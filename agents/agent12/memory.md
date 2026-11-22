@@ -359,7 +359,7 @@ invocation must continue until a checkpoint measures at least 70 minutes.
   experiment and candidate invariant.
 - One million macro successors from DR([0,0],[1]) completed without a
   TokenHalt, direct CR left-head>=2 halt, or closeTokCR call. Exactly one
-  closeTokDR occurred at macro 21,810 on input 0^2671 1, returning
+  closeTokDR occurred at macro 21,810 on input 0^267 1, returning
   CR(L=[0,0,0,1],R=[1]). Counters: 268 bounceDR calls, zero bounceCR calls;
   max left length 268, max right length 154,446, max entry 203, max left
   ones 10. Final macro-1,000,000 state is CR with
