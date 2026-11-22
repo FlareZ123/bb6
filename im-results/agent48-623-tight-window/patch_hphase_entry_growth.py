@@ -72,6 +72,7 @@ private theorem hphase_growth_76_raw (T : List (ℕ × ℕ)) :
   have hend : encRight (hPhaseP ++ hPhaseB ++ hPhaseB ++ T) =
       encRight T <+ encRight (hPhaseP ++ hPhaseB ++ hPhaseB) := encRight_append _ _
   rw [hstart, hend]
+  simp only [encRight_cons, encRight_nil, ListBlank.append_assoc]
   execute 254
 
 #print axioms hphase_entry_157_raw
