@@ -336,3 +336,22 @@ Current lease: run_id=agent41-gpt6-20261122T034542Z-depth5-open-leaf-closure, cl
 1. Check workflow **44985323541** and repair only concrete remaining failures in MachineCLeafRefinement.lean. If it succeeds, update the dossier with the exact 24/25 one-slot leaf result and keep it in im-results/.
 2. Monitor Agent 1's source-bridge repair; if no repair appears, offer a coordinated targeted patch rather than duplicating their whole module. Once the bridge compiles without sorryAx, run the existing #623 source workflow and only then add the mass-indexed length bound and sector-offset adapter to its compile chain.
 3. Keep the #623 all-time root-history invariant as the main mathematical blocker. Do not repeat the finite scan or the invalid slow-mass argument above.
+
+### 2026-11-22 04:47 UTC addendum — second CI repair pass
+
+- Machine C run **44986082108** compiled the terminal F/0 audit mass theorem cleanly: machineCGlobalLeafRefinement_terminal_mass has axiom profile [propext, Classical.choice, Quot.sound] and proves the terminal one-slot audit report (24,1). The global open proof still failed because the recursive child is transported across the equality refine (machineCPrefix n) slot (machineC slot) = machineCPrefix (n+1); the recursive IH has the uncast type. A duplicate orphan doc-comment also caused a parser error.
+- Patched MachineCLeafRefinement.lean at commit 5ca0cc8ae4daa88a5db09b5c2652875a3425eae5: removed the orphan comment and made the recursive proof reconstruct the prefix equality hext, then simplify the cast using that equality. Manual workflow **44986527277** is pending. If it still fails, the remaining task is to transport .open across the explicit cast induced by hext; do not reintroduce recursive simp-unfolding.
+- The terminal one-slot audit is now a genuine compiled theorem with 24 certified alternatives and one open original table. The global path connection is not yet compiled; do not claim the global report (24,25^8-24).
+
+- #623 source-bridge run **44985934360** showed the first repair pass fixed the output-bound/destructuring, summary successor, and nested tuple-injection errors. Remaining failures were:
+  - 3^L * 3 = 3 * 3^L commutation;
+  - parity modulo normalization;
+  - the countDigitInt_pow_shift / countDigitInt_sparse leading-digit decompositions and cast bounds;
+  - summary count recurrence;
+  - the differently associated RE correction term involving hR;
+  - output formula alias/cast normalization;
+  - no-op dsimp [stats] and remaining unqualified A.
+- Applied a second targeted pass at commit 98be57830f0f3b683006ae857ec39cf63a577643: use Nat.mul_comm; explicit mod/cast bounds; simplify the sparse leading digit; package the RE correction in an exactly associated hR'; make the Int output formula explicit; remove no-op dsimp; qualify DrainState.A. Manual workflow **44986443957** is pending. This is not yet source-certified; wait for its compile errors before claiming the bridge is repaired.
+- Sent Agent 1 the second-pass error inventory and patch summary at communications/agent1/20261122T044649Z_agent41-source-bridge-second-pass.md.
+
+Lease age at the last actual check (04:46:54Z) was 61.12 minutes. Original claim remains 03:45:47.181Z; the 70-minute release threshold is **04:55:47.181Z**. At the next checkpoint, obtain the actual clock and perform orderly release only if elapsed ≥70 minutes. Push all useful state before deleting the lease; lease deletion must be the final repository operation.
