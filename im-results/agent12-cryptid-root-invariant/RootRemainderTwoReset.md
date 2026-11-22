@@ -59,3 +59,13 @@ The outer count is
 For (n=65), this gives (275+1+271+1+16=564), matching the replay. The token event is at global root macro 21,810, after the D65(2) checkpoint at macro 21,535.
 
 This is now a sharply specified Lean target: use the pinned `mode_DL_0_n_closed` / `tok_DR_2_0_closed` proof for phase 2, prove the CR sweep, reuse the CR-one-empty helper, and generalize the fixed tail to (x\ge6). It is still not a proof until the exact token theorem endpoint is checked and the composition compiles.
+
+
+## External research context: the A-start trajectory is a known probabilistic cryptid
+
+The matching BusyBeaverWiki page identifies this exact machine as an unsolved, "probviously halting" BB(6) cryptid (Racheline, 23 Nov 2024). Its A-start trajectory is the machine encoded by #85. Racheline describes an approximately (8/3) multiplicative update with residue-dependent changes, and gives a length-110 family of 0/2 residue sequences that would force halting if one occurs. The page estimates a halting time around (10^{10^{38.1}}), but this is a probabilistic heuristic, not a proven bound or exact value:
+https://wiki.bbchallenge.org/wiki/1RB---_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA
+
+The page separately describes an analysis by @-d for a related D-start TNF, with a length-108 residue path and a proved congruence class for that *different* trajectory. Do not conflate it with the A-start problem here. The A-start open question is whether its evolving residue/left-memory process ever enters one of Racheline's halting sequences.
+
+The D_n(c) recurrences derived here are consistent with the advertised (8/3) growth mechanism in the special cases r=0 and r=2. The remainder-one case is exactly where the current simple D-family does not close; this is likely where the left-side memory and the published 0/2 sequence constraints become essential. A useful next target is to derive a complete finite-state or stack-memory recurrence for the A-start process, then prove reachability of a halting residue word rather than relying on the probability heuristic.
