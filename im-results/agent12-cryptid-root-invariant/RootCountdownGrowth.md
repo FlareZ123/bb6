@@ -10,9 +10,10 @@ The actual #490 blank-entry theorem reaches `DR(L=[0,0],R=[1])` after 7 raw step
 - macro 0: `DR(L=[0,0],R=[1])`;
 - macro 1: `CR(L=[1],R=[0,0,0,1])`, after the immediate #85 `tok_CR_1_0_closed` closure;
 - macro 22,099: `EL` with left-list length 3,481 and right-list length 6 (the #490 orientation);
-- macro 100,000: `DL` with left-list length 15,781 and right-list length 6; left head `[0,0,1,0,19,0,0,0]`, right head `[0,0,0,0,0,1]`.
+- macro 100,000: `DL` with left-list length 15,781 and right-list length 6; left head `[0,0,1,0,19,0,0,0]`, right head `[0,0,0,0,0,1]`;
+- macro 1,153,484: `DR` with left-list length 182,119 and right-list length 14; left head `[1,0,2,0,0,0,2,0]`, right head `[0,1,0,0,0,0,0,0]`.
 
-A persistent-list V8 replay of the corrected mirror has one token event, at macro 0 (the immediate `tok_CR_1_0_closed` closure), and reaches macro 100,000 without a halt. This is computational evidence, not a Lean proof; the full 1,153,484-step replay remains pending.
+A source-equivalent persistent-list V8 replay of the corrected mirror has exactly one token event, at macro 0 (the immediate `tok_CR_1_0_closed` closure), and reaches macro 1,153,484 without a halt. This is computational evidence, not a Lean proof; the checked-in Node script itself has not been run because local shell execution remains unavailable.
 
 ## Synthetic #85 prefix (not the #490 blank-root path)
 
