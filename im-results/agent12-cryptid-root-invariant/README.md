@@ -200,3 +200,6 @@ The recorded 106-check run predates the notation-only `E` -> `Corr` rename and s
 
 
 The macro note also records the exact pair-stack tape image of `Corr(r,c)`: `(10)^r 110 D> 0 1^(c+1) 0 11`, derived from the swapped `evalStackCfg` encoding. This is not yet an A(n,r) identification.
+
+
+For the unresolved halting-reachability target and the external `A(3^108*k+C,[])` cylinder, see [`resources/2026-11-20-cryptid-D-halting-cylinder.md`](../../resources/2026-11-20-cryptid-D-halting-cylinder.md). The current corridor result is a finite stack-orbit compression only; it does not establish a path into that cylinder.
