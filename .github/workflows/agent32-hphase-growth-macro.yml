@@ -60,9 +60,17 @@ jobs:
           set -o pipefail
           lake build BusyBeaver.BB6.Accelerations.M_1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LEHHH 2>&1 | tee /tmp/mirrored-root-growth-build.log
           for theorem in root_mirrored_token_closure root_mirrored_ordinary_prefix init_reaches_root_mirrored_seed root_mirrored_growth_76_raw root_mirrored_isNotHalt; do
-            line=$(grep -E "$theorem.*depends on axioms:" /tmp/mirrored-root-growth-build.log | tail -1 || true)
-            echo "$line"
-            if echo "$line" | grep -q 'sorryAx'; then
+            block=$(awk -v theorem="$theorem" '
+              index($0, theorem) && /depends on axioms:/ {printing=1}
+              printing {print}
+              printing && /\]/ {exit}
+            ' /tmp/mirrored-root-growth-build.log)
+            echo "$block"
+            if [ -z "$block" ]; then
+              echo "::error::missing axiom profile for $theorem"
+              exit 1
+            fi
+            if echo "$block" | grep -q 'sorryAx'; then
               echo "::error::$theorem depends on sorryAx"
               exit 1
             fi
