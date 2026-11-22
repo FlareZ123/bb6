@@ -136,7 +136,7 @@ The circular gaps are (2\theta-1) and (2-3\theta), with maximum (2-3\theta). Mor
 [
 2^{2-3\theta}=\frac{32}{27}<\frac{31}{25},
 ]
-so the maximum gap is strictly smaller than (\log_2(31/25)). Consequently, for every (gamma>0), there are (t'\in\{0,1,2,3,4\}) and (\sigma\in\mathbb Z) such that
+so the maximum gap is strictly smaller than (\log_2(31/25)). Taking base-2 logarithms, the ratio condition asks that a translate of an interval of length (\log_2(31/25)) contain one of the five points ({(t'+1)\theta}); these are a rotation of the five displayed points. The max-gap bound therefore proves that, for every (gamma>0), there are (t'\in\{0,1,2,3,4\}) and (\sigma\in\mathbb Z) such that
 [
 \frac{\gamma2^\sigma}{3^{t'+1}}\in\left(\frac{25}{4},\frac{31}{4}\right).
 ]
