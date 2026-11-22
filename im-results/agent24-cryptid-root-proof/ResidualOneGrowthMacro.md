@@ -87,3 +87,16 @@ Thus this residual-one endpoint reaches a proven infinite-growth family after (2
 ## What this does and does not establish
 
 This closes the local residual-one continuation: once the conditional root path reaches the stated residual-one endpoint, the machine cannot halt. It does **not** yet establish that the blank-tape root reaches (E_{160771976531}(13)), the (E(13)) chain, or this residual-one endpoint. Those upstream source macros and the blank-root prefix still require a single compiled Lean reachability theorem. Do not report this as a complete blank-root nonhalting proof or as a BB(6) result until that reachability gate is met.
+
+
+## Source-local Lean append draft
+
+`ResidualOneGrowthMacro.append.lean` now contains source-local theorem drafts, intended to be concatenated after `RootCountdownSweep.append.lean` and `RootRemainderTwoToken.append.lean` inside the pinned source module:
+
+- `agent24_tok_DR_growth_step`: direct `texecute 36) proof of (T(s)\to^+T(s+5)).
+- `agent24_tok_DR_growth_iter`: induction by `ReachesPlus.trans), giving arbitrarily long forward paths.
+- `agent24_s_residual_one_to_cr`: source-lemma proof that (S(1,k+1)) exits to the CR stack with (k+10) zeros.
+- `agent24_cr_residual_one_to_growth`: composes the parameterized CR/EL/DL/DR macros and the direct four-step DR-to-token entry to reach (T(2r+18)).
+- `agent24_s_residual_one_to_growth`: composes the previous two lemmas.
+
+Each theorem has a `#print axioms` command in the append. These are **drafts only**: the local Lean preflight has not run, and the Critic's acceptance gate prohibits CI dispatch until it succeeds locally. The append must be concatenated inside the source module because `tok_DR`, `tok_EL`, and encoding helpers are private.
