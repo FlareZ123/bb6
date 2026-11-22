@@ -751,3 +751,25 @@ The projected model used different updates in all three CR cases and bump []=[1]
 **Next work:** independently rewrite and audit the entire #85 projected successor from all pinned mode_*_closed branches (including token closures and empty cases); do not reuse the old simulator. Recompute the root trajectory from the confirmed raw-time-15 DR state. Formalize the D-countdown sweep on #85 and transport with reachesPlus_mirrorCfg (Stack.lean lines 359–365). Only then revisit D0 root-to-cylinder reachability or a nonhalting invariant. No halting/nonhalting result or BB(6) value is established.
 
 The local shell still returns a tool-level ClientError before executing commands; no Lean preflight or CI run was performed for the withdrawn macro.
+
+
+## 2026-11-22T08:3xZ: new source-branch zero-reset recurrence and root chain
+
+After correcting the ordinary CR clauses in an exploratory projected simulator, I found a second recurrence that is independent of the withdrawn 76-step growth macro.
+
+With D_n(c) = CR([0], 0^(4n+5) ++ [c]) in first-coordinate notation:
+
+1. Countdown: for c>=3, D_n(c) -> D_(n+1)(c-3) in 8n+24 outer successors, raw cost 24n+69. This uses CR-left-zero / CR-empty and ordinary EL/DL/DR branches.
+2. Zero-reset: D_n(0) -> D_0(8n+13) in 8n+41 outer successors, raw cost 16n+105. Phase decomposition: fixed 8-step prefix (raw21); EL-zero sweep length 4n+7 (raw 8n+14); EL-empty (1); CR-zero sweep length 4n+8 (raw 8n+16); CR-left-one/empty-tail (1, raw6); fixed 16-step tail (raw47). The tail branch sequence is EL0, EL+, DL+, DR0+, DR0+, DR-empty-left, EL+, DL0, EL0, EL0, EL+, DL+, DR0+, DR0+, DR0+, DR++.
+3. Direct source-clause replay checked the zero-reset formula for every n=0..100, including endpoint, outer successor count, and raw cost. This is bounded computation, not a proof.
+
+The #85 blank-entry seed DR([0,0],[1]) occurs at raw time 7. A 28-successor ordinary-branch prefix reaches D_0(3) at raw time 87. Composing the two recurrences yields a root-connected chain:
+- D0(3) -> D1(0) (24 steps, 69 raw) -> D0(21) (49,121);
+- D0(21) -> D7(0) (336,987) -> D0(69) (97,217);
+- D0(69) -> D23(0) (2,576,7,659) -> D0(197) (225,473);
+- D0(197) -> D65(2) (18,200,54,405).
+The final checkpoint is after 21,535 outer successors from the #85 seed, raw TM time 64,018 from blank. This chain uses no token-normalizer closure and no mistranscribed CR 1,0 / 1,1 / 1,>=2 branch. It is recorded in im-results/agent12-cryptid-root-invariant/RootCountdownReset.md.
+
+The next apparent transition D65(2)->D0(539) uses a DR token-normalizer closure in the exploratory JS port; it is NOT included in the source-validated chain. Need independently audit and formalize the token closure and the remainder-2 reset. The eventual remainder-1 case must also be resolved before claiming an infinite orbit. No nonhalting proof or BB(6) value yet.
+
+The corrected exploratory root script is im-results/agent12-cryptid-root-invariant/fast_root_stack_sim_crcorrected_exploratory.js. It fixes the CR ordinary branches and empty bump, but its bounce/token port is not yet independently audited. Do not use it as a proof. The prior 1,131,748 growth seed and 76-step macro remain withdrawn.
