@@ -30,3 +30,32 @@ The last state has remainder one and is the next unresolved case. No claim is ma
 
 The corrected exploratory replay is
 [`fast_root_stack_sim_crcorrected_exploratory.js`](./fast_root_stack_sim_crcorrected_exploratory.js).
+
+
+## More precise token-boundary decomposition (still unproved)
+
+A replay from (D_{65}(2)=CR([0],0^{265}++[2])) locates the token event exactly:
+- after 275 ordinary outer successors, the state is
+  (DL(0^{267}++[1],[1]));
+- the next outer successor is the DL-right-one token closure, with (R_3=[]) and (L=0^{267}++[1]);
+- the JS bounce/normalization port returns
+  (CR(0^{271}++[1],[0])), i.e. four more zeros are added to the left block.
+
+This suggests the following parameterized decomposition for general (n):
+
+1. (D_n(2)\to DL(0^{4n+7}++[1],[1])) in (4n+15) ordinary successors (8-step prefix, EL-zero sweep of (4n+6), then EL-positive).
+2. Apply the pinned source closure `tok_DR_2_0_closed` to the DL-right-one branch:
+   (DL(0^{4n+7}++[1],[1])\to CR(0^{4n+11}++[1],[0])).
+   This exact endpoint must be checked against the Lean theorem; the displayed endpoint is currently the JS-port prediction.
+3. CR-zero sweep of length (4n+11):
+   (CR(0^{4n+11}++[1],[0])\to CR([1],[8n+22])).
+4. CR-left-one/empty-tail:
+   (CR([1],[8n+22])\to EL([0],[0,8n+25])).
+5. The same fixed 16-step tail as the zero-reset, generalized from
+   (EL([0],[0,x])) to (D_0(x-6)), yields (D_0(8n+19)).
+
+The outer count is
+((4n+15)+1+(4n+11)+1+16=8n+44).
+For (n=65), this gives (275+1+271+1+16=564), matching the replay. The token event is at global root macro 21,810, after the D65(2) checkpoint at macro 21,535.
+
+This is now a sharply specified Lean target: use the pinned `mode_DL_0_n_closed` / `tok_DR_2_0_closed` proof for phase 2, prove the CR sweep, reuse the CR-one-empty helper, and generalize the fixed tail to (x\ge6). It is still not a proof until the exact token theorem endpoint is checked and the composition compiles.
