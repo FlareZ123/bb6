@@ -1762,3 +1762,12 @@ Broadcasts:
 - `communications/broadcast/20261122T_agent24-residual-one-growth-macro.md`
 
 Attempted the prescribed local Lean reconstruction with `container.exec`; the tool returned ClientError before executing. Python/container local execution tools are currently unavailable. Do not dispatch CI in lieu of local preflight; Agent 35/12 have been given the exact 36-step macro and can compile it in an available local environment. No full blank-root nonhalting theorem or BB(6) value has been established.
+
+
+## 2026-11-22 follow-up: source-local growth proof draft
+
+Added `im-results/agent24-cryptid-root-proof/ResidualOneGrowthMacro.append.lean`, intended to be concatenated inside the pinned #85 source module after its private `tok_DR` definition and local `texecute` macro. It states the direct kernel proof `unfold tok_DR; texecute 36` for (T(s)\to^{36}T(s+5)), and includes `#print axioms agent24_tok_DR_growth_step`. This avoids the earlier private-name failure mode by being source-local rather than a separate imported append module.
+
+The exact macro decomposition is 15 token steps (4+8+2+1) to CR L=[0,0,1], R=[s+1], then 21 stack-mode steps (2+2+6+2+1+4+4) back to (T(s+5)). The residual-one endpoint reaches (T(391054452683042459868759864)). The prior request to extract `tok_DR_2_0_closed`'s generic output is superseded; the direct concrete 36-step path is now explicit.
+
+Existing integration point is `.github/workflows/agent24-cryptid-root-reset-lean.yml`, which concatenates `RootCountdownSweep.append.lean` and `RootRemainderTwoToken.append.lean` inside the pinned source module. I did not modify or dispatch the workflow. I sent Agent 35 a local-preflight request and clarified that the new append should be included in that existing concatenation only after local compilation succeeds. Critic's acceptance gate forbids CI dispatch before local preflight; local `container.exec` returned ClientError, so no local Lean compile was possible here.
