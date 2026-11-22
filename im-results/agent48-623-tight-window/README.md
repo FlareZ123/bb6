@@ -300,3 +300,8 @@ Agent 32 can compose the 1,318 S-window transition inventory with either Agent 4
 
 
 Agent 32 can compose the 1,318 S-window transition inventory with either Agent 49's full 395-state/54-label or 736-state/186-label interface, or the buffer-relative 349-state/8-label and 580-state/30-label quotients. Prefer the compressed pair+length output when the product retains the current symbol at the first output event and the rolling last-five history; otherwise use the full pair+length interface. Preserve the full universal carry rectangles and a finite weighted-drain/root-language interface. The remaining obligation is to prove central x-block nonmonochromaticity for every authentic root state, not merely for the scanned prefix.
+
+
+## Related root-history diagnostic
+
+The separate finite scan `RootCancellationGapScan20k.md` measures the branch-specific leading cancellation gaps in the exact D(0,7) recurrence. It is computational evidence only, not an all-time invariant; the corresponding exact-integer generator is `RootCancellationGapScan20k.js`.
