@@ -16,3 +16,15 @@ private theorem agent24_tok_DR_growth_step (s : ℕ) :
   texecute 36
 
 #print axioms agent24_tok_DR_growth_step
+
+private theorem agent24_tok_DR_growth_iter (s k : ℕ) :
+    (tok_DR [2,0] [(s,0)] [0]) [target]⊢⁺
+      (tok_DR [2,0] [(s + 5 * (k + 1),0)] [0] := by
+  induction k with
+  | zero =>
+      simpa using agent24_tok_DR_growth_step s
+  | succ k ih =>
+      have hstep := agent24_tok_DR_growth_step (s + 5 * (k + 1))
+      simpa [Nat.mul_succ, Nat.add_assoc] using ReachesPlus.trans ih hstep
+
+#print axioms agent24_tok_DR_growth_iter
