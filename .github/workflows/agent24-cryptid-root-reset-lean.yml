@@ -38,7 +38,7 @@ jobs:
         working-directory: cryptids
         run: lake exe cache get
 
-      - name: Append source-local root and reset proofs with the audited prefix correction
+      - name: Append source-local root and reset proofs with audited endpoint corrections
         working-directory: cryptids
         shell: bash
         run: |
@@ -69,7 +69,7 @@ jobs:
               "\n\n" + reset.rstrip() + "\n\n" + ending + "\n"
           )
           print("Appended root countdown + remainder-two proof fragments.")
-          print("Applied only the independently identified h5/h6 prefix endpoint correction.")
+          print("Applied h5/h6 prefix and general-tail h7 endpoint corrections.")
           PY
           git diff --check
 
