@@ -174,3 +174,14 @@ the token subproblem is therefore exactly
 ]
 
 The upstream theorem `tok_DR_2_0_closed` proves that this token subproblem reaches either a halted configuration or a configuration in the main stack system. It does **not** by itself identify which alternative occurs or give the exact successor stack state. Extracting that concrete endpoint is now the decisive local task. In particular, do not claim the tempting (+5) right-counter recurrence until the `tok_DR_2_0_closed`/ `bl_terminates_le` output has been evaluated and checked.
+
+
+## Update: the residual-one growth macro is now explicit
+
+The previous paragraph's request to extract the output of `tok_DR_2_0_closed` is superseded. The concrete input is `tok_DR([2,0],[(s,0)],[0])) with (s=2r+18). Unfolding the specific (L=[0]) branch of `bounce_len` gives the 15-step token prefix to
+[
+\mathrm{cfg\_CR\_n\_n}([(0,0),(0,0),(1,0)],[(s+1,0)]).
+]
+The exact CR/EL/DL/DR branches then take 21 steps back to `tok_DR([2,0],[(s+5,0)],[0])). Hence the residual-one endpoint is now connected to the infinite (+5) growth family by the 36-step macro proved in `ResidualOneGrowthMacro.md`.
+
+The only remaining qualification is formal verification: the 36-step source-level macro has not yet been compiled as a standalone Lean theorem, and the upstream blank-root reachability chain remains conditional.
