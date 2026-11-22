@@ -117,12 +117,12 @@ function scan(steps = 20000, startIndex = 16) {
         };
       }
 
-      const actualNum = g2 * g2;
-      const actualDen = m2;
+      const actualNum = g * g;
+      const actualDen = m;
       if (minActualGapSquareOverM === null ||
           lessRatio(actualNum, actualDen, minActualGapSquareOverM.num, minActualGapSquareOverM.den)) {
         minActualGapSquareOverM = {
-          index: i + 1, g: g2.toString(), m: m2.toString(),
+          index: i, g: g.toString(), m: m.toString(),
           num: actualNum.toString(), den: actualDen.toString(),
           floor: (actualNum / actualDen).toString(),
         };
