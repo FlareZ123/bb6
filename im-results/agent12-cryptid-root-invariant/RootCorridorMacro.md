@@ -179,3 +179,54 @@ Consequently, the outer state `Corr(r,c)=DR(L=0^r1,R=[1,c])` has the exact pair-
 `(10)^r 110 D> 0 1^(c+1) 0 11`,
 
 up to the source's blank-extension equivalence. This is a concrete encoding of the corridor family in the #85-oriented stack system. It is **not** yet an identification with the @-d `A(n,r)` section or a proof of reachability to the halting cylinder; the full A-step2/stack-system bridge remains open (see [`ASectionStackEncoding.md`](../agent32-cryptid-padding/ASectionStackEncoding.md)).
+## Explicit fixed subpaths for the reset cases
+
+The two fixed tails used above can be checked directly from the outer clauses. Write `EL(L;R)` etc. with the left list before the semicolon and right list after it, and `ε` for the empty list.
+
+### The 12-step tail in the `c=0` reset
+
+Starting from `EL([0];[0,2r+13])`, the exact 12-step chain is:
+
+```text
+EL(0 ; 0,2r+13)
+→ EL(0,0 ; 2r+13)
+→ DL(0,0 ; 2r+12)
+→ DR(0,0 ; 1,2r+10)
+→ DR(0 ; 1,0,2r+10)
+→ DR(ε ; 1,0,0,2r+10)
+→ EL(0 ; 1,0,0,2r+10)
+→ DL(0 ; 0,0,0,2r+10)
+→ EL(0,1 ; 0,0,2r+10)
+→ EL(0,0,1 ; 0,2r+10)
+→ EL(0,0,0,1 ; 2r+10)
+→ DL(0,0,0,1 ; 2r+9)
+→ DR(0,0,0,1 ; 1,2r+7)
+```
+
+The endpoint is `Corr(3,2r+7)`.
+
+### The 16-step tail in the `c=2` reset
+
+The token-normalizer identity gives `CR(0,0,0,1 ; 1)`. From there the exact 16-step chain is:
+
+```text
+CR(0,0,0,1 ; 1)
+→ CR(0,0,1 ; 3)
+→ CR(0,1 ; 5)
+→ CR(1 ; 7)
+→ EL(0 ; 0,10)
+→ EL(0,0 ; 10)
+→ DL(0,0 ; 9)
+→ DR(0,0 ; 1,7)
+→ DR(0 ; 1,0,7)
+→ DR(ε ; 1,0,0,7)
+→ EL(0 ; 1,0,0,7)
+→ DL(0 ; 0,0,0,7)
+→ EL(0,1 ; 0,0,7)
+→ EL(0,0,1 ; 0,7)
+→ EL(0,0,0,1 ; 7)
+→ DL(0,0,0,1 ; 6)
+→ DR(0,0,0,1 ; 1,4)
+```
+
+The endpoint is `Corr(3,4)`, independent of the original `r`.
