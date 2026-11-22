@@ -20,6 +20,7 @@ The previous no-swap root replay and 76-step growth route are withdrawn. The pro
 - [ModeDRBranchAudit.md](./ModeDRBranchAudit.md): pinned-source DR branch distinction and the corrected initial DR steps only; it does not validate the full root path.
 - [NoSwapGrowth.lean](../agent48-no-swap-projection/NoSwapGrowth.lean): **withdrawn projected model**. Its CR clauses are not source-exact; do not use its `growth76` theorem as evidence.
 - [fast_root_stack_sim.js](./fast_root_stack_sim.js) and [verify_root_corridor_macro.js](./verify_root_corridor_macro.js): historical replay/checker using the incorrect CR transition function; root indices, macro counts, and token-event locations are untrusted.
+- [fast_root_stack_sim_crcorrected_exploratory.js](./fast_root_stack_sim_crcorrected_exploratory.js): new exploratory replay with the corrected ordinary CR clauses and empty bump. Its bounce/token-normalizer port is not yet independently audited or raw-step verified; use only as a debugging aid.
 - [RootCorridorMacro.md](./RootCorridorMacro.md): historical shared-corridor and c=1 identities from the withdrawn projected model; do not rely on them.
 - [TokenNormalizerCorrection.md](./TokenNormalizerCorrection.md): source-level token-normalizer corrections; these do not establish that the blank-root trajectory reaches a token checkpoint.
 - [HPhaseGrowth.md](./HPhaseGrowth.md): separate projected H-phase macro; it also requires a fresh audit against the corrected source transition rules before being used.
