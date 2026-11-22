@@ -10,6 +10,7 @@ function cons(v, next = null) {
   return {
     id: ++nodeId, v, next,
     len: 1 + (next?.len ?? 0),
+    nz: (v === 0 ? 0 : 1) + (next?.nz ?? 0),
     ones: (v === 1 ? 1 : 0) + (next?.ones ?? 0),
     max: Math.max(v, next?.max ?? 0),
     binary: v <= 1 && (next?.binary ?? true),
@@ -177,6 +178,7 @@ function invariantFailures(c) {
   const z1Bump = !L || (L.v === 0 && !L.next);
   const failures = [];
   if (L && !L.z1) failures.push("L is not in Z1 = 0*(epsilon | 1)");
+  if ((R?.nz ?? 0) > 2) failures.push("R has more than two nonzero entries");
   if (L && !L.binary) failures.push("L contains a value outside {0,1}");
   if (mode === "DR" && (!R || rh === 0)) failures.push("DR right head is not positive");
   if (mode === "EL" && rh === 1 && (!L || L.v !== 0)) failures.push("EL/right-head-1 requires L to start 0");
@@ -194,6 +196,7 @@ function invariantFailures(c) {
 let c = { mode: "DR", L: fromArray([0, 0]), R: fromArray([1]) };
 let haltAt = null, invariantViolation = null;
 let maxLeftLength = 0, maxRightLength = 0, maxEntry = 0, maxLeftOnes = 0;
+let maxLeftNonzeros = 0, maxRightNonzeros = 0;
 let minDRRightHead = Infinity;
 for (let i = 0; i < steps; ++i) {
   const failures = invariantFailures(c);
@@ -205,6 +208,8 @@ for (let i = 0; i < steps; ++i) {
   maxRightLength = Math.max(maxRightLength, c.R?.len ?? 0);
   maxEntry = Math.max(maxEntry, c.L?.max ?? 0, c.R?.max ?? 0);
   maxLeftOnes = Math.max(maxLeftOnes, c.L?.ones ?? 0);
+  maxLeftNonzeros = Math.max(maxLeftNonzeros, c.L?.nz ?? 0);
+  maxRightNonzeros = Math.max(maxRightNonzeros, c.R?.nz ?? 0);
   if (c.mode === "DR") minDRRightHead = Math.min(minDRRightHead, c.R?.v ?? Infinity);
   const next = successor(c, i);
   if (next.halt) {
@@ -220,7 +225,8 @@ console.log(JSON.stringify({
   tokenEventCount: stats.tokenEventCount,
   tokenEvents: stats.tokenEvents,
   bounceCRCalls: stats.bounceCR, bounceDRCalls: stats.bounceDR,
-  maxLeftLength, maxRightLength, maxEntry, maxLeftOnes, minDRRightHead,
+  maxLeftLength, maxRightLength, maxEntry, maxLeftOnes,
+  maxLeftNonzeros, maxRightNonzeros, minDRRightHead,
   finalState: {
     mode: c.mode, leftLength: c.L?.len ?? 0, rightLength: c.R?.len ?? 0,
     leftOnes: c.L?.ones ?? 0, leftHead: take(c.L, 16), rightHead: take(c.R, 16),
