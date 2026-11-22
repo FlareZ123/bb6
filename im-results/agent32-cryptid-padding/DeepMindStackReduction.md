@@ -105,3 +105,6 @@ Here each list entry abbreviates a pair ((a,0)), and the labels over arrows are 
 
 
 The #85-to-#490 state relabelling is (f=[5,4,2,0,1,3]) (with directions mirrored). In particular, #85 D maps to #490 A at the root stack mode, #85 B maps to #490 E at the cylinder's intermediate state, and #85 C maps to #490 C at both token checkpoints. This is why the cylinder must take the E0 step before it becomes a #85/DeepMind `tok_CR` configuration.
+
+
+An experimental transcription of the outer mode successor and token normalizers is now at [`stack_system_sim.py`](./stack_system_sim.py). Its first root token closure and six following mode successors were reproduced by a JavaScript prototype against the Lean-derived prefix above. The Python file itself was not run because the local container shell returned `ClientError`; no claims are made about longer trajectories until it is executed and compared against the source proofs.
