@@ -16,6 +16,7 @@ The previous no-swap root replay and 76-step growth route are withdrawn. The pro
 
 - [RootCountdownSweep.md](./RootCountdownSweep.md): the surviving direct countdown sweep decomposition; proof architecture and bounded computation, not yet compiled.
 - [RootCountdownReset.md](./RootCountdownReset.md): source-branch zero-remainder reset recurrence and a corrected root-connected chain through D65(2) at raw time 64,018; not yet compiled.
+- [RootSuffix13Continuation.md](./RootSuffix13Continuation.md): source-branch offset-six decrement E_n(x;T) -> E_(n+1)(x-3;T), the exceptional E_n(1) -> D_0(8n+9;[5]) bridge, and a conditional continuation from D_447093083(0;[13]) to E_1192248236(2). Exact phase costs have bounded source-transcribed replay, not Lean; the next E_n(2) token closure is still uncompiled.
 - [RootRemainderTwoReset.md](./RootRemainderTwoReset.md): source-derived remainder-two reset phases and token endpoint; full Lean composition pending.
 - [RootCountdownSweep.append.lean](./RootCountdownSweep.append.lean): uncompiled #85-source append draft for the one-step branch lemmas and the two inductive sweeps; fixed-prefix composition remains to be completed.
 - [RootCountdownGrowth.md](./RootCountdownGrowth.md): historical root-growth dossier, explicitly withdrawn except for the confirmed orientation/entry facts and its link to the surviving countdown.
@@ -30,9 +31,10 @@ The previous no-swap root replay and 76-step growth route are withdrawn. The pro
 
 ## Next mathematical work
 
-1. Replace the projected CR cases with the exact source equations in #85 `mode_CR_n_n_closed` lines 928–953 and set the first-coordinate empty bump to `[0]`, matching `bumpPairHead []=[(0,0)]).
-2. Audit every remaining projected branch and token closure against the pinned source before trusting a simulator.
-3. Recompute the blank-root continuation from the confirmed raw-time-15 DR state. Do not reuse the withdrawn 22,099-step prefix, 1,131,748 growth seed, 76-step insertion, or associated raw totals.
-4. Formalize the direct `D_n(c)` sweeps in the #85 module and lift them with `reachesPlus_mirrorCfg` (Stack.lean lines 359–365). Then establish whether the corrected root trajectory reaches a countdown state or a halting cylinder.
+1. Formalize the corrected suffix-preserving prefix and the new E_n(x;T) decrement / E_n(1) bridge in the pinned #85 module; do not reuse the current failing append unchanged.
+2. Resolve the offset-six E_n(2) token closure at the new endpoint E_1192248236(2), then continue the exact modulo-3 residual chain.
+3. Audit every remaining projected branch and token closure against the pinned source before trusting a simulator.
+4. Recompute and formalize the blank-root continuation from the confirmed raw-time-15 DR state. Do not reuse the withdrawn 22,099-step prefix, 1,131,748 growth seed, 76-step insertion, or associated raw totals.
+5. Lift source-local proofs with `reachesPlus_mirrorCfg` (Stack.lean lines 359–365) only after their exact dependency closure compiles. Determine whether the corrected root trajectory reaches a halting cylinder.
 
 No complete blank-root-to-cylinder path, infinite orbit, halting proof, nonhalting proof, or BB(6) value is currently established.

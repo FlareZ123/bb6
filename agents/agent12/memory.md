@@ -815,3 +815,21 @@ This derives the JS-port endpoint from pinned source clauses, though a specializ
 Adding ordinary prefix 8n+34, CR-zero sweep 8n+22, CR1empty6, fixed tail47 gives full r2-reset raw cost 40n+186. For n=65: 2,786 raw steps; D65(2) at raw64,018 therefore reaches D0(539) at raw66,804. This agrees with Agent35's independent total 66,804 but conflicts with its endpoint labels R=[1]/D0(540); I asked Agent35 to reconcile the one-cell/indexing difference.
 
 RootRemainderTwoReset.md now records the source-level derivation and the exact raw cost. Agent48 has been asked to formalize the bounce_DR / bl_step_macro_len endpoint in Lean. The r2 reset is not yet a compiled theorem; the remainder-one case remains unresolved.
+
+
+## 2026-11-22: suffix-[13] offset-six continuation
+
+Claimed Agent 12 after the required normal-mode draw. The previous agent12 research direction was the #85 A-start stack trajectory; preserve the critical withdrawal of the projected CR branches and the old 76-step/1,131,748 growth path. Do not use the withdrawn projected simulator as evidence.
+
+New source-branch derivation is in im-results/agent12-cryptid-root-invariant/RootSuffix13Continuation.md:
+- Define E_n(x;T)=CR([0],0^(4n+6)++[x]++T)=D_n(0;[x]++T).
+- For x>=3, E_n(x;T)->E_(n+1)(x-3;T), outer 8n+26, raw 24n+75.
+- Four decrements: E_n(13)->E_(n+4)(1), outer 32n+152, raw 96n+444.
+- Exceptional bridge E_m(1)->D_0(8m+9;[5]), outer 8m+43, raw 16m+115, via the 16-successor/47-raw suffix-preserving tail.
+- Conditional Agent24 endpoint D_447093083(0;[13]) now reduces to E_1192248236(2), with an additional 17,057,470,392,973,915,729 raw steps (5,685,823,466,709,135,053 outer successors). Adding Agent24's conditional prefix count gives 19,848,692,768,628,691,148 raw steps to E_1192248236(2). This is not a certified blank-root lower bound.
+- The next boundary is the offset-six E_n(2) token closure. Agent2's intermediate note gives E_n(2)->D_0(8n+21), but this needs exact token-source reconciliation and Lean compilation.
+- verify_suffix13_macro.py transcribes only ordinary CR/EL/DL/DR branches and checks n=0..4 and x in {3,4,7,10,13,16}. It is finite source-transcribed evidence, not proof.
+
+The supplied Lean RC2 split archive is truncated: concatenation is 542,081,024 bytes, while its ZIP member header advertises 608,393,640 bytes. Extraction/decompression can salvage a partial tar but not the complete toolchain, so no local Lean preflight was possible. Do not run CI as a substitute for the required local preflight. Agent24 workflow run 45007756579 failed on the existing append (prefix endpoint/type mismatches, simp recursion depth, and private token identifiers); this new derivation was not part of that run. Repair the first failing declarations and restore a complete local RC2 toolchain before any acceptance run.
+
+Next: formalize the E_n(x;T) decrement using the corrected suffix-preserving prefix, then formalize E_n(1) with the general-tail lemma; resolve E_n(2) token closure; compute the next exact residue. Keep all results in im-results until the dependency closure compiles and the blank-root quantifier is addressed.
