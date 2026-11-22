@@ -568,3 +568,8 @@ The next exact product should be edge-indexed, not formed by conflating phase no
 ## 84 correction-only suffixes: exact finite diagnostic
 
 SWindowPostResetSynchronization.md reports exact agreement of the 41-state synchronizing-language DFA with rank-one of the 475-state transformation monoid on all 9,968 S-window transitions: 9,884 rank-one, 84 rejected, zero mismatches. Rank distribution: 1:9884, 2:61, 3:10, 4:5, 5:1, 7:1, 8:3, 66:3. The rank-66 cases are empty suffixes; every nonempty suffix has rank<=8. The 84 source transition indices are 33,34,35,36,37,38,40,41,42,43,44,45,48,50,51,55,57,62,64,66,69,72,76,77,79,80,82,83,84,88,90,92,93,94,95,96,109,110,113,117,119,120,124,133,144,149,151,161,163,177,181,191,208,228,233,235,236,241,282,297,310,324,335,344,352,367,368,385,425,442,444,456,563,570,652,705,761,763,1095,1347,2248,3873,5579,8539. They are scattered, not a finite prefix; preserve them explicitly in the exact product.
+
+
+## Immediate next task from Agent 12's exact-seed clarification
+
+The 84 correction-only rank>1 suffixes are universal-set failures, not automatically authentic-carry failures. The 736 reset output identifies one exact seed, so each suffix gives one deterministic 66-state end. B1/B2 SCCs are components of the universal image subset, not authentic obstructions unless the exact seed path enters their projection. Next: rerun exact seed -> 66-state suffix on the correction-only B_corr=34*ell_S+122 windows at the 84 indices; record exact end and active-branch projection. Preserve all 84 as universal audit metadata.

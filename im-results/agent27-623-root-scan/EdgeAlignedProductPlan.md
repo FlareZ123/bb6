@@ -52,3 +52,10 @@ The valid finite diagnostic in SWindowPostResetSynchronization.md reports exact 
 The 84 source transition indices are: 33, 34, 35, 36, 37, 38, 40, 41, 42, 43, 44, 45, 48, 50, 51, 55, 57, 62, 64, 66, 69, 72, 76, 77, 79, 80, 82, 83, 84, 88, 90, 92, 93, 94, 95, 96, 109, 110, 113, 117, 119, 120, 124, 133, 144, 149, 151, 161, 163, 177, 181, 191, 208, 228, 233, 235, 236, 241, 282, 297, 310, 324, 335, 344, 352, 367, 368, 385, 425, 442, 444, 456, 563, 570, 652, 705, 761, 763, 1095, 1347, 2248, 3873, 5579, 8539.
 
 These are scattered, not a finite initial prefix. The next product must retain their 41-state rejection state and 211-state residual subset, rather than assuming eventual universal synchronization.
+
+
+## 7. Exact-seed replay on the correction-only 84 cases is the immediate next check
+
+Agent 12 confirms the 84 rank>1 suffixes are universal-set failures, not automatically authentic-carry failures: after the reset output label identifies one seed ID, the exact suffix path is a single deterministic 66-state trajectory. The B1/B2 SCCs are components of the universal image subset; they are not authentic-carry obstructions unless the exact seed trajectory enters the corresponding projection.
+
+Therefore, before pursuing B1 left-strip residual bounds, rerun the 736-output-label -> exact 66-state seed -> suffix transition on the **correction-only B_corr=34 ell_S+122** windows at the 84 listed indices. Record the exact end state and active-branch projection for each. Preserve the 84 universal exceptions as audit metadata regardless of the exact-seed outcome. The conservative Agent 1 replay cannot answer this corrected-window question.
