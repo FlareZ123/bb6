@@ -1,6 +1,6 @@
-# Source audit: corrected token normalization (root lift withdrawn)
+# Source audit: corrected token normalization and restored blank-root connection
 
-**Status:** the token-normalizer corrections and source branch distinctions below remain valid. However, the previously claimed root continuation is withdrawn because the #490 wrapper mirrors #85 and swaps L/R. The macro-21,810 token event below belongs to a synthetic unmirrored #85 trace, not the actual #490 blank-root trajectory. The actual #490 blank seed corresponds to #85 `DR(L=[1],R=[0,0])` and has an immediate `tok_CR_1_0_closed` event. See [ModeDRBranchAudit.md](./ModeDRBranchAudit.md) for the mirror correction.
+**Status:** the token-normalizer corrections and source branch distinctions below remain valid. The earlier root withdrawal was an evaluator-orientation error: #85's `evalStackCfg` swaps its arguments, and `ClosedStackSystem.mirror` swaps them again, so the reversals cancel. The actual #490 blank seed corresponds to #85 `cfg_DR_n_n [0,0] [1]`; the macro-21,810 DL token event is on the blank-root route. See [ModeDRBranchAudit.md](./ModeDRBranchAudit.md) and [RootCountdownGrowth.md](./RootCountdownGrowth.md).
 
 ## Pinned source
 
@@ -108,15 +108,15 @@ CR left list. Both outputs lie in Z1.
 
 ## Root consequence under the correct outer DR rule
 
-The earlier withdrawal in this section was incorrect. The pinned `mode_DR_n_n_closed` theorem uses `rcases r1 with _ | r5`: only r1=0 enters a token branch; r1≥1 takes the ordinary DR/CR branch. The root seed therefore begins with the ordinary four-step transition to `DR([0],[1,0])`, and the source-transcribed root countdown/growth replay is recovered when the simulator uses `b === 0` for DR. See [ModeDRBranchAudit.md](./ModeDRBranchAudit.md) and [RootCountdownGrowth.md](./RootCountdownGrowth.md).
+The evaluator composition is now checked explicitly: #490 `evalStackCfg .DR_n_n L R = mirrorCfg f (cfg_DR_n_n L R)`, because #85's own evaluator already reverses the arguments. The blank seed therefore begins with the ordinary four-step `DR([0,0],[1]) -> DR([0],[1,0])` transition. The DL right-head-1 token event occurs later, at projected macro 21,810. See [ModeDRBranchAudit.md](./ModeDRBranchAudit.md) and [RootCountdownGrowth.md](./RootCountdownGrowth.md).
 
 The token-normalizer formulas above are unaffected by this outer-mode correction. In particular, `tok_EL_1` must prepend a zero, the CR `1,1` suffixes remain as stated, and the `tok_EL_add3` / `tok_DR_zero` composition still consumes the leading zero before `bounceDR` begins.
 
 ## Repository changes
 
-- `fast_root_stack_sim.js`: now simulates the actual #490 blank root by swapping stacks into #85 orientation for each successor; its long replay has not yet been run.
-- `verify_root_corridor_macro.js`: checks #85-side projected branch/countdown/reset and growth macro candidates only; it does not establish blank-root reachability.
-- `stack_system_sim.py`: retains the #85-side projected DR right-head split; do not treat its unmirrored root trace as the #490 blank trajectory.
+- `fast_root_stack_sim.js`: uses the no-swap #85 `cfg_DR_n_n` transition on the #490 stack arguments; the evaluator reversals cancel.
+- `verify_root_corridor_macro.js`: checks the source-transcribed blank-root-connected projected branch/countdown/reset and growth macros; it is not a Lean proof.
+- `stack_system_sim.py`: its no-swap #85 `cfg_DR_n_n` trace has the correct stack-list order for the #490 root after the mirror cancellation.
 - The folder README and current proof target are [README.md](./README.md) and [RootCountdownGrowth.md](./RootCountdownGrowth.md).
 
 The updated checked-in Node harness has not yet been run under Node/CI after
@@ -126,12 +126,12 @@ direct source-equivalent transcription. No Lean compile or axiom audit was
 performed.
 
 
-## Synthetic #85 token event and raw-step count (not blank-root)
+## Blank-root-connected token event and raw-step count
 
-This synthetic #85 event is `closeTokDR([],0^267 ++ [1])`. It is reached at macro 21,810 from `DL(L=0^267 ++ [1],R=[1])` in the unmirrored projected trace; the DL branch's initial `tExecute 4` enters the token closure. The source lemmas then give:
+This #490 blank-root event is `closeTokDR([],0^267 ++ [1])`. It is reached at projected macro 21,810 from `DL(L=0^267 ++ [1],R=[1])` in the no-swap `cfg_DR_n_n` trace; the DL branch's initial `tExecute 4` enters the token closure. The source lemmas then give:
 - 267 `tok_DR_zero` applications at 4 raw steps each;
 - one `tok_DR_1_nil_28` at 28 raw steps;
 - 268 `tok_EL_1` applications at 2 raw steps each;
 - one `tok_EL_exit_zero` at 1 raw step.
 
-Including the DL prefix, the event costs `4 + 267·4 + 28 + 268·2 + 1 = 1,637` raw TM steps and returns `CR(L=0^271 ++ [1],R=[1])`. The ordinary synthetic prefix before and after the event costs 64,565 and 595 raw steps respectively. These counts do not apply to the #490 blank root, and the former 66,804 blank-to-`D_0(540)` claim is withdrawn.
+Including the DL prefix, the event costs `4 + 267·4 + 28 + 268·2 + 1 = 1,637` raw TM steps and returns `CR(L=0^271 ++ [1],R=[1])`. The ordinary prefix before and after the event costs 64,565 and 595 raw steps respectively. The stack-seed-to-`D_0(540)` total is 66,797 raw steps; including the seven-step blank entry gives 66,804 raw TM steps from the #490 blank tape.
