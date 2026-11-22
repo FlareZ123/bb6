@@ -243,7 +243,7 @@ for a finite integer (M_d). The (K)-length of (mathcal W) is
 [
 \frac{53}{2048}2^a.
 ]
-More strongly, any fixed open subinterval around (x_0=79/50) has (K)-length proportional to (2^a). Along (a=15+162n), this length tends to infinity. Therefore, for all sufficiently large (a) in this progression, the required residue cylinder modulo (L_d) has a representative with (x\) in that open subinterval. All source-band limits used above are then uniform for the finitely many stages (i\le d).
+More strongly, any fixed open subinterval around (x_0=79/50) has (K)-length proportional to (2^a). The base class (K_0(a)\pmod{486}) exists for every odd (a), and this length tends to infinity through odd (a). Therefore, for all sufficiently large odd (a), the required Hensel residue cylinder modulo (L_d) has a representative with (x) in that open subinterval. All source-band limits used above are then uniform for the finitely many stages (i\le d).
 
 This supplies the required (K\inmathcal W) and completes the finite-depth construction.
 
@@ -261,4 +261,4 @@ The recursion (2)–(4), not this finite sample, is the proof of arbitrary depth
 
 ## Consequence
 
-The K3 high-(Y) non-high third-lift class (a\equiv15\pmod{162}), (K\equiv219\pmod{486}) has arbitrarily deep odd-parent ancestry as the parameters vary. Therefore the claimed immediate parentlessness of this class is false, and a bounded-depth argument uniform in (a) cannot close it. The original 79/81 root-exclusion claim still requires a separate analysis of all reverse branches for each fixed parameter; this theorem does not imply root reachability.
+The unique third-lift class with (9\mid Z_0) has arbitrarily deep odd-parent ancestry for every sufficiently large odd (a). For (a\equiv0,1\pmod3), this class is one of the two non-high (Y\bmod27) lifts previously counted as excluded; for (a\equiv2\pmod3), it is the high-Y survivor. Thus the old 79/81 count is not a count of proved root exclusions for two-thirds of odd (a) classes. This construction does not imply root reachability for any fixed target, and the full fixed-parameter reverse cones remain open.
