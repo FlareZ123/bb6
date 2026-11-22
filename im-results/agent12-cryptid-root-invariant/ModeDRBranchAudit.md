@@ -1,6 +1,6 @@
 # Pinned-source audit: the DR and DL right-head branches are different
 
-> **Mirror correction — 2026-11-22:** The detailed macro-21,810 token event and subsequent `D_n` trace below are for the synthetic #85 trajectory starting at `DR(L=[0,0],R=[1])`; they are not the #490 blank-root path. The #490 wrapper defines `evalStackCfg m L R = mirrorCfg f (W.evalStackCfg m R L)`. Thus its blank-start seed `DR(L=[0,0],R=[1])` corresponds to #85 `DR(L=[1],R=[0,0])`. The correct mirrored #85 simulation has an immediate `tok_CR_1_0_closed` event at macro 0 and does not reach `D_0(540)` at macro 22,099. The old blank-root raw total 66,804 and all claimed root connections through `D_{484}(1)` are withdrawn. The branch-level audit of #85 itself remains useful.
+> **Mirror cancellation correction — 2026-11-22 (Agent 35):** The two stack-argument reversals cancel. #85 defines `evalStackCfg .DR_n_n L R = cfg_DR_n_n R L`, while `ClosedStackSystem.mirror` calls the source evaluator with `R,L`. Hence #490 `evalStackCfg .DR_n_n L R = mirrorCfg f (cfg_DR_n_n L R)`. The seven-step #490 blank-entry theorem therefore corresponds to #85 `cfg_DR_n_n [0,0] [1]`, with the same projected list order. The no-swap macro-21,810 token event and subsequent `D_n` trace are on the actual blank-root route. The previous withdrawal and the swapped `successor490` implementation are retracted.
 
 **Status:** source-derived branch correction plus reproducible V8 computation. This is intermediate research, not a Lean theorem or an original-machine nonhalting proof.
 
@@ -14,16 +14,16 @@ In `BusyBeaver/BB6/Accelerations/M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.lea
 - `mode_DL_0_n_closed`, lines 982–1006, splits the right-head first coordinate using `rcases r1 with _ | _ | r5`: 0, 1, and at least 2. Its r1=1 case (lines 994–999) invokes `tok_DR_2_0_closed`.
 - `mode_DR_n_n_closed`, lines 1008–1064, instead uses `rcases r1 with _ | r5`: 0 versus positive. The r1=0,a1=0 case (1030–1038) invokes `tok_DR_2_0_closed`; r1=0,a1>0 invokes `tok_CR_1_0_closed`. In the positive branch, a1=0 takes the ordinary four-step DR transition at lines 1049–1056, and a1>0 takes the ordinary three-step CR transition at lines 1057–1064. In particular r1=1 is ordinary, not token-normalized.
 
-The #490 wrapper does change the stack orientation. In the #85 source, `evalStackCfg .DR_n_n L R = cfg_DR_n_n R L` (lines 203–207). `ClosedStackSystem.mirror` defines the transported evaluator as `mirrorCfg f (W.evalStackCfg m R L)` (Stack.lean, lines 504–518). Therefore #490 `DR(L=[0,0],R=[1])` corresponds to #85 `DR(L=[1],R=[0,0])`, not the same ordered pair of stacks.
+The #490 evaluator is `mirrorCfg f (W.evalStackCfg m R L)`; the #85 evaluator itself is `cfg_DR_n_n R L`. Substitution gives #490 `evalStackCfg .DR_n_n L R = mirrorCfg f (cfg_DR_n_n L R)`, so the stack arguments are preserved at the `cfg_DR_n_n` layer.
 
-The actual #490 first successor is the mirror of the #85 `tok_CR_1_0_closed` branch:
+The actual #490 first successor is the mirror of the ordinary #85 DR branch for `L=[(0,0),(0,0)]`, `R=[(1,0)]`:
 
 | #490 outer successor | State | Evidence |
 |---:|---|---|
 | 0 | DR([0,0], [1]) | exact 7-raw-step blank entry |
-| 1 | CR([1], [0,0,0,1]) | V8 mirror of #85 `DR([1],[0,0])` token closure |
+| 1 | DR([0], [1,0]) | ordinary (a_1=0,r_1=1>0) branch, four raw steps |
 
-The following table is only the synthetic unmirrored #85 trajectory starting at `DR([0,0],[1])`; it is not the blank-root trace:
+The following table is the no-swap #85 `cfg_DR_n_n` trajectory and is the projected stack trace of the #490 blank root:
 
 The alleged 19-step closure from the root seed is the `mode_DL` r1=1 case misapplied to `mode_DR`.
 
@@ -58,9 +58,9 @@ I reran the persistent-list successor in the available V8 runtime with the sourc
 | 1,131,748 | first DR/G/B growth seed |
 | 1,153,484 | DR(L=G, R=[1] ++ B ++ T), after 286 growth repetitions |
 
-In the synthetic #85 trace, at macro 21,810 the `DL` right-head-1 token closure has input `r3=[]` and `L=0^267 ++ [1]`. The source formula
+In the blank-root-connected projected trace, at macro 21,810 the `DL` right-head-1 token closure has input `r3=[]` and `L=0^267 ++ [1]`. The source formula
 `closeTokDR(r3,0^n ++ [1]) = CR(L=0^(n+4) ++ [1], R=bump(r3))`
-therefore gives `CR(L=0^271 ++ [1],R=[1])` at macro 21,811. This is the exact c=2 corridor token event, not an ordinary DR right-head-1 branch. The token closure costs exactly 1,637 raw steps: the DL branch's `tExecute 4`, 267 `tok_DR_zero` steps at 4 each, one `tok_DR_1_nil_28` at 28, 268 `tok_EL_1` steps at 2 each, and one `tok_EL_exit_zero` at 1. The 21,810 ordinary outer successors before the closure cost 64,565 raw TM steps; the 288 ordinary successors after it cost 595 raw steps to `D_0(540)`. From the synthetic #85 seed, the trace to `D_0(540)` costs 66,797 raw steps; this is not a blank-root total.
+therefore gives `CR(L=0^271 ++ [1],R=[1])` at macro 21,811. This is the exact c=2 corridor token event, not an ordinary DR right-head-1 branch. The token closure costs exactly 1,637 raw steps: the DL branch's `tExecute 4`, 267 `tok_DR_zero` steps at 4 each, one `tok_DR_1_nil_28` at 28, 268 `tok_EL_1` steps at 2 each, and one `tok_EL_exit_zero` at 1. The 21,810 ordinary outer successors before the closure cost 64,565 raw TM steps; the 288 ordinary successors after it cost 595 raw steps to `D_0(540)`. From the stack seed, the trace to `D_0(540)` costs 66,797 raw steps; adding the seven-step blank entry gives 66,804 raw steps from blank.
 
 Here `D_n(c) = CR(L=[0], R=0^(4n+5) ++ [c])`,
 `G=[0,0,1,0,1,0,0,0,0,1]`, and
