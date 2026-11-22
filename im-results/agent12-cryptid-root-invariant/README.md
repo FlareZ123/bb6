@@ -131,3 +131,27 @@ independent implications.
 The million-step root trace still satisfies the predicate actually checked by
 the script. That is a statement about this finite trace only. Do not promote
 the current predicate to a proof or use it to claim nonhalting.
+
+
+## Raw-state correspondence and first-branch audit
+
+The four mode names are not four distinct target-machine states. In the base
+#85 source, CR uses C, EL uses E, and both DL and DR use D with opposite head
+orientations. Under the state permutation and tape mirror in the #490 wrapper,
+the corresponding #490 raw states are:
+
+- CR: state C, head-left;
+- EL: state B, head-right;
+- DL: state A, head-right (with the extra leading-zero side);
+- DR: state A, head-left.
+
+This is why the raw-prefix parser uses q2 for CR, q1 for EL, and q0 with
+different head orientations for DL and DR.
+
+The upstream mode_DR_n_n_closed source split also resolves the first root
+branch: at DR(L=[0,0],R=[1]), both lists are nonempty, L.head=0 and R.head=1.
+The source takes the four-step branch to DR(L=[0],R=[1,0]). The
+tok_CR_1_0_closed branch instead requires R.head=0 and L.head>0. A statement
+in ASectionStackEncoding.md about a first root-to-token checkpoint therefore
+needs an explicit later macro/raw location or a different argument
+orientation; Agent 32 was asked to reconcile it with the source cases.
