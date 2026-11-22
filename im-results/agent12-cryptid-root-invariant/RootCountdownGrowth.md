@@ -1,86 +1,31 @@
-# Root countdown and growth family
+# Root countdown and growth family — withdrawn candidate
 
-**Status: source-transcribed candidate, not a formal nonhalting proof.** The previous blanket withdrawal of this construction was based on a misreading of `mode_DR_n_n_closed`. In the pinned #85 source, `mode_DR` tokenizes only right-head 0; positive right heads, including 1, take the ordinary branch. The separate `mode_DL` rule is the one that splits right-head 0, 1, and ≥2. See [ModeDRBranchAudit.md](./ModeDRBranchAudit.md).
+**Critical withdrawal (2026-11-22):** The projected CR transition function used by the old root replay was mistranscribed. Its CR-left-prefix `1,0`, `1,1`, and `1,≥2` branches do not match pinned #85 source `mode_CR_n_n_closed` lines 928–953; its empty-list bump also disagrees with `bumpPairHead`. The 76-step growth macro and all later root checkpoints built from that simulator are withdrawn. See [the correction broadcast](../../communications/broadcast/20261122T0813Z_agent12-critical-CR-branch-withdrawal.md).
 
-All macro indices below count **outer stack successors**. Raw TM-step costs are stated separately and derived from the source `execute n` branches. The initial #490 blank-root prefix reaches the #85-oriented seed `DR(L=[0,0],R=[1])` after 7 raw TM steps.
+## Confirmed #490/#85 orientation and initial root steps
 
-## #490 mirror cancellation and projected root checkpoints
+The #490 wrapper's two evaluator argument reversals cancel: for every stack mode `m`, `#490.evalStackCfg m L R = mirrorCfg f (#85.cfg_m L R)`. The state map is `f = ![5,4,2,0,1,3]`. This source-level orientation result remains valid.
 
-The #490 wrapper's evaluator is `mirrorCfg f (W.evalStackCfg m R L)`, while #85's evaluator is `cfg_DR_n_n R L`. Therefore the two stack-argument reversals cancel:
-`#490.evalStackCfg .DR_n_n L R = mirrorCfg f (cfg_DR_n_n L R)`.
-The seven-step blank-entry theorem reaches the mirror of #85 `cfg_DR_n_n [0,0] [1]`; the projected lists are not swapped before applying the #85 `cfg_DR_n_n` transition clauses.
+The #490 blank-entry theorem gives the seven-raw-step entry to the mirror of #85 `DR(L=[0,0],R=[1])`. The first two #85 DR successors are also source-checked ordinary branches:
+- at raw time 7: `DR(L=[0,0],R=[1]));
+- right head 1 / left head 0 uses `execute 4`, reaching `DR(L=[0],R=[1,0])) at raw time 11;
+- the next right-head-1 / left-head-0 branch uses `execute 4`, reaching `DR(L=[],R=[1,0,0])) at raw time 15.
 
-The first source successor is the ordinary DR branch (a_1=0,r_1=1>0), costing four raw steps and taking `DR([0,0],[1])` to `DR([0],[1,0])`. The first token event is the DL right-head-1 closure at macro 21,810. The no-swap projected replay then reaches:
-- macro 22,099: `D_0(540)`;
-- macro 155,299: `D_180(0)`;
-- macro 156,780: `D_0(1453)`;
-- macro 1,103,484: `D_484(1)`;
-- macro 1,113,215: `H(1939)`;
-- macro 1,131,748: first `DR/G/B` right-insertion seed.
+No later projected root checkpoint in the old simulator is currently trusted. The corrected #490/D0 raw-time-36 alignment recorded in `DeepMindStackReduction.md` is an independent checkpoint; the full continuation from raw time 15 must be recomputed with source-accurate branches.
 
-## Blank-root-connected projected prefix
+## Withdrawn projected root prefix
 
-At macro 21,810 the state is `DL(L=0^267 ++ [1], R=[1])`. The DL right-head-1 branch invokes the DR token closure with `r3=[]`.
-The source-exact token identity `closeTokDR(r3,0^n ++ [1]) = CR(L=0^(n+4) ++ [1],R=bump(r3))` gives `CR(L=0^271 ++ [1],R=[1])` at macro 21,811. This is the c=2 corridor from `Corr(263,2)` at macro 21,271. Its 556-successor identity reaches `CR(L=0^255 ++ [1],R=[33])` at macro 21,827. A further 256 outer successors reach `EL(L=[0],R=[0,546])` at macro 22,083; 16 more reach `D_0(540)` at macro 22,099.
+The old `fast_root_stack_sim.js` and `verify_root_corridor_macro.js` use the incorrect CR branches. Consequently, their macro indices, token-event location, 1,131,748-step prefix, 1,153,484 growth seed, and all derived reset/corridor/H/growth counts are untrusted. In particular, the old claim of a root-connected 76-step right-insertion macro is false as a source-projection claim. The current `RootRightGrowthMacro.append.lean` and its config-normalization patch target that invalid endpoint; do not compile or cite them as a proof.
 
-The token closure has an exact source-step count. The DL right-head-1 branch first executes 4 raw steps to enter `tok_DR`; the closure then uses 267 `tok_DR_zero` applications (4 each), one `tok_DR_1_nil_28` (28), 268 `tok_EL_1` applications (2 each), and one `tok_EL_exit_zero` (1):
+## Surviving D-countdown recurrence
 
-```text
-4 + 267·4 + 28 + 268·2 + 1 = 1,637 raw TM steps.
-```
+The independent direct (D_n(c)) factorization uses only CR-left-zero and CR-empty, plus ordinary EL/DL/DR branches; it does not use any of the mistranscribed CR-left-one branches. It survives the specific CR correction and is preserved in [RootCountdownSweep.md](./RootCountdownSweep.md). Its quantified Lean proof and #490 mirror lift remain outstanding. The earlier shared-corridor derivation and its 180/484 regression counts were produced by the incorrect simulator and are not evidence for the recurrence.
 
-The 21,810 ordinary successors before the token closure cost 64,565 raw TM steps. The 288 ordinary successors after the closure cost 595 raw steps to `D_0(540)`. Thus the stack seed to `D_0(540)` costs 66,797 raw steps; adding the seven-step blank-entry theorem gives **66,804 raw TM steps from blank**. This is a DL right-head-1 closure; it does not contradict the separate rule that DR right-head 1 is ordinary.
+## Withdrawn reset/corridor/H/growth archive
 
-## Blank-root-connected #85-orientation countdown
+The following sections are retained as historical experimental material only. Their root connectivity and macro counts were computed with the incorrect CR projection and must not be used. Recompute them from the pinned source after correcting every projected branch.
 
-Define
-
-```text
-D_n(c) = CR(L=[0], R=0^(4n+5) ++ [c]).
-```
-
-The candidate countdown identity is
-
-```text
-S^(8n+24)(D_n(c)) = D_(n+1)(c-3),   c >= 3.
-```
-
-This identity follows algebraically from the shared-corridor family. Set `r=4n+3`. Then `D_n(c)` is the shared-corridor output `S^(r+1)(Corr(r,c))`. The c≥3 corridor macro takes `Corr(r,c)` to `Corr(r+4,c-3)` in `2r+14` successors; the latter reaches `D_(n+1)(c-3)` in `r+5` more successors. Removing the initial `r+1` shared-corridor segment leaves
-
-```text
-(2r+14) - (r+1) + (r+5) = 2r+18 = 8n+24.
-```
-
-### Direct source-branch factorization
-
-There is a second, more local proof route that avoids the intermediate `Corr` family. Write `0` for pair `(0,0)`, `1` for pair `(1,0)`, and use the first-coordinate stack notation. For every `n≥0,c≥3`, the no-swap source clauses factor the countdown as follows:
-
-| Phase | Outer successors | Raw TM steps | Endpoint |
-|---|---:|---:|---|
-| Fixed prefix | 8 | 21 | `EL(L=[0,1], R=0^(4n+6)++[c])` |
-| EL zero sweep | `4n+6` | `8n+12` | `EL(L=0^(4n+7)++[1], R=[c])` |
-| EL-positive then DL-positive | 2 | 5 | `DR(L=0^(4n+7)++[1], R=[1,c-3])` |
-| DR zero sweep | `4n+7` | `16n+28` | `DR(L=[1], R=[1]++0^(4n+7)++[c-3])` |
-| Final DR-positive/positive | 1 | 3 | `D_(n+1)(c-3)` |
-| **Total** | **`8n+24`** | **`24n+69`** | |
-
-The fixed eight-successor prefix has source branch costs `2,2,1,4,4,1,1,6`: CR-left-zero, CR-empty, EL-positive, DL-right-at-least-two, DR-left-zero/right-one, DR-empty-left, EL-right-one, and DL-right-zero. Their sum is 21. The `EL` sweep repeats the ordinary EL-right-zero branch (`execute 2`) exactly `4n+6` times. The two middle branches cost 1 and 4. The `DR` sweep repeats the ordinary DR-left-zero/right-one branch (`execute 4`) exactly `4n+7` times. The final DR-positive/positive branch costs 3. No token-normalizer branch occurs anywhere in this factorization.
-
-This reduces a quantified Lean proof to three components: the fixed eight-branch prefix with an untouched suffix, an inductive EL-zero sweep, and an inductive DR-zero sweep. The sweep induction steps are exactly the two source branches just identified; their stack-list equations are `EL(L,0::R) -> EL(0::L,R)` and `DR(0::L,1::R) -> DR(L,1::0::R)`. Compose these with the EL-positive, DL-positive, and final DR-positive/positive branches. This is a proof architecture, not yet a compiled theorem. For the original #490 target, prove these paths in the #85 module and transport them with pinned Stack.lean's `reachesPlus_mirrorCfg` (lines 359–365): the cancelled evaluator reversals give `#490.evalStackCfg m L R = mirrorCfg f (#85.cfg_m L R)`. The blank-entry theorem supplies the same #85 stack coordinates, so this transport preserves the root connection.
-
-The checked-in regression harness samples n=0,…,6 and c in {3,4,5,10,540}. An independent persistent-list replay additionally checked all 180 first-countdown and 484 second-countdown instances used by the blank-root chain. A separate source-transcribed execution of the direct phase factorization for n=0,1,2 matched every displayed phase endpoint and the predicted outer/raw totals. The raw-cost formula is still not a quantified Lean theorem.
-
-The root replay gives:
-
-| Macro index | State |
-|---:|---|
-| 22,099 | D_0(540) |
-| 153,843 | D_179(3) |
-| 155,299 | D_180(0) |
-
-The first countdown has 180 applications, 133,200 outer successors, and 399,060 raw steps.
-
-## Blank-root-connected reset and second countdown
+## WITHDRAWN reset and second-countdown candidate
 
 The reset follows from the c=0 corridor macro. Since `D_180(0)=S^724(Corr(723,0))`, and `Corr(723,0)` reaches `Corr(3,1453)` in `3·723+32=2201` successors, followed by the 4-successor shared corridor to `D_0(1453)`, the remaining path from `D_180(0)` is
 
@@ -104,7 +49,7 @@ Its raw-step total from the sampled formula is 2,838,660. Thus the D_0(540)-to-D
 
 The raw formula `24n+69` and its countdown aggregates remain computational/source-transcribed until the quantified corridor lemma is kernel-checked. From the stack seed, the projected costs are 3,307,502 to `D_484(1)`, 3,401,058 to the first DR/G/B seed, and 3,473,702 to the macro-1,153,484 checkpoint. Add seven raw steps for the blank-entry theorem: the corresponding blank-root totals are 3,307,509; 3,401,065; and 3,473,709.
 
-## Blank-root-connected c=1 corridor to H(1939)
+## WITHDRAWN c=1 corridor candidate
 
 Write
 
@@ -126,7 +71,7 @@ Here `(10)^j` means j repetitions of the pair `[1,0]`. Since `D_484(1)` is the s
 
 No token-normalizer call occurs in these three segments. The finite corridor regression checks r=1,…,8; the r=1939 instance is separately replayed.
 
-## Blank-root-connected H-family entry into the DR/G/B growth family
+## WITHDRAWN H-family entry candidate
 
 Let
 
@@ -193,7 +138,7 @@ It costs **591 raw TM steps**, with no token-normalizer calls. The regression te
 | DR, left tail nil | 2 | 1 | 2 |
 | **Total** | **179** | | **591** |
 
-### Applying the family to the root
+### WITHDRAWN application to the root
 
 Since `1939 = 4·484 + 3`, apply the padding macro 483 times:
 
@@ -216,7 +161,7 @@ Thus the first root-connected DR/G/B seed is reached from `D_484(1)` after **28,
 
 The earlier 50,000-successor checkpoint is later than this first entry: it is the first seed followed by 286 repetitions of the 76-successor insertion macro. Those repetitions add 21,736 outer successors and 72,644 raw steps, giving the previously recorded macro 1,153,484 state with right-list length 7,330. The full D_484(1)-to-checkpoint segment costs 166,200 raw steps.
 
-## Projected #85 tail-parametric growth
+## WITHDRAWN projected #85 tail-parametric growth
 
 The candidate insertion identity is
 
@@ -231,7 +176,7 @@ The checked-in regression tests seven numeric suffixes plus an opaque object suf
 
 If the countdown, reset, c=1 corridor, H-padding, H-base, and DR/G/B insertion identities are proved against the pinned source, their composition yields an infinite projected stack orbit from the blank-root seed. The source-transcribed computations are not yet kernel-checked Lean proofs or an original-TM nonhalting theorem.
 
-## Exact Lean source target and raw-step semantics
+## Source target and encoding facts (macro theorem withdrawn)
 
 The intended original-source proof target is the real #490 wrapper module at upstream `google-deepmind/cryptids` commit `3647718b5df22e1a61462dec0376bd204526285a`:
 
@@ -255,7 +200,7 @@ def closedStackSystem : ClosedStackSystem target :=
     M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.encLeft_eq_encRight hM
 ```
 
-The #85 stack type is `StackTuple 2 = ℕ × ℕ`. Its `closedStackSystem` sets `dSym=1`, `sSym=0`, and all eight parameters `strideL,offsetL,sepL,maxSepL,strideR,offsetR,sepR,maxSepR` to 1. Hence each pair `(a,b)` encodes `1^(a+1)0^1`, because `stackSepLen 1 1 b = 1` independently of b. The second coordinate is semantically ignored by the tape encoding; the JS first-coordinate stack simulator is therefore exact for arbitrary pair-list suffixes, not merely suffixes with second coordinate zero.
+The #85 stack type is `StackTuple 2 = ℕ × ℕ`. Its `closedStackSystem` sets `dSym=1`, `sSym=0`, and all eight parameters `strideL,offsetL,sepL,maxSepL,strideR,offsetR,sepR,maxSepR` to 1. Hence each pair `(a,b)` encodes `1^(a+1)0^1`, because `stackSepLen 1 1 b = 1` independently of b. The second coordinate is semantically ignored by the tape encoding. However, the checked-in JS transition function is not source-exact: its CR branches and empty-list bump were mistranscribed. Do not infer correctness of a simulator merely from the encoding projection.
 
 The same #490 file contains `init_reaches_nontrivial`, the exact 7-raw-step blank-start entry to `closedStackSystem.evalStackCfg .DR_n_n [(0,0),(0,0)] [(1,0)]`. Thus the mirrored #490 target is not an assumed path: it is an actual upstream source module with an explicit transition-table and stack-system mirror from #85.
 
@@ -263,14 +208,14 @@ In this #490 module, `execute n` is a local tactic macro that iterates n raw `Re
 
 The natural append target for proving the H-padding, H-base, and DR/G/B raw lemmas is this #490 wrapper, reusing its actual `closedStackSystem`, `target`, and `execute` definitions. The evaluator composition already lifts the same `cfg_DR_n_n L R` stack arguments through the mirror; the #85-side formulas are therefore root-connected at the source-transcribed stack level. The remaining task is to formalize the parametric macros and their composition against this #490 target. The existing manual workflow `.github/workflows/agent32-hphase-growth-macro.yml` checks out the same upstream commit and builds this exact module. Its current Lean pin is v4.35.0-rc4; the uploaded local Lean 4.36.0-rc2 preflight has not succeeded in this runtime, so no CI dispatch is claimed.
 
-## Reproducibility and proof obligations
+## Reproducibility status after CR correction
 
-- [`fast_root_stack_sim.js`](./fast_root_stack_sim.js) is the persistent-list root replay.
-- [`verify_root_corridor_macro.js`](./verify_root_corridor_macro.js) checks the source branch, corridor samples, token closures, countdown samples and costs, reset, c=1 corridor, H-padding and H-base macros, root entry, 76-step insertion, and raw-step totals.
+- [`fast_root_stack_sim.js`](./fast_root_stack_sim.js) is the historical persistent-list replay; it uses the incorrect CR projection and is withdrawn.
+- [`verify_root_corridor_macro.js`](./verify_root_corridor_macro.js) checks the same incorrect projected transition function; its macro and root-path assertions are withdrawn.
 - [`ModeDRBranchAudit.md`](./ModeDRBranchAudit.md) records the pinned-source branch distinction and the recovered root path.
 - [`RootCorridorMacro.md`](./RootCorridorMacro.md) contains the shared-corridor and c=1 family identities underlying the entry.
 
-No Lean compile or transitive axiom audit is claimed. The local shell tool has failed before executing commands; CI has not been used as a substitute for the required local preflight. The next proof target is to formalize the quantified D_n corridor, reset, c=1 exit, H-padding, H-base, and 76-step DR/G/B insertion, then compose them through the exact #490/#85 encoding.
+No Lean compile or transitive axiom audit is claimed. The local shell tool has failed before executing commands. The next valid proof target is the source-accurate D_n recurrence in RootCountdownSweep.md; independently correct and audit the full projected transition function before attempting any root continuation. The previous 76-step macro theorem target is invalid even though the isolated `root_evalStackCfg_DR` definitional equation remains correct.
 
 
 ### 2026-11-22 correction to the extra-swap left-insertion route
