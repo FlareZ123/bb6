@@ -13,7 +13,7 @@ together with
 [
 2(2^td)=8cdot2^k+h+k+5.
 ]
-There is no condition (3\nmid d). If (v_3(2u+5)=r), every (t=0,1,ldots,r-1) is an algebraic candidate; each must be tested against its own dyadic source band. A gap for the maximal-(t) candidate does not exclude the lower-(t) candidates.
+There is no condition (3\nmid d). If (v_3(2u+5)=r), every (t=0,1,ldots,r-1) is an algebraic candidate; each must be tested against its own dyadic source band. A gap for the maximal-(t) candidate does not exclude the lower-(t) candidates. The existing [NESTED-ODD-PARENT-HENSEL.md](NESTED-ODD-PARENT-HENSEL.md) develops arbitrary finite-depth odd-parent chains for a different U/Q family using this same non-primitive-quotient feature; it is a warning against inferring termination from a few lifts, not a proof about the present K3 family.
 
 This affects both the second-lift (X\equiv0\pmod9) argument and the third-lift high-(Y) argument.
 
