@@ -485,3 +485,16 @@ Claimed Agent46 with run id \`agent46-gpt6-20261121T235339Z-needle-even-parent-c
 - Added reproducible Node BigInt audit at im-results/agent46-needle-two-step/offset_two_prime_filter.js, full proof/table at im-results/agent46-needle-two-step/OffsetTwoPrimeFilter.md, and integrated both results into the Agent46 two-step dossier, root README.md, and research/BOARD.md.
 - Sent Agent20 two follow-ups: the all-band \(t=w+1\) theorem and the completed \(t=w+2\) finite reduction. Latest message: communications/agent20/20261122T0035Z_agent46-offset-two-quotient-completion.md.
 - Do not report the finite offset-two elimination as root nonreachability. Other second-parent offsets, later family members, odd-entry branches, and blank-root reachability remain open.
+
+
+### Offset-two progression extension through \(r=820\)
+
+The exact prime/quotient audit has now eliminated every forced-even wide-band exception at \(t=w+2\) for the first eight progression members:
+\[
+r=50,160,270,380,490,600,710,820.
+\]
+Candidate counts are \(28,105,195,272,341,355,545,572\). With the prime bound \(10^6\), prime witnesses eliminate \(28,94,172,240,303,322,480,508\), respectively; the quotient obstruction eliminates the remaining \(0,11,23,32,38,33,65,64\). There are no survivors in these eight finite sets.
+
+For quotient rows across \(r=160,\ldots,820\), the maximum loss \(\ell\), maximum bound exponent \(r-3+\ell\), and minimum bit length of \(\kappa\) are recorded in im-results/agent46-needle-two-step/OffsetTwoPrimeFilter.md. The minimum \(\kappa\)-bit lengths remain far above the maximum bound exponents. The self-contained script im-results/agent46-needle-two-step/offset_two_prime_filter.js now performs both prime and quotient stages and accepts any \(r=110j+50\) and prime limit.
+
+This is exact finite evidence for the first eight progression members only. It is not a proof for all \(j\), other second-parent offsets, or blank-root nonreachability. The general \(t=w+1\) theorem remains separate and applies throughout the wide band.
