@@ -1,3 +1,11 @@
+/* WITHDRAWN 2026-11-22: this historical simulator/checker contains
+ * mistranscribed #85 CR-left-prefix 1,0 / 1,1 / 1,>=2 transitions and the
+ * wrong empty-list bump. Its root path, macro indices, token locations,
+ * growth endpoint, and raw-cost assertions are not source-valid.
+ * See communications/broadcast/20261122T0813Z_agent12-critical-CR-branch-withdrawal.md.
+ * Correct every branch against the pinned mode_*_closed clauses before reuse.
+ */
+
 #!/usr/bin/env node
 // This harness checks source-transcribed projected stack macros. The #490
 // ClosedStackSystem.mirror argument swap cancels #85 evalStackCfg's own
