@@ -122,7 +122,7 @@ Two short parametric macros replace the earlier 50,000-successor finite entry.
 S^38(H(r+4;R)) = H(r; Q ++ Q ++ R)
 ```
 
-for r≥0 and arbitrary finite right suffix R. This macro costs **128 raw TM steps**, makes no token-normalizer call, and removes four `[1,0]` pairs from the left stack while prepending two Q blocks to the right. The checked-in regression tests r=0,…,7,11,1935 with several distinct suffixes, including an opaque object suffix. As with H-base, the current V8 suffix tests exercise numeric first-coordinate tails (second coordinate zero) and an opaque sentinel; arbitrary nonzero second coordinates remain for the Lean source proof. The branch histogram is constant across the tested r and R values:
+for r≥0 and arbitrary finite right suffix R. This macro costs **128 raw TM steps**, makes no token-normalizer call, and removes four `[1,0]` pairs from the left stack while prepending two Q blocks to the right. The checked-in regression tests r=0,…,7,11,1935 with several distinct suffixes, including an opaque object suffix. The #85 closed-stack encoding has all eight hparams equal to 1, so the second coordinate of every StackTuple(2) pair is ignored by the tape encoding; the first-coordinate V8 simulator therefore covers arbitrary pair-list suffixes. The branch histogram is constant across the tested r and R values:
 
 | Source branch | Count | Cost | Subtotal |
 |---|---:|---:|---:|
@@ -146,7 +146,7 @@ S^179(H(7; [a] ++ T))
   = DR(L=G, R=[1] ++ B ++ [16,0,0,0] ++ Q^3 ++ [a] ++ T).
 ```
 
-Here `[a]` denotes the pair-stack head `[(a,0)]`. The Lean target takes T as a finite pair-list suffix; the current V8 tests cover numeric first-coordinate tails (second coordinate zero) and an opaque sentinel, while arbitrary nonzero second coordinates remain to be discharged by the source proof. The root application has `[a]=[(12,0)]` because its right stack begins with Q.
+Here `[a]` denotes the pair-stack head `[(a,0)]`. The Lean target takes T as an arbitrary finite pair-list suffix. Since the #85 closed-stack encoding has all eight hparams equal to 1, the second coordinate of each StackTuple(2) pair is ignored; the first-coordinate V8 tests therefore cover the full pair-list encoding. The root application has `[a]=[(12,0)]` because its right stack begins with Q.
 
 with
 
@@ -233,6 +233,8 @@ def closedStackSystem : ClosedStackSystem target :=
   M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.closedStackSystem.mirror f
     M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.encLeft_eq_encRight hM
 ```
+
+The #85 stack type is `StackTuple 2 = ℕ × ℕ`. Its `closedStackSystem` sets `dSym=1`, `sSym=0`, and all eight parameters `strideL,offsetL,sepL,maxSepL,strideR,offsetR,sepR,maxSepR` to 1. Hence each pair `(a,b)` encodes `1^(a+1)0^1`, because `stackSepLen 1 1 b = 1` independently of b. The second coordinate is semantically ignored by the tape encoding; the JS first-coordinate stack simulator is therefore exact for arbitrary pair-list suffixes, not merely suffixes with second coordinate zero.
 
 The same #490 file contains `init_reaches_nontrivial`, the exact 7-raw-step blank-start entry to `closedStackSystem.evalStackCfg .DR_n_n [(0,0),(0,0)] [(1,0)]`. Thus the mirrored #490 target is not an assumed path: it is an actual upstream source module with an explicit transition-table and stack-system mirror from #85.
 
