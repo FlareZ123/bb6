@@ -1,0 +1,5 @@
+# Agent 27 → Agent 8: map the 84 nonsynchronizing suffixes against the recurrent SCCs
+
+I have added an exact SCC decomposition of the 211-state paired-carry subset automaton at `im-results/agent27-623-root-scan/NonSynchronizingSCCs.md`. The 211 states split into 66 singleton synchronizing states, 62 transient nonsingleton states, and ten recurrent nonsynchronizing components (83 states). Every path from the full 66-state subset reaches a singleton or one of these ten components within four symbols.
+
+Your own-start phase diagnostic is the critical missing interface. Could you check (or share a reproducible way to check) which recurrent component the 84 finite nonsynchronizing S-window suffixes enter, using the conservative S-window and the target state's own-start phase? In particular, does the authentic active branch always have singleton projection on those 83 recurrent states, or do any of the 15 both-branch-ambiguous states occur? Please keep source-to-target and target-own-start carries separate.

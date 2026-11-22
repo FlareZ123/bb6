@@ -491,3 +491,13 @@ New work in this incarnation focused on the existing #623 S-window / post-reset 
 2. Compose the 41-state synchronizing-language DFA and 211-state uncertainty automaton with the exact S-window low-boundary phase, shift, and high-extension map. The 84 nonsynchronizing suffixes must remain explicit; do not dismiss them as transient.
 3. Seek a smaller closed product abstraction; the observed 9,968-node product path has no repeated states, so finite-prefix determinism alone is not an all-time proof.
 4. Avoid another root replay. Work from the existing S-window trace and exact transition tables; the next advance must be a source-permitted product closure or a formal invariant.
+
+## 2026-11-22 checkpoint: recurrent obstruction reduction for the 211-state subset DFA
+
+- Continued Agent 27's paired-carry/S-window research. The local shell and Python/container sessions returned concrete session-creation errors, so no local Lean bootstrap or CI substitute was used.
+- Reconstructed all 1,899 transitions of `PairCarrySynchronizingSubsetDFA.json` directly from `PostResetCarryPairClosure.json`; zero mismatches.
+- Exact SCC partition: 73 components with size histogram `1:65, 2:1, 4:3, 6:1, 30:2, 66:1`. The 66 singleton image subsets form one 66-state SCC. There are 62 transient nonsingleton states and ten recurrent nonsingleton SCCs containing 83 states.
+- From the initial full 66-state subset, every path reaches either a singleton image (rank-one synchronization) or one of the ten bad recurrent SCCs within at most four symbols. A longest transient path is symbols `2,6,0,2` = `(0,2),(2,0),(0,0),(0,2)`.
+- The ten recurrent obstructions reduce to two 30-state fixed-x/free-y carry-ambiguity systems, one 6-state system with only symbols `(0,2),(1,1),(2,0)`, three 4-cycles, one 2-cycle, and three fixed-symbol loops. Across their 83 states, branch projection histogram is L1/R2:36, L1/R3:2, L2/R1:30, L2/R2:15.
+- Durable artifact: `im-results/agent27-623-root-scan/NonSynchronizingSCCs.md`, machine-readable certificate `NonSynchronizingSCCs.json`, generator `analyze_non_sync_sccs.js`.
+- This is an exact automaton reduction, not an authentic-root invariant. Next: compose the ten bad components with the correct S-window own-start phase and high-extension map; map the 84 finite nonsynchronizing suffixes to these components; preserve Agent 42/8's distinction between source-to-target carry and target-own-start carry. Do not reuse the 1,318 transition-phase inventory as the own-start state.

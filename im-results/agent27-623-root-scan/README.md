@@ -106,3 +106,8 @@ The independent phase extraction is now maintained at [Agent 32's actual boundar
 There are 262 observed complete phases (114 L, 148 R); ignoring sector, 30 L and 40 R previous-digit/carry states. Actual carry pairs are L ({(-2,1),(-1,0),(-1,1),(0,0)}) and R ({(-3,1),(-2,0),(-2,1),(-1,-1),(-1,0),(-1,1),(0,0)}). The phase alone is not deterministic (maximum observed successor count 25), so it is not an all-time invariant. The same directory contains the 263-state reset-pattern DFA and explicit raw-language nonclosure witnesses. These are phase diagnostics, not a new root-horizon scan or a nonhalting proof.
 
 This README remains the canonical source-faithful root trace; Agent 32's independent 20,000-step replay is the cross-check already cited above. Do not create another root scan or promote the observed sector graph to a theorem.
+
+
+## Recurrent obstruction reduction
+
+[NonSynchronizingSCCs.md](NonSynchronizingSCCs.md) gives an exact SCC decomposition of the 211-state paired-carry subset automaton. It isolates the ten recurrent nonsynchronizing components (83 states) and proves a four-symbol transient bound from the full 66-state uncertainty set. This is an automaton-level reduction; excluding these ten bad-tail languages on the authentic S-window stream remains open. Reproduce with [analyze_non_sync_sccs.js](analyze_non_sync_sccs.js).

@@ -1,0 +1,3976 @@
+{
+  "schema": "bb6-paired-carry-nonsynchronizing-scc/v1",
+  "status": "exact finite automaton structural certificate; not an authentic-root invariant",
+  "source_artifacts": [
+    "im-results/agent27-623-root-scan/PairCarrySynchronizingSubsetDFA.json",
+    "im-results/agent49-parity623/PostResetCarryPairClosure.json"
+  ],
+  "alphabet": {
+    "size": 9,
+    "encoding": "symbol=3*x+y with x,y in {0,1,2}"
+  },
+  "automata": {
+    "base_pair_carry_states": 66,
+    "subset_states": 211,
+    "initial_subset_state": 0,
+    "initial_image_size": 66,
+    "nonempty_word_max_image_size": 8
+  },
+  "transition_reconstruction": {
+    "checked": 1899,
+    "mismatches": 0,
+    "first_mismatch": null
+  },
+  "scc_partition": {
+    "total_components": 73,
+    "component_size_histogram": {
+      "1": 65,
+      "2": 1,
+      "4": 3,
+      "6": 1,
+      "30": 2,
+      "66": 1
+    },
+    "singleton_image_states": 66,
+    "singleton_image_scc_size": 66,
+    "transient_nonsingleton_states": 62,
+    "recurrent_nonsingleton_components": 10,
+    "recurrent_nonsingleton_states": 83,
+    "recurrent_nonsingleton_projection_histogram": {
+      "2/1": 30,
+      "1/2": 36,
+      "2/2": 15,
+      "1/3": 2
+    },
+    "recurrent_nonsingleton_components_detail": [
+      {
+        "label": "B1",
+        "type": "fixed-x-free-y",
+        "state_ids": [
+          10,
+          11,
+          12,
+          70,
+          71,
+          72,
+          82,
+          83,
+          84,
+          88,
+          89,
+          90,
+          115,
+          116,
+          117,
+          151,
+          152,
+          153,
+          160,
+          161,
+          162,
+          169,
+          170,
+          171,
+          181,
+          182,
+          183,
+          187,
+          188,
+          189
+        ],
+        "subset_size_set": [
+          2
+        ],
+        "projection_histogram": {
+          "2/1": 30
+        },
+        "internal_symbol_ids": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "internal_symbol_pairs": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "cycle": null,
+        "states": [
+          {
+            "id": 10,
+            "image_subset": [
+              0,
+              39
+            ],
+            "L_state_ids": [
+              7,
+              12
+            ],
+            "R_state_ids": [
+              17
+            ],
+            "L_count": 2,
+            "R_count": 1,
+            "previous_pair": [
+              0,
+              0
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 0,
+                "x": 0,
+                "y": 0,
+                "to": 10
+              },
+              {
+                "symbol": 1,
+                "x": 0,
+                "y": 1,
+                "to": 11
+              },
+              {
+                "symbol": 2,
+                "x": 0,
+                "y": 2,
+                "to": 12
+              }
+            ]
+          },
+          {
+            "id": 11,
+            "image_subset": [
+              1,
+              40
+            ],
+            "L_state_ids": [
+              32,
+              37
+            ],
+            "R_state_ids": [
+              47
+            ],
+            "L_count": 2,
+            "R_count": 1,
+            "previous_pair": [
+              0,
+              1
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 3,
+                "x": 1,
+                "y": 0,
+                "to": 82
+              },
+              {
+                "symbol": 4,
+                "x": 1,
+                "y": 1,
+                "to": 83
+              },
+              {
+                "symbol": 5,
+                "x": 1,
+                "y": 2,
+                "to": 84
+              }
+            ]
+          },
+          {
+            "id": 12,
+            "image_subset": [
+              2,
+              41
+            ],
+            "L_state_ids": [
+              57,
+              62
+            ],
+            "R_state_ids": [
+              77
+            ],
+            "L_count": 2,
+            "R_count": 1,
+            "previous_pair": [
+              0,
+              2
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 6,
+                "x": 2,
+                "y": 0,
+                "to": 88
+              },
+              {
+                "symbol": 7,
+                "x": 2,
+                "y": 1,
+                "to": 89
+              },
+              {
+                "symbol": 8,
+                "x": 2,
+                "y": 2,
+                "to": 90
+              }
+            ]
+          },
+          {
+            "id": 70,
+            "image_subset": [
+              9,
+              36
+            ],
+            "L_state_ids": [
+              157,
+              162
+            ],
+            "R_state_ids": [
+              188
+            ],
+            "L_count": 2,
+            "R_count": 1,
+            "previous_pair": [
+              2,
+              0
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 0,
+                "x": 0,
+                "y": 0,
+                "to": 151
+              },
+              {
+                "symbol": 1,
+                "x": 0,
+                "y": 1,
+                "to": 152
+              },
+              {
+                "symbol": 2,
+                "x": 0,
+                "y": 2,
+                "to": 153
+              }
+            ]
+          },
+          {
+            "id": 71,
+            "image_subset": [
+              10,
+              37
+            ],
+            "L_state_ids": [
+              182,
+              187
+            ],
+            "R_state_ids": [
+              218
+            ],
+            "L_count": 2,
+            "R_count": 1,
+            "previous_pair": [
+              2,
+              1
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 3,
+                "x": 1,
+                "y": 0,
+                "to": 169
+              },
+              {
+                "symbol": 4,
+                "x": 1,
+                "y": 1,
+                "to": 170
+              },
+              {
+                "symbol": 5,
+                "x": 1,
+                "y": 2,
+                "to": 171
+              }
+            ]
+          },
+          {
+            "id": 72,
+            "image_subset": [
+              11,
+              38
+            ],
+            "L_state_ids": [
+              207,
+              212
+            ],
+            "R_state_ids": [
+              248
+            ],
+            "L_count": 2,
+            "R_count": 1,
+            "previous_pair": [
+              2,
+              2
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 6,
+                "x": 2,
+                "y": 0,
+                "to": 70
+              },
+              {
+                "symbol": 7,
+                "x": 2,
+                "y": 1,
+                "to": 71
+              },
+              {
+                "symbol": 8,
+                "x": 2,
+                "y": 2,
+                "to": 72
+              }
+            ]
+          },
+          {
+            "id": 82,
+            "image_subset": [
+              12,
+              54
+            ],
+            "L_state_ids": [
+              82,
+              87
+            ],
+            "R_state_ids": [
+              107
+            ],
+            "L_count": 2,
+            "R_count": 1,
+            "previous_pair": [
+              1,
+              0
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 0,
+                "x": 0,
+                "y": 0,
+                "to": 10
+              },
+              {
+                "symbol": 1,
+                "x": 0,
+                "y": 1,
+                "to": 11
+              },
+              {
+                "symbol": 2,
+                "x": 0,
+                "y": 2,
+                "to": 12
+              }
+            ]
+          },
+          {
+            "id": 83,
+            "image_subset": [
+              13,
+              55
+            ],
+            "L_state_ids": [
+              107,
+              112
+            ],
+            "R_state_ids": [
+              137
+            ],
+            "L_count": 2,
+            "R_count": 1,
+            "previous_pair": [
+              1,
+              1
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 3,
+                "x": 1,
+                "y": 0,
+                "to": 115
+              },
+              {
+                "symbol": 4,
+                "x": 1,
+                "y": 1,
+                "to": 116
+              },
+              {
+                "symbol": 5,
+                "x": 1,
+                "y": 2,
+                "to": 117
+              }
+            ]
+          },
+          {
+            "id": 84,
+            "image_subset": [
+              14,
+              56
+            ],
+            "L_state_ids": [
+              132,
+              137
+            ],
+            "R_state_ids": [
+              167
+            ],
+            "L_count": 2,
+            "R_count": 1,
+            "previous_pair": [
+              1,
+              2
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 6,
+                "x": 2,
+                "y": 0,
+                "to": 181
+              },
+              {
+                "symbol": 7,
+                "x": 2,
+                "y": 1,
+                "to": 182
+              },
+              {
+                "symbol": 8,
+                "x": 2,
+                "y": 2,
+                "to": 183
+              }
+            ]
+          },
+          {
+            "id": 88,
+            "image_subset": [
+              3,
+              30
+            ],
+            "L_state_ids": [
+              157,
+              162
+            ],
+            "R_state_ids": [
+              192
+            ],
+            "L_count": 2,
+            "R_count": 1,
+            "previous_pair": [
+              2,
+              0
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 0,
+                "x": 0,
+                "y": 0,
+                "to": 187
+              },
+              {
+                "symbol": 1,
+                "x": 0,
+                "y": 1,
+                "to": 188
+              },
+              {
+                "symbol": 2,
+                "x": 0,
+                "y": 2,
+                "to": 189
+              }
+            ]
+          },
+          {
+            "id": 89,
+            "image_subset": [
+              4,
+              31
+            ],
+            "L_state_ids": [
+              182,
+              187
+            ],
+            "R_state_ids": [
+              222
+            ],
+            "L_count": 2,
+            "R_count": 1,
+            "previous_pair": [
+              2,
+              1
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 3,
+                "x": 1,
+                "y": 0,
+                "to": 160
+              },
+              {
+                "symbol": 4,
+                "x": 1,
+                "y": 1,
+                "to": 161
+              },
+              {
+                "symbol": 5,
+                "x": 1,
+                "y": 2,
+                "to": 162
+              }
+            ]
+          },
+          {
+            "id": 90,
+            "image_subset": [
+              5,
+              32
+            ],
+            "L_state_ids": [
+              207,
+              212
+            ],
+            "R_state_ids": [
+              252
+            ],
+            "L_count": 2,
+            "R_count": 1,
+            "previous_pair": [
+              2,
+              2
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 6,
+                "x": 2,
+                "y": 0,
+                "to": 70
+              },
+              {
+                "symbol": 7,
+                "x": 2,
+                "y": 1,
+                "to": 71
+              },
+              {
+                "symbol": 8,
+                "x": 2,
+                "y": 2,
+                "to": 72
+              }
+            ]
+          },
+          {
+            "id": 115,
+            "image_subset": [
+              21,
+              27
+            ],
+            "L_state_ids": [
+              82,
+              87
+            ],
+            "R_state_ids": [
+              102
+            ],
+            "L_count": 2,
+            "R_count": 1,
+            "previous_pair": [
+              1,
+              0
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 0,
+                "x": 0,
+                "y": 0,
+                "to": 10
+              },
+              {
+                "symbol": 1,
+                "x": 0,
+                "y": 1,
+                "to": 11
+              },
+              {
+                "symbol": 2,
+                "x": 0,
+                "y": 2,
+                "to": 12
+              }
+            ]
+          },
+          {
+            "id": 116,
+            "image_subset": [
+              22,
+              28
+            ],
+            "L_state_ids": [
+              107,
+              112
+            ],
+            "R_state_ids": [
+              132
+            ],
+            "L_count": 2,
+            "R_count": 1,
+            "previous_pair": [
+              1,
+              1
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 3,
+                "x": 1,
+                "y": 0,
+                "to": 115
+              },
+              {
+                "symbol": 4,
+                "x": 1,
+                "y": 1,
+                "to": 116
+              },
+              {
+                "symbol": 5,
+                "x": 1,
+                "y": 2,
+                "to": 117
+              }
+            ]
+          },
+          {
+            "id": 117,
+            "image_subset": [
+              23,
+              29
+            ],
+            "L_state_ids": [
+              132,
+              137
+            ],
+            "R_state_ids": [
+              162
+            ],
+            "L_count": 2,
+            "R_count": 1,
+            "previous_pair": [
+              1,
+              2
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 6,
+                "x": 2,
+                "y": 0,
+                "to": 70
+              },
+              {
+                "symbol": 7,
+                "x": 2,
+                "y": 1,
+                "to": 71
+              },
+              {
+                "symbol": 8,
+                "x": 2,
+                "y": 2,
+                "to": 72
+              }
+            ]
+          },
+          {
+            "id": 151,
+            "image_subset": [
+              6,
+              48
+            ],
+            "L_state_ids": [
+              7,
+              12
+            ],
+            "R_state_ids": [
+              13
+            ],
+            "L_count": 2,
+            "R_count": 1,
+            "previous_pair": [
+              0,
+              0
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 0,
+                "x": 0,
+                "y": 0,
+                "to": 10
+              },
+              {
+                "symbol": 1,
+                "x": 0,
+                "y": 1,
+                "to": 11
+              },
+              {
+                "symbol": 2,
+                "x": 0,
+                "y": 2,
+                "to": 12
+              }
+            ]
+          },
+          {
+            "id": 152,
+            "image_subset": [
+              7,
+              49
+            ],
+            "L_state_ids": [
+              32,
+              37
+            ],
+            "R_state_ids": [
+              43
+            ],
+            "L_count": 2,
+            "R_count": 1,
+            "previous_pair": [
+              0,
+              1
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 3,
+                "x": 1,
+                "y": 0,
+                "to": 115
+              },
+              {
+                "symbol": 4,
+                "x": 1,
+                "y": 1,
+                "to": 116
+              },
+              {
+                "symbol": 5,
+                "x": 1,
+                "y": 2,
+                "to": 117
+              }
+            ]
+          },
+          {
+            "id": 153,
+            "image_subset": [
+              8,
+              50
+            ],
+            "L_state_ids": [
+              57,
+              62
+            ],
+            "R_state_ids": [
+              73
+            ],
+            "L_count": 2,
+            "R_count": 1,
+            "previous_pair": [
+              0,
+              2
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 6,
+                "x": 2,
+                "y": 0,
+                "to": 181
+              },
+              {
+                "symbol": 7,
+                "x": 2,
+                "y": 1,
+                "to": 182
+              },
+              {
+                "symbol": 8,
+                "x": 2,
+                "y": 2,
+                "to": 183
+              }
+            ]
+          },
+          {
+            "id": 160,
+            "image_subset": [
+              15,
+              24
+            ],
+            "L_state_ids": [
+              82,
+              87
+            ],
+            "R_state_ids": [
+              103
+            ],
+            "L_count": 2,
+            "R_count": 1,
+            "previous_pair": [
+              1,
+              0
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 0,
+                "x": 0,
+                "y": 0,
+                "to": 10
+              },
+              {
+                "symbol": 1,
+                "x": 0,
+                "y": 1,
+                "to": 11
+              },
+              {
+                "symbol": 2,
+                "x": 0,
+                "y": 2,
+                "to": 12
+              }
+            ]
+          },
+          {
+            "id": 161,
+            "image_subset": [
+              16,
+              25
+            ],
+            "L_state_ids": [
+              107,
+              112
+            ],
+            "R_state_ids": [
+              133
+            ],
+            "L_count": 2,
+            "R_count": 1,
+            "previous_pair": [
+              1,
+              1
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 3,
+                "x": 1,
+                "y": 0,
+                "to": 160
+              },
+              {
+                "symbol": 4,
+                "x": 1,
+                "y": 1,
+                "to": 161
+              },
+              {
+                "symbol": 5,
+                "x": 1,
+                "y": 2,
+                "to": 162
+              }
+            ]
+          },
+          {
+            "id": 162,
+            "image_subset": [
+              17,
+              26
+            ],
+            "L_state_ids": [
+              132,
+              137
+            ],
+            "R_state_ids": [
+              163
+            ],
+            "L_count": 2,
+            "R_count": 1,
+            "previous_pair": [
+              1,
+              2
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 6,
+                "x": 2,
+                "y": 0,
+                "to": 70
+              },
+              {
+                "symbol": 7,
+                "x": 2,
+                "y": 1,
+                "to": 71
+              },
+              {
+                "symbol": 8,
+                "x": 2,
+                "y": 2,
+                "to": 72
+              }
+            ]
+          },
+          {
+            "id": 169,
+            "image_subset": [
+              18,
+              63
+            ],
+            "L_state_ids": [
+              82,
+              87
+            ],
+            "R_state_ids": [
+              98
+            ],
+            "L_count": 2,
+            "R_count": 1,
+            "previous_pair": [
+              1,
+              0
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 0,
+                "x": 0,
+                "y": 0,
+                "to": 187
+              },
+              {
+                "symbol": 1,
+                "x": 0,
+                "y": 1,
+                "to": 188
+              },
+              {
+                "symbol": 2,
+                "x": 0,
+                "y": 2,
+                "to": 189
+              }
+            ]
+          },
+          {
+            "id": 170,
+            "image_subset": [
+              19,
+              64
+            ],
+            "L_state_ids": [
+              107,
+              112
+            ],
+            "R_state_ids": [
+              128
+            ],
+            "L_count": 2,
+            "R_count": 1,
+            "previous_pair": [
+              1,
+              1
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 3,
+                "x": 1,
+                "y": 0,
+                "to": 160
+              },
+              {
+                "symbol": 4,
+                "x": 1,
+                "y": 1,
+                "to": 161
+              },
+              {
+                "symbol": 5,
+                "x": 1,
+                "y": 2,
+                "to": 162
+              }
+            ]
+          },
+          {
+            "id": 171,
+            "image_subset": [
+              20,
+              65
+            ],
+            "L_state_ids": [
+              132,
+              137
+            ],
+            "R_state_ids": [
+              158
+            ],
+            "L_count": 2,
+            "R_count": 1,
+            "previous_pair": [
+              1,
+              2
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 6,
+                "x": 2,
+                "y": 0,
+                "to": 70
+              },
+              {
+                "symbol": 7,
+                "x": 2,
+                "y": 1,
+                "to": 71
+              },
+              {
+                "symbol": 8,
+                "x": 2,
+                "y": 2,
+                "to": 72
+              }
+            ]
+          },
+          {
+            "id": 181,
+            "image_subset": [
+              45,
+              60
+            ],
+            "L_state_ids": [
+              157,
+              162
+            ],
+            "R_state_ids": [
+              193
+            ],
+            "L_count": 2,
+            "R_count": 1,
+            "previous_pair": [
+              2,
+              0
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 0,
+                "x": 0,
+                "y": 0,
+                "to": 151
+              },
+              {
+                "symbol": 1,
+                "x": 0,
+                "y": 1,
+                "to": 152
+              },
+              {
+                "symbol": 2,
+                "x": 0,
+                "y": 2,
+                "to": 153
+              }
+            ]
+          },
+          {
+            "id": 182,
+            "image_subset": [
+              46,
+              61
+            ],
+            "L_state_ids": [
+              182,
+              187
+            ],
+            "R_state_ids": [
+              223
+            ],
+            "L_count": 2,
+            "R_count": 1,
+            "previous_pair": [
+              2,
+              1
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 3,
+                "x": 1,
+                "y": 0,
+                "to": 160
+              },
+              {
+                "symbol": 4,
+                "x": 1,
+                "y": 1,
+                "to": 161
+              },
+              {
+                "symbol": 5,
+                "x": 1,
+                "y": 2,
+                "to": 162
+              }
+            ]
+          },
+          {
+            "id": 183,
+            "image_subset": [
+              47,
+              62
+            ],
+            "L_state_ids": [
+              207,
+              212
+            ],
+            "R_state_ids": [
+              253
+            ],
+            "L_count": 2,
+            "R_count": 1,
+            "previous_pair": [
+              2,
+              2
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 6,
+                "x": 2,
+                "y": 0,
+                "to": 70
+              },
+              {
+                "symbol": 7,
+                "x": 2,
+                "y": 1,
+                "to": 71
+              },
+              {
+                "symbol": 8,
+                "x": 2,
+                "y": 2,
+                "to": 72
+              }
+            ]
+          },
+          {
+            "id": 187,
+            "image_subset": [
+              33,
+              57
+            ],
+            "L_state_ids": [
+              7,
+              12
+            ],
+            "R_state_ids": [
+              12
+            ],
+            "L_count": 2,
+            "R_count": 1,
+            "previous_pair": [
+              0,
+              0
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 0,
+                "x": 0,
+                "y": 0,
+                "to": 10
+              },
+              {
+                "symbol": 1,
+                "x": 0,
+                "y": 1,
+                "to": 11
+              },
+              {
+                "symbol": 2,
+                "x": 0,
+                "y": 2,
+                "to": 12
+              }
+            ]
+          },
+          {
+            "id": 188,
+            "image_subset": [
+              34,
+              58
+            ],
+            "L_state_ids": [
+              32,
+              37
+            ],
+            "R_state_ids": [
+              42
+            ],
+            "L_count": 2,
+            "R_count": 1,
+            "previous_pair": [
+              0,
+              1
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 3,
+                "x": 1,
+                "y": 0,
+                "to": 115
+              },
+              {
+                "symbol": 4,
+                "x": 1,
+                "y": 1,
+                "to": 116
+              },
+              {
+                "symbol": 5,
+                "x": 1,
+                "y": 2,
+                "to": 117
+              }
+            ]
+          },
+          {
+            "id": 189,
+            "image_subset": [
+              35,
+              59
+            ],
+            "L_state_ids": [
+              57,
+              62
+            ],
+            "R_state_ids": [
+              72
+            ],
+            "L_count": 2,
+            "R_count": 1,
+            "previous_pair": [
+              0,
+              2
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 6,
+                "x": 2,
+                "y": 0,
+                "to": 88
+              },
+              {
+                "symbol": 7,
+                "x": 2,
+                "y": 1,
+                "to": 89
+              },
+              {
+                "symbol": 8,
+                "x": 2,
+                "y": 2,
+                "to": 90
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "label": "B2",
+        "type": "fixed-x-free-y",
+        "state_ids": [
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          49,
+          50,
+          51,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          100,
+          101,
+          102,
+          109,
+          110,
+          111,
+          145,
+          146,
+          147,
+          166,
+          167,
+          168
+        ],
+        "subset_size_set": [
+          2
+        ],
+        "projection_histogram": {
+          "1/2": 30
+        },
+        "internal_symbol_ids": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "internal_symbol_pairs": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "cycle": null,
+        "states": [
+          {
+            "id": 13,
+            "image_subset": [
+              12,
+              21
+            ],
+            "L_state_ids": [
+              87
+            ],
+            "R_state_ids": [
+              102,
+              107
+            ],
+            "L_count": 1,
+            "R_count": 2,
+            "previous_pair": [
+              1,
+              0
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 3,
+                "x": 1,
+                "y": 0,
+                "to": 13
+              },
+              {
+                "symbol": 4,
+                "x": 1,
+                "y": 1,
+                "to": 14
+              },
+              {
+                "symbol": 5,
+                "x": 1,
+                "y": 2,
+                "to": 15
+              }
+            ]
+          },
+          {
+            "id": 14,
+            "image_subset": [
+              13,
+              22
+            ],
+            "L_state_ids": [
+              112
+            ],
+            "R_state_ids": [
+              132,
+              137
+            ],
+            "L_count": 1,
+            "R_count": 2,
+            "previous_pair": [
+              1,
+              1
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 0,
+                "x": 0,
+                "y": 0,
+                "to": 19
+              },
+              {
+                "symbol": 1,
+                "x": 0,
+                "y": 1,
+                "to": 20
+              },
+              {
+                "symbol": 2,
+                "x": 0,
+                "y": 2,
+                "to": 21
+              }
+            ]
+          },
+          {
+            "id": 15,
+            "image_subset": [
+              14,
+              23
+            ],
+            "L_state_ids": [
+              137
+            ],
+            "R_state_ids": [
+              162,
+              167
+            ],
+            "L_count": 1,
+            "R_count": 2,
+            "previous_pair": [
+              1,
+              2
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 6,
+                "x": 2,
+                "y": 0,
+                "to": 64
+              },
+              {
+                "symbol": 7,
+                "x": 2,
+                "y": 1,
+                "to": 65
+              },
+              {
+                "symbol": 8,
+                "x": 2,
+                "y": 2,
+                "to": 66
+              }
+            ]
+          },
+          {
+            "id": 16,
+            "image_subset": [
+              3,
+              42
+            ],
+            "L_state_ids": [
+              162
+            ],
+            "R_state_ids": [
+              192,
+              197
+            ],
+            "L_count": 1,
+            "R_count": 2,
+            "previous_pair": [
+              2,
+              0
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 0,
+                "x": 0,
+                "y": 0,
+                "to": 100
+              },
+              {
+                "symbol": 1,
+                "x": 0,
+                "y": 1,
+                "to": 101
+              },
+              {
+                "symbol": 2,
+                "x": 0,
+                "y": 2,
+                "to": 102
+              }
+            ]
+          },
+          {
+            "id": 17,
+            "image_subset": [
+              4,
+              43
+            ],
+            "L_state_ids": [
+              187
+            ],
+            "R_state_ids": [
+              222,
+              227
+            ],
+            "L_count": 1,
+            "R_count": 2,
+            "previous_pair": [
+              2,
+              1
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 6,
+                "x": 2,
+                "y": 0,
+                "to": 64
+              },
+              {
+                "symbol": 7,
+                "x": 2,
+                "y": 1,
+                "to": 65
+              },
+              {
+                "symbol": 8,
+                "x": 2,
+                "y": 2,
+                "to": 66
+              }
+            ]
+          },
+          {
+            "id": 18,
+            "image_subset": [
+              5,
+              44
+            ],
+            "L_state_ids": [
+              212
+            ],
+            "R_state_ids": [
+              252,
+              257
+            ],
+            "L_count": 1,
+            "R_count": 2,
+            "previous_pair": [
+              2,
+              2
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 3,
+                "x": 1,
+                "y": 0,
+                "to": 49
+              },
+              {
+                "symbol": 4,
+                "x": 1,
+                "y": 1,
+                "to": 50
+              },
+              {
+                "symbol": 5,
+                "x": 1,
+                "y": 2,
+                "to": 51
+              }
+            ]
+          },
+          {
+            "id": 19,
+            "image_subset": [
+              0,
+              33
+            ],
+            "L_state_ids": [
+              7
+            ],
+            "R_state_ids": [
+              12,
+              17
+            ],
+            "L_count": 1,
+            "R_count": 2,
+            "previous_pair": [
+              0,
+              0
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 6,
+                "x": 2,
+                "y": 0,
+                "to": 16
+              },
+              {
+                "symbol": 7,
+                "x": 2,
+                "y": 1,
+                "to": 17
+              },
+              {
+                "symbol": 8,
+                "x": 2,
+                "y": 2,
+                "to": 18
+              }
+            ]
+          },
+          {
+            "id": 20,
+            "image_subset": [
+              1,
+              34
+            ],
+            "L_state_ids": [
+              32
+            ],
+            "R_state_ids": [
+              42,
+              47
+            ],
+            "L_count": 1,
+            "R_count": 2,
+            "previous_pair": [
+              0,
+              1
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 3,
+                "x": 1,
+                "y": 0,
+                "to": 109
+              },
+              {
+                "symbol": 4,
+                "x": 1,
+                "y": 1,
+                "to": 110
+              },
+              {
+                "symbol": 5,
+                "x": 1,
+                "y": 2,
+                "to": 111
+              }
+            ]
+          },
+          {
+            "id": 21,
+            "image_subset": [
+              2,
+              35
+            ],
+            "L_state_ids": [
+              57
+            ],
+            "R_state_ids": [
+              72,
+              77
+            ],
+            "L_count": 1,
+            "R_count": 2,
+            "previous_pair": [
+              0,
+              2
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 0,
+                "x": 0,
+                "y": 0,
+                "to": 19
+              },
+              {
+                "symbol": 1,
+                "x": 0,
+                "y": 1,
+                "to": 20
+              },
+              {
+                "symbol": 2,
+                "x": 0,
+                "y": 2,
+                "to": 21
+              }
+            ]
+          },
+          {
+            "id": 49,
+            "image_subset": [
+              15,
+              18
+            ],
+            "L_state_ids": [
+              82
+            ],
+            "R_state_ids": [
+              98,
+              103
+            ],
+            "L_count": 1,
+            "R_count": 2,
+            "previous_pair": [
+              1,
+              0
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 0,
+                "x": 0,
+                "y": 0,
+                "to": 19
+              },
+              {
+                "symbol": 1,
+                "x": 0,
+                "y": 1,
+                "to": 20
+              },
+              {
+                "symbol": 2,
+                "x": 0,
+                "y": 2,
+                "to": 21
+              }
+            ]
+          },
+          {
+            "id": 50,
+            "image_subset": [
+              16,
+              19
+            ],
+            "L_state_ids": [
+              107
+            ],
+            "R_state_ids": [
+              128,
+              133
+            ],
+            "L_count": 1,
+            "R_count": 2,
+            "previous_pair": [
+              1,
+              1
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 6,
+                "x": 2,
+                "y": 0,
+                "to": 64
+              },
+              {
+                "symbol": 7,
+                "x": 2,
+                "y": 1,
+                "to": 65
+              },
+              {
+                "symbol": 8,
+                "x": 2,
+                "y": 2,
+                "to": 66
+              }
+            ]
+          },
+          {
+            "id": 51,
+            "image_subset": [
+              17,
+              20
+            ],
+            "L_state_ids": [
+              132
+            ],
+            "R_state_ids": [
+              158,
+              163
+            ],
+            "L_count": 1,
+            "R_count": 2,
+            "previous_pair": [
+              1,
+              2
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 3,
+                "x": 1,
+                "y": 0,
+                "to": 49
+              },
+              {
+                "symbol": 4,
+                "x": 1,
+                "y": 1,
+                "to": 50
+              },
+              {
+                "symbol": 5,
+                "x": 1,
+                "y": 2,
+                "to": 51
+              }
+            ]
+          },
+          {
+            "id": 64,
+            "image_subset": [
+              9,
+              45
+            ],
+            "L_state_ids": [
+              162
+            ],
+            "R_state_ids": [
+              188,
+              193
+            ],
+            "L_count": 1,
+            "R_count": 2,
+            "previous_pair": [
+              2,
+              0
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 6,
+                "x": 2,
+                "y": 0,
+                "to": 64
+              },
+              {
+                "symbol": 7,
+                "x": 2,
+                "y": 1,
+                "to": 65
+              },
+              {
+                "symbol": 8,
+                "x": 2,
+                "y": 2,
+                "to": 66
+              }
+            ]
+          },
+          {
+            "id": 65,
+            "image_subset": [
+              10,
+              46
+            ],
+            "L_state_ids": [
+              187
+            ],
+            "R_state_ids": [
+              218,
+              223
+            ],
+            "L_count": 1,
+            "R_count": 2,
+            "previous_pair": [
+              2,
+              1
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 3,
+                "x": 1,
+                "y": 0,
+                "to": 145
+              },
+              {
+                "symbol": 4,
+                "x": 1,
+                "y": 1,
+                "to": 146
+              },
+              {
+                "symbol": 5,
+                "x": 1,
+                "y": 2,
+                "to": 147
+              }
+            ]
+          },
+          {
+            "id": 66,
+            "image_subset": [
+              11,
+              47
+            ],
+            "L_state_ids": [
+              212
+            ],
+            "R_state_ids": [
+              248,
+              253
+            ],
+            "L_count": 1,
+            "R_count": 2,
+            "previous_pair": [
+              2,
+              2
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 0,
+                "x": 0,
+                "y": 0,
+                "to": 67
+              },
+              {
+                "symbol": 1,
+                "x": 0,
+                "y": 1,
+                "to": 68
+              },
+              {
+                "symbol": 2,
+                "x": 0,
+                "y": 2,
+                "to": 69
+              }
+            ]
+          },
+          {
+            "id": 67,
+            "image_subset": [
+              6,
+              51
+            ],
+            "L_state_ids": [
+              7
+            ],
+            "R_state_ids": [
+              8,
+              13
+            ],
+            "L_count": 1,
+            "R_count": 2,
+            "previous_pair": [
+              0,
+              0
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 3,
+                "x": 1,
+                "y": 0,
+                "to": 13
+              },
+              {
+                "symbol": 4,
+                "x": 1,
+                "y": 1,
+                "to": 14
+              },
+              {
+                "symbol": 5,
+                "x": 1,
+                "y": 2,
+                "to": 15
+              }
+            ]
+          },
+          {
+            "id": 68,
+            "image_subset": [
+              7,
+              52
+            ],
+            "L_state_ids": [
+              32
+            ],
+            "R_state_ids": [
+              38,
+              43
+            ],
+            "L_count": 1,
+            "R_count": 2,
+            "previous_pair": [
+              0,
+              1
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 0,
+                "x": 0,
+                "y": 0,
+                "to": 19
+              },
+              {
+                "symbol": 1,
+                "x": 0,
+                "y": 1,
+                "to": 20
+              },
+              {
+                "symbol": 2,
+                "x": 0,
+                "y": 2,
+                "to": 21
+              }
+            ]
+          },
+          {
+            "id": 69,
+            "image_subset": [
+              8,
+              53
+            ],
+            "L_state_ids": [
+              57
+            ],
+            "R_state_ids": [
+              68,
+              73
+            ],
+            "L_count": 1,
+            "R_count": 2,
+            "previous_pair": [
+              0,
+              2
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 6,
+                "x": 2,
+                "y": 0,
+                "to": 166
+              },
+              {
+                "symbol": 7,
+                "x": 2,
+                "y": 1,
+                "to": 167
+              },
+              {
+                "symbol": 8,
+                "x": 2,
+                "y": 2,
+                "to": 168
+              }
+            ]
+          },
+          {
+            "id": 100,
+            "image_subset": [
+              39,
+              57
+            ],
+            "L_state_ids": [
+              12
+            ],
+            "R_state_ids": [
+              12,
+              17
+            ],
+            "L_count": 1,
+            "R_count": 2,
+            "previous_pair": [
+              0,
+              0
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 6,
+                "x": 2,
+                "y": 0,
+                "to": 16
+              },
+              {
+                "symbol": 7,
+                "x": 2,
+                "y": 1,
+                "to": 17
+              },
+              {
+                "symbol": 8,
+                "x": 2,
+                "y": 2,
+                "to": 18
+              }
+            ]
+          },
+          {
+            "id": 101,
+            "image_subset": [
+              40,
+              58
+            ],
+            "L_state_ids": [
+              37
+            ],
+            "R_state_ids": [
+              42,
+              47
+            ],
+            "L_count": 1,
+            "R_count": 2,
+            "previous_pair": [
+              0,
+              1
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 3,
+                "x": 1,
+                "y": 0,
+                "to": 13
+              },
+              {
+                "symbol": 4,
+                "x": 1,
+                "y": 1,
+                "to": 14
+              },
+              {
+                "symbol": 5,
+                "x": 1,
+                "y": 2,
+                "to": 15
+              }
+            ]
+          },
+          {
+            "id": 102,
+            "image_subset": [
+              41,
+              59
+            ],
+            "L_state_ids": [
+              62
+            ],
+            "R_state_ids": [
+              72,
+              77
+            ],
+            "L_count": 1,
+            "R_count": 2,
+            "previous_pair": [
+              0,
+              2
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 0,
+                "x": 0,
+                "y": 0,
+                "to": 19
+              },
+              {
+                "symbol": 1,
+                "x": 0,
+                "y": 1,
+                "to": 20
+              },
+              {
+                "symbol": 2,
+                "x": 0,
+                "y": 2,
+                "to": 21
+              }
+            ]
+          },
+          {
+            "id": 109,
+            "image_subset": [
+              27,
+              54
+            ],
+            "L_state_ids": [
+              82
+            ],
+            "R_state_ids": [
+              102,
+              107
+            ],
+            "L_count": 1,
+            "R_count": 2,
+            "previous_pair": [
+              1,
+              0
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 3,
+                "x": 1,
+                "y": 0,
+                "to": 13
+              },
+              {
+                "symbol": 4,
+                "x": 1,
+                "y": 1,
+                "to": 14
+              },
+              {
+                "symbol": 5,
+                "x": 1,
+                "y": 2,
+                "to": 15
+              }
+            ]
+          },
+          {
+            "id": 110,
+            "image_subset": [
+              28,
+              55
+            ],
+            "L_state_ids": [
+              107
+            ],
+            "R_state_ids": [
+              132,
+              137
+            ],
+            "L_count": 1,
+            "R_count": 2,
+            "previous_pair": [
+              1,
+              1
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 0,
+                "x": 0,
+                "y": 0,
+                "to": 19
+              },
+              {
+                "symbol": 1,
+                "x": 0,
+                "y": 1,
+                "to": 20
+              },
+              {
+                "symbol": 2,
+                "x": 0,
+                "y": 2,
+                "to": 21
+              }
+            ]
+          },
+          {
+            "id": 111,
+            "image_subset": [
+              29,
+              56
+            ],
+            "L_state_ids": [
+              132
+            ],
+            "R_state_ids": [
+              162,
+              167
+            ],
+            "L_count": 1,
+            "R_count": 2,
+            "previous_pair": [
+              1,
+              2
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 6,
+                "x": 2,
+                "y": 0,
+                "to": 166
+              },
+              {
+                "symbol": 7,
+                "x": 2,
+                "y": 1,
+                "to": 167
+              },
+              {
+                "symbol": 8,
+                "x": 2,
+                "y": 2,
+                "to": 168
+              }
+            ]
+          },
+          {
+            "id": 145,
+            "image_subset": [
+              24,
+              63
+            ],
+            "L_state_ids": [
+              87
+            ],
+            "R_state_ids": [
+              98,
+              103
+            ],
+            "L_count": 1,
+            "R_count": 2,
+            "previous_pair": [
+              1,
+              0
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 0,
+                "x": 0,
+                "y": 0,
+                "to": 100
+              },
+              {
+                "symbol": 1,
+                "x": 0,
+                "y": 1,
+                "to": 101
+              },
+              {
+                "symbol": 2,
+                "x": 0,
+                "y": 2,
+                "to": 102
+              }
+            ]
+          },
+          {
+            "id": 146,
+            "image_subset": [
+              25,
+              64
+            ],
+            "L_state_ids": [
+              112
+            ],
+            "R_state_ids": [
+              128,
+              133
+            ],
+            "L_count": 1,
+            "R_count": 2,
+            "previous_pair": [
+              1,
+              1
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 6,
+                "x": 2,
+                "y": 0,
+                "to": 64
+              },
+              {
+                "symbol": 7,
+                "x": 2,
+                "y": 1,
+                "to": 65
+              },
+              {
+                "symbol": 8,
+                "x": 2,
+                "y": 2,
+                "to": 66
+              }
+            ]
+          },
+          {
+            "id": 147,
+            "image_subset": [
+              26,
+              65
+            ],
+            "L_state_ids": [
+              137
+            ],
+            "R_state_ids": [
+              158,
+              163
+            ],
+            "L_count": 1,
+            "R_count": 2,
+            "previous_pair": [
+              1,
+              2
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 3,
+                "x": 1,
+                "y": 0,
+                "to": 49
+              },
+              {
+                "symbol": 4,
+                "x": 1,
+                "y": 1,
+                "to": 50
+              },
+              {
+                "symbol": 5,
+                "x": 1,
+                "y": 2,
+                "to": 51
+              }
+            ]
+          },
+          {
+            "id": 166,
+            "image_subset": [
+              36,
+              60
+            ],
+            "L_state_ids": [
+              157
+            ],
+            "R_state_ids": [
+              188,
+              193
+            ],
+            "L_count": 1,
+            "R_count": 2,
+            "previous_pair": [
+              2,
+              0
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 6,
+                "x": 2,
+                "y": 0,
+                "to": 64
+              },
+              {
+                "symbol": 7,
+                "x": 2,
+                "y": 1,
+                "to": 65
+              },
+              {
+                "symbol": 8,
+                "x": 2,
+                "y": 2,
+                "to": 66
+              }
+            ]
+          },
+          {
+            "id": 167,
+            "image_subset": [
+              37,
+              61
+            ],
+            "L_state_ids": [
+              182
+            ],
+            "R_state_ids": [
+              218,
+              223
+            ],
+            "L_count": 1,
+            "R_count": 2,
+            "previous_pair": [
+              2,
+              1
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 3,
+                "x": 1,
+                "y": 0,
+                "to": 49
+              },
+              {
+                "symbol": 4,
+                "x": 1,
+                "y": 1,
+                "to": 50
+              },
+              {
+                "symbol": 5,
+                "x": 1,
+                "y": 2,
+                "to": 51
+              }
+            ]
+          },
+          {
+            "id": 168,
+            "image_subset": [
+              38,
+              62
+            ],
+            "L_state_ids": [
+              207
+            ],
+            "R_state_ids": [
+              248,
+              253
+            ],
+            "L_count": 1,
+            "R_count": 2,
+            "previous_pair": [
+              2,
+              2
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 0,
+                "x": 0,
+                "y": 0,
+                "to": 67
+              },
+              {
+                "symbol": 1,
+                "x": 0,
+                "y": 1,
+                "to": 68
+              },
+              {
+                "symbol": 2,
+                "x": 0,
+                "y": 2,
+                "to": 69
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "label": "B3",
+        "type": "periodic-cycle",
+        "state_ids": [
+          24,
+          38,
+          53,
+          61
+        ],
+        "subset_size_set": [
+          4
+        ],
+        "projection_histogram": {
+          "2/2": 4
+        },
+        "internal_symbol_ids": [
+          1,
+          3,
+          5,
+          7
+        ],
+        "internal_symbol_pairs": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "cycle": {
+          "state_ids": [
+            24,
+            53,
+            61,
+            38
+          ],
+          "symbols": [
+            7,
+            3,
+            1,
+            5
+          ],
+          "symbol_pairs": [
+            [
+              2,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ]
+          ]
+        },
+        "states": [
+          {
+            "id": 24,
+            "image_subset": [
+              14,
+              23,
+              29,
+              56
+            ],
+            "L_state_ids": [
+              132,
+              137
+            ],
+            "R_state_ids": [
+              162,
+              167
+            ],
+            "L_count": 2,
+            "R_count": 2,
+            "previous_pair": [
+              1,
+              2
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 7,
+                "x": 2,
+                "y": 1,
+                "to": 53
+              }
+            ]
+          },
+          {
+            "id": 38,
+            "image_subset": [
+              1,
+              34,
+              40,
+              58
+            ],
+            "L_state_ids": [
+              32,
+              37
+            ],
+            "R_state_ids": [
+              42,
+              47
+            ],
+            "L_count": 2,
+            "R_count": 2,
+            "previous_pair": [
+              0,
+              1
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 5,
+                "x": 1,
+                "y": 2,
+                "to": 24
+              }
+            ]
+          },
+          {
+            "id": 53,
+            "image_subset": [
+              10,
+              37,
+              46,
+              61
+            ],
+            "L_state_ids": [
+              182,
+              187
+            ],
+            "R_state_ids": [
+              218,
+              223
+            ],
+            "L_count": 2,
+            "R_count": 2,
+            "previous_pair": [
+              2,
+              1
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 3,
+                "x": 1,
+                "y": 0,
+                "to": 61
+              }
+            ]
+          },
+          {
+            "id": 61,
+            "image_subset": [
+              15,
+              18,
+              24,
+              63
+            ],
+            "L_state_ids": [
+              82,
+              87
+            ],
+            "R_state_ids": [
+              98,
+              103
+            ],
+            "L_count": 2,
+            "R_count": 2,
+            "previous_pair": [
+              1,
+              0
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 1,
+                "x": 0,
+                "y": 1,
+                "to": 38
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "label": "B4",
+        "type": "fixed-symbol-loop",
+        "state_ids": [
+          30
+        ],
+        "subset_size_set": [
+          3
+        ],
+        "projection_histogram": {
+          "1/3": 1
+        },
+        "internal_symbol_ids": [
+          2
+        ],
+        "internal_symbol_pairs": [
+          [
+            0,
+            2
+          ]
+        ],
+        "cycle": {
+          "state_ids": [
+            30
+          ],
+          "symbols": [
+            2
+          ],
+          "symbol_pairs": [
+            [
+              0,
+              2
+            ]
+          ]
+        },
+        "states": [
+          {
+            "id": 30,
+            "image_subset": [
+              2,
+              8,
+              35
+            ],
+            "L_state_ids": [
+              57
+            ],
+            "R_state_ids": [
+              72,
+              73,
+              77
+            ],
+            "L_count": 1,
+            "R_count": 3,
+            "previous_pair": [
+              0,
+              2
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 2,
+                "x": 0,
+                "y": 2,
+                "to": 30
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "label": "B5",
+        "type": "x-plus-y-equals-2",
+        "state_ids": [
+          32,
+          59,
+          124,
+          129,
+          130,
+          144
+        ],
+        "subset_size_set": [
+          2
+        ],
+        "projection_histogram": {
+          "1/2": 6
+        },
+        "internal_symbol_ids": [
+          2,
+          4,
+          6
+        ],
+        "internal_symbol_pairs": [
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "cycle": null,
+        "states": [
+          {
+            "id": 32,
+            "image_subset": [
+              16,
+              28
+            ],
+            "L_state_ids": [
+              107
+            ],
+            "R_state_ids": [
+              132,
+              133
+            ],
+            "L_count": 1,
+            "R_count": 2,
+            "previous_pair": [
+              1,
+              1
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 2,
+                "x": 0,
+                "y": 2,
+                "to": 129
+              },
+              {
+                "symbol": 4,
+                "x": 1,
+                "y": 1,
+                "to": 32
+              },
+              {
+                "symbol": 6,
+                "x": 2,
+                "y": 0,
+                "to": 130
+              }
+            ]
+          },
+          {
+            "id": 59,
+            "image_subset": [
+              22,
+              25
+            ],
+            "L_state_ids": [
+              112
+            ],
+            "R_state_ids": [
+              132,
+              133
+            ],
+            "L_count": 1,
+            "R_count": 2,
+            "previous_pair": [
+              1,
+              1
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 2,
+                "x": 0,
+                "y": 2,
+                "to": 129
+              },
+              {
+                "symbol": 4,
+                "x": 1,
+                "y": 1,
+                "to": 59
+              },
+              {
+                "symbol": 6,
+                "x": 2,
+                "y": 0,
+                "to": 130
+              }
+            ]
+          },
+          {
+            "id": 124,
+            "image_subset": [
+              30,
+              60
+            ],
+            "L_state_ids": [
+              157
+            ],
+            "R_state_ids": [
+              192,
+              193
+            ],
+            "L_count": 1,
+            "R_count": 2,
+            "previous_pair": [
+              2,
+              0
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 2,
+                "x": 0,
+                "y": 2,
+                "to": 129
+              },
+              {
+                "symbol": 4,
+                "x": 1,
+                "y": 1,
+                "to": 59
+              },
+              {
+                "symbol": 6,
+                "x": 2,
+                "y": 0,
+                "to": 130
+              }
+            ]
+          },
+          {
+            "id": 129,
+            "image_subset": [
+              8,
+              35
+            ],
+            "L_state_ids": [
+              57
+            ],
+            "R_state_ids": [
+              72,
+              73
+            ],
+            "L_count": 1,
+            "R_count": 2,
+            "previous_pair": [
+              0,
+              2
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 2,
+                "x": 0,
+                "y": 2,
+                "to": 129
+              },
+              {
+                "symbol": 4,
+                "x": 1,
+                "y": 1,
+                "to": 32
+              },
+              {
+                "symbol": 6,
+                "x": 2,
+                "y": 0,
+                "to": 124
+              }
+            ]
+          },
+          {
+            "id": 130,
+            "image_subset": [
+              3,
+              45
+            ],
+            "L_state_ids": [
+              162
+            ],
+            "R_state_ids": [
+              192,
+              193
+            ],
+            "L_count": 1,
+            "R_count": 2,
+            "previous_pair": [
+              2,
+              0
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 2,
+                "x": 0,
+                "y": 2,
+                "to": 144
+              },
+              {
+                "symbol": 4,
+                "x": 1,
+                "y": 1,
+                "to": 59
+              },
+              {
+                "symbol": 6,
+                "x": 2,
+                "y": 0,
+                "to": 130
+              }
+            ]
+          },
+          {
+            "id": 144,
+            "image_subset": [
+              50,
+              59
+            ],
+            "L_state_ids": [
+              62
+            ],
+            "R_state_ids": [
+              72,
+              73
+            ],
+            "L_count": 1,
+            "R_count": 2,
+            "previous_pair": [
+              0,
+              2
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 2,
+                "x": 0,
+                "y": 2,
+                "to": 129
+              },
+              {
+                "symbol": 4,
+                "x": 1,
+                "y": 1,
+                "to": 32
+              },
+              {
+                "symbol": 6,
+                "x": 2,
+                "y": 0,
+                "to": 130
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "label": "B6",
+        "type": "fixed-symbol-loop",
+        "state_ids": [
+          41
+        ],
+        "subset_size_set": [
+          4
+        ],
+        "projection_histogram": {
+          "2/2": 1
+        },
+        "internal_symbol_ids": [
+          4
+        ],
+        "internal_symbol_pairs": [
+          [
+            1,
+            1
+          ]
+        ],
+        "cycle": {
+          "state_ids": [
+            41
+          ],
+          "symbols": [
+            4
+          ],
+          "symbol_pairs": [
+            [
+              1,
+              1
+            ]
+          ]
+        },
+        "states": [
+          {
+            "id": 41,
+            "image_subset": [
+              16,
+              22,
+              25,
+              28
+            ],
+            "L_state_ids": [
+              107,
+              112
+            ],
+            "R_state_ids": [
+              132,
+              133
+            ],
+            "L_count": 2,
+            "R_count": 2,
+            "previous_pair": [
+              1,
+              1
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 4,
+                "x": 1,
+                "y": 1,
+                "to": 41
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "label": "B7",
+        "type": "fixed-symbol-loop",
+        "state_ids": [
+          43
+        ],
+        "subset_size_set": [
+          3
+        ],
+        "projection_histogram": {
+          "1/3": 1
+        },
+        "internal_symbol_ids": [
+          6
+        ],
+        "internal_symbol_pairs": [
+          [
+            2,
+            0
+          ]
+        ],
+        "cycle": {
+          "state_ids": [
+            43
+          ],
+          "symbols": [
+            6
+          ],
+          "symbol_pairs": [
+            [
+              2,
+              0
+            ]
+          ]
+        },
+        "states": [
+          {
+            "id": 43,
+            "image_subset": [
+              3,
+              9,
+              45
+            ],
+            "L_state_ids": [
+              162
+            ],
+            "R_state_ids": [
+              188,
+              192,
+              193
+            ],
+            "L_count": 1,
+            "R_count": 3,
+            "previous_pair": [
+              2,
+              0
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 6,
+                "x": 2,
+                "y": 0,
+                "to": 43
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "label": "B8",
+        "type": "periodic-cycle",
+        "state_ids": [
+          138,
+          157
+        ],
+        "subset_size_set": [
+          4
+        ],
+        "projection_histogram": {
+          "2/2": 2
+        },
+        "internal_symbol_ids": [
+          2,
+          6
+        ],
+        "internal_symbol_pairs": [
+          [
+            0,
+            2
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "cycle": {
+          "state_ids": [
+            138,
+            157
+          ],
+          "symbols": [
+            6,
+            2
+          ],
+          "symbol_pairs": [
+            [
+              2,
+              0
+            ],
+            [
+              0,
+              2
+            ]
+          ]
+        },
+        "states": [
+          {
+            "id": 138,
+            "image_subset": [
+              8,
+              35,
+              50,
+              59
+            ],
+            "L_state_ids": [
+              57,
+              62
+            ],
+            "R_state_ids": [
+              72,
+              73
+            ],
+            "L_count": 2,
+            "R_count": 2,
+            "previous_pair": [
+              0,
+              2
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 6,
+                "x": 2,
+                "y": 0,
+                "to": 157
+              }
+            ]
+          },
+          {
+            "id": 157,
+            "image_subset": [
+              3,
+              30,
+              45,
+              60
+            ],
+            "L_state_ids": [
+              157,
+              162
+            ],
+            "R_state_ids": [
+              192,
+              193
+            ],
+            "L_count": 2,
+            "R_count": 2,
+            "previous_pair": [
+              2,
+              0
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 2,
+                "x": 0,
+                "y": 2,
+                "to": 138
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "label": "B9",
+        "type": "periodic-cycle",
+        "state_ids": [
+          139,
+          194,
+          201,
+          206
+        ],
+        "subset_size_set": [
+          3
+        ],
+        "projection_histogram": {
+          "2/2": 4
+        },
+        "internal_symbol_ids": [
+          1,
+          3,
+          5,
+          7
+        ],
+        "internal_symbol_pairs": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "cycle": {
+          "state_ids": [
+            139,
+            194,
+            201,
+            206
+          ],
+          "symbols": [
+            1,
+            5,
+            7,
+            3
+          ],
+          "symbol_pairs": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              1,
+              0
+            ]
+          ]
+        },
+        "states": [
+          {
+            "id": 139,
+            "image_subset": [
+              15,
+              18,
+              24
+            ],
+            "L_state_ids": [
+              82,
+              87
+            ],
+            "R_state_ids": [
+              98,
+              103
+            ],
+            "L_count": 2,
+            "R_count": 2,
+            "previous_pair": [
+              1,
+              0
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 1,
+                "x": 0,
+                "y": 1,
+                "to": 194
+              }
+            ]
+          },
+          {
+            "id": 194,
+            "image_subset": [
+              1,
+              34,
+              40
+            ],
+            "L_state_ids": [
+              32,
+              37
+            ],
+            "R_state_ids": [
+              42,
+              47
+            ],
+            "L_count": 2,
+            "R_count": 2,
+            "previous_pair": [
+              0,
+              1
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 5,
+                "x": 1,
+                "y": 2,
+                "to": 201
+              }
+            ]
+          },
+          {
+            "id": 201,
+            "image_subset": [
+              14,
+              29,
+              56
+            ],
+            "L_state_ids": [
+              132,
+              137
+            ],
+            "R_state_ids": [
+              162,
+              167
+            ],
+            "L_count": 2,
+            "R_count": 2,
+            "previous_pair": [
+              1,
+              2
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 7,
+                "x": 2,
+                "y": 1,
+                "to": 206
+              }
+            ]
+          },
+          {
+            "id": 206,
+            "image_subset": [
+              37,
+              46,
+              61
+            ],
+            "L_state_ids": [
+              182,
+              187
+            ],
+            "R_state_ids": [
+              218,
+              223
+            ],
+            "L_count": 2,
+            "R_count": 2,
+            "previous_pair": [
+              2,
+              1
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 3,
+                "x": 1,
+                "y": 0,
+                "to": 139
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "label": "B10",
+        "type": "periodic-cycle",
+        "state_ids": [
+          156,
+          197,
+          202,
+          209
+        ],
+        "subset_size_set": [
+          3
+        ],
+        "projection_histogram": {
+          "2/2": 4
+        },
+        "internal_symbol_ids": [
+          1,
+          3,
+          5,
+          7
+        ],
+        "internal_symbol_pairs": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "cycle": {
+          "state_ids": [
+            156,
+            197,
+            202,
+            209
+          ],
+          "symbols": [
+            7,
+            3,
+            1,
+            5
+          ],
+          "symbol_pairs": [
+            [
+              2,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ]
+          ]
+        },
+        "states": [
+          {
+            "id": 156,
+            "image_subset": [
+              14,
+              23,
+              29
+            ],
+            "L_state_ids": [
+              132,
+              137
+            ],
+            "R_state_ids": [
+              162,
+              167
+            ],
+            "L_count": 2,
+            "R_count": 2,
+            "previous_pair": [
+              1,
+              2
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 7,
+                "x": 2,
+                "y": 1,
+                "to": 197
+              }
+            ]
+          },
+          {
+            "id": 197,
+            "image_subset": [
+              10,
+              37,
+              46
+            ],
+            "L_state_ids": [
+              182,
+              187
+            ],
+            "R_state_ids": [
+              218,
+              223
+            ],
+            "L_count": 2,
+            "R_count": 2,
+            "previous_pair": [
+              2,
+              1
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 3,
+                "x": 1,
+                "y": 0,
+                "to": 202
+              }
+            ]
+          },
+          {
+            "id": 202,
+            "image_subset": [
+              18,
+              24,
+              63
+            ],
+            "L_state_ids": [
+              82,
+              87
+            ],
+            "R_state_ids": [
+              98,
+              103
+            ],
+            "L_count": 2,
+            "R_count": 2,
+            "previous_pair": [
+              1,
+              0
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 1,
+                "x": 0,
+                "y": 1,
+                "to": 209
+              }
+            ]
+          },
+          {
+            "id": 209,
+            "image_subset": [
+              34,
+              40,
+              58
+            ],
+            "L_state_ids": [
+              32,
+              37
+            ],
+            "R_state_ids": [
+              42,
+              47
+            ],
+            "L_count": 2,
+            "R_count": 2,
+            "previous_pair": [
+              0,
+              1
+            ],
+            "previous_pair_count": 1,
+            "internal_transitions": [
+              {
+                "symbol": 5,
+                "x": 1,
+                "y": 2,
+                "to": 156
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "transient_bound": {
+    "statement": "From the initial full 66-state subset, every input path reaches either a singleton image subset or a nonsingleton recurrent SCC within at most four symbols.",
+    "max_transitions": 4,
+    "witness_state_ids": [
+      0,
+      3,
+      34,
+      136,
+      10
+    ],
+    "witness_symbol_ids": [
+      2,
+      6,
+      0,
+      0
+    ],
+    "witness_symbol_pairs": [
+      [
+        0,
+        2
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        0
+      ]
+    ],
+    "terminal_component_state_ids": [
+      10,
+      11,
+      12,
+      70,
+      71,
+      72,
+      82,
+      83,
+      84,
+      88,
+      89,
+      90,
+      115,
+      116,
+      117,
+      151,
+      152,
+      153,
+      160,
+      161,
+      162,
+      169,
+      170,
+      171,
+      181,
+      182,
+      183,
+      187,
+      188,
+      189
+    ]
+  },
+  "interpretation": [
+    "A singleton image subset is exactly rank-one synchronization of the 66-state paired-carry machine.",
+    "Any infinite path that never synchronizes must eventually remain inside one of the ten recurrent nonsingleton SCCs listed here.",
+    "Two 30-state SCCs permit, at each state, exactly one x digit and all three y digits; the six-state SCC permits exactly (0,2),(1,1),(2,0).",
+    "The remaining recurrent obstructions are three four-cycles, one two-cycle, and three fixed-symbol loops.",
+    "This is an automaton-level reduction only. It does not prove that the authentic #623 S-window stream avoids these obstructions."
+  ]
+}
