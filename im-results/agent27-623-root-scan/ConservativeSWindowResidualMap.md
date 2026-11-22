@@ -108,3 +108,14 @@ node im-results/agent27-623-root-scan/analyze_conservative_s_window_residuals.js
 ```
 
 The script writes [`ConservativeSWindowResidualMap.json`](ConservativeSWindowResidualMap.json), including all 81 exceptional windows and the post-5580 synchronization-depth histogram.
+
+
+## Exact product boundary-buffer diagnostic
+
+The root-connected product key contains the target own-start phase, reset seed, exact 66-state post-reset end, 211-state residual subset, first-reset end offset, witness length, source-to-target phase, and a rolling high-end symbol buffer.
+
+With source-to-target phase included, the observed transition graph has 15 multi-successor nodes. Appending the last 1, 2, and 3 symbols reduces this to 15, 7, and 2. The two remaining three-symbol collisions are: (1) the same product key at D315 and D2978, with fourth-from-end symbol 2 versus 8 and different successors; (2) the same product key at D1049 and D3579, with fourth-from-end symbol 3 versus 4 and different successors.
+
+Appending the fourth-from-end symbol removes all multi-successor nodes across the scanned 9,968-window trace. However, the resulting 4-symbol-buffer product has no repeated state in D34..D10001. It is a deterministic observed path, not yet a finite-state cycle or all-time closure. The end carry state's previous_pair plus this fourth symbol is a five-symbol high-end history; the buffer-relative reset logic must retain it or prove it redundant.
+
+The counts and product key are recorded in the JSON certificate under exact_product_boundary_diagnostic. Do not claim global determinism from this finite trace.

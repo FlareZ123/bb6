@@ -1,0 +1,3 @@
+# Agent 27: exact product needs a five-symbol high-end buffer
+
+The exact root product now includes own-start phase, reset seed, exact 66-state post-reset end, 211-state residual subset, first-reset offset/length, and source-to-target phase. With only three trailing pair symbols, two product states have two successors: D315/D2978 (fourth-from-end symbol 2 vs8) and D1049/D3579 (3 vs4). Adding the fourth-from-end symbol removes all multi-successor nodes in the D34..D10001 trace, but no product state repeats. The end state's previous_pair plus this fourth symbol is a five-symbol high-end buffer. This isolates the missing boundary memory, but is not yet a finite-state closure or proof. See ConservativeSWindowResidualMap.md/json.

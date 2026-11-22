@@ -1276,5 +1276,73 @@
         ]
       }
     ]
+  },
+  "exact_product_boundary_diagnostic": {
+    "product_state_fields": [
+      "target own-start phase",
+      "reset seed state",
+      "exact post-reset end state",
+      "211-state residual subset",
+      "first reset end offset",
+      "reset witness length",
+      "source-to-target phase",
+      "last three pair-symbol IDs of current source window"
+    ],
+    "symbol_encoding": "3*x_digit+y_digit",
+    "scan": "D34..D10001, 9968 window states",
+    "graph_counts": {
+      "phase_only": {
+        "nodes": 9952,
+        "edges": 9967,
+        "multi_successor_nodes": 15
+      },
+      "plus_tail_1": {
+        "nodes": 9952,
+        "edges": 9967,
+        "multi_successor_nodes": 15
+      },
+      "plus_tail_2": {
+        "nodes": 9960,
+        "edges": 9967,
+        "multi_successor_nodes": 7
+      },
+      "plus_tail_3": {
+        "nodes": 9965,
+        "edges": 9967,
+        "multi_successor_nodes": 2
+      },
+      "plus_tail_4": {
+        "nodes": 9967,
+        "edges": 9967,
+        "multi_successor_nodes": 0
+      }
+    },
+    "two_ambiguous_three_symbol_states": [
+      {
+        "same_product_state_at": [
+          315,
+          2978
+        ],
+        "fourth_from_end_symbol_ids": [
+          2,
+          8
+        ],
+        "different_successor": true
+      },
+      {
+        "same_product_state_at": [
+          1049,
+          3579
+        ],
+        "fourth_from_end_symbol_ids": [
+          3,
+          4
+        ],
+        "different_successor": true
+      }
+    ],
+    "tail4_result": "Adding the fourth-from-end symbol makes every observed source product state have exactly one successor; however, no product state repeats anywhere in D34..D10001. The 9968 path states are distinct, so this is not yet a finite-state cycle/closure.",
+    "interpretation": "The 3-symbol buffer is insufficient at exactly two observed collisions. The end-state previous_pair plus this fourth symbol supplies a 5-symbol high-end history. The full 4-symbol tail resolves observed ambiguity but destroys the only observed repeats; the missing high-end information is not yet compressed into a closed root-connected invariant.",
+    "caveat": "Finite-orbit evidence only; determinism on the observed trace does not prove global determinism."
   }
 }

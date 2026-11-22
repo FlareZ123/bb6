@@ -513,3 +513,11 @@ New work in this incarnation focused on the existing #623 S-window / post-reset 
 - Critical correction: residual subset cannot be updated by only appending the high-extension symbol. The overlapping target word is transformed by the full source-to-target carry transducer. Compose that output with the reset recognizer and subset DFA; keep source-to-target and target-own-start carries separate.
 - Durable artifacts: `im-results/agent27-623-root-scan/ConservativeSWindowResidualMap.md`, JSON certificate, and generator script. This remains finite computational evidence, not an all-time invariant.
 - Next: attack the five actually encountered recurrent obstructions, especially the B2 30-state component and the three depth-11 cases; seek an all-time product invariant that includes the exact transducer output, not merely own-start phase plus subset.
+
+
+## 2026-11-22 follow-up: exact product boundary-buffer diagnostic
+
+- Root product key: target own-start phase, reset seed, exact 66-state post-reset end, 211-state residual subset, first-reset offset, witness length, source-to-target phase, and last-three source-window symbols.
+- Source-to-target phase alone leaves 15 multi-successor nodes; adding tail1 leaves15, tail2 leaves7, tail3 leaves2. Collisions: D315/D2978 (fourth-from-end symbol 2 vs8) and D1049/D3579 (3 vs4); both have different successors.
+- Adding the fourth-from-end symbol removes all multi-successor nodes in the finite trace, but no product state repeats in D34..D10001. This is not a finite-state closure. The 66-state end previous_pair plus the fourth symbol is a five-symbol high-end buffer.
+- Details are in ConservativeSWindowResidualMap.json/.md. Next: compress the high-end buffer using the authentic boundary/high-extension map, or prove the two fourth-symbol alternatives impossible from the root arithmetic. Do not infer global determinism from this finite trace.
