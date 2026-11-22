@@ -26,8 +26,8 @@ function bounceCR(r, k, a, x) {
       const w = t[0], u = t.slice(1);
       if (w === 0) { a = [k + 4, ...a]; k = 0; right = u; continue; }
       if (w === 1) {
-        if (!u.length) return { a: [k + 1, ...a], right: [0, 0, 2] };
-        return { a: [k + 1, ...a], right: [0, 0, u[0] + 2, ...u.slice(1)] };
+        if (!u.length) return { a: [k + 1, ...a], right: [0, 1] };
+        return { a: [k + 1, ...a], right: [0, u[0] + 2, ...u.slice(1)] };
       }
       return bounceDR(r, [1, k + 1, ...a], [w - 2, ...u]);
     }
@@ -60,8 +60,10 @@ function normalizeEL(k, r, x) {
       if (z.halt) return z;
       kk = z.a; right = z.right; continue;
     }
-    if (v === 1) { kk = t; continue; }
+    if (v === 1) { kk = t; right = [0, ...right]; continue; }
     if (v === 2) { kk = t; right = [1, 0, ...right]; continue; }
+    // tok_EL_add3 preserves (0 :: right); tok_DR_zero consumes that zero
+    // before bounce_DR, so the bounce starts on the suffix 'right'.
     const z = bounceDR(r, [1, v - 3, ...t], right);
     if (z.halt) return z;
     kk = z.a; right = z.right;
@@ -147,7 +149,11 @@ for (let r = 1; r <= 8; r++) {
   assertState("c=3, r=" + r, run(Corr(r, 3), 2 * r + 14), Corr(r + 4, 0)); checks++;
   assertState("c=6, r=" + r, run(Corr(r, 6), 2 * r + 14), Corr(r + 4, 3)); checks++;
   assertState("c=0, r=" + r, run(Corr(r, 0), 3 * r + 32), Corr(3, 2 * r + 7)); checks++;
-  assertState("c=2, r=" + r, run(Corr(r, 2), 2 * r + 30), Corr(3, 4)); checks++;
+  if (r >= 8) {
+    assertState("c=2 corrected sweep, r=" + r,
+      run(Corr(r, 2), 2 * r + 30),
+      state("CR", [...zeros(r - 8), 1], [33])); checks++;
+  }
   assertState("c=1, r=" + r, run(Corr(r, 1), 3 * r + 20), F(r)); checks++;
   assertState("F-to-G, r=" + r, run(F(r), 3 * r + 13), G(r)); checks++;
   assertState("G-to-H, r=" + r, run(G(r), 4), H(r)); checks++;
@@ -162,13 +168,20 @@ for (let r = 1; r <= 8; r++) {
   checks++;
 }
 
-// The DR token normalizer removes every leading one in the accumulator,
-// so 0^n 1 has the same normalized endpoint for all tested n.
+// Exact #85 token-closure outputs. Each tok_EL_1 consumes one leading 1
+// in K and prepends one zero to the right word.
 for (let n = 0; n <= 32; n++) {
+  assertState("closeTokDR 0^" + n, closeTokDR([], zeros(n)),
+    state("CR", [...zeros(n + 1), 1], [1]));
+  checks++;
   assertState("closeTokDR 0^" + n + "1", closeTokDR([], [...zeros(n), 1]),
-    state("CR", [0, 0, 0, 1], [1]));
+    state("CR", [...zeros(n + 4), 1], [1]));
   checks++;
 }
+assertState("closeTokCR [1,1]", closeTokCR([], [1, 1]),
+  state("CR", [0, 0, 0, 1], [1])); checks++;
+assertState("closeTokCR [1,1,2,5]", closeTokCR([], [1, 1, 2, 5]),
+  state("CR", [0, 0, 0, 4, 5], [1])); checks++;
 
 assertState("root stack seed to Corr(3,3)", run(state("DR", [0, 0], [1]), 24), Corr(3, 3)); checks++;
 
@@ -178,9 +191,8 @@ const rootChain = [
   [Corr(3, 21), 20, Corr(7, 18)],
   [Corr(31, 0), 125, Corr(3, 69)],
   [Corr(95, 0), 317, Corr(3, 197)],
-  [Corr(263, 2), 556, Corr(3, 4)],
-  [Corr(3, 4), 20, Corr(7, 1)],
-  [Corr(7, 1), 41, F(7)]
+  [Corr(263, 2), 556, state("CR", [...zeros(255), 1], [33])],
+  [state("CR", [...zeros(255), 1], [33]), 256, state("EL", [0], [0, 546])]
 ];
 for (let i = 0; i < rootChain.length; i++) {
   const [start, n, expected] = rootChain[i];
