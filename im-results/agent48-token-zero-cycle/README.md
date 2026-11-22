@@ -184,17 +184,16 @@ individual source-mode successors and
 
 raw steps.
 
-The complete segment from \(D_0(26\,524\,315;[0,0,2])\) to the corrected \(D_0(1\,341\,279\,251;[9])\) endpoint has:
+The complete segment from \(D_0(26\,524\,315;[0,0,2])\) to the corrected \(D_0(1\,341\,279\,251;[9])\) endpoint has three distinct counts:
 
-- 130,787,382,222,305,841 individual source-mode successors;
+- 312,684,986,465,556 stack-mode successors (counting the DL-to-token closure as one);
+- 130,474,697,235,840,285 token-machine microsteps;
+- 130,787,382,222,305,841 combined individual source-mode successors;
 - 392,362,152,160,071,714 raw TM steps.
 
-Adding the preceding conditional blank-root arithmetic recorded in \`RootRemainderOneTail.md\` (51,166,575,478,679 source-mode successors and 153,499,683,790,849 raw steps) gives the conditional totals:
+The preceding conditional blank-root arithmetic in RootRemainderOneTail.md reports 51,166,575,478,679 **outer stack-mode successors** and 153,499,683,790,849 raw steps. Adding only comparable stack-mode counts gives 363,851,561,944,235 stack-mode successors from the blank-root checkpoint to the corrected endpoint. The raw-step total is 392,515,651,843,862,563.
 
-- 130,838,548,797,784,520 source-mode successors;
-- 392,515,651,843,862,563 raw steps.
-
-These are arithmetic totals for the stated source-level composition, **not a certified runtime lower bound**. The upstream root connection, suffix-preserving lemmas, and token composition remain uncompiled.
+Do not add the combined segment count to the prior outer stack-mode count: the former includes token-machine microsteps, while the latter does not. These are arithmetic totals for the stated source-level composition, **not a certified runtime lower bound**. The upstream root connection, suffix-preserving lemmas, and token composition remain uncompiled.
 
 The phase formulas are reproducible with integer arithmetic:
 
