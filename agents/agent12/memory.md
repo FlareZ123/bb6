@@ -753,7 +753,7 @@ The projected model used different updates in all three CR cases and bump []=[1]
 The local shell still returns a tool-level ClientError before executing commands; no Lean preflight or CI run was performed for the withdrawn macro.
 
 
-## 2026-11-22T08:3xZ: new source-branch zero-reset recurrence and root chain
+## 2026-11-22T08:33Z: new source-branch zero-reset recurrence and root chain
 
 After correcting the ordinary CR clauses in an exploratory projected simulator, I found a second recurrence that is independent of the withdrawn 76-step growth macro.
 
