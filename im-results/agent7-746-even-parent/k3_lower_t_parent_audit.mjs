@@ -21,6 +21,17 @@ function ratio(n, p) {
   return Number((n * 1000000n) / p) / 1000000;
 }
 
+function mod(n, m) { return ((n % m) + m) % m; }
+function pow2Mod(e, m) {
+  let v = 1n, b = 2n % m;
+  while (e > 0n) {
+    if (e & 1n) v = v * b % m;
+    b = b * b % m;
+    e >>= 1n;
+  }
+  return v;
+}
+
 function parents(u) {
   const out = [];
 
@@ -67,9 +78,20 @@ function audit(K) {
   if (803n * twoA > 512n * c || 1024n * c > 1659n * twoA) {
     throw new Error(`K=${K} is outside W`);
   }
-  if (K % 6n !== 3n || (K % 486n !== 57n && K % 486n !== 219n)) {
+  if (K % 6n !== 3n || K % 162n !== 57n || (K % 486n !== 57n && K % 486n !== 219n)) {
     throw new Error(`K=${K} is not one of the two non-high K1 residues`);
   }
+
+  // Verify that this is the high X phase and a non-high Y third-lift.
+  const e = K + 4n - a;
+  const T243 = mod(80n * pow2Mod(K, 243n) + 2n * K + 13n
+    - 2n * mod((2n * K + 7n) * pow2Mod(e, 243n), 243n), 243n);
+  if (T243 % 3n !== 0n) throw new Error("T not divisible by 3");
+  const X81 = T243 / 3n;
+  if (X81 % 3n !== 0n) throw new Error("X not divisible by 3");
+  const h27 = mod(2n * (X81 / 3n) - 4n * pow2Mod(K, 27n) - K - 4n, 27n);
+  const Y27 = mod(2n * h27 + 5n, 27n);
+  if (Y27 !== 9n && Y27 !== 18n) throw new Error(`unexpected Y mod 27: ${Y27}`);
 
   const B = c * (1n << (K + 4n - a));
   const numerator = 40n * p + K - 1n - B;
@@ -127,6 +149,7 @@ function audit(K) {
     K: K.toString(),
     Kmod486: (K % 486n).toString(),
     x: `${c}/${twoA}`,
+    Ymod27: Y27.toString(),
     exploredNodes: seen.size,
     leaves,
     reachesRoot: root,
