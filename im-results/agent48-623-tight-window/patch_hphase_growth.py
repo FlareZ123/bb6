@@ -26,12 +26,14 @@ private def hPhaseB : List (ℕ × ℕ) :=
 
 /-- The 76-successor H-phase growth macro, checked as 254 raw TM steps.
 The arbitrary suffix is preserved and one block B is inserted before it. -/
-theorem hphase_growth_76_raw (T : List (ℕ × ℕ)) :
+private theorem hphase_growth_76_raw (T : List (ℕ × ℕ)) :
     (evalStackCfg .CR_n_n [(1, 0), (0, 0)] (hPhaseP ++ hPhaseB ++ T)) [target]⊢⁺
       evalStackCfg .CR_n_n [(1, 0), (0, 0)] (hPhaseP ++ hPhaseB ++ hPhaseB ++ T) := by
   dsimp only [evalStackCfg, cfg_CR_n_n]
   simp only [encLeft, encRight, Nat.mod_one]
   execute 254
+
+#print axioms hphase_growth_76_raw
 
 '''
 target.write_text(source.replace(marker, patch + marker))
