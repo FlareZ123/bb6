@@ -29,8 +29,8 @@ def step(mode, left, right):
             if b == 0:
                 return ("CR", l8, [0] + bumpn(right, 3), 5)
             if b == 1:
-                return ("EL", bump(l8), [1, 0] + right, 16)
-            return ("DR", [b - 2] + l8, [1, 0] + right, 15)
+                return ("EL", bump(l8), [1, 0, 0] + right, 16)
+            return ("DR", [b - 2] + l8, [1, 0, 0] + right, 15)
         return ("HALT", [], [], 2)
 
     if mode == "EL":
