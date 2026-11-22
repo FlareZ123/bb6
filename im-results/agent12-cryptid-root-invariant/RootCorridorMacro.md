@@ -111,7 +111,7 @@ The long middle runs are exactly repeated applications of case 1. For example, `
 
 ## What remains
 
-- Analyze the corrected root continuation from `EL(L=[0],R=[0,546])` and seek a root-specific invariant or a route to the certified A-section halting cylinder.
+- Prove the corrected countdown/reset chain and the 76-step root-reachable growth macro documented in [RootCountdownGrowth.md](RootCountdownGrowth.md); compress the 50,000-step entry and formalize the tail-parametric block insertion.
 - The `c=1` exit and the subsequent `F/G/H` identities remain valid as standalone projected macros, but the corrected blank-root trace no longer reaches them through the old c=2 reset.
 - Prove the exact `ListBlank` head-boundary/control-state correspondence for the candidate DRegular relation; the right-side image `0 1^(c+1) 0 11` is still unmatched.
 - Formalize the corrected token identities and the corridor macros against the actual source stack successor in Lean; no checked Lean theorem is claimed.
@@ -232,4 +232,4 @@ The exact left-stack tape identity also has a potentially useful relation to the
 
 So the left tape of `Corr(r,c)` is the reversed canonical DRegular section `(a,q,b)=(2,r,0)` with one additional boundary blank at the head. This is an exact string identity from the two encodings. It is only a **candidate bridge**: the exact `ListBlank` head-boundary equivalence, control-state correspondence, and the right-suffix image `encRight([1,c])=0 1^(c+1) 0 11` have not been matched to the DRegular state. Do not treat `Corr(r,c)` as a DRegular state without proving those conditions.
 
-The H(7) tail-parametric growth loop is retained in [HPhaseGrowth.md](HPhaseGrowth.md) as a standalone projected-system identity. The corrected blank-root trace does not reach H(7), so the loop is not a blank-root nonhalting result.
+The H(7) tail-parametric growth loop is retained in [HPhaseGrowth.md](HPhaseGrowth.md) as a standalone projected-system identity. The corrected root has a different candidate 76-step growth family, described in [RootCountdownGrowth.md](RootCountdownGrowth.md); neither projected identity is yet Lean-proved or lifted to an original-TM nonhalting theorem.
