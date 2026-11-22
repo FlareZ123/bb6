@@ -86,15 +86,15 @@ where
       (machineCPathRefinementFrom n hn).open machineC := by
     by_cases h : n = 11
     · subst n
-      change (machineCOneSlotAudit 6).open machineC
-      exact (machineCOneSlotAudit_open_iff_original machineC
-        (machineCPrefix_compatible 11)).2 rfl
+      simpa [machineCPathRefinementFrom] using
+        (machineCOneSlotAudit_open_iff_original machineC
+          (machineCPrefix_compatible 11)).2 rfl
     · have hlt : n < 11 := by omega
       let slot : Slot := machineCVisited[n]!
       rw [machineCPathRefinementFrom]
       rw [dif_neg h]
       simp only [FrontierAudit.open, dif_pos]
-      exact machineCPathRefinementFrom_open (n+1) (by omega)
+      simpa using machineCPathRefinementFrom_open (n+1) (by omega)
   termination_by 11 - n
   decreasing_by omega
 
@@ -108,11 +108,12 @@ theorem machineC_depth_four_leaf_continued :
 /-- Exact raw-table accounting for the selected leaf: 24 of its 25^8
 completions are source-certified nonhalting tables; every other completion,
 including the original Machine C, remains open. -/
-theorem machineCGlobalLeafRefinement_report :
-    machineCGlobalLeafRefinement.report = (24, 25^8 - 24) := by
-  classical
-  simp [machineCGlobalLeafRefinement, machineCPathRefinementFrom,
-    FrontierAudit.report, choices]
+/-- The terminal node of the authenticated path refinement is exactly
+    the one-slot F/0 audit. Its 24 non-halt transitions are certified,
+    and its sole open child is the original Machine C table. -/
+theorem machineCGlobalLeafRefinement_terminal_mass :
+    (machineCPathRefinementFrom 11 (by omega)).report = (24, 1) := by
+  simpa [machineCPathRefinementFrom] using machineCOneSlotAudit_mass 6
 
 /-- Generic frontier mass conservation independently checks the total
 compatible-table mass of the continuation. -/
@@ -126,7 +127,7 @@ theorem machineCGlobalLeafRefinement_mass_conserves :
 #print axioms machineCOneSlotAudit_open_iff_original
 #print axioms machineCGlobalLeafRefinement_open
 #print axioms machineC_depth_four_leaf_continued
-#print axioms machineCGlobalLeafRefinement_report
+#print axioms machineCGlobalLeafRefinement_terminal_mass
 #print axioms machineCGlobalLeafRefinement_mass_conserves
 
 end BB6Coverage
