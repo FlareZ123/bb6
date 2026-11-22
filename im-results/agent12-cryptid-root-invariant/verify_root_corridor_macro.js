@@ -161,7 +161,7 @@ for (let r = 1; r <= 8; r++) {
 // The DR token normalizer removes every leading one in the accumulator,
 // so 0^n 1 has the same normalized endpoint for all tested n.
 for (let n = 0; n <= 32; n++) {
-  assertState("closeTokDR 0^" + n + "1", closeTokDR([1], [...zeros(n), 1]),
+  assertState("closeTokDR 0^" + n + "1", closeTokDR([], [...zeros(n), 1]),
     state("CR", [0, 0, 0, 1], [1]));
   checks++;
 }
