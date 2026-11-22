@@ -76,8 +76,8 @@ def bounce_cr(r3: tuple[int, ...], k0: int, k_acc: tuple[int, ...],
             return bounce_cr(r3, 0, (k0 + 4,) + k_acc, rest)
         if b == 1:
             if not rest:
-                return (k0 + 1,) + k_acc, (0, 0, 2)
-            return (k0 + 1,) + k_acc, (0, 0, rest[0] + 2) + rest[1:]
+                return (k0 + 1,) + k_acc, (0, 1)
+            return (k0 + 1,) + k_acc, (0, rest[0] + 2) + rest[1:]
         # tok_CR_1_add2, followed by bounce_DR.
         return bounce_dr(r3, (1, k0 + 1) + k_acc, (b - 2,) + rest)
     # tok_CR_add2_halts.
@@ -118,7 +118,8 @@ def normalize_el(k: tuple[int, ...], r3: tuple[int, ...],
         k_out, l_out = result
         return normalize_el(k_out, r3, l_out)
     if a == 1:
-        return normalize_el(tail, r3, right_tail)
+        # Source tok_EL_1 prepends one zero to the right suffix.
+        return normalize_el(tail, r3, (0,) + right_tail)
     if a == 2:
         return normalize_el(tail, r3, (1, 0) + right_tail)
 
@@ -204,7 +205,9 @@ def successor(c: StackConfig) -> StackConfig | TokenHalt:
             return StackConfig("DR", (a - 1,) + left_tail, (0,))
         b, *right_tail = right
         right_tail = tuple(right_tail)
-        if b == 0:
+        # Source mode_DR tokenizes right-head 0 and 1; ordinary
+        # DR/CR transitions begin only at right-head >= 2.
+        if b <= 1:
             if a == 0:
                 return close_tok_dr(right_tail, left_tail)
             return close_tok_cr(right_tail, (a - 1,) + left_tail)
@@ -230,13 +233,13 @@ def root_prefix() -> list[StackConfig]:
         c = nxt
         out.append(c)
     expected = [
-        StackConfig("DR", (0,), (1, 0)),
-        StackConfig("DR", (), (1, 0, 0)),
-        StackConfig("EL", (0,), (1, 0, 0)),
-        StackConfig("DL", (0,), (0, 0, 0)),
-        StackConfig("EL", (0, 1), (0, 0)),
-        StackConfig("EL", (0, 0, 1), (0,)),
-        StackConfig("EL", (0, 0, 0, 1), ()),
+        StackConfig("CR", (0, 0, 1), (1,)),
+        StackConfig("CR", (0, 1), (3,)),
+        StackConfig("CR", (1,), (5,)),
+        StackConfig("EL", (0,), (0, 8)),
+        StackConfig("EL", (0, 0), (8,)),
+        StackConfig("DL", (0, 0), (7,)),
+        StackConfig("DR", (0, 0), (1, 5)),
     ]
     assert out[1:] == expected, (out[1:], expected)
     return out
