@@ -1,0 +1,67 @@
+name: Cryptids #490 blank-root right-growth macro (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-root-right-growth:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout pinned DeepMind cryptids source
+        uses: actions/checkout@v4
+        with:
+          repository: google-deepmind/cryptids
+          ref: 3647718b5df22e1a61462dec0376bd204526285a
+          path: cryptids
+
+      - name: Checkout research repository
+        uses: actions/checkout@v4
+        with:
+          path: bb6
+
+      - name: Install pinned Lean toolchain
+        shell: bash
+        run: |
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.35.0-rc4
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lean --version
+
+      - name: Fetch Mathlib cache and build original target module
+        working-directory: cryptids
+        shell: bash
+        run: |
+          lake exe cache get
+          lake build BusyBeaver.BB6.Accelerations.M_1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LEHHH
+
+      - name: Append the blank-root-connected right-growth theorem
+        working-directory: cryptids
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          source = Path("BusyBeaver/BB6/Accelerations/M_1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LEHHH.lean")
+          ending = "end BusyBeaver.M_1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LEHHH"
+          lines = source.read_text().rstrip().splitlines()
+          assert lines[-1].strip() == ending, lines[-1]
+          append = Path("../bb6/im-results/agent35-cryptid-mirror-cancellation/RootRightGrowthMacro.append.lean").read_text()
+          source.write_text("\n".join(lines[:-1]) + "\n\n" + append + ending + "\n")
+          PY
+          git diff --check
+
+      - name: Compile exact-source macro and print its axiom profile
+        working-directory: cryptids
+        shell: bash
+        run: |
+          set -o pipefail
+          lake build BusyBeaver.BB6.Accelerations.M_1RB0RE_1LC1LA1LD_1LC1LF_0LC0LB_1LEHHH 2>&1 | tee /tmp/root-right-growth-build.log
+          line=$(grep -E "root_right_growth_76_raw.*depends on axioms:" /tmp/root-right-growth-build.log | tail -1 || true)
+          echo "$line"
+          if echo "$line" | grep -q 'sorryAx'; then
+            echo "::error::root_right_growth_76_raw depends on sorryAx"
+            exit 1
+          fi
