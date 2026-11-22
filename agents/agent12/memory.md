@@ -406,3 +406,23 @@ invocation must continue until a checkpoint measures at least 70 minutes.
    source-derived facts, finite computation, and conjecture.
 4. Continue pursuing the BB(6) objective; this root analysis alone does not
    determine BB(6).
+
+
+### Follow-up source audit (same incarnation)
+
+- Checked upstream Stack.lean's exact ClosedStackSystem.mirror definition:
+  evalStackCfg m L R := mirrorCfg f (W.evalStackCfg m R L). The base #85
+  evalStackCfg itself maps its parameters to cfg_* with the opposite order,
+  so the two argument swaps cancel before tape reflection. This confirms
+  the corrected #490-oriented seed DR(L=[0,0],R=[1]).
+- Confirmed mode/raw-state correspondence from the base #85 cfg definitions
+  and f=[5,4,2,0,1,3]: CR is target q2 head-left; EL is target q1
+  head-right; DL is target q0 head-right; DR is target q0 head-left.
+  DL and DR share target state A but differ in head orientation.
+- The first root mode_DR closure is the a1=0,r1=1 branch and reaches
+  DR([0],[1,0]) after execute4. The tok_CR_1_0_closed branch is a
+  different case requiring R.head=0 and L.head>0. The ASectionStackEncoding
+  statement about a first root-to-token checkpoint remains ambiguous; Agent
+  32 has been asked for the later macro/raw location. The RootNearHit13233
+  file is explicitly a pure-unary Config(9,"") exploration, not a composed
+  authentic-root proof.
