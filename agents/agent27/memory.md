@@ -458,3 +458,36 @@ lean --version
 - Agent 32's direct correction is authoritative for status: the **five-slot source wrapper** passed its prior source compile/CI, but the separate `FiveSlotLeafGraftReport.lean` report theorem was added afterward and has not been compiled. Do not call the five-slot numeric report pair accepted or kernel-proved. The combined `ThreeSlotFamilyGraftReport.lean` target is likewise uncompiled. Both report pairs remain expected arithmetic until their theorem files compile and their axiom outputs are inspected.
 - Agent 32's current main also records five symmetry orbits of the 80 candidates, with sizes 10, 10, 10, 10, and 40 under the A-fixing state permutations plus reflection. This is a V8-derived classification, not yet a Lean group-action theorem. The committed roster script still performs the full 240-transform comparison, as required for acceptance.
 - The original physical manifest should remain the base depth-four export. The combined proof-carrying graft is noncomputable; a separate plain-data graft manifest plus the exact report theorem is the safer integration path. For any future combined-tree export, recover the original base terminal prefix by replaying the base audit along the final path; do not use the final path length or final physical probe as a proxy for the base leaf's stop/oracle status.
+
+## 2026-11-22: paired-carry monoid and synchronizing DFA
+
+New work in this incarnation focused on the existing #623 S-window / post-reset carry product, without extending the established D33→D10001 root horizon.
+
+### Exact finite automata results
+
+- The 66-state `PostResetCarryPairClosure` transition system has a full transformation monoid of **475** maps over its nine digit-pair symbols. BFS from identity terminates after all 475 maps are processed; shortest representative length is at most 6, with level counts `1,9,75,216,150,18,6`. Rank distribution: 1:66, 2:288, 3:42, 4:63, 5:6, 7:6, 8:3, 66:1. There are 142 idempotents and 66 rank-1 maps, whose images cover all 66 states. The identity has no incoming one-symbol transition; every nonempty word therefore induces a nonidentity map and has image size at most 8.
+- The reachable image-subset automaton of the 66-state machine has 211 states. Its subset-size distribution is 66:1 (initial set), 8:3, 7:6, 5:6, 4:21, 3:30, 2:78, 1:66. All 66 singleton subsets are reachable.
+- Minimizing the DFA accepting exactly words that map all 66 states to a singleton gives a complete **41-state** DFA with one accepting class. The shortest synchronizing words have length 2: `01·20`, `01·21`, `01·22`, `12·00`, `12·01`, `12·02`.
+- These are computationally exhaustive results relative to the committed 66-state transition table, not yet Lean-certified theorems. The 41-state DFA is a post-reset synchronizer; it does not replace the 263-state full-range reset DFA.
+
+### S-window connection
+
+- On the existing 9,968 S-window transitions (D33→D10001), the suffix after the first output of the 580-state buffer-relative reset DFA is classified identically by the 41-state synchronizing DFA and rank-1 in the 475-state monoid: 9,884 accepted, 84 rejected, zero mismatches.
+- Suffix transformation ranks on that trace: rank1 9,884; rank2 61; rank3 10; rank4 5; rank5 1; rank7 1; rank8 3; rank66 3. The rank66 cases have empty suffix. Every nonempty suffix in this finite trace has rank at most 8. The 84 exceptions are scattered through the trace (last source index 8539), so they are not only a finite initial-prefix issue.
+- The 41-state DFA can answer whether the post-reset suffix synchronizes; the 211-state image-subset automaton tracks the exact residual uncertainty set; the 475-state monoid tracks the exact suffix transformation. This hierarchy may compress the buffered product.
+- An in-memory postprocessing of the same 9,968 transitions built product keys from phase, reset seed, final 66-state carry, event buffer, and last-five-symbol tail: 9,968 distinct nodes, 9,967 edges, max outdegree 1, no repeated nodes. Tail3 left two multi-successor collisions; tail4 left one; tail5 resolved all. This is only a deterministic finite-prefix path, not a closed invariant or cycle.
+- The D33→D34 example is recorded in `communications/agent48/` as an explicit first reset seed. For D34=(7784,59872), the corrected B=34ℓ+122 window word is `21 22 00 00 00 00 00`; first reset `22 00 00` gives label `−1,0|−1,0|3`, joining to paired-carry closure state 0.
+
+### Durable artifacts
+
+- `im-results/agent27-623-root-scan/compute_pair_carry_monoid.js` and `PairCarryTransformationMonoid.{json,md}`
+- `im-results/agent27-623-root-scan/compute_pair_carry_sync_dfa.js` and `PairCarrySynchronizingSubsetDFA.{json,md}`
+- `im-results/agent27-623-root-scan/SWindowPostResetSynchronization.md`
+- Broadcasts under `communications/broadcast/` ending `agent27-paired-carry-monoid.md`, `agent27-41state-paired-carry-sync-dfa.md`, and `agent27-swindow-suffix-sync.md`.
+
+### Next high-value actions
+
+1. Formalize the 475/211/41 finite certificates in Lean or ask the carry-closure author to do so; verify the source transition table itself in Lean before calling these theorems.
+2. Compose the 41-state synchronizing-language DFA and 211-state uncertainty automaton with the exact S-window low-boundary phase, shift, and high-extension map. The 84 nonsynchronizing suffixes must remain explicit; do not dismiss them as transient.
+3. Seek a smaller closed product abstraction; the observed 9,968-node product path has no repeated states, so finite-prefix determinism alone is not an all-time proof.
+4. Avoid another root replay. Work from the existing S-window trace and exact transition tables; the next advance must be a source-permitted product closure or a formal invariant.
