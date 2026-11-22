@@ -597,3 +597,22 @@ Next actions:
 2. Check `DL(R.head=0) => L=[0]` and `EL(R.head=1) => L=[0]` as candidate root guards, but derive their preservation from source transitions rather than relying on the million-step observation.
 3. Formalize the corrected token formulas and c=2 drift against the actual source definitions when Lean runtime is available.
 4. Reopen the Agent 32/35 communications about the token audit; correct any remaining source interpretation disagreement. Keep the H-phase loop explicitly standalone unless a new root bridge is proved.
+### 2026-11-22 root countdown and root-reachable 76-step growth
+
+The corrected root continuation yields a new, more promising candidate infinite orbit. This supersedes the idea that a global Z1/two-nonzero invariant is the right final proof: those properties hold only through the first 1,000,000 macro successors and then fail in the later growth phase.
+
+Define `D_n(c) = CR(L=[0], R=0^(4n+5) ++ [c])`. The candidate countdown identity is `S^(8n+24)(D_n(c)) = D_(n+1)(c-3)` for c>=3. Manual V8 array tests passed for n=0..6 and c=3,4,5,10,540. The corrected root reaches D0(540) at macro 22,099; iteration of the formula gives D179(3) at 153,843 and D180(0) at 155,299.
+
+The 1,481-step source-successor run from `D180(0)=CR([0],0^726)` reaches `D0(1453)=CR([0],0^5 ++ [1453])` at macro 156,780. The second countdown has 484 macro applications and duration 946,704, reaching `D484(1)=CR([0],0^1941 ++ [1])` at macro 1,103,484.
+
+After 50,000 more source-equivalent array steps, the root reaches macro 1,153,484 in `DR(L=G,R=[1] ++ B ++ T)`, where `G=[0,0,1,0,1,0,0,0,0,1]` and `B=[16,0,0,0,2,0,0,0,2,0,0,0]`. The actual right list has length 7,330 and begins `[1] ++ B`.
+
+The new root-reachable 76-step macro is tail-parametric:
+`S^76(DR(L=G,R=[1] ++ B ++ T)) = DR(L=G,R=[1] ++ B ++ B ++ T)`.
+It preserves L, inserts B immediately after the leading 1, preserves arbitrary suffix T, and makes zero token-normalizer calls. Tested suffixes: `[]`, `[0]`, `[1]`, `[3,0,0]`, `[7,5,3,1]`, `[12,0,0,0,12,0,0,0,2]`, plus an opaque object sentinel. The actual root state also matched one 76-step iteration. This gives a candidate infinite projected orbit from a root-reachable state once the finite prefix and macro are formally proved.
+
+Important scope correction: `L in Z1` and `R` having at most two nonzero entries were observed only through macro 1,000,000. The later root growth phase leaves Z1 and has unbounded nonzero count in R. Treat the earlier checks as finite-prefix diagnostics, not global invariants.
+
+New artifact: `im-results/agent12-cryptid-root-invariant/RootCountdownGrowth.md`. `verify_root_corridor_macro.js` now contains tests for the D_n samples, the 1,481-step reset, the 50,000-step entry to the growth family, and the tail-parametric 76-step macro. It has not yet been run under Node/CI after these edits. No Lean proof or original-TM nonhalting claim is established.
+
+Highest-value next steps: prove the general D_n countdown identity; prove the 1,481-step reset; formalize the 76-step tail-parametric macro against the source successor; compress the 50,000-step root entry; then lift the infinite projected orbit through the original-TM/source correspondence.
