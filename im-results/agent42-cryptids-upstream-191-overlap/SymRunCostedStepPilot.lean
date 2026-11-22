@@ -1657,6 +1657,36 @@ theorem sweepBB_within (L R : List SymTok) :
 
 /-- Finishing a symbolic element transition only runs a BB sweep when
     the intermediate mode is BB. -/
+
+/-- The BB branch of the outer stepSym map inherits the linear sweep cost
+    when the input trace has at most 94 symbolic tokens. -/
+theorem stepSym_BB_within (L R : List SymTok)
+    (hT : L.length + R.length ≤ 94) :
+    ReachesWithin
+      (2^13 * (pilotStateFieldMax (.BB, L, R) + 1))
+      ((evalSym target_tm) (.BB, L, R))
+      ((evalSym target_tm) (stepSym (.BB, L, R))) := by
+  let M := pilotStateFieldMax (.BB, L, R)
+  have hL : L.length ≤ 94 := by omega
+  have hField : pilotListFieldMax L ≤ M := Nat.le_max_left _ _
+  have hprod :
+      (pilotListFieldMax L + 1) * (L.length + 1) ≤ (M + 1) * 95 :=
+    Nat.mul_le_mul (Nat.add_le_add_right hField 1) (by omega)
+  have hconst : 50 * 95 ≤ 2^13 := by norm_num
+  have hbudget :
+      50 * (pilotListFieldMax L + 1) * (L.length + 1) ≤ 2^13 * (M + 1) := by
+    calc
+      50 * (pilotListFieldMax L + 1) * (L.length + 1)
+        = 50 * ((pilotListFieldMax L + 1) * (L.length + 1)) := by ring
+      _ ≤ 50 * ((M + 1) * 95) := Nat.mul_le_mul_left 50 hprod
+      _ = (50 * 95) * (M + 1) := by ring
+      _ ≤ 2^13 * (M + 1) := Nat.mul_le_mul_right (M + 1) hconst
+  have h := sweepBB_within L R
+  have h' := reachesWithin_mono (by simpa [M] using hbudget) h
+  simpa [stepSym, M] using h'
+
+#print axioms stepSym_BB_within
+
 theorem finishThenBB_within (s : SymMode × List SymTok × List SymTok) :
     ReachesWithin
       (if s.1 = .BB then
