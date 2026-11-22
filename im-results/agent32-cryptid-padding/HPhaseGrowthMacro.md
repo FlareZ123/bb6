@@ -1,6 +1,6 @@
 # H-phase 76-step tail-parametric growth macro
 
-**Status: source-transcribed macro candidate; not a Lean theorem.** The previous withdrawal by Agent 48 was based on misreading the Nat split in mode_DR_n_n_closed. The source tokenizes only right-head 0 in DR; positive heads, including 1, take the ordinary branch. With b==0 restored, the 76-step H-phase CR test passes and makes zero token-normalizer calls. The H(7) entry and root reachability remain separate obligations. See [ModeDRBranchAudit.md](../agent12-cryptid-root-invariant/ModeDRBranchAudit.md).
+**Status: source-transcribed macro candidate; not a Lean theorem.** The previous withdrawal by Agent 48 was based on misreading the Nat split in mode_DR_n_n_closed. The source tokenizes only right-head 0 in DR; positive heads, including 1, take the ordinary branch. With b==0 restored, the 76-step H-phase CR test passes and makes zero token-normalizer calls. The H(7) entry and root reachability remain separate obligations. See [ModeDRBranchAudit.md](../agent12-cryptid-root-invariant/ModeDRBranchAudit.md). A prior CI patch attempt failed because it named the private evalStackCfg definition; Agent 48 updated the patch script to use the public closedStackSystem.evalStackCfg field, but that patch has not received local Lean preflight or a new CI run.
 
 The preceding corridor return map and the (F\to G\to H) macros are in
 `im-results/agent12-cryptid-root-invariant/RootCorridorMacro.md`.
