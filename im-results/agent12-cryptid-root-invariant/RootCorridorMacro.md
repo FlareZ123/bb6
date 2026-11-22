@@ -115,3 +115,19 @@ The long middle runs are exactly repeated applications of case 1. For example, `
 ## Reproducible regression result
 
 The checked-in `verify_root_corridor_macro.js` passed GitHub Actions run `44978821995` on commit `983702c7e6e15d3edb96cfb60565d82b79c973d6`, reporting `{ ok: true, checks: 89 }`. The checks cover `r=1,...,8` for the four macro cases (including `c=3,6` for the decrement case), arbitrary-tail transfer, empty-context `0^n1` DR-token closure for `n=0,...,32`, and selected root-chain transitions including `E(263,2) -> E(3,4)` and `E(7,1) -> F(7)`. This is reproducible executable evidence, not a Lean-checked theorem.
+
+## Closed form for repeated decrement phases
+
+Iterating case 1 `k` times from `E(3,c)` gives, whenever `c ≥ 3k`,
+
+`S^(4k^2+16k)(E(3,c)) = E(3+4k,c-3k)`.
+
+The elapsed time is the sum of the individual macro lengths `2(3+4j)+14 = 20+8j` for `j=0,...,k-1`, namely `4k^2+16k`. This turns each long decrement run into a quadratic-time-indexed family of exact states.
+
+The observed root trace decomposes into these three sweeps:
+
+- From `E(3,21)` at macro 97, take `k=0,...,7`; the endpoint is `E(31,0)` at macro 405, then the zero reset reaches `E(3,69)` at macro 530.
+- From `E(3,69)` at macro 530, take `k=0,...,23`; the endpoint is `E(95,0)` at macro 3014, then the zero reset reaches `E(3,197)` at macro 3331.
+- From `E(3,197)` at macro 3331, take `k=0,...,65`; the endpoint is `E(263,2)` at macro 21271, then the token reset reaches `E(3,4)` at macro 21827.
+
+The final short phase is `E(3,4) -> E(7,1) -> F(7)` at macro indices 21847 and 21888. This is a compact exact description of the corridor-family prefix; it does not imply that the later `F(7)` orbit remains in the `E` family.
