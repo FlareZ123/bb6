@@ -113,10 +113,16 @@ This remains a structural correspondence, not yet a proof that the entire A-step
 
 ## Root-to-cylinder token reachability target
 
-The independent #490 stack reduction supplies a concrete token checkpoint from the blank root. Its seven-step entry is `evalStackCfg .DR_n_n [(0,0),(0,0)] [(1,0)]`; after the #85/#490 state-map transport, the first `mode_DR_n_n_closed` case uses `texecute 3` to reach
-[
-\operatorname{tok\_CR}([1,0],[(0,0)],[0]).
-]
+The independent #490 stack reduction gives a seven-raw-step blank-root entry to
+`evalStackCfg .DR_n_n [(0,0),(0,0)] [(1,0)]`. Under the #85/#490 state-map
+transport, the first `mode_DR_n_n_closed` case has right head 1 and left
+head 0, so it takes the ordinary `execute 4` branch to
+`DR(L=[0],R=[1,0])` at raw time 11. The next DR case again takes the ordinary
+branch and reaches `DR(L=[],R=[1,0,0])` at raw time 15. There is **no**
+root `tok_CR([1,0],[(0,0)],[0])` checkpoint at raw time 10; that earlier
+statement used the reversed stack-argument interpretation and is superseded
+by the corrected root-parameter transport in
+[`DeepMindStackReduction.md`](./DeepMindStackReduction.md).
 
 The external cylinder reaches the separate C-token state
 [
@@ -125,4 +131,11 @@ The external cylinder reaches the separate C-token state
 ]
 after the E0 step described above.
 
-Conditional on transporting DeepMind's `init []` to this repository's D0 root, the missing connection is a reachability question inside the same `tok_CR`/closed-stack subsystem: does the root token state ever reach the cylinder token state (or another halting token state)? The local tape identity above does not answer this. See [`DeepMindStackReduction.md`](./DeepMindStackReduction.md) for the exact source paths and caveats.
+The local E0-to-`tok_CR` tape identity is established, but no path from the
+corrected blank-root trajectory to this cylinder token state has been proved.
+The corrected #490 stack prefix agrees with the D0 raw blank-root checkpoint
+at time 36; the cross-library initial-configuration lemma still needs exact
+dependency compilation. The remaining mathematical problem is to prove that
+the blank-root orbit reaches this token state (or another halting token state),
+or to prove an invariant excluding all halting token states. The local tape
+identity alone does not answer that question.
