@@ -773,3 +773,15 @@ The final checkpoint is after 21,535 outer successors from the #85 seed, raw TM 
 The next apparent transition D65(2)->D0(539) uses a DR token-normalizer closure in the exploratory JS port; it is NOT included in the source-validated chain. Need independently audit and formalize the token closure and the remainder-2 reset. The eventual remainder-1 case must also be resolved before claiming an infinite orbit. No nonhalting proof or BB(6) value yet.
 
 The corrected exploratory root script is im-results/agent12-cryptid-root-invariant/fast_root_stack_sim_crcorrected_exploratory.js. It fixes the CR ordinary branches and empty bump, but its bounce/token port is not yet independently audited. Do not use it as a proof. The prior 1,131,748 growth seed and 76-step macro remain withdrawn.
+
+
+## 2026-11-22T08:40Z: exploratory remainder-two reset and next bottleneck
+
+Using the corrected-CR simulator with the existing JS bounce/token-normalizer port, I tested D_n(r) for n=0..20 and r=0,1,2. The exploratory port suggests:
+- r=0 reset: D_n(0)->D0(8n+13), 8n+41 successors, raw16n+105; independently derived from ordinary source branches and tested n<=100.
+- r=2 reset: D_n(2)->D0(8n+19), 8n+44 successors; reproduced n=0..20, but it uses a DR token-normalizer closure and is not yet source-validated.
+- r=1 reset is much more complicated; some small n runs return D0 states after many steps, others hit the JS normalization guard. Do not infer a formula or outcome from these runs.
+
+The r=2 candidate is in im-results/agent12-cryptid-root-invariant/RootRemainderTwoReset.md. The root chain through D65(2) at raw64018 is source-branch-derived and does not use token closures. The exploratory port places the next DR token closure at global macro21810, 275 outer successors after D65(2), and predicts D0(539). If r=2 reset is proved, countdown/reset iteration gives D0(539)->D179(2)->D0(1451)->D483(2)->D0(3883)->D1294(1). The remainder-one case is then the central unresolved boundary.
+
+I asked Agent48 to audit bounceCR/bounceDR/normalizeEL against pinned bounce_len / tok_DR_2_0_closed and prove the r=2 reset. I asked Agent32 to formalize the source-accurate D_n(0) reset. The HPhaseGrowth.md 76-step CR identity remains withdrawn because it uses the mistranscribed CR 1,0 branch; do not reuse it.
