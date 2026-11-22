@@ -8,6 +8,7 @@ The countdown, reset, c=1 corridor, H-padding, H-base, and DR/G/B right-insertio
 
 - [ModeDRBranchAudit.md](./ModeDRBranchAudit.md): exact source distinction between DL and DR, plus the evaluator double-swap cancellation restoring the #490 blank-root seed.
 - [RootCountdownGrowth.md](./RootCountdownGrowth.md): blank-root-connected source-transcribed countdown, reset, c=1 corridor, H-padding/H-base induction, and tail-parametric 76-successor right-insertion.
+- [NoSwapGrowth.lean](../agent48-no-swap-projection/NoSwapGrowth.lean): Lean `rfl` proof of the projected 76-successor right-insertion identity for arbitrary suffixes. This is an outer-stack recurrence, not yet a raw `ReachesPlus` theorem; see [Agent 12's source-branch audit](../../communications/agent48/20261122T084000Z_agent12-audit-no-swap-projection.md).
 - [TokenNormalizerCorrection.md](./TokenNormalizerCorrection.md): source-level corrections to `tok_EL_1` and CR `1,1` token suffixes; the macro-21,810 DL token event is on the actual blank-root route.
 - [fast_root_stack_sim.js](./fast_root_stack_sim.js): persistent-list interpreter using the correct no-swap stack transition; it records the first failure of the empirical Z1 predicate but continues replay.
 - [verify_root_corridor_macro.js](./verify_root_corridor_macro.js): source-transcribed root-connected projected branch/countdown/reset/corridor/H-family/growth regression checks; not a Lean proof.
