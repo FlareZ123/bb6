@@ -229,7 +229,7 @@ The preceding known source macros from \(E_{1,192,248,236}(2)\) reach \(D_{22,60
 
 The total raw cost from \(E_{1,192,248,236}(2)\) through this return to \(E_{160,771,976,531}(13)\) is 360,907,035,686,332,048,624,882. This is a conditional source-lemma computation; the token proof and the preceding reset/countdown lemmas still need kernel verification.
 
-The index map \(n\mapsto(64n+107)/9\) is a one-base-3-digit shift with an affine unit multiplier on the domain \(n\equiv1\pmod9\). In particular, writing \(n=1+9a\) gives \(n'=19+64a\). The next residue class modulo 9 therefore depends on the next base-9 digit of \(n\); it is not constant across iterations.
+The index map \(n\mapsto(64n+107)/9\) is a one-base-9-digit shift (two base-3 digits) with an affine unit multiplier on the domain \(n\equiv1\pmod9\). In particular, writing \(n=1+9a\) gives \(n'=19+64a\). The next residue class modulo 9 therefore depends on the next base-9 digit of \(n\); it is not constant across iterations.
 ## Reproducibility and limitations
 
 verify_suffix13_macro.py transcribes the ordinary CR/EL/DL/DR stack clauses and checks the decrement and remainder-one formulas at small parameters. The finite checks cover \(n=0,\ldots,4\) and \(x\in\{3,4,7,10,13,16\}\). They are bounded source-transcribed computation, not a proof of the quantified statements.
