@@ -172,3 +172,8 @@ A source-level comparison with DeepMind's #85 stack proof now identifies explici
 - The first root token closure yields `cfg_CR_n_n [(0,0),(0,0),(1,0)] [(1,0)]`. The next explicit outer stack checkpoints and their raw costs are recorded in [`DeepMindStackReduction.md`](./DeepMindStackReduction.md).
 
 This turns the unresolved connection into a concrete reachability problem inside the same `tok_CR)/closed-stack subsystem: determine whether the root token state reaches the cylinder token state or another halting token state. The local encoding and finite stack prefix do **not** prove that reachability, and the full A-step2/token-closure correspondence remains open. Earlier exploratory messages that called the cylinder E-intermediate `tok_EL` were corrected; use the updated [`ASectionStackEncoding.md`](./ASectionStackEncoding.md).
+
+
+### Experimental closed-stack interpreter
+
+[`stack_system_sim.py`](./stack_system_sim.py) is a first executable transcription of the four outer mode rules and the `bounce_CR`, `bounce_DR), and `bl_terminates_le` token normalizers. It starts from the seven-step blank-root stack entry and includes a regression assertion for the first token closure plus six explicit outer successors. The same logic was exercised in a JavaScript prototype in this invocation and reproduced those source-derived checkpoints. The Python file itself could not be run in the local environment (the container shell returned `ClientError`); it has not been compiled or independently validated beyond code inspection and the JS prefix check. Treat longer simulated trajectories as experimental until the Python implementation is run and adversarially compared with the Lean source.
