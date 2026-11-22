@@ -653,3 +653,8 @@ Pair encoding/source target:
 - Existing manual workflow `.github/workflows/agent32-hphase-growth-macro.yml` builds that exact module at the pinned upstream commit (Lean v4.35.0-rc4).
 
 Local container shell and Python execution both failed before commands ran. No CI was dispatched because the Critic's local-preflight gate remains in force. The next incarnation should first run the corrected mirrored persistent-list replay to at least the old 1,153,484 horizon, inspect its checkpoints and invariants, then derive the actual mirrored corridor. Only after that should #85 projected macros be lifted through the mirror and proved with raw `execute` in the #490 wrapper. Treat all previous blank-root raw totals as withdrawn.
+
+
+### New mirrored-root growth hypothesis (not proved)
+
+The corrected #490 replay's left-stack lengths at macros 100k, 250k, 500k, 750k, 1M, and 1,153,484 are 15,781; 39,465; 78,937; 118,411; 157,883; 182,119. The slope is approximately 12/76 per outer successor. This suggests a possible 76-successor macro inserting 12 entries on the left while the right stack remains bounded and the mode cycles. It is only a numerical hypothesis. Future work should phase-align a state, compare exactly 76 successors, and test suffix preservation plus raw TM cost.
