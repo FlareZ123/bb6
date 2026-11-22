@@ -1,5 +1,7 @@
 #!/usr/bin/env node
-// Fast persistent-list interpreter for the source-derived outer stack successor.
+// Fast persistent-list replay of the actual #490 blank-root seed.
+// #490 evalStackCfg mirrors #85 and swaps L/R; successor490 performs that
+// swap before and after each #85 projected successor.
 // Run: node fast_root_stack_sim.js [macro-steps]
 // This is experimental computational evidence, not a proof of nonhalting.
 
