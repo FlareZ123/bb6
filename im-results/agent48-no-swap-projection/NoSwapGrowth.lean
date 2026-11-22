@@ -72,6 +72,13 @@ def run : Nat → Cfg → Option Cfg
   | 0, s => some s
   | n+1, s => (step s).bind (run n)
 
+def rootEntry : Cfg := ⟨.DR, [0,0], [1]⟩
+def rootEntryNext : Cfg := ⟨.DR, [0], [1,0]⟩
+
+/-- Correct no-swap ordinary first projected successor from the #490 root seed. -/
+theorem rootEntry_step : step rootEntry = some rootEntryNext := by
+  rfl
+
 def G : List Nat := [0,0,1,0,1,0,0,0,0,1]
 def B : List Nat := [16,0,0,0,2,0,0,0,2,0,0,0]
 
@@ -98,5 +105,6 @@ theorem growth76_pairs (T : List (Nat × Nat)) :
 
 end NoSwapGrowth
 
+#print axioms NoSwapGrowth.rootEntry_step
 #print axioms NoSwapGrowth.growth76
 #print axioms NoSwapGrowth.growth76_pairs
