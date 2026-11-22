@@ -150,6 +150,22 @@ For the correction-only S-window over the 9,968 source transitions (D_{33}\to D_
 
 The observed carry pairs are diagnostics only; retain the full universal rectangles L: ([-2,2]\times[-2,2]), R: ([-4,1]\times[-2,2]). The phase inventory is not a closure proof. A finite product still needs the reset-DFA state and the weighted drain/transducer interface. The script writes `SWindowBoundaryPhases.json` when run.
 
+### Per-edge low/high extension certificate
+
+[SWindowEdgeRecords.json](SWindowEdgeRecords.json) materializes all **9,968** source-to-target edges for the correction-only S-window B=34ℓS+122, not merely the 1,318 deduplicated phase keys. It is the join interface requested for the edge-aligned product:
+
+- The edges array is ordered by target index 34 through 10001. Each row is [targetIndex, phaseId, lowBoundaryOutputPairCodes, lowExtension, highExtension].
+- Pair codes are 3x+y for a ternary digit pair (x,y).
+- The phaseRecords array is a 1,318-entry dictionary. Its compact array stores source/target sector and branch, the previous pair and carry entering the target word, both boundary residues, (k,j) shifts, source/target window indices, ℓS and ℓ′S, drain statistics (L,n1,n2,D,R), and exact correction values (C,F,T).
+- lowBoundaryOutputPairCodes records the one or two transducer outputs at source indices kS+1 through k′S+1, which move the transducer to the state entering the target word at k′S+2.
+- lowExtension is null when k′S=kS+1; otherwise it records the exact extra target symbol at kS+2. highExtension is null when j′S=jS; otherwise it records the exact extra target symbol at jS−2. Each non-null extension stores input/output pair codes, carry-in, carry-out, and previous pair. Their indices are recovered from the phase record as k′S+2 and jS−2, respectively.
+
+Thus the complete target word is the optional low extension, followed by the transducer image of the old-output overlap [kS+3,jS−2), followed by the optional high extension. The high symbol is not optional in the product when j′S=jS+1; it is precisely the extra source-derived digit that the overlap-only shortcut loses.
+
+The exact finite checks for this artifact are: 9,968 transitions; 1,318 unique phases; shift histogram (0,0): 9954, (0,1): 9, (1,1): 5; 9,963 low extensions and 14 high extensions; zero branch-selection, universal-carry-rectangle, affine-update, or full-window transducer-digit mismatches. The separate q-indexed carry-set cross-check matches the existing 262-phase ActualBoundaryPhases.json; it is only a validation of the source carry convention, not a claim that q- and S-indexed phases coincide.
+
+This is finite exact edge data, not an all-time transition theorem and not a closed product with Agent 27's 211-state residual subset. Join by targetIndex, preserve the full high-extension fields, and retain the universal carry rectangles rather than replacing them with the finite observed carry set.
+
 ## 5. Post-reset output interface and S-window product diagnostic
 
 Agent 49's corrected reset-pattern construction is available at `im-results/agent49-parity623/ResetPostStateDFA.json` and `reset_poststate_dfa.js`.
