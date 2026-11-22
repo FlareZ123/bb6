@@ -71,3 +71,15 @@ example : normalizedStack 0 = (369, []) := by decide
 #eval normalizedStack 8841438
 #eval normalizeRootIndex 8129901390942
 #eval normalizedStack 8129901390942
+
+
+/- Arithmetic checks for the independent suffix-[9] zero-reset macro. -/
+def suffixNineZeroOutput (n : Nat) : Nat := 8 * n + 39
+def suffixNineZeroOuter (n : Nat) : Nat := 32 * n + 169
+def suffixNineZeroRaw (n : Nat) : Nat := 88 * n + 454
+def remainderOneOutput (n : Nat) : Nat := 8 * n + 7
+
+example : suffixNineZeroOutput 447093083 = 3576744703 := by decide
+example : suffixNineZeroOuter 447093083 = 14306978825 := by decide
+example : suffixNineZeroRaw 447093083 = 39344191758 := by decide
+example : remainderOneOutput 1192248234 = 9537985879 := by decide
