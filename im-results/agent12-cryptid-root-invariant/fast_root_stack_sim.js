@@ -173,6 +173,11 @@ function successor(c, macro) {
   return halted("unknown mode");
 }
 
+function successor490(c, macro) {
+  const p = successor({ mode: c.mode, L: c.R, R: c.L }, macro);
+  return p.halt ? p : { mode: p.mode, L: p.R, R: p.L };
+}
+
 // Empirical candidate invariant. Z1 is the regular language 0*(epsilon | 1).
 function invariantFailures(c) {
   const { mode, L, R } = c;
@@ -201,36 +206,39 @@ let maxLeftLength = 0, maxRightLength = 0, maxEntry = 0, maxLeftOnes = 0;
 let maxLeftNonzeros = 0, maxRightNonzeros = 0;
 let minDRRightHead = Infinity;
 const watchpoints = new Set([
-  21810, 21811, 21827, 22083, 22099,
-  153843, 155299, 156780, 1103484, 1113215, 1131748, 1153484
+  0, 1, 10, 100, 1000, 10000, 21810, 21811, 21827, 22083, 22099,
+  100000, 500000, 1000000, 1153484
 ]);
 const snapshots = {};
 function snapshot(c) {
+  const p = { mode: c.mode, L: c.R, R: c.L };
   return {
     mode: c.mode,
     leftLength: c.L?.len ?? 0,
     rightLength: c.R?.len ?? 0,
-    leftOnes: c.L?.ones ?? 0,
     leftHead: take(c.L, 16),
     rightHead: take(c.R, 16),
+    underlying85LeftHead: take(p.L, 16),
+    underlying85RightHead: take(p.R, 16),
     tokenEvents: stats.tokenEventCount
   };
 }
 for (let i = 0; i < steps; ++i) {
   if (watchpoints.has(i)) snapshots[i] = snapshot(c);
-  const failures = invariantFailures(c);
+  const underlying85 = { mode: c.mode, L: c.R, R: c.L };
+  const failures = invariantFailures(underlying85);
   if (failures.length) {
     invariantViolation = { macro: i, failures, state: { mode: c.mode, L: take(c.L, 20), R: take(c.R, 20) } };
     break;
   }
-  maxLeftLength = Math.max(maxLeftLength, c.L?.len ?? 0);
-  maxRightLength = Math.max(maxRightLength, c.R?.len ?? 0);
-  maxEntry = Math.max(maxEntry, c.L?.max ?? 0, c.R?.max ?? 0);
-  maxLeftOnes = Math.max(maxLeftOnes, c.L?.ones ?? 0);
-  maxLeftNonzeros = Math.max(maxLeftNonzeros, c.L?.nz ?? 0);
-  maxRightNonzeros = Math.max(maxRightNonzeros, c.R?.nz ?? 0);
-  if (c.mode === "DR") minDRRightHead = Math.min(minDRRightHead, c.R?.v ?? Infinity);
-  const next = successor(c, i);
+  maxLeftLength = Math.max(maxLeftLength, underlying85.L?.len ?? 0);
+  maxRightLength = Math.max(maxRightLength, underlying85.R?.len ?? 0);
+  maxEntry = Math.max(maxEntry, underlying85.L?.max ?? 0, underlying85.R?.max ?? 0);
+  maxLeftOnes = Math.max(maxLeftOnes, underlying85.L?.ones ?? 0);
+  maxLeftNonzeros = Math.max(maxLeftNonzeros, underlying85.L?.nz ?? 0);
+  maxRightNonzeros = Math.max(maxRightNonzeros, underlying85.R?.nz ?? 0);
+  if (c.mode === "DR") minDRRightHead = Math.min(minDRRightHead, underlying85.R?.v ?? Infinity);
+  const next = successor490(c, i);
   if (next.halt) {
     haltAt = { macro: i, reason: next.halt, state: { mode: c.mode, L: take(c.L, 20), R: take(c.R, 20) } };
     break;
