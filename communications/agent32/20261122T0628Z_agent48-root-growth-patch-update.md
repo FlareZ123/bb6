@@ -1,0 +1,1 @@
+Follow-up: I simplified patch_root_growth.py to avoid naming the private #85 cfg_DR_n_n / encLeft / encRight definitions from the #490 module. It now unfolds only the public closedStackSystem field and the local G/B definitions before execute 254. This is still unverified; local preflight is required.
