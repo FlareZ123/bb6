@@ -1633,3 +1633,53 @@ Inspected GitHub Actions run 44898135063 for `.github/workflows/agent41-623-drai
 3. Continue the root product using the exact reset seed and exact 66-state final carry, keeping source-to-target and own-start phases separate.
 4. Derive a source-level update for scale/window and event-buffer context; do not assume the 697 × 211 or 697 × 66 products close.
 5. Keep all finite scans and product diagnostics in `im-results/`; no new academically publishable result or BB(6) proof was established in this invocation.
+
+
+## 2026-11-22 correction: source-faithful B_corr event product
+
+A source audit by Agent27 identified that the earlier `agent1-623-swindow-obstruction-product` used the superseded conservative buffer \(\max(34\ell+140,36\ell+88)\) and an own-start phase, not the authentic S-window. I retracted its numerical claims in its README and marked its script as historical only. Do not use its 81/82, 697-phase, or collision figures as authentic S-window results. The exact-seed semantic distinction survives.
+
+### Correct replay
+
+Added `im-results/agent1-623-bcorr-event-product/README.md` and `analyze_bcorr_event_product.js`. This uses the exact correction-only S-indexed buffer
+\[
+B_{\mathrm{corr}}=34\ell_S+122
+\]
+and the complete source-to-target phase update from `im-results/agent48-623-tight-window/s_window_boundary_phases.js`, including low-boundary advancement through one or two digits and target sector/branch.
+
+Finite scan D33->D34 through D10000->D10001:
+- 9,968 transitions;
+- 1,318 source-to-target phase keys;
+- 114 observed universal 211-subset states;
+- 84 nonsynchronizing suffixes (matches `SWindowPostResetSynchronization.md`);
+- zero reset failures, branch/sign-vs-threshold mismatches, post-reset/reset-end mismatches, missing exact seeds, buffer-event/reset-end mismatches, or final carries outside the corresponding 211 subset.
+
+The 736-state reset-output DFA supplies the exact seed; the 66-state closure propagates the actual final carry. The 211 subset is only a universal rank-one diagnostic across all 66 seeds. All 66 final carry states are observed in the finite scan.
+
+### Compact buffer-relative product
+
+The 580-state `pair_carry_and_length` quotient from `im-results/agent48-623-tight-window/ResetPostStateDFA_BufferRelative.json` yields a compact event descriptor at the first reset output:
+- zero-based event position i;
+- pre-output DFA state q;
+- current symbol s;
+- second witness symbol b, recovered from the rolling five-symbol buffer as history[6-L].
+
+The product key
+\[
+(\text{source-to-target phase},\text{exact final 66-state carry},i,q,s,b)
+\]
+has 9,968 distinct keys, zero repeated keys, zero branching keys, and maximum observed outdegree 1. The post-output state is determined by (q,s), so it is omitted. The exact seed is used to compute final carry but is not separately required in the finite product key. No raw tail5 or 211 subset is needed in this compact key.
+
+Ablation counts are in the dossier README. The key event features are not interchangeable: with output state and phase/final carry, adding pre-state+symbol+second symbol but omitting event position leaves 2 branching keys; adding event position removes both. This compact product is a deterministic encoding of the observed trace, not a finite closure: all 9,968 product states are distinct.
+
+Agent48's `verify_buffer_relative_postreset.js` verifies the 580-state quotient against the original 736-state DFA for all words of length 0..6 (597,871 words) and checks previous-pair/second-symbol recovery. This validates the quotient, not the root product.
+
+### Persistence and next work
+
+- New source-faithful dossier: `im-results/agent1-623-bcorr-event-product/`.
+- Retracted historical dossier: `im-results/agent1-623-swindow-obstruction-product/`.
+- Sent the exact B_corr product and collision diagnostics to Agent27; broadcast the compact event product to the swarm.
+- The standalone Node script is committed but has not been smoke-tested in local Node or CI in this invocation. The in-session JavaScript computation used the same recurrence and automata; run the script in Node/CI to reproduce.
+- The Agent41 Lean workflow failure at `DrainValuationNormalForm.lean:40:8` still occurs before the Agent1 source bridge modules compile. Do not infer that the bridge is Lean-certified.
+- Next: (1) run the Node script in a working shell/CI; (2) collaborate with Agent27 on deriving an all-time transition/ranking argument from the compact product; (3) investigate the logarithmic ratio-four gap invariant, keeping finite observations separate from proof; (4) repair the Lean induction blocker and compile the source-linked bridge.
+- No academically publishable result or BB(6) proof was established. Keep this material in `im-results/`, not `results/`.
