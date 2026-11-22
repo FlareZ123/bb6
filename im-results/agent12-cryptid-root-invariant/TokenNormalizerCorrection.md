@@ -1,6 +1,6 @@
-# Source audit: corrected token normalization and root continuation
+# Source audit: corrected token normalization (root lift withdrawn)
 
-**Status:** the token-normalizer corrections below remain source-derived. The later blanket withdrawal of the root continuation was based on a misreading of the outer DR rule: `mode_DR_n_n_closed` tokenizes right-head 0 only; positive right heads are ordinary. The separate `mode_DL_0_n_closed` rule tokenizes right-head 1. See [ModeDRBranchAudit.md](./ModeDRBranchAudit.md) for the source audit and recovered root computations.
+**Status:** the token-normalizer corrections and source branch distinctions below remain valid. However, the previously claimed root continuation is withdrawn because the #490 wrapper mirrors #85 and swaps L/R. The macro-21,810 token event below belongs to a synthetic unmirrored #85 trace, not the actual #490 blank-root trajectory. The actual #490 blank seed corresponds to #85 `DR(L=[1],R=[0,0])` and has an immediate `tok_CR_1_0_closed` event. See [ModeDRBranchAudit.md](./ModeDRBranchAudit.md) for the mirror correction.
 
 ## Pinned source
 
@@ -114,24 +114,24 @@ The token-normalizer formulas above are unaffected by this outer-mode correction
 
 ## Repository changes
 
-- `fast_root_stack_sim.js`: retains the token-normalizer corrections and token-normalizes DR right-head 0 only; positive DR heads are ordinary.
-- `verify_root_corridor_macro.js`: checks the source branch, countdown samples, reset, and the two 76-successor macro candidates.
-- `stack_system_sim.py`: uses the same DR right-head split; the DL right-head-one token branch remains separate.
+- `fast_root_stack_sim.js`: now simulates the actual #490 blank root by swapping stacks into #85 orientation for each successor; its long replay has not yet been run.
+- `verify_root_corridor_macro.js`: checks #85-side projected branch/countdown/reset and growth macro candidates only; it does not establish blank-root reachability.
+- `stack_system_sim.py`: retains the #85-side projected DR right-head split; do not treat its unmirrored root trace as the #490 blank trajectory.
 - The folder README and current proof target are [README.md](./README.md) and [RootCountdownGrowth.md](./RootCountdownGrowth.md).
 
 The updated checked-in Node harness has not yet been run under Node/CI after
-these edits. Local shell execution returned a tool-level ClientError. The
-formula checks and corrected root continuation were instead exercised in the
-available V8 runtime using a direct source-equivalent transcription. No Lean
-compile or axiom audit was performed.
+these edits. Local shell and Python execution returned tool-level errors. The
+projected formula checks were exercised in the available V8 runtime using a
+direct source-equivalent transcription. No Lean compile or axiom audit was
+performed.
 
 
-## Corrected root token event and raw-step count
+## Synthetic #85 token event and raw-step count (not blank-root)
 
-The root event is `closeTokDR([],0^267 ++ [1])). It is reached at macro 21,810 from `DL(L=0^267 ++ [1],R=[1])`; the DL branch's initial `tExecute 4` enters the token closure. The source lemmas then give:
+This synthetic #85 event is `closeTokDR([],0^267 ++ [1])`. It is reached at macro 21,810 from `DL(L=0^267 ++ [1],R=[1])` in the unmirrored projected trace; the DL branch's initial `tExecute 4` enters the token closure. The source lemmas then give:
 - 267 `tok_DR_zero` applications at 4 raw steps each;
 - one `tok_DR_1_nil_28` at 28 raw steps;
 - 268 `tok_EL_1` applications at 2 raw steps each;
 - one `tok_EL_exit_zero` at 1 raw step.
 
-Including the DL prefix, the event costs `4 + 267·4 + 28 + 268·2 + 1 = 1,637` raw TM steps and returns `CR(L=0^271 ++ [1],R=[1])`. The ordinary root prefix before and after the event costs 64,565 and 595 raw steps respectively; together with the initial 7 raw blank-root steps, blank tape reaches `D_0(540)` in 66,804 raw TM steps.
+Including the DL prefix, the event costs `4 + 267·4 + 28 + 268·2 + 1 = 1,637` raw TM steps and returns `CR(L=0^271 ++ [1],R=[1])`. The ordinary synthetic prefix before and after the event costs 64,565 and 595 raw steps respectively. These counts do not apply to the #490 blank root, and the former 66,804 blank-to-`D_0(540)` claim is withdrawn.
