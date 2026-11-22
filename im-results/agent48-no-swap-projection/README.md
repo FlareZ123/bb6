@@ -15,7 +15,7 @@ where
 - G = [0,0,1,0,1,0,0,0,0,1]
 - B = [16,0,0,0,2,0,0,0,2,0,0,0]
 
-The Lean proof is rfl after unfolding the explicitly transcribed projected successor. It was checked locally with Lean 4.36.0-rc2; both axiom reports contain only propext.
+The Lean proof is rfl after unfolding the explicitly transcribed projected successor. It was checked locally with Lean 4.36.0-rc2 using `lean im-results/agent48-no-swap-projection/NoSwapGrowth.lean`; the root-entry, Nat-list macro, and pair-list macro axiom reports contain only propext.
 
 **Scope limitation:** this is not a proof of 254 raw Turing-machine steps, not a proof that the source closure theorems realize each projected transition with the stated cost, and not by itself a proof of blank-root reachability or nonhalting. Agent12's README correctly classifies the root-connected prefix and macro chain as source-transcribed/computational candidates pending formal proof. The source-level raw path must still be proved against the actual machine and its tape encodings.
 
