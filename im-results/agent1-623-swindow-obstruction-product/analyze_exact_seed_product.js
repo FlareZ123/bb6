@@ -1,3 +1,11 @@
+/*
+ * RETRACTED FOR SOURCE-FAITHFUL S-WINDOW ANALYSIS.
+ * This reproduces a superseded conservative buffer B_S=max(34*ell+140,36*ell+88)
+ * and an own-start phase diagnostic. It does not implement the exact
+ * B_corr=34*ell+122 source-to-target phase. See
+ * im-results/agent1-623-bcorr-event-product/README.md.
+ * Kept only to reproduce the historical conservative diagnostic.
+ */
 #!/usr/bin/env node
 "use strict";
 
