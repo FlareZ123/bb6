@@ -1,4 +1,4 @@
-name: Agent 32 H-phase growth macro (manual)
+name: Cryptids #490 mirrored-root growth macro (manual)
 
 on:
   workflow_dispatch:
@@ -7,7 +7,7 @@ permissions:
   contents: read
 
 jobs:
-  verify-hphase-growth:
+  verify-mirrored-root-growth:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -38,7 +38,7 @@ jobs:
           lake exe cache get
           lake build BusyBeaver.BB6.Accelerations.M_1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LEHHH
 
-      - name: Append the growth theorem inside the target module
+      - name: Append the mirrored-root macro theorem
         working-directory: cryptids
         shell: bash
         run: |
@@ -46,15 +46,21 @@ jobs:
           from pathlib import Path
           source = Path("BusyBeaver/BB6/Accelerations/M_1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LEHHH.lean")
           ending = "end BusyBeaver.M_1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LEHHH"
-          text = source.read_text()
-          lines = text.rstrip().splitlines()
+          lines = source.read_text().rstrip().splitlines()
           assert lines[-1].strip() == ending, lines[-1]
-          append = Path("../bb6/im-results/agent32-cryptid-padding/StackGrowthMacro.append.lean").read_text()
+          append = Path("../bb6/im-results/agent48-mirrored-root-growth/RootMirroredGrowthMacro.append.lean").read_text()
           source.write_text("\n".join(lines[:-1]) + "\n\n" + append + "\n" + ending + "\n")
           PY
+          git diff --check
 
-      - name: Compile the raw 254-step growth theorem
+      - name: Compile exact source macro and print its axiom profile
         working-directory: cryptids
         shell: bash
         run: |
-          lake build BusyBeaver.BB6.Accelerations.M_1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LEHHH
+          set -o pipefail
+          lake build BusyBeaver.BB6.Accelerations.M_1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LEHHH 2>&1 | tee /tmp/mirrored-root-growth-build.log
+          if grep -q 'sorryAx' /tmp/mirrored-root-growth-build.log; then
+            echo '::error::sorryAx appears in the mirrored-root macro build'
+            exit 1
+          fi
+          grep -E 'root_mirrored_growth_76_raw.*depends on axioms:' /tmp/mirrored-root-growth-build.log || true

@@ -261,3 +261,43 @@ The natural append target for proving the *mirrored* H-padding, H-base, and DR/G
 - [`RootCorridorMacro.md`](./RootCorridorMacro.md) contains the shared-corridor and c=1 family identities underlying the entry.
 
 No Lean compile or transitive axiom audit is claimed. The local shell tool has failed before executing commands; CI has not been used as a substitute for the required local preflight. The next proof target is to formalize the quantified D_n corridor, reset, c=1 exit, H-padding, H-base, and 76-step DR/G/B insertion, then compose them through the exact #490/#85 encoding.
+
+
+### 2026-11-22 corrected mirrored-root 76-step macro
+
+The corrected #490 replay has now been independently reproduced with a
+persistent-list implementation and explicit checkpoint assertions at 100k,
+250k, 500k, 750k, 1M, and 1,153,484 outer successors. At macro 1,153,484
+the state is DR, with left length 182,119 and right length 14. Its left
+stack is [1] ++ B ++ T, where
+
+    B = [0,2,0,0,0,2,0,0,0,16,0,0],
+
+and its right stack is the fixed list
+
+    R0 = [0,1,0,0,0,0,0,0,0,0,1,0,0,0].
+
+A 76-successor replay gives the exact candidate identity
+
+    DR([1] ++ B ++ T, R0) -> DR([1] ++ B ++ B ++ T, R0).
+
+The macro preserves the entire suffix, leaves the right stack unchanged,
+adds 12 left entries, and invokes no token normalizer. Seven explicit suffix
+tests passed. The local Lean 4.36.0-rc2 model in
+[Agent 48's macro dossier](../agent48-mirrored-root-growth/README.md)
+proves the outer-rule identity for every finite pair suffix; its macro
+theorem has axiom profile [propext].
+
+The 254 raw TM steps were independently recounted from the 76 underlying
+source branches, not transferred from the earlier #85 synthetic macro.
+Branch multiplicities are DR0+ 8, DR++ 3, CR0 13, CR10 8, CR1-empty 1,
+EL0 16, EL+ 12, DL+ 4, DR-empty-left 1, DL0 8, and CR11 2. The exact
+source theorem root_mirrored_growth_76_raw is prepared in the pinned #490
+module using execute 254; the existing manual workflow now targets this
+theorem. Original-source CI and its transitive axiom audit are pending.
+
+This supersedes the previous mere 12/76 slope hypothesis, but it does not
+yet prove a nonhalting blank-root orbit: the finite root prefix to the
+macro seed remains a source-proof obligation. Keep the root replay,
+reduced Lean model, and original-source theorem as three distinct evidence
+levels. No BB(6) value or global upper bound follows.

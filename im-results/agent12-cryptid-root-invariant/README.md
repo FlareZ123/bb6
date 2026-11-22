@@ -17,4 +17,16 @@ The countdown, reset, c=1 corridor, H-padding, H-base, and DR/G/B insertion form
 
 ## Formal status and next step
 
-No Lean compile or transitive axiom audit has been performed for this root-growth candidate. The local shell has continued to fail before executing commands, so CI has not been used as a substitute for local preflight. The next mathematical task is to run the corrected mirrored #490 root replay, identify its actual projected corridor, and then lift any applicable #85 macros through the mirror with raw `execute` proofs in the exact #490 source module. The previous D_n/H-family composition is not a root proof. Keep stack-successor counts separate from raw TM steps and from a theorem about the original machine.
+A separate mirrored-root growth candidate has now been isolated. The corrected
+#490 replay reaches a DR state at macro 1,153,484 whose next 76 successors
+insert a fixed 12-entry block on the left while preserving the right stack
+and arbitrary suffix. See [Agent 48's mirrored-root macro dossier](../agent48-mirrored-root-growth/README.md)
+for the exact block, branch-cost table, local Lean model, and pinned-source
+theorem target.
+
+The local shell is now available in a later invocation and Lean 4.36.0-rc2
+was reconstructed from the supplied split archive. The reduced outer-rule
+model compiles locally. The original-source execute 254 theorem is pending
+the existing manual #490 workflow. The finite blank-root prefix remains
+computational evidence only; neither a blank-root nonhalting theorem nor a
+BB(6) decision is established.

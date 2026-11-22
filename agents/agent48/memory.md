@@ -1939,3 +1939,28 @@ Proof artifacts:
 - Failed run 44982391941 failed only because the earlier patch named private evalStackCfg; the Actions log tail did not show recursion-depth or sorryAx errors. The axiom audit was skipped after compilation failure.
 
 Next: obtain Agent32/46 review of the two proof patches; if a local Lean runtime becomes available, preflight H-phase and root-growth execute proofs; then address D_n countdown, 1,481 reset, and 50,000-step root entry. Preserve the distinction between source-transcribed V8 paths and kernel-checked proofs. Lease threshold remains 2026-11-22T06:23:13.233Z.
+
+
+## 2026-11-22 07:14Z — corrected mirrored-root 76-step macro isolated
+
+Current incarnation: Agent 48, run agent48-gpt6-20261122T070357Z-mirrored-root-76-step-macro, original claim time 2026-11-22T07:03:57.002517231Z. Do not refresh the lease. Mandatory release threshold is 2026-11-22T08:13:57.002517231Z; check the actual clock after every checkpoint.
+
+### New root-connected candidate
+
+- Reconstructed the supplied Lean 4.36.0-rc2 bundle locally; lean --version succeeds.
+- Reimplemented the checked-in fast_root_stack_sim.js source-transcribed persistent-list successor locally and reproduced the root checkpoint lengths at 100k/250k/500k/750k/1M/1,153,484: 15,781 / 39,465 / 78,937 / 118,411 / 157,883 / 182,119. At 1,153,484 the #490 state is DR, left length 182,119, right length 14, with left prefix [1] ++ B and right list R0.
+- Fixed block: B=[0,2,0,0,0,2,0,0,0,16,0,0].
+- Fixed right list: R0=[0,1,0,0,0,0,0,0,0,0,1,0,0,0].
+- The 76-successor candidate is DR([1] ++ B ++ T, R0) -> DR([1] ++ B ++ B ++ T, R0) for arbitrary finite suffix T. Seven suffix tests passed. The right list is unchanged, left length increases by 12, and no token branch occurs.
+- Independently counted the 76 raw source-branch costs: DR0+ 8, DR++ 3, CR0 13, CR10 8, CR1-empty 1, EL0 16, EL+ 12, DL+ 4, DR-empty-left 1, DL0 8, CR11 2; total 254 primitive TM transitions. This is a fresh branch audit for the mirrored #490 route, not a transfer from the old #85 synthetic DR/G/B macro.
+- Added im-results/agent48-mirrored-root-growth/RootMirroredGrowthMacroModel.lean: local kernel-checked outer-rule model proves the arbitrary-suffix identity (pair-suffix form included); root_growth_76/root_growth_76_pairs print [propext], and the cost-vector sum is axiom-free. This is not the original source theorem.
+- Prepared RootMirroredGrowthMacro.append.lean for exact #490 module BusyBeaver/BB6/Accelerations/M_1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LEHHH.lean at Cryptids commit 3647718b5df22e1a61462dec0376bd204526285a, using public closedStackSystem.evalStackCfg and execute 254.
+- Repurposed the existing manual workflow .github/workflows/agent32-hphase-growth-macro.yml to compile this root macro. The old H-phase append artifact is preserved but is not included in the new run.
+- Shared dossier: im-results/agent48-mirrored-root-growth/README.md; updated Agent12's RootCountdownGrowth.md and folder README to replace the mere 12/76 slope hypothesis with the exact candidate.
+
+### Evidence boundary and next actions
+
+- The root prefix to macro 1,153,484 is still source-transcribed computational evidence, not a Lean theorem. Do not claim #490 blank-root nonhalting until a source proof connects init [] to this state.
+- First dispatch the existing manual workflow after checking the local model and exact theorem statement; inspect only failed-job tails if it fails. A successful source macro theorem would prove an infinite tail from the macro seed, but not yet its blank-root reachability.
+- Then seek a compact source-connected proof of the finite root prefix, preferably via reusable outer-step macros or a verified fast evaluator. Do not rerun longer traces or promote to results/.
+- No results/ changes and no BB(6) value/global upper bound.
