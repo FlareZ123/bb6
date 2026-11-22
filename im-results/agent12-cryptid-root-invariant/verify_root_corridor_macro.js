@@ -122,8 +122,9 @@ function step(s) {
       return state("DR", [a - 1, ...t], [0]);
     }
     const b = R[0], u = R.slice(1);
-    // Source mode_DR tokenizes r1=0 and r1=1; ordinary branches start at r1>=2.
-    if (b <= 1) return a === 0 ? closeTokDR(u, t) : closeTokCR(u, [a - 1, ...t]);
+    // Source mode_DR tokenizes only r1=0. Positive r1 is ordinary;
+    // mode_DL has the separate 0/1/>=2 split.
+    if (b === 0) return a === 0 ? closeTokDR(u, t) : closeTokCR(u, [a - 1, ...t]);
     if (a === 0) return state("DR", t, [1, b - 1, ...u]);
     return state("CR", [a - 1, ...t], [0, b - 1, ...u]);
   }
@@ -149,58 +150,74 @@ function assertState(label, actual, expected) {
 }
 
 let checks = 0;
-
-// The pinned mode_DR_n_n_closed branch for r1=1,a1=0 token-normalizes.
 const root = state("DR", [0, 0], [1]);
-assertState("blank-root stack seed first closure", step(root),
-  state("CR", [0, 0, 1], [1])); checks++;
 
-// Exact source token-closure formula on the zero-run inputs used by the root cycle.
+// In mode_DR, r1=1 is positive and takes the ordinary execute-4 branch.
+assertState("blank-root first source successor", step(root),
+  state("DR", [0], [1, 0])); checks++;
+assertState("blank-root second source successor", run(root, 2),
+  state("DR", [], [1, 0, 0])); checks++;
+assertState("blank-root third source successor", run(root, 3),
+  state("EL", [0], [1, 0, 0])); checks++;
+assertState("blank-root 24-successor corridor entry", run(root, 24),
+  Corr(3, 3)); checks++;
+
+// Exact source token-closure formula on the zero-run inputs used by the root.
 for (let n = 0; n <= 32; n++) {
   assertState("closeTokDR 0^" + n, closeTokDR([], zeros(n)),
     state("CR", [...zeros(n + 1), 1], [1])); checks++;
 }
+
+// The proposed 36-step cycle misread the final DR right-head-one case.
+// The correct source branch is ordinary and returns to DR.
 for (const c of [1, 2, 3, 7, 1000, 714286]) {
-  assertState("seven-successor CR cycle c=" + c,
+  assertState("CR candidate final edge c=" + c,
     run(state("CR", [0, 0, 1], [c]), 7),
-    state("CR", [0, 0, 1], [c + 5])); checks++;
+    state("DR", [0], [1, 0, c + 4])); checks++;
 }
-assertState("eight-successor blank-root prefix", run(root, 8),
-  state("CR", [0, 0, 1], [6])); checks++;
 
-// The former triangular D_0(3) countdown endpoint is not a source orbit.
-const d0 = state("CR", [0], [0, 0, 0, 0, 0, 3]);
-const d0Actual = run(d0, 24);
-const d1Expected = state("CR", [0], zeros(10));
-if (eq(d0Actual, d1Expected)) throw new Error("obsolete D_0(3) countdown endpoint unexpectedly survived");
-checks++;
+// Parameterized countdown macro samples and the finite reset.
+const D = (n, c) => state("CR", [0], [...zeros(4 * n + 5), c]);
+let countdownChecks = 0;
+for (let n = 0; n <= 6; n++) {
+  for (const c of [3, 4, 5, 10, 540]) {
+    assertState("D_n countdown n=" + n + " c=" + c,
+      run(D(n, c), 8 * n + 24), D(n + 1, c - 3));
+    countdownChecks++; checks++;
+  }
+}
+assertState("D_180(0) 1481-successor reset", run(D(180, 0), 1481),
+  D(0, 1453)); checks++;
 
-// The former DR corridor and its root-to-growth claims are not source orbits.
-const oldCorr = run(root, 24);
-if (eq(oldCorr, Corr(3, 3))) throw new Error("obsolete Corr(3,3) root claim unexpectedly survived");
-checks++;
-
-const P = [0, 0, 1, 0, 19];
-const B = [0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 16];
-const U = [0, 0, 0, 12, 0, 0, 0, 12, 0, 0, 0, 12, 0, 0, 0, 2, 0, 0, 0, 0];
-const hStart = state("CR", [1, 0], [...P, ...B, ...U]);
-const hActual = run(hStart, 76);
-const hExpected = state("CR", [1, 0], [...P, ...B, ...B, ...U]);
-if (eq(hActual, hExpected)) throw new Error("obsolete H-phase 76-step endpoint unexpectedly survived");
-checks++;
-
+// Root-reachable DR/G/B block insertion: test distinct arbitrary finite tails.
 const G0 = [0, 0, 1, 0, 1, 0, 0, 0, 0, 1];
 const B0 = [16, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0];
-const gActual = run(state("DR", G0, [1, ...B0, 7, 5, 3, 1]), 76);
-const gExpected = state("DR", G0, [1, ...B0, ...B0, 7, 5, 3, 1]);
-if (eq(gActual, gExpected)) throw new Error("obsolete DR/G/B 76-step endpoint unexpectedly survived");
+const suffixes = [[], [0], [1], [3, 0, 0], [7, 5, 3, 1],
+  [12, 0, 0, 0, 12, 0, 0, 0, 2]];
+let growthChecks = 0;
+for (const suffix of suffixes) {
+  const before = tokenCalls;
+  assertState("DR/G/B 76-step insertion suffix=" + JSON.stringify(suffix),
+    run(state("DR", G0, [1, ...B0, ...suffix]), 76),
+    state("DR", G0, [1, ...B0, ...B0, ...suffix]));
+  if (tokenCalls !== before) throw new Error("DR/G/B macro unexpectedly called a token normalizer");
+  growthChecks++; checks++;
+}
+
+// The separate H-phase CR macro also survives the source-correct DR rule.
+const P = [0, 0, 1, 0, 19];
+const HB = [0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 16];
+const U = [0, 0, 0, 12, 0, 0, 0, 12, 0, 0, 0, 12, 0, 0, 0, 2, 0, 0, 0, 0];
+const tokenBeforeH = tokenCalls;
+assertState("H-phase CR 76-step insertion",
+  run(state("CR", [1, 0], [...P, ...HB, ...U]), 76),
+  state("CR", [1, 0], [...P, ...HB, ...HB, ...U]));
+if (tokenCalls !== tokenBeforeH) throw new Error("H-phase macro unexpectedly called a token normalizer");
 checks++;
 
 console.log(JSON.stringify({
-  ok: true,
-  checks,
-  rootPrefix: run(root, 8),
-  cycleExample: run(state("CR", [0, 0, 1], [714286]), 7),
-  hPhase76Corrected: hActual,
-  rootGrowth76Corrected: gActual
+  ok: true, checks, countdownChecks, growthChecks,
+  rootPrefix24: run(root, 24),
+  d180Reset: run(D(180, 0), 1481),
+  hPhase76: run(state("CR", [1, 0], [...P, ...HB, ...U]), 76),
 }, null, 2));
