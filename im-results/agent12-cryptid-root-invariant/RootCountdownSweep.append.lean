@@ -272,3 +272,32 @@ theorem root_countdown_zero_reset (n : ℕ) :
         (ReachesPlus.trans h3
           (ReachesPlus.trans h4
             (ReachesPlus.trans h5 h6))))
+
+
+theorem root_countdown_step (n c : ℕ) (hc : 3 ≤ c) :
+    ReachesPlus target
+      (cfg_CR_n_n [(0,0)]
+        (List.replicate (4*n+5) (0,0) ++ [(c,0)]))
+      (cfg_CR_n_n [(0,0)]
+        (List.replicate (4*(n+1)+5) (0,0) ++ [(c-3,0)])) := by
+  have h1 := root_countdown_prefix n c
+  have h2 := root_countdown_el_zero_sweep (4*n+5)
+    [(0,0),(1,0)] [(c,0)]
+  have h3 := root_countdown_el_positive_step (c-1)
+    (List.replicate (4*n+7) (0,0) ++ [(1,0)]) []
+  have h4 := root_countdown_dl_positive_step (c-3)
+    (List.replicate (4*n+7) (0,0) ++ [(1,0)]) []
+  have h5 := root_countdown_dr_zero_sweep (4*n+6) [(1,0)]
+    [(c-3,0)]
+  have h6 := root_countdown_dr_positive_positive_step 0 0 []
+    (List.replicate (4*n+7) (0,0) ++ [(c-3,0)])
+  have hc1 : c-1+1 = c := by omega
+  have hc2 : c-3+2 = c-1 := by omega
+  have hn : 4*(n+1)+5 = 4*n+9 := by omega
+  simpa [List.replicate_succ, List.cons_append, List.append_assoc,
+    hc1, hc2, hn] using
+    (ReachesPlus.trans h1
+      (ReachesPlus.trans h2
+        (ReachesPlus.trans h3
+          (ReachesPlus.trans h4
+            (ReachesPlus.trans h5 h6))))
