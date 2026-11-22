@@ -50,73 +50,111 @@ and `encLeft ((d,b)::R)` is (1^{d+1}0^{1+b\bmod1}encLeft(R)=1^{d+1}0encLeft(R)).
 A plausible bridge is therefore a run-length map from an A-section's left alternating block and finite right suffix to the ((K,R3,L)) data of `tok_CR`, `tok_DR`, or `tok_EL`. The correspondence must account for the scanned cell and whether the separator zero belongs to the head or to the encoded side; simply matching the visible strings is insufficient. Proving that head-boundary convention is the key prerequisite before translating the 108-step cylinder.
 
 
-## First token checkpoint from the blank-root stack entry
+## Correct root-parameter transport
 
-The #490 module's `init_reaches_nontrivial` target is
-`evalStackCfg .DR_n_n [(0,0),(0,0)] [(1,0)]`.
-Because `evalStackCfg` swaps the list arguments for the `DR_n_n` constructor, the corresponding #85-oriented `cfg_DR_n_n L R` has
-[
-L=[(1,0)],\qquad R=[(0,0),(0,0)].
-]
-In the first applicable branch of `mode_DR_n_n_closed`, the proof takes a three-step `texecute 3` prefix to
-[
-\operatorname{tok\_CR}([1,0],[(0,0)],[0]).
-]
-This is an exact token-system checkpoint in the closure proof for DeepMind's init-root entry. It is not an inferred simulation.
+The #490 module's \`init_reaches_nontrivial\` target is
+\[
+\operatorname{evalStackCfg}\;\mathrm{DR\_n\_n}\;
+  [(0,0),(0,0)]\;[(1,0)].
+\]
+There are **two** argument swaps in the definition chain:
 
-The external halting-cylinder input has a separate local token representation, with an important state-map adjustment. For (C\equiv1\pmod3), (m=4(C/3)-1), its first `step_An_1101` intermediate is E in #490. The DeepMind state map sends #85 B to #490 E, so this is not a #85 `tok_EL` state. Since the suffix is empty, the scanned symbol is blank 0; #490 E0 writes 0, moves left, and enters C. After that one raw step, the tape is exactly
-[
-\operatorname{tok\_CR}([0]\; ++\; \operatorname{replicate}(m,1),[(1,0)],[]).
-]
-The left-list equality follows from `encTokens` and blank-extension equivalence; see `ASectionStackEncoding.md` for the derivation.
+- the #85 base \`evalStackCfg\` maps \`DR_n_n,L,R\` to \`cfg_DR_n_n R L\`;
+- \`ClosedStackSystem.mirror\` defines the transported \`evalStackCfg m L R\` as
+  \`mirrorCfg f (W.evalStackCfg m R L)\`.
 
-Thus the blank-root reduction and the external halting-cylinder proof both enter the same DeepMind token subsystem, but at very different token states. A precise reachability problem is now visible: determine whether the root's closed-stack/token evolution from `tok_CR [1,0] [(0,0)] [0]` ever reaches the halting token state associated with the cylinder (or another halting token state). No such reachability is established here.
+The swaps cancel. The underlying #85-oriented configuration is therefore
+\[
+\mathrm{cfg\_DR\_n\_n}\;
+  L=[(0,0),(0,0)],\qquad R=[(1,0)],
+\]
+not the reversed \`L=[(1,0)], R=[(0,0),(0,0)]\` stated in the earlier draft.
 
+This changes the first applicable case of \`mode_DR_n_n_closed\`. Here the
+first entries are \(a_1=0\) and \(r_1=1\), so the proof takes its
+DR-to-DR branch, not the \`tok_CR_1_0_closed\` branch. Its four-step
+\`execute 4\` prefix gives
+\[
+\mathrm{DR}\;L=[0],\quad R=[1,0]
+\]
+at raw time 11. The next DR case gives
+\[
+\mathrm{DR}\;L=[],\quad R=[1,0,0]
+\]
+at raw time 15. No root \`tok_CR [1,0] [(0,0)] [0]\` checkpoint occurs at
+raw time 10; that checkpoint came from the reversed parameter interpretation.
 
-## First root stack successor and short macro-prefix
+## Corrected blank-root stack prefix
 
-The first root token closure can be simplified directly from the source proof. For
-`tok_CR [1,0] [(0,0)] [0]`, `bounce_CR` consumes the right-list `[0]), then its empty-list case with accumulator value (2) returns the E-token state with (K=[1,0]) and right list ([0,0,1]). The `bl_terminates_le` proof applies `tok_EL_1` and then `tok_EL_exit_zero`, yielding the first outer stack successor:
-[
-\mathrm{CR}\;
-L=[(0,0),(0,0),(1,0)],\qquad R=[(1,0)].
-]
-This is a derivation from the displayed `bounce_CR` and `bl_step_macro_len` cases, not an independent simulator result.
+Lists below abbreviate pairs \((a,0)\). The raw times are measured from the
+standard state-A blank start; time 7 is the formal \`init_reaches_nontrivial\`
+entry. The outer macro checkpoints obtained by applying the source mode rules
+are:
 
-The next six outer mode transitions are explicit in `mode_CR_n_n_closed`, `mode_EL_n_n_closed`, and `mode_DL_0_n_closed`:
-[
-egin{aligned}
-\mathrm{CR}([0,0,1],[1])
-&\xrightarrow{2}
-\mathrm{CR}([0,1],[3])
-\xrightarrow{2}
-\mathrm{CR}([1],[5])\\
-&\xrightarrow{6}
-\mathrm{EL}([0],[0,8])
-\xrightarrow{2}
-\mathrm{EL}([0,0],[8])\\
-&\xrightarrow{1}
-\mathrm{DL}([0,0],[7])
-\xrightarrow{4}
-\mathrm{DR}([0,0],[1,5]).
-end{aligned}
-]
-Here each list entry abbreviates a pair ((a,0)), and the labels over arrows are the exact raw-step counts from the Lean `execute` blocks. These checkpoints provide a compact regression prefix for any executable implementation of the closed-stack successor relation.
+| Raw time | Mode | \(L\) | \(R\) |
+|---:|---|---|---|
+| 7 | DR | [0,0] | [1] |
+| 11 | DR | [0] | [1,0] |
+| 15 | DR | [] | [1,0,0] |
+| 16 | EL | [0] | [1,0,0] |
+| 17 | DL | [0] | [0,0,0] |
+| 23 | EL | [0,1] | [0,0] |
+| 25 | EL | [0,0,1] | [0] |
+| 27 | EL | [0,0,0,1] | [] |
+| 28 | CR | [0,0,0,1] | [0] |
+| 30 | CR | [0,0,1] | [2] |
+| 32 | CR | [0,1] | [4] |
+| 34 | CR | [1] | [6] |
+| 40 | EL | [0] | [0,9] |
 
+The first seven successor states (times 11 through 27) are the regression
+prefix in \`stack_system_sim.py\`. The subsequent checkpoints provide a
+longer cross-check against the raw transition table. The Python interpreter
+has not been run in this invocation because the local shell returned
+\`ClientError\`; an independent JavaScript transcription of its successor
+rules was executed and matched these stack configurations against raw
+six-state simulation.
 
-The #85-to-#490 state relabelling is (f=[5,4,2,0,1,3]) (with directions mirrored). In particular, #85 D maps to #490 A at the root stack mode, #85 B maps to #490 E at the cylinder's intermediate state, and #85 C maps to #490 C at both token checkpoints. This is why the cylinder must take the E0 step before it becomes a #85/DeepMind `tok_CR` configuration.
+## The 36-step D0 checkpoint is an interior macro point
 
+The repository's source-certified theorem
+\[
+\operatorname{run}\;D0\;36\;(\operatorname{blank}\;0)
+  = \operatorname{F0Pure}\;9\;(-6)
+\]
+is not a competing endpoint for a first outer stack successor. It is an
+interior raw configuration in the six-step CR-to-EL macro from the time-34
+state \(\mathrm{CR}([1],[6])\) to the time-40 state
+\(\mathrm{EL}([0],[0,9])\). At time 36 the raw machine is in state F with
+head \(-6\) and ones exactly on \([-5,3]\), which is the stated
+\(\operatorname{F0Pure}\;9\;(-6)\) configuration.
 
-An experimental transcription of the outer mode successor and token normalizers is now at [`stack_system_sim.py`](./stack_system_sim.py). Its first root token closure and six following mode successors were reproduced by a JavaScript prototype against the Lean-derived prefix above. The Python file itself was not run because the local container shell returned `ClientError`; no claims are made about longer trajectories until it is executed and compared against the source proofs.
+Thus the former C-versus-F discrepancy at raw time 36 was caused by the
+wrong root stack parameters and the wrong claim that time 36 was the first
+outer successor. The corrected stack prefix and the repository's D0 root
+checkpoint agree along one raw blank-root orbit. DeepMind's \`init []\` and
+the repository's \`blank 0\` both denote state A with an all-blank tape.
+The existing \`TM62MathlibD0Adapter.lean\` supplies the signed-coordinate
+tape map; a direct cross-library initial-configuration lemma still needs
+compilation, but there is no longer a conceptual different-root explanation.
 
+## Cylinder-side token target and remaining gap
 
-## Initial-configuration transport caveat
+The external A-section cylinder has a separate token-side derivation. For
+\(C\equiv1\pmod3\), put \(m=4(C/3)-1\). The existing
+\`ASectionStackEncoding.md\` records the cylinder-side E0 transition into
+\[
+\operatorname{tok\_CR}
+  ([0]\mathbin{+\!\!+}\operatorname{replicate}(m,1),[(1,0)],[]).
+\]
+That cylinder encoding is **not** the blank-root checkpoint at time 7 or
+the first root successor at time 11. The corrected outer-stack path must
+still be advanced far enough to prove that it reaches this token state (or
+another halting token state), or a genuine invariant must exclude it.
+The closed-stack theorem alone proves neither outcome.
 
-The root checkpoint above is derived from DeepMind's own `init_reaches_nontrivial` theorem. The #85/#490 transition-table isomorphism alone does not prove that DeepMind's `init []` is definitionally the same initial tape/head convention as this repository's D0 root adapter. Before using the stack checkpoint as a formal bridge to the standard BB(6) blank-root trajectory, explicitly compare the initial state, blank symbol, and left/right/head conventions in both libraries. No independent raw replay of this cross-library prefix was completed here. The cylinder-side E0-to-`tok_CR` tape identity is a separate local derivation and is unaffected by this caveat.
-
-
-### Concrete root-transport diagnostic
-
-The raw costs in the first closure are explicit: the DR-to-token prefix is 3 steps, then `tok_CR_zero` costs 2, `tok_CR_add2_nil_21` costs 21, `tok_EL_1` costs 2, and `tok_EL_exit_zero` costs 1. Together with the seven-step `init_reaches_nontrivial` entry, the first outer stack successor is reached at raw time (7+3+2+21+2+1=36) from DeepMind's `init []).
-
-This is a useful cross-check against the repository's D0 root theorem `run D0 36 (some (blank 0)) = some (F0Pure 9 (-6))` in `ExternalTM62-D0-Bridge.md`. However, the DeepMind first successor is a `cfg_CR_n_n) configuration (control state C), whereas the D0 checkpoint is `F0Pure 9) (control state F). They are not the same state. This is concrete evidence that the initial-configuration/tape-orientation transport must be resolved before treating the DeepMind root token orbit as the D0 blank-root orbit. Do not identify these checkpoints merely because their raw times coincide.
+The #85-to-#490 state relabelling remains \(f=[5,4,2,0,1,3]\), with tape
+directions mirrored. In particular #85 D maps to #490 A at the root, #85 B
+maps to #490 E at the cylinder's intermediate state, and #85 C maps to
+#490 C. Keep the cylinder-side E0-to-\`tok_CR\` statement separate from the
+blank-root stack-entry derivation.
