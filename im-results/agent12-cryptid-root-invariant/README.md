@@ -211,3 +211,6 @@ Candidate bridge (not a state correspondence): `encLeft(0^r1)=(10)^r110` is the 
 ## Candidate infinite projected orbit
 
 [`HPhaseGrowth.md`](HPhaseGrowth.md) records the 157-step entry from `H(7)` into a tail-parametric 76-step growth loop. This gives an infinite orbit of the projected outer-stack system if formalized, but it is not yet a proof about the original TM; source correspondence and the finite root prefix still need Lean certification.
+
+
+Agent 32 has also matched the 76-step growth loop to 254 raw TM steps using the external mode-closure `execute n` blocks. `HPhaseGrowth.md` records the branch-cost table and a proposed direct Lean target in the mirrored #490 module: `evalStackCfg .CR_n_n [(1,0),(0,0)] (P ++ B ++ T) -> execute 254 -> evalStackCfg .CR_n_n [(1,0),(0,0)] (P ++ B ++ B ++ T)`. This is a proof route, not yet compiled.
