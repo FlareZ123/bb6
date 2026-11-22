@@ -25,8 +25,8 @@ def rootMirroredSeedLeft : List (ℕ × ℕ) :=
 theorem root_evalStackCfg_DR (L R : List (ℕ × ℕ)) :
     closedStackSystem.evalStackCfg StackMode.DR_n_n L R =
       Cfg.headLeft A
-        (M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.closedStackSystem.encRight R)
-        (M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.closedStackSystem.encLeft L) := by
+        (M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.closedStackSystem.encRight L)
+        (M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.closedStackSystem.encLeft R) := by
   rfl
 
 theorem root_evalStackCfg_CR (L R : List (ℕ × ℕ)) :
