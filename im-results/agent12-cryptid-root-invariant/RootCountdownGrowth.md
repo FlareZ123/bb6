@@ -13,7 +13,13 @@ The #490 blank-entry theorem reaches the #85-oriented stack seed `DR(L=[0,0],R=[
 - This is the c=2 corridor from `Corr(263,2)` at macro 21,271. Its 556-successor identity reaches `CR(L=0^255 ++ [1],R=[33])` at macro 21,827.
 - A further 256 outer successors reach `EL(L=[0],R=[0,546])` at macro 22,083; 16 more reach `D_0(540)` at macro 22,099.
 
-The 21,810 ordinary successors before the token closure cost 64,565 raw TM steps. The 288 ordinary successors after the closure cost 595 raw steps to `D_0(540)`. The token closure's own raw-step count is not separately enumerated here. This root event is a DL right-head-1 closure; it does not contradict the separate rule that DR right-head 1 is ordinary.
+The token closure has an exact source-step count. The DL right-head-1 branch first executes 4 raw steps to enter `tok_DR`; the closure then uses 267 `tok_DR_zero` applications (4 each), one `tok_DR_1_nil_28` (28), 268 `tok_EL_1` applications (2 each), and one `tok_EL_exit_zero` (1):
+
+```text
+4 + 267·4 + 28 + 268·2 + 1 = 1,637 raw TM steps.
+```
+
+The 21,810 ordinary successors before the token closure cost 64,565 raw TM steps. The 288 ordinary successors after the closure cost 595 raw steps to `D_0(540)`. Thus the root stack seed to `D_0(540)` costs 66,797 raw steps; including the initial 7 raw blank-root steps, the blank tape reaches `D_0(540)` in **66,804 raw TM steps**. This root event is a DL right-head-1 closure; it does not contradict the separate rule that DR right-head 1 is ordinary.
 
 ## Root-connected countdown
 
@@ -75,7 +81,7 @@ D_0(1453) --946704 outer successors--> D_484(1).
 
 Its raw-step total from the sampled formula is 2,838,660. Thus the D_0(540)-to-D_484(1) segment has 1,081,385 outer successors and 3,240,705 raw steps. The persistent-list root replay places `D_484(1)` at macro 1,103,484.
 
-The raw formula `24n+69` and its aggregates remain computational/source-transcribed until the quantified corridor lemma is kernel-checked.
+The raw formula `24n+69` and its countdown aggregates remain computational/source-transcribed until the quantified corridor lemma is kernel-checked. Combining the exact initial prefix with the countdown gives blank-to-`D_484(1)` raw cost 3,307,509; blank-to-first-growth-seed raw cost 3,401,065; and blank-to-macro-1,153,484 checkpoint raw cost 3,473,709.
 
 ## The root's c=1 corridor to H(1939)
 
