@@ -335,16 +335,16 @@ for (const r of [0, 1, 2, 3, 4, 5, 6, 7, 11, 1935]) {
   }
 }
 
-// The 179-successor base macro inserts [16] and three Q blocks, preserving
-// any pre-existing Q^m prefix and arbitrary suffix T. It costs 591 raw steps.
+// The 179-successor base macro accepts any positive head a>=2 and
+// arbitrary suffix T, prepending [16] and three Q blocks. It costs 591 raw.
 const opaqueBaseSuffix = { opaque: "base-T" };
-for (const m of [0, 1, 2, 5, 10, 966]) {
+for (const a of [2, 3, 4, 5, 12, 100, 100000]) {
   for (const suffix of [[], [5, 3, 1], [opaqueBaseSuffix]]) {
     tokenCalls = 0;
-    const result = runWithCost(HwithRight(7,
-      [...repeatQ(m), ...Hright, ...suffix]), 179);
-    const expectedTail = [16, 0, 0, 0, ...repeatQ(m + 3), ...Hright, ...suffix];
-    assertState("H base m=" + m + " suffix=" + JSON.stringify(suffix),
+    const inputRight = [a, ...suffix];
+    const result = runWithCost(HwithRight(7, inputRight), 179);
+    const expectedTail = [16, 0, 0, 0, ...repeatQ(3), ...inputRight];
+    assertState("H base a=" + a + " suffix=" + JSON.stringify(suffix),
       result.state, state("DR", rootGrowthL, [1, ...rootGrowthB, ...expectedTail]));
     if (tokenCalls !== 0 || result.rawSteps !== 591) {
       throw new Error("H base raw/token cost mismatch");
