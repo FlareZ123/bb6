@@ -123,3 +123,34 @@ theorem root_countdown_dr_zero_sweep (k : ℕ) (L R : List (ℕ × ℕ)) :
       have h2 := ih L ((0,0) :: R)
       exact ReachesPlus.trans h1
         (by simpa [List.replicate_succ, List.cons_append, List.append_assoc] using h2)
+
+
+/-! Additional helpers for the zero-remainder reset recurrence. -/
+
+theorem root_countdown_cr_one_empty_step (R : List (ℕ × ℕ)) :
+    ReachesPlus target
+      (cfg_CR_n_n [(1,0)] R)
+      (cfg_EL_n_n [(0,0)] ((0,0) :: bumpPairHead (bumpPairHead (bumpPairHead R)))) := by
+  unfold cfg_CR_n_n cfg_EL_n_n
+  rw [encRight_mod1 1 0 [], Nat.mod_one 0, encRight_d1_s0 [],
+    encRight_d0_s0 [],
+    encLeft_d0_s0 (bumpPairHead (bumpPairHead (bumpPairHead R))),
+    ← encLeft_cons_one (bumpPairHead (bumpPairHead R)),
+    ← encLeft_cons_one (bumpPairHead R), ← encLeft_cons_one R]
+  execute 6
+
+theorem root_countdown_cr_zero_sweep_singleton (k b : ℕ) (L : List (ℕ × ℕ)) :
+    ReachesPlus target
+      (cfg_CR_n_n (List.replicate (k+1) (0,0) ++ L) [(b,0)])
+      (cfg_CR_n_n L [(b+2*(k+1),0)]) := by
+  induction k generalizing b L with
+  | zero =>
+      simpa [bumpPairHead] using root_countdown_cr_zero_step L [(b,0)]
+  | succ k ih =>
+      have h1 := root_countdown_cr_zero_step
+        (List.replicate (k+1) (0,0) ++ L) [(b,0)]
+      have h2 := ih (b+2) L
+      exact ReachesPlus.trans h1
+        (by
+          simpa [List.replicate_succ, List.cons_append, List.append_assoc,
+            Nat.add_assoc, Nat.add_left_comm, Nat.add_comm] using h2)
