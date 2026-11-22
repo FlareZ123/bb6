@@ -215,3 +215,51 @@ const cycleRaw = q => 12n*q*q + 41n*q;
 4. Reconnect the corrected endpoint to the blank-root proof and independently audit every raw-step count.
 
 Local Lean was not run in this invocation: the available shell/runtime calls returned a concrete ClientError. No CI run was used as a substitute for the required local preflight. Nothing here establishes halting, nonhalting, a universal six-state upper bound, or the exact value of BB(6).
+
+
+## 8. The corrected suffix-[9] branch reconnects to the suffix-[5] family
+
+The same existing token lemma handles a singleton suffix. For \(t\in\mathbb N\), the source composition gives
+
+\[
+D_n(2;[t])\longrightarrow^+D_0(8n+t+20).
+\]
+
+Indeed, the fixed prefix and EL-zero sweep leave \(DL(0^{4n+7}1,[1,t])\). The DL token closure uses \(R_3=[t]\), so \`root_d2_tok_dr_z1\` exits to
+
+\[
+CR(0^{4n+11}1,[t+1]).
+\]
+
+The CR-zero sweep, CR-one-empty step, and 16-step general tail give \(D_0(8n+t+20)\). The reset costs are independent of \(t\):
+
+- \(8n+44\) stack-mode successors;
+- \(8n+17\) token-machine microsteps inside the DL closure;
+- \(40n+186\) raw TM steps.
+
+For \(t=9\), the corrected endpoint therefore continues as follows:
+
+\[
+\begin{aligned}
+D_0(1\,341\,279\,251;[9])
+&\to D_{447\,093\,083}(2;[9])\\
+&\to D_0(3\,576\,744\,693)\\
+&\to D_{1\,192\,248\,231}(0)\\
+&\to D_0(9\,537\,985\,861)\\
+&\to D_{3\,179\,328\,620}(1)\\
+&\to D_0(25\,434\,628\,967;[5]).
+\end{aligned}
+\]
+
+The maps used after the suffix-[9] reset are the already-derived zero reset \(D_n(0)\to D_0(8n+13)\) and remainder-one reset \(D_n(1)\to D_0(8n+7;[5])\).
+
+One further already-known suffix-[5] reset gives
+
+\[
+D_0(25\,434\,628\,967;[5])
+\to D_{8\,478\,209\,655}(2;[5])
+\to D_0(67\,825\,677\,265)
+\to D_{22\,608\,559\,088}(1).
+\]
+
+This reaches a remainder-one state with index \(22\,608\,559\,088\), which differs by 110 from the \(22\,608\,559\,198\) index used as the starting point in the current suffix-[13] return-map note. The two chains must not be conflated: the corrected suffix-[9] route gives the former index.
