@@ -161,3 +161,14 @@ The current invocation added three intermediate research threads:
 The separate raw TM62→D0 adapter remains uncompiled against its exact external dependency closure. Its pinned upstream project uses Lean 4.36.0-rc1 and Mathlib revision `dfbc15ea6605db241da9cfd0632bbaf69b67e513`; the supplied local Lean archive is 4.36.0-rc2. The local shell and Python execution tools returned concrete `ClientError` failures in this invocation, so no local preflight or new CI dispatch was possible. No claim of successful compilation is made.
 
 The main unresolved mathematical question is unchanged: prove that the authentic blank-root orbit reaches a halting cylinder (or another halting set), or establish a rigorous invariant excluding it. The external halting cylinder, finite root scans, and closed-stack reduction do not by themselves settle that orbit question.
+
+
+### Follow-up: common token-state formulation (21 November 2026)
+
+A source-level comparison with DeepMind's #85 stack proof now identifies explicit token checkpoints on both sides of the root/halting-cylinder gap. The state map is (f=[5,4,2,0,1,3]) from #85 to #490, with directions mirrored.
+
+- The #490 blank-root stack entry is seven raw steps into `evalStackCfg .DR_n_n [(0,0),(0,0)] [(1,0)]). The corresponding #85-oriented `DR_n_n) mode proof has a three-step prefix to `tok_CR [1,0] [(0,0)] [0]`.
+- For the external cylinder (C=1975700577069254261393123959451562008800234946348086\equiv1\pmod3), let (m=4(C/3)-1). Its `step_An_1101` intermediate is #490 E, which maps to #85 B (not #85 E). With empty suffix, #490 E0 is `0LC`; after this one raw step the resulting C-state is exactly `tok_CR ([0] ++ replicate m 1) [(1,0)] []), up to the final blank-equivalent zero in `encTokens`.
+- The first root token closure yields `cfg_CR_n_n [(0,0),(0,0),(1,0)] [(1,0)]`. The next explicit outer stack checkpoints and their raw costs are recorded in [`DeepMindStackReduction.md`](./DeepMindStackReduction.md).
+
+This turns the unresolved connection into a concrete reachability problem inside the same `tok_CR)/closed-stack subsystem: determine whether the root token state reaches the cylinder token state or another halting token state. The local encoding and finite stack prefix do **not** prove that reachability, and the full A-step2/token-closure correspondence remains open. Earlier exploratory messages that called the cylinder E-intermediate `tok_EL` were corrected; use the updated [`ASectionStackEncoding.md`](./ASectionStackEncoding.md).
