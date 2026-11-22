@@ -1,3 +1,23 @@
+## 2026-11-22: branch-9 diagonal root-zero feeder
+
+Run id `agent30-gpt6-20261122T0001Z-bb429-q0-q5-root-closure`; original claim `2026-11-22T00:03:43.016Z`; 70-minute release threshold `2026-11-22T01:13:43.016Z`. Do not refresh the lease. After every checkpoint, compare actual UTC time to that threshold; release only after reaching it, with lease deletion as the final repository mutation.
+
+**Research note:** `im-results/agent30-429-branch9-zero-feeder/README.md` records the exact algebraic reduction for the branch-9 diagonal `h=(2d-3n-13)/4=0`. A subfamily `n=8*2^J-11,d=12*2^J-10` has an all-first inverse spine to `(9,b_J)), then to a candidate blank-root zero state `(0,z_J)`, where `z_J=12*2^(n+J+2)-48*2^J+36-3J`. This feeder is conditional: odd states with `b%4=2` have an S alternative, so a complete proof must eliminate all side branches.
+
+**Exact exploratory evidence:** an exact BigInt DFS over both odd parents and even parents, using selected current root invariants, produced J=2,4,6,8 with only the all-F low leaf at first counter 9, and J=3,5,7 with all branches closed. Unique node counts and low-leaf residues are in the note. This is finite computation only, not a uniform theorem.
+
+**Existing gate connections:** J=2 gives `z_J mod128=94`; both alternatives in Agent18's `rooted_zero_two_gateway_sharp` fail by residue. J=6 gives `z_J mod128=18`; the odd-reset alternative fails but the high-two source `(u,2u+2)`, `u=0 mod32`, survives, a direct target for Agent32's high-two/Junc work. J=4 and J=8 have `z_J=0 mod4`, requiring a zero-zero gateway not yet established.
+
+**General branch-local formula:** for `h!=0`, `r=v2(h)<n`, `H=h/2^r`, the F-only inverse ancestor has `a_r=2^(n-r)(d+10)+H-3` and `b_r=(2^(r+1)-1)*(2^(n-r+1)(d+10)+2H)-2d-5-3r`. For `r<=n-2`, the positive-even root condition `b_r mod8=2` yields the d/r/H congruences in the note. This remains branch-local until all S alternatives are resolved.
+
+**Collaboration:** sent direct handoffs to Agent32 (high-two/Junc connection) and Agent6 (branch-9 valuation filter and overlap check). No source Lean file or CI workflow was changed.
+
+**Tool blocker:** local `container.exec` and `python.exec` both returned tool-boundary errors. `AGENTS.md` explicitly forbids using CI as a substitute for the mandatory local Lean preflight, so no Lean verification or CI run was attempted. Keep claims intermediate until a future run can compile the proof locally and follow the prescribed source-validation workflow.
+
+**Next:** formalize the J=2 inverse tree; prove a uniform modular description of S side branches; coordinate J=6 with Agent32; derive a zero-zero predecessor gateway for J=4,8; extend the valuation filter to a complete two-parent inverse-tree argument.
+
+---
+
 ## 2026-11-08 final pre-release update, 21:42 UTC
 
 - Verified literal standalone `raw_two_burst_t0_exact`: `run target429 1888290 (jConfig 3 1717)=none`, original-source [CI 42526303107 success](https://github.com/FlareZ123/bb6/actions/runs/42526303107). README now records successful source audit in commit `dacf1cf98eaa49b5510a49c9fc3d80795869ce00`.
