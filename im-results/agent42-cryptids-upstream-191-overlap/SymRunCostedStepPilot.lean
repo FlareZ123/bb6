@@ -1009,6 +1009,58 @@ theorem stepElemCB_run0_within (L R1 : List SymTok) :
         pilot_reachesIn_refl
           ((evalSym target_tm) (.CB, L, .item (.run 0) :: .rep12 m :: R2))
 
+
+
+theorem stepElemCB_run0_within25 (L R1 : List SymTok) :
+    ReachesWithin (25 * (pilotStateFieldMax (.CB, L, .item (.run 0) :: R1) + 1))
+      ((evalSym target_tm) (.CB, L, .item (.run 0) :: R1))
+      ((evalSym target_tm) (stepElemCB_run0 L R1)) := by
+  unfold ReachesWithin
+  cases R1 with
+  | nil =>
+    refine ⟨3, by omega, ?_⟩
+    simpa only [stepElemCB_run0, strictList_eq, evalSym, evalM, encSymL, encSymR,
+      encSymL_bumpSymL] using
+      step_CB_run0_nil_exact (encSymL L)
+  | cons rt R2 =>
+    cases rt with
+    | item it =>
+      cases it with
+      | zero =>
+        refine ⟨3, by omega, ?_⟩
+        simpa only [stepElemCB_run0, strictList_eq, evalSym, evalM, encSymL, encSymR,
+          encSymL_bumpSymL] using
+          step_CB_run0_zero_exact (encSymL L) (encSymR R2)
+      | run d2 =>
+        rcases d2 with _ | d2
+        · refine ⟨6, by omega, ?_⟩
+          simpa only [stepElemCB_run0, strictList_eq, evalSym, evalM, encSymL, encSymR,
+            encSymL_bumpSymL, encSymL_prependZeroSym] using
+            step_CB_run0_run0_exact (encSymL L) (encSymR R2)
+        · refine ⟨3 * d2 + 21, ?_, ?_⟩
+          · have hd : d2 ≤ pilotStateFieldMax
+                (.CB, L, .item (.run 0) :: .item (.run (d2 + 1)) :: R2) := by
+              simp [pilotStateFieldMax, pilotListFieldMax, pilotTokFieldMax] <;> omega
+            omega
+          · simpa only [stepElemCB_run0, strictList_eq, evalSym, evalM, encSymL, encSymR,
+              encSymL_bumpSymL, encSymL_prependZeroSym] using
+              step_CB_run0_run_pos_exact d2 (encSymL L) (encSymR R2)
+    | repB1 k =>
+      refine ⟨0, by omega, ?_⟩
+      simpa [stepElemCB_run0] using
+        pilot_reachesIn_refl
+          ((evalSym target_tm) (.CB, L, .item (.run 0) :: .repB1 k :: R2))
+    | rep2 p =>
+      refine ⟨0, by omega, ?_⟩
+      simpa [stepElemCB_run0] using
+        pilot_reachesIn_refl
+          ((evalSym target_tm) (.CB, L, .item (.run 0) :: .rep2 p :: R2))
+    | rep12 m =>
+      refine ⟨0, by omega, ?_⟩
+      simpa [stepElemCB_run0] using
+        pilot_reachesIn_refl
+          ((evalSym target_tm) (.CB, L, .item (.run 0) :: .rep12 m :: R2))
+
 theorem stepElemCB_within (L R : List SymTok) :
     ReachesWithin (50 * (pilotStateFieldMax (.CB, L, R) + 1))
       ((evalSym target_tm) (.CB, L, R))
@@ -1031,6 +1083,63 @@ theorem stepElemCB_within (L R : List SymTok) :
       | run d =>
         rcases d with _ | _ | _ | d
         · simpa [stepElemCB] using stepElemCB_run0_within L R1
+        · refine ⟨3, by omega, ?_⟩
+          simpa only [stepElemCB, strictList_eq, evalSym, evalM, encSymL, encSymR,
+            encSymL_bumpSymL] using
+            step_CB_run1_exact (encSymL L) (encSymR R1)
+        · refine ⟨5, by omega, ?_⟩
+          simpa only [stepElemCB, strictList_eq, evalSym, evalM, encSymL, encSymR,
+            encSymL_bumpSymL] using
+            step_CB_run2_exact (encSymL L) (encSymR R1)
+        · refine ⟨5, by omega, ?_⟩
+          simpa only [stepElemCB, strictList_eq, strictNat_eq, evalSym, evalM,
+            encSymL, encSymR, encSymL_bumpSymL] using
+            step_CB_run_ge3_exact d (encSymL L) (encSymR R1)
+    | repB1 k =>
+      refine ⟨0, by omega, ?_⟩
+      simpa [stepElemCB] using
+        pilot_reachesIn_refl ((evalSym target_tm) (.CB, L, .repB1 k :: R1))
+    | rep2 p =>
+      refine ⟨0, by omega, ?_⟩
+      simpa [stepElemCB] using
+        pilot_reachesIn_refl ((evalSym target_tm) (.CB, L, .rep2 p :: R1))
+    | rep12 m =>
+      refine ⟨0, by omega, ?_⟩
+      simpa [stepElemCB] using
+        pilot_reachesIn_refl ((evalSym target_tm) (.CB, L, .rep12 m :: R1))
+
+#print axioms stepElemBB_within
+#print axioms stepElemDL_within
+#print axioms stepElemCB_run0_within
+#print axioms stepElemCB_within
+
+
+
+
+
+
+theorem stepElemCB_within25 (L R : List SymTok) :
+    ReachesWithin (25 * (pilotStateFieldMax (.CB, L, R) + 1))
+      ((evalSym target_tm) (.CB, L, R))
+      ((evalSym target_tm) (stepElemCB L R)) := by
+  unfold ReachesWithin
+  cases R with
+  | nil =>
+    refine ⟨2, by omega, ?_⟩
+    simpa only [stepElemCB, strictList_eq, evalSym, evalM, encSymL_bumpSymL] using
+      step_CB_nil_exact (encSymL L)
+  | cons t R1 =>
+    cases t with
+    | item it =>
+      cases it with
+      | zero =>
+        refine ⟨2, by omega, ?_⟩
+        simpa only [stepElemCB, strictList_eq, evalSym, evalM, encSymL_bumpSymL,
+          encSymR_bumpSymR] using
+          step_CB_zero_exact (encSymL L) (encSymR R1)
+      | run d =>
+        rcases d with _ | _ | _ | d
+        · simpa [stepElemCB] using stepElemCB_run0_within25 L R1
         · refine ⟨3, by omega, ?_⟩
           simpa only [stepElemCB, strictList_eq, evalSym, evalM, encSymL, encSymR,
             encSymL_bumpSymL] using
@@ -1811,6 +1920,136 @@ theorem stepElemThenBB_DL_within (L R : List SymTok) :
 
 /-- The DL branch of the outer stepSym map has a linear primitive-time
     bound whenever the trace token count is at most 94. -/
+
+/-- When a CB element transition finishes in BB, its new left stack grows
+    by at most two tokens (the run-0 exit can prepend two literals). -/
+theorem stepElemCB_BB_left_length (L R : List SymTok)
+    (hBB : (stepElemCB L R).1 = .BB) :
+    (stepElemCB L R).2.1.length ≤ L.length + 2 := by
+  cases R with
+  | nil => simp [stepElemCB] at hBB
+  | cons t R1 =>
+    cases t with
+    | item it =>
+      cases it with
+      | zero => simp [stepElemCB] at hBB
+      | run d =>
+        cases d with
+        | zero =>
+          cases R1 with
+          | nil =>
+            simp [stepElemCB, stepElemCB_run0, strictList_eq, bumpSymL] at hBB ⊢
+          | cons rt R2 =>
+            cases rt with
+            | item it2 =>
+              cases it2 with
+              | zero =>
+                simp [stepElemCB, stepElemCB_run0, strictList_eq, bumpSymL] at hBB ⊢
+              | run d2 =>
+                cases d2 with
+                | zero =>
+                  simp [stepElemCB, stepElemCB_run0, strictList_eq, bumpSymL] at hBB ⊢
+                | succ d2 =>
+                  simp [stepElemCB, stepElemCB_run0, strictList_eq] at hBB
+            | repB1 k => simp [stepElemCB, stepElemCB_run0] at hBB
+            | rep2 p => simp [stepElemCB, stepElemCB_run0] at hBB
+            | rep12 m => simp [stepElemCB, stepElemCB_run0] at hBB
+        | succ d =>
+          cases d with
+          | zero => simp [stepElemCB] at hBB
+          | succ d =>
+            cases d with
+            | zero =>
+              simp [stepElemCB, strictList_eq, bumpSymL] at hBB ⊢
+            | succ d =>
+              simp [stepElemCB, strictList_eq, strictNat_eq, bumpSymL] at hBB ⊢
+    | repB1 k => simp [stepElemCB] at hBB
+    | rep2 p => simp [stepElemCB] at hBB
+    | rep12 m => simp [stepElemCB] at hBB
+
+/-- A CB element followed by its optional BB sweep has a simple cost in
+    terms of the input field maximum and left-stack length. -/
+theorem stepElemThenBB_CB_within (L R : List SymTok) :
+    ReachesWithin
+      (2^9 * (pilotStateFieldMax (.CB, L, R) + 1) * (L.length + 3))
+      ((evalSym target_tm) (.CB, L, R))
+      ((evalSym target_tm) (stepElemThenBB .CB L R)) := by
+  let M := pilotStateFieldMax (.CB, L, R)
+  have h1 := stepElemCB_within25 L R
+  have h1' : ReachesWithin (25 * (M + 1))
+      ((evalSym target_tm) (.CB, L, R))
+      ((evalSym target_tm) (stepElemCB L R)) := by
+    simpa [M] using h1
+  have h2 := finishThenBB_within (stepElemCB L R)
+  have hcomp := reachesWithin_trans h1' h2
+  have hGrowth : pilotStateFieldMax (stepElemCB L R) ≤ M + 1 := by
+    change BusyBeaver.SymRunAudit.stateFieldMax (stepPure (.CB, L, R)) ≤
+      BusyBeaver.SymRunAudit.stateFieldMax (.CB, L, R) + 1
+    exact BusyBeaver.SymRunAudit.stepPure_field_growth (.CB, L, R)
+  have hField :
+      pilotListFieldMax (stepElemCB L R).2.1 ≤ M + 1 :=
+    Nat.le_trans (Nat.le_max_left _ _) hGrowth
+  have hLen :
+      (stepElemCB L R).2.1.length + 1 ≤ L.length + 3 := by
+    have h := stepElemCB_BB_left_length L R
+    by_cases hBB : (stepElemCB L R).1 = .BB
+    · exact Nat.le_trans (Nat.add_le_add_right (h L R hBB) 1) (by omega)
+    · omega
+  have h2Budget :
+      (if (stepElemCB L R).1 = .BB then
+        50 * (pilotListFieldMax (stepElemCB L R).2.1 + 1) *
+          ((stepElemCB L R).2.1.length + 1)
+       else 0) ≤ 100 * (M + 1) * (L.length + 3) := by
+    by_cases hBB : (stepElemCB L R).1 = .BB
+    · have hprod := Nat.mul_le_mul
+        (Nat.add_le_add_right hField 1) hLen
+      simp [hBB]
+      calc
+        50 * (pilotListFieldMax (stepElemCB L R).2.1 + 1) *
+            ((stepElemCB L R).2.1.length + 1)
+          = 50 * ((pilotListFieldMax (stepElemCB L R).2.1 + 1) *
+              ((stepElemCB L R).2.1.length + 1)) := by ring
+        _ ≤ 50 * ((M + 2) * (L.length + 3)) :=
+          Nat.mul_le_mul_left 50 hprod
+        _ ≤ 100 * (M + 1) * (L.length + 3) := by
+          have hM : M + 2 ≤ 2 * (M + 1) := by omega
+          have hmul := Nat.mul_le_mul_right (L.length + 3) hM
+          calc
+            50 * ((M + 2) * (L.length + 3))
+              = 50 * ((M + 2) * (L.length + 3)) := rfl
+            _ ≤ 50 * (2 * (M + 1) * (L.length + 3)) :=
+              Nat.mul_le_mul_left 50 hmul
+            _ = 100 * (M + 1) * (L.length + 3) := by ring
+    · simp [hBB]
+  have h1Budget :
+      25 * (M + 1) ≤ 25 * (M + 1) * (L.length + 3) := by
+    exact Nat.mul_le_mul_left (25 * (M + 1)) (by omega)
+  have htotal :
+      25 * (M + 1) * (L.length + 3) +
+        100 * (M + 1) * (L.length + 3) ≤
+          2^9 * (M + 1) * (L.length + 3) := by
+    calc
+      _ = 125 * (M + 1) * (L.length + 3) := by ring
+      _ ≤ 2^9 * (M + 1) * (L.length + 3) := by
+        exact Nat.mul_le_mul_right ((M + 1) * (L.length + 3)) (by norm_num)
+  have hbudget := Nat.add_le_add h1Budget h2Budget
+  have hcomp' : ReachesWithin
+      (25 * (M + 1) +
+        (if (stepElemCB L R).1 = .BB then
+          50 * (pilotListFieldMax (stepElemCB L R).2.1 + 1) *
+            ((stepElemCB L R).2.1.length + 1)
+         else 0))
+      ((evalSym target_tm) (.CB, L, R))
+      ((evalSym target_tm) (finishThenBB (stepElemCB L R))) := by
+    simpa [M] using hcomp
+  have hfinal := reachesWithin_mono (Nat.le_trans hbudget htotal) hcomp'
+  simpa [stepElemThenBB, stepElemSym, M] using hfinal
+
+#print axioms stepElemCB_run0_within25
+#print axioms stepElemCB_within25
+#print axioms stepElemCB_BB_left_length
+#print axioms stepElemThenBB_CB_within
+
 theorem stepSym_DL_within (L R : List SymTok)
     (hT : L.length + R.length ≤ 94) :
     ReachesWithin
