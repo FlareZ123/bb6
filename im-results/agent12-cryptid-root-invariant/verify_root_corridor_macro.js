@@ -285,7 +285,7 @@ checks++;
 // normalizer: it inserts one copy of B immediately after the leading 1.
 for (const T of [
   [], [0], [1], [3, 0, 0], [7, 5, 3, 1],
-  [12, 0, 0, 0, 12, 0, 0, 0, 2], [{ opaque: true }]
+  [12, 0, 0, 0, 12, 0, 0, 0, 2]
 ]) {
   tokenCalls = 0;
   const result = runWithCost(state("DR", rootGrowthL, [1, ...rootGrowthB, ...T]), 76);
@@ -306,6 +306,38 @@ if (tokenCalls !== 0) throw new Error("actual root growth step called a token no
 if (grownRootResult.rawSteps !== 254) throw new Error("actual root growth raw-step count mismatch");
 checks++;
 
+// A genuinely opaque suffix must remain the same object, not merely serialize
+// to an equal numeric list.
+const opaqueSuffix = { opaque: "T" };
+tokenCalls = 0;
+const opaqueResult = runWithCost(state("DR", rootGrowthL, [1, ...rootGrowthB, opaqueSuffix]), 76);
+assertState("root growth opaque suffix", opaqueResult.state,
+  state("DR", rootGrowthL, [1, ...rootGrowthB, ...rootGrowthB, opaqueSuffix]));
+if (opaqueResult.state.R[opaqueResult.state.R.length - 1] !== opaqueSuffix) {
+  throw new Error("opaque suffix identity was not preserved");
+}
+if (tokenCalls !== 0 || opaqueResult.rawSteps !== 254) {
+  throw new Error("opaque-suffix macro token/raw-step audit failed");
+}
+checks++;
+
+// The separate H-phase CR 76-successor identity also has an independently
+// derived raw-step count; it is not used as a substitute for DR/G/B.
+const P = [0, 0, 1, 0, 19];
+const HB = [0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 16];
+const U = [0, 0, 0, 12, 0, 0, 0, 12, 0, 0, 0, 12, 0, 0, 0, 2, 0, 0, 0, 0];
+tokenCalls = 0;
+const hPhaseResult = runWithCost(state("CR", [1, 0], [...P, ...HB, ...U]), 76);
+assertState("H-phase CR 76-step insertion", hPhaseResult.state,
+  state("CR", [1, 0], [...P, ...HB, ...HB, ...U]));
+if (tokenCalls !== 0 || hPhaseResult.rawSteps !== 254) {
+  throw new Error("H-phase 76-step token/raw-step audit failed");
+}
+checks++;
+
 console.log(JSON.stringify({
-  ok: true, checks, rootGrowth76RawSteps: grownRootResult.rawSteps
+  ok: true, checks,
+  rootGrowth76RawSteps: grownRootResult.rawSteps,
+  opaqueGrowth76RawSteps: opaqueResult.rawSteps,
+  hPhase76RawSteps: hPhaseResult.rawSteps
 }, null, 2));
