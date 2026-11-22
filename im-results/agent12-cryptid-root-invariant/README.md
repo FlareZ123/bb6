@@ -1,52 +1,57 @@
-# Corrected blank-root stack trajectory: accelerated experiment
+# Corrected blank-root stack trajectory: source-audited experiment
 
-**Status:** computational evidence and a candidate invariant, not a proof of nonhalting.
+**Status:** computational evidence and a candidate root invariant, not a proof of nonhalting.
 
 ## Experiment
 
-The corrected root seed is the #85-oriented stack configuration
-
+The accelerated root seed is the #85-oriented stack configuration
 \[
 \mathrm{DR}(L=[0,0],R=[1]),
 \]
+entered at raw TM time 7. The persistent-list interpreter in
+[fast_root_stack_sim.js](./fast_root_stack_sim.js) transcribes the four
+outer mode rules and token normalizers in
+[stack_system_sim.py](../agent32-cryptid-padding/stack_system_sim.py).
+A source audit found and corrected a missing zero insertion in the EL
+normalizer and two CR-token suffix errors. The correction is documented in
+[TokenNormalizerCorrection.md](./TokenNormalizerCorrection.md).
 
-entered at raw TM time 7. The fast interpreter in
-[\`fast_root_stack_sim.js\`](./fast_root_stack_sim.js) is a persistent-linked-list
-transcription of the four outer mode rules and token normalizers in
-[\`../agent32-cryptid-padding/stack_system_sim.py\`](../agent32-cryptid-padding/stack_system_sim.py).
-Unlike the array-based exploratory implementation, it retains shared list tails
-and can run a million macro-successor steps without copying the entire right
-stack at each transition.
+A source-equivalent persistent-list recurrence was executed in the V8 runtime
+for 1,000,000 macro-successor steps. It produced:
 
-A run of 1,000,000 macro-successor steps produced:
+- no token-halting branch;
+- no CR branch with left head at least 2;
+- no closeTokCR invocation;
+- exactly one closeTokDR invocation, at macro index 21,810;
+- that invocation's input was \(0^{267} ++ [1]\), and its corrected output was
+  \(\mathrm{CR}(L=0^{271} ++ [1],R=[1])\);
+- 268 bounceDR calls and zero bounceCR calls;
+- maximum left-list length 1,832, maximum right-list length 1,832,
+  maximum entry 1,459, and at most one 1 in the left list;
+- throughout the trace, the left list remained in
+  \(Z_1=0^*(\epsilon\mid1)\).
 
-- no \`TokenHalt\` branch;
-- no \`mode_CR\` left-head-\(\ge2\) branch;
-- no \`closeTokCR\` invocation;
-- exactly one \`closeTokDR\` invocation, at macro index 21,810;
-- that invocation's input was \(0^{267}1\), and it returned
-  \(\mathrm{CR}(L=[0,0,0,1],R=[1])\);
-- 268 \`bounceDR\` calls and zero \`bounceCR\` calls;
-- maximum left-list length 268, maximum right-list length 154,446,
-  maximum entry 203, and maximum number of ones in the left list 10.
+The corrected root continuation is:
 
-At macro index 1,000,000 the state was
+| Macro index | State |
+|---:|---|
+| 21,810 | \(\mathrm{DL}(L=0^{267}1,R=[1])\), invoking the DR token closure |
+| 21,811 | \(\mathrm{CR}(L=0^{271}1,R=[1])\) |
+| 21,827 | \(\mathrm{CR}(L=0^{255}1,R=[33])\) |
+| 22,083 | \(\mathrm{EL}(L=[0],R=[0,546])\) |
 
-\[
-\mathrm{CR}\left(
-L=[0,0,1,0,0,0,0,1],\
-R=[0,0,0,0,16,0,0,0,2,0,0,0,2,0,0,\ldots]
-\right),
-\]
+At macro index 1,000,000 the corrected run was in mode DR, with left-list
+length 1,316 and right-list length 518. The previous report of a 154,446-entry
+right stack and a terminal state in the CR mode came from the defective
+normalizer and is withdrawn.
 
-with right-list length 154,441.
-
-These are macro-successor counts, **not raw TM steps**. The accelerated run is
-a computation over the source-derived stack successor, not a formal proof that
-the TM runs forever. The Python implementation was not executed in this
-invocation; the JavaScript implementation was executed in the available V8
-runtime. The first root prefix was independently matched against the raw
-transition table.
+These are macro-successor counts, **not raw TM steps**. They are computational
+evidence for the source-transcribed stack recurrence, not a proof that the
+original TM runs forever. The checked-in Node script and regression harness
+have been edited; the exact file was not run under Node/CI after the edits.
+The local shell tool returned a ClientError, so the available V8 execution used
+a direct source-equivalent transcription. The initial raw prefix to the
+accelerated stack seed remains separate from these macro counts.
 
 ## Candidate inductive invariant
 
@@ -57,7 +62,7 @@ candidate for formalization, not yet an established invariant.
 Write \(Z_1=0^*(\epsilon\mid1)\), and let \(\operatorname{firstNZ}(R)\)
 be the first nonzero entry of \(R\), if any.
 
-1. Every entry of \(L\) belongs to \(\{0,1\}\).
+1. \(L\in Z_1=0^*(\epsilon\mid1)\): the left list is all zeros, optionally followed by one terminal 1.
 2. In mode DR, \(R\) is nonempty and its head is positive.
 3. In mode EL:
    - if the head of \(R\) is 1, \(L\) begins with 0;
@@ -69,8 +74,10 @@ be the first nonzero entry of \(R\), if any.
    - if the head of \(R\) is 0 and the first nonzero entry of the tail of \(R\) is 2, then \(L\in\{\epsilon,[0]\}\).
 5. In mode CR, if \(L\) begins with \([1,1]\) and the head of \(R\) is 1, then \(L\) with its first two entries removed belongs to \(Z_1\).
 
-The exact predicate, including the finite lookahead conditions, is implemented
-by \`invariantFailures\` in the JavaScript interpreter.
+The exact predicate, including the finite lookahead conditions and the stronger
+\(Z_1\) test, is implemented by \`invariantFailures\` in the JavaScript interpreter.
+The corrected million-step trace satisfies this predicate; this remains a
+finite observation, not an inductive proof.
 
 ## Why this could matter
 
@@ -87,50 +94,39 @@ leading zeros, optionally consumes one terminal 1, and returns a CR stack
 state with binary left list. In particular, the observed
 \(0^{267}1\) input returns \(\mathrm{CR}(L=[0,0,0,1],R=[1])\).
 
-The main unresolved task is to prove the candidate predicate is preserved by
-every successor case, including the interaction between leading-zero prefixes
-of \(R\) and the regular-language conditions on \(L\). A finite trace is not
-evidence of inductiveness. If the proof succeeds, it would give a route to a
-formal nonhalting result for this blank-root machine; if it fails, the first
-symbolic counterexample should refine the invariant rather than be patched
-with more finite simulation.
+The main unresolved task is to prove a root-specific strengthening of this
+predicate. In the corrected million-step trace, every DL state with right head
+0 had \(L=[0]\), and every EL state with right head 1 also had \(L=[0]\).
+The one EL state with right head 2 was the state immediately preceding the
+single token closure. These observed guards explain why the root trace stays
+inside \(Z_1\), but they are not yet proved for all reachable states.
+A finite trace is not evidence of inductiveness.
 
 
 ## Counterexample-guided audit of the candidate
 
-A small exhaustive one-step search over short lists found that the predicate
-above is **not inductive over all configurations satisfying it**. These
-counterexamples are not known to be reachable from the blank root; they show
-that the observed-trace predicate is too weak to serve directly as a global
-invariant.
+The strengthened predicate is still not globally inductive. A small
+counterexample already satisfies \(L\in Z_1\) and the current DL guard:
 
-Examples (input state \(\to\) successor):
+\[
+\mathrm{DL}(L=[0,0],R=[0])
+\longrightarrow
+\mathrm{EL}(L=[0,1,0],R=[]).
+\]
 
-- \(\mathrm{CR}(L=[1,1],R=[2])\to
-  \mathrm{EL}(L=[0,0,0,0],R=[1,0,2])\).
-  The successor violates the EL condition for a leading nonzero pattern
-  \(1,2\).
-- \(\mathrm{CR}(L=[0,1,1],R=[])\to
-  \mathrm{CR}(L=[1,1],R=[2])\).
-  The successor violates the CR condition on a left prefix \(1,1\).
-- \(\mathrm{CR}(L=[1,0,1],R=[1])\to
-  \mathrm{CR}(L=[1,1],R=[0,0,2])\).
-- \(\mathrm{EL}(L=[0],R=[1,1,2])\to
-  \mathrm{DL}(L=[0],R=[0,1,2])\).
-- \(\mathrm{EL}(L=[],R=[0,0,1,2])\to
-  \mathrm{EL}(L=[0],R=[0,1,2])\).
+The successor leaves \(Z_1\). Thus the root-specific observation
+\(\mathrm{DL}(R_0)\Rightarrow L=[0]\) is essential; the weaker condition
+"\(L\) begins with zero" is insufficient.
 
-The counterexamples expose a recurring dependency on the nonzero subsequence
-of \(R\): prefixes of the form \(1^k2\), together with the number of leading
-zeros, determine whether later EL/DL transitions produce a token-dangerous
-configuration. A stronger invariant will likely need a finite-state relation
-between the regular shape of \(L\) and an automaton state summarizing the
-nonzero prefix of \(R\), rather than the current small collection of
-independent implications.
+More generally, one-step searches expose dependencies between the number of
+leading zeros in \(R\), the first nonzero entry of its tail, and the regular
+shape of \(L\). The next useful invariant should encode this relationship
+with a small finite-state summary of the nonzero prefix of \(R\), rather than
+adding unrelated implications one at a time.
 
-The million-step root trace still satisfies the predicate actually checked by
-the script. That is a statement about this finite trace only. Do not promote
-the current predicate to a proof or use it to claim nonhalting.
+The million-step root trace satisfies the checked predicate, including
+\(L\in Z_1\). Do not promote that finite observation to a proof or use it
+to claim nonhalting.
 
 
 ## Raw-state correspondence and first-branch audit
@@ -159,58 +155,67 @@ orientation; Agent 32 was asked to reconcile it with the source cases.
 
 ## Closed form for the DR-token normalizer on Z1
 
-The source-derived bounce rules give a simple exact formula for the only
-token closure observed on the root trace. For any right context \(r\):
+The source-derived bounce rules give the following exact formulas for any
+right context \(r\):
 
 \[
 \begin{aligned}
 \operatorname{closeTokDR}(r,0^n)
-  &= \mathrm{CR}(L=[0,1],\,R=\operatorname{bump}(r)),\\
+  &= \mathrm{CR}(L=0^{n+1}1,\,R=\operatorname{bump}(r)),\\
 \operatorname{closeTokDR}(r,0^n1)
-  &= \mathrm{CR}(L=[0,0,0,1],\,R=\operatorname{bump}(r)).
+  &= \mathrm{CR}(L=0^{n+4}1,\,R=\operatorname{bump}(r)).
 \end{aligned}
 \]
 
 Indeed, bounceDR with initial accumulator \([0]\) maps \(0^n\) to
-\(([1^n,0],[1])\), and maps \(0^n1\) to
-\(([1^{n+1},0],[0,0,1])\). The EL normalizer erases the leading ones in the
-accumulator; its final zero emits the displayed CR configuration. Thus every
-input in \(Z_1\) is token-safe for this DR closure. The macro-21,810 event is
-the second case with \(n=267\) and empty context \(r\).
+accumulator \([1^n,0]\) and right suffix \([1]\), and maps \(0^n1\) to
+accumulator \([1^{n+1},0]\) and right suffix \([0,0,1]\). The corrected EL
+normalizer applies tok_EL_1 once for every leading 1, prepending a zero each
+time, before the final zero emits the CR state. Thus these closures preserve
+\(Z_1\). The macro-21,810 event is the second case with \(n=267\) and empty
+context \(r\).
+
+The CR-token clauses were corrected too: the \([1,1]\) nil case returns
+right suffix \([0,1]\), and the cons case returns \([0,c+2]++L_3\).
+For the EL accumulator head \(v\ge3\), the existing bounceDR argument is
+already correct: the source proof composes tok_EL_add3 with tok_DR_zero, which
+consumes the leading zero before bounceDR begins. See
+[TokenNormalizerCorrection.md](./TokenNormalizerCorrection.md) for the
+source-level audit.
+
 
 ## Exact corridor macro family
 
-`RootCorridorMacro.md` gives four exact macro identities for the family `Corr(r,c)=DR(L=0^r1,R=[1,c])`: the `c≥3` decrement-by-three step, the `c=0` reset, the `c=2` token-normalizer reset, and the `c=1` exit to `F(r)`. Composed with the observed root entry at macro 24, these identities explain the corridor-family prefix through `F(7)` at macro 21,888. They are exact transition derivations, but they do not yet close the subsequent orbit or prove nonhalting.
+[RootCorridorMacro.md](RootCorridorMacro.md) gives the source-audited corridor
+identities for \(\mathrm{Corr}(r,c)=\mathrm{DR}(L=0^r1,R=[1,c])\): the
+\(c\ge3\) decrement-by-three step, the \(c=0\) reset, the corrected
+\(c=2\) drift (for \(r\ge8\)), and the standalone \(c=1\) exit to
+\(F(r)\). The corrected root reaches
+\(\mathrm{CR}(L=0^{255}1,R=[33])\) at macro 21,827 and
+\(\mathrm{EL}(L=[0],R=[0,546])\) at macro 22,083. It does not reach
+\(F(7)\) through the old c=2 reset.
 
-`verify_root_corridor_macro.js` is a self-contained array-based regression harness for the four identities, the arbitrary-tail DR transfer, the empty-context `0^n1` token closure, and selected root-chain transitions. The harness is self-contained and runs under Node 20: `node im-results/agent12-cryptid-root-invariant/verify_root_corridor_macro.js`. A temporary one-off workflow was used for regression validation and removed after the passing run; no dedicated workflow is retained. The harness is computational support, not a formal proof.
-
-Regression status: `verify_root_corridor_macro.js` passed Actions run `44978821995` (commit `983702c7e6e15d3edb96cfb60565d82b79c973d6`) with 89 checks. This does not replace a formal proof.
-
-
-The macro regression harness also verifies `F(r) -> G(r)` in `3r+13` successors, where `G(r)=DR(0^2(10)^(r+2)0^2 1 0^3,[1,0])`. The root prefix therefore reaches `G(7)` at macro 21,922. Latest CI pass: Actions run `44979005652`, 97 checks.
-
-
-The root macro prefix now includes `G(7)` at 21,922 and `H(7)` at 21,926, with the four-step `G(r) -> H(r)` identity checked for r=1..8. Latest regression pass: Actions run `44979144632`, 105 checks. The H-family orbit is open.
-
-
-The regression harness also checks the 24-step prefix from the accelerated root stack seed `DR([0,0],[1])` (raw TM time 7) to `Corr(3,3)`. Latest CI run `44979251653` passed 106 checks, covering the executable root prefix through `H(7)` at macro 21,926. This remains computational support, not formal proof.
-
-
-The recorded 106-check run predates the notation-only `E` -> `Corr` rename and seed-time label clarification; the transition logic was unchanged, but no post-edit run is claimed.
-
-
-The macro note also records the exact pair-stack tape image of `Corr(r,c)`: `(10)^r 110 D> 0 1^(c+1) 0 11`, derived from the swapped `evalStackCfg` encoding. This is not yet an A(n,r) identification.
+[verify_root_corridor_macro.js](./verify_root_corridor_macro.js) is the updated
+array-based regression harness for the corrected token formulas and corridor
+macros. Earlier Actions runs 44978821995, 44979005652, 44979144632, and
+44979251653 predate the source correction and are withdrawn for the c=2/root
+chain claims. Manual V8 checks passed for the corrected token formulas at
+\(n=0,\ldots,32\), c=2 values \(r=8,9,10,263\), and the 556+256-step root
+continuation. The updated checked-in harness has not yet been executed under
+Node/CI after editing.
 
 
-For the unresolved halting-reachability target and the external `A(3^108*k+C,[])` cylinder, see [`resources/2026-11-20-cryptid-D-halting-cylinder.md`](../../resources/2026-11-20-cryptid-D-halting-cylinder.md). The current corridor result is a finite stack-orbit compression only; it does not establish a path into that cylinder.
+## Standalone infinite projected orbit
 
+[HPhaseGrowth.md](HPhaseGrowth.md) records a 157-step entry from the standalone
+state \(H(7)\) into a tail-parametric 76-step growth loop. The 76-step identity
+implies an infinite orbit of the projected outer-stack system once formalized,
+but the corrected blank-root trajectory does not reach \(H(7)\) through the
+previously claimed corridor.
 
-Candidate bridge (not a state correspondence): `encLeft(0^r1)=(10)^r110` is the reverse of the DRegular source section `sourceSection(2,r,0)=11(01)^r`, with one extra boundary blank. The right-side image and exact head/control correspondence remain unresolved; see the final section of `RootCorridorMacro.md`.
-
-
-## Candidate infinite projected orbit
-
-[`HPhaseGrowth.md`](HPhaseGrowth.md) records the 157-step entry from `H(7)` into a tail-parametric 76-step growth loop. This gives an infinite orbit of the projected outer-stack system if formalized, but it is not yet a proof about the original TM; source correspondence and the finite root prefix still need Lean certification.
-
-
-Agent 32 has also matched the 76-step growth loop to 254 raw TM steps using the external mode-closure `execute n` blocks. `HPhaseGrowth.md` records the branch-cost table and a proposed direct Lean target in the mirrored #490 module: `evalStackCfg .CR_n_n [(1,0),(0,0)] (P ++ B ++ T) -> execute 254 -> evalStackCfg .CR_n_n [(1,0),(0,0)] (P ++ B ++ B ++ T)`. This is a proof route, not yet compiled.
+Agent 32 matched the 76-step growth loop to 254 raw TM steps using the external
+mode-closure execute blocks. The proposed direct Lean target in the mirrored
+#490 module is
+`evalStackCfg .CR_n_n [(1,0),(0,0)] (P ++ B ++ T) -> execute 254 -> evalStackCfg .CR_n_n [(1,0),(0,0)] (P ++ B ++ B ++ T)`.
+This is a proof route for a standalone projected orbit, not a blank-root
+nonhalting theorem.
