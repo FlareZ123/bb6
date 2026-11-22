@@ -446,6 +446,11 @@ const ablations = {
 };
 
 const compactProduct = summarize(records, (r) => r.productKey);
+if (records.length !== 9968) throw new Error("unexpected transition count: " + records.length);
+if (compactProduct.distinct !== 9968 || compactProduct.repeated !== 0 ||
+    compactProduct.branching !== 0 || compactProduct.maxOutdegree !== 1) {
+  throw new Error("compact product failed expected finite-trace determinism check");
+}
 const report = {
   method: {
     window: "B_corr = 34*ell_S + 122",
