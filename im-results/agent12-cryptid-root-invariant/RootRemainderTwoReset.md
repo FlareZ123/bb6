@@ -1,6 +1,6 @@
 # Remainder-two reset candidate (token-normalizer dependent)
 
-**Status: exploratory finite replay only; not a source-validated theorem.** This candidate extends the source-branch countdown/reset chain, but unlike the zero-remainder reset it uses a DR token-normalizer closure. Its token port must be checked against the pinned #85 proofs before any root-path claim is made.
+**Status: source-level phase derivation; dedicated Lean composition pending.** Unlike the zero-remainder reset, this macro uses a DR token-normalizer closure. Its exact input/output can be derived from the pinned #85 token lemmas (`tok_DR_zero`, `tok_DR_1_nil_28`, `tok_EL_1`, `tok_EL_exit_zero`) and `bumpPairHead [] = [(0,0)]`; a specialized Lean theorem composing those lemmas has not yet been written or compiled. Bounded corrected-CR replay for n=0..20 is corroborating evidence, not the proof.
 
 With (D_n(c)=CR([0],0^{4n+5}++[c])), the corrected exploratory simulator suggests
 
@@ -69,3 +69,24 @@ https://wiki.bbchallenge.org/wiki/1RB---_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA
 The page separately describes an analysis by @-d for a related D-start TNF, with a length-108 residue path and a proved congruence class for that *different* trajectory. Do not conflate it with the A-start problem here. The A-start open question is whether its evolving residue/left-memory process ever enters one of Racheline's halting sequences.
 
 The D_n(c) recurrences derived here are consistent with the advertised (8/3) growth mechanism in the special cases r=0 and r=2. The remainder-one case is exactly where the current simple D-family does not close; this is likely where the left-side memory and the published 0/2 sequence constraints become essential. A useful next target is to derive a complete finite-state or stack-memory recurrence for the A-start process, then prove reachability of a halting residue word rather than relying on the probability heuristic.
+
+
+## Raw TM cost from the pinned token clauses
+
+The token closure has an explicit raw-step cost. For (k=4n+7) leading zeros in the token input:
+
+- DL-right-one prelude: 4 steps (`mode_DL_0_n_closed`, #85 lines 994–999);
+- (k) applications of `tok_DR_zero`: (4k=16n+28) steps;
+- `tok_DR_1_nil_28`: 28 steps;
+- (k+1=4n+8) applications of `tok_EL_1`: (2(k+1)=8n+16) steps;
+- `tok_EL_exit_zero`: 1 step.
+
+Total token-closure cost: (24n+77).
+
+Adding the ordinary prefix (raw (8n+34)), CR-zero sweep (raw (8n+22)), CR-one/empty-tail (6), and fixed tail (47) gives the candidate full reset cost
+
+[
+40n+186.
+]
+
+For (n=65), this is 2,786 raw steps. Added to the source-derived root checkpoint D65(2) at raw time 64,018, the predicted D0(539) checkpoint is raw time 66,804. This matches the earlier independent raw-cost bookkeeping value 66,804, although that note labels the endpoint D0(540); the exact endpoint here is D0(539) under the present definition. The endpoint/cost composition still needs a dedicated Lean theorem.
