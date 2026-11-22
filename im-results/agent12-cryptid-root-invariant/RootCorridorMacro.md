@@ -166,3 +166,6 @@ The regression harness also checks the accelerated root stack seed `DR(L=[0,0],R
 
 
 Process note: the temporary one-off Node workflow used for the 106-check regression was removed after the passing run, in line with the repository-wide direction to avoid proliferating standalone workflows. The self-contained JS harness remains available for local reproduction with Node 20.
+
+
+Editorial precision: the 106-check Actions run predates the subsequent pure notation rename `E(r,c)` -> `Corr(r,c)` and the label clarification that `DR([0,0],[1])` is the accelerated stack seed at raw TM time 7. The transition logic and test cases were not changed by those edits; no post-rename CI run is claimed.
