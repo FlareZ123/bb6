@@ -45,7 +45,7 @@ gives `S^76(C_n)=C_(n+1)` for every `n ≥ 0`. Thus the projected outer-stack sy
 
 ## Source-normalizer correction and root reachability
 
-The source-level correction is summarized in [TokenNormalizerCorrection.md](TokenNormalizerCorrection.md). In brief, `tok_EL_1` prepends one zero to the right stack. The former simulator omitted this update, so the old `closeTokDR([],0^2671)` output and all downstream root states were wrong. The corrected output is `CR(L=0^2711,R=[1])`, followed by the CR zero sweep described above. The old claim that the root enters `H(7)) is withdrawn.
+The source-level correction is summarized in [TokenNormalizerCorrection.md](TokenNormalizerCorrection.md). In brief, `tok_EL_1` prepends one zero to the right stack. The former simulator omitted this update, so the old `closeTokDR([],0^267 ++ [1])` output and all downstream root states were wrong. The corrected output is `CR(L=0^271 ++ [1],R=[1])`, followed by the CR zero sweep described above. At macro 21,926 the root is `CR(L=0^156 ++ [1],R=[231])`, not `H(7)`. The old root-to-H(7) claim is withdrawn.
 
 The 76-step identity below does not call a token normalizer, so its standalone tail-parametric statement is unaffected. It must not be described as root-reachable.
 
@@ -55,8 +55,8 @@ Agent 32 supplied the 157-step entry state and the tail-parametric 76-step deriv
 
 I independently executed the checked-in array successor from `verify_root_corridor_macro.js` in the V8 runtime:
 - `run(H(7),157)` exactly matched `CR([1,0],P ++ B ++ U)` in the prior projected-successor audit; this does not establish root reachability;
-- the 76-step identity matched for suffixes `[]`, `[0]`, `[1]`, `[3,0,0]`, `[12,0,0,0,12,0,0,0]`, the actual `U), and `[7,5,3,1]`;
-- an object sentinel appended as `T) survived the 76-step path unchanged.
+- the 76-step identity matched for suffixes `[]`, `[0]`, `[1]`, `[3,0,0]`, `[12,0,0,0,12,0,0,0]`, the actual suffix `U`, and `[7,5,3,1]`;
+- an object sentinel appended as suffix `T` survived the 76-step path unchanged.
 
 These are executable checks of the projected array transcription. Agent 32 additionally reports a symbolic tail sentinel that throws if any transition reads or arithmetically inspects the suffix; it survived unchanged. Neither check substitutes for a Lean proof of the source correspondence.
 
