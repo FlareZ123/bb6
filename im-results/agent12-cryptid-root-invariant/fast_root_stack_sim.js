@@ -33,6 +33,15 @@ function take(xs, n = 12) {
   while (xs && out.length < n) { out.push(xs.v); xs = xs.next; }
   return out;
 }
+function takeLast(xs, n = 12) {
+  const out = [];
+  while (xs) {
+    if (out.length === n) out.shift();
+    out.push(xs.v);
+    xs = xs.next;
+  }
+  return out;
+}
 const halted = reason => ({ halt: reason });
 const stats = { bounceCR: 0, bounceDR: 0, tokenEventCount: 0, tokenEvents: [] };
 
@@ -220,6 +229,8 @@ function snapshot(c) {
     rightLength: c.R?.len ?? 0,
     leftHead: take(c.L, 16),
     rightHead: take(c.R, 16),
+    leftTail: takeLast(c.L, 16),
+    rightTail: takeLast(c.R, 16),
     underlying85LeftHead: take(p.L, 16),
     underlying85RightHead: take(p.R, 16),
     tokenEvents: stats.tokenEventCount
