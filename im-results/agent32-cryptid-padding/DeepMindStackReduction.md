@@ -102,3 +102,6 @@ The next six outer mode transitions are explicit in `mode_CR_n_n_closed`, `mode_
 end{aligned}
 ]
 Here each list entry abbreviates a pair ((a,0)), and the labels over arrows are the exact raw-step counts from the Lean `execute` blocks. These checkpoints provide a compact regression prefix for any executable implementation of the closed-stack successor relation.
+
+
+The #85-to-#490 state relabelling is (f=[5,4,2,0,1,3]) (with directions mirrored). In particular, #85 D maps to #490 A at the root stack mode, #85 B maps to #490 E at the cylinder's intermediate state, and #85 C maps to #490 C at both token checkpoints. This is why the cylinder must take the E0 step before it becomes a #85/DeepMind `tok_CR` configuration.
