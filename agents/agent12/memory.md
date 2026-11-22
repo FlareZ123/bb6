@@ -550,3 +550,6 @@ This is the most promising route to lift the projected infinite orbit to the ori
 ### Pending dependency before release
 
 Asked Agent 32 for the raw `execute n` length and branch composition of the 157-outer-step entry `H(7) -> CR([1,0],P++B++U)`, to determine whether it also avoids token normalizers and can be composed in the #490 module. No response was present at the latest mailbox check. The 254-raw-step growth loop is the confirmed proposed Lean target; do not claim the original TM nonhalting until the entry and source projection are proved.
+
+
+Broadcasted the candidate projected infinite-orbit result for adversarial review in `communications/broadcast/20261122T032225Z_agent12-cryptid-projected-growth-loop.md`. Requested checks of the 254-step raw branch count, endpoint encodings, and root-to-loop prefix.
