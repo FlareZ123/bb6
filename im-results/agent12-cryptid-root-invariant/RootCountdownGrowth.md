@@ -105,7 +105,20 @@ Two short parametric macros replace the earlier 50,000-successor finite entry.
 S^38(H(r+4;R)) = H(r; Q ++ Q ++ R)
 ```
 
-for r≥0 and arbitrary finite right suffix R. This macro costs **128 raw TM steps**, makes no token-normalizer call, and removes four `[1,0]` pairs from the left stack while prepending two Q blocks to the right. The checked-in regression tests r=0,…,7,11,1935 with several distinct suffixes, including an opaque object suffix.
+for r≥0 and arbitrary finite right suffix R. This macro costs **128 raw TM steps**, makes no token-normalizer call, and removes four `[1,0]` pairs from the left stack while prepending two Q blocks to the right. The checked-in regression tests r=0,…,7,11,1935 with several distinct suffixes, including an opaque object suffix. The branch histogram is constant across the tested r and R values:
+
+| Source branch | Count | Cost | Subtotal |
+|---|---:|---:|---:|
+| CR, left head 0 | 14 | 2 | 28 |
+| CR, left head 1 / next-left 0 | 2 | 5 | 10 |
+| CR, left head 1 / next-left 1 | 2 | 16 | 32 |
+| EL, right head 0 | 6 | 2 | 12 |
+| EL, right head positive | 4 | 1 | 4 |
+| DL, right head 0 | 2 | 6 | 12 |
+| DL, right head ≥2 | 2 | 4 | 8 |
+| DR, left head 0 / right head positive | 4 | 4 | 16 |
+| DR, left head positive / right head positive | 2 | 3 | 6 |
+| **Total** | **38** | | **128** |
 
 ### Base macro
 
@@ -123,7 +136,22 @@ G = [0,0,1,0,1,0,0,0,0,1]
 B = [16,0,0,0,2,0,0,0,2,0,0,0].
 ```
 
-It costs **591 raw TM steps**, with no token-normalizer calls. The regression tests m=0,…,10 and m=966, with empty, numeric, and opaque suffixes. The opaque suffix is preserved by identity.
+It costs **591 raw TM steps**, with no token-normalizer calls. The regression tests m=0,…,10 and m=966, with empty, numeric, and opaque suffixes. The opaque suffix is preserved by identity. The 179-step branch histogram is also constant across these m and suffix values:
+
+| Source branch | Count | Cost | Subtotal |
+|---|---:|---:|---:|
+| CR, left head 0 | 44 | 2 | 88 |
+| CR, left head 1 / next-left 0 | 15 | 5 | 75 |
+| CR, left head 1 / next-left 1 | 6 | 16 | 96 |
+| CR, left head 1 / left tail nil | 2 | 6 | 12 |
+| EL, right head 0 | 35 | 2 | 70 |
+| EL, right head positive | 25 | 1 | 25 |
+| DL, right head 0 | 15 | 6 | 90 |
+| DL, right head ≥2 | 10 | 4 | 40 |
+| DR, left head 0 / right head positive | 18 | 4 | 72 |
+| DR, left head positive / right head positive | 7 | 3 | 21 |
+| DR, left tail nil | 2 | 1 | 2 |
+| **Total** | **179** | | **591** |
 
 ### Applying the family to the root
 
