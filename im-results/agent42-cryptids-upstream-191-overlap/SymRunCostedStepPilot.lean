@@ -1925,7 +1925,7 @@ theorem stepElemThenBB_DL_within (L R : List SymTok) :
     by at most two tokens (the run-0 exit can prepend two literals). -/
 theorem stepElemCB_BB_left_length (L R : List SymTok)
     (hBB : (stepElemCB L R).1 = .BB) :
-    (stepElemCB L R).2.1.length ≤ L.length + 2 := by
+    (stepElemCB L R).2.1.length ≤ L.length + 3 := by
   cases R with
   | nil => simp [stepElemCB] at hBB
   | cons t R1 =>
@@ -1971,7 +1971,7 @@ theorem stepElemCB_BB_left_length (L R : List SymTok)
     terms of the input field maximum and left-stack length. -/
 theorem stepElemThenBB_CB_within (L R : List SymTok) :
     ReachesWithin
-      (2^9 * (pilotStateFieldMax (.CB, L, R) + 1) * (L.length + 3))
+      (2^9 * (pilotStateFieldMax (.CB, L, R) + 1) * (L.length + 4))
       ((evalSym target_tm) (.CB, L, R))
       ((evalSym target_tm) (stepElemThenBB .CB L R)) := by
   let M := pilotStateFieldMax (.CB, L, R)
@@ -1993,10 +1993,10 @@ theorem stepElemThenBB_CB_within (L R : List SymTok) :
       (if (stepElemCB L R).1 = .BB then
         50 * (pilotListFieldMax (stepElemCB L R).2.1 + 1) *
           ((stepElemCB L R).2.1.length + 1)
-       else 0) ≤ 100 * (M + 1) * (L.length + 3) := by
+       else 0) ≤ 100 * (M + 1) * (L.length + 4) := by
     by_cases hBB : (stepElemCB L R).1 = .BB
     · have hLen :
-          (stepElemCB L R).2.1.length + 1 ≤ L.length + 3 := by
+          (stepElemCB L R).2.1.length + 1 ≤ L.length + 4 := by
         have h := stepElemCB_BB_left_length L R hBB
         omega
       have hprod := Nat.mul_le_mul
@@ -2007,7 +2007,7 @@ theorem stepElemThenBB_CB_within (L R : List SymTok) :
             ((stepElemCB L R).2.1.length + 1)
           = 50 * ((pilotListFieldMax (stepElemCB L R).2.1 + 1) *
               ((stepElemCB L R).2.1.length + 1)) := by ring
-        _ ≤ 50 * ((M + 2) * (L.length + 3)) :=
+        _ ≤ 50 * ((M + 2) * (L.length + 4)) :=
           Nat.mul_le_mul_left 50 hprod
         _ ≤ 100 * (M + 1) * (L.length + 3) := by
           have hM : M + 2 ≤ 2 * (M + 1) := by omega
@@ -2024,7 +2024,7 @@ theorem stepElemThenBB_CB_within (L R : List SymTok) :
     exact Nat.mul_le_mul_left (25 * (M + 1)) (by omega)
   have htotal :
       25 * (M + 1) * (L.length + 3) +
-        100 * (M + 1) * (L.length + 3) ≤
+        100 * (M + 1) * (L.length + 4) ≤
           2^9 * (M + 1) * (L.length + 3) := by
     calc
       _ = 125 * (M + 1) * (L.length + 3) := by ring
