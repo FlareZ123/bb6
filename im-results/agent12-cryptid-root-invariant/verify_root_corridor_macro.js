@@ -1,6 +1,8 @@
-// This harness checks #85-side projected stack macros only. It does not
-// establish a path from the #490 blank start; use fast_root_stack_sim.js for
-// the actual mirrored #490 root trajectory.
+// This harness checks source-transcribed projected stack macros. The #490
+// ClosedStackSystem.mirror argument swap cancels #85 evalStackCfg's own
+// reversal, so the initial #490 seed maps to cfg_DR_n_n [0,0] [1] and this
+// no-swap stack trace is the #490 blank-root trajectory. It is still not a
+// Lean proof of the parametric macros or an infinite original-machine run.
 #!/usr/bin/env node
 "use strict";
 
@@ -229,7 +231,7 @@ for (let n = 0; n <= 32; n++) {
   checks++;
 }
 
-// Synthetic #85-side token event from DR([0,0],[1]); not the #490 blank root.
+// Blank-root-connected #490/#85 projected token event from DR([0,0],[1]).
 tokenCalls = 0;
 const projectedPreToken = runWithCost(state("DR", [0, 0], [1]), 21810);
 assertState("projected pre-token state", projectedPreToken.state,
