@@ -1,0 +1,5602 @@
+{
+  "schema": "bb6.exact-seed-carry-84.v1",
+  "description": "Finite exact-seed replay for the 84 correction-only S-window suffix exceptions; not an all-time proof.",
+  "sources": [
+    "im-results/agent27-623-root-scan/SWindowPostResetSynchronization.md",
+    "im-results/agent48-623-tight-window/s_window_boundary_phases.js",
+    "im-results/agent32-623-phase-automaton/ResetPatternDFA.json",
+    "im-results/agent49-parity623/ResetPostStateDFA.json",
+    "im-results/agent49-parity623/PostResetCarryPairClosure.json",
+    "im-results/agent48-623-tight-window/PostResetCarryPairTransducer.json",
+    "im-results/agent27-623-root-scan/PairCarrySynchronizingSubsetDFA.json",
+    "im-results/agent27-623-root-scan/NonSynchronizingSCCs.json"
+  ],
+  "summary": {
+    "count": 84,
+    "nonemptyCount": 81,
+    "checks": {
+      "affine": 84,
+      "sourceBranch": 84,
+      "targetBranch": 84,
+      "firstReset": 84,
+      "seedLabel": 84,
+      "seedMember": 84
+    },
+    "subsetRankHistogram": {
+      "2": 61,
+      "3": 10,
+      "4": 5,
+      "5": 1,
+      "7": 1,
+      "8": 3,
+      "66": 3
+    },
+    "subsetSccHistogram": {
+      "B1": 13,
+      "B7": 6,
+      "B5": 7,
+      "B2": 36,
+      "transient/non-SCC": 20,
+      "B3": 2
+    },
+    "activeProjectionSizeHistogram": {
+      "1": 21,
+      "2": 47,
+      "3": 10,
+      "4": 3,
+      "18": 2,
+      "36": 1
+    },
+    "nonemptyActiveProjectionSizeHistogram": {
+      "1": 21,
+      "2": 47,
+      "3": 10,
+      "4": 3
+    },
+    "uniqueExactEndStates": 45,
+    "uniqueActiveStateIds": 39,
+    "emptySuffixCases": [
+      {
+        "n": 69,
+        "seedId": 6,
+        "endId": 6,
+        "activeBranch": "L",
+        "activeProjectionSize": 18,
+        "subsetRank": 66
+      },
+      {
+        "n": 93,
+        "seedId": 1,
+        "endId": 1,
+        "activeBranch": "R",
+        "activeProjectionSize": 36,
+        "subsetRank": 66
+      },
+      {
+        "n": 236,
+        "seedId": 20,
+        "endId": 20,
+        "activeBranch": "L",
+        "activeProjectionSize": 18,
+        "subsetRank": 66
+      }
+    ]
+  },
+  "rows": [
+    {
+      "n": 33,
+      "sourceSector": "RO",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 6,
+        "j": 17
+      },
+      "targetSector": "RE",
+      "targetBranch": "L",
+      "targetBranchThreshold": "L",
+      "targetWindow": {
+        "k": 6,
+        "j": 17
+      },
+      "targetWordLength": 7,
+      "firstResetPatternLength": 4,
+      "firstResetPairOutputLength": 4,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 3,
+      "resetLabelIndex": 0,
+      "resetLabelKey": "7|17",
+      "seedId": 0,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 10,
+      "subsetRank": 2,
+      "subsetScc": "B1",
+      "exactEndStateId": 0,
+      "exactEndState": {
+        "id": 0,
+        "L_state": 7,
+        "R_state": 17,
+        "previous_pair": [
+          0,
+          0
+        ],
+        "L_carry": [
+          -1,
+          0
+        ],
+        "R_carry": [
+          -1,
+          0
+        ],
+        "seed_label_indices": [
+          0
+        ],
+        "L_full_state_id": 7,
+        "R_full_state_id": 17
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "L",
+      "activeStateId": 7,
+      "activeCarry": [
+        -1,
+        0
+      ],
+      "activeProjectionStateIds": [
+        7,
+        12
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 34,
+      "sourceSector": "RE",
+      "sourceBranch": "L",
+      "sourceBranchThreshold": "L",
+      "sourceWindow": {
+        "k": 6,
+        "j": 17
+      },
+      "targetSector": "LO",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 6,
+        "j": 17
+      },
+      "targetWordLength": 7,
+      "firstResetPatternLength": 4,
+      "firstResetPairOutputLength": 4,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 3,
+      "resetLabelIndex": 9,
+      "resetLabelKey": "162|188",
+      "seedId": 9,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 43,
+      "subsetRank": 3,
+      "subsetScc": "B7",
+      "exactEndStateId": 9,
+      "exactEndState": {
+        "id": 9,
+        "L_state": 162,
+        "R_state": 188,
+        "previous_pair": [
+          2,
+          0
+        ],
+        "L_carry": [
+          0,
+          0
+        ],
+        "R_carry": [
+          -3,
+          1
+        ],
+        "seed_label_indices": [
+          9
+        ],
+        "L_full_state_id": 162,
+        "R_full_state_id": 188
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 188,
+      "activeCarry": [
+        -3,
+        1
+      ],
+      "activeProjectionStateIds": [
+        188,
+        192,
+        193
+      ],
+      "activeProjectionSize": 3,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 35,
+      "sourceSector": "LO",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 6,
+        "j": 17
+      },
+      "targetSector": "RO",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 6,
+        "j": 18
+      },
+      "targetWordLength": 8,
+      "firstResetPatternLength": 5,
+      "firstResetPairOutputLength": 5,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 3,
+      "resetLabelIndex": 9,
+      "resetLabelKey": "162|188",
+      "seedId": 9,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 43,
+      "subsetRank": 3,
+      "subsetScc": "B7",
+      "exactEndStateId": 9,
+      "exactEndState": {
+        "id": 9,
+        "L_state": 162,
+        "R_state": 188,
+        "previous_pair": [
+          2,
+          0
+        ],
+        "L_carry": [
+          0,
+          0
+        ],
+        "R_carry": [
+          -3,
+          1
+        ],
+        "seed_label_indices": [
+          9
+        ],
+        "L_full_state_id": 162,
+        "R_full_state_id": 188
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 188,
+      "activeCarry": [
+        -3,
+        1
+      ],
+      "activeProjectionStateIds": [
+        188,
+        192,
+        193
+      ],
+      "activeProjectionSize": 3,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 36,
+      "sourceSector": "RO",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 6,
+        "j": 18
+      },
+      "targetSector": "RE",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 6,
+        "j": 18
+      },
+      "targetWordLength": 8,
+      "firstResetPatternLength": 4,
+      "firstResetPairOutputLength": 4,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 4,
+      "resetLabelIndex": 4,
+      "resetLabelKey": "187|222",
+      "seedId": 4,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 43,
+      "subsetRank": 3,
+      "subsetScc": "B7",
+      "exactEndStateId": 9,
+      "exactEndState": {
+        "id": 9,
+        "L_state": 162,
+        "R_state": 188,
+        "previous_pair": [
+          2,
+          0
+        ],
+        "L_carry": [
+          0,
+          0
+        ],
+        "R_carry": [
+          -3,
+          1
+        ],
+        "seed_label_indices": [
+          9
+        ],
+        "L_full_state_id": 162,
+        "R_full_state_id": 188
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 188,
+      "activeCarry": [
+        -3,
+        1
+      ],
+      "activeProjectionStateIds": [
+        188,
+        192,
+        193
+      ],
+      "activeProjectionSize": 3,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 37,
+      "sourceSector": "RE",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 6,
+        "j": 18
+      },
+      "targetSector": "RO",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 6,
+        "j": 18
+      },
+      "targetWordLength": 8,
+      "firstResetPatternLength": 4,
+      "firstResetPairOutputLength": 4,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 4,
+      "resetLabelIndex": 4,
+      "resetLabelKey": "187|222",
+      "seedId": 4,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 43,
+      "subsetRank": 3,
+      "subsetScc": "B7",
+      "exactEndStateId": 9,
+      "exactEndState": {
+        "id": 9,
+        "L_state": 162,
+        "R_state": 188,
+        "previous_pair": [
+          2,
+          0
+        ],
+        "L_carry": [
+          0,
+          0
+        ],
+        "R_carry": [
+          -3,
+          1
+        ],
+        "seed_label_indices": [
+          9
+        ],
+        "L_full_state_id": 162,
+        "R_full_state_id": 188
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 188,
+      "activeCarry": [
+        -3,
+        1
+      ],
+      "activeProjectionStateIds": [
+        188,
+        192,
+        193
+      ],
+      "activeProjectionSize": 3,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 38,
+      "sourceSector": "RO",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 6,
+        "j": 18
+      },
+      "targetSector": "RE",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 6,
+        "j": 18
+      },
+      "targetWordLength": 8,
+      "firstResetPatternLength": 4,
+      "firstResetPairOutputLength": 4,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 4,
+      "resetLabelIndex": 8,
+      "resetLabelKey": "57|73",
+      "seedId": 8,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 43,
+      "subsetRank": 3,
+      "subsetScc": "B7",
+      "exactEndStateId": 45,
+      "exactEndState": {
+        "id": 45,
+        "L_state": 162,
+        "R_state": 193,
+        "previous_pair": [
+          2,
+          0
+        ],
+        "L_carry": [
+          0,
+          0
+        ],
+        "R_carry": [
+          -2,
+          1
+        ],
+        "seed_label_indices": [
+          45
+        ],
+        "L_full_state_id": 162,
+        "R_full_state_id": 193
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 193,
+      "activeCarry": [
+        -2,
+        1
+      ],
+      "activeProjectionStateIds": [
+        188,
+        192,
+        193
+      ],
+      "activeProjectionSize": 3,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 40,
+      "sourceSector": "RO",
+      "sourceBranch": "L",
+      "sourceBranchThreshold": "L",
+      "sourceWindow": {
+        "k": 6,
+        "j": 18
+      },
+      "targetSector": "LE",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 6,
+        "j": 18
+      },
+      "targetWordLength": 8,
+      "firstResetPatternLength": 3,
+      "firstResetPairOutputLength": 3,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 5,
+      "resetLabelIndex": 4,
+      "resetLabelKey": "187|222",
+      "seedId": 4,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 130,
+      "subsetRank": 2,
+      "subsetScc": "B5",
+      "exactEndStateId": 45,
+      "exactEndState": {
+        "id": 45,
+        "L_state": 162,
+        "R_state": 193,
+        "previous_pair": [
+          2,
+          0
+        ],
+        "L_carry": [
+          0,
+          0
+        ],
+        "R_carry": [
+          -2,
+          1
+        ],
+        "seed_label_indices": [
+          45
+        ],
+        "L_full_state_id": 162,
+        "R_full_state_id": 193
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 193,
+      "activeCarry": [
+        -2,
+        1
+      ],
+      "activeProjectionStateIds": [
+        192,
+        193
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 41,
+      "sourceSector": "LE",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 6,
+        "j": 18
+      },
+      "targetSector": "RE",
+      "targetBranch": "L",
+      "targetBranchThreshold": "L",
+      "targetWindow": {
+        "k": 6,
+        "j": 18
+      },
+      "targetWordLength": 8,
+      "firstResetPatternLength": 4,
+      "firstResetPairOutputLength": 4,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 4,
+      "resetLabelIndex": 15,
+      "resetLabelKey": "82|103",
+      "seedId": 15,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 10,
+      "subsetRank": 2,
+      "subsetScc": "B1",
+      "exactEndStateId": 39,
+      "exactEndState": {
+        "id": 39,
+        "L_state": 12,
+        "R_state": 17,
+        "previous_pair": [
+          0,
+          0
+        ],
+        "L_carry": [
+          0,
+          0
+        ],
+        "R_carry": [
+          -1,
+          0
+        ],
+        "seed_label_indices": [
+          39
+        ],
+        "L_full_state_id": 12,
+        "R_full_state_id": 17
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "L",
+      "activeStateId": 12,
+      "activeCarry": [
+        0,
+        0
+      ],
+      "activeProjectionStateIds": [
+        7,
+        12
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 42,
+      "sourceSector": "RE",
+      "sourceBranch": "L",
+      "sourceBranchThreshold": "L",
+      "sourceWindow": {
+        "k": 6,
+        "j": 18
+      },
+      "targetSector": "LO",
+      "targetBranch": "L",
+      "targetBranchThreshold": "L",
+      "targetWindow": {
+        "k": 6,
+        "j": 18
+      },
+      "targetWordLength": 8,
+      "firstResetPatternLength": 4,
+      "firstResetPairOutputLength": 4,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 4,
+      "resetLabelIndex": 5,
+      "resetLabelKey": "212|252",
+      "seedId": 5,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 10,
+      "subsetRank": 2,
+      "subsetScc": "B1",
+      "exactEndStateId": 0,
+      "exactEndState": {
+        "id": 0,
+        "L_state": 7,
+        "R_state": 17,
+        "previous_pair": [
+          0,
+          0
+        ],
+        "L_carry": [
+          -1,
+          0
+        ],
+        "R_carry": [
+          -1,
+          0
+        ],
+        "seed_label_indices": [
+          0
+        ],
+        "L_full_state_id": 7,
+        "R_full_state_id": 17
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "L",
+      "activeStateId": 7,
+      "activeCarry": [
+        -1,
+        0
+      ],
+      "activeProjectionStateIds": [
+        7,
+        12
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 43,
+      "sourceSector": "LO",
+      "sourceBranch": "L",
+      "sourceBranchThreshold": "L",
+      "sourceWindow": {
+        "k": 6,
+        "j": 18
+      },
+      "targetSector": "LO",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 6,
+        "j": 18
+      },
+      "targetWordLength": 8,
+      "firstResetPatternLength": 3,
+      "firstResetPairOutputLength": 3,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 5,
+      "resetLabelIndex": 8,
+      "resetLabelKey": "57|73",
+      "seedId": 8,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 64,
+      "subsetRank": 2,
+      "subsetScc": "B2",
+      "exactEndStateId": 9,
+      "exactEndState": {
+        "id": 9,
+        "L_state": 162,
+        "R_state": 188,
+        "previous_pair": [
+          2,
+          0
+        ],
+        "L_carry": [
+          0,
+          0
+        ],
+        "R_carry": [
+          -3,
+          1
+        ],
+        "seed_label_indices": [
+          9
+        ],
+        "L_full_state_id": 162,
+        "R_full_state_id": 188
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 188,
+      "activeCarry": [
+        -3,
+        1
+      ],
+      "activeProjectionStateIds": [
+        188,
+        193
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 44,
+      "sourceSector": "LO",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 6,
+        "j": 18
+      },
+      "targetSector": "RO",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 6,
+        "j": 18
+      },
+      "targetWordLength": 8,
+      "firstResetPatternLength": 5,
+      "firstResetPairOutputLength": 5,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 3,
+      "resetLabelIndex": 5,
+      "resetLabelKey": "212|252",
+      "seedId": 5,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 43,
+      "subsetRank": 3,
+      "subsetScc": "B7",
+      "exactEndStateId": 9,
+      "exactEndState": {
+        "id": 9,
+        "L_state": 162,
+        "R_state": 188,
+        "previous_pair": [
+          2,
+          0
+        ],
+        "L_carry": [
+          0,
+          0
+        ],
+        "R_carry": [
+          -3,
+          1
+        ],
+        "seed_label_indices": [
+          9
+        ],
+        "L_full_state_id": 162,
+        "R_full_state_id": 188
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 188,
+      "activeCarry": [
+        -3,
+        1
+      ],
+      "activeProjectionStateIds": [
+        188,
+        192,
+        193
+      ],
+      "activeProjectionSize": 3,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 45,
+      "sourceSector": "RO",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 6,
+        "j": 18
+      },
+      "targetSector": "RE",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 6,
+        "j": 18
+      },
+      "targetWordLength": 8,
+      "firstResetPatternLength": 4,
+      "firstResetPairOutputLength": 4,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 4,
+      "resetLabelIndex": 5,
+      "resetLabelKey": "212|252",
+      "seedId": 5,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 130,
+      "subsetRank": 2,
+      "subsetScc": "B5",
+      "exactEndStateId": 45,
+      "exactEndState": {
+        "id": 45,
+        "L_state": 162,
+        "R_state": 193,
+        "previous_pair": [
+          2,
+          0
+        ],
+        "L_carry": [
+          0,
+          0
+        ],
+        "R_carry": [
+          -2,
+          1
+        ],
+        "seed_label_indices": [
+          45
+        ],
+        "L_full_state_id": 162,
+        "R_full_state_id": 193
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 193,
+      "activeCarry": [
+        -2,
+        1
+      ],
+      "activeProjectionStateIds": [
+        192,
+        193
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 48,
+      "sourceSector": "LE",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 6,
+        "j": 18
+      },
+      "targetSector": "RE",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 6,
+        "j": 18
+      },
+      "targetWordLength": 8,
+      "firstResetPatternLength": 4,
+      "firstResetPairOutputLength": 4,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 4,
+      "resetLabelIndex": 29,
+      "resetLabelKey": "132|162",
+      "seedId": 29,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 64,
+      "subsetRank": 2,
+      "subsetScc": "B2",
+      "exactEndStateId": 9,
+      "exactEndState": {
+        "id": 9,
+        "L_state": 162,
+        "R_state": 188,
+        "previous_pair": [
+          2,
+          0
+        ],
+        "L_carry": [
+          0,
+          0
+        ],
+        "R_carry": [
+          -3,
+          1
+        ],
+        "seed_label_indices": [
+          9
+        ],
+        "L_full_state_id": 162,
+        "R_full_state_id": 188
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 188,
+      "activeCarry": [
+        -3,
+        1
+      ],
+      "activeProjectionStateIds": [
+        188,
+        193
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 50,
+      "sourceSector": "RO",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 6,
+        "j": 18
+      },
+      "targetSector": "RE",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 6,
+        "j": 18
+      },
+      "targetWordLength": 8,
+      "firstResetPatternLength": 5,
+      "firstResetPairOutputLength": 5,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 3,
+      "resetLabelIndex": 10,
+      "resetLabelKey": "187|218",
+      "seedId": 10,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 130,
+      "subsetRank": 2,
+      "subsetScc": "B5",
+      "exactEndStateId": 45,
+      "exactEndState": {
+        "id": 45,
+        "L_state": 162,
+        "R_state": 193,
+        "previous_pair": [
+          2,
+          0
+        ],
+        "L_carry": [
+          0,
+          0
+        ],
+        "R_carry": [
+          -2,
+          1
+        ],
+        "seed_label_indices": [
+          45
+        ],
+        "L_full_state_id": 162,
+        "R_full_state_id": 193
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 193,
+      "activeCarry": [
+        -2,
+        1
+      ],
+      "activeProjectionStateIds": [
+        192,
+        193
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 51,
+      "sourceSector": "RE",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 6,
+        "j": 18
+      },
+      "targetSector": "RO",
+      "targetBranch": "L",
+      "targetBranchThreshold": "L",
+      "targetWindow": {
+        "k": 6,
+        "j": 18
+      },
+      "targetWordLength": 8,
+      "firstResetPatternLength": 6,
+      "firstResetPairOutputLength": 6,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 2,
+      "resetLabelIndex": 7,
+      "resetLabelKey": "32|43",
+      "seedId": 7,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 37,
+      "subsetRank": 4,
+      "subsetScc": "transient/non-SCC",
+      "exactEndStateId": 0,
+      "exactEndState": {
+        "id": 0,
+        "L_state": 7,
+        "R_state": 17,
+        "previous_pair": [
+          0,
+          0
+        ],
+        "L_carry": [
+          -1,
+          0
+        ],
+        "R_carry": [
+          -1,
+          0
+        ],
+        "seed_label_indices": [
+          0
+        ],
+        "L_full_state_id": 7,
+        "R_full_state_id": 17
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "L",
+      "activeStateId": 7,
+      "activeCarry": [
+        -1,
+        0
+      ],
+      "activeProjectionStateIds": [
+        7,
+        12
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 55,
+      "sourceSector": "RO",
+      "sourceBranch": "L",
+      "sourceBranchThreshold": "L",
+      "sourceWindow": {
+        "k": 6,
+        "j": 18
+      },
+      "targetSector": "LE",
+      "targetBranch": "L",
+      "targetBranchThreshold": "L",
+      "targetWindow": {
+        "k": 6,
+        "j": 18
+      },
+      "targetWordLength": 8,
+      "firstResetPatternLength": 5,
+      "firstResetPairOutputLength": 5,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 3,
+      "resetLabelIndex": 10,
+      "resetLabelKey": "187|218",
+      "seedId": 10,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 127,
+      "subsetRank": 2,
+      "subsetScc": "transient/non-SCC",
+      "exactEndStateId": 6,
+      "exactEndState": {
+        "id": 6,
+        "L_state": 7,
+        "R_state": 13,
+        "previous_pair": [
+          0,
+          0
+        ],
+        "L_carry": [
+          -1,
+          0
+        ],
+        "R_carry": [
+          -2,
+          1
+        ],
+        "seed_label_indices": [
+          6
+        ],
+        "L_full_state_id": 7,
+        "R_full_state_id": 13
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "L",
+      "activeStateId": 7,
+      "activeCarry": [
+        -1,
+        0
+      ],
+      "activeProjectionStateIds": [
+        7
+      ],
+      "activeProjectionSize": 1,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 57,
+      "sourceSector": "LE",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 6,
+        "j": 18
+      },
+      "targetSector": "RE",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 6,
+        "j": 18
+      },
+      "targetWordLength": 8,
+      "firstResetPatternLength": 5,
+      "firstResetPairOutputLength": 5,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 3,
+      "resetLabelIndex": 2,
+      "resetLabelKey": "57|77",
+      "seedId": 2,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 50,
+      "subsetRank": 2,
+      "subsetScc": "B2",
+      "exactEndStateId": 19,
+      "exactEndState": {
+        "id": 19,
+        "L_state": 107,
+        "R_state": 128,
+        "previous_pair": [
+          1,
+          1
+        ],
+        "L_carry": [
+          -1,
+          0
+        ],
+        "R_carry": [
+          -3,
+          1
+        ],
+        "seed_label_indices": [
+          19
+        ],
+        "L_full_state_id": 107,
+        "R_full_state_id": 128
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 128,
+      "activeCarry": [
+        -3,
+        1
+      ],
+      "activeProjectionStateIds": [
+        128,
+        133
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 62,
+      "sourceSector": "LE",
+      "sourceBranch": "L",
+      "sourceBranchThreshold": "L",
+      "sourceWindow": {
+        "k": 6,
+        "j": 18
+      },
+      "targetSector": "LE",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 6,
+        "j": 18
+      },
+      "targetWordLength": 8,
+      "firstResetPatternLength": 6,
+      "firstResetPairOutputLength": 6,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 2,
+      "resetLabelIndex": 27,
+      "resetLabelKey": "82|102",
+      "seedId": 27,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 45,
+      "subsetRank": 3,
+      "subsetScc": "transient/non-SCC",
+      "exactEndStateId": 5,
+      "exactEndState": {
+        "id": 5,
+        "L_state": 212,
+        "R_state": 252,
+        "previous_pair": [
+          2,
+          2
+        ],
+        "L_carry": [
+          0,
+          0
+        ],
+        "R_carry": [
+          -2,
+          0
+        ],
+        "seed_label_indices": [
+          5
+        ],
+        "L_full_state_id": 212,
+        "R_full_state_id": 252
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 252,
+      "activeCarry": [
+        -2,
+        0
+      ],
+      "activeProjectionStateIds": [
+        248,
+        252,
+        253
+      ],
+      "activeProjectionSize": 3,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 64,
+      "sourceSector": "RE",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 6,
+        "j": 18
+      },
+      "targetSector": "RO",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 6,
+        "j": 18
+      },
+      "targetWordLength": 8,
+      "firstResetPatternLength": 4,
+      "firstResetPairOutputLength": 4,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 4,
+      "resetLabelIndex": 14,
+      "resetLabelKey": "137|167",
+      "seedId": 14,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 61,
+      "subsetRank": 4,
+      "subsetScc": "B3",
+      "exactEndStateId": 18,
+      "exactEndState": {
+        "id": 18,
+        "L_state": 82,
+        "R_state": 98,
+        "previous_pair": [
+          1,
+          0
+        ],
+        "L_carry": [
+          -1,
+          0
+        ],
+        "R_carry": [
+          -3,
+          1
+        ],
+        "seed_label_indices": [
+          18
+        ],
+        "L_full_state_id": 82,
+        "R_full_state_id": 98
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 98,
+      "activeCarry": [
+        -3,
+        1
+      ],
+      "activeProjectionStateIds": [
+        98,
+        103
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 66,
+      "sourceSector": "RE",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 7,
+        "j": 19
+      },
+      "targetSector": "RO",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 7,
+        "j": 19
+      },
+      "targetWordLength": 8,
+      "firstResetPatternLength": 5,
+      "firstResetPairOutputLength": 5,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 3,
+      "resetLabelIndex": 8,
+      "resetLabelKey": "57|73",
+      "seedId": 8,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 59,
+      "subsetRank": 2,
+      "subsetScc": "B5",
+      "exactEndStateId": 25,
+      "exactEndState": {
+        "id": 25,
+        "L_state": 112,
+        "R_state": 133,
+        "previous_pair": [
+          1,
+          1
+        ],
+        "L_carry": [
+          0,
+          0
+        ],
+        "R_carry": [
+          -2,
+          1
+        ],
+        "seed_label_indices": [
+          25
+        ],
+        "L_full_state_id": 112,
+        "R_full_state_id": 133
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 133,
+      "activeCarry": [
+        -2,
+        1
+      ],
+      "activeProjectionStateIds": [
+        132,
+        133
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 69,
+      "sourceSector": "LO",
+      "sourceBranch": "L",
+      "sourceBranchThreshold": "L",
+      "sourceWindow": {
+        "k": 7,
+        "j": 19
+      },
+      "targetSector": "LO",
+      "targetBranch": "L",
+      "targetBranchThreshold": "L",
+      "targetWindow": {
+        "k": 7,
+        "j": 19
+      },
+      "targetWordLength": 8,
+      "firstResetPatternLength": 8,
+      "firstResetPairOutputLength": 8,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 0,
+      "resetLabelIndex": 6,
+      "resetLabelKey": "7|13",
+      "seedId": 6,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 0,
+      "subsetRank": 66,
+      "subsetScc": "transient/non-SCC",
+      "exactEndStateId": 6,
+      "exactEndState": {
+        "id": 6,
+        "L_state": 7,
+        "R_state": 13,
+        "previous_pair": [
+          0,
+          0
+        ],
+        "L_carry": [
+          -1,
+          0
+        ],
+        "R_carry": [
+          -2,
+          1
+        ],
+        "seed_label_indices": [
+          6
+        ],
+        "L_full_state_id": 7,
+        "R_full_state_id": 13
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "L",
+      "activeStateId": 7,
+      "activeCarry": [
+        -1,
+        0
+      ],
+      "activeProjectionStateIds": [
+        7,
+        12,
+        32,
+        37,
+        57,
+        62,
+        82,
+        87,
+        107,
+        112,
+        132,
+        137,
+        157,
+        162,
+        182,
+        187,
+        207,
+        212
+      ],
+      "activeProjectionSize": 18,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 72,
+      "sourceSector": "LO",
+      "sourceBranch": "L",
+      "sourceBranchThreshold": "L",
+      "sourceWindow": {
+        "k": 7,
+        "j": 19
+      },
+      "targetSector": "LO",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 7,
+        "j": 19
+      },
+      "targetWordLength": 8,
+      "firstResetPatternLength": 4,
+      "firstResetPairOutputLength": 4,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 4,
+      "resetLabelIndex": 2,
+      "resetLabelKey": "57|77",
+      "seedId": 2,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 62,
+      "subsetRank": 4,
+      "subsetScc": "transient/non-SCC",
+      "exactEndStateId": 16,
+      "exactEndState": {
+        "id": 16,
+        "L_state": 107,
+        "R_state": 133,
+        "previous_pair": [
+          1,
+          1
+        ],
+        "L_carry": [
+          -1,
+          0
+        ],
+        "R_carry": [
+          -2,
+          1
+        ],
+        "seed_label_indices": [
+          16
+        ],
+        "L_full_state_id": 107,
+        "R_full_state_id": 133
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 133,
+      "activeCarry": [
+        -2,
+        1
+      ],
+      "activeProjectionStateIds": [
+        128,
+        133
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 76,
+      "sourceSector": "RO",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 7,
+        "j": 19
+      },
+      "targetSector": "RE",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 7,
+        "j": 19
+      },
+      "targetWordLength": 8,
+      "firstResetPatternLength": 5,
+      "firstResetPairOutputLength": 5,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 3,
+      "resetLabelIndex": 6,
+      "resetLabelKey": "7|13",
+      "seedId": 6,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 12,
+      "subsetRank": 2,
+      "subsetScc": "B1",
+      "exactEndStateId": 41,
+      "exactEndState": {
+        "id": 41,
+        "L_state": 62,
+        "R_state": 77,
+        "previous_pair": [
+          0,
+          2
+        ],
+        "L_carry": [
+          0,
+          0
+        ],
+        "R_carry": [
+          -1,
+          0
+        ],
+        "seed_label_indices": [
+          41
+        ],
+        "L_full_state_id": 62,
+        "R_full_state_id": 77
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 77,
+      "activeCarry": [
+        -1,
+        0
+      ],
+      "activeProjectionStateIds": [
+        77
+      ],
+      "activeProjectionSize": 1,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 77,
+      "sourceSector": "RE",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 7,
+        "j": 19
+      },
+      "targetSector": "RO",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 7,
+        "j": 19
+      },
+      "targetWordLength": 8,
+      "firstResetPatternLength": 6,
+      "firstResetPairOutputLength": 6,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 2,
+      "resetLabelIndex": 4,
+      "resetLabelKey": "187|222",
+      "seedId": 4,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 49,
+      "subsetRank": 2,
+      "subsetScc": "B2",
+      "exactEndStateId": 18,
+      "exactEndState": {
+        "id": 18,
+        "L_state": 82,
+        "R_state": 98,
+        "previous_pair": [
+          1,
+          0
+        ],
+        "L_carry": [
+          -1,
+          0
+        ],
+        "R_carry": [
+          -3,
+          1
+        ],
+        "seed_label_indices": [
+          18
+        ],
+        "L_full_state_id": 82,
+        "R_full_state_id": 98
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 98,
+      "activeCarry": [
+        -3,
+        1
+      ],
+      "activeProjectionStateIds": [
+        98,
+        103
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 79,
+      "sourceSector": "RE",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 7,
+        "j": 19
+      },
+      "targetSector": "RO",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 7,
+        "j": 19
+      },
+      "targetWordLength": 8,
+      "firstResetPatternLength": 7,
+      "firstResetPairOutputLength": 7,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 1,
+      "resetLabelIndex": 0,
+      "resetLabelKey": "7|17",
+      "seedId": 0,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 4,
+      "subsetRank": 8,
+      "subsetScc": "transient/non-SCC",
+      "exactEndStateId": 12,
+      "exactEndState": {
+        "id": 12,
+        "L_state": 87,
+        "R_state": 107,
+        "previous_pair": [
+          1,
+          0
+        ],
+        "L_carry": [
+          0,
+          0
+        ],
+        "R_carry": [
+          -1,
+          0
+        ],
+        "seed_label_indices": [
+          12
+        ],
+        "L_full_state_id": 87,
+        "R_full_state_id": 107
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 107,
+      "activeCarry": [
+        -1,
+        0
+      ],
+      "activeProjectionStateIds": [
+        98,
+        102,
+        103,
+        107
+      ],
+      "activeProjectionSize": 4,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 80,
+      "sourceSector": "RO",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 7,
+        "j": 19
+      },
+      "targetSector": "RE",
+      "targetBranch": "L",
+      "targetBranchThreshold": "L",
+      "targetWindow": {
+        "k": 7,
+        "j": 19
+      },
+      "targetWordLength": 8,
+      "firstResetPatternLength": 6,
+      "firstResetPairOutputLength": 6,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 2,
+      "resetLabelIndex": 3,
+      "resetLabelKey": "162|192",
+      "seedId": 3,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 31,
+      "subsetRank": 2,
+      "subsetScc": "transient/non-SCC",
+      "exactEndStateId": 27,
+      "exactEndState": {
+        "id": 27,
+        "L_state": 82,
+        "R_state": 102,
+        "previous_pair": [
+          1,
+          0
+        ],
+        "L_carry": [
+          -1,
+          0
+        ],
+        "R_carry": [
+          -2,
+          0
+        ],
+        "seed_label_indices": [
+          27
+        ],
+        "L_full_state_id": 82,
+        "R_full_state_id": 102
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "L",
+      "activeStateId": 82,
+      "activeCarry": [
+        -1,
+        0
+      ],
+      "activeProjectionStateIds": [
+        82
+      ],
+      "activeProjectionSize": 1,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 82,
+      "sourceSector": "LO",
+      "sourceBranch": "L",
+      "sourceBranchThreshold": "L",
+      "sourceWindow": {
+        "k": 7,
+        "j": 19
+      },
+      "targetSector": "LO",
+      "targetBranch": "L",
+      "targetBranchThreshold": "L",
+      "targetWindow": {
+        "k": 7,
+        "j": 19
+      },
+      "targetWordLength": 8,
+      "firstResetPatternLength": 5,
+      "firstResetPairOutputLength": 5,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 3,
+      "resetLabelIndex": 6,
+      "resetLabelKey": "7|13",
+      "seedId": 6,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 16,
+      "subsetRank": 2,
+      "subsetScc": "B2",
+      "exactEndStateId": 3,
+      "exactEndState": {
+        "id": 3,
+        "L_state": 162,
+        "R_state": 192,
+        "previous_pair": [
+          2,
+          0
+        ],
+        "L_carry": [
+          0,
+          0
+        ],
+        "R_carry": [
+          -2,
+          0
+        ],
+        "seed_label_indices": [
+          3
+        ],
+        "L_full_state_id": 162,
+        "R_full_state_id": 192
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "L",
+      "activeStateId": 162,
+      "activeCarry": [
+        0,
+        0
+      ],
+      "activeProjectionStateIds": [
+        162
+      ],
+      "activeProjectionSize": 1,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 83,
+      "sourceSector": "LO",
+      "sourceBranch": "L",
+      "sourceBranchThreshold": "L",
+      "sourceWindow": {
+        "k": 7,
+        "j": 19
+      },
+      "targetSector": "LO",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 7,
+        "j": 19
+      },
+      "targetWordLength": 8,
+      "firstResetPatternLength": 5,
+      "firstResetPairOutputLength": 5,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 3,
+      "resetLabelIndex": 19,
+      "resetLabelKey": "107|128",
+      "seedId": 19,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 16,
+      "subsetRank": 2,
+      "subsetScc": "B2",
+      "exactEndStateId": 42,
+      "exactEndState": {
+        "id": 42,
+        "L_state": 162,
+        "R_state": 197,
+        "previous_pair": [
+          2,
+          0
+        ],
+        "L_carry": [
+          0,
+          0
+        ],
+        "R_carry": [
+          -1,
+          0
+        ],
+        "seed_label_indices": [
+          42
+        ],
+        "L_full_state_id": 162,
+        "R_full_state_id": 197
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 197,
+      "activeCarry": [
+        -1,
+        0
+      ],
+      "activeProjectionStateIds": [
+        192,
+        197
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 84,
+      "sourceSector": "LO",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 7,
+        "j": 19
+      },
+      "targetSector": "RO",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 7,
+        "j": 19
+      },
+      "targetWordLength": 8,
+      "firstResetPatternLength": 6,
+      "firstResetPairOutputLength": 6,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 2,
+      "resetLabelIndex": 6,
+      "resetLabelKey": "7|13",
+      "seedId": 6,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 28,
+      "subsetRank": 3,
+      "subsetScc": "transient/non-SCC",
+      "exactEndStateId": 0,
+      "exactEndState": {
+        "id": 0,
+        "L_state": 7,
+        "R_state": 17,
+        "previous_pair": [
+          0,
+          0
+        ],
+        "L_carry": [
+          -1,
+          0
+        ],
+        "R_carry": [
+          -1,
+          0
+        ],
+        "seed_label_indices": [
+          0
+        ],
+        "L_full_state_id": 7,
+        "R_full_state_id": 17
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 17,
+      "activeCarry": [
+        -1,
+        0
+      ],
+      "activeProjectionStateIds": [
+        12,
+        13,
+        17
+      ],
+      "activeProjectionSize": 3,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 88,
+      "sourceSector": "LE",
+      "sourceBranch": "L",
+      "sourceBranchThreshold": "L",
+      "sourceWindow": {
+        "k": 7,
+        "j": 19
+      },
+      "targetSector": "LE",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 7,
+        "j": 19
+      },
+      "targetWordLength": 8,
+      "firstResetPatternLength": 5,
+      "firstResetPairOutputLength": 5,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 3,
+      "resetLabelIndex": 10,
+      "resetLabelKey": "187|218",
+      "seedId": 10,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 17,
+      "subsetRank": 2,
+      "subsetScc": "B2",
+      "exactEndStateId": 4,
+      "exactEndState": {
+        "id": 4,
+        "L_state": 187,
+        "R_state": 222,
+        "previous_pair": [
+          2,
+          1
+        ],
+        "L_carry": [
+          0,
+          0
+        ],
+        "R_carry": [
+          -2,
+          0
+        ],
+        "seed_label_indices": [
+          4
+        ],
+        "L_full_state_id": 187,
+        "R_full_state_id": 222
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 222,
+      "activeCarry": [
+        -2,
+        0
+      ],
+      "activeProjectionStateIds": [
+        222,
+        227
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 90,
+      "sourceSector": "RE",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 7,
+        "j": 19
+      },
+      "targetSector": "RO",
+      "targetBranch": "L",
+      "targetBranchThreshold": "L",
+      "targetWindow": {
+        "k": 7,
+        "j": 19
+      },
+      "targetWordLength": 8,
+      "firstResetPatternLength": 6,
+      "firstResetPairOutputLength": 6,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 2,
+      "resetLabelIndex": 12,
+      "resetLabelKey": "87|107",
+      "seedId": 12,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 15,
+      "subsetRank": 2,
+      "subsetScc": "B2",
+      "exactEndStateId": 14,
+      "exactEndState": {
+        "id": 14,
+        "L_state": 137,
+        "R_state": 167,
+        "previous_pair": [
+          1,
+          2
+        ],
+        "L_carry": [
+          0,
+          0
+        ],
+        "R_carry": [
+          -1,
+          0
+        ],
+        "seed_label_indices": [
+          14
+        ],
+        "L_full_state_id": 137,
+        "R_full_state_id": 167
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "L",
+      "activeStateId": 137,
+      "activeCarry": [
+        0,
+        0
+      ],
+      "activeProjectionStateIds": [
+        137
+      ],
+      "activeProjectionSize": 1,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 92,
+      "sourceSector": "LE",
+      "sourceBranch": "L",
+      "sourceBranchThreshold": "L",
+      "sourceWindow": {
+        "k": 7,
+        "j": 19
+      },
+      "targetSector": "LE",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 7,
+        "j": 19
+      },
+      "targetWordLength": 8,
+      "firstResetPatternLength": 7,
+      "firstResetPairOutputLength": 7,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 1,
+      "resetLabelIndex": 12,
+      "resetLabelKey": "87|107",
+      "seedId": 12,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 4,
+      "subsetRank": 8,
+      "subsetScc": "transient/non-SCC",
+      "exactEndStateId": 12,
+      "exactEndState": {
+        "id": 12,
+        "L_state": 87,
+        "R_state": 107,
+        "previous_pair": [
+          1,
+          0
+        ],
+        "L_carry": [
+          0,
+          0
+        ],
+        "R_carry": [
+          -1,
+          0
+        ],
+        "seed_label_indices": [
+          12
+        ],
+        "L_full_state_id": 87,
+        "R_full_state_id": 107
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 107,
+      "activeCarry": [
+        -1,
+        0
+      ],
+      "activeProjectionStateIds": [
+        98,
+        102,
+        103,
+        107
+      ],
+      "activeProjectionSize": 4,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 93,
+      "sourceSector": "LE",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 7,
+        "j": 19
+      },
+      "targetSector": "RE",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 7,
+        "j": 19
+      },
+      "targetWordLength": 8,
+      "firstResetPatternLength": 8,
+      "firstResetPairOutputLength": 8,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 0,
+      "resetLabelIndex": 1,
+      "resetLabelKey": "32|47",
+      "seedId": 1,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 0,
+      "subsetRank": 66,
+      "subsetScc": "transient/non-SCC",
+      "exactEndStateId": 1,
+      "exactEndState": {
+        "id": 1,
+        "L_state": 32,
+        "R_state": 47,
+        "previous_pair": [
+          0,
+          1
+        ],
+        "L_carry": [
+          -1,
+          0
+        ],
+        "R_carry": [
+          -1,
+          0
+        ],
+        "seed_label_indices": [
+          1
+        ],
+        "L_full_state_id": 32,
+        "R_full_state_id": 47
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 47,
+      "activeCarry": [
+        -1,
+        0
+      ],
+      "activeProjectionStateIds": [
+        8,
+        12,
+        13,
+        17,
+        38,
+        42,
+        43,
+        47,
+        68,
+        72,
+        73,
+        77,
+        98,
+        102,
+        103,
+        107,
+        128,
+        132,
+        133,
+        137,
+        158,
+        162,
+        163,
+        167,
+        188,
+        192,
+        193,
+        197,
+        218,
+        222,
+        223,
+        227,
+        248,
+        252,
+        253,
+        257
+      ],
+      "activeProjectionSize": 36,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 94,
+      "sourceSector": "RE",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 7,
+        "j": 19
+      },
+      "targetSector": "RO",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 7,
+        "j": 19
+      },
+      "targetWordLength": 8,
+      "firstResetPatternLength": 4,
+      "firstResetPairOutputLength": 4,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 4,
+      "resetLabelIndex": 7,
+      "resetLabelKey": "32|43",
+      "seedId": 7,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 68,
+      "subsetRank": 2,
+      "subsetScc": "B2",
+      "exactEndStateId": 7,
+      "exactEndState": {
+        "id": 7,
+        "L_state": 32,
+        "R_state": 43,
+        "previous_pair": [
+          0,
+          1
+        ],
+        "L_carry": [
+          -1,
+          0
+        ],
+        "R_carry": [
+          -2,
+          1
+        ],
+        "seed_label_indices": [
+          7
+        ],
+        "L_full_state_id": 32,
+        "R_full_state_id": 43
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 43,
+      "activeCarry": [
+        -2,
+        1
+      ],
+      "activeProjectionStateIds": [
+        38,
+        43
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 95,
+      "sourceSector": "RO",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 7,
+        "j": 19
+      },
+      "targetSector": "RE",
+      "targetBranch": "L",
+      "targetBranchThreshold": "L",
+      "targetWindow": {
+        "k": 7,
+        "j": 19
+      },
+      "targetWordLength": 8,
+      "firstResetPatternLength": 5,
+      "firstResetPairOutputLength": 5,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 3,
+      "resetLabelIndex": 2,
+      "resetLabelKey": "57|77",
+      "seedId": 2,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 12,
+      "subsetRank": 2,
+      "subsetScc": "B1",
+      "exactEndStateId": 2,
+      "exactEndState": {
+        "id": 2,
+        "L_state": 57,
+        "R_state": 77,
+        "previous_pair": [
+          0,
+          2
+        ],
+        "L_carry": [
+          -1,
+          0
+        ],
+        "R_carry": [
+          -1,
+          0
+        ],
+        "seed_label_indices": [
+          2
+        ],
+        "L_full_state_id": 57,
+        "R_full_state_id": 77
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "L",
+      "activeStateId": 57,
+      "activeCarry": [
+        -1,
+        0
+      ],
+      "activeProjectionStateIds": [
+        57,
+        62
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 96,
+      "sourceSector": "RE",
+      "sourceBranch": "L",
+      "sourceBranchThreshold": "L",
+      "sourceWindow": {
+        "k": 7,
+        "j": 19
+      },
+      "targetSector": "LO",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 7,
+        "j": 19
+      },
+      "targetWordLength": 8,
+      "firstResetPatternLength": 5,
+      "firstResetPairOutputLength": 5,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 3,
+      "resetLabelIndex": 25,
+      "resetLabelKey": "112|133",
+      "seedId": 25,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 64,
+      "subsetRank": 2,
+      "subsetScc": "B2",
+      "exactEndStateId": 9,
+      "exactEndState": {
+        "id": 9,
+        "L_state": 162,
+        "R_state": 188,
+        "previous_pair": [
+          2,
+          0
+        ],
+        "L_carry": [
+          0,
+          0
+        ],
+        "R_carry": [
+          -3,
+          1
+        ],
+        "seed_label_indices": [
+          9
+        ],
+        "L_full_state_id": 162,
+        "R_full_state_id": 188
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 188,
+      "activeCarry": [
+        -3,
+        1
+      ],
+      "activeProjectionStateIds": [
+        188,
+        193
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 109,
+      "sourceSector": "RE",
+      "sourceBranch": "L",
+      "sourceBranchThreshold": "L",
+      "sourceWindow": {
+        "k": 7,
+        "j": 19
+      },
+      "targetSector": "LO",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 7,
+        "j": 19
+      },
+      "targetWordLength": 8,
+      "firstResetPatternLength": 6,
+      "firstResetPairOutputLength": 6,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 2,
+      "resetLabelIndex": 5,
+      "resetLabelKey": "212|252",
+      "seedId": 5,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 55,
+      "subsetRank": 5,
+      "subsetScc": "transient/non-SCC",
+      "exactEndStateId": 48,
+      "exactEndState": {
+        "id": 48,
+        "L_state": 12,
+        "R_state": 13,
+        "previous_pair": [
+          0,
+          0
+        ],
+        "L_carry": [
+          0,
+          0
+        ],
+        "R_carry": [
+          -2,
+          1
+        ],
+        "seed_label_indices": [
+          48
+        ],
+        "L_full_state_id": 12,
+        "R_full_state_id": 13
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 13,
+      "activeCarry": [
+        -2,
+        1
+      ],
+      "activeProjectionStateIds": [
+        12,
+        13,
+        17
+      ],
+      "activeProjectionSize": 3,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 110,
+      "sourceSector": "LO",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 7,
+        "j": 19
+      },
+      "targetSector": "RO",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 7,
+        "j": 19
+      },
+      "targetWordLength": 8,
+      "firstResetPatternLength": 6,
+      "firstResetPairOutputLength": 6,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 2,
+      "resetLabelIndex": 4,
+      "resetLabelKey": "187|222",
+      "seedId": 4,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 40,
+      "subsetRank": 4,
+      "subsetScc": "transient/non-SCC",
+      "exactEndStateId": 24,
+      "exactEndState": {
+        "id": 24,
+        "L_state": 87,
+        "R_state": 103,
+        "previous_pair": [
+          1,
+          0
+        ],
+        "L_carry": [
+          0,
+          0
+        ],
+        "R_carry": [
+          -2,
+          1
+        ],
+        "seed_label_indices": [
+          24
+        ],
+        "L_full_state_id": 87,
+        "R_full_state_id": 103
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 103,
+      "activeCarry": [
+        -2,
+        1
+      ],
+      "activeProjectionStateIds": [
+        102,
+        103
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 113,
+      "sourceSector": "LO",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 7,
+        "j": 19
+      },
+      "targetSector": "RO",
+      "targetBranch": "L",
+      "targetBranchThreshold": "L",
+      "targetWindow": {
+        "k": 7,
+        "j": 19
+      },
+      "targetWordLength": 8,
+      "firstResetPatternLength": 4,
+      "firstResetPairOutputLength": 4,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 4,
+      "resetLabelIndex": 3,
+      "resetLabelKey": "162|192",
+      "seedId": 3,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 49,
+      "subsetRank": 2,
+      "subsetScc": "B2",
+      "exactEndStateId": 15,
+      "exactEndState": {
+        "id": 15,
+        "L_state": 82,
+        "R_state": 103,
+        "previous_pair": [
+          1,
+          0
+        ],
+        "L_carry": [
+          -1,
+          0
+        ],
+        "R_carry": [
+          -2,
+          1
+        ],
+        "seed_label_indices": [
+          15
+        ],
+        "L_full_state_id": 82,
+        "R_full_state_id": 103
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "L",
+      "activeStateId": 82,
+      "activeCarry": [
+        -1,
+        0
+      ],
+      "activeProjectionStateIds": [
+        82
+      ],
+      "activeProjectionSize": 1,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 117,
+      "sourceSector": "RO",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 7,
+        "j": 19
+      },
+      "targetSector": "RE",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 7,
+        "j": 20
+      },
+      "targetWordLength": 9,
+      "firstResetPatternLength": 5,
+      "firstResetPairOutputLength": 5,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 4,
+      "resetLabelIndex": 1,
+      "resetLabelKey": "32|47",
+      "seedId": 1,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 71,
+      "subsetRank": 2,
+      "subsetScc": "B1",
+      "exactEndStateId": 10,
+      "exactEndState": {
+        "id": 10,
+        "L_state": 187,
+        "R_state": 218,
+        "previous_pair": [
+          2,
+          1
+        ],
+        "L_carry": [
+          0,
+          0
+        ],
+        "R_carry": [
+          -3,
+          1
+        ],
+        "seed_label_indices": [
+          10
+        ],
+        "L_full_state_id": 187,
+        "R_full_state_id": 218
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 218,
+      "activeCarry": [
+        -3,
+        1
+      ],
+      "activeProjectionStateIds": [
+        218
+      ],
+      "activeProjectionSize": 1,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 119,
+      "sourceSector": "RO",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 7,
+        "j": 20
+      },
+      "targetSector": "RE",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 7,
+        "j": 20
+      },
+      "targetWordLength": 9,
+      "firstResetPatternLength": 4,
+      "firstResetPairOutputLength": 4,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 5,
+      "resetLabelIndex": 9,
+      "resetLabelKey": "162|188",
+      "seedId": 9,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 67,
+      "subsetRank": 2,
+      "subsetScc": "B2",
+      "exactEndStateId": 51,
+      "exactEndState": {
+        "id": 51,
+        "L_state": 7,
+        "R_state": 8,
+        "previous_pair": [
+          0,
+          0
+        ],
+        "L_carry": [
+          -1,
+          0
+        ],
+        "R_carry": [
+          -3,
+          1
+        ],
+        "seed_label_indices": [
+          51
+        ],
+        "L_full_state_id": 7,
+        "R_full_state_id": 8
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 8,
+      "activeCarry": [
+        -3,
+        1
+      ],
+      "activeProjectionStateIds": [
+        8,
+        13
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 120,
+      "sourceSector": "RE",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 7,
+        "j": 20
+      },
+      "targetSector": "RO",
+      "targetBranch": "L",
+      "targetBranchThreshold": "L",
+      "targetWindow": {
+        "k": 7,
+        "j": 20
+      },
+      "targetWordLength": 9,
+      "firstResetPatternLength": 7,
+      "firstResetPairOutputLength": 7,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 2,
+      "resetLabelIndex": 9,
+      "resetLabelKey": "162|188",
+      "seedId": 9,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 45,
+      "subsetRank": 3,
+      "subsetScc": "transient/non-SCC",
+      "exactEndStateId": 11,
+      "exactEndState": {
+        "id": 11,
+        "L_state": 212,
+        "R_state": 248,
+        "previous_pair": [
+          2,
+          2
+        ],
+        "L_carry": [
+          0,
+          0
+        ],
+        "R_carry": [
+          -3,
+          1
+        ],
+        "seed_label_indices": [
+          11
+        ],
+        "L_full_state_id": 212,
+        "R_full_state_id": 248
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "L",
+      "activeStateId": 212,
+      "activeCarry": [
+        0,
+        0
+      ],
+      "activeProjectionStateIds": [
+        212
+      ],
+      "activeProjectionSize": 1,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 124,
+      "sourceSector": "RO",
+      "sourceBranch": "L",
+      "sourceBranchThreshold": "L",
+      "sourceWindow": {
+        "k": 7,
+        "j": 20
+      },
+      "targetSector": "LE",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 7,
+        "j": 20
+      },
+      "targetWordLength": 9,
+      "firstResetPatternLength": 5,
+      "firstResetPairOutputLength": 5,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 4,
+      "resetLabelIndex": 4,
+      "resetLabelKey": "187|222",
+      "seedId": 4,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 66,
+      "subsetRank": 2,
+      "subsetScc": "B2",
+      "exactEndStateId": 11,
+      "exactEndState": {
+        "id": 11,
+        "L_state": 212,
+        "R_state": 248,
+        "previous_pair": [
+          2,
+          2
+        ],
+        "L_carry": [
+          0,
+          0
+        ],
+        "R_carry": [
+          -3,
+          1
+        ],
+        "seed_label_indices": [
+          11
+        ],
+        "L_full_state_id": 212,
+        "R_full_state_id": 248
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 248,
+      "activeCarry": [
+        -3,
+        1
+      ],
+      "activeProjectionStateIds": [
+        248,
+        253
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 133,
+      "sourceSector": "RE",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 7,
+        "j": 20
+      },
+      "targetSector": "RO",
+      "targetBranch": "L",
+      "targetBranchThreshold": "L",
+      "targetWindow": {
+        "k": 7,
+        "j": 20
+      },
+      "targetWordLength": 9,
+      "firstResetPatternLength": 5,
+      "firstResetPairOutputLength": 5,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 4,
+      "resetLabelIndex": 22,
+      "resetLabelKey": "112|132",
+      "seedId": 22,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 21,
+      "subsetRank": 2,
+      "subsetScc": "B2",
+      "exactEndStateId": 35,
+      "exactEndState": {
+        "id": 35,
+        "L_state": 57,
+        "R_state": 72,
+        "previous_pair": [
+          0,
+          2
+        ],
+        "L_carry": [
+          -1,
+          0
+        ],
+        "R_carry": [
+          -2,
+          0
+        ],
+        "seed_label_indices": [
+          35
+        ],
+        "L_full_state_id": 57,
+        "R_full_state_id": 72
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "L",
+      "activeStateId": 57,
+      "activeCarry": [
+        -1,
+        0
+      ],
+      "activeProjectionStateIds": [
+        57
+      ],
+      "activeProjectionSize": 1,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 144,
+      "sourceSector": "RE",
+      "sourceBranch": "L",
+      "sourceBranchThreshold": "L",
+      "sourceWindow": {
+        "k": 7,
+        "j": 20
+      },
+      "targetSector": "LO",
+      "targetBranch": "L",
+      "targetBranchThreshold": "L",
+      "targetWindow": {
+        "k": 7,
+        "j": 20
+      },
+      "targetWordLength": 9,
+      "firstResetPatternLength": 4,
+      "firstResetPairOutputLength": 4,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 5,
+      "resetLabelIndex": 1,
+      "resetLabelKey": "32|47",
+      "seedId": 1,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 17,
+      "subsetRank": 2,
+      "subsetScc": "B2",
+      "exactEndStateId": 43,
+      "exactEndState": {
+        "id": 43,
+        "L_state": 187,
+        "R_state": 227,
+        "previous_pair": [
+          2,
+          1
+        ],
+        "L_carry": [
+          0,
+          0
+        ],
+        "R_carry": [
+          -1,
+          0
+        ],
+        "seed_label_indices": [
+          43
+        ],
+        "L_full_state_id": 187,
+        "R_full_state_id": 227
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "L",
+      "activeStateId": 187,
+      "activeCarry": [
+        0,
+        0
+      ],
+      "activeProjectionStateIds": [
+        187
+      ],
+      "activeProjectionSize": 1,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 149,
+      "sourceSector": "RO",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 7,
+        "j": 20
+      },
+      "targetSector": "RE",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 7,
+        "j": 20
+      },
+      "targetWordLength": 9,
+      "firstResetPatternLength": 7,
+      "firstResetPairOutputLength": 7,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 2,
+      "resetLabelIndex": 8,
+      "resetLabelKey": "57|73",
+      "seedId": 8,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 49,
+      "subsetRank": 2,
+      "subsetScc": "B2",
+      "exactEndStateId": 15,
+      "exactEndState": {
+        "id": 15,
+        "L_state": 82,
+        "R_state": 103,
+        "previous_pair": [
+          1,
+          0
+        ],
+        "L_carry": [
+          -1,
+          0
+        ],
+        "R_carry": [
+          -2,
+          1
+        ],
+        "seed_label_indices": [
+          15
+        ],
+        "L_full_state_id": 82,
+        "R_full_state_id": 103
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 103,
+      "activeCarry": [
+        -2,
+        1
+      ],
+      "activeProjectionStateIds": [
+        98,
+        103
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 151,
+      "sourceSector": "RO",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 7,
+        "j": 20
+      },
+      "targetSector": "RE",
+      "targetBranch": "L",
+      "targetBranchThreshold": "L",
+      "targetWindow": {
+        "k": 7,
+        "j": 20
+      },
+      "targetWordLength": 9,
+      "firstResetPatternLength": 8,
+      "firstResetPairOutputLength": 8,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 1,
+      "resetLabelIndex": 5,
+      "resetLabelKey": "212|252",
+      "seedId": 5,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 2,
+      "subsetRank": 7,
+      "subsetScc": "transient/non-SCC",
+      "exactEndStateId": 7,
+      "exactEndState": {
+        "id": 7,
+        "L_state": 32,
+        "R_state": 43,
+        "previous_pair": [
+          0,
+          1
+        ],
+        "L_carry": [
+          -1,
+          0
+        ],
+        "R_carry": [
+          -2,
+          1
+        ],
+        "seed_label_indices": [
+          7
+        ],
+        "L_full_state_id": 32,
+        "R_full_state_id": 43
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "L",
+      "activeStateId": 32,
+      "activeCarry": [
+        -1,
+        0
+      ],
+      "activeProjectionStateIds": [
+        32,
+        37
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 161,
+      "sourceSector": "RO",
+      "sourceBranch": "L",
+      "sourceBranchThreshold": "L",
+      "sourceWindow": {
+        "k": 7,
+        "j": 20
+      },
+      "targetSector": "LE",
+      "targetBranch": "L",
+      "targetBranchThreshold": "L",
+      "targetWindow": {
+        "k": 7,
+        "j": 20
+      },
+      "targetWordLength": 9,
+      "firstResetPatternLength": 4,
+      "firstResetPairOutputLength": 4,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 5,
+      "resetLabelIndex": 23,
+      "resetLabelKey": "137|162",
+      "seedId": 23,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 51,
+      "subsetRank": 2,
+      "subsetScc": "B2",
+      "exactEndStateId": 17,
+      "exactEndState": {
+        "id": 17,
+        "L_state": 132,
+        "R_state": 163,
+        "previous_pair": [
+          1,
+          2
+        ],
+        "L_carry": [
+          -1,
+          0
+        ],
+        "R_carry": [
+          -2,
+          1
+        ],
+        "seed_label_indices": [
+          17
+        ],
+        "L_full_state_id": 132,
+        "R_full_state_id": 163
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "L",
+      "activeStateId": 132,
+      "activeCarry": [
+        -1,
+        0
+      ],
+      "activeProjectionStateIds": [
+        132
+      ],
+      "activeProjectionSize": 1,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 163,
+      "sourceSector": "LE",
+      "sourceBranch": "L",
+      "sourceBranchThreshold": "L",
+      "sourceWindow": {
+        "k": 7,
+        "j": 20
+      },
+      "targetSector": "LE",
+      "targetBranch": "L",
+      "targetBranchThreshold": "L",
+      "targetWindow": {
+        "k": 7,
+        "j": 20
+      },
+      "targetWordLength": 9,
+      "firstResetPatternLength": 6,
+      "firstResetPairOutputLength": 6,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 3,
+      "resetLabelIndex": 11,
+      "resetLabelKey": "212|248",
+      "seedId": 11,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 72,
+      "subsetRank": 2,
+      "subsetScc": "B1",
+      "exactEndStateId": 38,
+      "exactEndState": {
+        "id": 38,
+        "L_state": 207,
+        "R_state": 248,
+        "previous_pair": [
+          2,
+          2
+        ],
+        "L_carry": [
+          -1,
+          0
+        ],
+        "R_carry": [
+          -3,
+          1
+        ],
+        "seed_label_indices": [
+          38
+        ],
+        "L_full_state_id": 207,
+        "R_full_state_id": 248
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "L",
+      "activeStateId": 207,
+      "activeCarry": [
+        -1,
+        0
+      ],
+      "activeProjectionStateIds": [
+        207,
+        212
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 177,
+      "sourceSector": "LO",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 7,
+        "j": 20
+      },
+      "targetSector": "RO",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 7,
+        "j": 20
+      },
+      "targetWordLength": 9,
+      "firstResetPatternLength": 6,
+      "firstResetPairOutputLength": 6,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 3,
+      "resetLabelIndex": 26,
+      "resetLabelKey": "137|163",
+      "seedId": 26,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 20,
+      "subsetRank": 2,
+      "subsetScc": "B2",
+      "exactEndStateId": 34,
+      "exactEndState": {
+        "id": 34,
+        "L_state": 32,
+        "R_state": 42,
+        "previous_pair": [
+          0,
+          1
+        ],
+        "L_carry": [
+          -1,
+          0
+        ],
+        "R_carry": [
+          -2,
+          0
+        ],
+        "seed_label_indices": [
+          34
+        ],
+        "L_full_state_id": 32,
+        "R_full_state_id": 42
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 42,
+      "activeCarry": [
+        -2,
+        0
+      ],
+      "activeProjectionStateIds": [
+        42,
+        47
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 181,
+      "sourceSector": "RO",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 7,
+        "j": 20
+      },
+      "targetSector": "RE",
+      "targetBranch": "L",
+      "targetBranchThreshold": "L",
+      "targetWindow": {
+        "k": 7,
+        "j": 20
+      },
+      "targetWordLength": 9,
+      "firstResetPatternLength": 3,
+      "firstResetPairOutputLength": 3,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 6,
+      "resetLabelIndex": 10,
+      "resetLabelKey": "187|218",
+      "seedId": 10,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 68,
+      "subsetRank": 2,
+      "subsetScc": "B2",
+      "exactEndStateId": 7,
+      "exactEndState": {
+        "id": 7,
+        "L_state": 32,
+        "R_state": 43,
+        "previous_pair": [
+          0,
+          1
+        ],
+        "L_carry": [
+          -1,
+          0
+        ],
+        "R_carry": [
+          -2,
+          1
+        ],
+        "seed_label_indices": [
+          7
+        ],
+        "L_full_state_id": 32,
+        "R_full_state_id": 43
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "L",
+      "activeStateId": 32,
+      "activeCarry": [
+        -1,
+        0
+      ],
+      "activeProjectionStateIds": [
+        32
+      ],
+      "activeProjectionSize": 1,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 191,
+      "sourceSector": "RE",
+      "sourceBranch": "L",
+      "sourceBranchThreshold": "L",
+      "sourceWindow": {
+        "k": 7,
+        "j": 21
+      },
+      "targetSector": "LO",
+      "targetBranch": "L",
+      "targetBranchThreshold": "L",
+      "targetWindow": {
+        "k": 7,
+        "j": 21
+      },
+      "targetWordLength": 10,
+      "firstResetPatternLength": 5,
+      "firstResetPairOutputLength": 5,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 5,
+      "resetLabelIndex": 2,
+      "resetLabelKey": "57|77",
+      "seedId": 2,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 183,
+      "subsetRank": 2,
+      "subsetScc": "B1",
+      "exactEndStateId": 62,
+      "exactEndState": {
+        "id": 62,
+        "L_state": 207,
+        "R_state": 253,
+        "previous_pair": [
+          2,
+          2
+        ],
+        "L_carry": [
+          -1,
+          0
+        ],
+        "R_carry": [
+          -2,
+          1
+        ],
+        "seed_label_indices": [],
+        "L_full_state_id": 207,
+        "R_full_state_id": 253
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "L",
+      "activeStateId": 207,
+      "activeCarry": [
+        -1,
+        0
+      ],
+      "activeProjectionStateIds": [
+        207,
+        212
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 208,
+      "sourceSector": "LO",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 7,
+        "j": 21
+      },
+      "targetSector": "RO",
+      "targetBranch": "L",
+      "targetBranchThreshold": "L",
+      "targetWindow": {
+        "k": 7,
+        "j": 21
+      },
+      "targetWordLength": 10,
+      "firstResetPatternLength": 5,
+      "firstResetPairOutputLength": 5,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 5,
+      "resetLabelIndex": 9,
+      "resetLabelKey": "162|188",
+      "seedId": 9,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 19,
+      "subsetRank": 2,
+      "subsetScc": "B2",
+      "exactEndStateId": 33,
+      "exactEndState": {
+        "id": 33,
+        "L_state": 7,
+        "R_state": 12,
+        "previous_pair": [
+          0,
+          0
+        ],
+        "L_carry": [
+          -1,
+          0
+        ],
+        "R_carry": [
+          -2,
+          0
+        ],
+        "seed_label_indices": [
+          33
+        ],
+        "L_full_state_id": 7,
+        "R_full_state_id": 12
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "L",
+      "activeStateId": 7,
+      "activeCarry": [
+        -1,
+        0
+      ],
+      "activeProjectionStateIds": [
+        7
+      ],
+      "activeProjectionSize": 1,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 228,
+      "sourceSector": "LO",
+      "sourceBranch": "L",
+      "sourceBranchThreshold": "L",
+      "sourceWindow": {
+        "k": 7,
+        "j": 21
+      },
+      "targetSector": "LO",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 7,
+        "j": 21
+      },
+      "targetWordLength": 10,
+      "firstResetPatternLength": 8,
+      "firstResetPairOutputLength": 8,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 2,
+      "resetLabelIndex": 11,
+      "resetLabelKey": "212|248",
+      "seedId": 11,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 16,
+      "subsetRank": 2,
+      "subsetScc": "B2",
+      "exactEndStateId": 3,
+      "exactEndState": {
+        "id": 3,
+        "L_state": 162,
+        "R_state": 192,
+        "previous_pair": [
+          2,
+          0
+        ],
+        "L_carry": [
+          0,
+          0
+        ],
+        "R_carry": [
+          -2,
+          0
+        ],
+        "seed_label_indices": [
+          3
+        ],
+        "L_full_state_id": 162,
+        "R_full_state_id": 192
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 192,
+      "activeCarry": [
+        -2,
+        0
+      ],
+      "activeProjectionStateIds": [
+        192,
+        197
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 233,
+      "sourceSector": "RO",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 7,
+        "j": 21
+      },
+      "targetSector": "RE",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 7,
+        "j": 21
+      },
+      "targetWordLength": 10,
+      "firstResetPatternLength": 8,
+      "firstResetPairOutputLength": 8,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 2,
+      "resetLabelIndex": 31,
+      "resetLabelKey": "182|222",
+      "seedId": 31,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 44,
+      "subsetRank": 3,
+      "subsetScc": "transient/non-SCC",
+      "exactEndStateId": 46,
+      "exactEndState": {
+        "id": 46,
+        "L_state": 187,
+        "R_state": 223,
+        "previous_pair": [
+          2,
+          1
+        ],
+        "L_carry": [
+          0,
+          0
+        ],
+        "R_carry": [
+          -2,
+          1
+        ],
+        "seed_label_indices": [
+          46
+        ],
+        "L_full_state_id": 187,
+        "R_full_state_id": 223
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 223,
+      "activeCarry": [
+        -2,
+        1
+      ],
+      "activeProjectionStateIds": [
+        218,
+        222,
+        223
+      ],
+      "activeProjectionSize": 3,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 235,
+      "sourceSector": "RO",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 7,
+        "j": 21
+      },
+      "targetSector": "RE",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 7,
+        "j": 21
+      },
+      "targetWordLength": 10,
+      "firstResetPatternLength": 9,
+      "firstResetPairOutputLength": 9,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 1,
+      "resetLabelIndex": 18,
+      "resetLabelKey": "82|98",
+      "seedId": 18,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 5,
+      "subsetRank": 8,
+      "subsetScc": "transient/non-SCC",
+      "exactEndStateId": 22,
+      "exactEndState": {
+        "id": 22,
+        "L_state": 112,
+        "R_state": 132,
+        "previous_pair": [
+          1,
+          1
+        ],
+        "L_carry": [
+          0,
+          0
+        ],
+        "R_carry": [
+          -2,
+          0
+        ],
+        "seed_label_indices": [
+          22
+        ],
+        "L_full_state_id": 112,
+        "R_full_state_id": 132
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 132,
+      "activeCarry": [
+        -2,
+        0
+      ],
+      "activeProjectionStateIds": [
+        128,
+        132,
+        133,
+        137
+      ],
+      "activeProjectionSize": 4,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 236,
+      "sourceSector": "RE",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 7,
+        "j": 21
+      },
+      "targetSector": "RO",
+      "targetBranch": "L",
+      "targetBranchThreshold": "L",
+      "targetWindow": {
+        "k": 7,
+        "j": 21
+      },
+      "targetWordLength": 10,
+      "firstResetPatternLength": 10,
+      "firstResetPairOutputLength": 10,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 0,
+      "resetLabelIndex": 20,
+      "resetLabelKey": "132|158",
+      "seedId": 20,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 0,
+      "subsetRank": 66,
+      "subsetScc": "transient/non-SCC",
+      "exactEndStateId": 20,
+      "exactEndState": {
+        "id": 20,
+        "L_state": 132,
+        "R_state": 158,
+        "previous_pair": [
+          1,
+          2
+        ],
+        "L_carry": [
+          -1,
+          0
+        ],
+        "R_carry": [
+          -3,
+          1
+        ],
+        "seed_label_indices": [
+          20
+        ],
+        "L_full_state_id": 132,
+        "R_full_state_id": 158
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "L",
+      "activeStateId": 132,
+      "activeCarry": [
+        -1,
+        0
+      ],
+      "activeProjectionStateIds": [
+        7,
+        12,
+        32,
+        37,
+        57,
+        62,
+        82,
+        87,
+        107,
+        112,
+        132,
+        137,
+        157,
+        162,
+        182,
+        187,
+        207,
+        212
+      ],
+      "activeProjectionSize": 18,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 241,
+      "sourceSector": "RO",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 7,
+        "j": 21
+      },
+      "targetSector": "RE",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 7,
+        "j": 21
+      },
+      "targetWordLength": 10,
+      "firstResetPatternLength": 7,
+      "firstResetPairOutputLength": 7,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 3,
+      "resetLabelIndex": 4,
+      "resetLabelKey": "187|222",
+      "seedId": 4,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 129,
+      "subsetRank": 2,
+      "subsetScc": "B5",
+      "exactEndStateId": 8,
+      "exactEndState": {
+        "id": 8,
+        "L_state": 57,
+        "R_state": 73,
+        "previous_pair": [
+          0,
+          2
+        ],
+        "L_carry": [
+          -1,
+          0
+        ],
+        "R_carry": [
+          -2,
+          1
+        ],
+        "seed_label_indices": [
+          8
+        ],
+        "L_full_state_id": 57,
+        "R_full_state_id": 73
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 73,
+      "activeCarry": [
+        -2,
+        1
+      ],
+      "activeProjectionStateIds": [
+        72,
+        73
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 282,
+      "sourceSector": "RE",
+      "sourceBranch": "L",
+      "sourceBranchThreshold": "L",
+      "sourceWindow": {
+        "k": 7,
+        "j": 21
+      },
+      "targetSector": "LO",
+      "targetBranch": "L",
+      "targetBranchThreshold": "L",
+      "targetWindow": {
+        "k": 7,
+        "j": 21
+      },
+      "targetWordLength": 10,
+      "firstResetPatternLength": 8,
+      "firstResetPairOutputLength": 8,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 2,
+      "resetLabelIndex": 8,
+      "resetLabelKey": "57|73",
+      "seedId": 8,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 38,
+      "subsetRank": 4,
+      "subsetScc": "B3",
+      "exactEndStateId": 1,
+      "exactEndState": {
+        "id": 1,
+        "L_state": 32,
+        "R_state": 47,
+        "previous_pair": [
+          0,
+          1
+        ],
+        "L_carry": [
+          -1,
+          0
+        ],
+        "R_carry": [
+          -1,
+          0
+        ],
+        "seed_label_indices": [
+          1
+        ],
+        "L_full_state_id": 32,
+        "R_full_state_id": 47
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "L",
+      "activeStateId": 32,
+      "activeCarry": [
+        -1,
+        0
+      ],
+      "activeProjectionStateIds": [
+        32,
+        37
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 297,
+      "sourceSector": "RO",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 8,
+        "j": 22
+      },
+      "targetSector": "RE",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 8,
+        "j": 22
+      },
+      "targetWordLength": 10,
+      "firstResetPatternLength": 7,
+      "firstResetPairOutputLength": 7,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 3,
+      "resetLabelIndex": 15,
+      "resetLabelKey": "82|103",
+      "seedId": 15,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 102,
+      "subsetRank": 2,
+      "subsetScc": "B2",
+      "exactEndStateId": 41,
+      "exactEndState": {
+        "id": 41,
+        "L_state": 62,
+        "R_state": 77,
+        "previous_pair": [
+          0,
+          2
+        ],
+        "L_carry": [
+          0,
+          0
+        ],
+        "R_carry": [
+          -1,
+          0
+        ],
+        "seed_label_indices": [
+          41
+        ],
+        "L_full_state_id": 62,
+        "R_full_state_id": 77
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 77,
+      "activeCarry": [
+        -1,
+        0
+      ],
+      "activeProjectionStateIds": [
+        72,
+        77
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 310,
+      "sourceSector": "LE",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 8,
+        "j": 22
+      },
+      "targetSector": "RE",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 8,
+        "j": 22
+      },
+      "targetWordLength": 10,
+      "firstResetPatternLength": 7,
+      "firstResetPairOutputLength": 7,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 3,
+      "resetLabelIndex": 19,
+      "resetLabelKey": "107|128",
+      "seedId": 19,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 65,
+      "subsetRank": 2,
+      "subsetScc": "B2",
+      "exactEndStateId": 46,
+      "exactEndState": {
+        "id": 46,
+        "L_state": 187,
+        "R_state": 223,
+        "previous_pair": [
+          2,
+          1
+        ],
+        "L_carry": [
+          0,
+          0
+        ],
+        "R_carry": [
+          -2,
+          1
+        ],
+        "seed_label_indices": [
+          46
+        ],
+        "L_full_state_id": 187,
+        "R_full_state_id": 223
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 223,
+      "activeCarry": [
+        -2,
+        1
+      ],
+      "activeProjectionStateIds": [
+        218,
+        223
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 324,
+      "sourceSector": "RO",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 8,
+        "j": 22
+      },
+      "targetSector": "RE",
+      "targetBranch": "L",
+      "targetBranchThreshold": "L",
+      "targetWindow": {
+        "k": 8,
+        "j": 22
+      },
+      "targetWordLength": 10,
+      "firstResetPatternLength": 4,
+      "firstResetPairOutputLength": 4,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 6,
+      "resetLabelIndex": 51,
+      "resetLabelKey": "7|8",
+      "seedId": 51,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 183,
+      "subsetRank": 2,
+      "subsetScc": "B1",
+      "exactEndStateId": 47,
+      "exactEndState": {
+        "id": 47,
+        "L_state": 212,
+        "R_state": 253,
+        "previous_pair": [
+          2,
+          2
+        ],
+        "L_carry": [
+          0,
+          0
+        ],
+        "R_carry": [
+          -2,
+          1
+        ],
+        "seed_label_indices": [
+          47
+        ],
+        "L_full_state_id": 212,
+        "R_full_state_id": 253
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "L",
+      "activeStateId": 212,
+      "activeCarry": [
+        0,
+        0
+      ],
+      "activeProjectionStateIds": [
+        207,
+        212
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 335,
+      "sourceSector": "RO",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 8,
+        "j": 22
+      },
+      "targetSector": "RE",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 8,
+        "j": 22
+      },
+      "targetWordLength": 10,
+      "firstResetPatternLength": 7,
+      "firstResetPairOutputLength": 7,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 3,
+      "resetLabelIndex": 10,
+      "resetLabelKey": "187|218",
+      "seedId": 10,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 17,
+      "subsetRank": 2,
+      "subsetScc": "B2",
+      "exactEndStateId": 4,
+      "exactEndState": {
+        "id": 4,
+        "L_state": 187,
+        "R_state": 222,
+        "previous_pair": [
+          2,
+          1
+        ],
+        "L_carry": [
+          0,
+          0
+        ],
+        "R_carry": [
+          -2,
+          0
+        ],
+        "seed_label_indices": [
+          4
+        ],
+        "L_full_state_id": 187,
+        "R_full_state_id": 222
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 222,
+      "activeCarry": [
+        -2,
+        0
+      ],
+      "activeProjectionStateIds": [
+        222,
+        227
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 344,
+      "sourceSector": "LE",
+      "sourceBranch": "L",
+      "sourceBranchThreshold": "L",
+      "sourceWindow": {
+        "k": 8,
+        "j": 22
+      },
+      "targetSector": "LE",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 8,
+        "j": 22
+      },
+      "targetWordLength": 10,
+      "firstResetPatternLength": 6,
+      "firstResetPairOutputLength": 6,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 4,
+      "resetLabelIndex": 16,
+      "resetLabelKey": "107|133",
+      "seedId": 16,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 132,
+      "subsetRank": 2,
+      "subsetScc": "transient/non-SCC",
+      "exactEndStateId": 47,
+      "exactEndState": {
+        "id": 47,
+        "L_state": 212,
+        "R_state": 253,
+        "previous_pair": [
+          2,
+          2
+        ],
+        "L_carry": [
+          0,
+          0
+        ],
+        "R_carry": [
+          -2,
+          1
+        ],
+        "seed_label_indices": [
+          47
+        ],
+        "L_full_state_id": 212,
+        "R_full_state_id": 253
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 253,
+      "activeCarry": [
+        -2,
+        1
+      ],
+      "activeProjectionStateIds": [
+        252,
+        253
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 352,
+      "sourceSector": "LE",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 8,
+        "j": 22
+      },
+      "targetSector": "RE",
+      "targetBranch": "L",
+      "targetBranchThreshold": "L",
+      "targetWindow": {
+        "k": 8,
+        "j": 22
+      },
+      "targetWordLength": 10,
+      "firstResetPatternLength": 7,
+      "firstResetPairOutputLength": 7,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 3,
+      "resetLabelIndex": 11,
+      "resetLabelKey": "212|248",
+      "seedId": 11,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 11,
+      "subsetRank": 2,
+      "subsetScc": "B1",
+      "exactEndStateId": 40,
+      "exactEndState": {
+        "id": 40,
+        "L_state": 37,
+        "R_state": 47,
+        "previous_pair": [
+          0,
+          1
+        ],
+        "L_carry": [
+          0,
+          0
+        ],
+        "R_carry": [
+          -1,
+          0
+        ],
+        "seed_label_indices": [
+          40
+        ],
+        "L_full_state_id": 37,
+        "R_full_state_id": 47
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "L",
+      "activeStateId": 37,
+      "activeCarry": [
+        0,
+        0
+      ],
+      "activeProjectionStateIds": [
+        32,
+        37
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 367,
+      "sourceSector": "LO",
+      "sourceBranch": "L",
+      "sourceBranchThreshold": "L",
+      "sourceWindow": {
+        "k": 8,
+        "j": 22
+      },
+      "targetSector": "LO",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 8,
+        "j": 22
+      },
+      "targetWordLength": 10,
+      "firstResetPatternLength": 6,
+      "firstResetPairOutputLength": 6,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 4,
+      "resetLabelIndex": 11,
+      "resetLabelKey": "212|248",
+      "seedId": 11,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 32,
+      "subsetRank": 2,
+      "subsetScc": "B5",
+      "exactEndStateId": 16,
+      "exactEndState": {
+        "id": 16,
+        "L_state": 107,
+        "R_state": 133,
+        "previous_pair": [
+          1,
+          1
+        ],
+        "L_carry": [
+          -1,
+          0
+        ],
+        "R_carry": [
+          -2,
+          1
+        ],
+        "seed_label_indices": [
+          16
+        ],
+        "L_full_state_id": 107,
+        "R_full_state_id": 133
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 133,
+      "activeCarry": [
+        -2,
+        1
+      ],
+      "activeProjectionStateIds": [
+        132,
+        133
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 368,
+      "sourceSector": "LO",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 8,
+        "j": 22
+      },
+      "targetSector": "RO",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 8,
+        "j": 22
+      },
+      "targetWordLength": 10,
+      "firstResetPatternLength": 4,
+      "firstResetPairOutputLength": 4,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 6,
+      "resetLabelIndex": 5,
+      "resetLabelKey": "212|252",
+      "seedId": 5,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 13,
+      "subsetRank": 2,
+      "subsetScc": "B2",
+      "exactEndStateId": 21,
+      "exactEndState": {
+        "id": 21,
+        "L_state": 87,
+        "R_state": 102,
+        "previous_pair": [
+          1,
+          0
+        ],
+        "L_carry": [
+          0,
+          0
+        ],
+        "R_carry": [
+          -2,
+          0
+        ],
+        "seed_label_indices": [
+          21
+        ],
+        "L_full_state_id": 87,
+        "R_full_state_id": 102
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 102,
+      "activeCarry": [
+        -2,
+        0
+      ],
+      "activeProjectionStateIds": [
+        102,
+        107
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 385,
+      "sourceSector": "LO",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 8,
+        "j": 22
+      },
+      "targetSector": "RO",
+      "targetBranch": "L",
+      "targetBranchThreshold": "L",
+      "targetWindow": {
+        "k": 8,
+        "j": 22
+      },
+      "targetWordLength": 10,
+      "firstResetPatternLength": 8,
+      "firstResetPairOutputLength": 8,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 2,
+      "resetLabelIndex": 27,
+      "resetLabelKey": "82|102",
+      "seedId": 27,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 50,
+      "subsetRank": 2,
+      "subsetScc": "B2",
+      "exactEndStateId": 19,
+      "exactEndState": {
+        "id": 19,
+        "L_state": 107,
+        "R_state": 128,
+        "previous_pair": [
+          1,
+          1
+        ],
+        "L_carry": [
+          -1,
+          0
+        ],
+        "R_carry": [
+          -3,
+          1
+        ],
+        "seed_label_indices": [
+          19
+        ],
+        "L_full_state_id": 107,
+        "R_full_state_id": 128
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "L",
+      "activeStateId": 107,
+      "activeCarry": [
+        -1,
+        0
+      ],
+      "activeProjectionStateIds": [
+        107
+      ],
+      "activeProjectionSize": 1,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 425,
+      "sourceSector": "RE",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 8,
+        "j": 22
+      },
+      "targetSector": "RO",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 8,
+        "j": 22
+      },
+      "targetWordLength": 10,
+      "firstResetPatternLength": 5,
+      "firstResetPairOutputLength": 5,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 5,
+      "resetLabelIndex": 26,
+      "resetLabelKey": "137|163",
+      "seedId": 26,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 71,
+      "subsetRank": 2,
+      "subsetScc": "B1",
+      "exactEndStateId": 37,
+      "exactEndState": {
+        "id": 37,
+        "L_state": 182,
+        "R_state": 218,
+        "previous_pair": [
+          2,
+          1
+        ],
+        "L_carry": [
+          -1,
+          0
+        ],
+        "R_carry": [
+          -3,
+          1
+        ],
+        "seed_label_indices": [
+          37
+        ],
+        "L_full_state_id": 182,
+        "R_full_state_id": 218
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 218,
+      "activeCarry": [
+        -3,
+        1
+      ],
+      "activeProjectionStateIds": [
+        218
+      ],
+      "activeProjectionSize": 1,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 442,
+      "sourceSector": "LE",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 8,
+        "j": 23
+      },
+      "targetSector": "RE",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 8,
+        "j": 23
+      },
+      "targetWordLength": 11,
+      "firstResetPatternLength": 5,
+      "firstResetPairOutputLength": 5,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 6,
+      "resetLabelIndex": 21,
+      "resetLabelKey": "87|102",
+      "seedId": 21,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 110,
+      "subsetRank": 2,
+      "subsetScc": "B2",
+      "exactEndStateId": 55,
+      "exactEndState": {
+        "id": 55,
+        "L_state": 107,
+        "R_state": 137,
+        "previous_pair": [
+          1,
+          1
+        ],
+        "L_carry": [
+          -1,
+          0
+        ],
+        "R_carry": [
+          -1,
+          0
+        ],
+        "seed_label_indices": [],
+        "L_full_state_id": 107,
+        "R_full_state_id": 137
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 137,
+      "activeCarry": [
+        -1,
+        0
+      ],
+      "activeProjectionStateIds": [
+        132,
+        137
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 444,
+      "sourceSector": "RO",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 8,
+        "j": 23
+      },
+      "targetSector": "RE",
+      "targetBranch": "L",
+      "targetBranchThreshold": "L",
+      "targetWindow": {
+        "k": 8,
+        "j": 23
+      },
+      "targetWordLength": 11,
+      "firstResetPatternLength": 6,
+      "firstResetPairOutputLength": 6,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 5,
+      "resetLabelIndex": 7,
+      "resetLabelKey": "32|43",
+      "seedId": 7,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 129,
+      "subsetRank": 2,
+      "subsetScc": "B5",
+      "exactEndStateId": 35,
+      "exactEndState": {
+        "id": 35,
+        "L_state": 57,
+        "R_state": 72,
+        "previous_pair": [
+          0,
+          2
+        ],
+        "L_carry": [
+          -1,
+          0
+        ],
+        "R_carry": [
+          -2,
+          0
+        ],
+        "seed_label_indices": [
+          35
+        ],
+        "L_full_state_id": 57,
+        "R_full_state_id": 72
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "L",
+      "activeStateId": 57,
+      "activeCarry": [
+        -1,
+        0
+      ],
+      "activeProjectionStateIds": [
+        57
+      ],
+      "activeProjectionSize": 1,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 456,
+      "sourceSector": "LE",
+      "sourceBranch": "L",
+      "sourceBranchThreshold": "L",
+      "sourceWindow": {
+        "k": 8,
+        "j": 23
+      },
+      "targetSector": "LE",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 8,
+        "j": 23
+      },
+      "targetWordLength": 11,
+      "firstResetPatternLength": 7,
+      "firstResetPairOutputLength": 7,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 4,
+      "resetLabelIndex": 5,
+      "resetLabelKey": "212|252",
+      "seedId": 5,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 20,
+      "subsetRank": 2,
+      "subsetScc": "B2",
+      "exactEndStateId": 34,
+      "exactEndState": {
+        "id": 34,
+        "L_state": 32,
+        "R_state": 42,
+        "previous_pair": [
+          0,
+          1
+        ],
+        "L_carry": [
+          -1,
+          0
+        ],
+        "R_carry": [
+          -2,
+          0
+        ],
+        "seed_label_indices": [
+          34
+        ],
+        "L_full_state_id": 32,
+        "R_full_state_id": 42
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 42,
+      "activeCarry": [
+        -2,
+        0
+      ],
+      "activeProjectionStateIds": [
+        42,
+        47
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 563,
+      "sourceSector": "RE",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 8,
+        "j": 23
+      },
+      "targetSector": "RO",
+      "targetBranch": "L",
+      "targetBranchThreshold": "L",
+      "targetWindow": {
+        "k": 8,
+        "j": 23
+      },
+      "targetWordLength": 11,
+      "firstResetPatternLength": 4,
+      "firstResetPairOutputLength": 4,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 7,
+      "resetLabelIndex": 6,
+      "resetLabelKey": "7|13",
+      "seedId": 6,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 58,
+      "subsetRank": 2,
+      "subsetScc": "transient/non-SCC",
+      "exactEndStateId": 21,
+      "exactEndState": {
+        "id": 21,
+        "L_state": 87,
+        "R_state": 102,
+        "previous_pair": [
+          1,
+          0
+        ],
+        "L_carry": [
+          0,
+          0
+        ],
+        "R_carry": [
+          -2,
+          0
+        ],
+        "seed_label_indices": [
+          21
+        ],
+        "L_full_state_id": 87,
+        "R_full_state_id": 102
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "L",
+      "activeStateId": 87,
+      "activeCarry": [
+        0,
+        0
+      ],
+      "activeProjectionStateIds": [
+        87
+      ],
+      "activeProjectionSize": 1,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 570,
+      "sourceSector": "RO",
+      "sourceBranch": "L",
+      "sourceBranchThreshold": "L",
+      "sourceWindow": {
+        "k": 8,
+        "j": 23
+      },
+      "targetSector": "LE",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 8,
+        "j": 23
+      },
+      "targetWordLength": 11,
+      "firstResetPatternLength": 8,
+      "firstResetPairOutputLength": 8,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 3,
+      "resetLabelIndex": 2,
+      "resetLabelKey": "57|77",
+      "seedId": 2,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 72,
+      "subsetRank": 2,
+      "subsetScc": "B1",
+      "exactEndStateId": 38,
+      "exactEndState": {
+        "id": 38,
+        "L_state": 207,
+        "R_state": 248,
+        "previous_pair": [
+          2,
+          2
+        ],
+        "L_carry": [
+          -1,
+          0
+        ],
+        "R_carry": [
+          -3,
+          1
+        ],
+        "seed_label_indices": [
+          38
+        ],
+        "L_full_state_id": 207,
+        "R_full_state_id": 248
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 248,
+      "activeCarry": [
+        -3,
+        1
+      ],
+      "activeProjectionStateIds": [
+        248
+      ],
+      "activeProjectionSize": 1,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 652,
+      "sourceSector": "LO",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 8,
+        "j": 24
+      },
+      "targetSector": "RO",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 8,
+        "j": 24
+      },
+      "targetWordLength": 12,
+      "firstResetPatternLength": 6,
+      "firstResetPairOutputLength": 6,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 6,
+      "resetLabelIndex": 8,
+      "resetLabelKey": "57|73",
+      "seedId": 8,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 21,
+      "subsetRank": 2,
+      "subsetScc": "B2",
+      "exactEndStateId": 35,
+      "exactEndState": {
+        "id": 35,
+        "L_state": 57,
+        "R_state": 72,
+        "previous_pair": [
+          0,
+          2
+        ],
+        "L_carry": [
+          -1,
+          0
+        ],
+        "R_carry": [
+          -2,
+          0
+        ],
+        "seed_label_indices": [
+          35
+        ],
+        "L_full_state_id": 57,
+        "R_full_state_id": 72
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 72,
+      "activeCarry": [
+        -2,
+        0
+      ],
+      "activeProjectionStateIds": [
+        72,
+        77
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 705,
+      "sourceSector": "RE",
+      "sourceBranch": "L",
+      "sourceBranchThreshold": "L",
+      "sourceWindow": {
+        "k": 8,
+        "j": 24
+      },
+      "targetSector": "LO",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 8,
+        "j": 24
+      },
+      "targetWordLength": 12,
+      "firstResetPatternLength": 7,
+      "firstResetPairOutputLength": 7,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 5,
+      "resetLabelIndex": 1,
+      "resetLabelKey": "32|47",
+      "seedId": 1,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 67,
+      "subsetRank": 2,
+      "subsetScc": "B2",
+      "exactEndStateId": 6,
+      "exactEndState": {
+        "id": 6,
+        "L_state": 7,
+        "R_state": 13,
+        "previous_pair": [
+          0,
+          0
+        ],
+        "L_carry": [
+          -1,
+          0
+        ],
+        "R_carry": [
+          -2,
+          1
+        ],
+        "seed_label_indices": [
+          6
+        ],
+        "L_full_state_id": 7,
+        "R_full_state_id": 13
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 13,
+      "activeCarry": [
+        -2,
+        1
+      ],
+      "activeProjectionStateIds": [
+        8,
+        13
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 761,
+      "sourceSector": "LE",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 8,
+        "j": 24
+      },
+      "targetSector": "RE",
+      "targetBranch": "L",
+      "targetBranchThreshold": "L",
+      "targetWindow": {
+        "k": 8,
+        "j": 24
+      },
+      "targetWordLength": 12,
+      "firstResetPatternLength": 9,
+      "firstResetPairOutputLength": 9,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 3,
+      "resetLabelIndex": 8,
+      "resetLabelKey": "57|73",
+      "seedId": 8,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 60,
+      "subsetRank": 2,
+      "subsetScc": "transient/non-SCC",
+      "exactEndStateId": 26,
+      "exactEndState": {
+        "id": 26,
+        "L_state": 137,
+        "R_state": 163,
+        "previous_pair": [
+          1,
+          2
+        ],
+        "L_carry": [
+          0,
+          0
+        ],
+        "R_carry": [
+          -2,
+          1
+        ],
+        "seed_label_indices": [
+          26
+        ],
+        "L_full_state_id": 137,
+        "R_full_state_id": 163
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "L",
+      "activeStateId": 137,
+      "activeCarry": [
+        0,
+        0
+      ],
+      "activeProjectionStateIds": [
+        137
+      ],
+      "activeProjectionSize": 1,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 763,
+      "sourceSector": "LO",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 8,
+        "j": 24
+      },
+      "targetSector": "RO",
+      "targetBranch": "L",
+      "targetBranchThreshold": "L",
+      "targetWindow": {
+        "k": 8,
+        "j": 24
+      },
+      "targetWordLength": 12,
+      "firstResetPatternLength": 10,
+      "firstResetPairOutputLength": 10,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 2,
+      "resetLabelIndex": 9,
+      "resetLabelKey": "162|188",
+      "seedId": 9,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 51,
+      "subsetRank": 2,
+      "subsetScc": "B2",
+      "exactEndStateId": 17,
+      "exactEndState": {
+        "id": 17,
+        "L_state": 132,
+        "R_state": 163,
+        "previous_pair": [
+          1,
+          2
+        ],
+        "L_carry": [
+          -1,
+          0
+        ],
+        "R_carry": [
+          -2,
+          1
+        ],
+        "seed_label_indices": [
+          17
+        ],
+        "L_full_state_id": 132,
+        "R_full_state_id": 163
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "L",
+      "activeStateId": 132,
+      "activeCarry": [
+        -1,
+        0
+      ],
+      "activeProjectionStateIds": [
+        132
+      ],
+      "activeProjectionSize": 1,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 1095,
+      "sourceSector": "RO",
+      "sourceBranch": "L",
+      "sourceBranchThreshold": "L",
+      "sourceWindow": {
+        "k": 9,
+        "j": 25
+      },
+      "targetSector": "LE",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 9,
+        "j": 25
+      },
+      "targetWordLength": 12,
+      "firstResetPatternLength": 9,
+      "firstResetPairOutputLength": 9,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 3,
+      "resetLabelIndex": 4,
+      "resetLabelKey": "187|222",
+      "seedId": 4,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 50,
+      "subsetRank": 2,
+      "subsetScc": "B2",
+      "exactEndStateId": 16,
+      "exactEndState": {
+        "id": 16,
+        "L_state": 107,
+        "R_state": 133,
+        "previous_pair": [
+          1,
+          1
+        ],
+        "L_carry": [
+          -1,
+          0
+        ],
+        "R_carry": [
+          -2,
+          1
+        ],
+        "seed_label_indices": [
+          16
+        ],
+        "L_full_state_id": 107,
+        "R_full_state_id": 133
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 133,
+      "activeCarry": [
+        -2,
+        1
+      ],
+      "activeProjectionStateIds": [
+        128,
+        133
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 1347,
+      "sourceSector": "RE",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 9,
+        "j": 25
+      },
+      "targetSector": "RO",
+      "targetBranch": "L",
+      "targetBranchThreshold": "L",
+      "targetWindow": {
+        "k": 9,
+        "j": 25
+      },
+      "targetWordLength": 12,
+      "firstResetPatternLength": 5,
+      "firstResetPairOutputLength": 5,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 7,
+      "resetLabelIndex": 27,
+      "resetLabelKey": "82|102",
+      "seedId": 27,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 69,
+      "subsetRank": 2,
+      "subsetScc": "B2",
+      "exactEndStateId": 53,
+      "exactEndState": {
+        "id": 53,
+        "L_state": 57,
+        "R_state": 68,
+        "previous_pair": [
+          0,
+          2
+        ],
+        "L_carry": [
+          -1,
+          0
+        ],
+        "R_carry": [
+          -3,
+          1
+        ],
+        "seed_label_indices": [
+          53
+        ],
+        "L_full_state_id": 57,
+        "R_full_state_id": 68
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "L",
+      "activeStateId": 57,
+      "activeCarry": [
+        -1,
+        0
+      ],
+      "activeProjectionStateIds": [
+        57
+      ],
+      "activeProjectionSize": 1,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 2248,
+      "sourceSector": "RO",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 9,
+        "j": 27
+      },
+      "targetSector": "RE",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 9,
+        "j": 27
+      },
+      "targetWordLength": 14,
+      "firstResetPatternLength": 8,
+      "firstResetPairOutputLength": 8,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 6,
+      "resetLabelIndex": 17,
+      "resetLabelKey": "132|163",
+      "seedId": 17,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 20,
+      "subsetRank": 2,
+      "subsetScc": "B2",
+      "exactEndStateId": 1,
+      "exactEndState": {
+        "id": 1,
+        "L_state": 32,
+        "R_state": 47,
+        "previous_pair": [
+          0,
+          1
+        ],
+        "L_carry": [
+          -1,
+          0
+        ],
+        "R_carry": [
+          -1,
+          0
+        ],
+        "seed_label_indices": [
+          1
+        ],
+        "L_full_state_id": 32,
+        "R_full_state_id": 47
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 47,
+      "activeCarry": [
+        -1,
+        0
+      ],
+      "activeProjectionStateIds": [
+        42,
+        47
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 3873,
+      "sourceSector": "RO",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 10,
+        "j": 28
+      },
+      "targetSector": "RE",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 10,
+        "j": 28
+      },
+      "targetWordLength": 14,
+      "firstResetPatternLength": 8,
+      "firstResetPairOutputLength": 8,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 6,
+      "resetLabelIndex": 30,
+      "resetLabelKey": "157|192",
+      "seedId": 30,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 64,
+      "subsetRank": 2,
+      "subsetScc": "B2",
+      "exactEndStateId": 45,
+      "exactEndState": {
+        "id": 45,
+        "L_state": 162,
+        "R_state": 193,
+        "previous_pair": [
+          2,
+          0
+        ],
+        "L_carry": [
+          0,
+          0
+        ],
+        "R_carry": [
+          -2,
+          1
+        ],
+        "seed_label_indices": [
+          45
+        ],
+        "L_full_state_id": 162,
+        "R_full_state_id": 193
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 193,
+      "activeCarry": [
+        -2,
+        1
+      ],
+      "activeProjectionStateIds": [
+        188,
+        193
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 5579,
+      "sourceSector": "RO",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 10,
+        "j": 29
+      },
+      "targetSector": "RE",
+      "targetBranch": "L",
+      "targetBranchThreshold": "L",
+      "targetWindow": {
+        "k": 10,
+        "j": 29
+      },
+      "targetWordLength": 15,
+      "firstResetPatternLength": 6,
+      "firstResetPairOutputLength": 6,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 9,
+      "resetLabelIndex": 0,
+      "resetLabelKey": "7|17",
+      "seedId": 0,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 189,
+      "subsetRank": 2,
+      "subsetScc": "B1",
+      "exactEndStateId": 59,
+      "exactEndState": {
+        "id": 59,
+        "L_state": 62,
+        "R_state": 72,
+        "previous_pair": [
+          0,
+          2
+        ],
+        "L_carry": [
+          0,
+          0
+        ],
+        "R_carry": [
+          -2,
+          0
+        ],
+        "seed_label_indices": [],
+        "L_full_state_id": 62,
+        "R_full_state_id": 72
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "L",
+      "activeStateId": 62,
+      "activeCarry": [
+        0,
+        0
+      ],
+      "activeProjectionStateIds": [
+        57,
+        62
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    },
+    {
+      "n": 8539,
+      "sourceSector": "LE",
+      "sourceBranch": "R",
+      "sourceBranchThreshold": "R",
+      "sourceWindow": {
+        "k": 10,
+        "j": 30
+      },
+      "targetSector": "RE",
+      "targetBranch": "R",
+      "targetBranchThreshold": "R",
+      "targetWindow": {
+        "k": 10,
+        "j": 30
+      },
+      "targetWordLength": 16,
+      "firstResetPatternLength": 10,
+      "firstResetPairOutputLength": 10,
+      "firstResetLengthsAgree": true,
+      "suffixLength": 6,
+      "resetLabelIndex": 15,
+      "resetLabelKey": "82|103",
+      "seedId": 15,
+      "seedLabelMatchesClosure": true,
+      "subsetStateId": 66,
+      "subsetRank": 2,
+      "subsetScc": "B2",
+      "exactEndStateId": 47,
+      "exactEndState": {
+        "id": 47,
+        "L_state": 212,
+        "R_state": 253,
+        "previous_pair": [
+          2,
+          2
+        ],
+        "L_carry": [
+          0,
+          0
+        ],
+        "R_carry": [
+          -2,
+          1
+        ],
+        "seed_label_indices": [
+          47
+        ],
+        "L_full_state_id": 212,
+        "R_full_state_id": 253
+      },
+      "exactSeedInUniversalResidual": true,
+      "activeBranch": "R",
+      "activeStateId": 253,
+      "activeCarry": [
+        -2,
+        1
+      ],
+      "activeProjectionStateIds": [
+        248,
+        253
+      ],
+      "activeProjectionSize": 2,
+      "affineUpdateOK": true
+    }
+  ]
+}
