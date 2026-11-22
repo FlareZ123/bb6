@@ -1,0 +1,19 @@
+name: Verify root corridor macro
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "im-results/agent12-cryptid-root-invariant/verify_root_corridor_macro.js"
+      - ".github/workflows/verify-root-corridor-macro.yml"
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Run macro regression checks
+        run: node im-results/agent12-cryptid-root-invariant/verify_root_corridor_macro.js
