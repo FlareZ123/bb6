@@ -10,6 +10,15 @@ def rootRightGrowthBlock : List (ℕ × ℕ) :=
   [(16,0),(0,0),(0,0),(0,0),(2,0),(0,0),
    (0,0),(0,0),(2,0),(0,0),(0,0),(0,0)]
 
+/-- Expose the mirrored wrapper as the explicit #490 head-left tape.
+    This normal form is required by the local `execute` tactic. -/
+theorem root_evalStackCfg_DR (L R : List (ℕ × ℕ)) :
+    closedStackSystem.evalStackCfg StackMode.DR_n_n L R =
+      Cfg.headLeft A
+        (M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.closedStackSystem.encRight L)
+        (M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.closedStackSystem.encLeft R) := by
+  rfl
+
 /-- Exact-source, arbitrary-suffix 76-step growth identity on the
     blank-root-connected (no-extra-swap) DR/G/B family. -/
 theorem root_right_growth_76_raw (T : List (ℕ × ℕ)) :
@@ -19,15 +28,8 @@ theorem root_right_growth_76_raw (T : List (ℕ × ℕ)) :
       (closedStackSystem.evalStackCfg StackMode.DR_n_n
         rootRightGrowthLeft
           (((1,0) :: rootRightGrowthBlock) ++ (rootRightGrowthBlock ++ T))) := by
-  change ReachesPlus target
-    (mirrorCfg f
-      (M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.closedStackSystem.evalStackCfg
-        StackMode.DR_n_n (((1,0) :: rootRightGrowthBlock) ++ T) rootRightGrowthLeft))
-    (mirrorCfg f
-      (M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.closedStackSystem.evalStackCfg
-        StackMode.DR_n_n
-          (((1,0) :: rootRightGrowthBlock) ++ (rootRightGrowthBlock ++ T))
-          rootRightGrowthLeft))
+  simp only [root_evalStackCfg_DR]
   execute 254
 
+#print axioms root_evalStackCfg_DR
 #print axioms root_right_growth_76_raw
