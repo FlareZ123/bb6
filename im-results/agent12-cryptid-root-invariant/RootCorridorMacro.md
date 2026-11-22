@@ -118,8 +118,8 @@ The root then uses the H-family padding/base decomposition:
 ```text
 Q = [12,0,0,0]
 S^38(H(r+4;R)) = H(r;Q++Q++R)                    -- 128 raw steps
-S^179(H(7;Q^m++[2,0,0,0,0]++T))
-  = DR(G,[1]++B++[16,0,0,0]++Q^(m+3)++[2,0,0,0,0]++T)
+S^179(H(7;[a]++T))
+  = DR(G,[1]++B++[16,0,0,0]++Q^3++[a]++T), a>=2
                                                    -- 591 raw steps
 ```
 
