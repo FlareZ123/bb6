@@ -403,12 +403,12 @@ tokenCalls = 0;
 const rootGrowthEntryResult = runWithCost(hPadding.state, 179);
 const rootGrowthEntryTail = [16, 0, 0, 0, ...repeatQ(969), ...Hright];
 assertState("projected first DR/G/B seed", rootGrowthEntryResult.state,
-  state("DR", rootGrowthL, [1, ...rootGrowthB, ...rootGrowthTail]));
+  state("DR", rootGrowthL, [1, ...rootGrowthB, ...rootGrowthEntryTail]));
 if (tokenCalls !== 0 || rootGrowthEntryResult.rawSteps !== 591) {
   throw new Error("projected H-base aggregate mismatch");
 }
 checks++;
-const rootGrowth = growthSeedResult.state;
+const rootGrowth = rootGrowthEntryResult.state;
 const rootEntryOuter = 3897 + 5830 + 4 + 38 * 483 + 179;
 const rootEntryRaw = 13641 + 17487 + 13 + 61824 + 591;
 if (rootEntryOuter !== 28264 || rootEntryRaw !== 93556 || rootGrowth.R.length !== 3898) {
@@ -418,7 +418,7 @@ if (rootEntryOuter !== 28264 || rootEntryRaw !== 93556 || rootGrowth.R.length !=
 // The earlier 50,000-successor checkpoint is the first seed plus 286
 // repetitions of the 76-successor insertion macro.
 tokenCalls = 0;
-const laterRootCheckpoint = runWithCost(growthSeed, 286 * 76);
+const laterRootCheckpoint = runWithCost(rootGrowth, 286 * 76);
 if (tokenCalls !== 0 || laterRootCheckpoint.rawSteps !== 72644 ||
     laterRootCheckpoint.state.R.length !== 7330 ||
     !eq(laterRootCheckpoint.state.L, rootGrowthL) ||
@@ -451,7 +451,7 @@ for (const T of [
 tokenCalls = 0;
 const grownRootResult = runWithCost(rootGrowth, 76);
 assertState("root growth actual 76-step state", grownRootResult.state,
-  state("DR", rootGrowthL, [1, ...rootGrowthB, ...rootGrowthB, ...growthSeed.R.slice(13)]));
+  state("DR", rootGrowthL, [1, ...rootGrowthB, ...rootGrowthB, ...rootGrowth.R.slice(13)]));
 if (tokenCalls !== 0) throw new Error("actual root growth step called a token normalizer");
 if (grownRootResult.rawSteps !== 254) throw new Error("actual root growth raw-step count mismatch");
 checks++;
