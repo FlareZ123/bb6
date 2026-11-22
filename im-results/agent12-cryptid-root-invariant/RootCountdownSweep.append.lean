@@ -1,0 +1,125 @@
+/-!
+Source-local Lean append draft for the D_n(c) sweep recurrence.
+Append inside the pinned #85 source module
+M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA, where target,
+cfg_*_n_n, bumpPairHead, encLeft/encRight, and execute are in scope.
+
+This file is NOT compiled here. The two sweep proofs are the same source
+one-step recurrences sent to Agent 32. The fixed eight-step prefix and
+positive-head endpoints are listed in RootCountdownSweep.md and remain to
+be composed into the final quantified theorem.
+-/
+
+theorem root_countdown_cr_zero_step (L R : List (ℕ × ℕ)) :
+    ReachesPlus target
+      (cfg_CR_n_n ((0,0) :: L) R)
+      (cfg_CR_n_n L (bumpPairHead (bumpPairHead R))) := by
+  unfold cfg_CR_n_n
+  rw [encRight_mod1 0 0 L, Nat.mod_one 0, encRight_d0_s0 L,
+    ← encLeft_cons_one (bumpPairHead R), ← encLeft_cons_one R]
+  execute 2
+
+theorem root_countdown_cr_empty_step (R : List (ℕ × ℕ)) :
+    ReachesPlus target
+      (cfg_CR_n_n [] R)
+      (cfg_EL_n_n [(0,0)] (bumpPairHead R)) := by
+  unfold cfg_CR_n_n cfg_EL_n_n
+  rw [encRight_d0_s0 [], ← encLeft_cons_one R]
+  execute 2
+
+theorem root_countdown_el_positive_step (a : ℕ) (L R : List (ℕ × ℕ)) :
+    ReachesPlus target
+      (cfg_EL_n_n L ((a+1,0) :: R))
+      (cfg_DL_0_n L ((a,0) :: R)) := by
+  unfold cfg_EL_n_n cfg_DL_0_n
+  rw [encLeft_mod1 (a+1) 0 R, Nat.mod_one 0, encLeft_succ a 0 R,
+    encLeft_run_s0 a R]
+  execute 1
+
+theorem root_countdown_dl_positive_step (a : ℕ) (L R : List (ℕ × ℕ)) :
+    ReachesPlus target
+      (cfg_DL_0_n L ((a+2,0) :: R))
+      (cfg_DR_n_n L ((1,0) :: (a,0) :: R)) := by
+  unfold cfg_DL_0_n cfg_DR_n_n
+  rw [encLeft_mod1 (a+2) 0 R, Nat.mod_one 0,
+    encLeft_succ (a+1) 0 R, encLeft_succ a 0 R,
+    encLeft_run_s0 a R, encLeft_d1_s0 ((a,0) :: R),
+    encLeft_run_s0 R]
+  execute 4
+
+theorem root_countdown_dr_zero_step (L R : List (ℕ × ℕ)) :
+    ReachesPlus target
+      (cfg_DR_n_n ((0,0) :: L) ((1,0) :: R))
+      (cfg_DR_n_n L ((1,0) :: (0,0) :: R)) := by
+  unfold cfg_DR_n_n
+  rw [encRight_mod1 0 0 L, Nat.mod_one 0, encRight_d0_s0 L,
+    encLeft_mod1 1 0 R, Nat.mod_one 0, encLeft_succ 0 0 R,
+    encLeft_run_s0 0 R, encLeft_d1_s0 ((0,0) :: R),
+    encLeft_run_s0 R]
+  execute 4
+
+theorem root_countdown_dr_empty_left_step (R : List (ℕ × ℕ)) :
+    ReachesPlus target
+      (cfg_DR_n_n [] R)
+      (cfg_EL_n_n [(0,0)] R) := by
+  unfold cfg_DR_n_n cfg_EL_n_n
+  rw [encRight_d0_s0 []]
+  execute 1
+
+theorem root_countdown_dl_zero_step (L R : List (ℕ × ℕ)) :
+    ReachesPlus target
+      (cfg_DL_0_n L ((0,0) :: R))
+      (cfg_EL_n_n ((0,0) :: bumpPairHead L) R) := by
+  unfold cfg_DL_0_n cfg_EL_n_n
+  rw [encLeft_mod1 0 0 R, Nat.mod_one 0, encLeft_d0_s0 R,
+    encRight_d0_s0 (bumpPairHead L), ← encRight_cons_one L]
+  execute 6
+
+theorem root_countdown_dr_positive_positive_step (a b : ℕ)
+    (L R : List (ℕ × ℕ)) :
+    ReachesPlus target
+      (cfg_DR_n_n ((a+1,0) :: L) ((b+1,0) :: R))
+      (cfg_CR_n_n ((a,0) :: L) ((0,0) :: (b,0) :: R)) := by
+  unfold cfg_DR_n_n cfg_CR_n_n
+  rw [encRight_mod1 (a+1) 0 L, Nat.mod_one 0, encRight_succ a 0 L,
+    encRight_run_s0 a L, encLeft_mod1 (b+1) 0 R, Nat.mod_one 0,
+    encLeft_succ b 0 R, encLeft_run_s0 b R,
+    encLeft_d0_s0 ((b,0) :: R), encLeft_run_s0 b R]
+  execute 3
+
+theorem root_countdown_el_zero_step (L R : List (ℕ × ℕ)) :
+    ReachesPlus target
+      (cfg_EL_n_n L ((0,0) :: R))
+      (cfg_EL_n_n ((0,0) :: L) R) := by
+  unfold cfg_EL_n_n
+  rw [encLeft_mod1 0 0 R, Nat.mod_one 0, encLeft_d0_s0 R,
+    encRight_d0_s0 L]
+  execute 2
+
+theorem root_countdown_el_zero_sweep (k : ℕ) (L R : List (ℕ × ℕ)) :
+    ReachesPlus target
+      (cfg_EL_n_n L (List.replicate (k+1) (0,0) ++ R))
+      (cfg_EL_n_n (List.replicate (k+1) (0,0) ++ L) R) := by
+  induction k with
+  | zero =>
+      simpa using root_countdown_el_zero_step L R
+  | succ k ih =>
+      have h1 := root_countdown_el_zero_step L
+        (List.replicate (k+1) (0,0) ++ R)
+      have h2 := ih ((0,0) :: L) R
+      exact ReachesPlus.trans h1
+        (by simpa [List.replicate_succ, List.cons_append, List.append_assoc] using h2)
+
+theorem root_countdown_dr_zero_sweep (k : ℕ) (L R : List (ℕ × ℕ)) :
+    ReachesPlus target
+      (cfg_DR_n_n (List.replicate (k+1) (0,0) ++ L) ((1,0) :: R))
+      (cfg_DR_n_n L ((1,0) :: (List.replicate (k+1) (0,0) ++ R))) := by
+  induction k with
+  | zero =>
+      simpa using root_countdown_dr_zero_step L R
+  | succ k ih =>
+      have h1 := root_countdown_dr_zero_step
+        (List.replicate (k+1) (0,0) ++ L) R
+      have h2 := ih L ((0,0) :: R)
+      exact ReachesPlus.trans h1
+        (by simpa [List.replicate_succ, List.cons_append, List.append_assoc] using h2)
