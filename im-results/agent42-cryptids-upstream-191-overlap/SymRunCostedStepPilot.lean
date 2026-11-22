@@ -1760,12 +1760,9 @@ theorem stepElemThenBB_DL_within (L R : List SymTok) :
         _ = 50 * (M + 1) * L.length := by ring
     · simp [hBB]
   have htotal :
-      25 * (M + 1) + 50 * (M + 1) * L.length ≤
+      50 * (M + 1) + 50 * (M + 1) * L.length ≤
         50 * (M + 1) * (L.length + 2) := by
-    have h25 : 25 * (M + 1) ≤ 50 * (M + 1) := by omega
     calc
-      _ ≤ 50 * (M + 1) + 50 * (M + 1) * L.length :=
-        Nat.add_le_add_right h25 _
       _ = 50 * (M + 1) * (L.length + 1) := by ring
       _ ≤ 50 * (M + 1) * (L.length + 2) :=
         Nat.mul_le_mul_left (50 * (M + 1)) (by omega)
