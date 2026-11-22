@@ -1867,3 +1867,29 @@ Communications:
 - The source-derived recurrence is a proof target, not yet an accepted theorem. Highest-value next action: formalize the 19-step DR-to-CR closure and parameterized 36-step recurrence against the pinned #490/#85 definitions, then compose with the existing 7-step blank-root entry. The #490 wrapper file defines local step/finish/execute macros; a source-context theorem can copy them and attempt execute 19 / execute 36, or compose exact mode closure branches. Agent46 has this hint.
 - Do not formalize the old Corr/F/G/H/countdown/76-step claims. Do not promote to results/ until Lean compile, source correspondence, and axiom audit succeed.
 - No results/ changes. No exact BB(6) value, global six-state upper bound, or compiled nonhalting theorem established.
+
+
+## 2026-11-22 06:05Z critical retraction — DR Nat split misread
+
+The preceding 05:13Z section is **withdrawn in full**. I made a critical Lean pattern-matching error. In mode_DR_n_n_closed, rcases r1 with _ | r5 is the Nat split r1=0 versus r1=Nat.succ r5 (all positive r1>=1), not r1=0 versus r1=1. The nested branch for r1>=1 and a1=0 is the ordinary four-step DR transition. Thus r1=1 is ordinary. The tok_DR_2_0_closed call occurs only in the r1=0,a1=0 branch. I conflated this with mode_DL_0_n_closed, which really does split 0, 1, and >=2 and tokenizes its r1=1 case.
+
+Consequences:
+- The claimed 19-step DR([0,0],[1])->CR([0,0,1],[1]) closure is false; the correct first successor is DR([0],[1,0]) after 4 raw steps.
+- The claimed 36-step CR recurrence and all derived nonhalting statements are false.
+- The b<=1 edits to the DR branch were wrong. The source-faithful DR token condition is b==0; positive b takes ordinary DR/CR branches.
+- The claimed falsification of Corr, D_n countdown, DR/G/B 76-step, and H-phase 76-step macros was false. Under b==0, a V8 replay re-matches the H(7)->C1 157-step entry, H-phase 76-step identity, DR/G/B 76-step identity, and all tested D_n(c) samples (n=0..6; c=3,4,5,10,540). The prior source-transcribed candidate remains the active research direction, subject to its original proof requirements.
+- The separate token-normalizer corrections (tok_EL_1 prepends a zero; CR 1,1 suffixes corrected; tok_EL_add3/tok_DR_zero composition) remain valid and should be preserved.
+
+Agent12 created the authoritative audit im-results/agent12-cryptid-root-invariant/ModeDRBranchAudit.md, which records the exact distinction between mode_DL and mode_DR, the restored root checkpoints, and the correct next proof target. Current root research map is im-results/agent12-cryptid-root-invariant/README.md. RootCountdownGrowth.md now records the 35 countdown samples, 1481 reset, 50,000-step entry, and 76-step DR/G/B candidate. HPhaseGrowth.md records the separate CR 76-step candidate. RootCorridorMacro.md is marked for reevaluation after the token-normalizer corrections.
+
+Repair work completed:
+- Agent12 restored fast_root_stack_sim.js to b===0; Agent48 restored its original Z1 invariant.
+- Agent48 restored verify_root_corridor_macro.js to the source-faithful corridor/countdown/growth regression suite, with DR b===0.
+- Agent48 restored stack_system_sim.py root_prefix expected sequence; its DR branch is b==0. Keep the independent Python token-normalizer corrections.
+- Agent48 restored HPhaseGrowthMacro.md status and branch certificate.
+- Agent48 replaced the false DRHeadOneCycle.md with a short withdrawal notice.
+- Retraction broadcast and direct messages were sent to Critic and Agents12,32,35,37,46. Do not rely on any prior Agent48 message claiming a DR right-head-one token branch or a 19/36-step cycle.
+
+The initial wrong V8 runs with b<=1 are not source-equivalent and must not be cited. The corrected b==0 V8 checks re-match the prior macros and countdown samples, but no full Node harness or Lean theorem was compiled. Local container/Python runtime attempts returned ClientError; no CI was dispatched as a substitute for local preflight.
+
+Next work: use ModeDRBranchAudit.md as source of truth; continue the existing root-connected countdown/growth program. Re-run the complete regression harness locally when the runtime is available, then formalize the quantified countdown, finite reset, 50,000-step root entry, and arbitrary-suffix 76-step insertion. Preserve the distinction between V8 evidence, source-derived stack dynamics, and a kernel-checked original-TM nonhalting theorem. The 70-minute lease threshold remains 2026-11-22T06:23:13.233Z; check it after every checkpoint.
