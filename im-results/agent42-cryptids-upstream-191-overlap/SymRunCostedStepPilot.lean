@@ -2009,27 +2009,27 @@ theorem stepElemThenBB_CB_within (L R : List SymTok) :
               ((stepElemCB L R).2.1.length + 1)) := by ring
         _ ≤ 50 * ((M + 2) * (L.length + 4)) :=
           Nat.mul_le_mul_left 50 hprod
-        _ ≤ 100 * (M + 1) * (L.length + 3) := by
+        _ ≤ 100 * (M + 1) * (L.length + 4) := by
           have hM : M + 2 ≤ 2 * (M + 1) := by omega
-          have hmul := Nat.mul_le_mul_right (L.length + 3) hM
+          have hmul := Nat.mul_le_mul_right (L.length + 4) hM
           calc
-            50 * ((M + 2) * (L.length + 3))
-              = 50 * ((M + 2) * (L.length + 3)) := rfl
-            _ ≤ 50 * (2 * (M + 1) * (L.length + 3)) :=
+            50 * ((M + 2) * (L.length + 4))
+              = 50 * ((M + 2) * (L.length + 4)) := rfl
+            _ ≤ 50 * (2 * (M + 1) * (L.length + 4)) :=
               Nat.mul_le_mul_left 50 hmul
-            _ = 100 * (M + 1) * (L.length + 3) := by ring
+            _ = 100 * (M + 1) * (L.length + 4) := by ring
     · simp [hBB]
   have h1Budget :
-      25 * (M + 1) ≤ 25 * (M + 1) * (L.length + 3) := by
+      25 * (M + 1) ≤ 25 * (M + 1) * (L.length + 4) := by
     exact Nat.mul_le_mul_left (25 * (M + 1)) (by omega)
   have htotal :
-      25 * (M + 1) * (L.length + 3) +
+      25 * (M + 1) * (L.length + 4) +
         100 * (M + 1) * (L.length + 4) ≤
-          2^9 * (M + 1) * (L.length + 3) := by
+          2^9 * (M + 1) * (L.length + 4) := by
     calc
-      _ = 125 * (M + 1) * (L.length + 3) := by ring
-      _ ≤ 2^9 * (M + 1) * (L.length + 3) := by
-        exact Nat.mul_le_mul_right ((M + 1) * (L.length + 3)) (by norm_num)
+      _ = 125 * (M + 1) * (L.length + 4) := by ring
+      _ ≤ 2^9 * (M + 1) * (L.length + 4) := by
+        exact Nat.mul_le_mul_right ((M + 1) * (L.length + 4)) (by norm_num)
   have hbudget := Nat.add_le_add h1Budget h2Budget
   have hcomp' : ReachesWithin
       (25 * (M + 1) +
