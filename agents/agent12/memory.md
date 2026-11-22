@@ -830,7 +830,7 @@ New source-branch derivation is in im-results/agent12-cryptid-root-invariant/Roo
 - The next boundary is the offset-six E_n(2) token closure. Agent2's intermediate note gives E_n(2)->D_0(8n+21), but this needs exact token-source reconciliation and Lean compilation.
 - verify_suffix13_macro.py transcribes only ordinary CR/EL/DL/DR branches and checks n=0..4 and x in {3,4,7,10,13,16}. It is finite source-transcribed evidence, not proof.
 
-The supplied Lean RC2 split archive is truncated: concatenation is 542,081,024 bytes, while its ZIP member header advertises 608,393,640 bytes. Extraction/decompression can salvage a partial tar but not the complete toolchain, so no local Lean preflight was possible. Do not run CI as a substitute for the required local preflight. Agent24 workflow run 45007756579 failed on the existing append (prefix endpoint/type mismatches, simp recursion depth, and private token identifiers); this new derivation was not part of that run. Repair the first failing declarations and restore a complete local RC2 toolchain before any acceptance run.
+Correction: the earlier archive-truncation diagnosis was wrong. Concatenating the two uploaded parts produces a 608,393,796-byte ZIP; unzip -t passes, the tar.zst extracts, and Lean 4.36.0-rc2 runs locally. The 542,081,024-byte figure was a mistaken measurement. The full upstream source module is not locally buildable yet because the container has no network access to obtain its Mathlib/cryptids dependency checkout; a self-contained Lean-core finite replay has now compiled. Agent24 workflow run 45007756579 failed on the existing append (prefix endpoint/type mismatches, simp recursion depth, and private token identifiers); this new derivation was not part of that run. Repair the first failing declarations and restore a complete local RC2 toolchain before any acceptance run.
 
 Next: formalize the E_n(x;T) decrement using the corrected suffix-preserving prefix, then formalize E_n(1) with the general-tail lemma; resolve E_n(2) token closure; compute the next exact residue. Keep all results in im-results until the dependency closure compiles and the blank-root quantifier is addressed.
 
@@ -857,3 +857,8 @@ For n ≡ 1 (mod 9), the source-lemma token path from D_n(1;[0,0,2]) returns to 
 At n=22,608,559,198 this returns E_160771976531(13), raw cost 353,789,414,252,923,615,223,500. From E_1192248236(2), the known reset/countdown chain reaches D_22,608,559,198(1;[0,0,2]); total raw cost to E_160771976531(13) is 360,907,035,686,332,048,624,882. All conditional and uncompiled.
 
 This map is a 3-adic digit-shift-style transformation: for n=1+9a, n'=19+64a. The next residue mod9 depends on the next base-9 digit, so do not assume a fixed residue class across cycles.
+
+
+## 2026-11-22: local Lean finite replay
+
+The RC2 archive is intact; do not repeat the earlier false truncation claim. Extracted to /tmp/lean/lean-4.36.0-rc2-linux and confirmed Lean (version 4.36.0-rc2, commit b35cb10cf2ced51a2fd1880cfdbf75c71ab7a35a). Created verify_suffix13_macro.lean in im-results; it compiles with Lean core and its three decide checks pass: 30 generic decrement cases, five E_n(13) four-step chains, and five E_n(1) bridges. This is a bounded independent transcription, not a proof of quantified recurrences or source-module reachability. Full cryptids/Mathlib source dependencies are not present locally and outbound network is unavailable.

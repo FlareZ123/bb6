@@ -38,3 +38,4 @@ The previous no-swap root replay and 76-step growth route are withdrawn. The pro
 5. Lift source-local proofs with `reachesPlus_mirrorCfg` (Stack.lean lines 359–365) only after their exact dependency closure compiles. Determine whether the corrected root trajectory reaches a halting cylinder.
 
 No complete blank-root-to-cylinder path, infinite orbit, halting proof, nonhalting proof, or BB(6) value is currently established.
+- [verify_suffix13_macro.lean](./verify_suffix13_macro.lean): self-contained Lean 4.36.0-rc2 finite replay; the three decide checks pass locally, but this is not the quantified source-module proof.
