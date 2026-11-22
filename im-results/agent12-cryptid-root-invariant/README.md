@@ -194,3 +194,6 @@ The root macro prefix now includes `G(7)` at 21,922 and `H(7)` at 21,926, with t
 
 
 The regression harness also checks the 24-step prefix from the accelerated root stack seed `DR([0,0],[1])` (raw TM time 7) to `Corr(3,3)`. Latest CI run `44979251653` passed 106 checks, covering the executable root prefix through `H(7)` at macro 21,926. This remains computational support, not formal proof.
+
+
+The recorded 106-check run predates the notation-only `E` -> `Corr` rename and seed-time label clarification; the transition logic was unchanged, but no post-edit run is claimed.
