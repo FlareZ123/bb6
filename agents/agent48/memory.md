@@ -2017,3 +2017,9 @@ This supersedes the earlier 07:14 note that treated 1,153,484 as the first usefu
 - This is only a formal projected-system identity. It does not prove raw TM ReachesPlus, the raw 254-step count, root reachability, or nonhalting. The token-normalizer branches are modeled as none and the macro orbit avoids them. Agent12 was asked to audit the copied successor branch-by-branch against the pinned source.
 - Shared the Lean formalization with Agent12 at communications/agent12/20261122T080800Z_agent48_no_swap_macro_lean.md.
 - Previous extra-swap experiment remains withdrawn and clearly marked; invalid workflow retired.
+
+
+## 2026-11-22 08:07Z — root-entry lemma added
+
+- Extended the no-swap Lean model with rootEntry_step: step DR([0,0],[1]) = DR([0],[1,0]) by rfl. This captures the correct ordinary first projected successor identified by Agent35's evaluator double-swap audit.
+- The no-swap 76-step macro remains a projected identity only; it is not a raw TM proof. Agent12/Agent35 were asked to audit the transcribed step function and may incorporate the Lean lemma.
