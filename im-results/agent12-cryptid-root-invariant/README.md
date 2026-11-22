@@ -1,6 +1,6 @@
 # Corrected blank-root stack trajectory: source-audited experiment
 
-**Status:** computational evidence and a candidate root invariant, not a proof of nonhalting.
+**Status:** source-corrected computational prefix plus a candidate root-reachable growth macro; neither is yet a Lean proof of nonhalting.
 
 ## Experiment
 
@@ -55,7 +55,7 @@ The local shell tool returned a ClientError, so the available V8 execution used
 a direct source-equivalent transcription. The initial raw prefix to the
 accelerated stack seed remains separate from these macro counts.
 
-## Candidate inductive invariant
+## Finite-prefix candidate invariant
 
 The experiment checked the following predicate before every one of the
 1,000,000 successor applications, without finding a counterexample. It is a
@@ -78,20 +78,18 @@ be the first nonzero entry of \(R\), if any.
 6. In mode CR, if \(L\) begins with \([1,1]\) and the head of \(R\) is 1, then \(L\) with its first two entries removed belongs to \(Z_1\).
 
 The exact predicate, including the finite lookahead conditions, the stronger
-\(Z_1\) test, and the two-nonzero right-stack bound, is implemented by
-\`invariantFailures\` in the JavaScript interpreter.
-The corrected million-step trace satisfies this predicate; this remains a
-finite observation, not an inductive proof.
+Z1 test, and the two-nonzero right-stack bound, is implemented by
+`invariantFailures` in the JavaScript interpreter. The corrected trace
+satisfies it for the first 1,000,000 macro successors. These conditions are
+finite-prefix diagnostics, not an all-time invariant.
 
 ## Why this could matter
 
-If the predicate is proved inductive for the exact successor relation, it
-excludes the two halting mechanisms in the stack reduction:
-
-- the direct CR branch with left head at least 2, by item 1;
-- the CR token-halting branch, provided the only token entry is a DR-token
-  closure from a DL state with right head 1 and left list in \(Z_1\), while
-  DR states never have right head 0.
+The first-million-step predicate explains why the observed finite prefix
+avoids the two stack halting branches. It is not an all-time nonhalting
+invariant: the later corrected root trajectory leaves Z1 and has an
+unbounded number of nonzero right-stack entries, entering the growth family
+described in RootCountdownGrowth.md.
 
 For \(L\in Z_1\), the corrected DR token normalizer preserves \(Z_1\):
 \(0^n\) maps to \(\mathrm{CR}(L=0^{n+1}1,R=\operatorname{bump}(r))\),
@@ -100,19 +98,19 @@ The observed \(0^{267}1\) input therefore returns
 \(\mathrm{CR}(L=0^{271}1,R=[1])\). See
 [TokenNormalizerCorrection.md](./TokenNormalizerCorrection.md).
 
-The main unresolved task is to prove a root-specific strengthening of this
-predicate. In the corrected million-step trace, every DL state with right head
-0 had \(L=[0]\), and every EL state with right head 1 also had \(L=[0]\).
-The one EL state with right head 2 was the state immediately preceding the
-single token closure. These observed guards explain why the root trace stays
-inside \(Z_1\), but they are not yet proved for all reachable states.
-A finite trace is not evidence of inductiveness.
+In the first million macro successors, every DL state with right head 0 had
+L=[0], and every EL state with right head 1 also had L=[0]. The one EL state
+with right head 2 was immediately before the single token closure. These are
+finite-prefix observations only: the later corrected root trajectory exits
+Z1 and the two-nonzero right-stack bound. The countdown and growth macros,
+rather than a global Z1 invariant, are now the priority proof targets.
 
 
 ## Counterexample-guided audit of the candidate
 
-The strengthened predicate is still not globally inductive. A small
-counterexample already satisfies \(L\in Z_1\) and the current DL guard:
+The finite-prefix predicate is not globally inductive. A small
+counterexample already satisfies L in Z1, the two-nonzero right-stack bound,
+and the current DL guard:
 
 \[
 \mathrm{DL}(L=[0,0],R=[0])
@@ -130,9 +128,10 @@ shape of \(L\). The next useful invariant should encode this relationship
 with a small finite-state summary of the nonzero prefix of \(R\), rather than
 adding unrelated implications one at a time.
 
-The million-step root trace satisfies the checked predicate, including
-\(L\in Z_1\). Do not promote that finite observation to a proof or use it
-to claim nonhalting.
+The first million-step root prefix satisfies the checked predicate. The
+later root-reachable growth phase violates both the Z1 and two-nonzero
+right-stack bounds. Do not promote the finite-prefix observation to a
+global invariant.
 
 
 ## Raw-state correspondence and first-branch audit
@@ -225,3 +224,26 @@ mode-closure execute blocks. The proposed direct Lean target in the mirrored
 `evalStackCfg .CR_n_n [(1,0),(0,0)] (P ++ B ++ T) -> execute 254 -> evalStackCfg .CR_n_n [(1,0),(0,0)] (P ++ B ++ B ++ T)`.
 This is a proof route for a standalone projected orbit, not a blank-root
 nonhalting theorem.
+
+
+## Root-reachable countdown and growth candidate
+
+[RootCountdownGrowth.md](RootCountdownGrowth.md) records a stronger
+computational route from the corrected blank root. The root reaches
+\\(D_0(540)\\), follows the candidate triangular countdown
+\\(S^{8n+24}(D_n(c))=D_{n+1}(c-3)\\), resets from \\(D_{180}(0)\\) to
+\\(D_0(1453)\\), and reaches a new 76-step growth family at macro 1,153,484.
+
+With
+\\[
+G=[0,0,1,0,1,0,0,0,0,1],\\qquad
+B=[16,0,0,0,2,0,0,0,2,0,0,0],
+\\]
+the tested tail-parametric identity is
+\\[
+S^{76}(DR(G,[1]++B++T))=DR(G,[1]++B++B++T).
+\\]
+It preserves the left list, inserts a 12-entry block, and uses no token
+normalizer. This would give an infinite projected orbit once the macro and
+root prefix are source-proved. The countdown, reset, 50,000-step entry, and
+76-step identity currently have computational evidence only.
