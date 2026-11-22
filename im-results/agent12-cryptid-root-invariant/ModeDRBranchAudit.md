@@ -1,5 +1,7 @@
 # Pinned-source audit: the DR and DL right-head branches are different
 
+> **Mirror correction — 2026-11-22:** The detailed macro-21,810 token event and subsequent `D_n` trace below are for the synthetic #85 trajectory starting at `DR(L=[0,0],R=[1])`; they are not the #490 blank-root path. The #490 wrapper defines `evalStackCfg m L R = mirrorCfg f (W.evalStackCfg m R L)`. Thus its blank-start seed `DR(L=[0,0],R=[1])` corresponds to #85 `DR(L=[1],R=[0,0])`. The correct mirrored #85 simulation has an immediate `tok_CR_1_0_closed` event at macro 0 and does not reach `D_0(540)` at macro 22,099. The old blank-root raw total 66,804 and all claimed root connections through `D_{484}(1)` are withdrawn. The branch-level audit of #85 itself remains useful.
+
 **Status:** source-derived branch correction plus reproducible V8 computation. This is intermediate research, not a Lean theorem or an original-machine nonhalting proof.
 
 ## The source split
@@ -56,9 +58,9 @@ I reran the persistent-list successor in the available V8 runtime with the sourc
 | 1,131,748 | first DR/G/B growth seed |
 | 1,153,484 | DR(L=G, R=[1] ++ B ++ T), after 286 growth repetitions |
 
-At macro 21,810 the `DL` right-head-1 token closure has input `r3=[]` and `L=0^267 ++ [1]`. The source formula
+In the synthetic #85 trace, at macro 21,810 the `DL` right-head-1 token closure has input `r3=[]` and `L=0^267 ++ [1]`. The source formula
 `closeTokDR(r3,0^n ++ [1]) = CR(L=0^(n+4) ++ [1], R=bump(r3))`
-therefore gives `CR(L=0^271 ++ [1],R=[1])` at macro 21,811. This is the exact c=2 corridor token event, not an ordinary DR right-head-1 branch. The token closure costs exactly 1,637 raw steps: the DL branch's `tExecute 4`, 267 `tok_DR_zero` steps at 4 each, one `tok_DR_1_nil_28` at 28, 268 `tok_EL_1` steps at 2 each, and one `tok_EL_exit_zero` at 1. The 21,810 ordinary outer successors before the closure cost 64,565 raw TM steps; the 288 ordinary successors after it cost 595 raw steps to `D_0(540)`. Including the 7 raw blank-root prefix, blank-to-`D_0(540)` costs 66,804 raw steps.
+therefore gives `CR(L=0^271 ++ [1],R=[1])` at macro 21,811. This is the exact c=2 corridor token event, not an ordinary DR right-head-1 branch. The token closure costs exactly 1,637 raw steps: the DL branch's `tExecute 4`, 267 `tok_DR_zero` steps at 4 each, one `tok_DR_1_nil_28` at 28, 268 `tok_EL_1` steps at 2 each, and one `tok_EL_exit_zero` at 1. The 21,810 ordinary outer successors before the closure cost 64,565 raw TM steps; the 288 ordinary successors after it cost 595 raw steps to `D_0(540)`. From the synthetic #85 seed, the trace to `D_0(540)` costs 66,797 raw steps; this is not a blank-root total.
 
 Here `D_n(c) = CR(L=[0], R=0^(4n+5) ++ [c])`,
 `G=[0,0,1,0,1,0,0,0,0,1]`, and
