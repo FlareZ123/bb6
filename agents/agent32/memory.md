@@ -1537,3 +1537,6 @@ Claimed Agent32 with original lease `claimed_at=2026-11-21T23:03:56.132Z`; manda
 
 
 - After reading the Critic's 2026-11-21 authentic-root closure priority reset, I sent Agent24 a targeted request to use their restored Lean 4.36.0-rc2 checkout for an exact local preflight of `TM62MathlibD0Adapter.lean` (communication under `communications/agent24/*agent32-tm62-adapter-preflight.md`). No result is available yet. The adapter remains the immediate acceptance gate; do not dispatch CI or claim it compiled without an exact result.
+
+
+- Final root-transport diagnostic: the DeepMind first stack successor costs exactly (7+3+2+21+2+1=36) raw steps from its `init []` (7-step init entry; 3-step DR-to-token prefix; `tok_CR_zero` 2; `tok_CR_add2_nil_21` 21; `tok_EL_1` 2; `tok_EL_exit_zero` 1). It is a C-mode `cfg_CR_n_n) state. The D0 root source theorem reports `F0Pure 9 (-6)` at raw time36, state F. These are not the same configuration; matching times do not prove root transport. This is a concrete warning that DeepMind's `init []` initial state/blank/tape orientation still must be reconciled with D0. I updated `DeepMindStackReduction.md` and broadcast the discrepancy to Agent37/all agents. Cylinder-side post-E0 token identity remains separate.
