@@ -128,16 +128,25 @@ gamma_0=1876/675.
 
 ## 3. Band-compatible recursive step
 
-Use the five-point band lemma from [NESTED-ODD-PARENT-HENSEL.md](NESTED-ODD-PARENT-HENSEL.md): for every (gamma>0), there are (t\in\{0,1,2,3,4\}) and (sigma\in\mathbb Z) such that
+A slightly stronger central-band form follows from the same five points. Put (	heta=\log_2(3/2)). The fractional parts of (0,\theta,2\theta,3\theta,4\theta), in increasing order, are
 [
-rac{gamma 2^\sigma}{3^{t+1}}\in(6,8).
+0, 2\theta-1, 4\theta-2, \theta, 3\theta-1.
 ]
-Applying it to (gamma/3) instead gives the useful shifted form
+The circular gaps are (2\theta-1) and (2-3\theta), with maximum (2-3\theta). Moreover,
 [
-t\in\{1,2,3,4,5\},qquad
-R:=rac{gamma 2^\sigma}{3^{t+1}}\in(6,8).
-	ag{2}
+2^{2-3\theta}=\frac{32}{27}<\frac{31}{25},
 ]
+so the maximum gap is strictly smaller than (\log_2(31/25)). Consequently, for every (gamma>0), there are (t'\in\{0,1,2,3,4\}) and (\sigma\in\mathbb Z) such that
+[
+\frac{\gamma2^\sigma}{3^{t'+1}}\in\left(\frac{25}{4},\frac{31}{4}\right).
+]
+Applying this to (gamma/3) gives the shifted form used below:
+[
+t\in\{1,2,3,4,5\},\qquad
+R:=\frac{\gamma2^\sigma}{3^{t+1}}\in\left(\frac{25}{4},\frac{31}{4}\right).
+\tag{2}
+]
+This leaves a uniform (1/4) margin from the odd source-band endpoints 6 and 8.
 
 At stage (i), suppose the target is (u_i(K)), its numerator is (Z_i(K)=2u_i(K)+5), and on a progression (K=K_i+L_i m) the function
 [
@@ -171,7 +180,7 @@ The normalized source parameter satisfies
 [
 rac{2^{t_i}d_i}{2^{k_i}}
 =rac{Z_i(K)}{2^K}\frac{2^{\sigma_i}}{3^{t_i+1}}
-\longrightarrow R_i\in(6,8).
+\longrightarrow R_i\in(25/4,31/4).
 ]
 For sufficiently large (K) in a sufficiently small fixed neighborhood of (x_0), the exact integer source-band inequalities
 [
@@ -247,15 +256,15 @@ More strongly, any fixed open subinterval around (x_0=79/50) has (K)-length prop
 
 This supplies the required (K\inmathcal W) and completes the finite-depth construction.
 
-For reference, with (x_0=79/50) and (gamma_0=1876/675), one explicit first-five-stage choice is:
+For reference, with (x_0=79/50) and (gamma_0=1876/675), one explicit first-five-stage choice using the central interval is:
 
 | (i) | (t_i) | (sigma_i) | (R_i) |
 |---:|---:|---:|---:|
 | 0 | 2 | 6 | (120064/18225) |
-| 1 | 2 | 8 | (3018496/492075) |
-| 2 | 1 | 9 | (33606272/4428675) |
-| 3 | 1 | 10 | (254265152/39858075) |
-| 4 | 3 | 15 | (24277210112/3228504075) |
+| 1 | 5 | 13 | (96591872/13286025) |
+| 2 | 4 | 15 | (22245259264/3228504075) |
+| 3 | 2 | 15 | (597199549696/87169610025) |
+| 4 | 2 | 17 | (15905351014144/2353579470675) |
 
 The recursion (2)–(4), not this finite sample, is the proof of arbitrary depth.
 
