@@ -290,3 +290,49 @@ D_0(462\,501\,056\,907\,059).
 \]
 
 The arithmetic normalizer and concrete instances are kernel-checked in verify_token_normalizer_arithmetic.lean by GitHub Actions runs 45015701109 and 45016111201 using Lean 4.36.0-rc2 (the latter includes the corrected residual-two formula). The source-rule correspondence (the U_k transitions as compositions of the pinned token clauses) and the full source-module composition still await a Lean proof. The normalizer resolves the token behavior of the entire \(D_n(1;[0,0,2])\) family into explicit stack states, but does not prove that those resulting stack states halt or do not halt.
+
+
+## 11. The corrected next state has a suffix-[9] zero reset
+
+The newly exposed state \(D_n(0;[9])\) has a direct source-level reset:
+
+\[
+\boxed{D_n(0;[9])\longrightarrow^+D_0(8n+39).}
+\]
+
+A compact reproducible macro decomposition uses four passes. For \(j=0,1,2\), put \(m_j=4n+7+4j\). Each pass consists of:
+
+1. CR-zero, CR-empty, EL-positive, DL-positive;
+2. one DR-zero step and DR-empty-left;
+3. EL-positive and DL-zero;
+4. an EL-zero sweep of \(m_j\);
+5. EL-positive, DL-positive;
+6. a DR-zero sweep of \(m_j+1\), then DR-positive-positive.
+
+Each of these three passes costs \(2m_j+12\) stack-mode successors and \(6m_j+33\) raw steps.
+
+The fourth pass has the same first eight single steps, followed by an EL-zero sweep of \(m_3=4n+20\), EL-empty, a CR-zero sweep of \(m_3+1\), and CR-one-empty. It costs \(2m_3+11\) stack-mode successors and \(4m_3+30\) raw steps.
+
+A final fixed tail of 16 source-mode successors and 47 raw steps reaches \(D_0(8n+39)\). Summing the four passes and tail gives
+
+\[
+\boxed{32n+169\text{ stack-mode successors},\qquad 88n+454\text{ raw steps}.}
+\]
+
+For the corrected root branch, \(n=447\,093\,083\), so
+
+\[
+D_{447\,093\,083}(0;[9])
+\longrightarrow^+
+D_0(3\,576\,744\,703).
+\]
+
+Since \(3\,576\,744\,703=3(1\,192\,248\,234)+1\), the existing remainder-one reset then gives
+
+\[
+D_{1\,192\,248\,234}(1)
+\longrightarrow^+
+D_0(9\,537\,985\,879;[5]).
+\]
+
+This replaces the previously withdrawn suffix-[9] remainder-two continuation. The four-pass composition is source-level and still awaits a Lean proof.
