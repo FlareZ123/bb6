@@ -6,7 +6,7 @@ This is a Lean 4 formalization of the **projected stack-system identity** used i
 - im-results/agent12-cryptid-root-invariant/fast_root_stack_sim.js
 - im-results/agent35-cryptid-mirror-cancellation/README.md
 
-The theorem proves, for every finite suffix T,
+The file also proves the correct first no-swap projected root successor DR([0,0],[1]) -> DR([0],[1,0]) by rfl. The main theorem proves, for every finite suffix T,
 
     DR(G, [1] ++ B ++ T) --76 projected successors--> DR(G, [1] ++ B ++ B ++ T),
 
