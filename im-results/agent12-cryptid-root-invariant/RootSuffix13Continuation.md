@@ -112,6 +112,41 @@ The outer and raw totals for the full bridge are respectively
 21+2(4m+7)+15+2(4m+6)+6+47=16m+115.
 \]
 
+## Suffix-general tail lemma for the remainder-one bridge
+
+The 16-mode-successor, 47-raw-step tail can be generalized without fixing the suffix:
+
+\[
+EL([0],[0,x]++T)\longrightarrow D_0(x-6;T),\qquad x\ge6.
+\]
+
+A source-local Lean proof can compose the following helpers with the same suffix \(T\):
+
+1. root_countdown_el_zero_step [0] ((x,0)::T)
+2. root_countdown_el_positive_step (x-1) [0,0] T
+3. root_countdown_dl_positive_step (x-3) [0,0] T
+4. root_countdown_dr_zero_sweep 1 [] ((x-3,0)::T)
+5. root_countdown_dr_empty_left_step ([1,0,0,x-3]++T)
+6. root_countdown_el_positive_step 0 [0] ([0,0,x-3]++T)
+7. root_countdown_dl_zero_step [0] ([0,0,x-3]++T)
+8. root_countdown_el_zero_sweep 1 [0,1] ((x-3,0)::T)
+9. root_countdown_el_positive_step (x-4) (0^3++[1]) T
+10. root_countdown_dl_positive_step (x-6) (0^3++[1]) T
+11. root_countdown_dr_zero_sweep 2 [1] ((x-6,0)::T)
+12. root_countdown_dr_positive_positive_step 0 0 [] (0^3++[(x-6,0)]++T)
+
+The crucial endpoint correction is step 7: after step 6, the DL right list is \(0^3++[x-3]++T\), so the zero-step helper's remainder argument must be \(0^2++[x-3]++T\). The old fixed-suffix draft omitted one of these zeros. This suffix-general version makes the E_m(1) bridge to \(D_0(8m+9;[5])\) a direct composition by taking \(x=8m+15\), \(T=[5]\).
+
+The intended theorem statement is:
+
+\[
+\operatorname{ReachesPlus}\;target\;
+(cfg\_EL\_n\_n\;[0]\;([0,x]++T))\;
+(cfg\_CR\_n\_n\;[0]\;(0^5++[x-6]++T)).
+\]
+
+The arithmetic side conditions are \(x-1+1=x\), \(x-3+2=x-1\), \(x-4+1=x-3\), and \(x-6+2=x-4\), all by omega from \(6\le x\). The helper composition has 12 ReachesPlus sweep/branch blocks, 16 individual source-mode successors, and raw cost 47. This is a proof guide only; it has not been compiled.
+
 ## Application to the conditional root residual
 
 Agent 24's preceding conditional derivation reaches
