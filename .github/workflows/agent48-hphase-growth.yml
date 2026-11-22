@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: google-deepmind/cryptids
-          ref: 2c93870f6db0515f53722dc65135a3f6c587cb9a
+          ref: 3647718b5df22e1a61462dec0376bd204526285a
           persist-credentials: false
       - name: Checkout BB6 research patch
         uses: actions/checkout@v4
