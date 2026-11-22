@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 // Fast persistent-list replay of the actual #490 blank-root seed.
-// #490 evalStackCfg mirrors #85 and swaps L/R; successor490 performs that
-// swap before and after each #85 projected successor.
+// ClosedStackSystem.mirror swaps the evaluator arguments, but #85's own
+// evalStackCfg swaps them again when constructing cfg_DR_n_n. The two swaps
+// cancel, so the #490 stack arguments are the #85 cfg_DR_n_n arguments.
 // Run: node fast_root_stack_sim.js [macro-steps]
 // This is experimental computational evidence, not a proof of nonhalting.
 
@@ -185,8 +186,8 @@ function successor(c, macro) {
 }
 
 function successor490(c, macro) {
-  const p = successor({ mode: c.mode, L: c.R, R: c.L }, macro);
-  return p.halt ? p : { mode: p.mode, L: p.R, R: p.L };
+  // The #85 evalStackCfg reversal cancels ClosedStackSystem.mirror's reversal.
+  return successor(c, macro);
 }
 
 // Empirical candidate invariant. Z1 is the regular language 0*(epsilon | 1).
@@ -222,7 +223,6 @@ const watchpoints = new Set([
 ]);
 const snapshots = {};
 function snapshot(c) {
-  const p = { mode: c.mode, L: c.R, R: c.L };
   return {
     mode: c.mode,
     leftLength: c.L?.len ?? 0,
@@ -231,18 +231,17 @@ function snapshot(c) {
     rightHead: take(c.R, 16),
     leftTail: takeLast(c.L, 16),
     rightTail: takeLast(c.R, 16),
-    underlying85LeftHead: take(p.L, 16),
-    underlying85RightHead: take(p.R, 16),
+    underlying85LeftHead: take(c.L, 16),
+    underlying85RightHead: take(c.R, 16),
     tokenEvents: stats.tokenEventCount
   };
 }
 for (let i = 0; i < steps; ++i) {
   if (watchpoints.has(i)) snapshots[i] = snapshot(c);
-  const underlying85 = { mode: c.mode, L: c.R, R: c.L };
+  const underlying85 = c;
   const failures = invariantFailures(underlying85);
-  if (failures.length) {
+  if (failures.length && !invariantViolation) {
     invariantViolation = { macro: i, failures, state: { mode: c.mode, L: take(c.L, 20), R: take(c.R, 20) } };
-    break;
   }
   maxLeftLength = Math.max(maxLeftLength, underlying85.L?.len ?? 0);
   maxRightLength = Math.max(maxRightLength, underlying85.R?.len ?? 0);
@@ -261,7 +260,7 @@ for (let i = 0; i < steps; ++i) {
 if (watchpoints.has(steps)) snapshots[steps] = snapshot(c);
 console.log(JSON.stringify({
   requestedMacroSteps: steps,
-  completedMacroSteps: invariantViolation?.macro ?? haltAt?.macro ?? steps,
+  completedMacroSteps: haltAt?.macro ?? steps,
   haltAt, invariantViolation,
   tokenEventCount: stats.tokenEventCount,
   tokenEvents: stats.tokenEvents,
