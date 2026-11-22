@@ -24,7 +24,7 @@ A run of 1,000,000 macro-successor steps produced:
 - no \`mode_CR\` left-head-\(\ge2\) branch;
 - no \`closeTokCR\` invocation;
 - exactly one \`closeTokDR\` invocation, at macro index 21,810;
-- that invocation's input was \(0^{2671}1\), and it returned
+- that invocation's input was \(0^{267}1\), and it returned
   \(\mathrm{CR}(L=[0,0,0,1],R=[1])\);
 - 268 \`bounceDR\` calls and zero \`bounceCR\` calls;
 - maximum left-list length 268, maximum right-list length 154,446,
@@ -85,7 +85,7 @@ excludes the two halting mechanisms in the stack reduction:
 For \(L\in Z_1\), the DR token normalizer is elementary: it consumes the
 leading zeros, optionally consumes one terminal 1, and returns a CR stack
 state with binary left list. In particular, the observed
-\(0^{2671}1\) input returns \(\mathrm{CR}(L=[0,0,0,1],R=[1])\).
+\(0^{267}1\) input returns \(\mathrm{CR}(L=[0,0,0,1],R=[1])\).
 
 The main unresolved task is to prove the candidate predicate is preserved by
 every successor case, including the interaction between leading-zero prefixes
@@ -176,4 +176,4 @@ Indeed, bounceDR with initial accumulator \([0]\) maps \(0^n\) to
 \(([1^{n+1},0],[0,0,1])\). The EL normalizer erases the leading ones in the
 accumulator; its final zero emits the displayed CR configuration. Thus every
 input in \(Z_1\) is token-safe for this DR closure. The macro-21,810 event is
-the second case with \(n=2671\) and empty context \(r\).
+the second case with \(n=267\) and empty context \(r\).
