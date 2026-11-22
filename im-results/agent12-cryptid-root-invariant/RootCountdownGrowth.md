@@ -7,9 +7,9 @@
 The #490 wrapper's two evaluator argument reversals cancel: for every stack mode `m`, `#490.evalStackCfg m L R = mirrorCfg f (#85.cfg_m L R)`. The state map is `f = ![5,4,2,0,1,3]`. This source-level orientation result remains valid.
 
 The #490 blank-entry theorem gives the seven-raw-step entry to the mirror of #85 `DR(L=[0,0],R=[1])`. The first two #85 DR successors are also source-checked ordinary branches:
-- at raw time 7: `DR(L=[0,0],R=[1]));
-- right head 1 / left head 0 uses `execute 4`, reaching `DR(L=[0],R=[1,0])) at raw time 11;
-- the next right-head-1 / left-head-0 branch uses `execute 4`, reaching `DR(L=[],R=[1,0,0])) at raw time 15.
+- at raw time 7: `DR(L=[0,0],R=[1])`;
+- right head 1 / left head 0 uses `execute 4`, reaching `DR(L=[0],R=[1,0])` at raw time 11;
+- the next right-head-1 / left-head-0 branch uses `execute 4`, reaching `DR(L=[],R=[1,0,0])` at raw time 15.
 
 No later projected root checkpoint in the old simulator is currently trusted. The corrected #490/D0 raw-time-36 alignment recorded in `DeepMindStackReduction.md` is an independent checkpoint; the full continuation from raw time 15 must be recomputed with source-accurate branches.
 
@@ -202,40 +202,40 @@ def closedStackSystem : ClosedStackSystem target :=
 
 The #85 stack type is `StackTuple 2 = ℕ × ℕ`. Its `closedStackSystem` sets `dSym=1`, `sSym=0`, and all eight parameters `strideL,offsetL,sepL,maxSepL,strideR,offsetR,sepR,maxSepR` to 1. Hence each pair `(a,b)` encodes `1^(a+1)0^1`, because `stackSepLen 1 1 b = 1` independently of b. The second coordinate is semantically ignored by the tape encoding. However, the checked-in JS transition function is not source-exact: its CR branches and empty-list bump were mistranscribed. Do not infer correctness of a simulator merely from the encoding projection.
 
-The same #490 file contains `init_reaches_nontrivial`, the exact 7-raw-step blank-start entry to `closedStackSystem.evalStackCfg .DR_n_n [(0,0),(0,0)] [(1,0)]`. Thus the mirrored #490 target is not an assumed path: it is an actual upstream source module with an explicit transition-table and stack-system mirror from #85.
+The same #490 file contains `init_reaches_nontrivial`, the exact 7-raw-step blank-start entry to `closedStackSystem.evalStackCfg .DR_n_n [(0,0),(0,0)] [(1,0)]`. Thus the initial mirrored stack state is an actual upstream source theorem. This does not validate any later projected root replay.
 
 In this #490 module, `execute n` is a local tactic macro that iterates n raw `ReachesPlus.head` steps and discharges each with the original `Tape.move`/`Tape.write` semantics. Therefore `execute 128`, `execute 591`, and `execute 254` mean exactly 128, 591, and 254 primitive TM transitions, respectively—not outer stack successors. The outer counts 38, 179, and 76 are projected-stack successors; their raw counts are proved separately.
 
-The natural append target for proving the H-padding, H-base, and DR/G/B raw lemmas is this #490 wrapper, reusing its actual `closedStackSystem`, `target`, and `execute` definitions. The evaluator composition already lifts the same `cfg_DR_n_n L R` stack arguments through the mirror; the #85-side formulas are therefore root-connected at the source-transcribed stack level. The remaining task is to formalize the parametric macros and their composition against this #490 target. The existing manual workflow `.github/workflows/agent32-hphase-growth-macro.yml` checks out the same upstream commit and builds this exact module. Its current Lean pin is v4.35.0-rc4; the uploaded local Lean 4.36.0-rc2 preflight has not succeeded in this runtime, so no CI dispatch is claimed.
+The `root_evalStackCfg_DR` definitional normal-form equation remains correct, but the current `RootRightGrowthMacro.append.lean` theorem target is invalid because its projected endpoint was derived from the mistranscribed CR function. Do not dispatch the associated workflow for that theorem. The #85-side `reachesPlus_mirrorCfg` transport remains available for any future source-accurate path.
 
 ## Reproducibility status after CR correction
 
 - [`fast_root_stack_sim.js`](./fast_root_stack_sim.js) is the historical persistent-list replay; it uses the incorrect CR projection and is withdrawn.
 - [`verify_root_corridor_macro.js`](./verify_root_corridor_macro.js) checks the same incorrect projected transition function; its macro and root-path assertions are withdrawn.
-- [`ModeDRBranchAudit.md`](./ModeDRBranchAudit.md) records the pinned-source branch distinction and the recovered root path.
-- [`RootCorridorMacro.md`](./RootCorridorMacro.md) contains the shared-corridor and c=1 family identities underlying the entry.
+- [`ModeDRBranchAudit.md`](./ModeDRBranchAudit.md) records the pinned-source DR branch distinction and the corrected initial DR steps only; it does not validate the withdrawn full root path.
+- [`RootCorridorMacro.md`](./RootCorridorMacro.md) contains historical shared-corridor and c=1 identities from the withdrawn projected model; do not rely on them.
 
 No Lean compile or transitive axiom audit is claimed. The local shell tool has failed before executing commands. The next valid proof target is the source-accurate D_n recurrence in RootCountdownSweep.md; independently correct and audit the full projected transition function before attempting any root continuation. The previous 76-step macro theorem target is invalid even though the isolated `root_evalStackCfg_DR` definitional equation remains correct.
 
 
-### 2026-11-22 correction to the extra-swap left-insertion route
+### 2026-11-22 correction history and CR-branch withdrawal
 
 The earlier 260-step left-insertion seed, its 29-step token closure, and
-the 750,000 / 1,153,484 iterates belong to Agent 48's extra-swap abstract
-system. The evaluator double-swap cancellation means that system is not the
-#490 blank-root orbit. Its model and branch counts are preserved in
-[Agent 48's auxiliary dossier](../agent48-mirrored-root-growth/README.md),
-but they are not used in the blank-root route below.
+750,000 / 1,153,484 iterates belong to Agent 48's extra-swap abstract system
+and are not the #490 blank-root orbit.
 
-The blank-root prefix is seven raw steps to the mirrored #85 cfg seed
-`cfg_DR_n_n [0,0] [1]`. From there the no-swap source-transcribed route
-takes 22,099 outer successors / 66,797 raw steps to `D_0(540)`, followed
-by the countdown/reset/corridor/H-family chain above. The first DR/G/B
-right-insertion seed is reached at 1,131,748 outer successors and 3,401,065
-raw steps from blank.
+A later no-swap candidate was then proposed after the evaluator double-swap
+cancellation was established. That candidate is also withdrawn: its projected
+CR 1,0 / 1,1 / 1,≥2 updates do not match the pinned #85 source, and its empty
+`bumpPairHead` case was wrong. Thus the old 22,099-step root prefix, 1,131,748
+growth seed, 76-successor insertion, and associated raw totals are not valid
+evidence.
 
-The root-connected 76-successor macro is
-`DR(G,[1] ++ B ++ T) -> DR(G,[1] ++ B ++ B ++ T)` for arbitrary suffix T,
-at cost 254 raw TM steps in the source-transcribed branch trace. A source
-append theorem and axiom audit are still required before this can establish
-nonhalting. It does not determine BB(6).
+The only surviving results in this dossier are the evaluator orientation
+identity, the exact seven-step blank entry, the two ordinary DR successors
+through raw time 15, and the direct D-countdown sweep derivation in
+[`RootCountdownSweep.md`](./RootCountdownSweep.md). The corrected #490/D0
+raw-time-36 checkpoint is documented separately in
+[`DeepMindStackReduction.md`](../agent32-cryptid-padding/DeepMindStackReduction.md).
+No complete root-to-cylinder path, infinite orbit, halting proof, nonhalting
+proof, or BB(6) value is established.
