@@ -14,6 +14,8 @@
 
 All five are intermediate source-parent compositions, not yet integrated Lean theorems. They are pairwise disjoint and disjoint from the previously recorded r≡9568 and 10592 (mod 16384) classes. Their shared reduction and root-saturation equations are given below; each child note records the additional inverse-parent arithmetic.
 
+**Separate P7E1E/A4 refinement (not a sixth progression):** for t≡719 (mod 8192), the q=0 A4 parent fan now has a paper-level exact two-parent exclusion; see [A4T719Q0EvenS8.md](A4T719Q0EvenS8.md). Its root-index refinement r≡195936 (mod 524288) lies inside the existing r≡64864 (mod 65536) cylinder in the table above. It does not close the other q=0 residues or the full high-stop target, and the new composition is not yet Lean-compiled.
+
 ## 1. Parameter cylinder and existing reduction
 
 Use the existing B2/U5 root32 parameterization
