@@ -105,7 +105,7 @@ Two short parametric macros replace the earlier 50,000-successor finite entry.
 S^38(H(r+4;R)) = H(r; Q ++ Q ++ R)
 ```
 
-for r≥0 and arbitrary finite right suffix R. This macro costs **128 raw TM steps**, makes no token-normalizer call, and removes four `[1,0]` pairs from the left stack while prepending two Q blocks to the right. The checked-in regression tests r=0,…,7,11,1935 with several distinct suffixes, including an opaque object suffix. The branch histogram is constant across the tested r and R values:
+for r≥0 and arbitrary finite right suffix R. This macro costs **128 raw TM steps**, makes no token-normalizer call, and removes four `[1,0]` pairs from the left stack while prepending two Q blocks to the right. The checked-in regression tests r=0,…,7,11,1935 with several distinct suffixes, including an opaque object suffix. As with H-base, the current V8 suffix tests exercise numeric first-coordinate tails (second coordinate zero) and an opaque sentinel; arbitrary nonzero second coordinates remain for the Lean source proof. The branch histogram is constant across the tested r and R values:
 
 | Source branch | Count | Cost | Subtotal |
 |---|---:|---:|---:|
