@@ -14,16 +14,16 @@ In `BusyBeaver/BB6/Accelerations/M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.lea
 - `mode_DL_0_n_closed`, lines 982–1006, splits the right-head first coordinate using `rcases r1 with _ | _ | r5`: 0, 1, and at least 2. Its r1=1 case (lines 994–999) invokes `tok_DR_2_0_closed`.
 - `mode_DR_n_n_closed`, lines 1008–1064, instead uses `rcases r1 with _ | r5`: 0 versus positive. The r1=0,a1=0 case (1030–1038) invokes `tok_DR_2_0_closed`; r1=0,a1>0 invokes `tok_CR_1_0_closed`. In the positive branch, a1=0 takes the ordinary four-step DR transition at lines 1049–1056, and a1>0 takes the ordinary three-step CR transition at lines 1057–1064. In particular r1=1 is ordinary, not token-normalized.
 
-The #490 wrapper does not change this conclusion. In the #85 source, `evalStackCfg .DR_n_n L R = cfg_DR_n_n R L` (lines 203–207). `ClosedStackSystem.mirror` defines the transported evaluator as `mirrorCfg f (W.evalStackCfg m R L)` (Stack.lean, lines 504–518), so the two argument swaps cancel. The #490 blank-entry theorem therefore reaches the #85-oriented `DR(L=[0,0], R=[1])` seed after its seven raw steps.
+The #490 wrapper does change the stack orientation. In the #85 source, `evalStackCfg .DR_n_n L R = cfg_DR_n_n R L` (lines 203–207). `ClosedStackSystem.mirror` defines the transported evaluator as `mirrorCfg f (W.evalStackCfg m R L)` (Stack.lean, lines 504–518). Therefore #490 `DR(L=[0,0],R=[1])` corresponds to #85 `DR(L=[1],R=[0,0])`, not the same ordered pair of stacks.
 
-Consequently the exact first outer successors are:
+The actual #490 first successor is the mirror of the #85 `tok_CR_1_0_closed` branch:
 
-| Outer successor | State | Raw steps in that closure |
-|---:|---|---:|
-| 0 | DR([0,0], [1]) | seed |
-| 1 | DR([0], [1,0]) | 4 |
-| 2 | DR([], [1,0,0]) | 4 |
-| 3 | EL([0], [1,0,0]) | 1 |
+| #490 outer successor | State | Evidence |
+|---:|---|---|
+| 0 | DR([0,0], [1]) | exact 7-raw-step blank entry |
+| 1 | CR([1], [0,0,0,1]) | V8 mirror of #85 `DR([1],[0,0])` token closure |
+
+The following table is only the synthetic unmirrored #85 trajectory starting at `DR([0,0],[1])`; it is not the blank-root trace:
 
 The alleged 19-step closure from the root seed is the `mode_DL` r1=1 case misapplied to `mode_DR`.
 
