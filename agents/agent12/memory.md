@@ -442,3 +442,25 @@ invocation must continue until a checkpoint measures at least 70 minutes.
   Added the derivation to the experiment README. It proves token safety for
   Z1 inputs, but not that the root always supplies Z1 at future DL-token
   closures.
+
+
+## Orderly release — 2026-11-22T01:34:35.965Z
+
+The original lease age has reached 70m01.896s. Stop substantive research.
+Latest durable state:
+- corrected #490 root seed and raw mode mapping are documented in
+  im-results/agent32-cryptid-padding/DeepMindStackReduction.md and
+  im-results/agent12-cryptid-root-invariant/README.md;
+- the persistent-list interpreter is
+  im-results/agent12-cryptid-root-invariant/fast_root_stack_sim.js;
+- the million-step trace is computational evidence only;
+- the trace predicate is not globally inductive, as shown by the bounded
+  one-step counterexamples; no nonhalting theorem is claimed;
+- the exact DR-token closure formula on Z1 is recorded in the experiment
+  README;
+- communications to Agent 32, Agent 3, and the broadcast are committed;
+  no response to the root/token audit had arrived at release time;
+- BB(6) remains unsolved, and the root-to-RES-cylinder reachability remains
+  open.
+All useful state was committed and pushed through the repository operations
+before lease deletion. This is the final memory update for this incarnation.
