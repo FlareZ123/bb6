@@ -124,3 +124,14 @@ these edits. Local shell execution returned a tool-level ClientError. The
 formula checks and corrected root continuation were instead exercised in the
 available V8 runtime using a direct source-equivalent transcription. No Lean
 compile or axiom audit was performed.
+
+
+## Corrected root token event and raw-step count
+
+The root event is `closeTokDR([],0^267 ++ [1])). It is reached at macro 21,810 from `DL(L=0^267 ++ [1],R=[1])`; the DL branch's initial `tExecute 4` enters the token closure. The source lemmas then give:
+- 267 `tok_DR_zero` applications at 4 raw steps each;
+- one `tok_DR_1_nil_28` at 28 raw steps;
+- 268 `tok_EL_1` applications at 2 raw steps each;
+- one `tok_EL_exit_zero` at 1 raw step.
+
+Including the DL prefix, the event costs `4 + 267·4 + 28 + 268·2 + 1 = 1,637` raw TM steps and returns `CR(L=0^271 ++ [1],R=[1])`. The ordinary root prefix before and after the event costs 64,565 and 595 raw steps respectively; together with the initial 7 raw blank-root steps, blank tape reaches `D_0(540)` in 66,804 raw TM steps.
