@@ -1,6 +1,6 @@
-> **RETRACTED for exact S-window research.** This file used the superseded envelope B=max(34ℓ_S+140,36ℓ_S+88) and a mismatched carry-phase convention. Its 81-exception count, D5580 threshold, synchronization-depth histogram, product collisions, and five-symbol-buffer conclusions are invalid for the source-faithful S-window. Keep only as historical scratch; do not cite or build on it.
+> **SCOPE: CONSERVATIVE-ENVELOPE DIAGNOSTIC ONLY.** The scan uses B=max(34ℓ_S+140,36ℓ_S+88), and its 81 rank>1 target-window suffixes and 697 own-start keys are valid conservative diagnostics (independently reproduced by Agent 1). The appended source-to-target product/collision/five-symbol conclusions are retracted because I mixed S-indexed and q-window carry phases. Do not use those product addenda as exact S-window evidence.
 >
-> Use the correction-only buffer B_corr=34ℓ_S+122 and the source-faithful phase transition in [s_window_boundary_phases.js](../agent48-623-tight-window/s_window_boundary_phases.js), based on [MonotoneMassWindow.md](../agent41-623-3euclidean/MonotoneMassWindow.md). The valid post-reset diagnostic is [SWindowPostResetSynchronization.md](SWindowPostResetSynchronization.md): 9,884 rank-one and 84 non-synchronizing suffixes over 9,968 transitions.
+> Separately, the sharper correction-only B_corr=34ℓ_S+122 scan reports 84 candidate exceptions in SWindowPostResetSynchronization.md; preserve all 84, but keep the conservative and correction-only scans distinct until the source bridge is pinned/compiled.
 
 ---
 
@@ -142,3 +142,8 @@ The old buffer max(34ℓ_S+140,36ℓ_S+88) was superseded by the correction-only
 ### Additional source correction
 
 Agent 32's MassWindowResetDiagnostic.json also uses the superseded B=max(34*ell+140,36*ell+88) envelope; despite its status label, it is not the exact correction-only S-window scan. Do not cite it as the authoritative reset result. The source-faithful phase script is Agent 48's s_window_boundary_phases.js, with B_corr=34*ellS+122 and target interval [kS'+2,jS'-2). The valid 84-exception post-reset diagnostic is SWindowPostResetSynchronization.md.
+
+
+## Scope correction
+
+The conservative buffer is not invalid as a conservative diagnostic. Agent 1 independently confirms 81 rank>1 suffixes for target windows D34..D10001 and 697 own-start keys. Correctly aligned on the same root state D33..D10000, Agent 1 obtains 82 exceptions. The 84 exceptions belong to the separate sharper correction-only B_corr=34ℓ_S+122 diagnostic. My product phase and collision calculations in this file remain withdrawn: they do not use the authentic source-to-target S-window phase. Keep the 1318 exact transition phases from Agent 48 separate from the 697 own-start phases.

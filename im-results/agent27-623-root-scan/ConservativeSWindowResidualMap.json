@@ -1,6 +1,6 @@
 {
   "schema": "bb6-conservative-s-window-residual-map/v1",
-  "status": "RETRACTED for exact S-window research; historical scratch only",
+  "status": "CONSERVATIVE-ENVELOPE DIAGNOSTIC; exact-product phase claims retracted",
   "source_artifacts": [
     "im-results/agent32-623-phase-automaton/ResetPatternDFA.json",
     "im-results/agent27-623-root-scan/PairCarrySynchronizingSubsetDFA.json",
@@ -1279,51 +1279,34 @@
     ]
   },
   "exact_product_boundary_diagnostic": {
-    "status": "RETRACTED for exact S-window",
-    "reason": "This scan used the superseded buffer B=max(34*ell_S+140,36*ell_S+88) and a phase calculation that mixed S-indexed k with q-window/source-carry conventions. The source-faithful correction-only S-window uses B_corr=34*ell_S+122 and the exact transition phase in agent48-623-tight-window/s_window_boundary_phases.js.",
-    "invalidated": [
-      "81 universal-subset exceptions",
-      "last exception at D5580 and 4,421 rank-one windows after it",
-      "first-sync depth histogram/max 11 for this scan",
-      "the 697 own-phase count and mixed-phase counts",
-      "product collisions D315/D2978 and D1049/D3579",
-      "five-symbol high-end-buffer conclusion",
-      "the claimed exact-seed consistency counts from these windows"
-    ]
+    "status": "RETRACTED: mixed-phase product",
+    "reason": "The source-to-target carry phase was not the authentic S-window phase; collision and five-symbol conclusions are invalid."
   },
   "exact_seed_consistency": {
-    "status": "RETRACTED for this scan",
-    "interpretation": "The exact-seed vs universal-subset distinction is valid in general, but the 9,968-window checks recorded here used the superseded window/phase and must not be cited. Use Agent 1's independent exact-seed replay and the source-faithful S-window artifacts."
+    "status": "RETRACTED for my mixed-phase product",
+    "interpretation": "The general exact-seed vs universal-subset distinction remains valid; my finite window counts used an invalid phase and must not be cited."
   },
   "retraction": {
-    "status": "RETRACTED for exact S-window research; historical scratch only",
-    "reason": "This scan used the superseded buffer B=max(34*ell_S+140,36*ell_S+88) and a phase calculation that mixed S-indexed k with q-window/source-carry conventions. The source-faithful correction-only S-window uses B_corr=34*ell_S+122 and the exact transition phase in agent48-623-tight-window/s_window_boundary_phases.js.",
+    "reason": "This scan uses the conservative envelope B=max(34*ell_S+140,36*ell_S+88), not the sharper correction-only B_corr=34*ell_S+122. The conservative scan itself remains a valid conservative diagnostic and is independently confirmed by Agent 1; however, my appended product phase/collision calculations mixed S-indexed k with q-window/source-carry conventions and are retracted.",
+    "retained_valid_claims": [
+      "81 rank>1 universal-subset suffixes on the target-window sequence D34..D10001 (Agent 1 independently reproduced this conservative scan)",
+      "697 target own-start phase keys for the conservative envelope (independently matched by Agent 1)",
+      "the 211-state subset is universal over all 66 post-reset pair states; rank>1 does not imply unknown actual root carry"
+    ],
+    "corrected_alignment": "For the induction product pairing D_n own-start phase with D_n residual subset, Agent 1 reports 82 exceptions over D33..D10000; the 81 count belongs to the distinct target-window sequence D34..D10001.",
     "invalidated_claims": [
-      "81 universal-subset exceptions",
-      "last exception at D5580 and 4,421 rank-one windows after it",
-      "first-sync depth histogram/max 11 for this scan",
-      "the 697 own-phase count and mixed-phase counts",
-      "product collisions D315/D2978 and D1049/D3579",
+      "D315/D2978 and D1049/D3579 product collisions",
       "five-symbol high-end-buffer conclusion",
-      "the claimed exact-seed consistency counts from these windows"
+      "my 1318/phase product computations and source-to-target carry comparisons",
+      "the finite exact-seed consistency counts from my mixed-phase scan"
     ],
-    "authoritative_replacement": {
-      "boundary_theorem": "im-results/agent41-623-3euclidean/MonotoneMassWindow.md",
-      "source_phase_script": "im-results/agent48-623-tight-window/s_window_boundary_phases.js",
-      "reset_scan": "Agent 48 s_window_boundary_phases.js (uses B_corr=34*ellS+122 and target interval [kS'+2,jS'-2)); Agent 32 MassWindowResetDiagnostic.json is also based on the superseded max(34*ell+140,36*ell+88) buffer and must not be cited for the exact S-window.",
-      "correct_postreset_result": "im-results/agent27-623-root-scan/SWindowPostResetSynchronization.md (84 non-synchronizing suffixes)",
-      "correct_postreset_count": {
-        "windows": 9968,
-        "rank_one": 9884,
-        "non_synchronizing": 84
-      }
+    "separate_sharper_diagnostic": "SWindowPostResetSynchronization.md reports 84 exceptions for the correction-only B_corr=34*ell_S+122 diagnostic. Preserve these 84 cases as a separate sharper-buffer candidate, but do not replace the conservative 81/82 evidence until the source-correction bridge is pinned/compiled.",
+    "authoritative_references": {
+      "conservative_scan": "im-results/agent32-623-phase-automaton/MassWindowResetDiagnostic.json and Agent 1 communications/agent27/20261122T020823Z_agent1_conservative-swindow-product-audit.md",
+      "own_state_alignment": "Agent 1 communications/agent27/20261122T021010Z_agent1_phase-alignment-correction.md",
+      "correction_only_phase": "im-results/agent48-623-tight-window/s_window_boundary_phases.js (B_corr=34*ell_S+122; 1,318 source-to-target phases)",
+      "correction_only_postreset": "im-results/agent27-623-root-scan/SWindowPostResetSynchronization.md (84 candidate exceptions)"
     },
-    "preserved_valid_components": [
-      "ResetPatternDFA.json",
-      "PostResetCarryPairClosure.json",
-      "PairCarrySynchronizingSubsetDFA.json",
-      "the conceptual distinction between the exact root seed and the universal 211-state image subset"
-    ],
-    "instruction": "Do not use any counts or product conclusions in this artifact as evidence for the exact S-window. Rebuild from the correction-only S-window and authentic source-to-target phase."
+    "instruction": "Keep conservative and correction-only scans distinct. Build the exact product with the authentic S-window phase and preserve the 84 candidate cases; do not use my invalid product collisions."
   }
 }
