@@ -87,10 +87,10 @@ For \(k\geq0\),
 
 \[
 U_k(2,r)\longrightarrow^+
-\operatorname{CR}(0^{k+1}1\,0^{r+4}1,[0]).
+\operatorname{CR}(0^{k+1}1\,0^{r+3}1,[0]).
 \]
 
-After the DR-zero sweep, DR-one terminal step, and EL-one sweep, apply \`tok_EL_2\`, then \(k\) applications of \`tok_EL_1\), then \`tok_EL_exit_zero\`.
+After the DR-zero sweep, DR-one terminal step, and EL-one sweep, apply \`tok_EL_2\`, then \(k\) applications of \`tok_EL_1\), then \`tok_EL_exit_zero\`. The \`tok_EL_2\` clause consumes the leading zero and inserts the pair \(0,1\), leaving \(r+3\) zeros after that inserted one.
 
 The cost is
 
@@ -99,7 +99,7 @@ The cost is
 6r+38+2k\quad\text{raw steps}.
 \]
 
-In particular, when two zero-remainder branches have already occurred, \(k=2\), not \(k=4\). The residual-two endpoint then has three leading zeros and \(r+4\) zeros in the second run.
+When two zero-remainder branches have occurred, \(k=2\), so the output has three leading zeros and \(r+3\) zeros in its second run.
 
 ## 3. Application to the outstanding root input
 
@@ -118,9 +118,7 @@ The resulting token input is
 \qquad n=8\,841\,438.
 \]
 
-The initial token prefix (three DR-zero steps, DR-succ, \(4n+7\) CR-zero steps, CR-one terminal step, and EL-add-three) reaches \(U_4(8n+12,3)\), costing \(4n+13\) token successors and \(8n+67\) raw steps.
-
-The exact arithmetic is:
+The initial token prefix reaches \(U_4(8n+12,3)\), costing \(4n+13\) token microsteps and \(8n+67\) raw steps.
 
 | Stage | State | Batch count | Resulting \(r\) |
 |---|---|---:|---:|
@@ -131,15 +129,15 @@ The exact arithmetic is:
 | Second zero branch | \(U_2(502\,979\,717,3)\) | — | 3 |
 | Third subtract-three batch | \(U_2(2,670\,639\,623)\) | 167,659,905 | 670,639,623 |
 
-Thus the token memory evolves \(4\to3\to2\). The residual-two exit is
+Thus the token memory evolves \(4\to3\to2\). The corrected residual-two exit is
 
 \[
-\operatorname{CR}(0^3 1\,0^{670\,639\,627}1,[0]).
+\operatorname{CR}(0^3 1\,0^{670\,639\,626}1,[0]).
 \]
 
 ## 4. Ordinary-stack continuation
 
-Put \(R=670\,639\,627\). The pinned ordinary CR clauses give
+Put \(R=670\,639\,626\). The pinned ordinary CR clauses give
 
 \[
 \begin{aligned}
@@ -157,16 +155,16 @@ The final suffix-preserving general tail has 16 individual source-mode successor
 The corrected endpoint is
 
 \[
-\boxed{D_0(1\,341\,279\,251;[9])}.
+\boxed{D_0(1\,341\,279\,249;[9])}.
 \]
 
 This is a concrete stack configuration with CR left head zero; it is not a halting configuration.
 
 ## 5. Correction to the earlier residual-two note
 
-The earlier \`TokenResidual2Continuation.md\` keeps a fixed four-one suffix through both zero-remainder branches and consequently applies the residual-two exit with \(k=4\). That is inconsistent with \`tok_EL_0_cons\`: each zero branch consumes one of those ones.
+The earlier TokenResidual2Continuation.md keeps a fixed four-one suffix through both zero-remainder branches and consequently applies the residual-two exit with \(k=4\). The source clause tok_EL_0_cons consumes one of those ones at each zero branch, so this branch reaches \(k=2\).
 
-For this \(n=8\,841\,438\) input, the correct sequence is \(U_4\to U_3\to U_2\), so the endpoint is \(D_0(1\,341\,279\,251;[9])\), not \(D_0(1\,341\,279\,249;[13])\). The later suffix-[13] continuation is not connected to this particular root branch until a valid path to its starting state is established. A separate branch that reaches residual two without any zero-remainder stage may still use \(k=4\).
+The earlier note's c-coordinate \(1\,341\,279\,249\) is correct, but its suffix \([13]\) is not correct for this branch. The corrected endpoint is \(D_0(1\,341\,279\,249;[9])\). A separate branch that reaches residual two without any zero-remainder stage can still use \(k=4\) and suffix \([13]\).
 
 ## 6. Conditional exact step arithmetic
 
@@ -184,16 +182,16 @@ individual source-mode successors and
 
 raw steps.
 
-The complete segment from \(D_0(26\,524\,315;[0,0,2])\) to the corrected \(D_0(1\,341\,279\,251;[9])\) endpoint has three distinct counts:
+The complete segment from \(D_0(26\,524\,315;[0,0,2])\) to the corrected \(D_0(1\,341\,279\,249;[9])\) endpoint has:
 
-- 312,684,986,465,556 stack-mode successors (counting the DL-to-token closure as one);
+- 312,684,986,465,555 stack-mode successors (counting the DL-to-token closure as one);
 - 130,474,697,235,840,285 token-machine microsteps;
-- 130,787,382,222,305,841 combined individual source-mode successors;
-- 392,362,152,160,071,714 raw TM steps.
+- 130,787,382,222,305,840 combined individual source-mode successors;
+- 392,362,152,160,071,712 raw TM steps.
 
-The preceding conditional blank-root arithmetic in RootRemainderOneTail.md reports 51,166,575,478,679 **outer stack-mode successors** and 153,499,683,790,849 raw steps. Adding only comparable stack-mode counts gives 363,851,561,944,235 stack-mode successors from the blank-root checkpoint to the corrected endpoint. The raw-step total is 392,515,651,843,862,563.
+The preceding conditional blank-root arithmetic in RootRemainderOneTail.md reports 51,166,575,478,679 outer stack-mode successors and 153,499,683,790,849 raw steps. Adding only comparable stack-mode counts gives 363,851,561,944,234 stack-mode successors from the blank-root checkpoint to the corrected endpoint. The raw-step total is 392,515,651,843,862,561.
 
-Do not add the combined segment count to the prior outer stack-mode count: the former includes token-machine microsteps, while the latter does not. These are arithmetic totals for the stated source-level composition, **not a certified runtime lower bound**. The upstream root connection, suffix-preserving lemmas, and token composition remain uncompiled.
+Do not add the combined segment count to the prior outer stack-mode count: the former includes token-machine microsteps, while the latter does not. These are arithmetic totals for the stated source-level composition, not a certified runtime lower bound. The upstream root connection, suffix-preserving lemmas, and token composition remain uncompiled.
 
 The phase formulas are reproducible with integer arithmetic:
 
@@ -202,9 +200,7 @@ const n = 8841438n;
 const x0 = 8n*n + 12n, q0 = x0/3n, r0 = 3n + 4n*q0;
 const x1 = 2n*r0 + 7n, q1 = x1/3n, r1 = 3n + 4n*q1;
 const x2 = 2n*r1 + 7n, q2 = (x2-2n)/3n, r2 = 3n + 4n*q2;
-const R = r2 + 4n;
-const cycleOuter = q => 4n*q*q + 5n*q;
-const cycleRaw = q => 12n*q*q + 41n*q;
+const R = r2 + 3n;
 ~~~
 
 ## 7. Next proof obligations
@@ -217,89 +213,35 @@ const cycleRaw = q => 12n*q*q + 41n*q;
 Local Lean was not run in this invocation: the available shell/runtime calls returned a concrete ClientError. No CI run was used as a substitute for the required local preflight. Nothing here establishes halting, nonhalting, a universal six-state upper bound, or the exact value of BB(6).
 
 
-## 8. The corrected suffix-[9] branch reconnects to the suffix-[5] family
+## 8. Generic singleton-suffix remainder-two reset
 
-The same existing token lemma handles a singleton suffix. For \(t\in\mathbb N\), the source composition gives
+The independent source composition for a singleton suffix remains
 
 \[
 D_n(2;[t])\longrightarrow^+D_0(8n+t+20).
 \]
 
-Indeed, the fixed prefix and EL-zero sweep leave \(DL(0^{4n+7}1,[1,t])\). The DL token closure uses \(R_3=[t]\), so \`root_d2_tok_dr_z1\` exits to
-
-\[
-CR(0^{4n+11}1,[t+1]).
-\]
-
-The CR-zero sweep, CR-one-empty step, and 16-step general tail give \(D_0(8n+t+20)\). The reset costs are independent of \(t\):
+The fixed prefix and EL-zero sweep leave \(DL(0^{4n+7}1,[1,t])\). The DL token closure uses \(R_3=[t]\), so root_d2_tok_dr_z1 exits to \(CR(0^{4n+11}1,[t+1])\). The CR-zero sweep, CR-one-empty step, and general tail give the stated output. The costs are independent of \(t\):
 
 - \(8n+44\) stack-mode successors;
 - \(8n+17\) token-machine microsteps inside the DL closure;
 - \(40n+186\) raw TM steps.
 
-For \(t=9\), the corrected endpoint therefore continues as follows:
-
-\[
-\begin{aligned}
-D_0(1\,341\,279\,251;[9])
-&\to D_{447\,093\,083}(2;[9])\\
-&\to D_0(3\,576\,744\,693)\\
-&\to D_{1\,192\,248\,231}(0)\\
-&\to D_0(9\,537\,985\,861)\\
-&\to D_{3\,179\,328\,620}(1)\\
-&\to D_0(25\,434\,628\,967;[5]).
-\end{aligned}
-\]
-
-The maps used after the suffix-[9] reset are the already-derived zero reset \(D_n(0)\to D_0(8n+13)\) and remainder-one reset \(D_n(1)\to D_0(8n+7;[5])\).
-
-One further already-known suffix-[5] reset gives
-
-\[
-D_0(25\,434\,628\,967;[5])
-\to D_{8\,478\,209\,655}(2;[5])
-\to D_0(67\,825\,677\,265)
-\to D_{22\,608\,559\,088}(1).
-\]
-
-This reaches a remainder-one state with index \(22\,608\,559\,088\), which differs by 110 from the \(22\,608\,559\,198\) index used as the starting point in the current suffix-[13] return-map note. The two chains must not be conflated: the corrected suffix-[9] route gives the former index.
-
+This map does **not** apply immediately to the corrected root endpoint: \(1\,341\,279\,249=3\cdot447\,093\,083\), so the next state is \(D_{447\,093\,083}(0;[9])\), not a remainder-two state. The next unresolved transition for this branch is the suffix-[9] zero-remainder case \(D_n(0;[9])\).
 
 ## 9. Zero remainder with suffix [0,0,2]
 
-A second useful suffix-preserving branch is
+The independently derived suffix reset
 
 \[
-D_n(0;[0,0,2])\longrightarrow^+D_0(8n+23).
+D_n(0;[0,0,2])\longrightarrow^+D_0(8n+23)
 \]
 
-After the fixed eight-step prefix and the \(4n+6\)-zero EL sweep, the two zeros in the suffix are consumed by two further EL-zero steps. EL-positive on 2 then reaches the DL-right-one state with left list \(0^{4n+9}1\). Apply the existing token lemma with \(m=4n+9\) leading zeros and empty \(R_3\); it exits to \(CR(0^{4n+13}1,[0])\). The CR-zero sweep, CR-one-empty step, and general tail give \(D_0(8n+23)\).
+remains valid. After the fixed eight-step prefix and the \(4n+6\)-zero EL sweep, the two zeros in the suffix are consumed by two further EL-zero steps. EL-positive on 2 reaches the DL-right-one state with left list \(0^{4n+9}1\). Apply the existing token lemma with \(m=4n+9\) leading zeros and empty \(R_3\); it exits to \(CR(0^{4n+13}1,[0])\). The CR-zero sweep, CR-one-empty step, and general tail give \(D_0(8n+23)\).
 
-The costs are:
+Its costs are \(8n+48\) stack-mode successors, \(8n+21\) token-machine microsteps inside the DL closure, and \(40n+206\) raw TM steps.
 
-- \(8n+48\) stack-mode successors;
-- \(8n+21\) token-machine microsteps inside the DL closure;
-- \(40n+206\) raw TM steps.
-
-This extends the corrected suffix-[9] chain after its suffix-[5] continuation:
-
-\[
-\begin{aligned}
-D_{22\,608\,559\,088}(1)
-&\to D_0(180\,868\,472\,711;[5])\\
-&\to D_{60\,289\,490\,903}(1;[5])\\
-&\to D_0(482\,315\,927\,235;[0,0,2])\\
-&\to D_{160\,771\,975\,745}(0;[0,0,2])\\
-&\to D_0(1\,286\,175\,805\,983)\\
-&\to D_{428\,725\,268\,661}(0)\\
-&\to D_0(3\,429\,802\,149\,301)\\
-&\to D_{1\,143\,267\,383\,100}(1)\\
-&\to D_0(9\,146\,139\,064\,807;[5]).
-\end{aligned}
-\]
-
-The first two arrows use the already-derived remainder-one maps; the new suffix-[0,0,2] zero reset is the middle transition from \(D_{160\,771\,975\,745}(0;[0,0,2])\). The final two arrows use the ordinary zero reset and remainder-one reset. This is still a conditional source-level chain, not a Lean-checked root proof.
-
+The previously reported chain from \(D_{22\,608\,559\,088}(1)\) through \(D_0(9\,146\,139\,064\,807;[5])\) is withdrawn. It depended on the incorrect \(D_0(1\,341\,279\,251;[9])\) endpoint and is not connected to the corrected root branch. The generic suffix-[0,0,2] zero-reset map above is independent of that withdrawn chain.
 
 ## 10. Bounded 3-adic normalization for the whole \(D_n(1;[0,0,2])\) family
 
@@ -323,7 +265,7 @@ At a stage \(U_k(x,3)\), write \(x=3q+s\), \(s\in\{0,1,2\}\). The subtract-three
   The token exit costs \(2r+k+4\) microsteps and \(6r+2k+33\) raw steps.
 - If \(s=2\), the residual-two exit gives \(CR(0^{k+1}1\,0^{r+4}1,[0])\), then the ordinary tail gives
   \[
-  D_0(2r+5;[2k+5]).
+  D_0(2r+3;[2k+5]).
   \]
   The token exit costs \(2r+k+4\) microsteps and \(6r+2k+38\) raw steps.
 - If \(s=0\) when \(k=0\), the final token exit gives \(CR(0^{r+4}1,[0])\), then the ordinary tail gives \(D_0(2r+5)\). The token exit costs \(2r+3\) microsteps and \(6r+31\) raw steps.
