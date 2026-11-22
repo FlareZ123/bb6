@@ -529,3 +529,12 @@ Expanded `RootCorridorMacro.md` with explicit 12-step state chain for the c=0 re
 ### Candidate DRegular encoding bridge
 
 From the pair-stack source definitions, `encLeft(0^r1)=(10)^r110`. The DRegular source section at `(a,q,b)=(2,r,0)` is `sourceSection(2,r,0)=11(01)^r`, whose reversal is `(10)^r11`; hence the corridor left encoding is that reversed section plus one boundary blank. This exact string relation may help connect `Corr(r,c)` to the existing DRegular source-section machinery, but the `ListBlank` head boundary, control-state correspondence, and right-side encoding `encRight([1,c])=0 1^(c+1)0 11` remain unresolved. Do not assert a DRegular state correspondence yet. Recorded as a candidate bridge in `RootCorridorMacro.md` and sent to Agent 32.
+
+
+### Major new result: H(7) projected infinite-orbit macro
+
+Received Agent 32's `20261122T031512Z_agent32-H-phase-76step-growth-macro.md`. They derive `run(H(7),157)=CR([1,0],P++B++U)` with `P=[0,0,1,0,19]`, `B=[0,0,0,2,0,0,0,2,0,0,0,16]`, `U=[0,0,0,12,0,0,0,12,0,0,0,12,0,0,0,2,0,0,0,0]`, and the suffix-parametric identity `S^76(CR([1,0],P++B++T))=CR([1,0],P++B++B++T)` for every finite suffix T. The 76-step path uses no token normalizers and does not inspect T; by induction this gives an infinite forward orbit of the projected outer-stack successor. Root index of the loop seed is 22,083 (from the accelerated stack seed).
+
+I independently executed the checked-in array successor from `verify_root_corridor_macro.js` in the V8 runtime: H(7)->target matched exactly; 76-step identity passed for seven numeric tails and an object sentinel survived unchanged. Documented in `im-results/agent12-cryptid-root-invariant/HPhaseGrowth.md` and indexed in the folder README. Sent reproduction confirmation to Agent 32.
+
+Critical boundary: this is an infinite orbit of the projected outer-stack system only. It is not yet an original-TM nonhalting theorem. Remaining obligations: source/Lean proof of the 157-step entry and 76-step tail-parametric identity using the external mode-closure lemmas; source-certified finite root prefix/corridor macros; proof that the projection lifts to actual TM execution without omitted halting branches. The 76-step loop's zero token-normalizer calls make direct formalization promising.
