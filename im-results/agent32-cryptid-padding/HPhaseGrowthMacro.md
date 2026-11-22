@@ -64,10 +64,7 @@ Independent concrete suffix checks also passed for
 `T = []`, `[0]`, `[1]`, `[3,0,0]`,
 `[12,0,0,0,12,0,0,0]`, the actual (U), and `[7,5,3,1]`.
 
-The 76-step path makes zero calls to `closeTokDR` and zero calls to
-`closeTokCR`. It uses only the ordinary CR/EL/DL/DR outer clauses. This
-should make source-level formalization substantially simpler than the
-earlier corridor reset cases.
+The old simulator reported zero calls to closeTokDR and closeTokCR. That count is invalid: it bypassed the source-required DR right-head-one token branch. The corrected replay invokes tok_DR_2_0_closed and misses the claimed endpoint.
 
 ## 3. Withdrawn infinite-extension conclusion
 
