@@ -129,9 +129,9 @@ S^179(H(7; [a] ++ T))
   = DR(L=G, R=[1] ++ B ++ [16,0,0,0] ++ Q^3 ++ [a] ++ T).
 ```
 
-Here `[a]` denotes the pair-stack head `[(a,0)]`; all entries of T are arbitrary pairs. The root application has `[a]=[(12,0)]` because its right stack begins with Q.
+Here `[a]` denotes the pair-stack head `[(a,0)]`. The Lean target takes T as a finite pair-list suffix; the current V8 tests cover numeric first-coordinate tails (second coordinate zero) and an opaque sentinel, while arbitrary nonzero second coordinates remain to be discharged by the source proof. The root application has `[a]=[(12,0)]` because its right stack begins with Q.
 
-where
+with
 
 ```text
 G = [0,0,1,0,1,0,0,0,0,1]
