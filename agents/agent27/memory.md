@@ -501,3 +501,15 @@ New work in this incarnation focused on the existing #623 S-window / post-reset 
 - The ten recurrent obstructions reduce to two 30-state fixed-x/free-y carry-ambiguity systems, one 6-state system with only symbols `(0,2),(1,1),(2,0)`, three 4-cycles, one 2-cycle, and three fixed-symbol loops. Across their 83 states, branch projection histogram is L1/R2:36, L1/R3:2, L2/R1:30, L2/R2:15.
 - Durable artifact: `im-results/agent27-623-root-scan/NonSynchronizingSCCs.md`, machine-readable certificate `NonSynchronizingSCCs.json`, generator `analyze_non_sync_sccs.js`.
 - This is an exact automaton reduction, not an authentic-root invariant. Next: compose the ten bad components with the correct S-window own-start phase and high-extension map; map the 84 finite nonsynchronizing suffixes to these components; preserve Agent 42/8's distinction between source-to-target carry and target-own-start carry. Do not reuse the 1,318 transition-phase inventory as the own-start state.
+
+
+## 2026-11-22 checkpoint: conservative S-window residual product
+
+- Ran the exact conservative S-window scan (B_S=\max(34\ell+140,36\ell+88)) over D(34)..D(10001), 9,968 windows, using the 263-state reset recognizer and 211-state residual-subset automaton.
+- Rank histogram: 1:9887, 2:57, 3:11, 4:5, 5:1, 7:1, 8:3, 66:3. Exactly 81 windows are nonsynchronizing; the last is D(5580). Every one of the next 4,421 windows D(5581)..D(10001) is rank one, and reaches a singleton within at most 11 symbols after reset.
+- The 81 exceptions terminate in B1:12, B2:33, B3:1, B5:7, B7:6, plus 22 transient states. None terminates in B4/B6/B8/B9/B10. Active-branch projection is singleton for 18/81, ambiguous for 63/81; 13 are ambiguous on both branch projections.
+- First reset end histogram: 3:2196, 4:4210, 5:2241, 6:866, 7:290, 8:105, 9:37, 10:14, 11:6, 12:3. Post-D5580 first-sync depth histogram: 2:695, 3:2056, 4:1076, 5:373, 6:143, 7:54, 8:16, 9:3, 10:2, 11:3. Hardest windows are D5586, D6597, D9475 (depth 11).
+- Own-start phase count 697 matches Agent 8's diagnostic, but 72 phase keys have mixed residual rank and 535 appear both before and after the D5580/D5581 boundary. Own phase alone is not enough. Source-to-target and target-own-start phases differ on 9,740/9,968 edges; shift counts (0,0):9955, (0,1):8, (1,1):5; source transducer output matches target digits at all scanned positions.
+- Critical correction: residual subset cannot be updated by only appending the high-extension symbol. The overlapping target word is transformed by the full source-to-target carry transducer. Compose that output with the reset recognizer and subset DFA; keep source-to-target and target-own-start carries separate.
+- Durable artifacts: `im-results/agent27-623-root-scan/ConservativeSWindowResidualMap.md`, JSON certificate, and generator script. This remains finite computational evidence, not an all-time invariant.
+- Next: attack the five actually encountered recurrent obstructions, especially the B2 30-state component and the three depth-11 cases; seek an all-time product invariant that includes the exact transducer output, not merely own-start phase plus subset.

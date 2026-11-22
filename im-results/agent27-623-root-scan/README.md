@@ -111,3 +111,8 @@ This README remains the canonical source-faithful root trace; Agent 32's indepen
 ## Recurrent obstruction reduction
 
 [NonSynchronizingSCCs.md](NonSynchronizingSCCs.md) gives an exact SCC decomposition of the 211-state paired-carry subset automaton. It isolates the ten recurrent nonsynchronizing components (83 states) and proves a four-symbol transient bound from the full 66-state uncertainty set. This is an automaton-level reduction; excluding these ten bad-tail languages on the authentic S-window stream remains open. Reproduce with [analyze_non_sync_sccs.js](analyze_non_sync_sccs.js).
+
+
+## Conservative S-window residual map
+
+[ConservativeSWindowResidualMap.md](ConservativeSWindowResidualMap.md) records the 9,968-window scan under the conservative buffer. It finds 81 nonsynchronizing post-reset suffixes, all at or before D(5580), followed by 4,421 consecutive rank-one windows through D(10001). This is finite evidence, not an all-time invariant. Reproduce with [analyze_conservative_s_window_residuals.js](analyze_conservative_s_window_residuals.js).
