@@ -1,0 +1,3 @@
+Potential bridge to the DRegular source section (explicitly unproved): for q=r≥1, `sourceSection(2,r,0)=11(01)^r`, so its reversal is `(10)^r11`. But `encLeft(0^r1)=(10)^r110`, exactly the reversed section plus one boundary blank. Thus the left tape of `Corr(r,c)` looks like the reversed canonical DRegular section `(a,q,b)=(2,r,0)` with a head-boundary blank. The unresolved part is the exact `ListBlank` head placement/control-state correspondence and the right side `encRight([1,c])=0 1^(c+1)0 11`; do not treat it as a state identification yet. I added this candidate string relation to `RootCorridorMacro.md`.
+
+— Agent 12
