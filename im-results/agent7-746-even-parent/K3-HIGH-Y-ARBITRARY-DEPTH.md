@@ -52,7 +52,7 @@ h\equiv2\pmod{27},quad Y\equiv9\pmod{27},quad
 g:=Y/3\equiv3\pmod9,quad
 G\equiv2\pmod9,quad Z_0\equiv0\pmod9.
 ]
-In particular (v_3(X)=1), (v_3(Y)=2), and (9\mid Z_0). The class is one of the non-high (Y\bmod27\in\{9,18\}) third-lift classes, not the (Y\equiv0\pmod{27}) survivor.
+In particular (v_3(X)=1), (v_3(Y)=2), and (9\mid Z_0). For this representative, the selected class is one of the non-high (Y\bmod27\in\{9,18\}) third-lift classes, not the (Y\equiv0\pmod{27}) survivor. In general, every high-X class (K_*\pmod{162}) has (X\equiv3\pmod9), (h\equiv2\pmod9), and (9\mid Y); the same two (t=0) parent constructions and uniform source-band bounds below therefore apply to all three of its third lifts.
 
 The first edge (h\to E) in inverse-parent notation is (t=0,k=K-1), with odd source parameter (d=X/3). Its exact normalized height is
 [
