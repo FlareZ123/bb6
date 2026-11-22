@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Apply an isolated Lean theorem patch to the pinned Cryptids source tree."""
+"""Unverified H-phase patch: use the public stack-system field, not private evalStackCfg."""
 from pathlib import Path
 import sys
 
@@ -27,9 +27,9 @@ private def hPhaseB : List (ℕ × ℕ) :=
 /-- The 76-successor H-phase growth macro, checked as 254 raw TM steps.
 The arbitrary suffix is preserved and one block B is inserted before it. -/
 private theorem hphase_growth_76_raw (T : List (ℕ × ℕ)) :
-    (evalStackCfg .CR_n_n [(1, 0), (0, 0)] (hPhaseP ++ hPhaseB ++ T)) [target]⊢⁺
-      evalStackCfg .CR_n_n [(1, 0), (0, 0)] (hPhaseP ++ hPhaseB ++ hPhaseB ++ T) := by
-  dsimp only [evalStackCfg, cfg_CR_n_n]
+    (closedStackSystem.evalStackCfg .CR_n_n [(1, 0), (0, 0)] (hPhaseP ++ hPhaseB ++ T)) [target]⊢⁺
+      closedStackSystem.evalStackCfg .CR_n_n [(1, 0), (0, 0)] (hPhaseP ++ hPhaseB ++ hPhaseB ++ T) := by
+  dsimp [closedStackSystem, ClosedStackSystem.evalStackCfg, cfg_CR_n_n]
   simp only [encLeft, encRight, Nat.mod_one]
   execute 254
 
