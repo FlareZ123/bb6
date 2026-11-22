@@ -49,7 +49,7 @@ Agent 32's earlier entry and tail-sentinel checks exercised the defective projec
 
 ## Current formalization target
 
-The tail-parametric identity is stronger than a long finite simulation: once proved against the source successor, it gives an infinite orbit from `C_0`. Since the 76-step loop avoids token normalization, its source proof should be approachable by composing the external `mode_CR_n_n_closed`, `mode_EL_n_n_closed`, `mode_DL_n_n_closed`, and `mode_DR_n_n_closed` lemmas (or their exact public equivalents). It does not settle the blank-root machine without a new reachability bridge.
+The previous formalization argument is withdrawn. The corrected 76-step replay enters the r1=1 DR token branch and misses the claimed endpoint. The only current formalization target is the 19-step DR-to-CR root closure and 36-step CR recurrence in DRHeadOneCycle.md.
 
 The remaining obligation is to formalize the candidate 36-raw-step recurrence and its 19-step root entry against the pinned source, then compose with the existing seven-step blank-root entry. Until that compiles, the nonhalting conclusion remains a proof target.
 
