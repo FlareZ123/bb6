@@ -37,7 +37,7 @@ Then
 \operatorname{encTokens}(K,R3)
 =[0]\; ++\; [1,0]^m\; ++\; [1,1,0],
 ]
-which is exactly the same left `ListBlank` (the final extra zero is blank-equivalent). The control state is now C, which is unchanged by the #85/#490 state map. Thus **after the E0 step**, the external cylinder path is exactly the DeepMind `tok_CR K R3 []) configuration.
+which is exactly the same left `ListBlank` (the final extra zero is blank-equivalent). The control state is now C, which is unchanged by the #85/#490 state map. Thus **after the E0 step**, the external cylinder path is exactly the DeepMind `tok_CR K R3 []` configuration.
 
 ## Right-suffix encoding
 
