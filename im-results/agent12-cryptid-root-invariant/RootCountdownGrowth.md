@@ -210,6 +210,36 @@ The checked-in regression tests seven numeric suffixes plus an opaque object suf
 
 If the countdown, reset, c=1 corridor, H-padding, H-base, and DR/G/B insertion identities are proved against the pinned source, their composition yields an infinite projected stack orbit from the blank-root seed. The source-transcribed computations are not yet kernel-checked Lean proofs or an original-TM nonhalting theorem.
 
+## Exact Lean source target and raw-step semantics
+
+The intended original-source proof target is the real #490 wrapper module at upstream `google-deepmind/cryptids` commit `3647718b5df22e1a61462dec0376bd204526285a`:
+
+```text
+BusyBeaver/BB6/Accelerations/
+  M_1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LEHHH.lean
+```
+
+This file imports the #85 module
+
+```text
+BusyBeaver/BB6/Accelerations/
+  M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.lean
+```
+
+and explicitly defines the state relabelling `f = ![5,4,2,0,1,3]`, transition isomorphism `hM`, and
+
+```lean
+def closedStackSystem : ClosedStackSystem target :=
+  M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.closedStackSystem.mirror f
+    M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.encLeft_eq_encRight hM
+```
+
+The same #490 file contains `init_reaches_nontrivial`, the exact 7-raw-step blank-start entry to `closedStackSystem.evalStackCfg .DR_n_n [(0,0),(0,0)] [(1,0)]`. Thus the mirrored #490 target is not an assumed path: it is an actual upstream source module with an explicit transition-table and stack-system mirror from #85.
+
+In this #490 module, `execute n` is a local tactic macro that iterates n raw `ReachesPlus.head` steps and discharges each with the original `Tape.move`/`Tape.write` semantics. Therefore `execute 128`, `execute 591`, and `execute 254` mean exactly 128, 591, and 254 primitive TM transitions, respectively—not outer stack successors. The outer counts 38, 179, and 76 are projected-stack successors; their raw counts are proved separately.
+
+The natural append target for the H-padding, H-base, and DR/G/B raw lemmas is this #490 wrapper, reusing its actual `closedStackSystem`, `target`, and `execute` definitions. The existing manual workflow `.github/workflows/agent32-hphase-growth-macro.yml` checks out the same upstream commit and builds this exact module. Its current Lean pin is v4.35.0-rc4; the uploaded local Lean 4.36.0-rc2 preflight has not succeeded in this runtime, so no CI dispatch is claimed.
+
 ## Reproducibility and proof obligations
 
 - [`fast_root_stack_sim.js`](./fast_root_stack_sim.js) is the persistent-list root replay.
