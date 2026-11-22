@@ -248,7 +248,7 @@ theorem root_countdown_zero_reset_tail (n : ℕ) :
                   (ReachesPlus.trans h8
                     (ReachesPlus.trans h9
                       (ReachesPlus.trans h10
-                        (ReachesPlus.trans h11 h12))))))))))))
+                        (ReachesPlus.trans h11 h12)))))))))))
 
 
 
@@ -300,7 +300,7 @@ theorem root_countdown_step (n c : ℕ) (hc : 3 ≤ c) :
       (ReachesPlus.trans h2
         (ReachesPlus.trans h3
           (ReachesPlus.trans h4
-            (ReachesPlus.trans h5 h6))))
+            (ReachesPlus.trans h5 h6)))))
 
 
 theorem root_seed_to_D0_3 :
@@ -360,7 +360,7 @@ theorem root_seed_to_D0_3 :
                                     (ReachesPlus.trans h17
                                       (ReachesPlus.trans h18
                                         (ReachesPlus.trans h19
-                                          (ReachesPlus.trans h20 h21))))))))))))))))))
+                                          (ReachesPlus.trans h20 h21))))))))))))))))))))
 
 
 theorem root_countdown_iter_succ (m n c : ℕ)
@@ -446,4 +446,4 @@ theorem root_countdown_general_tail (x : ℕ) (hx : 6 ≤ x) :
                   (ReachesPlus.trans h8
                     (ReachesPlus.trans h9
                       (ReachesPlus.trans h10
-                        (ReachesPlus.trans h11 h12))))))))))
+                        (ReachesPlus.trans h11 h12)))))))))))
