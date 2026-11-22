@@ -1,4 +1,5 @@
 import MachineCFrontier
+import FrontierMass
 
 namespace BB6Coverage
 
@@ -67,7 +68,10 @@ theorem machineCDepthFiveAudit_exhaustive (m : Machine)
 theorem machineCDepthFiveAudit_mass_conserved :
     machineCDepthFiveAudit.report.1 +
       machineCDepthFiveAudit.report.2 = 25^8 := by
-  decide
+  calc
+    _ = cylinderMass (machineCPrefix 4) :=
+      FrontierAudit.report_conserves machineCDepthFiveAudit
+    _ = 25^8 := by decide
 
 /-- A nontrivial set of children receives all-time certificates. -/
 theorem machineCDepthFiveAudit_has_certified_mass :
@@ -75,13 +79,27 @@ theorem machineCDepthFiveAudit_has_certified_mass :
   decide
 
 /-- The original Machine C child remains in the open part of this split. -/
+noncomputable local instance machineCDepthFiveRootOpenDecidable :
+    Decidable (machineCDepthFiveAudit.open machineC) :=
+  FrontierAudit.openDecidable machineCDepthFiveAudit machineC
+
 theorem machineCDepthFiveAudit_root_open :
     machineCDepthFiveAudit.open machineC := by
   decide
 
-/-- Diagnostic: counts are in units of the 25^7 mass of one child. -/
-#eval (machineCDepthFiveAudit.report.1 / 25^7,
-  machineCDepthFiveAudit.report.2 / 25^7)
+/-- Diagnostic child counts; each child has mass 25^7. This intentionally
+    evaluates the ordinary 25-element list rather than the dependent audit
+    recursor, which is kernel-reducible but not compiler-codegen supported. -/
+def machineCDepthFiveDiagnosticCounts : Nat × Nat :=
+  choices.foldl
+    (fun acc t =>
+      if lassoDecisionOracle (machineCDepthFiveChild t) 6 18 12 2 4 then
+        (acc.1 + 1, acc.2)
+      else
+        (acc.1, acc.2 + 1))
+    (0, 0)
+
+#eval machineCDepthFiveDiagnosticCounts
 
 #print axioms machineCDepthFiveSlot_is_next_physical
 #print axioms machineCDepthFiveChild_is_actual
