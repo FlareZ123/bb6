@@ -402,7 +402,7 @@ checks++;
 // The 76-step root growth macro is tail-parametric and never calls a token
 // normalizer: it inserts one copy of B immediately after the leading 1.
 for (const T of [
-  [], [0], [1], [3, 0, 0], [7, 5, 3, 1],
+  [], [0], [1], [2, 4, 6, 8], [3, 0, 0], [7, 5, 3, 1],
   [12, 0, 0, 0, 12, 0, 0, 0, 2]
 ]) {
   tokenCalls = 0;
