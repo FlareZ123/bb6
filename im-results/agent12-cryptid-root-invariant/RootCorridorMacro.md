@@ -1,6 +1,6 @@
 # Exact macro dynamics of the DR corridor family
 
-**Status: WITHDRAWN as source dynamics.** The outer DR rule in fast_root_stack_sim.js omitted the pinned source's token branch for right head 1. The shared transfer corridor and all Corr-family formulas below use that incorrect transition. Preserve this file only as a record of the pre-correction abstract experiment; do not cite it as a source-stack identity. See [DRHeadOneCycle.md](../agent48-cryptid-root-cycle/DRHeadOneCycle.md).
+**Status: REQUIRES RE-EVALUATION; the previous blanket withdrawal was based on a wrong branch reading.** The pinned `mode_DR_n_n_closed` tokenizes only right-head 0; positive right heads take the ordinary branch. The restored source-transcribed simulator again reaches `Corr(3,3)` at macro 24. This does not automatically validate every formula below: treat the family identities as candidates until the full regression is rerun. See [ModeDRBranchAudit.md](./ModeDRBranchAudit.md).
 
 ## Historical definitions (pre-correction)
 
@@ -236,4 +236,4 @@ The exact left-stack tape identity also has a potentially useful relation to the
 
 So the left tape of `Corr(r,c)` is the reversed canonical DRegular section `(a,q,b)=(2,r,0)` with one additional boundary blank at the head. This is an exact string identity from the two encodings. It is only a **candidate bridge**: the exact `ListBlank` head-boundary equivalence, control-state correspondence, and the right-suffix image `encRight([1,c])=0 1^(c+1) 0 11` have not been matched to the DRegular state. Do not treat `Corr(r,c)` as a DRegular state without proving those conditions.
 
-The H(7) tail-parametric growth loop is retained in [HPhaseGrowth.md](HPhaseGrowth.md) as a standalone projected-system identity. The corrected root has a different candidate 76-step growth family, described in [RootCountdownGrowth.md](RootCountdownGrowth.md); neither projected identity is yet Lean-proved or lifted to an original-TM nonhalting theorem.
+The H(7) tail-parametric growth loop is discussed in [HPhaseGrowth.md](HPhaseGrowth.md). The currently root-connected candidate 76-step growth family is described in [RootCountdownGrowth.md](RootCountdownGrowth.md). Neither identity is yet Lean-proved or lifted to an original-TM nonhalting theorem.
