@@ -1,113 +1,67 @@
-# Cryptid D: source-local remainder-two closure
+# Cryptid D: source-local root trajectory
 
-**Status:** source-lemma proof construction, additional remainder-one branch derivations, and uncompiled Lean append drafts. No theorem in this dossier has passed local Lean compilation.
+**Status:** intermediate source-branch derivations and uncompiled Lean append drafts. No theorem in this dossier has passed Lean compilation.
 
-The shared root-countdown dossier defines
+The shared #85 root-countdown dossier defines
 \[
 D_n(c)=CR([0],0^{4n+5}++[c]).
 \]
-Agent 12's source-branch recurrences already establish the countdown
-\(D_n(c)\to D_{n+1}(c-3)\) for \(c\ge3\), and the zero reset
-\(D_n(0)\to D_0(8n+13)\). See
-[RootCountdownReset.md](../agent12-cryptid-root-invariant/RootCountdownReset.md).
-
-This dossier supplies the missing source-lemma construction for
+Its existing source-branch recurrences include the countdown
 \[
-D_n(2)\longrightarrow D_0(8n+19).
+D_n(c)\to D_{n+1}(c-3),\quad c\ge3,
 \]
-The source-local Lean fragment is
-[RootRemainderTwoToken.append.lean](RootRemainderTwoToken.append.lean).
-It must be appended to the pinned #85 source module after
-[RootCountdownSweep.append.lean](../agent12-cryptid-root-invariant/RootCountdownSweep.append.lean).
-The fragment is intentionally marked uncompiled. Agent 24 also found an off-by-one mismatch in the shared fixed-prefix proof; this appendix now supplies a local corrected prefix helper and does not call the flawed upstream theorem. The local shell/Python boundary remains unavailable, and repository guidance forbids substituting CI for local preflight.
-
-## Exact token-normalizer route
-
-Put \(m=4n+7\). The DL right-head-one branch takes four primitive TM steps
-to
+and the zero reset
 \[
-\operatorname{tok\_DR}([2,0],[],0^m++[1]).
+D_n(0)\to D_0(8n+13).
 \]
-The exact private source lemmas then give
+See [RootCountdownReset.md](../agent12-cryptid-root-invariant/RootCountdownReset.md).
+
+## Remainder two
+
+The missing remainder-two macro is
 \[
-\begin{aligned}
-\operatorname{tok\_DR}([2,0],R_3,0^m1)
-&\xrightarrow{\operatorname{tok\_DR\_zero}^{m}}
-  \operatorname{tok\_DR}([2,1^m,0],R_3,[1])\\
-&\xrightarrow{\operatorname{tok\_DR\_1\_nil\_28}}
-  \operatorname{tok\_EL}([1^{m+1},0],R_3,[0,0,0,1])\\
-&\xrightarrow{\operatorname{tok\_EL\_1}^{m+1}}
-  \operatorname{tok\_EL}([0],R_3,0^{m+4}1)\\
-&\xrightarrow{\operatorname{tok\_EL\_exit\_zero}}
-  CR(0^{m+4}1,\operatorname{bumpPairHead}(R_3)).
-\end{aligned}
+D_n(2)\longrightarrow D_0(8n+19),
 \]
-For this reset, \(R_3=[]\), and the pinned definition gives
-\(\operatorname{bumpPairHead}([])=[0]\). Thus the token endpoint is
+with `8n+44` outer successors and `40n+186` raw steps. The source-local Lean construction is in [RootRemainderTwoToken.append.lean](RootRemainderTwoToken.append.lean), to be appended after [RootCountdownSweep.append.lean](../agent12-cryptid-root-invariant/RootCountdownSweep.append.lean) in the pinned #85 module.
+
+The token closure is composed from the pinned `tok_DR_zero`, `tok_DR_1_nil_28`, `tok_EL_1`, and `tok_EL_exit_zero` lemmas. The endpoint is `CR(0^(4n+11)1,[0])`, because `bumpPairHead([])=[0]`. The appendix contains inductive sweep helpers and the full `root_countdown_two_reset` composition.
+
+## Remainder one and suffix transitions
+
+[RootRemainderOneTail.md](RootRemainderOneTail.md) derives two further maps:
+
 \[
-CR(0^{4n+11}1,[0]),
+D_n(1)\to D_0(8n+7;[5]),
 \]
-not a right stack headed by 1.
-
-The token subroutine costs
+with `8n+41` outer / `16n+111` raw steps, and
 \[
-4m+28+2(m+1)+1=6m+31
-\]
-primitive steps. Including the four-step DL entry gives
-\(6m+35=24n+77\) primitive steps for the one outer stack successor.
-
-## Full remainder-two phase decomposition
-
-| Phase | Outer successors | Primitive steps | Endpoint |
-|---|---:|---:|---|
-| Fixed prefix | 8 | 21 | \(EL([0,1],0^{4n+6}2)\) |
-| EL-zero sweep | \(4n+6\) | \(8n+12\) | \(EL(0^{4n+7}1,[2])\) |
-| EL-positive | 1 | 1 | \(DL(0^{4n+7}1,[1])\) |
-| DL/token closure | 1 | \(24n+77\) | \(CR(0^{4n+11}1,[0])\) |
-| CR-zero sweep | \(4n+11\) | \(8n+22\) | \(CR([1],[8n+22])\) |
-| CR-one/empty-tail | 1 | 6 | \(EL([0],[0,8n+25])\) |
-| Fixed general tail | 16 | 47 | \(D_0(8n+19)\) |
-| **Total** | **\(8n+44\)** | **\(40n+186\)** | |
-
-The token phase is composed from the pinned source's tok_DR_zero,
-tok_DR_1_nil_28, tok_EL_1, and tok_EL_exit_zero lemmas. The Lean
-append also composes the existing root_countdown_prefix,
-root_countdown_cr_zero_sweep_singleton,
-root_countdown_cr_one_empty_step, and
-root_countdown_general_tail helpers into root_countdown_two_reset.
-
-## Root-connected consequence, conditional on compilation
-
-The source-branch chain in Agent 12's dossier reaches \(D_{65}(2)\) after
-21,535 outer successors from the #85 seed and raw TM time 64,018 from
-blank. If root_countdown_two_reset compiles in the pinned source module,
-then the next checkpoint is
-\[
-D_{65}(2)\to D_0(539)
-\]
-after 564 more outer successors and 2,786 more primitive steps: cumulative
-22,099 outer successors from the #85 seed and raw time 66,804 from blank.
-
-The existing countdown theorem would then give the conditional continuation
-\[
-D_0(539)\to D_{179}(2)\to D_0(1451)
-\to D_{483}(2)\to D_0(3883)\to D_{1294}(1).
-\]
-The remainder-one state \(D_{1294}(1)\) is not resolved here. In particular,
-this document does not establish an infinite orbit, nonhalting, a BB(6)
-value, or a universal upper bound.
-
-All material remains in im-results/; nothing here qualifies for results/.
-
-
-## Remainder-one continuation
-
-See [RootRemainderOneTail.md](RootRemainderOneTail.md) for the two source-branch maps
-\[
-D_n(1)\to D_0(8n+7;[5]),\qquad
 D_n(1;[5])\to D_0(8n+11;[0,0,2]),
 \]
-and the conditional arithmetic continuation to (D_0(26,524,315;[0,0,2])).
-The latter's next unresolved token input is
-`tok_DR [2,0] [] (0^3 ++ [1] ++ 0^(4n+6) ++ [1])`
-at (n=8,841,438). Treat the cumulative (1.5349968\times10^{14}) raw-step figure as unverified until the generalized suffix lemmas are formalized and checked.
+with `8n+44` outer / `16n+119` raw steps.
+
+The same note gives the conditional arithmetic continuation from (D_{1294}(1)) to
+\[
+D_0(26,524,315;[0,0,2]).
+\]
+This uses suffix-preserving countdown, the offset-six transitions, and a remainder-two token closure with suffix `[5]`; those generalized lemmas are not yet formalized.
+
+## Conditional root trajectory
+
+Conditional on the full source-branch composition and its future formalization, the trajectory reaches
+\[
+D_0(26,524,315;[0,0,2])
+\]
+after `51,166,575,478,679` outer stack successors from the #85 seed and `153,499,683,790,849` raw TM steps from blank. Do not treat this as a certified lower bound until the generalized suffix lemmas and every reset composition are proved in Lean.
+
+The next countdown reaches `D_(8,841,438)(1;[0,0,2])`. Its DL-right-one branch enters
+\[
+\operatorname{tok\_DR}([2,0],[],0^3 1 0^{4n+6}1),
+\qquad n=8,841,438,
+\]
+where the source token rules admit a subtract-three cycle. The zero-remainder `tok_EL_0_cons` case is now the main unresolved token-normalizer boundary.
+
+## Proof and scope caveats
+
+Agent 24 found an off-by-one mismatch in the shared `root_countdown_prefix` proof: after h4, h5 must use `root_countdown_dr_zero_step [] ((0,0)::tail)`, and h6 must start from `(1,0)::(0,0)::(0,0)::tail`. The D2 appendix now supplies a local corrected suffix-preserving prefix helper and no longer calls the flawed upstream theorem. The shared dossier should be patched separately.
+
+All material remains in `im-results/`; nothing here qualifies for `results/`. No nonhalting result, halting-time theorem, exact BB(6) value, or universal upper bound is established.
