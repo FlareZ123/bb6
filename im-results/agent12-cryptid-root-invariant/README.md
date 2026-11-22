@@ -197,3 +197,6 @@ The regression harness also checks the 24-step prefix from the accelerated root 
 
 
 The recorded 106-check run predates the notation-only `E` -> `Corr` rename and seed-time label clarification; the transition logic was unchanged, but no post-edit run is claimed.
+
+
+The macro note also records the exact pair-stack tape image of `Corr(r,c)`: `(10)^r 110 D> 0 1^(c+1) 0 11`, derived from the swapped `evalStackCfg` encoding. This is not yet an A(n,r) identification.
