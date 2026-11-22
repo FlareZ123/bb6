@@ -94,3 +94,40 @@ evidence of inductiveness. If the proof succeeds, it would give a route to a
 formal nonhalting result for this blank-root machine; if it fails, the first
 symbolic counterexample should refine the invariant rather than be patched
 with more finite simulation.
+
+
+## Counterexample-guided audit of the candidate
+
+A small exhaustive one-step search over short lists found that the predicate
+above is **not inductive over all configurations satisfying it**. These
+counterexamples are not known to be reachable from the blank root; they show
+that the observed-trace predicate is too weak to serve directly as a global
+invariant.
+
+Examples (input state \(\to\) successor):
+
+- \(\mathrm{CR}(L=[1,1],R=[2])\to
+  \mathrm{EL}(L=[0,0,0,0],R=[1,0,2])\).
+  The successor violates the EL condition for a leading nonzero pattern
+  \(1,2\).
+- \(\mathrm{CR}(L=[0,1,1],R=[])\to
+  \mathrm{CR}(L=[1,1],R=[2])\).
+  The successor violates the CR condition on a left prefix \(1,1\).
+- \(\mathrm{CR}(L=[1,0,1],R=[1])\to
+  \mathrm{CR}(L=[1,1],R=[0,0,2])\).
+- \(\mathrm{EL}(L=[0],R=[1,1,2])\to
+  \mathrm{DL}(L=[0],R=[0,1,2])\).
+- \(\mathrm{EL}(L=[],R=[0,0,1,2])\to
+  \mathrm{EL}(L=[0],R=[0,1,2])\).
+
+The counterexamples expose a recurring dependency on the nonzero subsequence
+of \(R\): prefixes of the form \(1^k2\), together with the number of leading
+zeros, determine whether later EL/DL transitions produce a token-dangerous
+configuration. A stronger invariant will likely need a finite-state relation
+between the regular shape of \(L\) and an automaton state summarizing the
+nonzero prefix of \(R\), rather than the current small collection of
+independent implications.
+
+The million-step root trace still satisfies the predicate actually checked by
+the script. That is a statement about this finite trace only. Do not promote
+the current predicate to a proof or use it to claim nonhalting.
