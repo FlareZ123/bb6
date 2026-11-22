@@ -4,7 +4,7 @@
 
 ## Historical experiment (not source-valid)
 
-## 1. The root reaches a one-counter corridor
+## 1. Historical pre-head-one root prefix (withdrawn)
 
 The pre-head-one simulator reported EL(L=[0],R=[0,546]) at macro 22,083 and D_0(540) at macro 22,099. Both states and indices are withdrawn as source claims; the corrected root instead follows the recurrence in [DRHeadOneCycle.md](../agent48-cryptid-root-cycle/DRHeadOneCycle.md).
 
@@ -33,7 +33,7 @@ For the root's first counter value, iterating the formula 180 times gives:
 The elapsed time from `D_0(540)` to `D_180(0)` is
 `sum_(n=0)^179 (8n+24) = 133,200`.
 
-## 2. The zero counter resets upward
+## 2. Historical reset (withdrawn)
 
 The old simulator reported a 1,481-step run from
 
@@ -61,9 +61,9 @@ after
 
 additional successors, at macro index 1,103,484.
 
-## 3. A root-reachable tail-parametric growth macro
+## 3. Historical DR/G/B macro (falsified)
 
-A further 50,000 source-successor steps from `D_484(1)` reach macro index
+The old simulator reported that a further 50,000 successors from `D_484(1)` reached macro index
 1,153,484 in the state
 
 ```text
@@ -107,8 +107,7 @@ DR^3 CR^4 EL^3 DL EL^2 DL DR^3 CR^13 EL^2 DL
 DR^3 EL DL EL^5 DL EL^2 DL EL^2 DL
 ```
 
-The full test is tail-parametric, includes the opaque sentinel, and asserts
-zero token-normalizer calls.
+The old test was tail-parametric only for the defective successor and its zero-token-call assertion omitted the r1=1 branch. It is not source evidence.
 
 ## 4. What remains to prove
 
