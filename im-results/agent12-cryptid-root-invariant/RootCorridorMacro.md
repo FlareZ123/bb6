@@ -163,3 +163,6 @@ The regression harness now also checks `G(r) -> H(r)` for `r=1,...,8`. It passed
 
 
 The regression harness now also checks the authentic accelerated blank-root seed `DR(L=[0,0],R=[1]) -> E(3,3)` in 24 outer successors. Latest run `44979251653` on commit `29c9113ff346ea2039ec00f5ee42d6174dc902ee` passed with `{ ok: true, checks: 106 }`. This closes the executable prefix from the stack seed through `H(7)` at macro 21,926; it remains a finite regression, not a Lean proof or an all-time orbit result.
+
+
+Process note: the temporary one-off Node workflow used for the 106-check regression was removed after the passing run, in line with the repository-wide direction to avoid proliferating standalone workflows. The self-contained JS harness remains available for local reproduction with Node 20.
