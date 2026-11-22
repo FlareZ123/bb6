@@ -1,6 +1,6 @@
 # Exact macro dynamics of the DR corridor family
 
-**Status: REQUIRES RE-EVALUATION; the previous blanket withdrawal was based on a wrong branch reading.** The pinned `mode_DR_n_n_closed` tokenizes only right-head 0; positive right heads take the ordinary branch. The restored source-transcribed simulator again reaches `Corr(3,3)` at macro 24. This does not automatically validate every formula below: treat the family identities as candidates until the full regression is rerun. See [ModeDRBranchAudit.md](./ModeDRBranchAudit.md).
+**Status: source-transcribed candidate, not a formal proof.** The previous blanket withdrawal was based on a wrong branch reading. The pinned `mode_DR_n_n_closed` tokenizes only right-head 0; positive right heads take the ordinary branch. The restored source-transcribed simulator again reaches `Corr(3,3)` at macro 24. This does not automatically validate every formula below: treat the family identities as candidates until the full regression is rerun. See [ModeDRBranchAudit.md](./ModeDRBranchAudit.md).
 
 ## Definitions
 
@@ -34,7 +34,7 @@ The following four exact identities hold:
 
    `S^(3r+20)(Corr(r,1)) = F(r)`.
 
-The c=2 formula is now stated only for `r ≥ 8`; the previous exponent-independent reset to `Corr(3,4)` is withdrawn. The proof sketches reduce the remaining claims to explicit outer transition clauses and `List.replicate`-style zero-pop loops. The corrected regression harness has been edited, but a post-correction Node/CI run is not yet available.
+The c=2 formula is now stated only for `r ≥ 8`; the previous exponent-independent reset to `Corr(3,4)` is withdrawn. The proof sketches reduce the remaining claims to explicit outer transition clauses and `List.replicate`-style zero-pop loops. The corrected regression harness now covers the c=1 root entry and H-family padding/base macros, but the local shell has not been available to run the checked-in Node script or Lean.
 
 ## Proof sketches
 
@@ -109,10 +109,26 @@ The million-step replay contains the following exact corridor-family chain (macr
 
 The long middle runs are exactly repeated applications of case 1. For example, `Corr(3,69)` iterates case 1 until `Corr(95,0)`, then case 2 resets to `Corr(3,197)`. Likewise `Corr(3,197)` iterates case 1 until `Corr(263,2)`. The corrected c=2 token closure then produces a long CR zero sweep, not `Corr(3,4)`; the root reaches `EL([0],[0,546])` at macro 22,083.
 
+## Root-connected c=1 and H-family growth entry
+
+The c=1 exit is not merely standalone: the second countdown reaches `D_484(1)`, which is the shared-corridor output of `Corr(1939,1)`. Since `Corr(r,1)` reaches `F(r)` in `3r+20` successors and the shared transfer to `D_484(1)` takes `r+1=1940`, the remaining `D_484(1) -> F(1939)` segment takes `2r+19=3897` successors. The subsequent `F -> G -> H` segments take 5,830 and 4 successors. The source-transcribed raw costs are 13,641, 17,487, and 13 respectively.
+
+The root then uses the H-family padding/base decomposition:
+
+```text
+Q = [12,0,0,0]
+S^38(H(r+4;R)) = H(r;Q++Q++R)                    -- 128 raw steps
+S^179(H(7;Q^m++[2,0,0,0,0]++T))
+  = DR(G,[1]++B++[16,0,0,0]++Q^(m+3)++[2,0,0,0,0]++T)
+                                                   -- 591 raw steps
+```
+
+With `1939=4·484+3`, 483 padding applications followed by the base macro reach the first DR/G/B seed at macro 1,131,748. The full derivation and raw-step totals are in [RootCountdownGrowth.md](RootCountdownGrowth.md). The separate H(7)-to-CR H-phase entry is not used.
+
 ## What remains
 
 - Prove the corrected countdown/reset chain and the 76-step root-reachable growth macro documented in [RootCountdownGrowth.md](RootCountdownGrowth.md); compress the 50,000-step entry and formalize the tail-parametric block insertion.
-- The `c=1` exit and the subsequent `F/G/H` identities remain valid as standalone projected macros, but the corrected blank-root trace no longer reaches them through the old c=2 reset.
+- The corrected blank-root trace reaches the `c=1` corridor at `r=1939`: `D_484(1) -> F(1939) -> G(1939) -> H(1939)`. This is distinct from the old `r=7` chain, which remains off the corrected root prefix. From `H(1939)`, the root-connected route uses 483 H-padding macros and one H-base macro to reach DR/G/B; it does not use the separate H-phase CR seed. See [RootCountdownGrowth.md](RootCountdownGrowth.md).
 - Prove the exact `ListBlank` head-boundary/control-state correspondence for the candidate DRegular relation; the right-side image `0 1^(c+1) 0 11` is still unmatched.
 - Formalize the corrected token identities and the corridor macros against the actual source stack successor in Lean; no checked Lean theorem is claimed.
 - Do not infer nonhalting from a finite macro prefix or halting from the external cylinder. Root-to-cylinder reachability remains open.
@@ -149,7 +165,7 @@ Then
 
 Proof: the initial `1,0,0,0` prefix of `F(r)` takes 5 steps and reaches `EL(L=0^4 1 0^3, R=(10)^(r+2)3)`. Each remaining `(1,0)` pair takes 3 steps: EL decrements the leading 1, DL consumes the resulting zero and maps `L` to `0 :: bump(L)`, then EL consumes the original second zero. The net left-list map is `U(L)=0^2 ++ bump(L)`. Inductively, `U^k(0^4 1 0^3)=0^2(10)^k0^2 1 0^3`. After `r+2` pairs, the remaining right list is `[3]`; two final EL/DL steps produce `G(r)`. The total is `5+3(r+2)+2=3r+13`.
 
-These are exact standalone identities. The corrected blank-root trace does not reach `F(7)`, `G(7)`, or `H(7)` via the withdrawn c=2 reset, so they are not root-reachability claims.
+These are exact identities. The corrected blank-root trace reaches `F(1939)`, `G(1939)`, and `H(1939)` through the later c=1 countdown, not `F(7)`, `G(7)`, or `H(7)` through the withdrawn c=2 reset.
 
 The harness was extended and passed Actions run `44979005652` on commit `ba92d315165e341787be8fbc36bb8b69f1625d50`, reporting `{ ok: true, checks: 97 }`.
 
@@ -162,7 +178,7 @@ Define
 
 Then `S^4(G(r)) = H(r)`. The first two DR steps remove the two leading zeros of `G(r)` while extending the right prefix; the next DR step sees heads `1,1` and produces `CR(L=00(10)^(r+1)001000, R=0^5)`; one CR zero-pop step gives `H(r)`.
 
-The former root-prefix claim to `G(7) and `H(7)` is withdrawn. These remain standalone identities only; the corrected root state at macro 21,926 is in the CR zero-sweep family, not `H(7)`.
+The former root-prefix claim to `G(7)` and `H(7)` is withdrawn. The later root prefix does reach `G(1939)` and `H(1939)` at macros 1,113,211 and 1,113,215 respectively; the corrected state at macro 21,926 remains in the CR zero-sweep family, not `H(7)`.
 
 The earlier regression run for `G(r) -> H(r)` predates the source-normalizer correction. The local identity is retained as a standalone projected transition, but it is not a current root-prefix claim.
 
