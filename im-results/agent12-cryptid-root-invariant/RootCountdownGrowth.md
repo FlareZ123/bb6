@@ -18,11 +18,19 @@ The candidate countdown identity is
 S^(8n+24)(D_n(c)) = D_(n+1)(c-3),   c >= 3.
 ```
 
+This identity follows algebraically from the shared-corridor family. Set `r=4n+3`. Then `D_n(c)` is the shared-corridor output `S^(r+1)(Corr(r,c))). The c≥3 corridor macro takes `Corr(r,c)` to `Corr(r+4,c-3)` in `2r+14` successors; the latter reaches `D_(n+1)(c-3)` in `r+5` more successors. Removing the initial `r+1` shared-corridor segment leaves
+
+```text
+(2r+14) - (r+1) + (r+5) = 2r+18 = 8n+24.
+```
+
 The source-transcribed regression checks n=0,…,6 and c in {3,4,5,10,540}. Its raw cost on these paths is
 
 ```text
 24n + 69 raw TM steps.
 ```
+
+The raw-cost formula is still an observed/source-counted formula, not a quantified Lean theorem.
 
 The root replay gives:
 
@@ -35,6 +43,12 @@ The root replay gives:
 The first countdown has 180 applications, 133,200 outer successors, and 399,060 raw steps.
 
 ## Reset and second countdown
+
+The reset follows from the c=0 corridor macro. Since `D_180(0)=S^724(Corr(723,0))`, and `Corr(723,0)` reaches `Corr(3,1453)` in `3·723+32=2201` successors, followed by the 4-successor shared corridor to `D_0(1453)`, the remaining path from `D_180(0)` is
+
+```text
+2201 - 724 + 4 = 1481 outer successors.
+```
 
 The source-transcribed reset is
 
