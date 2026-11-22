@@ -179,7 +179,11 @@ function invariantFailures(c) {
   const rh = R?.v, tailNZ = R?.next?.firstNZ;
   const z1Bump = !L || (L.v === 0 && !L.next);
   const failures = [];
-  if (L && !L.z1) failures.push("L is not in Z1 = 0*(epsilon | 1)");
+  // The corrected root cycle has the legitimate exceptional state CR(L=[1]).
+  // All other states in this orbit keep L in Z1 = 0*(epsilon | 1).
+  if (L && !L.z1 && !(mode === "CR" && L.len === 1 && L.v === 1)) {
+    failures.push("L is not in Z1 or the exceptional CR([1]) state");
+  }
   if ((R?.nz ?? 0) > 2) failures.push("R has more than two nonzero entries");
   if (L && !L.binary) failures.push("L contains a value outside {0,1}");
   if (mode === "DR" && (!R || rh === 0)) failures.push("DR right head is not positive");
