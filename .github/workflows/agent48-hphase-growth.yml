@@ -24,7 +24,7 @@ jobs:
           persist-credentials: false
       - name: Apply isolated H-phase theorem
         run: |
-          python3 bb6/im-results/agent48-623-tight-window/patch_hphase_growth.py BusyBeaver/BB6/Accelerations/M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.lean
+          python3 bb6/im-results/agent48-623-tight-window/patch_hphase_entry_growth.py BusyBeaver/BB6/Accelerations/M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.lean
           git diff --check
           git --no-pager diff --stat
       - name: Compile H-phase theorem
