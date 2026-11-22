@@ -315,3 +315,94 @@ Next useful action: get a local Lean preflight of `A2Reparameterization.lean` an
 - Shared the reusable `A2Reparameterization.lean` helper with Agent 24. It can simplify their private BinDec/carry-prefix/config extensionality block after their residual `hres` is rewritten using `a2Tail_eq 76`.
 - Critical integration caveat: `tm63_root_second_q4Tail_eq_q4TailS0Frame` identifies the root frame with an unshifted `q4TailS0Frame rootMarker1Z w q`, but `tm63_blank_reaches_second_q4_tail` returns `shiftConfig rootMarker1Head rootSecondQ4TailFrame`. Agent 24's `a2_q4Frame_blank_prefix_halts` currently assumes the unshifted `a2Q4Frame z`. A translated conditional terminal theorem and translation of `TerminalFinish.SectionBits` (or an equivalent rebasing) are needed before direct composition. Sent this warning to Agent 24.
 - `FirstQ4P1Arithmetic.lean` defines `firstQ4P1Width L A = A+L+1` and `firstQ4P1Value L A = 2^(A-1)*(2^(L+2)-1)-1`. At L=76,A=2 these reduce to 79 and 2^79-3, matching the A=2 q4Tail specialization; the authentic-root parameter equality still needs Lean proof in the root closure.
+
+
+## 2026-11-22 continuation — corrected #490 blank-root stack and million-step experiment
+
+Claimed Agent 12 at 2026-11-22T00:24:34.069Z, run ID
+agent12-gpt6-20261122T002434Z-m1-source-acceptance. Do not refresh the
+lease. Its 70-minute release threshold is 2026-11-22T01:34:34.069Z; after
+every checkpoint compare this original timestamp with an actual runtime
+clock. At the latest checkpoint (01:29:00.345Z) the age was 64m26s, so this
+invocation must continue until a checkpoint measures at least 70 minutes.
+
+### Root argument-order correction
+
+- Read prompt.md, repository README, current Agent 12 memory, broadcasts,
+  and relevant Agent 32 root-stack work.
+- Found a double left/right swap in the evalStackCfg transport: the wrapper
+  and the base evalStackCfg each swap the two list arguments. The
+  #490-oriented blank-root entry is therefore the base #85-oriented stack
+  state DR(L=[0,0], R=[1]), not the reversed state.
+- Replayed the #490 raw transition table and matched the first outer-stack
+  prefix:
+  - raw t=7: DR([0,0],[1])
+  - t=11: DR([0],[1,0])
+  - t=15: DR([], [1,0,0])
+  - t=16: EL([0],[1,0,0])
+  - t=17: DL([0],[0,0,0])
+  - t=23: EL([0,1],[0,0])
+  - t=25: EL([0,0,1],[0])
+  - t=27: EL([0,0,0,1],[])
+- The local D0 theorem's 36-step F0Pure 9 (-6) configuration is an
+  interior raw configuration of the t=34 to t=40 macro, not the first outer
+  stack successor. The exact root mapping and first-prefix correction are
+  documented in im-results/agent32-cryptid-padding/DeepMindStackReduction.md
+  and stack_system_sim.py; README/index updated. Sent the correction to
+  Agent 32.
+
+### Accelerated stack experiment
+
+- Added im-results/agent12-cryptid-root-invariant/fast_root_stack_sim.js,
+  a persistent-linked-list transcription of the source-derived outer
+  successor and token normalizers. The accompanying README records the
+  experiment and candidate invariant.
+- One million macro successors from DR([0,0],[1]) completed without a
+  TokenHalt, direct CR left-head>=2 halt, or closeTokCR call. Exactly one
+  closeTokDR occurred at macro 21,810 on input 0^2671 1, returning
+  CR(L=[0,0,0,1],R=[1]). Counters: 268 bounceDR calls, zero bounceCR calls;
+  max left length 268, max right length 154,446, max entry 203, max left
+  ones 10. Final macro-1,000,000 state is CR with
+  L=[0,0,1,0,0,0,0,1], R length 154,441 and prefix
+  [0,0,0,0,16,0,0,0,2,0,0,0,2,0,0].
+- Checked a trace-derived regular-language predicate before every step of
+  this run. It passed the finite trace, but it is not a proof. A bounded
+  exhaustive one-step search found arbitrary-state counterexamples to its
+  inductiveness, including:
+  CR([1,1],[2]) -> EL([0,0,0,0],[1,0,2]),
+  CR([0,1,1],[]) -> CR([1,1],[2]),
+  EL([0],[1,1,2]) -> DL([0],[0,1,2]),
+  and EL([],[0,0,1,2]) -> EL([0],[0,1,2]).
+  These are not known to be root-reachable. They show the predicate needs
+  stronger constraints coupling L with a finite automaton over the nonzero
+  prefix of R (notably patterns 1^k 2 and leading-zero count).
+- Do not claim nonhalting from the million-step run. The accelerated script
+  is an experimental interpreter; the exact invariant and an all-time
+  proof remain open. The source-derived mode_DR_n_n_closed case split
+  confirms that the authentic root first takes the L.head=0,R.head=1
+  branch to DR([0],[1,0]) after four raw steps. The tok_CR branch requires
+  R.head=0 and L.head>0, so Agent 32 was asked to clarify the apparently
+  conflicting root-to-token statement in ASectionStackEncoding.md; no
+  conclusion yet.
+- Sent Agent 32 the million-step result and invariant candidate, then the
+  counterexamples; sent Agent 3 a request to check/add the formal adapter
+  equality between the transported external initial config and local
+  blank 0.
+- GitHub commits created the simulator, experiment README, candidate
+  counterexample addendum, and communications. The JS script is source code
+  for reproducibility; it has not been separately executed as a checked-in
+  Node file in this invocation. No local Lean compile was run.
+
+### Next actions
+
+1. Inspect Agent 32's response to the root-to-token branch audit and reconcile
+   it against the exact upstream mode_DR_n_n_closed cases.
+2. Refine the root invariant using an automaton for the nonzero prefix of R
+   and the leading-zero count; use counterexample-guided one-step checks, but
+   do not promote a finite predicate to a theorem.
+3. If a compact inductive invariant emerges, formalize it in Lean against the
+   actual source definitions and prove the stack closure implies
+   nonhalting/halting as appropriate. Preserve the distinction between
+   source-derived facts, finite computation, and conjecture.
+4. Continue pursuing the BB(6) objective; this root analysis alone does not
+   determine BB(6).
