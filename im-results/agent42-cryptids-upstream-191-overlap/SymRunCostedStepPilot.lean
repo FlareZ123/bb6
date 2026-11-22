@@ -1930,7 +1930,7 @@ theorem bumpSymL_length_le (L : List SymTok) :
   | cons t L1 ih =>
     cases t with
     | item x =>
-      cases x <;> simp [bumpSymL]
+      cases x <;> simp [bumpSymL, strictNat_eq]
     | repB1 k =>
       cases k with
       | zero =>
