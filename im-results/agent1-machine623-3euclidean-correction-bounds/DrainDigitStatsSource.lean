@@ -268,7 +268,8 @@ theorem drainDigitSummary_value_lt_pow (b : Nat) :
           have htail : t.value + 1 ≤ 3 ^ t.length := by omega
           have hsmall : 1 + s.eps + 3 * t.value < 3 ^ (t.length + 1) := by
             have hp : 3 ^ (t.length + 1) = 3 * 3 ^ t.length := by
-              simp [Nat.pow_succ]
+              rw [Nat.pow_succ]
+              exact Nat.mul_comm _ _
             omega
           have hmain :
               (1 + s.eps) * 3 ^ s.v + 3 ^ (s.v + 1) * t.value
@@ -318,7 +319,8 @@ theorem drainDigitSummary_length_parity (b : Nat) :
             omega
           rw [drainDigitSummary_succ]
           change (s.v + 1 + t.length) % 2 = (k + 1) % 2
-          omega
+          rw [hpar]
+          simp [Nat.add_mod, ht]
 
 /-- Count a fixed low-to-high ternary digit in an integer word of fixed length. -/
 def countDigitInt (digit : Int) : Nat → Int → Nat
@@ -355,7 +357,7 @@ theorem countDigitInt_pow_shift (digit : Int) (hd : digit = 1 ∨ digit = 2)
       simp only [countDigitInt, hsplit.1, hsplit.2]
       have hz : (0 : Int) ≠ digit := by
         rcases hd with h | h <;> simp [h]
-      simp [hz, ih]
+      simpa [hz] using ih
 
 theorem countDigitInt_sparse (digit : Int) (hd : digit = 1 ∨ digit = 2)
     (v L eps : Nat) (N : Int) (heps : eps ≤ 1) :
@@ -367,9 +369,15 @@ theorem countDigitInt_sparse (digit : Int) (hd : digit = 1 ∨ digit = 2)
   rw [hlen]
   rw [countDigitInt_pow_shift digit hd v (L + 1)
     (Int.ofNat (1 + eps) + 3 * N)]
-  have hsplit := int_digit_split (Int.ofNat (1 + eps)) N
-    (by omega) (by omega)
-  simp [countDigitInt, hsplit.1, hsplit.2]
+  have hout0 : 0 ≤ Int.ofNat (1 + eps) := by positivity
+  have hnat : 1 + eps < 3 := by omega
+  have hout1 : Int.ofNat (1 + eps) < 3 := by exact_mod_cast hnat
+  have hsplit := int_digit_split (Int.ofNat (1 + eps)) N hout0 hout1
+  have hsplit' :
+      (1 + (eps : Int) + 3 * N) % 3 = 1 + (eps : Int) ∧
+      (1 + (eps : Int) + 3 * N) / 3 = N := by
+    simpa [Int.natCast_add, Int.natCast_one] using hsplit
+  simp [countDigitInt, hsplit'.1, hsplit'.2]
 
 theorem runStats_count_digit (n b : Nat) (s : DrainState) :
     (runStats n b s).ones =
@@ -439,9 +447,15 @@ theorem drainDigitSummary_counts (b : Nat) :
           rcases ht with ⟨ht1, ht2⟩
           constructor
           · rw [ht1]
-            by_cases he : s.eps = 0 <;> simp [he] <;> omega
+            by_cases he : s.eps = 0
+            · simp [he]
+            · have he1 : s.eps = 1 := by omega
+              simp [he, he1]
           · rw [ht2]
-            by_cases he : s.eps = 0 <;> simp [he] <;> omega
+            by_cases he : s.eps = 0
+            · simp [he]
+            · have he1 : s.eps = 1 := by omega
+              simp [he, he1]
 
 theorem drainB_digit_summary (b : Nat) :
     ∀ a d aa dd : Nat, b ≤ ternaryOnes a →
@@ -526,7 +540,13 @@ theorem drainB_digit_summary (b : Nat) :
                     + (s.eps + (drainDigitSummary s.q).twos))
             have hsecond := hrec.2
             dsimp [a1] at hpot
-            rw [hR]
+            have hR' :
+                ((if s.eps = 0 then 1 else 0)
+                  + (drainDigitSummary s.q).ones)
+                  + (s.eps + (drainDigitSummary s.q).twos) =
+                1 + (drainDigitSummary s.q).ones
+                  + (drainDigitSummary s.q).twos := by omega
+            rw [hR']
             omega
 
 /-- Exact source drain formula in terms of the three-state transducer's output digits. -/
@@ -537,14 +557,14 @@ theorem drainB_digit_transducer (b a d aa dd : Nat)
         a + 2 * (runStats (drainDigitSummary b).length
           (b % 3 ^ (drainDigitSummary b).length) DrainState.A).twos ∧
     dd + 4 * (runStats (drainDigitSummary b).length
-          (b % 3 ^ (drainDigitSummary b).length) A).twos =
+          (b % 3 ^ (drainDigitSummary b).length) DrainState.A).twos =
         d + 3 * b + 2 * (drainDigitSummary b).length
           + 2 * ((runStats (drainDigitSummary b).length
-            (b % 3 ^ (drainDigitSummary b).length) A).ones
+            (b % 3 ^ (drainDigitSummary b).length) DrainState.A).ones
             + (runStats (drainDigitSummary b).length
-              (b % 3 ^ (drainDigitSummary b).length) A).twos) := by
+              (b % 3 ^ (drainDigitSummary b).length) DrainState.A).twos) := by
   let L := (drainDigitSummary b).length
-  let stats := runStats L (b % 3 ^ L) A
+  let stats := runStats L (b % 3 ^ L) DrainState.A
   have hsource := drainB_digit_summary b a d aa dd hbudget hdrain
   have hpar : L % 2 = b % 2 := by
     simpa [L] using drainDigitSummary_length_parity b
@@ -566,10 +586,13 @@ theorem drainB_digit_transducer (b a d aa dd : Nat)
     omega
   have hrun := runStats_exact_of_bounds L b hpar hsize
   have houtput : stats.output = Int.ofNat (drainDigitSummary b).value := by
-    dsimp [stats]
-    have hrun' := hrun
+    have hrun' : 4 * (runStats L (b % 3 ^ L) DrainState.A).output =
+        2 * Int.ofNat b - 1 + pow3 L := by
+      simpa [stats] using hrun
+    change (runStats L (b % 3 ^ L) DrainState.A).output =
+      Int.ofNat (drainDigitSummary b).value
     omega
-  have hcounts := runStats_count_digit L (b % 3 ^ L) A
+  have hcounts := runStats_count_digit L (b % 3 ^ L) DrainState.A
   have hsummaryCounts := drainDigitSummary_counts b
   have hones : stats.ones = (drainDigitSummary b).ones := by
     rw [hcounts.1, houtput]
@@ -579,16 +602,16 @@ theorem drainB_digit_transducer (b a d aa dd : Nat)
     exact hsummaryCounts.2
   rcases hsource with ⟨hfirst, hweighted⟩
   constructor
-  · dsimp [stats, L]
-    rw [← htwos]
-    exact hfirst
-  · dsimp [stats, L]
-    have htarget : dd + 4 * (drainDigitSummary b).twos =
+  · simpa [stats, L] using hfirst
+  · have htarget : dd + 4 * (drainDigitSummary b).twos =
         d + 3 * b + 2 * (drainDigitSummary b).length
           + 2 * ((drainDigitSummary b).ones + (drainDigitSummary b).twos) := by
       omega
-    rw [← hones, ← htwos]
-    exact htarget
+    have htarget' : dd + 4 * stats.twos =
+        d + 3 * b + 2 * L + 2 * (stats.ones + stats.twos) := by
+      rw [← hones, ← htwos]
+      simpa [L] using htarget
+    simpa [stats] using htarget'
 
 #print axioms drainB_digit_transducer
 
@@ -599,7 +622,7 @@ branch bundles its initial evaluator into the `drainB` argument, that
 evaluator is counted here too. -/
 def drainDigitStats (b : Nat) : DrainStats :=
   runStats (drainDigitSummary b).length
-    (b % 3 ^ (drainDigitSummary b).length) A
+    (b % 3 ^ (drainDigitSummary b).length) DrainState.A
 
 theorem drainB_digit_source_correction_interface
     (b a d aa dd : Nat) (s : Sector) (br : Branch)
