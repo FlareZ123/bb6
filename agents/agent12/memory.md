@@ -661,3 +661,52 @@ The corrected #490 replay's left-stack lengths at macros 100k, 250k, 500k, 750k,
 
 
 **Final checkpoint correction:** Although the checked-in Node script could not be run in the local shell, I did run a source-equivalent persistent-list V8 implementation with the corrected mirror through macro 1,153,484. It did not halt and recorded exactly one token event at macro 0. The checked-in script now has the same mirror transformation and watchpoints, but remains unexecuted as a file. The 12/76 left-growth slope is an empirical hypothesis only.
+
+
+## 2026-11-22T07:46:20Z incarnation — source-orientation resolution and countdown sweep factorization
+
+**Mode and lease.** The actual initial RNG draw selected normal research mode. Claimed Agent12 with `run_id=agent12-gpt6-20261122T074620Z-mirrored-root-orientation-audit`, original `claimed_at=2026-11-22T07:46:20.446Z`; lease pushed and remotely confirmed. The 70-minute threshold is **2026-11-22T08:56:20.446Z**. Do not refresh the lease. At a checkpoint, compare actual UTC time with this original timestamp; if age >=70m, push all useful state and memory, verify, delete lease as the final repo mutation, verify deletion, then exit.
+
+### Superseding source correction: the two swaps cancel
+
+The previous section claiming that the actual #490 root maps to #85 `DR([1],[0,0])` and that the #490 successor is `swap(step85(swap(state)))` is **wrong and superseded**. Exact substitution at pinned upstream `google-deepmind/cryptids@3647718b5df22e1a61462dec0376bd204526285a`:
+
+- #85 `evalStackCfg .DR_n_n L R = cfg_DR_n_n R L` (source lines 203–207).
+- `ClosedStackSystem.mirror` defines `evalStackCfg m L R = mirrorCfg f (W.evalStackCfg m R L)` (Stack.lean lines 504–518).
+- Therefore #490 `evalStackCfg .DR_n_n L R = mirrorCfg f (cfg_DR_n_n L R)`; the argument swaps cancel.
+- #490's seven-step blank-entry theorem reaches `L=[(0,0),(0,0)]`, `R=[(1,0)]`, exactly the #85 `cfg_DR_n_n L R) arguments. Do not swap again.
+
+The source `mode_DR_n_n_closed` at lines 1030–1056 also resolves the DR-head-one dispute: `rcases r1 with _ | r5` is the Nat split 0 vs successor, so `r1=1` lies in the second branch. With `a1=0`, it takes ordinary `execute 4` at lines 1049–1056 and reaches `DR(L=[0],R=[1,0])). Only `r1=0,a1=0` calls `tok_DR_2_0_closed` (1032). Agent48's proposed 19-step DR-head-one token closure, 36-step recurrence, and extra-swap left-insertion route are withdrawn; see `im-results/agent48-cryptid-root-cycle/DRHeadOneCycle.md` and the updated Agent48 dossier.
+
+### Root-connected 76-step right-insertion macro
+
+Agent35's no-extra-swap family is
+`G=[0,0,1,0,1,0,0,0,0,1]`,
+`B=[16,0,0,0,2,0,0,0,2,0,0,0]`,
+with
+`S^76(DR(L=G,R=[1]++B++T)) = DR(L=G,R=[1]++B++B++T)`
+for arbitrary finite suffix T. I independently executed the no-swap outer-rule recurrence with an opaque sentinel suffix: endpoint exact, suffix unchanged, 76 successors, 254 raw source-transcribed steps. Branch counts/costs are in `communications/broadcast/20261122T0750Z_agent12-source-orientation-and-growth-proof-audit.md`.
+
+Agent35's manual workflow run **44999117485** built the pinned source project and appended the macro, but failed when `execute 254` was applied to an opaque `mirrorCfg f (W.evalStackCfg ...)` goal. The failure log shows `step target` still contains `reflectTape`, so the execution tactic cannot reduce the primitive configuration; the resulting `sorryAx` is from the failed/incomplete declaration. The helper equation `root_evalStackCfg_DR L R = Cfg.headLeft A (W.encRight L) (W.encLeft R)` is definitionally `rfl` and already appears in Agent48's append; rewrite both endpoints to explicit `Cfg.headLeft` before `execute 254`. Sent the detailed repair to Agent35 in `communications/agent35/20261122T0752Z_agent12-root-growth-execute-fix.md` and broadcast the source audit. No source theorem is yet accepted.
+
+Tried local shell preflight once; `container.exec` returned tool-level `ClientError` before even `echo`/clock. No local Lean preflight possible; did not dispatch another CI run. Critic's local-preflight-before-CI instruction remains active.
+
+### New direct proof factorization for D-countdown
+
+Updated `im-results/agent12-cryptid-root-invariant/RootCountdownGrowth.md` with a local source-branch decomposition of
+`D_n(c)=CR([0],0^(4n+5)++[c]) -> D_(n+1)(c-3)` for n>=0,c>=3. It avoids the `Corr` intermediate family and isolates two inductive sweeps:
+
+1. Fixed 8-successor prefix, raw costs 2,2,1,4,4,1,1,6 (21 total), to `EL([0,1],0^(4n+6)++[c])).
+2. EL-right-zero sweep, 4n+6 steps at 2 raw each, to `EL(0^(4n+7)++[1],[c])).
+3. EL-positive + DL-positive, 2 steps / 5 raw, to `DR(0^(4n+7)++[1],[1,c-3])).
+4. DR-left-zero/right-one sweep, 4n+7 steps at 4 raw each, to `DR([1],[1]++0^(4n+7)++[c-3])).
+5. Final DR-positive/positive, 1 step / 3 raw, to `D_(n+1)(c-3)`.
+
+Thus outer count `8n+24`, raw cost `24n+69`. The only parameterized lemmas needed are the inductive EL and DR zero sweeps; their one-step branches are source `mode_EL_n_n_closed` lines 969–973 (`execute 2`) and `mode_DR_n_n_closed` lines 1049–1056 (`execute 4`). The fixed prefix is a composition of eight ordinary source branches; no token normalizer occurs. Source-transcribed phase checks for n=0,1,2 matched every phase endpoint and both formulas. This is a proof architecture and computation, not yet a Lean theorem. Broadcast in `communications/broadcast/20261122T0800Z_agent12-countdown-sweep-factorization.md`.
+
+### Remaining work / no overclaim
+
+- Follow Agent35's response to the `root_evalStackCfg_DR` rewrite and exact-source macro compile; don't rerun the unchanged failed workflow.
+- Formalize the two countdown sweeps and the fixed prefix in the #490 wrapper, then the 1,481-step reset, c=1 corridor, H-padding/H-base, root-prefix composition, and 76-step growth macro.
+- The blank-root-to-first-growth-seed path (macro 1,131,748 / 3,401,065 raw) remains source-transcribed computation, not a quantified Lean path. Even a proved 76-step invariant is insufficient until root reaches its seed in the original machine.
+- All Cryptid work remains in `im-results/`; no `results/` theorem or BB(6) value is established. BB(6) remains unresolved.
