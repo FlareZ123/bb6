@@ -1,8 +1,8 @@
-# Corrected #490 mirrored-root nonhalting proof attempt
+# Alternative extra-swap projected growth model (not the #490 blank-root orbit)
 
-**Status: decisive exact-source proof attempt pending CI.** The corrected mirrored-root replay identifies the pumping invariant after only 260 outer successors, not 1,153,484. A local Lean model proves the 260-step outer-stack prefix after representing the initial token-closure endpoint explicitly, and proves the 76-step suffix-parametric macro. The appended exact-source theorems attempt to prove the token closure, ordinary prefix, pumping macro, and resulting nonhalting invariant directly against the pinned original #490 machine. Do not claim nonhalting until the manual source workflow succeeds and the axiom profile is clean.
+**Status correction — 2026-11-22 (Agent 35):** This dossier's `step490 := swap(step85(swap(state)))` uses an extra L/R reversal. The #490 evaluator is `mirrorCfg f (W.evalStackCfg m R L)`, but #85's own `evalStackCfg .DR_n_n L R = cfg_DR_n_n R L` already reverses the arguments. Therefore the two swaps cancel and the actual #490 stack arguments correspond to #85 `cfg_DR_n_n L R` without an additional swap. The 260-step prefix, 29-step initial token closure, left-insertion seed, and appended source theorem below are for this **alternate extra-swap abstract system**, not the #490 blank-root orbit. Preserve the local model and macro as an auxiliary experiment, but do not dispatch the source workflow or claim #490 nonhalting from it until it is rederived against the correct evaluator. See [the source derivation and corrected blank-root chain](../agent35-cryptid-mirror-cancellation/README.md).
 
-## First root-reachable pumping seed
+## First pumping seed in the extra-swap abstract system
 
 Pinned upstream project: google-deepmind/cryptids commit
 3647718b5df22e1a61462dec0376bd204526285a.
@@ -11,9 +11,9 @@ Exact #490 module:
 BusyBeaver/BB6/Accelerations/M_1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LEHHH.lean
 (blob SHA f0bc716f48f69ffff474c8094c3254eaf7681acb).
 
-The corrected #490 mirrored successor is swap(step85(swap(state))). The
-first outer successor is a token closure; after that, the ordinary root
-replay enters the pumping set at outer successor 260.
+The alternate model's successor is swap(step85(swap(state))). Its first
+outer successor is a token closure; after that, this abstract replay enters
+the pumping set at outer successor 260. This is not a #490 blank-root path.
 
 At that first seed, the state is DR with left length 31 and right length 14.
 Write
@@ -35,9 +35,9 @@ iterations, respectively, of the 76-successor macro after seed 260:
 
 The long replay is therefore no longer the root-entry bottleneck.
 
-## Root-prefix raw-step accounting
+## Extra-swap model prefix accounting (not blank-root)
 
-The blank-root entry is split into three exact source obligations:
+The reduced model's prefix is split into three computational/source-branch obligations; only the first seven-step blank-entry theorem is the actual #490 root entry. The following 29- and 848-step pieces belong to the extra-swap model:
 
 | Segment | Raw TM transitions | Outer-stack successors |
 |---|---:|---:|
@@ -64,13 +64,14 @@ branches have cost 848. Their source-mode branch counts are:
 - CR prefix 1,0: 22 at 5 steps
 - CR prefix 1,1: 7 at 16 steps
 
-These counts sum to 259 branches and 848 raw transitions. The appended
-source proof separates the token closure (execute 29) from the ordinary
-prefix (execute 848), then composes with the 7-step blank-root entry.
+These counts sum to 259 branches and 848 raw transitions. The appended source proof currently attempts to separate the token closure
+(execute 29) from the ordinary prefix (execute 848), then compose them with
+the seven-step blank-entry theorem. Because the evaluator orientation is
+wrong, this composition is not a #490 root proof and must be rederived.
 
-## Suffix-parametric pumping macro
+## Suffix-parametric pumping macro in the extra-swap system
 
-For every finite pair suffix T, the 76-successor identity is
+For every finite pair suffix T in this alternate transition system, the 76-successor identity is
 
     DR(L=[1] ++ B ++ T, R=R0)
       --76 outer successors-->
@@ -98,27 +99,25 @@ The 76 underlying source-branch counts are independently audited:
 | CR, left prefix 1,1 | 2 | 16 | 32 |
 | **Total** | **76** |  | **254** |
 
-This is a different macro from the old #85 synthetic DR/G/B route and the
-standalone H-phase CR macro. The 254-step count was independently derived
-from the mirrored root's actual 76 branch sequence.
+This is a different macro from the no-swap blank-root-connected #85 DR/G/B
+right-insertion route and the standalone H-phase CR macro. The 254-step
+count was independently derived from this alternate system's 76 branch
+sequence, not from the #490 blank-root trajectory.
 
 ## Formal artifacts and source theorem
 
-- RootMirroredGrowthMacroModel.lean: local Lean 4.36.0-rc2 model. It proves
-  the 260-step outer-stack root prefix after representing the initial token
-  closure endpoint explicitly; it proves the arbitrary-suffix 76-step macro;
-  and it checks the 848, 877, and 254 arithmetic. The token endpoint in this
-  reduced model is not itself a source proof.
-- RootMirroredGrowthMacro.append.lean: exact-source proof attempt in the
-  pinned #490 module. It proves (or will fail to prove) the 29-step token
-  closure, 848-step ordinary prefix, 7-step blank-root entry, 254-step
-  pumping macro, and finally applies IsNotHalt.of_reachesPlus_invariant to
-  the fixed-prefix/right-stack set.
+- RootMirroredGrowthMacroModel.lean: local Lean model of the alternate
+  extra-swap transition system. It proves that system's 260-step prefix and
+  arbitrary-suffix 76-step macro; it is not a model of the #490 blank-root
+  stack orbit under the actual evaluator composition.
+- RootMirroredGrowthMacro.append.lean: exact-source proof attempt whose
+  current seed/prefix/macro orientation must be corrected before it can
+  establish anything about the #490 blank start. Do not dispatch it as a
+  nonhalting proof in its current form.
 - .github/workflows/agent32-hphase-growth-macro.yml: existing manual-only
-  workflow repurposed for this exact source proof. The older H-phase append
-  file is preserved but is not part of this run.
+  workflow. Do not run it for this append file until the source theorem has
+  been rewritten with the no-extra-swap evaluator mapping.
 
-If all source theorems compile with no sorryAx in their transitive axiom
-profiles, root_mirrored_isNotHalt proves that the #490 blank-start machine
-does not halt. That would classify this particular machine as nonhalting,
-not determine BB(6). The exact CI result is still pending.
+The alternate-system local Lean theorem may still be useful as a model
+identity. No #490 nonhalting theorem follows from this dossier as currently
+written; it does not determine BB(6).
