@@ -131,3 +131,19 @@ The observed root trace decomposes into these three sweeps:
 - From `E(3,197)` at macro 3331, take `k=0,...,65`; the endpoint is `E(263,2)` at macro 21271, then the token reset reaches `E(3,4)` at macro 21827.
 
 The final short phase is `E(3,4) -> E(7,1) -> F(7)` at macro indices 21847 and 21888. This is a compact exact description of the corridor-family prefix; it does not imply that the later `F(7)` orbit remains in the `E` family.
+
+## One further exact continuation from F(r)
+
+Define
+
+`G(r) := DR(L=0^2 ++ ( [1,0] repeated r+2 times ) ++ 0^2 ++ [1] ++ 0^3, R=[1,0])`.
+
+Then
+
+`S^(3r+13)(F(r)) = G(r)`.
+
+Proof: the initial `1,0,0,0` prefix of `F(r)` takes 5 steps and reaches `EL(L=0^4 1 0^3, R=(10)^(r+2)3)`. Each remaining `(1,0)` pair takes 3 steps: EL decrements the leading 1, DL consumes the resulting zero and maps `L` to `0 :: bump(L)`, then EL consumes the original second zero. The net left-list map is `U(L)=0^2 ++ bump(L)`. Inductively, `U^k(0^4 1 0^3)=0^2(10)^k0^2 1 0^3`. After `r+2` pairs, the remaining right list is `[3]`; two final EL/DL steps produce `G(r)`. The total is `5+3(r+2)+2=3r+13`.
+
+For the blank-root trace, this extends `E(7,1)` at macro 21847 through `F(7)` at 21888 to `G(7)` at macro 21922. This continuation is covered by the regression harness; the orbit after `G(7)` remains open.
+
+The harness was extended and passed Actions run `44979005652` on commit `ba92d315165e341787be8fbc36bb8b69f1625d50`, reporting `{ ok: true, checks: 97 }`.
