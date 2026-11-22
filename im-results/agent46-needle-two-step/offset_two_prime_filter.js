@@ -165,18 +165,81 @@ for (const candidate of candidates) {
   });
 }
 
-const eliminated = witnesses.filter(x => x.witness !== null);
-const survivors = witnesses.filter(x => x.witness === null);
+const primeEliminated = witnesses.filter(x => x.witness !== null);
+const primeSurvivors = candidates.filter(candidate =>
+  !witnesses.some(x => x.k === candidate.k.toString() &&
+                       x.e === candidate.e.toString() &&
+                       x.witness !== null)
+);
+
+// For the remaining candidates use the exact quotient obstruction described
+// in OffsetTwoPrimeFilter.md.  If Z=D*z and z=nR+kM, then k is determined
+// modulo n.  A proved upper bound on k lets us compare the least residue.
+function quotientObstruction(candidate) {
+  const { s, w, k, e } = candidate;
+  const T = s + 2n;
+  const m0 = a + s + 2n; // D_{w+2}=2^(a+s+2)+3
+  const c0 = mod(m0 - 1n, T) + 1n;
+  const loss = c0 <= d ? c0 : 0n;
+  const m = m0 - loss;
+  const c = c0 <= d ? T : c0;
+  if (c < d + 1n || T < d + 1n || m < m0 - d) {
+    return { eliminated: false, reason: "cut hypotheses not met" };
+  }
+
+  const Mmodn = powMod(2n, m, n);
+  const u2rmodn = powMod(2n, 2n * r * T, n);
+  const Dmodn = mod(powMod(2n, m0, n) + 3n, n);
+  const Cmodn = mod(110n * w + 190n, n);
+  const denominator = mod(8n * Dmodn * Mmodn, n);
+  const k0 = mod(Cmodn * u2rmodn * inverseMod(denominator, n), n);
+
+  const lossExponent = r - 3n + loss;
+  const bound = 1n << lossExponent;
+  const eliminated = bound < n && k0 > bound;
+  return {
+    eliminated,
+    c0: c0.toString(),
+    loss: loss.toString(),
+    bound_exponent: lossExponent.toString(),
+    bound_below_n: bound < n,
+    k0_bits: k0 === 0n ? 0 : k0.toString(2).length,
+    k0: k0.toString()
+  };
+}
+
+const quotientEliminated = [];
+const unresolved = [];
+for (const candidate of primeSurvivors) {
+  const check = quotientObstruction(candidate);
+  if (check.eliminated) {
+    quotientEliminated.push({
+      k: candidate.k.toString(),
+      e: candidate.e.toString(),
+      ...check
+    });
+  } else {
+    unresolved.push({
+      k: candidate.k.toString(),
+      e: candidate.e.toString(),
+      quotient_check: check
+    });
+  }
+}
+
 console.log(JSON.stringify({
   r: r.toString(),
   j: j.toString(),
   prime_limit: primeLimit,
   d: d.toString(),
   forced_even_exception_count: candidates.length,
-  eliminated_by_offset_two_prime_filter: eliminated.length,
-  survivors: survivors.map(x => ({ k: x.k, e: x.e })),
-  witnesses: eliminated.map(x => ({
+  eliminated_by_prime_witness: primeEliminated.length,
+  eliminated_by_quotient_obstruction: quotientEliminated.length,
+  total_eliminated: primeEliminated.length + quotientEliminated.length,
+  unresolved,
+  prime_witnesses: primeEliminated.map(x => ({
     k: x.k, e: x.e, p: x.witness.p,
     target_residue: x.witness.target_residue
-  }))
+  })),
+  quotient_witnesses: quotientEliminated
 }, null, 2));
