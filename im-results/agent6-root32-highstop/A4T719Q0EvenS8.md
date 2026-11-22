@@ -20,9 +20,9 @@ A4(t)=left(2814461475t+754739388,,
 ]
 Consequently the corrected P7E1E residual is also blank-unreachable on this cylinder, because its reachability forces reachability of A4.
 
-The exact root-index relation (t+j\equiv3780\pmod{8192}), with (r=32+64j), maps this residual-specific cylinder to
+The exact root-index relation (t+j\equiv3780\pmod{8192}), with (r=32+64j). Since t=719+8192m, the accepted root equation gives j≡3780−719≡3061 (mod 8192), so the residual-specific cylinder maps to
 [
-r\equiv523616\pmod{524288}.
+r\equiv195936\pmod{524288}.
 ]
 This is an index label for the P7E1E residual only. The other root32 high-stop alternatives are not discharged here.
 
