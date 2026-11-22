@@ -33,8 +33,8 @@ theorem root_evalStackCfg_DR (L R : List (ℕ × ℕ)) :
 theorem root_evalStackCfg_CR (L R : List (ℕ × ℕ)) :
     closedStackSystem.evalStackCfg StackMode.CR_n_n L R =
       Cfg.headLeft C
-        (M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.closedStackSystem.encRight R)
-        (M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.closedStackSystem.encLeft L) := by
+        (M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.closedStackSystem.encRight L)
+        (M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.closedStackSystem.encLeft R) := by
   rfl
 
 /-- The first token closure from the 7-step root-entry state costs 29 raw
@@ -45,6 +45,9 @@ theorem root_mirrored_token_closure :
       (closedStackSystem.evalStackCfg StackMode.CR_n_n
         [(1, 0)] [(0, 0), (0, 0), (0, 0), (1, 0)]) := by
   rw [root_evalStackCfg_DR, root_evalStackCfg_CR]
+  dsimp [M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.closedStackSystem,
+    M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.encLeft,
+    M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.encRight]
   execute 29
 
 /-- The next 259 ordinary outer successors cost 848 raw transitions and reach
@@ -56,6 +59,10 @@ theorem root_mirrored_ordinary_prefix :
       (closedStackSystem.evalStackCfg StackMode.DR_n_n
         rootMirroredSeedLeft rootMirroredRight) := by
   rw [root_evalStackCfg_CR, root_evalStackCfg_DR]
+  dsimp [M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.closedStackSystem,
+    M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.encLeft,
+    M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.encRight,
+    rootMirroredSeedLeft, rootMirroredSeedTail, rootMirroredBlock, rootMirroredRight]
   execute 848
 
 theorem root_mirrored_seed_from_stack :
@@ -92,6 +99,10 @@ theorem root_mirrored_growth_76_raw (T : List (ℕ × ℕ)) :
       (closedStackSystem.evalStackCfg StackMode.DR_n_n
         (((1, 0) :: rootMirroredBlock) ++ (rootMirroredBlock ++ T)) rootMirroredRight) := by
   rw [root_evalStackCfg_DR]
+  dsimp [M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.closedStackSystem,
+    M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.encLeft,
+    M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.encRight,
+    rootMirroredBlock, rootMirroredRight]
   execute 254
 
 /-- The invariant set consists of all DR configurations with the fixed leading
