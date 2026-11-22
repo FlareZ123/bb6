@@ -44,3 +44,7 @@ The entry parameters `7,31,95` are observations only; no recurrence or monotonic
 - This lemma alone does not establish nonhalting, cylinder reachability, or a BB(6) bound.
 
 Source transition definitions: `im-results/agent12-cryptid-root-invariant/fast_root_stack_sim.js`.
+
+## One-million-step cross-check
+
+A 1,000,000-successor V8 replay using the same linked-list transition clauses reproduced the previously recorded terminal summary: mode `CR`, `L=[0,0,1,0,0,0,0,1]`, `|R|=154441`, maximum outer `|L|=268`, maximum `|R|=154446`, and maximum stack entry 203. With the stricter corridor predicate `R = [1] ++ 0^b` (rather than merely `R.head=1` and `|R|=2`), exactly the three sweeps listed above occur in this million-step prefix. The sole token-normalizer call is at macro 21810; its input has length 268 and exactly one `1`, namely `0^267 ++ [1]`. These are finite replay facts, not an infinite-orbit proof.
