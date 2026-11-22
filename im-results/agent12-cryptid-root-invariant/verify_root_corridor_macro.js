@@ -170,7 +170,7 @@ for (let n = 0; n <= 32; n++) {
   checks++;
 }
 
-assertState("blank-root prefix", run(state("DR", [0, 0], [1]), 24), Corr(3, 3)); checks++;
+assertState("root stack seed to Corr(3,3)", run(state("DR", [0, 0], [1]), 24), Corr(3, 3)); checks++;
 
 const rootChain = [
   [Corr(3, 3), 20, Corr(7, 0)],
