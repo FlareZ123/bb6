@@ -1,6 +1,10 @@
-# Corrected blank-root stack trajectory: source-audited experiment
+# Historical root stack experiment: superseded by the DR head-one correction
 
-**Status:** source-corrected computational prefix plus a candidate root-reachable growth macro; neither is yet a Lean proof of nonhalting.
+**Status: WITHDRAWN as a source orbit.** The simulator omitted the pinned source's DR right-head-one token branch. The root trajectory, countdown, and growth claims below are historical outputs of the defective successor and must not be used as source evidence. See [the corrected DR head-one analysis](../agent48-cryptid-root-cycle/DRHeadOneCycle.md) for the source-derived 19-step root closure and candidate 36-step nonhalting recurrence.
+
+## Superseded experiment record (not source-valid)
+
+The following sections preserve the earlier experiment for traceability only. Their root indices, macro states, finite-prefix invariant, and growth connection are invalidated by the missing DR r1=1 token branch.
 
 ## Experiment
 
