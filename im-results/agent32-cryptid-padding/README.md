@@ -163,23 +163,72 @@ The separate raw TM62→D0 adapter remains uncompiled against its exact external
 The main unresolved mathematical question is unchanged: prove that the authentic blank-root orbit reaches a halting cylinder (or another halting set), or establish a rigorous invariant excluding it. The external halting cylinder, finite root scans, and closed-stack reduction do not by themselves settle that orbit question.
 
 
-### Follow-up: common token-state formulation (21 November 2026)
+### Corrected root-stack parameter transport (22 November 2026)
 
-A source-level comparison with DeepMind's #85 stack proof now identifies explicit token checkpoints on both sides of the root/halting-cylinder gap. The state map is (f=[5,4,2,0,1,3]) from #85 to #490, with directions mirrored.
+A source review found a double argument swap in the previous #490 root analysis.
+The #85 base \`evalStackCfg\` maps \`DR_n_n,L,R\` to \`cfg_DR_n_n R L\`, while
+\`ClosedStackSystem.mirror\` calls \`W.evalStackCfg m R L\`. These swaps cancel.
+Therefore the seven-step #490 root entry
+\`evalStackCfg .DR_n_n [(0,0),(0,0)] [(1,0)]\` corresponds to the
+#85-oriented \`cfg_DR_n_n L=[(0,0),(0,0)] R=[(1,0)]\`, not the reversed
+parameter lists used in the earlier note.
 
-- The #490 DeepMind init-root stack entry is seven raw steps into `evalStackCfg .DR_n_n [(0,0),(0,0)] [(1,0)]). The corresponding #85-oriented `DR_n_n) mode proof has a three-step prefix to `tok_CR [1,0] [(0,0)] [0]`.
-- For the external cylinder (C=1975700577069254261393123959451562008800234946348086\equiv1\pmod3), let (m=4(C/3)-1). Its `step_An_1101` intermediate is #490 E, which maps to #85 B (not #85 E). With empty suffix, #490 E0 is `0LC`; after this one raw step the resulting C-state is exactly `tok_CR ([0] ++ replicate m 1) [(1,0)] []), up to the final blank-equivalent zero in `encTokens`.
-- The first root token closure yields `cfg_CR_n_n [(0,0),(0,0),(1,0)] [(1,0)]`. The next explicit outer stack checkpoints and their raw costs are recorded in [`DeepMindStackReduction.md`](./DeepMindStackReduction.md).
+The first mode case is DR-to-DR, not a three-step jump to
+\`tok_CR [1,0] [(0,0)] [0]\`. The corrected raw-root checkpoints are:
 
-This turns the unresolved connection into a concrete reachability problem inside the same `tok_CR)/closed-stack subsystem: determine whether the DeepMind init-root token state reaches the cylinder token state or another halting token state. The local encoding and finite stack prefix do **not** prove that reachability, and the full A-step2/token-closure correspondence remains open. Earlier exploratory messages that called the cylinder E-intermediate `tok_EL` were corrected; use the updated [`ASectionStackEncoding.md`](./ASectionStackEncoding.md).
+| Raw time | Mode | L (first coordinates) | R (first coordinates) |
+|---:|---|---|---|
+| 7 | DR | [0,0] | [1] |
+| 11 | DR | [0] | [1,0] |
+| 15 | DR | [] | [1,0,0] |
+| 16 | EL | [0] | [1,0,0] |
+| 17 | DL | [0] | [0,0,0] |
+| 23 | EL | [0,1] | [0,0] |
+| 25 | EL | [0,0,1] | [0] |
+| 27 | EL | [0,0,0,1] | [] |
+| 28 | CR | [0,0,0,1] | [0] |
+| 30 | CR | [0,0,1] | [2] |
+| 32 | CR | [0,1] | [4] |
+| 34 | CR | [1] | [6] |
+| 40 | EL | [0] | [0,9] |
 
+Here each entry \(a\) abbreviates \((a,0)\). The first seven successor
+states (times 11–27) are now the regression prefix in
+[\`stack_system_sim.py\`](./stack_system_sim.py). An independent JavaScript
+transcription of the source-derived successor rules was run against the raw
+#490 transition table and matched the listed checkpoints.
+
+This also resolves the misleading time-36 comparison. The repository's
+source-certified
+\`run D0 36 (some (blank 0)) = some (F0Pure 9 (-6))\` checkpoint is an
+interior raw configuration in the six-step macro from
+\`CR([1],[6])\` at time 34 to \`EL([0],[0,9])\` at time 40. It is not the
+first outer stack successor. At time 36 the raw machine is in state F,
+head \(-6\), with ones on \([-5,3]\). DeepMind's \`init []\` and the local
+D0 \`blank 0\` both denote the standard state-A all-blank start; the local
+adapter supplies the signed-coordinate tape map. A direct cross-library
+initial-configuration lemma still needs compilation, but the earlier
+different-root explanation is withdrawn.
+
+The cylinder-side target recorded in
+[\`ASectionStackEncoding.md\`](./ASectionStackEncoding.md) remains a
+separate \`tok_CR\` state,
+\`tok_CR ([0] ++ replicate m 1) [(1,0)] []\`, with
+\(m=4(C/3)-1\) for \(C\equiv1\pmod3\). The corrected root stack prefix does
+not yet prove reachability of that target or a halting token state. The
+closed-stack reduction still does not decide the blank-root orbit or BB(6).
 
 ### Experimental closed-stack interpreter
 
-[`stack_system_sim.py`](./stack_system_sim.py) is a first executable transcription of the four outer mode rules and the `bounce_CR`, `bounce_DR), and `bl_terminates_le` token normalizers. It starts from the seven-step blank-root stack entry and includes a regression assertion for the first token closure plus six explicit outer successors. The same logic was exercised in a JavaScript prototype in this invocation and reproduced those source-derived checkpoints. The Python file itself could not be run in the local environment (the container shell returned `ClientError`); it has not been compiled or independently validated beyond code inspection and the JS prefix check. Treat longer simulated trajectories as experimental until the Python implementation is run and adversarially compared with the Lean source.
+[\`stack_system_sim.py\`](./stack_system_sim.py) transcribes the four outer
+mode rules and token normalizers. Its root assertion now starts from the
+correct \`DR([0,0],[1])\` entry and checks seven outer successors. The Python
+file itself has not been run in this invocation because the local shell
+returned \`ClientError\`; the equivalent JavaScript transcription was
+executed and checked against the raw transition table. The cylinder helper
+continues to represent the enormous token run in compressed form rather
+than materializing it.
 
-
-The interpreter currently materializes finite stack lists, so it cannot construct the cylinder's enormous (K=[0]++1^m) list. The helper `cylinder_token_state` deliberately returns that target in compressed prefix/run form. A useful next implementation improvement is run-length compression plus bulk handling of repeated zero/one runs; this is necessary before the interpreter can test the actual cylinder-scale reachability question.
-
-
-**Transport caveat:** the root token checkpoint is proved from DeepMind's own `init_reaches_nontrivial`; the initial state, blank symbol, and tape/head convention still need to be compared explicitly with this repository's D0 root adapter. The transition-table state map alone does not settle that initial-configuration equality. The cylinder-side E0-to-`tok_CR` tape identity is separate.
+The remaining mathematical task is to connect the corrected root orbit to
+the cylinder token state (or prove an invariant excluding it). A finite
+stack prefix and the closed-stack theorem alone do not establish halting.
