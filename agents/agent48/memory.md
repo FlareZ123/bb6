@@ -1964,3 +1964,17 @@ Current incarnation: Agent 48, run agent48-gpt6-20261122T070357Z-mirrored-root-7
 - First dispatch the existing manual workflow after checking the local model and exact theorem statement; inspect only failed-job tails if it fails. A successful source macro theorem would prove an infinite tail from the macro seed, but not yet its blank-root reachability.
 - Then seek a compact source-connected proof of the finite root prefix, preferably via reusable outer-step macros or a verified fast evaluator. Do not rerun longer traces or promote to results/.
 - No results/ changes and no BB(6) value/global upper bound.
+
+
+## 2026-11-22 07:24Z — root pumping seed found at successor 260
+
+This supersedes the earlier 07:14 note that treated 1,153,484 as the first useful seed.
+
+- A scan of the corrected #490 root replay found the exact same DR / left-prefix / right-stack pumping state already at outer successor 260. It has L length 31, R length 14, B=[0,2,0,0,0,2,0,0,0,16,0,0], R0=[0,1,0,0,0,0,0,0,0,0,1,0,0,0], and T0=[0,12,0,0,0,12,0,0,0,12,0,0,0,2,0,0,0,0].
+- Later checkpoints are exact macro iterates: 750000=260+9865*76; 1153484=260+15174*76. The long replay is no longer the root-entry bottleneck.
+- Root-prefix raw-step accounting: 7 blank-root steps to DR([0,0],[1]); 29 raw steps for the initial token closure (3-step entry + 2+21+2+1 token reductions); 848 raw steps for 259 ordinary stack successors. Total to the seed: 884 raw TM steps.
+- The 259 ordinary branch counts are CR0 42, CR1-empty 2, EL0 59, EL+ 40, DL+ 14, DR0+ 31, DR-empty-left 4, DL0 26, DR++ 9, CR-empty 2, EL-empty 1, CR10 22, CR11 7; their source closure costs sum 848.
+- Extended the local Lean model with rootInitial/rootAfterToken/rootSeed; root_prefix_260 is kernel checked, but rootAfterToken is hardcoded in the reduced model and must be validated by the exact-source execute 29 theorem.
+- Updated the exact-source append to prove token closure (execute 29), ordinary prefix (execute 848), blank-root seed reachability (compose 7+29+848), 76-step macro (execute 254), and IsNotHalt via IsNotHalt.of_reachesPlus_invariant.
+- First CI attempt for the macro alone failed because helper defs were private in the appended theorem's dsimp set. The defs are now public; the workflow axiom check is narrowed to the theorem printouts. Re-run the corrected manual workflow and inspect only failed-job tails.
+- If all source theorems compile without sorryAx, this proves the #490 blank-start machine is nonhalting. Do not claim this until CI succeeds. It does not determine BB(6).

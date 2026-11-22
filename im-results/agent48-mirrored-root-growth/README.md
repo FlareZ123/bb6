@@ -1,8 +1,8 @@
-# Corrected #490 mirrored-root growth macro
+# Corrected #490 mirrored-root nonhalting proof attempt
 
-**Status: intermediate research.** The root trajectory and macro were reproduced by a source-transcribed persistent-list interpreter. A local Lean model proves the 76-step outer-stack identity for every suffix. The exact pinned-original-source theorem is prepared for the existing manual Lean workflow; until that workflow succeeds, do not describe the macro as source-certified. The finite blank-root prefix is also not yet a Lean theorem.
+**Status: decisive exact-source proof attempt pending CI.** The corrected mirrored-root replay identifies the pumping invariant after only 260 outer successors, not 1,153,484. A local Lean model proves the 260-step outer-stack prefix after representing the initial token-closure endpoint explicitly, and proves the 76-step suffix-parametric macro. The appended exact-source theorems attempt to prove the token closure, ordinary prefix, pumping macro, and resulting nonhalting invariant directly against the pinned original #490 machine. Do not claim nonhalting until the manual source workflow succeeds and the axiom profile is clean.
 
-## Root-reachable candidate state
+## First root-reachable pumping seed
 
 Pinned upstream project: google-deepmind/cryptids commit
 3647718b5df22e1a61462dec0376bd204526285a.
@@ -11,52 +11,79 @@ Exact #490 module:
 BusyBeaver/BB6/Accelerations/M_1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LEHHH.lean
 (blob SHA f0bc716f48f69ffff474c8094c3254eaf7681acb).
 
-The #490 wrapper transports the #85 closed pair-stack system using
-ClosedStackSystem.mirror. The root replay uses the actual mirrored successor
-swap(step85(swap(state))); do not substitute the synthetic #85 seed or the
-old D_n(c) / H-phase route.
+The corrected #490 mirrored successor is swap(step85(swap(state))). The
+first outer successor is a token closure; after that, the ordinary root
+replay enters the pumping set at outer successor 260.
 
-At outer macro index 1,153,484, the persistent-list replay gives a #490
-configuration in mode DR with left length 182,119 and right length 14.
-Its left stack begins
-
-    [1] ++ B ++ T
-
-where
+At that first seed, the state is DR with left length 31 and right length 14.
+Write
 
     B = [0,2,0,0,0,2,0,0,0,16,0,0]
+    R0 = [0,1,0,0,0,0,0,0,0,0,1,0,0,0]
+    T0 = [0,12,0,0,0,12,0,0,0,12,0,0,0,2,0,0,0,0].
 
-and its right stack is
+Then the seed is exactly
 
-    R0 = [0,1,0,0,0,0,0,0,0,0,1,0,0,0].
+    DR(L=[1] ++ B ++ T0, R=R0).
 
-The concrete replay has length(T)=182106. Checkpoints at 100,000,
-250,000, 500,000, 750,000, 1,000,000 and 1,153,484 match the
-previously reported left-stack lengths 15,781; 39,465; 78,937; 118,411;
-157,883; and 182,119. The checked-in fast_root_stack_sim.js remains the
-reference simulator; the local replay used an independent persistent-list
-reimplementation of its source-transcribed transition clauses.
+The tail T0 has length 18. The same fixed prefix and right stack are visible
+at the later 750,000 and 1,153,484 checkpoints. Those are 9,865 and 15,174
+iterations, respectively, of the 76-successor macro after seed 260:
 
-## Exact candidate macro
+    750000 - 260 = 9865 * 76
+    1153484 - 260 = 15174 * 76.
 
-For every finite suffix T, the 76-successor outer-stack identity is
+The long replay is therefore no longer the root-entry bottleneck.
+
+## Root-prefix raw-step accounting
+
+The blank-root entry is split into three exact source obligations:
+
+| Segment | Raw TM transitions | Outer-stack successors |
+|---|---:|---:|
+| Blank root to initial DR stack state | 7 | — |
+| Initial token closure DR to CR | 29 | 1 |
+| Ordinary CR-to-seed prefix | 848 | 259 |
+| **Total to first pumping seed** | **884** | **260** |
+
+The 29-step token closure consists of the source branch's 3-step entry
+followed by token reductions of 2 + 21 + 2 + 1 steps. The 259 ordinary
+branches have cost 848. Their source-mode branch counts are:
+
+- CR head 0: 42 at 2 steps
+- CR prefix 1,empty: 2 at 6 steps
+- EL head 0: 59 at 2 steps
+- EL positive: 40 at 1 step
+- DL positive (at least 2): 14 at 4 steps
+- DR left head 0 / positive right: 31 at 4 steps
+- DR empty-left-tail: 4 at 1 step
+- DL head 0: 26 at 6 steps
+- DR positive/positive: 9 at 3 steps
+- CR empty: 2 at 2 steps
+- EL empty: 1 at 1 step
+- CR prefix 1,0: 22 at 5 steps
+- CR prefix 1,1: 7 at 16 steps
+
+These counts sum to 259 branches and 848 raw transitions. The appended
+source proof separates the token closure (execute 29) from the ordinary
+prefix (execute 848), then composes with the 7-step blank-root entry.
+
+## Suffix-parametric pumping macro
+
+For every finite pair suffix T, the 76-successor identity is
 
     DR(L=[1] ++ B ++ T, R=R0)
       --76 outer successors-->
     DR(L=[1] ++ B ++ B ++ T, R=R0).
 
-The right stack is unchanged, the left stack grows by 12 entries, and no
-token-normalizer branch occurs. Seven explicit suffix regressions passed,
-including empty, zero, one, mixed short, and large-entry suffixes. More
-importantly, RootMirroredGrowthMacroModel.lean proves the corresponding
-outer-rule identity for arbitrary T in the local Lean kernel.
+The right stack is unchanged; the left stack gains exactly 12 entries; the
+entire suffix is preserved; and no token-normalizer branch occurs. Seven
+explicit suffix regressions passed. The local Lean model proves the
+outer-rule identity for arbitrary pair suffixes.
 
-This is a different macro from the old #85 synthetic DR/G/B right-insertion
-macro and from the standalone H-phase CR macro. Its raw cost was derived
-independently from the actual source branch cases in the 76-step mirrored
-trace; it was not transferred from either earlier candidate.
+The 76 underlying source-branch counts are independently audited:
 
-| Underlying #85 source branch | Count | Cost each | Subtotal |
+| Source branch | Count | Cost each | Subtotal |
 |---|---:|---:|---:|
 | DR, left head 0 / positive right head | 8 | 4 | 32 |
 | DR, positive left and right heads | 3 | 3 | 9 |
@@ -71,42 +98,27 @@ trace; it was not transferred from either earlier candidate.
 | CR, left prefix 1,1 | 2 | 16 | 32 |
 | **Total** | **76** |  | **254** |
 
-No DR right-head-zero or DL right-head-one token branch appears in this
-macro. The local Lean model represents those token branches as unavailable;
-the successful 76-step reduction therefore certifies their absence in the
-model. The exact source theorem below is the decisive check against the
-pinned original machine.
+This is a different macro from the old #85 synthetic DR/G/B route and the
+standalone H-phase CR macro. The 254-step count was independently derived
+from the mirrored root's actual 76 branch sequence.
 
-## Formal artifacts
+## Formal artifacts and source theorem
 
-- RootMirroredGrowthMacroModel.lean: Lean 4.36.0-rc2 local model of the
-  outer stack clauses. root_growth_76_pairs proves the suffix-parametric
-  identity for arbitrary pair suffixes; its printed axiom profile is
-  [propext]. The explicit 76-entry cost-vector sum theorem is axiom-free.
-  This is a reduced source-transcribed model, not the original machine proof.
-- RootMirroredGrowthMacro.append.lean: source theorem to append inside the
-  exact #490 module. It uses the public closedStackSystem.evalStackCfg
-  field and execute 254, followed by an axiom print.
-- .github/workflows/agent32-hphase-growth-macro.yml is repurposed as a
-  manual-only source check for this mirrored-root theorem. It still pins the
-  exact upstream commit and toolchain. The older H-phase append file remains
-  preserved but is not part of this run.
+- RootMirroredGrowthMacroModel.lean: local Lean 4.36.0-rc2 model. It proves
+  the 260-step outer-stack root prefix after representing the initial token
+  closure endpoint explicitly; it proves the arbitrary-suffix 76-step macro;
+  and it checks the 848, 877, and 254 arithmetic. The token endpoint in this
+  reduced model is not itself a source proof.
+- RootMirroredGrowthMacro.append.lean: exact-source proof attempt in the
+  pinned #490 module. It proves (or will fail to prove) the 29-step token
+  closure, 848-step ordinary prefix, 7-step blank-root entry, 254-step
+  pumping macro, and finally applies IsNotHalt.of_reachesPlus_invariant to
+  the fixed-prefix/right-stack set.
+- .github/workflows/agent32-hphase-growth-macro.yml: existing manual-only
+  workflow repurposed for this exact source proof. The older H-phase append
+  file is preserved but is not part of this run.
 
-## What is and is not established
-
-Established computationally: the corrected mirrored root replay reaches the
-stated stack prefix at 1,153,484 outer successors; the 76-step local
-reimplementation returns to the same DR mode and fixed right stack while
-inserting B; seven suffix tests pass; the independently counted branch
-costs sum to 254.
-
-Kernel-checked locally: the reduced outer-rule model proves the
-suffix-parametric 76-step identity. This is not yet a theorem about the
-original target.
-
-Still open: compile the exact execute 254 theorem against the pinned
-original #490 module and audit its transitive axioms; source-certify the
-finite blank-root prefix from init [] to this macro seed; then compose the
-macro with that prefix. Only after both source obligations pass would this
-give a genuine nonhalting proof for the #490 blank-start machine. It does
-not determine BB(6) by itself.
+If all source theorems compile with no sorryAx in their transitive axiom
+profiles, root_mirrored_isNotHalt proves that the #490 blank-start machine
+does not halt. That would classify this particular machine as nonhalting,
+not determine BB(6). The exact CI result is still pending.

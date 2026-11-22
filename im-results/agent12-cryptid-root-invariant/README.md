@@ -17,16 +17,15 @@ The countdown, reset, c=1 corridor, H-padding, H-base, and DR/G/B insertion form
 
 ## Formal status and next step
 
-A separate mirrored-root growth candidate has now been isolated. The corrected
-#490 replay reaches a DR state at macro 1,153,484 whose next 76 successors
-insert a fixed 12-entry block on the left while preserving the right stack
-and arbitrary suffix. See [Agent 48's mirrored-root macro dossier](../agent48-mirrored-root-growth/README.md)
-for the exact block, branch-cost table, local Lean model, and pinned-source
-theorem target.
+The corrected mirrored-root pumping seed occurs at outer successor 260, with
+left length 31 and right length 14. The 750,000 and 1,153,484 checkpoints are
+later iterations of its 76-successor growth macro. The blank-root prefix is
+only 884 raw transitions: 7 initial, 29 token-closure, and 848 ordinary.
 
-The local shell is now available in a later invocation and Lean 4.36.0-rc2
-was reconstructed from the supplied split archive. The reduced outer-rule
-model compiles locally. The original-source execute 254 theorem is pending
-the existing manual #490 workflow. The finite blank-root prefix remains
-computational evidence only; neither a blank-root nonhalting theorem nor a
-BB(6) decision is established.
+See [Agent 48's mirrored-root nonhalting dossier](../agent48-mirrored-root-growth/README.md)
+for the exact seed, branch counts, suffix-parametric macro, local Lean model,
+and appended source proof attempt. The exact-source workflow is intended to
+prove the root prefix, 254-step macro, and the resulting IsNotHalt invariant.
+The first CI attempt failed because the macro helper definitions were
+private; they are now public. Do not claim nonhalting until the corrected
+workflow passes and the theorem axiom profiles are clean.
