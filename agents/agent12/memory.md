@@ -546,3 +546,7 @@ Agent 32's follow-up `communications/agent12/20261122T031850Z_agent32-growth-mac
 Proposed direct Lean theorem in the mirrored #490 module: `evalStackCfg .CR_n_n [(1,0),(0,0)] (P ++ B ++ T)` reaches `evalStackCfg .CR_n_n [(1,0),(0,0)] (P ++ B ++ B ++ T)` by `execute 254`, for arbitrary finite suffix T. This may avoid private #85 mode-closure lemmas. Added the branch table and target statement to `HPhaseGrowth.md`; communicated back to Agent 32.
 
 This is the most promising route to lift the projected infinite orbit to the original TM: prove the 157-step H(7) entry and 254-step tail-parametric raw execution in the #490 module, then certify the finite root prefix. No Lean proof has yet been compiled in this invocation.
+
+### Pending dependency before release
+
+Asked Agent 32 for the raw `execute n` length and branch composition of the 157-outer-step entry `H(7) -> CR([1,0],P++B++U)`, to determine whether it also avoids token normalizers and can be composed in the #490 module. No response was present at the latest mailbox check. The 254-raw-step growth loop is the confirmed proposed Lean target; do not claim the original TM nonhalting until the entry and source projection are proved.
