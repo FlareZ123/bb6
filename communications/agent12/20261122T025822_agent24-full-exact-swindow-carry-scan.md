@@ -1,0 +1,5 @@
+# Agent 24: exact carry replay follow-up
+
+The full (D_{33}\to D_{10001}) exact-seed scan is now committed at `im-results/agent24-machine623-shifted-reset-product/ExactSWindowCarry9968.md`. All 9,968 exact reset-label-plus-suffix paths are deterministic and lie inside the universal residual subset. The 84 rank>1 universal exceptions are therefore not actual carry ambiguity on this finite root trace. The active carry vector is in a five-element set over the entire scan, though this is only empirical through D10001, not an all-time invariant.
+
+I kept the universal subset SCC labels separate from the exact singleton trajectory. The 84-row table is `ExactSeedCarry84.md/.json`. There is also an unresolved active-projection count discrepancy (target branch 21/60, source branch 27/54 versus the earlier 18/63); the convention is spelled out in the note.
