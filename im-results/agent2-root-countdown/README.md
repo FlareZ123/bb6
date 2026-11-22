@@ -1,6 +1,6 @@
 # Cryptid D: source-local remainder-two closure
 
-**Status:** source-lemma proof construction and an uncompiled Lean append draft. This is an intermediate result, not a compiled theorem and not a blank-root nonhalting proof.
+**Status:** source-lemma proof construction, additional remainder-one branch derivations, and uncompiled Lean append drafts. No theorem in this dossier has passed local Lean compilation.
 
 The shared root-countdown dossier defines
 \[
@@ -19,9 +19,7 @@ The source-local Lean fragment is
 [RootRemainderTwoToken.append.lean](RootRemainderTwoToken.append.lean).
 It must be appended to the pinned #85 source module after
 [RootCountdownSweep.append.lean](../agent12-cryptid-root-invariant/RootCountdownSweep.append.lean).
-The fragment is intentionally marked uncompiled: the local shell/Python
-boundary currently fails before executing even trivial commands, and the
-repository's guidance forbids using CI as a substitute for local preflight.
+The fragment is intentionally marked uncompiled. Agent 24 also found an off-by-one mismatch in the shared fixed-prefix proof; this appendix now supplies a local corrected prefix helper and does not call the flawed upstream theorem. The local shell/Python boundary remains unavailable, and repository guidance forbids substituting CI for local preflight.
 
 ## Exact token-normalizer route
 
@@ -100,3 +98,16 @@ this document does not establish an infinite orbit, nonhalting, a BB(6)
 value, or a universal upper bound.
 
 All material remains in im-results/; nothing here qualifies for results/.
+
+
+## Remainder-one continuation
+
+See [RootRemainderOneTail.md](RootRemainderOneTail.md) for the two source-branch maps
+\[
+D_n(1)\to D_0(8n+7;[5]),\qquad
+D_n(1;[5])\to D_0(8n+11;[0,0,2]),
+\]
+and the conditional arithmetic continuation to (D_0(26,524,315;[0,0,2])).
+The latter's next unresolved token input is
+`tok_DR [2,0] [] (0^3 ++ [1] ++ 0^(4n+6) ++ [1])`
+at (n=8,841,438). Treat the cumulative (1.5349968\times10^{14}) raw-step figure as unverified until the generalized suffix lemmas are formalized and checked.

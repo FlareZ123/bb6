@@ -29,6 +29,63 @@ RootCountdownSweep.append.lean and has not passed local Lean preflight.
 -/
 
 
+/-
+The upstream root_countdown_prefix draft has an off-by-one endpoint
+mismatch in its DR-zero / DR-empty-left composition. This local
+suffix-preserving version uses the corrected source-clause arguments.
+Agent 24's audit identifies the same correction in the shared draft.
+-/
+theorem root_countdown_prefix_with_tail_fixed (n c : ℕ)
+    (T : List (ℕ × ℕ)) :
+    ReachesPlus target
+      (cfg_CR_n_n [(0,0)]
+        (List.replicate (4*n+5) (0,0) ++ [(c,0)] ++ T))
+      (cfg_EL_n_n [(0,0),(1,0)]
+        (List.replicate (4*n+6) (0,0) ++ [(c,0)] ++ T)) := by
+  let tail : List (ℕ × ℕ) :=
+    List.replicate (4*n+4) (0,0) ++ [(c,0)] ++ T
+  have h1 :
+      ReachesPlus target
+        (cfg_CR_n_n [(0,0)]
+          (List.replicate (4*n+5) (0,0) ++ [(c,0)] ++ T))
+        (cfg_CR_n_n [] ((2,0) :: tail)) := by
+    simpa [tail, bumpPairHead, List.replicate_succ,
+      List.cons_append, List.append_assoc] using
+      (root_countdown_cr_zero_step []
+        (List.replicate (4*n+5) (0,0) ++ [(c,0)] ++ T))
+  have h2 :
+      ReachesPlus target
+        (cfg_CR_n_n [] ((2,0) :: tail))
+        (cfg_EL_n_n [(0,0)] ((3,0) :: tail)) := by
+    simpa [bumpPairHead] using
+      (root_countdown_cr_empty_step ((2,0) :: tail))
+  have h3 := root_countdown_el_positive_step 2 [(0,0)] tail
+  have h4 := root_countdown_dl_positive_step 0 [(0,0)] tail
+  have h5 := root_countdown_dr_zero_step [] ((0,0) :: tail)
+  have h6 := root_countdown_dr_empty_left_step
+    ((1,0) :: (0,0) :: (0,0) :: tail)
+  have h7 := root_countdown_el_positive_step 0 [(0,0)]
+    ((0,0) :: (0,0) :: tail)
+  have h8 :
+      ReachesPlus target
+        (cfg_DL_0_n [(0,0)]
+          ((0,0) :: (0,0) :: (0,0) :: tail))
+        (cfg_EL_n_n [(0,0),(1,0)]
+          ((0,0) :: (0,0) :: tail)) := by
+    simpa [bumpPairHead] using
+      (root_countdown_dl_zero_step [(0,0)]
+        ((0,0) :: (0,0) :: tail))
+  simpa [tail, List.replicate_succ, List.cons_append,
+    List.append_assoc] using
+    (ReachesPlus.trans h1
+      (ReachesPlus.trans h2
+        (ReachesPlus.trans h3
+          (ReachesPlus.trans h4
+            (ReachesPlus.trans h5
+              (ReachesPlus.trans h6
+                (ReachesPlus.trans h7 h8)))))))
+
+
 theorem root_d2_tok_dr_zero_sweep (k : ℕ) (K1 : List ℕ)
     (R3 : List (ℕ × ℕ)) (L : List ℕ) :
     ReachesPlus target
@@ -121,7 +178,7 @@ theorem root_countdown_two_reset (n : ℕ) :
         (List.replicate (4*n+5) (0,0) ++ [(2,0)]))
       (cfg_CR_n_n [(0,0)]
         (List.replicate 5 (0,0) ++ [(8*n+19,0)])) := by
-  have h1 := root_countdown_prefix n 2
+  have h1 := root_countdown_prefix_with_tail_fixed n 2 []
   have h2 := root_countdown_el_zero_sweep (4*n+5)
     [(0,0),(1,0)] [(2,0)]
   have h3 := root_countdown_el_positive_step 1
