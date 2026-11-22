@@ -161,7 +161,9 @@ function successor(c, macro) {
       return { mode: "DR", L: cons(a - 1, lt), R: cons(0) };
     }
     const b = R.v, rt = R.next;
-    if (b === 0) {
+    // Source mode_DR tokenizes both r1=0 and r1=1. The ordinary
+    // DR/CR branch below applies only when the right head is >= 2.
+    if (b <= 1) {
       if (a === 0) return closeTokDR(rt, lt, macro);
       return closeTokCR(rt, cons(a - 1, lt), macro);
     }
