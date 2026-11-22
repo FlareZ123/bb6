@@ -382,17 +382,18 @@ theorem runStats_count_digit (n b : Nat) (s : DrainState) :
   | succ n ih =>
       cases hst : step s (b % 3) with
       | mk s' out =>
-          have hout := step_output_bounds s (b % 3)
+          have hout : 0 ≤ out ∧ out ≤ 2 := by
+            simpa [hst] using step_output_bounds s (b % 3)
           have htail := ih (b / 3) s'
           constructor
           · simp only [runStats, hst]
             rw [countDigitInt_shift 1 out
-              (runStats n (b / 3) s').output n (by omega) (by omega)]
+              (runStats n (b / 3) s').output n hout.1 (by omega)]
             rw [htail.1]
             omega
           · simp only [runStats, hst]
             rw [countDigitInt_shift 2 out
-              (runStats n (b / 3) s').output n (by omega) (by omega)]
+              (runStats n (b / 3) s').output n hout.1 (by omega)]
             rw [htail.2]
             omega
 
@@ -426,6 +427,7 @@ theorem drainDigitSummary_counts (b : Nat) :
             s.v t.length s.eps (Int.ofNat t.value) (by simpa [s] using hs.1)
           have hcount2 := countDigitInt_sparse 2 (by right; rfl)
             s.v t.length s.eps (Int.ofNat t.value) (by simpa [s] using hs.1)
+          rw [drainDigitSummary_succ]
           change
             countDigitInt 1 (s.v + 1 + t.length)
                 (Int.ofNat ((1 + s.eps) * 3 ^ s.v + 3 ^ (s.v + 1) * t.value)) =
@@ -487,7 +489,8 @@ theorem drainB_digit_summary (b : Nat) :
             obtain ⟨a1', q', d1', heval', hb1⟩ :=
               evalA_ones_budget a k (d + 2 * (k + 1) + 3) hstrict
             rw [heval] at heval'
-            injection heval' with hA hq hD
+            simp only [Option.some.injEq, Prod.mk.injEq] at heval'
+            rcases heval' with ⟨hA, hq, hD⟩
             subst a1'
             subst q'
             subst d1'
@@ -523,6 +526,7 @@ theorem drainB_digit_summary (b : Nat) :
                     + (s.eps + (drainDigitSummary s.q).twos))
             have hsecond := hrec.2
             dsimp [a1] at hpot
+            rw [hR]
             omega
 
 /-- Exact source drain formula in terms of the three-state transducer's output digits. -/
@@ -531,7 +535,7 @@ theorem drainB_digit_transducer (b a d aa dd : Nat)
     (hdrain : drainB a b d = some (.D aa dd)) :
     aa + (drainDigitSummary b).length =
         a + 2 * (runStats (drainDigitSummary b).length
-          (b % 3 ^ (drainDigitSummary b).length) A).twos ∧
+          (b % 3 ^ (drainDigitSummary b).length) DrainState.A).twos ∧
     dd + 4 * (runStats (drainDigitSummary b).length
           (b % 3 ^ (drainDigitSummary b).length) A).twos =
         d + 3 * b + 2 * (drainDigitSummary b).length
@@ -551,9 +555,7 @@ theorem drainB_digit_transducer (b a d aa dd : Nat)
       4 * Int.ofNat (drainDigitSummary b).value + 1 =
         2 * Int.ofNat b + pow3 L := by
     have hcast := congrArg Int.ofNat hformula
-    rw [pow3_eq_nat] at hcast
-    norm_num at hcast
-    exact hcast
+    simpa [pow3_eq_nat, Int.natCast_add, Int.natCast_mul] using hcast
   have hvalueBound : Int.ofNat (drainDigitSummary b).value < pow3 L := by
     rw [pow3_eq_nat]
     exact Int.ofNat_lt.mpr hbound
@@ -566,16 +568,13 @@ theorem drainB_digit_transducer (b a d aa dd : Nat)
   have houtput : stats.output = Int.ofNat (drainDigitSummary b).value := by
     dsimp [stats]
     have hrun' := hrun
-    rw [pow3_eq_nat] at hrun'
     omega
   have hcounts := runStats_count_digit L (b % 3 ^ L) A
   have hsummaryCounts := drainDigitSummary_counts b
   have hones : stats.ones = (drainDigitSummary b).ones := by
-    dsimp [stats]
     rw [hcounts.1, houtput]
     exact hsummaryCounts.1
   have htwos : stats.twos = (drainDigitSummary b).twos := by
-    dsimp [stats]
     rw [hcounts.2, houtput]
     exact hsummaryCounts.2
   rcases hsource with ⟨hfirst, hweighted⟩
@@ -634,7 +633,7 @@ theorem drainB_digit_source_correction_interface
   obtain ⟨r, hweighted⟩ :=
     drainB_weighted_exact b a d aa dd hbudget hdrain
   have hcount : r = stats.ones + stats.twos := by omega
-  have hweights := runStats_weight_bounds L (b % 3 ^ L) A
+  have hweights := runStats_weight_bounds L (b % 3 ^ L) DrainState.A
   have hE0 : 0 ≤ (stats.twos : Int) := by
     simpa [weightedE, stats, drainDigitStats, L] using hweights.1
   have hER : (stats.twos : Int) ≤ ((stats.ones + stats.twos : Nat) : Int) := by
