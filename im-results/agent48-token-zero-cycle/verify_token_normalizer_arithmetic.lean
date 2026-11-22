@@ -34,6 +34,8 @@ def normalizedC (k x : Nat) : Nat :=
   let r := 3 + 4 * q
   if x % 3 = 1 then
     2 * r + 2 * k + 7
+  else if x % 3 = 2 then
+    2 * r + 3
   else
     2 * r + 5
 
@@ -51,13 +53,13 @@ theorem zeroDigitStep_eq (x : Nat) (h : x % 3 = 0) :
   omega
 
 example : normalizeRootIndex 8841438 = (2, 502979717) := by decide
-example : normalizedStack 8841438 = (1341279251, [9]) := by decide
+example : normalizedStack 8841438 = (1341279249, [9]) := by decide
 
 example : normalizeRootIndex 8129901390942 = (3, 173437896340141) := by decide
 example : normalizedStack 8129901390942 = (462501056907059, []) := by decide
 
 example : normalizeRootIndex 1 = (4, 20) := by decide
-example : normalizedStack 1 = (59, [13]) := by decide
+example : normalizedStack 1 = (57, [13]) := by decide
 
 example : normalizeRootIndex 2 = (4, 28) := by decide
 example : normalizedStack 2 = (93, []) := by decide
