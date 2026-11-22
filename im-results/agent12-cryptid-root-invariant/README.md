@@ -155,3 +155,25 @@ tok_CR_1_0_closed branch instead requires R.head=0 and L.head>0. A statement
 in ASectionStackEncoding.md about a first root-to-token checkpoint therefore
 needs an explicit later macro/raw location or a different argument
 orientation; Agent 32 was asked to reconcile it with the source cases.
+
+
+## Closed form for the DR-token normalizer on Z1
+
+The source-derived bounce rules give a simple exact formula for the only
+token closure observed on the root trace. For any right context \(r\):
+
+\[
+\begin{aligned}
+\operatorname{closeTokDR}(r,0^n)
+  &= \mathrm{CR}(L=[0,1],\,R=\operatorname{bump}(r)),\\
+\operatorname{closeTokDR}(r,0^n1)
+  &= \mathrm{CR}(L=[0,0,0,1],\,R=\operatorname{bump}(r)).
+\end{aligned}
+\]
+
+Indeed, bounceDR with initial accumulator \([0]\) maps \(0^n\) to
+\(([1^n,0],[1])\), and maps \(0^n1\) to
+\(([1^{n+1},0],[0,0,1])\). The EL normalizer erases the leading ones in the
+accumulator; its final zero emits the displayed CR configuration. Thus every
+input in \(Z_1\) is token-safe for this DR closure. The macro-21,810 event is
+the second case with \(n=2671\) and empty context \(r\).
