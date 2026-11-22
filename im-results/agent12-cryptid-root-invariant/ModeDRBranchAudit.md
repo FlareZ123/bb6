@@ -42,9 +42,9 @@ I reran the persistent-list successor in the available V8 runtime with the sourc
 | Macro index | State summary |
 |---:|---|
 | 24 | DR(L=0001, R=[1,3]) = Corr(3,3) |
-| 21,810 | DL(L=0^2671, R=[1]), invoking the DR token closure |
-| 21,811 | CR(L=0^2711, R=[1]) |
-| 21,827 | CR(L=0^2551, R=[33]) |
+| 21,810 | DL(L=0^267 ++ [1], R=[1]), invoking the DR token closure |
+| 21,811 | CR(L=0^271 ++ [1], R=[1]) |
+| 21,827 | CR(L=0^255 ++ [1], R=[33]) |
 | 21,926 | CR(L=0^1561, R=[231]) |
 | 22,083 | EL(L=[0], R=[0,546]) |
 | 22,099 | D_0(540) |
@@ -55,6 +55,10 @@ I reran the persistent-list successor in the available V8 runtime with the sourc
 | 1,113,215 | H(1939) |
 | 1,131,748 | first DR/G/B growth seed |
 | 1,153,484 | DR(L=G, R=[1] ++ B ++ T), after 286 growth repetitions |
+
+At macro 21,810 the `DL` right-head-1 token closure has input `r3=[]` and `L=0^267 ++ [1]`. The source formula
+`closeTokDR(r3,0^n ++ [1]) = CR(L=0^(n+4) ++ [1], R=bump(r3))`
+therefore gives `CR(L=0^271 ++ [1],R=[1])` at macro 21,811. This is the exact c=2 corridor token event, not an ordinary DR right-head-1 branch. The 21,810 ordinary outer successors before the closure cost 64,565 raw TM steps; the 288 ordinary successors after it cost 595 raw steps to `D_0(540)`. The token closure's own raw-step count is not separately enumerated here.
 
 Here `D_n(c) = CR(L=[0], R=0^(4n+5) ++ [c])`,
 `G=[0,0,1,0,1,0,0,0,0,1]`, and
