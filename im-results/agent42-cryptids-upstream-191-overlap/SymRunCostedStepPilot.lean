@@ -693,6 +693,50 @@ theorem pilotStateFieldMax_right_mono (mode : SymMode) (L R' R : List SymTok)
   · exact Nat.le_max_left _ _
   · exact Nat.le_trans hR (Nat.le_max_right _ _)
 
+
+/-- The source `peelTok` operation never exposes a numeric field larger
+    than the head token it expands or the untouched suffix. -/
+theorem pilot_peelTok_field_growth (t : SymTok) (xs : List SymTok) :
+    pilotListFieldMax (peelTok t xs) ≤
+      max (pilotTokFieldMax t) (pilotListFieldMax xs) := by
+  cases t with
+  | item x =>
+    cases x <;> simp [peelTok, pilotListFieldMax, pilotTokFieldMax]
+  | repB1 k =>
+    cases k <;> simp [peelTok, pilotListFieldMax, pilotTokFieldMax, strictNat_eq] <;> omega
+  | rep2 p =>
+    cases p <;> simp [peelTok, pilotListFieldMax, pilotTokFieldMax, strictNat_eq] <;> omega
+  | rep12 m =>
+    cases m <;> simp [peelTok, pilotListFieldMax, pilotTokFieldMax, strictNat_eq] <;> omega
+
+theorem pilot_peelL_field_growth (L : List SymTok) :
+    pilotListFieldMax (peelL L) ≤ pilotListFieldMax L := by
+  cases L with
+  | nil => simp [peelL, pilotListFieldMax]
+  | cons t xs =>
+    simpa [peelL, pilotListFieldMax] using pilot_peelTok_field_growth t xs
+
+theorem pilot_peelTok_length_le (t : SymTok) (xs : List SymTok) :
+    (peelTok t xs).length ≤ xs.length + 6 := by
+  cases t with
+  | item x =>
+    cases x <;> simp [peelTok, strictNat_eq]
+  | repB1 k =>
+    cases k <;> simp [peelTok, strictNat_eq] <;> omega
+  | rep2 p =>
+    cases p <;> simp [peelTok, strictNat_eq] <;> omega
+  | rep12 m =>
+    cases m <;> simp [peelTok, strictNat_eq] <;> omega
+
+theorem pilot_peelL_length_le (L : List SymTok) :
+    (peelL L).length ≤ L.length + 5 := by
+  cases L with
+  | nil => simp [peelL]
+  | cons t xs =>
+    have h := pilot_peelTok_length_le t xs
+    simp only [peelL, List.length_cons]
+    omega
+
 theorem pilotStateFieldMax_peelL_left_mono (mode : SymMode) (L R : List SymTok) :
     pilotStateFieldMax (mode, peelL L, R) ≤
       pilotStateFieldMax (mode, L, R) := by
