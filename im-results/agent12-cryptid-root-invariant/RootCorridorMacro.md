@@ -1,6 +1,6 @@
 # Exact macro dynamics of the DR corridor family
 
-**Status: source-transcribed candidate, not a formal proof.** The previous blanket withdrawal was based on a wrong branch reading. The pinned `mode_DR_n_n_closed` tokenizes only right-head 0; positive right heads take the ordinary branch. The restored source-transcribed simulator again reaches `Corr(3,3)` at macro 24. This does not automatically validate every formula below: treat the family identities as candidates until the full regression is rerun. See [ModeDRBranchAudit.md](./ModeDRBranchAudit.md).
+**Status: source-transcribed #85-side projected candidate, not a formal proof or blank-root path.** The #490 wrapper mirrors #85 with L/R swapped. Its blank-start seed corresponds to #85 `DR(L=[1],R=[0,0])`, not the synthetic #85 `DR(L=[0,0],R=[1])` used for the `Corr(3,3)` macro-24 trace below. Therefore the c=1 corridor, `D_n` countdown, and H-family entry are not established as reachable from the actual blank tape. The mode branch formulas remain useful #85-side candidates; their mirror lift is open. See [ModeDRBranchAudit.md](./ModeDRBranchAudit.md) and [RootCountdownGrowth.md](./RootCountdownGrowth.md).
 
 ## Definitions
 
