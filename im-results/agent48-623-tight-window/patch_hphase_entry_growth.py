@@ -39,6 +39,14 @@ private def hPhaseH7L : List (ℕ × ℕ) :=
 private def hPhaseH7R : List (ℕ × ℕ) :=
   [(2, 0), (0, 0), (0, 0), (0, 0), (0, 0)]
 
+private theorem encRight_append (P T : List (ℕ × ℕ)) :
+    encRight (P ++ T) = encRight T <+ encRight P := by
+  induction P with
+  | nil => simp [encRight]
+  | cons p P ih =>
+      rcases p with ⟨a, b⟩
+      simp only [List.cons_append, encRight_cons, ih, ListBlank.append_assoc]
+
 /-- H(7) reaches C1 in 157 outer successors / 526 raw TM steps. -/
 private theorem hphase_entry_157_raw :
     (closedStackSystem.evalStackCfg .CR_n_n hPhaseH7L hPhaseH7R) [target]⊢⁺
@@ -58,7 +66,12 @@ private theorem hphase_growth_76_raw (T : List (ℕ × ℕ)) :
       (hPhaseP ++ hPhaseB ++ hPhaseB ++ T)) := by
   dsimp [closedStackSystem, ClosedStackSystem.evalStackCfg, cfg_CR_n_n,
     hPhaseP, hPhaseB]
-  simp only [encLeft, encRight, Nat.mod_one]
+  simp only [encLeft, Nat.mod_one]
+  have hstart : encRight (hPhaseP ++ hPhaseB ++ T) =
+      encRight T <+ encRight (hPhaseP ++ hPhaseB) := encRight_append _ _
+  have hend : encRight (hPhaseP ++ hPhaseB ++ hPhaseB ++ T) =
+      encRight T <+ encRight (hPhaseP ++ hPhaseB ++ hPhaseB) := encRight_append _ _
+  rw [hstart, hend]
   execute 254
 
 #print axioms hphase_entry_157_raw
