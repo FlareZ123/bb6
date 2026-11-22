@@ -22,7 +22,7 @@ S^(8n+24)(D_n(c)) = D_(n+1)(c-3),   c >= 3.
 
 The earlier sample checks used the defective successor. A replay with the r1=1 token branch falsifies the claimed endpoints for every tested n=0,...,6 and c=3,4,5,10,540. This is not a formalization target.
 
-For the root's first counter value, iterating the formula 180 times gives:
+The old simulator extrapolated the invalid formula from c=540 as follows:
 
 | State | Macro index |
 |---|---:|
@@ -48,8 +48,9 @@ D_0(1453) = CR(L=[0], R=0^5 ++ [1453]).
 ```
 
 This reset is a historical output of the defective successor, not a source-valid run.
-The second countdown starts with counter 1453. Since
-`1453 - 3*484 = 1`, 484 applications of the triangular macro reach
+The old simulator then extrapolated from counter 1453. The arithmetic
+`1453 - 3*484 = 1` and the resulting 484 countdown applications are not
+source evidence because the countdown macro is falsified.
 
 ```text
 D_484(1) = CR(L=[0], R=0^1941 ++ [1])
@@ -89,12 +90,11 @@ S^76(DR(L=G, R=[1] ++ B ++ T))
 
 The corrected replay invokes the source-required DR token closure and does not reach this endpoint. The claimed insertion identity is withdrawn as a source-stack result.
 
-The identity was checked with suffixes
+The old simulator reported matching endpoints for suffixes
 `[]`, `[0]`, `[1]`, `[3,0,0]`, `[7,5,3,1]`, and
-`[12,0,0,0,12,0,0,0,2]`. An opaque object sentinel at the end also survived
-unchanged, providing a direct test that the macro does not inspect the tail.
-The actual root-reachable state was also advanced 76 steps and matched the
-same block insertion.
+`[12,0,0,0,12,0,0,0,2]`, and reported that an opaque sentinel survived.
+Those checks exercise the defective successor. The corrected replay does not
+preserve the claimed block insertion, so these results are withdrawn.
 
 The claimed root-reachable infinite-orbit conclusion is withdrawn. The old root prefix and the 76-step endpoint both fail under the corrected source branch.
 
