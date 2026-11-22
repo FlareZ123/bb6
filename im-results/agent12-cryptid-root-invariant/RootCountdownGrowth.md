@@ -69,7 +69,28 @@ S^76(DR(L=G, R=[1] ++ B ++ T))
   = DR(L=G, R=[1] ++ B ++ B ++ T).
 ```
 
-The finite regression checked six different suffixes: `[]`, `[0]`, `[1]`, `[3,0,0]`, `[7,5,3,1]`, and `[12,0,0,0,12,0,0,0,2]`. All six matched the claimed endpoint, and the 76-step run made zero token-normalizer calls. This is strong computational evidence for a simple symbolic proof: every branch in the 76-step path should depend only on the fixed prefix and leave arbitrary `T` untouched. It is not yet a proof for all finite suffixes.
+The checked-in regression now tests seven numeric suffixes plus an opaque object suffix; all matched the claimed endpoint, and the 76-step run made zero token-normalizer calls. A separate V8 test used an opaque linked-list sentinel and confirmed that the identical sentinel survives untouched. These are strong computational indications that every branch depends only on the fixed prefix, but they are not a proof for all finite suffixes.
+
+### Raw TM-step count, derived from the actual source branches
+
+The 76 outer successors independently total **254 raw TM steps**. This is not transferred from the separate H-phase macro: each branch of the DR/G/B path was classified against the pinned `execute n` calls in `mode_CR_n_n_closed`, `mode_EL_n_n_closed`, `mode_DL_0_n_closed`, and `mode_DR_n_n_closed`.
+
+| Source branch on this path | Occurrences | Raw steps each | Subtotal |
+|---|---:|---:|---:|
+| DR, r1≥1 and a1=0 | 8 | 4 | 32 |
+| DR, r1≥1 and a1>0 | 3 | 3 | 9 |
+| CR, a1=0 | 13 | 2 | 26 |
+| CR, a1=1 and next left value 0 | 8 | 5 | 40 |
+| CR, a1=1 and next left value 1 | 2 | 16 | 32 |
+| EL, r1>0 | 12 | 1 | 12 |
+| DL, r1=0 | 8 | 6 | 48 |
+| EL, r1=0 | 16 | 2 | 32 |
+| DL, r1≥2 | 4 | 4 | 16 |
+| CR, a1=1 and left tail empty | 1 | 6 | 6 |
+| DR, left stack empty | 1 | 1 | 1 |
+| **Total** | **76** |  | **254** |
+
+No DR r1=0 token branch or DL r1=1 token branch occurs in this macro. The checked-in `sourceClosureCost` regression computes the sum from the source branch classification and asserts 254 for each tested suffix, including the actual root-reachable state. The raw-step count is therefore independently derived for this DR/G/B macro, not assumed from H-phase.
 
 If the countdown, reset, root-entry path, and arbitrary-suffix insertion are proved against the pinned source, the final identity yields an infinite projected stack orbit from the blank-root seed. The corresponding original-TM nonhalting theorem still requires a kernel-checked lift through the exact #490/#85 source encoding.
 
@@ -80,7 +101,7 @@ The separate CR H-phase 76-successor insertion also passes the restored source-t
 ## Reproducibility and proof obligations
 
 - [`fast_root_stack_sim.js`](./fast_root_stack_sim.js) is the persistent-list root replay.
-- [`verify_root_corridor_macro.js`](./verify_root_corridor_macro.js) checks the source branch, 35 countdown samples, the reset, and the two 76-successor macros.
+- [`verify_root_corridor_macro.js`](./verify_root_corridor_macro.js) checks the source branch, 35 countdown samples, the reset, the root-connected 76-successor macro, its 254-raw-step count, and opaque-suffix preservation.
 - [`ModeDRBranchAudit.md`](./ModeDRBranchAudit.md) records the pinned-source branch analysis and recovered checkpoints.
 
 The V8 replay and finite suffix tests are computational, not formal. No Lean compilation or transitive axiom audit is claimed. The local shell tool has failed before executing commands; do not replace the required local source preflight with a CI dispatch. Keep all of this in `im-results/` until the exact imported source closure, raw-step correspondence, arbitrary-suffix theorem, and axiom profile have been checked.
