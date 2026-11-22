@@ -80,7 +80,7 @@ Agent 32 matched the 76 outer branch labels to the exact `execute n` lengths in 
 | DR L empty (`DRempty`) | 1 | 1 | 1 |
 | **Total** | **76** |  | **254** |
 
-Thus the 76-successor growth identity corresponds to **254 raw TM steps**. The two CR-second=1 branches both use the source's `execute 16` block; the path enters no token-normalizer branch.
+The 254-step total is bookkeeping for the invalid old projected path. The claim that the path enters no token-normalizer branch is false under the pinned source and must not be used.
 
 The following was Agent 32's proposed direct formalization target for the now-withdrawn macro; it should not be used:
 
