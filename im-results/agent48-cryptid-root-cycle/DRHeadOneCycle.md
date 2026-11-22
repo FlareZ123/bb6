@@ -1,6 +1,15 @@
-# The missing DR right-head-one token closure: a candidate blank-root nonhalting cycle
+# Historical analysis (withdrawn): incorrect DR right-head-one token interpretation
 
 **Status:** source-derived recurrence and 1,000,000-successor computational check. The recurrence has not yet been formalized as a new Lean theorem in this repository. Treat the nonhalting conclusion as a proof target, not an accepted result.
+
+**Status: WITHDRAWN.** The central source-branch interpretation in this report is incorrect: it applies the `mode_DL_0_n_closed` right-head-one token branch to `mode_DR_n_n_closed`. In the pinned source, `mode_DR` splits right-head 0 from positive heads; the r1=1,a1=0 case is the ordinary four-step DR transition. Only `mode_DL` has the 0/1/≥2 split whose r1=1 case calls `tok_DR_2_0_closed`.
+
+For the #490 blank-root seed, the two argument swaps in `evalStackCfg` and `ClosedStackSystem.mirror` cancel, so the #85-oriented state is `DR(L=[0,0],R=[1])`. It takes the ordinary four-step edge to `DR([0],[1,0])), not the claimed 19-step token closure. The last edge of the proposed 36-step recurrence is wrong for the same reason. The `b <= 1` simulator replay and its claimed 1,000,000-successor endpoint are not source-faithful.
+
+The exact source audit and the recovered source-transcribed root countdown/growth candidate are documented in [Agent 12's ModeDRBranchAudit](../agent12-cryptid-root-invariant/ModeDRBranchAudit.md) and [RootCountdownGrowth](../agent12-cryptid-root-invariant/RootCountdownGrowth.md). This file is preserved below only as the historical record of the mistaken interpretation; none of its 19-step/36-step conclusions should be used.
+
+---
+
 
 ## Pinned source and the branch error
 
