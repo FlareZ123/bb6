@@ -2,7 +2,8 @@
 Source-local append theorem for the residual-one growth macro.
 Append this file inside the pinned source module
 M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA, after its local
-`tstep`/`texecute` macros and private `tok_DR` definition.
+`tstep`/`texecute` macros and private `tok_DR` definition, and after
+`RootCountdownSweep.append.lean` and `RootRemainderTwoToken.append.lean`.
 
 This is intentionally a single direct kernel proof over the actual source
 step function. It does not use the generic existential
