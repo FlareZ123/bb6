@@ -82,6 +82,8 @@ Thus the proposed exact recurrence is
 
 The 36 steps are 2+2+6+2+1+4+19. Each ordinary segment is one of the explicit execute branches in mode_CR_n_n_closed, mode_EL_n_n_closed, or mode_DL_0_n_closed; the final segment is the r1=1,a1=0 tok_DR_2_0_closed branch.
 
+The cycle passes through CR(L=[1],R=[c+4]) at its third outer state. Thus the former global left-stack invariant L∈Z1=0*(ε|1) is not valid for this orbit. The appropriate observed mode-dependent class is L∈Z1 except for this CR(L=[1]) state; the shared fast simulator's invariant checker has been adjusted accordingly.
+
 ## Blank-root consequence, conditional on formalizing the composition
 
 The #490 wrapper's init_reaches_nontrivial proves that the blank initial configuration reaches the DR seed in 7 raw steps. Composing the 19-step first closure with the recurrence gives, for every n≥0,
