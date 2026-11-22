@@ -1489,3 +1489,41 @@ Claimed Agent32 under the existing lease; original claimed_at is 2026-11-20T22:2
 1. Inspect workflow run `44837834285` and confirm the root32-only closure step succeeded. If it fails, retrieve only the failed job's short tail through GitHub Actions MCP, then fix the precise issue.
 2. Send Agent3 the proof-repair commit, 49-module local compile result, axiom profiles, and report path in a direct mailbox message.
 3. Continue toward the BB(6) objective only after preserving this accepted checkpoint. This root32 exclusion is **not** an exact BB(6) value or a universal upper bound; BB(6) remains unsolved.
+
+
+## 2026-11-21 UTC incarnation — independent #490 stack/token bridge
+
+Claimed Agent32 with original lease `claimed_at=2026-11-21T23:03:56.132Z`; mandatory 70-minute threshold is `2026-11-22T00:13:56.132Z`. Do not refresh the lease. The required random mode draw selected normal research mode.
+
+### New external formalization and token checkpoints
+
+- Inspected Google DeepMind's public `google-deepmind/cryptids` formalization of #490, which obtains a closed-stack reduction by mirroring/relabeling #85. External toolchain is Lean 4.35.0-rc4; Mathlib revision `7c2f1a3e3c2e0c7a5b11aefc28fbcab5a7f24f5b`. It is a mathematical reference, not a drop-in dependency for this repository's Lean 4.36.0-rc2.
+- #490's `init_reaches_nontrivial` gives a seven-step blank-root entry into `evalStackCfg .DR_n_n [(0,0),(0,0)] [(1,0)]`. After the list swap in `evalStackCfg), the #85-oriented mode state is `cfg_DR_n_n [(1,0)] [(0,0),(0,0)]`.
+- The first `mode_DR_n_n_closed` branch has a `texecute 3` prefix to the exact token state `tok_CR [1,0] [(0,0)] [0]`. This is source-derived from the DeepMind closure proof.
+- The external int-y1/proofs halting-cylinder input (C=1975700577069254261393123959451562008800234946348086\equiv1\pmod3) has (m=4(C/3)-1). Its `step_An_1101` branch is #490 E with blank scanned symbol. Under the #85→#490 state map (f=[5,4,2,0,1,3]), #490 E is #85 B, not a `tok_EL` state. The #490 E0 transition is `0LC`; after that one raw step the C-state tape equals the DeepMind token state `tok_CR ([0] ++ replicate(m,1)) [(1,0)] []` up to the final blank-equivalent zero. This corrects earlier exploratory messages that mistakenly called the E intermediate `tok_EL`.
+- Thus the blank root and the known halting cylinder enter the same `tok_CR`/closed-stack subsystem at explicit but very different states. The unresolved problem is reachability from root token state `tok_CR [1,0] [(0,0)] [0]` to the cylinder token state (or another halting token state). No such reachability or full A-step2/token-closure equivalence is proved.
+
+### First exact root stack successor prefix
+
+- From root token state `tok_CR [1,0] [(0,0)] [0]`, `bounce_CR` consumes L=[0] via `tok_CR_zero`; its empty-L case with accumulator 2 yields `tok_EL [1,0] [(0,0)] [0,0,1]`. The `bl_terminates_le` proof applies `tok_EL_1` then `tok_EL_exit_zero`, giving first outer successor:
+  `cfg_CR_n_n [(0,0),(0,0),(1,0)] [(1,0)]`.
+- The next exact outer stack checkpoints (list entries abbreviate ((a,0))) are:
+  `CR([0,0,1],[1]) --2--> CR([0,1],[3]) --2--> CR([1],[5]) --6--> EL([0],[0,8]) --2--> EL([0,0],[8]) --1--> DL([0,0],[7]) --4--> DR([0,0],[1,5])`.
+  Arrow labels are raw-step counts from the external Lean `execute` blocks. These are useful regression targets for a future interpreter.
+
+### Repository artifacts and communications
+
+- Added `im-results/agent32-cryptid-padding/DeepMindStackReduction.md` (external stack proof, root/cylinder token checkpoints, first root successor prefix).
+- Added `im-results/agent32-cryptid-padding/ASectionStackEncoding.md` (exact local left-tape encoding identity; state-map correction; conditional suffix/head-alignment caveats).
+- Updated `im-results/agent32-cryptid-padding/RootNearHit13233.md` to state explicitly that the repository already reports a stronger 21/108 match in Agent37's 2.7-million-section scan; the 13,233/8-of-108 observation is only a compact regression target, not a new best match.
+- Added/updated directory synthesis in `im-results/agent32-cryptid-padding/README.md`.
+- Sent Agent37 the stack/token bridge, the state-map correction, and the first root stack successor prefix. Broadcast the common token-system reachability formulation and its correction. Earlier messages claiming a direct `tok_EL` match are superseded by the correction; use the updated notes.
+- The fast DRegular shadow candidate `HaltingCylinderShadowFast.lean` remains uncompiled. The local shell and Python tools returned concrete `ClientError` failures in this invocation; no local Lean preflight or new CI dispatch was possible. Do not claim compilation. DeepMind RC4 and the external raw-bridge RC1 project are not the local RC2 toolchain.
+
+### Next actions
+
+1. Ask Agent37 to evaluate the corrected common `tok_CR) reachability formulation and the first stack prefix; avoid duplicating their work if they take it up.
+2. Formalize the local E0-to-`tok_CR` identity in one Lean environment with the exact #85/#490 state map.
+3. Derive an executable deterministic outer-stack/token successor from `bounce_CR`, `bounce_DR`, and `bl_terminates_le`; validate against the exact prefix above. Then relate its states to the A-step2 macro and the 108-step cylinder.
+4. Do not run more unconnected bounded root scans. Do not treat the 20k A-step2 subscan as progress beyond the existing 2.7M/21-of-108 result.
+5. At the 70-minute lease-age checkpoint, perform orderly release: push useful state, verify, delete `.lease.json) only as the final repository mutation, then exit.
