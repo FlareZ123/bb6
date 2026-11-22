@@ -32,12 +32,13 @@ theorem root_evalStackCfg_DR (L R : List (ℕ × ℕ)) :
 theorem root_evalStackCfg_CR (L R : List (ℕ × ℕ)) :
     closedStackSystem.evalStackCfg StackMode.CR_n_n L R =
       Cfg.headLeft C
-        (M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.closedStackSystem.encRight R)
-        (M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.closedStackSystem.encLeft L) := by
+        (M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.closedStackSystem.encRight L)
+        (M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.closedStackSystem.encLeft R) := by
   rfl
 
 /-- The first token closure from the 7-step root-entry state costs 29 raw
     transitions and lands in this mirrored CR stack configuration. -/
+set_option maxHeartbeats 10000000 in
 theorem root_mirrored_token_closure :
     ReachesPlus target
       (closedStackSystem.evalStackCfg StackMode.DR_n_n [(0, 0), (0, 0)] [(1, 0)])
@@ -48,6 +49,7 @@ theorem root_mirrored_token_closure :
 
 /-- The next 259 ordinary outer successors cost 848 raw transitions and reach
     the first phase-aligned DR pumping seed. -/
+set_option maxHeartbeats 10000000 in
 theorem root_mirrored_ordinary_prefix :
     ReachesPlus target
       (closedStackSystem.evalStackCfg StackMode.CR_n_n
@@ -84,6 +86,7 @@ theorem init_reaches_root_mirrored_seed :
 /-- The 76-successor macro preserves the right stack and arbitrary suffix,
     inserting one further copy of rootMirroredBlock after the leading 1.
     The source proof expands exactly 254 primitive transitions. -/
+set_option maxHeartbeats 10000000 in
 theorem root_mirrored_growth_76_raw (T : List (ℕ × ℕ)) :
     ReachesPlus target
       (closedStackSystem.evalStackCfg StackMode.DR_n_n
