@@ -139,6 +139,38 @@ Adding Agent 24's preceding conditional blank-to-\(D_{447093083}(0;[13])\) count
 The next natural target is the offset-six remainder-two token closure \(E_n(2)\). Agent 2's current intermediate note records the candidate map
 \(E_n(2)\to D_0(8n+21)\), with \(8n+46\) outer successors and \(40n+196\) raw steps; that closure is also not yet compiled. At the present endpoint \(n=1,192,248,236\), its proposed target would be \(D_0(9,537,985,909)\).
 
+## Offset-six remainder-two reset composition
+
+The new endpoint \(E_n(2)\) can be carried one step farther using the existing token helper root_d2_dl_one_z1. The source-local phase chain is:
+
+1. Corrected suffix-preserving prefix with \(c=0,T=[2]\): 8 outer / 21 raw, reaching \(EL([0,1],0^{4n+7}++[2])\).
+2. EL-zero sweep of \(4n+7\): \(4n+7\) outer / \(8n+14\) raw, reaching \(EL(0^{4n+8}++[1],[2])\).
+3. EL-positive on head 2: 1 outer / 1 raw, reaching DL with right head 1.
+4. Apply root_d2_dl_one_z1 with parameter \(4n+7\): 1 outer macro successor, raw cost \(6(4n+7)+41=24n+83\), reaching \(CR(0^{4n+12}++[1],[0])\).
+5. CR-zero sweep of \(4n+12\): \(4n+12\) outer / \(8n+24\) raw, reaching \(CR([1],[8n+24])\).
+6. CR-one/empty-tail: 1 outer / 6 raw, reaching \(EL([0],[0,8n+27])\).
+7. General tail with \(x=8n+27\): 16 outer / 47 raw, reaching \(D_0(8n+21)\).
+
+Consequently the existing candidate map is explained by the helper composition
+
+\[
+E_n(2)\longrightarrow D_0(8n+21),
+\]
+
+with \(8n+46\) outer successors and \(40n+196\) raw steps. In the source-local Lean draft, the intended helpers are, in order:
+
+- root_countdown_prefix_with_tail_fixed n 0 [(2,0)]
+- root_countdown_el_zero_sweep (4*n+6) [(0,0),(1,0)] [(2,0)]
+- root_countdown_el_positive_step 1 (replicate (4*n+8) 0 ++ [1]) []
+- root_d2_dl_one_z1 (4*n+7)
+- root_countdown_cr_zero_sweep_singleton (4*n+11) 0 [1]
+- root_countdown_cr_one_empty_step [8*n+24]
+- root_countdown_general_tail (8*n+27)
+
+This is a proof composition over the existing uncompiled token helper, not an independent proof of that helper. At the current endpoint \(n=1,192,248,236\), it would reach \(D_0(9,537,985,909)\). Since \(9,537,985,909\equiv1\pmod3\), the next suffix-preserving countdown reaches \(D_{3,179,328,636}(1)\).
+
+The raw cost of the E-reset itself is \(40n+196=47,689,929,636\) at the current \(n\). The following countdown has \(N=3,179,328,636\) steps, raw cost \(12N^2+57N=121,297,567,089,497,178,204\). These values remain conditional until the token helper and its dependency closure compile without axioms.
+
 ## Reproducibility and limitations
 
 verify_suffix13_macro.py transcribes the ordinary CR/EL/DL/DR stack clauses and checks the decrement and remainder-one formulas at small parameters. The finite checks cover \(n=0,\ldots,4\) and \(x\in\{3,4,7,10,13,16\}\). They are bounded source-transcribed computation, not a proof of the quantified statements.

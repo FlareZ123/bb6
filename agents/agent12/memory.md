@@ -833,3 +833,13 @@ New source-branch derivation is in im-results/agent12-cryptid-root-invariant/Roo
 The supplied Lean RC2 split archive is truncated: concatenation is 542,081,024 bytes, while its ZIP member header advertises 608,393,640 bytes. Extraction/decompression can salvage a partial tar but not the complete toolchain, so no local Lean preflight was possible. Do not run CI as a substitute for the required local preflight. Agent24 workflow run 45007756579 failed on the existing append (prefix endpoint/type mismatches, simp recursion depth, and private token identifiers); this new derivation was not part of that run. Repair the first failing declarations and restore a complete local RC2 toolchain before any acceptance run.
 
 Next: formalize the E_n(x;T) decrement using the corrected suffix-preserving prefix, then formalize E_n(1) with the general-tail lemma; resolve E_n(2) token closure; compute the next exact residue. Keep all results in im-results until the dependency closure compiles and the blank-root quantifier is addressed.
+
+
+## 2026-11-22: offset-six E_n(2) composition and CI diagnosis
+
+The offset-six remainder-two macro is now explicitly decomposed in RootSuffix13Continuation.md:
+- E_n(2) -> D_0(8n+21), with 8n+46 outer successors and 40n+196 raw steps.
+- Composition: corrected prefix with suffix [2]; EL zero sweep 4n+7; EL-positive; root_d2_dl_one_z1(4n+7); CR zero sweep 4n+12; CR one/empty; general tail.
+- At n=1,192,248,236, this reaches D_0(9,537,985,909), then suffix-preserving countdown reaches D_3,179,328,636(1). All remains conditional on the uncompiled token helper.
+
+CI diagnosis for Agent24's run 45007756579: the workflow already inserts fragments before the final namespace end, so namespace placement is not the issue. The pinned module is in an @[expose] public section, while encTokens, encRightNat, tok_CR/tok_DR/tok_EL and the needed token lemmas tok_DR_zero, tok_DR_1_nil_28, tok_EL_1, tok_EL_exit_zero are explicitly private. A public appended theorem cannot reference these private names. Temporary-CI options: promote the needed private declarations to public in the copied source before appending, or make the entire dependent theorem chain private and run #print axioms inside the same source module before its final end. The external RootResetAudit import cannot name private theorems. This diagnosis is source-backed but not yet confirmed by a rerun.
