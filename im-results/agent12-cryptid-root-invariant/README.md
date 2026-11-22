@@ -203,3 +203,6 @@ The macro note also records the exact pair-stack tape image of `Corr(r,c)`: `(10
 
 
 For the unresolved halting-reachability target and the external `A(3^108*k+C,[])` cylinder, see [`resources/2026-11-20-cryptid-D-halting-cylinder.md`](../../resources/2026-11-20-cryptid-D-halting-cylinder.md). The current corridor result is a finite stack-orbit compression only; it does not establish a path into that cylinder.
+
+
+Candidate bridge (not a state correspondence): `encLeft(0^r1)=(10)^r110` is the reverse of the DRegular source section `sourceSection(2,r,0)=11(01)^r`, with one extra boundary blank. The right-side image and exact head/control correspondence remain unresolved; see the final section of `RootCorridorMacro.md`.
