@@ -877,6 +877,88 @@ theorem stepElemDL_within (L R : List SymTok) :
       simpa [stepElemDL] using
         pilot_reachesIn_refl ((evalSym target_tm) (.DL, .rep12 m :: L1, R))
 
+
+theorem stepElemDL_within25 (L R : List SymTok) :
+    ReachesWithin (25 * (pilotStateFieldMax (.DL, L, R) + 1))
+      ((evalSym target_tm) (.DL, L, R))
+      ((evalSym target_tm) (stepElemDL L R)) := by
+  unfold ReachesWithin
+  cases L with
+  | nil =>
+    refine ⟨0, by omega, ?_⟩
+    simpa [stepElemDL] using pilot_reachesIn_refl ((evalSym target_tm) (.DL, [], R))
+  | cons t L1 =>
+    cases t with
+    | item x =>
+      cases x with
+      | zero =>
+        refine ⟨0, by omega, ?_⟩
+        simpa [stepElemDL] using
+          pilot_reachesIn_refl ((evalSym target_tm) (.DL, .item .zero :: L1, R))
+      | run d =>
+        rcases d with _ | _ | _ | d
+        · refine ⟨1, by omega, ?_⟩
+          simpa only [stepElemDL, strictList_eq, evalSym, evalM, encSymL, encSymR_bumpSymR] using
+            step_DL_run0_exact (encSymL L1) (encSymR R)
+        · refine ⟨3, by omega, ?_⟩
+          simpa only [stepElemDL, strictList_eq, evalSym, evalM, encSymL, encSymR,
+            encSymR_bumpSymR] using
+            step_DL_run1_exact (encSymL L1) (encSymR R)
+        · cases R with
+          | nil =>
+            refine ⟨0, by omega, ?_⟩
+            simpa [stepElemDL] using
+              pilot_reachesIn_refl ((evalSym target_tm) (.DL, .item (.run 2) :: L1, []))
+          | cons rt R1 =>
+            cases rt with
+            | item it =>
+              cases it with
+              | zero =>
+                refine ⟨0, by omega, ?_⟩
+                simpa [stepElemDL] using
+                  pilot_reachesIn_refl
+                    ((evalSym target_tm) (.DL, .item (.run 2) :: L1, .item .zero :: R1))
+              | run d0 =>
+                refine ⟨3 * d0 + 22, ?_, ?_⟩
+                · have hd : d0 ≤
+                      pilotStateFieldMax (.DL, .item (.run 2) :: L1, .item (.run d0) :: R1) := by
+                    simp [pilotStateFieldMax, pilotListFieldMax, pilotTokFieldMax] <;> omega
+                  omega
+                · simpa only [stepElemDL, strictList_eq, evalSym, evalM, encSymL, encSymR,
+                    encSymL_prependZeroSym] using
+                    step_DL_run2_exact d0 (encSymL L1) (encSymR R1)
+            | repB1 k =>
+              refine ⟨0, by omega, ?_⟩
+              simpa [stepElemDL] using
+                pilot_reachesIn_refl
+                  ((evalSym target_tm) (.DL, .item (.run 2) :: L1, .repB1 k :: R1))
+            | rep2 p =>
+              refine ⟨0, by omega, ?_⟩
+              simpa [stepElemDL] using
+                pilot_reachesIn_refl
+                  ((evalSym target_tm) (.DL, .item (.run 2) :: L1, .rep2 p :: R1))
+            | rep12 m =>
+              refine ⟨0, by omega, ?_⟩
+              simpa [stepElemDL] using
+                pilot_reachesIn_refl
+                  ((evalSym target_tm) (.DL, .item (.run 2) :: L1, .rep12 m :: R1))
+        · refine ⟨0, by omega, ?_⟩
+          simpa [stepElemDL] using
+            pilot_reachesIn_refl
+              ((evalSym target_tm) (.DL, .item (.run (d + 3)) :: L1, R))
+    | repB1 k =>
+      refine ⟨0, by omega, ?_⟩
+      simpa [stepElemDL] using
+        pilot_reachesIn_refl ((evalSym target_tm) (.DL, .repB1 k :: L1, R))
+    | rep2 p =>
+      refine ⟨0, by omega, ?_⟩
+      simpa [stepElemDL] using
+        pilot_reachesIn_refl ((evalSym target_tm) (.DL, .rep2 p :: L1, R))
+    | rep12 m =>
+      refine ⟨0, by omega, ?_⟩
+      simpa [stepElemDL] using
+        pilot_reachesIn_refl ((evalSym target_tm) (.DL, .rep12 m :: L1, R))
+
 theorem stepElemCB_run0_within (L R1 : List SymTok) :
     ReachesWithin (50 * (pilotStateFieldMax (.CB, L, .item (.run 0) :: R1) + 1))
       ((evalSym target_tm) (.CB, L, .item (.run 0) :: R1))
@@ -1572,6 +1654,174 @@ theorem sweepBB_within (L R : List SymTok) :
 /-- Costed outer CB sweep. Its recursion consumes only the right stack, so
     every run/repeat parameter charged by a branch is bounded by the initial
     right-stack maximum field. -/
+
+/-- Finishing a symbolic element transition only runs a BB sweep when
+    the intermediate mode is BB. -/
+theorem finishThenBB_within (s : SymMode × List SymTok × List SymTok) :
+    ReachesWithin
+      (if s.1 = .BB then
+        50 * (pilotListFieldMax s.2.1 + 1) * (s.2.1.length + 1)
+       else 0)
+      ((evalSym target_tm) s)
+      ((evalSym target_tm) (finishThenBB s)) := by
+  rcases s with ⟨mode, L, R⟩
+  cases mode with
+  | BB =>
+    simpa [finishThenBB] using sweepBB_within L R
+  | DL =>
+    unfold ReachesWithin
+    refine ⟨0, by omega, ?_⟩
+    simpa [finishThenBB] using
+      pilot_reachesIn_refl ((evalSym target_tm) (.DL, L, R))
+  | CB =>
+    unfold ReachesWithin
+    refine ⟨0, by omega, ?_⟩
+    simpa [finishThenBB] using
+      pilot_reachesIn_refl ((evalSym target_tm) (.CB, L, R))
+  | HALT =>
+    unfold ReachesWithin
+    refine ⟨0, by omega, ?_⟩
+    simpa [finishThenBB] using
+      pilot_reachesIn_refl ((evalSym target_tm) (.HALT, L, R))
+
+/-- A BB result from one DL element transition can only come from a
+    leading run-0 token; in that case the BB sweep sees its unchanged tail. -/
+theorem stepElemDL_BB_left_bounds (L R : List SymTok)
+    (hBB : (stepElemDL L R).1 = .BB) :
+    pilotListFieldMax (stepElemDL L R).2.1 ≤ pilotListFieldMax L ∧
+      (stepElemDL L R).2.1.length + 1 ≤ L.length := by
+  cases L with
+  | nil => simp [stepElemDL] at hBB
+  | cons t L1 =>
+    cases t with
+    | item x =>
+      cases x with
+      | zero => simp [stepElemDL] at hBB
+      | run d =>
+        cases d with
+        | zero =>
+          simp [stepElemDL, strictList_eq, pilotListFieldMax, pilotTokFieldMax] at hBB ⊢
+        | succ d =>
+          cases d with
+          | zero => simp [stepElemDL] at hBB
+          | succ d =>
+            cases d with
+            | zero =>
+              cases R with
+              | nil => simp [stepElemDL] at hBB
+              | cons rt R1 =>
+                cases rt with
+                | item it =>
+                  cases it with
+                  | zero => simp [stepElemDL] at hBB
+                  | run d0 => simp [stepElemDL, strictList_eq] at hBB
+                | repB1 k => simp [stepElemDL] at hBB
+                | rep2 p => simp [stepElemDL] at hBB
+                | rep12 m => simp [stepElemDL] at hBB
+            | succ d => simp [stepElemDL] at hBB
+    | repB1 k => simp [stepElemDL] at hBB
+    | rep2 p => simp [stepElemDL] at hBB
+    | rep12 m => simp [stepElemDL] at hBB
+
+/-- One DL element followed by its optional BB sweep. -/
+theorem stepElemThenBB_DL_within (L R : List SymTok) :
+    ReachesWithin
+      (50 * (pilotStateFieldMax (.DL, L, R) + 1) * (L.length + 2))
+      ((evalSym target_tm) (.DL, L, R))
+      ((evalSym target_tm) (stepElemThenBB .DL L R)) := by
+  let M := pilotStateFieldMax (.DL, L, R)
+  have h1 := stepElemDL_within25 L R
+  have h1' : ReachesWithin (25 * (M + 1))
+      ((evalSym target_tm) (.DL, L, R))
+      ((evalSym target_tm) (stepElemDL L R)) := by
+    simpa [M] using h1
+  have h2 := finishThenBB_within (stepElemDL L R)
+  have hcomp := reachesWithin_trans h1' h2
+  have h1Budget : 25 * (M + 1) ≤ 50 * (M + 1) := by omega
+  have h2Budget :
+      (if (stepElemDL L R).1 = .BB then
+        50 * (pilotListFieldMax (stepElemDL L R).2.1 + 1) *
+          ((stepElemDL L R).2.1.length + 1)
+       else 0) ≤ 50 * (M + 1) * L.length := by
+    by_cases hBB : (stepElemDL L R).1 = .BB
+    · have hBounds := stepElemDL_BB_left_bounds L R hBB
+      have hField : pilotListFieldMax (stepElemDL L R).2.1 ≤ M :=
+        Nat.le_trans hBounds.1 (Nat.le_max_left _ _)
+      have hLen : (stepElemDL L R).2.1.length + 1 ≤ L.length := hBounds.2
+      simp [hBB]
+      have hprod := Nat.mul_le_mul
+        (Nat.add_le_add_right hField 1) hLen
+      calc
+        50 * (pilotListFieldMax (stepElemDL L R).2.1 + 1) *
+            ((stepElemDL L R).2.1.length + 1)
+          = 50 * ((pilotListFieldMax (stepElemDL L R).2.1 + 1) *
+              ((stepElemDL L R).2.1.length + 1)) := by ring
+        _ ≤ 50 * ((M + 1) * L.length) := Nat.mul_le_mul_left 50 hprod
+        _ = 50 * (M + 1) * L.length := by ring
+    · simp [hBB]
+  have htotal :
+      25 * (M + 1) + 50 * (M + 1) * L.length ≤
+        50 * (M + 1) * (L.length + 2) := by
+    have h25 : 25 * (M + 1) ≤ 50 * (M + 1) := by omega
+    calc
+      _ ≤ 50 * (M + 1) + 50 * (M + 1) * L.length :=
+        Nat.add_le_add_right h25 _
+      _ = 50 * (M + 1) * (L.length + 1) := by ring
+      _ ≤ 50 * (M + 1) * (L.length + 2) :=
+        Nat.mul_le_mul_left (50 * (M + 1)) (by omega)
+  have hbudget := Nat.add_le_add h1Budget h2Budget
+  have hcomp' : ReachesWithin
+      (25 * (M + 1) +
+        (if (stepElemDL L R).1 = .BB then
+          50 * (pilotListFieldMax (stepElemDL L R).2.1 + 1) *
+            ((stepElemDL L R).2.1.length + 1)
+         else 0))
+      ((evalSym target_tm) (.DL, L, R))
+      ((evalSym target_tm) (finishThenBB (stepElemDL L R))) := by
+    simpa [M] using hcomp
+  have hfinal := reachesWithin_mono (Nat.le_trans hbudget htotal) hcomp'
+  simpa [stepElemThenBB, stepElemSym, M] using hfinal
+
+/-- The DL branch of the outer stepSym map has a linear primitive-time
+    bound whenever the trace token count is at most 94. -/
+theorem stepSym_DL_within (L R : List SymTok)
+    (hT : L.length + R.length ≤ 94) :
+    ReachesWithin
+      (2^13 * (pilotStateFieldMax (.DL, L, R) + 1))
+      ((evalSym target_tm) (.DL, L, R))
+      ((evalSym target_tm) (stepSym (.DL, L, R))) := by
+  let M := pilotStateFieldMax (.DL, L, R)
+  have hField := pilotStateFieldMax_peelL_left_mono .DL L R
+  have hLen := pilot_peelL_length_le L
+  have hL : L.length ≤ 94 := by omega
+  have hFactor : (peelL L).length + 2 ≤ 101 := by omega
+  have hprod :
+      (pilotStateFieldMax (.DL, peelL L, R) + 1) *
+          ((peelL L).length + 2) ≤ (M + 1) * 101 :=
+    Nat.mul_le_mul (Nat.add_le_add_right hField 1) hFactor
+  have hconst : 50 * 101 ≤ 2^13 := by norm_num
+  have hbudget :
+      50 * (pilotStateFieldMax (.DL, peelL L, R) + 1) *
+          ((peelL L).length + 2) ≤ 2^13 * (M + 1) := by
+    calc
+      50 * (pilotStateFieldMax (.DL, peelL L, R) + 1) *
+          ((peelL L).length + 2)
+        = 50 * ((pilotStateFieldMax (.DL, peelL L, R) + 1) *
+            ((peelL L).length + 2)) := by ring
+      _ ≤ 50 * ((M + 1) * 101) := Nat.mul_le_mul_left 50 hprod
+      _ = (50 * 101) * (M + 1) := by ring
+      _ ≤ 2^13 * (M + 1) := Nat.mul_le_mul_right (M + 1) hconst
+  have hstep := stepElemThenBB_DL_within (peelL L) R
+  have hstep' := reachesWithin_mono (by simpa [M] using hbudget) hstep
+  simpa [stepSym, strictList_eq, M] using hstep'
+
+#print axioms stepElemDL_within25
+#print axioms finishThenBB_within
+#print axioms stepElemDL_BB_left_bounds
+#print axioms stepElemThenBB_DL_within
+#print axioms stepSym_DL_within
+
+
 theorem sweepCB_within (L R : List SymTok) :
     ReachesWithin
       (50 * (pilotListFieldMax R + 1) * (R.length + 1))
