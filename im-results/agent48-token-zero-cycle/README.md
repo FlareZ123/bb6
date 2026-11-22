@@ -263,3 +263,39 @@ D_0(25\,434\,628\,967;[5])
 \]
 
 This reaches a remainder-one state with index \(22\,608\,559\,088\), which differs by 110 from the \(22\,608\,559\,198\) index used as the starting point in the current suffix-[13] return-map note. The two chains must not be conflated: the corrected suffix-[9] route gives the former index.
+
+
+## 9. Zero remainder with suffix [0,0,2]
+
+A second useful suffix-preserving branch is
+
+\[
+D_n(0;[0,0,2])\longrightarrow^+D_0(8n+23).
+\]
+
+After the fixed eight-step prefix and the \(4n+6\)-zero EL sweep, the two zeros in the suffix are consumed by two further EL-zero steps. EL-positive on 2 then reaches the DL-right-one state with left list \(0^{4n+9}1\). Apply the existing token lemma with \(m=4n+9\) leading zeros and empty \(R_3\); it exits to \(CR(0^{4n+13}1,[0])\). The CR-zero sweep, CR-one-empty step, and general tail give \(D_0(8n+23)\).
+
+The costs are:
+
+- \(8n+48\) stack-mode successors;
+- \(8n+21\) token-machine microsteps inside the DL closure;
+- \(40n+206\) raw TM steps.
+
+This extends the corrected suffix-[9] chain after its suffix-[5] continuation:
+
+\[
+\begin{aligned}
+D_{22\,608\,559\,088}(1)
+&\to D_0(180\,868\,472\,711;[5])\\
+&\to D_{60\,289\,490\,903}(1;[5])\\
+&\to D_0(482\,315\,927\,235;[0,0,2])\\
+&\to D_{160\,771\,975\,745}(0;[0,0,2])\\
+&\to D_0(1\,286\,175\,805\,983)\\
+&\to D_{428\,725\,268\,661}(0)\\
+&\to D_0(3\,429\,802\,149\,301)\\
+&\to D_{1\,143\,267\,383\,100}(1)\\
+&\to D_0(9\,146\,139\,064\,807;[5]).
+\end{aligned}
+\]
+
+The first two arrows use the already-derived remainder-one maps; the new suffix-[0,0,2] zero reset is the middle transition from \(D_{160\,771\,975\,745}(0;[0,0,2])\). The final two arrows use the ordinary zero reset and remainder-one reset. This is still a conditional source-level chain, not a Lean-checked root proof.
