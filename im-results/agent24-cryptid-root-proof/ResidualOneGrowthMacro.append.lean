@@ -14,3 +14,5 @@ private theorem agent24_tok_DR_growth_step (s : ℕ) :
       (tok_DR [2,0] [(s+5,0)] [0]) := by
   unfold tok_DR
   texecute 36
+
+#print axioms agent24_tok_DR_growth_step
