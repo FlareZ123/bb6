@@ -238,10 +238,11 @@ def root_prefix() -> list[StackConfig]:
 
 
 def cylinder_token_state(c: int) -> dict[str, object]:
+    """Return a compressed description; never materialize the huge K list."""
     if c % 3 != 1:
         raise ValueError("the recorded cylinder requires C ≡ 1 (mod 3)")
     m = 4 * (c // 3) - 1
-    return {"mode": "tok_CR", "K": [0, 1] + [1] * (m - 1),
+    return {"mode": "tok_CR", "K_prefix": [0], "K_run": {"value": 1, "count": m},
             "R3": [1], "L": []}
 
 
