@@ -19,7 +19,7 @@ private theorem agent24_tok_DR_growth_step (s : ℕ) :
 
 private theorem agent24_tok_DR_growth_iter (s k : ℕ) :
     (tok_DR [2,0] [(s,0)] [0]) [target]⊢⁺
-      (tok_DR [2,0] [(s + 5 * (k + 1),0)] [0] := by
+      (tok_DR [2,0] [(s + 5 * (k + 1),0)] [0]) := by
   induction k with
   | zero =>
       simpa using agent24_tok_DR_growth_step s
