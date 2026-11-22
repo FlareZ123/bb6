@@ -214,14 +214,16 @@ More strongly, any fixed open subinterval around (x_0=79/50) has (K)-length prop
 
 This supplies the required (K\inmathcal W) and completes the finite-depth construction.
 
-For reference, the first five exact leading-coefficient choices at (x_0=79/50) can be taken as
-[
-(t_i,\sigma_i)=(2,6),(2,8),(1,9),(1,10),(3,15),
-]
-with corresponding (R_i) approximately
-[
-6.58787,quad6.13422,quad7.58834,quad6.37926,quad7.51965.
-]
+For reference, with (x_0=79/50) and (gamma_0=1876/675), one explicit first-five-stage choice is:
+
+| (i) | (t_i) | (sigma_i) | (R_i) |
+|---:|---:|---:|---:|
+| 0 | 2 | 6 | (120064/18225) |
+| 1 | 2 | 8 | (3018496/492075) |
+| 2 | 1 | 9 | (33606272/4428675) |
+| 3 | 1 | 10 | (254265152/39858075) |
+| 4 | 3 | 15 | (24277210112/3228504075) |
+
 The recursion (2)–(4), not this finite sample, is the proof of arbitrary depth.
 
 ## Consequence
