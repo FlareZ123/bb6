@@ -1,9 +1,9 @@
+#!/usr/bin/env node
 // This harness checks source-transcribed projected stack macros. The #490
 // ClosedStackSystem.mirror argument swap cancels #85 evalStackCfg's own
 // reversal, so the initial #490 seed maps to cfg_DR_n_n [0,0] [1] and this
 // no-swap stack trace is the #490 blank-root trajectory. It is still not a
 // Lean proof of the parametric macros or an infinite original-machine run.
-#!/usr/bin/env node
 "use strict";
 
 // Array-based regression checks for RootCorridorMacro.md and the corrected root countdown/growth path.
