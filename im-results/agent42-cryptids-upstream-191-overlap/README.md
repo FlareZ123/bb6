@@ -160,3 +160,12 @@ repair in both the shared and isolated trace-audit copies.
 These are uncompiled proof drafts, not accepted machine-run theorems. The
 exact imported-source closure, full `stepSym` composition, and initial
 `runElemFast` prefix transfer remain open.
+
+### 2026-11-22 outer-step branch status (uncompiled)
+
+The F424 costed pilot now drafts `stepSym_BB_within` and
+`stepSym_DL_within`, both with the conditional bound `2^13(M+1)` under
+`T≤94`. The DL proof uses the actual `peelL` expansion bounds and charges
+its optional BB sweep only on the run-0 branch. The CB dispatcher/macro branch
+and the complete `stepSym` theorem remain open; none of these additions has
+passed local Lean 4.36.0-rc2 compilation yet.

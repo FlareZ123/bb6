@@ -170,3 +170,23 @@ tools returned tool-boundary ClientErrors in this invocation, so no local
 Lean preflight or exact imported-source acceptance was obtained. Do not
 replace the required local preflight with a CI dispatch. No F424/F412
 halting-time classification or BB(6) upper bound is claimed.
+
+## 2026-11-22 outer BB/DL branches (source-level, uncompiled)
+
+The costed pilot now contains draft theorems `stepSym_BB_within` and
+`stepSym_DL_within`, each proving a `2^13(M+1)` primitive-time bound under
+the trace invariant `L.length + R.length ≤ 94`.
+
+- BB: `sweepBB_within` costs at most `50(M+1)(|L|+1) ≤ 50·95(M+1) < 2^13(M+1)`.
+- DL: `peelL` is field-nonincreasing and increases length by at most five, so
+  `|peelL L|+2 ≤ 101`. A DL element followed by its optional BB sweep is
+  bounded by `50(M+1)(|peelL L|+2) ≤ 50·101(M+1) < 2^13(M+1)`.
+  The BB-producing DL case is only a leading run-0; its sweep sees the
+  unchanged suffix, while the run-2/right-run branch returns CB and does not
+  invoke a BB sweep.
+
+The corresponding helper drafts are `stepElemDL_within25`,
+`finishThenBB_within`, `stepElemDL_BB_left_bounds`, and
+`stepElemThenBB_DL_within`. These Lean declarations have not been locally
+compiled or axiom-audited. The CB branch, full `stepSym_within`, and the
+initial `runElemFast`/final halting transfer remain open.
