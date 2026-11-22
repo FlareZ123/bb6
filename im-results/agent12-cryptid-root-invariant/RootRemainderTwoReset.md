@@ -32,21 +32,21 @@ The corrected exploratory replay is
 [`fast_root_stack_sim_crcorrected_exploratory.js`](./fast_root_stack_sim_crcorrected_exploratory.js).
 
 
-## More precise token-boundary decomposition (still unproved)
+## More precise token-boundary decomposition (source-derived endpoint; Lean composition pending)
 
 A replay from (D_{65}(2)=CR([0],0^{265}++[2])) locates the token event exactly:
 - after 275 ordinary outer successors, the state is
   (DL(0^{267}++[1],[1]));
 - the next outer successor is the DL-right-one token closure, with (R_3=[]) and (L=0^{267}++[1]);
-- the JS bounce/normalization port returns
+- the pinned source branch sequence yields
   (CR(0^{271}++[1],[0])), i.e. four more zeros are added to the left block.
 
-This suggests the following parameterized decomposition for general (n):
+The source-derived parameterized decomposition for general (n) is:
 
 1. (D_n(2)\to DL(0^{4n+7}++[1],[1])) in (4n+15) ordinary successors (8-step prefix, EL-zero sweep of (4n+6), then EL-positive).
 2. Apply the pinned source closure `tok_DR_2_0_closed` to the DL-right-one branch:
    (DL(0^{4n+7}++[1],[1])\to CR(0^{4n+11}++[1],[0])).
-   This exact endpoint must be checked against the Lean theorem; the displayed endpoint is currently the JS-port prediction.
+   For this input, `bounce_DR` performs `tok_DR_zero` (4n+7) times and `tok_DR_1_nil_28`, producing K_out=1^(4n+8)++[0] and L_out=[0,0,1]. The `bl_step_macro_len` recursion performs `tok_EL_1` (4n+8) times and `tok_EL_exit_zero`; because R3=[] and `bumpPairHead []=[(0,0)]`, the resulting CR endpoint is exactly the displayed state. A dedicated Lean composition of these source lemmas is still pending.
 3. CR-zero sweep of length (4n+11):
    (CR(0^{4n+11}++[1],[0])\to CR([1],[8n+22])).
 4. CR-left-one/empty-tail:
@@ -58,7 +58,7 @@ The outer count is
 ((4n+15)+1+(4n+11)+1+16=8n+44).
 For (n=65), this gives (275+1+271+1+16=564), matching the replay. The token event is at global root macro 21,810, after the D65(2) checkpoint at macro 21,535.
 
-This is now a sharply specified Lean target: use the pinned `mode_DL_0_n_closed` / `tok_DR_2_0_closed` proof for phase 2, prove the CR sweep, reuse the CR-one-empty helper, and generalize the fixed tail to (x\ge6). It is still not a proof until the exact token theorem endpoint is checked and the composition compiles.
+This is now a sharply specified Lean target: use the pinned `mode_DL_0_n_closed` / `tok_DR_2_0_closed` proof for phase 2, prove the CR sweep, reuse the CR-one-empty helper, and generalize the fixed tail to (x\ge6). The token endpoint is now derived from the pinned source clauses, but the complete reset composition still needs to compile as a dedicated Lean theorem.
 
 
 ## External research context: the A-start trajectory is a known probabilistic cryptid
@@ -90,3 +90,6 @@ Adding the ordinary prefix (raw (8n+34)), CR-zero sweep (raw (8n+22)), CR-one/em
 ]
 
 For (n=65), this is 2,786 raw steps. Added to the source-derived root checkpoint D65(2) at raw time 64,018, the predicted D0(539) checkpoint is raw time 66,804. This matches the earlier independent raw-cost bookkeeping value 66,804, although that note labels the endpoint D0(540); the exact endpoint here is D0(539) under the present definition. The endpoint/cost composition still needs a dedicated Lean theorem.
+
+
+The full raw reset cost derived from the pinned clauses is (40n+186). At n=65 it is 2,786 steps; added to the source-derived D65(2) checkpoint at raw time 64,018, the predicted D0(539) checkpoint is raw time 66,804. This agrees with the earlier independent raw-step bookkeeping total 66,804, although that note labels its endpoint D0(540); under the present D_n definition and the source-derived endpoint it is D0(539).
