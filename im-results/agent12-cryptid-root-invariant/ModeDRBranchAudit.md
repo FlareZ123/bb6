@@ -52,7 +52,9 @@ I reran the persistent-list successor in the available V8 runtime with the sourc
 | 155,299 | D_180(0) |
 | 156,780 | D_0(1453) |
 | 1,103,484 | D_484(1) |
-| 1,153,484 | DR(L=G, R=[1] ++ B ++ T) |
+| 1,113,215 | H(1939) |
+| 1,131,748 | first DR/G/B growth seed |
+| 1,153,484 | DR(L=G, R=[1] ++ B ++ T), after 286 growth repetitions |
 
 Here `D_n(c) = CR(L=[0], R=0^(4n+5) ++ [c])`,
 `G=[0,0,1,0,1,0,0,0,0,1]`, and
@@ -61,8 +63,36 @@ Here `D_n(c) = CR(L=[0], R=0^(4n+5) ++ [c])`,
 The source-transcribed regression now checks:
 - 35 instances of `S^(8n+24)(D_n(c)) = D_(n+1)(c-3)` for n=0,…,6 and c in {3,4,5,10,540};
 - the 1,481-successor reset `D_180(0) -> D_0(1453)`;
-- the 76-successor insertion `S^76(DR(G,[1]++B++T)) = DR(G,[1]++B++B++T)` for seven numeric suffixes plus an opaque object suffix, with zero token-normalizer calls and explicit suffix-object identity preservation;
+- the c=1 corridor segments `D_484(1) -> F(1939) -> G(1939) -> H(1939)`;
+- the 38-successor H-padding macro and 179-successor H-base macro, including opaque suffixes;
+- the root-connected H(1939)-to-DR/G/B entry, followed by the 76-successor insertion `S^76(DR(G,[1]++B++T)) = DR(G,[1]++B++B++T)`;
 - the separate H-phase CR 76-step insertion, also with zero token-normalizer calls.
+
+## Short root-connected H-family entry
+
+The old 50,000-successor checkpoint is not the first entry into the DR/G/B growth family. The first seed is at macro 1,131,748, reached from D_484(1) in 28,264 outer successors / 93,556 raw TM steps:
+
+| Segment | Outer successors | Raw steps |
+|---|---:|---:|
+| D_484(1) → F(1939) | 3,897 | 13,641 |
+| F(1939) → G(1939) | 5,830 | 17,487 |
+| G(1939) → H(1939) | 4 | 13 |
+| 483 H-padding macros | 18,354 | 61,824 |
+| H-base macro | 179 | 591 |
+| **Total** | **28,264** | **93,556** |
+
+For `Q=[12,0,0,0]` and `H(r;R)=CR([0]++(10)^(r+1)++[0,0,1,0,0,0],R)`, the two source-transcribed H-family identities are:
+
+```text
+S^38(H(r+4;R)) = H(r;Q++Q++R)                 -- 128 raw steps
+S^179(H(7;Q^m++[2,0,0,0,0]++T))
+  = DR(G,[1]++B++[16,0,0,0]++Q^(m+3)++[2,0,0,0,0]++T)
+                                                   -- 591 raw steps
+```
+
+Since 1939=4·484+3, 483 padding macros take H(1939) to H(7;Q^966++[2,0,0,0,0]); the base macro then reaches the first DR/G/B seed with Q^969 in its tail. The 50,000-successor checkpoint at macro 1,153,484 is this first seed followed by 286 repetitions of the 76-step insertion macro. Those repetitions add 21,736 outer successors and 72,644 raw steps.
+
+The countdown raw-cost formula `24n+69` gives 399,060 raw steps for the first 180 countdowns and 2,838,660 for the second 484 countdowns; the reset costs 2,985. These are source-transcribed computations, not yet a quantified Lean proof. The H-phase CR growth loop remains a separate projected identity; the root route here uses H-padding and H-base to reach DR/G/B, not the standalone H-phase CR seed.
 
 The DR/G/B 76-successor macro independently totals **254 raw TM steps**. The count is derived from the actual `execute n` branches in the four source mode lemmas, not transferred from the separate H-phase calculation:
 
@@ -87,4 +117,4 @@ The persistent-list root replay and the finite suffix tests are computational ev
 
 ## Next proof target
 
-The useful target is again the root-connected countdown/growth construction, not the false 19/36-step DR-head-one cycle. Formalize the exact mode clauses and token closures, then prove the quantified countdown, reset, 50,000-step entry, and tail-parametric 76-step insertion. Preserve the distinction between source-derived stack dynamics, V8 simulation, and original-TM nonhalting.
+The useful target is the root-connected countdown/H-family/DR-G-B construction, not the false 19/36-step DR-head-one cycle. Formalize the quantified D_n corridor and reset, the c=1 exit, the H-padding and H-base identities, and the tail-parametric 76-step insertion. Lift the composition through the exact #490/#85 evaluator and prove that the token-normalizer event in the initial root prefix does not halt. Preserve the distinction between source-derived stack dynamics, V8 simulation, and original-TM nonhalting.
