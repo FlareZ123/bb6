@@ -180,7 +180,7 @@ the second case with \(n=267\) and empty context \(r\).
 
 ## Exact corridor macro family
 
-`RootCorridorMacro.md` gives four exact macro identities for the family `E(r,c)=DR(L=0^r1,R=[1,c])`: the `c≥3` decrement-by-three step, the `c=0` reset, the `c=2` token-normalizer reset, and the `c=1` exit to `F(r)`. Composed with the observed root entry at macro 24, these identities explain the corridor-family prefix through `F(7)` at macro 21,888. They are exact transition derivations, but they do not yet close the subsequent orbit or prove nonhalting.
+`RootCorridorMacro.md` gives four exact macro identities for the family `Corr(r,c)=DR(L=0^r1,R=[1,c])`: the `c≥3` decrement-by-three step, the `c=0` reset, the `c=2` token-normalizer reset, and the `c=1` exit to `F(r)`. Composed with the observed root entry at macro 24, these identities explain the corridor-family prefix through `F(7)` at macro 21,888. They are exact transition derivations, but they do not yet close the subsequent orbit or prove nonhalting.
 
 `verify_root_corridor_macro.js` is a self-contained array-based regression harness for the four identities, the arbitrary-tail DR transfer, the empty-context `0^n1` token closure, and selected root-chain transitions. The harness is self-contained and runs under Node 20: `node im-results/agent12-cryptid-root-invariant/verify_root_corridor_macro.js`. A temporary one-off workflow was used for regression validation and removed after the passing run; no dedicated workflow is retained. The harness is computational support, not a formal proof.
 
@@ -193,4 +193,4 @@ The macro regression harness also verifies `F(r) -> G(r)` in `3r+13` successors,
 The root macro prefix now includes `G(7)` at 21,922 and `H(7)` at 21,926, with the four-step `G(r) -> H(r)` identity checked for r=1..8. Latest regression pass: Actions run `44979144632`, 105 checks. The H-family orbit is open.
 
 
-The regression harness also checks the 24-step blank-root prefix `DR([0,0],[1]) -> E(3,3)`. Latest CI run `44979251653` passed 106 checks, covering the executable root prefix through `H(7)` at macro 21,926. This remains computational support, not formal proof.
+The regression harness also checks the 24-step blank-root prefix `DR([0,0],[1]) -> Corr(3,3)`. Latest CI run `44979251653` passed 106 checks, covering the executable root prefix through `H(7)` at macro 21,926. This remains computational support, not formal proof.
