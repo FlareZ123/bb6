@@ -140,3 +140,33 @@ This is still conditional. Required acceptance gates:
 5. Preserve the separate final `step_DL_zero_halt` cost +1 and transfer through the exact local machine identity and halting adapter, with axiom audit.
 
 The earlier machine-specific rule arrays and checkpoint arithmetic above remain the source anchors; the Agent 38 dossier supplies the replay and cost-bound candidate rather than a competing account.
+
+## 2026-11-22 source-level proof extensions (not yet accepted)
+
+The previous exact-source RC2 run `44955198218` successfully built the pinned
+F424 and F412 upstream modules and reached the local trace-audit file. The
+audit then failed in two branches of `stepElemBB_counter_sum_le`: the proof
+used `bumpSymR_counter_sum_le` without adding the unchanged left suffix.
+The correction lifts that inequality by `listCounterSum L1` in the
+`.item .zero` and large-run branches. This is a proof-script repair, not a
+counterexample to the source transition.
+
+The costed pilot now drafts the missing source-`peelTok` facts:
+`pilot_peelTok_field_growth`, `pilot_peelL_field_growth`, and the
+length bounds `|peelTok t xs| ≤ |xs|+6`, `|peelL L| ≤ |L|+5`.
+These are the exact bounds needed for the DL-to-BB branch; they are not yet
+compiled against the imported source.
+
+The pilot also now drafts the 46-step Rule-A prelude
+`stateA0 (k+1) (d+6) → stateA 0 k d`. Composing it with n 66-step blocks
+gives the explicit primitive-cost bound
+`50·66·(n+1)·(M+n+113)`, where M is the initial field maximum. Under
+`n ≤ M`, this is at most `379,500·(M+1)^2 < 2^19·(M+1)^2`.
+This closes the missing initialization-cost calculation for the successful
+Rule-A branch, but not the surrounding `tryRuleA` dispatcher proof.
+
+All additions remain source-level drafts. The local shell/Python execution
+tools returned tool-boundary ClientErrors in this invocation, so no local
+Lean preflight or exact imported-source acceptance was obtained. Do not
+replace the required local preflight with a CI dispatch. No F424/F412
+halting-time classification or BB(6) upper bound is claimed.

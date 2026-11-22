@@ -693,6 +693,12 @@ theorem pilotStateFieldMax_right_mono (mode : SymMode) (L R' R : List SymTok)
   · exact Nat.le_max_left _ _
   · exact Nat.le_trans hR (Nat.le_max_right _ _)
 
+theorem pilotStateFieldMax_peelL_left_mono (mode : SymMode) (L R : List SymTok) :
+    pilotStateFieldMax (mode, peelL L, R) ≤
+      pilotStateFieldMax (mode, L, R) := by
+  apply pilotStateFieldMax_left_mono
+  exact pilot_peelL_field_growth L
+
 theorem stepElemBB_within (L R : List SymTok) :
     ReachesWithin (50 * (pilotStateFieldMax (.BB, L, R) + 1))
       ((evalSym target_tm) (.BB, L, R))
@@ -1846,6 +1852,96 @@ theorem ruleC_iter_within (n p k d2 : Nat) (R_tail : List SymTok)
 #print axioms ruleC_step_within
 #print axioms ruleA_iter_within
 #print axioms ruleC_iter_within
+
+
+/-- The missing Rule-A initialization is exactly 46 pure symbolic transitions.
+    The equality is definitional in the pinned upstream source. -/
+theorem ruleA0_step_within (k d : Nat) (R_tail : List SymTok) :
+    ReachesWithin
+      (50 * 46 * (pilotStateFieldMax (stateA0 (k + 1) (d + 6) R_tail) + 47))
+      ((evalSym target_tm) (stateA0 (k + 1) (d + 6) R_tail))
+      ((evalSym target_tm) (stateA 0 k d R_tail)) := by
+  exact iterStep_stepPure_within_eq 46
+    (stateA0 (k + 1) (d + 6) R_tail)
+    (stateA 0 k d R_tail)
+    (by rfl)
+
+/-- Compose the 46-step Rule-A initialization with n ordinary 66-step
+    Rule-A blocks.  The initial maximum field M controls the whole chain. -/
+theorem ruleA0_iter_within (n k d : Nat) (R_tail : List SymTok) :
+    ReachesWithin
+      (50 * 66 * (n + 1) *
+        (pilotStateFieldMax (stateA0 (k + n + 1) (d + 6 * n + 6) R_tail) + n + 113))
+      ((evalSym target_tm) (stateA0 (k + n + 1) (d + 6 * n + 6) R_tail))
+      ((evalSym target_tm) (stateA n k d R_tail)) := by
+  let M := pilotStateFieldMax (stateA0 (k + n + 1) (d + 6 * n + 6) R_tail)
+  have h0 : ReachesWithin (50 * 46 * (M + 47))
+      ((evalSym target_tm) (stateA0 (k + n + 1) (d + 6 * n + 6) R_tail))
+      ((evalSym target_tm) (stateA 0 (k + n) (d + 6 * n) R_tail)) := by
+    simpa [M, Nat.add_assoc] using
+      (ruleA0_step_within (k + n) (d + 6 * n) R_tail)
+  have hfield :
+      pilotStateFieldMax (stateA 0 (k + n) (d + 6 * n) R_tail) ≤ M := by
+    simp [M, stateA0, stateA, pilotStateFieldMax, pilotListFieldMax, pilotTokFieldMax]
+    omega
+  have hiter := ruleA_iter_within n 0 k d R_tail
+  have hiterFactor :
+      pilotStateFieldMax (stateA 0 (k + n) (d + 6 * n) R_tail) + n + 67 ≤
+        M + n + 113 := by omega
+  have hiterBudget := Nat.mul_le_mul_left (50 * 66 * n) hiterFactor
+  have hiter' := reachesWithin_mono hiterBudget hiter
+  have h0Budget : 50 * 46 * (M + 47) ≤ 50 * 66 * (M + n + 113) := by omega
+  have h0' := reachesWithin_mono h0Budget h0
+  have hcomp := reachesWithin_trans h0' hiter'
+  have htotal :
+      50 * 66 * (M + n + 113) + 50 * 66 * n * (M + n + 113) ≤
+        50 * 66 * (n + 1) * (M + n + 113) := by
+    calc
+      _ = 50 * 66 * (n + 1) * (M + n + 113) := by ring
+      _ ≤ 50 * 66 * (n + 1) * (M + n + 113) := Nat.le_refl _
+  exact reachesWithin_mono htotal hcomp
+
+/-- If the repeated-block count n is no larger than the starting field M,
+    the complete Rule-A chain (including its 46-step prelude) costs less
+    than 2^19 (M+1)^2 primitive steps. -/
+theorem ruleA0_iter_within_2pow19 (n k d : Nat) (R_tail : List SymTok)
+    (hn : n ≤ pilotStateFieldMax
+      (stateA0 (k + n + 1) (d + 6 * n + 6) R_tail)) :
+    ReachesWithin
+      (2^19 *
+        (pilotStateFieldMax (stateA0 (k + n + 1) (d + 6 * n + 6) R_tail) + 1)^2)
+      ((evalSym target_tm) (stateA0 (k + n + 1) (d + 6 * n + 6) R_tail))
+      ((evalSym target_tm) (stateA n k d R_tail)) := by
+  let M := pilotStateFieldMax (stateA0 (k + n + 1) (d + 6 * n + 6) R_tail)
+  have hbase := ruleA0_iter_within n k d R_tail
+  have hbase' : ReachesWithin (50 * 66 * (n + 1) * (M + n + 113))
+      ((evalSym target_tm) (stateA0 (k + n + 1) (d + 6 * n + 6) R_tail))
+      ((evalSym target_tm) (stateA n k d R_tail)) := by
+    simpa [M] using hbase
+  have hn' : n + 1 ≤ M + 1 := by omega
+  have hfield : M + n + 113 ≤ 115 * (M + 1) := by omega
+  have hprod := Nat.mul_le_mul hn' hfield
+  have hconst : 50 * 66 * 115 ≤ 2^19 := by norm_num
+  have hbudget :
+      50 * 66 * (n + 1) * (M + n + 113) ≤ 2^19 * (M + 1)^2 := by
+    calc
+      50 * 66 * (n + 1) * (M + n + 113) =
+          50 * 66 * ((n + 1) * (M + n + 113)) := by ring
+      _ ≤ 50 * 66 * ((M + 1) * (115 * (M + 1))) :=
+        Nat.mul_le_mul_left (50 * 66) hprod
+      _ = (50 * 66 * 115) * (M + 1)^2 := by ring
+      _ ≤ 2^19 * (M + 1)^2 :=
+        Nat.mul_le_mul_right ((M + 1)^2) hconst
+  exact reachesWithin_mono (by simpa [M] using hbudget) hbase'
+
+#print axioms ruleA0_step_within
+#print axioms ruleA0_iter_within
+#print axioms ruleA0_iter_within_2pow19
+#print axioms pilot_peelTok_field_growth
+#print axioms pilot_peelL_field_growth
+#print axioms pilot_peelTok_length_le
+#print axioms pilot_peelL_length_le
+#print axioms pilotStateFieldMax_peelL_left_mono
 
 
 

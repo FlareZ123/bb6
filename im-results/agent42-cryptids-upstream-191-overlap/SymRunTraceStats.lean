@@ -1414,8 +1414,8 @@ theorem stepElemBB_counter_sum_le (L R : List SymTok) :
     | item x =>
       cases x with
       | zero =>
-        simp [stepElemBB, strictList_eq, symStateCounterSum, listCounterSum]
-        exact hR
+        have hR' := Nat.add_le_add_left hR (listCounterSum L1)
+        simpa [stepElemBB, strictList_eq, symStateCounterSum, listCounterSum, tokCounterSum] using hR'
       | run d =>
         cases d with
         | zero => simp [stepElemBB, symStateCounterSum, listCounterSum, tokCounterSum]
@@ -1430,8 +1430,9 @@ theorem stepElemBB_counter_sum_le (L R : List SymTok) :
               simp [stepElemBB, strictList_eq, symStateCounterSum, listCounterSum, tokCounterSum]
               exact hR
             | succ d =>
-              simp [stepElemBB, strictList_eq, strictNat_eq, symStateCounterSum, listCounterSum, tokCounterSum]
-              exact hR
+              have hR' := Nat.add_le_add_left hR (listCounterSum L1)
+              simpa [stepElemBB, strictList_eq, strictNat_eq,
+                symStateCounterSum, listCounterSum, tokCounterSum] using hR'
     | repB1 k => simp [stepElemBB, symStateCounterSum, listCounterSum, tokCounterSum]
     | rep2 p => simp [stepElemBB, symStateCounterSum, listCounterSum, tokCounterSum]
     | rep12 m => simp [stepElemBB, symStateCounterSum, listCounterSum, tokCounterSum]

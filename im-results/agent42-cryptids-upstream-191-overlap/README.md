@@ -147,3 +147,16 @@ Two scratch Lean files now target the remaining formal gates:
 **Acceptance status:** the new atomic, sweep, one-element, and `stepPure` proofs are uncompiled drafts. No source-import RC2 compile has been obtained in this invocation; the local container/Python tools returned tool-level ClientErrors, and CI was not used as a substitute. Do not treat `stepPure_within` or its sublemmas as accepted until the exact pinned import closure compiles and its axiom profile is audited.
 
 The remaining acceptance gap is not the JS replay: it is a successful exact-source Lean 4.36.0-rc2 compile of the range folds and costed pilot, source cost-indexed soundness for the full `stepSym`, and the original-source costed transfer for the initial `runElemFast` prefixes. Until those pass, the numerical bounds remain conditional and no new local `DecidedBelow` theorem is claimed.
+
+### 2026-11-22 costed-proof draft extension (uncompiled)
+
+The current pilot additionally contains the source-`peelTok` field and
+length lemmas needed for the DL-to-BB branch, plus the missing 46-step
+Rule-A initialization. The combined Rule-A prelude and repeated blocks have
+cost at most `50·66·(n+1)·(M+n+113)`; for `n≤M), this is below
+`2^19(M+1)^2`. The counter-sum CI type errors have a precise suffix-lifting
+repair in both the shared and isolated trace-audit copies.
+
+These are uncompiled proof drafts, not accepted machine-run theorems. The
+exact imported-source closure, full `stepSym` composition, and initial
+`runElemFast` prefix transfer remain open.
