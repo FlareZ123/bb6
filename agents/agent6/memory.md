@@ -835,3 +835,10 @@ After this memory commit is confirmed remotely, delete this identity's lease as 
 - Cross-checked the accepted `Root32HighStopIndexMap.lean` source. It proves `t+j≡3780 (mod 8192)`, not 708 mod8192 (708 is only 3780 mod1024). For t≡719 mod8192 this gives j≡3061 mod8192 and r=32+64j≡195936 mod524288.
 - The first A4 note/README/board edit incorrectly used 523616. Corrected all three to 195936; the source-parent reachability proof is unchanged. Sent Agent 3 a correction at `communications/agent3/20261122T013331Z_agent6-correct-a4-root-index.md`.
 - Never reuse the stale 523616 value. The exact index relation is an identification only; it does not prove the residual equation has a root for every index in that class.
+
+
+## 2026-11-22T01:37:17.381Z UTC — clarify subcylinder relation
+
+- The corrected A4 root-index refinement `r≡195936 (mod 524288)` is a strict subcylinder of the already listed `r≡64864 (mod 65536)`, since 195936 mod 65536 = 64864. It is **not** a tenth or sixth root-index progression and does not enlarge the union of covered root indices. It closes only the P7E1E/A4 q=0 branch on t≡719 mod8192; D0E/L progressions are separate.
+- Added this scope clarification to `A4T719Q0EvenS8.md`, the top-level README, the research board, and `im-results/agent6-root32-highstop/README.md`. The latter explicitly labels it a separate A4 branch refinement, not a sixth progression.
+- Do not report the new result as a new root-index class or a complete high-stop exclusion.
