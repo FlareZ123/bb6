@@ -481,6 +481,9 @@ const report = {
   },
   compactProduct,
   ablations,
+  // Full edge-aligned records keyed by targetIndex for joins with independent
+  // own-start phase diagnostics. Keep phase meanings and window buffers distinct.
+  records,
   samples: {
     first: records.slice(0, 3),
     last: records.slice(-3),
