@@ -6,7 +6,7 @@
 
 The previous version claimed that the root reached H(7) at outer index 21,926 and later reported a corrected prefix through macro 22,083. All of those macro indices are withdrawn: the outer DR successor omitted the source r1=1 token branch. The correct root starts with the 19-raw-step closure to CR([0,0,1],[1]) and then follows the candidate 7-closure recurrence in [DRHeadOneCycle.md](../agent48-cryptid-root-cycle/DRHeadOneCycle.md).
 
-The 157-successor entry and 76-successor growth identities below were computed with the defective successor. The corrected replay falsifies the 76-step endpoint, so neither identity is source-valid. The earlier claim that the blank-root seed reaches Corr(3,3) after 24 outer successors is withdrawn.
+The 157-successor H(7)-to-C1 entry was computed with the defective successor and remains unverified: the corrected interpreter reaches an unresolved token-normalizer case at outer step 11. The 76-successor C1 growth identity is falsified by corrected replay, which invokes the source-required DR right-head-one token closure and misses the claimed endpoint. The earlier claim that the blank-root seed reaches Corr(3,3) after 24 outer successors is withdrawn.
 
 Set
 
@@ -16,7 +16,7 @@ B = [0,0,0,2,0,0,0,2,0,0,0,16]
 U = [0,0,0,12,0,0,0,12,0,0,0,12,0,0,0,2,0,0,0,0]
 ```
 
-The old simulator claimed the following 157-successor entry macro (withdrawn):
+The old simulator claimed the following 157-successor H(7)-to-C1 entry (not source-validated):
 
 ```text
 S^157(H(7)) = CR(L=[1,0], R=P ++ B ++ U).
@@ -49,7 +49,7 @@ Agent 32's earlier entry and tail-sentinel checks exercised the defective projec
 
 ## Current formalization target
 
-The previous formalization argument is withdrawn. The corrected 76-step replay enters the r1=1 DR token branch and misses the claimed endpoint. The only current formalization target is the 19-step DR-to-CR root closure and 36-step CR recurrence in DRHeadOneCycle.md.
+The previous formalization argument is withdrawn. The 76-step C1 replay enters the r1=1 DR token branch and misses the claimed endpoint; the 157-step H(7)-to-C1 entry remains unresolved because the corrected interpreter stalls in a token-normalizer case. The only current formalization target is the 19-step DR-to-CR root closure and 36-step CR recurrence in DRHeadOneCycle.md.
 
 The remaining obligation is to formalize the candidate 36-raw-step recurrence and its 19-step root entry against the pinned source, then compose with the existing seven-step blank-root entry. Until that compiles, the nonhalting conclusion remains a proof target.
 
