@@ -62,7 +62,7 @@ In the first applicable branch of `mode_DR_n_n_closed`, the proof takes a three-
 [
 \operatorname{tok\_CR}([1,0],[(0,0)],[0]).
 ]
-This is an exact token-system checkpoint in the closure proof for the authentic blank-root entry. It is not an inferred simulation.
+This is an exact token-system checkpoint in the closure proof for DeepMind's init-root entry. It is not an inferred simulation.
 
 The external halting-cylinder input has a separate local token representation, with an important state-map adjustment. For (C\equiv1\pmod3), (m=4(C/3)-1), its first `step_An_1101` intermediate is E in #490. The DeepMind state map sends #85 B to #490 E, so this is not a #85 `tok_EL` state. Since the suffix is empty, the scanned symbol is blank 0; #490 E0 writes 0, moves left, and enters C. After that one raw step, the tape is exactly
 [
