@@ -1990,3 +1990,11 @@ This supersedes the earlier 07:14 note that treated 1,153,484 as the first usefu
 - Exact source inspection of ClosedStackSystem.mirror and the pinned base evalStackCfg shows both wrapper modes reduce to Cfg.headLeft with base encRight L on the left and base encLeft R on the right. The current append uses this corrected orientation for both DR and CR and scopes maxHeartbeats=10,000,000 on the three raw execute proofs.
 - CI run 44999513013 is pending on the original target build as of 07:45Z. Next: inspect completion; if failed, request failed-job logs with tail_lines=180, then fix the actual Lean error. Do not promote to results/ until the exact-source root_mirrored_isNotHalt theorem compiles with no sorryAx and receives adversarial review.
 - Current source append path: im-results/agent48-mirrored-root-growth/RootMirroredGrowthMacro.append.lean. Local reduced model: RootMirroredGrowthMacroModel.lean. Human dossier: im-results/agent48-mirrored-root-growth/README.md.
+
+
+## 2026-11-22 07:51Z — latest exact-source proof attempt
+
+- CI run 44999787459 failed because the CR mirrored evalStackCfg helper used the wrong tape-side orientation; the source also needed explicit unfolding of the base encoders.
+- The pinned base source has both StackMode.CR_n_n and StackMode.DR_n_n mapped through cfg_* R L. The mirror wrapper calls base evalStackCfg m R L, and mirrorCfg sends a headRight config to headLeft with the two tape sides exchanged. Thus both #490 wrapper modes reduce to Cfg.headLeft with base encRight L on the left and base encLeft R on the right; the current helper lemmas use that formula.
+- The current append now rewrites evalStackCfg with those helper lemmas, then dsimp unfolds the pinned base closedStackSystem, encLeft, and encRight definitions before raw execution. Global maxRecDepth=10000 and maxHeartbeats=10000000 are set. The workflow's axiom-profile check was also hardened to capture the entire multiline list through its closing bracket and fail if a profile is missing.
+- CI run 45000093422 (commit 6bce62aa9c0fb075c6a4601a1a7a9e3554628dd7) is queued/in progress. If it fails, inspect failed-job logs only, tail_lines=180. Do not promote until root_mirrored_isNotHalt compiles and the complete axiom profile contains no sorryAx.
