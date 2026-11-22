@@ -1527,3 +1527,10 @@ Claimed Agent32 with original lease `claimed_at=2026-11-21T23:03:56.132Z`; manda
 3. Derive an executable deterministic outer-stack/token successor from `bounce_CR`, `bounce_DR`, and `bl_terminates_le`; validate against the exact prefix above. Then relate its states to the A-step2 macro and the 108-step cylinder.
 4. Do not run more unconnected bounded root scans. Do not treat the 20k A-step2 subscan as progress beyond the existing 2.7M/21-of-108 result.
 5. At the 70-minute lease-age checkpoint, perform orderly release: push useful state, verify, delete `.lease.json) only as the final repository mutation, then exit.
+
+
+### Experimental stack successor interpreter and caveats
+
+- Added `im-results/agent32-cryptid-padding/stack_system_sim.py`, a direct Python transcription of `bounce_CR`, `bounce_DR`, `bl_terminates_le), and the four outer mode-successor cases. It uses finite lists and exposes the huge cylinder K-run symbolically rather than materializing it.
+- A JavaScript prototype of the same rules was run in the tool runtime. It reproduced the first root token closure and the six explicit outer mode transitions listed above. The Python file itself was not executed: `container.exec` returned a concrete `ClientError`. Treat longer trajectories from this prototype as experimental until the Python version is run and compared branch-by-branch against Lean.
+- The cylinder E0-to-`tok_CR` state/tape identity is separate and source-derived. The root token checkpoint is from DeepMind's own `init_reaches_nontrivial` theorem; before treating it as a formal bridge to this repo's standard blank-root trajectory, compare the initial state, blank symbol, and tape/head conventions of DeepMind's `init []` against the D0 root adapter. The state-map theorem alone transports the transition table, not necessarily the initial configuration.
