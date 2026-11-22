@@ -44,8 +44,10 @@ function bounceCR(r3, k0, kAcc, right, depth = 0) {
       const b = rest.v, rest2 = rest.next;
       if (b === 0) { kAcc = cons(k0 + 4, kAcc); k0 = 0; right = rest2; continue; }
       if (b === 1) {
-        if (!rest2) return [cons(k0 + 1, kAcc), fromArray([0, 0, 2])];
-        return [cons(k0 + 1, kAcc), fromArray([0, 0, rest2.v + 2], rest2.next)];
+        // tok_CR_1_1_nil_25 / tok_CR_1_1_cons_25 return 0 :: 0 :: ...;
+        // this function stores the suffix after the leading 0 of tok_EL.
+        if (!rest2) return [cons(k0 + 1, kAcc), fromArray([0, 1])];
+        return [cons(k0 + 1, kAcc), fromArray([0, rest2.v + 2], rest2.next)];
       }
       return bounceDR(r3, cons(1, cons(k0 + 1, kAcc)), cons(b - 2, rest2), depth + 1);
     }
@@ -79,8 +81,13 @@ function normalizeEL(k, r3, rightTail, depth = 0) {
       if (z.halt) return z;
       k = z[0]; rightTail = z[1]; continue;
     }
-    if (a === 1) { k = rest; continue; }
+    if (a === 1) {
+      // Source tok_EL_1: tok_EL (1 :: K) R3 (0 :: L) -> tok_EL K R3 (0 :: 0 :: L).
+      k = rest; rightTail = cons(0, rightTail); continue;
+    }
     if (a === 2) { k = rest; rightTail = cons(1, cons(0, rightTail)); continue; }
+    // bl_step_macro_len composes tok_EL_add3 on (0 :: rightTail) with
+    // tok_DR_zero, so bounceDR starts on rightTail after that zero is consumed.
     const z = bounceDR(r3, cons(1, cons(a - 3, rest)), rightTail);
     if (z.halt) return z;
     k = z[0]; rightTail = z[1];
