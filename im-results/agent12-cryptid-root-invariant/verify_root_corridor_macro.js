@@ -138,6 +138,48 @@ function run(s, n) {
   }
   return s;
 }
+// Exact raw-step counts from the pinned mode_*_closed execute branches.
+function sourceClosureCost(s) {
+  const { mode, L, R } = s;
+  if (mode === "CR") {
+    if (!L.length) return 2;
+    if (L[0] === 0) return 2;
+    if (L[0] === 1) {
+      if (!L.slice(1).length) return 6;
+      if (L[1] === 0) return 5;
+      if (L[1] === 1) return 16;
+      return 15;
+    }
+    throw new Error("halting CR branch");
+  }
+  if (mode === "EL") {
+    if (!R.length) return 1;
+    return R[0] === 0 ? 2 : 1;
+  }
+  if (mode === "DL") {
+    if (!R.length) return 4;
+    if (R[0] === 0) return 6;
+    if (R[0] === 1) throw new Error("DL token closure has no fixed execute cost");
+    return 4;
+  }
+  if (mode === "DR") {
+    if (!L.length) return 1;
+    if (!R.length) return L[0] === 0 ? 4 : 3;
+    if (R[0] === 0) throw new Error("DR token closure has no fixed execute cost");
+    return L[0] === 0 ? 4 : 3;
+  }
+  throw new Error("unknown stack mode");
+}
+
+function runWithCost(s, n) {
+  let rawSteps = 0;
+  for (let i = 0; i < n; i++) {
+    rawSteps += sourceClosureCost(s);
+    s = step(s);
+    if (s.halt) throw new Error("halt at offset " + (i + 1) + ": " + s.halt);
+  }
+  return { state: s, rawSteps };
+}
 const Corr = (r, c) => state("DR", [...zeros(r), 1], [1, c]);
 const F = r => state("EL", zeros(4), [1, 0, 0, 0, ...repeat([1, 0], r + 2), 3]);
 const G = r => state("DR", [0, 0, ...repeat([1, 0], r + 2), 0, 0, 1, 0, 0, 0], [1, 0]);
@@ -246,20 +288,24 @@ for (const T of [
   [12, 0, 0, 0, 12, 0, 0, 0, 2], [{ opaque: true }]
 ]) {
   tokenCalls = 0;
-  const actual = run(state("DR", rootGrowthL, [1, ...rootGrowthB, ...T]), 76);
-  assertState("root growth 76, suffix=" + JSON.stringify(T), actual,
+  const result = runWithCost(state("DR", rootGrowthL, [1, ...rootGrowthB, ...T]), 76);
+  assertState("root growth 76, suffix=" + JSON.stringify(T), result.state,
     state("DR", rootGrowthL, [1, ...rootGrowthB, ...rootGrowthB, ...T]));
   if (tokenCalls !== 0) throw new Error("root growth 76 unexpectedly called a token normalizer");
+  if (result.rawSteps !== 254) throw new Error("root growth 76 raw-step count mismatch: " + result.rawSteps);
   checks++;
 }
 
 // Check the actual root-reachable state one growth step, retaining its entire
 // pre-existing suffix untouched.
 tokenCalls = 0;
-const grownRoot = run(rootGrowth, 76);
-assertState("root growth actual 76-step state", grownRoot,
+const grownRootResult = runWithCost(rootGrowth, 76);
+assertState("root growth actual 76-step state", grownRootResult.state,
   state("DR", rootGrowthL, [1, ...rootGrowthB, ...rootGrowthB, ...rootGrowth.R.slice(13)]));
 if (tokenCalls !== 0) throw new Error("actual root growth step called a token normalizer");
+if (grownRootResult.rawSteps !== 254) throw new Error("actual root growth raw-step count mismatch");
 checks++;
 
-console.log(JSON.stringify({ ok: true, checks }, null, 2));
+console.log(JSON.stringify({
+  ok: true, checks, rootGrowth76RawSteps: grownRootResult.rawSteps
+}, null, 2));
