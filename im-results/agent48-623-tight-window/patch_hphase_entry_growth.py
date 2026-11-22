@@ -41,7 +41,7 @@ private def hPhaseH7R : List (ℕ × ℕ) :=
 
 /-- H(7) reaches C1 in 157 outer successors / 526 raw TM steps. -/
 private theorem hphase_entry_157_raw :
-    (closedStackSystem.evalStackCfg .CR_n_n hPhaseH7R hPhaseH7L) [target]⊢⁺
+    (closedStackSystem.evalStackCfg .CR_n_n hPhaseH7L hPhaseH7R) [target]⊢⁺
     (closedStackSystem.evalStackCfg .CR_n_n ([(1, 0), (0, 0)])
       (hPhaseP ++ hPhaseB ++ hPhaseU)) := by
   dsimp [closedStackSystem, ClosedStackSystem.evalStackCfg, cfg_CR_n_n,
