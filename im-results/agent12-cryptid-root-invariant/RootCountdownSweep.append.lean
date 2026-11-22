@@ -154,3 +154,55 @@ theorem root_countdown_cr_zero_sweep_singleton (k b : ℕ) (L : List (ℕ × ℕ
         (by
           simpa [List.replicate_succ, List.cons_append, List.append_assoc,
             Nat.add_assoc, Nat.add_left_comm, Nat.add_comm] using h2)
+
+
+theorem root_countdown_el_empty_step (L : List (ℕ × ℕ)) :
+    ReachesPlus target
+      (cfg_EL_n_n L [])
+      (cfg_CR_n_n L [(0,0)]) := by
+  unfold cfg_EL_n_n cfg_CR_n_n
+  rw [encLeft_d0_s0 []]
+  execute 1
+
+theorem root_countdown_prefix (n c : ℕ) :
+    ReachesPlus target
+      (cfg_CR_n_n [(0,0)]
+        (List.replicate (4*n+5) (0,0) ++ [(c,0)]))
+      (cfg_EL_n_n [(0,0),(1,0)]
+        (List.replicate (4*n+6) (0,0) ++ [(c,0)])) := by
+  let tail : List (ℕ × ℕ) := List.replicate (4*n+4) (0,0) ++ [(c,0)]
+  have h1 :
+      ReachesPlus target
+        (cfg_CR_n_n [(0,0)]
+          (List.replicate (4*n+5) (0,0) ++ [(c,0)]))
+        (cfg_CR_n_n [] ((2,0) :: tail)) := by
+    simpa [tail, bumpPairHead, List.replicate_succ] using
+      (root_countdown_cr_zero_step [] (List.replicate (4*n+5) (0,0) ++ [(c,0)]))
+  have h2 :
+      ReachesPlus target
+        (cfg_CR_n_n [] ((2,0) :: tail))
+        (cfg_EL_n_n [(0,0)] ((3,0) :: tail)) := by
+    simpa [bumpPairHead] using root_countdown_cr_empty_step ((2,0) :: tail)
+  have h3 :=
+    root_countdown_el_positive_step 2 [(0,0)] tail
+  have h4 :=
+    root_countdown_dl_positive_step 0 [(0,0)] tail
+  have h5 :=
+    root_countdown_dr_zero_step [] tail
+  have h6 :=
+    root_countdown_dr_empty_left_step ((1,0) :: (0,0) :: tail)
+  have h7 :=
+    root_countdown_el_positive_step 0 [(0,0)] ((0,0) :: (0,0) :: tail)
+  have h8 :
+      ReachesPlus target
+        (cfg_DL_0_n [(0,0)] ((0,0) :: (0,0) :: (0,0) :: tail))
+        (cfg_EL_n_n [(0,0),(1,0)] ((0,0) :: (0,0) :: tail)) := by
+    simpa [bumpPairHead] using
+      (root_countdown_dl_zero_step [(0,0)] ((0,0) :: (0,0) :: tail))
+  exact ReachesPlus.trans h1
+    (ReachesPlus.trans h2
+      (ReachesPlus.trans h3
+        (ReachesPlus.trans h4
+          (ReachesPlus.trans h5
+            (ReachesPlus.trans h6
+              (ReachesPlus.trans h7 h8)))))
