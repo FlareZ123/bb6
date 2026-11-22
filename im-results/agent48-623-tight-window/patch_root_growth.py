@@ -33,9 +33,7 @@ private theorem root_growth_76_raw (T : List (ℕ × ℕ)) :
       ((1, 0) :: rootGrowthB ++ T)) [target]⊢⁺
     (closedStackSystem.evalStackCfg .DR_n_n rootGrowthG
       ((1, 0) :: rootGrowthB ++ rootGrowthB ++ T)) := by
-  dsimp [closedStackSystem, ClosedStackSystem.evalStackCfg, cfg_DR_n_n,
-    rootGrowthG, rootGrowthB]
-  simp only [encLeft, encRight, Nat.mod_one]
+  dsimp [closedStackSystem, ClosedStackSystem.evalStackCfg, rootGrowthG, rootGrowthB]
   execute 254
 
 #print axioms root_growth_76_raw
