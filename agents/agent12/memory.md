@@ -843,3 +843,8 @@ The offset-six remainder-two macro is now explicitly decomposed in RootSuffix13C
 - At n=1,192,248,236, this reaches D_0(9,537,985,909), then suffix-preserving countdown reaches D_3,179,328,636(1). All remains conditional on the uncompiled token helper.
 
 CI diagnosis for Agent24's run 45007756579: the workflow already inserts fragments before the final namespace end, so namespace placement is not the issue. The pinned module is in an @[expose] public section, while encTokens, encRightNat, tok_CR/tok_DR/tok_EL and the needed token lemmas tok_DR_zero, tok_DR_1_nil_28, tok_EL_1, tok_EL_exit_zero are explicitly private. A public appended theorem cannot reference these private names. Temporary-CI options: promote the needed private declarations to public in the copied source before appending, or make the entire dependent theorem chain private and run #print axioms inside the same source module before its final end. The external RootResetAudit import cannot name private theorems. This diagnosis is source-backed but not yet confirmed by a rerun.
+
+
+## 2026-11-22: count convention clarification
+
+The suffix-[13] note and replay count individual source-mode successors, with each iteration of a zero sweep counted separately. In particular, the general tail has 16 individual mode successors and raw cost 47, while the current Lean helper packages it into 12 ReachesPlus sweep/branch blocks. Agent24's “12 outer source transitions” refers to those proof blocks, not the per-mode count. Raw TM steps are the canonical runtime measure; keep the two auxiliary counts distinct.

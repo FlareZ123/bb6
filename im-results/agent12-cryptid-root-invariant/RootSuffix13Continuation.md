@@ -31,7 +31,7 @@ For every \(x\ge 3\) and finite suffix \(T\), the ordinary source clauses give
 E_n(x;T)\longrightarrow E_{n+1}(x-3;T),
 \]
 
-with exactly \(8n+26\) outer stack successors and \(24n+75\) primitive TM steps.
+with exactly \(8n+26\) individual mode successors and \(24n+75\) primitive TM steps.
 
 The phase decomposition is:
 
@@ -63,7 +63,7 @@ Applying the decrement four times gives
 E_n(13;[])\longrightarrow E_{n+4}(1;[])
 \]
 
-in \(32n+152\) outer successors and \(96n+444\) raw steps.
+in \(32n+152\) individual mode successors and \(96n+444\) raw steps.
 
 ## The offset-six remainder-one bridge
 
@@ -73,7 +73,7 @@ A separate ordinary-branch calculation gives
 E_m(1;[])\longrightarrow D_0(8m+9;[5])
 \]
 
-in \(8m+43\) outer successors and \(16m+115\) raw steps.
+in \(8m+43\) individual mode successors and \(16m+115\) raw steps.
 
 The exact phase endpoints are:
 
@@ -91,7 +91,7 @@ The exact phase endpoints are:
    \(EL([0],[0,x]++T)\to D_0(x-6;T)\), raw cost 47,
    yields \(D_0(8m+9;[5])\).
 
-For the general-tail phase, the 16 ordinary successors are: EL-zero, EL-positive, DL-positive, two DR-zero steps, DR-empty-left, EL-positive, DL-zero, two EL-zero steps, EL-positive, DL-positive, three DR-zero steps, and DR-positive/positive. The raw costs sum to 47. The suffix \(T\) is unchanged.
+For the general-tail phase, the 16 ordinary successors are: EL-zero, EL-positive, DL-positive, two DR-zero steps, DR-empty-left, EL-positive, DL-zero, two EL-zero steps, EL-positive, DL-positive, three DR-zero steps, and DR-positive/positive. The raw costs sum to 47. The suffix \(T\) is unchanged. These are 16 individual source-mode successors; the current Lean helper packages them into 12 ReachesPlus sweep/branch blocks. This distinction explains the 12-block count in Agent 24's token note. Raw TM-step counts are the canonical runtime measure; mode-successor counts are auxiliary.
 
 The outer and raw totals for the full bridge are respectively
 \[
@@ -137,19 +137,19 @@ Exact conditional costs from \(D_{447093083}(0;[13])\):
 Adding Agent 24's preceding conditional blank-to-\(D_{447093083}(0;[13])\) count gives 19,848,692,768,628,691,148 raw steps to this next stack configuration. This total inherits the earlier path's conditional/uncompiled status and is not an established BB(6) lower bound.
 
 The next natural target is the offset-six remainder-two token closure \(E_n(2)\). Agent 2's current intermediate note records the candidate map
-\(E_n(2)\to D_0(8n+21)\), with \(8n+46\) outer successors and \(40n+196\) raw steps; that closure is also not yet compiled. At the present endpoint \(n=1,192,248,236\), its proposed target would be \(D_0(9,537,985,909)\).
+\(E_n(2)\to D_0(8n+21)\), with \(8n+46\) individual mode successors and \(40n+196\) raw steps; that closure is also not yet compiled. At the present endpoint \(n=1,192,248,236\), its proposed target would be \(D_0(9,537,985,909)\).
 
 ## Offset-six remainder-two reset composition
 
 The new endpoint \(E_n(2)\) can be carried one step farther using the existing token helper root_d2_dl_one_z1. The source-local phase chain is:
 
-1. Corrected suffix-preserving prefix with \(c=0,T=[2]\): 8 outer / 21 raw, reaching \(EL([0,1],0^{4n+7}++[2])\).
-2. EL-zero sweep of \(4n+7\): \(4n+7\) outer / \(8n+14\) raw, reaching \(EL(0^{4n+8}++[1],[2])\).
-3. EL-positive on head 2: 1 outer / 1 raw, reaching DL with right head 1.
+1. Corrected suffix-preserving prefix with \(c=0,T=[2]\): 8 individual mode successors / 21 raw, reaching \(EL([0,1],0^{4n+7}++[2])\).
+2. EL-zero sweep of \(4n+7\): \(4n+7\) individual mode successors / \(8n+14\) raw, reaching \(EL(0^{4n+8}++[1],[2])\).
+3. EL-positive on head 2: 1 individual mode successors / 1 raw, reaching DL with right head 1.
 4. Apply root_d2_dl_one_z1 with parameter \(4n+7\): 1 outer macro successor, raw cost \(6(4n+7)+41=24n+83\), reaching \(CR(0^{4n+12}++[1],[0])\).
-5. CR-zero sweep of \(4n+12\): \(4n+12\) outer / \(8n+24\) raw, reaching \(CR([1],[8n+24])\).
-6. CR-one/empty-tail: 1 outer / 6 raw, reaching \(EL([0],[0,8n+27])\).
-7. General tail with \(x=8n+27\): 16 outer / 47 raw, reaching \(D_0(8n+21)\).
+5. CR-zero sweep of \(4n+12\): \(4n+12\) individual mode successors / \(8n+24\) raw, reaching \(CR([1],[8n+24])\).
+6. CR-one/empty-tail: 1 individual mode successors / 6 raw, reaching \(EL([0],[0,8n+27])\).
+7. General tail with \(x=8n+27\): 16 individual mode successors / 47 raw, reaching \(D_0(8n+21)\).
 
 Consequently the existing candidate map is explained by the helper composition
 
@@ -157,7 +157,7 @@ Consequently the existing candidate map is explained by the helper composition
 E_n(2)\longrightarrow D_0(8n+21),
 \]
 
-with \(8n+46\) outer successors and \(40n+196\) raw steps. In the source-local Lean draft, the intended helpers are, in order:
+with \(8n+46\) individual mode successors and \(40n+196\) raw steps. In the source-local Lean draft, the intended helpers are, in order:
 
 - root_countdown_prefix_with_tail_fixed n 0 [(2,0)]
 - root_countdown_el_zero_sweep (4*n+6) [(0,0),(1,0)] [(2,0)]
