@@ -31,7 +31,7 @@ The token closure has an exact source-step count. The DL right-head-1 branch fir
 
 The 21,810 ordinary successors before the token closure cost 64,565 raw TM steps. The 288 ordinary successors after the closure cost 595 raw steps to `D_0(540)`. Thus the stack seed to `D_0(540)` costs 66,797 raw steps; adding the seven-step blank-entry theorem gives **66,804 raw TM steps from blank**. This is a DL right-head-1 closure; it does not contradict the separate rule that DR right-head 1 is ordinary.
 
-## Projected #85 countdown
+## Blank-root-connected #85-orientation countdown
 
 Define
 
@@ -51,7 +51,7 @@ This identity follows algebraically from the shared-corridor family. Set `r=4n+3
 (2r+14) - (r+1) + (r+5) = 2r+18 = 8n+24.
 ```
 
-The source-transcribed regression checks n=0,…,6 and c in {3,4,5,10,540}. Its raw cost on these paths is
+The checked-in regression harness samples n=0,…,6 and c in {3,4,5,10,540}. An independent persistent-list replay additionally checked all 180 first-countdown and 484 second-countdown instances used by the blank-root chain. The raw cost on these paths is
 
 ```text
 24n + 69 raw TM steps.
@@ -69,7 +69,7 @@ The root replay gives:
 
 The first countdown has 180 applications, 133,200 outer successors, and 399,060 raw steps.
 
-## Projected #85 reset and second countdown
+## Blank-root-connected reset and second countdown
 
 The reset follows from the c=0 corridor macro. Since `D_180(0)=S^724(Corr(723,0))`, and `Corr(723,0)` reaches `Corr(3,1453)` in `3·723+32=2201` successors, followed by the 4-successor shared corridor to `D_0(1453)`, the remaining path from `D_180(0)` is
 
@@ -93,7 +93,7 @@ Its raw-step total from the sampled formula is 2,838,660. Thus the D_0(540)-to-D
 
 The raw formula `24n+69` and its countdown aggregates remain computational/source-transcribed until the quantified corridor lemma is kernel-checked. From the stack seed, the projected costs are 3,307,502 to `D_484(1)`, 3,401,058 to the first DR/G/B seed, and 3,473,702 to the macro-1,153,484 checkpoint. Add seven raw steps for the blank-entry theorem: the corresponding blank-root totals are 3,307,509; 3,401,065; and 3,473,709.
 
-## Projected #85 c=1 corridor to H(1939)
+## Blank-root-connected c=1 corridor to H(1939)
 
 Write
 
@@ -115,7 +115,7 @@ Here `(10)^j` means j repetitions of the pair `[1,0]`. Since `D_484(1)` is the s
 
 No token-normalizer call occurs in these three segments. The finite corridor regression checks r=1,…,8; the r=1939 instance is separately replayed.
 
-## Projected #85 H-family entry into the DR/G/B growth family
+## Blank-root-connected H-family entry into the DR/G/B growth family
 
 Let
 
