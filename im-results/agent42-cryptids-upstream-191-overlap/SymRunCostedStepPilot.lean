@@ -1921,11 +1921,44 @@ theorem stepElemThenBB_DL_within (L R : List SymTok) :
 /-- The DL branch of the outer stepSym map has a linear primitive-time
     bound whenever the trace token count is at most 94. -/
 
+/-- Bumping a compressed left stack expands at most one token, with
+    rep12 giving the largest net increase of five. -/
+theorem bumpSymL_length_le (L : List SymTok) :
+    (bumpSymL L).length ≤ L.length + 5 := by
+  induction L with
+  | nil => simp [bumpSymL]
+  | cons t L1 ih =>
+    cases t with
+    | item x =>
+      cases x <;> simp [bumpSymL]
+    | repB1 k =>
+      cases k with
+      | zero =>
+        simp only [bumpSymL, List.length_cons]
+        omega
+      | succ k =>
+        cases k <;> simp [bumpSymL, strictNat_eq] <;> omega
+    | rep2 p =>
+      cases p with
+      | zero =>
+        simp only [bumpSymL, List.length_cons]
+        omega
+      | succ p =>
+        simp [bumpSymL, strictNat_eq] <;> omega
+    | rep12 m =>
+      cases m with
+      | zero =>
+        simp only [bumpSymL, List.length_cons]
+        omega
+      | succ m =>
+        simp [bumpSymL, strictNat_eq] <;> omega
+
 /-- When a CB element transition finishes in BB, its new left stack grows
-    by at most two tokens (the run-0 exit can prepend two literals). -/
+    by at most seven tokens: bumpSymL adds at most five, and the run-0
+    exit can prepend two more literals. -/
 theorem stepElemCB_BB_left_length (L R : List SymTok)
     (hBB : (stepElemCB L R).1 = .BB) :
-    (stepElemCB L R).2.1.length ≤ L.length + 3 := by
+    (stepElemCB L R).2.1.length ≤ L.length + 7 := by
   cases R with
   | nil => simp [stepElemCB] at hBB
   | cons t R1 =>
@@ -1938,17 +1971,26 @@ theorem stepElemCB_BB_left_length (L R : List SymTok)
         | zero =>
           cases R1 with
           | nil =>
-            simp [stepElemCB, stepElemCB_run0, strictList_eq, bumpSymL] at hBB ⊢
+            simp [stepElemCB, stepElemCB_run0, strictList_eq] at hBB ⊢
+            all_goals
+              have hBump := bumpSymL_length_le L
+              omega
           | cons rt R2 =>
             cases rt with
             | item it2 =>
               cases it2 with
               | zero =>
-                simp [stepElemCB, stepElemCB_run0, strictList_eq, bumpSymL] at hBB ⊢
+                simp [stepElemCB, stepElemCB_run0, strictList_eq] at hBB ⊢
+                all_goals
+                  have hBump := bumpSymL_length_le L
+                  omega
               | run d2 =>
                 cases d2 with
                 | zero =>
-                  simp [stepElemCB, stepElemCB_run0, strictList_eq, bumpSymL] at hBB ⊢
+                  simp [stepElemCB, stepElemCB_run0, strictList_eq] at hBB ⊢
+                  all_goals
+                    have hBump := bumpSymL_length_le L
+                    omega
                 | succ d2 =>
                   simp [stepElemCB, stepElemCB_run0, strictList_eq] at hBB
             | repB1 k => simp [stepElemCB, stepElemCB_run0] at hBB
@@ -1960,9 +2002,15 @@ theorem stepElemCB_BB_left_length (L R : List SymTok)
           | succ d =>
             cases d with
             | zero =>
-              simp [stepElemCB, strictList_eq, bumpSymL] at hBB ⊢
+              simp [stepElemCB, strictList_eq] at hBB ⊢
+              all_goals
+                have hBump := bumpSymL_length_le L
+                omega
             | succ d =>
-              simp [stepElemCB, strictList_eq, strictNat_eq, bumpSymL] at hBB ⊢
+              simp [stepElemCB, strictList_eq, strictNat_eq] at hBB ⊢
+              all_goals
+                have hBump := bumpSymL_length_le L
+                omega
     | repB1 k => simp [stepElemCB] at hBB
     | rep2 p => simp [stepElemCB] at hBB
     | rep12 m => simp [stepElemCB] at hBB
@@ -1971,7 +2019,7 @@ theorem stepElemCB_BB_left_length (L R : List SymTok)
     terms of the input field maximum and left-stack length. -/
 theorem stepElemThenBB_CB_within (L R : List SymTok) :
     ReachesWithin
-      (2^9 * (pilotStateFieldMax (.CB, L, R) + 1) * (L.length + 4))
+      (2^9 * (pilotStateFieldMax (.CB, L, R) + 1) * (L.length + 8))
       ((evalSym target_tm) (.CB, L, R))
       ((evalSym target_tm) (stepElemThenBB .CB L R)) := by
   let M := pilotStateFieldMax (.CB, L, R)
@@ -1993,10 +2041,10 @@ theorem stepElemThenBB_CB_within (L R : List SymTok) :
       (if (stepElemCB L R).1 = .BB then
         50 * (pilotListFieldMax (stepElemCB L R).2.1 + 1) *
           ((stepElemCB L R).2.1.length + 1)
-       else 0) ≤ 100 * (M + 1) * (L.length + 4) := by
+       else 0) ≤ 100 * (M + 1) * (L.length + 8) := by
     by_cases hBB : (stepElemCB L R).1 = .BB
     · have hLen :
-          (stepElemCB L R).2.1.length + 1 ≤ L.length + 4 := by
+          (stepElemCB L R).2.1.length + 1 ≤ L.length + 8 := by
         have h := stepElemCB_BB_left_length L R hBB
         omega
       have hprod := Nat.mul_le_mul
@@ -2007,29 +2055,29 @@ theorem stepElemThenBB_CB_within (L R : List SymTok) :
             ((stepElemCB L R).2.1.length + 1)
           = 50 * ((pilotListFieldMax (stepElemCB L R).2.1 + 1) *
               ((stepElemCB L R).2.1.length + 1)) := by ring
-        _ ≤ 50 * ((M + 2) * (L.length + 4)) :=
+        _ ≤ 50 * ((M + 2) * (L.length + 8)) :=
           Nat.mul_le_mul_left 50 hprod
-        _ ≤ 100 * (M + 1) * (L.length + 4) := by
+        _ ≤ 100 * (M + 1) * (L.length + 8) := by
           have hM : M + 2 ≤ 2 * (M + 1) := by omega
-          have hmul := Nat.mul_le_mul_right (L.length + 4) hM
+          have hmul := Nat.mul_le_mul_right (L.length + 8) hM
           calc
-            50 * ((M + 2) * (L.length + 4))
-              = 50 * ((M + 2) * (L.length + 4)) := rfl
-            _ ≤ 50 * (2 * (M + 1) * (L.length + 4)) :=
+            50 * ((M + 2) * (L.length + 8))
+              = 50 * ((M + 2) * (L.length + 8)) := rfl
+            _ ≤ 50 * (2 * (M + 1) * (L.length + 8)) :=
               Nat.mul_le_mul_left 50 hmul
-            _ = 100 * (M + 1) * (L.length + 4) := by ring
+            _ = 100 * (M + 1) * (L.length + 8) := by ring
     · simp [hBB]
   have h1Budget :
-      25 * (M + 1) ≤ 25 * (M + 1) * (L.length + 4) := by
+      25 * (M + 1) ≤ 25 * (M + 1) * (L.length + 8) := by
     exact Nat.mul_le_mul_left (25 * (M + 1)) (by omega)
   have htotal :
-      25 * (M + 1) * (L.length + 4) +
-        100 * (M + 1) * (L.length + 4) ≤
-          2^9 * (M + 1) * (L.length + 4) := by
+      25 * (M + 1) * (L.length + 8) +
+        100 * (M + 1) * (L.length + 8) ≤
+          2^9 * (M + 1) * (L.length + 8) := by
     calc
-      _ = 125 * (M + 1) * (L.length + 4) := by ring
-      _ ≤ 2^9 * (M + 1) * (L.length + 4) := by
-        exact Nat.mul_le_mul_right ((M + 1) * (L.length + 4)) (by norm_num)
+      _ = 125 * (M + 1) * (L.length + 8) := by ring
+      _ ≤ 2^9 * (M + 1) * (L.length + 8) := by
+        exact Nat.mul_le_mul_right ((M + 1) * (L.length + 8)) (by norm_num)
   have hbudget := Nat.add_le_add h1Budget h2Budget
   have hcomp' : ReachesWithin
       (25 * (M + 1) +
@@ -2042,6 +2090,12 @@ theorem stepElemThenBB_CB_within (L R : List SymTok) :
     simpa [M] using hcomp
   have hfinal := reachesWithin_mono (Nat.le_trans hbudget htotal) hcomp'
   simpa [stepElemThenBB, stepElemSym, M] using hfinal
+
+#print axioms bumpSymL_length_le
+#print axioms stepElemCB_run0_within25
+#print axioms stepElemCB_within25
+#print axioms stepElemCB_BB_left_length
+#print axioms stepElemThenBB_CB_within
 
 #print axioms stepElemCB_run0_within25
 #print axioms stepElemCB_within25
