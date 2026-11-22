@@ -45,7 +45,9 @@ theorem machineCDepthFiveSlot_is_next_physical :
 theorem machineCDepthFiveChild_is_actual :
     machineCDepthFiveChild (some machineCDepthFiveMove) =
       machineCPrefix 5 := by
-  decide
+  funext slot
+  simp [machineCDepthFiveChild, machineCPrefix, machineCVisited,
+    machineCDepthFiveSlot, machineCDepthFiveMove, refine, machineC]
 
 /-- The stronger child oracle does not decide the original Machine C
     child; this split therefore retains the actual holdout. -/
@@ -73,9 +75,11 @@ theorem machineCDepthFiveAudit_mass_conserved :
       FrontierAudit.report_conserves machineCDepthFiveAudit
     _ = 25^8 := by decide
 
-/-- A nontrivial set of children receives all-time certificates. -/
-theorem machineCDepthFiveAudit_has_certified_mass :
-    0 < machineCDepthFiveAudit.report.1 := by
+/-- This one-slot split is exhaustive, but the current bounded lasso
+    oracle certifies none of its 25 children. The deeper authenticated
+    eleven-input continuation supplies the useful 24-leaf refinement. -/
+theorem machineCDepthFiveAudit_no_certified_mass :
+    machineCDepthFiveAudit.report.1 = 0 := by
   decide
 
 /-- The original Machine C child remains in the open part of this split. -/
@@ -106,7 +110,7 @@ def machineCDepthFiveDiagnosticCounts : Nat × Nat :=
 #print axioms machineCDepthFiveRootOracle_false
 #print axioms machineCDepthFiveAudit_exhaustive
 #print axioms machineCDepthFiveAudit_mass_conserved
-#print axioms machineCDepthFiveAudit_has_certified_mass
+#print axioms machineCDepthFiveAudit_no_certified_mass
 #print axioms machineCDepthFiveAudit_root_open
 
 end BB6Coverage
