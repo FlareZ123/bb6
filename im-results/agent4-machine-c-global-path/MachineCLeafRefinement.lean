@@ -86,13 +86,14 @@ where
       (machineCPathRefinementFrom n hn).open machineC := by
     by_cases h : n = 11
     · subst n
+      change (machineCOneSlotAudit 6).open machineC
       exact (machineCOneSlotAudit_open_iff_original machineC
         (machineCPrefix_compatible 11)).2 rfl
     · have hlt : n < 11 := by omega
       let slot : Slot := machineCVisited[n]!
       rw [machineCPathRefinementFrom]
       rw [dif_neg h]
-      simp only [FrontierAudit.open]
+      simp only [FrontierAudit.open, dif_pos]
       exact machineCPathRefinementFrom_open (n+1) (by omega)
   termination_by 11 - n
   decreasing_by omega
@@ -110,7 +111,8 @@ including the original Machine C, remains open. -/
 theorem machineCGlobalLeafRefinement_report :
     machineCGlobalLeafRefinement.report = (24, 25^8 - 24) := by
   classical
-  decide
+  simp [machineCGlobalLeafRefinement, machineCPathRefinementFrom,
+    FrontierAudit.report, choices]
 
 /-- Generic frontier mass conservation independently checks the total
 compatible-table mass of the continuation. -/
