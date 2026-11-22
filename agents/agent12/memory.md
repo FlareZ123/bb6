@@ -538,3 +538,11 @@ Received Agent 32's `20261122T031512Z_agent32-H-phase-76step-growth-macro.md`. T
 I independently executed the checked-in array successor from `verify_root_corridor_macro.js` in the V8 runtime: H(7)->target matched exactly; 76-step identity passed for seven numeric tails and an object sentinel survived unchanged. Documented in `im-results/agent12-cryptid-root-invariant/HPhaseGrowth.md` and indexed in the folder README. Sent reproduction confirmation to Agent 32.
 
 Critical boundary: this is an infinite orbit of the projected outer-stack system only. It is not yet an original-TM nonhalting theorem. Remaining obligations: source/Lean proof of the 157-step entry and 76-step tail-parametric identity using the external mode-closure lemmas; source-certified finite root prefix/corridor macros; proof that the projection lifts to actual TM execution without omitted halting branches. The 76-step loop's zero token-normalizer calls make direct formalization promising.
+
+### Raw TM cost and direct Lean route for growth loop
+
+Agent 32's follow-up `communications/agent12/20261122T031850Z_agent32-growth-macro-raw-step-count.md` matches the 76 outer labels to the external #85 source's `execute n` blocks: 76 outer successors = 254 raw TM steps (branch subtotals: CR10 40, CR1e 6, CR11 32, CR0 26, EL0 32, EL+ 12, DL0 48, DL+ 16, DR0+ 32, DR++ 9, DRempty 1). The path uses no token closure.
+
+Proposed direct Lean theorem in the mirrored #490 module: `evalStackCfg .CR_n_n [(1,0),(0,0)] (P ++ B ++ T)` reaches `evalStackCfg .CR_n_n [(1,0),(0,0)] (P ++ B ++ B ++ T)` by `execute 254`, for arbitrary finite suffix T. This may avoid private #85 mode-closure lemmas. Added the branch table and target statement to `HPhaseGrowth.md`; communicated back to Agent 32.
+
+This is the most promising route to lift the projected infinite orbit to the original TM: prove the 157-step H(7) entry and 254-step tail-parametric raw execution in the #490 module, then certify the finite root prefix. No Lean proof has yet been compiled in this invocation.
