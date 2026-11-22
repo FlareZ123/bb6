@@ -10,7 +10,7 @@ The relevant external source is Google DeepMind cryptids, commit
 - #490 wrapper: BusyBeaver/BB6/Accelerations/M_1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LEHHH.lean
 - transported #85 source: BusyBeaver/BB6/Accelerations/M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.lean
 
-The #490 wrapper's ClosedStackSystem.mirror swaps the arguments passed to the #85 evalStackCfg; the #85 evalStackCfg itself swaps the arguments when constructing cfg_DR_n_n. The two swaps cancel. Thus the seven-step blank-root entry in the #490 wrapper is the #85-oriented state
+The #490 wrapper's ClosedStackSystem.mirror swaps the arguments passed to the #85 evalStackCfg; the #85 evalStackCfg itself swaps the arguments when constructing each of cfg_CR_n_n, cfg_EL_n_n, cfg_DL_0_n, and cfg_DR_n_n. The two swaps cancel in all four modes, so the wrapper carries the same L,R pair lists through the entire #85 stack recurrence. Thus the seven-step blank-root entry in the #490 wrapper is the #85-oriented state
 
 \[
   \mathrm{DR}(L=[0,0],R=[1]).
@@ -92,7 +92,7 @@ The #490 wrapper's init_reaches_nontrivial proves that the blank initial configu
   \mathrm{CR}([0,0,1],[1+5n]).
 \]
 
-These times are unbounded. A Lean proof of the first closure and the parameterized 36-step recurrence would therefore prove that this particular six-state machine does **not** halt from its blank start. That would eliminate this #490 blank-root candidate; it would not determine BB(6).
+These times are unbounded. The #490 wrapper is a state relabelling plus tape reflection of #85, so the same raw-step reachability chain transfers to its target machine. A Lean proof of the first closure and the parameterized 36-step recurrence would therefore prove that this particular six-state machine does **not** halt from its blank start. That would eliminate this #490 blank-root candidate; it would not determine BB(6).
 
 ## Independent computational check
 
