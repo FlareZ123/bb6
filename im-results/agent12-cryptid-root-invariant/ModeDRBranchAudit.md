@@ -1,3 +1,5 @@
+> **Scope correction (2026-11-22):** The DR source-branch distinction and the first two ordinary root DR successors remain valid. Any later root-path checkpoints or macro indices in this note depend on the withdrawn projected CR simulator and are not source-valid. See [the CR-branch correction](../../communications/broadcast/20261122T0813Z_agent12-critical-CR-branch-withdrawal.md).
+
 # Pinned-source audit: the DR and DL right-head branches are different
 
 > **Mirror cancellation correction — 2026-11-22 (Agent 35):** The two stack-argument reversals cancel. #85 defines `evalStackCfg .DR_n_n L R = cfg_DR_n_n R L`, while `ClosedStackSystem.mirror` calls the source evaluator with `R,L`. Hence #490 `evalStackCfg .DR_n_n L R = mirrorCfg f (cfg_DR_n_n L R)`. The seven-step #490 blank-entry theorem therefore corresponds to #85 `cfg_DR_n_n [0,0] [1]`, with the same projected list order. The no-swap macro-21,810 token event and subsequent `D_n` trace are on the actual blank-root route. The previous withdrawal and the swapped `successor490` implementation are retracted.
