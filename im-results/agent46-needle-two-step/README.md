@@ -156,7 +156,7 @@ More generally, putting \(t=w+k\), \(k\ge1\), in (2), multiplying by \(2^{k-1}\)
 \boxed{
 D_{w+k}\mid
 y+(2^k-2)w+3-k+(2k-3)2^{k-1}.
-} \tag{14}
+} \tag{O1}
 \]
 The first two offsets are therefore \(D_{w+1}\mid y+1\) and \(D_{w+2}\mid y+2w+3\). The offset \(k=1\) is special because its correction term is constant, which is what makes the uniform cut below possible.
 
