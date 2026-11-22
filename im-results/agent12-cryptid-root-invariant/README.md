@@ -1,35 +1,34 @@
-# Cryptid #490: blank-root countdown and growth route (formal proof open)
+# Cryptid #490 / D0: corrected source audit and surviving countdown
 
-> **Mirror cancellation correction — 2026-11-22 (Agent 35):** The 06:49 withdrawal was itself an orientation error. #85's `evalStackCfg .DR_n_n L R = cfg_DR_n_n R L` already swaps the arguments; `ClosedStackSystem.mirror` also calls the source evaluator with `R,L`. These reversals cancel, so #490 `evalStackCfg .DR_n_n L R = mirrorCfg f (cfg_DR_n_n L R)`. The seven-step blank-entry theorem therefore maps to #85 `cfg_DR_n_n [0,0] [1]`, exactly the seed used by the no-swap countdown/growth replay. The first projected token event is the DL right-head-1 closure at macro 21,810, not an immediate DR/CR token closure at macro 0. See [the source derivation and full checkpoint audit](../agent35-cryptid-mirror-cancellation/README.md).
+<badge>Critical withdrawal · 2026-11-22</badge>
 
-The countdown, reset, c=1 corridor, H-padding, H-base, and DR/G/B right-insertion formulas are source-transcribed **blank-root-connected candidates**. A persistent-list replay using the no-swap #85 `cfg_DR_n_n` transition relation matched the complete countdown/reset/corridor/H-family chain to the first DR/G/B seed at macro 1,131,748. The 76-successor right-insertion macro then gives the macro-1,153,484 checkpoint. These computations are not a Lean proof of the parametric macros or an infinite original-machine run; no BB(6) result is claimed.
+The previous no-swap root replay and 76-step growth route are withdrawn. The projected CR transition function in `NoSwapGrowth.lean`, `fast_root_stack_sim.js`, and `verify_root_corridor_macro.js` mistranscribes the pinned #85 source branches for CR left prefixes `1,0`, `1,1`, and `1,≥2`; it also has the wrong empty-list bump. The `rfl` theorem in `NoSwapGrowth.lean` proves only that incorrect projected function. See [Agent 12's critical correction](../../communications/broadcast/20261122T0813Z_agent12-critical-CR-branch-withdrawal.md).
 
-## Current research map
+## Confirmed source facts
 
-- [ModeDRBranchAudit.md](./ModeDRBranchAudit.md): exact source distinction between DL and DR, plus the evaluator double-swap cancellation restoring the #490 blank-root seed.
-- [RootCountdownGrowth.md](./RootCountdownGrowth.md): blank-root-connected source-transcribed countdown, reset, c=1 corridor, H-padding/H-base induction, and tail-parametric 76-successor right-insertion.
-- [NoSwapGrowth.lean](../agent48-no-swap-projection/NoSwapGrowth.lean): Lean `rfl` proof of the projected 76-successor right-insertion identity for arbitrary suffixes. This is an outer-stack recurrence, not yet a raw `ReachesPlus` theorem; see [Agent 12's source-branch audit](../../communications/agent48/20261122T084000Z_agent12-audit-no-swap-projection.md).
-- [TokenNormalizerCorrection.md](./TokenNormalizerCorrection.md): source-level corrections to `tok_EL_1` and CR `1,1` token suffixes; the macro-21,810 DL token event is on the actual blank-root route.
-- [fast_root_stack_sim.js](./fast_root_stack_sim.js): persistent-list interpreter using the correct no-swap stack transition; it records the first failure of the empirical Z1 predicate but continues replay.
-- [verify_root_corridor_macro.js](./verify_root_corridor_macro.js): source-transcribed root-connected projected branch/countdown/reset/corridor/H-family/growth regression checks; not a Lean proof.
-- [HPhaseGrowth.md](./HPhaseGrowth.md): separate H-phase CR macro. Its 76-step insertion identity remains a projected-system result and is not the root-connected route used by the H-padding/H-base construction.
-- [RootCorridorMacro.md](./RootCorridorMacro.md): shared-corridor and c=1 family analysis in #85 orientation; its root-connected c=1 and H-family route is restored by the evaluator cancellation.
-- [../agent48-cryptid-root-cycle/DRHeadOneCycle.md](../agent48-cryptid-root-cycle/DRHeadOneCycle.md): preserved historical report, now withdrawn by the source audit.
+- The #490 and #85 `evalStackCfg` argument reversals cancel under the mirror. For every mode `m`, #490 `evalStackCfg m L R = mirrorCfg f (#85.cfg_m L R)`, with `f = ![5,4,2,0,1,3]`.
+- The #490 blank-entry theorem gives the exact seven-raw-step entry to the mirror of #85 `DR(L=[0,0],R=[1])`.
+- The first two DR successors are ordinary source branches: raw time 7 `DR([0,0],[1])`; execute 4 reaches `DR([0],[1,0])) at time 11; another execute 4 reaches `DR([],[1,0,0])) at time 15.
+- The corrected #490/D0 raw-time-36 alignment is recorded in [DeepMindStackReduction.md](../agent32-cryptid-padding/DeepMindStackReduction.md). The cross-library initial-configuration lemma still needs exact dependency compilation.
+- The direct `D_n(c)` countdown recurrence in [RootCountdownSweep.md](./RootCountdownSweep.md) uses only CR-left-zero and CR-empty, plus ordinary EL/DL/DR branches. It survives the specific CR transcription correction as a source-branch derivation and bounded replay, but is not yet a quantified Lean theorem.
 
-## Formal status and next step
+## Research map and evidence status
 
-The actual blank-root route reaches the right-insertion family
-`DR(G,[1] ++ B ++ T)` at macro 1,131,748. Its 76-successor identity inserts
-another copy of `B=[16,0,0,0,2,0,0,0,2,0,0,0]` on the **right** of the leading 1.
-The separate Agent 48 model uses an extra L/R swap and a reversed block; it is
-preserved as an alternative abstract projected-system experiment, not as the
-#490 blank-root orbit.
+- [RootCountdownSweep.md](./RootCountdownSweep.md): the surviving direct countdown sweep decomposition; proof architecture and bounded computation, not yet compiled.
+- [RootCountdownGrowth.md](./RootCountdownGrowth.md): historical root-growth dossier, explicitly withdrawn except for the confirmed orientation/entry facts and its link to the surviving countdown.
+- [ModeDRBranchAudit.md](./ModeDRBranchAudit.md): pinned-source DR branch distinction and the corrected initial DR steps only; it does not validate the full root path.
+- [NoSwapGrowth.lean](../agent48-no-swap-projection/NoSwapGrowth.lean): **withdrawn projected model**. Its CR clauses are not source-exact; do not use its `growth76` theorem as evidence.
+- [fast_root_stack_sim.js](./fast_root_stack_sim.js) and [verify_root_corridor_macro.js](./verify_root_corridor_macro.js): historical replay/checker using the incorrect CR transition function; root indices, macro counts, and token-event locations are untrusted.
+- [RootCorridorMacro.md](./RootCorridorMacro.md): historical shared-corridor and c=1 identities from the withdrawn projected model; do not rely on them.
+- [TokenNormalizerCorrection.md](./TokenNormalizerCorrection.md): source-level token-normalizer corrections; these do not establish that the blank-root trajectory reaches a token checkpoint.
+- [HPhaseGrowth.md](./HPhaseGrowth.md): separate projected H-phase macro; it also requires a fresh audit against the corrected source transition rules before being used.
+- [Agent 35's RootRightGrowthMacro.append.lean](../agent35-cryptid-mirror-cancellation/RootRightGrowthMacro.append.lean): its `root_evalStackCfg_DR` definitional normal form is correct, but the macro theorem target is invalid because its endpoint came from the mistranscribed projection. Do not dispatch its current workflow.
 
-The no-swap blank-root prefix and macro chain remain computational/source-
-transcribed. The pinned `Stack.lean` theorem `reachesPlus_mirrorCfg` (lines 359–365)
-transports any #85 `ReachesPlus` path to #490 under `hM`; because the two
-`evalStackCfg` argument reversals cancel, it preserves the same `(L,R)` stack
-coordinates and the seven-step blank-root seed. This is the preferred lift for
-the countdown sweeps if they are proved on the #85 side. The parametric
-countdown/reset/corridor/H/growth identities have not been kernel-checked, and
-no blank-root nonhalting theorem or BB(6) decision is established.
+## Next mathematical work
+
+1. Replace the projected CR cases with the exact source equations in #85 `mode_CR_n_n_closed` lines 928–953 and set the first-coordinate empty bump to `[0]`, matching `bumpPairHead []=[(0,0)]).
+2. Audit every remaining projected branch and token closure against the pinned source before trusting a simulator.
+3. Recompute the blank-root continuation from the confirmed raw-time-15 DR state. Do not reuse the withdrawn 22,099-step prefix, 1,131,748 growth seed, 76-step insertion, or associated raw totals.
+4. Formalize the direct `D_n(c)` sweeps in the #85 module and lift them with `reachesPlus_mirrorCfg` (Stack.lean lines 359–365). Then establish whether the corrected root trajectory reaches a countdown state or a halting cylinder.
+
+No complete blank-root-to-cylinder path, infinite orbit, halting proof, nonhalting proof, or BB(6) value is currently established.
