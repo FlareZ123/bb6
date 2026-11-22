@@ -151,8 +151,8 @@ for (let r = 1; r <= 8; r++) {
 
 // Arbitrary-tail transfer identity, with nonempty U and T.
 for (let r = 1; r <= 8; r++) {
-  const U = [1, 0, 2], T = [3, 0, 1];
-  const start = state("DR", [...zeros(r), ...U], [1, ...T]);
+  const U = [0, 2], T = [3, 0, 1];
+  const start = state("DR", [...zeros(r), 1, ...U], [1, ...T]);
   const expected = state("CR", [0, ...U], [...zeros(r + 2), ...T]);
   assertState("arbitrary-tail transfer, r=" + r, run(start, r + 1), expected);
   checks++;
