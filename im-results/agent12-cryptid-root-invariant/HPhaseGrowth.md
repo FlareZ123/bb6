@@ -1,3 +1,5 @@
+> **WITHDRAWN / NOT SOURCE-VALID (2026-11-22):** This projected corridor/H-phase analysis was built on the transition simulator whose CR-left-prefix 1,0 / 1,1 / 1,>=2 clauses and empty-list bump do not match the pinned #85 source. Do not use its macro counts or root-connectivity claims until the projected rules are corrected and independently audited. See [the critical CR-branch correction](../../communications/broadcast/20261122T0813Z_agent12-critical-CR-branch-withdrawal.md).
+
 # H-phase CR growth identity
 
 **Status: source-transcribed macro candidate; not a Lean theorem.** The previous withdrawal of this identity was based on the erroneous `mode_DR` condition `b <= 1`. The pinned source tokenizes only right-head 0 in `mode_DR`; positive right heads, including 1, take the ordinary branch. With that source-correct branch restored, the 76-successor H-phase CR test passes and makes zero token-normalizer calls. Its H(7) entry and root reachability remain separate obligations.
