@@ -1,4 +1,6 @@
-# Mirror cancellation and the restored #490 blank-root route
+# Mirror cancellation and the withdrawn #490 blank-root route
+
+> **CRITICAL WITHDRAWAL — 2026-11-22:** The projected CR successor used for the root replay mistranscribes the pinned #85 source branches CR 1,0 / 1,1 / 1,≥2 and the empty-list bump. Therefore the root-chain counts, H-family entry, and 76-step right-insertion target described below are not source-valid. The current append theorem must not be compiled or cited as a proof. See [the CR-branch correction](../../communications/broadcast/20261122T0813Z_agent12-critical-CR-branch-withdrawal.md). The isolated `root_evalStackCfg_DR` definitional equation remains valid.
 
 **Status (22 November 2026):** source-level evaluator algebra restores the connection between the #490 blank start and the no-swap #85 `cfg_DR_n_n` stack trajectory. The projected countdown/reset/H/growth chain has been independently replayed in a V8 persistent-list interpreter using the pinned source branch clauses. This is **not** a Lean proof of the parametric macros or an infinite original-machine execution.
 
