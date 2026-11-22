@@ -34,7 +34,7 @@ The following four exact identities hold:
 
    `S^(3r+20)(Corr(r,1)) = F(r)`.
 
-These formulas have been checked by an independent array-based implementation for `r=1,...,8`; the proof sketches below reduce each to the explicit outer transition clauses and `List.replicate`-style zero-pop loops.
+These formulas have been checked by an separate array-based transcription for `r=1,...,8`; the proof sketches below reduce each to the explicit outer transition clauses and `List.replicate`-style zero-pop loops.
 
 ## Proof sketches
 
