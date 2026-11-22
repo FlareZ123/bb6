@@ -1,4 +1,7 @@
 import Lean
+set_option maxRecDepth 10000
+set_option maxHeartbeats 5000000
+
 namespace RootMacroModel
 
 inductive Mode where
@@ -21,8 +24,9 @@ def bumpN : List Nat → Nat → List Nat
 
 def swap (s : Cfg) : Cfg := ⟨s.mode, s.R, s.L⟩
 
-/-- Source-transcribed #85 outer successor; token branches are marked none.
-    The 76-step mirrored-root path never enters any of those branches. -/
+/-- Source-transcribed #85 outer successor. Token branches are marked none;
+    the only token event in the 260-step root prefix is separately represented
+    by rootAfterToken below. The 76-step growth macro has no token branches. -/
 def step85 (s : Cfg) : Option Cfg :=
   match s.mode with
   | .CR =>
@@ -94,7 +98,35 @@ theorem root_growth_76_pairs (T : List (Nat × Nat)) :
     some ⟨.DR, ((1,0) :: pairBlock ++ pairBlock ++ T).map Prod.fst, pairRight.map Prod.fst⟩ := by
   rfl
 
-/-- Independently counted raw costs of the 76 underlying source-mode branches. -/
+def rootInitial : Cfg := ⟨.DR, [0,0], [1]⟩
+/-- Endpoint of the initial source token closure; the appended source theorem
+    checks this endpoint with execute 29. -/
+def rootAfterToken : Cfg := ⟨.CR, [1], [0,0,0,1]⟩
+
+def rootSeed : Cfg := ⟨.DR,
+  [1,0,2,0,0,0,2,0,0,0,16,0,0,0,12,0,0,0,12,0,0,0,12,0,0,0,2,0,0,0,0],
+  [0,1,0,0,0,0,0,0,0,0,1,0,0,0]⟩
+
+def stepRoot (s : Cfg) : Option Cfg :=
+  if s = rootInitial then some rootAfterToken else step490 s
+
+def runRoot : Nat → Cfg → Option Cfg
+  | 0, s => some s
+  | n+1, s => (stepRoot s).bind (runRoot n)
+
+theorem root_prefix_260 : runRoot 260 rootInitial = some rootSeed := by
+  rfl
+
+def rootPrefixOrdinaryCost : Nat :=
+  42 * 2 + 2 * 6 + 59 * 2 + 40 * 1 + 14 * 4 + 31 * 4 +
+  4 * 1 + 26 * 6 + 9 * 3 + 2 * 2 + 1 * 1 + 22 * 5 + 7 * 16
+
+theorem rootPrefixOrdinaryCost_eq : rootPrefixOrdinaryCost = 848 := by
+  decide
+
+theorem rootPrefixCost_eq : 29 + rootPrefixOrdinaryCost = 877 := by
+  decide
+
 def rootRawCosts : List Nat :=
   [4,3,2,2,2,2,2,2,2,2,2,5,5,5,6,2,1,4,4,4,1,1,6,2,2,2,2,1,6,2,1,6,2,1,4,4,4,3,2,2,5,5,5,5,16,1,6,2,2,2,1,6,2,1,6,2,1,6,2,1,4,4,4,3,2,2,5,16,2,2,1,6,2,1,4,4]
 
@@ -103,6 +135,7 @@ theorem rootRawCosts_sum : rootRawCosts.sum = 254 := by
 
 end RootMacroModel
 
-#print axioms RootMacroModel.root_growth_76
+#print axioms RootMacroModel.root_prefix_260
 #print axioms RootMacroModel.root_growth_76_pairs
+#print axioms RootMacroModel.rootPrefixCost_eq
 #print axioms RootMacroModel.rootRawCosts_sum
