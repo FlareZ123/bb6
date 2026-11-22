@@ -1310,8 +1310,8 @@
     "authoritative_replacement": {
       "boundary_theorem": "im-results/agent41-623-3euclidean/MonotoneMassWindow.md",
       "source_phase_script": "im-results/agent48-623-tight-window/s_window_boundary_phases.js",
-      "reset_scan": "im-results/agent32-623-phase-automaton/MassWindowResetDiagnostic.json",
-      "correct_postreset_result": "im-results/agent27-623-root-scan/SWindowPostResetSynchronization.md",
+      "reset_scan": "Agent 48 s_window_boundary_phases.js (uses B_corr=34*ellS+122 and target interval [kS'+2,jS'-2)); Agent 32 MassWindowResetDiagnostic.json is also based on the superseded max(34*ell+140,36*ell+88) buffer and must not be cited for the exact S-window.",
+      "correct_postreset_result": "im-results/agent27-623-root-scan/SWindowPostResetSynchronization.md (84 non-synchronizing suffixes)",
       "correct_postreset_count": {
         "windows": 9968,
         "rank_one": 9884,

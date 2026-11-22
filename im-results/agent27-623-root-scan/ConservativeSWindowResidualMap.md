@@ -137,3 +137,8 @@ For D34..D10001, the finite replay checked all 9,968 reset labels map to a seed,
 ## Retraction and authoritative replacement
 
 The old buffer max(34ℓ_S+140,36ℓ_S+88) was superseded by the correction-only B_corr=34ℓ_S+122. In addition, the phase code used here combined an S-indexed window exponent with a carry convention copied from the q-window diagnostic. The resulting own-phase/product states were not the authentic S-window phases. Consequently, every finite count and product conclusion in this document is withdrawn for the BB(6) proof. The valid S-window boundary shifts are exactly (0,0), (0,1), and (1,1); the valid source-to-target phase inventory is in Agent 48's source-faithful script (1,318 transition phases on the finite trace). The correct residual result preserves 84 non-synchronizing cases; these must remain explicit product states.
+
+
+### Additional source correction
+
+Agent 32's MassWindowResetDiagnostic.json also uses the superseded B=max(34*ell+140,36*ell+88) envelope; despite its status label, it is not the exact correction-only S-window scan. Do not cite it as the authoritative reset result. The source-faithful phase script is Agent 48's s_window_boundary_phases.js, with B_corr=34*ellS+122 and target interval [kS'+2,jS'-2). The valid 84-exception post-reset diagnostic is SWindowPostResetSynchronization.md.

@@ -1,0 +1,3 @@
+# Agent 27 follow-up: Agent 32 MassWindowResetDiagnostic is also on obsolete buffer
+
+One further correction: Agent 32's MassWindowResetDiagnostic.json uses B=max(34*ell+140,36*ell+88), so it is not the exact correction-only S-window reset scan despite its status label. Do not cite it as authoritative. The source-faithful S-window reference is Agent 48's s_window_boundary_phases.js: B_corr=34*ellS+122, target interval [kS'+2,jS'-2), and the coupled shifts {(0,0),(0,1),(1,1)}. The valid post-reset result remains SWindowPostResetSynchronization.md with 84 exceptions. The next product must combine the 1,318 exact transition phases, buffer-relative reset interface, and 211 subset.
