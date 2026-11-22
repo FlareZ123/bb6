@@ -225,6 +225,35 @@ for (let n = 0; n <= 32; n++) {
     state("CR", [...zeros(n + 4), 1], [1]));
   checks++;
 }
+
+// Exact root token event and the initial blank-root prefix to D_0(540).
+tokenCalls = 0;
+const rootPreToken = runWithCost(state("DR", [0, 0], [1]), 21810);
+assertState("root pre-token state", rootPreToken.state,
+  state("DL", [...zeros(267), 1], [1]));
+if (tokenCalls !== 0 || rootPreToken.rawSteps !== 64565) {
+  throw new Error("root pre-token raw/token count mismatch");
+}
+checks++;
+tokenCalls = 0;
+const rootTokenOutput = step(rootPreToken.state);
+assertState("root token closure output", rootTokenOutput,
+  state("CR", [...zeros(271), 1], [1]));
+if (tokenCalls !== 1) throw new Error("root token closure count mismatch");
+const rootTokenRaw = 4 + 267 * 4 + 28 + 268 * 2 + 1;
+if (rootTokenRaw !== 1637) throw new Error("root token raw arithmetic mismatch");
+checks++;
+tokenCalls = 0;
+const rootPostToken = runWithCost(rootTokenOutput, 288);
+assertState("root post-token D_0(540)", rootPostToken.state,
+  state("CR", [0], [...zeros(5), 540]));
+if (tokenCalls !== 0 || rootPostToken.rawSteps !== 595) {
+  throw new Error("root post-token raw/token count mismatch");
+}
+if (7 + rootPreToken.rawSteps + rootTokenRaw + rootPostToken.rawSteps !== 66804) {
+  throw new Error("blank-to-D_0(540) raw total mismatch");
+}
+checks++;
 assertState("closeTokCR [1,1]", closeTokCR([], [1, 1]),
   state("CR", [0, 0, 0, 1], [1])); checks++;
 assertState("closeTokCR [1,1,2,5]", closeTokCR([], [1, 1, 2, 5]),
