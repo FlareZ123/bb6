@@ -205,9 +205,9 @@ def successor(c: StackConfig) -> StackConfig | TokenHalt:
             return StackConfig("DR", (a - 1,) + left_tail, (0,))
         b, *right_tail = right
         right_tail = tuple(right_tail)
-        # Source mode_DR tokenizes right-head 0 and 1; ordinary
-        # DR/CR transitions begin only at right-head >= 2.
-        if b <= 1:
+        # Source mode_DR tokenizes only right-head 0; positive heads
+        # take the ordinary DR/CR transition. mode_DL has a separate 0/1 split.
+        if b == 0:
             if a == 0:
                 return close_tok_dr(right_tail, left_tail)
             return close_tok_cr(right_tail, (a - 1,) + left_tail)
