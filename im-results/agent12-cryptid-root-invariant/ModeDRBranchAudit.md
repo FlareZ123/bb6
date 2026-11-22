@@ -61,8 +61,27 @@ Here `D_n(c) = CR(L=[0], R=0^(4n+5) ++ [c])`,
 The source-transcribed regression now checks:
 - 35 instances of `S^(8n+24)(D_n(c)) = D_(n+1)(c-3)` for n=0,…,6 and c in {3,4,5,10,540};
 - the 1,481-successor reset `D_180(0) -> D_0(1453)`;
-- the 76-successor insertion `S^76(DR(G,[1]++B++T)) = DR(G,[1]++B++B++T)` for six distinct finite suffixes, with zero token-normalizer calls;
+- the 76-successor insertion `S^76(DR(G,[1]++B++T)) = DR(G,[1]++B++B++T)` for seven numeric suffixes plus an opaque object suffix, with zero token-normalizer calls and explicit suffix-object identity preservation;
 - the separate H-phase CR 76-step insertion, also with zero token-normalizer calls.
+
+The DR/G/B 76-successor macro independently totals **254 raw TM steps**. The count is derived from the actual `execute n` branches in the four source mode lemmas, not transferred from the separate H-phase calculation:
+
+| Source branch | Occurrences | Raw steps each | Subtotal |
+|---|---:|---:|---:|
+| DR, r1≥1 and a1=0 | 8 | 4 | 32 |
+| DR, r1≥1 and a1>0 | 3 | 3 | 9 |
+| CR, a1=0 | 13 | 2 | 26 |
+| CR, a1=1 and next left value 0 | 8 | 5 | 40 |
+| CR, a1=1 and next left value 1 | 2 | 16 | 32 |
+| EL, r1>0 | 12 | 1 | 12 |
+| DL, r1=0 | 8 | 6 | 48 |
+| EL, r1=0 | 16 | 2 | 32 |
+| DL, r1≥2 | 4 | 4 | 16 |
+| CR, a1=1 and left tail empty | 1 | 6 | 6 |
+| DR, left stack empty | 1 | 1 | 1 |
+| **Total** | **76** |  | **254** |
+
+The updated `verify_root_corridor_macro.js` computes these costs from the source branch classification and asserts 254 for each tested DR/G/B suffix and for the actual root-reachable state. It also independently checks the H-phase CR macro's raw count (254); equality of the totals is an observed result, not an assumption.
 
 The persistent-list root replay and the finite suffix tests are computational evidence, not an all-time proof. The arbitrary-suffix macro and the long root prefix still need kernel-checked Lean proofs against the pinned source. No Lean compile or axiom audit is claimed. The local shell tool has continued to fail before executing commands, so CI has not been used as a substitute for the required local preflight.
 
