@@ -199,10 +199,11 @@ theorem root_countdown_prefix (n c : ℕ) :
         (cfg_EL_n_n [(0,0),(1,0)] ((0,0) :: (0,0) :: tail)) := by
     simpa [bumpPairHead] using
       (root_countdown_dl_zero_step [(0,0)] ((0,0) :: (0,0) :: tail))
-  exact ReachesPlus.trans h1
-    (ReachesPlus.trans h2
-      (ReachesPlus.trans h3
-        (ReachesPlus.trans h4
-          (ReachesPlus.trans h5
-            (ReachesPlus.trans h6
-              (ReachesPlus.trans h7 h8)))))
+  simpa [tail, List.replicate_succ, List.cons_append, List.append_assoc] using
+    (ReachesPlus.trans h1
+      (ReachesPlus.trans h2
+        (ReachesPlus.trans h3
+          (ReachesPlus.trans h4
+            (ReachesPlus.trans h5
+              (ReachesPlus.trans h6
+                (ReachesPlus.trans h7 h8))))))
