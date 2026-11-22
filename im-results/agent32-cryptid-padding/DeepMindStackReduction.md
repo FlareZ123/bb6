@@ -113,3 +113,10 @@ An experimental transcription of the outer mode successor and token normalizers 
 ## Initial-configuration transport caveat
 
 The root checkpoint above is derived from DeepMind's own `init_reaches_nontrivial` theorem. The #85/#490 transition-table isomorphism alone does not prove that DeepMind's `init []` is definitionally the same initial tape/head convention as this repository's D0 root adapter. Before using the stack checkpoint as a formal bridge to the standard BB(6) blank-root trajectory, explicitly compare the initial state, blank symbol, and left/right/head conventions in both libraries. No independent raw replay of this cross-library prefix was completed here. The cylinder-side E0-to-`tok_CR` tape identity is a separate local derivation and is unaffected by this caveat.
+
+
+### Concrete root-transport diagnostic
+
+The raw costs in the first closure are explicit: the DR-to-token prefix is 3 steps, then `tok_CR_zero` costs 2, `tok_CR_add2_nil_21` costs 21, `tok_EL_1` costs 2, and `tok_EL_exit_zero` costs 1. Together with the seven-step `init_reaches_nontrivial` entry, the first outer stack successor is reached at raw time (7+3+2+21+2+1=36) from DeepMind's `init []).
+
+This is a useful cross-check against the repository's D0 root theorem `run D0 36 (some (blank 0)) = some (F0Pure 9 (-6))` in `ExternalTM62-D0-Bridge.md`. However, the DeepMind first successor is a `cfg_CR_n_n) configuration (control state C), whereas the D0 checkpoint is `F0Pure 9) (control state F). They are not the same state. This is concrete evidence that the initial-configuration/tape-orientation transport must be resolved before treating the DeepMind root token orbit as the D0 blank-root orbit. Do not identify these checkpoints merely because their raw times coincide.
