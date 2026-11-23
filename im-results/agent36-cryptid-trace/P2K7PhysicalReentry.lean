@@ -16,7 +16,7 @@ open CryptidBoundary BB6.Agent31PacketSource
 open BB6.Agent35K7
 open BB6.Agent35K7Shapes (code codeTail)
 open BB6.Agent2BoundaryBZero
-open BB6.BoundaryPadding BB6.Padding
+open BB6.BoundaryPadding
 
 set_option maxHeartbeats 10000000
 set_option maxRecDepth 8192
@@ -46,7 +46,7 @@ private theorem one_tail (n : Nat) :
       (List.replicate n true ++
         (oppairs 4 ++ List.replicate 0 true)) ++ [false],5⟩ : Cfg) at h
   simpa [ObsEq,regularSection,run,oppairs,List.append_assoc] using
-    (cfgEq_symm h)
+    (BB6.Padding.cfgEq_symm h)
 
 private theorem two_tail (n : Nat) :
     (⟨[],false,List.replicate n true,5⟩ : Cfg) =
@@ -75,7 +75,7 @@ private theorem close_zero_regular (t u : Nat) :
     simpa only [ka,ws,n,finalTime] using
       (BB6.Agent35K7.close_zero t u)
   rw [h,zero_tail]
-  exact cfgEq_refl _
+  exact BB6.Padding.cfgEq_refl _
 
 private theorem close_one_regular (t u : Nat) :
     ∃ T a q b, ObsEq
@@ -122,7 +122,7 @@ private theorem close_two_regular (t u : Nat) :
     simpa only [ka,ws,n,finalTime] using
       (BB6.Agent35K7.close_two t u)
   rw [h,two_tail]
-  exact cfgEq_refl _
+  exact BB6.Padding.cfgEq_refl _
 
 /-- Full q-uniform, source-connected physically regular return for the
     hitherto non-integrated k=27t+25 E/p=2 reset branch. -/
@@ -144,18 +144,18 @@ theorem all_k25_regular (t q : Nat) :
     rw [hq]
     exact close_two_regular t (q/3)
 
-/-- Direct authentic-blank integration interface: an ObsEq prefix into
+/-- Direct authentic-blank integration interface: an ObsEq rootTime into
     the k=27t+25 cylinder may be composed into a genuine regular source
-    section, without claiming that any such prefix currently exists. -/
-theorem chain_k25_regular (c : Cfg) (t q prefix : Nat)
+    section, without claiming that any such rootTime currently exists. -/
+theorem chain_k25_regular (c : Cfg) (t q rootTime : Nat)
     (h : ObsEq
-      (run prefix c)
+      (run rootTime c)
       (packet (3*firstK t+4) q 2
         (false::List.replicate 6 true))) :
     ∃ T a q' b, ObsEq (run T c) (regularSection a q' b) := by
   obtain ⟨tail,a,q',b,htail⟩ := all_k25_regular t q
-  exact ⟨prefix+tail,a,q',b,
-    source_chain prefix tail c
+  exact ⟨rootTime+tail,a,q',b,
+    source_chain rootTime tail c
       (packet (3*firstK t+4) q 2
         (false::List.replicate 6 true))
       (regularSection a q' b) h htail⟩
