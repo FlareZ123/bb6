@@ -10,6 +10,7 @@ on:
           - raw_d0_bridge
           - legacy_padding_107_call
           - tail_prefix_cylinders
+          - short_mod3_halting
         default: raw_d0_bridge
         required: true
 
@@ -79,8 +80,8 @@ jobs:
           mkdir -p .lake/build/lib/lean/BusyLean/Individual
           lake env lean -o .lake/build/lib/lean/BusyLean/Individual/1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---.olean BusyLean/Individual/1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---.lean
 
-      - name: Prepare exact pinned TM62 and Mathlib dependencies (raw bridge only)
-        if: inputs.target == 'raw_d0_bridge'
+      - name: Prepare exact pinned TM62 and Mathlib dependencies (raw bridge and short halting)
+        if: inputs.target == 'raw_d0_bridge' || inputs.target == 'short_mod3_halting'
         run: |
           set -euo pipefail
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
@@ -108,6 +109,17 @@ jobs:
           lake build BusyLean.BB62 BusyLean.TMAcceleration
           mkdir -p .lake/build/lib/lean/BusyLean/Individual
           lake env lean -o .lake/build/lib/lean/BusyLean/Individual/1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---.olean BusyLean/Individual/1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---.lean
+
+      - name: Compile direct TM62 mod-three terminal-prefix feeder (short only)
+        if: inputs.target == 'short_mod3_halting'
+        run: |
+          set -euo pipefail
+          cd /tmp/proofs
+          cat "$GITHUB_WORKSPACE/im-results/agent32-cryptid-padding/ShortSuffixHalting.append.lean" >> BusyLean/Individual/1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---.lean
+          lake env lean -o .lake/build/lib/lean/BusyLean/Individual/1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---.olean BusyLean/Individual/1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---.lean 2>&1 | tee /tmp/d-short-mod3-halt.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/d-short-mod3-halt.log; then
+            echo "Forbidden axiom in the short-mod3 halting proof"; exit 1
+          fi
 
       - name: Compile exact Mathlib Tape-to-D0 adapter (raw bridge only)
         if: inputs.target == 'raw_d0_bridge'
