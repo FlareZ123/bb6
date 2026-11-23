@@ -1,6 +1,15 @@
 name: Agent 2 complete D-regular original-source proof (manual)
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        description: Proof target (full suite or A first-return)
+        required: true
+        type: choice
+        options:
+          - full
+          - a_first
+        default: full
 permissions:
   contents: read
 jobs:
@@ -8,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
-      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent35-d-regular-certificate:im-results/agent32-cryptid-padding:im-results/agent2-cryptid-continuity:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third
+      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent35-d-regular-certificate:im-results/agent32-cryptid-padding:im-results/agent2-cryptid-continuity:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent4-cryptid-d0-review
     steps:
       - uses: actions/checkout@v4
       - name: Restore pinned original D sources and DRegular proof
@@ -50,6 +59,19 @@ jobs:
           lean -o "$D/AZeroSource.olean" "$D/AZeroSource.lean"
           lean -o "$D/EZeroSource.olean" "$D/EZeroSource.lean"
           lean -o "$D/AOneSource.olean" "$D/AOneSource.lean"
+          if [ "${{ inputs.target }}" = "a_first" ]; then
+            S=im-results/agent32-cryptid-third
+            G=im-results/agent4-cryptid-d0-review
+            lean -o "$S/CryptidSix.olean" "$S/CryptidSix.lean"
+            lean -o "$D/NoEarlierF.olean" "$D/NoEarlierF.lean"
+            lean -o "$D/EOneTripleReturn.olean" "$D/EOneTripleReturn.lean"
+            lean -o "$D/E111FirstReturn.olean" "$D/E111FirstReturn.lean"
+            lean -o "$D/PrefixNoF.olean" "$D/PrefixNoF.lean"
+            lean -o "$B/A1100.olean" "$B/A1100.lean"
+            lean -o "$B/A1100First.olean" "$B/A1100First.lean"
+            lean "$G/AZeroOneFirstReturn.lean"
+            exit 0
+          fi
           lean -o "$D/AWordAlgebra.olean" "$D/AWordAlgebra.lean"
           lean -o "$D/ATwoSource.olean" "$D/ATwoSource.lean"
           lean -o "$D/ARegularFull.olean" "$D/ARegularFull.lean"
