@@ -30,39 +30,18 @@ namespace BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution
 
 open BusyBeaver.RleStackEngine BusyBeaver.SymRunEngine
 
-/-- Totalized deterministic successor. The default branch is used only to
-    make the function total; every use below carries an isSome proof. -/
-def nextCfg (c : Cfg (Fin 2) (Fin 6)) : Cfg (Fin 2) (Fin 6) :=
-  (step target_tm c).getD default
-
-theorem step_eq_some_nextCfg (c : Cfg (Fin 2) (Fin 6))
-    (hstep : (step target_tm c).isSome) :
-    step target_tm c = some (nextCfg c) := by
-  cases h : step target_tm c with
-  | none => simp [h] at hstep
-  | some c' => simp [nextCfg, h]
-
-/-- Successor-indexed reachability avoids an unconstrained intermediate
-    configuration metavariable in repeated primitive-step witnesses. -/
-theorem reachesIn_step_left_succ {n : Nat} {c₁ c₃ : Cfg (Fin 2) (Fin 6)}
-    (hstep : (step target_tm c₁).isSome)
-    (hrest : ReachesIn target_tm n (nextCfg c₁) c₃) :
-    ReachesIn target_tm (Nat.succ n) c₁ c₃ := by
-  have hnext := step_eq_some_nextCfg c₁ hstep
-  simpa only [Nat.add_one] using BusyBeaver.ReachesIn.step_left hnext hrest
-
 macro "stepWithin" : tactic => `(tactic| (
-  try simp only [isVarA_tm, ite_true, ite_false, dif_pos, dif_neg,
+  try simp only [if_pos isVarA_tm, dif_pos, dif_neg,
     BusyBeaver.Cfg.headRight, BusyBeaver.Cfg.headLeft, pow_succ_list, pow_zero_list,
     cons_append_list, nil_append_list, listblank_append_cons, listblank_append_nil,
     Turing.ListBlank.head_cons, Turing.ListBlank.tail_cons, default_head, default_tail,
     encM_nil, encM_cons_zero, encM_cons_run, encM_bumpM, encLeft_cons_head, cons_one_encLeft_tail,
     encRight_cons_head, cons_one_encRight_tail, encM_cons_run_head, cons_one_encM_cons_run_tail]
-  refine reachesIn_step_left_succ ?_ ?_
+  apply BusyBeaver.ReachesIn.step_left
   · first
     | rfl
     | simp [step, BusyBeaver.init_nil, target_tm, target, machine,
-        isVarA_tm, ite_true, ite_false, dif_pos, dif_neg,
+        if_pos isVarA_tm, dif_pos, dif_neg,
         BusyBeaver.Cfg.headRight, BusyBeaver.Cfg.headLeft, Turing.Tape.move,
         pow_succ_list, pow_zero_list, cons_append_list, nil_append_list,
         listblank_append_cons, listblank_append_nil, Turing.ListBlank.head_cons,
@@ -70,27 +49,25 @@ macro "stepWithin" : tactic => `(tactic| (
         default_tail, encM_nil, encM_cons_zero, encM_cons_run, encM_bumpM, encLeft_cons_head,
         cons_one_encLeft_tail, encRight_cons_head, cons_one_encRight_tail,
         encM_cons_run_head, cons_one_encM_cons_run_tail]
-  · simp only [nextCfg, step, BusyBeaver.init_nil, target_tm, target, machine, Option.getD_some,
-      isVarA_tm, ite_true, ite_false, dif_pos, dif_neg,
-      BusyBeaver.Cfg.headRight, BusyBeaver.Cfg.headLeft, Turing.Tape.move,
-      pow_succ_list, pow_zero_list, cons_append_list, nil_append_list,
-      listblank_append_cons, listblank_append_nil, Turing.ListBlank.head_cons,
-      Turing.ListBlank.tail_cons, Tape.write, zero_cons_default, default_head,
-      default_tail, encM_nil, encM_cons_zero, encM_cons_run, encM_bumpM, encLeft_cons_head,
-      cons_one_encLeft_tail, encRight_cons_head, cons_one_encRight_tail,
+  · simp only [if_pos isVarA_tm, dif_pos, dif_neg,
+      BusyBeaver.Cfg.headRight, BusyBeaver.Cfg.headLeft, pow_succ_list, pow_zero_list,
+      cons_append_list, nil_append_list, listblank_append_cons, listblank_append_nil,
+      Turing.ListBlank.head_cons, Turing.ListBlank.tail_cons, zero_cons_default, default_head,
+      default_tail, enc1_nil, encM_nil, encM_cons_zero, encM_cons_run, encM_bumpM,
+      encLeft_cons_head, cons_one_encLeft_tail, encRight_cons_head, cons_one_encRight_tail,
       encM_cons_run_head, cons_one_encM_cons_run_tail]
 ))
 
 macro "finishWithin" : tactic => `(tactic| (
   all_goals (
     change multiStep target_tm _ 0 = some _
-    simp only [isVarA_tm, ite_true, ite_false, dif_pos, dif_neg,
+    simp only [if_pos isVarA_tm, dif_pos, dif_neg,
       BusyBeaver.Cfg.headRight, BusyBeaver.Cfg.headLeft, pow_succ_list, pow_zero_list,
       cons_append_list, nil_append_list, listblank_append_cons, listblank_append_nil,
       Turing.ListBlank.head_cons, Turing.ListBlank.tail_cons, zero_cons_default, default_head,
-      default_tail, enc1_nil, encM_nil, encM_cons_zero, encM_cons_run, encM_bumpM, encLeft_cons_head,
-      cons_one_encLeft_tail, encRight_cons_head, cons_one_encRight_tail, encM_cons_run_head,
-      cons_one_encM_cons_run_tail, encM_bumpM, multiStep_zero]
+      default_tail, enc1_nil, encM_nil, encM_cons_zero, encM_cons_run, encM_bumpM,
+      encLeft_cons_head, cons_one_encLeft_tail, encRight_cons_head, cons_one_encRight_tail,
+      encM_cons_run_head, cons_one_encM_cons_run_tail, multiStep_zero]
     try rfl
   )
 ))
@@ -103,7 +80,7 @@ macro "executeWithin" n:num : tactic => `(tactic| (
 theorem step_BB_nil_exact (R : List MItem) :
     ReachesIn target_tm 1 (cfgBB target_tm [] R) (cfgCB target_tm [] (bumpM R)) := by
   unfold cfgBB cfgCB
-  dsimp only [isVarA_tm, ite_true, ite_false]
+  simp only [if_pos isVarA_tm]
   rw [← encM_bumpM]
   executeWithin 1
 
@@ -111,7 +88,7 @@ theorem step_BB_run0_exact (L1 R : List MItem) :
     ReachesIn target_tm 8 (cfgBB target_tm (.run 0 :: L1) R)
       (cfgBB target_tm L1 (.run 0 :: R)) := by
   unfold cfgBB
-  dsimp only [isVarA_tm, ite_true, ite_false]
+  simp only [if_pos isVarA_tm]
   executeWithin 8
 
 theorem reachesIn_trans {m n : Nat} {c1 c2 c3 : Cfg (Fin 2) (Fin 6)}
@@ -178,7 +155,7 @@ theorem exit_R_A_exact (W R1 : List MItem) :
         (0 : Fin 2) >> encM R1⟩⟩ : Cfg (Fin 2) (Fin 6))
       (cfgCB target_tm (.run 0 :: .run 0 :: W) R1) := by
   unfold cfgCB
-  dsimp only [isVarA_tm, ite_true, ite_false]
+  simp only [if_pos isVarA_tm]
   executeWithin 13
 
 theorem step_DL_run2_exact (d0 : Nat) (L1 R1 : List MItem) :
@@ -187,7 +164,7 @@ theorem step_DL_run2_exact (d0 : Nat) (L1 R1 : List MItem) :
       (cfgCB target_tm
         (.run 0 :: .run 0 :: List.replicate (d0 + 1) .zero ++ L1) R1) := by
   unfold cfgDL
-  dsimp only [isVarA_tm, ite_true, ite_false]
+  simp only [if_pos isVarA_tm]
   have h1 :
       ReachesIn target_tm 6
         (encM (.run 2 :: L1) <{{D}} encM (.run d0 :: R1))
@@ -212,7 +189,7 @@ theorem step_CB_run0_run_pos_exact (d2 : Nat) (L R2 : List MItem) :
       (cfgCB target_tm
         (.run 0 :: .run 0 :: List.replicate d2 .zero ++ bumpM L) R2) := by
   unfold cfgCB
-  dsimp only [isVarA_tm, ite_true, ite_false]
+  simp only [if_pos isVarA_tm]
   have h1 :
       ReachesIn target_tm 5
         (⟨some C, ⟨0, encM L, encM (.run 0 :: .run (d2 + 1) :: R2)⟩⟩ :
@@ -241,7 +218,7 @@ theorem step_CB_run0_nil_exact (L : List MItem) :
     ReachesIn target_tm 3 (cfgCB target_tm L [.run 0])
       (cfgBB target_tm (.run 0 :: bumpM L) []) := by
   unfold cfgCB cfgBB
-  dsimp only [isVarA_tm, ite_true, ite_false]
+  simp only [if_pos isVarA_tm, encM_cons_run]
   rw [← encM_bumpM L]
   executeWithin 3
 
@@ -250,7 +227,7 @@ theorem step_CB_run0_zero_exact (L R2 : List MItem) :
     ReachesIn target_tm 3 (cfgCB target_tm L (.run 0 :: .zero :: R2))
       (cfgBB target_tm (.run 0 :: bumpM L) R2) := by
   unfold cfgCB cfgBB
-  dsimp only [isVarA_tm, ite_true, ite_false]
+  simp only [if_pos isVarA_tm]
   rw [← encM_bumpM L]
   executeWithin 3
 
@@ -261,7 +238,7 @@ theorem step_BB_run1_nil_exact (L1 : List MItem) :
     ReachesIn target_tm 3 (cfgBB target_tm (.run 1 :: L1) [])
       (cfgBB target_tm L1 (.run 0 :: bumpM [])) := by
   unfold cfgBB
-  dsimp only [isVarA_tm, ite_true, ite_false]
+  simp only [if_pos isVarA_tm, encM_cons_run]
   rw [← encM_bumpM []]
   executeWithin 3
 
@@ -270,7 +247,7 @@ theorem step_BB_run1_zero_exact (L1 R2 : List MItem) :
     ReachesIn target_tm 3 (cfgBB target_tm (.run 1 :: L1) (.zero :: R2))
       (cfgBB target_tm L1 (.run 0 :: bumpM (.zero :: R2))) := by
   unfold cfgBB
-  dsimp only [isVarA_tm, ite_true, ite_false]
+  simp only [if_pos isVarA_tm, encM_cons_run]
   rw [← encM_bumpM (.zero :: R2)]
   executeWithin 3
 
@@ -281,7 +258,7 @@ theorem step_BB_run1_exact (L1 R : List MItem) :
     ReachesIn target_tm 3 (cfgBB target_tm (.run 1 :: L1) R)
       (cfgBB target_tm L1 (.run 0 :: bumpM R)) := by
   unfold cfgBB
-  dsimp only [isVarA_tm, ite_true, ite_false]
+  simp only [if_pos isVarA_tm, encM_cons_run]
   rw [← encM_bumpM R]
   executeWithin 3
 
@@ -310,7 +287,7 @@ theorem step_BB_zero_exact (L1 R : List MItem) :
     ReachesIn target_tm 1 (cfgBB target_tm (.zero :: L1) R)
       (cfgCB target_tm L1 (bumpM R)) := by
   unfold cfgBB cfgCB
-  dsimp only [isVarA_tm, ite_true, ite_false]
+  simp only [if_pos isVarA_tm]
   rw [← encM_bumpM]
   executeWithin 1
 
@@ -319,7 +296,7 @@ theorem step_BB_run2_exact (L1 R : List MItem) :
     ReachesIn target_tm 5 (cfgBB target_tm (.run 2 :: L1) R)
       (cfgDL target_tm L1 (.run 0 :: .run 0 :: bumpM R)) := by
   unfold cfgBB cfgDL
-  dsimp only [isVarA_tm, ite_true, ite_false]
+  simp only [if_pos isVarA_tm]
   simp only [encM_cons_run]
   rw [← encM_bumpM]
   executeWithin 5
@@ -329,7 +306,7 @@ theorem step_BB_run3_exact (L1 R : List MItem) :
     ReachesIn target_tm 9 (cfgBB target_tm (.run 3 :: L1) R)
       (cfgBB target_tm (.run 0 :: .zero :: .zero :: L1) (bumpM R)) := by
   unfold cfgBB
-  dsimp only [isVarA_tm, ite_true, ite_false]
+  simp only [if_pos isVarA_tm]
   simp only [encM_cons_run, encM_cons_zero]
   rw [← encM_bumpM]
   executeWithin 9
@@ -339,7 +316,7 @@ theorem step_BB_run_ge4_exact (d : Nat) (L1 R : List MItem) :
     ReachesIn target_tm 9 (cfgBB target_tm (.run (d + 4) :: L1) R)
       (cfgBB target_tm (.run 0 :: .zero :: .run d :: L1) (bumpM R)) := by
   unfold cfgBB
-  dsimp only [isVarA_tm, ite_true, ite_false]
+  simp only [if_pos isVarA_tm]
   simp only [encM_cons_run, encM_cons_zero]
   rw [← encM_bumpM]
   executeWithin 9
@@ -349,7 +326,7 @@ theorem step_DL_run0_exact (L1 R : List MItem) :
     ReachesIn target_tm 1 (cfgDL target_tm (.run 0 :: L1) R)
       (cfgBB target_tm L1 (bumpM R)) := by
   unfold cfgDL cfgBB
-  dsimp only [isVarA_tm, ite_true, ite_false]
+  simp only [if_pos isVarA_tm]
   rw [← encM_bumpM]
   executeWithin 1
 
@@ -358,7 +335,7 @@ theorem step_DL_run1_exact (L1 R : List MItem) :
     ReachesIn target_tm 3 (cfgDL target_tm (.run 1 :: L1) R)
       (cfgDL target_tm L1 (.run 0 :: bumpM R)) := by
   unfold cfgDL
-  dsimp only [isVarA_tm, ite_true, ite_false]
+  simp only [if_pos isVarA_tm]
   simp only [encM_cons_run]
   rw [← encM_bumpM]
   executeWithin 3
@@ -368,7 +345,7 @@ theorem step_CB_nil_exact (L : List MItem) :
     ReachesIn target_tm 2 (cfgCB target_tm L [])
       (cfgDL target_tm (bumpM L) [.run 0]) := by
   unfold cfgCB cfgDL
-  dsimp only [isVarA_tm, ite_true, ite_false]
+  simp only [if_pos isVarA_tm]
   rw [← encM_bumpM]
   executeWithin 2
 
@@ -377,7 +354,7 @@ theorem step_CB_zero_exact (L R1 : List MItem) :
     ReachesIn target_tm 2 (cfgCB target_tm L (.zero :: R1))
       (cfgDL target_tm (bumpM L) (bumpM R1)) := by
   unfold cfgCB cfgDL
-  dsimp only [isVarA_tm, ite_true, ite_false]
+  simp only [if_pos isVarA_tm]
   rw [← encM_bumpM L, ← encM_bumpM R1]
   executeWithin 2
 
@@ -386,7 +363,7 @@ theorem step_CB_run0_run0_exact (L R2 : List MItem) :
     ReachesIn target_tm 6 (cfgCB target_tm L (.run 0 :: .run 0 :: R2))
       (cfgBB target_tm (.run 0 :: .zero :: bumpM L) R2) := by
   unfold cfgCB cfgBB
-  dsimp only [isVarA_tm, ite_true, ite_false]
+  simp only [if_pos isVarA_tm]
   simp only [encM_cons_run, encM_cons_zero]
   rw [← encM_bumpM]
   executeWithin 6
@@ -396,7 +373,7 @@ theorem step_CB_run2_exact (L R1 : List MItem) :
     ReachesIn target_tm 5 (cfgCB target_tm L (.run 2 :: R1))
       (cfgBB target_tm (bumpM L) (.run 0 :: .zero :: R1)) := by
   unfold cfgCB cfgBB
-  dsimp only [isVarA_tm, ite_true, ite_false]
+  simp only [if_pos isVarA_tm]
   rw [← encM_bumpM]
   executeWithin 5
 
@@ -405,7 +382,7 @@ theorem step_CB_run_ge3_exact (d : Nat) (L R1 : List MItem) :
     ReachesIn target_tm 5 (cfgCB target_tm L (.run (d + 3) :: R1))
       (cfgBB target_tm (bumpM L) (.run 0 :: .run d :: R1)) := by
   unfold cfgCB cfgBB
-  dsimp only [isVarA_tm, ite_true, ite_false]
+  simp only [if_pos isVarA_tm]
   rw [← encM_bumpM]
   executeWithin 5
 
@@ -413,7 +390,7 @@ theorem step_CB_run1_exact (L R1 : List MItem) :
     ReachesIn target_tm 3 (cfgCB target_tm L (.run 1 :: R1))
       (cfgCB target_tm (.run 0 :: bumpM L) R1) := by
   unfold cfgCB
-  dsimp only [isVarA_tm, ite_true, ite_false]
+  simp only [if_pos isVarA_tm]
   simp only [encM_cons_run]
   rw [← encM_bumpM]
   executeWithin 3
