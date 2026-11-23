@@ -2,62 +2,12 @@
 
 This dossier develops source-level bounds for the symbolic-run engine in
 `google-deepmind/cryptids` commit
-`3647718b5df22e1a61462dec0376bd204526285a`. The main formal source is
-`../agent42-cryptids-upstream-191-overlap/SymRunTraceStats.lean`.
+`3647718b5df22e1a61462dec0376bd204526285a`.
 
-## Current strongest bounds
+## Current strongest BB-sweep argument
 
-### Pure-step field growth
-
-The source-equivalent proof harness establishes:
-
-- `stepPure_field_growth`: one `stepPure` transition raises the maximum
-  numeric run/repeat field by at most one.
-- `stepPureIter_field_growth`: after `n` pure transitions, the maximum
-  field is at most its initial value plus `n`.
-
-The proof uses the exact BB, DL, and CB cases, with reusable bounds for
-`bumpSymL/R`, `prependZeroSym`, `peelPureTok`, and prefix stripping.
-This is a theorem about `stepPure`, not the outer `stepSym` transition.
-
-### CB token and field bounds
-
-The imported-source file contains the following source-generic lemmas:
-
-- `sweepCB_length_bound`: output token count is at most
-  `|L| + 6*|R|`.
-- `sweepCB_length_le_564`: with at most 94 input tokens, the CB sweep
-  outputs at most 564 tokens.
-- `stepElemCB_BB_length_bound`: a BB-producing elementary CB step adds at
-  most six tokens.
-- `stepElemCB_after_sweep_570`: the subsequent BB-sweep input has at most
-  570 tokens, under the explicit 94-token and BB-branch premises.
-- `sweepCB_counter_sum_bound`: repeat-counter sum grows by at most
-  `4*|R|`; with 94 input tokens this gives `94*M + 376`.
-- `cb_fallback_then_bb_counter_sum_94M2656`: the complete CB-sweep,
-  BB-producing fallback, and BB-sweep path has repeat-counter sum at most
-  `94*M_CB + 2656`.
-- `sweepCB_num_sum_bound`: numeric-field sum grows by at most
-  `3*|R|`; with 94 input tokens it is at most `94*M_CB + 282`.
-- `cb_fallback_bb_input_field_max_le_94M285`: the field maximum at the
-  BB-sweep input is at most `94*M_CB + 285`, hence at most
-  `2^9*(M_CB+1)`.
-
-The 94-token premise is established by the finite `traceStats` certificates
-for the named F424 and F412 source traces. The fallback results also require
-the stated BB-output branch condition.
-
-### BB-sweep amortized potential — formal drafts
-
-An initial direct combined-potential proof in SymRunTraceStats.lean was
-withdrawn after the first exact-source CI run exposed arithmetic and
-unsolved-goal errors. Rather than patching a weaker one-pass induction, the
-current route separates token length from numeric mass in the dedicated
-`SymRunBBBounds.lean` module below. The simpler direct proof is no longer
-claimed or retained.
-
-A sharper independent derivation is drafted in
-`SymRunBBBounds.lean`. It separates token length from numeric mass:
+The current BB-sweep route separates output token length from numeric-field
+mass and combines them only after the two inductions:
 
 - `sweepBB_length_bound4_pair`: simultaneous induction with an ordinary
   right-stack bound and a one-unit stronger bound when the right stack begins
@@ -66,10 +16,18 @@ A sharper independent derivation is drafted in
   `|L| + |R| + 4*|L| + 12`.
 - `sweepBB_num_sum_bound`: output numeric-field sum is at most
   `numSum(L) + numSum(R) + 2*|L| + 5`.
-- `sweepBB_weight_bound_sharper`: combining the two gives
+- `sweepBB_weight_bound_sharper`: with
+  `symStateWeight = tokenCount + numericFieldSum`, the combined estimate is
   `W_out ≤ W_in + 6*|L| + 17`.
 - `sweepBB_field_max_le`: output maximum numeric field is at most
   `numSum(L) + numSum(R) + 2*|L| + 5`.
+
+Here the corresponding augmented input potential is
+`W_in = 1 + |L| + |R| + numSum(L) + numSum(R)`, and the output potential
+adds the leading 1 to `symStateWeight). Algebraically, the draft estimate
+implies `W_out ≤ 7*W_in + 11 ≤ 9*(W_in + 1)` for `W_in ≥ 1`.
+This is a source-generic BB-sweep lemma, not yet a bound on the full
+`stepSym` transition or on blank-root primitive runtime.
 
 The key amortized invariant is the leading-run0 shield. In the ordinary
 induction case, a run-1 head can incur the generic five-token bump expansion,
@@ -79,46 +37,75 @@ with run 0 changes its head to run 1 without increasing its length. Successful
 B2/B12R eats preserve the shield; B1 eats may lose it but shorten the right
 stack enough to use the ordinary bound.
 
-If accepted, the sharper estimate gives
-`W_out ≤ W_in + 6*|L| + 17 ≤ 24*(W_in+1)` for `W_in ≥ 1`.
-This is sufficient to retain the coarse multiplicative factor used in the
-CB fallback analysis. The field-maximum corollary also gives a direct
-source-generic bound for the state after a BB sweep.
+## Exact-source module split
 
-**Status:** both derivations remain drafts. The first exact-source run
-[45129145926](https://github.com/FlareZ123/bb6/actions/runs/45129145926)
-failed on the withdrawn direct combined proof and one missing arithmetic
-closure in the atomic length lemma. The failed proof was removed and the
-atomic case corrected. A second pinned run
+The earlier broad workfile
+`../agent42-cryptids-upstream-191-overlap/SymRunTraceStats.lean` is not a
+valid exact-source dependency as a whole. The pinned RC2 run
+[45137136319](https://github.com/FlareZ123/bb6/actions/runs/45137136319)
+reported independent errors outside the BB-sweep helper closure, including:
+
+- theorem proof constants incorrectly used as propositions in the
+  F424/F412 range aggregates and checkpoint certificates;
+- unresolved field-growth and `stepPure` proof goals;
+- unresolved branches in `stepElemCB_BB_length_bound`.
+
+The BB-specific helper declarations near the end of that file did compile
+without `sorryAx`, but the module-wide errors prevented acceptance of any
+downstream certificate. Rather than silently treating those declarations as
+accepted or repairing unrelated code merely to unblock this result, the
+needed helper closure was extracted to
+`SymRunBBBase.lean`. It contains the exact-source BB length, numeric-mass,
+and field-maximum lemmas, without the unrelated legacy declarations.
+
+`SymRunBBBounds.lean` now imports `SymRunBBBase`; the theorem
+`sweepBB_weight_bound_sharper` is placed after
+`sweepBB_num_sum_bound` to avoid a forward reference.
+`SymRunTraceStatsAudit.lean` imports the isolated base and BB bounds and
+prints the transitive axiom profiles of the resulting lemmas.
+
+## Status and acceptance boundary
+
+**The BB-sweep bounds remain unaccepted drafts.** The exact-source audit
+[45144654362](https://github.com/FlareZ123/bb6/actions/runs/45144654362)
+is the current focused run, pinned to the Cryptids commit above and Lean
+`v4.36.0-rc2`, with dependency chain:
+
+`SymRunBBBase.lean → SymRunBBBounds.lean → SymRunTraceStatsAudit.lean`.
+
+The preceding run [45144046165](https://github.com/FlareZ123/bb6/actions/runs/45144046165)
+was cancelled before the proof stage after a static review found that the
+first isolated base omitted the field-maximum helper declarations. Those
+helpers have since been added; the cancelled run provides no proof evidence.
+
+The earlier exact-source runs
+[45129145926](https://github.com/FlareZ123/bb6/actions/runs/45129145926) and
 [45132510153](https://github.com/FlareZ123/bb6/actions/runs/45132510153)
-is now compiling SymRunTraceStats.lean, SymRunBBBounds.lean as an extra
-dependency, and the updated axiom bridge. Do not treat the new amortized
-theorems as formally accepted before that run succeeds.
+also failed. The local source-equivalent Lean harnesses used for earlier
+field-growth, CB-length, counter-sum, and numeric-sum experiments are useful
+development evidence only; they do not replace the pinned source audit.
 
-## Exact-source and acceptance boundary
+The intended acceptance standard is kernel-checked compilation of the
+complete dependency closure and exported transitive axiom profiles without
+`sorryAx` or `native_decide`. Standard Lean axioms such as `propext`,
+`Quot.sound`, and where justified `Classical.choice` are not equivalent to
+admitting an unproved theorem.
 
-The local source-equivalent Lean 4.36.0-rc2 harnesses used for the earlier
-field-growth, CB-length, counter-sum, and numeric-sum results are useful
-development checks, but do not substitute for compiling the exact imported
-source closure. The previous shared exact-source audit
-[44955198218](https://github.com/FlareZ123/bb6/actions/runs/44955198218)
-failed after the statistics module emitted its axiom reports. The current
-audit run above isolates the statistics module and its axiom bridge.
+## Remaining route to a full source-cost bound
 
-The proof is intended to remain kernel-checked without `sorryAx` or
-`native_decide`. Existing `#print axioms` reports for the older lemmas
-include standard Lean axioms such as `propext`, `Quot.sound`, and in some
-CB results `Classical.choice`; these are distinct from admitting an
-unproved theorem.
-
-## Next formal steps
-
-1. Resolve the current exact-source audit, repairing only concrete compiler
-   failures.
-2. Use the BB-sweep weight bound with the existing CB/DL branch bounds to
-   prove a global `stepSym` potential inequality.
-3. Compose that inequality with the already-developed source-native
-   primitive-cost envelopes and exact F424/F412 checkpoint chains.
-4. Keep all resulting candidate primitive-time classifications conditional
-   until the original-machine one-step and macro-dispatch bridges are
+1. Complete the focused BB-sweep exact-source audit and repair only concrete
+   compiler failures.
+2. Isolate and repair the CB-sweep and BB-producing fallback length/mass
+   lemmas. The current broad Stats module's
+   `stepElemCB_BB_length_bound` has unresolved branches and its F424/F412
+   trace aggregates are not yet valid certificates.
+3. Coordinate the accepted BB/CB exports with Agent 42's independent
+   `stepSym` wrapper composition.
+4. Compose the complete macro-cost inequality with source-native primitive
+   cost envelopes and exact blank-root checkpoint chains.
+5. Keep every candidate primitive-time classification conditional until
+   the original-machine one-step and macro-dispatch bridges are
    kernel-checked.
+
+No claim here establishes a universal six-state upper bound or determines
+BB(6).
