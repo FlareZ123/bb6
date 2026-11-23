@@ -691,11 +691,13 @@ private theorem q_even_p_blank_unreachable_h5 (d b : Nat) :
     have hgate0 := (six_even_right_blank_reach_iff A B
       (by omega) (by omega) (by omega) (by omega)).mp hp
     have hF1reach : BB6.Agent3.CReach F1x F1y := by
-      simpa only [hF1x,hF1y] using hgate0
+      rcases hgate0 with ⟨time,htime⟩
+      exact ⟨time,by simpa only [hF1x,hF1y] using htime⟩
     have hgate1 := (six_even_right_blank_reach_iff F1x F1y
       (by omega) (by omega) (by omega) (by omega)).mp hF1reach
     have hF2reach : BB6.Agent3.CReach F2x F2y := by
-      simpa only [hF2x,hF2y] using hgate1
+      rcases hgate1 with ⟨time,htime⟩
+      exact ⟨time,by simpa only [hF2x,hF2y] using htime⟩
     have hF2xeq : F2x=86996+7148544*d+14296064*b := by
       dsimp [F2x,A,W,t,z,qEvenH5T,qEvenH5Z]
       omega
