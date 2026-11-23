@@ -115,13 +115,19 @@ private theorem branch9_affine_identity (t q r v K : Nat)
   rcases hb with ⟨hJK,hNJ,hpowJK,hpowJN⟩
   have hpowK : 1≤2^K := by have hp:=pow2_pos K; omega
   have hNbig : 24*2^J≤12*2^N := by
-    have heq : 2^(J+1)=2^J*2 := by simp [Nat.pow_succ]
-    omega
+    have hpow2 : 2^(J+1)=2^J*2 := by simp [Nat.pow_succ]
+    calc
+      24*2^J = 12*(2^J*2) := by omega
+      _ = 12*2^(J+1) := by rw [←hpow2]
+      _ ≤ 12*2^N := Nat.mul_le_mul_left 12 hpowJN
   have hJbig : 48*2^K≤12*2^J := by
-    have heq : 2^(K+2)=2^K*4 := by
-      rw [show K+2=(K+1)+1 by omega, Nat.pow_succ, Nat.pow_succ]
-      simp [Nat.mul_assoc]
-    omega
+    have hpow4 : 2^(K+2)=2^K*4 := by
+      rw [Nat.pow_add]
+      simp
+    calc
+      48*2^K = 12*(2^K*4) := by omega
+      _ = 12*2^(K+2) := by rw [←hpow4]
+      _ ≤ 12*2^J := Nat.mul_le_mul_left 12 hpowJK
   have hqidx' : q≤2*2^J+v := hqidx
   have hidx : k+q=2*2^J+v := by
     dsimp [k,branch9Index,J]
@@ -144,7 +150,12 @@ private theorem branch9_affine_identity (t q r v K : Nat)
     change (6*2^t+3*q-8)+8=6*2^t+3*q
     exact Nat.sub_add_cancel hCnonneg
   have hidx3 : 3*k+3*q=6*2^J+3*v := by omega
-  omega
+  have hsum : branch9A t q r v+3*v+12*2^J=12*2^N+C := by omega
+  calc
+    branch9A t q r v+3*v =
+        (branch9A t q r v+3*v+12*2^J)-12*2^J := by omega
+    _ = (12*2^N+C)-12*2^J := by rw [hsum]
+    _ = (12*2^N-12*2^J)+C := by omega
 
 private theorem branch9_high_counter (t q r v K : Nat)
     (ht : 5≤t) (hr : r<4) (hK : 1≤K)
@@ -155,13 +166,21 @@ private theorem branch9_high_counter (t q r v K : Nat)
   rcases hb with ⟨hJK,hNJ,hpowJK,hpowJN⟩
   have hpowK : 1≤2^K := by have hp:=pow2_pos K; omega
   have hNbig : 24*2^(branch9J r v)≤12*2^(branch9N r v) := by
-    have heq : 2^(branch9J r v+1)=2^(branch9J r v)*2 := by simp [Nat.pow_succ]
-    omega
+    have hpow2 : 2^(branch9J r v+1)=2^(branch9J r v)*2 := by
+      simp [Nat.pow_succ]
+    calc
+      24*2^(branch9J r v) =
+          12*(2^(branch9J r v)*2) := by omega
+      _ = 12*2^(branch9J r v+1) := by rw [←hpow2]
+      _ ≤ 12*2^(branch9N r v) := Nat.mul_le_mul_left 12 hpowJN
   have hJbig : 48*2^K≤12*2^(branch9J r v) := by
-    have heq : 2^(K+2)=2^K*4 := by
-      rw [show K+2=(K+1)+1 by omega, Nat.pow_succ, Nat.pow_succ]
-      simp [Nat.mul_assoc]
-    omega
+    have hpow4 : 2^(K+2)=2^K*4 := by
+      rw [Nat.pow_add]
+      simp
+    calc
+      48*2^K = 12*(2^K*4) := by omega
+      _ = 12*2^(K+2) := by rw [←hpow4]
+      _ ≤ 12*2^(branch9J r v) := Nat.mul_le_mul_left 12 hpowJK
   have hdiff : 12*2^(branch9J r v)≤
       12*2^(branch9N r v)-12*2^(branch9J r v) := by omega
   have hC : 0≤branch9Carry t q := by
