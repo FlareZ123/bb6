@@ -39,7 +39,7 @@ structure LowRowCert (rs : List Nat) (T : Nat)
   shift : Nat
   target : Nat
   modulus_gt_one : 1 < modulus
-  matches :
+  «matches» :
     modulus = (nodeAt node).C * 3^h * (2^(a+1)+1) ∧
     base = (nodeAt node).s + h + 1 ∧
     shift = lowShift (nodeAt node) h a ∧
@@ -132,7 +132,7 @@ structure ValCert (rs : List Nat) (T : Nat)
   modulus : Nat
   base : Nat
   target : Nat
-  matches :
+  «matches» :
     modulus = 3^((nodeAt node).r+(nodeAt node).v3C+1) ∧
     base = (nodeAt node).s ∧
     target = (nodeAt node).C-(nodeAt node).b+(nodeAt node).c
@@ -182,7 +182,7 @@ structure HighCert (nodeAt : Nat → AffineNode) where
   D : Nat
   E : Nat
   cutoff_lower : 2 ≤ A
-  matches :
+  «matches» :
     D = (nodeAt node).C*3^h ∧
     E = 2^(h+1)*((nodeAt node).C-(nodeAt node).b+(nodeAt node).c)
   base_gap :
