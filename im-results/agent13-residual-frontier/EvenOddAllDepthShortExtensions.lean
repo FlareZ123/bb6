@@ -107,8 +107,6 @@ theorem depth_six_AOE_parent_impossible
   have hsize2 : 23 ≤ x2+y2 := by omega
   let x3 := (x2+y2-5)/2
   let y3 := (x2+3*y2-9)/4
-  have hx3lin : 2*x3+12*r=352*u+24+((q+15*r)/4) := by
-    dsimp [x3]; omega
   have h3 : BB6.Agent3.CReach x3 y3 := by
     dsimp [x3,y3]
     exact (BB6.Agent3.odd_seven_blank_reach_iff
@@ -164,8 +162,6 @@ theorem depth_four_OBBB_parent_impossible
   have h27 : (x2+y2)%8≠7 := by omega
   let x3 := x2+y2-2
   let y3 := (y2-2)/2
-  have hx3lin : 2*x3+24*r=832*u+80+((q+9*r-14)/32)*32 := by
-    dsimp [x3]; omega
   have h3 : BB6.Agent3.CReach x3 y3 := by
     dsimp [x3,y3]
     exact (BB6.Agent46.six_even_right_blank_reach_iff
