@@ -1,5 +1,6 @@
-/-! Sharper independent length and numeric-mass bounds for the exact BB sweep. -/
 import SymRunBBBase
+
+/-! Sharper independent length and numeric-mass bounds for the exact BB sweep. -/
 
 open BusyBeaver.SymRunEngine
 
@@ -257,7 +258,6 @@ theorem sweepBB_length_bound4_pair (L : List SymTok) :
 theorem sweepBB_length_bound4 (L R : List SymTok) :
     stateTokenCount (sweepBB L R) ≤ L.length + R.length + 4 * L.length + 12 :=
   (sweepBB_length_bound4_pair L R).1
-
 
 theorem sweepBB_length_bound (L R : List SymTok) :
     stateTokenCount (sweepBB L R) ≤ L.length + R.length + 5 * L.length + 12 := by
