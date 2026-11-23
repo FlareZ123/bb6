@@ -465,5 +465,3 @@ theorem first_stop_m12355_mod16384 (time m k : Nat)
 #print axioms first_stop_m12355_mod16384
 end BB6.Agent21Low1091
 
-#print axioms first_stop_m1091_mod4096
-end BB6.Agent21Low1091
