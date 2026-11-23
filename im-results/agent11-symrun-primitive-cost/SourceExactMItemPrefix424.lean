@@ -456,3 +456,6 @@ theorem blankToRunElemFast424_within_two31 :
 #print axioms maxRunMRight_stepElemM_le
 #print axioms costElemM424_le
 #print axioms costIterM424_le
+#print axioms initToCB424_exact
+#print axioms blankToRunElemFast424_exact_reaches
+#print axioms blankToRunElemFast424_within_two31
