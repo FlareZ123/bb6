@@ -78,6 +78,12 @@ theorem outer_s1_marker_prefix_cell (L n m a b : Nat) (h : Int)
     (hm : m < 3) (i : Nat) (hi : i ≤ m+4) :
     (s1Config L n m a 0 b h).tape
       (h-((3*a+i):Int)) = sideBit (markerWord m ++ d0) i := by
+  have hindex :
+      (3 : Int) * (a : Int) + (i : Int) =
+        ((3*a+i : Nat) : Int) := by
+    push_cast
+    rfl
+  rw [hindex]
   rw [s1Config_left_cell L n m a 0 b h (3*a+i)]
   have hword : s1LeftFacing L n m a 0 =
       d1pow a ++ (markerWord m ++ d0 ++ binDec L n ++ lh) := by
@@ -105,7 +111,7 @@ theorem outer_s1_counter_cell (L n m a b : Nat) (h : Int)
         ((3*a+m+5+i : Nat) : Int) := by
     push_cast
     rfl
-  rw [← hindex]
+  rw [hindex]
   rw [s1Config_left_cell L n m a 0 b h (3*a+m+5+i)]
   have hword : s1LeftFacing L n m a 0 =
       (d1pow a ++ markerWord m ++ d0) ++ (binDec L n ++ lh) := by
