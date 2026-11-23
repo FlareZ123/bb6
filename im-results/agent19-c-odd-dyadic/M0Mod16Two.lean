@@ -87,7 +87,7 @@ theorem prior_high_allowed_m0_j16_two (s : Nat) (hs : 1≤s) :
     omega
   have hy : 2^(2*0+2)*(j+3)-(j+3*0+5)=48*s+13 := by
     dsimp [j]
-    norm_num
+    change 4*(16*s+5)-(16*s+7)=48*s+13
     omega
   have hright :
       (BB6.Agent15.affineNormalize (2*j+3)
