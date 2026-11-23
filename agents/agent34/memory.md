@@ -168,3 +168,12 @@ The fresh run **45166152059** confirmed the non-heartbeat defects were fixed: `p
 - Replaced the first-direction `omega` with an explicit delta decomposition and a divisibility proof from the sector congruence.
 - Rewrote the second-direction congruence into two smaller residue equations before deriving `k % 16384`.
 - These changes are in commits **3822d82** and **8b9fe4**. Focused run **45167599254** is queued/running with `s2_sixall_only=true`. Its outcome is not yet known; do not claim C58/S3 acceptance until it completes and every relevant axiom profile is free of `sorryAx`.
+
+
+### q-even hcong=5 formal pullback and current CI
+
+- Derived the adjacent lift `(2*t-z)%8=5`, i.e. `53*u+57*v ≡794 (mod 1024)`. Its high-stop pullback is the candidate cylinder `j%512=319`, `m%1048576=(7210+337408*(j/512))%1048576`, equivalently `171*m+879873 ≡49*j (mod 1048576)`.
+- Added `q_even_h5_parameter_pullback_iff` to `im-results/agent34-s2-pullback/CSixSeventhS2Pullback.lean` (commit **ea84f55**) and documented the open bounce-parent issue in `QEvenH5-frontier.md`. This is only a parameter pullback, not a blank-root exclusion.
+- Added `QEvenH5Probe.lean` and optional workflow input `s2_qeven_h5_probe` to evaluate `valSixMixedRootDecision` on hcong=1 and hcong=5 sample bounce parents. The probe has not yet been run; do not treat sample computations as a family theorem.
+- C58 source proof was further repaired in commits **b63bdbe** and **a9d2a1b**: the S3 sector pullback no longer uses truncated Nat subtraction; it uses `Nat.mul_mod_mul_left` to lift `v%16` to the 16384 modulus, and isolates the two heavy theorems with a 1,000,000 heartbeat budget. Focused run **45168994612** (S2/six-all only) is in progress. It was triggered before the h5 theorem commit, so it does not check that new theorem.
+- The previous run **45167599254** still failed: the let-bound counter rewrites and S3 arithmetic hit heartbeat limits, and the attempted Nat-subtraction delta was invalid. The current C58 patch specifically addresses those issues; wait for run 45168994612 before further edits.
