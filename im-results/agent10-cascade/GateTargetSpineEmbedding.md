@@ -1,6 +1,6 @@
 # Exact inverse-spine structure for #746 halting gates
 
-**Status:** eight algebraic statements over the exact original-source `ResetParent` grammar: (i) the existing narrow-window t=0 entry embedding into a *single* even-spine branch, (ii) an all-sector, all-index **exact criterion for predecessor existence at the canonical spine's terminal state**, (iii) a full **unique-chain root-exclusion** on a low-valuation terminal subfamily, and (iv) a two-edge exclusion in a second low-valuation sector, and (v) a disjoint four-edge exclusion in its next dyadic-depth window, and (vi) a forced second-tier odd-parent fork in a further infinite narrow high-c strip, and (vii) a complete nonterminal off-spine fork cone two indices closer to the actual gate, extended by six forced-even levels, and (viii) a second complete off-spine fork giving a 17-node root-dead cone thirteen inverse levels nearer the gate. The complete derivations are paper proofs, not yet compiled against the original source in Lean. Neither statement eliminates off-spine odd-parent forks or decides the machine.
+**Status:** nine algebraic statements over the exact original-source `ResetParent` grammar: (i) the existing narrow-window t=0 entry embedding into a *single* even-spine branch, (ii) an all-sector, all-index **exact criterion for predecessor existence at the canonical spine's terminal state**, (iii) a full **unique-chain root-exclusion** on a low-valuation terminal subfamily, and (iv) a two-edge exclusion in a second low-valuation sector, and (v) a disjoint four-edge exclusion in its next dyadic-depth window, and (vi) a forced second-tier odd-parent fork in a further infinite narrow high-c strip, and (vii) a complete nonterminal off-spine fork cone two indices closer to the actual gate, extended by six forced-even levels, and (viii) a second complete off-spine fork giving a 17-node root-dead cone thirteen inverse levels nearer the gate, and (ix) a universal nine-packet Hensel obstruction forcing genuine t=3 odd-parent forks within 50 ray indices. The complete derivations are paper proofs, not yet compiled against the original source in Lean. Neither statement eliminates off-spine odd-parent forks or decides the machine.
 
 ## 1. Actual source gate
 
@@ -1092,7 +1092,125 @@ paper derivation; neither the
 17-node theorem nor the densities
 have yet been source-compiled in Lean.
 
-## 11. Where the current E-parent results apply
+## 11. Uniform nine-packet obstruction: an unavoidable genuine t=3 odd parent
+
+The previous full-cone exclusions are necessarily finite-depth phenomena
+for any strategy that refuses higher odd valuations. There is an exact
+**all-index source-grammar obstruction**: every high-c terminal family
+covered by Section 9 carries a *genuine third-valuation odd parent*
+within nine successive active canonical-ray packets, not merely an
+arithmetical divisibility witness.
+
+**Theorem (forced triple source-parent fork; paper proof).**
+Suppose n≥257, n mod6∈{4,5}, J=n−floor(log2(2n+3)) even,
+\(q=(2n+3)2^J\), \(p=2^n\), \(4q>7p\), and
+\[
+     X_0:=2u_{J-2}+5\equiv9\pmod{27}.
+\]
+Put \(j_r=J-2-6r\) and \(X_r=2u_{j_r}+5\).
+There is a **unique** \(r_*\in\{1,\dots,8\}\) with
+\[
+ \boxed{81\mid X_{r_*}}.
+\]
+Moreover \(u_{j_{r_*}}\) has **at least three distinct genuine
+ResetParent predecessors**: its canonical even-ray parent,
+a t=1 odd parent at scale \(k=n-2\), and a t=3 odd parent at
+scale \(k=n-3\). Thus one cannot close the entire \(u_0\)
+inverse tree on these parameter sectors using only even and
+t=1 predecessors. This is a forced *branch existence*,
+not a blank-root reachability claim.
+
+**Proof of the unique valuation packet.** Define
+\(A=8p+2n+3\) and \(Z_r=2(2n+3)2^{j_r}\),
+so \(X_r=A-Z_r\).
+The gate-sector restriction gives \(3\nmid(2n+3)\), hence
+\(3\nmid Z_0\). As \(2^6=64\) and
+\[
+       64^{-1}\equiv19\equiv1+18\pmod{81},
+\]
+for r=0,…,8 we obtain
+\[
+  Z_r\equiv Z_0\cdot19^r
+       \equiv Z_0(1+18r)\pmod{81},\qquad
+  X_r\equiv X_0-18rZ_0\pmod{81}.
+\]
+Because \(3\nmid Z_0\), the increments \(-18Z_0\)
+generate every multiple of nine modulo 81 **exactly once**
+over r=0,…,8. Since \(9\mid X_0\), precisely one
+\(X_r\) vanishes modulo81; since \(X_0\equiv9\pmod{27}\),
+it cannot be r=0. For n≥257, \(J>50\), so every
+indicated ray index is positive and the equalities
+are legitimate, not negative-index formal manipulations.
+
+**Proof that the extra source parent is real.** Since
+\(r_*\ge1\), \(j_{r_*}\le J-8\). Write \(j=j_{r_*}\),
+\(X=X_{r_*}\), and \(d_1=X/9\), \(d_3=X/81\), both
+positive odd integers. The small ray deficit
+\(c2^j\le q/256<p/128\) gives
+\[
+   8p-p/64<X<8p+2n+3.
+\]
+Using n≥257 and \(p=2^n\gg n\), these explicit
+inequalities imply
+\[
+  6\cdot2^{n-2}+1\le2d_1\le8\cdot2^{n-2}-1,
+\]
+\[
+  6\cdot2^{n-3}+1\le8d_3\le8\cdot2^{n-3}-1.
+\]
+Therefore the t=1 and t=3 odd arms of the
+**original untruncated** ResetParent grammar
+are both valid. The corresponding source-parent
+numbers are exactly
+\[
+ h_1=4d_1-2p-n-3,\qquad
+ h_3=16d_3-p-n-2.
+\]
+Both are nonnegative, and the same bounds give
+\[
+  p<h_1<2p,\qquad p/2<h_3<p.
+\]
+Meanwhile the canonical even predecessor
+\(u_{j+1}>3p\), so all three source parents
+are pairwise distinct.
+
+**Higher 3-adic hierarchy.** The same mechanism repeats
+at powers \(3^k\): the exact lifting formula
+\(\nu_3(2^{6m}-1)=2+\nu_3(m)\) shows that
+\(2^6\) has order \(3^{k-2}\) modulo \(3^k\)
+for \(k\ge2\). Conditional on the active
+\(9\mid X_r\) phase, each complete block of
+\(3^{k-2}\) active packet indices contains
+precisely one \(r\) with \(3^k\mid X_r\), provided
+all those dyadic ray indices exist. Thus
+arbitrarily high odd-output valuations are
+structurally **forced as n grows**. Which
+valuations produce *genuine* odd-source bands
+depends on \(2^{t+1}/3^{t+1}\) and the disjoint
+dyadic band geometry; t=3 above is the
+first unavoidable genuinely additional odd
+source after t=1.
+
+**Reproduction.** An independent exact BigInt
+calculation for n=455,509,928,982,1817,
+1871,1925,2033,3616,3778 found exactly one
+r in 1,…,8 with X_r%81=0 in every case,
+and checked the actual odd source bands, both
+parent nonnegativity conditions and all three
+pairwise distinct parents. This finite check is
+not used to justify the all-index modular proof.
+
+**Research implication.** A sustainable path to
+closing the full original #746 gate inverse
+tree must address the forced high-valuation
+t=3 branches (and eventually the higher
+3-adic hierarchy), instead of endlessly
+expanding t=1-only residue cylinders.
+The source-connected Lean certification of
+this all-index nine-packet theorem remains
+an open formalization task.
+
+## 12. Where the current E-parent results apply
 
 The even-parent bands adjacent to (E) are
 [
@@ -1121,7 +1239,7 @@ The parity sectors align with both original gate residues:
 
 The odd-a, (K\equiv3\pmod6) entry-parent classification remains open.
 
-## 12. Existing Ray reductions to compose, not duplicate
+## 13. Existing Ray reductions to compose, not duplicate
 
 The spine formula above is the same canonical even ray used by the repository's `Ray*` modules:
 [
@@ -1161,7 +1279,7 @@ J-11,J-10,\ldots,J.
 ]
 This gives a concrete finite target for composing `RayNoSeam`, `RayNoSeamWalk`, the two-tier Hensel selectors, and the terminal t=0 entry (E(a,K)). The BigInt checks at ((K,a)=(387,9),(800,10),(399,9),(806,10)) independently found this exact 12-index split; the algebra above explains it uniformly.
 
-## 13. Scope and remaining work
+## 14. Scope and remaining work
 
 This identity connects the auxiliary entry family to the actual #746 halting targets. It proves that (E(a,K)) is an ancestor on **one** inverse-parent branch of (U_{K+2}). It does **not** prove that every root path to (U_{K+2}) passes through (E(a,K)). Other odd-parent side branches can leave intermediate spine nodes; a root path could in principle enter through one of them.
 
