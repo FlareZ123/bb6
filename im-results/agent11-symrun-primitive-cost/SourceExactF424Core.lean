@@ -30,6 +30,15 @@ namespace BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution
 
 open BusyBeaver.RleStackEngine BusyBeaver.SymRunEngine
 
+/-- A successor-indexed form of the exact reachability constructor.
+    Writing the index as Nat.succ n avoids asking elaboration to invert
+    the stuck expression ?n + 1 when apply sees a numeral such as 8. -/
+theorem reachesIn_step_left_succ {n : Nat} {c₁ c₂ c₃ : Cfg (Fin 2) (Fin 6)}
+    (hstep : step target_tm c₁ = some c₂)
+    (hrest : ReachesIn target_tm n c₂ c₃) :
+    ReachesIn target_tm (Nat.succ n) c₁ c₃ := by
+  simpa only [Nat.add_one] using BusyBeaver.ReachesIn.step_left hstep hrest
+
 macro "stepWithin" : tactic => `(tactic| (
   all_goals
     try simp only [isVarA_tm, ite_true, ite_false, dif_pos, dif_neg,
@@ -39,7 +48,7 @@ macro "stepWithin" : tactic => `(tactic| (
       encM_nil, encM_cons_zero, encM_cons_run, encLeft_cons_head, cons_one_encLeft_tail,
       encRight_cons_head, cons_one_encRight_tail, encM_cons_run_head, cons_one_encM_cons_run_tail]
   all_goals
-    apply BusyBeaver.ReachesIn.step_left
+    apply reachesIn_step_left_succ
     · simp [ReachesIn, multiStep, target_tm, target, machine,
         isVarA_tm, ite_true, ite_false, dif_pos, dif_neg,
         BusyBeaver.Cfg.headRight, BusyBeaver.Cfg.headLeft, Turing.Tape.move,
