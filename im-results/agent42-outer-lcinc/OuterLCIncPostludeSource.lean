@@ -18,6 +18,7 @@ open BB6Coverage.Agent8OuterLCInc
 open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent24LBinDecHRun
 open BB6Coverage.Agent48Champion
+open BB6Coverage.Agent6Q4Prefix
 
 /-- Source tape after the initial counted left sweep. -/
 def outerLCIncSourceT1 (T : Int → Bool) (h : Int) (a : Nat) :
@@ -49,7 +50,7 @@ theorem outerLCInc_s1_right_facts (L n m a b : Nat) (h : Int) :
     (∀ j : Nat, T (h+3*b+10+j) = false) := by
   dsimp
   have hlen : ([false,true,true,true,false,false] ++ d1pow (b+1)).length =
-      3*b+9 := by simp [d1pow_length]
+      3*b+9 := by simp [d1pow_length] <;> omega
   have hcell (i : Nat) :
       (s1Config L n m a 0 b h).tape (h+1+i) =
         sideBit ([false,true,true,true,false,false] ++ d1pow (b+1)) i := by
@@ -168,8 +169,10 @@ theorem markerBridgeFrameOut_five (m : Nat) (hm : m < 3)
   rw [markerBridgeFrameOut_tape]
   simp [hin]
   have hm' : m = 0 ∨ m = 1 ∨ m = 2 := by omega
+  have hjcases : j=0 ∨ j=1 ∨ j=2 ∨ j=3 ∨ j=4 := by omega
   rcases hm' with rfl | rfl | rfl <;>
-    interval_cases j <;> norm_num [markerBridgeOutput]
+    rcases hjcases with rfl | rfl | rfl | rfl | rfl <;>
+    decide
 
 /-- The final m marker-frame cells are ones, exactly the prefix
 needed at the beginning of the E scan. -/
@@ -186,8 +189,11 @@ theorem markerBridgeFrameOut_trailing (m : Nat) (hm : m < 3)
   have hm' : m = 0 ∨ m = 1 ∨ m = 2 := by omega
   rcases hm' with rfl | rfl | rfl
   · omega
-  · interval_cases i <;> norm_num [markerBridgeOutput]
-  · interval_cases i <;> norm_num [markerBridgeOutput]
+  · have hi0 : i=0 := by omega
+    subst i
+    decide
+  · have hicases : i=0 ∨ i=1 := by omega
+    rcases hicases with rfl | rfl <;> decide
 
 /-- The marker frame preserves every cell strictly to the right of
 its fixed output window. -/
@@ -422,7 +428,8 @@ theorem outerLCInc_source_postlude_conditions
           dsimp [h1, outerLCIncH1, k]
           omega
         have hcell : T (h+2+(k:Int)) = true := by
-          interval_cases k
+          have hkCases : k=0 ∨ k=1 ∨ k=2 := by omega
+          rcases hkCases with rfl | rfl | rfl
           · simpa using h111.1
           · simpa using h111.2.1
           · simpa using h111.2.2
@@ -501,7 +508,7 @@ theorem outerLCInc_source_postlude_conditions
           omega)
       _ = T (h+3*b+10) := hT3source _ (by omega)
       _ = false := hblank 0
-  have hpat := outerLCIncAfterSweep_tailPattern T h a m b hright'
+  have hpat := outerLCIncAfterSweep_tailPattern T3 h a m b hright'
   have h6 :
       outerLCIncAfterZeroExit T3 h a m b (h+3*b+6) = true := by
     rw [outerLCIncAfterZeroExit_preserves T3 h a m b _ (by omega)]
@@ -521,22 +528,29 @@ theorem outerLCInc_source_postlude_conditions
   have h10 :
       outerLCIncAfterZeroExit T3 h a m b (h+3*b+10) = true :=
     outerLCIncAfterZeroExit_one T3 h a m b
+  have hblankT3 : ∀ k : Nat, T3 (h+3*b+10+k) = false := by
+    intro k
+    have hp : T3 (h+3*b+10+k) = T (h+3*b+10+k) := by
+      apply hT3source
+      omega
+    rw [hp]
+    exact hblank k
   have h11 :
       outerLCIncAfterZeroExit T3 h a m b (h+3*b+11) = false := by
     rw [outerLCIncAfterZeroExit_preserves T3 h a m b _ (by omega)]
-    exact outerLCIncAfterSweep_blank T h a m b r 1 hblank
+    exact outerLCIncAfterSweep_blank T3 h a m b r 1 hblankT3
   have h12 :
       outerLCIncAfterZeroExit T3 h a m b (h+3*b+12) = false := by
     rw [outerLCIncAfterZeroExit_preserves T3 h a m b _ (by omega)]
-    exact outerLCIncAfterSweep_blank T h a m b r 2 hblank
+    exact outerLCIncAfterSweep_blank T3 h a m b r 2 hblankT3
   have h13 :
       outerLCIncAfterZeroExit T3 h a m b (h+3*b+13) = false := by
     rw [outerLCIncAfterZeroExit_preserves T3 h a m b _ (by omega)]
-    exact outerLCIncAfterSweep_blank T h a m b r 3 hblank
+    exact outerLCIncAfterSweep_blank T3 h a m b r 3 hblankT3
   have h14 :
       outerLCIncAfterZeroExit T3 h a m b (h+3*b+14) = false := by
     rw [outerLCIncAfterZeroExit_preserves T3 h a m b _ (by omega)]
-    exact outerLCIncAfterSweep_blank T h a m b r 4 hblank
+    exact outerLCIncAfterSweep_blank T3 h a m b r 4 hblankT3
   have htail :
       ∀ x, outerLCIncTailInside x = true →
         outerLCIncAfterZeroExit T3 h a m b (h+3*b+9+x) =
@@ -644,7 +658,7 @@ theorem outerLCInc_s1_postlude_conditions
   rcases hright with ⟨h2,h3,h4,h5,h6,hrun,hblank⟩
   exact outerLCInc_source_postlude_conditions
     (s1Config L n m a 0 b h).tape h a m b r hm hleft
-    ⟨h2,h3,h4⟩ ⟨h5,h6⟩ hrun hblank
+    ⟨h2,h3,h4⟩ ⟨h5,h6⟩ hrun hblankT3
 
 
 
@@ -697,7 +711,7 @@ theorem outerLCInc_full_run
   have hcost :
       12*a+4*m+63+12*r+3*b =
         (9*a+3*m+17+12*r+4) + (3*a+42+m+3*b) := by omega
-  rw [hcost, ← run_add, hpre']
+  rw [hcost, run_append, hpre']
   simpa only [Option.bind_some] using hpost
 
 #print axioms outerLCInc_full_run
