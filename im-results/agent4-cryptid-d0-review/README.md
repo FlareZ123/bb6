@@ -96,3 +96,23 @@ The same screen tests Agent 32's extended final-tail suffix candidates `(q,b)=(1
 - The highest-value next steps are to obtain a working local Lean 4.36.0-rc2 runtime and compile the exact `Root13Section.lean` dependency closure; finish the concrete pinned TM62/Mathlib adapter; and use source-derived exceptional transitions to continue the root-cylinder search beyond episode 20. Avoid larger blind arithmetic scans and do not promote finite exclusions to all-time claims.
 
 All of this work remains intermediate. `results/` is unchanged; no exact BB(6) value or universal upper bound has been established.
+
+## Verified low-E first physical return, including canonical blank padding (23 November 2026)
+
+The all-parameter original D-start machine E-on-zero low row has now been **kernel checked** against the restored original `CryptidBoundary` transition table.  Its physically blank-left F/0 section is defined using the half-tape equivalence `TapeEq c.l []`, not the representation-sensitive equality `c.l=[]`.  For every `k,q≥0` the canonical source input
+
+```text
+I_(3k+4)((01)^q)
+= init (replicate (3k+2) true ++ oppairs q)
+```
+
+has **no positive physical F/0 return** at any `0<t<T`, where `T=12k²+49k+50+4q`.  The source endpoint at exactly `T` is provided by Agent31's preexisting `DRegularELow.e_zero_suffix`, modulo physically irrelevant tape padding. Taken together, these are the exact one-return clock and no-earlier-physical-return properties needed for the low-E row of the root grammar; they do **not** imply global nonhalting or a BB(6) upper bound.
+
+The proof is in [ELowPhysicalFirstReturnRepair.lean](ELowPhysicalFirstReturnRepair.lean) and [ELowCanonicalBlankFirst.lean](ELowCanonicalBlankFirst.lean), using [BoundaryPadding](../agent32-cryptid-padding/BoundaryPadding.lean). The first file proves `ePairs_first_physical` and `full_E_pairs_first_physical` for explicitly padded inputs. The second file proves the stronger `canonical_E_low_no_early_blank` for the original implicit-blank source, via a mathematical predicate invariant under `ObsEq`.
+
+**Decisive correction:** `PairsFirstReturn.cBase_noF` from Agent2's draft was *mathematically false* (and failed CI on 21 November). The four-step C/1 close encounters state F at time two, but its left half-tape still contains a one. Our checked lemma `cBase_internal_F` establishes this for every parameter, and our corrected proof forbids only **physical** first returns in that bridge. The machine-wide experimental regression [low_e_physical_trace.mjs](low_e_physical_trace.mjs) checks 169 low-E inputs and 13 internal C-base cases independently. This regression is corroboration, not a universal proof.
+
+The CI is [45111455597](https://github.com/FlareZ123/bb6/actions/runs/45111455597) (canonical input theorem, **success**, original Lean 4.36.0-rc2); the earlier explicit-padding source theorem is [45111145554](https://github.com/FlareZ123/bb6/actions/runs/45111145554) (**success**). The printed axiom profiles contain only `propext` and `Quot.sound`, **no `sorryAx`**, for the final source first-return theorems.
+
+This closes an important intermediate proof gap. The implicit right-padding quotient is essential; a bare `IsPhysicalReturn` predicate based on literal `l=[]` is too representation-specific to transfer through `BoundaryPadding.source_init_pad`.
+
