@@ -150,17 +150,17 @@ theorem costIterM424_exact_reaches (n : Nat) (s : MState) :
 
 /-- Iterating a transition in two nested blocks is equivalent to one
     iteration with the sum of the block lengths. -/
-theorem iterStep_add (f : α → α) (n m : Nat) (s : α) :
+theorem iterStep_add {α : Type} (f : α → α) (n m : Nat) (s : α) :
     iterStep f (n + m) s = iterStep f m (iterStep f n s) := by
   induction n generalizing s with
   | zero => simp [iterStep]
   | succ n ih => simp [Nat.succ_add, iterStep, ih]
 
-theorem iterStep_comp (f : α → α) (a b : Nat) (s : α) :
+theorem iterStep_comp {α : Type} (f : α → α) (a b : Nat) (s : α) :
     iterStep f a (iterStep f b s) = iterStep f (a + b) s := by
   simpa [Nat.add_comm] using (iterStep_add f b a s).symm
 
-theorem iterStep_repeat (f : α → α) (n m : Nat) (s : α) :
+theorem iterStep_repeat {α : Type} (f : α → α) (n m : Nat) (s : α) :
     iterStep (iterStep f n) m s = iterStep f (n * m) s := by
   induction m generalizing s with
   | zero => simp [iterStep]
