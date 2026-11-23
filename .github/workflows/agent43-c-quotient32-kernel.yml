@@ -53,7 +53,7 @@ jobs:
         with:
           name: a43-m32-olean-${{ matrix.shard }}
           path: tools/P32Block*.olean
-          retention-days: 3
+          retention-days: 90
 
   prove-global:
     if: ${{ !inputs.u5_syntax_preflight && !inputs.thin_gateway_acceptance }}
