@@ -179,15 +179,28 @@ theorem m2ZeroSetup_HRun_Postlude (n : Nat) (T : Int → Bool)
   have hrSetup : Tsetup (hN-13)=false := by
     simpa [hnot] using hwindow
   have hsetup := m2ZeroSetup_at T hN hmatch
+  have hsetupFrame :
+      frameAt T hN m2ZeroSetupInside m2ZeroSetupEnd =
+        ⟨3,hN-14,Tsetup⟩ := by
+    apply config_ext
+    · simp [frameAt,frame,embed,m2ZeroSetupEnd]
+    · simp [frameAt,frame,shiftConfig,embed,m2ZeroSetupEnd]
+      omega
+    · rfl
   have hsetupRun :
       run tm2 44 ⟨3,hN,T⟩ = some ⟨3,hN-14,Tsetup⟩ := by
-    simpa [Tsetup,frameAt_head] using hsetup
+    rw [← hsetupFrame] at hsetup
+    exact hsetup
+  have hrSetup' : Tsetup (hN-14+1)=false := by
+    have hcoord' : hN-14+1 = hN-13 := by omega
+    simpa [hcoord'] using hrSetup
   have hrun := counted_LBinDec_HRun n Tsetup (hN-14)
-    honSetup h0Setup hm1Setup hrSetup
+    honSetup h0Setup hm1Setup hrSetup'
   have hrun' :
       run tm2 (12*n+4) ⟨3,hN-14,Tsetup⟩ =
         some ⟨1,hN-12,Thrun⟩ := by
-    simpa [Thrun] using hrun
+    have hhead : hN-14+2 = hN-12 := by omega
+    simpa [Thrun,hhead] using hrun
   have hpostmatch := m2ZeroPostlude_match_after_HRun n T hN hr
   have hpost := m2ZeroPostlude_at Thrun (hN-12) hpostmatch
   have hfirst :
