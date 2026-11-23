@@ -16,6 +16,7 @@ on:
           - suffix3-zero
           - suffix3-two
           - suffix3-growth
+          - suffix3-residual-one
           - suffix3-padded-two
 
 permissions:
@@ -68,11 +69,29 @@ jobs:
           reset_path = Path("../bb6/im-results/agent2-root-countdown/RootRemainderTwoToken.append.lean")
           ending = "end BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA"
 
-          if os.environ.get("PROOF_TARGET") in ("suffix3-shift", "suffix3-full", "suffix3-word", "suffix3-zero", "suffix3-two", "suffix3-growth", "suffix3-padded-two"):
+          if os.environ.get("PROOF_TARGET") in ("suffix3-shift", "suffix3-full", "suffix3-word", "suffix3-zero", "suffix3-two", "suffix3-growth", "suffix3-residual-one", "suffix3-padded-two"):
               base = Path("../bb6/im-results/agent48-suffix3-shift")
-              fragments = ([root_path, base / "RootTokenGrowthStep5.append.lean"]
-                           if os.environ.get("PROOF_TARGET") == "suffix3-growth"
-                           else [base / "RootSuffixThreeShift.append.lean"])
+              target = os.environ.get("PROOF_TARGET")
+              if target in ("suffix3-growth", "suffix3-residual-one"):
+                  root = root_path.read_text()
+                  old1 = "root_countdown_dr_zero_step [] tail"
+                  old2 = "root_countdown_dr_empty_left_step ((1,0) :: (0,0) :: tail)"
+                  old3 = "root_countdown_dl_zero_step [(0,0)]\\n    [(0,0),(x-3,0)]"
+                  if root.count(old1) != 1 or root.count(old2) != 1 or root.count(old3) != 1:
+                      raise SystemExit("expected exactly one h5, h6, and general-tail h7 source call")
+                  root = root.replace(old1, "root_countdown_dr_zero_step [] ((0,0) :: tail)", 1)
+                  root = root.replace(old2, "root_countdown_dr_empty_left_step ((1,0) :: (0,0) :: (0,0) :: tail)", 1)
+                  root = root.replace(old3, "root_countdown_dl_zero_step [(0,0)]\\n    [(0,0),(0,0),(x-3,0)]", 1)
+                  corrected_root_path = Path("/tmp/RootCountdownSweep.corrected.lean")
+                  corrected_root_path.write_text(root)
+                  if target == "suffix3-growth":
+                      fragments = [corrected_root_path, base / "RootTokenGrowthStep5.append.lean"]
+                  else:
+                      fragments = [corrected_root_path, reset_path,
+                                   base / "RootTokenGrowthStep5.append.lean",
+                                   base / "ResidualOneNeverHalts.append.lean"]
+              else:
+                  fragments = [base / "RootSuffixThreeShift.append.lean"]
               if os.environ.get("PROOF_TARGET") == "suffix3-full":
                   fragments += [base / "RootSuffixBaseZero.append.lean",
                                 base / "RootSuffixBaseTwo.append.lean",
