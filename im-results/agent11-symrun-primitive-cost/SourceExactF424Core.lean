@@ -56,7 +56,7 @@ macro "stepWithin" : tactic => `(tactic| (
     BusyBeaver.Cfg.headRight, BusyBeaver.Cfg.headLeft, pow_succ_list, pow_zero_list,
     cons_append_list, nil_append_list, listblank_append_cons, listblank_append_nil,
     Turing.ListBlank.head_cons, Turing.ListBlank.tail_cons, default_head, default_tail,
-    encM_nil, encM_cons_zero, encM_cons_run, encLeft_cons_head, cons_one_encLeft_tail,
+    encM_nil, encM_cons_zero, encM_cons_run, encM_bumpM, encLeft_cons_head, cons_one_encLeft_tail,
     encRight_cons_head, cons_one_encRight_tail, encM_cons_run_head, cons_one_encM_cons_run_tail]
   refine reachesIn_step_left_succ ?_ ?_
   · first
@@ -67,7 +67,7 @@ macro "stepWithin" : tactic => `(tactic| (
         pow_succ_list, pow_zero_list, cons_append_list, nil_append_list,
         listblank_append_cons, listblank_append_nil, Turing.ListBlank.head_cons,
         Turing.ListBlank.tail_cons, Tape.write, zero_cons_default, default_head,
-        default_tail, encM_nil, encM_cons_zero, encM_cons_run, encLeft_cons_head,
+        default_tail, encM_nil, encM_cons_zero, encM_cons_run, encM_bumpM, encLeft_cons_head,
         cons_one_encLeft_tail, encRight_cons_head, cons_one_encRight_tail,
         encM_cons_run_head, cons_one_encM_cons_run_tail]
   · simp only [nextCfg, step, BusyBeaver.init_nil, target_tm, target, machine, Option.getD_some,
@@ -76,7 +76,7 @@ macro "stepWithin" : tactic => `(tactic| (
       pow_succ_list, pow_zero_list, cons_append_list, nil_append_list,
       listblank_append_cons, listblank_append_nil, Turing.ListBlank.head_cons,
       Turing.ListBlank.tail_cons, Tape.write, zero_cons_default, default_head,
-      default_tail, encM_nil, encM_cons_zero, encM_cons_run, encLeft_cons_head,
+      default_tail, encM_nil, encM_cons_zero, encM_cons_run, encM_bumpM, encLeft_cons_head,
       cons_one_encLeft_tail, encRight_cons_head, cons_one_encRight_tail,
       encM_cons_run_head, cons_one_encM_cons_run_tail]
 ))
@@ -88,15 +88,15 @@ macro "finishWithin" : tactic => `(tactic| (
       BusyBeaver.Cfg.headRight, BusyBeaver.Cfg.headLeft, pow_succ_list, pow_zero_list,
       cons_append_list, nil_append_list, listblank_append_cons, listblank_append_nil,
       Turing.ListBlank.head_cons, Turing.ListBlank.tail_cons, zero_cons_default, default_head,
-      default_tail, enc1_nil, encM_nil, encM_cons_zero, encM_cons_run, encLeft_cons_head,
+      default_tail, enc1_nil, encM_nil, encM_cons_zero, encM_cons_run, encM_bumpM, encLeft_cons_head,
       cons_one_encLeft_tail, encRight_cons_head, cons_one_encRight_tail, encM_cons_run_head,
-      cons_one_encM_cons_run_tail, multiStep_zero]
+      cons_one_encM_cons_run_tail, encM_bumpM, multiStep_zero]
     try rfl
   )
 ))
 
 macro "executeWithin" n:num : tactic => `(tactic| (
-  iterate $n stepWithin
+  iterate $n (try stepWithin)
   finishWithin
 ))
 
@@ -469,7 +469,7 @@ theorem sweep_BB_B1_exact (k : Nat) (L R : List MItem) :
     have h1 := step_BB_r0_r1_exact (repBlock [.run 0, .run 1] k ++ L) R
     have h2 := ih (.run 0 :: .run 1 :: R)
     convert reachesIn_trans h1 h2 using 1
-    all_goals (try simp only [repBlock_succ_right, List.append_assoc])
+    all_goals (try simp [repBlock, repBlock_succ_right, List.append_assoc, List.cons_append, List.nil_append])
     all_goals omega
 
 /-- F424 BB/C2 sweep: exactly 14 primitive steps per repeated block. -/
@@ -494,7 +494,7 @@ theorem sweep_BB_C2_exact (p : Nat) (L R : List MItem) :
     have h1 := step_BB_r1_r0_r1_comm_exact (repBlock [.run 1, .run 0, .run 1] p ++ L) R
     have h2 := ih (.run 0 :: .run 1 :: .run 1 :: R)
     convert reachesIn_trans h1 h2 using 1
-    all_goals (try simp only [repBlock_succ_right, List.append_assoc])
+    all_goals (try simp [repBlock, repBlock_succ_right, List.append_assoc, List.cons_append, List.nil_append])
     all_goals omega
 
 /-- F424 BB/C12 sweep: exactly 25 primitive steps per repeated block. -/
@@ -529,7 +529,7 @@ theorem sweep_BB_C12_exact (m : Nat) (L R : List MItem) :
     have h3 := ih (.run 0 :: .run 1 :: .run 0 :: .run 1 :: .run 1 :: R)
     have h12 := reachesIn_trans h1 h2
     convert reachesIn_trans h12 h3 using 1
-    all_goals (try simp only [repBlock_succ_right, List.append_assoc])
+    all_goals (try simp [repBlock, repBlock_succ_right, List.append_assoc, List.cons_append, List.nil_append])
     all_goals omega
 
 /-- F424 CB/B1 sweep: exactly 21 primitive steps per repeated block. -/
@@ -559,7 +559,7 @@ theorem sweep_CB_B1_exact (k : Nat) (L R : List MItem) :
           (repBlock [.run 0, .run 1] k ++ R)
     have h2 := ih (.run 0 :: .run 1 :: L)
     convert reachesIn_trans h1 h2 using 1
-    all_goals (try simp only [repBlock_succ_right, List.append_assoc])
+    all_goals (try simp [repBlock, repBlock_succ_right, List.append_assoc, List.cons_append, List.nil_append])
     all_goals omega
 
 /-- F424 CB/B2 sweep: exactly 24 primitive steps per repeated block. -/
@@ -603,7 +603,7 @@ theorem sweep_CB_B2_exact (p : Nat) (L R : List MItem) :
     have h3 := ih (.run 1 :: .run 0 :: .run 1 :: L)
     have h12 := reachesIn_trans h1 h2
     convert reachesIn_trans h12 h3 using 1
-    all_goals (try simp only [repBlock_succ_right, List.append_assoc])
+    all_goals (try simp [repBlock, repBlock_succ_right, List.append_assoc, List.cons_append, List.nil_append])
     all_goals omega
 
 /-- F424 CB/B12R sweep: exactly 45 primitive steps per repeated block. -/
@@ -665,7 +665,7 @@ theorem sweep_CB_B12R_exact (m : Nat) (L R : List MItem) :
     have h3' := ih (.run 1 :: .run 0 :: .run 1 :: .run 0 :: .run 1 :: L)
     have h12 := reachesIn_trans (reachesIn_trans h1 h2) h3
     convert reachesIn_trans h12 h3' using 1
-    all_goals (try simp only [repBlock_succ_right, List.append_assoc])
+    all_goals (try simp [repBlock, repBlock_succ_right, List.append_assoc, List.cons_append, List.nil_append])
     all_goals omega
 
 #print axioms step_BB_zero_exact
