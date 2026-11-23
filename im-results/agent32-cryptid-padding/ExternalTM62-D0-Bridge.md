@@ -1,10 +1,6 @@
 # Raw TM62-to-D0 transport for Cryptid D
 
-**Status (23 November 2026): intermediate; no accepted transfer theorem.** The concrete Mathlib-facing adapter exists at [TM62MathlibD0Adapter.lean](./TM62MathlibD0Adapter.lean). Manual run [45136547963](https://github.com/FlareZ123/bb6/actions/runs/45136547963) built the exact pinned upstream/Mathlib closure and upstream Individual module, but the adapter failed typechecking. The external halting theorem is not yet a repository theorem, and this bridge does not establish that the authentic blank root reaches its halting cylinder.
-
-
 **Status (23 November 2026): accepted source-connected transfer theorem; blank-root reachability remains open.** The concrete Mathlib-facing adapter [TM62MathlibD0Adapter.lean](./TM62MathlibD0Adapter.lean) imports the exact external TM62 module and proves the repository-side theorem `BB6.CryptidD0Bridge.D0_halts_on_A_cylinder`. Manual run [45174638945](https://github.com/FlareZ123/bb6/actions/runs/45174638945), at commit `0442829e7bdf6b403c8c56fd453e3851db367131`, compiled the 1,505-job pinned upstream/Mathlib dependency closure and the complete adapter. The exported theorem's transitive axiom profile is `[propext, Classical.choice, Quot.sound]`; the acceptance log contains neither `sorryAx` nor `native_decide`. The transfer preserves the exact primitive halting count. It does not prove that the authentic blank root reaches the cylinder.
-
 ## Pinned source and target semantics
 
 External source:
