@@ -953,3 +953,10 @@ Next actions: obtain a working local Lean 4.36.0-rc2 runtime; compile the exact 
 
 - The isolated helper module NineteenthFastBlock.lean passed pinned Lean 4.36.0-rc2 CI in [45148385744](https://github.com/FlareZ123/bb6/actions/runs/45148385744) in 37 seconds. The workflow audited run_blockedWith and fastRunBlocksWith_add, rejected sorryAx/native_decide, and produced artifact d-root-stage3b4c (15,789,907 bytes).
 - Dispatched stage 4d to compile the much smaller terminal composition from that helper artifact: [45148593918](https://github.com/FlareZ123/bb6/actions/runs/45148593918), queued at the last check. Inputs: predecessor run 45148385744 / artifact d-root-stage3b4c; source 20509b53af45edce5b8a145e8714245d3d225cdd; extension c9a1e403f7f72a9d6e893e2b3abf39ece7a9b106; predecessor extension marker identical. If stage4d succeeds, stage 5 uses its d-root-stage3b4d artifact, then stage 6 uses d-root-stage3b5.
+
+
+### Checkpoint — fix Option.bind endpoint proof and rerun stage 4d (2026-11-23)
+
+- Stage 4c helper run [45148385744](https://github.com/FlareZ123/bb6/actions/runs/45148385744) succeeded, producing d-root-stage3b4c. Stage 4d run [45148593918](https://github.com/FlareZ123/bb6/actions/runs/45148593918) remained in its Lean compile step for over 12 minutes.
+- A local Lean 4.36.0-rc2 stub reproduction isolated the proof-script issue: the hfast proofs cannot simplify an arbitrary Option.bind of run 0 merely with simp [run]. Replaced both hfast proofs with explicit cases on fastRunBlocksWith and simp [hopt], then cases the resulting equality. The revised source is commit 85c574409ba7ffc747e628716a19d977f78fb812.
+- Attempted to cancel the old 45148593918 run, but the GitHub Actions API is rate-limited until roughly 09:56Z. The old run uses extension 81997fe9 and does not contain the proof fix. A fresh stage-4d run should use predecessor run 45148385744 / artifact d-root-stage3b4c, source ref 20509b53af45edce5b8a145e8714245d3d225cdd, extension ref 85c574409ba7ffc747e628716a19d977f78fb812, and previous extension marker 81997fe9ee3bf501ffd301576f8706710d22a7f8.
