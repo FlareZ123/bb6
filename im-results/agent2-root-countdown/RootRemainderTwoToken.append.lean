@@ -499,6 +499,13 @@ private theorem root_d1_suffix_two_to_tok_DR (n : ℕ) :
             (ReachesPlus.trans h6'
               (ReachesPlus.trans h7 h8'))))))
 
+def root_d1_token_cfg (n : ℕ) : Cfg (Fin 2) (Fin 6) :=
+  (([1,1,0,0] : List (Fin 2)) +> default) {{D}}>
+    ((([1,0] : List (Fin 2)) ^ 3) +>
+      ((1 : Fin 2) >> (1 : Fin 2) >> (0 : Fin 2) >>
+        ((([1,0] : List (Fin 2)) ^ (4*n+6)) +>
+          ((1 : Fin 2) >> (1 : Fin 2) >> (0 : Fin 2) >> default))))
+
 theorem root_d1_suffix_two_to_token_cfg (n : ℕ) :
     ReachesPlus target
       (cfg_CR_n_n [(0,0)]
