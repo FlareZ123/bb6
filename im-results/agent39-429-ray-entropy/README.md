@@ -38,6 +38,24 @@ It still **does not prove any particular ray unreachable, decide machine #429, o
 
 ---
 
+## Global all-offset first-counter bound (now source-kernel-certified)
+
+The [`BB429AllRayGlobal.lean`](BB429AllRayGlobal.lean) module strengthens the per-shell result to a single **entire-prefix** cardinal bound, with no nonconstructive asymptotic summation:
+
+```lean
+theorem BB429InverseWord.any_ray_global_dyadic_bound
+    (c m : Nat) (l : List Nat) (hn : l.Nodup)
+    (hl : ∀ a, a ∈ l → a < 32*4^m ∧
+      (∃ b, BB429NewResidue.Reach a b ∧ b+c=2*a)) :
+    l.length ≤ 256*2^m
+```
+
+This is a **uniform in `c`**, genuine-blank-root, fully quantifier-closed square-root bound over the whole integer range `[0,32·4^m)` for **every** `m≥0` (no exceptional initial parameters or finite cutoff). Proof: base `m=0` by uniqueness of integers below 32; increase `m` by one, splitting the new range into a former prefix and two dyadic shells (at `k=2m+1` and `k=2m+2`) and applying the source-certified factor-64 shell theorem. The two fresh shells contribute ≤ `64·2^m+128·2^m`; the old prefix contributes ≤`256·2^m`, within the next factor-two budget `512·2^m`.
+
+The theorem was accepted **against unchanged repository source** in [Lean CI 45122501656](https://github.com/FlareZ123/bb6/actions/runs/45122501656), with printed transitive axioms exactly **`[propext, Classical.choice, Quot.sound]`**, no `sorryAx` or `native_decide`. This converts the preceding paper zero-density interpretation into a precise, entirely kernel-verified global finite-cardinality statement. It still does not establish emptiness of any ray or solve BB(6).
+
+---
+
 ## Main result: a square-root, not merely modular, sieve
 
 Let `next`, `run` and the genuine blank section root `(0,0)` be the exact `BB429` definitions of [Agent 5's authenticated accelerator](../agent5-429-rank/BB429Rank.lean), with source inverse lemmas [`BB429NewResidue.odd_inverse/even_inverse`](../agent6-harmonic429/BB429NewResidue.lean). Define
