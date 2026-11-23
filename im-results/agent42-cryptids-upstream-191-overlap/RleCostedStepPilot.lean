@@ -49,3 +49,9 @@ theorem rule_B_zero_exact (L R : List ℕ) :
 end SecondF289
 
 end BB6Agent42.RleCostedStepPilot
+
+
+#print axioms BB6Agent42.RleCostedStepPilot.FirstF289.rule_B_nil_exact
+#print axioms BB6Agent42.RleCostedStepPilot.FirstF289.rule_B_zero_exact
+#print axioms BB6Agent42.RleCostedStepPilot.SecondF289.rule_B_nil_exact
+#print axioms BB6Agent42.RleCostedStepPilot.SecondF289.rule_B_zero_exact
