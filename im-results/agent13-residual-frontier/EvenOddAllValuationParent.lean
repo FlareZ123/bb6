@@ -47,9 +47,8 @@ theorem even_odd_nonpower_parent
                   if_neg hk0,if_neg hk1,if_neg hk2,if_neg hk3] at hp
               rcases hp with ⟨n,hpow,_⟩
               have heq : x+y+1=2^(n+4) := by
-                rw [show n+4=n+4 by rfl,Nat.pow_add]
-                norm_num at *
-                exact hpow
+                simpa only [Nat.pow_add, show (2:Nat)^4=16 by decide]
+                  using hpow
               exact False.elim (hnonpower (n+4) heq)
     · by_cases hk0 : k=0
       · simp [sectionPreimageCriterion,ha0,ha1,hk0] at hp
