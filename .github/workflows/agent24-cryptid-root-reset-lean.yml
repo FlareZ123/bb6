@@ -97,7 +97,8 @@ jobs:
               if os.environ.get("PROOF_TARGET") == "suffix3-full":
                   fragments += [base / "RootSuffixBaseZero.append.lean",
                                 base / "RootSuffixBaseTwo.append.lean",
-                                base / "RootSuffixWordShift.append.lean"]
+                                base / "RootSuffixWordShift.append.lean",
+                                base / "RootSuffixOneReset.append.lean"]
               elif os.environ.get("PROOF_TARGET") == "suffix3-zero":
                   fragments += [base / "RootSuffixBaseZero.append.lean"]
               elif os.environ.get("PROOF_TARGET") == "suffix3-two":
@@ -228,6 +229,7 @@ jobs:
           #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.s3_zero_residue_family
           #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.s3_two_residue_family
           #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.s3_universal_word_suffix_shift
+          #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.s3_residual_one_suffix_reset
           EOF
           else
             cat > RootResetAudit.lean <<'EOF'
