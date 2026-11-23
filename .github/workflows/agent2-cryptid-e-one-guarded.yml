@@ -2,6 +2,15 @@ name: D-start guarded E cylinder original-source verification (manual)
 
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        description: Proof target (repair only or existing full suite)
+        required: true
+        type: choice
+        options:
+          - low_e_repair
+          - full
+        default: low_e_repair
 
 permissions:
   contents: read
@@ -23,7 +32,7 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Compile unmodified original source and Agent 2 proof
         env:
-          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent2-cryptid-continuity:im-results/agent32-cryptid-third:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code
+          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent2-cryptid-continuity:im-results/agent32-cryptid-third:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent4-cryptid-d0-review
         run: |
           lean --version
           lean -o im-results/agent31-cryptid-boundary/Boundary.olean im-results/agent31-cryptid-boundary/Boundary.lean
@@ -35,6 +44,10 @@ jobs:
           lean -o im-results/agent2-cryptid-continuity/EOneTripleReturn.olean im-results/agent2-cryptid-continuity/EOneTripleReturn.lean
           lean -o im-results/agent2-cryptid-continuity/E111FirstReturn.olean im-results/agent2-cryptid-continuity/E111FirstReturn.lean
           lean -o im-results/agent2-cryptid-continuity/PrefixNoF.olean im-results/agent2-cryptid-continuity/PrefixNoF.lean
+          if [ "${{ inputs.target }}" = "low_e_repair" ]; then
+            lean im-results/agent4-cryptid-d0-review/ELowPhysicalFirstReturnRepair.lean
+            exit 0
+          fi
           lean -o im-results/agent31-cryptid-boundary/A1100.olean im-results/agent31-cryptid-boundary/A1100.lean
           lean -o im-results/agent31-cryptid-boundary/A1100First.olean im-results/agent31-cryptid-boundary/A1100First.lean
           lean im-results/agent31-cryptid-boundary/A1100Strong.lean
