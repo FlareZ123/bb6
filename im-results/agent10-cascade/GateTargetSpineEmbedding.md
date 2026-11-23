@@ -1,6 +1,6 @@
-# Main even-spine embedding of t=0 entries into the #746 gate targets
+# Exact inverse-spine structure for #746 halting gates
 
-**Status:** exact algebraic derivation; not yet Lean-formalized. This is an intermediate result in `im-results/`, not a proof that #746 does not halt.
+**Status:** two algebraic statements over the exact original-source `ResetParent` grammar: (i) the existing narrow-window t=0 entry embedding into a *single* even-spine branch, and (ii) a new all-sector, all-index **exact criterion for predecessor existence at the canonical spine's terminal state**. The complete derivations are paper proofs, not yet compiled against the original source in Lean. Neither statement eliminates off-spine odd-parent forks or decides the machine.
 
 ## 1. Actual source gate
 
@@ -150,7 +150,125 @@ X_j=2u_j+5=32p+2K+7-2c2^j,
 if (K\equiv2\pmod6), then (p\equiv1), (c\equiv2\pmod3), and
 (X_j\equiv1-2^j\pmod3); if (K\equiv3\pmod6), then (p\equiv2), (c\equiv1\pmod3), and (X_j\equiv2-2^{j+1}\pmod3). In either case (3\mid X_j) exactly when (j) is even. Hence (a=K+2-j) has the same parity as (K): even (a) for the (n\equiv4\pmod6) gate sector, odd (a) for (n\equiv5\pmod6).
 
-## 4. Where the current E-parent results apply
+## 4. Exact all-index classification of the terminal spine state
+
+This result uses **no narrow x-window**. Fix every n≥257 with n mod 6∈{4,5}. Put
+\[
+  c=2n+3,\quad a=\lfloor\log_2c\rfloor,\quad p=2^n,\quad
+  J=n-a,\quad s=2^J,\quad q=cs,
+\]
+and continue the same canonical ray \(u_j=4p+n-1-c2^j\) to \(u_J\).
+Equivalently \(2^a\le c<2^{a+1}\). Since \(c\) is odd,
+\(r=c-2^a\) is a **positive** integer and \(q=p+rs<2p\).
+
+**Terminal predecessor theorem (paper proof).** Let \(X=2u_J+5\). With
+\(\mathrm{ResetParent}\) defined *exactly* as in \`FirstInverseComplete.lean\`,
+\[
+\boxed{\quad
+  (\exists h:\mathbb N,\ \mathrm{ResetParent}(h,u_J))
+  \ \Longleftrightarrow\
+  (J\equiv0\pmod2)
+  \ \land\
+  \bigl(4c\le7\cdot2^a\ \lor\ X\equiv0\pmod9\bigr).\quad}
+\]
+Thus the complement is an **actual predecessor-free leaf**, not merely
+the absence of an arbitrarily selected “maximal-valuation” parent.
+
+**Uniform gap proof.** The elementary inequality
+\(2^n>(n+4)(2n+3)\), valid for all \(n\ge10\) (base case and
+induction under doubling), implies \(s>n+4\).
+Using \(q=p+rs\) and \(p\le q<2p\), one obtains
+\[
+   2p<u_J=3p+n-1-rs<3p-1.
+\]
+For every \(k\le n-2\), the even-parent target band ends by
+\(8\cdot2^k-3\le2p-3<u_J\); for every \(k\ge n-1\) it begins at
+\(6\cdot2^k-1\ge3p-1>u_J\). Therefore **no even ResetParent exists**,
+with no exceptional dyadic scale.
+
+**Odd branches and exact converse.** The original odd-parent grammar is
+\[
+  2u_J+5=3^{t+1}d,\quad d\equiv1\pmod2,\quad
+  6\cdot2^k+1\le2^td\le8\cdot2^k-1,\quad
+  h=2^{t+1}d-8\cdot2^k-k-5\ge0.
+\]
+Its first equation requires \(3\mid X\). The signed canonical-ray
+identity or a two-case computation modulo 3 gives
+\(3\mid X\iff J\) is even for both surviving gate sectors.
+If \(J\) is odd, **every odd t is impossible**.
+
+Suppose \(J\) is even. Then \(3\mid X\), and \(d_0=X/3\) is odd.
+For \(t=0\), the only possible source scale is \(k=n-2\):
+the terminal gap implies \(p<d_0<2p\), excluding all other k.
+The upper source-band inequality \(d_0\le2p-1\) holds automatically,
+and the lower one is exactly
+\[
+  d_0\ge3p/2+1\quad\iff\quad 4q\le7p+4n.
+\]
+Since \(q=cs\), \(p=2^as\), \(a\ge2\), and \(s>n+4\),
+\[
+  4q\le7p+4n\quad\iff\quad4c\le7\cdot2^a.
+\]
+Indeed a positive value of \(4c-7\cdot2^a\) is a positive multiple
+of four, making \(4q-7p\ge4s>4n+15\).
+When the inequality holds, the concrete parent is
+\[
+  h_0=2(X/3)-2p-n-3,
+\]
+which is nonnegative by the same source-band lower bound.
+
+In the complementary high-c case \(4c>7\cdot2^a\), \(t=0\) is
+impossible at **every** scale, and
+\(4q\ge7p+4n+16\). If \(9\mid X\), take \(t=1\), \(d_1=X/9\),
+\(k=n-3\). Its source band is
+\[
+  3p/4+1\le 2X/9\le p-1.
+\]
+The lower inequality follows from \(u_J>2p\), and the upper one
+from \(4q\ge7p+4n+16\); the corresponding
+\(h_1=4(X/9)-p-n-2\) is nonnegative for \(n\ge257\).
+Thus \(9\mid X\) supplies an **actual** t=1 parent, even when X has
+higher 3-adic valuation. If \(9\nmid X\), all \(t\ge1\) are excluded
+by their output divisibility \(9\mid X\), while \(t=0\) has already
+failed. This proves the equivalence in both directions, without
+discarding any lower-valuation possibilities.
+
+**Residues and density within dyadic blocks.** In the \(J\)-even
+part of each block \(2^a\le2n+3<2^{a+1}\), the condition \(9\mid X\)
+occupies precisely one of the three \(n\bmod18\) classes in the
+relevant n mod 6 sector. More explicitly,
+\[
+\begin{array}{ll}
+a\ {\rm even},\ n\bmod6=4:&9\mid X\iff n\equiv3a+10\pmod{18},\\
+a\ {\rm odd},\ n\bmod6=5:&9\mid X\iff n\equiv2-3a\pmod{18}.
+\end{array}
+\]
+This follows by reducing \(X=8\cdot2^n+2n+3-2c2^{n-a}\)
+modulo 9, using the period 6 of \(2^j\bmod9\).
+Within one complete block, half the eligible gate indices have
+\(J\) odd. Among the other half, the high-c tail
+\(4c>7\cdot2^a\) occupies one quarter of the index interval,
+and \(9\nmid X\) selects two out of three compatible residues.
+Consequently the **exact predecessor-free terminal fraction**, over
+all eligible gate n within block a, tends to
+\[
+  \frac12+\frac12\cdot\frac14\cdot\frac23
+  =\boxed{\frac7{12}}\qquad(a\to\infty),
+\]
+with \(O(1)\) counting error per block. Across *prefixes* n≤N
+this fraction has no single natural density: elementary geometric
+block summation gives liminf \(23/42\) (at the start of the high-c
+tail of the largest block) and limsup \(7/12\) (at complete
+block endpoints). These densities describe **one terminal inverse
+spine state per gate index**, not halting machines, valid target
+exclusions, or blank-root nonreachability.
+
+The independent full-grammar exact-integer regression is
+[\`terminal_spine_parent_census.mjs\`](terminal_spine_parent_census.mjs).
+It is a finite consistency test; the quantified proof is the
+inequality-and-divisibility argument above.
+
+## 5. Where the current E-parent results apply
 
 The even-parent bands adjacent to (E) are
 [
@@ -219,13 +337,13 @@ J-11,J-10,\ldots,J.
 ]
 This gives a concrete finite target for composing `RayNoSeam`, `RayNoSeamWalk`, the two-tier Hensel selectors, and the terminal t=0 entry (E(a,K)). The BigInt checks at ((K,a)=(387,9),(800,10),(399,9),(806,10)) independently found this exact 12-index split; the algebra above explains it uniformly.
 
-## 8. Scope and remaining work
+## 7. Scope and remaining work
 
 This identity connects the auxiliary entry family to the actual #746 halting targets. It proves that (E(a,K)) is an ancestor on **one** inverse-parent branch of (U_{K+2}). It does **not** prove that every root path to (U_{K+2}) passes through (E(a,K)). Other odd-parent side branches can leave intermediate spine nodes; a root path could in principle enter through one of them.
 
 The following are still required for a global #746 conclusion:
 
-1. Formalize the chain identity against the exact `ResetParent` and `ResetChain` definitions in Lean.
+1. Formalize the chain identity and the new terminal predecessor theorem against the exact `ResetParent` and `ResetChain` definitions in Lean.
 2. Compose the existing Ray reductions listed above with every (t\ge1) side branch leaving the intermediate (u_j), and prove the hypotheses exhaust the full spine (or identify the uncovered cases).
 3. Extend the E-parent exclusions beyond the current narrow x-window and across the remaining parity/phase sectors.
 4. Combine the branch classifications with `OriginalAlgorithmicGate.lean` to exclude every (n\ge257) with (n\bmod6\in\{4,5\}).
