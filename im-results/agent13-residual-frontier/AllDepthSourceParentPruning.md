@@ -26,7 +26,7 @@ Let `k>=80`, `a+3=8q`, `q>=1`, and retain the exact source cost equation. The fo
 | `n=8*r+4` | `(q+r)%8=4` | O-B | 1 mod4 |
 | `n=8*r+4` | `(q+r)%16=3` | O-F | 2 mod4 |
 | `n=8*r+6` | `(q+r)%2=1` | A | 2 mod4 |
-| `n=8*r+6` | `(q+7*r)%8=0` | A-O | 1 mod4 (additional draft) |
+| `n=8*r+6` | `(q+7*r)%8=0` | A-O | 1 mod4 (certified) |
 
 Here B is the exact even-right six-source inverse, A the even-right affine inverse, O the exact odd/odd low-valuation inverse, and F the exact even/odd valuation-two inverse. There is **no restriction on r**, and no claim that any one listed parent actually exists. Any genuine source parent satisfying the hypotheses is proven blank-inaccessible.
 
@@ -36,8 +36,8 @@ In each fixed four-depth block `n in {8*r,8*r+2,8*r+4,8*r+6}`, the first five ac
 
 - [EvenOddAllDepthForbidden.lean](EvenOddAllDepthForbidden.lean): arbitrary depth n=8r odd-image and n=8r+6 affine cases, plus n=8r+2 BBA. First four theorems accepted in [CI 45257688863](https://github.com/FlareZ123/bb6/actions/runs/45257688863), and the BBA extension accepted in [CI 45259227220](https://github.com/FlareZ123/bb6/actions/runs/45259227220), each original-source 58-module closure with standard Lean axioms, no `sorryAx`.
 - [EvenOddAllDepthPhaseFour.lean](EvenOddAllDepthPhaseFour.lean): source-exact O-B and O-F uniform n=8r+4 proofs, accepted [CI 45259818679](https://github.com/FlareZ123/bb6/actions/runs/45259818679), 59 modules, standard axioms.
-- [EvenOddAllDepthSieve.lean](EvenOddAllDepthSieve.lean): combined `sourceOddDepthPruned` and `source_odd_depth_pruned_unreachable`, accepted [CI 45260157919](https://github.com/FlareZ123/bb6/actions/runs/45260157919), 60 modules, standard axioms. A more general dyadic-mass corollary was added afterwards and awaits a complete final check.
-- [EvenOddAllDepthPhaseSix.lean](EvenOddAllDepthPhaseSix.lean): candidate additional A-O phase, exact source proof drafted; CI acceptance pending.
+- [EvenOddAllDepthSieve.lean](EvenOddAllDepthSieve.lean): combined `sourceOddDepthPruned` and `source_odd_depth_pruned_unreachable`, accepted [CI 45260157919](https://github.com/FlareZ123/bb6/actions/runs/45260157919), 60 modules, standard axioms. The more general dyadic-mass corollary and expanded A-O phase are **accepted** in [CI 45261057263](https://github.com/FlareZ123/bb6/actions/runs/45261057263), 61 original-source modules, standard axioms.
+- [EvenOddAllDepthPhaseSix.lean](EvenOddAllDepthPhaseSix.lean): additional A-O phase **accepted** in [CI 45260562548](https://github.com/FlareZ123/bb6/actions/runs/45260562548), 60 original-source modules, standard axioms and no \`sorryAx\`.
 
 ## Open research obligation and next leverage
 
