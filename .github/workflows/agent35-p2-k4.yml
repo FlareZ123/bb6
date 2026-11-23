@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 35
     env:
-      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent32-cryptid-padding:im-results/agent31-d-exceptional:im-results/agent2-packet-shift:im-results/agent37-root-language-pilot:im-results/agent26-cryptid-e-gate
+      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent32-cryptid-padding:im-results/agent31-d-exceptional:im-results/agent2-packet-shift:im-results/agent37-root-language-pilot:im-results/agent26-cryptid-e-gate:im-results/agent36-cryptid-trace
     steps:
       - uses: actions/checkout@v4
       - name: Restore originals
@@ -53,10 +53,11 @@ jobs:
           lean "$C/P2K4Source.lean" | tee -a axioms.log
           lean -o "$C/P2K7Shapes.olean" "$C/P2K7Shapes.lean" | tee -a axioms.log
           lean -o "$C/P2K7ShapeCfg.olean" "$C/P2K7ShapeCfg.lean" | tee -a axioms.log
-          lean "$C/P2K7Source.lean" | tee -a axioms.log
+          lean -o "$C/P2K7Source.olean" "$C/P2K7Source.lean" | tee -a axioms.log
           lean -o "$C/P2MarkerA.olean" "$C/P2MarkerA.lean" | tee -a axioms.log
           lean -o "$P/Generic.olean" "$P/Generic.lean"
           lean -o "$P/BoundaryPadding.olean" "$P/BoundaryPadding.lean"
+          lean im-results/agent36-cryptid-trace/P2K7PhysicalReentry.lean | tee -a axioms.log
           lean -o "$R/PacketRank.olean" "$R/PacketRank.lean"
           lean -o "$R/PacketPaths.olean" "$R/PacketPaths.lean"
           lean -o "$D/PacketSafeExit.olean" "$D/PacketSafeExit.lean"
