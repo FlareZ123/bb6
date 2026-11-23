@@ -1,6 +1,6 @@
 # Exact inverse-spine structure for #746 halting gates
 
-**Status:** five algebraic statements over the exact original-source `ResetParent` grammar: (i) the existing narrow-window t=0 entry embedding into a *single* even-spine branch, (ii) an all-sector, all-index **exact criterion for predecessor existence at the canonical spine's terminal state**, (iii) a full **unique-chain root-exclusion** on a low-valuation terminal subfamily, and (iv) a two-edge exclusion in a second low-valuation sector, and (v) a disjoint four-edge exclusion in its next dyadic-depth window. The complete derivations are paper proofs, not yet compiled against the original source in Lean. Neither statement eliminates off-spine odd-parent forks or decides the machine.
+**Status:** six algebraic statements over the exact original-source `ResetParent` grammar: (i) the existing narrow-window t=0 entry embedding into a *single* even-spine branch, (ii) an all-sector, all-index **exact criterion for predecessor existence at the canonical spine's terminal state**, (iii) a full **unique-chain root-exclusion** on a low-valuation terminal subfamily, and (iv) a two-edge exclusion in a second low-valuation sector, and (v) a disjoint four-edge exclusion in its next dyadic-depth window, and (vi) a forced second-tier odd-parent fork in a further infinite narrow high-c strip. The complete derivations are paper proofs, not yet compiled against the original source in Lean. Neither statement eliminates off-spine odd-parent forks or decides the machine.
 
 ## 1. Actual source gate
 
@@ -605,7 +605,115 @@ off-spine odd forks are not excluded by this result.
 The four-edge family is a paper proof awaiting
 original-source Lean acceptance.
 
-## 8. Where the current E-parent results apply
+## 8. A forced odd-parent bifurcation at depth at most four
+
+The previous low-valuation exclusions have the opposite
+counterpart: close to the *lower high-c threshold*, the even
+parent chain necessarily forks, for **every** compatible n
+in a specified infinite parameter sector. This identifies
+where a successful whole-gate exclusion must use the
+multi-tier odd-parent machinery rather than a single-chain
+argument.
+
+**Theorem (uniform forced fork; paper proof).** Retain
+\(n\bmod6=5\), \(J\) even, \(X=2u_J+5\),
+\(X\bmod27=18\), and assume
+\[
+   7\cdot2^a<4c,\qquad 1024c<1801\cdot2^a.
+\]
+The initial odd t=1 predecessor \(b_0\) is unique.
+Form \(b_{j+1}=2b_j-p-(n-3)\). Then all
+\(b_0,\ldots,b_5\) lie in the \(k=n-3\)
+even-target band, and **exactly one** of
+\(b_0,b_2,b_4\) also has a genuine t=1 odd
+ResetParent at source scale \(k=n-4\).
+That odd parent is distinct from its even
+parent. Thus the complete inverse cone of
+\(u_J\) has a true bifurcation within the
+first five ancestor states.
+
+**Proof.** Put \(\delta=4c-7\cdot2^a>0\)
+and \(s=2^{n-a}\). Because \(a\ge9\),
+\(1024c<1801\cdot2^a\) and integrality give
+\(1024q\le1801p-1024s\). Therefore
+\[
+  \delta s=4q-7p\le(9/256)p-4s.
+\]
+The closed forms of Section 5 at j=4,5 are
+\[
+ 9D_4=32\delta s+151n-309,\qquad
+ 9D_5=64\delta s+311n-645.
+\]
+From the basic growth \(s>2n\) (valid for
+n≥257), both imply
+\[
+ D_4<p/8,\qquad D_5<p/4+1.
+\]
+All earlier \(D_j\) are smaller, so
+\(b_0,\ldots,b_5\) stay in the even-target
+band and, moreover,
+\[
+ 7p/8<b_0,b_2,b_4\le p-3.
+\]
+
+Let \(A=p+n-3\). In this gate sector
+\(A\equiv1\pmod3\) while
+\(b_0\equiv2\pmod3\) because \(X\bmod27=18\).
+The exact even recurrence gives
+\[
+ b_{2i}\equiv A+4^i(b_0-A)\pmod9
+ \quad(i=0,1,2).
+\]
+Since \(4^i\bmod9\) cycles through
+\(1,4,7\), and \(b_0-A\equiv1\pmod3\),
+the three residues \(b_0,b_2,b_4\)
+are **exactly \(\{2,5,8\}\pmod9\)**
+in some order. Precisely one of these
+even-index states, say \(b_j\), therefore
+has \(9\mid(2b_j+5)\). The actual t=1
+source coordinate
+\[
+ w=\frac{2(2b_j+5)}9
+\]
+lies in the odd source band
+\[
+  3p/8+1\le w\le p/2-1,
+\]
+since \(7p/8<b_j\le p-3\) and
+\(p\gg n\). Its odd predecessor
+\[
+ h_{\mathrm{odd}}=2w-p/2-(n-4)-5
+\]
+is nonnegative by \(p>4n\), so
+this is a genuine t=1 ResetParent.
+The separate even parent \(b_{j+1}\)
+lies above \(3p/4-1\), whereas
+\(h_{\mathrm{odd}}<p/2\), hence they
+are distinct. Other higher-t parents
+may exist but are irrelevant to this
+**at-least-two-parent** conclusion.
+
+A full BigInt evaluation of the
+untruncated parent grammar for
+n=7199, 28703, 28757 and 28811 found
+the predicted fork at j=2,2,4,0
+respectively. This is a finite diagnostic;
+the uniform theorem is the modular cycle
+plus the dyadic interval argument.
+
+**Interpretation:** the low-valuation
+sector that Section 5 can exclude
+by a unique chain is genuinely different
+from this sector. Every proof attempting
+to close all terminal ancestor trees in
+the narrow high-c strip must explicitly
+resolve a **second-tier odd branch**
+somewhere among \(b_0,b_2,b_4\).
+Neither the existence nor the pruning of
+such a synthetic odd fork establishes
+reachability from the blank root.
+
+## 9. Where the current E-parent results apply
 
 The even-parent bands adjacent to (E) are
 [
@@ -634,7 +742,7 @@ The parity sectors align with both original gate residues:
 
 The odd-a, (K\equiv3\pmod6) entry-parent classification remains open.
 
-## 9. Existing Ray reductions to compose, not duplicate
+## 10. Existing Ray reductions to compose, not duplicate
 
 The spine formula above is the same canonical even ray used by the repository's `Ray*` modules:
 [
@@ -674,7 +782,7 @@ J-11,J-10,\ldots,J.
 ]
 This gives a concrete finite target for composing `RayNoSeam`, `RayNoSeamWalk`, the two-tier Hensel selectors, and the terminal t=0 entry (E(a,K)). The BigInt checks at ((K,a)=(387,9),(800,10),(399,9),(806,10)) independently found this exact 12-index split; the algebra above explains it uniformly.
 
-## 10. Scope and remaining work
+## 11. Scope and remaining work
 
 This identity connects the auxiliary entry family to the actual #746 halting targets. It proves that (E(a,K)) is an ancestor on **one** inverse-parent branch of (U_{K+2}). It does **not** prove that every root path to (U_{K+2}) passes through (E(a,K)). Other odd-parent side branches can leave intermediate spine nodes; a root path could in principle enter through one of them.
 
