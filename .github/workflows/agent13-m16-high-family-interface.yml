@@ -25,6 +25,7 @@ on:
           - sourceD4Second
           - sourceD4Third
           - sourceD23Five
+          - sourceAllDepth
           - sourceCriterion559
           - source523
           - sourceCriterion523
@@ -114,6 +115,9 @@ jobs:
               ;;
             sourceD23Five)
               target=im-results/agent13-residual-frontier/LowM67FiveD23Source.lean
+              ;;
+            sourceAllDepth)
+              target=im-results/agent13-residual-frontier/EvenOddAllDepthForbidden.lean
               ;;
             sourceCriterion559)
               target=im-results/agent13-residual-frontier/LowM67All559Criterion.lean
