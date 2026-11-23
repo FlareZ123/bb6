@@ -31,31 +31,36 @@ namespace BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution
 open BusyBeaver.RleStackEngine BusyBeaver.SymRunEngine
 
 macro "stepWithin" : tactic => `(tactic| (
-  try simp only [BusyBeaver.Cfg.headRight, BusyBeaver.Cfg.headLeft, pow_succ_list, pow_zero_list,
+  try simp only [isVarA_tm, ite_true, ite_false,BusyBeaver.Cfg.headRight, BusyBeaver.Cfg.headLeft, pow_succ_list, pow_zero_list,
     cons_append_list, nil_append_list, listblank_append_cons, listblank_append_nil,
     Turing.ListBlank.head_cons, Turing.ListBlank.tail_cons, default_head, default_tail,
     encM_nil, encM_cons_zero, encM_cons_run, encLeft_cons_head, cons_one_encLeft_tail,
     encRight_cons_head, cons_one_encRight_tail, encM_cons_run_head, cons_one_encM_cons_run_tail]
   apply BusyBeaver.ReachesIn.step_left
   · rfl
-  · simp only [BusyBeaver.Cfg.headRight, BusyBeaver.Cfg.headLeft, Turing.Tape.move,
+  · simp only [isVarA_tm, ite_true, ite_false,
+      BusyBeaver.Cfg.headRight, BusyBeaver.Cfg.headLeft, Turing.Tape.move,
       pow_succ_list, pow_zero_list, cons_append_list, nil_append_list,
       listblank_append_cons, listblank_append_nil, Turing.ListBlank.head_cons,
       Turing.ListBlank.tail_cons, Tape.write, zero_cons_default, default_head,
       default_tail, encM_nil, encM_cons_zero, encM_cons_run, encLeft_cons_head,
       cons_one_encLeft_tail, encRight_cons_head, cons_one_encRight_tail,
       encM_cons_run_head, cons_one_encM_cons_run_tail]
+    try rfl
 ))
 
 macro "finishWithin" : tactic => `(tactic| (
-  change multiStep target_tm _ 0 = some _
-  simp only [BusyBeaver.Cfg.headRight, BusyBeaver.Cfg.headLeft, pow_succ_list, pow_zero_list,
-    cons_append_list, nil_append_list, listblank_append_cons, listblank_append_nil,
-    Turing.ListBlank.head_cons, Turing.ListBlank.tail_cons, zero_cons_default, default_head,
-    default_tail, enc1_nil, encM_nil, encM_cons_zero, encM_cons_run, encLeft_cons_head,
-    cons_one_encLeft_tail, encRight_cons_head, cons_one_encRight_tail, encM_cons_run_head,
-    cons_one_encM_cons_run_tail, multiStep_zero]
-  try rfl
+  all_goals (
+    change multiStep target_tm _ 0 = some _
+    simp only [isVarA_tm, ite_true, ite_false,
+      BusyBeaver.Cfg.headRight, BusyBeaver.Cfg.headLeft, pow_succ_list, pow_zero_list,
+      cons_append_list, nil_append_list, listblank_append_cons, listblank_append_nil,
+      Turing.ListBlank.head_cons, Turing.ListBlank.tail_cons, zero_cons_default, default_head,
+      default_tail, enc1_nil, encM_nil, encM_cons_zero, encM_cons_run, encLeft_cons_head,
+      cons_one_encLeft_tail, encRight_cons_head, cons_one_encRight_tail, encM_cons_run_head,
+      cons_one_encM_cons_run_tail, multiStep_zero]
+    try rfl
+  )
 ))
 
 macro "executeWithin" n:num : tactic => `(tactic| (
