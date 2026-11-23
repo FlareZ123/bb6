@@ -1,6 +1,8 @@
 /-! Sharper independent length and numeric-mass bounds for the exact BB sweep. -/
 import SymRunTraceStats
 
+open BusyBeaver.SymRunEngine
+
 namespace BusyBeaver.SymRunAudit
 
 theorem sweepBB_length_bound (L R : List SymTok) :
