@@ -130,7 +130,10 @@ The remaining proof work is to compose the existing Rule A/B/C ReachesWithin lem
 
 ## Consequence if the target lemmas are proved
 
-Let \(V=W+1\). The weight inequality gives \(V_{i+1}\le2^{13}V_i\). Both machine-specific initSymCyc3 states have \(W\le162<2^{10}\), so \(V_0\le2^{10}\).
+Let \(V=W+1\). The weight inequality gives \(V_{i+1}\le2^{13}V_i\). The literal initSymCyc3 states have:
+- F424: \((|L|,\operatorname{numSum}L,|R|,\operatorname{numSum}R)=(13,52,9,85)\), hence \(W=160\);
+- F412: \((13,52,10,86)\), hence \(W=162\).
+Thus both satisfy \(W\le162<2^{10}\) and \(V_0\le2^{10}\).
 
 For \(n\) symbolic transitions, the total primitive cost is then bounded by
 
