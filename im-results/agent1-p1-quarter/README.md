@@ -1,6 +1,6 @@
 # Agent 1: P1 quarter-class proof and all-depth dyadic inverse grammar
 
-**Status 2026-11-02:** Genuine blank-entry P1 critical indices n≡2(mod64) for n≥66 and n≡50(mod64) have been universally excluded by Lean 4.36.0-rc2. The entire P1 machine and BB(6) remain undecided. See [the academic result and proof provenance](../../results/2026-11-02-p1-entire-2-and-50-mod64-exclusions.md).
+**Status 2026-11-23:** P1 and BB(6) remain undecided. The earlier Lean-checked critical-index exclusions remain documented in [the academic result and proof provenance](../../results/2026-11-02-p1-entire-2-and-50-mod64-exclusions.md). The new [mod-128 root-prefix obstruction](./RootPrefixMod128.md) excludes blank-root ancestry for h≡0,3 (mod4) in each of two 249/343 fourth-edge restart progressions; h≡1,2 and all other inverse exits remain open. The detailed source-checked inverse bounds below are necessary-condition results, not a complete blank-orbit decision.
 
 ## Source-checked all-natural theorem and reproduction
 
@@ -43,7 +43,7 @@ All this is **kernel-checked original-source arithmetic** in [manual CI 41461096
 
 ## Remaining unbounded closure task
 
-Known original-source reductions leave the infinite P1 critical sectors n≡2,14(mod16). Our new proof excludes q%4=0,3 within n=16q+2; **q%4=1,2** survive, alongside n≡14(mod16). Agent45's exact feeder equivalence requires both special families `u(q)=7*2^(16q)-4q-3` to be excluded from the actual blank orbit. Source-verified arbitrarily deep *synthetic* inverse paths defeat a global fixed-depth strategy.
+Known original-source reductions leave the infinite P1 critical sectors n≡2,14(mod16). The existing theorem excludes q≡0,3 (mod4) for direct critical reachability within n=16q+2, leaving q≡1,2, alongside n≡14(mod16). Separately, [RootPrefixMod128.md](./RootPrefixMod128.md) excludes root ancestry for h≡0,3 (mod4) in two fourth-edge local-survivor progressions: n=5362+595056h (q=210+37191h) and n=9538+703248h (q=596+43953h). This is only a subfamily exclusion; it does not remove all q≡1,2 or any general n≡14 family. Agent45's exact feeder equivalence still requires the remaining special families `u(q)=7*2^(16q)-4q-3` to be excluded from the actual blank orbit. Source-verified arbitrarily deep *synthetic* inverse paths defeat a global fixed-depth strategy. The next useful root-specific target is the complementary h≡1,2 classes and the other surviving inverse exits; reachability in the relaxed mod-128 graph is not evidence of an actual root path.
 
 The exact `(s,m)` grammar suggests investigating a parameter-aware forward barrier on `s+2*m`, equivalent to lower bounds on `b`; no such sufficient universal barrier is yet proved. It is crucial to test proposed restrictions against Agent4's real reachable (32,45) member of the unrestricted L0 line and Agent45's deep synthetic histories. No generic whole-line exclusion, new BB(6) bound, or decision is claimed.
 
