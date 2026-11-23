@@ -83,12 +83,8 @@ theorem outer_s1_marker_prefix_cell (L n m a b : Nat) (h : Int)
     (hm : m < 3) (i : Nat) (hi : i ≤ m+4) :
     (s1Config L n m a 0 b h).tape
       (h-((3*a+i):Int)) = sideBit (markerWord m ++ d0) i := by
-  have hcell :
-      (s1Config L n m a 0 b h).tape
-        (h - ((3 : Int) * (a : Int) + (i : Int))) =
-        sideBit (s1LeftFacing L n m a 0) (3*a+i) := by
-    simpa only [Nat.cast_add, Nat.cast_mul] using
-      (s1Config_left_cell L n m a 0 b h (3*a+i))
+  have hcell := s1Config_left_cell L n m a 0 b h (3*a+i)
+  push_cast at hcell
   have hword : s1LeftFacing L n m a 0 =
       d1pow a ++ (markerWord m ++ d0 ++ binDec L n ++ lh) := by
     simp [s1LeftFacing,binDec_zero,List.append_assoc]
@@ -113,17 +109,14 @@ theorem outer_s1_counter_cell (L n m a b : Nat) (h : Int)
     (hm : m < 3) (i : Nat) :
     (s1Config L n m a 0 b h).tape
       (h-((3*a+m+5+i):Int)) = sideBit (binDec L n ++ lh) i := by
-  have hcell :
-      (s1Config L n m a 0 b h).tape
-        (h - ((3 : Int) * (a : Int) + (m : Int) + 5 + (i : Int))) =
-        sideBit (s1LeftFacing L n m a 0) (3*a+m+5+i) := by
-    simpa only [Nat.cast_add, Nat.cast_mul] using
-      (s1Config_left_cell L n m a 0 b h (3*a+m+5+i))
+  have hcell := s1Config_left_cell L n m a 0 b h (3*a+m+5+i)
+  push_cast at hcell
   have hword : s1LeftFacing L n m a 0 =
       (d1pow a ++ markerWord m ++ d0) ++ (binDec L n ++ lh) := by
     simp [s1LeftFacing,binDec_zero,List.append_assoc]
   rw [hword] at hcell
   rw [← d1pow_length a] at hcell
+  simp only [Nat.add_assoc] at hcell
   rw [outer_sideBit_append_shift] at hcell
   have hmarker : (markerWord m).length = m+2 :=
     outer_markerWord_length m hm
