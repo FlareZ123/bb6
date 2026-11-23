@@ -113,3 +113,20 @@ Hence this SCC is exactly the high-digit carry automaton for
 These are precisely the two linear residuals appearing in the left/right terminal-predecessor strips. This explains why the hardest nonsynchronizing languages coincide with the terminal-cancellation obstruction: synchronization alone cannot magically remove the terminal-strip problem, because its recurrent failures literally encode those strips.
 
 `DangerousResidualSCC.lean` proves the two coordinate identities symbolically with `omega` and checks every internal carry edge, including both 0- and 2-sign-extension labellings, by kernel computation. It compiles locally with Lean 4.36.0-rc2.
+
+
+## Unimodular two-coordinate reduction
+
+[TwoCoordinate3AdicCocycle.md](TwoCoordinate3AdicCocycle.md) rewrites the exact four synchronization residues using the unimodular coordinates (U=Y), (V=X+Y):
+[
+(V-4U,;3U,;4V-U,;3V).
+]
+The two scale tests reduce exactly to residues of (U,V) modulo (3^{n-1}), while the branch cocycle becomes
+[
+(U',V')=
+egin{cases}
+(3U+phi,;V-U+kappa+phi),&L,\\
+(3V+phi,;U-V+kappa+phi),&R.
+end{cases}
+]
+This is an exact algebraic reparameterization, not yet an all-time avoidance proof.
