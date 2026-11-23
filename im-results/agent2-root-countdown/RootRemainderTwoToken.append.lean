@@ -222,9 +222,9 @@ theorem root_countdown_two_reset (n : ℕ) :
 /-!
 ## Suffix-preserving CR sweeps and the remainder-one resets
 
-The generic tail below is parameterized by the untouched stack suffix.  The
-remainder-one reset with suffix [5] is deliberately stated with the exact
-source-produced suffix [0,0,0,2]; it must not be shortened to [0,0,2].
+The generic tail below is parameterized by the untouched stack suffix. The
+remainder-one reset with suffix [5] is stated with the exact source-produced
+suffix [0,0,2], after the CR-zero sweep increments its first zero counter.
 -/
 
 private theorem root_countdown_cr_one_zero_step (L : List (ℕ × ℕ)) :
