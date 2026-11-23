@@ -2,6 +2,7 @@ import S1Encoder
 import CountedLBinDecHRun
 import CountedOddBase
 import CountedReset
+import CostRecurrence
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -19,6 +20,7 @@ open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent24LBinDecHRun
 open BB6Coverage.Agent8CountedReset
+open BB6ChampionArithmetic
 
 /-- Moving the index past a list prefix selects the same cell in the suffix. -/
 theorem outer_sideBit_append_shift (xs ys : List Bool) (i : Nat) :
@@ -391,7 +393,7 @@ theorem outerLCInc_preHRun
     have hbit : sideBit (d1pow a ++
         (markerWord m ++ d0 ++ binDec L n ++ lh)) i = true := by
       rw [outer_sideBit_append_prefix _ _ _ hprefix]
-      exact outer_sideBit_d1pow a i (by rw [d1pow_length] at hi; exact hi)
+      exact outer_sideBit_d1pow a i (by exact hi)
     simpa [T] using hc.trans hbit
   have hsweep :
       run tm2 (9*a) (s1Config L n m a 0 b h) =
@@ -410,10 +412,15 @@ theorem outerLCInc_preHRun
     exact markerBridge_run m hm T1 h0
   have hcfg :
       markerBridgeFrameOut m T1 h0 = ⟨3,h1,T2⟩ := by
-    apply Config.ext
-    · exact markerBridgeFrameOut_state m hm T1 h0
-    · simpa [h1,h0] using markerBridgeFrameOut_head m hm T1 h0
-    · rfl
+    cases hOut : markerBridgeFrameOut m T1 h0 with
+    | mk s hOutHead t =>
+        have hs : s = 3 := by
+          simpa [hOut] using markerBridgeFrameOut_state m hm T1 h0
+        have hh : hOutHead = h1 := by
+          simpa [hOut,h1,h0] using markerBridgeFrameOut_head m hm T1 h0
+        subst s
+        subst hOutHead
+        simp [T2,hOut]
   have hbridge' :
       run tm2 (3*m+17) ⟨3,h0,T1⟩ = some ⟨3,h1,T2⟩ := by
     rw [hbridge,hcfg]
@@ -441,7 +448,7 @@ theorem outerLCInc_preHRun
           d1pow r ++ (d0 ++ binDec len q ++ lh) := by
         simp [List.append_assoc]
       rw [hrest,outer_sideBit_append_prefix _ _ _ hprefix]
-      exact outer_sideBit_d1pow r i (by rw [d1pow_length] at hi; exact hi)
+      exact outer_sideBit_d1pow r i (by exact hi)
     calc
       T2 (h1-(i:Int)) = T (h1-(i:Int)) := hpi
       _ = sideBit (d1pow r ++ d0 ++ binDec len q ++ lh) i := by
