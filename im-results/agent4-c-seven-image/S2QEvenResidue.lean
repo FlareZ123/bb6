@@ -89,7 +89,7 @@ theorem q_even_direct_parent_unreachable (t z : Nat)
   have hr' : BB6.Agent3.CReach a k := by
     have hiff := (BB6.Agent3.evenodd_four_blank_reach_iff
       x y hx hy hy5 hmod).mp hr
-    simpa only [hxa,hyk] using hiff
+    exact hiff
   rcases hr' with ⟨time,ht⟩
   cases time with
   | zero =>
