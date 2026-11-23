@@ -175,7 +175,7 @@ The algebraic reduction gives a compact candidate low-digit layer:
 \]
 The 27-state drain lift supplies the two statistic residues from the exact low-\(L\)-digit drain word. The separate S-window boundary carry is still necessary for the higher digits and for the exact next-window quotient. In particular, the central window alone does not determine the complete next drain word; do not claim closure by composing only these mod-3 states.
 
-I checked the displayed normalized update against the materialized source-faithful edge data im-results/agent48-623-tight-window/SWindowEdgeRecords.json. Starting from the exact D33 prefix and using each edge's exact \((D,R)\), the 9,968 transitions D33→D10001 had:
+I checked the displayed normalized update against the materialized source-faithful edge data im-results/agent48-623-tight-window/SWindowEdgeRecords.json. The exact finite audit is reproducible with im-results/agent27-623-root-scan/verify_sector_normalized_cocycle.js (run from the repository root with Node). Starting from the exact D33 prefix and using each edge's exact \((D,R)\), the 9,968 transitions D33→D10001 had:
 - zero source-sector or source-branch mismatches;
 - zero target-sector mismatches;
 - zero mismatches in either normalized mod-3 output;
