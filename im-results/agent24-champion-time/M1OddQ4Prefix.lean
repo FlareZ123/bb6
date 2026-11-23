@@ -60,17 +60,21 @@ private theorem binDec_three_three :
 
 
 
+/-- Concrete low-order 2-bit word at L=3 in the head-facing encoding. -/
+private theorem binDec_three_two :
+    binDec 3 2 = d1 ++ d0 ++ d1 := by decide
+
 private theorem m1OddSourceLeftAt (a b : Nat) (h : Int) (k : Nat) :
     (s1Config 3 3 1 a 0 b h).tape
       (h - ((3*a+1+k : Nat) : Int)) =
-      sideBit (markerWord 1 ++ d0 ++ d0 ++ d1 ++ lh) (1+k) := by
+      sideBit (markerWord 1 ++ d0 ++ d0 ++ d0 ++ d1 ++ lh) (1+k) := by
   have hleft :
       s1LeftFacing 3 3 1 a 0 =
-        d1pow a ++ markerWord 1 ++ d0 ++ d0 ++ d1 ++ lh := by
+        d1pow a ++ markerWord 1 ++ d0 ++ d0 ++ d0 ++ d1 ++ lh := by
     simp [s1LeftFacing, binDec_zero, binDec_three_three, List.append_assoc]
   have hcell := s1Config_left_cell 3 3 1 a 0 b h (3*a+1+k)
   have hside := sideBit_d1pow_append a (3*a+1+k)
-    (markerWord 1 ++ d0 ++ d0 ++ d1 ++ lh) (by omega)
+    (markerWord 1 ++ d0 ++ d0 ++ d0 ++ d1 ++ lh) (by omega)
   rw [hleft] at hcell
   simp only [List.append_assoc] at hcell hside
   rw [hside] at hcell
@@ -80,7 +84,7 @@ private theorem m1OddSourceLeftAt (a b : Nat) (h : Int) (k : Nat) :
 private theorem m1OddSweptLeftCell (a b : Nat) (h : Int) (k : Nat) :
     sweptLeft (3*a+1) (s1Config 3 3 1 a 0 b h).tape h
       (h - ((3*a+1 : Nat) : Int) - (k : Int)) =
-      sideBit (markerWord 1 ++ d0 ++ d0 ++ d1 ++ lh) (1+k) := by
+      sideBit (markerWord 1 ++ d0 ++ d0 ++ d0 ++ d1 ++ lh) (1+k) := by
   have hpres := sweptLeft_preserves_left (3*a+1)
     (s1Config 3 3 1 a 0 b h).tape h
     (h - ((3*a+1 : Nat) : Int) - (k : Int)) (by omega)
@@ -113,7 +117,7 @@ theorem m1OddQ4Bridge_input_match (a b : Nat) (h : Int) :
     rw [hcoord]
     have hleft := m1OddSweptLeftCell a b h k
     have hbits :
-        sideBit (markerWord 1 ++ d0 ++ d0 ++ d1 ++ lh) (1+k) =
+        sideBit (markerWord 1 ++ d0 ++ d0 ++ d0 ++ d1 ++ lh) (1+k) =
           decide (y ∈ m1OddQ4BridgeStart.marked) := by
       have hyCases : y = -9 ∨ y = -8 ∨ y = -7 ∨ y = -6 ∨ y = -5 ∨
           y = -4 ∨ y = -3 ∨ y = -2 ∨ y = -1 ∨ y = 0 := by omega
@@ -208,14 +212,14 @@ theorem m1Odd_q4_prefix_run (a b : Nat) (h : Int) :
   let T2 := (frameAt T1 hN m1OddQ4Inside m1OddQ4BridgeEnd).tape
   have hleftFacing :
       s1LeftFacing 3 3 1 a 0 =
-        d1pow a ++ markerWord 1 ++ d0 ++ d0 ++ d1 ++ lh := by
+        d1pow a ++ markerWord 1 ++ d0 ++ d0 ++ d0 ++ d1 ++ lh := by
     simp [s1LeftFacing, binDec_zero, binDec_three_three, List.append_assoc]
   have hOn : leftOnes T h N := by
     intro i hi
     have hcell := s1Config_left_cell 3 3 1 a 0 b h i
     have hside : sideBit (s1LeftFacing 3 3 1 a 0) i = true := by
       rw [hleftFacing]
-      let R : List Bool := markerWord 1 ++ (d0 ++ (d1 ++ (d0 ++ (d0 ++ lh))))
+      let R : List Bool := markerWord 1 ++ (d0 ++ (d0 ++ (d0 ++ (d1 ++ lh))))
       simp only [List.append_assoc]
       change sideBit (d1pow a ++ R) i = true
       by_cases hi3 : i < 3*a
