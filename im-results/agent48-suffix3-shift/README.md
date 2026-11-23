@@ -1,6 +1,6 @@
 # Universal ternary suffix shift in Cryptid D
 
-**Research status:** exact transition law derived from the pinned original #85 source's CR/EL/DL/DR clauses, with a standalone source-local **uncompiled** Lean proof draft. This is a real infinite-family reduction at the level of the conditional stack system; it is not yet an accepted original-machine Lean theorem or a blank-tape decision.
+**Research status:** exact transition law derived from the pinned original #85 source's CR/EL/DL/DR clauses, with standalone source-local **uncompiled** Lean proof drafts. The same shift is drafted for **every arbitrary finite further stack tail**. These are candidate infinite-family reductions, not yet accepted original-machine Lean theorems or a blank-tape decision.
 
 Define the source-coordinate family
 
@@ -65,5 +65,18 @@ The file has **not yet compiled** because the local shell returned \`ClientError
 The earlier [suffix-[5] reduction](../agent48-suffix5-reset/README.md) is now the \(t=2\) instance of (1) followed by the residual-two token closure \(Q(n,2)\to D_0(8n+21)\), giving \(Q(n,5)\to D_0(8n+29)\). The original suffix-[5] Lean append can be simplified to the present universal lemma plus the residual-two proof, once both are accepted.
 
 Source-clause replay also suggests the residual-zero family \(Q(n,0)\to D_0(8n+15)\) with \(8n+43\) outer and \(16n+109\) raw steps, and the residual-two family \(Q(n,2)\to D_0(8n+21)\) with \(8n+46\) outer and \(40n+196\) raw steps. These latter laws require separate original-source formalization. If they are accepted, the entire congruence classes \(t\equiv0,2\pmod3\) admit explicit \(D_0\) reset formulas; \(t\equiv1\pmod3\) requires a different token analysis.
+
+Combining the source-derived shift with these still-unaccepted residual base cases produces the conditional general formulas, for every (kge0):
+
+\[
+\begin{aligned}
+Q(n,3k)&\to^+D_0(8(n+k)+15),\\
+Q(n,3k+2)&\to^+D_0(8(n+k)+21).
+\end{aligned}
+\]
+
+The proposed primitive-step costs, including the residual endpoint, are respectively (24nk+12k^2+79k+16n+109) and (24nk+12k^2+103k+40n+196). These are **clause-derived** and have not passed counted-run formalization. The corresponding outer successor counts are (8n(k+1)+4k^2+30k+43) and (8n(k+1)+4k^2+30k+46). These formulas should not be mistaken for global machine runtime bounds.
+
+[RootSuffixWordShift.append.lean](RootSuffixWordShift.append.lean) independently drafts the stronger (Q(n,t+3;T)\to^+Q(n+1,t;T)) and its iterates for an **arbitrary finite pair-stack tail** (T). The source path never inspects the tail. This file is not compiled.
 
 In particular, the conditional root state \(Q(428725269581,5)\) reduces to \(Q(428725269582,2)\), then conditionally to \(D_0(3429802156677)\). This is not an unconditional blank-tape halting or nonhalting decision.
