@@ -1,30 +1,30 @@
 /-!
 Source-exact residual-one token recurrence for Cryptid #85.
 
-The former one-shot 36-step claim T(s) -> T(s+5) is false. The correct
-recurrence is a composition of the original token reductions with the
-source-checked CR countdown sweep. It gives a positive-time return from
-T(s) to T(s+5), and the family invariant then proves NeverHaltsFrom at
-every T(s). This is a token-family result, not a blank-root reachability
-claim.
+The direct one-shot 36-step claim T(s) -> T(s+5) is false. The correct
+recurrence is composed from a 15-step source token prefix to CR, the
+source-local CR/EL/DL countdown helpers, and a final four-step DR-to-T
+conversion. It gives a positive-time return from T(s) to T(s+5), and the
+family invariant then proves NeverHaltsFrom at every T(s). This is a
+token-family result, not a blank-root reachability claim.
 
-Append after RootCountdownSweep.append.lean inside the pinned source module.
+Append after the corrected RootCountdownSweep fragment inside the pinned
+source module. The token-state wrapper below is written explicitly because
+the original tok_DR abbreviation is private to the upstream source file.
 -/
 
-/-- T(s) is the original source token state tok_DR [2,0] [(s,0)] [0]. -/
+/-- T(s) = tok_DR [2,0] [(s,0)] [0], exposed without private abbreviations. -/
 def s3_tok_growth_cfg (s : ℕ) : Cfg (Fin 2) (Fin 6) :=
-  tok_DR [2,0] [(s,0)] [0]
+  ((([1] : List (Fin 2)) ^ 2) +>
+    ((0 : Fin 2) >> ((0 : Fin 2) >> encLeft [(s,0)])))
+      {{D}}> ((1 : Fin 2) >> ((0 : Fin 2) >> default))
 
-/-- First reduce T(s) to CR([0,0,1],[s+1]) using the source token lemmas. -/
+/-- The token subroutine reaches CR([0,0,1],[s+1]) in 15 source steps. -/
 theorem s3_tok_growth_to_CR (s : ℕ) :
     ReachesPlus target (s3_tok_growth_cfg s)
       (cfg_CR_n_n [(0,0),(0,0),(1,0)] [(s+1,0)]) := by
-  have h1 := tok_DR_zero [0] [(s,0)] []
-  have h2 := tok_DR_nil_8 [1,0] [(s,0)]
-  have h3 := tok_EL_1 [0] [(s,0)] [0,1]
-  have h4 := tok_EL_exit_zero [(s,0)] [0,0,1]
-  have h := ReachesPlus.trans h1 (ReachesPlus.trans h2 (ReachesPlus.trans h3 h4))
-  simpa [s3_tok_growth_cfg, bumpPairHead] using h
+  unfold s3_tok_growth_cfg cfg_CR_n_n
+  texecute 15
 
 /-- CR([0,0,1],[s+1]) returns to T(s+5) by the checked countdown macros. -/
 theorem s3_CR_to_growth_step5 (s : ℕ) :
@@ -39,7 +39,7 @@ theorem s3_CR_to_growth_step5 (s : ℕ) :
   have h6 : ReachesPlus target
       (cfg_DR_n_n [(0,0),(0,0)] [(1,0),(s+5,0)])
       (s3_tok_growth_cfg (s+5)) := by
-    unfold s3_tok_growth_cfg tok_DR cfg_DR_n_n
+    unfold s3_tok_growth_cfg cfg_DR_n_n
     texecute 4
   have h := ReachesPlus.trans h1
     (ReachesPlus.trans h2
