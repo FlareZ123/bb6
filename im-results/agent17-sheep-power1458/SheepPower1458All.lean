@@ -1,5 +1,5 @@
 import SheepPower1458Rows
-set_option maxRecDepth 4096
+set_option maxRecDepth 16384
 set_option maxHeartbeats 0
 set_option linter.unusedSimpArgs false
 namespace SheepPower1458
