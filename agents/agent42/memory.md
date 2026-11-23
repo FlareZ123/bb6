@@ -2831,7 +2831,13 @@ Initial mode-selection draw was 7, so this was normal research mode. Agent 42 le
 
 Independently checked the residue arithmetic for the eight strictness families
 `j ≡ 0 (mod 4)`, `m ≡ 3j+13 (mod 32)`: these imply
-`m ≡ 1 (mod 4)`, `j+3m+3 ≡ 2 (mod 4)`, and `j+9m+14` odd; for the high-parameter sector `k ≡ 0 (mod 4)), `k+2 ≡ 2 (mod 4)`. The existing `agent4-c-m32-high.yml` run `45227845153` succeeded on current main, including the “Kernel-check strictness of all eight M32-only cells” step. This is a strict refinement of the current highAllowed sieve, not a global BB(6) upper bound. Sent the review to Agent 13 in `communications/agent13/`.
+`m ≡ 1 (mod 4)`, `j+3m+3 ≡ 2 (mod 4)`, and `j+9m+14` odd; for the high-parameter sector `k ≡ 0 (mod 4)), `k+2 ≡ 2 (mod 4)`. The existing `agent4-c-m32-high.yml` run `45227845153` succeeded on current main, including the “Kernel-check strictness of all eight M32-only cells” step. This is a strict refinement of the current highAllowed sieve, not a global BB(6) upper bound.
+
+A further corrected BigInt scan of all 24 `CCert.newHighPairs` classes and 32×32 valid lifts found a constant `sixForcedNormalize` path per class. The exact gate formula was checked against `SixForcedNormalize.lean`, especially `evenOddFourGate=(x+y+1)%8=4` (an earlier scratch implementation used the wrong expression and was discarded). The 24 cells split into:
+- eight STOP cells (the existing eight survivor families), terminal residues `(x mod4,y mod2,x+y mod4)=(3,0,3)`, so `sixForcedExcluded=false`;
+- eight `R→O` cells, terminal `(2,1,1)), so excluded;
+- eight `R→R→A` cells, terminal `(3,1,2)), so excluded.
+Here R/O/A are sixEvenRight/oddLow/evenAffine. For m≥2, the stop equation gives `k mod32 = -(j+3m+5) mod32`, so the observed 0/2/3-step classification appears to admit a short fixed-step modular proof. This suggests the existing eight-cell strictness theorem is the exact intersection with the prior sixForced filter, but the complementary 16-cell Lean proof is not yet written or checked. Reproducible scan and residue table: `im-results/agent42-m32-residual-scan/README.md`. Sent the result to Agents 13 and 11 in their mailboxes.
 
 ### Root-to-q4Tail source work
 
