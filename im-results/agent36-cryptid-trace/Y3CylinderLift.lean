@@ -72,7 +72,7 @@ theorem lift_safe_seed (r Q t : Nat)
   have hamin : d.a ≥ 4 := BB6.Agent2PacketSafe.normalize_amin c hc
   obtain ⟨tail,a,q,b,htail⟩ :=
     BB6.Agent36Y3Safe.terminalY3_source
-      (⟨d.a+y,d.q,d.p⟩ : Packet) (by omega) hsafeShift
+      (⟨d.a+y,d.q,d.p⟩ : Packet) (by change d.a+y≥4; omega) hsafeShift
   obtain ⟨linear,hshift⟩ :=
     BB6.Agent31PacketShift.source_path_shift hpath
       BB6.Agent2PacketP2Reset.marker
@@ -91,9 +91,11 @@ theorem lift_safe_seed (r Q t : Nat)
     exact hpathShift
   have hinput :
       8*(r+3^N*t)+5 = c.a+3^n*x := by
-    dsimp [c]
-    rw [hx]
-    omega
+    calc
+      8*(r+3^N*t)+5 = 8*r+(8*3^N*t)+5 := by
+        rw [Nat.mul_add,Nat.mul_assoc]
+      _ = (8*r+5)+(8*3^N*t) := by omega
+      _ = c.a+3^n*x := by dsimp [c]; rw [hx]
   refine ⟨BB6.Agent2PacketP2Reset.eTwoTime
     (r+3^N*t) Q+(costShift+tail),a,q,b,?_⟩
   rw [run_add,BB6.Agent2PacketP2Reset.e_two_reset]
