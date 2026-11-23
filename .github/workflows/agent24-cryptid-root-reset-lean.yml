@@ -70,7 +70,7 @@ jobs:
 
           if os.environ.get("PROOF_TARGET") in ("suffix3-shift", "suffix3-full", "suffix3-word", "suffix3-zero", "suffix3-two", "suffix3-growth", "suffix3-padded-two"):
               base = Path("../bb6/im-results/agent48-suffix3-shift")
-              fragments = ([base / "RootTokenGrowth36.append.lean"]
+              fragments = ([root_path, base / "RootTokenGrowthStep5.append.lean"]
                            if os.environ.get("PROOF_TARGET") == "suffix3-growth"
                            else [base / "RootSuffixThreeShift.append.lean"])
               if os.environ.get("PROOF_TARGET") == "suffix3-full":
@@ -147,12 +147,10 @@ jobs:
           elif [[ "${PROOF_TARGET:-root-reset}" == "suffix3-growth" ]]; then
             cat > RootResetAudit.lean <<'EOF'
           import BusyBeaver.BB6.Accelerations.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA
-          #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.s3_tok_growth_36_to_intermediate
-          #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.s3_tok_growth_36_to_C1
-          #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.s3_tok_growth_36_C1_to_B1
-          #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.s3_tok_growth_36_B1_to_E0
-          #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.s3_tok_growth_to_C1
-          #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.s3_tok_growth_to_E0
+          #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.s3_tok_growth_to_CR
+          #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.s3_CR_to_growth_step5
+          #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.s3_tok_growth_step5
+          #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.s3_tok_growth_never_halts
           EOF
           elif [[ "${PROOF_TARGET:-root-reset}" == "suffix3-two" ]]; then
             cat > RootResetAudit.lean <<'EOF'
