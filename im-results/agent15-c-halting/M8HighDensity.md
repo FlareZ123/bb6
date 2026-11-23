@@ -76,6 +76,32 @@ The unique forbidden class is easily generated via the modular inverse of odd \(
 
 The [unbounded-depth tower](M8OddTower.md) is a constructive doubly infinite *subfamily* using explicit geometric sums; the modular inverse formula characterizes the **entire depth-wise M8 congruence class**, including many other heights. The tower separation theorem against an earlier dyadic filter should not be extrapolated to all the classes here.
 
+## A positive-density family surviving the entire former Agent19 high sieve
+
+A stronger theorem [M8GenericLegacyPass.lean](M8GenericLegacyPass.lean) proves that **every** forbidden M8 class at a compatible depth \(d\ge 2m+2\) satisfies the *entire* earlier maintained \`Agent19Joint.highAllowed j m\` predicate. The source-body Lean 4.36.0-rc2 proof uses exact copied definitions of the Agent3 and Agent19 predicates, compiles without \`sorryAx\`, and is still awaiting full original-module import compilation.
+
+Indeed \(W=Q(j+3)-m=2^d(2+8t)\). Using \(B=3Q+1\),
+\[
+B(j+3)=j+3m+3+3W.
+\]
+Because \(B=2^{2m+2}\) divides \(W\) for all \(d\ge2m+2\), one has
+\[
+\boxed{B\mid(j+3m+3).}
+\]
+This forces zero residues for all earlier Agent19 dyadic-depth congruence tests. The other Agent3/Agent19 high exclusions are defeated by the necessary \(j\equiv m+1\pmod4\), since \(m\) is odd and \(j\) even with \(j+m\equiv3\pmod4\). Lean proves this composition in \`generic_deep_passes_all_legacy_high_sieves\` and couples it with source M8 nonreachability in \`generic_deep_new_exclusion\`.
+
+In particular, the **entire union** over compatible deep depths consists of candidate indices that were allowed by the earlier sieve and are now excluded. Its exact natural density among all \(j\ge0\) at fixed odd \(m\) is
+\[
+\delta_m^{\mathrm{new}}=
+\begin{cases}
+\displaystyle\sum_{a\ge0}2^{-(2m+6+2a)}=\frac{1}{3\cdot2^{2m+4}},
+  & m\equiv1\pmod4,\\[6pt]
+\displaystyle\sum_{a\ge0}2^{-(2m+5+2a)}=\frac{1}{3\cdot2^{2m+3}},
+  & m\equiv3\pmod4.
+\end{cases}
+\]
+For \(m=1\) this is \(1/192\); for \(m=3\) it is \(1/1536\). The density proof uses the same disjoint residue classes and vanishing tail argument described above. It measures a concrete **new exclusion relative to the earlier maintained joint high sieve**, without asserting novelty relative to all alternative source filters in the repository.
+
 ## Trust boundary
 
 The modular invertibility, unique-class assertion and density calculation are elementary arithmetic proofs presented here. They are **not yet individually formalized as Lean inverse/density theorems**. The explicit source-bound exclusion is checked by [M8GenericHigh.lean](M8GenericHigh.lean), whose imported root theorems still await the full original-source CI outcome. The argument assumes the original source's M8 exclusion as the conditional nonreachability endpoint.
