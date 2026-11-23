@@ -32,7 +32,7 @@ private theorem forbidden_of_z (m : Nat)
         z%128=9 ∨ z%128=21) := by
   let z := m/512
   have hm512 : m%512=67 := by
-    rcases hf with h|h|h|h|h <;> simp only [low16Forbidden] at * <;> omega
+    rcases hf with h|h|h|h|h <;> omega
   have hm : m=512*z+67 := by
     have h := Nat.mod_add_div m 512
     dsimp [z]
