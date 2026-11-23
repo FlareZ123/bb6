@@ -301,7 +301,9 @@ theorem m1EvenResidueFour_q4_prefix_run (a b : Nat) (h : Int) :
         simp [m1EvenResidueFourInside,x]
         omega
       have hframe : T2 x = T1 x := by
-        simpa [T2] using frameAt_tape_outside T1 hN
+        change (frameAt T1 hN m1EvenResidueFourInside
+          m1EvenResidueFourBridgeEnd).tape x = T1 x
+        exact Agent6Q4Prefix.frameAt_tape_outside T1 hN
           m1EvenResidueFourInside m1EvenResidueFourBridgeEnd x hout
       have hT1 : T1 x = true := by
         by_cases hx : x ≤ h
@@ -504,7 +506,7 @@ private theorem m1EvenResidueFour_bridge_prefix_lower
     h-12 ≤ d.head := by
   obtain ⟨e,hexact⟩ :=
     m1EvenResidueFour_fRun_prefix_exists
-      m1EvenResidueFourBridge_exact (by omega)
+      (k := j) m1EvenResidueFourBridge_exact (by omega)
   have hcheckj :
       (List.range j).all (fun k =>
         match fRun tm2 k m1EvenResidueFourBridgeStart with
@@ -517,11 +519,14 @@ private theorem m1EvenResidueFour_bridge_prefix_lower
       omega
     exact (List.all_eq_true.mp m1EvenResidueFourBridge_heads) k
       (List.mem_range.mpr hkj)
-  have hbridge := bridgeAt T h m1EvenResidueFourInside
+  have hbridgeFrame := bridgeAt T h m1EvenResidueFourInside
     m1EvenResidueFourBridgeStart e j rfl hexact hcheckj hmatch
+  have hbridge : run tm2 j ⟨3,h,T⟩ =
+      some (frameAt T h m1EvenResidueFourInside e) := by
+    simpa [m1EvenResidueFourBridgeStart] using hbridgeFrame
   rw [hbridge] at hd
   have hdeq : d = frameAt T h m1EvenResidueFourInside e :=
-    Option.some.inj hd
+    (Option.some.inj hd).symm
   have hinside : m1EvenResidueFourInside e.head = true := by
     have hh := (List.all_eq_true.mp m1EvenResidueFourBridge_heads) j
       (List.mem_range.mpr hj)
@@ -545,8 +550,8 @@ private theorem m1EvenResidueFour_E_scan_prefix_head
   have hrun := E_scan T h j hlinearJ
   rw [hrun] at hd
   have heq := Option.some.inj hd
-  simp at heq
-  omega
+  cases heq
+  rfl
 
 /-- Every prefix of the base m=1,n=4 q4 prefix remains in
 x ≥ h-(3*a+13), allowing the later arbitrary-tail frame lift. -/
@@ -680,30 +685,33 @@ theorem m1EvenResidueFour_q4_prefix_head_bound
   intro k hk d hd
   let p1 := 3*N
   let p2 := p1+53
+  have hSweep' :
+      run tm2 p1 (s1Config 3 4 1 a 0 b h) = some ⟨3,hN,T1⟩ := by
+    simpa [p1,N,T,hN,T1] using hSweep
   by_cases hk1 : k < p1
   · have hlow := m1EvenResidueFour_counted_left_sweep_heads N T h hOn hright k
       (by dsimp [p1]; omega) d hd
-    dsimp [hN,N] at *
+    simp only [hN,N] at *
     omega
   · by_cases hk2 : k < p2
     · let j := k-p1
       have hj : j<53 := by dsimp [j,p1] at *; omega
       have hkEq : k=p1+j := by dsimp [j,p1]; omega
-      rw [hkEq,run_append,hSweep] at hd
+      rw [hkEq,run_append,hSweep'] at hd
       simp only [Option.bind_some] at hd
       have hlow := m1EvenResidueFour_bridge_prefix_lower T1 hN hmatch j hj d hd
-      dsimp [hN,N] at *
+      simp only [hN,N] at *
       omega
     · let j := k-p2
       have hj : j<3*a := by dsimp [j,p2,p1,N] at *; omega
       have hkEq : k=p1+(53+j) := by dsimp [j,p2,p1]; omega
-      rw [hkEq,run_append,hSweep] at hd
+      rw [hkEq,run_append,hSweep'] at hd
       simp only [Option.bind_some] at hd
       rw [run_append,hBridge'] at hd
       simp only [Option.bind_some] at hd
       have hhead := m1EvenResidueFour_E_scan_prefix_head
         T2 (hN+5) (3*a) hlinear j hj d hd
-      dsimp [hN,N] at *
+      simp only [hN,N] at *
       omega
 
 
@@ -951,20 +959,18 @@ private theorem m1EvenResidueFourQ4LeftFacingTail
         markerWord,d0,d1,lh,List.append_assoc]
     have hlenS : srcInit.length = 3*a+14 := by
       simp [srcInit,d1pow_length,markerWord,d0,d1]
-      omega
     have hlenT : tgtInit.length = 3*a+14 := by
       simp [tgtInit,d1pow_length,markerWord,d0,d1]
-      omega
     have hs : sideBit (srcInit ++ ([true] ++ lh)) (3*a+14) = true := by
       rw [m1EvenResidueFour_sideBit_append_after_local
         srcInit ([true] ++ lh) (3*a+14) (by rw [hlenS]; omega)]
-      simp [sideBit]
+      simp [hlenS,sideBit]
     have ht : sideBit (tgtInit ++ ([true] ++ lh)) (3*a+14) = true := by
       rw [m1EvenResidueFour_sideBit_append_after_local
         tgtInit ([true] ++ lh) (3*a+14) (by rw [hlenT]; omega)]
-      simp [sideBit]
+      simp [hlenT,sideBit]
     rw [hsrc',htgt']
-    exact hs.trans ht.symm
+    simpa only [List.append_assoc] using hs.trans ht.symm
   · have hi' : 3*a+15 ≤ i := by omega
     have hs := m1EvenResidueFour_sideBit_append_after_local
       srcPrefix common i (by
@@ -1001,7 +1007,7 @@ private theorem m1EvenResidueFourQ4LeftFacingPrefixTrue
   have hlen : P.length = 3*a+1 := by
     simp [P,d1pow_length]
   rw [hlist]
-  rw [sideBit_append_left P R i (by simpa [hlen] using hi)]
+  rw [sideBit_append_left P R i (by rw [hlen]; omega)]
   exact hP
 
 private theorem m1EvenResidueFourQ4LeftFacingBoundaryBit
@@ -1128,7 +1134,7 @@ theorem m1EvenResidueFour_q4_prefix_leftFacing
           rw [hlist]
           rw [m1EvenResidueFour_sideBit_append_after_local P R
             (3*a+1) (by rw [hlen]; omega)]
-          simp [R,markerWord,sideBit]
+          simp [R,markerWord,sideBit,hlen]
         simpa [x] using hval.trans htarget.symm
       · by_cases hbound : i ≤ 3*a+13
         · let k : Nat := i-(3*a+1)
