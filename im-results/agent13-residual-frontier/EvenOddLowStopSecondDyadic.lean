@@ -29,13 +29,14 @@ theorem second_low_parent_mass_dyadic_iff
   let t := 2048*s+129
   let v := 2048*s+125
   have hlin : v+1≤2^v := linear_le_power v
-  have ht : t=v+4 := by dsimp [t,v]; omega
+  have ht : t=v+4 := by dsimp [t,v]
   have htpow : 2^t=16*2^v := by
     rw [ht,Nat.pow_add]
     simp only [show (2:Nat)^4=16 by decide]
     omega
   have hsmall : 4*(3*(685*s+49)) < 2^t := by
-    dsimp [v] at hlin
+    have hv : v=2048*s+125 := rfl
+    rw [htpow]
     omega
   have hpow2 : 2∣(2:Nat)^t := by
     have hd : (2:Nat)^1∣2^t :=
