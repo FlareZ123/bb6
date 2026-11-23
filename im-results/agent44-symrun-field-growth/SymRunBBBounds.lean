@@ -5,6 +5,259 @@ open BusyBeaver.SymRunEngine
 
 namespace BusyBeaver.SymRunAudit
 
+/-- Simultaneous amortized bounds: arbitrary right stacks get +12,
+    while a right stack headed by run 0 gets one unit of extra slack. -/
+theorem sweepBB_length_bound4_pair (L : List SymTok) :
+    ∀ R : List SymTok,
+      stateTokenCount (sweepBB L R) ≤ L.length + R.length + 4 * L.length + 12 ∧
+      (∀ R1 : List SymTok,
+        stateTokenCount (sweepBB L (.item (.run 0) :: R1)) ≤
+          L.length + R1.length + 1 + 4 * L.length + 11) := by
+  induction L with
+  | nil =>
+    intro R
+    constructor
+    · have hstep := stepElemBB_length_le [] R
+      calc
+        stateTokenCount (sweepBB [] R) = stateTokenCount (stepElemBB [] R) := by simp [sweepBB]
+        _ ≤ R.length + 7 := by simpa using hstep
+        _ ≤ [].length + R.length + 4 * [].length + 12 := by omega
+    · intro R1
+      have hstep := stepElemBB_length_le [] (.item (.run 0) :: R1)
+      calc
+        stateTokenCount (sweepBB [] (.item (.run 0) :: R1)) =
+            stateTokenCount (stepElemBB [] (.item (.run 0) :: R1)) := by simp [sweepBB]
+        _ ≤ R1.length + 1 + 7 := by simpa using hstep
+        _ ≤ [].length + R1.length + 1 + 4 * [].length + 11 := by omega
+  | cons t L1 ih =>
+    intro R
+    have hrecA (R' : List SymTok) :
+        stateTokenCount (sweepBB L1 R') ≤
+          L1.length + R'.length + 4 * L1.length + 12 :=
+      (ih R').1
+    have hrec0 (R' : List SymTok) :
+        stateTokenCount (sweepBB L1 (.item (.run 0) :: R')) ≤
+          L1.length + R'.length + 1 + 4 * L1.length + 11 :=
+      (ih (.item (.run 0) :: R')).2 R'
+    constructor
+    · cases t with
+      | item x =>
+        cases x with
+        | zero =>
+          have hstep := stepElemBB_length_le (.item .zero :: L1) R
+          calc
+            stateTokenCount (sweepBB (.item .zero :: L1) R) =
+                stateTokenCount (stepElemBB (.item .zero :: L1) R) := by simp [sweepBB]
+            _ ≤ L1.length + 1 + R.length + 7 := by simpa using hstep
+            _ ≤ (L1.length + 1) + R.length + 4 * (L1.length + 1) + 12 := by omega
+        | run d =>
+          cases d with
+          | zero =>
+            have hrec' := hrec0 R
+            calc
+              stateTokenCount (sweepBB (.item (.run 0) :: L1) R) =
+                  stateTokenCount (sweepBB L1 (.item (.run 0) :: R)) := by simp [sweepBB]
+              _ ≤ L1.length + R.length + 1 + 4 * L1.length + 11 := hrec'
+              _ ≤ (L1.length + 1) + R.length + 4 * (L1.length + 1) + 12 := by omega
+          | succ d =>
+            cases d with
+            | zero =>
+              have hBump := bumpSymR_length_le R
+              have hrec' := hrec0 (bumpSymR R)
+              calc
+                stateTokenCount (sweepBB (.item (.run 1) :: L1) R) =
+                    stateTokenCount (sweepBB L1 (.item (.run 0) :: bumpSymR R)) := by
+                      simp [sweepBB, strictList_eq]
+                _ ≤ L1.length + (bumpSymR R).length + 1 + 4 * L1.length + 11 := hrec'
+                _ ≤ (L1.length + 1) + R.length + 4 * (L1.length + 1) + 12 := by omega
+            | succ d =>
+              have hstep := stepElemBB_length_le (.item (.run (d + 2)) :: L1) R
+              calc
+                stateTokenCount (sweepBB (.item (.run (d + 2)) :: L1) R) =
+                    stateTokenCount (stepElemBB (.item (.run (d + 2)) :: L1) R) := by
+                      simp [sweepBB, strictNat_eq]
+                _ ≤ L1.length + 1 + R.length + 7 := by simpa using hstep
+                _ ≤ (L1.length + 1) + R.length + 4 * (L1.length + 1) + 12 := by omega
+      | repB1 k =>
+        have hEat := eatB1_length_le k R
+        have hrec' := hrecA (eatB1 k R)
+        calc
+          stateTokenCount (sweepBB (.repB1 k :: L1) R) =
+              stateTokenCount (sweepBB L1 (eatB1 k R)) := by simp [sweepBB, strictList_eq]
+          _ ≤ L1.length + (eatB1 k R).length + 4 * L1.length + 12 := hrec'
+          _ ≤ (L1.length + 1) + R.length + 4 * (L1.length + 1) + 12 := by omega
+      | rep2 p =>
+        cases hs : stripPrefixSym [.item (.run 0), .item (.run 1)] R with
+        | some R2 =>
+          have hprefix := stripPrefixSym_some _ R R2 hs
+          have hRlen : R.length = R2.length + 2 := by rw [hprefix]; simp
+          have hEat := eatB2_length_le p R2
+          have hrec' := hrec0 (.item (.run 1) :: eatB2 p R2)
+          calc
+            stateTokenCount (sweepBB (.rep2 p :: L1) R) =
+                stateTokenCount (sweepBB L1
+                  (.item (.run 0) :: .item (.run 1) :: eatB2 p R2)) := by
+                    simp [sweepBB, hs, strictList_eq]
+            _ ≤ L1.length + ( .item (.run 1) :: eatB2 p R2).length + 1 +
+                  4 * L1.length + 11 := hrec'
+            _ ≤ (L1.length + 1) + R.length + 4 * (L1.length + 1) + 12 := by
+                  simp
+                  omega
+        | none =>
+          have hPeel := peelTok_length_le (.rep2 p) L1
+          have hstep := stepElemBB_length_le (peelTok (.rep2 p) L1) R
+          calc
+            stateTokenCount (sweepBB (.rep2 p :: L1) R) =
+                stateTokenCount (stepElemBB (peelTok (.rep2 p) L1) R) := by
+                  simp [sweepBB, hs, strictList_eq]
+            _ ≤ (peelTok (.rep2 p) L1).length + R.length + 7 := hstep
+            _ ≤ (L1.length + 1) + R.length + 4 * (L1.length + 1) + 12 := by omega
+      | rep12 m =>
+        cases hs : stripPrefixSym [.item (.run 0), .item (.run 1)] R with
+        | some R2 =>
+          have hprefix := stripPrefixSym_some _ R R2 hs
+          have hRlen : R.length = R2.length + 2 := by rw [hprefix]; simp
+          have hEat := eatB12R_length_le m R2
+          have hrec' := hrec0 (.item (.run 1) :: eatB12R m R2)
+          calc
+            stateTokenCount (sweepBB (.rep12 m :: L1) R) =
+                stateTokenCount (sweepBB L1
+                  (.item (.run 0) :: .item (.run 1) :: eatB12R m R2)) := by
+                    simp [sweepBB, hs, strictList_eq]
+            _ ≤ L1.length + (.item (.run 1) :: eatB12R m R2).length + 1 +
+                  4 * L1.length + 11 := hrec'
+            _ ≤ (L1.length + 1) + R.length + 4 * (L1.length + 1) + 12 := by
+                  simp
+                  omega
+        | none =>
+          have hPeel := peelTok_length_le (.rep12 m) L1
+          have hstep := stepElemBB_length_le (peelTok (.rep12 m) L1) R
+          calc
+            stateTokenCount (sweepBB (.rep12 m :: L1) R) =
+                stateTokenCount (stepElemBB (peelTok (.rep12 m) L1) R) := by
+                  simp [sweepBB, hs, strictList_eq]
+            _ ≤ (peelTok (.rep12 m) L1).length + R.length + 7 := hstep
+            _ ≤ (L1.length + 1) + R.length + 4 * (L1.length + 1) + 12 := by omega
+    · intro R1
+      cases t with
+      | item x =>
+        cases x with
+        | zero =>
+          have hstep := stepElemBB_length_le (.item .zero :: L1) (.item (.run 0) :: R1)
+          calc
+            stateTokenCount (sweepBB (.item .zero :: L1) (.item (.run 0) :: R1)) =
+                stateTokenCount (stepElemBB (.item .zero :: L1) (.item (.run 0) :: R1)) := by
+                  simp [sweepBB]
+            _ ≤ L1.length + 1 + (R1.length + 1) + 7 := by simpa using hstep
+            _ ≤ (L1.length + 1) + R1.length + 1 + 4 * (L1.length + 1) + 11 := by omega
+        | run d =>
+          cases d with
+          | zero =>
+            have hrec' := hrec0 (.item (.run 0) :: R1)
+            calc
+              stateTokenCount (sweepBB (.item (.run 0) :: L1) (.item (.run 0) :: R1)) =
+                  stateTokenCount (sweepBB L1 (.item (.run 0) :: .item (.run 0) :: R1)) := by
+                    simp [sweepBB]
+              _ ≤ L1.length + R1.length + 1 + 1 + 4 * L1.length + 11 := by
+                    simpa using hrec'
+              _ ≤ (L1.length + 1) + R1.length + 1 + 4 * (L1.length + 1) + 11 := by omega
+          | succ d =>
+            cases d with
+            | zero =>
+              have hBump : bumpSymR (.item (.run 0) :: R1) =
+                  .item (.run 1) :: R1 := by simp [bumpSymR, strictNat_eq]
+              have hrec' := hrec0 (.item (.run 1) :: R1)
+              calc
+                stateTokenCount (sweepBB (.item (.run 1) :: L1) (.item (.run 0) :: R1)) =
+                    stateTokenCount (sweepBB L1
+                      (.item (.run 0) :: .item (.run 1) :: R1)) := by
+                        simp [sweepBB, strictList_eq, hBump]
+                _ ≤ L1.length + R1.length + 1 + 1 + 4 * L1.length + 11 := by
+                      simpa using hrec'
+                _ ≤ (L1.length + 1) + R1.length + 1 + 4 * (L1.length + 1) + 11 := by omega
+            | succ d =>
+              have hstep := stepElemBB_length_le (.item (.run (d + 2)) :: L1) (.item (.run 0) :: R1)
+              calc
+                stateTokenCount (sweepBB (.item (.run (d + 2)) :: L1) (.item (.run 0) :: R1)) =
+                    stateTokenCount (stepElemBB (.item (.run (d + 2)) :: L1) (.item (.run 0) :: R1)) := by
+                      simp [sweepBB, strictNat_eq]
+                _ ≤ L1.length + 1 + (R1.length + 1) + 7 := by simpa using hstep
+                _ ≤ (L1.length + 1) + R1.length + 1 + 4 * (L1.length + 1) + 11 := by omega
+      | repB1 k =>
+        have hEat := eatB1_length_le k (.item (.run 0) :: R1)
+        have hrec' := hrecA (eatB1 k (.item (.run 0) :: R1))
+        calc
+          stateTokenCount (sweepBB (.repB1 k :: L1) (.item (.run 0) :: R1)) =
+              stateTokenCount (sweepBB L1 (eatB1 k (.item (.run 0) :: R1))) := by
+                simp [sweepBB, strictList_eq]
+          _ ≤ L1.length + (eatB1 k (.item (.run 0) :: R1)).length +
+                4 * L1.length + 12 := hrec'
+          _ ≤ (L1.length + 1) + R1.length + 1 + 4 * (L1.length + 1) + 11 := by omega
+      | rep2 p =>
+        cases hs : stripPrefixSym [.item (.run 0), .item (.run 1)]
+            (.item (.run 0) :: R1) with
+        | some R2 =>
+          have hprefix := stripPrefixSym_some _ (.item (.run 0) :: R1) R2 hs
+          have hRlen : (.item (.run 0) :: R1).length = R2.length + 2 := by
+            rw [hprefix]
+            simp
+          have hEat := eatB2_length_le p R2
+          have hrec' := hrec0 (.item (.run 1) :: eatB2 p R2)
+          calc
+            stateTokenCount (sweepBB (.rep2 p :: L1) (.item (.run 0) :: R1)) =
+                stateTokenCount (sweepBB L1
+                  (.item (.run 0) :: .item (.run 1) :: eatB2 p R2)) := by
+                    simp [sweepBB, hs, strictList_eq]
+            _ ≤ L1.length + (.item (.run 1) :: eatB2 p R2).length + 1 +
+                  4 * L1.length + 11 := hrec'
+            _ ≤ (L1.length + 1) + R1.length + 1 +
+                  4 * (L1.length + 1) + 11 := by
+                    simp
+                    omega
+        | none =>
+          have hPeel := peelTok_length_le (.rep2 p) L1
+          have hstep := stepElemBB_length_le (peelTok (.rep2 p) L1) (.item (.run 0) :: R1)
+          calc
+            stateTokenCount (sweepBB (.rep2 p :: L1) (.item (.run 0) :: R1)) =
+                stateTokenCount (stepElemBB (peelTok (.rep2 p) L1) (.item (.run 0) :: R1)) := by
+                  simp [sweepBB, hs, strictList_eq]
+            _ ≤ (peelTok (.rep2 p) L1).length + (R1.length + 1) + 7 := hstep
+            _ ≤ (L1.length + 1) + R1.length + 1 + 4 * (L1.length + 1) + 11 := by omega
+      | rep12 m =>
+        cases hs : stripPrefixSym [.item (.run 0), .item (.run 1)]
+            (.item (.run 0) :: R1) with
+        | some R2 =>
+          have hprefix := stripPrefixSym_some _ (.item (.run 0) :: R1) R2 hs
+          have hRlen : (.item (.run 0) :: R1).length = R2.length + 2 := by
+            rw [hprefix]
+            simp
+          have hEat := eatB12R_length_le m R2
+          have hrec' := hrec0 (.item (.run 1) :: eatB12R m R2)
+          calc
+            stateTokenCount (sweepBB (.rep12 m :: L1) (.item (.run 0) :: R1)) =
+                stateTokenCount (sweepBB L1
+                  (.item (.run 0) :: .item (.run 1) :: eatB12R m R2)) := by
+                    simp [sweepBB, hs, strictList_eq]
+            _ ≤ L1.length + (.item (.run 1) :: eatB12R m R2).length + 1 +
+                  4 * L1.length + 11 := hrec'
+            _ ≤ (L1.length + 1) + R1.length + 1 +
+                  4 * (L1.length + 1) + 11 := by
+                    simp
+                    omega
+        | none =>
+          have hPeel := peelTok_length_le (.rep12 m) L1
+          have hstep := stepElemBB_length_le (peelTok (.rep12 m) L1) (.item (.run 0) :: R1)
+          calc
+            stateTokenCount (sweepBB (.rep12 m :: L1) (.item (.run 0) :: R1)) =
+                stateTokenCount (stepElemBB (peelTok (.rep12 m) L1) (.item (.run 0) :: R1)) := by
+                  simp [sweepBB, hs, strictList_eq]
+            _ ≤ (peelTok (.rep12 m) L1).length + (R1.length + 1) + 7 := hstep
+            _ ≤ (L1.length + 1) + R1.length + 1 + 4 * (L1.length + 1) + 11 := by omega
+
+theorem sweepBB_length_bound4 (L R : List SymTok) :
+    stateTokenCount (sweepBB L R) ≤ L.length + R.length + 4 * L.length + 12 :=
+  (sweepBB_length_bound4_pair L R).1
+
 theorem sweepBB_length_bound (L R : List SymTok) :
     stateTokenCount (sweepBB L R) ≤ L.length + R.length + 5 * L.length + 12 := by
   generalize hn : L.length = n
