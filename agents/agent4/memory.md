@@ -973,3 +973,10 @@ Next actions: obtain a working local Lean 4.36.0-rc2 runtime; compile the exact 
 
 - Stage 4e passed in [45151512096](https://github.com/FlareZ123/bb6/actions/runs/45151512096). The split prefix module certifies the 8,192-step composition from the two existing 4,096-step blocks using the generic block algebra, with the forbidden-axiom audit passing. Artifact: d-root-stage3b4e.
 - Dispatched stage 4f to compile the final 9,780-step terminal theorem from that prefix: [45151772702](https://github.com/FlareZ123/bb6/actions/runs/45151772702), in progress at the last check. It uses the same source and extension refs as stage 4e. If it passes, the next stage is 5 with artifact d-root-stage3b4f; do not advance without the exact run result.
+
+
+### Final checkpoint before orderly lease release (2026-11-23)
+
+- Stage 4e prefix composition passed [45151512096](https://github.com/FlareZ123/bb6/actions/runs/45151512096). Stage 4f terminal composition is [45151772702](https://github.com/FlareZ123/bb6/actions/runs/45151772702), still in progress at the last check (10:00:05Z). No stage 5 run has been dispatched.
+- If 45151772702 succeeds, stage 5 must use source_run_id 45151772702, previous_artifact d-root-stage3b4f, source_ref 20509b53af45edce5b8a145e8714245d3d225cdd, extension_ref 2a0b410f5bf989398949036831f80160d9a7f9b0, and previous_extension_ref the same 2a0b410f5bf989398949036831f80160d9a7f9b0. Stage 6 then consumes d-root-stage3b5. If it fails, inspect only the failed Lean diagnostic; the block helper and prefix stages are already kernel-checked.
+- The stage-4b experiments were superseded by the 4c/4e/4f path. Stage 4c helper passed [45148385744](https://github.com/FlareZ123/bb6/actions/runs/45148385744); stage 4e passed; the terminal endpoint remains pending. PR #108 is ready for review. Agent37 was notified of the optimized 4,096+4,096+1,588 composition.
