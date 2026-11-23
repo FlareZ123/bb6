@@ -14,6 +14,17 @@ STATUS: original-source proof DRAFT, not compiled or axiom-audited.
 def s3D (n t : ℕ) : Cfg (Fin 2) (Fin 6) :=
   cfg_CR_n_n [(0,0)] (List.replicate (4*n+5) (0,0) ++ [(0,0),(t,0)])
 
+
+/-- Moving a single zero across a homogeneous zero run (source-list normalizer). -/
+private theorem s3_zero_push (k : ℕ) (R : List (ℕ × ℕ)) :
+    List.replicate k (0,0) ++ ((0,0)::R) =
+      (0,0)::(List.replicate k (0,0) ++ R) := by
+  induction k with
+  | zero => rfl
+  | succ k ih =>
+      simpa only [List.replicate_succ, List.cons_append] using
+        congrArg (List.cons (0,0)) ih
+
 private theorem s3_cr_zero (L R : List (ℕ × ℕ)) :
     ReachesPlus target
       (cfg_CR_n_n ((0,0)::L) R)
@@ -109,7 +120,7 @@ private theorem s3_el_sweep (k : ℕ) (L R : List (ℕ × ℕ)) :
     have h1 := s3_el_zero L (List.replicate (k+1) (0,0) ++ R)
     have h2 := ih ((0,0)::L) R
     exact ReachesPlus.trans h1
-      (by simpa [List.replicate_succ, List.cons_append,
+      (by simpa [s3_zero_push, List.replicate_succ, List.cons_append,
         List.append_assoc] using h2)
 
 private theorem s3_dr_sweep (k : ℕ) (L R : List (ℕ × ℕ)) :
@@ -123,7 +134,7 @@ private theorem s3_dr_sweep (k : ℕ) (L R : List (ℕ × ℕ)) :
     have h1 := s3_dr_zero (List.replicate (k+1) (0,0) ++ L) R
     have h2 := ih L ((0,0)::R)
     exact ReachesPlus.trans h1
-      (by simpa [List.replicate_succ, List.cons_append,
+      (by simpa [s3_zero_push, List.replicate_succ, List.cons_append,
         List.append_assoc] using h2)
 
 /-- Corrected eight-successor prefix, retaining the arbitrary singleton suffix. -/
@@ -195,7 +206,7 @@ theorem s3_universal_suffix_shift (n t : ℕ) :
         (cfg_DR_n_n [(1,0)] ((1,0)::
           (List.replicate (4*n+8) (0,0) ++ [(t,0)])))
         (s3D (n+1) t) := by
-    simpa [s3D, List.replicate_add, List.replicate_succ,
+    simpa [s3D, s3_zero_push, List.replicate_add, List.replicate_succ,
       List.cons_append, List.append_assoc, Nat.mul_add, Nat.add_assoc] using h6
   have hchain := ReachesPlus.trans h1
     (ReachesPlus.trans h2
