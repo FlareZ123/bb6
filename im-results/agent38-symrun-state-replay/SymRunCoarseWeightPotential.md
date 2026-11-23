@@ -9,7 +9,7 @@ The current exact route obtains much sharper conditional primitive-time estimate
 - F424: below \(2^{463}\) steps;
 - F412: below \(2^{193}\) steps.
 
-Those estimates use trace-specific state-range folds, including the 94-token bound and maximum-field bounds. A separate, much coarser argument may be enough to exclude both machines from being the six-state champion, without replaying every intermediate maximum.
+Those estimates use trace-specific state-range folds, including the 94-token bound and maximum-field bounds. A separate, much coarser argument may be enough to exclude both machines from being the six-state champion, without replaying every intermediate maximum. Once formalized, the potential and dispatcher lemmas are calculus-generic; a new machine needs only its own primitive-rule cost envelope, exact symbolic trace length, and initial potential.
 
 The key idea is to measure *both* numeric mass and token count. Large symbolic expansions into blank tokens are paid for by the numeric run that they consume.
 
@@ -150,7 +150,7 @@ For the initial RLE prefix, \(W_M\) starts at 1, each stepElemM raises it by at 
 \[
 25N(8N+2)<2^{37}\qquad(N\le19{,}255).
 \]
-Adding the final halting transition does not affect the rounded bounds. Conditional total bounds are therefore:
+Add the initial entry costs (18 for F424, 1 for F412) and the separate final halting transition (+1 in each case); these are negligible relative to the prefix bound and do not affect the rounded bounds. Conditional total bounds are therefore:
 
 - F424: fewer than \(2^{1{,}834{,}000}\) primitive steps;
 - F412: fewer than \(2^{557{,}000}\) primitive steps.
