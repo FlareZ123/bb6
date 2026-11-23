@@ -263,12 +263,34 @@ theorem treeParentClosed (F : FrozenTreeTable) (r k : Nat)
     have hh : h ≤ (F.nodeAt n).r := hHidden hydef huodd
     obtain ⟨hDpos,hD,hS⟩ := F.specialBounds ⟨n,hn⟩ ⟨h,by omega⟩
     have hN : 55 ≤ 1458*t+(F.nodeAt n).s+h := by omega
+    have hspecialNode :
+        (F.nodeAt n).C*3^h*(3*2^a+a+2)
+          + 2^h*((F.nodeAt n).C-(F.nodeAt n).b+(F.nodeAt n).c)
+          = 2^(1458*t+(F.nodeAt n).s+h) := by
+      simpa using hspecial
+    have hsplit :
+        (F.nodeAt n).C*3^h*(3*2^a+a+2)
+          = 3*((F.nodeAt n).C*3^h)*2^a
+              + (F.nodeAt n).C*3^h*(a+2) := by
+      have hsum : 3*2^a+a+2 = 3*2^a+(a+2) := by omega
+      rw [hsum, Nat.mul_add]
+      ac_rfl
+    have hspecial' :
+        3*((F.nodeAt n).C*3^h)*2^a
+          + (F.nodeAt n).C*3^h*(a+2)
+          + 2^h*((F.nodeAt n).C-(F.nodeAt n).b+(F.nodeAt n).c)
+          = 2^(1458*t+(F.nodeAt n).s+h) := by
+      calc
+        _ = (F.nodeAt n).C*3^h*(3*2^a+a+2)
+              + 2^h*((F.nodeAt n).C-(F.nodeAt n).b+(F.nodeAt n).c) := by
+          rw [← hsplit]
+        _ = _ := hspecialNode
     exact False.elim
       (no_special_affine
         ((F.nodeAt n).C*3^h)
         (2^h*((F.nodeAt n).C-(F.nodeAt n).b+(F.nodeAt n).c))
         a (1458*t+(F.nodeAt n).s+h)
-        hDpos hD hS hN hspecial)
+        hDpos hD hS hN hspecial')
 
 theorem indexedBasin_not10 (F : FrozenTreeTable) (t : Nat)
     (ht : 1 ≤ t) :
@@ -278,6 +300,8 @@ theorem indexedBasin_not10 (F : FrozenTreeTable) (t : Nat)
   have hpow : 2^55 ≤ 2^(1458*t+(F.nodeAt n).s) :=
     Nat.pow_le_pow_right (by decide) hN
   have hsmall := F.nodeTenBound ⟨n,hn⟩
+  have hsmall' : (F.nodeAt n).C*10+(F.nodeAt n).c < 2^55 := by
+    simpa using hsmall
   unfold affineNodeValue at hval
   omega
 
@@ -300,7 +324,12 @@ theorem treeNoEvenReach (F : FrozenTreeTable) (r k : Nat)
   have ht : 1 ≤ t := by
     have := F.residuePos r hr
     omega
-  have hclosed := treeParentClosed F r k hr
+  have hclosed :
+      ∀ {x y}, x%2=0 →
+        indexedAffineBasin t F.nodeAt F.nodeCount y →
+        EvenEdge x y →
+        indexedAffineBasin t F.nodeAt F.nodeCount x := by
+    exact treeParentClosed F r k hr
   have hnot10 := indexedBasin_not10 F t ht
   have hroot : indexedAffineBasin t F.nodeAt F.nodeCount (2^(1458*t)) := by
     refine ⟨0,F.nodeCountPos,?_⟩
@@ -311,6 +340,8 @@ theorem treeNoEvenReach (F : FrozenTreeTable) (r k : Nat)
 end SheepPower1458
 
 namespace SheepPower1458
+
+open SheepEven
 
 def t1TreeTable : FrozenTreeTable where
   rs := residues_t1
@@ -564,7 +595,7 @@ def h7a2TreeTable : FrozenTreeTable where
     intro n child h a he
     simp [edges_h7a2] at he
     rcases he with ⟨rfl,rfl,rfl,rfl⟩
-    all_goals decide
+    try all_goals decide
 
   nodeProps := by
     decide
@@ -629,7 +660,7 @@ def h7a4TreeTable : FrozenTreeTable where
     intro n child h a he
     simp [edges_h7a4] at he
     rcases he with ⟨rfl,rfl,rfl,rfl⟩
-    all_goals decide
+    try all_goals decide
 
   nodeProps := by
     decide
