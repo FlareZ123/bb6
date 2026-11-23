@@ -196,7 +196,7 @@ theorem s3_residual_one_suffix_reset (n : ℕ) (T : List (ℕ × ℕ)) :
       (List.replicate (4*n+8) (0,0) ++ [(1,0)]))
   have h6 := s3_cr_zero
     (bumpPairHead
-      (List.replicate (4*n+8) (0,0) ++ [(1,0)])
+      (List.replicate (4*n+8) (0,0) ++ [(1,0)]))
     [(0,0)]
   have h7 := s3o_cr_one_zero
     (List.replicate (4*n+6) (0,0) ++ [(1,0)])
