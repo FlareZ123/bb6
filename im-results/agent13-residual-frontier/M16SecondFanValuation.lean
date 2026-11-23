@@ -1,9 +1,18 @@
-import M16SecondFanProbe
+import CSourceBridge16
 
 set_option maxRecDepth 20000
 set_option maxHeartbeats 0
 
 namespace BB6.Agent13M16SecondFan
+
+def aResidue (s : Nat) : Nat := (16 - ((2*s+3)%16))%16
+def kResidue (r s : Nat) : Nat := (s+5+16-(3*r)%16)%16
+def qRep (x : Nat) : Nat := CCert.q (x+16)
+
+def parentNotExcludedResidue (r s : Nat) : Bool :=
+  CCert.seen (qRep (aResidue s))
+    (qRep (kResidue r s)) (CCert.q 0)
+
 
 /-- For F=2^d*q and n=2*r, the quotient's third parent coordinate is
     s = (F/2^(2*r)) mod 16. -/
