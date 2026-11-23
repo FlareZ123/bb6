@@ -23,6 +23,116 @@ open BB6Coverage.Agent49M0EvenFourteenQ4Prefix
 
 set_option maxHeartbeats 3000000
 
+private theorem m0EvenFourteen_sweptLeft_head_eq_source (q : Nat)
+    (T : Int → Bool) (h : Int) :
+    sweptLeft q T h (h-(q:Int)) = T (h-(q:Int)) := by
+  induction q generalizing T h with
+  | zero => simp [sweptLeft]
+  | succ q ih =>
+    have hcoord : h-(((q+1:Nat):Int)) = (h-1)-(q:Int) := by omega
+    change sweptLeft q (holeThree T h) (h-1)
+        (h-(((q+1:Nat):Int))) = T (h-(((q+1:Nat):Int)))
+    rw [hcoord, ih (holeThree T h) (h-1)]
+    have hne1 : (h-1)-(q:Int) ≠ h+1 := by omega
+    have hne2 : (h-1)-(q:Int) ≠ h := by omega
+    simp [holeThree,hne1,hne2]
+
+private theorem m0EvenFourteen_sweptLeft_head_plus1_false (q : Nat)
+    (T : Int → Bool) (h : Int) :
+    sweptLeft (q+1) T h (h-(q:Int)) = false := by
+  induction q generalizing T h with
+  | zero =>
+    simp [sweptLeft,holeThree] <;> omega
+  | succ q ih =>
+    have hcoord : h-(((q+1:Nat):Int)) = (h-1)-(q:Int) := by omega
+    change sweptLeft (q+1) (holeThree T h) (h-1)
+      (h-(((q+1:Nat):Int))) = false
+    rw [hcoord]
+    exact ih (holeThree T h) (h-1)
+
+private theorem m0EvenFourteen_leftSweep_one (T : Int → Bool) (h : Int)
+    (ht : T h = true) :
+    run tm2 1 ⟨3,h,T⟩ = some ⟨1,h+1,T⟩ := by
+  change rawStep tm2 ⟨3,h,T⟩ = some ⟨1,h+1,T⟩
+  simp only [rawStep,readSlot,ht]
+  have he : tm2 ((3:Fin 6),true) = some ⟨true,true,1⟩ := rfl
+  rw [he]
+  simp only [Option.map_some,applyMove]
+  apply congrArg (fun f : Int → Bool => some (Config.mk 1 (h+1) f))
+  funext x
+  by_cases hx : x=h <;> simp [hx,ht]
+
+private theorem m0EvenFourteen_leftSweep_two (T : Int → Bool) (h : Int)
+    (ht : T h = true) (hr : T (h+1) = false) :
+    run tm2 2 ⟨3,h,T⟩ =
+      some ⟨2,h,(fun x => if x = h+1 then true else T x)⟩ := by
+  rw [show 2 = 1+1 by omega,run_append,m0EvenFourteen_leftSweep_one T h ht]
+  simp only [Option.bind_some]
+  change rawStep tm2 ⟨1,h+1,T⟩ =
+    some ⟨2,h,(fun x => if x = h+1 then true else T x)⟩
+  simp only [rawStep,readSlot,hr]
+  have he : tm2 ((1:Fin 6),false) = some ⟨true,false,2⟩ := rfl
+  rw [he]
+  simp only [Option.map_some,applyMove]
+  have hcoord : h+1+(-1) = h := by omega
+  simpa [hcoord]
+
+/-- Lower head bound for every prefix of the 3-cell grouped left sweep. -/
+private theorem m0EvenFourteen_counted_left_sweep_heads
+    (N : Nat) (T : Int → Bool) (h : Int)
+    (hOn : leftOnes T h N) (hr : T (h+1) = false)
+    (k : Nat) (hk : k < 3*N) (d : Config)
+    (hd : run tm2 k ⟨3,h,T⟩ = some d) :
+    h-(N:Int) ≤ d.head := by
+  let q := k/3
+  let r := k%3
+  have hkdecomp : k = 3*q+r := by dsimp [q,r]; omega
+  have hq : q < N := by dsimp [q]; omega
+  have hqOn : leftOnes T h q := by
+    intro i hi
+    exact hOn i (by omega)
+  have hqrun := counted_left_sweep q T h hqOn hr
+  let Tq := sweptLeft q T h
+  have hqhead : Tq (h-(q:Int)) = true := by
+    rw [show Tq = sweptLeft q T h by rfl,m0EvenFourteen_sweptLeft_head_eq_source]
+    exact hOn q hq
+  have hqright : Tq (h-(q:Int)+1) = false := by
+    change sweptLeft q T h (h-(q:Int)+1) = false
+    by_cases hq0 : q = 0
+    · rw [hq0]
+      simpa [sweptLeft] using hr
+    · obtain ⟨q',hq'⟩ := Nat.exists_eq_succ_of_ne_zero hq0
+      rw [hq']
+      have hfalse := m0EvenFourteen_sweptLeft_head_plus1_false q' T h
+      have hcoord : h-(((q'+1:Nat):Int))+1 = h-(q':Int) := by omega
+      simpa only [hcoord] using hfalse
+  have hqrun' :
+      run tm2 (3*q) ⟨3,h,T⟩ =
+        some ⟨3,h-(q:Int),Tq⟩ := by
+    simpa [Tq] using hqrun
+  rw [hkdecomp,run_append,hqrun'] at hd
+  simp only [Option.bind_some] at hd
+  have hrlt : r < 3 := Nat.mod_lt _ (by decide)
+  have hrCases : r=0 ∨ r=1 ∨ r=2 := by omega
+  rcases hrCases with hr0|hr1|hr2
+  · rw [hr0] at hd
+    simp [run] at hd
+    subst d
+    change h-(N:Int) ≤ h-(q:Int)
+    omega
+  · rw [hr1] at hd
+    rw [m0EvenFourteen_leftSweep_one Tq (h-(q:Int)) hqhead] at hd
+    have heq := Option.some.inj hd
+    subst d
+    change h-(N:Int) ≤ h-(q:Int)+1
+    omega
+  · rw [hr2] at hd
+    rw [m0EvenFourteen_leftSweep_two Tq (h-(q:Int)) hqhead hqright] at hd
+    have heq := Option.some.inj hd
+    subst d
+    change h-(N:Int) ≤ h-(q:Int)
+    omega
+
 private theorem fRun_prefix_exists {m c n k d}
     (h : fRun m n c = some d) (hk : k ≤ n) :
     ∃ e, fRun m k c = some e := by
@@ -51,7 +161,7 @@ private theorem m0EvenFourteen_bridge_prefix_lower
     (hd : run tm2 j ⟨3,h,T⟩ = some d) :
     h-9 ≤ d.head := by
   obtain ⟨e,hexact⟩ :=
-    fRun_prefix_exists m0EvenFourteenBridge_exact (by omega)
+    fRun_prefix_exists (k := j) m0EvenFourteenBridge_exact (by omega)
   have hcheckj :
       (List.range j).all (fun k =>
         match fRun tm2 k m0EvenFourteenBridgeStart with
@@ -64,11 +174,14 @@ private theorem m0EvenFourteen_bridge_prefix_lower
       omega
     exact (List.all_eq_true.mp m0EvenFourteenBridge_heads) k
       (List.mem_range.mpr hk39)
-  have hbridge := bridgeAt T h m0EvenFourteenInside
+  have hbridgeFrame := bridgeAt T h m0EvenFourteenInside
     m0EvenFourteenBridgeStart e j rfl hexact hcheckj hmatch
+  have hbridge : run tm2 j ⟨3,h,T⟩ =
+      some (frameAt T h m0EvenFourteenInside e) := by
+    simpa [m0EvenFourteenBridgeStart] using hbridgeFrame
   rw [hbridge] at hd
   have hdeq : d = frameAt T h m0EvenFourteenInside e :=
-    Option.some.inj hd
+    (Option.some.inj hd).symm
   have hinside : m0EvenFourteenInside e.head = true := by
     have hh := (List.all_eq_true.mp m0EvenFourteenBridge_heads) j
       (List.mem_range.mpr hj)
@@ -92,8 +205,8 @@ private theorem E_scan_prefix_head
   have hrun := E_scan T h j hlinearJ
   rw [hrun] at hd
   have heq := Option.some.inj hd
-  simp at heq
-  omega
+  cases heq
+  rfl
 
 private theorem m0EvenFourteenQ4LeftFacingPrefixTrue
     (a i : Nat) (ha : 0<a) (hi : i < 3*a) :
@@ -181,10 +294,10 @@ theorem m0EvenFourteen_q4_prefix_head_bound
     have hframeConfig :
         frameAt T1 hN m0EvenFourteenInside m0EvenFourteenBridgeEnd =
           (⟨4,hN+3,T2⟩ : Config) := by
-      apply config_ext_by_fields
+      apply config_ext
       · simp [frameAt_state,m0EvenFourteenBridgeEnd]
       · simp [frameAt_head,m0EvenFourteenBridgeEnd] <;> omega
-      · simp [m0EvenFourteenQ4CutTape,T,N,T1,hN,T2]
+      · rfl
     rw [hframeConfig] at hBridge
     exact hBridge
   have hlinear : linearRightOnes T2 (hN+3) (3*(a-1)) := by
@@ -195,8 +308,7 @@ theorem m0EvenFourteen_q4_prefix_head_bound
     have htrue := m0EvenFourteenQ4LeftFacingPrefixTrue a j ha hj
     have hval :
         m0EvenFourteenQ4CutTape a b h (h-(j:Int)) = true := by
-      rw [hleftCut,htrue]
-      rfl
+      simpa [htrue] using hleftCut
     have hcoord : hN+3+(i:Int) = h-(j:Int) := by
       dsimp [hN,N,j]
       omega
@@ -205,15 +317,15 @@ theorem m0EvenFourteen_q4_prefix_head_bound
   let p1 := 3*N
   let p2 := p1+39
   by_cases hk1 : k < p1
-  · have hlow := counted_left_sweep_heads N T h hOn hright k
-      (by dsimp [p1]; omega) d hd
+  · have hlow :=   m0EvenFourteen_counted_left_sweep_heads N T h hOn hright k
+      (by omega) d hd
     dsimp [hN,N] at *
     omega
   · by_cases hk2 : k < p2
     · let j := k-p1
       have hj : j<39 := by dsimp [j,p1] at *; omega
       have hkEq : k=p1+j := by dsimp [j,p1]; omega
-      rw [hkEq,run_add,hSweep] at hd
+      rw [hkEq,run_append,hSweep] at hd
       simp only [Option.bind_some] at hd
       have hlow := m0EvenFourteen_bridge_prefix_lower T1 hN hmatch j hj d hd
       dsimp [hN,N] at *
@@ -221,9 +333,9 @@ theorem m0EvenFourteen_q4_prefix_head_bound
     · let j := k-p2
       have hj : j<3*(a-1) := by dsimp [j,p2,p1,N] at *; omega
       have hkEq : k=p1+(39+j) := by dsimp [j,p2,p1]; omega
-      rw [hkEq,run_add,hSweep] at hd
+      rw [hkEq,run_append,hSweep] at hd
       simp only [Option.bind_some] at hd
-      rw [run_add,hBridge'] at hd
+      rw [run_append,hBridge'] at hd
       simp only [Option.bind_some] at hd
       have hhead := E_scan_prefix_head T2 (hN+3) (3*(a-1)) hlinear j hj d hd
       dsimp [hN,N] at *
