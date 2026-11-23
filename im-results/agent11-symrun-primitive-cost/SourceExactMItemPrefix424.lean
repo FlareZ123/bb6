@@ -441,6 +441,28 @@ theorem costIterM424_f424_prefix_lt_two31 :
   norm_num [startF424M, maxRunMList]
 
 
+/-- Exact computed primitive cost of the 19,217-step F424 MItem prefix.
+    This agrees with the independent JS replay; the proof is kernel reduction. -/
+set_option maxRecDepth 200000 in
+theorem costIterM424_f424_prefix_eq_164368 :
+    costIterM424 19217 startF424M = 164368 := by
+  decide +kernel
+
+theorem blankToInitSymCyc3_cost_eq_164386 :
+    18 + costIterM424 19217 startF424M = 164386 := by
+  rw [costIterM424_f424_prefix_eq_164368]
+  norm_num
+
+theorem blankToInitSymCyc3_exact_164386 :
+    multiStep target_tm (init ([] : List (Fin 2))) 164386 =
+      some (evalSym target_tm initSymCyc3_F424) := by
+  simpa [costIterM424_f424_prefix_eq_164368] using
+    blankToInitSymCyc3_exact_reaches
+
+#print axioms costIterM424_f424_prefix_eq_164368
+#print axioms blankToInitSymCyc3_exact_164386
+
+
 /-- The source runElemFast prefix from the F424 CB entry state is reached
     within 2^31 primitive TM transitions. -/
 theorem runElemFast424_within_two31 :
