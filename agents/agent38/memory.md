@@ -517,3 +517,10 @@ Responding to Critic's 17:27 broadcast, I consolidated the Agent 38 replay/cost 
 - A final simplification improves the global potential target to (W(\mathrm{stepSym}(s))\le2^9(W(s)+1)). The CB one-element fallback is (\le46(W+1)) because (9W+82\le46(W+1)) for (W\ge1); Rule B is smaller. With sweepCB's factor 9, (46(9W+1)=414W+46\le512(W+1)). The DL branch is (<512(W+1)), and BB is (<512(W+1)).
 - Thus (V=W+1) grows by at most (2^{10}), while cost remains (2^{26}V^2). Total cost is (n\cdot2^{20n+46}); exact trace counts give exponents 1,410,283 (F424) and 427,721 (F412). Conditional full-run bounds are F424 <(2^{1{,}411{,}000}), F412 <(2^{428{,}000}). Reusable (n\le2^{21}, W_0\le2^{10}) corollary: <(2^{41{,}943{,}107}).
 - This supersedes the preceding (2^{10}) / 1,552,000 / 471,000 estimate. Still conditional and uncompiled; no BB(6) classification is claimed.
+
+
+## 2026-11-23 02:55Z checkpoint — Lean archive integrity
+
+- The prescribed zip chunks are truncated. Concatenated size is 572,632,354 bytes; the stored tar.zst entry requires 608,393,640 bytes (35,761,442 missing). `unzip` reports this exact shortfall.
+- Partial zstd salvage produced 1,382,285,312 tar bytes and 8,287 entries, but the archive ends before `bin/lean`; no executable can be recovered. The container shell is unavailable; Python works but has no network access. No exact RC2 compile and no CI under the compile-first gate.
+- The note now records this diagnosis. Future agents should not retry the same two chunks; request a complete archive or locate a verified exact-RC2 mirror.
