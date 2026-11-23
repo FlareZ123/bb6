@@ -2,6 +2,26 @@
 
 **Mathematical status:** **kernel-certified quantified finite-cardinality theorem for the unchanged repository's BB429 blank-root accelerator**, Lean 4.36.0-rc2 [manual source CI 45121153859](https://github.com/FlareZ123/bb6/actions/runs/45121153859), exact dependency closure and final axiom profile `[propext, Classical.choice, Quot.sound]` (no `sorryAx`). Its all-X square-root bound and zero-density interpretation follow by elementary logarithm arithmetic from that certificate. This is a nontrivial necessary-condition restriction on one authentic-root feeder family, **not** a blank-machine decision, an upper bound on BB(6), or a new halting witness. External novelty has not been established.
 
+## Universal odd-offset ray theorem (source-verified 2026-11-23 06:06 UTC)
+
+The q0 theorem above is now accompanied by a **strictly more general original-source mathematical restriction**. The Lean module [`BB429OddRayEntropy.lean`](BB429OddRayEntropy.lean) proves `BB429InverseWord.odd_ray_dyadic_shell_bound`:
+
+```lean
+∀ c k : Nat, c % 2 = 1 →
+  ∀ l : List Nat, l.Nodup →
+  (∀ a ∈ l, 16*2^k ≤ a ∧ a < 32*2^k ∧
+    ∃ b, BB429NewResidue.Reach a b ∧ b+c=2*a) →
+  l.length ≤ 32 * 2^(k/2)
+```
+
+Thus for **every fixed positive or zero odd offset `c`**, all first-coordinate values of truly blank-reachable `BB429` sections on **the entire diagonal affine ray** `b+c=2a` obey a square-root upper count within each dyadic shell `[16·2^k,32·2^k)`. This implies the set of such first-coordinate values has zero natural density, and it is **not** restricted to the branch-10 q0 exponential specialization. The proof constructs the genuine original-source reverse word for every input, derives its correct mod-four rank phase (0 or 2 according to `c mod4`), counts exactly `2^(k/2)` legal words, and injects each source counter into `(word, floor(a/2^k))`. The latter quotient is less than 32 on the stated shell, giving the finite pigeonhole count. No hand-picked finite reachability cutoff, bounded simulation, or assumption that the synthetic inverse language is fully reachable occurs.
+
+Complete original-repository-source Lean 4.36.0-rc2 **[CI 45121805424](https://github.com/FlareZ123/bb6/actions/runs/45121805424) passed**, importing and compiling all of `BB429Rank`, `BB429Mod8`, `BB429NewResidue`, and all five new Agent39 modules. The printed final theorem's transitive axioms are exactly **`[propext, Classical.choice, Quot.sound]`**, no `sorryAx` or `native_decide`.
+
+This is a **sparsity theorem, not a nonhalting theorem**: it leaves countably infinite possibilities for every nonterminal ray. In particular `c=1` is the special halting line, whose authentic blank orbit contains at most one state anyway; the structural result is more interesting for nonhalting intermediate odd offsets such as `c=13`. It makes no assertion that the remaining sparse necessary rays are actually reachable.
+
+---
+
 ## Main result: a square-root, not merely modular, sieve
 
 Let `next`, `run` and the genuine blank section root `(0,0)` be the exact `BB429` definitions of [Agent 5's authenticated accelerator](../agent5-429-rank/BB429Rank.lean), with source inverse lemmas [`BB429NewResidue.odd_inverse/even_inverse`](../agent6-harmonic429/BB429NewResidue.lean). Define
