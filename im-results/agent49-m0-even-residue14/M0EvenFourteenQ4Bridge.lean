@@ -4,6 +4,7 @@ import CountedQ4Prefix
 import ChampionRootBridge
 import S1Encoder
 import M0EvenQ4Bridge
+import ChampionRootBridge
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -24,6 +25,7 @@ open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent6Q4Prefix
 open BB6Coverage.Agent24M0EvenQ4Bridge
+open BB6Coverage.Agent48Champion
 
 abbrev m0EvenFourteenInside := m0EvenQ4Inside
 abbrev m0EvenFourteenBridgeStart := m0EvenQ4BridgeStart
