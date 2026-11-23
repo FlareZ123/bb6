@@ -2743,3 +2743,34 @@ Current invocation claimed this identity at `2026-11-23T07:20:45.021Z` as `agent
 5. Agent 11 asked for a local preflight of `SourceExactF424Core.lean`; this invocation cannot supply it because the local shell failed at the tool boundary. Respond with that exact limitation rather than claiming a Lean result.
 
 Relevant files: `im-results/agent8-counted-reset/OuterLCIncPrelude.lean`; `im-results/agent38-root-q4tail/TM63RootQ4Tail.lean`; `im-results/agent38-root-q4tail/P2RootS0FrameIdentity.lean`; `im-results/agent42-q4-s0-drain/TM63GeneralQ4TerminalComposition.lean`; `im-results/agent44-tm63-middle/GeneralQ4TailTerminalComposition.lean`. All remain intermediate; BB(6) is unresolved.
+
+
+## 2026-11-23 continuation: repair exact q4Tail dependency closure
+
+Current invocation: `agent42-gpt6-20261123T094506615Z-tm63-q4-root-closure`, claimed at `2026-11-23T09:45:06.615Z`. Do not refresh this lease. After each checkpoint, compare the original timestamp to the actual runtime clock; the 70-minute threshold is `2026-11-23T10:55:06.615Z`.
+
+### Environment and exact CI evidence
+
+- Normal research mode was selected by the invocation's actual runtime random draw.
+- Attempted the prescribed local Lean 4.36.0-rc2 bootstrap once using the two mounted ZIP parts, extraction of the inner `tar.zst`, and `lean --version`. `container.exec` returned a tool-level `ClientError` before any shell output; no unzip integrity test, extraction, or Lean version was obtained. Do not repeat the identical bootstrap in this invocation.
+- Run `45150426746` (root-q4tail, source head `9cc394aa3a2281fea2156a6b48ac5d9f47bb57aa`) failed in exact source compilation. First diagnostics: cast-sensitive source-cell rewrites and unresolved finite marker-window coordinate goals in `OuterLCIncPrelude.lean`; `M0EvenEightQ4Bridge.lean` also had source-coordinate, BinDec quotient, and left-sweep errors. Printed `sorryAx` profiles were downstream of failed elaboration.
+- First repair checkpoint:
+  - `8e683e80d932b20d7c7daa514cebe8ad37598304`: explicit coordinate equalities for the positive y=1,2,3 cases in `M0EvenEightQ4Bridge`.
+  - `f051e9777c03b4e3118200ae100b22e99cd3e573`: explicit `s1Config_left_cell` indices, removal of a redundant final `rfl`, and marker-window coordinate normalization in `OuterLCIncPrelude`.
+- Run `45151724433` (root-q4tail, source head `f051e9777c03b4e3118200ae100b22e99cd3e573`) still failed. Exact new blockers:
+  - `OuterLCIncPrelude.outer_s1_counter_cell`: Nat-to-Int cast distribution prevented the explicit-index rewrite.
+  - `markerBridgeFrameOut_right_zero`: the coordinate equality was simplified too late, leaving three finite framed-tape goals.
+  - `M0EvenEightQ4Bridge`: the `hpow3) rewrite changed the RHS exponent; global `hdiv) rewriting changed the quotient on both sides; `binDec_zero) was missing from the source-facing simplification; the base-left-ones proof used `sideBit_d1pow` (not declared) and the wrong side of `sideBit_d1pow_append`; a redundant tactic remained; and the input-window coordinate proof tried to rewrite an absent cast occurrence.
+- Second repair checkpoint:
+  - `eb8ffb0b40ab91f14b6a13df8500e876d8f6d71a`: repaired both residue hpow3 proofs with lhs-only exponent rewriting, restricted the odd-quotient rewrite to the BinDec lhs, added `binDec_zero`, supplied local prefix/d1pow cell lemmas for the base-left-ones proof, simplified the sweep bound, and used `push_cast` for the input-window coordinate.
+  - `5294d387d4a29bee54be9e503268baafea8f1afb`: normalized the outer counter's expanded Nat cast with an explicit `hindex), and proved the three finite marker-output boundary coordinates separately before simplifying the frame.
+- The repaired root-q4tail run `45152560950` was queued at `2026-11-23T10:03:22Z`, pinned to source head `17a90dffaddfad7720a6a69c7ce7b73f8deb00b2`. Inspect its final status and failed-job logs before further edits. It has not yet been accepted.
+- Sent Agent 48 the M0 bridge patch details, Agent 38 the OuterLCIncPrelude patch details, and Agent 44 a non-duplication handoff: Agent 44 should own the isolated SymRun BB-cost follow-on; this identity is focused on TM63 q4 root closure.
+
+### Mathematical integration state
+
+- The preferred lower-bound path remains the direct arbitrary-A q4Tail-to-terminal construction, not another q4Tail recurrence. `GeneralQ4TailArithmetic.lean`, `GeneralQ4TailS1Reparam.lean`, `GeneralQ4TailS1Config.lean`, and `GeneralQ4TailTerminalComposition.lean` express the generic counted-drain + SectionResult dispatcher + marker-zero terminal chain.
+- `TM63GeneralQ4TerminalComposition.lean` composes the authentic blank-root q4Tail prefix with the arbitrary-A terminal theorem. Its root-frame identity is unshifted, while the authentic run endpoint is `shiftConfig rootMarker1Head rootSecondQ4TailFrame`; the wrapper correctly uses `shift_run rootMarker1Head` and `shift_s1_reset` to transport the terminal configuration and SectionBits endpoint. Static source review found the parameter/head-shift chain coherent, but this is not Lean acceptance.
+- No theorem in this direct terminal chain has yet been accepted in the current invocation. Keep all material in `im-results/`; do not modify `results/` or claim a published lower bound.
+- The q4Tail workflow target `root-q4tail` is in `.github/workflows/agent48-positive-z-q4-prefix.yml`; the separate `p2-s0-frame-identity` target is also available there. After root-q4tail passes, run that identity target. Then add named exact-closure targets to the existing `.github/workflows/agent42-champion-terminal-source.yml` for `GeneralQ4TailTerminalComposition.lean` and the full `TM63GeneralQ4TerminalComposition.lean` root closure; do not create a new workflow. The four root exports to audit are `tm63_blank_reaches_general_q4_terminal`, `tm63_general_q4_terminalSectionBits`, `tm63_blank_halts`, and `tm63_blank_attainable`. Report any transitive native-computation axioms explicitly; reject `sorryAx`.
+- The overall BB(6) exact value and universal upper bound remain unresolved.
