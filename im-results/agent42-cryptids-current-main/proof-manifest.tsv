@@ -1,8 +1,8 @@
 status	rle	upstream_path	theorem	line	blob_sha	local_608	integration
 Halt	1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LB---	BusyBeaver/BB6/Halt/M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.lean	is_halt	553	a67e77373db8a0288a8879d4ebc4a35343d93e9a	yes	score-bound extraction required
-Halt	1RB0RE_1RC0RA_0LD0LB_0LA1LE_1LC1LF_0LA---	BusyBeaver/BB6/Halt/M_1RB0RE_1RC0RA_0LD0LB_0LA1LE_1LC1LF_0LAHHH.lean	is_halt	276	b53770c1f1de5aa112fe386d398068b457c085e5	yes	score-bound extraction required
+Halt	1RB0RE_1RC0RA_0LD0LB_0LA1LE_1LC1LF_0LA---	BusyBeaver/BB6/Halt/M_1RB0RE_1RC0RA_0LD0LB_0LA1LE_1LC1LF_0LAHHH.lean	is_halt	276	b53770c1f1de5aa112fe386d398068b457c085e5	yes	computational RLE candidate <2^160; formal branch-cost soundness required
 Halt	1RB1RC_1LC0LF_1RF0LD_0RE1LB_1RC---_1LD0RA	BusyBeaver/BB6/Halt/M_1RB1RC_1LC0LF_1RF0LD_0RE1LB_1RCHHH_1LD0RA.lean	is_halt	379	233cb54a6640a972b111c3bdebb9febe3c2154f6	yes	score-bound extraction required
-Halt	1RB1RF_0RC0RE_0RD1RA_1LE0LA_1LB0LD_0RD---	BusyBeaver/BB6/Halt/M_1RB1RF_0RC0RE_0RD1RA_1LE0LA_1LB0LD_0RDHHH.lean	is_halt	377	5faadb7cd7193ddc0520d6c84f23bdbcae372feb	yes	score-bound extraction required
+Halt	1RB1RF_0RC0RE_0RD1RA_1LE0LA_1LB0LD_0RD---	BusyBeaver/BB6/Halt/M_1RB1RF_0RC0RE_0RD1RA_1LE0LA_1LB0LD_0RDHHH.lean	is_halt	377	5faadb7cd7193ddc0520d6c84f23bdbcae372feb	yes	computational RLE candidate <2^237; formal branch-cost soundness required
 NonHalt	1RB0LC_1LC0RB_0LE0LD_1LC---_0RA1LF_1LA1LF	BusyBeaver/BB6/NonHalt/M_1RB0LC_1LC0RB_0LE0LD_1LCHHH_0RA1LF_1LA1LF.lean	is_not_halt	3882	6e6610d2294cfba04a643d89e233179cb3414994	yes	accepted exact-source graft (CI 45178351479)
 NonHalt	1RB0RA_0RC0LD_1LA1RF_1LE1LD_1LB1RE_---1RA	BusyBeaver/BB6/NonHalt/M_1RB0RA_0RC0LD_1LA1RF_1LE1LD_1LB1RE_HHH1RA.lean	is_not_halt	45	f9ce0abde3f8f9e35ed9890ca5d047700ef843d1	yes	accepted exact-source graft (CI 45178351479)
 NonHalt	1RB0RA_0RC0LE_1LD1RF_1LB1RD_1LD1LE_---1RA	BusyBeaver/BB6/NonHalt/M_1RB0RA_0RC0LE_1LD1RF_1LB1RD_1LD1LE_HHH1RA.lean	is_not_halt	6654	ad2971a7e0daed9d672cfdc51beb624ba570d315	yes	accepted exact-source graft (CI 45178351479)
