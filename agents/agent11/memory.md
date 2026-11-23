@@ -1,3 +1,21 @@
+## Checkpoint 2026-11-23 07:20 UTC — F424 source bridge remains uncompiled
+
+- Current identity: Agent 11, lease run `agent11-gpt6-20261123T063909Z-f424-source-cost-closure`, claimed at `2026-11-23T06:39:09.547Z`. The 70-minute release threshold is `2026-11-23T07:49:09.547Z`; do not refresh the lease. Continue research until the measured threshold, then release only after pushing all useful state.
+- Invocation mode was normal research (actual random draw 3). Local `python.exec` and `container.exec` both returned tool-level `ClientError` before command execution. No Lean executable was obtained and no archive sizes were measured in this invocation. This is a tool-boundary blocker, not a Lean compiler result.
+- Source-rooted `SourceCostModel.lean` + `SourceCostCombinators.lean` passed run 45119191819 under Lean 4.36.0-rc2. Theorems `costIter_add`, `costIter_exact_reaches`, and `costIter_exact_checkpoint` are conditional on `ExactSymStep M is424`; they do not certify the complete stepSym checkpoint trace or either candidate full primitive time.
+- The exact F424 source witness attempt is in `im-results/agent11-symrun-primitive-cost/SourceExactF424Core.lean`, using `SourceF424Machine.lean` and pinned upstream Cryptids `HaltShared.lean` at `3647718b5df22e1a61462dec0376bd204526285a`. Latest source edit is commit `8c2eeeb48a79cc9c9d29a8b1fa9db636ec2107d0`. It is **not compiled or accepted**.
+- Focused raw-exact diagnostics:
+  - 45126155156 exposed the `all_goals` tactic applying the step constructor to generated subgoals and no-progress simp errors.
+  - 45127528380 exposed unresolved intermediate configuration metavariables and unsolved repeated-step goals.
+  - 45128248162 showed the step relation's intermediate configuration was not synthesized in some branches and that `Nat.add_one` in the simp set caused a recursion loop.
+  - 45129111607 (last completed) still failed on intermediate `c₂` synthesis in repeated witnesses and a simp recursion loop in endpoint normalization.
+  - 45129893355 was cancelled before compilation. No full `agent11-symrun-exact-bb.yml` gate was dispatched.
+- Agent 38 applied the two static fixes to `im-results/agent38-symrun-state-replay/SourceExactSweepBB424.lean` (BB `strictNat_eq`; CB case4 `costSweepCB=0` using the no-run0/run1 hypothesis). That file remains uncompiled. I did not edit it.
+- Communication: Agent 42 was informed of the successor-indexed tactic hypothesis and raw-exact scope; Agent 38 received the exact local-preflight blocker and confirmation that the full gate will not be dispatched while local RC2 is unavailable.
+- Next actions: do not dispatch further CI until a working local Lean 4.36.0-rc2 preflight is available. Ask an equipped collaborator for a focused local compile if practical. Then compile the exact Core closure, resolve the first actual Lean errors, and audit exported `#print axioms` for `sorryAx`/unapproved dependencies. Only after that consider the full `stepPure`/outer `stepSym` closure, finite cost fold, and original-machine bridge. Keep all current candidate times in `im-results/`; do not promote to `results/` or claim BB(6).
+ 
+---
+
 ## Checkpoint 2026-11-23 05:41 UTC — 26 **Lean-kernel verified** cost identities; machine bridge in active CI
 
 - Definitive successful run [45117981961](https://github.com/FlareZ123/bb6/actions/runs/45117981961): Lean 4.36.0-rc2 compiled **all twelve natural-number macro recurrence/summation identities** in `MacroCostArithmetic.lean` and **twelve integer potential endpoints/drops plus two generic affine potential identities** in `MacroCostPotential.lean`, with `#print axioms` no sorryAx/native_decide. Confirmed and documented in dossier README.
