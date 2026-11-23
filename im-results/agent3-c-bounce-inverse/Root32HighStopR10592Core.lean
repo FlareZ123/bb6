@@ -6,8 +6,8 @@ import D0EInverseArithmetic
 import EvenOddFourExact
 import Lean.Elab.Tactic.Omega
 
-set_option maxHeartbeats 1000000
-set_option maxRecDepth 65536
+set_option maxHeartbeats 10000000
+set_option maxRecDepth 262144
 
 namespace BB6.Agent3Root32HighStopR10592Core
 
@@ -274,8 +274,11 @@ theorem root32_highstop_r10592_unreachable
     omega
   have hj : j%256=165 := by rw [hjExact]; omega
   have hE17 : 17≤E := by rw [hE]; omega
+  have hRoot' :
+      18018+211*(1802+6720*t)+22155*r=20*2^(E-13) := by
+    simpa [hu] using hRoot
   have hTj : 17300+22155*(t+j)=5*2^(E-17) :=
-    root32_tj_exact t j E r hrj hRoot hE17
+    root32_tj_exact t j E r hrj hRoot' hE17
   have hE8 : 8≤E-17 := by rw [hE]; omega
   have hdivPow : 256∣2^(E-17) := by
     have h := Nat.pow_dvd_pow 2 hE8
@@ -293,6 +296,10 @@ theorem root32_highstop_r10592_unreachable
   have h139 : (22155:Nat)%256=139 := by decide
   have hnorm : (148+139*((t+j)%256))%256=0 := by
     simpa [Nat.add_mod,Nat.mul_mod,h148,h139] using hmod
+  have hdivNorm : 256∣148+139*((t+j)%256) :=
+    Nat.dvd_iff_mod_eq_zero.mpr hnorm
+  rcases hdivNorm with ⟨z,hz⟩
+  have hreslt : (t+j)%256<256 := Nat.mod_lt (t+j) (by decide)
   have htjMod : (t+j)%256=196 := by omega
   have hsumMod : (t%256+j%256)%256=196 := by
     simpa [Nat.add_mod] using htjMod
