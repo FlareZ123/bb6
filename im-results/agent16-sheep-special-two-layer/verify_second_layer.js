@@ -39,7 +39,9 @@ function zOne(a) {
   return 2n * (3n * (1n << BigInt(a + 1)) - 1n) / 5n;
 }
 function isNewClass(a) {
-  return (a % 18 === 13 && a % 54 !== 13 && a % 8 !== 5 &&
+  return ([13,121].includes(a % 162) && a % 8 !== 5 &&
+      a % 12 !== 1 && a % 486 !== 445) ||
+    (a % 18 === 13 && a % 54 !== 13 && a % 8 !== 5 &&
       a % 12 !== 1 && a % 162 !== 103) ||
     (a % 6 === 1 && a % 18 !== 13 && a % 8 !== 5 &&
       a % 12 !== 1 && a % 54 !== 37) ||
@@ -103,6 +105,30 @@ function expectedTwoHiddenSecond(a) {
   }
   return result;
 }
+function expectedThreeHiddenSecond(a) {
+  const result = [];
+  if (a % 12 === 1) {
+    result.push({h: 1, b: 1,
+      x: 2n * ((1n << BigInt(a + 5)) - 19n) / 45n,
+      kind: "generic"});
+  }
+  if (a % 24 === 13) {
+    result.push({h: 1, b: 3,
+      x: 8n * ((1n << BigInt(a + 5)) - 55n) / 153n,
+      kind: "generic"});
+  }
+  if (a % 108 === 13) {
+    result.push({h: 3, b: 1,
+      x: 2n * ((1n << BigInt(a + 7)) - 31n) / 405n,
+      kind: "generic"});
+  }
+  if (a % 486 === 445) {
+    result.push({h: 3, b: 2,
+      x: 4n * ((1n << BigInt(a + 7)) - 193n) / 729n,
+      kind: "generic"});
+  }
+  return result;
+}
 function expectedEvenSecond(a) {
   const result = [];
   if (a % 20 === 4) {
@@ -126,12 +152,13 @@ function sameParents(a, actual, expected) {
 
 let grammarCases = 0, evenGrammarCases = 0, newBlankExclusions = 0;
 for (let a = 3; a <= 950; a += 2) {
-  if (a % 18 === 13 && a % 54 === 13) continue;
+  if (a % 162 === 67) continue;
   if (a < 7 && a % 6 === 1) continue;
   const X = xTwo(a);
   sameParents(a, evenParents(X),
     a % 6 !== 1 ? expectedSecond(a) :
-      (a % 18 === 13 ? expectedTwoHiddenSecond(a) : expectedOneHiddenSecond(a)));
+      (a % 18 !== 13 ? expectedOneHiddenSecond(a) :
+        (a % 54 !== 13 ? expectedTwoHiddenSecond(a) : expectedThreeHiddenSecond(a))));
   grammarCases++;
 
   if (isNewClass(a)) {
@@ -172,18 +199,22 @@ const A2 = Array.from({length: 648}, (_,a) => a).filter(a =>
   a % 18 === 13 && a % 54 !== 13 && a % 8 !== 5 &&
   a % 12 !== 1 && a % 162 !== 103);
 assert.deepEqual(A2, [31,139,211,247,319,355,463,535,571,643]);
-const new3240 = Array.from({length: 3240}, (_,a) => a).filter(isNewClass);
-const old3240 = Array.from({length: 3240}, (_,a) => a).filter(a => a % 4 === 2);
-assert.equal(new3240.length, 1280);
-assert.equal(old3240.length, 810);
-assert(new3240.every(a => a % 4 !== 2));
-assert.equal(new Set([...new3240,...old3240]).size, 2090);
+const A3prime = Array.from({length: 1944}, (_,a) => a).filter(a =>
+  [13,121].includes(a % 162) && a % 8 !== 5 &&
+  a % 12 !== 1 && a % 486 !== 445);
+assert.deepEqual(A3prime, [175,283,499,607,823,1147,1255,1471,1579,1795]);
+const new9720 = Array.from({length: 9720}, (_,a) => a).filter(isNewClass);
+const old9720 = Array.from({length: 9720}, (_,a) => a).filter(a => a % 4 === 2);
+assert.equal(new9720.length, 3890);
+assert.equal(old9720.length, 2430);
+assert(new9720.every(a => a % 4 !== 2));
+assert.equal(new Set([...new9720,...old9720]).size, 6320);
 console.log(JSON.stringify({
   verified_odd_a_up_to: 950,
   odd_second_parent_grammar_cases: grammarCases,
   even_second_parent_grammar_cases: evenGrammarCases,
   new_two_generation_exclusion_instances: newBlankExclusions,
-  new_excluded_residue_classes_mod_3240: new3240.length,
-  old_no_incoming_residue_classes_mod_3240: old3240.length,
-  combined_residue_classes_mod_3240: 2090
+  new_excluded_residue_classes_mod_9720: new9720.length,
+  old_no_incoming_residue_classes_mod_9720: old9720.length,
+  combined_residue_classes_mod_9720: 6320
 }, null, 2));
