@@ -187,7 +187,7 @@ private theorem m2EvenResidueTwoBaseTape_spec
       (m2EvenResidueTwoBaseTape a b h ha) h b ∧
     (∀ i : Nat,
       m2EvenResidueTwoBaseTape a b h ha (h+1+(i:Int)) =
-        sideBit (BB6Coverage.Agent8Q4Suffix.BB6Coverage.Agent6Q4Prefix.q4RightFacing b) i) := by
+        sideBit (BB6Coverage.Agent6Q4Prefix.q4RightFacing b) i) := by
   simpa [m2EvenResidueTwoBaseTape] using
     (Classical.choose_spec (m2EvenSix_q4_prefix_data a b h ha))
 
@@ -268,7 +268,7 @@ private theorem m2EvenResidueTwo_cut_eq_input
 private theorem q4RightShape_congr
     (T U : Int → Bool) (h : Int) (b : Nat)
     (heq : ∀ x, h ≤ x → T x = U x)
-    (hT : BB6Coverage.Agent8Q4Suffix.BB6Coverage.Agent8Q4Suffix.q4RightShape T h b) :
+    (hT : BB6Coverage.Agent8Q4Suffix.q4RightShape T h b) :
     BB6Coverage.Agent8Q4Suffix.BB6Coverage.Agent8Q4Suffix.q4RightShape U h b := by
   unfold BB6Coverage.Agent8Q4Suffix.BB6Coverage.Agent8Q4Suffix.q4RightShape at *
   rcases hT with ⟨h0,h5,h6,h79,hzero⟩
@@ -382,7 +382,7 @@ private theorem m2EvenResidueTwo_rightFacing
     (hL : 3 ≤ L) (hbound : 8*k+2 < 2^L) (ha : 0<a) :
     ∀ i : Nat,
       m2EvenResidueTwoCutTape L k a b h ha (h+1+(i:Int)) =
-        sideBit (BB6Coverage.Agent8Q4Suffix.q4RightFacing b) i := by
+        sideBit (BB6Coverage.Agent6Q4Prefix.q4RightFacing b) i := by
   intro i
   have hbase :=
     (m2EvenResidueTwoBaseTape_spec a b h ha).2.2.2.2 i
@@ -515,7 +515,7 @@ private theorem m2EvenSix_q4_prefix_head_bound
         have hside := sideBit_append_right (d1pow a)
           m2EvenResidueTwoSourceLeftSuffix (3*a) (by rw [d1pow_length]; omega)
         rw [hside] at hcell
-        simpa [m2EvenResidueTwoSourceLeftSuffix,markerWord,sideBit] using hcell
+        simpa [m2EvenResidueTwoSourceLeftSuffix,markerWord,sideBit,d1pow_length] using hcell
       · subst i
         have hside := sideBit_append_right (d1pow a)
           m2EvenResidueTwoSourceLeftSuffix (3*a+1) (by rw [d1pow_length]; omega)
@@ -549,12 +549,9 @@ private theorem m2EvenSix_q4_prefix_head_bound
       · rfl
     rw [hframe] at hb
     exact hb
-  have hlinearCoord : hN+2 = h-(3*a:Int) := by
-    dsimp [hN,N]
-    omega
   have hlinear : linearRightOnes T2 (hN+2) (3*a) := by
-    simpa [T2,hlinearCoord] using
-      m2EvenSixQ4CutTape_linearRightOnes a b h ha
+    convert m2EvenSixQ4CutTape_linearRightOnes a b h ha using 1 <;>
+      dsimp [T2,hN,N] <;> omega
   intro k hk d hd
   let p1 := 3*N
   let p2 := p1+38
@@ -669,7 +666,7 @@ theorem m2Even_residue2_q4_reset_prefix_source
     intro i hi
     rw [hright i]
     apply sideBit_ge_length
-    rw [BB6Coverage.Agent8Q4Suffix.q4RightFacing_length]
+    rw [BB6Coverage.Agent6Q4Prefix.q4RightFacing_length]
     omega
   have happend := q4SuffixTargetLeft L (8*k+1) a b
   have hsuffix := q4_suffix_run_to_s1Config Tq h b
