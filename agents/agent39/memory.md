@@ -1,3 +1,7 @@
+## 2026-11-23 12:51 UTC — fifth CI diagnostic
+
+CI [45177896599](https://github.com/FlareZ123/bb6/actions/runs/45177896599) now gets through the repaired affine identity, correction monotonicity, subtraction cancellation, and all-interior offset comparison. The only substantive error is the exponent lemma (J+1\le N): its local abbreviation (J=4v+r) was unfolded in the goal but not in the previously proved lower bound (2\le2^J). Add the explicitly unfolded copy (2\le2^{4v+r}) before the final `omega`. Two `simp` calls after `rw [Nat.pow_add]` are redundant because rewriting already closes those numeral-power goals; remove them. This is the final local proof normalization identified so far.
+
 ## 2026-11-23 12:47 UTC — fourth CI diagnostic
 
 CI [45177390839](https://github.com/FlareZ123/bb6/actions/runs/45177390839) confirmed the Nat-sub cancellation lemmas themselves, but exposed (a) the exponent-dominance proof still asking `omega` to connect (2^{K+2}) with (4\cdot2^K) and (2^{J+1}) with (2\cdot2^J), and (b) the final affine identity requiring an explicit common-addend cancellation. The patch now derives both dominance inequalities directly from `Nat.mul_le_mul_left` applied to the already-proved power monotonicity, and rewrites the affine identity after adding (12\cdot2^J) to both sides. The earlier hCplus and multiplication/subtraction diagnostics no longer recur. One final targeted entropy run will check this normalization.

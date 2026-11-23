@@ -82,8 +82,10 @@ private theorem branch9_exponent_bounds (r v K : Nat)
     have heq : J=(J-1)+1 := by omega
     rw [heq,Nat.pow_succ]
     omega
+  have hpowJ2' : 2≤2^(4*v+r) := by
+    simpa [J,branch9J] using hpowJ2
   have hNJ : J+1≤N := by
-    dsimp [N,branch9N]
+    dsimp [N,branch9N,J,branch9J]
     omega
   have hpowJK := pow2_mono (K+2) J hJK
   have hpowJN := pow2_mono (J+1) N hNJ
@@ -123,7 +125,6 @@ private theorem branch9_affine_identity (t q r v K : Nat)
   have hJbig : 48*2^K≤12*2^J := by
     have hpow4 : 2^(K+2)=2^K*4 := by
       rw [Nat.pow_add]
-      simp
     calc
       48*2^K = 12*(2^K*4) := by omega
       _ = 12*2^(K+2) := by rw [←hpow4]
@@ -176,7 +177,6 @@ private theorem branch9_high_counter (t q r v K : Nat)
   have hJbig : 48*2^K≤12*2^(branch9J r v) := by
     have hpow4 : 2^(K+2)=2^K*4 := by
       rw [Nat.pow_add]
-      simp
     calc
       48*2^K = 12*(2^K*4) := by omega
       _ = 12*2^(K+2) := by rw [←hpow4]
