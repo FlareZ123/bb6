@@ -99,6 +99,20 @@ Thus the **depth-16 finite inverse search** rejects `4191236/4194304` classes of
 
 The algorithm can be run with `node im-results/agent30-429-branch9-zero-feeder/side_branch_sieve.js 16`. The JavaScript source is deliberately standalone and the computed count includes a regression assertion; local runtime execution was unavailable in this invocation, so the script was not re-run after being committed. The numbers were produced by a functionally equivalent exact-BigInt interpreter in the available code execution runtime, not by Lean or original-machine simulation.
 
+## A 2-adic ghost spine obstructs uniform shallow congruence pruning
+
+There is a simple structural explanation for why growing the published all-time root residue sieve cannot, **by itself**, eliminate the long all-F spine. The affine F predecessor formula on integers is
+
+    F⁻¹(a,b)=((a-3)/2, a+b).
+
+In the 2-adic limit the first coordinate `a=-3` is a fixed point:
+
+    F⁻¹(-3,b)=(-3,b-3).
+
+The residue `-3` is `5 mod8, 13 mod16, 29 mod32, 61 mod64`. **All the particular all-time predicates currently consumed by `side_branch_sieve.js` admit every second-coordinate residue at that first-coordinate 2-adic point:** the basic `Allowed` invariant imposes no restriction when the first coordinate is `5 mod8`; the strong seven/one/five rows, the even16 law, and the ten listed forbidden mod64 cells do not apply; the odd/odd row for first `13 mod16` imposes no second-coordinate restriction. Thus the formal *residue filter* accepts the entire infinite ghost chain `(-3,b-3i)` for all finite `i`. This is a check of the listed filter definitions, **not** a claim that a negative first counter is a genuine natural machine state.
+
+The real spine has `A_i=12·2^(N-i)-3`. For any fixed modulus `2^K` and finite inverse depth `D` with `N-i≥K+D`, its successive first coordinates agree with the ghost value `-3` modulo `2^K`; and its successive second coordinates agree with a decrement of 3 per F step after the high-power terms vanish. Consequently **no finite-depth restriction based only on these specific bounded-residue predicates can eliminate the generic interior all-F branch**: at finite 2-adic precision it is indistinguishable from the admitted ghost spine. This limits this *particular* sieve, not all conceivable modular invariants, and says nothing about the genuine root reachability of the terminal `(9,3,0)` states. A productive route needs a global invariant that distinguishes natural finite first counters from their 2-adic shadows, a new source invariant constraining first `-3` residues, or a complete analysis at the small-counter end rather than just deeper uniform congruence tests.
+
 ## Stronger source-kernel-checked zero-return root gates
 
 For all genuine blank-root visits with a parent first counter `u≥129`, the exact source map yields **two** possible predecessors of a zero output with second coordinate `z≡2 (mod4)`:
