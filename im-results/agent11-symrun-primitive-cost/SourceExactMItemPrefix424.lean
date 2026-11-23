@@ -26,7 +26,7 @@ def costElemM424 : MState → Nat
   | (.BB, .run 1 :: _, _) => 3
   | (.BB, .run 2 :: _, _) => 5
   | (.BB, .run 3 :: _, _) => 9
-  | (.BB, .run (_ + 4) :: _, _) => 9
+  | (.BB, .run (d + 4) :: _, _) => 9
   | (.DL, .zero :: _, _) => 0
   | (.DL, .run 0 :: _, _) => 1
   | (.DL, .run 1 :: _, _) => 3
@@ -39,7 +39,7 @@ def costElemM424 : MState → Nat
   | (.CB, _, .run 0 :: .run (d2 + 1) :: _) => 3 * d2 + 21
   | (.CB, _, .run 1 :: _) => 3
   | (.CB, _, .run 2 :: _) => 5
-  | (.CB, _, .run (_ + 3) :: _) => 5
+  | (.CB, _, .run (d + 3) :: _) => 5
   | _ => 0
 
 /-- Every MItem-level stepElemM branch is an exact original-TM run.
