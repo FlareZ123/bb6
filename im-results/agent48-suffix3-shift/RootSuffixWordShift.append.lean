@@ -53,8 +53,9 @@ private theorem s3_word_prefix (n t : ℕ) (T : List (ℕ × ℕ)) :
               (ReachesPlus.trans h6
                 (ReachesPlus.trans h7 h8)))))))
 
+set_option maxHeartbeats 1000000
+
 /-- Shift three from the first nonzero suffix digit, preserving every later digit. -/
-set_option maxHeartbeats 1000000 in
 theorem s3_universal_word_suffix_shift (n t : ℕ)
     (T : List (ℕ × ℕ)) :
     ReachesPlus target (s3DWord n (t+3) T)
@@ -72,6 +73,8 @@ theorem s3_universal_word_suffix_shift (n t : ℕ)
       (s3_el_sweep (4*n+6) [(0,0),(1,0)] ((t+3,0)::T))
   have h3 := s3_el_positive (t+2)
     (List.replicate (4*n+8) (0,0) ++ [(1,0)]) T
+  have h3' := h3
+  rw [show t+2+1=t+3 by omega] at h3'
   have h4 := s3_dl_positive t
     (List.replicate (4*n+8) (0,0) ++ [(1,0)]) T
   have h5 := s3_dr_sweep (4*n+7) [(1,0)] ((t,0)::T)
@@ -84,11 +87,19 @@ theorem s3_universal_word_suffix_shift (n t : ℕ)
         (s3DWord (n+1) t T) := by
     simpa [s3DWord, s3_zero_push, List.replicate_add, List.replicate_succ,
       List.cons_append, List.append_assoc, Nat.mul_add, Nat.add_assoc] using h6
+  have h5' :
+      ReachesPlus target
+        (cfg_DR_n_n (List.replicate (4*n+8) (0,0) ++ [(1,0)])
+          ((1,0)::(t,0)::T))
+        (cfg_DR_n_n [(1,0)]
+          ((1,0)::(List.replicate (4*n+8) (0,0) ++ [(t,0)] ++ T))) := by
+    simpa [List.replicate_add, List.cons_append, List.append_assoc,
+      Nat.add_assoc] using h5
   have hchain := ReachesPlus.trans h1
     (ReachesPlus.trans h2
-      (ReachesPlus.trans h3
+      (ReachesPlus.trans h3'
         (ReachesPlus.trans h4
-          (ReachesPlus.trans h5 h6'))))
+          (ReachesPlus.trans h5' h6'))))
   simpa [Nat.add_assoc] using hchain
 
 /-- Arbitrarily long suffix-word 3-adic reduction without touching T. -/
@@ -105,6 +116,6 @@ theorem s3_iterated_word_suffix_shift (k n t : ℕ)
         n (t+3*(k+1)) T
       have h2 := ih (n+1)
       have ht : t + 3*((k+1)+1) = t + 3*(k+1) + 3 := by omega
-      have hn : n + ((k+1)+1) = (n+1) + (k+1) := by omega
+      have hn : n + (k+1) + 1 = (n+1) + k + 1 := by omega
       rw [ht, hn]
       exact ReachesPlus.trans h1 h2
