@@ -867,5 +867,7 @@ theorem blank_ne_s2q_even_image_h5_progression (d b time : Nat) :
 #print axioms q_even_R_parents
 #print axioms blank_ne_s2q_even_image
 #print axioms blank_ne_s2q_even_image_progression
+#print axioms q_even_h5_residual_unreachable
+#print axioms blank_ne_s2q_even_image_h5_progression
 
 end BB6.Agent4SevenS2QEven
