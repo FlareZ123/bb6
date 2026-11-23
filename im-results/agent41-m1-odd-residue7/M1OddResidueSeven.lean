@@ -1,5 +1,6 @@
 import M1OddQ4Bridge
 import Q4RightEndpoint
+import S1CountedDrain
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -25,6 +26,7 @@ open BB6Coverage.Agent8Q4Suffix
 open BB6Coverage.Agent8CountedReset
 open BB6Coverage.Agent42M1OddQ4Bridge
 open BB6Coverage.Agent24Q4Endpoint
+open BB6Coverage.Agent48CountedInc0
 open BB6ChampionArithmetic
 
 private theorem sideBit_append_after_local (xs ys : List Bool) (i : Nat)
@@ -632,8 +634,8 @@ theorem m1ResidueSeven_q4_prefix_leftFacing
 theorem m1ResidueSeven_q4_prefix_rightShape
     (L q a b : Nat) (h : Int)
     (hL : 3 ≤ L) (hbound : 8*q+7 < 2^L) (ha : 0 < a) :
-    q4RightShape (m1ResidueSevenQ4CutTape L q a b h) h b := by
-  unfold q4RightShape
+    Agent8Q4Suffix.q4RightShape (m1ResidueSevenQ4CutTape L q a b h) h b := by
+  unfold Agent8Q4Suffix.q4RightShape
   constructor
   · intro i hi
     have hcases : i=0 ∨ i=1 ∨ i=2 ∨ i=3 ∨ i=4 := by omega
