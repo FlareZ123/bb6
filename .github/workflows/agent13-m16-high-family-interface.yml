@@ -37,4 +37,5 @@ jobs:
             --source-root /tmp/a43mod16 \
             --jobs 4 \
             --lean "$(command -v lean)" \
-            --override CLine=im-results/agent11-c-line/CLine.lean
+            --override CLine=im-results/agent11-c-line/CLine.lean \
+            --override BounceParity=im-results/agent46-c-jump/BounceParity.lean
