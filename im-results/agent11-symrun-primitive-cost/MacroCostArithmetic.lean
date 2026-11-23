@@ -34,7 +34,7 @@ def aIter412 : Nat → Nat → Nat → Nat
 theorem aIter424_closed (n m k : Nat) :
     aIter424 n m k = n * (140 * m + 32 * k + 86 * n + 368) := by
   induction n generalizing m with
-  | zero => rfl
+  | zero => simp [aIter424, aIter412, cIter424, cIter412, bIter424, bIter412]
   | succ n ih =>
     simp only [aIter424]
     rw [ih]
@@ -43,7 +43,7 @@ theorem aIter424_closed (n m k : Nat) :
 theorem aIter412_closed (n m k : Nat) :
     aIter412 n m k = n * (124 * m + 28 * k + 76 * n + 332) := by
   induction n generalizing m with
-  | zero => rfl
+  | zero => simp [aIter424, aIter412, cIter424, cIter412, bIter424, bIter412]
   | succ n ih =>
     simp only [aIter412]
     rw [ih]
@@ -80,7 +80,7 @@ def cIter412 : Nat → Nat → Nat → Nat
 theorem cIter424_closed (n p k : Nat) :
     cIter424 n p k = n * (76 * p + 64 * k + 102 * n + 384) := by
   induction n generalizing k with
-  | zero => rfl
+  | zero => simp [aIter424, aIter412, cIter424, cIter412, bIter424, bIter412]
   | succ n ih =>
     simp only [cIter424]
     rw [ih]
@@ -89,7 +89,7 @@ theorem cIter424_closed (n p k : Nat) :
 theorem cIter412_closed (n p k : Nat) :
     cIter412 n p k = n * (68 * p + 56 * k + 90 * n + 344) := by
   induction n generalizing k with
-  | zero => rfl
+  | zero => simp [aIter424, aIter412, cIter424, cIter412, bIter424, bIter412]
   | succ n ih =>
     simp only [cIter412]
     rw [ih]
@@ -124,7 +124,7 @@ theorem bIter424_closed (n p m k c : Nat) :
     bIter424 c n p m k =
       n * (152 * p + 140 * m + 32 * k + 238 * n + c + 304) := by
   induction n generalizing p with
-  | zero => rfl
+  | zero => simp [aIter424, aIter412, cIter424, cIter412, bIter424, bIter412]
   | succ n ih =>
     simp only [bIter424]
     rw [ih]
@@ -134,7 +134,7 @@ theorem bIter412_closed (n p m k c : Nat) :
     bIter412 c n p m k =
       n * (136 * p + 124 * m + 28 * k + 212 * n + c + 272) := by
   induction n generalizing p with
-  | zero => rfl
+  | zero => simp [aIter424, aIter412, cIter424, cIter412, bIter424, bIter412]
   | succ n ih =>
     simp only [bIter412]
     rw [ih]
