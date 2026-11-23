@@ -40,7 +40,11 @@ theorem q_even_direct_parent_unreachable (t z : Nat)
   have hmod : (x+y+1)%8=4 := by dsimp [x,y]; omega
   have hxa : (x+y-5)/2=a := by dsimp [x,y,a]; omega
   have hyk : (x+3*y-9)/4=k := by dsimp [x,y,k]; omega
-  have hsum : (a+k)%4=2 := by dsimp [a,k]; omega
+  have haEq : a+15778*z=7737+7396*t := by dsimp [a]; omega
+  have hkEq : k+8495*z=4164+3982*t := by dsimp [k]; omega
+  have hsumEq : a+k+24273*z=11901+11378*t := by omega
+  have hcong4 : (2*t-z)%4=1 := by omega
+  have hsum : (a+k)%4=2 := by omega
   have hkodd : k%2=1 := by dsimp [k]; omega
   have hk5 : 5≤k := by dsimp [k]; omega
   have ha5 : 5<a := by dsimp [a]; omega
@@ -86,12 +90,13 @@ theorem q_even_bounce_parent_unreachable (t z : Nat)
   have hnot7 : (x+y)%8≠7 := by omega
   have hHx : 5<hx := by dsimp [hx,x,y]; omega
   have hHy : 5≤hy := by dsimp [hy,y]; omega
-  have hHyEq : 2*hy=y-2 := by dsimp [hy]; omega
+  have hHyEq : 2*hy+2=y := by dsimp [hy]; omega
   have hHyOdd : hy%2=1 := by omega
-  have hHtwice : 2*(hx+hy)=25953+24818*t-52945*z := by
-    dsimp [hx,x,y,hy]
-    omega
-  have hnum8 : (25953+24818*t-52945*z)%8=2 := by omega
+  have hHyMod8 : y%8=4 := by dsimp [y]; omega
+  have hsumXY : (x+y)%4=2 := by dsimp [x,y]; omega
+  have hHxEq : hx+2=x+y := by dsimp [hx]; omega
+  have hHxMod : hx%4=0 := by omega
+  have hHyMod : hy%4=1 := by omega
   have hHsum : (hx+hy)%4=1 := by omega
   intro hr
   have hparent : BB6.Agent3.CReach hx hy := by
@@ -125,9 +130,10 @@ theorem q_even_normalizer_residual_unreachable (t z : Nat)
     calc
       3808*z = 119*(32*z) := by omega
       _ ≤ 119*(12+11*t) := Nat.mul_le_mul_left 119 hhi
-  have hhi873 : 27936*z ≤ 873*(32*z) := by omega
-  have hhi873' : 873*(32*z) ≤ 873*(12+11*t) := Nat.mul_le_mul_left 873 hhi
-  exact le_trans hhi873 hhi873'
+  have hhi873 : 27936*z ≤ 873*(12+11*t) := by
+    calc
+      27936*z = 873*(32*z) := by omega
+      _ ≤ 873*(12+11*t) := Nat.mul_le_mul_left 873 hhi
   have hx : 5<x := by dsimp [x]; omega
   have hxe : x%2=0 := by dsimp [x]; omega
   have hy : 6≤y := by dsimp [y]; omega
