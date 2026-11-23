@@ -47,15 +47,17 @@ macro "stepWithin" : tactic => `(tactic| (
     encM_nil, encM_cons_zero, encM_cons_run, encLeft_cons_head, cons_one_encLeft_tail,
     encRight_cons_head, cons_one_encRight_tail, encM_cons_run_head, cons_one_encM_cons_run_tail]
   apply reachesIn_step_left_succ
-  · simp [ReachesIn, multiStep, target_tm, target, machine,
-      isVarA_tm, ite_true, ite_false, dif_pos, dif_neg,
-      BusyBeaver.Cfg.headRight, BusyBeaver.Cfg.headLeft, Turing.Tape.move,
-      pow_succ_list, pow_zero_list, cons_append_list, nil_append_list,
-      listblank_append_cons, listblank_append_nil, Turing.ListBlank.head_cons,
-      Turing.ListBlank.tail_cons, Tape.write, zero_cons_default, default_head,
-      default_tail, encM_nil, encM_cons_zero, encM_cons_run, encLeft_cons_head,
-      cons_one_encLeft_tail, encRight_cons_head, cons_one_encRight_tail,
-      encM_cons_run_head, cons_one_encM_cons_run_tail]
+  · first
+    | rfl
+    | simp [ReachesIn, multiStep, target_tm, target, machine,
+        isVarA_tm, ite_true, ite_false, dif_pos, dif_neg,
+        BusyBeaver.Cfg.headRight, BusyBeaver.Cfg.headLeft, Turing.Tape.move,
+        pow_succ_list, pow_zero_list, cons_append_list, nil_append_list,
+        listblank_append_cons, listblank_append_nil, Turing.ListBlank.head_cons,
+        Turing.ListBlank.tail_cons, Tape.write, zero_cons_default, default_head,
+        default_tail, encM_nil, encM_cons_zero, encM_cons_run, encLeft_cons_head,
+        cons_one_encLeft_tail, encRight_cons_head, cons_one_encRight_tail,
+        encM_cons_run_head, cons_one_encM_cons_run_tail]
   · try simp only [isVarA_tm, ite_true, ite_false, dif_pos, dif_neg,
       BusyBeaver.Cfg.headRight, BusyBeaver.Cfg.headLeft, Turing.Tape.move,
       pow_succ_list, pow_zero_list, cons_append_list, nil_append_list,
@@ -455,7 +457,7 @@ theorem sweep_BB_B1_exact (k : Nat) (L R : List MItem) :
     have h1 := step_BB_r0_r1_exact (repBlock [.run 0, .run 1] k ++ L) R
     have h2 := ih (.run 0 :: .run 1 :: R)
     convert reachesIn_trans h1 h2 using 1
-    all_goals (try simp [List.append_assoc])
+    all_goals (try simp [repBlock_succ_right, List.append_assoc])
     all_goals omega
 
 /-- F424 BB/C2 sweep: exactly 14 primitive steps per repeated block. -/
@@ -480,7 +482,7 @@ theorem sweep_BB_C2_exact (p : Nat) (L R : List MItem) :
     have h1 := step_BB_r1_r0_r1_comm_exact (repBlock [.run 1, .run 0, .run 1] p ++ L) R
     have h2 := ih (.run 0 :: .run 1 :: .run 1 :: R)
     convert reachesIn_trans h1 h2 using 1
-    all_goals (try simp [List.append_assoc])
+    all_goals (try simp [repBlock_succ_right, List.append_assoc])
     all_goals omega
 
 /-- F424 BB/C12 sweep: exactly 25 primitive steps per repeated block. -/
@@ -515,7 +517,7 @@ theorem sweep_BB_C12_exact (m : Nat) (L R : List MItem) :
     have h3 := ih (.run 0 :: .run 1 :: .run 0 :: .run 1 :: .run 1 :: R)
     have h12 := reachesIn_trans h1 h2
     convert reachesIn_trans h12 h3 using 1
-    all_goals (try simp [List.append_assoc])
+    all_goals (try simp [repBlock_succ_right, List.append_assoc])
     all_goals omega
 
 /-- F424 CB/B1 sweep: exactly 21 primitive steps per repeated block. -/
@@ -545,7 +547,7 @@ theorem sweep_CB_B1_exact (k : Nat) (L R : List MItem) :
           (repBlock [.run 0, .run 1] k ++ R)
     have h2 := ih (.run 0 :: .run 1 :: L)
     convert reachesIn_trans h1 h2 using 1
-    all_goals (try simp [List.append_assoc])
+    all_goals (try simp [repBlock_succ_right, List.append_assoc])
     all_goals omega
 
 /-- F424 CB/B2 sweep: exactly 24 primitive steps per repeated block. -/
@@ -589,7 +591,7 @@ theorem sweep_CB_B2_exact (p : Nat) (L R : List MItem) :
     have h3 := ih (.run 1 :: .run 0 :: .run 1 :: L)
     have h12 := reachesIn_trans h1 h2
     convert reachesIn_trans h12 h3 using 1
-    all_goals (try simp [List.append_assoc])
+    all_goals (try simp [repBlock_succ_right, List.append_assoc])
     all_goals omega
 
 /-- F424 CB/B12R sweep: exactly 45 primitive steps per repeated block. -/
@@ -651,7 +653,7 @@ theorem sweep_CB_B12R_exact (m : Nat) (L R : List MItem) :
     have h3' := ih (.run 1 :: .run 0 :: .run 1 :: .run 0 :: .run 1 :: L)
     have h12 := reachesIn_trans (reachesIn_trans h1 h2) h3
     convert reachesIn_trans h12 h3' using 1
-    all_goals (try simp [List.append_assoc])
+    all_goals (try simp [repBlock_succ_right, List.append_assoc])
     all_goals omega
 
 #print axioms step_BB_zero_exact
