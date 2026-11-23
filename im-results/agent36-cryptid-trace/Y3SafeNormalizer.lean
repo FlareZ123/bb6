@@ -48,14 +48,18 @@ theorem terminalY3_source (d : Packet) (ha : d.a ≥ 4)
     let k : Nat := (d.a-2)/3
     have hk : d.a = 3*k+2 := by dsimp [k]; omega
     refine ⟨12*k*k+49*k+40,8*k+9+d.p,3,2,?_⟩
-    rw [hk,hq,BB6.Agent35MarkerOne.b_zero_regular]
+    rw [hk,hq]
+    have hm : BB6.Agent2PacketP2Reset.marker = BB6.Agent35MarkerOne.marker := by rfl
+    rw [hm,BB6.Agent35MarkerOne.b_zero_regular]
     exact BB6.Padding.cfgEq_refl _
   · obtain ⟨hE,hrest⟩ := hE
     rcases hrest with hp1 | ⟨hp0,hq0⟩
     · refine ⟨0,d.a,d.q+4,2,?_⟩
       change ObsEq (packet d.a d.q d.p BB6.Agent2PacketP2Reset.marker)
         (BB6.Agent2BoundaryBZero.regularSection d.a (d.q+4) 2)
-      rw [hp1,BB6.Agent35MarkerOne.e_one_regular]
+      rw [hp1]
+      have hm : BB6.Agent2PacketP2Reset.marker = BB6.Agent35MarkerOne.marker := by rfl
+      rw [hm,BB6.Agent35MarkerOne.e_one_regular]
       exact BB6.Padding.cfgEq_refl _
     · let k : Nat := (d.a-4)/3
       let u : Nat := d.q/3
@@ -104,7 +108,8 @@ theorem p2_fixed_safe (k Q : Nat)
           (packet (3*k+4) Q 2 (false::List.replicate 6 true)))
         (BB6.Agent2BoundaryBZero.regularSection a q b) := by
   obtain ⟨T,a,q,b,hreg⟩ :=
-    safeY3_source ⟨8*k+5,0,2*Q+6⟩ (by omega) hs
+    safeY3_source ⟨8*k+5,0,2*Q+6⟩
+      (by change 8*k+5 ≥ 4; omega) hs
   refine ⟨BB6.Agent2PacketP2Reset.eTwoTime k Q+T,a,q,b,?_⟩
   rw [run_add,BB6.Agent2PacketP2Reset.e_two_reset]
   exact hreg
