@@ -294,3 +294,30 @@ local runtime is unavailable. The q=5 episode-20 root input already has a
 separate EEE-to-P4 escape, so this general safe-E candidate is not a
 prerequisite for that particular root step.
 
+
+
+## November 23, 2026: revised nineteenth-root compilation and episode-20–30 handoff
+
+This section supersedes the older episode-19 "64-block candidate; preflight pending" workflow note above.
+
+### Episode 19: one-process source-reentry certificate (CI pending)
+
+The large `NineteenthTail5684.olean` and `NineteenthBlock3.olean` imports repeatedly ended in runner shutdown when used by separate terminal modules. The current alternative is `NineteenthReentryComplete.lean`, which imports the smaller `NineteenthBlock2` closure, recomputes the final 1,588-step fast block in the same Lean process, and composes the existing exact certificates:
+
+- `block19_1_exact`: 4,096 steps;
+- `block19_2_exact`: 4,096 steps;
+- `terminal1588_exact`: 1,588 steps.
+
+It then proves `terminal9780_exact`, the authentic blank-root nineteenth exception, and the original-source E/A packet reentry `blank_nineteenth_reentry` in that same module. The last theorem targets the pure-unary section `L(64*t19+113,0,0)`.
+
+The focused stage-4d CI run is [45161497546](https://github.com/FlareZ123/bb6/actions/runs/45161497546), using source snapshot `20509b53af45edce5b8a145e8714245d3d225cdd`, extension `fdea1e851d50520f40835816319c88d14dc1c481`, predecessor artifact `d-root-stage3b3` from run `44326644032`, and predecessor extension marker `0ddab8f895b4f202bfdee684d28b7ae62a6b3d8e`. **At the time of this update the run is still in progress; do not treat any theorem in the new module as CI-verified until this run succeeds and its axiom audit is checked.**
+
+### Episode 20–30 continuation
+
+The staged workflow `agent25-eleventh-root.yml` now starts episode 20 at stage 3c from artifact `d-root-stage3b4d`, requiring `NineteenthReentryComplete.olean`, `ExceptionalE7ThirdReturnEscape.olean`, and `DRegularFast.olean`. It checks out a separately pinned proof extension and overlays the current episode 20–30 source modules, while retaining the exact original source snapshot.
+
+The twentieth 2,040-step regular prefix and the 22nd–26th regular prefixes now use `DRegularFast.fastRun_correct` with explicit canonicality proofs rather than direct large `DRegular.run := by decide` evaluations. The extension snapshot prepared for this continuation is `cb2d702017eb5b04275df0b39480ed27075871d5`; source remains `20509b53af45edce5b8a145e8714245d3d225cdd`.
+
+If stage 4d succeeds, dispatch stage 3c with its run ID and artifact `d-root-stage3b4d`, then proceed sequentially through stages 3d/3e, 4a–4g, and 5a–5e. The final stage produces the Seed31 probe artifact `d-root-seed31-audit`, which feeds the existing Seed31 first-stop certificate workflow and then the conditional 34–38 / Seed39 probe workflow.
+
+This is a finite conditional trajectory program. Even a successful Seed31/Seed39 probe is not, by itself, a global proof of halting or nonhalting and does not determine BB(6).
