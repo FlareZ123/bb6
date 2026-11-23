@@ -980,3 +980,30 @@ Next actions: obtain a working local Lean 4.36.0-rc2 runtime; compile the exact 
 - Stage 4e prefix composition passed [45151512096](https://github.com/FlareZ123/bb6/actions/runs/45151512096). Stage 4f terminal composition is [45151772702](https://github.com/FlareZ123/bb6/actions/runs/45151772702), still in progress at the last check (10:00:05Z). No stage 5 run has been dispatched.
 - If 45151772702 succeeds, stage 5 must use source_run_id 45151772702, previous_artifact d-root-stage3b4f, source_ref 20509b53af45edce5b8a145e8714245d3d225cdd, extension_ref 2a0b410f5bf989398949036831f80160d9a7f9b0, and previous_extension_ref the same 2a0b410f5bf989398949036831f80160d9a7f9b0. Stage 6 then consumes d-root-stage3b5. If it fails, inspect only the failed Lean diagnostic; the block helper and prefix stages are already kernel-checked.
 - The stage-4b experiments were superseded by the 4c/4e/4f path. Stage 4c helper passed [45148385744](https://github.com/FlareZ123/bb6/actions/runs/45148385744); stage 4e passed; the terminal endpoint remains pending. PR #108 is ready for review. Agent37 was notified of the optimized 4,096+4,096+1,588 composition.
+
+
+## 2026-11-23 11:07Z — combined nineteenth reentry and episode-20–30 continuation
+
+Current incarnation remains Agent 4, lease `claimed_at=2026-11-23T10:18:19.496Z`; do not refresh. At this memory checkpoint the lease age is about 49 minutes, below the 70-minute release threshold. Continue until the measured threshold; after each later checkpoint, compare the original lease timestamp with the actual runtime clock.
+
+### Root-19 proof path
+
+- The previous stage-4b Tail5684 terminal import and stage-4d Block3 terminal import repeatedly ended in runner shutdown (exit 143) without Lean diagnostics. A proof-script issue in the first Tail5684 attempt was also found and fixed, but the import-heavy path remained unproductive.
+- Added `im-results/agent37-d-timing-cocycle/NineteenthReentryComplete.lean`. It imports the smaller `NineteenthBlock2` closure, re-evaluates the 1,588-step final block in the same Lean process, composes the three checked blocks (4,096 + 4,096 + 1,588 = 9,780) with `DRegularFast.run_add`, and then proves `blank_nineteenth_exception` and the original-source E/A packet `blank_nineteenth_reentry`. It prints axioms for the terminal, exception, reentry, and residue theorems.
+- The current focused CI run is [45161497546](https://github.com/FlareZ123/bb6/actions/runs/45161497546), stage 4d, dispatched from predecessor run 44326644032 / artifact `d-root-stage3b3`, source ref `20509b53af45edce5b8a145e8714245d3d225cdd`, extension ref `fdea1e851d50520f40835816319c88d14dc1c481`, predecessor extension marker `0ddab8f895b4f202bfdee684d28b7ae62a6b3d8e`. It was still compiling at the last check. **Do not claim the new combined theorem verified until this run succeeds and its axiom audit is inspected.**
+- The current root19 workflow stage4d now consumes `d-root-stage3b3`, requires Block2, BlankEighteenthRejoin, ExceptionalAGeneral, and DRegularFast .olean files, and compiles the combined module. Its artifact should be `d-root-stage3b4d`. Stages 5/6 were removed from dispatch options because the combined module now includes the root lift and packet reentry.
+- The earlier stage4d attempts were not mathematical counterexamples: run 451572 failed only because the predecessor extension marker was mis-pinned; 451574 was runner-shutdown; 451612 failed on unbound workflow path variables. The corrected current run uses the observed predecessor marker and literal dependency paths.
+
+### Episode 20–30 handoff
+
+- Updated `BlankTwentiethEscape.lean` to import `NineteenthReentryComplete` and use `DRegularFast.fastRun_correct` for the 2,040-step twentieth regular prefix, with an explicit `seed20_canon`.
+- Converted the direct large `DRegular.run := by decide` certificates in `BlankTwentySecondRejoin` through `BlankTwentySixthRejoin` to `DRegularFast.fastRun_correct`, each with a canonicality proof. The 21st and 27th–30th modules already used the fast evaluator.
+- Updated `.github/workflows/agent25-eleventh-root.yml`: stage 3c now expects artifact `d-root-stage3b4d` and requires `NineteenthReentryComplete.olean`, `ExceptionalE7ThirdReturnEscape.olean`, and `DRegularFast.olean`. The workflow checks out a separately pinned proof extension and overlays the current episode 20–30 modules plus Seed31Probe, while retaining source snapshot 20509.
+- Extension snapshot prepared for the next chain: `cb2d702017eb5b04275df0b39480ed27075871d5`. If run 45161497546 succeeds, dispatch stage 3c using its run ID, artifact `d-root-stage3b4d`, source ref `20509b53af45edce5b8a145e8714245d3d225cdd`, and extension ref `cb2d702017eb5b04275df0b39480ed27075871d5`. Continue sequentially through stages 3d/3e, 4a–4g, and 5a–5e. Stage 5e produces `d-root-seed31-audit`; the existing Seed31 first-stop workflow then compiles the first-stop/source lift and episodes 31–33, followed by the 34–38 / Seed39 probe workflow.
+- The Seed31/Seed39 probes are finite first-exception searches with conditional soundness theorems. Even successful runs do not by themselves prove halting/nonhalting or determine BB(6).
+
+### Tooling and next action
+
+- Local `container.exec` and `python.exec` remain unavailable (tool-level ClientError/active-session failures); Lean verification is therefore being done through the repository's pinned GitHub Actions workflows, not claimed as local preflight.
+- Next action: inspect run 45161497546. If it succeeds, immediately dispatch episode-20 stage 3c from its artifact. If it fails, inspect only the failed-job tail and fix the concrete Lean or workflow issue. If it is runner-shutdown again, consider compiling the combined root19 theorem inline with NineteenthBlock3 to avoid a second process import, but do not return to the Tail5684/Block3 import-heavy terminal modules.
+- Detailed current status is in `im-results/agent37-d-timing-cocycle/README.md`; the new section explicitly marks stage4d pending. No new result has been moved into `results/`; BB(6) remains unresolved.
