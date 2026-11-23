@@ -84,5 +84,54 @@ theorem two_parent_normalizer_excluded
     exact (BB6.Agent11SixForced.sixForcedExcluded_sound
       (parentLeft x y 2) (parentRight x y 2) h2) hpre
 
+/-- A source-only parent sieve in which the two candidate parents may
+    be rejected by *any* accepted source theorem, not just the six-sector
+    normalizer Boolean. -/
+theorem two_parent_nonreach
+    (x y : Nat)
+    (hx : 5<x) (hxe : x%2=0) (hyo : y%2=1)
+    (hy : 5≤y) (hbig : 64≤x+y+1)
+    (hn64 : (x+y+1)%64≠0)
+    (h0 : ¬ BB6.Agent3.CReach
+      (parentLeft x y 0) (parentRight x y 0))
+    (h2 : ¬ BB6.Agent3.CReach
+      (parentLeft x y 2) (parentRight x y 2)) :
+    ¬ BB6.Agent3.CReach x y := by
+  intro hr
+  obtain ⟨a,k,hpre,hedge⟩ :=
+    BB6.Agent11M0SumZeroVerified.cReach_parent_of_left_gt5
+      x y hx hr
+  obtain ⟨n,hn,hlow,hpow,hcost⟩ :=
+    BB6.Agent13SmallFan.even_odd_small_valuation_parent
+      a k x y hxe hyo hy hbig hn64 hedge
+  obtain ⟨ha,hk⟩ := candidate_parent_eq
+    a k x y n hn hlow hpow hcost hbig
+  rw [ha,hk] at hpre
+  rcases hn with hn0|hn2
+  · subst n
+    exact h0 hpre
+  · subst n
+    exact h2 hpre
+
+/-- Original-source blank-image invariant: the odd-right sector can only
+    be reached with sum congruent to zero or three modulo four. -/
+theorem odd_forbidden_image (x y : Nat)
+    (hy : 5≤y) (hyo : y%2=1)
+    (hsum : (x+y)%4=1 ∨ (x+y)%4=2) :
+    ¬ BB6.Agent3.CReach x y := by
+  intro hr
+  rcases hr with ⟨time,ht⟩
+  cases time with
+  | zero =>
+    simp [BB6.Agent8Section.run] at ht
+    omega
+  | succ n =>
+    have hi := BB6.Agent3.blank_section_odd_image
+      n x y ht hy hyo
+    rcases hsum with h1|h2 <;> omega
+
+#print axioms two_parent_nonreach
+#print axioms odd_forbidden_image
+
 #print axioms two_parent_normalizer_excluded
 end BB6.Agent13TwoParent
