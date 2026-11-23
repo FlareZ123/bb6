@@ -825,7 +825,7 @@ private theorem q_even_h1_blank_unreachable_h5 (d b : Nat) :
     progression \(u=2+2^{13}d,\ v=48+2^{13}b\). -/
 theorem blank_ne_s2q_even_image_h5_progression (d b time : Nat) :
     BB6.Agent8Section.run secNext time (some (5,1)) ≠
-      some (641+1024*qEvenH5U d,574+1024*qEvenH5V b) := by
+      some (641+1024*(2+8192*d),574+1024*(48+8192*b)) := by
   intro hr
   cases time with
   | zero =>
