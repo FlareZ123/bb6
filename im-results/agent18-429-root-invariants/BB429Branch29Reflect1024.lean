@@ -72,8 +72,8 @@ finite residue set, while exclusion of each complete cylinder is
 the preceding quantified certified soundness theorem. -/
 theorem partition1024 :
     (List.range 1024).all (fun r =>
-      decide (r∈prior128 ∨
-         (r%128 ∈ prior128 → r∈blocked1024 ∨ r∈surviving1024))) = true := by
+      decide (r%128 ∈ prior128 →
+         r∈blocked1024 ∨ r∈surviving1024)) = true := by
   decide
 
 /-- Main uniform 38/1024 necessary root result for any q>=21. -/
@@ -86,27 +86,13 @@ theorem rooted_29_q_38_mod1024 (q : Nat) (hq : 21≤q)
     (List.all_eq_true.mp partition1024) (q%1024)
       (List.mem_range.mpr hr_lt)
   have hpart :
-      (q%1024∈prior128) ∨
-      ((q%1024)%128∈prior128 →
-        q%1024∈blocked1024 ∨ q%1024∈surviving1024) :=
+      (q%1024)%128∈prior128 →
+        q%1024∈blocked1024 ∨ q%1024∈surviving1024 :=
       of_decide_eq_true hpartition
   have hres : (q%1024)%128 ∈ prior128 := by
-    simp only [prior128,List.mem_cons,List.not_mem_nil] at *
+    simp only [prior128,List.mem_cons,List.not_mem_nil]
     omega
-  have hdisj : q%1024∈blocked1024 ∨ q%1024∈surviving1024 := by
-    rcases hpart with hfirst | hrest
-    · have hsmall : q%1024=2 ∨ q%1024=10 ∨ q%1024=15 ∨
-          q%1024=47 ∨ q%1024=58 ∨ q%1024=63 ∨
-          q%1024=74 ∨ q%1024=79 ∨ q%1024=82 ∨
-          q%1024=111 ∨ q%1024=122 ∨ q%1024=127 := by
-        simpa only [prior128,List.mem_cons,List.not_mem_nil] using hfirst
-      -- The partition was deliberately phrased with a redundant disjunct.
-      -- All twelve small representatives are handled by its implication:
-      have hrest' : q%1024∈blocked1024 ∨ q%1024∈surviving1024 := by
-        simp only [blocked1024,surviving1024,List.mem_cons,List.not_mem_nil]
-        omega
-      exact hrest'
-    · exact hrest hres
+  have hdisj := hpart hres
   rcases hdisj with hblocked | hsurvivor
   · exact False.elim (no_blocked_residue q (q%1024) rfl hblocked hroot)
   · exact hsurvivor
