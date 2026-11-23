@@ -88,7 +88,8 @@ theorem rootGate_child_t1 (t h a : Nat)
 theorem residue_mods_h1a3 (r : Nat) (hr : r ∈ residues_h1a3) :
     r%2=0 ∧ r%4=2 ∧ r%7≠5 ∧ r%9≠1 ∧ r%15≠8 := by
   simp [residues_h1a3] at hr
-  omega
+  rcases hr with h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h
+  all_goals subst r <;> decide
 
 theorem progression_mods_h1a3 (r k : Nat) (hr : r ∈ residues_h1a3) :
     (r+period_h1a3*k)%2=0 ∧ (r+period_h1a3*k)%4=2 ∧ (r+period_h1a3*k)%7≠5 ∧ (r+period_h1a3*k)%9≠1 ∧ (r+period_h1a3*k)%15≠8 := by
@@ -141,7 +142,8 @@ theorem rootGate_child_h1a3 (t h a : Nat)
 theorem residue_mods_h3a6 (r : Nat) (hr : r ∈ residues_h3a6) :
     r%2=0 ∧ r%4=0 ∧ r%7=5 ∧ r%9≠1 ∧ r%15≠8 := by
   simp [residues_h3a6] at hr
-  omega
+  rcases hr with h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h
+  all_goals subst r <;> decide
 
 theorem progression_mods_h3a6 (r k : Nat) (hr : r ∈ residues_h3a6) :
     (r+period_h3a6*k)%2=0 ∧ (r+period_h3a6*k)%4=0 ∧ (r+period_h3a6*k)%7=5 ∧ (r+period_h3a6*k)%9≠1 ∧ (r+period_h3a6*k)%15≠8 := by
@@ -194,7 +196,8 @@ theorem rootGate_child_h3a6 (t h a : Nat)
 theorem residue_mods_h7a2 (r : Nat) (hr : r ∈ residues_h7a2) :
     r%2=0 ∧ r%4=0 ∧ r%7≠5 ∧ r%9=1 ∧ r%15≠8 := by
   simp [residues_h7a2] at hr
-  omega
+  rcases hr with h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h
+  all_goals subst r <;> decide
 
 theorem progression_mods_h7a2 (r k : Nat) (hr : r ∈ residues_h7a2) :
     (r+period_h7a2*k)%2=0 ∧ (r+period_h7a2*k)%4=0 ∧ (r+period_h7a2*k)%7≠5 ∧ (r+period_h7a2*k)%9=1 ∧ (r+period_h7a2*k)%15≠8 := by
@@ -247,7 +250,8 @@ theorem rootGate_child_h7a2 (t h a : Nat)
 theorem residue_mods_h7a4 (r : Nat) (hr : r ∈ residues_h7a4) :
     r%2=0 ∧ r%4=0 ∧ r%7≠5 ∧ r%9≠1 ∧ r%15=8 := by
   simp [residues_h7a4] at hr
-  omega
+  rcases hr with h | h | h | h | h | h | h | h | h
+  all_goals subst r <;> decide
 
 theorem progression_mods_h7a4 (r k : Nat) (hr : r ∈ residues_h7a4) :
     (r+period_h7a4*k)%2=0 ∧ (r+period_h7a4*k)%4=0 ∧ (r+period_h7a4*k)%7≠5 ∧ (r+period_h7a4*k)%9≠1 ∧ (r+period_h7a4*k)%15=8 := by
