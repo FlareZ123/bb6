@@ -82,6 +82,8 @@ theorem state3_zero_exit4 (T : Int → Bool) (h : Int)
     (hleft : T (h-1) = false) (h0 : T h = false)
     (hright : T (h+1) = false) :
     run tm2 4 ⟨3,h,T⟩ = some ⟨1,h+2,afterZeroExit4 T h⟩ := by
+  change run tm2 4 ⟨(⟨3, by decide⟩ : Fin 6),h,T⟩ =
+    some ⟨(⟨1, by decide⟩ : Fin 6),h+2,afterZeroExit4 T h⟩
   have neq1 : h-1 ≠ h := by omega
   have neq2 : h+1 ≠ h := by omega
   have neq3 : h+1 ≠ h-1 := by omega
@@ -90,7 +92,8 @@ theorem state3_zero_exit4 (T : Int → Bool) (h : Int)
   simp [run, rawStep, readSlot, applyMove, tm2, hleft, h0, hright,
     afterZeroExit4, neq1, neq2, neq3, hh0, hh1]
   all_goals
-    constructor
+    apply config_ext
+    · rfl
     · omega
     · funext x
       by_cases hx0 : x = h-1 <;> by_cases hx1 : x = h <;>
