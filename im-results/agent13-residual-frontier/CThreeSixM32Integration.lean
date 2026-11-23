@@ -3,6 +3,9 @@ import M32SectionEmbedding
 import HighSource
 import Lean.Elab.Tactic.Omega
 
+set_option maxRecDepth 20000
+set_option maxHeartbeats 0
+
 namespace BB6.Agent13M32Integration
 
 /-- A source-certified finite M32 condition added to the strongest current
@@ -64,7 +67,9 @@ theorem blank_halts_iff_six_m32 :
 /-- The M32 quotient certifies the residue pair (0,13) as absent. -/
 theorem m32_pair_0_13_good :
     CCert.highPairGood 0 13 := by
-  decide
+  have hmem : (0,13) ∈ CCert.newHighPairs := by decide
+  exact of_decide_eq_true
+    ((List.all_eq_true.mp CCert.newHighPairs_excluded) (0,13) hmem)
 
 /-- The same (0,13) family is invisible to the six-forced inverse
     normalizer: its first state already has residues (x,k,x+k)=(3,4,7)
@@ -77,8 +82,7 @@ theorem sixForced_not_excluded_0_13
   have hpow : 8 ∣ 2^(2*m+2) := by
     have hp : 2^3 ∣ 2^(2*m+2) :=
       Nat.pow_dvd_pow 2 (by omega)
-    norm_num at hp
-    exact hp
+    simpa only [show (2:Nat)^3=8 by decide] using hp
   have hprod : 8 ∣ 2^(2*m+2)*(j+3) :=
     dvd_mul_of_dvd_left hpow (j+3)
   have hP : (2^(2*m+2)*(j+3))%8=0 :=
