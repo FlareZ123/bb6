@@ -456,6 +456,11 @@ jobs:
           lean -o M0Mod2048Four.olean M0Mod2048Four.lean > "$GITHUB_WORKSPACE/m0-mod2048-four.txt" 2>&1
           cat "$GITHUB_WORKSPACE/m0-mod2048-four.txt"
           cat "$GITHUB_WORKSPACE/m0-mod2048-four.txt" >> "$GITHUB_STEP_SUMMARY"
+          # Agent 12: lift the final finite m=0 high residual j=1093 to an exact infinite family.
+          cp ${GITHUB_WORKSPACE}/im-results/agent12-c-high-m0/M0Residual1093Lift.lean .
+          lean -o M0Residual1093Lift.olean M0Residual1093Lift.lean > "$GITHUB_WORKSPACE/m0-residual1093-lift.txt" 2>&1
+          cat "$GITHUB_WORKSPACE/m0-residual1093-lift.txt"
+          cat "$GITHUB_WORKSPACE/m0-residual1093-lift.txt" >> "$GITHUB_STEP_SUMMARY"
           # Agent 5: bounded scan of the exact executable high filter.
           mkdir -p im-results/agent5-c-parameter-search
           cp ${GITHUB_WORKSPACE}/im-results/agent5-c-parameter-search/ParameterSearch.lean .
@@ -516,6 +521,7 @@ jobs:
             m0-mod16-two.txt
             m0-additional-forced-families.txt
             m0-mod2048-four.txt
+            m0-residual1093-lift.txt
             m1-full-forced.txt
             m2-full-forced.txt
             c-residual-probe.txt
