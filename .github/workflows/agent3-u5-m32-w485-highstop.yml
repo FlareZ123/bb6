@@ -16,6 +16,7 @@ on:
           - b2-root32
           - q0-secondary-parent
           - q0-secondary-cylinders
+          - linear-rank
         default: m32-w485-highstop
 
 permissions:
@@ -89,6 +90,11 @@ jobs:
               python3 tools/lean_compile_closure.py \
                 im-results/agent3-c-bounce-inverse/U5Q0TwoCylindersAudit.lean \
                 --jobs 8 --workdir /tmp/lean-closure-q0-secondary-cylinders 2>&1 | tee "/tmp/lean-closure-reports/${target}.log"
+              ;;
+            linear-rank)
+              python3 tools/lean_compile_closure.py \
+                im-results/agent3-linear-rank-unique/MachineCLinearRankOriginal.lean \
+                --jobs 4 --workdir /tmp/lean-closure-linear-rank 2>&1 | tee "/tmp/lean-closure-reports/${target}.log"
               ;;
             *)
               echo "Unknown target: ${{ inputs.target }}" >&2
