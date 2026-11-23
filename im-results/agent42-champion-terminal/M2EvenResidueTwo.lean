@@ -269,8 +269,8 @@ private theorem q4RightShape_congr
     (T U : Int → Bool) (h : Int) (b : Nat)
     (heq : ∀ x, h ≤ x → T x = U x)
     (hT : BB6Coverage.Agent8Q4Suffix.q4RightShape T h b) :
-    BB6Coverage.Agent8Q4Suffix.BB6Coverage.Agent8Q4Suffix.q4RightShape U h b := by
-  unfold BB6Coverage.Agent8Q4Suffix.BB6Coverage.Agent8Q4Suffix.q4RightShape at *
+    BB6Coverage.Agent8Q4Suffix.q4RightShape U h b := by
+  unfold BB6Coverage.Agent8Q4Suffix.q4RightShape at *
   rcases hT with ⟨h0,h5,h6,h79,hzero⟩
   refine ⟨?_,?_,?_,?_,?_⟩
   · intro i hi
@@ -633,7 +633,7 @@ theorem m2Even_residue2_q4_prefix_data
         sideBit (BB6Coverage.Agent8Q4Suffix.q4LeftFacing L (8*k+1) a) i) ∧
       BB6Coverage.Agent8Q4Suffix.q4RightShape Tq h b ∧
       (∀ i : Nat, Tq (h+1+(i:Int)) =
-        sideBit (BB6Coverage.Agent8Q4Suffix.q4RightFacing b) i) := by
+        sideBit (BB6Coverage.Agent6Q4Prefix.q4RightFacing b) i) := by
   refine ⟨m2EvenResidueTwoCutTape L k a b h ha, ?_, ?_, ?_, ?_⟩
   · exact m2Even_residue2_q4_prefix_source L k a b h hL hbound ha
   · simpa [m2EvenResidueTwoLeftFacing] using
