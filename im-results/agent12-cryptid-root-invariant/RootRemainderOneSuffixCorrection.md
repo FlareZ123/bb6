@@ -38,8 +38,9 @@ Starting from `D_n(1;[0,0,2])`, the stack-level sequence appears to be:
 This accounting appears to pass the left stack
 `[0,0,1] ++ replicate (4*n+6) 0 ++ [1]` to the token conversion, i.e.
 a `0^2 1 ...` prefix. The dossier currently records `0^3 1 ...`.
-That one-zero discrepancy has not been kernel-checked; neither form should
-be treated as established until the exact composed Lean theorem is compiled.
+A private proof draft, `root_d1_suffix_two_to_tok_DR`, has now been added
+to the same append file with that exact `tok_DR([2,0],[],0^2 1 ...)`
+endpoint. It remains unverified until the pinned source module compiles.
 
 ## Lean proof draft
 
