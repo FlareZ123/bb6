@@ -777,6 +777,9 @@ private theorem low6723_target_reaches_R (t : Nat)
   let K := low6723K t
   have hparams := low6723_params t
   rcases hparams with ⟨hm,hW,hvEq⟩
+  have hm' : m=512*z+67 := by simpa [m,z] using hm
+  have hW' : w=64*v+19 := by simpa [w,v] using hW
+  have hvEq' : v+24*t+20=2^(2*m-7) := by simpa [m,v] using hvEq
   have hlt : 2*m<2^(2*m) := by
     have h := low6723_succ_le_pow2 (2*m)
     omega
@@ -831,7 +834,8 @@ private theorem low6723_target_reaches_R (t : Nat)
         _=2^10*2^(2*m-7) := by rw [Nat.pow_add]
         _=1024*2^(2*m-7) := by simp [Nat.mul_comm]
     have hP1sum : 2*(8*w+2)+(3*m+3)=2^(2*m+3) := by
-      rw [hW,hpow1024,hm]
+      rw [hW',hpow1024,hm']
+      rw [← hvEq']
       omega
     have hKsum : (1+K)+(3*m+3)=2^(2*m+3) := by omega
     have hP1 : 2*(8*w+2)=1+K := by omega
@@ -841,7 +845,8 @@ private theorem low6723_target_reaches_R (t : Nat)
         _=2^11*2^(2*m-7) := by rw [Nat.pow_add]
         _=2048*2^(2*m-7) := by simp [Nat.mul_comm]
     have hP2sum : 32*w+6+6*m+8=2^(2*m+4) := by
-      rw [hW,hpow2048,hm]
+      rw [hW',hpow2048,hm']
+      rw [← hvEq']
       omega
     have hdouble : 2*2^(2*m+3)=2^(2*m+4) := by
       calc
@@ -857,8 +862,8 @@ private theorem low6723_target_reaches_R (t : Nat)
     constructor <;> omega
   have hP : CReach (8*w) (12*w) :=
     cReach_of_unique_parent 1 K (8*w) (12*w) (by omega) hPuniq hT
-  have hPzero : (8*w+12*w)%8≠0 := by rw [hW]; omega
-  have hPseven : (8*w+12*w)%8≠7 := by rw [hW]; omega
+  have hPzero : (8*w+12*w)%8≠0 := by rw [hW']; omega
+  have hPseven : (8*w+12*w)%8≠7 := by rw [hW']; omega
   have hD0 := cReach_even_right_parent (8*w) (12*w)
     (by omega) (by omega) (by omega) hPzero hPseven hP
   have hD : CReach (20*w-2) (6*w-1) := by
@@ -872,7 +877,7 @@ private theorem low6723_target_reaches_R (t : Nat)
   have hDuniq : ∀ a k, secNext (a,k)=some (20*w-2,6*w-1) →
       a=13*w-4 ∧ k=(19*w-7)/2 := by
     intro a k hedge
-    have hs : ((20*w-2)+(6*w-1)+1)%8=4 := by rw [hW]; omega
+    have hs : ((20*w-2)+(6*w-1)+1)%8=4 := by rw [hW']; omega
     have hp := even_odd_sumplus1_mod8_4_parent a k
       (20*w-2) (6*w-1) (by omega) (by omega)
       (by omega) (by omega) hs hedge
@@ -880,8 +885,8 @@ private theorem low6723_target_reaches_R (t : Nat)
   have hQ : CReach (13*w-4) ((19*w-7)/2) :=
     cReach_of_unique_parent (20*w-2) (6*w-1)
       (13*w-4) ((19*w-7)/2) (by omega) hDuniq hD
-  have hQx : 13*w-4=832*v+243 := by rw [hW]; omega
-  have hQy : (19*w-7)/2=608*v+177 := by rw [hW]; omega
+  have hQx : 13*w-4=832*v+243 := by rw [hW']; omega
+  have hQy : (19*w-7)/2=608*v+177 := by rw [hW']; omega
   have hQsum : ((13*w-4)+(19*w-7)/2)%8=4 := by
     rw [hQx,hQy]
     omega
@@ -918,11 +923,13 @@ theorem first_stop_m6723_mod8192 (time m k : Nat)
       _=8*2^(2*m) := by simp [Nat.mul_comm]
   have hle : 3*m+4≤2^(2*m+3) := by rw [hpow]; omega
   have hK : k=2^(2*m+3)-(3*m+4) := by omega
+  have hK' : k=low6723K t := by
+    dsimp [low6723K,low6723M]
+    rw [← hmeq]
+    exact hK
   have hT : CReach 1 (low6723K t) := by
     refine ⟨time,?_⟩
-    dsimp [low6723K,low6723M]
-    rw [hmeq,hK]
-    exact hrun
+    simpa [hK'] using hrun
   have hR := low6723_target_reaches_R t hT
   exact low6723_R_unreachable t hR
 
