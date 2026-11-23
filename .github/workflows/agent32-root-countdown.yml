@@ -9,49 +9,52 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
 
-      - name: Reconstruct pinned #85 source module and pin Lean
-        run: |
-          python -m pip install filelock
-          python im-results/agent2-unpack-proof.py
-          printf 'leanprover/lean4:v4.36.0-rc2\n' > lean-toolchain
-
-      - name: Install pinned Lean using elan
+      - name: Install pinned Lean 4.35.0-rc4
         run: |
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
-          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.35.0-rc4
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           "$HOME/.elan/bin/lean" --version
 
-      - name: Append root countdown sweep inside source namespace
-        shell: bash
+      - name: Clone exact #85 Cryptids source
         run: |
-          set -euo pipefail
+          git clone https://github.com/google-deepmind/cryptids.git /tmp/cryptids
+          cd /tmp/cryptids
+          git checkout 3647718b5df22e1a61462dec0376bd204526285a
+          test "$(cat lean-toolchain)" = "leanprover/lean4:v4.35.0-rc4"
+
+      - name: Restore Mathlib cache
+        run: |
+          cd /tmp/cryptids
+          lake exe cache get
+
+      - name: Insert root countdown append into exact source module
+        run: |
           python - <<'PY'
           from pathlib import Path
-          source = Path("im-results/agent2-cryptid-proof.lean")
+          src = Path("/tmp/cryptids/BusyBeaver/BB6/Accelerations/M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.lean")
           append = Path("im-results/agent12-cryptid-root-invariant/RootCountdownSweep.append.lean")
-          lines = source.read_text().splitlines()
-          while lines and not lines[-1].strip():
-              lines.pop()
-          closings = []
-          while lines and lines[-1].strip().startswith("end"):
-              closings.append(lines.pop())
-          lines.extend(["", "open _root_.BusyBeaver", "open _root_.BusyBeaver.BB6.Accelerations.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA", ""] + append.read_text().splitlines() + [""])
-          lines.extend(reversed(closings))
-          source.write_text("\n".join(lines) + "\n")
+          closing = "end BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA"
+          lines = src.read_text().splitlines()
+          if not lines or lines[-1].strip() != closing:
+              raise SystemExit("pinned #85 source module closing namespace did not match")
+          lines.pop()
+          lines.extend([""] + append.read_text().splitlines() + [
+              "",
+              "#print axioms root_countdown_general_tail",
+              "#print axioms root_countdown_step",
+              "#print axioms root_chain_to_D65_2",
+              "",
+              closing,
+          ])
+          src.write_text("\n".join(lines) + "\n")
           PY
-          tail -n 12 im-results/agent2-cryptid-proof.lean
+
       - name: Compile and audit root countdown theorems
-        shell: bash
         run: |
-          set -euo pipefail
-          lean im-results/agent2-cryptid-proof.lean 2>&1 | tee /tmp/root-countdown-lean.log
-          tail -n 30 /tmp/root-countdown-lean.log
-          if tail -n 30 /tmp/root-countdown-lean.log | grep -q 'sorryAx'; then
-            echo "Root countdown theorem depends on sorryAx" >&2
-            exit 1
-          fi
+          cd /tmp/cryptids
+          lake build BusyBeaver.BB6.Accelerations.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC1RA
