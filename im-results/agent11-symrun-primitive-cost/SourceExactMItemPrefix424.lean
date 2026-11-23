@@ -429,3 +429,6 @@ theorem runElemFast424_within_two31 :
 #print axioms runElemFast424_exact_reaches
 #print axioms costIterM424_f424_prefix_lt_two31
 #print axioms runElemFast424_within_two31
+#print axioms maxRunMRight_stepElemM_le
+#print axioms costElemM424_le
+#print axioms costIterM424_le
