@@ -51,7 +51,6 @@ theorem rooted_branch29_final_burst_floor
     have hpow : 2^(n+2)=524288*2^(n-17) := by
       have hsplit : n+2=19+(n-17) := by omega
       rw [hsplit, Nat.pow_add]
-      rfl
     have hmod : (128*q+3*n+131)%524288=0 := by
       rw [heq,hpow]
       omega
@@ -76,7 +75,7 @@ theorem rooted_branch29_final_burst_floor
         (BB429Kernel.vb s (q/4096)) := by
       obtain ⟨i,hi⟩ := hroot
       exact ⟨i, by simpa only [hx,hy] using hi⟩
-    exact (BB429Kernel.cert_sound 17 s (q/4096) hcert) hsource
+    exact False.elim ((BB429Kernel.cert_sound 17 s (q/4096) hcert) hsource)
 
 #print axioms short_candidates_cert
 #print axioms rooted_branch29_final_burst_floor
