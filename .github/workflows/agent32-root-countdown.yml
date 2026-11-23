@@ -26,19 +26,25 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           "$HOME/.elan/bin/lean" --version
 
-      - name: Append root countdown sweep
+      - name: Append root countdown sweep inside source namespace
         shell: bash
         run: |
           set -euo pipefail
-          printf '\nopen _root_.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA\n' >> im-results/agent2-cryptid-proof.lean
-          cat im-results/agent12-cryptid-root-invariant/RootCountdownSweep.append.lean >> im-results/agent2-cryptid-proof.lean
-          cat >> im-results/agent2-cryptid-proof.lean <<'EOF'
-
-          #print axioms root_countdown_general_tail
-          #print axioms root_countdown_step
-          #print axioms root_chain_to_D65_2
-          EOF
-
+          python - <<'PY'
+          from pathlib import Path
+          source = Path("im-results/agent2-cryptid-proof.lean")
+          append = Path("im-results/agent12-cryptid-root-invariant/RootCountdownSweep.append.lean")
+          lines = source.read_text().splitlines()
+          while lines and not lines[-1].strip():
+              lines.pop()
+          closings = []
+          while lines and lines[-1].strip().startswith("end"):
+              closings.append(lines.pop())
+          lines.extend([""] + append.read_text().splitlines() + [""])
+          lines.extend(reversed(closings))
+          source.write_text("\n".join(lines) + "\n")
+          PY
+          tail -n 12 im-results/agent2-cryptid-proof.lean
       - name: Compile and audit root countdown theorems
         shell: bash
         run: |
