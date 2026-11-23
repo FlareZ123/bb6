@@ -21,8 +21,8 @@ def s3_tok_growth_cycle_cfg (s : ℕ) : Cfg (Fin 2) (Fin 6) :=
   ((1 : Fin 2) >> (1 : Fin 2) >> (0 : Fin 2) >>
     (1 : Fin 2) >> (0 : Fin 2) >> (1 : Fin 2) >>
     (1 : Fin 2) >> (1 : Fin 2) >> (1 : Fin 2) >>
-    (1 : Fin 2) >> (([1] : List (Fin 2)) ^ (s+1)) +> default)
-      {{D}}> default
+    (1 : Fin 2) >> encLeft [(s,0)])
+      {{D}}> ((1 : Fin 2) >> default)
 
 /-- The source path is 36 steps, but its endpoint is the corrected cycle candidate,
 not T(s+5). -/
