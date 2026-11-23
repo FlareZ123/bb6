@@ -19,6 +19,7 @@ on:
           - sourceU97U41
           - sourceU14
           - sourceU16
+          - sourceCriterion
 
 permissions:
   contents: read
@@ -84,6 +85,9 @@ jobs:
               ;;
             sourceU16)
               target=im-results/agent13-residual-frontier/U16AllSource.lean
+              ;;
+            sourceCriterion)
+              target=im-results/agent13-residual-frontier/LowM67HaltingCriterion.lean
               ;;
             *)
               echo "Unsupported M16 target: $M16_TARGET" >&2
