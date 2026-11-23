@@ -270,6 +270,7 @@ theorem prior_latefast_admits_s3_second_parameter_family (t : Nat) :
     the second strict image family is admitted by the preceding
     ValSixFull+C58 all-depth and arbitrary-depth late-fast predicates.
     Its disjointness from the old diagonal follows from u+v=3 (mod 4). -/
+set_option maxHeartbeats 1000000 in
 theorem prior_latefast_admits_s3_image_family (j m u v : Nat)
     (hm7 : 7≤m)
     (hj : j=319+512*u)
@@ -549,6 +550,7 @@ private theorem s3_pullback_forces_m_ge7 (j m u v : Nat)
 
 /-- Exact equivalence between the second strict image-family pullback
     and its single affine high-stop congruence cylinder. -/
+set_option maxHeartbeats 1000000 in
 theorem s3_image_pullback_iff_congruence (j m : Nat) :
     (∃ u v, j=319+512*u ∧
       (2:Nat)^(2*m+2)*(j+3)-(j+3*m+5)=574+1024*v ∧
@@ -577,25 +579,37 @@ theorem s3_image_pullback_iff_congruence (j m : Nat) :
     have hjmod : j%512=319 := by
       rw [hj]
       omega
-    have hsector' : (15+3*u-v)%16=0 := by omega
-    have h16 : 16∣15+3*u-v := Nat.dvd_of_mod_eq_zero hsector'
-    have hdivdelta : 16384∣1024*(15+3*u-v) := by
+    have hv16 : v%16=(15+3*u)%16 := by omega
+    have h1024v : (1024*v)%16384=(1024*(15+3*u))%16384 := by
       calc
-        16384 = 1024*16 := by decide
-        _ ∣ 1024*(15+3*u-v) := Nat.mul_dvd_mul_left 1024 h16
-    have hdelta : 3*m+7*j+14025 =
-        ((574+1024*v)+j+3*m+5)+1024*(15+3*u-v) := by
+        (1024*v)%16384 = 1024*(v%16) := by
+          simpa only [show 1024*16=16384 by decide] using
+            (Nat.mul_mod_mul_left 1024 v 16)
+        _ = 1024*((15+3*u)%16) := by rw [hv16]
+        _ = (1024*(15+3*u))%16384 := by
+          symm
+          simpa only [show 1024*16=16384 by decide] using
+            (Nat.mul_mod_mul_left 1024 (15+3*u) 16)
+    have hmod' : (3*m+898+512*u+1024*v)%16384=0 := by
+      rw [hj] at hmod
+      omega
+    have htargetEq : 3*m+7*j+14025 =
+        3*m+898+512*u+1024*(15+3*u) := by
       rw [hj]
       omega
-    have htarget : (3*m+7*j+14025)%16384=0 := by
+    have htarget' :
+        (3*m+898+512*u+1024*(15+3*u))%16384=0 := by
       calc
-        (3*m+7*j+14025)%16384 =
-            (((574+1024*v)+j+3*m+5)+1024*(15+3*u-v))%16384 := by rw [hdelta]
-        _ = (((574+1024*v)+j+3*m+5)%16384 +
-              (1024*(15+3*u-v))%16384)%16384 := Nat.add_mod _ _ _
-        _ = 0 := by
-          rw [hmod, Nat.mod_eq_zero_of_dvd hdivdelta]
-          decide
+        (3*m+898+512*u+1024*(15+3*u))%16384 =
+            ((3*m+898+512*u)%16384 +
+              (1024*(15+3*u))%16384)%16384 := Nat.add_mod _ _ _
+        _ = ((3*m+898+512*u)%16384 +
+              (1024*v)%16384)%16384 := by rw [h1024v]
+        _ = (3*m+898+512*u+1024*v)%16384 := (Nat.add_mod _ _ _).symm
+        _ = 0 := hmod'
+    have htarget : (3*m+7*j+14025)%16384=0 := by
+      rw [htargetEq]
+      exact htarget'
     exact ⟨hjmod,htarget⟩
   · rintro ⟨hjmod,hcong⟩
     let u : Nat := j/512
@@ -642,7 +656,7 @@ theorem s3_image_pullback_iff_congruence (j m : Nat) :
       omega
     have hstop' : (k+324+512*u+3*m)%16384=0 := by
       rw [hj] at hmodStop
-      omega
+      simpa [Nat.add_assoc, Nat.add_left_comm, Nat.add_comm] using hmodStop
     have hmodK : k%16384=(15934+3072*u)%16384 := by
       omega
     have hdiv : 1024 ∣ 16384 := by decide
