@@ -59,6 +59,25 @@ Importantly, `costPure` is still the right building block for the internal Rule 
 
 `im-results/agent38-symrun-state-replay/SourceExactSweepBB424.lean` now defines source-shaped costs for the outer F424 `sweepBB` and `sweepCB` functions, using the exact item-step and repeated-block witnesses from Agent 11's `SourceExactF424Core.lean`. It attempts `ReachesIn` theorems for both sweeps and derives an exact BB-mode `stepSym` theorem. This file is an uncompiled intermediate draft, not an accepted Lean result.
 
+
+## Exact fallback composition
+
+The DL and CB fallback branches have a short exact construction once the sweep theorem compiles. The source definition is:
+
+```lean
+stepElemThenBB mode L R = finishThenBB (stepElemSym mode L R)
+```
+
+Define the one-element charge by mode (`costElemBB true L`, `costElemDL true L`, `costElemCB true L R`, and zero for HALT), and add `costSweepBB L' R'` exactly when `stepElemSym mode L R` returns mode BB. Then prove the exact fallback theorem by cases on `mode` and on the output mode:
+
+- Use `sourceElemBB_exact`, `sourceElemDL_exact`, or `sourceElemCB_exact` for the first element transition.
+- If the intermediate mode is BB, compose with `sourceSweepBB_exact L' R'`.
+- If the intermediate mode is DL, CB, or HALT, `finishThenBB` is the identity and the first exact witness is already the result.
+- For the full DL `stepSym` branch, precompose with the representation equality induced by `peelL`; `encSymL_peelL` shows that this normalization does not change the concrete configuration.
+- For CB `afterSweepCB` fallback, apply the same theorem to the post-sweep state.
+
+This avoids a new primitive-step proof: it composes existing exact element witnesses with the exact BB sweep witness. The remaining difficult CB branches are only the recognized Rule A/B/C accelerators.
+
 ## Remaining closure routes
 
 The practical route is a direct composition of source-shaped exact pieces:
