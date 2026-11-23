@@ -62,7 +62,6 @@ theorem second_deep_root_m8_parity_exclusion
   have hdeep := BB6.Agent15.second_halt_deep_sector j m k hstop hj hm hs
   have hp : BB6.Agent15.affineNormalize (2*j+3) k = (x,y) := by
     dsimp [x,y,p]
-    cases h : BB6.Agent15.affineNormalize (2*j+3) k <;> simp [h]
   have hmass : x+2*y+4*d=2*j+3+2*k := by
     simpa [x,y,d,p] using hdeep.2.2.2.1
   have hscale : 2^d*(y+2)=k+2 := by
