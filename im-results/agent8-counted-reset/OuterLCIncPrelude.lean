@@ -257,7 +257,7 @@ theorem markerBridgeFrameOut_head (m : Nat) (hm : m < 3)
     (markerBridgeFrameOut m T h0).head = h0-(m+5:Int) := by
   have hm0 : m=0 ∨ m=1 ∨ m=2 := by omega
   rcases hm0 with h0' | h1 | h2 <;> subst m <;>
-    simp [markerBridgeFrameOut,frame,shiftConfig,embed,markerBridgeOutput]
+    simp [markerBridgeFrameOut,frame,shiftConfig,embed,markerBridgeOutput] <;> omega
 
 /-- The marker bridge clears the final d0 cell, producing the right-zero
 boundary required by counted_LBinDec_HRun. -/
@@ -267,7 +267,7 @@ theorem markerBridgeFrameOut_right_zero (m : Nat) (hm : m < 3)
   have hm0 : m=0 ∨ m=1 ∨ m=2 := by omega
   rcases hm0 with h0' | h1 | h2 <;> subst m <;>
     simp [markerBridgeFrameOut,frame,markerBridgeInsideAt,markerBridgeInside,
-      shiftConfig,embed,markerBridgeOutput]
+      shiftConfig,embed,markerBridgeOutput] <;> omega
 
 /-- Everything strictly to the left of the bridge window is inherited from
 the source tape; the preceding counted sweep has not touched it. -/
@@ -278,7 +278,8 @@ theorem markerBridgeFrameOut_preserves_source
       (h-(3*a:Int))).tape x = T x := by
   have hlt : x-(h-(3*a:Int)) < -(m+4:Int) := by omega
   have hfalse : markerBridgeInsideAt m (h-(3*a:Int)) x = false := by
-    simp [markerBridgeInsideAt,markerBridgeInside,hlt]
+    simp [markerBridgeInsideAt,markerBridgeInside]
+    omega
   change (frame (markerBridgeInsideAt m (h-(3*a:Int)))
     (sweptLeft (3*a) T h)
     (shiftConfig (h-(3*a:Int)) (embed (markerBridgeOutput m)))).tape x = T x
@@ -299,8 +300,12 @@ theorem outer_afterSweep_eq_markerBridgeFrameIn
   let h0 : Int := h-(3*a:Int)
   let T1 : Int → Bool := sweptLeft (3*a) T h
   apply config_ext
-  · simp [markerBridgeFrameIn,frame,shiftConfig,embed,markerBridgeInput]
-  · simp [markerBridgeFrameIn,frame,shiftConfig,embed,markerBridgeInput]
+  · have hm0 : m=0 ∨ m=1 ∨ m=2 := by omega
+    rcases hm0 with h0' | h1 | h2 <;> subst m <;>
+      simp [markerBridgeFrameIn,frame,shiftConfig,embed,markerBridgeInput]
+  · have hm0 : m=0 ∨ m=1 ∨ m=2 := by omega
+    rcases hm0 with h0' | h1 | h2 <;> subst m <;>
+      simp [markerBridgeFrameIn,frame,shiftConfig,embed,markerBridgeInput]
   · funext x
     change (if markerBridgeInsideAt m h0 x then
       (shiftConfig h0 (embed (markerBridgeInput m))).tape x else T1 x) = T1 x
@@ -346,7 +351,8 @@ theorem outer_afterSweep_eq_markerBridgeFrameIn
           dsimp [T1]
           exact sweptLeft_boundary_right_zero (3*a) T h hr
         have hbase := markerBridgeInput_right_zero m hm
-        simp [shiftConfig,hbase,hzero]
+        have hcoord : h0+1-h0 = 1 := by omega
+        simp [shiftConfig,hcoord,hbase,hzero]
     · have hfalse : markerBridgeInsideAt m h0 x = false := by
         cases hb : markerBridgeInsideAt m h0 x <;> simp_all
       simp [hfalse]
@@ -413,7 +419,7 @@ theorem outerLCInc_preHRun
         some ⟨3,h0,T1⟩ := by
     have hs := counted_left_sweep (3*a) T h hones hr
     have hcost : 3*(3*a)=9*a := by omega
-    simpa [T,h0,T1,hcost] using hs
+    simpa [T,h0,T1,hcost,s1Config,s0Config] using hs
   have hframe :
       markerBridgeFrameIn m T1 h0 = ⟨3,h0,T1⟩ := by
     simpa [T,T1,h0] using
