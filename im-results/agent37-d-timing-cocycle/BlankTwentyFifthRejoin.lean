@@ -1,6 +1,7 @@
 import Lean.Elab.Tactic.Omega
 import BlankTwentyFourthRejoin
 import ExceptionalBGeneral
+import DRegularFast
 
 set_option maxHeartbeats 100000000
 set_option maxRecDepth 55000
@@ -12,13 +13,26 @@ open CryptidBoundary BB6.BoundaryPadding BB6.Padding
 def seed25 : DRegular.L := BB6.Agent2TwentyFourthRoot.seed25
 
 def terminal1718 : DRegular.L :=
-  (DRegular.run 1718 seed25).getD ⟨9,0,0⟩
+  (BB6.DRegularFast.fastRun 1718 seed25).getD ⟨9,0,0⟩
 
 def t25 : Nat := (terminal1718.a-4)/9
+
+theorem seed25_canon : DRegular.Canon seed25 := by
+  constructor
+  · change
+      BB6.Agent2PacketZeroBoundary.aZeroUnary
+        BB6.Agent2TwentyFourthRoot.k24
+        BB6.Agent2TwentyFourthRoot.normalized24.q
+        BB6.Agent2TwentyFourthRoot.r24 ≥ 2
+    simp [BB6.Agent2PacketZeroBoundary.aZeroUnary]
+    omega
+  · right
+    rfl
 
 theorem terminal1718_certificate :
     DRegular.run 1718 seed25 = some ⟨9*t25+4,8,1⟩ ∧
       t25 % 27 = 16 := by
+  rw [BB6.DRegularFast.fastRun_correct 1718 seed25 seed25_canon]
   decide
 
 theorem terminal1718_exact :

@@ -1,6 +1,7 @@
 import Lean.Elab.Tactic.Omega
 import BlankTwentySecondRejoin
 import ExceptionalBGeneral
+import DRegularFast
 
 set_option maxHeartbeats 100000000
 set_option maxRecDepth 55000
@@ -43,13 +44,26 @@ def seed23 : DRegular.L :=
     BB6.Agent2TwentySecondRoot.normalized22.q+2,5⟩
 
 def terminal3636 : DRegular.L :=
-  (DRegular.run 3636 seed23).getD ⟨9,0,0⟩
+  (BB6.DRegularFast.fastRun 3636 seed23).getD ⟨9,0,0⟩
 
 def t23 : Nat := (terminal3636.a-4)/9
+
+theorem seed23_canon : DRegular.Canon seed23 := by
+  constructor
+  · have hamin : BB6.Agent2TwentySecondRoot.normalized22.a ≥ 4 :=
+      BB6.Agent2PacketSafe.normalize_amin
+        BB6.Agent2TwentySecondRoot.packet22
+        (by simp [BB6.Agent2TwentySecondRoot.packet22]; omega)
+    dsimp [seed23]
+    omega
+  · left
+    dsimp [seed23]
+    omega
 
 theorem terminal3636_certificate :
     DRegular.run 3636 seed23 = some ⟨9*t23+4,2,1⟩ ∧
       t23 % 27 = 21 := by
+  rw [BB6.DRegularFast.fastRun_correct 3636 seed23 seed23_canon]
   decide
 
 theorem terminal3636_exact :

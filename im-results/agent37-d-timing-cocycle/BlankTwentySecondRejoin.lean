@@ -3,6 +3,7 @@ import BlankTwentyFirstRejoin
 import ExceptionalE7SecondSafe
 import PacketNormalizeSource
 import BoundaryBZero
+import DRegularFast
 
 set_option maxHeartbeats 100000000
 set_option maxRecDepth 55000
@@ -18,13 +19,21 @@ def seed22 : DRegular.L :=
 
 /-- Exact endpoint after 730 regular sections from the twenty-first reentry. -/
 def terminal730 : DRegular.L :=
-  (DRegular.run 730 seed22).getD ⟨9,0,0⟩
+  (BB6.DRegularFast.fastRun 730 seed22).getD ⟨9,0,0⟩
 
 def t22 : Nat := (terminal730.a-7)/9
+
+theorem seed22_canon : DRegular.Canon seed22 := by
+  constructor
+  · dsimp [seed22]
+    omega
+  · left
+    decide
 
 theorem terminal730_certificate :
     DRegular.run 730 seed22 = some ⟨9*t22+7,8,1⟩ ∧
       t22 % 27 = 14 := by
+  rw [BB6.DRegularFast.fastRun_correct 730 seed22 seed22_canon]
   decide
 
 theorem terminal730_exact :

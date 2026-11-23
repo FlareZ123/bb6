@@ -2,6 +2,7 @@ import Lean.Elab.Tactic.Omega
 import BlankTwentyFifthRejoin
 import EFirstAPacket
 import AOnePacketBoundarySource
+import DRegularFast
 
 set_option maxHeartbeats 100000000
 set_option maxRecDepth 55000
@@ -15,13 +16,21 @@ def seed26 : DRegular.L :=
   ⟨64*BB6.Agent2TwentyFifthRoot.t25+33,1,5⟩
 
 def terminal8516 : DRegular.L :=
-  (DRegular.run 8516 seed26).getD ⟨9,0,0⟩
+  (BB6.DRegularFast.fastRun 8516 seed26).getD ⟨9,0,0⟩
 
 def t26 : Nat := (terminal8516.a-10)/9
+
+theorem seed26_canon : DRegular.Canon seed26 := by
+  constructor
+  · dsimp [seed26]
+    omega
+  · left
+    decide
 
 theorem terminal8516_certificate :
     DRegular.run 8516 seed26 = some ⟨9*t26+10,8,1⟩ ∧
       t26 % 27 = 25 := by
+  rw [BB6.DRegularFast.fastRun_correct 8516 seed26 seed26_canon]
   decide
 
 theorem terminal8516_exact :

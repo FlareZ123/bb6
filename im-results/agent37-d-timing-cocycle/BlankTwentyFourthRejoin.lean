@@ -3,6 +3,7 @@ import BlankTwentyThirdRejoin
 import ExceptionalE7SecondSafe
 import PacketNormalizeSource
 import PacketZeroBoundarySource
+import DRegularFast
 
 set_option maxHeartbeats 100000000
 set_option maxRecDepth 55000
@@ -18,13 +19,21 @@ def seed24 : DRegular.L :=
   ⟨64*BB6.Agent2TwentyThirdRoot.t23+21,1,5⟩
 
 def terminal4510 : DRegular.L :=
-  (DRegular.run 4510 seed24).getD ⟨9,0,0⟩
+  (BB6.DRegularFast.fastRun 4510 seed24).getD ⟨9,0,0⟩
 
 def t24 : Nat := (terminal4510.a-7)/9
+
+theorem seed24_canon : DRegular.Canon seed24 := by
+  constructor
+  · dsimp [seed24]
+    omega
+  · left
+    decide
 
 theorem terminal4510_certificate :
     DRegular.run 4510 seed24 = some ⟨9*t24+7,6,1⟩ ∧
       t24 % 27 = 17 := by
+  rw [BB6.DRegularFast.fastRun_correct 4510 seed24 seed24_canon]
   decide
 
 theorem terminal4510_exact :
