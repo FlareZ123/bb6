@@ -37,8 +37,9 @@ private theorem n_plus_1000_le_pow (n : Nat) (hn : 18≤n) :
       _ ≤ 2^(k+2)+1 := by omega
       _ ≤ 2^(k+2)*2 := by omega
       _ = 2^(k+1+2) := by
-        rw [show k+1+2=k+2+1 by omega, Nat.pow_succ]
-        omega
+        have he : k+1+2=(k+2)+1 := by omega
+        rw [he]
+        exact (Nat.pow_succ 2 (k+2)).symm
 
 /-- In the genuine branch-7 long-burst last-reset equation, the
 29 mod32 pre-reset class is compatible with only two residue classes
