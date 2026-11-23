@@ -192,3 +192,32 @@ console.log("two_edge_terminal_exclusion", JSON.stringify({
   gateRange:[lo,hi], cases:twoEdgeCases, discrepancies:twoEdgeFailures
 }));
 if (twoEdgeFailures) process.exitCode=1;
+
+
+// Depth-three even-spine tail, complete four-edge cone with no forks.
+let fourEdgeCases=0, fourEdgeFailures=0;
+for(let n=lo;n<=hi;n++){
+  if(n%6!==5)continue;
+  const t=terminal(n), c=BigInt(2*n+3), p=b2(n), N=BigInt(n);
+  if(t.J%2 || 256n*c<457n*b2(t.a) ||
+     128n*c>=233n*b2(t.a) || t.X%27n!==18n)continue;
+  const b0=4n*(t.X/9n)-p-N-2n;
+  if(b0%9n!==5n)continue;
+  fourEdgeCases++;
+  const A=p+N-3n;
+  const bs=[t.u,b0];
+  for(let j=0;j<3;j++)bs.push(2n*bs[bs.length-1]-A);
+  let bad=false;
+  for(let j=0;j<4;j++){
+    const ps=allResetParents(bs[j]);
+    if(ps.length!==1 || ps[0].h!==bs[j+1] ||
+       ((j===0)!==(ps[0].kind==="odd")) ||
+       (j===0 && ps[0].t!==1))bad=true;
+  }
+  if(bs[4]===2n || allResetParents(bs[4]).length)bad=true;
+  if(bad){fourEdgeFailures++;console.error("FOUR-EDGE MISMATCH",n)}
+}
+console.log("four_edge_terminal_exclusion",JSON.stringify({
+  gateRange:[lo,hi],cases:fourEdgeCases,discrepancies:fourEdgeFailures
+}));
+if(fourEdgeFailures)process.exitCode=1;
