@@ -563,6 +563,17 @@ private theorem s3_mod_1024_cancel (v w : Nat)
     v%16=w%16 := by
   omega
 
+/-- Recover the high-stop quotient without unfolding its exponential definition. -/
+private theorem s3_k_decompose (k : Nat) (hkmod : k%1024=574) :
+    k=574+1024*(k/1024) := by
+  have hdecomp := Nat.mod_add_div k 1024
+  omega
+
+/-- Constant normalization used after the high-stop quotient is isolated. -/
+private theorem s3_right_residue_identity (u : Nat) :
+    15934+3072*u=574+1024*(15+3*u) := by
+  omega
+
 /-- The second strict image sector is the quotient-residue equation
     obtained from v = 15+3*u (mod 16). -/
 private theorem s3_sector_of_v16 (u v : Nat)
@@ -690,12 +701,9 @@ theorem s3_image_pullback_iff_congruence (j m : Nat) :
           Nat.mod_mod_of_dvd (15934+3072*u) hdiv
         _ = 574 := by omega
     let v : Nat := k/1024
-    have hdecomp : k%1024+1024*(k/1024)=k :=
-      Nat.mod_add_div k 1024
     have hk : k=574+1024*v := by
-      dsimp [v]
-      omega
-    have hright : 15934+3072*u=574+1024*(15+3*u) := by omega
+      simpa only [v] using s3_k_decompose k hkmod1024
+    have hright := s3_right_residue_identity u
     have hmodK' :
         (574+1024*v)%16384=(574+1024*(15+3*u))%16384 := by
       simpa only [hright, hk] using hmodK
