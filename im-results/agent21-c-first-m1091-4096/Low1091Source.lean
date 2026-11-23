@@ -4,6 +4,8 @@ import EvenRightUnique
 import GenericSection
 import Lean.Elab.Tactic.Omega
 
+set_option maxRecDepth 10000
+
 namespace BB6.Agent21Low1091
 open BB6.Agent46
 
@@ -210,40 +212,39 @@ private theorem even_odd_sumplus1_mod8_4_parent (a k x y : Nat)
             omega
           · simp only [sectionPreimageCriterion,if_neg ha0,if_neg ha1,
               if_neg hk0,if_neg hlow,if_neg haeven] at hp
-            rcases hp with ⟨hy3,_⟩ | ⟨_,n,hpow,hcost⟩
+            rcases hp with ⟨hy3,_⟩ | ⟨_,⟨n,hpow,hcost⟩⟩
             · omega
-            · cases n with
-              | zero =>
-                  simp at hpow hcost
-                  have hform : 2*(a-1)+8=2*(a+3) := by omega
-                  rw [hform] at hpow
-                  have haEq : a=(x+y+1)/2-3 := by omega
-                  have hkEq : k=(x+2*y-a-7)/2 := by omega
-                  exact ⟨haEq,hkEq⟩
-              | succ n =>
-                  have hfour : 4∣(2*(a-1)+8) := by
-                    have hform : 2*(a-1)+8=2*(a+3) := by omega
-                    rw [hform]
-                    have hmodlt : a%2<2 := Nat.mod_lt a (by omega)
-                    have haOdd : a%2=1 := by omega
-                    have hmod : (a+3)%2=0 := by omega
-                    have hdiv : 2∣a+3 := Nat.dvd_of_mod_eq_zero hmod
-                    rcases hdiv with ⟨q,hq⟩
-                    refine ⟨q,?_⟩
-                    rw [hq]
-                    ring
-                  have hpowdiv : 2∣2^(n+1) := by
-                    change 2^1∣2^(n+1)
-                    exact Nat.pow_dvd_pow 2 (by omega)
-                  rcases hfour with ⟨q,hq⟩
-                  rcases hpowdiv with ⟨r,hr⟩
-                  have hdiv8 : 8∣x+y+1 := by
-                    refine ⟨r*q,?_⟩
-                    rw [hpow,hr,hq]
-                    ring
-                  have hmod : (x+y+1)%8=0 := Nat.mod_eq_zero_of_dvd hdiv8
-                  have hmod4 : (x+y+1)%8=4 := by omega
-                  omega
+            · by_cases hn0 : n=0
+              · subst n
+                simp at hpow hcost
+                have hform : 2*(a-1)+8=2*(a+3) := by omega
+                rw [hform] at hpow
+                have haEq : a=(x+y+1)/2-3 := by omega
+                have hkEq : k=(x+2*y-a-7)/2 := by omega
+                exact ⟨haEq,hkEq⟩
+              · have hnpos : 1≤n := by omega
+                have hform : 2*(a-1)+8=2*(a+3) := by omega
+                have hmodlt : a%2<2 := Nat.mod_lt a (by omega)
+                have haOdd : a%2=1 := by omega
+                have hmod : (a+3)%2=0 := by omega
+                have hdivA : 2∣a+3 := Nat.dvd_of_mod_eq_zero hmod
+                rcases hdivA with ⟨q,hq⟩
+                have hfour : 4∣2*(a-1)+8 := by
+                  rw [hform]
+                  refine ⟨q,?_⟩
+                  rw [hq]
+                  ring
+                have hpowdiv : 2∣2^n := by
+                  change 2^1∣2^n
+                  exact Nat.pow_dvd_pow 2 hnpos
+                rcases hfour with ⟨r,hr⟩
+                rcases hpowdiv with ⟨s,hs⟩
+                have hdiv8 : 8∣x+y+1 := by
+                  refine ⟨s*r,?_⟩
+                  rw [hpow,hform,hs,hr]
+                  ring
+                have hmod : (x+y+1)%8=0 := Nat.mod_eq_zero_of_dvd hdiv8
+                omega
 
 /-- A positive-time blank output cannot have odd right counter and sum 2 mod 4. -/
 private theorem no_blank_odd_sum_two (x y : Nat)
@@ -323,11 +324,12 @@ private theorem no_low_target_q0 (q : Nat) (hq : q%4=0) :
     have h := cReach_even_right_parent (692*q+543) (678*q+532)
       (by omega) (by omega) hzero hseven hR1
     have hx : (692*q+543)+(678*q+532)-2=1370*q+1073 := by omega
-    have hnum : (678*q+532)-2=2*(339*q+265) := by omega
-    have hy : ((678*q+532)-2)/2=339*q+265 := by
-      rw [hnum]
-      simp
-    simpa [hx,hy] using h
+    have hraw : CReach (1370*q+1073) ((678*q+530)/2) := by
+      simpa [hx] using h
+    have hnum : 678*q+530=2*(339*q+265) := by omega
+    have hy : (678*q+530)/2=339*q+265 := by rw [hnum]; simp
+    rw [hy] at hraw
+    exact hraw
   have hfinal : (1370*q+1073+339*q+265)%4=2 := by omega
   have hodd : (339*q+265)%2=1 := by omega
   exact no_blank_odd_sum_two (1370*q+1073) (339*q+265)
@@ -345,11 +347,12 @@ private theorem no_low_target_q11 (q : Nat) (hq : q%16=11) :
     have h := cReach_even_right_parent (692*q+543) (678*q+532)
       (by omega) (by omega) hR1zero hR1seven hR1
     have hx : (692*q+543)+(678*q+532)-2=1370*q+1073 := by omega
-    have hnum : (678*q+532)-2=2*(339*q+265) := by omega
-    have hy : ((678*q+532)-2)/2=339*q+265 := by
-      rw [hnum]
-      simp
-    simpa [hx,hy] using h
+    have hraw : CReach (1370*q+1073) ((678*q+530)/2) := by
+      simpa [hx] using h
+    have hnum : 678*q+530=2*(339*q+265) := by omega
+    have hy : (678*q+530)/2=339*q+265 := by rw [hnum]; simp
+    rw [hy] at hraw
+    exact hraw
   have hS1zero : ((1370*q+1073)+(339*q+265))%8≠0 := by omega
   have hS1seven : ((1370*q+1073)+(339*q+265))%8≠7 := by omega
   have hS1red := cReach_even_right_parent (1370*q+1073) (339*q+265)
@@ -360,24 +363,26 @@ private theorem no_low_target_q11 (q : Nat) (hq : q%16=11) :
     have hx : (1370*q+1073)+(339*q+265)-2=27344*v+20135 := by
       rw [hqeq]
       omega
-    have hnum : (339*q+265)-2=2*(2712*v+1996) := by
+    have hraw : CReach (27344*v+20135) ((339*q+263)/2) := by
+      simpa [hx] using hS1red
+    have hnum : 339*q+263=2*(2712*v+1996) := by
       rw [hqeq]
       omega
-    have hy : ((339*q+265)-2)/2=2712*v+1996 := by
-      rw [hnum]
-      simp
-    simpa [hx,hy] using hS1red
+    have hy : (339*q+263)/2=2712*v+1996 := by rw [hnum]; simp
+    rw [hy] at hraw
+    exact hraw
   have hS2zero : ((27344*v+20135)+(2712*v+1996))%8≠0 := by omega
   have hS2seven : ((27344*v+20135)+(2712*v+1996))%8≠7 := by omega
   have hS2red := cReach_even_right_parent (27344*v+20135) (2712*v+1996)
     (by omega) (by omega) hS2zero hS2seven hS2
   have hS3 : CReach (30056*v+22129) (1356*v+997) := by
     have hx : (27344*v+20135)+(2712*v+1996)-2=30056*v+22129 := by omega
-    have hnum : (2712*v+1996)-2=2*(1356*v+997) := by omega
-    have hy : ((2712*v+1996)-2)/2=1356*v+997 := by
-      rw [hnum]
-      simp
-    simpa [hx,hy] using hS2red
+    have hraw : CReach (30056*v+22129) ((2712*v+1994)/2) := by
+      simpa [hx] using hS2red
+    have hnum : 2712*v+1994=2*(1356*v+997) := by omega
+    have hy : (2712*v+1994)/2=1356*v+997 := by rw [hnum]; simp
+    rw [hy] at hraw
+    exact hraw
   have hfinal : (30056*v+22129+1356*v+997)%4=2 := by omega
   have hodd : (1356*v+997)%2=1 := by omega
   exact no_blank_odd_sum_two (30056*v+22129) (1356*v+997)
