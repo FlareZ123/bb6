@@ -291,9 +291,9 @@ theorem prior_latefast_admits_s3_image_family (j m u v : Nat)
   have hstopmod512 : (k+j+3*m+5)%512=0 := by
     rw [hstop]
     exact Nat.mod_eq_zero_of_dvd hprod512
+  have hk' : k=574+1024*v := hk
   have hm512 : m%512=42 := by
-    simp only [k] at hstopmod512
-    rw [hk,hj] at hstopmod512
+    rw [hk',hj] at hstopmod512
     omega
   have hprior := prior_c58_admits_residue_pair j m hm7 hj512 hm512
   have hbool : BB6.Agent11C58Boolean.highAllowed j m :=
@@ -321,8 +321,7 @@ theorem prior_latefast_admits_s3_image_family (j m u v : Nat)
       rw [hstop]
       exact Nat.mod_eq_zero_of_dvd hprod4096
     have hsector4 : (u+v)%4=3 := by omega
-    simp only [k] at hstopmod4096
-    rw [hk,hj] at hstopmod4096
+    rw [hk',hj] at hstopmod4096
     omega
   exact ⟨⟨hbool,hlate⟩,hnotdiag⟩
 
@@ -578,9 +577,25 @@ theorem s3_image_pullback_iff_congruence (j m : Nat) :
     have hjmod : j%512=319 := by
       rw [hj]
       omega
-    have htarget : (3*m+7*j+14025)%16384=0 := by
+    have hsector' : (15+3*u-v)%16=0 := by omega
+    have h16 : 16∣15+3*u-v := Nat.dvd_of_mod_eq_zero hsector'
+    have hdivdelta : 16384∣1024*(15+3*u-v) := by
+      calc
+        16384 = 1024*16 := by decide
+        _ ∣ 1024*(15+3*u-v) := Nat.mul_dvd_mul_left 1024 h16
+    have hdelta : 3*m+7*j+14025 =
+        ((574+1024*v)+j+3*m+5)+1024*(15+3*u-v) := by
       rw [hj]
       omega
+    have htarget : (3*m+7*j+14025)%16384=0 := by
+      calc
+        (3*m+7*j+14025)%16384 =
+            (((574+1024*v)+j+3*m+5)+1024*(15+3*u-v))%16384 := by rw [hdelta]
+        _ = (((574+1024*v)+j+3*m+5)%16384 +
+              (1024*(15+3*u-v))%16384)%16384 := Nat.add_mod _ _ _
+        _ = 0 := by
+          rw [hmod, Nat.mod_eq_zero_of_dvd hdivdelta]
+          decide
     exact ⟨hjmod,htarget⟩
   · rintro ⟨hjmod,hcong⟩
     let u : Nat := j/512
@@ -622,8 +637,12 @@ theorem s3_image_pullback_iff_congruence (j m : Nat) :
     have hmodStop : (k+j+3*m+5)%16384=0 := by
       rw [hstop]
       exact Nat.mod_eq_zero_of_dvd hprod
+    have hcong' : (3*m+16258+3584*u)%16384=0 := by
+      simpa only [hj] using hcong
+    have hstop' : (k+324+512*u+3*m)%16384=0 := by
+      rw [hj] at hmodStop
+      omega
     have hmodK : k%16384=(15934+3072*u)%16384 := by
-      rw [hj] at hmodStop hcong
       omega
     have hdiv : 1024 ∣ 16384 := by decide
     have hkmod1024 : k%1024=574 := by
