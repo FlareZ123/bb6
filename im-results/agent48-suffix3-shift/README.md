@@ -1,6 +1,6 @@
 # Cryptid D: certified universal ternary singleton-suffix shift
 
-**Status (2026-11-23):** The universal shift and its finite iteration have **passed the original-source Lean kernel build and axiom audit** on the pinned DeepMind #85 source. [Successful CI run 45119240956](https://github.com/FlareZ123/bb6/actions/runs/45119240956) compiled the entire modified original module, and \`#print axioms\` for both theorems returned **only** \`propext\`, \`Classical.choice\` and \`Quot.sound\` (no \`sorryAx\` or \`native_decide\`). The residual-zero, residual-two and arbitrary-tail source extensions below remain **separate unaccepted drafts** pending their own compiler checks. This work does **not** decide whether the original blank-tape six-state machine halts, or determine BB(6).
+**Status (2026-11-23):** The universal shift and its finite iteration have **passed the original-source Lean kernel build and axiom audit** on the pinned DeepMind #85 source. [Successful CI run 45119240956](https://github.com/FlareZ123/bb6/actions/runs/45119240956) compiled the entire modified original module, and \`#print axioms\` for both theorems returned **only** \`propext\`, \`Classical.choice\` and \`Quot.sound\` (no \`sorryAx\` or \`native_decide\`). The residual-zero source extension has **also passed original-source Lean compilation and axiom audit** ([run 45120434674](https://github.com/FlareZ123/bb6/actions/runs/45120434674)); the residual-two and arbitrary-tail extensions remain unaccepted drafts. This work does **not** decide whether the original blank-tape six-state machine halts, or determine BB(6).
 
 ## Source-coordinate theorem
 
@@ -55,7 +55,7 @@ The *reachability* theorems are Lean kernel-checked. The numerical formulas are 
 
 An independent V8 interpreter transcribed from the upstream CR/EL/DL/DR clauses also reached $Q(n+2,t)$ from $Q(n,t+6)$ for all tested $n=0,1,2$ and $t=0,1,2,3,4,5,6,7,11,20$, with $16n+60$ outer and $48n+174$ raw steps and **no token branch before the endpoint**. This finite test is supporting evidence; source-kernel acceptance, not empirical replay, is decisive.
 
-## Two additional residual-base reductions (uncompiled drafts)
+## Residual-zero theorem accepted; residual-two draft pending
 
 The proposed source-level base cases are
 
@@ -69,10 +69,10 @@ $$
 
 The first uses the same eight-step prefix, the zero-right EL sweep, CR-zero sweep, CR-one-empty and the 16-step general tail. The second uses the exact source token \`tok_DR_zero\` / \`tok_DR_1_nil_28\` / \`tok_EL_1\` / \`tok_EL_exit_zero\` cascade from a DL-right-one entry, not a hypothetical token output.
 
-- [RootSuffixBaseZero.append.lean](RootSuffixBaseZero.append.lean) contains source-local \`s3_zero_suffix_reset\` and the entire residue-zero family.
+- [RootSuffixBaseZero.append.lean](RootSuffixBaseZero.append.lean) contains source-local \`s3_zero_suffix_reset\` and the entire residue-zero family, **both kernel accepted** on run 45120434674 with axiom profiles exactly \`[propext, Classical.choice, Quot.sound]\`.
 - [RootSuffixBaseTwo.append.lean](RootSuffixBaseTwo.append.lean) contains a separately composed local DL-one token closure, \`s3_two_suffix_reset\`, and the entire residue-two family. Neither file depends on the older large RootCountdownSweep/RootRemainderTwoToken research appends.
 
-**Neither base file has yet compiled.** If both pass, equations (1)–(4) yield, for all $k\ge0$,
+**Only the residual-two base file remains uncompiled.** If that proof passes, equations (1)–(4) yield, for all $k\ge0$,
 
 $$
 \begin{aligned}
