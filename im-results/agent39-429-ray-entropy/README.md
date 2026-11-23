@@ -70,7 +70,13 @@ l.length ≤ 2*2^(k/2)
 ```
 for **all** `k,c,s,d,e,X,A,B,l` meeting those conditions. It does **not** assume that the candidate functions have a particular exponential closed form: only the stated necessary divisibility is used. The proof takes a legitimate length-k inverse word for each genuine blank-reachable candidate, applies source-proved fixed-word first-counter congruence, cancels the exactly known `2^s` part of the affine coefficient, and injects the parameters into the regular inverse-word language. This is a transferable counting theorem, not another numerical residue table.
 
-**Unchanged source Lean 4.36.0-rc2 [CI 45123217034](https://github.com/FlareZ123/bb6/actions/runs/45123217034) passed**, with exported transitive axiom list **`[propext, Classical.choice, Quot.sound]`** only, no `sorryAx`. The original q0 theorem is a more sharply constants-adapted specialization (the generic theorem's factor 2 is unnecessary for its particular initial phase).
+A companion theorem, \`generic_feeder_cardinality_bound_even_phase\`, sharpens the bound to
+\[
+l.length\le2^{\lfloor k/2\rfloor}
+\]
+whenever the induced initial phase \(\operatorname{anyRayPhase}(c)\) is even. The proof uses the exact even-phase word count \`allWords_len_even\`, rather than the phase-uniform estimate. Branch 9 is an instance because its offset \(c=24\cdot2^t-21\equiv3\pmod4\) induces phase \(2\).
+
+**Unchanged source Lean 4.36.0-rc2 [CI 45123217034](https://github.com/FlareZ123/bb6/actions/runs/45123217034) passed**, with exported transitive axiom list **\`[propext, Classical.choice, Quot.sound]\`** only, no \`sorryAx\`. The even-phase specialization is also source-checked in [CI 45181698589](https://github.com/FlareZ123/bb6/actions/runs/45181698589).
 
 ---
 
