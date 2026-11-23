@@ -291,4 +291,103 @@ theorem symRunF424_exact :
 
 #print axioms symRunF424_exact
 
+/-- The final symbolic state is in HALT mode and exposes the DL/zero halt
+    transition as one original-machine step. -/
+theorem step_DL_zero_halt_F424 (L1 R1 : List MItem) :
+    (cfgDL target_tm (.zero :: L1) (.run 0 :: R1)) [target_tm]⊢⁺
+      ⟨some E, ⟨1, (1 : Fin 2) >> encM L1, (0 : Fin 2) >> encM R1⟩⟩ := by
+  unfold cfgDL
+  dsimp only [isVarA_tm, ite_true, ite_false]
+  execute 1
+
+theorem step_DL_zero_halt_F424_exact (L1 R1 : List MItem) :
+    ReachesIn target_tm 1
+      (cfgDL target_tm (.zero :: L1) (.run 0 :: R1))
+      ⟨some E, ⟨1, (1 : Fin 2) >> encM L1, (0 : Fin 2) >> encM R1⟩⟩ := by
+  unfold cfgDL
+  dsimp only [isVarA_tm, ite_true, ite_false]
+  executeWithin 1
+  finishWithin
+
+/-- Reconstruct the upstream symbolic halting chain from the extracted
+    checkpoint computations, without importing its unrelated 18 halting
+    certificates. -/
+theorem blankF424_is_halt : IsHalt target_tm := by
+  have hPrefix : (init ([] : List (Fin 2))) [target_tm]⊢*
+      (evalSym target_tm initSymCyc3_F424) := by
+    exact ⟨18 + costIterM424 19217 startF424M,
+      blankToInitSymCyc3_exact_reaches⟩
+  have hc1 : (evalSym target_tm initSymCyc3_F424) [target_tm]⊢* (evalSym target_tm symChk4096_F424) := by
+    rw [← sym_chk1_F424]
+    exact stepSym4096_sound initSymCyc3_F424
+  have hc2 : (evalSym target_tm symChk4096_F424) [target_tm]⊢* (evalSym target_tm symChk8192_F424) := by
+    rw [← sym_chk2_F424]
+    exact stepSym4096_sound symChk4096_F424
+  have hc3 : (evalSym target_tm symChk8192_F424) [target_tm]⊢* (evalSym target_tm symChk12288_F424) := by
+    rw [← sym_chk3_F424]
+    exact stepSym4096_sound symChk8192_F424
+  have hc4 : (evalSym target_tm symChk12288_F424) [target_tm]⊢* (evalSym target_tm symChk16384_F424) := by
+    rw [← sym_chk4_F424]
+    exact stepSym4096_sound symChk12288_F424
+  have hc5 : (evalSym target_tm symChk16384_F424) [target_tm]⊢* (evalSym target_tm symChk20480_F424) := by
+    rw [← sym_chk5_F424]
+    exact stepSym4096_sound symChk16384_F424
+  have hc6 : (evalSym target_tm symChk20480_F424) [target_tm]⊢* (evalSym target_tm symChk24576_F424) := by
+    rw [← sym_chk6_F424]
+    exact stepSym4096_sound symChk20480_F424
+  have hc7 : (evalSym target_tm symChk24576_F424) [target_tm]⊢* (evalSym target_tm symChk28672_F424) := by
+    rw [← sym_chk7_F424]
+    exact stepSym4096_sound symChk24576_F424
+  have hc8 : (evalSym target_tm symChk28672_F424) [target_tm]⊢* (evalSym target_tm symChk32768_F424) := by
+    rw [← sym_chk8_F424]
+    exact stepSym4096_sound symChk28672_F424
+  have hc9 : (evalSym target_tm symChk32768_F424) [target_tm]⊢* (evalSym target_tm symChk36864_F424) := by
+    rw [← sym_chk9_F424]
+    exact stepSym4096_sound symChk32768_F424
+  have hc10 : (evalSym target_tm symChk36864_F424) [target_tm]⊢* (evalSym target_tm symChk40960_F424) := by
+    rw [← sym_chk10_F424]
+    exact stepSym4096_sound symChk36864_F424
+  have hc11 : (evalSym target_tm symChk40960_F424) [target_tm]⊢* (evalSym target_tm symChk45056_F424) := by
+    rw [← sym_chk11_F424]
+    exact stepSym4096_sound symChk40960_F424
+  have hc12 : (evalSym target_tm symChk45056_F424) [target_tm]⊢* (evalSym target_tm symChk49152_F424) := by
+    rw [← sym_chk12_F424]
+    exact stepSym4096_sound symChk45056_F424
+  have hc13 : (evalSym target_tm symChk49152_F424) [target_tm]⊢* (evalSym target_tm symChk53248_F424) := by
+    rw [← sym_chk13_F424]
+    exact stepSym4096_sound symChk49152_F424
+  have hc14 : (evalSym target_tm symChk53248_F424) [target_tm]⊢* (evalSym target_tm symChk57344_F424) := by
+    rw [← sym_chk14_F424]
+    exact stepSym4096_sound symChk53248_F424
+  have hc15 : (evalSym target_tm symChk57344_F424) [target_tm]⊢* (evalSym target_tm symChk61440_F424) := by
+    rw [← sym_chk15_F424]
+    exact stepSym4096_sound symChk57344_F424
+  have hc16 : (evalSym target_tm symChk61440_F424) [target_tm]⊢* (evalSym target_tm symChk65536_F424) := by
+    rw [← sym_chk16_F424]
+    exact stepSym4096_sound symChk61440_F424
+  have hc17 : (evalSym target_tm symChk65536_F424) [target_tm]⊢* (evalSym target_tm symChk69632_F424) := by
+    rw [← sym_chk17_F424]
+    exact stepSym4096_sound symChk65536_F424
+  have hc18 : (evalSym target_tm symChk69632_F424) [target_tm]⊢* (evalSym target_tm symChk70511_F424) := by
+    rw [← sym_chk18_F424]
+    exact stepStar_trans (iterStep_sound stepSym256 (evalSym target_tm)
+        (stepSym256_sound (target_tm := target_tm)) 3 symChk69632_F424)
+      (stepStar_trans (iterStep_sound stepSym16 (evalSym target_tm)
+        (stepSym16_sound (target_tm := target_tm)) 6 _)
+        (iterStep_sound stepSym (evalSym target_tm)
+          (stepSym_sound (target_tm := target_tm)) 15 _))
+  have hTrace : (evalSym target_tm initSymCyc3_F424) [target_tm]⊢* (evalSym target_tm symChk70511_F424) := by
+    exact stepStar_trans hc1 (stepStar_trans hc2 (stepStar_trans hc3 (stepStar_trans hc4 (stepStar_trans hc5 (stepStar_trans hc6 (stepStar_trans hc7 (stepStar_trans hc8 (stepStar_trans hc9 (stepStar_trans hc10 (stepStar_trans hc11 (stepStar_trans hc12 (stepStar_trans hc13 (stepStar_trans hc14 (stepStar_trans hc15 (stepStar_trans hc16 (stepStar_trans hc17 (stepStar_trans hc18 (hc18))))))))))))))))))
+  have h_to_halt_sym : (init ([] : List (Fin 2))) [target_tm]⊢*
+      (evalSym target_tm symChk70511_F424) :=
+    stepStar_trans hPrefix hTrace
+  have h_final := step_DL_zero_halt_F424
+    (encSymL symChk70511_F424.2.1.tail)
+    (encSymR symChk70511_F424.2.2.tail)
+  exact ⟨_, stepStar_trans h_to_halt_sym (stepPlus_stepStar h_final), rfl⟩
+
+#print axioms blankF424_is_halt
+#print axioms step_DL_zero_halt_F424_exact
+
+
 end BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution
