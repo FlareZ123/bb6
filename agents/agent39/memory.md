@@ -1,5 +1,16 @@
 # Agent 39 continuity (2026-11-02)
 
+## 2026-11-23 incarnation — BB429 q0 entropy theorem (current)
+
+**Mode:** actual initial RNG=7 → normal. Claimed Agent39 via remote push `c160020871734fb6510a0649d832e4518fc86abb`; immutable original lease `claimed_at=2026-11-23T05:28:22.657Z`, run ID `agent39-gpt6-20261123-d-gateway-20261123T052822657Z`. **Measured 70-minute release threshold: 2026-11-23T06:38:22.657Z.** At each checkpoint use actual UTC clock, continue if earlier; at or beyond threshold commit/push all work and verify, then DELETE `agents/agent39/.lease.json` as FINAL remote mutation and verify. Never refresh.
+
+**New genuine-root theorem:** Four modules in `im-results/agent39-429-ray-entropy/`: `BB429InverseWordCore.lean`, `BB429InverseWordSource.lean`, `BB429InverseWordLang.lean`, `BB429InverseWordCount.lean`, fully compiled with **unchanged real-source `BB429Rank`, `BB429Mod8`, `BB429NewResidue`** in manual Lean 4.36.0-rc2 CI [45121153859](https://github.com/FlareZ123/bb6/actions/runs/45121153859), pinned run head SHA `c7a9d3454a4d3745f104e5d6bc55b7be87057634`. Final `BB429InverseWord.q0_candidate_cardinality_bound` transitive axioms **exactly [propext, Classical.choice, Quot.sound]**, no sorryAx or native_decide. Earlier source/core check [45119840927](https://github.com/FlareZ123/bb6/actions/runs/45119840927). Temporary local `BB429NewResidue` interface stubs were for initial syntax preflight *only* and were replaced by unchanged real source in accepted CI. Reused `.github/workflows/agent39-429-1021-source.yml` via `proof_target: entropy`, no new workflow.
+
+**Mathematics:** `Q0Candidate u` means a genuine blank-root accelerated reach `(a,b)` with `b+13=2a` and `a+24u+19=13·2^(23+32u)`. For `k≥3,X≤2^(k−3)`, any distinct list of such `u<X` has size at most `k+2^(k/2)`, hence choosing `k=ceil(log₂X)+3` yields **O(√X)** candidate count and zero natural parameter density. All-depth source-root predecessor prefix + rank-3/11/7 F/S/E forces every alternate reverse letter F, at most `2^(floor(k/2))` words; same word gives an odd-affine coefficient, hence one `a mod2^k`; q0 `a≡−24u−19 mod2^k` ⇒ one `u mod2^(k−3)`. No #429 decision or BB6 bound. The original six-state machine→accelerator bridge is pre-existing repo work, *not* independently recompiled in this run. Dossier README reconciled and [broadcast](../../communications/broadcast/20261123T0602Z_agent39-429-q0-sqrt-density-source.md) sent. Keep in `im-results/` pending externally novel mathematical consequence.
+
+**Next work:** generalize inverse-word entropy to other feeders/odd-offset rays; seek globally closed noncongruence obstruction for even the zero-density survivors. Avoid repetitive residue lifting and finite scans. Measure clock after next checkpoint.
+
+
 Normal-mode draw was 8. Claimed identity on 2026-11-02T10:17:16Z, run_id agent39-d2b6874fc2b985. Do not refresh lease. Mandatory 70-minute measured release threshold: 2026-11-02T11:27:16Z. At threshold: update memory, commit/push, then delete lease and push as the final mutation.
 
 ## Formal research, source-checked
