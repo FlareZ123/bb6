@@ -102,14 +102,26 @@ theorem outerLCInc_s1_right_facts (L n m a b : Nat) (h : Int) :
     have hc1 := hcell (7+3*i)
     have hc2 := hcell (8+3*i)
     have hr0 : sideBit ([false,true,true,true,false,false] ++ d1pow (b+1))
-        (6+3*i) = sideBit (d1pow (b+1)) (3*i) :=
-      BB6Coverage.Agent6Q4Prefix.sideBit_append_right _ _ _ (by omega)
+        (6+3*i) = sideBit (d1pow (b+1)) (3*i) := by
+      rw [BB6Coverage.Agent6Q4Prefix.sideBit_append_right
+        ([false,true,true,true,false,false] : List Bool)
+        (d1pow (b+1)) (6+3*i) (by omega)]
+      congr 1
+      omega
     have hr1 : sideBit ([false,true,true,true,false,false] ++ d1pow (b+1))
-        (7+3*i) = sideBit (d1pow (b+1)) (3*i+1) :=
-      BB6Coverage.Agent6Q4Prefix.sideBit_append_right _ _ _ (by omega)
+        (7+3*i) = sideBit (d1pow (b+1)) (3*i+1) := by
+      rw [BB6Coverage.Agent6Q4Prefix.sideBit_append_right
+        ([false,true,true,true,false,false] : List Bool)
+        (d1pow (b+1)) (7+3*i) (by omega)]
+      congr 1
+      omega
     have hr2 : sideBit ([false,true,true,true,false,false] ++ d1pow (b+1))
-        (8+3*i) = sideBit (d1pow (b+1)) (3*i+2) :=
-      BB6Coverage.Agent6Q4Prefix.sideBit_append_right _ _ _ (by omega)
+        (8+3*i) = sideBit (d1pow (b+1)) (3*i+2) := by
+      rw [BB6Coverage.Agent6Q4Prefix.sideBit_append_right
+        ([false,true,true,true,false,false] : List Bool)
+        (d1pow (b+1)) (8+3*i) (by omega)]
+      congr 1
+      omega
     refine ⟨?_, ?_, ?_⟩
     · calc
         (s1Config L n m a 0 b h).tape (h+7+3*(i:Int)) =
@@ -170,7 +182,7 @@ theorem markerBridgeFrameOut_five (m : Nat) (hm : m < 3)
       (h0-(m+3:Int)+(j:Int))-h0 ∧
       (h0-(m+3:Int)+(j:Int))-h0 ≤ 1) = true
     rw [hcoord]
-    exact of_decide_eq_true (by omega)
+    exact decide_eq_true_iff.mpr (by omega)
   have hmark :
       (embed (markerBridgeOutput m)).tape
         (-(m+3:Int)+(j:Int)) = decide (j < 4) := by
@@ -259,9 +271,11 @@ theorem outerLCIncSourceT3_preserves_right
     (outerLCIncSourceT2 T h a m) (outerLCIncH1 h a m) x = T x
   rw [lbinDecHRunTape_preserves_right r
     (outerLCIncSourceT2 T h a m) (outerLCIncH1 h a m) x hx1]
-  change (outerLCIncSourceT2 T h a m) x = T x
+  change (markerBridgeFrameOut m (outerLCIncSourceT1 T h a)
+    (h-(3*a:Int))).tape x = T x
   rw [markerBridgeFrameOut_preserves_right m
     (outerLCIncSourceT1 T h a) (h-(3*a:Int)) x (by dsimp; omega)]
+  change sweptLeft (3*a) T h x = T x
   exact sweptLeft_preserves_right (3*a) T h x hx
 
 
