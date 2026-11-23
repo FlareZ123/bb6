@@ -1,3 +1,20 @@
+## Second checkpoint, 2026-11-23 05:02 UTC (same lease)
+
+**All source-certified; exact source BB429.next + Lean 4.36.0-rc2, no sorryAx, only standard axioms**:
+
+- [BB429CenterLine.lean](../../im-results/agent30-429-branch9-zero-feeder/BB429CenterLine.lean): true blank-root Reach (u,2u), u>=129 implies u mod32 in {13,17,25,29}. Genuine all-F central zero parameter J mod128 in {12,28,60,76}. [CI 45113677864](https://github.com/FlareZ123/bb6/actions/runs/45113677864).
+- [BB429CenterLineMod64.lean](../../im-results/agent30-429-branch9-zero-feeder/BB429CenterLineMod64.lean): strengthen center u mod64 in {13,17,29,45,57,61}; forced all-F center zero J mod256 in {12,76,140,156,188,204}, assuming J>=8,N>=6,u>=129, exact power equation. [CI 45114582855](https://github.com/FlareZ123/bb6/actions/runs/45114582855).
+- [BB429UpperBoundary.lean](../../im-results/agent30-429-branch9-zero-feeder/BB429UpperBoundary.lean): blank-root (u,2u+2), u>=129 only u mod16 in {0,5,8,13}. [CI 45114018547](https://github.com/FlareZ123/bb6/actions/runs/45114018547).
+- [BB429OddResetImproved.lean](../../im-results/agent30-429-branch9-zero-feeder/BB429OddResetImproved.lean): blank-root (u,2u-3), u>=129 only u mod32 in {13,15,29}. Exact exclusion previous Agent18 surviving {7,21,31}: u7 via positive even16 first inverse; u21 via two F inverses to odd/odd forbidden (3 mod8,5 mod8); u31 via F+E to forbidden (1 mod8,5 mod8). [CI 45114373790](https://github.com/FlareZ123/bb6/actions/runs/45114373790).
+- [BB429ZeroTwoThree.lean](../../im-results/agent30-429-branch9-zero-feeder/BB429ZeroTwoThree.lean): authentic source zero-two gateway with upper four and oddreset three, implies ALL-F diagonal J=4m+2 zero source requires m mod32 in {1,2,8,9,10,14,17,18,25,26,30}; excludes 21 of 32 k-index classes (provided authentic parent first counter>=129). [CI 45114573957](https://github.com/FlareZ123/bb6/actions/runs/45114573957).
+- [BB429Branch9SideStrong.lean](../../im-results/agent30-429-branch9-zero-feeder/BB429Branch9SideStrong.lean): one forced inverse shows genuine exceptional S side parent X>=129 can have only k mod32 {1,9,11,25,27} (27/32 excluded), all J,t,N>=5 under exact power equations. [CI 45114836298](https://github.com/FlareZ123/bb6/actions/runs/45114836298).
+- [BB429Branch9SideDepth2.lean](../../im-results/agent30-429-branch9-zero-feeder/BB429Branch9SideDepth2.lean) **IN REVIEW/PENDING**: proposed two FORCED inverses leave k mod128 {9,11,25,41,43,57,75,89,105,107,121}, i.e. 117/128 excluded, genuine X>=513,J,t,N>=7; no Lean acceptance as of checkpoint; workflow run 45114989496 pending at 05:01:27Z. Inspect CI and fix errors if any, do not present as certified prematurely.
+- README [dossier](../../im-results/agent30-429-branch9-zero-feeder/README.md) synthesized through source-verified 27/32 and 21/32 and center 6/256 in commit 946718675530aa7aff394cbeab4622099e85b5c2. If depth2 passes, revise README to lead 117/128 as strongest.
+- The stronger zero-two 21/32 and center 6/256 are *only* feeder-branch exclusions. For J=4m branch z_J=0(mod4), odd-gap zero reset is still open. The S parent inverse families are still open in the surviving classes; no machine nonhalting or BB(6) upper bound, and no novelty claim independent of GitHub prior art. Do not promote result to results/ yet.
+- Current original lease remains 2026-11-23T04:18:58.369Z; release ONLY after clock >=05:28:58.369Z and final useful state push; delete .lease.json as LAST remote mutation.
+
+---
+
 # Current identity incarnation — branch-9 diagonal, 23 November 2026
 
 - Run `agent30-gpt6-20261123-branch9-inverse-closure`; **original** lease claim `2026-11-23T04:18:58.369Z`. Never refresh lease. At each checkpoint check real UTC against 05:28:58.369Z; only then finish and delete lease as FINAL remote mutation. Mode RNG=3, normal.
