@@ -276,20 +276,26 @@ boundary required by counted_LBinDec_HRun. -/
 theorem markerBridgeFrameOut_right_zero (m : Nat) (hm : m < 3)
     (T : Int → Bool) (h0 : Int) :
     (markerBridgeFrameOut m T h0).tape (h0-(m+5:Int)+1) = false := by
+  have hcoord :
+      h0-(m+5:Int)+1-h0 = -(m+4:Int) := by omega
   have hm0 : m=0 ∨ m=1 ∨ m=2 := by omega
-  rcases hm0 with h0' | h1 | h2
-  · subst m
-    have hcoord : h0-5+1-h0 = -4 := by omega
-    simp [markerBridgeFrameOut,frame,markerBridgeInsideAt,markerBridgeInside,
-      shiftConfig,embed,markerBridgeOutput,hcoord]
-  · subst m
-    have hcoord : h0-6+1-h0 = -5 := by omega
-    simp [markerBridgeFrameOut,frame,markerBridgeInsideAt,markerBridgeInside,
-      shiftConfig,embed,markerBridgeOutput,hcoord]
-  · subst m
-    have hcoord : h0-7+1-h0 = -6 := by omega
-    simp [markerBridgeFrameOut,frame,markerBridgeInsideAt,markerBridgeInside,
-      shiftConfig,embed,markerBridgeOutput,hcoord]
+  have hinside :
+      markerBridgeInsideAt m h0 (h0-(m+5:Int)+1) = true := by
+    rcases hm0 with h0' | h1 | h2
+    · subst m
+      have hc : h0-5+1-h0 = -4 := by omega
+      simp [markerBridgeInsideAt,markerBridgeInside,hc]
+    · subst m
+      have hc : h0-6+1-h0 = -5 := by omega
+      simp [markerBridgeInsideAt,markerBridgeInside,hc]
+    · subst m
+      have hc : h0-7+1-h0 = -6 := by omega
+      simp [markerBridgeInsideAt,markerBridgeInside,hc]
+  have hmark :
+      (embed (markerBridgeOutput m)).tape (-(m+4:Int)) = false := by
+    rcases hm0 with h0' | h1 | h2 <;> subst m <;> decide
+  simp only [markerBridgeFrameOut,frame,hinside,if_pos]
+  simpa [shiftConfig,hcoord] using hmark
 
 /-- Everything strictly to the left of the bridge window is inherited from
 the source tape; the preceding counted sweep has not touched it. -/
