@@ -21,7 +21,8 @@ theorem s3_tok_growth_36 (s : ℕ) :
       (s3_tok_growth_cfg s)
       (s3_tok_growth_cfg (s+5)) := by
   unfold s3_tok_growth_cfg
-  texecute 36
+  iterate 36 tstep
+  simp [bumpPairHead, Nat.add_assoc]
 
 /-- Repeat the strictly positive source run k+1 times. -/
 theorem s3_tok_growth_iter (s k : ℕ) :
