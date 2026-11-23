@@ -20,7 +20,7 @@ private theorem allOdd_pow_four (m : Nat) : allOddB m=4^(m+1) := by
   have hh : 2*m+2=2*(m+1) := by omega
   rw [hh,m8PowTwoDouble]
 
-private theorem allOdd_BQ (m : Nat) : allOddB m=3*allOddQ m+1 := by
+theorem allOdd_BQ (m : Nat) : allOddB m=3*allOddQ m+1 := by
   rw [allOdd_pow_four]
   simpa [allOddQ] using (m8Geom4_three (m+1)).symm
 
@@ -63,7 +63,7 @@ private theorem allOdd_Umod4 (m d : Nat) (hd : 1≤d) :
   dsimp [allOddU]
   omega
 
-private theorem allOdd_Jmod4 (m d t : Nat) (hm : 1≤m) (hd : 1≤d) :
+theorem allOdd_Jmod4 (m d t : Nat) (hm : 1≤m) (hd : 1≤d) :
     allOddJ m d t%4=(m+1)%4 := by
   have hB4 := allOdd_Bfour m hm
   have hB16 := allOdd_Blower m hm
@@ -80,14 +80,14 @@ private theorem allOdd_Jmod4 (m d t : Nat) (hm : 1≤m) (hd : 1≤d) :
   rw [Nat.add_mod,hterm1,hterm2]
   omega
 
-private theorem allOdd_V8 (m d t : Nat) : allOddV m d t%8=2 := by
+theorem allOdd_V8 (m d t : Nat) : allOddV m d t%8=2 := by
   have hv : allOddV m d t=2+8*(allOddH m d*allOddN m d t) := by
     dsimp [allOddV]
     ac_rfl
   rw [hv]
   omega
 
-private theorem allOdd_Kplus (m d t : Nat) :
+theorem allOdd_Kplus (m d t : Nat) :
     allOddK m d t+2=3*allOddV m d t*2^d := by
   have hV : 2≤allOddV m d t := by dsimp [allOddV]; omega
   have hpow : 1≤2^d := Nat.pow_pos (by decide)
@@ -98,7 +98,7 @@ private theorem allOdd_Kplus (m d t : Nat) :
   dsimp [allOddK]
   omega
 
-private theorem allOdd_stop (m d t : Nat)
+theorem allOdd_stop (m d t : Nat)
     (hm : 1≤m) (_hd : 1≤d) (hdmax : d+3≤2*m+2) :
     allOddK m d t+allOddJ m d t+3*m+5=
       2^(2*m+2)*(allOddJ m d t+3) := by
