@@ -82,14 +82,24 @@ The following bounds are deliberately loose.
      \le W(BB,L,R)+6|L|+17
      \le 24(W(BB,L,R)+1).
    \]
-   Branch accounting for the induction:
-   - `.run 0` moves a zero-mass token L→R; both measures are unchanged before IH.
-   - `.run 1` removes one left token of mass 1 and applies bumpSymR, so intermediate deltas are at most +4 tokens and +2 numeric mass; then apply IH to L1.
-   - `.repB1` removes its left repeat token; eatB1 adds at most one right token and has nonincreasing numeric mass, so neither measure increases before IH.
-   - Successful `.rep2`/`.rep12` branches remove the repeat token and strip/reinsert the same two-token right prefix. eatB2/eatB12R adds at most one token and has nonincreasing mass; the removed repeat token pays for the possible extra token, and its counter pays for the mass, so neither measure increases before IH.
-   - A failed `.rep2`/`.rep12` branch applies peelTok to L1. Relative to the original full L, this is at most +5 tokens and +2 mass; terminal stepElemBB adds at most +7 tokens and +3 mass. Thus the terminal deltas are ≤+12 tokens and ≤+5 mass, covered by the proposed bounds because |L|≥1.
-   - The nil, `.zero`, and `.run(d+2)` terminal branches use stepElemBB and contribute at most +7 tokens and +3 mass.
-   
+   The branchwise immediate changes (before applying the recursive hypothesis) are:
+
+   | sweepBB case | \(\Delta\operatorname{pairLen}\) | \(\Delta\operatorname{pairNumSum}\) | continuation |
+   |---|---:|---:|---|
+   | empty L | at most +7 | at most +3 | terminal stepElemBB |
+   | .zero | at most +7 | at most +3 | terminal stepElemBB |
+   | .run(d+2) | at most +7 | at most +3 | terminal stepElemBB |
+   | .run 0 | 0 | 0 | recurse on L1 |
+   | .run 1 | at most +4 | at most +2 | recurse on L1 |
+   | .repB1 k | at most 0 | at most 0 | recurse after eatB1 |
+   | .rep2 p, right prefix 01 | at most 0 | at most 0 | recurse after eatB2 |
+   | .rep12 m, right prefix 01 | at most 0 | at most 0 | recurse after eatB12R |
+   | .rep2 / .rep12, no prefix | at most +12 | at most +5 | terminal peelTok + stepElemBB |
+
+   The repeat-success rows use the combined left-plus-right measures: the repeat counter removed from L pays for the possible extra token / numeric mass returned by eatFuel, and the stripped right prefix is reinserted unchanged. For a failed repeat row, peelTok is applied to L1, not to the full input L; relative to the full input, its length increase is at most +5 and its numeric-sum increase at most +2. The terminal stepElemBB then contributes at most +7 length and +3 mass, giving +12/+5.
+
+   Strong induction on |L| now gives the two displayed bounds. In a recursive row, |L|=|L1|+1: the worst immediate recursive deltas are +4 length and +2 mass (the run-1 case), exactly matching the per-token allowances in the induction targets. Zero-delta repeat and run-0 rows are smaller. Every terminal row has |L|≥1 except the empty-L base case; its +7/+3 deltas are covered by the +12/+5 constants. The failed-repeat terminal row has +12/+5 and is covered because |L|≥1.
+
    The needed ingredients are bumpSymR length/mass (+5/+3), eatB1/B2/B12R length/mass (+1/0), peelTok length/mass (+6/+2 relative to L1), and stepElemBB length/mass (+7/+3). The generic eatFuel length lemma already gives the B-side eat length bounds; instantiate eatFuel_num_sum_le separately for the B-side blocks [run0,run1,run1] and [run0,run1,run0,run1,run1] to obtain the missing eatB2/eatB12R mass bounds. A small case split on the pinned stepElemBB definition gives its +7 token bound (the worst run(d+4) branch removes one token, adds three left tokens, and applies bumpSymR).
 
 5. **Finish-after-one-element.** Use the existing pilot left-length facts as well as the atomic W bounds. If stepElemCB returns BB, stepElemCB_BB_left_length gives \(|L'|\le|L|+7\); otherwise no BB sweep occurs. With \(W_1\le W+16\), the BB case gives
