@@ -15,6 +15,7 @@ on:
           - suffix3-word
           - suffix3-zero
           - suffix3-two
+          - suffix3-growth
 
 permissions:
   contents: read
@@ -66,9 +67,11 @@ jobs:
           reset_path = Path("../bb6/im-results/agent2-root-countdown/RootRemainderTwoToken.append.lean")
           ending = "end BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA"
 
-          if os.environ.get("PROOF_TARGET") in ("suffix3-shift", "suffix3-full", "suffix3-word", "suffix3-zero", "suffix3-two"):
+          if os.environ.get("PROOF_TARGET") in ("suffix3-shift", "suffix3-full", "suffix3-word", "suffix3-zero", "suffix3-two", "suffix3-growth"):
               base = Path("../bb6/im-results/agent48-suffix3-shift")
-              fragments = [base / "RootSuffixThreeShift.append.lean"]
+              fragments = ([base / "RootTokenGrowth36.append.lean"]
+                           if os.environ.get("PROOF_TARGET") == "suffix3-growth"
+                           else [base / "RootSuffixThreeShift.append.lean"])
               if os.environ.get("PROOF_TARGET") == "suffix3-full":
                   fragments += [base / "RootSuffixBaseZero.append.lean",
                                 base / "RootSuffixBaseTwo.append.lean",
@@ -135,6 +138,12 @@ jobs:
           import BusyBeaver.BB6.Accelerations.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA
           #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.s3_zero_suffix_reset
           #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.s3_zero_residue_family
+          EOF
+          elif [[ "${PROOF_TARGET:-root-reset}" == "suffix3-growth" ]]; then
+            cat > RootResetAudit.lean <<'EOF'
+          import BusyBeaver.BB6.Accelerations.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA
+          #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.s3_tok_growth_36
+          #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.s3_tok_growth_iter
           EOF
           elif [[ "${PROOF_TARGET:-root-reset}" == "suffix3-two" ]]; then
             cat > RootResetAudit.lean <<'EOF'
