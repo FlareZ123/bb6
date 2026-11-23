@@ -137,10 +137,10 @@ private theorem odd_odd_sum4_parent (a k x y : Nat)
 
 /-- Even/odd outputs with x+y+1 = 12 mod 16 have only their
     depth-zero odd-left bounce predecessor. -/
-private theorem even_odd_sumplus1_12_parent (a k x y : Nat)
+private theorem even_odd_sumplus1_mod8_4_parent (a k x y : Nat)
     (hx : 5<x) (hy : 5≤y)
     (hxe : x%2=0) (hyo : y%2=1)
-    (hs : (x+y+1)%16=12)
+    (hs : (x+y+1)%8=4)
     (hedge : secNext (a,k)=some (x,y)) :
     a=(x+y+1)/2-3 ∧ k=(x+2*y-a-7)/2 := by
   have hp := (complete_section_inverse a k x y hy).mp hedge
@@ -173,9 +173,10 @@ private theorem even_odd_sumplus1_12_parent (a k x y : Nat)
                 if_neg hk0,if_neg hk1,if_neg hk2,if_neg hk3] at hp
               rcases hp with ⟨hy3,_⟩ | ⟨_,n,hpow,_⟩
               · omega
-              · have hmod : (x+y+1)%16=0 := by
+              · have hmod16 : (x+y+1)%16=0 := by
                   rw [hpow]
                   simp [Nat.mul_mod]
+                have hmod8 : (x+y+1)%8=0 := by omega
                 omega
     · have ha2 : 2≤a := by omega
       by_cases hk0 : k=0
@@ -269,7 +270,7 @@ private theorem no_low_target (u : Nat) (hu : u%4=0) :
   have hDuniq : ∀ a k, secNext (a,k)=some (1280*u+1018,384*u+305) →
       a=832*u+659 ∧ k=608*u+481 := by
     intro a k hedge
-    have hp := even_odd_sumplus1_12_parent a k
+    have hp := even_odd_sumplus1_mod8_4_parent a k
       (1280*u+1018) (384*u+305) (by omega) (by omega)
       (by omega) (by omega) (by omega) hedge
     constructor <;> omega
@@ -288,7 +289,7 @@ private theorem no_low_target (u : Nat) (hu : u%4=0) :
   have hR0uniq : ∀ a k, secNext (a,k)=some (720*u+568,664*u+523) →
       a=692*u+543 ∧ k=678*u+532 := by
     intro a k hedge
-    have hp := even_odd_sumplus1_12_parent a k
+    have hp := even_odd_sumplus1_mod8_4_parent a k
       (720*u+568) (664*u+523) (by omega) (by omega)
       (by omega) (by omega) (by omega) hedge
     constructor <;> omega
