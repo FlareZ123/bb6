@@ -14,6 +14,9 @@ All variables represent natural numbers; no truncating subtraction or
 untrusted numeric testing appears.
 -/
 
+set_option maxRecDepth 8192
+set_option maxHeartbeats 0
+
 namespace BB6.Agent11.SymRunCosts
 
 /-- F424: cost of n ordinary Rule-A 66-step blocks. -/
