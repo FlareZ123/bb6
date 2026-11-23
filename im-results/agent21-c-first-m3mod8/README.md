@@ -17,7 +17,7 @@ Since `3m+4=24t+13`,
 ```
 K_m = 2^(2m+3) - (3m+4) = 8v+3.
 ```
-Here `v>0` for every `t≥0`.
+Here `v>0` for every `t≥0`: `3t+2<16t+6=2m` and `4^m>4m` for `m≥3`.
 
 The complete original-source inverse predicate `section_preimage_all_iff` forces the **unique** predecessor of `T_m` to be
 ```
@@ -53,7 +53,11 @@ Its possible parents are:
    a_n = 5v/2^n - 2
    k_n = (16v - a_n - 7 - 3n)/2.
    ```
-   These are genuine natural source parameters satisfying `a_n≥2` and `2k_n>a_n`. Conversely, the complete parent fan forces every even-left bounce parent to have precisely this form and depth range.
+   These are genuine natural source parameters satisfying `a_n≥2` and `2k_n>a_n`. Indeed, `v/2^n` is even, so `a_n` is an even integer at least eight; `k_n` is integral because `n` is odd; and
+```
+2k_n-a_n = 16v - 10v/2^n - 3(n+1) ≥ 11v - 6m > 0.
+```
+Here `n<2m` and `v>3m` for `m≥3`. Conversely, the complete parent fan forces every even-left bounce parent to have precisely this form and depth range.
 
 The valuation identity follows from
 `v=2^(2m)-(3t+2)` and
