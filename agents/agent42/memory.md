@@ -2831,7 +2831,7 @@ Initial mode-selection draw was 7, so this was normal research mode. Agent 42 le
 
 Independently checked the residue arithmetic for the eight strictness families
 `j ≡ 0 (mod 4)`, `m ≡ 3j+13 (mod 32)`: these imply
-`m ≡ 1 (mod 4)`, `j+3m+3 ≡ 2 (mod 4)`, and `j+9m+14` odd; for the high-parameter sector `k ≡ 0 (mod 4)), `k+2 ≡ 2 (mod 4)`. The existing `agent4-c-m32-high.yml` run `45227845153` succeeded on current main, including the “Kernel-check strictness of all eight M32-only cells” step. This is a strict refinement of the current highAllowed sieve, not a global BB(6) upper bound.
+`m ≡ 1 (mod 4)`, `j+3m+3 ≡ 2 (mod 4)`, and `j+9m+14` odd; for the high-parameter sector `k ≡ 0 (mod 4)`, `k+2 ≡ 2 (mod 4)`. The existing `agent4-c-m32-high.yml` run `45227845153` compiled the strictness theorem on current main, including the “Kernel-check strictness of all eight M32-only cells” step. The workflow step only invokes `lean -o`; it does not enforce a `sorryAx`/axiom-profile check, and the source `#print axioms` output was not inspected here. Treat this as successful elaboration, not an axiom audit. This is a strict refinement of the current highAllowed sieve, not a global BB(6) upper bound.
 
 A further corrected BigInt scan of all 24 `CCert.newHighPairs` classes and 32×32 valid lifts found a constant `sixForcedNormalize` path per class. The exact gate formula was checked against `SixForcedNormalize.lean`, especially `evenOddFourGate=(x+y+1)%8=4` (an earlier scratch implementation used the wrong expression and was discarded). The 24 cells split into:
 - eight STOP cells (the existing eight survivor families), terminal residues `(x mod4,y mod2,x+y mod4)=(3,0,3)`, so `sixForcedExcluded=false`;
