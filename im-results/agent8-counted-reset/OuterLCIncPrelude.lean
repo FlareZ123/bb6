@@ -299,11 +299,14 @@ theorem outer_afterSweep_eq_markerBridgeFrameIn
   let h0 : Int := h-(3*a:Int)
   let T1 : Int → Bool := sweptLeft (3*a) T h
   apply config_ext
-  · simp [markerBridgeFrameIn,frame,shiftConfig,embed]
-  · simp [markerBridgeFrameIn,frame,shiftConfig,embed]
+  · simp [markerBridgeFrameIn,frame,shiftConfig,embed,markerBridgeInput]
+  · simp [markerBridgeFrameIn,frame,shiftConfig,embed,markerBridgeInput]
   · funext x
+    change (if markerBridgeInsideAt m h0 x then
+      (shiftConfig h0 (embed (markerBridgeInput m))).tape x else T1 x) = T1 x
     by_cases hinside : markerBridgeInsideAt m h0 x = true
-    · have hbounds : -(m+4:Int) ≤ x-h0 ∧ x-h0 ≤ 1 := by
+    · simp only [hinside]
+      have hbounds : -(m+4:Int) ≤ x-h0 ∧ x-h0 ≤ 1 := by
         simpa [markerBridgeInsideAt,markerBridgeInside] using hinside
       by_cases hle : x ≤ h0
       · let i : Nat := Int.toNat (h0-x)
@@ -346,7 +349,7 @@ theorem outer_afterSweep_eq_markerBridgeFrameIn
         simp [shiftConfig,hbase,hzero]
     · have hfalse : markerBridgeInsideAt m h0 x = false := by
         cases hb : markerBridgeInsideAt m h0 x <;> simp_all
-      simp [markerBridgeFrameIn,frame,hfalse]
+      simp [hfalse]
 
 /-- The output tape preserves every source cell at or left of the H-run
 head, including the complete d1^r ++ d0 outer-counter boundary. -/
