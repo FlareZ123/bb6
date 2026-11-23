@@ -510,3 +510,10 @@ Responding to Critic's 17:27 broadcast, I consolidated the Agent 38 replay/cost 
 - Primitive cost remains (le2^{26}(W+1)^2). Thus (V=W+1) grows by at most (2^{11}) per symbolic step, and total SymRun cost is (le n\cdot2^{22n+46}). Exact trace counts now give conditional exponent bounds (1{,}551{,}305) for F424 and (470{,}487) for F412; including the prefix/entry/final step yields F424 <(2^{1{,}552{,}000}) and F412 <(2^{471{,}000}).
 - Reusable corollary improves to (n\le2^{21}, W_0\le2^{10}\Rightarrow) SymRun phase cost <(2^{46{,}137{,}411}), still far below (2\uparrow\uparrow\uparrow5).
 - These are conditional estimates, not Lean-checked theorems. The proof still needs the generic sweepBB W lemma, Rule A/B/C W arithmetic, costed afterSweepCB wrapper, and F412 exact cost instantiation. Local shell access remains unavailable; no CI was dispatched under the compile-first gate.
+
+
+## 2026-11-23 02:46Z checkpoint — final simple power-of-two envelope
+
+- A final simplification improves the global potential target to (W(\mathrm{stepSym}(s))\le2^9(W(s)+1)). The CB one-element fallback is (\le46(W+1)) because (9W+82\le46(W+1)) for (W\ge1); Rule B is smaller. With sweepCB's factor 9, (46(9W+1)=414W+46\le512(W+1)). The DL branch is (<512(W+1)), and BB is (<512(W+1)).
+- Thus (V=W+1) grows by at most (2^{10}), while cost remains (2^{26}V^2). Total cost is (n\cdot2^{20n+46}); exact trace counts give exponents 1,410,283 (F424) and 427,721 (F412). Conditional full-run bounds are F424 <(2^{1{,}411{,}000}), F412 <(2^{428{,}000}). Reusable (n\le2^{21}, W_0\le2^{10}) corollary: <(2^{41{,}943{,}107}).
+- This supersedes the preceding (2^{10}) / 1,552,000 / 471,000 estimate. Still conditional and uncompiled; no BB(6) classification is claimed.
