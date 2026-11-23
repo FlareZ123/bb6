@@ -630,6 +630,10 @@ private theorem m2EvenSix_q4_prefix_head_bound
       run tm2 (3*N) ⟨3,h,T⟩ =
         some ⟨3,h-(N:Int),T1⟩ := by
     simpa [T1] using counted_left_sweep N T h hOn hright
+  have hSweep' :
+      run tm2 (3*N) (s1Config 3 6 2 a 0 b h) =
+        some ⟨3,h-(N:Int),T1⟩ := by
+    simpa [T,T1,s1Config] using hSweep
   have hmatch := m2EvenSixQ4Bridge_input_match a b h
   have hBridge :
       run tm2 38 ⟨3,hN,T1⟩ =
@@ -662,7 +666,7 @@ private theorem m2EvenSix_q4_prefix_head_bound
     · let j := k-p1
       have hj : j<38 := by dsimp [j,p1] at *; omega
       have hkEq : k=p1+j := by dsimp [j,p1]; omega
-      rw [hkEq,run_add,hSweep] at hd
+      rw [hkEq,run_add,hSweep'] at hd
       simp only [Option.bind_some] at hd
       have hlow := m2EvenSix_bridge_prefix_lower T1 hN hmatch j hj d hd
       dsimp [hN,N] at *
@@ -670,7 +674,7 @@ private theorem m2EvenSix_q4_prefix_head_bound
     · let j := k-p2
       have hj : j<3*a := by dsimp [j,p2,p1,N] at *; omega
       have hkEq : k=p1+(38+j) := by dsimp [j,p2,p1]; omega
-      rw [hkEq,run_add,hSweep] at hd
+      rw [hkEq,run_add,hSweep'] at hd
       simp only [Option.bind_some] at hd
       rw [run_add,hBridge] at hd
       simp only [Option.bind_some] at hd
