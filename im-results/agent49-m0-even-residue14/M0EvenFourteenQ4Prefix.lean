@@ -89,14 +89,14 @@ theorem m0EvenFourteen_q4_prefix_run (a b : Nat) (h : Int) (ha : 0 < a) :
   let T2 := (frameAt T1 hN m0EvenFourteenInside m0EvenFourteenBridgeEnd).tape
   have hleftFacing :
       s1LeftFacing 5 14 0 a 0 =
-        d1pow a ++ markerWord 0 ++ d0 ++ d1 ++ d0 ++ d1 ++ lh := by
+        d1pow a ++ markerWord 0 ++ d0 ++ d1 ++ d0 ++ d0 ++ d0 ++ d1 ++ lh := by
     simp [s1LeftFacing,binDec_zero,m0EvenFourteen_binDec_five_fourteen,List.append_assoc]
   have hOn : leftOnes T h N := by
     intro i hi
     have hcell := s1Config_left_cell 5 14 0 a 0 b h i
     have hside : sideBit (s1LeftFacing 5 14 0 a 0) i = true := by
       rw [hleftFacing]
-      let R : List Bool := markerWord 0 ++ (d0 ++ (d1 ++ (d0 ++ (d1 ++ lh))))
+      let R : List Bool := markerWord 0 ++ (d0 ++ (d1 ++ (d0 ++ (d0 ++ (d0 ++ (d1 ++ lh))))))
       simp only [List.append_assoc]
       change sideBit (d1pow a ++ R) i = true
       have hiLen : i < (d1pow a).length := by
@@ -118,8 +118,8 @@ theorem m0EvenFourteen_q4_prefix_run (a b : Nat) (h : Int) (ha : 0 < a) :
         frameAt T1 hN m0EvenFourteenInside m0EvenFourteenBridgeEnd =
           (⟨4,hN+3,T2⟩ : Config) := by
       apply config_ext
-      · simp [frameAt_state,m0EvenFourteenBridgeEnd]
-      · simp [frameAt_head,m0EvenFourteenBridgeEnd] <;> omega
+      · simp [frameAt_state,m0EvenFourteenBridgeEnd,BB6Coverage.Agent24M0EvenQ4Bridge.m0EvenQ4BridgeEnd]
+      · simp [frameAt_head,m0EvenFourteenBridgeEnd,BB6Coverage.Agent24M0EvenQ4Bridge.m0EvenQ4BridgeEnd] <;> omega
       · rfl
     rw [hframeConfig] at hBridge
     exact hBridge
@@ -137,7 +137,7 @@ theorem m0EvenFourteen_q4_prefix_run (a b : Nat) (h : Int) (ha : 0 < a) :
       have hmark :
           decide (((hN+3)-(h-((3*a:Nat):Int))) ∈ m0EvenFourteenBridgeEnd.marked) = true := by
         rw [hcoord]
-        simp [m0EvenFourteenBridgeEnd]
+        simp [m0EvenFourteenBridgeEnd,BB6Coverage.Agent24M0EvenQ4Bridge.m0EvenQ4BridgeEnd]
       have htrue : m0EvenFourteenQ4CutTape a b h (hN+3) = true :=
         hcut.trans hmark
       simpa [m0EvenFourteenQ4CutTape,T,N,T1,hN,T2] using htrue
@@ -215,7 +215,7 @@ theorem m0EvenFourteen_q4_prefix_rightShape (a b : Nat) (h : Int) (ha : 0 < a) :
         have hmark :
             decide ((h-(h-(3:Int))) ∈ m0EvenFourteenBridgeEnd.marked) = true := by
           rw [hc]
-          simp [m0EvenFourteenBridgeEnd]
+          simp [m0EvenFourteenBridgeEnd,BB6Coverage.Agent24M0EvenQ4Bridge.m0EvenQ4BridgeEnd]
         simpa using hcut.trans hmark
       · have hnot : ¬(-9 ≤ h-(h-((3*a : Nat) : Int)) ∧
             h-(h-((3*a : Nat) : Int)) ≤ 3) := by omega
@@ -367,15 +367,15 @@ private theorem m0EvenFourteenQ4LeftFacingTail (a i : Nat) (ha : 0 < a)
     simp [tgtPrefix,common,m0EvenFourteenQ4LeftFacing,
       m0EvenFourteen_binDec_five_thirteen,d0,d1,List.append_assoc]
   have hs := sideBit_append_after_local srcPrefix common i (by
-    simp [srcPrefix,d1pow_length,markerWord,d0]
+    simp [srcPrefix,d1pow_length,markerWord,d0,d1]
     omega)
   have ht := sideBit_append_after_local tgtPrefix common i (by
-    simp [tgtPrefix,d1pow_length,markerWord,d0]
+    simp [tgtPrefix,d1pow_length,markerWord,d0,d1]
     omega)
   have hlenS : srcPrefix.length = 3*a+10 := by
-    simp [srcPrefix,d1pow_length,markerWord,d0]
+    simp [srcPrefix,d1pow_length,markerWord,d0,d1]
   have hlenT : tgtPrefix.length = 3*a+10 := by
-    simp [tgtPrefix,d1pow_length,markerWord,d0]
+    simp [tgtPrefix,d1pow_length,markerWord,d0,d1]
     omega
   rw [hsrc,htgt,hs,ht,hlenS,hlenT]
 private theorem m0EvenFourteenQ4LeftFacingPrefixTrue (a i : Nat)
@@ -502,7 +502,7 @@ theorem m0EvenFourteen_q4_prefix_leftFacing (a b : Nat) (h : Int) (ha : 0 < a) :
               decide ((x-(h-((3*a:Nat):Int))) ∈ m0EvenFourteenBridgeEnd.marked) = true := by
             have hc : x-(h-((3*a:Nat):Int)) = 3 := by dsimp [x]; omega
             rw [hc]
-            simp [m0EvenFourteenBridgeEnd]
+            simp [m0EvenFourteenBridgeEnd,BB6Coverage.Agent24M0EvenQ4Bridge.m0EvenQ4BridgeEnd]
           have hval : m0EvenFourteenQ4CutTape a b h x = true := hcut.trans hmark
           have htarget := m0EvenFourteenQ4LeftFacingPrefixTrue a (3*a-3) (by omega)
           simpa [x] using hval.trans htarget.symm
@@ -516,7 +516,7 @@ theorem m0EvenFourteen_q4_prefix_leftFacing (a b : Nat) (h : Int) (ha : 0 < a) :
               decide ((x-(h-((3*a:Nat):Int))) ∈ m0EvenFourteenBridgeEnd.marked) = true := by
             have hc : x-(h-((3*a:Nat):Int)) = 2 := by dsimp [x]; omega
             rw [hc]
-            simp [m0EvenFourteenBridgeEnd]
+            simp [m0EvenFourteenBridgeEnd,BB6Coverage.Agent24M0EvenQ4Bridge.m0EvenQ4BridgeEnd]
           have hval : m0EvenFourteenQ4CutTape a b h x = true := hcut.trans hmark
           have htarget := m0EvenFourteenQ4LeftFacingPrefixTrue a (3*a-2) (by omega)
           simpa [x] using hval.trans htarget.symm
@@ -530,7 +530,7 @@ theorem m0EvenFourteen_q4_prefix_leftFacing (a b : Nat) (h : Int) (ha : 0 < a) :
               decide ((x-(h-((3*a:Nat):Int))) ∈ m0EvenFourteenBridgeEnd.marked) = true := by
             have hc : x-(h-((3*a:Nat):Int)) = 1 := by dsimp [x]; omega
             rw [hc]
-            simp [m0EvenFourteenBridgeEnd]
+            simp [m0EvenFourteenBridgeEnd,BB6Coverage.Agent24M0EvenQ4Bridge.m0EvenQ4BridgeEnd]
           have hval : m0EvenFourteenQ4CutTape a b h x = true := hcut.trans hmark
           have htarget := m0EvenFourteenQ4LeftFacingPrefixTrue a (3*a-1) (by omega)
           simpa [x] using hval.trans htarget.symm
@@ -544,7 +544,7 @@ theorem m0EvenFourteen_q4_prefix_leftFacing (a b : Nat) (h : Int) (ha : 0 < a) :
               decide ((x-(h-((3*a:Nat):Int))) ∈ m0EvenFourteenBridgeEnd.marked) = false := by
             have hc : x-(h-((3*a:Nat):Int)) = 0 := by dsimp [x]; omega
             rw [hc]
-            simp [m0EvenFourteenBridgeEnd]
+            simp [m0EvenFourteenBridgeEnd,BB6Coverage.Agent24M0EvenQ4Bridge.m0EvenQ4BridgeEnd]
           have htarget :
               sideBit (m0EvenFourteenQ4LeftFacing a) (3*a) = false := by
             have hlist :
