@@ -200,27 +200,28 @@ theorem s2_R_parents (u v t a k : Nat)
                 rw [hleft,hright] at hmodEq
                 omega
               have hnle : n≤2 := by
-                by_contra hn
-                have hn3 : 3≤n := by omega
-                have hp : 8∣(2:Nat)^n := by
-                  have hh : (2:Nat)^3∣(2:Nat)^n :=
-                    Nat.pow_dvd_pow 2 hn3
-                  simpa only [show (2:Nat)^3=8 by decide] using hh
-                have hf : 4∣2*(a-1)+8 := by
-                  refine ⟨(a-1)/2+2,?_⟩
+                by_cases hn : n≤2
+                · exact hn
+                · have hn3 : 3≤n := by omega
+                  have hp : 8∣(2:Nat)^n := by
+                    have hh : (2:Nat)^3∣(2:Nat)^n :=
+                      Nat.pow_dvd_pow 2 hn3
+                    simpa only [show (2:Nat)^3=8 by decide] using hh
+                  have hf : 4∣2*(a-1)+8 := by
+                    refine ⟨(a-1)/2+2,?_⟩
+                    omega
+                  obtain ⟨p,hp⟩ := hp
+                  obtain ⟨q,hq⟩ := hf
+                  have hdiv : 32∣x+y+1 := by
+                    refine ⟨p*q,?_⟩
+                    calc
+                      x+y+1=(2:Nat)^n*(2*(a-1)+8) := hs
+                      _=(8*p)*(4*q) := by rw [hp,hq]
+                      _=(8*4)*(p*q) := by ac_rfl
+                      _=32*(p*q) := by simp
+                  have hmod := Nat.mod_eq_zero_of_dvd hdiv
+                  rw [hval] at hmod
                   omega
-                obtain ⟨p,hp⟩ := hp
-                obtain ⟨q,hq⟩ := hf
-                have hdiv : 32∣x+y+1 := by
-                  refine ⟨p*q,?_⟩
-                  calc
-                    x+y+1=(2:Nat)^n*(2*(a-1)+8) := hs
-                    _=(8*p)*(4*q) := by rw [hp,hq]
-                    _=(8*4)*(p*q) := by ac_rfl
-                    _=32*(p*q) := by simp
-                have hmod := Nat.mod_eq_zero_of_dvd hdiv
-                rw [hval] at hmod
-                omega
               have hn1 : n=1 := by omega
               subst n
               simp only [show (2:Nat)^1=2 by decide] at hs
