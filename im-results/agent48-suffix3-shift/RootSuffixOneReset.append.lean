@@ -7,7 +7,7 @@ prepared suffix-one bridge directly from the same source-local mode clauses,
 without depending on the uncompiled shared RootCountdownSweep draft.
 -/
 
-private def s3oD (n c : ℕ) (T : List (ℕ × ℕ)) : Cfg :=
+private def s3oD (n c : ℕ) (T : List (ℕ × ℕ)) :=
   cfg_CR_n_n [(0,0)]
     (List.replicate (4*n+5) (0,0) ++ [(0,0),(c,0)] ++ T)
 
@@ -168,29 +168,29 @@ private theorem s3o_general_tail (x : ℕ) (T : List (ℕ × ℕ))
                 (ReachesPlus.trans h8
                   (ReachesPlus.trans h9'
                     (ReachesPlus.trans h10'
-                      (ReachesPlus.trans h11 h12)))))))))
+                      (ReachesPlus.trans h11 h12))))))))))
 
-/-- The residual-one family Q(n,1;T) enters the suffix-five family. -/
-theorem s3_residual_one_suffix_reset (n : ℕ) (T : List (ℕ × ℕ)) :
+/-- The residual-one family Q(n,1) enters the suffix-five family. -/
+theorem s3_residual_one_suffix_reset (n : ℕ) :
     ReachesPlus target
-      (s3oD n 1 T)
+      (s3oD n 1 [])
       (cfg_CR_n_n [(0,0)]
-        (List.replicate 5 (0,0) ++ [(8*n+9,0),(5,0)] ++ T)) := by
-  have h1 := s3o_prefix n 1 T
-  have h2 := s3_el_sweep (4*n+6) [(0,0),(1,0)] ((1,0)::T)
+        (List.replicate 5 (0,0) ++ [(8*n+9,0),(5,0)])) := by
+  have h1 := s3o_prefix n 1 []
+  have h2 := s3_el_sweep (4*n+6) [(0,0),(1,0)] [(1,0)]
   have h2' :
       ReachesPlus target
         (cfg_EL_n_n [(0,0),(1,0)]
-          (List.replicate (4*n+6) (0,0) ++ [(0,0),(1,0)] ++ T))
+          (List.replicate (4*n+6) (0,0) ++ [(0,0),(1,0)]))
         (cfg_EL_n_n
           (List.replicate (4*n+8) (0,0) ++ [(1,0)])
-          T) := by
+          [(1,0)]) := by
     simpa [List.replicate_add, List.cons_append,
       List.append_assoc, Nat.add_assoc] using h2
   have h3 := s3_el_positive 0
-    (List.replicate (4*n+8) (0,0) ++ [(1,0)]) T
+    (List.replicate (4*n+8) (0,0) ++ [(1,0)]) []
   have h4 := s3_dl_zero
-    (List.replicate (4*n+8) (0,0) ++ [(1,0)]) T
+    (List.replicate (4*n+8) (0,0) ++ [(1,0)]) []
   have h5 := s3o_el_empty
     ((0,0)::bumpPairHead
       (List.replicate (4*n+8) (0,0) ++ [(1,0)]))
@@ -201,9 +201,17 @@ theorem s3_residual_one_suffix_reset (n : ℕ) (T : List (ℕ × ℕ)) :
   have h7 := s3o_cr_one_zero
     (List.replicate (4*n+6) (0,0) ++ [(1,0)])
   have h8 := s3o_cr_zero_sweep_pair (4*n+5) 0 [(1,0)]
-    ((5,0)::T)
-  have h9 := s3o_cr_one_empty ((8*n+12,0)::(5,0)::T)
-  have h10 := s3o_general_tail (8*n+15) ((5,0)::T) (by omega)
+    [(5,0)]
+  have h8' :
+      ReachesPlus target
+        (cfg_CR_n_n (List.replicate (4*n+6) (0,0) ++ [(1,0)])
+          [(0,0),(5,0)])
+        (cfg_CR_n_n [(1,0)] [(8*n+12,0),(5,0)]) := by
+    have hrep : 4*n+5+1 = 4*n+6 := by omega
+    have hcount : 0+2*(4*n+5+1) = 8*n+12 := by omega
+    simpa [hrep, hcount] using h8
+  have h9 := s3o_cr_one_empty [(8*n+12,0),(5,0)]
+  have h10 := s3o_general_tail (8*n+15) [(5,0)] (by omega)
   exact ReachesPlus.trans h1
     (ReachesPlus.trans h2'
       (ReachesPlus.trans h3
@@ -211,5 +219,5 @@ theorem s3_residual_one_suffix_reset (n : ℕ) (T : List (ℕ × ℕ)) :
           (ReachesPlus.trans h5
             (ReachesPlus.trans h6
               (ReachesPlus.trans h7
-                (ReachesPlus.trans h8
-                  (ReachesPlus.trans h9 h10)))))))
+                (ReachesPlus.trans h8'
+                  (ReachesPlus.trans h9 h10))))))))
