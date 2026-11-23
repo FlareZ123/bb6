@@ -89,12 +89,13 @@ theorem state3_zero_exit4 (T : Int → Bool) (h : Int)
   have hh1 : h+1-1 = h := by omega
   simp [run, rawStep, readSlot, applyMove, tm2, hleft, h0, hright,
     afterZeroExit4, neq1, neq2, neq3, hh0, hh1]
-  constructor
-  · omega
-  · funext x
-    by_cases hx0 : x = h-1 <;> by_cases hx1 : x = h <;>
-      by_cases hx2 : x = h+1 <;>
-      simp [afterZeroExit4,hx0,hx1,hx2,hleft,h0,hright,neq1,neq2,neq3]
+  all_goals
+    constructor
+    · omega
+    · funext x
+      by_cases hx0 : x = h-1 <;> by_cases hx1 : x = h <;>
+        by_cases hx2 : x = h+1 <;>
+        simp [afterZeroExit4,hx0,hx1,hx2,hleft,h0,hright,neq1,neq2,neq3]
 
 #print axioms bridge_prefix44
 #print axioms bridge_heads44
