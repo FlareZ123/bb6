@@ -153,14 +153,14 @@ For a successful macro, the existing iteration lemmas give:
 - Rule B: \(50\cdot126\cdot n(M+4n+127)\). When \(n\le M\), \(M+4n+127\le5M+127\le132(M+1)\), and \(50\cdot126\cdot132=831{,}600<2^{20}\);
 - Rule C: \(50\cdot46\cdot n(M+2n+47)\). When \(n\le M\), \(M+2n+47\le3M+47\le48(M+1)\), and \(50\cdot46\cdot48=110{,}400<2^{17}\).
 
-After the CB sweep, \(M_1\le S_1\le4W\), so all successful macro costs are bounded by \(2^{20}(4W+1)^2\le2^{24}(W+1)^2\). For fallback, \(M_1+1\le4(W+1)\) and the stepElemCB left-length bound gives \(|L_1|\le|L|+7\le W+6\), hence \(|L_1|+8\le14(W+1)\). Therefore \(2^9(M_1+1)(|L_1|+8)\le2^9\cdot56(W+1)^2<2^{15}(W+1)^2\). The outer sweepCB cost is at most \(50(W+1)^2<2^6(W+1)^2\). The sum of these contributions is below \(2^{25}(W+1)^2\), so a safe common target is
+After the CB sweep, \(M_1\le S_1\le4W\), so all successful macro costs are bounded by \(2^{20}(4W+1)^2\le2^{24}(W+1)^2\). For fallback, the input left list is the post-sweepCB L', and `sweepCB_length_le_six` gives \(|L'|\le6W\). Thus \(|L'|+8\le7(W+1)\), while \(M_1+1\le4(W+1)\), so \(2^9(M_1+1)(|L'|+8)\le2^9\cdot28(W+1)^2<2^{14}(W+1)^2\). The outer sweepCB cost is at most \(50(W+1)^2<2^6(W+1)^2\). The sum of these contributions is below \(2^{25}(W+1)^2\), so a safe common target is
 
 \[
 \boxed{\operatorname{cost}(\operatorname{stepSym}(s))
        \le 2^{26}(W(s)+1)^2.}
 \]
 
-The remaining proof work is to compose the existing Rule A/B/C ReachesWithin lemmas through the exact afterSweepCB dispatch. Mirror afterSweepCB_sound's branch tree: a right prefix .zero :: .run d2 enters tryRuleBC (Rule C success, then Rule B success, otherwise fallback); a right head .run d enters tryRuleA only for d≥12 (otherwise fallback); empty, repeat-token, and other right heads fall back directly to stepElemThenBB_CB. On success the relevant macro budget is at most (2^{20}(M_1+1)^2); on fallback use (2^9(M_1+1)(|L_1|+8)). The post-sweep bounds (M_1\le4W) and (|L_1|\le W+6) give (|L_1|+8\le14(W+1)), making either branch fit the global (2^{26}(W+1)^2) budget after including the outer sweepCB. The current pilot has the costed macro and sweep ingredients, but not this complete dispatcher wrapper.
+The remaining proof work is to compose the existing Rule A/B/C ReachesWithin lemmas through the exact afterSweepCB dispatch. Mirror afterSweepCB_sound's branch tree: a right prefix .zero :: .run d2 enters tryRuleBC (Rule C success, then Rule B success, otherwise fallback); a right head .run d enters tryRuleA only for d≥12 (otherwise fallback); empty, repeat-token, and other right heads fall back directly to stepElemThenBB_CB. On success the relevant macro budget is at most \(2^{20}(M_1+1)^2\); on fallback use \(2^9(M_1+1)(|L'|+8)\) for the post-sweepCB input left list L'. The post-sweep bounds \(M_1\le4W\) and \(|L'|\le6W\) give \(|L'|+8\le7(W+1)\), making either branch fit the global \(2^{26}(W+1)^2\) budget after including the outer sweepCB. The current pilot has the costed macro and sweep ingredients, but not this complete dispatcher wrapper.
 
 ## Consequence if the target lemmas are proved
 
