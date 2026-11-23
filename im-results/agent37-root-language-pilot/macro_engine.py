@@ -104,6 +104,10 @@ def step(c: Config):
         )
     if v.startswith("1101100") and q == 0:
         return "E_halt", 12*k*k+41*k+98, None
+    # Agent2 all-q proof: original-source CI 45267507107. Cost excludes the
+    # final frozen-state entry, as for the other halting branches above.
+    if v.startswith("1101101100"):
+        return "E_all_q_1101101100_halt", 12*k*k+41*k+105+2*q, None
     return f"E_unresolved(q={q}):{v[:30]}", None, None
 
 
