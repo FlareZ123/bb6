@@ -175,3 +175,17 @@ The [fourth-edge terminal analysis](fourth_edge_terminal_survivors.md), with its
 Both extend to infinite arithmetic progressions of locally source-valid restart suffixes, with a preceding depth-five or depth-seven edge. The base indices 5362 and 9538 also satisfy the existing mod-16 wall filter. These are **synthetic restart-local paths**, not blank-root histories. Their parent costs exceed n, so the missing root prefix must still supply the entire cumulative-cost subset congruence modulo 2^n. The existing finite carry DP rejects the two base indices, but no all-time exclusion of the progressions has been proved.
 
 **Priority correction:** further local terminal-edge enumeration is not the decisive bottleneck. Work should now target the blank-root prefix/cumulative-cost carry obstruction for these surviving progressions, or a source-connected construction of such a prefix. The local compiler was unavailable in this invocation; no Lean or CI verification is claimed.
+
+
+## Dyadic Euclidean reverse-parent cycle (23 November 2026)
+
+The [249/343 reverse-parent analysis](dyadic_euclidean_249_343.md), with its [exact BigInt orbit scan](dyadic_euclidean_249_343.js), reformulates the original-source inverse parent map in the coordinates D=d−1, N=b+d+6 and k=t+1:
+
+\[
+N'=N+2k,\qquad D'=2^kD-N'-1,\qquad m'=m-k,
+\]
+with the complete remaining parent interval \(N'+1\le2^kD\le2N'-14\). The source-level uniqueness theorem already exists in Agent 27's P1InverseNoMerge.lean; the present contribution is the scalar coordinate form and its periodic reference dynamics, not a new unique-parent theorem.
+
+The two fourth-edge survivors have limiting restart ratios 491/21952 and 141/21952. Their ideal reverse-depth words map both to 249/343. Since ord_343(2)=147, this rational has a 147-bit binary period whose run-length word has 73 symbols and total cost 147. The exact finite-size error over one ideal cycle obeys an affine recurrence with multiplier 2^147. After their distinct initial words, the exact errors are respectively 21160n+238409 and 401982095360n+4624852107897.
+
+At the base indices, the exact reverse-parent orbits shadow the 73-symbol cycle for 2658 steps/cost 5347 (n=5362), and 4717 steps/cost 9490 (n=9538), then choose different next depths from the ideal orbit. This is exact finite computational evidence, not an actual periodic source orbit or a root-prefix decision. The new bottleneck is the post-shadowing deterministic reverse orbit: determine whether it reaches the blank-root state or is obstructed, potentially by a sequence of further rational reference cycles.
