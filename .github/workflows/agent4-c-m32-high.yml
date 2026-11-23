@@ -9,7 +9,7 @@ permissions:
 jobs:
   verify-high-32:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - name: Set up Lean 4.36.0-rc2
@@ -43,3 +43,29 @@ jobs:
             echo "Kernel-checking $f"
             lean -o "$f.olean" "$f.lean"
           done
+      - name: Compile the current all-depth criterion and M32 section bridge
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/a13-m32-extra
+          cp im-results/agent38-c-section-mod4/ThirdStageOddDepth.lean.xz.b64 /tmp/a13-m32-extra/
+          cd /tmp/a13-m32-extra
+          base64 -d ThirdStageOddDepth.lean.xz.b64 | xz -d > ThirdStageOddDepth.lean
+          echo "48fb1fcbf2b3a409c7bafb07a9f1df78a087b02d8cadeac51b2b81b02f301ed0  ThirdStageOddDepth.lean" | sha256sum -c -
+          cd "$GITHUB_WORKSPACE"
+          python3 tools/lean_compile_closure.py \
+            im-results/agent11-c-low58/CThreeSixAllCriterion.lean \
+            im-results/agent15-c-halting/M32SectionEmbedding.lean \
+            --workdir /tmp/a13-m32-c3six \
+            --source-root /tmp/a13-m32-extra \
+            --jobs 4 \
+            --lean "$(command -v lean)" \
+            --override BounceParity=im-results/agent46-c-jump/BounceParity.lean
+      - name: Kernel-check the exact CThreeSix plus M32 high criterion
+        shell: bash
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="/tmp/a13-m32-c3six:$GITHUB_WORKSPACE/tools"
+          lean --version
+          lean -o /tmp/a13-m32-c3six/CThreeSixM32Integration.olean \
+            im-results/agent13-residual-frontier/CThreeSixM32Integration.lean
