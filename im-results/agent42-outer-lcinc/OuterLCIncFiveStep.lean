@@ -1,4 +1,5 @@
 import CountedRst1Prime
+import ChampionRootBridge
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -14,6 +15,7 @@ namespace BB6Coverage.Agent42OuterLCInc
 
 open BB6Coverage
 open BB6Coverage.Agent8Rst1Prime
+open BB6Coverage.Agent48Champion
 
 /-- The five-step exit reads/writes exactly offsets 0 through 4. -/
 def outerLCIncFiveInside (x : Int) : Bool :=
