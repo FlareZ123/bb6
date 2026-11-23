@@ -2074,3 +2074,23 @@ Source-level reduction with base0/base2 yields conditional whole congruence-fami
 Reused existing manual workflow .github/workflows/agent24-cryptid-root-reset-lean.yml with explicit \`proof_target=suffix3-shift\` leaving old default root-reset unchanged, pinned upstream and native Lean v4.35.0-rc4. First run 45118275776 reached compiled original source and produced *actual Lean diagnostics*, not source unsoundness: two \`encLeft_run_s0\` missing Nat arguments, sweep I.H. not generalized over L,R, list-replicate normalization failures. Corrected both encoder arguments, generalized inductions, changed CR-prefix to explicit \`(0,0)::tail\` source redex; second run 45118887614 narrowed to three remaining zero-run commuting normalization failures; implemented private \`s3_zero_push\` induction lemma and used it in both sweep compositions and h6 endpoint. Third workflow run dispatched, pending. Need read actual failed-job logs (tail 100-200) if errors; continue repairs until original module and #print axioms succeed, then compile base0/base2 and tail extension. All drafts uncompiled pending success; do not put in results/.
 
 Original claim 05:19:10.366Z, lease not refreshed. Release only after actual >=70m at checkpoint, after pushing all work and deleting lease last.
+
+
+## 2026-11-23 06:04 UTC — source kernel accepted results and next frontier
+
+ORIGINAL-SOURCE KERNEL CERTIFICATIONS in pinned DeepMind Cryptid #85 3647718, all exact axiom profiles [propext, Classical.choice, Quot.sound], no sorryAx:
+- CI 45119240956: s3_universal_suffix_shift and s3_iterated_suffix_shift, Q(n,t+3)->Q(n+1,t), iterated all k>=1.
+- CI 45120434674: s3_zero_suffix_reset Q(n,0)->D0(8n+15) and s3_zero_residue_family Q(n,3k)->D0(8(n+k)+15), all n,k.
+- CI 45120508529: s3_universal_word_suffix_shift and s3_iterated_word_suffix_shift with ANY finite extra pair-stack tail T, Q(n,t+3;T)->Q(n+1,t;T), and iteration.
+
+README in im-results/agent48-suffix3-shift/ has been updated for accepted zero and word. A long-form paper for results/ attempted via GitHub create but conflicted with simultaneous push (409), file NOT written. Retry compact publication after next accepted theorem and update results/README only when source-verified contribution warrants it.
+
+Residual-two Q(n,2)->D0(8n+21) isolated CI 45120786563 narrowed to 4 list-associativity obligations, CI 45121219176 to ONE list equality (replicate k zeros ++ four zeros plus one versus four zeros prefix ++ replicate k zeros ++ one). Added s3_nat_push in final hz simp; repeat CI 45121525070 currently running. Correct exact token macro cost: original source lemma parameter k denotes k+1 zeros, cost 6*k+41; JavaScript earlier actual zeros length z=k+1 macro formula 6*z+35 is equivalent. Source clause sums Q(n,2)=40n+196 raw and Q(n,5)=64n+311 raw remain correct.
+
+New generalized ANY positive zero-run residual two: for u>=0, define s3_padded_two u = CR([0], zeros^(u+1) ++ [2]). Source rule composition proposes s3_padded_two u ->+ D0(2u+11), or any m>=1 zero digits followed by 2 resets to D0(2m+9). Source-local new RootPaddedTwoReset.append.lean drafted but NOT COMPILED. It implies Q(n,0;[0,2]) -> D0(8n+25), potentially extending conditional root orbit back to source-decidable C family. After BaseTwo accepted, compile this via isolated workflow.
+
+Also independently checking Agent24's 36-step source T(s)->T(s+5) token growth to establish reusable nonhalting family: RootTokenGrowth36.append.lean. Original token def tok_DR is private, so cannot appear in public theorem statement (CI 45120730753) or public def body (CI 45121122472). Updated public Cfg alias with explicit raw token tape 1^2 0 0 encLeft[(s,0)] and 1 0 blank; source mode texecute36; third growth CI 45121472135 running. Credit Agent24 if accepted.
+
+Conditional root arithmetic: source-derived current route D0(1341279249;[9])->Q(447093083,9)->Q(447093086,0)->D0(3576744703) uses certified shift and zero base but old c-countdown is NOT YET source kernel checked; two ordinary returns via B and Q0 would reach D0(25434629019;[0,0,2]), c divisible3, then conjectural new padded-two law -> D0(67825677409). A continuing source-derived C/B/Q0 recurrence reaches an unresolved Q0 residue 2 at c=443500237116953243 after 19 abstract events; this is conditional experimental itinerary, not a decision.
+
+No blank-root theorem or exact BB(6) value. Lease original 2026-11-23T05:19:10.366Z; 70min threshold 06:29:10.366Z.
