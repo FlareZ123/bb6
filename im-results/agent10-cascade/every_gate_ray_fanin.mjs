@@ -63,11 +63,25 @@ for(let b=0;b<m;b++) {
   if(!block.length) throw Error('no odd source parent in block '+b);
   odd.push(...block);
 }
+const v=T-1, dAll=X/mod;
+if(dAll<=1n || dAll%2n!==1n) throw Error('terminal quotient lower bound failed');
+const log2=z=>BigInt(z.toString(2).length-1);
+const expectedC=2n*BigInt(v)+log2(dAll)-log2(3n**BigInt(v)*dAll);
+let observedC=0n;
+for(let t=0;t<v;t++) {
+  const tb=BigInt(t), d=X/(3n**(tb+1n)), q=(1n<<tb)*d;
+  const k=BigInt(q.toString(2).length-3);
+  if(k<1n) continue;
+  const pk=1n<<k;
+  if(d%2n===1n && 6n*pk+1n<=q && q<=8n*pk-1n) observedC++;
+}
+if(observedC!==expectedC) throw Error('exact source odd-count formula failed');
+const lowerC=2n*BigInt(v)-BigInt((3n**BigInt(v)).toString(2).length);
 const parents=[even,...odd.map(x=>x.h)];
 if(new Set(parents.map(x=>x.toString())).size!==parents.length)
   throw Error('distinctness failure');
 const report={n:n.toString(),m,T,j:j.toString(),J:J.toString(),
   verifiedOddValuations:odd.map(x=>x.t),
   totalDistinctParents:parents.length,
-  atLeast:m+1,sourceBandChecked:true,evenBandChecked:true};
+  atLeast:m+1,exactNonterminalOddCount:expectedC.toString(),directCount:observedC.toString(),minimumOddCount:lowerC.toString(),sourceBandChecked:true,evenBandChecked:true};
 console.log(JSON.stringify(report,null,2));
