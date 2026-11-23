@@ -102,26 +102,22 @@ theorem tapeToRelative_write_move_right (T : ExtTape) (w : ExtSymbol) :
           change encodeSymbol ((Turing.Tape.move .right
             (Turing.Tape.write w (leftTape {{a}} rightTape))).nth 0) =
             encodeSymbol ((leftTape {{a}} rightTape).nth 1)
-          rw [Turing.Tape.move_right_nth]
-          simp [Turing.Tape.write_mk']
+          simp [Turing.Tape.move_right_nth, Turing.Tape.write_mk,
+            Turing.Tape.nth]
       · constructor
         · exact by
             funext n
             cases n with
             | zero =>
-                simp [Turing.Tape.move_right_nth, Turing.Tape.write]
+                simp [Turing.Tape.move_right_nth, Turing.Tape.write_mk,
+                  Turing.Tape.nth]
             | succ n =>
-                rw [Turing.Tape.move_right_nth]
-                have hidx : (Int.negSucc (n + 1) + 1 : Int) =
-                    Int.negSucc n := by omega
-                rw [hidx]
-                simp [Turing.Tape.write_mk']
+                simp [Turing.Tape.move_right_nth, Turing.Tape.write_mk,
+                  Turing.Tape.nth]
         · exact by
             funext n
-            rw [Turing.Tape.move_right_nth]
-            have hidx : (n : Int) + 2 = (n : Int) + 1 + 1 := by omega
-            rw [hidx]
-            simp [Turing.Tape.write_mk']
+            simp [Turing.Tape.move_right_nth, Turing.Tape.write_mk,
+              Turing.Tape.nth]
 
 /-- Mathlib's write-then-move-left operation is exactly BB6.Bridge.goLeft. -/
 theorem tapeToRelative_write_move_left (T : ExtTape) (w : ExtSymbol) :
@@ -136,30 +132,22 @@ theorem tapeToRelative_write_move_left (T : ExtTape) (w : ExtSymbol) :
           change encodeSymbol ((Turing.Tape.move .left
             (Turing.Tape.write w (leftTape {{a}} rightTape))).nth 0) =
             encodeSymbol ((leftTape {{a}} rightTape).nth (-1))
-          rw [Turing.Tape.move_left_nth]
-          simp [Turing.Tape.write_mk']
+          simp [Turing.Tape.move_left_nth, Turing.Tape.write_mk,
+            Turing.Tape.nth]
       · constructor
         · exact by
             funext n
-            rw [Turing.Tape.move_left_nth]
-            have hidx : (Int.negSucc n - 1 : Int) =
-                Int.negSucc (n + 1) := by omega
-            rw [hidx]
-            simp [Turing.Tape.write_mk']
+            simp [Turing.Tape.move_left_nth, Turing.Tape.write_mk,
+              Turing.Tape.nth]
         · exact by
             funext n
             cases n with
             | zero =>
-                rw [Turing.Tape.move_left_nth]
-                simp [Turing.Tape.write_mk']
+                simp [Turing.Tape.move_left_nth, Turing.Tape.write_mk,
+                  Turing.Tape.nth]
             | succ n =>
-                rw [Turing.Tape.move_left_nth]
-                have hidx : (Int.ofNat (n + 2) - 1 : Int) =
-                    Int.ofNat (n + 1) := by
-                  change (n + 2 : Int) - 1 = (n + 1 : Int)
-                  omega
-                rw [hidx]
-                simp [Turing.Tape.write_mk']
+                simp [Turing.Tape.move_left_nth, Turing.Tape.write_mk,
+                  Turing.Tape.nth]
 
 structure Positioned where
   state : ExtState
