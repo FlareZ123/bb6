@@ -149,7 +149,7 @@ The exact checkpoint chains give:
 | F424 | \(1+16+11\cdot256+4\cdot4096=19{,}217\) | \(70{,}511\) | \(2^{1{,}833{,}349}\) |
 | F412 | \(7+3\cdot16+11\cdot256+4\cdot4096=19{,}255\) | \(21{,}383\) | \(2^{556{,}019}\) |
 
-For the initial RLE prefix, \(W_M\) starts at 1, each stepElemM raises it by at most 8, and its primitive cost is at most \(25(W_M+1)\). Thus the whole prefix is bounded by
+For the initial RLE prefix, \(W_M\) starts at 1 and each stepElemM raises it by at most 8. The F424/F412 rule tables have maximal variable costs \(3d+22\) and \(3d+20\), respectively (fixed branches are at most 13); since \(d\le W_M\), both are bounded by \(25(W_M+1)\). Thus the whole prefix is bounded by
 \[
 25N(8N+2)<2^{37}\qquad(N\le19{,}255).
 \]
