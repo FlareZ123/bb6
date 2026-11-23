@@ -99,6 +99,21 @@ Thus the **depth-16 finite inverse search** rejects `4191236/4194304` classes of
 
 The algorithm can be run with `node im-results/agent30-429-branch9-zero-feeder/side_branch_sieve.js 16`. The JavaScript source is deliberately standalone and the computed count includes a regression assertion; local runtime execution was unavailable in this invocation, so the script was not re-run after being committed. The numbers were produced by a functionally equivalent exact-BigInt interpreter in the available code execution runtime, not by Lean or original-machine simulation.
 
+## Exceptional parents have an exact dyadic gap independent of the outer burst
+
+The full S-parent formula above gives the **parameter-free identity**
+
+    2*X + 21 = Y + 24*2^t,
+    d := X - (Y-1)/2 = 12*2^t - 10.
+
+Here `Y` is odd, and `d` is the source map's actual odd-gap counter, independent of the much larger `N` and `J` and of the spine index `k`. In fact, for `t≥1`, `d` is even and `d≥14`; the genuine odd-gap source branch, not an artificial inverse transition, maps
+
+    (X,Y) -> (d+7,2*Y-4) = (12*2^t-3,B_(4k+3)).
+
+Thus every potential exceptional ancestor joins the same first-coordinate tower as the ordinary F spine, but by **encoding the remaining distance t as its gap**. The source formula itself proves this algebraic statement, without assuming blank reachability. This is a stronger structural handle than the dyadic residue frequency alone: the next productive investigation should seek an all-time root invariant on the joint *first-coordinate/gap* pair, or a monotone obstruction across repeated F/S switching. Merely classifying `X` by bounded congruences discards the exact gap `12*2^t-10`.
+
+For clarity, an inverse tree with a fixed total rank `R=2u+w` can be parameterized by the leading `2^N` coefficient of the first counter. The full F inverse sends its leading coefficient `a→a/2`, whereas S/E send `a→(a+24)/2` when the rank's leading coefficient is `48`. On the normalized coefficient `p=a/24`, this is the binary contraction `p→p/2` versus `p→(p+1)/2`. This is an *algebraic branch-encoding observation*, not a proof that every binary word is source-admissible. The real guards, lower-order terms, and finite natural first counters are the essential additional data.
+
 ## A 2-adic ghost spine obstructs uniform shallow congruence pruning
 
 There is a simple structural explanation for why growing the published all-time root residue sieve cannot, **by itself**, eliminate the long all-F spine. The affine F predecessor formula on integers is
