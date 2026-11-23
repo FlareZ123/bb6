@@ -91,9 +91,10 @@ private theorem q4Tail_left_stream
     have hframe : U.tape x = d0Sweep n T h x := by
       change (frameAt (d0Sweep n T h) g q4TailInside q4TailEnd).tape x = _
       rw [frameAt_tape]
-      have hlt : x-g < 0 := by dsimp [x,H,g]; omega
+      have hlt : x-g < -4 := by dsimp [x,H,g]; omega
       have hnot : q4TailInside (x-g) = false := by
-        simp [q4TailInside, not_le_of_gt hlt]
+        simp [q4TailInside]
+        omega
       simp [hnot]
     have hbefore : d0Sweep n T h x = T x := by
       apply d0Sweep_before
@@ -106,6 +107,7 @@ private theorem q4Tail_left_stream
         sideBit (d0pow (n-1) ++ ell) i = sideBit ell j := by
       rw [Agent6Q4Prefix.sideBit_append_right (d0pow (n-1)) ell i
         (by rw [hprefixLen]; exact hge)]
+      rw [hprefixLen]
       simp [j]
     calc
       U.tape (H-(i:Int)) = U.tape x := by rfl
@@ -142,7 +144,9 @@ private theorem q4Tail_right_stream
       change (frameAt (d0Sweep n T h) g q4TailInside q4TailEnd).tape
         (g+(-4+(i:Int))) = _
       rw [frameAt_tape]
-      simp_all [q4TailInside,q4TailEnd,s0RightFacing,d1pow,d1,sideBit] <;> omega
+      have hrel : (g+(-4+(i:Int)))-g = -4+(i:Int) := by omega
+      rw [hrel]
+      simp_all [q4TailInside,q4TailEnd,s0RightFacing,d1pow,d1,sideBit]
   · let j : Nat := i-9
     have hcoord : H+1+(i:Int) = g+5+(j:Int) := by
       dsimp [H,g,j]
