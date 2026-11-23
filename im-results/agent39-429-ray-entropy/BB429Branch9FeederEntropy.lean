@@ -180,13 +180,13 @@ private theorem branch9_divisibility (t q r v K : Nat)
         rw [h12]
         calc
           (3*4)*2^N = 3*(4*2^N) := by rw [Nat.mul_assoc]
-          _ = 3*(2^N*4) := by rw [Nat.mul_comm]
+          _ = 3*(2^N*4) := by rw [Nat.mul_comm 4 (2^N)]
       _ = 3*2^(N+2) := by rw [←hpowN]
       _ = 3*(2^K*2^(N+2-K)) := by rw [hsplitN,Nat.pow_add]
       _ = 2^K*(3*2^(N+2-K)) := by
         calc
           3*(2^K*2^(N+2-K)) = (3*2^K)*2^(N+2-K) := by rw [←Nat.mul_assoc]
-          _ = (2^K*3)*2^(N+2-K) := by rw [Nat.mul_comm]
+          _ = (2^K*3)*2^(N+2-K) := by rw [Nat.mul_comm 3 (2^K)]
           _ = 2^K*(3*2^(N+2-K)) := by rw [Nat.mul_assoc]
   have h12J : 12*2^J=2^K*(3*2^(J+2-K)) := by
     calc
@@ -195,13 +195,13 @@ private theorem branch9_divisibility (t q r v K : Nat)
         rw [h12]
         calc
           (3*4)*2^J = 3*(4*2^J) := by rw [Nat.mul_assoc]
-          _ = 3*(2^J*4) := by rw [Nat.mul_comm]
+          _ = 3*(2^J*4) := by rw [Nat.mul_comm 4 (2^J)]
       _ = 3*2^(J+2) := by rw [←hpowJ]
       _ = 3*(2^K*2^(J+2-K)) := by rw [hsplitJ,Nat.pow_add]
       _ = 2^K*(3*2^(J+2-K)) := by
         calc
           3*(2^K*2^(J+2-K)) = (3*2^K)*2^(J+2-K) := by rw [←Nat.mul_assoc]
-          _ = (2^K*3)*2^(J+2-K) := by rw [Nat.mul_comm]
+          _ = (2^K*3)*2^(J+2-K) := by rw [Nat.mul_comm 3 (2^K)]
           _ = 2^K*(3*2^(J+2-K)) := by rw [Nat.mul_assoc]
   let P := 3*2^(N+2-K)
   let Q := 3*2^(J+2-K)
