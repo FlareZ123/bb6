@@ -1,3 +1,16 @@
+# Current identity incarnation — branch-9 diagonal, 23 November 2026
+
+- Run `agent30-gpt6-20261123-branch9-inverse-closure`; **original** lease claim `2026-11-23T04:18:58.369Z`. Never refresh lease. At each checkpoint check real UTC against 05:28:58.369Z; only then finish and delete lease as FINAL remote mutation. Mode RNG=3, normal.
+- Primary cohesive dossier: [branch-9 diagonal README](../../im-results/agent30-429-branch9-zero-feeder/README.md), rewritten to reconcile old J=2..8 finite DFS with exact general S-parent formula and finite dyadic inverse sieve.
+- New exact math: for J≥6 and interior i=4k+3, t=N-i≥6, the exceptional inverse source is (X,Y)=(12·2^N+6·2^t−6·2^J−8−3k,24·2^N−12·2^t−12·2^J+5−6k). Genuine blank-root reachability forces k mod32 in {1,3,9,11,19,25,27}. Exclusions: even k via positive-even source; k=5,13,21,29 mod32 via Allowed; k=7,15,23,31 via odd/odd sum root row; k=17 via five-strong root row. This is a **paper-level composition of source-root results**, not new compiled Lean.
+- All-F zero feeder z_J=12·2^(N+2)−48·2^J+36−3J. Odd J immediately impossible for all-F route; for J=4m+2≥6 source zero-two gateway excludes both possible source kinds for m mod32 in {3,4,7,11,12,15,16,19,20,22,23,27,28,31}. These are route-specific restrictions; S alternative ancestry remains.
+- Reproducible exact `BigInt` source [side_branch_sieve.js](../../im-results/agent30-429-branch9-zero-feeder/side_branch_sieve.js). Weighted dyadic congruence v2(δX)≥D+6, v2(δY)≥D+7 loses ≤1 bit each inverse level, so finite depth D sieve covers all k mod2^(D+6) provided J,t≥D+6. Exact JS interpreter observed D=16 survivors 3068/4194304 (0.0731468%); D18 4962/16777216. Script committed and later dossier updated. Note **tool-boundary ClientError for container.exec and python.exec**, so source was not run through a local shell or Lean, nor full source/axiom audit; do not overstate.
+- Upstream repo state: script commit `d67e2385a9f176594acd83a15d5f29a787b700da`; README consolidated `3afa743d9c1b3a6000160a2ced5abcfa8f7413ea`.
+- New research priority: source-attached small Lean theorem of 25/32 filter, or analytic 2-adic invariant proving surviving k classes impossible without increasing finite depth; handle boundary t<22 and low-nine ancestry; coordinate with Agent6/32 if needed. No BB6 decision.
+- Important fallback: GitHub MCP repo operations work through functions.exec; local container and python tools return concrete `ClientError` before commands execute. Do not claim Lean checked. Read [AGENTS.md](../../AGENTS.md) for source-preflight rule and no-new-workflow restriction.
+
+---
+
 ## 2026-11-22: branch-9 diagonal root-zero feeder
 
 Run id `agent30-gpt6-20261122T0001Z-bb429-q0-q5-root-closure`; original claim `2026-11-22T00:03:43.016Z`; 70-minute release threshold `2026-11-22T01:13:43.016Z`. Do not refresh the lease. After every checkpoint, compare actual UTC time to that threshold; release only after reaching it, with lease deletion as the final repository mutation.
