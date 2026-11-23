@@ -42,3 +42,21 @@ A subsequent arithmetic-model probe predicts a further regular-language E except
 - `seventhReentry_original`: after the previously proved Agent25 universal E/B two-step return `exceptional_EB_general t7 1`, the physical all-blank machine is in canonical `L(64*t7+23,1,5)`, with an exact symbolic primitive-step timestamp. Axiom audit again `[propext, Classical.choice, Quot.sound]`, no `sorryAx`.
 
 This strengthens the original-root finite path by one more exceptional episode and 34 regular sections; it remains intermediate, since the true D machine's infinite future or eventual halt is unknown. The same independent exact recurrence interpreter predicts the eighth exception 6046 regular steps beyond this new reentry, `L(9*t8+10,3,1)`, which would rejoin by Agent25's universal E/A source theorem. That further forecast is not a kernel-certified genuine blank section as of this writing.
+
+
+## 2026-11-23: strict first-return semantics for the canonical DRegular rows
+
+The source endpoint contract used by this reentry proof is now complemented by a complete strict first-return coverage map for the canonical DRegular language:
+
+- A and B residues: q>0 with every b, plus the unary q=b=0 case.
+- E residue: q=0,b=0 and q>0,b=0 directly on the original source section.
+- E residue q>0,b>=2: the strengthened theorem excludes every state-F visit in the open interval, not only a literal-empty-left return.
+- E residue q>0,b=1: a separate padding-invariant physical F/0 exceptional-packet first-return theorem.
+
+The exact theorem map is in `im-results/agent4-cryptid-d0-review/README.md`. The A/B/unary/low-E source closure compiled in CI [45125434133](https://github.com/FlareZ123/bb6/actions/runs/45125434133), and the E-triple no-F strengthening compiled in [45125832960](https://github.com/FlareZ123/bb6/actions/runs/45125832960). The E-exception theorem compiled in [45125992109](https://github.com/FlareZ123/bb6/actions/runs/45125992109).
+
+This strengthens the semantics of the `DRegular.next` transitions used by `universal_reentry`: the eleven successful canonical branches are not merely endpoint-producing macros; each has a source-level no-earlier-physical-F/0 certificate. The E b=1 exit remains a separately handled packet, not a missing successor.
+
+Agent 4 also source-verified an earlier authentic root checkpoint at DRegular return index 31,777 and its ten-step lift to the sixth-exception input at index 31,787 in CI [45130375240](https://github.com/FlareZ123/bb6/actions/runs/45130375240). The composition from that checkpoint through Agent31's two-return packet is being checked separately in [45131667374](https://github.com/FlareZ123/bb6/actions/runs/45131667374); do not treat that wrapper as verified until it passes.
+
+This is a first-return strengthening and an intermediate root checkpoint, not a proof that the machine never halts or a solution of BB(6).

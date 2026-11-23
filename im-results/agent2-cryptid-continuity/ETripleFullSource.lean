@@ -46,5 +46,35 @@ theorem full_E_triple_pairs_first_return (k q : Nat) (ys : List Bool) :
       exact (eTriplePairs_firstF (4*k+3) q ys).2
         (t-(12*k*k+41*k+33)) hr hphys.1
 
+/-- Stronger state-F exclusion for the same E-triple source interval.
+The boundary proof already excludes every state-F visit, not merely the
+literal-empty-left return predicate used in the historical wrapper. -/
+theorem full_E_triple_pairs_noF (k q : Nat) (ys : List Bool) :
+    let tmax := 12*k*k+49*k+58+6*q
+    let start := init (List.replicate (3*k+2) true ++
+      false :: (pairs q ++ ([true,true,true] ++ ys)))
+    ∀ t, 0<t → t<tmax → (run t start).st ≠ 5 := by
+  dsimp
+  intro t hpos hlt hF
+  by_cases hp : t<12*k*k+41*k+33
+  · exact prefixE_positive_noF k
+      (pairs q ++ ([true,true,true]++ys)) t hpos hp hF
+  · have hprefix :
+      run (12*k*k+41*k+33)
+        (init (List.replicate (3*k+2) true ++
+          false :: (pairs q ++ ([true,true,true]++ys)))) =
+        eTriplePairs (4*k+3) q ys := by
+      rw [prefix_E]
+      rfl
+    have ht : t=(12*k*k+41*k+33)+(t-(12*k*k+41*k+33)) := by omega
+    have hr : t-(12*k*k+41*k+33)<
+        2*(4*k+3)+6*q+19 := by omega
+    rw [ht,run_add] at hF
+    simp only [List.cons_append, List.nil_append] at hprefix
+    rw [hprefix] at hF
+    exact (eTriplePairs_firstF (4*k+3) q ys).2
+      (t-(12*k*k+41*k+33)) hr hF
+
 #print axioms full_E_triple_pairs_first_return
+#print axioms full_E_triple_pairs_noF
 end BB6.CryptidETriplePairsFirstReturn

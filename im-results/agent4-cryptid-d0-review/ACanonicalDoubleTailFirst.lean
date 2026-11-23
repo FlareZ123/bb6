@@ -19,6 +19,7 @@ set_option linter.unusedSimpArgs false
 namespace BB6.Agent4ACanonicalDoubleTail
 
 open CryptidBoundary
+open BB6.BoundaryPadding
 open BB6.Agent4ACanonicalOneTail
 open BB6.Agent4AImplicitDouble
 open BB6.CryptidA1100CodeFirst

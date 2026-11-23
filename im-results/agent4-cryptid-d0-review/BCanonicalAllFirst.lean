@@ -67,7 +67,10 @@ theorem all_B_no_earlier_F (k q b : Nat)
         · exact hzero
       subst b
       have hn : (3*k+2)-2=3*k := by omega
-      change (run t (init (List.replicate (3*k) true))).st ≠5
+      have hstart : DRegularSource.sourceSection ⟨3*k+2,0,0⟩ =
+          init (List.replicate (3*k) true) := by
+        simp [DRegularSource.sourceSection, hn, oppairs]
+      rw [hstart]
       exact b_unary_noF k t hpos ht
   | succ q =>
       have hn : (3*k+2)-2=3*k := by omega
@@ -93,8 +96,11 @@ theorem all_B_first (k q b : Nat)
     ∀ t, 0<t → t<DRegular.duration ⟨3*k+2,q,b⟩ →
       (run t (DRegularSource.sourceSection ⟨3*k+2,q,b⟩)).st ≠ 5 := by
   constructor
-  · exact BB6.BRegularSource.original_B_row _ _ hc
-      (by omega) hn
+  · have hmod : (DRegular.L.mk (3*k+2) q b).a % 3 = 2 := by
+      change (3*k+2)%3=2
+      omega
+    exact BB6.BRegularSource.original_B_row
+      (DRegular.L.mk (3*k+2) q b) out hc hmod hn
   · exact all_B_no_earlier_F k q b hc
 
 #print axioms b_raw_noF

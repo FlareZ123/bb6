@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
-      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent35-d-regular-certificate:im-results/agent32-cryptid-padding:im-results/agent2-cryptid-continuity:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent31-d-exceptional:im-results/agent35-d-sixth-rejoin
+      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent35-d-regular-certificate:im-results/agent32-cryptid-padding:im-results/agent2-cryptid-continuity:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent31-d-exceptional:im-results/agent35-d-sixth-rejoin:im-results/agent4-cryptid-macro-replay:im-results/agent4-cryptid-d0-review
     steps:
       - uses: actions/checkout@v4
       - name: Restore pinned original D sources and DRegular proof
@@ -97,3 +97,16 @@ jobs:
           lean -DmaxRecDepth=55000 -o "$G/SixthRejoin.olean" "$G/SixthRejoin.lean"
           lean -DmaxRecDepth=55000 -o "$G/SeventhRejoin.olean" "$G/SeventhRejoin.lean"
           lean -DmaxRecDepth=55000 "$D/BlankEighthRejoin.lean"
+          M=im-results/agent4-cryptid-macro-replay
+          R13=im-results/agent4-cryptid-d0-review
+          lean -DmaxRecDepth=55000 -o "$M/First10AffineBridge.olean" "$M/First10AffineBridge.lean"
+          lean -DmaxRecDepth=55000 -o "$R13/Root13Section.olean" "$R13/Root13Section.lean" | tee "$R13/root13-axioms.txt"
+          if grep -q 'sorryAx' "$R13/root13-axioms.txt"; then
+            echo "Root13Section has an admitted axiom dependency" >&2
+            exit 1
+          fi
+          lean -DmaxRecDepth=55000 -o "$R13/Root13TwoReturn.olean" "$R13/Root13TwoReturn.lean" | tee "$R13/root13-two-return-axioms.txt"
+          if grep -q 'sorryAx' "$R13/root13-two-return-axioms.txt"; then
+            echo "Root13TwoReturn has an admitted axiom dependency" >&2
+            exit 1
+          fi

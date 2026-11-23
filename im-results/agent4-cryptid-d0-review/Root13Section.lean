@@ -9,9 +9,13 @@ from the fifth root reentry seed. This file extracts the prefix 4,484 steps,
 which is the root section at section index 31,777 (the sixth exceptional
 endpoint is index 31,787), and records its exact 3-adic residue.
 
-**Compilation status:** uncompiled draft. The current invocation's local
-Python/container tools fail with tool-level ClientError; do not treat the
-declarations below as kernel-checked until the exact source closure compiles.
+**Compilation status:** source-verified by pinned original-source Lean 4.36.0-rc2 CI. Run
+[45130375240](https://github.com/FlareZ123/bb6/actions/runs/45130375240) checked the
+Root13 section and authentic source lift; run
+[45131667374](https://github.com/FlareZ123/bb6/actions/runs/45131667374) checked the
+complete two-return composition. Both workflows reject `sorryAx` and
+`native_decide`. This is a finite blank-root trajectory certificate, not a
+halting/nonhalting theorem.
 -/
 
 set_option maxHeartbeats 100000000
@@ -92,10 +96,19 @@ theorem root13Section_eq_lift :
       BB6.DRegularShift.shiftNat cryptidStart (3^13*root13P) := by
   have hmod := root13Section_mod3pow14
   have hge := root13Section_ge_C
-  apply DRegular.L.mk.inj
+  change DRegular.L.mk root13Section.a root13Section.q root13Section.b =
+    DRegular.L.mk (cylinderC + 3^13*root13P) 0 0
+  simp only [DRegular.L.mk.injEq]
   constructor
-  · simp [BB6.DRegularShift.shiftNat, cryptidStart, cryptidCylinderC,
-      cylinderC, root13P]
+  · simp only [root13P]
+    have hpow : 3^14 = 3^13*3 := by decide
+    have hdiv : (root13Section.a-cylinderC) % 3^13 = 0 := by omega
+    have hmul :
+        3^13*((root13Section.a-cylinderC)/3^13) =
+          root13Section.a-cylinderC := by
+      have h := Nat.mod_add_div (root13Section.a-cylinderC) (3^13)
+      rw [hdiv] at h
+      simpa using h
     omega
   · exact root13Section_shape
 
@@ -116,7 +129,7 @@ theorem root13_first10_shift :
     calc
       3^10*(3^3*root13P) = (3^10*3^3)*root13P := by ac_rfl
       _ = 3^(10+3)*root13P := by rw [← Nat.pow_add]
-      _ = 3^13*root13P := by congr 1; omega
+      _ = 3^13*root13P := by rfl
   simpa [hpow] using h
 
 theorem root13_first10_exact :
@@ -147,11 +160,42 @@ theorem root13Section_original :
   · exact root13Section_exact
   · exact BB6.Agent25FifthRoot.fifthReentry_original
 
+/-- The canonical predicate holds for the authentic root section. -/
+theorem root13Section_canon : DRegular.Canon root13Section := by
+  constructor
+  · have hC : 2 ≤ cylinderC := by decide
+    have hG := root13Section_ge_C
+    omega
+  · right
+    exact root13Section_shape.2
+
+/-- Source-lift the ten exact DRegular transitions from the root-13 section
+to the already certified sixth-exception input. This is an actual blank-root
+source path, not merely an arithmetic shadow. -/
+theorem root13_to_sixth_exception_original :
+    ObsEq
+      (run
+        (BB6.Agent25FifthRoot.fifthReentryTime +
+          DRegular.accumulated 4484 BB6.Agent25SixthRoot.seed +
+          DRegular.accumulated 10 root13Section)
+        blank)
+      (DRegularSource.sourceSection
+        ⟨9*BB6.Agent25SixthRoot.t6+7,4,1⟩) := by
+  apply BB6.Agent25RootChain.extend_regular blank
+    (BB6.Agent25FifthRoot.fifthReentryTime +
+      DRegular.accumulated 4484 BB6.Agent25SixthRoot.seed)
+    10 root13Section ⟨9*BB6.Agent25SixthRoot.t6+7,4,1⟩
+  · exact root13Section_canon
+  · exact root13_to_sixth_exception
+  · exact root13Section_original
+
 #print axioms root13Certificate
 #print axioms root13Section_mod3pow14
 #print axioms root13P_mod2187
+#print axioms root13Section_eq_lift
 #print axioms root13_first10_exact
 #print axioms root13_to_sixth_exception
 #print axioms root13Section_original
+#print axioms root13_to_sixth_exception_original
 
 end BB6.Agent4Root13Section
