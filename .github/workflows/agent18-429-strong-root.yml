@@ -32,6 +32,7 @@ jobs:
           lean -DmaxRecDepth=30000 -DmaxHeartbeats=10000000 -o im-results/agent18-429-root-invariants/BB429SevenStrong.olean im-results/agent18-429-root-invariants/BB429SevenStrong.lean
           lean -DmaxRecDepth=30000 -DmaxHeartbeats=10000000 -o im-results/agent18-429-root-invariants/BB429OddResetGate.olean im-results/agent18-429-root-invariants/BB429OddResetGate.lean
           lean -DmaxRecDepth=30000 -DmaxHeartbeats=10000000 -o im-results/agent18-429-root-invariants/BB429Reset31.olean im-results/agent18-429-root-invariants/BB429Reset31.lean
+          lean -DmaxRecDepth=30000 -DmaxHeartbeats=50000000 im-results/agent18-429-root-invariants/BB429Branch29BurstFloor.lean
           lean -DmaxRecDepth=30000 -DmaxHeartbeats=8000000 -o im-results/agent30-429-even16/BB429Even16.olean im-results/agent30-429-even16/BB429Even16.lean
           lean -DmaxRecDepth=30000 -DmaxHeartbeats=10000000 -o im-results/agent18-429-root-invariants/BB429Branch7.olean im-results/agent18-429-root-invariants/BB429Branch7.lean
           lean -DmaxRecDepth=30000 -DmaxHeartbeats=10000000 -o im-results/agent18-429-root-invariants/BB429Branch29.olean im-results/agent18-429-root-invariants/BB429Branch29.lean
@@ -45,4 +46,3 @@ jobs:
           lean -DmaxRecDepth=30000 -DmaxHeartbeats=30000000 -o im-results/agent18-429-root-invariants/BB429Branch29Reflect1024.olean im-results/agent18-429-root-invariants/BB429Branch29Reflect1024.lean
           lean -DmaxRecDepth=30000 -DmaxHeartbeats=30000000 -o im-results/agent18-429-root-invariants/BB429Branch29Small.olean im-results/agent18-429-root-invariants/BB429Branch29Small.lean
           lean -DmaxRecDepth=30000 -DmaxHeartbeats=30000000 im-results/agent18-429-root-invariants/BB429Branch29All.lean
-          lean -DmaxRecDepth=30000 -DmaxHeartbeats=50000000 im-results/agent18-429-root-invariants/BB429Branch29BurstFloor.lean
