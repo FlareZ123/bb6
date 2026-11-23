@@ -66,6 +66,47 @@ theorem m32_pair_0_13_good :
     CCert.highPairGood 0 13 := by
   decide
 
+/-- The same (0,13) family is invisible to the six-forced inverse
+    normalizer: its first state already has residues (x,k,x+k)=(3,4,7)
+    modulo 8, and none of the six source gates can fire. -/
+theorem sixForced_not_excluded_0_13
+    (j m k : Nat) (hm : 2≤m)
+    (hjr : j%32=0) (hmr : m%32=13)
+    (hstop : k+j+3*m+5=2^(2*m+2)*(j+3)) :
+    BB6.Agent11SixForced.sixForcedExcluded (2*j+3) k = false := by
+  have hpow : 8 ∣ 2^(2*m+2) := by
+    have hp : 2^3 ∣ 2^(2*m+2) :=
+      Nat.pow_dvd_pow 2 (by omega)
+    norm_num at hp
+    exact hp
+  have hprod : 8 ∣ 2^(2*m+2)*(j+3) :=
+    dvd_mul_of_dvd_left hpow (j+3)
+  have hP : (2^(2*m+2)*(j+3))%8=0 :=
+    Nat.mod_eq_zero_of_dvd hprod
+  have hB : (j+3*m+5)%8=4 := by
+    have hj8 : j%8=0 := by omega
+    have hm8 : m%8=5 := by omega
+    omega
+  have hk8 : k%8=4 := by omega
+  have hx8 : (2*j+3)%8=3 := by
+    have hj4 : j%4=0 := by omega
+    omega
+  have hx16 : (2*j+3)%16=3 ∨ (2*j+3)%16=11 := by
+    have hj8 : j%8=0 ∨ j%8=4 := by omega
+    rcases hj8 with h | h <;> omega
+  have hsum8 : ((2*j+3)+k)%8=7 := by omega
+  have hsum4 : ((2*j+3)+k)%4=3 := by omega
+  have hkeven : k%2=0 := by omega
+  simp [BB6.Agent11SixForced.sixForcedExcluded,
+    BB6.Agent11SixForced.sixForcedNormalize,
+    BB6.Agent3.oddLowGate,
+    BB6.Agent3.evenSevenGate,
+    BB6.Agent3.evenAffineGate,
+    BB6.Agent46.sixEvenRightGate,
+    BB6.Agent3ValSix.valSixGate,
+    BB6.Agent11SixForced.evenOddFourGate,
+    hx8,hx16,hsum8,hsum4,hkeven]
+
 /-- Infinite source-level exclusion for the high stopping family
     j=0 (mod 32), m=13 (mod 32), j>=3, m>=2. -/
 theorem m32_0_13_family_no_root
