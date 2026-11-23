@@ -1,39 +1,45 @@
-# Corrected suffix in the remainder-one reset
+# Remainder-one reset: endpoint audit and open token boundary
 
-**Status:** source-branch derivation and Lean proof draft added; the new theorems in
-`RootRemainderTwoToken.append.lean` have not yet passed the original-source CI
-build. Treat the formulas below as a checked-by-hand endpoint correction, not
-as a kernel-certified root theorem.
+**Status:** source-branch endpoint derivation and Lean proof draft added; the
+new declarations in `RootRemainderTwoToken.append.lean` have not yet passed
+the pinned original-source CI build. No new blank-root theorem is claimed.
 
-## Corrected map
+## Exact [5] reset endpoint
 
-The source stack clauses give
+The initial proposed extra-zero correction was **wrong**. The exact source
+statement for `root_countdown_dr_positive_positive_step` has output right
+stack `(0,0)::(b,0)::R`: two cells. For the [5] reset, after DR-zero the
+right stack is `[1,0,2]). DR-positive-positive with (b=0) and
+(R=[0,2]) gives `[0,0,0,2]` (three zeros before 2). The subsequent
+CR-zero sweep increments the first zero counter and leaves `[0,0,2]);
+CR-one/empty then gives
 [
-D_n(1;[5]) longrightarrow^+ D_0(8n+11;[0,0,0,2]),
+EL([0];[0,8n+17,0,0,2]).
 ]
-not `D_0(8n+11;[0,0,2])`.
+The suffix-preserving general-tail map therefore yields
+[
+D_n(1;[5]) longrightarrow^+ D_0(8n+11;[0,0,2]).
+]
+The original endpoint in `RootRemainderOneTail.md` is supported. The
+temporary claim of an endpoint ending in `[0,0,0,2]` has been retracted.
 
-The discrepancy is the DR positive-positive branch. Immediately before it,
-the configuration is
-[
-DR(0,1,0^{4n+6},1; [1,0,2]).
-]
-Applying the source `root_countdown_dr_positive_positive_step` with
-`a=b=0` consumes the leading 1s and prefixes three zeros to the remaining
-right suffix `[0,2]`. Thus its exact endpoint is
-[
-CR(0^{4n+7}1; [0,0,0,0,2]),
-]
-with **four** zeros before 2. The subsequent CR-zero sweep increments the
-first zero counter and leaves `[0,0,0,2]` behind; CR-one/empty produces
-[
-EL([0]; [0,8n+17,0,0,0,2]).
-]
-The suffix-preserving 16-step general-tail macro then gives the stated
-`D_0(8n+11;[0,0,0,2])`.
+## Remaining token-boundary discrepancy
 
-The outer-successor and raw-step counts in the existing dossier are unchanged;
-only the untouched suffix at the endpoint changes.
+There is a separate, unresolved question about the next DL-right-one branch.
+Starting from `D_n(1;[0,0,2])`, the stack-level sequence appears to be:
+
+1. fixed prefix and EL-zero sweep;
+2. EL-positive on 1;
+3. DL-zero consumes the first zero, leaving `[0,2]`;
+4. one EL-zero consumes the remaining zero;
+5. EL-positive on 2;
+6. DL-right-one invokes `tok_DR_2_0_closed`.
+
+This accounting appears to pass the left stack
+`[0,0,1] ++ replicate (4*n+6) 0 ++ [1]` to the token conversion, i.e.
+a `0^2 1 ...` prefix. The dossier currently records `0^3 1 ...`.
+That one-zero discrepancy has not been kernel-checked; neither form should
+be treated as established until the exact composed Lean theorem is compiled.
 
 ## Lean proof draft
 
@@ -43,27 +49,12 @@ The following declarations have been added to
 - `root_countdown_cr_one_zero_step`: the exact five-step CR `[1,0]` branch;
 - `root_countdown_cr_zero_sweep_pair`: a CR-zero sweep preserving an
   arbitrary right suffix;
-- `root_countdown_general_tail_with_suffix`: the 16-step tail generalized
-  to arbitrary untouched suffixes;
+- `root_countdown_general_tail_with_suffix`: the general-tail map for
+  arbitrary untouched suffixes;
 - `root_countdown_one_reset`: (D_n(1)	o D_0(8n+7;[5]));
-- `root_countdown_one_five_reset`: the corrected
-  (D_n(1;[5])	o D_0(8n+11;[0,0,0,2])).
+- `root_countdown_one_five_reset`: (D_n(1;[5])	o
+  D_0(8n+11;[0,0,2])).
 
-These are proof drafts until the pinned source module compiles them and the
-public theorem axiom audit is clean.
-
-## Consequence for the blank-root path
-
-The arithmetic continuation in `RootRemainderOneTail.md` should therefore
-be revisited at its final suffix: the candidate endpoint is
-`D_0(26,524,315;[0,0,0,2])`, not
-`D_0(26,524,315;[0,0,2])`.
-
-The next token-normalizer input already recorded in that dossier,
-`tok_DR([2,0],[],0^3 1 0^(4n+6)1)`, is in fact consistent with the corrected
-suffix. Starting from `D_n(1;[0,0,0,2])`, the DL-zero branch consumes the
-first zero and two subsequent EL-zero branches consume the remaining two;
-the resulting DL left stack is `0^3 1 0^(4n+6)1`. Thus the suffix correction
-does not by itself invalidate the token-normalizer route. That exact alignment
-still needs to be included in the kernel proof. In particular, this correction
-does **not** yet establish blank-root nonhalting.
+These remain proof drafts until the pinned source module compiles them and
+the public theorem axiom audit is clean. The arithmetic continuation to
+`D_0(26,524,315;[0,0,2])` is not independently certified by this document.
