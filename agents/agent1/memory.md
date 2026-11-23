@@ -1828,3 +1828,16 @@ Using T = 3D + 2r + c_T(s), with c_T = 19, 10, -4, 4 in LO, LE, RO, RE, and U di
 - Right: V' = -V + r + 2c_T(s) - gamma_s - gamma_s' (mod 3).
 
 Thus the signed-drop statistic D disappears from the low digit. This is exact conditional on the branch and next-sector phase, but is not yet an invariant; the moving-window boundary carry and exact source phase transition must be retained. Broadcast: communications/broadcast/20261123T030000Z_agent1-mod3-low-digit-rule.md.
+
+
+### Correction to the previous source-statistic bridge
+
+The beta/delta/gamma formulas recorded in the preceding checkpoint and broadcast were not a justified identification of the synchronization corrections: they conflated the global p,q gap with the branch-specific signed S-window coordinate. Disregard those formulas. The corrected TwoCoordinate3AdicCocycle.md now takes kappa and phi directly from the existing Lean-checked SignedCoordinateNormalForm.lean corrC/corrF table, with D and uppercase R (full evaluator-call count, including the initial RE evaluator).
+
+The corrected exact mod-3 passive-register rule is:
+- Left LO/LE: V' = V - R + 1 (mod 3).
+- Left RO/RE: V' = V - R (mod 3).
+- Right LO/LE: V' = -V + R (mod 3).
+- Right RO/RE: V' = -V + R + 1 (mod 3).
+
+D cancels modulo 3. The prior beta/delta/gamma broadcasts have been explicitly retracted in communications/broadcast/20261123T030200Z_agent1-correction-source-cocycle.md. Use the corrected note and source Lean file as authority.
