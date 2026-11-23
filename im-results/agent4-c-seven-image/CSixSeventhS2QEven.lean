@@ -1,5 +1,6 @@
 import CSixSeventhS2
 import S2QEvenResidue
+import HighSumTwo
 import Lean.Elab.Tactic.Omega
 
 set_option maxRecDepth 8192
@@ -589,15 +590,15 @@ private theorem q_even_h5_residual_unreachable (d b : Nat) :
     have hD1y : (Dpx+3*Dpy-9)/4=D1y := by
       dsimp [Dpx,Dpy,D1y]; omega
     have hD1reach : BB6.Agent3.CReach D1x D1y := by
-      simpa only [hD1x,hD1y] using hgate
+      rcases hgate with ⟨time,htime⟩
+      exact ⟨time,by simpa only [hD1x,hD1y] using htime⟩
     exact BB6.Agent11High.blank_no_odd_sum_two D1x D1y
       (by dsimp [D1y]; omega) (by dsimp [D1y]; omega)
       (by dsimp [D1x,D1y]; omega) hD1reach
   have hE : ¬ BB6.Agent3.CReach (2*S-2) ((x+2*y-2*S-8)/2) := by
     intro h
     have hEx : 2*S-2=Ex := by dsimp [S,Ex]; omega
-    have hEy : (x+2*y-2*S-8)/2=Ey := by
-      dsimp [x,y,S,Ey]; omega
+    have hEy : (x+2*y-2*S-8)/2=Ey := by omega
     have hEreach : BB6.Agent3.CReach Ex Ey := by
       simpa only [hEx,hEy] using h
     have hgate0 := (six_even_right_blank_reach_iff Ex Ey
@@ -606,23 +607,25 @@ private theorem q_even_h5_residual_unreachable (d b : Nat) :
     have hErx : Ex+Ey-2=Erx := by dsimp [Ex,Ey,Erx]; omega
     have hEry : (Ey-2)/2=Ery := by dsimp [Ey,Ery]; omega
     have hErreach : BB6.Agent3.CReach Erx Ery := by
-      simpa only [hErx,hEry] using hgate0
+      rcases hgate0 with ⟨time,htime⟩
+      exact ⟨time,by simpa only [hErx,hEry] using htime⟩
     have hgate1 := (BB6.Agent3.evenodd_four_blank_reach_iff Erx Ery
       (by dsimp [Erx]; omega) (by dsimp [Ery]; omega)
       (by dsimp [Ery]; omega) (by dsimp [Erx,Ery]; omega)).mp hErreach
     have hEax : (Erx+Ery-5)/2=Eax := by
       dsimp [Erx,Ery,Eax]; omega
-    have hEay : (Erx+3*Ery-9)/4=Eay := by
-      dsimp [Erx,Ery,Eay]; omega
+    have hEay : (Erx+3*Ery-9)/4=Eay := by omega
     have hEareach : BB6.Agent3.CReach Eax Eay := by
-      simpa only [hEax,hEay] using hgate1
+      rcases hgate1 with ⟨time,htime⟩
+      exact ⟨time,by simpa only [hEax,hEay] using htime⟩
     have hgate2 := (six_even_right_blank_reach_iff Eax Eay
       (by dsimp [Eax]; omega) (by dsimp [Eay]; omega)
       (by dsimp [Eay]; omega) (by dsimp [Eax,Eay]; omega)).mp hEareach
     have hEbx : Eax+Eay-2=Ebx := by dsimp [Eax,Eay,Ebx]; omega
     have hEby : (Eay-2)/2=Eby := by dsimp [Eay,Eby]; omega
     have hEbreach : BB6.Agent3.CReach Ebx Eby := by
-      simpa only [hEbx,hEby] using hgate2
+      rcases hgate2 with ⟨time,htime⟩
+      exact ⟨time,by simpa only [hEbx,hEby] using htime⟩
     exact BB6.Agent11High.blank_no_odd_sum_two Ebx Eby
       (by dsimp [Eby]; omega) (by dsimp [Eby]; omega)
       (by dsimp [Ebx,Eby]; omega) hEbreach
@@ -838,7 +841,7 @@ theorem blank_ne_s2q_even_image_h5_progression (d b time : Nat) :
           rcases p with ⟨a,k⟩
           have hstep : secNext (a,k)=some
               (641+1024*qEvenH5U d,574+1024*qEvenH5V b) := by
-            simpa [BB6.Agent8Section.run,hp] using hr
+            simpa [qEvenH5U,qEvenH5V,BB6.Agent8Section.run,hp] using hr
           have hpre : sectionPreimageAll a k
               (641+1024*qEvenH5U d) (574+1024*qEvenH5V b) :=
             (section_preimage_all_iff a k _ _).mp hstep
