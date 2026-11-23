@@ -386,10 +386,10 @@ private theorem m2EvenResidueSix_rightFacing
     (hL : 4 ≤ L) (hbound : 16*k+6 < 2^L) :
     ∀ i : Nat,
       m2EvenResidueSixCutTape L k a b h (h+1+(i:Int)) =
-        sideBit (BB6Coverage.Agent8Q4Suffix.q4RightFacing b) i := by
+        sideBit (q4RightFacing b) i := by
   intro i
   have hbase : m2EvenSixQ4CutTape a b h (h+1+(i:Int)) =
-      sideBit (BB6Coverage.Agent8Q4Suffix.q4RightFacing b) i := by
+      sideBit (q4RightFacing b) i := by
     obtain ⟨_,_,_,hright⟩ :=
       m2EvenSix_q4_prefix_data_exact a b h (by omega)
     exact hright i
@@ -617,12 +617,12 @@ private theorem m2EvenSix_q4_prefix_head_bound
         have hside := sideBit_append_right (d1pow a)
           m2EvenResidueSixSourceLeftSuffix (3*a) (by rw [d1pow_length]; omega)
         rw [hside] at hcell
-        simpa [m2EvenResidueSixSourceLeftSuffix,markerWord,sideBit] using hcell
+        simpa [T,m2EvenResidueSixSourceLeftSuffix,markerWord,sideBit] using hcell
       · subst i
         have hside := sideBit_append_right (d1pow a)
           m2EvenResidueSixSourceLeftSuffix (3*a+1) (by rw [d1pow_length]; omega)
         rw [hside] at hcell
-        simpa [m2EvenResidueSixSourceLeftSuffix,markerWord,sideBit] using hcell
+        simpa [T,m2EvenResidueSixSourceLeftSuffix,markerWord,sideBit] using hcell
   have hright : T (h+1) = false := by
     have hc := s1Config_right_cell 3 6 2 a 0 b h 0
     simpa [T,s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit] using hc
@@ -712,7 +712,7 @@ theorem m2Even_residue6_q4_prefix_source
         some (⟨4,h,m2EvenSixQ4CutTape a b h⟩ : Config) := by
     obtain ⟨hprefix,_,_,_⟩ :=
       m2EvenSix_q4_prefix_data_exact a b h ha
-    simpa [base] using hprefix
+    simpa [base,s1Config] using hprefix
   rw [hbaseRun] at hlift
   simp only [Option.map_some] at hlift
   simpa [m2EvenResidueSixCutTape,background] using hlift
@@ -727,7 +727,7 @@ theorem m2Even_residue6_q4_prefix_data
         sideBit (BB6Coverage.Agent8Q4Suffix.q4LeftFacing L (16*k+5) a) i) ∧
       BB6Coverage.Agent8Q4Suffix.q4RightShape Tq h b ∧
       (∀ i : Nat, Tq (h+1+(i:Int)) =
-        sideBit (BB6Coverage.Agent8Q4Suffix.q4RightFacing b) i) := by
+        sideBit (q4RightFacing b) i) := by
   refine ⟨m2EvenResidueSixCutTape L k a b h, ?_, ?_, ?_, ?_⟩
   · exact m2Even_residue6_q4_prefix_source L k a b h hL hbound ha
   · simpa [m2EvenResidueSixLeftFacing] using
@@ -743,7 +743,7 @@ private theorem m2EvenResidueSix_prefix_far_tail
   intro i hi
   rw [m2EvenResidueSix_rightFacing L k a b h hL hbound i]
   apply sideBit_ge_length
-  rw [BB6Coverage.Agent8Q4Suffix.q4RightFacing_length]
+  rw [q4RightFacing_length]
   omega
 
 theorem m2Even_residue6_q4_reset_prefix_source
@@ -760,7 +760,7 @@ theorem m2Even_residue6_q4_reset_prefix_source
     intro i hi
     rw [hright i]
     apply sideBit_ge_length
-    rw [BB6Coverage.Agent8Q4Suffix.q4RightFacing_length]
+    rw [q4RightFacing_length]
     omega
   have happend := q4SuffixTargetLeft L (16*k+5) a b
   have hsuffix := q4_suffix_run_to_s1Config Tq h b
