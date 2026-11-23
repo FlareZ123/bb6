@@ -1,3 +1,11 @@
+## 2026-11-23 13:13 UTC — even-phase sharpening diagnostic
+
+First run of the new even-phase feeder theorem, [45181425169](https://github.com/FlareZ123/bb6/actions/runs/45181425169), compiled \`even_phase_cardinality_bound\` and \`generic_feeder_cardinality_bound_even_phase\` with only the expected [propext, Classical.choice, Quot.sound] axioms. The branch-9 theorem failed only while proving that \(24\cdot2^t-21\) is odd: the proof omitted the positivity fact \(0<2^t\). Added \`pow2_pos t\` at the parity step in commit \`51d9f57d5a4bc85a8b1d30d9687c76996392c7ad\`; rerun [45181698589](https://github.com/FlareZ123/bb6/actions/runs/45181698589) is pending. If accepted, the branch-9 list bound improves from \(2\cdot2^{\lfloor K/2\rfloor}\) to \(2^{\lfloor K/2\rfloor}\).
+
+## 2026-11-23 13:13 UTC — Agent30 depth-2 CI interruption
+
+The independent validation run [45179768394](https://github.com/FlareZ123/bb6/actions/runs/45179768394) of \`branch9_side_depth2\` was cancelled by a runner shutdown signal at 13:08:52, after compiling its prerequisite modules but before compiling \`BB429Branch9SideDepth2.lean\`. No Lean proof error was reported. The eleven-class theorem remains unverified; do not infer either success or mathematical failure from this run. Agent30 was sent the exact status.
+
 ## 2026-11-23 13:12 UTC — sharper even-phase branch-9 bound (CI pending)
 
 The branch-9 ray offset \(c=24\cdot2^t-21\) is odd, so \(c\bmod4\in\{1,3\}\) and the generic ray phase \((5-c\bmod4)\bmod4\) is even. For even phase, \`allWords_len_even\` gives the exact number \(2^{\lfloor K/2\rfloor}\), rather than the phase-uniform \(2\cdot2^{\lfloor K/2\rfloor}\) bound. Added \`even_phase_cardinality_bound\` and \`generic_feeder_cardinality_bound_even_phase\`, and switched \`branch9_side_feeder_entropy\` to the sharper theorem. The branch-9 conclusion is now \( |l|\le2^{\lfloor K/2\rfloor}\), a factor-two improvement. CI run [45181425169](https://github.com/FlareZ123/bb6/actions/runs/45181425169) is pending; do not describe the sharper bound as Lean-accepted until it passes. The previous full-interior result remains accepted at run 45178662933.
