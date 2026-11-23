@@ -42,11 +42,11 @@ The following bounds are deliberately loose.
 
    Therefore either bump raises \(W\) by at most 8. The existing peelTok_num_sum_le plus the corresponding length bound gives an increase of at most 7 for replacing a head token by its peeled form.
 
-2. **Eating.** For the concrete nonempty blocks used by eatB1/eatB2/eatB12R, eatFuel_num_sum_le proves that a positive-mass block is exchanged for its repeat counter without increasing numeric mass. The length lemma
+2. **Eating.** The repository already contains the generic eatFuel_length_le theorem. Its eatStep_some_length_le helper proves that every successful eatStep returns a suffix of length at most |xs| (getRep removes a token; stripPrefixSym returns the unmatched suffix), so induction on fuel gives
    \[
-   |\operatorname{eatFuel}(\ldots,xs)|\le |xs|+1
+   |\operatorname{eatFuel}(\ldots,xs)|\le |xs|+1.
    \]
-   follows by induction on fuel, with the nonempty-block hypothesis: every successful eatStep returns a strict suffix (getRep removes one token; stripPrefixSym removes a nonempty block). On no match, eatFuel emits one repeat token before xs; on a match, the induction hypothesis bounds the result by the shorter suffix length plus one, hence by |xs|. In successful sweepBB branches, the stripped prefix is reinserted with the same mass; the repeat token consumed from the left pays for the resulting right-side representation.
+   No nonempty-block hypothesis is needed for this length inequality. For numeric field sum, eatFuel_num_sum_le additionally requires a positive-mass literal block; this applies to eatB1, eatB2, and eatB12R, whose blocks have sums 1, 2, and 3. The generic length lemma already supplies the eatB2/eatB12R length bounds. In successful sweepBB branches, the stripped prefix is reinserted with the same field sum; the repeat token consumed from the left pays for the resulting right-side representation.
 
 3. **Atomic symbolic steps.** The case definitions support the target inequalities
    \[
@@ -174,7 +174,7 @@ These are much weaker than the existing \(2^{463}\) and \(2^{193}\) candidates, 
 ## Formalization checklist and caveats
 
 1. Prove the prependZeroSym/prependZeroM length and numeric-sum equalities, then the MItem and SymTok atomic combined-potential lemmas by cases (including the stepElemBB length bound +7).
-2. Prove eatFuel length growth and the missing eatB2 / eatB12R mass bounds.
+2. Reuse the existing eatFuel_length_le theorem; add the missing eatB2 / eatB12R field-sum bounds from eatFuel_num_sum_le.
 3. Prove the generic sweepBB potential bound.
 4. Prove the Rule A/B/C output-potential bounds and afterSweepCB dispatcher bound.
 5. Complete the costed afterSweepCB ReachesWithin wrapper using the existing pilot lemmas.
