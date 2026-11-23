@@ -185,8 +185,6 @@ theorem two_one_pairs_return (m q : Nat) (ys : List Bool):
             rw [show 2*(m+2)+1=2*m+5 by omega]
   exact congrArg (fun z : List Bool => Cfg.mk [] false z 5) hrep
 
-/-- A trajectory segment has no physical F/0 return before its endpoint.
-    Here "physical" means that every cell strictly left of the head is blank. -/
 /-- A blank-left F-state in the original finite-tape model. -/
 def PhysicalPair (c : Cfg) : Prop :=
   c.st = 5 ∧ ∀ b ∈ c.l, b = false
@@ -209,6 +207,7 @@ private theorem sweepD_noF_pair (m : Nat) (ys : List Bool) (t : Nat)
         rw [hu, run_add, sweepD_step]
         exact ih (true::true::ys) u (by omega)
 
+/-- No blank-left F-state occurs in the first `n` configurations. -/
 def NoPhysicalF0 (c : Cfg) (n : Nat) : Prop :=
   ∀ t, t < n → ¬ PhysicalPair (run t c)
 
