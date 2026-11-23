@@ -29,8 +29,11 @@ def m0EvenSixInside (x : Int) : Bool :=
 def m0EvenSixBridgeStart : FConfig :=
   ⟨3, 0, [-10,-7,-6,-5,-4,-1,2,3]⟩
 
+/-- Exact list order produced by `fMove`: newly written cells are
+prepended. Its marked-cell set is the sorted endpoint
+`{-10,-9,-8,-7,-4,-1,1,2,3}`; `embed` observes membership, not order. -/
 def m0EvenSixBridgeEnd : FConfig :=
-  ⟨4, 3, [-10,-9,-8,-7,-4,-1,1,2,3]⟩
+  ⟨4, 3, [2,1,-1,-4,-7,-8,-9,-10,3]⟩
 
 /-- Exact 39-step run of the original TM2 table on the finite window. -/
 theorem m0EvenSixBridge_exact :
