@@ -1,79 +1,87 @@
-# Machine C low first-stop inverse chains
+# Machine C low first-stop inverse exclusions
 
-**Status: unverified source-proof draft.** The last retrievable run (45140632742) failed on an earlier version with incorrectly unpacked inverse-criterion branches. Those branches have since been corrected to match `sectionPreimageCriterion`, and a follow-up workflow dispatch was issued against source commit `b7f784515badfde622d7d14ed7c7255054e28185`; the Actions API rate limit prevented retrieving its run ID or result before this checkpoint. Do not treat either family as accepted until that run succeeds and its axiom report is free of `sorryAx`.
+<badge>Not a BB(6) decision</badge>
 
-## Claim under verification
+**Status: original-source Lean verified.** The focused manual workflow [45154176898](https://github.com/FlareZ123/bb6/actions/runs/45154176898) completed successfully with Lean 4.36.0-rc2. The axiom reports for both final theorems contain only `propext`, `Classical.choice`, and `Quot.sound`; neither contains `sorryAx`.
 
-For the original Machine C section transition `BB6.Agent46.secNext`, starting at `(5,1)`, let a low first-stop target be `(1,k)` with
+## Theorem
+
+For the unchanged Machine C section transition `BB6.Agent46.secNext`, starting from the blank-origin section state `(5,1)`, consider a low first-stop target `(1,k)) satisfying
+
 [
 k+3m+4=2^{2m+3}.
 ]
-The Lean module `Low1091Source.lean` aims to prove all-time nonreachability for both progressions:
 
-- (mequiv1091pmod{4096});
-- (mequiv12355pmod{16384}).
+The original blank-origin orbit never reaches `(1,k)) if either
 
-The formal theorems are `first_stop_m1091_mod4096` and `first_stop_m12355_mod16384`. Each excludes the target for every section-run time, not merely within a bounded simulation.
+[
+m\equiv1091\pmod{4096}
+\qquad\text{or}\qquad
+m\equiv12355\pmod{16384}.
+]
+
+The formal results are:
+
+- `BB6.Agent21Low1091.first_stop_m1091_mod4096`
+- `BB6.Agent21Low1091.first_stop_m12355_mod16384`
+
+Each theorem excludes the target at every finite section-run time. This is not a bounded simulation result.
 
 ## Shared exact inverse chain
 
-Writing (k=1024q+819), the first five forced source inversions are valid for every (qinmathbb N):
+Writing (k=1024q+819), the complete original-source inverse classification forces the following five predecessor edges:
+
 [
 egin{aligned}
 (1,1024q+819)
-&leftarrow(512q+408,768q+612)\
-&leftarrow(1280q+1018,384q+305)\
-&leftarrow(832q+659,608q+481)\
-&leftarrow(720q+568,664q+523)\
-&leftarrow(692q+543,678q+532).
+&\leftarrow(512q+408,768q+612)\\
+&\leftarrow(1280q+1018,384q+305)\\
+&\leftarrow(832q+659,608q+481)\\
+&\leftarrow(720q+568,664q+523)\\
+&\leftarrow(692q+543,678q+532).
 end{aligned}
 ]
-The arrows point from a target to its uniquely classified immediate source parent. The classifications use the complete original-source inverse predicate, the even/even affine classification, and the mixed-parity valuation-two classification.
 
-The last state has even right coordinate. Whenever its coordinate sum is neither (0) nor (7pmod8), the source-certified even-right reachability theorem forces its direct predecessor ((x+y-2,(y-2)/2)).
+The arrows point from a target to its uniquely classified immediate source parent. The final state has even right coordinate. The source-certified even-right theorem forces the direct predecessor
+[
+(x,y)\longmapsto(x+y-2,(y-2)/2)
+]
+whenever (y\ge6) is even and ((x+y)\bmod8\notin\{0,7\}).
 
-### Cylinder (qequiv0pmod4)
+### First cylinder: (q\equiv0\pmod4)
 
-The stopping equation for (m=4096r+1091) gives
+For (m=4096r+1091), the stopping equation implies
 [
 q+12r+4=2^{2m-7},
 ]
-hence (qequiv0pmod4). One direct even-right reduction gives
+so (q\equiv0\pmod4). One further direct even-right reduction reaches
 [
 (1370q+1073,339q+265).
 ]
-Its right coordinate is odd and its coordinate sum is (2pmod4).
+Its right coordinate is odd and its coordinate sum is (2\pmod4).
 
-### Cylinder (qequiv11pmod{16})
+### Second cylinder: (q\equiv11\pmod{16})
 
-For (m=16384r+12355), the stopping equation gives
+For (m=16384r+12355), the stopping equation implies
 [
 q+48r+37=2^{2m-7},
 ]
-hence (qequiv11pmod{16}). With (q=16v+11), three direct even-right reductions end at
+so (q\equiv11\pmod{16}). Writing (q=16v+11), three further direct even-right reductions reach
 [
-(30056v+22129,1356v+997),
+(30056v+22129,1356v+997).
 ]
-again with odd right coordinate and coordinate sum (2pmod4).
+Again, the right coordinate is odd and the coordinate sum is (2\pmod4).
 
-The existing all-time blank-section image theorem `BB6Agent38.blank_section_mod4` forbids such a state except for the seed `(5,1)); both terminal states have right coordinate at least (5), so neither is the seed.
+The source-verified all-time blank-section theorem `BB6.Agent38.blank_section_mod4` forbids such a state when the right coordinate is at least five. Both terminal right coordinates satisfy that bound.
 
-## Relation to the maintained low sieve
+## Relation to the exact Machine C criterion
 
-Both progressions have (mequiv67pmod{1024}), (mequiv3pmod{16}), and (m
-otequiv0pmod{128}). They therefore pass the currently published `jointLowAllowed`, `Agent11Joint.lowAllowed`, and `lowAllowedValSixFull` residue restrictions. The new exclusions are intended to refine, not replace, the unbounded low-parameter existential in `ValSixJointFull.lean`.
+Both progressions pass the previously maintained low restrictions: in particular, they have (m\equiv67\pmod{1024}), (m\equiv3\pmod{16}), and (m\not\equiv0\pmod{128}). Thus these are additional exclusions, not restatements of the earlier `jointLowAllowed`, `Agent11Joint.lowAllowed`, or `lowAllowedValSixFull` predicates.
 
-This is not a decision of the residual low existential, the high existential, Machine C halting, or BB(6).
+The next useful step is to compose these two exclusions into a separate strengthened low-parameter predicate around `ValSixJointFull.lean`, while preserving its existing exact equivalence. The remaining low and high parameter existentials are still unbounded. Machine C halting and BB(6) remain unresolved.
 
-## Files and verification
+## Reproduction
 
-- `Low1091Source.lean`: complete Lean source proof and axiom reports.
-- `../../.github/workflows/agent21-low1875-source.yml`: focused manual source workflow, compiling the unchanged section/bounce dependencies and this module.
-- Source CI workflow: `.github/workflows/agent21-low1875-source.yml`.
-- Last retrieved failed run: [45140632742](https://github.com/FlareZ123/bb6/actions/runs/45140632742) (pre-correction source). Follow-up dispatch is untracked because the Actions API rate-limited run-list/get calls; inspect the newest manual run before accepting this draft.
-
-## Next useful work
-
-1. After CI acceptance, integrate these exclusions into a strengthened low predicate alongside `lowAllowedValSixFull`, preserving the existing exact joint halting equivalence.
-2. Formalize the next direct-parent cylinder (qequiv39pmod{64}), which the arithmetic chain maps to (mequiv8259pmod{65536}); do not cite it until its unchanged-source Lean proof passes.
-3. Continue the 2-adic direct-parent tree only where each reduction is justified by the original-source even-right theorem; exceptional sum residues (0,7pmod8) require separate inverse analysis.
+- Proof source: [`Low1091Source.lean`](Low1091Source.lean)
+- Manual source workflow: [`agent21-low1875-source.yml`](../../.github/workflows/agent21-low1875-source.yml)
+- Successful original-source verification: [GitHub Actions run 45154176898](https://github.com/FlareZ123/bb6/actions/runs/45154176898)
