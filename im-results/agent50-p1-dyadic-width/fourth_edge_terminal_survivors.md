@@ -264,7 +264,29 @@ m_p=m_R-t-1.
   b_p=(-3236P+47432u-3388n-11112)/49.
   \]
 
-Substitution of the respective \(u\)-formula shows \(b_p\ge8\), \(d_p\ge1\), and \(m_p\ge0\) for \(n\ge83\); the coefficients of \(P\) in the positivity inequalities are strictly positive, and \(2^n\ge100000n\) absorbs the linear terms. Also \(b_p\equiv0\pmod4\), \(d_p\) is odd, \(c=d_R-4\) is odd, and \(k=(b_R+4)/2\) is even and at least two. Thus the preceding depth-five/depth-seven transition satisfies the same exact source power/mass conditions.
+Substitution gives explicit positivity certificates. In Case I,
+
+\[
+1058\cdot49\,d_p
+=303104P+11172\cdot636+1058(798n+2533)>0,
+\]
+\[
+1058\cdot49\,b_p
+=399360P-740600n-8653504>0.
+\]
+
+In Case II,
+
+\[
+1198\cdot49\,d_p
+=452608P+48804\cdot712+1198(3486n+11553)>0,
+\]
+\[
+1198\cdot49\,b_p
+=249856P-4058824n-47083760>0.
+\]
+
+The two negative-tail inequalities follow immediately from \(P=2^n\ge100000n\) for \(n\ge83\); in particular \(b_p>8\) and \(d_p\ge1\). Also \(u>aP/(2b)\) in each family, so \(m_p=14u-2n-t-4>n\) (with \((a,b,t)=(17,1058,5)\) or \((87,1198,7)\)). Since \(b_R\equiv0\pmod4\), \(d_R\) is odd, \(D=d_R-1\) is even, and \(V=b_R+d_R\) is odd, the formulas give \(b_p\equiv0\pmod4\) and \(d_p\) odd. Finally \(c=d_R-4\) is odd and \(k=(b_R+4)/2\) is even and at least two. Thus the preceding depth-five/depth-seven transition satisfies the exact source power/mass and parity conditions.
 
 The resulting local depth words, in forward order from the synthetic parent to the wall, are
 
@@ -292,7 +314,7 @@ for \(n\ge83\). The complete source-wall congruence
 \sum_{s\in A_n}(n+3+s)2^s\equiv1\pmod{2^n}
 \]
 
-therefore still has to be supplied entirely by the missing prefix before this parent: all suffix start costs are at least \(m_p>n\) and vanish modulo \(2^n\). The existing exact carry scan in [wall_modular_obstruction.md](wall_modular_obstruction.md) reports no subset witness at the base indices 5362 and 9538; this is finite computational evidence, not an all-time proof.
+therefore still has to be supplied entirely by the missing prefix before this parent: all suffix start costs are at least \(m_p>n\) and vanish modulo \(2^n\). The exact modular subset scan in [Agent 43's finite all-depth carry result](../agent43-p1-high-cost-reset-count/WallFullDPTo10000.md) finds only six possible indices for \(14\le n\le10000\); neither 5362 nor 9538 is among them. This is finite computational evidence, not an all-time proof.
 
 **Research direction:** stop extending local terminal-position case tables as though they could decide the blank-root problem. The decisive missing result is an all-time restriction on the root prefix's cumulative-cost subset (or a source-connected construction of such a prefix) for the arithmetic progressions above. The density-zero shallow-gap theorem in [six_shallow_sparse_candidates.md](six_shallow_sparse_candidates.md) is not enough: it leaves a zero-density exceptional set.
 
