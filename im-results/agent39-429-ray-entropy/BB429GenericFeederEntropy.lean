@@ -86,6 +86,24 @@ theorem any_phase_cardinality_bound (j k:Nat) (l:List Nat)
   rw [List.length_map] at hh
   omega
 
+/-- Exact cardinality bound when the initial ray phase is even: one
+choice-bearing letter per pair, with no leading factor of two. -/
+theorem even_phase_cardinality_bound (j k:Nat) (l:List Nat)
+    (f:Nat→List Move) (huniq:l.Nodup)
+    (hlegal:∀u∈l,Regular j (f u) ∧ (f u).length=k)
+    (hinj:∀u∈l,∀v∈l,f u=f v→u=v)
+    (hj:j%2=0) :
+    l.length ≤ 2^(k/2) := by
+  have hn : (l.map f).Nodup := nodup_map_inj_on l f huniq hinj
+  have hsub : (l.map f) ⊆ allWords j k := by
+    intro w hw
+    obtain ⟨u,hu,rfl⟩ := List.mem_map.mp hw
+    obtain ⟨hr,hlen⟩ := hlegal u hu
+    simpa [hlen] using regular_mem_allWords j hr
+  have hh := List.Nodup.length_le_of_subset hn hsub
+  rw [List.length_map, allWords_len_even j k hj] at hh
+  exact hh
+
 /-- Generic source-root feeder sieve: no assumption about the formula for A(u)
 or B(u) beyond a fixed affine ray, high-counter reachability, and a single
 power-of-two congruence with a coefficient of known binary valuation. -/
@@ -116,5 +134,36 @@ theorem generic_feeder_cardinality_bound
     exact generic_coefficient_inj k s d X u v hs hodd hX huX hvX haff
   exact any_phase_cardinality_bound (anyRayPhase c) k l f hn hlegal hinj
 
+/-- The same source-root feeder theorem with the sharper bound when the
+offset induces an even initial phase. -/
+theorem generic_feeder_cardinality_bound_even_phase
+    (c k s d e X:Nat) (A B:Nat→Nat)
+    (l:List Nat) (hn:l.Nodup)
+    (hs:s≤k) (hodd:d%2=1) (hX:X≤2^(k-s))
+    (hl:∀u, u∈l → u<X ∧ BB429NewResidue.Reach (A u) (B u) ∧
+      B u+c=2*(A u) ∧ 16*2^k≤A u+3 ∧
+      2^k ∣ A u + (2^s*d)*u + e)
+    (hphase:(anyRayPhase c)%2=0) :
+    l.length ≤ 2^(k/2) := by
+  classical
+  let f:Nat→List Move := fun u => chosenAnyRayWord c k (A u)
+  have hlegal : ∀u∈l, Regular (anyRayPhase c) (f u) ∧ (f u).length=k := by
+    intro u hu
+    obtain ⟨_,hreach,hbal,hhigh,hdiv⟩ := hl u hu
+    obtain ⟨hlen,hr,_⟩ := chosenAnyRayWord_spec c k (A u)
+      ⟨B u,hreach,hbal⟩ hhigh
+    exact ⟨hr,hlen⟩
+  have hinj : ∀u∈l,∀v∈l,f u=f v→u=v := by
+    intro u hu v hv he
+    obtain ⟨huX,huR,huB,huH,huDiv⟩ := hl u hu
+    obtain ⟨hvX,hvR,hvB,hvH,hvDiv⟩ := hl v hv
+    have hmod := anyRayWord_mod c k (A u) (A v)
+      ⟨B u,huR,huB⟩ ⟨B v,hvR,hvB⟩ huH hvH he
+    have haff := generic_affine_correction_mod (2^k) (2^s*d) e
+      u v (A u) (A v) huDiv hvDiv hmod
+    exact generic_coefficient_inj k s d X u v hs hodd hX huX hvX haff
+  exact even_phase_cardinality_bound (anyRayPhase c) k l f hn hlegal hinj hphase
+
 #print axioms generic_feeder_cardinality_bound
+#print axioms generic_feeder_cardinality_bound_even_phase
 end BB429InverseWord
