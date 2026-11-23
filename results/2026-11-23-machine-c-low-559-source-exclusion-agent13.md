@@ -55,7 +55,7 @@ For the valuation-four/five families, \(R_u\) has exactly two **possible** incom
 a_n=\frac{346u+54}{2^{n+1}}-3,\qquad
 k_n=\frac{512u+78-a_n-7-3n}{2}.
 \]
-The exhaustive depth restrictions, including all exceptional small-input cases, are certified by the original-source theorems `even_odd_small_valuation_parent` and `even_odd_valuation_six_parent`. In all nine added or prior families, the depth-zero parent has odd right counter and sum \(2\pmod4\), which is excluded from the actual blank orbit by the proven odd-image invariant.
+The exhaustive depth restrictions, including all exceptional small-input cases, are certified by the original-source theorems `even_odd_small_valuation_parent` and `even_odd_valuation_six_parent`. In all thirteen listed congruence clauses, the depth-zero parent has odd right counter and sum \(2\pmod4\), which is excluded from the actual blank orbit by the proven odd-image invariant.
 
 The seven **additional** disjoint classes proved in this invocation are:
 
@@ -93,6 +93,19 @@ m\not\equiv240195,444995,299587\pmod{524288}.
 \end{gathered}
 \]
 These restrictions are **necessary** for any low-branch witness, not sufficient for halting.
+
+## Uniform arithmetic pruning at arbitrarily large inverse bounce depth
+
+A complementary mathematically reusable result goes beyond the bounded valuation-four/six inverse fans used to prove the 559/4096 theorem. For **any** even original odd-source inverse depth \(n\) satisfying \(346u+54=2^{n+1}(a+3)\) and \(2k+a+7+3n=512u+78\), if in addition \(346u+54=2^{n+4}q\), \(q\ge1\), and \(k\ge80\), the original predecessor \((a,k)\) is blank-inaccessible whenever its depth/quotient lies in a certified source phase predicate:
+
+- \(n=8r\): every \(q\);
+- \(n=8r+2\): \(q+3r\equiv7\pmod8\);
+- \(n=8r+4\): \(q+r\equiv4\pmod8\) or \(q+r\equiv3\pmod{16}\);
+- \(n=8r+6\): \(q+r\equiv1\pmod2\) or \(q+7r\equiv0\pmod8\).
+
+This is a genuine all-depth original-source theorem, not a fixed valuation cutoff. The proof invokes exact source equivalences with forced words of length at most three for the phase-four and phase-six cases, and the actual blank odd-image invariant. Its complete Lean-certified [predicate and arbitrary dyadic-mass corollary](../im-results/agent13-residual-frontier/EvenOddAllDepthSieve.lean) are accepted in [CI 45261057263](https://github.com/FlareZ123/bb6/actions/runs/45261057263), 61 original-source modules, standard axioms, no `sorryAx`. The proof constructions, guards, and limits are in [the intermediate all-depth source note](../im-results/agent13-residual-frontier/AllDepthSourceParentPruning.md).
+
+For every fixed \(r\), these conditions cover exactly \(31\) of the \(64\) formal depth-phase and \(q\)-mod-16 cells. This is **not** an exclusion of 31/64 of actual halting candidates: many such formal cells may have no source predecessor and the quotient depends on depth. The remaining depth-phase cells are not proved reachable; a complete original-source fan and the independent high-stop existential must still be resolved. This theorem supports future reductions of arbitrarily wide inverse fans, but is not by itself an additional 559/4096 source target exclusion.
 
 ## Open mathematical obligation
 
