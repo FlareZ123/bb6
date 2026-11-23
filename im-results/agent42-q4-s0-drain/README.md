@@ -945,12 +945,53 @@ iterated-log and additive-bound derivations.
 
 ## 2026-11-23 exact RC2 closure status
 
-The earlier execution note above records a prior invocation's local-runtime failure and should be read historically. In this continuation, the prescribed Lean 4.36.0-rc2 local bootstrap was attempted once; the container returned a tool-level `ClientError` before any shell output, so local compilation remains unavailable.
+The local Lean 4.36.0-rc2 bootstrap was attempted again in this continuation,
+but the container shell returned a tool-level `ClientError` before producing
+any command output. The split archive parts are present; the prescribed
+local extraction and compiler preflight therefore remain unperformed.
 
-The manual `root-q4tail` CI target has now produced useful dependency-level evidence:
+Two existing `root-q4tail` manual-workflow runs were used as bounded
+diagnostics after substantive source repairs:
 
-- Run `45153630387` (source head `2a7d31d6fe1fd83fdabc238ff9c23cd50caf9698`) successfully compiled `M0EvenEightQ4Bridge.lean`. The exact bridge, heads, residue-8, residue-7, and input-match declarations reported only foundational axioms (`propext`, `Classical.choice`, `Quot.sound` as applicable); none reported `sorryAx`.
-- The same run failed in `OuterLCIncPrelude.lean`: this core-only Lean environment does not expose the Mathlib names `Nat.cast_add`/`Nat.cast_mul), and the counter index needed right-association before the append-shift lemma could match.
-- The latest repair uses `push_cast at hcell` for the source-cell casts and `simp only [Nat.add_assoc]` before the first counter append-shift. It is being checked by run `45154022091`, source head `b84cd53ce3d2314244e877a394bf67a2ef335881`. This run is pending at the time of this note.
+- Run `45231291371` (head `a1a6226addb66d718cbfa691763b5767a6bf03be`)
+  advanced past the repaired `M0EvenFourQ4Prefix` source and exposed
+  remaining errors in `M0EvenEightQ4Prefix`,
+  `M0EvenEightValuationFixedPrefix`, and `OuterLCIncFiveStep`.
+- Run `45232595807` (head `75575d3...`) advanced further and exposed
+  frame/head-contract and namespace issues in
+  `M0EvenEightValuationFixedPrefix`, `M0EvenFourteenQ4Bridge`,
+  `M2EvenResidueZeroFrames`, and `OuterLCIncTail`.
 
-Consequently, the M0-even eight-block dependency is now compiler-accepted, but `OuterLCIncPrelude`, the full authentic root-to-second-q4Tail theorem, the P2 S0 frame identity, and the direct arbitrary-A terminal composition are **not yet accepted**. No exact BB(6) value or universal upper bound follows from this partial lower-bound work.
+These runs are diagnostics only, not acceptance. The following source
+repairs were made after or in response to those logs:
+
+- `M0EvenFourQ4Prefix.lean`: imported the actual q4 suffix interface;
+  normalized the modulo-three branch; made the finite prefix index
+  explicit; corrected the bridge endpoint orientation; exposed the exact
+  sweep endpoint; and normalized the left-prefix lengths.
+- `M0EvenEightQ4Bridge.lean` and `M0EvenEightQ4Prefix.lean`: exported
+  the source-left-facing theorem, aligned the finite-head predicate with
+  `bridgeAt`, imported the q4 suffix interface, and made the counted
+  sweep endpoint use the exact configuration shape.
+- `M0EvenEightValuationFixedPrefix.lean`: corrected the finite marked-list
+  order for the preserved `-14` bit, aligned the frame/head-check
+  contracts, and made the zero-exit trace use explicit `Fin 6` states.
+- `M2EvenResidueZeroFrames.lean`: exposed the required `leftOnes`
+  namespace, normalized both frame coordinates, and made the setup frame
+  and counted-run endpoints explicit.
+- `OuterLCIncFiveStep.lean`, `OuterLCIncTail.lean`, and
+  `M0EvenFourteenQ4Bridge.lean`: imported/opened the actual
+  `Agent48Champion` machine interface rather than relying on implicit
+  names.
+- `OuterLCIncPrelude.lean`: replaced the brittle right-zero boundary
+  rewrite with an explicit inside-window and output-cell proof.
+
+The latest source state includes these repairs but has **not** been
+compiled after them. No further CI run was dispatched: the local preflight
+gate remains unsatisfied, and CI must not be treated as a substitute.
+The root-to-second-q4Tail theorem, `P2RootS0FrameIdentity`, the
+arbitrary-`A` dispatcher/terminal composition, and their transitive
+axiom profiles remain unaccepted. The source theorem
+`tm63_blank_halts` in `TM63GeneralQ4TerminalComposition.lean` is still
+a conditional draft, not a verified halt theorem. No exact BB(6) value or
+global six-state upper bound follows from this work.
