@@ -78,3 +78,41 @@ The 14 candidate-new residues all satisfy the older `BB6.Agent11SixAll.lowAllowe
 A small new Lean module should import `M16SecondFanValuation`, `FullSectionInverse`, `SixForcedNormalize`, and the accepted `CSourceBridge16`; prove the four-step forced equality, the exact \(r\in\{0,1\}\) parent implication for \(d=2,3\), and discharge both parent cells using existing `CCert.seen` facts and source reachability induction. Compile its complete original-source dependency closure and print the exported axiom profile. No fresh quotient construction or new workflow is needed. Until that passes, **do not call this result Lean-certified or move it into `results/`**.
 
 Source dependencies: [Agent 21 inverse fan](../agent21-c-first-m3mod8/SecondFanExactProfile.md), [Agent 13 certified valuation table](M16SecondFanValuation.lean), [Agent 13 M16 census](M16SecondFanCensus.md), [source complete inverse](../agent3-c-bounce-inverse/FullSectionInverse.lean), [source normalizer](../agent11-c-low58/SixForcedNormalize.lean), [Agent 21 earlier exclusions](../agent21-c-first-m1091-4096/README.md).
+
+
+## Source-only strengthening: sixteen low-stop cylinders
+
+**Updated 2026-11-23T18:52Z. Paper-level original-source argument; exact generic two-depth inverse theorem now Lean checked in CI [45242048957](https://github.com/FlareZ123/bb6/actions/runs/45242048957). The stopping-family specialization remains to be formally compiled.**
+
+A stronger argument avoids the M16 quotient lookup altogether and adds **two more** uniform cylinders:
+
+\[
+\boxed{\ z\bmod64\in\{5,13,29,45,61\}\quad\text{or}\quad
+ z\bmod32=25\quad\text{or}\quad z\bmod128\in\{9,21\}.\ }
+\]
+These are **16 disjoint residues modulo 128** (1/8 of this \(m=512z+67\) subfamily), not 16 individual stopping indices. All 16 pass the previous full low congruence gate and the original target's `sixForcedExcluded` test. Every residue family has \(d=v_2(519z+73)=2\) or 3, hence the only possible immediate parents of \(R_z\) have depth 0 and 2.
+
+The depth-zero parent always satisfies \(k_0\equiv1\pmod4\) and \(a_0+k_0\equiv2\pmod4\), with \(k_0\ge5\); it is excluded by Agent 3's original blank-section odd-image invariant. For the depth-two parent, a *uniform finite source-only normalization* gives:
+
+| Class of \(z\) | Depth-two parent forced normalizer prefix | Terminal odd-right image sum |
+| --- | --- | --- |
+| \(z\equiv13,29,45,61\pmod{64}\) | empty | \(2\bmod4\) |
+| \(z\equiv5\pmod{64}\) | O | \(1\bmod4\) |
+| \(z\equiv25\pmod{32}\) | A | \(2\bmod4\) |
+| \(z\equiv9\pmod{128}\) | A,O | \(1\bmod4\) |
+| \(z\equiv21\pmod{128}\) | O,B | \(1\bmod4\) |
+
+The guards are those *already source-proved* in `SixForcedNormalize.lean`: O is the odd/odd low-valuation inverse edge; A is the even-right affine inverse edge; B is the exact even-right six-source edge. The required terminal right counters are at least five because their starting coordinates grow like positive multiples of \(2^{2m}\), and each fixed-length inverse prefix subtracts only bounded constants and scales by at most 4.
+
+The four direct-rejection rows follow immediately from the exact parent residue formulas \(a_{2r}\equiv-2s_r-3\) and \(k_{2r}\equiv s_r+5-3r\pmod{16}\). The three nontrivial transformation cases use only a few low bits:
+
+1. **\(z\equiv5\pmod{64}\):** the \(n=2\) source parent is \((a,k)\equiv(7,13)\pmod{16}\). It is odd/odd with \(a+k\equiv4\pmod{16}\), so O applies. The next state has odd right coordinate and coordinate sum \(1\pmod4\).
+2. **\(z\equiv25\pmod{32}\):** \((a,k)\equiv(1,0)\) or \((1,8)\pmod{16}\), so A applies; the next state has odd right coordinate and sum \(2\pmod4\).
+3. **\(z\equiv9\pmod{128}\):** \(a\equiv57\pmod{64}\), \(k\equiv4\pmod{32}\) for the \(n=2\) parent. A gives a parent with coordinates \((11,1)\pmod{16}\); O then gives odd right and sum \(1\pmod4\).
+4. **\(z\equiv21\pmod{128}\):** \(a\equiv15\pmod{64}\), \(k\equiv25\pmod{32}\). O gives an even-right state with left coordinate \(2\pmod8\), right coordinate \(4\pmod8\); B applies and reaches odd right and sum \(1\pmod4\).
+
+These are exact modular identities over *every* lift in the stated cylinders. In particular, they use the finite original-source six-sector return theorem, not any `seen=true` or `seen=false` quotient claim. Since each source parent is blank-unreachable by `sixForcedExcluded_sound`, the complete inverse grammar prevents \(R_z\) from being blank-reachable, and the initial four forced edges prevent the stopping target from being blank-reachable.
+
+The **fully source-checked general sublemma** now available at `EvenOddSmallValuation.lean` is `BB6.Agent13SmallFan.even_odd_small_valuation_parent`. It proves all incoming parents for a sufficiently large even-left/odd-right state with \((x+y+1)\bmod64\ne0\) are odd-source bounce parents of depth exactly 0 or 2, preserving the side condition \(a<2k\). The proof imports `FullSectionInverse.lean` and was checked by Lean 4.36.0-rc2 with axioms `[propext, Classical.choice, Quot.sound]`, **no `sorryAx`** (CI 45242048957, before adding the explicit \(a<2k\) conjunct). The follow-on module `EvenOddTwoParentRoot.lean` implements a source-only two-Boolean-parent nonreachability certificate; until its CI passes do not claim that wrapper kernel-verified.
+
+**Research priority:** formalize the above finite modular cylinders against the source-only `two_parent_normalizer_excluded` lemma, then integrate them into the lossless Machine C stopping criterion. No new M16 quotient work is needed. This is still a narrowing of an unbounded existential, not a decision of Machine C or BB(6).

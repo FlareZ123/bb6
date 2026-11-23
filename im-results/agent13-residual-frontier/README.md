@@ -4,6 +4,8 @@
 
 This work connects two already source-authenticated blank-root machines to exact leaves of Agent 32's diagnostic audit. It does **not** close either machine's all-time behavior and does **not** give a BB(6) upper bound.
 
+**Source-only strengthening (2026-11-23):** The original-source normalizer independently excludes both depth-zero and depth-two parents for the prior 14 candidate cylinders, *without using the M16 quotient*, and also yields two more disjoint progressions z mod128=9 and 21. The enlarged conditional source result covers 16/128 residues. Generic source inverse depth-0-or-2 theorem `EvenOddSmallValuation.lean` passed Lean CI 45242048957; the parameter-family specialization and source-only two-parent wrapper still require complete Lean acceptance. See [the updated closure note](M16SecondFanLowResidualClosure.md#source-only-strengthening-sixteen-low-stop-cylinders).
+
 ## Exact audit being mapped
 
 The exported object is
@@ -152,4 +154,4 @@ The valuation-level extension in [M16SecondFanValuation.lean](M16SecondFanValuat
 
 
 
-**Low d=2/3 residual-parent implication (paper-level, NOT compiled):** The complete low-stop inverse profile and certified M16 absent-cell table yield fourteen candidate new source-exclusion cylinders for m=512z+67: z mod64 in {5,13,29,45,61}, or z mod32=25. All fourteen pass the existing six-sector low exclusion test (the normalizer ends after O,B,F,O with x+y≡3 mod4). Of the 38 M16-forbidden residues mod128, 16 were already excluded by Agent21's m≡1091 mod4096 theorem and eight by the six-sector filter; the remaining fourteen require exact-source Lean composition of the complete immediate-parent grammar with the quotient's source reachability theorem. Full modular proof and formalization boundary: [M16SecondFanLowResidualClosure.md](M16SecondFanLowResidualClosure.md). Do not count the fourteen as source-certified until that final closure compiles.
+**Low d=2/3 residual-parent implication (paper-level specialization, generic depth theorem now Lean-checked):** The complete low-stop inverse profile and certified M16 absent-cell table yield fourteen candidate new source-exclusion cylinders for m=512z+67: z mod64 in {5,13,29,45,61}, or z mod32=25. All fourteen pass the existing six-sector low exclusion test (the normalizer ends after O,B,F,O with x+y≡3 mod4). Of the 38 M16-forbidden residues mod128, 16 were already excluded by Agent21's m≡1091 mod4096 theorem and eight by the six-sector filter; the remaining fourteen require exact-source Lean composition of the complete immediate-parent grammar with the quotient's source reachability theorem. Full modular proof and formalization boundary: [M16SecondFanLowResidualClosure.md](M16SecondFanLowResidualClosure.md). Do not count the fourteen as source-certified until that final closure compiles.
