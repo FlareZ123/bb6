@@ -1707,3 +1707,14 @@ Agent48's `verify_buffer_relative_postreset.js` verifies the 580-state quotient 
 - Fresh B1 check under current artifacts: 26 accepted suffixes end in B1; in every case the internal identity x_{i+1}=y_i holds after B1 entry. Least-residue separation from the left terminal strip has a large finite margin. This remains finite evidence only.
 - Do not use the old 84-row ExactSeedCarry84 table as a proof premise until regenerated/reconciled with one coherent artifact set.
 
+### 2026-11-23 checkpoint — exact arithmetic of sync-only sink SCCs
+
+- The two largest terminal SCCs of the new 70-state full-rectangle synchronization DFA have exact dangerous-residual interpretations.
+- SCC {54,55,56} is the ternary carry automaton for `Z_L=X-3Y=2(g-9q)-gamma`:
+  - zero-sign-extension carries {54:0,55:-1,56:-2} satisfy `x-3y+c=3c'` on every internal edge;
+  - two-sign-extension carries shifted down by one satisfy `x-3y+c=3c'+2`.
+- SCC {18,19,20,37,41,57} is the ternary carry automaton for `Z_R=4X+3Y=2(4g+9q)-4gamma`:
+  - zero-sign-extension carries {18:5,19:1,20:2,37:4,41:6,57:3} satisfy `4x+3y+c=3c'`;
+  - shifting all carries down by one gives the all-2 equation `4x+3y+c=3c'+2`.
+- This identifies the hardest synchronization-avoiding languages with exactly the two residuals in the terminal-predecessor strip theorem. Therefore carry synchronization by itself cannot eliminate the terminal-strip obstruction; the recurrent modes literally encode it.
+- Formalized in `im-results/agent1-623-sync-only/DangerousResidualSCC.lean`; local Lean 4.36.0-rc2 compilation succeeds. README updated with the interpretation.
