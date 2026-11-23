@@ -61,7 +61,6 @@ theorem second_parent_source_parent_iff
     secNext (a,k)=some (173*u+24,(339*u+47)/2) ↔
       (a=173*u+24+((339*u+47)/2)-2 ∧
        k=(((339*u+47)/2)-2)/2) ∨
-      secondHighParentCondition s u 0 a k ∨
       (∃ n : Nat, secondHighParentCondition s u n a k) := by
   have ⟨hxLarge,hyLarge,hyEven,hxyOdd⟩ :=
     second_parent_facts s u hu
@@ -150,9 +149,8 @@ theorem second_parent_source_parent_iff
                   2*k+a+7+3*n =
                     (173*u+24)+2*((339*u+47)/2) := by omega
               right
-              right
               exact ⟨n,hnodd,haodd,by omega,by omega,hmass,hcost'⟩
-  · rintro (⟨ha,hk⟩ | hzero | ⟨n,hcond⟩)
+  · rintro (⟨ha,hk⟩ | ⟨n,hcond⟩)
     · subst a
       subst k
       have ha0 : 173*u+24+((339*u+47)/2)-2 ≠ 0 := by omega
@@ -169,27 +167,6 @@ theorem second_parent_source_parent_iff
           if_neg ha1,if_neg hk0,if_pos hlow]
         omega
       exact (complete_section_inverse _ _ _ _ hy).mpr hp
-    · rcases hzero with ⟨hn,haodd,ha3,hregion,hmass,hcost⟩
-      have ha0 : a≠0 := by omega
-      have ha1 : a≠1 := by omega
-      have hk0 : k≠0 := by omega
-      have hhigh : ¬ 2*k≤a := by omega
-      have hae : ¬ a%2=0 := by omega
-      have hfactor : 2*(a-1)+8=2*(a+3) := by omega
-      have hpow :
-          (173*u+24)+((339*u+47)/2)+1 =
-            2^0*(2*(a-1)+8) := by
-        rw [hmass]
-        simp [hfactor]
-      have hcost' :
-          (2*k-a+3)+(2*(a-1)+8)+3*0 =
-            (173*u+24)+2*((339*u+47)/2)+2 := by omega
-      have hp : sectionPreimageCriterion a k
-          (173*u+24) ((339*u+47)/2) := by
-        simp only [sectionPreimageCriterion,if_neg ha0,
-          if_neg ha1,if_neg hk0,if_neg hhigh,if_neg hae]
-        exact ⟨0,hpow,hcost'⟩
-      exact (complete_section_inverse _ _ _ _ hy).mpr hp
     · rcases hcond with ⟨hn,haodd,ha3,hregion,hmass,hcost⟩
       have ha0 : a≠0 := by omega
       have ha1 : a≠1 := by omega
@@ -200,10 +177,14 @@ theorem second_parent_source_parent_iff
       have hpow :
           (173*u+24)+((339*u+47)/2)+1 =
             2^n*(2*(a-1)+8) := by
-        rw [hmass]
-        rw [Nat.pow_succ]
-        rw [hfactor]
-        ac_rfl
+        calc
+          (173*u+24)+((339*u+47)/2)+1 =
+              173*u+25+(339*u+47)/2 := by omega
+          _ = 2^(n+1)*(a+3) := hmass
+          _ = 2^n*(2*(a+3)) := by
+            rw [Nat.pow_succ]
+            ac_rfl
+          _ = 2^n*(2*(a-1)+8) := by rw [hfactor]
       have hcost' :
           (2*k-a+3)+(2*(a-1)+8)+3*n =
             (173*u+24)+2*((339*u+47)/2)+2 := by omega
@@ -258,12 +239,11 @@ theorem second_parent_reach_iff
       BB6.Agent11M0SumZeroVerified.cReach_parent_of_left_gt5
         (173*u+24) ((339*u+47)/2) hxLarge hr
     rcases (second_parent_source_parent_iff s u a k hu).mp hedge with
-      hdir | hzero | ⟨n,hcond⟩
+      hdir | ⟨n,hcond⟩
     · rcases hdir with ⟨ha,hk⟩
       left
       rw [ha,hk] at hpre
       exact hpre
-    · exact Or.inr ⟨0,a,k,hzero,hpre⟩
     · exact Or.inr ⟨n,a,k,hcond,hpre⟩
   · rintro (hdir | ⟨n,a,k,hcond,hrparent⟩)
     · rcases hdir with ⟨time,ht⟩
@@ -278,10 +258,31 @@ theorem second_parent_reach_iff
     · rcases hrparent with ⟨time,ht⟩
       have hedge : secNext (a,k)=some (173*u+24,(339*u+47)/2) :=
         (second_parent_source_parent_iff s u a k hu).mpr
-          (Or.inr (Or.inr ⟨n,hcond⟩))
+          (Or.inr ⟨n,hcond⟩)
       exact ⟨time+1,by simpa [BB6.Agent8Section.run,ht] using hedge⟩
 
 #print axioms second_parent_reach_iff
+
+/-- For every even low-stop index z=2s, the original target R_u
+    has an exact root-reachability decomposition through the unique
+    first parent P and the complete second-generation source fan. -/
+theorem low_ray_even_z_second_parent_fan_reach_iff
+    (s u : Nat)
+    (hu : u+12*s+1=2^(2048*s+129)) :
+    BB6.Agent3.CReach (180*u+28) (166*u+25) ↔
+      BB6.Agent3.CReach
+        (173*u+24+((339*u+47)/2)-2)
+        (((339*u+47)/2-2)/2) ∨
+      (∃ n a k, secondHighParentCondition s u n a k ∧
+        BB6.Agent3.CReach a k) := by
+  have hfirstExp : 1024*(2*s)+129=2048*s+129 := by omega
+  have hu' : u+6*(2*s)+1=2^(1024*(2*s)+129) := by
+    rw [hfirstExp]
+    exact hu
+  have hfirst :=
+    BB6.Agent13LowEvenIff.even_low_ray_reach_iff_unique_parent
+      (2*s) u hu' (by omega)
+  exact hfirst.trans (second_parent_reach_iff s u hu)
 
 /-- On the residual sum-seven subfamily s=4r+3 with odd r, every
     high-bounce parent has depth exactly one. This follows from the
@@ -324,30 +325,17 @@ theorem low_ray_z14_second_fan_reach_iff
         (((339*u+47)/2-2)/2) ∨
       (∃ a k, secondHighParentCondition (4*r+3) u 1 a k ∧
         BB6.Agent3.CReach a k) := by
-  have hfirstExp : 1024*(2*(4*r+3))+129 =
-      2048*(4*r+3)+129 := by omega
-  have hu' : u+6*(2*(4*r+3))+1 =
-      2^(1024*(2*(4*r+3))+129) := by
-    rw [hfirstExp]
-    exact hu
-  have hfirst :=
-    BB6.Agent13LowEvenIff.even_low_ray_reach_iff_unique_parent
-      (2*(4*r+3)) u hu' (by omega)
   have hsecond :=
-    second_parent_reach_iff (4*r+3) u hu
+    low_ray_even_z_second_parent_fan_reach_iff (4*r+3) u hu
   constructor
   · intro hrRoot
-    have hP := hfirst.mp hrRoot
-    rcases hsecond.mp hP with hdir | ⟨n,a,k,hcond,hreach⟩
+    rcases hsecond.mp hrRoot with hdir | ⟨n,a,k,hcond,hreach⟩
     · exact Or.inl hdir
     · have hn1 :=
         second_high_parent_depth_one_of_odd_r r u n a k hu hr hcond
       subst n
       exact Or.inr ⟨a,k,hcond,hreach⟩
-  · intro hparents
-    apply hfirst.mpr
-    apply hsecond.mpr
-    exact hparents
+  · exact hsecond.mpr hparents
 
 #print axioms low_ray_z14_second_fan_reach_iff
 end BB6.Agent13LowSecondFan
