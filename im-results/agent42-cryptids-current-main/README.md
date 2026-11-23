@@ -6,7 +6,7 @@
 
 The pinned upstream `BusyBeaver/BB6/README.md` reports 302 distinct BB(6) machines: 191 resolved (32 halting and 159 nonhalting) and 111 holdout/reduction modules (55 core and 56 accelerations). The umbrella `BusyBeaver.lean` imports all 32 `Halt` and 159 `NonHalt` modules. The upstream `busy_beaver_ci.yml` run [#170](https://github.com/google-deepmind/cryptids/actions/runs/43250232081) completed successfully at the pinned commit with build arguments `BusyBeaver BusyBeaverChallenge`.
 
-This establishes that the upstream umbrella build compiled these modules. It is not a transitive axiom audit performed by this repository; the local graft draft includes `#print axioms` so that its actual imported theorem dependencies can be checked.
+This establishes that the upstream umbrella build compiled these modules. The local six-root graft has now also been compiled against the pinned source with an explicit transitive axiom audit; see the accepted run below.
 
 ## Exact overlap with the historical local roster
 
@@ -32,23 +32,31 @@ The exact ten live resolved overlaps, theorem locations and upstream blob SHAs a
 
 The six `NonHalt` modules expose `is_not_halt : BusyBeaver.IsNotHalt target`, with `target = machine.toBB`. The generic `not_halts_to_agent8` transfer is centralized in `CryptidsTapeAdapter.lean`. `Cryptids608NonHalt.lean` imports `BusyBeaver.Bridge` and explicitly converts each upstream certificate through `ConjectureMachines.isNotHalt_toBB_iff_not_halts` before transferring it to `NeverHalts`.
 
-[Cryptids608NonHalt.lean](Cryptids608NonHalt.lean) is a draft integration into the existing `depth4ResidualAudit`. It:
-- imports the six pinned upstream modules;
-- defines independent literal 12-slot RLE tables and proves each `toAgent8` source machine equals its literal table;
-- transfers each `IsNotHalt` theorem to `NeverHalts`;
+[Cryptids608NonHalt.lean](Cryptids608NonHalt.lean) is now an **accepted integration** into the existing `depth4ResidualAudit`. It:
+- imports the six exact pinned upstream `NonHalt` modules;
+- defines independent literal 12-slot RLE tables and proves all six `toAgent8` source machines equal their literal tables;
+- transfers each upstream `IsNotHalt` theorem to local `NeverHalts`;
 - constructs a full singleton `Cover (DecidedBelow 6)` for each root;
-- asks Lean to establish that each root is still open in the old depth-four audit;
-- grafts all six certificates and states the exact open-set characterization, exhaustiveness and (25^{12}) mass conservation.
+- proves that each root was still open in the old depth-four audit;
+- grafts all six certificates and proves the exact open-set characterization, exhaustiveness and `25^12` mass conservation.
 
-**Acceptance status:** the source now contains the shared source-to-local transfer, explicit conversion of all six upstream `IsNotHalt target` certificates, the `and_assoc` normalization in the graft's open-set theorem, and a constructive `FrontierAudit.openDecidable` helper with a local instance for the six `oldOpen_*` checks. The graft already declares `cryptids608GraftedAudit` noncomputably. The long diagnostic IO exporter has been moved out of `ResidualFrontierManifest.lean` into the opt-in `ResidualFrontierExport.lean`, so importing the manifest for proof work no longer runs that exporter.
+The six newly closed local RLEs are:
+1. `1RB0LC_1LC0RB_0LE0LD_1LC---_0RA1LF_1LA1LF`
+2. `1RB0RA_0RC0LD_1LA1RF_1LE1LD_1LB1RE_---1RA`
+3. `1RB0RA_0RC0LE_1LD1RF_1LB1RD_1LD1LE_---1RA`
+4. `1RB0RA_1RC0LC_0LD1RF_1RA1LE_1LD0LB_0RE---`
+5. `1RB1RA_0LC0RA_1RC1LD_0LB1LE_1LF0RC_---0LD`
+6. `1RB1RA_1RC1LB_0LD0RA_1RF1LE_---1LF_1LC0LF`
 
-A previous local RC2 scratch preflight compiled 26 of the 27 modules in the original closure. Scratch checks proved all six `oldOpen_*` propositions with the recursive decision helper and compiled the graft, open-set characterization, exhaustiveness, mass conservation and six closure theorems when the six `NeverHalts` propositions were explicit assumptions. These are conditional integration checks, **not** a verification of the upstream nonhalting certificates or the complete adapter chain. The six RLE names and literal tables previously matched across all 72 transition slots.
+**Accepted exact-source audit (23 November 2026):** the existing `shared-cryptids-source-audit.yml` now has the opt-in `verify_six_root_graft` target; no new workflow was created. [Run 45178351479](https://github.com/FlareZ123/bb6/actions/runs/45178351479) succeeded with upstream commit `3647718b5df22e1a61462dec0376bd204526285a`, Lean 4.36.0-rc2 and matching dependencies. It built `BusyBeaver.Bridge`, `Cryptids.Machines`, all six upstream machine modules, 30 local support modules, and the current graft. The first exact-source diagnostic run [45177028376](https://github.com/FlareZ123/bb6/actions/runs/45177028376) exposed one missing `noncomputable` modifier on the recursive `depth4ResidualOpenDecidable` instance; that exact issue was fixed before the successful run.
 
-The current source edits have **not** been compiled together. Next, run the exact compatible-toolchain closure, check the six `simpa [source_rN]` conversions, confirm all six `oldOpen_*` computations, and inspect the full transitive axiom profiles for the final graft theorems. If any old-open assertion fails, determine whether that root was already classified by the old audit rather than weakening the assertion. No global BB(6) upper bound or universal classification is implied.
+The full requested axiom output showed `[propext, Classical.choice, Quot.sound]` for each upstream `is_not_halt` theorem, each source-table equality, each transfer, every `oldOpen_*` and `closes_*` theorem, and the aggregate graft/open-set/exhaustiveness/mass declarations. The corrected workflow rejects both `sorryAx` and `native_decide`; the successful run passed those checks. The IO exporter remains separated in opt-in `ResidualFrontierExport.lean`, so importing `ResidualFrontierManifest.lean` does not run it.
+
+This closes exactly six previously-open machines in the bound-six depth-four frontier. The open-set theorem preserves every other previously-open completion; exhaustiveness and mass conservation remain proved. The reported global coverage percentage has **not** been recomputed or changed. No universal BB(6) classification or upper bound is implied.
 ### Four halting roots
 
 The four `Halt` modules prove `IsHalt target`, but their current theorem interface does not provide an explicit primitive step bound suitable for the existing `DecidedBelow 6` frontier. Their proof files use symbolic batch/accelerated executions. Do not graft them into the bound-6 audit as though existential halting supplied a score. The next useful task is to extract an exact primitive-step witness or a verified upper bound and compare it with the champion lower bound.
 
 ## Research consequence
 
-The immediate proof-reuse opportunity is the six nonhalting roots, not another generic holdout scan. If the graft compiles with a clean transitive axiom profile and the six `oldOpen_*` proofs succeed, the repository will have closed six concrete machines in its existing proof-carrying depth-four frontier while preserving all other open completions. This is a partial classification result, not a universal BB(6) upper bound. The 52 core and 56 acceleration modules remain unresolved reductions and must not be counted as solved.
+The six nonhalting roots are now source-accepted in the proof-carrying depth-four frontier. The next useful Cryptids task is to extract primitive-step bounds for the four live `IsHalt` overlaps (F424, F412 and two distinct F289 tables) and then build a **higher-bound** frontier audit. Do not add them to `DecidedBelow 6`: in `Frontier.lean`, the parameter is a primitive-step bound, and `depth4ResidualAudit` is explicitly `FrontierAudit (DecidedBelow 6) emptyTable`. The 52 core and 56 acceleration overlaps remain unresolved reductions and must not be counted as solved. This is a partial classification result, not a universal BB(6) upper bound.
