@@ -4,6 +4,7 @@ import Lean.Elab.Tactic.Omega
 
 namespace BB6Coverage.Agent48M0EvenEightValuationSuffix
 
+open BB6Coverage
 open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent48M0EvenEightQ4Prefix
 open BB6Coverage.Agent8Q4Suffix
@@ -23,13 +24,13 @@ theorem m0EvenEightQ4SuffixTargetLeftAllQ
   unfold s1LeftFacing m0EvenEightQ4LeftFacingAll
   have hbin : binDec (a+b+1) (2^b-1) =
       d0pow b ++ d1pow (a+1) := by
-    have h := binDec_pow2_sub_one (a-1) b
+    have h := BB6Coverage.Agent8Q4Suffix.binDec_pow2_sub_one (a-1) b
     have hlen : (a-1)+b+2 = a+b+1 := by omega
     have hval : (a-1)+2 = a+1 := by omega
     simpa [hlen,hval] using h
   rw [hbin]
   have hadd : d1pow (a+1) = d1pow 2 ++ d1pow (a-1) := by
-    have h := d1pow_add_right (a-1) 2
+    have h := BB6Coverage.Agent8Q4Suffix.d1pow_add_right (a-1) 2
     have hval : (a-1)+2 = a+1 := by omega
     simpa [hval] using h
   rw [hadd]
