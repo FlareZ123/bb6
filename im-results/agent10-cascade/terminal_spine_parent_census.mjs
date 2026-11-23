@@ -279,10 +279,26 @@ for(let n=lo;n<=hi;n++){
         pz=allResetParents(z),ph=allResetParents(oddParent);
   const ev=pv.filter(e=>e.kind==="even");
   const od=pv.filter(e=>e.kind==="odd");
+  // The next five earlier ray states, through depth J-7,
+  // have only their unique even parent. The next (J-8) state
+  // provably reintroduces a t=1 off-spine fork.
+  let presegmentOK=true;
+  for(let k=3;k<=7;k++){
+    const current=4n*p+N-1n-c*b2(t.J-k);
+    const successor=4n*p+N-1n-c*b2(t.J-k+1);
+    const pc=allResetParents(current);
+    if(pc.length!==1 || pc[0].kind!=="even" ||
+       pc[0].h!==successor)presegmentOK=false;
+  }
+  const next=4n*p+N-1n-c*b2(t.J-8);
+  const nextParents=allResetParents(next);
+  if(!nextParents.some(e=>e.kind==="odd" && e.t===1))
+    presegmentOK=false;
   if(pv.length!==2 || ev.length!==1 || od.length!==1 ||
      od[0].t!==1 || ev[0].h!==w || od[0].h!==oddParent ||
      pw.length!==1 || pw[0].kind!=="even" || pw[0].h!==z ||
-     pz.length!==0 || ph.length!==0 || oddParent===2n || z===2n){
+     pz.length!==0 || ph.length!==0 || oddParent===2n || z===2n ||
+     !presegmentOK){
        nonterminalFailures++;
        console.error("NONTERMINAL FOUR-NODE MISMATCH",n);
   }
