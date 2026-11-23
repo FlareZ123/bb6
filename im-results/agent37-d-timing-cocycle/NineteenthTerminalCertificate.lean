@@ -1,5 +1,4 @@
-import NineteenthBlock2
-import DRegularFast
+import NineteenthBlock3
 
 set_option maxHeartbeats 100000000
 set_option maxRecDepth 55000
@@ -8,26 +7,8 @@ namespace BB6.Agent2NineteenthRoot
 
 open DRegular BB6.DRegularFast
 
-/-- Final 1,588-section arithmetic block after the two 4,096-section blocks. -/
-def terminal9780 : L :=
-  (BB6.DRegularFast.fastRun 1588 block19_2).getD ⟨9,0,0⟩
-
-def t19 : Nat := (terminal9780.a-10)/9
-
-theorem terminal1588_certificate :
-    run 1588 block19_2 = some ⟨9*t19+10,9,1⟩ ∧
-      t19 % 27 = 12 := by
-  rw [BB6.DRegularFast.fastRun_correct 1588 block19_2 block19_2_canon]
-  decide
-
-theorem terminal1588_exact :
-    run 1588 block19_2 = some ⟨9*t19+10,9,1⟩ :=
-  terminal1588_certificate.1
-
-theorem t19_mod27 : t19 % 27 = 12 :=
-  terminal1588_certificate.2
-
-/-- Compose the three exact blocks: 4,096 + 4,096 + 1,588 = 9,780. -/
+/-- Exact 9,780-step terminal certificate, composed from the three
+    independently kernel-checked arithmetic blocks (4,096 + 4,096 + 1,588). -/
 theorem terminal9780_exact :
     run 9780 seed19 = some ⟨9*t19+10,9,1⟩ := by
   rw [show 9780 = 4096 + (4096 + 1588) by decide,
@@ -42,7 +23,33 @@ theorem terminal9780_exact :
 theorem t19_mod27_exact : t19 % 27 = 12 :=
   t19_mod27
 
+private def haltingCylinderC : Nat :=
+  1975700577069254261393123959451562008800234946348086
+
+/-- The nineteenth reentry parameter is zero modulo three. -/
+theorem t19_mod3 : t19 % 3 = 0 := by
+  have h := t19_mod27_exact
+  omega
+
+/-- The pure-unary parameter after the nineteenth E/A packet is 2 mod 3. -/
+theorem root19_unary_mod3 : (64*t19+113) % 3 = 2 := by
+  have h := t19_mod3
+  omega
+
+/-- Consequently the nineteenth pure-unary reentry misses the external
+    TM62 halting cylinder C + 3^108*k for every natural k. -/
+theorem root19_reentry_misses_cylinder :
+    ∀ k : Nat, 64*t19+113 ≠ haltingCylinderC + 3^108*k := by
+  intro k h
+  have hmod := congrArg (fun n : Nat => n % 3) h
+  have hC : haltingCylinderC % 3 = 1 := by norm_num [haltingCylinderC]
+  have hp : (3^108*k) % 3 = 0 := by norm_num
+  have hleft := root19_unary_mod3
+  have hright : (haltingCylinderC + 3^108*k) % 3 = 1 := by omega
+  omega
+
 #print axioms terminal9780_exact
 #print axioms t19_mod27_exact
+#print axioms root19_reentry_misses_cylinder
 
 end BB6.Agent2NineteenthRoot
