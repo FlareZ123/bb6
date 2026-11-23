@@ -57,7 +57,7 @@ private theorem m1One_binDec_one (L : Nat) (hL : 0 < L) :
     binDec L 1 = d0 ++ d1pow (L-1) := by
   have hL' : L = (L-1)+1 := by omega
   conv_lhs => rw [hL']
-  rw [binDec_odd (L-1) 0 (by simp)]
+  rw [binDec_odd (L-1) 0 (Nat.pow_pos (by decide))]
   rw [binDec_zero]
 
 private theorem m1One_d1pow_succ (L : Nat) (hL : 0 < L) :
@@ -289,14 +289,14 @@ theorem m1One_q4_prefix_run
             change sweptLeft N T h (h+2) = true
             have hsrc : T (h+2) = true := by
               have hcoord : h+1+1 = h+2 := by omega
-              simpa [T,hcoord,s1PhysicalRight_source,sideBit] using
+              simpa [T,hcoord,s0RightFacing,s1PhysicalRight_source,sideBit] using
                 s1Config_right_cell L 1 1 a 0 b h 1
             rw [hpres,hsrc]
           · rw [hx3'] at hpres ⊢
             change sweptLeft N T h (h+3) = true
             have hsrc : T (h+3) = true := by
               have hcoord : h+1+2 = h+3 := by omega
-              simpa [T,hcoord,s1PhysicalRight_source,sideBit] using
+              simpa [T,hcoord,s0RightFacing,s1PhysicalRight_source,sideBit] using
                 s1Config_right_cell L 1 1 a 0 b h 2
             rw [hpres,hsrc]
     simpa [x,T2] using hframe.trans hT1
@@ -457,7 +457,7 @@ theorem m1One_q4_prefix_rightShape
         have hpres := sweptLeft_preserves_right (3*a+1) T h (h+2) (by omega)
         have hsrc : T (h+2) = true := by
           have hcoord : h+1+1 = h+2 := by omega
-          simpa [T,hcoord,s1PhysicalRight_source,sideBit] using
+          simpa [T,hcoord,s0RightFacing,s1PhysicalRight_source,sideBit] using
             s1Config_right_cell L 1 1 a 0 b h 1
         exact hcut.trans (hpres.trans hsrc)
     · by_cases ha0 : a = 0
@@ -478,7 +478,7 @@ theorem m1One_q4_prefix_rightShape
         have hpres := sweptLeft_preserves_right (3*a+1) T h (h+3) (by omega)
         have hsrc : T (h+3) = true := by
           have hcoord : h+1+2 = h+3 := by omega
-          simpa [T,hcoord,s1PhysicalRight_source,sideBit] using
+          simpa [T,hcoord,s0RightFacing,s1PhysicalRight_source,sideBit] using
             s1Config_right_cell L 1 1 a 0 b h 2
         exact hcut.trans (hpres.trans hsrc)
     · have hout : m1OneQ4Inside
@@ -489,21 +489,21 @@ theorem m1One_q4_prefix_rightShape
       have hpres := sweptLeft_preserves_right (3*a+1) T h (h+4) (by omega)
       have hsrc : T (h+4) = true := by
         have hcoord : h+1+3 = h+4 := by omega
-        simpa [T,hcoord,s1PhysicalRight_source,sideBit] using
+        simpa [T,hcoord,s0RightFacing,s1PhysicalRight_source,sideBit] using
           s1Config_right_cell L 1 1 a 0 b h 3
       exact hcut.trans (hpres.trans hsrc)
   · constructor
     · have hcut := m1OneQ4CutTape_eq_source_right L a b h (h+5) (by omega)
       have hsrc : T (h+5) = false := by
         have hcoord : h+1+4 = h+5 := by omega
-        simpa [T,hcoord,s1PhysicalRight_source,sideBit] using
+        simpa [T,hcoord,s0RightFacing,s1PhysicalRight_source,sideBit] using
           s1Config_right_cell L 1 1 a 0 b h 4
       simpa [T] using hcut.trans hsrc
     · constructor
       · have hcut := m1OneQ4CutTape_eq_source_right L a b h (h+6) (by omega)
         have hsrc : T (h+6) = false := by
           have hcoord : h+1+5 = h+6 := by omega
-          simpa [T,hcoord,s1PhysicalRight_source,sideBit] using
+          simpa [T,hcoord,s0RightFacing,s1PhysicalRight_source,sideBit] using
             s1Config_right_cell L 1 1 a 0 b h 5
         simpa [T] using hcut.trans hsrc
       · constructor
@@ -512,7 +512,7 @@ theorem m1One_q4_prefix_rightShape
           have hsrc : T (h+7+(i:Int)) =
               sideBit (s0RightFacing b) (6+i) := by
             have hcoord : h+1+(6+i:Int) = h+7+(i:Int) := by omega
-            simpa [T,hcoord,s1PhysicalRight_source,sideBit] using
+            simpa [T,hcoord,s0RightFacing,s1PhysicalRight_source,sideBit] using
               s1Config_right_cell L 1 1 a 0 b h (6+i)
           have hside :
               sideBit (s0RightFacing b) (6+i) =
@@ -533,7 +533,7 @@ theorem m1One_q4_prefix_rightShape
               sideBit (s0RightFacing b) (9+3*b+i) := by
             have hcoord : h+1+((9+3*b+i:Int)) =
                 h+10+(3*b:Int)+(i:Int) := by omega
-            simpa [T,hcoord,s1PhysicalRight_source,sideBit] using
+            simpa [T,hcoord,s0RightFacing,s1PhysicalRight_source,sideBit] using
               s1Config_right_cell L 1 1 a 0 b h (9+3*b+i)
           have hlen : (s0RightFacing b).length = 9+3*b := by
             simp [s0RightFacing,d1pow_length]
@@ -778,11 +778,15 @@ theorem m1One_q4_reset_prefix_source
     simpa [hsplit] using hq4
   rw [run_append,hfirst] at hq4split
   simp only [Option.bind_some] at hq4split
+  have hprefix' :
+      run tm2 (32+12*a) (s1Config L 1 1 a 0 b h) =
+        some ⟨4,h+4,T⟩ := by
+    simpa [T,s1Config,s0Config] using hprefix
   have htotal :
       run tm2 ((32+12*a)+(35+3*b)) (s1Config L 1 1 a 0 b h) =
         some (s1Config L 0 0 (a+b+2) (2^b-1) 0
           (h+5+3*b)) := by
-    rw [run_append,hprefix]
+    rw [run_append,hprefix']
     simp only [Option.bind_some]
     exact hq4split
   have hv : v2 1 = 0 := v2_of_odd 1 (by decide)
