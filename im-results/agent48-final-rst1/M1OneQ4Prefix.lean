@@ -56,10 +56,9 @@ private theorem m1One_sideBit_false_after_length
 private theorem m1One_binDec_one (L : Nat) (hL : 0 < L) :
     binDec L 1 = d0 ++ d1pow (L-1) := by
   have hL' : L = (L-1)+1 := by omega
-  rw [hL']
+  conv_lhs => rw [hL']
   rw [binDec_odd (L-1) 0 (by simp)]
   rw [binDec_zero]
-  simp [Nat.add_sub_cancel_right]
 
 private theorem m1One_d1pow_succ (L : Nat) (hL : 0 < L) :
     d1pow L = d1 ++ d1pow (L-1) := by
