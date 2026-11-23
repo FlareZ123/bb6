@@ -99,10 +99,10 @@ B=24\cdot2^N+5-12\cdot2^t-12\cdot2^J-6k.
 Then
 
 \[
-\boxed{|l|\le 2\cdot2^{\lfloor K/2\rfloor}.}
+\boxed{|l|\le 2^{\lfloor K/2\rfloor}.}
 \]
 
-The proof applies the reusable affine-feeder cardinality theorem with the exact branch-9 parameters. Its key identities and bounds are:
+The proof applies the reusable affine-feeder cardinality theorem with the exact branch-9 parameters. The offset is (c=24\cdot2^t-21\equiv3\pmod4), so (\operatorname{anyRayPhase}(c)=2) is even. The even-phase word language has exactly (2^{\lfloor K/2\rfloor}) words, eliminating the factor of two in the phase-uniform bound. Its key identities and bounds are:
 
 - \(t+3\le N\), together with \(t+14=r+4q\), implies \(q\le2\cdot2^J+v\); the natural subtraction defining \(k\) is therefore exact.
 - With \(C=6\cdot2^t+3q-8\), the affine identity is
@@ -113,7 +113,7 @@ The proof applies the reusable affine-feeder cardinality theorem with the exact 
 
 This removes the earlier draft's artificial restrictions \(t\le K\) and \(q\le v\). The estimate now covers every \(t\ge5\) in the actual interior range \(t+3\le N(v)\), for each fixed \(t,r,q\). It is a parameter-sparsity theorem, not an exclusion of the branch or a BB(6) solution.
 
-**Validation:** the existing manual workflow \`.github/workflows/agent39-429-1021-source.yml\`, input \`proof_target=entropy\`, passed on 2026-11-23 (run [45178662933](https://github.com/FlareZ123/bb6/actions/runs/45178662933)). The Lean source ends with \`#print axioms branch9_side_feeder_entropy\`; no \`sorry\` or \`admit\` was introduced in this module.
+**Validation:** the existing manual workflow \`.github/workflows/agent39-429-1021-source.yml\`, input \`proof_target=entropy\`, passed on 2026-11-23 (run [45181698589](https://github.com/FlareZ123/bb6/actions/runs/45181698589), which also checks the sharper even-phase specialization). The Lean source ends with \`#print axioms branch9_side_feeder_entropy\`; no \`sorry\` or \`admit\` was introduced in this module.
 
 ### Additional finite-sieve observation (not yet Lean-certified)
 
