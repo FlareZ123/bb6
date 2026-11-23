@@ -1,3 +1,7 @@
+## 2026-11-23 13:09 UTC — 2-adic precision invariant for the finite sieve
+
+For the ghost-pair sieve, the one-bit-per-inverse-level precision budget is justified by the error-pair invariant: if \(2^m\mid\Delta x\) and \(2^{m+1}\mid\Delta y\), then F maps errors to \((\Delta x/2,\Delta x+\Delta y)\), and S/E maps them to \(((4\Delta x+\Delta y)/4,\Delta y/2)\). Both preserve the one-bit gap while lowering \(m\) by one. Therefore a starting congruence modulo \(2^{d+6}\) suffices to preserve mod-64 root predicates through \(d\) inverse levels. The actual branch9 coordinate differences meet the starting divisibility conditions under the exponent thresholds recorded in the README. This is an elementary algebraic derivation; formalize it in Lean if extending the D4 filter.
+
 ## 2026-11-23 13:04 UTC — finite-sieve transfer scope
 
 Important caveat for the empirical D4/D20 refinement: the sieve starts from the ghost pair ((-8-3k,5-6k)), while actual side-parent coordinates differ by (12\cdot2^N+6\cdot2^t-6\cdot2^J) and (24\cdot2^N-12\cdot2^t-12\cdot2^J). For modulus (2^{d+6}), sufficient transfer conditions are (t\ge d+5), (J\ge d+5), (N\ge d+4). Therefore D4 requires (t,J\ge9,N\ge8); D20 requires (t,J\ge25,N\ge24). This is not the same scope as the all-interior entropy theorem ((t\ge5)). README updated and Agent30 sent a scope-correction follow-up. Never apply D4/D20 residue conclusions outside these exponent conditions without a stronger congruence argument.
