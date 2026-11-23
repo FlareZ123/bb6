@@ -141,6 +141,12 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reconstruct compressed TerminalLeft dependency
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/agent38-root-q4tail-source
+          python3 -c "import base64,lzma,pathlib; p=pathlib.Path('im-results/agent42-champion-terminal/TerminalLeftExact.lean.xz.b64'); pathlib.Path('/tmp/agent38-root-q4tail-source/TerminalLeft.lean').write_bytes(lzma.decompress(base64.b64decode(p.read_text())))"
+          echo "1bce2075fc4e0cd7d740fb71b3796088b190ddb6766e04640d992dadd1b650ff  /tmp/agent38-root-q4tail-source/TerminalLeft.lean" | sha256sum -c -
       - name: Compile exact root-to-q4Tail import closure
         run: |
           set -euo pipefail
@@ -148,6 +154,7 @@ jobs:
             im-results/agent38-root-q4tail/TM63RootQ4Tail.lean \
             --jobs 8 \
             --workdir /tmp/agent38-root-q4tail \
+            --source-root /tmp/agent38-root-q4tail-source \
             --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean \
             | tee /tmp/agent38-root-q4tail.log
           python3 - <<'PY'
