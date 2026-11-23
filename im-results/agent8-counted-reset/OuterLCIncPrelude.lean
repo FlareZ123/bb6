@@ -100,6 +100,12 @@ theorem outer_s1_counter_cell (L n m a b : Nat) (h : Int)
     (hm : m < 3) (i : Nat) :
     (s1Config L n m a 0 b h).tape
       (h-((3*a+m+5+i):Int)) = sideBit (binDec L n ++ lh) i := by
+  have hindex :
+      (3 : Int) * (a : Int) + (m : Int) + 5 + (i : Int) =
+        ((3*a+m+5+i : Nat) : Int) := by
+    push_cast
+    rfl
+  rw [← hindex]
   rw [s1Config_left_cell L n m a 0 b h (3*a+m+5+i)]
   have hword : s1LeftFacing L n m a 0 =
       (d1pow a ++ markerWord m ++ d0) ++ (binDec L n ++ lh) := by
@@ -263,9 +269,18 @@ boundary required by counted_LBinDec_HRun. -/
 theorem markerBridgeFrameOut_right_zero (m : Nat) (hm : m < 3)
     (T : Int → Bool) (h0 : Int) :
     (markerBridgeFrameOut m T h0).tape (h0-(m+5:Int)+1) = false := by
-  have hcoord : h0-(m+5:Int)+1-h0 = -(m+4:Int) := by omega
   have hm0 : m=0 ∨ m=1 ∨ m=2 := by omega
-  rcases hm0 with h0' | h1 | h2 <;> subst m <;>
+  rcases hm0 with h0' | h1 | h2
+  · subst m
+    have hcoord : h0-5+1-h0 = -4 := by omega
+    simp [markerBridgeFrameOut,frame,markerBridgeInsideAt,markerBridgeInside,
+      shiftConfig,embed,markerBridgeOutput,hcoord]
+  · subst m
+    have hcoord : h0-6+1-h0 = -5 := by omega
+    simp [markerBridgeFrameOut,frame,markerBridgeInsideAt,markerBridgeInside,
+      shiftConfig,embed,markerBridgeOutput,hcoord]
+  · subst m
+    have hcoord : h0-7+1-h0 = -6 := by omega
     simp [markerBridgeFrameOut,frame,markerBridgeInsideAt,markerBridgeInside,
       shiftConfig,embed,markerBridgeOutput,hcoord]
 
