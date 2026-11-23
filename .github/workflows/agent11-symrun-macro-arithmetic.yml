@@ -1,0 +1,50 @@
+name: Agent 11 certified exact SymRun macro-cost algebra (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      LEAN_TOOLCHAIN: leanprover/lean4:v4.36.0-rc2
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: local-bb6
+          persist-credentials: false
+      - name: Remove unused hosted-runner caches
+        run: |
+          sudo rm -rf /usr/local/lib/android /opt/hostedtoolcache /usr/share/dotnet /usr/share/swift /usr/local/share/powershell
+          df -h
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain "$LEAN_TOOLCHAIN"
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Clone source repository for Mathlib 4.36 RC2
+        run: |
+          git clone -q https://github.com/google-deepmind/cryptids.git upstream
+          git -C upstream checkout -q 3647718b5df22e1a61462dec0376bd204526285a
+          test "$(git -C upstream rev-parse HEAD)" = "3647718b5df22e1a61462dec0376bd204526285a"
+          printf '%s\n' "$LEAN_TOOLCHAIN" > upstream/lean-toolchain
+          sed -i 's/v4.35.0-rc4/v4.36.0-rc2/g' upstream/lakefile.toml
+          rm -f upstream/lake-manifest.json
+      - name: Fetch matching RC2 mathlib and restore oleans
+        working-directory: upstream
+        run: |
+          set -euo pipefail
+          lake update
+          lake exe cache get
+      - name: Kernel-check twelve exact macro summation theorems
+        working-directory: upstream
+        run: |
+          set -euo pipefail
+          cp ../local-bb6/im-results/agent11-symrun-primitive-cost/MacroCostArithmetic.lean .
+          lake env lean MacroCostArithmetic.lean | tee /tmp/agent11-macro-axioms.log
+          ! grep -Eq 'sorryAx|native_decide|declaration uses \\[synthetic\\]' /tmp/agent11-macro-axioms.log
+          echo "PASS: 12 quadratic/summation theorems under Lean 4.36.0-rc2"
