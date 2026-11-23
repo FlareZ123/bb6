@@ -587,3 +587,142 @@ theorem root_d1_suffix_two_to_token_cfg (n : ℕ) :
   simpa [root_d1_token_cfg, tok_DR, encTokens, encRightNat, encLeft,
     List.replicate_succ, List.cons_append, List.append_assoc] using
     (root_d1_suffix_two_to_tok_DR n)
+
+
+/-!
+## Suffix-preserving countdown and root-to-token composition
+
+The ordinary decrement D_n(c;T) -> D_(n+1)(c-3;T) preserves an arbitrary
+untouched token suffix. The residue-one iterator then reaches the exact
+DL-right-one token boundary for the suffix [0,0,2].
+-/
+
+theorem root_countdown_step_with_suffix (n c : ℕ)
+    (T : List (ℕ × ℕ)) (hc : 3 ≤ c) :
+    ReachesPlus target
+      (cfg_CR_n_n [(0,0)]
+        (List.replicate (4*n+5) (0,0) ++ [(c,0)] ++ T))
+      (cfg_CR_n_n [(0,0)]
+        (List.replicate (4*n+9) (0,0) ++ [(c-3,0)] ++ T)) := by
+  have hc1 : c-1+1 = c := by omega
+  have hc2 : c-3+2 = c-1 := by omega
+  have h1 := root_countdown_prefix_with_tail_fixed n c T
+  have h2 := root_countdown_el_zero_sweep (4*n+5)
+    [(0,0),(1,0)] ([(c,0)] ++ T)
+  have h2' : ReachesPlus target
+      (cfg_EL_n_n [(0,0),(1,0)]
+        (List.replicate (4*n+6) (0,0) ++ [(c,0)] ++ T))
+      (cfg_EL_n_n (List.replicate (4*n+7) (0,0) ++ [(1,0)])
+        ([(c,0)] ++ T)) := by
+    simpa [List.replicate_succ, List.cons_append, List.append_assoc] using h2
+  have h3 := root_countdown_el_positive_step (c-1)
+    (List.replicate (4*n+7) (0,0) ++ [(1,0)]) T
+  have h3' : ReachesPlus target
+      (cfg_EL_n_n (List.replicate (4*n+7) (0,0) ++ [(1,0)])
+        ([(c,0)] ++ T))
+      (cfg_DL_0_n (List.replicate (4*n+7) (0,0) ++ [(1,0)])
+        ([(c-1,0)] ++ T)) := by
+    simpa [hc1] using h3
+  have h4 := root_countdown_dl_positive_step (c-3)
+    (List.replicate (4*n+7) (0,0) ++ [(1,0)]) T
+  have h4' : ReachesPlus target
+      (cfg_DL_0_n (List.replicate (4*n+7) (0,0) ++ [(1,0)])
+        ([(c-1,0)] ++ T))
+      (cfg_DR_n_n (List.replicate (4*n+7) (0,0) ++ [(1,0)])
+        ([(1,0),(c-3,0)] ++ T)) := by
+    simpa [hc2] using h4
+  have h5 := root_countdown_dr_zero_sweep (4*n+6) [(1,0)]
+    ([(c-3,0)] ++ T)
+  have h6 := root_countdown_dr_positive_positive_step 0 0 []
+    (List.replicate (4*n+7) (0,0) ++ [(c-3,0)] ++ T)
+  exact ReachesPlus.trans h1
+    (ReachesPlus.trans h2'
+      (ReachesPlus.trans h3'
+        (ReachesPlus.trans h4'
+          (ReachesPlus.trans h5 h6))))
+
+theorem root_countdown_iter_succ_one_with_suffix (n k : ℕ)
+    (T : List (ℕ × ℕ)) :
+    ReachesPlus target
+      (cfg_CR_n_n [(0,0)]
+        (List.replicate (4*n+5) (0,0) ++ [(3*(k+1)+1,0)] ++ T))
+      (cfg_CR_n_n [(0,0)]
+        (List.replicate (4*(n+k+1)+5) (0,0) ++ [(1,0)] ++ T)) := by
+  induction k generalizing n with
+  | zero =>
+      have h := root_countdown_step_with_suffix n 4 T (by omega)
+      simpa [Nat.mul_add, List.replicate_succ, List.cons_append,
+        List.append_assoc] using h
+  | succ k ih =>
+      have h1 := root_countdown_step_with_suffix n (3*(k+2)+1) T (by omega)
+      have h2 := ih (n+1)
+      have h2' : ReachesPlus target
+          (cfg_CR_n_n [(0,0)]
+            (List.replicate (4*(n+1)+5) (0,0) ++ [(3*(k+1)+1,0)] ++ T))
+          (cfg_CR_n_n [(0,0)]
+            (List.replicate (4*((n+1)+(k+1))+5) (0,0) ++ [(1,0)] ++ T)) := by
+        simpa [Nat.add_assoc] using h2
+      exact ReachesPlus.trans h1 h2'
+
+theorem root_countdown_iter_succ_zero_with_suffix (n k : ℕ)
+    (T : List (ℕ × ℕ)) :
+    ReachesPlus target
+      (cfg_CR_n_n [(0,0)]
+        (List.replicate (4*n+5) (0,0) ++ [(3*(k+1),0)] ++ T))
+      (cfg_CR_n_n [(0,0)]
+        (List.replicate (4*(n+k+1)+5) (0,0) ++ [(0,0)] ++ T)) := by
+  induction k generalizing n with
+  | zero =>
+      have h := root_countdown_step_with_suffix n 3 T (by omega)
+      simpa [Nat.mul_add, List.replicate_succ, List.cons_append,
+        List.append_assoc] using h
+  | succ k ih =>
+      have h1 := root_countdown_step_with_suffix n (3*(k+2)) T (by omega)
+      have h2 := ih (n+1)
+      have h2' : ReachesPlus target
+          (cfg_CR_n_n [(0,0)]
+            (List.replicate (4*(n+1)+5) (0,0) ++ [(3*(k+1),0)] ++ T))
+          (cfg_CR_n_n [(0,0)]
+            (List.replicate (4*((n+1)+(k+1))+5) (0,0) ++ [(0,0)] ++ T)) := by
+        simpa [Nat.add_assoc] using h2
+      exact ReachesPlus.trans h1 h2'
+
+theorem root_countdown_iter_succ_two_with_suffix (n k : ℕ)
+    (T : List (ℕ × ℕ)) :
+    ReachesPlus target
+      (cfg_CR_n_n [(0,0)]
+        (List.replicate (4*n+5) (0,0) ++ [(3*(k+1)+2,0)] ++ T))
+      (cfg_CR_n_n [(0,0)]
+        (List.replicate (4*(n+k+1)+5) (0,0) ++ [(2,0)] ++ T)) := by
+  induction k generalizing n with
+  | zero =>
+      have h := root_countdown_step_with_suffix n 5 T (by omega)
+      simpa [Nat.mul_add, List.replicate_succ, List.cons_append,
+        List.append_assoc] using h
+  | succ k ih =>
+      have h1 := root_countdown_step_with_suffix n (3*(k+2)+2) T (by omega)
+      have h2 := ih (n+1)
+      have h2' : ReachesPlus target
+          (cfg_CR_n_n [(0,0)]
+            (List.replicate (4*(n+1)+5) (0,0) ++ [(3*(k+1)+2,0)] ++ T))
+          (cfg_CR_n_n [(0,0)]
+            (List.replicate (4*((n+1)+(k+1))+5) (0,0) ++ [(2,0)] ++ T)) := by
+        simpa [Nat.add_assoc] using h2
+      exact ReachesPlus.trans h1 h2'
+
+theorem root_remainder_one_root_to_token_cfg :
+    ReachesPlus target
+      (cfg_CR_n_n [(0,0)]
+        (List.replicate 5 (0,0) ++ [(26524315,0),(0,0),(0,0),(2,0)]))
+      (root_d1_token_cfg 8841438) := by
+  have h1 := root_countdown_iter_succ_one_with_suffix 0 8841437
+    [(0,0),(0,0),(2,0)]
+  have h2 := root_d1_suffix_two_to_token_cfg 8841438
+  have hc : 3*8841438+1 = 26524315 := by norm_num
+  have h1' : ReachesPlus target
+      (cfg_CR_n_n [(0,0)]
+        (List.replicate 5 (0,0) ++ [(26524315,0),(0,0),(0,0),(2,0)]))
+      (cfg_CR_n_n [(0,0)]
+        (List.replicate (4*8841438+5) (0,0) ++ [(1,0),(0,0),(0,0),(2,0)])) := by
+    simpa [hc, Nat.mul_add] using h1
+  exact ReachesPlus.trans h1' h2
