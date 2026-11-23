@@ -1,4 +1,4 @@
-name: Agent 11 full F424 source primitive exactness (manual)
+name: Agent 11 F424 source exactness and MItem prefix bound (manual)
 
 on:
   workflow_dispatch:
@@ -37,16 +37,18 @@ jobs:
           lake update
           lake exe cache get >/tmp/mathlib-cache.log
           lake build BusyBeaver.Calculi.HaltShared
-      - name: Kernel-check F424 exact source stepPure costs and outer SymRun sweeps
+      - name: Kernel-check F424 exact source steps, outer sweeps, and MItem prefix
         working-directory: upstream
         run: |
           set -euo pipefail
-          cp ../local-bb6/im-results/agent11-symrun-primitive-cost/{SourceF424Machine,SourceCostModel,SourceCostCombinators,SourceExactF424Core,SourceExactPureBB424,SourceExactPureDL424,SourceExactPureCB424,SourceExactPureStep424}.lean .
+          cp ../local-bb6/im-results/agent11-symrun-primitive-cost/{SourceF424Machine,SourceCostModel,SourceCostCombinators,SourceExactF424Core,SourceExactMItemPrefix424,SourceExactPureBB424,SourceExactPureDL424,SourceExactPureCB424,SourceExactPureStep424}.lean .
           cp ../local-bb6/im-results/agent38-symrun-state-replay/SourceExactSweepBB424.lean .
           lake env lean -o SourceCostModel.olean SourceCostModel.lean
           LEAN_PATH=. lake env lean -o SourceF424Machine.olean SourceF424Machine.lean
           LEAN_PATH=. lake env lean -o SourceCostCombinators.olean SourceCostCombinators.lean
           LEAN_PATH=. lake env lean -o SourceExactF424Core.olean SourceExactF424Core.lean
+          LEAN_PATH=. lake env lean -o SourceExactMItemPrefix424.olean SourceExactMItemPrefix424.lean | tee /tmp/agent11-mitem-prefix.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/agent11-mitem-prefix.log
           LEAN_PATH=. lake env lean -o SourceExactPureBB424.olean SourceExactPureBB424.lean
           LEAN_PATH=. lake env lean -o SourceExactPureDL424.olean SourceExactPureDL424.lean
           LEAN_PATH=. lake env lean -o SourceExactPureCB424.olean SourceExactPureCB424.lean
@@ -54,4 +56,4 @@ jobs:
           ! grep -Eq 'sorryAx|native_decide' /tmp/agent11-full-f424.log
           LEAN_PATH=. lake env lean SourceExactSweepBB424.lean | tee /tmp/agent38-symrun-sweeps.log
           ! grep -Eq 'sorryAx|native_decide' /tmp/agent38-symrun-sweeps.log
-          echo "PASS: F424 source exact stepPure costs and outer sweep primitive-time soundness"
+          echo "PASS: F424 source exact stepPure costs, outer sweeps, and blank-to-MItem prefix bound"
