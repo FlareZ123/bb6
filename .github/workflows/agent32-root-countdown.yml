@@ -13,13 +13,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install pinned Lean
-        uses: leanprover/lean-action@v1
-        with:
-          version: 4.36.0-rc2
+      - name: Reconstruct pinned #85 source module and pin Lean
+        run: |
+          python -m pip install filelock
+          python im-results/agent2-unpack-proof.py
+          python -c 'from pathlib import Path; Path("lean-toolchain").write_text("leanprover/lean4:v4.36.0-rc2\\n")'
 
-      - name: Reconstruct pinned #85 source module
-        run: python im-results/agent2-unpack-proof.py
+      - name: Install pinned Lean using elan
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
 
       - name: Append root countdown sweep
         shell: bash
