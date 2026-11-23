@@ -137,9 +137,9 @@ Two source-linked Lean drafts now cover the F424 run from the blank tape through
   ```
   costIterM424 19217 (.CB, [], [.run 1, .run 0]) < 2^31
   ```
-- The same module adds an 18-step blank-to-CB witness using `executeWithin 18`, copies the upstream `initSymCyc3` checkpoint definition, and reproduces the upstream `runElemFast 1 1 11 4` endpoint computation with `decide +kernel`. These are composed into `blankToInitSymCyc3_exact_reaches`: the blank-tape F424 configuration reaches the symbolic `initSymCyc3` checkpoint in fewer than (2^{31}) primitive transitions.
+- The same module adds an 18-step blank-to-CB witness using `executeWithin 18`, copies the upstream `initSymCyc3` checkpoint definition, and reproduces the upstream `runElemFast 1 1 11 4` endpoint computation with `decide +kernel`. The MItem cost sum is itself computed by kernel reduction as `costIterM424 19217 startF424M = 164368`, and these are composed into `blankToInitSymCyc3_exact_164386`: the blank-tape F424 configuration reaches the symbolic `initSymCyc3` checkpoint in exactly 164,386 primitive transitions (18 entry steps plus 164,368 MItem-prefix steps).
 - `SourceF424SymbolicTrace.lean` extracts the 18 symbolic checkpoint states and their kernel computation proofs from the pinned upstream certificate. It proves `symRunF424_exact`, the exact 70,511-step `stepSym` trajectory to `symChk70511`, and reconstructs `blankF424_is_halt` by composing the blank-to-checkpoint prefix, the checkpoint soundness chain, and the final DL/zero halting step.
 
-The prefix bound is intentionally much looser than the JS-replayed prefix cost 164,368. Its purpose is a simple, reusable, kernel-checkable upper bound on the initial prefix.
+The generic `<2^31` invariant is a reusable coarse bound; the separate kernel-computed exact prefix cost is 164,386 including the blank-to-CB entry, matching the JS replay.
 
 **Acceptance boundary:** both modules and their proof compositions remain uncompiled. They are intermediate work, not publishable results. The exact primitive-time cost of the 70,511-step symbolic trace still depends on the separate costed `stepSym`/dispatcher work; do not treat this as an exact F424 halting-time proof or promote it to `results/` until the full dependency closure compiles and the costed symbolic trace is composed.
