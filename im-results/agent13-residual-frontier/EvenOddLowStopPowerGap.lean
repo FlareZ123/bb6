@@ -39,11 +39,9 @@ theorem low_mass_strict_gap
     rw [Nat.pow_add]
     simp only [show (2:Nat)^9=512 by decide] at *
     omega
-  have ht8 : t+8=1024*z+137 := by dsimp [t]; omega
-  have ht9 : t+9=1024*z+138 := by dsimp [t]; omega
-  rw [ht8] at hboundlo
-  rw [ht9] at hboundhi
-  exact ⟨hboundlo,hboundhi⟩
+  constructor
+  · simpa only [show t+8=1024*z+137 by omega] using hboundlo
+  · simpa only [show t+9=1024*z+138 by omega] using hboundhi
 
 /-- The necessary low-stop source mass is never dyadically pure. This
     removes the previously unresolved exceptional a=1 predecessor branch
@@ -73,7 +71,7 @@ theorem all_low_ray_parents_are_even_bounce
     (hedge : secNext (a,k)=some (180*u+28,166*u+25)) :
     ∃ n : Nat, n%2=0 ∧ 3≤a ∧ a<2*k ∧
       346*u+54=2^n*(2*(a-1)+8) ∧
-      (2*k-a+3)+(2*(a-1)+8)+3*n=512*u+78 := by
+      (2*k-a+3)+(2*(a-1)+8)+3*n=512*u+80 := by
   have hlin : (1024*z+129)+1 ≤ 2^(1024*z+129) :=
     linear_le_power _
   have hu64 : 64≤u := by omega
