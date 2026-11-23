@@ -12,6 +12,7 @@ on:
           - root-reset
           - root-remainder-one
           - suffix3-shift
+          - suffix3-one
           - suffix3-full
           - suffix3-word
           - suffix3-zero
@@ -108,6 +109,8 @@ jobs:
                                 base / "RootPaddedTwoReset.append.lean"]
               elif os.environ.get("PROOF_TARGET") == "suffix3-word":
                   fragments += [base / "RootSuffixWordShift.append.lean"]
+              elif os.environ.get("PROOF_TARGET") == "suffix3-one":
+                  fragments += [base / "RootSuffixOneReset.append.lean"]
               source = module.read_text().rstrip().splitlines()
               if source[-1].strip() != ending:
                   raise SystemExit(f"unexpected source-module ending: {source[-1]!r}")
@@ -143,7 +146,7 @@ jobs:
           PY
           git diff --check
 
-      - name: Kernel-check root chain and remainder-two reset
+      - name: Kernel-check selected source-local theorem family
         working-directory: cryptids
         env:
           LEAN_NUM_THREADS: "1"
