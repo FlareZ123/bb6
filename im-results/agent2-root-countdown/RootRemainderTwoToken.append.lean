@@ -443,12 +443,19 @@ private theorem root_d1_suffix_two_to_tok_DR (n : ℕ) :
       (cfg_CR_n_n [(0,0)]
         (List.replicate (4*n+5) (0,0) ++ [(1,0),(0,0),(0,0),(2,0)]))
       (tok_DR [2,0] []
-        ([0,0,1] ++ List.replicate (4*n+6) 0 ++ [1])) := by
-  let L0 := List.replicate (4*n+7) (0,0) ++ [(1,0)]
-  let L1 := [(0,0),(1,0)] ++ List.replicate (4*n+6) (0,0) ++ [(1,0)]
-  let L2 := [(0,0),(0,0),(1,0)] ++ List.replicate (4*n+6) (0,0) ++ [(1,0)]
+        ([0,0,0,1] ++ List.replicate (4*n+6) 0 ++ [1])) := by
+  let L0 := List.replicate (4*n+6) (0,0) ++ [(0,0),(1,0)]
+  let L1 := (0,0) :: bumpPairHead L0
+  let L2 := (0,0) :: L1
+  let L3 := (0,0) :: L2
   have h1 := root_countdown_prefix_with_tail_fixed n 1
     [(0,0),(0,0),(2,0)]
+  have h1' : ReachesPlus target
+      (cfg_CR_n_n [(0,0)]
+        (List.replicate (4*n+5) (0,0) ++ [(1,0),(0,0),(0,0),(2,0)]))
+      (cfg_EL_n_n [(0,0),(1,0)]
+        (List.replicate (4*n+6) (0,0) ++ [(1,0),(0,0),(0,0),(2,0)])) := by
+    simpa [List.append_assoc] using h1
   have h2 := root_countdown_el_zero_sweep (4*n+5)
     [(0,0),(1,0)] [(1,0),(0,0),(0,0),(2,0)]
   have h2' : ReachesPlus target
@@ -459,125 +466,38 @@ private theorem root_d1_suffix_two_to_tok_DR (n : ℕ) :
     simpa [List.replicate_succ, List.cons_append, List.append_assoc] using h2
   have h3 := root_countdown_el_positive_step 0 L0
     [(0,0),(0,0),(2,0)]
-  have h4 := root_countdown_dl_zero_step L0 [(0,0),(2,0)]
+  have h4 := root_countdown_dl_zero_step L0
+    [(0,0),(0,0),(2,0)]
   have h4' : ReachesPlus target
-      (cfg_DL_0_n L0 [(0,0),(0,0),(2,0)])
-      (cfg_EL_n_n L1 [(0,0),(2,0)]) := by
-    dsimp [L0, L1]
-    simpa [List.replicate_succ, List.cons_append, List.append_assoc,
-      bumpPairHead] using h4
-  have h5 := root_countdown_el_zero_step L1 [(2,0)]
-  have h6 := root_countdown_el_positive_step 1 L2 []
-  have h7 := root_d1_dl_one_to_tok_DR L2
+      (cfg_DL_0_n L0 [(0,0),(0,0),(0,0),(2,0)])
+      (cfg_EL_n_n L1 [(0,0),(0,0),(2,0)]) := by
+    simpa [L1] using h4
+  have h5 := root_countdown_el_zero_step L1 [(0,0),(2,0)]
   have h5' : ReachesPlus target
-      (cfg_EL_n_n L1 [(0,0),(2,0)])
-      (cfg_EL_n_n L2 [(2,0)]) := by
-    dsimp [L1, L2]
-    simp [List.cons_append, List.append_assoc]
-    exact h5
+      (cfg_EL_n_n L1 [(0,0),(0,0),(2,0)])
+      (cfg_EL_n_n L2 [(0,0),(2,0)]) := by
+    simpa [L2] using h5
+  have h6 := root_countdown_el_zero_step L2 [(2,0)]
   have h6' : ReachesPlus target
-      (cfg_EL_n_n L2 [(2,0)])
-      (cfg_DL_0_n L2 [(1,0)]) := h6
-  have h7' : ReachesPlus target
-      (cfg_DL_0_n L2 [(1,0)])
-      (tok_DR [2,0] [] (L2.map Prod.fst)) := h7
-  have h7'' : ReachesPlus target
-      (cfg_DL_0_n L2 [(1,0)])
+      (cfg_EL_n_n L2 [(0,0),(2,0)])
+      (cfg_EL_n_n L3 [(2,0)]) := by
+    simpa [L3] using h6
+  have h7 := root_countdown_el_positive_step 1 L3 []
+  have h8 := root_d1_dl_one_to_tok_DR L3
+  have h8' : ReachesPlus target
+      (cfg_DL_0_n L3 [(1,0)])
       (tok_DR [2,0] []
-        ([0,0,1] ++ List.replicate (4*n+6) 0 ++ [1])) := by
-    dsimp [L2]
-    simpa [List.cons_append, List.append_assoc] using h7'
-  exact ReachesPlus.trans h1
+        ([0,0,0,1] ++ List.replicate (4*n+6) 0 ++ [1])) := by
+    dsimp [L3, L2, L1, L0]
+    simpa [bumpPairHead, List.map_replicate, List.map_append,
+      List.replicate_succ, List.cons_append, List.append_assoc] using h8
+  exact ReachesPlus.trans h1'
     (ReachesPlus.trans h2'
       (ReachesPlus.trans h3
         (ReachesPlus.trans h4'
           (ReachesPlus.trans h5'
-            (ReachesPlus.trans h6' h7'')))))
-
-
-/-! A suffix-preserving version of the D_n(2) token closure. -/
-
-private theorem root_d2_dl_one_z1_with_suffix (k : ℕ)
-    (R3 : List (ℕ × ℕ)) :
-    ReachesPlus target
-      (cfg_DL_0_n (List.replicate (k+1) (0,0) ++ [(1,0)])
-        ((1,0)::R3))
-      (cfg_CR_n_n (List.replicate (k+5) (0,0) ++ [(1,0)])
-        (bumpPairHead R3)) := by
-  have h1 :
-      ReachesPlus target
-        (cfg_DL_0_n (List.replicate (k+1) (0,0) ++ [(1,0)])
-          ((1,0)::R3))
-        (tok_DR [2,0] R3 (List.replicate (k+1) 0 ++ [1])) := by
-    unfold cfg_DL_0_n tok_DR
-    rw [encLeft_mod1 1 0 R3, Nat.mod_one 0, encLeft_d1_s0 R3,
-      encRight_eq_nat (List.replicate (k+1) (0,0) ++ [(1,0)]),
-      encTokens_succ, encTokens_succ, encTokens_zero, encTokens_zero,
-      encTokens_nil]
-    texecute 4
-  have h2 := root_d2_tok_dr_z1 k R3
-  exact ReachesPlus.trans h1 h2
-
-theorem root_countdown_two_reset_five_suffix (n : ℕ) :
-    ReachesPlus target
-      (cfg_CR_n_n [(0,0)]
-        (List.replicate (4*n+5) (0,0) ++ [(2,0),(5,0)]))
-      (cfg_CR_n_n [(0,0)]
-        (List.replicate 5 (0,0) ++ [(8*n+25,0)])) := by
-  have h1 := root_countdown_prefix_with_tail_fixed n 2 [(5,0)]
-  have h2 := root_countdown_el_zero_sweep (4*n+5)
-    [(0,0),(1,0)] [(2,0),(5,0)]
-  have h2' : ReachesPlus target
-      (cfg_EL_n_n [(0,0),(1,0)]
-        (List.replicate (4*n+6) (0,0) ++ [(2,0),(5,0)]))
-      (cfg_EL_n_n (List.replicate (4*n+7) (0,0) ++ [(1,0)])
-        [(2,0),(5,0)]) := by
-    simpa [List.replicate_succ, List.cons_append, List.append_assoc] using h2
-  have h3 := root_countdown_el_positive_step 1
-    (List.replicate (4*n+7) (0,0) ++ [(1,0)]) [(5,0)]
-  have h4 := root_d2_dl_one_z1_with_suffix (4*n+6) [(5,0)]
-  have h5 := root_countdown_cr_zero_sweep_singleton (4*n+10) 6 [(1,0)]
-  have h6 := root_countdown_cr_one_empty_step [(8*n+28,0)]
-  have h7 := root_countdown_general_tail_with_suffix (8*n+31) [] (by omega)
-  have hcount : 6+2*(4*n+11) = 8*n+28 := by omega
-  have h4' : ReachesPlus target
-      (cfg_DL_0_n (List.replicate (4*n+7) (0,0) ++ [(1,0)])
-        [(1,0),(5,0)])
-      (cfg_CR_n_n (List.replicate (4*n+11) (0,0) ++ [(1,0)])
-        [(6,0)]) := by
-    simpa [List.replicate_succ, List.cons_append, List.append_assoc,
-      bumpPairHead] using h4
-  have h5' : ReachesPlus target
-      (cfg_CR_n_n (List.replicate (4*n+11) (0,0) ++ [(1,0)]) [(6,0)])
-      (cfg_CR_n_n [(1,0)] [(8*n+28,0)]) := by
-    simpa [List.replicate_succ, List.cons_append, List.append_assoc,
-      hcount] using h5
-  have h6' : ReachesPlus target
-      (cfg_CR_n_n [(1,0)] [(8*n+28,0)])
-      (cfg_EL_n_n [(0,0)] [(0,0),(8*n+31,0)]) := by
-    simpa [bumpPairHead] using h6
-  have h7' : ReachesPlus target
-      (cfg_EL_n_n [(0,0)] [(0,0),(8*n+31,0)])
-      (cfg_CR_n_n [(0,0)]
-        (List.replicate 5 (0,0) ++ [(8*n+25,0)])) := by
-    have hx : 8*n+31-6 = 8*n+25 := by omega
-    simpa [hx] using h7
-  exact ReachesPlus.trans h1
-    (ReachesPlus.trans h2'
-      (ReachesPlus.trans h3
-        (ReachesPlus.trans h4'
-          (ReachesPlus.trans h5'
-            (ReachesPlus.trans h6' h7')))))
-
-
-/-! Public explicit-tape endpoint for the exact remainder-one token boundary. -/
-
-def root_d1_token_cfg (n : ℕ) : Cfg (Fin 2) (Fin 6) :=
-  (([1,1,0,0] : List (Fin 2)) +> default) {{D}}>
-    ((([1,0] : List (Fin 2)) ^ 2) +>
-      ((1 : Fin 2) >> (1 : Fin 2) >> (0 : Fin 2) >>
-        ((([1,0] : List (Fin 2)) ^ (4*n+6)) +>
-          ((1 : Fin 2) >> (1 : Fin 2) >> (0 : Fin 2) >> default))))
+            (ReachesPlus.trans h6'
+              (ReachesPlus.trans h7 h8'))))))
 
 theorem root_d1_suffix_two_to_token_cfg (n : ℕ) :
     ReachesPlus target
