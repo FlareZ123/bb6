@@ -142,3 +142,40 @@ The corresponding correction table for beta,delta,T is in im-results/agent3-623-
 The all-time problem can now be stated as avoidance, along the exact two-coordinate cocycle, of the four allowed residue intervals displayed in Section 2. More importantly, the inverse recurrences expose a ternary digit at every backward step. A prospective proof can therefore track the pair (U,V) as a two-register 3-adic process: the left branch shifts the U-register, while the right branch shifts the V-register. The correction phi supplies the low ternary digit, and kappa+phi supplies the affine carry in the other register.
 
 This is an exact reparameterization and an actionable reduction, **not** a proof that the authentic orbit avoids the bands. The next mathematical task is to combine the explicit beta,delta,gamma correction formulas with a proved boundary-carry invariant for the authentic S-window quotients. The low-boundary carry warning in WindowQuotientInterface.md still applies: global (U,V) alone cannot be substituted naively for every shifted S-window quotient.
+
+
+## 6. One-digit quotient and low-digit reduction
+
+The correction formulas make the ternary shift explicit. Dividing the active register by 3 gives
+
+**Left-output branch**
+\[
+U'/3=U+2\delta,\qquad
+V'=V-U+\gamma_s-\gamma_{s'}-2T.
+\]
+
+**Right-output branch**
+\[
+U'/3=V+\gamma_s+2\beta,\qquad
+V'=U-V+2T-\gamma_s-\gamma_{s'}.
+\]
+
+Thus the active register is shifted by one ternary digit, with a source-derived integer correction. The passive register is updated affinely.
+
+From the exact sector table in the (p,q) cocycle,
+\[
+T=3D+2r+c_T(s),\qquad
+c_T(LO)=19,\ c_T(LE)=10,\ c_T(RO)=-4,\ c_T(RE)=4.
+\]
+Since U is divisible by 3, the low digit of the passive register is therefore
+
+\[
+V'\equiv V+\gamma_s-\gamma_{s'}-r-2c_T(s)\pmod3
+\]
+on the left-output branch, and
+\[
+V'\equiv -V+r+2c_T(s)-\gamma_s-\gamma_{s'}\pmod3
+\]
+on the right-output branch. The signed-drop statistic D disappears modulo 3. Conditional on the exact branch and next-sector phase, the low digit is controlled only by the current V digit, r mod 3, and the sector constants.
+
+This is a finite low-digit transition rule, not yet a finite invariant: the next-sector phase must be justified by the exact source transition, and the higher digits still depend on the correlated drain corrections. It gives a concrete target for a 3-adic carry automaton: retain the sector pair, r mod 3, and the moving-window boundary carry, rather than using the observed finite phase set alone.
