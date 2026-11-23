@@ -45,7 +45,7 @@ theorem even_low_ray_reach_forces_unique_parent
           346*u+54=2^n*(2*(a-1)+8) := hpow
           _=(4*v)*(2*(a+3)) := by rw [hv,hfactor]
           _=(4*2)*(v*(a+3)) := by ac_rfl
-          _=8*(v*(a+3)) := by norm_num
+          _=8*(v*(a+3)) := by rfl
       have hh : (346*u+54)%8=0 := Nat.mod_eq_zero_of_dvd hdiv8
       omega
   subst n
