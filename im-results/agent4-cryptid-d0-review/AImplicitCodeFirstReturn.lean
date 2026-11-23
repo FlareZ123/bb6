@@ -23,6 +23,7 @@ open BB6.CryptidPrefixFirstReturn
 open BB6.CryptidE111FirstReturn
 open BB6.CryptidATenFirstReturn
 open BB6.CryptidACodeFirstReturn
+open BB6.Agent35
 
 def codeCost (k : Nat) (ws : List Bool) : Nat :=
   (12*k*k+41*k+32)+
@@ -66,6 +67,7 @@ theorem code_pad (k : Nat) (ws : List Bool) (t : Nat) :
   let xs := List.replicate (3*k+1) true ++
     (false::CryptidA.wordCode ws)
   have hp := source_init_pad t 1 xs
+  simp only [List.replicate_one] at hp
   have hx : init (xs ++ [false]) = mixedStart k ws [] := by
     simp [xs,mixedStart,List.append_assoc]
   rw [hx] at hp
@@ -95,6 +97,8 @@ theorem code_unpadded_strict_first (k : Nat) (ws : List Bool) :
   · exact code_endpoint k ws
   · intro t htpos ht
     have hp := (code_pad k ws t).2.2.2
+    change (run t (implicitStart k ws)).st =
+      (run t (mixedStart k ws [])).st at hp
     rw [hp]
     exact mixed_explicit_noF k ws [] t htpos ht
 
