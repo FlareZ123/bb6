@@ -63,3 +63,53 @@ A cleaner all-time proof target is now available:
 - handle output nonmonochromaticity separately, using the exact synchronized state/suffix and only the actually reachable boundary phases.
 
 This avoids demanding a single universal pattern simultaneously solve carry synchronization and output separation. The finite scan is evidence for this decomposition, not an induction proof.
+
+## Exact arithmetic meaning of the two largest sink components
+
+The nonaccepting graph of the 70-state DFA contains two especially prominent terminal SCCs. They are not opaque automaton artifacts.
+
+For the 3-state SCC `{54,55,56}`, assign carries `0,-1,-2` respectively. Every internal edge labelled by digit pair `(x,y)` satisfies
+
+[
+x-3y+c = 3c'.
+]
+
+With the shifted carries `-1,-2,-3`, the same edges satisfy
+
+[
+x-3y+c = 3c'+2.
+]
+
+Thus this SCC is exactly the high-digit carry automaton for a ternary block of all 0s, or all 2s, in
+
+[
+X-3Y = 2(g-9q)-\gamma_s.
+]
+
+For the 6-state SCC `{18,19,20,37,41,57}`, assign zero-digit carries
+
+[
+18\mapsto5,;19\mapsto1,;20\mapsto2,;37\mapsto4,;41\mapsto6,;57\mapsto3.
+]
+
+Every internal edge satisfies
+
+[
+4x+3y+c=3c'.
+]
+
+Subtracting one from each carry gives the all-2 sign-extension version
+
+[
+4x+3y+c=3c'+2.
+]
+
+Hence this SCC is exactly the high-digit carry automaton for
+
+[
+4X+3Y = 2(4g+9q)-4\gamma_s.
+]
+
+These are precisely the two linear residuals appearing in the left/right terminal-predecessor strips. This explains why the hardest nonsynchronizing languages coincide with the terminal-cancellation obstruction: synchronization alone cannot magically remove the terminal-strip problem, because its recurrent failures literally encode those strips.
+
+`DangerousResidualSCC.lean` proves the two coordinate identities symbolically with `omega` and checks every internal carry edge, including both 0- and 2-sign-extension labellings, by kernel computation. It compiles locally with Lean 4.36.0-rc2.
