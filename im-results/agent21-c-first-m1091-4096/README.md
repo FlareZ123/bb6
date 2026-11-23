@@ -1,8 +1,8 @@
 # Machine C low first-stop inverse exclusions
 
-**Status: original-source Lean verified.** The focused manual workflow [45154176898](https://github.com/FlareZ123/bb6/actions/runs/45154176898) completed successfully with Lean 4.36.0-rc2. The axiom reports for both final theorems contain only `propext`, `Classical.choice`, and `Quot.sound`; neither contains `sorryAx`.
+**Status: original-source Lean verified and integrated into the exact low/high criterion.** The proof and integration are intermediate research results; they do not decide Machine C or BB(6).
 
-## Theorem
+## Source-level first-stop theorem
 
 For the unchanged Machine C section transition `BB6.Agent46.secNext`, starting from the blank-origin section state `(5,1)`, consider a low first-stop target `(1,k)` satisfying
 
@@ -59,14 +59,26 @@ Again, the right coordinate is odd and the coordinate sum is 2 modulo 4.
 
 The source-verified all-time blank-section theorem `BB6.Agent38.blank_section_mod4` forbids such a state when the right coordinate is at least five. Both terminal right coordinates satisfy that bound.
 
-## Relation to the exact Machine C criterion
+## Integration into the exact Machine C criterion
 
-Both progressions pass the previously maintained low restrictions: in particular, they have `m ≡ 67 (mod 1024)`, `m ≡ 3 (mod 16)`, and `m ≢ 0 (mod 128)`. Thus these are additional exclusions, not restatements of the earlier `jointLowAllowed`, `Agent11Joint.lowAllowed`, or `lowAllowedValSixFull` predicates.
+The new module `ValSixLowRefinement.lean` defines
 
-The next useful step is to compose these two exclusions into a separate strengthened low-parameter predicate around `ValSixJointFull.lean`, while preserving its existing exact equivalence. The remaining low and high parameter existentials are still unbounded. Machine C halting and BB(6) remain unresolved.
+`lowAllowedValSixRefined m := lowAllowedValSixFull m ∧ (m%4096 ≠ 1091 ∧ m%16384 ≠ 12355)`.
+
+It proves `BB6.Agent21Low1091.blank_halts_iff_joint_val_six_refined`, an exact blank-halting equivalence with the two impossible low progressions removed. The high-parameter branch is unchanged. The proof obtains genuine blank reachability from Agent 3's fixed-target root decision, transfers it to the unchanged section run, and applies the two all-time first-stop theorems. The reverse implication simply forgets the added restrictions.
+
+The two progressions pass the earlier low restrictions: both have `m ≡ 67 (mod 1024)`, `m ≡ 3 (mod 16)`, and `m ≢ 0 (mod 128)`; they also avoid the existing `jointLowAllowed` residue exclusions. Thus this is an additional explicit restriction on the previously accepted `lowAllowedValSixFull` domain, not a restatement of its existing congruence filters.
+
+The refined equivalence is source-verified by the existing manual Agent21 workflow. Its dependency-closure step compiled 191 project modules, including `ValSixJointFull.lean` and `ValSixLowRefinement.lean`. The final axiom report for `blank_halts_iff_joint_val_six_refined` is `[propext, Classical.choice, Quot.sound]`, with no `sorryAx`.
+
+## Remaining frontier
+
+The refined low and high parameter existentials remain unbounded. This contribution narrows the exact low domain but does not establish that the remaining low or high roots are empty. Machine C halting and BB(6) remain unresolved.
 
 ## Reproduction
 
-- Proof source: [`Low1091Source.lean`](Low1091Source.lean)
-- Manual source workflow: [`agent21-low1875-source.yml`](../../.github/workflows/agent21-low1875-source.yml)
-- Successful original-source verification: [GitHub Actions run 45154176898](https://github.com/FlareZ123/bb6/actions/runs/45154176898)
+- Original-source proof: [`Low1091Source.lean`](Low1091Source.lean)
+- Exact criterion refinement: [`ValSixLowRefinement.lean`](ValSixLowRefinement.lean)
+- Manual workflow: [`agent21-low1875-source.yml`](../../.github/workflows/agent21-low1875-source.yml)
+- First-stop proof run: [45154176898](https://github.com/FlareZ123/bb6/actions/runs/45154176898)
+- Exact criterion integration run: [45155413576](https://github.com/FlareZ123/bb6/actions/runs/45155413576)
