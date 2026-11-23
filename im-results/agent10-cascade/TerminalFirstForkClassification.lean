@@ -101,6 +101,7 @@ theorem ray_nonterminal_four_node_from_bands
     (hqbound : q<2*p)
     (hqfour : q=4*Q)
     (hvlin : v+Q+1=4*p+n)
+    (hwlin : w+2*Q+1=4*p+n)
     (hXd : 2*v+5=9*d)
     (hdmod : d%3=1)
     (hhlin : h+2*p+n+3=4*d)
@@ -128,13 +129,22 @@ theorem ray_nonterminal_four_node_from_bands
   have hoddEq : 4*d=8*2^(n-2)+h+(n-2)+5 := by omega
   have h27 : (2*v+5)%27=9 := by
     rw [hXd]
-    have hD : d%3=1 := hdmod
     omega
-  -- The exact 27-residue is a stronger condition than d%3=1:
-  -- it is explicitly supplied to prevent any t>=2 source valuation.
-  sorry
+  have hparentV : ∀ r, ResetParent r v → r=w ∨ r=h := by
+    intro r hr
+    exact middle_band_exact_two_parent_coverage n v w h d
+      (by omega) hvband hevenV hoddBand hXd hoddEq h27 r hr
+  have hparentW : ∀ r, ResetParent r w → r=z := by
+    intro r hr
+    exact middle_band_unique_even_parent n w z hwband hevenW
+      hwmod r hr
+  exact ray_nonterminal_fork_closed n p q Q u v w z h d s
+    hn hp hpbig hhigh hqbound hqfour hvlin hXd hdmod hhlin
+    hsector hzlin hhighstrong hs hzmod hvne hwne
+    hparentV hparentW
 
 #print axioms odd_source_scale_unique
 #print axioms middle_band_exact_two_parent_coverage
 #print axioms middle_band_unique_even_parent
+#print axioms ray_nonterminal_four_node_from_bands
 end CascadeTerminalFirstForkClassification
