@@ -13,7 +13,12 @@ theorem fast512_8_seed19 :
   have h := run_blockedWith 512 8 0 seed19 seed19_canon
   have hlen : 512*8+0 = 4096 := by decide
   rw [hlen, block19_1_exact] at h
-  simpa [run] using h.symm
+  cases hopt : fastRunBlocksWith 512 8 seed19 with
+  | none => simp [hopt] at h
+  | some x =>
+      simp [hopt] at h
+      cases h
+      rfl
 
 /-- Reuse the already certified second 4,096-step block. -/
 theorem fast512_8_block19_1 :
@@ -21,7 +26,12 @@ theorem fast512_8_block19_1 :
   have h := run_blockedWith 512 8 0 block19_1 block19_1_canon
   have hlen : 512*8+0 = 4096 := by decide
   rw [hlen, block19_2_exact] at h
-  simpa [run] using h.symm
+  cases hopt : fastRunBlocksWith 512 8 block19_1 with
+  | none => simp [hopt] at h
+  | some x =>
+      simp [hopt] at h
+      cases h
+      rfl
 
 /-- The two certified 4,096-step blocks combine to the 8,192-step prefix. -/
 theorem fast512_16_seed19 :
