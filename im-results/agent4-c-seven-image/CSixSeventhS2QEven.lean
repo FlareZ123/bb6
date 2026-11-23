@@ -119,27 +119,28 @@ theorem q_even_R_parents (u v t a k : Nat)
                 rw [hleft,hright] at hmodEq
                 omega
               have hnle : n≤2 := by
-                by_contra hn
-                have hn3 : 3≤n := by omega
-                have hp : 8∣(2:Nat)^n := by
-                  have hh : (2:Nat)^3∣(2:Nat)^n :=
-                    Nat.pow_dvd_pow 2 hn3
-                  simpa only [show (2:Nat)^3=8 by decide] using hh
-                have hf : 4∣2*(a-1)+8 := by
-                  refine ⟨(a-1)/2+2,?_⟩
+                by_cases hn : n≤2
+                · exact hn
+                · have hn3 : 3≤n := by omega
+                  have hp : 8∣(2:Nat)^n := by
+                    have hh : (2:Nat)^3∣(2:Nat)^n :=
+                      Nat.pow_dvd_pow 2 hn3
+                    simpa only [show (2:Nat)^3=8 by decide] using hh
+                  have hf : 4∣2*(a-1)+8 := by
+                    refine ⟨(a-1)/2+2,?_⟩
+                    omega
+                  obtain ⟨p,hp⟩ := hp
+                  obtain ⟨q,hq⟩ := hf
+                  have hdiv : 32∣x+y+1 := by
+                    refine ⟨p*q,?_⟩
+                    calc
+                      x+y+1=(2:Nat)^n*(2*(a-1)+8) := hs
+                      _=(8*p)*(4*q) := by rw [hp,hq]
+                      _=(8*4)*(p*q) := by ac_rfl
+                      _=32*(p*q) := by simp
+                  have hmod := Nat.mod_eq_zero_of_dvd hdiv
+                  rw [hval] at hmod
                   omega
-                obtain ⟨p,hp⟩ := hp
-                obtain ⟨q,hq⟩ := hf
-                have hdiv : 32∣x+y+1 := by
-                  refine ⟨p*q,?_⟩
-                  calc
-                    x+y+1=(2:Nat)^n*(2*(a-1)+8) := hs
-                    _=(8*p)*(4*q) := by rw [hp,hq]
-                    _=(8*4)*(p*q) := by ac_rfl
-                    _=32*(p*q) := by simp
-                have hmod := Nat.mod_eq_zero_of_dvd hdiv
-                rw [hval] at hmod
-                omega
               have hn1 : n=1 := by omega
               subst n
               simp only [show (2:Nat)^1=2 by decide] at hs
@@ -189,10 +190,10 @@ private theorem q_even_p_blank_unreachable (t z : Nat)
   have hBmin : 6≤B := by dsimp [B]; omega
   have hWmin : 5≤W := by dsimp [W]; omega
   have hWmod : W%4=3 := by dsimp [W]; omega
-  have hBmod : B%8=6 := by rw [← hW]; omega
+  have hBmod : B%8=6 := by omega
   have hsum0 : (A+B)%8=6 := by dsimp [A,B]; omega
   have hF1x : A+B-2=F1x := by dsimp [F1x]; omega
-  have hF1y : (B-2)/2=F1y := by rw [hW]; dsimp [F1y]; omega
+  have hF1y : (B-2)/2=F1y := by dsimp [F1y]; omega
   have hF1sum : (F1x+F1y)%8=6 := by dsimp [F1x,F1y]; omega
   have hF1min : 6≤F1y := by dsimp [F1y]; omega
   have hF2x : F1x+F1y-2=F2x := by dsimp [F1x,F1y,F2x]; omega
@@ -201,14 +202,8 @@ private theorem q_even_p_blank_unreachable (t z : Nat)
   have hF2sum : (F2x+F2y)%8=0 := by dsimp [F2x,F2y]; omega
   have hAreach : ¬ BB6.Agent3.CReach A B := by
     intro hp
-    have hiff := (BB6.Agent3.oddodd_lowval_blank_reach_iff
-      px py (by omega) (by omega) (by omega)
-      (by omega) (by omega) (by omega)).mp hp
-    rcases hiff with ⟨time,htime⟩
     have hgate0 := (six_even_right_blank_reach_iff A B
-      (by omega) (by omega) (by omega) (by omega)).mp
-      (show BB6.Agent3.CReach A B from
-        ⟨time,by simpa only [hAeq,hBeq] using htime⟩)
+      (by omega) (by omega) (by omega) (by omega)).mp hp
     have hF1reach : BB6.Agent3.CReach F1x F1y := by
       simpa only [hF1x,hF1y] using hgate0
     have hgate1 := (six_even_right_blank_reach_iff F1x F1y
