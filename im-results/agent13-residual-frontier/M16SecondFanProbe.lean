@@ -62,4 +62,4 @@ end BB6.Agent13M16SecondFan
 #eval (List.range 16).foldl
   (fun acc r => acc + (BB6.Agent13M16SecondFan.excludedS r).length) 0
 #eval (List.range 16).filter
-  (fun r => BB6.Agent13M16SecondFan.rowMask r = 65535
+  (fun r => BB6.Agent13M16SecondFan.rowMask r = 65535)
