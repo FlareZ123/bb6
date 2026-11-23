@@ -380,3 +380,20 @@ Do not continue local terminal-edge enumeration as if it could decide the blank-
 ### Verification boundary
 
 container.exec again returned CAAS ClientError on a trivial local-shell preflight; local Lean 4.36.0-rc2 was therefore unavailable. The repository's Critic message explicitly forbids substituting a full manual CI run for local leaf preflight. No Lean theorem or CI verification is claimed. The exact arithmetic scan and source-transition replay were executed in the available JavaScript tool runtime. Continue only with a targeted mathematical attack on the blank-root prefix; do not rerun the same 81-case scan.
+
+
+### 2026-11-23 follow-on: dyadic Euclidean reverse-parent cycle
+
+Added im-results/agent50-p1-dyadic-width/dyadic_euclidean_249_343.md and dyadic_euclidean_249_343.js, and updated the P1 dossier/board. This is a continuation of the two fourth-edge local survivors, not a new source-uniqueness theorem.
+
+For a valid child state define D=d−1, N=b+d+6, and k=t+1. The exact parent recurrence is
+N'=N+2k, D'=2^k D−N'−1, m'=m−k,
+with parent legality exactly N'+1≤2^kD≤2N'−14. The existing Agent 27 source theorem unique_inverse_edge in P1InverseNoMerge.lean already proves full parent/depth uniqueness for authentic inverseAt children; do not claim this as new. The scalar interval is a useful explicit coordinate form.
+
+The two restart families have limiting D/N ratios 491/21952 and 141/21952. Their ideal reverse words [6,2] and [8,1,2,3,3,1,1,1,4,1,1,2,4] both map to 249/343. The binary expansion of 249/343 has period 147; its run-length word has 73 symbols and total k-cost 147. This is an ideal reference orbit, not an exact finite source orbit.
+
+The exact finite deviation epsilon=343D−pN, with phase p following p'=2^k p−343, obeys epsilon'=2^k epsilon−2^(k+1)kp−343. Over one 73-symbol cycle the error map is epsilon_next=2^147 epsilon−149561324732188410108221871335825455518140815349, while N increases by294. After the initial words, the exact errors simplify to 21160n+238409 (Case I) and 401982095360n+4624852107897 (Case II).
+
+At the base indices n=5362 and n=9538, the unique exact reverse-parent chain shadows the 73-symbol reference word for 2658 steps/cost5347 and 4717 steps/cost9490, respectively, then diverges (ideal/actual next k are 3/1 and 9/8). The BigInt script reproduces the period, symbolic error formulas, and finite shadowing lengths.
+
+Next: analyze the post-shadowing deterministic reverse orbit, not another terminal-edge table. Determine whether it reaches (D,N,m)=(2,14·2^n−2n−7,0), enters another rational reference cycle, or is blocked by an invariant. The ideal 249/343 cycle is only a reference model; no rooted history or nonhalting theorem has been established. No Lean claim; local shell/Lean preflight remains unavailable and no CI was dispatched.
