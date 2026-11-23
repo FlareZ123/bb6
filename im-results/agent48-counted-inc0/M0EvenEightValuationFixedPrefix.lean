@@ -78,27 +78,68 @@ private theorem lookup00_zero :
     tm2 ((0 : Fin 6), false) = some ⟨true,true,1⟩ := by rfl
 
 /-- Four original-table moves across a 000 boundary enter state 1. -/
+private def zeroExitStart : FConfig := ⟨3,0,[]⟩
+private def zeroExitEnd : FConfig := ⟨1,2,[1,0,-1]⟩
+private def zeroExitInside (x : Int) : Bool := decide (-1 ≤ x ∧ x ≤ 1)
+
+private theorem zeroExit_exact :
+    fRun tm2 4 zeroExitStart = some zeroExitEnd := by decide
+
+private theorem zeroExit_heads :
+    (List.range 4).all (fun k =>
+      match fRun tm2 k zeroExitStart with
+      | none => true
+      | some f => zeroExitInside f.head) = true := by decide
+
+/-- A four-step physical exit proved by lifting its exact finite source trace.
+The input agrees with the finite trace at precisely the three read cells;
+all other tape cells remain arbitrary. -/
 theorem state3_zero_exit4 (T : Int → Bool) (h : Int)
     (hleft : T (h-1) = false) (h0 : T h = false)
     (hright : T (h+1) = false) :
     run tm2 4 ⟨3,h,T⟩ = some ⟨1,h+2,afterZeroExit4 T h⟩ := by
-  change run tm2 4 ⟨(⟨3, by decide⟩ : Fin 6),h,T⟩ =
-    some ⟨(⟨1, by decide⟩ : Fin 6),h+2,afterZeroExit4 T h⟩
-  have neq1 : h-1 ≠ h := by omega
-  have neq2 : h+1 ≠ h := by omega
-  have neq3 : h+1 ≠ h-1 := by omega
-  have hh0 : h-1+1 = h := by omega
-  have hh1 : h+1-1 = h := by omega
-  simp [run, rawStep, readSlot, applyMove, tm2, hleft, h0, hright,
-    afterZeroExit4, neq1, neq2, neq3, hh0, hh1]
-  all_goals
+  have hmatch : ∀ x, zeroExitInside x = true →
+      T (h+x) = decide (x ∈ zeroExitStart.marked) := by
+    intro x hx
+    have hrange : -1 ≤ x ∧ x ≤ 1 := by
+      simpa [zeroExitInside] using hx
+    have hcases : x = -1 ∨ x = 0 ∨ x = 1 := by omega
+    rcases hcases with hm | hz | hp
+    · subst x
+      have hc : h + (-1 : Int) = h-1 := by omega
+      simpa [zeroExitStart,hc] using hleft
+    · subst x
+      simpa [zeroExitStart] using h0
+    · subst x
+      simpa [zeroExitStart] using hright
+  have hlift := bridgeAt T h zeroExitInside zeroExitStart zeroExitEnd
+    4 rfl zeroExit_exact zeroExit_heads hmatch
+  have hend :
+      frameAt T h zeroExitInside zeroExitEnd =
+        (⟨(1:Fin 6),h+2,afterZeroExit4 T h⟩ : Config) := by
     apply config_ext
-    · rfl
-    · omega
+    · simp [zeroExitEnd]
+    · simp [zeroExitEnd]
+      omega
     · funext x
-      by_cases hx0 : x = h-1 <;> by_cases hx1 : x = h <;>
-        by_cases hx2 : x = h+1 <;>
-        simp [afterZeroExit4,hx0,hx1,hx2,hleft,h0,hright,neq1,neq2,neq3]
+      rw [frameAt_tape]
+      by_cases hm : x = h-1
+      · subst x
+        have hc : h-1-h = -1 := by omega
+        simp [zeroExitInside,zeroExitEnd,afterZeroExit4,hc]
+      by_cases hz : x = h
+      · subst x
+        have hc : h-h = 0 := by omega
+        simp [zeroExitInside,zeroExitEnd,afterZeroExit4,hc]
+      by_cases hp : x = h+1
+      · subst x
+        have hc : h+1-h = 1 := by omega
+        simp [zeroExitInside,zeroExitEnd,afterZeroExit4,hc]
+      have hout : zeroExitInside (x-h) = false := by
+        simp [zeroExitInside]
+        omega
+      simp [hout,afterZeroExit4,hm,hz,hp]
+  simpa [zeroExitStart,hend] using hlift
 
 #print axioms bridge_prefix44
 #print axioms bridge_heads44

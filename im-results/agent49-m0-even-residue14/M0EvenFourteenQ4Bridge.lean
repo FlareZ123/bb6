@@ -43,8 +43,7 @@ theorem m0EvenFourteenBridge_heads :
       match fRun tm2 k m0EvenFourteenBridgeStart with
       | none => true
       | some f => m0EvenFourteenInside f.head) = true := by
-  simpa [m0EvenFourteenInside,m0EvenFourteenBridgeStart] using
-    m0EvenQ4Bridge_heads
+  decide
 
 /-- Five low source blocks for n=14. -/
 theorem m0EvenFourteen_binDec_five_fourteen :

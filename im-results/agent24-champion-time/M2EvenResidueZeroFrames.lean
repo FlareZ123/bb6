@@ -183,7 +183,8 @@ theorem m2ZeroSetup_HRun_Postlude (n : Nat) (T : Int → Bool)
       frameAt T hN m2ZeroSetupInside m2ZeroSetupEnd =
         ⟨3,hN-14,Tsetup⟩ := by
     apply config_ext
-    · simp [frameAt,frame,embed,m2ZeroSetupEnd]
+    · simpa [m2ZeroSetupEnd] using
+        (frameAt_state T hN m2ZeroSetupInside m2ZeroSetupEnd)
     · simp [frameAt,frame,shiftConfig,embed,m2ZeroSetupEnd]
       omega
     · rfl
