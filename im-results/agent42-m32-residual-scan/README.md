@@ -198,6 +198,22 @@ sixForcedNormalize for at most three steps, and discharge the residue
 conditions with omega. If formalized, this would show that exactly the
 existing eight cells survive the prior six-forced criterion.
 
+## Conjectured exact statement
+
+Let
+`K(j,m)=2^(2m+2)*(j+3)-(j+3m+5)`. The scan and residue derivation
+suggest the following exact characterization:
+
+For all j≥3 and m≥2 with
+`(j mod 32,m mod 32) ∈ CCert.newHighPairs`,
+`sixForcedExcluded (2*j+3) (K(j,m)) = false`
+if and only if
+`j mod 4 = 0` and `m mod 32 = (3*j+13) mod 32`.
+
+The right-hand side is exactly the existing eight-cell family. Combined
+with the existing prior-highAllowed proof for that family, this would
+identify the M32 mask's exact marginal effect on the prior sieve.
+
 ## Source files
 
 - `im-results/agent43-c-quotient-kernel/M32HighAll.lean` — defines
