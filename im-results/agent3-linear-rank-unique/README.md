@@ -44,6 +44,6 @@ The direct family `(2k,k) → (0,2k+2)` forces `v≥2u`; the short even-bounce f
 ## Verification and relevance
 
 - Source-closure CI for the two-counter theorem **passed**, [run 45258467939](https://github.com/FlareZ123/bb6/actions/runs/45258467939), Lean 4.36.0-rc2. Both concluding source theorems report only `[propext, Classical.choice, Quot.sound]` in their Lean axiom dependencies.
-- The three-counter proof was compiled locally as a source-signature-faithful test with a placeholder only for the already-proved original `rank_mono`; the original-source job is separately targeted under the existing manual `agent3-u5-m32-w485-highstop.yml` workflow with target `linear-rank`. Its run should be cited here only after success.
+- The primitive three-counter proof **passed full unmodified-source Lean CI**, [run 45259644484](https://github.com/FlareZ123/bb6/actions/runs/45259644484), in the existing manual `agent3-u5-m32-w485-highstop.yml` workflow with target `linear-rank`. The two concluding original-source theorems have axiom profile **`[propext, Quot.sound]`**, without `sorryAx`, `native_decide`, or `Classical.choice`. The same run recompiled the two-counter theorem successfully.
 
 **Impact:** the theorem rules out improving the global section-rank obstruction or replacing the primitive lexicographic ranking using a different nonnegative linear functional. It does not prove nonhalting, halting, a new density bound, or a new bound on BB(6); resolving those questions requires nonlinear invariants or root-specific ancestry arguments.
