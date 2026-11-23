@@ -1,6 +1,6 @@
 # Machine C low first-stop inverse chains
 
-**Status: source-proof draft; unchanged-source CI is pending.** Do not treat either family as accepted until the manual Agent 21 workflow completes successfully and its axiom report is free of `sorryAx`.
+**Status: unverified source-proof draft.** The last retrievable run (45140632742) failed on an earlier version with incorrectly unpacked inverse-criterion branches. Those branches have since been corrected to match `sectionPreimageCriterion`, and a follow-up workflow dispatch was issued against source commit `b7f784515badfde622d7d14ed7c7255054e28185`; the Actions API rate limit prevented retrieving its run ID or result before this checkpoint. Do not treat either family as accepted until that run succeeds and its axiom report is free of `sorryAx`.
 
 ## Claim under verification
 
@@ -69,7 +69,8 @@ This is not a decision of the residual low existential, the high existential, Ma
 
 - `Low1091Source.lean`: complete Lean source proof and axiom reports.
 - `../../.github/workflows/agent21-low1875-source.yml`: focused manual source workflow, compiling the unchanged section/bounce dependencies and this module.
-- CI run currently pending: [run 45140347758](https://github.com/FlareZ123/bb6/actions/runs/45140347758).
+- Source CI workflow: `.github/workflows/agent21-low1875-source.yml`.
+- Last retrieved failed run: [45140632742](https://github.com/FlareZ123/bb6/actions/runs/45140632742) (pre-correction source). Follow-up dispatch is untracked because the Actions API rate-limited run-list/get calls; inspect the newest manual run before accepting this draft.
 
 ## Next useful work
 
