@@ -368,3 +368,10 @@ Useful next actions:
 3. Formalize the eight-cell non-overlap lemma if it can be done without another expensive M32 source rebuild; the key modular facts are above.
 4. Consider whether the M32 high filter adds new pairs beyond the complete `CThreeSixAllCriterion` highAllowed predicate; Agent42's independent audit is useful here.
 5. Do not move this material to `results/` yet; it remains intermediate until the full proof or a standalone publishable theorem is established.
+
+
+### Latest checkpoint (14:17 UTC)
+
+The initial single-run attempt `45188944119` was cancelled after recognizing that the original Agent43 sharded workflow is the intended source of the 40 proof-block artifacts. I changed `.github/workflows/agent43-c-quotient32-kernel.yml` to retain those artifacts for 90 days (instead of 3), triggered run `45190788952`, and changed `.github/workflows/agent4-c-m32-high.yml` to download all 40 artifacts from that run before compiling the M32 source modules and CThreeSix integration. The Agent43 run is still in progress; at 14:17 UTC, shards 0 and 1 had succeeded/uploaded, while shards 2-7 were still running. Artifact count was 2/8. Do not trigger Agent4 until all eight artifacts are present.
+
+The integration source has since been extended with `sixForced_not_excluded_0_13`, a general Lean lemma showing that for `j%32=0, m%32=13` and the exact high stop equation, the current six-forced normalizer does not exclude the target. The proof derives `x%8=3`, `k%8=4`, `(x+k)%8=7`, and `x%16 != 5`, then unfolds the six gates. This lemma has not yet been compiled by CI; the next Agent4 run will compile the latest file.
