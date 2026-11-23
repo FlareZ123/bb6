@@ -150,6 +150,10 @@ jobs:
           python3 -c "import base64,lzma,pathlib; p=pathlib.Path('im-results/agent42-champion-terminal/TerminalLeftExact.lean.xz.b64'); pathlib.Path('/tmp/agent38-root-q4tail-source/TerminalLeft.lean').write_bytes(lzma.decompress(base64.b64decode(p.read_text())))"
           echo "12329036c66c3846f9261167b8f9aebd1778d9b6ea6044309956c2fa0b3e49b7  /tmp/agent38-root-q4tail-source/TerminalFinish.lean" | sha256sum -c -
           echo "1bce2075fc4e0cd7d740fb71b3796088b190ddb6766e04640d992dadd1b650ff  /tmp/agent38-root-q4tail-source/TerminalLeft.lean" | sha256sum -c -
+      - name: Inspect exact M0 valuation source from terminal archive
+        run: |
+          set -euo pipefail
+          find /tmp/agent38-root-q4tail-source -name 'M0EvenEightValuationEncoding.lean' -print -exec sed -n '1,180p' {} \;
       - name: Compile exact root-to-q4Tail import closure
         run: |
           set -euo pipefail
