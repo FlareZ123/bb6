@@ -173,7 +173,7 @@ These are much weaker than the existing \(2^{463}\) and \(2^{193}\) candidates, 
 
 ## Formalization checklist and caveats
 
-1. Prove the MItem and SymTok combined-potential lemmas by cases.
+1. Prove the prependZeroSym/prependZeroM length and numeric-sum equalities, then the MItem and SymTok atomic combined-potential lemmas by cases (including the stepElemBB length bound +7).
 2. Prove eatFuel length growth and the missing eatB2 / eatB12R mass bounds.
 3. Prove the generic sweepBB potential bound.
 4. Prove the Rule A/B/C output-potential bounds and afterSweepCB dispatcher bound.
