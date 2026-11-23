@@ -34,6 +34,48 @@ def cover : Nat → Nat → Nat → Nat → Bool
     else cover fuel (E+1) r N &&
          cover fuel (E+1) (r+2^E) N
 
+
+private theorem complementary_residues
+    (M a b : Nat)
+    (hM : 0<M) (ha : a<M) (hb : b<M)
+    (hmod : (a+b)%M=0) :
+    a=(M-b)%M := by
+  by_cases hlo : a+b<M
+  · have hs : (a+b)%M=a+b := Nat.mod_eq_of_lt hlo
+    have hz : a=0 ∧ b=0 := by omega
+    rcases hz with ⟨rfl,rfl⟩
+    simp
+  · have hge : M≤a+b := by omega
+    have hs : (a+b)%M=a+b-M := by
+      rw [Nat.mod_eq_sub_mod hge]
+      exact Nat.mod_eq_of_lt (by omega)
+    have hsum : a+b=M := by omega
+    have hbpos : 0<b := by omega
+    have hsub : M-b<M := by omega
+    rw [Nat.mod_eq_of_lt hsub]
+    omega
+
+private theorem mod_doubling (k M r : Nat)
+    (hm : 0<M) (hr : r<M) (hk : k%M=r) :
+    k%(2*M)=r ∨ k%(2*M)=r+M := by
+  let z := k%(2*M)
+  have hzlim : z<2*M := Nat.mod_lt _ (by omega)
+  have hdiv : M ∣ 2*M := ⟨2, by omega⟩
+  have hzmod : z%M=r := by
+    dsimp [z]
+    rw [Nat.mod_mod_of_dvd k hdiv]
+    exact hk
+  by_cases hsmall : z<M
+  · have hzm : z%M=z := Nat.mod_eq_of_lt hsmall
+    left
+    omega
+  · have hge : M≤z := by omega
+    have hzm : z%M=z-M := by
+      rw [Nat.mod_eq_sub_mod hge]
+      exact Nat.mod_eq_of_lt (by omega)
+    right
+    omega
+
 private theorem certified_prefix_excludes
     (E r k q n : Nat)
     (hr : r < 2^E)
@@ -46,20 +88,31 @@ private theorem certified_prefix_excludes
   have hsum : (q+3*k+4)%(2^E)=0 := by
     rw [heq, hsplit, Nat.pow_add]
     simp [Nat.mul_assoc, Nat.mul_comm, Nat.mul_left_comm]
+  have hmodrew :
+      (q+3*k+4)%(2^E) =
+      (q%(2^E)+(3*r+4)%(2^E))%(2^E) := by
+    simp [Nat.add_mod, Nat.mul_mod, hk]
+  have hz : (q%(2^E)+(3*r+4)%(2^E))%(2^E)=0 := by
+    rw [←hmodrew]
+    exact hsum
   have hq : q%(2^E)=residue E r := by
-    dsimp [residue]
-    omega
-  let M := 2^E
-  have hdiv : q%M+M*(q/M)=q := Nat.mod_add_div q M
-  have ha : BB429Kernel.va (affine E r) (q/M)=32*q+29 := by
-    dsimp [affine, BB429Kernel.va, M]
+    simpa [residue] using
+      (complementary_residues (2^E)
+        (q%(2^E)) ((3*r+4)%(2^E))
+        (by omega)
+        (Nat.mod_lt q (by omega))
+        (Nat.mod_lt (3*r+4) (by omega)) hz)
+  have hdiv : q%(2^E)+(2^E)*(q/(2^E))=q :=
+    Nat.mod_add_div q (2^E)
+  have ha : BB429Kernel.va (affine E r) (q/(2^E))=32*q+29 := by
+    dsimp [affine, BB429Kernel.va]
     calc
       32*(2^E)*(q/(2^E))+32*(residue E r)+29 =
         32*((2^E)*(q/(2^E))+residue E r)+29 := by
           simp [Nat.mul_add, Nat.mul_assoc]
       _ = 32*q+29 := by omega
-  have hb : BB429Kernel.vb (affine E r) (q/M)=64*q+55 := by
-    dsimp [affine, BB429Kernel.vb, M]
+  have hb : BB429Kernel.vb (affine E r) (q/(2^E))=64*q+55 := by
+    dsimp [affine, BB429Kernel.vb]
     calc
       64*(2^E)*(q/(2^E))+64*(residue E r)+55 =
         64*((2^E)*(q/(2^E))+residue E r)+55 := by
@@ -67,10 +120,10 @@ private theorem certified_prefix_excludes
       _ = 64*q+55 := by omega
   obtain ⟨i,hi⟩ := hroot
   have hs : BB429NewResidue.Reach
-      (BB429Kernel.va (affine E r) (q/M))
-      (BB429Kernel.vb (affine E r) (q/M)) := by
+      (BB429Kernel.va (affine E r) (q/(2^E)))
+      (BB429Kernel.vb (affine E r) (q/(2^E))) := by
     exact ⟨i, by simpa only [ha,hb] using hi⟩
-  exact (BB429Kernel.cert_sound 64 (affine E r) (q/M) hc) hs
+  exact (BB429Kernel.cert_sound 64 (affine E r) (q/(2^E)) hc) hs
 
 /-- A successful adaptive prefix Boolean tree excludes every true
 blank-root terminal reset with a small enough burst index. -/
@@ -89,30 +142,32 @@ theorem cover_sound :
   | zero =>
       intro E r N k q n hr hk hsmall hn heq hc hroot
       by_cases hstop : N≤r
-      · omega
+      · have hrle : r≤k := by simpa only [hk] using Nat.mod_le k (2^E)
+        omega
       · have hcert : BB429Kernel.cert 64 (affine E r)=true := by
           simpa [cover,hstop] using hc
         exact certified_prefix_excludes E r k q n hr hk (by omega) heq hcert hroot
   | succ fuel ih =>
       intro E r N k q n hr hk hsmall hn heq hc hroot
       by_cases hstop : N≤r
-      · omega
+      · have hrle : r≤k := by simpa only [hk] using Nat.mod_le k (2^E)
+        omega
       · by_cases hcert : BB429Kernel.cert 64 (affine E r)=true
         · exact certified_prefix_excludes E r k q n hr hk (by omega) heq hcert hroot
         · have hpair :
             cover fuel (E+1) r N &&
             cover fuel (E+1) (r+2^E) N = true := by
               simpa [cover,hstop,hcert] using hc
-          have hleft : cover fuel (E+1) r N = true :=
-            (Bool.and_eq_true.mp hpair).1
-          have hright : cover fuel (E+1) (r+2^E) N = true :=
-            (Bool.and_eq_true.mp hpair).2
+          have hleft : cover fuel (E+1) r N = true := by
+            cases hl : cover fuel (E+1) r N <;> simp [hl] at hpair ⊢
+          have hright : cover fuel (E+1) (r+2^E) N = true := by
+            cases hl : cover fuel (E+1) (r+2^E) N <;> simp [hl] at hpair ⊢
           have hpow : 2^(E+1)=2*(2^E) := by
             rw [Nat.pow_succ]
             omega
           have hdich : k%(2^(E+1))=r ∨ k%(2^(E+1))=r+2^E := by
             rw [hpow]
-            omega
+            exact mod_doubling k (2^E) r (by omega) hr hk
           rcases hdich with h1 | h2
           · exact ih (E+1) r N k q n
               (by rw [hpow];omega) h1 hsmall (by omega)
@@ -143,7 +198,7 @@ theorem no_root_k_lt1000 (q n k : Nat)
     (heq : 128*q+3*n+131=3*2^(n+2))
     (hroot : Reach (32*q+29) (64*q+55)) : False := by
   exact cover_sound 23 0 0 1000 k q n
-    (by decide) (by simp) hk (by omega)
+    (by decide) (by omega) hk (by omega)
     (exact_offset q n k hn heq) cover_one_thousand hroot
 
 #print axioms cover_sound
