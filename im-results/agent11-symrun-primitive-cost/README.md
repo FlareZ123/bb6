@@ -126,3 +126,18 @@ The prescribed local Lean 4.36.0-rc2 preflight is blocked in the current environ
 - Initial primitive prefix costs are independently recorded in [Agent38's prefix work](../agent38-symrun-prefix-cost/README.md). They have *not* been recertified here.
 
 **Gap to promotion:** prove the seven affine fixed-block formulas for **all** natural parameters from the pinned original source, not just examples, and compose them into source-level costed Rule A/B/C and `stepSym` theorems in Lean. Then kernel-check the traced primitive-count fold, including the prefix, and audit the exact original-source import closure. The present numbers are high-quality **computational candidates**, not established mathematical proofs. No change should be made to `results/` or the global BB(6) upper-bound ledger before those obligations close.
+
+
+## MItem-level initial-prefix bound draft (23 November 2026)
+
+Added `SourceExactMItemPrefix424.lean` as a source-linked draft for the F424 initial acceleration. It lifts the existing exact BB/DL/CB primitive witnesses to the upstream MItem dispatcher `stepElemM`, defines the exact one-step charge, and proves an exact `multiStep` witness for any `n) iterations via `costIterM424_exact_reaches`. The upstream nesting `runElemFast 1 1 11 4` is reduced to exactly `1 + 16 + 256·11 + 4096·4 = 19,217` elementary MItem transitions.
+
+A right-stack maximum invariant is used because the only unbounded one-step charges read a run counter from the right stack (DL/run2 and CB/run0/positive-run). The draft proves the coarse bound
+
+```
+costIterM424 19217 (.CB, [], [.run 1, .run 0]) < 2^31
+```
+
+and packages the corresponding exact `runElemFast` prefix reachability as an existential primitive-step bound. This is intentionally much looser than the JS-replayed prefix cost 164,368, but it is designed to be easy to kernel-check and is sufficient for the initial-prefix part of a candidate exclusion.
+
+**Acceptance boundary:** this module has not been Lean-compiled. It starts at the known CB entry state `(.CB, [], [.run 1, .run 0])); the separate 18-step blank-to-CB entry is not yet composed here, nor is the resulting MItem endpoint yet equated in Lean with the symbolic `initSymCyc3` checkpoint. Do not treat this as a complete F424 halting proof or promote it to `results/` until the exact dependency closure compiles and the endpoint connection is proved.
