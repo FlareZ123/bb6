@@ -135,3 +135,26 @@ I resumed Agent 18 and claimed the lease at the start of this incarnation. The c
 2. Derive a compact uniform proof for branches 1,2,3,4,7. The inverse explorer indicates short closure; investigate valuations of the affine expressions in n and/or a finite residue certificate with period justified by the maximum division depth.
 3. Extend the same exact inverse analysis to branches 5 and 6, where d is free but has fixed parity and lower bound.
 4. Coordinate with Agent6/Agent1 using the corrected identity; do not duplicate the existing PR's branch9/10 work.
+
+
+## 2026-11-23 UTC incarnation — certified 29-mod32 odd-reset inverse closure (partial)
+
+**Lease**: original `agents/agent18/.lease.json` claimed `2026-11-23T03:50:08.199Z`; 70-minute release threshold `2026-11-23T05:00:08.199Z`. Never refresh. The mandatory first draw was 5 (normal mode). Local shell and Python failed with `ClientError`; use GitHub connector + manual CI and code-mode JS instead.
+
+### New kernel-checked uniform root theorem
+
+For every q>=21, if authentic local blank-root `BB429.run` reaches `(32q+29,64q+55)`, then **q%16 in {2,10,15}**, excluding 13/16 residue families. No exceptional index. Proof modules in `im-results/agent18-429-root-invariants/`:
+
+- `BB429Branch29.lean`: six-of-eight q mod8 reduction via forced exact 5-ancestor inverse; RC2 [CI 45108772982](https://github.com/FlareZ123/bb6/actions/runs/45108772982) succeeded.
+- `BB429Branch29Mod16.lean`: q%16=7 impossible unless q=55; derived exact odd inverse even for a>=3 except a=11, explicitly accounting for the special 11 transition; RC2 [CI 45109428286](https://github.com/FlareZ123/bb6/actions/runs/45109428286) succeeded.
+- `BB429FiniteAvoidance.lean`: generic sound Boolean finite prefix checker and rank cutoff; for target `(11,7110)` root prefix N=1586 ends at `(3069,996)` with rank 7134 > target 7132, and avoids it. Kernel `decide`, no `native_decide`; eliminates q55. `BB429Branch29Mod16.rooted_29_q_three_mod16` thus has no exception. RC2 [CI 45109777431](https://github.com/FlareZ123/bb6/actions/runs/45109777431) succeeded. Full axiom profiles only `propext, Classical.choice, Quot.sound` and no `sorryAx`.
+
+### Original-source bridge and scope
+
+- `BB429Branch29Source.lean` composes uniform local proof through unchanged `BB429SourceMod16.source_run_to_local` of actual Cryptids original source, and proves proposed necessary final-burst n%2048 in {895,1919,2047} for branch7 x%32=29 with n>=18 and exact equation `4x+3n+15=3*2^(n+2)`. DO NOT claim source acceptance yet: first pinned source run [45109015710](https://github.com/FlareZ123/bb6/actions/runs/45109015710) failed *before reaching the new source module* due to pre-existing exponent omega bug in `BB429Branch7Source.lean`; repaired with explicit `n+1+2=n+2+1` exponent identity. Standalone job failed missing dependency `BB429NewResidue`; fixed its module list. Repaired full source run [45110331714](https://github.com/FlareZ123/bb6/actions/runs/45110331714) triggered at ~04:11:30 and was in progress at last checkpoint. Check failed jobs with targeted GitHub Actions MCP, fix actual compiler diagnostics. New source module has not passed pinned Cryptids closure yet.
+- Dossier `im-results/agent18-429-root-invariants/BRANCH29.md` keeps accepted local mathematics distinct from pending source closure; `results/` unchanged because this is intermediate.
+- Sent disjoint-u=13/15 handoff to Agent33 `communications/agent33/20261123T040800Z_agent18-branch29-uniform-exclusion-handoff.md`; Agent18 continues u=29.
+
+### Mathematical next work, avoid repetitive verification
+
+Uniform local inverse certificate is substantive but does NOT decide the original #429 halt status or BB(6). Remaining q%16 {2,10,15} cannot be eliminated by the current short modular rows. A JS exploratory backwards search at 16 inverse depth on large representative q lifts shows sparse but *nonempty* compatible 2-adic cylinders; taking a single representative per q%256 class is **not sound** for a universal proof (modular constraints at depth16 inspect higher q bits). Avoid overclaiming a finite residue scan as universal. Try symbolic affine 2-adic inverse certificates or exact source last-reset global closure. Other near-terminal constant-seed branches 1–4 show sparse but nonempty compatible parameter lifts by depth14; a finite sampling nonhalting inference is not justified. The retained exact last-reset source equation is in `im-results/agent32-429-turnaround-gap/LastResetEquation.lean`, and branch7 residue 13/15 remains an open dependency.
