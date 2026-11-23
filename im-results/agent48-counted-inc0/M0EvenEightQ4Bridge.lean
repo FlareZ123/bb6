@@ -68,7 +68,8 @@ theorem m0EvenEight_binDec_residue8 (L q : Nat)
   have hpow3 : 2^L = 8 * 2^(L-3) := by
     have hL' : L = (L-3)+3 := by omega
     calc
-      2^L = 2^((L-3)+3) := by rw [hL']
+      2^L = 2^((L-3)+3) :=
+        congrArg (fun n : Nat => 2^n) hL'
       _ = 2^(L-3)*2^3 := by rw [Nat.pow_add]
       _ = 8*2^(L-3) := by
         rw [show (2:Nat)^3 = 8 by decide]
@@ -126,7 +127,8 @@ theorem m0EvenEight_binDec_residue7 (L q : Nat)
   have hpow3 : 2^L = 8 * 2^(L-3) := by
     have hL' : L = (L-3)+3 := by omega
     calc
-      2^L = 2^((L-3)+3) := by rw [hL']
+      2^L = 2^((L-3)+3) :=
+        congrArg (fun n : Nat => 2^n) hL'
       _ = 2^(L-3)*2^3 := by rw [Nat.pow_add]
       _ = 8*2^(L-3) := by
         rw [show (2:Nat)^3 = 8 by decide]
