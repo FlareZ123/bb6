@@ -1683,3 +1683,27 @@ Agent48's `verify_buffer_relative_postreset.js` verifies the 580-state quotient 
 - The Agent41 Lean workflow failure at `DrainValuationNormalForm.lean:40:8` still occurs before the Agent1 source bridge modules compile. Do not infer that the bridge is Lean-certified.
 - Next: (1) run the Node script in a working shell/CI; (2) collaborate with Agent27 on deriving an all-time transition/ranking argument from the compact product; (3) investigate the logarithmic ratio-four gap invariant, keeping finite observations separate from proof; (4) repair the Lean induction blocker and compile the source-linked bridge.
 - No academically publishable result or BB(6) proof was established. Keep this material in `im-results/`, not `results/`.
+
+## 2026-11-23 incarnation — live reset regression and synchronization-only split
+
+- Claimed Agent 1 at 2026-11-23T01:58:17.350Z (run `agent1-gpt56sol-20261123T015817Z-bb6-frontier`).
+- Replayed the current source-faithful #623 recurrence against the current correction-only S-window and current reset/subset artifacts. This exposed a concrete live regression:
+  - transition n=652 -> target D653, k=8,j=24, target word `[3,7,5,3,1,5,6,6,7,5,5,5]`;
+  - current 263-state ResetPatternDFA never reaches accepting state 3 on this word; current post_reset_pair output is null;
+  - fresh 9968-transition replay gives 1 reset failure, 80 accepted nonsynchronizing suffixes, and 26 B1 endings, not the maintained 0/84/13 census;
+  - current SWindowEdgeRecords independently records target 653 with source/target windows (8,24)->(8,24), so this is not a window-index recomputation typo.
+- Preserved reproducibility/correction in `im-results/agent1-623-live-reset-regression/` and broadcast it.
+- Important repair: D653 is **not a carry-synchronization failure**. The word synchronizes all 225 L and 270 R full-rectangle starts after its first 3 symbols. Its common-reset failure is solely the output-nonmonochromatic flag:
+  - L: all 225 starts have both x-output flags;
+  - R: only 5 starts fail, exactly prev=(2,2), carryX=-4, carryY=-2..2;
+  - authentic R phase entering the D653 word is prev=(1,0), carry=(-3,1), so the actual output is nonmonochromatic.
+- Built an exact synchronization-only automaton from the full L/R rectangles:
+  - 355 reachable image-pair subset states;
+  - minimal synchronized/not-synchronized DFA has 70 states, one accepting state (state 53 in the preserved numbering);
+  - construction reaches all states by shortest representatives of length <=4;
+  - all 9968 current root S-windows are accepted, first synchronization by symbol 3..12; histogram 3:2642,4:4042,5:2093,6:782,7:268,8:96,9:27,10:9,11:7,12:2; length-12 cases n=3383,6931.
+  - exact table/builder: `im-results/agent1-623-sync-only/FullRectangleSyncDFA.json`, `build_full_rectangle_sync_dfa.js`.
+- New recommended proof decomposition: separate (A) carry synchronization via the 70-state full-rectangle language from (B) nonmonochromatic output using only authentic/reachable boundary phases. The old common-reset language bundles these and is unnecessarily strong.
+- Fresh B1 check under current artifacts: 26 accepted suffixes end in B1; in every case the internal identity x_{i+1}=y_i holds after B1 entry. Least-residue separation from the left terminal strip has a large finite margin. This remains finite evidence only.
+- Do not use the old 84-row ExactSeedCarry84 table as a proof premise until regenerated/reconciled with one coherent artifact set.
+
