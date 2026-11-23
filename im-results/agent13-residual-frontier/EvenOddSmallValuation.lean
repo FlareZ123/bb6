@@ -101,22 +101,22 @@ theorem even_odd_small_valuation_parent
               rw [hu]
               omega
             have hnlt : n<4 := by
-              by_contra hlt
-              have hn4 : 4≤n := by omega
-              have hpow16 : 16 ∣ 2^n := by
-                have h : (2:Nat)^4 ∣ 2^n :=
-                  Nat.pow_dvd_pow 2 hn4
-                simpa only [show (2:Nat)^4=16 by decide] using h
-              rcases hpow16 with ⟨u,hu⟩
-              rcases hfac with ⟨v,hv⟩
-              have h64 : 64 ∣ x+y+1 := by
-                refine ⟨u*v,?_⟩
-                calc
-                  x+y+1 = 2^n*(2*(a-1)+8) := hpow
-                  _ = (16*u)*(4*v) := by rw [hu,hv]
-                  _ = (16*4)*(u*v) := by ac_rfl
-                  _ = 64*(u*v) := by decide
-              exact hn64 (Nat.mod_eq_zero_of_dvd h64)
+              by_cases hn4 : 4≤n
+              · have hpow16 : 16 ∣ 2^n := by
+                  have h : (2:Nat)^4 ∣ 2^n :=
+                    Nat.pow_dvd_pow 2 hn4
+                  simpa only [show (2:Nat)^4=16 by decide] using h
+                rcases hpow16 with ⟨u,hu⟩
+                rcases hfac with ⟨v,hv⟩
+                have h64 : 64 ∣ x+y+1 := by
+                  refine ⟨u*v,?_⟩
+                  calc
+                    x+y+1 = 2^n*(2*(a-1)+8) := hpow
+                    _ = (16*u)*(4*v) := by rw [hu,hv]
+                    _ = (16*4)*(u*v) := by ac_rfl
+                    _ = 64*(u*v) := by decide
+                exact hn64 (Nat.mod_eq_zero_of_dvd h64)
+              · omega
             exact ⟨n,by omega,hpow,hcost⟩
 
 #print axioms even_odd_small_valuation_parent
