@@ -456,9 +456,36 @@ const allowedRLEs=[
   '1RB1RF_0RC0RE_0RD1RA_1LE0LA_1LB0LD_0RDHHH'
 ];
 assert.ok(allowedRLEs.includes(machineRLE),'this cost table is only checked for the two F289 RLE modules');
-const executeCounts=[...source.matchAll(/\bexecute\s+(\d+)/g)].map(m=>Number(m[1]));
-assert.deepEqual(executeCounts,[1,4,2,1,2,4,5,3,4,3,1,3,5,17,4,5,7,6,3],
-  'machine-specific primitive execute-count signature changed');
+const expectedRuleCosts = {
+  rule_B_nil:1, rule_B_zero:4, rule_B_succ:2,
+  rule_BR_nil:1, rule_BR_zero:2, rule_BR_one:4, rule_BR_add_two:5,
+  rule_DR0_nil:3, rule_DR0_zero:4, rule_DR0_succ:3,
+  rule_C_nil:1, rule_C_zero_nil:3, rule_C_zero_zero:5, rule_C_zero_one:17,
+  rule_C_zero_add_two:4, rule_C_one_nil:5, rule_C_one_zero:7,
+  rule_C_one_succ:6, rule_C_add_two_step:3
+};
+function theoremBlock(name) {
+  const i=lines.findIndex(x=>new RegExp('^theorem '+name+'\\\\b').test(x));
+  if(i<0) throw new Error('missing primitive rule theorem '+name);
+  const j=lines.findIndex((x,k)=>k>i && /^(?:private\\s+)?(?:theorem|def|abbrev|opaque|instance)\\s+/.test(x));
+  return lines.slice(i,j<0?lines.length:j).join('\\n');
+}
+function namedRuleCost(name) {
+  const block=theoremBlock(name);
+  const match=block.match(/\\bexecute\\s+(\\d+)/);
+  if(match) return Number(match[1]);
+  if(name==='rule_BR_nil' && /:=\\s*rule_B_nil\\b/.test(block)) return namedRuleCost('rule_B_nil');
+  throw new Error('could not extract primitive cost for '+name);
+}
+const ruleCostAudit=Object.fromEntries(Object.entries(expectedRuleCosts).map(([name,expected])=>{
+  const actual=namedRuleCost(name);
+  assert.equal(actual,expected,'primitive cost changed for '+name);
+  return [name,actual];
+}));
+const initCostMatch=theoremBlock('init_reaches_stack').match(/\\bexecute\\s+(\\d+)/);
+assert.ok(initCostMatch,'missing initial source-to-stack execution cost');
+const initialPrimitiveStepBound=BigInt(initCostMatch[1]);
+assert.equal(initialPrimitiveStepBound,1n,'initial source-to-stack cost changed');
 
 const hasCkpt0=lines.some(x=>x.startsWith('def ckpt0 : RleFullState'));
 const ckpt0=hasCkpt0
@@ -491,13 +518,17 @@ assert.equal(state.halted,true,'final RLE state is not halted');
 if(machineRLE===allowedRLEs[0])
   assert.equal(total,1003448704258405241756955830449585121679083838719n,'first F289 cost bound changed');
 
+const primitiveStepUpperBound=initialPrimitiveStepBound+total;
 console.log(JSON.stringify({
   machineRLE,
   checkpointMatches:chunkResults.filter(x=>x.to!==null).map(x=>x.to),
   finalHalted:state.halted,
   rleTransitionsUpperBound:chunks.reduce((a,x)=>a+x.batches*25,0),
+  primitiveRuleCosts:ruleCostAudit,
+  initialPrimitiveStepBound:String(initialPrimitiveStepBound),
   chunkBounds:chunkResults,
-  primitiveStepUpperBound:String(total),
-  boundBits:total.toString(2).length,
-  below2pow160:total<(1n<<160n)
+  rleTransitionCostUpperBound:String(total),
+  primitiveStepUpperBound:String(primitiveStepUpperBound),
+  boundBits:primitiveStepUpperBound.toString(2).length,
+  below2pow160:primitiveStepUpperBound<(1n<<160n)
 },null,2));
