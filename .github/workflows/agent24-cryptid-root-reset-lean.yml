@@ -71,7 +71,7 @@ jobs:
           reset_path = Path("../bb6/im-results/agent2-root-countdown/RootRemainderTwoToken.append.lean")
           ending = "end BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA"
 
-          if os.environ.get("PROOF_TARGET") in ("suffix3-shift", "suffix3-full", "suffix3-word", "suffix3-zero", "suffix3-two", "suffix3-growth", "suffix3-residual-one", "suffix3-padded-two"):
+          if os.environ.get("PROOF_TARGET") in ("suffix3-shift", "suffix3-full", "suffix3-word", "suffix3-one", "suffix3-zero", "suffix3-two", "suffix3-growth", "suffix3-residual-one", "suffix3-padded-two"):
               base = Path("../bb6/im-results/agent48-suffix3-shift")
               target = os.environ.get("PROOF_TARGET")
               if target in ("suffix3-growth", "suffix3-residual-one"):
