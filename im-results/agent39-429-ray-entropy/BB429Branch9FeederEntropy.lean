@@ -140,7 +140,9 @@ private theorem branch9_high_counter (t q r v K : Nat)
     have heq : 2^(branch9J r v+1)=2^(branch9J r v)*2 := by simp [Nat.pow_succ]
     omega
   have hJbig : 48*2^K≤12*2^(branch9J r v) := by
-    have heq : 2^(K+2)=2^K*4 := by simp [Nat.pow_succ]
+    have heq : 2^(K+2)=2^K*4 := by
+      rw [show K+2=(K+1)+1 by omega, Nat.pow_succ, Nat.pow_succ]
+      simp [Nat.mul_assoc]
     omega
   have hdiff : 12*2^(branch9J r v)≤
       12*2^(branch9N r v)-12*2^(branch9J r v) := by omega
@@ -201,9 +203,6 @@ private theorem branch9_divisibility (t q r v K : Nat)
           3*(2^K*2^(J+2-K)) = (3*2^K)*2^(J+2-K) := by rw [←Nat.mul_assoc]
           _ = (2^K*3)*2^(J+2-K) := by rw [Nat.mul_comm]
           _ = 2^K*(3*2^(J+2-K)) := by rw [Nat.mul_assoc]
-  have horder : 3*2^(J+2-K)≤3*2^(N+2-K) := by
-    have hp := pow2_mono (J+2-K) (N+2-K) (by omega)
-    omega
   let P := 3*2^(N+2-K)
   let Q := 3*2^(J+2-K)
   have horder : Q≤P := by
@@ -232,8 +231,12 @@ private theorem branch9_divisibility (t q r v K : Nat)
     rw [hident]
     omega
   refine ⟨P-Q+(C+1), ?_⟩
-  rw [hsum,hdiff,hCplus]
-  omega
+  calc
+    branch9A t q r v + 3*v + branch9Correction t q K =
+        (12*2^N-12*2^J)+(C+branch9Correction t q K) := hsum
+    _ = 2^K*(P-Q)+(C+1)*2^K := by rw [hdiff,hCplus]
+    _ = 2^K*(P-Q)+2^K*(C+1) := by rw [Nat.mul_comm]
+    _ = 2^K*(P-Q+(C+1)) := by rw [Nat.mul_add]
 
 /-- For a fixed t and a fixed residue r satisfying t+14=r (mod 4),
 the genuine branch-9 exceptional S parents have zero-density outer
