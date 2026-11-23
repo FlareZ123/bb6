@@ -77,12 +77,12 @@ jobs:
                   root = root_path.read_text()
                   old1 = "root_countdown_dr_zero_step [] tail"
                   old2 = "root_countdown_dr_empty_left_step ((1,0) :: (0,0) :: tail)"
-                  old3 = "root_countdown_dl_zero_step [(0,0)]\\n    [(0,0),(x-3,0)]"
+                  old3 = "root_countdown_dl_zero_step [(0,0)]\n    [(0,0),(x-3,0)]"
                   if root.count(old1) != 1 or root.count(old2) != 1 or root.count(old3) != 1:
                       raise SystemExit("expected exactly one h5, h6, and general-tail h7 source call")
                   root = root.replace(old1, "root_countdown_dr_zero_step [] ((0,0) :: tail)", 1)
                   root = root.replace(old2, "root_countdown_dr_empty_left_step ((1,0) :: (0,0) :: (0,0) :: tail)", 1)
-                  root = root.replace(old3, "root_countdown_dl_zero_step [(0,0)]\\n    [(0,0),(0,0),(x-3,0)]", 1)
+                  root = root.replace(old3, "root_countdown_dl_zero_step [(0,0)]\n    [(0,0),(0,0),(x-3,0)]", 1)
                   corrected_root_path = Path("/tmp/RootCountdownSweep.corrected.lean")
                   corrected_root_path.write_text(root)
                   if target == "suffix3-growth":
