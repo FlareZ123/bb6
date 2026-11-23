@@ -55,6 +55,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          mkdir -p /tmp/a21-low1091-extra
+          base64 --decode im-results/agent38-c-section-mod4/ThirdStageOddDepth.lean.xz.b64 | xz --decompress > /tmp/a21-low1091-extra/ThirdStageOddDepth.lean
+          echo "48fb1fcbf2b3a409c7bafb07a9f1df78a087b02d8cadeac51b2b81b02f301ed0  /tmp/a21-low1091-extra/ThirdStageOddDepth.lean" | sha256sum --check
           python3 tools/lean_compile_closure.py \
             im-results/agent21-c-first-m1091-4096/ValSixLowRefinement.lean \
-            --workdir /tmp/a21-low1091-joint --jobs 4 --lean "$(command -v lean)"
+            --workdir /tmp/a21-low1091-joint --source-root /tmp/a21-low1091-extra \
+            --jobs 4 --lean "$(command -v lean)"
