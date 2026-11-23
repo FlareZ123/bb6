@@ -21,7 +21,6 @@ open CryptidBoundary
 open BB6.CryptidPrefixFirstReturn
 open BB6.CryptidE111FirstReturn
 open BB6.CryptidACodeFirstReturn
-open BB6.Agent35
 
 def oneCost (k : Nat) (ws : List Bool) : Nat :=
   (12*k*k+41*k+32)+
@@ -43,7 +42,7 @@ private theorem suffix_one_run (m : Nat) (ws : List Bool) :
       (aBoundary m (CryptidA.wordCode ws ++ [true])) =
     ⟨[],false,
       List.replicate (2*(m+CryptidA.wordInc ws)+7) true,5⟩ := by
-  rw [run_add,a_code_return]
+  rw [run_add,BB6.Agent35.a_code_return]
   change run (2*(m+CryptidA.wordInc ws)+10)
     (BB6.AOneSource.ab (m+CryptidA.wordInc ws) [true]) = _
   exact BB6.AOneSource.a_one_close (m+CryptidA.wordInc ws)
@@ -59,7 +58,7 @@ private theorem suffix_one_noF (m : Nat) (ws : List Bool) :
   · exact original_word_noF m ws [true] t hp
   · have hsplit : t=CryptidA.wordCost m ws+
         (t-CryptidA.wordCost m ws) := by omega
-    rw [hsplit,run_add,a_code_return]
+    rw [hsplit,run_add,BB6.Agent35.a_code_return]
     change (run (t-CryptidA.wordCost m ws)
       (BB6.AOneSource.ab (m+CryptidA.wordInc ws) [true])).st ≠5
     exact BB6.CryptidARegularFirstReturn.ab_one_close_noF
