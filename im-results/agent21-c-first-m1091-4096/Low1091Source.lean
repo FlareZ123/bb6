@@ -166,16 +166,14 @@ private theorem even_odd_sumplus1_mod8_4_parent (a k x y : Nat)
       · simp only [sectionPreimageCriterion,if_pos ha0,if_neg hk0,if_neg hk1] at hp
         rcases hp with ⟨n,⟨hpow,_⟩⟩
         have hodd : (x+y)%2=1 := by omega
-        have heven : (2^n*8)%2=0 := by simp
+        have heven : (2^n*8)%2=0 := by simp [Nat.mul_mod]
         rw [hpow] at hodd
         omega
   · by_cases ha1 : a=1
     · by_cases hk0 : k=0
       · simp [sectionPreimageCriterion,ha0,ha1,hk0] at hp
-        omega
       · by_cases hk1 : k=1
         · simp [sectionPreimageCriterion,ha0,ha1,hk0,hk1] at hp
-          omega
         · by_cases hk2 : k=2
           · simp [sectionPreimageCriterion,ha0,ha1,hk0,hk1,hk2] at hp
             omega
@@ -220,7 +218,7 @@ private theorem even_odd_sumplus1_mod8_4_parent (a k x y : Nat)
               rw [hform]
               refine ⟨q,?_⟩
               rw [hq]
-              ring
+              omega
             have hn0 : n=0 := by
               by_contra hnz
               have hnpos : 1≤n := by omega
@@ -232,7 +230,7 @@ private theorem even_odd_sumplus1_mod8_4_parent (a k x y : Nat)
               have hdiv8 : 8∣x+y+1 := by
                 refine ⟨s*r,?_⟩
                 rw [hpow,hs,hr]
-                ring
+                simp [Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm]
               have hmod8 : (x+y+1)%8=0 := Nat.mod_eq_zero_of_dvd hdiv8
               omega
             subst n
