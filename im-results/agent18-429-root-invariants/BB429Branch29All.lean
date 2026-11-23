@@ -21,9 +21,10 @@ theorem rooted_29_global (q : Nat)
     21≤q ∧
     q%1024 ∈ BB429Branch29Reflect1024.surviving1024 := by
   have hq : 21≤q := by
-    by_contra hh
-    have hsmall : q<21 := by omega
-    exact BB429Branch29Small.no_small_q q hsmall hroot
+    by_cases hh : 21≤q
+    · exact hh
+    · have hsmall : q<21 := by omega
+      exact False.elim (BB429Branch29Small.no_small_q q hsmall hroot)
   exact ⟨hq,
     BB429Branch29Reflect1024.rooted_29_q_38_mod1024
       q hq hroot⟩
