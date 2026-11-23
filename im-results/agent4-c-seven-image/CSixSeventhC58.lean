@@ -189,6 +189,28 @@ def lateFastHighAllowed (j m : Nat) : Prop :=
   ¬(7≤m ∧ j%512=319 ∧
     (3*m)%4096=(j+2879)%4096)
 
+/-- Every parameter pair in the common base residue cylinder
+    j = 319 (mod 512), m = 42 (mod 512) passes the previous
+    ValSix+C58 all-depth and arbitrary-depth late-fast restrictions.
+    This public interface lets later source exclusions establish
+    nonredundancy without reconstructing the private C58 proof. -/
+theorem prior_latefast_admits_base_residue (j m : Nat)
+    (hm7 : 7≤m) (hj : j%512=319) (hm512 : m%512=42) :
+    BB6.Agent11LateFastWrapper.highAllowed j m := by
+  have hprior := prior_c58_admits_residue_pair j m hm7 hj hm512
+  have hbool : BB6.Agent11C58Boolean.highAllowed j m :=
+    (BB6.Agent11C58Boolean.highAllowed_iff j m).mpr hprior
+  have hlate : BB6.Agent11LateDepthGate.allowedBool j m=true := by
+    apply (BB6.Agent11LateDepthGate.allowedBool_iff j m).mpr
+    intro r hr
+    rcases hr with ⟨hrmin,hm3,hm4,hmod,hsize⟩
+    have hm4res : m%4=2 := by omega
+    have hodd : (2*r+1)%4=1 ∨ (2*r+1)%4=3 := by omega
+    omega
+  exact ⟨hbool,hlate⟩
+
+#print axioms prior_latefast_admits_base_residue
+
 /-- A second explicit high-stop parameter progression survives all
     current C58/late-fast filters: j=831, m=9770 (mod 16384). -/
 theorem prior_latefast_admits_s3_parameter_family (t : Nat) :
