@@ -111,7 +111,8 @@ theorem m0EvenEight_binDec_residue8 (L q : Nat)
     rw [show L-3 = (L-4)+1 by omega]
     calc
       binDec ((L-4)+1) q =
-          binDec ((L-4)+1) (2*(q/2)+1) := by rw [hdiv]
+          binDec ((L-4)+1) (2*(q/2)+1) :=
+        congrArg (binDec ((L-4)+1)) hdiv
       _ = d0 ++ binDec (L-4) (q/2) :=
         binDec_odd (L-4) (q/2) hq4
   rw [h1,h2,h3,h4]
