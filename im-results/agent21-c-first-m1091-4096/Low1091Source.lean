@@ -96,9 +96,9 @@ private theorem odd_odd_sum4_parent (a k x y : Nat)
                 if_neg hk0,if_neg hk1,if_neg hk2,if_neg hk3] at hp
               rcases hp with ⟨n,⟨hpow,_⟩⟩
               have hodd : (x+y+1)%2=1 := by omega
-                have heven : (2^n*16)%2=0 := by simp
-                rw [hpow] at hodd
-                omega
+              have heven : (2^n*16)%2=0 := by simp
+              rw [hpow] at hodd
+              omega
     · have ha2 : 2≤a := by omega
       by_cases hk0 : k=0
       · simp [sectionPreimageCriterion,ha0,ha1,hk0] at hp
@@ -144,9 +144,9 @@ private theorem odd_odd_sum4_parent (a k x y : Nat)
               if_neg hk0,if_neg hlow,if_neg haeven] at hp
             rcases hp with ⟨n,⟨hpow,_⟩⟩
             have hodd : (x+y+1)%2=1 := by omega
-              have heven : (2^n*(2*(a-1)+8))%2=0 := by simp [Nat.mul_mod]
-              rw [hpow] at hodd
-              omega
+            have heven : (2^n*(2*(a-1)+8))%2=0 := by simp [Nat.mul_mod]
+            rw [hpow] at hodd
+            omega
 
 /-- Even/odd outputs with x+y+1 = 4 mod 8 have only their
     depth-zero odd-left bounce predecessor. -/
@@ -186,10 +186,10 @@ private theorem even_odd_sumplus1_mod8_4_parent (a k x y : Nat)
                 if_neg hk0,if_neg hk1,if_neg hk2,if_neg hk3] at hp
               rcases hp with ⟨n,⟨hpow,_⟩⟩
               have hmod16 : (x+y+1)%16=0 := by
-                  rw [hpow]
-                  simp [Nat.mul_mod]
-                have hmod8 : (x+y+1)%8=0 := by omega
-                omega
+                rw [hpow]
+                simp [Nat.mul_mod]
+              have hmod8 : (x+y+1)%8=0 := by omega
+              omega
     · have ha2 : 2≤a := by omega
       by_cases hk0 : k=0
       · simp [sectionPreimageCriterion,ha0,ha1,hk0] at hp
