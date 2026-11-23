@@ -1,5 +1,6 @@
-/-! Exact-source axiom audit for the BB sweep combined field-potential lemmas. -/
+/-! Exact-source axiom audit for the BB sweep field-potential lemmas. -/
 import SymRunTraceStats
+import SymRunBBBounds
 
 #print axioms BusyBeaver.SymRunAudit.eatB2_num_sum_le
 #print axioms BusyBeaver.SymRunAudit.eatB12R_num_sum_le
@@ -7,3 +8,7 @@ import SymRunTraceStats
 #print axioms BusyBeaver.SymRunAudit.stepElemBB_weight_le
 #print axioms BusyBeaver.SymRunAudit.peelTok_weight_le
 #print axioms BusyBeaver.SymRunAudit.sweepBB_weight_bound
+#print axioms BusyBeaver.SymRunAudit.sweepBB_length_bound
+#print axioms BusyBeaver.SymRunAudit.sweepBB_num_sum_bound
+#print axioms BusyBeaver.SymRunAudit.sweepBB_weight_bound_sharp
+#print axioms BusyBeaver.SymRunAudit.sweepBB_field_max_le
