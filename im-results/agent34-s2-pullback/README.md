@@ -1,6 +1,6 @@
 # Machine C: S2 and q-even high-stop pullbacks
 
-**Status:** formal Lean source added; CI acceptance is pending. These are root-unreachability results for two explicit high-stop parameter cylinders. They do not determine BB(6), and this dossier does not yet claim integration into the repository's complete six-all halting criterion.
+**Status:** formal Lean sources and an exact six-all iff extension have been added; CI acceptance is pending. These are root-unreachability results for two explicit high-stop parameter cylinders. They do not determine BB(6).
 
 ## High-stop coordinates
 
@@ -87,5 +87,7 @@ CSixSeventhS2Pullback.lean contains:
 - the q-even (u,v)-to-(t,z) reconstruction;
 - CReach corollaries;
 - #print axioms checks for the exported theorems.
+
+CSixSeventhSixAllS2.lean adds both congruence exclusions to the existing six-all high predicate and proves blank_halts_iff_six_both_s2q, preserving the exact low branch and fixed-target root test. The exact iff extension is still pending CI acceptance.
 
 The source imports Agent 4's CSixSeventhS2 and CSixSeventhS2QEven modules. The existing agent4-c-three-ancestry.yml workflow is being extended to compile this file after those dependencies. Until that CI run passes, treat the repository artifact as a proof candidate rather than an accepted certificate.
