@@ -3,6 +3,8 @@
 --         inverse_tree_44_classes_certificate.py.
 -- All arithmetic proofs below use kernel `decide`; this file has NOT yet been Lean-compiled.
 import SheepPower1458SourceIntegration
+set_option maxRecDepth 8192
+set_option maxHeartbeats 0
 
 namespace SheepPower1458
 
