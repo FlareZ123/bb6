@@ -9,6 +9,14 @@ set_option maxHeartbeats 1000000
 namespace BB6.Agent4SevenS2QEven
 open BB6.Agent46
 
+private theorem q_even_direct_parent_k_ge5 (t z : Nat)
+    (hhi : 32*z≤12+11*t) :
+    5≤4164+3982*t-8495*z := by omega
+
+private theorem q_even_direct_parent_a_gt5 (t z : Nat)
+    (hhi : 32*z≤12+11*t) :
+    5<7737+7396*t-15778*z := by omega
+
 private theorem q_even_direct_parent_sum_mod4 (a k t z : Nat)
     (hsumEq : a+k+24273*z=11901+11378*t)
     (hcong : (2*t-z)%8=1) :
@@ -75,8 +83,8 @@ theorem q_even_direct_parent_unreachable (t z : Nat)
   have hsumEq : a+k+24273*z=11901+11378*t := by omega
   have hsum : (a+k)%4=2 := q_even_direct_parent_sum_mod4 a k t z hsumEq hcong
   have hkodd : k%2=1 := by dsimp [k]; omega
-  have hk5 : 5≤k := by dsimp [k]; omega
-  have ha5 : 5<a := by dsimp [a]; omega
+  have hk5 : 5≤k := by dsimp [k]; exact q_even_direct_parent_k_ge5 t z hhi
+  have ha5 : 5<a := by dsimp [a]; exact q_even_direct_parent_a_gt5 t z hhi
   intro hr
   have hr' : BB6.Agent3.CReach a k := by
     have hiff := (BB6.Agent3.evenodd_four_blank_reach_iff
