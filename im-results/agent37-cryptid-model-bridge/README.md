@@ -93,9 +93,16 @@ pairTime(k+h,q,ws) = pairTime(k,q,ws)
    + h·(24k+12h+49+24·tripleTokens(ws)).
 ```
 
-This is derived from the all-word `wordCost` cocycle; each triple token contributes precisely 24h more raw steps. Theorems `wordCost_shift4h`, `pairTime_shift_h`, and `paired_return_shift_h` all passed original-machine [CI 41511776217](https://github.com/FlareZ123/bb6/actions/runs/41511776217), each with exactly `[propext, Quot.sound]`. The source-backed return-shift proves one substantial subfamily of the conjectured general `n↦n+3h` continuity. It does not establish first-return minimality for all inputs, handle unknown suffix words, exclude a halt on the genuine blank orbit, or determine BB(6).
+This is derived from the all-word `wordCost` cocycle; each triple token contributes precisely 24h more raw steps. Theorems `wordCost_shift4h`, `pairTime_shift_h`, and `paired_return_shift_h` all passed original-machine [CI 41511776217](https://github.com/FlareZ123/bb6/actions/runs/41511776217), each with exactly `[propext, Quot.sound]`. The source-backed return-shift proves one substantial subfamily of the conjectured general `n↦n+3h` continuity. It has now been strengthened from an eventual return to a **strict first blank-left F-state theorem** in [FullWordPairsFirst.lean](./FullWordPairsFirst.lean): for every `k,q,ws,ys`, the first configuration with state F and every cell strictly left of the head blank occurs exactly at `pairTime(k,q,ws)`; the endpoint is F/0. The proof excludes earlier F states in the three consecutive pieces: the `prefix_A` segment by `prefixA_positive_noF`, the arbitrary mixed-token consumer by `original_word_noF`, and the `110(10)^q0` terminal branch by the new `two_one_pairs_first_physical` theorem. The first-event theorem passed original-source [CI 45182834918](https://github.com/FlareZ123/bb6/actions/runs/45182834918), with final axiom profile exactly `[propext, Quot.sound]` and no `sorryAx` or `native_decide`.
 
-New files: [FullWordPairs.lean](./FullWordPairs.lean), [ReturnShift.lean](./ReturnShift.lean). Both are included in the existing manual-only [workflow](../../.github/workflows/agent37-cryptid-halt-model-bridge.yml). Compare Agent2's conditional general shift [research](../agent2-cryptid-continuity/README.md) and Agent35's earlier `full_A_code_double` branch for prior context. External novelty and publication eligibility have not been established, so these findings remain in `im-results/`.
+Combining first-event minimality with `pairTime_shift_h` gives the exact first-event time shift
+```text
+pairTime(k+h,q,ws) = pairTime(k,q,ws)
+   + h·(24k+12h+49+24·tripleTokens(ws)).
+```
+This certifies first-event timing for the entire token-coded `110(10)^q0` terminal family, not for arbitrary binary suffixes. The general first-event cocycle, blank-root reachability, and BB(6) remain open.
+
+New files: [FullWordPairs.lean](./FullWordPairs.lean), [FullWordPairsFirst.lean](./FullWordPairsFirst.lean), [ReturnShift.lean](./ReturnShift.lean). These are included in the existing manual-only [workflow](../../.github/workflows/agent37-cryptid-halt-model-bridge.yml). Compare Agent2's conditional general shift [research](../agent2-cryptid-continuity/README.md) and Agent35's earlier `full_A_code_double` branch for prior context. External novelty and publication eligibility have not been established, so these findings remain in `im-results/`.
 
 
 ## Shorter A-side complete returns and unrestricted A-110 portal (19:55 UTC)
