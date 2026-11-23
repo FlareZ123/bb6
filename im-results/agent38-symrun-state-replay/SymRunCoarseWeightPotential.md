@@ -132,51 +132,51 @@ The remaining proof work is to compose the existing Rule A/B/C ReachesWithin lem
 
 ## Consequence if the target lemmas are proved
 
-Let (V=W+1). The sharper weight inequality gives
-[
-V_{i+1}=W_{i+1}+1le 2^9V_i+1le513V_i<2^{10}V_i
-]
-because (V_ige1). The literal `initSymCyc3` states have:
-- F424: ((|L|,operatorname{numSum}L,|R|,operatorname{numSum}R)=(13,52,9,85)), hence (W=160) and (V_0=161<2^8);
-- F412: ((13,52,10,86)), hence (W=162) and (V_0=163<2^8).
+Let \(V=W+1\). The sharper weight inequality gives
+\[
+V_{i+1}=W_{i+1}+1\le 2^9V_i+1\le513V_i<2^{10}V_i
+\]
+because \(V_i\ge1\). The literal initSymCyc3 states have:
+- F424: \((|L|,\operatorname{numSum}L,|R|,\operatorname{numSum}R)=(13,52,9,85)\), hence \(W=160\) and \(V_0=161<2^8\);
+- F412: \((13,52,10,86)\), hence \(W=162\) and \(V_0=163<2^8\).
 
-Therefore (V_i<2^{8+10i}), and the conditional per-transition cost satisfies
-[
-C_ile2^{26}V_i^2<2^{42+20i}.
-]
-For (N) `stepSym` transitions, sum the actual pre-step states (i=0,ldots,N-1):
-[
-sum_{i=0}^{N-1}C_i
- < N,2^{42+20(N-1)}
- < 2^{20N+22+lceillog_2Nceil}.
-]
+Therefore \(V_i<2^{8+10i}\), and the conditional per-transition cost satisfies
+\[
+C_i\le2^{26}V_i^2<2^{42+20i}.
+\]
+For \(N\) stepSym transitions, sum the actual pre-step states \(i=0,\ldots,N-1\):
+\[
+\sum_{i=0}^{N-1}C_i
+ < N\cdot2^{42+20(N-1)}
+ < 2^{20N+22+\lceil\log_2N\rceil}.
+\]
 
 The exact checkpoint chains give:
 
-| Machine | Initial runElemFast steps | stepSym steps (N) | SymRun-chain exponent |
+| Machine | Initial runElemFast steps | stepSym steps \(N\) | SymRun-chain exponent |
 |---|---:|---:|---:|
-| F424 | (1+16+11cdot256+4cdot4096=19{,}217) | (70{,}511) | (1{,}410{,}259) |
-| F412 | (7+3cdot16+11cdot256+4cdot4096=19{,}255) | (21{,}383) | (427{,}697) |
+| F424 | \(1+16+11\cdot256+4\cdot4096=19{,}217\) | \(70{,}511\) | \(1{,}410{,}259\) |
+| F412 | \(7+3\cdot16+11\cdot256+4\cdot4096=19{,}255\) | \(21{,}383\) | \(427{,}697\) |
 
-For the initial RLE prefix, (W_M) starts at 1 and each `stepElemM` raises it by at most 8. The F424/F412 rule tables have maximal variable costs (3d+22) and (3d+20), respectively (fixed branches are at most 13); since (dle W_M), both are bounded by (25(W_M+1)). Thus the whole prefix is bounded by
-[
-25N(8N+2)<2^{37}qquad(Nle19{,}255).
-]
-Add the initial entry costs (18 for F424, 1 for F412) and the separate final halting transition (+1 in each case). Since these fixed-prefix and final costs are below (2^{37}+20), they are absorbed by one extra exponent bit. Conditional full bounds become:
+For the initial RLE prefix, \(W_M\) starts at 1 and each stepElemM raises it by at most 8. The F424/F412 rule tables have maximal variable costs \(3d+22\) and \(3d+20\), respectively (fixed branches are at most 13); since \(d\le W_M\), both are bounded by \(25(W_M+1)\). Thus the whole prefix is bounded by
+\[
+25N(8N+2)<2^{37}\qquad(N\le19{,}255).
+\]
+Add the initial entry costs (18 for F424, 1 for F412) and the separate final halting transition (+1 in each case). Since these fixed-prefix and final costs are below \(2^{37}+20\), they are absorbed by one extra exponent bit. Conditional full bounds become:
 
-- F424: fewer than (2^{1{,}410{,}260}) primitive steps;
-- F412: fewer than (2^{427{,}698}) primitive steps.
+- F424: fewer than \(2^{1{,}410{,}260}\) primitive steps;
+- F412: fewer than \(2^{427{,}698}\) primitive steps.
 
-**Reusable SymRun-phase corollary.** If an arbitrary SymRun phase starts with (Wle2^{10}) and has at most (N=2^{21}) symbolic transitions, then (V_0=W+1le2^{11}), hence (V_ile2^{11+10i}). Thus
-[
-C_ile2^{26}V_i^2le2^{48+20i},
-qquad
-sum_{i=0}^{N-1}C_i<2^{20N+49}
+**Reusable SymRun-phase corollary.** If an arbitrary SymRun phase starts with \(W\le2^{10}\) and has at most \(N=2^{21}\) symbolic transitions, then \(V_0=W+1\le2^{11}\), hence \(V_i\le2^{11+10i}\). Thus
+\[
+C_i\le2^{26}V_i^2\le2^{48+20i},
+\qquad
+\sum_{i=0}^{N-1}C_i<2^{20N+49}
 =2^{41{,}943{,}089}.
-]
-This remains far below (2\uparrow\uparrow\uparrow5), since (41{,}943{,}089<2^{26}<2^{65{,}535}).
+\]
+This remains far below \(2\uparrow\uparrow\uparrow5\), since \(41{,}943{,}089<2^{26}<2^{65{,}535}\).
 
-These are conditional bounds only: the global (W)-growth and cost inequalities, including the afterSweepCB dispatcher, still need proof. The sharper trace-specific (2^{463}) and (2^{193}) candidates remain stronger if their own intermediate-state folds and cost-indexed soundness theorem are established.
+These are conditional bounds only: the global W-growth and cost inequalities, including the afterSweepCB dispatcher, still need proof. The sharper trace-specific \(2^{463}\) and \(2^{193}\) candidates remain stronger if their own intermediate-state folds and cost-indexed soundness theorem are established.
 
 ## Formalization checklist and caveats
 
