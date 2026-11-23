@@ -3,7 +3,8 @@ import RootConeComposition
 set_option maxHeartbeats 0
 
 namespace CascadeTerminalFirstForkClassification
-open CascadeResetInverse CascadeUniformFatal CascadeSweep
+open CascadeResetInverse CascadeUniformFatal CascadeSweep CascadeAgent10Four
+open CascadeForkOddDead CascadeForkOddDead27 CascadeRayOddStrip
 open CascadeTerminalFirstFork CascadeTerminalHighBand CascadeRootConeComposition
 
 /-- Dyadic odd-source bands, just like even-return target bands,
@@ -118,12 +119,14 @@ theorem ray_nonterminal_four_node_from_bands
     ¬ReachC (2,0) (v,0) := by
   have hpEven : 2^n=2*2^(n-1) := by
     have hidx : n=(n-1)+1 := by omega
-    rw [hidx,Nat.pow_succ]
-    omega
+    calc
+      2^n=2^((n-1)+1) := congrArg (fun j : Nat => 2^j) hidx
+      _=2*2^(n-1) := by rw [Nat.pow_succ]; omega
   have hpOdd : 2^n=4*2^(n-2) := by
     have hidx : n=(n-2)+2 := by omega
-    rw [hidx,Nat.pow_add]
-    omega
+    calc
+      2^n=2^((n-2)+2) := congrArg (fun j : Nat => 2^j) hidx
+      _=4*2^(n-2) := by rw [Nat.pow_add]; omega
   have hevenV : 2*v=8*2^(n-1)+w+(n-1) := by omega
   have hevenW : 2*w=8*2^(n-1)+z+(n-1) := by omega
   have hoddEq : 4*d=8*2^(n-2)+h+(n-2)+5 := by omega
