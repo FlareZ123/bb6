@@ -45,37 +45,38 @@ theorem rooted_branch29_final_burst_floor
     (hroot : Reach (32*q+29) (64*q+55))
     (heq : 128*q+3*n+131=3*2^(n+2)) :
     16255 ≤ n := by
-  by_contra hshort
-  have hshort' : n < 16255 := by omega
-  have hpow : 2^(n+2)=524288*2^(n-17) := by
-    have hsplit : n+2=19+(n-17) := by omega
-    rw [hsplit, Nat.pow_add]
-    norm_num
-  have hmod : (128*q+3*n+131)%524288=0 := by
-    rw [heq,hpow]
-    omega
-  let k := n/128
-  have hnr : n%128=127 := by omega
-  have hnform : n=128*k+127 := by dsimp [k]; omega
-  have hk : k<126 := by omega
-  have hqmod : q%4096=4092-3*k := by omega
-  let s : BB429Kernel.Affine :=
-    ⟨131072,32*(4092-3*k)+29,262144,64*(4092-3*k)+55⟩
-  have hcert : BB429Kernel.cert 17 s = true := by
-    exact (List.all_eq_true.mp short_candidates_cert) k
-      (List.mem_range.mpr hk)
-  have hx : BB429Kernel.va s (q/4096)=32*q+29 := by
-    dsimp [s, BB429Kernel.va]
-    omega
-  have hy : BB429Kernel.vb s (q/4096)=64*q+55 := by
-    dsimp [s, BB429Kernel.vb]
-    omega
-  have hsource : BB429NewResidue.Reach
-      (BB429Kernel.va s (q/4096))
-      (BB429Kernel.vb s (q/4096)) := by
-    obtain ⟨i,hi⟩ := hroot
-    exact ⟨i, by simpa only [hx,hy] using hi⟩
-  exact (BB429Kernel.cert_sound 17 s (q/4096) hcert) hsource
+  by_cases hlarge : 16255 ≤ n
+  · exact hlarge
+  · have hshort' : n < 16255 := by omega
+    have hpow : 2^(n+2)=524288*2^(n-17) := by
+      have hsplit : n+2=19+(n-17) := by omega
+      rw [hsplit, Nat.pow_add]
+      norm_num
+    have hmod : (128*q+3*n+131)%524288=0 := by
+      rw [heq,hpow]
+      omega
+    let k := n/128
+    have hnr : n%128=127 := by omega
+    have hnform : n=128*k+127 := by dsimp [k]; omega
+    have hk : k<126 := by omega
+    have hqmod : q%4096=4092-3*k := by omega
+    let s : BB429Kernel.Affine :=
+      ⟨131072,32*(4092-3*k)+29,262144,64*(4092-3*k)+55⟩
+    have hcert : BB429Kernel.cert 17 s = true := by
+      exact (List.all_eq_true.mp short_candidates_cert) k
+        (List.mem_range.mpr hk)
+    have hx : BB429Kernel.va s (q/4096)=32*q+29 := by
+      dsimp [s, BB429Kernel.va]
+      omega
+    have hy : BB429Kernel.vb s (q/4096)=64*q+55 := by
+      dsimp [s, BB429Kernel.vb]
+      omega
+    have hsource : BB429NewResidue.Reach
+        (BB429Kernel.va s (q/4096))
+        (BB429Kernel.vb s (q/4096)) := by
+      obtain ⟨i,hi⟩ := hroot
+      exact ⟨i, by simpa only [hx,hy] using hi⟩
+    exact (BB429Kernel.cert_sound 17 s (q/4096) hcert) hsource
 
 #print axioms short_candidates_cert
 #print axioms rooted_branch29_final_burst_floor
