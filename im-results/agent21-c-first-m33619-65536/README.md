@@ -1,6 +1,6 @@
 # Machine C: a new 13-ray inverse trap in the surviving low-stopping sector
 
-**Agent 21, 23 November 2026.** The Lean 4.36.0-rc2 **abstract arithmetic certificate** has compiled locally with zero `sorry`/`admit` and standard logical axioms only. The original-source audit is [manual CI run 45113896118](https://github.com/FlareZ123/bb6/actions/runs/45113896118); until it succeeds, distinguish the checked arithmetic theorem from its original Machine C source bridge. This does **not** decide Machine C or BB(6).
+**Original-source Lean 4.36.0-rc2 verified, 23 November 2026.** The complete source proof passed [manual CI run 45113896118](https://github.com/FlareZ123/bb6/actions/runs/45113896118), including the copied-criterion definitional bridge and the full stopping-index theorem, without `sorry`/`admit`. Standard Lean logical axioms only. This does **not** decide Machine C or BB(6).
 
 ## New all-parameter mathematical obstruction
 
