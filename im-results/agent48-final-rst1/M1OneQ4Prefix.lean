@@ -1,4 +1,6 @@
 import M1OddQ4Prefix
+import CountedQ4Prefix
+import CountedSweep
 import Q4RightEndpoint
 import Lean.Elab.Tactic.Omega
 
@@ -21,6 +23,7 @@ open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent8CountedReset
 open BB6Coverage.Agent8Q4Suffix
+open BB6Coverage.Agent6Q4Prefix
 open BB6Coverage.Agent24Q4Endpoint
 open BB6Coverage.Agent24M1OddQ4Prefix
 open BB6ChampionArithmetic
