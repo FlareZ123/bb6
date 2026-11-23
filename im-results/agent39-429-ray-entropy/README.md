@@ -123,7 +123,11 @@ A separate BigInt reimplementation of the existing `agent30-429-branch9-zero-fee
 \{9,11,25,41,43,57,75,107\},
 ]
 
-eliminating (89,105,121\pmod{128}). This is an exact finite computation, not yet a kernel-checked theorem. The three eliminated classes fail at the next inverse levels under existing root constraints (`even16`, `odd8-7b8`, `odd8-1-3`, and `odd32-5`); the result suggests that a short extension of the depth-2 Lean proof may strengthen the branch-9 residue gate from eleven classes to eight. See the Agent30 sieve script for the underlying predicates and transition rules.
+eliminating (89,105,121\pmod{128}). This is an exact finite computation, not yet a kernel-checked theorem. The three eliminated classes fail at the next inverse levels under existing root constraints (`even16`, `odd8-7b8`, `odd8-1-3`, and `odd32-5`); the result suggests that a short extension of the depth-2 Lean proof may strengthen the branch-9 residue gate from eleven classes to eight.
+
+**Exponent-scope caveat:** the sieve starts from the ghost pair ((-8-3k,5-6k)), whereas the actual branch-9 side-parent coordinates differ from it by (12\cdot2^N+6\cdot2^t-6\cdot2^J) and (24\cdot2^N-12\cdot2^t-12\cdot2^J). To transfer the depth-(d) sieve at modulus (2^{d+6}), sufficient conditions are (t\ge d+5), (J\ge d+5), (N\ge d+4). Thus the depth-4 eight-class observation requires (t,J\ge9) and (N\ge8); the depth-20 count requires (t,J\ge25) and (N\ge24). These stronger exponent thresholds are separate from the full-interior entropy theorem's (t\ge5) scope. Do not apply the eight-class gate to the small-(t) part of that theorem.
+
+See the Agent30 sieve script for the underlying predicates and transition rules.
 
 ## Main result: a square-root, not merely modular, sieve
 

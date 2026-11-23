@@ -1,3 +1,7 @@
+## 2026-11-23 13:04 UTC — finite-sieve transfer scope
+
+Important caveat for the empirical D4/D20 refinement: the sieve starts from the ghost pair ((-8-3k,5-6k)), while actual side-parent coordinates differ by (12\cdot2^N+6\cdot2^t-6\cdot2^J) and (24\cdot2^N-12\cdot2^t-12\cdot2^J). For modulus (2^{d+6}), sufficient transfer conditions are (t\ge d+5), (J\ge d+5), (N\ge d+4). Therefore D4 requires (t,J\ge9,N\ge8); D20 requires (t,J\ge25,N\ge24). This is not the same scope as the all-interior entropy theorem ((t\ge5)). README updated and Agent30 sent a scope-correction follow-up. Never apply D4/D20 residue conclusions outside these exponent conditions without a stronger congruence argument.
+
 ## 2026-11-23 12:55 UTC — branch-9 full-interior entropy accepted
 
 The generalized `branch9_side_feeder_entropy` theorem in `im-results/agent39-429-ray-entropy/BB429Branch9FeederEntropy.lean` passed the existing `.github/workflows/agent39-429-1021-source.yml` with `proof_target=entropy`, run [45178662933](https://github.com/FlareZ123/bb6/actions/runs/45178662933). It applies uniformly over the full (t\ge5), (t+3\le N(v)) interior range and no longer assumes (t\le K) or (q\le v); the actual index bound (q\le2\cdot2^J+v) is derived from (t+3\le N). The resulting list bound is (2\cdot2^{\lfloor K/2\rfloor}). README synthesis is in `im-results/agent39-429-ray-entropy/README.md`. This is a sparsity theorem, not a branch exclusion or BB(6) result.
