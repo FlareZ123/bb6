@@ -24,6 +24,7 @@ on:
           - sourceD4
           - source17
           - source65
+          - sourceJointM32
 
 permissions:
   contents: read
@@ -104,6 +105,9 @@ jobs:
               ;;
             source65)
               target=im-results/agent13-residual-frontier/LowM67All65Source.lean
+              ;;
+            sourceJointM32)
+              target=im-results/agent13-residual-frontier/LowM67M32JointCriterion.lean
               ;;
             *)
               echo "Unsupported M16 target: $M16_TARGET" >&2
