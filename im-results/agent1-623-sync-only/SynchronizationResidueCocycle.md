@@ -73,3 +73,8 @@ Both branch matrices have determinant of 3-adic valuation exactly one. Therefore
 This is more economical than carrying the 70-state synchronization DFA: the DFA is a finite presentation of boundary quotient ambiguity, while the actual root dynamics live in the two integer coordinates A,B.
 
 Combined with TerminalSynchronizationBridge.md, an all-time proof that the authentic S-window residues of A, B, 4A+5B and 3A+4B stay inside the four synchronization intervals would exclude every terminal successor after the small-depth prefix.
+## Window-boundary caveat
+
+The pair (A,B) above is a **global-coordinate cocycle**. For a window beginning at ternary position s, the synchronization DFA sees the digit blocks of X and Y, not naively `floor(A/3^s)` and `floor(B/3^s)`. The exact conversion has finite low-boundary carries: see `WindowQuotientInterface.md`. Consequently an all-time induction must retain those low carries (or an equivalent compatible phase relation) together with the global (A,B) cocycle.
+
+This caveat does not weaken the terminal bridge: a globally small dangerous form |A|<3^s or |4A+5B|<3^s forces synchronization failure regardless of the low carry.
