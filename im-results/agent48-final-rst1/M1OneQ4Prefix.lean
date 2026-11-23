@@ -676,12 +676,19 @@ theorem m1One_q4_prefix_leftFacing
       have hmark : decide (r ∈ m1OddQ4BridgeEnd.marked) = true := by
         have hcases : r = 1 ∨ r = 2 ∨ r = 3 ∨ r = 4 := by omega
         rcases hcases with h1r | h2r | h3r | h4r
-        all_goals subst r <;> simp [m1OddQ4BridgeEnd]
+        · rw [h1r]; decide
+        · rw [h2r]; decide
+        · rw [h3r]; decide
+        · rw [h4r]; decide
       rw [hcoord] at hcut
       exact (hcut.trans hmark).trans htarget.symm
-    · have hcut := m1OneQ4CutTape_eq_swept L a b h (h-(i:Int)) (by
+    · have hinFalse : m1OneQ4Inside r = false := by
+        cases hh : m1OneQ4Inside r with
+        | false => exact hh
+        | true => exact False.elim (hin hh)
+      have hcut := m1OneQ4CutTape_eq_swept L a b h (h-(i:Int)) (by
         rw [hcoord]
-        exact hin)
+        exact hinFalse)
       have hblock : sweptLeft (3*a+1)
           (s1Config L 1 1 a 0 b h).tape h (h-(i:Int)) = true := by
         have hframe : ¬ (-7 ≤ r ∧ r ≤ 4) := by
@@ -709,9 +716,13 @@ theorem m1One_q4_prefix_leftFacing
           simp [d1pow_length]
         rw [hleft]
         rw [sideBit_append_right ([true] ++ d1pow a)
-          (markerWord 0 ++ d0 ++ d1pow L ++ lh) (3*a+1) (by rw [hlen])]
-        simp [markerWord,sideBit]
-      simpa [r,N,hieq] using (hcut.trans hmark).trans htarget.symm
+          (markerWord 0 ++ d0 ++ d1pow L ++ lh) (3*a+1) (by rw [hlen]; omega)]
+        simp [markerWord,sideBit,d1pow_length]
+      have hcut0 :
+          m1OneQ4CutTape L a b h (h-(i:Int)) =
+            decide ((0:Int) ∈ m1OddQ4BridgeEnd.marked) := by
+        simpa [hieq] using hcut
+      exact (hcut0.trans hmark).trans htarget.symm
     · by_cases hsmall : i ≤ 3*a+8
       · let k : Nat := i-(3*a+1)
         have hk : 1 ≤ k ∧ k ≤ 7 := by dsimp [k]; omega
