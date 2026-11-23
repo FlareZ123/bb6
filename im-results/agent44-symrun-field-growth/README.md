@@ -49,18 +49,12 @@ the stated BB-output branch condition.
 
 ### BB-sweep amortized potential — formal drafts
 
-The exact-source statistics module now contains a direct, unconditional
-combined-potential proof draft:
-
-```lean
-symStateWeight (sweepBB L R) ≤
-  L.length + R.length + listNumSum L + listNumSum R
-    + 8 * L.length + 18
-```
-
-Here symStateWeight is total symbolic token count plus numeric-field sum.
-This theorem is in SymRunTraceStats.lean and is being checked by the first
-exact-source audit.
+An initial direct combined-potential proof in SymRunTraceStats.lean was
+withdrawn after the first exact-source CI run exposed arithmetic and
+unsolved-goal errors. Rather than patching a weaker one-pass induction, the
+current route separates token length from numeric mass in the dedicated
+`SymRunBBBounds.lean` module below. The simpler direct proof is no longer
+claimed or retained.
 
 A sharper independent derivation is drafted in
 `SymRunBBBounds.lean`. It separates token length from numeric mass:
@@ -93,10 +87,12 @@ source-generic bound for the state after a BB sweep.
 
 **Status:** both derivations remain drafts. The first exact-source run
 [45129145926](https://github.com/FlareZ123/bb6/actions/runs/45129145926)
-compiles SymRunTraceStats.lean and its axiom bridge. Once that run finishes,
-a second pinned run will compile SymRunBBBounds.lean as an extra dependency
-and audit the sharper amortized theorems. Do not treat either result as
-formally accepted before those checks succeed.
+failed on the withdrawn direct combined proof and one missing arithmetic
+closure in the atomic length lemma. The failed proof was removed and the
+atomic case corrected. A second pinned run is now required to compile
+SymRunTraceStats.lean, SymRunBBBounds.lean as an extra dependency, and the
+updated axiom bridge. Do not treat the new amortized theorems as formally
+accepted before that run succeeds.
 
 ## Exact-source and acceptance boundary
 
