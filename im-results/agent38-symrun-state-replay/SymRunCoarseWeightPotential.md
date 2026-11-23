@@ -118,7 +118,7 @@ A failed recognition uses stepElemThenBB_CB, already covered above. Rule A/B/C s
 \[
 W(\operatorname{afterSweepCB}(L,R))\le46(W(CB,L,R)+1).
 \]
-After sweepCB, \(W_1\le9W\), so the CB step is at most \(46(9W+1)=414W+46\le2^9(W+1)\). For DL, the 34-bound after peelL gives \(34(W+8)\le306(W+1)<2^9(W+1)\). The BB sweep is at most \(24(W+1)\). Therefore the sharper global target is
+After sweepCB, \(W_1\le9W\), so the CB step is at most \(46(9W+1)=414W+46\le2^9(W+1)\). For DL, the 34-bound after peelL gives \(34(W+8)\le306(W+1)<2^9(W+1)\). The BB sweep is at most \(18(W+1)\). Therefore the sharper global target is
 \[
 \boxed{W(\operatorname{stepSym}(s))\le2^9(W(s)+1).}
 \]
