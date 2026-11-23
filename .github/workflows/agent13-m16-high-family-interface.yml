@@ -10,6 +10,7 @@ on:
         options:
           - probe
           - valuation
+          - sourceDepth
 
 permissions:
   contents: read
@@ -48,6 +49,9 @@ jobs:
               ;;
             valuation)
               target=im-results/agent13-residual-frontier/M16SecondFanValuation.lean
+              ;;
+            sourceDepth)
+              target=im-results/agent13-residual-frontier/EvenOddSmallValuation.lean
               ;;
             *)
               echo "Unsupported M16 target: $M16_TARGET" >&2
