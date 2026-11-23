@@ -39,8 +39,11 @@ theorem low_mass_strict_gap
     rw [Nat.pow_add]
     simp only [show (2:Nat)^9=512 by decide] at *
     omega
-  dsimp [t] at hboundlo hboundhi
-  constructor <;> convert (by assumption : _) using 1 <;> congr 1 <;> omega
+  have ht8 : t+8=1024*z+137 := by dsimp [t]; omega
+  have ht9 : t+9=1024*z+138 := by dsimp [t]; omega
+  rw [ht8] at hboundlo
+  rw [ht9] at hboundhi
+  exact ⟨hboundlo,hboundhi⟩
 
 /-- The necessary low-stop source mass is never dyadically pure. This
     removes the previously unresolved exceptional a=1 predecessor branch
