@@ -93,61 +93,67 @@ theorem tapeToRelative_symbol (T : ExtTape) (i : Int) :
 theorem tapeToRelative_write_move_right (T : ExtTape) (w : ExtSymbol) :
     tapeToRelative (Turing.Tape.move .right (Turing.Tape.write w T)) =
       BB6.Bridge.goRight (tapeToRelative T) (encodeSymbol w) := by
-  cases T with
-  | mk a leftTape rightTape =>
-      simp only [tapeToRelative, BB6.Bridge.goRight,
-        BB6.Bridge.Tape.mk.injEq]
-      constructor
-      · exact by
-          change encodeSymbol ((Turing.Tape.move .right
-            (Turing.Tape.write w (leftTape {{a}} rightTape))).nth 0) =
-            encodeSymbol ((leftTape {{a}} rightTape).nth 1)
-          rw [Turing.Tape.move_right_nth]
-          simp [Turing.Tape.write_mk, Turing.Tape.nth]
-      · constructor
-        · exact by
-            funext n
-            cases n with
-            | zero =>
-                rw [Turing.Tape.move_right_nth]
-                simp [Turing.Tape.write_mk, Turing.Tape.nth]
-            | succ n =>
-                rw [Turing.Tape.move_right_nth]
-                simp [Turing.Tape.write_mk, Turing.Tape.nth]
-        · exact by
-            funext n
-            rw [Turing.Tape.move_right_nth]
-            simp [Turing.Tape.write_mk, Turing.Tape.nth]
+  have hpoint (i : Int) :
+      BB6.Bridge.symbol
+          (tapeToRelative (Turing.Tape.move .right (Turing.Tape.write w T))) i =
+        BB6.Bridge.symbol
+          (BB6.Bridge.goRight (tapeToRelative T) (encodeSymbol w)) i := by
+    calc
+      BB6.Bridge.symbol
+          (tapeToRelative (Turing.Tape.move .right (Turing.Tape.write w T))) i =
+          encodeSymbol ((Turing.Tape.move .right (Turing.Tape.write w T)).nth i) :=
+        tapeToRelative_symbol _ _
+      _ = if i = -1 then encodeSymbol w else encodeSymbol (T.nth (i + 1)) := by
+        simp only [Turing.Tape.move_right_nth, Turing.Tape.write_nth]
+        by_cases hi : i = -1
+        · subst i
+          simp
+        · have hne : i + 1 ≠ 0 := by omega
+          simp [hi, hne]
+      _ = BB6.Bridge.symbol
+          (BB6.Bridge.goRight (tapeToRelative T) (encodeSymbol w)) i := by
+        rw [BB6.Bridge.at_goRight, tapeToRelative_symbol]
+  simp only [tapeToRelative, BB6.Bridge.goRight, BB6.Bridge.Tape.mk.injEq]
+  constructor
+  · simpa [BB6.Bridge.symbol] using hpoint 0
+  · constructor
+    · funext n
+      simpa [BB6.Bridge.symbol] using hpoint (Int.negSucc n)
+    · funext n
+      simpa [BB6.Bridge.symbol] using hpoint (Int.ofNat (n + 1))
 
 /-- Mathlib's write-then-move-left operation is exactly BB6.Bridge.goLeft. -/
 theorem tapeToRelative_write_move_left (T : ExtTape) (w : ExtSymbol) :
     tapeToRelative (Turing.Tape.move .left (Turing.Tape.write w T)) =
       BB6.Bridge.goLeft (tapeToRelative T) (encodeSymbol w) := by
-  cases T with
-  | mk a leftTape rightTape =>
-      simp only [tapeToRelative, BB6.Bridge.goLeft,
-        BB6.Bridge.Tape.mk.injEq]
-      constructor
-      · exact by
-          change encodeSymbol ((Turing.Tape.move .left
-            (Turing.Tape.write w (leftTape {{a}} rightTape))).nth 0) =
-            encodeSymbol ((leftTape {{a}} rightTape).nth (-1))
-          rw [Turing.Tape.move_left_nth]
-          simp [Turing.Tape.write_mk, Turing.Tape.nth]
-      · constructor
-        · exact by
-            funext n
-            rw [Turing.Tape.move_left_nth]
-            simp [Turing.Tape.write_mk, Turing.Tape.nth]
-        · exact by
-            funext n
-            cases n with
-            | zero =>
-                rw [Turing.Tape.move_left_nth]
-                simp [Turing.Tape.write_mk, Turing.Tape.nth]
-            | succ n =>
-                rw [Turing.Tape.move_left_nth]
-                simp [Turing.Tape.write_mk, Turing.Tape.nth]
+  have hpoint (i : Int) :
+      BB6.Bridge.symbol
+          (tapeToRelative (Turing.Tape.move .left (Turing.Tape.write w T))) i =
+        BB6.Bridge.symbol
+          (BB6.Bridge.goLeft (tapeToRelative T) (encodeSymbol w)) i := by
+    calc
+      BB6.Bridge.symbol
+          (tapeToRelative (Turing.Tape.move .left (Turing.Tape.write w T))) i =
+          encodeSymbol ((Turing.Tape.move .left (Turing.Tape.write w T)).nth i) :=
+        tapeToRelative_symbol _ _
+      _ = if i = 1 then encodeSymbol w else encodeSymbol (T.nth (i - 1)) := by
+        simp only [Turing.Tape.move_left_nth, Turing.Tape.write_nth]
+        by_cases hi : i = 1
+        · subst i
+          simp
+        · have hne : i - 1 ≠ 0 := by omega
+          simp [hi, hne]
+      _ = BB6.Bridge.symbol
+          (BB6.Bridge.goLeft (tapeToRelative T) (encodeSymbol w)) i := by
+        rw [BB6.Bridge.at_goLeft, tapeToRelative_symbol]
+  simp only [tapeToRelative, BB6.Bridge.goLeft, BB6.Bridge.Tape.mk.injEq]
+  constructor
+  · simpa [BB6.Bridge.symbol] using hpoint 0
+  · constructor
+    · funext n
+      simpa [BB6.Bridge.symbol] using hpoint (Int.negSucc n)
+    · funext n
+      simpa [BB6.Bridge.symbol] using hpoint (Int.ofNat (n + 1))
 
 structure Positioned where
   state : ExtState
