@@ -172,3 +172,17 @@ A further local experiment used a tail-recursive `prefixRunFast` with a proved e
 
 
 The full-root simulation is now reproducible with [s5457_chunk_states.py](s5457_chunk_states.py). It starts from the Lean-certified `s337`, runs the original Python `checker.chain` for 5,120 returns, asserts the candidate `s5457`, and exposes 320 intermediate 16-return checkpoints through `chunk_states()`. Those checkpoints were used by [s5457_lean_certificate.py](s5457_lean_certificate.py) in the source-proved 320-chunk finite survival certificate.
+
+
+## All-time discounted-moment bound (23 November 2026)
+
+A new root-wide constraint is derived in [DISCOUNTED-MOMENT-ASYMPTOTIC.md](DISCOUNTED-MOMENT-ASYMPTOTIC.md), with the reproducible BigInt recurrence in [discounted_moment_bounds.mjs](discounted_moment_bounds.mjs). For \(z=2^{-s}\), the surviving S4 root satisfies
+\[
+P_S(z)\le \frac32 z^{10}M(S)+C_s
+\]
+at every gate boundary. The script gives \(C_s=9155,1724,1036,839,757,720,702,693\) for \(s=1,\ldots,8\). Jensen then yields the conditional asymptotic result
+\[
+\liminf_{M(S)\to\infty}D(S)/M(S)\ge10.
+\]
+
+The derivation uses the source-certified 81,920-return nine-digit prefix cycle and the genuine root at return 5,457. The finite constants and 703/245,057 deep/shallow census are exact BigInt computations with outward rounding, not yet Lean-kernel-enumerated. This is not a non-halting proof; its intended use is to sharpen the root-reachable tail-moment/odd-quotient intervals.
