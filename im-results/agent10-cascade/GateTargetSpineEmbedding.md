@@ -1363,6 +1363,8 @@ while the all-index modular
 selection remains a paper proof
 pending Lean integration.
 
+A further [uniform all-gate ray-fanin theorem](EveryGateRayFanin.md) strengthens this fixed-t=3 phenomenon: for every m and all n≥100·3^(3m+1) in either surviving gate sector, some interior even ray vertex has at least m+1 genuine distinct ResetParent predecessors. The proof uses this same primitive-root selector at arbitrary ternary precision and Agent44's already source-checked every-three-odd-valuation lemma. It remains a paper-level modular/source composition and does not decide rooted reachability.
+
 ## 13. Where the current E-parent results apply
 
 The even-parent bands adjacent to (E) are
