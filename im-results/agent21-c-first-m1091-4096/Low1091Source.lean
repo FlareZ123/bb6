@@ -722,7 +722,7 @@ private theorem low6723_R_unreachable (t : Nat) :
     Nat.mod_eq_zero_of_dvd hpowdiv4
   have hfirstmod : (173*2^(2*m-8))%4=0 := by
     rw [Nat.mul_mod,hpowmod4]
-    norm_num
+    simp
   have hqmod : q%4=1 := by
     dsimp [q]
     omega
