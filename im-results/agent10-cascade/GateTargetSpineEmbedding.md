@@ -1365,6 +1365,8 @@ pending Lean integration.
 
 A further [uniform all-gate ray-fanin theorem](EveryGateRayFanin.md) strengthens this fixed-t=3 phenomenon: for every m and all n≥100·3^(3m+1) in either surviving gate sector, some interior even ray vertex has at least m+1 genuine distinct ResetParent predecessors. The proof uses this same primitive-root selector at arbitrary ternary precision and Agent44's already source-checked every-three-odd-valuation lemma. It remains a paper-level modular/source composition and does not decide rooted reachability.
 
+A separate [all-index parentless third-valuation packet theorem](ThirdForkPacketLeaves.md) now combines the source-accepted `depthResidue_iff` and `ray_tthree_parent_gap` with a paper-level modulo-243 three-lift argument: for every n≥257 in either gate sector, **each complete 162-index period** in the physical high-margin prefix has exactly three genuine t=3 odd parents and **two of these offray parents have no ResetParent** (not just no blank-root path). This yields ≥2⌊(J−13)/162⌋ distinct source-parentless t=3 feeders along every gate's canonical ray. It remains an intermediate universal source-graph pruning result, not a gate decision.
+
 ## 13. Where the current E-parent results apply
 
 The even-parent bands adjacent to (E) are
