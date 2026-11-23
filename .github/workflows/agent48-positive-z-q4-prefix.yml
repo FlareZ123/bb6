@@ -11,6 +11,7 @@ on:
           - root-q4tail
           - p2-actual-boundary
           - p2-s0-frame-identity
+          - tm63-q4-terminal-composition
         default: prefix
         required: true
 permissions:
@@ -315,5 +316,92 @@ jobs:
         with:
           name: agent38-root-s0-frame-identity-diagnostics
           path: /tmp/agent38-root-s0-frame-identity.log
+          if-no-files-found: ignore
+          retention-days: 3
+
+  tm63-q4-terminal-composition:
+    if: ${{ inputs.target == 'tm63-q4-terminal-composition' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reconstruct compressed TerminalLeft and TerminalFinish dependencies
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/agent42-tm63-q4-terminal-source
+          python3 -c "import base64,io,pathlib,tarfile; p=pathlib.Path('im-results/agent42-champion-terminal/TerminalProofs.tar.xz.b64'); d=base64.b64decode(p.read_text()); tarfile.open(fileobj=io.BytesIO(d),mode='r:xz').extractall('/tmp/agent42-tm63-q4-terminal-source',filter='data')"
+          python3 -c "import base64,lzma,pathlib; p=pathlib.Path('im-results/agent42-champion-terminal/TerminalLeftExact.lean.xz.b64'); pathlib.Path('/tmp/agent42-tm63-q4-terminal-source/TerminalLeft.lean').write_bytes(lzma.decompress(base64.b64decode(p.read_text())))"
+          echo "12329036c66c3846f9261167b8f9aebd1778d9b6ea6044309956c2fa0b3e49b7  /tmp/agent42-tm63-q4-terminal-source/TerminalFinish.lean" | sha256sum -c -
+          echo "1bce2075fc4e0cd7d740fb71b3796088b190ddb6766e04640d992dadd1b650ff  /tmp/agent42-tm63-q4-terminal-source/TerminalLeft.lean" | sha256sum -c -
+      - name: Compile and axiom-audit the authentic blank-to-halt TM63 composition
+        run: |
+          set -euo pipefail
+          python3 tools/lean_compile_closure.py \
+            im-results/agent42-q4-s0-drain/TM63GeneralQ4TerminalComposition.lean \
+            --jobs 8 \
+            --workdir /tmp/agent42-tm63-q4-terminal \
+            --source-root /tmp/agent42-tm63-q4-terminal-source \
+            --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean \
+            | tee /tmp/agent42-tm63-q4-terminal.log
+          python3 - <<'PY'
+          import pathlib
+          log = pathlib.Path("/tmp/agent42-tm63-q4-terminal.log").read_text()
+          allowed = {"propext", "Classical.choice", "Quot.sound"}
+          names = (
+              "rootP1Value_odd_public",
+              "tm63_blank_reaches_second_q4_tail",
+              "q4TailS0SourceGuards",
+              "q4TailS0Frame_eq_s0Config",
+              "tm63_root_second_q4Tail_eq_s0Config",
+              "tm63_blank_reaches_general_q4_terminal",
+              "tm63_general_q4_terminalSectionBits",
+              "tm63_blank_halts",
+              "tm63_blank_attainable",
+          )
+          for name in names:
+              found = []
+              lines = log.splitlines()
+              for i, line in enumerate(lines):
+                  if "depends on axioms:" not in line:
+                      continue
+                  if line.split(" depends on axioms:", 1)[0].split(".")[-1] != name:
+                      continue
+                  profile = line.split("depends on axioms:", 1)[1].strip()
+                  j = i + 1
+                  while not profile.endswith("]") and j < len(lines):
+                      profile += " " + lines[j].strip()
+                      j += 1
+                  found.append(profile)
+              if len(found) != 1:
+                  raise SystemExit(f"expected one axiom profile for {name}, got {len(found)}")
+              profile = found[0]
+              if not (profile.startswith("[") and profile.endswith("]")):
+                  raise SystemExit(f"unrecognized axiom profile for {name}: {profile}")
+              axioms = {x.strip() for x in profile[1:-1].split(",") if x.strip()}
+              bad = axioms - allowed
+              if bad:
+                  raise SystemExit(f"nonstandard axioms in {name}: {sorted(bad)}")
+              print(f"{name}: {sorted(axioms)}")
+          PY
+          if grep -R -nE 'sorryAx|native_decide' /tmp/agent42-tm63-q4-terminal --include='*.lean'; then
+            echo '::error::sorryAx or native_decide found in the authentic blank-to-halt TM63 closure'
+            exit 1
+          fi
+          if grep -q 'sorryAx' /tmp/agent42-tm63-q4-terminal.log; then
+            echo '::error::sorryAx found in the authentic blank-to-halt TM63 axiom profiles'
+            exit 1
+          fi
+          echo 'Authentic TM63 blank-root-to-terminal composition compiled with standard axioms only.'
+      - name: Upload Lean diagnostics on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent42-tm63-q4-terminal-diagnostics
+          path: /tmp/agent42-tm63-q4-terminal.log
           if-no-files-found: ignore
           retention-days: 3
