@@ -3,6 +3,8 @@ import M2EvenResidueZeroFinite
 import CountedLBinDecHRun
 import Lean.Elab.Tactic.Omega
 
+set_option maxHeartbeats 1000000
+
 /-!
 # Full-tape frame lifts for the finite m=2, n=8*k bridge kernels
 
@@ -15,6 +17,7 @@ is blank.
 namespace BB6Coverage.Agent24M2EvenFrames
 
 open BB6Coverage
+open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent8Rst1Prime
 open BB6Coverage.Agent8M2EvenResidueZero
 open BB6Coverage.Agent24LBinDecHRun
@@ -48,7 +51,8 @@ theorem m2ZeroSetupAt_window (T : Int → Bool) (h : Int)
     (frameAt T h m2ZeroSetupInside m2ZeroSetupEnd).tape (h+x) =
       decide (x ∈ m2ZeroSetupEnd.marked) := by
   rw [frameAt_tape]
-  simp [hx]
+  have hcoord : h+x-h=x := by omega
+  simp [hcoord,hx]
 
 /-- The postlude's output window is exactly the finite word
 00100100100101. -/
@@ -97,7 +101,7 @@ theorem m2ZeroPostlude_match_after_HRun (n : Nat) (T : Int → Bool)
         _ = T (hN+1) := hframeOutside
         _ = false := hr
     have hnot : (13:Int) ∉ m2ZeroPostludeStart.marked := by
-      simp [m2ZeroPostludeStart]
+      simp [m2ZeroPostludeStart] <;> omega
     simpa [harg,hzero,hnot]
   · have hxle12 : x≤12 := by omega
     have hyinside : m2ZeroSetupInside (-12+x)=true := by
