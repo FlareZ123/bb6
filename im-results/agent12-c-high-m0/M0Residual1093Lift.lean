@@ -147,7 +147,8 @@ private theorem forced_terminal {x y : Nat}
   rw [dif_neg hO,dif_neg hS,dif_neg hA,dif_neg hE]
 
 /-- The exact 15-gate source normalizer path for the last finite
-    m=0 high residual j=1093, lifted to a 2^22 progression. -/
+    m=0 high residual j=1093, lifted to a 2^22 progression. The stride
+    preserves the modulus required at every gate and by the prior sieve. -/
 private theorem normalize_m0_2p22_1093 (t : Nat) :
     BB6.Agent3.fullForcedNormalize (8388608*t+2189) (12582912*t+3286) =
       (29087208*t+7532,2233612*t+577) := by
