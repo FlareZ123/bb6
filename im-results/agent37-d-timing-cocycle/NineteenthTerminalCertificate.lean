@@ -13,7 +13,7 @@ open DRegular BB6.DRegularFast
     transitive through tail5684_exact. -/
 theorem terminal9780_exact :
     run 9780 seed19 = some ⟨9*t19+10,9,1⟩ := by
-  rw [show 9780 = 4096 + 5684 by norm_num]
+  rw [show 9780 = 4096 + 5684 by decide]
   rw [BB6.DRegularFast.run_add 4096 5684 seed19]
   rw [block19_1_exact]
   simpa only [Option.bind_some] using tail5684_exact
