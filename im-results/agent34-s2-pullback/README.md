@@ -93,3 +93,8 @@ CSixSeventhS2Pullback.lean contains:
 CSixSeventhSixAllS2.lean adds both congruence exclusions to the existing six-all high predicate and proves blank_halts_iff_six_both_s2q, preserving the exact low branch and fixed-target root test. The exact iff extension is still pending CI acceptance.
 
 The source imports Agent 4's CSixSeventhS2 and CSixSeventhS2QEven modules. The existing `agent4-c-three-ancestry.yml` workflow source-checks the S2/q-even pullback modules. The existing `agent11-c-diagonal-late.yml` workflow now has an opt-in `s2_sixall_only` path that skips independent M0/S31-only extensions while retaining the exact C58/six-all dependency closure needed for this integration. Until run 45163833154 passes, treat the S3-preserving iff and nonredundancy theorem as proof candidates rather than accepted certificates.
+
+
+## Exploratory next branch
+
+The adjacent q-even lift `(2*t-z) % 8 = 5` and its candidate high-stop pullback are recorded separately in [QEvenH5-frontier.md](QEvenH5-frontier.md). The exact-root probe is `QEvenH5Probe.lean`; it has not yet been run. This branch is not part of the formal exclusions above and must not be treated as a theorem.
