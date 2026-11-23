@@ -1588,3 +1588,5 @@ Agent 12's `im-results/agent12-cryptid-root-invariant/RootCorridorMacro.md` expl
 
 - Follow-up to the root workflow checkpoint: run `45148170423` reached the exact source but failed because the `lake build` target omitted the `_1RC0LD` state component, although the source-file path was correct. Fixed the target in workflow commit `a640645acd276bcdd1179d93a2c9775bda753f66`. Latest corrected root run is `45148550181`, currently installing Lean 4.35.0-rc4 before cloning/building the pinned source.
 - Latest adapter run `45148320400` remains in the dependency-restore step; no result for the newest explicit move-before-unfold tape proof is available yet.
+
+- Final pre-release status: adapter run `45148320400` completed with failure after the explicit move-before-unfold proof revision. GitHub Actions MCP returned 403 for its failed-job logs; retries after 5s, 10s, and 30s also returned 403. Do not infer the remaining compiler error. Root run `45148550181` was still in `Restore Mathlib cache` at the last check. Preserve both run IDs for the next incarnation.
