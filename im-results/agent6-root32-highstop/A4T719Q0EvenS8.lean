@@ -65,8 +65,9 @@ private theorem no_pow2_mul_odd_gt_one (d w n : Nat)
     calc
       2^d*w = 2^n := heq
       _ = 2^d*2^(n-d) := hfactor
+  have hpowPos : 0<2^d := Nat.pow_pos (by decide : 0<2)
   have hw : w=2^(n-d) := by
-    apply Nat.mul_left_cancel (by positivity : 0<2^d)
+    apply Nat.mul_left_cancel hpowPos
     exact hmul
   by_cases hz : n-d=0
   · rw [hz] at hw
@@ -187,8 +188,12 @@ private theorem a4_source_parent_cases (s a k : Nat)
                 (2*k-a+3)+(2*(a-1)+6)+3*n=x+2*y := by
               simpa [sectionPreimageAll,ha0,ha1,hk0,hlow,haeven] using hp
             rcases hcase with ⟨_,n,hpow,hcost⟩
-            have hsum' : x+y=2^n*(2*a+4) := by omega
-            have hcost' : 2*k+a+7+3*n=x+2*y := by omega
+            have hfactor : 2*(a-1)+6=2*a+4 := by omega
+            have hsum' : x+y=2^n*(2*a+4) := by
+              simpa [hfactor] using hpow
+            have hcost' : 2*k+a+7+3*n=x+2*y := by
+              rw [hfactor] at hcost
+              omega
             have hnEven : n%2=0 := by omega
             have hnle : n≤3 := by
               by_cases hn4 : 4≤n
