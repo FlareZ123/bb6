@@ -19,9 +19,4 @@ def qEvenQ (t z : Nat) : Nat × Nat :=
 #eval BB6.Agent3ValSix.valSixMixedNormalize (qEvenQ 12 3).1 (qEvenQ 12 3).2
 #eval BB6.Agent3ValSix.valSixMixedRootDecision (qEvenQ 12 3).1 (qEvenQ 12 3).2
 
-/-- hcong = 5 sample whose normalized path also takes an even-seven edge. -/
-#eval qEvenQ 200 51
-#eval BB6.Agent3ValSix.valSixMixedNormalize (qEvenQ 200 51).1 (qEvenQ 200 51).2
-#eval BB6.Agent3ValSix.valSixMixedRootDecision (qEvenQ 200 51).1 (qEvenQ 200 51).2
-
 end BB6.Agent34QEvenH5Probe
