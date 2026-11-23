@@ -76,56 +76,62 @@ for **all** `k,c,s,d,e,X,A,B,l` meeting those conditions. It does **not** assume
 
 ## Branch-9 exceptional S-parent family: full-interior square-root entropy
 
-**Lean-checked result.** `BB429Branch9FeederEntropy.lean` proves `branch9_side_feeder_entropy`. Fix (t,r,q,K\in\mathbb N) with (t\ge5), (r<4), (t+14=r+4q), and (K\ge1). For a distinct finite list (l), suppose every (v\in l) satisfies
+**Lean-checked result.** \`BB429Branch9FeederEntropy.lean\` proves \`branch9_side_feeder_entropy\`. Fix \(t,r,q,K\in\mathbb N\) with \(t\ge5\), \(r<4\), \(t+14=r+4q\), and \(K\ge1\). For a distinct finite list \(l\), suppose every \(v\in l\) satisfies
 
-[
+\[
 K\le v<2^K,\qquad t+3\le N(v),\qquad
 \operatorname{Reach}(A(t,q,r,v),B(t,q,r,v)),
-]
+\]
 
 where
 
-[
+\[
 J(v)=4v+r,\quad N(v)=8\cdot2^{J(v)}+J(v)-11,
 \quad k(v)=2\cdot2^{J(v)}+v-q,
-]
+\]
 
-[
+\[
 A=12\cdot2^N+6\cdot2^t-6\cdot2^J-8-3k,
 \qquad
 B=24\cdot2^N+5-12\cdot2^t-12\cdot2^J-6k.
-]
+\]
 
 Then
 
-[
+\[
 \boxed{|l|\le 2\cdot2^{\lfloor K/2\rfloor}.}
-]
+\]
 
 The proof applies the reusable affine-feeder cardinality theorem with the exact branch-9 parameters. Its key identities and bounds are:
 
-- (t+3\le N), together with (t+14=r+4q), implies (q\le2\cdot2^J+v); the natural subtraction defining (k) is therefore exact.
-- With (C=6\cdot2^t+3q-8), the affine identity is
-  (A+3v=(12\cdot2^N-12\cdot2^J)+C).
-  Since (J\ge K+2) and (N\ge J+1), the first term is divisible by (2^K). The correction (e=(C+1)2^K-C) makes (A+3v+e) divisible by (2^K).
-- The ray offset (c=24\cdot2^t-21) satisfies (B+c=2A), and (t+3\le N) gives (c\le2A).
-- The high-counter condition (16\cdot2^K\le A+3) follows from the same affine identity and exponent separation.
+- \(t+3\le N\), together with \(t+14=r+4q\), implies \(q\le2\cdot2^J+v\); the natural subtraction defining \(k\) is therefore exact.
+- With \(C=6\cdot2^t+3q-8\), the affine identity is
+  \(A+3v=(12\cdot2^N-12\cdot2^J)+C\).
+  Since \(J\ge K+2\) and \(N\ge J+1\), the first term is divisible by \(2^K\). The correction \(e=(C+1)2^K-C\) makes \(A+3v+e\) divisible by \(2^K\).
+- The ray offset \(c=24\cdot2^t-21\) satisfies \(B+c=2A\), and \(t+3\le N\) gives \(c\le2A\).
+- The high-counter condition \(16\cdot2^K\le A+3\) follows from the same affine identity and exponent separation.
 
-This removes the earlier draft's artificial restrictions (t\le K) and (q\le v). The estimate now covers every (t\ge5) in the actual interior range (t+3\le N(v)), for each fixed (t,r,q). It is a parameter-sparsity theorem, not an exclusion of the branch or a BB(6) solution.
+This removes the earlier draft's artificial restrictions \(t\le K\) and \(q\le v\). The estimate now covers every \(t\ge5\) in the actual interior range \(t+3\le N(v)\), for each fixed \(t,r,q\). It is a parameter-sparsity theorem, not an exclusion of the branch or a BB(6) solution.
 
-**Validation:** the existing manual workflow `.github/workflows/agent39-429-1021-source.yml`, input `proof_target=entropy`, passed on 2026-11-23 (run [45178662933](https://github.com/FlareZ123/bb6/actions/runs/45178662933)). The Lean source ends with `#print axioms branch9_side_feeder_entropy`; no `sorry` or `admit` was introduced in this module.
+**Validation:** the existing manual workflow \`.github/workflows/agent39-429-1021-source.yml\`, input \`proof_target=entropy\`, passed on 2026-11-23 (run [45178662933](https://github.com/FlareZ123/bb6/actions/runs/45178662933)). The Lean source ends with \`#print axioms branch9_side_feeder_entropy\`; no \`sorry\` or \`admit\` was introduced in this module.
 
 ### Additional finite-sieve observation (not yet Lean-certified)
 
-A separate BigInt reimplementation of the existing `agent30-429-branch9-zero-feeder/side_branch_sieve.js` predicates and inverse-parent rules reproduces the reported depth-16 and depth-18 counts (3068 and 4962), and extends the computation to depth 20: **12088** surviving residues modulo (2^{26}). Already at depth 4, the surviving low-seven-bit classes shrink from the depth-2 eleven-class set to
+A separate BigInt reimplementation of the existing \`agent30-429-branch9-zero-feeder/side_branch_sieve.js\` predicates and inverse-parent rules reproduces the reported depth-16 and depth-18 counts (3068 and 4962), and extends the computation to depth 20: **12088** surviving residues modulo \(2^{26}\). Already at depth 4, the surviving low-seven-bit classes shrink from the depth-2 eleven-class set to
 
-[
+\[
 \{9,11,25,41,43,57,75,107\},
-]
+\]
 
-eliminating (89,105,121\pmod{128}). This is an exact finite computation, not yet a kernel-checked theorem. The three eliminated classes fail at the next inverse levels under existing root constraints (`even16`, `odd8-7b8`, `odd8-1-3`, and `odd32-5`); the result suggests that a short extension of the depth-2 Lean proof may strengthen the branch-9 residue gate from eleven classes to eight.
+eliminating \(89,105,121\pmod{128}\). This is an exact finite computation, not yet a kernel-checked theorem. The three eliminated classes fail at the next inverse levels under existing root constraints (\`even16\`, \`odd8-7b8\`, \`odd8-1-3\`, and \`odd32-5\`); the result suggests that a short extension of the depth-2 Lean proof may strengthen the branch-9 residue gate from eleven classes to eight.
 
-**Exponent-scope caveat:** the sieve starts from the ghost pair ((-8-3k,5-6k)), whereas the actual branch-9 side-parent coordinates differ from it by (12\cdot2^N+6\cdot2^t-6\cdot2^J) and (24\cdot2^N-12\cdot2^t-12\cdot2^J). To transfer the depth-(d) sieve at modulus (2^{d+6}), sufficient conditions are (t\ge d+5), (J\ge d+5), (N\ge d+4). Thus the depth-4 eight-class observation requires (t,J\ge9) and (N\ge8); the depth-20 count requires (t,J\ge25) and (N\ge24). These stronger exponent thresholds are separate from the full-interior entropy theorem's (t\ge5) scope. Do not apply the eight-class gate to the small-(t) part of that theorem.
+**Exponent-scope caveat:** the sieve starts from the ghost pair \((-8-3k,5-6k)\), whereas the actual branch-9 side-parent coordinates differ from it by \(12\cdot2^N+6\cdot2^t-6\cdot2^J\) and \(24\cdot2^N-12\cdot2^t-12\cdot2^J\). To transfer the depth-\(d\) sieve at modulus \(2^{d+6}\), sufficient conditions are \(t\ge d+5\), \(J\ge d+5\), \(N\ge d+4\). Thus the depth-4 eight-class observation requires \(t,J\ge9\) and \(N\ge8\); the depth-20 count requires \(t,J\ge25\) and \(N\ge24\). These stronger exponent thresholds are separate from the full-interior entropy theorem's \(t\ge5\) scope. Do not apply the eight-class gate to the small-\(t\) part of that theorem without a stronger congruence argument.
+
+The one-bit-per-level precision budget has a useful algebraic explanation. Let \((\Delta x,\Delta y)\) be the difference between an actual side-parent state and its ghost pair. If \(2^m\mid\Delta x\) and \(2^{m+1}\mid\Delta y\), then the inverse maps transform the error pair as follows:
+- F: \((\Delta x,\Delta y)\mapsto(\Delta x/2,\Delta x+\Delta y)\);
+- S/E: \((\Delta x,\Delta y)\mapsto((4\Delta x+\Delta y)/4,\Delta y/2)\).
+
+In either case the new first-coordinate error is divisible by \(2^{m-1}\), while the second-coordinate error is divisible by \(2^m\). Thus the one-bit gap is preserved and each inverse level consumes at most one bit of initial precision. Starting with congruence modulo \(2^{d+6}\) therefore preserves the modulo-64 root tests through \(d\) levels. This algebraic invariant explains the script's modulus budget; a Lean proof of the transfer invariant should accompany any future formal D4 theorem.
 
 See the Agent30 sieve script for the underlying predicates and transition rules.
 
