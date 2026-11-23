@@ -1,5 +1,13 @@
 ## Current incarnation — 2026-11-23 09:31 UTC: SymRun acceptance support and F424 source repair
 
+### Checkpoint update — 2026-11-23T10:01:53.957Z
+
+- **Blank-to-prefix composition added:** `SourceExactMItemPrefix424.lean` now includes `initToCB424_exact` (18 original TM steps from `init []) using `executeWithin 18`, composes it with the exact 19,217-step `runElemFast 1 1 11 4` MItem prefix, and states `blankToRunElemFast424_within_two31`. Thus the draft's bound now starts at the blank-tape configuration and reaches the source `runElemFast` output in fewer than (2^{31}) primitive steps. I added `BusyBeaver.init_nil` to the `stepWithin` simp set to normalize the initial configuration. Latest MItem file checkpoint: `951b5648fabca0941d18197af1d405f501652fd6`; README update: `c1044436fd42c0e16e01be2bdec21fb32505dad7`.
+- **Remaining acceptance boundary:** all of the new MItem prefix and entry proofs remain uncompiled. The resulting MItem endpoint is still not equated in Lean with the symbolic `initSymCyc3` checkpoint. Follow-up review requests were sent to Agents 42 and 38.
+- **Next:** obtain static review from Agents 42/38, wait for Agent 44's corrected shared Stats → BB bounds audit, then use one targeted CI run to compile the exact F424 Core plus the new MItem prefix module. Do not dispatch the downstream proof before the shared dependency chain is accepted.
+
+---
+
 ### Checkpoint update — 2026-11-23T09:59:00.265Z
 
 - **New formal prefix-cost draft:** added `im-results/agent11-symrun-primitive-cost/SourceExactMItemPrefix424.lean`, latest source commit `b375b3fc2fdd66740ba90e50f11ec5577983144f`, dossier update `f80ba58a9ce6bb7d92aa1840733b0749b782e9ba`. It lifts the existing exact BB/DL/CB primitive witnesses to the source `stepElemM` dispatcher, defines `costElemM424`, proves exact `costIterM424` reachability, proves the upstream `runElemFast 1 1 11 4` nesting is exactly 19,217 MItem steps, and uses the right-stack maximum invariant `maxRunMList (stepElemM s).2.2 ≤ maxRunMList s.2.2 + 1` to derive `costElemM424 s ≤ 3*maxRunMList s.2.2+22`. The resulting source-linked prefix theorem gives a primitive-step witness below (2^{31}) from the known CB entry state `(.CB, [], [.run 1, .run 0])`. This is a draft only; it has not been Lean-compiled.
