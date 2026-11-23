@@ -22,6 +22,16 @@ open BB6Coverage.Agent24LBinDecHRun
 open BB6Coverage.Agent8CountedReset
 open BB6ChampionArithmetic
 
+/-- Fieldwise extensionality for the concrete TM63 configuration structure. -/
+private theorem config_ext {c d : Config}
+    (hs : c.state = d.state) (hh : c.head = d.head)
+    (ht : c.tape = d.tape) : c = d := by
+  cases c with
+  | mk s h t =>
+      cases d with
+      | mk s' h' t' =>
+          simp_all
+
 /-- Moving the index past a list prefix selects the same cell in the suffix. -/
 theorem outer_sideBit_append_shift (xs ys : List Bool) (i : Nat) :
     sideBit (xs ++ ys) (xs.length+i) = sideBit ys i := by
@@ -288,7 +298,7 @@ theorem outer_afterSweep_eq_markerBridgeFrameIn
   let T : Int → Bool := (s1Config L n m a 0 b h).tape
   let h0 : Int := h-(3*a:Int)
   let T1 : Int → Bool := sweptLeft (3*a) T h
-  apply Config.ext
+  apply config_ext
   · simp [markerBridgeFrameIn,frame,shiftConfig,embed]
   · simp [markerBridgeFrameIn,frame,shiftConfig,embed]
   · funext x
@@ -504,9 +514,11 @@ theorem outerLCInc_preHRun
   simp only [Option.bind_some]
   rw [run_append,hbridge']
   simp only [Option.bind_some]
+  have hbase : h-(3*a:Int)-(m+5:Int) =
+      h-(3*a+m+5:Int) := by omega
   have hhead : h-(3*a:Int)-(m+5:Int)+2 =
       h-(3*a+m+5:Int)+2 := by omega
-  rw [← hhead]
+  rw [← hhead,← hbase]
   simpa [T,T1,T2,h0,h1] using hhrun
 
 #print axioms markerBridge_finite
