@@ -22,31 +22,30 @@ theorem even_low_ray_reach_forces_unique_parent
   obtain ⟨n,hn,ha,hlow,hpow,hcost⟩ :=
     BB6.Agent13LowFanPower.all_low_ray_parents_are_even_bounce
       z u a k hu hedge
-  have haodd : a%2=1 := by
-    have hp : 2^n*(2*(a-1)+8)=346*u+54 := hpow.symm
-    have hh : a-1=2*((a-1)/2) := by omega
-    omega
-  have hfactor : 2*(a-1)+8=4*((a-1)/2+2) := by omega
-  have hval : 2^(n+2)∣346*u+54 := by
-    refine ⟨(a-1)/2+2,?_⟩
-    calc
-      346*u+54=2^n*(2*(a-1)+8) := hpow
-      _=2^n*(4*((a-1)/2+2)) := by rw [hfactor]
-      _=2^(n+2)*((a-1)/2+2) := by
-        rw [Nat.pow_add]
-        simp only [show (2:Nat)^2=4 by decide]
-        ac_rfl
-  have hdiv : 2^n∣519*z+73 :=
-    (BB6.Agent13LowFanDivisor.low_mass_divisor_iff z u n hu).mp hval
-  have hodd : (519*z+73)%2=1 := by omega
+  have hp4 : 4 ∣ (2:Nat)^(1024*z+129) := by
+    have hd : (2:Nat)^2 ∣ 2^(1024*z+129) :=
+      Nat.pow_dvd_pow 2 (by omega)
+    simpa only [show (2:Nat)^2=4 by decide] using hd
+  have hpmod : (2^(1024*z+129))%4=0 :=
+    Nat.mod_eq_zero_of_dvd hp4
+  have humod : u%4=3 := by omega
+  have hQmod : (346*u+54)%8=4 := by omega
   have hn0 : n=0 := by
-    by_contra hh
-    have hge : 1≤n := by omega
-    have hd : 2∣(2:Nat)^n := by
-      have h := Nat.pow_dvd_pow 2 hge
-      simpa only [show (2:Nat)^1=2 by decide] using h
-    have hd2 : 2∣519*z+73 := dvd_trans hd hdiv
-    have he : (519*z+73)%2=0 := Nat.mod_eq_zero_of_dvd hd2
+    by_contra hnon
+    have hnge : 2≤n := by omega
+    have hdiv4 : 4 ∣ (2:Nat)^n := by
+      have hd : (2:Nat)^2∣2^n := Nat.pow_dvd_pow 2 hnge
+      simpa only [show (2:Nat)^2=4 by decide] using hd
+    rcases hdiv4 with ⟨v,hv⟩
+    have hfactor : 2*(a-1)+8=2*(a+3) := by omega
+    have hdiv8 : 8 ∣ 346*u+54 := by
+      refine ⟨v*(a+3),?_⟩
+      calc
+        346*u+54=2^n*(2*(a-1)+8) := hpow
+        _=(4*v)*(2*(a+3)) := by rw [hv,hfactor]
+        _=(4*2)*(v*(a+3)) := by ac_rfl
+        _=8*(v*(a+3)) := by norm_num
+    have hh : (346*u+54)%8=0 := Nat.mod_eq_zero_of_dvd hdiv8
     omega
   subst n
   simp at hpow hcost
