@@ -147,6 +147,50 @@ theorem costIterM424_exact_reaches (n : Nat) (s : MState) :
         some (evalM target_tm (iterStep stepElemM n (stepElemM s)))
     exact multiStep_trans (sourceElemM424_exact s) (ih (stepElemM s))
 
+
+/-- Iterating a transition in two nested blocks is equivalent to one
+    iteration with the sum of the block lengths. -/
+theorem iterStep_add (f : α → α) (n m : Nat) (s : α) :
+    iterStep f (n + m) s = iterStep f m (iterStep f n s) := by
+  induction n generalizing s with
+  | zero => simp [iterStep]
+  | succ n ih => simp [Nat.succ_add, iterStep, ih]
+
+theorem iterStep_comp (f : α → α) (a b : Nat) (s : α) :
+    iterStep f a (iterStep f b s) = iterStep f (a + b) s := by
+  simpa [Nat.add_comm] using (iterStep_add f b a s).symm
+
+theorem iterStep_repeat (f : α → α) (n m : Nat) (s : α) :
+    iterStep (iterStep f n) m s = iterStep f (n * m) s := by
+  induction m generalizing s with
+  | zero => simp [iterStep]
+  | succ m ih =>
+    simp only [iterStep]
+    calc
+      iterStep (iterStep f n) m (iterStep f n s)
+          = iterStep f (n * m) (iterStep f n s) := ih (iterStep f n s)
+      _ = iterStep f (n * m + n) s := iterStep_comp f (n * m) n s
+      _ = iterStep f (n * (m + 1)) s := by rw [Nat.mul_succ]
+
+/-- The upstream runElemFast nesting is exactly 1+16b+256c+4096d
+    elementary MItem transitions. -/
+theorem runElemFast_eq_iterStep (a b c d : Nat) (s : MState) :
+    runElemFast a b c d s =
+      iterStep stepElemM (a + 16 * b + 256 * c + 4096 * d) s := by
+  simp [runElemFast, stepElem16, stepElem256, stepElem4096,
+    iterStep_repeat, iterStep_comp, Nat.add_assoc, Nat.add_comm,
+    Nat.add_left_comm, Nat.mul_assoc, Nat.mul_comm, Nat.mul_left_comm]
+
+def startF424M : MState := (.CB, [], [.run 1, .run 0])
+
+theorem runElemFast424_exact_reaches :
+    multiStep target_tm (evalM target_tm startF424M)
+      (costIterM424 19217 startF424M) =
+      some (evalM target_tm (runElemFast 1 1 11 4 startF424M)) := by
+  rw [runElemFast_eq_iterStep]
+  norm_num
+  exact costIterM424_exact_reaches 19217 startF424M
+
 #print axioms sourceElemM424_exact
 #print axioms costIterM424_exact_reaches
 
