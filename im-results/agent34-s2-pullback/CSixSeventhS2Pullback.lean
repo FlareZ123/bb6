@@ -333,6 +333,95 @@ theorem s2_q_even_parameter_classes_disjoint (j m : Nat)
   rw [hs,hq] at hmod
   omega
 
+
+private theorem q_even_h5_k_mod (k a n : Nat)
+    (hz : (k+a)%8388608=0)
+    (hb : a+49726=8388608*n) :
+    k%8388608=49726 := by
+  omega
+
+private theorem q_even_h5_k_decompose (k : Nat)
+    (h : k%8388608=49726) :
+    k=49726+8388608*(k/8388608) := by
+  have hd := Nat.mod_add_div k 8388608
+  omega
+
+private theorem q_even_h5_root_pair_eq (c b j k : Nat)
+    (hj : j=1343+4194304*c)
+    (hk : k=49726+8388608*b) :
+    (2*j+3,k)=
+      (641+1024*(2+8192*c),574+1024*(48+8192*b)) := by
+  omega
+
+/-- A positive-density subcylinder of the complementary h5 parameter lift
+    has an all-time source-root exclusion. -/
+theorem q_even_h5_high_parameter_no_blank (c w time : Nat) :
+    BB6.Agent8Section.run secNext time (some (5,1)) ≠
+      some (2*(1343+4194304*c)+3,
+        highK (1343+4194304*c)
+          (2779178+4194304*c+8388608*w)) := by
+  let j := 1343+4194304*c
+  let m := 2779178+4194304*c+8388608*w
+  let k := highK j m
+  have hm : 11≤m := by dsimp [m]; omega
+  have hpow : (2:Nat)^23∣(2:Nat)^(2*m+2) :=
+    Nat.pow_dvd_pow 2 (by omega)
+  have hpow' : 8388608∣(2:Nat)^(2*m+2) := by
+    simpa only [show (2:Nat)^23=8388608 by decide] using hpow
+  have hstop : k+(j+3*m+5)=(2:Nat)^(2*m+2)*(j+3) := by
+    simpa [k] using high_stop_identity j m
+  have hstop' : k+j+3*m+5=(2:Nat)^(2*m+2)*(j+3) := by omega
+  have hprod : 8388608∣(2:Nat)^(2*m+2)*(j+3) := by
+    obtain ⟨q,hq⟩ := hpow'
+    refine ⟨q*(j+3),?_⟩
+    rw [hq]
+    ac_rfl
+  have hdiv : 8388608∣k+j+3*m+5 := by
+    rw [hstop']
+    exact hprod
+  have hzero : (k+(j+3*m+5))%8388608=0 := by
+    apply Nat.mod_eq_zero_of_dvd
+    simpa [Nat.add_assoc] using hdiv
+  have hbase : j+3*m+5+49726=
+      8388608*(1+2*c+3*w) := by
+    dsimp [j,m]
+    omega
+  have hrem : k%8388608=49726 :=
+    q_even_h5_k_mod k (j+3*m+5) (1+2*c+3*w) hzero hbase
+  let b := k/8388608
+  have hk : k=49726+8388608*b := by
+    simpa only [b] using q_even_h5_k_decompose k hrem
+  have hj : j=1343+4194304*c := by dsimp [j]; omega
+  have hpair := q_even_h5_root_pair_eq c b j k hj hk
+  have hNo := BB6.Agent4SevenS2QEven.blank_ne_s2q_even_image_h5_progression
+    c b time
+  intro hrun
+  apply hNo
+  simpa only [hpair] using hrun
+
+/-- The h5 progression is contained in the exact complementary q-even
+    high-stop parameter cylinder. -/
+theorem q_even_h5_progression_in_parameter_cylinder (c w : Nat) :
+    (1343+4194304*c)%512=319 ∧
+    (2779178+4194304*c+8388608*w)%1048576 =
+      (7210+337408*((1343+4194304*c)/512))%1048576 := by
+  have hj : (1343+4194304*c)=319+512*(2+8192*c) := by omega
+  constructor
+  · omega
+  · rw [hj]
+    omega
+
+/-- The corresponding exact non-reachability statement. -/
+theorem q_even_h5_high_parameter_not_CReach (c w : Nat) :
+    ¬ BB6.Agent3.CReach
+      (2*(1343+4194304*c)+3)
+      (highK (1343+4194304*c)
+        (2779178+4194304*c+8388608*w)) := by
+  intro hreach
+  rcases hreach with ⟨time,hrun⟩
+  exact q_even_h5_high_parameter_no_blank c w time hrun
+
+
 #print axioms s2_parameter_pullback_iff
 #print axioms q_even_parameter_pullback_iff
 #print axioms s2_high_parameter_no_blank
