@@ -23,6 +23,11 @@ on:
         required: true
         default: "2da159d86fa86d813bdfbc54e38e3ec9c75b6e69"
         type: string
+      extension_ref:
+        description: Exact proof-extension commit for staged root modules
+        required: true
+        default: "6d1f3a4a83fc0906dccdbf845fd6c42ffc4cbf8e"
+        type: string
   workflow_call:
     inputs:
       stage:
@@ -35,6 +40,9 @@ on:
         required: false
         type: string
       source_ref:
+        required: true
+        type: string
+      extension_ref:
         required: true
         type: string
 permissions:
@@ -53,6 +61,12 @@ jobs:
         with:
           ref: ${{ inputs.source_ref }}
           path: source
+      - name: Checkout proof extension for twentieth checkpoint
+        if: ${{ inputs.stage == '3c' }}
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.extension_ref }}
+          path: extension
       - name: Restore pinned original D sources and DRegular proof
         working-directory: source
         run: |
@@ -62,6 +76,10 @@ jobs:
           python3 im-results/agent25-cryptid-doublezero/unpack.py
           python3 im-results/agent2-cryptid-continuity/restore_a_regular.py
           python3 im-results/agent2-cryptid-continuity/restore_e_regular.py
+      - name: Overlay optimized twentieth checkpoint
+        if: ${{ inputs.stage == '3c' }}
+        run: |
+          cp extension/im-results/agent37-d-timing-cocycle/BlankTwentiethEscape.lean source/im-results/agent37-d-timing-cocycle/BlankTwentiethEscape.lean
       - name: Install Lean 4.36.0-rc2
         run: |
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
