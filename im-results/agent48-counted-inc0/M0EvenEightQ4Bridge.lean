@@ -66,8 +66,11 @@ theorem m0EvenEight_binDec_residue8 (L q : Nat)
     binDec L (8*q) =
       d1 ++ d1 ++ d1 ++ d0 ++ binDec (L-4) (q/2) := by
   have hpow3 : 2^L = 8 * 2^(L-3) := by
-    rw [show L = (L-3)+3 by omega, Nat.pow_add]
-    rw [show (2:Nat)^3 = 8 by decide, Nat.mul_comm]
+    have hL' : L = (L-3)+3 := by omega
+    conv_lhs => rw [hL']
+    rw [Nat.pow_add]
+    rw [show (2:Nat)^3 = 8 by decide]
+    exact Nat.mul_comm _ _
   have hpow2 : 2^(L-1) = 4 * 2^(L-3) := by
     rw [show L-1 = (L-3)+2 by omega, Nat.pow_add]
     rw [show (2:Nat)^2 = 4 by decide, Nat.mul_comm]
@@ -103,7 +106,8 @@ theorem m0EvenEight_binDec_residue8 (L q : Nat)
     exact binDec_even (L-3) q hq
   have h4 : binDec (L-3) q =
       d0 ++ binDec (L-4) (q/2) := by
-    rw [show L-3 = (L-4)+1 by omega, hdiv]
+    rw [show L-3 = (L-4)+1 by omega]
+    conv_lhs => rw [hdiv]
     exact binDec_odd (L-4) (q/2) hq4
   rw [h1,h2,h3,h4]
   simp [List.append_assoc]
@@ -114,8 +118,11 @@ theorem m0EvenEight_binDec_residue7 (L q : Nat)
     binDec L (8*q-1) =
       d0 ++ d0 ++ d0 ++ d1 ++ binDec (L-4) (q/2) := by
   have hpow3 : 2^L = 8 * 2^(L-3) := by
-    rw [show L = (L-3)+3 by omega, Nat.pow_add]
-    rw [show (2:Nat)^3 = 8 by decide, Nat.mul_comm]
+    have hL' : L = (L-3)+3 := by omega
+    conv_lhs => rw [hL']
+    rw [Nat.pow_add]
+    rw [show (2:Nat)^3 = 8 by decide]
+    exact Nat.mul_comm _ _
   have hpow2 : 2^(L-1) = 4 * 2^(L-3) := by
     rw [show L-1 = (L-3)+2 by omega, Nat.pow_add]
     rw [show (2:Nat)^2 = 4 by decide, Nat.mul_comm]
@@ -166,9 +173,36 @@ private theorem m0EvenEightSourceLeftFacing
     (hbound : 8*q < 2^L) :
     s1LeftFacing L (8*q) 0 a 0 =
       d1pow a ++ m0EvenEightSourceLeftSuffix L q := by
-  simp [s1LeftFacing,m0EvenEightSourceLeftSuffix,
+  simp [s1LeftFacing,m0EvenEightSourceLeftSuffix,binDec_zero,
     m0EvenEight_binDec_residue8 L q hL hqodd hbound,
     List.append_assoc]
+
+private theorem m0EvenEight_sideBit_append_prefix
+    (xs ys : List Bool) (i : Nat) (hi : i < xs.length) :
+    sideBit (xs ++ ys) i = sideBit xs i := by
+  induction xs generalizing i with
+  | nil => simp at hi
+  | cons x xs ih =>
+      cases i with
+      | zero => rfl
+      | succ i =>
+          simp only [List.length_cons, Nat.succ_lt_succ_iff] at hi
+          simp only [List.cons_append, sideBit]
+          exact ih i hi
+
+private theorem m0EvenEight_sideBit_d1pow (a i : Nat)
+    (hi : i < 3*a) : sideBit (d1pow a) i = true := by
+  induction a generalizing i with
+  | zero => omega
+  | succ a ih =>
+      by_cases h : i < 3
+      · have hi0 : i=0 ∨ i=1 ∨ i=2 := by omega
+        rcases hi0 with h0 | h1 | h2 <;> subst i <;>
+          simp [d1pow,d1,sideBit]
+      · have hi' : i-3 < 3*a := by omega
+        have heq : i = 3+(i-3) := by omega
+        rw [heq]
+        simpa [d1pow,d1,sideBit] using ih (i-3) hi'
 
 private theorem m0EvenEightBaseLeftOnes
     (L q a b : Nat) (h : Int)
@@ -178,10 +212,14 @@ private theorem m0EvenEightBaseLeftOnes
   intro i hi
   have hcell := s1Config_left_cell L (8*q) 0 a 0 b h i
   have hface := m0EvenEightSourceLeftFacing L q a hL hqodd hbound
-  have hside := sideBit_d1pow_append a i
-    (m0EvenEightSourceLeftSuffix L q) (by simp [d1pow_length]; omega)
-  rw [hface, hside] at hcell
-  simp [sideBit_d1pow, hi] at hcell ⊢
+  have hprefix : i < (d1pow a).length := by
+    rw [d1pow_length]
+    exact hi
+  have hbit : sideBit (d1pow a ++ m0EvenEightSourceLeftSuffix L q) i = true := by
+    rw [m0EvenEight_sideBit_append_prefix _ _ _ hprefix]
+    exact m0EvenEight_sideBit_d1pow a i hi
+  rw [hface, hbit] at hcell
+  exact hcell
 
 private theorem m0EvenEightSweptLeftCell
     (L q a b : Nat) (h : Int) (i : Nat)
@@ -194,7 +232,7 @@ private theorem m0EvenEightSweptLeftCell
   have hcell := s1Config_left_cell L (8*q) 0 a 0 b h (3*a+i)
   have hface := m0EvenEightSourceLeftFacing L q a hL hqodd hbound
   have hside := sideBit_d1pow_append a (3*a+i)
-    (m0EvenEightSourceLeftSuffix L q) (by simp [d1pow_length]; omega)
+    (m0EvenEightSourceLeftSuffix L q) (by omega)
   have hpres := sweptLeft_preserves_left (3*a) T h
     (h - ((3*a+i : Nat) : Int)) (by omega)
   rw [hface, hside] at hcell
@@ -237,7 +275,6 @@ theorem m0EvenEightBridge_input_match
     have hcoord :
         h - ((3*a : Nat) : Int) + y =
           h - ((3*a+i : Nat) : Int) := by
-      rw [hiCast]
       push_cast
       omega
     rw [hcoord]
