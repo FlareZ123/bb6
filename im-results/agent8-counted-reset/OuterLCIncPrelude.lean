@@ -112,7 +112,7 @@ theorem outer_s1_counter_cell (L n m a b : Nat) (h : Int)
   have hcell := s1Config_left_cell L n m a 0 b h (3*a+m+5+i)
   push_cast at hcell
   have hword : s1LeftFacing L n m a 0 =
-      (d1pow a ++ markerWord m ++ d0) ++ (binDec L n ++ lh) := by
+      d1pow a ++ (markerWord m ++ d0 ++ (binDec L n ++ lh)) := by
     simp [s1LeftFacing,binDec_zero,List.append_assoc]
   rw [hword] at hcell
   rw [← d1pow_length a] at hcell
@@ -120,9 +120,9 @@ theorem outer_s1_counter_cell (L n m a b : Nat) (h : Int)
   rw [outer_sideBit_append_shift] at hcell
   have hmarker : (markerWord m).length = m+2 :=
     outer_markerWord_length m hm
-  have hlen : (d1pow a ++ markerWord m ++ d0).length =
-      3*a+m+5 := by
-    simp [d1pow_length,hmarker,d0] <;> omega
+  have hlen : (markerWord m ++ d0).length = m+5 := by
+    simp [hmarker,d0] <;> omega
+  rw [← Nat.add_assoc] at hcell
   rw [← hlen] at hcell
   rw [outer_sideBit_append_shift] at hcell
   exact hcell
