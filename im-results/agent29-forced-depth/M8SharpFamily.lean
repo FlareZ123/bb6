@@ -33,6 +33,7 @@ theorem m8Geom4_add (a b : Nat) :
   | succ a ih =>
       simp only [Nat.succ_add, m8Geom4, Nat.pow_succ]
       rw [ih, Nat.mul_add]
+      simp only [Nat.succ_eq_add_one]
       ac_rfl
 
 theorem m8Geom4_ge (n : Nat) : n≤m8Geom4 n := by
@@ -143,7 +144,13 @@ theorem m8SharpMain (r : Nat) (hr : 2≤r) :
       3*m8SharpV r*2^(m8SharpT r)
           = 3*(m8SharpV r*2^(m8SharpT r)) := by ac_rfl
       _ = 3*(m8Geom4 (m8SharpL r)-m8SharpM r) := by rw [hmass]
-  dsimp [m8SharpM] at hm
+  have hm0 : 3*m8SharpM r+1=4^r := by
+    simpa [m8SharpM] using hm
+  have hle : m8SharpM r ≤ m8Geom4 (m8SharpL r) := by
+    have hadd := m8Geom4_add r (m8SharpN r)
+    rw [m8SharpL_decomp r] at hadd
+    dsimp [m8SharpM]
+    omega
   omega
 
 theorem m8SharpStop (r : Nat) (hr : 2≤r) :
@@ -170,11 +177,9 @@ theorem m8SharpStop (r : Nat) (hr : 2≤r) :
     have h := m8SharpV_mod_eight r hr
     omega
   have htpos : 1≤2^(m8SharpT r) := by
-    have h := Nat.pow_pos (by decide : 0 < (2:Nat))
-    omega
+    exact Nat.pow_pos (by decide : 0 < (2:Nat))
   have hdpos : 1≤2^(m8SharpD r) := by
-    have h := Nat.pow_pos (by decide : 0 < (2:Nat))
-    omega
+    exact Nat.pow_pos (by decide : 0 < (2:Nat))
   have hj : m8SharpJ r+3 =
       3*m8SharpV r*2^(m8SharpT r)+1 := by
     have hmul : 2≤m8SharpV r*2^(m8SharpT r) :=
@@ -207,6 +212,7 @@ theorem m8SharpStop (r : Nat) (hr : 2≤r) :
     _ = 4^(m8SharpL r)*(3*m8SharpV r*2^(m8SharpT r))+
         3*m8SharpV r*2^(m8SharpT r)+3*m8SharpM r+1 := by
           rw [hk, hj, hfactor]
+          omega
     _ = 4^(m8SharpL r)*(3*m8SharpV r*2^(m8SharpT r)+1) := by
           rw [Nat.mul_add]
           omega
@@ -316,8 +322,7 @@ theorem m8SharpFamily_data (r : Nat) (hr : 2≤r) :
     have h := m8SharpV_mod_eight r hr
     omega
   have hdpos : 1≤2^(m8SharpD r) := by
-    have h := Nat.pow_pos (by decide : 0 < (2:Nat))
-    omega
+    exact Nat.pow_pos (by decide : 0 < (2:Nat))
   have hmulD : 2≤m8SharpV r*2^(m8SharpD r) :=
     Nat.mul_le_mul hvpos hdpos
   have hmulD3 : 2≤3*m8SharpV r*2^(m8SharpD r) := by
