@@ -84,6 +84,86 @@ theorem k31_q0_regular (s : Nat) :
   rw [hm]
   exact hreg
 
+
+/-- The second previously untreated q=0 terminal cylinder:
+    k = 81*s+16.  Here the exact guarded phase is reset, E, B, E,
+    reaching the same Y3 E/p0,q=3 regularizing terminal. -/
+def k16 (s : Nat) : Nat := 81*s+16
+def k16E1 (s : Nat) : Nat := 216*s+43
+def k16B (s : Nat) : Nat := 576*s+117
+def k16E2 (s : Nat) : Nat := 1536*s+314
+def k16Terminal (s : Nat) : Nat := 4096*s+839
+
+def prefixT16 (s : Nat) : Nat :=
+  eTwoTime (k16 s) 0 +
+    (eT (k16E1 s) 0 + (bT (k16B s) + eT (k16E2 s) 1))
+
+theorem prefix16_to_e_zero (s : Nat) :
+    run (prefixT16 s)
+      (packet (3*k16 s+4) 0 2 (false::List.replicate 6 true)) =
+      packet (3*k16Terminal s+4) 3 0 marker := by
+  have h1 : 8*k16 s+5=3*k16E1 s+4 := by
+    simp [k16,k16E1]; omega
+  have h2 : 8*k16E1 s+9=3*k16B s+2 := by
+    simp [k16E1,k16B]; omega
+  have h3 : 8*k16B s+10=3*k16E2 s+4 := by
+    simp [k16B,k16E2]; omega
+  have h4 : 8*k16E2 s+9=3*k16Terminal s+4 := by
+    simp [k16E2,k16Terminal]; omega
+  have he1 :
+      run (eT (k16E1 s) 0)
+        (packet (3*k16E1 s+4) 0 6 marker) =
+        packet (8*k16E1 s+9) 2 3 marker := by
+    simpa [eT] using (e_packet (k16E1 s) 0 3 marker)
+  have hb :
+      run (bT (k16B s))
+        (packet (3*k16B s+2) 2 3 marker) =
+        packet (8*k16B s+10) 1 3 marker := by
+    simpa [bT] using (b_packet (k16B s) 1 3 marker)
+  have he2 :
+      run (eT (k16E2 s) 1)
+        (packet (3*k16E2 s+4) 1 3 marker) =
+        packet (8*k16E2 s+9) 3 0 marker := by
+    simpa [eT] using (e_packet (k16E2 s) 1 0 marker)
+  unfold prefixT16
+  rw [run_add,e_two_reset,h1]
+  change run (eT (k16E1 s) 0 + (bT (k16B s) + eT (k16E2 s) 1))
+    (packet (3*k16E1 s+4) 0 6 marker) = _
+  rw [run_add,he1,h2,run_add,hb,h3,he2,h4]
+
+/-- Every k≡16 (mod81), q=0 fixed-tail exceptional packet regularizes. -/
+theorem k16_q0_regular (s : Nat) :
+    ∃ T a q b,
+      BB6.BoundaryPadding.ObsEq
+        (run T
+          (packet (3*k16 s+4) 0 2
+            (false::List.replicate 6 true)))
+        (BB6.Agent2BoundaryBZero.regularSection a q b) := by
+  obtain ⟨Tr,a,q,b,hreg⟩ :=
+    BB6.Agent2MarkerTower.e_zero_q0_regular (k16Terminal s) 1 2
+  refine ⟨prefixT16 s+Tr,a,q,b,?_⟩
+  rw [run_add,prefix16_to_e_zero]
+  have hm : marker = BB6.Agent2MarkerTower.marker 3 := by decide
+  rw [hm]
+  exact hreg
+
+/-- The union of the two new full linear k-cylinders for q=0. -/
+theorem k16_or_k31_q0_regular (k : Nat)
+    (h : (∃ s, k = k16 s) ∨ (∃ s, k = k0 s)) :
+    ∃ T a q b,
+      BB6.BoundaryPadding.ObsEq
+        (run T (packet (3*k+4) 0 2 (false::List.replicate 6 true)))
+        (BB6.Agent2BoundaryBZero.regularSection a q b) := by
+  rcases h with ⟨s,hs⟩ | ⟨s,hs⟩
+  · rw [hs]
+    exact k16_q0_regular s
+  · rw [hs]
+    exact k31_q0_regular s
+
+#print axioms prefix16_to_e_zero
+#print axioms k16_q0_regular
+#print axioms k16_or_k31_q0_regular
+
 #print axioms prefix_to_e_zero
 #print axioms k31_q0_regular
 end BB6.Agent36K31
