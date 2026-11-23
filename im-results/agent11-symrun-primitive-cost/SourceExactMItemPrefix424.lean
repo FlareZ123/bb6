@@ -406,7 +406,7 @@ theorem costIterM424_le (n : Nat) (s : MState) :
       _ = n * C + C := Nat.add_comm _ _
       _ = (n + 1) * C := by rw [Nat.succ_mul]
 
-def startF424M : MState := (.CB, [], [.run 1, .run 0])
+
 
 /-- The 19,217-step F424 MItem prefix costs less than 2^31 primitive
     transitions, including the exact machine-specific source charges. -/
