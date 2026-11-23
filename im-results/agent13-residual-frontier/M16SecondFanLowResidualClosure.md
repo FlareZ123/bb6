@@ -1,6 +1,6 @@
-# Machine C: fourteen new candidate low-stop cylinders from the complete M16 second-parent sieve
+# Machine C: first M16 fan argument, then 16 Lean-certified source-only low-stop cylinders
 
-**23 November 2026 · Agent 13 · paper-level original-source argument, not Lean-compiled.** This refines the M16 valuation theorem and Agent 21's exact second-fan profile. It is not a Machine C halt/nonhalt decision. The word "new" below means not already eliminated by the cited Agent 11 low-parameter predicate, its six-sector normalizer, or Agent 21's two first-stop progressions; other work may still overlap.
+**23 November 2026 · Agent 13 · original first fan paper argument below; the stronger sixteen-cylinder original-source theorem is now formally Lean-certified (CI 45246116887).** This refines the M16 valuation theorem and Agent 21's exact second-fan profile. It is not a Machine C halt/nonhalt decision. The word "new" below means not already eliminated by the cited Agent 11 low-parameter predicate, its six-sector normalizer, or Agent 21's two first-stop progressions; other work may still overlap.
 
 ## Statement and arithmetic residue form
 
@@ -82,7 +82,7 @@ Source dependencies: [Agent 21 inverse fan](../agent21-c-first-m3mod8/SecondFanE
 
 ## Source-only strengthening: sixteen low-stop cylinders
 
-**Updated 2026-11-23T18:52Z. Paper-level original-source argument; exact generic two-depth inverse theorem now Lean checked in CI [45242048957](https://github.com/FlareZ123/bb6/actions/runs/45242048957). The stopping-family specialization remains to be formally compiled.**
+**Updated 2026-11-23T19:12Z. The sixteen-cylinder original-source specialization and 64-module closure are now formally certified in [CI 45246116887](https://github.com/FlareZ123/bb6/actions/runs/45246116887), axioms [propext, Classical.choice, Quot.sound]. Full publication-style theorem and proof: [results/2026-11-23-machine-c-low-source-sixteen-agent13.md](../../results/2026-11-23-machine-c-low-source-sixteen-agent13.md).**
 
 A stronger argument avoids the M16 quotient lookup altogether and adds **two more** uniform cylinders:
 

@@ -8,6 +8,10 @@ BusyBeaverWiki currently identifies `1RB1RA_1RC1RZ_1LD0RF_1RA0LE_0LD1RC_1RA0RE` 
 
 This is external published evidence, not a repository theorem. The repository's [Agent 48 champion-root bridge](../im-results/agent48-champion-root/README.md) formalizes a conditional machine equivalence; it does not import the unconditional external halting proof or prove the exact primitive step count. A separately [source-certified exact TM63 terminal-section cost](../im-results/agent42-champion-terminal/README.md), [CI 42739779283](https://github.com/FlareZ123/bb6/actions/runs/42739779283), now proves for every `L,a` the literal source's terminal `m0` macro uses exactly `59+12*(L+a)` successful transitions before the final undefined halt query. It allows arbitrary tape exterior, and does **not** certify the other still-conjectural counted macros, the entire champion trajectory, or BB(6). The source links and notation distinctions are recorded in [the external baseline note](../resources/BB6-current-frontier-2026-11-06.md).
 
+## New original-source Machine C exclusion (23 November 2026)
+
+A [Lean-certified original-source theorem](2026-11-23-machine-c-low-source-sixteen-agent13.md) excludes **sixteen disjoint residue classes modulo 128** of Machine C low stopping indices \(m=512z+67\), namely \(z\equiv13\pmod{16}\), \(5\pmod{64}\), \(25\pmod{32}\), \(9\pmod{128}\), or \(21\pmod{128}\). It uses four exact inverse transitions and a complete two-parent source classification, **without any M16/M32 quotient certificate**. The complete 64-module Lean 4.36.0-rc2 closure passed [CI 45246116887](https://github.com/FlareZ123/bb6/actions/runs/45246116887), with main theorem axioms `[propext, Classical.choice, Quot.sound]` and no `sorryAx`. This excludes one-eighth of this necessary low-stop *parameter subfamily*, not one-eighth of all possible machine halts. Machine C and BB(6) remain undecided.
+
 ## What the preserved research actually establishes
 
 | Line of work | Strongest useful entry point | Mathematical and provenance boundary |
