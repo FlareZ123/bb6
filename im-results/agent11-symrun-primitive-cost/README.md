@@ -17,7 +17,7 @@ For F424 the stepSym stage's charged sums, grouped by source proof family, are: 
 
 ## Fixed-block exact-cost candidates
 
-Let `stepPure` be the exact source transition; let `stateA0`, `stateA`, `stateB`, and `stateC` be the literal source definitions in HaltShared.lean. Write `cost_N(s)` for the primitive cost along the **specific** `N` source `stepPure` witnesses, with zero-cost representation-only changes allowed. The source's `ruleA0_sound`, `ruleA_step_eq`, `ruleC_step_eq`, and four `ruleB_step_{AA,AB,BA,BB}` certificates fix the lengths as **46, 66, 46, 126/118/106/98**. Counting primitive costs of the underlying original-machine `execute n` rules produces the following affine formulas, currently checked by symbolic-shaped concrete replay over positive and boundary parameters:
+Let `stepPure` be the exact source transition; let `stateA0`, `stateA`, `stateB`, and `stateC` be the literal source definitions in HaltShared.lean. Write `cost_N(s)` for the primitive cost along the **specific** `N` source `stepPure` witnesses, with zero-cost representation-only changes allowed. The source's `ruleA0_sound`, `ruleA_step_eq`, `ruleC_step_eq`, and four `ruleB_step_{AA,AB,BA,BB}` certificates fix the lengths as **46, 66, 46, 126/118/106/98**. Counting primitive costs of the underlying original-machine `execute n` rules produces the following affine formulas. **All fourteen formula families are checked for arbitrary nonnegative integer parameters**, not merely for sampled inputs, by the source-shaped affine abstract interpreter described below. The checker remains an independently written computational model, not a Lean proof:
 
 | Fixed source block, with input parameters | F424 cost | F412 cost |
 | --- | ---: | ---: |
@@ -54,10 +54,21 @@ Using only the fixed block formulas above and the **exact upstream induction dec
 
 All these closed forms are quadratic in the unbounded macro iteration count. The outer sweeps and fallback atomic steps are charged directly from the original per-branch `ReachesIn` costs, with no unbounded replay of the expanded tape.
 
+
+## Auditable finite certificate structure
+
+A valid all-parameter block cost proof is reducible to a finite straight-line trace: for each of the 14 machine–block pairs, the symbolic evaluator performs 46–126 source-shaped `stepPure` transitions, maintains an affine cost in the free variables (p,m,k,d), and checks every branch guard against the **whole** natural orthant. Each successful run returns a coefficient vector `[constant,p,m,k,d]`, with zero dependence on `d` and no inspection of a symbolic unrestricted `R_tail`. Those coefficient vectors are shown in the table above. The affine-guard argument uses componentwise coefficient signs and exact zero tests, so there is no unsound appeal to testing a few concrete inputs.
+
+The source's exact `execute n` rules give machine-specific primitive costs, including `step_DL_run2(d) = 3d+22/20` and `step_CB_run0_run_pos(d) = 3d+21/19`, while the six repeated-block transfer lemmas carry the coefficients 11/9, 14/12, 25/21, 21/19, 24/22, 45/41. The finite checker requires no arithmetic larger than linear forms to establish the fixed-block costs. Quadratic macro forms arise only from summing these *proven-symbolically-relative-to-source* affine forms under the previously certified inductive macro decomposition.
+
+**Boundary:** the source-shaped evaluator itself is trusted JavaScript; no theorem about its interpretation of the upstream Lean source has yet been typechecked in Lean. The 24 finite checkpoints in `checkpoint_costs.json` are replayed and tested against source states, not kernel-checked for their associated costs. Thus even though the abstract interpretation ranges over all nonnegative parameter values, the resulting complete primitive times are **candidate exact values** pending the model-to-source and count-fold proof obligations.
+
 ## Reproduction and acceptance boundary
 
 - [`symrun_cost_replay.cjs`](symrun_cost_replay.cjs) is an executable, instrumented clone of the independent [Agent38 checkpoint replay](../agent38-symrun-state-replay/symrun_state_replay.cjs). It still independently checks every literal upstream symbolic checkpoint and now reports `primitiveStepSymCost`, its category breakdown, and success counts. Invoke it through the same `run(fetchText)` interface, for example with Node's `fetch` function at the pinned source URLs.
 - [`pure_cost_factory.cjs`](pure_cost_factory.cjs) is an independent instrumentation of one source `stepPure` transition and of the source `stateA0/stateA/stateB/stateC` constructors. It validates the exact fixed-block affine formulas for concrete natural-number parameters; the large unbounded macros are summed algebraically, not replayed.
+- [`affine_block_certificate.cjs`](affine_block_certificate.cjs) symbolically executes all fourteen fixed-length proof blocks over arbitrary nonnegative integer parameters p,m,k,d with an affine-expression domain. Every branch comparison must be uniformly true or uniformly false on the **entire** nonnegative parameter orthant; otherwise the checker throws. An opaque tail sentinel throws if the execution ever inspects the unconstrained `R_tail`. The 14 symbolic executions halt successfully and give exactly the coefficients in the table, independent of `d` and `R_tail` (no loop over parameter values). This is a machine-checkable universal certificate **relative to the handwritten translation** of the source transitions and cost table. A source-level Lean theorem remains necessary to establish equivalence to the original machine.
+- [`checkpoint_costs.json`](checkpoint_costs.json) records the complete cumulative primitive cost and Rule A/B/C hit counts at all 18+6 original upstream symbolic checkpoints; this is the finite trace-fold certificate for the candidate full times.
 - [`cost_wrapper_fragment.js`](cost_wrapper_fragment.js) records the separate instrumentation used by the full replay.
 - Initial primitive prefix costs are independently recorded in [Agent38's prefix work](../agent38-symrun-prefix-cost/README.md). They have *not* been recertified here.
 
