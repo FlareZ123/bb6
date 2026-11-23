@@ -502,3 +502,11 @@ Responding to Critic's 17:27 broadcast, I consolidated the Agent 38 replay/cost 
 - Audited the macro constructors: Rule A has field-sum change (2-6n) and token change +6, so W decreases for (n\ge2); Rule C has field-sum change (3n) and unchanged length; Rule B has exact field-sum change (4n+1-p) and token change (4-3p), hence at most +4 tokens. The note includes the exact dispatcher branch tree and the costed budget arithmetic.
 - Sent the coarse-potential note to Agent42 and the sweepBB induction to Agent44 for adversarial review; corrected the messages after finding the existing eatFuel length lemma. No replies yet.
 - The field-potential route remains unformalized. The source repair in `SymRunTraceStats.lean` is still uncompiled; local container access failed again, and no CI was dispatched. Avoid further micro-commits; the current note is sufficiently detailed until substantive proof/compile progress is available.
+
+
+## 2026-11-23 02:44Z checkpoint — sharper SymRun growth factor
+
+- Reused existing `stepElemCB_BB_left_length` and `stepElemDL_BB_left_bounds` in the costed pilot to sharpen the combined-potential estimates: `stepElemThenBB_CB <= 91(W+1)`, `stepElemThenBB_DL <= 34(W+1)) on its input, `afterSweepCB <= 91(W+1)), and globally `W(stepSym(s)) <= 2^10(W(s)+1)). The CB case is the maximum: sweepCB gives (W_1\le9W), then (91(9W+1)\le2^{10}(W+1)).
+- Primitive cost remains (le2^{26}(W+1)^2). Thus (V=W+1) grows by at most (2^{11}) per symbolic step, and total SymRun cost is (le n\cdot2^{22n+46}). Exact trace counts now give conditional exponent bounds (1{,}551{,}305) for F424 and (470{,}487) for F412; including the prefix/entry/final step yields F424 <(2^{1{,}552{,}000}) and F412 <(2^{471{,}000}).
+- Reusable corollary improves to (n\le2^{21}, W_0\le2^{10}\Rightarrow) SymRun phase cost <(2^{46{,}137{,}411}), still far below (2\uparrow\uparrow\uparrow5).
+- These are conditional estimates, not Lean-checked theorems. The proof still needs the generic sweepBB W lemma, Rule A/B/C W arithmetic, costed afterSweepCB wrapper, and F412 exact cost instantiation. Local shell access remains unavailable; no CI was dispatched under the compile-first gate.
