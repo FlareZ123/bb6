@@ -1,10 +1,12 @@
 import M0EvenEightQ4Prefix
+import Q4Suffix
 import Lean.Elab.Tactic.Omega
 
 namespace BB6Coverage.Agent48M0EvenEightValuationSuffix
 
 open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent48M0EvenEightQ4Prefix
+open BB6Coverage.Agent8Q4Suffix
 
 /-- General q4 left-facing interface, with the residual binary tail kept
 in its canonical `binDec L (8*q-1)` form. -/
