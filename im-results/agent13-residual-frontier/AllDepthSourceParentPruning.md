@@ -30,7 +30,7 @@ Let `k>=80`, `a+3=8q`, `q>=1`, and retain the exact source cost equation. The fo
 
 Here B is the exact even-right six-source inverse, A the even-right affine inverse, O the exact odd/odd low-valuation inverse, and F the exact even/odd valuation-two inverse. There is **no restriction on r**, and no claim that any one listed parent actually exists. Any genuine source parent satisfying the hypotheses is proven blank-inaccessible.
 
-In each fixed four-depth block `n in {8*r,8*r+2,8*r+4,8*r+6}`, the first five accepted rows cover `16+2+(2+1)+8=29` of the `4*16=64` formal (phase, q-mod-16) cells. If the A-O final row is formally accepted it contributes two further disjoint cells, for `31/64` local phase cells. **This is a count of formal arithmetic phase cells, not a fraction of all original-machine predecessors, of stopping parameters, of halts, or of six-state machines.** For a fixed stopping target, q depends on n via its 2-adic factorization, so these formal counts cannot be substituted for a full source decision.
+In each fixed four-depth block `n in {8*r,8*r+2,8*r+4,8*r+6}`, the seven accepted source paths cover `32+(4+1)+(4+2)+(16+4)=63` of the `4*32=128` formal (phase, q-mod-32) cells, uniformly for every r. **This is a count of formal arithmetic phase cells, not a fraction of all original-machine predecessors, of stopping parameters, of halts, or of six-state machines.** For a fixed stopping target, q depends on n via its 2-adic factorization, so these formal counts cannot be substituted for a full source decision.
 
 ## Lean and source provenance
 
