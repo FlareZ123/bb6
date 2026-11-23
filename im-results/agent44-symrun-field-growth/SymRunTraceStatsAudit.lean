@@ -1,5 +1,5 @@
 /-! Exact-source axiom audit for the BB sweep field-potential lemmas. -/
-import SymRunTraceStats
+import SymRunBBBase
 import SymRunBBBounds
 
 #print axioms BusyBeaver.SymRunAudit.eatB2_num_sum_le
