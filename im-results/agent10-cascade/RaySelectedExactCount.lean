@@ -37,7 +37,6 @@ theorem selected_ray_exact_nonterminal_count
     | zero => decide
     | succ e ih =>
       rw [Nat.pow_succ, Nat.mul_mod, ih]
-      decide
   have hodd : (2*u+5)%2=1 := by omega
   have hdodd : d%2=1 := by
     rw [hd, Nat.mul_mod, hthree (k+1)] at hodd
