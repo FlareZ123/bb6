@@ -67,16 +67,18 @@ prints the transitive axiom profiles of the resulting lemmas.
 ## Status and acceptance boundary
 
 **The BB-sweep bounds remain unaccepted drafts.** The exact-source audit
-[45144654362](https://github.com/FlareZ123/bb6/actions/runs/45144654362)
+[45145550915](https://github.com/FlareZ123/bb6/actions/runs/45145550915)
 is the current focused run, pinned to the Cryptids commit above and Lean
 `v4.36.0-rc2`, with dependency chain:
 
 `SymRunBBBase.lean → SymRunBBBounds.lean → SymRunTraceStatsAudit.lean`.
 
-The preceding run [45144046165](https://github.com/FlareZ123/bb6/actions/runs/45144046165)
-was cancelled before the proof stage after a static review found that the
-first isolated base omitted the field-maximum helper declarations. Those
-helpers have since been added; the cancelled run provides no proof evidence.
+The preceding runs [45144046165](https://github.com/FlareZ123/bb6/actions/runs/45144046165)
+and [45144654362](https://github.com/FlareZ123/bb6/actions/runs/45144654362)
+were cancelled before the proof stage after static dependency review found
+successive omissions in the isolated field-maximum closure. The current base
+now includes the field-max definitions, append/cons lemmas, and the
+numeric-sum bridge; neither cancelled run provides proof evidence.
 
 The earlier exact-source runs
 [45129145926](https://github.com/FlareZ123/bb6/actions/runs/45129145926) and
