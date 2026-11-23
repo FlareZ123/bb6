@@ -53,6 +53,11 @@ on:
         required: false
         type: boolean
         default: false
+      verify_f289_rle_cost:
+        description: 'Compile exact ReachesIn primitive-step pilot theorems for both F289 roots'
+        required: false
+        type: boolean
+        default: false
       bridge_path:
         description: 'Repo-relative Lean source proof importing original module and dependency'
         required: true
@@ -78,6 +83,7 @@ jobs:
       DEPENDENCY_VERSION: ${{ inputs.dependency_version }}
       VERIFY_SIX_ROOT_GRAFT: ${{ inputs.verify_six_root_graft }}
       SIMULATE_SECOND_F289: ${{ inputs.simulate_second_f289 }}
+      VERIFY_F289_RLE_COST: ${{ inputs.verify_f289_rle_cost }}
     steps:
       - uses: actions/checkout@v4
       - name: Validate manual inputs
@@ -113,12 +119,21 @@ jobs:
             test "$DEPENDENCY_VERSION" = "v4.36.0-rc2"
             test "$BRIDGE_PATH" = "im-results/agent42-cryptids-current-main/Cryptids608NonHalt.lean"
           fi
-          if [[ "$VERIFY_SIX_ROOT_GRAFT" == "true" && "$SIMULATE_SECOND_F289" == "true" ]]; then
+          if [[ "$VERIFY_SIX_ROOT_GRAFT" == "true" && "$SIMULATE_SECOND_F289" == "true" ]] || \
+             [[ "$VERIFY_SIX_ROOT_GRAFT" == "true" && "$VERIFY_F289_RLE_COST" == "true" ]] || \
+             [[ "$SIMULATE_SECOND_F289" == "true" && "$VERIFY_F289_RLE_COST" == "true" ]]; then
             echo "::error::select only one targeted mode"
             exit 1
           fi
           if [[ "$SIMULATE_SECOND_F289" == "true" ]]; then
             test "$UPSTREAM_SHA" = "3647718b5df22e1a61462dec0376bd204526285a"
+          fi
+          if [[ "$VERIFY_F289_RLE_COST" == "true" ]]; then
+            test "$ORIGINAL_MODULE" = "BusyBeaver.BB6.Halt.M_1RB0RE_1RC0RA_0LD0LB_0LA1LE_1LC1LF_0LAHHH"
+            test "$EXTRA_ORIGINAL_MODULE" = "BusyBeaver.BB6.Halt.M_1RB1RF_0RC0RE_0RD1RA_1LE0LA_1LB0LD_0RDHHH"
+            test "$UPSTREAM_SHA" = "3647718b5df22e1a61462dec0376bd204526285a"
+            test "$LEAN_TOOLCHAIN" = "leanprover/lean4:v4.36.0-rc2"
+            test "$DEPENDENCY_VERSION" = "v4.36.0-rc2"
           fi
       - name: Install original Cryptids Lean version
         if: ${{ !inputs.simulate_second_f289 }}
@@ -226,6 +241,15 @@ jobs:
           if [[ -n "$EXTRA_ORIGINAL_MODULE" ]]; then
             lake build "$EXTRA_ORIGINAL_MODULE"
           fi
+      - name: Compile F289 exact primitive-step pilot
+        if: ${{ inputs.verify_f289_rle_cost }}
+        working-directory: /tmp/cryptids
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p BB6Agent42
+          cp "$GITHUB_WORKSPACE/im-results/agent42-cryptids-upstream-191-overlap/RleCostedStepPilot.lean" BB6Agent42/
+          LEAN_PATH=BB6Agent42 lake env lean -o BB6Agent42/RleCostedStepPilot.olean BB6Agent42/RleCostedStepPilot.lean
       - name: Compile six-root Cryptids frontier graft (explicitly requested only)
         if: ${{ inputs.verify_six_root_graft && !inputs.simulate_second_f289 }}
         working-directory: /tmp/cryptids
@@ -269,7 +293,7 @@ jobs:
           fi
           echo "Six-root graft compiled; no sorryAx in exported axiom profiles."
       - name: Prove against unchanged source definitions and audit axioms
-        if: ${{ !inputs.verify_six_root_graft && !inputs.simulate_second_f289 }}
+        if: ${{ !inputs.verify_six_root_graft && !inputs.simulate_second_f289 && !inputs.verify_f289_rle_cost }}
         working-directory: /tmp/cryptids
         shell: bash
         run: |
