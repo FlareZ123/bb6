@@ -40,7 +40,7 @@ private theorem prior_high_allowed_m0 (j : Nat)
     exact ⟨hAgent11,by omega⟩
   have hy :
       2^(2*0+2)*(j+3)-(j+3*0+5)=3*j+7 := by
-    norm_num
+    change 4*(j+3)-(j+5)=3*j+7
     omega
   have hright :
       (BB6.Agent15.affineNormalize (2*j+3)
@@ -328,10 +328,16 @@ theorem m0_2p22_1093_admitted_and_excluded (t : Nat) :
       BB6.Agent3.fullForcedExcluded (8388608*t+2189)
         (12582912*t+3286)=true := by
   constructor
-  · apply prior_high_allowed_m0
-    · omega
-    · simpa [Nat.mul_comm,Nat.mul_left_comm,Nat.mul_assoc] using
-        affine_right_m0_2p22_1093 t
+  · have hj4 : (4194304*t+1093)%4≠0 := by omega
+    have hx : 2*(4194304*t+1093)+3=8388608*t+2189 := by omega
+    have hy : 3*(4194304*t+1093)+7=12582912*t+3286 := by omega
+    have hright :
+        (BB6.Agent15.affineNormalize
+          (2*(4194304*t+1093)+3)
+          (3*(4194304*t+1093)+7)).2≠4 := by
+      rw [hx,hy]
+      exact affine_right_m0_2p22_1093 t
+    exact prior_high_allowed_m0 (4194304*t+1093) hj4 hright
   · exact excluded_m0_2p22_1093 t
 
 /-- No target in this exact high-stopping family lies on the original
