@@ -66,12 +66,12 @@ theorem tail5684_exact :
     checked together in one kernel invocation. -/
 theorem terminal9780_exact :
     run 9780 seed19 = some ⟨9*t19+10,9,1⟩ := by
-  have hlen : 9780 = 4096*1+5684 := by decide
+  have hlen : 9780 = 512*8+5684 := by decide
   rw [hlen]
-  rw [run_blockedWith 4096 1 5684 seed19 seed19_canon]
-  have hfast : fastRunBlocksWith 4096 1 seed19 = some block19_1 := by
-    have h := run_blockedWith 4096 1 0 seed19 seed19_canon
-    have hlen0 : 4096*1+0 = 4096 := by decide
+  rw [run_blockedWith 512 8 5684 seed19 seed19_canon]
+  have hfast : fastRunBlocksWith 512 8 seed19 = some block19_1 := by
+    have h := run_blockedWith 512 8 0 seed19 seed19_canon
+    have hlen0 : 512*8+0 = 4096 := by decide
     rw [hlen0, block19_1_exact] at h
     simpa [run] using h
   rw [hfast]
