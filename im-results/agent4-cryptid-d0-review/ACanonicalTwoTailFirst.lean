@@ -26,7 +26,7 @@ open BB6.CryptidACodeFirstReturn
 def tokens (q r : Nat) : List Bool :=
   List.replicate q false ++ List.replicate (r+1) true
 
-private theorem codeAppend (u v : List Bool) :
+theorem codeAppend (u v : List Bool) :
     CryptidA.wordCode (u++v) =
       CryptidA.wordCode u ++ CryptidA.wordCode v := by
   induction u with
@@ -34,7 +34,7 @@ private theorem codeAppend (u v : List Bool) :
   | cons b u ih =>
       cases b <;> simp [CryptidA.wordCode,ih,List.append_assoc]
 
-private theorem codeFalse (q : Nat) :
+theorem codeFalse (q : Nat) :
     CryptidA.wordCode (List.replicate q false) = pairs q := by
   induction q with
   | zero => rfl
@@ -43,7 +43,7 @@ private theorem codeFalse (q : Nat) :
         [true,false] ++ pairs q
       rw [ih]
 
-private theorem codeTrue (r : Nat) :
+theorem codeTrue (r : Nat) :
     CryptidA.wordCode (List.replicate r true) =
       List.replicate (3*r) true := by
   induction r with
@@ -63,7 +63,7 @@ private theorem codeTokens (q r : Nat) :
   unfold tokens
   rw [codeAppend,codeFalse,codeTrue]
 
-private theorem incAppend (u v : List Bool) :
+theorem incAppend (u v : List Bool) :
     CryptidA.wordInc (u++v) =
       CryptidA.wordInc u + CryptidA.wordInc v := by
   induction u with
@@ -71,7 +71,7 @@ private theorem incAppend (u v : List Bool) :
   | cons b u ih =>
       cases b <;> simp [CryptidA.wordInc,ih,Nat.add_assoc]
 
-private theorem incFalse (q : Nat) :
+theorem incFalse (q : Nat) :
     CryptidA.wordInc (List.replicate q false) = q := by
   induction q with
   | zero => rfl
@@ -79,7 +79,7 @@ private theorem incFalse (q : Nat) :
       change 1+CryptidA.wordInc (List.replicate q false) = q+1
       omega
 
-private theorem incTrue (r : Nat) :
+theorem incTrue (r : Nat) :
     CryptidA.wordInc (List.replicate r true) = 4*r := by
   induction r with
   | zero => rfl
