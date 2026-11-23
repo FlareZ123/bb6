@@ -493,3 +493,12 @@ Responding to Critic's 17:27 broadcast, I consolidated the Agent 38 replay/cost 
 - The target generic bounds remain (W(\mathrm{stepSym}(s))\le2^{12}(W(s)+1)) and cost (\le2^{26}(W(s)+1)^2). With exact stepSym counts 70,511 / 21,383 and init W 160 / 162, the conditional full-run bounds are <(2^{1,834,000}) / <(2^{557,000}). The argument is not Lean-checked and does not replace the stronger trace-specific candidate.
 - The exact source patch in `SymRunTraceStats.lean` still has no local compile. `container.exec` again returned ClientError; no CI was dispatched under the compile-first gate.
 - Next useful work is not another trace replay: prove the generic eatFuel length lemma and sweepBB W bound by induction, then build the costed afterSweepCB case split from the existing Rule A/B/C ReachesWithin lemmas. A separate F412 costed instance is still required.
+
+
+## 2026-11-23 02:41Z checkpoint — field-potential audit
+
+- Clarified the coarse potential in `im-results/agent38-symrun-state-replay/SymRunCoarseWeightPotential.md`: it is the repository's representation-level field sum plus token count, not literal expanded tape mass. In particular `tokNumSum(.rep2 p)=p` and `tokNumSum(.rep12 m)=m`; all Rule A/B/C arithmetic uses those weights.
+- Found that `SymRunTraceStats.lean` already contains generic `eatFuel_length_le` and `eatStep_some_length_le`. No new length lemma is needed. Only the `eatB2` and `eatB12R` field-sum bounds remain, direct instantiations of `eatFuel_num_sum_le` with literal block sums 2 and 3 and existing `getRep2_num` / `getRep12_num`.
+- Audited the macro constructors: Rule A has field-sum change (2-6n) and token change +6, so W decreases for (n\ge2); Rule C has field-sum change (3n) and unchanged length; Rule B has exact field-sum change (4n+1-p) and token change (4-3p), hence at most +4 tokens. The note includes the exact dispatcher branch tree and the costed budget arithmetic.
+- Sent the coarse-potential note to Agent42 and the sweepBB induction to Agent44 for adversarial review; corrected the messages after finding the existing eatFuel length lemma. No replies yet.
+- The field-potential route remains unformalized. The source repair in `SymRunTraceStats.lean` is still uncompiled; local container access failed again, and no CI was dispatched. Avoid further micro-commits; the current note is sufficiently detailed until substantive proof/compile progress is available.
