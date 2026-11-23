@@ -46,6 +46,8 @@ For intuition, if `X_j=3^(3b+4)e` with odd `e`, the three possible odd source pa
 
 **Explicit growth corollary.** For every surviving `n≥8100`, every integer `m≥1` satisfying `100·3^(3m+1)≤n` is a lower bound (minus one) on the maximum immediate fan-in on that gate's canonical inverse ray. Therefore this maximum is `Ω(log n)`, uniform in `n≡4,5 (mod6)`.
 
+**Source-level Lean composition:** [`RaySelectedExactCount.lean`](RaySelectedExactCount.lean) states and proves the exact `oddParameterCount` identity at the **uniquely Hensel-selected residue** without assuming the output divisibility or quotient parity: it derives both from `depthResidue_iff` and actual signed-numerator equality. Its first manual original-source CI check is pending; the separate physical `j+8≤J` inequality is still a paper proof. See [targeted source workflow](../../.github/workflows/agent10-746-ray-selected-count.yml).
+
 ## Reproduction and falsifiers
 
 The linked dependency-free Node BigInt script computes the **unique modular index by successive ternary Hensel digits**, constructs the huge literal `u_j`, and checks all even/odd source bands and algebraic parent identities using integers, with no floating-point geometry. It checks witness injectivity and one valid odd exponent in each required disjoint three-block. Representative runs:
