@@ -99,6 +99,7 @@ jobs:
             lean -o "$b/TerminalFirstForkLeaf.olean" "$b/TerminalFirstForkLeaf.lean"
             lean -o "$b/RootConeComposition.olean" "$b/RootConeComposition.lean"
             lean -o "$b/TerminalFirstForkClassification.olean" "$b/TerminalFirstForkClassification.lean"
+            lean -o "$b/TerminalDeepConeBarrier.olean" "$b/TerminalDeepConeBarrier.lean"
             echo "Finished focused original-source terminal leaf proof and axiom audit."
             exit 0
           fi
