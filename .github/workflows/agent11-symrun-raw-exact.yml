@@ -41,7 +41,8 @@ jobs:
         working-directory: upstream
         run: |
           set -euo pipefail
-          cp ../local-bb6/im-results/agent11-symrun-primitive-cost/SourceExactF424Core.lean .
-          lake env lean SourceExactF424Core.lean | tee /tmp/agent11-f424-core.log
+          cp ../local-bb6/im-results/agent11-symrun-primitive-cost/{SourceF424Machine,SourceExactF424Core}.lean .
+          lake env lean -o SourceF424Machine.olean SourceF424Machine.lean
+          LEAN_PATH=. lake env lean SourceExactF424Core.lean | tee /tmp/agent11-f424-core.log
           ! grep -Eq 'sorryAx|native_decide' /tmp/agent11-f424-core.log
           echo "PASS: exact F424 primitive atomic/sweep witnesses compile against original Cryptids source"
