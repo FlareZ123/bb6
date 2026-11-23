@@ -143,6 +143,34 @@ theorem q_even_parameter_pullback_iff (j m : Nat) :
     · exact hj
     · omega
 
+/-- Adjacent q-even hcong=5 high-stop cylinder. This is only a parameter
+    pullback; the bounce-parent blank-root question remains open. -/
+theorem q_even_h5_parameter_pullback_iff (j m : Nat) :
+  (j%512=319 ∧ (171*m+879873)%1048576=(49*j)%1048576) ↔
+  (j%512=319 ∧ m%1048576=(7210+337408*(j/512))%1048576) := by
+  constructor
+  · rintro ⟨hj,hc⟩
+    let u := j/512
+    have hjEq : j=319+512*u := by
+      have hd := Nat.mod_add_div j 512
+      rw [hj] at hd
+      dsimp [u]
+      omega
+    constructor
+    · exact hj
+    · omega
+  · rintro ⟨hj,hm⟩
+    let u := j/512
+    have hjEq : j=319+512*u := by
+      have hd := Nat.mod_add_div j 512
+      rw [hj] at hd
+      dsimp [u]
+      omega
+    constructor
+    · exact hj
+    · omega
+
+
 /-- Every high-stop parameter in the S2 cylinder has an all-time root exclusion. -/
 theorem s2_high_parameter_no_blank (j m time : Nat)
     (hj : j%512=319)
