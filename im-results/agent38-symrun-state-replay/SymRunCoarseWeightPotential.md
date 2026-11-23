@@ -37,11 +37,11 @@ The following bounds are deliberately loose.
 
    Therefore either bump raises \(W\) by at most 8. The existing peelTok_num_sum_le plus the corresponding length bound gives an increase of at most 7 for replacing a head token by its peeled form.
 
-2. **Eating.** eatFuel_num_sum_le proves that a positive-mass block is exchanged for its repeat counter without increasing numeric mass. A direct induction on fuel should also give
+2. **Eating.** eatFuel_num_sum_le proves that a positive-mass block is exchanged for its repeat counter without increasing numeric mass. The length lemma
    \[
-   |\operatorname{eatFuel}(\ldots,xs)|\le |xs|+1.
+   |\operatorname{eatFuel}(\ldots,xs)|\le |xs|+1
    \]
-   In the successful sweepBB branches, the stripped prefix is reinserted with the same mass; the repeat token consumed from the left pays for the resulting right-side representation.
+   follows by induction on fuel: every successful eatStep returns a strict suffix (getRep removes one token; stripPrefixSym removes a nonempty block). On no match, eatFuel emits one repeat token before xs; on a match, the induction hypothesis bounds the result by the shorter suffix length plus one, hence by |xs|. In successful sweepBB branches, the stripped prefix is reinserted with the same mass; the repeat token consumed from the left pays for the resulting right-side representation.
 
 3. **Atomic symbolic steps.** The case definitions support the target inequalities
    \[
@@ -68,7 +68,7 @@ The following bounds are deliberately loose.
    \le W(BB,L,R)+8|L|+18
    \le 32(W(BB,L,R)+1).
    \]
-   In that induction, .run 1 contributes at most 8; successful eatB1/eatB2/eatB12R branches do not increase the potential; a failed peel followed by stepElemBB contributes at most 17; and terminal stepElemBB contributes at most 10. The missing mass lemmas for eatB2 and eatB12R follow from the existing generic eatFuel_num_sum_le, since their blocks have positive mass.
+   The constructor accounting is explicit: .run 0 moves to the right without changing W; .run 1 consumes one left token, adds a right run-zero, and applies bumpSymR, for net increase at most 8; .repB1 consumes its left token while eatB1 adds at most one right token and preserves mass; successful .rep2/.rep12 branches reinsert the stripped two-token prefix, with eatB2/eatB12R preserving mass and adding at most one token, again paid for by the removed left token. A failed .rep2/.rep12 branch peels with at most +2 mass and +5 length relative to the input, then stepElemBB adds at most +3 mass and +7 length, for net +17. The base, .zero, and .run(d+2) terminal branches use stepElemBB and cost at most +10. Thus there are at most |L| recursive +8 contributions and one terminal contribution at most 18. The missing mass lemmas for eatB2 and eatB12R follow from generic eatFuel_num_sum_le, since their blocks have positive mass.
 
 5. **Finish-after-one-element.** Combining the atomic inequalities with the BB sweep bound should give
    \[
