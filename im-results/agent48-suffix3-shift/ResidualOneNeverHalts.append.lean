@@ -1,15 +1,17 @@
 /-!
 Source-local closure of the residual-one S-family into the nonhalting T-family.
 
-This fragment depends on RootCountdownSweep.append.lean,
+This fragment depends on the corrected RootCountdownSweep fragment,
 RootRemainderTwoToken.append.lean, and RootTokenGrowthStep5.append.lean.
 It does not establish blank-root reachability: it proves nonhalting only
 for the parameterized residual-one seed family.
 -/
 
-/-- Residual-one seed S(k) used by the 3-adic branch. -/
+/-- Explicit tape encoding of the residual-one seed S(k). -/
 def s3_residual_one_cfg (k : ℕ) : Cfg (Fin 2) (Fin 6) :=
-  tok_DR [2,1,1,1,1,1,0] [] (List.replicate (k+1) 0 ++ [1])
+  ((([1,1,0,1,0,1,0,1,0,1,0,1,0,0] : List (Fin 2)) +> default)
+    {{D}}>
+    ((List.flatten (List.replicate (k+1) ([1,0] : List (Fin 2))) ++ [1,1,0]) +> default))
 
 /-- S(k) reaches the exact CR countdown state. -/
 theorem s3_residual_one_to_CR (k : ℕ) :
@@ -17,22 +19,12 @@ theorem s3_residual_one_to_CR (k : ℕ) :
       (cfg_CR_n_n
         (List.replicate (k+9) (0,0) ++ [(1,0)]) [(0,0)]) := by
   have h1 := root_d2_tok_dr_zero_sweep k [1,1,1,1,1,0] [] [1]
-  have h2 :
-      ReachesPlus target
-        (tok_DR (2 :: List.replicate (k+1) 1 ++ [1,1,1,1,1,0]) [] [1])
-        (tok_EL (List.replicate (k+6) 1 ++ [0]) [] [0,0,0,1]) := by
-    simpa [List.replicate_succ, List.cons_append, List.append_assoc] using
-      (tok_DR_1_nil_28 (List.replicate k 1 ++ [1,1,1,1,1,0]) [])
-  have h3 :
-      ReachesPlus target
-        (tok_EL (List.replicate (k+6) 1 ++ [0]) [] [0,0,0,1])
-        (tok_EL [0] [] (List.replicate (k+9) 0 ++ [1])) := by
-    simpa [List.replicate_succ, List.cons_append, List.append_assoc] using
-      (root_d2_tok_el_one_sweep (k+5) [0] [] [0,0,0,1])
+  have h2 := tok_DR_1_nil_28 (List.replicate k 1 ++ [1,1,1,1,1,0]) []
+  have h3 := root_d2_tok_el_one_sweep (k+5) [0] [] [0,0,0,1]
   have h4 := tok_EL_exit_zero [] (List.replicate (k+9) 0 ++ [1])
-  simpa [s3_residual_one_cfg, List.map_replicate, List.map_append,
-    List.replicate_succ, List.cons_append, List.append_assoc, bumpPairHead] using
-    (ReachesPlus.trans h1 (ReachesPlus.trans h2 (ReachesPlus.trans h3 h4)))
+  have h := ReachesPlus.trans h1 (ReachesPlus.trans h2 (ReachesPlus.trans h3 h4))
+  simpa [s3_residual_one_cfg, List.replicate_succ, List.cons_append,
+    List.append_assoc, List.map_replicate, List.map_append, bumpPairHead] using h
 
 /-- The countdown CR state returns to the token family with parameter 2r+18. -/
 theorem s3_CR_to_T (r : ℕ) :
@@ -48,7 +40,7 @@ theorem s3_CR_to_T (r : ℕ) :
   have h6 : ReachesPlus target
       (cfg_DR_n_n [(0,0),(0,0)] [(1,0),(2*r+18,0)])
       (s3_tok_growth_cfg (2*r+18)) := by
-    unfold s3_tok_growth_cfg tok_DR cfg_DR_n_n
+    unfold s3_tok_growth_cfg cfg_DR_n_n
     texecute 4
   have h := ReachesPlus.trans h1
     (ReachesPlus.trans h2
