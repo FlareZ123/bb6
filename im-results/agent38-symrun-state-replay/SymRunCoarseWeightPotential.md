@@ -140,10 +140,10 @@ The current costed pilot already contains generic cost bounds for the sweeps and
 For a successful macro, the existing iteration lemmas give:
 
 - Rule A: at most \(2^{19}(M+1)^2\);
-- Rule B: \(50\cdot126\cdot n(M+4n+127)\), which is at most \(2^{20}(M+1)^2\) when \(n\le M\);
-- Rule C: \(50\cdot46\cdot n(M+2n+47)\), which is at most \(2^{17}(M+1)^2\) when \(n\le M\).
+- Rule B: \(50\cdot126\cdot n(M+4n+127)\). When \(n\le M\), \(M+4n+127\le5M+127\le132(M+1)\), and \(50\cdot126\cdot132=831{,}600<2^{20}\);
+- Rule C: \(50\cdot46\cdot n(M+2n+47)\). When \(n\le M\), \(M+2n+47\le3M+47\le48(M+1)\), and \(50\cdot46\cdot48=110{,}400<2^{17}\).
 
-After the CB sweep, \(M_1\le S_1\le4W\), so all successful macro costs are bounded by \(2^{20}(4W+1)^2\). The fallback cost is smaller using \(M_1\le4W\) and \(|L_1|\le6W\). Including the outer sweep, a safe common target is
+After the CB sweep, \(M_1\le S_1\le4W\), so all successful macro costs are bounded by \(2^{20}(4W+1)^2\le2^{24}(W+1)^2\). For fallback, \(M_1+1\le4(W+1)\) and the stepElemCB left-length bound gives \(|L_1|\le|L|+7\le W+6\), hence \(|L_1|+8\le14(W+1)\). Therefore \(2^9(M_1+1)(|L_1|+8)\le2^9\cdot56(W+1)^2<2^{15}(W+1)^2\). The outer sweepCB cost is at most \(50(W+1)^2<2^6(W+1)^2\). The sum of these contributions is below \(2^{25}(W+1)^2\), so a safe common target is
 
 \[
 \boxed{\operatorname{cost}(\operatorname{stepSym}(s))
