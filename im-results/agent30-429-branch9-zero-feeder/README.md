@@ -1,6 +1,6 @@
 # BB429 branch-9 diagonal feeder and exceptional-parent sieve
 
-**Mathematical scope.** This is an exact algebraic reduction of one branch-9 last-reset family in the genuine `BB429.next` accelerator, a **source-kernel-checked uniform modulo-32 exclusion** for its exceptional inverse parents, and a separate finite-depth inverse sieve. The main exclusion and its symbolic power-of-two specialization were compiled with the original source closure in [manual CI 45112940106](https://github.com/FlareZ123/bb6/actions/runs/45112940106); both exported theorems audit exactly `[propext, Classical.choice, Quot.sound]`, without `sorryAx`. The deeper sieve is exact-integer JavaScript computation, **not a compiled Lean proof**. This dossier does not establish that any pre-reset state is reachable or unreachable for every parameter. Machine #429 and BB(6) remain open.
+**Mathematical scope.** This dossier combines an exact algebraic branch-9 diagonal last-reset subfamily of the genuine `BB429.next` accelerator with source-kernel-checked all-time blank-root necessary conditions. They now exclude **27/32** exceptional-parent parameter classes modulo 32, **21/32** all-F zero-two predecessor parameter classes modulo 32, and all but **6/256** burst-index classes on the all-F central-zero branch. All cited exported Lean theorems have been compiled against the unchanged original source closure and report only `[propext, Classical.choice, Quot.sound]`, not `sorryAx`. A separate deeper exact-integer dyadic inverse sieve remains computational, not yet a Lean proof. The algebraic inverse paths and conditional root exclusions do **not** determine reachability for every parameter, the behavior of machine #429, or BB(6).
 
 ## Authentic source, last-reset family, and full inverse grammar
 
@@ -56,6 +56,13 @@ When `J≥5` and `t≥5` the parent has
 
 The checked source [BB429Branch9SideRoot.lean](BB429Branch9SideRoot.lean) proves the abstract root theorem `side_parent_k_mod32` and the parametric power-of-two theorem `diagonal_side_parent_k_mod32`, importing unchanged [BB429NewResidue](../agent6-harmonic429/BB429NewResidue.lean), [BB429Mod8](../agent6-harmonic429/BB429Mod8.lean), [positive-even-eight](../agent39-429-1021/BB429RootEven8.lean), and [the strengthened five row](../agent18-429-root-invariants/BB429SevenStrong.lean). The odd/odd sum obstruction is proved **directly** from the exact `odd_back` inverse lemma and the positive-even-eight theorem, not assumed from an independently compiled wrapper. The exact source closure and exported axiom profiles passed [manual CI 45112940106](https://github.com/FlareZ123/bb6/actions/runs/45112940106) at Lean 4.36.0-rc2, source commit `b055e879cf6781317b4159811a8daae9ec37ff3a`. This is an all-natural implication about authentic blank-root reachability, not a synthetic-state experiment.
 
+**Forced-one-inverse refinement (kernel-checked).** The exceptional parent has odd second coordinate, so the exact `odd_back` source lemma forces the F predecessor. If `k≡3 (mod16)`, its positive-even first counter is `2 (mod4)` but its second coordinate is `2 (mod16)`, contradicting [BB429Even16.rooted_even_sixteen](../agent30-429-even16/BB429Even16.lean), which requires `10 (mod16)`. The stronger source theorem [BB429Branch9SideStrong.lean](BB429Branch9SideStrong.lean) therefore restricts every sufficiently interior exceptional parent (`J,t≥5`, first counter `X≥129`) to
+
+    k mod32 ∈ {1,9,11,25,27}.
+
+This **excludes 27 of 32 k residues**, uniformly over the burst parameters. Its abstract and exact-power theorems passed [CI 45114836298](https://github.com/FlareZ123/bb6/actions/runs/45114836298), without `sorryAx`. A two-inverse-step source proof candidate [BB429Branch9SideDepth2.lean](BB429Branch9SideDepth2.lean) aims at eleven remaining classes modulo 128; treat that additional cut as unverified until its separate source job succeeds.
+
+
 This gives a uniform necessary condition on **every sufficiently interior exceptional branch**, not merely seven sampled values of `J`.
 
 ## Dyadic reverse-tree sieve: computation and proof obligation
@@ -92,6 +99,27 @@ Thus the **depth-16 finite inverse search** rejects `4191236/4194304` classes of
 
 The algorithm can be run with `node im-results/agent30-429-branch9-zero-feeder/side_branch_sieve.js 16`. The JavaScript source is deliberately standalone and the computed count includes a regression assertion; local runtime execution was unavailable in this invocation, so the script was not re-run after being committed. The numbers were produced by a functionally equivalent exact-BigInt interpreter in the available code execution runtime, not by Lean or original-machine simulation.
 
+## Stronger source-kernel-checked zero-return root gates
+
+For all genuine blank-root visits with a parent first counter `u≥129`, the exact source map yields **two** possible predecessors of a zero output with second coordinate `z≡2 (mod4)`:
+
+- **Upper**: input `(u,2u+2)`, output `(0,4u+18)`; [BB429UpperBoundary.rooted_upper_mod16](BB429UpperBoundary.lean) proves `u mod16∈{0,5,8,13}`, versus seven previously allowed classes. [CI 45114018547](https://github.com/FlareZ123/bb6/actions/runs/45114018547).
+- **Odd reset**: input `(u,2u-3)`, output `(0,4u+2)`; [BB429OddResetImproved.rooted_odd_reset_necessary_three](BB429OddResetImproved.lean) proves `u mod32∈{13,15,29}`, eliminating `7,21,31` from the older six-class root gate. The proof uses the source F/E inverses and all-time even16, odd/odd, one-nine rows, not a synthetic tape assumption. [CI 45114373790](https://github.com/FlareZ123/bb6/actions/runs/45114373790).
+
+In the diagonal all-F feeder with `J=4m+2≥6`, `z_J+12m≡30 (mod128)`. Substituting the two branches gives exactly the following **source-certified necessary residue set**:
+
+    m mod32 ∈ {1,2,8,9,10,14,17,18,25,26,30}.
+
+The 21 other residue classes cannot be blank-root ancestors of `(0,z_J)` through either zero-two source branch with `u≥129`. The theorem [BB429ZeroTwoThree.diagonal_zero_two_m_power_eleven](BB429ZeroTwoThree.lean) establishes this for all natural parameters satisfying the exact power equation, not just sampled exponents. [CI 45114573957](https://github.com/FlareZ123/bb6/actions/runs/45114573957), exact original source, standard axioms only. It does not preclude any S predecessor on the earlier diagonal spine.
+
+For `J≡0 (mod4)`, the feeder `z_J` is `0 (mod4)`, and these zero-two gateway theorems do **not** apply. However, one candidate is the **central reset** input `(u,2u)`, output `(0,4u+12)`. [BB429CenterLine.rooted_center_mod32](BB429CenterLine.lean) initially restricted `u mod32` to `{13,17,25,29}`; its source refinement [BB429CenterLineMod64.rooted_center_mod64](BB429CenterLineMod64.lean) restricts `u mod64` to `{13,17,29,45,57,61}`, excluding two further dyadic cylinders with genuinely reachable inverse predecessors. Combining `4u+12=z_J` with the exact power formula yields
+
+    J mod256 ∈ {12,76,140,156,188,204}
+
+as a **necessary** condition for the central-reset branch of the all-F route (`J≥8`, `N≥6`, `u≥129`). The [Lean theorem `diagonal_zero_center_power_j_mod256`](BB429CenterLineMod64.lean) was accepted by [CI 45114582855](https://github.com/FlareZ123/bb6/actions/runs/45114582855). This excludes the central source branch for 250 of 256 exponent classes, but the `0 (mod4)` zero-output grammar contains **other branches** (including the odd-gap resets) that remain unclosed. It is not a full all-F exclusion for `J≡0 (mod4)`.
+
+These restrictions concern authentic blank-root *necessity* on named inverse routes, and are not claims of positive reachability or nonhalting of machine #429.
+
 ## Zero-parent bottleneck on the residual all-F spine
 
 On the all-F route, `z_J` is even exactly when `J` is even. For `J=4m+2≥6`,
@@ -111,9 +139,9 @@ The earlier exact DFS for individual `J=2,…,8` explored both exceptional alter
 
 ## Unresolved mathematical quantifiers and next tests
 
-1. The single-stage 25/32 congruence theorem is already source-certified; next translate the depth-`D` **additional** residue pruning into a source-attached Lean certificate generator on the exact `BB429.next` inverse lemmas, with weighted modulus soundness and correct base guards. Its numerical census is not yet a theorem.
+1. The nested 25/32 and 27/32 congruence theorems are already source-certified; next translate the depth-`D` **additional** residue pruning into a source-attached Lean certificate generator on the exact `BB429.next` inverse lemmas, with weighted modulus soundness and correct base guards. Its numerical census is not yet a theorem.
 2. Prove a structural invariant for exceptional parents in the sparse surviving dyadic classes, rather than simply increasing `D` or listing more residues.
-3. Close remaining `t<22` edge branches and the low-nine zero feeder. The present source-filter reductions, even if all accepted, leave these routes open.
+3. Close remaining `t<22` exceptional-parent edge branches and the low-nine zero feeder, especially the `z≡0 (mod4)` non-central reset grammar. The present source-filter reductions, even if all accepted, leave these routes open.
 4. Handle non-diagonal branch-9 `h≠0`; its previously derived first-even valuation filter is branch-local because alternative S predecessors remain.
 
-The 25/32 source theorem is a genuine all-parameter restriction for one conditional feeder, not a nonhalting proof for #429. No entry is promoted to `results/` while the unresolved alternative routes, a decision consequence, and external novelty review remain open.
+The 27/32 source theorem and 21/32 zero-two gateway are genuine all-parameter restrictions on named conditional feeders, not nonhalting proofs for #429. No entry is promoted to `results/` while the unresolved alternative routes, a decision consequence, and external novelty review remain open.
