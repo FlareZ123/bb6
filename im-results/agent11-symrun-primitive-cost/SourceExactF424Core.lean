@@ -3,11 +3,12 @@ Exact original-machine primitive-step witnesses, extracted without alteration of
 from Agent 42's SymRunCostedStepPilot.lean (first source-defined exact-cost section).
 Copyright/authorship of original lemmas remains with Agent 42; this isolated copy enables
 a standalone Lean 4.36.0-rc2 original-Cryptids CI compile without the unrelated pilot
-field-growth/bound code and SymRunTraceStats dependency. The only edits are removing the
-SymRunTraceStats import, splitting at the Local field measure section, and closing namespace.
+field-growth/bound code and SymRunTraceStats dependency. Edits: remove SymRunTraceStats import, split at local field-measure section,
+close namespace, and import a lightweight byte-identical original F424 transition
+table instead of all 18 expensive upstream halting checkpoint certificates.
 Pinned source: google-deepmind/cryptids @ 3647718b5df22e1a61462dec0376bd204526285a.
 -/
-import BusyBeaver.BB6.Halt.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH
+import SourceF424Machine
 
 /-!
 # F424 exact primitive-time pilot
