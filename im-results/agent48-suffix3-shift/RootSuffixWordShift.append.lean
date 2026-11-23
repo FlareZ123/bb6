@@ -54,6 +54,7 @@ private theorem s3_word_prefix (n t : ℕ) (T : List (ℕ × ℕ)) :
                 (ReachesPlus.trans h7 h8)))))))
 
 /-- Shift three from the first nonzero suffix digit, preserving every later digit. -/
+set_option maxHeartbeats 1000000 in
 theorem s3_universal_word_suffix_shift (n t : ℕ)
     (T : List (ℕ × ℕ)) :
     ReachesPlus target (s3DWord n (t+3) T)
@@ -81,8 +82,8 @@ theorem s3_universal_word_suffix_shift (n t : ℕ)
         (cfg_DR_n_n [(1,0)] ((1,0)::
           (List.replicate (4*n+8) (0,0) ++ [(t,0)] ++ T)))
         (s3DWord (n+1) t T) := by
-    simpa [s3DWord, List.replicate_succ, List.cons_append,
-      List.append_assoc, Nat.mul_add, Nat.add_assoc] using h6
+    simpa [s3DWord, s3_zero_push, List.replicate_add, List.replicate_succ,
+      List.cons_append, List.append_assoc, Nat.mul_add, Nat.add_assoc] using h6
   have hchain := ReachesPlus.trans h1
     (ReachesPlus.trans h2
       (ReachesPlus.trans h3
@@ -103,5 +104,7 @@ theorem s3_iterated_word_suffix_shift (k n t : ℕ)
       have h1 := s3_universal_word_suffix_shift
         n (t+3*(k+1)) T
       have h2 := ih (n+1)
-      simpa [Nat.mul_add, Nat.add_assoc, Nat.add_left_comm,
-        Nat.add_comm] using ReachesPlus.trans h1 h2
+      have ht : t + 3*((k+1)+1) = t + 3*(k+1) + 3 := by omega
+      have hn : n + ((k+1)+1) = (n+1) + (k+1) := by omega
+      rw [ht, hn]
+      exact ReachesPlus.trans h1 h2
