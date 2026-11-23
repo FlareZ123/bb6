@@ -56,8 +56,16 @@ jobs:
           cp im-results/agent4-c-four-step-image/CNewM1Depth4.lean /tmp/agent4-three/
           cp im-results/agent4-c-five-image/{CAltFifthArithmetic,CAltFifthSource,CAltFifthGate,CAltFifthStrict,CAltSixthStrict,CAltSixthGate,CAltSeventhCounterexample}.lean /tmp/agent4-three/
           cp im-results/agent4-c-seven-image/{CSixSeventhArithmetic,CSixSeventhStrict,CSixSeventhRoot,CSixSeventhS2,CSixSeventhGate,CSixSeventhGateWide,CSixSeventhDiagonal}.lean /tmp/agent4-three/
+          python3 "${GITHUB_WORKSPACE}/tools/lean_compile_closure.py" \
+            "${GITHUB_WORKSPACE}/im-results/agent11-c-bounce-exact/HighSumTwo.lean" \
+            --workdir /tmp/agent4-highsumtwo --jobs 4 --lean "$(command -v lean)" \
+            2>&1 | tee /tmp/agent4-highsumtwo.log
+          if grep -q sorryAx /tmp/agent4-highsumtwo.log; then
+            echo "REJECTED sorryAx in odd-right sum-two dependency closure"
+            exit 1
+          fi
           cd /tmp/agent4-three
-          export LEAN_PATH=.
+          export LEAN_PATH="/tmp/agent4-highsumtwo:/tmp/agent4-three"
           lean --version
           for f in CLine GenericSection CReachBridge CPhaseRank CSectionTotal JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef FastSectionProof FastSectionHalting Agent46CBridge BounceInverse EvenTargetForward BounceEvenExact BounceOddExact BounceEvenThree BounceEvenNoFour Agent38SectionParity BounceAllExact SectionAllInverse Agent3CImage Agent3COneFamily Agent3COrbitIff OddSliver OddSevenSliver OddOddWedge OddOddOrbit OddOddVal3 OddOddVal3Orbit OddOddLowVal EvenOddFourExact EvenEvenInverse OddEvenInverse ExtraEvenOrbit SectionAffineInverse EvenRightSixOrbit M0EvenEvenSumZero ConeArithmetic ConeSource ConeBroadArithmetic S2QEvenResidue ConeBroadSource ThreeConeArithmetic ThreeConeSource ThreeConeProper CThreeArithmetic CThreeSource CThreeStop CThreeGenericSource CThreeGenericStop CThreeWit CThreeAltSource CThreeAltStop CThreeAltWit CThreeDiagonal CThreeToFourSource CFourHierarchy CAllDepthBlank CNewM1 CNewM1Depth4 CAltFifthArithmetic CAltFifthSource CAltFifthGate CAltFifthStrict CAltSixthStrict CAltSixthGate CAltSeventhCounterexample CSixSeventhArithmetic CSixSeventhStrict CSixSeventhRoot CSixSeventhS2 CSixSeventhS2QEven CSixSeventhS2Pullback CSixSeventhGate CSixSeventhGateWide CSixSeventhDiagonal; do
             echo "Compiling $f"
