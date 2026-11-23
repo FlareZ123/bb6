@@ -97,7 +97,7 @@ private theorem s3_zero_prefix (n : ℕ) :
         (cfg_CR_n_n [] ((2,0)::tail)) := by
     simpa [s3D, tail, bumpPairHead, List.replicate_succ,
       List.cons_append, List.append_assoc] using
-      (s3_cr_zero [] (List.replicate (4*n+5) (0,0) ++ [(0,0),(0,0)]))
+      (s3_cr_zero [] ((0,0)::tail))
   have h2 :
       ReachesPlus target
         (cfg_CR_n_n [] ((2,0)::tail))
