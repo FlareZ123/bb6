@@ -22,7 +22,8 @@ set_option linter.unusedSimpArgs false
 namespace BB6.CryptidELowCanonicalFirst
 
 open CryptidBoundary
-open BB6.Padding BB6.BoundaryPadding
+open BB6.Padding (TapeEq tapeEq_trans tapeEq_symm bitAt)
+open BB6.BoundaryPadding
 open BB6.CryptidPrefixFirstReturn
 open BB6.CryptidE111FirstReturn
 open BB6.CryptidFirstReturn
