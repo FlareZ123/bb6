@@ -1,5 +1,6 @@
 import BB429Branch7Source
 import BB429Branch29Mod64
+import BB429Branch29Arithmetic
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -180,6 +181,41 @@ theorem source_branch7_29_burst_mod8192
   · omega
   · omega
   · omega
+
+
+/-- Pinned original Cryptids blank-source version of the stronger
+necessary branch-7 last-burst 16384 residue restriction. The genuine
+raw source root is transported by the trusted source-to-local theorem,
+then the all-time rooted twelve-q-class result is applied directly
+to the exact final-burst Diophantine equation. -/
+theorem source_branch7_29_burst_mod16384
+    (i n x y : Nat)
+    (hroot : BB429SourceLadder.sourceRun i highLevelStart =
+      some (.J x y))
+    (hbranch : y+3=2*x)
+    (h29 : x%32=29)
+    (hn : 18≤n)
+    (heq : 4*x+3*n+15=3*2^(n+2)) :
+    n%16384=16255 ∨ n%16384=4991 ∨ n%16384=10239 ∨
+    n%16384=14335 ∨ n%16384=2943 ∨ n%16384=8191 ∨
+    n%16384=13183 ∨ n%16384=2047 ∨ n%16384=1919 ∨
+    n%16384=6143 ∨ n%16384=11135 ∨ n%16384=16383 := by
+  let q := x/32
+  have hx : x=32*q+29 := by dsimp [q]; omega
+  have hy : y=64*q+55 := by omega
+  have hb := n_plus_1000_le_pow n hn
+  have hmul : 3*(n+1000)≤3*2^(n+2) :=
+    Nat.mul_le_mul_left 3 hb
+  have hq : 21≤q := by omega
+  have hsrc := hroot
+  rw [hx,hy] at hsrc
+  have hlocal := BB429SourceMod16.source_run_to_local i
+      (32*q+29) (64*q+55) hsrc
+  have heq' : 128*q+3*n+131=3*2^(n+2) := by omega
+  exact BB429Branch29Arithmetic.local_branch29_burst_mod16384
+    q n hq hn ⟨i,hlocal⟩ heq'
+
+#print axioms source_branch7_29_burst_mod16384
 
 #print axioms source_29_q_eight_mod64
 #print axioms source_branch7_29_burst_mod8192
