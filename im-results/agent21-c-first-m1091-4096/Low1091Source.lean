@@ -248,7 +248,7 @@ private theorem no_low_target (u : Nat) (hu : u%4=0) :
       a=512*u+408 ∧ k=768*u+612 := by
     intro a k hedge
     have hp := odd_odd_sum4_parent a k 1 (1024*u+819)
-      (by omega) (by omega) (by omega) (by omega) (by omega) hedge
+      (by omega) (by omega) (by omega) (by omega) (by omega) (by omega) hedge
     constructor <;> omega
   have hP : CReach (512*u+408) (768*u+612) :=
     cReach_of_unique_parent 1 (1024*u+819) (512*u+408) (768*u+612)
