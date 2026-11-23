@@ -1,6 +1,6 @@
 # Exact inverse-spine structure for #746 halting gates
 
-**Status:** seven algebraic statements over the exact original-source `ResetParent` grammar: (i) the existing narrow-window t=0 entry embedding into a *single* even-spine branch, (ii) an all-sector, all-index **exact criterion for predecessor existence at the canonical spine's terminal state**, (iii) a full **unique-chain root-exclusion** on a low-valuation terminal subfamily, and (iv) a two-edge exclusion in a second low-valuation sector, and (v) a disjoint four-edge exclusion in its next dyadic-depth window, and (vi) a forced second-tier odd-parent fork in a further infinite narrow high-c strip, and (vii) a complete nonterminal off-spine fork cone two indices closer to the actual gate. The complete derivations are paper proofs, not yet compiled against the original source in Lean. Neither statement eliminates off-spine odd-parent forks or decides the machine.
+**Status:** eight algebraic statements over the exact original-source `ResetParent` grammar: (i) the existing narrow-window t=0 entry embedding into a *single* even-spine branch, (ii) an all-sector, all-index **exact criterion for predecessor existence at the canonical spine's terminal state**, (iii) a full **unique-chain root-exclusion** on a low-valuation terminal subfamily, and (iv) a two-edge exclusion in a second low-valuation sector, and (v) a disjoint four-edge exclusion in its next dyadic-depth window, and (vi) a forced second-tier odd-parent fork in a further infinite narrow high-c strip, and (vii) a complete nonterminal off-spine fork cone two indices closer to the actual gate, extended by six forced-even levels, and (viii) a second complete off-spine fork giving a 17-node root-dead cone thirteen inverse levels nearer the gate. The complete derivations are paper proofs, not yet compiled against the original source in Lean. Neither statement eliminates off-spine odd-parent forks or decides the machine.
 
 ## 1. Actual source gate
 
@@ -892,7 +892,207 @@ above and zero unexpected parents.
 That is a consistency check, not the
 uniform proof.
 
-## 10. Where the current E-parent results apply
+## 10. Two complete off-spine forks: a 17-node inverse cone thirteen levels out
+
+The exact nine-node cone in Section 9 can be extended across
+the **next six-step Hensel period** in two explicit infinite
+subfamilies. This resolves two distinct nonterminal odd forks,
+not just a root-dead single spine.
+
+**Theorem (complete depth-13 reverse cone; paper proof).**
+Assume the Section 9 gate hypotheses \(n\ge257\),
+\(n\bmod6\in\{4,5\}\), \(J\) even,
+\(4c>7\cdot2^a\), and
+\(X_{J-2}=2u_{J-2}+5\equiv9\pmod{27}\).
+Write
+\[
+  X_8:=2u_{J-8}+5,\quad
+  d_8=X_8/9,\quad
+  h_8=4d_8-2p-n-3,\quad
+  g_8=2h_8-2p-n+2.
+\]
+Suppose one of the following further modular alternatives:
+
+\[
+\begin{array}{ll}
+{\rm (A)}&n\bmod6=4,\quad (2h_8+5)\bmod27\ne0;\\
+{\rm (B)}&n\bmod6=5,\quad X_8\bmod81=54.
+\end{array}
+\]
+
+Then the **full** inverse ResetParent cone of
+\(u_{J-13}\) consists of **exactly 17 distinct
+vertices**, namely the fourteen consecutive
+canonical even-ray states
+\(u_{J-13},u_{J-12},\ldots,u_J\),
+the first off-spine odd feeder \(h_2\)
+at \(u_{J-2}\) (defined in Section 9),
+and the second fork
+\[
+   u_{J-8}\longleftarrow h_8
+                     \longleftarrow g_8.
+\]
+The only leaves are \(u_J,h_2,g_8\).
+All three differ from the blank root 2.
+Therefore
+\[
+ \boxed{\neg\operatorname{ResetChain}(2,u_{J-13})}
+ \quad\text{and}\quad
+ \boxed{\neg\operatorname{ReachC}((2,0),(u_{J-13},0))}.
+\]
+
+**Proof: isolation of the next odd fork.**
+By the six-step period of \(2^j\bmod9\),
+\(j=J-8\) is the next even ray index,
+going backward from \(J-2\), for which
+\(9\mid X_j\). Every intermediate
+\(j=J-3,\ldots,J-7\), and every
+\(j=J-9,\ldots,J-13\), has no odd
+parent: odd j gives \(3\nmid X_j\),
+while the other even j have
+\(9\nmid X_j\) and a t=0
+source in the gap \((2p,3p)\).
+Their only parent is the canonical
+even successor. The earlier four-node
+fork remains exactly as in Section 9.
+
+At \(j=J-8\), the t=0 source is still
+in the gap \((2p,3p)\). The t=1 odd
+source \(2X_8/9\) lies in the
+level-(n−2) band
+\([3p/2+1,2p-1]\), producing the
+displayed \(h_8\), in addition to the
+canonical even parent \(u_{J-7}\).
+
+The exact congruence
+\[
+  X_{J-2}-X_8
+       =-126c\,2^{J-8}
+\]
+shows that \(X_8\bmod27=18\) in
+sector \(n\bmod6=4\), and
+\(X_8\bmod27=0\) in sector
+\(n\bmod6=5\).
+In (A) this gives \(v_3(X_8)=2\),
+so no odd t≥2 parent of \(u_{J-8}\)
+exists. In (B), \(v_3(X_8)=3\):
+the only possible additional
+valuation t=2 has source coordinate
+\(4X_8/27\in(p,3p/2)\), an
+odd-source gap, while t≥3 requires
+\(81\mid X_8\), excluded by
+\(X_8\bmod81=54\).
+Thus in both alternatives the only
+odd parent of \(u_{J-8}\) is \(h_8\).
+
+**Proof: both levels of the new fork close.**
+Using \(7p/4<q<2p\), the explicit
+formula is
+\[
+ h_8=\frac{14p-q/32-n-15}{9},
+\]
+which lies in the \(k=n-2\) even-target
+band \([3p/2-1,2p-3]\).
+Its **only** even predecessor is
+\[
+ g_8
+  =\frac{10p-q/16-11n-12}{9},
+ \qquad p<g_8<9p/8-4,
+\]
+in the gap between even-target bands.
+The elementary growth \(p\gg n\) for
+n≥257 makes all endpoint inequalities
+strict.
+
+In case (A), \(h_8\bmod3=2\).
+Its t=0 odd source \((2h_8+5)/3\)
+lies in the odd-band gap \((p,3p/2)\);
+its t=1 source \(2(2h_8+5)/9\),
+when integral, lies in
+\((p/2,3p/4)\), another gap.
+Any t≥2 odd parent requires
+\(27\mid(2h_8+5)\), excluded by
+the (A) hypothesis. Hence
+\(h_8\) has only the even parent
+\(g_8\). The latter has
+\(g_8\bmod3=0\), eliminating all
+odd parents; its even-target gap
+eliminates the rest. Thus \(g_8\)
+is a nonroot leaf.
+
+In case (B), \(h_8\bmod3=0\),
+so it has no odd parent to begin
+with. Its only parent is \(g_8\),
+which has \(g_8\bmod3=2\).
+The t=0 source of \(g_8\) lies
+below the level-(n−3) lower
+band, because \(g_8<9p/8-4\).
+Write \(d_8=X_8/9\). From
+\[
+ 2g_8+5=16d_8-12p-6n-3
+\]
+and \(d_8\bmod9=6\)
+(the (B) residue), \(p\bmod9=5\)
+and \(n\bmod3=2\), one gets
+\[
+ (2g_8+5)\bmod9=3.
+\]
+Thus every t≥1 odd parent is
+impossible. Again \(g_8\) is
+parentless and different from 2.
+These cases exhaust the second fork;
+the 17-node cone is complete.
+
+**Asymptotic positive-density subfamilies.**
+For fixed large even a, (A)
+occupies asymptotically
+\[
+  \frac1{72}\cdot\frac89
+  =\boxed{\frac1{81}}
+\]
+of surviving gate indices within
+the full dyadic a-block. The extra
+8/9 follows from the exact
+shift \(n\mapsto n+54\):
+once \(X_{J-2}\bmod27=9\)
+is fixed, \((2h_8+5)\bmod27\)
+cycles through the nine multiples
+of three in a period-nine orbit.
+In fact its step is 3, 12, or 21
+mod27 according to \(a\bmod6\);
+exactly one of nine lifts fails (A).
+
+For fixed large odd a, (B)
+occupies asymptotically
+\[
+ \frac1{72}\cdot\frac13
+ =\boxed{\frac1{216}}
+\]
+of surviving gate indices.
+On increments \(n\mapsto n+54\),
+\(X_8\bmod81\) advances by 54
+(derived using \(2^{54}\equiv1
+\pmod{81}\) and \(J-7\) odd),
+cycling through \(0,27,54\);
+one of three lifts meets (B).
+Both count estimates have \(O(2^{-a})\)
+boundary errors. They measure
+**the fully closed 13-level inverse
+branch**, not all fatal gates.
+
+The untruncated original ResetParent
+BigInt enumerator checked 19 qualifying
+indices n≤11000 (10 in case A, 9 in
+case B). Every one had **exactly 17
+vertices, three parentless leaves and
+two genuine fork nodes**, with no
+unexpected source-grammar parent.
+These are finite checks of the
+paper derivation; neither the
+17-node theorem nor the densities
+have yet been source-compiled in Lean.
+
+## 11. Where the current E-parent results apply
 
 The even-parent bands adjacent to (E) are
 [
@@ -921,7 +1121,7 @@ The parity sectors align with both original gate residues:
 
 The odd-a, (K\equiv3\pmod6) entry-parent classification remains open.
 
-## 11. Existing Ray reductions to compose, not duplicate
+## 12. Existing Ray reductions to compose, not duplicate
 
 The spine formula above is the same canonical even ray used by the repository's `Ray*` modules:
 [
@@ -961,7 +1161,7 @@ J-11,J-10,\ldots,J.
 ]
 This gives a concrete finite target for composing `RayNoSeam`, `RayNoSeamWalk`, the two-tier Hensel selectors, and the terminal t=0 entry (E(a,K)). The BigInt checks at ((K,a)=(387,9),(800,10),(399,9),(806,10)) independently found this exact 12-index split; the algebra above explains it uniformly.
 
-## 12. Scope and remaining work
+## 13. Scope and remaining work
 
 This identity connects the auxiliary entry family to the actual #746 halting targets. It proves that (E(a,K)) is an ancestor on **one** inverse-parent branch of (U_{K+2}). It does **not** prove that every root path to (U_{K+2}) passes through (E(a,K)). Other odd-parent side branches can leave intermediate spine nodes; a root path could in principle enter through one of them.
 
