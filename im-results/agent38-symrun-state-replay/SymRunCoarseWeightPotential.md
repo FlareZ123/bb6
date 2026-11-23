@@ -94,11 +94,11 @@ The following bounds are deliberately loose.
 
 5. **Finish-after-one-element.** Use the existing pilot left-length facts as well as the atomic W bounds. If stepElemCB returns BB, stepElemCB_BB_left_length gives \(|L'|\le|L|+7\); otherwise no BB sweep occurs. With \(W_1\le W+16\), the BB case gives
    \[
-   W'\le W_1+8|L'|+18\le W+16+8(W+6)+18=9W+82\le46(W+1).
+   W'\le W_1+6|L'|+17\le W+16+6(W+6)+17=7W+69\le46(W+1).
    \]
    The non-BB case is smaller. Since \(9W+82\le46(W+1)\) for \(W\ge1\), we obtain \(W(\operatorname{stepElemThenBB}_{CB}(L,R))\le46(W+1)\).
    
-   For DL, stepElemDL_BB_left_bounds gives \(|L'|\le|L|\) whenever the element step returns BB. With input potential \(U\), the BB case gives \(W'\le U+7+8U+18=9U+25\le34(U+1)\); the non-BB case is smaller. Thus \(W(\operatorname{stepElemThenBB}_{DL}(L,R))\le34(U+1)\). The peelL applied by stepSym itself raises W by at most 7.
+   For DL, stepElemDL_BB_left_bounds gives \(|L'|\le|L|\) whenever the element step returns BB. With input potential \(U\), the BB case gives \(W'\le U+7+6U+17=7U+24\le34(U+1)\); the non-BB case is smaller. Thus \(W(\operatorname{stepElemThenBB}_{DL}(L,R))\le34(U+1)\). The peelL applied by stepSym itself raises W by at most 7.
 
 ## Macro-dispatch weight
 
@@ -118,7 +118,7 @@ A failed recognition uses stepElemThenBB_CB, already covered above. Rule A/B/C s
 \[
 W(\operatorname{afterSweepCB}(L,R))\le46(W(CB,L,R)+1).
 \]
-After sweepCB, \(W_1\le9W\), so the CB step is at most \(46(9W+1)=414W+46\le2^9(W+1)\). For DL, the 34-bound after peelL gives \(34(W+8)\le306(W+1)<2^9(W+1)\). The BB sweep is at most \(27(W+1)\). Therefore the sharper global target is
+After sweepCB, \(W_1\le9W\), so the CB step is at most \(46(9W+1)=414W+46\le2^9(W+1)\). For DL, the 34-bound after peelL gives \(34(W+8)\le306(W+1)<2^9(W+1)\). The BB sweep is at most \(24(W+1)\). Therefore the sharper global target is
 \[
 \boxed{W(\operatorname{stepSym}(s))\le2^9(W(s)+1).}
 \]
