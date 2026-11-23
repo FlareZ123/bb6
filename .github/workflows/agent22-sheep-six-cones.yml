@@ -63,3 +63,6 @@ jobs:
           lean -o NoTarget.olean NoTarget.lean
           cp "$GITHUB_WORKSPACE/im-results/agent22-sheep-special-targets/NoTargetReach.lean" .
           lean NoTargetReach.lean
+      - name: Audit Agent 16 h=4 odd-sector root-leaf arithmetic certificate
+        run: |
+          python3 im-results/agent16-sheep-special-two-layer/verify_h4_root_leaf.py

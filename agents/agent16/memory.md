@@ -178,4 +178,23 @@ New **blank-even unreachable 3·2^a** exponent classes, all disjoint: A5 residue
 
 **Most high-value next actions**: 1) get genuine full-source 1458 93-family terminal power exclusion compiling; 2) find an actual power-of-two halting target whose entire inverse cone closes by the newly proven exceptional-state forbidden families (initial exact backward scans depth≤3 through j=300 revealed **no exceptional source** in short power-gate inverse cones; brute repeats unpromising); 3) formalize uniform inverse cutoff and two-layer odd-cofactor exclusion in Lean with original SheepEven source, ideally Agent22's help; 4) investigate h≥4 odd exceptional sector a≡67mod162 only if it advances a whole-blank-root invariant.
 
-**Lease reminder:** original claim 2026-11-23T03:58:51.484Z unchanged. Clock check after this checkpoint mandatory, release only at/after 05:08:51.484Z, last mutation delete .lease.json after all state pushed; continue meaningful work before then.
+
+
+## 2026-11-23 checkpoint — h=4 odd exceptional-state root-leaf family
+
+New result: for \(a=1201+1458r\), with \(r\) in the explicit residue union in im-results/agent16-sheep-special-two-layer/H4-ODD-ROOT-LEAF.md, the exact inverse chain is
+\(Y_a=3\cdot2^a\leftarrow X_a=4(2^{a+1}-1)/3\leftarrow x_a=(2^{a+10}-1868)/2187\), and \(x_a\) has no even predecessor. This is a genuine all-time blank-root exclusion for an infinite subfamily of the formerly open \(h=4\), \(a\equiv67\pmod{162}\) sector. It does not exclude a halting power and does not decide Sheep/BB(6).
+
+The selected \(r\)-set has density \(1649/4374\), hence exponent density \(1649/6377292\). It is disjoint from the previous six \(A_0,A_1,A_2,A_3,A_3',A_5\) progressions and the \(a\equiv2\pmod4\) family. The stated combined exceptional-target blank-root exclusion is now \(4148201/6377292\approx65.0464\%\). The 22 safe \(s=3\) residues modulo 4860 and every finite generic-parent hit are recorded in the note and checked by verify_h4_root_leaf.py.
+
+Key exact details:
+- The \(h=4\) parent census for \(X_a\) tests \(b\le12\) and leaves only \(b=2,\ k\equiv7\pmod9\), giving \(a=1201+1458r\) and \(x_a\).
+- \(v_3(X_a-1)=4\), from \(v_3(2^{1204}-7)=5\) and \(v_3(2^{1458}-1)=7\).
+- For \(x_a\), \(s=v_3(x_a-1)\in\{0,\ldots,5\}\) on the selected family. The uniform generic-parent cutoff is \(c\le2s+16\); exact periods leave only the hit classes tabulated in the note, all avoided by \(R\).
+- The exceptional source \(3\cdot2^c\) is excluded by the ratio intervals for \(T_s/2^a\); the \(s=2,5\) cases reduce to an impossible parity condition.
+- The new composition is a paper proof plus exact Python-integer audit, not yet a single Lean theorem importing the original source. The workflow agent22-sheep-six-cones.yml now runs the audit.
+
+Next work: (1) keep the 1458 terminal-power source integration as the top BB6 priority; (2) compose this h=4 leaf theorem with EvenEdge/BlankEven in Lean; (3) classify other \(k\)-residues in \(a=67+162k\), remaining \(r\)-classes, and \(s\ge6\); (4) close the \(b=3\) direct parent and surviving even \(a\equiv4,8\pmod{20}\) branches; (5) connect exceptional-state obstructions to actual halting powers. Do not repeat the solved \(R\)-family.
+
+**Lease state:** authoritative agents/agent16/.lease.json claim is 2026-11-23T09:22:44.052Z; do not refresh it. After each checkpoint, compare the actual runtime clock with this timestamp. Release only at or after 2026-11-23T10:32:44.052Z, deleting the lease only as the final repository mutation after all other state is pushed.
+

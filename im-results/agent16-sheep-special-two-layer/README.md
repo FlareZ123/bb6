@@ -1,6 +1,6 @@
 # Sheep: two-layer exclusions for exceptional targets $3\cdot2^a$
 
-**Agent 16, 23 November 2026.** This is an all-exponent mathematical proof using the exact published original-Sheep even-return law; a standalone BigInt verifier is supplied. The **new result** is complete second-predecessor grammars in both odd $a\equiv3,5\pmod6$ sectors and the even $a\equiv0\pmod4$ sector and a resulting positive-density, depth-two **blank-root exclusion** for exceptional (odd-cofactor-three) targets. The *new composition has not yet been compiled as one Lean source-importing theorem*; the underlying original-machine-to-even-return bridge and the previously established direct-parent classification are separate earlier results. External novelty has not been determined. This result does **not** exclude a new power-of-two halting gate, decide Sheep, or determine BB(6).
+**Agent 16, 23 November 2026.** This dossier proves exact source-law inverse grammars in several low-hidden-valuation sectors. The previous disjoint certificate excluded $158/243$ of exponents $a$ for $Y_a=3\cdot2^a$. The new [h=4 odd-sector root-leaf theorem](H4-ODD-ROOT-LEAF.md) adds a disjoint family of density $1649/6377292$, raising the stated union to $4148201/6377292\approx65.0464\%$. On that family the exact inverse chain is $Y_a\leftarrow X_a\leftarrow x_a$, with $x_a$ having no even predecessor. The new two-layer composition has an exact paper proof and a Python-integer arithmetic audit, but is not yet compiled as one Lean source-importing theorem. These are intermediate exceptional-state exclusions, not halting-power exclusions; Sheep and BB(6) remain unresolved.
 
 ## Uniform all-hidden-length generic valuation cutoff
 
@@ -353,8 +353,24 @@ The two surviving cofactors are $(2^{a+7}-31)/405$ and $(2^{a+7}-193)/729$, whic
 
 To exclude the original target $Y_a$ from blank start $10$, first rule out its alternative $b=3$ direct parent by demanding $a\not\equiv5\pmod8$. This also rules out the $h=1,b=3$ incoming parent of $X_a$, since $a\equiv13\pmod{24}$ implies $a\equiv5\pmod8$. Rule out $h=1,b=1$ and $h=3,b=1$ simultaneously by $a\not\equiv1\pmod{12}$, because in this valuation stratum the latter congruence $a\equiv13\pmod{108}$ is equivalent to $a\equiv1\pmod{12}$. Finally rule out $h=3,b=2$ by $a\not\equiv445\pmod{486}$. The $h=2$ gate was already absent. This leaves exactly the ten residues modulo 1944 displayed in $A_3'$, adding disjoint density $10/1944=5/972$.
 
+
+## Fifth theorem: h=4 odd-sector root-leaf closure
+
+The previously open residue sector \(a\equiv67\pmod{162}\) has a new exact subfamily. For \(a=1201+1458r\), with \(r\) in the explicit union \(R\) in [H4-ODD-ROOT-LEAF.md](H4-ODD-ROOT-LEAF.md), the unique inverse chain is
+\[
+3\cdot2^a\leftarrow X_a=\frac{4(2^{a+1}-1)}3
+\leftarrow x_a=\frac{2^{a+10}-1868}{2187},
+\]
+and \(x_a\) has no even predecessor. The \(r\)-set has density \(1649/4374\), so the exponent density added is \(1649/6377292\). The new family is disjoint from the earlier six \(A_0,A_1,A_2,A_3,A_3',A_5\) progressions and the \(a\equiv2\pmod4\) family. The combined stated exceptional-target exclusion is now
+\[
+\frac{158}{243}+\frac{1649}{6377292}
+=\frac{4148201}{6377292}\approx65.0464\%.
+\]
+
+This is a partial closure only: other \(k\)-residues in \(a=67+162k\), other \(r\)-classes in the \(k\equiv7\pmod9\) branch, and hidden lengths \(s\ge6\) remain open. The new proof is exact arithmetic plus a reproducible Python audit; it is not yet a Lean-kernel theorem composed with the original source.
+
 ## Reproduction and priority
 
-Run [verify_second_layer.js](verify_second_layer.js) in Node.js. It uses exact BigInt E-inverse arithmetic to check all five complete inverse grammars through exponent 950, checks the direct-parent conditions, and asserts the exhaustive 360-residue density. This finite check is supplementary; Steps 1–4 and the earlier full direct-parent grammar prove the statement for unbounded exponents.
+Run [verify_second_layer.js](verify_second_layer.js) in Node.js for the earlier inverse grammars, and [verify_h4_root_leaf.py](verify_h4_root_leaf.py) with Python 3 for the new h=4 root-leaf family. The latter checks the exact modular periods, valuation-root classes, every small generic-parent hit, special-source interval inequalities, density, and CRT disjointness. These are exact arithmetic audits; the new two-layer composition is not yet a Lean-kernel theorem.
 
-**Next mathematical task:** classify the other direct parent $b=3$ when $a\equiv5\pmod8$, the still-open **$h\ge4$** sector $a\equiv67\pmod{162}$, and the surviving even cases $a\equiv4,8\pmod{20}$, to eliminate further genuine exceptional states or uncover a stronger blank-root structural obstruction. These exceptional-target exclusions are distinct from actual halting powers $2^j$; a complete Sheep/BB(6) decision requires ruling out every reachable halting power, not merely the odd-cofactor-three states.
+**Next mathematical task:** finish the remaining $h\ge4$ frontier without repeating the solved subfamily: classify other $k$-residues in $a=67+162k$, then the $r$-classes outside $R$ and hidden lengths $s\ge6$. Also close the alternative direct parent $b=3$ when $a\equiv5\pmod8$ and the surviving even cases $a\equiv4,8\pmod{20}$. The h=4 result is an intermediate-state exclusion only; the decisive BB(6) priority remains composing source-exact forbidden-state families into an obstruction for actual halting powers $2^j$.
