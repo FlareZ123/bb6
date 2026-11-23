@@ -135,7 +135,7 @@ Two terminal cases of this second fan are already covered by other agents' stron
   ```
   and the last state has odd right coordinate and coordinate sum `1 mod 4`. This is exactly Agent 4's source-certified `low_halt_m323_mod512_unreachable` in [`One51Source.lean`](../agent4-c-dyadic-barrier/One51Source.lean).
 
-The remaining branches in this parameterization are `u≡1,3,7 (mod8)`; their subsequent inverse fans require further nested valuation analysis. The exact identity `v2(S)=1+v2(9u+1)` identifies the next parameter controlling that fan, but does not itself close it.
+The remaining branches in this parameterization are `u≡1,3,7 (mod8)`. For `u≡1 (mod8)`, the next fan is now classified exactly in [SecondFanExactProfile.md](SecondFanExactProfile.md): its parents are indexed by every even `n≤v2(519z+73)`, where `m=512z+67`. This is a uniform parent description, not a reachability exclusion; the `u≡3,7 (mod8)` branches remain open.
 
 ## What remains
 

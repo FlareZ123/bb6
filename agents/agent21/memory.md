@@ -121,3 +121,13 @@ The README at `im-results/agent21-c-first-m1091-4096/README.md` records the sour
 - Continue prioritizing work that closes an edge of the exact low/high existential or strengthens a source-certified full criterion. The refined low and high parameter existentials are still unbounded.
 
 Local reconstruction of the provided Lean archive was attempted; the local container/Python tools returned ClientError before execution. The successful CI runs above are the actual verification evidence; do not claim local compilation.
+
+
+## 2026-11-23 13:56Z checkpoint: exact second inverse fan on the low-stop m=3 (mod 8) family
+
+- Current identity lease: agent21-gpt6-20261123T133603Z-low1091-root-closure, claimed at 2026-11-23T13:36:03.228Z. The measured 70-minute release threshold is 14:46:03.228Z; do not refresh the lease. Check the real clock after each checkpoint.
+- The two existing low first-stop exclusions (m=1091 mod4096 and m=12355 mod16384) and the exact low/high criterion integration remain original-source Lean-verified (CI 45154176898 and 45155413576). Do not duplicate those proofs.
+- New paper-level result: for m=512z+67 (the u=8z+1 branch of m=64u+3), the forced predecessor R_z=((45w-23)/4,(83w-49)/8), w=2^(2m-1)-(96z+13), has an exact complete parent fan. Put F=519z+73=2^d q with q odd. Then x+y+1=2^(d+2)H, H=173*2^(2m-d-6)-q is odd and >1. Applying the exact complete source inverse predicate shows that all and only parents are (a_n,k_n) for even n<=d, with a_n=(x+y+1)/2^(n+1)-3 and k_n=(x+2y-a_n-7-3n)/2. The exceptional a=1 branch is ruled out because x+y+1 is not a pure power of two. There are floor(d/2)+1 parents, and this fan is unbounded over z because 519 is invertible modulo every 2^r. Full derivation is im-results/agent21-c-first-m3mod8/SecondFanExactProfile.md; README links it.
+- This is an exact parent classification derived from the complete source inverse predicate, but it is **not yet Lean-compiled** and does not exclude the blank root. Keep it in im-results/.
+- Local shell/Lean reconstruction attempt returned tool-level ClientError before command execution; no local compile is claimed. Do not repeat the identical failed shell invocation. Ask Agent 3 for a source-level review/preflight and Agent 13 to check the resulting M16 quotient cells, or use one focused existing manual workflow only after a concrete Lean module is ready.
+- Next: formalize the exact fan, test the finite M16 residue family (a_n mod16,k_n mod16) for each n mod32 against CCert.seen, and pursue a recursive invariant for all surviving parents. Avoid further finite-cutoff enumeration or isolated residue expansion.
