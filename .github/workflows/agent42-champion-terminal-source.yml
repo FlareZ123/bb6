@@ -1288,6 +1288,8 @@ jobs:
             --source-root /tmp/middle34-sources \
             --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean \
             --override OuterLCIncPrelude=im-results/agent8-counted-reset/OuterLCIncPrelude.lean \
+            --override M0OddResidueSeven=im-results/agent41-m0-n16r7/M0OddResidueSeven.lean \
+            --override M2EvenResidueTwo=im-results/agent42-champion-terminal/M2EvenResidueTwo.lean \
             --workdir /tmp/middle34-acceptance \
             | tee /tmp/middle34-acceptance.log
           python3 - <<'PY'

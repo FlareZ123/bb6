@@ -31,6 +31,19 @@ open BB6Coverage.Agent24M0OddQ4Prefix
 
 set_option maxHeartbeats 3000000
 
+private theorem m0OddResidueSeven_config_ext (c d : Config)
+    (hstate : c.state = d.state) (hhead : c.head = d.head)
+    (htape : c.tape = d.tape) : c = d := by
+  cases c with
+  | mk cs ch ct =>
+    cases d with
+    | mk ds dh dt =>
+      cases hstate
+      cases hhead
+      cases htape
+      rfl
+
+
 private theorem pow2_mul_pow (n k c : Nat) (hc : 2^k = c) :
     2^(n+k) = c*2^n := by
   calc
@@ -44,8 +57,9 @@ theorem binDec_residue7 (L r : Nat) (hL : 4 ≤ L)
     binDec L (16*r+7) =
       d0 ++ d0 ++ d0 ++ d1 ++ binDec (L-4) r := by
   have hpow4 : 2^L = 16 * 2^(L-4) := by
-    conv_lhs => rw [show L = (L-4)+4 by omega]
-    exact pow2_mul_pow (L-4) 4 16 (by decide)
+    calc
+      2^L = 2^((L-4)+4) := by congr 1; omega
+      _ = 16 * 2^(L-4) := pow2_mul_pow (L-4) 4 16 (by decide)
   have hpow3 : 2^(L-1) = 8 * 2^(L-4) := by
     rw [show L-1 = (L-4)+3 by omega]
     exact pow2_mul_pow (L-4) 3 8 (by decide)
@@ -90,8 +104,9 @@ theorem binDec_residue6 (L r : Nat) (hL : 4 ≤ L)
     binDec L (16*r+6) =
       d1 ++ d0 ++ d0 ++ d1 ++ binDec (L-4) r := by
   have hpow4 : 2^L = 16 * 2^(L-4) := by
-    conv_lhs => rw [show L = (L-4)+4 by omega]
-    exact pow2_mul_pow (L-4) 4 16 (by decide)
+    calc
+      2^L = 2^((L-4)+4) := by congr 1; omega
+      _ = 16 * 2^(L-4) := pow2_mul_pow (L-4) 4 16 (by decide)
   have hpow3 : 2^(L-1) = 8 * 2^(L-4) := by
     rw [show L-1 = (L-4)+3 by omega]
     exact pow2_mul_pow (L-4) 3 8 (by decide)
@@ -310,7 +325,7 @@ private theorem m0Odd_bridge_prefix_lower
     (hd : run tm2 j ⟨3,h,T⟩ = some d) :
     h-6 ≤ d.head := by
   obtain ⟨e,hexact⟩ :=
-    fRun_prefix_exists m0OddQ4Bridge27_exact (by omega)
+    fRun_prefix_exists (k := j) m0OddQ4Bridge27_exact (by omega)
   have hcheckj :
       (List.range j).all (fun k =>
         match fRun tm2 k m0OddQ4Bridge27Start with
@@ -325,9 +340,13 @@ private theorem m0Odd_bridge_prefix_lower
       (List.mem_range.mpr hk27)
   have hbridge := bridgeAt T h m0OddQ4Bridge27Inside
     m0OddQ4Bridge27Start e j rfl hexact hcheckj hmatch
-  rw [hbridge] at hd
+  have hbridge' :
+      run tm2 j ⟨3,h,T⟩ =
+        some (frameAt T h m0OddQ4Bridge27Inside e) := by
+    simpa [m0OddQ4Bridge27Start] using hbridge
+  rw [hbridge'] at hd
   have hdeq : d = frameAt T h m0OddQ4Bridge27Inside e :=
-    Option.some.inj hd
+    (Option.some.inj hd).symm
   have hinside : m0OddQ4Bridge27Inside e.head = true := by
     have hh := (List.all_eq_true.mp m0OddQ4Bridge27_heads) j
       (List.mem_range.mpr hj)
@@ -351,8 +370,8 @@ private theorem E_scan_prefix_head
   have hrun := E_scan T h j hlinearJ
   rw [hrun] at hd
   have heq := Option.some.inj hd
-  simp at heq
-  omega
+  cases heq
+  rfl
 
 private theorem m0OddQ4CutTape_eq_swept
     (a b : Nat) (h x : Int)
@@ -381,6 +400,60 @@ private theorem m0OddQ4CutTape_eq_end_inside
 
 /-- Every prefix of the base m=0,n=5 source run stays in the finite
 half-line used by the generalized frame. -/
+private theorem m0Odd_counted_left_sweep_heads
+    (N : Nat) (T : Int → Bool) (h : Int)
+    (hOn : leftOnes T h N) (hr : T (h+1) = false)
+    (k : Nat) (hk : k < 3*N) (d : Config)
+    (hd : run tm2 k ⟨3,h,T⟩ = some d) :
+    h-(N:Int) ≤ d.head := by
+  let q := k/3
+  let r := k%3
+  have hkdecomp : k = 3*q+r := by dsimp [q,r]; omega
+  have hq : q < N := by dsimp [q]; omega
+  have hqOn : leftOnes T h q := by
+    intro i hi
+    exact hOn i (by omega)
+  have hqrun := counted_left_sweep q T h hqOn hr
+  let Tq := sweptLeft q T h
+  have hqhead : Tq (h-(q:Int)) = true := by
+    rw [show Tq = sweptLeft q T h by rfl,sweptLeft_head_eq_source]
+    exact hOn q hq
+  have hqright : Tq (h-(q:Int)+1) = false := by
+    by_cases hq0 : q = 0
+    · subst q
+      simpa [Tq] using hr
+    · obtain ⟨q',rfl⟩ := Nat.exists_eq_succ_of_ne_zero hq0
+      have hfalse := sweptLeft_head_plus1_false q' T h
+      simpa [Tq] using hfalse
+  have hqrun' :
+      run tm2 (3*q) ⟨3,h,T⟩ =
+        some ⟨3,h-(q:Int),Tq⟩ := by
+    simpa [Tq] using hqrun
+  rw [hkdecomp,run_add,hqrun'] at hd
+  simp only [Option.bind_some] at hd
+  have hrlt : r < 3 := Nat.mod_lt _ (by decide)
+  have hrCases : r=0 ∨ r=1 ∨ r=2 := by omega
+  rcases hrCases with hr0|hr1|hr2
+  · subst r
+    simp [run] at hd
+    have heq := Option.some.inj hd
+    subst d
+    simp
+    omega
+  · subst r
+    rw [leftSweep_one Tq (h-(q:Int)) hqhead] at hd
+    have heq := Option.some.inj hd
+    subst d
+    simp
+    omega
+  · subst r
+    rw [leftSweep_two Tq (h-(q:Int)) hqhead hqright] at hd
+    have heq := Option.some.inj hd
+    subst d
+    simp
+    omega
+
+
 private theorem m0Odd_base_prefix_head_bound
     (a b : Nat) (h : Int) (ha : 0<a) :
     ∀ k, k < 24+12*a → ∀ d,
@@ -413,7 +486,7 @@ private theorem m0Odd_base_prefix_head_bound
   have hSweep' :
       run tm2 (3*N) (s1Config 3 5 0 a 0 b h) =
         some (⟨3,hN,T1⟩ : Config) := by
-    simpa [N,hN,T1] using hSweep
+    simpa [T,N,hN,T1] using hSweep
   have hmatch := m0OddQ4Bridge_input_match a b h ha
   have hBridge := m0OddQ4Bridge27At T1 hN hmatch
   have hBridge' :
@@ -463,7 +536,7 @@ private theorem m0Odd_base_prefix_head_bound
   let p1 := 3*N
   let p2 := p1+27
   by_cases hk1 : k < p1
-  · have hlow := counted_left_sweep_heads N T h hOn hright k
+  · have hlow := m0Odd_counted_left_sweep_heads N T h hOn hright k
       (by dsimp [p1]; omega) d hd
     dsimp [hN,N] at *
     omega
