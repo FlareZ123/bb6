@@ -314,9 +314,8 @@ theorem step_DL_zero_halt_F424_exact (L1 R1 : List MItem) :
     certificates. -/
 theorem blankF424_is_halt : IsHalt target_tm := by
   have hPrefix : (init ([] : List (Fin 2))) [target_tm]⊢*
-      (evalSym target_tm initSymCyc3_F424) := by
-    exact ⟨18 + costIterM424 19217 startF424M,
-      blankToInitSymCyc3_exact_reaches⟩
+      (evalSym target_tm initSymCyc3_F424) :=
+    ReachesIn.to_star blankToInitSymCyc3_exact_reaches
   have hc1 : (evalSym target_tm initSymCyc3_F424) [target_tm]⊢* (evalSym target_tm symChk4096_F424) := by
     rw [← sym_chk1_F424]
     exact stepSym4096_sound initSymCyc3_F424
