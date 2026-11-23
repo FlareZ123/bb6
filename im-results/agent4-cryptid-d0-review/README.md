@@ -1,6 +1,6 @@
 # Raw TM62-to-D0 coordinate audit
 
-**Status:** locally kernel-checked semantic preflight. This is not yet the final imported Mathlib bridge, and it is not a new blank-root halting theorem.
+**Status:** independent coordinate audit, cross-checked against the accepted imported Mathlib bridge. This is not a blank-root halting theorem.
 
 ## Conclusion
 
@@ -22,15 +22,13 @@ The checked file proves, for the exact eleven live transitions and F/1 halt case
 
 The exact-time transport does not add a step in the six-state D0 semantics. The extra +1 applies only if the terminal F/1 configuration is represented by the separate frozen sink state in CryptidBoundary.
 
-## What is still needed for the actual upstream source
+## Concrete Mathlib adapter: accepted
 
-The checked model uses a relative tape observation `Int → ExtSymbol`. The actual external source uses `Turing.Tape Symbol`. The remaining adapter is small and is directly supported by the pinned Mathlib lemmas:
+The remaining source-level adapter has since been completed by Agent 32 in [`TM62MathlibD0Adapter.lean`](../agent32-cryptid-padding/TM62MathlibD0Adapter.lean). It imports the exact external TM62 module and the pinned Mathlib `Turing.Tape`, proves the two whole-tape write/move equations by signed-coordinate extensionality, composes the external step through `BB6.Bridge` into `BB6.Portfolio.D0`, and transports exact-n runs and the undefined-next-step halting predicate. It also proves that external `A(n,[])` is exactly `F0Pure n h` under the absolute-head map.
 
-- `Tape.write_nth`: observation of `T.write w` is `relWrite (observe T) w`;
-- `Tape.move_left_nth`: observation after a left move is `relMove .left`;
-- `Tape.move_right_nth`: observation after a right move is `relMove .right`.
+The accepted source-connected theorem is `BB6.CryptidD0Bridge.D0_halts_on_A_cylinder`: every `F0Pure (C+3^108*k) h` halts in repository D0, with the same primitive transition count as the external source theorem. Pinned CI [45174638945](https://github.com/FlareZ123/bb6/actions/runs/45174638945) built the 1,505-job upstream/Mathlib dependency closure and compiled the adapter under Lean 4.36.0-rc2. Its exported axiom profile is `[propext, Classical.choice, Quot.sound]`, with no `sorryAx` or `native_decide`. The external pins are proofs commit `b77dda5c79fb196d67ce35669e172ad632401c1b`, Mathlib `dfbc15ea6605db241da9cfd0632bbaf69b67e513`, and external Lean 4.36.0-rc1.
 
-Here `observe T i := T.nth i`. The external `TM.step` writes the new symbol and then calls `Tape.move`, so the adapter must preserve that order. The external `A(n,[])` definition should then be shown to have relative observation `j ↦ if 0 < j ∧ j ≤ n then S1 else S0`, using the ListBlank nth/append lemmas. Do not describe the current file as having compiled those Mathlib adapter lemmas.
+This closes the representation and source-transport gate. The independent `HeadRelativeFunctionAudit.lean` remains a separate abstract cross-check, not the accepted imported-source proof.
 
 ## Reproducible pins
 
@@ -66,7 +64,7 @@ The upstream theorem proves halting from `A(3^108*k + C, [])`, where `C = 197570
 
 ## Authentic-root reachability and A-section bridge
 
-The external @-d Lean development proves that the cylinder `A(C+3^108*k, [])` halts for every natural k, with `C=1975700577069254261393123959451562008800234946348086`. The unresolved question is whether the authentic blank-root orbit reaches this or another certified halting cylinder. The repository's concrete Mathlib `TM62`-to-D0 adapter remains uncompiled; the separate abstract `HeadRelativeFunctionAudit.lean` is a checked semantic model, not a substitute for that adapter.
+The external @-d Lean development proves that the cylinder `A(C+3^108*k, [])` halts for every natural k, with `C=1975700577069254261393123959451562008800234946348086`. The concrete Mathlib `TM62`-to-D0 adapter is now accepted in CI [45174638945](https://github.com/FlareZ123/bb6/actions/runs/45174638945), transferring this family to `F0Pure (C+3^108*k) h` in `BB6.Portfolio.D0` at the exact primitive time. The unresolved question is solely whether the authentic blank-root orbit reaches this or another certified halting cylinder (or can be proved to avoid all halting sets).
 
 ### Root section at index 31,777
 
@@ -77,7 +75,7 @@ The external @-d Lean development proves that the cylinder `A(C+3^108*k, [])` ha
 - `a mod 3^20 = 2863782241`;
 - `a` has 44,970 bits.
 
-`Root13Section.lean` extracts the 4,484-step prefix from `Agent25SixthRoot.seed` and attempts to source-certify the section, its exact residue, and its ten-step link to the sixth exceptional input. **That file is still uncompiled.** The separate `First10AffineBridge.lean` arithmetic theorem was locally checked with Lean 4.36.0-rc2; this does not validate the root-section extraction.
+`Root13Section.lean` source-certifies the 4,484-step prefix from `Agent25SixthRoot.seed`, its exact 3-adic residue, and the ten-step link to the sixth-exception input. `Root13TwoReturn.lean` then composes that authentic-root lift with Agent31's two-return source packet. Both modules passed the pinned original-source audits [45130375240](https://github.com/FlareZ123/bb6/actions/runs/45130375240) and [45131667374](https://github.com/FlareZ123/bb6/actions/runs/45131667374), including the forbidden-axiom gate. This remains a finite root-prefix certificate, not a halting/nonhalting result.
 
 The first ten external A-macro suffixes are canonical DRegular states. The root's corresponding sections at indices 31,777 through 31,787 have a descending exact 3-adic shadow, with valuations 13 through 3. The raw replay then matches external macros 11–13 (arguments 35,21,5; branches E,E,B; exact output suffixes), reducing the parameter-difference valuation to 2,1,0 before diverging at macro 14. Root-specific raw prefixes m=23 and m=26 then return to suffix `(01)^3 11`. This suffix also occurs at external prefix j=2, but the later root reentry at index 31,792 is not in that cylinder: its parameter is 0 mod 3, while external `C_2=14049426325825808081017770378322218729246115174030817` is 2 mod 3 (`v3` difference 0).
 
@@ -91,9 +89,9 @@ The same screen tests Agent 32's extended final-tail suffix candidates `(q,b)=(1
 
 ### Other intermediate work and next priorities
 
-- `AZeroOneFirstReturn.lean` contains uncompiled strict no-intermediate-F drafts for the canonical q=b=0 and q>0,b=0 rows.
-- `HeadRelativeFunctionAudit.lean` proves the abstract whole-tape coordinate conjugacy, exact-n run transport, and halting equivalence. The concrete Mathlib tape adapter and transitive axiom audit remain open.
-- The highest-value next steps are to obtain a working local Lean 4.36.0-rc2 runtime and compile the exact `Root13Section.lean` dependency closure; finish the concrete pinned TM62/Mathlib adapter; and use source-derived exceptional transitions to continue the root-cylinder search beyond episode 20. Avoid larger blind arithmetic scans and do not promote finite exclusions to all-time claims.
+- `AZeroOneFirstReturn.lean` is now compiled against the pinned original `CryptidBoundary` source in the 23 November A/B first-return audit (CI [45125434133](https://github.com/FlareZ123/bb6/actions/runs/45125434133)); its unary and low-A interfaces are used by `UnaryFirstReturnComplete.lean`.
+- `HeadRelativeFunctionAudit.lean` independently proves the abstract whole-tape coordinate conjugacy, exact-n run transport, and halting equivalence. The concrete imported Mathlib adapter is now accepted; see the pinned CI and axiom profile above.
+- Root13's 4,484-step authentic source section and two-return composition are verified in CI [45130375240](https://github.com/FlareZ123/bb6/actions/runs/45130375240) and [45131667374](https://github.com/FlareZ123/bb6/actions/runs/45131667374). The remaining work is root reachability: source-certify the nineteenth exception and subsequent continuation, and connect the actual blank orbit to a certified halting cylinder or prove a global exclusion. Avoid larger blind arithmetic scans and do not promote finite exclusions to all-time claims.
 
 All of this work remains intermediate. `results/` is unchanged; no exact BB(6) value or universal upper bound has been established.
 
@@ -116,3 +114,30 @@ The CI is [45111455597](https://github.com/FlareZ123/bb6/actions/runs/4511145559
 
 This closes an important intermediate proof gap. The implicit right-padding quotient is essential; a bare `IsPhysicalReturn` predicate based on literal `l=[]` is too representation-specific to transfer through `BoundaryPadding.source_init_pad`.
 
+
+
+## Canonical DRegular first-return partition (23 November 2026)
+
+The Critic's E-zero/E-one-zero coverage objection is resolved by a source-level partition. Write the canonical language as
+`L(a,q,b)=I_a((01)^q1^b)`, with `a≥2` and `q=0 ⇒ b=0`; the three arithmetic residues are `a=3k+2` (B), `a=3k+3` (A), and `a=3k+4` (E). The existing `BB6.ERemaining.source_contract` supplies the exact original-source `ObsEq` endpoint for every successful `DRegular.next` branch (all eleven rows; original-source CI [41712102615](https://github.com/FlareZ123/bb6/actions/runs/41712102615)). The following independent strict-return theorems fill the no-earlier-physical-F/0 side:
+
+| Canonical branch | Source first-return coverage |
+| --- | --- |
+| A, `q=0,b=0` | `BB6.Agent4UnaryFirstReturnComplete.unary_source_first_return` |
+| A, `q>0`, any `b` | `BB6.Agent4ACanonicalAllFirst.all_A_positive_first`; internally covers all three `b mod 3` tails |
+| B, `q=0,b=0` | `BB6.Agent4UnaryFirstReturnComplete.unary_source_first_return` |
+| B, `q>0`, any `b` | `BB6.Agent4BCanonicalAllFirst.all_B_first`; internally covers all three `b mod 3` tails |
+| E, `q=0,b=0` | `unary_source_first_return`, using the canonical low-E no-early-blank theorem |
+| E, `q>0,b=0` | `BB6.CryptidELowCanonicalFirst.canonical_E_low_no_early_blank`, with endpoint from `ERemaining.source_contract` |
+| E, `q>0,b≥2` | `BB6.CryptidETriplePairsFirstReturn.full_E_triple_pairs_noF`, with `ys=replicate (b-2) true` and endpoint from `ERemaining.source_contract` |
+| E, `q>0,b=1` | `BB6.EExceptionalFirstPhysical.source_exception_first_physical`: a separately handled physical F/0 packet; `DRegular.next` exits the regular language here rather than returning a successor |
+
+The E-low source input is exactly `sourceSection ⟨3k+4,q,0⟩ = init (replicate (3k+2) true ++ oppairs q)`, so it covers both the pure E-zero case and the q-positive one-pair/zero-tail case without a guessed conversion to `EZeroFirst` or `EOneZeroFullFirst`. The theorem is formulated with `TapeEq c.l []`, so its first-return predicate survives observational blank-padding equivalence.
+
+For E-triple, the identity
+`oppairs (q+1) ++ replicate b true = false :: (pairs q ++ [true,true,true] ++ replicate (b-2) true)`
+for `b≥2` puts the canonical source input directly into the E-triple first-return family. The new `full_E_triple_pairs_noF` theorem exposes the stronger fact already available in the boundary proof: **no state-F visit at all** occurs in the open interval, not merely no literal-empty-left return.
+
+The A/B/unary/low-E source closure compiled successfully in pinned Lean 4.36.0-rc2 CI [45125434133](https://github.com/FlareZ123/bb6/actions/runs/45125434133); the strengthened E-triple no-F theorem compiled in the exact-source E-triple audit [45125832960](https://github.com/FlareZ123/bb6/actions/runs/45125832960). The E-exception theorem compiled cleanly in [45125992109](https://github.com/FlareZ123/bb6/actions/runs/45125992109); that overall run failed only at the new Root13 canonicality proof. Run [45130375240](https://github.com/FlareZ123/bb6/actions/runs/45130375240) compiled `Root13Section` and its authentic source lift cleanly (no `sorryAx`). The namespace correction in `Root13TwoReturn` was then verified by the successful full-composition run [45131667374](https://github.com/FlareZ123/bb6/actions/runs/45131667374), which also enforces the workflow's forbidden-axiom gate.
+
+This is a complete first-return *coverage map* for the canonical DRegular language plus its one E-exception packet. It is not a proof that the blank root never halts, nor a BB(6) upper bound. The finite cylinder screen above has not been extended.

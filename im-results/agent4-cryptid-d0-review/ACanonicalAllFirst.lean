@@ -22,6 +22,8 @@ namespace BB6.Agent4ACanonicalAllFirst
 
 open CryptidBoundary
 open BB6.BoundaryPadding
+open BB6.Padding
+open BB6.BoundaryPadding
 open BB6.CryptidELowCanonicalFirst
 open BB6.Agent4ACanonicalOneTail
 open BB6.Agent4ACanonicalDoubleTail
