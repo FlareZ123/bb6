@@ -216,6 +216,7 @@ theorem outerLCIncSourceT3_preserves_right
   have hx1 : outerLCIncH1 h a m + 2 ≤ x := by
     dsimp [outerLCIncH1]
     omega
+  unfold outerLCIncSourceT3 outerLCIncSourceT2 outerLCIncSourceT1
   rw [lbinDecHRunTape_preserves_right r
     (outerLCIncSourceT2 T h a m) (outerLCIncH1 h a m) x hx1]
   rw [markerBridgeFrameOut_preserves_right m
@@ -293,15 +294,16 @@ theorem outerLCIncAfterSweep_tailPattern
     · subst b
       have hpres := sweptRightB_preserves_left 1
         (outerLCIncAfterZero T h a m) (h+7) (h+6) (by omega)
-      rw [outerLCIncAfterSweep, hpres]
-      exact (outerLCIncAfterZero_cells T h a m).2
+      have hval := (outerLCIncAfterZero_cells T h a m).2
+      simpa [outerLCIncAfterSweep] using hpres.trans hval
     · have hpos : 0 < b := by omega
       have hprev := sweptRightB_block (b+1)
         (outerLCIncAfterZero T h a m) (h+7) hright (b-1) (by omega)
       have hcoord : h+3*b+6 =
           h+7+3*((b-1:Int))+2 := by omega
-      rw [outerLCIncAfterSweep, hcoord]
-      exact hprev.2.2
+      have hc : h+7+3*((b-1:Nat):Int)+2 =
+          h+7+3*((b:Int)-1)+2 := by omega
+      simpa [outerLCIncAfterSweep,hcoord,hc] using hprev.2.2
   refine ⟨h6, ?_, ?_, ?_⟩
   · have hcoord : h+3*b+7 = h+7+3*(b:Int) := by omega
     rw [outerLCIncAfterSweep, hcoord]
@@ -327,8 +329,6 @@ theorem outerLCIncAfterSweep_blank
     (h+3*b+10+(j:Int)) (by omega)]
   rw [outerLCIncAfterFive_preserves_right T h a m
     (h+3*b+10+(j:Int)) (by dsimp [outerLCIncH1]; omega)]
-  rw [outerLCIncSourceT3_preserves_right T h a m r
-    (h+3*b+10+(j:Int)) (by omega)]
   exact hblank j
 
 
@@ -539,19 +539,27 @@ theorem outerLCInc_source_postlude_conditions
   have h11 :
       outerLCIncAfterZeroExit T3 h a m b (h+3*b+11) = false := by
     rw [outerLCIncAfterZeroExit_preserves T3 h a m b _ (by omega)]
-    exact outerLCIncAfterSweep_blank T3 h a m b r 1 hblankT3
+    have hb := outerLCIncAfterSweep_blank T3 h a m b r 1 hblankT3
+    have hc : h+3*(b:Int)+10+(1:Nat) = h+3*(b:Int)+11 := by omega
+    simpa only [hc] using hb
   have h12 :
       outerLCIncAfterZeroExit T3 h a m b (h+3*b+12) = false := by
     rw [outerLCIncAfterZeroExit_preserves T3 h a m b _ (by omega)]
-    exact outerLCIncAfterSweep_blank T3 h a m b r 2 hblankT3
+    have hb := outerLCIncAfterSweep_blank T3 h a m b r 2 hblankT3
+    have hc : h+3*(b:Int)+10+(2:Nat) = h+3*(b:Int)+12 := by omega
+    simpa only [hc] using hb
   have h13 :
       outerLCIncAfterZeroExit T3 h a m b (h+3*b+13) = false := by
     rw [outerLCIncAfterZeroExit_preserves T3 h a m b _ (by omega)]
-    exact outerLCIncAfterSweep_blank T3 h a m b r 3 hblankT3
+    have hb := outerLCIncAfterSweep_blank T3 h a m b r 3 hblankT3
+    have hc : h+3*(b:Int)+10+(3:Nat) = h+3*(b:Int)+13 := by omega
+    simpa only [hc] using hb
   have h14 :
       outerLCIncAfterZeroExit T3 h a m b (h+3*b+14) = false := by
     rw [outerLCIncAfterZeroExit_preserves T3 h a m b _ (by omega)]
-    exact outerLCIncAfterSweep_blank T3 h a m b r 4 hblankT3
+    have hb := outerLCIncAfterSweep_blank T3 h a m b r 4 hblankT3
+    have hc : h+3*(b:Int)+10+(4:Nat) = h+3*(b:Int)+14 := by omega
+    simpa only [hc] using hb
   have htail :
       ∀ x, outerLCIncTailInside x = true →
         outerLCIncAfterZeroExit T3 h a m b (h+3*b+9+x) =
@@ -617,8 +625,12 @@ theorem outerLCInc_s1_leftOnes
   have happ := BB6Coverage.Agent6Q4Prefix.sideBit_append_left
     (d1pow a) (markerWord m ++ d0 ++ binDec L n ++ lh) i
     (by simpa [d1pow_length] using hi)
-  rw [happ] at hcell
-  exact hcell.trans
+  have hcell' :
+      (s1Config L n m a 0 b h).tape (h-(i:Int)) =
+        sideBit (d1pow a ++
+          (markerWord m ++ d0 ++ binDec L n ++ lh)) i := by
+    simpa only [List.append_assoc] using hcell
+  exact (hcell'.trans happ).trans
     (BB6Coverage.Agent6Q4Prefix.sideBit_d1pow_true a i hi)
 
 /-- Specialization of the generic postlude source obligations to the
@@ -699,7 +711,7 @@ theorem outerLCInc_full_run
               (s1Config L n m a 0 b h).tape h a m r)
             h a m b⟩ := by
   obtain ⟨q,r,len,hnfactor,hL,hq,hv2,hpre⟩ :=
-    outerLCInc_preHRun L n m a b h hn hnL hm
+    outerLCInc_preHRun L n m a b h hm hn hnL
   have hpre' :
       run tm2 (9*a+3*m+17+12*r+4)
         (s1Config L n m a 0 b h) =
@@ -723,6 +735,8 @@ the decremented binary counter is d0^b followed by a+2 one-blocks. -/
 theorem outerLCInc_target_binary_prefix (a b : Nat) :
     binDec (a+b+2) (2^b-1) = d0pow b ++ d1pow (a+2) := by
   have hq : 0 < 2^(a+1) := Nat.pow_pos (by decide : 0 < 2)
+  have hlen : a+b+2 = a+1+1+b := by omega
+  rw [hlen]
   simpa [binDec_zero, d1pow] using
     (binDec_sub_one_carryPrefix (a+1) 0 b hq)
 
