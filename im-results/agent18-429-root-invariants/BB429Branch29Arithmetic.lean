@@ -33,8 +33,8 @@ theorem local_branch29_burst_mod16384
     BB429Branch29Odd31.rooted_29_q_twelve_mod128 q hq hroot
   have hpow : 2^(n+2)=16384*2^(n-12) := by
     have hsplit : n+2=14+(n-12) := by omega
-    rw [hsplit,pow_add]
-    norm_num
+    rw [hsplit, Nat.pow_add]
+    simp only [Nat.reducePow]
   have hmod : (128*q+3*n+131)%16384=0 := by
     rw [heq,hpow]
     omega
