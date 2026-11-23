@@ -1,5 +1,15 @@
 ## Current incarnation — 2026-11-23 09:31 UTC: SymRun acceptance support and F424 source repair
 
+### Checkpoint update — 2026-11-23T10:14:05.817Z
+
+- **F424 symbolic trace draft added:** `im-results/agent11-symrun-primitive-cost/SourceF424SymbolicTrace.lean` extracts the 18 symbolic checkpoint states and their `by decide +kernel` proofs from the pinned upstream certificate. It proves `symRunF424_exact`, identifying the 70,511-step `stepSym` trajectory from `initSymCyc3_F424` to `symChk70511_F424`, and reconstructs `blankF424_is_halt` by composing the exact blank-to-checkpoint prefix, the checkpoint soundness chain, and the final DL/zero halting transition. This remains an uncompiled draft.
+- **CI diagnostic and repairs:** run `45152480608` failed in `SourceExactF424Core.lean` (not in the new prefix module). The first errors were two `executeWithin` tactic failures in CB exact-step branches and six sweep-state goals incorrectly sent to `omega`. I hardened `executeWithin` with `try stepWithin`, added `encM_bumpM` to the step simplifier, and expanded sweep normalization with `repBlock`/append simp before arithmetic. These changes are uncompiled.
+- **Current targeted CI:** workflow `.github/workflows/agent11-symrun-exact-bb.yml` now compiles Core → MItem prefix → symbolic trace, audits for `sorryAx`/`native_decide`, and has a 60-minute timeout. Run `45154044588` is in progress on head `b84cd53ce3d2314244e877a394bf67a2ef335881`; this is the first run including the new MItem and symbolic-trace modules. Do not dispatch another until this run finishes.
+- **Research boundary:** the blank-tape F424 run is now connected in draft form through its 70,511-step symbolic halting trace, but the exact primitive-time cost of that symbolic trace still depends on the separate costed `stepSym`/dispatcher work. Agent 42's pilot contains partial BB/DL/CB branches, Rule-A/C/B iterations, and `sweepCB_within`; the global `stepSym) bridge remains open and Agent 44 owns the BB-sweep numeric-sum/post-BB field work. Do not duplicate those branches or claim an exact F424 time.
+- **Next:** wait for run `45154044588`; if it fails, inspect failed-job logs only and repair the first source-level error. If it passes, record the accepted axiom profile, then coordinate the next cost-composition step with Agents 42/44. All work remains in `im-results/`; no `results/` publication or BB(6) conclusion.
+
+---
+
 ### Checkpoint update — 2026-11-23T10:01:53.957Z
 
 - **Blank-to-prefix composition added:** `SourceExactMItemPrefix424.lean` now includes `initToCB424_exact` (18 original TM steps from `init []) using `executeWithin 18`, composes it with the exact 19,217-step `runElemFast 1 1 11 4` MItem prefix, and states `blankToRunElemFast424_within_two31`. Thus the draft's bound now starts at the blank-tape configuration and reaches the source `runElemFast` output in fewer than (2^{31}) primitive steps. I added `BusyBeaver.init_nil` to the `stepWithin` simp set to normalize the initial configuration. Latest MItem file checkpoint: `951b5648fabca0941d18197af1d405f501652fd6`; README update: `c1044436fd42c0e16e01be2bdec21fb32505dad7`.
