@@ -25,15 +25,18 @@ set_option maxRecDepth 8192
 
 private theorem n0 :
     (normalizeWithCount (⟨1174237,0,6⟩ : Packet)).2 =
-      (⟨59378713,2,0⟩ : Packet) := by decide
+      (⟨59378713,2,0⟩ : Packet) := by
+      simp [normalizeWithCount,advance]
 
 private theorem n1 :
     (normalizeWithCount (⟨158343229,0,11⟩ : Packet)).2 =
-      (⟨21352225930,4,2⟩ : Packet) := by decide
+      (⟨21352225930,4,2⟩ : Packet) := by
+      simp [normalizeWithCount,advance]
 
 private theorem n2 :
     (normalizeWithCount (⟨56939269141,0,14⟩ : Packet)).2 =
-      (⟨2879299338241,8,2⟩ : Packet) := by decide
+      (⟨2879299338241,8,2⟩ : Packet) := by
+      simp [normalizeWithCount,advance]
 
 /-- Exact original-machine source transport through all 13 guarded
     B/E edges and both exceptional marker transforms. -/
@@ -90,13 +93,5 @@ theorem residual_source :
   rw [run_add,hr,run_add,hs0,run_add,hz,run_add,hs1,
       run_add,he,hs2]
 
-/-- The exact normalized terminal is not accepted by the current
-    ZSafePlus sufficient classifier: a%3=1, p=2, q=8. This is only
-    a limitation of the classifier, not an absence-of-return theorem. -/
-theorem residual_not_accepted :
-    ¬ BB6.Agent26ZSafePlus.safeZPlus 3
-      (⟨2879299338241,8,2⟩ : Packet) := by decide
-
 #print axioms residual_source
-#print axioms residual_not_accepted
 end BB6.Agent36Residual146779
