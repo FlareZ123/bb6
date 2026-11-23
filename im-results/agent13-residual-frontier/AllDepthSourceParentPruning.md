@@ -32,6 +32,10 @@ Here B is the exact even-right six-source inverse, A the even-right affine inver
 
 In each fixed four-depth block `n in {8*r,8*r+2,8*r+4,8*r+6}`, the seven accepted source paths cover `32+(4+1)+(4+2)+(16+4)=63` of the `4*32=128` formal (phase, q-mod-32) cells, uniformly for every r. **This is a count of formal arithmetic phase cells, not a fraction of all original-machine predecessors, of stopping parameters, of halts, or of six-state machines.** For a fixed stopping target, q depends on n via its 2-adic factorization, so these formal counts cannot be substituted for a full source decision.
 
+### What remains in the generic phase filter
+
+The 63/128 bound is still far from a complete inversion theorem. For any fixed r, the unexcluded formal q-mod-32 counts by depth phase are: n=8r **0/32**, n=8r+2 **27/32**, n=8r+4 **26/32**, and n=8r+6 **12/32**. The principal bottlenecks are n=8r+2 and 8r+4. For n=8r+2, the direct first B inverse is unavailable when q+r is even (a sum-seven sector), covering 16 of those 32 quotient cells; existing BBA and BBAO certificates attack only favorable odd sectors. For n=8r+4 the direct O inverse fails when q+r≡1 (mod4), accounting for eight of the 32 quotient cells, and further recursive source phases remain beyond the short O-B/O-F certificates. **These are arithmetic profile counts, not statements of machine reachability**. A productive generalization should target the exceptional exact original-source inverse laws in these two sectors before attempting more fixed-depth modular cylinders.
+
 ## Lean and source provenance
 
 - [EvenOddAllDepthForbidden.lean](EvenOddAllDepthForbidden.lean): arbitrary depth n=8r odd-image and n=8r+6 affine cases, plus n=8r+2 BBA. First four theorems accepted in [CI 45257688863](https://github.com/FlareZ123/bb6/actions/runs/45257688863), and the BBA extension accepted in [CI 45259227220](https://github.com/FlareZ123/bb6/actions/runs/45259227220), each original-source 58-module closure with standard Lean axioms, no `sorryAx`.
