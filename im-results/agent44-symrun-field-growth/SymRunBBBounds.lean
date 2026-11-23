@@ -87,7 +87,7 @@ theorem sweepBB_length_bound (L R : List SymTok) :
                 stateTokenCount (sweepBB L1
                   (.item (.run 0) :: .item (.run 1) :: eatB2 p R2)) := by
                     simp [sweepBB, hs, strictList_eq]
-            _ ≤ L1.length + 2 + (eatB2 p R2).length + 5 * L1.length + 12 := by
+            _ ≤ L1.length + (eatB2 p R2).length + 2 + 5 * L1.length + 12 := by
                     simpa using hrec'
             _ ≤ (L1.length + 1) + R.length + 5 * (L1.length + 1) + 12 := by omega
         | none =>
@@ -114,7 +114,7 @@ theorem sweepBB_length_bound (L R : List SymTok) :
                 stateTokenCount (sweepBB L1
                   (.item (.run 0) :: .item (.run 1) :: eatB12R m R2)) := by
                     simp [sweepBB, hs, strictList_eq]
-            _ ≤ L1.length + 2 + (eatB12R m R2).length + 5 * L1.length + 12 := by
+            _ ≤ L1.length + (eatB12R m R2).length + 2 + 5 * L1.length + 12 := by
                     simpa using hrec'
             _ ≤ (L1.length + 1) + R.length + 5 * (L1.length + 1) + 12 := by omega
         | none =>
