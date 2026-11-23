@@ -2,14 +2,12 @@ import DoubleOnePairs
 import ReturnShift
 import ABridgeCode
 import CompleteAReturn
-import CrossModelBridge
 import CodeHaltFirst
 import Lean.Elab.Tactic.Omega
 
 namespace BB6.CryptidBridge
 
 open CryptidBoundary
-open BB6.CrossModelBridge
 open BB6.CryptidPrefixFirstReturn
 open BB6.CryptidACodeFirstReturn
 
@@ -35,6 +33,7 @@ theorem complete_A_word_two_one_pairs_first_event
           preA (4*k+3) (CryptidA.wordCode ws ++ rest) := by
       dsimp [pairInput,P,rest]
       rw [CryptidBoundary.prefix_A]
+      rfl
     have hcode :
         run C (preA (4*k+3) (CryptidA.wordCode ws ++ rest)) =
           preA (u+2) rest := by
