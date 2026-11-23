@@ -61,35 +61,35 @@ theorem outerLCInc_s1_right_facts (L n m a b : Nat) (h : Int) :
           (s1Config L n m a 0 b h).tape (h+1+1) := by congr 1 <;> omega
       _ = sideBit ([false,true,true,true,false,false] ++ d1pow (b+1)) 1 :=
         hcell 1
-      _ = true := by decide
+      _ = true := by simp [sideBit]
   constructor
   · calc
       (s1Config L n m a 0 b h).tape (h+3) =
           (s1Config L n m a 0 b h).tape (h+1+2) := by congr 1 <;> omega
       _ = sideBit ([false,true,true,true,false,false] ++ d1pow (b+1)) 2 :=
         hcell 2
-      _ = true := by decide
+      _ = true := by simp [sideBit]
   constructor
   · calc
       (s1Config L n m a 0 b h).tape (h+4) =
           (s1Config L n m a 0 b h).tape (h+1+3) := by congr 1 <;> omega
       _ = sideBit ([false,true,true,true,false,false] ++ d1pow (b+1)) 3 :=
         hcell 3
-      _ = true := by decide
+      _ = true := by simp [sideBit]
   constructor
   · calc
       (s1Config L n m a 0 b h).tape (h+5) =
           (s1Config L n m a 0 b h).tape (h+1+4) := by congr 1 <;> omega
       _ = sideBit ([false,true,true,true,false,false] ++ d1pow (b+1)) 4 :=
         hcell 4
-      _ = false := by decide
+      _ = false := by simp [sideBit]
   constructor
   · calc
       (s1Config L n m a 0 b h).tape (h+6) =
           (s1Config L n m a 0 b h).tape (h+1+5) := by congr 1 <;> omega
       _ = sideBit ([false,true,true,true,false,false] ++ d1pow (b+1)) 5 :=
         hcell 5
-      _ = false := by decide
+      _ = false := by simp [sideBit]
   constructor
   · intro i hi
     have h0 : sideBit (d1pow (b+1)) (3*i) = true :=
@@ -103,7 +103,7 @@ theorem outerLCInc_s1_right_facts (L n m a b : Nat) (h : Int) :
     have hc2 := hcell (8+3*i)
     have hr0 : sideBit ([false,true,true,true,false,false] ++ d1pow (b+1))
         (6+3*i) = sideBit (d1pow (b+1)) (3*i) :=
-      BB6Coverage.Agent6Q4Prefix.sideBit_append_right _ _ _ (by simp)
+      BB6Coverage.Agent6Q4Prefix.sideBit_append_right _ _ _ (by omega)
     have hr1 : sideBit ([false,true,true,true,false,false] ++ d1pow (b+1))
         (7+3*i) = sideBit (d1pow (b+1)) (3*i+1) :=
       BB6Coverage.Agent6Q4Prefix.sideBit_append_right _ _ _ (by omega)
@@ -172,7 +172,7 @@ theorem markerBridgeFrameOut_five (m : Nat) (hm : m < 3)
   have hjcases : j=0 ∨ j=1 ∨ j=2 ∨ j=3 ∨ j=4 := by omega
   rcases hm' with rfl | rfl | rfl <;>
     rcases hjcases with rfl | rfl | rfl | rfl | rfl <;>
-    decide
+    norm_num [markerBridgeOutput, sideBit]
 
 /-- The final m marker-frame cells are ones, exactly the prefix
 needed at the beginning of the E scan. -/
@@ -191,9 +191,10 @@ theorem markerBridgeFrameOut_trailing (m : Nat) (hm : m < 3)
   · omega
   · have hi0 : i=0 := by omega
     subst i
-    decide
+    norm_num [markerBridgeOutput, sideBit]
   · have hicases : i=0 ∨ i=1 := by omega
-    rcases hicases with rfl | rfl <;> decide
+    rcases hicases with rfl | rfl <;>
+      norm_num [markerBridgeOutput, sideBit]
 
 /-- The marker frame preserves every cell strictly to the right of
 its fixed output window. -/
