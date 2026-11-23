@@ -687,6 +687,19 @@ jobs:
           for f in CSixSeventhArithmetic CSixSeventhStrict CSixSeventhRoot CSixSeventhGateWide CSixSeventhDiagonal; do
             lean -o "$f.olean" "$f.lean"
           done
+          # Source-check the S2 and complementary q-even image exclusions,
+          # then pull both back to the exact high-stop parameter cylinders.
+          cp ${GITHUB_WORKSPACE}/im-results/agent4-c-seven-image/S2QEvenResidue.lean .
+          lean -o S2QEvenResidue.olean S2QEvenResidue.lean 2>&1 | tee S2QEvenResidue.log
+          cp ${GITHUB_WORKSPACE}/im-results/agent4-c-seven-image/{CSixSeventhS2,CSixSeventhS2QEven}.lean .
+          lean -o CSixSeventhS2.olean CSixSeventhS2.lean 2>&1 | tee CSixSeventhS2.log
+          lean -o CSixSeventhS2QEven.olean CSixSeventhS2QEven.lean 2>&1 | tee CSixSeventhS2QEven.log
+          cp ${GITHUB_WORKSPACE}/im-results/agent34-s2-pullback/CSixSeventhS2Pullback.lean .
+          lean -o CSixSeventhS2Pullback.olean CSixSeventhS2Pullback.lean 2>&1 | tee CSixSeventhS2Pullback.log
+          if grep -E -q sorryAx S2QEvenResidue.log CSixSeventhS2.log CSixSeventhS2QEven.log CSixSeventhS2Pullback.log; then
+            echo "REJECTED: S2/q-even high-stop source pullback contains sorryAx"
+            exit 1
+          fi
           cp ${GITHUB_WORKSPACE}/im-results/agent4-c-seven-image/CSixSeventhC58.lean .
           lean -o CSixSeventhC58.olean CSixSeventhC58.lean 2>&1 | tee CSixSeventhC58.log
           if grep -q sorryAx CSixSeventhC58.log; then
@@ -699,6 +712,14 @@ jobs:
           lean -o CSixSeventhSixAll.olean CSixSeventhSixAll.lean 2>&1 | tee CSixSeventhSixAll.log
           if grep -q sorryAx CSixSeventhSixAll.log; then
             echo "REJECTED: latest six-sector s3 integration contains sorryAx"
+            exit 1
+          fi
+          # Compose the two new source-certified high-stop exclusions
+          # with the latest exact six-all halting iff.
+          cp ${GITHUB_WORKSPACE}/im-results/agent34-s2-pullback/CSixSeventhSixAllS2.lean .
+          lean -o CSixSeventhSixAllS2.olean CSixSeventhSixAllS2.lean 2>&1 | tee CSixSeventhSixAllS2.log
+          if grep -q sorryAx CSixSeventhSixAllS2.log; then
+            echo "REJECTED: S2/q-even exact six-all integration contains sorryAx"
             exit 1
           fi
 
