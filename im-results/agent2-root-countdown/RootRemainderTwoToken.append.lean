@@ -375,6 +375,12 @@ theorem root_countdown_one_five_reset (n : ℕ) :
         (List.replicate 5 (0,0) ++ [(8*n+11,0)] ++
           List.replicate 2 (0,0) ++ [(2,0)])) := by
   have h1 := root_countdown_prefix_with_tail_fixed n 1 [(5,0)]
+  have h1' : ReachesPlus target
+      (cfg_CR_n_n [(0,0)]
+        (List.replicate (4*n+5) (0,0) ++ [(1,0),(5,0)]))
+      (cfg_EL_n_n [(0,0),(1,0)]
+        (List.replicate (4*n+6) (0,0) ++ [(1,0),(5,0)])) := by
+    simpa [List.append_assoc] using h1
   have h2 := root_countdown_el_zero_sweep (4*n+5) [(0,0),(1,0)] [(1,0),(5,0)]
   have h2' : ReachesPlus target
       (cfg_EL_n_n [(0,0),(1,0)]
@@ -407,7 +413,7 @@ theorem root_countdown_one_five_reset (n : ℕ) :
         (List.replicate 5 (0,0) ++ [(8*n+11,0)] ++
           List.replicate 2 (0,0) ++ [(2,0)])) := by
     simpa [hx, List.append_assoc] using h11
-  exact ReachesPlus.trans h1
+  exact ReachesPlus.trans h1'
     (ReachesPlus.trans h2'
       (ReachesPlus.trans h3
         (ReachesPlus.trans h4
@@ -423,8 +429,8 @@ theorem root_countdown_one_five_reset (n : ℕ) :
 ## Exact DL-right-one boundary for the suffix [0,0,2]
 
 This private theorem records the precise token configuration reached from
-D_n(1;[0,0,2]). The two zeros are consumed by DL-zero and one EL-zero
-transition, respectively; no third EL-zero transition occurs before the
+D_n(1;[0,0,2]). EL-positive(1) writes an additional zero; DL-zero consumes
+the first, and two EL-zero transitions consume the remaining two before the
 right-one branch.
 -/
 
