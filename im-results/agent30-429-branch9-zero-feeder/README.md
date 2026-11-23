@@ -1,102 +1,119 @@
-# Branch-9 diagonal feeder: exact reduction to a blank-root zero state
+# BB429 branch-9 diagonal feeder and exceptional-parent sieve
 
-**Status:** intermediate. The algebraic identities are exact; the inverse-tree sweep is exploratory computation, not a Lean-certified theorem. No BB(6) or full #429 decision is claimed.
+**Mathematical scope.** This is an exact algebraic reduction of one branch-9 last-reset family in the genuine `BB429.next` accelerator, together with a *new necessary congruence restriction* on its exceptional inverse parents and a reproducible finite-depth inverse sieve. The algebra and modulo-32 exclusion are paper arguments using existing all-time blank-root invariants; the deeper census is exact-integer JavaScript computation, **not a compiled Lean proof**. This dossier does not establish that any pre-reset state is reachable or unreachable for every parameter. Machine #429 and BB(6) remain open.
 
-## Last-reset equation and inverse grammar
+## Authentic source, last-reset family, and full inverse grammar
 
-For the branch-9 pre-reset state `(x,y)`, burst length `n), and reset parameter `d),
+The original six-state target is `1RB0LF_1RC1RA_0RD0RB_1LEHHH_0LA1LE_1RD1LA`. We use the exact return map `BB429.next` in [BB429Rank.lean](../agent5-429-rank/BB429Rank.lean). The original branch-9 last-reset equations for pre-reset `(x,y)`, burst length `n`, and reset parameter `d` are
 
-```
-4*x = 2^(n+2)*(d+10) + 2*d - 3*n - 25
-y   = 2*(x-d)+1.
-```
+    4*x = 2^(n+2)*(d+10) + 2*d - 3*n - 25,
+    y   = 2*(x-d) + 1.
 
-Let `h=(2*d-3*n-13)/4). Then `x=2^n*(d+10)+h-3).
+On `h=(2*d-3*n-13)/4=0` set `d=(3*n+13)/2`. The interesting integer subfamily, for `J≥2`, is
 
-The inverse parents used in the exact DFS are:
+    n=8*2^J-11;    d=12*2^J-10;    N=n+J;
+    (x,y)=(12*2^N-3, 24*2^N-24*2^J+15).
 
-```
-F⁻¹(a,b) = ((a-3)/2, a+b)                    [a odd]
-S⁻¹(a,b) = ((4*a+b-26)/4, (b+4)/2)          [a odd, b%4=2]
-E⁻¹(a,b) = ((4*a+b-14)/4, b/2)              [a even, b%4=2].
-```
+The first-branch predecessor for an odd first coordinate is `F⁻¹(a,b)=((a-3)/2,a+b)`. Its complete spine, for `0≤i≤N`, has the exact integer coordinates
 
-At an odd state with `b%4=2`, both F and S must be explored. Following F alone is not automatically justified.
+    A_i = 12*2^(N-i)-3,
+    B_i = 48*2^N-24*2^(N-i)-24*2^J+15-3*i.
 
-## Diagonal h=0 feeder
+At `i=N` this gives `(9,B_N)`. From the genuine source case split, nine has unique predecessor `(3,B_N+9)`, and three in this situation has unique predecessor `(0,z_J)`, where
 
-On `h=0), `d=(3*n+13)/2` and `x=2^n*(d+10)-3`. Along the all-F inverse spine, for `0≤i≤n`,
+    z_J=B_N+12=12*2^(N+2)-48*2^J+36-3*J.
 
-```
-a_i = 2^(n-i)*(d+10)-3
-b_i = (2^(i+1)-1)*2^(n-i+1)*(d+10) - 2*d - 5 - 3*i.
-```
+These two inverse steps identify an **all-F feeder**, not the entire ancestry of `(x,y)`: exceptional predecessors must also be examined. All-F ancestry is ruled out immediately for odd `J` because then `z_J` is odd, whereas every transition to first coordinate zero has even second coordinate. This is not an exclusion of the pre-reset state itself.
 
-Thus `(a_n,b_n)=(d+7, 2^(n+2)*(d+10)-4*d-25-3*n)`.
+The complete large-first-coordinate inverse grammar is
 
-Set `d+7=12*2^J-3`. This gives the subfamily
+    F⁻¹(a,b)=((a-3)/2, a+b)              [odd a];
+    S⁻¹(a,b)=((4*a+b-26)/4, (b+4)/2)    [odd a≥13, b≡2 mod4];
+    E⁻¹(a,b)=((4*a+b-14)/4, b/2)        [even a≥6, b≡2 mod4].
 
-```
-n = 8*2^J-11
-d = 12*2^J-10.
-```
+Both `F` and `S` must be explored when admissible at an odd target. See [BB429NewResidue.lean](../agent6-harmonic429/BB429NewResidue.lean) for the source inverse lemmas.
 
-After J more F inverses, the all-F path reaches `(9,b_J)), where `b_J=b_n+24*2^J-24-3*J`. Two forward first-branch steps from `(0,z_J)` reach `(9,b_J)), with
+## New exact S-parent parameterization and modulo-32 root obstruction
 
-```
-z_J = b_J+12
-    = 12*2^(n+J+2) - 48*2^J + 36 - 3*J.
-```
+For any interior spine index `i`, `B_i≡3+i (mod4)`. Thus an S inverse exists only when
 
-The private `nine_predecessor` lemma in `im-results/agent39-429-1021/BB429RootMod64R2.lean` gives the unique predecessor `(3,b+9)` of `(9,b)`; direct source case analysis gives the unique predecessor `(0,b+12)` of a state with first coordinate 3. Therefore, **if** all S alternatives along this spine are excluded, the remaining question is exactly whether `(0,z_J)` is blank-root reachable. Conversely, a root visit to `(0,z_J)` deterministically generates the feeder and the branch-9 prestate.
+    i=4*k+3,   t=N-i≥1.
 
-## Exact-integer inverse-tree exploration
+Its exact parent is
 
-A DFS over exact BigInt states explored F and S at odd states (S when `b%4=2`) and E at even states (when `b%4=2`), deduplicating states. Leaves were tested against a selected set of current repository invariants: `BB429Mod8.Allowed`, positive-even mod-8/mod-16 rows, root mod-16/mod-32 strong rows, odd/odd rows from the branch-9 work, and Agent 39 forbidden cells `no_15_26`, `no_15_24`, `no_31_24`, `no_1_25`, `no_1_23`, `no_33_23`, `no_5_20`, `no_3_18`, `no_9_9`, `no_21_20`.
+    X = 12*2^N+6*2^t-6*2^J-8-3*k,
+    Y = 24*2^N-12*2^t-12*2^J+5-6*k.
 
-| J | n | d | unique states | low leaf | low-leaf b mod 64 | z_J mod 128 |
-|---:|---:|---:|---:|---|---:|---:|
-| 2 | 21 | 38 | 45 | (9,b) | 18 | 94 |
-| 3 | 53 | 86 | 89 | none | — | 27 |
-| 4 | 117 | 182 | 183 | (9,b) | 12 | 24 |
-| 5 | 245 | 374 | 353 | none | — | 21 |
-| 6 | 501 | 758 | 739 | (9,b) | 6 | 18 |
-| 7 | 1013 | 1526 | 1488 | none | — | 15 |
-| 8 | 2037 | 3062 | 2987 | (9,b) | 0 | 12 |
+When `J≥6` and `t≥6` the parent has
 
-For J=3,5,7 all explored branches close under the selected invariants. For J=2,4,6,8 the only surviving leaf is the all-F path to first counter 9. This is finite computational evidence only; no uniform proof in J has been established.
+    (X mod32,Y mod32)=((-8-3*k) mod32,(5-6*k) mod32).
 
-Every transition with output first coordinate 0 has even second coordinate. The existing `rooted_zero_two_gateway_sharp` theorem in `im-results/agent18-429-root-invariants/BB429OddResetGate.lean` says a root state `(0,z)` with `z%4=2` must have either:
-- high-two source `(u,2*u+2)`, `u%16 ∈ {0,4,5,8,9,12,13}`; or
-- odd-reset source `(u,2*u-3)`, `u%32 ∈ {7,13,15,21,29,31}`.
+**Necessary condition:** If this genuine S-parent belongs to the blank-root orbit, then
 
-For J=2, `z_J%128=94`: the two source residues are `(z_J-18)/4=19 (mod 32)` and `(z_J-2)/4=23 (mod 32)`; both fail the gateway. Subject to formalizing the finite inverse tree, this closes the J=2 member.
+    k mod32 ∈ {1,3,9,11,19,25,27}.
 
-For J=6, `z_J%128=18`: the high-two source has `u=0 (mod 32)`, while the odd-reset source has `u=4 (mod 32)`. The odd-reset alternative fails, but the high-two source survives. This is a direct target for Agent 32's high-two/Junc work.
+**Derivation, including all 25 excluded residues:** An even `k` gives even `X` and odd `Y`, contradicting the all-time positive-even source invariant `Y≡2 (mod8)`; this excludes 16 of 32 classes. For odd `k≡5,13,21,29 (mod32)` we get `X≡1 (mod8), Y≡3 (mod4)`, excluded by `BB429Mod8.Allowed`. For odd `k≡7,15,23,31 (mod32)` we have `X≡3 (mod4), (X+Y)≡6 (mod8)`, contradicted by the exact odd/odd predecessor theorem, which requires `X+Y≡2 (mod8)` for a sufficiently large authentic root state. Finally `k≡17 (mod32)` gives `X≡5 (mod32), Y≡7 (mod8)`, contradicting the strengthened five-mod-32 root row `Y mod8∈{2,4,5}`. These disjoint classes give `16+4+4+1=25` exclusions. The surviving seven classes are *not* certified reachable.
 
-For J=4 and J=8, `z_J%4=0`, so the zero-two gateway does not apply. A useful next theorem is a source classification for root states `(0,z)` with `z%4=0`. The broad source cases are `w=2*u`, `d=1,w=2*u-2`, or even `w` with odd `d=u-w/2≥3`; the last family remains too broad under current residue rows.
+The root facts being consumed, rather than conjectured, are [BB429Mod8](../agent6-harmonic429/BB429Mod8.lean), [positive-even-eight](../agent39-429-1021/BB429RootEven8.lean), [odd/odd row source](../agent33-429-reset-boundary-rows/BB429ResetBoundaryRows.lean) and [the strengthened five row](../agent18-429-root-invariants/BB429SevenStrong.lean). Source-acceptance statuses of composed dependencies should be audited before turning this paper implication into a source-certified theorem.
 
-## General non-diagonal branch-local formula
+This gives a uniform necessary condition on **every sufficiently interior exceptional branch**, not merely seven sampled values of `J`.
 
-For `h!=0`, let `r=v₂(h)` and `H=h/2^r` (odd). Along the F-only branch, for `r<n`,
+## Dyadic reverse-tree sieve: computation and proof obligation
 
-```
-a_r = 2^(n-r)*(d+10)+H-3
-b_r = (2^(r+1)-1)*(2^(n-r+1)*(d+10)+2*H)-2*d-5-3*r.
-```
+[side_branch_sieve.js](side_branch_sieve.js) explores the complete `F/S/E` predecessor tree of the possible exceptional parent, rejecting a node whenever it violates a published all-time root necessary predicate. It uses JavaScript exact `BigInt` arithmetic and the following root filters:
 
-When `r≤n-2`, the large power term vanishes mod 8. If this F-ancestor is the actual root ancestor, it is positive even, so `b_r%8=2` is required. This yields:
-- `d%4=2`: for r=1, H%4=1; for r≥2, either (H%4=1 and r%8=1) or (H%4=3 and r%8=5).
-- `d%4=0`: for r=1, H%4=3; for r≥2, either (H%4=1 and r%8=5) or (H%4=3 and r%8=1).
+* `BB429Mod8.Allowed`, positive-even mod-16 rows, strengthened seven/one/five root rows;
+* odd/odd source rows of `BB429ResetBoundaryRows.odd_odd_rows`;
+* ten forbidden small-modulus root cells from `BB429RootMod64R0` and `BB429RootMod64R2`.
 
-These are branch-local constraints, not global necessary conditions until the alternative S parents are handled.
+The calculation depends only on `k` modulo `2^(D+6)` for a reverse depth `D`, provided `J,t≥D+6`. To see the precision bound, set `K=D+6` and compare the true initial parent with the signed dyadic representative
 
-## Next proof obligations
+    (X₀,Y₀)=(-8-3*k, 5-6*k).
 
-1. Formalize the J=2 inverse tree and combine it with the existing zero-two gateway.
-2. Prove a uniform modular description of the S side branches along the diagonal spine.
-3. Coordinate J=6 with Agent 32's high-two/Junc work.
-4. Derive a zero-state `z%4=0` predecessor gateway for J=4,8 and later J.
-5. Extend the valuation filter to a complete two-parent inverse-tree argument.
+Their first difference is divisible by `2^K` and their second difference by `2^(K+1)`. Each inverse operation preserves an appropriately weighted congruence, losing at most one first-coordinate bit per level:
 
-This is intermediate work; nothing belongs in `results/` yet.
+    F: (δX,δY) ↦ (δX/2, δX+δY)
+    S or E: (δX,δY) ↦ (δX+δY/4, δY/2).
+
+Consequently the reverse-tree branch guards and all predicates through mod64 in the first coordinate and mod32 in the second are invariant over each complete `k mod2^(D+6)` cylinder, for all depths ≤D. The actual first counters remain much larger than 33 under these conditions, so the source inverse grammar covers the tree and no small-counter exception is substituted. The representative is kept as a **signed integer throughout**; silently wrapping it modulo `2^K` during inverse expansion would invalidate the weighted precision.
+
+The exact script census is:
+
+| Inverse depth D | k modulus | Surviving residue classes | Fraction |
+| ---: | ---: | ---: | ---: |
+| 0 | 64 | 14 | 21.875% |
+| 4 | 1024 | 56 | 5.46875% |
+| 8 | 16384 | 188 | 1.14746% |
+| 12 | 262144 | 788 | 0.30060% |
+| 16 | 4194304 | 3068 | 0.0731468% |
+| 18 | 16777216 | 4962 | 0.0295758% |
+
+Thus the **depth-16 finite inverse search** rejects `4191236/4194304` classes of the `k` congruence parameter at sufficiently interior S parents, on the stated trusted-root-filter assumptions. The remaining 3,068 classes and all positions with `t<22` are open. This count is a reproducible algorithm output, **not a Lean kernel-certified cardinality theorem**, and the transitive source-axiom audit of the combined predicates has not been run for this new sieve. No density statement about machines or BB(6) follows.
+
+The algorithm can be run with `node im-results/agent30-429-branch9-zero-feeder/side_branch_sieve.js 16`. The JavaScript source is deliberately standalone and the computed count includes a regression assertion; local runtime execution was unavailable in this invocation, so the script was not re-run after being committed. The numbers were produced by a functionally equivalent exact-BigInt interpreter in the available code execution runtime, not by Lean or original-machine simulation.
+
+## Zero-parent bottleneck on the residual all-F spine
+
+On the all-F route, `z_J` is even exactly when `J` is even. For `J=4m+2≥6`,
+
+    z_J mod128 = (36-3J) mod128,
+    u_top mod32 = (z_J-18)/4 mod32 = 3-3m mod32,
+    u_odd mod32 = (z_J-2)/4 mod32 = 7-3m mod32.
+
+The [genuine zero-two gateway](../agent18-429-root-invariants/BB429OddResetGate.lean) requires one of the following admissible predecessors:
+the upper-boundary `(u,2u+2)` with `u mod16∈{0,4,5,8,9,12,13}`, or the odd-reset `(u,2u-3)` with `u mod32∈{7,13,15,21,29,31}`. Checking these two residue lists excludes **both possible predecessor kinds** for exactly
+
+    m mod32 ∈ {3,4,7,11,12,15,16,19,20,22,23,27,28,31}.
+
+This is a **new infinite exclusion of the zero-state ancestry for the all-F route**, not a full diagonal-state nonreachability proof. When `J=6` the upper-boundary candidate survives with `u≡0 (mod32)`, so Agent32's high-two/Junc classification is relevant. For `J=4m`, `z_J≡0 (mod4)` and the zero-two gateway does not apply; the broader even-zero predecessor grammar remains open.
+
+The earlier exact DFS for individual `J=2,…,8` explored both exceptional alternatives and returned no surviving side leaf under a particular invariant collection; for odd `J=3,5,7` it found no candidate leaf at all, while for even `J=2,4,6,8` the only survivor was the all-F low-nine leaf. Those are finite experiments and do **not** establish a uniform claim in `J`.
+
+## Unresolved mathematical quantifiers and next tests
+
+1. Translate the depth-`D` residue pruning into a small source-attached Lean certificate generator on the exact original `BB429.next` inverse lemmas, with weighted modulus soundness and correct base guards. Source-check decisive all-natural congruence lemmas before claiming formal certification.
+2. Prove a structural invariant for exceptional parents in the sparse surviving dyadic classes, rather than simply increasing `D` or listing more residues.
+3. Close remaining `t<22` edge branches and the low-nine zero feeder. The present source-filter reductions, even if all accepted, leave these routes open.
+4. Handle non-diagonal branch-9 `h≠0`; its previously derived first-even valuation filter is branch-local because alternative S predecessors remain.
+
+No entry is promoted to `results/` while these gaps and external novelty review remain unresolved.
