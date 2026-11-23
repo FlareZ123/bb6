@@ -75,11 +75,11 @@ theorem full_A_zero_first_return (k : Nat) :
     ∀ t, 0<t → t<12*k*k+49*k+44 →
       (run t (init (List.replicate (3*k+1) true))).st ≠ 5 := by
   intro t hpos ht
-  have hp : t = (12*k*k+41*k+32) +
-      (t-(12*k*k+41*k+32)) := by omega
   by_cases hprefix : t < 12*k*k+41*k+32
   · exact zeroPrefixNoF k t hpos hprefix
-  · rw [hp, run_add, prefix_A_nil]
+  · have hp : t = (12*k*k+41*k+32) +
+        (t-(12*k*k+41*k+32)) := by omega
+    rw [hp, run_add, prefix_A_nil]
     change (run (t-(12*k*k+41*k+32))
       (BB6.AZeroSource.aEmpty (4*k+3))).st ≠ 5
     exact aEmpty_noF (4*k+3) (t-(12*k*k+41*k+32)) (by omega)
@@ -111,7 +111,7 @@ private theorem ab_ten_run_noF (m q : Nat) (ys : List Bool) :
         2 (2*q)
         (ab_ten_noF m (pairs q ++ ys))
         (BB6.AOneSource.a_ten m (pairs q ++ ys))
-        (ih (m+1) (pairs q ++ ys))
+        (ih (m+1) ys)
       simpa [show 2*(q+1)=2+2*q by omega] using h
 
 /-- The five-step A-one front and following D sweep contain no F before
@@ -157,12 +157,12 @@ theorem full_A_one_first_return (k q : Nat) :
       (run t (init (List.replicate (3*k+1) true ++
         false::(pairs q ++ [true])))).st ≠ 5 := by
   intro t hpos ht
-  have hp : t = (12*k*k+41*k+32) +
-      (t-(12*k*k+41*k+32)) := by omega
   by_cases hprefix : t < 12*k*k+41*k+32
   · exact BB6.CryptidPrefixFirstReturn.prefixA_positive_noF
       k (pairs q ++ [true]) t hpos hprefix
-  · rw [hp, run_add, prefix_A]
+  · have hp : t = (12*k*k+41*k+32) +
+        (t-(12*k*k+41*k+32)) := by omega
+    rw [hp, run_add, prefix_A]
     change (run (t-(12*k*k+41*k+32))
       (BB6.AOneSource.ab (4*k+3) (pairs q ++ [true]))).st ≠ 5
     exact ab_suffix_noF (4*k+3) q
