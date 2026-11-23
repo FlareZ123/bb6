@@ -31,7 +31,6 @@ theorem q_even_R_parents (u v t a k : Nat)
     have hv' : v%4=(12+11*t)%4 := by omega
     omega
   have hT : 558+325*u+649*v=1208+1300*t+324*v := by
-    dsimp [x,y]
     omega
   have hTmod : (558+325*u+649*v)%16=8 := by
     rw [hT]
