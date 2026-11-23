@@ -11,6 +11,7 @@ on:
         options:
           - even16
           - branch9_side
+          - branch9_side_strong
           - branch9_center
           - branch9_center64
           - branch9_upper
@@ -53,7 +54,7 @@ jobs:
           lean -DmaxHeartbeats=20000000 -DmaxRecDepth=32768 -o im-results/agent30-429-even16/BB429No11473mod16384.olean im-results/agent30-429-even16/BB429No11473mod16384.lean
 
       - name: Compile branch-9 exceptional parent 25/32 theorem
-        if: ${{ inputs.proof_target == 'branch9_side' || inputs.proof_target == 'branch9_center' || inputs.proof_target == 'branch9_center64' || inputs.proof_target == 'branch9_upper' || inputs.proof_target == 'branch9_zero_two' || inputs.proof_target == 'branch9_odd_reset' || inputs.proof_target == 'branch9_zero_three' }}
+        if: ${{ inputs.proof_target == 'branch9_side' || inputs.proof_target == 'branch9_side_strong' || inputs.proof_target == 'branch9_center' || inputs.proof_target == 'branch9_center64' || inputs.proof_target == 'branch9_upper' || inputs.proof_target == 'branch9_zero_two' || inputs.proof_target == 'branch9_odd_reset' || inputs.proof_target == 'branch9_zero_three' }}
         shell: bash
         env:
           LEAN_PATH: im-results/agent5-429-rank:im-results/agent6-harmonic429:im-results/agent39-429-1021:im-results/agent18-429-root-invariants:im-results/agent30-429-even16:im-results/agent1-429-root-rows:im-results/agent30-429-branch9-zero-feeder
@@ -65,7 +66,7 @@ jobs:
           lean -DmaxHeartbeats=5000000 -o im-results/agent6-harmonic429/BB429NoThree.olean im-results/agent6-harmonic429/BB429NoThree.lean
           lean -DmaxHeartbeats=10000000 -DmaxRecDepth=30000 -o im-results/agent18-429-root-invariants/BB429SevenStrong.olean im-results/agent18-429-root-invariants/BB429SevenStrong.lean
           lean -DmaxHeartbeats=50000000 -DmaxRecDepth=30000 -o im-results/agent6-harmonic429/BB429NewResidue.olean im-results/agent6-harmonic429/BB429NewResidue.lean
-          lean -DmaxHeartbeats=20000000 -DmaxRecDepth=30000 im-results/agent30-429-branch9-zero-feeder/BB429Branch9SideRoot.lean
+          lean -DmaxHeartbeats=20000000 -DmaxRecDepth=30000 -o im-results/agent30-429-branch9-zero-feeder/BB429Branch9SideRoot.olean im-results/agent30-429-branch9-zero-feeder/BB429Branch9SideRoot.lean
           if [ "${{ inputs.proof_target }}" = "branch9_center" ] || [ "${{ inputs.proof_target }}" = "branch9_center64" ]; then
             lean -DmaxHeartbeats=8000000 -o im-results/agent30-429-even16/BB429Even16.olean im-results/agent30-429-even16/BB429Even16.lean
             lean -DmaxHeartbeats=30000000 -DmaxRecDepth=30000 -o im-results/agent30-429-branch9-zero-feeder/BB429CenterLine.olean im-results/agent30-429-branch9-zero-feeder/BB429CenterLine.lean
@@ -103,4 +104,9 @@ jobs:
             lean -DmaxHeartbeats=15000000 -DmaxRecDepth=16000 -o im-results/agent1-429-root-rows/BB429RootOddRowsStrong.olean im-results/agent1-429-root-rows/BB429RootOddRowsStrong.lean
             lean -DmaxHeartbeats=30000000 -DmaxRecDepth=30000 -o im-results/agent30-429-branch9-zero-feeder/BB429OddResetImproved.olean im-results/agent30-429-branch9-zero-feeder/BB429OddResetImproved.lean
             lean -DmaxHeartbeats=30000000 -DmaxRecDepth=30000 im-results/agent30-429-branch9-zero-feeder/BB429ZeroTwoThree.lean
+          fi
+
+          if [ "${{ inputs.proof_target }}" = "branch9_side_strong" ]; then
+            lean -DmaxHeartbeats=8000000 -o im-results/agent30-429-even16/BB429Even16.olean im-results/agent30-429-even16/BB429Even16.lean
+            lean -DmaxHeartbeats=25000000 -DmaxRecDepth=30000 im-results/agent30-429-branch9-zero-feeder/BB429Branch9SideStrong.lean
           fi
