@@ -21,7 +21,7 @@ For a symbolic state \(s=(m,L,R)\), define
 W(s)=1+|L|+|R|+\operatorname{numSum}(L)+\operatorname{numSum}(R),
 \]
 
-where \(\operatorname{numSum}\) is the existing listNumSum / symPairNumSum from SymRunTraceStats.lean. Thus every field and each list length is bounded by \(W(s)\).
+where \(\operatorname{numSum}\) is the existing listNumSum / symPairNumSum from SymRunTraceStats.lean. Thus every field and each list length is bounded by \(W(s)\). This is a representation-level field potential, not the literal expanded tape sum: tokNumSum(.rep2 p)=p and tokNumSum(.rep12 m)=m (not 2p and 3m). The macro arithmetic below uses exactly this repository definition.
 
 Use the analogous potential \(W_M\) on the initial MItem RLE states, with numeric sum of .run d equal to d and .zero equal to zero.
 
