@@ -1,4 +1,5 @@
 import EvenOddAllDepthPhaseSix
+import EvenOddAllDepthPhaseTwoDeep
 import Lean.Elab.Tactic.Omega
 
 namespace BB6.Agent13AllDepthSieve
@@ -9,7 +10,7 @@ namespace BB6.Agent13AllDepthSieve
     The parameter n is arbitrary: no recursion-depth cutoff is used. -/
 def sourceOddDepthPruned (n q : Nat) : Prop :=
   n%8=0 ∨
-  (n%8=2 ∧ (q+3*(n/8))%8=7) ∨
+  (n%8=2 ∧ ((q+3*(n/8))%8=7 ∨ (q+19*(n/8))%32=19)) ∨
   (n%8=4 ∧ ((q+n/8)%8=4 ∨ (q+n/8)%16=3)) ∨
   (n%8=6 ∧ ((q+n/8)%2=1 ∨ (q+7*(n/8))%8=0))
 
@@ -38,10 +39,14 @@ theorem source_odd_depth_pruned_unreachable
       have hh := Nat.mod_add_div n 8
       dsimp [r]
       omega
-    have hp : (q+3*r)%8=7 := by dsimp [r] at *; exact hqphase
     rw [hn] at hcost
-    exact BB6.Agent13AllDepth.depth_two_BBA_source_parent_impossible
-      u a k r q hk ha (by omega) hp
+    rcases hqphase with hBBA|hBBAO
+    · have hp : (q+3*r)%8=7 := by dsimp [r] at *; exact hBBA
+      exact BB6.Agent13AllDepth.depth_two_BBA_source_parent_impossible
+        u a k r q hk ha (by omega) hp
+    · have hp : (q+19*r)%32=19 := by dsimp [r] at *; exact hBBAO
+      exact BB6.Agent13AllDepthTwoDeep.depth_two_BBAO_source_parent_impossible
+        u a k r q hq hk ha (by omega) hp
   · let r := n/8
     have hn : n=8*r+4 := by
       have hh := Nat.mod_add_div n 8
