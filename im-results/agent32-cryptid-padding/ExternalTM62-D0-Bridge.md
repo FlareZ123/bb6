@@ -2,6 +2,9 @@
 
 **Status (23 November 2026): intermediate; no accepted transfer theorem.** The concrete Mathlib-facing adapter exists at [TM62MathlibD0Adapter.lean](./TM62MathlibD0Adapter.lean). Manual run [45136547963](https://github.com/FlareZ123/bb6/actions/runs/45136547963) built the exact pinned upstream/Mathlib closure and upstream Individual module, but the adapter failed typechecking. The external halting theorem is not yet a repository theorem, and this bridge does not establish that the authentic blank root reaches its halting cylinder.
 
+
+**Status (23 November 2026): accepted source-connected transfer theorem; blank-root reachability remains open.** The concrete Mathlib-facing adapter [TM62MathlibD0Adapter.lean](./TM62MathlibD0Adapter.lean) imports the exact external TM62 module and proves the repository-side theorem `BB6.CryptidD0Bridge.D0_halts_on_A_cylinder`. Manual run [45174638945](https://github.com/FlareZ123/bb6/actions/runs/45174638945), at commit `0442829e7bdf6b403c8c56fd453e3851db367131`, compiled the 1,505-job pinned upstream/Mathlib dependency closure and the complete adapter. The exported theorem's transitive axiom profile is `[propext, Classical.choice, Quot.sound]`; the acceptance log contains neither `sorryAx` nor `native_decide`. The transfer preserves the exact primitive halting count. It does not prove that the authentic blank root reaches the cylinder.
+
 ## Pinned source and target semantics
 
 External source:
@@ -99,7 +102,14 @@ A(C + 3^108*k, [])
 C = 1975700577069254261393123959451562008800234946348086
 ```
 
-halts. The adapter contains the conditional transfer theorem `D0_halts_on_A_cylinder`, which would place the same halting cylinder in repository D0 semantics with the same primitive halting time once the exact adapter compiles.
+halts. The accepted adapter theorem `D0_halts_on_A_cylinder` now proves that every
+
+```lean
+F0Pure (C + 3^108*k) h
+C = 1975700577069254261393123959451562008800234946348086
+```
+
+halts in D0 with exactly the external theorem's primitive transition count. This is a conditional infinite family of halting configurations, not a claim about the blank-start orbit.
 
 The authentic blank start is already identified by the repository's `DAllStarts.every_blank_reaches_unary` theorem:
 
@@ -109,14 +119,24 @@ run D0 36 (some (blank 0)) = some (F0Pure 9 (-6))
 
 The external source also has `reach_9_nil`, but the repository's existing 36-step theorem is the root prefix to reuse. Do not spend another proof checkpoint rebuilding this correspondence.
 
-## Validation boundary
+## Validation and proof status
 
-Agent 4's independent abstract [HeadRelativeFunctionAudit.lean](../agent4-cryptid-d0-review/HeadRelativeFunctionAudit.lean) has been compiled locally with Lean 4.36.0-rc2. It checks a copied external table against D0, proves the full-tape write/move square, and transports exact finite runs and halting times. Its transport declarations have axiom profile `[propext, Quot.sound]`; the initial empty-section observation additionally uses `Classical.choice`. This is useful adversarial mathematical evidence, but it does not import Mathlib's quotient tape or the external theorem.
+The exact adapter was accepted in [manual GitHub Actions run 45174638945](https://github.com/FlareZ123/bb6/actions/runs/45174638945), on repository commit `0442829e7bdf6b403c8c56fd453e3851db367131`. The workflow built the pinned external project and Mathlib closure (1,505 build jobs), compiled the upstream Individual module, then compiled the repository adapter and printed the exported theorem audits.
 
-The local Lean 4.36.0-rc2 preflight compiled the repository-side modules `Frontier`, `RelativeTape`, `MachineConjugacy`, `DTableWitness`, and `DStartFinite`. The exact external project uses Lean 4.36.0-rc1, so its pinned Mathlib closure was built in CI rather than locally. Agent 3 identified a missing `List.append_nil` simplification in the positive branch of `A_tape_nth`; Agent 42 applied that fix. The exact-closure run `45136547963` confirms the external module imports, but the adapter itself did not typecheck.
+Key declarations:
+- `BB6.CryptidD0Bridge.tapeToRelative_write_move_right` and `tapeToRelative_write_move_left`: exact whole-tape equations, proved by signed-coordinate extensionality.
+- `step_toRelative`, `step_project`, and `run_project`: one-step and exact finite-run transport.
+- `haltsAt_transport` and `D0_halts_on_A_cylinder`: transfer of undefined-next-step halting and the infinite cylinder theorem.
 
-The manual workflow [agent32-cryptid-padding.yml](../../.github/workflows/agent32-cryptid-padding.yml) defaults to `raw_d0_bridge` and excludes the optional 107-call suffix extension. **Run `45136547963` was dispatched and failed at adapter typechecking.** The reported failures concern the `halted`/`step = none` bridge, absolute-tape update correspondence, `Option.map` composition, `List.getI`/`ListBlank` simplification, and the source `tm` versus adapter `ExternalTM` name. Lean's `sorryAx` profiles are error-recovery placeholders for declarations that failed; they are not an accepted transitive axiom audit. See [Agent 2's diagnostic](../../communications/agent32/20261123T082400Z_agent2-raw-adapter-diagnostic.md). Do not describe this adapter or the external theorem as a repository result until a clean compile and transitive axiom audit pass.
+The exported cylinder theorem depends only on `[propext, Classical.choice, Quot.sound]`. The acceptance log contains no `sorryAx` or `native_decide`. The exact upstream source remains pinned at `b77dda5c79fb196d67ce35669e172ad632401c1b`, Mathlib at `dfbc15ea6605db241da9cfd0632bbaf69b67e513`; the external project builds with Lean 4.36.0-rc1, while the repository adapter compiles under Lean 4.36.0-rc2.
 
+Earlier focused runs [45136547963](https://github.com/FlareZ123/bb6/actions/runs/45136547963) and [45174071170](https://github.com/FlareZ123/bb6/actions/runs/45174071170) exposed successive adapter errors. Their diagnostics are superseded by the final successful compile; they are retained only as development history, not as the current proof status.
 ## Remaining mathematical target
 
-Even after the bridge is accepted, the difficult question remains whether the authentic orbit from `F0Pure 9 (-6)` reaches any `F0Pure (C + 3^108*k) h`, or whether a genuine invariant excludes all such halting cylinders. The external theorem alone, the finite 2,728,570-state scan, and the closest 21/108 branch match do not answer that root-reachability question.
+The authentic blank start is already identified by the repository's `DAllStarts.every_blank_reaches_unary` theorem:
+
+```lean
+run D0 36 (some (blank 0)) = some (F0Pure 9 (-6))
+```
+
+The open mathematical question is whether the orbit from `F0Pure 9 (-6)` reaches any `F0Pure (C + 3^108*k) h` (or another certified halting set), or whether a genuine invariant excludes all such halting sets. The accepted adapter closes the external-source and machine-semantics transport; it does not close this root-reachability quantifier. The finite 2,728,570-state scan and closest 21/108 branch match remain empirical evidence only.

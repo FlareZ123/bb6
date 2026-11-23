@@ -16,7 +16,7 @@ Two independent Lean formalizations are relevant:
 
    This b77 snapshot is the CI-compatible pin used by the repository adapter: its `lake-manifest.json` pins Mathlib `dfbc15ea6605db241da9cfd0632bbaf69b67e513` and Lean 4.36.0-rc1. The earlier `1929f57df4dd7afcc11c3f458e20526fd1f991e0` snapshot used Lean 4.22.0-rc4; Agent 4 compared the transition table, `A` definition, `reach_9_nil`, and the complete `halts_A_mod_3_pow_108` declaration/proof between the two snapshots and found those relevant sections byte-for-byte identical. Use b77/dfbc for the concrete adapter's dependency closure.
 
-Thus the *halting cylinder itself* is formally proved in an independent Lean development. The blank-root question is whether the actual orbit from `A(9, [])` ever enters this cylinder (or another halting cylinder). The proof does **not** establish that reachability.
+Thus the *halting cylinder itself* is formally proved in an independent Lean development, and the repository now has an accepted exact transport into its own D0 semantics. The adapter `TM62MathlibD0Adapter.lean` compiled in [CI run 45174638945](https://github.com/FlareZ123/bb6/actions/runs/45174638945), proving `BB6.CryptidD0Bridge.D0_halts_on_A_cylinder` with exact primitive-step preservation and transitive axiom profile `[propext, Classical.choice, Quot.sound]`; no `sorryAx` or `native_decide` was detected. The pinned dependency closure is the b77 source and dfbc15 Mathlib revision above. This still does **not** establish that the blank-root orbit reaches the cylinder.
 
 ## Explicit 108-step branch word
 
@@ -43,9 +43,9 @@ The initial configuration correspondence is already present. `DRegularSource.sou
 This establishes the same affine 3-adic shift pattern for DRegular source-certified section paths on the canonical regular suffix family, not for arbitrary suffixes or all exceptional exits. It is the natural regular-language analogue of the wiki's suggested A(n,r) shift law, but the exact first-return identification of `DRegular.duration` with the external A-macro is not asserted by these theorems. The remaining task is to extend the synchronization/source-return mechanism across arbitrary evolving `r` (or prove the 108-step target is covered by the regular family plus existing exceptional reentries), establish the macro correspondence where needed, and then prove the orbit-hit theorem. The [target-C DRegular probe](../im-results/agent2-root-language-exit/halting-cylinder-DRegular-probe.md) records the exact first two external A-macro checkpoints: the first ten land on `L(D1,4,1)`, while the next ten produce the nonregular suffix `01011101010111`; the q=4 E/E source closure is a later return, not the next A-macro step. Do not confuse start-state identification or a local source-path shift law with full dynamics equivalence or eventual halting.
 
 Highest-value next work:
-1. prove a source-exact correspondence between the repository's DRegular section and @-d's `A(n,r)` macro, including the E/B/A branch labels and suffix update;
-2. derive the exact preimage/cylinder conditions for the 108-step word in the repository's own model;
-3. investigate whether the orbit from `A(9, [])` reaches that cylinder, another certified halting cylinder, or is provably excluded from all of them;
-4. use exact modular/3-adic structure to replace the uninformative 2.7-million-step finite screen. Do not treat a probabilistic heuristic or a long finite prefix as a proof of eventual reachability.
+1. Treat the raw TM62-to-D0 transport and the 36-step blank-prefix theorem as closed dependencies; do not spend further work on rechecking the same initial-state or tape-coordinate correspondence.
+2. Prove a source-exact transition/preimage relationship between the authentic root trajectory and the external `A(n,r)` cylinder, especially across arbitrary suffixes and exceptional reentries.
+3. Use the existing DRegular 3-adic shift and root-return theorems to determine whether the root reaches the certified cylinder or another halting set.
+4. If reachability fails, establish a genuine all-time invariant excluding every applicable halting class. The 2.7-million-state scan and 21/108 match remain empirical only; they cannot prove eventual avoidance or reachability.
 
 This result concerns one BB(6) holdout and does not determine the global Busy Beaver value.
