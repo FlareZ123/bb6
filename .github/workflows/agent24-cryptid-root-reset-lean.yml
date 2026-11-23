@@ -11,6 +11,8 @@ on:
         options:
           - root-reset
           - suffix3-shift
+          - suffix3-full
+          - suffix3-word
 
 permissions:
   contents: read
@@ -62,13 +64,23 @@ jobs:
           reset_path = Path("../bb6/im-results/agent2-root-countdown/RootRemainderTwoToken.append.lean")
           ending = "end BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA"
 
-          if os.environ.get("PROOF_TARGET") == "suffix3-shift":
-              fragment = Path("../bb6/im-results/agent48-suffix3-shift/RootSuffixThreeShift.append.lean").read_text()
+          if os.environ.get("PROOF_TARGET") in ("suffix3-shift", "suffix3-full", "suffix3-word"):
+              base = Path("../bb6/im-results/agent48-suffix3-shift")
+              fragments = [base / "RootSuffixThreeShift.append.lean"]
+              if os.environ.get("PROOF_TARGET") == "suffix3-full":
+                  fragments += [base / "RootSuffixBaseZero.append.lean",
+                                base / "RootSuffixBaseTwo.append.lean",
+                                base / "RootSuffixWordShift.append.lean"]
+              elif os.environ.get("PROOF_TARGET") == "suffix3-word":
+                  fragments += [base / "RootSuffixWordShift.append.lean"]
               source = module.read_text().rstrip().splitlines()
               if source[-1].strip() != ending:
                   raise SystemExit(f"unexpected source-module ending: {source[-1]!r}")
-              module.write_text("\n".join(source[:-1]) + "\n\n" + fragment.rstrip() + "\n\n" + ending + "\n")
-              print("Standalone original-source universal suffix shift inserted.")
+              module.write_text("\n".join(source[:-1]) + "\n\n" +
+                                "\n\n".join(p.read_text().rstrip() for p in fragments) +
+                                "\n\n" + ending + "\n")
+              print("Inserted standalone original-source fragments:",
+                    [p.name for p in fragments])
               raise SystemExit(0)
           if os.environ.get("PROOF_TARGET") not in ("", "root-reset"):
               raise SystemExit("invalid proof target")
@@ -110,6 +122,20 @@ jobs:
           import BusyBeaver.BB6.Accelerations.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA
           #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.s3_universal_suffix_shift
           #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.s3_iterated_suffix_shift
+          EOF
+          elif [[ "${PROOF_TARGET:-root-reset}" == "suffix3-word" ]]; then
+            cat > RootResetAudit.lean <<'EOF'
+          import BusyBeaver.BB6.Accelerations.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA
+          #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.s3_universal_word_suffix_shift
+          #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.s3_iterated_word_suffix_shift
+          EOF
+          elif [[ "${PROOF_TARGET:-root-reset}" == "suffix3-full" ]]; then
+            cat > RootResetAudit.lean <<'EOF'
+          import BusyBeaver.BB6.Accelerations.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA
+          #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.s3_universal_suffix_shift
+          #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.s3_zero_residue_family
+          #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.s3_two_residue_family
+          #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.s3_universal_word_suffix_shift
           EOF
           else
             cat > RootResetAudit.lean <<'EOF'
