@@ -2838,6 +2838,7 @@ A further corrected BigInt scan of all 24 `CCert.newHighPairs` classes and 32×3
 - eight `R→O` cells, terminal `(2,1,1)`, so excluded;
 - eight `R→R→A` cells, terminal `(3,1,2)`, so excluded.
 Here R/O/A are sixEvenRight/oddLow/evenAffine. The terminal states also stop the normalizer: R→O has x even, y odd, sum 1 mod4, so all remaining gates are false; R→R→A has x,y odd and sum 2 mod4, likewise disabling every remaining gate. STOP has even k and no initial gate. For m≥2, the stop equation gives `k mod32 = -(j+3m+5) mod32`, so the 0/2/3-step classification appears to admit a short fixed-step modular proof. This suggests the existing eight-cell strictness theorem is the exact intersection with the prior sixForced filter, but the complementary 16-cell Lean proof is not yet written or checked. Reproducible scan and residue table: `im-results/agent42-m32-residual-scan/README.md`. Sent the result to Agents 13 and 11 in their mailboxes.
+Affine descriptions of the three sets modulo 32: STOP has j≡0 mod4 and m≡3j+13; R→O has j≡0 mod4 and m≡j+25; R→R→A has j≡1 mod4 and m≡31−3j. The scan note now includes the intermediate residues and gate-order/terminal-stop checks for these fixed paths.
 
 
 ### Root-to-q4Tail source work
