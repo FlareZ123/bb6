@@ -1,81 +1,164 @@
-# Every surviving #746 gate has a linear family of genuine but parentless third-valuation feeders
+# Uniform linear family of parentless third-valuation feeders on every surviving #746 gate ray
 
-**Status, 23 November 2026:** new **paper-level all-index composition** of the exact original-source first-reset grammar, the previously source-certified [unique Hensel depth residue](../agent7-fatal-density/RayDepthResidue.lean), and the source-certified [third-valuation root-gap theorem](RayTThreeGap.lean). The new *universal 162-index packet counting and geometric conjunction* has not been compiled as a single Lean theorem. This is an authentic source-**inverse graph** theorem, **not** a blank-root decision, #746 nonhalting proof, or BB(6) upper bound.
+**Status (23 November 2026): paper-level all-index composition.** This combines the original-source exact ResetParent grammar, the already source-checked [unique 3-adic Hensel depth residue](../agent7-fatal-density/RayDepthResidue.lean), and the source-checked [third-valuation parent-gap theorem](RayTThreeGap.lean). The new modulo-243 packet counting and full geometry conjunction have **not** been kernel-compiled together. It is an exact mathematical statement about the genuine first-reset **inverse graph**, not an actual blank-root reachability or nonhalting claim.
 
-## Quantified theorem
+## Theorem
 
-For every gate candidate `n≥257`, `n mod 6∈{4,5}`, let
-[
-p=2^n,qquad c=2n+3,qquad a=lfloorlog_2 cfloor,qquad J=n-a,
-]
-and `u_j=4p+n−1−c2^j` for `0≤j≤J`. These are the actual #746 fatal `u_0=4p−n−4` canonical even-ray heights. Define
-[
-B=leftlfloor rac{J-13}{162}ightfloor.
-]
-For **every** `b=0,…,B−1`, among the **81 even ray indices**
-[
-jin{162b, 162b+2,ldots,162b+160}
-]
-there are exactly three with `81∣X_j:=2u_j+5`, and these three have `X_j/81mod 3` equal to `0,1,2` **in some order**.
+Fix any candidate index \(n\ge257\) with \(n\bmod6\in\{4,5\}\). Define
 
-All three have a distinct genuine **t=3 odd** predecessor `h_j`, with
-[
-d_j=X_j/81,quad 16d_j=p+h_j+n+2,qquad
-operatorname{ResetParent}(h_j,u_j).
-]
-Every such `h_j` lies strictly in the gap
-[
-p/2 < h_j < 3p/4,
-]
-so **none has an even ResetParent predecessor**. In each packet **at least two** of these three `h_j` also have `h_jmod 3≠2`; these two have **no odd ResetParent predecessor either**, and therefore are **parentless in the complete, untruncated source-C reset graph**. All these parentless `h_j` are pairwise distinct across all packets.
+\[
+p=2^n,\quad c=2n+3,\quad a=\lfloor\log_2c\rfloor,\quad
+J=n-a,\quad u_j=4p+n-1-c2^j.
+\]
 
-Thus, for every surviving `n≥257`, the canonical ray has at least
-[
-oxed{2,leftlfloor (n-lfloorlog_2(2n+3)floor-13)/162ightfloor}
-]
-**distinct, genuine t=3 source predecessors with no own predecessors**. This is a **uniform linear-in-n** lower bound on explicitly prunable third-valuation branches, not a lower bound on actually rooted branches. The third residue class can require deeper odd-valuation recursion.
+The ray begins at the authentic possible fatal height \(u_0=4p-n-4\). Put
 
-## Proof: exact modular three-packet
+\[
+B=\left\lfloor\frac{J-13}{162}\right\rfloor.
+\]
 
-Take `j_0=depthResidue(n,3)`, the computable index certified in [`RayDepthResidue.lean`](../agent7-fatal-density/RayDepthResidue.lean). The source theorem `depthResidue_lt` gives `j_0<depthPeriod(3)=54`, and `depthResidue_iff` says `3^4=81∣signedZ(n,j_0)=X_(j_0)` on the physical ray. By `2^54≡82=1+81` and `2^108≡163=1+162` modulo 243,
-[
-X_{j_0+54t}equiv X_{j_0}-81tcdot 2c2^{j_0}pmod{243}
-qquad(t=0,1,2).
-]
-Since `3∤c`, the coefficient `2c2^{j_0}` is a unit modulo 3. Therefore `X_{j_0+54t}/81mod3` runs through `0,1,2` precisely once. All three indices remain even and below 162. Conversely, the unique-index Hensel congruence `depthResidue_iff(n,3,j)` says that there are **no other** even j in this packet with `81∣X_j`.
+In **every** complete 162-index packet \(b\in\{0,\ldots,B-1\}\), the 81 even indices
 
-As `2^162≡1 (mod243)`, the three residues and their quotient classes repeat in **every** packet translated by 162. The same uniqueness holds for every block.
+\[
+j\in\{162b,\ 162b+2,\ \ldots,\ 162b+160\}
+\]
 
-## Proof: genuine source band, gap, and no-parent residue
+contain **exactly three** values for which \(81\mid X_j:=2u_j+5\). Their quotient residues \(d_j=X_j/81\bmod3\) are precisely \(0,1,2\), once each.
 
-Throughout these complete packets, `0≤j≤162B−2≤J−15`. Since `c2^J<2p`, `c2^j<p/4096`. The exact numerator identity
-[
-X_j=8p+2n+3-2c2^j
-]
-gives `8p-p/2048<X_j<8p+2n+3`. As `n≥257`, `p` dwarfs `n`. For `81∣X_j`, put `d_j=X_j/81` (necessarily positive and odd). Direct multiplication gives the source strict band at scale `k=n−3`:
-[
-6cdot2^{n-3}+1le8d_jle8cdot2^{n-3}-1.
-]
-The odd source-output equation `2u_j+5=3^4d_j` holds by definition. Defining `h_j=16d_j-p-n-2` gives `16d_j=8cdot2^{n-3}+h_j+(n-3)+5`, and the lower bound makes `h_j≥0`. These three equations are exactly the **genuine**, all-valuation `ResetParent` odd arm, with t=3. No simulated tape reachability or truncated valuation argument is used.
+Each of the three carries a distinct **genuine odd first-reset source predecessor with valuation \(t=3\)**:
 
-The same bounds give `p/2<h_j<3p/4`, so its height lies between the disjoint even-parent target bands (the adjacent bands terminate at `p/2−3` and begin at `3p/4−1`). This is the source-checked gap in [`RayTThreeGap.ray_tthree_parent_gap`](RayTThreeGap.lean). The even arm of `ResetParent` is impossible for every `h_j`.
+\[
+d_j=X_j/81,\qquad
+h_j=16d_j-p-n-2,\qquad
+\mathrm{ResetParent}(h_j,u_j).
+\]
 
-For the odd arm, `2h_j+5` must be divisible by three, requiring `h_j≡2 (mod3)`. The source-sector lemma [`pow_sector_mod_three`](../agent7-fatal-density/RayDepthHensel.lean) gives `p≡n (mod3)`, hence the exact source equation yields
-[
-h_jequivegin{cases}
-d_j-1&nequiv4pmod6,\
-d_j&nequiv5pmod6
-end{cases}pmod3.
-]
-Thus when `n≡4`, only `d_j≡0` could have an odd parent; when `n≡5`, only `d_j≡2` could have an odd parent. Of the exactly three `d_jmod3` classes in each packet, **two** fail this necessary gate. Those two **have no ResetParent at all**. The weaker blank-root consequence for a given offray parent is already a source-compiled lemma [`ray_tthree_parent_dead`](RayTThreeGap.lean).
+Every such \(h_j\) lies in the strict gap \(p/2<h_j<3p/4\), where no even parent exists. In each packet **two** of the three satisfy \(h_j\bmod3\ne2\), making any odd parent impossible as well. These two source heights are **parentless** in the complete, untruncated ResetParent grammar, and all such heights are pairwise distinct between packets.
 
-Finally, `j↦X_j` strictly decreases, so the associated `d_j` and `h_j` are all distinct across packets. The number of explicitly source-parentless offray parents is at least `2B`. There is no conclusion that `u_j` itself is rooted, and no finite-parent-tree argument has been extended to the entire fatal gate.
+**Consequently, every eligible gate ray contains at least**
 
-## Exact reproducible checks and integration
+\[
+\boxed{2\left\lfloor
+\frac{n-\lfloor\log_2(2n+3)\rfloor-13}{162}
+\right\rfloor}
+\]
 
-The dependency-free [`third_fork_packet_leaves.mjs`](third_fork_packet_leaves.mjs) checks every j in all complete packets using BigInt, verifies the *full* odd source band and algebraic reset-parent equations, checks both adjacent even-band gap inequalities and `h_j mod3`, and requires exactly three genuine t=3 parents and exactly two parentless certified children per packet. Independently evaluated results in the JS runtime:
+**distinct genuine third-valuation feeders that themselves have no source predecessor.** This is a uniform \(\Omega(n)\) inverse-graph pruning count. The third feeder in each packet is *not* certified to be rooted or unrooted by this residue argument.
 
-| gate index n | J | full 162-index packets B | distinct certified parentless t=3 feeders |
+## Proof 1: the exact three-quotient permutation
+
+The source-certified theorem
+[\`depthResidue_iff\`](../agent7-fatal-density/RayDepthResidue.lean)
+says that for every surviving \(n\) there is exactly one ray residue
+\(j_0=\mathrm{depthResidue}(n,3)\in[0,54)\) such that
+
+\[
+3^4=81\mid\mathrm{signedZ}(n,j_0).
+\]
+
+The physical ray numerator equals signedZ on the admissible prefix.
+Since \(2^{54}\equiv82=1+81\pmod{243}\) and
+\(2^{108}\equiv163=1+162\pmod{243}\), and since
+
+\[
+X_j=8p+2n+3-2c\,2^j,
+\]
+
+we have the exact congruence
+
+\[
+X_{j_0+54t}\equiv
+X_{j_0}-81t(2c\,2^{j_0})
+\pmod{243},\qquad t=0,1,2.
+\]
+
+The coefficient \(2c\,2^{j_0}\) is nonzero modulo three because
+\(n\bmod6\in\{4,5\}\) implies \(3\nmid c\).
+Since \(81\mid X_{j_0}\), dividing the three congruences by 81 modulo
+three gives an affine permutation of \(0,1,2\) for the quotient \(X/81\bmod3\).
+The exact residue characterization also rules out all other even indices
+in the 162-index block. Because \(2^{162}\equiv1\pmod{243}\),
+the same three-quotient permutation repeats in every complete block.
+
+## Proof 2: genuine original-source predecessors and a strict parentless gap
+
+Every index in these complete packets satisfies
+
+\[
+0\le j\le162B-2\le J-15.
+\]
+
+The dyadic definition of \(a\) gives \(c2^J<2p\), hence
+\(c2^j<p/4096\). The exact numerator obeys
+
+\[
+8p-p/2048<X_j<8p+2n+3.
+\]
+
+For \(81\mid X_j\), the quotient \(d_j=X_j/81\) is positive and odd,
+and the source odd-band inequalities at level \(k=n-3\) follow:
+
+\[
+6\cdot 2^{n-3}+1\le8d_j\le8\cdot2^{n-3}-1.
+\]
+
+The bound \(n\ge257\) makes the additive \(O(n)\) terms strictly
+smaller than the positive dyadic margins in these inequalities.
+The source-output equation is \(2u_j+5=3^4d_j\), and
+the source-height equation is
+
+\[
+2(8d_j)=8\cdot2^{n-3}+h_j+(n-3)+5
+\]
+
+by definition of \(h_j=16d_j-p-n-2\). The same lower bound proves
+\(h_j\ge0\). This is **exactly** the original source-certified
+odd ResetParent grammar at valuation \(t=3\), with no truncation to
+a preferred valuation.
+
+The same equations force \(p/2<h_j<3p/4\). This gap lies strictly
+between adjacent even-parent bands. The original-source result
+[\`ray_tthree_parent_gap\`](RayTThreeGap.lean) already proves that
+physical gap when the high-margin source assumptions hold; those
+assumptions follow from \(j\le J-15\) and \(n\ge257\).
+Therefore **no even source parent** can enter \(h_j\).
+
+Any odd parent of \(h_j\) must satisfy \(3\mid2h_j+5\), or equivalently
+\(h_j\bmod3=2\).
+The certified source-sector lemma
+[\`pow_sector_mod_three\`](../agent7-fatal-density/RayDepthHensel.lean)
+gives \(p\equiv n\pmod3\); since
+\(h_j=16d_j-p-n-2\), reduction yields
+
+\[
+h_j\equiv\begin{cases}
+d_j-1 & n\equiv4\pmod6,\\
+d_j   & n\equiv5\pmod6
+\end{cases}
+\pmod3.
+\]
+
+In the first sector only \(d_j\equiv0\) could permit an odd parent;
+in the second sector only \(d_j\equiv2\) could. Thus **two of the three**
+quotient residue classes in *each* packet have no odd parent either:
+these two \(h_j\) are source-parentless (and hence blank-root excluded).
+The existing source-checked
+[\`ray_tthree_parent_dead\`](RayTThreeGap.lean)
+already verifies the weaker blank-root conclusion for a given \(h_j\).
+
+Finally, the map \(j\mapsto X_j\) is strictly decreasing, so the
+\(d_j\) and hence the \(h_j\) are pairwise distinct across all packets.
+
+## Reproduction, scope, and exact remaining Lean edge
+
+The dependency-free
+[\`third_fork_packet_leaves.mjs\`](third_fork_packet_leaves.mjs)
+checks every candidate index in each complete packet using BigInt,
+including the source band and reset equations, gap inequalities,
+residues, and uniqueness. The same exact-integer logic was independently
+evaluated in the available JavaScript runtime:
+
+| n | J | complete 162-index packets | distinct certified parentless t=3 feeders |
 |---:|---:|---:|---:|
 | 257 | 248 | 1 | 2 |
 | 262 | 253 | 1 | 2 |
@@ -83,4 +166,18 @@ The dependency-free [`third_fork_packet_leaves.mjs`](third_fork_packet_leaves.mj
 | 1000 | 990 | 6 | 12 |
 | 10000 | 9986 | 61 | 122 |
 
-For full Lean acceptance, compose `depthResidue_iff` (or `RayDepthPhysical.admissible_ray_valuation_iff`), the existing `signedZ_shift_digit_mod` with `k=3`, and `RayTThreeGap.ray_tthree_parent_gap` against an exact original ray bound for `j≤J−15`. The only genuinely new algebraic branch is the three-class mod-243 quotient permutation and its counting across complete packets. Reuse existing modules; no new workflow file is warranted. This is a distinct result from the [uniform logarithmic **fan-in** theorem](EveryGateRayFanin.md): there, many valid parents coexist at one ray vertex; here, **two synthetic third-valuation parents are dead in each period**, across linearly many vertices.
+A direct source-checked all-index Lean integration would compose
+[\`depthResidue_iff\`](../agent7-fatal-density/RayDepthResidue.lean),
+[\`signedZ_shift_digit_mod\`](../agent7-fatal-density/RayDepthHensel.lean)
+at \(k=3\), and
+[\`ray_tthree_parent_gap\`](RayTThreeGap.lean) with the physical
+\(j\le J-15\) bound. The three-class quotient permutation and
+full packet count remain paper-proved pending that composition.
+No individual parentless synthetic feeder decides the source root
+reachability of its corresponding ray vertex \(u_j\).
+
+This result is complementary to the
+[uniform logarithmic fan-in at one ray vertex](EveryGateRayFanin.md):
+the latter constructs many distinct **incoming** inverse edges at a
+single vertex, while the present theorem certifies linearly many
+**terminal, unreachable** odd side branches across the entire ray.
