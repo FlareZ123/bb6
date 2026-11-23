@@ -133,7 +133,8 @@ jobs:
             3) expected_artifact="d-root-stage3b2"; required_modules=("$T/NineteenthBlock2.olean"); source_file="$T/NineteenthBlock3.lean"; audit_decl="terminal1588_exact" ;;
             4a) expected_artifact="d-root-stage3b3"; required_modules=("$T/NineteenthBlock3.olean"); source_file="$T/NineteenthTail5684.lean"; audit_decl="tail5684_exact" ;;
             4b) expected_artifact="d-root-stage3b4a"; required_modules=("$T/NineteenthTail5684.olean"); source_file="$T/NineteenthTerminalCertificate.lean"; audit_decl="terminal9780_exact" ;;
-            5) expected_artifact="d-root-stage3b4b"; required_modules=("$T/NineteenthTerminalCertificate.olean"); source_file="$T/NineteenthRootPrefix.lean"; audit_decl="blank_nineteenth_exception" ;;
+            4c) expected_artifact="d-root-stage3b3"; required_modules=("$T/NineteenthBlock3.olean"); source_file="$T/NineteenthTerminalCertificate.lean"; audit_decl="terminal9780_exact" ;;
+            5) expected_artifact="d-root-stage3b4c"; required_modules=("$T/NineteenthTerminalCertificate.olean"); source_file="$T/NineteenthRootPrefix.lean"; audit_decl="blank_nineteenth_exception" ;;
             6) expected_artifact="d-root-stage3b5"; required_modules=("$T/NineteenthRootPrefix.olean"); source_file="$T/BlankNineteenthRejoin.lean"; audit_decl="blank_nineteenth_reentry" ;;
             *) echo "Unknown stage: $STAGE" >&2; exit 2 ;;
           esac
@@ -167,6 +168,7 @@ jobs:
             3) source_file="$T/NineteenthBlock3.lean"; audit_decl="terminal1588_exact" ;;
             4a) source_file="$T/NineteenthTail5684.lean"; audit_decl="" ;;
             4b) source_file="$T/NineteenthTerminalCertificate.lean"; audit_decl="terminal9780_exact" ;;
+            4c) source_file="$T/NineteenthTerminalCertificate.lean"; audit_decl="terminal9780_exact" ;;
             5) source_file="$T/NineteenthRootPrefix.lean"; audit_decl="blank_nineteenth_exception" ;;
             6) source_file="$T/BlankNineteenthRejoin.lean"; audit_decl="blank_nineteenth_reentry" ;;
           esac
