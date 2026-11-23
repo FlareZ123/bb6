@@ -9,7 +9,6 @@ set_option maxHeartbeats 0
 
 namespace SheepPower1458
 
-open SheepPower1458SourceIntegration
 open SheepEven
 
 def blankRootNode : AffineNode :=
