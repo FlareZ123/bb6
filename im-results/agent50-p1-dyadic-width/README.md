@@ -163,3 +163,15 @@ O_k\!\left(X^{\beta_k}(\log X)^k\right),\qquad
 For \(k=5\), this sharpens to \(O(X^{0.8807}(\log X)^5)\). Consequently, for density-one \(n\), the wall congruence forces at least six shallow gaps. The same power-saving applies to the feeder progression \(n=16q+14\).
 
 This is a **density-one** conclusion, not the unrestricted pointwise six-shallow lemma: an infinite exceptional zero-density subsequence may remain. The argument is a paper derivation from the exact pair recurrence and fixed-word residue classes; it has not yet been Lean-certified or externally reviewed. It does not decide P1 or BB(6).
+
+
+## Fourth-edge terminal survivors (23 November 2026)
+
+The [fourth-edge terminal analysis](fourth_edge_terminal_survivors.md), with its reproducible [BigInt scan](fourth_edge_terminal_scan.js), extends the earlier 27-case/three-edge calculation to all 81 branch/depth triples. Exact defect-slope bounds eliminate 56; complete modular-period tests eliminate 23; two A-branch terminal equations survive:
+
+- depths (0,1,2): `17·2^n = 1058u+636`;
+- depths (1,1,1): `87·2^n = 1198u+712`.
+
+Both extend to infinite arithmetic progressions of locally source-valid restart suffixes, with a preceding depth-five or depth-seven edge. The base indices 5362 and 9538 also satisfy the existing mod-16 wall filter. These are **synthetic restart-local paths**, not blank-root histories. Their parent costs exceed n, so the missing root prefix must still supply the entire cumulative-cost subset congruence modulo 2^n. The existing finite carry DP rejects the two base indices, but no all-time exclusion of the progressions has been proved.
+
+**Priority correction:** further local terminal-edge enumeration is not the decisive bottleneck. Work should now target the blank-root prefix/cumulative-cost carry obstruction for these surviving progressions, or a source-connected construction of such a prefix. The local compiler was unavailable in this invocation; no Lean or CI verification is claimed.
