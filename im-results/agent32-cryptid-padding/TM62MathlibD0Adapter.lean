@@ -102,22 +102,22 @@ theorem tapeToRelative_write_move_right (T : ExtTape) (w : ExtSymbol) :
           change encodeSymbol ((Turing.Tape.move .right
             (Turing.Tape.write w (leftTape {{a}} rightTape))).nth 0) =
             encodeSymbol ((leftTape {{a}} rightTape).nth 1)
-          simp [Turing.Tape.move_right_nth, Turing.Tape.write_mk,
-            Turing.Tape.nth]
+          rw [Turing.Tape.move_right_nth]
+          simp [Turing.Tape.write_mk, Turing.Tape.nth]
       · constructor
         · exact by
             funext n
             cases n with
             | zero =>
-                simp [Turing.Tape.move_right_nth, Turing.Tape.write_mk,
-                  Turing.Tape.nth]
+                rw [Turing.Tape.move_right_nth]
+                simp [Turing.Tape.write_mk, Turing.Tape.nth]
             | succ n =>
-                simp [Turing.Tape.move_right_nth, Turing.Tape.write_mk,
-                  Turing.Tape.nth]
+                rw [Turing.Tape.move_right_nth]
+                simp [Turing.Tape.write_mk, Turing.Tape.nth]
         · exact by
             funext n
-            simp [Turing.Tape.move_right_nth, Turing.Tape.write_mk,
-              Turing.Tape.nth]
+            rw [Turing.Tape.move_right_nth]
+            simp [Turing.Tape.write_mk, Turing.Tape.nth]
 
 /-- Mathlib's write-then-move-left operation is exactly BB6.Bridge.goLeft. -/
 theorem tapeToRelative_write_move_left (T : ExtTape) (w : ExtSymbol) :
@@ -132,22 +132,22 @@ theorem tapeToRelative_write_move_left (T : ExtTape) (w : ExtSymbol) :
           change encodeSymbol ((Turing.Tape.move .left
             (Turing.Tape.write w (leftTape {{a}} rightTape))).nth 0) =
             encodeSymbol ((leftTape {{a}} rightTape).nth (-1))
-          simp [Turing.Tape.move_left_nth, Turing.Tape.write_mk,
-            Turing.Tape.nth]
+          rw [Turing.Tape.move_left_nth]
+          simp [Turing.Tape.write_mk, Turing.Tape.nth]
       · constructor
         · exact by
             funext n
-            simp [Turing.Tape.move_left_nth, Turing.Tape.write_mk,
-              Turing.Tape.nth]
+            rw [Turing.Tape.move_left_nth]
+            simp [Turing.Tape.write_mk, Turing.Tape.nth]
         · exact by
             funext n
             cases n with
             | zero =>
-                simp [Turing.Tape.move_left_nth, Turing.Tape.write_mk,
-                  Turing.Tape.nth]
+                rw [Turing.Tape.move_left_nth]
+                simp [Turing.Tape.write_mk, Turing.Tape.nth]
             | succ n =>
-                simp [Turing.Tape.move_left_nth, Turing.Tape.write_mk,
-                  Turing.Tape.nth]
+                rw [Turing.Tape.move_left_nth]
+                simp [Turing.Tape.write_mk, Turing.Tape.nth]
 
 structure Positioned where
   state : ExtState
