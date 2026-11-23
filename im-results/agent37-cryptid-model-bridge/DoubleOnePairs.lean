@@ -188,7 +188,7 @@ theorem two_one_pairs_return (m q : Nat) (ys : List Bool):
 
 /-- A trajectory segment has no physical F/0 return before its endpoint.
     Here "physical" means that every cell strictly left of the head is blank. -/
-private def NoPhysical (c : Cfg) (n : Nat) : Prop :=
+def NoPhysical (c : Cfg) (n : Nat) : Prop :=
   ∀ t, t < n → ¬ Physical (run t c)
 
 private theorem appendNoPhysical (c d : Cfg) (a b : Nat)
