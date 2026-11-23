@@ -13,6 +13,11 @@ on:
         required: false
         type: boolean
         default: false
+      verify_agent1_depth4_gap:
+        description: 'Check original-source depth-four open-family theorem for the 1200 five-step cylinders'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -76,5 +81,16 @@ jobs:
           lean -o im-results/agent1-five-step-blank-drift/FiveStepBlankFamily.olean im-results/agent1-five-step-blank-drift/FiveStepBlankFamily.lean 2>&1 | tee /tmp/agent1-five-step-1200.log
           if grep -q 'sorryAx' /tmp/agent1-five-step-1200.log; then
             echo "ERROR: five-step family source theorem depends on sorryAx"
+            exit 1
+          fi
+
+      - name: Check exact 1200-way original-source depth-four frontier gap (opt-in)
+        if: ${{ inputs.verify_agent1_depth4_gap }}
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent24-translated-cycle:im-results/agent1-five-step-blank-drift"
+          lean -o im-results/agent1-five-step-blank-drift/FiveStepFrontierGap.olean im-results/agent1-five-step-blank-drift/FiveStepFrontierGap.lean 2>&1 | tee /tmp/agent1-five-step-depth4-gap.log
+          if grep -q 'sorryAx' /tmp/agent1-five-step-depth4-gap.log; then
+            echo "ERROR: five-step depth-four frontier theorem depends on sorryAx"
             exit 1
           fi
