@@ -1747,3 +1747,18 @@ Agent48's `verify_buffer_relative_postreset.js` verifies the 580-state quotient 
 - Therefore any terminal successor at canonical depth n>=10 forces its predecessor correction-only S-window to fail full-rectangle synchronization. This removes the old nonmonochromatic-output flag entirely from the terminal contradiction.
 - Full derivation: `im-results/agent1-623-sync-only/TerminalSynchronizationBridge.md`.
 - Remaining decisive obligation: prove the authentic root S-window is full-rectangle synchronizing for all later reached states (small depths separately handled). Abstract synchronization language is not closed under arbitrary transducer outputs, so authentic root dynamics are essential.
+### 2026-11-23 checkpoint — exact window carries and propagation obstruction
+
+- Corrected the global-vs-window interface: a synchronization word beginning at ternary position s sees `QX=floor(X/3^s)` and `QY=floor(Y/3^s)` modulo the word modulus, not naively the shifted quotient of each global linear form.
+- Exact low-boundary carry ranges for the four global forms are:
+  - `X-3Y`: carry in {-3,-2,-1,0};
+  - `3Y`: carry in {0,1,2};
+  - `4X+3Y`: carry in {0,...,6};
+  - `3(X+Y)`: carry in {0,...,5}.
+- Preserved this in `im-results/agent1-623-sync-only/WindowQuotientInterface.md` and added the caveat to `SynchronizationResidueCocycle.md`. The terminal small-residual bridge remains valid because it was derived with the low remainder explicitly.
+- A generic propagation lemma is false even after restricting the entering transducer state to combinations present in the current authentic phase catalogue:
+  - input word `[0,1,0]` is fully synchronizing (M=27, all four source residues safe);
+  - L start `prev=(2,0), carry=(0,0)` outputs `[0,0,7]`, which fails via scale residues 3Y and 3(X+Y);
+  - R start `prev=(0,0), carry=(-2,1)` outputs `[4,6,4]`, which fails via 3(X+Y).
+- Thus source synchronization plus membership in the union of observed boundary-state labels is not an inductive invariant. The missing condition is a joint compatibility relation among boundary state, sector/drain correction, and source word. Recorded in `SynchronizationPropagationObstruction.md`.
+- This negative result is useful: do not attempt a carry-free or phase-label-only preservation proof. The exact two-coordinate global cocycle must be paired with finite low-boundary carry/compatibility information.
