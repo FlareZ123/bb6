@@ -259,3 +259,36 @@ console.log("mandatory_second_tier_fork",JSON.stringify({
   gateRange:[lo,hi],cases:forcedForkCases,discrepancies:forcedForkFailures
 }));
 if(forcedForkFailures)process.exitCode=1;
+
+
+// The first full *nonterminal* complete cone, two positions before
+// the last canonical ray state. Requires v3(2*u_(J-2)+5)=2 with
+// residue 9 mod27; the odd t=1 feeder is a root-dead gap leaf,
+// while the two even continuations end at the terminal gap leaf.
+let nonterminalCases=0, nonterminalFailures=0;
+for(let n=lo;n<=hi;n++){
+  if(n%6!==4 && n%6!==5)continue;
+  const t=terminal(n),c=BigInt(2*n+3),p=b2(n),N=BigInt(n);
+  if(t.J%2 || 4n*c<=7n*b2(t.a))continue;
+  const q=c*b2(t.J),v=4n*p+N-1n-q/4n,
+        w=4n*p+N-1n-q/2n,z=t.u,Xv=2n*v+5n;
+  if(Xv%27n!==9n)continue;
+  nonterminalCases++;
+  const oddParent=4n*(Xv/9n)-2n*p-N-3n;
+  const pv=allResetParents(v),pw=allResetParents(w),
+        pz=allResetParents(z),ph=allResetParents(oddParent);
+  const ev=pv.filter(e=>e.kind==="even");
+  const od=pv.filter(e=>e.kind==="odd");
+  if(pv.length!==2 || ev.length!==1 || od.length!==1 ||
+     od[0].t!==1 || ev[0].h!==w || od[0].h!==oddParent ||
+     pw.length!==1 || pw[0].kind!=="even" || pw[0].h!==z ||
+     pz.length!==0 || ph.length!==0 || oddParent===2n || z===2n){
+       nonterminalFailures++;
+       console.error("NONTERMINAL FOUR-NODE MISMATCH",n);
+  }
+}
+console.log("nonterminal_complete_fork",JSON.stringify({
+  gateRange:[lo,hi],cases:nonterminalCases,
+  discrepancies:nonterminalFailures
+}));
+if(nonterminalFailures)process.exitCode=1;
