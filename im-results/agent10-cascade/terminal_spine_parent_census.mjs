@@ -221,3 +221,41 @@ console.log("four_edge_terminal_exclusion",JSON.stringify({
   gateRange:[lo,hi],cases:fourEdgeCases,discrepancies:fourEdgeFailures
 }));
 if(fourEdgeFailures)process.exitCode=1;
+
+
+// Forced genuine t=1 fork among the first three even-index ancestors,
+// in the very narrow high-c terminal strip. Exactly one of b0,b2,b4
+// must carry both its ordinary even parent and a distinct t=1 odd
+// parent at scale n-4. Higher valuation odd parents are allowed here.
+let forcedForkCases=0, forcedForkFailures=0;
+for(let n=lo;n<=hi;n++){
+  if(n%6!==5)continue;
+  const t=terminal(n), c=BigInt(2*n+3);
+  if(t.a<11 || t.J%2 || 4n*c<=7n*b2(t.a) ||
+     1024n*c>=1801n*b2(t.a) || t.X%27n!==18n)continue;
+  forcedForkCases++;
+  const p=b2(n), N=BigInt(n);
+  const b0=4n*(t.X/9n)-p-N-2n, A=p+N-3n;
+  const bs=[b0];
+  for(let j=0;j<5;j++)bs.push(2n*bs[bs.length-1]-A);
+  const forkDepths=[];
+  let bad=false;
+  for(let j=0;j<6;j++){
+    const ps=allResetParents(bs[j]);
+    const even=ps.filter(e=>e.kind==="even");
+    if(even.length!==1 ||
+       (j<5 && even[0].h!==bs[j+1]))bad=true;
+    if(j%2===0){
+      const t1=ps.filter(e=>e.kind==="odd" && e.t===1 && e.k===n-4);
+      if(t1.length)forkDepths.push(j);
+      if(t1.some(e=>e.h===even[0]?.h))bad=true;
+    }
+  }
+  if(forkDepths.length!==1 || bad){
+    forcedForkFailures++;console.error("FORCED-FORK MISMATCH",n,forkDepths);
+  }
+}
+console.log("mandatory_second_tier_fork",JSON.stringify({
+  gateRange:[lo,hi],cases:forcedForkCases,discrepancies:forcedForkFailures
+}));
+if(forcedForkFailures)process.exitCode=1;
