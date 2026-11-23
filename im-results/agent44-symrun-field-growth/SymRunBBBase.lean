@@ -131,14 +131,14 @@ def tokNumSum : SymTok → Nat
   | .item (.run d) => d
   | .repB1 k => k
   | .rep2 p => p
-  | .rep12 m
+  | .rep12 m => m
 
 theorem tokNumSum_eq_tokFieldMax (t : SymTok) : tokNumSum t = tokFieldMax t := by
   cases t with
   | item x => cases x <;> rfl
   | repB1 k => rfl
   | rep2 p => rfl
-  | rep12 m => rfl => m
+  | rep12 m => rfl
 
 def listNumSum : List SymTok → Nat
   | [] => 0
