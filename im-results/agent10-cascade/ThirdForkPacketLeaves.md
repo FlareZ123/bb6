@@ -48,7 +48,7 @@ Every such \(h_j\) lies in the strict gap \(p/2<h_j<3p/4\), where no even parent
 ## Proof 1: the exact three-quotient permutation
 
 The source-certified theorem
-[\`depthResidue_iff\`](../agent7-fatal-density/RayDepthResidue.lean)
+[`depthResidue_iff`](../agent7-fatal-density/RayDepthResidue.lean)
 says that for every surviving \(n\) there is exactly one ray residue
 \(j_0=\mathrm{depthResidue}(n,3)\in[0,54)\) such that
 
@@ -118,7 +118,7 @@ a preferred valuation.
 
 The same equations force \(p/2<h_j<3p/4\). This gap lies strictly
 between adjacent even-parent bands. The original-source result
-[\`ray_tthree_parent_gap\`](RayTThreeGap.lean) already proves that
+[`ray_tthree_parent_gap`](RayTThreeGap.lean) already proves that
 physical gap when the high-margin source assumptions hold; those
 assumptions follow from \(j\le J-15\) and \(n\ge257\).
 Therefore **no even source parent** can enter \(h_j\).
@@ -126,7 +126,7 @@ Therefore **no even source parent** can enter \(h_j\).
 Any odd parent of \(h_j\) must satisfy \(3\mid2h_j+5\), or equivalently
 \(h_j\bmod3=2\).
 The certified source-sector lemma
-[\`pow_sector_mod_three\`](../agent7-fatal-density/RayDepthHensel.lean)
+[`pow_sector_mod_three`](../agent7-fatal-density/RayDepthHensel.lean)
 gives \(p\equiv n\pmod3\); since
 \(h_j=16d_j-p-n-2\), reduction yields
 
@@ -143,7 +143,7 @@ in the second sector only \(d_j\equiv2\) could. Thus **two of the three**
 quotient residue classes in *each* packet have no odd parent either:
 these two \(h_j\) are source-parentless (and hence blank-root excluded).
 The existing source-checked
-[\`ray_tthree_parent_dead\`](RayTThreeGap.lean)
+[`ray_tthree_parent_dead`](RayTThreeGap.lean)
 already verifies the weaker blank-root conclusion for a given \(h_j\).
 
 Finally, the map \(j\mapsto X_j\) is strictly decreasing, so the
@@ -152,7 +152,7 @@ Finally, the map \(j\mapsto X_j\) is strictly decreasing, so the
 ## Reproduction, scope, and exact remaining Lean edge
 
 The dependency-free
-[\`third_fork_packet_leaves.mjs\`](third_fork_packet_leaves.mjs)
+[`third_fork_packet_leaves.mjs`](third_fork_packet_leaves.mjs)
 checks every candidate index in each complete packet using BigInt,
 including the source band and reset equations, gap inequalities,
 residues, and uniqueness. The same exact-integer logic was independently
@@ -167,10 +167,10 @@ evaluated in the available JavaScript runtime:
 | 10000 | 9986 | 61 | 122 |
 
 A direct source-checked all-index Lean integration would compose
-[\`depthResidue_iff\`](../agent7-fatal-density/RayDepthResidue.lean),
-[\`signedZ_shift_digit_mod\`](../agent7-fatal-density/RayDepthHensel.lean)
+[`depthResidue_iff`](../agent7-fatal-density/RayDepthResidue.lean),
+[`signedZ_shift_digit_mod`](../agent7-fatal-density/RayDepthHensel.lean)
 at \(k=3\), and
-[\`ray_tthree_parent_gap\`](RayTThreeGap.lean) with the physical
+[`ray_tthree_parent_gap`](RayTThreeGap.lean) with the physical
 \(j\le J-15\) bound. The three-class quotient permutation and
 full packet count remain paper-proved pending that composition.
 No individual parentless synthetic feeder decides the source root
