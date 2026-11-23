@@ -638,7 +638,8 @@ theorem s3_image_pullback_iff_congruence (j m : Nat) :
       rw [hstop]
       exact Nat.mod_eq_zero_of_dvd hprod
     have hcong' : (3*m+16258+3584*u)%16384=0 := by
-      simpa only [hj] using hcong
+      rw [hj] at hcong
+      omega
     have hstop' : (k+324+512*u+3*m)%16384=0 := by
       rw [hj] at hmodStop
       omega
