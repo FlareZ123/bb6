@@ -83,12 +83,12 @@ The following bounds are deliberately loose.
      \le 24(W(BB,L,R)+1).
    \]
    Branch accounting for the induction:
-   - \`.run 0\` moves a zero-mass token L→R; both measures are unchanged before IH.
-   - \`.run 1\` removes one left token of mass 1 and applies bumpSymR, so intermediate deltas are at most +4 tokens and +2 numeric mass; then apply IH to L1.
-   - \`.repB1\` removes its left repeat token; eatB1 adds at most one right token and has nonincreasing numeric mass, so neither measure increases before IH.
-   - Successful \`.rep2\`/\`.rep12\` branches remove the repeat token and strip/reinsert the same two-token right prefix. eatB2/eatB12R adds at most one token and has nonincreasing mass; the removed repeat token pays for the possible extra token, and its counter pays for the mass, so neither measure increases before IH.
-   - A failed \`.rep2\`/\`.rep12\` branch applies peelTok to L1. Relative to the original full L, this is at most +5 tokens and +2 mass; terminal stepElemBB adds at most +7 tokens and +3 mass. Thus the terminal deltas are ≤+12 tokens and ≤+5 mass, covered by the proposed bounds because |L|≥1.
-   - The nil, \`.zero\`, and \`.run(d+2)\` terminal branches use stepElemBB and contribute at most +7 tokens and +3 mass.
+   - `.run 0` moves a zero-mass token L→R; both measures are unchanged before IH.
+   - `.run 1` removes one left token of mass 1 and applies bumpSymR, so intermediate deltas are at most +4 tokens and +2 numeric mass; then apply IH to L1.
+   - `.repB1` removes its left repeat token; eatB1 adds at most one right token and has nonincreasing numeric mass, so neither measure increases before IH.
+   - Successful `.rep2`/`.rep12` branches remove the repeat token and strip/reinsert the same two-token right prefix. eatB2/eatB12R adds at most one token and has nonincreasing mass; the removed repeat token pays for the possible extra token, and its counter pays for the mass, so neither measure increases before IH.
+   - A failed `.rep2`/`.rep12` branch applies peelTok to L1. Relative to the original full L, this is at most +5 tokens and +2 mass; terminal stepElemBB adds at most +7 tokens and +3 mass. Thus the terminal deltas are ≤+12 tokens and ≤+5 mass, covered by the proposed bounds because |L|≥1.
+   - The nil, `.zero`, and `.run(d+2)` terminal branches use stepElemBB and contribute at most +7 tokens and +3 mass.
    
    The needed ingredients are bumpSymR length/mass (+5/+3), eatB1/B2/B12R length/mass (+1/0), peelTok length/mass (+6/+2 relative to L1), and stepElemBB length/mass (+7/+3). The generic eatFuel length lemma already gives the B-side eat length bounds; instantiate eatFuel_num_sum_le separately for the B-side blocks [run0,run1,run1] and [run0,run1,run0,run1,run1] to obtain the missing eatB2/eatB12R mass bounds. A small case split on the pinned stepElemBB definition gives its +7 token bound (the worst run(d+4) branch removes one token, adds three left tokens, and applies bumpSymR).
 
