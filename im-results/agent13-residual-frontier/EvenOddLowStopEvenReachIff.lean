@@ -37,9 +37,9 @@ theorem even_low_ray_reach_iff_unique_parent
       apply (BB6.Agent13LowFullInverse.low_stop_section_parent_iff
         z u (173*u+24) ((339*u+47)/2) hu).mpr
       refine ⟨0,by decide,by omega,by omega,?_,?_⟩
-      · norm_num
+      · change 346*u+54=2*(173*u+24+3)
         omega
-      · norm_num
+      · change 2*((339*u+47)/2)+(173*u+24)+7=512*u+78
         omega
     rcases hr with ⟨time,ht⟩
     refine ⟨time+1,?_⟩
