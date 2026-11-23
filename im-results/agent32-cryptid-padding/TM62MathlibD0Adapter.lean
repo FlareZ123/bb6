@@ -99,7 +99,10 @@ theorem tapeToRelative_write_move_right (T : ExtTape) (w : ExtSymbol) :
         BB6.Bridge.Tape.mk.injEq]
       constructor
       · exact by
-          simp [Turing.Tape.move_right_nth, Turing.Tape.write_nth]
+          change encodeSymbol ((Turing.Tape.move .right
+            (Turing.Tape.write w (leftTape {{a}} rightTape))).nth 0) =
+            encodeSymbol ((leftTape {{a}} rightTape).nth 1)
+          simp
       · constructor
         · exact by
             funext n
@@ -107,10 +110,16 @@ theorem tapeToRelative_write_move_right (T : ExtTape) (w : ExtSymbol) :
             | zero =>
                 simp [Turing.Tape.move_right_nth, Turing.Tape.write_nth]
             | succ n =>
-                simp [Turing.Tape.move_right_nth, Turing.Tape.write_nth] <;> omega
+                simp [Turing.Tape.move_right_nth, Turing.Tape.write_nth]
+                all_goals
+                  congr 2
+                  omega
         · exact by
             funext n
-            simp [Turing.Tape.move_right_nth, Turing.Tape.write_nth] <;> omega
+            simp [Turing.Tape.move_right_nth, Turing.Tape.write_nth]
+            all_goals
+              congr 2
+              omega
 
 /-- Mathlib's write-then-move-left operation is exactly BB6.Bridge.goLeft. -/
 theorem tapeToRelative_write_move_left (T : ExtTape) (w : ExtSymbol) :
@@ -122,18 +131,27 @@ theorem tapeToRelative_write_move_left (T : ExtTape) (w : ExtSymbol) :
         BB6.Bridge.Tape.mk.injEq]
       constructor
       · exact by
-          simp [Turing.Tape.move_left_nth, Turing.Tape.write_nth]
+          change encodeSymbol ((Turing.Tape.move .left
+            (Turing.Tape.write w (leftTape {{a}} rightTape))).nth 0) =
+            encodeSymbol ((leftTape {{a}} rightTape).nth (-1))
+          simp
       · constructor
         · exact by
             funext n
-            simp [Turing.Tape.move_left_nth, Turing.Tape.write_nth] <;> omega
+            simp [Turing.Tape.move_left_nth, Turing.Tape.write_nth]
+            all_goals
+              congr 2
+              omega
         · exact by
             funext n
             cases n with
             | zero =>
                 simp [Turing.Tape.move_left_nth, Turing.Tape.write_nth]
             | succ n =>
-                simp [Turing.Tape.move_left_nth, Turing.Tape.write_nth] <;> omega
+                simp [Turing.Tape.move_left_nth, Turing.Tape.write_nth]
+                all_goals
+                  congr 2
+                  omega
 
 structure Positioned where
   state : ExtState
@@ -159,7 +177,9 @@ theorem step_toRelative (p : Positioned) :
     BB6.Bridge.step d0Coverage (toRelative p) =
       (step p).map toRelative := by
   simp only [BB6.Bridge.step, step, toRelative]
-  rw [table_conjugate_coverage]
+  have hcur : (tapeToRelative p.tape).cur =
+      encodeSymbol (p.tape.nth 0) := rfl
+  rw [hcur, table_conjugate_coverage]
   cases h : ExternalTM (p.state, p.tape.nth 0) with
   | none =>
       simp [h]
@@ -183,7 +203,7 @@ theorem step_project (p : Positioned) :
           | none => simp [step, project, _root_.step, ht]
           | some instr =>
               rcases instr with ⟨w, d, s⟩
-              cases d <;> rfl
+               simp [step, project, _root_.step, ht, Turing.Tape.nth]
 
 theorem step_none_iff (p : Positioned) :
     step p = none ↔ _root_.step ExternalTM (project p) = none := by
@@ -345,7 +365,12 @@ theorem A_tape_nth (n : Nat) (j : Int) :
           simp only [«1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---».A,
             Turing.Tape.nth, hdefault, Turing.ListBlank.append_mk,
             Turing.ListBlank.nth_mk, List.append_nil]
-          rw [singletonPow_replicate, getI_replicate n j]
+          have hOne : (1 : _root_.Symbol) = _root_.Symbol.S1 := by decide
+          have hpow : ([1] : List _root_.Symbol) ^ n =
+              List.replicate n _root_.Symbol.S1 := by
+            rw [hOne]
+            exact singletonPow_replicate n
+          rw [hpow, getI_replicate n j]
           have hpos : (0 : Int) < Int.ofNat (j + 1) := by
             exact_mod_cast Nat.succ_pos j
           have hbound : Int.ofNat (j + 1) ≤ (n : Int) ↔ j < n := by
@@ -379,9 +404,7 @@ theorem toPortfolioAbs_ofA (n : Nat) (h : Int) :
   rw [tapeToRelative_symbol]
   change encodeSymbol (((«1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---».A n []).2).nth (x - h)) = _
   rw [A_tape_nth n (x - h)]
-  have hiff : (0 < x - h ∧ x - h ≤ (n : Int)) ↔
-      (h < x ∧ x ≤ h + (n : Int)) := by omega
-  simp [encodeSymbol, hiff]
+  simp [encodeSymbol]
 
 /-- The external halting cylinder transfers to the exact repository D0
 configuration at the same primitive halting time. This is not a blank-root
