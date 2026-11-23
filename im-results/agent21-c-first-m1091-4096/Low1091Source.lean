@@ -320,7 +320,10 @@ private theorem no_low_target_q0 (q : Nat) (hq : q%4=0) :
     have h := cReach_even_right_parent (692*q+543) (678*q+532)
       (by omega) (by omega) hzero hseven hR1
     have hx : (692*q+543)+(678*q+532)-2=1370*q+1073 := by omega
-    have hy : ((678*q+532)-2)/2=339*q+265 := by omega
+    have hnum : (678*q+532)-2=2*(339*q+265) := by omega
+    have hy : ((678*q+532)-2)/2=339*q+265 := by
+      rw [hnum]
+      simp
     simpa [hx,hy] using h
   have hfinal : (1370*q+1073+339*q+265)%4=2 := by omega
   have hodd : (339*q+265)%2=1 := by omega
@@ -339,7 +342,10 @@ private theorem no_low_target_q11 (q : Nat) (hq : q%16=11) :
     have h := cReach_even_right_parent (692*q+543) (678*q+532)
       (by omega) (by omega) hR1zero hR1seven hR1
     have hx : (692*q+543)+(678*q+532)-2=1370*q+1073 := by omega
-    have hy : ((678*q+532)-2)/2=339*q+265 := by omega
+    have hnum : (678*q+532)-2=2*(339*q+265) := by omega
+    have hy : ((678*q+532)-2)/2=339*q+265 := by
+      rw [hnum]
+      simp
     simpa [hx,hy] using h
   have hS1zero : ((1370*q+1073)+(339*q+265))%8≠0 := by omega
   have hS1seven : ((1370*q+1073)+(339*q+265))%8≠7 := by omega
@@ -351,9 +357,12 @@ private theorem no_low_target_q11 (q : Nat) (hq : q%16=11) :
     have hx : (1370*q+1073)+(339*q+265)-2=27344*v+20135 := by
       rw [hqeq]
       omega
-    have hy : ((339*q+265)-2)/2=2712*v+1996 := by
+    have hnum : (339*q+265)-2=2*(2712*v+1996) := by
       rw [hqeq]
       omega
+    have hy : ((339*q+265)-2)/2=2712*v+1996 := by
+      rw [hnum]
+      simp
     simpa [hx,hy] using hS1red
   have hS2zero : ((27344*v+20135)+(2712*v+1996))%8≠0 := by omega
   have hS2seven : ((27344*v+20135)+(2712*v+1996))%8≠7 := by omega
@@ -361,7 +370,10 @@ private theorem no_low_target_q11 (q : Nat) (hq : q%16=11) :
     (by omega) (by omega) hS2zero hS2seven hS2
   have hS3 : CReach (30056*v+22129) (1356*v+997) := by
     have hx : (27344*v+20135)+(2712*v+1996)-2=30056*v+22129 := by omega
-    have hy : ((2712*v+1996)-2)/2=1356*v+997 := by omega
+    have hnum : (2712*v+1996)-2=2*(1356*v+997) := by omega
+    have hy : ((2712*v+1996)-2)/2=1356*v+997 := by
+      rw [hnum]
+      simp
     simpa [hx,hy] using hS2red
   have hfinal : (30056*v+22129+1356*v+997)%4=2 := by omega
   have hodd : (1356*v+997)%2=1 := by omega
@@ -396,7 +408,7 @@ theorem first_stop_m1091_mod4096 (time m k : Nat)
       2^(2*m+3)=2^(10+(2*m-7)) := by
         rw [show 2*m+3=10+(2*m-7) by omega]
       _=2^10*2^(2*m-7) := by rw [Nat.pow_add]
-      _=1024*2^(2*m-7) := by norm_num
+      _=1024*2^(2*m-7) := by rfl
   have hU : q+12*r+4=2^(2*m-7) := by
     rw [hpowFactor] at hpowEq
     omega
@@ -441,7 +453,7 @@ theorem first_stop_m12355_mod16384 (time m k : Nat)
       2^(2*m+3)=2^(10+(2*m-7)) := by
         rw [show 2*m+3=10+(2*m-7) by omega]
       _=2^10*2^(2*m-7) := by rw [Nat.pow_add]
-      _=1024*2^(2*m-7) := by norm_num
+      _=1024*2^(2*m-7) := by rfl
   have hQ : q+48*r+37=2^(2*m-7) := by
     rw [hpowFactor] at hpowEq
     omega
