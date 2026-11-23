@@ -18,6 +18,11 @@ on:
         required: false
         type: boolean
         default: false
+      verify_agent1_exhaustive_five:
+        description: 'Run the complete 41760-cylinder geometric and physical trace enumeration'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -94,3 +99,9 @@ jobs:
             echo "ERROR: five-step depth-four frontier theorem depends on sorryAx"
             exit 1
           fi
+
+      - name: Enumerate all five-transition translated-blank source cylinders (opt-in)
+        if: ${{ inputs.verify_agent1_exhaustive_five }}
+        run: |
+          set -euo pipefail
+          node im-results/agent1-five-step-exhaustive-blank/enumerate_five_step_blank.cjs
