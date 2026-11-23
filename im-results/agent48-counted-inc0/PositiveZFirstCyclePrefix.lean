@@ -102,24 +102,22 @@ theorem firstCyclePrefix_from_checkpoint
     intro i hi
     have hp := firstCyclePrefix22_preserves_after T h
       (h+4+(i:Int)) (by omega)
-    change T1 (h+4+(i:Int)) = true
-    rw [hp]
-    exact hfirst i hi
+    have hval : T (h+4+(i:Int)) = true := hfirst i hi
+    simpa [T1] using hp.trans hval
   have hErun :
       run tm2 m ⟨4,h+4,T1⟩ = some ⟨4,h1,T1⟩ := by
     simpa [h1] using E_scan T1 (h+4) m hEones
 
   have hsep0' : T1 h1 = false := by
     have hp := firstCyclePrefix22_preserves_after T h h1 (by dsimp [h1]; omega)
-    change T1 h1 = false
-    rw [hp]
-    simpa [h1] using hsep0
+    have hval : T h1 = false := by simpa [h1] using hsep0
+    simpa [T1] using hp.trans hval
   have hsep1' : T1 (h1+1) = false := by
     have hp := firstCyclePrefix22_preserves_after T h (h1+1)
       (by dsimp [h1]; omega)
-    change T1 (h1+1) = false
-    rw [hp]
-    simpa [h1,Int.add_assoc] using hsep1
+    have hval : T (h1+1) = false := by
+      simpa [h1,Int.add_assoc] using hsep1
+    simpa [T1] using hp.trans hval
   have hsetup :
       run tm2 2 ⟨4,h1,T1⟩ = some ⟨1,h2,T2⟩ := by
     simpa [h2,T2] using firstCycleTwoZeroSetup T1 h1 hsep0' hsep1'
@@ -180,19 +178,23 @@ theorem firstCyclePrefix_from_checkpoint
     · have heq : h2+3*((n-2:Int))+2 = g-4 := by dsimp [g]; omega
       change d0Sweep n T2 h2 (g-4) = true
       rw [← heq]
-      exact hp2
+      have hc : ((n-2:Nat):Int) = (n:Int)-2 := by omega
+      simpa only [hc] using hp2
     · have heq : h2+3*((n-1:Int)) = g-3 := by dsimp [g]; omega
       change d0Sweep n T2 h2 (g-3) = false
       rw [← heq]
-      exact hl0
+      have hc : ((n-1:Nat):Int) = (n:Int)-1 := by omega
+      simpa only [hc] using hl0
     · have heq : h2+3*((n-1:Int))+1 = g-2 := by dsimp [g]; omega
       change d0Sweep n T2 h2 (g-2) = false
       rw [← heq]
-      exact hl1
+      have hc : ((n-1:Nat):Int) = (n:Int)-1 := by omega
+      simpa only [hc] using hl1
     · have heq : h2+3*((n-1:Int))+2 = g-1 := by dsimp [g]; omega
       change d0Sweep n T2 h2 (g-1) = true
       rw [← heq]
-      exact hl2
+      have hc : ((n-1:Nat):Int) = (n:Int)-1 := by omega
+      simpa only [hc] using hl2
     · intro i hi
       have hsw :
           d0Sweep n T2 h2 (g+(i:Int)) = T2 (g+(i:Int)) :=
