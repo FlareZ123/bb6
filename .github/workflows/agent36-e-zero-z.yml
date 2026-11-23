@@ -91,6 +91,9 @@ jobs:
           lean -o "$X/AZ0P2.olean" "$X/AZ0P2.lean" | tee -a axioms.log
           lean -o "$E/ZMarkerATwo.olean" "$E/ZMarkerATwo.lean" | tee -a axioms.log
           lean -o "$E/ZSafePlus.olean" "$E/ZSafePlus.lean" | tee -a axioms.log
+          lean -o "$E/EZeroMarkerP2Front.olean" "$E/EZeroMarkerP2Front.lean" | tee -a axioms.log
+          lean -o "$E/EZeroMarkerP2Source.olean" "$E/EZeroMarkerP2Source.lean" | tee -a axioms.log
+          lean -o "$E/EZeroMarkerP2Packet.olean" "$E/EZeroMarkerP2Packet.lean" | tee -a axioms.log
           lean "$X/P2K31Q0Source.lean" | tee -a axioms.log
           lean -o "$X/Y3SafeNormalizer.olean" "$X/Y3SafeNormalizer.lean" | tee -a axioms.log
           lean "$X/Y3CylinderLift.lean" | tee -a axioms.log
@@ -98,5 +101,6 @@ jobs:
           lean -o "$X/AY2P2Regular.olean" "$X/AY2P2Regular.lean" | tee -a axioms.log
           lean -o "$X/AY1P2Regular.olean" "$X/AY1P2Regular.lean" | tee -a axioms.log
           lean -o "$X/YPlusZClosure.olean" "$X/YPlusZClosure.lean" | tee -a axioms.log
-          lean "$X/P2Residual146779Source.lean" | tee -a axioms.log
+          lean -o "$X/P2Residual146779Source.olean" "$X/P2Residual146779Source.lean" | tee -a axioms.log
+          lean "$X/EZTwoK0BRegular.lean" | tee -a axioms.log
           if grep -E 'sorryAx|_native.native_decide' axioms.log; then exit 1; fi
