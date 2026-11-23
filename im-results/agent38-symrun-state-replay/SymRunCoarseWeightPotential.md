@@ -158,6 +158,12 @@ Add the initial entry costs (18 for F424, 1 for F412) and the separate final hal
 - F424: fewer than \(2^{1{,}834{,}000}\) primitive steps;
 - F412: fewer than \(2^{557{,}000}\) primitive steps.
 
+**Reusable SymRun-phase corollary.** Under the same target lemmas, any SymRun phase with initial \(W\le2^{10}\) and at most \(2^{21}\) symbolic transitions has primitive cost below
+\[
+2^{26\cdot2^{21}+46+21}=2^{54{,}526{,}019},
+\]
+which is still far below \(2\uparrow\uparrow\uparrow5\). This criterion is independent of the detailed intermediate trace states; only the symbolic transition count and initial potential enter.
+
 These are much weaker than the existing \(2^{463}\) and \(2^{193}\) candidates, but they are still sufficient for non-championship. Under the repository's published lower-bound convention \(2\uparrow\uparrow\uparrow5=2\uparrow\uparrow65536\), both are far smaller: \(1{,}834{,}000<2^{21}<2^{65535}\), and \(557{,}000<2^{20}<2^{65535}\).
 
 ## Formalization checklist and caveats
