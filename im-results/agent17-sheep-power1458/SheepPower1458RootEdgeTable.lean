@@ -55,7 +55,8 @@ theorem progression_mods_t1 (r k : Nat) (hr : r ∈ residues_t1) :
     exact progression_mod (T:=period_t1) (r:=r) (k:=k) (q:=9) h9
   have m15 : (r+period_t1*k)%15=r%15 := by
     exact progression_mod (T:=period_t1) (r:=r) (k:=k) (q:=15) h15
-  omega
+  rw [m2, m4, m7, m9, m15]
+  exact ⟨h2r, h4r, h7r, h9r, h15r⟩
 
 def rootEdgeSpecs_t1 : List (Nat × Nat × Nat) :=
   [⟨1,1,1⟩, ⟨3,1,2⟩, ⟨5,1,3⟩, ⟨7,1,4⟩, ⟨7,2,5⟩]
@@ -109,7 +110,8 @@ theorem progression_mods_h1a3 (r k : Nat) (hr : r ∈ residues_h1a3) :
     exact progression_mod (T:=period_h1a3) (r:=r) (k:=k) (q:=9) h9
   have m15 : (r+period_h1a3*k)%15=r%15 := by
     exact progression_mod (T:=period_h1a3) (r:=r) (k:=k) (q:=15) h15
-  omega
+  rw [m2, m4, m7, m9, m15]
+  exact ⟨h2r, h4r, h7r, h9r, h15r⟩
 
 def rootEdgeSpecs_h1a3 : List (Nat × Nat × Nat) :=
   [⟨1,3,1⟩]
@@ -163,7 +165,8 @@ theorem progression_mods_h3a6 (r k : Nat) (hr : r ∈ residues_h3a6) :
     exact progression_mod (T:=period_h3a6) (r:=r) (k:=k) (q:=9) h9
   have m15 : (r+period_h3a6*k)%15=r%15 := by
     exact progression_mod (T:=period_h3a6) (r:=r) (k:=k) (q:=15) h15
-  omega
+  rw [m2, m4, m7, m9, m15]
+  exact ⟨h2r, h4r, h7r, h9r, h15r⟩
 
 def rootEdgeSpecs_h3a6 : List (Nat × Nat × Nat) :=
   [⟨3,6,1⟩]
@@ -217,7 +220,8 @@ theorem progression_mods_h7a2 (r k : Nat) (hr : r ∈ residues_h7a2) :
     exact progression_mod (T:=period_h7a2) (r:=r) (k:=k) (q:=9) h9
   have m15 : (r+period_h7a2*k)%15=r%15 := by
     exact progression_mod (T:=period_h7a2) (r:=r) (k:=k) (q:=15) h15
-  omega
+  rw [m2, m4, m7, m9, m15]
+  exact ⟨h2r, h4r, h7r, h9r, h15r⟩
 
 def rootEdgeSpecs_h7a2 : List (Nat × Nat × Nat) :=
   [⟨7,2,1⟩]
@@ -271,7 +275,8 @@ theorem progression_mods_h7a4 (r k : Nat) (hr : r ∈ residues_h7a4) :
     exact progression_mod (T:=period_h7a4) (r:=r) (k:=k) (q:=9) h9
   have m15 : (r+period_h7a4*k)%15=r%15 := by
     exact progression_mod (T:=period_h7a4) (r:=r) (k:=k) (q:=15) h15
-  omega
+  rw [m2, m4, m7, m9, m15]
+  exact ⟨h2r, h4r, h7r, h9r, h15r⟩
 
 def rootEdgeSpecs_h7a4 : List (Nat × Nat × Nat) :=
   [⟨7,4,1⟩]
