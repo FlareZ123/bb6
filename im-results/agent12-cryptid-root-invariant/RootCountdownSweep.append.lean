@@ -259,18 +259,27 @@ theorem root_countdown_zero_reset (n : ℕ) :
         (List.replicate 5 (0,0) ++ [(8*n+13,0)])) := by
   have h1 := root_countdown_prefix n 0
   have h2 := root_countdown_el_zero_sweep (4*n+6) [(0,0),(1,0)] []
+  have h2' : ReachesPlus target
+      (cfg_EL_n_n [(0,0),(1,0)]
+        (List.replicate (4*n+6) (0,0) ++ [(0,0)]))
+      (cfg_EL_n_n (List.replicate (4*n+7) (0,0) ++ [(0,0),(1,0)]) []) := by
+    simpa [List.replicate_succ, List.cons_append, List.append_assoc] using h2
   have h3 := root_countdown_el_empty_step
     (List.replicate (4*n+7) (0,0) ++ [(0,0),(1,0)])
   have h4 := root_countdown_cr_zero_sweep_singleton (4*n+7) 0 [(1,0)]
+  have h4' : ReachesPlus target
+      (cfg_CR_n_n (List.replicate (4*n+7) (0,0) ++ [(0,0),(1,0)]) [(0,0)])
+      (cfg_CR_n_n [(1,0)] [(8*n+16,0)]) := by
+    simpa [List.replicate_succ, List.cons_append, List.append_assoc] using h4
   have h5 := root_countdown_cr_one_empty_step [(8*n+16,0)]
   have h6 := root_countdown_zero_reset_tail n
   have hcount : 2*(4*n+8) = 8*n+16 := by omega
   simpa [List.replicate_succ, List.cons_append, List.append_assoc,
     bumpPairHead, hcount] using
     (ReachesPlus.trans h1
-      (ReachesPlus.trans h2
+      (ReachesPlus.trans h2'
         (ReachesPlus.trans h3
-          (ReachesPlus.trans h4
+          (ReachesPlus.trans h4'
             (ReachesPlus.trans h5 h6)))))
 
 
@@ -283,10 +292,23 @@ theorem root_countdown_step (n c : ℕ) (hc : 3 ≤ c) :
   have h1 := root_countdown_prefix n c
   have h2 := root_countdown_el_zero_sweep (4*n+5)
     [(0,0),(1,0)] [(c,0)]
+  have h2' : ReachesPlus target
+      (cfg_EL_n_n [(0,0),(1,0)]
+        (List.replicate (4*n+6) (0,0) ++ [(c,0)]))
+      (cfg_EL_n_n (List.replicate (4*n+7) (0,0) ++ [(1,0)]) [(c,0)]) := by
+    simpa [List.replicate_succ, List.cons_append, List.append_assoc] using h2
   have h3 := root_countdown_el_positive_step (c-1)
     (List.replicate (4*n+7) (0,0) ++ [(1,0)]) []
+  have h3' : ReachesPlus target
+      (cfg_EL_n_n (List.replicate (4*n+7) (0,0) ++ [(1,0)]) [(c,0)])
+      (cfg_DL_0_n (List.replicate (4*n+7) (0,0) ++ [(1,0)]) [(c-1,0)]) := by
+    simpa [hc1] using h3
   have h4 := root_countdown_dl_positive_step (c-3)
     (List.replicate (4*n+7) (0,0) ++ [(1,0)]) []
+  have h4' : ReachesPlus target
+      (cfg_DL_0_n (List.replicate (4*n+7) (0,0) ++ [(1,0)]) [(c-1,0)])
+      (cfg_DR_n_n (List.replicate (4*n+7) (0,0) ++ [(1,0)]) [(1,0),(c-3,0)]) := by
+    simpa [hc2] using h4
   have h5 := root_countdown_dr_zero_sweep (4*n+6) [(1,0)]
     [(c-3,0)]
   have h6 := root_countdown_dr_positive_positive_step 0 0 []
@@ -297,9 +319,9 @@ theorem root_countdown_step (n c : ℕ) (hc : 3 ≤ c) :
   simpa [List.replicate_succ, List.cons_append, List.append_assoc,
     hc1, hc2, hn] using
     (ReachesPlus.trans h1
-      (ReachesPlus.trans h2
-        (ReachesPlus.trans h3
-          (ReachesPlus.trans h4
+      (ReachesPlus.trans h2'
+        (ReachesPlus.trans h3'
+          (ReachesPlus.trans h4'
             (ReachesPlus.trans h5 h6)))))
 
 
@@ -330,7 +352,7 @@ theorem root_seed_to_D0_3 :
   have h15 := root_countdown_el_positive_step 0 [(0,0)]
     [(0,0),(0,0),(6,0)]
   have h16 := root_countdown_dl_zero_step [(0,0)]
-    [(0,0),(6,0)]
+    [(0,0),(0,0),(6,0)]
   have h17 := root_countdown_el_zero_sweep 1 [(0,0),(1,0)] [(6,0)]
   have h18 := root_countdown_el_positive_step 5
     [(0,0),(0,0),(0,0),(1,0)] []
@@ -387,20 +409,31 @@ theorem root_chain_to_D65_2 :
         (List.replicate (4*65+5) (0,0) ++ [(2,0)])) := by
   have h0 := root_seed_to_D0_3
   have h1 := root_countdown_iter_succ 0 0 3 (by omega)
+  have h1' : ReachesPlus target
+      (cfg_CR_n_n [(0,0)] (List.replicate 5 (0,0) ++ [(3,0)]))
+      (cfg_CR_n_n [(0,0)] (List.replicate 10 (0,0))) := by
+    simpa [List.replicate_succ] using h1
   have h2 := root_countdown_zero_reset 1
   have h3 := root_countdown_iter_succ 6 0 21 (by omega)
+  have h3' : ReachesPlus target
+      (cfg_CR_n_n [(0,0)] (List.replicate 5 (0,0) ++ [(21,0)]))
+      (cfg_CR_n_n [(0,0)] (List.replicate 34 (0,0))) := by
+    simpa [List.replicate_succ] using h3
   have h4 := root_countdown_zero_reset 7
   have h5 := root_countdown_iter_succ 22 0 69 (by omega)
+  have h5' : ReachesPlus target
+      (cfg_CR_n_n [(0,0)] (List.replicate 5 (0,0) ++ [(69,0)]))
+      (cfg_CR_n_n [(0,0)] (List.replicate 98 (0,0))) := by
+    simpa [List.replicate_succ] using h5
   have h6 := root_countdown_zero_reset 23
   have h7 := root_countdown_iter_succ 64 0 197 (by omega)
-  simpa [List.replicate_succ, List.cons_append, List.append_assoc] using
-    (ReachesPlus.trans h0
-      (ReachesPlus.trans h1
-        (ReachesPlus.trans h2
-          (ReachesPlus.trans h3
-            (ReachesPlus.trans h4
-              (ReachesPlus.trans h5
-                (ReachesPlus.trans h6 h7)))))))
+  exact ReachesPlus.trans h0
+    (ReachesPlus.trans h1'
+      (ReachesPlus.trans h2
+        (ReachesPlus.trans h3'
+          (ReachesPlus.trans h4
+            (ReachesPlus.trans h5'
+              (ReachesPlus.trans h6 h7)))))
 
 
 theorem root_countdown_general_tail (x : ℕ) (hx : 6 ≤ x) :
@@ -411,8 +444,16 @@ theorem root_countdown_general_tail (x : ℕ) (hx : 6 ≤ x) :
   have h1 := root_countdown_el_zero_step [(0,0)] [(x,0)]
   have h2 := root_countdown_el_positive_step (x-1)
     [(0,0),(0,0)] []
+  have h2' : ReachesPlus target
+      (cfg_EL_n_n [(0,0),(0,0)] [(x,0)])
+      (cfg_DL_0_n [(0,0),(0,0)] [(x-1,0)]) := by
+    simpa [hx1] using h2
   have h3 := root_countdown_dl_positive_step (x-3)
     [(0,0),(0,0)] []
+  have h3' : ReachesPlus target
+      (cfg_DL_0_n [(0,0),(0,0)] [(x-1,0)])
+      (cfg_DR_n_n [(0,0),(0,0)] [(1,0),(x-3,0)]) := by
+    simpa [hx2] using h3
   have h4 := root_countdown_dr_zero_sweep 1 [] [(x-3,0)]
   have h5 := root_countdown_dr_empty_left_step
     [(1,0),(0,0),(0,0),(x-3,0)]
@@ -424,8 +465,16 @@ theorem root_countdown_general_tail (x : ℕ) (hx : 6 ≤ x) :
     [(x-3,0)]
   have h9 := root_countdown_el_positive_step (x-4)
     [(0,0),(0,0),(0,0),(1,0)] []
+  have h9' : ReachesPlus target
+      (cfg_EL_n_n [(0,0),(0,0),(0,0),(1,0)] [(x-3,0)])
+      (cfg_DL_0_n [(0,0),(0,0),(0,0),(1,0)] [(x-4,0)]) := by
+    simpa [hx3] using h9
   have h10 := root_countdown_dl_positive_step (x-6)
     [(0,0),(0,0),(0,0),(1,0)] []
+  have h10' : ReachesPlus target
+      (cfg_DL_0_n [(0,0),(0,0),(0,0),(1,0)] [(x-4,0)])
+      (cfg_DR_n_n [(0,0),(0,0),(0,0),(1,0)] [(1,0),(x-6,0)]) := by
+    simpa [hx4] using h10
   have h11 := root_countdown_dr_zero_sweep 2 [(1,0)]
     [(x-6,0)]
   have h12 := root_countdown_dr_positive_positive_step 0 0 []
@@ -437,13 +486,13 @@ theorem root_countdown_general_tail (x : ℕ) (hx : 6 ≤ x) :
   simpa [List.replicate_succ, List.cons_append, List.append_assoc,
     bumpPairHead, hx1, hx2, hx3, hx4] using
     (ReachesPlus.trans h1
-      (ReachesPlus.trans h2
-        (ReachesPlus.trans h3
+      (ReachesPlus.trans h2'
+        (ReachesPlus.trans h3'
           (ReachesPlus.trans h4
             (ReachesPlus.trans h5
               (ReachesPlus.trans h6
                 (ReachesPlus.trans h7
                   (ReachesPlus.trans h8
-                    (ReachesPlus.trans h9
-                      (ReachesPlus.trans h10
+                    (ReachesPlus.trans h9'
+                      (ReachesPlus.trans h10'
                         (ReachesPlus.trans h11 h12)))))))))))
