@@ -71,7 +71,7 @@ theorem sourceSweepBB_exact (L R : List SymTok) :
                       simpa [sweepBB, costSweepBB, strictList_eq, costElemBB,
                         stepElemBB] using reachesIn_trans h1 h2
                   | succ d =>
-                      simpa [sweepBB, costSweepBB, strictList_eq] using
+                      simpa [sweepBB, costSweepBB, strictList_eq, strictNat_eq] using
                         (sourceElemBB_exact (.item (.run (d+2)) :: L1) R)
       | repB1 k =>
           have h1 :
@@ -206,7 +206,24 @@ theorem sourceSweepCB_exact (L R : List SymTok) :
           | repB1 _ => rfl
           | rep2 _ => rfl
           | rep12 _ => rfl
-      rw [heq]
+      have hcost : costSweepCB L (.item (.run 0) :: R1) = 0 := by
+        cases R1 with
+        | nil => rfl
+        | cons y R2 =>
+            cases y with
+            | item it =>
+                cases it with
+                | zero => rfl
+                | run d =>
+                    rcases d with _ | _ | d
+                    · rfl
+                    · exfalso
+                      exact hnot R2 rfl
+                    · rfl
+            | repB1 _ => rfl
+            | rep2 _ => rfl
+            | rep12 _ => rfl
+      rw [heq, hcost]
       change multiStep target_tm 0 _ = some _
       simp only [multiStep_zero]
       rfl
