@@ -83,8 +83,11 @@ theorem sixForced_not_excluded_0_13
     have hp : 2^3 ∣ 2^(2*m+2) :=
       Nat.pow_dvd_pow 2 (by omega)
     simpa only [show (2:Nat)^3=8 by decide] using hp
-  have hprod : 8 ∣ 2^(2*m+2)*(j+3) :=
-    dvd_mul_of_dvd_left hpow (j+3)
+  have hprod : 8 ∣ 2^(2*m+2)*(j+3) := by
+    rcases hpow with ⟨q,hq⟩
+    refine ⟨q*(j+3),?_⟩
+    rw [hq]
+    simp [Nat.mul_assoc]
   have hP : (2^(2*m+2)*(j+3))%8=0 :=
     Nat.mod_eq_zero_of_dvd hprod
   have hB : (j+3*m+5)%8=4 := by
