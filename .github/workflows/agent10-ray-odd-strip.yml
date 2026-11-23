@@ -1,6 +1,19 @@
 name: Agent 10 ray-depth odd-fork source check (manual)
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        description: 'Source proof family (terminal uses minimal dependency slice)'
+        required: false
+        type: choice
+        default: full
+        options:
+          - full
+          - terminal
+      source_sha:
+        description: 'Optional exact source commit to check'
+        required: false
+        type: string
 permissions:
   contents: read
 jobs:
@@ -9,6 +22,8 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha || github.sha }}
       - name: Install Lean 4.36.0-rc2
         run: |
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
@@ -79,6 +94,11 @@ jobs:
           lean -o "$b/ForkOddDead486.olean" "$b/ForkOddDead486.lean"
           lean -o "$b/RayOddForkStrip.olean" "$b/RayOddForkStrip.lean"
           lean -o "$b/RayOddForkExtended.olean" "$b/RayOddForkExtended.lean"
+          if [ "${{ inputs.target }}" = "terminal" ]; then
+            lean -o "$b/TerminalHighBandLeaf.olean" "$b/TerminalHighBandLeaf.lean"
+            echo "Finished focused original-source terminal leaf proof and axiom audit."
+            exit 0
+          fi
           lean -o "$g/OddRayDeep.olean" "$g/OddRayDeep.lean"
           lean -o "$g/SignedRayPeriod.olean" "$g/SignedRayPeriod.lean"
           lean -o "$g/RayDepthHensel.olean" "$g/RayDepthHensel.lean"
