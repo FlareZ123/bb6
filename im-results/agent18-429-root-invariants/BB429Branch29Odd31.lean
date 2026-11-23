@@ -25,10 +25,11 @@ theorem no_q_31_mod64 (q : Nat) (hq : 21≤q)
   have h5 :=
     BB429Branch29.to_q_minus_two q hq
       (BB429Branch29.first_three q hroot)
-  have h5' : Reach (16*r+13) (2016*r+1992) := by
-    simpa only [hqeq] using h5
+  have hx5 : q-2=16*r+13 := by omega
+  have hy5 : 126*q+102=2016*r+1992 := by omega
+  rw [hx5,hy5] at h5
   obtain ⟨x1,y1,hp1,hs1⟩ :=
-    pred (16*r+13) (2016*r+1992) (by omega) h5'
+    pred (16*r+13) (2016*r+1992) (by omega) h5
   rcases BB429Reset31.odd_inverse x1 y1
       (16*r+13) (2016*r+1992)
       (by omega) (by omega) hs1 with hF | hS
