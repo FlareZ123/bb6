@@ -30,8 +30,28 @@ Source: [TailWindowPrefix.lean](../agent32-cryptid-padding/TailWindowPrefix.lean
 
 These theorems certify a **prepared E-boundary**, not the full root. In particular, merely knowing that the enormous upstream TM62 `A(3^108 k+C,[])` halting class exists does not license appending arbitrary right tails to its 107 symbolic reduction. A direct attempt to replace every intermediate source `A(…,[])` checkpoint by `A(…,ls)` in [SuffixParametricPrefix.append.lean](../agent32-cryptid-padding/SuffixParametricPrefix.append.lean) **failed to compile** (manual CI 45262562151); it is not a theorem and its hypothesis is not currently established. Do not splice its draft conclusion into the halting proof.
 
-## Stronger next question: an unbounded scanner before the terminal word
+## Independently source-checked unbounded E scanner and exact first halt (23 November 2026)
 
-A separate **computational hypothesis** from exact transition-table experiments (not formalized): for any `q >= 0`, an E/0 boundary with the same immediate two left zeros, and right-neighbor prefix `(10)^q 1101101100`, enters F/1 after **`72+2q`** primitive steps, independent of the rest of the right tape, provided the left stack is long enough. For q=0,...,7, the explicit traces all have minimal head position -2 and maximum position `10+2q`. The source upstream lemma `step_B10_01B` already proves the unbounded two-step-per-pair B scan. After its initial five steps and the q scan, the remaining 67-step terminal segment is plausibly uniform. **This is not yet a Lean theorem**; check the exact source decomposition before asserting it, and avoid treating eight numerical cases as an induction.
+An additional, genuinely **all-parameter** source result closes a different terminal branch rather than merely enumerating finite prefixes. For every `q >= 0`, any physical E/0 configuration with immediate left cells `001`, arbitrary further left tail `L`, right-neighbor pattern
 
-The relevant next problem is not to grow a finite trace blindly. It is to compose the universal terminal lemma with an actually blank-reachable feeder. Existing source-return grammars for the root are highly constrained; an A-section / E-prefix bridge must preserve the position of the scanned zero and the delimiter, rather than adding or deleting a zero by visual similarity. Conversely, if an E-prefix feeder can be proved from the blank tape, this finite-window certificate gives a rigorous halt immediately.
+```
+(10)^q 1101101100 y
+```
+
+and arbitrary right tail `y`, reaches the original finite-list machine's frozen state 6 after exactly `73 + 2q` raw steps. The six-state undefined F/1 instruction occurs one transition earlier, at `72 + 2q` steps. The source-level proof in [AllQ1101101100.lean](./AllQ1101101100.lean) decomposes the run into a 4-step E-to-A prelude, a **2q-step scanner proved by induction**, a 3-step A-to-E trigger, and the **previously certified** arbitrary-tail 66-step `BB6.CryptidEHalt.e_halt_66`. Neither q nor either tail length is bounded. In [AllQFirstHalt.lean](./AllQFirstHalt.lean), the exact predecessor is proved F scanning 1 and frozen absorption rules out **all earlier** frozen-halting states.
+
+Crucially, this is also connected to the **original F0 section** by the unchanged source-certified `CryptidBoundary.prefix_E`. For every `k,q >= 0` and arbitrary binary `y`:
+
+```
+I_(3k+4)( 0 (10)^q 1101101100 y )
+  --[12k²+41k+106+2q raw transitions]-->
+frozen halting state 6
+```
+
+Theorem `BB6.Agent2AllQE1101101100.full_E_all_q_halt` in [AllQSourceFeeder.lean](./AllQSourceFeeder.lean) gives the full conditional section-to-halt connection. Theorem `full_E_all_q_exact_first_halt` additionally proves that the displayed time is the **first** frozen halt from the section, with no earlier frozen state. In particular, this is not a bound extrapolated from q=0,1,... samples.
+
+**Formal acceptance:** manual source-restored [CI 45267507107](https://github.com/FlareZ123/bb6/actions/runs/45267507107) compiled the SHA-checked original `Boundary.lean`, `EHaltCylinder.lean`, and all three new modules using Lean 4.36.0-rc2. `#print axioms` on each substantive theorem reports only `[propext, Quot.sound]` (some local finite lemmas use only `[propext]`); no `sorryAx` or `native_decide`.
+
+The source-connected theorem adds the formerly unhandled `E_all_q_1101101100_halt` branch to the conservative [root-language macro interpreter](../agent37-root-language-pilot/macro_engine.py). That engine's halt-branch cost is `12k²+41k+105+2q` **successful** transitions, one less than the frozen state entry as required by its existing convention.
+
+The missing root question is unchanged: neither the original blank orbit nor all of its exceptional successors has been proved to enter or exclude this family. The two families here are independently useful conditional halting classes; neither is an actual blank-machine decision. More trace enumeration or a further packed suffix extension would be less relevant than proving a complete physically exact root-language invariant, especially through the outstanding E/regular reset corridors.
