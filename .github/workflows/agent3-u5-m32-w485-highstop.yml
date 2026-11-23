@@ -95,6 +95,9 @@ jobs:
               python3 tools/lean_compile_closure.py \
                 im-results/agent3-linear-rank-unique/MachineCLinearRankOriginal.lean \
                 --jobs 4 --workdir /tmp/lean-closure-linear-rank 2>&1 | tee "/tmp/lean-closure-reports/${target}.log"
+              python3 tools/lean_compile_closure.py \
+                im-results/agent3-linear-rank-unique/PrimitiveRankOriginal.lean \
+                --jobs 4 --workdir /tmp/lean-closure-primitive-rank 2>&1 | tee "/tmp/lean-closure-reports/primitive-${target}.log"
               ;;
             *)
               echo "Unknown target: ${{ inputs.target }}" >&2
