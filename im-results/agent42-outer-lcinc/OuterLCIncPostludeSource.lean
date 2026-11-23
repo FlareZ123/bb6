@@ -105,21 +105,21 @@ theorem outerLCInc_s1_right_facts (L n m a b : Nat) (h : Int) :
         (6+3*i) = sideBit (d1pow (b+1)) (3*i) := by
       rw [BB6Coverage.Agent6Q4Prefix.sideBit_append_right
         ([false,true,true,true,false,false] : List Bool)
-        (d1pow (b+1)) (6+3*i) (by simp <;> omega)
+        (d1pow (b+1)) (6+3*i) (by simp <;> omega)]
       congr 1
       omega
     have hr1 : sideBit ([false,true,true,true,false,false] ++ d1pow (b+1))
         (7+3*i) = sideBit (d1pow (b+1)) (3*i+1) := by
       rw [BB6Coverage.Agent6Q4Prefix.sideBit_append_right
         ([false,true,true,true,false,false] : List Bool)
-        (d1pow (b+1)) (7+3*i) (by simp <;> omega)
+        (d1pow (b+1)) (7+3*i) (by simp <;> omega)]
       congr 1
       omega
     have hr2 : sideBit ([false,true,true,true,false,false] ++ d1pow (b+1))
         (8+3*i) = sideBit (d1pow (b+1)) (3*i+2) := by
       rw [BB6Coverage.Agent6Q4Prefix.sideBit_append_right
         ([false,true,true,true,false,false] : List Bool)
-        (d1pow (b+1)) (8+3*i) (by simp <;> omega)
+        (d1pow (b+1)) (8+3*i) (by simp <;> omega)]
       congr 1
       omega
     refine ⟨?_, ?_, ?_⟩
@@ -274,7 +274,7 @@ theorem outerLCIncSourceT3_preserves_right
   change (markerBridgeFrameOut m (outerLCIncSourceT1 T h a)
     (h-(3*a:Int))).tape x = T x
   rw [markerBridgeFrameOut_preserves_right m
-    (outerLCIncSourceT1 T h a) (h-(3*a:Int)) x (by omega)
+    (outerLCIncSourceT1 T h a) (h-(3*a:Int)) x (by omega)]
   change sweptLeft (3*a) T h x = T x
   exact sweptLeft_preserves_right (3*a) T h x hx
 
