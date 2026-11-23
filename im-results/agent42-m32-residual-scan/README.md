@@ -144,6 +144,15 @@ intermediate residues.
   applies; after A, (x3 mod4,y3 mod4)=(3,3), so y3 is odd and
   x3+y3 ≡ 2 (mod4), making the terminal exclusion predicate true.
 
+Terminal stop checks are also simple. In the R→O class the final
+coordinates satisfy x even, y odd, and x+y ≡ 1 (mod 4): oddLow is
+false by x-parity; evenSeven and evenOddFour would require x+y ≡ 3
+(mod 4); evenAffine, sixEvenRight, and valSix require y even. In the
+R→R→A class x,y are both odd and x+y ≡ 2 (mod 4): oddLow requires
+sum 0 mod 4, evenSeven/evenOddFour require x even, and all even-y gates
+are false. Thus the displayed R→O and R→R→A paths really terminate at
+the stated excluded pairs, rather than merely passing through them.
+
 The size guards (y≥4, y≥5, y≥6, and x+y thresholds) follow from
 j≥3,m≥2 and the stop-k formula; the smallest initial k is already
 370. The modular residues above determine the branch tests, while
