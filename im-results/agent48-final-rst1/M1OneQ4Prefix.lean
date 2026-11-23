@@ -608,6 +608,9 @@ private theorem m1OneQ4LeftFacingBridgeBit
   rw [hleft]
   rw [sideBit_append_right ([true] ++ d1pow a)
     (markerWord 0 ++ d0 ++ d1pow L ++ lh) (3*a+1+k) (by rw [hlen]; omega)]
+  rw [hlen]
+  have hcoord : 3*a+1+k-(3*a+1) = k := by omega
+  rw [hcoord]
   have h0 := sideBit_d1pow_true L 0 (by omega)
   have h1 := sideBit_d1pow_true L 1 (by omega)
   have h2 := sideBit_d1pow_true L 2 (by omega)
@@ -655,21 +658,34 @@ theorem m1One_q4_prefix_leftFacing
         (markerWord 0 ++ d0 ++ d1pow L ++ lh) i
         (by simp [d1pow_length]; omega)]
       exact hprefix
+    have hcoord : h-(i:Int) - (h-((3*a+1:Nat):Int)) = r := by
+      dsimp [r,N]
+      omega
     by_cases hin : m1OneQ4Inside r = true
     · have hcut := m1OneQ4CutTape_eq_end_inside L a b h (h-(i:Int)) (by
-        simpa [r,N] using hin)
+        rw [hcoord]
+        exact hin)
+      have hr0 : -7 ≤ r ∧ r ≤ 4 := by
+        simpa [m1OneQ4Inside] using hin
       have hr : 1 ≤ r ∧ r ≤ 4 := by
-        simpa [r,N,m1OneQ4Inside] using hin
+        dsimp [r,N]
+        omega
       have hmark : decide (r ∈ m1OddQ4BridgeEnd.marked) = true := by
         have hcases : r = 1 ∨ r = 2 ∨ r = 3 ∨ r = 4 := by omega
         rcases hcases with h1r | h2r | h3r | h4r
         all_goals subst r <;> simp [m1OddQ4BridgeEnd]
+      rw [hcoord] at hcut
       exact (hcut.trans hmark).trans htarget.symm
     · have hcut := m1OneQ4CutTape_eq_swept L a b h (h-(i:Int)) (by
-        simpa [r,N] using hin)
+        rw [hcoord]
+        exact hin)
       have hblock : sweptLeft (3*a+1)
           (s1Config L 1 1 a 0 b h).tape h (h-(i:Int)) = true := by
-        have hidx : i < 3*a+1 := by omega
+        have hframe : ¬ (-7 ≤ r ∧ r ≤ 4) := by
+          simpa [m1OneQ4Inside] using hin
+        have hidx : i+1 < 3*a+1 := by
+          dsimp [r,N] at *
+          omega
         have hb := sweptLeft_block (3*a+1) i
           (s1Config L 1 1 a 0 b h).tape h hidx
         simpa using hb
@@ -693,26 +709,33 @@ theorem m1One_q4_prefix_leftFacing
           (markerWord 0 ++ d0 ++ d1pow L ++ lh) (3*a+1) (by rw [hlen])]
         simp [markerWord,sideBit]
       simpa [r,N,hieq] using (hcut.trans hmark).trans htarget.symm
-    · have hsmall : i ≤ 3*a+8 := by omega
-      let k : Nat := i-(3*a+1)
-      have hk : 1 ≤ k ∧ k ≤ 7 := by dsimp [k]; omega
-      have hcut := m1OneQ4CutTape_eq_end_inside L a b h (h-(i:Int)) (by
+    · by_cases hsmall : i ≤ 3*a+8
+      · let k : Nat := i-(3*a+1)
+        have hk : 1 ≤ k ∧ k ≤ 7 := by dsimp [k]; omega
         have hr : r = -(k:Int) := by dsimp [r,N,k]; omega
-        simp [m1OneQ4Inside,hr,hk])
-      have hr : r = -(k:Int) := by dsimp [r,N,k]; omega
-      have hmark : decide (r ∈ m1OddQ4BridgeEnd.marked) =
-          sideBit (m1OneQ4LeftFacing L a) i := by
-        rw [hr]
-        have hb := m1OneQ4LeftFacingBridgeBit L a k hL hk
-        have hidx : i = 3*a+1+k := by dsimp [k]; omega
-        rw [hidx]
-        exact hb.symm
-      exact hcut.trans hmark
-  · have htail : 3*a+9 ≤ i := by omega
-    have hcut := m1OneQ4CutTape_eq_source_left L a b h i hL htail
-    have hcell := s1Config_left_cell L 1 1 a 0 b h i
-    rw [m1OneQ4LeftFacingTail L a i hL htail] at hcell
-    exact hcut.trans hcell
+        have hcoord : h-(i:Int) - (h-((3*a+1:Nat):Int)) = r := by
+          dsimp [r,N]; omega
+        have hinside : m1OneQ4Inside r = true := by
+          rw [hr]
+          simp [m1OneQ4Inside]
+          omega
+        have hcut := m1OneQ4CutTape_eq_end_inside L a b h (h-(i:Int)) (by
+          rw [hcoord]
+          exact hinside)
+        have hmark : decide (r ∈ m1OddQ4BridgeEnd.marked) =
+            sideBit (m1OneQ4LeftFacing L a) i := by
+          rw [hr]
+          have hb := m1OneQ4LeftFacingBridgeBit L a k hL hk
+          have hidx : i = 3*a+1+k := by dsimp [k]; omega
+          rw [hidx]
+          exact hb.symm
+        rw [hcoord] at hcut
+        exact hcut.trans hmark
+      · have htail : 3*a+9 ≤ i := by omega
+        have hcut := m1OneQ4CutTape_eq_source_left L a b h i hL htail
+        have hcell := s1Config_left_cell L 1 1 a 0 b h i
+        rw [m1OneQ4LeftFacingTail L a i hL htail] at hcell
+        exact hcut.trans hcell
 
 /-- The Q4 suffix transforms the source-left stream into the canonical
 marker-zero S1 target for the final n=1 reset. -/
