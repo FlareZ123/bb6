@@ -21,9 +21,8 @@ theorem s2_sector_decompose (u v : Nat)
   have ht : u+v=2+4*t := by
     dsimp [t]
     omega
-  have hv : (v+11*t)%32=28 := by omega
-  refine ⟨t,ht,?_⟩
-  omega
+  have hv : v%32=(28+11*t)%32 := by omega
+  exact ⟨t,ht,hv⟩
 
 /-- The direct parent of the odd/odd P branch is excluded by the
     source-exact six-right normalizer.  Its three gate residues are
