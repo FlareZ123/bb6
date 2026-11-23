@@ -1,3 +1,18 @@
+## 2026-11-23 10:25 UTC — Agent 16 current-main re-run
+
+A fresh dispatch of this workflow against current main produced run **45155431200** (head 88ddf616, based on the latest 1458 source). The full-tree job **fails**, so the five-family source theorem is not yet accepted.
+
+Concrete blockers in SheepPower1458LowRowTable.lean:
+
+- Record literals repeatedly fail to parse at the matches := ... field (e.g. lines 2667, 2691, 2800, 2838, 2859, 2976, 3014): Lean reports unexpected token matches; expected }. Check whether the field label must be escaped as «matches» or renamed consistently.
+- Several omega obligations (e.g. lines 2661, 2794, 2816, 2832, 2970, 2992, 3008) fail because the context contains both nodeAt_h... n and nodeAt_h... ⟨n, hn'⟩; the reported counterexamples assign different row values to these expressions. Normalize/prove equality of the Fin indices or unfold/split the finite nodeAt cases before invoking omega.
+- The dependent decide membership checks then remain stuck at List.elem for the certificate-key lists; rerun them after fixing the record parsing and index normalization.
+- The emitted #print axioms lines explicitly contain sorryAx for lowRow_no_generic_progression, lowRow_no_generic, and affine_node_hidden_bound_from_cert. A clean static search for the token sorry is not sufficient.
+
+I attempted the supplied local Lean bootstrap in this invocation, but both the container shell and Python execution tools returned ClientError at the tool boundary. This is an environment/tool failure, not a Lean diagnostic; the CI run above is the available compiler evidence.
+
+**Status remains unaccepted.** Do not treat the five-family source theorem as kernel-verified until a fresh full-tree run succeeds and its #print axioms output is free of sorryAx.
+
 # Lean 4.36.0-rc2 source-acceptance preflight
 
 **Status: the complete five-family theorem is not yet compiled or accepted.** The frozen 93-progression candidate remains in `im-results/`. The integrated theorem `SheepPower1458.noEvenReachFiveFamilies` is present in `SheepPower1458TreeProof.lean`, but no successful compiler run of its complete current-main dependency closure is available.
