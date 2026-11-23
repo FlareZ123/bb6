@@ -82,3 +82,40 @@ For example, (z=0) has (C=73) and exactly one immediate parent; (z=1) has (C=592
 All three jobs reuse the existing *manual* `.github/workflows/agent13-m16-high-family-interface.yml`. There is no new workflow file or per-commit run.
 
 The independent [all-depth source-word sieve](AllDepthSourceParentPruning.md) may exclude particular individual candidates after the classification. Its formal phase fraction is **not** a count of solved candidate machine orbits. To close even this low-stop ray, one must eliminate *every* surviving permitted depth for *every* z using a genuine blank-root inverse invariant or exhibit a genuine root hit. The high-stop family in the exact Machine C halting criterion remains unrestricted by these statements.
+
+
+## Full original-source edge iff: the completeness statement is now formal
+
+The prior parent classification and dyadic bound have been strengthened to a source-exact **necessary AND sufficient** edge criterion for *every* stopping index z, with no bound on the bounce depth:
+
+```
+secNext(a,k) = some (180*u+28,166*u+25)
+    ↔ ∃ n, n%2=0 ∧ 3≤a ∧ a<2*k ∧
+         346*u+54=2^(n+1)*(a+3) ∧
+         2*k+a+7+3*n=512*u+78.
+```
+
+The reverse direction is significant: it reconstructs an actual `secNext` machine edge from the source arithmetic via the complete original-section inverse theorem; it does *not* treat an arithmetic candidate as automatically genuine. Accepted in [Lean CI 45275606485](https://github.com/FlareZ123/bb6/actions/runs/45275606485), source [EvenOddLowStopFullInverseIff.lean](EvenOddLowStopFullInverseIff.lean).
+
+For **every even z**, `519*z+73` is odd, so the only allowed depth is n=0. In fact [EvenOddLowStopEvenEdgeIff.lean](EvenOddLowStopEvenEdgeIff.lean) proves the stronger exact source singleton-fiber equivalence
+
+```
+secNext(a,k)=some (180*u+28,166*u+25)
+  ↔ a=173*u+24 ∧ k=(339*u+47)/2,
+   provided z%2=0 and u+6*z+1=2^(1024*z+129).
+```
+
+This establishes *actual original section indegree exactly one* for the entire unbounded even-z half-ray, [CI 45276324981](https://github.com/FlareZ123/bb6/actions/runs/45276324981). [EvenOddLowStopEvenReachIff.lean](EvenOddLowStopEvenReachIff.lean) further proves the genuine **blank-root reachability iff** between `R_u` and its unique parent, [CI 45276448739](https://github.com/FlareZ123/bb6/actions/runs/45276448739). Thus the even-index low ray is no longer an *inverse-enumeration problem*: it is a single explicit recursive root obligation. Neither theorem excludes that last parent in general.
+
+## New all-time rooted exclusions and the integrated gateway
+
+Two source-exact independent inverse words exclude complete previously open low-stop index progressions:
+
+- `z≡44 mod64`, `u≡119 mod128`: forced inverse word F-A-B-O ends at an odd-right source-image contradiction. Accepted [CI 45272616908](https://github.com/FlareZ123/bb6/actions/runs/45272616908), [LowM67Z44Source.lean](LowM67Z44Source.lean).
+- `z≡16 mod128`, `u≡159 mod256`: forced F-A-A-A-A-B ends in a different odd-right forbidden-image class. Accepted [CI 45274516141](https://github.com/FlareZ123/bb6/actions/runs/45274516141), [LowM67Z16Source.lean](LowM67Z16Source.lean).
+
+Both have no time, u or z cutoff. Combined with previous exact source 559/4096 and Agent 8 z=2 mod8, z=7 mod16 and z=24 mod32, the [lossless original blank-halting equivalence](LowM67All1551Criterion.lean), accepted [CI 45275168303](https://github.com/FlareZ123/bb6/actions/runs/45275168303), excludes **1551/4096 distinct formal z-residue classes** from this particular low stopping ray. The high-stop family and all surviving low cases remain unbounded and untouched. This is **NOT** a fraction of halting six-state machines resolved; it is an exact infinite parameter-index exclusion.
+
+A separate [second-generation 2-adic mass relation](EvenOddLowStopSecondDyadic.lean) follows the unique even-z predecessor one source layer further. It uses `s=z/2` and `u+12s+1=2^(2048s+129)` and the exact identity
+`2*((173u+24)+(339u+47)/2+1)+12*(685s+49)=685*2^(2048s+129)`.
+Its proposed all-exponent Lean equivalence is under targeted source check; do **not** describe that new second-generation module as kernel-accepted until its workflow passes.
