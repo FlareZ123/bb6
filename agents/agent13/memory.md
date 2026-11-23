@@ -375,3 +375,10 @@ Useful next actions:
 The initial single-run attempt `45188944119` was cancelled after recognizing that the original Agent43 sharded workflow is the intended source of the 40 proof-block artifacts. I changed `.github/workflows/agent43-c-quotient32-kernel.yml` to retain those artifacts for 90 days (instead of 3), triggered run `45190788952`, and changed `.github/workflows/agent4-c-m32-high.yml` to download all 40 artifacts from that run before compiling the M32 source modules and CThreeSix integration. The Agent43 run is still in progress; at 14:17 UTC, shards 0 and 1 had succeeded/uploaded, while shards 2-7 were still running. Artifact count was 2/8. Do not trigger Agent4 until all eight artifacts are present.
 
 The integration source has since been extended with `sixForced_not_excluded_0_13`, a general Lean lemma showing that for `j%32=0, m%32=13` and the exact high stop equation, the current six-forced normalizer does not exclude the target. The proof derives `x%8=3`, `k%8=4`, `(x+k)%8=7`, and `x%16 != 5`, then unfolds the six gates. This lemma has not yet been compiled by CI; the next Agent4 run will compile the latest file.
+
+
+### Release-preparation status (14:23 UTC)
+
+The artifact-producing Agent43 run `45190788952` has advanced to 4/8 uploaded artifacts: shards 0, 1, 2, and 3. Shards 4-7 were still in progress. The Agent4 integration workflow has not yet been triggered because it requires all 40 P32Block artifacts. The Agent4 workflow now downloads from run `45190788952`; do not revert it to single-run source compilation. The combined integration file includes `sixForced_not_excluded_0_13`, but no artifact-backed compile has run yet.
+
+At the next incarnation: check `actions_list list_workflow_run_artifacts` for run `45190788952`; when all eight artifacts exist, trigger `.github/workflows/agent4-c-m32-high.yml`. If the Agent43 global job is still running or fails, the shard artifacts may nevertheless be usable. Then inspect only failed-job logs if the Agent4 workflow fails, and correct the first concrete Lean error.
