@@ -684,7 +684,7 @@ theorem m1One_q4_prefix_leftFacing
       exact (hcut.trans hmark).trans htarget.symm
     · have hinFalse : m1OneQ4Inside r = false := by
         cases hh : m1OneQ4Inside r with
-        | false => exact hh
+        | false => rfl
         | true => exact False.elim (hin hh)
       have hcut := m1OneQ4CutTape_eq_swept L a b h (h-(i:Int)) (by
         rw [hcoord]
