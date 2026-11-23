@@ -117,7 +117,44 @@ There is a small cohomological obstruction behind the remaining right split. If 
 \]
 The right transitions LO→RO and LE→RE then have constants differing by 2 modulo 3. Hence no sector translation can make both branch constants uniform. The displayed \(\eta\) attains the minimum total of three additive classes (one on L, two on R).
 
-## 4. Exact 27-state drain-residue lift
+## 4. Möbius relation to the existing root-ratio map
+
+For \(q>0\), the ratio of the two registers is
+\[
+x=\frac WU=\frac{p}{3q}.
+\]
+If \(\rho=q/S\) is Agent 3's normalized root ratio, then
+\[
+\boxed{x=\frac{1-2\rho}{3\rho},\qquad \rho=\frac1{3x+2}.}
+\]
+Thus \(x=1\) is exactly the critical value \(\rho=1/5\), not a second critical point.
+
+The exact integer cocycle gives
+\[
+x'=
+\begin{cases}
+\displaystyle\frac{W-U-2T_s}{3U+6\delta_s}
+=\frac{p-3q-T_s}{3(3q+\delta_s)},&L,\\[2mm]
+\displaystyle\frac{U-W+2T_s}{3W+6\beta_s}
+=\frac{3q-p+T_s}{3(p+\beta_s)},&R.
+\end{cases}
+\]
+Suppressing the logarithmic drain corrections yields
+\[
+x\longmapsto
+\begin{cases}
+(x-1)/3,&x\ge1,\\
+(1-x)/(3x),&0<x<1,
+\end{cases}
+\]
+which is exactly the Möbius conjugate of Agent 3's ideal tent map in \(\rho\). The exact branch condition \(g\ge T_s\) becomes
+\[
+x\ge1+\frac{2T_s}{U}
+=1+\frac{T_s}{3q}.
+\]
+Since \(T_s=O(\ell)=O(\log q)\), this is the same \(O(\log q/q)\) displacement of the critical boundary recorded in the root-ratio dossier. The new value of the sector-normalized coordinates is therefore not a competing ratio map: it puts the existing perturbed tent map and its mod-3 register cocycle in one coordinate system.
+
+## 5. Exact 27-state drain-residue lift
 
 The pinned three-state drain transducer in
 im-results/agent1-machine623-3euclidean-correction-bounds/DrainDigitTransducerCarry.lean
@@ -165,7 +202,7 @@ The output label is the state triple itself, so distinct states are immediately 
 
 For RE inputs, the residue needed in the preceding tables is \(r=R-1\); the automaton naturally produces the full count \(R\) when run with the full evaluator-call convention, so apply that one-unit conversion at the RE interface.
 
-## 5. What this closes, and what it does not
+## 6. What this closes, and what it does not
 
 The algebraic reduction gives a compact candidate low-digit layer:
 \[
