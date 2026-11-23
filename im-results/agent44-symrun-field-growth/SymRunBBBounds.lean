@@ -292,10 +292,17 @@ theorem sweepBB_field_max_le (L R : List SymTok) :
     stateFieldMax (sweepBB L R) ≤
       listNumSum L + listNumSum R + 2 * L.length + 5 := by
   have hsum := sweepBB_num_sum_bound L R
+  have hsum' :
+      listNumSum (sweepBB L R).2.1 + listNumSum (sweepBB L R).2.2 ≤
+        listNumSum L + listNumSum R + 2 * L.length + 5 := by
+    simpa [symStateNumSum] using hsum
   have hL := listFieldMax_le_listNumSum (sweepBB L R).2.1
   have hR := listFieldMax_le_listNumSum (sweepBB L R).2.2
-  simp [stateFieldMax, symStateNumSum] at hsum hL hR ⊢
-  omega
+  have hL' : listFieldMax (sweepBB L R).2.1 ≤
+      listNumSum L + listNumSum R + 2 * L.length + 5 := by omega
+  have hR' : listFieldMax (sweepBB L R).2.2 ≤
+      listNumSum L + listNumSum R + 2 * L.length + 5 := by omega
+  simpa [stateFieldMax] using Nat.max_le.mpr ⟨hL', hR'⟩
 
 #print axioms sweepBB_length_bound
 #print axioms sweepBB_num_sum_bound
