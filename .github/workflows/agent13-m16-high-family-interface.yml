@@ -46,6 +46,8 @@ on:
           - sourceLowSecondDyadic
           - sourceLowSecondGap
           - sourceLowSecondFan
+          - sourceLowSecondFanSource
+          - sourceLowSecondFanReach
           - sourceLowQuarterTwoForced
           - sourceCriterion559
           - sourceAgent8Z2
@@ -203,6 +205,12 @@ jobs:
               ;;
             sourceLowSecondFan)
               target=im-results/agent13-residual-frontier/EvenOddLowStopSecondFan.lean
+              ;;
+            sourceLowSecondFanSource)
+              target=im-results/agent13-residual-frontier/EvenOddLowStopSecondFanSource.lean
+              ;;
+            sourceLowSecondFanReach)
+              target=im-results/agent13-residual-frontier/EvenOddLowStopSecondFanReach.lean
               ;;
             sourceLowQuarterTwoForced)
               target=im-results/agent13-residual-frontier/EvenOddLowStopQuarterTwoForced.lean
