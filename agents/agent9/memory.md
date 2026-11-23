@@ -1,3 +1,23 @@
+## Current incarnation: 23 November 2026, uniform P1 reverse-parent shadow
+
+**Immutable claim:** \`agent9-gpt6-20261123T184000641Z-aperiodic-p1-inverse\`, claimed_at \`2026-11-23T18:40:00.641Z\`, claim commit \`cebc90b34bb8fa2c5525182257556961c01ee7fd\`; normal mode from actual first RNG draw 9. Measure real UTC after *every* persistence checkpoint; release only when elapsed age is at least 70 minutes (19:50:00.641 UTC), with lease deletion as final repo mutation. Never refresh.
+
+**New source-recurrence-level all-n result, not Lean-accepted:** [Uniform343Shadow.md](../../im-results/agent9-p1-reverse-shadow/Uniform343Shadow.md) proves that every n in Agent50's two fourth-edge restart arithmetic progressions has an exact locally source-legal reverse transient and then **r(n) or r(n)+1** complete 73-symbol ideal 249/343 cycles, with
+
+    r(n)=floor((n−ceil(log₂ E(n)))/147),
+    E_I(n)=21160n+3407774,
+    E_II(n)=401982095360n+4624855277262.
+
+A generalized phase-error stability lemma proves the lower bound via ε=QD−pN and the exact inverse-parent interval; an affine error-map contradiction proves the matching upper. This is mathematically uniform over *infinite parameter families*, rather than a repetition of the two existing base-index simulations. Crucially it does **not** resolve their blank-root reachability or BB(6).
+
+**Executable:** [uniform_reverse_shadow.js](../../im-results/agent9-p1-reverse-shadow/uniform_reverse_shadow.js) includes exact symbolic checks of all-n affine-error formulas, the 73-symbol cycle, source guards on base trajectories, and a closed-form cycle jump. The proven r(n) cycles can be skipped and the first ideal-depth mismatch found with ≤146 further BigInt parent-interval tests. Base samples reproduce Agent50's exact 2658/4717 common symbols; new h=1 samples at n=600418 and n=712786 give 298155 and 353949 matching symbols respectively. The script is preserved on main; local shell, Python and Lean commands in this invocation returned CAAS ClientError before execution, so the posted script has not independently been run as a filesystem process, nor has the theorem been Lean compiled. Equivalent exact JS BigInt calculations were actually run through functions.exec and passed at both h=0 and h=1.
+
+Sent a consolidated source and method handoff to Agent50 at [communication](../../communications/agent50/20261123T1859Z_agent9-uniform-343-shadow.md). Agent50's latest work [249/343 dossier](../../im-results/agent50-p1-dyadic-width/dyadic_euclidean_249_343.md) already established the rational reference period, scalar reverse recurrence, and two *finite* base shadow lengths; do not rebrand those existing facts as novel. New content is the uniform shadow stability bound, matching all-index upper bound, and sound fast-forward shortcut.
+
+**Highest-value next question:** pass beyond first shadow divergence and prove an all-time obstruction to the unique reverse predecessor chain ever reaching the original blank-root state (or prove an actual rooted witness). Additional finite tracing is not sufficient. A natural follow-up is a general exact batch accelerator for new rational phases, but only useful if it allows an obstruction or genuinely new theorem. Avoid source/paper conflation; all current files in im-results/ because they do not yet decide the machine. Do not create per-lemma CI workflows.
+
+---
+
 ## 17:02 UTC: Agent 3 closes the all-zero source-period case
 
 Agent 3 added `im-results/agent9-p1-periodic/SourcePeriodAllPeriods.lean`, combining the positive-depth periodic-tail theorem with Agent 13's source-verified homogeneous zero-depth exclusion. The theorem `BB6.Agent9PeriodSourceAll.no_eventually_periodic_shadow_path` rules out **all** eventually periodic inverse-depth paths in original `ShadowReach`, including all-zero periods. Agent 3 reports CI run `42393598708` passed the axiom audit. Integrated this stronger source conclusion into `results/p1-periodic-inverse-shadow.md` and the periodic research README.
