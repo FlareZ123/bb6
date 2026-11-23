@@ -76,7 +76,7 @@ private theorem odd_odd_sum4_parent (a k x y : Nat)
       · simp [sectionPreimageCriterion,ha0,hk0,hk1] at hp
         omega
       · simp only [sectionPreimageCriterion,if_pos ha0,if_neg hk0,if_neg hk1] at hp
-        rcases hp with ⟨n,hpow,_⟩
+        rcases hp with ⟨n,⟨hpow,_⟩⟩
         have hdiv : (x+y)%8=0 := by
           rw [hpow]
           simp [Nat.mul_mod]
@@ -94,7 +94,7 @@ private theorem odd_odd_sum4_parent (a k x y : Nat)
               omega
             · simp only [sectionPreimageCriterion,if_neg ha0,if_pos ha1,
                 if_neg hk0,if_neg hk1,if_neg hk2,if_neg hk3] at hp
-              rcases hp with ⟨hy3,_⟩ | ⟨_,⟨n,hpow,_⟩⟩
+              rcases hp with ⟨hy3,_⟩ | ⟨_,⟨n,⟨hpow,_⟩⟩⟩
               · omega
               · have hodd : (x+y+1)%2=1 := by omega
                 have heven : (2^n*16)%2=0 := by simp
@@ -112,7 +112,7 @@ private theorem odd_odd_sum4_parent (a k x y : Nat)
         · by_cases haeven : a%2=0
           · simp only [sectionPreimageCriterion,if_neg ha0,if_neg ha1,
               if_neg hk0,if_neg hlow,if_pos haeven] at hp
-            rcases hp with ⟨n,hpow,hcost⟩
+            rcases hp with ⟨n,⟨hpow,hcost⟩⟩
             cases n with
             | zero =>
                 simp at hpow hcost
@@ -129,7 +129,7 @@ private theorem odd_odd_sum4_parent (a k x y : Nat)
                   rcases hdiv with ⟨q,hq⟩
                   refine ⟨q,?_⟩
                   rw [hq]
-                  ring
+                  omega
                 have hpowdiv : 2∣2^(n+1) := by
                   change 2^1∣2^(n+1)
                   exact Nat.pow_dvd_pow 2 (by omega)
@@ -138,12 +138,12 @@ private theorem odd_odd_sum4_parent (a k x y : Nat)
                 have hdiv8 : 8∣x+y := by
                   refine ⟨r*q,?_⟩
                   rw [hpow,hr,hq]
-                  ring
+                  omega
                 have hmod : (x+y)%8=0 := Nat.mod_eq_zero_of_dvd hdiv8
                 omega
           · simp only [sectionPreimageCriterion,if_neg ha0,if_neg ha1,
               if_neg hk0,if_neg hlow,if_neg haeven] at hp
-            rcases hp with ⟨hy3,_⟩ | ⟨_,⟨n,hpow,_⟩⟩
+            rcases hp with ⟨hy3,_⟩ | ⟨_,⟨n,⟨hpow,_⟩⟩⟩
             · omega
             · have hodd : (x+y+1)%2=1 := by omega
               have heven : (2^n*(2*(a-1)+8))%2=0 := by simp [Nat.mul_mod]
@@ -166,7 +166,7 @@ private theorem even_odd_sumplus1_mod8_4_parent (a k x y : Nat)
       · simp [sectionPreimageCriterion,ha0,hk0,hk1] at hp
         omega
       · simp only [sectionPreimageCriterion,if_pos ha0,if_neg hk0,if_neg hk1] at hp
-        rcases hp with ⟨n,hpow,_⟩
+        rcases hp with ⟨n,⟨hpow,_⟩⟩
         have hodd : (x+y)%2=1 := by omega
         have heven : (2^n*8)%2=0 := by simp
         rw [hpow] at hodd
@@ -186,7 +186,7 @@ private theorem even_odd_sumplus1_mod8_4_parent (a k x y : Nat)
               omega
             · simp only [sectionPreimageCriterion,if_neg ha0,if_pos ha1,
                 if_neg hk0,if_neg hk1,if_neg hk2,if_neg hk3] at hp
-              rcases hp with ⟨hy3,_⟩ | ⟨_,⟨n,hpow,_⟩⟩
+              rcases hp with ⟨hy3,_⟩ | ⟨_,⟨n,⟨hpow,_⟩⟩⟩
               · omega
               · have hmod16 : (x+y+1)%16=0 := by
                   rw [hpow]
@@ -205,14 +205,14 @@ private theorem even_odd_sumplus1_mod8_4_parent (a k x y : Nat)
         · by_cases haeven : a%2=0
           · simp only [sectionPreimageCriterion,if_neg ha0,if_neg ha1,
               if_neg hk0,if_neg hlow,if_pos haeven] at hp
-            rcases hp with ⟨n,hpow,_⟩
+            rcases hp with ⟨n,⟨hpow,_⟩⟩
             have hodd : (x+y)%2=1 := by omega
             have heven : (2^n*(2*(a-1)+6))%2=0 := by simp [Nat.mul_mod]
             rw [hpow] at hodd
             omega
           · simp only [sectionPreimageCriterion,if_neg ha0,if_neg ha1,
               if_neg hk0,if_neg hlow,if_neg haeven] at hp
-            rcases hp with ⟨hy3,_⟩ | ⟨_,⟨n,hpow,hcost⟩⟩
+            rcases hp with ⟨hy3,_⟩ | ⟨_,⟨n,⟨hpow,hcost⟩⟩⟩
             · omega
             · by_cases hn0 : n=0
               · subst n
@@ -233,7 +233,7 @@ private theorem even_odd_sumplus1_mod8_4_parent (a k x y : Nat)
                   rw [hform]
                   refine ⟨q,?_⟩
                   rw [hq]
-                  ring
+                  omega
                 have hpowdiv : 2∣2^n := by
                   change 2^1∣2^n
                   exact Nat.pow_dvd_pow 2 hnpos
@@ -242,7 +242,7 @@ private theorem even_odd_sumplus1_mod8_4_parent (a k x y : Nat)
                 have hdiv8 : 8∣x+y+1 := by
                   refine ⟨s*r,?_⟩
                   rw [hpow,hform,hs,hr]
-                  ring
+                  omega
                 have hmod : (x+y+1)%8=0 := Nat.mod_eq_zero_of_dvd hdiv8
                 omega
 
