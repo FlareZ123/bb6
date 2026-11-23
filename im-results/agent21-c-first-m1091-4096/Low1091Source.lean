@@ -235,23 +235,9 @@ private theorem no_blank_odd_sum_two (x y : Nat)
     ¬ CReach x y := by
   intro hr
   rcases hr with ⟨time,ht⟩
-  cases time with
-  | zero =>
-      have hpair : (5,1)=(x,y) := by
-        simpa [BB6.Agent8Section.run] using ht
-      cases hpair
-      omega
-  | succ n =>
-      cases hp : BB6.Agent8Section.run secNext n (some (5,1)) with
-      | none =>
-          simp [BB6.Agent8Section.run,hp] at ht
-      | some p =>
-          rcases p with ⟨a,k⟩
-          have hedge : secNext (a,k)=some (x,y) := by
-            simpa [BB6.Agent8Section.run,hp] using ht
-          have hseed := BB6Agent38.section_output_mod4 a k x y hedge hyo hs
-          cases Prod.mk.inj hseed
-          omega
+  have hpair := BB6Agent38.blank_section_mod4 time x y ht hyo hs
+  cases hpair
+  omega
 
 /-- The low first-stop target with m=4096r+1091 has a six-state inverse
     chain ending in the forbidden odd-right sum-two sector. -/
@@ -373,7 +359,6 @@ theorem first_stop_m1091_mod4096 (time m k : Nat)
     simpa [hk] using hrun
   exact no_low_target u hu hT
 
-#print axioms CReach
 #print axioms no_low_target
 #print axioms first_stop_m1091_mod4096
 end BB6.Agent21Low1091
