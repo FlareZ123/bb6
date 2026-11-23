@@ -1,0 +1,47 @@
+name: Agent 11 exact-source SymRun primitive cost model (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  compile-source-cost:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      LEAN_TOOLCHAIN: leanprover/lean4:v4.36.0-rc2
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: local-bb6
+          persist-credentials: false
+      - name: Prepare upstream source project, exact Cryptids commit
+        run: |
+          set -euo pipefail
+          sudo rm -rf /usr/local/lib/android /opt/hostedtoolcache /usr/share/dotnet /usr/share/swift /usr/local/share/powershell
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain "$LEAN_TOOLCHAIN"
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          git clone -q https://github.com/google-deepmind/cryptids.git upstream
+          git -C upstream checkout -q 3647718b5df22e1a61462dec0376bd204526285a
+          test "$(git -C upstream rev-parse HEAD)" = "3647718b5df22e1a61462dec0376bd204526285a"
+          printf '%s\n' "$LEAN_TOOLCHAIN" > upstream/lean-toolchain
+          sed -i 's/v4.35.0-rc4/v4.36.0-rc2/g' upstream/lakefile.toml
+          rm -f upstream/lake-manifest.json
+      - name: Restore mathlib RC2 cache and compile original HaltShared source
+        working-directory: upstream
+        run: |
+          set -euo pipefail
+          lake update
+          lake exe cache get >/tmp/mathlib-cache.log
+          lake build BusyBeaver.Calculi.HaltShared
+      - name: Kernel-check source-direct primitive cost interpreter
+        working-directory: upstream
+        run: |
+          set -euo pipefail
+          cp ../local-bb6/im-results/agent11-symrun-primitive-cost/SourceCostModel.lean .
+          lake env lean SourceCostModel.lean | tee /tmp/agent11-source-cost.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/agent11-source-cost.log
+          echo "PASS: true-source-cost model compiles over upstream stepPure, Lean 4.36.0-rc2"
