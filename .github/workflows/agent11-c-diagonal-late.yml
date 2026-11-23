@@ -58,11 +58,25 @@ jobs:
     timeout-minutes: 55
     steps:
       - uses: actions/checkout@v4
+      - name: Cache Lean 4.36.0-rc2
+        uses: actions/cache@v4
+        with:
+          path: /tmp/lean
+          key: lean-4.36.0-rc2-linux
       - name: Install pinned Lean
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
-          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
-          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
-          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          if [ ! -x /tmp/lean/lean-4.36.0-rc2-linux/bin/lean ]; then
+            sudo apt-get update
+            sudo apt-get install -y zstd
+            curl -fL -H "Authorization: Bearer $GITHUB_TOKEN" -H "Accept: application/octet-stream" https://api.github.com/repos/leanprover/lean4/releases/assets/682509531 -o /tmp/lean-4.36.0-rc2-linux.tar.zst
+            mkdir -p /tmp/lean
+            tar --zstd -xf /tmp/lean-4.36.0-rc2-linux.tar.zst -C /tmp/lean
+          fi
+          test -x /tmp/lean/lean-4.36.0-rc2-linux/bin/lean
+          echo "/tmp/lean/lean-4.36.0-rc2-linux/bin" >> "$GITHUB_PATH"
+          /tmp/lean/lean-4.36.0-rc2-linux/bin/lean --version
       - name: Check original C source and both Machine C low-family exclusions
         env:
           M0_S229_S533_ONLY: ${{ inputs.m0_s229_s533_only }}
