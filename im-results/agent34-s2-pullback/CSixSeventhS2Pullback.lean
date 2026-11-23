@@ -405,11 +405,16 @@ theorem q_even_h5_progression_in_parameter_cylinder (c w : Nat) :
     (1343+4194304*c)%512=319 ∧
     (2779178+4194304*c+8388608*w)%1048576 =
       (7210+337408*((1343+4194304*c)/512))%1048576 := by
-  have hj : (1343+4194304*c)=319+512*(2+8192*c) := by omega
-  constructor
-  · omega
-  · rw [hj]
+  have hjmod : (1343+4194304*c)%512=319 := by omega
+  have hjquot : (1343+4194304*c)/512=2+8192*c := by
+    have hd := Nat.mod_add_div (1343+4194304*c) 512
+    rw [hjmod] at hd
     omega
+  have hm : (2779178+4194304*c+8388608*w)%1048576=682026 := by omega
+  have hr : (7210+337408*(2+8192*c))%1048576=682026 := by omega
+  constructor
+  · exact hjmod
+  · rw [hjquot,hm,hr]
 
 /-- The corresponding exact non-reachability statement. -/
 theorem q_even_h5_high_parameter_not_CReach (c w : Nat) :
