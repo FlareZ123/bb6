@@ -48,8 +48,11 @@ recurrences from one representative halt proof and specifies a cost-indexed
 RLE semantics. This is an intermediate method, not yet formalized or
 accepted.
 
-The F289 row with rooted RLE `1RB0RE_1RC0RA_0LD0LB_0LA1LE_1LC1LF_0LA---` now has a checkpoint-matched JavaScript/BigInt state port and a candidate primitive-step bound below `2^160`, conditional on formal branch-cost soundness. The family label F289 occurs on another distinct RLE row; this candidate does not cover that second machine. See [the simulator](simulate_f289_rle.js) and the
-computational caveats in [PrimitiveStepCost.md](PrimitiveStepCost.md). The exact n-step bridge is already present upstream as `multiStep_toBB` in `BusyBeaver/Bridge.lean`, and the local exact halting adapter is `BB6.ConjectureBridge.source_halts_after_iff_agent8_halts_after`; the remaining proof gap is branchwise cost soundness.
+Both distinct F289 roots now have deterministic checkpoint-matched JavaScript/BigInt replays and candidate primitive-step bounds, conditional on formal branch-cost soundness:
+- `1RB0RE_1RC0RA_0LD0LB_0LA1LE_1LC1LF_0LA---`: complete primitive-step candidate `1003448704258405241756955830449585121679083838720 < 2^160`, including its one-step initial source-to-stack transition.
+- `1RB1RF_0RC0RE_0RD1RA_1LE0LA_1LB0LD_0RDHHH`: complete primitive-step candidate `126276952940611745349599848496735249080302155982948794561796401307306807 < 2^237`, from 18,500 RLE transitions and five matched intermediate checkpoints ([CI run 45180798535](https://github.com/FlareZ123/bb6/actions/runs/45180798535)).
+
+The simulator now checks the 19 primitive costs by theorem name rather than source order, and includes the one-step initial transition. These are **computational candidates only**, not local halting certificates: the cost-indexed RLE soundness theorem for every dispatch branch remains unproved. See [the simulator](simulate_f289_rle.js) and the detailed recurrences/caveats in [PrimitiveStepCost.md](PrimitiveStepCost.md). The exact n-step bridge is already present upstream as `multiStep_toBB` in `BusyBeaver/Bridge.lean`, and the local exact halting adapter is `BB6.ConjectureBridge.source_halts_after_iff_agent8_halts_after`; the remaining proof gap is branchwise cost soundness.
 
 ## Critical dependency constraint
 
