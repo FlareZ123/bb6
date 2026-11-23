@@ -37,6 +37,21 @@ private theorem prior_six_forced_admits_base_residue (j m : Nat)
     (hj : j%512=319) (hm : m%512=42) :
     BB6.Agent11SixForced.sixForcedExcluded (2*j+3) (highK j m)=false := by
   have hm42 : 42≤m := by omega
+  have hj16 : j%16=15 := by
+    have hdiv : 16∣512 := by decide
+    have hmod := Nat.mod_mod_of_dvd j hdiv
+    rw [hj] at hmod
+    omega
+  have hj8 : j%8=7 := by
+    have hdiv : 8∣512 := by decide
+    have hmod := Nat.mod_mod_of_dvd j hdiv
+    rw [hj] at hmod
+    omega
+  have hm8 : m%8=2 := by
+    have hdiv : 8∣512 := by decide
+    have hmod := Nat.mod_mod_of_dvd m hdiv
+    rw [hm] at hmod
+    omega
   have hpow8 : 8∣(2:Nat)^(2*m+2) := by
     have hp : (2:Nat)^3∣(2:Nat)^(2*m+2) :=
       Nat.pow_dvd_pow 2 (by omega)
@@ -52,6 +67,7 @@ private theorem prior_six_forced_admits_base_residue (j m : Nat)
   have hmod8 := Nat.mod_eq_zero_of_dvd hdiv8
   have hx : (2*j+3)%2=1 := by omega
   have hx16 : (2*j+3)%16=1 := by omega
+  have hsumBase8 : (j+3*m+5)%8=2 := by omega
   have hy8 : highK j m%8=6 := by omega
   have hy2 : highK j m%2=0 := by omega
   have hsum4 : (2*j+3+highK j m)%4=3 := by omega
