@@ -111,7 +111,7 @@ U'/3&D+r+1-\mathbf1_{s=RO}
 
 Thus the passive register has one uniform left rule and only a two-class right rule. The active quotient still distinguishes RO from the other three sectors. This is a substantially smaller phase dependence than the unnormalized \((U,V)\) expression, but it is not a closed root automaton: the next \(D,r\) must be computed from the next state's complete canonical drain.
 
-There is a small cohomological obstruction behind the remaining right split. If one tries a general sector translation \(W+\eta_s\) and demands a single sector-independent additive constant for *both* passive branch updates, the left equations force
+There is a small cohomological obstruction behind the remaining right split. In fact, no sector translation can make the right passive update uniform: the transitions RO→RE and RE→RO have constants \(2c_T(RO)+\eta_{RO}+\eta_{RE}\) and \(2c_T(RE)+\eta_{RE}+\eta_{RO}\), which differ by \(2(c_T(RO)-c_T(RE))\equiv2\pmod3\), independently of \(\eta\). Thus every translation has at least two right classes. If one additionally demands a single sector-independent additive constant for the left passive update, the left equations force
 \[
 \eta_{RO}-\eta_{LE}=1,\qquad \eta_{RE}=\eta_{LO}\pmod3.
 \]
