@@ -1,6 +1,6 @@
 # Exact inverse-spine structure for #746 halting gates
 
-**Status:** six algebraic statements over the exact original-source `ResetParent` grammar: (i) the existing narrow-window t=0 entry embedding into a *single* even-spine branch, (ii) an all-sector, all-index **exact criterion for predecessor existence at the canonical spine's terminal state**, (iii) a full **unique-chain root-exclusion** on a low-valuation terminal subfamily, and (iv) a two-edge exclusion in a second low-valuation sector, and (v) a disjoint four-edge exclusion in its next dyadic-depth window, and (vi) a forced second-tier odd-parent fork in a further infinite narrow high-c strip. The complete derivations are paper proofs, not yet compiled against the original source in Lean. Neither statement eliminates off-spine odd-parent forks or decides the machine.
+**Status:** seven algebraic statements over the exact original-source `ResetParent` grammar: (i) the existing narrow-window t=0 entry embedding into a *single* even-spine branch, (ii) an all-sector, all-index **exact criterion for predecessor existence at the canonical spine's terminal state**, (iii) a full **unique-chain root-exclusion** on a low-valuation terminal subfamily, and (iv) a two-edge exclusion in a second low-valuation sector, and (v) a disjoint four-edge exclusion in its next dyadic-depth window, and (vi) a forced second-tier odd-parent fork in a further infinite narrow high-c strip, and (vii) a complete nonterminal off-spine fork cone two indices closer to the actual gate. The complete derivations are paper proofs, not yet compiled against the original source in Lean. Neither statement eliminates off-spine odd-parent forks or decides the machine.
 
 ## 1. Actual source gate
 
@@ -713,7 +713,144 @@ Neither the existence nor the pruning of
 such a synthetic odd fork establishes
 reachability from the blank root.
 
-## 9. Where the current E-parent results apply
+## 9. A complete nonterminal inverse fork: two steps nearer the fatal gate
+
+The preceding results resolve the deepest canonical-ray node
+\(u_J\). We can do more: an infinite subfamily has a **complete
+inverse cone for \(u_{J-2}\)**, incorporating an actual off-spine
+odd predecessor. This is the first result here that closes a
+genuine two-arm fork **above** the terminal node, not merely its
+terminal path.
+
+**Theorem (exact nonterminal four-node inverse cone, paper proof).**
+For any surviving gate \(n\ge257\), n mod6∈{4,5}, put
+\(p=2^n,\ c=2n+3,\ a=\lfloor\log_2 c\rfloor,\ J=n-a,\ q=c2^J\).
+Assume \(J\) even, \(4c>7\cdot2^a\), and
+\[
+ X_-:=2u_{J-2}+5
+       =8p+2n+3-q/2\equiv9\pmod{27}.
+\]
+Then the **entire** inverse ResetParent graph
+of the nonterminal ray state \(v=u_{J-2}\) is
+\[
+ \begin{array}{ccccc}
+  &&v&&\\[-2pt]
+  &\swarrow&&\searrow&\\[-2pt]
+  w=u_{J-1}&&&&h\\[-2pt]
+  \downarrow&&&&\\[-2pt]
+  z=u_J&&&&
+ \end{array}
+\]
+with exact two parents \(w,h\) of \(v\), exact sole parent
+\(z\) of \(w\), and **both \(h,z\) parentless**,
+where
+\[
+ \begin{aligned}
+  w&=4p+n-1-q/2,\\
+  z&=4p+n-1-q,\\
+  h&=4(X_-/9)-2p-n-3
+     =(14p-2q-n-15)/9.
+ \end{aligned}
+\]
+Neither terminal leaf is the blank root 2. Consequently,
+\[
+ \boxed{\neg\operatorname{ResetChain}(2,u_{J-2})},
+ \qquad
+ \boxed{\neg\operatorname{ReachC}((2,0),(u_{J-2},0))}.
+\]
+The source-reachability equivalence is previously certified;
+the new infinite-parametric classification remains uncompiled.
+
+**Proof: even edges and no extra even parents.**
+The actual \(u_{J-2}\) and \(u_{J-1}\)
+lie in the level-(n−1) even-target band
+\([3p-1,4p-3]\). Their unique even parents
+are respectively \(w\) and \(z\), by
+\(2u_j=4p+(n-1)+u_{j+1}\).
+The final \(z\) lies in the entire even-parent
+gap \((2p,3p-1)\), as in Section 4.
+
+**Proof: the only odd fork from v.**
+The parity \(J-2\) is even, and \(X_-\bmod27=9\),
+so \(v_3(X_-)=2\). For t=0, the would-be
+source coordinate \(d_0=X_-/3\) lies
+strictly inside \((2p,3p)\), the gap between
+the odd source bands at levels n−2 and n−1;
+there is no t=0 parent. For t≥2, output
+divisibility would require \(27\mid X_-\),
+contradicting its residue. The only remaining
+valuation is t=1. Its source coordinate
+\(2d=2X_-/9\) lies in
+\([3p/2+1,2p-1]\), the odd-source
+band at level n−2; its exact parent is
+the above \(h\), which is positive.
+Thus \(v\) has exactly the two displayed
+parents, an even \(w\) and an odd t=1 \(h\).
+
+**Proof: the off-spine h is an immediate leaf.**
+Using \(7p/4<q<2p\) in its closed form,
+\[
+  p<h<3p/2-1.
+\]
+This is an open even-target image gap
+at all dyadic scales. Since \(n\bmod6\in
+\{4,5\}\), we have \(2p+n\equiv0\pmod3\).
+Therefore
+\[
+  h\bmod3=(X_-/9)\bmod3=1,
+\]
+so \(3\nmid(2h+5)\) and no odd parent
+exists at any valuation. This proves
+that \(h\) is parentless.
+
+**Proof: the on-spine w and z have no odd forks.**
+Define \(X_w=2w+5=X_--q/2\).
+The factor \(q/2=c2^{J-1}\) is coprime
+to three (because \(c=2n+3\) is
+1 or 2 modulo 3). Thus
+\(X_w\not\equiv0\pmod3\), and
+w has no odd parent. Finally
+\[
+  X_z=2z+5=X_--3q/2
+       \equiv-3(q/2)\not\equiv0\pmod9,
+\]
+because \(9\mid X_-\) and \(3\nmid(q/2)\).
+Since z is in the high-c terminal
+even-target gap, Section 4 implies that
+z has no odd or even parent. Hence
+the exact four-node inverse tree closes.
+
+This is a **true blank-root exclusion two ray
+indices closer to the original gate**, but
+still not the gate itself: other odd forks
+leaving earlier even ray states can bypass v.
+
+**Positive-density sector.** For each large
+complete dyadic a-block, these n occupy
+asymptotically
+\[
+ \frac12\cdot\frac14\cdot\frac19
+   =\boxed{\frac1{72}}
+\]
+of the surviving original gate indices.
+Indeed J even selects one gate residue
+sector, high-c selects the last quarter
+of the a-block, and the exact 3-adic
+shift of \(X_-\) through its nine
+mod-54 lifts selects one class with
+\(X_-\bmod27=9\). The count refers to
+the \(u_{J-2}\) inverse **branch**, not
+to full fatal target nonreachability.
+
+A full untruncated BigInt ResetParent
+enumerator tested 37 qualifying n≤10000,
+including n=455,509,928,982,1817:
+all 37 had precisely the four-node tree
+above and zero unexpected parents.
+That is a consistency check, not the
+uniform proof.
+
+## 10. Where the current E-parent results apply
 
 The even-parent bands adjacent to (E) are
 [
@@ -742,7 +879,7 @@ The parity sectors align with both original gate residues:
 
 The odd-a, (K\equiv3\pmod6) entry-parent classification remains open.
 
-## 10. Existing Ray reductions to compose, not duplicate
+## 11. Existing Ray reductions to compose, not duplicate
 
 The spine formula above is the same canonical even ray used by the repository's `Ray*` modules:
 [
@@ -782,7 +919,7 @@ J-11,J-10,\ldots,J.
 ]
 This gives a concrete finite target for composing `RayNoSeam`, `RayNoSeamWalk`, the two-tier Hensel selectors, and the terminal t=0 entry (E(a,K)). The BigInt checks at ((K,a)=(387,9),(800,10),(399,9),(806,10)) independently found this exact 12-index split; the algebra above explains it uniformly.
 
-## 11. Scope and remaining work
+## 12. Scope and remaining work
 
 This identity connects the auxiliary entry family to the actual #746 halting targets. It proves that (E(a,K)) is an ancestor on **one** inverse-parent branch of (U_{K+2}). It does **not** prove that every root path to (U_{K+2}) passes through (E(a,K)). Other odd-parent side branches can leave intermediate spine nodes; a root path could in principle enter through one of them.
 
