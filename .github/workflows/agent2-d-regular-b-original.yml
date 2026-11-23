@@ -75,6 +75,9 @@ jobs:
             lean -o "$G/ELowPhysicalFirstReturnRepair.olean" "$G/ELowPhysicalFirstReturnRepair.lean"
             lean -o "$G/ELowCanonicalBlankFirst.olean" "$G/ELowCanonicalBlankFirst.lean"
             lean "$G/UnaryFirstReturnComplete.lean"
+            lean -o "$D/ATenFirstReturn.olean" "$D/ATenFirstReturn.lean"
+            lean -o "$D/ACodeFirstReturn.olean" "$D/ACodeFirstReturn.lean"
+            lean "$G/AImplicitCodeFirstReturn.lean"
             exit 0
           fi
           lean -o "$D/AWordAlgebra.olean" "$D/AWordAlgebra.lean"
