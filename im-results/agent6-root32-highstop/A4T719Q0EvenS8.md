@@ -56,7 +56,7 @@ H=T0_x+T0_y+1=3420714875040+4869966729600s
 has 2-adic valuation exactly 5, and the cost equation forces an even depth. Its depth-two parent is
 ```
 P2(s)=(427589359377+608745841200s,
-       2320341966345+3303398633040s).
+       2320341966345+3303399608040s).
 ```
 P2 is odd/odd with sum 2 mod 4, hence forbidden by the global blank-section odd-right image invariant. The depth-zero parent is
 ```
