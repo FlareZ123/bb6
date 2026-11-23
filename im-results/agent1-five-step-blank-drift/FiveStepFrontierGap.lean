@@ -25,9 +25,30 @@ theorem all_prefix_oracles :
       lassoDecisionOracle (p2 b c right) 6 6 12 2 4 = false ∧
       lassoDecisionOracle (p3 b c d right) 6 6 12 2 4 = false ∧
       lassoDecisionOracle (p4 b c d e right) 6 6 12 2 4 = false := by
+  let P : Fin 6 → Fin 6 → Fin 6 → Fin 6 → Bool → Prop :=
+    fun b c d e right =>
+        lassoDecisionOracle emptyTable 6 6 12 2 4 = false ∧
+        lassoDecisionOracle (p1 b right) 6 6 12 2 4 = false ∧
+        lassoDecisionOracle (p2 b c right) 6 6 12 2 4 = false ∧
+        lassoDecisionOracle (p3 b c d right) 6 6 12 2 4 = false ∧
+        lassoDecisionOracle (p4 b c d e right) 6 6 12 2 4 = false
+  have hall :
+      (List.finRange 6).all (fun (b : Fin 6) =>
+        (List.finRange 6).all (fun (c : Fin 6) =>
+          (List.finRange 6).all (fun (d : Fin 6) =>
+            (List.finRange 6).all (fun (e : Fin 6) =>
+              ([false, true] : List Bool).all (fun right =>
+                decide (b ≠ 0 → d ≠ c → e ≠ 0 → e ≠ b → P b c d e right)))))) = true := by
+    decide
   intro b c d e right hb hd he0 heb
-  fin_cases b <;> fin_cases c <;> fin_cases d <;>
-    fin_cases e <;> cases right <;> (first | contradiction | decide)
+  have h1 := (List.all_eq_true.mp hall) b (List.mem_finRange b)
+  have h2 := (List.all_eq_true.mp h1) c (List.mem_finRange c)
+  have h3 := (List.all_eq_true.mp h2) d (List.mem_finRange d)
+  have h4 := (List.all_eq_true.mp h3) e (List.mem_finRange e)
+  have hright : right ∈ ([false, true] : List Bool) := by
+    cases right <;> decide
+  have h5 := (List.all_eq_true.mp h4) right hright
+  exact (of_decide_eq_true h5) hb hd he0 heb
 
 /-- The exact physical first-unknown path reaches E/0 at depth four
     for every legal parameter tuple. -/
@@ -39,9 +60,30 @@ theorem all_prefix_unknowns :
       firstUnknownPhysical (p2 b c right) 12 finiteBlank = some (oneSlot c) ∧
       firstUnknownPhysical (p3 b c d right) 12 finiteBlank = some (oneSlot d) ∧
       firstUnknownPhysical (p4 b c d e right) 12 finiteBlank = some (zeroSlot e) := by
+  let P : Fin 6 → Fin 6 → Fin 6 → Fin 6 → Bool → Prop :=
+    fun b c d e right =>
+        firstUnknownPhysical emptyTable 12 finiteBlank = some a0 ∧
+        firstUnknownPhysical (p1 b right) 12 finiteBlank = some (zeroSlot b) ∧
+        firstUnknownPhysical (p2 b c right) 12 finiteBlank = some (oneSlot c) ∧
+        firstUnknownPhysical (p3 b c d right) 12 finiteBlank = some (oneSlot d) ∧
+        firstUnknownPhysical (p4 b c d e right) 12 finiteBlank = some (zeroSlot e)
+  have hall :
+      (List.finRange 6).all (fun (b : Fin 6) =>
+        (List.finRange 6).all (fun (c : Fin 6) =>
+          (List.finRange 6).all (fun (d : Fin 6) =>
+            (List.finRange 6).all (fun (e : Fin 6) =>
+              ([false, true] : List Bool).all (fun right =>
+                decide (b ≠ 0 → d ≠ c → e ≠ 0 → e ≠ b → P b c d e right)))))) = true := by
+    decide
   intro b c d e right hb hd he0 heb
-  fin_cases b <;> fin_cases c <;> fin_cases d <;>
-    fin_cases e <;> cases right <;> (first | contradiction | decide)
+  have h1 := (List.all_eq_true.mp hall) b (List.mem_finRange b)
+  have h2 := (List.all_eq_true.mp h1) c (List.mem_finRange c)
+  have h3 := (List.all_eq_true.mp h2) d (List.mem_finRange d)
+  have h4 := (List.all_eq_true.mp h3) e (List.mem_finRange e)
+  have hright : right ∈ ([false, true] : List Bool) := by
+    cases right <;> decide
+  have h5 := (List.all_eq_true.mp h4) right hright
+  exact (of_decide_eq_true h5) hb hd he0 heb
 
 private theorem open_step (p : PartialMachine) (depth : Nat)
     (s : Slot) (hf : lassoDecisionOracle p 6 6 12 2 4 = false)
