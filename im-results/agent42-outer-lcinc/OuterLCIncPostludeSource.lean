@@ -483,8 +483,12 @@ theorem outerLCInc_source_postlude_conditions
           have hkCases : k=0 ∨ k=1 ∨ k=2 := by omega
           rcases hkCases with hk0 | hk1 | hk2
           · rw [hk0]; simpa using h111.1
-          · rw [hk1]; convert h111.2.1 using 1 <;> omega
-          · rw [hk2]; convert h111.2.2 using 1 <;> omega
+          · have harg : h+2+(k:Int) = h+3 := by rw [hk1]; omega
+            rw [harg]
+            exact h111.2.1
+          · have harg : h+2+(k:Int) = h+4 := by rw [hk2]; omega
+            rw [harg]
+            exact h111.2.2
         calc
           T3 (h1+7+(i:Int)) = T (h+2+(k:Int)) := by
             rw [hcoord]
