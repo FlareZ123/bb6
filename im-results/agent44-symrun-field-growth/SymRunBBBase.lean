@@ -14,6 +14,19 @@ open BusyBeaver.SymRunEngine
 namespace BusyBeaver.SymRunAudit
 abbrev SymState := SymMode × List SymTok × List SymTok
 
+def tokFieldMax : SymTok → Nat
+  | .item .zero => 0
+  | .item (.run n) => n
+  | .repB1 n => n
+  | .rep2 n => n
+  | .rep12 n => n
+
+def listFieldMax (xs : List SymTok) : Nat :=
+  xs.foldl (fun a t => max a (tokFieldMax t)) 0
+
+def stateFieldMax (s : SymState) : Nat :=
+  max (listFieldMax s.2.1) (listFieldMax s.2.2)
+
 def stateTokenCount (s : SymState) : Nat :=
   s.2.1.length + s.2.2.length
 
@@ -97,7 +110,14 @@ def tokNumSum : SymTok → Nat
   | .item (.run d) => d
   | .repB1 k => k
   | .rep2 p => p
-  | .rep12 m => m
+  | .rep12 m
+
+theorem tokNumSum_eq_tokFieldMax (t : SymTok) : tokNumSum t = tokFieldMax t := by
+  cases t with
+  | item x => cases x <;> rfl
+  | repB1 k => rfl
+  | rep2 p => rfl
+  | rep12 m => rfl => m
 
 def listNumSum : List SymTok → Nat
   | [] => 0
@@ -108,6 +128,16 @@ theorem listNumSum_append (xs ys : List SymTok) :
   induction xs with
   | nil => simp [listNumSum]
   | cons t xs ih => simp [listNumSum, ih, Nat.add_assoc]
+
+theorem listFieldMax_le_listNumSum (xs : List SymTok) :
+    listFieldMax xs ≤ listNumSum xs := by
+  induction xs with
+  | nil => simp [listFieldMax, listNumSum]
+  | cons t xs ih =>
+    rw [listFieldMax_cons, listNumSum]
+    rw [tokNumSum_eq_tokFieldMax t]
+    simp only [Nat.max_le]
+    constructor <;> omega
 
 theorem bumpSymR_num_sum_le (xs : List SymTok) :
     listNumSum (bumpSymR xs) ≤ listNumSum xs + 3 := by
