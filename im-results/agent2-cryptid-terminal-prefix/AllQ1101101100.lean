@@ -65,7 +65,9 @@ theorem all_q_e_terminal_halt (q : Nat) (L ys : List Bool) :
     (run (73+2*q) (⟨[false,false,true] ++ L,false,
       pairR q ++ word ++ ys,4⟩ : Cfg)).st = 6 := by
   have ht : 73+2*q = 4+(2*q+(3+66)) := by omega
-  rw [ht,run_add,prelude4,run_add,scan_all,run_add,trigger3]
+  rw [ht,run_add,prelude4,run_add]
+  simp only [List.append_assoc]
+  rw [scan_all,run_add,trigger3]
   exact BB6.CryptidEHalt.e_halt_66 _ _
 
 #print axioms prelude4
