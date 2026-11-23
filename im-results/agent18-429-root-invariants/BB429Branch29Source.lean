@@ -2,6 +2,7 @@ import BB429Branch7Source
 import BB429Branch29Mod64
 import BB429Branch29Arithmetic
 import BB429Branch29BurstFloor
+import BB429Branch29Prefix
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -242,6 +243,32 @@ theorem source_branch7_29_burst_ge16255
     q n hn ⟨i,hlocal⟩ heq'
 
 #print axioms source_branch7_29_burst_ge16255
+
+
+/-- A strengthened original-pinned-source terminal-burst obstruction:
+    all genuine 29(mod32) branch7 final-reset events require at
+    least 128000127 successive first-branch steps. -/
+theorem source_branch7_29_burst_ge128000127
+    (i n x y : Nat)
+    (hroot : BB429SourceLadder.sourceRun i highLevelStart =
+      some (.J x y))
+    (hbranch : y+3=2*x)
+    (h29 : x%32=29)
+    (hn : 18≤n)
+    (heq : 4*x+3*n+15=3*2^(n+2)) :
+    128000127≤n := by
+  let q := x/32
+  have hx : x=32*q+29 := by dsimp [q]; omega
+  have hy : y=64*q+55 := by omega
+  have hsrc := hroot
+  rw [hx,hy] at hsrc
+  have hlocal :=
+    BB429SourceMod16.source_run_to_local i (32*q+29) (64*q+55) hsrc
+  have heq' : 128*q+3*n+131=3*2^(n+2) := by omega
+  exact BB429Branch29Prefix.rooted_branch29_final_burst_ge128000127
+    q n hn ⟨i,hlocal⟩ heq'
+
+#print axioms source_branch7_29_burst_ge128000127
 
 #print axioms source_branch7_29_burst_mod16384
 
