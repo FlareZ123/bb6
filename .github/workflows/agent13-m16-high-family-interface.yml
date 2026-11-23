@@ -32,6 +32,7 @@ on:
           - sourceAllDepthTwoDeep
           - sourceAllDepthShort
           - sourceAllValuationParent
+          - sourceLowPowerGap
           - sourceCriterion559
           - sourceAgent8Z2
           - sourceAgent8Z7
@@ -146,6 +147,9 @@ jobs:
               ;;
             sourceAllValuationParent)
               target=im-results/agent13-residual-frontier/EvenOddAllValuationParent.lean
+              ;;
+            sourceLowPowerGap)
+              target=im-results/agent13-residual-frontier/EvenOddLowStopPowerGap.lean
               ;;
             sourceCriterion559)
               target=im-results/agent13-residual-frontier/LowM67All559Criterion.lean
