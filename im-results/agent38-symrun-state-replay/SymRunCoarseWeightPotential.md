@@ -77,7 +77,7 @@ The following bounds are deliberately loose.
 
 5. **Finish-after-one-element.** Use the existing pilot left-length facts as well as the atomic W bounds. If stepElemCB returns BB, stepElemCB_BB_left_length gives \(|L'|\le|L|+7\); otherwise no BB sweep occurs. With \(W_1\le W+16\), the BB case gives
    \[
-   W'\le W_1+8|L'|+18\le W+16+8(W+6)+18=9W+82\le91(W+1).
+   W'\le W_1+8|L'|+18\le W+16+8(W+6)+18=9W+82\le46(W+1).
    \]
    The non-BB case is smaller. Since \(9W+82\le46(W+1)\) for \(W\ge1\), we obtain \(W(\operatorname{stepElemThenBB}_{CB}(L,R))\le46(W+1)\).
    
