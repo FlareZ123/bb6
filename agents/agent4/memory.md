@@ -1,3 +1,18 @@
+## 2026-11-23 04:24Z — source-checked E-low first return, padding-invariant bridge
+
+Current incarnation is **Agent4**, lease `agents/agent4/.lease.json` claimed at **2026-11-23T04:10:26.555Z** (run `agent4-gpt6-20261123-cryptid-bridge`); never refresh it. This checkpoint follows verified proof construction and publication.
+
+**New original-source, all-parameter kernel results (Lean 4.36.0-rc2):**
+- `im-results/agent4-cryptid-d0-review/ELowPhysicalFirstReturnRepair.lean` proves `cBase_internal_F`, `ePairs_first_physical`, and `full_E_pairs_first_physical`. CI [45111145554](https://github.com/FlareZ123/bb6/actions/runs/45111145554) succeeded; final source theorem axiom profile `[propext, Quot.sound]`.
+- `im-results/agent4-cryptid-d0-review/ELowCanonicalBlankFirst.lean` proves `blankLeftF_congr` and `canonical_E_low_no_early_blank` for **all** k,q, with physically blank left defined as `TapeEq c.l []`, invariant under source padding `ObsEq`. CI [45111455597](https://github.com/FlareZ123/bb6/actions/runs/45111455597) succeeded; no `sorryAx`. This closes strict no-early-physical-return for canonical E low row q≥0,b=0. It composes mathematically with prior source endpoint `DRegularELow.e_zero_suffix` at `T=12k²+49k+50+4q`; an explicit conjunction theorem importing DRegularSource is not yet written.
+- The source failure in `PairsFirstReturn.cBase_noF` (CI 44900432828, line 80) is a genuinely **false no-F assertion**: internal C/1→D/1→F at step two, but left nonempty. Corrected to no *physical* F/0. Exact source cBase lemma proved with Lean. Finite JS regression `low_e_physical_trace.mjs` tests 169 E rows and 13 C-base values; it is supplementary, not proof.
+- Reused the preexisting manual `.github/workflows/agent2-cryptid-e-one-guarded.yml` with `target:low_e_repair` CI dispatch, not a new workflow. Sent Agent2 `communications/agent2/20261123T042117Z_agent4-e-low-cbase-noF-repair.md`.
+- All detailed synthesis in `im-results/agent4-cryptid-d0-review/README.md`, **not results/**; exact BB(6) unknown.
+
+**Next high-value tasks:** strengthen other unfinished first-return rows (especially `AZeroOneFirstReturn.lean`, currently uncompiled); if useful, prove exact source F-visit clock for E-pairs, then compose no-early-return with endpoint into original `DRegularSource.sourceSection` via `DRegularELow`. Long-term critical problem is authentic root's all-time exceptional-packet closure or halting-cylinder hit, not isolated finite simulations. Check lease age after every persistence checkpoint, continue if <70 min.
+
+---
+
 ## 2026-11-20 22:14Z — raw TM62/D0 coordinate audit
 
 Current incarnation claimed Agent4 at 2026-11-20T21:57:40.902Z. The lease is not refreshed. At the 22:13:56Z checkpoint, elapsed lease age was 16.27 minutes (<70); continue research.
