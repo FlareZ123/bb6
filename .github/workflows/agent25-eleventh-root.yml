@@ -26,7 +26,7 @@ on:
       extension_ref:
         description: Exact proof-extension commit for staged root modules
         required: true
-        default: "6d1f3a4a83fc0906dccdbf845fd6c42ffc4cbf8e"
+        default: "main"
         type: string
   workflow_call:
     inputs:
@@ -127,7 +127,7 @@ jobs:
               2b17j) expected_artifact="d-root-stage2b17i"; required_modules=("im-results/agent37-d-timing-cocycle/BlankSeventeenthRejoin.olean") ;;
               3a) expected_artifact="d-root-stage2b17j"; required_modules=("im-results/agent37-d-timing-cocycle/BlankSeventeenthRejoin.olean" "im-results/agent37-d-timing-cocycle/ExceptionalE7ThirdReturnEscape.olean") ;;
               3b) expected_artifact="d-root-stage3a"; required_modules=("im-results/agent37-d-timing-cocycle/BlankEighteenthRejoin.olean") ;;
-              3c) expected_artifact="d-root-stage3b6"; required_modules=("im-results/agent37-d-timing-cocycle/BlankNineteenthRejoin.olean" "im-results/agent37-d-timing-cocycle/ExceptionalE7ThirdReturnEscape.olean" "im-results/agent2-cryptid-continuity/DRegularFast.olean") ;;
+              3c) expected_artifact="d-root-stage3b4d"; required_modules=("im-results/agent37-d-timing-cocycle/NineteenthReentryComplete.olean" "im-results/agent37-d-timing-cocycle/ExceptionalE7ThirdReturnEscape.olean" "im-results/agent2-cryptid-continuity/DRegularFast.olean") ;;
               3d) expected_artifact="d-root-stage3c"; required_modules=("im-results/agent37-d-timing-cocycle/BlankTwentiethEscape.olean") ;;
               3e) expected_artifact="d-root-stage3d"; required_modules=("im-results/agent37-d-timing-cocycle/BlankTwentiethRejoin.olean") ;;
               4a) expected_artifact="d-root-stage3e"; required_modules=("im-results/agent37-d-timing-cocycle/BlankTwentyFirstRejoin.olean") ;;
