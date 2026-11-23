@@ -48,6 +48,14 @@ Let $a\ge7$, $a\equiv1\pmod6$ and $a\not\equiv13\pmod{18}$. The direct parent of
 
 There are no exceptional sources and no other generic valuations; each displayed candidate satisfying its congruence is legal and gives exactly $E(x)=X_a$. In particular, all three possible branches are eliminated if $a\not\equiv1\pmod{12}$, $a\not\equiv37\pmod{54}$ and $a\not\equiv13\pmod{24}$. The last exclusion already follows from $a\not\equiv5\pmod8$, which is also needed for $Y_a$ to have only the $b=2$ immediate parent. The complete modular proof follows below.
 
+## Fourth theorem: exact two-hidden-step odd-sector parents
+
+Let $a\ge31$ satisfy $a\equiv13\pmod{18}$ and $a\not\equiv13\pmod{54}$, equivalently $a\equiv31$ or $49\pmod{54}$. Then $v_3(X_a-1)=2$ and any incoming even $E$-edge to $X_a$ has hidden length $h=0,1$, or $2$. The $h=0$ branch is absent. The $h=1$ branches are still those from the third theorem ($b=1$ if $a\equiv1\pmod{12}$; $b=3$ if $a\equiv13\pmod{24}$; its $b=2$ condition $a\equiv37\pmod{54}$ cannot occur here). The **only additional possible even predecessor** is
+$
+x=\frac{4(2^{a+6}-83)}{243}
+$
+on branch $h=2,b=2$, present exactly when $a\equiv103\pmod{162}$. There are no exceptional/cofactor-three sources and no other $h=2$ generic valuations. This is a complete all-exponent source-law classification in this 3-adic stratum, proved below.
+
 ## New all-time blank-root exclusions
 
 Define the following **disjoint** exponent sets:
@@ -58,17 +66,19 @@ A_5&=\{a\ge3:\ a\equiv5\pmod6,\ a\not\equiv5\pmod8,\ a\not\equiv11\pmod{18}\},\\
 A_3&=\{a\ge3:\ a\equiv3\pmod6,\ a\not\equiv5\pmod8,\ a\not\equiv3\pmod{30}\},\\
 A_0&=\{a\ge4:\ a\equiv0,12,16\pmod{20}\},\\
 A_1&=\{a\ge7:\ a\equiv1\pmod6,\ a\not\equiv13\pmod{18},\
-a\not\equiv5\pmod8,\ a\not\equiv1\pmod{12},\ a\not\equiv37\pmod{54}\}.
+a\not\equiv5\pmod8,\ a\not\equiv1\pmod{12},\ a\not\equiv37\pmod{54}\},\\
+A_2&=\{a\ge31:\ a\equiv13\pmod{18},\ a\not\equiv13\pmod{54},\
+a\not\equiv5\pmod8,\ a\not\equiv1\pmod{12},\ a\not\equiv103\pmod{162}\}.
 \end{aligned}
 $$
 
-**Corollary.** For every $a\in A_0\cup A_1\cup A_3\cup A_5$,
+**Corollary.** For every $a\in A_0\cup A_1\cup A_2\cup A_3\cup A_5$,
 $$
 \neg\mathrm{SheepEven.EvenReach}\ 10\ (3\cdot2^a).
 $$
 These are true blank-root reachability exclusions, not a synthetic-state classification. The initial even state is $10$, while every listed first-level parent $X_a,Z_a$ and target $Y_a$ exceeds $10$.
 
-The already known complete direct-parent grammar of [Agent 22](../agent22-sheep-special-targets/README.md) says that for odd $a\ge3$, the only possible even parents of $Y_a$ are $X_a$ and an additional $b=3$ parent precisely when $a\equiv5\pmod8$. Both sets $A_3,A_5$ exclude the latter congruence, so $X_a$ is the **unique** actual even parent of $Y_a$. Our first and third theorems say $X_a$ has **no** even parent, excluding the three odd-sector sets $A_1,A_3,A_5$. Similarly, for every $a\in A_0$ the unique even parent is $Z_a$, which our companion theorem proves has **no** even parent. Each first-level parent differs from the blank entry $10$, so neither it nor its exceptional target can lie in the blank even-reachability orbit. Crucially, only even sources are claimed: the original `EvenEdge` constructor may admit odd source states outside the authentic even-root subgraph. The already source-certified `even_reach_preserves_even` closes this parity premise for the genuine path.
+The already known complete direct-parent grammar of [Agent 22](../agent22-sheep-special-targets/README.md) says that for odd $a\ge3$, the only possible even parents of $Y_a$ are $X_a$ and an additional $b=3$ parent precisely when $a\equiv5\pmod8$. Both sets $A_3,A_5$ exclude the latter congruence, so $X_a$ is the **unique** actual even parent of $Y_a$. Our first, third, and fourth theorems say $X_a$ has **no** even parent, excluding the four odd-sector sets $A_1,A_2,A_3,A_5$. Similarly, for every $a\in A_0$ the unique even parent is $Z_a$, which our companion theorem proves has **no** even parent. Each first-level parent differs from the blank entry $10$, so neither it nor its exceptional target can lie in the blank even-reachability orbit. Crucially, only even sources are claimed: the original `EvenEdge` constructor may admit odd source states outside the authentic even-root subgraph. The already source-certified `even_reach_preserves_even` closes this parity premise for the genuine path.
 
 The allowed residues are exactly
 
@@ -77,11 +87,12 @@ $$
 A_5\pmod{72}&=\{17,23,35,41,59,71\},\\
 A_3\pmod{120}&=\{9,15,27,39,51,57,75,81,87,99,105,111\},\\
 A_0\pmod{20}&=\{0,12,16\},\\
-A_1\pmod{216}&=\{7,19,43,55,79,115,127,151,163,187\}.
+A_1\pmod{216}&=\{7,19,43,55,79,115,127,151,163,187\},\\
+A_2\pmod{648}&=\{31,139,211,247,319,355,463,535,571,643\}.
 \end{aligned}
 $$
 
-Thus the **new** four-sector union gives **$6/72+12/120+3/20+10/216=41/108$** of exceptional target exponents. These are strictly disjoint from Agent 22's previously source-compiled no-direct-parent family $a\equiv2\pmod4$, of density $1/4$. The union of **these stated certificates** excludes **$1/4+41/108=17/27\approx62.963\%$** of exceptional-exponent indices; this is not a probabilistic statement about Sheep and is not necessarily disjoint from every other result in the repository.
+Thus the **new** five-sector union gives **$6/72+12/120+3/20+10/216+10/648=32/81$** of exceptional target exponents. These are strictly disjoint from Agent 22's previously source-compiled no-direct-parent family $a\equiv2\pmod4$, of density $1/4$. The union of **these stated certificates** excludes **$1/4+32/81=209/324\approx64.506\%$** of exceptional-exponent indices; this is not a probabilistic statement about Sheep and is not necessarily disjoint from every other result in the repository.
 
 ## Proof of the complete second-parent theorem
 
@@ -207,8 +218,51 @@ The displayed discrete logarithms in the first three rows follow from orders of 
 
 For a blank-root exclusion, Agent22's direct-parent grammar requires excluding the other $b=3$ parent of $Y_a$, i.e. $a\not\equiv5\pmod8$. That condition also rules out the $h=1,b=3$ branch because $a\equiv13\pmod{24}$ would imply $a\equiv5\pmod8$. Excluding the other two rows yields precisely the new set $A_1$, with ten residue classes modulo $216$. Since $X_a>10$ is then predecessor-free among even sources, neither it nor $Y_a$ can be reached from blank start $10$.
 
+## Proof of the exact two-hidden-step stratum
+
+Assume $a\ge31$, $a\equiv13\pmod{18}$, and $a\not\equiv13\pmod{54}$. The identity $X_a-1=(2^{a+3}-7)/3$ reduces $v_3(X_a-1)$ to the 3-adic valuation of $2^{a+3}-7$. The order of $2$ modulo $81$ is $54$, and $2^e\equiv7\pmod{81}$ exactly when $e\equiv16\pmod{54}$. Consequently $v_3(X_a-1)=2$ in the two stated exponent classes.
+
+At $h=0$ the first theorem's source congruences cannot hold when $a\equiv1\pmod6$. For $h=1$, the exact generic source equation remains equation (5); its complete low-$b$ grammar from the third theorem applies. Its former $b=6$ rejection can also be seen unconditionally modulo $43$: equation (5) at $b=6$ would require $2^{a+5}\equiv109\equiv23\pmod{43}$, but $23$ is not a power of two modulo $43$ (order $14$). Thus the only $h=1$ branches are $b=1$ iff $a\equiv1\pmod{12}$ and $b=3$ iff $a\equiv13\pmod{24}$; $b=2$ requires $a\equiv37\pmod{54}$ and is absent in this stratum.
+
+At hidden length $h=2$, the intermediate successor is
+$
+F(x)=1+\frac{4(X_a-1)}9=\frac{2^{a+5}-1}{27}.
+$
+The exceptional source $x=3\cdot2^b$ is impossible because the strictly increasing $f(b)=3\cdot2^b+b+3$ satisfies $f(a-2)<F(x)<f(a-1)$. Explicitly,
+$
+27(F(x)-f(a-2))=47\cdot2^{a-2}-27a-28>0,\qquad
+27(f(a-1)-F(x))=17\cdot2^{a-1}+27a+55>0
+$
+for all $a\ge31$.
+
+A generic source $2^b v$ must satisfy
+$
+27(2^{b+1}+1)v+54b-25=2^{a+6}.
+\tag{7}
+$
+For every $b\ge9$, $K_b=54b-25$ is odd with $1<K_b<2^b$ (at $b=9$, $461<512$, and then induction). The signed-power residue gap modulo $2^{b+1}+1$ rules out all such $b$. The remaining eight source valuations are exhausted by the exact modular condition
+$
+2^{a+6}\equiv54b-25\pmod{27(2^{b+1}+1)}.
+\tag{8}
+$
+
+| $b$ | Modulus | Exact decision |
+|---|---:|---|
+| 1 | 135 | Impossible modulo $5$: $54b-25\equiv4$, but $a+6$ is odd so $2^{a+6}\equiv2$ or $3$ |
+| 2 | 243 | $2^{a+6}\equiv83$ iff $a+6\equiv109\pmod{162}$, i.e. $a\equiv103\pmod{162}$ |
+| 3 | 459 | Modulo $17$, $54b-25\equiv1$ requires $a+6\equiv0\pmod8$, impossible for odd $a+6$ |
+| 4 | 891 | Modulo $11$, $54b-25\equiv4$ requires $a+6\equiv2\pmod{10}$, impossible for odd $a+6$ |
+| 5 | 1755 | Impossible modulo $5$: $54b-25\equiv0$ |
+| 6 | 3483 | Modulo $43$, $54b-25\equiv41$ requires $a+6\equiv8\pmod{14}$, impossible for odd $a+6$ |
+| 7 | 6939 | Modulo $257$, $54b-25\equiv96$ is not a binary-power residue $\pm2^r$, $0\le r\le7$ |
+| 8 | 13851 | Modulo $81$ requires $a+6\equiv1\pmod{54}$, while modulo $19$ requires $a+6\equiv3\pmod{18}$: contradiction |
+
+The residue $83$ has unique discrete logarithm $109$ modulo $162$ for the generator $2$ modulo $243$, whose multiplicative order is $162$. The resulting source cofactor $(2^{a+6}-83)/243$ is an odd integer at least five in the surviving class; it reconstructs the required $F(x)$ and true hidden length $h=2$, so the $b=2$ condition is sufficient.
+
+For a blank-root exclusion, require that $Y_a$ have only its original $b=2$ direct parent, so $a\not\equiv5\pmod8$; this also eliminates the $h=1,b=3$ source since $a\equiv13\pmod{24}$ would give $a\equiv5\pmod8$. Exclude the $h=1,b=1$ and $h=2,b=2$ congruences as well, obtaining the stated $A_2$. Exactly ten residues modulo $648$ remain, namely $31,139,211,247,319,355,463,535,571,643$. Their intermediate $X_a$ is predecessor-free among even states and differs from initial $10$, so both $X_a$ and $3\cdot2^a$ are genuinely blank-unreachable. This fourth stratum contributes an additional disjoint density $10/648=5/324$, giving the aggregate $1/4+32/81=209/324$ for the explicitly stated certificate union.
+
 ## Reproduction and priority
 
-Run [verify_second_layer.js](verify_second_layer.js) in Node.js. It uses exact BigInt E-inverse arithmetic to check all three complete second-parent grammars through exponent 950, checks the direct-parent conditions, and asserts the exhaustive 360-residue density. This finite check is supplementary; Steps 1–4 and the earlier full direct-parent grammar prove the statement for unbounded exponents.
+Run [verify_second_layer.js](verify_second_layer.js) in Node.js. It uses exact BigInt E-inverse arithmetic to check all four complete inverse grammars through exponent 950, checks the direct-parent conditions, and asserts the exhaustive 360-residue density. This finite check is supplementary; Steps 1–4 and the earlier full direct-parent grammar prove the statement for unbounded exponents.
 
-**Next mathematical task:** classify the other direct parent $b=3$ when $a\equiv5\pmod8$, the still-open **$h\ge2$** sector $a\equiv13\pmod{18}$, and the surviving even cases $a\equiv4,8\pmod{20}$, to eliminate further genuine exceptional states or uncover a stronger blank-root structural obstruction. These exceptional-target exclusions are distinct from actual halting powers $2^j$; a complete Sheep/BB(6) decision requires ruling out every reachable halting power, not merely the odd-cofactor-three states.
+**Next mathematical task:** classify the other direct parent $b=3$ when $a\equiv5\pmod8$, the still-open **$h\ge3$** sector $a\equiv13\pmod{54}$, and the surviving even cases $a\equiv4,8\pmod{20}$, to eliminate further genuine exceptional states or uncover a stronger blank-root structural obstruction. These exceptional-target exclusions are distinct from actual halting powers $2^j$; a complete Sheep/BB(6) decision requires ruling out every reachable halting power, not merely the odd-cofactor-three states.
