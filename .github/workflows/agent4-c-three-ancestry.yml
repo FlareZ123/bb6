@@ -9,17 +9,25 @@ jobs:
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
+      - name: Cache Lean 4.36.0-rc2
+        uses: actions/cache@v4
+        with:
+          path: /tmp/lean
+          key: lean-4.36.0-rc2-linux
       - name: Install Lean 4.36.0-rc2
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
-          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
-          for attempt in 1 2 3 4; do
-            if sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2; then
-              break
-            fi
-            sleep 12
-          done
-          test -x "$HOME/.elan/bin/lean"
-          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          if [ ! -x /tmp/lean/lean-4.36.0-rc2-linux/bin/lean ]; then
+            sudo apt-get update
+            sudo apt-get install -y zstd
+            curl -fL -H "Authorization: Bearer $GITHUB_TOKEN" -H "Accept: application/octet-stream" https://api.github.com/repos/leanprover/lean4/releases/assets/682509531 -o /tmp/lean-4.36.0-rc2-linux.tar.zst
+            mkdir -p /tmp/lean
+            tar --zstd -xf /tmp/lean-4.36.0-rc2-linux.tar.zst -C /tmp/lean
+          fi
+          test -x /tmp/lean/lean-4.36.0-rc2-linux/bin/lean
+          echo "/tmp/lean/lean-4.36.0-rc2-linux/bin" >> "$GITHUB_PATH"
+          /tmp/lean/lean-4.36.0-rc2-linux/bin/lean --version
       - name: Compile unmodified original Machine C and new exact high-root exclusion
         run: |
           set -euo pipefail
