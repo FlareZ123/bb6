@@ -3,6 +3,7 @@ import CountedSweep
 import ChampionRootBridge
 import S1Encoder
 import CountedQ4Prefix
+import Q4Suffix
 import M0EvenEightQ4Bridge
 import Lean.Elab.Tactic.Omega
 
@@ -108,22 +109,14 @@ theorem m0EvenEight_q4_prefix_run
     have hc := s1Config_right_cell L (8*q) 0 a 0 b h 0
     simpa [T,s1PhysicalRight_source,sideBit] using hc
   have hSweep :
-      run tm2 (3*N) (s1Config L (8*q) 0 a 0 b h) =
+      run tm2 (3*N) ⟨3,h,T⟩ =
         some ⟨3,hN,T1⟩ := by
     simpa [N,T,T1,hN] using counted_left_sweep N T h hOn hright
   have hmatch := m0EvenEightBridge_input_match
     L q a b h hL hqodd hbound ha
-  have hBridgeHeads : ∀ k < 63,
-      m0EvenEightInside
-        ((fRun tm2 k m0EvenEightBridgeStart).getD
-          m0EvenEightBridgeStart).head = true := by
-    intro k hk
-    have hall := List.all_eq_true.mp m0EvenEightBridge_heads k
-      (by simp [List.mem_range,hk])
-    simpa using hall
   have hBridge := bridgeAt T1 hN m0EvenEightInside
     m0EvenEightBridgeStart m0EvenEightBridgeEnd 63 rfl
-    m0EvenEightBridge_exact hBridgeHeads hmatch
+    m0EvenEightBridge_exact m0EvenEightBridge_heads hmatch
   have hBridge' :
       run tm2 63 ⟨3,hN,T1⟩ =
         some ⟨4,hN+3,T2⟩ := by
