@@ -229,5 +229,10 @@ identify the M32 mask's exact marginal effect on the prior sieve.
 This is an exploratory executable scan, not a Lean theorem. The scan is
 reproducible and its gate definitions were checked against the source, but
 the all-lifts claims above remain conjectural until the fixed-step modular
-proof is added and kernel-checked. It does not change the global BB(6)
+proof is added and kernel-checked. The existing eight-cell theorem did
+compile in workflow run 45227845153, but that workflow step only invokes
+`lean -o`; it does not enforce a `sorryAx`/axiom-profile check. The source
+contains `#print axioms`, but its output was not inspected in this
+continuation. Treat that run as successful elaboration of the theorem and
+its closure, not as an axiom audit. This does not change the global BB(6)
 status.
