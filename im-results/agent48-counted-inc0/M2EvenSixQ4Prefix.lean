@@ -644,6 +644,57 @@ theorem m2EvenSix_q4_prefix_data (a b : Nat) (h : Int)
   refine ⟨m2EvenSixQ4CutTape a b h, ?_, hleftT, hshape, hrightT⟩
   simpa [T,s1Config,s0Config] using hprefix'
 
+
+/-- The q4 prefix data has a concrete tape witness.  This packages the
+existential frame tape as the explicit cut tape, so downstream source
+compositions can use an exact run rather than attempting a non-definitional
+rfl across an opaque existential witness. -/
+theorem m2EvenSix_q4_prefix_data_exact (a b : Nat) (h : Int)
+    (ha : 0 < a) :
+    run tm2 (44+12*a) (s1Config 3 6 2 a 0 b h) =
+        some ⟨4,h,m2EvenSixQ4CutTape a b h⟩ ∧
+      (∀ i : Nat,
+        m2EvenSixQ4CutTape a b h (h-(i:Int)) =
+          sideBit (m2EvenSixQ4LeftFacing a) i) ∧
+      BB6Coverage.Agent8Q4Suffix.q4RightShape
+        (m2EvenSixQ4CutTape a b h) h b ∧
+      (∀ i : Nat,
+        m2EvenSixQ4CutTape a b h (h+1+(i:Int)) =
+          sideBit (q4RightFacing b) i) := by
+  obtain ⟨Tq,hprefix,hleft,hshape,hright⟩ :=
+    m2EvenSix_q4_prefix_data a b h ha
+  have hhead := m2EvenSixQ4CutTape_head a b h ha
+  have hleftCut := m2EvenSixQ4CutTape_leftFacing a b h ha hhead
+  have hrightCut := m2EvenSixQ4CutTape_rightFacing a b h ha
+  have hTq : Tq = m2EvenSixQ4CutTape a b h := by
+    funext x
+    by_cases hx : x ≤ h
+    · let i : Nat := Int.toNat (h-x)
+      have hcoord : h-(i:Int) = x := by
+        dsimp [i]
+        rw [Int.toNat_of_nonneg (by omega)]
+        omega
+      have hleft' := hleft i
+      have hleftCut' := hleftCut i
+      rw [hcoord] at hleft' hleftCut'
+      exact hleft'.trans hleftCut'.symm
+    · let i : Nat := Int.toNat (x-h-1)
+      have hcoord : h+1+(i:Int) = x := by
+        dsimp [i]
+        rw [Int.toNat_of_nonneg (by omega)]
+        omega
+      have hright' := hright i
+      have hrightCut' := hrightCut i
+      rw [hcoord] at hright' hrightCut'
+      exact hright'.trans hrightCut'.symm
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · simpa [hTq] using hprefix
+  · intro i
+    simpa [hTq] using hleft i
+  · simpa [hTq] using hshape
+  · intro i
+    simpa [hTq] using hright i
+
 /-- The E scan after the 38-step bridge crosses exactly the remaining
 3*a marked cells to the right of its starting point. -/
 theorem m2EvenSixQ4CutTape_linearRightOnes
