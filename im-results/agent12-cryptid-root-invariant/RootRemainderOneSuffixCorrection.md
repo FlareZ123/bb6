@@ -23,24 +23,23 @@ D_n(1;[5]) longrightarrow^+ D_0(8n+11;[0,0,2]).
 The original endpoint in `RootRemainderOneTail.md` is supported. The
 temporary claim of an endpoint ending in `[0,0,0,2]` has been retracted.
 
-## Remaining token-boundary discrepancy
+## Exact token boundary after the [0,0,2] reset
 
-There is a separate, unresolved question about the next DL-right-one branch.
-Starting from `D_n(1;[0,0,2])`, the stack-level sequence appears to be:
+The dossier's `0^3 1 0^(4n+6)1` token input is correct. My temporary
+`0^2` concern omitted the zero written by EL-positive(1):
 
-1. fixed prefix and EL-zero sweep;
-2. EL-positive on 1;
-3. DL-zero consumes the first zero, leaving `[0,2]`;
-4. one EL-zero consumes the remaining zero;
-5. EL-positive on 2;
-6. DL-right-one invokes `tok_DR_2_0_closed`.
+1. After the fixed prefix and EL-zero sweep, the EL right stack is
+   `[1,0,0,2]`.
+2. EL-positive(1) writes a zero, so the DL right stack is
+   `[0,0,0,2]`.
+3. DL-zero consumes the first zero, leaving `[0,0,2]`.
+4. Two EL-zero transitions consume the remaining two zeros.
+5. EL-positive(2) enters DL with left stack
+   `[0,0,0,1] ++ replicate (4*n+6) 0 ++ [1]` and right stack `[1]`.
 
-This accounting appears to pass the left stack
-`[0,0,1] ++ replicate (4*n+6) 0 ++ [1]` to the token conversion, i.e.
-a `0^2 1 ...` prefix. The dossier currently records `0^3 1 ...`.
-A private proof draft, `root_d1_suffix_two_to_tok_DR`, has now been added
-to the same append file with that exact `tok_DR([2,0],[],0^2 1 ...)`
-endpoint. It remains unverified until the pinned source module compiles.
+The private proof draft `root_d1_suffix_two_to_tok_DR` now includes both
+EL-zero transitions. The explicit tape definition `root_d1_token_cfg`
+encodes the three-zero prefix. The earlier 0^2 warning is retracted.
 
 ## Lean proof draft
 
