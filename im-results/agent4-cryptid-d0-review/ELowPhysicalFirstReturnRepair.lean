@@ -207,7 +207,7 @@ theorem full_E_pairs_first_physical (k q : Nat) :
     ∀ t, 0<t → t<n → ¬ IsPhysicalReturn (run t source) := by
   dsimp
   constructor
-  · exact full_E_pairs k q []
+  · simpa using (full_E_pairs k q [])
   · intro t hpos ht hphys
     let preCost : Nat := 12*k*k+41*k+33
     by_cases hpref : t<preCost
