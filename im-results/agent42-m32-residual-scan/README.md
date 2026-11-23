@@ -97,6 +97,14 @@ evenAffineGate. The eight existing survivor cells were all 992 or 1024
 valid lifts with no normalization step; the other sixteen were all 992 or
 1024 valid lifts with the displayed fixed path and terminal exclusion.
 
+The same 24-element set has a compact affine description modulo 32:
+- STOP: j≡0 (mod4), m≡3j+13 (mod32);
+- R→O: j≡0 (mod4), m≡j+25 (mod32);
+- R→R→A: j≡1 (mod4), m≡31-3j (mod32).
+
+Each line gives exactly eight pairs. This representation is convenient for
+splitting the finite certificate and deriving the corresponding k residues.
+
 The same residue calculation gives the following representative terminal
 states modulo the coordinates needed by the exclusion predicate. The
 (x mod 32, k mod 32) column is independent of the chosen lift because
