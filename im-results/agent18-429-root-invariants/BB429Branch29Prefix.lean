@@ -88,10 +88,20 @@ private theorem certified_prefix_excludes
   have hsum : (q+3*k+4)%(2^E)=0 := by
     rw [heq, hsplit, Nat.pow_add]
     simp [Nat.mul_assoc, Nat.mul_comm, Nat.mul_left_comm]
+  have hkr : r%(2^E)=r := Nat.mod_eq_of_lt hr
+  have hk3 : (3*k+4)%(2^E)=(3*r+4)%(2^E) := by
+    simp [Nat.add_mod, Nat.mul_mod, hk, hkr]
   have hmodrew :
       (q+3*k+4)%(2^E) =
       (q%(2^E)+(3*r+4)%(2^E))%(2^E) := by
-    simp [Nat.add_mod, Nat.mul_mod, hk]
+    calc
+      (q+3*k+4)%(2^E) = (q+(3*k+4))%(2^E) := by
+        congr 1
+        omega
+      _ = (q%(2^E)+(3*k+4)%(2^E))%(2^E) := by
+        rw [Nat.add_mod]
+      _ = (q%(2^E)+(3*r+4)%(2^E))%(2^E) := by
+        rw [hk3]
   have hz : (q%(2^E)+(3*r+4)%(2^E))%(2^E)=0 := by
     rw [←hmodrew]
     exact hsum
