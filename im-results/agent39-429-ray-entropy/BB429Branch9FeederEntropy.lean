@@ -229,13 +229,13 @@ private theorem branch9_divisibility (t q r v K : Nat)
       branch9A t q r v + 3*v + branch9Correction t q K =
         (12*2^N-12*2^J)+(C+branch9Correction t q K) := by
     rw [hident]
-    omega
+    exact Nat.add_assoc _ _ _
   refine ⟨P-Q+(C+1), ?_⟩
   calc
     branch9A t q r v + 3*v + branch9Correction t q K =
         (12*2^N-12*2^J)+(C+branch9Correction t q K) := hsum
     _ = 2^K*(P-Q)+(C+1)*2^K := by rw [hdiff,hCplus]
-    _ = 2^K*(P-Q)+2^K*(C+1) := by rw [Nat.mul_comm]
+    _ = 2^K*(P-Q)+2^K*(C+1) := by rw [Nat.mul_comm (C+1) (2^K)]
     _ = 2^K*(P-Q+(C+1)) := by rw [Nat.mul_add]
 
 /-- For a fixed t and a fixed residue r satisfying t+14=r (mod 4),
