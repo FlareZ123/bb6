@@ -40,7 +40,7 @@ jobs:
           closings = []
           while lines and lines[-1].strip().startswith("end"):
               closings.append(lines.pop())
-          lines.extend([""] + append.read_text().splitlines() + [""])
+          lines.extend(["", "open _root_.BusyBeaver.BB6.Accelerations.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA", ""] + append.read_text().splitlines() + [""])
           lines.extend(reversed(closings))
           source.write_text("\n".join(lines) + "\n")
           PY
