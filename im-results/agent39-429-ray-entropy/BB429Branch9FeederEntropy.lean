@@ -107,7 +107,9 @@ private theorem branch9_affine_identity (t q r v K : Nat)
     have heq : 2^(J+1)=2^J*2 := by simp [Nat.pow_succ]
     omega
   have hJbig : 48*2^K≤12*2^J := by
-    have heq : 2^(K+2)=2^K*4 := by simp [Nat.pow_succ]
+    have heq : 2^(K+2)=2^K*4 := by
+      rw [show K+2=(K+1)+1 by omega, Nat.pow_succ, Nat.pow_succ]
+      simp [Nat.mul_assoc]
     omega
   have hidx : k≤2*2^J+v := by
     dsimp [k,branch9Index,J]
@@ -148,7 +150,6 @@ private theorem branch9_high_counter (t q r v K : Nat)
     have h32 : 2^5=32 := by decide
     omega
   have hlarge : 48*2^K≤branch9A t q r v+3+3*v := by
-    rw [hident]
     omega
   omega
 
@@ -166,44 +167,73 @@ private theorem branch9_divisibility (t q r v K : Nat)
   have hsplitJ : J+2=K+(J+2-K) := by omega
   have hpowN : 2^(N+2)=2^N*4 := by
     rw [show N+2=(N+1)+1 by omega, Nat.pow_succ, Nat.pow_succ]
-    omega
+    simp [Nat.mul_assoc]
   have hpowJ : 2^(J+2)=2^J*4 := by
     rw [show J+2=(J+1)+1 by omega, Nat.pow_succ, Nat.pow_succ]
-    omega
+    simp [Nat.mul_assoc]
   have h12N : 12*2^N=2^K*(3*2^(N+2-K)) := by
     calc
-      12*2^N = 3*2^(N+2) := by rw [hpowN]; ring
+      12*2^N = 3*(2^N*4) := by
+        have h12 : 12=3*4 := by decide
+        rw [h12]
+        calc
+          (3*4)*2^N = 3*(4*2^N) := by rw [Nat.mul_assoc]
+          _ = 3*(2^N*4) := by rw [Nat.mul_comm]
+      _ = 3*2^(N+2) := by rw [←hpowN]
       _ = 3*(2^K*2^(N+2-K)) := by rw [hsplitN,Nat.pow_add]
-      _ = 2^K*(3*2^(N+2-K)) := by ring
+      _ = 2^K*(3*2^(N+2-K)) := by
+        calc
+          3*(2^K*2^(N+2-K)) = (3*2^K)*2^(N+2-K) := by rw [←Nat.mul_assoc]
+          _ = (2^K*3)*2^(N+2-K) := by rw [Nat.mul_comm]
+          _ = 2^K*(3*2^(N+2-K)) := by rw [Nat.mul_assoc]
   have h12J : 12*2^J=2^K*(3*2^(J+2-K)) := by
     calc
-      12*2^J = 3*2^(J+2) := by rw [hpowJ]; ring
+      12*2^J = 3*(2^J*4) := by
+        have h12 : 12=3*4 := by decide
+        rw [h12]
+        calc
+          (3*4)*2^J = 3*(4*2^J) := by rw [Nat.mul_assoc]
+          _ = 3*(2^J*4) := by rw [Nat.mul_comm]
+      _ = 3*2^(J+2) := by rw [←hpowJ]
       _ = 3*(2^K*2^(J+2-K)) := by rw [hsplitJ,Nat.pow_add]
-      _ = 2^K*(3*2^(J+2-K)) := by ring
+      _ = 2^K*(3*2^(J+2-K)) := by
+        calc
+          3*(2^K*2^(J+2-K)) = (3*2^K)*2^(J+2-K) := by rw [←Nat.mul_assoc]
+          _ = (2^K*3)*2^(J+2-K) := by rw [Nat.mul_comm]
+          _ = 2^K*(3*2^(J+2-K)) := by rw [Nat.mul_assoc]
   have horder : 3*2^(J+2-K)≤3*2^(N+2-K) := by
     have hp := pow2_mono (J+2-K) (N+2-K) (by omega)
     omega
-  have hdiff : 12*2^N-12*2^J =
-      2^K*(3*2^(N+2-K)-3*2^(J+2-K)) := by
-    rw [h12N,h12J]
+  let P := 3*2^(N+2-K)
+  let Q := 3*2^(J+2-K)
+  have horder : Q≤P := by
+    dsimp [P,Q]
+    have hp := pow2_mono (J+2-K) (N+2-K) (by omega)
     omega
+  have hmul_sub : 2^K*P-2^K*Q=2^K*(P-Q) := by
+    have hp : P=Q+(P-Q) := by omega
+    rw [hp,Nat.mul_add]
+    omega
+  have hdiff : 12*2^N-12*2^J = 2^K*(P-Q) := by
+    rw [h12N,h12J]
+    exact hmul_sub
   have hpowK : 1≤2^K := by have hp:=pow2_pos K; omega
   have hCplus : C+branch9Correction t q K=(C+1)*2^K := by
-    dsimp [branch9Correction,C]
-    have hcarry : branch9Carry t q = 6*2^t+3*q-8 := rfl
+    dsimp [branch9Correction,branch9Carry]
     have hCnonneg : 8≤6*2^t+3*q := by
       have hpowt := pow2_mono 5 t ht
       have h32 : 2^5=32 := by decide
       omega
+    have hpowK : 1≤2^K := by have hp:=pow2_pos K; omega
     omega
   have hsum :
       branch9A t q r v + 3*v + branch9Correction t q K =
         (12*2^N-12*2^J)+(C+branch9Correction t q K) := by
     rw [hident]
     omega
-  refine ⟨3*2^(N+2-K)-3*2^(J+2-K)+(C+1), ?_⟩
+  refine ⟨P-Q+(C+1), ?_⟩
   rw [hsum,hdiff,hCplus]
-  ring
+  omega
 
 /-- For a fixed t and a fixed residue r satisfying t+14=r (mod 4),
 the genuine branch-9 exceptional S parents have zero-density outer
@@ -221,15 +251,6 @@ theorem branch9_side_feeder_entropy
   have hqv : ∀v, v∈l → q≤v := by
     intro v hv
     have hkv := (hl v hv).1
-    omega
-  have hcarry : 8≤6*2^t+3*q := by
-    have hpowt := pow2_mono 5 t ht
-    have h32 : 2^5=32 := by decide
-    omega
-  have he : branch9Carry t q + branch9Correction t q K =
-      (branch9Carry t q+1)*2^K := by
-    dsimp [branch9Correction]
-    have hpowK := pow2_pos K
     omega
   have hline : ∀v, v∈l →
       branch9B t q r v + branch9Offset t = 2*branch9A t q r v := by
