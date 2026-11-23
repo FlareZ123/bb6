@@ -1,3 +1,13 @@
+## Source-verified and stronger local results — 23 November ~04:45 UTC
+
+**Pinned original Cryptids source bridge now accepted:** [CI 45111763374](https://github.com/FlareZ123/bb6/actions/runs/45111763374) succeeded in both its standalone and pinned original Lean/Mathlib/source jobs. It verifies `BB429Branch29Source.source_29_q_eight_mod64` and `source_branch7_29_burst_mod8192` (all transitive axioms `propext, Classical.choice, Quot.sound`, no `sorryAx`). Thus this branch's genuine original-source pre-reset final-burst length `n>=18` satisfying `4x+3n+15=3*2^(n+2)` and `x%32=29` must obey `n%8192 in {8063,4991,2047,1919,4095,6143,2943,8191}`. This is still only a necessary constraint, **not a halt/nonhalt proof**.
+
+**Latest local proof accepted:** [CI 45113335816](https://github.com/FlareZ123/bb6/actions/runs/45113335816) verifies that after excluding q=10 and122(mod128) using Agent33's rigorous affine inverse `BB429Kernel.cert_sound`, the necessary local-root q set sharpens to **{2,15,47,58,63,74,79,82,111,127} modulo128** — ten out of 128 parameter classes. The same CI accepts `BB429Branch29Arithmetic.local_branch29_burst_mod16384` for the previous twelve q classes, n%16384 in **{16255,4991,10239,14335,2943,8191,13183,2047,1919,6143,11135,16383}**. Both have the standard axiom profile, no oracle. Source-corollary modulo16384 compilation against unchanged upstream is running separately in [CI 45113326621](https://github.com/FlareZ123/bb6/actions/runs/45113326621); do not count as original-source verified until success.
+
+**More complete root geometry in progress:** `BB429Branch29Reflect1024.lean` introduces a single 58-residue symbolic affine inverse-tree certificate at depth13 using existing sound Agent33 proof engine. It proposes to retain only 38 out of 1024 q residue classes uniformly, not by sampling 1024 concrete machine inputs. `BB429Branch29Small.lean` proposes to exclude the entire q<21 finite prefix by certified rank cutoff after 553 root macro steps ending rank2676 > highest target rank2673. Both modules are **unverified pending local CI**, so neither must be labeled accepted yet.
+
+---
+
 # #429: original blank-root odd-reset class 29 — inverse and finite-rank certificates
 
 **Current evidence:** Local original-table accelerator theorems are accepted by Lean 4.36.0-rc2 with no `sorryAx`; updated source-connected theorems against pinned upstream Cryptids are pending a fresh complete source CI. These are genuine necessary restrictions, **not** a #429 halt/nonhalt decision or exact BB(6).
