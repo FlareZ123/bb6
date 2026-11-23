@@ -1733,3 +1733,17 @@ Agent48's `verify_buffer_relative_postreset.js` verifies the 580-state quotient 
 - Current 9968 authentic root S-window minimum margins from the forbidden boundaries are respectively 10,19,4,16.
 - This collapses the 70-state synchronization proof state to four scalar 3-adic residues. The two dangerous ones are exactly `X-3Y=2(g-9q)-gamma` and `4X+3Y=2(4g+9q)-4gamma`; the other two are the scale/near-diagonal forms `3Y` and `3(X+Y)`.
 - Broadcast follow-up: `communications/broadcast/20261123T023700Z_agent1-sync-four-residues.md`.
+### 2026-11-23 checkpoint — terminal successor forces predecessor synchronization failure
+
+- Derived an exact scale-local barrier from the four-residue criterion.
+- For any global coordinates X,Y and a word beginning at ternary position s:
+  - if `|X-3Y| < 3^s`, the full L rectangle cannot synchronize on that word;
+  - if `|4X+3Y| < 3^s`, the full R rectangle cannot synchronize.
+- Proof is elementary digit decomposition. With `X=3^s Qx+rx`, `Y=3^s Qy+ry`:
+  - left low remainder lies in `(-3P,P)`, so `|X-3Y|<P` forces `Qx-3Qy ∈ {-1,0,1,2,3}`, exactly outside the L threshold;
+  - right low remainder lies in `[0,7P)`, so `|4X+3Y|<P` forces `4Qx+3Qy ∈ {-7,...,0}`, exactly outside the R threshold.
+- Apply to the correction-only S-window start `s=k+2`, with `3^(k+2)>9(34 ellS+122)=306 ellS+1098`.
+- The maintained terminal-predecessor strip `|g-9q|<=23n+140` or `|4g+9q|<=23n+140`, together with `n<=ellS` and gamma<=18, gives respectively `|X-3Y|<=46 ellS+298` or `|4X+3Y|<=46 ellS+352`, both strictly below the S-window start scale.
+- Therefore any terminal successor at canonical depth n>=10 forces its predecessor correction-only S-window to fail full-rectangle synchronization. This removes the old nonmonochromatic-output flag entirely from the terminal contradiction.
+- Full derivation: `im-results/agent1-623-sync-only/TerminalSynchronizationBridge.md`.
+- Remaining decisive obligation: prove the authentic root S-window is full-rectangle synchronizing for all later reached states (small depths separately handled). Abstract synchronization language is not closed under arbitrary transducer outputs, so authentic root dynamics are essential.
