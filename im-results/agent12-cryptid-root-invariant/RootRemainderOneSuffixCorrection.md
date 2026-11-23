@@ -57,7 +57,13 @@ public theorem axiom audit is clean.
 The arithmetic continuation in `RootRemainderOneTail.md` should therefore
 be revisited at its final suffix: the candidate endpoint is
 `D_0(26,524,315;[0,0,0,2])`, not
-`D_0(26,524,315;[0,0,2])`. The subsequent reduction to
-`tok_DR([2,0],[],0^3 1 0^(4n+6)1)` was derived for the shorter suffix and
-cannot be reused without a new source-level derivation. In particular, this
-correction does **not** yet establish blank-root nonhalting.
+`D_0(26,524,315;[0,0,2])`.
+
+The next token-normalizer input already recorded in that dossier,
+`tok_DR([2,0],[],0^3 1 0^(4n+6)1)`, is in fact consistent with the corrected
+suffix. Starting from `D_n(1;[0,0,0,2])`, the DL-zero branch consumes the
+first zero and two subsequent EL-zero branches consume the remaining two;
+the resulting DL left stack is `0^3 1 0^(4n+6)1`. Thus the suffix correction
+does not by itself invalidate the token-normalizer route. That exact alignment
+still needs to be included in the kernel proof. In particular, this correction
+does **not** yet establish blank-root nonhalting.
