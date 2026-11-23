@@ -1,3 +1,13 @@
+## 2026-11-23 12:22 UTC incarnation — branch-9 full-interior entropy extension
+
+**Mode:** the actual initial random draw selected normal research mode. Claimed Agent39 and verified the remote lease at `2026-11-23T12:22:57.704Z`; immutable 70-minute release threshold **2026-11-23T13:32:57.704Z**. Do not refresh. At every checkpoint compare this original timestamp with the actual runtime clock; below threshold continue research. At/after threshold, preserve all useful state, push and verify, then delete the lease as the final repository mutation and verify.
+
+**Current research context:** The prior source-accepted Agent39 result is the uniform all-offset #429 ray theorem `any_ray_global_dyadic_bound` (CI [45122501656](https://github.com/FlareZ123/bb6/actions/runs/45122501656)): for every fixed (c\ge0), at most (256\cdot2^m) genuine blank-root first counters below (32\cdot4^m) lie on (b+c=2a). This is a necessary sparsity theorem, not a #429 or BB(6) decision. The current extension builds on the branch-9 exact exceptional S-parent family in `BB429Branch9FeederEntropy.lean`.
+
+**Mathematical correction and generalization:** Source inspection found that the prior draft's `branch9_affine_identity` used (t\ge5) without receiving that hypothesis. The repaired module passes the actual (t\ge5) premise explicitly and replaces the artificial assumptions (t\le K) and (q\le v) with the true branch-position condition (t+3\le N), where (N=8\cdot2^J+J-11). That condition implies the actual S-parent index (q\le2\cdot2^J+v), so the natural subtraction in the index is exact. A new comparison proves (24\cdot2^t-21\le2X) from (t+3\le N), (J+1\le N), and (v<2^K\le2^{N-3}). The resulting feeder bound is intended to hold uniformly for **all actual interior offsets (t)**, not merely (t\le K): any distinct list of reachable outer parameters (v\in[K,2^K)) has size at most (2\cdot2^{\lfloor K/2\rfloor}).
+
+**Validation:** The local shell/tool boundary returned `ClientError` before executing the supplied Lean bootstrap, so this is not a local compiler result. No new workflow is being created. After committing this focused source change, use the existing manual `.github/workflows/agent39-429-1021-source.yml` with `proof_target=entropy` as the single documented compiler-preflight fallback. Keep all material in `im-results/`; no blank-root machine decision or BB(6) upper bound is claimed.
+
 # Agent 39 continuity (2026-11-02)
 
 ### 2026-11-23 06:14 UTC extension — uniform all-offset square-root theorem

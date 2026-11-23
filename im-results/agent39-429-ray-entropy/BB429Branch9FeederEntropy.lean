@@ -89,10 +89,21 @@ private theorem branch9_exponent_bounds (r v K : Nat)
   have hpowJN := pow2_mono (J+1) N hNJ
   exact ⟨hJK,hNJ,hpowJK,hpowJN⟩
 
+/-- The actual branch-9 index is nonnegative exactly when the
+interior position satisfies t+3≤N. -/
+private theorem branch9_index_nonnegative (t q r v : Nat)
+    (htr : t+14=r+4*q)
+    (hTN : t+3≤branch9N r v) :
+    q≤2*2^(branch9J r v)+v := by
+  have hh := hTN
+  dsimp [branch9N,branch9J] at hh
+  dsimp [branch9J]
+  omega
+
 /-- Exact affine identity along the branch-9 S-parent family. -/
 private theorem branch9_affine_identity (t q r v K : Nat)
-    (hr : r<4) (hK : 1≤K) (hv : K≤v)
-    (hqv : q≤v) (hvlt : v<2^K) :
+    (ht : 5≤t) (hr : r<4) (hK : 1≤K) (hv : K≤v)
+    (hqidx : q≤2*2^(branch9J r v)+v) (hvlt : v<2^K) :
     branch9A t q r v + 3*v =
       (12*2^(branch9N r v)-12*2^(branch9J r v)) +
         branch9Carry t q := by
@@ -111,9 +122,10 @@ private theorem branch9_affine_identity (t q r v K : Nat)
       rw [show K+2=(K+1)+1 by omega, Nat.pow_succ, Nat.pow_succ]
       simp [Nat.mul_assoc]
     omega
-  have hidx : k≤2*2^J+v := by
+  have hqidx' : q≤2*2^J+v := hqidx
+  have hidx : k+q=2*2^J+v := by
     dsimp [k,branch9Index,J]
-    omega
+    exact Nat.sub_add_cancel hqidx'
   have hsmall : 8+3*v≤12*2^J := by
     omega
   have hbase : 6*2^J+8+3*k≤12*2^N+6*2^t := by
@@ -121,8 +133,7 @@ private theorem branch9_affine_identity (t q r v K : Nat)
     omega
   have hdiff : 12*2^J≤12*2^N := by omega
   have hCnonneg : 8≤6*2^t+3*q := by
-    have ht5 : 5≤t := by omega
-    have hpowt := pow2_mono 5 t ht5
+    have hpowt := pow2_mono 5 t ht
     have h32 : 2^5=32 := by decide
     omega
   dsimp [branch9A,branch9Carry,branch9Index,branch9J,branch9N]
@@ -130,9 +141,9 @@ private theorem branch9_affine_identity (t q r v K : Nat)
 
 private theorem branch9_high_counter (t q r v K : Nat)
     (ht : 5≤t) (hr : r<4) (hK : 1≤K)
-    (hv : K≤v) (hqv : q≤v) (hvlt : v<2^K) :
+    (hv : K≤v) (hqidx : q≤2*2^(branch9J r v)+v) (hvlt : v<2^K) :
     16*2^K≤branch9A t q r v+3 := by
-  have hident := branch9_affine_identity t q r v K hr hK hv hqv hvlt
+  have hident := branch9_affine_identity t q r v K ht hr hK hv hqidx hvlt
   have hb := branch9_exponent_bounds r v K hr hK hv
   rcases hb with ⟨hJK,hNJ,hpowJK,hpowJN⟩
   have hpowK : 1≤2^K := by have hp:=pow2_pos K; omega
@@ -157,12 +168,12 @@ private theorem branch9_high_counter (t q r v K : Nat)
 
 private theorem branch9_divisibility (t q r v K : Nat)
     (ht : 5≤t) (hr : r<4) (hK : 1≤K)
-    (hv : K≤v) (hqv : q≤v) (hvlt : v<2^K) :
+    (hv : K≤v) (hqidx : q≤2*2^(branch9J r v)+v) (hvlt : v<2^K) :
     2^K ∣ branch9A t q r v + 3*v + branch9Correction t q K := by
   let J := branch9J r v
   let N := branch9N r v
   let C := branch9Carry t q
-  have hident := branch9_affine_identity t q r v K hr hK hv hqv hvlt
+  have hident := branch9_affine_identity t q r v K ht hr hK hv hqidx hvlt
   have hb := branch9_exponent_bounds r v K hr hK hv
   rcases hb with ⟨hJK,hNJ,hpowJK,hpowJN⟩
   have hsplitN : N+2=K+(N+2-K) := by omega
@@ -238,32 +249,82 @@ private theorem branch9_divisibility (t q r v K : Nat)
     _ = 2^K*(P-Q)+2^K*(C+1) := by rw [Nat.mul_comm (C+1) (2^K)]
     _ = 2^K*(P-Q+(C+1)) := by rw [Nat.mul_add]
 
-/-- For a fixed t and a fixed residue r satisfying t+14=r (mod 4),
-the genuine branch-9 exceptional S parents have zero-density outer
-parameter v= (J-r)/4 in dyadic ranges: at most 2*sqrt(2^K) of the
-reachable parameters v in [K,2^K). -/
+/-- The diagonal ray identity is valid throughout the actual interior
+branch-9 range t+3≤N; it does not require the artificial restriction t≤K. -/
+private theorem branch9_offset_le_two_A (t q r v K : Nat)
+    (ht : 5≤t) (hr : r<4) (hK : 1≤K) (hv : K≤v)
+    (hqidx : q≤2*2^(branch9J r v)+v) (hvlt : v<2^K)
+    (hTN : t+3≤branch9N r v) :
+    branch9Offset t≤2*branch9A t q r v := by
+  have hident := branch9_affine_identity t q r v K ht hr hK hv hqidx hvlt
+  have hb := branch9_exponent_bounds r v K hr hK hv
+  rcases hb with ⟨hJK,hNJ,hpowJK,hpowJN⟩
+  have hpowTN : 8*2^t≤2^(branch9N r v) := by
+    have hp := pow2_mono (t+3) (branch9N r v) hTN
+    have heq : 2^(t+3)=2^t*2^3 := by rw [Nat.pow_add]
+    have h8 : (2:Nat)^3=8 := by decide
+    rw [h8] at heq
+    omega
+  have hpowJN' : 2*2^(branch9J r v)≤2^(branch9N r v) := by
+    have hp := hpowJN
+    rw [Nat.pow_succ] at hp
+    omega
+  have hNK : K+3≤branch9N r v := by omega
+  have hpowKN : 8*2^K≤2^(branch9N r v) := by
+    have hp := pow2_mono (K+3) (branch9N r v) hNK
+    have heq : 2^(K+3)=2^K*2^3 := by rw [Nat.pow_add]
+    have h8 : (2:Nat)^3=8 := by decide
+    rw [h8] at heq
+    omega
+  have hvsmall : v<2^(branch9N r v) := by omega
+  have hC8 : branch9Carry t q+8=6*2^t+3*q := by
+    dsimp [branch9Carry]
+    have hpowt := pow2_mono 5 t ht
+    have h32 : 2^5=32 := by decide
+    omega
+  have hAeq :
+      branch9A t q r v+12*2^(branch9J r v)+8+3*v =
+        12*2^(branch9N r v)+6*2^t+3*q := by
+    have hh := hident
+    omega
+  have hA2 :
+      2*branch9A t q r v+24*2^(branch9J r v)+16+6*v =
+        24*2^(branch9N r v)+12*2^t+6*q := by
+    have h := congrArg (fun z : Nat => 2*z) hAeq
+    simp only [Nat.mul_add] at h
+    omega
+  have hterms :
+      12*2^t+24*2^(branch9J r v)+6*v≤24*2^(branch9N r v) := by
+    have htterm : 12*2^t≤6*2^(branch9N r v) := by omega
+    have hjterm : 24*2^(branch9J r v)≤12*2^(branch9N r v) := by omega
+    have hvterm : 6*v≤6*2^(branch9N r v) := by omega
+    omega
+  have hgoal : 24*2^t≤2*branch9A t q r v+21 := by omega
+  dsimp [branch9Offset]
+  omega
+
+/-- For a fixed t and residue r satisfying t+14=r (mod 4), the genuine
+branch-9 exceptional S parents have at most 2*sqrt(2^K) reachable outer
+parameters v in [K,2^K), uniformly over the full actual interior range
+t+3≤N. No assumption t≤K is needed. -/
 theorem branch9_side_feeder_entropy
     (t r q K : Nat)
     (ht : 5≤t) (hr : r<4) (htr : t+14=r+4*q)
-    (hK : 1≤K) (hKt : t≤K)
+    (hK : 1≤K)
     (l : List Nat) (hn : l.Nodup)
     (hl : ∀v, v∈l → K≤v ∧ v<2^K ∧
+      t+3≤branch9N r v ∧
       BB429NewResidue.Reach (branch9A t q r v) (branch9B t q r v)) :
     l.length≤2*2^(K/2) := by
-  have hqK : q≤K := by omega
-  have hqv : ∀v, v∈l → q≤v := by
+  have hqidx : ∀v, v∈l → q≤2*2^(branch9J r v)+v := by
     intro v hv
-    have hkv := (hl v hv).1
-    omega
+    exact branch9_index_nonnegative t q r v htr ((hl v hv).2.2.1)
   have hline : ∀v, v∈l →
       branch9B t q r v + branch9Offset t = 2*branch9A t q r v := by
     intro v hv
-    have hhigh := branch9_high_counter t q r v K ht hr hK
-      ((hl v hv).1) (hqv v hv) ((hl v hv).2.1)
-    have hpowTK : 2^t≤2^K := pow2_mono t K hKt
-    have hc : branch9Offset t≤2*branch9A t q r v := by
-      dsimp [branch9Offset]
-      omega
+    have hc := branch9_offset_le_two_A t q r v K ht hr hK
+      ((hl v hv).1) (hqidx v hv) ((hl v hv).2.1)
+      ((hl v hv).2.2.1)
     dsimp [branch9B]
     exact Nat.sub_add_cancel hc
   have hlegal :
@@ -276,11 +337,13 @@ theorem branch9_side_feeder_entropy
     intro v hv
     have hvK := (hl v hv).1
     have hvlt := (hl v hv).2.1
-    have hreach := (hl v hv).2.2
+    have hTN := (hl v hv).2.2.1
+    have hreach := (hl v hv).2.2.2
+    have hidx := hqidx v hv
     have hhigh := branch9_high_counter t q r v K ht hr hK
-      hvK (hqv v hv) hvlt
+      hvK hidx hvlt
     have hdiv := branch9_divisibility t q r v K ht hr hK
-      hvK (hqv v hv) hvlt
+      hvK hidx hvlt
     exact ⟨hreach,hline v hv,hhigh,hdiv⟩
   have hbound := generic_feeder_cardinality_bound
     (branch9Offset t) K 0 3 (branch9Correction t q K) (2^K)
@@ -288,7 +351,7 @@ theorem branch9_side_feeder_entropy
     (by omega) (by decide) (by simp) ?_
   · exact hbound
   · intro v hv
-    obtain ⟨hvK,hvlt,hreach⟩ := hl v hv
+    have hvlt := (hl v hv).2.1
     obtain ⟨hR,hline',hhigh,hdiv⟩ := hlegal v hv
     exact ⟨hvlt,hR,hline',hhigh,hdiv⟩
 
