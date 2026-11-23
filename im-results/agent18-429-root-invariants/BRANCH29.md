@@ -22,3 +22,14 @@ The contradiction cases use *existing rooted* modular theorems, not heuristics: 
 **Verification blocker:** local shell command `container.exec(['bash','-lc','pwd; ls -la | head; date -u +%FT%TZ'])` failed with tool-boundary `ClientError`, as did a trivial `python.exec` command. No Lean diagnostic was available locally. The existing manual `agent18-429-strong-root.yml` has been extended to compile the new file as its final module; it is the smallest existing source slice and should be dispatched once. An accepted local theorem would still require connection through unchanged upstream Cryptids source for an original-machine claim. The source wrapper and last-reset n-parameter arithmetic remain open.
 
 For provenance see `im-results/agent18-429-root-invariants/BB429Branch7Source.lean`, `BB429Branch7.lean` and the 15 November branch-7 memory of Agent18.
+
+
+## Source-connected exact long-burst reduction (pending upstream-source compile)
+
+The follow-on source module `BB429Branch29Source.lean` composes the six-of-eight rooted exclusion with the unchanged Cryptids `sourceRun` blank-root connector. For branch 7, suppose `n>=18`, `y+3=2x`, `x%32=29`, and the exact final-burst equation `4x+3n+15=3*2^(n+2)` holds at a genuinely source-reachable `(x,y)`. Then the proposed stronger conclusion is
+
+```
+n % 1024 = 895 or 1023.
+```
+
+Indeed `x=32q+29`, `y=64q+55`, and `q>=21` follows from exponential growth in the exact equation. The original-source/local bridge forces `q%8 in {2,7}`. Since `2^(n+2)` is divisible by 1024 for `n>=18`, the equation becomes `128q+3n+131=0 (mod 1024)`; substituting `q=2,7 (mod 8)` gives `n=895,1023 (mod 1024)`, respectively. This is a genuine source-root *necessary condition*, not a nonhalting decision. The original-source closure is staged in the existing manual `agent6-429-source-chain.yml`; acceptance requires that full source compile and the transitive axiom output, not just the stand-alone local RC2 run.

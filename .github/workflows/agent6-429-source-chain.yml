@@ -65,7 +65,7 @@ jobs:
             lake env lean -o ".lake/build/lib/lean/$module.olean" "$module.lean"
             echo "::endgroup::"
           done
-          for module in BB429RootEven8 BB429SevenStrong BB429OddResetGate BB429Reset31 BB429Even16 BB429Branch7 BB429Branch7Source; do
+          for module in BB429RootEven8 BB429SevenStrong BB429OddResetGate BB429Reset31 BB429Even16 BB429Branch7 BB429Branch29 BB429Branch7Source BB429Branch29Source; do
             echo "::group::Compile source-root branch-7 module $module"
             lake env lean -o ".lake/build/lib/lean/$module.olean" "$module.lean"
             echo "::endgroup::"
