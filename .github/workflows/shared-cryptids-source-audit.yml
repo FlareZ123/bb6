@@ -48,6 +48,11 @@ on:
         required: false
         type: boolean
         default: false
+      simulate_second_f289:
+        description: 'Run the deterministic BigInt RLE state/cost candidate on the second live F289 upstream Halt module (not a proof)'
+        required: false
+        type: boolean
+        default: false
       bridge_path:
         description: 'Repo-relative Lean source proof importing original module and dependency'
         required: true
@@ -72,6 +77,7 @@ jobs:
       LEAN_TOOLCHAIN: ${{ inputs.lean_toolchain }}
       DEPENDENCY_VERSION: ${{ inputs.dependency_version }}
       VERIFY_SIX_ROOT_GRAFT: ${{ inputs.verify_six_root_graft }}
+      SIMULATE_SECOND_F289: ${{ inputs.simulate_second_f289 }}
     steps:
       - uses: actions/checkout@v4
       - name: Validate manual inputs
@@ -107,7 +113,15 @@ jobs:
             test "$DEPENDENCY_VERSION" = "v4.36.0-rc2"
             test "$BRIDGE_PATH" = "im-results/agent42-cryptids-current-main/Cryptids608NonHalt.lean"
           fi
+          if [[ "$VERIFY_SIX_ROOT_GRAFT" == "true" && "$SIMULATE_SECOND_F289" == "true" ]]; then
+            echo "::error::select only one targeted mode"
+            exit 1
+          fi
+          if [[ "$SIMULATE_SECOND_F289" == "true" ]]; then
+            test "$UPSTREAM_SHA" = "3647718b5df22e1a61462dec0376bd204526285a"
+          fi
       - name: Install original Cryptids Lean version
+        if: ${{ !inputs.simulate_second_f289 }}
         shell: bash
         run: |
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
@@ -119,13 +133,33 @@ jobs:
           git clone --quiet https://github.com/google-deepmind/cryptids.git /tmp/cryptids
           git -C /tmp/cryptids checkout --quiet "$UPSTREAM_SHA"
           test "$(git -C /tmp/cryptids rev-parse HEAD)" = "$UPSTREAM_SHA"
+      - name: Simulate second F289 RLE cost candidate (computational evidence only)
+        if: ${{ inputs.simulate_second_f289 }}
+        working-directory: /tmp/cryptids
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --version
+          node "$GITHUB_WORKSPACE/im-results/agent42-cryptids-upstream-191-overlap/simulate_f289_rle.js" \
+            "$PWD/BusyBeaver/BB6/Halt/M_1RB1RF_0RC0RE_0RD1RA_1LE0LA_1LB0LD_0RDHHH.lean" \
+            | tee "$RUNNER_TEMP/f289-second-rle-candidate.json"
+          sha256sum "$RUNNER_TEMP/f289-second-rle-candidate.json"
+      - name: Upload second F289 RLE candidate output
+        if: ${{ inputs.simulate_second_f289 }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: f289-second-rle-candidate
+          path: ${{ runner.temp }}/f289-second-rle-candidate.json
+          if-no-files-found: error
       - name: Reclaim unused hosted-runner disk for Mathlib cache
+        if: ${{ !inputs.simulate_second_f289 }}
         shell: bash
         run: |
           df -h
           sudo rm -rf /usr/local/lib/android /opt/hostedtoolcache /usr/share/dotnet /usr/share/swift /usr/local/share/powershell
           df -h
       - name: Align upstream Lake dependencies with selected Lean toolchain
+        if: ${{ !inputs.simulate_second_f289 }}
         working-directory: /tmp/cryptids
         shell: bash
         run: |
@@ -138,11 +172,12 @@ jobs:
           fi
           test "$(cat lean-toolchain)" = "$LEAN_TOOLCHAIN"
       - name: Restore upstream cache
+        if: ${{ !inputs.simulate_second_f289 }}
         working-directory: /tmp/cryptids
         shell: bash
         run: lake exe cache get
       - name: Expose original private target and solution declarations and imports
-        if: env.EXPOSE_SOLUTION_DECLARATIONS == 'true'
+        if: ${{ !inputs.simulate_second_f289 && inputs.expose_solution_declarations }}
         working-directory: /tmp/cryptids
         shell: bash
         run: |
@@ -182,6 +217,7 @@ jobs:
           PY
           done
       - name: Compile original raw-TM acceleration
+        if: ${{ !inputs.simulate_second_f289 }}
         working-directory: /tmp/cryptids
         shell: bash
         run: |
@@ -191,7 +227,7 @@ jobs:
             lake build "$EXTRA_ORIGINAL_MODULE"
           fi
       - name: Compile six-root Cryptids frontier graft (explicitly requested only)
-        if: ${{ inputs.verify_six_root_graft }}
+        if: ${{ inputs.verify_six_root_graft && !inputs.simulate_second_f289 }}
         working-directory: /tmp/cryptids
         shell: bash
         run: |
@@ -233,7 +269,7 @@ jobs:
           fi
           echo "Six-root graft compiled; no sorryAx in exported axiom profiles."
       - name: Prove against unchanged source definitions and audit axioms
-        if: ${{ !inputs.verify_six_root_graft }}
+        if: ${{ !inputs.verify_six_root_graft && !inputs.simulate_second_f289 }}
         working-directory: /tmp/cryptids
         shell: bash
         run: |
