@@ -103,6 +103,7 @@ jobs:
           lake env bash -c '
             set -euo pipefail
             ROOT="$GITHUB_WORKSPACE"
+            cd "$ROOT"
             export LEAN_PATH="$ROOT/im-results/agent8-coverage-contract:$ROOT/im-results/agent4-coverage-smoke:$ROOT/im-results/agent3-portfolio-raw-conjugacy:/tmp/proofs:$LEAN_PATH"
             lean --version
             lean -o "$ROOT/im-results/agent8-coverage-contract/Frontier.olean" "$ROOT/im-results/agent8-coverage-contract/Frontier.lean"
