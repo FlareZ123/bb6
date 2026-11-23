@@ -104,7 +104,7 @@ theorem lowRow_no_generic {rs T nodeAt}
       row.modulus*v + (2*row.a*D+E) =
         2^(row.base+1458*t)+3*D := by
     rw [hm,hbase]
-    simpa [D,E] using hgen'
+    simpa [D,E, Nat.add_assoc] using hgen'
   by_cases hsign : 3*D ≤ 2*row.a*D+E
   · have htgt : row.target = 2*row.a*D+E-3*D := by
       simpa [lowTarget,D,E,hsign] using htarget
@@ -1824,7 +1824,7 @@ theorem lowRowKey_complete_t1 (n h a : Nat)
     (hh : h ≤ (nodeAt_t1 n).r)
     (ha : 1 ≤ a) (ha' : a < cutoff_t1 n h) :
     (n,h,a) ∈ lowRowKeys_t1 ∨ (n,h,a) ∈ nonrootEdgeKeys_t1 := by
-  exact lowRowKey_complete_fin_t1 ⟨n,hn'⟩ hn ⟨h,by omega⟩ ⟨a,ha'⟩ ha
+  exact lowRowKey_complete_fin_t1 ⟨n,hn'⟩ hn ⟨h, by simpa using Nat.lt_succ_of_le hh⟩ ⟨a,ha'⟩ ha
 
 
 def highCerts_t1 : List (HighCert nodeAt_t1) :=
@@ -1890,7 +1890,7 @@ theorem highCertKey_complete_t1 (n h : Nat)
     (hn : 1 ≤ n) (hn' : n < 15)
     (hh : h ≤ (nodeAt_t1 n).r) :
     (n,h) ∈ highCertKeys_t1 := by
-  exact highCertKey_complete_fin_t1 ⟨n,hn'⟩ hn ⟨h,by omega⟩
+  exact highCertKey_complete_fin_t1 ⟨n,hn'⟩ hn ⟨h, by simpa using Nat.lt_succ_of_le hh⟩
 
 def highCertTripleKeys_t1 : List (Nat × Nat × Nat) :=
   highCerts_t1.map highCertTripleKey
@@ -1906,7 +1906,7 @@ theorem highCertCutoff_complete_t1 (n h : Nat)
     (hh : h ≤ (nodeAt_t1 n).r) :
     ∃ cert, cert ∈ highCerts_t1 ∧ cert.node=n ∧
       cert.h=h ∧ cert.A=cutoff_t1 n h := by
-  have hkey := highCertCutoffKey_complete_fin_t1 ⟨n,hn'⟩ hn ⟨h,by omega⟩
+  have hkey := highCertCutoffKey_complete_fin_t1 ⟨n,hn'⟩ hn ⟨h, by simpa using Nat.lt_succ_of_le hh⟩
   exact highCertTriple_mem_of_key hkey
 
 
@@ -2356,7 +2356,7 @@ theorem lowRowKey_complete_h1a3 (n h a : Nat)
     (hh : h ≤ (nodeAt_h1a3 n).r)
     (ha : 1 ≤ a) (ha' : a < cutoff_h1a3 n h) :
     (n,h,a) ∈ lowRowKeys_h1a3 ∨ (n,h,a) ∈ nonrootEdgeKeys_h1a3 := by
-  exact lowRowKey_complete_fin_h1a3 ⟨n,hn'⟩ hn ⟨h,by omega⟩ ⟨a,ha'⟩ ha
+  exact lowRowKey_complete_fin_h1a3 ⟨n,hn'⟩ hn ⟨h, by simpa using Nat.lt_succ_of_le hh⟩ ⟨a,ha'⟩ ha
 
 
 def highCerts_h1a3 : List (HighCert nodeAt_h1a3) :=
@@ -2388,7 +2388,7 @@ theorem highCertKey_complete_h1a3 (n h : Nat)
     (hn : 1 ≤ n) (hn' : n < 7)
     (hh : h ≤ (nodeAt_h1a3 n).r) :
     (n,h) ∈ highCertKeys_h1a3 := by
-  exact highCertKey_complete_fin_h1a3 ⟨n,hn'⟩ hn ⟨h,by omega⟩
+  exact highCertKey_complete_fin_h1a3 ⟨n,hn'⟩ hn ⟨h, by simpa using Nat.lt_succ_of_le hh⟩
 
 def highCertTripleKeys_h1a3 : List (Nat × Nat × Nat) :=
   highCerts_h1a3.map highCertTripleKey
@@ -2404,7 +2404,7 @@ theorem highCertCutoff_complete_h1a3 (n h : Nat)
     (hh : h ≤ (nodeAt_h1a3 n).r) :
     ∃ cert, cert ∈ highCerts_h1a3 ∧ cert.node=n ∧
       cert.h=h ∧ cert.A=cutoff_h1a3 n h := by
-  have hkey := highCertCutoffKey_complete_fin_h1a3 ⟨n,hn'⟩ hn ⟨h,by omega⟩
+  have hkey := highCertCutoffKey_complete_fin_h1a3 ⟨n,hn'⟩ hn ⟨h, by simpa using Nat.lt_succ_of_le hh⟩
   exact highCertTriple_mem_of_key hkey
 
 
@@ -2618,7 +2618,7 @@ theorem lowRowKey_complete_h3a6 (n h a : Nat)
     (hh : h ≤ (nodeAt_h3a6 n).r)
     (ha : 1 ≤ a) (ha' : a < cutoff_h3a6 n h) :
     (n,h,a) ∈ lowRowKeys_h3a6 ∨ (n,h,a) ∈ nonrootEdgeKeys_h3a6 := by
-  exact lowRowKey_complete_fin_h3a6 ⟨n,hn'⟩ hn ⟨h,by omega⟩ ⟨a,ha'⟩ ha
+  exact lowRowKey_complete_fin_h3a6 ⟨n,hn'⟩ hn ⟨h, by simpa using Nat.lt_succ_of_le hh⟩ ⟨a,ha'⟩ ha
 
 
 def highCerts_h3a6 : List (HighCert nodeAt_h3a6) :=
@@ -2642,7 +2642,7 @@ theorem highCertKey_complete_h3a6 (n h : Nat)
     (hn : 1 ≤ n) (hn' : n < 3)
     (hh : h ≤ (nodeAt_h3a6 n).r) :
     (n,h) ∈ highCertKeys_h3a6 := by
-  exact highCertKey_complete_fin_h3a6 ⟨n,hn'⟩ hn ⟨h,by omega⟩
+  exact highCertKey_complete_fin_h3a6 ⟨n,hn'⟩ hn ⟨h, by simpa using Nat.lt_succ_of_le hh⟩
 
 def highCertTripleKeys_h3a6 : List (Nat × Nat × Nat) :=
   highCerts_h3a6.map highCertTripleKey
