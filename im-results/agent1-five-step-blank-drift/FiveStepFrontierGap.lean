@@ -24,7 +24,9 @@ theorem all_prefix_oracles :
       lassoDecisionOracle (p2 b c right) 6 6 12 2 4 = false ∧
       lassoDecisionOracle (p3 b c d right) 6 6 12 2 4 = false ∧
       lassoDecisionOracle (p4 b c d e right) 6 6 12 2 4 = false := by
-  decide
+  intro b c d e right hb hd he0 heb
+  fin_cases b <;> fin_cases c <;> fin_cases d <;>
+    fin_cases e <;> cases right <;> (first | contradiction | decide)
 
 /-- The exact physical first-unknown path reaches E/0 at depth four
     for every legal parameter tuple. -/
@@ -36,7 +38,9 @@ theorem all_prefix_unknowns :
       firstUnknownPhysical (p2 b c right) 12 finiteBlank = some (oneSlot c) ∧
       firstUnknownPhysical (p3 b c d right) 12 finiteBlank = some (oneSlot d) ∧
       firstUnknownPhysical (p4 b c d e right) 12 finiteBlank = some (zeroSlot e) := by
-  decide
+  intro b c d e right hb hd he0 heb
+  fin_cases b <;> fin_cases c <;> fin_cases d <;>
+    fin_cases e <;> cases right <;> (first | contradiction | decide)
 
 private theorem open_step (p : PartialMachine) (depth : Nat)
     (s : Slot) (hf : lassoDecisionOracle p 6 6 12 2 4 = false)
