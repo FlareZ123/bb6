@@ -353,3 +353,8 @@ acceptance target after the current middle34/M1 gate passes.
 ## Positive-z q4 outer-counter descent
 
 A new intermediate arithmetic interface is recorded in [Q4OuterCounterDescent.md](Q4OuterCounterDescent.md). Agent42's [outer-width recurrence](../agent42-q4-s0-drain/FirstQ4P1OuterWidthRecurrence.lean) now exposes the P2 100 guard after every two-d0-block boundary and the corresponding A → A-2 residual counter. This makes the arithmetic outer loop finite (residual A in {1,2}) if the actual q4Tail/S0 trajectory is shown to consume the six-cell suffix each time. The q4Tail-to-S0 tape identity and six-cell trajectory invariant remain open. The A=2 boundary now has a separate z=1 diagnostic: [A2TerminalBaseCaseZ1.md](A2TerminalBaseCaseZ1.md) records exact finite runs to SectionBits and identifies a distinct 11110000 branch when the P2 100 guard fails. This does not close the authentic root's positive-z terminal case (z≥3), and no halting claim follows.
+
+
+## Exact tape interface for the m=2,n=4 q4 prefix (2026-11-23)
+
+Added `m2EvenSix_q4_prefix_data_exact`, which upgrades the existential tape witness in `m2EvenSix_q4_prefix_data` to the concrete `m2EvenSixQ4CutTape`. The proof uses the established left- and right-facing stream characterizations to show extensional equality of the existential witness and the explicit tape. Downstream M2 residue-six consumers can now use a concrete exact-run interface rather than relying on an invalid `rfl` across an opaque existential theorem. This is a source-level proof addition; compile acceptance is pending.
