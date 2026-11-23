@@ -1,4 +1,4 @@
-import EvenOddAllDepthPhaseFour
+import EvenOddAllDepthPhaseSix
 import Lean.Elab.Tactic.Omega
 
 namespace BB6.Agent13AllDepthSieve
@@ -11,7 +11,7 @@ def sourceOddDepthPruned (n q : Nat) : Prop :=
   n%8=0 ∨
   (n%8=2 ∧ (q+3*(n/8))%8=7) ∨
   (n%8=4 ∧ ((q+n/8)%8=4 ∨ (q+n/8)%16=3)) ∨
-  (n%8=6 ∧ (q+n/8)%2=1)
+  (n%8=6 ∧ ((q+n/8)%2=1 ∨ (q+7*(n/8))%8=0))
 
 /-- A source-only uniform theorem for the original Machine C left-odd
     bounce inverse fan at arbitrary depth n. Given the original exact
@@ -60,10 +60,14 @@ theorem source_odd_depth_pruned_unreachable
       have hh := Nat.mod_add_div n 8
       dsimp [r]
       omega
-    have hp : (q+r)%2=1 := by dsimp [r] at *; exact hqphase
     rw [hn] at hcost
-    exact BB6.Agent13AllDepth.depth_six_parity_source_parent_impossible
-      u a k r q (by omega) ha (by omega) hp
+    rcases hqphase with hpar|hao
+    · have hp : (q+r)%2=1 := by dsimp [r] at *; exact hpar
+      exact BB6.Agent13AllDepth.depth_six_parity_source_parent_impossible
+        u a k r q (by omega) ha (by omega) hp
+    · have hp : (q+7*r)%8=0 := by dsimp [r] at *; exact hao
+      exact BB6.Agent13AllDepthSix.depth_six_AO_parent_impossible
+        u a k r q hq hk ha (by omega) hp
 
 
 /-- The exact original-section odd-left bounce power equation supplies
