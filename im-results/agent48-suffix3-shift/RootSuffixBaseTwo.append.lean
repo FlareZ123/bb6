@@ -96,7 +96,8 @@ private theorem s3_tok_dr_z1 (k : ℕ) (R3 : List (ℕ × ℕ)) :
         List.replicate ((k+1)+1) 0 ++ [0,0,0,1] =
         List.replicate (k+5) 0 ++ [1] := by
       rw [show k+5=((k+1)+1)+3 by omega, List.replicate_add]
-      simp [List.replicate_succ, List.cons_append, List.append_assoc]
+      simp [s3_nat_push, List.replicate_succ,
+        List.cons_append, List.append_assoc]
     simpa [hz, s3_nat_push, List.replicate_succ, List.cons_append,
       List.append_assoc] using
       (s3_tok_el_ones (k+1) [0] R3 [0,0,0,1])
