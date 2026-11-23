@@ -149,6 +149,8 @@ private theorem endEq (k q r : Nat) :
       _ = _ := rfl
   have htime :
       2*(4*k+3+(q+4*(r+1)))+5 = 8*k+19+2*q+8*r := by omega
+  unfold mixedEnd
+  simp only [List.append_nil]
   change
     (⟨[],false,List.replicate
       (2*(4*k+3+CryptidA.wordInc (tokens q r))+5) true,5⟩ : Cfg) =
