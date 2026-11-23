@@ -61,6 +61,7 @@ theorem safeYPlusK0_source (m : Nat) (c : Packet) (ha : c.a ≥ 4)
     rcases hs with hold | hnew
     · exact BB6.Agent36YPlus.safeYPlus_source (m+1) c ha hold
     let d : Packet := (normalizeWithCount c).2
+    have hd : d.a ≥ 4 := BB6.Agent2PacketSafe.normalize_amin c ha
     change
       (d.a%3=1 ∧ d.p=0 ∧
         safeYPlusK0 m ⟨8*((d.a-4)/3)+5,0,2*d.q+7⟩) ∨
