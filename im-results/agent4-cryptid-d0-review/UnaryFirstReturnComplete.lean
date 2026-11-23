@@ -85,8 +85,7 @@ theorem unary_source_first_return (a : Nat) (ha : 2 ≤ a) :
     · rw [hnum]
       simp [DRegular.next,h2,hd]
     · rw [hnum]
-      exact BB6.AZeroSource.a_zero_model k
-        |> (fun h => by simpa [htime] using h)
+      simpa [htime] using (BB6.AZeroSource.a_zero_model k)
     · intro t htpos ht hblank
       rw [hnum,htime] at ht
       rw [hnum,hstart] at hblank
