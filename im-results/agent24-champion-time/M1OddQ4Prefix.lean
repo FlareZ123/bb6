@@ -231,7 +231,7 @@ theorem m1Odd_q4_prefix_run (a b : Nat) (h : Int) :
         subst i
         have hlen : (d1pow a).length = 3*a := by simp [d1pow_length]
         rw [sideBit_append_right (d1pow a) R (3*a) (by simpa [hlen])]
-        simp [markerWord, d1pow_length]
+        simp [R,markerWord,sideBit,d1pow_length,hlen]
     simpa [T,hside] using hcell
   have hright : T (h+1) = false := by
     have hc := s1Config_right_cell 3 3 1 a 0 b h 0
@@ -288,14 +288,14 @@ theorem m1Odd_q4_prefix_run (a b : Nat) (h : Int) :
             change sweptLeft N T h (h+2) = true
             have hsrc : T (h+2) = true := by
               have hcoord : h+1+1 = h+2 := by omega
-              simpa [T,hcoord,s1PhysicalRight_source,sideBit] using
+              simpa [T,hcoord,s1PhysicalRight_source,sideBit,s0RightFacing] using
                 s1Config_right_cell 3 3 1 a 0 b h 1
             rw [hpres,hsrc]
           · rw [hx3'] at hpres ⊢
             change sweptLeft N T h (h+3) = true
             have hsrc : T (h+3) = true := by
               have hcoord : h+1+2 = h+3 := by omega
-              simpa [T,hcoord,s1PhysicalRight_source,sideBit] using
+              simpa [T,hcoord,s1PhysicalRight_source,sideBit,s0RightFacing] using
                 s1Config_right_cell 3 3 1 a 0 b h 2
             rw [hpres,hsrc]
     simpa [x,T2] using hframe.trans hT1
@@ -456,7 +456,7 @@ theorem m1Odd_q4_prefix_rightShape (a b : Nat) (h : Int) :
         have hpres := sweptLeft_preserves_right (3*a+1) T h (h+2) (by omega)
         have hsrc : T (h+2) = true := by
           have hcoord : h+1+(1:Int) = h+2 := by omega
-          simpa [T,hcoord,s1PhysicalRight_source,sideBit] using
+          simpa [T,hcoord,s1PhysicalRight_source,sideBit,s0RightFacing] using
             s1Config_right_cell 3 3 1 a 0 b h 1
         exact hcut.trans (hpres.trans hsrc)
     · by_cases ha0 : a = 0
@@ -477,7 +477,7 @@ theorem m1Odd_q4_prefix_rightShape (a b : Nat) (h : Int) :
         have hpres := sweptLeft_preserves_right (3*a+1) T h (h+3) (by omega)
         have hsrc : T (h+3) = true := by
           have hcoord : h+1+(2:Int) = h+3 := by omega
-          simpa [T,hcoord,s1PhysicalRight_source,sideBit] using
+          simpa [T,hcoord,s1PhysicalRight_source,sideBit,s0RightFacing] using
             s1Config_right_cell 3 3 1 a 0 b h 2
         exact hcut.trans (hpres.trans hsrc)
     · have hout : m1OddQ4Inside
@@ -488,21 +488,21 @@ theorem m1Odd_q4_prefix_rightShape (a b : Nat) (h : Int) :
       have hpres := sweptLeft_preserves_right (3*a+1) T h (h+4) (by omega)
       have hsrc : T (h+4) = true := by
         have hcoord : h+1+(3:Int) = h+4 := by omega
-        simpa [T,hcoord,s1PhysicalRight_source,sideBit] using
+        simpa [T,hcoord,s1PhysicalRight_source,sideBit,s0RightFacing] using
           s1Config_right_cell 3 3 1 a 0 b h 3
       exact hcut.trans (hpres.trans hsrc)
   · constructor
     · have hcut := m1OddQ4CutTape_eq_source_right a b h (h+5) (by omega)
       have hsrc : T (h+5) = false := by
         have hcoord : h+1+(4:Int) = h+5 := by omega
-        simpa [T,hcoord,s1PhysicalRight_source,sideBit] using
+        simpa [T,hcoord,s1PhysicalRight_source,sideBit,s0RightFacing] using
           s1Config_right_cell 3 3 1 a 0 b h 4
       simpa [T] using hcut.trans hsrc
     · constructor
       · have hcut := m1OddQ4CutTape_eq_source_right a b h (h+6) (by omega)
         have hsrc : T (h+6) = false := by
           have hcoord : h+1+(5:Int) = h+6 := by omega
-          simpa [T,hcoord,s1PhysicalRight_source,sideBit] using
+          simpa [T,hcoord,s1PhysicalRight_source,sideBit,s0RightFacing] using
             s1Config_right_cell 3 3 1 a 0 b h 5
         simpa [T] using hcut.trans hsrc
       · constructor
@@ -511,7 +511,7 @@ theorem m1Odd_q4_prefix_rightShape (a b : Nat) (h : Int) :
           have hsrc : T (h+7+(i:Int)) =
               sideBit (s0RightFacing b) (6+i) := by
             have hcoord : h+1+(6+i:Int) = h+7+(i:Int) := by omega
-            simpa [T,hcoord,s1PhysicalRight_source,sideBit] using s1Config_right_cell 3 3 1 a 0 b h (6+i)
+            simpa [T,hcoord,s1PhysicalRight_source,sideBit,s0RightFacing] using s1Config_right_cell 3 3 1 a 0 b h (6+i)
           have hside :
               sideBit (s0RightFacing b) (6+i) =
                 sideBit (d1pow (b+1)) i := by
@@ -531,7 +531,7 @@ theorem m1Odd_q4_prefix_rightShape (a b : Nat) (h : Int) :
               sideBit (s0RightFacing b) (9+3*b+i) := by
             have hcoord : h+1+((9+3*b+i:Int)) =
                 h+10+(3*b:Int)+(i:Int) := by omega
-            simpa [T,hcoord,s1PhysicalRight_source,sideBit] using
+            simpa [T,hcoord,s1PhysicalRight_source,sideBit,s0RightFacing] using
               s1Config_right_cell 3 3 1 a 0 b h (9+3*b+i)
           have hlen : (s0RightFacing b).length = 9+3*b := by
             simp [s0RightFacing,d1pow_length]
@@ -556,7 +556,7 @@ theorem m1Odd_q4_prefix_far_tail (a b : Nat) (h : Int) :
   have hsrc :
       (s1Config 3 3 1 a 0 b h).tape (h+1+(i:Int)) =
         sideBit (s0RightFacing b) i := by
-    simpa [s1PhysicalRight_source,sideBit] using
+    simpa [s1PhysicalRight_source,sideBit,s0RightFacing] using
       s1Config_right_cell 3 3 1 a 0 b h i
   have hlen : (s0RightFacing b).length = 9+3*b := by
     simp [s0RightFacing,d1pow_length]
@@ -666,7 +666,7 @@ private theorem m1OddQ4LeftFacingBoundaryBit (a k : Nat)
   rw [hlist]
   rw [sideBit_append_after_local ([true] ++ d1pow a)
     (markerWord 0 ++ d0 ++ d1 ++ d0 ++ d1 ++ lh)
-    (3*a+1+k) (by simp [d1pow_length]; omega)]
+    (3*a+1+k) (by simp [d1pow_length])]
   have hkCases : k = 1 ∨ k = 2 ∨ k = 3 ∨ k = 4 ∨ k = 5 ∨
       k = 6 ∨ k = 7 ∨ k = 8 ∨ k = 9 := by omega
   rcases hkCases with h1 | h2 | h3 | h4 | h5 | h6 | h7 | h8 | h9
@@ -724,11 +724,12 @@ theorem m1Odd_q4_prefix_leftFacing (a b : Nat) (h : Int) :
             simpa [m1OddQ4Inside] using hin
           constructor <;> omega
         have hmark : decide (r ∈ m1OddQ4BridgeEnd.marked) = true := by
+          apply decide_eq_true_iff.mpr
           have hcases : r=2 ∨ r=3 ∨ r=4 := by omega
           rcases hcases with h2 | h3 | h4
-          · subst r; simp [m1OddQ4BridgeEnd]
-          · subst r; simp [m1OddQ4BridgeEnd]
-          · subst r; simp [m1OddQ4BridgeEnd]
+          · rw [h2]; decide
+          · rw [h3]; decide
+          · rw [h4]; decide
         have hmark' : decide
             ((x-(h-((3*a+1 : Nat):Int))) ∈ m1OddQ4BridgeEnd.marked) = true := by
           rw [hrel]
@@ -797,7 +798,7 @@ theorem m1Odd_q4_prefix_leftFacing (a b : Nat) (h : Int) :
             rw [sideBit_append_after_local ([true] ++ d1pow a)
               (markerWord 0 ++ d0 ++ binDec 3 2 ++ lh) (3*a+1)
               (by simp [d1pow_length])]
-            simp [markerWord,sideBit]
+            simp [markerWord,sideBit,d1pow_length]
           have hmark' : decide
               ((x-(h-((3*a+1 : Nat):Int))) ∈ m1OddQ4BridgeEnd.marked) = false := by
             rw [hrel]
