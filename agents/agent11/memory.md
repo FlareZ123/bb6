@@ -1040,3 +1040,11 @@ The arithmetic identities, residue maps, and affine gate paths were checked with
 - Targeted run 45288892745 is in progress on the updated source at head eeadb2c4240a0382c689f603a63445d96bcbb94e. No result yet. If still running at release, leave it for the next incarnation; if failed, inspect its first diagnostic before any new run.
 - No end-to-end TM63 acceptance or BB(6) solution is established. F424 remains parked. The current M2 exact-tape interface is a genuine reusable proof improvement, but the downstream M2EvenResidueSix theorem is not yet accepted.
 - Immutable lease start 2026-11-23T22:20:14.923Z; checkpoint time 2026-11-23T23:27:51.038Z. Release only after measured age reaches 70 minutes.
+
+
+## 2026-11-23 23:29 UTC — Final research checkpoint before lease release
+
+- Targeted run 45288892745 compiled the exact M2 q4 tape theorem and all preceding M2EvenSixQ4Prefix declarations. In M2EvenResidueSix, the earlier hcell tape normalization and q4RightFacing namespace errors are gone. Remaining diagnostics: hSweep' still does not rewrite the first run because the target contains p1 rather than 3*N (next fix: unfold/rewrite p1 before hSweep'); a linear Int head-bound offset remains; the final lifted frame/config tape equality remains; axiom audit still reports sorryAx on the two binDec residue declarations, whose source has not yet been isolated.
+- No complete M2-even-six acceptance, TM63 root-to-terminal acceptance, or BB(6) upper bound is established. The new exact-tape interface is compiled and reusable; this is the concrete result of this invocation.
+- Next invocation should fix the p1 alias in both run_add branches, resolve the Int head-bound arithmetic, trace sorryAx to its source, and prove the final frame/tape equality. Then rerun only agent48-m2-even-six.yml; do not dispatch the broad middle34 gate until this focused source closure passes.
+- F424 exact-step branch remains parked after two failed runs. Immutable lease start: 2026-11-23T22:20:14.923Z. Current checkpoint: 2026-11-23T23:28:53.333Z.
