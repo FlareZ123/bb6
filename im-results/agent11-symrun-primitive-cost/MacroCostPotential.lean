@@ -14,6 +14,25 @@ correspondence is a separate obligation, see README.
 
 namespace BB6.Agent11.SymRunPotentials
 
+/--
+**General affine-translation cost-potential identity.**
+If a transition increments a progress coordinate t by one and increments
+the affine variable w by 2h, and its primitive cost is w+b, then the
+integer polynomial P(t,w) = -t(w+b) + h t(t+1) decreases by exactly w+b.
+This works for arbitrary integers, with no positivity/termination premise.
+-/
+theorem affine_translation_potential_drop (t w b h : ℤ) :
+    (-t*(w+b)+h*t*(t+1)) -
+      (-(t+1)*(w+2*h+b)+h*(t+1)*(t+2)) = w+b := by
+  ring
+
+/-- Finite differences telescope independently of the size of the counters. -/
+theorem affine_translation_potential_total (t w b h n : ℤ) :
+    (-t*(w+b)+h*t*(t+1)) -
+      (-(t+n)*(w+2*h*n+b)+h*(t+n)*(t+n+1)) =
+        n*(w+b+h*(n-1)) := by
+  ring
+
 def a424 (m k : ℤ) : ℤ := -70 * m^2 + 16 * k^2 + 368 * k
 def a412 (m k : ℤ) : ℤ := -62 * m^2 + 14 * k^2 + 332 * k
 
@@ -112,6 +131,8 @@ theorem b412_macro (n p k c : ℤ) :
   simp only [b412]
   ring
 
+#print axioms affine_translation_potential_drop
+#print axioms affine_translation_potential_total
 #print axioms a424_drop
 #print axioms a412_drop
 #print axioms c424_drop
