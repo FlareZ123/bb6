@@ -254,7 +254,7 @@ theorem outerLCIncAfterZero_cells
     outerLCIncAfterZero T h a m (h+6) = true := by
   constructor <;>
     simp [outerLCIncAfterZero, frameAt_tape,
-      outerLCIncZeroInside, outerLCIncZeroEnd]
+      outerLCIncZeroInside, outerLCIncZeroEnd] <;> omega
 
 /-- The one-step B-zero exit writes one at its current head. -/
 theorem outerLCIncAfterZeroExit_one
@@ -389,7 +389,13 @@ theorem outerLCInc_source_postlude_conditions
       _ = decide (x.toNat < 4) :=
         markerBridgeFrameOut_five m hm T1 h0 x.toNat (by omega)
       _ = decide (x ∈ outerLCIncFiveStart.marked) := by
-        simp [outerLCIncFiveStart, hj]
+        have hcases : x = 0 ∨ x = 1 ∨ x = 2 ∨ x = 3 ∨ x = 4 := by omega
+        rcases hcases with hx0 | hx1 | hx2 | hx3 | hx4
+        · subst x; simp [outerLCIncFiveStart]
+        · subst x; simp [outerLCIncFiveStart]
+        · subst x; simp [outerLCIncFiveStart]
+        · subst x; simp [outerLCIncFiveStart]
+        · subst x; simp [outerLCIncFiveStart]
   have hscan :
       linearRightOnes (outerLCIncAfterFive T3 h a m)
         (h1+7) (3*a+m+3) := by
@@ -430,10 +436,10 @@ theorem outerLCInc_source_postlude_conditions
           omega
         have hcell : T (h+2+(k:Int)) = true := by
           have hkCases : k=0 ∨ k=1 ∨ k=2 := by omega
-          rcases hkCases with rfl | rfl | rfl
-          · simpa using h111.1
-          · simpa using h111.2.1
-          · simpa using h111.2.2
+          rcases hkCases with hk0 | hk1 | hk2
+          · rw [hk0]; simpa using h111.1
+          · rw [hk1]; simpa using h111.2.1
+          · rw [hk2]; simpa using h111.2.2
         calc
           T3 (h1+7+(i:Int)) = T (h+2+(k:Int)) := by
             rw [hcoord]
@@ -508,7 +514,7 @@ theorem outerLCInc_source_postlude_conditions
           dsimp [h1, outerLCIncH1]
           omega)
       _ = T (h+3*b+10) := hT3source _ (by omega)
-      _ = false := hblank 0
+      _ = false := by simpa using hblank 0
   have hpat := outerLCIncAfterSweep_tailPattern T3 h a m b hright'
   have h6 :
       outerLCIncAfterZeroExit T3 h a m b (h+3*b+6) = true := by
