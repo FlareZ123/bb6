@@ -48,6 +48,18 @@ Since \(B\mid X_r\) and \(B\mid(S_r-1)\), necessarily \(B\mid(j+3m+3)\). Consequ
 \]
 whereas the earlier Agent19 dyadic-tower test requires residue \(2^{n+2}\). This is proven for arbitrary \(m,r,t,n\), not just sampled configurations. The construction avoids that **specific** earlier exclusion; other stronger filters may overlap and are not ruled out.
 
+## Stronger separation: the full pre-M8 Agent19 joint sieve
+
+The earlier dyadic-residue separation is only one part of a stronger result. [M8TowerLegacyPass.lean](M8TowerLegacyPass.lean) proves
+```lean
+theorem tower_passes_all_legacy_high_sieves (m r t : Nat)
+    (hm : m%2=1) (hr : 1≤r) :
+    BB6.Agent19Joint.highAllowed (towerIndex m r t) m
+```
+for **all** odd m, positive heights r and t≥0. The source-body proof locally compiles with no `sorryAx` when the original Agent3 and Agent19 high predicates are replaced with their **exact copied definitions** (rather than opaque assumptions). The proof is therefore a direct syntactic arithmetic comparison with the entire earlier maintained high sieve. The original `JointAllRoot` dependency chain has not yet been compiled together with it.
+
+The remaining cases simplify by parity: the new j is even and (j+m)%4=3. Agent3's five base restrictions, the rectangular m%32=5/j%32=12 exclusion, and all four Agent19 special restrictions are incompatible with those residues. The all-depth pair-residue restriction fails by `tower_prior_avoided`. Consequently, assuming the source modules are accepted, each tower family removes infinitely many high candidates that **all survived the previous Agent19 joint parameter criterion**.
+
 ## Formal results
 
 - [M8OddTower.lean](M8OddTower.lean): `tower_stopping_algebra`, `tower_every_odd_unreachable`, `tower_odd_depth`. Main root theorem has no `sorryAx` in local source-body compilation against exact-signature assumptions.
