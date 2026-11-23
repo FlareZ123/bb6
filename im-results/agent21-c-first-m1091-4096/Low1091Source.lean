@@ -477,6 +477,451 @@ theorem first_stop_m12355_mod16384 (time m k : Nat)
 #print axioms no_low_target_q0
 #print axioms no_low_target_q11
 #print axioms first_stop_m1091_mod4096
+
+
+/-! A new exact first-stop exclusion on the m = 6723 (mod 8192) cylinder.
+    This specializes the m = 512z+67 second fan to z = 13 (mod 16):
+    v2(519z+73)=2, and both possible parents of the forced state are in
+    the source-forbidden odd-right/sum-two image class. -/
+
+def low6723M (t : Nat) : Nat := 8192*t+6723
+def low6723Z (t : Nat) : Nat := 16*t+13
+def low6723W (t : Nat) : Nat :=
+  2^(2*low6723M t-1) - (96*low6723Z t+13)
+def low6723V (t : Nat) : Nat := low6723W t / 64
+def low6723H (t : Nat) : Nat :=
+  173*2^(2*low6723M t-8) - (2076*t+1705)
+def low6723K (t : Nat) : Nat :=
+  2^(2*low6723M t+3) - (3*low6723M t+4)
+
+private theorem low6723_params (t : Nat) :
+    low6723M t = 512*low6723Z t+67 ∧
+    low6723W t = 64*low6723V t+19 ∧
+    low6723V t+24*t+20 = 2^(2*low6723M t-7) := by
+  let m := low6723M t
+  let z := low6723Z t
+  let w := low6723W t
+  let v := low6723V t
+  have hm : m=512*z+67 := by
+    dsimp [m,z,low6723M,low6723Z]
+    omega
+  have hc : 96*z+13≤m := by
+    rw [hm]
+    dsimp [z,low6723Z]
+    omega
+  have hlt : 2*m-2 < 2^(2*m-2) := by
+    have h := Nat.le_two_pow_self (2*m-2)
+    omega
+  have hpowEq : 2^(2*m-1)=2*2^(2*m-2) := by
+    calc
+      2^(2*m-1)=2^((2*m-2)+1) := by congr 1 <;> omega
+      _=2^(2*m-2)*2 := by rw [Nat.pow_succ]
+      _=2*2^(2*m-2) := by ring
+  have hmul := Nat.mul_lt_mul_of_pos_left hlt (by norm_num : 0<2)
+  rw [hpowEq] at hmul
+  have hPowBig : 2*m < 2^(2*m-1) := by omega
+  have hbig : 96*z+13≤2^(2*m-1) := by omega
+  have hdiff : w+(96*z+13)=2^(2*m-1) := by
+    dsimp [w,low6723W]
+    exact Nat.sub_add_cancel hbig
+  have hpowdiv : 64∣2^(2*m-1) := by
+    change 2^6∣2^(2*m-1)
+    exact Nat.pow_dvd_pow 2 (by omega)
+  have hpmod : (2^(2*m-1))%64=0 :=
+    Nat.mod_eq_zero_of_dvd hpowdiv
+  have hcmod : (96*z+13)%64=45 := by
+    dsimp [z,low6723Z]
+    omega
+  have hsumMod : (w+(96*z+13))%64=0 := by
+    rw [hdiff,hpmod]
+  rw [Nat.add_mod] at hsumMod
+  have hwlt : w%64<64 := Nat.mod_lt w (by norm_num)
+  have hwmod : w%64=19 := by omega
+  have hW : w=64*v+19 := by
+    have h := Nat.mod_add_div w 64
+    dsimp [v,low6723V]
+    omega
+  have hcExpr : 96*z+13=64*(24*t+19)+45 := by
+    dsimp [z,low6723Z]
+    omega
+  have hpowFactor : 2^(2*m-1)=64*2^(2*m-7) := by
+    calc
+      2^(2*m-1)=2^(6+(2*m-7)) := by congr 1 <;> omega
+      _=2^6*2^(2*m-7) := by rw [Nat.pow_add]
+      _=64*2^(2*m-7) := by norm_num
+  have hvEq : v+24*t+20=2^(2*m-7) := by
+    rw [hW,hcExpr,hpowFactor] at hdiff
+    omega
+  exact ⟨hm,hW,hvEq⟩
+
+private theorem no_blank_odd_sum_two_ne51 (x y : Nat)
+    (hr : CReach x y) (hyo : y%2=1)
+    (hs : (x+y)%4=2) (hne : (x,y)≠(5,1)) : False := by
+  rcases hr with ⟨time,ht⟩
+  have hpair := BB6Agent38.blank_section_mod4 time x y ht hyo hs
+  exact hne hpair
+
+/-- Every parent of the special R-state is in the source-forbidden
+    odd-right/sum-two class. -/
+private theorem low6723_parent_mod4 (a k x y H : Nat)
+    (hx : 5<x) (hy : 5≤y)
+    (hxe : x%2=0) (hyo : y%2=1)
+    (hT : x+y+1=16*H) (hH4 : H%4=3)
+    (hU : (x+2*y)%8=6)
+    (hedge : secNext (a,k)=some (x,y)) :
+    k%2=1 ∧ (a+k)%4=2 ∧ a<2*k := by
+  have hp := (complete_section_inverse a k x y hy).mp hedge
+  by_cases ha0 : a=0
+  · by_cases hk0 : k=0
+    · simp [sectionPreimageCriterion,ha0,hk0] at hp
+    · by_cases hk1 : k=1
+      · simp [sectionPreimageCriterion,ha0,hk0,hk1] at hp
+        omega
+      · simp only [sectionPreimageCriterion,if_pos ha0,if_neg hk0,if_neg hk1] at hp
+        rcases hp with ⟨n,⟨hpow,_⟩⟩
+        have hodd : (x+y)%2=1 := by omega
+        have heven : (2^n*8)%2=0 := by simp [Nat.mul_mod]
+        rw [hpow] at hodd
+        omega
+  · by_cases ha1 : a=1
+    · by_cases hk0 : k=0
+      · simp [sectionPreimageCriterion,ha0,ha1,hk0] at hp
+      · by_cases hk1 : k=1
+        · simp [sectionPreimageCriterion,ha0,ha1,hk0,hk1] at hp
+        · by_cases hk2 : k=2
+          · simp [sectionPreimageCriterion,ha0,ha1,hk0,hk1,hk2] at hp
+            omega
+          · by_cases hk3 : k=3
+            · simp [sectionPreimageCriterion,ha0,ha1,hk0,hk1,hk2,hk3] at hp
+              omega
+            · simp only [sectionPreimageCriterion,if_neg ha0,if_pos ha1,
+                if_neg hk0,if_neg hk1,if_neg hk2,if_neg hk3] at hp
+              rcases hp with ⟨n,⟨hpow,_⟩⟩
+              have hEq : H=2^n := by
+                rw [hT] at hpow
+                omega
+              have hHodd : H%2=1 := by omega
+              cases n with
+              | zero =>
+                  simp at hEq
+                  omega
+              | succ n =>
+                  rw [hEq] at hHodd
+                  simp at hHodd
+    · have ha2 : 2≤a := by omega
+      by_cases hk0 : k=0
+      · simp [sectionPreimageCriterion,ha0,ha1,hk0] at hp
+      · by_cases hlow : 2*k≤a
+        · simp only [sectionPreimageCriterion,if_neg ha0,if_neg ha1,
+            if_neg hk0,if_pos hlow] at hp
+          rcases hp with ⟨_,hyEq⟩
+          have hyEven : y%2=0 := by rw [hyEq]; omega
+          omega
+        · by_cases haeven : a%2=0
+          · simp only [sectionPreimageCriterion,if_neg ha0,if_neg ha1,
+              if_neg hk0,if_neg hlow,if_pos haeven] at hp
+            rcases hp with ⟨n,⟨hpow,_⟩⟩
+            have hodd : (x+y)%2=1 := by omega
+            have heven : (2^n*(2*(a-1)+6))%2=0 := by
+              simp [Nat.mul_mod]
+            rw [hpow] at hodd
+            omega
+          · simp only [sectionPreimageCriterion,if_neg ha0,if_neg ha1,
+              if_neg hk0,if_neg hlow,if_neg haeven] at hp
+            rcases hp with ⟨n,⟨hpow,hcost⟩⟩
+            have hform : 2*(a-1)+8=2*(a+3) := by omega
+            have hmod : (a+3)%2=0 := by omega
+            have hdivA : 2∣a+3 := Nat.dvd_of_mod_eq_zero hmod
+            rcases hdivA with ⟨q,hq⟩
+            have hfour : 4∣2*(a-1)+8 := by
+              rw [hform]
+              refine ⟨q,?_⟩
+              rw [hq]
+              omega
+            have hn : n≤2 := by
+              by_contra h
+              have hn3 : 3≤n := by omega
+              have hpowdiv8 : 8∣2^n := by
+                change 2^3∣2^n
+                exact Nat.pow_dvd_pow 2 hn3
+              rcases hpowdiv8 with ⟨p,hp⟩
+              rcases hfour with ⟨q,hq⟩
+              have hdiv32 : 32∣x+y+1 := by
+                refine ⟨p*q,?_⟩
+                rw [hpow,hp,hq]
+                ring
+              have hmod0 : (x+y+1)%32=0 :=
+                Nat.mod_eq_zero_of_dvd hdiv32
+              have hHodd : H%2=1 := by omega
+              have hHdecomp : H=2*(H/2)+1 := by
+                have h := Nat.mod_add_div H 2
+                omega
+              have hmod16 : (x+y+1)%32=16 := by
+                rw [hT,hHdecomp]
+                omega
+              omega
+            have haOdd : a%2=1 := by
+              have hlt : a%2<2 := Nat.mod_lt a (by omega)
+              omega
+            have hcost' : 2*k+a+7+3*n=x+2*y := by omega
+            have hnEven : n%2=0 := by omega
+            have hnCases : n=0 ∨ n=2 := by omega
+            rcases hnCases with hn0 | hn2
+            · subst n
+              simp at hpow hcost
+              rw [hform] at hpow
+              have haEq : a+3=8*H := by
+                rw [hT] at hpow
+                omega
+              have ha8 : a%8=5 := by omega
+              have hk4 : k%4=1 := by omega
+              have hsum : (a+k)%4=2 := by omega
+              exact ⟨by omega,hsum,by omega⟩
+            · subst n
+              simp at hpow hcost
+              rw [hform] at hpow
+              have haEq : a+3=2*H := by
+                rw [hT] at hpow
+                omega
+              have ha8 : a%8=3 := by omega
+              have hk4 : k%4=3 := by omega
+              have hsum : (a+k)%4=2 := by omega
+              exact ⟨by omega,hsum,by omega⟩
+
+private theorem low6723_R_unreachable (t : Nat) :
+    ¬ CReach (720*low6723V t+208) (664*low6723V t+191) := by
+  let m := low6723M t
+  let v := low6723V t
+  let x := 720*v+208
+  let y := 664*v+191
+  let H := low6723H t
+  let q := 2076*t+1705
+  have hparams := low6723_params t
+  rcases hparams with ⟨hm,hW,hvEq⟩
+  have hqleExp : q≤2*m-8 := by
+    dsimp [q,m,low6723M]
+    omega
+  have hpowgt : 2*m-8<2^(2*m-8) := by
+    have h := Nat.le_two_pow_self (2*m-8)
+    omega
+  have hqle : q≤173*2^(2*m-8) := by omega
+  have hHplus : H+q=173*2^(2*m-8) := by
+    dsimp [H,low6723H]
+    exact Nat.sub_add_cancel hqle
+  have hpowdiv4 : 4∣2^(2*m-8) := by
+    change 2^2∣2^(2*m-8)
+    exact Nat.pow_dvd_pow 2 (by omega)
+  have hpowmod4 : (2^(2*m-8))%4=0 :=
+    Nat.mod_eq_zero_of_dvd hpowdiv4
+  have hfirstmod : (173*2^(2*m-8))%4=0 := by
+    rw [Nat.mul_mod,hpowmod4]
+    norm_num
+  have hqmod : q%4=1 := by
+    dsimp [q]
+    omega
+  have hHmod : H%4=3 := by
+    have hsum : (H+q)%4=0 := by rw [hHplus,hfirstmod]
+    rw [Nat.add_mod,hqmod] at hsum
+    omega
+  have hpow16 : 2^(2*m-4)=16*2^(2*m-8) := by
+    calc
+      2^(2*m-4)=2^(4+(2*m-8)) := by congr 1 <;> omega
+      _=2^4*2^(2*m-8) := by rw [Nat.pow_add]
+      _=16*2^(2*m-8) := by norm_num
+  have hH16 : 16*H+16*q=173*2^(2*m-4) := by
+    calc
+      16*H+16*q=16*(H+q) := by ring
+      _=16*(173*2^(2*m-8)) := by rw [hHplus]
+      _=173*(16*2^(2*m-8)) := by ring
+      _=173*2^(2*m-4) := by rw [hpow16]
+  have hpow8 : 2^(2*m-4)=8*2^(2*m-7) := by
+    calc
+      2^(2*m-4)=2^(3+(2*m-7)) := by congr 1 <;> omega
+      _=2^3*2^(2*m-7) := by rw [Nat.pow_add]
+      _=8*2^(2*m-7) := by norm_num
+  have hTplus : x+y+1+16*q=173*2^(2*m-4) := by
+    dsimp [x,y]
+    rw [hpow8,hvEq]
+    omega
+  have hT : x+y+1=16*H := by omega
+  have hU : (x+2*y)%8=6 := by
+    dsimp [x,y]
+    omega
+  have hx : 5<x := by dsimp [x]; omega
+  have hy : 5≤y := by dsimp [y]; omega
+  have hxe : x%2=0 := by dsimp [x]; omega
+  have hyo : y%2=1 := by dsimp [y]; omega
+  intro hr
+  obtain ⟨a,k,hrp,hedge⟩ := cReach_parent_of_right5 x y hy hr
+  have hpar := low6723_parent_mod4 a k x y H hx hy hxe hyo hT hHmod hU hedge
+  have hne : (a,k)≠(5,1) := by
+    intro h
+    cases Prod.mk.inj h
+    omega
+  exact no_blank_odd_sum_two_ne51 a k hrp hpar.1 hpar.2.1 hne
+
+private theorem low6723_target_reaches_R (t : Nat)
+    (hT : CReach 1 (low6723K t)) :
+    CReach (720*low6723V t+208) (664*low6723V t+191) := by
+  let m := low6723M t
+  let z := low6723Z t
+  let w := low6723W t
+  let v := low6723V t
+  let K := low6723K t
+  have hparams := low6723_params t
+  rcases hparams with ⟨hm,hW,hvEq⟩
+  have hlt : 2*m<2^(2*m) := by
+    have h := Nat.le_two_pow_self (2*m)
+    omega
+  have hpow8 : 2^(2*m+3)=8*2^(2*m) := by
+    calc
+      2^(2*m+3)=2^(2*m+3) := rfl
+      _=2^(2*m)*2^3 := by rw [Nat.pow_add]
+      _=8*2^(2*m) := by norm_num
+  have hle : 3*m+4≤2^(2*m+3) := by rw [hpow8]; omega
+  have hKadd : K+3*m+4=2^(2*m+3) := by
+    dsimp [K,low6723K]
+    exact Nat.sub_add_cancel hle
+  have hpowdiv1024 : 1024∣2^(2*m+3) := by
+    change 2^10∣2^(2*m+3)
+    exact Nat.pow_dvd_pow 2 (by omega)
+  have hpowmod1024 : (2^(2*m+3))%1024=0 :=
+    Nat.mod_eq_zero_of_dvd hpowdiv1024
+  have h3m1024 : (3*m+4)%1024=717 := by
+    rw [hm]
+    dsimp [z,low6723Z]
+    omega
+  have hKmod : K%1024=307 := by
+    have hsum : (K+3*m+4)%1024=0 := by rw [hKadd,hpowmod1024]
+    rw [Nat.add_mod,h3m1024] at hsum
+    omega
+  have hKge : 5≤K := by omega
+  have hKodd : K%2=1 := by omega
+  have hpowdiv8 : 8∣2^(2*m+3) := by
+    change 2^3∣2^(2*m+3)
+    exact Nat.pow_dvd_pow 2 (by omega)
+  have hpowmod8 : (2^(2*m+3))%8=0 :=
+    Nat.mod_eq_zero_of_dvd hpowdiv8
+  have h3m3 : (3*m+3)%8=4 := by
+    rw [hm]
+    dsimp [z,low6723Z]
+    omega
+  have hsum8 : (1+K)%8=4 := by
+    have hsum : ((1+K)+(3*m+3))%8=0 := by
+      have hEq : (1+K)+(3*m+3)=2^(2*m+3) := by omega
+      rw [hEq,hpowmod8]
+    rw [Nat.add_mod,h3m3] at hsum
+    omega
+  have hPuniq : ∀ a k, secNext (a,k)=some (1,K) →
+      a=8*w ∧ k=12*w := by
+    intro a k hedge
+    have hp := odd_odd_sum4_parent a k 1 K
+      (by omega) (by omega) hKge (by omega) hKodd hsum8 hedge
+    rcases hp with ⟨ha,hk⟩
+    have hpow1024 : 2^(2*m+3)=1024*2^(2*m-7) := by
+      calc
+        2^(2*m+3)=2^(10+(2*m-7)) := by congr 1 <;> omega
+        _=2^10*2^(2*m-7) := by rw [Nat.pow_add]
+        _=1024*2^(2*m-7) := by norm_num
+    have hP1sum : 2*(8*w+2)+(3*m+3)=2^(2*m+3) := by
+      rw [hW,hpow1024,hm]
+      omega
+    have hKsum : (1+K)+(3*m+3)=2^(2*m+3) := by omega
+    have hP1 : 2*(8*w+2)=1+K := by omega
+    have hpow2048 : 2^(2*m+4)=2048*2^(2*m-7) := by
+      calc
+        2^(2*m+4)=2^(11+(2*m-7)) := by congr 1 <;> omega
+        _=2^11*2^(2*m-7) := by rw [Nat.pow_add]
+        _=2048*2^(2*m-7) := by norm_num
+    have hP2sum : 32*w+6+6*m+8=2^(2*m+4) := by
+      rw [hW,hpow2048,hm]
+      omega
+    have hdouble : 2*2^(2*m+3)=2^(2*m+4) := by
+      calc
+        2*2^(2*m+3)=2^(2*m+3)*2 := by ring
+        _=2^(2*m+3+1) := by rw [← Nat.pow_succ]
+        _=2^(2*m+4) := by congr 1 <;> omega
+    have hK2sum : 2*K+6*m+8=2^(2*m+4) := by
+      calc
+        2*K+6*m+8=2*(K+3*m+4) := by ring
+        _=2*2^(2*m+3) := by rw [hKadd]
+        _=2^(2*m+4) := hdouble
+    have hP2 : 2*K=32*w+6 := by omega
+    constructor <;> omega
+  have hP : CReach (8*w) (12*w) :=
+    cReach_of_unique_parent 1 K (8*w) (12*w) (by omega) hPuniq hT
+  have hPzero : (8*w+12*w)%8≠0 := by rw [hW]; omega
+  have hPseven : (8*w+12*w)%8≠7 := by rw [hW]; omega
+  have hD0 := cReach_even_right_parent (8*w) (12*w)
+    (by omega) (by omega) (by omega) hPzero hPseven hP
+  have hD : CReach (20*w-2) (6*w-1) := by
+    have hx : 8*w+12*w-2=20*w-2 := by omega
+    have hraw : CReach (20*w-2) ((12*w-2)/2) := by
+      simpa [hx] using hD0
+    have hnum : 12*w-2=2*(6*w-1) := by omega
+    have hy : (12*w-2)/2=6*w-1 := by rw [hnum]; simp
+    rw [hy] at hraw
+    exact hraw
+  have hDuniq : ∀ a k, secNext (a,k)=some (20*w-2,6*w-1) →
+      a=13*w-4 ∧ k=(19*w-7)/2 := by
+    intro a k hedge
+    have hs : ((20*w-2)+(6*w-1)+1)%8=4 := by rw [hW]; omega
+    have hp := even_odd_sumplus1_mod8_4_parent a k
+      (20*w-2) (6*w-1) (by omega) (by omega)
+      (by omega) (by omega) hs hedge
+    constructor <;> omega
+  have hQ : CReach (13*w-4) ((19*w-7)/2) :=
+    cReach_of_unique_parent (20*w-2) (6*w-1)
+      (13*w-4) ((19*w-7)/2) (by omega) hDuniq hD
+  have hQx : 13*w-4=832*v+243 := by rw [hW]; omega
+  have hQy : (19*w-7)/2=608*v+177 := by rw [hW]; omega
+  have hQsum : ((13*w-4)+(19*w-7)/2)%8=4 := by
+    rw [hQx,hQy]
+    omega
+  have hQuniq : ∀ a k, secNext (a,k)=some (13*w-4,(19*w-7)/2) →
+      a=720*v+208 ∧ k=664*v+191 := by
+    intro a k hedge
+    have hp := odd_odd_sum4_parent a k (13*w-4) ((19*w-7)/2)
+      (by rw [hQx]; omega) (by rw [hQx]; omega)
+      (by rw [hQy]; omega) (by rw [hQx]; omega)
+      (by rw [hQy]; omega) hQsum hedge
+    rcases hp with ⟨ha,hk⟩
+    rw [hQx,hQy] at ha hk
+    constructor <;> omega
+  exact cReach_of_unique_parent (13*w-4) ((19*w-7)/2)
+    (720*v+208) (664*v+191) (by omega) hQuniq hQ
+
+/-- Every first stopping target with m=6723 (mod 8192) is absent
+    from the all-time original blank section orbit. -/
+theorem first_stop_m6723_mod8192 (time m k : Nat)
+    (hm : m%8192=6723)
+    (hstop : k+3*m+4=2^(2*m+3)) :
+    BB6.Agent8Section.run secNext time (some (5,1)) ≠ some (1,k) := by
+  intro hrun
+  have hmEq : m=8192*(m/8192)+6723 := by omega
+  let t := m/8192
+  have hmeq : m=8192*t+6723 := by dsimp [t]; omega
+  have hlt : 2*m<2^(2*m) := by
+    have h := Nat.le_two_pow_self (2*m)
+    omega
+  have hpow : 2^(2*m+3)=8*2^(2*m) := by
+    calc
+      2^(2*m+3)=2^(2*m+3) := rfl
+      _=2^(2*m)*2^3 := by rw [Nat.pow_add]
+      _=8*2^(2*m) := by norm_num
+  have hle : 3*m+4≤2^(2*m+3) := by rw [hpow]; omega
+  have hK : k=2^(2*m+3)-(3*m+4) := by omega
+  have hT : CReach 1 (low6723K t) := by
+    refine ⟨time,?_⟩
+    dsimp [low6723K,low6723M]
+    rw [hmeq,hK]
+    exact hrun
+  have hR := low6723_target_reaches_R t hT
+  exact low6723_R_unreachable t hR
+
+#print axioms first_stop_m6723_mod8192
+
+
 #print axioms first_stop_m12355_mod16384
 end BB6.Agent21Low1091
 
