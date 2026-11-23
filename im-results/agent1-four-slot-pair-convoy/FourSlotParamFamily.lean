@@ -69,8 +69,8 @@ theorem table_masses :
   decide
 
 theorem table_mass (p : PartialMachine) (hp : p ∈ tables) :
-    cylinderMass p = 25^8 :=
-  (List.all_eq_true.mp table_masses) p hp
+    cylinderMass p = 25^8 := by
+  exact of_decide_eq_true ((List.all_eq_true.mp table_masses) p hp)
 
 theorem union_mass_numeric :
     300 * 25^8 = 45776367187500 := by decide
