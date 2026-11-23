@@ -9,6 +9,22 @@ tok_EL_exit_zero, and original cfg/tape definitions.
 Status: uncompiled, not axiom audited; no sorry added.
 -/
 
+private theorem s3_nat_push (d k : ℕ) (L : List ℕ) :
+    List.replicate k d ++ (d::L) =
+      d::(List.replicate k d ++ L) := by
+  induction k with
+  | zero => rfl
+  | succ k ih =>
+      simpa only [List.replicate_succ, List.cons_append] using
+        congrArg (List.cons d) ih
+
+private theorem s3_nat_replicate_next (d k : ℕ) (L : List ℕ) :
+    List.replicate (k+2) d ++ L =
+      d::(List.replicate (k+1) d ++ L) := by
+  rw [show k+2 = (k+1)+1 by omega, List.replicate_add]
+  simpa [s3_nat_push, List.cons_append, List.append_assoc] using
+    (s3_nat_push d (k+1) L)
+
 private theorem s3_tok_dr_zeros (k : ℕ) (K1 : List ℕ)
     (R3 : List (ℕ × ℕ)) (L : List ℕ) :
     ReachesPlus target
@@ -24,11 +40,12 @@ private theorem s3_tok_dr_zeros (k : ℕ) (K1 : List ℕ)
             (tok_DR (2::K1) R3 (List.replicate (k+2) 0 ++ L))
             (tok_DR (2::1::K1) R3
               (List.replicate (k+1) 0 ++ L)) := by
-        simpa [List.replicate_succ, List.cons_append] using
+        simpa [s3_nat_replicate_next, List.replicate_succ, List.cons_append,
+          List.append_assoc] using
           (tok_DR_zero K1 R3 (List.replicate (k+1) 0 ++ L))
       have h2 := ih (1::K1) L
       exact ReachesPlus.trans h1
-        (by simpa [List.replicate_succ, List.cons_append,
+        (by simpa [s3_nat_push, List.replicate_succ, List.cons_append,
           List.append_assoc] using h2)
 
 private theorem s3_tok_el_ones (k : ℕ) (K1 : List ℕ)
@@ -46,11 +63,12 @@ private theorem s3_tok_el_ones (k : ℕ) (K1 : List ℕ)
             (tok_EL (List.replicate (k+2) 1 ++ K1) R3 L)
             (tok_EL (List.replicate (k+1) 1 ++ K1)
               R3 (0::L)) := by
-        simpa [List.replicate_succ, List.cons_append] using
+        simpa [s3_nat_push, List.replicate_succ, List.cons_append,
+          List.append_assoc] using
           (tok_EL_1 (List.replicate (k+1) 1 ++ K1) R3 L)
       have h2 := ih K1 (0::L)
       exact ReachesPlus.trans h1
-        (by simpa [List.replicate_succ, List.cons_append,
+        (by simpa [s3_nat_push, List.replicate_succ, List.cons_append,
           List.append_assoc] using h2)
 
 private theorem s3_tok_dr_z1 (k : ℕ) (R3 : List (ℕ × ℕ)) :
@@ -65,7 +83,7 @@ private theorem s3_tok_dr_z1 (k : ℕ) (R3 : List (ℕ × ℕ)) :
         (tok_DR (2::List.replicate (k+1) 1 ++ [0]) R3 [1])
         (tok_EL (List.replicate (k+2) 1 ++ [0])
           R3 [0,0,0,1]) := by
-    simpa [List.replicate_succ, List.cons_append,
+    simpa [s3_nat_push, List.replicate_succ, List.cons_append,
       List.append_assoc] using
       (tok_DR_1_nil_28 (List.replicate (k+1) 1 ++ [0]) R3)
   have h3 :
@@ -73,7 +91,12 @@ private theorem s3_tok_dr_z1 (k : ℕ) (R3 : List (ℕ × ℕ)) :
         (tok_EL (List.replicate (k+2) 1 ++ [0])
           R3 [0,0,0,1])
         (tok_EL [0] R3 (List.replicate (k+5) 0 ++ [1])) := by
-    simpa [List.replicate_succ, List.cons_append,
+    have hz :
+        List.replicate ((k+1)+1) 0 ++ [0,0,0,1] =
+        List.replicate (k+5) 0 ++ [1] := by
+      rw [show k+5=((k+1)+1)+3 by omega, List.replicate_add]
+      rfl
+    simpa [hz, s3_nat_push, List.replicate_succ, List.cons_append,
       List.append_assoc] using
       (s3_tok_el_ones (k+1) [0] R3 [0,0,0,1])
   have h4 := tok_EL_exit_zero R3
@@ -97,6 +120,12 @@ private theorem s3_dl_one_z1 (k : ℕ) :
       encRight_eq_nat (List.replicate (k+1) (0,0) ++ [(1,0)]),
       encTokens_succ, encTokens_succ, encTokens_zero,
       encTokens_zero, encTokens_nil]
+    have hmap :
+        List.map Prod.fst
+          (List.replicate (k+1) (0,0) ++ [(1,0)]) =
+        List.replicate (k+1) 0 ++ [1] := by
+      simp
+    rw [hmap]
     texecute 4
   have h2 := s3_tok_dr_z1 k []
   simpa [bumpPairHead, List.map_replicate, List.map_append] using
