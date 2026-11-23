@@ -547,3 +547,13 @@ No new Lean module was compiled. The local shell/Python tool boundary returned o
 - Propagated the corrected \(Q\) update through the 18-digit prefix from the seed to the second full-suffix event (relative return 929,375, before \(G(290)\)). There are 11 prefix-crossing gates in this finite path. At the event, the outward-rounded tail-excess interval is \(175,849,077\le Q_0\le702,151,658\).
 - Combining that interval with the valid Cauchy-Schwarz/chord tail inequalities gives only \(123,903,222\le q\le742,649,644\), which contains \(2^{27},2^{28},2^{29}\). The corrected recurrence is exact, but this straightforward 18-prefix propagation is not decisive.
 - The full-stack exact-Q interval at the same event is narrower, but depends on the finite full stack and is not an all-time root invariant. Do not repeat the coarse 18-prefix Q propagation without a sharper carry-remainder bound or a joint moment argument.
+
+
+### 2026-11-23T23:17:53.648Z — all-time discounted-moment bound
+
+- New derivation in im-results/agent5-s4-prefix-causal/DISCOUNTED-MOMENT-ASYMPTOTIC.md, with BigInt recurrence in discounted_moment_bounds.mjs.
+- For P_S(z)=sum_i (b_i+1) z^i, M=sum_i (b_i+1), and D=sum_i i(b_i+1), the exact carry generating-function identity gives, at every deep gate with r>=9, a centered contraction for R=P_S(z)-alpha*M, where z=2^-s and alpha=(3/2)z^10. Shallow-gate increments are exact from the nine-digit prefix.
+- The source-certified 81,920-P-return nine-digit cycle has 703 deep and 245,057 shallow gates per period. The centered period map contracts, so P_S(z)<=(3/2)z^10*M+C_s uniformly over every surviving root gate boundary. Exact BigInt upper recurrence gives C_s=(9155,1724,1036,839,757,720,702,693) for s=1,...,8.
+- Jensen P/M>=z^(D/M) yields liminf D/M>=10 along any infinite surviving S4 root trajectory. This improves the old asymptotic coefficient 9, but does not exclude a halt or prove survival.
+- The recurrence was executed in the JS tool runtime; the standalone .mjs reproduction was committed but not run from a local shell in this invocation. Required Lean bootstrap command was attempted through container.exec twice (both returned ClientError); Python session creation returned TooManyActiveSessionsError. No Lean/CI verification is claimed for this new result.
+- Next: combine the discounted constraints for several z with the existing first/second-moment tail fibre to sharpen odd-quotient intervals at the 703 candidate phases. Separately formalize the generating-function identity and centered contraction when a local Lean runtime or equipped collaborator is available.
