@@ -138,6 +138,93 @@ theorem prefix_0010100 : haltCheckWord 121 [false,false,true,false,true,false,fa
 theorem prefix_0110100 : haltCheckWord 78 [false,true,true,false,true,false,false] = true := by decide
 theorem prefix_0110111 : haltCheckWord 131 [false,true,true,false,true,true,true] = true := by decide
 
+/- This prefix-free trie has 64 leaves of length at most 12. Each entry
+   (w,n) is checked as an exact finite raw trace; the single theorem below
+   proves the entire union, rather than assuming results of a simulator. -/
+def prefixTable : List (List Bool × Nat) := [
+  ([false, false, false], 113),
+  ([false, false, true, false, false], 117),
+  ([false, true, true, false, false], 74),
+  ([false, false, true, true, false, false], 123),
+  ([false, true, false, false, false, false], 127),
+  ([false, false, true, false, true, false, false], 121),
+  ([false, true, true, false, true, false, false], 78),
+  ([false, true, true, false, true, true, true], 131),
+  ([false, false, true, false, true, true, false, false], 127),
+  ([false, false, true, true, false, true, false, false], 127),
+  ([false, false, true, true, false, true, true, true], 131),
+  ([false, true, false, false, false, true, false, false], 131),
+  ([false, true, false, false, false, true, true, true], 135),
+  ([false, true, true, false, true, true, false, false], 81),
+  ([false, false, true, false, true, false, true, false, false], 125),
+  ([false, false, true, true, false, true, true, false, false], 169),
+  ([false, true, false, false, false, true, true, false, false], 173),
+  ([false, true, false, true, false, true, true, false, false], 131),
+  ([false, true, true, false, true, false, true, false, false], 82),
+  ([false, true, true, false, true, false, true, true, true], 137),
+  ([false, false, true, false, true, false, true, true, false, false], 131),
+  ([false, false, true, false, true, true, false, true, false, false], 131),
+  ([false, false, true, false, true, true, false, true, true, true], 135),
+  ([false, false, true, true, false, true, false, true, false, false], 131),
+  ([false, false, true, true, false, true, false, true, true, true], 137),
+  ([false, true, false, false, false, true, false, true, false, false], 135),
+  ([false, true, false, false, false, true, false, true, true, true], 141),
+  ([false, true, false, true, true, false, true, true, true, false], 153),
+  ([false, true, true, false, true, false, true, true, false, false], 94),
+  ([false, true, true, false, true, true, false, true, false, false], 85),
+  ([false, true, true, false, true, true, false, true, true, true], 92),
+  ([false, false, true, false, true, false, true, false, true, false, false], 129),
+  ([false, false, true, false, true, true, false, true, true, false, false], 173),
+  ([false, false, true, true, false, true, false, true, true, false, false], 137),
+  ([false, false, true, true, false, true, true, false, true, false, false], 173),
+  ([false, false, true, true, false, true, true, false, true, true, true], 141),
+  ([false, true, false, false, false, true, false, true, true, false, false], 141),
+  ([false, true, false, false, false, true, true, false, true, false, false], 177),
+  ([false, true, false, false, false, true, true, false, true, true, true], 145),
+  ([false, true, false, true, false, true, false, true, true, false, false], 153),
+  ([false, true, false, true, false, true, true, false, true, false, false], 135),
+  ([false, true, false, true, true, false, true, true, false, false, false], 129),
+  ([false, true, true, false, true, false, true, false, true, false, false], 86),
+  ([false, true, true, false, true, false, true, false, true, true, true], 143),
+  ([false, true, true, false, true, true, false, true, true, false, false], 88),
+  ([false, false, true, false, true, false, true, false, true, true, false, false], 135),
+  ([false, false, true, false, true, false, true, true, false, true, false, false], 135),
+  ([false, false, true, false, true, false, true, true, false, true, true, true], 139),
+  ([false, false, true, false, true, true, false, true, false, true, false, false], 135),
+  ([false, false, true, false, true, true, false, true, false, true, true, true], 141),
+  ([false, false, true, true, false, true, false, true, false, true, false, false], 135),
+  ([false, false, true, true, false, true, false, true, false, true, true, true], 143),
+  ([false, false, true, true, false, true, true, false, true, true, false, false], 165),
+  ([false, true, false, false, false, true, false, true, false, true, false, false], 139),
+  ([false, true, false, false, false, true, false, true, false, true, true, true], 147),
+  ([false, true, false, false, false, true, true, false, true, true, false, false], 169),
+  ([false, true, false, true, true, false, true, false, true, true, true, false], 163),
+  ([false, true, false, true, true, false, true, true, true, true, false, false], 157),
+  ([false, true, false, true, true, false, true, true, true, true, true, true], 165),
+  ([false, true, true, false, true, false, true, false, true, true, false, false], 92),
+  ([false, true, true, false, true, false, true, true, false, true, false, false], 98),
+  ([false, true, true, false, true, false, true, true, false, true, true, true], 96),
+  ([false, true, true, false, true, true, false, true, false, true, false, false], 89),
+  ([false, true, true, false, true, true, false, true, false, true, true, true], 98)
+]
+
+/- One kernel-evaluated, proof-carrying table certificate. -/
+theorem prefixTable_checked :
+    ∀ e ∈ prefixTable, 0 < e.2 ∧ haltCheckWord e.2 e.1 = true := by
+  decide
+
+/- Every table entry describes an infinite cylinder of halting right tapes,
+   uniformly for all left pair-stack lengths m >= 3. -/
+theorem all_prefix_table_halting (m n : Nat) (w ys : List Bool)
+    (hm : 3 ≤ m) (hmem : (w,n) ∈ prefixTable) :
+    ∃ c, run n (some (startActualWord m (w ++ ys))) = some c ∧
+      c.state = 5 ∧ c.tape c.pos = true ∧ step c = none := by
+  have h := prefixTable_checked (w,n) hmem
+  exact halts_with_arbitrary_suffix n m w ys h.1 hm h.2
+
+#print axioms prefixTable_checked
+#print axioms all_prefix_table_halting
+
 #print axioms initialWordEqOn
 #print axioms haltCheckWord_sound
 #print axioms halts_with_arbitrary_suffix
