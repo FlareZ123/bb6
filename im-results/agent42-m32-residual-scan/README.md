@@ -153,6 +153,18 @@ sum 0 mod 4, evenSeven/evenOddFour require x even, and all even-y gates
 are false. Thus the displayed R→O and R→R→A paths really terminate at
 the stated excluded pairs, rather than merely passing through them.
 
+The gate order at each stage is also controlled by the listed residues.
+In both non-STOP classes the initial x is odd, y=k is even, and
+x+y ≡ 3 (mod 4), so oddLow, evenSeven, and evenAffine are false; the
+six-even-right gate is the first applicable gate because x+y ≡ 3
+(mod 8). In the R→R→A class, after the first R the new x1 is odd,
+y1 is even, and x1+y1 ≡ 3 (mod 4) and 3 (mod 8), so the second R
+is again the first applicable gate. After that second R, x2 is odd,
+y2 is even, and x2+y2 ≡ 1 (mod 4), so evenAffine is the first
+applicable gate. In the R→O class, after the first R both coordinates
+are odd and x1+y1 ≡ 8 (mod 16), so oddLow is the first applicable
+gate.
+
 The size guards (y≥4, y≥5, y≥6, and x+y thresholds) follow from
 j≥3,m≥2 and the stop-k formula; the smallest initial k is already
 370. The modular residues above determine the branch tests, while
