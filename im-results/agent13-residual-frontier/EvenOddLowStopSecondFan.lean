@@ -293,6 +293,7 @@ theorem second_high_parent_depth_one_of_odd_r
     (hr : r%2=1)
     (hcond : secondHighParentCondition (4*r+3) u n a k) :
     n=1 := by
+  have hnodd : n%2=1 := hcond.1
   have hdvd := second_high_parent_depth_divides (4*r+3) u n a k hu hcond
   have hidentity :
       3*(685*(4*r+3)+49)=12*(685*r+526) := by omega
@@ -335,7 +336,8 @@ theorem low_ray_z14_second_fan_reach_iff
         second_high_parent_depth_one_of_odd_r r u n a k hu hr hcond
       subst n
       exact Or.inr ⟨a,k,hcond,hreach⟩
-  · exact hsecond.mpr hparents
+  · intro hparents
+    exact hsecond.mpr hparents
 
 #print axioms low_ray_z14_second_fan_reach_iff
 end BB6.Agent13LowSecondFan
