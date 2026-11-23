@@ -44,7 +44,7 @@ theorem root_countdown_dl_positive_step (a : ℕ) (L R : List (ℕ × ℕ)) :
   rw [encLeft_mod1 (a+2) 0 R, Nat.mod_one 0,
     encLeft_succ (a+1) 0 R, encLeft_succ a 0 R,
     encLeft_run_s0 a R, encLeft_d1_s0 ((a,0) :: R),
-    encLeft_run_s0 R]
+    encLeft_run_s0 a R]
   execute 4
 
 theorem root_countdown_dr_zero_step (L R : List (ℕ × ℕ)) :
@@ -55,7 +55,7 @@ theorem root_countdown_dr_zero_step (L R : List (ℕ × ℕ)) :
   rw [encRight_mod1 0 0 L, Nat.mod_one 0, encRight_d0_s0 L,
     encLeft_mod1 1 0 R, Nat.mod_one 0, encLeft_succ 0 0 R,
     encLeft_run_s0 0 R, encLeft_d1_s0 ((0,0) :: R),
-    encLeft_run_s0 R]
+    encLeft_run_s0 0 R]
   execute 4
 
 theorem root_countdown_dr_empty_left_step (R : List (ℕ × ℕ)) :
@@ -100,7 +100,7 @@ theorem root_countdown_el_zero_sweep (k : ℕ) (L R : List (ℕ × ℕ)) :
     ReachesPlus target
       (cfg_EL_n_n L (List.replicate (k+1) (0,0) ++ R))
       (cfg_EL_n_n (List.replicate (k+1) (0,0) ++ L) R) := by
-  induction k with
+  induction k generalizing L R with
   | zero =>
       simpa using root_countdown_el_zero_step L R
   | succ k ih =>
@@ -114,7 +114,7 @@ theorem root_countdown_dr_zero_sweep (k : ℕ) (L R : List (ℕ × ℕ)) :
     ReachesPlus target
       (cfg_DR_n_n (List.replicate (k+1) (0,0) ++ L) ((1,0) :: R))
       (cfg_DR_n_n L ((1,0) :: (List.replicate (k+1) (0,0) ++ R))) := by
-  induction k with
+  induction k generalizing L R with
   | zero =>
       simpa using root_countdown_dr_zero_step L R
   | succ k ih =>
@@ -149,11 +149,17 @@ theorem root_countdown_cr_zero_sweep_singleton (k b : ℕ) (L : List (ℕ × ℕ
   | succ k ih =>
       have h1 := root_countdown_cr_zero_step
         (List.replicate (k+1) (0,0) ++ L) [(b,0)]
+      have h1' : ReachesPlus target
+          (cfg_CR_n_n (List.replicate (k+1) (0,0) ++ L) [(b,0)])
+          (cfg_CR_n_n (List.replicate (k+1) (0,0) ++ L) [(b+2,0)]) := by
+        simpa [bumpPairHead] using h1
       have h2 := ih (b+2) L
-      exact ReachesPlus.trans h1
-        (by
-          simpa [List.replicate_succ, List.cons_append, List.append_assoc,
-            Nat.add_assoc, Nat.add_left_comm, Nat.add_comm] using h2)
+      have hval : b+2+2*(k+1) = b+2*(k+2) := by omega
+      have h2' : ReachesPlus target
+          (cfg_CR_n_n (List.replicate (k+1) (0,0) ++ L) [(b+2,0)])
+          (cfg_CR_n_n L [(b+2*(k+2),0)]) := by
+        simpa [hval] using h2
+      exact ReachesPlus.trans h1' h2'
 
 
 theorem root_countdown_el_empty_step (L : List (ℕ × ℕ)) :
@@ -434,7 +440,7 @@ theorem root_chain_to_D65_2 :
         (ReachesPlus.trans h3'
           (ReachesPlus.trans h4
             (ReachesPlus.trans h5'
-              (ReachesPlus.trans h6 h7)))))
+              (ReachesPlus.trans h6 h7))))))
 
 
 theorem root_countdown_general_tail (x : ℕ) (hx : 6 ≤ x) :
@@ -465,7 +471,7 @@ theorem root_countdown_general_tail (x : ℕ) (hx : 6 ≤ x) :
   have h6 := root_countdown_el_positive_step 0 [(0,0)]
     [(0,0),(0,0),(x-3,0)]
   have h7 := root_countdown_dl_zero_step [(0,0)]
-    [(0,0),(x-3,0)]
+    [(0,0),(0,0),(x-3,0)]
   have h8 := root_countdown_el_zero_sweep 1 [(0,0),(1,0)]
     [(x-3,0)]
   have h9 := root_countdown_el_positive_step (x-4)
