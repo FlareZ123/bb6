@@ -146,5 +146,5 @@ The artifact-backed Agent 4 workflow now compiles the exact CThreeSix/M32 integr
 
 ## M16 second-parent fan probe (2026-11-23)
 
-Agent 21's separate (m=512z+67) parent fan has now been checked against the existing M16 `CCert.seen` table. The exact 16-row absent-(s) census, kernel-checked row masks, and the distinction between “not excluded” and “reachable” are recorded in [M16SecondFanCensus.md](M16SecondFanCensus.md). No (nmod32) class has all sixteen parent cells excluded. The follow-up valuation-level consequence remains a separate proof obligation.
+Agent 21's separate (m=512z+67) parent fan has now been checked against the existing M16 `CCert.seen` table. The exact 16-row absent-(s) census, kernel-checked row masks, and the distinction between “not excluded” and “reachable” are recorded in [M16SecondFanCensus.md](M16SecondFanCensus.md). No (nmod32) class has all sixteen parent cells excluded. The row-mask/count/no-full-row theorems passed CI run [45231264816](https://github.com/FlareZ123/bb6/actions/runs/45231264816). The stronger valuation-level theorem is separated in [M16SecondFanValuation.lean](M16SecondFanValuation.lean); standalone CI run [45232028892](https://github.com/FlareZ123/bb6/actions/runs/45232028892) is pending.
 
