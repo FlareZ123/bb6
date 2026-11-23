@@ -45,9 +45,6 @@ def rowMask (r : Nat) : Nat :=
 def rowMasks : List Nat := (List.range 16).map rowMask
 
 /-- Exact row masks: bit s is set precisely when the M16 quotient table
-    does not contain the corresponding c=0 parent cell. The individual
-    16-cell rows are kernel-reduced separately to keep proof terms small. -/
-/-- Exact row masks: bit s is set precisely when the M16 quotient table
     does not contain the corresponding c=0 parent cell. -/
 theorem rowMasks_exact :
     rowMasks =
