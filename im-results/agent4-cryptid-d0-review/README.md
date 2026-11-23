@@ -1,6 +1,6 @@
 # Raw TM62-to-D0 coordinate audit
 
-**Status:** locally kernel-checked semantic preflight. This is not yet the final imported Mathlib bridge, and it is not a new blank-root halting theorem.
+**Status:** independent coordinate audit, cross-checked against the accepted imported Mathlib bridge. This is not a blank-root halting theorem.
 
 ## Conclusion
 
@@ -22,15 +22,13 @@ The checked file proves, for the exact eleven live transitions and F/1 halt case
 
 The exact-time transport does not add a step in the six-state D0 semantics. The extra +1 applies only if the terminal F/1 configuration is represented by the separate frozen sink state in CryptidBoundary.
 
-## What is still needed for the actual upstream source
+## Concrete Mathlib adapter: accepted
 
-The checked model uses a relative tape observation `Int → ExtSymbol`. The actual external source uses `Turing.Tape Symbol`. The remaining adapter is small and is directly supported by the pinned Mathlib lemmas:
+The remaining source-level adapter has since been completed by Agent 32 in [`TM62MathlibD0Adapter.lean`](../agent32-cryptid-padding/TM62MathlibD0Adapter.lean). It imports the exact external TM62 module and the pinned Mathlib `Turing.Tape`, proves the two whole-tape write/move equations by signed-coordinate extensionality, composes the external step through `BB6.Bridge` into `BB6.Portfolio.D0`, and transports exact-n runs and the undefined-next-step halting predicate. It also proves that external `A(n,[])` is exactly `F0Pure n h` under the absolute-head map.
 
-- `Tape.write_nth`: observation of `T.write w` is `relWrite (observe T) w`;
-- `Tape.move_left_nth`: observation after a left move is `relMove .left`;
-- `Tape.move_right_nth`: observation after a right move is `relMove .right`.
+The accepted source-connected theorem is `BB6.CryptidD0Bridge.D0_halts_on_A_cylinder`: every `F0Pure (C+3^108*k) h` halts in repository D0, with the same primitive transition count as the external source theorem. Pinned CI [45174638945](https://github.com/FlareZ123/bb6/actions/runs/45174638945) built the 1,505-job upstream/Mathlib dependency closure and compiled the adapter under Lean 4.36.0-rc2. Its exported axiom profile is `[propext, Classical.choice, Quot.sound]`, with no `sorryAx` or `native_decide`. The external pins are proofs commit `b77dda5c79fb196d67ce35669e172ad632401c1b`, Mathlib `dfbc15ea6605db241da9cfd0632bbaf69b67e513`, and external Lean 4.36.0-rc1.
 
-Here `observe T i := T.nth i`. The external `TM.step` writes the new symbol and then calls `Tape.move`, so the adapter must preserve that order. The external `A(n,[])` definition should then be shown to have relative observation `j ↦ if 0 < j ∧ j ≤ n then S1 else S0`, using the ListBlank nth/append lemmas. Do not describe the current file as having compiled those Mathlib adapter lemmas.
+This closes the representation and source-transport gate. The independent `HeadRelativeFunctionAudit.lean` remains a separate abstract cross-check, not the accepted imported-source proof.
 
 ## Reproducible pins
 
@@ -66,7 +64,7 @@ The upstream theorem proves halting from `A(3^108*k + C, [])`, where `C = 197570
 
 ## Authentic-root reachability and A-section bridge
 
-The external @-d Lean development proves that the cylinder `A(C+3^108*k, [])` halts for every natural k, with `C=1975700577069254261393123959451562008800234946348086`. The unresolved question is whether the authentic blank-root orbit reaches this or another certified halting cylinder. The repository's concrete Mathlib `TM62`-to-D0 adapter remains uncompiled; the separate abstract `HeadRelativeFunctionAudit.lean` is a checked semantic model, not a substitute for that adapter.
+The external @-d Lean development proves that the cylinder `A(C+3^108*k, [])` halts for every natural k, with `C=1975700577069254261393123959451562008800234946348086`. The concrete Mathlib `TM62`-to-D0 adapter is now accepted in CI [45174638945](https://github.com/FlareZ123/bb6/actions/runs/45174638945), transferring this family to `F0Pure (C+3^108*k) h` in `BB6.Portfolio.D0` at the exact primitive time. The unresolved question is solely whether the authentic blank-root orbit reaches this or another certified halting cylinder (or can be proved to avoid all halting sets).
 
 ### Root section at index 31,777
 
@@ -77,7 +75,7 @@ The external @-d Lean development proves that the cylinder `A(C+3^108*k, [])` ha
 - `a mod 3^20 = 2863782241`;
 - `a` has 44,970 bits.
 
-`Root13Section.lean` extracts the 4,484-step prefix from `Agent25SixthRoot.seed` and attempts to source-certify the section, its exact residue, and its ten-step link to the sixth exceptional input. **That file is still uncompiled.** The separate `First10AffineBridge.lean` arithmetic theorem was locally checked with Lean 4.36.0-rc2; this does not validate the root-section extraction.
+`Root13Section.lean` source-certifies the 4,484-step prefix from `Agent25SixthRoot.seed`, its exact 3-adic residue, and the ten-step link to the sixth-exception input. `Root13TwoReturn.lean` then composes that authentic-root lift with Agent31's two-return source packet. Both modules passed the pinned original-source audits [45130375240](https://github.com/FlareZ123/bb6/actions/runs/45130375240) and [45131667374](https://github.com/FlareZ123/bb6/actions/runs/45131667374), including the forbidden-axiom gate. This remains a finite root-prefix certificate, not a halting/nonhalting result.
 
 The first ten external A-macro suffixes are canonical DRegular states. The root's corresponding sections at indices 31,777 through 31,787 have a descending exact 3-adic shadow, with valuations 13 through 3. The raw replay then matches external macros 11–13 (arguments 35,21,5; branches E,E,B; exact output suffixes), reducing the parameter-difference valuation to 2,1,0 before diverging at macro 14. Root-specific raw prefixes m=23 and m=26 then return to suffix `(01)^3 11`. This suffix also occurs at external prefix j=2, but the later root reentry at index 31,792 is not in that cylinder: its parameter is 0 mod 3, while external `C_2=14049426325825808081017770378322218729246115174030817` is 2 mod 3 (`v3` difference 0).
 
@@ -92,8 +90,8 @@ The same screen tests Agent 32's extended final-tail suffix candidates `(q,b)=(1
 ### Other intermediate work and next priorities
 
 - `AZeroOneFirstReturn.lean` is now compiled against the pinned original `CryptidBoundary` source in the 23 November A/B first-return audit (CI [45125434133](https://github.com/FlareZ123/bb6/actions/runs/45125434133)); its unary and low-A interfaces are used by `UnaryFirstReturnComplete.lean`.
-- `HeadRelativeFunctionAudit.lean` proves the abstract whole-tape coordinate conjugacy, exact-n run transport, and halting equivalence. The concrete Mathlib tape adapter and transitive axiom audit remain open.
-- The local Lean 4.36.0-rc2 toolchain is now available; the local repository checkout remains blocked by shell DNS resolution for `github.com`. The Root13 section and two-return source composition are now verified in pinned CI [45130375240](https://github.com/FlareZ123/bb6/actions/runs/45130375240) and [45131667374](https://github.com/FlareZ123/bb6/actions/runs/45131667374). The highest-value remaining bridge is the concrete pinned TM62/Mathlib adapter and continuation of the authentic root beyond the current nineteenth exception. Avoid larger blind arithmetic scans and do not promote finite exclusions to all-time claims.
+- `HeadRelativeFunctionAudit.lean` independently proves the abstract whole-tape coordinate conjugacy, exact-n run transport, and halting equivalence. The concrete imported Mathlib adapter is now accepted; see the pinned CI and axiom profile above.
+- Root13's 4,484-step authentic source section and two-return composition are verified in CI [45130375240](https://github.com/FlareZ123/bb6/actions/runs/45130375240) and [45131667374](https://github.com/FlareZ123/bb6/actions/runs/45131667374). The remaining work is root reachability: source-certify the nineteenth exception and subsequent continuation, and connect the actual blank orbit to a certified halting cylinder or prove a global exclusion. Avoid larger blind arithmetic scans and do not promote finite exclusions to all-time claims.
 
 All of this work remains intermediate. `results/` is unchanged; no exact BB(6) value or universal upper bound has been established.
 
