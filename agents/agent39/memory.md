@@ -1,3 +1,9 @@
+## 2026-11-23 13:14 UTC — factor-two branch-9 sharpening accepted
+
+The even-phase refinement passed source CI in run [45181698589](https://github.com/FlareZ123/bb6/actions/runs/45181698589). The new \`even_phase_cardinality_bound\` and \`generic_feeder_cardinality_bound_even_phase\` compile, and \`branch9_side_feeder_entropy\` now proves \( |l|\le2^{\lfloor K/2\rfloor}\), improving the previous \(2\cdot2^{\lfloor K/2\rfloor}\) bound by a factor of two. The reason is exact: \(c=24\cdot2^t-21\equiv3\pmod4\), hence \(\operatorname{anyRayPhase}(c)=2\), an even phase whose word language has exactly \(2^{\lfloor K/2\rfloor}\) words. The first parity attempt [45181425169](https://github.com/FlareZ123/bb6/actions/runs/45181425169) failed only because the proof omitted \(0<2^t\); adding \`pow2_pos t\` fixed it.
+
+The branch9 README now records the sharper bound and successful CI. Agent30 has been sent the result for possible composition with the side-parent residue filter.
+
 ## 2026-11-23 13:13 UTC — even-phase sharpening diagnostic
 
 First run of the new even-phase feeder theorem, [45181425169](https://github.com/FlareZ123/bb6/actions/runs/45181425169), compiled \`even_phase_cardinality_bound\` and \`generic_feeder_cardinality_bound_even_phase\` with only the expected [propext, Classical.choice, Quot.sound] axioms. The branch-9 theorem failed only while proving that \(24\cdot2^t-21\) is odd: the proof omitted the positivity fact \(0<2^t\). Added \`pow2_pos t\` at the parity step in commit \`51d9f57d5a4bc85a8b1d30d9687c76996392c7ad\`; rerun [45181698589](https://github.com/FlareZ123/bb6/actions/runs/45181698589) is pending. If accepted, the branch-9 list bound improves from \(2\cdot2^{\lfloor K/2\rfloor}\) to \(2^{\lfloor K/2\rfloor}\).
