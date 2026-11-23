@@ -55,12 +55,16 @@ The following declarations have been added to
 - `root_countdown_one_five_reset`: (D_n(1;[5]) -> D_0(8n+11;[0,0,2]));
 - `root_countdown_step_with_suffix` and the three residue iterators:
   suffix-preserving countdown for arbitrary untouched token tails;
-- `root_d1_suffix_two_to_token_cfg`: explicit-tape endpoint for
-  `tok_DR([2,0],[],0^2 1 0^(4n+6)1)`;
-- `root_remainder_one_root_to_token_cfg`: countdown from
-  `D_0(26,524,315;[0,0,2])` to that explicit token configuration.
+- `root_d1_suffix_two_to_tok_DR` (private): exact token-state endpoint with
+  `0^3 1 0^(4n+6)1);
+- `root_d1_token_cfg`: public explicit-tape definition of that token state;
+- `root_remainder_one_root_to_token_cfg` (private): suffix countdown from
+  `D_0(26,524,315;[0,0,2])` to the explicit token configuration.
 
-These remain proof drafts until the pinned source module compiles them and
-the public theorem axiom audit is clean. The preceding arithmetic path to
+The token chain depends on source-private encoding helpers, so its axiom
+reports are emitted by `#print axioms` commands inside the source module.
+The external audit prints the public reset/countdown lemmas. These remain
+proof drafts until the pinned source module compiles and the relevant axiom
+audits are clean. The preceding arithmetic path to
 `D_0(26,524,315;[0,0,2])` remains conditional on its earlier reset and
 offset-six compositions.
