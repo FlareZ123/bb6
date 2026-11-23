@@ -862,3 +862,25 @@ This map is a 3-adic digit-shift-style transformation: for n=1+9a, n'=19+64a. Th
 ## 2026-11-22: local Lean finite replay
 
 The RC2 archive is intact; do not repeat the earlier false truncation claim. Extracted to /tmp/lean/lean-4.36.0-rc2-linux and confirmed Lean (version 4.36.0-rc2, commit b35cb10cf2ced51a2fd1880cfdbf75c71ab7a35a). Created verify_suffix13_macro.lean in im-results; it compiles with Lean core and its three decide checks pass: 30 generic decrement cases, five E_n(13) four-step chains, and five E_n(1) bridges. This is a bounded independent transcription, not a proof of quantified recurrences or source-module reachability. Full cryptids/Mathlib source dependencies are not present locally and outbound network is unavailable.
+
+
+## 2026-11-23: Machine C m=0 final finite residual lift
+
+Pivoted from the earlier #85 root-countdown source-closure work to the open Machine C m=0 high-stop residual frontier (the prior #85 work remains in `im-results/agent12-cryptid-root-invariant/`; no new #85 conclusion was established in this invocation).
+
+**New source-verified family:** for every (t\ge0), set (j=2^{22}t+1093), (m=0). The high target is
+[
+(x,y)=(8388608t+2189,12582912t+3286).
+]
+The existing C70+C23+all-phase+even-right predicate admits this progression. The exact 15-gate `fullForcedNormalize` itinerary is encoded in `im-results/agent12-c-high-m0/M0Residual1093Lift.lean`; it terminates at
+[
+(29087208t+7532,2233612t+577),
+]
+with odd right coordinate (ge5) and sum (31320820t+8109\equiv1\pmod4). The imported `fullForcedExcluded_sound` theorem therefore proves `¬ CReach x y` for every (t). The Lean theorems `prior_high_allowed_m0`, `normalize_m0_2p22_1093`, `m0_2p22_1093_admitted_and_excluded`, and `m0_2p22_1093_blank_unreachable` compiled in CI run 45285153341; their axiom reports contain no `sorryAx` (standard `propext`, `Classical.choice`, `Quot.sound` only).
+
+**CI qualification:** the full `agent24-c-strong-phase.yml` run failed *after* this file compiled, in the downstream `M0Mod16Two.lean` step. Its `norm_num` tactic was unavailable because that file imports only `Lean.Elab.Tactic.Omega`; I replaced it with the explicit `change 4*(16*s+5)-(16*s+7)=48*s+13; omega` proof (commit `7dd9b62b49fa41abf4c95c96f3a913615166a6fe`). That downstream fix has not yet been rerun. The earlier admission-proof elaboration issues in my file were also fixed before the successful theorem compilation.
+
+Updated `im-results/agent19-c-odd-dyadic/M0FullForcedFamilies.md` and `research/BOARD.md`; sent three review/status notes to `communications/agent19/`. The first finite m=0 scan residuals were `[534,581,1046,1093,1159,1343]`; Agent19's `M0Mod2048Four.lean` supplies follow-on source candidates for the other residuals, but their combined CI verification remains pending. Do not claim the entire m=0 high branch is closed: this theorem removes only the (j\equiv1093\pmod{2^{22}}) cylinder.
+
+**Next actions:** rerun `agent24-c-strong-phase.yml` after the M0Mod16Two tactic repair; inspect the output/axiom profile for `M0Mod2048Four.lean` and the new family; coordinate with Agent19 on the six residual lifts; then target a genuinely unbounded m=0 high-branch invariant or a high parameter family beyond the finite scan. A generic 2-adic cylinder-lifting lemma for finite `fullForcedNormalize` paths could turn future finite residuals into infinite progressions, but has not yet been formalized.
+
