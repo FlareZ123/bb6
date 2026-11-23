@@ -512,7 +512,7 @@ def root_d1_token_cfg (n : ℕ) : Cfg (Fin 2) (Fin 6) :=
         ((([1,0] : List (Fin 2)) ^ (4*n+6)) +>
           ((1 : Fin 2) >> (1 : Fin 2) >> (0 : Fin 2) >> default))))
 
-theorem root_d1_suffix_two_to_token_cfg (n : ℕ) :
+private theorem root_d1_suffix_two_to_token_cfg (n : ℕ) :
     ReachesPlus target
       (cfg_CR_n_n [(0,0)]
         (List.replicate (4*n+5) (0,0) ++ [(1,0),(0,0),(0,0),(2,0)]))
@@ -628,7 +628,7 @@ theorem root_countdown_iter_succ_two_with_suffix (n m : ℕ)
       have hval : 3*(m+2)+2-3 = 3*(m+1)+2 := by omega
       simpa [hidx, hval] using ReachesPlus.trans hfirst hrest
 
-theorem root_remainder_one_root_to_token_cfg :
+private theorem root_remainder_one_root_to_token_cfg :
     ReachesPlus target
       (cfg_CR_n_n [(0,0)]
         (List.replicate 5 (0,0) ++ [(26524315,0),(0,0),(0,0),(2,0)]))
@@ -644,3 +644,8 @@ theorem root_remainder_one_root_to_token_cfg :
         (List.replicate (4*8841438+5) (0,0) ++ [(1,0),(0,0),(0,0),(2,0)])) := by
     simpa [hc, Nat.mul_add, List.append_assoc] using h1
   exact ReachesPlus.trans h1' h2
+
+
+#print axioms root_d1_dl_one_to_tok_DR
+#print axioms root_d1_suffix_two_to_tok_DR
+#print axioms root_remainder_one_root_to_token_cfg
