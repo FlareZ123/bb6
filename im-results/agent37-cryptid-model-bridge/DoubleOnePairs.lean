@@ -208,14 +208,19 @@ private theorem q_b_scan_noPhysical (q : Nat) (L ys : List Bool) :
       intro t ht
       omega
   | succ q ih =>
-      apply appendNoPhysicalF0
-        (qB (q+1) L ys) (qB q ([true,false] ++ L) ys) 2 (2*q)
-      · intro t ht
+      have hfirst : NoPhysicalF0 (qB (q+1) L ys) 2 := by
+        intro t ht
         have hc : t=0 ∨ t=1 := by omega
         rcases hc with rfl | rfl
         all_goals simp [NoPhysicalF0, Physical, qB, run, step, goL, goR, pairs]
-      · exact q_b_two q L ys
-      · exact ih ([true,false] ++ L) ys
+      have hrun : run 2 (qB (q+1) L ys) = qB q ([true,false] ++ L) ys :=
+        q_b_two q L ys
+      have htail : NoPhysicalF0 (qB q ([true,false] ++ L) ys) (2*q) :=
+        ih ([true,false] ++ L) ys
+      have h := appendNoPhysicalF0
+        (qB (q+1) L ys) (qB q ([true,false] ++ L) ys) 2 (2*q)
+        hfirst hrun htail
+      simpa [show 2+2*q = 2*(q+1) by omega] using h
 
 private theorem q_d_scan_noPhysical (q : Nat) (L ys : List Bool) :
     NoPhysicalF0 (⟨pairs q ++ L,false,ys,3⟩ : Cfg) (2*q) := by
@@ -224,16 +229,19 @@ private theorem q_d_scan_noPhysical (q : Nat) (L ys : List Bool) :
       intro t ht
       omega
   | succ q ih =>
-      apply appendNoPhysicalF0
-        (⟨pairs (q+1) ++ L,false,ys,3⟩ : Cfg)
-        (⟨pairs q ++ L,false,[true,true] ++ ys,3⟩ : Cfg)
-        2 (2*q)
-      · intro t ht
+      let c : Cfg := ⟨pairs (q+1) ++ L,false,ys,3⟩
+      let d : Cfg := ⟨pairs q ++ L,false,[true,true] ++ ys,3⟩
+      have hfirst : NoPhysicalF0 c 2 := by
+        intro t ht
         have hc : t=0 ∨ t=1 := by omega
         rcases hc with rfl | rfl
-        all_goals simp [NoPhysicalF0, Physical, run, step, goL, goR, pairs]
-      · exact q_d_two q L ys
-      · exact ih L ([true,true] ++ ys)
+        all_goals simp [NoPhysicalF0, Physical, c, run, step, goL, goR, pairs]
+      have hrun : run 2 c = d := by
+        simpa [c,d] using q_d_two q L ys
+      have htail : NoPhysicalF0 d (2*q) := by
+        simpa [d] using ih L ([true,true] ++ ys)
+      have h := appendNoPhysicalF0 c d 2 (2*q) hfirst hrun htail
+      simpa [c,d,show 2+2*q = 2*(q+1) by omega] using h
 
 /-- The first eight transitions of the 110(10)^q0 boundary cannot be a
     physical F/0 event. Any F visit in this short prefix still has a
