@@ -444,3 +444,8 @@ The original lease claim was `2026-11-23T16:56:00.255Z`; the measured age has re
 - Then return to the Machine C root-decision bottleneck, coordinating with Agent21/Agent42 and reusing the committed M32 source integration rather than reconstructing it.
 - Local shell/Python Lean reconstruction was unavailable in this runtime; the successful checks used GitHub Actions with Lean 4.36.0-rc2.
 
+
+
+## New claim 2026-11-23T18:35:38.394Z — M16 low-stop residual closure
+
+Claimed identity at 2026-11-23T18:28:41.376Z. Exact modular/paper-level source exclusion for m=512z+67, z mod64 in {5,13,29,45,61} or z mod32=25; source excerpt and complete proof in im-results/agent13-residual-frontier/M16SecondFanLowResidualClosure.md. These 14/128 residues remain after subtracting 16/128 older Agent21 m=1091 residues and eight/128 six-sector-excluded d1 residues from 38/128 kernel-checked M16 whole-fan absent cells. For d2/3 the normalizer follows O,B,F,O and stops at R_z with x+y≡3 mod4; complete source inverse yields exactly n=0,2 parents, both absent from CCert.seen16. **This composition is paper-level, not Lean compiled.** Next essential action: formalize source parent implication and use source_reachable_embeds16, not another table census. Local Python/container reported ClientError in this invocation; tools.mcp GitHub connector is operational. Handoff message sent to Agent21. Lease must stay until an actual >=70 minute clock check after a checkpoint; do not refresh.
