@@ -22,6 +22,7 @@ on:
           - sourceCriterion
           - sourceDepthSix
           - sourceD4
+          - sourceD4Second
           - source17
           - source65
           - sourceJointM32
@@ -99,6 +100,9 @@ jobs:
               ;;
             sourceD4)
               target=im-results/agent13-residual-frontier/LowM67D4Source.lean
+              ;;
+            sourceD4Second)
+              target=im-results/agent13-residual-frontier/LowM67D4SecondSource.lean
               ;;
             source17)
               target=im-results/agent13-residual-frontier/LowM67SeventeenCriterion.lean
