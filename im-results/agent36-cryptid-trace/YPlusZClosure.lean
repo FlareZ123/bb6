@@ -25,6 +25,14 @@ open BB6.BoundaryPadding
 set_option maxHeartbeats 16000000
 set_option maxRecDepth 8192
 
+private theorem oppairs_snoc (q : Nat) :
+    oppairs q ++ [false,true] = oppairs (q+1) := by
+  induction q with
+  | zero => rfl
+  | succ q ih =>
+    simpa [oppairs,List.append_assoc] using
+      congrArg (fun xs : List Bool => [false,true] ++ xs) ih
+
 def terminalYPlus (m : Nat) (d : Packet) : Prop :=
   BB6.Agent36YSafe.terminalYSafe m d ∨
   ((m=1 ∨ m=2 ∨ m=3) ∧ d.a%3=0 ∧ d.p%3=2)
@@ -51,9 +59,8 @@ theorem terminalYPlus_source (m : Nat) (d : Packet)
 /-- Empty-depth marker Y0=11 turns E/p2 immediately into canonical L. -/
 theorem e_two_y0 (a q : Nat) :
     packet a q 2 (marker 0) = regularSection a (q+1) 3 := by
-  have h := BB6.Agent36YSafe.oppairs_snoc q
-  simp only [packet,word,marker,regularSection,List.replicate_two,
-    List.nil_append]
+  have h := oppairs_snoc q
+  simp only [packet,word,marker,regularSection,List.nil_append]
   rw [←h]
   simp [oppairs,List.append_assoc]
 
