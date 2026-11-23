@@ -13,6 +13,8 @@ on:
           - suffix3-shift
           - suffix3-full
           - suffix3-word
+          - suffix3-zero
+          - suffix3-two
 
 permissions:
   contents: read
@@ -64,13 +66,18 @@ jobs:
           reset_path = Path("../bb6/im-results/agent2-root-countdown/RootRemainderTwoToken.append.lean")
           ending = "end BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA"
 
-          if os.environ.get("PROOF_TARGET") in ("suffix3-shift", "suffix3-full", "suffix3-word"):
+          if os.environ.get("PROOF_TARGET") in ("suffix3-shift", "suffix3-full", "suffix3-word", "suffix3-zero", "suffix3-two"):
               base = Path("../bb6/im-results/agent48-suffix3-shift")
               fragments = [base / "RootSuffixThreeShift.append.lean"]
               if os.environ.get("PROOF_TARGET") == "suffix3-full":
                   fragments += [base / "RootSuffixBaseZero.append.lean",
                                 base / "RootSuffixBaseTwo.append.lean",
                                 base / "RootSuffixWordShift.append.lean"]
+              elif os.environ.get("PROOF_TARGET") == "suffix3-zero":
+                  fragments += [base / "RootSuffixBaseZero.append.lean"]
+              elif os.environ.get("PROOF_TARGET") == "suffix3-two":
+                  fragments += [base / "RootSuffixBaseZero.append.lean",
+                                base / "RootSuffixBaseTwo.append.lean"]
               elif os.environ.get("PROOF_TARGET") == "suffix3-word":
                   fragments += [base / "RootSuffixWordShift.append.lean"]
               source = module.read_text().rstrip().splitlines()
@@ -122,6 +129,18 @@ jobs:
           import BusyBeaver.BB6.Accelerations.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA
           #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.s3_universal_suffix_shift
           #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.s3_iterated_suffix_shift
+          EOF
+          elif [[ "${PROOF_TARGET:-root-reset}" == "suffix3-zero" ]]; then
+            cat > RootResetAudit.lean <<'EOF'
+          import BusyBeaver.BB6.Accelerations.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA
+          #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.s3_zero_suffix_reset
+          #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.s3_zero_residue_family
+          EOF
+          elif [[ "${PROOF_TARGET:-root-reset}" == "suffix3-two" ]]; then
+            cat > RootResetAudit.lean <<'EOF'
+          import BusyBeaver.BB6.Accelerations.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA
+          #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.s3_two_suffix_reset
+          #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.s3_two_residue_family
           EOF
           elif [[ "${PROOF_TARGET:-root-reset}" == "suffix3-word" ]]; then
             cat > RootResetAudit.lean <<'EOF'
