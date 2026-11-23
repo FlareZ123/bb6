@@ -65,7 +65,8 @@ jobs:
           lake exe cache get
           lake build BusyLean.BB62 BusyLean.TMAcceleration
           cat "$GITHUB_WORKSPACE/im-results/agent32-cryptid-padding/SuffixParametricPrefix.append.lean" >> BusyLean/Individual/1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---.lean
-          lake env lean -o BusyLean/Individual/1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---.olean BusyLean/Individual/1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---.lean
+          mkdir -p .lake/build/lib/lean/BusyLean/Individual
+          lake env lean -o .lake/build/lib/lean/BusyLean/Individual/1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---.olean BusyLean/Individual/1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---.lean
 
       - name: Prepare exact pinned TM62 and Mathlib dependencies (raw bridge only)
         if: inputs.target == 'raw_d0_bridge'
@@ -105,6 +106,7 @@ jobs:
             ROOT="$GITHUB_WORKSPACE"
             cd "$ROOT"
             test -f /tmp/proofs/.lake/build/lib/lean/BusyLean/BB62.olean
+            test -f /tmp/proofs/.lake/build/lib/lean/BusyLean/Individual/1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---.olean
             export LEAN_PATH="$ROOT/im-results/agent8-coverage-contract:$ROOT/im-results/agent4-coverage-smoke:$ROOT/im-results/agent3-portfolio-raw-conjugacy:/tmp/proofs/.lake/build/lib/lean:/tmp/proofs:$LEAN_PATH"
             lean --version
             lean -o "$ROOT/im-results/agent8-coverage-contract/Frontier.olean" "$ROOT/im-results/agent8-coverage-contract/Frontier.lean"
