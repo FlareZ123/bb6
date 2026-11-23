@@ -37,6 +37,7 @@ on:
           - sourceAllDepthSieve67
           - sourceLowZ44
           - sourceLow1519
+          - sourceLowZ16
           - sourceCriterion559
           - sourceAgent8Z2
           - sourceAgent8Z7
@@ -166,6 +167,9 @@ jobs:
               ;;
             sourceLow1519)
               target=im-results/agent13-residual-frontier/LowM67All1519Criterion.lean
+              ;;
+            sourceLowZ16)
+              target=im-results/agent13-residual-frontier/LowM67Z16Source.lean
               ;;
             sourceCriterion559)
               target=im-results/agent13-residual-frontier/LowM67All559Criterion.lean
