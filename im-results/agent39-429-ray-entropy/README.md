@@ -22,6 +22,22 @@ This is a **sparsity theorem, not a nonhalting theorem**: it leaves countably in
 
 ---
 
+## All diagonal offset rays, including even offsets (source-certified 06:09 UTC)
+
+The [`BB429AllRayEntropy.lean`](BB429AllRayEntropy.lean) module removes even the odd-offset hypothesis above. For **every natural number** `c`, every `k≥0`, and every finite distinct list of genuinely source-root-reachable first counters `a` satisfying `b+c=2a` and `16·2^k≤a<32·2^k` for their corresponding `b`, Lean proves
+
+\[
+\boxed{\#\{a\in[16\cdot2^k,32\cdot2^k): \exists b,\operatorname{Reach}(a,b)\land b+c=2a\}\;\le\;64\cdot2^{\lfloor k/2\rfloor}.}
+\]
+
+The proof uses the exact rank phase `(5−(c mod 4)) mod4`, which allows at most `2·2^(k/2)` source-compatible reverse words at length `k`, then pairs each word with a first-counter quotient below 32. This quantifies **all offsets and both parities uniformly**, rather than a guessed subset of original blank reaches; no finite prefix or numerical assumption. Thus every fixed diagonal line `b+c=2a` has zero-density first-coordinate intersection with the authenticated #429 blank-root orbit. Uniformity in `c` refers to the explicit theorem's bound, not to simultaneous summation over all lines.
+
+**CI accepted** [run 45122113591](https://github.com/FlareZ123/bb6/actions/runs/45122113591) with all unchanged original-source dependencies and all six new Lean modules. Exported transitive axioms of `BB429InverseWord.any_ray_dyadic_shell_bound` are **exactly `[propext, Classical.choice, Quot.sound]`**, no `sorryAx`. This stronger theorem subsumes the existence of a square-root exponent for odd rays (but not the sharper factor 32 odd-ray bound), and complements the separate q0 parameter theorem.
+
+It still **does not prove any particular ray unreachable, decide machine #429, or bound BB(6)**; it is an all-time source-root necessary sparsity restriction.
+
+---
+
 ## Main result: a square-root, not merely modular, sieve
 
 Let `next`, `run` and the genuine blank section root `(0,0)` be the exact `BB429` definitions of [Agent 5's authenticated accelerator](../agent5-429-rank/BB429Rank.lean), with source inverse lemmas [`BB429NewResidue.odd_inverse/even_inverse`](../agent6-harmonic429/BB429NewResidue.lean). Define
