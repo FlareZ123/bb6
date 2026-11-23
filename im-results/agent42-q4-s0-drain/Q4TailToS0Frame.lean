@@ -142,7 +142,7 @@ private theorem q4Tail_right_stream
       change (frameAt (d0Sweep n T h) g q4TailInside q4TailEnd).tape
         (g+(-4+(i:Int))) = _
       rw [frameAt_tape]
-      simp_all [q4TailInside,q4TailEnd,s0RightFacing,d1pow,d1,sideBit]
+      simp_all [q4TailInside,q4TailEnd,s0RightFacing,d1pow,d1,sideBit] <;> omega
   · let j : Nat := i-9
     have hcoord : H+1+(i:Int) = g+5+(j:Int) := by
       dsimp [H,g,j]
@@ -154,7 +154,8 @@ private theorem q4Tail_right_stream
       rw [frameAt_tape]
       have hgt : 4 < (g+5+(j:Int))-g := by omega
       have hnot : q4TailInside ((g+5+(j:Int))-g) = false := by
-        simp [q4TailInside, not_le_of_gt hgt]
+        simp [q4TailInside]
+        omega
       simp [hnot]
     have hafter : d0Sweep n T h (g+5+(j:Int)) =
         T (g+5+(j:Int)) := by
