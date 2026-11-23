@@ -9,6 +9,36 @@ set_option maxHeartbeats 1000000
 namespace BB6.Agent4SevenS2QEven
 open BB6.Agent46
 
+private theorem q_even_direct_parent_sum_mod4 (a k t z : Nat)
+    (hsumEq : a+k+24273*z=11901+11378*t)
+    (hcong : (2*t-z)%8=1) :
+    (a+k)%4=2 := by
+  have hcong4 : (2*t-z)%4=1 := by
+    have hdiv : 4 ∣ 8 := by decide
+    calc
+      (2*t-z)%4 = ((2*t-z)%8)%4 :=
+        (Nat.mod_mod_of_dvd (2*t-z) hdiv).symm
+      _ = 1%4 := by rw [hcong]
+      _ = 1 := by decide
+  omega
+
+private theorem q_even_bounce_y_mod8 (t z : Nat)
+    (hhi : 32*z≤12+11*t) (hcong : (2*t-z)%8=1) :
+    (6173+5902*t-12591*z)%8=4 := by omega
+
+private theorem q_even_bounce_xy_mod4 (t z : Nat)
+    (hhi : 32*z≤12+11*t) (hcong : (2*t-z)%8=1) :
+    ((3720+3556*t-7586*z)+(6173+5902*t-12591*z))%4=2 := by omega
+
+private theorem q_even_mod4_sub_two (a b : Nat)
+    (hab : a+2=b) (hb : b%4=2) : a%4=0 := by omega
+
+private theorem q_even_mod4_half_sub_two (a b : Nat)
+    (hab : 2*a+2=b) (hb : b%8=4) : a%4=1 := by omega
+
+private theorem q_even_mod4_add_one (a b : Nat)
+    (ha : a%4=0) (hb : b%4=1) : (a+b)%4=1 := by omega
+
 /-- In the complementary lift v=12+11*t-32*z, the direct parent of
     the two-step even-right residual is an even/odd valuation-two state.
     Its unique source parent is odd/odd with forbidden sum 2 mod 4. -/
@@ -43,8 +73,7 @@ theorem q_even_direct_parent_unreachable (t z : Nat)
   have haEq : a+15778*z=7737+7396*t := by dsimp [a]; omega
   have hkEq : k+8495*z=4164+3982*t := by dsimp [k]; omega
   have hsumEq : a+k+24273*z=11901+11378*t := by omega
-  have hcong4 : (2*t-z)%4=1 := by omega
-  have hsum : (a+k)%4=2 := by omega
+  have hsum : (a+k)%4=2 := q_even_direct_parent_sum_mod4 a k t z hsumEq hcong
   have hkodd : k%2=1 := by dsimp [k]; omega
   have hk5 : 5≤k := by dsimp [k]; omega
   have ha5 : 5<a := by dsimp [a]; omega
@@ -92,12 +121,16 @@ theorem q_even_bounce_parent_unreachable (t z : Nat)
   have hHy : 5≤hy := by dsimp [hy,y]; omega
   have hHyEq : 2*hy+2=y := by dsimp [hy]; omega
   have hHyOdd : hy%2=1 := by omega
-  have hHyMod8 : y%8=4 := by dsimp [y]; omega
-  have hsumXY : (x+y)%4=2 := by dsimp [x,y]; omega
+  have hHyMod8 : y%8=4 := by
+    dsimp [y]
+    exact q_even_bounce_y_mod8 t z hhi hcong
+  have hsumXY : (x+y)%4=2 := by
+    dsimp [x,y]
+    exact q_even_bounce_xy_mod4 t z hhi hcong
   have hHxEq : hx+2=x+y := by dsimp [hx]; omega
-  have hHxMod : hx%4=0 := by omega
-  have hHyMod : hy%4=1 := by omega
-  have hHsum : (hx+hy)%4=1 := by omega
+  have hHxMod : hx%4=0 := q_even_mod4_sub_two hx (x+y) hHxEq hsumXY
+  have hHyMod : hy%4=1 := q_even_mod4_half_sub_two hy y hHyEq hHyMod8
+  have hHsum : (hx+hy)%4=1 := q_even_mod4_add_one hx hy hHxMod hHyMod
   intro hr
   have hparent : BB6.Agent3.CReach hx hy := by
     have hiff := (BB6.Agent46.six_even_right_blank_reach_iff
