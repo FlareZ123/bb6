@@ -61,7 +61,7 @@ private theorem a_zero_shape (ka q r m : Nat) :
       _ = false :: (CryptidA.wordCode (BB6.Agent35MarkerA.code q r) ++
         (false :: true :: marker m)) := by
           rw [BB6.Agent35MarkerA.code_word]
-          rfl
+          simp [marker,oppairs,List.append_assoc]
   simp only [packet,word,init,List.cons_append]
   rw [hn,hw]
   rfl
