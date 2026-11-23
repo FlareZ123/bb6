@@ -3,11 +3,11 @@ on:
   workflow_dispatch:
     inputs:
       stage:
-        description: "1-3 arithmetic blocks; 4a tail join; 4b full endpoint; 5 authentic-root lift; 6 source reentry"
+        description: "1-3 arithmetic blocks; 4a tail experiment; 4b tail composition; 4c block-reused endpoint; 5 authentic-root lift; 6 source reentry"
         required: true
         default: "1"
         type: choice
-        options: ["1", "2", "3", "4a", "4b", "5", "6"]
+        options: ["1", "2", "3", "4a", "4b", "4c", "5", "6"]
       source_run_id:
         description: "Run ID containing the previous successful checkpoint artifact"
         required: true
