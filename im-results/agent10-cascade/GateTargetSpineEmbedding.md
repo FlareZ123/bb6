@@ -162,7 +162,7 @@ Equivalently \(2^a\le c<2^{a+1}\). Since \(c\) is odd,
 \(r=c-2^a\) is a **positive** integer and \(q=p+rs<2p\).
 
 **Terminal predecessor theorem (paper proof).** Let \(X=2u_J+5\). With
-\(\mathrm{ResetParent}\) defined *exactly* as in \`FirstInverseComplete.lean\`,
+\(\mathrm{ResetParent}\) defined *exactly* as in `FirstInverseComplete.lean`,
 \[
 \boxed{\quad
   (\exists h:\mathbb N,\ \mathrm{ResetParent}(h,u_J))
@@ -255,16 +255,24 @@ all eligible gate n within block a, tends to
   \frac12+\frac12\cdot\frac14\cdot\frac23
   =\boxed{\frac7{12}}\qquad(a\to\infty),
 \]
-with \(O(1)\) counting error per block. Across *prefixes* n≤N
-this fraction has no single natural density: elementary geometric
-block summation gives liminf \(23/42\) (at the start of the high-c
-tail of the largest block) and limsup \(7/12\) (at complete
-block endpoints). These densities describe **one terminal inverse
+with \(O(1)\) counting error per block. Across *prefixes* n≤N this fraction has no single natural
+density. Write \(N=t2^a\), \(t\in[1/2,1]\), with an \(O(1)\) boundary
+adjustment to stay in the same dyadic block. Completed smaller
+blocks contribute \(2^a/72+O(a)\) extra terminal leaves beyond the
+baseline parity-half; the current block contributes
+\(2^a(t-7/8)_+/9+O(1)\), where \(x_+=\max(x,0)\).
+Since the number of surviving gate indices up to N is \(N/3+O(1)\),
+the relative leaf fraction is
+\[
+ \frac12+\frac1{24t}+\frac{(t-7/8)_+}{3t}+o(1).
+\]
+It has liminf \(23/42\) (at the high-c threshold \(t=7/8\))
+and limsup \(7/12\) (at complete block endpoints \(t=1\) or \(1/2\)). These densities describe **one terminal inverse
 spine state per gate index**, not halting machines, valid target
 exclusions, or blank-root nonreachability.
 
 The independent full-grammar exact-integer regression is
-[\`terminal_spine_parent_census.mjs\`](terminal_spine_parent_census.mjs).
+[`terminal_spine_parent_census.mjs`](terminal_spine_parent_census.mjs).
 It is a finite consistency test; the quantified proof is the
 inequality-and-divisibility argument above.
 
