@@ -1,6 +1,6 @@
 # BB429: square-root sparsity of the branch-10 q0 candidate parameters
 
-**Mathematical status:** exact paper proof from the original repository accelerator's exhaustive high-output inverse equations, with the reusable inverse-word congruence and phase lemmas locally Lean-compiled (4.36.0-rc2, standard `[propext, Quot.sound]` only). The complete original-source reachability/counting wrapper has **not yet passed its transitive Lean import**, so do not describe the final quantified cardinality bound as source-certified. This is an intermediate restriction, **not** a blank-machine decision, an upper bound on BB(6), or a new halting witness.
+**Mathematical status:** **kernel-certified quantified finite-cardinality theorem for the unchanged repository's BB429 blank-root accelerator**, Lean 4.36.0-rc2 [manual source CI 45121153859](https://github.com/FlareZ123/bb6/actions/runs/45121153859), exact dependency closure and final axiom profile `[propext, Classical.choice, Quot.sound]` (no `sorryAx`). Its all-X square-root bound and zero-density interpretation follow by elementary logarithm arithmetic from that certificate. This is a nontrivial necessary-condition restriction on one authentic-root feeder family, **not** a blank-machine decision, an upper bound on BB(6), or a new halting witness. External novelty has not been established.
 
 ## Main result: a square-root, not merely modular, sieve
 
@@ -13,7 +13,7 @@ The open branch-10 q0 feeder has the specific source-derived parametrization
 \]
 See [the existing q0 derivation](../agent1-429-q0-23-7/Q0ResidueCoverage.md). Let `U = {u ∈ ℕ : Reach(A(u),B(u))}`.
 
-**Theorem (paper, quantitative).** For every integer `X ≥ 2`, putting `k=⌈log₂ X⌉+3`,
+**Theorem (Lean source-connected, quantitative).** For every integer `X ≥ 2`, putting `k=⌈log₂ X⌉+3`,
 \[
  \#\{u<X:u\in U\}\;\le\; k+2^{\lfloor k/2\rfloor}
  \;<\; \log_2 X+4+4\sqrt X.
@@ -40,8 +40,8 @@ For a fixed word `w`, write `a_j=(C_j a_0+D_j)/2^j` for its `j`-th predecessor f
 `a_{j+1}=a_j/2+a_0-(13+δ_j+c_w)/4`
 where `c_w=26` (S) or 14 (E). Thus `C_{j+1}=C_j+2^{j+1}` on S/E. For these steps `j` is odd and `13+δ_j+c_w` is even, so all constants `D_j` are integers. **Every `C_j` is odd.** Since `a_k` is an integer, `2^k | (C_k a_0+D_k)`; an odd `C_k` is invertible modulo `2^k`. Consequently **one fixed inverse word admits at most one initial `a_0` residue modulo `2^k`**.
 
-The same fact has an alternative coefficient-free proof: two inverse histories carrying the same word, from targets with the same ray offset, have
-`2^j(a_j-a'_j)=C_j(a_0-a'_0)` with odd `C_j`. The F step preserves `C_j`; S/E adds `2^{j+1}`. Thus `a_0≡a'_0 mod2^k`. This quantified uniqueness, the exact branch costs, and the mod-four phase restrictions are checked in [the Lean arithmetic core](BB429InverseWordCore.lean); the core does not silently assume that every syntactic inverse word occurs on the blank orbit.
+The Lean proof uses the following coefficient-free form: two inverse histories carrying the same word, from targets with the same ray offset, have
+`2^j(a_j-a'_j)=C_j(a_0-a'_0)` with odd `C_j`. The F step preserves `C_j`; S/E adds `2^{j+1}`. Thus `a_0≡a'_0 mod2^k`. This quantified uniqueness, the exact branch costs, and the mod-four phase restrictions are kernel-checked in [the Lean arithmetic core](BB429InverseWordCore.lean). The [language module](BB429InverseWordLang.lean) proves an exact regular-word count and a bridge from pairs of source inverse chains; it never assumes that every syntactic inverse word occurs on the blank orbit.
 
 ## Unbounded high-counter prefix and the q0 count
 
@@ -49,9 +49,21 @@ Any legitimate predecessor of a target with `a≥13` satisfies `a≤2x+3`, so `a
 
 For `u≥k`, the elementary inequality `24u+19≤2^{23+32u}` implies `A(u)≥12·2^{23+32u}≥24·2^k`. Thus every `u≥k` in `U` admits a length-`k` inverse word. Since `n(u)≥k`, `A(u)≡−24u−19 mod2^k`. Two such parameters with the same word therefore obey `2^k | 24(u-v)`; since `24=8·3` with `3` odd, `u≡v mod2^{k-3}`. For `k=⌈log₂X⌉+3`, `2^{k-3}≥X`, hence **at most one** `u∈[k,X)` per word. There are fewer than `k` exceptional small parameters, yielding the asserted bound. No infinite trajectory simulation or finite-sample-to-universal extrapolation is involved.
 
-## Evidence boundary and next decisive use
+## Machine-checked theorem and evidence boundary
 
-The three inverse equations and root `run` are imported source facts from the linked modules; the arithmetic core is a locally successful **abstract exact-grammar** Lean proof, not an original-source import. Complete source certification requires an exact `BB429.next`→legitimate-edge bridge, an induction constructing each high-counter rooted prefix, and a counting theorem (or a carefully scoped mathematical proof of the latter). These are precisely separated to avoid confusing a synthetic inverse ray with actual blank reachability.
+The exact exported result in [`BB429InverseWordCount.lean`](BB429InverseWordCount.lean) is:
+
+```lean
+theorem BB429InverseWord.q0_candidate_cardinality_bound
+    (X k : Nat) (hk : 3 ≤ k) (hX : X ≤ 2^(k-3))
+    (l : List Nat) (hn : l.Nodup)
+    (hl : ∀ u, u ∈ l → u < X ∧ Q0Candidate u) :
+    l.length ≤ k + 2^(k/2)
+```
+
+Here `Q0Candidate u` explicitly means there exist original-source accelerated blank-root-reachable `a,b` with `b+13=2*a` and `a+24*u+19=13*2^(23+32*u)`. This avoids any finite-run cutoff or truncated subtraction. The proof establishes source-connected `source_step_legit`, all-depth `source_high_prefix`, exact parity-language constraints, odd-slope uniqueness, modular parameter injection, and the final cardinal bound, all compiling against **unchanged** `BB429Rank`, `BB429Mod8`, `BB429NewResidue`. Verified exact source closure in [CI 45121153859](https://github.com/FlareZ123/bb6/actions/runs/45121153859) (head SHA `c7a9d3454a4d3745f104e5d6bc55b7be87057634`) with exported axiom list **exactly** `[propext, Classical.choice, Quot.sound]`; no `sorryAx`, `native_decide`, or extra axioms. The first source-root and abstract-core check passed separately in [CI 45119840927](https://github.com/FlareZ123/bb6/actions/runs/45119840927).
+
+To apply the theorem at arbitrary `X≥2`, choose `k=⌈log₂ X⌉+3`; then `X≤2^(k-3)` and its conclusion gives the displayed `O(√X)` bound. The asymptotic simplification is a paper corollary, not itself a new Lean theorem. The bridge from `BB429.run` to the six-state Turing-machine table is pre-existing repository source work: this CI directly imports the exact genuine blank-root accelerator definitions, but does not independently rebuild the upstream Google DeepMind raw-machine formalization.
 
 The quantitative sparsity still allows infinitely many exceptional parameters and cannot close branch-10 q0, the competing inverse branches, #429, or BB(6). A consequential next question is whether the surviving dyadic inverse language intersects the very special exponential-affine q0 ray at **any** parameter, not how many low-modulus residues can be filtered.
 
