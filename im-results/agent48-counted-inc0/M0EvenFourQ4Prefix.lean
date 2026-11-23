@@ -3,6 +3,7 @@ import CountedSweep
 import ChampionRootBridge
 import S1Encoder
 import CountedQ4Prefix
+import Q4Suffix
 import M0EvenFourQ4Bridge
 import Lean.Elab.Tactic.Omega
 
@@ -257,23 +258,23 @@ private theorem m0EvenFour_counted_left_sweep_heads
   have hrlt : r < 3 := Nat.mod_lt _ (by decide)
   have hrCases : r=0 ∨ r=1 ∨ r=2 := by omega
   rcases hrCases with hr0|hr1|hr2
-  · subst r
+  · have hkmod : k%3=0 := by simpa [r] using hr0
+    rw [hkmod] at hd
     simp [run] at hd
     have heq := Option.some.inj hd
-    subst d
-    simp
+    cases heq
     omega
-  · subst r
+  · have hkmod : k%3=1 := by simpa [r] using hr1
+    rw [hkmod] at hd
     rw [m0EvenFour_leftSweep_one Tq (h-(q:Int)) hqhead] at hd
     have heq := Option.some.inj hd
-    subst d
-    simp
+    cases heq
     omega
-  · subst r
+  · have hkmod : k%3=2 := by simpa [r] using hr2
+    rw [hkmod] at hd
     rw [m0EvenFour_leftSweep_two Tq (h-(q:Int)) hqhead hqright] at hd
     have heq := Option.some.inj hd
-    subst d
-    simp
+    cases heq
     omega
 
 private theorem fRun_prefix_exists {m c n k d}
@@ -306,7 +307,7 @@ private theorem m0EvenFour_bridge_prefix_lower
     (hd : run tm2 j ⟨3,h,T⟩ = some d) :
     h-12 ≤ d.head := by
   obtain ⟨e,hexact⟩ :=
-    fRun_prefix_exists m0EvenFourBridge_exact (by omega)
+    fRun_prefix_exists (k := j) m0EvenFourBridge_exact (by omega)
   have hcheckj :
       (List.range j).all (fun k =>
         match fRun tm2 k m0EvenFourBridgeStart with
@@ -319,11 +320,14 @@ private theorem m0EvenFour_bridge_prefix_lower
       omega
     exact (List.all_eq_true.mp m0EvenFourBridge_heads) k
       (List.mem_range.mpr hk51)
-  have hbridge := bridgeAt T h m0EvenFourInside
+  have hbridgeFrame := bridgeAt T h m0EvenFourInside
     m0EvenFourBridgeStart e j rfl hexact hcheckj hmatch
+  have hbridge : run tm2 j ⟨3,h,T⟩ =
+      some (frameAt T h m0EvenFourInside e) := by
+    simpa [m0EvenFourBridgeStart] using hbridgeFrame
   rw [hbridge] at hd
   have hdeq : d = frameAt T h m0EvenFourInside e :=
-    Option.some.inj hd
+    (Option.some.inj hd).symm
   have hinside : m0EvenFourInside e.head = true := by
     have hh := (List.all_eq_true.mp m0EvenFourBridge_heads) j
       (List.mem_range.mpr hj)
@@ -347,8 +351,8 @@ private theorem E_scan_prefix_head
   have hrun := E_scan T h j hlinearJ
   rw [hrun] at hd
   have heq := Option.some.inj hd
-  simp at heq
-  omega
+  cases heq
+  rfl
 
 /-- Every intermediate configuration of the base q4 prefix stays in
 the half-line x≥h-(3a+12), so the arbitrary high-order left tail is safe
@@ -436,16 +440,21 @@ theorem m0EvenFour_q4_prefix_head_bound
   intro k hk d hd
   let p1 := 3*N
   let p2 := p1+51
+  have hSweepP1 :
+      run tm2 p1 (s1Config 3 4 0 a 0 b h) =
+        some ⟨3,hN,T1⟩ := by
+    simpa [p1,T,N,T1,hN,s1Config] using hSweep
   by_cases hk1 : k < p1
-  · have hlow := m0EvenFour_counted_left_sweep_heads N T h hOn hright k
-      (by dsimp [p1]; omega) d hd
+  · have hkN : k < 3*N := by simpa [p1] using hk1
+    have hlow := m0EvenFour_counted_left_sweep_heads N T h hOn hright k
+      hkN d hd
     dsimp [hN,N] at *
     omega
   · by_cases hk2 : k < p2
     · let j := k-p1
       have hj : j<51 := by dsimp [j,p1] at *; omega
       have hkEq : k=p1+j := by dsimp [j,p1]; omega
-      rw [hkEq,run_add,hSweep] at hd
+      rw [hkEq,run_add,hSweepP1] at hd
       simp only [Option.bind_some] at hd
       have hlow := m0EvenFour_bridge_prefix_lower T1 hN hmatch j hj d hd
       dsimp [hN,N] at *
@@ -453,7 +462,7 @@ theorem m0EvenFour_q4_prefix_head_bound
     · let j := k-p2
       have hj : j<3*(a-1) := by dsimp [j,p2,p1,N] at *; omega
       have hkEq : k=p1+(51+j) := by dsimp [j,p2,p1]; omega
-      rw [hkEq,run_add,hSweep] at hd
+      rw [hkEq,run_add,hSweepP1] at hd
       simp only [Option.bind_some] at hd
       rw [run_add,hBridge'] at hd
       simp only [Option.bind_some] at hd
@@ -646,15 +655,15 @@ private theorem m0EvenFourQ4LeftFacingTail (a i : Nat) (ha : 0 < a)
     simp [tgtPrefix,common,m0EvenFourQ4LeftFacing,
       m0Even_binDec_three_three,d0,d1,List.append_assoc]
   have hs := sideBit_append_after_local srcPrefix common i (by
-    simp [srcPrefix,d1pow_length,markerWord,d0]
+    simp [srcPrefix,d1pow_length,markerWord,d0,d1]
     omega)
   have ht := sideBit_append_after_local tgtPrefix common i (by
-    simp [tgtPrefix,d1pow_length,markerWord,d0]
+    simp [tgtPrefix,d1pow_length,markerWord,d0,d1]
     omega)
   have hlenS : srcPrefix.length = 3*a+13 := by
-    simp [srcPrefix,d1pow_length,markerWord,d0]
+    simp [srcPrefix,d1pow_length,markerWord,d0,d1]
   have hlenT : tgtPrefix.length = 3*a+13 := by
-    simp [tgtPrefix,d1pow_length,markerWord,d0]
+    simp [tgtPrefix,d1pow_length,markerWord,d0,d1]
     omega
   rw [hsrc,htgt,hs,ht,hlenS,hlenT]
 
