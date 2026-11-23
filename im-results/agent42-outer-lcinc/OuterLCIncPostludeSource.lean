@@ -658,7 +658,7 @@ theorem outerLCInc_s1_postlude_conditions
   rcases hright with ⟨h2,h3,h4,h5,h6,hrun,hblank⟩
   exact outerLCInc_source_postlude_conditions
     (s1Config L n m a 0 b h).tape h a m b r hm hleft
-    ⟨h2,h3,h4⟩ ⟨h5,h6⟩ hrun hblankT3
+    ⟨h2,h3,h4⟩ ⟨h5,h6⟩ hrun hblank
 
 
 
