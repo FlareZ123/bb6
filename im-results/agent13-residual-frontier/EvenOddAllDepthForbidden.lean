@@ -16,12 +16,12 @@ theorem depth_eight_high_valuation_parent_unreachable
     ¬ BB6.Agent3.CReach a k := by
   have hfactor : (2:Nat)^(8*r+4)=2^(8*r+1)*8 := by
     rw [show 8*r+4=(8*r+1)+3 by omega,Nat.pow_add]
-    simp only [show (2:Nat)^3=8 by decide]
+    -- the power-of-two numeral simplifies by reflexivity
   have hnew : 346*u+54=(2:Nat)^(8*r+1)*(8*q) := by
     rw [hfactor] at hmass
     calc
       346*u+54=(2:Nat)^(8*r+1)*8*q := hmass
-      _=(2:Nat)^(8*r+1)*(8*q) := by simp only [mul_assoc]
+      _=(2:Nat)^(8*r+1)*(8*q) := by ac_rfl
   have he : (2:Nat)^(8*r+1)*(a+3)=
       (2:Nat)^(8*r+1)*(8*q) :=
     hparent.symm.trans hnew
