@@ -108,11 +108,7 @@ and
 
 The arrows label the \(k=t+1\) values, not forward machine depths. The initial words are respectively \([6,2]\) and \([8,1,2,3,3,1,1,1,4,1,1,2,4]\).
 
-The binary expansion of \(249/343\) is purely periodic because \(\gcd(249,343)=1\) and the denominator is odd. Moreover,
-
-\[
-\operatorname{ord}_{343}(2)=147.
-\]
+The binary expansion of \(249/343\) is purely periodic because \(\gcd(249,343)=1\) and the denominator is odd. Moreover, the proper divisors of 147 give residues \(2^1\equiv2\), \(2^3\equiv8\), \(2^7\equiv128\), \(2^{21}\equiv50\), and \(2^{49}\equiv324\pmod{343}\), while \(2^{147}\equiv1\pmod{343}\). Hence \(\operatorname{ord}_{343}(2)=147\).
 
 Its run-length encoding is therefore a 73-symbol cycle whose \(k\)-values sum to 147:
 
