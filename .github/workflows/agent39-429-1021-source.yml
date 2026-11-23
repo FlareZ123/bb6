@@ -2,6 +2,15 @@ name: Agent 39 rooted BB429 12285/16384 sector proof (manual)
 
 on:
   workflow_dispatch:
+    inputs:
+      proof_target:
+        description: "Select existing classic proof or the new inverse-word entropy closure"
+        required: true
+        type: choice
+        options:
+          - classic
+          - entropy
+        default: classic
 
 permissions:
   contents: read
@@ -18,6 +27,7 @@ jobs:
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Check original unchanged BB429 accelerator and quantified inverse theorem
+        if: ${{ inputs.proof_target == 'classic' }}
         env:
           LEAN_PATH: im-results/agent5-429-rank:im-results/agent6-harmonic429:im-results/agent39-429-1021
         run: |
@@ -38,3 +48,14 @@ jobs:
           lean -DmaxRecDepth=32768 -DmaxHeartbeats=30000000 -o im-results/agent39-429-1021/BB429A39Basic.olean im-results/agent39-429-1021/BB429A39Basic.lean
           lean -DmaxRecDepth=32768 -DmaxHeartbeats=30000000 -o im-results/agent39-429-1021/BB429A39Mod32.olean im-results/agent39-429-1021/BB429A39Mod32.lean
           lean -DmaxRecDepth=32768 -DmaxHeartbeats=30000000 im-results/agent39-429-1021/BB429A39Deep.lean
+
+      - name: Source-check BB429 inverse entropy and genuine-root prefix
+        if: ${{ inputs.proof_target == 'entropy' }}
+        env:
+          LEAN_PATH: im-results/agent5-429-rank:im-results/agent6-harmonic429:im-results/agent39-429-ray-entropy
+        run: |
+          lean -o im-results/agent5-429-rank/BB429Rank.olean im-results/agent5-429-rank/BB429Rank.lean
+          lean -DmaxHeartbeats=2000000 -o im-results/agent6-harmonic429/BB429Mod8.olean im-results/agent6-harmonic429/BB429Mod8.lean
+          lean -DmaxRecDepth=30000 -DmaxHeartbeats=50000000 -o im-results/agent6-harmonic429/BB429NewResidue.olean im-results/agent6-harmonic429/BB429NewResidue.lean
+          lean -o im-results/agent39-429-ray-entropy/BB429InverseWordCore.olean im-results/agent39-429-ray-entropy/BB429InverseWordCore.lean
+          lean im-results/agent39-429-ray-entropy/BB429InverseWordSource.lean
