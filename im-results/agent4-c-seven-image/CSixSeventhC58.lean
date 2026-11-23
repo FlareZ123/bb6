@@ -292,6 +292,7 @@ theorem prior_latefast_admits_s3_image_family (j m u v : Nat)
     rw [hstop]
     exact Nat.mod_eq_zero_of_dvd hprod512
   have hm512 : m%512=42 := by
+    simp only [k] at hstopmod512
     rw [hk,hj] at hstopmod512
     omega
   have hprior := prior_c58_admits_residue_pair j m hm7 hj512 hm512
@@ -320,6 +321,7 @@ theorem prior_latefast_admits_s3_image_family (j m u v : Nat)
       rw [hstop]
       exact Nat.mod_eq_zero_of_dvd hprod4096
     have hsector4 : (u+v)%4=3 := by omega
+    simp only [k] at hstopmod4096
     rw [hk,hj] at hstopmod4096
     omega
   exact ⟨⟨hbool,hlate⟩,hnotdiag⟩
@@ -453,7 +455,7 @@ private theorem s3_high_target (t : Nat) :
 /-- The new s3 strict-image family excludes these exact high-stop
     parameters from the original blank-root orbit. -/
 private theorem s3_high_parameter_no_blank (t time : Nat) :
-    BB6.Agent8Section.run secNext time (some (5,1)) ≠
+    BB6.Agent8Section.run BB6.Agent46.secNext time (some (5,1)) ≠
       some (2*831+3,
         (2:Nat)^(2*(9770+16384*t)+2)*(831+3) -
           (831+3*(9770+16384*t)+5)) := by
@@ -511,7 +513,7 @@ private theorem s3_high_target_second (t : Nat) :
 /-- The second exact high-stop progression is excluded by the
     second strict image slice at every time. -/
 private theorem s3_high_parameter_no_blank_second (t time : Nat) :
-    BB6.Agent8Section.run secNext time (some (5,1)) ≠
+    BB6.Agent8Section.run BB6.Agent46.secNext time (some (5,1)) ≠
       some (2*1855+3,
         (2:Nat)^(2*(12842+16384*t)+2)*(1855+3) -
           (1855+3*(12842+16384*t)+5)) := by
@@ -537,8 +539,9 @@ private theorem s3_pullback_forces_m_ge7 (j m u v : Nat)
     have h := Nat.sub_add_cancel (high_score_nonnegative j m)
     omega
   rw [hj] at hstop
-  by_contra hm
-  have hmle : m≤6 := by omega
+  by_cases hge : 7≤m
+  · exact hge
+  · have hmle : m≤6 := by omega
   rcases (show m=0 ∨ m=1 ∨ m=2 ∨ m=3 ∨ m=4 ∨ m=5 ∨ m=6 by omega)
     with h0|h1|h2|h3|h4|h5|h6
   all_goals subst m
@@ -665,9 +668,6 @@ theorem highAllowedAllS3_iff_congruence (j m : Nat) :
       lateFastHighAllowed j m ∧
       ¬(j%512=319 ∧ (3*m+7*j+14025)%16384=0) := Iff.rfl
 
-/-- Exact Machine C blank-halting iff after excluding every high-stop
-    target in the second strict sixth/seventh image family, not only
-    the two explicit progressions. -/
 /-- Direct all-time blank-root exclusion in the parameter-only
     high-stop congruence cylinder. -/
 theorem blank_ne_s3_parameter_congruence (j m time : Nat)
