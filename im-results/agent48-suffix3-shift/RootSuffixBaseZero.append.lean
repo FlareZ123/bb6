@@ -36,8 +36,10 @@ private theorem s3_cr_zero_sweep (k b : ℕ) (L : List (ℕ × ℕ)) :
       have h1 := s3_cr_zero
         (List.replicate (k+1) (0,0) ++ L) [(b,0)]
       have h2 := ih (b+2) L
+      have hb : b+2+2*(k+1)=b+2*(k+2) := by omega
       exact ReachesPlus.trans h1
-        (by simpa [List.replicate_succ, List.cons_append, List.append_assoc,
+        (by simpa [s3_zero_push, bumpPairHead, List.replicate_succ,
+          List.cons_append, List.append_assoc, hb,
           Nat.add_assoc, Nat.add_left_comm, Nat.add_comm] using h2)
 
 /-- Corrected source-local 16-successor general end tail. -/
@@ -69,6 +71,10 @@ private theorem s3_general_tail (x : ℕ) (hx : 6 ≤ x) :
   have hx2 : x-3+2 = x-1 := by omega
   have hx3 : x-4+1 = x-3 := by omega
   have hx4 : x-6+2 = x-4 := by omega
+  rw [hx1] at h2
+  rw [hx2] at h3
+  rw [hx3] at h9
+  rw [hx4] at h10
   simpa [List.replicate_succ, List.cons_append, List.append_assoc,
     bumpPairHead, hx1, hx2, hx3, hx4] using
     (ReachesPlus.trans h1
@@ -116,8 +122,8 @@ private theorem s3_zero_prefix (n : ℕ) :
           ((0,0)::(0,0)::tail)) := by
     simpa [bumpPairHead] using
       (s3_dl_zero [(0,0)] ((0,0)::(0,0)::tail))
-  simpa [tail, List.replicate_succ, List.cons_append, List.append_assoc,
-    Nat.add_assoc] using
+  simpa [tail, List.replicate_add, List.replicate_succ, List.cons_append,
+    List.append_assoc, Nat.add_assoc] using
     (ReachesPlus.trans h1
       (ReachesPlus.trans h2
         (ReachesPlus.trans h3
@@ -159,6 +165,12 @@ theorem s3_zero_suffix_reset (n : ℕ) :
           (List.replicate (4*n+8) (0,0) ++ [(0,0),(1,0)]) []) := by
     simpa [List.replicate_succ, List.cons_append, List.append_assoc]
       using h2
+  have h34 :
+      List.replicate (4*n+8) (0,0) ++ [(0,0),(1,0)] =
+      List.replicate (4*n+9) (0,0) ++ [(1,0)] := by
+    rw [show 4*n+9=(4*n+8)+1 by omega, List.replicate_add]
+    rfl
+  rw [h34] at h3
   have hchain := ReachesPlus.trans h1
     (ReachesPlus.trans h2'
       (ReachesPlus.trans h3
