@@ -24,8 +24,7 @@ private theorem s3_word_prefix (n t : ℕ) (T : List (ℕ × ℕ)) :
         (cfg_CR_n_n [] ((2,0)::tail)) := by
     simpa [s3DWord, tail, bumpPairHead, List.replicate_succ,
       List.cons_append, List.append_assoc] using
-      (s3_cr_zero [] (List.replicate (4*n+5) (0,0) ++
-        [(0,0),(t+3,0)] ++ T))
+      (s3_cr_zero [] ((0,0)::tail))
   have h2 :
       ReachesPlus target
         (cfg_CR_n_n [] ((2,0)::tail))
@@ -67,7 +66,7 @@ theorem s3_universal_word_suffix_shift (n t : ℕ)
         (cfg_EL_n_n
           (List.replicate (4*n+8) (0,0) ++ [(1,0)])
           ((t+3,0)::T)) := by
-    simpa [List.replicate_succ, List.cons_append,
+    simpa [List.replicate_add, List.cons_append,
       List.append_assoc, Nat.add_assoc] using
       (s3_el_sweep (4*n+6) [(0,0),(1,0)] ((t+3,0)::T))
   have h3 := s3_el_positive (t+2)
