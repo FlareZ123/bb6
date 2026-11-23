@@ -377,7 +377,7 @@ theorem blankF424_is_halt : IsHalt target_tm := by
         (iterStep_sound stepSym (evalSym target_tm)
           (stepSym_sound (target_tm := target_tm)) 15 _))
   have hTrace : (evalSym target_tm initSymCyc3_F424) [target_tm]⊢* (evalSym target_tm symChk70511_F424) := by
-    exact stepStar_trans hc1 (stepStar_trans hc2 (stepStar_trans hc3 (stepStar_trans hc4 (stepStar_trans hc5 (stepStar_trans hc6 (stepStar_trans hc7 (stepStar_trans hc8 (stepStar_trans hc9 (stepStar_trans hc10 (stepStar_trans hc11 (stepStar_trans hc12 (stepStar_trans hc13 (stepStar_trans hc14 (stepStar_trans hc15 (stepStar_trans hc16 (stepStar_trans hc17 (stepStar_trans hc18 (hc18))))))))))))))))))
+    exact stepStar_trans hc1 (stepStar_trans hc2 (stepStar_trans hc3 (stepStar_trans hc4 (stepStar_trans hc5 (stepStar_trans hc6 (stepStar_trans hc7 (stepStar_trans hc8 (stepStar_trans hc9 (stepStar_trans hc10 (stepStar_trans hc11 (stepStar_trans hc12 (stepStar_trans hc13 (stepStar_trans hc14 (stepStar_trans hc15 (stepStar_trans hc16 (stepStar_trans hc17 (hc18)))))))))))))))))
   have h_to_halt_sym : (init ([] : List (Fin 2))) [target_tm]⊢*
       (evalSym target_tm symChk70511_F424) :=
     stepStar_trans hPrefix hTrace
