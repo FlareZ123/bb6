@@ -55,6 +55,43 @@ Using only the fixed block formulas above and the **exact upstream induction dec
 All these closed forms are quadratic in the unbounded macro iteration count. The outer sweeps and fallback atomic steps are charged directly from the original per-branch `ReachesIn` costs, with no unbounded replay of the expanded tape.
 
 
+## Exact-cost potentials: a telescoping proof of all unbounded macro sums
+
+The fixed-block costs have a stronger structure than merely being affine: **they are discrete gradients of quadratic integer-valued potentials.** Writing \(m,k,p\) for the literal source-state counters, define:
+
+| Variant | A potential \(\Phi_A(m,k)\) | C potential \(\Phi_C(p,k)\) |
+|---|---|---|
+| F424 | \(-70m^2+16k^2+368k\) | \(38p^2-16k^2+168p\) |
+| F412 | \(-62m^2+14k^2+332k\) | \(34p^2-14k^2+152p\) |
+
+For the B rule with macro separator-pair offset \(c\) (F424 \(506,436,354,284\); F412 \(458,396,322,260\)), define
+
+\[
+\Phi_{B,424,c}(p,m,k)=-38p^2+70m^2+16k^2+(c+12)m,
+\]
+\[
+\Phi_{B,412,c}(p,m,k)=-34p^2+62m^2+14k^2+(c+12)m.
+\]
+
+Each fixed-block cost is an **exact potential drop** on its source-prescribed counter change. For example,
+
+\[
+\Phi_{A,424}(m,k+1)-\Phi_{A,424}(m+1,k)=140m+32k+454
+\]
+and
+\[
+\Phi_{B,424,c}(p+1,m+2,k+1)-\Phi_{B,424,c}(p+3,m+1,k)=152p+140m+32k+c+542.
+\]
+
+The analogous C drop is \(76p+64k+486\) on \((p+3,k+1)\to(p+2,k+3)\). Therefore along **any** successful sequence of A/B/C source induction steps, the cost telescopes to the difference between just its *initial and final* potential values. This directly yields all six quadratic macro costs from their root counters—no unbounded summation or approximate bound is needed.
+
+- [`MacroCostPotential.lean`](MacroCostPotential.lean) states and proves twelve algebraic theorems (both variants × three fixed-block potential drops and three closed macro endpoint formulas) using `ring` over integers.
+- [`MacroCostArithmetic.lean`](MacroCostArithmetic.lean) independently states and proves the twelve natural-number recurrence/summation identities underlying the same macro formulas.
+- The symbolic affine block checker supplies the still-to-be-source-linked *premises* that these are the primitive costs of the 46–126 original `stepPure` rules. Thus the integer potential identities are unconditional arithmetic statements, while their use as exact Turing-machine step counts remains conditional on the source connection.
+
+This potential approach is preferable to repeatedly simulating huge macro iterations and is reusable for any accelerated system whose block costs are affine in counters that evolve by translations.
+
+
 ## Auditable finite certificate structure
 
 A valid all-parameter block cost proof is reducible to a finite straight-line trace: for each of the 14 machine–block pairs, the symbolic evaluator performs 46–126 source-shaped `stepPure` transitions, maintains an affine cost in the free variables (p,m,k,d), and checks every branch guard against the **whole** natural orthant. Each successful run returns a coefficient vector `[constant,p,m,k,d]`, with zero dependence on `d` and no inspection of a symbolic unrestricted `R_tail`. Those coefficient vectors are shown in the table above. The affine-guard argument uses componentwise coefficient signs and exact zero tests, so there is no unsound appeal to testing a few concrete inputs.
