@@ -72,3 +72,10 @@ jobs:
           lean --version
           lean -o /tmp/a13-m32-c3six/CThreeSixM32Integration.olean \
             im-results/agent13-residual-frontier/CThreeSixM32Integration.lean
+      - name: Kernel-check strictness of all eight M32-only cells
+        shell: bash
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="/tmp/a13-m32-c3six:$GITHUB_WORKSPACE/tools"
+          lean -o /tmp/a13-m32-c3six/M32EightCellStrictness.olean \
+            im-results/agent13-residual-frontier/M32EightCellStrictness.lean
