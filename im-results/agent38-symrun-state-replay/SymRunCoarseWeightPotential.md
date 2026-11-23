@@ -25,7 +25,12 @@ where \(\operatorname{numSum}\) is the existing listNumSum / symPairNumSum from 
 
 Use the analogous potential \(W_M\) on the initial MItem RLE states, with numeric sum of .run d equal to d and .zero equal to zero.
 
-The useful feature is that prependZeroM and prependZeroSym do not cause an uncontrolled increase in this potential. For example, the DL transition consuming .run 2 and .run d replaces them with \(d+1\) zero tokens and two zero-length run tokens. The numeric mass drops by \(d+2\), while token count rises by \(d+1\): the net potential decreases by one. The CB run-zero/run-positive transition has the same cancellation, up to the bounded cost of bumpSymL.
+The useful feature is that prependZeroM and prependZeroSym do not cause an uncontrolled increase in this potential. For example, the DL transition consuming .run 2 and .run d replaces them with \(d+1\) zero tokens and two zero-length run tokens. The numeric mass drops by \(d+2\), while token count rises by \(d+1\): the net potential decreases by one. The CB run-zero/run-positive transition has the same cancellation, up to the bounded cost of bumpSymL. The first two helper facts to formalize are
+\[
+|\operatorname{prependZeroSym}(n,L)|=n+|L|,\qquad
+\operatorname{numSum}(\operatorname{prependZeroSym}(n,L))=\operatorname{numSum}(L),
+\]
+and the identical pair for prependZeroM.
 
 ## Local weight inequalities to formalize
 
