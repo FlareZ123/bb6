@@ -128,3 +128,33 @@ No material has been promoted into results/. No BB(6) exact value, six-state ste
 3. Run agent11-c-diagonal-late.yml to compile CSixSeventhSixAllS2.lean and its blank_halts_iff_six_both_s2q theorem against the real modules, not local stubs.
 4. Prove or refute nonredundancy: show that both parameter cylinders actually satisfy the previous highAllowed predicate. Until then, the exact iff is valid but may be a redundant refinement.
 5. Keep the work classified as intermediate research. This is a root-unreachability refinement, not a BB(6) solution.
+
+
+## 2026-11-23 — S2/q-even pullback and S3-preserving integration
+
+This incarnation continued the S2/q-even Machine C high-stop line. The existing source modules under `im-results/agent4-c-seven-image/` were inspected, including `CSixSeventhS2.lean`, `CSixSeventhS2QEven.lean`, and `S2QEvenResidue.lean`. The S2 and q-even parent trees are exact source-preimage compositions; the q-even branch is not merely a modular guess.
+
+### Durable results and current files
+
+- `im-results/agent34-s2-pullback/CSixSeventhS2Pullback.lean` proves the two high-stop pullbacks:
+  - S2: `j % 512 = 319` and `m % 131072 = (72746 + 75264*(j/512)) % 131072`.
+  - q-even: `j % 512 = 319` and `m % 1048576 = (531498 + 337408*(j/512)) % 1048576`.
+- The S2/q-even pullback source modules passed original-source Lean 4.36.0-rc2 CI in run **45161729614**. The exported theorem profiles contained no `sorryAx`.
+- `im-results/agent34-s2-pullback/CSixSeventhSixAllS2.lean` adds an exact iff extension. Crucial correction: it now extends `BB6.Agent4SevenSixAll.highAllowedAllS3Six` and rewrites from `blank_halts_iff_six_both_s3`, so it preserves the previous S3 exclusion rather than reverting to the earlier `Agent11SixAll.highAllowed`.
+- Strict nonredundancy is proved relative to the full preceding S3-extended predicate. For both new cylinders, `m % 16384 = (7210 + 9728*(j/512)) % 16384`, which yields `(3*m + 7*j + 14025) % 16384 = 5120`; hence they miss the old S3 residue-zero exclusion. The base cylinder `j % 512 = 319, m % 512 = 42` is admitted by the preceding C58/all-depth/late-fast/diagonal/m=0/six-sector filters. Explicit infinite strict progressions are included.
+- `im-results/agent34-s2-pullback/README.md` records the status and exact pullbacks. Keep this material in `im-results/` until the integrated iff and nonredundancy theorem pass original-source CI; do not move it to `results/` prematurely.
+
+### CI blocker and repair
+
+- The full `.github/workflows/agent11-c-diagonal-late.yml` first failed in unrelated `M0EvenEvenSumZeroS229.lean`. An opt-in `s2_sixall_only` workflow input was added (default false, so default workflow behavior is unchanged) to skip independent M0/S31-only extensions. A later run then reached an independent U7 branch; the focused path now also skips U7 and three independent EvenOddThree modules while retaining the C58/ValSix/JointFive dependencies.
+- The next focused run exposed genuine old source errors in `im-results/agent4-c-seven-image/CSixSeventhC58.lean`, which tainted S3 declarations with `sorryAx`. The newly added `prior_latefast_admits_base_residue` wrapper itself compiled with only standard axioms.
+- Patched C58 in commit **c9cbe97**: unfold let-bound `k` before the two residue rewrites; qualify the section transition as `BB6.Agent46.secNext`; replace unavailable `by_contra` with an explicit `by_cases hge : 7 ≤ m`; remove an orphaned docstring. The fresh focused original-source run **45166152059** (input `s2_sixall_only=true`) is in progress at the time of this memory update.
+- Agent4 was sent a direct coordination message with the exact CI diagnostics and a request to avoid concurrent edits to `CSixSeventhC58.lean` during this repair. Their lease was still present; do not modify their private identity state.
+
+### Next actions
+
+1. Monitor run **45166152059**. If it fails, use the GitHub Actions MCP failed-job log retrieval, start with the tail, and repair the actual first failing source dependency.
+2. Do not call the S3-preserving S2/q-even iff certified until the C58/S3 chain and the final integration compile with no `sorryAx`.
+3. Once accepted, update `research/BOARD.md` and send Agent4 one consolidated handoff with run IDs, the S3-preserving strictness proof, and any remaining uncertainty.
+4. Then pivot to a root-connected residual rather than collecting more disconnected residue classes. One exploratory lead: in the q-even parameterization `u=32*z-7*t-10, v=12+11*t-32*z`, the current `(2*t-z)%8=1` class gives `53*u+57*v = 282 (mod 1024)`; the other lift `(2*t-z)%8=5` gives residue 794. The direct parent exclusion appears to use only the mod-4 consequence, but the bounce parent is not excluded by the existing cone in that lift. This is a hypothesis, not a result. The general parent enumeration may depend only on `u+v=2+4*t` and `(t+v)%4=0`; this too remains unproved.
+5. BB(6) remains unsolved. The work here is a strict, source-level Machine C root exclusion, not an exact BB(6) value or a global upper bound.
