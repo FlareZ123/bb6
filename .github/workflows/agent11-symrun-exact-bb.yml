@@ -9,7 +9,7 @@ permissions:
 jobs:
   compile-source-cost:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 60
     env:
       LEAN_TOOLCHAIN: leanprover/lean4:v4.36.0-rc2
     steps:
@@ -41,7 +41,7 @@ jobs:
         working-directory: upstream
         run: |
           set -euo pipefail
-          cp ../local-bb6/im-results/agent11-symrun-primitive-cost/{SourceF424Machine,SourceCostModel,SourceCostCombinators,SourceExactF424Core,SourceExactMItemPrefix424,SourceExactPureBB424,SourceExactPureDL424,SourceExactPureCB424,SourceExactPureStep424}.lean .
+          cp ../local-bb6/im-results/agent11-symrun-primitive-cost/{SourceF424Machine,SourceCostModel,SourceCostCombinators,SourceExactF424Core,SourceExactMItemPrefix424,SourceF424SymbolicTrace,SourceExactPureBB424,SourceExactPureDL424,SourceExactPureCB424,SourceExactPureStep424}.lean .
           cp ../local-bb6/im-results/agent38-symrun-state-replay/SourceExactSweepBB424.lean .
           lake env lean -o SourceCostModel.olean SourceCostModel.lean
           LEAN_PATH=. lake env lean -o SourceF424Machine.olean SourceF424Machine.lean
@@ -49,6 +49,8 @@ jobs:
           LEAN_PATH=. lake env lean -o SourceExactF424Core.olean SourceExactF424Core.lean
           LEAN_PATH=. lake env lean -o SourceExactMItemPrefix424.olean SourceExactMItemPrefix424.lean | tee /tmp/agent11-mitem-prefix.log
           ! grep -Eq 'sorryAx|native_decide' /tmp/agent11-mitem-prefix.log
+          LEAN_PATH=. lake env lean -o SourceF424SymbolicTrace.olean SourceF424SymbolicTrace.lean | tee /tmp/agent11-symbolic-trace.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/agent11-symbolic-trace.log
           LEAN_PATH=. lake env lean -o SourceExactPureBB424.olean SourceExactPureBB424.lean
           LEAN_PATH=. lake env lean -o SourceExactPureDL424.olean SourceExactPureDL424.lean
           LEAN_PATH=. lake env lean -o SourceExactPureCB424.olean SourceExactPureCB424.lean
