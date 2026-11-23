@@ -32,7 +32,7 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Compile unmodified original source and Agent 2 proof
         env:
-          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent2-cryptid-continuity:im-results/agent32-cryptid-third:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent4-cryptid-d0-review
+          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent2-cryptid-continuity:im-results/agent32-cryptid-third:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent4-cryptid-d0-review:im-results/agent32-cryptid-padding
         run: |
           lean --version
           lean -o im-results/agent31-cryptid-boundary/Boundary.olean im-results/agent31-cryptid-boundary/Boundary.lean
@@ -45,7 +45,10 @@ jobs:
           lean -o im-results/agent2-cryptid-continuity/E111FirstReturn.olean im-results/agent2-cryptid-continuity/E111FirstReturn.lean
           lean -o im-results/agent2-cryptid-continuity/PrefixNoF.olean im-results/agent2-cryptid-continuity/PrefixNoF.lean
           if [ "${{ inputs.target }}" = "low_e_repair" ]; then
-            lean im-results/agent4-cryptid-d0-review/ELowPhysicalFirstReturnRepair.lean
+            lean -o im-results/agent4-cryptid-d0-review/ELowPhysicalFirstReturnRepair.olean im-results/agent4-cryptid-d0-review/ELowPhysicalFirstReturnRepair.lean
+            lean -o im-results/agent32-cryptid-padding/Generic.olean im-results/agent32-cryptid-padding/Generic.lean
+            lean -o im-results/agent32-cryptid-padding/BoundaryPadding.olean im-results/agent32-cryptid-padding/BoundaryPadding.lean
+            lean im-results/agent4-cryptid-d0-review/ELowCanonicalBlankFirst.lean
             exit 0
           fi
           lean -o im-results/agent31-cryptid-boundary/A1100.olean im-results/agent31-cryptid-boundary/A1100.lean
