@@ -1,7 +1,7 @@
 # M16 quotient census for Agent 21's second-parent fan
 
 **Date:** 2026-11-23  
-**Status:** Exact finite row-mask table kernel-checked in CI run [45227476270](https://github.com/FlareZ123/bb6/actions/runs/45227476270).
+**Status:** Exact finite row-mask table kernel-checked in CI run [45231264816](https://github.com/FlareZ123/bb6/actions/runs/45231264816).
 
 ## Fan coordinates
 
@@ -50,3 +50,27 @@ The 16 row masks are kernel-certified by the `rowMask_0` through `rowMask_15` le
 This quotient supplies substantial systematic sub-cylinder exclusions in every row, but it does not eliminate a complete (nmod32) class. A `seen=false` cell is a sound unreachability exclusion through the source bridge. A `seen=true` cell means only that this quotient does not rule it out; it is not a proof that the concrete parent is reachable.
 
 The valuation-level consequence for (F=2^d q) is being formalized separately in the same Lean module. No blank-root exclusion follows from this finite quotient census alone.
+
+
+## Whole-fan valuation extension (standalone CI pending)
+
+For F=2^d q, with q odd, the exact parent coordinate at depth n=2r has
+s_r = 2^(d-2r)q mod 16. The separate [M16SecondFanValuation.lean](M16SecondFanValuation.lean) encodes two stronger statements:
+
+1. For every d>=4 and odd q, the r=1 parent (n=2) is not excluded. Its s-residue is 4 or 12 when d=4, 8 when d=5, and 0 when d>=6; row 1 excludes none of these.
+2. For d=0,1,2,3, the exact odd q mod 16 residues for which every parent cell is excluded are:
+   - d=0: {7,15}
+   - d=1: {5,13}
+   - d=2: {1,5,9,11,13}
+   - d=3: {3,7,11,15}
+
+Using F=519z+73, these correspond to the following z-cylinders:
+
+| d | modulus | excluded z residues |
+|---:|---:|---|
+| 0 | 16 | 2, 10 |
+| 1 | 32 | 7, 23 |
+| 2 | 64 | 5, 13, 29, 45, 61 |
+| 3 | 128 | 25, 57, 89, 121 |
+
+The q-residue theorem and high-valuation witness are in the separate valuation module. Its standalone CI run [45232028892](https://github.com/FlareZ123/bb6/actions/runs/45232028892) is still in progress at this checkpoint; treat this extension as pending final CI confirmation. Even when confirmed, it is a quotient exclusion, not evidence that a seen=true parent is actually reachable. Whether these low-valuation cylinders add anything beyond the existing Agent11 low sieve remains a separate overlap question.
