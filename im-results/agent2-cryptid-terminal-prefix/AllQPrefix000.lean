@@ -1,4 +1,4 @@
-import AllQFirstHalt
+import AllQSourceFeeder
 import Lean.Elab.Tactic.Omega
 
 set_option maxHeartbeats 50000000
