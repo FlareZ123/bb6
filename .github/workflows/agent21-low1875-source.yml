@@ -61,4 +61,5 @@ jobs:
           python3 tools/lean_compile_closure.py \
             im-results/agent21-c-first-m1091-4096/ValSixLowRefinement.lean \
             --workdir /tmp/a21-low1091-joint --source-root /tmp/a21-low1091-extra \
+            --override BounceParity=im-results/agent46-c-jump/BounceParity.lean \
             --jobs 4 --lean "$(command -v lean)"
