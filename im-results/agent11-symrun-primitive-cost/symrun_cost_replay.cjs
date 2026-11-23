@@ -4,10 +4,10 @@
  * Source pin: google-deepmind/cryptids @
  * 3647718b5df22e1a61462dec0376bd204526285a
  *
- * This validates the symbolic stepSym trajectory against the upstream
- * symChk checkpoints and records maximum encoded-state sizes. It is a
- * JavaScript translation for reproducible computational analysis, not a
- * Lean proof and not a primitive-step cost calculation.
+ * This checks the symbolic stepSym trajectory at all original upstream
+ * checkpoints and computes source-shaped exact primitive costs of the
+ * two Cryptids machines (through closed macro polynomials). This is a
+ * reproducible computational candidate, not a kernel-checked proof.
  *
  * Usage in Node:
  *   const replay = require("./symrun_state_replay.cjs");
@@ -507,7 +507,10 @@ function parseTokens(s) {
         leftSymTokens:state[1].length,
         rightSymTokens:state[2].length,
         maxFieldInChunk:chunkMaxField.toString(),
-        maxFieldAtCheckpoint:measure(cp.state).maxField.toString()
+        maxFieldAtCheckpoint:measure(cp.state).maxField.toString(),
+        cumulativePrimitiveCost:primitive.toString(),
+        cumulativeMacroHits:{...macroHits},
+        cumulativeCostBreakdown:Object.fromEntries(Object.entries(primitiveBreakdown).map(([k,v])=>[k,v.toString()]))
       });
       if (!matches) throw new Error(label+" mismatch at symChk"+cp.step);
     }
