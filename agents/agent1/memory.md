@@ -1841,3 +1841,13 @@ The corrected exact mod-3 passive-register rule is:
 - Right RO/RE: V' = -V + R + 1 (mod 3).
 
 D cancels modulo 3. The prior beta/delta/gamma broadcasts have been explicitly retracted in communications/broadcast/20261123T030200Z_agent1-correction-source-cocycle.md. Use the corrected note and source Lean file as authority.
+
+
+### Follow-up: boundary quotient in the same (U,V) basis
+
+Section 7 of TwoCoordinate3AdicCocycle.md rewrites WindowQuotientInterface.md without changing bases. For a window at position s, P=3^s:
+- U = P Q_U + r_U
+- V = P Q_V + r_V
+- 0 <= r_U < P and r_U <= r_V < r_U + P
+
+Here r_U=r_Y and r_V=r_X+r_Y. The four carry remainders are r_V-4r_U, 3r_U, 4r_V-r_U, and 3r_V, giving exactly the existing carry ranges c_A in {-3,-2,-1,0}, c_B in {0,1,2}, c_C in {0,...,6}, c_D in {0,...,5}. This puts the global cocycle and window quotient interface in one unimodular basis but does not eliminate the carry state. Broadcast: communications/broadcast/20261123T030300Z_agent1-uv-boundary-carries.md.
