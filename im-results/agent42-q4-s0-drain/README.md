@@ -977,8 +977,9 @@ repairs were made after or in response to those logs:
   order for the preserved `-14` bit, aligned the frame/head-check
   contracts, and made the zero-exit trace use explicit `Fin 6` states.
 - `M2EvenResidueZeroFrames.lean`: exposed the required `leftOnes`
-  namespace, normalized both frame coordinates, and made the setup frame
-  and counted-run endpoints explicit.
+  namespace, normalized both frame coordinates, identified the setup frame
+  with `config_ext`, rewrote `frameAt` forward to its explicit configuration,
+  and normalized the counted-run input/output heads.
 - `OuterLCIncFiveStep.lean`, `OuterLCIncTail.lean`, and
   `M0EvenFourteenQ4Bridge.lean`: imported/opened the actual
   `Agent48Champion` machine interface rather than relying on implicit
