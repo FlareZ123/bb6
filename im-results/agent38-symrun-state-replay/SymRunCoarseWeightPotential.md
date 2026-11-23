@@ -46,14 +46,12 @@ The following bounds are deliberately loose.
 3. **Atomic symbolic steps.** The case definitions support the target inequalities
    \[
    W(\operatorname{stepElemBB}(L,R))\le W(BB,L,R)+10,
-   \]
-   \[
+   \quad
    W(\operatorname{stepElemDL}(L,R))\le W(DL,L,R)+7,
-   \]
-   \[
+   \quad
    W(\operatorname{stepElemCB}(L,R))\le W(CB,L,R)+16.
    \]
-   The parameter-sized zero expansions in the DL and CB branches are exactly where the numeric-mass/token-count cancellation matters.
+   For BB, the existing numeric-sum bound is (+3), and a direct constructor count gives length growth at most (+7). For DL, the only growing ordinary branches are run-zero/run-one, where bumpSymR contributes at most (+8) to W and the consumed head offsets the optional run-zero prefix; the run-two/right-run-(d) branch has net potential change (-1), because it consumes numeric mass (d+2) while adding (d+1) zero tokens. For CB, the largest ordinary branch is a right-side zero, which performs both bumps and contributes at most (8+8-1=15); the parameterized run-zero/right-run-((d+1)) branch has net change at most 7 after its consumed run pays for the (d) prepended zeros. Thus (+16) is a safe uniform bound. The analogous MItem stepElemM branches have (W_M)-growth at most (+8), with the large prependZeroM branch again paid for by the consumed run.
 
 4. **Sweeps.** The repository already proves
    - sweepCB_num_sum_bound: output numeric mass is at most input mass plus \(3|R|\);
