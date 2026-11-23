@@ -201,3 +201,21 @@ c_C\in\{0,1,2,3,4,5,6\},\quad c_D\in\{0,1,2,3,4,5\}.
 These are the same finite carry ranges as the original X,Y formulation.
 
 Thus the global branch cocycle and the window quotient interface can use one unimodular basis, provided the extra addition carry c_V is retained. This does not eliminate the carries; it makes the basis-change carry explicit. A finite-state proof still has to track the induced carry transitions as s changes.
+
+
+## 8. The low-digit rule needs only a 9-state drain product
+
+Section 5 depends on the full evaluator count R only modulo 3. The existing DrainDigitTransducer.md distinguishes R_dig=n_1+n_2, the number of nonzero emitted ternary digits, from R_full, the actual evaluator-call count (including the initial RE evaluator). It records that the source-linked drain theorem and the weighted evaluator identity imply
+\[
+R_{\rm full}=R_{\rm dig}.
+\]
+This equality is an immediate corollary of the existing source theorems, although it is not yet packaged as a named theorem.
+
+Consequently the R mod 3 input to the passive-register update can be computed by taking the existing three-state drain transducer and adjoining a counter in Z/3Z. On a transition that emits digit out in {0,1,2}, update
+\[
+(s,\rho)\longmapsto
+\left(s',\rho+\mathbf 1_{\mathrm{out}\ne0}\right)\pmod3.
+\]
+This gives a deterministic nine-state product (three drain states times three count residues) that computes R_full mod 3 for every successful source drain covered by the source theorem.
+
+This is the minimal drain statistic needed by the new passive-register low-digit rule. It does not by itself prove the drain budget for every authentic root state or resolve the moving-window boundary carry, but it identifies a small, exact product automaton to compose with the sector/branch and boundary-carry state.
