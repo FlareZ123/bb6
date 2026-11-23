@@ -79,6 +79,20 @@ For each representative \(k\), the graph has the edge
 
 Every actual reverse-parent step is therefore an edge of this larger finite graph. If the root vertex \((2,0)\) is not reachable in this graph, it cannot be reached by a genuine source-parent chain.
 
+## Why odd-prime reductions cannot improve this particular relaxation
+
+For any odd prime `p`, let `r=ord_p(2)`. Since `r\mid p-1`, we have `gcd(r,p)=1`. In the same all-positive-cost relaxation over `F_p^2` (with fixed `N_0`), every vertex reaches every other vertex in at most two edges.
+
+Indeed, by the Chinese remainder theorem, for any current second coordinate `m` and desired next coordinate `m'`, there is a positive `k` satisfying
+`k\equiv m-m'\pmod p` and `k\equiv0\pmod r`.
+Then `2^k\equiv1\pmod p`, so the edge is
+`(D,m)\longrightarrow(D-N_0+2m'-1,m')`.
+Given any source `(D,m)` and target `(E,n)`, choose the intermediate coordinate
+`m_1\equiv (E-D)/2+N_0-n+1\pmod p`.
+Two such identity-multiplier edges then land exactly at `(E,n)`.
+
+This is a no-go theorem for this **specific relaxation**, not for the original source relation: trying another odd-prime modulus while still allowing every positive `k` and dropping source legality cannot exclude the root. The nontrivial mod-128 obstruction comes from the noninvertible 2-adic multiplier and its collapse for `k\ge7`. A stronger sieve must retain source interval/legality conditions or exploit higher 2-adic information.
+
 ## Why the start residues depend only on \(h\bmod4\)
 
 Write \(b=2b_{\rm odd}\). The two families have
