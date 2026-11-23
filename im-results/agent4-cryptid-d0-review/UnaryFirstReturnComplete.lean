@@ -26,7 +26,7 @@ open BB6.CryptidPrefixFirstReturn
 open BB6.CryptidFirstReturn
 open BB6.CryptidELowCanonicalFirst
 
-private theorem b_unary_noF (k t : Nat)
+theorem b_unary_noF (k t : Nat)
     (htpos : 0<t) (ht : t<12*k*k+49*k+40) :
     (run t (init (List.replicate (3*k) true))).st ≠ 5 := by
   let xs := List.replicate (3*k) true
