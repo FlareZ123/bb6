@@ -97,5 +97,6 @@ jobs:
           lean -o "$X/YSafeNormalizer.olean" "$X/YSafeNormalizer.lean" | tee -a axioms.log
           lean -o "$X/AY2P2Regular.olean" "$X/AY2P2Regular.lean" | tee -a axioms.log
           lean -o "$X/AY1P2Regular.olean" "$X/AY1P2Regular.lean" | tee -a axioms.log
-          lean "$X/YPlusZClosure.lean" | tee -a axioms.log
+          lean -o "$X/YPlusZClosure.olean" "$X/YPlusZClosure.lean" | tee -a axioms.log
+          lean "$X/P2Residual146779Source.lean" | tee -a axioms.log
           if grep -E 'sorryAx|_native.native_decide' axioms.log; then exit 1; fi
