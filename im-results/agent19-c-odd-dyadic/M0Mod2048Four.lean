@@ -40,7 +40,7 @@ private theorem prior_high_allowed_m0 (j : Nat)
     exact ⟨hAgent11,by omega⟩
   have hy :
       2^(2*0+2)*(j+3)-(j+3*0+5)=3*j+7 := by
-    norm_num
+    change 4*(j+3)-(j+5)=3*j+7
     omega
   have hright :
       (BB6.Agent15.affineNormalize (2*j+3)
