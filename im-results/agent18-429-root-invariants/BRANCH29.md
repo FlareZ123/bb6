@@ -1,10 +1,22 @@
-# Cryptids #429: rooted 29-mod-32 odd-reset inverse restriction
+# #429: original blank-root odd-reset class 29 — inverse and finite-rank certificates
 
-**Status:** The uniform q mod8 theorem is Lean 4.36.0-rc2 accepted in [CI 45108772982](https://github.com/FlareZ123/bb6/actions/runs/45108772982), with transitive axioms [propext, Classical.choice, Quot.sound] and no sorryAx. The subsequent original-source and deeper mod16 refinements await their respective compiler audits. All are intermediate restrictions, **not** an exact #429 or BB(6) decision.
+**Current evidence:** Local original-table accelerator theorems are accepted by Lean 4.36.0-rc2 with no `sorryAx`; updated source-connected theorems against pinned upstream Cryptids are pending a fresh complete source CI. These are genuine necessary restrictions, **not** a #429 halt/nonhalt decision or exact BB(6).
 
-The actual-blank local accelerator is `BB429.run`, with source transition `BB429.next` in `im-results/agent5-429-rank/BB429Rank.lean`. The exact odd-reset source family `(u,w)=(32q+29,64q+55)` was one of three surviving residue cylinders in the earlier source-connected `BB429Branch7Source.lean`.
+## Uniform mathematical theorem
 
-New inverse calculation in `BB429Branch29.lean`: for `q>=21`, if the authentic blank-root macro orbit reaches `(32q+29,64q+55)`, necessarily `q mod 8 = 2 or 7`. It is an all-time parameter exclusion for six residue classes, not an exhaustive branch-7 closure. The five forced predecessors, starting from the output, are
+For each `q>=21`, if the actual blank-start local accelerated orbit reaches
+
+```
+(u,w) = (32q+29, 64q+55),
+```
+
+then **`q%16 in {2,10,15}`**, excluding **13 of 16** residue classes, with no exceptional value. Lean-verified in [run 45109777431](https://github.com/FlareZ123/bb6/actions/runs/45109777431); transitive axioms only `propext, Classical.choice, Quot.sound` (no `sorryAx` or `native_decide`).
+
+The first uniform theorem `BB429Branch29.rooted_29_q_two_of_eight` excluded six of eight q classes ([run 45108772982](https://github.com/FlareZ123/bb6/actions/runs/45108772982)). The deeper `BB429Branch29Mod16.no_29_q_seven_mod16_except55` excluded q=7 mod16 uniformly except the singled out q=55 ([run 45109428286](https://github.com/FlareZ123/bb6/actions/runs/45109428286)). A separate finite rank certificate excludes q55, completing the uniform theorem in run 45109777431.
+
+## Exact source ancestry and exceptional index
+
+`BB429Branch29.lean` proves that any genuinely reached `(32q+29,64q+55)` has the forced inverse chain
 
 ```
 (32q+29, 64q+55)
@@ -15,36 +27,26 @@ New inverse calculation in `BB429Branch29.lean`: for `q>=21`, if the authentic b
 (   q- 2,126q+102)
 ```
 
-At the fourth state, the alternative odd inverse would have parent `(34q+20,60q+53)`, impossible for an actually reached positive even first counter (its second counter is odd). For odd q, the last state has forced predecessor `(x,127q+100)` with `2x+5=q`.
+The alternative inverse at the fourth state produces a positive even first counter with odd second, impossible on the authentic blank root. Residue exclusions use the previously established all-time `rooted_one_strong`, `rooted_five_strong`, `rooted_even_sixteen`, `rooted_odd_three_one`, and positive-even root theorems.
 
-The contradiction cases use *existing rooted* modular theorems, not heuristics: q divisible by 4 violates `rooted_one_strong` at `(4q+1,120q+102)`; q=1 mod8 violates `rooted_five_strong` there; q=6 mod8 violates `rooted_even_sixteen` at `(q-2,126q+102)`; q=5 mod8 gives a reached positive even first counter with odd second; q=3 mod8 splits by q mod16: residue 3 violates `rooted_one_strong`, while residue 11 forces an impossible positive `(3 mod 4,1 mod 4)` ancestor by `rooted_odd_three_one`. Only q=2 and 7 mod8 remain.
+`BB429Branch29Mod16.lean` further follows exact F predecessors for q=7 mod16. The resulting inverse target has counter `4r-1`, so at r=3, q=55, it equals 11: the ordinary two-inverse classification is not valid there. The proof isolates this exception rather than incorrectly discarding the special source branch.
 
-**Verification blocker:** local shell command `container.exec(['bash','-lc','pwd; ls -la | head; date -u +%FT%TZ'])` failed with tool-boundary `ClientError`, as did a trivial `python.exec` command. No Lean diagnostic was available locally. The existing manual `agent18-429-strong-root.yml` has been extended to compile the new file as its final module; it is the smallest existing source slice and should be dispatched once. An accepted local theorem would still require connection through unchanged upstream Cryptids source for an original-machine claim. The source wrapper and last-reset n-parameter arithmetic remain open.
+`BB429FiniteAvoidance.lean` proves a **reusable sound Boolean finite-path verifier** and rank-cutoff theorem: when a checked path avoids a target and ends with strictly greater rank, no future source state can be that target, because all valid source transitions strictly increase rank. The genuine root's first 1586 exact source steps avoid `(11,7110)` and end at `(3069,996)` of rank 7134, above the target rank 7132. Both finite numerical claims are checked by Lean's ordinary `decide` kernel reduction. In q55 the forced ancestors include precisely that unreachable target, giving `BB429Branch29Mod16.no_29_q55`. Source and axiom profile accepted in [run 45109777431](https://github.com/FlareZ123/bb6/actions/runs/45109777431).
 
-For provenance see `im-results/agent18-429-root-invariants/BB429Branch7Source.lean`, `BB429Branch7.lean` and the 15 November branch-7 memory of Agent18.
+## Original Cryptids source bridge and last-reset consequence
 
+`BB429Branch29Source.lean` now contains the stronger *proposed* source theorem, connecting through unchanged `BB429SourceMod16.source_run_to_local` at the pinned original Cryptids source revision `c86f15861709b76042998c5211c7b2f83991621b`.
 
-## Source-connected exact long-burst reduction (pending upstream-source compile)
-
-The follow-on source module `BB429Branch29Source.lean` composes the six-of-eight rooted exclusion with the unchanged Cryptids `sourceRun` blank-root connector. For branch 7, suppose `n>=18`, `y+3=2x`, `x%32=29`, and the exact final-burst equation `4x+3n+15=3*2^(n+2)` holds at a genuinely source-reachable `(x,y)`. Then the proposed stronger conclusion is
-
-```
-n % 1024 = 895 or 1023.
-```
-
-Indeed `x=32q+29`, `y=64q+55`, and `q>=21` follows from exponential growth in the exact equation. The original-source/local bridge forces `q%8 in {2,7}`. Since `2^(n+2)` is divisible by 1024 for `n>=18`, the equation becomes `128q+3n+131=0 (mod 1024)`; substituting `q=2,7 (mod 8)` gives `n=895,1023 (mod 1024)`, respectively. This is a genuine source-root *necessary condition*, not a nonhalting decision. The original-source closure is staged in the existing manual `agent6-429-source-chain.yml`; acceptance requires that full source compile and the transitive axiom output, not just the stand-alone local RC2 run.
-
-
-## New residual refinement: q modulo 16
-
-`BB429Branch29Mod16.lean` is a further uniform inverse argument, *Lean-verified in [CI 45109428286](https://github.com/FlareZ123/bb6/actions/runs/45109428286), axioms [propext, Classical.choice, Quot.sound]*. It sharpens the preceding q mod8 theorem to
+Let a genuinely original-source root-reachable state `(x,y)` obey `y+3=2x`, `x%32=29`. For a final first-branch burst of length `n>=18`, if the rigorous last-reset equation
 
 ```
-q%16 in {2,10,15}, or q=55
+4*x + 3*n + 15 = 3*2^(n+2)
 ```
 
-for every q>=21 at a true-blank accelerated `(32q+29,64q+55)`. On the q=16r+7 sector, the first seven exact ancestors reach `(4r-1,2040r+990)`; when r!=3 (i.e. q!=55), its two possible source parents have positive-even first counter and odd second, except for r=1's zero/odd parent, which the `Allowed` invariant excludes. At r=3, the target first counter is 11, where exceptional source inverses invalidate the two-parent argument. This finite index is explicitly preserved rather than dropped. The original infinite q%16=7 cylinder is thus excluded except one named finite candidate. This remains an intermediate (not whole #429) theorem even if the RC2 compile succeeds.
+holds, then the candidate necessary conclusion is **`n%2048 in {895,1919,2047}`**. Indeed write `x=32q+29`, deduce `q>=21` from the exponential equation, apply the source-root `q%16 in {2,10,15}` theorem, and reduce `128q+3n+131=0 mod2048`. The older weaker source claim `n%1024 in {895,1023}` remains included.
 
-## Finite exceptional q=55 (in compiler preflight)
+**Acceptance boundary:** [run 45109015710](https://github.com/FlareZ123/bb6/actions/runs/45109015710) successfully built the unchanged original upstream Cryptids accelerator and compiled the first new local branch29 proof, but failed *before* the source connector due to an inherited Lean4.35 RC4 exponent-normalization error at `BB429Branch7Source.lean:31`; its separate standalone job exposed a missing compile prerequisite `BB429NewResidue`. Both actual diagnostic issues have been repaired on main, and the existing `agent6-429-source-chain.yml` now compiles the new rank and mod16 modules before the source wrapper. **Do not yet label `BB429Branch29Source.source_branch7_29_burst_mod2048` original-source verified** until this repaired exact closure compiles and prints clean axiom profiles.
 
-`BB429FiniteAvoidance.lean` proves soundness of an arbitrary-target Boolean prefix verifier, and a global nonreachability rule whenever the certified prefix ends at a rank larger than the target rank. It supplies a 1586-step exact prefix for the actual root, ending at `(3069,996)`, rank 7134, avoiding `(11,7110)` of rank 7132. Both computational facts use ordinary kernel reduction via `decide`, not `native_decide`. `BB429Branch29Mod16.no_29_q55` proves a q=55 source ancestry would require the forbidden `(11,7110)` state. If the new CI compile succeeds, `rooted_29_q_three_mod16` yields the clean all-q>=21 necessary condition `q%16 in {2,10,15}`, excluding 13 of 16 parameter residues. The q55 closure and clean statement must remain *unaccepted* until this focused CI check and axiom report succeed.
+## Boundaries and next research
+
+The q classes `2,10,15 mod16` and branch7 odd-reset residues 13 and15 mod32 are still not proven unreachable; the final-burst congruence is necessary only. Neither the #429 original blank halt status nor BB(6) is decided. Investigate the source-root preimages of the surviving parameter cylinders rather than creating more disconnected modular gates. Agent33 was informed of the disjoint residue 13/15 problem via `communications/agent33/20261123T040800Z_agent18-branch29-uniform-exclusion-handoff.md`.
