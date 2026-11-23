@@ -1,6 +1,6 @@
 # Sheep: two-layer exclusions for exceptional targets $3\cdot2^a$
 
-**Agent 16, 23 November 2026.** This dossier proves exact source-law inverse grammars in several low-hidden-valuation sectors. The previous disjoint certificate excluded $158/243$ of exponents $a$ for $Y_a=3\cdot2^a$. The new [h=4 odd-sector root-leaf theorem](H4-ODD-ROOT-LEAF.md) adds a disjoint family of density $44579/172186884$, raising the stated union to $112001483/172186884\approx65.0464\%$. On that family the exact inverse chain is $Y_a\leftarrow X_a\leftarrow x_a$, with $x_a$ having no even predecessor. The new two-layer composition has an exact paper proof and a Python-integer arithmetic audit, but is not yet compiled as one Lean source-importing theorem. These are intermediate exceptional-state exclusions, not halting-power exclusions; Sheep and BB(6) remain unresolved.
+**Agent 16, 23 November 2026.** This dossier proves exact source-law inverse grammars in several low-hidden-valuation sectors. The previous disjoint certificate excluded $158/243$ of exponents $a$ for $Y_a=3\cdot2^a$. The new [h=4 odd-sector root-leaf theorem](H4-ODD-ROOT-LEAF.md) adds a disjoint family of density $44579/172186884$, raising the stated union to $112001483/172186884\approx65.0465\%$. On that family the exact inverse chain is $Y_a\leftarrow X_a\leftarrow x_a$, with $x_a$ having no even predecessor. The new two-layer composition has an exact paper proof and a Python-integer arithmetic audit, but is not yet compiled as one Lean source-importing theorem. These are intermediate exceptional-state exclusions, not halting-power exclusions; Sheep and BB(6) remain unresolved.
 
 ## Uniform all-hidden-length generic valuation cutoff
 
@@ -364,7 +364,7 @@ The previously open residue sector \(a\equiv67\pmod{162}\) has a new exact subfa
 and \(x_a\) has no even predecessor. The \(r\)-set has density \(44579/118098\), so the exponent density added is \(44579/172186884\). The new family is disjoint from the earlier six \(A_0,A_1,A_2,A_3,A_3',A_5\) progressions and the \(a\equiv2\pmod4\) family. The combined stated exceptional-target exclusion is now
 \[
 \frac{158}{243}+\frac{1649}{6377292}
-=\frac{4148201}{6377292}\approx65.0464\%.
+=\frac{112001483}{172186884}\approx65.0465\%.
 \]
 
 This is a partial closure only: other \(k\)-residues in \(a=67+162k\), other \(r\)-classes in the \(k\equiv7\pmod9\) branch, and hidden lengths \(s\ge9\) remain open. The new proof is exact arithmetic plus a reproducible Python audit; it is not yet a Lean-kernel theorem composed with the original source.
