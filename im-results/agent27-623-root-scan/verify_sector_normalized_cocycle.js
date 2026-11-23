@@ -87,6 +87,7 @@ for (let n = 0; n < 33; n += 1) {
 
 let checked = 0;
 const keys = new Set();
+const productRecords = [];
 
 for (const row of edgeData.edges) {
   const targetIndex = row[0];
@@ -162,6 +163,17 @@ for (const row of edgeData.edges) {
     WHat.toString(),
   ].join("|"));
 
+  const drainInput = source.q + { LO: 3n, LE: 2n, RO: -1n, RE: 1n }[sourceSector];
+  const high = drainInput / (3n ** BigInt(drainLength));
+  assert.ok(high === 0n || high === 1n, "canonical drain high digit is not 0 or 1");
+  productRecords.push({
+    phaseId,
+    D: mod3(D).toString(),
+    r: mod3(r).toString(),
+    high: high.toString(),
+    L: String(drainLength % 3),
+  });
+
   // Retain references to the fields that define this finite audit row.
   assert.ok(drainLength >= 0 && n1 >= 0 && n2 >= 0);
   [a, d] = [aNext, dNext];
@@ -172,11 +184,36 @@ for (const row of edgeData.edges) {
 assert.equal(checked, 9968);
 assert.equal(keys.size, 216);
 
+function productSummary(keyOf) {
+  const successors = new Map();
+  for (let i = 0; i + 1 < productRecords.length; i += 1) {
+    const from = keyOf(productRecords[i]);
+    const to = keyOf(productRecords[i + 1]);
+    if (!successors.has(from)) successors.set(from, new Set());
+    successors.get(from).add(to);
+  }
+  const degrees = [...successors.values()].map((set) => set.size);
+  return {
+    nodes: successors.size,
+    edges: productRecords.length - 1,
+    multiSuccessorNodes: degrees.filter((degree) => degree > 1).length,
+    maxOutdegree: Math.max(...degrees),
+  };
+}
+
+const productSummaries = {
+  phase: productSummary((x) => String(x.phaseId)),
+  phase_D_r: productSummary((x) => [x.phaseId, x.D, x.r].join("|")),
+  phase_D_r_high: productSummary((x) => [x.phaseId, x.D, x.r, x.high].join("|")),
+  phase_D_r_high_Lmod3: productSummary((x) => [x.phaseId, x.D, x.r, x.high, x.L].join("|")),
+};
+
 process.stdout.write(JSON.stringify({
   checked,
   distinctNormalizedResidueStates: keys.size,
   sourceAndTargetPhaseMismatches: 0,
   activeMod3Mismatches: 0,
   passiveMod3Mismatches: 0,
-  interpretation: "finite edge audit only; not an all-time invariant"
+  productSummaries,
+  interpretation: "finite edge audit only; product nondeterminism is not an all-time theorem"
 }, null, 2) + "\n");
