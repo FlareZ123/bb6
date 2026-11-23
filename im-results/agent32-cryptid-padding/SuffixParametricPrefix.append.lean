@@ -1,4 +1,4 @@
-/-- The 107 source-preserving A_step2 moves from the external halting proof,
+/- The 107 source-preserving A_step2 moves from the external halting proof,
     with each exact original checkpoint kept explicit. This does NOT prove
     halting for the arbitrary suffix; the final finite tail is a separate gate. -/
 set_option maxHeartbeats 1000000 in
