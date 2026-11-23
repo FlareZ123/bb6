@@ -2,6 +2,15 @@ name: Agent 24 Cryptid D root and remainder-two Lean verification (manual)
 
 on:
   workflow_dispatch:
+    inputs:
+      proof_target:
+        description: 'Original root reset or standalone source suffix shift'
+        required: false
+        type: choice
+        default: root-reset
+        options:
+          - root-reset
+          - suffix3-shift
 
 permissions:
   contents: read
@@ -9,6 +18,8 @@ permissions:
 jobs:
   source-kernel:
     runs-on: ubuntu-latest
+    env:
+      PROOF_TARGET: ${{ inputs.proof_target }}
     timeout-minutes: 45
     steps:
       - name: Checkout pinned Cryptids source
@@ -38,17 +49,29 @@ jobs:
         working-directory: cryptids
         run: lake exe cache get
 
-      - name: Append source-local root and reset proofs with audited endpoint corrections
+      - name: Append selected source-local proof with audited endpoint corrections
         working-directory: cryptids
         shell: bash
         run: |
           python3 - <<'PY'
           from pathlib import Path
+          import os
 
           module = Path("BusyBeaver/BB6/Accelerations/M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.lean")
           root_path = Path("../bb6/im-results/agent12-cryptid-root-invariant/RootCountdownSweep.append.lean")
           reset_path = Path("../bb6/im-results/agent2-root-countdown/RootRemainderTwoToken.append.lean")
           ending = "end BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA"
+
+          if os.environ.get("PROOF_TARGET") == "suffix3-shift":
+              fragment = Path("../bb6/im-results/agent48-suffix3-shift/RootSuffixThreeShift.append.lean").read_text()
+              source = module.read_text().rstrip().splitlines()
+              if source[-1].strip() != ending:
+                  raise SystemExit(f"unexpected source-module ending: {source[-1]!r}")
+              module.write_text("\n".join(source[:-1]) + "\n\n" + fragment.rstrip() + "\n\n" + ending + "\n")
+              print("Standalone original-source universal suffix shift inserted.")
+              raise SystemExit(0)
+          if os.environ.get("PROOF_TARGET") not in ("", "root-reset"):
+              raise SystemExit("invalid proof target")
 
           root = root_path.read_text()
           old1 = "root_countdown_dr_zero_step [] tail"
@@ -82,12 +105,20 @@ jobs:
           set -euo pipefail
           MODULE=BusyBeaver.BB6.Accelerations.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA
           lake build "$MODULE" 2>&1 | tee /tmp/agent24-root-reset-build.log
-          cat > RootResetAudit.lean <<'EOF'
+          if [[ "${PROOF_TARGET:-root-reset}" == "suffix3-shift" ]]; then
+            cat > RootResetAudit.lean <<'EOF'
+          import BusyBeaver.BB6.Accelerations.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA
+          #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.s3_universal_suffix_shift
+          #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.s3_iterated_suffix_shift
+          EOF
+          else
+            cat > RootResetAudit.lean <<'EOF'
           import BusyBeaver.BB6.Accelerations.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA
           #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.root_chain_to_D65_2
           #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.root_countdown_two_reset
           #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.root_d2_dl_one_z1
           EOF
+          fi
           lake env lean RootResetAudit.lean 2>&1 | tee /tmp/agent24-root-reset-axioms.log
           if grep -q 'sorryAx' /tmp/agent24-root-reset-axioms.log; then
             echo "::error::root/reset theorem depends on sorryAx"
