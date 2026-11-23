@@ -1,5 +1,6 @@
 import Lean.Elab.Tactic.Omega
 import DoubleOneBranch
+import A1100First
 
 set_option maxRecDepth 8192
 set_option maxHeartbeats 1500000
@@ -184,6 +185,156 @@ theorem two_one_pairs_return (m q : Nat) (ys : List Bool):
           (false :: List.replicate (2*q+6) true ++ ys) := by
             rw [show 2*(m+2)+1=2*m+5 by omega]
   exact congrArg (fun z : List Bool => Cfg.mk [] false z 5) hrep
+
+/-- A trajectory segment has no physical F/0 return before its endpoint.
+    Here "physical" means that every cell strictly left of the head is blank. -/
+private def NoPhysical (c : Cfg) (n : Nat) : Prop :=
+  ∀ t, t < n → ¬ Physical (run t c)
+
+private theorem appendNoPhysical (c d : Cfg) (a b : Nat)
+    (hc : NoPhysical c a) (he : run a c = d) (hd : NoPhysical d b) :
+    NoPhysical c (a+b) := by
+  intro t ht
+  by_cases hsmall : t < a
+  · exact hc t hsmall
+  · obtain ⟨u,hu⟩ : ∃ u, t = a+u := ⟨t-a, by omega⟩
+    rw [hu, run_add, he]
+    exact hd u (by omega)
+
+private theorem q_b_scan_noPhysical (q : Nat) (L ys : List Bool) :
+    NoPhysical (qB q L ys) (2*q) := by
+  induction q generalizing L ys with
+  | zero =>
+      intro t ht
+      omega
+  | succ q ih =>
+      apply appendNoPhysical
+        (qB (q+1) L ys) (qB q ([true,false] ++ L) ys) 2 (2*q)
+      · intro t ht
+        have hc : t=0 ∨ t=1 := by omega
+        rcases hc with rfl | rfl
+        all_goals simp [NoPhysical, Physical, qB, run, step, goL, goR, pairs]
+      · exact q_b_two q L ys
+      · exact ih ([true,false] ++ L) ys
+
+private theorem q_d_scan_noPhysical (q : Nat) (L ys : List Bool) :
+    NoPhysical (⟨pairs q ++ L,false,ys,3⟩ : Cfg) (2*q) := by
+  induction q generalizing L ys with
+  | zero =>
+      intro t ht
+      omega
+  | succ q ih =>
+      apply appendNoPhysical
+        (⟨pairs (q+1) ++ L,false,ys,3⟩ : Cfg)
+        (⟨pairs q ++ L,false,[true,true] ++ ys,3⟩ : Cfg)
+        2 (2*q)
+      · intro t ht
+        have hc : t=0 ∨ t=1 := by omega
+        rcases hc with rfl | rfl
+        all_goals simp [NoPhysical, Physical, run, step, goL, goR, pairs]
+      · exact q_d_two q L ys
+      · exact ih L ([true,true] ++ ys)
+
+/-- The first eight transitions of the 110(10)^q0 boundary cannot be a
+    physical F/0 event. Any F visit in this short prefix still has a
+    nonblank cell to the left. -/
+private theorem q_front8_noPhysical (m q : Nat) (ys : List Bool) :
+    NoPhysical
+      (preA (m+2) ([true,true,false] ++ (pairs q ++ (false::ys)))) 8 := by
+  intro t ht
+  have hc : t=0 ∨ t=1 ∨ t=2 ∨ t=3 ∨ t=4 ∨ t=5 ∨ t=6 ∨ t=7 := by omega
+  rcases hc with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
+  all_goals simp [NoPhysical, Physical, preA, run, step, goL, goR, pairs]
+
+private theorem q_core7_noPhysical (m : Nat) (zs : List Bool) :
+    NoPhysical
+      (⟨qCoreL m,false,[true,true] ++ zs,3⟩ : Cfg) 7 := by
+  intro t ht
+  have hc : t=0 ∨ t=1 ∨ t=2 ∨ t=3 ∨ t=4 ∨ t=5 ∨ t=6 := by omega
+  rcases hc with rfl | rfl | rfl | rfl | rfl | rfl | rfl
+  all_goals simp [NoPhysical, Physical, qCoreL, run, step, goL, goR, pairs]
+
+private theorem q_phaseB_noPhysical (m q : Nat) (ys : List Bool) :
+    NoPhysical
+      (preA (m+2) ([true,true,false] ++ (pairs q ++ (false::ys))))
+      (8+2*q) := by
+  apply appendNoPhysical
+    (preA (m+2) ([true,true,false] ++ (pairs q ++ (false::ys))))
+    (qB q (qFrontL (m+2)) ys) 8 (2*q)
+  · exact q_front8_noPhysical m q ys
+  · exact q_front8 (m+2) q ys
+  · exact q_b_scan_noPhysical q (qFrontL (m+2)) ys
+
+private theorem q_phaseD_noPhysical (m q : Nat) (ys : List Bool) :
+    NoPhysical
+      (⟨pairs (q+1) ++ qCoreL m,false,ys,1⟩ : Cfg)
+      (2+2*q+7) := by
+  let start : Cfg := ⟨pairs (q+1) ++ qCoreL m,false,ys,1⟩
+  let mid : Cfg := ⟨pairs q ++ qCoreL m,false,[true,true] ++ ys,3⟩
+  let mid2 : Cfg := ⟨qCoreL m,false,
+      List.replicate (2*q) true ++ ([true,true] ++ ys),3⟩
+  have hfirst : NoPhysical start 2 := by
+    intro t ht
+    have hc : t=0 ∨ t=1 := by omega
+    rcases hc with rfl | rfl
+    all_goals simp [NoPhysical, Physical, start, run, step, goL, goR, pairs]
+  have hB : run 2 start = mid := by
+    simp [start,mid,run,step,goL,goR,pairs]
+  have hscan : run (2*q) mid = mid2 := by
+    exact q_d_scan q (qCoreL m) ([true,true] ++ ys)
+  have hcore : NoPhysical mid2 7 := by
+    change NoPhysical
+      (⟨qCoreL m,false,
+        List.replicate (2*q) true ++ ([true,true] ++ ys),3⟩ : Cfg) 7
+    rw [q_twos_comm (2*q) ys]
+    exact q_core7_noPhysical m (List.replicate (2*q) true ++ ys)
+  have htail : NoPhysical mid (2*q+7) :=
+    appendNoPhysical mid mid2 (2*q) 7
+      (q_d_scan_noPhysical q (qCoreL m) ([true,true] ++ ys))
+      hscan hcore
+  have h := appendNoPhysical start mid 2 (2*q+7) hfirst hB htail
+  simpa [show 2+(2*q+7)=2+2*q+7 by omega] using h
+
+/-- The complete 110(10)^q0 front has no earlier physical F/0 event. -/
+private theorem two_one_pairs_front_noPhysical (m q : Nat) (ys : List Bool) :
+    NoPhysical
+      (preA (m+2) ([true,true,false] ++ (pairs q ++ (false::ys))))
+      (17+4*q) := by
+  have hB : NoPhysical
+      (preA (m+2) ([true,true,false] ++ (pairs q ++ (false::ys))))
+      (8+2*q) := q_phaseB_noPhysical m q ys
+  have hrun : run (8+2*q)
+      (preA (m+2) ([true,true,false] ++ (pairs q ++ (false::ys)))) =
+      ⟨pairs (q+1) ++ qCoreL m,false,ys,1⟩ := q_phaseB m q ys
+  have hD : NoPhysical
+      (⟨pairs (q+1) ++ qCoreL m,false,ys,1⟩ : Cfg)
+      (2+2*q+7) := q_phaseD_noPhysical m q ys
+  have h := appendNoPhysical _ _ (8+2*q) (2+2*q+7) hB hrun hD
+  simpa [show (8+2*q)+(2+2*q+7)=17+4*q by omega] using h
+
+/-- Strict first physical F/0 return for the all-suffix 110(10)^q0
+    branch. The final D sweep is the first segment with no F state at all. -/
+theorem two_one_pairs_first_physical (m q : Nat) (ys : List Bool) :
+    NoPhysical
+      (preA (m+2) ([true,true,false] ++ (pairs q ++ (false::ys))))
+      (2*(m+2)+16+4*q) := by
+  have hfront : NoPhysical
+      (preA (m+2) ([true,true,false] ++ (pairs q ++ (false::ys))))
+      (17+4*q) := two_one_pairs_front_noPhysical m q ys
+  have hrun : run (17+4*q)
+      (preA (m+2) ([true,true,false] ++ (pairs q ++ (false::ys)))) =
+      sweepD m ([true,true,false] ++ List.replicate (2*q+6) true ++ ys) :=
+    two_one_pairs_front m q ys
+  have htail : NoPhysical
+      (sweepD m ([true,true,false] ++ List.replicate (2*q+6) true ++ ys))
+      (2*m+3) := by
+    intro t ht hp
+    exact (CryptidBoundary.sweepD_noF m
+      ([true,true,false] ++ List.replicate (2*q+6) true ++ ys) t ht) hp.1
+  have h := appendNoPhysical _ _ (17+4*q) (2*m+3) hfront hrun htail
+  simpa [show (17+4*q)+(2*m+3)=2*(m+2)+16+4*q by omega] using h
+
+#print axioms two_one_pairs_first_physical
 
 #print axioms two_one_pairs_front
 #print axioms two_one_pairs_return
