@@ -10,7 +10,7 @@ namespace BB6.Agent34S2Pullback
 /-- The latest six-all high predicate with both S2 and complementary q-even
     high-stop cylinders removed. The low branch is unchanged. -/
 def highAllowedAllS2Q (j m : Nat) : Prop :=
-  BB6.Agent11SixAll.highAllowed j m ∧
+  BB6.Agent4SevenSixAll.highAllowedAllS3Six j m ∧
   ¬(j%512=319 ∧ (3*m+102921)%131072=(185*j)%131072) ∧
   ¬(j%512=319 ∧ (171*m+355585)%1048576=(49*j)%1048576)
 
@@ -137,46 +137,89 @@ theorem prior_six_all_admits_base_residue (j m : Nat)
       (2^(2*m+2)*(j+3)-(j+3*m+5))=false
   exact ⟨hdeep,hforced⟩
 
-/-- The S2 cylinder is wholly admitted by the preceding exact
-    six-all high predicate, so its removal is a strict strengthening. -/
+/-- Both new cylinders occupy the same mod-16384 lift, which is
+    disjoint from the previously excluded S3 high-stop cylinder. -/
+theorem prior_s3_admits_s2q_residue (j m : Nat)
+    (hj : j%512=319) (hm512 : m%512=42)
+    (hm16384 : m%16384=(7210+9728*(j/512))%16384) :
+    BB6.Agent4SevenSixAll.highAllowedAllS3Six j m := by
+  have hprior := prior_six_all_admits_base_residue j m hj hm512
+  let u := j/512
+  have hu : j=319+512*u := by dsimp [u]; omega
+  have hmres : m%16384=(7210+9728*u)%16384 := by simpa [u] using hm16384
+  have hs3 : (3*m+7*j+14025)%16384=5120 := by
+    rw [hu]
+    omega
+  have hnotS3 :
+      ¬(j%512=319 ∧ (3*m+7*j+14025)%16384=0) := by
+    rintro ⟨_,hzero⟩
+    omega
+  exact ⟨hprior,hnotS3⟩
+
+/-- The S2 cylinder is wholly admitted by the preceding S3-extended
+    high predicate, so its removal is a strict strengthening. -/
 theorem s2_cylinder_strict_nonredundancy (j m : Nat)
     (hj : j%512=319)
     (hm : m%131072=(72746+75264*(j/512))%131072) :
-    BB6.Agent11SixAll.highAllowed j m ∧
+    BB6.Agent4SevenSixAll.highAllowedAllS3Six j m ∧
       ¬highAllowedAllS2Q j m := by
-  have hdiv : 512∣131072 := by decide
+  have hdiv : 16384∣131072 := by decide
+  have hm16384 :
+      m%16384=(7210+9728*(j/512))%16384 := by
+    calc
+      m%16384=(m%131072)%16384 :=
+        (Nat.mod_mod_of_dvd m hdiv).symm
+      _=((72746+75264*(j/512))%131072)%16384 := by rw [hm]
+      _=(72746+75264*(j/512))%16384 :=
+        Nat.mod_mod_of_dvd _ hdiv
+      _=(7210+9728*(j/512))%16384 := by omega
+  have hdiv512 : 512∣16384 := by decide
   have hm512 : m%512=42 := by
     calc
-      m%512=(m%131072)%512 :=
-        (Nat.mod_mod_of_dvd m hdiv).symm
-      _=((72746+75264*(j/512))%131072)%512 := by rw [hm]
+      m%512=(m%16384)%512 :=
+        (Nat.mod_mod_of_dvd m hdiv512).symm
+      _=((7210+9728*(j/512))%16384)%512 := by rw [hm16384]
+      _=(7210+9728*(j/512))%512 :=
+        Nat.mod_mod_of_dvd _ hdiv512
       _=42 := by omega
-  refine ⟨prior_six_all_admits_base_residue j m hj hm512,?_⟩
+  refine ⟨prior_s3_admits_s2q_residue j m hj hm512 hm16384,?_⟩
   intro h
   exact h.2.1 ((s2_parameter_pullback_iff j m).2 ⟨hj,hm⟩)
 
 /-- The complementary q-even cylinder is also wholly admitted by the
-    preceding exact six-all high predicate. -/
+    preceding S3-extended exact high predicate. -/
 theorem q_even_cylinder_strict_nonredundancy (j m : Nat)
     (hj : j%512=319)
     (hm : m%1048576=(531498+337408*(j/512))%1048576) :
-    BB6.Agent11SixAll.highAllowed j m ∧
+    BB6.Agent4SevenSixAll.highAllowedAllS3Six j m ∧
       ¬highAllowedAllS2Q j m := by
-  have hdiv : 512∣1048576 := by decide
+  have hdiv : 16384∣1048576 := by decide
+  have hm16384 :
+      m%16384=(7210+9728*(j/512))%16384 := by
+    calc
+      m%16384=(m%1048576)%16384 :=
+        (Nat.mod_mod_of_dvd m hdiv).symm
+      _=((531498+337408*(j/512))%1048576)%16384 := by rw [hm]
+      _=(531498+337408*(j/512))%16384 :=
+        Nat.mod_mod_of_dvd _ hdiv
+      _=(7210+9728*(j/512))%16384 := by omega
+  have hdiv512 : 512∣16384 := by decide
   have hm512 : m%512=42 := by
     calc
-      m%512=(m%1048576)%512 :=
-        (Nat.mod_mod_of_dvd m hdiv).symm
-      _=((531498+337408*(j/512))%1048576)%512 := by rw [hm]
+      m%512=(m%16384)%512 :=
+        (Nat.mod_mod_of_dvd m hdiv512).symm
+      _=((7210+9728*(j/512))%16384)%512 := by rw [hm16384]
+      _=(7210+9728*(j/512))%512 :=
+        Nat.mod_mod_of_dvd _ hdiv512
       _=42 := by omega
-  refine ⟨prior_six_all_admits_base_residue j m hj hm512,?_⟩
+  refine ⟨prior_s3_admits_s2q_residue j m hj hm512 hm16384,?_⟩
   intro h
   exact h.2.2 ((q_even_parameter_pullback_iff j m).2 ⟨hj,hm⟩)
 
 /-- Explicit nonempty infinite S2 progression, admitted by the old
-    criterion and removed by the new one. -/
+    S3-extended criterion and removed by the new one. -/
 theorem s2_progression_strict (u n : Nat) :
-    BB6.Agent11SixAll.highAllowed
+    BB6.Agent4SevenSixAll.highAllowedAllS3Six
       (319+512*u) (72746+75264*u+131072*n) ∧
     ¬highAllowedAllS2Q
       (319+512*u) (72746+75264*u+131072*n) := by
@@ -189,9 +232,9 @@ theorem s2_progression_strict (u n : Nat) :
   exact s2_cylinder_strict_nonredundancy _ _ hj hm
 
 /-- Explicit nonempty infinite q-even progression, admitted by the old
-    criterion and removed by the new one. -/
+    S3-extended criterion and removed by the new one. -/
 theorem q_even_progression_strict (u n : Nat) :
-    BB6.Agent11SixAll.highAllowed
+    BB6.Agent4SevenSixAll.highAllowedAllS3Six
       (319+512*u) (531498+337408*u+1048576*n) ∧
     ¬highAllowedAllS2Q
       (319+512*u) (531498+337408*u+1048576*n) := by
@@ -203,7 +246,7 @@ theorem q_even_progression_strict (u n : Nat) :
     omega
   exact q_even_cylinder_strict_nonredundancy _ _ hj hm
 
-#print axioms prior_six_all_admits_base_residue
+#print axioms prior_s3_admits_s2q_residue
 #print axioms s2_cylinder_strict_nonredundancy
 #print axioms q_even_cylinder_strict_nonredundancy
 #print axioms s2_progression_strict
@@ -217,7 +260,7 @@ theorem blank_halts_iff_six_both_s2q :
       (∃ j m, highAllowedAllS2Q j m ∧
         BB6.Agent11SixForced.sixForcedRootDecision
           (2*j+3) (highK j m)=true) := by
-  rw [BB6.Agent11SixAll.blank_halts_iff_six_both]
+  rw [BB6.Agent4SevenSixAll.blank_halts_iff_six_both_s3]
   constructor
   · rintro (hlow | ⟨j,m,hprior,hroot⟩)
     · exact Or.inl hlow
