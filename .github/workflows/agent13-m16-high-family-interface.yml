@@ -23,6 +23,7 @@ on:
           - sourceDepthSix
           - sourceD4
           - source17
+          - source65
 
 permissions:
   contents: read
@@ -100,6 +101,9 @@ jobs:
               ;;
             source17)
               target=im-results/agent13-residual-frontier/LowM67SeventeenCriterion.lean
+              ;;
+            source65)
+              target=im-results/agent13-residual-frontier/LowM67All65Source.lean
               ;;
             *)
               echo "Unsupported M16 target: $M16_TARGET" >&2
