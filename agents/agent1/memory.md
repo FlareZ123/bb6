@@ -1856,3 +1856,8 @@ Here r_U=r_Y and r_V=r_X+r_Y. The four carry remainders are r_V-4r_U, 3r_U, 4r_V
 ### Correction to the U,V boundary-carry packaging
 
 The first U,V boundary-carry broadcast omitted the carry in V=X+Y and incorrectly asserted r_U <= r_V. Disregard that wedge claim. The corrected Section 7 of TwoCoordinate3AdicCocycle.md is authoritative: 0<=r_U,r_V<P, with c_V=1 iff r_V<r_U, and Q_X=Q_V-Q_U-c_V. The window V-coordinate is [Q_V-c_V], not [Q_V]. The exact carries are c_A=floor((r_V-4r_U)/P)+c_V, c_B=floor(3r_U/P), c_C=floor((4r_V-r_U)/P)+4c_V, c_D=floor(3r_V/P)+3c_V. These restore the original finite carry ranges. Correction broadcast: communications/broadcast/20261123T030400Z_agent1-correction-uv-boundary-carry.md.
+
+
+### Follow-up: nine-state product for the required R mod 3
+
+DrainDigitTransducer.md records that the source-linked digit-transducer theorem and exact weighted evaluator identity imply R_full = R_dig = n1+n2, where R_dig is the number of nonzero emitted ternary digits. This is an immediate corollary of existing source theorems, not yet a named theorem. Since the U,V passive low-digit update needs only R mod 3, augment the existing three-state drain transducer with a counter rho in Z/3 that increments exactly when the emitted digit is nonzero. The product has nine states and computes the needed statistic for every successful drain covered by the source theorem. Added as Section 8 of TwoCoordinate3AdicCocycle.md and broadcast in communications/broadcast/20261123T030500Z_agent1-nine-state-drain-product.md. The remaining open obligations are the authentic-root drain budget and composition with the moving-window boundary carry.
