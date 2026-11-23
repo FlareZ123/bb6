@@ -37,13 +37,13 @@ theorem blank_halts_iff_six_both_s2q :
             (3*m+102921)%131072=(185*j)%131072) := by
         rintro ⟨hj,hcong⟩
         have hm := (s2_parameter_pullback_iff j m).1 ⟨hj,hcong⟩
-        exact s2_high_parameter_not_CReach j m hj hm hreach
+        exact s2_high_parameter_not_CReach j m hj hm.2 hreach
       have hnotQ :
           ¬(j%512=319 ∧
             (171*m+355585)%1048576=(49*j)%1048576) := by
         rintro ⟨hj,hcong⟩
         have hm := (q_even_parameter_pullback_iff j m).1 ⟨hj,hcong⟩
-        exact q_even_high_parameter_not_CReach j m hj hm hreach
+        exact q_even_high_parameter_not_CReach j m hj hm.2 hreach
       exact Or.inr ⟨j,m,⟨hprior,hnotS2,hnotQ⟩,hroot⟩
   · rintro (hlow | ⟨j,m,⟨hprior,_,_⟩,hroot⟩)
     · exact Or.inl hlow
