@@ -31,22 +31,23 @@ theorem even_low_ray_reach_forces_unique_parent
   have humod : u%4=3 := by omega
   have hQmod : (346*u+54)%8=4 := by omega
   have hn0 : n=0 := by
-    by_contra hnon
-    have hnge : 2≤n := by omega
-    have hdiv4 : 4 ∣ (2:Nat)^n := by
-      have hd : (2:Nat)^2∣2^n := Nat.pow_dvd_pow 2 hnge
-      simpa only [show (2:Nat)^2=4 by decide] using hd
-    rcases hdiv4 with ⟨v,hv⟩
-    have hfactor : 2*(a-1)+8=2*(a+3) := by omega
-    have hdiv8 : 8 ∣ 346*u+54 := by
-      refine ⟨v*(a+3),?_⟩
-      calc
-        346*u+54=2^n*(2*(a-1)+8) := hpow
-        _=(4*v)*(2*(a+3)) := by rw [hv,hfactor]
-        _=(4*2)*(v*(a+3)) := by ac_rfl
-        _=8*(v*(a+3)) := by norm_num
-    have hh : (346*u+54)%8=0 := Nat.mod_eq_zero_of_dvd hdiv8
-    omega
+    by_cases hzero : n=0
+    · exact hzero
+    · have hnge : 2≤n := by omega
+      have hdiv4 : 4 ∣ (2:Nat)^n := by
+        have hd : (2:Nat)^2∣2^n := Nat.pow_dvd_pow 2 hnge
+        simpa only [show (2:Nat)^2=4 by decide] using hd
+      rcases hdiv4 with ⟨v,hv⟩
+      have hfactor : 2*(a-1)+8=2*(a+3) := by omega
+      have hdiv8 : 8 ∣ 346*u+54 := by
+        refine ⟨v*(a+3),?_⟩
+        calc
+          346*u+54=2^n*(2*(a-1)+8) := hpow
+          _=(4*v)*(2*(a+3)) := by rw [hv,hfactor]
+          _=(4*2)*(v*(a+3)) := by ac_rfl
+          _=8*(v*(a+3)) := by norm_num
+      have hh : (346*u+54)%8=0 := Nat.mod_eq_zero_of_dvd hdiv8
+      omega
   subst n
   simp at hpow hcost
   have haeq : a=173*u+24 := by omega
