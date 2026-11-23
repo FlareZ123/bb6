@@ -91,6 +91,42 @@ theorem rooted_center_mod64 (u : Nat)
     exact rooted_center_not_49_mod64 u hr hu h
   omega
 
+
+/-- The genuine center reset parent of the diagonal all-F low-nine
+    feeder constrains the burst index J to six classes modulo 256.
+    No other zero-return predecessor is excluded by this corollary. -/
+theorem diagonal_zero_center_j_mod256 (J z u : Nat)
+    (hr : Reach u (2*u)) (hu : 129 ≤ u)
+    (hz : z=4*u+12)
+    (hmod : (z+3*J)%256=36) :
+    J%256=12 ∨ J%256=76 ∨ J%256=140 ∨
+    J%256=156 ∨ J%256=188 ∨ J%256=204 := by
+  have hc := rooted_center_mod64 u hr hu
+  omega
+
+private theorem pow_mod256_zero (e : Nat) (he : 8 ≤ e) :
+    (2:Nat)^e % 256 = 0 := by
+  have heq : e=8+(e-8) := by omega
+  rw [heq, Nat.pow_add, show (2:Nat)^8=256 by decide]
+  omega
+
+/-- Source-attached power-of-two specialization for the all-F zero
+    feeder z_J=12*2^(N+2)-48*2^J+36-3J, on the genuine center branch. -/
+theorem diagonal_zero_center_power_j_mod256 (J N z u : Nat)
+    (hr : Reach u (2*u)) (hu : 129 ≤ u)
+    (hJ : 8 ≤ J) (hN : 6 ≤ N)
+    (hz : z=4*u+12)
+    (heq : z+48*2^J+3*J=12*2^(N+2)+36) :
+    J%256=12 ∨ J%256=76 ∨ J%256=140 ∨
+    J%256=156 ∨ J%256=188 ∨ J%256=204 := by
+  have hpJ := pow_mod256_zero J hJ
+  have hpN := pow_mod256_zero (N+2) (by omega)
+  have hmod : (z+3*J)%256=36 := by omega
+  exact diagonal_zero_center_j_mod256 J z u hr hu hz hmod
+
+#print axioms diagonal_zero_center_j_mod256
+#print axioms diagonal_zero_center_power_j_mod256
+
 #print axioms no_root_one_five
 #print axioms rooted_center_not_25_mod64
 #print axioms rooted_center_not_49_mod64
