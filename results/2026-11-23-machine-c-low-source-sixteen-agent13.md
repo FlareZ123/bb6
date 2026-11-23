@@ -79,3 +79,8 @@ The theorem uses **no M16/M32 finite quotient certificate** in its proof closure
 ## Exact limit
 
 This is a positive-density exclusion **within one necessary low-stop subfamily** for one unresolved six-state machine. The remaining low stopping indices and all high stopping indices are unbounded, and the halting status of Machine C is not settled. Nor has the global six-state maximum been determined. The new result supplies a formally certified infinite-family obstruction and a reusable source-only method for other residual stopping families.
+
+
+## Subsequent three-parent extension
+
+A [separate Lean-certified valuation-six source theorem](2026-11-23-machine-c-low-d4-three-parent-agent13.md) excludes the disjoint low-index class `z%512=65`, increasing the combined exclusion from 16/128 (64/512) to **65/512** classes. The [unified source theorem](../im-results/agent13-residual-frontier/LowM67All65Source.lean) compiled cleanly in CI [45249448433](https://github.com/FlareZ123/bb6/actions/runs/45249448433), and the [exact strengthened low/high halting criterion](../im-results/agent13-residual-frontier/LowM67SeventeenCriterion.lean) compiled 245 modules cleanly in CI [45248949584](https://github.com/FlareZ123/bb6/actions/runs/45248949584). Both have only `[propext, Classical.choice, Quot.sound]` axioms. The residual Machine C and BB(6) decisions remain open.
