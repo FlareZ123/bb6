@@ -114,17 +114,49 @@ theorem outerLCInc_postlude_run
     · simp [frameAt_state,outerLCIncFiveEnd]
     · simp [frameAt_head,outerLCIncFiveEnd] <;> omega
     · rfl
+  have hzeroFrame :
+      frameAt (outerLCIncAfterFive T h a m) (h+5)
+        outerLCIncZeroInside outerLCIncZeroEnd =
+        (⟨(1:Fin 6),h+7,outerLCIncAfterZero T h a m⟩ : Config) := by
+    apply config_ext
+    · simp [frameAt_state,outerLCIncZeroEnd]
+    · simp [frameAt_head,outerLCIncZeroEnd] <;> omega
+    · rfl
+  have hzeroExitFrame :
+      frameAt (outerLCIncAfterSweep T h a m b) (h+3*b+10)
+        outerLCIncZeroExitInside outerLCIncZeroExitEnd =
+        (⟨(2:Fin 6),h+3*b+9,
+           outerLCIncAfterZeroExit T h a m b⟩ : Config) := by
+    apply config_ext
+    · simp [frameAt_state,outerLCIncZeroExitEnd]
+    · simp [frameAt_head,outerLCIncZeroExitEnd] <;> omega
+    · rfl
+  have htailFrame :
+      frameAt (outerLCIncAfterZeroExit T h a m b) (h+3*b+9)
+        outerLCIncTailInside outerLCIncTailEnd =
+        (⟨(3:Fin 6),h+3*b+5,
+           outerLCIncPostludeTape T h a m b⟩ : Config) := by
+    apply config_ext
+    · simp [frameAt_state,outerLCIncTailEnd]
+    · simp [frameAt_head,outerLCIncTailEnd] <;> omega
+    · rfl
+  have hscanHead :
+      outerLCIncH1 h a m + 7 + ((3*a+m+3:Nat):Int) = h+5 := by
+    dsimp [outerLCIncH1]
+    omega
+  have hrightHead :
+      h+7+3*((b+1:Nat):Int) = h+3*(b:Int)+10 := by omega
   rw [hcost, run_append, hfiveRun]
   simp only [Option.bind_some]
   rw [hfiveFrame,run_append,hscanRun]
   simp only [Option.bind_some]
-  rw [run_append, hzeroRun]
+  rw [hscanHead,run_append,hzeroRun]
   simp only [Option.bind_some]
-  rw [run_append, hrightRun]
+  rw [hzeroFrame,run_append,hrightRun]
   simp only [Option.bind_some]
-  rw [run_append, hzeroExitRun]
+  rw [hrightHead,run_append,hzeroExitRun]
   simp only [Option.bind_some]
-  exact htailRun
+  rw [hzeroExitFrame,htailRun,htailFrame]
 
 #print axioms outerLCInc_postlude_run
 
