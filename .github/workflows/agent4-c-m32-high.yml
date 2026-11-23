@@ -32,13 +32,15 @@ jobs:
       - name: Check full original transition semantics and new all-high certificates
         run: |
           cd tools
+          cp "$GITHUB_WORKSPACE/im-results/agent11-c-line/CLine.lean" CLine.lean
           cp "$GITHUB_WORKSPACE/im-results/agent43-c-quotient-kernel/M32HighAll.lean" M32HighAll.lean
           cp "$GITHUB_WORKSPACE/im-results/agent43-c-quotient-kernel/M32HighSmall.lean" M32HighSmall.lean
           cp "$GITHUB_WORKSPACE/im-results/agent4-c-m32-high/HighSource.lean" HighSource.lean
           export LEAN_PATH=.
           lean --version
           lean -o CCert32Pure.olean CCert32Pure.lean
-          lean -o CLine.olean "$GITHUB_WORKSPACE/im-results/agent11-c-line/CLine.lean"
+          lean -o CLine.olean CLine.lean
+          rm CLine.lean
           test "$(find . -maxdepth 1 -name 'P32Block*.olean' | wc -l)" -eq 40
           for f in CQuotientSound32 CMapIf32 CGlobal32 CFull32 CExclusions32 CSourceBridge32 M32HighAll M32HighSmall HighSource; do
             echo "Kernel-checking $f"
