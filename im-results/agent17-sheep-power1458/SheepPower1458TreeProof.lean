@@ -167,7 +167,7 @@ theorem treeParentClosed (F : FrozenTreeTable) (r k : Nat)
       rw [Nat.mul_mod, F.periodMod3]
       simp
     rw [ht, Nat.add_mod, hTk]
-    exact F.residueMod3 r hr
+    simpa using F.residueMod3 r hr
   intro x y hx hyBasin hedge
   rcases hyBasin with ⟨n, hn, hval⟩
   have hnodeProps := F.nodeProps ⟨n,hn⟩
@@ -192,7 +192,8 @@ theorem treeParentClosed (F : FrozenTreeTable) (r k : Nat)
         valCert_mem_of_key (F.valComplete n hnpos hn)
       have hval' : affineNodeValue t (F.nodeAt cert.node) y := by
         simpa [hcertNode] using hval
-      exact affine_node_hidden_bound_from_cert cert t r k h y u ht hr hval' hydef huodd
+      simpa [hcertNode] using
+        (affine_node_hidden_bound_from_cert cert t r k h y u ht hr hval' hydef huodd)
   rcases affine_edge_inverse_cases hedge hx hnodeProps.1 hnodeProps.2 hpower with
     hgen | hspecial
   · rcases hgen with ⟨a,h,v,u,ha,hv,hvodd,huodd,hxdef,hydef,hEq⟩
@@ -203,10 +204,12 @@ theorem treeParentClosed (F : FrozenTreeTable) (r k : Nat)
           3^h*(2^(a+1)+1)*v+2*a*3^h+2^(h+1)
             = 2^(1458*t+h+1)+3*3^h := by
         simpa [F.rootNodeEq, blankRootNode] using hEq
+      have hh7 : h ≤ 7 := by
+        simpa [F.rootNodeEq, blankRootNode] using hh
       have hnotHigh :
           ¬ (if h=0 then 2 else 2*h+3) ≤ a := by
         intro hbig
-        exact no_high_source h a t v hh hbig hEqRoot
+        exact no_high_source h a t v hh7 hbig hEqRoot
       have hzero : h=0 → a=1 := by
         intro h0
         have hnot2 : ¬ 2 ≤ a := by
@@ -218,7 +221,7 @@ theorem treeParentClosed (F : FrozenTreeTable) (r k : Nat)
           simpa [Nat.ne_of_gt hp] using hnotHigh
         omega
       obtain ⟨child,hchild,hEdge⟩ :=
-        F.rootGate r k h a v hr hh ha hzero hpos hEqRoot
+        F.rootGate r k h a v hr hh7 ha hzero hpos hEqRoot
       obtain ⟨hchildBound,hchildS,hchildC,hchildOffset⟩ :=
         F.edgeShape 0 child h a hEdge
       have hchildVal :=
@@ -261,7 +264,7 @@ theorem treeParentClosed (F : FrozenTreeTable) (r k : Nat)
           exact ⟨child,hchildBound',hchildVal⟩
   · rcases hspecial with ⟨a,h,u,ha,huodd,hxdef,hydef,hspecial⟩
     have hh : h ≤ (F.nodeAt n).r := hHidden hydef huodd
-    obtain ⟨hDpos,hD,hS⟩ := F.specialBounds ⟨n,hn⟩ ⟨h,by omega⟩
+    obtain ⟨hDpos,hD,hS⟩ := F.specialBounds ⟨n,hn⟩ ⟨h, by simpa using Nat.lt_succ_of_le hh⟩
     have hN : 55 ≤ 1458*t+(F.nodeAt n).s+h := by omega
     have hspecialNode :
         (F.nodeAt n).C*3^h*(3*2^a+a+2)
@@ -333,7 +336,7 @@ theorem treeNoEvenReach (F : FrozenTreeTable) (r k : Nat)
   have hnot10 := indexedBasin_not10 F t ht
   have hroot : indexedAffineBasin t F.nodeAt F.nodeCount (2^(1458*t)) := by
     refine ⟨0,F.nodeCountPos,?_⟩
-    simpa [affineNodeValue,F.rootNodeEq,blankRootNode]
+    simp [affineNodeValue,F.rootNodeEq,blankRootNode]
   have hno := no_evenReach_of_indexedBasin t F.nodeCount F.nodeAt hclosed hnot10 hroot
   simpa [t] using hno
 
@@ -589,7 +592,7 @@ def h7a2TreeTable : FrozenTreeTable where
   edgeKeySound := by
     intro n h a hk
     simp [nonrootEdgeKeys_h7a2] at hk
-    cases hk
+    try cases hk
 
   edgeShape := by
     intro n child h a he
