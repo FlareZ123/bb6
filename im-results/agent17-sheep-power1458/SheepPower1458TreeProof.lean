@@ -1,3 +1,4 @@
+import EvenReach
 import SheepPower1458LowRowTable
 import SheepPower1458RootEdgeTable
 import SheepPower1458High
@@ -657,7 +658,7 @@ def h7a4TreeTable : FrozenTreeTable where
   edgeKeySound := by
     intro n h a hk
     simp [nonrootEdgeKeys_h7a4] at hk
-    cases hk
+    try cases hk
 
   edgeShape := by
     intro n child h a he
