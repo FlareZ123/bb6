@@ -556,6 +556,20 @@ private theorem s3_mod_cancel (m u k : Nat)
     k%16384=(15934+3072*u)%16384 := by
   omega
 
+/-- A residue equality between two 1024-multiples modulo 16384
+    is exactly equality of their quotient residues modulo 16. -/
+private theorem s3_mod_1024_cancel (v w : Nat)
+    (h : (574+1024*v)%16384=(574+1024*w)%16384) :
+    v%16=w%16 := by
+  omega
+
+/-- The second strict image sector is the quotient-residue equation
+    obtained from v = 15+3*u (mod 16). -/
+private theorem s3_sector_of_v16 (u v : Nat)
+    (hv16 : v%16=(15+3*u)%16) :
+    (u+v)%16=(15+4*u)%16 := by
+  omega
+
 /-- Exact equivalence between the second strict image-family pullback
     and its single affine high-stop congruence cylinder. -/
 theorem s3_image_pullback_iff_congruence (j m : Nat) :
@@ -681,10 +695,14 @@ theorem s3_image_pullback_iff_congruence (j m : Nat) :
     have hk : k=574+1024*v := by
       dsimp [v]
       omega
-    have hv16 : v%16=(15+3*u)%16 := by
-      rw [hk] at hmodK
-      omega
-    have hsector : (u+v)%16=(15+4*u)%16 := by omega
+    have hright : 15934+3072*u=574+1024*(15+3*u) := by omega
+    have hmodK' :
+        (574+1024*v)%16384=(574+1024*(15+3*u))%16384 := by
+      simpa only [hright, hk] using hmodK
+    have hv16 : v%16=(15+3*u)%16 :=
+      s3_mod_1024_cancel v (15+3*u) hmodK'
+    have hsector : (u+v)%16=(15+4*u)%16 :=
+      s3_sector_of_v16 u v hv16
     have hk' :
         (2:Nat)^(2*m+2)*(j+3)-(j+3*m+5)=574+1024*v := by
       simpa [k] using hk
