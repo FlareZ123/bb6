@@ -78,7 +78,7 @@ theorem outer_s1_marker_prefix_cell (L n m a b : Nat) (h : Int)
     (hm : m < 3) (i : Nat) (hi : i ≤ m+4) :
     (s1Config L n m a 0 b h).tape
       (h-((3*a+i):Int)) = sideBit (markerWord m ++ d0) i := by
-  rw [s1Config_left_cell]
+  rw [s1Config_left_cell L n m a 0 b h (3*a+i)]
   have hword : s1LeftFacing L n m a 0 =
       d1pow a ++ (markerWord m ++ d0 ++ binDec L n ++ lh) := by
     simp [s1LeftFacing,binDec_zero,List.append_assoc]
@@ -100,7 +100,7 @@ theorem outer_s1_counter_cell (L n m a b : Nat) (h : Int)
     (hm : m < 3) (i : Nat) :
     (s1Config L n m a 0 b h).tape
       (h-((3*a+m+5+i):Int)) = sideBit (binDec L n ++ lh) i := by
-  rw [s1Config_left_cell]
+  rw [s1Config_left_cell L n m a 0 b h (3*a+m+5+i)]
   have hword : s1LeftFacing L n m a 0 =
       (d1pow a ++ markerWord m ++ d0) ++ (binDec L n ++ lh) := by
     simp [s1LeftFacing,binDec_zero,List.append_assoc]
@@ -129,7 +129,6 @@ theorem outer_s1_counter_carry_cell
     rw [hL,hn]
     exact binDec_carryPrefix len q r hq
   rw [hbin]
-  rfl
 
 /-- Finite D-to-D bridge inputs for the three source marker words.  The
 right neighbour is the zero left by the counted unary sweep. -/
@@ -264,10 +263,11 @@ boundary required by counted_LBinDec_HRun. -/
 theorem markerBridgeFrameOut_right_zero (m : Nat) (hm : m < 3)
     (T : Int → Bool) (h0 : Int) :
     (markerBridgeFrameOut m T h0).tape (h0-(m+5:Int)+1) = false := by
+  have hcoord : h0-(m+5:Int)+1-h0 = -(m+4:Int) := by omega
   have hm0 : m=0 ∨ m=1 ∨ m=2 := by omega
   rcases hm0 with h0' | h1 | h2 <;> subst m <;>
     simp [markerBridgeFrameOut,frame,markerBridgeInsideAt,markerBridgeInside,
-      shiftConfig,embed,markerBridgeOutput] <;> omega
+      shiftConfig,embed,markerBridgeOutput,hcoord]
 
 /-- Everything strictly to the left of the bridge window is inherited from
 the source tape; the preceding counted sweep has not touched it. -/
