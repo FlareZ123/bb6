@@ -22,16 +22,13 @@ theorem binDec_residue1 (L q : Nat) (hL : 3 ≤ L)
       d0 ++ d1 ++ d1 ++ binDec (L-3) q := by
   have hpow3 : 2^L = 8 * 2^(L-3) := by
     rw [show L = (L-3)+3 by omega, Nat.pow_add]
-    norm_num
-    omega
+    simp [show (2:Nat)^3 = 8 by decide, Nat.mul_comm]
   have hpow2 : 2^(L-1) = 4 * 2^(L-3) := by
     rw [show L-1 = (L-3)+2 by omega, Nat.pow_add]
-    norm_num
-    omega
+    simp [show (2:Nat)^2 = 4 by decide, Nat.mul_comm]
   have hpow1 : 2^(L-2) = 2 * 2^(L-3) := by
     rw [show L-2 = (L-3)+1 by omega, Nat.pow_add]
-    norm_num
-    omega
+    simp [show (2:Nat)^1 = 2 by decide, Nat.mul_comm]
   have hk : q < 2^(L-3) := by rw [hpow3] at hbound; omega
   have hq1 : 4*q < 2^(L-1) := by
     rw [hpow2]
@@ -65,16 +62,13 @@ theorem binDec_residue0 (L q : Nat) (hL : 3 ≤ L)
       d1 ++ d1 ++ d1 ++ binDec (L-3) q := by
   have hpow3 : 2^L = 8 * 2^(L-3) := by
     rw [show L = (L-3)+3 by omega, Nat.pow_add]
-    norm_num
-    omega
+    simp [show (2:Nat)^3 = 8 by decide, Nat.mul_comm]
   have hpow2 : 2^(L-1) = 4 * 2^(L-3) := by
     rw [show L-1 = (L-3)+2 by omega, Nat.pow_add]
-    norm_num
-    omega
+    simp [show (2:Nat)^2 = 4 by decide, Nat.mul_comm]
   have hpow1 : 2^(L-2) = 2 * 2^(L-3) := by
     rw [show L-2 = (L-3)+1 by omega, Nat.pow_add]
-    norm_num
-    omega
+    simp [show (2:Nat)^1 = 2 by decide, Nat.mul_comm]
   have hk : q < 2^(L-3) := by
     rw [hpow3] at hbound
     omega

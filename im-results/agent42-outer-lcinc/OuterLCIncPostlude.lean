@@ -80,8 +80,21 @@ theorem outerLCInc_postlude_run
   have hfiveRun := outerLCIncFive_at T (outerLCIncH1 h a m+2) hfive
   have hscanRun := E_scan (outerLCIncAfterFive T h a m)
     (outerLCIncH1 h a m+7) (3*a+m+3) hscan
+  have hzeroMatch : ∀ x, outerLCIncZeroInside x = true →
+      outerLCIncAfterFive T h a m (h+5+x) =
+        decide (x ∈ outerLCIncZeroStart.marked) := by
+    intro x hx
+    have hxCases : x = 0 ∨ x = 1 := by
+      have hb : 0 ≤ x ∧ x ≤ 1 := by
+        simpa [outerLCIncZeroInside] using hx
+      omega
+    rcases hxCases with hx0 | hx1
+    · subst x
+      simpa [outerLCIncZeroStart] using hzero.1
+    · subst x
+      simpa [outerLCIncZeroStart] using hzero.2
   have hzeroRun := outerLCIncZero_at
-    (outerLCIncAfterFive T h a m) (h+5) hzero
+    (outerLCIncAfterFive T h a m) (h+5) hzeroMatch
   have hrightRun := counted_right_sweep_B (b+1)
     (outerLCIncAfterZero T h a m) (h+7) hright
   have hzeroExitRun := outerLCIncZeroExit_at
@@ -91,15 +104,15 @@ theorem outerLCInc_postlude_run
   have hcost :
       3*a+42+m+3*b =
         5 + (3*a+m+3) + 2 + 3*(b+1) + 1 + 28 := by omega
-  rw [hcost, run_add, hfiveRun]
+  rw [hcost, run_append, hfiveRun]
   simp only [Option.bind_some]
-  rw [run_add, hscanRun]
+  rw [run_append, hscanRun]
   simp only [Option.bind_some]
-  rw [run_add, hzeroRun]
+  rw [run_append, hzeroRun]
   simp only [Option.bind_some]
-  rw [run_add, hrightRun]
+  rw [run_append, hrightRun]
   simp only [Option.bind_some]
-  rw [run_add, hzeroExitRun]
+  rw [run_append, hzeroExitRun]
   simp only [Option.bind_some]
   exact htailRun
 
