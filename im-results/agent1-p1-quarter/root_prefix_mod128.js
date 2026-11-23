@@ -31,7 +31,7 @@ const families = [
     name: "II", n0: 9538n, delta: 703248n, a: 87n, b: 1198n, c: 712n,
     oddPart: 599n, ordOdd: 299n, expectedP: 5504n, expectedU: 708n,
     base: { D: 124, m: 49, N0: 117 }, shift: { D: 96, m: 96, N0: 96 },
-    hashes: { 0: "9d8525052d0ce383", 3: "41fc3ae41d741e03" },
+    hashes: { 0: "7b214ef39db40325", 3: "1f9864d28e1b3da5" },
   },
 ];
 
