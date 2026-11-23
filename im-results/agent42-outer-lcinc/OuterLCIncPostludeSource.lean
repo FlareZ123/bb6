@@ -162,17 +162,44 @@ theorem markerBridgeFrameOut_five (m : Nat) (hm : m < 3)
     (T : Int → Bool) (h0 : Int) (j : Nat) (hj : j < 5) :
     (markerBridgeFrameOut m T h0).tape
       (h0-(m+3:Int)+(j:Int)) = decide (j < 4) := by
+  have hcoord :
+      (h0-(m+3:Int)+(j:Int))-h0 = -(m+3:Int)+(j:Int) := by omega
   have hin : markerBridgeInsideAt m h0
       (h0-(m+3:Int)+(j:Int)) = true := by
-    simp [markerBridgeInsideAt, markerBridgeInside]
-    omega
-  rw [markerBridgeFrameOut_tape]
-  simp [hin]
-  have hm' : m = 0 ∨ m = 1 ∨ m = 2 := by omega
-  have hjcases : j=0 ∨ j=1 ∨ j=2 ∨ j=3 ∨ j=4 := by omega
-  rcases hm' with rfl | rfl | rfl <;>
-    rcases hjcases with rfl | rfl | rfl | rfl | rfl <;>
-    simp [markerBridgeOutput, sideBit]
+    change decide (-(m+4:Int) ≤
+      (h0-(m+3:Int)+(j:Int))-h0 ∧
+      (h0-(m+3:Int)+(j:Int))-h0 ≤ 1) = true
+    rw [hcoord]
+    exact of_decide_eq_true (by omega)
+  have hmark :
+      (embed (markerBridgeOutput m)).tape
+        (-(m+3:Int)+(j:Int)) = decide (j < 4) := by
+    have hm' : m = 0 ∨ m = 1 ∨ m = 2 := by omega
+    have hjcases : j=0 ∨ j=1 ∨ j=2 ∨ j=3 ∨ j=4 := by omega
+    rcases hm' with hm0 | hm1 | hm2
+    · subst m
+      rcases hjcases with hj0 | hj1 | hj2 | hj3 | hj4
+      · subst j; decide
+      · subst j; decide
+      · subst j; decide
+      · subst j; decide
+      · subst j; decide
+    · subst m
+      rcases hjcases with hj0 | hj1 | hj2 | hj3 | hj4
+      · subst j; decide
+      · subst j; decide
+      · subst j; decide
+      · subst j; decide
+      · subst j; decide
+    · subst m
+      rcases hjcases with hj0 | hj1 | hj2 | hj3 | hj4
+      · subst j; decide
+      · subst j; decide
+      · subst j; decide
+      · subst j; decide
+      · subst j; decide
+  simp only [markerBridgeFrameOut, frame, hin, if_pos]
+  simpa [shiftConfig, hcoord] using hmark
 
 /-- The final m marker-frame cells are ones, exactly the prefix
 needed at the beginning of the E scan. -/
@@ -180,21 +207,33 @@ theorem markerBridgeFrameOut_trailing (m : Nat) (hm : m < 3)
     (T : Int → Bool) (h0 : Int) (i : Nat) (hi : i < m) :
     (markerBridgeFrameOut m T h0).tape
       (h0-(m:Int)+2+(i:Int)) = true := by
+  have hcoord :
+      (h0-(m:Int)+2+(i:Int))-h0 = -(m:Int)+2+(i:Int) := by omega
   have hin : markerBridgeInsideAt m h0
       (h0-(m:Int)+2+(i:Int)) = true := by
-    simp [markerBridgeInsideAt, markerBridgeInside]
-    omega
-  rw [markerBridgeFrameOut_tape]
-  simp [hin]
-  have hm' : m = 0 ∨ m = 1 ∨ m = 2 := by omega
-  rcases hm' with rfl | rfl | rfl
-  · omega
-  · have hi0 : i=0 := by omega
-    subst i
-    simp [markerBridgeOutput, sideBit]
-  · have hicases : i=0 ∨ i=1 := by omega
-    rcases hicases with rfl | rfl <;>
-      simp [markerBridgeOutput, sideBit]
+    change decide (-(m+4:Int) ≤
+      (h0-(m:Int)+2+(i:Int))-h0 ∧
+      (h0-(m:Int)+2+(i:Int))-h0 ≤ 1) = true
+    rw [hcoord]
+    exact of_decide_eq_true (by omega)
+  have hmark :
+      (embed (markerBridgeOutput m)).tape
+        (-(m:Int)+2+(i:Int)) = true := by
+    have hm' : m = 0 ∨ m = 1 ∨ m = 2 := by omega
+    rcases hm' with hm0 | hm1 | hm2
+    · subst m
+      omega
+    · subst m
+      have hi0 : i=0 := by omega
+      subst i
+      decide
+    · subst m
+      have hicases : i=0 ∨ i=1 := by omega
+      rcases hicases with hi0 | hi1
+      · subst i; decide
+      · subst i; decide
+  simp only [markerBridgeFrameOut, frame, hin, if_pos]
+  simpa [shiftConfig, hcoord] using hmark
 
 /-- The marker frame preserves every cell strictly to the right of
 its fixed output window. -/
@@ -216,9 +255,11 @@ theorem outerLCIncSourceT3_preserves_right
   have hx1 : outerLCIncH1 h a m + 2 ≤ x := by
     dsimp [outerLCIncH1]
     omega
-  unfold outerLCIncSourceT3 outerLCIncSourceT2 outerLCIncSourceT1
+  change lbinDecHRunTape r
+    (outerLCIncSourceT2 T h a m) (outerLCIncH1 h a m) x = T x
   rw [lbinDecHRunTape_preserves_right r
     (outerLCIncSourceT2 T h a m) (outerLCIncH1 h a m) x hx1]
+  change (outerLCIncSourceT2 T h a m) x = T x
   rw [markerBridgeFrameOut_preserves_right m
     (outerLCIncSourceT1 T h a) (h-(3*a:Int)) x (by dsimp; omega)]
   exact sweptLeft_preserves_right (3*a) T h x hx
@@ -252,9 +293,13 @@ theorem outerLCIncAfterZero_cells
     (T : Int → Bool) (h : Int) (a m : Nat) :
     outerLCIncAfterZero T h a m (h+5) = true ∧
     outerLCIncAfterZero T h a m (h+6) = true := by
-  constructor <;>
+  constructor
+  · have hcoord : (h+5)-(h+5) = (0:Int) := by omega
     simp [outerLCIncAfterZero, frameAt_tape,
-      outerLCIncZeroInside, outerLCIncZeroEnd] <;> omega
+      outerLCIncZeroInside, outerLCIncZeroEnd, hcoord]
+  · have hcoord : (h+6)-(h+5) = (1:Int) := by omega
+    simp [outerLCIncAfterZero, frameAt_tape,
+      outerLCIncZeroInside, outerLCIncZeroEnd, hcoord]
 
 /-- The one-step B-zero exit writes one at its current head. -/
 theorem outerLCIncAfterZeroExit_one
@@ -438,8 +483,8 @@ theorem outerLCInc_source_postlude_conditions
           have hkCases : k=0 ∨ k=1 ∨ k=2 := by omega
           rcases hkCases with hk0 | hk1 | hk2
           · rw [hk0]; simpa using h111.1
-          · rw [hk1]; simpa using h111.2.1
-          · rw [hk2]; simpa using h111.2.2
+          · rw [hk1]; convert h111.2.1 using 1 <;> omega
+          · rw [hk2]; convert h111.2.2 using 1 <;> omega
         calc
           T3 (h1+7+(i:Int)) = T (h+2+(k:Int)) := by
             rw [hcoord]
