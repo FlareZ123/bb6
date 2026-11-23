@@ -10,7 +10,7 @@ Keep the signed S-window coordinates X,Y, and define
 \[
 U:=Y,\qquad V:=X+Y.
 \]
-The map (X,Y) -> (U,V) has determinant -1, hence is an invertible integer change of coordinates. No additional identification with the (p,q) coordinates is needed for this change of basis.
+The map (X,Y) -> (U,V) has determinant -1, hence is an invertible integer change of coordinates. This basis change alone requires no canonical (p,q) identification. However, for the **global source signed coordinates** (X=2(p-3q)-\gamma_s, Y=6q) there is an **exact phase-offset** identification (U=6q, V=2p-\gamma_s). Its complete correction-table bridge appears in [GlobalSignedPQBridge.md](GlobalSignedPQBridge.md). Do not lift this identity to truncated moving-window digits without the carry from Section 7.
 
 Recall
 \[

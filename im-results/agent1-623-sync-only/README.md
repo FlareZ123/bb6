@@ -119,6 +119,10 @@ These are precisely the two linear residuals appearing in the left/right termina
 
 [ExactSynchronizationDensity.md](ExactSynchronizationDensity.md) proves analytically that, for every ternary digit-pair word length \(n\ge4\), **exactly \(3^{2n}-30\cdot3^n+291\)** of the \(3^{2n}\) words synchronize both full L/R rectangles. The proof is an explicit four-event inclusion–exclusion argument over the residue criterion; [count_sync_words.js](count_sync_words.js) independently enumerates the small cases. This is a count of *all words*, not authentic root windows. It makes the empirical synchronization frequency less probative of a universal invariant and pinpoints why authentic source compatibility is essential.
 
+## Phase-correct global root-coordinate bridge
+
+[GlobalSignedPQBridge.md](GlobalSignedPQBridge.md) restores the **exact** integer relation between canonical counters \((p,q)\) and the signed cocycle coordinates \(U=6q,\ V=2p-\gamma_s\), with sector phase \(\gamma_s=(18,10,2,4)\). Every one of the eight implied correction rows matches the existing \`SignedCoordinateNormalForm.lean\` table, including the RE full-drain convention. The previous blanket withdrawal should apply to **truncated moving-window propagation**, not to this global integer conjugacy: low-window quotient carry \(c_V\), source boundary phase and shifting window index still prevent a carry-free induction. The note includes the algebra and a coefficient-check reproducer.
+
 ## Unimodular two-coordinate reduction
 
 [TwoCoordinate3AdicCocycle.md](TwoCoordinate3AdicCocycle.md) rewrites the exact four synchronization residues using the unimodular coordinates U = Y and V = X + Y.
