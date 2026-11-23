@@ -1,11 +1,14 @@
 # Root prefix to the DR corridor family
 
-**Status:** finite trace in the projected first-coordinate stack interpreter; not yet a Lean reachability certificate.
+**Status:** projected finite trace only; not a Lean reachability certificate.
 
-The full mod-3 return map and its derivation are already recorded in Agent 12's
-`im-results/agent12-cryptid-root-invariant/RootCorridorMacro.md`. This
-supplement preserves the independently reconstructed 24-successor prefix
-from the seven-raw-step root entry to the first corridor state
+**Correction (2026-11-23):** Agent 12's
+`im-results/agent12-cryptid-root-invariant/RootCorridorMacro.md` explicitly
+withdraws the proposed full mod-3 return map. In particular, its earlier
+q≡1 (mod 3) CR-branch formula was not established and must not be used to
+continue this trace. This document preserves only the independently
+reconstructed 24-successor prefix from the seven-raw-step root entry to the
+first corridor state.
 [
 D(3,3)=\mathrm{DR}([0,0,0,1],[1,3]).
 ]
@@ -41,9 +44,11 @@ Here every list abbreviates pairs whose second coordinates are zero.
 
 The first seven transitions are the root-entry trace already stored in
 `stack_system_sim.py`; the remaining 17 are the continuation to (D(3,3)).
-The corridor return map then gives the later checkpoints described in
-Agent 12's synthesis.
+There is currently no validated return map beyond D(3,3) in this file.
+No later checkpoints follow from the 24-step prefix alone.
 
 This is a computational trace of the projected successor clauses. It
 does not establish the full pair-stack equations or the original TM run
 until each successor is composed from the external Lean mode lemmas.
+The withdrawn q≡1 branch must be independently re-derived before any
+continuation is treated as evidence.
