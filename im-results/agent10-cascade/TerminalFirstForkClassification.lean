@@ -146,8 +146,66 @@ theorem ray_nonterminal_four_node_from_bands
     hsector hzlin hhighstrong hs hzmod hvne hwne
     hparentV hparentW
 
+
+/-- Numerically explicit high-c inverse-ray complete-fork exclusion.
+    The dyadic even and odd source-band hypotheses of the previous
+    theorem follow from elementary affine geometry, the strict high-c
+    ratio 7p<4q<8p, the canonical ray identities and the very mild
+    exponential growth margin p>16n+256. No universal parent-coverage
+    hypothesis is assumed. The modulo-3 obstruction on the middle
+    ray state is derived from the true odd quotient and Q nondivisibility. -/
+theorem ray_nonterminal_four_node_from_affine
+    (n p q Q v w z h d s : Nat)
+    (hn : 257≤n)
+    (hp : p=2^n)
+    (hbig : 16*n+256<p)
+    (hhigh : 7*p<4*q)
+    (hqbound : q<2*p)
+    (hqfour : q=4*Q)
+    (hvlin : v+Q+1=4*p+n)
+    (hwlin : w+2*Q+1=4*p+n)
+    (hXd : 2*v+5=9*d)
+    (hdmod : d%3=1)
+    (hhlin : h+2*p+n+3=4*d)
+    (hsector : (2*p+n)%3=0)
+    (hQmod : Q%3≠0)
+    (hzlin : z+q+1=4*p+n)
+    (hhighstrong : 7*p+4*s≤4*q)
+    (hs : n+5≤s)
+    (hzmod : (2*z+5)%9≠0) :
+    ¬ReachC (2,0) (v,0) := by
+  have hpowEven : 2^n=2*2^(n-1) := by
+    have hi : n=(n-1)+1 := by omega
+    calc
+      2^n=2^((n-1)+1) := congrArg (fun j : Nat => 2^j) hi
+      _=2*2^(n-1) := by rw [Nat.pow_succ];omega
+  have hpowOdd : 2^n=4*2^(n-2) := by
+    have hi : n=(n-2)+2 := by omega
+    calc
+      2^n=2^((n-2)+2) := congrArg (fun j : Nat => 2^j) hi
+      _=4*2^(n-2) := by rw [Nat.pow_add];omega
+  have hpbig : n+16<p := by omega
+  have hvband : 6*2^(n-1)-1≤v ∧ v≤8*2^(n-1)-3 := by
+    constructor <;> omega
+  have hwband : 6*2^(n-1)-1≤w ∧ w≤8*2^(n-1)-3 := by
+    constructor <;> omega
+  have hoddBand : 6*2^(n-2)+1≤2*d ∧ 2*d≤8*2^(n-2)-1 := by
+    constructor <;> omega
+  have hwmod : w%3≠2 := by omega
+  have hvne : v≠2 := by
+    have hh : 1≤2^(n-1) := Nat.one_le_pow _ _ (by decide)
+    omega
+  have hwne : w≠2 := by
+    have hh : 1≤2^(n-1) := Nat.one_le_pow _ _ (by decide)
+    omega
+  exact ray_nonterminal_four_node_from_bands n p q Q v v w z h d s
+    hn hp hpbig hhigh hqbound hqfour hvlin hwlin hXd hdmod hhlin
+    hsector hzlin hhighstrong hs hzmod hvband hwband hoddBand
+    hwmod hvne hwne
+
 #print axioms odd_source_scale_unique
 #print axioms middle_band_exact_two_parent_coverage
 #print axioms middle_band_unique_even_parent
 #print axioms ray_nonterminal_four_node_from_bands
+#print axioms ray_nonterminal_four_node_from_affine
 end CascadeTerminalFirstForkClassification
