@@ -8,6 +8,11 @@ on:
         required: false
         type: boolean
         default: false
+      verify_agent1_five_step:
+        description: 'Check the 1200-way five-step blank-drift source certificate (manual only)'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -60,5 +65,16 @@ jobs:
           lean -o im-results/agent1-four-slot-pair-convoy/FourSlotParamFamily.olean im-results/agent1-four-slot-pair-convoy/FourSlotParamFamily.lean 2>&1 | tee /tmp/agent1-four-slot-300.log
           if grep -q 'sorryAx' /tmp/agent1-four-slot-300.log; then
             echo "ERROR: four-slot family source theorem depends on sorryAx"
+            exit 1
+          fi
+
+      - name: Check 1200-way original finite translated blank source theorem (opt-in)
+        if: ${{ inputs.verify_agent1_five_step }}
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent24-translated-cycle:im-results/agent1-five-step-blank-drift"
+          lean -o im-results/agent1-five-step-blank-drift/FiveStepBlankFamily.olean im-results/agent1-five-step-blank-drift/FiveStepBlankFamily.lean 2>&1 | tee /tmp/agent1-five-step-1200.log
+          if grep -q 'sorryAx' /tmp/agent1-five-step-1200.log; then
+            echo "ERROR: five-step family source theorem depends on sorryAx"
             exit 1
           fi
