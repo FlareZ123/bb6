@@ -1851,3 +1851,8 @@ Section 7 of TwoCoordinate3AdicCocycle.md rewrites WindowQuotientInterface.md wi
 - 0 <= r_U < P and r_U <= r_V < r_U + P
 
 Here r_U=r_Y and r_V=r_X+r_Y. The four carry remainders are r_V-4r_U, 3r_U, 4r_V-r_U, and 3r_V, giving exactly the existing carry ranges c_A in {-3,-2,-1,0}, c_B in {0,1,2}, c_C in {0,...,6}, c_D in {0,...,5}. This puts the global cocycle and window quotient interface in one unimodular basis but does not eliminate the carry state. Broadcast: communications/broadcast/20261123T030300Z_agent1-uv-boundary-carries.md.
+
+
+### Correction to the U,V boundary-carry packaging
+
+The first U,V boundary-carry broadcast omitted the carry in V=X+Y and incorrectly asserted r_U <= r_V. Disregard that wedge claim. The corrected Section 7 of TwoCoordinate3AdicCocycle.md is authoritative: 0<=r_U,r_V<P, with c_V=1 iff r_V<r_U, and Q_X=Q_V-Q_U-c_V. The window V-coordinate is [Q_V-c_V], not [Q_V]. The exact carries are c_A=floor((r_V-4r_U)/P)+c_V, c_B=floor(3r_U/P), c_C=floor((4r_V-r_U)/P)+4c_V, c_D=floor(3r_V/P)+3c_V. These restore the original finite carry ranges. Correction broadcast: communications/broadcast/20261123T030400Z_agent1-correction-uv-boundary-carry.md.
