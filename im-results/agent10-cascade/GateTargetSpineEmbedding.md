@@ -1,6 +1,6 @@
 # Exact inverse-spine structure for #746 halting gates
 
-**Status:** two algebraic statements over the exact original-source `ResetParent` grammar: (i) the existing narrow-window t=0 entry embedding into a *single* even-spine branch, and (ii) a new all-sector, all-index **exact criterion for predecessor existence at the canonical spine's terminal state**. The complete derivations are paper proofs, not yet compiled against the original source in Lean. Neither statement eliminates off-spine odd-parent forks or decides the machine.
+**Status:** three algebraic statements over the exact original-source `ResetParent` grammar: (i) the existing narrow-window t=0 entry embedding into a *single* even-spine branch, (ii) an all-sector, all-index **exact criterion for predecessor existence at the canonical spine's terminal state**, and (iii) a full **unique-chain root-exclusion** on a further infinite low-valuation terminal subfamily. The complete derivations are paper proofs, not yet compiled against the original source in Lean. Neither statement eliminates off-spine odd-parent forks or decides the machine.
 
 ## 1. Actual source gate
 
@@ -276,7 +276,151 @@ The independent full-grammar exact-integer regression is
 It is a finite consistency test; the quantified proof is the
 inequality-and-divisibility argument above.
 
-## 5. Where the current E-parent results apply
+## 5. Uniform exclusion of low-valuation terminal branches
+
+The preceding terminal theorem is only a predecessor-existence classification.
+The following stronger result decides genuine blank-root reachability for an
+additional infinite **terminal-state subfamily whose terminal states do have
+predecessors**. This remains a paper proof over the exact full parent grammar;
+it is not yet a Lean-compiled source theorem.
+
+**Theorem (complete inverse cone).** Keep \(n\ge257\), \(n\bmod6\in\{4,5\}\)
+and the notation \(c,a,J,s,p,q,u_J,X\) of Section 4. Suppose
+\(J\) is even and \(4c>7\cdot2^a\). If additionally
+\[
+ \begin{cases}
+ X\bmod27\in\{9,18\},& n\bmod6=4,\\
+ X\bmod27=9,& n\bmod6=5,
+ \end{cases}
+\]
+then the **entire inverse ResetParent cone of \(u_J\)** is a finite,
+unique chain ending in a parentless state different from 2. In particular
+\[
+ \neg\operatorname{ResetChain}(2,u_J),\qquad
+ \neg\operatorname{ReachC}((2,0),(u_J,0)).
+\]
+The latter uses the existing source-certified equivalence in
+ResetChain.lean; the new parametric proof itself is not yet formalized.
+This closes **one inverse branch** of \(U_n\), not the off-spine odd
+forks from earlier \(u_j\), and does not prove #746 nonhalting.
+
+**First inverse step.** Section 4 rules out every even parent and
+every odd valuation \(t=0\) in the high-\(c\) window. Since
+\(v_3(X)=2\), valuations \(t\ge2\) are impossible as well.
+The only parent is the \(t=1\) parent at scale \(k=n-3\),
+\[
+ b_0=4(X/9)-p-n-2=\frac{23p-8q-n-6}{9}.
+\]
+Its output-band interval is
+\[
+ 3p/4-1\le b_0\le p-3.
+\]
+Indeed \(q>7p/4\) gives the upper bound and
+\(q<2p\) gives \(b_0>(7p-n-6)/9>3p/4-1\),
+using \(p>4n\). Hence \(b_0\) has a unique possible
+even-parent scale \(k=n-3\), and the only alternative
+parents would be odd parents.
+
+**Residue obstruction for every subsequent odd parent.** An
+even predecessor at \(k=n-3\) has exact recurrence
+\[
+ b\longmapsto b'=2b-p-(n-3).
+\]
+For \(n\bmod6=4\), \(p\equiv n\equiv1\pmod3\);
+the two allowed \(X\bmod27\) residues give
+\(b_0\bmod3\in\{0,1\}\), and the recurrence
+\(b'\equiv1-b\pmod3\) preserves \(\{0,1\}\).
+For \(n\bmod6=5\), \(p\equiv n\equiv2\pmod3\);
+\(X\bmod27=9\) gives \(b_0\equiv1\pmod3\), and
+\(b'\equiv2-b\equiv1\pmod3\).
+Thus at every finite depth on the even spine,
+\(b\bmod3\ne2\), equivalently \(3\nmid(2b+5)\).
+**All odd-parent valuations are ruled out at once**, including
+lower valuations that prior maximal-valuation-only analyses omitted.
+
+**The exit cannot cross the next even-image seam.** Define
+\[
+ \delta=4c-7\cdot2^a,\quad 4\le\delta<2^a,\quad
+ \delta\equiv4\pmod8,\qquad
+ D_0=p-b_0=\frac{2\delta s+n+6}{9}.
+\]
+Here \(\nu_2(\delta)=2\). Along the unique even-parent chain,
+as long as the \(k=n-3\) target band holds,
+\[
+ b_{e+1}=2b_e-p-(n-3),\quad
+ D_{e+1}=2D_e+(n-3),\qquad
+ 9D_e=2^e(2\delta s+10n-21)-9(n-3).
+\]
+Since \(b_0>3p/4-1\), \(D_0<p/4+1\).
+Let \(e\ge1\) be the first index with \(D_e>p/4+1\);
+it exists by strict growth of \(D_e\).
+The previous index lies in-band, so
+\(D_e\le p/2+n-1\). The closed form, using \(e\ge1\),
+also gives \(2^e\delta s\le9p/4-n+3\), so
+\(2^e<2^a\) (because \(\delta\ge4\)).
+
+We show \(D_e<p/2\). The elementary growth inequality
+\(2^n>20n(2n+3)^2\) for \(n\ge257\) implies
+\(s>20n2^a\). If instead \(D_e\ge p/2\), then
+\(0\le9(D_e-p/2)\le9(n-1)\). But the exact identity is
+\[
+\begin{aligned}
+ 9(D_e-p/2)&=Cs+E,\\
+ C&=2^{e+1}\delta-9\cdot2^{a-1},\\
+ E&=2^e(10n-21)-9(n-3).
+\end{aligned}
+\]
+Since \(1\le e<a\), \(0<E<10n2^a<s\).
+If \(C\le-1\), then \(Cs+E<0\); if \(C\ge1\),
+then \(Cs+E>s>9(n-1)\). Hence \(C=0\).
+Taking 2-adic valuations, \(\nu_2(\delta)=2\)
+forces \(e=a-4\) and \(\delta=36\). Consequently
+\[
+ c=7\cdot2^{a-2}+9,\qquad n=7\cdot2^{a-3}+3.
+\]
+For even \(a\), this gives \(n\bmod6=5\), making
+\(J=n-a\) odd, contrary to the hypotheses. For odd \(a\),
+it gives \(n\bmod6=1\), outside the surviving gate sectors.
+Thus \(C\ne0\), a contradiction. Therefore
+\[
+     p/4+1<D_e<p/2,\qquad p/2<b_e<3p/4-1.
+\]
+The latter state is in the open gap between neighboring
+even-target bands and has no even predecessor at *any*
+scale. It has no odd predecessor by the established
+mod-3 invariant. It is positive and different from the
+blank root 2. Backward induction along the unique finite
+parent chain proves the theorem.
+
+**How much of the terminal branch is excluded?** Within each complete
+dyadic index block \(2^a\le2n+3<2^{a+1}\), the Section 4
+parentless leaf condition excludes a fraction approaching \(7/12\)
+of surviving gate terminal states. Among the remaining indices,
+the present theorem excludes another \(1/36\) for even \(a\),
+or \(1/72\) for odd \(a\): over the high-\(c\), \(J\)-even
+subblock, \(X\bmod27\in\{0,9,18\}\) cycles uniformly when the
+index increases by 18, and the new theorem covers two of three
+lifts for the \(n\bmod6=4\) sector, one of three for
+\(n\bmod6=5\). The resulting **asymptotic terminal-branch
+root-exclusion coverage** is
+\[
+ \begin{cases}
+  11/18+O(2^{-a}),&a\ {\rm even},\\
+  43/72+O(2^{-a}),&a\ {\rm odd}.
+ \end{cases}
+\]
+This is a fraction of canonical *terminal inverse branches*,
+**not** a fraction of machines or of actual gate targets
+shown unreachable. All off-spine forks remain open.
+
+A full-grammar exact-integer finite inverse-cone regression of the
+low-valuation cases (22 qualifying n≡4 modulo 6 below 5000,
+and 25 qualifying n≡5 modulo 6 below 15000) found 47/47 unique
+chains ending in leaves, maximum observed depth six.
+The all-parameter conclusion rests on the preceding algebra,
+not on those finite checks.
+
+## 6. Where the current E-parent results apply
 
 The even-parent bands adjacent to (E) are
 [
@@ -305,7 +449,7 @@ The parity sectors align with both original gate residues:
 
 The odd-a, (K\equiv3\pmod6) entry-parent classification remains open.
 
-## 6. Existing Ray reductions to compose, not duplicate
+## 7. Existing Ray reductions to compose, not duplicate
 
 The spine formula above is the same canonical even ray used by the repository's `Ray*` modules:
 [
@@ -345,13 +489,13 @@ J-11,J-10,\ldots,J.
 ]
 This gives a concrete finite target for composing `RayNoSeam`, `RayNoSeamWalk`, the two-tier Hensel selectors, and the terminal t=0 entry (E(a,K)). The BigInt checks at ((K,a)=(387,9),(800,10),(399,9),(806,10)) independently found this exact 12-index split; the algebra above explains it uniformly.
 
-## 7. Scope and remaining work
+## 8. Scope and remaining work
 
 This identity connects the auxiliary entry family to the actual #746 halting targets. It proves that (E(a,K)) is an ancestor on **one** inverse-parent branch of (U_{K+2}). It does **not** prove that every root path to (U_{K+2}) passes through (E(a,K)). Other odd-parent side branches can leave intermediate spine nodes; a root path could in principle enter through one of them.
 
 The following are still required for a global #746 conclusion:
 
-1. Formalize the chain identity and the new terminal predecessor theorem against the exact `ResetParent` and `ResetChain` definitions in Lean.
+1. Formalize the chain identity, the terminal predecessor criterion, and the new unique-chain root-exclusion theorem against the exact `ResetParent` and `ResetChain` definitions in Lean.
 2. Compose the existing Ray reductions listed above with every (t\ge1) side branch leaving the intermediate (u_j), and prove the hypotheses exhaust the full spine (or identify the uncovered cases).
 3. Extend the E-parent exclusions beyond the current narrow x-window and across the remaining parity/phase sectors.
 4. Combine the branch classifications with `OriginalAlgorithmicGate.lean` to exclude every (n\ge257) with (n\bmod6\in\{4,5\}).
