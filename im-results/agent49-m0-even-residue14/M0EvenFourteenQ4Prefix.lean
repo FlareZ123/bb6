@@ -444,7 +444,7 @@ private theorem m0EvenFourteenQ4LeftFacingBoundaryBit (a k : Nat) (ha : 0 < a)
       k=6 ∨ k=7 ∨ k=8 ∨ k=9 := by omega
   rcases hkCases with h1 | h2 | h3 | h4 | h5 | h6 | h7 | h8 | h9
   all_goals subst k
-  all_goals simp [m0EvenFourteenBridgeEnd,markerWord,d0,d1,lh,sideBit,m0EvenFourteen_binDec_five_thirteen]
+  all_goals simp [m0EvenFourteenBridgeEnd,markerWord,d0,d1,lh,sideBit,m0EvenFourteen_binDec_five_thirteen] <;> decide
 
 private theorem m0EvenFourteenQ4CutTape_eq_source_left
     (a b : Nat) (h : Int) (i : Nat) (hi : 3*a+10 ≤ i) :

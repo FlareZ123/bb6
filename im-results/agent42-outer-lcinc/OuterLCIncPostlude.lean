@@ -105,9 +105,18 @@ theorem outerLCInc_postlude_run
   have hcost :
       3*a+42+m+3*b =
         5 + ((3*a+m+3) + (2 + (3*(b+1) + (1+28)))) := by omega
+  have hfiveFrame :
+      frameAt T (outerLCIncH1 h a m+2)
+        outerLCIncFiveInside outerLCIncFiveEnd =
+        (⟨(4:Fin 6),outerLCIncH1 h a m+7,
+           outerLCIncAfterFive T h a m⟩ : Config) := by
+    apply config_ext
+    · simp [frameAt_state,outerLCIncFiveEnd]
+    · simp [frameAt_head,outerLCIncFiveEnd] <;> omega
+    · rfl
   rw [hcost, run_append, hfiveRun]
   simp only [Option.bind_some]
-  rw [run_append, hscanRun]
+  rw [hfiveFrame,run_append,hscanRun]
   simp only [Option.bind_some]
   rw [run_append, hzeroRun]
   simp only [Option.bind_some]
