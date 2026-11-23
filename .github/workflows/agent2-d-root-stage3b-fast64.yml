@@ -134,7 +134,7 @@ jobs:
             4a) expected_artifact="d-root-stage3b3"; required_modules=("$T/NineteenthBlock3.olean"); source_file="$T/NineteenthTail5684.lean"; audit_decl="tail5684_exact" ;;
             4b) expected_artifact="d-root-stage3b4a"; required_modules=("$T/NineteenthTail5684.olean"); source_file="$T/NineteenthTerminalCertificate.lean"; audit_decl="terminal9780_exact" ;;
             4c) expected_artifact="d-root-stage3b3"; required_modules=("$T/NineteenthBlock3.olean"); source_file="$T/NineteenthFastBlock.lean"; audit_decl="run_blockedWith" ;;
-            4d) expected_artifact="d-root-stage3b3"; required_modules=("$T/NineteenthBlock2.olean" "im-results/agent2-cryptid-continuity/DRegularFast.olean"); source_file="$T/NineteenthTerminalCertificate.lean"; audit_decl="terminal9780_exact" ;;
+            4d) expected_artifact="d-root-stage3b3"; required_modules=("$T/NineteenthBlock3.olean"); source_file="$T/NineteenthTerminalCertificate.lean"; audit_decl="terminal9780_exact" ;;
             4e) expected_artifact="d-root-stage3b4c"; required_modules=("$T/NineteenthFastBlock.olean"); source_file="$T/NineteenthFastPrefix.lean"; audit_decl="fast512_16_seed19" ;;
             4f) expected_artifact="d-root-stage3b4e"; required_modules=("$T/NineteenthFastPrefix.olean"); source_file="$T/NineteenthTerminalCertificate.lean"; audit_decl="terminal9780_exact" ;;
             5) expected_artifact="d-root-stage3b4d"; required_modules=("$T/NineteenthTerminalCertificate.olean"); source_file="$T/NineteenthRootPrefix.lean"; audit_decl="blank_nineteenth_exception" ;;
