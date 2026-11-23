@@ -2,7 +2,7 @@ import BusyBeaver.Calculi.HaltShared
 import BusyBeaver.BB6.Halt.M_1RB0RE_1RC0RA_0LD0LB_0LA1LE_1LC1LF_0LAHHH
 import BusyBeaver.BB6.Halt.M_1RB1RF_0RC0RE_0RD1RA_1LE0LA_1LB0LD_0RDHHH
 
-open Mathlib Relation Nat Turing BusyBeaver
+open Mathlib Relation Nat Turing BusyBeaver BusyBeaver.RleStackEngine
 
 namespace BB6Agent42.RleCostedStepPilot
 
