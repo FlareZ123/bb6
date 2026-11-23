@@ -842,6 +842,48 @@ mod-54 lifts selects one class with
 the \(u_{J-2}\) inverse **branch**, not
 to full fatal target nonreachability.
 
+**Corollary (complete nine-node cone seven levels before termination).**
+In the exact same parameter family, the whole inverse cone of
+\(u_{J-7}\) is still finite and root-dead: it consists of the
+eight-node canonical even chain
+\[
+  u_{J-7}\leftarrow u_{J-6}\leftarrow\cdots
+          \leftarrow u_{J-1}\leftarrow u_J
+\]
+and **only one** additional odd leaf, attached at \(u_{J-2}\)
+as above. Hence
+\[
+ \boxed{\neg\operatorname{ReachC}((2,0),(u_{J-7},0))}.
+\]
+To see there are no further off-spine forks in this segment,
+note the exact signed identity
+\(X_j=2u_j+5=8p+2n+3-2c\,2^j\).
+For every even \(j\le J-2\), the possible t=0
+source parameter \(X_j/3\) lies in the universal gap
+\((2p,3p)\). Thus any odd parent must have t≥1
+and hence require \(9\mid X_j\). Among even-index
+depths, \(X_{j+2}-X_j=-6c\,2^j\) is congruent
+to the same nonzero multiple of three modulo nine
+(because \(c\not\equiv0\pmod3\)).
+Consequently the three successive even depths
+\(J-2,J-4,J-6\) have \(X_j\bmod9\) in
+\(\{0,3,6\}\), exactly once each. Their only
+9-divisible member is the already closed
+\(j=J-2\) fork; all odd-index depths have
+\(3\nmid X_j\). No further parent occurs
+between \(u_{J-7}\) and the terminal state.
+
+The extension is also **sharp for this simple argument**:
+\(9\mid X_{J-8}\) again by the six-step modular
+period, and its t=1 odd source lies in a genuine
+scale-(n−2) band. Thus extending to
+\(u_{J-8}\) requires a second off-spine fork
+analysis (and possibly higher t). The corollary
+moves the certified *paper-level* root-dead
+segment seven inverse levels nearer the
+original fatal target; it does not reach
+\(U_n=u_0\).
+
 A full untruncated BigInt ResetParent
 enumerator tested 37 qualifying n≤10000,
 including n=455,509,928,982,1817:
