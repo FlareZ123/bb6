@@ -208,7 +208,7 @@ C_i\le2^{26}V_i^2\le2^{48+20i},
 \]
 This remains far below \(2\uparrow\uparrow\uparrow5\), since \(41{,}943{,}089<2^{26}<2^{65{,}535}\).
 
-Since `1,410,260 < 2^21 < 2^65,535` and `427,698 < 2^19 < 2^65,535`, these conditional bounds would put both complete primitive runtimes below `2^(2^65,535) = 2↑↑65,536 < 2↑↑↑5`; if the lemmas are proved, F424 and F412 are thereby excluded as BB(6) champions. This is not a present classification: the global W-growth and cost inequalities, including the afterSweepCB dispatcher, still need proof. The sharper trace-specific `2^463` and `2^193` candidates remain stronger if their own intermediate-state folds and cost-indexed soundness theorem are established.
+Since `1,410,260 < 2^21 < 2^65,535` and `427,698 < 2^19 < 2^65,535`, these conditional bounds would put both complete primitive runtimes below `2^(2^65,535) < 2↑↑65,536 < 2↑↑↑5`; if the lemmas are proved, F424 and F412 are thereby excluded as BB(6) champions. This is not a present classification: the global W-growth and cost inequalities, including the afterSweepCB dispatcher, still need proof. The sharper trace-specific `2^463` and `2^193` candidates remain stronger if their own intermediate-state folds and cost-indexed soundness theorem are established.
 
 ## Formalization checklist and caveats
 
