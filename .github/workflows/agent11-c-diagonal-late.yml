@@ -493,6 +493,7 @@ jobs:
           if [ "$S31_W13_ONLY" = "true" ]; then exit 0; fi
           fi
 
+          if [ "$S2_SIXALL_ONLY" != "true" ]; then
           # Agent 41: disjoint c=512*g+7 closure of the u=64*c+7 E4 branch.
           cp ${GITHUB_WORKSPACE}/im-results/agent41-m0-u7-c512/OddSevenU7C512.lean .
           lean -o OddSevenU7C512.olean OddSevenU7C512.lean 2>&1 | tee OddSevenU7C512.log
@@ -521,6 +522,7 @@ jobs:
           if grep -q sorryAx EvenOddThreeX128W.log; then
             echo "REJECTED: generalized x=128*w+10 boundary proof contains sorryAx"
             exit 1
+          fi
           fi
           lean -o HighInverseSumOne.olean HighInverseSumOne.lean
           lean -o JointImageSieve.olean JointImageSieve.lean
