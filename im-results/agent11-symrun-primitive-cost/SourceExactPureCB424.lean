@@ -104,7 +104,8 @@ theorem sourcePureCB_exact (L R : List SymTok) :
         have hL := stripPrefixSym_some _ L L2 hs2
         rw [hL]
         simpa [costPureCB, stepPureCB, fcost, evalSym, evalM,
-          encSymL, encSymR, List.cons_append, List.nil_append] using
+          encSymL, encSymR, List.cons_append, List.nil_append,
+          repBlock_succ_right, List.append_assoc] using
           sweep_CB_B1_exact k (.run 0 :: .run 1 :: encSymL L2) (encSymR R1)
       | none =>
         cases hs1 : stripPrefixSym [.item (.run 0)] L with
@@ -112,7 +113,8 @@ theorem sourcePureCB_exact (L R : List SymTok) :
           have hL := stripPrefixSym_some _ L L1 hs1
           rw [hL]
           simpa [costPureCB, stepPureCB, fcost, evalSym, evalM,
-            encSymL, encSymR, List.cons_append, List.nil_append] using
+            encSymL, encSymR, List.cons_append, List.nil_append,
+          repBlock_succ_right, List.append_assoc] using
             sweep_CB_B1_exact k (encSymL L1) (encSymR R1)
         | none =>
           simp [costPureCB, stepPureCB, hs2, hs1]
@@ -122,7 +124,8 @@ theorem sourcePureCB_exact (L R : List SymTok) :
         have hL := stripPrefixSym_some _ L L2 hs2
         rw [hL]
         simpa [costPureCB, stepPureCB, fcost, evalSym, evalM,
-          encSymL, encSymR, List.cons_append, List.nil_append] using
+          encSymL, encSymR, List.cons_append, List.nil_append,
+          repBlock_succ_right, List.append_assoc] using
           sweep_CB_B2_exact p (.run 1 :: .run 0 :: .run 1 :: encSymL L2) (encSymR R1)
       | none =>
         cases hs1 : stripPrefixSym [.item (.run 0)] L with
@@ -130,7 +133,8 @@ theorem sourcePureCB_exact (L R : List SymTok) :
           have hL := stripPrefixSym_some _ L L1 hs1
           rw [hL]
           simpa [costPureCB, stepPureCB, fcost, evalSym, evalM,
-            encSymL, encSymR, List.cons_append, List.nil_append] using
+            encSymL, encSymR, List.cons_append, List.nil_append,
+          repBlock_succ_right, List.append_assoc] using
             sweep_CB_B2_exact p (encSymL L1) (encSymR R1)
         | none =>
           simp [costPureCB, stepPureCB, hs2, hs1]
@@ -140,7 +144,8 @@ theorem sourcePureCB_exact (L R : List SymTok) :
         have hL := stripPrefixSym_some _ L L1 hs1
         rw [hL]
         simpa [costPureCB, stepPureCB, fcost, evalSym, evalM,
-          encSymL, encSymR, List.cons_append, List.nil_append] using
+          encSymL, encSymR, List.cons_append, List.nil_append,
+          repBlock_succ_right, List.append_assoc] using
           sweep_CB_B12R_exact m (encSymL L1) (encSymR R1)
       | none =>
         simp [costPureCB, stepPureCB, hs1]
