@@ -1,6 +1,6 @@
 # Cryptid D: certified universal ternary singleton-suffix shift
 
-**Status (2026-11-23):** The universal shift and its finite iteration have **passed the original-source Lean kernel build and axiom audit** on the pinned DeepMind #85 source. [Successful CI run 45119240956](https://github.com/FlareZ123/bb6/actions/runs/45119240956) compiled the entire modified original module, and \`#print axioms\` for both theorems returned **only** \`propext\`, \`Classical.choice\` and \`Quot.sound\` (no \`sorryAx\` or \`native_decide\`). The residual-zero source extension has **also passed original-source Lean compilation and axiom audit** ([run 45120434674](https://github.com/FlareZ123/bb6/actions/runs/45120434674)); the residual-two and arbitrary-tail extensions remain unaccepted drafts. This work does **not** decide whether the original blank-tape six-state machine halts, or determine BB(6).
+**Status (2026-11-23):** The universal shift and its finite iteration have **passed the original-source Lean kernel build and axiom audit** on the pinned DeepMind #85 source. [Successful CI run 45119240956](https://github.com/FlareZ123/bb6/actions/runs/45119240956) compiled the entire modified original module, and \`#print axioms\` for both theorems returned **only** \`propext\`, \`Classical.choice\` and \`Quot.sound\` (no \`sorryAx\` or \`native_decide\`). The residual-zero source extension has **also passed original-source Lean compilation and axiom audit** ([run 45120434674](https://github.com/FlareZ123/bb6/actions/runs/45120434674)); the residual-two source extension remains an unaccepted draft, while the **arbitrary-tail extension has now also passed original-source kernel compilation and axiom audit** ([run 45120508529](https://github.com/FlareZ123/bb6/actions/runs/45120508529)). This work does **not** decide whether the original blank-tape six-state machine halts, or determine BB(6).
 
 ## Source-coordinate theorem
 
@@ -95,13 +95,13 @@ The outer transition totals are $8n(k+1)+4k^2+30k+43$ and $8n(k+1)+4k^2+30k+46$.
 
 ## Arbitrary finite suffix tails
 
-[RootSuffixWordShift.append.lean](RootSuffixWordShift.append.lean) separately drafts the stronger rule
+[RootSuffixWordShift.append.lean](RootSuffixWordShift.append.lean) **proves in the original-source Lean kernel** the stronger rule
 
 $$
 Q(n,t+3;T)\longrightarrow^+Q(n+1,t;T)
 $$
 
-for **every finite further pair-stack tail** $T$. The source transitions never inspect $T$, but the word-family Lean draft remains uncompiled. Its correctness would make (1) a contextual reduction rule rather than only a singleton-suffix rule.
+for **every finite further pair-stack tail** $T$. The source transitions never inspect $T$. The word-family Lean theorem `s3_universal_word_suffix_shift` and its iterated version **both passed CI 45120508529** with axiom profiles exactly `[propext, Classical.choice, Quot.sound]`. Thus the modular reduction is already an accepted contextual source transition, not merely a singleton-suffix fact.
 
 ## Connection to the conditional blank-root research
 
