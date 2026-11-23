@@ -35,8 +35,12 @@ function evenParents(y) {
 function xTwo(a) {
   return 4n * ((1n << BigInt(a + 1)) - 1n) / 3n;
 }
+function zOne(a) {
+  return 2n * (3n * (1n << BigInt(a + 1)) - 1n) / 5n;
+}
 function isNewClass(a) {
-  return (a % 6 === 5 && a % 8 !== 5 && a % 18 !== 11) ||
+  return (a % 4 === 0 && [0, 12, 16].includes(a % 20)) ||
+    (a % 6 === 5 && a % 8 !== 5 && a % 18 !== 11) ||
     (a % 6 === 3 && a % 8 !== 5 && a % 30 !== 3);
 }
 function expectedSecond(a) {
@@ -57,6 +61,20 @@ function expectedSecond(a) {
   }
   return result;
 }
+function expectedEvenSecond(a) {
+  const result = [];
+  if (a % 20 === 4) {
+    result.push({ h: 0, b: 1,
+      x: 2n * (3n * (1n << BigInt(a + 3)) - 9n) / 25n,
+      kind: "generic" });
+  }
+  if (a % 20 === 8) {
+    result.push({ h: 0, b: 4,
+      x: 16n * (3n * (1n << BigInt(a + 3)) - 39n) / 165n,
+      kind: "generic" });
+  }
+  return result;
+}
 function sameParents(a, actual, expected) {
   const encode = p => [p.h, p.b, p.x.toString(), p.kind].join("/");
   assert.deepEqual(
@@ -64,7 +82,7 @@ function sameParents(a, actual, expected) {
   );
 }
 
-let grammarCases = 0, newBlankExclusions = 0;
+let grammarCases = 0, evenGrammarCases = 0, newBlankExclusions = 0;
 for (let a = 3; a <= 950; a += 2) {
   if (a % 6 === 1) continue;
   const X = xTwo(a);
@@ -81,6 +99,20 @@ for (let a = 3; a <= 950; a += 2) {
     newBlankExclusions++;
   }
 }
+for (let a = 4; a <= 950; a += 4) {
+  const Z = zOne(a);
+  sameParents(a, evenParents(Z), expectedEvenSecond(a));
+  evenGrammarCases++;
+  if (isNewClass(a)) {
+    const Y = 3n << BigInt(a);
+    const top = evenParents(Y);
+    assert.equal(top.length, 1, "even direct parent count a=" + a);
+    assert.equal(top[0].x, Z, "even direct parent identity a=" + a);
+    assert.equal(evenParents(Z).length, 0, "even second parent count a=" + a);
+    assert(Z > 10n && Y > 10n);
+    newBlankExclusions++;
+  }
+}
 const A5 = Array.from({length: 72}, (_,a) => a).filter(a =>
   a % 6 === 5 && a % 8 !== 5 && a % 18 !== 11);
 const A3 = Array.from({length: 120}, (_,a) => a).filter(a =>
@@ -89,15 +121,16 @@ assert.deepEqual(A5, [17,23,35,41,59,71]);
 assert.deepEqual(A3, [9,15,27,39,51,57,75,81,87,99,105,111]);
 const new360 = Array.from({length: 360}, (_,a) => a).filter(isNewClass);
 const old360 = Array.from({length: 360}, (_,a) => a).filter(a => a % 4 === 2);
-assert.equal(new360.length, 66);
+assert.equal(new360.length, 120);
 assert.equal(old360.length, 90);
 assert(new360.every(a => a % 4 !== 2));
-assert.equal(new Set([...new360,...old360]).size, 156);
+assert.equal(new Set([...new360,...old360]).size, 210);
 console.log(JSON.stringify({
   verified_odd_a_up_to: 950,
-  full_second_parent_grammar_cases: grammarCases,
+  odd_second_parent_grammar_cases: grammarCases,
+  even_second_parent_grammar_cases: evenGrammarCases,
   new_two_generation_exclusion_instances: newBlankExclusions,
   new_excluded_residue_classes_mod_360: new360.length,
   old_no_incoming_residue_classes_mod_360: old360.length,
-  combined_residue_classes_mod_360: 156
+  combined_residue_classes_mod_360: 210
 }, null, 2));
