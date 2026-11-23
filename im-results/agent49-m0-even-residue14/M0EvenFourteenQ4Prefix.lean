@@ -146,7 +146,8 @@ theorem m0EvenFourteen_q4_prefix_run (a b : Nat) (h : Int) (ha : 0 < a) :
         dsimp [x]
         omega
       have hout : m0EvenFourteenInside (x-hN) = false := by
-        simp [m0EvenFourteenInside,hgt]
+        change decide (-9 ≤ x-hN ∧ x-hN ≤ 3) = false
+        exact decide_eq_false_iff_not.mpr (by omega)
       have hframe : T2 x = T1 x := by
         simpa [T2] using
           frameAt_tape_outside T1 hN m0EvenFourteenInside m0EvenFourteenBridgeEnd x hout
@@ -477,10 +478,14 @@ theorem m0EvenFourteen_q4_prefix_leftFacing (a b : Nat) (h : Int) (ha : 0 < a) :
     simpa [m0EvenFourteenQ4LeftFacing,sideBit] using htrue
   · by_cases hsmall : i < 3*a-3
     · let x : Int := h-(i:Int)
+      have hgt : 3 < x-(h-((3*a:Nat):Int)) := by
+        dsimp [x]
+        omega
       have hout : m0EvenFourteenInside
           (x-(h-((3*a : Nat):Int))) = false := by
-        simp [m0EvenFourteenInside,x]
-        omega
+        change decide (-9 ≤ x-(h-((3*a:Nat):Int)) ∧
+            x-(h-((3*a:Nat):Int)) ≤ 3) = false
+        exact decide_eq_false_iff_not.mpr (by omega)
       have hcut := m0EvenFourteenQ4CutTape_eq_swept a b h x hout
       have hblock := sweptLeft_block (3*a) i
         (s1Config 5 14 0 a 0 b h).tape h (by omega)
@@ -495,8 +500,11 @@ theorem m0EvenFourteen_q4_prefix_leftFacing (a b : Nat) (h : Int) (ha : 0 < a) :
         · subst i
           let x : Int := h-((3*a-3:Nat):Int)
           have hin : m0EvenFourteenInside (x-(h-((3*a:Nat):Int))) = true := by
-            simp [m0EvenFourteenInside,x]
-            omega
+            have hc : x-(h-((3*a:Nat):Int)) = 3 := by
+              dsimp [x]
+              omega
+            rw [hc]
+            decide
           have hcut := m0EvenFourteenQ4CutTape_eq_end_inside a b h x hin
           have hmark :
               decide ((x-(h-((3*a:Nat):Int))) ∈ m0EvenFourteenBridgeEnd.marked) = true := by
@@ -509,8 +517,11 @@ theorem m0EvenFourteen_q4_prefix_leftFacing (a b : Nat) (h : Int) (ha : 0 < a) :
         · subst i
           let x : Int := h-((3*a-2:Nat):Int)
           have hin : m0EvenFourteenInside (x-(h-((3*a:Nat):Int))) = true := by
-            simp [m0EvenFourteenInside,x]
-            omega
+            have hc : x-(h-((3*a:Nat):Int)) = 2 := by
+              dsimp [x]
+              omega
+            rw [hc]
+            decide
           have hcut := m0EvenFourteenQ4CutTape_eq_end_inside a b h x hin
           have hmark :
               decide ((x-(h-((3*a:Nat):Int))) ∈ m0EvenFourteenBridgeEnd.marked) = true := by
@@ -523,8 +534,11 @@ theorem m0EvenFourteen_q4_prefix_leftFacing (a b : Nat) (h : Int) (ha : 0 < a) :
         · subst i
           let x : Int := h-((3*a-1:Nat):Int)
           have hin : m0EvenFourteenInside (x-(h-((3*a:Nat):Int))) = true := by
-            simp [m0EvenFourteenInside,x]
-            omega
+            have hc : x-(h-((3*a:Nat):Int)) = 1 := by
+              dsimp [x]
+              omega
+            rw [hc]
+            decide
           have hcut := m0EvenFourteenQ4CutTape_eq_end_inside a b h x hin
           have hmark :
               decide ((x-(h-((3*a:Nat):Int))) ∈ m0EvenFourteenBridgeEnd.marked) = true := by
@@ -538,7 +552,9 @@ theorem m0EvenFourteen_q4_prefix_leftFacing (a b : Nat) (h : Int) (ha : 0 < a) :
         · subst i
           let x : Int := h-((3*a:Int))
           have hin : m0EvenFourteenInside (x-(h-((3*a:Nat):Int))) = true := by
-            simp [m0EvenFourteenInside,x]
+            have hc : x-(h-((3*a:Nat):Int)) = 0 := by dsimp [x]; omega
+            rw [hc]
+            decide
           have hcut := m0EvenFourteenQ4CutTape_eq_end_inside a b h x hin
           have hmark :
               decide ((x-(h-((3*a:Nat):Int))) ∈ m0EvenFourteenBridgeEnd.marked) = false := by
@@ -573,8 +589,8 @@ theorem m0EvenFourteen_q4_prefix_leftFacing (a b : Nat) (h : Int) (ha : 0 < a) :
               dsimp [x,k]
               omega
             have hin : m0EvenFourteenInside (-(k:Int)) = true := by
-              simp [m0EvenFourteenInside]
-              omega
+              change decide (-9 ≤ -(k:Int) ∧ -(k:Int) ≤ 3) = true
+              exact decide_eq_true_iff.mpr (by omega)
             have hin' : m0EvenFourteenInside
                 (x-(h-((3*a:Nat):Int))) = true := by
               rw [hrel]
