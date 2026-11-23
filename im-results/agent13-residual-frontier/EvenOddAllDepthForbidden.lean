@@ -1,5 +1,6 @@
 import EvenOddTwoParentRoot
 import Lean.Elab.Tactic.Omega
+set_option maxHeartbeats 0
 
 namespace BB6.Agent13AllDepth
 
