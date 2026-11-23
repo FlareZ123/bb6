@@ -152,3 +152,45 @@ The all-time problem can now be stated as avoidance, along the exact two-coordin
 The natural next object is a carry automaton retaining the sector, branch, R mod 3, and the moving-window low-boundary carry. The global (U,V) coordinates alone cannot be substituted naively for every shifted S-window quotient; the caveat in WindowQuotientInterface.md still applies.
 
 This is an exact reparameterization and a more explicit low-digit reduction, **not** a proof that the authentic orbit avoids the synchronization bands or a solution of BB(6).
+
+
+## 7. Boundary carries in the same (U,V) coordinates
+
+The WindowQuotientInterface.md caveat can also be written naturally in this basis. For a window starting at position s, put P=3^s and decompose
+\[
+U=PQ_U+r_U,\qquad V=PQ_V+r_V,
+\]
+with
+\[
+0\le r_U<P,\qquad r_U\le r_V<r_U+P.
+\]
+Indeed U=Y, V=X+Y, so r_U=r_Y and r_V=r_X+r_Y. The window coordinates are exactly
+\[
+U_w=[Q_U]_{3^n},\qquad V_w=[Q_V]_{3^n}.
+\]
+
+The four low remainders that create the synchronization carries become
+\[
+r_V-4r_U,\qquad 3r_U,\qquad 4r_V-r_U,\qquad 3r_V.
+\]
+Consequently their quotient carries are
+\[
+c_A=\left\lfloor\frac{r_V-4r_U}{P}\right\rfloor,\quad
+c_B=\left\lfloor\frac{3r_U}{P}\right\rfloor,\quad
+c_C=\left\lfloor\frac{4r_V-r_U}{P}\right\rfloor,\quad
+c_D=\left\lfloor\frac{3r_V}{P}\right\rfloor.
+\]
+The wedge constraint on (r_U,r_V) gives exactly
+\[
+c_A\in\{-3,-2,-1,0\},\quad c_B\in\{0,1,2\},
+\]
+\[
+c_C\in\{0,1,2,3,4,5,6\},\quad c_D\in\{0,1,2,3,4,5\}.
+\]
+These are the same finite carry ranges as the original X,Y formulation, but now both the global cocycle and the window boundary state use the same two-register basis.
+
+This does not eliminate the carries; it packages them as a constrained remainder pair
+\[
+0\le r_U<P,\qquad r_U\le r_V<r_U+P.
+\]
+A finite-state proof still has to track the induced carry transitions as s changes. The advantage is that the affine branch update and the boundary quotient interface can now be composed without changing coordinate systems.
