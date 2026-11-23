@@ -52,7 +52,7 @@ private theorem appendNoReturn (c d : Cfg) (a b : Nat)
     rw [heq, run_add, he]
     exact hd (t-a) (by omega)
 
-private theorem scanner_noF (n : Nat) (L ys : List Bool) :
+theorem scanner_noF (n : Nat) (L ys : List Bool) :
     NoF (scanStart n L ys) (2*n) := by
   induction n generalizing L ys with
   | zero =>
@@ -68,14 +68,14 @@ private theorem scanner_noF (n : Nat) (L ys : List Bool) :
         rw [htime,run_add,scan_step]
         exact ih ([false,true]++L) ys (t-2) (by omega)
 
-private theorem ePairs_start_noF (m q : Nat) (ys : List Bool) :
+theorem ePairs_start_noF (m q : Nat) (ys : List Bool) :
     NoF (ePairs m q ys) 2 := by
   intro t ht
   have hc : t=0 ∨ t=1 := by omega
   rcases hc with rfl | rfl
   all_goals simp [ePairs,run,step,goL,goR,pairs]
 
-private theorem aCloseStart_noF (n m : Nat) (ys : List Bool) :
+theorem aCloseStart_noF (n m : Nat) (ys : List Bool) :
     NoF (aCloseStart n m ys) 2 := by
   intro t ht
   have hc : t=0 ∨ t=1 := by omega
@@ -89,7 +89,7 @@ private theorem cWalk_two_noF (n : Nat) (L ys : List Bool) :
   rcases hc with rfl | rfl
   all_goals simp [cWalk,run,step,goL,goR,oppairs]
 
-private theorem cWalk_noF (n : Nat) (L ys : List Bool) :
+theorem cWalk_noF (n : Nat) (L ys : List Bool) :
     NoF (cWalk n L ys) (2*n) := by
   induction n generalizing ys with
   | zero =>
