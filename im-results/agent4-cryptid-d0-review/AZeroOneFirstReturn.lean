@@ -116,7 +116,7 @@ private theorem ab_ten_run_noF (m q : Nat) (ys : List Bool) :
 
 /-- The five-step A-one front and following D sweep contain no F before
     their terminal F/0 section. -/
-private theorem ab_one_close_noF (m : Nat) :
+theorem ab_one_close_noF (m : Nat) :
     NoF (BB6.AOneSource.ab m [true]) (2*m+10) := by
   have hfront : NoF (BB6.AOneSource.ab m [true]) 5 := by
     intro t ht
