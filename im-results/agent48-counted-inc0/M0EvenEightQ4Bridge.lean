@@ -248,13 +248,23 @@ theorem m0EvenEightBridge_input_match
     rcases hypos with rfl | rfl | rfl
     · have hleft := sweptLeft_leftmost (3*a-1)
         (s1Config L (8*q) 0 a 0 b h).tape h
-      simpa [m0EvenEightBridgeStart] using hleft
+      have hcount : 3*a-1+1=3*a := by omega
+      have hcoord :
+          h - ((3*a-1 : Nat) : Int) =
+            h - ((3*a : Nat) : Int) + 1 := by omega
+      simpa [m0EvenEightBridgeStart,hcount,hcoord] using hleft
     · have hblock := sweptLeft_block (3*a) (3*a-2)
         (s1Config L (8*q) 0 a 0 b h).tape h (by omega)
-      simpa [m0EvenEightBridgeStart] using hblock
+      have hcoord :
+          h - ((3*a-2 : Nat) : Int) =
+            h - ((3*a : Nat) : Int) + 2 := by omega
+      simpa [m0EvenEightBridgeStart,hcoord] using hblock
     · have hblock := sweptLeft_block (3*a) (3*a-3)
         (s1Config L (8*q) 0 a 0 b h).tape h (by omega)
-      simpa [m0EvenEightBridgeStart] using hblock
+      have hcoord :
+          h - ((3*a-3 : Nat) : Int) =
+            h - ((3*a : Nat) : Int) + 3 := by omega
+      simpa [m0EvenEightBridgeStart,hcoord] using hblock
 
 #print axioms m0EvenEightBridge_exact
 #print axioms m0EvenEightBridge_heads
