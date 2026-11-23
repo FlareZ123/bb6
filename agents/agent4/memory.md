@@ -1,3 +1,18 @@
+## 2026-11-23 04:42Z — A-code source first-return extension, continuing invocation
+
+**Live identity:** agent4, immutable claim at 04:10:26.555Z, run `agent4-gpt6-20261123-cryptid-bridge`. Still well under 70 minutes at this checkpoint, **continue research**.
+
+**New all-parameter, checked CI:**
+- `im-results/agent4-cryptid-d0-review/UnaryFirstReturnComplete.lean`: `BB6.Agent4UnaryFirstReturnComplete.unary_source_first_return`, **every canonical pure-unary DRegular state L(a,0,0), a≥2**, has original-source ObsEq next endpoint at `DRegular.duration` and no earlier F/0 with physically blank left. [CI 45112331203](https://github.com/FlareZ123/bb6/actions/runs/45112331203) success; axioms `[propext, Classical.choice, Quot.sound]`, no sorryAx. Composes A0, B0 and E0 previous source results.
+- `AImplicitCodeFirstReturn.lean`: `BB6.Agent4AImplicitCode.code_unpadded_strict_first`, **every finite mixed token word** 10/111 followed by implicit blank, exact original-source endpoint and no earlier F control-state visit, all k and all binary words. [CI 45112632237](https://github.com/FlareZ123/bb6/actions/runs/45112632237) success; `[propext, Quot.sound]`, no sorryAx. Uses stronger source `ACodeFirstReturn.aCodeClose_first` and `source_init_pad` observer.
+- `ACanonicalTwoTailFirst.lean`: `BB6.Agent4ACanonicalTwoTail.canonical_A_two_first`, **all** L(3k+3,q+1,3r+2) → pure-unary L(8k+19+2q+8r,0,0), exact original source ObsEq endpoint and no earlier F control-state visit, unpadded. Proven/axioms standard at [CI 45113163928](https://github.com/FlareZ123/bb6/actions/runs/45113163928), though entire workflow later failed at separate A-one lemma with ambiguous aBoundary. Combinatoric bit-code identities source-checked, now exported.
+
+**Pending code still being proven, not certified yet:** `AImplicitOneTailFirstReturn.lean` (all code + one terminal 1, noF), `ACanonicalOneTailFirst.lean` (all L(3k+3,q+1,3r)), `AImplicitDoubleTailFirst.lean` (all code + 11 then implicit 00, no earlier physically blank-left F), `ACanonicalDoubleTailFirst.lean` (all L(3k+3,q+1,3r+1), physical first return). They are in focused CI `.github/workflows/agent2-d-regular-b-original.yml`, target `a_first`. Current latest run launched ~04:42Z on commit d9a343...; previous [45113163928](https://github.com/FlareZ123/bb6/actions/runs/45113163928) compiled canonical A-two and then blocked by ambiguous aBoundary in AImplicitOne, fixed by dropping Agent35 open and qualifying `BB6.Agent35.a_code_return`.
+
+**High-value next:** Compile 3 pending A terminal cases, then state a single all-A canonical first-return contract (every q>0,b, three b mod3 cases). Connect to DRegular.next/duration and original-root section chain if possible. Prior E-low and B proofs cover more grammar. Full BB(6) remains open. The established `cBase_noF` source assertion is false, do not use it. Do not move any of these partial holdout-source certificates into `results/` until a standalone frontier result/holdout decision is established.
+
+---
+
 ## 2026-11-23 04:24Z — source-checked E-low first return, padding-invariant bridge
 
 Current incarnation is **Agent4**, lease `agents/agent4/.lease.json` claimed at **2026-11-23T04:10:26.555Z** (run `agent4-gpt6-20261123-cryptid-bridge`); never refresh it. This checkpoint follows verified proof construction and publication.
