@@ -23,8 +23,9 @@ private theorem cReach_parent_of_right5 (x y : Nat)
   rcases hr with ⟨time,ht⟩
   cases time with
   | zero =>
-      simp [BB6.Agent8Section.run] at ht
-      exact False.elim (hneq ht.symm)
+      have hpair : (5,1)=(x,y) := by
+        simpa [BB6.Agent8Section.run] using ht
+      exact False.elim (hneq hpair.symm)
   | succ n =>
       cases hp : BB6.Agent8Section.run secNext n (some (5,1)) with
       | none =>
@@ -106,11 +107,12 @@ private theorem odd_odd_sum4_parent (a k x y : Nat)
                 exact ⟨haEq,hkEq⟩
             | succ n =>
                 have hfac : 2*(a-1)+6 = 2*(a+2) := by omega
-                have hfour : 4∣(2*(a-1)+6) := by
+                    have hfour : 4∣(2*(a-1)+6) := by
                   rw [hfac]
-                  refine ⟨(a+2)/2,?_⟩
-                  have hdiv : 2∣a+2 := by omega
+                  have hmod : (a+2)%2=0 := by omega
+                  have hdiv : 2∣a+2 := Nat.dvd_of_mod_eq_zero hmod
                   rcases hdiv with ⟨q,hq⟩
+                  refine ⟨q+1,?_⟩
                   rw [hq]
                   ring
                 have hpowdiv : 2∣2^(n+1) := by
@@ -208,9 +210,10 @@ private theorem even_odd_sumplus1_12_parent (a k x y : Nat)
                   have hfour : 4∣(2*(a-1)+8) := by
                     have hform : 2*(a-1)+8=2*(a+3) := by omega
                     rw [hform]
-                    refine ⟨(a+3)/2,?_⟩
-                    have hdiv : 2∣a+3 := by omega
+                    have hmod : (a+3)%2=0 := by omega
+                    have hdiv : 2∣a+3 := Nat.dvd_of_mod_eq_zero hmod
                     rcases hdiv with ⟨q,hq⟩
+                    refine ⟨q+1,?_⟩
                     rw [hq]
                     ring
                   have hpowdiv : 2∣2^(n+1) := by
@@ -234,9 +237,9 @@ private theorem no_blank_odd_sum_two (x y : Nat)
   rcases hr with ⟨time,ht⟩
   cases time with
   | zero =>
-      simp [BB6.Agent8Section.run] at ht
-      have hpair : (5,1)=(x,y) := ht
-      cases Prod.mk.inj hpair
+      have hpair : (5,1)=(x,y) := by
+        simpa [BB6.Agent8Section.run] using ht
+      cases hpair
       omega
   | succ n =>
       cases hp : BB6.Agent8Section.run secNext n (some (5,1)) with
@@ -350,7 +353,8 @@ theorem first_stop_m1091_mod4096 (time m k : Nat)
       _=2^(2*m+3) := hstop
   have hpowFactor : 2^(2*m+3)=1024*2^(2*m-7) := by
     calc
-      2^(2*m+3)=2^(10+(2*m-7)) := by congr 1 <;> omega
+      2^(2*m+3)=2^(10+(2*m-7)) := by
+        rw [show 2*m+3=10+(2*m-7) by omega]
       _=2^10*2^(2*m-7) := by rw [Nat.pow_add]
       _=1024*2^(2*m-7) := by norm_num
   have hU : u+12*r+4=2^(2*m-7) := by
