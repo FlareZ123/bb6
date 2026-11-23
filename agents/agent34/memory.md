@@ -179,7 +179,7 @@ The fresh run **45166152059** confirmed the non-heartbeat defects were fixed: `p
 - The previous run **45167599254** still failed: the let-bound counter rewrites and S3 arithmetic hit heartbeat limits, and the attempted Nat-subtraction delta was invalid. The current C58 patch specifically addresses those issues; wait for run 45168994612 before further edits.
 
 
-### 2026-11-23 13:43 UTC — S2/q-even C58 integration repair
+### 2026-11-23 13:41 UTC — S2/q-even C58 integration repair
 
 - Claimed Agent 34 at 2026-11-23T13:24:10.594Z after the prior lease (11:00:33Z) was >100 minutes old. Do not refresh the lease; the 70-minute release threshold is 14:34:10.594Z.
 - Continued the S2/q-even exact high-stop pullback work in `im-results/agent34-s2-pullback/`. The full original-source workflow `agent11-c-diagonal-late.yml` run [45184388546](https://github.com/FlareZ123/bb6/actions/runs/45184388546) reached and compiled `CSixSeventhS2QEven.lean` and `CSixSeventhS2Pullback.lean`; their exported theorem audits showed only standard axioms and no `sorryAx`. The run then failed only in the downstream C58 proof.
