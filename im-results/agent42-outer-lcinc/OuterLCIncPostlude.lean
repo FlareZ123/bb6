@@ -92,7 +92,8 @@ theorem outerLCInc_postlude_run
     · subst x
       simpa [outerLCIncZeroStart] using hzero.1
     · subst x
-      simpa [outerLCIncZeroStart] using hzero.2
+      have hc : h+5+1 = h+6 := by omega
+      simpa [outerLCIncZeroStart,hc] using hzero.2
   have hzeroRun := outerLCIncZero_at
     (outerLCIncAfterFive T h a m) (h+5) hzeroMatch
   have hrightRun := counted_right_sweep_B (b+1)
@@ -103,7 +104,7 @@ theorem outerLCInc_postlude_run
     (outerLCIncAfterZeroExit T h a m b) (h+3*b+9) htail
   have hcost :
       3*a+42+m+3*b =
-        5 + (3*a+m+3) + 2 + 3*(b+1) + 1 + 28 := by omega
+        5 + ((3*a+m+3) + (2 + (3*(b+1) + (1+28)))) := by omega
   rw [hcost, run_append, hfiveRun]
   simp only [Option.bind_some]
   rw [run_append, hscanRun]

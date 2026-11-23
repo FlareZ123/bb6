@@ -237,7 +237,7 @@ private theorem m0EvenFour_leftSweep_two (T : Int → Bool) (h : Int)
   rw [he]
   simp only [Option.map_some,applyMove]
   have hcoord : h+1+(-1) = h := by omega
-  simpa only [hcoord]
+  simpa [hcoord]
 
 /-- Lower head bound for every prefix of the 3-cell grouped left sweep. -/
 private theorem m0EvenFour_counted_left_sweep_heads
@@ -266,7 +266,8 @@ private theorem m0EvenFour_counted_left_sweep_heads
     · obtain ⟨q',hq'⟩ := Nat.exists_eq_succ_of_ne_zero hq0
       rw [hq']
       have hfalse := m0EvenFour_sweptLeft_head_plus1_false q' T h
-      convert hfalse using 1 <;> omega
+      have hcoord : h-(((q'+1:Nat):Int))+1 = h-(q':Int) := by omega
+      simpa only [hcoord] using hfalse
   have hqrun' :
       run tm2 (3*q) ⟨3,h,T⟩ =
         some ⟨3,h-(q:Int),Tq⟩ := by
