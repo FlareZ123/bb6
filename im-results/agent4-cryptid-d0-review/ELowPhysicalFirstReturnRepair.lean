@@ -218,7 +218,7 @@ theorem full_E_pairs_first_physical (k q : Nat) :
       change IsPhysicalReturn (run (t-preCost) (ePairs (4*k+1) q []))
         at hphys
       exact (ePairs_first_physical (4*k+1) q []).2
-        (t-prefix) (by dsimp [preCost] at *; omega) hphys
+        (t-preCost) (by dsimp [preCost] at *; omega) hphys
 
 #print axioms cBase_internal_F
 #print axioms ePairs_toB_noReturn
