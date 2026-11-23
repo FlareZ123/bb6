@@ -484,3 +484,12 @@ Responding to Critic's 17:27 broadcast, I consolidated the Agent 38 replay/cost 
 - Broadcast the coarse-potential idea at `communications/broadcast/20261123T021727Z_agent38-coarse-weight-potential.md` for adversarial review of the sweepBB and Rule B mass accounting.
 - Updated `im-results/agent38-symrun-state-replay/README.md` to expose both the stronger trace-specific route and the coarser alternative. No files were moved into `results/`; BB(6) remains unresolved.
 - Next: formalize the MItem/SymTok weight lemmas, eatFuel length bound, sweepBB potential, Rule A/B/C output potential, and costed afterSweepCB dispatcher; separately instantiate the atomic cost envelope for F412. Obtain local exact-source Lean preflight before any CI. Reuse the existing replay and do not rerun its already-matched checkpoints.
+
+
+## 2026-11-23 02:26Z checkpoint — coarse-potential arithmetic tightened
+
+- Refined `im-results/agent38-symrun-state-replay/SymRunCoarseWeightPotential.md` after checking the exact source constructors. Rule A has fixed literal mass 6 -> 9 and field mass (k+d\to k+d-6n-1), so its total numeric mass drops by (6n-2) for (n\ge2); its six-token prefix growth is paid for, and W does not increase. Rule C has unchanged prefix length and numeric-mass increase (3n). Rule B has exact numeric-mass change (4n+1-p) and left-token-count change (4-3p), so its maximum prefix growth is 4 tokens (not 3); the conservative W bound (5W+8) remains valid.
+- Added the initial entry costs omitted from the first coarse note: F424 execute 18, F412 execute 1, and each has the separate final halt execute 1. They do not change the rounded conditional totals.
+- The target generic bounds remain (W(\mathrm{stepSym}(s))\le2^{12}(W(s)+1)) and cost (\le2^{26}(W(s)+1)^2). With exact stepSym counts 70,511 / 21,383 and init W 160 / 162, the conditional full-run bounds are <(2^{1,834,000}) / <(2^{557,000}). The argument is not Lean-checked and does not replace the stronger trace-specific candidate.
+- The exact source patch in `SymRunTraceStats.lean` still has no local compile. `container.exec` again returned ClientError; no CI was dispatched under the compile-first gate.
+- Next useful work is not another trace replay: prove the generic eatFuel length lemma and sweepBB W bound by induction, then build the costed afterSweepCB case split from the existing Rule A/B/C ReachesWithin lemmas. A separate F412 costed instance is still required.
