@@ -1,6 +1,7 @@
 import BB429Branch7Source
 import BB429Branch29Mod64
 import BB429Branch29Arithmetic
+import BB429Branch29BurstFloor
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -214,6 +215,33 @@ theorem source_branch7_29_burst_mod16384
   have heq' : 128*q+3*n+131=3*2^(n+2) := by omega
   exact BB429Branch29Arithmetic.local_branch29_burst_mod16384
     q n hq hn ⟨i,hlocal⟩ heq'
+
+
+/-- A lower bound for any actual ORIGINAL Cryptids blank-root
+29(mod32) branch-7 final burst: at least 16255 first-branch steps.
+This is an unbounded source-time theorem conditional on the exact
+terminal-burst equation, not a claim that any such event occurs. -/
+theorem source_branch7_29_burst_ge16255
+    (i n x y : Nat)
+    (hroot : BB429SourceLadder.sourceRun i highLevelStart =
+      some (.J x y))
+    (hbranch : y+3=2*x)
+    (h29 : x%32=29)
+    (hn : 18≤n)
+    (heq : 4*x+3*n+15=3*2^(n+2)) :
+    16255≤n := by
+  let q := x/32
+  have hx : x=32*q+29 := by dsimp [q]; omega
+  have hy : y=64*q+55 := by omega
+  have hsrc := hroot
+  rw [hx,hy] at hsrc
+  have hlocal :=
+    BB429SourceMod16.source_run_to_local i (32*q+29) (64*q+55) hsrc
+  have heq' : 128*q+3*n+131=3*2^(n+2) := by omega
+  exact BB429Branch29BurstFloor.rooted_branch29_final_burst_floor
+    q n hn ⟨i,hlocal⟩ heq'
+
+#print axioms source_branch7_29_burst_ge16255
 
 #print axioms source_branch7_29_burst_mod16384
 
