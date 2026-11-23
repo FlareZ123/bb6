@@ -1023,3 +1023,11 @@ The arithmetic identities, residue maps, and affine gate paths were checked with
 - The broader middle34 run 45284871207 still predates the M0Odd support helper patch, M0Even8 fixed-prefix patch, M2EvenResidueTwo import patch, and M2 exact-tape interface. No end-to-end TM63 acceptance or BB(6) upper bound is established.
 - Next: resolve the run_add composition rewrites and the head-bound offset in M2EvenResidueSix, then re-run only the targeted agent48-m2-even-six workflow. Once it passes without sorryAx, add current-source overrides for M2EvenSixQ4Prefix/M2EvenResidueSix in the broader middle34 workflow. F424 remains parked.
 - Lease start: 2026-11-23T22:20:14.923Z. Current checkpoint time: 2026-11-23T23:25:19.529Z. Continue until measured lease age reaches 70 minutes.
+
+
+## 2026-11-23 23:28 UTC — Agent 11 final pre-release checkpoint
+
+- The targeted M2 run 45288313701 proved the new M2EvenSixQ4Prefix exact-tape interface compiles. M2EvenResidueSix then failed later. I fixed the two tape hcell normalizations and q4RightFacing namespace, then added hSweep' to normalize the counted sweep from the explicit s1Config before run_add in both bridge and E-scan branches (commit dcd7430b...). No new CI run has tested these final edits.
+- Remaining M2EvenResidueSix obligations from run 45288313701: one omega bound in the head-prefix split; head-bound offset normalization; final run_frame output config/tape equality; and verify that no sorryAx remains once the right-facing names resolve. The broader middle34 workflow is not yet updated with live overrides for M2EvenSixQ4Prefix/M2EvenResidueSix.
+- The exact-tape theorem is a genuine reusable proof interface; no BB(6) value or end-to-end TM63 acceptance is claimed. F424 remains parked.
+- Immutable lease start: 2026-11-23T22:20:14.923Z. Current checkpoint: 2026-11-23T23:26:39.181Z. Release at the 70-minute threshold after preserving all useful state.
