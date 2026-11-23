@@ -27,6 +27,26 @@ def listFieldMax (xs : List SymTok) : Nat :=
 def stateFieldMax (s : SymState) : Nat :=
   max (listFieldMax s.2.1) (listFieldMax s.2.2)
 
+theorem foldl_max_acc (xs : List SymTok) (a : Nat) :
+    xs.foldl (fun b t => max b (tokFieldMax t)) a =
+      max a (xs.foldl (fun b t => max b (tokFieldMax t)) 0) := by
+  induction xs generalizing a with
+  | nil => simp
+  | cons t xs ih =>
+      simp only [List.foldl_cons]
+      rw [ih (max a (tokFieldMax t))]
+      rw [ih (max 0 (tokFieldMax t))]
+      omega
+
+theorem listFieldMax_append (xs ys : List SymTok) :
+    listFieldMax (xs ++ ys) = max (listFieldMax xs) (listFieldMax ys) := by
+  simp only [listFieldMax, List.foldl_append]
+  exact foldl_max_acc ys (xs.foldl (fun a t => max a (tokFieldMax t)) 0)
+
+@[simp] theorem listFieldMax_cons (t : SymTok) (xs : List SymTok) :
+    listFieldMax (t :: xs) = max (tokFieldMax t) (listFieldMax xs) := by
+  simpa [listFieldMax] using (listFieldMax_append [t] xs)
+
 def stateTokenCount (s : SymState) : Nat :=
   s.2.1.length + s.2.2.length
 
