@@ -43,7 +43,7 @@ def m2EvenSixQ4LeftFacing (a : Nat) : List Bool :=
 
 /-- The base q4 cut word is the canonical q4 left-facing word. -/
 theorem m2EvenSixQ4LeftFacing_eq_q4LeftFacing (a : Nat) :
-    m2EvenSixQ4LeftFacing a = q4LeftFacing 3 5 a := by
+    m2EvenSixQ4LeftFacing a = Agent8Q4Suffix.q4LeftFacing 3 5 a := by
   rfl
 
 /-- The finite bridge sees the even-n=6 boundary, not the odd-n boundary
@@ -73,7 +73,7 @@ theorem m2EvenSixQ4Bridge_heads :
 private theorem m2EvenSixSourceLeftAt (a b : Nat) (h : Int) (k : Nat) :
     (s1Config 3 6 2 a 0 b h).tape
         (h-((3*a+2+k : Nat) : Int)) =
-      sideBit m2EvenSixSourceLeftSuffix k := by
+      sideBit m2EvenSixSourceLeftSuffix (2+k) := by
   have hface : s1LeftFacing 3 6 2 a 0 =
       d1pow a ++ m2EvenSixSourceLeftSuffix := by
     simp [s1LeftFacing,binDec_zero,m2EvenSixSourceLeftSuffix,
@@ -96,8 +96,9 @@ private theorem m2EvenSixSweptLeftCell (a b : Nat) (h : Int) (k : Nat) :
   have hcoord :
       h-((3*a+2+k : Nat) : Int) =
         h-((3*a+2 : Nat) : Int)-(k:Int) := by omega
-  rw [hcoord,hpres]
-  simpa [T] using m2EvenSixSourceLeftAt a b h k
+  have hsrc := m2EvenSixSourceLeftAt a b h k
+  have hcombined := hpres.trans hsrc
+  simpa only [hcoord] using hcombined
 
 /-- Exact input match for the 38-step bridge after sweeping the 3*a+2
 leading one-blocks. -/
@@ -130,6 +131,7 @@ theorem m2EvenSixQ4Bridge_input_match (a b : Nat) (h : Int) :
       all_goals subst y
       all_goals simp [k,m2EvenSixSourceLeftSuffix,markerWord,d0,d1,lh,
         binDec_three_six,sideBit,m2EvenSixQ4BridgeStart]
+    rw [hcoord] at hleft
     exact hleft.trans hbits
   · have hyCases : y = 1 ∨ y = 2 := by omega
     rcases hyCases with h1 | h2
@@ -212,6 +214,8 @@ theorem m2EvenSixQ4LeftFacingPrefixTrue (a i : Nat)
         m2EvenSixQ4LeftSuffix (3*a) (by rw [d1pow_length]; omega)
       rw [heq,hlast] at hside
       rw [hside]
+      have hlen : (d1pow a).length = 3*a := by simp [d1pow_length]
+      rw [hlen]
       simp [m2EvenSixQ4LeftSuffix,markerWord,sideBit]
 
 /-- The 10-cell boundary written by the 38-step bridge is exactly the
@@ -643,8 +647,8 @@ theorem m2EvenSixQ4CutTape_linearRightOnes
     (a b : Nat) (h : Int) (ha : 0 < a) :
     linearRightOnes (m2EvenSixQ4CutTape a b h)
       (h-(3*a:Int)) (3*a) := by
-  obtain ⟨Tq,_,hleft,_,_⟩ := m2EvenSix_q4_prefix_data a b h ha
-  have hTq : Tq = m2EvenSixQ4CutTape a b h := by rfl
+  have hhead := m2EvenSixQ4CutTape_head a b h ha
+  have hleft := m2EvenSixQ4CutTape_leftFacing a b h ha hhead
   intro i hi
   let j := 3*a-i
   have hj1 : 1 ≤ j := by dsimp [j]; omega
@@ -652,10 +656,9 @@ theorem m2EvenSixQ4CutTape_linearRightOnes
   have hbit : sideBit (m2EvenSixQ4LeftFacing a) j = true :=
     m2EvenSixQ4LeftFacingPrefixTrue a j (by omega)
   have hcell := hleft j
-  have htrue : Tq (h-(j:Int)) = true := by
+  have htrue : m2EvenSixQ4CutTape a b h (h-(j:Int)) = true := by
     rw [hbit] at hcell
     exact hcell
-  rw [hTq] at htrue
   have hcoord : h-(j:Int) = h-(3*a:Int)+(i:Int) := by
     dsimp [j]
     omega
