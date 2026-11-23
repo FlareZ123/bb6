@@ -1,11 +1,13 @@
 import RayDepthResidue
 import ParameterCountBridge
+import ManyParents
 
 set_option maxHeartbeats 0
 
 namespace CascadeSelectedGateRayCount
 
 open CascadeRayPeriod CascadeRayDepthHensel CascadeRayDepthResidue CascadeAgent44
+open CascadeResetInverse
 
 /-- Elementary dyadic domination for a linear input at depth j. -/
 private theorem linear_big_pow (j : Nat) :
@@ -65,6 +67,47 @@ theorem depth_selected_physical_pow_budget
   have hbudget : 4*j+24 ≤ n := by omega
   exact physical_pow_budget n j hbudget
 
+/-- Stronger physical margin: eight reserved binary levels still fit
+    uniformly for every eligible index and precision. The proof uses
+    the same wholly symbolic 4j+24 geometric-growth bound. -/
+theorem depth_selected_physical_pow_margin8
+    (n k : Nat)
+    (hn : 100*3^(k+1) ≤ n) :
+    2^(depthResidue n k+8)*(2*n+3) ≤ 2^n := by
+  let j := depthResidue n k
+  have hj : j < 2*3^k := by
+    simpa only [j, depthPeriod] using depthResidue_lt n k
+  have hpos : 1 ≤ 3^k := Nat.one_le_pow k 3 (by decide)
+  have hpow : 3^(k+1)=3*3^k := by rw [Nat.pow_succ]; omega
+  rw [hpow] at hn
+  have hbudget : 4*(j+8)+24 ≤ n := by omega
+  exact physical_pow_budget n (j+8) hbudget
+
+/-- Fully source-linked arbitrary-size family of distinct genuine odd
+    first-reset parents at the selected all-precision inverse-ray
+    index. The only remaining condition is that the signed numerator
+    be the actual physical ray target numerator; the uniform power
+    margin above supports that original-source bridge. -/
+theorem selected_ray_many_distinct_reset_parents
+    (n M u : Nat)
+    (hsector : n % 6 = 4 ∨ n % 6 = 5)
+    (hphysical :
+      signedZ n (depthResidue n (3*M)) = (2*u+5 : Int)) :
+    ∃ f : Fin M → Nat, Function.Injective f ∧
+      ∀ j : Fin M, ResetParent (f j) u := by
+  have hsmall : depthResidue n (3*M) < depthPeriod (3*M) :=
+    depthResidue_lt n (3*M)
+  have hdivI : (3 : Int)^(3*M+1) ∣
+      signedZ n (depthResidue n (3*M)) :=
+    (depthResidue_iff n (3*M) (depthResidue n (3*M)) hsector).mpr
+      (Nat.mod_eq_of_lt hsmall)
+  rw [hphysical] at hdivI
+  have hdivN : 3^(3*M+1) ∣ 2*u+5 := by
+    exact_mod_cast hdivI
+  have hmod : (2*u+5)%3^(3*M+1)=0 :=
+    Nat.mod_eq_zero_of_dvd hdivN
+  exact many_distinct_reset_parents u M hmod
+
 /-- The selected all-precision Hensel ray residue has an exact
     source-valid odd-reset parameter count whenever its signed
     numerator is the genuine nonnegative source-C output numerator.
@@ -103,5 +146,7 @@ theorem selected_ray_exact_nonterminal_count
   exact exact_nonterminal_odd_param_count u k d hdodd hd
 
 #print axioms depth_selected_physical_pow_budget
+#print axioms depth_selected_physical_pow_margin8
+#print axioms selected_ray_many_distinct_reset_parents
 #print axioms selected_ray_exact_nonterminal_count
 end CascadeSelectedGateRayCount

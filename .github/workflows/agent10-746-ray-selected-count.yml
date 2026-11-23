@@ -40,7 +40,7 @@ jobs:
           for m in ValuationDrain FullReturn ReturnInverseArithmetic ResetInverseWitnesses FirstOutcome FirstInverseComplete; do
             lean -o "$b/$m.olean" "$b/$m.lean"
           done
-          for m in BandTriple OddGroup LogBands LogStep Telescope GeomLog GeomBand ExactCountLean ParameterCountBridge; do
+          for m in BandTriple OddGroup ExactOdd ManyParents LogBands LogStep Telescope GeomLog GeomBand ExactCountLean ParameterCountBridge; do
             lean -o "$c/$m.olean" "$c/$m.lean"
           done
           for m in SignedRayPeriod RayDepthHensel RayDepthResidue; do
