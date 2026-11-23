@@ -37,6 +37,11 @@ on:
         required: false
         type: boolean
         default: false
+      a4_t719_only:
+        description: 'Compile the exact Agent 6 A4/P7E1E t=719+8192*m source-parent closure and print axiom profiles, then stop'
+        required: false
+        type: boolean
+        default: false
 permissions:
   contents: read
 jobs:
@@ -55,8 +60,13 @@ jobs:
         run: |
           python3 tools/lean_compile_closure.py im-results/agent3-c-bounce-inverse/U5B2Root32.lean \
             --workdir /tmp/root32-closure --jobs 4 --lean "$(command -v lean)"
+      - name: Compile Agent 6 A4 t719 q0 source-parent closure
+        if: ${{ inputs.a4_t719_only }}
+        run: |
+          python3 tools/lean_compile_closure.py im-results/agent6-root32-highstop/A4T719Q0EvenS8.lean \
+            --workdir /tmp/a4-t719-q0-closure --jobs 4 --lean "$(command -v lean)"
       - name: Verify against original unmodified section and bounce source
-        if: ${{ !inputs.root32_only }}
+        if: ${{ !inputs.root32_only && !inputs.a4_t719_only }}
         run: |
           mkdir -p /tmp/a3-bounce
           cp im-results/agent11-c-line/CLine.lean /tmp/a3-bounce/
