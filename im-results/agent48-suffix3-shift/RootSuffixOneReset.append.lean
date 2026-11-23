@@ -181,7 +181,7 @@ theorem s3_residual_one_suffix_reset (n : ℕ) :
   have h2' :
       ReachesPlus target
         (cfg_EL_n_n [(0,0),(1,0)]
-          (List.replicate (4*n+6) (0,0) ++ [(0,0),(1,0)]))
+          (List.replicate (4*n+6) (0,0) ++ [(0,0),(1,0)] ++ []))
         (cfg_EL_n_n
           (List.replicate (4*n+8) (0,0) ++ [(1,0)])
           [(1,0)]) := by
