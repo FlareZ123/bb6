@@ -16,6 +16,17 @@ Let \(R\) be the following disjoint union of residue classes, with \(r\ge0\):
   \]
 - \(s=4\): \(r\equiv485\pmod{486}\), or \(r\equiv161,647\pmod{1458}\).
 - \(s=5\): \(r\equiv809\pmod{1458}\), or \(r\equiv1781,3239\pmod{4374}\).
+- \(s=6\): \(r\equiv4211\pmod{4374}\), or \(r\equiv1295,5669\pmod{13122}\).
+- \(s=7\): \(r\pmod{393660}\) belongs to
+  \[
+  \{15875,24623,42119,77111,94607,103355,120851,147095,155843,173339,182087,
+  225827,234575,252071,260819,278315,304559,313307,339551,357047,383291,392039\}.
+  \]
+- \(s=8\): \(r\pmod{590490}\) belongs to
+  \[
+  \{20249,59615,72737,112103,138347,177713,190835,217079,230201,256445,308933,
+  335177,348299,374543,413909,427031,453275,466397,532007,545129,571373,584495\}.
+  \]
 
 For every \(r\in R\), put
 \[
@@ -26,15 +37,15 @@ x_a=\frac{2^{a+10}-1868}{2187}.
 \]
 Then the only even predecessor of \(Y_a\) is \(X_a\), the only even predecessor of \(X_a\) is \(x_a\), and \(x_a\) has no even predecessor. Consequently \(Y_a\) is not reachable from the blank even root \(10\).
 
-The \(r\)-set has density \(1649/4374\). Since \(a\) advances by \(1458\), this adds exponent density
+The \(r\)-set has density \(44579/118098\). Since \(a\) advances by \(1458\), this adds exponent density
 \[
-\frac{1649}{4374\cdot1458}=\frac{1649}{6377292}.
+\frac{44579}{118098\cdot1458}=\frac{44579}{172186884}.
 \]
 The set is disjoint from the previously certified \(158/243\) exceptional-target union (the six \(A_0,A_1,A_2,A_3,A_3',A_5\) progressions and the \(a\equiv2\pmod4\) family). The combined stated exceptional-target exclusion is therefore
 \[
-\frac{158}{243}+\frac{1649}{6377292}
-=\frac{4148201}{6377292}
-\approx65.0464\%.
+\frac{158}{243}+\frac{44579}{172186884}
+=\frac{112001483}{172186884}
+\approx65.0465\%.
 \]
 
 ## 1. The unique \(h=4\) parent of \(X_a\)
@@ -107,7 +118,7 @@ We have
 \[
 x_a-1=\frac{2^{1211+1458r}-4055}{3^7}.
 \]
-For \(r\in R\), let \(s=v_3(x_a-1)\). Exact enumeration modulo \(3^{s+8}\), whose \(r\)-period is \(3^{s+1}\), gives the complete exact-valuation root classes through \(s=5\):
+For \(r\in R\), let \(s=v_3(x_a-1)\). Exact enumeration modulo \(3^{s+8}\), whose \(r\)-period is \(3^{s+1}\), gives the complete exact-valuation root classes through \(s=8\):
 \[
 \begin{array}{c|c|c}
 s&\text{exact }r\text{ residues modulo }3^{s+1}&\text{odd lifts used in }R\\ \hline
@@ -116,7 +127,10 @@ s&\text{exact }r\text{ residues modulo }3^{s+1}&\text{odd lifts used in }R\\ \hl
 2&8,17\pmod{27}&35,17\pmod{54}\\
 3&26,53\pmod{81}&r\text{ odd in these classes}\\
 4&161,242\pmod{243}&161,485\pmod{486}\\
-5&80,323\pmod{729}&809,323\pmod{1458}.
+5&80,323\pmod{729}&809,323\pmod{1458}\\
+6&1295,2024\pmod{2187}&4211\pmod{4374};\ 1295,5669\pmod{13122}\\
+7&2753,4940\pmod{6561}&22\text{ selected odd residues modulo }393660\\
+8&566,13688\pmod{19683}&22\text{ selected odd residues modulo }590490.
 \end{array}
 \]
 The family \(R\) selects only root classes and odd lifts with no generic parent.
@@ -154,8 +168,11 @@ This is a period for the congruence (1) and for the parity/3-adic root filter: t
 | 3 | 1–22 | \(c=2,\ r\equiv215\pmod{486}\); \(c=3,\ r\equiv107,215\pmod{324}\); \(c=4,\ r\equiv269\pmod{810}\) |
 | 4 | 1–24 | \(c=2,\ r\equiv1133\pmod{1458}\) |
 | 5 | 1–26 | \(c=2,\ r\equiv323\pmod{4374}\) |
+| 6 | 1–28 | \(c=2,\ r\equiv10043\pmod{13122}\) |
+| 7 | 1–30 | \(c=2,\ r\equiv11501\pmod{39366}\); \(c=3,\ r\equiv2753,11501\pmod{26244}\); \(c=4,\ r\equiv2753\pmod{65610}\) |
+| 8 | 1–32 | \(c=2,\ r\equiv33371\pmod{118098}\); \(c=4,\ r\equiv98981\pmod{196830}\) |
 
-The displayed definition of \(R\) excludes every listed hit. For \(s=3\), the 22 residues modulo 4860 are exactly the odd lifts in the two exact root classes that avoid the \(c=2,3,4\) hits. Thus no generic even source can precede \(x_a\).
+The displayed definition of \(R\) excludes every listed hit. For \(s=3,7,8\), the 22 residues modulo the displayed common period are exactly the odd lifts in the two exact root classes that avoid all listed hits. For \(s=6\), the selected lifts avoid the single \(c=2\) hit. Thus no generic even source can precede \(x_a\).
 
 It remains to exclude the exceptional source \(3\cdot2^c\). If it were a predecessor, its odd successor would have to be
 \[
@@ -173,7 +190,7 @@ x_a-(3\cdot2^{a-3}+a)
 \]
 The numerator is positive at \(a=2659\) and has positive forward difference \(295\cdot2^{a-3}-2187\) for \(a\ge10\), so equality is impossible.
 
-For \(1\le s\le5\),
+For \(1\le s\le8\),
 \[
 \frac{T_s}{2^a}
 =C_s+\frac{3^{s+7}-2^s\cdot4055}{3^{s+7}2^a},
@@ -188,8 +205,16 @@ All \(a\) in the family satisfy \(a\ge2659\); the correction has absolute value 
 | 3 | \(8192/59049\) | \((1/8,3/16)\) | a gap; impossible |
 | 4 | \(16384/177147\) | \((1/16,3/32)\) | a gap; impossible |
 | 5 | \(32768/531441\) | \((3/64,1/16)\) | only \(c=a-6\) could fit |
+| 6 | \(65536/1594323\) | \((1/32,3/64)\) | a gap; impossible |
+| 7 | \(131072/4782969\) | \((3/128,1/32)\) | only \(c=a-7\) could fit |
+| 8 | \(262144/14348907\) | \((1/64,3/128)\) | a gap; impossible |
 
-In the two non-gap cases, the equality \(2^s w=3\cdot2^c+c+2\), with \(c\ge s\), forces \(2^s\mid c+2\). For \(s=2\) or \(5\), this makes \(c\) even. But \(a\) is odd and the only candidates \(a-4,a-6\) are odd. Contradiction. This excludes every exceptional predecessor as well.
+In the non-gap cases, the equality \(2^s w=3\cdot2^c+c+2\), with \(c\ge s\), forces \(2^s\mid c+2\). For \(s=2,5\), the only candidates \(c=a-4,a-6\) are odd, contradicting the required evenness. For \(s=7\), the candidate is \(c=a-7\), and \(2^7\mid c+2\) is equivalent to
+\[
+1196+1458r\equiv0\pmod{128}
+\quad\Longleftrightarrow\quad r\equiv58\pmod{64},
+\]
+which is impossible because every selected \(r\) is odd. This excludes every exceptional predecessor as well.
 
 Therefore \(x_a\) has no even predecessor. Since \(x_a>10\), it cannot occur on a blank-root trajectory, and neither can \(X_a\) or \(Y_a\).
 
@@ -199,11 +224,12 @@ The selected classes have density
 \[
 \frac2{15}+\frac19+\frac5{54}+\frac5{162}
 +\frac{22}{4860}+\frac5{1458}+\frac5{4374}
-=\frac{1649}{4374}
++\frac5{13122}+\frac{22}{393660}+\frac{22}{590490}
+=\frac{44579}{118098}
 \]
-in \(r\), hence \(1649/6377292\) among all \(a\). The arithmetic verifier checks pairwise disjointness and CRT-disjointness from the prior six progressions and the \(a\equiv2\pmod4\) family.
+in \(r\), hence \(44579/172186884\) among all \(a\). The arithmetic verifier checks pairwise disjointness and CRT-disjointness from the prior six progressions and the \(a\equiv2\pmod4\) family.
 
-This is only a subfamily of the \(h=4\), \(a\equiv67\pmod{162}\) sector: other \(k\)-residues, other \(r\)-classes, and hidden lengths \(s\ge6\) remain open. The proof also does not turn these intermediate-state exclusions into a halting-power exclusion. The next decisive step remains a source-importing Lean composition and, ultimately, a connection to every possible halting power.
+This is only a subfamily of the \(h=4\), \(a\equiv67\pmod{162}\) sector: other \(k\)-residues, other \(r\)-classes, and hidden lengths \(s\ge9\) remain open. The proof also does not turn these intermediate-state exclusions into a halting-power exclusion. The next decisive step remains a source-importing Lean composition and, ultimately, a connection to every possible halting power.
 
 ## Reproduction
 

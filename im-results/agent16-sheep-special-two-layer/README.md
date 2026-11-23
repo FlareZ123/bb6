@@ -1,6 +1,6 @@
 # Sheep: two-layer exclusions for exceptional targets $3\cdot2^a$
 
-**Agent 16, 23 November 2026.** This dossier proves exact source-law inverse grammars in several low-hidden-valuation sectors. The previous disjoint certificate excluded $158/243$ of exponents $a$ for $Y_a=3\cdot2^a$. The new [h=4 odd-sector root-leaf theorem](H4-ODD-ROOT-LEAF.md) adds a disjoint family of density $1649/6377292$, raising the stated union to $4148201/6377292\approx65.0464\%$. On that family the exact inverse chain is $Y_a\leftarrow X_a\leftarrow x_a$, with $x_a$ having no even predecessor. The new two-layer composition has an exact paper proof and a Python-integer arithmetic audit, but is not yet compiled as one Lean source-importing theorem. These are intermediate exceptional-state exclusions, not halting-power exclusions; Sheep and BB(6) remain unresolved.
+**Agent 16, 23 November 2026.** This dossier proves exact source-law inverse grammars in several low-hidden-valuation sectors. The previous disjoint certificate excluded $158/243$ of exponents $a$ for $Y_a=3\cdot2^a$. The new [h=4 odd-sector root-leaf theorem](H4-ODD-ROOT-LEAF.md) adds a disjoint family of density $44579/172186884$, raising the stated union to $112001483/172186884\approx65.0464\%$. On that family the exact inverse chain is $Y_a\leftarrow X_a\leftarrow x_a$, with $x_a$ having no even predecessor. The new two-layer composition has an exact paper proof and a Python-integer arithmetic audit, but is not yet compiled as one Lean source-importing theorem. These are intermediate exceptional-state exclusions, not halting-power exclusions; Sheep and BB(6) remain unresolved.
 
 ## Uniform all-hidden-length generic valuation cutoff
 
@@ -361,16 +361,16 @@ The previously open residue sector \(a\equiv67\pmod{162}\) has a new exact subfa
 3\cdot2^a\leftarrow X_a=\frac{4(2^{a+1}-1)}3
 \leftarrow x_a=\frac{2^{a+10}-1868}{2187},
 \]
-and \(x_a\) has no even predecessor. The \(r\)-set has density \(1649/4374\), so the exponent density added is \(1649/6377292\). The new family is disjoint from the earlier six \(A_0,A_1,A_2,A_3,A_3',A_5\) progressions and the \(a\equiv2\pmod4\) family. The combined stated exceptional-target exclusion is now
+and \(x_a\) has no even predecessor. The \(r\)-set has density \(44579/118098\), so the exponent density added is \(44579/172186884\). The new family is disjoint from the earlier six \(A_0,A_1,A_2,A_3,A_3',A_5\) progressions and the \(a\equiv2\pmod4\) family. The combined stated exceptional-target exclusion is now
 \[
 \frac{158}{243}+\frac{1649}{6377292}
 =\frac{4148201}{6377292}\approx65.0464\%.
 \]
 
-This is a partial closure only: other \(k\)-residues in \(a=67+162k\), other \(r\)-classes in the \(k\equiv7\pmod9\) branch, and hidden lengths \(s\ge6\) remain open. The new proof is exact arithmetic plus a reproducible Python audit; it is not yet a Lean-kernel theorem composed with the original source.
+This is a partial closure only: other \(k\)-residues in \(a=67+162k\), other \(r\)-classes in the \(k\equiv7\pmod9\) branch, and hidden lengths \(s\ge9\) remain open. The new proof is exact arithmetic plus a reproducible Python audit; it is not yet a Lean-kernel theorem composed with the original source.
 
 ## Reproduction and priority
 
 Run [verify_second_layer.js](verify_second_layer.js) in Node.js for the earlier inverse grammars, and [verify_h4_root_leaf.py](verify_h4_root_leaf.py) with Python 3 for the new h=4 root-leaf family. The latter checks the exact modular periods, valuation-root classes, every small generic-parent hit, special-source interval inequalities, density, and CRT disjointness. These are exact arithmetic audits; the new two-layer composition is not yet a Lean-kernel theorem.
 
-**Next mathematical task:** finish the remaining $h\ge4$ frontier without repeating the solved subfamily: classify other $k$-residues in $a=67+162k$, then the $r$-classes outside $R$ and hidden lengths $s\ge6$. Also close the alternative direct parent $b=3$ when $a\equiv5\pmod8$ and the surviving even cases $a\equiv4,8\pmod{20}$. The h=4 result is an intermediate-state exclusion only; the decisive BB(6) priority remains composing source-exact forbidden-state families into an obstruction for actual halting powers $2^j$.
+**Next mathematical task:** finish the remaining $h\ge4$ frontier without repeating the solved subfamily: classify other $k$-residues in $a=67+162k$, then the $r$-classes outside $R$ and hidden lengths $s\ge9$. Also close the alternative direct parent $b=3$ when $a\equiv5\pmod8$ and the surviving even cases $a\equiv4,8\pmod{20}$. The h=4 result is an intermediate-state exclusion only; the decisive BB(6) priority remains composing source-exact forbidden-state families into an obstruction for actual halting powers $2^j$.

@@ -32,6 +32,9 @@ EXPECTED_ROOTS = {
     3: [26, 53],
     4: [161, 242],
     5: [80, 323],
+    6: [1295, 2024],
+    7: [2753, 4940],
+    8: [566, 13688],
 }
 
 
@@ -62,6 +65,9 @@ EXPECTED_HITS = {
     3: {2: (486, [215]), 3: (324, [107, 215]), 4: (810, [269])},
     4: {2: (1458, [1133])},
     5: {2: (4374, [323])},
+    6: {2: (13122, [10043])},
+    7: {2: (39366, [11501]), 3: (26244, [2753, 11501]), 4: (65610, [2753])},
+    8: {2: (118098, [33371]), 4: (196830, [98981])},
 }
 
 
@@ -105,6 +111,14 @@ FAMILY = [
     (4, 1458, [161, 647]),
     (5, 1458, [809]),
     (5, 4374, [1781, 3239]),
+    (6, 4374, [4211]),
+    (6, 13122, [1295, 5669]),
+    (7, 393660, [15875, 24623, 42119, 77111, 94607, 103355, 120851, 147095,
+                155843, 173339, 182087, 225827, 234575, 252071, 260819, 278315,
+                304559, 313307, 339551, 357047, 383291, 392039]),
+    (8, 590490, [20249, 59615, 72737, 112103, 138347, 177713, 190835, 217079,
+                 230201, 256445, 308933, 335177, 348299, 374543, 413909, 427031,
+                 453275, 466397, 532007, 545129, 571373, 584495]),
 ]
 
 OLD_SETS = [
@@ -144,12 +158,16 @@ def check_family(roots_by_s: dict[int, list[int]], hits_by_s: dict[int, list[tup
         for r0 in residues:
             assert (1201 + 1458 * r0) % 4 == 3
             for old_modulus, old_residues in OLD_SETS:
-                period = old_modulus // gcd(1458, old_modulus)
-                joint_period = lcm(modulus, period)
-                for r in range(joint_period):
-                    if r % modulus == r0:
-                        a_mod = (1201 + 1458 * r) % old_modulus
-                        assert a_mod not in old_residues, (s, r0, old_modulus, a_mod)
+                g0 = gcd(1458, old_modulus)
+                period = old_modulus // g0
+                inverse = pow(1458 // g0, -1, period)
+                joint_gcd = gcd(modulus, period)
+                for target in old_residues:
+                    rhs = target - 1201
+                    if rhs % g0:
+                        continue
+                    target_r = ((rhs // g0) * inverse) % period
+                    assert (r0 - target_r) % joint_gcd != 0, (s, r0, old_modulus, target)
 
 
 def check_special_source_intervals() -> dict[int, str]:
@@ -161,6 +179,9 @@ def check_special_source_intervals() -> dict[int, str]:
         3: (Fraction(1, 8), Fraction(3, 16)),
         4: (Fraction(1, 16), Fraction(3, 32)),
         5: (Fraction(3, 64), Fraction(1, 16)),
+        6: (Fraction(1, 32), Fraction(3, 64)),
+        7: (Fraction(3, 128), Fraction(1, 32)),
+        8: (Fraction(1, 64), Fraction(3, 128)),
     }
     ratios = {}
     for s, (lower, upper) in intervals.items():
@@ -181,23 +202,26 @@ def check_special_source_intervals() -> dict[int, str]:
     # The s=0 candidate c=a-3 is strictly below x_a.
     assert 295 * 2 ** (a_min - 3) - 2187 * a_min - 1868 > 0
 
-    # In the two non-gap cases s=2,5, c=a-d is odd, contradicting 2^s | c+2.
+    # For s=2,5 the only candidates c=a-4,a-6 are odd, but 2^s | c+2 forces c even.
     assert (a_min - 4) % 2 == 1
     assert (a_min - 6) % 2 == 1
+
+    # For s=7, c=a-7 and 2^7 | c+2 iff r == 58 (mod 64), an even class.
+    parity_solutions = [r for r in range(64) if (1196 + 1458 * r) % 128 == 0]
+    assert parity_solutions == [58] and parity_solutions[0] % 2 == 0
 
     # Exceptional cofactor-three source for X_a is trapped strictly between d=a-3 and d=a-2.
     g = lambda d: 729 * 2 ** d + 243 * d + 598
     assert g(a_min - 3) < 2 ** (a_min + 7) < g(a_min - 2)
     return ratios
 
-
 def main() -> None:
-    roots_by_s = {s: exact_roots(s) for s in range(6)}
+    roots_by_s = {s: exact_roots(s) for s in range(9)}
     assert roots_by_s == EXPECTED_ROOTS, roots_by_s
 
     hits_by_s = {}
     hit_report = {}
-    for s in range(6):
+    for s in range(9):
         hits = []
         for c in range(1, 2 * s + 17):
             _, period, residues = generic_parent_hits(s, c, roots_by_s[s])
@@ -220,7 +244,7 @@ def main() -> None:
     assert v3(2 ** 1458 - 1) == 7
 
     # Check the uniform generic-parent cutoff at its base and increment.
-    for s in range(6):
+    for s in range(9):
         c0 = 2 * s + 17
         k0 = 2 ** (s + 1) * 4055 + 3 ** (s + 7) * (2 * c0 - 3)
         assert 1 < k0 < 2 ** c0
@@ -230,11 +254,11 @@ def main() -> None:
     check_family(roots_by_s, hits_by_s)
 
     r_density = sum((Fraction(len(rs), modulus) for _, modulus, rs in FAMILY), Fraction(0))
-    assert r_density == Fraction(1649, 4374), r_density
+    assert r_density == Fraction(44579, 118098), r_density
     a_density = r_density / 1458
-    assert a_density == Fraction(1649, 6377292), a_density
+    assert a_density == Fraction(44579, 172186884), a_density
     combined = Fraction(158, 243) + a_density
-    assert combined == Fraction(4148201, 6377292), combined
+    assert combined == Fraction(112001483, 172186884), combined
 
     print(json.dumps({
         "h4_parent_periods": h4_periods,
@@ -247,6 +271,8 @@ def main() -> None:
         "combined_with_prior_158_over_243": str(combined),
         "combined_percent": float(combined * 100),
         "s3_safe_residue_count_mod_4860": 22,
+        "s7_safe_residue_count_mod_393660": 22,
+        "s8_safe_residue_count_mod_590490": 22,
         "disjoint_from_prior_progressions": True,
     }, indent=2))
 
