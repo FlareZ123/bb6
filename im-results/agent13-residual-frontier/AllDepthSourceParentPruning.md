@@ -1,50 +1,56 @@
-# An unbounded original-source inverse-parent pruning sieve for Machine C
+# Machine C: source-exact inverse-word sieve at every odd-bounce depth
 
-**Agent 13 · 23 November 2026.** This is reusable mathematical infrastructure, not a halt decision. The complementary source-complete parent theorem for every possible parent of a particular target still has to be applied separately. New Lean modules are in this directory.
+**23 November 2026, Agent 13.** This module excludes selected individual original Machine C section parents at **arbitrarily large bounce depth**, with no finite-depth cutoff. It is a reusable source-level ingredient, not a decision of Machine C or BB(6). The **complementary complete original-source parent classifier** for the genuine low-stop ray is now [LowRayFullFan.md](LowRayFullFan.md).
 
-## Exact source equations and the obstacle
+## Scope and equations
 
-The exact four-step inverse of a necessary low stopping target of the form `(1,256*u+51)` yields the original Machine C section state `R_u=(180*u+28,166*u+25)`. Every candidate parent from the odd-left bounce inverse has a bounce count `n` and natural coordinates `(a,k)` satisfying
+The genuine original section four-step inverse of a necessary low stopping state `(1,256*u+51)` gives `R_u=(180*u+28,166*u+25)`. Every odd high-bounce parent candidate `(a,k)` at even depth `n` must satisfy the exact original-source equations
+
 ```
 346*u+54 = 2^(n+1)*(a+3)
 2*k+a+7+3*n = 512*u+78.
 ```
-These are exact source-derived equations, not approximate machine dynamics. The parent depth can be **arbitrarily large** as the 2-adic valuation of `346*u+54` grows. A per-residue finite depth census cannot exclude all possible original parents. If
-```
-346*u+54 = 2^(n+4)*q,   q>=1,
-```
-then canceling the strictly positive source factor `2^(n+1)` gives `a+3=8*q`. Combined with the exact source cost, this reduces all parity and finite residue phase guards to arithmetic in `n,q` (and the quotient `r=n/8`).
 
-## Uniform forced original-source reductions
+If `346*u+54=2^(n+4)*q` with `q>=1`, then `a+3=8*q`. This high-valuation quotient covers all unbounded depths for which the source factor `a+3` is a multiple of eight; the remaining maximal-depth odd cofactors require separate treatment. The new [all-valuation source classification and dyadic equivalence](LowRayFullFan.md) prevent those other branches from being mistaken for nonexistent.
 
-Let `k>=80`, `a+3=8q`, `q>=1`, and retain the exact source cost equation. The following bounded words are performed on the **original** section transitions; each arrow is a proven exact predecessor equivalence. All terminal states have right coordinate odd >=5 and total coordinate sum 1 or 2 (mod4), forbidden by `odd_forbidden_image` for the genuine blank-origin orbit:
+## Uniform source-certified exclusions
 
-| Arbitrary depth | Congruence sufficient for exclusion | Original-source inverse word | Final forbidden sum |
+Fix `u,a,k,n,q` with `80≤k`, `1≤q`, `a+3=8*q` and the exact source cost. Set `r=n/8`. Each row below is proved for **every** `r≥0` by applying a chain of unique **unchanged-source** inverse equivalences to a final state with odd right counter ≥5 and forbidden coordinate sum 1 or 2 modulo 4. The letters denote A (even-right affine), B (six-sector even-right), O (odd/odd low-valuation), E (even/odd valuation-three) and F (even/odd valuation-two).
+
+| Depth phase | Sufficient quotient congruence | Exact inverse word | Terminal sum modulo 4 |
 |---|---|---|---|
-| `n=8*r` | all `q` | none | 2 mod4 |
-| `n=8*r+2` | `(q+3*r)%8=7` | B-B-A | 2 mod4 |
-| `n=8*r+4` | `(q+r)%8=4` | O-B | 1 mod4 |
-| `n=8*r+4` | `(q+r)%16=3` | O-F | 2 mod4 |
-| `n=8*r+6` | `(q+r)%2=1` | A | 2 mod4 |
-| `n=8*r+6` | `(q+7*r)%8=0` | A-O | 1 mod4 (certified) |
+| `n=8r` | every `q` | none | 2 |
+| `n=8r+2` | `(q+3r)%8=7` | B-B-A | 2 |
+| `n=8r+2` | `(q+19r)%32=19` | B-B-A-O | 1 |
+| `n=8r+4` | `(q+r)%8=4` | O-B | 1 |
+| `n=8r+4` | `(q+r)%16=3` | O-F | 2 |
+| `n=8r+4` | **`(q+9r)%32=14`** | **O-B-B-B** | 1 |
+| `n=8r+6` | `(q+r)%2=1` | A | 2 |
+| `n=8r+6` | `(q+7r)%8=0` | A-O | 1 |
+| `n=8r+6` | **`(q+15r)%16=2`** | **A-O-B** | 1 |
+| `n=8r+6` | **`(q+31r)%32=20`** | **A-O-E** | 2 |
 
-Here B is the exact even-right six-source inverse, A the even-right affine inverse, O the exact odd/odd low-valuation inverse, and F the exact even/odd valuation-two inverse. There is **no restriction on r**, and no claim that any one listed parent actually exists. Any genuine source parent satisfying the hypotheses is proven blank-inaccessible.
+All ten conditions are mutually disjoint within their own depth phase. For each fixed `r`, the proved source filter therefore covers:
 
-In each fixed four-depth block `n in {8*r,8*r+2,8*r+4,8*r+6}`, the seven accepted source paths cover `32+(4+1)+(4+2)+(16+4)=63` of the `4*32=128` formal (phase, q-mod-32) cells, uniformly for every r. **This is a count of formal arithmetic phase cells, not a fraction of all original-machine predecessors, of stopping parameters, of halts, or of six-state machines.** For a fixed stopping target, q depends on n via its 2-adic factorization, so these formal counts cannot be substituted for a full source decision.
+| Depth phase | Covered q mod32 | Remaining q mod32 |
+|---|---:|---:|
+| `8r` | 32 | 0 |
+| `8r+2` | 5 | 27 |
+| `8r+4` | 7 | 25 |
+| `8r+6` | 23 | 9 |
+| **Total** | **67 of 128** | **61 of 128** |
 
-### What remains in the generic phase filter
+These are **formal phase/quotient cells**, not fractions of genuine parents, stopping targets, unsolved machines or BB(6) halts. For fixed `u`, the quotients at distinct depths are arithmetically coupled; in particular, **67/128 does not imply 67/128 of a parent fan is excluded.** The merged predicate `sourceOddDepthPruned67` and theorem `source_odd_depth_pruned67_unreachable` work at unbounded `n`, and the high-valuation corollary takes the original source mass equation directly. No native decision oracle or finite-time simulation is used in these proofs.
 
-The 63/128 bound is still far from a complete inversion theorem. For any fixed r, the unexcluded formal q-mod-32 counts by depth phase are: n=8r **0/32**, n=8r+2 **27/32**, n=8r+4 **26/32**, and n=8r+6 **12/32**. The principal bottlenecks are n=8r+2 and 8r+4. For n=8r+2, the direct first B inverse is unavailable when q+r is even (a sum-seven sector), covering 16 of those 32 quotient cells; existing BBA and BBAO certificates attack only favorable odd sectors. For n=8r+4 the direct O inverse fails when q+r≡1 (mod4), accounting for eight of the 32 quotient cells, and further recursive source phases remain beyond the short O-B/O-F certificates. **These are arithmetic profile counts, not statements of machine reachability**. A productive generalization should target the exceptional exact original-source inverse laws in these two sectors before attempting more fixed-depth modular cylinders.
+## Trust and location
 
-## Lean and source provenance
+- [EvenOddAllDepthForbidden.lean](EvenOddAllDepthForbidden.lean), [EvenOddAllDepthPhaseFour.lean](EvenOddAllDepthPhaseFour.lean), [EvenOddAllDepthPhaseSix.lean](EvenOddAllDepthPhaseSix.lean), [EvenOddAllDepthPhaseTwoDeep.lean](EvenOddAllDepthPhaseTwoDeep.lean): established original-source letters and first seven inverse-word exclusions, certified in the earlier CI closures recorded in their modules and the prior Git history.
+- [EvenOddAllDepthShortExtensions.lean](EvenOddAllDepthShortExtensions.lean): three disjoint OBBB / AOB / AOE arbitrary-depth additions; original-source Lean 4.36.0-rc2 closure **passed** [CI 45268317452](https://github.com/FlareZ123/bb6/actions/runs/45268317452).
+- [EvenOddAllDepthSieve67.lean](EvenOddAllDepthSieve67.lean): the merged source-certified predicate, unbounded reachability exclusion and high-valuation parent corollary, **passed** [CI 45271905097](https://github.com/FlareZ123/bb6/actions/runs/45271905097).
+- [LowRayFullFan.md](LowRayFullFan.md): the independent complete-source parent classification proves that for `m=512z+67`, any genuine parent depth is even, satisfies `2^n∣519z+73`, and hence is at most `log₂(519z+73)`. The exact 2-adic equivalence and power gap are proved in the linked Lean modules. This **does not** eliminate all remaining permitted depths.
 
-- [EvenOddAllDepthForbidden.lean](EvenOddAllDepthForbidden.lean): arbitrary depth n=8r odd-image and n=8r+6 affine cases, plus n=8r+2 BBA. First four theorems accepted in [CI 45257688863](https://github.com/FlareZ123/bb6/actions/runs/45257688863), and the BBA extension accepted in [CI 45259227220](https://github.com/FlareZ123/bb6/actions/runs/45259227220), each original-source 58-module closure with standard Lean axioms, no `sorryAx`.
-- [EvenOddAllDepthPhaseFour.lean](EvenOddAllDepthPhaseFour.lean): source-exact O-B and O-F uniform n=8r+4 proofs, accepted [CI 45259818679](https://github.com/FlareZ123/bb6/actions/runs/45259818679), 59 modules, standard axioms.
-- [EvenOddAllDepthSieve.lean](EvenOddAllDepthSieve.lean): combined `sourceOddDepthPruned` and `source_odd_depth_pruned_unreachable`, accepted [CI 45260157919](https://github.com/FlareZ123/bb6/actions/runs/45260157919), 60 modules, standard axioms. The more general dyadic-mass corollary and expanded A-O phase are **accepted** in [CI 45261057263](https://github.com/FlareZ123/bb6/actions/runs/45261057263), 61 original-source modules, standard axioms.
-- [EvenOddAllDepthPhaseSix.lean](EvenOddAllDepthPhaseSix.lean): additional A-O phase **accepted** in [CI 45260562548](https://github.com/FlareZ123/bb6/actions/runs/45260562548), 60 original-source modules, standard axioms and no \`sorryAx\`.\n- [EvenOddAllDepthPhaseTwoDeep.lean](EvenOddAllDepthPhaseTwoDeep.lean): additional B-B-A-O phase **accepted** in [CI 45261440104](https://github.com/FlareZ123/bb6/actions/runs/45261440104), 59 source modules, standard axioms, no \`sorryAx\`.
+## Unresolved mathematical obstacle
 
-## Open research obligation and next leverage
+For phase `8r+2`, many candidates are in an original-source sector with several possible predecessors, so the exact B inverse is not unique. For phase `8r+4`, the O inverse fails at `q+r≡1 (mod4)`, requiring a different fan argument. The quotient `a+3=8q` also omits possible top depths with a smaller odd cofactor. Any complete blank-root nonreachability proof must handle these *actual remaining source parents*, not merely raise the phase coverage count. A definitive Machine C decision additionally needs an exact unbounded halt/nonhalt criterion for its high-stop family.
 
-The **finite-list per-target parent fan may have arbitrarily many depth members as the source 2-adic valuation grows**. This theorem gives an explicit source-correct **uniform filter** on each potential parent that can be integrated with a complete original-section predecessor enumeration. It does not prove that all parents of any chosen whole ray are excluded, and does not decide Machine C. To advance toward a root decision, combine the phase filter with the exact inverse-parent grammar, analyze the remaining phase cells for *all depths* using a well-founded source-invariant or a recursively closed inverse cone, and separately handle the unrestricted high-stop family. Do not silently identify formal phase density with measure of halting witnesses.
-
-The accepted [559/4096 low-stop source theorem](../../results/2026-11-23-machine-c-low-559-source-exclusion-agent13.md) is a separate all-time genuine target exclusion. The present all-depth lemma is an extensible technique for future **full-fan** exclusions rather than another finite index census.
+The previously proved low-stop 559/4096 target exclusion is a separate authentic blank-orbit theorem, [described here](../../results/2026-11-23-machine-c-low-559-source-exclusion-agent13.md). The new all-depth sieve should be used to help eliminate **entire** authentic stopping rays, not publicized as a percentage of BB(6) solved.
