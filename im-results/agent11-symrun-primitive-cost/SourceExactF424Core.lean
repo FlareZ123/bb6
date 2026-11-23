@@ -61,7 +61,7 @@ macro "stepWithin" : tactic => `(tactic| (
   refine reachesIn_step_left_succ ?_ ?_
   · first
     | rfl
-    | simp [step, target_tm, target, machine,
+    | simp [step, BusyBeaver.init_nil, target_tm, target, machine,
         isVarA_tm, ite_true, ite_false, dif_pos, dif_neg,
         BusyBeaver.Cfg.headRight, BusyBeaver.Cfg.headLeft, Turing.Tape.move,
         pow_succ_list, pow_zero_list, cons_append_list, nil_append_list,
@@ -70,7 +70,7 @@ macro "stepWithin" : tactic => `(tactic| (
         default_tail, encM_nil, encM_cons_zero, encM_cons_run, encLeft_cons_head,
         cons_one_encLeft_tail, encRight_cons_head, cons_one_encRight_tail,
         encM_cons_run_head, cons_one_encM_cons_run_tail]
-  · simp only [nextCfg, step, target_tm, target, machine, Option.getD_some,
+  · simp only [nextCfg, step, BusyBeaver.init_nil, target_tm, target, machine, Option.getD_some,
       isVarA_tm, ite_true, ite_false, dif_pos, dif_neg,
       BusyBeaver.Cfg.headRight, BusyBeaver.Cfg.headLeft, Turing.Tape.move,
       pow_succ_list, pow_zero_list, cons_append_list, nil_append_list,
