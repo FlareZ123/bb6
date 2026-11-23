@@ -103,3 +103,59 @@ for (let a = 10; a <= 16; a++) {
     ratio: Number((L / G).toFixed(8))});
 }
 console.log("complete_dyadic_blocks", JSON.stringify(blockRows));
+
+
+// Full inverse-cone check for the paper-level low-valuation unique-chain
+// theorem. Unlike a finite-step forward simulation, this enumerates *all*
+// parent options at every visited node under ResetParent's exact two arms.
+function allResetParents(u) {
+  const out = [];
+  const uBits = u.toString(2).length;
+  for (let k = Math.max(0, uBits - 4); k <= uBits - 2; k++) {
+    const p = b2(k), h = 2n * u - 8n * p - BigInt(k);
+    if (6n * p - 1n <= u && u <= 8n * p - 3n && h >= 0n) {
+      out.push({kind:"even", k, h});
+    }
+  }
+  let x = 2n * u + 5n, t = 0;
+  while (x % 3n === 0n) {
+    x /= 3n;
+    const w = b2(t) * x;
+    const bits = w.toString(2).length;
+    for (let k = Math.max(0, bits - 4); k <= bits - 2; k++) {
+      const p = b2(k), h = 2n * w - 8n * p - BigInt(k) - 5n;
+      if ((x & 1n) === 1n && 6n * p + 1n <= w && w <= 8n * p - 1n
+          && h >= 0n) out.push({kind:"odd", t, k, h});
+    }
+    t++;
+  }
+  return out;
+}
+let lowValCases = 0, lowValDecided = 0, badConeCases = 0, maxDepth = 0;
+for (let n = lo; n <= hi; n++) {
+  if (n % 6 !== 4 && n % 6 !== 5) continue;
+  const t = terminal(n);
+  const high = 4n * BigInt(2 * n + 3) > 7n * b2(t.a);
+  if (!high || t.J % 2 !== 0 ||
+      !((n % 6 === 4 && [9n,18n].includes(t.X % 27n)) ||
+        (n % 6 === 5 && t.X % 27n === 9n))) continue;
+  lowValCases++;
+  let u = t.u, depth = 0, valid = true;
+  while (true) {
+    if (u === 2n) { valid = false; break; }
+    const ps = allResetParents(u);
+    if (ps.length === 0) break;
+    if (ps.length !== 1 || depth > t.a + 10) { valid = false; break; }
+    u = ps[0].h;
+    depth++;
+  }
+  if (valid) lowValDecided++;
+  else { badConeCases++; console.error("CONE MISMATCH", n, depth); }
+  maxDepth = Math.max(maxDepth, depth);
+}
+console.log("low_valuation_unique_chain", JSON.stringify({
+  gateRange: [lo,hi], cases: lowValCases,
+  conesEndedAtNonrootLeaves: lowValDecided,
+  discrepancies: badConeCases, maximumParentDepth: maxDepth
+}));
+if (badConeCases) process.exitCode = 1;
