@@ -96,6 +96,7 @@ jobs:
           lean -o "$b/RayOddForkExtended.olean" "$b/RayOddForkExtended.lean"
           if [ "${{ inputs.target }}" = "terminal" ]; then
             lean -o "$b/TerminalHighBandLeaf.olean" "$b/TerminalHighBandLeaf.lean"
+            lean -o "$b/TerminalFirstForkLeaf.olean" "$b/TerminalFirstForkLeaf.lean"
             echo "Finished focused original-source terminal leaf proof and axiom audit."
             exit 0
           fi
