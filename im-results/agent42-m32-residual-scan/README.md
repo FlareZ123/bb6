@@ -97,6 +97,21 @@ evenAffineGate. The eight existing survivor cells were all 992 or 1024
 valid lifts with no normalization step; the other sixteen were all 992 or
 1024 valid lifts with the displayed fixed path and terminal exclusion.
 
+The same residue calculation gives the following representative terminal
+states modulo the coordinates needed by the exclusion predicate. The
+(x mod 32, k mod 32) column is independent of the chosen lift because
+32 divides 2^(2m+2).
+
+| Path class | Initial (x mod 32, k mod 32) values | Final (x mod 4, y mod 2, x+y mod 4) |
+|---|---|---|
+| STOP | (3,20), (11,12), (19,4), (27,28) | (3,0,3) |
+| R → O | (3,16), (11,0), (19,16), (27,0) | (2,1,1) |
+| R → R → A | (5,6), (13,6), (21,6), (29,6) | (3,1,2) |
+
+The final tuples make the terminal test transparent: STOP has even y and
+sum residue 3; R → O has odd y and sum residue 1; R → R → A has odd y and
+sum residue 2.
+
 This strongly suggests that the current eight-cell theorem is the exact
 intersection of CCert.newHighPairs with the prior highAllowed sieve,
 not merely a lower bound on that intersection.
