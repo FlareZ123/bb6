@@ -102,7 +102,7 @@ private theorem s3_el_sweep (k : ℕ) (L R : List (ℕ × ℕ)) :
     ReachesPlus target
       (cfg_EL_n_n L (List.replicate (k+1) (0,0) ++ R))
       (cfg_EL_n_n (List.replicate (k+1) (0,0) ++ L) R) := by
-  induction k with
+  induction k generalizing L R with
   | zero =>
     simpa using s3_el_zero L R
   | succ k ih =>
@@ -116,7 +116,7 @@ private theorem s3_dr_sweep (k : ℕ) (L R : List (ℕ × ℕ)) :
     ReachesPlus target
       (cfg_DR_n_n (List.replicate (k+1) (0,0) ++ L) ((1,0)::R))
       (cfg_DR_n_n L ((1,0)::(List.replicate (k+1) (0,0) ++ R))) := by
-  induction k with
+  induction k generalizing L R with
   | zero =>
     simpa using s3_dr_zero L R
   | succ k ih =>
