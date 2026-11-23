@@ -189,7 +189,7 @@ theorem m2ZeroSetup_HRun_Postlude (n : Nat) (T : Int → Bool)
     · rfl
   have hsetupRun :
       run tm2 44 ⟨3,hN,T⟩ = some ⟨3,hN-14,Tsetup⟩ := by
-    rw [← hsetupFrame] at hsetup
+    rw [hsetupFrame] at hsetup
     exact hsetup
   have hrSetup' : Tsetup (hN-14+1)=false := by
     have hcoord' : hN-14+1 = hN-13 := by omega
