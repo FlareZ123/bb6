@@ -1,6 +1,8 @@
 import OuterLCIncPrelude
 import OuterLCIncFiveStep
 import OuterLCIncTail
+import CountedSweep
+import CountedLBinDecHRun
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -17,7 +19,7 @@ namespace BB6Coverage.Agent42OuterLCInc
 
 open BB6Coverage
 open BB6Coverage.Agent8Rst1Prime
-open BB6Coverage.Agent24CountedSweep
+open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent24LBinDecHRun
 
 /-- The original head of the outer reset macro. -/

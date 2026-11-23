@@ -1,3 +1,10 @@
+import CountedReset
+import ChampionRootBridge
+import S1Encoder
+import CountedQ4Prefix
+import Q4Suffix
+import Lean.Elab.Tactic.Omega
+
 /-!
 # Source-level m=1,n=3 odd q4 reset prefix
 
@@ -7,13 +14,6 @@ The finite 29-step bridge is kernel-decidable and its head path is
 confined to [-9,4]. This module has not yet been compiled in CI.
 Keep it in im-results/ until compilation and axiom audit succeed.
 -/
-
-import CountedReset
-import ChampionRootBridge
-import S1Encoder
-import CountedQ4Prefix
-import Q4Suffix
-import Lean.Elab.Tactic.Omega
 
 namespace BB6Coverage.Agent24M1OddQ4Prefix
 
