@@ -1,4 +1,4 @@
-name: Agent 21 Machine C low1875 infinite source proof
+name: Agent 21 Machine C low-stop source proofs
 
 on:
   workflow_dispatch:
@@ -28,24 +28,25 @@ jobs:
           cp im-results/agent46-c-jump/{JumpHigh,JumpMacro,JumpSection,JumpBounce,JumpOneReturn,JumpBounceSections,BounceCalc,BounceProof,FastSectionDef}.lean /tmp/a21-low1875/
           cp im-results/agent38-c-section-mod4/Agent38SectionParity.lean /tmp/a21-low1875/
           cp im-results/agent3-c-bounce-inverse/{BounceInverse,EvenTargetForward,BounceEvenExact,BounceOddExact,BounceEvenThree,BounceEvenNoFour,FullSectionInverse}.lean /tmp/a21-low1875/
+          cp im-results/agent3-c-odd-image/Agent3CImage.lean /tmp/a21-low1875/
+          cp im-results/agent15-c-halting/SectionAffineInverse.lean /tmp/a21-low1875/
+          cp im-results/agent15-c-even-source/{EvenEvenUnique,OddEvenUnique,EvenRightUnique}.lean /tmp/a21-low1875/
           cp im-results/agent21-c-first-m1875-2048/{Low1875Source,LowQ7Source}.lean /tmp/a21-low1875/
           cp im-results/agent21-c-first-m33619-65536/Low33619Source.lean /tmp/a21-low1875/
           cp im-results/agent21-c-first-m123219-131072/Low123219Source.lean /tmp/a21-low1875/
-          cp im-results/agent21-c-first-m56659-131072/Low56659Source.lean /tmp/a21-low1875/
+          cp im-results/agent21-c-first-m1091-4096/Low1091Source.lean /tmp/a21-low1875/
           base64 --decode im-results/agent21-c-first-m1875-2048/Low1875Arithmetic.lean.xz.b64 | xz --decompress > /tmp/a21-low1875/Low1875Arithmetic.lean
           base64 --decode im-results/agent21-c-first-m1875-2048/LowQ7.lean.xz.b64 | xz --decompress > /tmp/a21-low1875/LowQ7.lean
           base64 --decode im-results/agent21-c-first-m33619-65536/Low33619.lean.xz.b64 | xz --decompress > /tmp/a21-low1875/Low33619.lean
           base64 --decode im-results/agent21-c-first-m123219-131072/Low123219.lean.xz.b64 | xz --decompress > /tmp/a21-low1875/Low123219.lean
-          base64 --decode im-results/agent21-c-first-m56659-131072/Low56659.lean.xz.b64 | xz --decompress > /tmp/a21-low1875/Low56659.lean
           cd /tmp/a21-low1875
           echo "0da0704569dd55cc60b8c1dec8fd75b79220d19574f27c5901c76dcd13f44625  Low1875Arithmetic.lean" | sha256sum --check
           echo "d2154987cbec9e28dd5e2749f0f1fb31866cae65124f0be33e3bb4d6024c5e3c  LowQ7.lean" | sha256sum --check
           echo "2c3dd399810da73c658434fb1ac91b3c831c55d7069d3df629cad1cae8e7cc29  Low33619.lean" | sha256sum --check
           echo "28c17c5ea2c506996e47b6b309aabd5e6efe3a7eb0db8d7b1e41d87b5a205826  Low123219.lean" | sha256sum --check
-          echo "49df449ee572a04ae46679fccd800cce395f37a7d607d9c9d46d2f2a236fcb3d  Low56659.lean" | sha256sum --check
           export LEAN_PATH=.
           lean --version
-          for f in CLine GenericSection JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef Agent38SectionParity BounceInverse EvenTargetForward BounceEvenExact BounceOddExact BounceEvenThree BounceEvenNoFour FullSectionInverse Low1875Arithmetic Low1875Source LowQ7 LowQ7Source Low33619 Low33619Source Low123219 Low123219Source Low56659 Low56659Source; do
+          for f in CLine GenericSection JumpHigh JumpMacro JumpSection JumpBounce JumpOneReturn JumpBounceSections BounceCalc BounceProof FastSectionDef Agent38SectionParity BounceInverse EvenTargetForward BounceEvenExact BounceOddExact BounceEvenThree BounceEvenNoFour FullSectionInverse Agent3CImage SectionAffineInverse EvenEvenUnique OddEvenUnique EvenRightUnique Low1875Arithmetic Low1875Source LowQ7 LowQ7Source Low33619 Low33619Source Low123219 Low123219Source Low1091Source; do
             echo "Compiling original-source dependency or low1875 proof: $f"
             lean -o "$f.olean" "$f.lean"
           done
