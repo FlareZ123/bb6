@@ -97,6 +97,7 @@ theorem sixForced_not_excluded_0_13
   have hsum8 : ((2*j+3)+k)%8=7 := by omega
   have hsum4 : ((2*j+3)+k)%4=3 := by omega
   have hkeven : k%2=0 := by omega
+  have hxodd : (2*j+3)%2=1 := by omega
   simp [BB6.Agent11SixForced.sixForcedExcluded,
     BB6.Agent11SixForced.sixForcedNormalize,
     BB6.Agent3.oddLowGate,
@@ -105,7 +106,7 @@ theorem sixForced_not_excluded_0_13
     BB6.Agent46.sixEvenRightGate,
     BB6.Agent3ValSix.valSixGate,
     BB6.Agent11SixForced.evenOddFourGate,
-    hx8,hx16,hsum8,hsum4,hkeven]
+    hx8,hx16,hsum8,hsum4,hkeven,hxodd]
 
 /-- Infinite source-level exclusion for the high stopping family
     j=0 (mod 32), m=13 (mod 32), j>=3, m>=2. -/
