@@ -21,6 +21,7 @@ namespace BB6.Agent4ACanonicalTwoTail
 open CryptidBoundary
 open BB6.BoundaryPadding
 open BB6.Agent4AImplicitCode
+open BB6.CryptidACodeFirstReturn
 
 def tokens (q r : Nat) : List Bool :=
   List.replicate q false ++ List.replicate (r+1) true
@@ -98,8 +99,14 @@ theorem tokenWord (q r : Nat) :
       false :: CryptidA.wordCode (tokens q r) := by
   have hrep : true :: List.replicate (3*r+2) true =
       List.replicate (3*(r+1)) true := by
-    have hn : 3*(r+1)=3*r+2+1 := by omega
-    rw [hn,List.replicate_succ]
+    calc
+      true :: List.replicate (3*r+2) true =
+        List.replicate 1 true ++ List.replicate (3*r+2) true := rfl
+      _ = List.replicate (1+(3*r+2)) true :=
+        List.replicate_append_replicate
+      _ = List.replicate (3*(r+1)) true := by
+        congr 1
+        omega
   have hfront :
       oppairs (q+1) ++ List.replicate (3*r+2) true =
       false :: (pairs q ++
