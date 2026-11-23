@@ -105,6 +105,20 @@ The same 24-element set has a compact affine description modulo 32:
 Each line gives exactly eight pairs. This representation is convenient for
 splitting the finite certificate and deriving the corresponding k residues.
 
+For a direct residue proof, write the first two families as j=4r:
+- STOP has m=12r+13, so k≡-(40r+44) (mod32) and
+  x+k≡23 (mod32).
+- R→O has m=4r+25, so k≡-(16r+80) (mod32), i.e. k≡16
+  for even r and k≡0 for odd r. After R, the four possible
+  (x1 mod32,y1 mod16) pairs are (17,7),(9,15),(1,7),(25,15);
+  each has x1+y1≡8 (mod16), and the O step yields
+  (x2 mod4,y2 mod4)=(2,3).
+For the third family write j=4r+1, m=28-12r. Then
+k≡-(90-32r)≡6 (mod32), x≡8r+5 (mod32). After R the
+(x1 mod32,y1 mod16) pair is (8r+9,2); after the second R it is
+(x2 mod16,y2 mod8)=(8r+9 mod16,0); A then yields
+(x3 mod4,y3 mod4)=(3,3).
+
 The same residue calculation gives the following representative terminal
 states modulo the coordinates needed by the exclusion predicate. The
 (x mod 32, k mod 32) column is independent of the chosen lift because
