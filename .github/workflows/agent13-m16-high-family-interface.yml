@@ -12,6 +12,7 @@ on:
           - valuation
           - sourceDepth
           - sourceClosure
+          - sourceRect
 
 permissions:
   contents: read
@@ -56,6 +57,9 @@ jobs:
               ;;
             sourceClosure)
               target=im-results/agent13-residual-frontier/EvenOddTwoParentRoot.lean
+              ;;
+            sourceRect)
+              target=im-results/agent13-residual-frontier/EvenOddSimpleRectangle.lean
               ;;
             *)
               echo "Unsupported M16 target: $M16_TARGET" >&2
