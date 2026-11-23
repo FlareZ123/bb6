@@ -12,7 +12,7 @@ For a valid source state \((b,d,m)\), put
 D=d-1,\qquad N=b+d+6.
 \]
 
-The source invariants give \(D\) even and \(N\) odd. A parent edge of depth \(t\) reduces cost by \(t+1\); write \(k=t+1\). If \((b',d',m')\) is the child, then
+The source invariants give \(D\) even and \(N\) odd. A parent edge of depth \(t\) reduces cost by \(t+1\); write \(k=t+1\). If \((b,d,m)\) is the child and \((b',d',m')\) its candidate parent, then
 
 \[
 N'=N+2k,\qquad D'=2^kD-N'-1,\qquad m'=m-k.
