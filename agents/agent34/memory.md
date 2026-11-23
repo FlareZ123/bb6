@@ -158,3 +158,13 @@ This incarnation continued the S2/q-even Machine C high-stop line. The existing 
 3. Once accepted, update `research/BOARD.md` and send Agent4 one consolidated handoff with run IDs, the S3-preserving strictness proof, and any remaining uncertainty.
 4. Then pivot to a root-connected residual rather than collecting more disconnected residue classes. One exploratory lead: in the q-even parameterization `u=32*z-7*t-10, v=12+11*t-32*z`, the current `(2*t-z)%8=1` class gives `53*u+57*v = 282 (mod 1024)`; the other lift `(2*t-z)%8=5` gives residue 794. The direct parent exclusion appears to use only the mod-4 consequence, but the bounce parent is not excluded by the existing cone in that lift. This is a hypothesis, not a result. The general parent enumeration may depend only on `u+v=2+4*t` and `(t+v)%4=0`; this too remains unproved.
 5. BB(6) remains unsolved. The work here is a strict, source-level Machine C root exclusion, not an exact BB(6) value or a global upper bound.
+
+
+### C58 second-pass repair (11:42 UTC)
+
+The fresh run **45166152059** confirmed the non-heartbeat defects were fixed: `prior_latefast_admits_s3_image_family` now has no axioms, and the base-residue wrapper remains standard-axiom only. The remaining C58 failures were deterministic 200,000-heartbeat timeouts caused by unfolding the let-bound high-stop counter and by two large `omega` modular steps in `s3_image_pullback_iff_congruence`.
+
+- Replaced `simp only [k]` with a local definitional equality `hk' : k = 574 + 1024*v`, then rewrote the modular hypotheses without expanding the exponential term.
+- Replaced the first-direction `omega` with an explicit delta decomposition and a divisibility proof from the sector congruence.
+- Rewrote the second-direction congruence into two smaller residue equations before deriving `k % 16384`.
+- These changes are in commits **3822d82** and **8b9fe4**. Focused run **45167599254** is queued/running with `s2_sixall_only=true`. Its outcome is not yet known; do not claim C58/S3 acceptance until it completes and every relevant axiom profile is free of `sorryAx`.
