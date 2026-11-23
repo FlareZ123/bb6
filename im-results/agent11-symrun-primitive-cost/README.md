@@ -128,16 +128,18 @@ The prescribed local Lean 4.36.0-rc2 preflight is blocked in the current environ
 **Gap to promotion:** prove the seven affine fixed-block formulas for **all** natural parameters from the pinned original source, not just examples, and compose them into source-level costed Rule A/B/C and `stepSym` theorems in Lean. Then kernel-check the traced primitive-count fold, including the prefix, and audit the exact original-source import closure. The present numbers are high-quality **computational candidates**, not established mathematical proofs. No change should be made to `results/` or the global BB(6) upper-bound ledger before those obligations close.
 
 
-## MItem-level initial-prefix bound draft (23 November 2026)
+## F424 blank-to-halt source chain draft (23 November 2026)
 
-Added `SourceExactMItemPrefix424.lean` as a source-linked draft for the F424 initial acceleration. It lifts the existing exact BB/DL/CB primitive witnesses to the upstream MItem dispatcher `stepElemM`, defines the exact one-step charge, and proves an exact `multiStep` witness for any `n` iterations via `costIterM424_exact_reaches`. The upstream nesting `runElemFast 1 1 11 4` is reduced to exactly `1 + 16 + 256·11 + 4096·4 = 19,217` elementary MItem transitions.
+Two source-linked Lean drafts now cover the F424 run from the blank tape through the symbolic halting checkpoint.
 
-A right-stack maximum invariant is used because the only unbounded one-step charges read a run counter from the right stack (DL/run2 and CB/run0/positive-run). The draft proves the coarse bound
+- `SourceExactMItemPrefix424.lean` lifts the existing exact BB/DL/CB primitive witnesses to the upstream MItem dispatcher `stepElemM`, defines the exact one-step charge, and proves an exact `multiStep` witness for any `n` iterations via `costIterM424_exact_reaches`. The upstream nesting `runElemFast 1 1 11 4` is reduced to exactly `1 + 16 + 256·11 + 4096·4 = 19,217` elementary MItem transitions.
+- A right-stack maximum invariant is used because the only unbounded one-step charges read a run counter from the right stack (DL/run2 and CB/run0/positive-run). It proves
+  ```
+  costIterM424 19217 (.CB, [], [.run 1, .run 0]) < 2^31
+  ```
+- The same module adds an 18-step blank-to-CB witness using `executeWithin 18`, copies the upstream `initSymCyc3` checkpoint definition, and reproduces the upstream `runElemFast 1 1 11 4` endpoint computation with `decide +kernel`. These are composed into `blankToInitSymCyc3_exact_reaches`: the blank-tape F424 configuration reaches the symbolic `initSymCyc3` checkpoint in fewer than (2^{31}) primitive transitions.
+- `SourceF424SymbolicTrace.lean` extracts the 18 symbolic checkpoint states and their kernel computation proofs from the pinned upstream certificate. It proves `symRunF424_exact`, the exact 70,511-step `stepSym` trajectory to `symChk70511`, and reconstructs `blankF424_is_halt` by composing the blank-to-checkpoint prefix, the checkpoint soundness chain, and the final DL/zero halting step.
 
-```
-costIterM424 19217 (.CB, [], [.run 1, .run 0]) < 2^31
-```
+The prefix bound is intentionally much looser than the JS-replayed prefix cost 164,368. Its purpose is a simple, reusable, kernel-checkable upper bound on the initial prefix.
 
-It also adds an 18-step blank-to-CB witness using `executeWithin 18`, copies the upstream `initSymCyc3` checkpoint definition, and reproduces the upstream `runElemFast 1 1 11 4` endpoint computation with `decide +kernel`. These are composed into `blankToInitSymCyc3_exact_reaches`: the blank-tape F424 configuration reaches the symbolic `initSymCyc3` checkpoint in fewer than (2^{31}) primitive transitions. This is intentionally much looser than the JS-replayed prefix cost 164,368, but is designed to be easy to kernel-check and sufficient for the initial-prefix part of a candidate exclusion.
-
-**Acceptance boundary:** this module has not been Lean-compiled. The initial prefix is now connected to the symbolic checkpoint in the draft, but the downstream symbolic run and halting endpoint still require the exact source-cost chain to compile and compose. Do not treat this as a complete F424 halting proof or promote it to `results/` until the full dependency closure is accepted.
+**Acceptance boundary:** both modules and their proof compositions remain uncompiled. They are intermediate work, not publishable results. The exact primitive-time cost of the 70,511-step symbolic trace still depends on the separate costed `stepSym`/dispatcher work; do not treat this as an exact F424 halting-time proof or promote it to `results/` until the full dependency closure compiles and the costed symbolic trace is composed.
