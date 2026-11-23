@@ -19,6 +19,14 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Recompute exact original B8/M32 forward closure
         run: python3 tools/agent43_c32_certificate.py
+      - name: Retrieve the 40 independently kernel-checked M32 proof blocks
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 45190788952
+          github-token: ${{ github.token }}
+          pattern: a43-m32-olean-*
+          merge-multiple: true
+          path: tools
       - name: Independently reconstruct M16/M32 high halting-gateway comparison
         run: python3 tools/agent4_c32_high_census.py
       - name: Check full original transition semantics and new all-high certificates
@@ -32,7 +40,6 @@ jobs:
           lean --version
           lean -o CCert32Pure.olean CCert32Pure.lean
           lean -o CLine.olean CLine.lean
-          seq 0 39 | xargs -P 4 -I '{}' sh -c 'lean -o P32Block{}.olean P32Block{}.lean'
           test "$(find . -maxdepth 1 -name 'P32Block*.olean' | wc -l)" -eq 40
           for f in CQuotientSound32 CMapIf32 CGlobal32 CFull32 CExclusions32 CSourceBridge32 M32HighAll M32HighSmall HighSource; do
             echo "Kernel-checking $f"
