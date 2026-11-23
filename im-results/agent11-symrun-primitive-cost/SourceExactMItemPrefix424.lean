@@ -414,3 +414,18 @@ theorem costIterM424_f424_prefix_lt_two31 :
     costIterM424 19217 startF424M < 2 ^ 31 := by
   apply lt_of_le_of_lt (costIterM424_le 19217 startF424M)
   norm_num [startF424M, maxRunMList]
+
+
+/-- The source runElemFast prefix from the F424 CB entry state is reached
+    within 2^31 primitive TM transitions. -/
+theorem runElemFast424_within_two31 :
+    ∃ n : Nat, n < 2 ^ 31 ∧
+      multiStep target_tm (evalM target_tm startF424M) n =
+        some (evalM target_tm (runElemFast 1 1 11 4 startF424M)) := by
+  exact ⟨costIterM424 19217 startF424M,
+    costIterM424_f424_prefix_lt_two31,
+    runElemFast424_exact_reaches⟩
+
+#print axioms runElemFast424_exact_reaches
+#print axioms costIterM424_f424_prefix_lt_two31
+#print axioms runElemFast424_within_two31
