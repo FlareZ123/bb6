@@ -2835,9 +2835,10 @@ Independently checked the residue arithmetic for the eight strictness families
 
 A further corrected BigInt scan of all 24 `CCert.newHighPairs` classes and 32×32 valid lifts found a constant `sixForcedNormalize` path per class. The exact gate formula was checked against `SixForcedNormalize.lean`, especially `evenOddFourGate=(x+y+1)%8=4` (an earlier scratch implementation used the wrong expression and was discarded). The 24 cells split into:
 - eight STOP cells (the existing eight survivor families), terminal residues `(x mod4,y mod2,x+y mod4)=(3,0,3)`, so `sixForcedExcluded=false`;
-- eight `R→O` cells, terminal `(2,1,1)), so excluded;
-- eight `R→R→A` cells, terminal `(3,1,2)), so excluded.
-Here R/O/A are sixEvenRight/oddLow/evenAffine. For m≥2, the stop equation gives `k mod32 = -(j+3m+5) mod32`, so the observed 0/2/3-step classification appears to admit a short fixed-step modular proof. This suggests the existing eight-cell strictness theorem is the exact intersection with the prior sixForced filter, but the complementary 16-cell Lean proof is not yet written or checked. Reproducible scan and residue table: `im-results/agent42-m32-residual-scan/README.md`. Sent the result to Agents 13 and 11 in their mailboxes.
+- eight `R→O` cells, terminal `(2,1,1)`, so excluded;
+- eight `R→R→A` cells, terminal `(3,1,2)`, so excluded.
+Here R/O/A are sixEvenRight/oddLow/evenAffine. The terminal states also stop the normalizer: R→O has x even, y odd, sum 1 mod4, so all remaining gates are false; R→R→A has x,y odd and sum 2 mod4, likewise disabling every remaining gate. STOP has even k and no initial gate. For m≥2, the stop equation gives `k mod32 = -(j+3m+5) mod32`, so the 0/2/3-step classification appears to admit a short fixed-step modular proof. This suggests the existing eight-cell strictness theorem is the exact intersection with the prior sixForced filter, but the complementary 16-cell Lean proof is not yet written or checked. Reproducible scan and residue table: `im-results/agent42-m32-residual-scan/README.md`. Sent the result to Agents 13 and 11 in their mailboxes.
+
 
 ### Root-to-q4Tail source work
 
@@ -2854,7 +2855,7 @@ Source repairs made in this continuation (all unverified after the last diagnost
 - `M0EvenFourQ4Prefix.lean`: import `Q4Suffix`; explicitly rewrite the `k % 3` branch; fix the finite-prefix index, bridge equality orientation, sweep endpoint, and prefix lengths.
 - `M0EvenEightQ4Bridge.lean` / `M0EvenEightQ4Prefix.lean`: expose `m0EvenEightSourceLeftFacing`; align bridge heads with the `bridgeAt` match contract; import `Q4Suffix`; use the exact counted-sweep input configuration.
 - `M0EvenEightValuationFixedPrefix.lean`: correct the finite marked-list order for the preserved `-14` bit; align the frame/head contract; use explicit `Fin 6` states for the four-step zero-exit proof.
-- `M2EvenResidueZeroFrames.lean`: expose the `Agent48Champion.leftOnes` namespace; normalize both frame coordinates; explicitly identify the setup frame configuration; normalize the counted-run input/output heads.
+- `M2EvenResidueZeroFrames.lean`: expose the `Agent48Champion.leftOnes` namespace; normalize both frame coordinates; identify the setup frame with `config_ext`, orient the rewrite from `frameAt` to its explicit configuration, and normalize the counted-run input/output heads.
 - `OuterLCIncFiveStep.lean`, `OuterLCIncTail.lean`, and `M0EvenFourteenQ4Bridge.lean`: explicitly import/open `ChampionRootBridge` / `BB6Coverage.Agent48Champion` to prevent auto-implicit machine/config names.
 
 Updated `im-results/agent42-q4-s0-drain/README.md` in commit `c64b2f8f9291b7be19b333c9d6d96aeb61fed76f` to replace the stale “CI pending/no CI” status with the actual diagnostic runs and current unverified source state. A broadcast summarizing the initial repairs was sent; the latest post-diagnostic repairs are visible in main but have not yet been separately broadcast to all owners. No files were promoted to `results/`.
