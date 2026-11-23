@@ -97,7 +97,6 @@ private theorem certified_prefix_excludes
     calc
       (q+3*k+4)%(2^E) = (q+(3*k+4))%(2^E) := by
         congr 1
-        omega
       _ = (q%(2^E)+(3*k+4)%(2^E))%(2^E) := by
         rw [Nat.add_mod]
       _ = (q%(2^E)+(3*r+4)%(2^E))%(2^E) := by
@@ -210,6 +209,47 @@ theorem no_root_k_lt1000 (q n k : Nat)
   exact cover_sound 23 0 0 1000 k q n
     (by decide) (by omega) hk (by omega)
     (exact_offset q n k hn heq) cover_one_thousand hroot
+
+
+/-- The adaptive inverse trie covers one million actual burst indices
+with only 2227 disjoint certified dyadic cylinders and 2764 empty
+prefixes, not one million individual Lean proof obligations. -/
+theorem cover_one_million :
+    cover 46 0 0 1000000 = true := by decide
+
+theorem no_root_k_lt_million (q n k : Nat)
+    (hk : k<1000000)
+    (hn : n=127+128*k)
+    (heq : 128*q+3*n+131=3*2^(n+2))
+    (hroot : Reach (32*q+29) (64*q+55)) : False := by
+  exact cover_sound 46 0 0 1000000 k q n
+    (by decide) (by omega) hk (by omega)
+    (exact_offset q n k hn heq) cover_one_million hroot
+
+/-- An unbounded blank-root theorem, conditional on the exact
+29(mod32) final-reset branch7 terminal-burst equation. -/
+theorem rooted_branch29_final_burst_ge128000127
+    (q n : Nat)
+    (hn : 18≤n)
+    (hroot : Reach (32*q+29) (64*q+55))
+    (heq : 128*q+3*n+131=3*2^(n+2)) :
+    128000127≤n := by
+  by_cases hlarge : 128000127≤n
+  · exact hlarge
+  · have hpow : 2^(n+2)=128*2^(n-5) := by
+      have hp : n+2=7+(n-5) := by omega
+      rw [hp, Nat.pow_add]
+    have hmod : (128*q+3*n+131)%128=0 := by
+      rw [heq,hpow]
+      omega
+    let k := n/128
+    have hnr : n%128=127 := by omega
+    have hnform : n=127+128*k := by dsimp [k]; omega
+    have hk : k<1000000 := by omega
+    exact False.elim (no_root_k_lt_million q n k hk hnform heq hroot)
+
+#print axioms cover_one_million
+#print axioms rooted_branch29_final_burst_ge128000127
 
 #print axioms cover_sound
 #print axioms no_root_k_lt1000
