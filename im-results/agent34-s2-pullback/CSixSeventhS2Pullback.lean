@@ -7,6 +7,7 @@ set_option maxHeartbeats 1000000
 
 namespace BB6.Agent34S2Pullback
 open BB6.Agent4Seven
+open BB6.Agent46
 
 /-- The standard six-state high-stop counter used by the Machine C filter. -/
 def highK (j m : Nat) : Nat :=
@@ -186,8 +187,8 @@ theorem s2_high_parameter_no_blank (j m time : Nat)
   have hsector : (v+93*u)%128=42 := by
     rw [hkv] at hKcong
     omega
-  obtain ⟨t,ht,hv⟩ := BB6.Agent4Seven.s2_sector_decompose u v hsector
-  have hblank := BB6.Agent4Seven.blank_ne_s2_image u v t time ht hv
+  obtain ⟨t,ht,hv⟩ := BB6.Agent4SevenS2.s2_sector_decompose u v hsector
+  have hblank := BB6.Agent4SevenS2.blank_ne_s2_image u v t time ht hv
   have hx : 2*j+3=641+1024*u := by rw [hjEq]; omega
   intro hrun
   apply hblank
