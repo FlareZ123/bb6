@@ -117,7 +117,7 @@ These are precisely the two linear residuals appearing in the left/right termina
 
 ## Exact synchronization-language density
 
-[ExactSynchronizationDensity.md](ExactSynchronizationDensity.md) proves analytically that, for every ternary digit-pair word length \(n\ge4\), **exactly \(3^{2n}-30\cdot3^n+291\)** of the \(3^{2n}\) words synchronize both full L/R rectangles. The proof is an explicit four-event inclusion–exclusion argument over the residue criterion; [count_sync_words.js](count_sync_words.js) independently enumerates the small cases. This is a count of *all words*, not authentic root windows. It makes the empirical synchronization frequency less probative of a universal invariant and pinpoints why authentic source compatibility is essential.
+[ExactSynchronizationDensity.md](ExactSynchronizationDensity.md) proves analytically that, for every ternary digit-pair word length \(n\ge4\), **exactly \(3^{2n}-30\cdot3^n+291\)** of the \(3^{2n}\) words synchronize both full L/R rectangles. The proof is an explicit four-event inclusion–exclusion argument over the residue criterion; [count_sync_words.js](count_sync_words.js) independently enumerates the small cases. This is a count of *all words*, not authentic root windows. The generic infinite non-synchronizing words are exactly the union of 20 affine 3-adic lines, and the exact expected first-synchronization length for Haar-uniform words is 8239/1944 (about 4.238). Neither generic almost-sure synchronization nor the observed near-uniform prefix histogram implies an authentic-root invariant. It pinpoints why authentic source compatibility is essential.
 
 ## Phase-correct global root-coordinate bridge
 

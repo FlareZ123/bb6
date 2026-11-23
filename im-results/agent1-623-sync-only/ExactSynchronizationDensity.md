@@ -82,6 +82,68 @@ Subtracting from \(M^2\) completes the proof.
 
 All arithmetic is with exact integer congruences; there is no asymptotic or independence assumption.
 
+## Infinite-word classification and exact first-synchronization time
+
+Let \((U,V)\in\mathbb Z_3^2\) be the two 3-adic integers whose least-significant-first digits encode an **infinite** ternary pair word. Let \(\nu_3(z)\in\mathbb N\cup\{\infty\}\), with \(\nu_3(0)=\infty\). Define the four (possibly infinite) contact orders
+\[
+h_A=\max_{a=-2,\ldots,3}\nu_3(V-4U-a),\qquad
+h_C=\max_{c=-7,\ldots,1}\nu_3(4V-U-c),
+\]
+\[
+h_E=\max_{e\in\{-1,0\}}\nu_3(U-e),\qquad
+h_F=\max_{f\in\{-2,-1,0\}}\nu_3(V-f).
+\]
+
+**Exact stopping-time theorem.** The first prefix synchronizing both full rectangles has length
+\[
+\boxed{\tau(U,V)=\max(3,\;h_A+1,\;h_C+1,\;h_E+2,\;h_F+2)}
+\tag{9}
+\]
+where \(\infty+k=\infty\). In particular, a given infinite word **never** synchronizes if and only if at least one of these equations holds in \(\mathbb Z_3\):
+\[
+V-4U\in\{-2,-1,0,1,2,3\},
+\quad 4V-U\in\{-7,-6,-5,-4,-3,-2,-1,0,1\},
+\]
+\[
+U\in\{-1,0\},\qquad V\in\{-2,-1,0\}.
+\tag{10}
+\]
+Thus the exceptional infinite non-synchronizing language is **exactly a union of 20 affine 3-adic lines** in \(\mathbb Z_3^2\), not an unspecified fractal attractor.
+
+*Proof.* For each \(n\ge3\), failure of one of the four inequalities of the exact synchronization criterion is equivalent to one of
+\[
+h_A\ge n,\quad h_C\ge n,\quad h_E\ge n-1,\quad h_F\ge n-1.
+\]
+For example, \(V-4U\bmod3^n\) lies in the six forbidden residues if and only if \(V-4U\) equals one of those six integers modulo \(3^n\); that is \(h_A\ge n\). The other three statements are identical, observing the \(3^{n-1}\) scale for \(U,V\). Therefore the first \(n\ge3\) at which all four failure inequalities are false is exactly (9). If \(h_A=\infty\), one of the six differences vanishes in \(\mathbb Z_3\), and analogously for the other contact orders. Conversely, if all contact orders are finite, choosing \(n\) larger than their four thresholds forces synchronization. No mixing or statistical assumptions are needed. Each of the 20 lines has a coefficient of one coordinate that is a 3-adic unit; each is a one-dimensional affine copy of \(\mathbb Z_3\), hence the exceptional set has 2D Haar measure zero and 3-adic Hausdorff dimension one under the usual max ultrametric.
+
+**Exact uniform stopping-time law.** Under independent, uniformly distributed ternary digit pairs, the count of words whose *first* synchronization occurs at length \(n\) is
+
+\[
+\begin{array}{c|c}
+n & \text{number among }9^n\text{ words}\\\hline
+n=3&195\\
+n=4&2667\\
+n\ge5&60\cdot3^n-2328.
+\end{array}
+\]
+Indeed, once synchronized, a word stays synchronized under any further digit pair; hence the number of first-hit words at length \(n\) is \(G_n-9G_{n-1}\), with \(G_3=195\) and \(G_n=9^n-30\cdot3^n+291\) for \(n\ge4\).
+
+The tail distribution is exact:
+\[
+\Pr[\tau>3]=534/729,\qquad
+\Pr[\tau>n]=\frac{30}{3^n}-\frac{291}{9^n}\quad(n\ge4).
+\]
+The expected first synchronization length is consequently the rational
+\[
+\boxed{\mathbb E[\tau]=3+\frac{534}{729}
++\sum_{n=4}^{\infty}\left(\frac{30}{3^n}-\frac{291}{9^n}\right)
+=\frac{8239}{1944}\approx4.23817.}
+\]
+
+The finite authentic #623 first-hit histogram in the repository (3:2642, 4:4042, 5:2093, 6:782, 7:268, 8:96, 9:27, 10:9, 11:7, 12:2) is strikingly close to the uniform-word distribution: out of 9968 windows the uniform expectations for lengths 3,4,5,6 are about 2666.34, 4051.92, 2068.25, 776.75. This is **not** a valid independence test or a theorem about authentic orbit dynamics. Instead it explains why the observed finite synchronization histogram alone is weak evidence for an all-time invariant: a generic long digit word is already overwhelmingly likely to synchronize.
+
+The genuine-root proof obligation now has a precise geometric form: show that every *finite moving S-window* of its signed \((U,V)\) coordinates stays separated from these twenty affine 3-adic danger lines at the window's scale, **with the exact low-boundary carry and phase shift**. Formula (9) does not give this separation automatically.
+
 ## Reproducer and significance
 
 [count_sync_words.js](count_sync_words.js) independently enumerates all \(M^2\) pairs and prints the intersection table and predicted count for \(n=2,\ldots,7\). It uses ordinary integer arithmetic only (largest \(M=2187\)); the theorem above holds for **every** \(n\ge4\) and does not depend on this finite check.
