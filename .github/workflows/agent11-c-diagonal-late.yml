@@ -53,6 +53,11 @@ on:
         required: false
         type: boolean
         default: false
+      s2_qeven_h5_probe:
+        description: "Evaluate the exact blank-root oracle on representative q-even hcong=5 bounce parents"
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -94,6 +99,7 @@ jobs:
           U5_SOURCE_ONLY_W21_ONLY: ${{ inputs.u5_source_only_w21_only }}
           S31_W13_ONLY: ${{ inputs.s31_w13_only }}
           S2_SIXALL_ONLY: ${{ inputs.s2_sixall_only }}
+          S2_QEVEN_H5_PROBE: ${{ inputs.s2_qeven_h5_probe }}
         run: |
           set -euo pipefail
           mkdir -p /tmp/a38-section
@@ -548,6 +554,11 @@ jobs:
           for f in ValSixArithmetic ValSixInverse ValSixSource ValSixHighArithmetic ValSixHighSource ValSixSecondArithmetic ValSixSecondInverse ValSixSecondSource ValSixSecondConeArithmetic ValSixSecondConeSource ValSixSecondHighArithmetic ValSixSecondHighSource ValSixJoint ValSixNovel ValSixThirdConeArithmetic ValSixThirdConeSource ValSixThirdHighArithmetic ValSixThirdHighSource ValSixJointThree ValSixThirdNovel ValSixMixedNormalize ValSixJointFast; do
             lean -o "$f.olean" "$f.lean"
           done
+
+          if [ "$S2_QEVEN_H5_PROBE" = "true" ]; then
+            cp ${GITHUB_WORKSPACE}/im-results/agent34-s2-pullback/QEvenH5Probe.lean .
+            lean QEvenH5Probe.lean | tee QEvenH5Probe.log
+          fi
 
           # Agent29's infinite m=1 right-four tower: compile its exact
           # affine normalizer and true blank-root exclusion into this same
