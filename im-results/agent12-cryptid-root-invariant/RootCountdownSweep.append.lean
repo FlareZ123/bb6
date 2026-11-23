@@ -150,7 +150,7 @@ theorem root_countdown_cr_zero_sweep_singleton (k b : ℕ) (L : List (ℕ × ℕ
       have h1 := root_countdown_cr_zero_step
         (List.replicate (k+1) (0,0) ++ L) [(b,0)]
       have h1' : ReachesPlus target
-          (cfg_CR_n_n (List.replicate (k+1) (0,0) ++ L) [(b,0)])
+          (cfg_CR_n_n (List.replicate (k+2) (0,0) ++ L) [(b,0)])
           (cfg_CR_n_n (List.replicate (k+1) (0,0) ++ L) [(b+2,0)]) := by
         simpa [bumpPairHead] using h1
       have h2 := ih (b+2) L
