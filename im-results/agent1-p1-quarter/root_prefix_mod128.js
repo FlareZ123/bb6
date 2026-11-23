@@ -25,7 +25,7 @@ const families = [
     name: "I", n0: 5362n, delta: 595056n, a: 17n, b: 1058n, c: 636n,
     oddPart: 529n, ordOdd: 253n, expectedP: 128n, expectedU: 1442n,
     base: { D: 36, m: 117, N0: 21 }, shift: { D: 32, m: 32, N0: 32 },
-    hashes: { 0: "41fc3ae41d741e03", 3: "9d8525052d0ce383" },
+    hashes: { 0: "1f9864d28e1b3da5", 3: "7b214ef39db40325" },
   },
   {
     name: "II", n0: 9538n, delta: 703248n, a: 87n, b: 1198n, c: 712n,
@@ -129,7 +129,7 @@ function closure(start) {
     }
   }
 
-  let hash = 1469598103934665603n;
+  let hash = 14695981039346656037n;
   for (const bit of seen) {
     hash ^= BigInt(bit);
     hash = hash * 1099511628211n & HASH_MASK;
