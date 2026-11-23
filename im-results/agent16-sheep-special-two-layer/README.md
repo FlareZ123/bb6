@@ -2,6 +2,38 @@
 
 **Agent 16, 23 November 2026.** This is an all-exponent mathematical proof using the exact published original-Sheep even-return law; a standalone BigInt verifier is supplied. The **new result** is complete second-predecessor grammars in both odd $a\equiv3,5\pmod6$ sectors and the even $a\equiv0\pmod4$ sector and a resulting positive-density, depth-two **blank-root exclusion** for exceptional (odd-cofactor-three) targets. The *new composition has not yet been compiled as one Lean source-importing theorem*; the underlying original-machine-to-even-return bridge and the previously established direct-parent classification are separate earlier results. External novelty has not been determined. This result does **not** exclude a new power-of-two halting gate, decide Sheep, or determine BB(6).
 
+## Uniform all-hidden-length generic valuation cutoff
+
+The five explicit grammars below are instances of a **single unbounded inverse-source bound**. For every odd $a\ge3$, every even legal generic parent $x=2^b v$ of $X_a=4(2^{a+1}-1)/3$ with hidden odd-block length $h\ge0$ satisfies
+$
+h=0\implies b\le5,\qquad h\ge1\implies b\le2h+4.
+\tag{U}
+$
+In particular, once $h$ is known, all source valuations can be exhaustively tested in a finite range **without a magnitude bound on $a$**. This is a paper-level lemma derived from the existing signed binary residue gap, not a new Lean-certified theorem. It works also for higher $h$ sectors not yet classified in the dossier.
+
+**Proof.** From the exact $E$ source equations and $X_a-1=(2^{a+3}-7)/3$, an incoming generic edge must satisfy
+$
+3^{h+1}(2^{b+1}+1)v+
+\underbrace{3^{h+1}(2b-3)+7\cdot2^{h+1}}_{K(h,b)}
+=2^{a+h+4}.
+\tag{U1}
+$
+For $b$ sufficiently large, $K(h,b)$ is a positive odd integer strictly between $1$ and $2^b$. Modulo $2^{b+1}+1$, equation (U1) would then equate $K(h,b)$ with a signed power residue $\pm2^r$, $0\le r\le b$, which is impossible: the only positive odd residue below $2^b$ is $1$. It remains to establish the claimed *uniform numeric cutoff*.
+
+For $h=0$, at $b=6$, $K(0,6)=41<64$, with $K(0,b+1)-K(0,b)=6<2^b$ thereafter. Thus every $b\ge6$ is excluded.
+
+For $h=1$, at $b=7=2h+5$, $K(1,7)=127<128$. For every $h\ge2$ put $B=2h+5$. The elementary inequality
+$
+3^h(4h+7)\le9\cdot4^h \qquad(h\ge2)
+$
+holds at $h=2$ ($135\le144$) and is preserved by induction, since $3(4h+11)\le4(4h+7)$ for $h\ge2$. Therefore
+$
+K(h,B)=3^{h+1}(4h+7)+7\cdot2^{h+1}
+\le27\cdot4^h+\tfrac72\,4^h
+<32\cdot4^h=2^B.
+$
+For any fixed $h\ge1$, increasing $b$ increases $K$ by exactly $2\cdot3^{h+1}$, and $2\cdot3^{h+1}\le6\cdot4^h<32\cdot4^h\le2^b$ whenever $b\ge B$. Hence the inequality $1<K(h,b)<2^b$ holds for all $b\ge2h+5$. The signed-power gap then proves (U). QED.
+
 ## Theorem: complete second-parent grammar
 
 Let $E$ be the genuine Sheep first-even successor on legal even, nonterminal section counters $x=2^b v$, with $b\ge1$, $v\ge3$ odd. From the source-certified section, write $F(x)=x+b+(v-1)/2$ for $v\ge5$, $F(3\cdot2^b)=3\cdot2^b+b+3$; whenever $F(x)-1=2^h w$ with (w) odd, $E(x)=1+3^h w$.
