@@ -249,7 +249,11 @@ jobs:
           set -euo pipefail
           mkdir -p BB6Agent42
           cp "$GITHUB_WORKSPACE/im-results/agent42-cryptids-upstream-191-overlap/RleCostedStepPilot.lean" BB6Agent42/
-          LEAN_PATH=BB6Agent42 lake env lean -o BB6Agent42/RleCostedStepPilot.olean BB6Agent42/RleCostedStepPilot.lean
+          LEAN_PATH=BB6Agent42 lake env lean -o BB6Agent42/RleCostedStepPilot.olean BB6Agent42/RleCostedStepPilot.lean 2>&1 | tee "$RUNNER_TEMP/f289-cost-pilot.log"
+          if grep -Eq 'sorryAx|native_decide' "$RUNNER_TEMP/f289-cost-pilot.log"; then
+            echo "::error::F289 exact-step pilot contains a prohibited axiom or native_decide"
+            exit 1
+          fi
       - name: Compile six-root Cryptids frontier graft (explicitly requested only)
         if: ${{ inputs.verify_six_root_graft && !inputs.simulate_second_f289 }}
         working-directory: /tmp/cryptids
