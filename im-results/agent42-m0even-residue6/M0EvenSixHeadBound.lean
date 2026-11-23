@@ -133,6 +133,14 @@ private theorem m0EvenSix_counted_left_sweep_heads
     change h-(N:Int) ≤ h-(q:Int)
     omega
 
+theorem counted_left_sweep_heads
+    (N : Nat) (T : Int → Bool) (h : Int)
+    (hOn : leftOnes T h N) (hr : T (h+1) = false)
+    (k : Nat) (hk : k < 3*N) (d : Config)
+    (hd : run tm2 k ⟨3,h,T⟩ = some d) :
+    h-(N:Int) ≤ d.head :=
+  m0EvenSix_counted_left_sweep_heads N T h hOn hr k hk d hd
+
 private theorem fRun_prefix_exists {m c n k d}
     (h : fRun m n c = some d) (hk : k ≤ n) :
     ∃ e, fRun m k c = some e := by
