@@ -47,9 +47,10 @@ The 94-token premise is established by the finite `traceStats` certificates
 for the named F424 and F412 source traces. The fallback results also require
 the stated BB-output branch condition.
 
-### BB-sweep combined potential — formal draft
+### BB-sweep amortized potential — formal drafts
 
-The latest addition to `SymRunTraceStats.lean` is:
+The exact-source statistics module now contains a direct, unconditional
+combined-potential proof draft:
 
 ```lean
 symStateWeight (sweepBB L R) ≤
@@ -57,36 +58,45 @@ symStateWeight (sweepBB L R) ≤
     + 8 * L.length + 18
 ```
 
-Here `symStateWeight` is total symbolic token count plus numeric-field
-sum; adding one gives the coarse potential
-`W = 1 + |L| + |R| + numSum(L) + numSum(R)`.
+Here symStateWeight is total symbolic token count plus numeric-field sum.
+This theorem is in SymRunTraceStats.lean and is being checked by the first
+exact-source audit.
 
-The proof draft adds:
+A sharper independent derivation is drafted in
+`SymRunBBBounds.lean`. It separates token length from numeric mass:
 
-- numeric-sum and length bounds for `eatB2` and `eatB12R`;
-- a length bound for `peelTok`;
-- a total-token bound for `stepElemBB`;
-- a strong induction over the exact `sweepBB` cases.
+- `sweepBB_length_bound4_pair`: simultaneous induction with an ordinary
+  right-stack bound and a one-unit stronger bound when the right stack begins
+  with run 0.
+- `sweepBB_length_bound4`: output token count is at most
+  `|L| + |R| + 4*|L| + 12`.
+- `sweepBB_num_sum_bound`: output numeric-field sum is at most
+  `numSum(L) + numSum(R) + 2*|L| + 5`.
+- `sweepBB_weight_bound_sharper`: combining the two gives
+  `W_out ≤ W_in + 6*|L| + 17`.
+- `sweepBB_field_max_le`: output maximum numeric field is at most
+  `numSum(L) + numSum(R) + 2*|L| + 5`.
 
-Successful repeat-eat branches transfer the consumed left repeat field to
-the returned right suffix. The run-1 recursive branch is covered by the
-eight-unit per-left-token allowance. Failed repeat matches are terminal and
-are covered by the fixed additive allowance.
+The key amortized invariant is the leading-run0 shield. In the ordinary
+induction case, a run-1 head can incur the generic five-token bump expansion,
+but the recursive right stack is prefixed by run 0 and therefore admits the
+stronger bound. In the shielded case, bumping a right stack already beginning
+with run 0 changes its head to run 1 without increasing its length. Successful
+B2/B12R eats preserve the shield; B1 eats may lose it but shorten the right
+stack enough to use the ordinary bound.
 
-**Status:** committed in `SymRunTraceStats.lean` at
-`fbaac854103fd5cad922e473140ca5d2cd420ad0`, but not yet accepted as a
-formal result. Exact-source Lean 4.36.0-rc2 audit run
+If accepted, the sharper estimate gives
+`W_out ≤ W_in + 6*|L| + 17 ≤ 24*(W_in+1)` for `W_in ≥ 1`.
+This is sufficient to retain the coarse multiplicative factor used in the
+CB fallback analysis. The field-maximum corollary also gives a direct
+source-generic bound for the state after a BB sweep.
+
+**Status:** both derivations remain drafts. The first exact-source run
 [45129145926](https://github.com/FlareZ123/bb6/actions/runs/45129145926)
-is in progress. The audit compiles the pinned F424 and F412 modules, then
-the complete `SymRunTraceStats.lean` file and
-`SymRunTraceStatsAudit.lean`. Until that run succeeds, treat the new BB
-potential theorem as a proof draft.
-
-If accepted, the theorem gives
-`W(sweepBB(L,R)) ≤ W(BB,L,R) + 8*|L| + 18`, and hence the coarse
-multiplicative estimate `W_out ≤ 27*(W_in+1)`. This is one component of
-the global `stepSym` potential argument, not yet a complete primitive-time
-bound.
+compiles SymRunTraceStats.lean and its axiom bridge. Once that run finishes,
+a second pinned run will compile SymRunBBBounds.lean as an extra dependency
+and audit the sharper amortized theorems. Do not treat either result as
+formally accepted before those checks succeed.
 
 ## Exact-source and acceptance boundary
 
