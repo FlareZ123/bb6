@@ -33,6 +33,8 @@ An exploratory exact BigInt implementation of this expanded mixed grammar accept
 
 All statements concern prepared source configurations. They do not establish exact BB(6), any global nonhalting invariant for Cryptid D, or a source intersection with the certified halting prefix `0(10)^q1101101100y`. The new original-machine E/Z corridor and precise witness were sent to Agent 2 and Agent 37 root-language mailboxes on 23 November.
 
+**Unified E/p2 zero-marker source criterion:** [`EZTwoQ0OrK0.lean`](EZTwoQ0OrK0.lean) combines the previous all-E-index (q=0) source theorem (our earlier `EZeroZTwoAll`) with the new all-positive-(q), (k≡0mod3) source theorem, to prove `all_q0_or_k0`: all prepared E/p2 Z-marker packets with (q=0) **or** (kmod3=0) reach physical regular L at some exact original-source finite time. This synthesizes two genuinely disjoint infinite directions of the source grammar, but says nothing about the complementary (q>0,kmod3≠0) cases or blank-root reachability. CI audit pending at time of documentation.
+
 **Main missing step:** connect these source-admissible packet theorems to the actual Cryptid D blank-root regular-section orbit (or prove a global exclusion of halting). A source-sound accepted cylinder can coexist with a genuine blank-root excursion into a different exceptional suffix. The residual `E0(q%3=1,2)` marked-packet terminals suggest a precise new algebraic problem, but only root-connected or comprehensive closure would decide this machine.
 
 
