@@ -7,6 +7,7 @@ import OddOddLowVal
 import MixedMod16SevenOrbit
 import OddSevenForcedRoot
 import Lean.Elab.Tactic.Omega
+import Mathlib.Tactic
 
 set_option maxHeartbeats 1000000
 set_option maxRecDepth 65536
@@ -144,7 +145,7 @@ private theorem a4_source_parent_cases (s a k : Nat)
   · by_cases hk0 : k=0
     · simp [sectionPreimageAll,ha0,hk0] at hp
     · by_cases hk1 : k=1
-      · simp [sectionPreimageAll,ha0,hk0,hk1] at hp
+      · simp [sectionPreimageAll,ha0,hk0,hk1] at hp <;> omega
       · have hcase : 4≤y ∧ ∃ n : Nat,
             x+y=2^n*8 ∧ (2*k+1)+8+3*n=x+2*y := by
           simpa [sectionPreimageAll,ha0,hk0,hk1] using hp
@@ -191,23 +192,23 @@ private theorem a4_source_parent_cases (s a k : Nat)
             have hcost' : 2*k+a+7+3*n=x+2*y := by omega
             have hnEven : n%2=0 := by omega
             have hnle : n≤3 := by
-              by_contra hn
-              have hn4 : 4≤n := by omega
-              have hpowdiv : 2^4∣2^n := Nat.pow_dvd_pow 2 hn4
-              have ha2div : 2∣a+2 := by
-                refine ⟨(a+2)/2,?_⟩
+              by_cases hn4 : 4≤n
+              · have hpowdiv : 2^4∣2^n := Nat.pow_dvd_pow 2 hn4
+                have ha2even : (a+2)%2=0 := by omega
+                have ha2div : 2∣a+2 :=
+                  Nat.dvd_iff_mod_eq_zero.mpr ha2even
+                rcases hpowdiv with ⟨p,hp⟩
+                rcases ha2div with ⟨q,hq⟩
+                have hfac : 2*a+4=4*q := by omega
+                have hdiv : 64∣x+y := by
+                  refine ⟨p*q,?_⟩
+                  calc
+                    x+y = 2^n*(2*a+4) := hsum'
+                    _ = (2^4*p)*(4*q) := by rw [← hp,hfac]
+                    _ = 64*(p*q) := by norm_num [show (2:Nat)^4=16 by decide]; ring
+                have hzero := Nat.mod_eq_zero_of_dvd hdiv
                 omega
-              rcases hpowdiv with ⟨p,hp⟩
-              rcases ha2div with ⟨q,hq⟩
-              have hfac : 2*a+4=4*q := by omega
-              have hdiv : 64∣x+y := by
-                refine ⟨p*q,?_⟩
-                calc
-                  x+y = 2^n*(2*a+4) := hsum'
-                  _ = (2^4*p)*(4*q) := by rw [← hp,hfac]
-                  _ = 64*(p*q) := by norm_num [show (2:Nat)^4=16 by decide]; ring
-              have hzero := Nat.mod_eq_zero_of_dvd hdiv
-              omega
+              · omega
             have hdepth : n=0 ∨ n=2 := by omega
             rcases hdepth with hn | hn
             · subst n
@@ -244,9 +245,10 @@ private theorem a4_source_parent_cases (s a k : Nat)
             rcases hcase with ⟨hy3,_⟩ | ⟨_,n,hpow,_⟩
             · omega
             · have hodd : (x+y+1)%2=1 := by omega
+              have hEvenFactor : (2*(a-1)+8)%2=0 := by omega
               have heven : (x+y+1)%2=0 := by
-                rw [hpow]
-                simp [Nat.mul_mod]
+                rw [hpow,Nat.mul_mod]
+                simp [hEvenFactor]
               omega
 
 /-- The q=1 A4 parent is even/even with sum 2 mod 4. Its direct
@@ -377,27 +379,31 @@ private theorem t0_source_parent_cases (s a k : Nat)
               simpa [sectionPreimageAll,ha0,ha1,hk0,hlow,haeven] using hp
             rcases hcase with ⟨hy3,_⟩ | ⟨_,n,hpow,hcost⟩
             · omega
-            · have hsum' : x+y+1=2^n*(2*a+6) := by omega
-              have hcost' : 2*k+a+7+3*n=x+2*y := by omega
+            · have hfactor : 2*(a-1)+8=2*a+6 := by omega
+              have hsum' : x+y+1=2^n*(2*a+6) := by
+                simpa [hfactor] using hpow
+              have hcost' : 2*k+a+7+3*n=x+2*y := by
+                rw [hfactor] at hcost
+                omega
               have hnEven : n%2=0 := by omega
               have hnle : n≤3 := by
-                by_contra hn
-                have hn4 : 4≤n := by omega
-                have hpowdiv : 2^4∣2^n := Nat.pow_dvd_pow 2 hn4
-                have ha3div : 2∣a+3 := by
-                  refine ⟨(a+3)/2,?_⟩
+                by_cases hn4 : 4≤n
+                · have hpowdiv : 2^4∣2^n := Nat.pow_dvd_pow 2 hn4
+                  have ha3even : (a+3)%2=0 := by omega
+                  have ha3div : 2∣a+3 :=
+                    Nat.dvd_iff_mod_eq_zero.mpr ha3even
+                  rcases hpowdiv with ⟨p,hp⟩
+                  rcases ha3div with ⟨q,hq⟩
+                  have hfac : 2*a+6=4*q := by omega
+                  have hdiv : 64∣x+y+1 := by
+                    refine ⟨p*q,?_⟩
+                    calc
+                      x+y+1=2^n*(2*a+6) := hsum'
+                      _=(2^4*p)*(4*q) := by rw [← hp,hfac]
+                      _=64*(p*q) := by norm_num [show (2:Nat)^4=16 by decide]; ring
+                  have hzero := Nat.mod_eq_zero_of_dvd hdiv
                   omega
-                rcases hpowdiv with ⟨p,hp⟩
-                rcases ha3div with ⟨q,hq⟩
-                have hfac : 2*a+6=4*q := by omega
-                have hdiv : 64∣x+y+1 := by
-                  refine ⟨p*q,?_⟩
-                  calc
-                    x+y+1=2^n*(2*a+6) := hsum'
-                    _=(2^4*p)*(4*q) := by rw [← hp,hfac]
-                    _=64*(p*q) := by norm_num [show (2:Nat)^4=16 by decide]; ring
-                have hzero := Nat.mod_eq_zero_of_dvd hdiv
-                omega
+                · omega
               have hdepth : n=0 ∨ n=2 := by omega
               rcases hdepth with hn | hn
               · subst n
@@ -561,15 +567,24 @@ theorem r0_eight_unreachable (m : Nat) :
         B1y m%2=0 ∧ (B1x m+B1y m)%8=3 := by
       dsimp [B1x,B1y]
       omega
+    have hBx :
+        (R1x m+R1y m+1)/4-3=B1x m := by
+      dsimp [R1x,R1y,B1x]
+      omega
+    have hBy :
+        (R1x m+2*R1y m-((R1x m+R1y m+1)/4-3)-10)/2=B1y m := by
+      dsimp [R1x,R1y,B1x,B1y]
+      omega
     have hBreach : RunReach (B1x m) (B1y m) := by
       simpa [RunReach,BB6.Agent3Root32HighStopA4Core.RunReach,
-        BB6.Agent3.CReach] using hB
+        BB6.Agent3.CReach,hBx,hBy] using hB
     obtain ⟨a,k,hprev,hstep⟩ :=
       BB6.Agent3Root32HighStopA4Core.run_parent_of_left_gt5
         (B1x m) (B1y m) hBfacts.1 hBreach
-    obtain ⟨ha,hk⟩ := (BB6.Agent46.section_odd_even_iff_affine
+    have hAffine := BB6.Agent46.section_odd_even_iff_affine
       a k (B1x m) (B1y m) hBfacts.2.2.1 hBfacts.2.2.2.1
-      hBfacts.2.1 hBfacts.2.2.2.2 hstep).mp hstep
+      hBfacts.2.1 hBfacts.2.2.2.2
+    obtain ⟨ha,hk⟩ := hAffine.mp hstep
     have hGreach : RunReach (G1x m) (G1y m) := by
       have hGx : B1x m+B1y m-2=G1x m := by
         dsimp [B1x,B1y,G1x]
