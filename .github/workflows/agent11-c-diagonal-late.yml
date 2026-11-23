@@ -728,6 +728,15 @@ jobs:
           lean -o S2QEvenResidue.olean S2QEvenResidue.lean 2>&1 | tee S2QEvenResidue.log
           cp ${GITHUB_WORKSPACE}/im-results/agent4-c-seven-image/{CSixSeventhS2,CSixSeventhS2QEven}.lean .
           lean -o CSixSeventhS2.olean CSixSeventhS2.lean 2>&1 | tee CSixSeventhS2.log
+          python3 "${GITHUB_WORKSPACE}/tools/lean_compile_closure.py" \
+            "${GITHUB_WORKSPACE}/im-results/agent11-c-bounce-exact/HighSumTwo.lean" \
+            --workdir /tmp/a11-highsumtwo --jobs 4 --lean "$(command -v lean)" \
+            2>&1 | tee HighSumTwoClosure.log
+          if grep -q sorryAx HighSumTwoClosure.log; then
+            echo "REJECTED: odd-right sum-two source obstruction contains sorryAx"
+            exit 1
+          fi
+          export LEAN_PATH="/tmp/a11-highsumtwo:$PWD"
           lean -o CSixSeventhS2QEven.olean CSixSeventhS2QEven.lean 2>&1 | tee CSixSeventhS2QEven.log
           cp ${GITHUB_WORKSPACE}/im-results/agent34-s2-pullback/CSixSeventhS2Pullback.lean .
           lean -o CSixSeventhS2Pullback.olean CSixSeventhS2Pullback.lean 2>&1 | tee CSixSeventhS2Pullback.log
@@ -753,7 +762,7 @@ jobs:
             echo "REJECTED: exact six-sector criterion closure contains sorryAx"
             exit 1
           fi
-          export LEAN_PATH="/tmp/a11-s2-sixall-criterion:$PWD"
+          export LEAN_PATH="/tmp/a11-s2-sixall-criterion:/tmp/a11-highsumtwo:$PWD"
 
           # Compose the s3 source-image exclusion with the latest merged
           # C58 + odd-diagonal + m=0 + six-sector exact halting criterion.
