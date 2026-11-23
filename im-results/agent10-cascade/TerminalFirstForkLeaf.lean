@@ -3,12 +3,13 @@ import RayOddForkExtended
 set_option maxHeartbeats 0
 
 namespace CascadeTerminalFirstFork
-open CascadeResetInverse CascadeRayOddStrip CascadeSweep
+open CascadeResetInverse CascadeRayOddStrip CascadeSweep CascadeUniformFatal CascadeAgent10Four
+open CascadeForkOddDead CascadeForkOddDead27
 
 /-- The t=1 odd feeder of the nonterminal J-2 canonical ray
     cannot be blank-rooted when its output quotient is 1 mod 3.
     All hypotheses are exact arithmetic consequences of the high-c
-    original #746 ray formula and X_-/27 residue 9. -/
+    original #746 ray formula and the Xminus residue modulo 27. -/
 theorem tone_feeder_nonterminal_gap_dead
     (n p q d h : Nat)
     (hn : 257 ≤ n)
@@ -35,7 +36,9 @@ theorem three_even_depth_residue_gate (A B : Nat)
     (2*(A+B)+5)%9=0 ∨
     (2*(A+4*B)+5)%9=0 ∨
     (2*(A+16*B)+5)%9=0 := by
-  omega
+  have hA9 : A%9=1 ∨ A%9=4 ∨ A%9=7 := by omega
+  have hB9 : B%9=1 ∨ B%9=4 ∨ B%9=7 := by omega
+  rcases hA9 with ha|ha|ha <;> rcases hB9 with hb|hb|hb <;> omega
 
 #print axioms tone_feeder_nonterminal_gap_dead
 #print axioms three_even_depth_residue_gate
