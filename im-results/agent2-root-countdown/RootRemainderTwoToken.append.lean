@@ -86,7 +86,7 @@ theorem root_countdown_prefix_with_tail_fixed (n c : ℕ)
                 (ReachesPlus.trans h7 h8)))))))
 
 
-theorem root_d2_tok_dr_zero_sweep (k : ℕ) (K1 : List ℕ)
+private theorem root_d2_tok_dr_zero_sweep (k : ℕ) (K1 : List ℕ)
     (R3 : List (ℕ × ℕ)) (L : List ℕ) :
     ReachesPlus target
       (tok_DR (2 :: K1) R3 (List.replicate (k+1) 0 ++ L))
@@ -109,7 +109,7 @@ theorem root_d2_tok_dr_zero_sweep (k : ℕ) (K1 : List ℕ)
         simpa [List.replicate_succ, List.cons_append, List.append_assoc] using h2)
 
 
-theorem root_d2_tok_el_one_sweep (k : ℕ) (K1 : List ℕ)
+private theorem root_d2_tok_el_one_sweep (k : ℕ) (K1 : List ℕ)
     (R3 : List (ℕ × ℕ)) (L : List ℕ) :
     ReachesPlus target
       (tok_EL (List.replicate (k+1) 1 ++ K1) R3 L)
@@ -130,7 +130,7 @@ theorem root_d2_tok_el_one_sweep (k : ℕ) (K1 : List ℕ)
         simpa [List.replicate_succ, List.cons_append, List.append_assoc] using h2)
 
 
-theorem root_d2_tok_dr_z1 (k : ℕ) (R3 : List (ℕ × ℕ)) :
+private theorem root_d2_tok_dr_z1 (k : ℕ) (R3 : List (ℕ × ℕ)) :
     ReachesPlus target
       (tok_DR [2,0] R3 (List.replicate (k+1) 0 ++ [1]))
       (cfg_CR_n_n
@@ -153,7 +153,7 @@ theorem root_d2_tok_dr_z1 (k : ℕ) (R3 : List (ℕ × ℕ)) :
   exact ReachesPlus.trans h1 (ReachesPlus.trans h2 (ReachesPlus.trans h3 h4))
 
 
-theorem root_d2_dl_one_z1 (k : ℕ) :
+private theorem root_d2_dl_one_z1 (k : ℕ) :
     ReachesPlus target
       (cfg_DL_0_n (List.replicate (k+1) (0,0) ++ [(1,0)]) [(1,0)])
       (cfg_CR_n_n (List.replicate (k+5) (0,0) ++ [(1,0)]) [(0,0)]) := by
@@ -181,6 +181,11 @@ theorem root_countdown_two_reset (n : ℕ) :
   have h1 := root_countdown_prefix_with_tail_fixed n 2 []
   have h2 := root_countdown_el_zero_sweep (4*n+5)
     [(0,0),(1,0)] [(2,0)]
+  have h2' : ReachesPlus target
+      (cfg_EL_n_n [(0,0),(1,0)]
+        (List.replicate (4*n+6) (0,0) ++ [(2,0)]))
+      (cfg_EL_n_n (List.replicate (4*n+7) (0,0) ++ [(1,0)]) [(2,0)]) := by
+    simpa [List.replicate_succ, List.cons_append, List.append_assoc] using h2
   have h3 := root_countdown_el_positive_step 1
     (List.replicate (4*n+7) (0,0) ++ [(1,0)]) []
   have h4 := root_d2_dl_one_z1 (4*n+6)
@@ -207,7 +212,7 @@ theorem root_countdown_two_reset (n : ℕ) :
     simpa [bumpPairHead] using h6
   have hchain :=
     ReachesPlus.trans h1
-      (ReachesPlus.trans h2
+      (ReachesPlus.trans h2'
         (ReachesPlus.trans h3
           (ReachesPlus.trans h4'
             (ReachesPlus.trans h5' (ReachesPlus.trans h6' h7)))))
