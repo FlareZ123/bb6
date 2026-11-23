@@ -27,7 +27,7 @@ def A4Q1Dx (s : Nat) : Nat := 2755781203284 + 3923321078880*s
 def A4Q1Dy (s : Nat) : Nat := 1156246044393 + 1646111989200*s
 
 def T0Q1x (s : Nat) : Nat := 427589359377 + 608745841200*s
-def T0Q1y (s : Nat) : Nat := 2320341966345 + 3303398633040*s
+def T0Q1y (s : Nat) : Nat := 2320341966345 + 3303399608040*s
 
 def P0x (s : Nat) : Nat := 1710357437517 + 2434983364800*s
 def P0y (s : Nat) : Nat := 1678957927278 + 2390280846240*s
@@ -581,7 +581,7 @@ theorem r0_eight_unreachable (m : Nat) :
       dsimp [R1x,R1y,B1x]
       omega
     have hBy :
-        (R1x m+2*R1y m-((R1x m+R1y m+1)/4-3)-10)/2=B1y m := by
+        (R1x m+2*R1y m-B1x m-10)/2=B1y m := by
       dsimp [R1x,R1y,B1x,B1y]
       omega
     have hBreach : RunReach (B1x m) (B1y m) := by
