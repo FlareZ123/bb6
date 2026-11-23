@@ -122,8 +122,8 @@ private theorem s3_zero_prefix (n : ℕ) :
           ((0,0)::(0,0)::tail)) := by
     simpa [bumpPairHead] using
       (s3_dl_zero [(0,0)] ((0,0)::(0,0)::tail))
-  simpa [tail, List.replicate_add, List.replicate_succ, List.cons_append,
-    List.append_assoc, Nat.add_assoc] using
+  simpa [tail, s3_zero_push, List.replicate_add, List.replicate_succ,
+    List.cons_append, List.append_assoc, Nat.add_assoc] using
     (ReachesPlus.trans h1
       (ReachesPlus.trans h2
         (ReachesPlus.trans h3
@@ -168,12 +168,17 @@ theorem s3_zero_suffix_reset (n : ℕ) :
   have h34 :
       List.replicate (4*n+8) (0,0) ++ [(0,0),(1,0)] =
       List.replicate (4*n+9) (0,0) ++ [(1,0)] := by
-    rw [show 4*n+9=(4*n+8)+1 by omega, List.replicate_add]
-    rfl
-  rw [h34] at h3
+    rw [show 4*n+9=(4*n+8)+1 by omega]
+    simp [List.replicate_add, List.cons_append, List.append_assoc,
+      s3_zero_push]
+  have h3' :
+      ReachesPlus target
+        (cfg_EL_n_n (List.replicate (4*n+8) (0,0) ++ [(0,0),(1,0)]) [])
+        (cfg_CR_n_n (List.replicate (4*n+9) (0,0) ++ [(1,0)]) [(0,0)]) := by
+    simpa only [← h34] using h3
   have hchain := ReachesPlus.trans h1
     (ReachesPlus.trans h2'
-      (ReachesPlus.trans h3
+      (ReachesPlus.trans h3'
         (ReachesPlus.trans h4
           (ReachesPlus.trans h5 h6))))
   simpa [List.replicate_succ, List.cons_append, List.append_assoc,
