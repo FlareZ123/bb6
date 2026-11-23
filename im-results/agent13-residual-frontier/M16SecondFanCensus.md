@@ -73,4 +73,4 @@ Using F=519z+73, these correspond to the following z-cylinders:
 | 2 | 64 | 5, 13, 29, 45, 61 |
 | 3 | 128 | 25, 57, 89, 121 |
 
-The q-residue theorem and high-valuation witness are in the separate valuation module. Its standalone CI run [45232028892](https://github.com/FlareZ123/bb6/actions/runs/45232028892) is still in progress at this checkpoint; treat this extension as pending final CI confirmation. Even when confirmed, it is a quotient exclusion, not evidence that a seen=true parent is actually reachable. Whether these low-valuation cylinders add anything beyond the existing Agent11 low sieve remains a separate overlap question.
+The q-residue theorem and high-valuation witness are in the separate valuation module. Its standalone CI run [45232028892](https://github.com/FlareZ123/bb6/actions/runs/45232028892) passed. Both theorem declarations compile with no sorryAx. Even when confirmed, it is a quotient exclusion, not evidence that a seen=true parent is actually reachable. Whether these low-valuation cylinders add anything beyond the existing Agent11 low sieve remains a separate overlap question.
