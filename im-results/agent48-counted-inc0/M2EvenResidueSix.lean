@@ -331,10 +331,9 @@ private theorem m2EvenResidueSix_leftFacing
   have hbaseLeft : ∀ i : Nat,
       m2EvenSixQ4CutTape a b h (h-(i:Int)) =
         sideBit (m2EvenSixQ4LeftFacing a) i := by
-    obtain ⟨Tq,_,hleft,_,_⟩ :=
-      m2EvenSix_q4_prefix_data a b h ha
-    have hTq : Tq = m2EvenSixQ4CutTape a b h := by rfl
-    simpa [hTq] using hleft
+    obtain ⟨_,hleft,_,_⟩ :=
+      m2EvenSix_q4_prefix_data_exact a b h ha
+    exact hleft
   intro i
   by_cases hi : i ≤ 3*a+11
   · have hin :
@@ -387,10 +386,9 @@ private theorem m2EvenResidueSix_rightFacing
   intro i
   have hbase : m2EvenSixQ4CutTape a b h (h+1+(i:Int)) =
       sideBit (q4RightFacing b) i := by
-    obtain ⟨Tq,_,_,_,hright⟩ :=
-      m2EvenSix_q4_prefix_data a b h (by omega)
-    have hTq : Tq = m2EvenSixQ4CutTape a b h := by rfl
-    simpa [hTq] using hright i
+    obtain ⟨_,_,_,hright⟩ :=
+      m2EvenSix_q4_prefix_data_exact a b h (by omega)
+    exact hright i
   have hin :
       m2EvenResidueSixInside a h (h+1+(i:Int)) = true := by
     simp [m2EvenResidueSixInside]
@@ -411,10 +409,9 @@ private theorem m2EvenResidueSix_prefix_rightShape
       simp [m2EvenResidueSixInside]
       omega
     exact (m2EvenResidueSix_cut_eq_base_inside L k a b h x hin).symm
-  · obtain ⟨Tq,_,hleft,hshape,_⟩ :=
-      m2EvenSix_q4_prefix_data a b h ha
-    have hTq : Tq = m2EvenSixQ4CutTape a b h := by rfl
-    simpa [hTq] using hshape
+  · obtain ⟨_,_,hshape,_⟩ :=
+      m2EvenSix_q4_prefix_data_exact a b h ha
+    exact hshape
 
 private theorem fRun_prefix_exists {m c n k d}
     (h : fRun m n c = some d) (hk : k ≤ n) :
