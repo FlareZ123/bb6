@@ -37,11 +37,11 @@ The following bounds are deliberately loose.
 
    Therefore either bump raises \(W\) by at most 8. The existing peelTok_num_sum_le plus the corresponding length bound gives an increase of at most 7 for replacing a head token by its peeled form.
 
-2. **Eating.** eatFuel_num_sum_le proves that a positive-mass block is exchanged for its repeat counter without increasing numeric mass. The length lemma
+2. **Eating.** For the concrete nonempty blocks used by eatB1/eatB2/eatB12R, eatFuel_num_sum_le proves that a positive-mass block is exchanged for its repeat counter without increasing numeric mass. The length lemma
    \[
    |\operatorname{eatFuel}(\ldots,xs)|\le |xs|+1
    \]
-   follows by induction on fuel: every successful eatStep returns a strict suffix (getRep removes one token; stripPrefixSym removes a nonempty block). On no match, eatFuel emits one repeat token before xs; on a match, the induction hypothesis bounds the result by the shorter suffix length plus one, hence by |xs|. In successful sweepBB branches, the stripped prefix is reinserted with the same mass; the repeat token consumed from the left pays for the resulting right-side representation.
+   follows by induction on fuel, with the nonempty-block hypothesis: every successful eatStep returns a strict suffix (getRep removes one token; stripPrefixSym removes a nonempty block). On no match, eatFuel emits one repeat token before xs; on a match, the induction hypothesis bounds the result by the shorter suffix length plus one, hence by |xs|. In successful sweepBB branches, the stripped prefix is reinserted with the same mass; the repeat token consumed from the left pays for the resulting right-side representation.
 
 3. **Atomic symbolic steps.** The case definitions support the target inequalities
    \[
