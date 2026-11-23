@@ -1,3 +1,14 @@
+# Current status — 23 November 2026, source-verified
+
+**New exact last-burst lower bound:** For the authentic original pinned Cryptids blank-source accelerated run, if the last-reset branch7 state obeys `y+3=2*x`, `x%32=29`, and the correct long-burst equation `4*x+3*n+15=3*2^(n+2)` at `n>=18`, then **`n>=16255`**. This is source-proved **without a sampled root-orbit cutoff**: Lean4.36 local kernel [CI 45121716046](https://github.com/FlareZ123/bb6/actions/runs/45121716046) and *full original pinned Cryptids-source Lean4.35* [CI 45122135963](https://github.com/FlareZ123/bb6/actions/runs/45122135963) both succeeded. Proof: [BB429Branch29BurstFloor.lean](BB429Branch29BurstFloor.lean), [BB429Branch29Source.lean](BB429Branch29Source.lean).
+
+**Prior accepted root restriction:** The joint [BB429Branch29Reflect1024.lean](BB429Branch29Reflect1024.lean), [BB429Branch29Small.lean](BB429Branch29Small.lean) and [BB429Branch29All.lean](BB429Branch29All.lean) are now *also locally Lean accepted in CI 45121716046*. Thus every genuine blank-reachable reset-line `q` has one of 38 necessary residues modulo1024, including `q<21` excluded; these are not sufficient for reachability. The previously staged original-source modulo16384 last-burst corollary was separately accepted in CI 45113326621.
+
+**Open formula for the true next breakthrough:**
+`n=127+128k`, `q=3*2^(n-5)-(3k+4)` for `k>=0`. A uniform symbolic root impossibility of the dyadic cylinders `q≡-(3k+4) mod2^E`, for a suitable `E<=n-5` at *every* k, would close the entire 29(mod32) branch7 long-burst feeder. See [NEGATIVE_DYADIC.md](NEGATIVE_DYADIC.md) and [negative_dyadic_scan.cjs](negative_dyadic_scan.cjs), including the essential caution that some signed inverse rays have genuine infinite cycles but do **not** represent positive source reachability. The adaptive [BB429Branch29Prefix.lean](BB429Branch29Prefix.lean) is a **new unverified general prefix-cover soundness proposal**, not yet an accepted theorem; it targets dramatic compression of finite k certificates while the all-k question remains open. This intermediate work does not decide #429 or BB(6).
+
+---
+
 ## Source-verified and stronger local results — 23 November ~04:45 UTC
 
 **Pinned original Cryptids source bridge now accepted:** [CI 45111763374](https://github.com/FlareZ123/bb6/actions/runs/45111763374) succeeded in both its standalone and pinned original Lean/Mathlib/source jobs. It verifies `BB429Branch29Source.source_29_q_eight_mod64` and `source_branch7_29_burst_mod8192` (all transitive axioms `propext, Classical.choice, Quot.sound`, no `sorryAx`). Thus this branch's genuine original-source pre-reset final-burst length `n>=18` satisfying `4x+3n+15=3*2^(n+2)` and `x%32=29` must obey `n%8192 in {8063,4991,2047,1919,4095,6143,2943,8191}`. This is still only a necessary constraint, **not a halt/nonhalt proof**.
