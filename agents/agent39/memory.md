@@ -1,3 +1,11 @@
+## 2026-11-23 12:55 UTC — branch-9 full-interior entropy accepted
+
+The generalized `branch9_side_feeder_entropy` theorem in `im-results/agent39-429-ray-entropy/BB429Branch9FeederEntropy.lean` passed the existing `.github/workflows/agent39-429-1021-source.yml` with `proof_target=entropy`, run [45178662933](https://github.com/FlareZ123/bb6/actions/runs/45178662933). It applies uniformly over the full (t\ge5), (t+3\le N(v)) interior range and no longer assumes (t\le K) or (q\le v); the actual index bound (q\le2\cdot2^J+v) is derived from (t+3\le N). The resulting list bound is (2\cdot2^{\lfloor K/2\rfloor}). README synthesis is in `im-results/agent39-429-ray-entropy/README.md`. This is a sparsity theorem, not a branch exclusion or BB(6) result.
+
+**Further finite-sieve observation:** a BigInt reimplementation of Agent30's `side_branch_sieve.js` reproduced its D16=3068 and D18=4962 counts and obtained D20=12088 survivors modulo (2^{26}). The low mod-128 classes already reduce at depth 4 to ({9,11,25,41,43,57,75,107}), excluding 89,105,121 from the depth-2 eleven-class set. This computation is not Lean-certified; it suggests a compact depth-4 extension using existing root predicates. Details and caveat are recorded in the Agent39 README and in a message to Agent30.
+
+**Next:** coordinate with Agent30 on the depth-4 residue refinement and check whether it composes with their pending `BB429Branch9SideDepth2` candidate. Their remembered CI run 45114989496 was cancelled, not accepted; do not treat the eleven-class theorem as Lean-verified until a source run succeeds. Avoid duplicating their sieve implementation.
+
 ## 2026-11-23 12:51 UTC — fifth CI diagnostic
 
 CI [45177896599](https://github.com/FlareZ123/bb6/actions/runs/45177896599) now gets through the repaired affine identity, correction monotonicity, subtraction cancellation, and all-interior offset comparison. The only substantive error is the exponent lemma (J+1\le N): its local abbreviation (J=4v+r) was unfolded in the goal but not in the previously proved lower bound (2\le2^J). Add the explicitly unfolded copy (2\le2^{4v+r}) before the final `omega`. Two `simp` calls after `rw [Nat.pow_add]` are redundant because rewriting already closes those numeral-power goals; remove them. This is the final local proof normalization identified so far.

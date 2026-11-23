@@ -74,6 +74,57 @@ for **all** `k,c,s,d,e,X,A,B,l` meeting those conditions. It does **not** assume
 
 ---
 
+## Branch-9 exceptional S-parent family: full-interior square-root entropy
+
+**Lean-checked result.** `BB429Branch9FeederEntropy.lean` proves `branch9_side_feeder_entropy`. Fix (t,r,q,K\in\mathbb N) with (t\ge5), (r<4), (t+14=r+4q), and (K\ge1). For a distinct finite list (l), suppose every (v\in l) satisfies
+
+[
+K\le v<2^K,\qquad t+3\le N(v),\qquad
+\operatorname{Reach}(A(t,q,r,v),B(t,q,r,v)),
+]
+
+where
+
+[
+J(v)=4v+r,\quad N(v)=8\cdot2^{J(v)}+J(v)-11,
+\quad k(v)=2\cdot2^{J(v)}+v-q,
+]
+
+[
+A=12\cdot2^N+6\cdot2^t-6\cdot2^J-8-3k,
+\qquad
+B=24\cdot2^N+5-12\cdot2^t-12\cdot2^J-6k.
+]
+
+Then
+
+[
+\boxed{|l|\le 2\cdot2^{\lfloor K/2\rfloor}.}
+]
+
+The proof applies the reusable affine-feeder cardinality theorem with the exact branch-9 parameters. Its key identities and bounds are:
+
+- (t+3\le N), together with (t+14=r+4q), implies (q\le2\cdot2^J+v); the natural subtraction defining (k) is therefore exact.
+- With (C=6\cdot2^t+3q-8), the affine identity is
+  (A+3v=(12\cdot2^N-12\cdot2^J)+C).
+  Since (J\ge K+2) and (N\ge J+1), the first term is divisible by (2^K). The correction (e=(C+1)2^K-C) makes (A+3v+e) divisible by (2^K).
+- The ray offset (c=24\cdot2^t-21) satisfies (B+c=2A), and (t+3\le N) gives (c\le2A).
+- The high-counter condition (16\cdot2^K\le A+3) follows from the same affine identity and exponent separation.
+
+This removes the earlier draft's artificial restrictions (t\le K) and (q\le v). The estimate now covers every (t\ge5) in the actual interior range (t+3\le N(v)), for each fixed (t,r,q). It is a parameter-sparsity theorem, not an exclusion of the branch or a BB(6) solution.
+
+**Validation:** the existing manual workflow `.github/workflows/agent39-429-1021-source.yml`, input `proof_target=entropy`, passed on 2026-11-23 (run [45178662933](https://github.com/FlareZ123/bb6/actions/runs/45178662933)). The Lean source ends with `#print axioms branch9_side_feeder_entropy`; no `sorry` or `admit` was introduced in this module.
+
+### Additional finite-sieve observation (not yet Lean-certified)
+
+A separate BigInt reimplementation of the existing `agent30-429-branch9-zero-feeder/side_branch_sieve.js` predicates and inverse-parent rules reproduces the reported depth-16 and depth-18 counts (3068 and 4962), and extends the computation to depth 20: **12088** surviving residues modulo (2^{26}). Already at depth 4, the surviving low-seven-bit classes shrink from the depth-2 eleven-class set to
+
+[
+\{9,11,25,41,43,57,75,107\},
+]
+
+eliminating (89,105,121\pmod{128}). This is an exact finite computation, not yet a kernel-checked theorem. The three eliminated classes fail at the next inverse levels under existing root constraints (`even16`, `odd8-7b8`, `odd8-1-3`, and `odd32-5`); the result suggests that a short extension of the depth-2 Lean proof may strengthen the branch-9 residue gate from eleven classes to eight. See the Agent30 sieve script for the underlying predicates and transition rules.
+
 ## Main result: a square-root, not merely modular, sieve
 
 Let `next`, `run` and the genuine blank section root `(0,0)` be the exact `BB429` definitions of [Agent 5's authenticated accelerator](../agent5-429-rank/BB429Rank.lean), with source inverse lemmas [`BB429NewResidue.odd_inverse/even_inverse`](../agent6-harmonic429/BB429NewResidue.lean). Define
