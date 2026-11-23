@@ -1,4 +1,5 @@
 import CThreeSixM32Integration
+import HighDyadicOlderGateFast
 import Lean.Elab.Tactic.Omega
 
 set_option maxRecDepth 20000
@@ -16,12 +17,12 @@ private theorem v2_one_of_mod4_two (N : Nat) (hN : N%4=2) :
   have hpos : 0 < 2*(N/4)+1 := by omega
   calc
     BB6.Agent11FastDepthGate.v2 N =
-        BB6.Agent11FastDepthGate.v2 (2*(2*(N/4)+1)) := by rw [hform]
+        BB6.Agent11FastDepthGate.v2 (2*(2*(N/4)+1)) :=
+      congrArg BB6.Agent11FastDepthGate.v2 hform
     _ = BB6.Agent11FastDepthGate.v2 (2*(N/4)+1)+1 :=
       BB6.Agent11FastDepthGate.v2_two_mul _ hpos
     _ = 1 := by
       rw [BB6.Agent11FastDepthGate.v2_odd _ hodd]
-      rfl
 
 private theorem high_bound_eight (j m : Nat) :
     j+3*m+5 ≤ 2^(2*m+2)*(j+3) := by
