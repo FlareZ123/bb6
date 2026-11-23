@@ -136,7 +136,14 @@ private theorem branch9_affine_identity (t q r v K : Nat)
     have hpowt := pow2_mono 5 t ht
     have h32 : 2^5=32 := by decide
     omega
-  dsimp [branch9A,branch9Carry,branch9Index,branch9J,branch9N]
+  have hAeq :
+      branch9A t q r v+(6*2^J+8+3*k)=12*2^N+6*2^t := by
+    change (12*2^N+6*2^t-(6*2^J+8+3*k))+(6*2^J+8+3*k)=12*2^N+6*2^t
+    exact Nat.sub_add_cancel hbase
+  have hCeq : branch9Carry t q+8=6*2^t+3*q := by
+    change (6*2^t+3*q-8)+8=6*2^t+3*q
+    exact Nat.sub_add_cancel hCnonneg
+  have hidx3 : 3*k+3*q=6*2^J+3*v := by omega
   omega
 
 private theorem branch9_high_counter (t q r v K : Nat)
@@ -224,9 +231,13 @@ private theorem branch9_divisibility (t q r v K : Nat)
     omega
   have hmul_sub : 2^K*P-2^K*Q=2^K*(P-Q) := by
     have hp : P=Q+(P-Q) := by omega
+    have hmulP : 2^K*P=2^K*Q+2^K*(P-Q) := by
+      have h := congrArg (fun z : Nat => 2^K*z) hp
+      rw [Nat.mul_add] at h
+      exact h
     calc
-      2^K*P-2^K*Q = (2^K*Q+2^K*(P-Q))-2^K*Q := by rw [hp,Nat.mul_add]
-      _ = 2^K*(P-Q) := Nat.add_sub_cancel_left _ _
+      2^K*P-2^K*Q = (2^K*Q+2^K*(P-Q))-2^K*Q := by rw [hmulP]
+      _ = 2^K*(P-Q) := by omega
   have hdiff : 12*2^N-12*2^J = 2^K*(P-Q) := by
     rw [h12N,h12J]
     exact hmul_sub
