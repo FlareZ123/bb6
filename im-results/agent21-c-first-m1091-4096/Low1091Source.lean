@@ -45,6 +45,18 @@ private theorem cReach_of_unique_parent (x y a k : Nat)
   obtain ⟨rfl,rfl⟩ := huniq b c hedge
   exact hrb
 
+/-- The source-certified even-right theorem reduces blank reachability
+    to the direct predecessor whenever the sum residue is neither 0 nor 7. -/
+private theorem cReach_even_right_parent (x y : Nat)
+    (hy6 : 6≤y) (hye : y%2=0)
+    (hzero : (x+y)%8≠0) (hseven : (x+y)%8≠7)
+    (hr : CReach x y) :
+    CReach (x+y-2) ((y-2)/2) := by
+  change (∃ t, BB6.Agent8Section.run secNext t (some (5,1))=some (x,y)) at hr
+  have h := (BB6.Agent15.blank_reach_iff_even_right x y hy6 hye hzero hseven).mp hr
+  change CReach (x+y-2) ((y-2)/2)
+  exact h
+
 /-- Odd/odd outputs with sum 4 modulo 8 have only their depth-zero
     even-left bounce predecessor. This is derived from the complete
     unbounded-depth original-source inverse predicate. -/
@@ -135,7 +147,7 @@ private theorem odd_odd_sum4_parent (a k x y : Nat)
               rw [hpow] at hodd
               omega
 
-/-- Even/odd outputs with x+y+1 = 12 mod 16 have only their
+/-- Even/odd outputs with x+y+1 = 4 mod 8 have only their
     depth-zero odd-left bounce predecessor. -/
 private theorem even_odd_sumplus1_mod8_4_parent (a k x y : Nat)
     (hx : 5<x) (hy : 5≤y)
@@ -240,80 +252,121 @@ private theorem no_blank_odd_sum_two (x y : Nat)
   cases hpair
   omega
 
-/-- The low first-stop target with m=4096r+1091 has a six-state inverse
-    chain ending in the forbidden odd-right sum-two sector. -/
-private theorem no_low_target (u : Nat) (hu : u%4=0) :
-    ¬ CReach 1 (1024*u+819) := by
-  intro hT
-  have hTuniq : ∀ a k, secNext (a,k)=some (1,1024*u+819) →
-      a=512*u+408 ∧ k=768*u+612 := by
+/-- The first five exact source inversions reduce every target
+    (1,1024*q+819) to the even-right state shown here. -/
+private theorem low_target_reaches_R1 (q : Nat)
+    (hT : CReach 1 (1024*q+819)) :
+    CReach (692*q+543) (678*q+532) := by
+  have hTuniq : ∀ a k, secNext (a,k)=some (1,1024*q+819) →
+      a=512*q+408 ∧ k=768*q+612 := by
     intro a k hedge
-    have hp := odd_odd_sum4_parent a k 1 (1024*u+819)
+    have hp := odd_odd_sum4_parent a k 1 (1024*q+819)
       (by omega) (by omega) (by omega) (by omega) (by omega) (by omega) hedge
     constructor <;> omega
-  have hP : CReach (512*u+408) (768*u+612) :=
-    cReach_of_unique_parent 1 (1024*u+819) (512*u+408) (768*u+612)
+  have hP : CReach (512*q+408) (768*q+612) :=
+    cReach_of_unique_parent 1 (1024*q+819) (512*q+408) (768*q+612)
       (by omega) hTuniq hT
-  have hPuniq : ∀ a k, secNext (a,k)=some (512*u+408,768*u+612) →
-      a=1280*u+1018 ∧ k=384*u+305 := by
+  have hPuniq : ∀ a k, secNext (a,k)=some (512*q+408,768*q+612) →
+      a=1280*q+1018 ∧ k=384*q+305 := by
     intro a k hedge
-    have hx : (512*u+408)%2=0 := by omega
-    have hy : (768*u+612)%2=0 := by omega
-    have hy6 : 6≤768*u+612 := by omega
-    have hsum : ((512*u+408)+(768*u+612))%8≠0 := by omega
+    have hx : (512*q+408)%2=0 := by omega
+    have hy : (768*q+612)%2=0 := by omega
+    have hy6 : 6≤768*q+612 := by omega
+    have hsum : ((512*q+408)+(768*q+612))%8≠0 := by omega
     have hp := (section_even_even_iff_affine a k
-      (512*u+408) (768*u+612) hx hy hy6 hsum).mp hedge
+      (512*q+408) (768*q+612) hx hy hy6 hsum).mp hedge
     constructor <;> omega
-  have hD : CReach (1280*u+1018) (384*u+305) :=
-    cReach_of_unique_parent (512*u+408) (768*u+612)
-      (1280*u+1018) (384*u+305) (by omega) hPuniq hP
-  have hDuniq : ∀ a k, secNext (a,k)=some (1280*u+1018,384*u+305) →
-      a=832*u+659 ∧ k=608*u+481 := by
+  have hD : CReach (1280*q+1018) (384*q+305) :=
+    cReach_of_unique_parent (512*q+408) (768*q+612)
+      (1280*q+1018) (384*q+305) (by omega) hPuniq hP
+  have hDuniq : ∀ a k, secNext (a,k)=some (1280*q+1018,384*q+305) →
+      a=832*q+659 ∧ k=608*q+481 := by
     intro a k hedge
     have hp := even_odd_sumplus1_mod8_4_parent a k
-      (1280*u+1018) (384*u+305) (by omega) (by omega)
+      (1280*q+1018) (384*q+305) (by omega) (by omega)
       (by omega) (by omega) (by omega) hedge
     constructor <;> omega
-  have hQ : CReach (832*u+659) (608*u+481) :=
-    cReach_of_unique_parent (1280*u+1018) (384*u+305)
-      (832*u+659) (608*u+481) (by omega) hDuniq hD
-  have hQuniq : ∀ a k, secNext (a,k)=some (832*u+659,608*u+481) →
-      a=720*u+568 ∧ k=664*u+523 := by
+  have hQ : CReach (832*q+659) (608*q+481) :=
+    cReach_of_unique_parent (1280*q+1018) (384*q+305)
+      (832*q+659) (608*q+481) (by omega) hDuniq hD
+  have hQuniq : ∀ a k, secNext (a,k)=some (832*q+659,608*q+481) →
+      a=720*q+568 ∧ k=664*q+523 := by
     intro a k hedge
-    have hp := odd_odd_sum4_parent a k (832*u+659) (608*u+481)
+    have hp := odd_odd_sum4_parent a k (832*q+659) (608*q+481)
       (by omega) (by omega) (by omega) (by omega) (by omega) (by omega) hedge
     constructor <;> omega
-  have hR0 : CReach (720*u+568) (664*u+523) :=
-    cReach_of_unique_parent (832*u+659) (608*u+481)
-      (720*u+568) (664*u+523) (by omega) hQuniq hQ
-  have hR0uniq : ∀ a k, secNext (a,k)=some (720*u+568,664*u+523) →
-      a=692*u+543 ∧ k=678*u+532 := by
+  have hR0 : CReach (720*q+568) (664*q+523) :=
+    cReach_of_unique_parent (832*q+659) (608*q+481)
+      (720*q+568) (664*q+523) (by omega) hQuniq hQ
+  have hR0uniq : ∀ a k, secNext (a,k)=some (720*q+568,664*q+523) →
+      a=692*q+543 ∧ k=678*q+532 := by
     intro a k hedge
     have hp := even_odd_sumplus1_mod8_4_parent a k
-      (720*u+568) (664*u+523) (by omega) (by omega)
+      (720*q+568) (664*q+523) (by omega) (by omega)
       (by omega) (by omega) (by omega) hedge
     constructor <;> omega
-  have hR1 : CReach (692*u+543) (678*u+532) :=
-    cReach_of_unique_parent (720*u+568) (664*u+523)
-      (692*u+543) (678*u+532) (by omega) hR0uniq hR0
-  have hR1run : ∃ t, BB6.Agent8Section.run secNext t (some (5,1)) =
-      some (692*u+543,678*u+532) := hR1
-  have hy6 : 6≤678*u+532 := by omega
-  have hye : (678*u+532)%2=0 := by omega
-  have hzero : ((692*u+543)+(678*u+532))%8≠0 := by omega
-  have hseven : ((692*u+543)+(678*u+532))%8≠7 := by omega
-  have hD2run := (BB6.Agent15.blank_reach_iff_even_right
-    (692*u+543) (678*u+532) hy6 hye hzero hseven).mp hR1run
-  have hD2 : CReach (1370*u+1073) (339*u+265) := by
-    rcases hD2run with ⟨t,ht⟩
-    refine ⟨t,?_⟩
-    have hx : (692*u+543)+(678*u+532)-2=1370*u+1073 := by omega
-    have hy : ((678*u+532)-2)/2=339*u+265 := by omega
-    simpa [hx,hy] using ht
-  have hfinal : (1370*u+1073+339*u+265)%4=2 := by omega
-  have hodd : (339*u+265)%2=1 := by omega
-  exact no_blank_odd_sum_two (1370*u+1073) (339*u+265)
+  exact cReach_of_unique_parent (720*q+568) (664*q+523)
+    (692*q+543) (678*q+532) (by omega) hR0uniq hR0
+
+/-- The q=0 (mod 4) cylinder terminates immediately in the forbidden
+    odd-right, sum-two image sector. -/
+private theorem no_low_target_q0 (q : Nat) (hq : q%4=0) :
+    ¬ CReach 1 (1024*q+819) := by
+  intro hT
+  have hR1 := low_target_reaches_R1 q hT
+  have hzero : ((692*q+543)+(678*q+532))%8≠0 := by omega
+  have hseven : ((692*q+543)+(678*q+532))%8≠7 := by omega
+  have hD2 : CReach (1370*q+1073) (339*q+265) := by
+    have h := cReach_even_right_parent (692*q+543) (678*q+532)
+      (by omega) (by omega) hzero hseven hR1
+    have hx : (692*q+543)+(678*q+532)-2=1370*q+1073 := by omega
+    have hy : ((678*q+532)-2)/2=339*q+265 := by omega
+    simpa [hx,hy] using h
+  have hfinal : (1370*q+1073+339*q+265)%4=2 := by omega
+  have hodd : (339*q+265)%2=1 := by omega
+  exact no_blank_odd_sum_two (1370*q+1073) (339*q+265)
     (by omega) hodd hfinal hD2
+
+/-- A second direct-parent cylinder, q=11 (mod 16), terminates after
+    three even-right reductions in the same forbidden image sector. -/
+private theorem no_low_target_q11 (q : Nat) (hq : q%16=11) :
+    ¬ CReach 1 (1024*q+819) := by
+  intro hT
+  have hR1 := low_target_reaches_R1 q hT
+  have hR1zero : ((692*q+543)+(678*q+532))%8≠0 := by omega
+  have hR1seven : ((692*q+543)+(678*q+532))%8≠7 := by omega
+  have hS1 : CReach (1370*q+1073) (339*q+265) := by
+    have h := cReach_even_right_parent (692*q+543) (678*q+532)
+      (by omega) (by omega) hR1zero hR1seven hR1
+    have hx : (692*q+543)+(678*q+532)-2=1370*q+1073 := by omega
+    have hy : ((678*q+532)-2)/2=339*q+265 := by omega
+    simpa [hx,hy] using h
+  have hS1zero : ((1370*q+1073)+(339*q+265))%8≠0 := by omega
+  have hS1seven : ((1370*q+1073)+(339*q+265))%8≠7 := by omega
+  have hS1red := cReach_even_right_parent (1370*q+1073) (339*q+265)
+    (by omega) (by omega) hS1zero hS1seven hS1
+  let v := q/16
+  have hqeq : q=16*v+11 := by dsimp [v]; omega
+  have hS2 : CReach (27344*v+20135) (2712*v+1996) := by
+    have hx : (1370*q+1073)+(339*q+265)-2=27344*v+20135 := by
+      rw [hqeq]
+      omega
+    have hy : ((339*q+265)-2)/2=2712*v+1996 := by
+      rw [hqeq]
+      omega
+    simpa [hx,hy] using hS1red
+  have hS2zero : ((27344*v+20135)+(2712*v+1996))%8≠0 := by omega
+  have hS2seven : ((27344*v+20135)+(2712*v+1996))%8≠7 := by omega
+  have hS2red := cReach_even_right_parent (27344*v+20135) (2712*v+1996)
+    (by omega) (by omega) hS2zero hS2seven hS2
+  have hS3 : CReach (30056*v+22129) (1356*v+997) := by
+    have hx : (27344*v+20135)+(2712*v+1996)-2=30056*v+22129 := by omega
+    have hy : ((2712*v+1996)-2)/2=1356*v+997 := by omega
+    simpa [hx,hy] using hS2red
+  have hfinal : (30056*v+22129+1356*v+997)%4=2 := by omega
+  have hodd : (1356*v+997)%2=1 := by omega
+  exact no_blank_odd_sum_two (30056*v+22129) (1356*v+997)
+    (by omega) hodd hfinal hS3
 
 /-- Every genuine first stopping target with m=1091 modulo 4096 is
     absent from the all-time original blank section orbit. -/
@@ -332,11 +385,11 @@ theorem first_stop_m1091_mod4096 (time m k : Nat)
     rw [hstop]
     exact Nat.mod_eq_zero_of_dvd hpowdiv
   have hkmod : k%1024=819 := by omega
-  let u := k/1024
-  have hk : k=1024*u+819 := by dsimp [u]; omega
-  have hpowEq : 1024*(u+12*r+4)=2^(2*m+3) := by
+  let q := k/1024
+  have hk : k=1024*q+819 := by dsimp [q]; omega
+  have hpowEq : 1024*(q+12*r+4)=2^(2*m+3) := by
     calc
-      1024*(u+12*r+4)=k+3*m+4 := by rw [hk,hmeq]; omega
+      1024*(q+12*r+4)=k+3*m+4 := by rw [hk,hmeq]; omega
       _=2^(2*m+3) := hstop
   have hpowFactor : 2^(2*m+3)=1024*2^(2*m-7) := by
     calc
@@ -344,22 +397,73 @@ theorem first_stop_m1091_mod4096 (time m k : Nat)
         rw [show 2*m+3=10+(2*m-7) by omega]
       _=2^10*2^(2*m-7) := by rw [Nat.pow_add]
       _=1024*2^(2*m-7) := by norm_num
-  have hU : u+12*r+4=2^(2*m-7) := by
+  have hU : q+12*r+4=2^(2*m-7) := by
     rw [hpowFactor] at hpowEq
     omega
   have hpowdiv4 : 4∣2^(2*m-7) := by
     change 2^2∣2^(2*m-7)
     exact Nat.pow_dvd_pow 2 (by omega)
-  rcases hpowdiv4 with ⟨q,hq⟩
-  have hu : u%4=0 := by
-    have heq : u+12*r+4=4*q := by rw [hU,hq]
+  rcases hpowdiv4 with ⟨z,hz⟩
+  have hq4 : q%4=0 := by
+    have heq : q+12*r+4=4*z := by rw [hU,hz]
     omega
   intro hrun
-  have hT : CReach 1 (1024*u+819) := by
+  have hT : CReach 1 (1024*q+819) := by
     refine ⟨time,?_⟩
     simpa [hk] using hrun
-  exact no_low_target u hu hT
+  exact no_low_target_q0 q hq4 hT
 
-#print axioms no_low_target
+/-- Every genuine first stopping target with m=12355 modulo 16384 is
+    absent from the all-time original blank section orbit. -/
+theorem first_stop_m12355_mod16384 (time m k : Nat)
+    (hm : m%16384=12355)
+    (hstop : k+3*m+4=2^(2*m+3)) :
+    BB6.Agent8Section.run secNext time (some (5,1)) ≠ some (1,k) := by
+  have hmEq : m=16384*(m/16384)+12355 := by omega
+  let r := m/16384
+  have hmeq : m=16384*r+12355 := by dsimp [r]; omega
+  have hpowdiv : 1024∣2^(2*m+3) := by
+    change 2^10∣2^(2*m+3)
+    exact Nat.pow_dvd_pow 2 (by omega)
+  have h3m : (3*m+4)%1024=205 := by rw [hmeq]; omega
+  have hsum : (k+3*m+4)%1024=0 := by
+    rw [hstop]
+    exact Nat.mod_eq_zero_of_dvd hpowdiv
+  have hkmod : k%1024=819 := by omega
+  let q := k/1024
+  have hk : k=1024*q+819 := by dsimp [q]; omega
+  have hpowEq : 1024*(q+48*r+37)=2^(2*m+3) := by
+    calc
+      1024*(q+48*r+37)=k+3*m+4 := by rw [hk,hmeq]; omega
+      _=2^(2*m+3) := hstop
+  have hpowFactor : 2^(2*m+3)=1024*2^(2*m-7) := by
+    calc
+      2^(2*m+3)=2^(10+(2*m-7)) := by
+        rw [show 2*m+3=10+(2*m-7) by omega]
+      _=2^10*2^(2*m-7) := by rw [Nat.pow_add]
+      _=1024*2^(2*m-7) := by norm_num
+  have hQ : q+48*r+37=2^(2*m-7) := by
+    rw [hpowFactor] at hpowEq
+    omega
+  have hpowdiv16 : 16∣2^(2*m-7) := by
+    change 2^4∣2^(2*m-7)
+    exact Nat.pow_dvd_pow 2 (by omega)
+  rcases hpowdiv16 with ⟨z,hz⟩
+  have hq16 : q%16=11 := by
+    have heq : q+48*r+37=16*z := by rw [hQ,hz]
+    omega
+  intro hrun
+  have hT : CReach 1 (1024*q+819) := by
+    refine ⟨time,?_⟩
+    simpa [hk] using hrun
+  exact no_low_target_q11 q hq16 hT
+
+#print axioms low_target_reaches_R1
+#print axioms no_low_target_q0
+#print axioms no_low_target_q11
+#print axioms first_stop_m1091_mod4096
+#print axioms first_stop_m12355_mod16384
+end BB6.Agent21Low1091
+
 #print axioms first_stop_m1091_mod4096
 end BB6.Agent21Low1091
