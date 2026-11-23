@@ -109,6 +109,49 @@ theorem rooted_center_mod32 (u : Nat)
       · omega
   omega
 
+
+/-- A center-line parent of the all-F low-nine zero feeder restricts its
+    exponent index J to four residue classes modulo 128. This corollary
+    deliberately requires the exact modular feeder equation as a hypothesis;
+    it does not exclude other zero-return predecessor kinds. -/
+theorem diagonal_zero_center_j_mod128 (J z u : Nat)
+    (hr : Reach u (2*u)) (hu : 129 ≤ u)
+    (hz : z=4*u+12)
+    (hmod : (z+3*J)%128=36) :
+    J%128=12 ∨ J%128=28 ∨ J%128=60 ∨ J%128=76 := by
+  have hc := rooted_center_mod32 u hr hu
+  omega
+
+private theorem pow_mod128_zero (e : Nat) (he : 7 ≤ e) :
+    (2:Nat)^e % 128 = 0 := by
+  have heq : e=7+(e-7) := by omega
+  rw [heq, Nat.pow_add, show (2:Nat)^7=128 by decide]
+  omega
+
+/-- The actual all-F zero-feeder power equation implies that same
+    necessary J-residue list. In the diagonal subfamily N=n+J, the
+    N>=5 side condition is automatic. -/
+theorem diagonal_zero_center_power_j_mod128 (J N z u : Nat)
+    (hr : Reach u (2*u)) (hu : 129 ≤ u)
+    (hJ : 3 ≤ J) (hN : 5 ≤ N)
+    (hz : z=4*u+12)
+    (heq : z+48*2^J+3*J=12*2^(N+2)+36) :
+    J%128=12 ∨ J%128=28 ∨ J%128=60 ∨ J%128=76 := by
+  have hpN := pow_mod128_zero (N+2) (by omega)
+  have hpJ := pow_mod128_zero (J+4) (by omega)
+  have hmul : 48*2^J=3*2^(J+4) := by
+    rw [show J+4=4+J by omega, Nat.pow_add,
+        show (2:Nat)^4=16 by decide]
+    omega
+  have hpowJ : (48*2^J)%128=0 := by
+    rw [hmul]
+    omega
+  have hmod : (z+3*J)%128=36 := by omega
+  exact diagonal_zero_center_j_mod128 J z u hr hu hz hmod
+
+#print axioms diagonal_zero_center_j_mod128
+#print axioms diagonal_zero_center_power_j_mod128
+
 #print axioms no_root_three_three
 #print axioms no_root_even_two_two
 #print axioms rooted_center_mod32
