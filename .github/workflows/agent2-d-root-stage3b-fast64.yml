@@ -224,7 +224,7 @@ jobs:
         if: ${{ success() && inputs.stage == '6' }}
         uses: actions/upload-artifact@v4
         with:
-          name: d-root-stage3b
+          name: d-root-stage3b6
           path: |
             source/lean-stage.tar.gz
             source/lean-audit.log
