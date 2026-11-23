@@ -295,6 +295,16 @@ theorem q_even_high_parameter_not_CReach (j m : Nat)
   rcases hreach with ⟨time,hrun⟩
   exact q_even_high_parameter_no_blank j m time hj hm hrun
 
+/-- The S2 and q-even high-stop cylinders are disjoint. -/
+theorem s2_q_even_parameter_classes_disjoint (j m : Nat)
+    (hs : m%131072=(72746+75264*(j/512))%131072)
+    (hq : m%1048576=(531498+337408*(j/512))%1048576) : False := by
+  have hdiv : 131072∣1048576 := by decide
+  have hmod : m%131072=(m%1048576)%131072 :=
+    (Nat.mod_mod_of_dvd m hdiv).symm
+  rw [hs,hq] at hmod
+  omega
+
 #print axioms s2_parameter_pullback_iff
 #print axioms q_even_parameter_pullback_iff
 #print axioms s2_high_parameter_no_blank
@@ -302,5 +312,6 @@ theorem q_even_high_parameter_not_CReach (j m : Nat)
 #print axioms q_even_image_blank_unreachable_uv
 #print axioms q_even_high_parameter_no_blank
 #print axioms q_even_high_parameter_not_CReach
+#print axioms s2_q_even_parameter_classes_disjoint
 
 end BB6.Agent34S2Pullback
