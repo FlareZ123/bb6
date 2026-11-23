@@ -61,7 +61,8 @@ theorem m2ZeroPostludeAt_window (T : Int → Bool) (h : Int)
     (frameAt T h m2ZeroPostludeInside m2ZeroPostludeEnd).tape (h+x) =
       decide (x ∈ m2ZeroPostludeEnd.marked) := by
   rw [frameAt_tape]
-  simp [hx]
+  have hcoord : h+x-h=x := by omega
+  simp [hcoord,hx]
 
 
 /-- The H-run preserves the setup's thirteen output ones and its
