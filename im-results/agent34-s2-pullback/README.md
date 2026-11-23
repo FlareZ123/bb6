@@ -79,6 +79,8 @@ The existing blank_ne_s2q_even_image theorem then excludes the high-stop state a
 
 The two cylinders are disjoint: their induced m-residues differ by \(65536\pmod{131072}\) for every \(u\). Their combined density is \(9\cdot2^{-29}\).
 
+The current formal iff removes these parameter cylinders from the high predicate, but the separate nonredundancy claim—that every removed parameter also passed the immediately preceding highAllowed predicate—has not yet been proved in this dossier. The densities above are exact lattice densities, not a measured fraction of previously surviving candidates.
+
 ## Formal artifact
 
 CSixSeventhS2Pullback.lean contains:
