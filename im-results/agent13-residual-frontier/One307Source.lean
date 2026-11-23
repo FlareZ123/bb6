@@ -11,14 +11,11 @@ open BB6.Agent46 BB6.Agent3
     when the low target has shape (1,256*u+51) with u=49 mod128, its four
     forced exact predecessors land in a proven two-parent forbidden
     residue rectangle. No finite orbit cutoff and no quotient is used. -/
-theorem no_one_256u51_u49_mod128
-    (u : Nat) (hu : u%128=49) :
-    ¬ BB6.Agent3.CReach 1 (256*u+51) := by
-  have hR : ¬ BB6.Agent3.CReach (180*u+28) (166*u+25) := by
-    apply BB6.Agent13SourceRect.even_odd_rectangle_144_223
-    · omega
-    · omega
-  intro hr
+/-- Four source-certified exact backward transitions for every positive
+    parameter u; no restriction on the valuation or a quotient is used. -/
+theorem four_step_to_rectangle
+    (u : Nat) (hr : BB6.Agent3.CReach 1 (256*u+51)) :
+    BB6.Agent3.CReach (180*u+28) (166*u+25) := by
   have hO1 := (BB6.Agent3.oddodd_lowval_blank_reach_iff
     1 (256*u+51) (by omega) (by omega) (by omega)
     (by omega) (by omega) (by omega)).mp hr
@@ -49,7 +46,18 @@ theorem no_one_256u51_u49_mod128
       show ((208*u+35)+(152*u+25)-4)/2=180*u+28 by omega,
       show ((208*u+35)+3*(152*u+25)-10)/4=166*u+25 by omega]
       using hO4
-  exact hR h4
+  exact h4
 
+theorem no_one_256u51_u49_mod128
+    (u : Nat) (hu : u%128=49) :
+    ¬ BB6.Agent3.CReach 1 (256*u+51) := by
+  have hR : ¬ BB6.Agent3.CReach (180*u+28) (166*u+25) := by
+    apply BB6.Agent13SourceRect.even_odd_rectangle_144_223
+    · omega
+    · omega
+  intro hr
+  exact hR (four_step_to_rectangle u hr)
+
+#print axioms four_step_to_rectangle
 #print axioms no_one_256u51_u49_mod128
 end BB6.Agent13One307
