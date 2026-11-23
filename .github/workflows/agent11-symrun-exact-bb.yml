@@ -41,8 +41,9 @@ jobs:
         working-directory: upstream
         run: |
           set -euo pipefail
-          cp ../local-bb6/im-results/agent11-symrun-primitive-cost/{SourceCostModel,SourceCostCombinators,SourceExactF424Core,SourceExactPureBB424,SourceExactPureDL424,SourceExactPureCB424,SourceExactPureStep424}.lean .
+          cp ../local-bb6/im-results/agent11-symrun-primitive-cost/{SourceF424Machine,SourceCostModel,SourceCostCombinators,SourceExactF424Core,SourceExactPureBB424,SourceExactPureDL424,SourceExactPureCB424,SourceExactPureStep424}.lean .
           lake env lean -o SourceCostModel.olean SourceCostModel.lean
+          LEAN_PATH=. lake env lean -o SourceF424Machine.olean SourceF424Machine.lean
           LEAN_PATH=. lake env lean -o SourceCostCombinators.olean SourceCostCombinators.lean
           LEAN_PATH=. lake env lean -o SourceExactF424Core.olean SourceExactF424Core.lean
           LEAN_PATH=. lake env lean -o SourceExactPureBB424.olean SourceExactPureBB424.lean
