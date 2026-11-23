@@ -352,7 +352,7 @@ theorem branch9_side_feeder_entropy
     (hl : ∀v, v∈l → K≤v ∧ v<2^K ∧
       t+3≤branch9N r v ∧
       BB429NewResidue.Reach (branch9A t q r v) (branch9B t q r v)) :
-    l.length≤2*2^(K/2) := by
+    l.length≤2^(K/2) := by
   have hqidx : ∀v, v∈l → q≤2*2^(branch9J r v)+v := by
     intro v hv
     exact branch9_index_nonnegative t q r v htr ((hl v hv).2.2.1)
@@ -382,15 +382,26 @@ theorem branch9_side_feeder_entropy
     have hdiv := branch9_divisibility t q r v K ht hr hK
       hvK hidx hvlt
     exact ⟨hreach,hline v hv,hhigh,hdiv⟩
-  have hbound := generic_feeder_cardinality_bound
-    (branch9Offset t) K 0 3 (branch9Correction t q K) (2^K)
-    (branch9A t q r) (branch9B t q r) l hn
-    (by omega) (by decide) (by simp) ?_
-  · exact hbound
-  · intro v hv
+  have hfeed : ∀v, v∈l →
+      v<2^K ∧ BB429NewResidue.Reach (branch9A t q r v) (branch9B t q r v) ∧
+      branch9B t q r v+branch9Offset t=2*branch9A t q r v ∧
+      16*2^K≤branch9A t q r v+3 ∧
+      2^K∣branch9A t q r v+3*v+branch9Correction t q K := by
+    intro v hv
     have hvlt := (hl v hv).2.1
     obtain ⟨hR,hline',hhigh,hdiv⟩ := hlegal v hv
     exact ⟨hvlt,hR,hline',hhigh,hdiv⟩
+  have hphase : (anyRayPhase (branch9Offset t))%2=0 := by
+    unfold anyRayPhase
+    have hc : branch9Offset t%2=1 := by
+      dsimp [branch9Offset]
+      omega
+    have hc4 : branch9Offset t%4=1 ∨ branch9Offset t%4=3 := by omega
+    rcases hc4 with h|h <;> omega
+  exact generic_feeder_cardinality_bound_even_phase
+    (branch9Offset t) K 0 3 (branch9Correction t q K) (2^K)
+    (branch9A t q r) (branch9B t q r) l hn
+    (by omega) (by decide) (by simp) hfeed hphase
 
 #print axioms branch9_side_feeder_entropy
 
