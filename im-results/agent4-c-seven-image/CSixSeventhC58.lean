@@ -2,6 +2,8 @@ import ValSixC58LateFast
 import CSixSeventhDiagonal
 import Lean.Elab.Tactic.Omega
 
+set_option maxHeartbeats 1000000
+
 namespace BB6.Agent4SevenC58
 
 /-- The four-class diagonal forces these exact low residues. -/
@@ -270,7 +272,6 @@ theorem prior_latefast_admits_s3_second_parameter_family (t : Nat) :
     the second strict image family is admitted by the preceding
     ValSixFull+C58 all-depth and arbitrary-depth late-fast predicates.
     Its disjointness from the old diagonal follows from u+v=3 (mod 4). -/
-set_option maxHeartbeats 1000000 in
 theorem prior_latefast_admits_s3_image_family (j m u v : Nat)
     (hm7 : 7≤m)
     (hj : j=319+512*u)
@@ -548,9 +549,15 @@ private theorem s3_pullback_forces_m_ge7 (j m u v : Nat)
     all_goals simp at hstop
     all_goals omega
 
+/-- Cancel a common summand from two zero residues modulo 2^14. -/
+private theorem s3_mod_cancel (m u k : Nat)
+    (hcong : (3*m+16258+3584*u)%16384=0)
+    (hstop : (k+324+512*u+3*m)%16384=0) :
+    k%16384=(15934+3072*u)%16384 := by
+  omega
+
 /-- Exact equivalence between the second strict image-family pullback
     and its single affine high-stop congruence cylinder. -/
-set_option maxHeartbeats 1000000 in
 theorem s3_image_pullback_iff_congruence (j m : Nat) :
     (∃ u v, j=319+512*u ∧
       (2:Nat)^(2*m+2)*(j+3)-(j+3*m+5)=574+1024*v ∧
@@ -592,7 +599,7 @@ theorem s3_image_pullback_iff_congruence (j m : Nat) :
             (Nat.mul_mod_mul_left 1024 (15+3*u) 16)
     have hmod' : (3*m+898+512*u+1024*v)%16384=0 := by
       rw [hj] at hmod
-      simpa [Nat.add_assoc, Nat.add_left_comm, Nat.add_comm] using hmod
+      omega
     have htargetEq : 3*m+7*j+14025 =
         3*m+898+512*u+1024*(15+3*u) := by
       rw [hj]
@@ -656,9 +663,9 @@ theorem s3_image_pullback_iff_congruence (j m : Nat) :
       omega
     have hstop' : (k+324+512*u+3*m)%16384=0 := by
       rw [hj] at hmodStop
-      simpa [Nat.add_assoc, Nat.add_left_comm, Nat.add_comm] using hmodStop
-    have hmodK : k%16384=(15934+3072*u)%16384 := by
       omega
+    have hmodK : k%16384=(15934+3072*u)%16384 :=
+      s3_mod_cancel m u k hcong' hstop'
     have hdiv : 1024 ∣ 16384 := by decide
     have hkmod1024 : k%1024=574 := by
       calc
