@@ -44,7 +44,8 @@ def m2EvenSixQ4LeftFacing (a : Nat) : List Bool :=
 /-- The base q4 cut word is the canonical q4 left-facing word. -/
 theorem m2EvenSixQ4LeftFacing_eq_q4LeftFacing (a : Nat) :
     m2EvenSixQ4LeftFacing a = Agent8Q4Suffix.q4LeftFacing 3 5 a := by
-  rfl
+  simp [m2EvenSixQ4LeftFacing,m2EvenSixQ4LeftSuffix,
+    Agent8Q4Suffix.q4LeftFacing,List.append_assoc]
 
 /-- The finite bridge sees the even-n=6 boundary, not the odd-n boundary
 used by Agent 6's 26-step m=2 bridge. -/
@@ -131,7 +132,9 @@ theorem m2EvenSixQ4Bridge_input_match (a b : Nat) (h : Int) :
       all_goals subst y
       all_goals simp [k,m2EvenSixSourceLeftSuffix,markerWord,d0,d1,lh,
         binDec_three_six,sideBit,m2EvenSixQ4BridgeStart]
-    rw [hcoord] at hleft
+    have hcoord' : h-((3*a+2+k:Nat):Int) =
+        h-((3*a+2:Nat):Int)-(k:Int) := by omega
+    rw [hcoord'] at hleft
     exact hleft.trans hbits
   · have hyCases : y = 1 ∨ y = 2 := by omega
     rcases hyCases with h1 | h2
