@@ -7,7 +7,7 @@ prepared suffix-one bridge directly from the same source-local mode clauses,
 without depending on the uncompiled shared RootCountdownSweep draft.
 -/
 
-private def s3oD (n c : ℕ) (T : List (ℕ × ℕ)) :=
+def s3oD (n c : ℕ) (T : List (ℕ × ℕ)) :=
   cfg_CR_n_n [(0,0)]
     (List.replicate (4*n+5) (0,0) ++ [(0,0),(c,0)] ++ T)
 
