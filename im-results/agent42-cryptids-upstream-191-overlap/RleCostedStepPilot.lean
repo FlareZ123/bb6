@@ -10,8 +10,10 @@ namespace BB6Agent42.RleCostedStepPilot
 macro "exactStep" : tactic => `(tactic| (
   apply ReachesIn.step_left
   · simp only [BusyBeaver.Cfg.headRight, BusyBeaver.Cfg.headLeft,
-      listblank_append_cons, listblank_append_nil,
-      Turing.ListBlank.head_cons, Turing.ListBlank.tail_cons, default_head]
+      BusyBeaver.RleStackEngine.listblank_append_cons,
+      BusyBeaver.RleStackEngine.listblank_append_nil,
+      Turing.ListBlank.head_cons, Turing.ListBlank.tail_cons,
+      BusyBeaver.RleStackEngine.default_head]
     rfl
 ))
 
