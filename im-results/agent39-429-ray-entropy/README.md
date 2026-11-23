@@ -102,7 +102,7 @@ Then
 \boxed{|l|\le 2^{\lfloor K/2\rfloor}.}
 \]
 
-The proof applies the reusable affine-feeder cardinality theorem with the exact branch-9 parameters. The offset is (c=24\cdot2^t-21\equiv3\pmod4), so (\operatorname{anyRayPhase}(c)=2) is even. The even-phase word language has exactly (2^{\lfloor K/2\rfloor}) words, eliminating the factor of two in the phase-uniform bound. Its key identities and bounds are:
+The proof applies the reusable affine-feeder cardinality theorem with the exact branch-9 parameters. The offset is \(c=24\cdot2^t-21\equiv3\pmod4\), so \(\operatorname{anyRayPhase}(c)=2\) is even. The even-phase word language has exactly \(2^{\lfloor K/2\rfloor}\) words, eliminating the factor of two in the phase-uniform bound. Its key identities and bounds are:
 
 - \(t+3\le N\), together with \(t+14=r+4q\), implies \(q\le2\cdot2^J+v\); the natural subtraction defining \(k\) is therefore exact.
 - With \(C=6\cdot2^t+3q-8\), the affine identity is
