@@ -220,7 +220,7 @@ theorem s2_R_parents (u v t a k : Nat)
                     _=32*(p*q) := by simp
                 have hmod := Nat.mod_eq_zero_of_dvd hdiv
                 rw [hval] at hmod
-                norm_num at hmod
+                omega
               have hn1 : n=1 := by omega
               subst n
               simp only [show (2:Nat)^1=2 by decide] at hs
