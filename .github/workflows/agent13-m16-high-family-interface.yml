@@ -38,6 +38,8 @@ on:
           - sourceLowZ44
           - sourceLow1519
           - sourceLowZ16
+          - sourceLow1551
+          - sourceLowEvenUnique
           - sourceCriterion559
           - sourceAgent8Z2
           - sourceAgent8Z7
@@ -170,6 +172,12 @@ jobs:
               ;;
             sourceLowZ16)
               target=im-results/agent13-residual-frontier/LowM67Z16Source.lean
+              ;;
+            sourceLow1551)
+              target=im-results/agent13-residual-frontier/LowM67All1551Criterion.lean
+              ;;
+            sourceLowEvenUnique)
+              target=im-results/agent13-residual-frontier/EvenOddLowStopEvenUnique.lean
               ;;
             sourceCriterion559)
               target=im-results/agent13-residual-frontier/LowM67All559Criterion.lean
