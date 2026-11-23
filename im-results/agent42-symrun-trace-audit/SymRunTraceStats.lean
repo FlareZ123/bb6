@@ -1623,12 +1623,12 @@ theorem stepElemCB_BB_counter_sum_le (L R : List SymTok)
     symPairCounterSum ((stepElemCB L R).2.1, (stepElemCB L R).2.2) ≤
       listCounterSum L + listCounterSum R := by
   cases R with
-  | nil => simp [stepElemCB] at hmode
+  | nil => simp_all [stepElemCB, strictList_eq]
   | cons t R1 =>
     cases t with
     | item x =>
       cases x with
-      | zero => simp [stepElemCB] at hmode
+      | zero => simp_all [stepElemCB, strictList_eq]
       | run d =>
         cases d with
         | zero =>
@@ -1651,13 +1651,13 @@ theorem stepElemCB_BB_counter_sum_le (L R : List SymTok)
                   have hB := bumpSymL_counter_sum_le L
                   simp [stepElemCB, stepElemCB_run0, strictList_eq, symPairCounterSum, listCounterSum, tokCounterSum]
                   omega
-                | succ d2 => simp [stepElemCB, stepElemCB_run0] at hmode
-            | repB1 k => simp [stepElemCB, stepElemCB_run0] at hmode
-            | rep2 p => simp [stepElemCB, stepElemCB_run0] at hmode
-            | rep12 m => simp [stepElemCB, stepElemCB_run0] at hmode
+                | succ d2 => simp_all [stepElemCB, stepElemCB_run0, strictList_eq]
+            | repB1 k => simp_all [stepElemCB, stepElemCB_run0, strictList_eq]
+            | rep2 p => simp_all [stepElemCB, stepElemCB_run0, strictList_eq]
+            | rep12 m => simp_all [stepElemCB, stepElemCB_run0, strictList_eq]
         | succ d =>
           cases d with
-          | zero => simp [stepElemCB] at hmode
+          | zero => simp_all [stepElemCB, strictList_eq]
           | succ d =>
             cases d with
             | zero =>
@@ -1668,9 +1668,9 @@ theorem stepElemCB_BB_counter_sum_le (L R : List SymTok)
               have hB := bumpSymL_counter_sum_le L
               simp [stepElemCB, strictList_eq, symPairCounterSum, listCounterSum, tokCounterSum]
               omega
-    | repB1 k => simp [stepElemCB] at hmode
-    | rep2 p => simp [stepElemCB] at hmode
-    | rep12 m => simp [stepElemCB] at hmode
+    | repB1 k => simp_all [stepElemCB, strictList_eq]
+    | rep2 p => simp_all [stepElemCB, strictList_eq]
+    | rep12 m => simp_all [stepElemCB, strictList_eq]
 
 /-- The whole CB-sweep / BB-fallback / BB-sweep path has a counter-sum
     bound in terms of the original CB input maximum field. -/
@@ -2101,12 +2101,12 @@ theorem stepElemCB_BB_num_sum_le (L R : List SymTok)
     symPairNumSum ((stepElemCB L R).2.1, (stepElemCB L R).2.2) ≤
       listNumSum L + listNumSum R + 3 := by
   cases R with
-  | nil => simp [stepElemCB] at hmode
+  | nil => simp_all [stepElemCB, strictList_eq]
   | cons t R1 =>
     cases t with
     | item x =>
       cases x with
-      | zero => simp [stepElemCB] at hmode
+      | zero => simp_all [stepElemCB, strictList_eq]
       | run d =>
         cases d with
         | zero =>
@@ -2129,13 +2129,13 @@ theorem stepElemCB_BB_num_sum_le (L R : List SymTok)
                   have hB := bumpSymL_num_sum_le L
                   simp [stepElemCB, stepElemCB_run0, strictList_eq, symPairNumSum, listNumSum, tokNumSum]
                   omega
-                | succ d2 => simp [stepElemCB, stepElemCB_run0] at hmode
-            | repB1 k => simp [stepElemCB, stepElemCB_run0] at hmode
-            | rep2 p => simp [stepElemCB, stepElemCB_run0] at hmode
-            | rep12 m => simp [stepElemCB, stepElemCB_run0] at hmode
+                | succ d2 => simp_all [stepElemCB, stepElemCB_run0, strictList_eq]
+            | repB1 k => simp_all [stepElemCB, stepElemCB_run0, strictList_eq]
+            | rep2 p => simp_all [stepElemCB, stepElemCB_run0, strictList_eq]
+            | rep12 m => simp_all [stepElemCB, stepElemCB_run0, strictList_eq]
         | succ d =>
           cases d with
-          | zero => simp [stepElemCB] at hmode
+          | zero => simp_all [stepElemCB, strictList_eq]
           | succ d =>
             cases d with
             | zero =>
@@ -2146,9 +2146,9 @@ theorem stepElemCB_BB_num_sum_le (L R : List SymTok)
               have hB := bumpSymL_num_sum_le L
               simp [stepElemCB, strictList_eq, symPairNumSum, listNumSum, tokNumSum]
               omega
-    | repB1 k => simp [stepElemCB] at hmode
-    | rep2 p => simp [stepElemCB] at hmode
-    | rep12 m => simp [stepElemCB] at hmode
+    | repB1 k => simp_all [stepElemCB, strictList_eq]
+    | rep2 p => simp_all [stepElemCB, strictList_eq]
+    | rep12 m => simp_all [stepElemCB, strictList_eq]
 
 
 /-- The BB-sweep input maximum field is bounded in terms of the original
