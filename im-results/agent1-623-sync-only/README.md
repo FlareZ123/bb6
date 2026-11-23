@@ -117,16 +117,16 @@ These are precisely the two linear residuals appearing in the left/right termina
 
 ## Unimodular two-coordinate reduction
 
-[TwoCoordinate3AdicCocycle.md](TwoCoordinate3AdicCocycle.md) rewrites the exact four synchronization residues using the unimodular coordinates (U=Y), (V=X+Y):
-[
-(V-4U,;3U,;4V-U,;3V).
-]
-The two scale tests reduce exactly to residues of (U,V) modulo (3^{n-1}), while the branch cocycle becomes
-[
-(U',V')=
-egin{cases}
-(3U+phi,;V-U+kappa+phi),&L,\\
-(3V+phi,;U-V+kappa+phi),&R.
-end{cases}
-]
+[TwoCoordinate3AdicCocycle.md](TwoCoordinate3AdicCocycle.md) rewrites the exact four synchronization residues using the unimodular coordinates U = Y and V = X + Y.
+
+The four forms are:
+- V - 4U
+- 3U
+- 4V - U
+- 3V
+
+The two scale tests reduce exactly to residues of U and V modulo 3^(n-1). The exact branch updates become:
+- Left: U' = 3U + φ; V' = V - U + κ + φ.
+- Right: U' = 3V + φ; V' = U - V + κ + φ.
+
 This is an exact algebraic reparameterization, not yet an all-time avoidance proof.
