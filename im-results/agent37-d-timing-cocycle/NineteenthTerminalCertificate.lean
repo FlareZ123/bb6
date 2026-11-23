@@ -17,7 +17,7 @@ theorem terminal9780_exact :
           rw [show 9780 = 4096 + 5684 by decide,
             BB6.DRegularFast.run_add]
     _ = run 5684 block19_1 := by
-          rw [block19_1_exact]
+          simp [block19_1_exact]
     _ = some ⟨9*t19+10,9,1⟩ := tail5684_exact
 
 theorem t19_mod27_exact : t19 % 27 = 12 :=
