@@ -107,21 +107,21 @@ theorem outerLCInc_s1_right_facts (L n m a b : Nat) (h : Int) :
         ([false,true,true,true,false,false] : List Bool)
         (d1pow (b+1)) (6+3*i) (by simp <;> omega)]
       congr 1
-      omega
+      simp <;> omega
     have hr1 : sideBit ([false,true,true,true,false,false] ++ d1pow (b+1))
         (7+3*i) = sideBit (d1pow (b+1)) (3*i+1) := by
       rw [BB6Coverage.Agent6Q4Prefix.sideBit_append_right
         ([false,true,true,true,false,false] : List Bool)
         (d1pow (b+1)) (7+3*i) (by simp <;> omega)]
       congr 1
-      omega
+      simp <;> omega
     have hr2 : sideBit ([false,true,true,true,false,false] ++ d1pow (b+1))
         (8+3*i) = sideBit (d1pow (b+1)) (3*i+2) := by
       rw [BB6Coverage.Agent6Q4Prefix.sideBit_append_right
         ([false,true,true,true,false,false] : List Bool)
         (d1pow (b+1)) (8+3*i) (by simp <;> omega)]
       congr 1
-      omega
+      simp <;> omega
     refine ⟨?_, ?_, ?_⟩
     · calc
         (s1Config L n m a 0 b h).tape (h+7+3*(i:Int)) =
