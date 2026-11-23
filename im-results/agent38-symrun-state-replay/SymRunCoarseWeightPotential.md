@@ -108,6 +108,11 @@ After sweepCB, write S for numeric mass and T for token count before the sweep. 
 S_1\le S+3T\le 4W,\qquad T_1\le 6T\le 6W.
 \]
 
+For the combined potential, retain the shared pre-sweep S and T rather than adding the two loose W-bounds separately:
+\[
+W_1=1+S_1+T_1\le1+S+9T\le9W.
+\]
+
 The three successful macro outputs have simple mass/length bounds:
 
 - **Rule A:** for the input stateA0(k,d) and output stateA(n-1,k-n,d-6n), the fixed literal mass rises from 6 to 9, while the three numeric fields change from \(k+d\) to \(k+d-6n-1\). Since the recognizer requires \(n\ge2\), total numeric mass actually drops by \(6n-2\). Its fixed left prefix grows by 6 tokens, so \(W_{\rm out}\le W_{\rm in}\).
