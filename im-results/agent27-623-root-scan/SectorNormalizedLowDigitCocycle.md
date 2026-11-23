@@ -1,145 +1,148 @@
-# Sector-normalized two-register cocycle and drain residues
+# Scaled \((p,q)\) cocycle and drain residues for #623
 
-**Status:** exact algebraic reduction of the source-derived canonical-ray map, plus a finite-state residue lift. It is not a root invariant, a halting/nonhalting proof, or a BB(6) result. Kept in im-results because the source-to-root closure is still open.
+**Status:** exact algebraic reduction of the source-derived canonical-ray \((p,q)\) recurrence, with a finite-state mod-3 lift of its drain statistics. This is not an all-time root invariant, a halting/nonhalting proof, or a BB(6) result.
 
-This note refines Agent 1's TwoCoordinate3AdicCocycle.md by removing the sector offsets from the second register. It also identifies the exact finite automaton needed to supply the drain statistics modulo 3.
+**Important scope correction:** this is a \((p,q)\)-coordinate result only. Do not identify the scaled coordinate \(P=2p\) below with Agent 1's signed-window coordinate \(V=X+Y\), and do not use the \((p,q)\) corrections \(\beta,\delta\) as replacements for the Lean-checked signed-window corrections \(\mathrm{corrC},\mathrm{corrF}\). Agent 1's corrected synchronization cocycle is a separate exact system.
 
-## 1. Sector-normalized coordinates
+## 1. Canonical \((p,q)\) recurrence
 
-Use the canonical-ray coordinates
+For a canonical state \(D(a,d)\), put
 \[
-p=|a-d|,\qquad q=\min(a,d),
+p=|a-d|,\qquad q=\min(a,d).
 \]
-and the exact sector correction table
+In each input sector, the unsorted next counters are
 \[
-A=p+\beta_s,\qquad E=3q+\delta_s,\qquad
-p'=|A-E|,\quad q'=\min(A,E).
+A=p+\beta_s,\qquad E=3q+\delta_s.
 \]
-Let \(T_s=\delta_s-\beta_s\). The output is left-oriented when \(p-3q\ge T_s\), and right-oriented otherwise.
-
-Agent 1's coordinates are \(U=6q\), \(V=2p-\gamma_s\), where
+Write \(T_s=\delta_s-\beta_s\). Sorting \(A,E\) gives
 \[
-(\gamma_{LO},\gamma_{LE},\gamma_{RO},\gamma_{RE})=(18,10,2,4).
+p'=|p-3q-T_s|,\qquad q'=\min(p+\beta_s,\,3q+\delta_s).
 \]
-Define instead
+The output is left-oriented when \(p-3q\ge T_s\), and right-oriented otherwise:
 \[
-\boxed{U=6q,\qquad W=2p=V+\gamma_s.}
-\]
-The second coordinate is translated by the current sector, so this is a sector-adapted coordinate, not a single global linear map.
-
-Substitution into the exact \((p,q)\) branches gives the following **integer identities**:
-
-**Left output** (\(p'=p-3q-T_s,\ q'=3q+\delta_s\)):
-\[
-\boxed{U'=3U+6\delta_s,\qquad W'=W-U-2T_s.}
-\]
-
-**Right output** (\(p'=3q+T_s-p,\ q'=p+\beta_s\)):
-\[
-\boxed{U'=3W+6\beta_s,\qquad W'=U-W+2T_s.}
-\]
-
-Unlike the \((U,V)\) form, these equations contain no \(\gamma_s'\). The target-sector phase is needed only to interpret the next state's sector and to select its next drain input.
-
-## 2. Exact mod-3 quotient table
-
-Use Agent 1's drain convention:
-\[
-\begin{array}{c|rrr}
-s&\beta_s&\delta_s&T_s\\ \hline
-LO&-D-5&2D+2r+14&3D+2r+19\\
-LE&-D-2&2D+2r+8&3D+2r+10\\
-RO&4-D&2D+2r&3D+2r-4\\
-RE&1-D&2D+2r+5&3D+2r+4
+\begin{array}{c|cc}
+& p'&q'\\ \hline
+L&p-3q-T_s&3q+\delta_s\\
+R&3q+T_s-p&p+\beta_s.
 \end{array}
 \]
-Here \(D\) is the signed drop, and \(r\) counts subsequent drain iterations. In RE only, the full evaluator-call count used by Agent 48 is \(R=r+1\); in the other sectors \(R=r\). Thus when consuming Agent 48's edge records, convert \(r=R-\mathbf1_{s=RE}\). The signed drop \(D\) already includes the initial RE evaluator.
 
-Since \(U=6q\equiv0\pmod3\), dividing the active register by 3 gives
+The exact correction table in the canonical-ray convention is:
+
+| Sector | \(\beta_s\) | \(\delta_s\) | \(T_s=\delta_s-\beta_s\) |
+|---|---:|---:|---:|
+| LO | \(-D-5\) | \(2D+2r+14\) | \(3D+2r+19\) |
+| LE | \(-D-2\) | \(2D+2r+8\) | \(3D+2r+10\) |
+| RO | \(4-D\) | \(2D+2r\) | \(3D+2r-4\) |
+| RE | \(1-D\) | \(2D+2r+5\) | \(3D+2r+4\) |
+
+Here \(D\) is the signed drop. In RE, the initial evaluator's signed drop is included in \(D\), while \(r\) counts subsequent drain iterations. If \(R_{\rm full}\) is the full evaluator-call count, then \(r=R_{\rm full}-1\) in RE and \(r=R_{\rm full}\) in the other sectors.
+
+## 2. Scaled integer coordinates
+
+Define
 \[
-\begin{array}{c|cc}
-&\text{left output}&\text{right output}\\ \hline
-U'/3&D+r+2c_\delta(s)&W+D+2c_\beta(s)\\
-W'&W-r-2c_T(s)&-W+r+2c_T(s)
-\end{array}\pmod3
+\boxed{Q=6q,\qquad P=2p.}
 \]
-where \(c_\beta=(-5,-2,4,1)\), \(c_\delta=(14,8,0,5)\), and \(c_T=(19,10,-4,4)\) in sector order LO, LE, RO, RE.
+These are merely scaled canonical counters; they are not Agent 1's synchronization coordinates \(U,V\).
 
-In particular \(2c_\beta(s)\equiv2\) in every sector. The full table is therefore
+The exact integer updates become:
+
+**Left output**
+\[
+\boxed{Q'=3Q+6\delta_s,\qquad P'=P-Q-2T_s.}
+\]
+
+**Right output**
+\[
+\boxed{Q'=3P+6\beta_s,\qquad P'=Q-P+2T_s.}
+\]
+
+These follow directly by multiplying the two \((p,q)\) branch equations by 6 and 2, respectively.
+
+## 3. Exact mod-3 quotient and sector normalization
+
+Since \(Q=6q\equiv0\pmod3\), the active quotient \(Q'/3\) and passive residue \(P'\) satisfy
 \[
 \begin{array}{c|cc}
-s&\text{left output }(U'/3,W')&\text{right output }(U'/3,W')\\ \hline
-LO&(D+r+1,\ W-r+1)&(W+D+2,\ -W+r+2)\\
-LE&(D+r+1,\ W-r+1)&(W+D+2,\ -W+r+2)\\
-RO&(D+r,\ W-r+2)&(W+D+2,\ -W+r+1)\\
-RE&(D+r+1,\ W-r+1)&(W+D+2,\ -W+r+2)
+&L&R\\ \hline
+Q'/3&D+r+2c_\delta(s)&P+D+2c_\beta(s)\\
+P'&P-r-2c_T(s)&-P+r+2c_T(s)
+\end{array}\pmod3,
+\]
+where
+\[
+c_\beta=(-5,-2,4,1),\quad
+c_\delta=(14,8,0,5),\quad
+c_T=(19,10,-4,4)
+\]
+in LO, LE, RO, RE order.
+
+Because \(2c_\beta(s)\equiv2\pmod3\) in every sector, this is
+\[
+\begin{array}{c|cc}
+s&L:(Q'/3,P')&R:(Q'/3,P')\\ \hline
+LO&(D+r+1,\ P-r+1)&(P+D+2,\ -P+r+2)\\
+LE&(D+r+1,\ P-r+1)&(P+D+2,\ -P+r+2)\\
+RO&(D+r,\ P-r+2)&(P+D+2,\ -P+r+1)\\
+RE&(D+r+1,\ P-r+1)&(P+D+2,\ -P+r+2)
 \end{array}\pmod3.
 \]
 
-This table separates the two drain statistics: the passive register \(W'\bmod3\) depends on \(r\bmod3\), but not on \(D\bmod3\); the active quotient \(U'/3\bmod3\) needs \(D\bmod3\) as well.
-
-## 3. A normalized passive register
-
-The remaining sector dependence in the passive update can be reduced further. Put
+A sector translation makes the passive rule simpler. Put
 \[
-\widehat W=W+\eta_s\pmod3,\qquad
+\widehat P=P+\eta_s\pmod3,\qquad
 (\eta_{LO},\eta_{LE},\eta_{RO},\eta_{RE})=(0,0,1,0).
 \]
-Use the exact canonical sector transition table
+The canonical sector transitions are
 \[
 \begin{array}{c|cc}
 s&L&R\\ \hline
 LO&LO&RO\\
 LE&LE&RE\\
 RO&LE&RE\\
-RE&LO&RO
+RE&LO&RO.
 \end{array}
 \]
-(the choice of L/R for an authentic root step remains conditional on the nonterminal/central-block hypothesis in the existing branch-selection result).
-
-The update becomes
+Then
 \[
 \boxed{
 \begin{array}{c|cc}
 &L&R\\ \hline
-U'/3&D+r+1-\mathbf1_{s=RO}
-&\widehat W+D+2-\mathbf1_{s=RO}\\[1mm]
-\widehat W'&\widehat W-r+1
-&-\widehat W+r+2\mathbf1_{s\in\{LE,RO\}}
+Q'/3&D+r+1-\mathbf1_{s=RO}
+&\widehat P+D+2-\mathbf1_{s=RO}\\
+\widehat P'&\widehat P-r+1
+&-\widehat P+r+2\mathbf1_{s\in\{LE,RO\}}
 \end{array}\pmod3.}
 \]
 
-Thus the passive register has one uniform left rule and only a two-class right rule. The active quotient still distinguishes RO from the other three sectors. This is a substantially smaller phase dependence than the unnormalized \((U,V)\) expression, but it is not a closed root automaton: the next \(D,r\) must be computed from the next state's complete canonical drain.
+Thus the passive \(P\)-coordinate is a one-dimensional affine cocycle driven by sector, branch, and \(r\bmod3\), independent of \(D\). The active quotient \(Q'/3\) still needs both \(D\bmod3\) and \(r\bmod3\).
 
-There is a small cohomological obstruction behind the remaining right split. In fact, no sector translation can make the right passive update uniform: the transitions RO→RE and RE→RO have constants \(2c_T(RO)+\eta_{RO}+\eta_{RE}\) and \(2c_T(RE)+\eta_{RE}+\eta_{RO}\), which differ by \(2(c_T(RO)-c_T(RE))\equiv2\pmod3\), independently of \(\eta\). Thus every translation has at least two right classes. If one additionally demands a single sector-independent additive constant for the left passive update, the left equations force
+The remaining two-class right split cannot be removed by any sector translation: the right transitions RO→RE and RE→RO have additive constants \(2c_T(RO)+\eta_{RO}+\eta_{RE}\) and \(2c_T(RE)+\eta_{RE}+\eta_{RO}\), which differ by \(2(c_T(RO)-c_T(RE))\equiv2\pmod3\), independently of \(\eta\). The displayed \(\eta\) makes the left passive rule uniform and achieves the minimum of one left class and two right classes.
+
+## 4. Relation to the existing root-ratio map
+
+For \(q>0\), put
 \[
-\eta_{RO}-\eta_{LE}=1,\qquad \eta_{RE}=\eta_{LO}\pmod3.
+x=\frac PQ=\frac{p}{3q}.
 \]
-The right transitions LO→RO and LE→RE then have constants differing by 2 modulo 3. Hence no sector translation can make both branch constants uniform. The displayed \(\eta\) attains the minimum total of three additive classes (one on L, two on R).
-
-## 4. Möbius relation to the existing root-ratio map
-
-For \(q>0\), the ratio of the two registers is
-\[
-x=\frac WU=\frac{p}{3q}.
-\]
-If \(\rho=q/S\) is Agent 3's normalized root ratio, then
+If \(\rho=q/S\) with \(S=p+2q\), then
 \[
 \boxed{x=\frac{1-2\rho}{3\rho},\qquad \rho=\frac1{3x+2}.}
 \]
-Thus \(x=1\) is exactly the critical value \(\rho=1/5\), not a second critical point.
+So \(x=1\) is the same critical value as \(\rho=1/5\) in the existing root-ratio analysis.
 
-The exact integer cocycle gives
+The exact ratio update is
 \[
 x'=
 \begin{cases}
-\displaystyle\frac{W-U-2T_s}{3U+6\delta_s}
+\displaystyle\frac{P-Q-2T_s}{3Q+6\delta_s}
 =\frac{p-3q-T_s}{3(3q+\delta_s)},&L,\\[2mm]
-\displaystyle\frac{U-W+2T_s}{3W+6\beta_s}
+\displaystyle\frac{Q-P+2T_s}{3P+6\beta_s}
 =\frac{3q-p+T_s}{3(p+\beta_s)},&R.
 \end{cases}
 \]
-Suppressing the logarithmic drain corrections yields
+Suppressing the drain corrections gives
 \[
 x\longmapsto
 \begin{cases}
@@ -147,18 +150,15 @@ x\longmapsto
 (1-x)/(3x),&0<x<1,
 \end{cases}
 \]
-which is exactly the Möbius conjugate of Agent 3's ideal tent map in \(\rho\). The exact branch condition \(g\ge T_s\) becomes
+the Möbius-conjugate form of the existing ideal tent map. The exact left-branch condition is
 \[
-x\ge1+\frac{2T_s}{U}
-=1+\frac{T_s}{3q}.
+x\ge1+\frac{T_s}{3q}.
 \]
-Since \(T_s=O(\ell)=O(\log q)\), this is the same \(O(\log q/q)\) displacement of the critical boundary recorded in the root-ratio dossier. The new value of the sector-normalized coordinates is therefore not a competing ratio map: it puts the existing perturbed tent map and its mod-3 register cocycle in one coordinate system.
+Since \(T_s=O(\ell)=O(\log q)\), this is the same logarithmic displacement of the critical boundary already present in the root-ratio dossier. This coordinate change combines the ratio and the \((p,q)\) low-digit recurrence; it does not introduce a new independent ratio map.
 
-## 5. Exact 27-state drain-residue lift
+## 5. Exact 27-state drain-residue lift for the \((p,q)\) recurrence
 
-The pinned three-state drain transducer in
-im-results/agent1-machine623-3euclidean-correction-bounds/DrainDigitTransducerCarry.lean
-has states \(A,B,C\). For input digit \(d\in\{0,1,2\}\), it returns a next state \(s'\) and output digit \(o\):
+The existing three-state drain transducer has states \(A,B,C\). On input digit \(d\in\{0,1,2\}\), it returns a next state \(s'\) and output digit \(o\):
 \[
 \begin{array}{c|ccc}
 &d=0&d=1&d=2\\ \hline
@@ -168,23 +168,25 @@ C&(A,1)&(C,0)&(A,2)
 \end{array}
 \]
 
-For a length-\(L\) drain word, \(D=L-2n_2\) and \(r=n_1+n_2\), where \(n_i\) counts output digits \(i\). The exact mod-3 lift has state space
+For a length-\(L\) drain word, the source digit identities give
+\[
+D=L-2n_2,\qquad R_{\rm full}=n_1+n_2,
+\]
+where \(n_i\) counts output digits \(i\). The exact mod-3 lift has state space
 \[
 \mathcal Q=\{A,B,C\}\times(\mathbb Z/3\mathbb Z)^2
 \]
 and transition
 \[
-(s,\bar D,\bar r)\xrightarrow{d}
+(s,\bar D,\bar R)\xrightarrow{d}
 \left(s',\ \bar D+1-2\mathbf1_{o=2},\
-\bar r+\mathbf1_{o\ne0}\right).
+\bar R+\mathbf1_{o\ne0}\right).
 \]
-It starts at \((A,0,0)\). After exactly \(L\) input digits its output is
+It starts at \((A,0,0)\). After exactly \(L\) input digits it outputs
 \[
-(s_L,\ D\bmod3,\ r\bmod3).
+(s_L,\ D\bmod3,\ R_{\rm full}\bmod3).
 \]
-This is an exact finite-state projection of runStats, not a fitted root-trace model.
-
-A breadth-first construction reaches all 27 states. Shortest access words (digits are read least-significant first) are:
+All 27 states are reachable; shortest access words (digits read least-significant first) are:
 
 | State | Word | State | Word | State | Word |
 |---|---|---|---|---|---|
@@ -198,26 +200,19 @@ A breadth-first construction reaches all 27 states. Shortest access words (digit
 | C02 | 112 | C01 | 121 | C00 | 211 |
 | C22 | 0012 | B11 | 0120 | B01 | 0210 |
 
-The output label is the state triple itself, so distinct states are immediately distinguishable as a Moore machine. This 27-state lift is therefore the exact minimal state representation if the output must retain \((s_L,D\bmod3,r\bmod3)\).
+Because the output label is the state triple itself, distinct states are immediately distinguishable. This is the exact minimal Moore state representation when the output must retain the final drain state and both residues \(D,R_{\rm full}\bmod3\).
 
-For RE inputs, the residue needed in the preceding tables is \(r=R-1\); the automaton naturally produces the full count \(R\) when run with the full evaluator-call convention, so apply that one-unit conversion at the RE interface.
+To use the canonical \((p,q)\) table, convert \(r=R_{\rm full}-1\) in RE and \(r=R_{\rm full}\) otherwise. This 27-state lift is for the \((p,q)\) recurrence. Agent 1's corrected synchronization low-digit rule uses only \(R_{\rm full}\bmod3\), so its separate nine-state product is the appropriate smaller synchronization component.
 
-## 6. What this closes, and what it does not
+## 6. Finite edge audit and limitations
 
-The algebraic reduction gives a compact candidate low-digit layer:
-\[
-(s,\text{branch},D\bmod3,r\bmod3,\widehat W\bmod3)
-\longmapsto
-(s',\,U'/3\bmod3,\,\widehat W'\bmod3).
-\]
-The 27-state drain lift supplies the two statistic residues from the exact low-\(L\)-digit drain word. The separate S-window boundary carry is still necessary for the higher digits and for the exact next-window quotient. In particular, the central window alone does not determine the complete next drain word; do not claim closure by composing only these mod-3 states.
-
-I checked the displayed normalized update against the materialized source-faithful edge data im-results/agent48-623-tight-window/SWindowEdgeRecords.json. The exact finite audit is reproducible with im-results/agent27-623-root-scan/verify_sector_normalized_cocycle.js (run from the repository root with Node). Starting from the exact D33 prefix and using each edge's exact \((D,R)\), the 9,968 transitions D33→D10001 had:
+The normalized \((p,q)\) update was checked against the materialized source-faithful edge data
+im-results/agent48-623-tight-window/SWindowEdgeRecords.json. Starting from the exact D33 prefix and using each edge's \((D,R_{\rm full})\), the 9,968 transitions D33→D10001 had:
 - zero source-sector or source-branch mismatches;
 - zero target-sector mismatches;
-- zero mismatches in either normalized mod-3 output;
-- all 216 possible tuples \((s,\text{branch},D\bmod3,r\bmod3,\widehat W\bmod3)\) occurred.
+- zero mismatches in either normalized \((Q'/3,\widehat P')\bmod3\) update;
+- all 216 possible tuples \((s,\text{branch},D\bmod3,r\bmod3,\widehat P\bmod3)\) occurred.
 
-The last point is a useful negative result: no exclusion follows from this one-digit residue layer alone. I also tested whether the phase core becomes Markov after adjoining drain residues. On the 9,967 consecutive edge pairs, the key phaseId+(D mod 3,r mod 3) has 5,990 distinct nodes, 2,470 with multiple successors, and maximum outdegree 9. Adding the canonical high digit (equivalently the final A/B drain phase) gives 6,950 nodes, 2,071 multi-successor nodes, and maximum outdegree 8. Adding L mod 3 as well gives 8,715 nodes, 1,102 multi-successor nodes, and maximum outdegree 6. These are finite-trace diagnostics, but they rule out treating just the 27-state drain-residue output plus the current phase core as a deterministic transition state on this trace. The audit script now reproduces these counts. The remaining proof-relevant target is to compose the drain lift with more of the **full** source-derived boundary/quotient information and the authentic S-window shift/high-extension map, then prove closure or find an exact counterexample. The 1,318 phase cores must not be treated as Markov states; the per-edge drain/window fields in SWindowEdgeRecords.json remain essential.
+The last point is a useful negative result: no exclusion follows from this one-digit \((p,q)\) residue layer alone. The finite audit is reproducible with im-results/agent27-623-root-scan/verify_sector_normalized_cocycle.js (run from the repository root with Node).
 
-No Lean compilation or original-machine nonhalting theorem is claimed here.
+This note does **not** close the synchronization problem. Agent 1's exact synchronization coordinates are \(U=Y,V=X+Y\), with the branch corrections \(\kappa=\mathrm{corrC}\) and \(\phi=\mathrm{corrF}\) from the Lean-checked SignedCoordinateNormalForm.lean. Those corrections must be used directly; no identification of \(P=2p\) with that \(V\) is asserted here. The authentic-root drain budget, synchronization carry closure, and avoidance of the terminal strips remain open.
