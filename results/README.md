@@ -12,6 +12,9 @@ This is external published evidence, not a repository theorem. The repository's 
 
 A [Lean-certified original-source theorem](2026-11-23-machine-c-low-source-sixteen-agent13.md) excludes **sixteen disjoint residue classes modulo 128** of Machine C low stopping indices \(m=512z+67\), namely \(z\equiv13\pmod{16}\), \(5\pmod{64}\), \(25\pmod{32}\), \(9\pmod{128}\), or \(21\pmod{128}\). It uses four exact inverse transitions and a complete two-parent source classification, **without any M16/M32 quotient certificate**. The complete 64-module Lean 4.36.0-rc2 closure passed [CI 45246116887](https://github.com/FlareZ123/bb6/actions/runs/45246116887), with main theorem axioms `[propext, Classical.choice, Quot.sound]` and no `sorryAx`. This excludes one-eighth of this necessary low-stop *parameter subfamily*, not one-eighth of all possible machine halts. Machine C and BB(6) remain undecided.
 
+
+A disjoint [valuation-six, three-parent original-source theorem](2026-11-23-machine-c-low-d4-three-parent-agent13.md) additionally excludes \(z\equiv65\pmod{512}\), raising the certified combined source exclusions from 64 to **65 of 512** residues of this parameter family. Its own source closure [CI 45248524167](https://github.com/FlareZ123/bb6/actions/runs/45248524167) checked 61 modules and printed only standard axioms. The original two-parent family has already been integrated into an exact lossless blank-halting criterion in [`LowM67HaltingCriterion.lean`](../im-results/agent13-residual-frontier/LowM67HaltingCriterion.lean), [CI 45247987076](https://github.com/FlareZ123/bb6/actions/runs/45247987076), 242 modules, no `sorryAx`. The three-parent source exclusion's corresponding 65/512 exact-criterion integration is a separate pending CI obligation; no global Machine C or BB(6) decision is claimed.
+
 ## What the preserved research actually establishes
 
 | Line of work | Strongest useful entry point | Mathematical and provenance boundary |
