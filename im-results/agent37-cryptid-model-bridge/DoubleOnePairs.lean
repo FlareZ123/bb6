@@ -1,6 +1,5 @@
 import Lean.Elab.Tactic.Omega
 import DoubleOneBranch
-import A1100First
 
 set_option maxRecDepth 8192
 set_option maxHeartbeats 1500000
@@ -188,8 +187,30 @@ theorem two_one_pairs_return (m q : Nat) (ys : List Bool):
 
 /-- A trajectory segment has no physical F/0 return before its endpoint.
     Here "physical" means that every cell strictly left of the head is blank. -/
+/-- A blank-left F-state in the original finite-tape model. -/
+def PhysicalPair (c : Cfg) : Prop :=
+  c.st = 5 ∧ ∀ b ∈ c.l, b = false
+
+/-- The final D sweep has no F state before its terminal return. -/
+private theorem sweepD_noF_pair (m : Nat) (ys : List Bool) (t : Nat)
+    (ht : t < 2*m+3) :
+    (run t (sweepD m ys)).st ≠ 5 := by
+  induction m generalizing ys t with
+  | zero =>
+      have hc : t=0 ∨ t=1 ∨ t=2 := by omega
+      rcases hc with rfl | rfl | rfl
+      all_goals simp [run, sweepD, step, goL, goR, pairs]
+  | succ m ih =>
+      by_cases hsmall : t < 2
+      · have hc : t=0 ∨ t=1 := by omega
+        rcases hc with rfl | rfl
+        all_goals simp [run, sweepD, step, goL, goR, pairs]
+      · obtain ⟨u,hu⟩ : ∃ u, t=2+u := ⟨t-2, by omega⟩
+        rw [hu, run_add, sweepD_step]
+        exact ih (true::true::ys) u (by omega)
+
 def NoPhysicalF0 (c : Cfg) (n : Nat) : Prop :=
-  ∀ t, t < n → ¬ Physical (run t c)
+  ∀ t, t < n → ¬ PhysicalPair (run t c)
 
 private theorem appendNoPhysicalF0 (c d : Cfg) (a b : Nat)
     (hc : NoPhysicalF0 c a) (he : run a c = d) (hd : NoPhysicalF0 d b) :
@@ -212,7 +233,7 @@ private theorem q_b_scan_noPhysical (q : Nat) (L ys : List Bool) :
         intro t ht
         have hc : t=0 ∨ t=1 := by omega
         rcases hc with rfl | rfl
-        all_goals simp [NoPhysicalF0, Physical, qB, run, step, goL, goR, pairs]
+        all_goals simp [NoPhysicalF0, PhysicalPair, qB, run, step, goL, goR, pairs]
       have hrun : run 2 (qB (q+1) L ys) = qB q ([true,false] ++ L) ys :=
         q_b_two q L ys
       have htail : NoPhysicalF0 (qB q ([true,false] ++ L) ys) (2*q) :=
@@ -235,7 +256,7 @@ private theorem q_d_scan_noPhysical (q : Nat) (L ys : List Bool) :
         intro t ht
         have hc : t=0 ∨ t=1 := by omega
         rcases hc with rfl | rfl
-        all_goals simp [NoPhysicalF0, Physical, c, run, step, goL, goR, pairs]
+        all_goals simp [NoPhysicalF0, PhysicalPair, c, run, step, goL, goR, pairs]
       have hrun : run 2 c = d := by
         simpa [c,d] using q_d_two q L ys
       have htail : NoPhysicalF0 d (2*q) := by
@@ -252,7 +273,7 @@ private theorem q_front8_noPhysical (m q : Nat) (ys : List Bool) :
   intro t ht
   have hc : t=0 ∨ t=1 ∨ t=2 ∨ t=3 ∨ t=4 ∨ t=5 ∨ t=6 ∨ t=7 := by omega
   rcases hc with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
-  all_goals simp [NoPhysicalF0, Physical, preA, run, step, goL, goR, pairs]
+  all_goals simp [NoPhysicalF0, PhysicalPair, preA, run, step, goL, goR, pairs]
 
 private theorem q_core7_noPhysical (m : Nat) (zs : List Bool) :
     NoPhysicalF0
@@ -260,7 +281,7 @@ private theorem q_core7_noPhysical (m : Nat) (zs : List Bool) :
   intro t ht
   have hc : t=0 ∨ t=1 ∨ t=2 ∨ t=3 ∨ t=4 ∨ t=5 ∨ t=6 := by omega
   rcases hc with rfl | rfl | rfl | rfl | rfl | rfl | rfl
-  all_goals simp [NoPhysicalF0, Physical, qCoreL, run, step, goL, goR, pairs]
+  all_goals simp [NoPhysicalF0, PhysicalPair, qCoreL, run, step, goL, goR, pairs]
 
 private theorem q_phaseB_noPhysical (m q : Nat) (ys : List Bool) :
     NoPhysicalF0
@@ -285,7 +306,7 @@ private theorem q_phaseD_noPhysical (m q : Nat) (ys : List Bool) :
     intro t ht
     have hc : t=0 ∨ t=1 := by omega
     rcases hc with rfl | rfl
-    all_goals simp [NoPhysicalF0, Physical, start, run, step, goL, goR, pairs]
+    all_goals simp [NoPhysicalF0, PhysicalPair, start, run, step, goL, goR, pairs]
   have hB : run 2 start = mid := by
     simp [start,mid,run,step,goL,goR,pairs]
   have hscan : run (2*q) mid = mid2 := by
@@ -337,7 +358,7 @@ theorem two_one_pairs_first_physical (m q : Nat) (ys : List Bool) :
       (sweepD m ([true,true,false] ++ List.replicate (2*q+6) true ++ ys))
       (2*m+3) := by
     intro t ht hp
-    exact (CryptidBoundary.sweepD_noF m
+    exact (sweepD_noF_pair m
       ([true,true,false] ++ List.replicate (2*q+6) true ++ ys) t ht) hp.1
   have h := appendNoPhysicalF0 _ _ (17+4*q) (2*m+3) hfront hrun htail
   simpa [show (17+4*q)+(2*m+3)=2*(m+2)+16+4*q by omega] using h

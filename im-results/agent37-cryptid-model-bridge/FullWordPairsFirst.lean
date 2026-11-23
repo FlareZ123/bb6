@@ -16,12 +16,12 @@ open BB6.CryptidACodeFirstReturn
     and arbitrary trailing suffixes. -/
 theorem complete_A_word_two_one_pairs_first_event
     (k q : Nat) (ws ys : List Bool) :
-    Physical (run (pairTime k ws q) (pairInput k ws q ys)) ∧
+    PhysicalPair (run (pairTime k ws q) (pairInput k ws q ys)) ∧
     ∀ t, 0 < t → t < pairTime k ws q →
-      ¬ Physical (run t (pairInput k ws q ys)) := by
+      ¬ PhysicalPair (run t (pairInput k ws q ys)) := by
   constructor
   · rw [pair_source]
-    simp [Physical]
+    simp [PhysicalPair]
   · intro t hpos ht
     let P := 12*k*k+41*k+32
     let C := CryptidA.wordCost (4*k+3) ws

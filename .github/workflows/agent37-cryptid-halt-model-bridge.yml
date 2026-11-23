@@ -27,8 +27,6 @@ jobs:
           export LEAN_PATH="$GITHUB_WORKSPACE/im-results/agent31-cryptid-boundary:$GITHUB_WORKSPACE/im-results/agent25-cryptid-doublezero:$GITHUB_WORKSPACE/im-results/agent32-cryptid-third:$GITHUB_WORKSPACE/im-results/agent32-cryptid-padding:$GITHUB_WORKSPACE/im-results/agent37-cryptid-model-bridge:$GITHUB_WORKSPACE/im-results/agent35-cryptid-code:$GITHUB_WORKSPACE/im-results/agent2-cryptid-continuity:$GITHUB_WORKSPACE/im-results/agent37-d-timing-cocycle"
           lean -o im-results/agent31-cryptid-boundary/Boundary.olean im-results/agent31-cryptid-boundary/Boundary.lean
           lean -o im-results/agent31-cryptid-boundary/BoundaryExtra.olean im-results/agent31-cryptid-boundary/BoundaryExtra.lean
-          lean -o im-results/agent31-cryptid-boundary/A1100.olean im-results/agent31-cryptid-boundary/A1100.lean
-          lean -o im-results/agent31-cryptid-boundary/A1100First.olean im-results/agent31-cryptid-boundary/A1100First.lean
           cd "$GITHUB_WORKSPACE/im-results/agent25-cryptid-doublezero"
           for module in DoubleZero TripleUniversalBase TripleUniversalCore TripleUniversalWalk TripleUniversal TripleIteration TenPump SixOnes TokenCode; do
             lean -o "$module.olean" "$module.lean"
