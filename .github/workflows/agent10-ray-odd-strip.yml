@@ -101,6 +101,7 @@ jobs:
             lean -o "$b/TerminalFirstForkClassification.olean" "$b/TerminalFirstForkClassification.lean"
             lean -o "$b/TerminalDeepConeBarrier.olean" "$b/TerminalDeepConeBarrier.lean"
             lean -o "$b/ForcedThirdValuationSource.olean" "$b/ForcedThirdValuationSource.lean"
+            lean -o "$b/HenselNinePacket.olean" "$b/HenselNinePacket.lean"
             echo "Finished focused original-source terminal leaf proof and axiom audit."
             exit 0
           fi
