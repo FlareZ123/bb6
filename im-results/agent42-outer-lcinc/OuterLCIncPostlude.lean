@@ -146,15 +146,20 @@ theorem outerLCInc_postlude_run
     omega
   have hrightHead :
       h+7+3*((b+1:Nat):Int) = h+3*(b:Int)+10 := by omega
+  have hrightRun' :
+      run tm2 (3*(b+1)) ⟨1,h+7,outerLCIncAfterZero T h a m⟩ =
+        some ⟨1,h+3*b+10,outerLCIncAfterSweep T h a m b⟩ := by
+    rw [hrightRun]
+    simp [outerLCIncAfterSweep,hrightHead]
   rw [hcost, run_append, hfiveRun]
   simp only [Option.bind_some]
   rw [hfiveFrame,run_append,hscanRun]
   simp only [Option.bind_some]
   rw [hscanHead,run_append,hzeroRun]
   simp only [Option.bind_some]
-  rw [hzeroFrame,run_append,hrightRun]
+  rw [hzeroFrame,run_append,hrightRun']
   simp only [Option.bind_some]
-  rw [hrightHead,run_append,hzeroExitRun]
+  rw [run_append,hzeroExitRun]
   simp only [Option.bind_some]
   rw [hzeroExitFrame,htailRun,htailFrame]
 
