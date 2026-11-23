@@ -2,11 +2,6 @@ name: Agent 24 C58 ValSix original source all-phase integration (manual)
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-    paths:
-      - 'im-results/agent12-c-high-m0/M0Residual1093Lift.lean'
 
 permissions:
   contents: write
@@ -364,6 +359,16 @@ jobs:
           cat "$GITHUB_WORKSPACE/full-forced-residual.txt"
           cat "$GITHUB_WORKSPACE/full-forced-residual.txt" >> "$GITHUB_STEP_SUMMARY"
           if [ "$full_forced_status" -ne 0 ]; then exit "$full_forced_status"; fi
+          # Agent 12: check the lifted final m=0 high residual immediately after
+          # its complete source dependency module, before unrelated later probes.
+          cp ${GITHUB_WORKSPACE}/im-results/agent12-c-high-m0/M0Residual1093Lift.lean .
+          set +e
+          lean -o M0Residual1093Lift.olean M0Residual1093Lift.lean > "$GITHUB_WORKSPACE/m0-residual1093-lift.txt" 2>&1
+          m0_1093_status=$?
+          set -e
+          cat "$GITHUB_WORKSPACE/m0-residual1093-lift.txt"
+          cat "$GITHUB_WORKSPACE/m0-residual1093-lift.txt" >> "$GITHUB_STEP_SUMMARY"
+          if [ "$m0_1093_status" -ne 0 ]; then exit "$m0_1093_status"; fi
           # Agent 4: compile the exact forward mass scan and compose it with
           # the original-source halting iff before later independent probes.
           cp ${GITHUB_WORKSPACE}/im-results/agent4-machine-c-global-path/{CResidualMassBounds,CResidualMass2000,CResidualMass10000,CResidualMassIntegration}.lean .
@@ -461,11 +466,6 @@ jobs:
           lean -o M0Mod2048Four.olean M0Mod2048Four.lean > "$GITHUB_WORKSPACE/m0-mod2048-four.txt" 2>&1
           cat "$GITHUB_WORKSPACE/m0-mod2048-four.txt"
           cat "$GITHUB_WORKSPACE/m0-mod2048-four.txt" >> "$GITHUB_STEP_SUMMARY"
-          # Agent 12: lift the final finite m=0 high residual j=1093 to an exact infinite family.
-          cp ${GITHUB_WORKSPACE}/im-results/agent12-c-high-m0/M0Residual1093Lift.lean .
-          lean -o M0Residual1093Lift.olean M0Residual1093Lift.lean > "$GITHUB_WORKSPACE/m0-residual1093-lift.txt" 2>&1
-          cat "$GITHUB_WORKSPACE/m0-residual1093-lift.txt"
-          cat "$GITHUB_WORKSPACE/m0-residual1093-lift.txt" >> "$GITHUB_STEP_SUMMARY"
           # Agent 5: bounded scan of the exact executable high filter.
           mkdir -p im-results/agent5-c-parameter-search
           cp ${GITHUB_WORKSPACE}/im-results/agent5-c-parameter-search/ParameterSearch.lean .
