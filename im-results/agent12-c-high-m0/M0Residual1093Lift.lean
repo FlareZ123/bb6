@@ -317,8 +317,7 @@ private theorem affine_right_m0_2p22_1093 (t : Nat) :
     (BB6.Agent15.affineNormalize (8388608*t+2189)
       (12582912*t+3286)).2≠4 := by
   apply affine_right_no_step
-  · unfold BB6.Agent15.affineNormalize
-    omega
+  · omega
   · omega
 
 /-- A new infinite m=0 high-stopping family, disjoint from the
