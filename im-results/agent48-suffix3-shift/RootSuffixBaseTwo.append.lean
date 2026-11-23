@@ -40,9 +40,8 @@ private theorem s3_tok_dr_zeros (k : ℕ) (K1 : List ℕ)
             (tok_DR (2::K1) R3 (List.replicate (k+2) 0 ++ L))
             (tok_DR (2::1::K1) R3
               (List.replicate (k+1) 0 ++ L)) := by
-        simpa [s3_nat_replicate_next, List.replicate_succ, List.cons_append,
-          List.append_assoc] using
-          (tok_DR_zero K1 R3 (List.replicate (k+1) 0 ++ L))
+        rw [s3_nat_replicate_next 0 k L]
+        exact tok_DR_zero K1 R3 (List.replicate (k+1) 0 ++ L)
       have h2 := ih (1::K1) L
       exact ReachesPlus.trans h1
         (by simpa [s3_nat_push, List.replicate_succ, List.cons_append,
@@ -63,9 +62,8 @@ private theorem s3_tok_el_ones (k : ℕ) (K1 : List ℕ)
             (tok_EL (List.replicate (k+2) 1 ++ K1) R3 L)
             (tok_EL (List.replicate (k+1) 1 ++ K1)
               R3 (0::L)) := by
-        simpa [s3_nat_push, List.replicate_succ, List.cons_append,
-          List.append_assoc] using
-          (tok_EL_1 (List.replicate (k+1) 1 ++ K1) R3 L)
+        rw [s3_nat_replicate_next 1 k K1]
+        exact tok_EL_1 (List.replicate (k+1) 1 ++ K1) R3 L
       have h2 := ih K1 (0::L)
       exact ReachesPlus.trans h1
         (by simpa [s3_nat_push, List.replicate_succ, List.cons_append,
@@ -83,8 +81,11 @@ private theorem s3_tok_dr_z1 (k : ℕ) (R3 : List (ℕ × ℕ)) :
         (tok_DR (2::List.replicate (k+1) 1 ++ [0]) R3 [1])
         (tok_EL (List.replicate (k+2) 1 ++ [0])
           R3 [0,0,0,1]) := by
-    simpa [s3_nat_push, List.replicate_succ, List.cons_append,
-      List.append_assoc] using
+    have hr : List.replicate (k+2) 1 ++ [0] =
+        1::(List.replicate (k+1) 1 ++ [0]) :=
+      s3_nat_replicate_next 1 k [0]
+    rw [hr]
+    simpa only [List.cons_append] using
       (tok_DR_1_nil_28 (List.replicate (k+1) 1 ++ [0]) R3)
   have h3 :
       ReachesPlus target
@@ -95,7 +96,7 @@ private theorem s3_tok_dr_z1 (k : ℕ) (R3 : List (ℕ × ℕ)) :
         List.replicate ((k+1)+1) 0 ++ [0,0,0,1] =
         List.replicate (k+5) 0 ++ [1] := by
       rw [show k+5=((k+1)+1)+3 by omega, List.replicate_add]
-      rfl
+      simp [List.replicate_succ, List.cons_append, List.append_assoc]
     simpa [hz, s3_nat_push, List.replicate_succ, List.cons_append,
       List.append_assoc] using
       (s3_tok_el_ones (k+1) [0] R3 [0,0,0,1])
