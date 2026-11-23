@@ -31,7 +31,9 @@ private theorem getD_append_of_lt (xs ys : List Bool) (i : Nat)
       cases i with
       | zero => rfl
       | succ j =>
-          have h : j < xs.length := by simpa only [List.length_cons] at hi; omega
+          have h : j < xs.length := by
+            simp only [List.length_cons] at hi
+            omega
           simpa [List.getD] using ih j h
 
 /- Source-left identity and right-prefix locality. All cells in the
