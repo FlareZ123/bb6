@@ -27,7 +27,9 @@ private theorem n_add_48_le_pow (n : Nat) (hn : 18≤n) :
       _ ≤ 2^(n+2)+1 := by omega
       _ ≤ 2^(n+2)*2 := by omega
       _ = 2^(n+1+2) := by
-        rw [show n+1+2=(n+2)+1 by omega, Nat.pow_succ]
+        have he : n+1+2=(n+2)+1 := by omega
+        rw [he]
+        exact (Nat.pow_succ 2 (n+2)).symm
 
 /-- In branch 7, the exact last-reset equation is
 4*x+3*n+15=3*2^(n+2). For n>=18 it forces x>=33. -/
