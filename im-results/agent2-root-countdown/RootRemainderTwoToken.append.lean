@@ -568,3 +568,22 @@ theorem root_countdown_two_reset_five_suffix (n : ℕ) :
         (ReachesPlus.trans h4'
           (ReachesPlus.trans h5'
             (ReachesPlus.trans h6' h7')))))
+
+
+/-! Public explicit-tape endpoint for the exact remainder-one token boundary. -/
+
+def root_d1_token_cfg (n : ℕ) : Cfg (Fin 2) (Fin 6) :=
+  (([1,1,0,0] : List (Fin 2)) +> default) {{D}}>
+    ((([1,0] : List (Fin 2)) ^ 2) +>
+      ((1 : Fin 2) >> (1 : Fin 2) >> (0 : Fin 2) >>
+        ((([1,0] : List (Fin 2)) ^ (4*n+6)) +>
+          ((1 : Fin 2) >> (1 : Fin 2) >> (0 : Fin 2) >> default))))
+
+theorem root_d1_suffix_two_to_token_cfg (n : ℕ) :
+    ReachesPlus target
+      (cfg_CR_n_n [(0,0)]
+        (List.replicate (4*n+5) (0,0) ++ [(1,0),(0,0),(0,0),(2,0)]))
+      (root_d1_token_cfg n) := by
+  simpa [root_d1_token_cfg, tok_DR, encTokens, encRightNat, encLeft,
+    List.replicate_succ, List.cons_append, List.append_assoc] using
+    (root_d1_suffix_two_to_tok_DR n)
