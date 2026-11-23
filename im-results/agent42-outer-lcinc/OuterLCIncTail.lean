@@ -1,4 +1,5 @@
 import CountedRst1Prime
+import ChampionRootBridge
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -16,6 +17,7 @@ namespace BB6Coverage.Agent42OuterLCInc
 
 open BB6Coverage
 open BB6Coverage.Agent8Rst1Prime
+open BB6Coverage.Agent48Champion
 
 /-- The tail reads and writes only the finite interval [-3,5]. -/
 def outerLCIncTailInside (x : Int) : Bool :=
