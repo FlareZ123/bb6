@@ -67,7 +67,7 @@ prints the transitive axiom profiles of the resulting lemmas.
 ## Status and acceptance boundary
 
 **The BB-sweep bounds remain unaccepted drafts.** The exact-source audit
-[45145550915](https://github.com/FlareZ123/bb6/actions/runs/45145550915)
+[45147110361](https://github.com/FlareZ123/bb6/actions/runs/45147110361)
 is the current focused run, pinned to the Cryptids commit above and Lean
 `v4.36.0-rc2`, with dependency chain:
 
@@ -76,9 +76,11 @@ is the current focused run, pinned to the Cryptids commit above and Lean
 The preceding runs [45144046165](https://github.com/FlareZ123/bb6/actions/runs/45144046165)
 and [45144654362](https://github.com/FlareZ123/bb6/actions/runs/45144654362)
 were cancelled before the proof stage after static dependency review found
-successive omissions in the isolated field-maximum closure. The current base
-now includes the field-max definitions, append/cons lemmas, and the
-numeric-sum bridge; neither cancelled run provides proof evidence.
+successive omissions in the isolated field-maximum closure. Run
+[45145550915](https://github.com/FlareZ123/bb6/actions/runs/45145550915)
+then failed immediately because Lean requires imports to precede module
+documentation comments. All three module headers have been corrected. These
+three runs provide no mathematical proof evidence.
 
 The earlier exact-source runs
 [45129145926](https://github.com/FlareZ123/bb6/actions/runs/45129145926) and
