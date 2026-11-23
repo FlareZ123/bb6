@@ -9,7 +9,7 @@ permissions:
 jobs:
   source-proof:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
       - name: Install Lean 4.36.0-rc2
@@ -50,3 +50,11 @@ jobs:
             echo "Compiling original-source dependency or low1875 proof: $f"
             lean -o "$f.olean" "$f.lean"
           done
+
+      - name: Compile the refined exact joint Machine C low criterion
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/lean_compile_closure.py \
+            im-results/agent21-c-first-m1091-4096/ValSixLowRefinement.lean \
+            --workdir /tmp/a21-low1091-joint --jobs 4 --lean "$(command -v lean)"
