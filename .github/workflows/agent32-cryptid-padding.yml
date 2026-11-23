@@ -76,7 +76,8 @@ jobs:
           lean -o im-results/agent31-cryptid-boundary/Boundary.olean im-results/agent31-cryptid-boundary/Boundary.lean
           lean -o im-results/agent2-cryptid-continuity/EHaltCylinder.olean im-results/agent2-cryptid-continuity/EHaltCylinder.lean
           lean -o im-results/agent2-cryptid-terminal-prefix/AllQ1101101100.olean im-results/agent2-cryptid-terminal-prefix/AllQ1101101100.lean 2>&1 | tee /tmp/agent2-all-q-halt.log
-          lean im-results/agent2-cryptid-terminal-prefix/AllQSourceFeeder.lean 2>&1 | tee -a /tmp/agent2-all-q-halt.log
+          lean -o im-results/agent2-cryptid-terminal-prefix/AllQSourceFeeder.olean im-results/agent2-cryptid-terminal-prefix/AllQSourceFeeder.lean 2>&1 | tee -a /tmp/agent2-all-q-halt.log
+          lean im-results/agent2-cryptid-terminal-prefix/AllQFirstHalt.lean 2>&1 | tee -a /tmp/agent2-all-q-halt.log
           if grep -Eq 'sorryAx|native_decide' /tmp/agent2-all-q-halt.log; then
             echo "Forbidden Lean axiom in all-q terminal scanner proof"; exit 1
           fi
