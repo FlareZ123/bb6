@@ -11,6 +11,7 @@ on:
           - legacy_padding_107_call
           - tail_prefix_cylinders
           - short_mod3_halting
+          - all_q_e_terminal
         default: raw_d0_bridge
         required: true
 
@@ -25,7 +26,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Restore original source with SHA verification (legacy only)
-        if: inputs.target == 'legacy_padding_107_call'
+        if: inputs.target == 'legacy_padding_107_call' || inputs.target == 'all_q_e_terminal'
         run: |
           python3 -m pip install --quiet filelock
           python3 im-results/agent31-cryptid-boundary/unpack.py
@@ -64,6 +65,20 @@ jobs:
           lean --version
           lean -o im-results/agent32-cryptid-padding/TailWindowCore.olean im-results/agent32-cryptid-padding/TailWindowCore.lean
           lean im-results/agent32-cryptid-padding/TailWindowPrefix.lean
+
+      - name: Check source-level unbounded E 1101101100 halt scanner (all q only)
+        if: inputs.target == 'all_q_e_terminal'
+        env:
+          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent2-cryptid-continuity:im-results/agent2-cryptid-terminal-prefix
+        run: |
+          set -euo pipefail
+          lean --version
+          lean -o im-results/agent31-cryptid-boundary/Boundary.olean im-results/agent31-cryptid-boundary/Boundary.lean
+          lean -o im-results/agent2-cryptid-continuity/EHaltCylinder.olean im-results/agent2-cryptid-continuity/EHaltCylinder.lean
+          lean im-results/agent2-cryptid-terminal-prefix/AllQ1101101100.lean 2>&1 | tee /tmp/agent2-all-q-halt.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/agent2-all-q-halt.log; then
+            echo "Forbidden Lean axiom in all-q terminal scanner proof"; exit 1
+          fi
 
       - name: Compile preserved arbitrary-suffix 107-call extension (legacy only)
         if: inputs.target == 'legacy_padding_107_call'
