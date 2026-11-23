@@ -205,11 +205,13 @@ private theorem q_even_p_blank_unreachable (t z : Nat)
     have hgate0 := (six_even_right_blank_reach_iff A B
       (by omega) (by omega) (by omega) (by omega)).mp hp
     have hF1reach : BB6.Agent3.CReach F1x F1y := by
-      simpa only [hF1x,hF1y] using hgate0
+      rcases hgate0 with ⟨time,htime⟩
+      exact ⟨time,by simpa only [hF1x,hF1y] using htime⟩
     have hgate1 := (six_even_right_blank_reach_iff F1x F1y
       (by omega) (by omega) (by omega) (by omega)).mp hF1reach
     have hF2reach : BB6.Agent3.CReach F2x F2y := by
-      simpa only [hF2x,hF2y] using hgate1
+      rcases hgate1 with ⟨time,htime⟩
+      exact ⟨time,by simpa only [hF2x,hF2y] using htime⟩
     have hF2xeq : F2x=13700+13088*t-27920*z := by
       dsimp [F2x,A,W]
       omega
@@ -703,7 +705,8 @@ private theorem q_even_p_blank_unreachable_h5 (d b : Nat) :
     have hF2reach' : BB6.Agent3.CReach
         (86996+7148544*d+14296064*b)
         (7548+620032*d+1240576*b) := by
-      simpa only [hF2xeq,hF2yeq] using hF2reach
+      rcases hF2reach with ⟨time,htime⟩
+      exact ⟨time,by simpa only [hF2xeq,hF2yeq] using htime⟩
     exact q_even_h5_residual_unreachable d b hF2reach'
   intro hp
   have hiff := (BB6.Agent3.oddodd_lowval_blank_reach_iff
