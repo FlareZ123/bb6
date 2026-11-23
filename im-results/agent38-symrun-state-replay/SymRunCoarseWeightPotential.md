@@ -46,7 +46,7 @@ The following bounds are deliberately loose.
    \[
    |\operatorname{eatFuel}(\ldots,xs)|\le |xs|+1.
    \]
-   No nonempty-block hypothesis is needed for this length inequality. For numeric field sum, eatFuel_num_sum_le additionally requires a positive-mass literal block; this applies to eatB1, eatB2, and eatB12R, whose blocks have sums 1, 2, and 3. The generic length lemma already supplies the eatB2/eatB12R length bounds. In successful sweepBB branches, the stripped prefix is reinserted with the same field sum; the repeat token consumed from the left pays for the resulting right-side representation.
+   No nonempty-block hypothesis is needed for this length inequality. For numeric field sum, eatFuel_num_sum_le additionally requires a positive-mass literal block; this applies to eatB1, eatB2, and eatB12R, whose blocks have listNumSum 1, 2, and 3. The generic length lemma already supplies the eatB2/eatB12R length bounds. The two missing sum lemmas are direct instantiations: use block [run0,run1,run1], mkRep .rep2, getRep2_num for eatB2; use [run0,run1,run0,run1,run1], mkRep .rep12, getRep12_num for eatB12R. In successful sweepBB branches, the stripped prefix is reinserted with the same field sum; the repeat token consumed from the left pays for the resulting right-side representation.
 
 3. **Atomic symbolic steps.** The case definitions support the target inequalities
    \[
