@@ -1,4 +1,4 @@
-/-!
+/-
 # Draft: Mathlib TM62 → BB6.Bridge → repository D0 adapter
 
 This version reuses the already kernel-checked BB6.Bridge relative/absolute
