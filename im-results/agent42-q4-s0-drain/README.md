@@ -942,3 +942,15 @@ These are paper-level consequences of the conditional source-cost
 identity, not Lean acceptance or an authentic-root halt theorem. See
 [TM63ScoreAsymptotic.md](TM63ScoreAsymptotic.md) for the full
 iterated-log and additive-bound derivations.
+
+## 2026-11-23 exact RC2 closure status
+
+The earlier execution note above records a prior invocation's local-runtime failure and should be read historically. In this continuation, the prescribed Lean 4.36.0-rc2 local bootstrap was attempted once; the container returned a tool-level `ClientError` before any shell output, so local compilation remains unavailable.
+
+The manual `root-q4tail` CI target has now produced useful dependency-level evidence:
+
+- Run `45153630387` (source head `2a7d31d6fe1fd83fdabc238ff9c23cd50caf9698`) successfully compiled `M0EvenEightQ4Bridge.lean`. The exact bridge, heads, residue-8, residue-7, and input-match declarations reported only foundational axioms (`propext`, `Classical.choice`, `Quot.sound` as applicable); none reported `sorryAx`.
+- The same run failed in `OuterLCIncPrelude.lean`: this core-only Lean environment does not expose the Mathlib names `Nat.cast_add`/`Nat.cast_mul), and the counter index needed right-association before the append-shift lemma could match.
+- The latest repair uses `push_cast at hcell` for the source-cell casts and `simp only [Nat.add_assoc]` before the first counter append-shift. It is being checked by run `45154022091`, source head `b84cd53ce3d2314244e877a394bf67a2ef335881`. This run is pending at the time of this note.
+
+Consequently, the M0-even eight-block dependency is now compiler-accepted, but `OuterLCIncPrelude`, the full authentic root-to-second-q4Tail theorem, the P2 S0 frame identity, and the direct arbitrary-A terminal composition are **not yet accepted**. No exact BB(6) value or universal upper bound follows from this partial lower-bound work.
