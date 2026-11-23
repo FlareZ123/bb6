@@ -1,3 +1,4 @@
+import Q4Suffix
 import M2EvenSixQ4Prefix
 import Lean.Elab.Tactic.Omega
 
@@ -30,26 +31,29 @@ open BB6ChampionArithmetic
 
 set_option maxHeartbeats 3000000
 
+private def m2EvenResidueSixSourceLeftSuffix : List Bool :=
+  markerWord 2 ++ (d0 ++ (binDec 3 6 ++ lh))
+
 theorem binDec_residue6 (L k : Nat) (hL : 4 ≤ L)
     (hbound : 16*k+6 < 2^L) :
     binDec L (16*k+6) =
       d1 ++ d0 ++ d0 ++ d1 ++ binDec (L-4) k := by
   have hpow4 : 2^L = 16 * 2^(L-4) := by
-    rw [show L = (L-4)+4 by omega, Nat.pow_add]
-    norm_num
-    ring
+    calc
+      2^L = 2^((L-4)+4) := by congr 1; omega
+      _ = 16 * 2^(L-4) := pow2_mul_pow (L-4) 4 16 (by decide)
   have hpow3 : 2^(L-1) = 8 * 2^(L-4) := by
-    rw [show L-1 = (L-4)+3 by omega, Nat.pow_add]
-    norm_num
-    ring
+    calc
+      2^(L-1) = 2^((L-4)+3) := by congr 1; omega
+      _ = 8 * 2^(L-4) := pow2_mul_pow (L-4) 3 8 (by decide)
   have hpow2 : 2^(L-2) = 4 * 2^(L-4) := by
-    rw [show L-2 = (L-4)+2 by omega, Nat.pow_add]
-    norm_num
-    ring
+    calc
+      2^(L-2) = 2^((L-4)+2) := by congr 1; omega
+      _ = 4 * 2^(L-4) := pow2_mul_pow (L-4) 2 4 (by decide)
   have hpow1 : 2^(L-3) = 2 * 2^(L-4) := by
-    rw [show L-3 = (L-4)+1 by omega, Nat.pow_add]
-    norm_num
-    ring
+    calc
+      2^(L-3) = 2^((L-4)+1) := by congr 1; omega
+      _ = 2 * 2^(L-4) := pow2_mul_pow (L-4) 1 2 (by decide)
   have hk : k < 2^(L-4) := by rw [hpow4] at hbound; omega
   have hq1 : 8*k+3 < 2^(L-1) := by rw [hpow3]; omega
   have hq2 : 4*k+1 < 2^(L-2) := by rw [hpow2]; omega
@@ -81,21 +85,21 @@ theorem binDec_residue5 (L k : Nat) (hL : 4 ≤ L)
     binDec L (16*k+5) =
       d0 ++ d1 ++ d0 ++ d1 ++ binDec (L-4) k := by
   have hpow4 : 2^L = 16 * 2^(L-4) := by
-    rw [show L = (L-4)+4 by omega, Nat.pow_add]
-    norm_num
-    ring
+    calc
+      2^L = 2^((L-4)+4) := by congr 1; omega
+      _ = 16 * 2^(L-4) := pow2_mul_pow (L-4) 4 16 (by decide)
   have hpow3 : 2^(L-1) = 8 * 2^(L-4) := by
-    rw [show L-1 = (L-4)+3 by omega, Nat.pow_add]
-    norm_num
-    ring
+    calc
+      2^(L-1) = 2^((L-4)+3) := by congr 1; omega
+      _ = 8 * 2^(L-4) := pow2_mul_pow (L-4) 3 8 (by decide)
   have hpow2 : 2^(L-2) = 4 * 2^(L-4) := by
-    rw [show L-2 = (L-4)+2 by omega, Nat.pow_add]
-    norm_num
-    ring
+    calc
+      2^(L-2) = 2^((L-4)+2) := by congr 1; omega
+      _ = 4 * 2^(L-4) := pow2_mul_pow (L-4) 2 4 (by decide)
   have hpow1 : 2^(L-3) = 2 * 2^(L-4) := by
-    rw [show L-3 = (L-4)+1 by omega, Nat.pow_add]
-    norm_num
-    ring
+    calc
+      2^(L-3) = 2^((L-4)+1) := by congr 1; omega
+      _ = 2 * 2^(L-4) := pow2_mul_pow (L-4) 1 2 (by decide)
   have hk : k < 2^(L-4) := by rw [hpow4] at hbound; omega
   have hq1 : 8*k+2 < 2^(L-1) := by rw [hpow3]; omega
   have hq2 : 4*k+1 < 2^(L-2) := by rw [hpow2]; omega
@@ -155,9 +159,9 @@ private theorem m2EvenResidueSix_source_base_left (a : Nat) :
     m2EvenResidueSixBaseTail,binDec_three_six,d0,d1,List.append_assoc]
 
 private theorem m2EvenResidueSix_target_base_left (a : Nat) :
-    q4LeftFacing 3 5 a =
+    BB6Coverage.Agent8Q4Suffix.q4LeftFacing 3 5 a =
       m2EvenResidueSixTargetPrefix a ++ m2EvenResidueSixBaseTail := by
-  simp [q4LeftFacing,m2EvenResidueSixTargetPrefix,
+  simp [BB6Coverage.Agent8Q4Suffix.q4LeftFacing,m2EvenResidueSixTargetPrefix,
     m2EvenResidueSixBaseTail,binDec_three_five,d0,d1,List.append_assoc]
 
 private theorem m2EvenResidueSix_source_left
@@ -171,10 +175,10 @@ private theorem m2EvenResidueSix_source_left
 
 private theorem m2EvenResidueSix_target_left
     (L k a : Nat) (hL : 4 ≤ L) (hbound : 16*k+5 < 2^L) :
-    q4LeftFacing L (16*k+5) a =
+    BB6Coverage.Agent8Q4Suffix.q4LeftFacing L (16*k+5) a =
       m2EvenResidueSixTargetPrefix a ++
         m2EvenResidueSixSharedTail L k := by
-  simp [q4LeftFacing,m2EvenResidueSixTargetPrefix,
+  simp [BB6Coverage.Agent8Q4Suffix.q4LeftFacing,m2EvenResidueSixTargetPrefix,
     m2EvenResidueSixSharedTail,binDec_residue5 L k hL hbound,
     d0,d1,List.append_assoc]
 
@@ -267,9 +271,9 @@ private theorem m2EvenResidueSix_cut_eq_input
 private theorem q4RightShape_congr
     (T U : Int → Bool) (h : Int) (b : Nat)
     (heq : ∀ x, h ≤ x → T x = U x)
-    (hT : q4RightShape T h b) :
-    q4RightShape U h b := by
-  unfold q4RightShape at *
+    (hT : BB6Coverage.Agent8Q4Suffix.q4RightShape T h b) :
+    BB6Coverage.Agent8Q4Suffix.q4RightShape U h b := by
+  unfold BB6Coverage.Agent8Q4Suffix.q4RightShape at *
   rcases hT with ⟨h0,h5,h6,h79,hzero⟩
   refine ⟨?_,?_,?_,?_,?_⟩
   · intro i hi
@@ -287,7 +291,7 @@ private theorem q4RightShape_congr
     exact hzero i hi
 
 def m2EvenResidueSixLeftFacing (L k a : Nat) : List Bool :=
-  q4LeftFacing L (16*k+5) a
+  BB6Coverage.Agent8Q4Suffix.q4LeftFacing L (16*k+5) a
 
 private theorem m2EvenResidueSix_base_target_bit
     (a i : Nat) (hi : i < 3*a+12) :
@@ -304,7 +308,7 @@ private theorem m2EvenResidueSix_base_target_bit
 private theorem m2EvenResidueSix_target_bit
     (L k a : Nat) (hL : 4 ≤ L)
     (hbound : 16*k+6 < 2^L) (i : Nat) (hi : i < 3*a+12) :
-    sideBit (q4LeftFacing L (16*k+5) a) i =
+    sideBit (BB6Coverage.Agent8Q4Suffix.q4LeftFacing L (16*k+5) a) i =
       sideBit (m2EvenResidueSixTargetPrefix a) i := by
   have htarget :=
     m2EvenResidueSix_target_left L k a hL (by omega)
@@ -382,10 +386,10 @@ private theorem m2EvenResidueSix_rightFacing
     (hL : 4 ≤ L) (hbound : 16*k+6 < 2^L) :
     ∀ i : Nat,
       m2EvenResidueSixCutTape L k a b h (h+1+(i:Int)) =
-        sideBit (q4RightFacing b) i := by
+        sideBit (BB6Coverage.Agent8Q4Suffix.q4RightFacing b) i := by
   intro i
   have hbase : m2EvenSixQ4CutTape a b h (h+1+(i:Int)) =
-      sideBit (q4RightFacing b) i := by
+      sideBit (BB6Coverage.Agent8Q4Suffix.q4RightFacing b) i := by
     obtain ⟨_,_,_,hright⟩ :=
       m2EvenSix_q4_prefix_data_exact a b h (by omega)
     exact hright i
@@ -400,7 +404,7 @@ private theorem m2EvenResidueSix_rightFacing
 private theorem m2EvenResidueSix_prefix_rightShape
     (L k a b : Nat) (h : Int)
     (hL : 4 ≤ L) (hbound : 16*k+6 < 2^L) (ha : 0<a) :
-    q4RightShape (m2EvenResidueSixCutTape L k a b h) h b := by
+    BB6Coverage.Agent8Q4Suffix.q4RightShape (m2EvenResidueSixCutTape L k a b h) h b := by
   apply q4RightShape_congr
     (m2EvenSixQ4CutTape a b h)
     (m2EvenResidueSixCutTape L k a b h) h b
@@ -441,7 +445,7 @@ private theorem m2EvenSix_bridge_prefix_lower
     (hd : run tm2 j ⟨3,h,T⟩ = some d) :
     h-9 ≤ d.head := by
   obtain ⟨e,hexact⟩ :=
-    fRun_prefix_exists m2EvenSixQ4Bridge_exact (by omega)
+    fRun_prefix_exists (k := j) m2EvenSixQ4Bridge_exact (by omega)
   have hcheckj :
       (List.range j).all (fun k =>
         match fRun tm2 k m2EvenSixQ4BridgeStart with
@@ -456,9 +460,12 @@ private theorem m2EvenSix_bridge_prefix_lower
       (List.mem_range.mpr hj')
   have hbridge := bridgeAt T h m2EvenSixQ4Inside
     m2EvenSixQ4BridgeStart e j rfl hexact hcheckj hmatch
-  rw [hbridge] at hd
+  have hbridge' : run tm2 j ⟨3,h,T⟩ =
+      some (frameAt T h m2EvenSixQ4Inside e) := by
+    simpa [m2EvenSixQ4BridgeStart] using hbridge
+  rw [hbridge'] at hd
   have hdeq : d = frameAt T h m2EvenSixQ4Inside e :=
-    Option.some.inj hd
+    (Option.some.inj hd).symm
   have hinside : m2EvenSixQ4Inside e.head = true := by
     have hh := (List.all_eq_true.mp m2EvenSixQ4Bridge_heads) j
       (List.mem_range.mpr hj)
@@ -482,8 +489,103 @@ private theorem E_scan_prefix_head
   have hrun := E_scan T h j hlinearJ
   rw [hrun] at hd
   have heq := Option.some.inj hd
-  simp at heq
-  omega
+  cases heq
+  rfl
+
+private theorem sweptLeft_head_eq_source (q : Nat)
+    (T : Int → Bool) (h : Int) :
+    sweptLeft q T h (h-(q:Int)) = T (h-(q:Int)) := by
+  induction q with
+  | zero => simp [sweptLeft]
+  | succ q ih =>
+      have hcoord : h-((q+1:Int)) = (h-1)-(q:Int) := by omega
+      rw [show sweptLeft (q+1) T h =
+        sweptLeft q (holeThree T h) (h-1) by rfl]
+      rw [hcoord,ih]
+      have hne1 : h-((q+1:Int)) ≠ h+1 := by omega
+      have hne2 : h-((q+1:Int)) ≠ h := by omega
+      simp [holeThree,hne1,hne2]
+
+private theorem sweptLeft_head_plus1_false (q : Nat)
+    (T : Int → Bool) (h : Int) :
+    sweptLeft (q+1) T h (h-(q:Int)) = false := by
+  induction q with
+  | zero => simp [sweptLeft,holeThree]
+  | succ q ih =>
+      have hcoord : h-((q+1:Int)) = (h-1)-(q:Int) := by omega
+      rw [show sweptLeft (q+2) T h =
+        sweptLeft (q+1) (holeThree T h) (h-1) by rfl]
+      rw [hcoord]
+      exact ih (holeThree T h) (h-1)
+
+private theorem leftSweep_one (T : Int → Bool) (h : Int)
+    (ht : T h = true) :
+    run tm2 1 ⟨3,h,T⟩ = some ⟨1,h+1,T⟩ := by
+  simp [run,rawStep,readSlot,applyMove,tm2,ht]
+
+private theorem leftSweep_two (T : Int → Bool) (h : Int)
+    (ht : T h = true) (hr : T (h+1) = false) :
+    run tm2 2 ⟨3,h,T⟩ =
+      some ⟨2,h,(fun x => if x = h+1 then true else T x)⟩ := by
+  rw [show 2 = 1+1 by omega,run_add,leftSweep_one T h ht]
+  simp [run,rawStep,readSlot,applyMove,tm2,hr]
+
+
+private theorem m2EvenSix_counted_left_sweep_heads
+    (N : Nat) (T : Int → Bool) (h : Int)
+    (hOn : leftOnes T h N) (hr : T (h+1) = false)
+    (k : Nat) (hk : k < 3*N) (d : Config)
+    (hd : run tm2 k ⟨3,h,T⟩ = some d) :
+    h-(N:Int) ≤ d.head := by
+  let q := k/3
+  let r := k%3
+  have hkdecomp : k = 3*q+r := by dsimp [q,r]; omega
+  have hq : q < N := by dsimp [q]; omega
+  have hqOn : leftOnes T h q := by
+    intro i hi
+    exact hOn i (by omega)
+  have hqrun := counted_left_sweep q T h hqOn hr
+  let Tq := sweptLeft q T h
+  have hqhead : Tq (h-(q:Int)) = true := by
+    rw [show Tq = sweptLeft q T h by rfl,sweptLeft_head_eq_source]
+    exact hOn q hq
+  have hqright : Tq (h-(q:Int)+1) = false := by
+    by_cases hq0 : q = 0
+    · subst q
+      simpa [Tq] using hr
+    · obtain ⟨q',rfl⟩ := Nat.exists_eq_succ_of_ne_zero hq0
+      have hfalse := sweptLeft_head_plus1_false q' T h
+      simpa [Tq] using hfalse
+  have hqrun' :
+      run tm2 (3*q) ⟨3,h,T⟩ =
+        some ⟨3,h-(q:Int),Tq⟩ := by
+    simpa [Tq] using hqrun
+  rw [hkdecomp,run_add,hqrun'] at hd
+  simp only [Option.bind_some] at hd
+  have hrlt : r < 3 := Nat.mod_lt _ (by decide)
+  have hrCases : r=0 ∨ r=1 ∨ r=2 := by omega
+  rcases hrCases with hr0|hr1|hr2
+  · subst r
+    simp [run] at hd
+    have heq := Option.some.inj hd
+    subst d
+    simp
+    omega
+  · subst r
+    rw [leftSweep_one Tq (h-(q:Int)) hqhead] at hd
+    have heq := Option.some.inj hd
+    subst d
+    simp
+    omega
+  · subst r
+    rw [leftSweep_two Tq (h-(q:Int)) hqhead hqright] at hd
+    have heq := Option.some.inj hd
+    subst d
+    simp
+    omega
+
+
+
 
 private theorem m2EvenSix_q4_prefix_head_bound
     (a b : Nat) (h : Int) :
@@ -496,8 +598,8 @@ private theorem m2EvenSix_q4_prefix_head_bound
   let hN : Int := h-(N:Int)
   let T2 := m2EvenSixQ4CutTape a b h
   have hface : s1LeftFacing 3 6 2 a 0 =
-      d1pow a ++ m2EvenSixSourceLeftSuffix := by
-    simp [s1LeftFacing,binDec_zero,m2EvenSixSourceLeftSuffix,
+      d1pow a ++ m2EvenResidueSixSourceLeftSuffix := by
+    simp [s1LeftFacing,binDec_zero,m2EvenResidueSixSourceLeftSuffix,
       List.append_assoc]
   have hOn : leftOnes T h N := by
     intro i hi
@@ -505,7 +607,7 @@ private theorem m2EvenSix_q4_prefix_head_bound
     rw [hface] at hcell
     by_cases hi3 : i < 3*a
     · have hside := sideBit_append_left (d1pow a)
-        m2EvenSixSourceLeftSuffix i (by rw [d1pow_length]; omega)
+        m2EvenResidueSixSourceLeftSuffix i (by rw [d1pow_length]; omega)
       rw [hside] at hcell
       have hbit := sideBit_d1pow_true a i hi3
       exact hcell.trans hbit
@@ -513,14 +615,14 @@ private theorem m2EvenSix_q4_prefix_head_bound
       rcases hcases with hi0|hi1
       · subst i
         have hside := sideBit_append_right (d1pow a)
-          m2EvenSixSourceLeftSuffix (3*a) (by rw [d1pow_length]; omega)
+          m2EvenResidueSixSourceLeftSuffix (3*a) (by rw [d1pow_length]; omega)
         rw [hside] at hcell
-        simpa [m2EvenSixSourceLeftSuffix,markerWord,sideBit] using hcell
+        simpa [m2EvenResidueSixSourceLeftSuffix,markerWord,sideBit] using hcell
       · subst i
         have hside := sideBit_append_right (d1pow a)
-          m2EvenSixSourceLeftSuffix (3*a+1) (by rw [d1pow_length]; omega)
+          m2EvenResidueSixSourceLeftSuffix (3*a+1) (by rw [d1pow_length]; omega)
         rw [hside] at hcell
-        simpa [m2EvenSixSourceLeftSuffix,markerWord,sideBit] using hcell
+        simpa [m2EvenResidueSixSourceLeftSuffix,markerWord,sideBit] using hcell
   have hright : T (h+1) = false := by
     have hc := s1Config_right_cell 3 6 2 a 0 b h 0
     simpa [T,s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit] using hc
@@ -538,7 +640,7 @@ private theorem m2EvenSix_q4_prefix_head_bound
     have hframe :
         frameAt T1 hN m2EvenSixQ4Inside m2EvenSixQ4BridgeEnd =
           (⟨4,hN+2,T2⟩ : Config) := by
-      apply m2EvenSixQ4_config_ext
+      apply m2EvenResidueSix_config_ext
       · simp [frameAt_state,m2EvenSixQ4BridgeEnd]
       · simp [frameAt_head,m2EvenSixQ4BridgeEnd]
         omega
@@ -552,7 +654,7 @@ private theorem m2EvenSix_q4_prefix_head_bound
   let p1 := 3*N
   let p2 := p1+38
   by_cases hk1 : k < p1
-  · have hlow := counted_left_sweep_heads N T h hOn hright k
+  · have hlow := m2EvenSix_counted_left_sweep_heads N T h hOn hright k
       (by dsimp [p1] at *; omega) d hd
     dsimp [hN,N] at *
     omega
@@ -608,10 +710,9 @@ theorem m2Even_residue6_q4_prefix_source
   have hbaseRun :
       run tm2 (44+12*a) base =
         some (⟨4,h,m2EvenSixQ4CutTape a b h⟩ : Config) := by
-    obtain ⟨Tq,hprefix,_,_,_⟩ :=
-      m2EvenSix_q4_prefix_data a b h ha
-    have hTq : Tq = m2EvenSixQ4CutTape a b h := by rfl
-    simpa [base,hTq] using hprefix
+    obtain ⟨hprefix,_,_,_⟩ :=
+      m2EvenSix_q4_prefix_data_exact a b h ha
+    simpa [base] using hprefix
   rw [hbaseRun] at hlift
   simp only [Option.map_some] at hlift
   simpa [m2EvenResidueSixCutTape,background] using hlift
@@ -623,10 +724,10 @@ theorem m2Even_residue6_q4_prefix_data
       run tm2 (44+12*a) (s1Config L (16*k+6) 2 a 0 b h) =
         some ⟨4,h,Tq⟩ ∧
       (∀ i : Nat, Tq (h-(i:Int)) =
-        sideBit (q4LeftFacing L (16*k+5) a) i) ∧
-      q4RightShape Tq h b ∧
+        sideBit (BB6Coverage.Agent8Q4Suffix.q4LeftFacing L (16*k+5) a) i) ∧
+      BB6Coverage.Agent8Q4Suffix.q4RightShape Tq h b ∧
       (∀ i : Nat, Tq (h+1+(i:Int)) =
-        sideBit (q4RightFacing b) i) := by
+        sideBit (BB6Coverage.Agent8Q4Suffix.q4RightFacing b) i) := by
   refine ⟨m2EvenResidueSixCutTape L k a b h, ?_, ?_, ?_, ?_⟩
   · exact m2Even_residue6_q4_prefix_source L k a b h hL hbound ha
   · simpa [m2EvenResidueSixLeftFacing] using
@@ -642,7 +743,7 @@ private theorem m2EvenResidueSix_prefix_far_tail
   intro i hi
   rw [m2EvenResidueSix_rightFacing L k a b h hL hbound i]
   apply sideBit_ge_length
-  rw [q4RightFacing_length]
+  rw [BB6Coverage.Agent8Q4Suffix.q4RightFacing_length]
   omega
 
 theorem m2Even_residue6_q4_reset_prefix_source
@@ -659,12 +760,12 @@ theorem m2Even_residue6_q4_reset_prefix_source
     intro i hi
     rw [hright i]
     apply sideBit_ge_length
-    rw [q4RightFacing_length]
+    rw [BB6Coverage.Agent8Q4Suffix.q4RightFacing_length]
     omega
   have happend := q4SuffixTargetLeft L (16*k+5) a b
   have hsuffix := q4_suffix_run_to_s1Config Tq h b
     L (16*k+5) 1 (a+b+2) (2^b-1)
-    (q4LeftFacing L (16*k+5) a)
+    (BB6Coverage.Agent8Q4Suffix.q4LeftFacing L (16*k+5) a)
     hshape htail hleft happend
   have hsum :
       resetPrefixCost 2 (16*k+6) a b = (44+12*a)+(39+3*b) := by
