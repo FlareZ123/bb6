@@ -4,6 +4,7 @@ import Agent3CImage
 import Lean.Elab.Tactic.Omega
 
 set_option maxRecDepth 8192
+set_option maxHeartbeats 1000000
 
 namespace BB6.Agent4SevenS2QEven
 open BB6.Agent46
@@ -21,9 +22,18 @@ theorem q_even_direct_parent_unreachable (t z : Nat)
   let a := 7737+7396*t-15778*z
   let k := 4164+3982*t-8495*z
   have hzodd : z%2=1 := by omega
-  have hhi38 : 1216*z ≤ 38*(12+11*t) := Nat.mul_le_mul_left 38 hhi
-  have hhi266 : 8512*z ≤ 266*(12+11*t) := Nat.mul_le_mul_left 266 hhi
-  have hhi494 : 15808*z ≤ 494*(12+11*t) := Nat.mul_le_mul_left 494 hhi
+  have hhi38 : 1216*z ≤ 38*(12+11*t) := by
+    calc
+      1216*z = 38*(32*z) := by omega
+      _ ≤ 38*(12+11*t) := Nat.mul_le_mul_left 38 hhi
+  have hhi266 : 8512*z ≤ 266*(12+11*t) := by
+    calc
+      8512*z = 266*(32*z) := by omega
+      _ ≤ 266*(12+11*t) := Nat.mul_le_mul_left 266 hhi
+  have hhi494 : 15808*z ≤ 494*(12+11*t) := by
+    calc
+      15808*z = 494*(32*z) := by omega
+      _ ≤ 494*(12+11*t) := Nat.mul_le_mul_left 494 hhi
   have hx : x%2=0 := by dsimp [x]; omega
   have hy : y%2=1 := by dsimp [y]; omega
   have hy5 : 5≤y := by dsimp [y]; omega
@@ -60,8 +70,14 @@ theorem q_even_bounce_parent_unreachable (t z : Nat)
   let y := 6173+5902*t-12591*z
   let hx := x+y-2
   let hy := (y-2)/2
-  have hhi394 : 12608*z ≤ 394*(12+11*t) := Nat.mul_le_mul_left 394 hhi
-  have hhi631 : 20192*z ≤ 631*(12+11*t) := Nat.mul_le_mul_left 631 hhi
+  have hhi394 : 12608*z ≤ 394*(12+11*t) := by
+    calc
+      12608*z = 394*(32*z) := by omega
+      _ ≤ 394*(12+11*t) := Nat.mul_le_mul_left 394 hhi
+  have hhi631 : 20192*z ≤ 631*(12+11*t) := by
+    calc
+      20192*z = 631*(32*z) := by omega
+      _ ≤ 631*(12+11*t) := Nat.mul_le_mul_left 631 hhi
   have hye4 : y%4=0 := by dsimp [y]; omega
   have hye : y%2=0 := by omega
   have hy6 : 6≤y := by dsimp [y]; omega
@@ -101,9 +117,17 @@ theorem q_even_normalizer_residual_unreachable (t z : Nat)
   let dy := 593+568*t-1212*z
   let ex := 3720+3556*t-7586*z
   let ey := 6173+5902*t-12591*z
-  have hhi76 : 2432*z ≤ 76*(12+11*t) := Nat.mul_le_mul_left 76 hhi
-  have hhi119 : 3808*z ≤ 119*(12+11*t) := Nat.mul_le_mul_left 119 hhi
-  have hhi873 : 27936*z ≤ 873*(12+11*t) := Nat.mul_le_mul_left 873 hhi
+  have hhi76 : 2432*z ≤ 76*(12+11*t) := by
+    calc
+      2432*z = 76*(32*z) := by omega
+      _ ≤ 76*(12+11*t) := Nat.mul_le_mul_left 76 hhi
+  have hhi119 : 3808*z ≤ 119*(12+11*t) := by
+    calc
+      3808*z = 119*(32*z) := by omega
+      _ ≤ 119*(12+11*t) := Nat.mul_le_mul_left 119 hhi
+  have hhi873 : 27936*z ≤ 873*(32*z) := by omega
+  have hhi873' : 873*(32*z) ≤ 873*(12+11*t) := Nat.mul_le_mul_left 873 hhi
+  exact le_trans hhi873 hhi873'
   have hx : 5<x := by dsimp [x]; omega
   have hxe : x%2=0 := by dsimp [x]; omega
   have hy : 6≤y := by dsimp [y]; omega
