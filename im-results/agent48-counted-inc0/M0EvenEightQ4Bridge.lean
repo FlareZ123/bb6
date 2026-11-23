@@ -67,10 +67,12 @@ theorem m0EvenEight_binDec_residue8 (L q : Nat)
       d1 ++ d1 ++ d1 ++ d0 ++ binDec (L-4) (q/2) := by
   have hpow3 : 2^L = 8 * 2^(L-3) := by
     have hL' : L = (L-3)+3 := by omega
-    conv_lhs => rw [hL']
-    rw [Nat.pow_add]
-    rw [show (2:Nat)^3 = 8 by decide]
-    exact Nat.mul_comm _ _
+    calc
+      2^L = 2^((L-3)+3) := by rw [hL']
+      _ = 2^(L-3)*2^3 := by rw [Nat.pow_add]
+      _ = 8*2^(L-3) := by
+        rw [show (2:Nat)^3 = 8 by decide]
+        exact Nat.mul_comm _ _
   have hpow2 : 2^(L-1) = 4 * 2^(L-3) := by
     rw [show L-1 = (L-3)+2 by omega, Nat.pow_add]
     rw [show (2:Nat)^2 = 4 by decide, Nat.mul_comm]
@@ -107,8 +109,11 @@ theorem m0EvenEight_binDec_residue8 (L q : Nat)
   have h4 : binDec (L-3) q =
       d0 ++ binDec (L-4) (q/2) := by
     rw [show L-3 = (L-4)+1 by omega]
-    conv_lhs => rw [hdiv]
-    exact binDec_odd (L-4) (q/2) hq4
+    calc
+      binDec ((L-4)+1) q =
+          binDec ((L-4)+1) (2*(q/2)+1) := by rw [hdiv]
+      _ = d0 ++ binDec (L-4) (q/2) :=
+        binDec_odd (L-4) (q/2) hq4
   rw [h1,h2,h3,h4]
   simp [List.append_assoc]
 
@@ -119,10 +124,12 @@ theorem m0EvenEight_binDec_residue7 (L q : Nat)
       d0 ++ d0 ++ d0 ++ d1 ++ binDec (L-4) (q/2) := by
   have hpow3 : 2^L = 8 * 2^(L-3) := by
     have hL' : L = (L-3)+3 := by omega
-    conv_lhs => rw [hL']
-    rw [Nat.pow_add]
-    rw [show (2:Nat)^3 = 8 by decide]
-    exact Nat.mul_comm _ _
+    calc
+      2^L = 2^((L-3)+3) := by rw [hL']
+      _ = 2^(L-3)*2^3 := by rw [Nat.pow_add]
+      _ = 8*2^(L-3) := by
+        rw [show (2:Nat)^3 = 8 by decide]
+        exact Nat.mul_comm _ _
   have hpow2 : 2^(L-1) = 4 * 2^(L-3) := by
     rw [show L-1 = (L-3)+2 by omega, Nat.pow_add]
     rw [show (2:Nat)^2 = 4 by decide, Nat.mul_comm]
@@ -200,7 +207,7 @@ private theorem m0EvenEight_sideBit_d1pow (a i : Nat)
         rcases hi0 with h0 | h1 | h2 <;> subst i <;>
           simp [d1pow,d1,sideBit]
       · have hi' : i-3 < 3*a := by omega
-        have heq : i = 3+(i-3) := by omega
+        have heq : i = (i-3)+3 := by omega
         rw [heq]
         simpa [d1pow,d1,sideBit] using ih (i-3) hi'
 
