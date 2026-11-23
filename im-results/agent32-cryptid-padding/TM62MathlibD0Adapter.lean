@@ -89,6 +89,26 @@ theorem tapeToRelative_symbol (T : ExtTape) (i : Int) :
       | succ n => rfl
   | negSucc n => rfl
 
+/-- A head-relative tape is determined by all of its signed coordinates. -/
+private theorem bridgeTape_ext {x y : BB6.Bridge.Tape}
+    (h : ∀ i, BB6.Bridge.symbol x i = BB6.Bridge.symbol y i) : x = y := by
+  cases x with
+  | mk xc xl xr =>
+    cases y with
+    | mk yc yl yr =>
+      have hc : xc = yc := by
+        simpa [BB6.Bridge.symbol] using h 0
+      have hl : xl = yl := by
+        funext n
+        simpa [BB6.Bridge.symbol] using h (Int.negSucc n)
+      have hr : xr = yr := by
+        funext n
+        simpa [BB6.Bridge.symbol] using h (Int.ofNat (n + 1))
+      cases hc
+      cases hl
+      cases hr
+      rfl
+
 /-- Mathlib's write-then-move-right operation is exactly BB6.Bridge.goRight. -/
 theorem tapeToRelative_write_move_right (T : ExtTape) (w : ExtSymbol) :
     tapeToRelative (Turing.Tape.move .right (Turing.Tape.write w T)) =
@@ -113,14 +133,7 @@ theorem tapeToRelative_write_move_right (T : ExtTape) (w : ExtSymbol) :
       _ = BB6.Bridge.symbol
           (BB6.Bridge.goRight (tapeToRelative T) (encodeSymbol w)) i := by
         rw [BB6.Bridge.at_goRight, tapeToRelative_symbol]
-  simp only [tapeToRelative, BB6.Bridge.goRight, BB6.Bridge.Tape.mk.injEq]
-  constructor
-  · simpa [BB6.Bridge.symbol] using hpoint 0
-  · constructor
-    · funext n
-      simpa [BB6.Bridge.symbol] using hpoint (Int.negSucc n)
-    · funext n
-      simpa [BB6.Bridge.symbol] using hpoint (Int.ofNat (n + 1))
+  exact bridgeTape_ext hpoint
 
 /-- Mathlib's write-then-move-left operation is exactly BB6.Bridge.goLeft. -/
 theorem tapeToRelative_write_move_left (T : ExtTape) (w : ExtSymbol) :
@@ -146,14 +159,7 @@ theorem tapeToRelative_write_move_left (T : ExtTape) (w : ExtSymbol) :
       _ = BB6.Bridge.symbol
           (BB6.Bridge.goLeft (tapeToRelative T) (encodeSymbol w)) i := by
         rw [BB6.Bridge.at_goLeft, tapeToRelative_symbol]
-  simp only [tapeToRelative, BB6.Bridge.goLeft, BB6.Bridge.Tape.mk.injEq]
-  constructor
-  · simpa [BB6.Bridge.symbol] using hpoint 0
-  · constructor
-    · funext n
-      simpa [BB6.Bridge.symbol] using hpoint (Int.negSucc n)
-    · funext n
-      simpa [BB6.Bridge.symbol] using hpoint (Int.ofNat (n + 1))
+  exact bridgeTape_ext hpoint
 
 structure Positioned where
   state : ExtState
