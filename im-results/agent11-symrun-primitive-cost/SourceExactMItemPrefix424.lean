@@ -191,6 +191,31 @@ theorem runElemFast424_exact_reaches :
   norm_num
   exact costIterM424_exact_reaches 19217 startF424M
 
+
+/-- Exact source checkpoint used by the upstream F424 halting certificate. -/
+def initSymCyc3_F424 : SymMode × List SymTok × List SymTok :=
+  (.CB,
+    [.item (.run 0), .item (.run 0), .item (.run 1), .item (.run 1),
+      .item (.run 0), .item (.run 1), .item (.run 1), .item (.run 1),
+      .item (.run 0), .item .zero, .item (.run 1), .repB1 46, .item (.run 0)],
+    [.item (.run 79), .item (.run 0), .item (.run 1), .item .zero,
+      .item (.run 1), .item (.run 1), .item (.run 1), .item (.run 1),
+      .item (.run 1)])
+
+set_option maxRecDepth 200000 in
+theorem runElemFast424_eq_initSymCyc3 :
+    runElemFast 1 1 11 4 startF424M =
+      (initSymCyc3_F424.1, encSymL initSymCyc3_F424.2.1,
+        encSymR initSymCyc3_F424.2.2) := by
+  decide +kernel
+
+theorem blankToInitSymCyc3_exact_reaches :
+    multiStep target_tm (init ([] : List (Fin 2)))
+      (18 + costIterM424 19217 startF424M) =
+      some (evalSym target_tm initSymCyc3_F424) := by
+  rw [blankToRunElemFast424_exact_reaches, runElemFast424_eq_initSymCyc3]
+  rfl
+
 #print axioms sourceElemM424_exact
 #print axioms costIterM424_exact_reaches
 
