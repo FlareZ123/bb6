@@ -69,7 +69,12 @@ jobs:
             lean -o "$D/PrefixNoF.olean" "$D/PrefixNoF.lean"
             lean -o "$B/A1100.olean" "$B/A1100.lean"
             lean -o "$B/A1100First.olean" "$B/A1100First.lean"
-            lean "$G/AZeroOneFirstReturn.lean"
+            lean -o "$G/AZeroOneFirstReturn.olean" "$G/AZeroOneFirstReturn.lean"
+            lean -o "$S/CryptidPairs.olean" "$S/CryptidPairs.lean"
+            lean -o "$D/BFirstReturn.olean" "$D/BFirstReturn.lean"
+            lean -o "$G/ELowPhysicalFirstReturnRepair.olean" "$G/ELowPhysicalFirstReturnRepair.lean"
+            lean -o "$G/ELowCanonicalBlankFirst.olean" "$G/ELowCanonicalBlankFirst.lean"
+            lean "$G/UnaryFirstReturnComplete.lean"
             exit 0
           fi
           lean -o "$D/AWordAlgebra.olean" "$D/AWordAlgebra.lean"
