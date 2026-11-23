@@ -2,6 +2,12 @@ name: Agent 24 source-checked finite translated-cycle oracle (manual)
 
 on:
   workflow_dispatch:
+    inputs:
+      verify_agent1_four_slot:
+        description: 'Check the 300-way four-slot moving-pair source certificate (manual only)'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -45,3 +51,14 @@ jobs:
           lean -o im-results/agent32-zero-prefix-global/LassoTraceAudit.olean im-results/agent32-zero-prefix-global/LassoTraceAudit.lean
           lean -o im-results/agent24-translated-cycle/TranslatedSeparation.olean im-results/agent24-translated-cycle/TranslatedSeparation.lean
           lean -o im-results/agent24-translated-cycle/TranslatedFrontier.olean im-results/agent24-translated-cycle/TranslatedFrontier.lean
+
+      - name: Check 300-way original finite translated pair source theorem (opt-in)
+        if: ${{ inputs.verify_agent1_four_slot }}
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent24-translated-cycle:im-results/agent1-four-slot-pair-convoy"
+          lean -o im-results/agent1-four-slot-pair-convoy/FourSlotParamFamily.olean im-results/agent1-four-slot-pair-convoy/FourSlotParamFamily.lean 2>&1 | tee /tmp/agent1-four-slot-300.log
+          if grep -q 'sorryAx' /tmp/agent1-four-slot-300.log; then
+            echo "ERROR: four-slot family source theorem depends on sorryAx"
+            exit 1
+          fi
