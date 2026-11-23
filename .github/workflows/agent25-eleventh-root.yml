@@ -61,8 +61,7 @@ jobs:
         with:
           ref: ${{ inputs.source_ref }}
           path: source
-      - name: Checkout proof extension for twentieth checkpoint
-        if: ${{ inputs.stage == '3c' }}
+      - name: Checkout pinned proof extension
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.extension_ref }}
@@ -76,10 +75,12 @@ jobs:
           python3 im-results/agent25-cryptid-doublezero/unpack.py
           python3 im-results/agent2-cryptid-continuity/restore_a_regular.py
           python3 im-results/agent2-cryptid-continuity/restore_e_regular.py
-      - name: Overlay optimized twentieth checkpoint
-        if: ${{ inputs.stage == '3c' }}
+      - name: Overlay current episode 20–30 proof modules
         run: |
-          cp extension/im-results/agent37-d-timing-cocycle/BlankTwentiethEscape.lean source/im-results/agent37-d-timing-cocycle/BlankTwentiethEscape.lean
+          T=im-results/agent37-d-timing-cocycle
+          for module in BlankTwentiethEscape BlankTwentiethRejoin BlankTwentyFirstRejoin BlankTwentySecondRejoin BlankTwentyThirdRejoin BlankTwentyFourthRejoin BlankTwentyFifthRejoin BlankTwentySixthRejoin BlankTwentySeventhRejoin BlankTwentyEighthRejoin BlankTwentyNinthRejoin BlankThirtiethRejoin Seed31Probe; do
+            cp "extension/$T/$module.lean" "source/$T/$module.lean"
+          done
       - name: Install Lean 4.36.0-rc2
         run: |
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
