@@ -53,7 +53,7 @@ The direct `stepSym` replay charges 11 for the B1 sweep and 1 for the terminal e
 
 ### New exact sweep draft
 
-[SourceExactSweepBB424.lean](SourceExactSweepBB424.lean) defines source-shaped F424 costs for `sweepBB` and `sweepCB`, using the exact primitive witnesses for item steps and repeated-block sweeps. It attempts `ReachesIn` theorems for both outer sweeps and derives the exact BB-mode `stepSym` theorem. The file includes `#print axioms` audits, but it has **not** been compiled; it is an intermediate proof draft, not an accepted Lean result.
+[SourceExactSweepBB424.lean](SourceExactSweepBB424.lean) defines source-shaped F424 costs for `sweepBB` and `sweepCB`, using the exact primitive witnesses for item steps and repeated-block sweeps. It attempts `ReachesIn` theorems for both outer sweeps and derives the exact BB-mode `stepSym` theorem. The file includes `#print axioms` audits, but it has **not** been compiled; it is an intermediate proof draft, not an accepted Lean result. Static review flags two likely repair points before first compile: the BB `run (d+2)` branch may need `strictNat_eq`, and the CB `case4` zero-cost branch must use its no-run0/run1 hypothesis to reduce the `costSweepCB` pattern match.
 
 The next formal steps are:
 
