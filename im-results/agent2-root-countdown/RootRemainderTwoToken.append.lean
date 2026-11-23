@@ -372,7 +372,7 @@ theorem root_countdown_one_five_reset (n : ℕ) :
         (List.replicate (4*n+5) (0,0) ++ [(1,0),(5,0)]))
       (cfg_CR_n_n [(0,0)]
         (List.replicate 5 (0,0) ++ [(8*n+11,0)] ++
-          List.replicate 3 (0,0) ++ [(2,0)])) := by
+          List.replicate 2 (0,0) ++ [(2,0)])) := by
   have h1 := root_countdown_prefix_with_tail_fixed n 1 [(5,0)]
   have h2 := root_countdown_el_zero_sweep (4*n+5) [(0,0),(1,0)] [(1,0),(5,0)]
   have h2' : ReachesPlus target
@@ -393,18 +393,18 @@ theorem root_countdown_one_five_reset (n : ℕ) :
   have h8 := root_countdown_dr_positive_positive_step 0 0
     (List.replicate (4*n+6) (0,0) ++ [(1,0)]) [(0,0),(2,0)]
   have h9 := root_countdown_cr_zero_sweep_pair (4*n+6) 0 [(1,0)]
-    (List.replicate 3 (0,0) ++ [(2,0)])
+    (List.replicate 2 (0,0) ++ [(2,0)])
   have h10 := root_countdown_cr_one_empty_step
-    [(8*n+14,0),(0,0),(0,0),(0,0),(2,0)]
+    [(8*n+14,0),(0,0),(0,0),(2,0)]
   have h11 := root_countdown_general_tail_with_suffix (8*n+17)
-    (List.replicate 3 (0,0) ++ [(2,0)]) (by omega)
+    (List.replicate 2 (0,0) ++ [(2,0)]) (by omega)
   have hx : 8*n+17-6 = 8*n+11 := by omega
   have h11' : ReachesPlus target
       (cfg_EL_n_n [(0,0)]
-        ([(0,0),(8*n+17,0)] ++ List.replicate 3 (0,0) ++ [(2,0)]))
+        ([(0,0),(8*n+17,0)] ++ List.replicate 2 (0,0) ++ [(2,0)]))
       (cfg_CR_n_n [(0,0)]
         (List.replicate 5 (0,0) ++ [(8*n+11,0)] ++
-          List.replicate 3 (0,0) ++ [(2,0)])) := by
+          List.replicate 2 (0,0) ++ [(2,0)])) := by
     simpa [hx, List.append_assoc] using h11
   exact ReachesPlus.trans h1
     (ReachesPlus.trans h2'
