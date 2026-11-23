@@ -75,11 +75,13 @@ The following bounds are deliberately loose.
    \]
    The constructor accounting is explicit: .run 0 moves to the right without changing W; .run 1 consumes one left token, adds a right run-zero, and applies bumpSymR, for net increase at most 8; .repB1 consumes its left token while eatB1 adds at most one right token and preserves mass; successful .rep2/.rep12 branches reinsert the stripped two-token prefix, with eatB2/eatB12R preserving mass and adding at most one token, again paid for by the removed left token. A failed .rep2/.rep12 branch peels with at most +2 mass and +5 length relative to the input, then stepElemBB adds at most +3 mass and +7 length, for net +17. The base, .zero, and .run(d+2) terminal branches use stepElemBB and cost at most +10. Thus there are at most |L| recursive +8 contributions and one terminal contribution at most 18. The missing mass lemmas for eatB2 and eatB12R follow from generic eatFuel_num_sum_le, since their blocks have positive mass.
 
-5. **Finish-after-one-element.** Combining the atomic inequalities with the BB sweep bound should give
+5. **Finish-after-one-element.** Use the existing pilot left-length facts as well as the atomic W bounds. If stepElemCB returns BB, stepElemCB_BB_left_length gives \(|L'|\le|L|+7\); otherwise no BB sweep occurs. With \(W_1\le W+16\), the BB case gives
    \[
-   W(\operatorname{stepElemThenBB}_{CB}(L,R))\le 256(W(CB,L,R)+1),
+   W'\le W_1+8|L'|+18\le W+16+8(W+6)+18=9W+82\le91(W+1).
    \]
-   and the analogous DL bound after peelL. The DL peelL itself raises \(W\) by at most 7.
+   The non-BB case is smaller, so \(W(\operatorname{stepElemThenBB}_{CB}(L,R))\le91(W+1)\).
+   
+   For DL, stepElemDL_BB_left_bounds gives \(|L'|\le|L|\) whenever the element step returns BB. With input potential \(U\), the BB case gives \(W'\le U+7+8U+18=9U+25\le34(U+1)\); the non-BB case is smaller. Thus \(W(\operatorname{stepElemThenBB}_{DL}(L,R))\le34(U+1)\). The peelL applied by stepSym itself raises W by at most 7.
 
 ## Macro-dispatch weight
 
@@ -95,19 +97,14 @@ The three successful macro outputs have simple mass/length bounds:
 - **Rule C:** with \(n=p-2\), the two increasing fields are \(k+2n\) and \(d+2n\), while the rep2 field falls to 2. Numeric mass rises by \(3n\le3S\), and the fixed prefix does not grow. Thus \(W_{\rm out}\le4W_{\rm in}\).
 - **Rule B:** splitB2 counts copies of the literal block 011; each counted block has numeric mass 2. The output fields are \(p+2n-1\), \(1\), \(k-n\), and \(d+4n\), with \(n=m-1\). Comparing with the consumed input gives the exact numeric-mass change \(4n+1-p\), hence at most \(4S+1\). The output fixed prefix is at most 4 tokens longer (the input has one leading run-zero token, the (p) literal blocks, and the unchanged suffix). Thus \(W_{\rm out}\le5W_{\rm in}+8\).
 
-A failed recognition uses stepElemThenBB_CB, already covered above. Hence the desired dispatcher inequality is
-
+A failed recognition uses stepElemThenBB_CB, already covered above. Rule A/B/C successes are bounded by \(W\), \(5W+8\), and \(4W\), respectively; for \(W\ge1\), each is at most \(13(W+1)\). Hence
 \[
-W(\operatorname{afterSweepCB}(L,R))\le256(W(CB,L,R)+1).
+W(\operatorname{afterSweepCB}(L,R))\le91(W(CB,L,R)+1).
 \]
-
-Combining this with the CB sweep gives the global target
-
+After sweepCB, \(W_1\le9W\), so the CB step is at most \(91(9W+1)=819W+91\le2^{10}(W+1)\). For DL, the 34-bound after peelL gives \(34(W+8)\le306(W+1)<2^{10}(W+1)\). The BB sweep is at most \(27(W+1)\). Therefore the sharper global target is
 \[
-\boxed{W(\operatorname{stepSym}(s))\le 2^{12}(W(s)+1).}
+\boxed{W(\operatorname{stepSym}(s))\le2^{10}(W(s)+1).}
 \]
-
-The BB and DL cases are smaller under the preceding bounds.
 
 ## Primitive-cost inequality
 
@@ -135,7 +132,7 @@ The remaining proof work is to compose the existing Rule A/B/C ReachesWithin lem
 
 ## Consequence if the target lemmas are proved
 
-Let \(V=W+1\). The weight inequality gives \(V_{i+1}\le2^{13}V_i\). The literal initSymCyc3 states have:
+Let \(V=W+1\). The sharper weight inequality gives \(V_{i+1}\le2^{11}V_i\). The literal initSymCyc3 states have:
 - F424: \((|L|,\operatorname{numSum}L,|R|,\operatorname{numSum}R)=(13,52,9,85)\), hence \(W=160\);
 - F412: \((13,52,10,86)\), hence \(W=162\).
 Thus both satisfy \(W\le162<2^{10}\) and \(V_0\le2^{10}\).
@@ -143,16 +140,16 @@ Thus both satisfy \(W\le162<2^{10}\) and \(V_0\le2^{10}\).
 For \(n\) symbolic transitions, the total primitive cost is then bounded by
 
 \[
-n\cdot2^{26}\cdot2^{26n}\cdot2^{20}
-= n\cdot2^{26n+46}.
+n\cdot2^{26}\cdot2^{22n}\cdot2^{20}
+= n\cdot2^{22n+46}.
 \]
 
 The exact checkpoint chains give:
 
 | Machine | Initial runElemFast steps | stepSym steps | SymRun exponent bound |
 |---|---:|---:|---:|
-| F424 | \(1+16+11\cdot256+4\cdot4096=19{,}217\) | \(70{,}511\) | \(2^{1{,}833{,}349}\) |
-| F412 | \(7+3\cdot16+11\cdot256+4\cdot4096=19{,}255\) | \(21{,}383\) | \(2^{556{,}019}\) |
+| F424 | \(1+16+11\cdot256+4\cdot4096=19{,}217\) | \(70{,}511\) | \(2^{1{,}551{,}305}\) |
+| F412 | \(7+3\cdot16+11\cdot256+4\cdot4096=19{,}255\) | \(21{,}383\) | \(2^{470{,}487}\) |
 
 For the initial RLE prefix, \(W_M\) starts at 1 and each stepElemM raises it by at most 8. The F424/F412 rule tables have maximal variable costs \(3d+22\) and \(3d+20\), respectively (fixed branches are at most 13); since \(d\le W_M\), both are bounded by \(25(W_M+1)\). Thus the whole prefix is bounded by
 \[
@@ -160,16 +157,16 @@ For the initial RLE prefix, \(W_M\) starts at 1 and each stepElemM raises it by 
 \]
 Add the initial entry costs (18 for F424, 1 for F412) and the separate final halting transition (+1 in each case); these are negligible relative to the prefix bound and do not affect the rounded bounds. Conditional total bounds are therefore:
 
-- F424: fewer than \(2^{1{,}834{,}000}\) primitive steps;
-- F412: fewer than \(2^{557{,}000}\) primitive steps.
+- F424: fewer than \(2^{1{,}552{,}000}\) primitive steps;
+- F412: fewer than \(2^{471{,}000}\) primitive steps.
 
 **Reusable SymRun-phase corollary.** Under the same target lemmas, any SymRun phase with initial \(W\le2^{10}\) and at most \(2^{21}\) symbolic transitions has primitive cost below
 \[
-2^{26\cdot2^{21}+46+21}=2^{54{,}526{,}019},
+2^{22\cdot2^{21}+46+21}=2^{46{,}137{,}411},
 \]
 which is still far below \(2\uparrow\uparrow\uparrow5\). This criterion is independent of the detailed intermediate trace states; only the symbolic transition count and initial potential enter.
 
-These are much weaker than the existing \(2^{463}\) and \(2^{193}\) candidates, but they are still sufficient for non-championship. Under the repository's published lower-bound convention \(2\uparrow\uparrow\uparrow5=2\uparrow\uparrow65536\), both are far smaller: \(1{,}834{,}000<2^{21}<2^{65535}\), and \(557{,}000<2^{20}<2^{65535}\).
+These are much weaker than the existing \(2^{463}\) and \(2^{193}\) candidates, but they are still sufficient for non-championship. Under the repository's published lower-bound convention \(2\uparrow\uparrow\uparrow5=2\uparrow\uparrow65536\), both are far smaller: \(1{,}552{,}000<2^{21}<2^{65535}\), and \(471{,}000<2^{19}<2^{65535}\).
 
 ## Formalization checklist and caveats
 
