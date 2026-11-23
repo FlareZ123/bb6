@@ -98,16 +98,19 @@ theorem tapeToRelative_write_move_right (T : ExtTape) (w : ExtSymbol) :
       simp only [tapeToRelative, BB6.Bridge.goRight,
         BB6.Bridge.Tape.mk.injEq]
       constructor
-      · simp [Turing.Tape.move_right_nth, Turing.Tape.write_nth]
+      · exact by
+          simp [Turing.Tape.move_right_nth, Turing.Tape.write_nth]
       · constructor
-        · funext n
-          cases n with
-          | zero =>
-              simp [Turing.Tape.move_right_nth, Turing.Tape.write_nth]
-          | succ n =>
-              simp [Turing.Tape.move_right_nth, Turing.Tape.write_nth] <;> omega
-        · funext n
-          simp [Turing.Tape.move_right_nth, Turing.Tape.write_nth] <;> omega
+        · exact by
+            funext n
+            cases n with
+            | zero =>
+                simp [Turing.Tape.move_right_nth, Turing.Tape.write_nth]
+            | succ n =>
+                simp [Turing.Tape.move_right_nth, Turing.Tape.write_nth] <;> omega
+        · exact by
+            funext n
+            simp [Turing.Tape.move_right_nth, Turing.Tape.write_nth] <;> omega
 
 /-- Mathlib's write-then-move-left operation is exactly BB6.Bridge.goLeft. -/
 theorem tapeToRelative_write_move_left (T : ExtTape) (w : ExtSymbol) :
@@ -118,16 +121,19 @@ theorem tapeToRelative_write_move_left (T : ExtTape) (w : ExtSymbol) :
       simp only [tapeToRelative, BB6.Bridge.goLeft,
         BB6.Bridge.Tape.mk.injEq]
       constructor
-      · simp [Turing.Tape.move_left_nth, Turing.Tape.write_nth]
+      · exact by
+          simp [Turing.Tape.move_left_nth, Turing.Tape.write_nth]
       · constructor
-        · funext n
-          simp [Turing.Tape.move_left_nth, Turing.Tape.write_nth] <;> omega
-        · funext n
-          cases n with
-          | zero =>
-              simp [Turing.Tape.move_left_nth, Turing.Tape.write_nth]
-          | succ n =>
-              simp [Turing.Tape.move_left_nth, Turing.Tape.write_nth] <;> omega
+        · exact by
+            funext n
+            simp [Turing.Tape.move_left_nth, Turing.Tape.write_nth] <;> omega
+        · exact by
+            funext n
+            cases n with
+            | zero =>
+                simp [Turing.Tape.move_left_nth, Turing.Tape.write_nth]
+            | succ n =>
+                simp [Turing.Tape.move_left_nth, Turing.Tape.write_nth] <;> omega
 
 structure Positioned where
   state : ExtState
@@ -172,7 +178,7 @@ theorem step_project (p : Positioned) :
   cases p with
   | mk q h T =>
       cases T with
-      | mk a leftTape rightTape R =>
+      | mk a leftTape rightTape =>
           cases ht : ExternalTM (q, a) with
           | none => simp [step, project, _root_.step, ht]
           | some instr =>
