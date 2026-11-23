@@ -198,6 +198,16 @@ sixForcedNormalize for at most three steps, and discharge the residue
 conditions with omega. If formalized, this would show that exactly the
 existing eight cells survive the prior six-forced criterion.
 
+## Source files
+
+- `im-results/agent43-c-quotient-kernel/M32HighAll.lean` — defines
+  `CCert.newHighPairs` and the M32 quotient mask.
+- `im-results/agent13-residual-frontier/M32EightCellStrictness.lean` —
+  proves the existing eight survivor families are prior-highAllowed and
+  M32-rejected.
+- `im-results/agent11-c-low58/SixForcedNormalize.lean` — defines the
+  recursive six-forced normalizer and its gate order.
+
 ## Evidence boundary
 
 This is an exploratory executable scan, not a Lean theorem. The scan is
