@@ -94,8 +94,63 @@ theorem depth_six_high_valuation_parent_unreachable
   exact depth_six_parity_source_parent_impossible
     u a k r q hk12 ha hcost hpar
 
+
+/-- A third arbitrarily deep original-section obstruction. At depth
+    n=8r+2, one combined mod-eight condition forces two exact even-right
+    inverse steps B,B and then one exact affine inverse A. The final
+    odd-right image has coordinate sum 2 (mod 4), hence cannot belong
+    to the actual blank orbit. No bound on r is imposed. -/
+theorem depth_two_BBA_source_parent_impossible
+    (u a k r q : Nat) (hk80 : 80≤k)
+    (ha : a+3=8*q)
+    (hcost : 2*k+a+7+3*(8*r+2)=512*u+78)
+    (hphase : (q+7*r+4*(r%2))%8=7) :
+    ¬ BB6.Agent3.CReach a k := by
+  have hy0 : 6≤k := by omega
+  have he0 : k%2=0 := by omega
+  have h00 : (a+k)%8≠0 := by omega
+  have h07 : (a+k)%8≠7 := by omega
+  intro hr
+  let x1 := a+k-2
+  let y1 := (k-2)/2
+  have h1 : BB6.Agent3.CReach x1 y1 := by
+    dsimp [x1,y1]
+    exact (BB6.Agent46.six_even_right_blank_reach_iff
+      a k hy0 he0 h00 h07).mp hr
+  have hy1 : 6≤y1 := by dsimp [y1]; omega
+  have he1 : y1%2=0 := by dsimp [x1,y1]; omega
+  have h10 : (x1+y1)%8≠0 := by dsimp [x1,y1]; omega
+  have h17 : (x1+y1)%8≠7 := by dsimp [x1,y1]; omega
+  let x2 := x1+y1-2
+  let y2 := (y1-2)/2
+  have h2 : BB6.Agent3.CReach x2 y2 := by
+    dsimp [x2,y2]
+    exact (BB6.Agent46.six_even_right_blank_reach_iff
+      x1 y1 hy1 he1 h10 h17).mp h1
+  have hy2 : 4≤y2 := by dsimp [y2,x1,y1]; omega
+  have he2 : y2%2=0 := by dsimp [y2,x1,y1]; omega
+  have hse2 : (x2+y2)%4=1 := by
+    dsimp [x2,y2,x1,y1]
+    omega
+  let x3 := x2+y2-2
+  let y3 := (y2-2)/2
+  have h3 : BB6.Agent3.CReach x3 y3 := by
+    dsimp [x3,y3]
+    exact (BB6.Agent15.blank_reach_iff_affine
+      x2 y2 hy2 he2 hse2).mp h2
+  have hy3 : 5≤y3 := by dsimp [y3,y2,y1,x2,x1]; omega
+  have hyo3 : y3%2=1 := by
+    dsimp [y3,y2,y1,x2,x1]
+    omega
+  have hs3 : (x3+y3)%4=2 := by
+    dsimp [x3,y3,y2,y1,x2,x1]
+    omega
+  exact (BB6.Agent13TwoParent.odd_forbidden_image
+    x3 y3 hy3 hyo3 (Or.inr hs3)) h3
+
 #print axioms depth_eight_high_valuation_parent_unreachable
 #print axioms depth_eight_odd_source_explicit_impossible
 #print axioms depth_six_parity_source_parent_impossible
 #print axioms depth_six_high_valuation_parent_unreachable
+#print axioms depth_two_BBA_source_parent_impossible
 end BB6.Agent13AllDepth
