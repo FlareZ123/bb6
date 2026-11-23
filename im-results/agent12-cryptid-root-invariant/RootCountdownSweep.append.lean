@@ -188,9 +188,10 @@ theorem root_countdown_prefix (n c : ℕ) :
   have h4 :=
     root_countdown_dl_positive_step 0 [(0,0)] tail
   have h5 :=
-    root_countdown_dr_zero_step [] tail
+    root_countdown_dr_zero_step [] ((0,0) :: tail)
   have h6 :=
-    root_countdown_dr_empty_left_step ((1,0) :: (0,0) :: tail)
+    root_countdown_dr_empty_left_step
+      ((1,0) :: (0,0) :: (0,0) :: tail)
   have h7 :=
     root_countdown_el_positive_step 0 [(0,0)] ((0,0) :: (0,0) :: tail)
   have h8 :
@@ -297,6 +298,8 @@ theorem root_countdown_step (n c : ℕ) (hc : 3 ≤ c) :
         (List.replicate (4*n+6) (0,0) ++ [(c,0)]))
       (cfg_EL_n_n (List.replicate (4*n+7) (0,0) ++ [(1,0)]) [(c,0)]) := by
     simpa [List.replicate_succ, List.cons_append, List.append_assoc] using h2
+  have hc1 : c-1+1 = c := by omega
+  have hc2 : c-3+2 = c-1 := by omega
   have h3 := root_countdown_el_positive_step (c-1)
     (List.replicate (4*n+7) (0,0) ++ [(1,0)]) []
   have h3' : ReachesPlus target
@@ -313,8 +316,6 @@ theorem root_countdown_step (n c : ℕ) (hc : 3 ≤ c) :
     [(c-3,0)]
   have h6 := root_countdown_dr_positive_positive_step 0 0 []
     (List.replicate (4*n+7) (0,0) ++ [(c-3,0)])
-  have hc1 : c-1+1 = c := by omega
-  have hc2 : c-3+2 = c-1 := by omega
   have hn : 4*(n+1)+5 = 4*n+9 := by omega
   simpa [List.replicate_succ, List.cons_append, List.append_assoc,
     hc1, hc2, hn] using
@@ -442,6 +443,10 @@ theorem root_countdown_general_tail (x : ℕ) (hx : 6 ≤ x) :
       (cfg_CR_n_n [(0,0)]
         (List.replicate 5 (0,0) ++ [(x-6,0)])) := by
   have h1 := root_countdown_el_zero_step [(0,0)] [(x,0)]
+  have hx1 : x-1+1 = x := by omega
+  have hx2 : x-3+2 = x-1 := by omega
+  have hx3 : x-4+1 = x-3 := by omega
+  have hx4 : x-6+2 = x-4 := by omega
   have h2 := root_countdown_el_positive_step (x-1)
     [(0,0),(0,0)] []
   have h2' : ReachesPlus target
@@ -479,10 +484,6 @@ theorem root_countdown_general_tail (x : ℕ) (hx : 6 ≤ x) :
     [(x-6,0)]
   have h12 := root_countdown_dr_positive_positive_step 0 0 []
     (List.replicate 3 (0,0) ++ [(x-6,0)])
-  have hx1 : x-1+1 = x := by omega
-  have hx2 : x-3+2 = x-1 := by omega
-  have hx3 : x-4+1 = x-3 := by omega
-  have hx4 : x-6+2 = x-4 := by omega
   simpa [List.replicate_succ, List.cons_append, List.append_assoc,
     bumpPairHead, hx1, hx2, hx3, hx4] using
     (ReachesPlus.trans h1
