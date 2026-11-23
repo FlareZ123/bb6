@@ -13,6 +13,7 @@ on:
           - sourceDepth
           - sourceClosure
           - sourceRect
+          - sourceOne307
 
 permissions:
   contents: read
@@ -60,6 +61,9 @@ jobs:
               ;;
             sourceRect)
               target=im-results/agent13-residual-frontier/EvenOddSimpleRectangle.lean
+              ;;
+            sourceOne307)
+              target=im-results/agent13-residual-frontier/One307Source.lean
               ;;
             *)
               echo "Unsupported M16 target: $M16_TARGET" >&2
