@@ -66,10 +66,12 @@ theorem table_conjugate_coverage (q : ExtState) (b : ExtSymbol) :
     d0Coverage (encodeState q, encodeSymbol b) =
       (ExternalTM (q, b)).map (fun (w, d, s) => externalMove w d s) := by
   unfold d0Coverage
-  rw [table_conjugate, Option.map_map]
-  apply congrArg (fun f => Option.map f (ExternalTM (q, b)))
-  funext w d s
-  cases d <;> rfl
+  rw [table_conjugate]
+  cases h : ExternalTM (q, b) with
+  | none => rfl
+  | some instr =>
+      rcases instr with ⟨w, d, s⟩
+      cases d <;> rfl
 
 /-- Direct representation of a Mathlib tape in the existing relative-tape
 bridge: the current cell, cells to the left, and cells to the right. -/
@@ -93,41 +95,39 @@ theorem tapeToRelative_write_move_right (T : ExtTape) (w : ExtSymbol) :
       BB6.Bridge.goRight (tapeToRelative T) (encodeSymbol w) := by
   cases T with
   | mk a leftTape rightTape =>
-      apply BB6.Bridge.Tape.ext
-      · simp [tapeToRelative, BB6.Bridge.goRight,
-          Turing.Tape.move_right_nth, Turing.Tape.write_nth]
-      · funext n
-        cases n with
-        | zero =>
-            simp [tapeToRelative, BB6.Bridge.goRight,
-              Turing.Tape.move_right_nth, Turing.Tape.write_nth]
-        | succ n =>
-            simp [tapeToRelative, BB6.Bridge.goRight,
-              Turing.Tape.move_right_nth, Turing.Tape.write_nth] <;> omega
-      · funext n
-        simp [tapeToRelative, BB6.Bridge.goRight,
-          Turing.Tape.move_right_nth, Turing.Tape.write_nth] <;> omega
+      simp only [tapeToRelative, BB6.Bridge.goRight,
+        BB6.Bridge.Tape.mk.injEq]
+      constructor
+      · simp [Turing.Tape.move_right_nth, Turing.Tape.write_nth]
+      · constructor
+        · funext n
+          cases n with
+          | zero =>
+              simp [Turing.Tape.move_right_nth, Turing.Tape.write_nth]
+          | succ n =>
+              simp [Turing.Tape.move_right_nth, Turing.Tape.write_nth] <;> omega
+        · funext n
+          simp [Turing.Tape.move_right_nth, Turing.Tape.write_nth] <;> omega
 
 /-- Mathlib's write-then-move-left operation is exactly BB6.Bridge.goLeft. -/
 theorem tapeToRelative_write_move_left (T : ExtTape) (w : ExtSymbol) :
     tapeToRelative (Turing.Tape.move .left (Turing.Tape.write w T)) =
       BB6.Bridge.goLeft (tapeToRelative T) (encodeSymbol w) := by
   cases T with
-  | mk a L R =>
-      apply BB6.Bridge.Tape.ext
-      · simp [tapeToRelative, BB6.Bridge.goLeft,
-          Turing.Tape.move_left_nth, Turing.Tape.write_nth]
-      · funext n
-        simp [tapeToRelative, BB6.Bridge.goLeft,
-          Turing.Tape.move_left_nth, Turing.Tape.write_nth] <;> omega
-      · funext n
-        cases n with
-        | zero =>
-            simp [tapeToRelative, BB6.Bridge.goLeft,
-              Turing.Tape.move_left_nth, Turing.Tape.write_nth]
-        | succ n =>
-            simp [tapeToRelative, BB6.Bridge.goLeft,
-              Turing.Tape.move_left_nth, Turing.Tape.write_nth] <;> omega
+  | mk a leftTape rightTape =>
+      simp only [tapeToRelative, BB6.Bridge.goLeft,
+        BB6.Bridge.Tape.mk.injEq]
+      constructor
+      · simp [Turing.Tape.move_left_nth, Turing.Tape.write_nth]
+      · constructor
+        · funext n
+          simp [Turing.Tape.move_left_nth, Turing.Tape.write_nth] <;> omega
+        · funext n
+          cases n with
+          | zero =>
+              simp [Turing.Tape.move_left_nth, Turing.Tape.write_nth]
+          | succ n =>
+              simp [Turing.Tape.move_left_nth, Turing.Tape.write_nth] <;> omega
 
 structure Positioned where
   state : ExtState
@@ -152,7 +152,7 @@ relative-tape bridge. -/
 theorem step_toRelative (p : Positioned) :
     BB6.Bridge.step d0Coverage (toRelative p) =
       (step p).map toRelative := by
-  simp only [BB6.Bridge.step, step, toRelative, tapeToRelative]
+  simp only [BB6.Bridge.step, step, toRelative]
   rw [table_conjugate_coverage]
   cases h : ExternalTM (p.state, p.tape.nth 0) with
   | none =>
@@ -172,7 +172,7 @@ theorem step_project (p : Positioned) :
   cases p with
   | mk q h T =>
       cases T with
-      | mk a L R =>
+      | mk a leftTape rightTape R =>
           cases ht : ExternalTM (q, a) with
           | none => simp [step, project, _root_.step, ht]
           | some instr =>
@@ -239,7 +239,8 @@ theorem rawStep_toPortfolio (c : BB6Coverage.Config) :
       BB6.Portfolio.step BB6.Portfolio.D0 (toPortfolioCfg c) := by
   cases h : BB6.Portfolio.D0 c.state (c.tape c.head) with
   | none =>
-      simp [BB6Coverage.rawStep, d0Coverage, BB6.Portfolio.step, h]
+      simp [BB6Coverage.rawStep, d0Coverage, BB6.Portfolio.step,
+        toPortfolioCfg, h]
   | some instr =>
       rcases instr with ⟨w, d, s⟩
       cases d <;>
@@ -309,6 +310,8 @@ theorem singletonPow_replicate (n : Nat) :
   | zero => rfl
   | succ n ih => simp [Nat.repeat, ih, List.replicate_succ]
 
+private theorem default_symbol : (default : _root_.Symbol) = _root_.Symbol.S0 := rfl
+
 theorem getI_replicate (n i : Nat) :
     (List.replicate n _root_.Symbol.S1).getI i =
       if i < n then _root_.Symbol.S1 else _root_.Symbol.S0 := by
@@ -318,7 +321,7 @@ theorem getI_replicate (n i : Nat) :
     simp [List.getElem_replicate, hi]
   · have hlen : (List.replicate n _root_.Symbol.S1).length ≤ i := by
       simpa using Nat.le_of_not_gt hi
-    rw [List.getI_eq_default _ hlen]
+    rw [List.getI_eq_default _ hlen, default_symbol]
     simp [hi]
 
 theorem A_tape_nth (n : Nat) (j : Int) :
@@ -331,20 +334,27 @@ theorem A_tape_nth (n : Nat) (j : Int) :
       cases j with
       | zero =>
           simp [«1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---».A,
-            Turing.Tape.nth, hdefault]
+            Turing.Tape.nth, hdefault, default_symbol]
       | succ j =>
           simp only [«1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---».A,
-            Turing.Tape.nth, «1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---».nil_append_default,
-            hdefault, Turing.ListBlank.append_mk, Turing.ListBlank.nth_mk,
-            List.append_nil, singletonPow_replicate]
-          have hpos : (0 : Int) < Int.ofNat (j + 1) := by omega
-          have hbound : Int.ofNat (j + 1) ≤ (n : Int) ↔ j < n := by omega
-          rw [getI_replicate n j]
+            Turing.Tape.nth, hdefault, Turing.ListBlank.append_mk,
+            Turing.ListBlank.nth_mk, List.append_nil]
+          rw [singletonPow_replicate, getI_replicate n j]
+          have hpos : (0 : Int) < Int.ofNat (j + 1) := by
+            exact_mod_cast Nat.succ_pos j
+          have hbound : Int.ofNat (j + 1) ≤ (n : Int) ↔ j < n := by
+            constructor
+            · intro h
+              have h' : j + 1 ≤ n := by exact_mod_cast h
+              omega
+            · intro h
+              have h' : j + 1 ≤ n := by omega
+              exact_mod_cast h'
           simp [hpos, hbound]
   | negSucc j =>
       simp [«1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---».A,
         Turing.Tape.nth, «1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---».default_tail,
-        hdefault]
+        hdefault, default_symbol]
 
 def ofA (n : Nat) (h : Int) : Positioned :=
   ⟨_root_.State.F, h, («1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---».A n []).2⟩
@@ -358,16 +368,14 @@ theorem toPortfolioAbs_ofA (n : Nat) (h : Int) :
   simp only [toPortfolioAbs, toPortfolioCfg, BB6.Bridge.toAbsolute,
     toRelative, encodeState, BB6.Portfolio.F0Pure, BB6.Portfolio.Cfg.mk.injEq,
     ofA]
-  refine ⟨rfl, rfl, ?_⟩
+  refine ⟨trivial, trivial, ?_⟩
   funext x
   rw [tapeToRelative_symbol]
   change encodeSymbol (((«1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---».A n []).2).nth (x - h)) = _
   rw [A_tape_nth n (x - h)]
-  by_cases hp : h < x ∧ x ≤ h + (n : Int)
-  · have hq : 0 < x - h ∧ x - h ≤ (n : Int) := by omega
-    simp [encodeSymbol, hp, hq]
-  · have hq : ¬ (0 < x - h ∧ x - h ≤ (n : Int)) := by omega
-    simp [encodeSymbol, hp, hq]
+  have hiff : (0 < x - h ∧ x - h ≤ (n : Int)) ↔
+      (h < x ∧ x ≤ h + (n : Int)) := by omega
+  simp [encodeSymbol, hiff]
 
 /-- The external halting cylinder transfers to the exact repository D0
 configuration at the same primitive halting time. This is not a blank-root
