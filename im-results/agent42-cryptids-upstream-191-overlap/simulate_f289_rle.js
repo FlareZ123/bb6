@@ -465,16 +465,16 @@ const expectedRuleCosts = {
   rule_C_one_succ:6, rule_C_add_two_step:3
 };
 function theoremBlock(name) {
-  const i=lines.findIndex(x=>new RegExp('^theorem '+name+'\\\\b').test(x));
+  const i=lines.findIndex(x=>x.startsWith('theorem '+name+' '));
   if(i<0) throw new Error('missing primitive rule theorem '+name);
-  const j=lines.findIndex((x,k)=>k>i && /^(?:private\\s+)?(?:theorem|def|abbrev|opaque|instance)\\s+/.test(x));
-  return lines.slice(i,j<0?lines.length:j).join('\\n');
+  const j=lines.findIndex((x,k)=>k>i && /^(private )?(theorem|def|abbrev|opaque|instance) /.test(x));
+  return lines.slice(i,j<0?lines.length:j).join('\n');
 }
 function namedRuleCost(name) {
   const block=theoremBlock(name);
-  const match=block.match(/\\bexecute\\s+(\\d+)/);
+  const match=block.match(/execute ([0-9]+)/);
   if(match) return Number(match[1]);
-  if(name==='rule_BR_nil' && /:=\\s*rule_B_nil\\b/.test(block)) return namedRuleCost('rule_B_nil');
+  if(name==='rule_BR_nil' && block.includes('rule_B_nil L')) return namedRuleCost('rule_B_nil');
   throw new Error('could not extract primitive cost for '+name);
 }
 const ruleCostAudit=Object.fromEntries(Object.entries(expectedRuleCosts).map(([name,expected])=>{
@@ -482,7 +482,7 @@ const ruleCostAudit=Object.fromEntries(Object.entries(expectedRuleCosts).map(([n
   assert.equal(actual,expected,'primitive cost changed for '+name);
   return [name,actual];
 }));
-const initCostMatch=theoremBlock('init_reaches_stack').match(/\\bexecute\\s+(\\d+)/);
+const initCostMatch=theoremBlock('init_reaches_stack').match(/execute ([0-9]+)/);
 assert.ok(initCostMatch,'missing initial source-to-stack execution cost');
 const initialPrimitiveStepBound=BigInt(initCostMatch[1]);
 assert.equal(initialPrimitiveStepBound,1n,'initial source-to-stack cost changed');
