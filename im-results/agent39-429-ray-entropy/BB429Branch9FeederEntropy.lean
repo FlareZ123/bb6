@@ -394,6 +394,7 @@ theorem branch9_side_feeder_entropy
   have hphase : (anyRayPhase (branch9Offset t))%2=0 := by
     unfold anyRayPhase
     have hc : branch9Offset t%2=1 := by
+      have hp : 0<2^t := pow2_pos t
       dsimp [branch9Offset]
       omega
     have hc4 : branch9Offset t%4=1 ∨ branch9Offset t%4=3 := by omega
