@@ -55,6 +55,11 @@ def step(c: Config):
                 m += 4
                 v = v[3:]
                 continue
+            # Source first-return: full_A_code_1101010111_first_return
+            # (Agent26 A1101010111CodeFirst.lean), arbitrary mixed 10/111
+            # prefix and arbitrary tail.
+            if v.startswith("1101010111"):
+                return "A1101010111_code", p+cost+2*m+36, canonical(2*m+5, "010101010"+v[10:])
             if v.startswith("1100") or v in ("11", "110"):
                 return "A1100", p+cost+2*m+16, canonical(2*m+1, "0"+"1"*6+(v[4:] if len(v)>4 else ""))
             if v.startswith("110111"):
@@ -87,8 +92,16 @@ def step(c: Config):
         return "E_pairs_1100", p+60+4*q, canonical(
             8*k+5, "0"+"1"*(2*q+2)+"0"+"1"*6+tail
         )
-    if v.startswith("110111") and q == 0:
-        return "E110111", p+68, canonical(8*k+3, "110"+"1"*6+"01010"+v[6:])
+    # All-q source first-return families (Agent32 E110111First.lean;
+    # Agent26 E1101010111First.lean), both with arbitrary right tails.
+    if v.startswith("1101010111"):
+        return "E1101010111", p+80+4*q, canonical(
+            8*k+5, "0"+"1"*(2*q+6)+"010101010"+v[10:]
+        )
+    if v.startswith("110111"):
+        return "E110111", p+68+4*q, canonical(
+            8*k+5, "0"+"1"*(2*q+6)+"01010"+v[6:]
+        )
     if v.startswith("1101100") and q == 0:
         return "E_halt", 12*k*k+41*k+98, None
     return f"E_unresolved(q={q}):{v[:30]}", None, None
