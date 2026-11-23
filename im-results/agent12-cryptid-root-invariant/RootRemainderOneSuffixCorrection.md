@@ -53,9 +53,15 @@ The following declarations have been added to
 - `root_countdown_general_tail_with_suffix`: the general-tail map for
   arbitrary untouched suffixes;
 - `root_countdown_one_reset`: (D_n(1)	o D_0(8n+7;[5]));
-- `root_countdown_one_five_reset`: (D_n(1;[5])	o
-  D_0(8n+11;[0,0,2])).
+- `root_countdown_one_five_reset`: (D_n(1;[5]) -> D_0(8n+11;[0,0,2]));
+- `root_countdown_step_with_suffix` and the three residue iterators:
+  suffix-preserving countdown for arbitrary untouched token tails;
+- `root_d1_suffix_two_to_token_cfg`: explicit-tape endpoint for
+  `tok_DR([2,0],[],0^2 1 0^(4n+6)1)`;
+- `root_remainder_one_root_to_token_cfg`: countdown from
+  `D_0(26,524,315;[0,0,2])` to that explicit token configuration.
 
 These remain proof drafts until the pinned source module compiles them and
-the public theorem axiom audit is clean. The arithmetic continuation to
-`D_0(26,524,315;[0,0,2])` is not independently certified by this document.
+the public theorem axiom audit is clean. The preceding arithmetic path to
+`D_0(26,524,315;[0,0,2])` remains conditional on its earlier reset and
+offset-six compositions.
