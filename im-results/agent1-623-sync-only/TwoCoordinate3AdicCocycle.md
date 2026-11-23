@@ -10,11 +10,7 @@ Keep the signed S-window coordinates X,Y, and define
 \[
 U:=Y,\qquad V:=X+Y.
 \]
-The map (X,Y) -> (U,V) has determinant -1, hence is an invertible integer change of coordinates. In the canonical root coordinates X=2g-gamma_s, Y=6q, this is
-\[
-U=6q,\qquad V=2p-\gamma_s,
-\]
-using g=p-3q.
+The map (X,Y) -> (U,V) has determinant -1, hence is an invertible integer change of coordinates. No additional identification with the (p,q) coordinates is needed for this change of basis.
 
 Recall
 \[
@@ -27,7 +23,7 @@ A=V-4U,\quad B=3U,\quad
 4A+5B=4V-U,\quad 3A+4B=3V.
 }
 \]
-In particular, the four tests are not four unrelated residues: they are the two forms V-4U, 4V-U, together with 3U, 3V.
+Thus the four tests are the two forms V-4U, 4V-U, together with 3U, 3V.
 
 ## 2. Exact residue criterion in the new coordinates
 
@@ -55,7 +51,7 @@ This removes one ternary digit from each of the two scale tests. The remaining f
 
 ## 3. Exact branch cocycle
 
-Write the existing source/drain corrections as kappa,phi, to avoid confusing them with the four synchronization forms. The maintained updates are
+Write the exact signed-coordinate corrections as kappa,phi (the existing source file calls them C,F). The maintained updates are
 
 Left:
 \[
@@ -67,7 +63,7 @@ Right:
 X'=-4X-3Y+\kappa,\qquad Y'=3X+3Y+\phi.
 \]
 
-Substituting U=Y, V=X+Y gives the simpler exact cocycle.
+Substituting U=Y, V=X+Y gives
 
 **Left**
 \[
@@ -85,97 +81,74 @@ L_{UV}=\begin{pmatrix}3&0\\-1&1\end{pmatrix},
 \qquad
 R_{UV}=\begin{pmatrix}0&3\\1&-1\end{pmatrix},
 \]
-with determinants 3 and -3, respectively. These are conjugate to the previously recorded (A,B) matrices by an integer unimodular transformation; the determinant-±3 fact is unchanged.
+with determinants 3 and -3, respectively. These are conjugate to the previously recorded (A,B) matrices by an integer unimodular transformation.
 
-The inverse recurrences are particularly useful:
+The inverse recurrences are:
 
-- after a left step,
-  \[
-  U=(U'-\phi)/3,\qquad V=V'+U-\kappa-\phi;
-  \]
-- after a right step,
-  \[
-  V=(U'-\phi)/3,\qquad U=V'+V-\kappa-\phi.
-  \]
+- after a left step, U=(U'-phi)/3 and V=V'+U-kappa-phi;
+- after a right step, V=(U'-phi)/3 and U=V'+V-kappa-phi.
 
 So backward reconstruction divides exactly one of the two coordinates by three at each step.
 
-## 4. Corrections from the exact (p,q) source map
+## 4. Exact corrections from the Lean-checked signed normal form
 
-The correction pair is not arbitrary. Let beta,delta be the sector-dependent source/drain corrections from the exact (p,q) cocycle, let T=delta-beta, and let gamma_s,gamma_s' be the current and next sector phases. The phase values are
+The existing SignedCoordinateNormalForm.lean defines the exact corrections corrC and corrF in terms of the full-drain statistics D and R. In this note kappa=corrC and phi=corrF. R is the full evaluator-call count; in the RE sector it includes the initial evaluator.
+
+| Sector | Branch | kappa | phi |
+|---|---|---|---|
+| LO | Left | -18D - 16R - 122 | 12D + 12R + 84 |
+| LE | Left | -18D - 16R - 68 | 12D + 12R + 48 |
+| RO | Left | -18D - 16R | 12D + 12R |
+| RE | Left | -18D - 16R - 36 | 12D + 12R + 18 |
+| LO | Right | 12D + 4R - 6 | -6D + 24 |
+| LE | Right | 12D + 4R - 12 | -6D + 18 |
+| RO | Right | 12D + 4R - 44 | -6D + 30 |
+| RE | Right | 12D + 4R - 20 | -6D + 18 |
+
+Every phi is a multiple of 6. The source Lean file proves the correction identities, signed updates, and correction bounds; this note only changes coordinates on those already-defined updates.
+
+## 5. One-digit quotient and low-digit reduction
+
+Since phi is divisible by 6, the active register can be divided by 3 exactly:
+
+**Left**
 \[
-\gamma_{LO}=18,\quad \gamma_{LE}=10,\quad
-\gamma_{RO}=2,\quad \gamma_{RE}=4.
-\]
-The (p,q) map is
-\[
-p'=p-3q-T,\quad q'=3q+\delta
-\]
-on the left-output branch, and
-\[
-p'=3q+T-p,\quad q'=p+\beta
-\]
-on the right-output branch.
-
-Substitution into U=6q and V=2p-gamma_s gives the exact corrections:
-
-**Left-output branch**
-\[
-\phi_L=6\delta,\qquad
-\kappa_L=\gamma_s-\gamma_{s'}+2\beta-8\delta.
-\]
-Equivalently, kappa_L+phi_L = gamma_s-gamma_s'-2T.
-
-**Right-output branch**
-\[
-\phi_R=3\gamma_s+6\beta,\qquad
-\kappa_R=2\delta-8\beta-4\gamma_s-\gamma_{s'}.
-\]
-Equivalently, kappa_R+phi_R = 2T-gamma_s-gamma_s'.
-
-Thus phi is a multiple of 6 on both branches: this is immediate for phi_L, and for phi_R it follows because every gamma_s is even. Equivalently, U'=6q' and V=2p-gamma_s is even, so phi_R=U'-3V is divisible by 6. These formulas connect the two-register cocycle directly to the source drain statistics; the remaining phase input is the exact sector transition s -> s'.
-
-The corresponding correction table for beta,delta,T is in im-results/agent3-623-pq-cocycle/README.md, and the phase values and transition table are in im-results/agent32-623-phase-automaton/RootPhaseInvariant.md. The latter also warns that its observed finite phase set is not yet proved invariant.
-
-## 5. Why this is useful
-
-The all-time problem can now be stated as avoidance, along the exact two-coordinate cocycle, of the four allowed residue intervals displayed in Section 2. More importantly, the inverse recurrences expose a ternary digit at every backward step. A prospective proof can therefore track the pair (U,V) as a two-register 3-adic process: the left branch shifts the U-register, while the right branch shifts the V-register. The correction phi supplies the low ternary digit, and kappa+phi supplies the affine carry in the other register.
-
-This is an exact reparameterization and an actionable reduction, **not** a proof that the authentic orbit avoids the bands. The next mathematical task is to combine the explicit beta,delta,gamma correction formulas with a proved boundary-carry invariant for the authentic S-window quotients. The low-boundary carry warning in WindowQuotientInterface.md still applies: global (U,V) alone cannot be substituted naively for every shifted S-window quotient.
-
-
-## 6. One-digit quotient and low-digit reduction
-
-The correction formulas make the ternary shift explicit. Dividing the active register by 3 gives
-
-**Left-output branch**
-\[
-U'/3=U+2\delta,\qquad
-V'=V-U+\gamma_s-\gamma_{s'}-2T.
+U'/3=U+\phi/3,\qquad V'=V-U+\kappa+\phi.
 \]
 
-**Right-output branch**
+**Right**
 \[
-U'/3=V+\gamma_s+2\beta,\qquad
-V'=U-V+2T-\gamma_s-\gamma_{s'}.
+U'/3=V+\phi/3,\qquad V'=U-V+\kappa+\phi.
 \]
 
-Thus the active register is shifted by one ternary digit, with a source-derived integer correction. The passive register is updated affinely.
+The correction sums kappa+phi simplify as follows:
 
-From the exact sector table in the (p,q) cocycle,
-\[
-T=3D+2r+c_T(s),\qquad
-c_T(LO)=19,\ c_T(LE)=10,\ c_T(RO)=-4,\ c_T(RE)=4.
-\]
-Since U is divisible by 3, the low digit of the passive register is therefore
+| Sector | Left: kappa+phi | Right: kappa+phi |
+|---|---|---|
+| LO | -6D - 4R - 38 | 6D + 4R + 18 |
+| LE | -6D - 4R - 20 | 6D + 4R + 6 |
+| RO | -6D - 4R | 6D + 4R - 14 |
+| RE | -6D - 4R - 18 | 6D + 4R - 2 |
+
+Because U is divisible by 3, the passive-register low digit is therefore
 
 \[
-V'\equiv V+\gamma_s-\gamma_{s'}-r-2c_T(s)\pmod3
+V'\equiv
+\begin{cases}
+V-R+1 & \text{left, LO or LE},\\
+V-R & \text{left, RO or RE},\\
+-V+R & \text{right, LO or LE},\\
+-V+R+1 & \text{right, RO or RE}
+\end{cases}
+\pmod3.
 \]
-on the left-output branch, and
-\[
-V'\equiv -V+r+2c_T(s)-\gamma_s-\gamma_{s'}\pmod3
-\]
-on the right-output branch. The signed-drop statistic D disappears modulo 3. Conditional on the exact branch and next-sector phase, the low digit is controlled only by the current V digit, r mod 3, and the sector constants.
 
-This is a finite low-digit transition rule, not yet a finite invariant: the next-sector phase must be justified by the exact source transition, and the higher digits still depend on the correlated drain corrections. It gives a concrete target for a 3-adic carry automaton: retain the sector pair, r mod 3, and the moving-window boundary carry, rather than using the observed finite phase set alone.
+The signed drop D disappears modulo 3. The remaining low-digit input is the sector, branch, current V digit, and full-drain count R modulo 3. This is an exact low-digit rule; it is not yet a finite invariant because the source drain state and moving-window boundary carry must still be retained.
+
+## 6. Why this is useful
+
+The all-time problem can now be stated as avoidance, along the exact two-coordinate cocycle, of the four allowed residue intervals displayed in Section 2. The inverse recurrences expose a ternary digit at every backward step. A prospective proof can track (U,V) as a two-register 3-adic process, with the exact correction pair supplied by the verified drain-statistic table.
+
+The natural next object is a carry automaton retaining the sector, branch, R mod 3, and the moving-window low-boundary carry. The global (U,V) coordinates alone cannot be substituted naively for every shifted S-window quotient; the caveat in WindowQuotientInterface.md still applies.
+
+This is an exact reparameterization and a more explicit low-digit reduction, **not** a proof that the authentic orbit avoids the synchronization bands or a solution of BB(6).
