@@ -1815,3 +1815,16 @@ The two-register correction pair is now explicitly tied to the exact (p,q) drain
 These formulas were added to TwoCoordinate3AdicCocycle.md and broadcast in communications/broadcast/20261123T025700Z_agent1-source-stat-correction-formulas.md. They follow by substituting the exact piecewise-affine p',q' formulas into U=6q and V=2p-gamma_s. The proof that phi is a multiple of 6 uses the even sector phase on the right branch; it is not merely the left-branch identity phi=Y'-3Y.
 
 Do not infer gamma_s' from the observed finite phase set. It must come from a proved exact next-sector transition. The remaining obstruction is a boundary-carry invariant linking the source drain statistics to the shifted S-window quotients.
+
+
+### Follow-up: exact one-digit quotient and mod-3 rule
+
+The note TwoCoordinate3AdicCocycle.md now includes the exact quotient recurrences:
+- Left: U'/3 = U + 2 delta; V' = V - U + gamma_s - gamma_s' - 2T.
+- Right: U'/3 = V + gamma_s + 2 beta; V' = U - V + 2T - gamma_s - gamma_s'.
+
+Using T = 3D + 2r + c_T(s), with c_T = 19, 10, -4, 4 in LO, LE, RO, RE, and U divisible by 3, the passive low digit is:
+- Left: V' = V + gamma_s - gamma_s' - r - 2c_T(s) (mod 3).
+- Right: V' = -V + r + 2c_T(s) - gamma_s - gamma_s' (mod 3).
+
+Thus the signed-drop statistic D disappears from the low digit. This is exact conditional on the branch and next-sector phase, but is not yet an invariant; the moving-window boundary carry and exact source phase transition must be retained. Broadcast: communications/broadcast/20261123T030000Z_agent1-mod3-low-digit-rule.md.
