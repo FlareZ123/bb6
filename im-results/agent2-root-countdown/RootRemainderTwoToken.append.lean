@@ -337,7 +337,7 @@ theorem root_countdown_one_reset (n : ℕ) :
   have h5 := root_countdown_el_empty_step
     ([(0,0),(1,0)] ++ List.replicate (4*n+6) (0,0) ++ [(1,0)])
   have h6 := root_countdown_cr_zero_step
-    ([(1,0)] ++ List.replicate (4*n+6) (0,0) ++ [(1,0)]) []
+    ([(1,0)] ++ List.replicate (4*n+6) (0,0) ++ [(1,0)]) [(0,0)]
   have h7 := root_countdown_cr_one_zero_step
     (List.replicate (4*n+5) (0,0) ++ [(1,0)])
   have h7' : ReachesPlus target
@@ -346,7 +346,8 @@ theorem root_countdown_one_reset (n : ℕ) :
         [(2,0)])
       (cfg_CR_n_n
         (List.replicate (4*n+5) (0,0) ++ [(1,0)])
-        [(0,0),(5,0)]) := h7
+        [(0,0),(5,0)]) := by
+    simpa [List.replicate_succ, List.cons_append, List.append_assoc] using h7
   have h8 := root_countdown_cr_zero_sweep_pair (4*n+4) 0 [(1,0)] [(5,0)]
   have h9 := root_countdown_cr_one_empty_step [(8*n+10,0),(5,0)]
   have h10 := root_countdown_general_tail_with_suffix (8*n+13) [(5,0)] (by omega)
