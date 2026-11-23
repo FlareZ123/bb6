@@ -542,11 +542,11 @@ private theorem s3_pullback_forces_m_ge7 (j m u v : Nat)
   by_cases hge : 7≤m
   · exact hge
   · have hmle : m≤6 := by omega
-  rcases (show m=0 ∨ m=1 ∨ m=2 ∨ m=3 ∨ m=4 ∨ m=5 ∨ m=6 by omega)
-    with h0|h1|h2|h3|h4|h5|h6
-  all_goals subst m
-  all_goals simp at hstop
-  all_goals omega
+    rcases (show m=0 ∨ m=1 ∨ m=2 ∨ m=3 ∨ m=4 ∨ m=5 ∨ m=6 by omega)
+      with h0|h1|h2|h3|h4|h5|h6
+    all_goals subst m
+    all_goals simp at hstop
+    all_goals omega
 
 /-- Exact equivalence between the second strict image-family pullback
     and its single affine high-stop congruence cylinder. -/
@@ -673,7 +673,7 @@ theorem highAllowedAllS3_iff_congruence (j m : Nat) :
 theorem blank_ne_s3_parameter_congruence (j m time : Nat)
     (hjmod : j%512=319)
     (hcong : (3*m+7*j+14025)%16384=0) :
-    BB6.Agent8Section.run secNext time (some (5,1)) ≠
+    BB6.Agent8Section.run BB6.Agent46.secNext time (some (5,1)) ≠
       some (2*j+3,(2:Nat)^(2*m+2)*(j+3)-(j+3*m+5)) := by
   obtain ⟨u,v,hj,hk,hsector⟩ :=
     (s3_image_pullback_iff_congruence j m).2 ⟨hjmod,hcong⟩
