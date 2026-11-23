@@ -9,6 +9,7 @@ on:
         options:
           - raw_d0_bridge
           - legacy_padding_107_call
+          - tail_prefix_cylinders
         default: raw_d0_bridge
         required: true
 
@@ -29,7 +30,7 @@ jobs:
           python3 im-results/agent31-cryptid-boundary/unpack.py
 
       - name: Install pinned Lean 4.36.0-rc2 (legacy only)
-        if: inputs.target == 'legacy_padding_107_call'
+        if: inputs.target != 'raw_d0_bridge'
         run: |
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
@@ -52,6 +53,16 @@ jobs:
           lean -o im-results/agent35-cryptid-code/EDouble.olean im-results/agent35-cryptid-code/EDouble.lean
           lean im-results/agent32-cryptid-padding/EAllDouble.lean
           lean im-results/agent32-cryptid-padding/ETripleZero.lean
+
+      - name: Compile parameterized terminal-prefix finite-window proof (tail prefix only)
+        if: inputs.target == 'tail_prefix_cylinders'
+        env:
+          LEAN_PATH: im-results/agent32-cryptid-padding
+        run: |
+          set -euo pipefail
+          lean --version
+          lean -o im-results/agent32-cryptid-padding/TailWindowCore.olean im-results/agent32-cryptid-padding/TailWindowCore.lean
+          lean im-results/agent32-cryptid-padding/TailWindowPrefix.lean
 
       - name: Compile preserved arbitrary-suffix 107-call extension (legacy only)
         if: inputs.target == 'legacy_padding_107_call'
