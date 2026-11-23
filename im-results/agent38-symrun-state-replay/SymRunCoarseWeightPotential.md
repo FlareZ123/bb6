@@ -166,7 +166,7 @@ Add the initial entry costs (18 for F424, 1 for F412) and the separate final hal
 \]
 which is still far below \(2\uparrow\uparrow\uparrow5\). This criterion is independent of the detailed intermediate trace states; only the symbolic transition count and initial potential enter.
 
-These are much weaker than the existing \(2^{463}\) and \(2^{193}\) candidates, but they are still sufficient for non-championship. Under the repository's published lower-bound convention \(2\uparrow\uparrow\uparrow5=2\uparrow\uparrow65536\), both are far smaller: \(1{,}411{,}000<2^{21}<2^{65535}\), and \(428{,}000<2^{19}<2^{65535}\).
+These are much weaker than the existing \(2^{463}\) and \(2^{193}\) candidates, but they are still sufficient for non-championship. Under standard Knuth-arrow recursion, \(2\uparrow\uparrow\uparrow5>2\uparrow\uparrow65536>2^{65535}\); this weaker comparison is all that is needed, so both are far smaller: \(1{,}411{,}000<2^{21}<2^{65535}\), and \(428{,}000<2^{19}<2^{65535}\).
 
 ## Formalization checklist and caveats
 
