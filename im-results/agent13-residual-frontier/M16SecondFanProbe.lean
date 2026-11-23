@@ -1,5 +1,8 @@
 import CSourceBridge16
 
+set_option maxRecDepth 20000
+set_option maxHeartbeats 0
+
 namespace BB6.Agent13M16SecondFan
 
 /-- Residue of the first parent coordinate supplied by Agent 21. -/
@@ -23,15 +26,44 @@ def excludedS (r : Nat) : List Nat :=
 def rowMask (r : Nat) : Nat :=
   (excludedS r).foldl (fun acc s => acc + 2^s) 0
 
-/-- Exact M16 lookup for all n=2*r (mod 32) and all s=(F/2^n) mod 16.
-    A set bit s means the corresponding quotient parent is absent from
-    the kernel-certified M16 reachable-state table. -/
-#eval (List.range 16).map (fun r => (r, rowMask r, excludedS r))
+def rowMasks : List Nat := (List.range 16).map rowMask
 
-/-- n-classes for which every one of the sixteen parent cells is absent. -/
-#eval (List.range 16).filter (fun r => rowMask r = 65535)
+/-- Exact row masks: bit s is set precisely when the M16 quotient table
+    does not contain the corresponding c=0 parent cell. -/
+theorem rowMasks_exact :
+    rowMasks =
+      [38289,27234,19524,47320,22809,42534,17604,35215,
+       37269,25194,17484,55480,6489,9894,50244,36745] := by
+  decide +kernel
 
-/-- Total number of absent parent cells in this 16-by-16 fan. -/
-#eval (List.range 16).foldl (fun acc r => acc + (excludedS r).length) 0
+/-- No n mod 32 class has all sixteen possible parent cells absent. -/
+theorem no_full_parent_row :
+    ∀ r : Fin 16, rowMask r.val ≠ 65535 := by
+  intro r h
+  have hmem : rowMask r.val ∈ rowMasks := by
+    unfold rowMasks
+    apply List.mem_map.mpr
+    exact ⟨r.val,List.mem_range.mpr r.isLt,rfl⟩
+  rw [rowMasks_exact] at hmem
+  simp at hmem
+  omega
+
+/-- There are exactly 108 absent cells among the 256 parent cells. -/
+theorem excluded_parent_count :
+    (List.range 16).foldl
+      (fun acc r => acc + (excludedS r).length) 0 = 108 := by
+  decide +kernel
+
+#print axioms rowMasks_exact
+#print axioms no_full_parent_row
+#print axioms excluded_parent_count
 
 end BB6.Agent13M16SecondFan
+
+#eval BB6.Agent13M16SecondFan.rowMasks
+#eval (List.range 16).map
+  (fun r => (r,BB6.Agent13M16SecondFan.excludedS r))
+#eval (List.range 16).foldl
+  (fun acc r => acc + (BB6.Agent13M16SecondFan.excludedS r).length) 0
+#eval (List.range 16).filter
+  (fun r => BB6.Agent13M16SecondFan.rowMask r = 65535)
