@@ -617,7 +617,7 @@ argument.
 
 **Theorem (uniform forced fork; paper proof).** Retain
 \(n\bmod6=5\), \(J\) even, \(X=2u_J+5\),
-\(X\bmod27=18\), and assume
+\(X\bmod27=18\), require \(a\ge11\), and assume
 \[
    7\cdot2^a<4c,\qquad 1024c<1801\cdot2^a.
 \]
@@ -633,7 +633,7 @@ parent. Thus the complete inverse cone of
 first five ancestor states.
 
 **Proof.** Put \(\delta=4c-7\cdot2^a>0\)
-and \(s=2^{n-a}\). Because \(a\ge9\),
+and \(s=2^{n-a}\). Because \(a\ge11\),
 \(1024c<1801\cdot2^a\) and integrality give
 \(1024q\le1801p-1024s\). Therefore
 \[
