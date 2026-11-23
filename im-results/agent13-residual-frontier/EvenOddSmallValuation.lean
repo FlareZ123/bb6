@@ -28,7 +28,7 @@ theorem even_odd_small_valuation_parent
     (hbig : 64≤x+y+1)
     (hn64 : (x+y+1)%64≠0)
     (hedge : secNext (a,k)=some (x,y)) :
-    ∃ n : Nat, (n=0 ∨ n=2) ∧
+    ∃ n : Nat, (n=0 ∨ n=2) ∧ a < 2*k ∧
       x+y+1=2^n*(2*(a-1)+8) ∧
       (2*k-a+3)+(2*(a-1)+8)+3*n=x+2*y+2 := by
   have hp := (complete_section_inverse a k x y hy).mp hedge
@@ -118,7 +118,7 @@ theorem even_odd_small_valuation_parent
                       simp only [show (16:Nat)*4=64 by decide]
                 exact False.elim (hn64 (Nat.mod_eq_zero_of_dvd h64))
               · omega
-            exact ⟨n,by omega,hpow,hcost⟩
+            exact ⟨n,by omega,by omega,hpow,hcost⟩
 
 #print axioms even_odd_small_valuation_parent
 end BB6.Agent13SmallFan
