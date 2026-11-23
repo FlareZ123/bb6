@@ -17,7 +17,7 @@ set_option maxRecDepth 30000
 
 /-- The first three inverse source steps are forced. The possible second
 preimage of (16q+13,96q+84) contradicts b = 2 (mod 4). -/
-private theorem first_three (q : Nat)
+theorem first_three (q : Nat)
     (hr : Reach (32*q+29) (64*q+55)) :
     Reach (4*q+1) (120*q+102) := by
   obtain ⟨x1,y1,hp1,hs1⟩ :=
@@ -50,7 +50,7 @@ private theorem first_three (q : Nat)
 /-- The next pair of inverse steps is forced for q>=21: the alternative
 source preimage has a positive even first counter and an odd second
 counter, violating the actual-root even-counter theorem. -/
-private theorem to_q_minus_two (q : Nat) (hq : 21≤q)
+theorem to_q_minus_two (q : Nat) (hq : 21≤q)
     (hr : Reach (4*q+1) (120*q+102)) :
     Reach (q-2) (126*q+102) := by
   obtain ⟨x4,y4,hp4,hs4⟩ :=
@@ -82,7 +82,7 @@ private theorem to_q_minus_two (q : Nat) (hq : 21≤q)
 /-- On an odd q, the (q-2,126q+102) ancestor has its own forced
 first-branch parent. This includes the genuinely rooted small-state
 exception only when q>=21, where all counters exceed 11. -/
-private theorem odd_q_parent (q : Nat) (hq : 21≤q) (hodd : q%2=1)
+theorem odd_q_parent (q : Nat) (hq : 21≤q) (hodd : q%2=1)
     (hr : Reach (q-2) (126*q+102)) :
     ∃ x y, Reach x y ∧ 2*x+5=q ∧ y=127*q+100 := by
   obtain ⟨x,y,hp,hs⟩ :=

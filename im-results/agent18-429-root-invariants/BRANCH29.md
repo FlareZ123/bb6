@@ -1,6 +1,6 @@
 # Cryptids #429: rooted 29-mod-32 odd-reset inverse restriction
 
-**Status:** Lean source proposed; pending compiler diagnostic and complete transitive axiom audit. This is an intermediate restriction, **not** an exact #429 or BB(6) decision.
+**Status:** The uniform q mod8 theorem is Lean 4.36.0-rc2 accepted in [CI 45108772982](https://github.com/FlareZ123/bb6/actions/runs/45108772982), with transitive axioms [propext, Classical.choice, Quot.sound] and no sorryAx. The subsequent original-source and deeper mod16 refinements await their respective compiler audits. All are intermediate restrictions, **not** an exact #429 or BB(6) decision.
 
 The actual-blank local accelerator is `BB429.run`, with source transition `BB429.next` in `im-results/agent5-429-rank/BB429Rank.lean`. The exact odd-reset source family `(u,w)=(32q+29,64q+55)` was one of three surviving residue cylinders in the earlier source-connected `BB429Branch7Source.lean`.
 
@@ -33,3 +33,14 @@ n % 1024 = 895 or 1023.
 ```
 
 Indeed `x=32q+29`, `y=64q+55`, and `q>=21` follows from exponential growth in the exact equation. The original-source/local bridge forces `q%8 in {2,7}`. Since `2^(n+2)` is divisible by 1024 for `n>=18`, the equation becomes `128q+3n+131=0 (mod 1024)`; substituting `q=2,7 (mod 8)` gives `n=895,1023 (mod 1024)`, respectively. This is a genuine source-root *necessary condition*, not a nonhalting decision. The original-source closure is staged in the existing manual `agent6-429-source-chain.yml`; acceptance requires that full source compile and the transitive axiom output, not just the stand-alone local RC2 run.
+
+
+## New residual refinement: q modulo 16
+
+`BB429Branch29Mod16.lean` is a further uniform inverse argument, *source draft pending Lean preflight*. It sharpens the preceding q mod8 theorem to
+
+```
+q%16 in {2,10,15}, or q=55
+```
+
+for every q>=21 at a true-blank accelerated `(32q+29,64q+55)`. On the q=16r+7 sector, the first seven exact ancestors reach `(4r-1,2040r+990)`; when r!=3 (i.e. q!=55), its two possible source parents have positive-even first counter and odd second, except for r=1's zero/odd parent, which the `Allowed` invariant excludes. At r=3, the target first counter is 11, where exceptional source inverses invalidate the two-parent argument. This finite index is explicitly preserved rather than dropped. The original infinite q%16=7 cylinder is thus excluded except one named finite candidate. This remains an intermediate (not whole #429) theorem even if the RC2 compile succeeds.
