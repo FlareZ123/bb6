@@ -4,12 +4,13 @@ on:
   workflow_dispatch:
     inputs:
       proof_target:
-        description: 'Original root reset or standalone source suffix shift'
+        description: 'Root resets, remainder-one extensions, or source suffix shifts'
         required: false
         type: choice
         default: root-reset
         options:
           - root-reset
+          - root-remainder-one
           - suffix3-shift
           - suffix3-full
           - suffix3-word
@@ -116,7 +117,7 @@ jobs:
               print("Inserted standalone original-source fragments:",
                     [p.name for p in fragments])
               raise SystemExit(0)
-          if os.environ.get("PROOF_TARGET") not in ("", "root-reset"):
+          if os.environ.get("PROOF_TARGET") not in ("", "root-reset", "root-remainder-one"):
               raise SystemExit("invalid proof target")
 
           root = root_path.read_text()
@@ -137,7 +138,7 @@ jobs:
               "\n".join(source[:-1]) + "\n\n" + root.rstrip() +
               "\n\n" + reset.rstrip() + "\n\n" + ending + "\n"
           )
-          print("Appended root countdown + remainder-two proof fragments.")
+          print("Appended root countdown and remainder proof fragments.")
           print("Applied h5/h6 prefix and general-tail h7 endpoint corrections.")
           PY
           git diff --check
@@ -198,6 +199,16 @@ jobs:
           import BusyBeaver.BB6.Accelerations.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA
           #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.s3_universal_word_suffix_shift
           #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.s3_iterated_word_suffix_shift
+          EOF
+          elif [[ "${PROOF_TARGET:-root-reset}" == "root-remainder-one" ]]; then
+            cat > RootResetAudit.lean <<'EOF'
+          import BusyBeaver.BB6.Accelerations.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA
+          #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.root_chain_to_D65_2
+          #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.root_countdown_two_reset
+          #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.root_countdown_general_tail_with_suffix
+          #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.root_countdown_one_reset
+          #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.root_countdown_one_five_reset
+          #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.root_countdown_two_reset_five_suffix
           EOF
           elif [[ "${PROOF_TARGET:-root-reset}" == "suffix3-full" ]]; then
             cat > RootResetAudit.lean <<'EOF'
