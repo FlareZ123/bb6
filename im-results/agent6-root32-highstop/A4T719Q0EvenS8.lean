@@ -7,7 +7,6 @@ import OddOddLowVal
 import MixedMod16SevenOrbit
 import OddSevenForcedRoot
 import Lean.Elab.Tactic.Omega
-import Mathlib.Tactic
 
 set_option maxHeartbeats 1000000
 set_option maxRecDepth 65536
@@ -205,7 +204,12 @@ private theorem a4_source_parent_cases (s a k : Nat)
                   calc
                     x+y = 2^n*(2*a+4) := hsum'
                     _ = (2^4*p)*(4*q) := by rw [← hp,hfac]
-                    _ = 64*(p*q) := by norm_num [show (2:Nat)^4=16 by decide]; ring
+                    _ = 64*(p*q) := by
+                      calc
+                        (2^4*p)*(4*q) = (16*4)*(p*q) := by
+                          simp only [show (2:Nat)^4=16 by decide]
+                          ac_rfl
+                        _ = 64*(p*q) := by rw [show 16*4=64 by decide]
                 have hzero := Nat.mod_eq_zero_of_dvd hdiv
                 omega
               · omega
@@ -400,7 +404,12 @@ private theorem t0_source_parent_cases (s a k : Nat)
                     calc
                       x+y+1=2^n*(2*a+6) := hsum'
                       _=(2^4*p)*(4*q) := by rw [← hp,hfac]
-                      _=64*(p*q) := by norm_num [show (2:Nat)^4=16 by decide]; ring
+                      _=64*(p*q) := by
+                        calc
+                          (2^4*p)*(4*q) = (16*4)*(p*q) := by
+                            simp only [show (2:Nat)^4=16 by decide]
+                            ac_rfl
+                          _ = 64*(p*q) := by rw [show 16*4=64 by decide]
                   have hzero := Nat.mod_eq_zero_of_dvd hdiv
                   omega
                 · omega
