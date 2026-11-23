@@ -423,3 +423,24 @@ Current incarnation: Agent 13, original lease claim `2026-11-23T16:56:00.255Z`; 
 - The M32 integration is a necessary high-gateway refinement only. It does not decide the remaining Machine C blank-root existential, does not establish a global six-state upper bound, and does not solve BB(6).
 - After the M16 valuation proof passes, send Agent21 the exact low-valuation exclusions. Then inspect the remaining Machine C root-decision bottleneck and coordinate with Agent42/Agent21 rather than repeating finite quotient enumeration.
 - Local shell/Python attempts to reconstruct Lean failed with concrete tool errors; GitHub CI has been the successful Lean 4.36.0-rc2 execution path. Do not waste further time retrying the same local runtime setup without a changed environment.
+
+
+## Final checkpoint and orderly release (2026-11-23T18:06:23.781Z)
+
+The original lease claim was `2026-11-23T16:56:00.255Z`; the measured age has reached 70 minutes. This incarnation is performing the required orderly release. Do not refresh or reuse this lease.
+
+### Completed, verified results
+
+- **M32 high-gateway integration and strictness:** CI run `45227845153` passed. `CThreeSixM32Integration.lean` proves `blank_halts_iff_six_m32`; `M32EightCellStrictness.lean` proves all eight lifts of `j % 4 = 0, m % 32 = (3*j+13) % 32` pass the full pre-M32 `Agent11SixCriterion.highAllowed` gate but fail `highAllowedM32`. The result and proof outline are in `im-results/agent13-residual-frontier/M32EightCellStrictness.md`.
+- **M16 second-parent row census:** CI run `45231264816` passed. `M16SecondFanProbe.lean` kernel-checks the 16 row masks, the 108/256 absent-cell count, and the no-full-row theorem. No (n\bmod32) row has all 16 parent cells excluded. Full table and caveat are in `M16SecondFanCensus.md`.
+- **M16 valuation-level fan theorem:** standalone CI run `45232028892` passed. `M16SecondFanValuation.lean` kernel-checks that for every (d\ge4) and odd (q), the (r=1) ((n=2)) parent is not excluded, and gives the exact low-valuation q residues for which the entire fan is excluded: d=0: {7,15}; d=1: {5,13}; d=2: {1,5,9,11,13}; d=3: {3,7,11,15}. For (F=519z+73), the corresponding z cylinders are respectively mod 16 {2,10}, mod 32 {7,23}, mod 64 {5,13,29,45,61}, and mod 128 {25,57,89,121}. These are quotient-only exclusions; `seen=true` is not a reachability proof. Whether the low-d cylinders are incremental over `Agent11Joint.lowAllowed` remains unresolved.
+- Human-readable synthesis is in `im-results/agent13-residual-frontier/README.md`, `M32EightCellStrictness.md`, and `M16SecondFanCensus.md`.
+- Agent42 received the M32 strictness result. Agent21 received the M16 row census and the confirmed valuation-level result.
+
+### Remaining objective and next actions
+
+- **BB(6) is not solved.** The M32 work strengthens a necessary Machine C high-gateway filter but leaves the unbounded source-authentic root-decision existential. No global upper bound or exact value of (S(6)) or (Sigma(6)) has been established.
+- Next, compare the 13 low-d M16 z-cylinders against the existing Agent11 low sieve to determine whether they add any new exclusion. Do not spend further effort trying to eliminate the complete M16 parent fan at (d\ge4): the (r=1) witness theorem rules that out for this quotient.
+- Then return to the Machine C root-decision bottleneck, coordinating with Agent21/Agent42 and reusing the committed M32 source integration rather than reconstructing it.
+- Local shell/Python Lean reconstruction was unavailable in this runtime; the successful checks used GitHub Actions with Lean 4.36.0-rc2.
+
