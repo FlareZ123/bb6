@@ -193,7 +193,8 @@ private theorem branch9_divisibility (t q r v K : Nat)
           (3*4)*2^N = 3*(4*2^N) := by rw [Nat.mul_assoc]
           _ = 3*(2^N*4) := by rw [Nat.mul_comm 4 (2^N)]
       _ = 3*2^(N+2) := by rw [←hpowN]
-      _ = 3*(2^K*2^(N+2-K)) := by rw [hsplitN,Nat.pow_add]
+      _ = 3*2^(K+(N+2-K)) := by rw [←hsplitN]
+       _ = 3*(2^K*2^(N+2-K)) := by rw [Nat.pow_add]
       _ = 2^K*(3*2^(N+2-K)) := by
         calc
           3*(2^K*2^(N+2-K)) = (3*2^K)*2^(N+2-K) := by rw [←Nat.mul_assoc]
@@ -208,7 +209,8 @@ private theorem branch9_divisibility (t q r v K : Nat)
           (3*4)*2^J = 3*(4*2^J) := by rw [Nat.mul_assoc]
           _ = 3*(2^J*4) := by rw [Nat.mul_comm 4 (2^J)]
       _ = 3*2^(J+2) := by rw [←hpowJ]
-      _ = 3*(2^K*2^(J+2-K)) := by rw [hsplitJ,Nat.pow_add]
+      _ = 3*2^(K+(J+2-K)) := by rw [←hsplitJ]
+       _ = 3*(2^K*2^(J+2-K)) := by rw [Nat.pow_add]
       _ = 2^K*(3*2^(J+2-K)) := by
         calc
           3*(2^K*2^(J+2-K)) = (3*2^K)*2^(J+2-K) := by rw [←Nat.mul_assoc]
@@ -222,8 +224,9 @@ private theorem branch9_divisibility (t q r v K : Nat)
     omega
   have hmul_sub : 2^K*P-2^K*Q=2^K*(P-Q) := by
     have hp : P=Q+(P-Q) := by omega
-    rw [hp,Nat.mul_add]
-    omega
+    calc
+      2^K*P-2^K*Q = (2^K*Q+2^K*(P-Q))-2^K*Q := by rw [hp,Nat.mul_add]
+      _ = 2^K*(P-Q) := Nat.add_sub_cancel_left _ _
   have hdiff : 12*2^N-12*2^J = 2^K*(P-Q) := by
     rw [h12N,h12J]
     exact hmul_sub
