@@ -121,6 +121,7 @@ private theorem odd_odd_sum4_parent (a k x y : Nat)
                 have hfac : 2*(a-1)+6 = 2*(a+2) := by omega
                 have hfour : 4∣(2*(a-1)+6) := by
                   rw [hfac]
+                  have haEven : a%2=0 := haeven
                   have hmod : (a+2)%2=0 := by omega
                   have hdiv : 2∣a+2 := Nat.dvd_of_mod_eq_zero hmod
                   rcases hdiv with ⟨q,hq⟩
@@ -223,6 +224,8 @@ private theorem even_odd_sumplus1_mod8_4_parent (a k x y : Nat)
                   have hfour : 4∣(2*(a-1)+8) := by
                     have hform : 2*(a-1)+8=2*(a+3) := by omega
                     rw [hform]
+                    have hmodlt : a%2<2 := Nat.mod_lt a (by omega)
+                    have haOdd : a%2=1 := by omega
                     have hmod : (a+3)%2=0 := by omega
                     have hdiv : 2∣a+3 := Nat.dvd_of_mod_eq_zero hmod
                     rcases hdiv with ⟨q,hq⟩
