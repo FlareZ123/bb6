@@ -1,6 +1,6 @@
 # Full-rectangle synchronization language for machine #623
 
-**Status:** exact finite-automaton construction plus finite authentic-root diagnostic. Intermediate: it does not prove the all-time root language.
+**Status:** exact finite-automaton construction, four-residue criterion, closed-form generic-word density, and finite authentic-root diagnostic. Intermediate: none proves the all-time authentic-root language.
 
 ## Key separation
 
@@ -114,6 +114,10 @@ These are precisely the two linear residuals appearing in the left/right termina
 
 `DangerousResidualSCC.lean` proves the two coordinate identities symbolically with `omega` and checks every internal carry edge, including both 0- and 2-sign-extension labellings, by kernel computation. It compiles locally with Lean 4.36.0-rc2.
 
+
+## Exact synchronization-language density
+
+[ExactSynchronizationDensity.md](ExactSynchronizationDensity.md) proves analytically that, for every ternary digit-pair word length \(n\ge4\), **exactly \(3^{2n}-30\cdot3^n+291\)** of the \(3^{2n}\) words synchronize both full L/R rectangles. The proof is an explicit four-event inclusion–exclusion argument over the residue criterion; [count_sync_words.js](count_sync_words.js) independently enumerates the small cases. This is a count of *all words*, not authentic root windows. It makes the empirical synchronization frequency less probative of a universal invariant and pinpoints why authentic source compatibility is essential.
 
 ## Unimodular two-coordinate reduction
 
