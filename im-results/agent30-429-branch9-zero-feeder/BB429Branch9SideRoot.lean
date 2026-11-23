@@ -28,13 +28,13 @@ theorem side_parent_k_mod32 (x y k : Nat)
     k%32=19 ∨ k%32=25 ∨ k%32=27 := by
   have hyodd : y % 2 = 1 := by omega
   have hkodd : k % 2 = 1 := by
-    by_contra h
-    have hkeven : k % 2 = 0 := by omega
-    have hxeven : x % 2 = 0 := by omega
-    obtain ⟨n,hn⟩ := hr
-    have h8 := BB429RootEven8.rooted_positive_even_eight
-      n x y hn (by omega) hxeven
-    omega
+    by_cases hkeven : k % 2 = 0
+    · have hxeven : x % 2 = 0 := by omega
+      obtain ⟨n,hn⟩ := hr
+      have h8 := BB429RootEven8.rooted_positive_even_eight
+        n x y hn (by omega) hxeven
+      omega
+    · omega
   have hnot5 : k % 8 ≠ 5 := by
     intro h5
     have hall := reach_allowed x y hr
@@ -63,7 +63,7 @@ theorem side_parent_k_mod32 (x y k : Nat)
 private theorem pow_mod32_zero (e : Nat) (he : 5 ≤ e) :
     (2:Nat)^e % 32 = 0 := by
   have heq : e = 5+(e-5) := by omega
-  rw [heq, pow_add, show (2:Nat)^5 = 32 by decide]
+  rw [heq, Nat.pow_add, show (2:Nat)^5 = 32 by decide]
   omega
 
 /-- The symbolic S-parent exact equations imply the uniform modular
