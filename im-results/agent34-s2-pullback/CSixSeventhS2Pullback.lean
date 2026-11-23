@@ -430,5 +430,8 @@ theorem q_even_h5_high_parameter_not_CReach (c w : Nat) :
 #print axioms q_even_high_parameter_no_blank
 #print axioms q_even_high_parameter_not_CReach
 #print axioms s2_q_even_parameter_classes_disjoint
+#print axioms q_even_h5_high_parameter_no_blank
+#print axioms q_even_h5_high_parameter_not_CReach
+#print axioms q_even_h5_progression_in_parameter_cylinder
 
 end BB6.Agent34S2Pullback
