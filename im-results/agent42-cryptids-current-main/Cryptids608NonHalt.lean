@@ -81,7 +81,7 @@ theorem cover_r1 (bound : Nat) : Cover (DecidedBelow bound) cylinder_r1 := by
   rw [heq]
   exact Or.inl literal_r1_never
 
-local instance depth4ResidualOpenDecidable (m : Machine) :
+noncomputable local instance depth4ResidualOpenDecidable (m : Machine) :
     Decidable (depth4ResidualAudit.open m) :=
   FrontierAudit.openDecidable depth4ResidualAudit m
 
