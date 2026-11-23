@@ -286,26 +286,13 @@ theorem sweepBB_weight_bound_sharp (L R : List SymTok) :
   simp [symStateWeight, stateTokenCount, symStateNumSum] at h ⊢
   omega
 
-theorem listFieldMax_le_listNumSum (xs : List SymTok) :
-    listFieldMax xs ≤ listNumSum xs := by
-  induction xs with
-  | nil => simp [listFieldMax, listNumSum]
-  | cons t xs ih =>
-    rw [listFieldMax_cons]
-    have htok : tokFieldMax t ≤ tokNumSum t := by
-      cases t <;> simp [tokFieldMax, tokNumSum]
-    have hsum : listNumSum (t :: xs) = tokNumSum t + listNumSum xs := by
-      simp [listNumSum]
-    rw [hsum]
-    omega
-
 theorem sweepBB_field_max_le (L R : List SymTok) :
-    symStateFieldMax (sweepBB L R) ≤
+    stateFieldMax (sweepBB L R) ≤
       listNumSum L + listNumSum R + 2 * L.length + 5 := by
   have hsum := sweepBB_num_sum_bound L R
   have hL := listFieldMax_le_listNumSum (sweepBB L R).2.1
   have hR := listFieldMax_le_listNumSum (sweepBB L R).2.2
-  simp [symStateFieldMax, symStateNumSum] at hsum hL hR ⊢
+  simp [stateFieldMax, symStateNumSum] at hsum hL hR ⊢
   omega
 
 #print axioms sweepBB_length_bound
