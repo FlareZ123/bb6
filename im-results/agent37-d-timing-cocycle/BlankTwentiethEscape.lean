@@ -1,6 +1,7 @@
 import Lean.Elab.Tactic.Omega
 import BlankNineteenthRejoin
 import ExceptionalE7ThirdReturnEscape
+import DRegularFast
 
 set_option maxHeartbeats 100000000
 set_option maxRecDepth 55000
@@ -13,14 +14,24 @@ def seed20 : DRegular.L :=
   ⟨64*BB6.Agent2NineteenthRoot.t19+113,0,0⟩
 
 def terminal2040 : DRegular.L :=
-  (DRegular.run 2040 seed20).getD ⟨9,0,0⟩
+  (BB6.DRegularFast.fastRun 2040 seed20).getD ⟨9,0,0⟩
 
 def t20 : Nat := (terminal2040.a-7)/9
+
+/-- The twentieth seed is a canonical pure-unary section. -/
+theorem seed20_canon : DRegular.Canon seed20 := by
+  constructor
+  · dsimp [seed20]
+    omega
+  · right
+    rfl
 
 /-- Exact DRegular state and residue after the nineteenth E/A reentry. -/
 theorem terminal2040_certificate :
     DRegular.run 2040 seed20 = some ⟨9*t20+7,5,1⟩ ∧
-      t20 % 27 = 4 := by decide
+      t20 % 27 = 4 := by
+  rw [BB6.DRegularFast.fastRun_correct 2040 seed20 seed20_canon]
+  decide
 
 theorem terminal2040_exact :
     DRegular.run 2040 seed20 = some ⟨9*t20+7,5,1⟩ :=
