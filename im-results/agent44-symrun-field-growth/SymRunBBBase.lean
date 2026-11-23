@@ -1,11 +1,12 @@
+import BusyBeaver.BB6.Halt.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH
+import BusyBeaver.BB6.Halt.M_1RB1RC_1LC0LF_1RF0LD_0RE1LB_1RCHHH_1LD0RA
+
 /-!
 Copyright (c) 2026 FlareZ123. All rights reserved.
 Minimal exact-source helper closure for the BB-sweep potential proof.
 Extracted from the source-audit work while excluding unrelated legacy lemmas
 whose exact-source proofs are still under repair.
 -/
-import BusyBeaver.BB6.Halt.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH
-import BusyBeaver.BB6.Halt.M_1RB1RC_1LC0LF_1RF0LD_0RE1LB_1RCHHH_1LD0RA
 
 set_option maxRecDepth 200000
 
@@ -329,10 +330,6 @@ theorem stepElemBB_num_sum_le (L R : List SymTok) :
     | repB1 k => simp [stepElemBB, symStateNumSum, listNumSum, tokNumSum]
     | rep2 p => simp [stepElemBB, symStateNumSum, listNumSum, tokNumSum]
     | rep12 m => simp [stepElemBB, symStateNumSum, listNumSum, tokNumSum]
-
-
-
-
 
 /-!
 ## BB-sweep combined field potential
