@@ -221,6 +221,53 @@ theorem deepIndex_step (m t : Nat) :
     simp only [h,ite_false,Nat.mul_add,Nat.mul_one]
     ac_rfl
 
+/-- For every depth used by the earlier dyadic-tower sieve, the deep
+    family is in the zero residue instead of the forbidden 2^(n+2). -/
+theorem deep_prior_tower_zero (m t n : Nat)
+    (hn : n+4≤2*m+2) :
+    (deepIndex m t+3*m+3)%2^(n+4)=0 := by
+  have hq4 : allOddQ m%4=1 := by
+    simpa [allOddQ] using m8Geom4_mod_four (m+1) (by omega)
+  have hb : 3≤allOddB m := by
+    have hB := allOdd_BQ m
+    omega
+  have hj : deepIndex m t+3*m+3 =
+      allOddB m*(m+deepTail m t+1) := by
+    dsimp [deepIndex]
+    have hBsub : allOddB m-3+3=allOddB m := by omega
+    have hmul : (allOddB m-3)*(m+1)+3*(m+1)=
+        allOddB m*(m+1) := by
+      calc
+        (allOddB m-3)*(m+1)+3*(m+1)=
+          (allOddB m-3+3)*(m+1) :=
+          (Nat.add_mul (allOddB m-3) 3 (m+1)).symm
+        _=allOddB m*(m+1) := by rw [hBsub]
+    calc
+      (allOddB m-3)*(m+1)+allOddB m*deepTail m t+3*m+3 =
+        (allOddB m-3)*(m+1)+3*(m+1)+allOddB m*deepTail m t := by omega
+      _ = allOddB m*(m+1)+allOddB m*deepTail m t := by rw [hmul]
+      _ = allOddB m*(m+deepTail m t+1) := by
+        rw [show m+deepTail m t+1=(m+1)+deepTail m t by omega]
+        simp only [Nat.mul_add]
+  have hdvd : 2^(n+4)∣allOddB m := by
+    obtain ⟨e,he⟩ : ∃e, 2*m+2=n+4+e :=
+      ⟨2*m+2-(n+4),by omega⟩
+    refine ⟨2^e,?_⟩
+    dsimp [allOddB]
+    rw [he,Nat.pow_add]
+  rw [hj]
+  rcases hdvd with ⟨q,hq⟩
+  exact Nat.mod_eq_zero_of_dvd ⟨q*(m+deepTail m t+1),by rw [hq]; ac_rfl⟩
+
+theorem deep_prior_tower_avoided (m t n : Nat)
+    (hn : n+4≤2*m+2) :
+    ¬((deepIndex m t+3*m+3)%2^(n+4)=2^(n+2)) := by
+  have hz := deep_prior_tower_zero m t n hn
+  have hp : 0<2^(n+2) := Nat.pow_pos (by decide)
+  omega
+
+#print axioms deep_prior_tower_avoided
+
 #print axioms deep_every_odd_unreachable
 #print axioms deepIndex_step
 end BB6.Agent15Research
