@@ -1,6 +1,6 @@
 # Machine C: S2 and q-even high-stop pullbacks
 
-**Status:** formal Lean sources and an exact six-all iff extension have been added; CI acceptance is pending. These are root-unreachability results for two explicit high-stop parameter cylinders. They do not determine BB(6).
+**Status:** the S2/q-even original-source pullback modules passed Lean 4.36.0-rc2 CI in run [45161729614](https://github.com/FlareZ123/bb6/actions/runs/45161729614), with no `sorryAx` in the exported theorem profiles. The S3-preserving six-all integration and its strict-nonredundancy proof are added but await the focused original-source run [45163833154](https://github.com/FlareZ123/bb6/actions/runs/45163833154). These are root-unreachability results for two explicit high-stop parameter cylinders. They do not determine BB(6).
 
 ## High-stop coordinates
 
@@ -79,7 +79,7 @@ The existing blank_ne_s2q_even_image theorem then excludes the high-stop state a
 
 The two cylinders are disjoint: their induced m-residues differ by \(65536\pmod{131072}\) for every \(u\). Their combined density is \(9\cdot2^{-29}\).
 
-The current formal iff removes these parameter cylinders from the high predicate, but the separate nonredundancy claim—that every removed parameter also passed the immediately preceding highAllowed predicate—has not yet been proved in this dossier. The densities above are exact lattice densities, not a measured fraction of previously surviving candidates.
+The new `CSixSeventhSixAllS2.lean` proof establishes that both cylinders were admitted by the entire preceding S3-extended high predicate, not merely by the older six-all base. Both imply the common residue lift `m = 7210 + 9728u (mod 16384)`, where `u=(j-319)/512`; hence `(3*m+7*j+14025) mod 16384 = 5120`, so they are disjoint from the earlier S3 exclusion (whose residue is zero). The base residue `j=319 (mod 512), m=42 (mod 512)` also passes the prior C58/all-depth/late-fast/diagonal/m=0/six-sector filters: `m=2 (mod 4)`, `m=10 (mod 32)`, `(j+25)=24 (mod 32)`, and the six-sector normalizer takes no inverse edge. Thus the new cylinders are genuinely additional to S3. The densities above are exact lattice densities, not a measured fraction of previously surviving candidates.
 
 ## Formal artifact
 
@@ -92,4 +92,4 @@ CSixSeventhS2Pullback.lean contains:
 
 CSixSeventhSixAllS2.lean adds both congruence exclusions to the existing six-all high predicate and proves blank_halts_iff_six_both_s2q, preserving the exact low branch and fixed-target root test. The exact iff extension is still pending CI acceptance.
 
-The source imports Agent 4's CSixSeventhS2 and CSixSeventhS2QEven modules. The existing agent4-c-three-ancestry.yml workflow is being extended to compile this file after those dependencies. Until that CI run passes, treat the repository artifact as a proof candidate rather than an accepted certificate.
+The source imports Agent 4's CSixSeventhS2 and CSixSeventhS2QEven modules. The existing `agent4-c-three-ancestry.yml` workflow source-checks the S2/q-even pullback modules. The existing `agent11-c-diagonal-late.yml` workflow now has an opt-in `s2_sixall_only` path that skips independent M0/S31-only extensions while retaining the exact C58/six-all dependency closure needed for this integration. Until run 45163833154 passes, treat the S3-preserving iff and nonredundancy theorem as proof candidates rather than accepted certificates.
