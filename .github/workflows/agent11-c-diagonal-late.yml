@@ -741,6 +741,20 @@ jobs:
             echo "REJECTED: six/seven C58 integration contains sorryAx"
             exit 1
           fi
+          # S2_SIXALL_ONLY skips the broad M0/S31 sweep above, but the
+          # final six-all wrapper still needs the exact six-sector criterion.
+          # Build its complete import closure in isolation, then expose it
+          # alongside the already-compiled C58/S2 modules.
+          python3 "${GITHUB_WORKSPACE}/tools/lean_compile_closure.py" \
+            "${GITHUB_WORKSPACE}/im-results/agent11-c-low58/CThreeSixAllCriterion.lean" \
+            --workdir /tmp/a11-s2-sixall-criterion --jobs 4 --lean "$(command -v lean)" \
+            2>&1 | tee CThreeSixAllCriterionClosure.log
+          if grep -q sorryAx CThreeSixAllCriterionClosure.log; then
+            echo "REJECTED: exact six-sector criterion closure contains sorryAx"
+            exit 1
+          fi
+          export LEAN_PATH="/tmp/a11-s2-sixall-criterion:$PWD"
+
           # Compose the s3 source-image exclusion with the latest merged
           # C58 + odd-diagonal + m=0 + six-sector exact halting criterion.
           cp ${GITHUB_WORKSPACE}/im-results/agent4-c-seven-image/CSixSeventhSixAll.lean .
