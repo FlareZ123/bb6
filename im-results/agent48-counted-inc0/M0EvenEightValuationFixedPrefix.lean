@@ -19,7 +19,7 @@ def bridgeMidWithBit (bit : Bool) : FConfig :=
   { state := 3
     head := -14
     marked := if bit then
-      (-14) :: [-12,-11,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,0,2,3]
+      [-12,-11,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,0,-14,2,3]
       else [-12,-11,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,0,2,3] }
 
 /-- The first 44 moves never read the variable cell at -14. -/
@@ -33,9 +33,9 @@ def bridgeInside44 (x : Int) : Bool := decide (-13 ≤ x ∧ x ≤ 3)
 
 private theorem bridge_heads44_all (bit : Bool) :
     (List.range 44).all (fun k =>
-      bridgeInside44
-        ((fRun tm2 k (bridgeStartWithBit bit)).getD
-          (bridgeStartWithBit bit)).head) = true := by
+      match fRun tm2 k (bridgeStartWithBit bit) with
+      | none => true
+      | some f => bridgeInside44 f.head) = true := by
   cases bit <;> decide
 
 theorem bridge_heads44 (bit : Bool) (k : Nat) (hk : k < 44) :
@@ -43,8 +43,10 @@ theorem bridge_heads44 (bit : Bool) (k : Nat) (hk : k < 44) :
       ((fRun tm2 k (bridgeStartWithBit bit)).getD
         (bridgeStartWithBit bit)).head = true := by
   have hall := List.all_eq_true.mp (bridge_heads44_all bit) k
-    (by simp [List.mem_range,hk])
-  exact hall
+    (List.mem_range.mpr hk)
+  cases hrun : fRun tm2 k (bridgeStartWithBit bit) with
+  | none => simp [hrun,bridgeStartWithBit,bridgeInside44]
+  | some f => simpa [hrun] using hall
 
 
 /-- Lift the fixed 44-step prefix to any source tape agreeing on [-13,3].
@@ -53,7 +55,7 @@ theorem bridge_prefix44_at (T : Int → Bool) (h : Int) (bit : Bool)
     (hmatch : ∀ x, bridgeInside44 x = true →
       T (h+x) = decide (x ∈ (bridgeStartWithBit bit).marked)) :
     run tm2 44 ⟨3,h,T⟩ =
-      some ⟨3,h-14,frameAt T h bridgeInside44 (bridgeMidWithBit bit)⟩ := by
+      some (frameAt T h bridgeInside44 (bridgeMidWithBit bit)) := by
   simpa [bridgeStartWithBit,bridgeMidWithBit] using
     bridgeAt T h bridgeInside44
       (bridgeStartWithBit bit) (bridgeMidWithBit bit) 44 rfl
@@ -88,12 +90,6 @@ theorem state3_zero_exit4 (T : Int → Bool) (h : Int)
   simp [run, rawStep, readSlot, applyMove, hleft, h0, hright,
     lookup30_zero, lookup20_zero, lookup40_zero, lookup00_zero,
     neq1, neq2, neq3, hh0, hh1]
-  constructor
-  · omega
-  · funext x
-    by_cases hx0 : x = h-1 <;> by_cases hx1 : x = h <;>
-      by_cases hx2 : x = h+1 <;>
-      simp [afterZeroExit4,hx0,hx1,hx2,hleft,h0,hright,neq1,neq2,neq3]
 
 #print axioms bridge_prefix44
 #print axioms bridge_heads44
