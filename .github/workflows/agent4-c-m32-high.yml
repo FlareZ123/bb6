@@ -63,6 +63,7 @@ jobs:
             --jobs 4 \
             --lean "$(command -v lean)" \
             --override BounceParity=im-results/agent46-c-jump/BounceParity.lean
+            --override CLine=tools/CLine.lean
       - name: Kernel-check the exact CThreeSix plus M32 high criterion
         shell: bash
         run: |
