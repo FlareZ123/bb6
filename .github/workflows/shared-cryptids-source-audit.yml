@@ -43,6 +43,11 @@ on:
         required: true
         type: string
         default: 'v4.35.0-rc4'
+      verify_six_root_graft:
+        description: 'Compile and axiom-audit the six pinned upstream NonHalt roots grafted into the local depth-four frontier'
+        required: false
+        type: boolean
+        default: false
       bridge_path:
         description: 'Repo-relative Lean source proof importing original module and dependency'
         required: true
@@ -66,6 +71,7 @@ jobs:
       UPSTREAM_SHA: ${{ inputs.upstream_sha }}
       LEAN_TOOLCHAIN: ${{ inputs.lean_toolchain }}
       DEPENDENCY_VERSION: ${{ inputs.dependency_version }}
+      VERIFY_SIX_ROOT_GRAFT: ${{ inputs.verify_six_root_graft }}
     steps:
       - uses: actions/checkout@v4
       - name: Validate manual inputs
@@ -92,6 +98,14 @@ jobs:
             test -f "$EXTRA_DEPENDENCY_PATH"
             test "$EXTRA_DEPENDENCY_PATH" != "$DEPENDENCY_PATH"
             test "$EXTRA_DEPENDENCY_PATH" != "$BRIDGE_PATH"
+          fi
+          if [[ "$VERIFY_SIX_ROOT_GRAFT" == "true" ]]; then
+            test "$ORIGINAL_MODULE" = "BusyBeaver.Bridge"
+            test "$EXTRA_ORIGINAL_MODULE" = "Cryptids.Machines"
+            test "$UPSTREAM_SHA" = "3647718b5df22e1a61462dec0376bd204526285a"
+            test "$LEAN_TOOLCHAIN" = "leanprover/lean4:v4.36.0-rc2"
+            test "$DEPENDENCY_VERSION" = "v4.36.0-rc2"
+            test "$BRIDGE_PATH" = "im-results/agent42-cryptids-current-main/Cryptids608NonHalt.lean"
           fi
       - name: Install original Cryptids Lean version
         shell: bash
@@ -176,7 +190,50 @@ jobs:
           if [[ -n "$EXTRA_ORIGINAL_MODULE" ]]; then
             lake build "$EXTRA_ORIGINAL_MODULE"
           fi
+      - name: Compile six-root Cryptids frontier graft (explicitly requested only)
+        if: ${{ inputs.verify_six_root_graft }}
+        working-directory: /tmp/cryptids
+        shell: bash
+        run: |
+          set -euo pipefail
+          lake build \
+            BusyBeaver.BB6.NonHalt.M_1RB0LC_1LC0RB_0LE0LD_1LCHHH_0RA1LF_1LA1LF \
+            BusyBeaver.BB6.NonHalt.M_1RB0RA_0RC0LD_1LA1RF_1LE1LD_1LB1RE_HHH1RA \
+            BusyBeaver.BB6.NonHalt.M_1RB0RA_0RC0LE_1LD1RF_1LB1RD_1LD1LE_HHH1RA \
+            BusyBeaver.BB6.NonHalt.M_1RB0RA_1RC0LC_0LD1RF_1RA1LE_1LD0LB_0REHHH \
+            BusyBeaver.BB6.NonHalt.M_1RB1RA_0LC0RA_1RC1LD_0LB1LE_1LF0RC_HHH0LD \
+            BusyBeaver.BB6.NonHalt.M_1RB1RA_1RC1LB_0LD0RA_1RF1LE_HHH1LF_1LC0LF
+          mkdir -p BB6Agent42
+          cp "$GITHUB_WORKSPACE/im-results/agent8-coverage-contract/Frontier.lean" BB6Agent42/
+          for m in RayClosed RayChecker RayEntry RayFinite RayTurnExample RayFiniteOracle FiniteHalting Symmetry ZeroMaskOracle FiniteDecision; do
+            cp "$GITHUB_WORKSPACE/im-results/agent8-coverage-contract/$m.lean" BB6Agent42/
+          done
+          for m in RayMacro EntryMacroOracle EntryMacroLeft; do
+            cp "$GITHUB_WORKSPACE/im-results/agent6-fresh-glider/$m.lean" BB6Agent42/
+          done
+          cp "$GITHUB_WORKSPACE/im-results/agent44-drift-closure/DirectedDrift.lean" BB6Agent42/
+          for m in FrontierAudit FrontierMass FrontierExtract FrontierUnique FrontierManifestMass RelativeTape CryptidsTapeAdapter; do
+            cp "$GITHUB_WORKSPACE/im-results/agent4-coverage-smoke/$m.lean" BB6Agent42/
+          done
+          for m in ZeroPathAudit ControlPathAudit ZeroRowAudit PhysicalTraceAudit FiniteLassoOracle LassoTraceAudit ResidualFrontierManifest; do
+            cp "$GITHUB_WORKSPACE/im-results/agent32-zero-prefix-global/$m.lean" BB6Agent42/
+          done
+          cp "$GITHUB_WORKSPACE/im-results/agent8-coverage-contract/IncrementalAudit.lean" BB6Agent42/
+          cp "$GITHUB_WORKSPACE/$BRIDGE_PATH" BB6Agent42/Cryptids608NonHalt.lean
+          export LEAN_PATH=BB6Agent42
+          for m in Frontier RayClosed RayChecker RayEntry RayFinite RayTurnExample RayFiniteOracle FiniteHalting Symmetry RayMacro EntryMacroOracle EntryMacroLeft DirectedDrift ZeroMaskOracle FiniteDecision FrontierAudit FrontierMass ZeroPathAudit ControlPathAudit ZeroRowAudit PhysicalTraceAudit FiniteLassoOracle LassoTraceAudit FrontierExtract FrontierUnique FrontierManifestMass ResidualFrontierManifest IncrementalAudit RelativeTape CryptidsTapeAdapter; do
+            lake env lean -o "BB6Agent42/$m.olean" "BB6Agent42/$m.lean"
+          done
+          mkdir -p /tmp/cryptids-source-audit
+          graft_log=/tmp/cryptids-source-audit/Cryptids608NonHalt.log
+          lake env lean -o BB6Agent42/Cryptids608NonHalt.olean BB6Agent42/Cryptids608NonHalt.lean 2>&1 | tee "$graft_log"
+          if grep -q 'sorryAx' "$graft_log"; then
+            echo "::error::six-root graft proof graph depends on sorryAx"
+            exit 1
+          fi
+          echo "Six-root graft compiled; no sorryAx in exported axiom profiles."
       - name: Prove against unchanged source definitions and audit axioms
+        if: ${{ !inputs.verify_six_root_graft }}
         working-directory: /tmp/cryptids
         shell: bash
         run: |
