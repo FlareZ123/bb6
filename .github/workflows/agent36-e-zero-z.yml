@@ -34,6 +34,7 @@ jobs:
           E=im-results/agent26-cryptid-e-gate
           lean -o "$B/Boundary.olean" "$B/Boundary.lean"
           lean -o "$B/A1100.olean" "$B/A1100.lean"
+          lean -o "$B/A110111.olean" "$B/A110111.lean" | tee -a axioms.log
           for module in DoubleZero TripleUniversalBase TripleUniversalCore TripleUniversalWalk TripleUniversal TenPump TokenCode TripleIteration SixOnes; do
             lean -o "$A/$module.olean" "$A/$module.lean"
           done
@@ -85,5 +86,6 @@ jobs:
           lean -o "$X/Y3SafeNormalizer.olean" "$X/Y3SafeNormalizer.lean" | tee -a axioms.log
           lean "$X/Y3CylinderLift.lean" | tee -a axioms.log
           lean -o "$X/YSafeNormalizer.olean" "$X/YSafeNormalizer.lean" | tee -a axioms.log
-          lean "$X/AY2P2Regular.lean" | tee -a axioms.log
+          lean -o "$X/AY2P2Regular.olean" "$X/AY2P2Regular.lean" | tee -a axioms.log
+          lean "$X/AY1P2Regular.lean" | tee -a axioms.log
           if grep -E 'sorryAx|_native.native_decide' axioms.log; then exit 1; fi
