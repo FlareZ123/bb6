@@ -42,9 +42,9 @@ theorem m0EvenEightBridge_exact :
 /-- Every pre-transition head remains in the finite bridge window. -/
 theorem m0EvenEightBridge_heads :
     (List.range 63).all (fun k =>
-      m0EvenEightInside
-        ((fRun tm2 k m0EvenEightBridgeStart).getD
-          m0EvenEightBridgeStart).head) = true := by
+      match fRun tm2 k m0EvenEightBridgeStart with
+      | none => true
+      | some f => m0EvenEightInside f.head) = true := by
   decide
 
 /-- The base n=8 word has the four low blocks d1,d1,d1,d0. -/
@@ -178,7 +178,7 @@ def m0EvenEightSourceLeftSuffix (L q : Nat) : List Bool :=
   markerWord 0 ++ d0 ++ d1 ++ d1 ++ d1 ++ d0 ++
     binDec (L-4) (q/2) ++ lh
 
-private theorem m0EvenEightSourceLeftFacing
+theorem m0EvenEightSourceLeftFacing
     (L q a : Nat) (hL : 4 ≤ L) (hqodd : q % 2 = 1)
     (hbound : 8*q < 2^L) :
     s1LeftFacing L (8*q) 0 a 0 =
