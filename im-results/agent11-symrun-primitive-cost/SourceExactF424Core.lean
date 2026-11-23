@@ -30,14 +30,26 @@ namespace BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution
 
 open BusyBeaver.RleStackEngine BusyBeaver.SymRunEngine
 
-/-- A successor-indexed form of the exact reachability constructor.
-    Writing the index as Nat.succ n avoids asking elaboration to invert
-    the stuck expression ?n + 1 when apply sees a numeral such as 8. -/
-theorem reachesIn_step_left_succ {n : Nat} {c₁ c₂ c₃ : Cfg (Fin 2) (Fin 6)}
-    (hstep : step target_tm c₁ = some c₂)
-    (hrest : ReachesIn target_tm n c₂ c₃) :
+/-- Totalized deterministic successor. The default branch is used only to
+    make the function total; every use below carries an isSome proof. -/
+def nextCfg (c : Cfg (Fin 2) (Fin 6)) : Cfg (Fin 2) (Fin 6) :=
+  (step target_tm c).getD default
+
+theorem step_eq_some_nextCfg (c : Cfg (Fin 2) (Fin 6))
+    (hstep : (step target_tm c).isSome) :
+    step target_tm c = some (nextCfg c) := by
+  cases h : step target_tm c with
+  | none => simp [h] at hstep
+  | some c' => simp [nextCfg, h]
+
+/-- Successor-indexed reachability avoids an unconstrained intermediate
+    configuration metavariable in repeated primitive-step witnesses. -/
+theorem reachesIn_step_left_succ {n : Nat} {c₁ c₃ : Cfg (Fin 2) (Fin 6)}
+    (hstep : (step target_tm c₁).isSome)
+    (hrest : ReachesIn target_tm n (nextCfg c₁) c₃) :
     ReachesIn target_tm (Nat.succ n) c₁ c₃ := by
-  simpa only [Nat.add_one] using BusyBeaver.ReachesIn.step_left hstep hrest
+  have hnext := step_eq_some_nextCfg c₁ hstep
+  simpa only [Nat.add_one] using BusyBeaver.ReachesIn.step_left hnext hrest
 
 macro "stepWithin" : tactic => `(tactic| (
   try simp only [isVarA_tm, ite_true, ite_false, dif_pos, dif_neg,
@@ -49,7 +61,7 @@ macro "stepWithin" : tactic => `(tactic| (
   refine reachesIn_step_left_succ ?_ ?_
   · first
     | rfl
-    | simp [ReachesIn, multiStep, target_tm, target, machine,
+    | simp [step, target_tm, target, machine,
         isVarA_tm, ite_true, ite_false, dif_pos, dif_neg,
         BusyBeaver.Cfg.headRight, BusyBeaver.Cfg.headLeft, Turing.Tape.move,
         pow_succ_list, pow_zero_list, cons_append_list, nil_append_list,
@@ -58,7 +70,8 @@ macro "stepWithin" : tactic => `(tactic| (
         default_tail, encM_nil, encM_cons_zero, encM_cons_run, encLeft_cons_head,
         cons_one_encLeft_tail, encRight_cons_head, cons_one_encRight_tail,
         encM_cons_run_head, cons_one_encM_cons_run_tail]
-  · simp only [isVarA_tm, ite_true, ite_false, dif_pos, dif_neg,
+  · simp only [nextCfg, step, target_tm, target, machine, Option.getD_some,
+      isVarA_tm, ite_true, ite_false, dif_pos, dif_neg,
       BusyBeaver.Cfg.headRight, BusyBeaver.Cfg.headLeft, Turing.Tape.move,
       pow_succ_list, pow_zero_list, cons_append_list, nil_append_list,
       listblank_append_cons, listblank_append_nil, Turing.ListBlank.head_cons,
@@ -456,7 +469,7 @@ theorem sweep_BB_B1_exact (k : Nat) (L R : List MItem) :
     have h1 := step_BB_r0_r1_exact (repBlock [.run 0, .run 1] k ++ L) R
     have h2 := ih (.run 0 :: .run 1 :: R)
     convert reachesIn_trans h1 h2 using 1
-    all_goals (try simp only [Nat.add_one, repBlock_succ_right, List.append_assoc])
+    all_goals (try simp only [repBlock_succ_right, List.append_assoc])
     all_goals omega
 
 /-- F424 BB/C2 sweep: exactly 14 primitive steps per repeated block. -/
@@ -481,7 +494,7 @@ theorem sweep_BB_C2_exact (p : Nat) (L R : List MItem) :
     have h1 := step_BB_r1_r0_r1_comm_exact (repBlock [.run 1, .run 0, .run 1] p ++ L) R
     have h2 := ih (.run 0 :: .run 1 :: .run 1 :: R)
     convert reachesIn_trans h1 h2 using 1
-    all_goals (try simp only [Nat.add_one, repBlock_succ_right, List.append_assoc])
+    all_goals (try simp only [repBlock_succ_right, List.append_assoc])
     all_goals omega
 
 /-- F424 BB/C12 sweep: exactly 25 primitive steps per repeated block. -/
@@ -516,7 +529,7 @@ theorem sweep_BB_C12_exact (m : Nat) (L R : List MItem) :
     have h3 := ih (.run 0 :: .run 1 :: .run 0 :: .run 1 :: .run 1 :: R)
     have h12 := reachesIn_trans h1 h2
     convert reachesIn_trans h12 h3 using 1
-    all_goals (try simp only [Nat.add_one, repBlock_succ_right, List.append_assoc])
+    all_goals (try simp only [repBlock_succ_right, List.append_assoc])
     all_goals omega
 
 /-- F424 CB/B1 sweep: exactly 21 primitive steps per repeated block. -/
@@ -546,7 +559,7 @@ theorem sweep_CB_B1_exact (k : Nat) (L R : List MItem) :
           (repBlock [.run 0, .run 1] k ++ R)
     have h2 := ih (.run 0 :: .run 1 :: L)
     convert reachesIn_trans h1 h2 using 1
-    all_goals (try simp only [Nat.add_one, repBlock_succ_right, List.append_assoc])
+    all_goals (try simp only [repBlock_succ_right, List.append_assoc])
     all_goals omega
 
 /-- F424 CB/B2 sweep: exactly 24 primitive steps per repeated block. -/
@@ -590,7 +603,7 @@ theorem sweep_CB_B2_exact (p : Nat) (L R : List MItem) :
     have h3 := ih (.run 1 :: .run 0 :: .run 1 :: L)
     have h12 := reachesIn_trans h1 h2
     convert reachesIn_trans h12 h3 using 1
-    all_goals (try simp only [Nat.add_one, repBlock_succ_right, List.append_assoc])
+    all_goals (try simp only [repBlock_succ_right, List.append_assoc])
     all_goals omega
 
 /-- F424 CB/B12R sweep: exactly 45 primitive steps per repeated block. -/
@@ -652,7 +665,7 @@ theorem sweep_CB_B12R_exact (m : Nat) (L R : List MItem) :
     have h3' := ih (.run 1 :: .run 0 :: .run 1 :: .run 0 :: .run 1 :: L)
     have h12 := reachesIn_trans (reachesIn_trans h1 h2) h3
     convert reachesIn_trans h12 h3' using 1
-    all_goals (try simp only [Nat.add_one, repBlock_succ_right, List.append_assoc])
+    all_goals (try simp only [repBlock_succ_right, List.append_assoc])
     all_goals omega
 
 #print axioms step_BB_zero_exact
