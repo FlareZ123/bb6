@@ -36,7 +36,11 @@ The inspected module proves the deterministic checkpoint equalities:
 - `runBatches 100 ckpt10 = ckpt15`;
 - `runBatches 80 ckpt15` is halted.
 
-So the certificate performs exactly 380 batches, i.e. at most **9,500 RLE transitions**. These are not 9,500 TM steps: one RLE transition may contract a variable-length primitive path.
+So the first F289 certificate performs exactly 380 batches, i.e. at most **9,500 RLE transitions**. These are not 9,500 TM steps: one RLE transition may contract a variable-length primitive path.
+
+The second live F289 root,
+`M_1RB1RF_0RC0RE_0RD1RA_1LE0LA_1LB0LD_0RDHHH`,
+uses five 120-batch chunks and a final 140-batch chunk: 740 batches, or at most **18,500 RLE transitions**. Its checkpoint chain is `ckpt0 → ckpt6 → ckpt12 → ckpt18 → ckpt24 → ckpt30 → halted`.
 
 ## Primitive costs already exposed by the source rules
 
@@ -126,7 +130,7 @@ A direct function from the existing `ReflTransGen` proof to a Nat is not availab
 
 ## First end-to-end F289 accumulator run (computational candidate)
 
-A JavaScript/BigInt port of the upstream state transitions was run from `ckpt0`. This applies only to the rooted RLE `1RB0RE_1RC0RA_0LD0LB_0LA1LE_1LC1LF_0LA---` (the first F289 row in `upstream-exact-overlap.tsv`); the local ledger reuses family label F289 for a different RLE as well, which is **not** covered by this run. The second F289 row's module uses the **same 19 primitive `execute n` rule costs** (checked by pairing each `rule_*` theorem with its tactic count) and the same shared RLE engine, but starts at `ckpt0 = ⟨.C, .raw [], [.z 1], false⟩` and uses five 120-batch chunks plus a final 140-batch chunk (at most 18,500 RLE transitions). The cost-soundness lemmas should therefore be reusable. `simulate_f289_rle.js` has now been generalized to parse either F289 module's own `ckpt0`, checkpoint chain, and `chunk_*` schedule, while asserting the shared 19-cost signature; however, the second module has **not yet been run**, so no second bound is claimed. Run `node simulate_f289_rle.js /path/to/M_1RB1RF_0RC0RE_0RD1RA_1LE0LA_1LB0LD_0RDHHH.lean` to compute it. It reproduced the Lean proof's three explicit checkpoints **exactly**: `runBatches 100 ckpt0 = ckpt5`, the next 100 batches equal `ckpt10`, and the next 100 equal `ckpt15`. The final 80-batch run reached `halted = true`. This validates the state-update port against the proof's checkpoint literals; it does not prove the primitive cost semantics. The full state simulator and branch-cost accumulator are preserved in [simulate_f289_rle.js](simulate_f289_rle.js); run it with Node against the exact upstream F289 proof module (commit `3647718b5df22e1a61462dec0376bd204526285a`).
+A JavaScript/BigInt port of the upstream state transitions was run from `ckpt0`. This applies only to the rooted RLE `1RB0RE_1RC0RA_0LD0LB_0LA1LE_1LC1LF_0LA---` (the first F289 row in `upstream-exact-overlap.tsv`); the local ledger reuses family label F289 for a different RLE as well, which is **not** covered by this run. The second F289 row's module uses the **same 19 named primitive rule costs** and the same shared RLE engine, but starts at `ckpt0 = ⟨.C, .raw [], [.z 1], false⟩` and uses five 120-batch chunks plus a final 140-batch chunk (at most 18,500 RLE transitions). A first CI attempt exposed a validator bug: the old script compared raw source-order `execute n` lists against the class-field order, although the theorem-name-to-cost mapping was identical. The script now audits each `rule_*` theorem by name, treats `rule_BR_nil` as the `rule_B_nil` alias, and separately checks the one-step `init_reaches_stack` cost. The corrected replay succeeded in [CI run 45180798535](https://github.com/FlareZ123/bb6/actions/runs/45180798535), matched all five intermediate checkpoints, and ended halted. It reproduced the Lean proof's three explicit checkpoints **exactly**: `runBatches 100 ckpt0 = ckpt5`, the next 100 batches equal `ckpt10`, and the next 100 equal `ckpt15`. The final 80-batch run reached `halted = true`. This validates the state-update port against the proof's checkpoint literals; it does not prove the primitive cost semantics. The full state simulator and branch-cost accumulator are preserved in [simulate_f289_rle.js](simulate_f289_rle.js); run it with Node against the exact upstream F289 proof module (commit `3647718b5df22e1a61462dec0376bd204526285a`).
 
 Accumulating the branch-specific bounds above over the at-most 9,500 RLE transitions (the loop stops calling `rleStep` once the halted flag is set) gave:
 
@@ -135,11 +139,36 @@ Accumulating the branch-specific bounds above over the at-most 9,500 RLE transit
 - third 100 batches: `124842490278774511382713615548623788982769809`;
 - final 80 batches: `1003323861768105046986224874806868631470122277577`.
 
-The sum is
+The sum is the **RLE-transition cost sum**
+`N = 1003448704258405241756955830449585121679083838719 < 2^160`.
+The source proof also takes one primitive step in `init_reaches_stack` before `ckpt0), so the complete primitive-step candidate is `N+1 = 1003448704258405241756955830449585121679083838720`. Since `2^160 = 1461501637330902918203684832716283019655932542976`, the strict `n+1≤B` requirement is still satisfied with slack `458052933072497676446729002266697897976848704256`.
 
-`N = 1003448704258405241756955830449585121679083838719 < 2^160`. In particular, `N+1 = 1003448704258405241756955830449585121679083838720`, while `2^160 = 1461501637330902918203684832716283019655932542976`; the slack for the `n+1≤B` convention in `DecidedBelow` is `458052933072497676446729002266697897976848704256`.
+This is a **computational candidate upper bound**, not yet a theorem. If every branch cost is shown sound against the primitive TM transition relation, the first F289 machine reaches its halting state in at most `N+1` primitive steps, including the initial source-to-stack transition. The bound is already far below the TM63 tower-scale lower-bound expression, so it would suffice for a `DecidedBelow` leaf once the cost soundness and exact table transfer are formalized. Do not add F289 to the certified frontier on the basis of this simulation alone.
 
-This is a **computational candidate upper bound**, not yet a theorem. If every branch cost is shown sound against the primitive TM transition relation, the F289 machine reaches its halting state in at most `N` primitive steps. The bound is already far below the TM63 tower-scale lower-bound expression, so it would suffice for a `DecidedBelow` leaf once the cost soundness and exact table transfer are formalized. Do not add F289 to the certified frontier on the basis of this simulation alone.
+
+## Second F289 end-to-end accumulator replay (computational candidate)
+
+The corrected name-indexed script was run against the exact second F289 module at upstream commit `3647718b5df22e1a61462dec0376bd204526285a` in [CI run 45180798535](https://github.com/FlareZ123/bb6/actions/runs/45180798535). The run:
+- parsed RLE `1RB1RF_0RC0RE_0RD1RA_1LE0LA_1LB0LD_0RDHHH`;
+- checked all 19 named primitive rule costs against the source theorems, including the `rule_BR_nil := rule_B_nil` alias;
+- checked `init_reaches_stack` has exactly one primitive step;
+- replayed all 18,500 RLE transitions through the five checkpoint literals `ckpt6`, `ckpt12`, `ckpt18`, `ckpt24`, and `ckpt30`;
+- reached the final halted state.
+
+The six chunk bounds were:
+1. `1724680719097766021408040530663` (120 batches, `ckpt0 → ckpt6`);
+2. `14039024050947366338187144312225222365474367` (120, `ckpt6 → ckpt12`);
+3. `87449181964252787543177016957072539598502800356767` (120, `ckpt12 → ckpt18`);
+4. `602268854723326478762652439723887760350363137223325183816` (120, `ckpt18 → ckpt24`);
+5. `53342105669046226234904710261225146666525575497594622324027059833` (120, `ckpt24 → ckpt30`);
+6. `126276899598505474034431441069542948364223497533749631986191720748701360` (140, `ckpt30 → halted`).
+
+The RLE-transition cost sum is
+`126276952940611745349599848496735249080302155982948794561796401307306806`.
+Adding the one initial primitive step gives the candidate
+`126276952940611745349599848496735249080302155982948794561796401307306807`,
+which has 237 binary digits and is therefore strictly below `2^237`. This is **computational evidence only**: it validates the state replay and the name-indexed primitive cost table, not the branchwise theorem that each cost bounds the corresponding primitive TM path.
+
 
 ## Prefer an evaluated cost accumulator over a global invariant
 
