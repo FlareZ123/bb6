@@ -86,8 +86,15 @@ private theorem R_parent_fan_q3 (q a k : Nat)
       · by_cases hlow : 2*k≤a
         · have hcase : x=a-2*k ∧ y=2*k+2 := by
             simpa [sectionPreimageAll,ha0,ha1,hk0,hlow] using hp
-          rcases hcase with ⟨_,hyy⟩
-          omega
+          rcases hcase with ⟨hxx,hyy⟩
+          have hA : a=RpxQ q := by
+            dsimp [RpxQ,x,y,RxQ,RyQ]
+            omega
+          have hK : k=RpyQ q := by
+            dsimp [RpyQ,y,RyQ]
+            omega
+          left
+          exact ⟨hA,hK⟩
         · by_cases haeven : a%2=0
           · have hcase : 4≤y ∧ ∃ n : Nat,
                 x+y=2^n*(2*(a-1)+6) ∧
