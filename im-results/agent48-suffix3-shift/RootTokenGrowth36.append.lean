@@ -11,14 +11,16 @@ No sorry, axiom, or source-mode simulator. NOT COMPILED UNTIL CI SUCCEEDS.
 
 /-- Publicly denotable Cfg alias for the source-private tok_DR state family. -/
 def s3_tok_growth_cfg (s : ℕ) : Cfg (Fin 2) (Fin 6) :=
-  tok_DR [2,0] [(s,0)] [0]
+  ((([1] : List (Fin 2)) ^ 2) +>
+    ((0 : Fin 2) >> ((0 : Fin 2) >> encLeft [(s,0)])))
+      {{D}}> ((1 : Fin 2) >> ((0 : Fin 2) >> default))
 
 /-- A uniform original-TM 36-step token trajectory advancing parameter s by 5. -/
 theorem s3_tok_growth_36 (s : ℕ) :
     ReachesPlus target
       (s3_tok_growth_cfg s)
       (s3_tok_growth_cfg (s+5)) := by
-  unfold s3_tok_growth_cfg tok_DR
+  unfold s3_tok_growth_cfg
   texecute 36
 
 /-- Repeat the strictly positive source run k+1 times. -/
