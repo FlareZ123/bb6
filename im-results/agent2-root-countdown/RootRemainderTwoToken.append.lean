@@ -417,3 +417,79 @@ theorem root_countdown_one_five_reset (n : ℕ) :
                 (ReachesPlus.trans h8
                   (ReachesPlus.trans h9
                     (ReachesPlus.trans h10 h11')))))))))
+
+
+/-!
+## Exact DL-right-one boundary for the suffix [0,0,2]
+
+This private theorem records the precise token configuration reached from
+D_n(1;[0,0,2]). The two zeros are consumed by DL-zero and one EL-zero
+transition, respectively; no third EL-zero transition occurs before the
+right-one branch.
+-/
+
+private theorem root_d1_dl_one_to_tok_DR (L : List (ℕ × ℕ)) :
+    ReachesPlus target
+      (cfg_DL_0_n L [(1,0)])
+      (tok_DR [2,0] [] (L.map Prod.fst)) := by
+  unfold cfg_DL_0_n tok_DR
+  rw [encLeft_mod1 1 0 [], Nat.mod_one 0, encLeft_d1_s0 [],
+    encRight_eq_nat L, encTokens_succ, encTokens_succ,
+    encTokens_zero, encTokens_zero, encTokens_nil]
+  texecute 4
+
+private theorem root_d1_suffix_two_to_tok_DR (n : ℕ) :
+    ReachesPlus target
+      (cfg_CR_n_n [(0,0)]
+        (List.replicate (4*n+5) (0,0) ++ [(1,0),(0,0),(0,0),(2,0)]))
+      (tok_DR [2,0] []
+        ([0,0,1] ++ List.replicate (4*n+6) 0 ++ [1])) := by
+  let L0 := List.replicate (4*n+7) (0,0) ++ [(1,0)]
+  let L1 := [(0,0),(1,0)] ++ List.replicate (4*n+6) (0,0) ++ [(1,0)]
+  let L2 := [(0,0),(0,0),(1,0)] ++ List.replicate (4*n+6) (0,0) ++ [(1,0)]
+  have h1 := root_countdown_prefix_with_tail_fixed n 1
+    [(0,0),(0,0),(2,0)]
+  have h2 := root_countdown_el_zero_sweep (4*n+5)
+    [(0,0),(1,0)] [(1,0),(0,0),(0,0),(2,0)]
+  have h2' : ReachesPlus target
+      (cfg_EL_n_n [(0,0),(1,0)]
+        (List.replicate (4*n+6) (0,0) ++ [(1,0),(0,0),(0,0),(2,0)]))
+      (cfg_EL_n_n L0 [(1,0),(0,0),(0,0),(2,0)]) := by
+    dsimp [L0]
+    simpa [List.replicate_succ, List.cons_append, List.append_assoc] using h2
+  have h3 := root_countdown_el_positive_step 0 L0
+    [(0,0),(0,0),(2,0)]
+  have h4 := root_countdown_dl_zero_step L0 [(0,0),(2,0)]
+  have h4' : ReachesPlus target
+      (cfg_DL_0_n L0 [(0,0),(0,0),(2,0)])
+      (cfg_EL_n_n L1 [(0,0),(2,0)]) := by
+    dsimp [L0, L1]
+    simpa [List.replicate_succ, List.cons_append, List.append_assoc,
+      bumpPairHead] using h4
+  have h5 := root_countdown_el_zero_step L1 [(2,0)]
+  have h6 := root_countdown_el_positive_step 1 L2 []
+  have h7 := root_d1_dl_one_to_tok_DR L2
+  have h5' : ReachesPlus target
+      (cfg_EL_n_n L1 [(0,0),(2,0)])
+      (cfg_EL_n_n L2 [(2,0)]) := by
+    dsimp [L1, L2]
+    simp [List.cons_append, List.append_assoc]
+    exact h5
+  have h6' : ReachesPlus target
+      (cfg_EL_n_n L2 [(2,0)])
+      (cfg_DL_0_n L2 [(1,0)]) := h6
+  have h7' : ReachesPlus target
+      (cfg_DL_0_n L2 [(1,0)])
+      (tok_DR [2,0] [] (L2.map Prod.fst)) := h7
+  have h7'' : ReachesPlus target
+      (cfg_DL_0_n L2 [(1,0)])
+      (tok_DR [2,0] []
+        ([0,0,1] ++ List.replicate (4*n+6) 0 ++ [1])) := by
+    dsimp [L2]
+    simpa [List.cons_append, List.append_assoc] using h7'
+  exact ReachesPlus.trans h1
+    (ReachesPlus.trans h2'
+      (ReachesPlus.trans h3
+        (ReachesPlus.trans h4'
+          (ReachesPlus.trans h5'
+            (ReachesPlus.trans h6' h7'')))))
