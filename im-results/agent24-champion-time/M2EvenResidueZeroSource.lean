@@ -1,6 +1,7 @@
 import S1Encoder
 import CountedSweep
 import M2EvenResidueZeroFrames
+import CountedQ4Prefix
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -19,6 +20,7 @@ open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent8M2EvenResidueZero
 open BB6Coverage.Agent24LBinDecHRun
 open BB6Coverage.Agent24M2EvenFrames
+open BB6Coverage.Agent6Q4Prefix
 
 set_option maxHeartbeats 1000000
 
@@ -113,7 +115,7 @@ theorem s1M2InitialLeftOnes (L k a b : Nat) (h : Int) :
     simp [s1LeftFacing,binDec_zero,List.append_assoc]
   rw [hleft,sideBit_append]
   by_cases hiA : i<3*a
-  · simp [d1pow_length,hiA,sideBit_d1pow a i hiA]
+  · simpa only [d1pow_length, if_pos hiA] using sideBit_d1pow a i hiA
   · have hcases : i=3*a ∨ i=3*a+1 := by omega
     rcases hcases with h|h
     · subst i
@@ -124,8 +126,8 @@ theorem s1M2InitialLeftOnes (L k a b : Nat) (h : Int) :
 /-- The original S1 right stream begins with a blank cell. -/
 theorem s1M2RightZero (L k a b : Nat) (h : Int) :
     (s1Config L (8*k) 2 a 0 b h).tape (h+1) = false := by
-  rw [s1Config_right_cell]
-  simp [s1PhysicalRight_source,sideBit]
+  have hc := s1Config_right_cell L (8*k) 2 a 0 b h 0
+  simpa [s1PhysicalRight_source,sideBit] using hc
 
 /-- The 14-cell setup input window is already present in the source S1
 left stream after the first 3*a+2 ones.  The counted sweep itself preserves
@@ -151,7 +153,8 @@ theorem m2ZeroSetup_match_after_initial_sweep
     (s1Config L (8*k) 2 a 0 b h).tape h
     (h-(3*a+2)+x) (by omega)
   rw [hpres,hcoord]
-  rw [s1Config_left_cell]
+  have hcell := s1Config_left_cell L (8*k) 2 a 0 b h (3*a+2+i)
+  rw [hcell]
   have hsuffix := s1M2Setup_suffix L k a hL hk i hi
   have hmarker := m2SetupBits_marker i hi
   rw [hsuffix,hmarker]
@@ -170,7 +173,9 @@ theorem m2ZeroInitialSweep (L k a b : Nat) (h : Int)
   have hs := counted_left_sweep (3*a+2)
     (s1Config L (8*k) 2 a 0 b h).tape h hon hr
   have hnum : 3*(3*a+2)=9*a+6 := by omega
-  simpa [hnum] using hs
+  change run tm2 (9*a+6) ⟨3,h,(s1Config L (8*k) 2 a 0 b h).tape⟩ =
+    some ⟨3,h-(3*a+2),sweptLeft (3*a+2) (s1Config L (8*k) 2 a 0 b h).tape h⟩
+  simpa only [hnum, Nat.cast_add, Nat.cast_mul, Nat.cast_ofNat] using hs
 
 /-- Compose the source-level 9*a+6 left sweep with the framed 44-step
 setup.  This is the first two phases of the m=2, n=8*k candidate. -/
