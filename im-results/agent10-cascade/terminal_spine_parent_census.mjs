@@ -159,3 +159,36 @@ console.log("low_valuation_unique_chain", JSON.stringify({
   discrepancies: badConeCases, maximumParentDepth: maxDepth
 }));
 if (badConeCases) process.exitCode = 1;
+
+
+// Uniform 2-edge theorem in the previously residual n%6=5, X%27=18
+// phase. The full grammar must give exactly [odd t=1, even], then no
+// predecessors of the last state, for the stated large-q subwindow.
+let twoEdgeCases = 0, twoEdgeFailures = 0;
+for (let n = lo; n <= hi; n++) {
+  if (n % 6 !== 5) continue;
+  const t = terminal(n);
+  const c = BigInt(2*n+3);
+  if (t.J % 2 !== 0 || 64n*c < 121n*b2(t.a) ||
+      t.X % 27n !== 18n) continue;
+  const p = b2(n);
+  const b0 = 4n * (t.X / 9n) - p - BigInt(n) - 2n;
+  const Y = 2n*b0 + 5n;
+  if (Y % 9n === 0n) continue;
+  twoEdgeCases++;
+  const pb = allResetParents(t.u);
+  const pc = allResetParents(b0);
+  const b1 = 2n*b0-p-BigInt(n-3);
+  const pd = allResetParents(b1);
+  if (pb.length!==1 || pb[0].h!==b0 ||
+      pb[0].kind!=="odd" || pb[0].t!==1 ||
+      pc.length!==1 || pc[0].h!==b1 ||
+      pc[0].kind!=="even" || b1===2n || pd.length!==0) {
+    console.error("TWO-EDGE MISMATCH",n);
+    twoEdgeFailures++;
+  }
+}
+console.log("two_edge_terminal_exclusion", JSON.stringify({
+  gateRange:[lo,hi], cases:twoEdgeCases, discrepancies:twoEdgeFailures
+}));
+if (twoEdgeFailures) process.exitCode=1;
