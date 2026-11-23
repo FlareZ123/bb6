@@ -30,26 +30,40 @@ This is an index label for the P7E1E residual only. Since 195936 mod 65536 = 648
 
 The canonical all-depth A4 fan is in [Root32HighStopA4ParentFan.md](../agent3-c-bounce-inverse/Root32HighStopA4ParentFan.md), Sections 1–5 and the secondary q=0 fan.
 
-For (t=719+1024s), the A4 parent fan has exactly the depth parameters (0,2). Its depth-two parent is odd/odd with coordinate sum (2\pmod4), so it is excluded by the original-source odd-right image invariant. The remaining depth-zero parent is
-[
-T_0(s)=
-(1773156457998+2524388401920s,,
-1647558417041+2345578327680s).
-]
-Thus A4 reachability implies (T_0(s)) reachability.
+For t=719+1024s, the A4 parent fan has exactly the depth parameters 0 and 2.
 
-The exact source-parent fan of (T_0) also has only depths (0,2), because
-[
-H=T_{0,x}+T_{0,y}+1
-=3420714875040+4869966729600s
-]
-has (v_2(H)=5), and the cost equation forces an even depth. The depth-two parent is odd/odd with sum (2\pmod4), hence forbidden. The depth-zero parent is
-[
-P_0(s)=
-(1710357437517+2434983364800s,,
-1678957927278+2390280846240s).
-]
-It has odd/even coordinates, right coordinate at least six, and sum (3\pmod8). The source-certified six-even-right inverse therefore gives the exact reachability equivalence
+The depth-two parent is
+```
+E(s)=(443289114498+631097100480s,
+      2312492088788+3292223978400s).
+```
+It is even/even with coordinate sum 2 mod 4. Its complete even/even source fan forces the direct predecessor
+```
+D(s)=(2755781203284+3923321078880s,
+      1156246044393+1646111989200s).
+```
+Here D_x is even, D_y is odd and at least five, and (D_x+D_y+1) is 2 mod 4. The complete `section_preimage_all_iff` grammar proves that D(s) has no source predecessor. Thus the depth-two A4 branch is excluded. The remaining depth-zero parent is
+```
+T0(s)=(1773156457998+2524388401920s,
+       1647558417041+2345578327680s).
+```
+Therefore A4 reachability implies T0(s) reachability.
+
+The exact source-parent fan of T0 also has only depths 0 and 2, because
+```
+H=T0_x+T0_y+1=3420714875040+4869966729600s
+```
+has 2-adic valuation exactly 5, and the cost equation forces an even depth. Its depth-two parent is
+```
+P2(s)=(427589359377+608745841200s,
+       2320341966345+3303398633040s).
+```
+P2 is odd/odd with sum 2 mod 4, hence forbidden by the global blank-section odd-right image invariant. The depth-zero parent is
+```
+P0(s)=(1710357437517+2434983364800s,
+       1678957927278+2390280846240s).
+```
+It has odd/even coordinates, right coordinate at least six, and sum 3 mod 8. The source-certified six-even-right inverse therefore gives the exact reachability equivalence
 [
 CReach(T_0(s))\iff CReach(R_0(s)),
 ]
