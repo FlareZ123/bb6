@@ -47,7 +47,7 @@ private theorem s3_dl_positive (a : ℕ) (L R : List (ℕ × ℕ)) :
   rw [encLeft_mod1 (a+2) 0 R, Nat.mod_one 0,
     encLeft_succ (a+1) 0 R, encLeft_succ a 0 R,
     encLeft_run_s0 a R, encLeft_d1_s0 ((a,0)::R),
-    encLeft_run_s0 R]
+    encLeft_run_s0 a R]
   execute 4
 
 private theorem s3_dr_zero (L R : List (ℕ × ℕ)) :
@@ -58,7 +58,7 @@ private theorem s3_dr_zero (L R : List (ℕ × ℕ)) :
   rw [encRight_mod1 0 0 L, Nat.mod_one 0, encRight_d0_s0 L,
     encLeft_mod1 1 0 R, Nat.mod_one 0, encLeft_succ 0 0 R,
     encLeft_run_s0 0 R, encLeft_d1_s0 ((0,0)::R),
-    encLeft_run_s0 R]
+    encLeft_run_s0 0 R]
   execute 4
 
 private theorem s3_dr_empty (R : List (ℕ × ℕ)) :
@@ -140,7 +140,7 @@ private theorem s3_prefix (n t : ℕ) :
         (cfg_CR_n_n [] ((2,0)::tail)) := by
     simpa [s3D, tail, bumpPairHead, List.replicate_succ,
       List.cons_append, List.append_assoc] using
-      (s3_cr_zero [] (List.replicate (4*n+5) (0,0) ++ [(0,0),(t+3,0)]))
+      (s3_cr_zero [] ((0,0)::tail))
   have h2 :
       ReachesPlus target
         (cfg_CR_n_n [] ((2,0)::tail))
@@ -180,7 +180,7 @@ theorem s3_universal_suffix_shift (n t : ℕ) :
         (cfg_EL_n_n
           (List.replicate (4*n+8) (0,0) ++ [(1,0)])
           [(t+3,0)]) := by
-    simpa [List.replicate_succ, List.cons_append,
+    simpa [List.replicate_add, List.cons_append,
       List.append_assoc, Nat.add_assoc] using
       (s3_el_sweep (4*n+6) [(0,0),(1,0)] [(t+3,0)])
   have h3 := s3_el_positive (t+2)
@@ -195,8 +195,8 @@ theorem s3_universal_suffix_shift (n t : ℕ) :
         (cfg_DR_n_n [(1,0)] ((1,0)::
           (List.replicate (4*n+8) (0,0) ++ [(t,0)])))
         (s3D (n+1) t) := by
-    simpa [s3D, List.replicate_succ, List.cons_append,
-      List.append_assoc, Nat.mul_add, Nat.add_assoc] using h6
+    simpa [s3D, List.replicate_add, List.replicate_succ,
+      List.cons_append, List.append_assoc, Nat.mul_add, Nat.add_assoc] using h6
   have hchain := ReachesPlus.trans h1
     (ReachesPlus.trans h2
       (ReachesPlus.trans h3
@@ -214,5 +214,7 @@ theorem s3_iterated_suffix_shift (k n t : ℕ) :
   | succ k ih =>
       have h1 := s3_universal_suffix_shift n (t+3*(k+1))
       have h2 := ih (n+1)
-      simpa [Nat.mul_add, Nat.add_assoc, Nat.add_left_comm,
-        Nat.add_comm] using ReachesPlus.trans h1 h2
+      have ht : t + 3*((k+1)+1) = t + 3*(k+1) + 3 := by omega
+      have hn : n + ((k+1)+1) = (n+1) + (k+1) := by omega
+      rw [ht, hn]
+      exact ReachesPlus.trans h1 h2
