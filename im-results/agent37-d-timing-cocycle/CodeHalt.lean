@@ -8,7 +8,7 @@ set_option maxRecDepth 4096
 
 namespace BB6.Agent37CodeHalt
 
-open CryptidBoundary BB6.Agent35
+open CryptidBoundary
 
 /-- Original physical F/0 entry, with a general mixed A token word
     (10 or 111), followed by the earlier source-proved A halt cylinder. -/
@@ -30,10 +30,10 @@ theorem full_code_halts (k : Nat) (ws ys : List Bool) :
   dsimp [codeTime, codeInput]
   rw [run_add, prefix_A]
   change (run (CryptidA.wordCost (4*k+3) ws + 69)
-    (aBoundary (4*k+3)
+    (BB6.Agent35.aBoundary (4*k+3)
       (CryptidA.wordCode ws ++ (BB6.CryptidAHalt.haltWord ++ ys)))).st = 6
-  rw [run_add, a_code_return]
-  simpa only [aBoundary] using
+  rw [run_add, BB6.Agent35.a_code_return]
+  simpa only [BB6.Agent35.aBoundary] using
     BB6.CryptidAHalt.a_halt_69
       (false :: pairs (4*k+3+CryptidA.wordInc ws) ++ [true,true]) ys
 
@@ -46,13 +46,13 @@ theorem full_code_before_halt (k : Nat) (ws ys : List Bool) :
   rw [run_add, prefix_A]
   change
     (run (CryptidA.wordCost (4*k+3) ws + 68)
-      (aBoundary (4*k+3)
+      (BB6.Agent35.aBoundary (4*k+3)
         (CryptidA.wordCode ws ++ (BB6.CryptidAHalt.haltWord ++ ys)))).st = 5 ∧
     (run (CryptidA.wordCost (4*k+3) ws + 68)
-      (aBoundary (4*k+3)
+      (BB6.Agent35.aBoundary (4*k+3)
         (CryptidA.wordCode ws ++ (BB6.CryptidAHalt.haltWord ++ ys)))).h = true
-  rw [run_add, a_code_return]
-  simpa only [aBoundary] using
+  rw [run_add, BB6.Agent35.a_code_return]
+  simpa only [BB6.Agent35.aBoundary] using
     BB6.CryptidAHalt.a_before_halt
       (false :: pairs (4*k+3+CryptidA.wordInc ws) ++ [true,true]) ys
 
