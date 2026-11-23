@@ -103,7 +103,7 @@ theorem tapeToRelative_write_move_right (T : ExtTape) (w : ExtSymbol) :
             (Turing.Tape.write w (leftTape {{a}} rightTape))).nth 0) =
             encodeSymbol ((leftTape {{a}} rightTape).nth 1)
           rw [Turing.Tape.move_right_nth]
-          simp [Turing.Tape.write]
+          simp [Turing.Tape.write_nth]
       · constructor
         · exact by
             funext n
@@ -115,14 +115,16 @@ theorem tapeToRelative_write_move_right (T : ExtTape) (w : ExtSymbol) :
                 have hidx : (Int.negSucc (n + 1) + 1 : Int) =
                     Int.negSucc n := by omega
                 rw [hidx]
-                simp [Turing.Tape.write]
+                simp [Turing.Tape.write_nth]
         · exact by
             funext n
             rw [Turing.Tape.move_right_nth]
             have hidx : (Int.ofNat (n + 1) + 1 : Int) =
-                Int.ofNat (n + 2) := by omega
+                Int.ofNat (n + 2) := by
+              change (n + 1 : Int) + 1 = (n + 2 : Int)
+              omega
             rw [hidx]
-            simp [Turing.Tape.write]
+            simp [Turing.Tape.write_nth]
 
 /-- Mathlib's write-then-move-left operation is exactly BB6.Bridge.goLeft. -/
 theorem tapeToRelative_write_move_left (T : ExtTape) (w : ExtSymbol) :
@@ -138,7 +140,7 @@ theorem tapeToRelative_write_move_left (T : ExtTape) (w : ExtSymbol) :
             (Turing.Tape.write w (leftTape {{a}} rightTape))).nth 0) =
             encodeSymbol ((leftTape {{a}} rightTape).nth (-1))
           rw [Turing.Tape.move_left_nth]
-          simp [Turing.Tape.write]
+          simp [Turing.Tape.write_nth]
       · constructor
         · exact by
             funext n
@@ -146,19 +148,21 @@ theorem tapeToRelative_write_move_left (T : ExtTape) (w : ExtSymbol) :
             have hidx : (Int.negSucc n - 1 : Int) =
                 Int.negSucc (n + 1) := by omega
             rw [hidx]
-            simp [Turing.Tape.write]
+            simp [Turing.Tape.write_nth]
         · exact by
             funext n
             cases n with
             | zero =>
                 rw [Turing.Tape.move_left_nth]
-                simp [Turing.Tape.write]
+                simp [Turing.Tape.write_nth]
             | succ n =>
                 rw [Turing.Tape.move_left_nth]
                 have hidx : (Int.ofNat (n + 2) - 1 : Int) =
-                    Int.ofNat (n + 1) := by omega
+                    Int.ofNat (n + 1) := by
+                  change (n + 2 : Int) - 1 = (n + 1 : Int)
+                  omega
                 rw [hidx]
-                simp [Turing.Tape.write]
+                simp [Turing.Tape.write_nth]
 
 structure Positioned where
   state : ExtState
@@ -379,8 +383,14 @@ theorem A_tape_nth (n : Nat) (j : Int) :
             rw [hOne]
             exact singletonPow_replicate n
           rw [hpow, getI_replicate n j]
-          have hbound : (Int.ofNat j + 1 ≤ (n : Int)) ↔ j < n := by
-            omega
+          have hbound : ((j : Int) + 1 ≤ (n : Int)) ↔ j < n := by
+            constructor
+            · intro h
+              have h' : j + 1 ≤ n := by exact_mod_cast h
+              omega
+            · intro h
+              have h' : j + 1 ≤ n := by omega
+              exact_mod_cast h'
           simp [hbound]
   | negSucc j =>
       simp [«1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---».A,
@@ -404,7 +414,8 @@ theorem toPortfolioAbs_ofA (n : Nat) (h : Int) :
   rw [tapeToRelative_symbol]
   change encodeSymbol (((«1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---».A n []).2).nth (x - h)) = _
   rw [A_tape_nth n (x - h)]
-  simp [encodeSymbol, Int.add_comm]
+  by_cases h₁ : h < x <;> by_cases h₂ : x ≤ h + (n : Int) <;>
+    simp [encodeSymbol, Int.add_comm, h₁, h₂]
 
 /-- The external halting cylinder transfers to the exact repository D0
 configuration at the same primitive halting time. This is not a blank-root
