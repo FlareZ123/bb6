@@ -1,4 +1,26 @@
-# Cryptid D: original-source first sections and recursive zero-marker closure
+# Cryptid D: original-source packet closure, 3-adic lifting, and zero-marker recursion
+
+## New original-source exceptional Y3 packet closure and 3-adic lifting (23 November 2026)
+
+**Scope:** Prepared physical packets of the original Cryptid D six-state machine, not proven blank-reachable. Exact BB(6) and Cryptid D blank-tape halting remain open.
+
+A complete, source-sound **sufficient acceptance test** for the one-fixed-marker guarded B/E packet normalizer is now formalized in [`Y3SafeNormalizer.lean`](Y3SafeNormalizer.lean). Let (Y_3=(01)^3 11) and (d=normalizeWithCount(a,q,p).2). The predicate `terminalY3 d` accepts iff:
+
+- `d.a % 3 = 0` (A source terminal, arbitrary p/q);
+- `d.a % 3 = 2 && d.q = 0` (exhausted B source terminal);
+- `d.a % 3 = 1 && d.p = 1` (already regular E terminal);
+- `d.a % 3 = 1 && d.p = 0 && d.q % 3 = 0` (E-zero marker reduction through source theorem `Agent2MarkerTower.e_zero_q0_regular`).
+
+`safeY3 c = terminalY3 ((normalizeWithCount c).2)`; the theorem `safeY3_source` composes the exact original-machine guarded path with the terminal source return, proving that **every accepted `c` with `c.a≥4` returns to physical regular section `L`**. `p2_fixed_safe` connects the fixed-tail `M(3k+4,Q,2;0 1^6)` to this criterion after `e_two_reset`. Lean [CI 45267284097](https://github.com/FlareZ123/bb6/actions/runs/45267284097) accepted all declarations, axioms only `[propext, Quot.sound]`.
+
+**Unbounded 3-adic continuation, not just finite lookup:** [`Y3CylinderLift.lean`](Y3CylinderLift.lean) proves `lift_safe_seed`: for every (r,Q,t≥0), if `safeY3 ⟨8*r+5,0,2*Q+6⟩`, then the original physical machine started from `M(3*(r+3^(2*Q+7)*t)+4,Q,2;0 1^6)` returns to `L` in finite raw time. It uses the preexisting exact costed `Agent31PacketShift.source_path_shift`; the normalizer path count `n≤2Q+6` makes its final a-prefix lift divisible by 3, which preserves the terminal residue and pair-resource fields. **Lean CI [45267997767](https://github.com/FlareZ123/bb6/actions/runs/45267997767) succeeded**, with only `[propext,Quot.sound]`, no `sorryAx`.
+
+For (Q=0), the reproducible exact-BigInt [`q0-census.js`](q0-census.js) classifies all (3^7=2187) residues: 1254 A, 759 B-zero, 57 E-zero with q divisible by 3, and 117 E-zero residuals with q congruent 1 or 2 mod 3 (90+27). Thus the **computationally enumerated 2070/2187** seed cylinders pass the *proved sufficient criterion*. The count itself is an integer-arithmetic census, **not a kernel-checked cardinality theorem**, and 117 rejected residues are unresolved, not proven nonreturning, much less halting. In particular this is a measure of a restricted artificial source packet family, not of BB(6) tables, genuine root visits, or decided machines. For the q-zero generated family, the 3-adic source lift is universal once a base residue is accepted.
+
+Two additional disjoint **explicit exact** original-machine q-zero source cylinders were proved in [`P2K31Q0Source.lean`](P2K31Q0Source.lean): `k=81s+16` follows reset/E/B/E → E0(q=3)→L; `k=81s+31` follows reset/E/E/B → E0(q=3)→L. [Lean CI 45266668841](https://github.com/FlareZ123/bb6/actions/runs/45266668841) passed (standard axioms only). Separately, [`P2K7PhysicalReentry.lean`](P2K7PhysicalReentry.lean) assembles Agent 35's three previously source-proved k=27t+25 q-mod3 exact endpoint shapes into `all_k25_regular` and an optional physical `chain_k25_regular` prefix composition. Both new declarations individually compile and print `[propext,Quot.sound]` in [CI 45265241701](https://github.com/FlareZ123/bb6/actions/runs/45265241701); **that workflow's eventual failure is wholly later**, in unrelated `MarkerPairsTerminal.lean`, and does not discredit the successful targeted declaration checks.
+
+**Main missing step:** connect these source-admissible packet theorems to the actual Cryptid D blank-root regular-section orbit (or prove a global exclusion of halting). A source-sound accepted cylinder can coexist with a genuine blank-root excursion into a different exceptional suffix. The residual `E0(q%3=1,2)` marked-packet terminals suggest a precise new algebraic problem, but only root-connected or comprehensive closure would decide this machine.
+
 
 **Research state: 8 November 2026.** New original-machine zero-marker packet theorems and a terminating depth-recursive safe language have been **kernel-certified** against the original six-state table in [manual Lean CI 42531370805](https://github.com/FlareZ123/bb6/actions/runs/42531370805). This is intermediate synthetic-section mathematics. The blank-root D machine remains undecided, so no exact BB(6) value or upper bound follows. [Earlier research log](FULL_RESEARCH_LOG.md).
 
