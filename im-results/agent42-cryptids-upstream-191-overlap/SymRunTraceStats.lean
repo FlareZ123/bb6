@@ -2257,4 +2257,305 @@ theorem stepElemBB_num_sum_le (L R : List SymTok) :
 #print axioms stepElemBB_num_sum_le
 
 
+
+
+/-!
+## BB-sweep combined field potential
+
+The measure below is the sum of symbolic token count and numeric-field sum.
+The induction charges a run-1 bump by at most eight units, while repeat-token
+eats transfer the consumed repeat field to the returned suffix. Failed repeat
+matches are terminal and are covered by the fixed +18 allowance.
+-/
+
+theorem eatB2_num_sum_le (k : Nat) (xs : List SymTok) :
+    listNumSum (eatB2 k xs) ≤ k + listNumSum xs := by
+  simpa [eatB2] using
+    (eatFuel_num_sum_le [.item (.run 0), .item (.run 1), .item (.run 1)] .rep2 getRep2
+      (by simp [listNumSum, tokNumSum]) (by intro n; simp [tokNumSum])
+      getRep2_num 4 k xs)
+
+theorem eatB12R_num_sum_le (k : Nat) (xs : List SymTok) :
+    listNumSum (eatB12R k xs) ≤ k + listNumSum xs := by
+  simpa [eatB12R] using
+    (eatFuel_num_sum_le [.item (.run 0), .item (.run 1), .item (.run 0), .item (.run 1), .item (.run 1)]
+      .rep12 getRep12 (by simp [listNumSum, tokNumSum]) (by intro n; simp [tokNumSum])
+      getRep12_num 4 k xs)
+
+theorem eatB2_length_le (k : Nat) (xs : List SymTok) :
+    (eatB2 k xs).length ≤ xs.length + 1 := by
+  simpa [eatB2] using
+    (eatFuel_length_le [.item (.run 0), .item (.run 1), .item (.run 1)] .rep2 getRep2 4 k xs)
+
+theorem eatB12R_length_le (k : Nat) (xs : List SymTok) :
+    (eatB12R k xs).length ≤ xs.length + 1 := by
+  simpa [eatB12R] using
+    (eatFuel_length_le [.item (.run 0), .item (.run 1), .item (.run 0), .item (.run 1), .item (.run 1)]
+      .rep12 getRep12 4 k xs)
+
+theorem peelTok_length_le (t : SymTok) (xs : List SymTok) :
+    (peelTok t xs).length ≤ xs.length + 6 := by
+  cases t with
+  | item x => simp [peelTok]
+  | repB1 k =>
+    cases k with
+    | zero => simp [peelTok]
+    | succ k =>
+      cases k with
+      | zero => simp [peelTok]
+      | succ k => simp [peelTok, strictNat_eq] <;> omega
+  | rep2 p =>
+    cases p with
+    | zero => simp [peelTok]
+    | succ p =>
+      cases p with
+      | zero => simp [peelTok]
+      | succ p => simp [peelTok, strictNat_eq] <;> omega
+  | rep12 m =>
+    cases m with
+    | zero => simp [peelTok]
+    | succ m =>
+      cases m with
+      | zero => simp [peelTok]
+      | succ m => simp [peelTok, strictNat_eq] <;> omega
+
+theorem stepElemBB_length_le (L R : List SymTok) :
+    stateTokenCount (stepElemBB L R) ≤ L.length + R.length + 7 := by
+  have hR := bumpSymR_length_le R
+  cases L with
+  | nil =>
+    simp [stepElemBB, stateTokenCount, strictList_eq]
+    omega
+  | cons t L1 =>
+    cases t with
+    | item x =>
+      cases x with
+      | zero =>
+        simp [stepElemBB, stateTokenCount, strictList_eq]
+        omega
+      | run d =>
+        cases d with
+        | zero =>
+          simp [stepElemBB, stateTokenCount]
+        | succ d =>
+          cases d with
+          | zero =>
+            simp [stepElemBB, stateTokenCount, strictList_eq]
+            omega
+          | succ d =>
+            cases d with
+            | zero =>
+              simp [stepElemBB, stateTokenCount, strictList_eq]
+              omega
+            | succ d =>
+              cases d with
+              | zero =>
+                simp [stepElemBB, stateTokenCount, strictList_eq]
+                omega
+              | succ d =>
+                simp [stepElemBB, stateTokenCount, strictList_eq, strictNat_eq]
+                omega
+    | repB1 k => simp [stepElemBB, stateTokenCount]
+    | rep2 p => simp [stepElemBB, stateTokenCount]
+    | rep12 m => simp [stepElemBB, stateTokenCount]
+
+def symStateWeight (s : SymState) : Nat :=
+  stateTokenCount s + symStateNumSum s
+
+theorem stepElemBB_weight_le (L R : List SymTok) :
+    symStateWeight (stepElemBB L R) ≤
+      L.length + R.length + listNumSum L + listNumSum R + 10 := by
+  have hlen := stepElemBB_length_le L R
+  have hsum := stepElemBB_num_sum_le L R
+  have h := Nat.add_le_add hlen hsum
+  simp [symStateWeight, stateTokenCount, symStateNumSum] at h ⊢
+  omega
+
+theorem peelTok_weight_le (t : SymTok) (xs : List SymTok) :
+    (peelTok t xs).length + listNumSum (peelTok t xs) ≤
+      xs.length + 1 + tokNumSum t + listNumSum xs + 7 := by
+  have hlen := peelTok_length_le t xs
+  have hsum := peelTok_num_sum_le t xs
+  omega
+
+/-- The BB sweep grows numeric-field mass plus token count by at most
+    eight times the left token count plus eighteen. This is a source-generic
+    bound over arbitrary stacks. -/
+theorem sweepBB_weight_bound (L R : List SymTok) :
+    symStateWeight (sweepBB L R) ≤
+      L.length + R.length + listNumSum L + listNumSum R + 8 * L.length + 18 := by
+  generalize hn : L.length = n
+  induction n using Nat.strongRecOn generalizing L R with
+  | ind n ih =>
+    have hlen : L.length = n := hn
+    cases L with
+    | nil =>
+      have hstep := stepElemBB_weight_le [] R
+      have htarget : R.length + listNumSum R + 10 ≤
+          R.length + listNumSum R + 18 := by omega
+      simpa [sweepBB] using Nat.le_trans hstep htarget
+    | cons t L1 =>
+      simp at hlen hn
+      have hrec (R' : List SymTok) :
+          symStateWeight (sweepBB L1 R') ≤
+            L1.length + R'.length + listNumSum L1 + listNumSum R' +
+              8 * L1.length + 18 :=
+        ih L1.length (by omega) L1 R' rfl
+      cases t with
+      | item x =>
+        cases x with
+        | zero =>
+          have hstep := stepElemBB_weight_le (.item .zero :: L1) R
+          calc
+            symStateWeight (sweepBB (.item .zero :: L1) R) ≤
+                L1.length + 1 + R.length + listNumSum L1 + listNumSum R + 10 := by
+                  simpa [sweepBB, listNumSum, tokNumSum] using hstep
+            _ ≤ (L1.length + 1) + R.length + listNumSum (.item .zero :: L1) +
+                listNumSum R + 8 * (L1.length + 1) + 18 := by
+                  simp [listNumSum, tokNumSum]
+                  omega
+        | run d =>
+          cases d with
+          | zero =>
+            have hrec' := hrec (.item (.run 0) :: R)
+            calc
+              symStateWeight (sweepBB (.item (.run 0) :: L1) R) =
+                  symStateWeight (sweepBB L1 (.item (.run 0) :: R)) := by simp [sweepBB]
+              _ ≤ L1.length + R.length + 1 + listNumSum L1 + listNumSum R +
+                    8 * L1.length + 18 := by
+                    simpa [listNumSum, tokNumSum] using hrec'
+              _ ≤ (L1.length + 1) + R.length + listNumSum (.item (.run 0) :: L1) +
+                    listNumSum R + 8 * (L1.length + 1) + 18 := by
+                    simp [listNumSum, tokNumSum]
+                    omega
+          | succ d =>
+            cases d with
+            | zero =>
+              have hBLen := bumpSymR_length_le R
+              have hBNum := bumpSymR_num_sum_le R
+              have hrec' := hrec (.item (.run 0) :: bumpSymR R)
+              calc
+                symStateWeight (sweepBB (.item (.run 1) :: L1) R) =
+                    symStateWeight (sweepBB L1 (.item (.run 0) :: bumpSymR R)) := by
+                      simp [sweepBB, strictList_eq]
+                _ ≤ L1.length + (bumpSymR R).length + 1 + listNumSum L1 +
+                      listNumSum (bumpSymR R) + 8 * L1.length + 18 := by
+                      simpa [listNumSum, tokNumSum] using hrec'
+                _ ≤ (L1.length + 1) + R.length + listNumSum (.item (.run 1) :: L1) +
+                      listNumSum R + 8 * (L1.length + 1) + 18 := by
+                      simp [listNumSum, tokNumSum]
+                      omega
+            | succ d =>
+              have hstep := stepElemBB_weight_le (.item (.run (d + 2)) :: L1) R
+              calc
+                symStateWeight (sweepBB (.item (.run (d + 2)) :: L1) R) =
+                    symStateWeight (stepElemBB (.item (.run (d + 2)) :: L1) R) := by
+                      simp [sweepBB, strictNat_eq]
+                _ ≤ (L1.length + 1) + R.length + listNumSum (.item (.run (d + 2)) :: L1) +
+                      listNumSum R + 10 := by
+                      simpa [listNumSum, tokNumSum] using hstep
+                _ ≤ (L1.length + 1) + R.length + listNumSum (.item (.run (d + 2)) :: L1) +
+                      listNumSum R + 8 * (L1.length + 1) + 18 := by omega
+      | repB1 k =>
+        have hELen := eatB1_length_le k R
+        have hENum := eatB1_num_sum_le k R
+        have hrec' := hrec (eatB1 k R)
+        calc
+          symStateWeight (sweepBB (.repB1 k :: L1) R) =
+              symStateWeight (sweepBB L1 (eatB1 k R)) := by
+                simp [sweepBB, strictList_eq]
+          _ ≤ L1.length + (eatB1 k R).length + listNumSum L1 +
+                listNumSum (eatB1 k R) + 8 * L1.length + 18 := hrec'
+          _ ≤ (L1.length + 1) + R.length + listNumSum (.repB1 k :: L1) +
+                listNumSum R + 8 * (L1.length + 1) + 18 := by
+                simp [listNumSum, tokNumSum]
+                omega
+      | rep2 p =>
+        cases hs : stripPrefixSym [.item (.run 0), .item (.run 1)] R with
+        | some R2 =>
+          have hprefix := stripPrefixSym_some _ R R2 hs
+          have hRlen : R.length = R2.length + 2 := by
+            rw [hprefix]
+            simp
+          have hRsum : listNumSum R = listNumSum R2 + 1 := by
+            rw [hprefix, listNumSum_append]
+            simp [listNumSum, tokNumSum]
+          have hELen := eatB2_length_le p R2
+          have hENum := eatB2_num_sum_le p R2
+          have hrec' := hrec (.item (.run 0) :: .item (.run 1) :: eatB2 p R2)
+          calc
+            symStateWeight (sweepBB (.rep2 p :: L1) R) =
+                symStateWeight (sweepBB L1
+                  (.item (.run 0) :: .item (.run 1) :: eatB2 p R2)) := by
+                    simp [sweepBB, hs, strictList_eq]
+            _ ≤ L1.length + 2 + (eatB2 p R2).length + listNumSum L1 +
+                  1 + listNumSum (eatB2 p R2) + 8 * L1.length + 18 := by
+                    simpa [listNumSum, tokNumSum] using hrec'
+            _ ≤ (L1.length + 1) + R.length + listNumSum (.rep2 p :: L1) +
+                  listNumSum R + 8 * (L1.length + 1) + 18 := by
+                    simp [listNumSum, tokNumSum]
+                    omega
+        | none =>
+          have hPeelLen := peelTok_length_le (.rep2 p) L1
+          have hPeelNum := peelTok_num_sum_le (.rep2 p) L1
+          have hstep := stepElemBB_weight_le (peelTok (.rep2 p) L1) R
+          calc
+            symStateWeight (sweepBB (.rep2 p :: L1) R) =
+                symStateWeight (stepElemBB (peelTok (.rep2 p) L1) R) := by
+                  simp [sweepBB, hs, strictList_eq]
+            _ ≤ (peelTok (.rep2 p) L1).length + R.length +
+                  listNumSum (peelTok (.rep2 p) L1) + listNumSum R + 10 := hstep
+            _ ≤ L1.length + R.length + listNumSum L1 + tokNumSum (.rep2 p) +
+                  listNumSum R + 18 := by omega
+            _ ≤ (L1.length + 1) + R.length + listNumSum (.rep2 p :: L1) +
+                  listNumSum R + 8 * (L1.length + 1) + 18 := by
+                    simp [listNumSum, tokNumSum]
+                    omega
+      | rep12 m =>
+        cases hs : stripPrefixSym [.item (.run 0), .item (.run 1)] R with
+        | some R2 =>
+          have hprefix := stripPrefixSym_some _ R R2 hs
+          have hRlen : R.length = R2.length + 2 := by
+            rw [hprefix]
+            simp
+          have hRsum : listNumSum R = listNumSum R2 + 1 := by
+            rw [hprefix, listNumSum_append]
+            simp [listNumSum, tokNumSum]
+          have hELen := eatB12R_length_le m R2
+          have hENum := eatB12R_num_sum_le m R2
+          have hrec' := hrec (.item (.run 0) :: .item (.run 1) :: eatB12R m R2)
+          calc
+            symStateWeight (sweepBB (.rep12 m :: L1) R) =
+                symStateWeight (sweepBB L1
+                  (.item (.run 0) :: .item (.run 1) :: eatB12R m R2)) := by
+                    simp [sweepBB, hs, strictList_eq]
+            _ ≤ L1.length + 2 + (eatB12R m R2).length + listNumSum L1 +
+                  1 + listNumSum (eatB12R m R2) + 8 * L1.length + 18 := by
+                    simpa [listNumSum, tokNumSum] using hrec'
+            _ ≤ (L1.length + 1) + R.length + listNumSum (.rep12 m :: L1) +
+                  listNumSum R + 8 * (L1.length + 1) + 18 := by
+                    simp [listNumSum, tokNumSum]
+                    omega
+        | none =>
+          have hPeelLen := peelTok_length_le (.rep12 m) L1
+          have hPeelNum := peelTok_num_sum_le (.rep12 m) L1
+          have hstep := stepElemBB_weight_le (peelTok (.rep12 m) L1) R
+          calc
+            symStateWeight (sweepBB (.rep12 m :: L1) R) =
+                symStateWeight (stepElemBB (peelTok (.rep12 m) L1) R) := by
+                  simp [sweepBB, hs, strictList_eq]
+            _ ≤ (peelTok (.rep12 m) L1).length + R.length +
+                  listNumSum (peelTok (.rep12 m) L1) + listNumSum R + 10 := hstep
+            _ ≤ L1.length + R.length + listNumSum L1 + tokNumSum (.rep12 m) +
+                  listNumSum R + 18 := by omega
+            _ ≤ (L1.length + 1) + R.length + listNumSum (.rep12 m :: L1) +
+                  listNumSum R + 8 * (L1.length + 1) + 18 := by
+                    simp [listNumSum, tokNumSum]
+                    omega
+
+#print axioms eatB2_num_sum_le
+#print axioms eatB12R_num_sum_le
+#print axioms stepElemBB_weight_le
+#print axioms sweepBB_weight_bound
+
 end BusyBeaver.SymRunAudit
