@@ -641,8 +641,11 @@ theorem m1EvenResidueFour_q4_prefix_head_bound
         simp [m1EvenResidueFourInside,x]
         omega
       have hframe : T2 x = T1 x := by
-        simpa [T2] using frameAt_tape_outside T1 hN
-          m1EvenResidueFourInside m1EvenResidueFourBridgeEnd x hout
+        have hout' : m1EvenResidueFourInside
+            (x-(h-((3*a+1:Nat):Int))) = false := by
+          simpa [hN,N] using hout
+        simpa [T2,T1,T,N] using
+          m1EvenResidueFourCutTape_eq_swept a b h x hout'
       have hT1 : T1 x = true := by
         by_cases hx : x ≤ h
         · let j : Nat := 3*a-4-i
@@ -687,10 +690,10 @@ theorem m1EvenResidueFour_q4_prefix_head_bound
   let p2 := p1+53
   have hSweep' :
       run tm2 p1 (s1Config 3 4 1 a 0 b h) = some ⟨3,hN,T1⟩ := by
-    simpa [p1,N,T,hN,T1] using hSweep
+    simpa [p1,N,T,hN,T1,s1Config,s0Config] using hSweep
   by_cases hk1 : k < p1
   · have hlow := m1EvenResidueFour_counted_left_sweep_heads N T h hOn hright k
-      (by dsimp [p1]; omega) d hd
+      (by omega) d hd
     simp only [hN,N] at *
     omega
   · by_cases hk2 : k < p2
