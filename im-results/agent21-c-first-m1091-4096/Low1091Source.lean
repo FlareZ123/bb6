@@ -484,6 +484,13 @@ theorem first_stop_m12355_mod16384 (time m k : Nat)
     v2(519z+73)=2, and both possible parents of the forced state are in
     the source-forbidden odd-right/sum-two image class. -/
 
+private theorem low6723_succ_le_pow2 (n : Nat) : n+1≤2^n := by
+  induction n with
+  | zero => simp
+  | succ n ih =>
+      rw [Nat.pow_succ]
+      omega
+
 def low6723M (t : Nat) : Nat := 8192*t+6723
 def low6723Z (t : Nat) : Nat := 16*t+13
 def low6723W (t : Nat) : Nat :=
@@ -510,14 +517,14 @@ private theorem low6723_params (t : Nat) :
     dsimp [z,low6723Z]
     omega
   have hlt : 2*m-2 < 2^(2*m-2) := by
-    have h := Nat.le_two_pow_self (2*m-2)
+    have h := low6723_succ_le_pow2 (2*m-2)
     omega
   have hpowEq : 2^(2*m-1)=2*2^(2*m-2) := by
     calc
       2^(2*m-1)=2^((2*m-2)+1) := by congr 1 <;> omega
       _=2^(2*m-2)*2 := by rw [Nat.pow_succ]
-      _=2*2^(2*m-2) := by ring
-  have hmul := Nat.mul_lt_mul_of_pos_left hlt (by norm_num : 0<2)
+      _=2*2^(2*m-2) := by simp [Nat.mul_comm]
+  have hmul := Nat.mul_lt_mul_of_pos_left hlt (by omega)
   rw [hpowEq] at hmul
   have hPowBig : 2*m < 2^(2*m-1) := by omega
   have hbig : 96*z+13≤2^(2*m-1) := by omega
@@ -535,7 +542,7 @@ private theorem low6723_params (t : Nat) :
   have hsumMod : (w+(96*z+13))%64=0 := by
     rw [hdiff,hpmod]
   rw [Nat.add_mod] at hsumMod
-  have hwlt : w%64<64 := Nat.mod_lt w (by norm_num)
+  have hwlt : w%64<64 := Nat.mod_lt w (by omega)
   have hwmod : w%64=19 := by omega
   have hW : w=64*v+19 := by
     have h := Nat.mod_add_div w 64
@@ -548,7 +555,7 @@ private theorem low6723_params (t : Nat) :
     calc
       2^(2*m-1)=2^(6+(2*m-7)) := by congr 1 <;> omega
       _=2^6*2^(2*m-7) := by rw [Nat.pow_add]
-      _=64*2^(2*m-7) := by norm_num
+      _=64*2^(2*m-7) := by simp [Nat.mul_comm]
   have hvEq : v+24*t+20=2^(2*m-7) := by
     rw [hW,hcExpr,hpowFactor] at hdiff
     omega
@@ -649,7 +656,7 @@ private theorem low6723_parent_mod4 (a k x y H : Nat)
               have hdiv32 : 32∣x+y+1 := by
                 refine ⟨p*q,?_⟩
                 rw [hpow,hp,hq]
-                ring
+                simp [Nat.mul_assoc,Nat.mul_left_comm,Nat.mul_comm]
               have hmod0 : (x+y+1)%32=0 :=
                 Nat.mod_eq_zero_of_dvd hdiv32
               have hHodd : H%2=1 := by omega
@@ -702,7 +709,7 @@ private theorem low6723_R_unreachable (t : Nat) :
     dsimp [q,m,low6723M]
     omega
   have hpowgt : 2*m-8<2^(2*m-8) := by
-    have h := Nat.le_two_pow_self (2*m-8)
+    have h := low6723_succ_le_pow2 (2*m-8)
     omega
   have hqle : q≤173*2^(2*m-8) := by omega
   have hHplus : H+q=173*2^(2*m-8) := by
@@ -727,18 +734,18 @@ private theorem low6723_R_unreachable (t : Nat) :
     calc
       2^(2*m-4)=2^(4+(2*m-8)) := by congr 1 <;> omega
       _=2^4*2^(2*m-8) := by rw [Nat.pow_add]
-      _=16*2^(2*m-8) := by norm_num
+      _=16*2^(2*m-8) := by simp [Nat.mul_comm]
   have hH16 : 16*H+16*q=173*2^(2*m-4) := by
     calc
-      16*H+16*q=16*(H+q) := by ring
+      16*H+16*q=16*(H+q) := by omega
       _=16*(173*2^(2*m-8)) := by rw [hHplus]
-      _=173*(16*2^(2*m-8)) := by ring
+      _=173*(16*2^(2*m-8)) := by simp [Nat.mul_assoc,Nat.mul_left_comm,Nat.mul_comm]
       _=173*2^(2*m-4) := by rw [hpow16]
   have hpow8 : 2^(2*m-4)=8*2^(2*m-7) := by
     calc
       2^(2*m-4)=2^(3+(2*m-7)) := by congr 1 <;> omega
       _=2^3*2^(2*m-7) := by rw [Nat.pow_add]
-      _=8*2^(2*m-7) := by norm_num
+      _=8*2^(2*m-7) := by simp [Nat.mul_comm]
   have hTplus : x+y+1+16*q=173*2^(2*m-4) := by
     dsimp [x,y]
     rw [hpow8,hvEq]
@@ -771,13 +778,13 @@ private theorem low6723_target_reaches_R (t : Nat)
   have hparams := low6723_params t
   rcases hparams with ⟨hm,hW,hvEq⟩
   have hlt : 2*m<2^(2*m) := by
-    have h := Nat.le_two_pow_self (2*m)
+    have h := low6723_succ_le_pow2 (2*m)
     omega
   have hpow8 : 2^(2*m+3)=8*2^(2*m) := by
     calc
       2^(2*m+3)=2^(2*m+3) := rfl
       _=2^(2*m)*2^3 := by rw [Nat.pow_add]
-      _=8*2^(2*m) := by norm_num
+      _=8*2^(2*m) := by simp [Nat.mul_comm]
   have hle : 3*m+4≤2^(2*m+3) := by rw [hpow8]; omega
   have hKadd : K+3*m+4=2^(2*m+3) := by
     dsimp [K,low6723K]
@@ -822,7 +829,7 @@ private theorem low6723_target_reaches_R (t : Nat)
       calc
         2^(2*m+3)=2^(10+(2*m-7)) := by congr 1 <;> omega
         _=2^10*2^(2*m-7) := by rw [Nat.pow_add]
-        _=1024*2^(2*m-7) := by norm_num
+        _=1024*2^(2*m-7) := by simp [Nat.mul_comm]
     have hP1sum : 2*(8*w+2)+(3*m+3)=2^(2*m+3) := by
       rw [hW,hpow1024,hm]
       omega
@@ -832,18 +839,18 @@ private theorem low6723_target_reaches_R (t : Nat)
       calc
         2^(2*m+4)=2^(11+(2*m-7)) := by congr 1 <;> omega
         _=2^11*2^(2*m-7) := by rw [Nat.pow_add]
-        _=2048*2^(2*m-7) := by norm_num
+        _=2048*2^(2*m-7) := by simp [Nat.mul_comm]
     have hP2sum : 32*w+6+6*m+8=2^(2*m+4) := by
       rw [hW,hpow2048,hm]
       omega
     have hdouble : 2*2^(2*m+3)=2^(2*m+4) := by
       calc
-        2*2^(2*m+3)=2^(2*m+3)*2 := by ring
+        2*2^(2*m+3)=2^(2*m+3)*2 := by simp [Nat.mul_comm]
         _=2^(2*m+3+1) := by rw [← Nat.pow_succ]
         _=2^(2*m+4) := by congr 1 <;> omega
     have hK2sum : 2*K+6*m+8=2^(2*m+4) := by
       calc
-        2*K+6*m+8=2*(K+3*m+4) := by ring
+        2*K+6*m+8=2*(K+3*m+4) := by omega
         _=2*2^(2*m+3) := by rw [hKadd]
         _=2^(2*m+4) := hdouble
     have hP2 : 2*K=32*w+6 := by omega
@@ -902,13 +909,13 @@ theorem first_stop_m6723_mod8192 (time m k : Nat)
   let t := m/8192
   have hmeq : m=8192*t+6723 := by dsimp [t]; omega
   have hlt : 2*m<2^(2*m) := by
-    have h := Nat.le_two_pow_self (2*m)
+    have h := low6723_succ_le_pow2 (2*m)
     omega
   have hpow : 2^(2*m+3)=8*2^(2*m) := by
     calc
       2^(2*m+3)=2^(2*m+3) := rfl
       _=2^(2*m)*2^3 := by rw [Nat.pow_add]
-      _=8*2^(2*m) := by norm_num
+      _=8*2^(2*m) := by simp [Nat.mul_comm]
   have hle : 3*m+4≤2^(2*m+3) := by rw [hpow]; omega
   have hK : k=2^(2*m+3)-(3*m+4) := by omega
   have hT : CReach 1 (low6723K t) := by
