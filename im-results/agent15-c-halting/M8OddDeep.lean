@@ -46,7 +46,7 @@ private theorem deepJ_mod4 (m t : Nat) (hm : 1≤m) :
   rw [Nat.add_mod,hmul,hmul2]
   omega
 
-private theorem deepN_mod16_one (m t : Nat)
+theorem deepN_mod16_one (m t : Nat)
     (hm : m%4=1) : deepMass m t%16=4 := by
   have hmpos : 1≤m := by omega
   have hQ16 := deepQ_mod16 m hmpos
@@ -62,7 +62,7 @@ private theorem deepN_mod16_one (m t : Nat)
   rw [hQsub,hQ16,htail]
   omega
 
-private theorem deepN_mod8_three (m t : Nat)
+theorem deepN_mod8_three (m t : Nat)
     (hm : m%4=3) : deepMass m t%8=2 := by
   have hmpos : 1≤m := by omega
   have hQ16 := deepQ_mod16 m hmpos
@@ -111,7 +111,7 @@ theorem deep_stop (m t : Nat) (hm : m%2=1) :
     omega
   omega
 
-private theorem deep_no_root_of_data
+theorem deep_no_root_of_data
     (j m k d v : Nat)
     (hm : m%2=1) (hj2 : j%2=0) (hs : (j+m)%4=3)
     (hstop : k+j+3*m+5=2^(2*m+2)*(j+3))
