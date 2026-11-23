@@ -229,13 +229,15 @@ private theorem branch9_divisibility (t q r v K : Nat)
     exact hmul_sub
   have hpowK : 1≤2^K := by have hp:=pow2_pos K; omega
   have hCplus : C+branch9Correction t q K=(C+1)*2^K := by
-    dsimp [branch9Correction,branch9Carry]
-    have hCnonneg : 8≤6*2^t+3*q := by
-      have hpowt := pow2_mono 5 t ht
-      have h32 : 2^5=32 := by decide
-      omega
+    change C+((C+1)*2^K-C)=(C+1)*2^K
     have hpowK : 1≤2^K := by have hp:=pow2_pos K; omega
-    omega
+    have hmul : C+1≤(C+1)*2^K := by
+      have hh := Nat.mul_le_mul_left (C+1) hpowK
+      simpa using hh
+    have hCbound : C≤(C+1)*2^K := by omega
+    calc
+      C+((C+1)*2^K-C)=((C+1)*2^K-C)+C := by omega
+      _ = (C+1)*2^K := Nat.sub_add_cancel hCbound
   have hsum :
       branch9A t q r v + 3*v + branch9Correction t q K =
         (12*2^N-12*2^J)+(C+branch9Correction t q K) := by
@@ -247,7 +249,9 @@ private theorem branch9_divisibility (t q r v K : Nat)
         (12*2^N-12*2^J)+(C+branch9Correction t q K) := hsum
     _ = 2^K*(P-Q)+(C+1)*2^K := by rw [hdiff,hCplus]
     _ = 2^K*(P-Q)+2^K*(C+1) := by rw [Nat.mul_comm (C+1) (2^K)]
-    _ = 2^K*(P-Q+(C+1)) := by rw [Nat.mul_add]
+    _ = 2^K*(P-Q+(C+1)) := by
+      symm
+      exact Nat.mul_add _ _ _
 
 /-- The diagonal ray identity is valid throughout the actual interior
 branch-9 range t+3≤N; it does not require the artificial restriction t≤K. -/

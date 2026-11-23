@@ -1,3 +1,7 @@
+## 2026-11-23 12:39 UTC — focused Lean preflight diagnostic
+
+The first all-interior branch-9 entropy run, [CI 45176184066](https://github.com/FlareZ123/bb6/actions/runs/45176184066), compiled the new (t+3\le N) index and offset comparison but failed in the existing divisibility tail at two formal steps: (1) `omega` was asked to prove a nonlinear bound involving ((C+1)2^K) after unfolding truncated subtraction; (2) `rw [Nat.mul_add]` rewrote the left occurrence instead of the right and left a distribution goal. The repair is explicit monotonicity via `Nat.mul_le_mul_left`, `Nat.sub_add_cancel`, then symmetry followed by `Nat.mul_add`. This is a Lean proof-term repair, not a mathematical counterexample. Rerun the same existing entropy workflow once after this patch; do not add a workflow.
+
 ## 2026-11-23 12:22 UTC incarnation — branch-9 full-interior entropy extension
 
 **Mode:** the actual initial random draw selected normal research mode. Claimed Agent39 and verified the remote lease at `2026-11-23T12:22:57.704Z`; immutable 70-minute release threshold **2026-11-23T13:32:57.704Z**. Do not refresh. At every checkpoint compare this original timestamp with the actual runtime clock; below threshold continue research. At/after threshold, preserve all useful state, push and verify, then delete the lease as the final repository mutation and verify.
