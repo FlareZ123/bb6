@@ -66,8 +66,10 @@ theorem table_conjugate_coverage (q : ExtState) (b : ExtSymbol) :
     d0Coverage (encodeState q, encodeSymbol b) =
       (ExternalTM (q, b)).map (fun (w, d, s) => externalMove w d s) := by
   unfold d0Coverage
-  rw [table_conjugate]
-  simp [toMove, externalMove, encodeDir]
+  rw [table_conjugate, Option.map_map]
+  apply congrArg (fun f => Option.map f (ExternalTM (q, b)))
+  funext w d s
+  cases d <;> rfl
 
 /-- Direct representation of a Mathlib tape in the existing relative-tape
 bridge: the current cell, cells to the left, and cells to the right. -/
@@ -90,7 +92,7 @@ theorem tapeToRelative_write_move_right (T : ExtTape) (w : ExtSymbol) :
     tapeToRelative (Turing.Tape.move .right (Turing.Tape.write w T)) =
       BB6.Bridge.goRight (tapeToRelative T) (encodeSymbol w) := by
   cases T with
-  | mk a L R =>
+  | mk a leftTape rightTape =>
       apply BB6.Bridge.Tape.ext
       · simp [tapeToRelative, BB6.Bridge.goRight,
           Turing.Tape.move_right_nth, Turing.Tape.write_nth]
@@ -175,8 +177,7 @@ theorem step_project (p : Positioned) :
           | none => simp [step, project, _root_.step, ht]
           | some instr =>
               rcases instr with ⟨w, d, s⟩
-              simp [step, project, _root_.step, ht,
-                Turing.Tape.write, Turing.Tape.move]
+              cases d <;> rfl
 
 theorem step_none_iff (p : Positioned) :
     step p = none ↔ _root_.step ExternalTM (project p) = none := by
@@ -224,8 +225,9 @@ theorem extHaltsAt_of_external (p : Positioned) (n : Nat)
   | none => simp [he] at hp
   | some lastExt =>
       have hlast : project lastExt = last := by simpa [he] using hp
-      exact ⟨lastExt, he,
-        (step_none_iff lastExt).mpr (by simpa [hlast] using hs)⟩
+      have hs' : _root_.step ExternalTM (project lastExt) = none := by
+        simpa [halted, hlast] using hs
+      exact ⟨lastExt, he, (step_none_iff lastExt).mpr hs'⟩
 
 def toPortfolioCfg (c : BB6Coverage.Config) : BB6.Portfolio.Cfg :=
   ⟨c.state, c.head, c.tape⟩
@@ -237,14 +239,14 @@ theorem rawStep_toPortfolio (c : BB6Coverage.Config) :
       BB6.Portfolio.step BB6.Portfolio.D0 (toPortfolioCfg c) := by
   cases h : BB6.Portfolio.D0 c.state (c.tape c.head) with
   | none =>
-      simp [BB6Coverage.rawStep, BB6Coverage.readSlot, d0Coverage,
-        BB6.Portfolio.step, h]
+      simp [BB6Coverage.rawStep, d0Coverage, BB6.Portfolio.step, h]
   | some instr =>
       rcases instr with ⟨w, d, s⟩
       cases d <;>
-        simp [BB6Coverage.rawStep, BB6Coverage.readSlot, d0Coverage,
-          BB6Coverage.applyMove, BB6.Portfolio.step, h, toMove,
-          toPortfolioCfg, BB6.Portfolio.updateTape, BB6.Portfolio.Dir.dx]
+        simp [BB6Coverage.rawStep, d0Coverage, BB6Coverage.applyMove,
+          BB6.Portfolio.step, h, toMove, toPortfolioCfg,
+          BB6.Portfolio.Dir.dx]
+      all_goals rfl
 
 def toPortfolioAbs (p : Positioned) : BB6.Portfolio.Cfg :=
   toPortfolioCfg (BB6.Bridge.toAbsolute (toRelative p))
@@ -261,12 +263,13 @@ theorem step_toPortfolio (p : Positioned) :
       (rawStep_toPortfolio (BB6.Bridge.toAbsolute (toRelative p))).symm
     _ = (BB6.Bridge.step d0Coverage (toRelative p)).map
           (toPortfolioCfg ∘ BB6.Bridge.toAbsolute) := by
-      rw [BB6.Bridge.step_absolute]
+      rw [BB6.Bridge.step_absolute, Option.map_map]
     _ = ((step p).map toRelative).map
           (toPortfolioCfg ∘ BB6.Bridge.toAbsolute) := by
       rw [step_toRelative]
     _ = (step p).map toPortfolioAbs := by
-      simp [toPortfolioAbs, Function.comp_def, Option.map_map]
+      rw [Option.map_map]
+      rfl
 
 /-- Exact-n run transport from the external positioned TM to Portfolio.D0. -/
 theorem run_toPortfolio (n : Nat) (p : Positioned) :
@@ -311,34 +314,37 @@ theorem getI_replicate (n i : Nat) :
       if i < n then _root_.Symbol.S1 else _root_.Symbol.S0 := by
   by_cases hi : i < n
   · have hlen : i < (List.replicate n _root_.Symbol.S1).length := by simpa using hi
-    rw [List.getI_eq_getElem hlen]
+    rw [List.getI_eq_getElem _ hlen]
     simp [List.getElem_replicate, hi]
   · have hlen : (List.replicate n _root_.Symbol.S1).length ≤ i := by
       simpa using Nat.le_of_not_gt hi
-    rw [List.getI_eq_default hlen]
+    rw [List.getI_eq_default _ hlen]
     simp [hi]
 
 theorem A_tape_nth (n : Nat) (j : Int) :
     ((«1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---».A n []).2).nth j =
       if 0 < j ∧ j ≤ (n : Int) then _root_.Symbol.S1 else _root_.Symbol.S0 := by
+  have hdefault : (default : Turing.ListBlank _root_.Symbol) =
+      Turing.ListBlank.mk [] := rfl
   cases j with
   | ofNat j =>
       cases j with
       | zero =>
-          simp [«1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---».A, Turing.Tape.nth]
+          simp [«1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---».A,
+            Turing.Tape.nth, hdefault]
       | succ j =>
           simp only [«1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---».A,
-            Turing.Tape.nth, Turing.ListBlank.append_mk, Turing.ListBlank.nth_mk,
-            List.nil_append, List.append_nil, singletonPow_replicate]
-          change (List.replicate n _root_.Symbol.S1).getI j =
-            if 0 < (Int.ofNat (j + 1)) ∧ (Int.ofNat (j + 1)) ≤ (n : Int)
-              then _root_.Symbol.S1 else _root_.Symbol.S0
-          have hpos : (0 : Int) < (Int.ofNat (j + 1)) := by omega
-          have hbound : (Int.ofNat (j + 1) ≤ (n : Int)) ↔ j < n := by omega
-          simp [getI_replicate, hpos, hbound]
+            Turing.Tape.nth, «1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---».nil_append_default,
+            hdefault, Turing.ListBlank.append_mk, Turing.ListBlank.nth_mk,
+            List.append_nil, singletonPow_replicate]
+          have hpos : (0 : Int) < Int.ofNat (j + 1) := by omega
+          have hbound : Int.ofNat (j + 1) ≤ (n : Int) ↔ j < n := by omega
+          rw [getI_replicate n j]
+          simp [hpos, hbound]
   | negSucc j =>
       simp [«1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---».A,
-        Turing.Tape.nth, «1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---».default_tail]
+        Turing.Tape.nth, «1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---».default_tail,
+        hdefault]
 
 def ofA (n : Nat) (h : Int) : Positioned :=
   ⟨_root_.State.F, h, («1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---».A n []).2⟩
@@ -350,10 +356,12 @@ theorem project_ofA (n : Nat) (h : Int) :
 theorem toPortfolioAbs_ofA (n : Nat) (h : Int) :
     toPortfolioAbs (ofA n h) = BB6.Portfolio.F0Pure n h := by
   simp only [toPortfolioAbs, toPortfolioCfg, BB6.Bridge.toAbsolute,
-    toRelative, encodeState, BB6.Portfolio.F0Pure, BB6.Portfolio.Cfg.mk.injEq]
+    toRelative, encodeState, BB6.Portfolio.F0Pure, BB6.Portfolio.Cfg.mk.injEq,
+    ofA]
   refine ⟨rfl, rfl, ?_⟩
   funext x
   rw [tapeToRelative_symbol]
+  change encodeSymbol (((«1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---».A n []).2).nth (x - h)) = _
   rw [A_tape_nth n (x - h)]
   by_cases hp : h < x ∧ x ≤ h + (n : Int)
   · have hq : 0 < x - h ∧ x - h ≤ (n : Int) := by omega
@@ -371,11 +379,12 @@ theorem D0_halts_on_A_cylinder (k : Nat) (h : Int) :
   let m := 3 ^ 108 * k + 1975700577069254261393123959451562008800234946348086
   obtain ⟨n, hn⟩ :=
     «1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---».halts_A_mod_3_pow_108 k
-  have hext : ExtHaltsAt (ofA m h) n := by
-    apply extHaltsAt_of_external
-    simpa [project_ofA] using hn
+  have hsource : _root_.haltsIn ExternalTM (project (ofA m h)) n := by
+    simpa only [ExternalTM, project_ofA] using hn
+  have hext : ExtHaltsAt (ofA m h) n :=
+    extHaltsAt_of_external (ofA m h) n hsource
   have hd0 := haltsAt_transport (ofA m h) n hext
-  simpa [m, toPortfolioAbs_ofA] using hd0
+  exact ⟨n, by simpa [m, toPortfolioAbs_ofA] using hd0⟩
 
 #print axioms table_conjugate
 #print axioms table_conjugate_coverage
