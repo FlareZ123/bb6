@@ -59,6 +59,7 @@ private theorem m1One_binDec_one (L : Nat) (hL : 0 < L) :
   rw [hL']
   rw [binDec_odd (L-1) 0 (by simp)]
   rw [binDec_zero]
+  simp [Nat.add_sub_cancel_right]
 
 private theorem m1One_d1pow_succ (L : Nat) (hL : 0 < L) :
     d1pow L = d1 ++ d1pow (L-1) := by
@@ -232,7 +233,7 @@ theorem m1One_q4_prefix_run
         subst i
         have hlen : (d1pow a).length = 3*a := by simp [d1pow_length]
         rw [sideBit_append_right (d1pow a) R (3*a) (by simpa [hlen])]
-        simp [markerWord, d1pow_length]
+        simp [R, markerWord, sideBit, d1pow_length]
     simpa [T,hside] using hcell
   have hright : T (h+1) = false := by
     have hc := s1Config_right_cell L 1 1 a 0 b h 0
@@ -375,8 +376,8 @@ private theorem m1OneQ4CutTape_eq_source_left
 as the (1,3) branch; the smaller frame changes only the far-left exterior. -/
 theorem m1One_q4_prefix_rightShape
     (L a b : Nat) (h : Int) :
-    q4RightShape (m1OneQ4CutTape L a b h) h b := by
-  unfold q4RightShape
+    Agent8Q4Suffix.q4RightShape (m1OneQ4CutTape L a b h) h b := by
+  unfold Agent8Q4Suffix.q4RightShape
   let T := (s1Config L 1 1 a 0 b h).tape
   constructor
   · intro i hi
@@ -555,7 +556,7 @@ theorem m1One_q4_prefix_far_tail
   have hsrc :
       (s1Config L 1 1 a 0 b h).tape (h+1+(i:Int)) =
         sideBit (s0RightFacing b) i := by
-    simpa [s1PhysicalRight_source,sideBit] using
+    simpa [s0RightFacing,s1PhysicalRight_source,sideBit] using
       s1Config_right_cell L 1 1 a 0 b h i
   have hlen : (s0RightFacing b).length = 9+3*b := by
     simp [s0RightFacing,d1pow_length]
@@ -584,8 +585,7 @@ private theorem m1OneQ4LeftFacingTail
     simp [P,R,s1LeftFacing,binDec_zero,m1One_binDec_one L hL,List.append_assoc]
   have htgt :
       m1OneQ4LeftFacing L a = Q ++ R := by
-    rw [m1One_d1pow_succ L hL]
-    simp [Q,R,m1OneQ4LeftFacing,List.append_assoc]
+    simp [Q,R,m1OneQ4LeftFacing,m1One_d1pow_succ L hL,List.append_assoc]
   have hlenP : P.length = 3*a+9 := by
     simp [P,d1pow_length,markerWord,d0]
   have hlenQ : Q.length = 3*a+9 := by
