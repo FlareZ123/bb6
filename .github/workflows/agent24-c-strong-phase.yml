@@ -2,6 +2,11 @@ name: Agent 24 C58 ValSix original source all-phase integration (manual)
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'im-results/agent12-c-high-m0/M0Residual1093Lift.lean'
 
 permissions:
   contents: write
