@@ -204,7 +204,10 @@ theorem q4Tail_frame_eq_s0Config
     rw [binDec_allOnes_local]
   apply config_ext_local
   · rfl
-  · simp [U,H,g,frameAt,q4TailEnd,s0Config] <;> omega
+  · change (frameAt (d0Sweep n T h) g q4TailInside q4TailEnd).head = H
+    rw [BB6Coverage.Agent6Q4Prefix.frameAt_head]
+    dsimp [q4TailEnd,H,g]
+    omega
   · funext x
     by_cases hx : x ≤ H
     · let i : Nat := Int.toNat (H-x)
