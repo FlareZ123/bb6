@@ -56,9 +56,12 @@ private theorem m1One_sideBit_false_after_length
 private theorem m1One_binDec_one (L : Nat) (hL : 0 < L) :
     binDec L 1 = d0 ++ d1pow (L-1) := by
   have hL' : L = (L-1)+1 := by omega
-  conv_lhs => rw [hL']
-  rw [binDec_odd (L-1) 0 (Nat.pow_pos (by decide))]
-  rw [binDec_zero]
+  calc
+    binDec L 1 = binDec ((L-1)+1) (2*0+1) := by
+      exact congrArg (fun t : Nat => binDec t 1) hL'
+    _ = d0 ++ binDec (L-1) 0 :=
+      binDec_odd (L-1) 0 (Nat.pow_pos (by decide))
+    _ = d0 ++ d1pow (L-1) := by rw [binDec_zero]
 
 private theorem m1One_d1pow_succ (L : Nat) (hL : 0 < L) :
     d1pow L = d1 ++ d1pow (L-1) := by
