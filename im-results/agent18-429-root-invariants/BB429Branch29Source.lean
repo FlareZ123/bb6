@@ -1,5 +1,5 @@
 import BB429Branch7Source
-import BB429Branch29Mod16
+import BB429Branch29Mod64
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -125,6 +125,64 @@ theorem source_branch7_29_burst_mod2048
   · exact Or.inr (Or.inl (by omega))
   · exact Or.inl (by omega)
   · exact Or.inr (Or.inr (by omega))
+
+
+/-- Eight necessary parameter classes modulo 64 for the original,
+pinned Cryptids-source blank root in the 29 mod32 odd-reset feeder. -/
+theorem source_29_q_eight_mod64 (i q : Nat) (hq : 21≤q)
+    (hroot : BB429SourceLadder.sourceRun i highLevelStart =
+      some (.J (32*q+29) (64*q+55))) :
+    q%64=2 ∨ q%64=10 ∨ q%64=15 ∨ q%64=18 ∨
+    q%64=31 ∨ q%64=47 ∨ q%64=58 ∨ q%64=63 := by
+  have hlocal :=
+    BB429SourceMod16.source_run_to_local i
+      (32*q+29) (64*q+55) hroot
+  exact BB429Branch29Mod64.rooted_29_q_eight_mod64 q hq ⟨i,hlocal⟩
+
+/-- Exact necessary original-source last-reset burst restriction at
+modulus 8192. Every class of the eight-way disjunction is traced
+through the valid blank-root source connector and the exponential
+last-reset equation, not sampled from a finite trajectory. -/
+theorem source_branch7_29_burst_mod8192
+    (i n x y : Nat)
+    (hroot : BB429SourceLadder.sourceRun i highLevelStart =
+      some (.J x y))
+    (hbranch : y+3=2*x)
+    (h29 : x%32=29)
+    (hn : 18≤n)
+    (heq : 4*x+3*n+15=3*2^(n+2)) :
+    n%8192=8063 ∨ n%8192=4991 ∨ n%8192=2047 ∨
+    n%8192=1919 ∨ n%8192=4095 ∨ n%8192=6143 ∨
+    n%8192=2943 ∨ n%8192=8191 := by
+  let q := x/32
+  have hx : x=32*q+29 := by dsimp [q]; omega
+  have hy : y=64*q+55 := by omega
+  have hb := n_plus_1000_le_pow n hn
+  have hmul : 3*(n+1000)≤3*2^(n+2) :=
+    Nat.mul_le_mul_left 3 hb
+  have hq : 21≤q := by omega
+  have hsrc := hroot
+  rw [hx,hy] at hsrc
+  have hqmod := source_29_q_eight_mod64 i q hq hsrc
+  have hpow : 2^(n+2)=8192*2^(n-11) := by
+    have hsplit : n+2=13+(n-11) := by omega
+    rw [hsplit,pow_add]
+    norm_num
+  have hmod : (4*x+3*n+15)%8192=0 := by
+    rw [heq,hpow]
+    omega
+  rcases hqmod with h2 | h10 | h15 | h18 | h31 | h47 | h58 | h63
+  · omega
+  · omega
+  · omega
+  · omega
+  · omega
+  · omega
+  · omega
+  · omega
+
+#print axioms source_29_q_eight_mod64
+#print axioms source_branch7_29_burst_mod8192
 
 #print axioms source_29_q_three_mod16
 #print axioms source_branch7_29_burst_mod2048
