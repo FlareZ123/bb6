@@ -1,4 +1,4 @@
-name: Agent 11 F424 exact source-machine cost bridge (manual)
+name: Agent 11 full F424 source primitive exactness (manual)
 
 on:
   workflow_dispatch:
@@ -37,13 +37,17 @@ jobs:
           lake update
           lake exe cache get >/tmp/mathlib-cache.log
           lake build BusyBeaver.Calculi.HaltShared
-      - name: Check exact F424 BB symbolic-mode primitive step count
+      - name: Kernel-check F424 exact primitive count of all source stepPure transitions
         working-directory: upstream
         run: |
           set -euo pipefail
-          cp ../local-bb6/im-results/agent11-symrun-primitive-cost/{SourceCostModel,SourceExactF424Core,SourceExactPureBB424}.lean .
+          cp ../local-bb6/im-results/agent11-symrun-primitive-cost/{SourceCostModel,SourceCostCombinators,SourceExactF424Core,SourceExactPureBB424,SourceExactPureDL424,SourceExactPureCB424,SourceExactPureStep424}.lean .
           lake env lean -o SourceCostModel.olean SourceCostModel.lean
+          LEAN_PATH=. lake env lean -o SourceCostCombinators.olean SourceCostCombinators.lean
           LEAN_PATH=. lake env lean -o SourceExactF424Core.olean SourceExactF424Core.lean
-          LEAN_PATH=. lake env lean SourceExactPureBB424.lean | tee /tmp/agent11-bb-exact.log
-          ! grep -Eq 'sorryAx|native_decide' /tmp/agent11-bb-exact.log
-          echo "PASS: source F424 BB symbolic-mode exact primitive-time theorem"
+          LEAN_PATH=. lake env lean -o SourceExactPureBB424.olean SourceExactPureBB424.lean
+          LEAN_PATH=. lake env lean -o SourceExactPureDL424.olean SourceExactPureDL424.lean
+          LEAN_PATH=. lake env lean -o SourceExactPureCB424.olean SourceExactPureCB424.lean
+          LEAN_PATH=. lake env lean SourceExactPureStep424.lean | tee /tmp/agent11-full-f424.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/agent11-full-f424.log
+          echo "PASS: F424 all-mode source exact primitive-time cost soundness and iteration"
