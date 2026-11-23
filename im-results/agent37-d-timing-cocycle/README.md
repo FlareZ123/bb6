@@ -37,6 +37,32 @@ The missing assertion is a complete source-connected **all-arbitrary-suffix firs
 
 Even a fully established first-event cocycle would be an intermediate structural tool. Every unary n has some **synthetic** halting extension, already source-proved by Agent2 in [ExactFirstHalt.lean](../agent2-cryptid-continuity/ExactFirstHalt.lean). The **genuine blank-reachable suffix language** remains the deciding obstacle. The authentic D-family unary seeds 5,9,15,39 remain unresolved.
 
+## Source-kernel-certified mixed-token first-return theorem (2026-11-23)
+
+The [cryptid-model-bridge result](../agent37-cryptid-model-bridge/FullWordPairsFirst.lean) now proves a strict first-event return for a second infinite prepared-input family, complementary to the halting cylinder above. For every `k,q≥0`, finite A-token word `ws` (arbitrary interleavings of `10` and `111`), and finite binary tail `ys`, the original-source configuration
+```text
+pairInput(k,q,ws,ys)
+  = I_(3k+1)(0 · Code(ws) · 110 · (10)^q · 0 · ys)
+```
+reaches its first state-F configuration with every cell strictly left of the head blank at exactly
+```text
+T(k,q,ws) = pairTime(k,q,ws)
+          = 12k² + 41k + 32
+            + wordCost(4k+3,ws)
+            + 2(4k+3+wordInc(ws)) + 16 + 4q.
+```
+The endpoint scans 0 (F/0), with left tape empty and right tape
+`1^(2(4k+3+wordInc(ws))+1) · 0 · 1^(2q+6) · ys`. The proof excludes earlier blank-left F states across the unary prefix, the arbitrary mixed-token consumer, and the complete `110(10)^q0` terminal macro. The terminal macro's new `two_one_pairs_first_physical` theorem explicitly handles the qB/qD scans, the seven-step core, and the final D sweep.
+
+The existing exact shift law is therefore a **first-event** law on this family:
+```text
+T(k+h,q,ws) = T(k,q,ws)
+              + h(24k + 12h + 49 + 24·tripleTokens(ws)).
+```
+Original-source manual [CI 45182834918](https://github.com/FlareZ123/bb6/actions/runs/45182834918) succeeded; the exported theorem has axiom profile `[propext, Quot.sound]`, with no `sorryAx` or `native_decide`.
+
+This is a restricted token-coded terminal family, not the conjectured arbitrary-binary-suffix cocycle for residues `r∈{2,3,4}`. It does not prove that the authentic blank-root orbit reaches these prepared inputs, and it does not decide BB(6). External novelty/publication eligibility remains unassessed.
+
 ## Next discriminating action
 
 Try adversarially structured, long irregular E/A packets for an actual counterexample, especially the source-certified E p=2 marker-mutating branch. If the rule survives, develop an original-source guarded alternating-stack simulation with exact halt/return timing. A useful eventual consequence must constrain an **entire actual blank-root feeder**, not merely produce another synthetic cylinder. Keep this evidence in `im-results/` until that mathematical gap is closed.
