@@ -79,7 +79,9 @@ jobs:
             lean -o "$D/ACodeFirstReturn.olean" "$D/ACodeFirstReturn.lean"
             lean -o "$G/AImplicitCodeFirstReturn.olean" "$G/AImplicitCodeFirstReturn.lean"
             lean -o "$G/ACanonicalTwoTailFirst.olean" "$G/ACanonicalTwoTailFirst.lean"
-            lean "$G/AImplicitOneTailFirstReturn.lean"
+            lean -o "$G/AImplicitOneTailFirstReturn.olean" "$G/AImplicitOneTailFirstReturn.lean"
+            lean -o "$B/A1100CodeFirst.olean" "$B/A1100CodeFirst.lean"
+            lean "$G/AImplicitDoubleTailFirst.lean"
             exit 0
           fi
           lean -o "$D/AWordAlgebra.olean" "$D/AWordAlgebra.lean"
