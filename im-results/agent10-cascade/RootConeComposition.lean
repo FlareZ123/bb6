@@ -82,6 +82,32 @@ theorem ray_nonterminal_fork_closed
   exact rooted_two_fork_closed v w z h hvne hwne hzroot hhroot
     hparents hwparents
 
+
+/-- Backward-closed source reset barriers need not enumerate an infinite
+    reset orbit. If a predicate excludes the blank root and contains
+    every exact first-reset predecessor of each of its states, no state
+    in that predicate is reached from C(2,0). This works equally well
+    for finite 17-node symbolic cones and infinite parametric barriers. -/
+theorem backward_closed_root_barrier
+    (P : Nat → Prop)
+    (hroot : ¬ P 2)
+    (hback : ∀ u h, P u → ResetParent h u → P h)
+    (u : Nat) (hu : P u) :
+    ¬ ReachC (2,0) (u,0) := by
+  intro hreach
+  have hc : ResetChain 2 u := (root_reset_chain_iff u).mp hreach
+  have hbackChain : ∀ v, ResetChain 2 v → P v → P 2 := by
+    intro v hv
+    induction hv with
+    | root =>
+      intro hvP
+      exact hvP
+    | append hprev hp ih =>
+      intro htargetP
+      exact ih (hback _ _ htargetP hp)
+  exact hroot (hbackChain u hc hu)
+
+#print axioms backward_closed_root_barrier
 #print axioms root_excluded_of_all_parents_dead
 #print axioms rooted_two_fork_closed
 #print axioms ray_nonterminal_fork_closed
