@@ -60,7 +60,8 @@ theorem p7e1e_reach_implies_a4_t7 (t : Nat) (ht8 : t%8=7)
           (p7e1eDX t) (p7e1eDY t) := by
       simpa only [ha,hk,hDx,hDy] using hprev
     have hDreach : RunReach (p7e1eDX t) (p7e1eDY t) := by
-      simpa [RunReach,BB6.Agent3Root32HighStopA4Core.RunReach] using hDreachA4
+      simpa [RunReach,BB6.Agent3Root32HighStopA4Core.RunReach,
+        BB6.Agent3Root32HighStopIntegrated.RunReach] using hDreachA4
     have hDxEven : p7e1eDX t%2=0 := by
       dsimp [p7e1eDX]
       omega
