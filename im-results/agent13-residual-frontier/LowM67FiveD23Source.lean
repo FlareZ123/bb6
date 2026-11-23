@@ -77,7 +77,7 @@ theorem low_stop_m67_z165_mod256_unreachable
   have hpdiv : 131072 ∣ 2^(2*m+3) := by
     have h : (2:Nat)^17 ∣ 2^(2*m+3) :=
       Nat.pow_dvd_pow 2 (by omega)
-    simpa only [show (2:Nat)^12=131072 by decide] using h
+    simpa only [show (2:Nat)^17=131072 by decide] using h
   have hpmod : (2^(2*m+3))%131072=0 :=
     Nat.mod_eq_zero_of_dvd hpdiv
   have hkmod : k%131072=8499 := by
@@ -186,7 +186,7 @@ theorem low_stop_m67_z105_mod512_unreachable
   have hpdiv : 262144 ∣ 2^(2*m+3) := by
     have h : (2:Nat)^18 ∣ 2^(2*m+3) :=
       Nat.pow_dvd_pow 2 (by omega)
-    simpa only [show (2:Nat)^13=262144 by decide] using h
+    simpa only [show (2:Nat)^18=262144 by decide] using h
   have hpmod : (2^(2*m+3))%262144=0 :=
     Nat.mod_eq_zero_of_dvd hpdiv
   have hkmod : k%262144=100659 := by
@@ -295,7 +295,7 @@ theorem low_stop_m67_z469_mod1024_unreachable
   have hpdiv : 524288 ∣ 2^(2*m+3) := by
     have h : (2:Nat)^19 ∣ 2^(2*m+3) :=
       Nat.pow_dvd_pow 2 (by omega)
-    simpa only [show (2:Nat)^14=524288 by decide] using h
+    simpa only [show (2:Nat)^19=524288 by decide] using h
   have hpmod : (2^(2*m+3))%524288=0 :=
     Nat.mod_eq_zero_of_dvd hpdiv
   have hkmod : k%524288=327987 := by
@@ -404,7 +404,7 @@ theorem low_stop_m67_z869_mod1024_unreachable
   have hpdiv : 524288 ∣ 2^(2*m+3) := by
     have h : (2:Nat)^19 ∣ 2^(2*m+3) :=
       Nat.pow_dvd_pow 2 (by omega)
-    simpa only [show (2:Nat)^14=524288 by decide] using h
+    simpa only [show (2:Nat)^19=524288 by decide] using h
   have hpmod : (2^(2*m+3))%524288=0 :=
     Nat.mod_eq_zero_of_dvd hpdiv
   have hkmod : k%524288=237875 := by
@@ -513,7 +513,7 @@ theorem low_stop_m67_z585_mod1024_unreachable
   have hpdiv : 524288 ∣ 2^(2*m+3) := by
     have h : (2:Nat)^19 ∣ 2^(2*m+3) :=
       Nat.pow_dvd_pow 2 (by omega)
-    simpa only [show (2:Nat)^14=524288 by decide] using h
+    simpa only [show (2:Nat)^19=524288 by decide] using h
   have hpmod : (2^(2*m+3))%524288=0 :=
     Nat.mod_eq_zero_of_dvd hpdiv
   have hkmod : k%524288=149811 := by
