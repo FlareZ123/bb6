@@ -143,7 +143,7 @@ private theorem a4_source_parent_cases (s a k : Nat)
   have hp := (section_preimage_all_iff a k x y).mp hstep
   by_cases ha0 : a=0
   · by_cases hk0 : k=0
-    · simp [sectionPreimageAll,ha0,hk0] at hp
+    · simp [sectionPreimageAll,ha0,hk0] at hp <;> omega
     · by_cases hk1 : k=1
       · simp [sectionPreimageAll,ha0,hk0,hk1] at hp <;> omega
       · have hcase : 4≤y ∧ ∃ n : Nat,
@@ -325,9 +325,9 @@ private theorem t0_source_parent_cases (s a k : Nat)
   have hp := (section_preimage_all_iff a k x y).mp hstep
   by_cases ha0 : a=0
   · by_cases hk0 : k=0
-    · simp [sectionPreimageAll,ha0,hk0] at hp
+    · simp [sectionPreimageAll,ha0,hk0] at hp <;> omega
     · by_cases hk1 : k=1
-      · simp [sectionPreimageAll,ha0,hk0,hk1] at hp
+      · simp [sectionPreimageAll,ha0,hk0,hk1] at hp <;> omega
       · have hcase : 4≤y ∧ ∃ n : Nat,
             x+y=2^n*8 ∧ (2*k+1)+8+3*n=x+2*y := by
           simpa [sectionPreimageAll,ha0,hk0,hk1] using hp
