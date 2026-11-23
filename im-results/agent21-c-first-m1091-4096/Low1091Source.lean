@@ -96,7 +96,7 @@ private theorem odd_odd_sum4_parent (a k x y : Nat)
                 if_neg hk0,if_neg hk1,if_neg hk2,if_neg hk3] at hp
               rcases hp with ⟨n,⟨hpow,_⟩⟩
               have hodd : (x+y+1)%2=1 := by omega
-              have heven : (2^n*16)%2=0 := by simp
+              have heven : (2^n*16)%2=0 := by simp [Nat.mul_mod]
               rw [hpow] at hodd
               omega
     · have ha2 : 2≤a := by omega
@@ -128,7 +128,7 @@ private theorem odd_odd_sum4_parent (a k x y : Nat)
                   rcases hdiv with ⟨q,hq⟩
                   refine ⟨q,?_⟩
                   rw [hq]
-                  simp [Nat.mul_assoc]
+                  ring
                 have hpowdiv : 2∣2^(n+1) := by
                   change 2^1∣2^(n+1)
                   exact Nat.pow_dvd_pow 2 (by omega)
@@ -210,37 +210,37 @@ private theorem even_odd_sumplus1_mod8_4_parent (a k x y : Nat)
           · simp only [sectionPreimageCriterion,if_neg ha0,if_neg ha1,
               if_neg hk0,if_neg hlow,if_neg haeven] at hp
             rcases hp with ⟨n,⟨hpow,hcost⟩⟩
-            by_cases hn0 : n=0
-              · subst n
-                simp at hpow hcost
-                have hform : 2*(a-1)+8=2*(a+3) := by omega
-                rw [hform] at hpow
-                have haEq : a=(x+y+1)/2-3 := by omega
-                have hkEq : k=(x+2*y-a-7)/2 := by omega
-                exact ⟨haEq,hkEq⟩
-              · have hnpos : 1≤n := by omega
-                have hform : 2*(a-1)+8=2*(a+3) := by omega
-                have hmodlt : a%2<2 := Nat.mod_lt a (by omega)
-                have haOdd : a%2=1 := by omega
-                have hmod : (a+3)%2=0 := by omega
-                have hdivA : 2∣a+3 := Nat.dvd_of_mod_eq_zero hmod
-                rcases hdivA with ⟨q,hq⟩
-                have hfour : 4∣2*(a-1)+8 := by
-                  rw [hform]
-                  refine ⟨q,?_⟩
-                  rw [hq]
-                  simp [Nat.mul_assoc]
-                have hpowdiv : 2∣2^n := by
-                  change 2^1∣2^n
-                  exact Nat.pow_dvd_pow 2 hnpos
-                rcases hfour with ⟨r,hr⟩
-                rcases hpowdiv with ⟨s,hs⟩
-                have hdiv8 : 8∣x+y+1 := by
-                  refine ⟨s*r,?_⟩
-                  rw [hpow,hs,hr]
-                  simp [Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm]
-                have hmod : (x+y+1)%8=0 := Nat.mod_eq_zero_of_dvd hdiv8
-                omega
+            have hform : 2*(a-1)+8=2*(a+3) := by omega
+            have hmodlt : a%2<2 := Nat.mod_lt a (by omega)
+            have haOdd : a%2=1 := by omega
+            have hmod : (a+3)%2=0 := by omega
+            have hdivA : 2∣a+3 := Nat.dvd_of_mod_eq_zero hmod
+            rcases hdivA with ⟨q,hq⟩
+            have hfour : 4∣2*(a-1)+8 := by
+              rw [hform]
+              refine ⟨q,?_⟩
+              rw [hq]
+              ring
+            have hn0 : n=0 := by
+              by_contra hnz
+              have hnpos : 1≤n := by omega
+              have hpowdiv : 2∣2^n := by
+                change 2^1∣2^n
+                exact Nat.pow_dvd_pow 2 hnpos
+              rcases hfour with ⟨r,hr⟩
+              rcases hpowdiv with ⟨s,hs⟩
+              have hdiv8 : 8∣x+y+1 := by
+                refine ⟨s*r,?_⟩
+                rw [hpow,hs,hr]
+                ring
+              have hmod8 : (x+y+1)%8=0 := Nat.mod_eq_zero_of_dvd hdiv8
+              omega
+            subst n
+            simp only [Nat.pow_zero, one_mul, Nat.mul_zero, Nat.add_zero] at hpow hcost
+            rw [hform] at hpow
+            have haEq : a=(x+y+1)/2-3 := by omega
+            have hkEq : k=(x+2*y-a-7)/2 := by omega
+            exact ⟨haEq,hkEq⟩
 
 /-- A positive-time blank output cannot have odd right counter and sum 2 mod 4. -/
 private theorem no_blank_odd_sum_two (x y : Nat)
