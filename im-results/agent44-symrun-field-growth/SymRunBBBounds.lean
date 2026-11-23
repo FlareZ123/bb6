@@ -1,5 +1,5 @@
 /-! Sharper independent length and numeric-mass bounds for the exact BB sweep. -/
-import SymRunTraceStats
+import SymRunBBBase
 
 open BusyBeaver.SymRunEngine
 
@@ -258,15 +258,6 @@ theorem sweepBB_length_bound4 (L R : List SymTok) :
     stateTokenCount (sweepBB L R) ≤ L.length + R.length + 4 * L.length + 12 :=
   (sweepBB_length_bound4_pair L R).1
 
-
-theorem sweepBB_weight_bound_sharper (L R : List SymTok) :
-    symStateWeight (sweepBB L R) ≤
-      L.length + R.length + listNumSum L + listNumSum R + 6 * L.length + 17 := by
-  have hlen := sweepBB_length_bound4 L R
-  have hsum := sweepBB_num_sum_bound L R
-  have h := Nat.add_le_add hlen hsum
-  simp [symStateWeight, stateTokenCount, symStateNumSum] at h ⊢
-  omega
 
 theorem sweepBB_length_bound (L R : List SymTok) :
     stateTokenCount (sweepBB L R) ≤ L.length + R.length + 5 * L.length + 12 := by
@@ -541,6 +532,15 @@ theorem sweepBB_num_sum_bound (L R : List SymTok) :
                   omega
             _ ≤ listNumSum (.rep12 m :: L1) + listNumSum R +
                   2 * (L1.length + 1) + 5 := by omega
+
+theorem sweepBB_weight_bound_sharper (L R : List SymTok) :
+    symStateWeight (sweepBB L R) ≤
+      L.length + R.length + listNumSum L + listNumSum R + 6 * L.length + 17 := by
+  have hlen := sweepBB_length_bound4 L R
+  have hsum := sweepBB_num_sum_bound L R
+  have h := Nat.add_le_add hlen hsum
+  simp [symStateWeight, stateTokenCount, symStateNumSum] at h ⊢
+  omega
 
 theorem sweepBB_weight_bound_sharp (L R : List SymTok) :
     symStateWeight (sweepBB L R) ≤
