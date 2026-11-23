@@ -57,7 +57,17 @@ private theorem ff_residues (r s k : Nat)
     k%128=9 ∨ k%128=25 ∨ k%128=41 ∨
     k%128=57 ∨ k%128=89 ∨ k%128=105 ∨
     k%128=121 := by
-  rcases hk with h|h|h <;> omega
+  rcases hk with h1 | h9 | h25
+  · have hbad : r%8=3 ∧ s%8=5 := by omega
+    exact False.elim (hno35 hbad)
+  · have hnot73 : k%128≠73 := by
+      intro h73
+      have hbad : r%32=5 ∧ s%8=1 := by omega
+      exact hno51 hbad
+    clear hr hs hno35 hno51
+    omega
+  · clear hr hs hno35 hno51
+    omega
 
 /-- Pure arithmetic core of the forced F-then-E inverse branch. -/
 private theorem fe_residues (r s k : Nat)
@@ -68,7 +78,11 @@ private theorem fe_residues (r s k : Nat)
     k%128=11 ∨ k%128=43 ∨ k%128=75 ∨
     k%128=107 := by
   have hk32 : k%32=11 ∨ k%32=27 := by omega
-  rcases hk32 with h|h <;> omega
+  rcases hk32 with h11 | h27
+  · clear hr hs hno15
+    omega
+  · have hbad : r%8=1 ∧ s%8=5 := by omega
+    exact False.elim (hno15 hbad)
 
 /-- Only 11 out of the 128 k classes can be genuine blank-root
     exceptional parents sufficiently far inside the branch-9 spine. -/
