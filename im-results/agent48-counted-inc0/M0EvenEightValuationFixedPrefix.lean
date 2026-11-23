@@ -45,7 +45,7 @@ theorem bridge_heads44 (bit : Bool) (k : Nat) (hk : k < 44) :
   have hall := List.all_eq_true.mp (bridge_heads44_all bit) k
     (List.mem_range.mpr hk)
   cases hrun : fRun tm2 k (bridgeStartWithBit bit) with
-  | none => simp [hrun,bridgeStartWithBit,bridgeInside44]
+  | none => simp [hrun,bridgeStartWithBit,m0EvenEightBridgeStart,bridgeInside44]
   | some f => simpa [hrun] using hall
 
 
@@ -56,7 +56,7 @@ theorem bridge_prefix44_at (T : Int → Bool) (h : Int) (bit : Bool)
       T (h+x) = decide (x ∈ (bridgeStartWithBit bit).marked)) :
     run tm2 44 ⟨3,h,T⟩ =
       some (frameAt T h bridgeInside44 (bridgeMidWithBit bit)) := by
-  simpa [bridgeStartWithBit,bridgeMidWithBit] using
+  simpa [bridgeStartWithBit,m0EvenEightBridgeStart,bridgeMidWithBit] using
     bridgeAt T h bridgeInside44
       (bridgeStartWithBit bit) (bridgeMidWithBit bit) 44 rfl
       (bridge_prefix44 bit) (bridge_heads44_all bit) hmatch
@@ -87,9 +87,14 @@ theorem state3_zero_exit4 (T : Int → Bool) (h : Int)
   have neq3 : h+1 ≠ h-1 := by omega
   have hh0 : h-1+1 = h := by omega
   have hh1 : h+1-1 = h := by omega
-  simp [run, rawStep, readSlot, applyMove, hleft, h0, hright,
-    lookup30_zero, lookup20_zero, lookup40_zero, lookup00_zero,
-    neq1, neq2, neq3, hh0, hh1]
+  simp [run, rawStep, readSlot, applyMove, tm2, hleft, h0, hright,
+    afterZeroExit4, neq1, neq2, neq3, hh0, hh1]
+  constructor
+  · omega
+  · funext x
+    by_cases hx0 : x = h-1 <;> by_cases hx1 : x = h <;>
+      by_cases hx2 : x = h+1 <;>
+      simp [afterZeroExit4,hx0,hx1,hx2,hleft,h0,hright,neq1,neq2,neq3]
 
 #print axioms bridge_prefix44
 #print axioms bridge_heads44
