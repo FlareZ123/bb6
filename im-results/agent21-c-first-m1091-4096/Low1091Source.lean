@@ -94,7 +94,7 @@ private theorem odd_odd_sum4_parent (a k x y : Nat)
               omega
             · simp only [sectionPreimageCriterion,if_neg ha0,if_pos ha1,
                 if_neg hk0,if_neg hk1,if_neg hk2,if_neg hk3] at hp
-              rcases hp with ⟨hy3,_⟩ | ⟨_,n,hpow,_⟩
+              rcases hp with ⟨hy3,_⟩ | ⟨_,⟨n,hpow,_⟩⟩
               · omega
               · have hodd : (x+y+1)%2=1 := by omega
                 have heven : (2^n*16)%2=0 := by simp
@@ -143,7 +143,7 @@ private theorem odd_odd_sum4_parent (a k x y : Nat)
                 omega
           · simp only [sectionPreimageCriterion,if_neg ha0,if_neg ha1,
               if_neg hk0,if_neg hlow,if_neg haeven] at hp
-            rcases hp with ⟨hy3,_⟩ | ⟨_,n,hpow,_⟩
+            rcases hp with ⟨hy3,_⟩ | ⟨_,⟨n,hpow,_⟩⟩
             · omega
             · have hodd : (x+y+1)%2=1 := by omega
               have heven : (2^n*(2*(a-1)+8))%2=0 := by simp [Nat.mul_mod]
@@ -186,7 +186,7 @@ private theorem even_odd_sumplus1_mod8_4_parent (a k x y : Nat)
               omega
             · simp only [sectionPreimageCriterion,if_neg ha0,if_pos ha1,
                 if_neg hk0,if_neg hk1,if_neg hk2,if_neg hk3] at hp
-              rcases hp with ⟨hy3,_⟩ | ⟨_,n,hpow,_⟩
+              rcases hp with ⟨hy3,_⟩ | ⟨_,⟨n,hpow,_⟩⟩
               · omega
               · have hmod16 : (x+y+1)%16=0 := by
                   rw [hpow]
