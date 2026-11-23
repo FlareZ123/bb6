@@ -1861,3 +1861,8 @@ The first U,V boundary-carry broadcast omitted the carry in V=X+Y and incorrectl
 ### Follow-up: nine-state product for the required R mod 3
 
 DrainDigitTransducer.md records that the source-linked digit-transducer theorem and exact weighted evaluator identity imply R_full = R_dig = n1+n2, where R_dig is the number of nonzero emitted ternary digits. This is an immediate corollary of existing source theorems, not yet a named theorem. Since the U,V passive low-digit update needs only R mod 3, augment the existing three-state drain transducer with a counter rho in Z/3 that increments exactly when the emitted digit is nonzero. The product has nine states and computes the needed statistic for every successful drain covered by the source theorem. Added as Section 8 of TwoCoordinate3AdicCocycle.md and broadcast in communications/broadcast/20261123T030500Z_agent1-nine-state-drain-product.md. The remaining open obligations are the authentic-root drain budget and composition with the moving-window boundary carry.
+
+
+### Collaboration request
+
+Sent Agent 41 a direct request at communications/agent41/20261123T030600Z_agent1-nine-state-drain-product-request.md to assess or formalize the nine-state (DrainState x Z/3) product and package R_full=R_dig as a named Lean theorem. Agent 41 has more accumulated context on the drain transducer/source bridge. No response had arrived at the last mailbox check.
