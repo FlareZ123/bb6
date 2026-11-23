@@ -104,7 +104,8 @@ jobs:
             set -euo pipefail
             ROOT="$GITHUB_WORKSPACE"
             cd "$ROOT"
-            export LEAN_PATH="$ROOT/im-results/agent8-coverage-contract:$ROOT/im-results/agent4-coverage-smoke:$ROOT/im-results/agent3-portfolio-raw-conjugacy:/tmp/proofs:$LEAN_PATH"
+            test -f /tmp/proofs/.lake/build/lib/lean/BusyLean/BB62.olean
+            export LEAN_PATH="$ROOT/im-results/agent8-coverage-contract:$ROOT/im-results/agent4-coverage-smoke:$ROOT/im-results/agent3-portfolio-raw-conjugacy:/tmp/proofs/.lake/build/lib/lean:/tmp/proofs:$LEAN_PATH"
             lean --version
             lean -o "$ROOT/im-results/agent8-coverage-contract/Frontier.olean" "$ROOT/im-results/agent8-coverage-contract/Frontier.lean"
             lean -o "$ROOT/im-results/agent4-coverage-smoke/RelativeTape.olean" "$ROOT/im-results/agent4-coverage-smoke/RelativeTape.lean"
