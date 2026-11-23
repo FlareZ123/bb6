@@ -539,6 +539,7 @@ theorem root_countdown_step_with_suffix (n c : ℕ)
         (List.replicate (4*n+9) (0,0) ++ [(c-3,0)] ++ T)) := by
   have hc1 : c-1+1 = c := by omega
   have hc2 : c-3+2 = c-1 := by omega
+  have hn : 4*(n+1)+5 = 4*n+9 := by omega
   have h1 := root_countdown_prefix_with_tail_fixed n c T
   have h2 := root_countdown_el_zero_sweep (4*n+5)
     [(0,0),(1,0)] ([(c,0)] ++ T)
@@ -568,80 +569,64 @@ theorem root_countdown_step_with_suffix (n c : ℕ)
     ([(c-3,0)] ++ T)
   have h6 := root_countdown_dr_positive_positive_step 0 0 []
     (List.replicate (4*n+7) (0,0) ++ [(c-3,0)] ++ T)
-  exact ReachesPlus.trans h1
-    (ReachesPlus.trans h2'
-      (ReachesPlus.trans h3'
-        (ReachesPlus.trans h4'
-          (ReachesPlus.trans h5 h6))))
+  simpa [List.replicate_succ, List.cons_append, List.append_assoc,
+    hc1, hc2, hn] using
+    (ReachesPlus.trans h1
+      (ReachesPlus.trans h2'
+        (ReachesPlus.trans h3'
+          (ReachesPlus.trans h4'
+            (ReachesPlus.trans h5 h6))))
 
-theorem root_countdown_iter_succ_one_with_suffix (n k : ℕ)
+theorem root_countdown_iter_succ_one_with_suffix (n m : ℕ)
     (T : List (ℕ × ℕ)) :
     ReachesPlus target
       (cfg_CR_n_n [(0,0)]
-        (List.replicate (4*n+5) (0,0) ++ [(3*(k+1)+1,0)] ++ T))
+        (List.replicate (4*n+5) (0,0) ++ [(3*(m+1)+1,0)] ++ T))
       (cfg_CR_n_n [(0,0)]
-        (List.replicate (4*(n+k+1)+5) (0,0) ++ [(1,0)] ++ T)) := by
-  induction k generalizing n with
+        (List.replicate (4*(n+m+1)+5) (0,0) ++ [(1,0)] ++ T)) := by
+  induction m generalizing n with
   | zero =>
-      have h := root_countdown_step_with_suffix n 4 T (by omega)
-      simpa [Nat.mul_add, List.replicate_succ, List.cons_append,
-        List.append_assoc] using h
-  | succ k ih =>
-      have h1 := root_countdown_step_with_suffix n (3*(k+2)+1) T (by omega)
-      have h2 := ih (n+1)
-      have h2' : ReachesPlus target
-          (cfg_CR_n_n [(0,0)]
-            (List.replicate (4*(n+1)+5) (0,0) ++ [(3*(k+1)+1,0)] ++ T))
-          (cfg_CR_n_n [(0,0)]
-            (List.replicate (4*((n+1)+(k+1))+5) (0,0) ++ [(1,0)] ++ T)) := by
-        simpa [Nat.add_assoc] using h2
-      exact ReachesPlus.trans h1 h2'
+      simpa using root_countdown_step_with_suffix n 4 T (by omega)
+  | succ m ih =>
+      have hfirst := root_countdown_step_with_suffix n (3*(m+2)+1) T (by omega)
+      have hrest := ih (n+1)
+      have hidx : (n+1)+(m+1) = n+(m+2) := by omega
+      have hval : 3*(m+2)+1-3 = 3*(m+1)+1 := by omega
+      simpa [hidx, hval] using ReachesPlus.trans hfirst hrest
 
-theorem root_countdown_iter_succ_zero_with_suffix (n k : ℕ)
+theorem root_countdown_iter_succ_zero_with_suffix (n m : ℕ)
     (T : List (ℕ × ℕ)) :
     ReachesPlus target
       (cfg_CR_n_n [(0,0)]
-        (List.replicate (4*n+5) (0,0) ++ [(3*(k+1),0)] ++ T))
+        (List.replicate (4*n+5) (0,0) ++ [(3*(m+1),0)] ++ T))
       (cfg_CR_n_n [(0,0)]
-        (List.replicate (4*(n+k+1)+5) (0,0) ++ [(0,0)] ++ T)) := by
-  induction k generalizing n with
+        (List.replicate (4*(n+m+1)+5) (0,0) ++ [(0,0)] ++ T)) := by
+  induction m generalizing n with
   | zero =>
-      have h := root_countdown_step_with_suffix n 3 T (by omega)
-      simpa [Nat.mul_add, List.replicate_succ, List.cons_append,
-        List.append_assoc] using h
-  | succ k ih =>
-      have h1 := root_countdown_step_with_suffix n (3*(k+2)) T (by omega)
-      have h2 := ih (n+1)
-      have h2' : ReachesPlus target
-          (cfg_CR_n_n [(0,0)]
-            (List.replicate (4*(n+1)+5) (0,0) ++ [(3*(k+1),0)] ++ T))
-          (cfg_CR_n_n [(0,0)]
-            (List.replicate (4*((n+1)+(k+1))+5) (0,0) ++ [(0,0)] ++ T)) := by
-        simpa [Nat.add_assoc] using h2
-      exact ReachesPlus.trans h1 h2'
+      simpa using root_countdown_step_with_suffix n 3 T (by omega)
+  | succ m ih =>
+      have hfirst := root_countdown_step_with_suffix n (3*(m+2)) T (by omega)
+      have hrest := ih (n+1)
+      have hidx : (n+1)+(m+1) = n+(m+2) := by omega
+      have hval : 3*(m+2)-3 = 3*(m+1) := by omega
+      simpa [hidx, hval] using ReachesPlus.trans hfirst hrest
 
-theorem root_countdown_iter_succ_two_with_suffix (n k : ℕ)
+theorem root_countdown_iter_succ_two_with_suffix (n m : ℕ)
     (T : List (ℕ × ℕ)) :
     ReachesPlus target
       (cfg_CR_n_n [(0,0)]
-        (List.replicate (4*n+5) (0,0) ++ [(3*(k+1)+2,0)] ++ T))
+        (List.replicate (4*n+5) (0,0) ++ [(3*(m+1)+2,0)] ++ T))
       (cfg_CR_n_n [(0,0)]
-        (List.replicate (4*(n+k+1)+5) (0,0) ++ [(2,0)] ++ T)) := by
-  induction k generalizing n with
+        (List.replicate (4*(n+m+1)+5) (0,0) ++ [(2,0)] ++ T)) := by
+  induction m generalizing n with
   | zero =>
-      have h := root_countdown_step_with_suffix n 5 T (by omega)
-      simpa [Nat.mul_add, List.replicate_succ, List.cons_append,
-        List.append_assoc] using h
-  | succ k ih =>
-      have h1 := root_countdown_step_with_suffix n (3*(k+2)+2) T (by omega)
-      have h2 := ih (n+1)
-      have h2' : ReachesPlus target
-          (cfg_CR_n_n [(0,0)]
-            (List.replicate (4*(n+1)+5) (0,0) ++ [(3*(k+1)+2,0)] ++ T))
-          (cfg_CR_n_n [(0,0)]
-            (List.replicate (4*((n+1)+(k+1))+5) (0,0) ++ [(2,0)] ++ T)) := by
-        simpa [Nat.add_assoc] using h2
-      exact ReachesPlus.trans h1 h2'
+      simpa using root_countdown_step_with_suffix n 5 T (by omega)
+  | succ m ih =>
+      have hfirst := root_countdown_step_with_suffix n (3*(m+2)+2) T (by omega)
+      have hrest := ih (n+1)
+      have hidx : (n+1)+(m+1) = n+(m+2) := by omega
+      have hval : 3*(m+2)+2-3 = 3*(m+1)+2 := by omega
+      simpa [hidx, hval] using ReachesPlus.trans hfirst hrest
 
 theorem root_remainder_one_root_to_token_cfg :
     ReachesPlus target
@@ -657,5 +642,5 @@ theorem root_remainder_one_root_to_token_cfg :
         (List.replicate 5 (0,0) ++ [(26524315,0),(0,0),(0,0),(2,0)]))
       (cfg_CR_n_n [(0,0)]
         (List.replicate (4*8841438+5) (0,0) ++ [(1,0),(0,0),(0,0),(2,0)])) := by
-    simpa [hc, Nat.mul_add] using h1
+    simpa [hc, Nat.mul_add, List.append_assoc] using h1
   exact ReachesPlus.trans h1' h2
