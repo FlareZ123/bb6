@@ -51,7 +51,7 @@ theorem rooted_branch29_final_burst_floor
     have hpow : 2^(n+2)=524288*2^(n-17) := by
       have hsplit : n+2=19+(n-17) := by omega
       rw [hsplit, Nat.pow_add]
-      norm_num
+      rfl
     have hmod : (128*q+3*n+131)%524288=0 := by
       rw [heq,hpow]
       omega
