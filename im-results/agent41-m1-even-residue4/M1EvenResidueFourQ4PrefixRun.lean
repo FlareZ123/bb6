@@ -360,44 +360,58 @@ theorem m1EvenResidueFour_q4_prefix_run (a b : Nat) (h : Int) :
 private theorem m1EvenResidueFour_sweptLeft_head_eq_source (q : Nat)
     (T : Int → Bool) (h : Int) :
     sweptLeft q T h (h-(q:Int)) = T (h-(q:Int)) := by
-  induction q with
+  induction q generalizing T h with
   | zero => simp [sweptLeft]
   | succ q ih =>
-    have hcoord : h-((q+1:Int)) = (h-1)-(q:Int) := by omega
-    rw [show sweptLeft (q+1) T h =
-      sweptLeft q (holeThree T h) (h-1) by rfl]
-    rw [hcoord,ih]
-    have hne1 : h-((q+1:Int)) ≠ h+1 := by omega
-    have hne2 : h-((q+1:Int)) ≠ h := by omega
+    have hcoord : h-(((q+1:Nat):Int)) = (h-1)-(q:Int) := by omega
+    change sweptLeft q (holeThree T h) (h-1)
+        (h-(((q+1:Nat):Int))) = T (h-(((q+1:Nat):Int)))
+    rw [hcoord, ih (holeThree T h) (h-1)]
+    have hne1 : (h-1)-(q:Int) ≠ h+1 := by omega
+    have hne2 : (h-1)-(q:Int) ≠ h := by omega
     simp [holeThree,hne1,hne2]
 
 private theorem m1EvenResidueFour_sweptLeft_head_plus1_false (q : Nat)
     (T : Int → Bool) (h : Int) :
     sweptLeft (q+1) T h (h-(q:Int)) = false := by
-  induction q with
-  | zero => simp [sweptLeft,holeThree]
+  induction q generalizing T h with
+  | zero =>
+    simp [sweptLeft,holeThree] <;> omega
   | succ q ih =>
-    have hcoord : h-((q+1:Int)) = (h-1)-(q:Int) := by omega
-    rw [show sweptLeft (q+2) T h =
-      sweptLeft (q+1) (holeThree T h) (h-1) by rfl]
+    have hcoord : h-(((q+1:Nat):Int)) = (h-1)-(q:Int) := by omega
+    change sweptLeft (q+1) (holeThree T h) (h-1)
+      (h-(((q+1:Nat):Int))) = false
     rw [hcoord]
     exact ih (holeThree T h) (h-1)
 
-private theorem m1EvenResidueFour_leftSweep_one
-    (T : Int → Bool) (h : Int) (ht : T h = true) :
+private theorem m1EvenResidueFour_leftSweep_one (T : Int → Bool) (h : Int)
+    (ht : T h = true) :
     run tm2 1 ⟨3,h,T⟩ = some ⟨1,h+1,T⟩ := by
-  simp [run,rawStep,readSlot,applyMove,tm2,ht]
+  change rawStep tm2 ⟨3,h,T⟩ = some ⟨1,h+1,T⟩
+  simp only [rawStep,readSlot,ht]
+  have he : tm2 ((3:Fin 6),true) = some ⟨true,true,1⟩ := rfl
+  rw [he]
+  simp only [Option.map_some,applyMove]
+  apply congrArg (fun f : Int → Bool => some (Config.mk 1 (h+1) f))
+  funext x
+  by_cases hx : x=h <;> simp [hx,ht]
 
-private theorem m1EvenResidueFour_leftSweep_two
-    (T : Int → Bool) (h : Int)
+private theorem m1EvenResidueFour_leftSweep_two (T : Int → Bool) (h : Int)
     (ht : T h = true) (hr : T (h+1) = false) :
     run tm2 2 ⟨3,h,T⟩ =
       some ⟨2,h,(fun x => if x = h+1 then true else T x)⟩ := by
-  rw [show 2 = 1+1 by omega,run_add,
-    m1EvenResidueFour_leftSweep_one T h ht]
-  simp [run,rawStep,readSlot,applyMove,tm2,hr]
+  rw [show 2 = 1+1 by omega,run_append,m1EvenResidueFour_leftSweep_one T h ht]
+  simp only [Option.bind_some]
+  change rawStep tm2 ⟨1,h+1,T⟩ =
+    some ⟨2,h,(fun x => if x = h+1 then true else T x)⟩
+  simp only [rawStep,readSlot,hr]
+  have he : tm2 ((1:Fin 6),false) = some ⟨true,false,2⟩ := rfl
+  rw [he]
+  simp only [Option.map_some,applyMove]
+  have hcoord : h+1+(-1) = h := by omega
+  simpa [hcoord]
 
-/-- Every prefix of the counted left sweep stays to the right of h-N. -/
+/-- Lower head bound for every prefix of the 3-cell grouped left sweep. -/
 private theorem m1EvenResidueFour_counted_left_sweep_heads
     (N : Nat) (T : Int → Bool) (h : Int)
     (hOn : leftOnes T h N) (hr : T (h+1) = false)
@@ -414,16 +428,18 @@ private theorem m1EvenResidueFour_counted_left_sweep_heads
   have hqrun := counted_left_sweep q T h hqOn hr
   let Tq := sweptLeft q T h
   have hqhead : Tq (h-(q:Int)) = true := by
-    rw [show Tq = sweptLeft q T h by rfl,
-      m1EvenResidueFour_sweptLeft_head_eq_source]
+    rw [show Tq = sweptLeft q T h by rfl,m1EvenResidueFour_sweptLeft_head_eq_source]
     exact hOn q hq
   have hqright : Tq (h-(q:Int)+1) = false := by
+    change sweptLeft q T h (h-(q:Int)+1) = false
     by_cases hq0 : q = 0
-    · subst q
-      simpa [Tq] using hr
-    · obtain ⟨q',rfl⟩ := Nat.exists_eq_succ_of_ne_zero hq0
+    · rw [hq0]
+      simpa [sweptLeft] using hr
+    · obtain ⟨q',hq'⟩ := Nat.exists_eq_succ_of_ne_zero hq0
+      rw [hq']
       have hfalse := m1EvenResidueFour_sweptLeft_head_plus1_false q' T h
-      simpa [Tq] using hfalse
+      have hcoord : h-(((q'+1:Nat):Int))+1 = h-(q':Int) := by omega
+      simpa only [hcoord] using hfalse
   have hqrun' :
       run tm2 (3*q) ⟨3,h,T⟩ =
         some ⟨3,h-(q:Int),Tq⟩ := by
@@ -433,23 +449,22 @@ private theorem m1EvenResidueFour_counted_left_sweep_heads
   have hrlt : r < 3 := Nat.mod_lt _ (by decide)
   have hrCases : r=0 ∨ r=1 ∨ r=2 := by omega
   rcases hrCases with hr0|hr1|hr2
-  · subst r
+  · rw [hr0] at hd
     simp [run] at hd
-    have heq := Option.some.inj hd
     subst d
-    simp
+    change h-(N:Int) ≤ h-(q:Int)
     omega
-  · subst r
+  · rw [hr1] at hd
     rw [m1EvenResidueFour_leftSweep_one Tq (h-(q:Int)) hqhead] at hd
     have heq := Option.some.inj hd
     subst d
-    simp
+    change h-(N:Int) ≤ h-(q:Int)+1
     omega
-  · subst r
+  · rw [hr2] at hd
     rw [m1EvenResidueFour_leftSweep_two Tq (h-(q:Int)) hqhead hqright] at hd
     have heq := Option.some.inj hd
     subst d
-    simp
+    change h-(N:Int) ≤ h-(q:Int)
     omega
 
 private theorem m1EvenResidueFour_fRun_prefix_exists {m c n k d}
