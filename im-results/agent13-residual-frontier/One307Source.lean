@@ -7,10 +7,6 @@ import Lean.Elab.Tactic.Omega
 namespace BB6.Agent13One307
 open BB6.Agent46 BB6.Agent3
 
-/-- A new, original-source infinite low-target nonreachability cylinder:
-    when the low target has shape (1,256*u+51) with u=49 mod128, its four
-    forced exact predecessors land in a proven two-parent forbidden
-    residue rectangle. No finite orbit cutoff and no quotient is used. -/
 /-- Four source-certified exact backward transitions for every positive
     parameter u; no restriction on the valuation or a quotient is used. -/
 theorem four_step_to_rectangle
@@ -48,6 +44,10 @@ theorem four_step_to_rectangle
       using hO4
   exact h4
 
+/-- A new, original-source infinite low-target nonreachability cylinder:
+    when the low target has shape (1,256*u+51) with u=49 mod128, its four
+    forced exact predecessors land in a proven two-parent forbidden
+    residue rectangle. No finite orbit cutoff and no quotient is used. -/
 theorem no_one_256u51_u49_mod128
     (u : Nat) (hu : u%128=49) :
     ¬ BB6.Agent3.CReach 1 (256*u+51) := by
