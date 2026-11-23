@@ -108,20 +108,31 @@ the unary d1^a followed by the first two ones of markerWord 2. -/
 theorem s1M2InitialLeftOnes (L k a b : Nat) (h : Int) :
     leftOnes (s1Config L (8*k) 2 a 0 b h).tape h (3*a+2) := by
   intro i hi
-  rw [s1Config_left_cell]
+  have hcell := s1Config_left_cell L (8*k) 2 a 0 b h i
   have hleft :
       s1LeftFacing L (8*k) 2 a 0 =
         d1pow a ++ markerWord 2 ++ d0 ++ binDec L (8*k) ++ lh := by
     simp [s1LeftFacing,binDec_zero,List.append_assoc]
-  rw [hleft,sideBit_append]
-  by_cases hiA : i<3*a
-  · simpa only [d1pow_length, if_pos hiA] using sideBit_d1pow a i hiA
-  · have hcases : i=3*a ∨ i=3*a+1 := by omega
-    rcases hcases with h|h
-    · subst i
-      simp [d1pow_length,sideBit_append,markerWord,sideBit]
-    · subst i
-      simp [d1pow_length,sideBit_append,markerWord,sideBit]
+  rw [hleft] at hcell
+  let R : List Bool := markerWord 2 ++ d0 ++ binDec L (8*k) ++ lh
+  have hside : sideBit (d1pow a ++ R) i = true := by
+    by_cases hiA : i<3*a
+    · have hiLen : i < (d1pow a).length := by
+        simpa [d1pow_length] using hiA
+      rw [Agent6Q4Prefix.sideBit_append_left (d1pow a) R i hiLen]
+      exact sideBit_d1pow a i hiA
+    · have hcases : i = 3*a ∨ i = 3*a+1 := by omega
+      rcases hcases with h | h
+      · subst i
+        rw [Agent6Q4Prefix.sideBit_append_right (d1pow a) R
+          (3*a) (by simp [d1pow_length])]
+        simp [R,markerWord,sideBit,d1pow_length]
+      · subst i
+        rw [Agent6Q4Prefix.sideBit_append_right (d1pow a) R
+          (3*a+1) (by simp [d1pow_length])]
+        simp [R,markerWord,sideBit,d1pow_length]
+  rw [hcell]
+  simpa [R,List.append_assoc] using hside
 
 /-- The original S1 right stream begins with a blank cell. -/
 theorem s1M2RightZero (L k a b : Nat) (h : Int) :
@@ -149,11 +160,14 @@ theorem m2ZeroSetup_match_after_initial_sweep
     exact Int.toNat_of_nonneg (by omega)
   have hi : i≤13 := by omega
   have hcoord : h-(3*a+2)+x = h-((3*a+2+i):Int) := by omega
-  have hpres := sweptLeft_preserves_left (3*a+2)
+  have hpres := Agent24LBinDecHRun.sweptLeft_preserves_left (3*a+2)
     (s1Config L (8*k) 2 a 0 b h).tape h
     (h-(3*a+2)+x) (by omega)
   rw [hpres,hcoord]
   have hcell := s1Config_left_cell L (8*k) 2 a 0 b h (3*a+2+i)
+  have hcellCoord : h-((3*a+2+i:Nat):Int) =
+      h-(3*(a:Int)+2+(i:Int)) := by omega
+  rw [hcellCoord] at hcell
   rw [hcell]
   have hsuffix := s1M2Setup_suffix L k a hL hk i hi
   have hmarker := m2SetupBits_marker i hi
@@ -175,14 +189,15 @@ theorem m2ZeroInitialSweep (L k a b : Nat) (h : Int)
   have hnum : 3*(3*a+2)=9*a+6 := by omega
   change run tm2 (9*a+6) ⟨3,h,(s1Config L (8*k) 2 a 0 b h).tape⟩ =
     some ⟨3,h-(3*a+2),sweptLeft (3*a+2) (s1Config L (8*k) 2 a 0 b h).tape h⟩
-  simpa only [hnum, Nat.cast_add, Nat.cast_mul, Nat.cast_ofNat] using hs
+  have hcoord : ((3*a+2:Nat):Int) = 3*(a:Int)+2 := by omega
+  simpa only [hnum,hcoord] using hs
 
 /-- Compose the source-level 9*a+6 left sweep with the framed 44-step
 setup.  This is the first two phases of the m=2, n=8*k candidate. -/
 theorem m2ZeroInitialSweep_Setup (L k a b : Nat) (h : Int)
     (hL : 3≤L) (hk : k<2^(L-3)) :
     run tm2 (9*a+6+44) (s1Config L (8*k) 2 a 0 b h) =
-      some (frameAt
+      some (Agent8Rst1Prime.frameAt
         (sweptLeft (3*a+2) (s1Config L (8*k) 2 a 0 b h).tape h)
         (h-(3*a+2)) m2ZeroSetupInside m2ZeroSetupEnd) := by
   let T : Int → Bool := (s1Config L (8*k) 2 a 0 b h).tape
