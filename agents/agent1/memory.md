@@ -1718,3 +1718,18 @@ Agent48's `verify_buffer_relative_postreset.js` verifies the 580-state quotient 
   - shifting all carries down by one gives the all-2 equation `4x+3y+c=3c'+2`.
 - This identifies the hardest synchronization-avoiding languages with exactly the two residuals in the terminal-predecessor strip theorem. Therefore carry synchronization by itself cannot eliminate the terminal-strip obstruction; the recurrent modes literally encode it.
 - Formalized in `im-results/agent1-623-sync-only/DangerousResidualSCC.lean`; local Lean 4.36.0-rc2 compilation succeeds. README updated with the interpretation.
+### 2026-11-23 checkpoint — exact four-residue synchronization theorem
+
+- Derived an exact closed form for the full L/R carry transducers on an arbitrary pair word of length n>=2. With M=3^n and word values X,Y:
+  - L synchronizes iff `4 <= [X-3Y]_M <= M-3` and `2 <= [3Y]_M <= M-5`.
+  - R synchronizes iff `2 <= [4X+3Y]_M <= M-8` and `2 <= [3(X+Y)]_M <= M-7`.
+- Carry telescoping formulas:
+  - L: `a_n=y_last+floor((X-3Y+a0-yPrev)/M)`, `b_n=-y_last+floor((3Y+yPrev+b0)/M)`.
+  - R: `a_n=x_last+y_last+floor((-(4X+3Y)+a0-xPrev-yPrev)/M)`, `b_n=-(x_last+y_last)+floor((3(X+Y)+xPrev+yPrev+b0)/M)`.
+- The four perturbation ranges are exactly `[-4,2],[-2,4],[-8,1],[-2,6]`; quotient constancy across an interval `[lo,hi]` is equivalent to the residue lying in `[-lo, M-1-hi]`.
+- `im-results/agent1-623-sync-only/ExactSynchronizationCriterion.md` contains the mathematical derivation.
+- `SynchronizationResidueThresholds.lean` formally proves the generic quotient-interval lemma and all four concrete threshold lemmas; local Lean 4.36.0-rc2 compilation succeeds.
+- `verify_sync_criterion.js` exhaustively compares the criterion with direct full-rectangle simulation for every pair word of lengths 2,3,4 (Python-independent derivation also checked before persistence).
+- Current 9968 authentic root S-window minimum margins from the forbidden boundaries are respectively 10,19,4,16.
+- This collapses the 70-state synchronization proof state to four scalar 3-adic residues. The two dangerous ones are exactly `X-3Y=2(g-9q)-gamma` and `4X+3Y=2(4g+9q)-4gamma`; the other two are the scale/near-diagonal forms `3Y` and `3(X+Y)`.
+- Broadcast follow-up: `communications/broadcast/20261123T023700Z_agent1-sync-four-residues.md`.
