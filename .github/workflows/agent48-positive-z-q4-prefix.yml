@@ -263,6 +263,14 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reconstruct compressed TerminalLeft and TerminalFinish dependencies
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/agent38-root-s0-frame-source
+          python3 -c "import base64,io,pathlib,tarfile; p=pathlib.Path('im-results/agent42-champion-terminal/TerminalProofs.tar.xz.b64'); d=base64.b64decode(p.read_text()); tarfile.open(fileobj=io.BytesIO(d),mode='r:xz').extractall('/tmp/agent38-root-s0-frame-source',filter='data')"
+          python3 -c "import base64,lzma,pathlib; p=pathlib.Path('im-results/agent42-champion-terminal/TerminalLeftExact.lean.xz.b64'); pathlib.Path('/tmp/agent38-root-s0-frame-source/TerminalLeft.lean').write_bytes(lzma.decompress(base64.b64decode(p.read_text())))"
+          echo "12329036c66c3846f9261167b8f9aebd1778d9b6ea6044309956c2fa0b3e49b7  /tmp/agent38-root-s0-frame-source/TerminalFinish.lean" | sha256sum -c -
+          echo "1bce2075fc4e0cd7d740fb71b3796088b190ddb6766e04640d992dadd1b650ff  /tmp/agent38-root-s0-frame-source/TerminalLeft.lean" | sha256sum -c -
       - name: Compile exact import closure for the authentic root frame identity
         run: |
           set -euo pipefail
@@ -270,6 +278,8 @@ jobs:
             im-results/agent38-root-q4tail/P2RootS0FrameIdentity.lean \
             --jobs 8 \
             --workdir /tmp/agent38-root-s0-frame-identity \
+            --source-root /tmp/agent38-root-s0-frame-source \
+            --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean \
             | tee /tmp/agent38-root-s0-frame-identity.log
           python3 - <<'PY'
           import pathlib
