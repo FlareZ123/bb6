@@ -116,6 +116,12 @@ Two source-exact independent inverse words exclude complete previously open low-
 
 Both have no time, u or z cutoff. Combined with previous exact source 559/4096 and Agent 8 z=2 mod8, z=7 mod16 and z=24 mod32, the [lossless original blank-halting equivalence](LowM67All1551Criterion.lean), accepted [CI 45275168303](https://github.com/FlareZ123/bb6/actions/runs/45275168303), excludes **1551/4096 distinct formal z-residue classes** from this particular low stopping ray. The high-stop family and all surviving low cases remain unbounded and untouched. This is **NOT** a fraction of halting six-state machines resolved; it is an exact infinite parameter-index exclusion.
 
-A separate [second-generation 2-adic mass relation](EvenOddLowStopSecondDyadic.lean) follows the unique even-z predecessor one source layer further. It uses `s=z/2` and `u+12s+1=2^(2048s+129)` and the exact identity
+A separate **second-generation 2-adic mass relation** follows the unique even-z predecessor one source layer further. It uses `s=z/2` and `u+12s+1=2^(2048s+129)` and the exact identity
 `2*((173u+24)+(339u+47)/2+1)+12*(685s+49)=685*2^(2048s+129)`.
-Its proposed all-exponent Lean equivalence is under targeted source check; do **not** describe that new second-generation module as kernel-accepted until its workflow passes.
+The all-exponent equivalence
+`2^(n+2) | 2*(173u+25+(339u+47)/2) ↔ 2^n | 3*(685s+49)`
+is now kernel-accepted in [CI 45277270250](https://github.com/FlareZ123/bb6/actions/runs/45277270250). The second-generation strict non-power gap, which excludes the exceptional pure-power source branch uniformly, is kernel-accepted in [CI 45277766006](https://github.com/FlareZ123/bb6/actions/runs/45277766006).
+
+For `z` divisible by four, [EvenOddLowStopQuarterTwoForced.lean](EvenOddLowStopQuarterTwoForced.lean) composes two exact source-forced ancestors; its selective CI passed in [45287391182](https://github.com/FlareZ123/bb6/actions/runs/45287391182). This is still a reduction, not a root exclusion.
+
+A further second-generation theorem is being developed in [EvenOddLowStopSecondFanSource.lean](EvenOddLowStopSecondFanSource.lean) and [EvenOddLowStopSecondFanReach.lean](EvenOddLowStopSecondFanReach.lean). Its intended exact source-parent iff says that the odd/even target `P=(173u+24,(339u+47)/2)` has its direct affine parent plus only odd-depth high-bounce parents, with every such depth satisfying `2^n | 3*(685s+49)`. For `s=4r+3` with odd `r`, the divisor bound forces every high-bounce parent to depth `n=1`, giving an exact two-candidate root-reachability decomposition. **This further fan is not yet kernel-accepted.** Its first combined CI run was interrupted by a GitHub runner shutdown while compiling the new module (not a Lean diagnostic); source and reachability files have since been split for targeted verification. Do not present these new theorems as certified until the split CI jobs pass.
