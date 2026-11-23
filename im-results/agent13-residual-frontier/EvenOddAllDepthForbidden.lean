@@ -105,7 +105,7 @@ theorem depth_two_BBA_source_parent_impossible
     (u a k r q : Nat) (hk80 : 80≤k)
     (ha : a+3=8*q)
     (hcost : 2*k+a+7+3*(8*r+2)=512*u+78)
-    (hphase : (q+7*r+4*(r%2))%8=7) :
+    (hphase : (q+3*r)%8=7) :
     ¬ BB6.Agent3.CReach a k := by
   have hy0 : 6≤k := by omega
   have he0 : k%2=0 := by omega
