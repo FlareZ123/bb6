@@ -116,21 +116,38 @@ This strongly suggests that the current eight-cell theorem is the exact
 intersection of CCert.newHighPairs with the prior highAllowed sieve,
 not merely a lower bound on that intersection.
 
-## Proof route suggested by the scan
+## Fixed-step residue derivation
 
 For m≥2, 32 divides 2^(2m+2), hence
-k ≡ -(j+3m+5) (mod 32). Thus all gate decisions in the observed
-two-/three-step paths appear to be determined by the residue pair modulo
-32:
-- the eight survivor cells have (j+3m+5)%8=4, so
-  (2j+3+k)%8=7 and the six-even-right gate is false; all other gates
-  are false at the initial point;
-- the eight R → O cells have (j+3m+5)%8=0; after one right-six
-  inverse step the odd-low gate applies, and the terminal normalized pair
-  satisfies the exclusion predicate;
-- the eight R → R → A cells have (j+3m+5)%8=2; two right-six
-  inverse steps lead to the even-affine gate, and the terminal normalized
-  pair satisfies the exclusion predicate.
+k ≡ -(j+3m+5) (mod 32). Thus the initial residues
+(x mod32,k mod32), with x=2j+3, are exactly those tabulated above.
+The transformations in sixForcedNormalize then give the following
+intermediate residues.
+
+- STOP cells: x+k ≡ 23 (mod32), so x+k ≡ 7 (mod8). Here x is odd
+  and k is even; oddLow/evenSeven/evenOddFour are false by parity,
+  evenAffine is false because x+k ≡ 3 (mod4), sixEvenRight is false
+  because x+k ≡ 7 (mod8), and valSix is false because x ≡ 3 (mod8).
+  The normalizer stops with even k, so sixForcedExcluded is false.
+- R → O cells: the four distinct initial pairs are
+  (x mod32,k mod32)=(3,16),(11,0),(19,16),(27,0). After R,
+  (x1 mod32,y1 mod16)=(17,7),(9,15),(1,7),(25,15), respectively.
+  In every case x1,y1 are odd, x1+y1 ≡ 8 (mod16), and the
+  odd-low gate applies. After O, (x2 mod4,y2 mod4)=(2,3);
+  hence y2 is odd and x2+y2 ≡ 1 (mod4), so the terminal exclusion
+  predicate is true.
+- R → R → A cells: the four distinct initial pairs are
+  (x mod32,k mod32)=(5,6),(13,6),(21,6),(29,6). After the first R,
+  (x1 mod32,y1 mod16)=(9,2),(17,2),(25,2),(1,2). The second R
+  applies in every case. After the second R,
+  (x2 mod16,y2 mod8)=(9,0),(1,0),(9,0),(1,0). Thus evenAffine
+  applies; after A, (x3 mod4,y3 mod4)=(3,3), so y3 is odd and
+  x3+y3 ≡ 2 (mod4), making the terminal exclusion predicate true.
+
+The size guards (y≥4, y≥5, y≥6, and x+y thresholds) follow from
+j≥3,m≥2 and the stop-k formula; the smallest initial k is already
+370. The modular residues above determine the branch tests, while
+the lower bounds ensure that the corresponding guards are enabled.
 
 A Lean complement to sixForced_not_excluded_eight should split
 CCert.newHighPairs into these three eight-element sets, unfold
