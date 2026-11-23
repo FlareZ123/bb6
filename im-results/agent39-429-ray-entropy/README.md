@@ -56,6 +56,24 @@ The theorem was accepted **against unchanged repository source** in [Lean CI 451
 
 ---
 
+## Reusable source-certified arbitrary affine-feeder counting theorem
+
+The [`BB429GenericFeederEntropy.lean`](BB429GenericFeederEntropy.lean) module takes an arbitrary nonnegative diagonal offset `c`, any integer-dyadic coefficient `D=2^s d` with `d` **odd**, any affine correction `e`, and **arbitrary** candidate functions `A(u),B(u)`. If every candidate in a finite distinct-parameter list `l` satisfies
+```
+u < X,             X ≤ 2^(k-s),       s ≤ k,
+Reach (A u) (B u), B u + c = 2*(A u),
+16*2^k ≤ A u+3,  2^k ∣ A u + D*u + e,
+```
+then the Lean theorem `generic_feeder_cardinality_bound` proves
+```
+l.length ≤ 2*2^(k/2)
+```
+for **all** `k,c,s,d,e,X,A,B,l` meeting those conditions. It does **not** assume that the candidate functions have a particular exponential closed form: only the stated necessary divisibility is used. The proof takes a legitimate length-k inverse word for each genuine blank-reachable candidate, applies source-proved fixed-word first-counter congruence, cancels the exactly known `2^s` part of the affine coefficient, and injects the parameters into the regular inverse-word language. This is a transferable counting theorem, not another numerical residue table.
+
+**Unchanged source Lean 4.36.0-rc2 [CI 45123217034](https://github.com/FlareZ123/bb6/actions/runs/45123217034) passed**, with exported transitive axiom list **`[propext, Classical.choice, Quot.sound]`** only, no `sorryAx`. The original q0 theorem is a more sharply constants-adapted specialization (the generic theorem's factor 2 is unnecessary for its particular initial phase).
+
+---
+
 ## Main result: a square-root, not merely modular, sieve
 
 Let `next`, `run` and the genuine blank section root `(0,0)` be the exact `BB429` definitions of [Agent 5's authenticated accelerator](../agent5-429-rank/BB429Rank.lean), with source inverse lemmas [`BB429NewResidue.odd_inverse/even_inverse`](../agent6-harmonic429/BB429NewResidue.lean). Define
