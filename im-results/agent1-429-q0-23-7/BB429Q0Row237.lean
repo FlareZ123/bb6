@@ -18,7 +18,7 @@ theorem noReach_notAllowed (a b : Nat)
     (hnot : ¬ BB429Mod8.Allowed a b) : ¬ Reach a b := by
   intro hr
   rcases hr with ⟨n, hn⟩
-  exact hnot (BB429NewResidue.reach_allowed a b hn)
+  exact hnot (BB429NewResidue.reach_allowed a b ⟨n,hn⟩)
 
 theorem noReach_11_1 (a b : Nat) (ha : a % 16 = 11) (hb : b % 4 = 1) :
     ¬ Reach a b := by
