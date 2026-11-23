@@ -154,43 +154,50 @@ The natural next object is a carry automaton retaining the sector, branch, R mod
 This is an exact reparameterization and a more explicit low-digit reduction, **not** a proof that the authentic orbit avoids the synchronization bands or a solution of BB(6).
 
 
-## 7. Boundary carries in the same (U,V) coordinates
 
-The WindowQuotientInterface.md caveat can also be written naturally in this basis. For a window starting at position s, put P=3^s and decompose
-\[
-U=PQ_U+r_U,\qquad V=PQ_V+r_V,
-\]
-with
-\[
-0\le r_U<P,\qquad r_U\le r_V<r_U+P.
-\]
-Indeed U=Y, V=X+Y, so r_U=r_Y and r_V=r_X+r_Y. The window coordinates are exactly
-\[
-U_w=[Q_U]_{3^n},\qquad V_w=[Q_V]_{3^n}.
-\]
+## 7. Boundary carries in the same (U,V) basis
 
-The four low remainders that create the synchronization carries become
+The WindowQuotientInterface.md caveat can be expressed in the same basis, but the basis change itself has a low-boundary carry. For a window starting at position s, put P=3^s and write
+\[
+U=PQ_U+r_U,\qquad V=PQ_V+r_V,\qquad 0\le r_U,r_V<P.
+\]
+Here r_U=r_Y and r_V=(r_X+r_Y) mod P. Define c_V in {0,1} by
+\[
+c_V=\left\lfloor\frac{r_X+r_Y}{P}\right\rfloor.
+\]
+Equivalently, c_V=1 exactly when r_V<r_U. The quotient relation is
+\[
+Q_X=Q_V-Q_U-c_V.
+\]
+Therefore the actual window coordinates in the new basis are
+\[
+U_w=[Q_U]_{3^n},\qquad V_w=[Q_V-c_V]_{3^n},
+\]
+not [Q_V] by itself.
+
+The four low remainders of the global forms U,V are
 \[
 r_V-4r_U,\qquad 3r_U,\qquad 4r_V-r_U,\qquad 3r_V.
 \]
-Consequently their quotient carries are
+Writing their floor carries as
 \[
-c_A=\left\lfloor\frac{r_V-4r_U}{P}\right\rfloor,\quad
-c_B=\left\lfloor\frac{3r_U}{P}\right\rfloor,\quad
-c_C=\left\lfloor\frac{4r_V-r_U}{P}\right\rfloor,\quad
-c_D=\left\lfloor\frac{3r_V}{P}\right\rfloor.
+a_0=\left\lfloor\frac{r_V-4r_U}{P}\right\rfloor,\quad
+b_0=\left\lfloor\frac{3r_U}{P}\right\rfloor,\quad
+c_0=\left\lfloor\frac{4r_V-r_U}{P}\right\rfloor,\quad
+d_0=\left\lfloor\frac{3r_V}{P}\right\rfloor,
 \]
-The wedge constraint on (r_U,r_V) gives exactly
+the exact carries for the window forms are
+\[
+c_A=a_0+c_V,\quad c_B=b_0,\quad
+c_C=c_0+4c_V,\quad c_D=d_0+3c_V.
+\]
+The condition c_V=0 iff r_V>=r_U and c_V=1 iff r_V<r_U gives exactly
 \[
 c_A\in\{-3,-2,-1,0\},\quad c_B\in\{0,1,2\},
 \]
 \[
 c_C\in\{0,1,2,3,4,5,6\},\quad c_D\in\{0,1,2,3,4,5\}.
 \]
-These are the same finite carry ranges as the original X,Y formulation, but now both the global cocycle and the window boundary state use the same two-register basis.
+These are the same finite carry ranges as the original X,Y formulation.
 
-This does not eliminate the carries; it packages them as a constrained remainder pair
-\[
-0\le r_U<P,\qquad r_U\le r_V<r_U+P.
-\]
-A finite-state proof still has to track the induced carry transitions as s changes. The advantage is that the affine branch update and the boundary quotient interface can now be composed without changing coordinate systems.
+Thus the global branch cocycle and the window quotient interface can use one unimodular basis, provided the extra addition carry c_V is retained. This does not eliminate the carries; it makes the basis-change carry explicit. A finite-state proof still has to track the induced carry transitions as s changes.
