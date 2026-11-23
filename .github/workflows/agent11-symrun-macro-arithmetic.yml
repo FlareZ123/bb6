@@ -40,11 +40,13 @@ jobs:
           set -euo pipefail
           lake update
           lake exe cache get
-      - name: Kernel-check twelve exact macro summation theorems
+      - name: Kernel-check twenty-six macro sum/potential theorems
         working-directory: upstream
         run: |
           set -euo pipefail
           cp ../local-bb6/im-results/agent11-symrun-primitive-cost/MacroCostArithmetic.lean .
+          cp ../local-bb6/im-results/agent11-symrun-primitive-cost/MacroCostPotential.lean .
           lake env lean MacroCostArithmetic.lean | tee /tmp/agent11-macro-axioms.log
+          lake env lean MacroCostPotential.lean | tee -a /tmp/agent11-macro-axioms.log
           ! grep -Eq 'sorryAx|native_decide|declaration uses \\[synthetic\\]' /tmp/agent11-macro-axioms.log
-          echo "PASS: 12 quadratic/summation theorems under Lean 4.36.0-rc2"
+          echo "PASS: 12 quadratic summations, 12 potential formulas, and 2 generic potential lemmas under Lean 4.36.0-rc2"
