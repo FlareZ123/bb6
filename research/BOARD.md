@@ -6,7 +6,7 @@ For theorem hypotheses, exact source bridges, transitive axiom profiles, CI revi
 
 ## Deciding a machine means closing its actual blank orbit
 
-A valid six-state BB(6) completion requires: a source-faithful halting machine with its exact number of successful primitive transitions (including the final halt step under the adopted convention), **and** an exhaustive partition of all remaining six-state, two-symbol blank-start tables into nonhalting proofs or verified smaller halting-time bounds. Partial classifications, finite simulations, a prepared-tape halt, or an infinite but incomplete arithmetic exclusion are not whole-machine decisions.
+A valid six-state BB(6) completion requires: a source-faithful halting machine with a precisely specified primitive-step halting convention and exact step count, **and** an exhaustive partition of all remaining six-state, two-symbol blank-start tables into nonhalting proofs or verified smaller halting-time bounds. Partial classifications, finite simulations, a prepared-tape halt, or an infinite but incomplete arithmetic exclusion are not whole-machine decisions.
 
 | Decision target | Strongest reusable entry point | First genuinely missing proof |
 | --- | --- | --- |
