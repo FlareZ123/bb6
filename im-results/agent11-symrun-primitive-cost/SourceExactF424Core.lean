@@ -37,25 +37,16 @@ macro "stepWithin" : tactic => `(tactic| (
     Turing.ListBlank.head_cons, Turing.ListBlank.tail_cons, default_head, default_tail,
     encM_nil, encM_cons_zero, encM_cons_run, encM_bumpM, encLeft_cons_head, cons_one_encLeft_tail,
     encRight_cons_head, cons_one_encRight_tail, encM_cons_run_head, cons_one_encM_cons_run_tail]
-  apply BusyBeaver.ReachesIn.step_left
-  · first
-    | rfl
-    | simp [step, BusyBeaver.init_nil, target_tm, target, machine,
-        if_pos isVarA_tm, dif_pos, dif_neg,
-        BusyBeaver.Cfg.headRight, BusyBeaver.Cfg.headLeft, Turing.Tape.move,
-        pow_succ_list, pow_zero_list, cons_append_list, nil_append_list,
-        listblank_append_cons, listblank_append_nil, Turing.ListBlank.head_cons,
-        Turing.ListBlank.tail_cons, Tape.write, zero_cons_default, default_head,
-        default_tail, encM_nil, encM_cons_zero, encM_cons_run, encM_bumpM, encLeft_cons_head,
-        cons_one_encLeft_tail, encRight_cons_head, cons_one_encRight_tail,
-        encM_cons_run_head, cons_one_encM_cons_run_tail]
-  · simp only [if_pos isVarA_tm, dif_pos, dif_neg,
-      BusyBeaver.Cfg.headRight, BusyBeaver.Cfg.headLeft, pow_succ_list, pow_zero_list,
-      cons_append_list, nil_append_list, listblank_append_cons, listblank_append_nil,
-      Turing.ListBlank.head_cons, Turing.ListBlank.tail_cons, zero_cons_default, default_head,
-      default_tail, enc1_nil, encM_nil, encM_cons_zero, encM_cons_run, encM_bumpM,
-      encLeft_cons_head, cons_one_encLeft_tail, encRight_cons_head, cons_one_encRight_tail,
-      encM_cons_run_head, cons_one_encM_cons_run_tail]
+  change multiStep target_tm _ _ = some _
+  refine multiStep_step (by rfl) ?_
+  simp only [if_pos isVarA_tm, dif_pos, dif_neg,
+    BusyBeaver.Cfg.headRight, BusyBeaver.Cfg.headLeft, Turing.Tape.move, Tape.write,
+    pow_succ_list, pow_zero_list, cons_append_list, nil_append_list,
+    listblank_append_cons, listblank_append_nil, Turing.ListBlank.head_cons,
+    Turing.ListBlank.tail_cons, zero_cons_default, default_head, default_tail,
+    enc1_nil, encM_nil, encM_cons_zero, encM_cons_run, encM_bumpM,
+    encLeft_cons_head, cons_one_encLeft_tail, encRight_cons_head, cons_one_encRight_tail,
+    encM_cons_run_head, cons_one_encM_cons_run_tail]
 ))
 
 macro "finishWithin" : tactic => `(tactic| (
