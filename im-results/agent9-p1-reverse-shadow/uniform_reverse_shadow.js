@@ -135,6 +135,41 @@ function proveBase(fam,word) {
     validReverseCost:cost
   };
 }
+
+// Exact O(1)-cycle / <=146-parent-test leap. All-n soundness is supplied
+// by the interval proof in Uniform343Shadow.md, not a numerical guess.
+function fastFirstDivergence(fam,h,word) {
+  const f = {...fam,n:fam.n+fam.period*h};
+  const {P,state:root} = actualState(f);
+  let s=root;
+  for(const k of f.transient) s=sourceParent(s,k);
+  const eps=343n*s.D-249n*s.N;
+  const E=eps+3169365n;
+  const r=Math.floor((f.n-ceilLog2(E))/147);
+  check(r>=0,"negative guaranteed cycle count");
+  const A=149561324732188410108221871335825455518140815349n;
+  const B=pow2(147)-1n;
+  check(838n*B<A&&A<839n*B,"fixed-point error bound");
+  const erNumer=pow2(147*r)*(B*eps-A)+A;
+  check(erNumer%B===0n,"cycle error quotient not integral");
+  const er=erNumer/B, Nr=s.N+294n*BigInt(r);
+  const DrNumer=249n*Nr+er;
+  check(DrNumer%343n===0n,"cycle-coordinate quotient not integral");
+  s={D:DrNumer/343n,N:Nr,m:s.m-147n*BigInt(r)};
+  let matched=73*r, cost=147*r;
+  for(let i=0;i<146;i++) {
+    const k=word[i%73], K=BigInt(k);
+    const np=s.N+2n*K, sc=pow2(k)*s.D;
+    if(!(K<=s.m&&sc>=np+1n&&sc<=2n*np-14n)) {
+      return {family:f.name,h,n:f.n,r,extraMatchingSymbols:i,
+        matchingSymbols:matched,matchingCost:cost,idealNextK:k};
+    }
+    s=sourceParent(s,k);
+    matched++; cost+=k;
+  }
+  throw new Error("all-n bound violated: two extra cycles completed");
+}
+
 const word=idealCycle();
 // All-n elementary side inequalities used in the note.
 check(pow2(83-32)>6000n*83n+91015040n, "transient induction base");
@@ -144,6 +179,17 @@ for(const x of f) {
   const eSlope = x.name==="I" ? pow2(15) : pow2(39);
   check(E0<=eSlope*n && x.post[0]<eSlope, "asymptotic bound");
 }
+const fastChecks=[
+  fastFirstDivergence(f[0],0,word),fastFirstDivergence(f[0],1,word),
+  fastFirstDivergence(f[1],0,word),fastFirstDivergence(f[1],1,word)
+];
+check(fastChecks[0].matchingSymbols===2658&&fastChecks[0].matchingCost===5347,
+  "case I h0 mismatch");
+check(fastChecks[1].matchingSymbols===298155&&fastChecks[1].matchingCost===600392,
+  "case I h1 mismatch");
+check(fastChecks[2].matchingSymbols===4717&&fastChecks[2].matchingCost===9490,
+  "case II h0 mismatch");
+check(fastChecks[3].matchingSymbols===353949&&fastChecks[3].matchingCost===712738,
+  "case II h1 mismatch");
 console.log(JSON.stringify({referenceSymbols:word.length, referenceBitCost:147,
-  // The word itself may be compared with Agent 50's reference cycle.
-  referenceWord:word, tests:f.map(x=>proveBase(x,word))},null,2));
+  referenceWord:word, tests:f.map(x=>proveBase(x,word)), fastChecks},null,2));
