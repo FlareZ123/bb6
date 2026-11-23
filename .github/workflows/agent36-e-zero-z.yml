@@ -83,4 +83,5 @@ jobs:
           lean "$X/P2K31Q0Source.lean" | tee -a axioms.log
           lean -o "$X/Y3SafeNormalizer.olean" "$X/Y3SafeNormalizer.lean" | tee -a axioms.log
           lean "$X/Y3CylinderLift.lean" | tee -a axioms.log
+          lean "$X/YSafeNormalizer.lean" | tee -a axioms.log
           if grep -E 'sorryAx|_native.native_decide' axioms.log; then exit 1; fi
