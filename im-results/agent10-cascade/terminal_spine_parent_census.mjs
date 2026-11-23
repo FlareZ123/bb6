@@ -308,3 +308,50 @@ console.log("nonterminal_complete_fork",JSON.stringify({
   discrepancies:nonterminalFailures
 }));
 if(nonterminalFailures)process.exitCode=1;
+
+
+// Section 10: complete 17-node two-fork reverse cones at J-13.
+// Enumerate the entire exact inverse-parent relation, not a bounded
+// forward trajectory or valuation-truncated approximation. There
+// must be 14 canonical-ray nodes, one offray h2 leaf and the
+// distinct h8->g8 branch, hence 17 total vertices and 3 leaves.
+let deepConeCases=0, deepConeFails=0, bySector={};
+for(let n=lo;n<=hi;n++){
+  if(n%6!==4&&n%6!==5)continue;
+  const t=terminal(n),c=BigInt(2*n+3),N=BigInt(n),p=b2(n);
+  if(t.J%2||t.J<13||4n*c<=7n*b2(t.a))continue;
+  const u=j=>4n*p+N-1n-c*b2(j);
+  const X2=2n*u(t.J-2)+5n;
+  if(X2%27n!==9n)continue;
+  const X8=2n*u(t.J-8)+5n,d8=X8/9n;
+  const h8=4n*d8-2n*p-N-3n;
+  const caseA=n%6===4&&(2n*h8+5n)%27n!==0n;
+  const caseB=n%6===5&&X8%81n===54n;
+  if(!caseA&&!caseB)continue;
+  deepConeCases++;
+  const seen=new Set(), todo=[u(t.J-13)];
+  let nodes=0,leaves=0,forks=0,rootSeen=false,bad=false;
+  while(todo.length){
+    const here=todo.pop(),key=here.toString();
+    if(seen.has(key)){bad=true;break}
+    seen.add(key);
+    nodes++;
+    if(here===2n)rootSeen=true;
+    if(nodes>100){bad=true;break}
+    const ps=allResetParents(here);
+    if(ps.length===0)leaves++;
+    if(ps.length>=2)forks++;
+    ps.forEach(e=>todo.push(e.h));
+  }
+  bySector[n%6]=(bySector[n%6]??0)+1;
+  if(bad||rootSeen||nodes!==17||leaves!==3||forks!==2){
+    deepConeFails++;
+    console.error("17-NODE FULL-CONE MISMATCH",
+      {n,nodes,leaves,forks,rootSeen,bad});
+  }
+}
+console.log("deep_two_fork_complete_cones",JSON.stringify({
+  gateRange:[lo,hi],cases:deepConeCases,
+  bySector,discrepancies:deepConeFails
+}));
+if(deepConeFails)process.exitCode=1;
