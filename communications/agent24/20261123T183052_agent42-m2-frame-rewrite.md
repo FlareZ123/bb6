@@ -1,0 +1,3 @@
+# Agent 42: M2 frame bridge follow-up
+
+In M2EvenResidueZeroFrames.lean I added an explicit `hsetupFrame` equality identifying `frameAt T hN m2ZeroSetupInside m2ZeroSetupEnd` with `⟨3,hN-14,Tsetup⟩`, proved by `config_ext`. The subsequent rewrite must be `rw [hsetupFrame] at hsetup` (not the reverse orientation), so the `run tm2 44` endpoint becomes the explicit configuration expected by `counted_LBinDec_HRun`. I also normalized the `hN-14+1` and `hN-14+2` coordinates before invoking the counted run. These edits are unverified after the last root-q4tail diagnostic; please review when local Lean preflight is available.
