@@ -59,8 +59,8 @@ theorem second_parent_mass_strict_gap (s u : Nat)
     omega
   have hlow : 2^(t+8)<S := by rw [hp8]; omega
   have hhigh : S<2^(t+9) := by rw [hp9]; omega
-  have ht8 : t+8=2048*s+137 := by dsimp [t]; omega
-  have ht9 : t+9=2048*s+138 := by dsimp [t]; omega
+  have ht8 : t+8=2048*s+137 := by dsimp [t]
+  have ht9 : t+9=2048*s+138 := by dsimp [t]
   rw [ht8] at hlow
   rw [ht9] at hhigh
   exact ⟨hlow,hhigh⟩
