@@ -1,4 +1,5 @@
 import Root32HighStopA4Core
+import Root32HighStopIntegrated
 import Lean.Elab.Tactic.Omega
 
 set_option maxHeartbeats 1000000
@@ -36,8 +37,13 @@ theorem p7e1e_reach_implies_a4_t7 (t : Nat) (ht8 : t%8=7)
   have hye : p7e1eY t%2=0 := by
     dsimp [p7e1eY]
     omega
+  have hreachA4 : BB6.Agent3Root32HighStopA4Core.RunReach
+      (p7e1eX t) (p7e1eY t) := by
+    simpa [RunReach,BB6.Agent3Root32HighStopIntegrated.RunReach,
+      BB6.Agent3Root32HighStopA4Core.RunReach] using hreach
   obtain ⟨a,k,hprev,hstep⟩ :=
-    run_parent_of_left_gt5 (p7e1eX t) (p7e1eY t) hx hreach
+    BB6.Agent3Root32HighStopA4Core.run_parent_of_left_gt5
+      (p7e1eX t) (p7e1eY t) hx hreachA4
   have hfan := BB6.Agent3ParentFan.even_even_parent_fan
     a k (p7e1eX t) (p7e1eY t)
     (by omega) hxe hy6 hye hstep
@@ -49,8 +55,12 @@ theorem p7e1e_reach_implies_a4_t7 (t : Nat) (ht8 : t%8=7)
     have hDy : (p7e1eY t-2)/2=p7e1eDY t := by
       dsimp [p7e1eY,p7e1eDY]
       omega
-    have hDreach : RunReach (p7e1eDX t) (p7e1eDY t) := by
+    have hDreachA4 :
+        BB6.Agent3Root32HighStopA4Core.RunReach
+          (p7e1eDX t) (p7e1eDY t) := by
       simpa only [ha,hk,hDx,hDy] using hprev
+    have hDreach : RunReach (p7e1eDX t) (p7e1eDY t) := by
+      simpa [RunReach,BB6.Agent3Root32HighStopA4Core.RunReach] using hDreachA4
     have hDxEven : p7e1eDX t%2=0 := by
       dsimp [p7e1eDX]
       omega
@@ -66,16 +76,22 @@ theorem p7e1e_reach_implies_a4_t7 (t : Nat) (ht8 : t%8=7)
     have hDsize : 23≤p7e1eDX t+p7e1eDY t := by
       dsimp [p7e1eDX,p7e1eDY]
       omega
+    have hDreachC : BB6.Agent3.CReach (p7e1eDX t) (p7e1eDY t) := by
+      simpa [RunReach,BB6.Agent3Root32HighStopIntegrated.RunReach,
+        BB6.Agent3.CReach] using hDreach
     have hiff := (BB6.Agent3.odd_seven_blank_reach_iff
       (p7e1eDX t) (p7e1eDY t)
-      hDxEven hDyOdd hDy5 hDmod hDsize).mp hDreach
+      hDxEven hDyOdd hDy5 hDmod hDsize).mp hDreachC
     have hAx : (p7e1eDX t+p7e1eDY t-5)/2=a4X t := by
       dsimp [p7e1eDX,p7e1eDY,a4X]
       omega
     have hAy : (p7e1eDX t+3*p7e1eDY t-9)/4=a4Y t := by
       dsimp [p7e1eDX,p7e1eDY,a4Y]
       omega
-    simpa [RunReach,hAx,hAy] using hiff
+    have hA4 : RunReach (a4X t) (a4Y t) := by
+      simpa [RunReach,BB6.Agent3Root32HighStopIntegrated.RunReach,
+        BB6.Agent3.CReach,hAx,hAy] using hiff
+    exact hA4
   · rcases hzero with ⟨_,_,n,hsum,_⟩
     have hmod : (p7e1eX t+p7e1eY t)%8=0 := by
       rw [hsum]
