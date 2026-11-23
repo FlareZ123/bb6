@@ -230,8 +230,7 @@ theorem m8OddDepth_scaled (v d : Nat) (hv : v%4=2) :
   | succ d ih =>
       have hv2 : 2≤v := by omega
       have hpowPos : 1≤2^d := by
-        have hp := Nat.pow_pos (by decide : 0 < (2:Nat))
-        omega
+        exact Nat.pow_pos (by decide : 0 < (2:Nat))
       have hpow2 : 2≤2^(d+1) := by
         rw [Nat.pow_succ]
         omega
@@ -294,7 +293,6 @@ theorem m8SharpFamily_data (r : Nat) (hr : 2≤r) :
       ⟨m8SharpT r-2,by omega⟩
     refine ⟨2^q,?_⟩
     rw [hq, Nat.pow_add]
-    simp
   have hproddiv : 4∣3*m8SharpV r*2^(m8SharpT r) := by
     rcases hpowdiv with ⟨q,hq⟩
     refine ⟨3*m8SharpV r*q,?_⟩
@@ -302,6 +300,16 @@ theorem m8SharpFamily_data (r : Nat) (hr : 2≤r) :
     ac_rfl
   have hj4 : j%4=2 := by
     rcases hproddiv with ⟨q,hq⟩
+    have hvpos : 2≤m8SharpV r := by
+      have hh := m8SharpV_mod_eight r hr
+      omega
+    have htpos : 1≤2^(m8SharpT r) :=
+      Nat.pow_pos (by decide : 0<(2:Nat))
+    have hmul : 2≤m8SharpV r*2^(m8SharpT r) :=
+      Nat.mul_le_mul hvpos htpos
+    have hmul3 : 6≤3*m8SharpV r*2^(m8SharpT r) := by
+      have h := Nat.mul_le_mul_left 3 hmul
+      simpa [Nat.mul_assoc] using h
     dsimp [j,m8SharpJ]
     omega
   have hj : j%2=0 := by omega
@@ -332,7 +340,8 @@ theorem m8SharpFamily_data (r : Nat) (hr : 2≤r) :
     rw [heq] at h
     omega
   have hscaleFamily : 2^d*(3*v)=k+2 := by
-    dsimp [k,d,v,m8SharpK,m8SharpD,m8SharpV]
+    change 2^(m8SharpD r)*(3*m8SharpV r) =
+      (3*m8SharpV r*2^(m8SharpD r)-2)+2
     rw [Nat.sub_add_cancel hmulD3]
     ac_rfl
   have hY : p.2+2=3*v := by
