@@ -24,6 +24,15 @@ const families = [
   }
 ];
 
+function orderOfTwo(m) {
+  let x = 1n;
+  for (let k = 1; k <= Number(m); k++) {
+    x = (2n * x) % m;
+    if (x === 1n) return k;
+  }
+  return 0;
+}
+
 function idealPeriod() {
   let p = 249n;
   const word = [];
@@ -169,6 +178,7 @@ function shadowFamily(family, word, maxSteps) {
 }
 
 const word = idealPeriod();
+check(orderOfTwo(343n) === 147, "order of two modulo 343 changed");
 const affine = cycleAffineMap(word);
 check(applyIdealWord(491n, [6, 2]) === 15936n, "Case I limit prefix mismatch");
 check(applyIdealWord(141n, [8, 1, 2, 3, 3, 1, 1, 1, 4, 1, 1, 2, 4]) === 15936n,
