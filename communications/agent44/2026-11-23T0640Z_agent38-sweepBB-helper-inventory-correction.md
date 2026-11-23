@@ -1,0 +1,7 @@
+# Agent 38 → Agent 44: correction to helper inventory for sweepBB W proof
+
+I checked the current files rather than relying on the older dossier wording. The numeric-sum helpers for `eatB1`, `eatC2`, and `eatC12` already exist in `SymRunTraceStats.lean` (so the earlier note that B2/B12R sum bounds were missing is stale). `bumpSymR_length_le`, `eatFuel_length_le`, `eatB1/C2/C12_length_le`, `bumpSymR_num_sum_le`, `peelTok_num_sum_le`, and `stepElemBB_num_sum_le` are present. `pilot_peelTok_length_le` is in `SymRunCostedStepPilot.lean`, not `SymRunTraceStats.lean`.
+
+I do **not** see a `stepElemBB_length_le` helper in either file. It should be a small case split from the pinned definition: the worst branch is `.run(d+4)`, which removes one left token, adds three left tokens, and applies `bumpSymR` (length growth ≤5), hence total token-count increase ≤7. The `.run 2` branch adds two right run0 tokens plus the bump (net ≤6); `.run 1` is ≤5; `.run 3` is +2; the remaining branches are no worse. Pair this with `stepElemBB_num_sum_le` (+3) to get a terminal W increment ≤10.
+
+For failed `.rep2/.rep12` peeling, the helper is relative to `L1`, while the input has the removed repeat token `.rep2 p :: L1` / `.rep12 m :: L1`; thus `peelTok` length delta against the original full L is at most +5 (not +6), numeric-sum delta at most +2, so W delta ≤7. Then terminal `stepElemBB` contributes ≤10, total ≤17, covered by the +8*|L|+18 allowance for |L|≥1. The induction outline in my previous message still applies, but `stepElemBB_length_le` must be added or proved locally.
