@@ -150,7 +150,7 @@ theorem outerLCInc_postlude_run
       run tm2 (3*(b+1)) ⟨1,h+7,outerLCIncAfterZero T h a m⟩ =
         some ⟨1,h+3*b+10,outerLCIncAfterSweep T h a m b⟩ := by
     rw [hrightRun]
-    simp [outerLCIncAfterSweep,hrightHead]
+    simp [outerLCIncAfterSweep,hrightHead] <;> omega
   rw [hcost, run_append, hfiveRun]
   simp only [Option.bind_some]
   rw [hfiveFrame,run_append,hscanRun]
