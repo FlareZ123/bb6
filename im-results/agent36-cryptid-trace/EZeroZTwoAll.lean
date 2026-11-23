@@ -9,7 +9,7 @@ open CryptidBoundary
 open BB6.Agent36EZeroZTwoFollow
 open BB6.Agent36EZeroZTwoA
 open BB6.Agent2BoundaryBZero
-open BB6.BoundaryPadding BB6.Padding
+open BB6.BoundaryPadding
 
 set_option maxHeartbeats 10000000
 set_option maxRecDepth 8192
@@ -36,7 +36,7 @@ private theorem tail_regular (a q m : Nat) :
     change ObsEq
       (regularSection a q 0)
       (⟨[],false,(List.replicate a true ++ (oppairs q ++ [])) ++ [false],5⟩ : Cfg) at h
-    simpa [ObsEq,regularSection,run,List.append_assoc] using (cfgEq_symm h)
+    simpa [ObsEq,regularSection,run,List.append_assoc] using (BB6.Padding.cfgEq_symm h)
   | succ m =>
     refine ⟨q+1,2*m+1,?_⟩
     have hr : List.replicate (2*(m+1)) true =
@@ -164,7 +164,7 @@ theorem all_E_zero_p2_marker_regular (k m : Nat) :
   change ObsEq (run T (init (unpadded k m)))
       (run T (init (unpadded k m ++ [false]))) at hp
   rw [←marker_shape,marker_pad_shape] at hp
-  exact cfgEq_trans hp h
+  exact BB6.Padding.cfgEq_trans hp h
 
 #print axioms all_E_zero_p2_marker_regular
 #print axioms all_E_zero_p2_to_regular
