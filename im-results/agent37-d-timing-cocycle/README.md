@@ -65,7 +65,7 @@ This is a restricted token-coded terminal family, not the conjectured arbitrary-
 
 ## Next discriminating action
 
-Try adversarially structured, long irregular E/A packets for an actual counterexample, especially the source-certified E p=2 marker-mutating branch. If the rule survives, develop an original-source guarded alternating-stack simulation with exact halt/return timing. A useful eventual consequence must constrain an **entire actual blank-root feeder**, not merely produce another synthetic cylinder. Keep this evidence in `im-results/` until that mathematical gap is closed.
+The token-coded `110(10)^q0` terminal family is now closed at first-event level by [FullWordPairsFirst.lean](../agent37-cryptid-model-bridge/FullWordPairsFirst.lean); do not spend more compute re-proving that branch. The next discriminating action is to try adversarially structured, long irregular E/A packets for an actual counterexample, especially the source-certified E p=2 marker-mutating branch. If the rule survives, develop an original-source guarded alternating-stack simulation with exact halt/return timing. A useful eventual consequence must constrain an **entire actual blank-root feeder**, not merely produce another synthetic cylinder. Keep this evidence in `im-results/` until that mathematical gap is closed.
 
 
 ## Source-kernel-certified mixed-token halting first-event theorem (2026-11-05)
