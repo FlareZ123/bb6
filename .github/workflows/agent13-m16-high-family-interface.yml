@@ -1,6 +1,15 @@
-name: Agent 13 M16 low/high source-family exclusions
+name: Agent 13 M16 source-family proof audit
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        description: Select the M16 source theorem module
+        required: true
+        type: choice
+        default: probe
+        options:
+          - probe
+          - valuation
 
 permissions:
   contents: read
@@ -27,12 +36,26 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent38-c-section-mod4/ThirdStageOddDepth.lean.xz.b64" .
           base64 -d ThirdStageOddDepth.lean.xz.b64 | xz -d > ThirdStageOddDepth.lean
           echo "48fb1fcbf2b3a409c7bafb07a9f1df78a087b02d8cadeac51b2b81b02f301ed0  ThirdStageOddDepth.lean" | sha256sum -c -
-      - name: Kernel verify the complete M16-to-root-filter dependency closure
+      - name: Kernel verify the selected M16 dependency closure
         shell: bash
+        env:
+          M16_TARGET: ${{ inputs.target }}
         run: |
           set -euo pipefail
+          case "$M16_TARGET" in
+            probe)
+              target=im-results/agent13-residual-frontier/M16SecondFanProbe.lean
+              ;;
+            valuation)
+              target=im-results/agent13-residual-frontier/M16SecondFanValuation.lean
+              ;;
+            *)
+              echo "Unsupported M16 target: $M16_TARGET" >&2
+              exit 2
+              ;;
+          esac
           python3 tools/lean_compile_closure.py \
-            im-results/agent13-residual-frontier/M16SecondFanProbe.lean \
+            "$target" \
             --workdir /tmp/a43m16-root-filter \
             --source-root /tmp/a43mod16 \
             --jobs 4 \
