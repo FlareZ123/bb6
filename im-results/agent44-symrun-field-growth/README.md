@@ -89,10 +89,11 @@ source-generic bound for the state after a BB sweep.
 [45129145926](https://github.com/FlareZ123/bb6/actions/runs/45129145926)
 failed on the withdrawn direct combined proof and one missing arithmetic
 closure in the atomic length lemma. The failed proof was removed and the
-atomic case corrected. A second pinned run is now required to compile
-SymRunTraceStats.lean, SymRunBBBounds.lean as an extra dependency, and the
-updated axiom bridge. Do not treat the new amortized theorems as formally
-accepted before that run succeeds.
+atomic case corrected. A second pinned run
+[45132510153](https://github.com/FlareZ123/bb6/actions/runs/45132510153)
+is now compiling SymRunTraceStats.lean, SymRunBBBounds.lean as an extra
+dependency, and the updated axiom bridge. Do not treat the new amortized
+theorems as formally accepted before that run succeeds.
 
 ## Exact-source and acceptance boundary
 
