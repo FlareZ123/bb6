@@ -107,12 +107,12 @@ private theorem odd_odd_sum4_parent (a k x y : Nat)
                 exact ⟨haEq,hkEq⟩
             | succ n =>
                 have hfac : 2*(a-1)+6 = 2*(a+2) := by omega
-                    have hfour : 4∣(2*(a-1)+6) := by
+                have hfour : 4∣(2*(a-1)+6) := by
                   rw [hfac]
                   have hmod : (a+2)%2=0 := by omega
                   have hdiv : 2∣a+2 := Nat.dvd_of_mod_eq_zero hmod
                   rcases hdiv with ⟨q,hq⟩
-                  refine ⟨q+1,?_⟩
+                  refine ⟨q,?_⟩
                   rw [hq]
                   ring
                 have hpowdiv : 2∣2^(n+1) := by
@@ -213,7 +213,7 @@ private theorem even_odd_sumplus1_12_parent (a k x y : Nat)
                     have hmod : (a+3)%2=0 := by omega
                     have hdiv : 2∣a+3 := Nat.dvd_of_mod_eq_zero hmod
                     rcases hdiv with ⟨q,hq⟩
-                    refine ⟨q+1,?_⟩
+                    refine ⟨q,?_⟩
                     rw [hq]
                     ring
                   have hpowdiv : 2∣2^(n+1) := by
