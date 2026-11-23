@@ -128,7 +128,7 @@ private theorem odd_odd_sum4_parent (a k x y : Nat)
                   rcases hdiv with ⟨q,hq⟩
                   refine ⟨q,?_⟩
                   rw [hq]
-                  ring
+                  omega
                 have hpowdiv : 2∣2^(n+1) := by
                   change 2^1∣2^(n+1)
                   exact Nat.pow_dvd_pow 2 (by omega)
@@ -235,7 +235,7 @@ private theorem even_odd_sumplus1_mod8_4_parent (a k x y : Nat)
                 have hmod8 : (x+y+1)%8=0 := Nat.mod_eq_zero_of_dvd hdiv8
                 omega
             subst n
-            simp only [Nat.pow_zero, one_mul, Nat.mul_zero, Nat.add_zero] at hpow hcost
+            simp only [Nat.pow_zero, Nat.one_mul, Nat.mul_zero, Nat.add_zero] at hpow hcost
             rw [hform] at hpow
             have haEq : a=(x+y+1)/2-3 := by omega
             have hkEq : k=(x+2*y-a-7)/2 := by omega
