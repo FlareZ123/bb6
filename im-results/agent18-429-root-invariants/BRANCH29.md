@@ -37,10 +37,14 @@ Indeed `x=32q+29`, `y=64q+55`, and `q>=21` follows from exponential growth in th
 
 ## New residual refinement: q modulo 16
 
-`BB429Branch29Mod16.lean` is a further uniform inverse argument, *source draft pending Lean preflight*. It sharpens the preceding q mod8 theorem to
+`BB429Branch29Mod16.lean` is a further uniform inverse argument, *Lean-verified in [CI 45109428286](https://github.com/FlareZ123/bb6/actions/runs/45109428286), axioms [propext, Classical.choice, Quot.sound]*. It sharpens the preceding q mod8 theorem to
 
 ```
 q%16 in {2,10,15}, or q=55
 ```
 
 for every q>=21 at a true-blank accelerated `(32q+29,64q+55)`. On the q=16r+7 sector, the first seven exact ancestors reach `(4r-1,2040r+990)`; when r!=3 (i.e. q!=55), its two possible source parents have positive-even first counter and odd second, except for r=1's zero/odd parent, which the `Allowed` invariant excludes. At r=3, the target first counter is 11, where exceptional source inverses invalidate the two-parent argument. This finite index is explicitly preserved rather than dropped. The original infinite q%16=7 cylinder is thus excluded except one named finite candidate. This remains an intermediate (not whole #429) theorem even if the RC2 compile succeeds.
+
+## Finite exceptional q=55 (in compiler preflight)
+
+`BB429FiniteAvoidance.lean` proves soundness of an arbitrary-target Boolean prefix verifier, and a global nonreachability rule whenever the certified prefix ends at a rank larger than the target rank. It supplies a 1586-step exact prefix for the actual root, ending at `(3069,996)`, rank 7134, avoiding `(11,7110)` of rank 7132. Both computational facts use ordinary kernel reduction via `decide`, not `native_decide`. `BB429Branch29Mod16.no_29_q55` proves a q=55 source ancestry would require the forbidden `(11,7110)` state. If the new CI compile succeeds, `rooted_29_q_three_mod16` yields the clean all-q>=21 necessary condition `q%16 in {2,10,15}`, excluding 13 of 16 parameter residues. The q55 closure and clean statement must remain *unaccepted* until this focused CI check and axiom report succeed.

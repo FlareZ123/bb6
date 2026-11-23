@@ -1,4 +1,5 @@
 import BB429Branch29
+import BB429FiniteAvoidance
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -97,6 +98,45 @@ theorem rooted_29_q_three_mod16_or_55 (q : Nat)
     · exact Or.inr (Or.inr (Or.inr h55))
     · exact False.elim (no_29_q_seven_mod16_except55 q hq h7 h55 hroot)
   · omega
+
+
+/-- The q=55 exception is impossible: forced true-blank ancestor (11,7110)
+contradicts the finite prefix plus strict-rank certificate. -/
+theorem no_29_q55 : ¬Reach (32*55+29) (64*55+55) := by
+  intro hroot
+  have h3 := BB429Branch29.first_three 55 hroot
+  have h5 := BB429Branch29.to_q_minus_two 55 (by omega) h3
+  obtain ⟨x6,y6,hp6,hx6,hy6⟩ :=
+    BB429Branch29.odd_q_parent 55 (by omega) (by omega) h5
+  have h6x : x6=25 := by omega
+  have h6y : y6=7085 := by omega
+  rw [h6x,h6y] at hp6
+  obtain ⟨x7,y7,hp7,hs7⟩ :=
+    pred 25 7085 (by omega) hp6
+  obtain ⟨ha,hb⟩ :=
+    BB429OddResetGate.incoming_odd_second x7 y7 25 7085
+      hs7 (by omega)
+  have h7x : x7=11 := by omega
+  have h7y : y7=7110 := by omega
+  rw [h7x,h7y] at hp7
+  exact BB429FiniteAvoidance.no_root_11_7110 hp7
+
+/-- Complete all-time rooted restriction for q>=21 with no exception:
+only q=2,10,15 mod16 remain. -/
+theorem rooted_29_q_three_mod16 (q : Nat) (hq : 21≤q)
+    (hroot : Reach (32*q+29) (64*q+55)) :
+    q%16=2 ∨ q%16=10 ∨ q%16=15 := by
+  have h :=
+    rooted_29_q_three_mod16_or_55 q hq hroot
+  rcases h with h2 | h10 | h15 | h55
+  · exact Or.inl h2
+  · exact Or.inr (Or.inl h10)
+  · exact Or.inr (Or.inr h15)
+  · subst q
+    exact False.elim (no_29_q55 hroot)
+
+#print axioms no_29_q55
+#print axioms rooted_29_q_three_mod16
 
 #print axioms odd_inverse_except_eleven
 #print axioms no_29_q_seven_mod16_except55
