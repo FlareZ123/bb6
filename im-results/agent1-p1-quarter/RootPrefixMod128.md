@@ -137,10 +137,10 @@ For the four excluded cases:
 
 | Family | \(h\bmod4\) | Reachable vertices | Root \((2,0)\) in closure? | FNV-1a fingerprint of 16,384-byte membership vector |
 |---|---:|---:|---|---|
-| I | 0 | 1,384 | No | 41fc3ae41d741e03 |
-| I | 3 | 1,384 | No | 9d8525052d0ce383 |
-| II | 0 | 1,384 | No | 9d8525052d0ce383 |
-| II | 3 | 1,384 | No | 41fc3ae41d741e03 |
+| I | 0 | 1,384 | No | 1f9864d28e1b3da5 |
+| I | 3 | 1,384 | No | 7b214ef39db40325 |
+| II | 0 | 1,384 | No | 7b214ef39db40325 |
+| II | 3 | 1,384 | No | 1f9864d28e1b3da5 |
 
 The repeated fingerprints reflect two identical finite closures shared across the four start cases; the checker independently reconstructs and closure-checks each case.
 
