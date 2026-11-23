@@ -151,3 +151,222 @@ theorem costIterM424_exact_reaches (n : Nat) (s : MState) :
 #print axioms costIterM424_exact_reaches
 
 end BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution
+
+
+/-- Maximum run counter on an MItem stack; zero markers do not contribute. -/
+def maxRunMList : List MItem → Nat
+  | [] => 0
+  | .zero :: xs => maxRunMList xs
+  | .run d :: xs => max d (maxRunMList xs)
+
+theorem maxRunMList_bumpM_le (xs : List MItem) :
+    maxRunMList (bumpM xs) ≤ maxRunMList xs + 1 := by
+  cases xs with
+  | nil => simp [bumpM, maxRunMList]
+  | cons x xs =>
+    cases x with
+    | zero => simp [bumpM, maxRunMList]
+    | run d =>
+      simp [bumpM, strictNat_eq, maxRunMList]
+      omega
+
+theorem maxRunMList_tail_le (x : MItem) (xs : List MItem) :
+    maxRunMList xs ≤ maxRunMList (x :: xs) := by
+  cases x <;> simp [maxRunMList] <;> omega
+
+/-- The right-hand run maximum grows by at most one under every source
+    MItem transition. Only the DL-run2 and CB-run0/positive-run costs depend
+    on a run counter on this side, so this is the needed prefix invariant. -/
+theorem maxRunMRight_stepElemM_le (s : MState) :
+    maxRunMList (stepElemM s).2.2 ≤ maxRunMList s.2.2 + 1 := by
+  rcases s with ⟨mode, L, R⟩
+  cases mode with
+  | BB =>
+    cases L with
+    | nil =>
+      simpa [stepElemM, strictMList_eq, maxRunMList] using
+        maxRunMList_bumpM_le R
+    | cons t L1 =>
+      cases t with
+      | zero =>
+        simpa [stepElemM, strictMList_eq, maxRunMList] using
+          maxRunMList_bumpM_le R
+      | run d =>
+        rcases d with _ | _ | _ | _ | d
+        · simp [stepElemM, strictMList_eq, maxRunMList]
+          omega
+        · simpa [stepElemM, strictMList_eq, maxRunMList] using
+            maxRunMList_bumpM_le R
+        · simpa [stepElemM, strictMList_eq, maxRunMList] using
+            maxRunMList_bumpM_le R
+        · simpa [stepElemM, strictMList_eq, maxRunMList] using
+            maxRunMList_bumpM_le R
+        · simpa [stepElemM, strictMList_eq, strictNat_eq, maxRunMList] using
+            maxRunMList_bumpM_le R
+  | DL =>
+    cases L with
+    | nil => simp [stepElemM, maxRunMList]
+      <;> omega
+    | cons t L1 =>
+      cases t with
+      | zero => simp [stepElemM, maxRunMList]
+        <;> omega
+      | run d =>
+        rcases d with _ | _ | _ | d
+        · simpa [stepElemM, strictMList_eq, maxRunMList] using
+            maxRunMList_bumpM_le R
+        · simpa [stepElemM, strictMList_eq, maxRunMList] using
+            maxRunMList_bumpM_le R
+        · cases R with
+          | nil => simp [stepElemM, maxRunMList]
+            <;> omega
+          | cons rt R1 =>
+            cases rt with
+            | zero => simp [stepElemM, maxRunMList]
+              <;> omega
+            | run d0 =>
+              simp [stepElemM, strictMList_eq, strictNat_eq, maxRunMList]
+              omega
+        · simp [stepElemM, maxRunMList]
+          <;> omega
+  | CB =>
+    cases R with
+    | nil =>
+      simp [stepElemM, strictMList_eq, maxRunMList]
+      omega
+    | cons t R1 =>
+      cases t with
+      | zero =>
+        simpa [stepElemM, strictMList_eq, maxRunMList] using
+          maxRunMList_bumpM_le R1
+      | run d =>
+        rcases d with _ | _ | _ | d
+        · cases R1 with
+          | nil =>
+            simp [stepElemM, strictMList_eq, maxRunMList]
+            omega
+          | cons t2 R2 =>
+            cases t2 with
+            | zero =>
+              simp [stepElemM, strictMList_eq, maxRunMList]
+              omega
+            | run d2 =>
+              rcases d2 with _ | d2
+              · simp [stepElemM, strictMList_eq, maxRunMList]
+                omega
+              · simp [stepElemM, strictMList_eq, strictNat_eq, maxRunMList]
+                omega
+        · simp [stepElemM, strictMList_eq, maxRunMList]
+          omega
+        · simp [stepElemM, strictMList_eq, maxRunMList]
+          omega
+        · simp [stepElemM, strictMList_eq, strictNat_eq, maxRunMList]
+          omega
+  | HALT => simp [stepElemM, maxRunMList]
+    <;> omega
+
+/-- The one-step primitive charge is at most three times the current
+    right-side maximum plus 22. The only unbounded branches are DL/run2 and
+    CB/run0 followed by a positive run; both consume their parameter from R. -/
+theorem costElemM424_le (s : MState) :
+    costElemM424 s ≤ 3 * maxRunMList s.2.2 + 22 := by
+  rcases s with ⟨mode, L, R⟩
+  cases mode with
+  | BB =>
+    cases L with
+    | nil => simp [costElemM424, maxRunMList] <;> omega
+    | cons t L1 =>
+      cases t with
+      | zero => simp [costElemM424, maxRunMList] <;> omega
+      | run d =>
+        rcases d with _ | _ | _ | _ | d <;>
+          simp [costElemM424, maxRunMList] <;> omega
+  | DL =>
+    cases L with
+    | nil => simp [costElemM424, maxRunMList] <;> omega
+    | cons t L1 =>
+      cases t with
+      | zero => simp [costElemM424, maxRunMList] <;> omega
+      | run d =>
+        rcases d with _ | _ | _ | d
+        · simp [costElemM424, maxRunMList] <;> omega
+        · simp [costElemM424, maxRunMList] <;> omega
+        · cases R with
+          | nil => simp [costElemM424, maxRunMList] <;> omega
+          | cons rt R1 =>
+            cases rt with
+            | zero => simp [costElemM424, maxRunMList] <;> omega
+            | run d0 => simp [costElemM424, maxRunMList] <;> omega
+        · simp [costElemM424, maxRunMList] <;> omega
+  | CB =>
+    cases R with
+    | nil => simp [costElemM424, maxRunMList] <;> omega
+    | cons t R1 =>
+      cases t with
+      | zero => simp [costElemM424, maxRunMList] <;> omega
+      | run d =>
+        rcases d with _ | _ | _ | d
+        · cases R1 with
+          | nil => simp [costElemM424, maxRunMList] <;> omega
+          | cons t2 R2 =>
+            cases t2 with
+            | zero => simp [costElemM424, maxRunMList] <;> omega
+            | run d2 =>
+              rcases d2 with _ | d2
+              · simp [costElemM424, maxRunMList] <;> omega
+              · simp [costElemM424, maxRunMList] <;> omega
+        · simp [costElemM424, maxRunMList] <;> omega
+        · simp [costElemM424, maxRunMList] <;> omega
+        · simp [costElemM424, maxRunMList] <;> omega
+  | HALT => simp [costElemM424, maxRunMList]
+
+theorem maxRunMRight_iterStep_le (n : Nat) (s : MState) :
+    maxRunMList (iterStep stepElemM n s).2.2 ≤ maxRunMList s.2.2 + n := by
+  induction n generalizing s with
+  | zero => simp [iterStep]
+  | succ n ih =>
+    simp only [iterStep]
+    calc
+      maxRunMList (iterStep stepElemM n (stepElemM s)).2.2
+          ≤ maxRunMList (stepElemM s).2.2 + n := ih (stepElemM s)
+      _ ≤ maxRunMList s.2.2 + 1 + n :=
+        Nat.add_le_add_right (maxRunMRight_stepElemM_le s) n
+      _ = maxRunMList s.2.2 + (n + 1) := by omega
+
+/-- Coarse but fully source-linked bound for any finite initial MItem run. -/
+theorem costIterM424_le (n : Nat) (s : MState) :
+    costIterM424 n s ≤
+      n * (3 * (maxRunMList s.2.2 + n) + 22) := by
+  induction n generalizing s with
+  | zero => simp [costIterM424]
+  | succ n ih =>
+    let C := 3 * (maxRunMList s.2.2 + (n + 1)) + 22
+    have hcost : costElemM424 s ≤ C := by
+      have h := costElemM424_le s
+      dsimp [C]
+      omega
+    have hmax := maxRunMRight_stepElemM_le s
+    have harg :
+        3 * (maxRunMList (stepElemM s).2.2 + n) + 22 ≤ C := by
+      dsimp [C]
+      omega
+    have hih : costIterM424 n (stepElemM s) ≤ n * C := by
+      calc
+        costIterM424 n (stepElemM s)
+            ≤ n * (3 * (maxRunMList (stepElemM s).2.2 + n) + 22) :=
+              ih (stepElemM s)
+        _ ≤ n * C := Nat.mul_le_mul_left n harg
+    change costElemM424 s + costIterM424 n (stepElemM s) ≤ (n + 1) * C
+    calc
+      _ ≤ C + n * C := Nat.add_le_add hcost hih
+      _ = n * C + C := Nat.add_comm _ _
+      _ = (n + 1) * C := by rw [Nat.succ_mul]
+
+def startF424M : MState := (.CB, [], [.run 1, .run 0])
+
+/-- The 19,217-step F424 MItem prefix costs less than 2^31 primitive
+    transitions, including the exact machine-specific source charges. -/
+theorem costIterM424_f424_prefix_lt_two31 :
+    costIterM424 19217 startF424M < 2 ^ 31 := by
+  apply lt_of_le_of_lt (costIterM424_le 19217 startF424M)
+  norm_num [startF424M, maxRunMList]
