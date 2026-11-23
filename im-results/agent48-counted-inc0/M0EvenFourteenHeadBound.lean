@@ -178,7 +178,7 @@ private theorem m0EvenFourteen_bridge_prefix_lower
     m0EvenFourteenBridgeStart e j rfl hexact hcheckj hmatch
   have hbridge : run tm2 j ⟨3,h,T⟩ =
       some (frameAt T h m0EvenFourteenInside e) := by
-    simpa [m0EvenFourteenBridgeStart] using hbridgeFrame
+    simpa [m0EvenFourteenBridgeStart,BB6Coverage.Agent24M0EvenQ4Bridge.m0EvenQ4BridgeStart] using hbridgeFrame
   rw [hbridge] at hd
   have hdeq : d = frameAt T h m0EvenFourteenInside e :=
     (Option.some.inj hd).symm
@@ -187,7 +187,7 @@ private theorem m0EvenFourteen_bridge_prefix_lower
       (List.mem_range.mpr hj)
     simpa [hexact] using hh
   have hlow : -9 ≤ e.head := by
-    simp [m0EvenFourteenInside] at hinside
+    simp [m0EvenFourteenInside,BB6Coverage.Agent24M0EvenQ4Bridge.m0EvenQ4Inside] at hinside
     omega
   rw [hdeq]
   simp [frameAt_head]
@@ -295,8 +295,8 @@ theorem m0EvenFourteen_q4_prefix_head_bound
         frameAt T1 hN m0EvenFourteenInside m0EvenFourteenBridgeEnd =
           (⟨4,hN+3,T2⟩ : Config) := by
       apply config_ext
-      · simp [frameAt_state,m0EvenFourteenBridgeEnd]
-      · simp [frameAt_head,m0EvenFourteenBridgeEnd] <;> omega
+      · simp [frameAt_state,m0EvenFourteenBridgeEnd,BB6Coverage.Agent24M0EvenQ4Bridge.m0EvenQ4BridgeEnd]
+      · simp [frameAt_head,m0EvenFourteenBridgeEnd,BB6Coverage.Agent24M0EvenQ4Bridge.m0EvenQ4BridgeEnd] <;> omega
       · rfl
     rw [hframeConfig] at hBridge
     exact hBridge
