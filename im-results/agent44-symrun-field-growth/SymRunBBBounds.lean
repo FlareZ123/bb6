@@ -258,6 +258,16 @@ theorem sweepBB_length_bound4 (L R : List SymTok) :
     stateTokenCount (sweepBB L R) ≤ L.length + R.length + 4 * L.length + 12 :=
   (sweepBB_length_bound4_pair L R).1
 
+
+theorem sweepBB_weight_bound_sharper (L R : List SymTok) :
+    symStateWeight (sweepBB L R) ≤
+      L.length + R.length + listNumSum L + listNumSum R + 6 * L.length + 17 := by
+  have hlen := sweepBB_length_bound4 L R
+  have hsum := sweepBB_num_sum_bound L R
+  have h := Nat.add_le_add hlen hsum
+  simp [symStateWeight, stateTokenCount, symStateNumSum] at h ⊢
+  omega
+
 theorem sweepBB_length_bound (L R : List SymTok) :
     stateTokenCount (sweepBB L R) ≤ L.length + R.length + 5 * L.length + 12 := by
   generalize hn : L.length = n
