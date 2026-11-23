@@ -166,3 +166,10 @@ The argument composes existing source-certified statements:
 - `blank_section_odd_image` and `blank_no_odd_sum_two`.
 
 The affine formulas and residues above were checked with exact integer arithmetic for the full parameterization. The new composition itself has **not** been compiled in Lean in this invocation: the local Python/container execution tools return ClientError before command execution. No CI substitute was dispatched. The next useful action is for the owner of the A4 source dossier to integrate these two branches into the existing Lean closure, run the exact dependency preflight, and audit the exported theorem axioms. Keep this document in `im-results/`; do not promote it to `results/` yet.
+
+
+## Lean verification
+
+The source-level result is formalized in `im-results/agent6-root32-highstop/A4T719Q0EvenS8.lean`. The targeted Lean 4.36.0-rc2 import-closure workflow completed successfully in run [45195062299](https://github.com/FlareZ123/bb6/actions/runs/45195062299). The module contains `#print axioms` commands for all seven principal theorems and contains no explicit `sorry`. Its imports include the repaired generic P7E1E-to-A4 reduction in `Root32P7E1EGenericA4.lean`; that theorem's observed axiom profile is `[propext, Classical.choice, Quot.sound]`.
+
+This verifies the P7E1E residual exclusion only. It does not establish the other two alternatives in the root32 high-stop reduction, and therefore does not yet prove the corresponding root-index cylinder impossible.
