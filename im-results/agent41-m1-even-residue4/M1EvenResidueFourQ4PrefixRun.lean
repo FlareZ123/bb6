@@ -280,15 +280,21 @@ theorem m1EvenResidueFour_q4_prefix_run (a b : Nat) (h : Int) :
     let x : Int := hN+5+(i:Int)
     by_cases hi0 : i = 0
     · subst i
-      have hin : m1EvenResidueFourInside ((hN+5)-hN) = true := by
-        simp [m1EvenResidueFourInside]
+      have hcoord : (hN+5)-(h-((3*a+1:Nat):Int)) = 5 := by
+        dsimp [hN,N]
+        omega
+      have hin : m1EvenResidueFourInside
+          ((hN+5)-(h-((3*a+1:Nat):Int))) = true := by
+        rw [hcoord]
+        decide
       have hcut := m1EvenResidueFourCutTape_eq_end_inside a b h
-        (hN+5) (by simpa [hN] using hin)
+        (hN+5) hin
       have hmark :
           decide (5 ∈ m1EvenResidueFourBridgeEnd.marked) = true := by
-        simp [m1EvenResidueFourBridgeEnd]
+        decide
       have htrue : T2 (hN+5) = true := by
-        simpa [T2,hN,m1EvenResidueFourCutTape] using hcut.trans hmark
+        rw [hcoord] at hcut
+        simpa [T2,hN,N,T1,T,m1EvenResidueFourCutTape] using hcut.trans hmark
       simpa [x] using htrue
     · have hiPos : 1 ≤ i := by omega
       have hout : m1EvenResidueFourInside (x-hN) = false := by
@@ -609,15 +615,21 @@ theorem m1EvenResidueFour_q4_prefix_head_bound
     let x : Int := hN+5+(i:Int)
     by_cases hi0 : i = 0
     · subst i
-      have hin : m1EvenResidueFourInside ((hN+5)-hN) = true := by
-        simp [m1EvenResidueFourInside]
+      have hcoord : (hN+5)-(h-((3*a+1:Nat):Int)) = 5 := by
+        dsimp [hN,N]
+        omega
+      have hin : m1EvenResidueFourInside
+          ((hN+5)-(h-((3*a+1:Nat):Int))) = true := by
+        rw [hcoord]
+        decide
       have hcut := m1EvenResidueFourCutTape_eq_end_inside a b h
-        (hN+5) (by simpa [hN] using hin)
+        (hN+5) hin
       have hmark :
           decide (5 ∈ m1EvenResidueFourBridgeEnd.marked) = true := by
-        simp [m1EvenResidueFourBridgeEnd]
+        decide
       have htrue : T2 (hN+5) = true := by
-        simpa [T2,hN,m1EvenResidueFourCutTape] using hcut.trans hmark
+        rw [hcoord] at hcut
+        simpa [T2,hN,N,T1,T,m1EvenResidueFourCutTape] using hcut.trans hmark
       simpa [x] using htrue
     · have hiPos : 1 ≤ i := by omega
       have hout : m1EvenResidueFourInside (x-hN) = false := by
