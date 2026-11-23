@@ -103,7 +103,7 @@ function classifyRow(branch, row) {
   const oddPart = b / twoPart;
   if (c % twoPart !== 0n) return { kind: "modular", reason: "2-adic", delta };
 
-  if (oddPart === 1n) return { kind: "survivor", witness: 84, oddPart, target: 0n, delta };
+  if (oddPart === 1n) return { kind: "survivor", witness: branch.nmod === 4 ? 88 : 86, oddPart, target: 0n, delta };
 
   const target = mod(c * inverse(a, oddPart), oddPart);
   let x = powmod(2n, 83n, oddPart);
