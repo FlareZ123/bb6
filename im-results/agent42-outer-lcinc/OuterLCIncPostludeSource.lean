@@ -172,7 +172,7 @@ theorem markerBridgeFrameOut_five (m : Nat) (hm : m < 3)
   have hjcases : j=0 ∨ j=1 ∨ j=2 ∨ j=3 ∨ j=4 := by omega
   rcases hm' with rfl | rfl | rfl <;>
     rcases hjcases with rfl | rfl | rfl | rfl | rfl <;>
-    norm_num [markerBridgeOutput, sideBit]
+    simp [markerBridgeOutput, sideBit]
 
 /-- The final m marker-frame cells are ones, exactly the prefix
 needed at the beginning of the E scan. -/
@@ -191,10 +191,10 @@ theorem markerBridgeFrameOut_trailing (m : Nat) (hm : m < 3)
   · omega
   · have hi0 : i=0 := by omega
     subst i
-    norm_num [markerBridgeOutput, sideBit]
+    simp [markerBridgeOutput, sideBit]
   · have hicases : i=0 ∨ i=1 := by omega
     rcases hicases with rfl | rfl <;>
-      norm_num [markerBridgeOutput, sideBit]
+      simp [markerBridgeOutput, sideBit]
 
 /-- The marker frame preserves every cell strictly to the right of
 its fixed output window. -/
