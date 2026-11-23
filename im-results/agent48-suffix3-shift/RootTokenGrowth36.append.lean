@@ -9,19 +9,23 @@ original private tok_DR and texecute are available there.
 No sorry, axiom, or source-mode simulator. NOT COMPILED UNTIL CI SUCCEEDS.
 -/
 
+/-- Publicly denotable Cfg alias for the source-private tok_DR state family. -/
+def s3_tok_growth_cfg (s : ℕ) : Cfg (Fin 2) (Fin 6) :=
+  tok_DR [2,0] [(s,0)] [0]
+
 /-- A uniform original-TM 36-step token trajectory advancing parameter s by 5. -/
 theorem s3_tok_growth_36 (s : ℕ) :
     ReachesPlus target
-      (tok_DR [2,0] [(s,0)] [0])
-      (tok_DR [2,0] [(s+5,0)] [0]) := by
-  unfold tok_DR
+      (s3_tok_growth_cfg s)
+      (s3_tok_growth_cfg (s+5)) := by
+  unfold s3_tok_growth_cfg tok_DR
   texecute 36
 
 /-- Repeat the strictly positive source run k+1 times. -/
 theorem s3_tok_growth_iter (s k : ℕ) :
     ReachesPlus target
-      (tok_DR [2,0] [(s,0)] [0])
-      (tok_DR [2,0] [(s+5*(k+1),0)] [0]) := by
+      (s3_tok_growth_cfg s)
+      (s3_tok_growth_cfg (s+5*(k+1))) := by
   induction k with
   | zero =>
     simpa using s3_tok_growth_36 s
