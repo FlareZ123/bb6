@@ -592,7 +592,7 @@ theorem s3_image_pullback_iff_congruence (j m : Nat) :
             (Nat.mul_mod_mul_left 1024 (15+3*u) 16)
     have hmod' : (3*m+898+512*u+1024*v)%16384=0 := by
       rw [hj] at hmod
-      omega
+      simpa [Nat.add_assoc, Nat.add_left_comm, Nat.add_comm] using hmod
     have htargetEq : 3*m+7*j+14025 =
         3*m+898+512*u+1024*(15+3*u) := by
       rw [hj]
