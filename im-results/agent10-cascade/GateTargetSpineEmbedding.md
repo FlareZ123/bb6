@@ -1,6 +1,6 @@
 # Exact inverse-spine structure for #746 halting gates
 
-**Status:** four algebraic statements over the exact original-source `ResetParent` grammar: (i) the existing narrow-window t=0 entry embedding into a *single* even-spine branch, (ii) an all-sector, all-index **exact criterion for predecessor existence at the canonical spine's terminal state**, (iii) a full **unique-chain root-exclusion** on a low-valuation terminal subfamily, and (iv) a new two-edge exclusion in a second low-valuation sector. The complete derivations are paper proofs, not yet compiled against the original source in Lean. Neither statement eliminates off-spine odd-parent forks or decides the machine.
+**Status:** five algebraic statements over the exact original-source `ResetParent` grammar: (i) the existing narrow-window t=0 entry embedding into a *single* even-spine branch, (ii) an all-sector, all-index **exact criterion for predecessor existence at the canonical spine's terminal state**, (iii) a full **unique-chain root-exclusion** on a low-valuation terminal subfamily, and (iv) a two-edge exclusion in a second low-valuation sector, and (v) a disjoint four-edge exclusion in its next dyadic-depth window. The complete derivations are paper proofs, not yet compiled against the original source in Lean. Neither statement eliminates off-spine odd-parent forks or decides the machine.
 
 ## 1. Actual source gate
 
@@ -505,7 +505,107 @@ The conditions and exact chain can be reproduced directly
 from the full grammar using the accompanying JS regression.
 The proof remains uncompiled in Lean.
 
-## 7. Where the current E-parent results apply
+## 7. Four-edge root exclusion in the next dyadic depth window
+
+A second, disjoint subfamily of the \(n\bmod6=5,X\bmod27=18\)
+phase has a complete inverse chain of **four** edges rather than two.
+This establishes that the strategy of combining even-chain
+geometric depth with a small 3-adic residue invariant works beyond
+the first band exit.
+
+**Theorem (four-edge exclusion, paper proof).** Let the canonical
+terminal state and \(b_0\) be as in Sections 4–6. Suppose
+\[
+ n\bmod6=5,\quad J\equiv0\pmod2,\quad
+ X\bmod27=18,\quad b_0\bmod9=5,
+\]
+and the following strict dyadic strip conditions:
+\[
+ 256c\ge457\cdot2^a,\qquad 128c<233\cdot2^a.
+\]
+Then the **complete** predecessor graph of \(u_J\) consists
+of exactly the chain
+\[
+ u_J\leftarrow b_0\leftarrow b_1\leftarrow b_2
+      \leftarrow b_3,
+ \qquad b_{i+1}=2b_i-p-(n-3),
+\]
+and \(b_3\ne2\) is parentless. Hence
+\(\neg\operatorname{ResetChain}(2,u_J)\) and source-equivalently
+\(\neg\operatorname{ReachC}((2,0),(u_J,0))\).
+
+**Proof.** The strip bounds imply
+\(457/256\le q/p<233/128\), wholly inside
+the high-\(c\) region \(7/4<q/p<2\).
+As in Section 5, \(u_J\) has exactly the initial t=1
+odd parent \(b_0\), which is in the \(k=n-3\)
+even-target band. For every in-band \(b_i\), its
+t=0 source \(d=(2b_i+5)/3\), when integral, lies
+strictly between \(p/2\) and \(3p/4\), the
+odd-source dyadic gap; any odd parent with t≥1
+requires \(9\mid(2b_i+5)\).
+
+The even predecessor recurrence modulo 3 gives
+\(b_0,b_2\bmod3=2\) and \(b_1,b_3\bmod3=0\).
+More precisely, put \(A=p+n-3\), which satisfies
+\(A\equiv1\pmod3\), and note
+\[
+ b_2=4b_0-3A.
+\]
+Since \(b_0\bmod9=5\), we obtain
+\(b_2\bmod9=4\cdot5-3\equiv8\pmod9\).
+Thus at both even-index nodes \(b_0,b_2\),
+the odd numerator is divisible by three but **not nine**;
+all t≥1 odd parents are excluded. The odd-index
+nodes have no odd parent at all by their mod-3 residues.
+
+It remains to show that precisely the first three
+even edges exist. With \(\delta=4c-7\cdot2^a\),
+the closed form in Section 5 yields
+\[
+ 9D_2=8\delta s+31n-57,\qquad
+ 9D_3=16\delta s+71n-141.
+\]
+The upper strict strip boundary and integrality imply
+\[
+ 128q\le233p-128s,\quad
+ \delta s=4q-7p\le(9/32)p-4s.
+\]
+Since \(s>n+4\), this gives \(D_2<p/4+1\),
+so \(b_0,b_1,b_2\) all remain in the same
+\(k=n-3\) even-target band.
+
+The lower strip boundary gives
+\(256q\ge457p\), whence
+\(\delta s\ge(9/64)p\). Therefore
+\(D_3>p/4+1\), so the chain exits at exactly
+the third even edge. The universal no-overshoot proof
+in Section 5 (whose gap-coefficient C=0 case is
+forbidden in both surviving gate sectors with J even)
+implies \(D_3<p/2\). Thus
+\(p/2<b_3<3p/4-1\), an even-predecessor gap.
+Finally \(b_3\bmod3=0\) eliminates every odd
+predecessor. The chain terminates at a state \(>p/2>2\).
+
+**Further arithmetic density:** the strip has width
+\(233/128-457/256=9/256\) in \(c/2^a\).
+For odd a, J-even selects half of eligible gate
+indices; X%27=18 selects one class in nine; and the
+additional b0%9=5 condition selects one of its
+three exact n-mod-162 lifts. This adds an
+asymptotic \(1/1536+O(2^{-a})\) disjoint
+terminal-branch exclusion fraction. Including
+Sections 4–7, the **odd-a** terminal-branch
+exclusion fraction is therefore at least
+\[
+ \boxed{8321/13824+O(2^{-a})\approx0.601924}.
+\]
+The even-a bound remains 11/18. Again, earlier
+off-spine odd forks are not excluded by this result.
+The four-edge family is a paper proof awaiting
+original-source Lean acceptance.
+
+## 8. Where the current E-parent results apply
 
 The even-parent bands adjacent to (E) are
 [
@@ -534,7 +634,7 @@ The parity sectors align with both original gate residues:
 
 The odd-a, (K\equiv3\pmod6) entry-parent classification remains open.
 
-## 8. Existing Ray reductions to compose, not duplicate
+## 9. Existing Ray reductions to compose, not duplicate
 
 The spine formula above is the same canonical even ray used by the repository's `Ray*` modules:
 [
@@ -574,7 +674,7 @@ J-11,J-10,\ldots,J.
 ]
 This gives a concrete finite target for composing `RayNoSeam`, `RayNoSeamWalk`, the two-tier Hensel selectors, and the terminal t=0 entry (E(a,K)). The BigInt checks at ((K,a)=(387,9),(800,10),(399,9),(806,10)) independently found this exact 12-index split; the algebra above explains it uniformly.
 
-## 9. Scope and remaining work
+## 10. Scope and remaining work
 
 This identity connects the auxiliary entry family to the actual #746 halting targets. It proves that (E(a,K)) is an ancestor on **one** inverse-parent branch of (U_{K+2}). It does **not** prove that every root path to (U_{K+2}) passes through (E(a,K)). Other odd-parent side branches can leave intermediate spine nodes; a root path could in principle enter through one of them.
 
