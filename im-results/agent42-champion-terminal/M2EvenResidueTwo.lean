@@ -40,17 +40,14 @@ theorem binDec_residue2 (L k : Nat) (hL : 3 ≤ L)
     binDec L (8*k+2) =
       d1 ++ d0 ++ d1 ++ binDec (L-3) k := by
   have hpow3 : 2^L = 8 * 2^(L-3) := by
-    rw [show L = (L-3)+3 by omega, Nat.pow_add]
-    norm_num
-    ring
+    rw [show L = (L-3)+3 by omega, Nat.pow_add,
+      show (2:Nat)^3 = 8 by decide, Nat.mul_comm]
   have hpow2 : 2^(L-1) = 4 * 2^(L-3) := by
-    rw [show L-1 = (L-3)+2 by omega, Nat.pow_add]
-    norm_num
-    ring
+    rw [show L-1 = (L-3)+2 by omega, Nat.pow_add,
+      show (2:Nat)^2 = 4 by decide, Nat.mul_comm]
   have hpow1 : 2^(L-2) = 2 * 2^(L-3) := by
-    rw [show L-2 = (L-3)+1 by omega, Nat.pow_add]
-    norm_num
-    ring
+    rw [show L-2 = (L-3)+1 by omega, Nat.pow_add,
+      show (2:Nat)^1 = 2 by decide, Nat.mul_comm]
   have hk : k < 2^(L-3) := by rw [hpow3] at hbound; omega
   have hq1 : 4*k+1 < 2^(L-1) := by rw [hpow2]; rw [hpow3] at hbound; omega
   have hq2 : 2*k < 2^(L-2) := by rw [hpow1]; rw [hpow3] at hbound; omega
@@ -76,17 +73,14 @@ theorem binDec_residue1 (L k : Nat) (hL : 3 ≤ L)
     binDec L (8*k+1) =
       d0 ++ d1 ++ d1 ++ binDec (L-3) k := by
   have hpow3 : 2^L = 8 * 2^(L-3) := by
-    rw [show L = (L-3)+3 by omega, Nat.pow_add]
-    norm_num
-    ring
+    rw [show L = (L-3)+3 by omega, Nat.pow_add,
+      show (2:Nat)^3 = 8 by decide, Nat.mul_comm]
   have hpow2 : 2^(L-1) = 4 * 2^(L-3) := by
-    rw [show L-1 = (L-3)+2 by omega, Nat.pow_add]
-    norm_num
-    ring
+    rw [show L-1 = (L-3)+2 by omega, Nat.pow_add,
+      show (2:Nat)^2 = 4 by decide, Nat.mul_comm]
   have hpow1 : 2^(L-2) = 2 * 2^(L-3) := by
-    rw [show L-2 = (L-3)+1 by omega, Nat.pow_add]
-    norm_num
-    ring
+    rw [show L-2 = (L-3)+1 by omega, Nat.pow_add,
+      show (2:Nat)^1 = 2 by decide, Nat.mul_comm]
   have hk : k < 2^(L-3) := by rw [hpow3] at hbound; omega
   have hq1 : 4*k < 2^(L-1) := by rw [hpow2]; rw [hpow3] at hbound; omega
   have hq2 : 2*k < 2^(L-2) := by rw [hpow1]; rw [hpow3] at hbound; omega
@@ -137,13 +131,13 @@ private theorem m2EvenResidueTwo_source_base_left (a : Nat) :
     s1LeftFacing 3 6 2 a 0 =
       m2EvenResidueTwoInputPrefix a ++ m2EvenResidueTwoBaseTail := by
   simp [s1LeftFacing,m2EvenResidueTwoInputPrefix,
-    m2EvenResidueTwoBaseTail,binDec_three_six,d0,d1,List.append_assoc]
+    m2EvenResidueTwoBaseTail,binDec_three_six,binDec_zero,d0,d1,List.append_assoc]
 
 private theorem m2EvenResidueTwo_target_base_left (a : Nat) :
     BB6Coverage.Agent8Q4Suffix.q4LeftFacing 3 5 a =
       m2EvenResidueTwoTargetPrefix a ++ m2EvenResidueTwoBaseTail := by
   simp [BB6Coverage.Agent8Q4Suffix.q4LeftFacing,m2EvenResidueTwoTargetPrefix,
-    m2EvenResidueTwoBaseTail,binDec_three_five,d0,d1,List.append_assoc]
+    m2EvenResidueTwoBaseTail,binDec_three_five,binDec_zero,d0,d1,List.append_assoc]
 
 private theorem m2EvenResidueTwo_source_left
     (L k a : Nat) (hL : 3 ≤ L) (hbound : 8*k+2 < 2^L) :
@@ -152,7 +146,7 @@ private theorem m2EvenResidueTwo_source_left
         m2EvenResidueTwoSharedTail L k := by
   simp [s1LeftFacing,m2EvenResidueTwoInputPrefix,
     m2EvenResidueTwoSharedTail,binDec_residue2 L k hL hbound,
-    d0,d1,List.append_assoc]
+    binDec_zero,d0,d1,List.append_assoc]
 
 private theorem m2EvenResidueTwo_target_left
     (L k a : Nat) (hL : 3 ≤ L) (hbound : 8*k+1 < 2^L) :
@@ -161,7 +155,7 @@ private theorem m2EvenResidueTwo_target_left
         m2EvenResidueTwoSharedTail L k := by
   simp [BB6Coverage.Agent8Q4Suffix.q4LeftFacing,m2EvenResidueTwoTargetPrefix,
     m2EvenResidueTwoSharedTail,binDec_residue1 L k hL hbound,
-    d0,d1,List.append_assoc]
+    binDec_zero,d0,d1,List.append_assoc]
 
 private theorem m2EvenResidueTwo_config_ext (c d : Config)
     (hstate : c.state = d.state) (hhead : c.head = d.head)
@@ -189,11 +183,11 @@ private theorem m2EvenResidueTwoBaseTape_spec
     (∀ i : Nat,
       m2EvenResidueTwoBaseTape a b h ha (h-(i:Int)) =
         sideBit (m2EvenSixQ4LeftFacing a) i) ∧
-    BB6Coverage.Agent8Q4Suffix.BB6Coverage.Agent8Q4Suffix.q4RightShape
+    BB6Coverage.Agent8Q4Suffix.q4RightShape
       (m2EvenResidueTwoBaseTape a b h ha) h b ∧
     (∀ i : Nat,
       m2EvenResidueTwoBaseTape a b h ha (h+1+(i:Int)) =
-        sideBit (BB6Coverage.Agent8Q4Suffix.BB6Coverage.Agent8Q4Suffix.q4RightFacing b) i) := by
+        sideBit (BB6Coverage.Agent8Q4Suffix.BB6Coverage.Agent6Q4Prefix.q4RightFacing b) i) := by
   simpa [m2EvenResidueTwoBaseTape] using
     (Classical.choose_spec (m2EvenSix_q4_prefix_data a b h ha))
 
@@ -380,7 +374,8 @@ private theorem m2EvenResidueTwo_leftFacing
       (by rw [m2EvenResidueTwoTargetPrefix_length]; omega)
     rw [hsrcBit] at hcell
     rw [htgtBit]
-    exact hcell
+    simpa [m2EvenResidueTwoInputPrefix_length,
+      m2EvenResidueTwoTargetPrefix_length] using hcell
 
 private theorem m2EvenResidueTwo_rightFacing
     (L k a b : Nat) (h : Int)
@@ -457,7 +452,11 @@ private theorem m2EvenSix_bridge_prefix_lower
       (List.mem_range.mpr hj')
   have hbridge := bridgeAt T h m2EvenSixQ4Inside
     m2EvenSixQ4BridgeStart e j rfl hexact hcheckj hmatch
-  rw [hbridge] at hd
+  have hbridge' :
+      run tm2 j ⟨3,h,T⟩ =
+        some (frameAt T h m2EvenSixQ4Inside e) := by
+    simpa [m2EvenSixQ4BridgeStart] using hbridge
+  rw [hbridge'] at hd
   have hdeq : d = frameAt T h m2EvenSixQ4Inside e :=
     Option.some.inj hd
   have hinside : m2EvenSixQ4Inside e.head = true := by
@@ -529,6 +528,10 @@ private theorem m2EvenSix_q4_prefix_head_bound
       run tm2 (3*N) ⟨3,h,T⟩ =
         some ⟨3,h-(N:Int),T1⟩ := by
     simpa [T1] using counted_left_sweep N T h hOn hright
+  have hSweep' :
+      run tm2 (3*N) (s1Config 3 6 2 a 0 b h) =
+        some ⟨3,h-(N:Int),T1⟩ := by
+    simpa [T] using hSweep
   have hmatch := m2EvenSixQ4Bridge_input_match a b h
   have hBridge :
       run tm2 38 ⟨3,hN,T1⟩ =
@@ -546,8 +549,11 @@ private theorem m2EvenSix_q4_prefix_head_bound
       · rfl
     rw [hframe] at hb
     exact hb
+  have hlinearCoord : hN+2 = h-(3*a:Int) := by
+    dsimp [hN,N]
+    omega
   have hlinear : linearRightOnes T2 (hN+2) (3*a) := by
-    simpa [T2,hN,N] using
+    simpa [T2,hlinearCoord] using
       m2EvenSixQ4CutTape_linearRightOnes a b h ha
   intro k hk d hd
   let p1 := 3*N
@@ -561,7 +567,7 @@ private theorem m2EvenSix_q4_prefix_head_bound
     · let j := k-p1
       have hj : j<38 := by dsimp [j,p1] at *; omega
       have hkEq : k=p1+j := by dsimp [j,p1]; omega
-      rw [hkEq,run_add,hSweep] at hd
+      rw [hkEq,run_add,hSweep'] at hd
       simp only [Option.bind_some] at hd
       have hlow := m2EvenSix_bridge_prefix_lower T1 hN hmatch j hj d hd
       dsimp [hN,N] at *
@@ -569,7 +575,7 @@ private theorem m2EvenSix_q4_prefix_head_bound
     · let j := k-p2
       have hj : j<3*a := by dsimp [j,p2,p1,N] at *; omega
       have hkEq : k=p1+(38+j) := by dsimp [j,p2,p1]; omega
-      rw [hkEq,run_add,hSweep] at hd
+      rw [hkEq,run_add,hSweep'] at hd
       simp only [Option.bind_some] at hd
       rw [run_add,hBridge] at hd
       simp only [Option.bind_some] at hd
@@ -618,7 +624,7 @@ theorem m2Even_residue2_q4_prefix_source
     simpa [base] using (m2EvenResidueTwoBaseTape_spec a b h ha).1
   rw [hbaseRun] at hlift
   simp only [Option.map_some] at hlift
-  simpa [m2EvenResidueTwoCutTape,background,base] using hlift
+  simpa [m2EvenResidueTwoCutTape,background,base,frame] using hlift
 
 theorem m2Even_residue2_q4_prefix_data
     (L k a b : Nat) (h : Int)
@@ -646,7 +652,7 @@ private theorem m2EvenResidueTwo_prefix_far_tail
   intro i hi
   rw [m2EvenResidueTwo_rightFacing L k a b h hL hbound ha i]
   apply sideBit_ge_length
-  rw [BB6Coverage.Agent8Q4Suffix.q4RightFacing_length]
+  rw [BB6Coverage.Agent6Q4Prefix.q4RightFacing_length]
   omega
 
 theorem m2Even_residue2_q4_reset_prefix_source
