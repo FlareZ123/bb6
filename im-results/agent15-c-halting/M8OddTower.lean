@@ -46,7 +46,7 @@ theorem towerX_geom (m r : Nat) :
             ac_rfl
         _=B*towerX m r := by rw [ih]
 
-private theorem towerR_plus (m r : Nat) (hr : 1≤r) :
+theorem towerR_plus (m r : Nat) (hr : 1≤r) :
     towerR m r+3*towerS m r=towerX m r := by
   let Q := allOddQ m
   let S := towerS m r
