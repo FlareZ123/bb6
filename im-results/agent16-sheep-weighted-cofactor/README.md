@@ -232,7 +232,7 @@ Their source data ((a,h,b)) and weights (kappa) are:
 | 244 | (2,0,2) | 2 |
 | 276 | (2,0,3) | 2 |
 | 312 | (3,0,1) | 0 |
-| 334 | (1,0,4) | 0 |
+| 334 | (1,0,1) | 0 |
 | 418 | (1,1,4) | 1 |
 
 The cumulative slope valuation after these seven edges is (K=14). In particular, the dependence on the initial cofactor (u_0=5) has disappeared modulo (3^{14}) from the composed affine expression for the final odd cofactor.
