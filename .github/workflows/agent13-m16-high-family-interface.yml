@@ -43,6 +43,7 @@ on:
           - sourceLowFullIff
           - sourceLowEvenReachIff
           - sourceLowEvenEdgeIff
+          - sourceLowSecondDyadic
           - sourceCriterion559
           - sourceAgent8Z2
           - sourceAgent8Z7
@@ -190,6 +191,9 @@ jobs:
               ;;
             sourceLowEvenEdgeIff)
               target=im-results/agent13-residual-frontier/EvenOddLowStopEvenEdgeIff.lean
+              ;;
+            sourceLowSecondDyadic)
+              target=im-results/agent13-residual-frontier/EvenOddLowStopSecondDyadic.lean
               ;;
             sourceCriterion559)
               target=im-results/agent13-residual-frontier/LowM67All559Criterion.lean
