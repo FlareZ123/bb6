@@ -32,18 +32,10 @@ jobs:
         run: |
           set -euo pipefail
           python3 tools/lean_compile_closure.py \
-            im-results/agent13-residual-frontier/ValSixM16Integration.lean \
+            im-results/agent13-residual-frontier/M16SecondFanProbe.lean \
             --workdir /tmp/a43m16-root-filter \
             --source-root /tmp/a43mod16 \
             --jobs 4 \
             --lean "$(command -v lean)" \
             --override CLine=im-results/agent11-c-line/CLine.lean \
             --override BounceParity=im-results/agent46-c-jump/BounceParity.lean
-      - name: Evaluate the exact M16 second-fan parent cells
-        shell: bash
-        run: |
-          set -euo pipefail
-          cd "$GITHUB_WORKSPACE"
-          export LEAN_PATH=/tmp/a43m16-root-filter
-          lean -o /tmp/a43m16-root-filter/M16SecondFanProbe.olean \
-            im-results/agent13-residual-frontier/M16SecondFanProbe.lean
