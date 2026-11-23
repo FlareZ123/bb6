@@ -1,5 +1,9 @@
 import DoubleOnePairs
 import ReturnShift
+import ABridgeCode
+import CryptidA
+import CompleteAReturn
+import CrossModelBridge
 import CodeHaltFirst
 import Lean.Elab.Tactic.Omega
 
@@ -16,9 +20,9 @@ open BB6.CryptidACodeFirstReturn
     and arbitrary trailing suffixes. -/
 theorem complete_A_word_two_one_pairs_first_event
     (k q : Nat) (ws ys : List Bool) :
-    PhysicalPair (run (pairTime k ws q) (pairInput k ws q ys)) ∧
-    ∀ t, 0 < t → t < pairTime k ws q →
-      ¬ PhysicalPair (run t (pairInput k ws q ys)) := by
+    PhysicalPair (run (pairTime k q ws) (pairInput k q ws ys)) ∧
+    ∀ t, 0 < t → t < pairTime k q ws →
+      ¬ PhysicalPair (run t (pairInput k q ws ys)) := by
   constructor
   · rw [pair_source]
     simp [PhysicalPair]
@@ -28,7 +32,7 @@ theorem complete_A_word_two_one_pairs_first_event
     let u := 4*k+1+CryptidA.wordInc ws
     let rest := [true,true,false] ++ (pairs q ++ (false::ys))
     have hprefix :
-        run P (pairInput k ws q ys) =
+        run P (pairInput k q ws ys) =
           preA (4*k+3) (CryptidA.wordCode ws ++ rest) := by
       dsimp [pairInput,P,rest]
       rw [CryptidBoundary.prefix_A]
@@ -49,6 +53,7 @@ theorem complete_A_word_two_one_pairs_first_event
         dsimp [u]
         omega
       rw [hu]
+      rw [← preA_embed_ab]
     intro hp
     by_cases hbefore : t < P
     · have hno := prefixA_positive_noF k
