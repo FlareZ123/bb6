@@ -44,6 +44,32 @@ private theorem no_root_one_five (a b : Nat)
     exact BB429RootOddRowsStrong.rooted_not_9_5
       a b hr ha h9 hb8
 
+
+/-- The small, pure Presburger core of the two forced F inverses.
+    Splitting three k mod32 possibilities keeps the Lean omega proof
+    bounded, rather than expanding all original inverse coordinates. -/
+private theorem ff_residues (r s k : Nat)
+    (hk : k%32=1 ∨ k%32=9 ∨ k%32=25)
+    (hr : (4*r+17+3*k)%128=0)
+    (hs : (2*s+17+21*k)%128=0)
+    (hno35 : ¬(r%8=3 ∧ s%8=5))
+    (hno51 : ¬(r%32=5 ∧ s%8=1)) :
+    k%128=9 ∨ k%128=25 ∨ k%128=41 ∨
+    k%128=57 ∨ k%128=89 ∨ k%128=105 ∨
+    k%128=121 := by
+  rcases hk with h|h|h <;> omega
+
+/-- Pure arithmetic core of the forced F-then-E inverse branch. -/
+private theorem fe_residues (r s k : Nat)
+    (hk : k%16=11)
+    (hr : (4*r+39+15*k)%128=0)
+    (hs : (2*s+3+9*k)%128=0)
+    (hno15 : ¬(r%8=1 ∧ s%8=5)) :
+    k%128=11 ∨ k%128=43 ∨ k%128=75 ∨
+    k%128=107 := by
+  have hk32 : k%32=11 ∨ k%32=27 := by omega
+  rcases hk32 with h|h <;> omega
+
 /-- Only 11 out of the 128 k classes can be genuine blank-root
     exceptional parents sufficiently far inside the branch-9 spine. -/
 theorem side_parent_k_mod128_eleven (x y k : Nat)
@@ -73,6 +99,10 @@ theorem side_parent_k_mod128_eleven (x y k : Nat)
           have hfive := BB429SevenStrong.rooted_five_strong
             n r s hn h.1
           omega
+        have hkff : k%32=1 ∨ k%32=9 ∨ k%32=25 := by omega
+        have hff1 : (4*r+17+3*k)%128=0 := by omega
+        have hff2 : (2*s+17+21*k)%128=0 := by omega
+        have hff := ff_residues r s k hkff hff1 hff2 hno35 hno51
         omega
       · omega
     · have hpeven : p%2=0 := by omega
@@ -81,6 +111,10 @@ theorem side_parent_k_mod128_eleven (x y k : Nat)
       have hno15 : ¬(r%8=1 ∧ s%8=5) := by
         intro h
         exact no_root_one_five r s hrs (by omega) h.1 h.2
+      have hkfe : k%16=11 := by omega
+      have hfe1 : (4*r+39+15*k)%128=0 := by omega
+      have hfe2 : (2*s+3+9*k)%128=0 := by omega
+      have hfe := fe_residues r s k hkfe hfe1 hfe2 hno15
       omega
   · omega
 
