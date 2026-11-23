@@ -48,6 +48,11 @@ on:
         required: false
         type: boolean
         default: false
+      s2_sixall_only:
+        description: "Source-check the S2/q-even six-all root integration, skipping independent M0/S31-only extensions"
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -88,6 +93,7 @@ jobs:
           U5_Q0_M16_ONLY: ${{ inputs.u5_q0_m16_only }}
           U5_SOURCE_ONLY_W21_ONLY: ${{ inputs.u5_source_only_w21_only }}
           S31_W13_ONLY: ${{ inputs.s31_w13_only }}
+          S2_SIXALL_ONLY: ${{ inputs.s2_sixall_only }}
         run: |
           set -euo pipefail
           mkdir -p /tmp/a38-section
@@ -432,7 +438,7 @@ jobs:
             done
             exit 0
           fi
-          if [ "$S31_W13_ONLY" != "true" ]; then
+          if [ "$S31_W13_ONLY" != "true" ] && [ "$S2_SIXALL_ONLY" != "true" ]; then
             # Source-check the complete even-valuation s=1024*w+229 high-stop exclusion.
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/M0EvenEvenSumZeroS229.lean .
           lean -o M0EvenEvenSumZeroS229.olean M0EvenEvenSumZeroS229.lean 2>&1 | tee M0EvenEvenSumZeroS229.log
@@ -452,6 +458,7 @@ jobs:
             if [ "$M0_S229_S533_ONLY" = "true" ]; then exit 0; fi
           fi
 
+          if [ "$S2_SIXALL_ONLY" != "true" ]; then
           cp ${GITHUB_WORKSPACE}/im-results/agent11-c-low58/M0EvenEvenSumZeroS31.lean .
           lean -o M0EvenEvenSumZeroS31.olean M0EvenEvenSumZeroS31.lean 2>&1 | tee M0EvenEvenSumZeroS31.log
           if grep -q sorryAx M0EvenEvenSumZeroS31.log; then
@@ -484,6 +491,7 @@ jobs:
           fi
 
           if [ "$S31_W13_ONLY" = "true" ]; then exit 0; fi
+          fi
 
           # Agent 41: disjoint c=512*g+7 closure of the u=64*c+7 E4 branch.
           cp ${GITHUB_WORKSPACE}/im-results/agent41-m0-u7-c512/OddSevenU7C512.lean .
