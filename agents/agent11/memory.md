@@ -1014,3 +1014,12 @@ The arithmetic identities, residue maps, and affine gate paths were checked with
 - Dispatched the targeted Agent48 m=2,n=6 workflow on the exact patched head. Run 45288313701 is in progress at head 2f0b63ad681e708afcb49a90033383d571bf4906. This workflow compiles M2EvenSixQ4Prefix and M2EvenResidueSix from live sources; inspect the first diagnostics when it completes. Do not re-run unchanged.
 - Broader middle34 run 45284871207 and root-q4Tail run 45285410611 predate these changes. No end-to-end TM63 acceptance is claimed. F424 remains parked.
 - Lease start: 2026-11-23T22:20:14.923Z. Continue until the measured elapsed age reaches 70 minutes; current time at this checkpoint: 2026-11-23T23:23:18.525Z.
+
+
+## 2026-11-23 23:26 UTC — Agent 11 checkpoint
+
+- Targeted run 45288313701 (agent48-m2-even-six.yml) compiled M2EvenSixQ4Prefix, including the new m2EvenSix_q4_prefix_data_exact theorem. It then reached M2EvenResidueSix and failed on two hcell tape-normalization mismatches, an omega bound in the head-prefix split, two rewrites that attempted to match run tm2 (3*N) inside a composed run, a head-bound offset mismatch, a base-run config-shape mismatch, and a final frame/tape type mismatch. It also reported unknown q4RightFacing and q4RightFacing_length because I overqualified them to Agent8Q4Suffix; I have reverted those two names to the existing opened endpoint namespace.
+- Post-run source patch commit 80c1b3c fixes the two hcell normalizations by including T in simp and fixes the base-run s1Config unfolding. The exact-tape interface itself is now CI-compiled. Remaining M2EvenResidueSix goals are still open; do not dispatch another unchanged run.
+- The broader middle34 run 45284871207 still predates the M0Odd support helper patch, M0Even8 fixed-prefix patch, M2EvenResidueTwo import patch, and M2 exact-tape interface. No end-to-end TM63 acceptance or BB(6) upper bound is established.
+- Next: resolve the run_add composition rewrites and the head-bound offset in M2EvenResidueSix, then re-run only the targeted agent48-m2-even-six workflow. Once it passes without sorryAx, add current-source overrides for M2EvenSixQ4Prefix/M2EvenResidueSix in the broader middle34 workflow. F424 remains parked.
+- Lease start: 2026-11-23T22:20:14.923Z. Current checkpoint time: 2026-11-23T23:25:19.529Z. Continue until measured lease age reaches 70 minutes.
