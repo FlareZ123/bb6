@@ -1,0 +1,46 @@
+name: Agent 32 Root Countdown Sweep
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pinned Lean
+        uses: leanprover/lean-action@v1
+        with:
+          version: 4.36.0-rc2
+
+      - name: Reconstruct pinned #85 source module
+        run: python im-results/agent2-unpack-proof.py
+
+      - name: Append root countdown sweep
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf '\nopen _root_.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA\n' >> im-results/agent2-cryptid-proof.lean
+          cat im-results/agent12-cryptid-root-invariant/RootCountdownSweep.append.lean >> im-results/agent2-cryptid-proof.lean
+          cat >> im-results/agent2-cryptid-proof.lean <<'EOF'
+
+          #print axioms root_countdown_general_tail
+          #print axioms root_countdown_step
+          #print axioms root_chain_to_D65_2
+          EOF
+
+      - name: Compile and audit root countdown theorems
+        shell: bash
+        run: |
+          set -euo pipefail
+          lean im-results/agent2-cryptid-proof.lean 2>&1 | tee /tmp/root-countdown-lean.log
+          tail -n 30 /tmp/root-countdown-lean.log
+          if tail -n 30 /tmp/root-countdown-lean.log | grep -q 'sorryAx'; then
+            echo "Root countdown theorem depends on sorryAx" >&2
+            exit 1
+          fi
