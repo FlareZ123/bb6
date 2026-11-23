@@ -133,7 +133,11 @@ theorem unary_source_first_return (a : Nat) (ha : 2 ≤ a) :
     · rw [hnum]
       simp [DRegular.next,h2,hd]
     · rw [hnum]
-      simpa [htime] using (BB6.BRegularSource.b_zero k)
+      exact BB6.BRegularSource.original_B_row
+        ⟨3*k+2,0,0⟩ ⟨8*k+9,0,0⟩
+        (by simp [DRegular.Canon])
+        (by omega)
+        (by simp [DRegular.next,h2,hd])
     · intro t htpos ht hblank
       rw [hnum,htime] at ht
       rw [hnum,hstart] at hblank
