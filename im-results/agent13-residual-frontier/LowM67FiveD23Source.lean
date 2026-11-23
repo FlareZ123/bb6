@@ -74,22 +74,22 @@ theorem low_stop_m67_z165_mod256_unreachable
     (z m k : Nat) (hm : m=512*z+67) (hz : z%256=165)
     (hstop : k+3*m+4=2^(2*m+3)) :
     ¬ BB6.Agent3.CReach 1 k := by
-  have hpdiv : 4096 ∣ 2^(2*m+3) := by
-    have h : (2:Nat)^12 ∣ 2^(2*m+3) :=
+  have hpdiv : 131072 ∣ 2^(2*m+3) := by
+    have h : (2:Nat)^17 ∣ 2^(2*m+3) :=
       Nat.pow_dvd_pow 2 (by omega)
-    simpa only [show (2:Nat)^12=4096 by decide] using h
-  have hpmod : (2^(2*m+3))%4096=0 :=
+    simpa only [show (2:Nat)^12=131072 by decide] using h
+  have hpmod : (2^(2*m+3))%131072=0 :=
     Nat.mod_eq_zero_of_dvd hpdiv
-  have hkmod : k%4096=8499 := by
-    have hs : (k+3*m+4)%4096=0 := by
+  have hkmod : k%131072=8499 := by
+    have hs : (k+3*m+4)%131072=0 := by
       rw [hstop]
       exact hpmod
     rw [hm] at hs
     omega
-  let u := 512*(k/4096)+33
+  let u := 512*(k/131072)+33
   have hu : u%512=33 := by dsimp [u]; omega
   have hk : k=256*u+51 := by
-    have hh := Nat.mod_add_div k 4096
+    have hh := Nat.mod_add_div k 131072
     rw [hkmod] at hh
     dsimp [u]
     omega
@@ -183,22 +183,22 @@ theorem low_stop_m67_z105_mod512_unreachable
     (z m k : Nat) (hm : m=512*z+67) (hz : z%512=105)
     (hstop : k+3*m+4=2^(2*m+3)) :
     ¬ BB6.Agent3.CReach 1 k := by
-  have hpdiv : 8192 ∣ 2^(2*m+3) := by
-    have h : (2:Nat)^13 ∣ 2^(2*m+3) :=
+  have hpdiv : 262144 ∣ 2^(2*m+3) := by
+    have h : (2:Nat)^18 ∣ 2^(2*m+3) :=
       Nat.pow_dvd_pow 2 (by omega)
-    simpa only [show (2:Nat)^13=8192 by decide] using h
-  have hpmod : (2^(2*m+3))%8192=0 :=
+    simpa only [show (2:Nat)^13=262144 by decide] using h
+  have hpmod : (2^(2*m+3))%262144=0 :=
     Nat.mod_eq_zero_of_dvd hpdiv
-  have hkmod : k%8192=100659 := by
-    have hs : (k+3*m+4)%8192=0 := by
+  have hkmod : k%262144=100659 := by
+    have hs : (k+3*m+4)%262144=0 := by
       rw [hstop]
       exact hpmod
     rw [hm] at hs
     omega
-  let u := 1024*(k/8192)+393
+  let u := 1024*(k/262144)+393
   have hu : u%1024=393 := by dsimp [u]; omega
   have hk : k=256*u+51 := by
-    have hh := Nat.mod_add_div k 8192
+    have hh := Nat.mod_add_div k 262144
     rw [hkmod] at hh
     dsimp [u]
     omega
@@ -292,22 +292,22 @@ theorem low_stop_m67_z469_mod1024_unreachable
     (z m k : Nat) (hm : m=512*z+67) (hz : z%1024=469)
     (hstop : k+3*m+4=2^(2*m+3)) :
     ¬ BB6.Agent3.CReach 1 k := by
-  have hpdiv : 16384 ∣ 2^(2*m+3) := by
-    have h : (2:Nat)^14 ∣ 2^(2*m+3) :=
+  have hpdiv : 524288 ∣ 2^(2*m+3) := by
+    have h : (2:Nat)^19 ∣ 2^(2*m+3) :=
       Nat.pow_dvd_pow 2 (by omega)
-    simpa only [show (2:Nat)^14=16384 by decide] using h
-  have hpmod : (2^(2*m+3))%16384=0 :=
+    simpa only [show (2:Nat)^14=524288 by decide] using h
+  have hpmod : (2^(2*m+3))%524288=0 :=
     Nat.mod_eq_zero_of_dvd hpdiv
-  have hkmod : k%16384=327987 := by
-    have hs : (k+3*m+4)%16384=0 := by
+  have hkmod : k%524288=327987 := by
+    have hs : (k+3*m+4)%524288=0 := by
       rw [hstop]
       exact hpmod
     rw [hm] at hs
     omega
-  let u := 2048*(k/16384)+1281
+  let u := 2048*(k/524288)+1281
   have hu : u%2048=1281 := by dsimp [u]; omega
   have hk : k=256*u+51 := by
-    have hh := Nat.mod_add_div k 16384
+    have hh := Nat.mod_add_div k 524288
     rw [hkmod] at hh
     dsimp [u]
     omega
@@ -401,22 +401,22 @@ theorem low_stop_m67_z869_mod1024_unreachable
     (z m k : Nat) (hm : m=512*z+67) (hz : z%1024=869)
     (hstop : k+3*m+4=2^(2*m+3)) :
     ¬ BB6.Agent3.CReach 1 k := by
-  have hpdiv : 16384 ∣ 2^(2*m+3) := by
-    have h : (2:Nat)^14 ∣ 2^(2*m+3) :=
+  have hpdiv : 524288 ∣ 2^(2*m+3) := by
+    have h : (2:Nat)^19 ∣ 2^(2*m+3) :=
       Nat.pow_dvd_pow 2 (by omega)
-    simpa only [show (2:Nat)^14=16384 by decide] using h
-  have hpmod : (2^(2*m+3))%16384=0 :=
+    simpa only [show (2:Nat)^14=524288 by decide] using h
+  have hpmod : (2^(2*m+3))%524288=0 :=
     Nat.mod_eq_zero_of_dvd hpdiv
-  have hkmod : k%16384=237875 := by
-    have hs : (k+3*m+4)%16384=0 := by
+  have hkmod : k%524288=237875 := by
+    have hs : (k+3*m+4)%524288=0 := by
       rw [hstop]
       exact hpmod
     rw [hm] at hs
     omega
-  let u := 2048*(k/16384)+929
+  let u := 2048*(k/524288)+929
   have hu : u%2048=929 := by dsimp [u]; omega
   have hk : k=256*u+51 := by
-    have hh := Nat.mod_add_div k 16384
+    have hh := Nat.mod_add_div k 524288
     rw [hkmod] at hh
     dsimp [u]
     omega
@@ -510,22 +510,22 @@ theorem low_stop_m67_z585_mod1024_unreachable
     (z m k : Nat) (hm : m=512*z+67) (hz : z%1024=585)
     (hstop : k+3*m+4=2^(2*m+3)) :
     ¬ BB6.Agent3.CReach 1 k := by
-  have hpdiv : 16384 ∣ 2^(2*m+3) := by
-    have h : (2:Nat)^14 ∣ 2^(2*m+3) :=
+  have hpdiv : 524288 ∣ 2^(2*m+3) := by
+    have h : (2:Nat)^19 ∣ 2^(2*m+3) :=
       Nat.pow_dvd_pow 2 (by omega)
-    simpa only [show (2:Nat)^14=16384 by decide] using h
-  have hpmod : (2^(2*m+3))%16384=0 :=
+    simpa only [show (2:Nat)^14=524288 by decide] using h
+  have hpmod : (2^(2*m+3))%524288=0 :=
     Nat.mod_eq_zero_of_dvd hpdiv
-  have hkmod : k%16384=149811 := by
-    have hs : (k+3*m+4)%16384=0 := by
+  have hkmod : k%524288=149811 := by
+    have hs : (k+3*m+4)%524288=0 := by
       rw [hstop]
       exact hpmod
     rw [hm] at hs
     omega
-  let u := 2048*(k/16384)+585
+  let u := 2048*(k/524288)+585
   have hu : u%2048=585 := by dsimp [u]; omega
   have hk : k=256*u+51 := by
-    have hh := Nat.mod_add_div k 16384
+    have hh := Nat.mod_add_div k 524288
     rw [hkmod] at hh
     dsimp [u]
     omega
