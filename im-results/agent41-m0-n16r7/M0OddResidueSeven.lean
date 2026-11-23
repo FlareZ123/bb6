@@ -400,6 +400,45 @@ private theorem m0OddQ4CutTape_eq_end_inside
 
 /-- Every prefix of the base m=0,n=5 source run stays in the finite
 half-line used by the generalized frame. -/
+private theorem sweptLeft_head_eq_source (q : Nat)
+    (T : Int → Bool) (h : Int) :
+    sweptLeft q T h (h-(q:Int)) = T (h-(q:Int)) := by
+  induction q with
+  | zero => simp [sweptLeft]
+  | succ q ih =>
+      have hcoord : h-((q+1:Int)) = (h-1)-(q:Int) := by omega
+      rw [show sweptLeft (q+1) T h =
+        sweptLeft q (holeThree T h) (h-1) by rfl]
+      rw [hcoord,ih]
+      have hne1 : h-((q+1:Int)) ≠ h+1 := by omega
+      have hne2 : h-((q+1:Int)) ≠ h := by omega
+      simp [holeThree,hne1,hne2]
+
+private theorem sweptLeft_head_plus1_false (q : Nat)
+    (T : Int → Bool) (h : Int) :
+    sweptLeft (q+1) T h (h-(q:Int)) = false := by
+  induction q with
+  | zero => simp [sweptLeft,holeThree]
+  | succ q ih =>
+      have hcoord : h-((q+1:Int)) = (h-1)-(q:Int) := by omega
+      rw [show sweptLeft (q+2) T h =
+        sweptLeft (q+1) (holeThree T h) (h-1) by rfl]
+      rw [hcoord]
+      exact ih (holeThree T h) (h-1)
+
+private theorem leftSweep_one (T : Int → Bool) (h : Int)
+    (ht : T h = true) :
+    run tm2 1 ⟨3,h,T⟩ = some ⟨1,h+1,T⟩ := by
+  simp [run,rawStep,readSlot,applyMove,tm2,ht]
+
+private theorem leftSweep_two (T : Int → Bool) (h : Int)
+    (ht : T h = true) (hr : T (h+1) = false) :
+    run tm2 2 ⟨3,h,T⟩ =
+      some ⟨2,h,(fun x => if x = h+1 then true else T x)⟩ := by
+  rw [show 2 = 1+1 by omega,run_add,leftSweep_one T h ht]
+  simp [run,rawStep,readSlot,applyMove,tm2,hr]
+
+
 private theorem m0Odd_counted_left_sweep_heads
     (N : Nat) (T : Int → Bool) (h : Int)
     (hOn : leftOnes T h N) (hr : T (h+1) = false)
@@ -486,7 +525,7 @@ private theorem m0Odd_base_prefix_head_bound
   have hSweep' :
       run tm2 (3*N) (s1Config 3 5 0 a 0 b h) =
         some (⟨3,hN,T1⟩ : Config) := by
-    simpa [T,N,hN,T1] using hSweep
+    simpa [T,N,hN,T1,s1Config] using hSweep
   have hmatch := m0OddQ4Bridge_input_match a b h ha
   have hBridge := m0OddQ4Bridge27At T1 hN hmatch
   have hBridge' :

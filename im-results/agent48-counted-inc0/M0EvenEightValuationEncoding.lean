@@ -8,6 +8,7 @@ namespace BB6Coverage.Agent48M0EvenEightValuationEncoding
 open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent8CountedReset
 open BB6Coverage.Agent48M0EvenEightValuationSuffix
+open BB6ChampionArithmetic
 
 /-- Factor q as oddPart * 2^t, with the exact residual BinDec length. -/
 theorem factor8q (L q : Nat) (hL : 4 ≤ L)
@@ -92,7 +93,12 @@ marker 0, d0, then the first three d1 blocks. -/
 theorem sourceLeftFixedPrefix14 (t : Nat) (tail : List Bool) :
     (markerWord 0 ++ d0 ++ d1pow (3+t) ++ tail).take 14 =
       markerWord 0 ++ d0 ++ d1pow 3 := by
-  simp [markerWord,d0,d1pow,List.take_append]
+  have hsplit : d1pow (3+t) = d1pow 3 ++ d1pow t := by
+    simpa [Nat.add_comm] using BB6Coverage.Agent8Q4Suffix.d1pow_add_right t 3
+  have hlen : 9 ≤ (d1pow (3+t)).length := by
+    simp [d1pow_length]
+    omega
+  simp [markerWord,d0,List.take_append,hsplit,d1pow_length,hlen]
 
 /-- The encoder's odd-factor exponent is exactly the valuation used by reset cost. -/
 theorem v2_8q_all (L q : Nat) (hL : 4 ≤ L)
