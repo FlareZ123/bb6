@@ -14,6 +14,20 @@ then **`q%16 in {2,10,15}`**, excluding **13 of 16** residue classes, with no ex
 
 The first uniform theorem `BB429Branch29.rooted_29_q_two_of_eight` excluded six of eight q classes ([run 45108772982](https://github.com/FlareZ123/bb6/actions/runs/45108772982)). The deeper `BB429Branch29Mod16.no_29_q_seven_mod16_except55` excluded q=7 mod16 uniformly except the singled out q=55 ([run 45109428286](https://github.com/FlareZ123/bb6/actions/runs/45109428286)). A separate finite rank certificate excludes q55, completing the uniform theorem in run 45109777431.
 
+
+## Stronger certified all-parameter restrictions (23 November, after first checkpoint)
+
+The 29(mod32) reset-line first-counter parameter is now restricted **for every q>=21**, not merely for sampled inputs:
+
+- `BB429Branch29Mod64.rooted_29_q_eight_mod64`: q mod64 in **{2,10,15,18,31,47,58,63}**, kernel-verified in [CI 45111484181](https://github.com/FlareZ123/bb6/actions/runs/45111484181). Entire q=26,34,42,50 mod64 cylinders are excluded. In particular the rooted (13 mod32,1 mod8) row was proved directly by exact double inversion.
+- `BB429Branch29Mod128.rooted_29_q_fourteen_mod128`: q mod128 in **{2,10,15,31,47,58,63,74,79,82,95,111,122,127}**, kernel-verified in [CI 45111872004](https://github.com/FlareZ123/bb6/actions/runs/45111872004). Entire q=18 and66 mod128 cylinders are excluded. It introduces the reusable exact rooted odd-three row: for genuine root-reachable a>=13, if a%8=3 and b odd, then b%8=7.
+- `BB429Branch29Odd31.rooted_29_q_twelve_mod128`: q mod128 in **{2,10,15,47,58,63,74,79,82,111,122,127}**, kernel-verified in [CI 45112328855](https://github.com/FlareZ123/bb6/actions/runs/45112328855). The *entire* q=31 mod64 cylinder is excluded by the two-way forced inverse at its odd third ancestor. This is a genuine additional uniform exclusion rather than a single finite q.
+- The new `BB429Branch29Arithmetic.local_branch29_burst_mod16384` is staged for a focused kernel check and packages the last-reset exponential arithmetic over the twelve surviving q classes. Until that job succeeds, do not claim its new modulo16384 result verified.
+
+All three accepted refinements have only the standard transitive axiom profile `[propext, Classical.choice, Quot.sound]`, no `sorryAx`, and require no finite-orbit assumption.
+
+The pinned original Cryptids source verification is intentionally a separate issue. Third complete source run [45111763374](https://github.com/FlareZ123/bb6/actions/runs/45111763374), at original-source snapshot `ef18e2b2...`, contains the modulo8192 source corollary and is in progress as of 04:34 UTC. Its standalone local chain passed; the original-source job is not yet concluded. The proposed modulo16384 corollary is not in this run.
+
 ## Exact source ancestry and exceptional index
 
 `BB429Branch29.lean` proves that any genuinely reached `(32q+29,64q+55)` has the forced inverse chain
