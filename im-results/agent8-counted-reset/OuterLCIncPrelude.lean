@@ -74,31 +74,38 @@ theorem outer_sideBit_d1pow (a i : Nat) (hi : i < 3*a) :
 
 /-- The S1 tape immediately to the left of the D head exposes marker ++ d0
 after the initial unary a-block. -/
+private theorem outer_markerWord_length (m : Nat) (hm : m < 3) :
+    (markerWord m).length = m+2 := by
+  have hm0 : m=0 ∨ m=1 ∨ m=2 := by omega
+  rcases hm0 with h0 | h1 | h2 <;> subst m <;> simp [markerWord]
+
 theorem outer_s1_marker_prefix_cell (L n m a b : Nat) (h : Int)
     (hm : m < 3) (i : Nat) (hi : i ≤ m+4) :
     (s1Config L n m a 0 b h).tape
       (h-((3*a+i):Int)) = sideBit (markerWord m ++ d0) i := by
-  have hindex :
-      (3 : Int) * (a : Int) + (i : Int) =
-        ((3*a+i : Nat) : Int) := by
-    push_cast
-    rfl
-  rw [hindex]
-  rw [s1Config_left_cell L n m a 0 b h (3*a+i)]
+  have hcell :
+      (s1Config L n m a 0 b h).tape
+        (h - ((3 : Int) * (a : Int) + (i : Int))) =
+        sideBit (s1LeftFacing L n m a 0) (3*a+i) := by
+    simpa only [Nat.cast_add, Nat.cast_mul] using
+      (s1Config_left_cell L n m a 0 b h (3*a+i))
   have hword : s1LeftFacing L n m a 0 =
       d1pow a ++ (markerWord m ++ d0 ++ binDec L n ++ lh) := by
     simp [s1LeftFacing,binDec_zero,List.append_assoc]
-  rw [hword]
-  rw [← d1pow_length a]
-  rw [outer_sideBit_append_shift]
+  rw [hword] at hcell
+  rw [← d1pow_length a] at hcell
+  rw [outer_sideBit_append_shift] at hcell
+  have hmarker : (markerWord m).length = m+2 :=
+    outer_markerWord_length m hm
   have hlen : (markerWord m ++ d0).length = m+5 := by
-    simp [markerWord_length m hm,d0]
+    simp [hmarker,d0] <;> omega
   have hi' : i < (markerWord m ++ d0).length := by omega
   have hrest : markerWord m ++ d0 ++ binDec L n ++ lh =
       (markerWord m ++ d0) ++ (binDec L n ++ lh) := by
     simp [List.append_assoc]
-  rw [hrest]
-  exact outer_sideBit_append_prefix _ _ _ hi'
+  rw [hrest] at hcell
+  rw [outer_sideBit_append_prefix _ _ _ hi'] at hcell
+  exact hcell
 
 /-- At the exact start of the outer binary counter, the source tape is
 the corresponding head-facing bit of BinDec(L,n) ++ lh. -/
@@ -106,25 +113,26 @@ theorem outer_s1_counter_cell (L n m a b : Nat) (h : Int)
     (hm : m < 3) (i : Nat) :
     (s1Config L n m a 0 b h).tape
       (h-((3*a+m+5+i):Int)) = sideBit (binDec L n ++ lh) i := by
-  have hindex :
-      (3 : Int) * (a : Int) + (m : Int) + 5 + (i : Int) =
-        ((3*a+m+5+i : Nat) : Int) := by
-    push_cast
-    rfl
-  rw [hindex]
-  rw [s1Config_left_cell L n m a 0 b h (3*a+m+5+i)]
+  have hcell :
+      (s1Config L n m a 0 b h).tape
+        (h - ((3 : Int) * (a : Int) + (m : Int) + 5 + (i : Int))) =
+        sideBit (s1LeftFacing L n m a 0) (3*a+m+5+i) := by
+    simpa only [Nat.cast_add, Nat.cast_mul] using
+      (s1Config_left_cell L n m a 0 b h (3*a+m+5+i))
   have hword : s1LeftFacing L n m a 0 =
       (d1pow a ++ markerWord m ++ d0) ++ (binDec L n ++ lh) := by
     simp [s1LeftFacing,binDec_zero,List.append_assoc]
-  rw [hword]
+  rw [hword] at hcell
+  rw [← d1pow_length a] at hcell
+  rw [outer_sideBit_append_shift] at hcell
+  have hmarker : (markerWord m).length = m+2 :=
+    outer_markerWord_length m hm
   have hlen : (d1pow a ++ markerWord m ++ d0).length =
       3*a+m+5 := by
-    rw [List.length_append,List.length_append,List.length_append]
-    rw [d1pow_length,markerWord_length m hm]
-    simp [d0]
-    omega
-  rw [← hlen]
-  exact outer_sideBit_append_shift _ _ i
+    simp [d1pow_length,hmarker,d0] <;> omega
+  rw [← hlen] at hcell
+  rw [outer_sideBit_append_shift] at hcell
+  exact hcell
 
 /-- Under the odd-factor decomposition of n, the outer counter starts
 with d1^r ++ d0 exactly, not merely with a finite sampled prefix. -/
