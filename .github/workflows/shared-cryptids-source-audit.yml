@@ -227,8 +227,8 @@ jobs:
           mkdir -p /tmp/cryptids-source-audit
           graft_log=/tmp/cryptids-source-audit/Cryptids608NonHalt.log
           lake env lean -o BB6Agent42/Cryptids608NonHalt.olean BB6Agent42/Cryptids608NonHalt.lean 2>&1 | tee "$graft_log"
-          if grep -q 'sorryAx' "$graft_log"; then
-            echo "::error::six-root graft proof graph depends on sorryAx"
+          if grep -Eq 'sorryAx|native_decide' "$graft_log"; then
+            echo "::error::six-root graft proof graph depends on sorryAx or native_decide"
             exit 1
           fi
           echo "Six-root graft compiled; no sorryAx in exported axiom profiles."
