@@ -31,6 +31,7 @@ on:
           - sourceAllDepthSix
           - sourceCriterion559
           - sourceAgent8Z2
+          - sourceAgent8Z7
           - source523
           - sourceCriterion523
           - source17
@@ -137,6 +138,9 @@ jobs:
               ;;
             sourceAgent8Z2)
               target=im-results/agent8-machine-c-low-z2/LowM67Z2Source.lean
+              ;;
+            sourceAgent8Z7)
+              target=im-results/agent8-machine-c-low-z2/LowM67Z7Source.lean
               ;;
             source523)
               target=im-results/agent13-residual-frontier/LowM67All523Source.lean
