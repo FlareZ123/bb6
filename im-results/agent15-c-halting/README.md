@@ -12,6 +12,10 @@ The stronger parity-normalized original-root gateway, modular quotient exclusion
 
 The dossier distinguishes the copied-definition/local Lean checks, original `CLine` quotient imports, and later source-composition modules. Earlier `M8M16Composition.lean` CI exposed an iterator bridge error, which was repaired using the existing `BB6.Agent46.run_eq` theorem. Individual later modules should be cited only with the exact successful original-source CI that checked their version. The [Machine C combined true-root theorem](../agent19-c-odd-dyadic/JointAllRoot.lean) is a more useful current entry point for the remaining global condition.
 
+## Deep M8 forbidden stopping families for every odd index
+
+[Construction, examples, proof boundary and comparison to earlier filters](M8OddDeep.md). The source bodies in [M8OddDeep.lean](M8OddDeep.lean) prove, modulo the previously established M8 quotient and affine source theorems, an explicit infinite high-stopping exclusion for **every positive odd** second-family index `m`. The normalizer depth is `2*m+3` when `m%4=1` and `2*m+2` otherwise. A separate pure arithmetic theorem shows this family escapes every residue tested by the earlier shallow dyadic tower. Local Lean 4.36.0-rc2 preflight compiled all new proof bodies without `sorryAx` against exact-signature dependency stubs; full original-source recompilation remains outstanding. The source-locus exclusion is an intermediate result and does not establish global Machine C nonhalting.
+
 ## Remaining question
 
 Exclude all authentic blank-root stopping parameters across both infinite families or exhibit an original-source halting witness. The completeness of the algebraic stopping locus itself gives no root-reachability result. See the [full log](FULL_RESEARCH_LOG.md) for exact parameter families, proof source files, mathematical derivations, checks and counterexamples.
