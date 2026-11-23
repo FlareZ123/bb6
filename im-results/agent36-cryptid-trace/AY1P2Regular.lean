@@ -89,7 +89,8 @@ theorem original (ka q r : Nat) :
         [true,true,false,true,true,true]) = _
   have h := CryptidBoundary.a110111_run
     (4*ka+CryptidA.wordInc (BB6.Agent35MarkerA.code q r)) []
-  simpa [unary,Nat.add_assoc,Nat.add_comm,Nat.add_left_comm] using h
+  simpa [unary,BB6.Agent35.aBoundary,CryptidBoundary.aBoundary,
+    Nat.add_assoc,Nat.add_comm,Nat.add_left_comm] using h
 
 theorem regular (ka q r : Nat) :
     ∃ T a Q b,
