@@ -203,6 +203,11 @@ jobs:
           #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.s3_universal_word_suffix_shift
           #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.s3_iterated_word_suffix_shift
           EOF
+          elif [[ "${PROOF_TARGET:-root-reset}" == "suffix3-one" ]]; then
+            cat > RootResetAudit.lean <<'EOF'
+          import BusyBeaver.BB6.Accelerations.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA
+          #print axioms BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.s3_residual_one_suffix_reset
+          EOF
           elif [[ "${PROOF_TARGET:-root-reset}" == "root-remainder-one" ]]; then
             cat > RootResetAudit.lean <<'EOF'
           import BusyBeaver.BB6.Accelerations.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA
