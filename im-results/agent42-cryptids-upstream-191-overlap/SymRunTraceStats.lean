@@ -1422,13 +1422,15 @@ theorem stepElemBB_counter_sum_le (L R : List SymTok) :
         | succ d =>
           cases d with
           | zero =>
+            have hR' := Nat.add_le_add_left hR (listCounterSum L1)
             simp [stepElemBB, strictList_eq, symStateCounterSum, listCounterSum, tokCounterSum]
-            exact hR
+            omega
           | succ d =>
             cases d with
             | zero =>
+              have hR' := Nat.add_le_add_left hR (listCounterSum L1)
               simp [stepElemBB, strictList_eq, symStateCounterSum, listCounterSum, tokCounterSum]
-              exact hR
+              omega
             | succ d =>
               have hR' := Nat.add_le_add_left hR (listCounterSum L1)
               simpa [stepElemBB, strictList_eq, strictNat_eq,

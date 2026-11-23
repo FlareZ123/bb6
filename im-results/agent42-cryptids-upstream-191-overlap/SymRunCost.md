@@ -145,11 +145,17 @@ The earlier machine-specific rule arrays and checkpoint arithmetic above remain 
 
 The previous exact-source RC2 run `44955198218` successfully built the pinned
 F424 and F412 upstream modules and reached the local trace-audit file. The
-audit then failed in two branches of `stepElemBB_counter_sum_le`: the proof
-used `bumpSymR_counter_sum_le` without adding the unchanged left suffix.
-The correction lifts that inequality by `listCounterSum L1` in the
-`.item .zero` and large-run branches. This is a proof-script repair, not a
-counterexample to the source transition.
+audit failed in the `.run 1` and `.run 2` branches of
+`stepElemBB_counter_sum_le`: both used `bumpSymR_counter_sum_le` without
+transporting it across the unchanged left suffix. The `.item .zero` and
+large-run branches already had the required lift. The two residual branches
+now use `Nat.add_le_add_left hR (listCounterSum L1)` followed by arithmetic
+discharge. This is a proof-script repair, not a counterexample to the source
+transition. **The repair is uncompiled**: local shell and Python execution
+still fail at the tool boundary, so no CI dispatch is justified under the
+compile-first gate. The prior `sorryAx` report in the sweep theorem is
+downstream of these elaboration failures; only a fresh exact-source compile
+and transitive axiom audit can determine whether it disappears.
 
 The costed pilot now drafts the missing source-`peelTok` facts:
 `pilot_peelTok_field_growth`, `pilot_peelL_field_growth`, and the
