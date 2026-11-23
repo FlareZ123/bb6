@@ -426,6 +426,30 @@ theorem runElemFast424_within_two31 :
     costIterM424_f424_prefix_lt_two31,
     runElemFast424_exact_reaches⟩
 
+
+/-- The blank-tape F424 configuration reaches its CB entry state in 18
+    original-machine transitions. The existing stepWithin tactic expands
+    and checks this short source-table prefix. -/
+theorem initToCB424_exact :
+    ReachesIn target_tm 18 (init ([] : List (Fin 2)))
+      (evalM target_tm startF424M) := by
+  executeWithin 18
+  finishWithin
+
+theorem blankToRunElemFast424_exact_reaches :
+    multiStep target_tm (init ([] : List (Fin 2)))
+      (18 + costIterM424 19217 startF424M) =
+      some (evalM target_tm (runElemFast 1 1 11 4 startF424M)) := by
+  exact multiStep_trans initToCB424_exact runElemFast424_exact_reaches
+
+theorem blankToRunElemFast424_within_two31 :
+    ∃ n : Nat, n < 2 ^ 31 ∧
+      multiStep target_tm (init ([] : List (Fin 2))) n =
+        some (evalM target_tm (runElemFast 1 1 11 4 startF424M)) := by
+  refine ⟨18 + costIterM424 19217 startF424M, ?_, blankToRunElemFast424_exact_reaches⟩
+  have h := costIterM424_f424_prefix_lt_two31
+  omega
+
 #print axioms runElemFast424_exact_reaches
 #print axioms costIterM424_f424_prefix_lt_two31
 #print axioms runElemFast424_within_two31
