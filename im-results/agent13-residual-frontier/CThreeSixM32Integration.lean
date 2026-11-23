@@ -91,7 +91,7 @@ theorem sixForced_not_excluded_0_13
   have hx8 : (2*j+3)%8=3 := by
     have hj4 : j%4=0 := by omega
     omega
-  have hx16 : (2*j+3)%16=3 ∨ (2*j+3)%16=11 := by
+  have hx16 : (2*j+3)%16 ≠ 5 := by
     have hj8 : j%8=0 ∨ j%8=4 := by omega
     rcases hj8 with h | h <;> omega
   have hsum8 : ((2*j+3)+k)%8=7 := by omega
