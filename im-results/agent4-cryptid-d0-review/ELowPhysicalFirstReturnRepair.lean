@@ -209,16 +209,16 @@ theorem full_E_pairs_first_physical (k q : Nat) :
   constructor
   · exact full_E_pairs k q []
   · intro t hpos ht hphys
-    let prefix : Nat := 12*k*k+41*k+33
-    by_cases hpref : t<prefix
+    let preCost : Nat := 12*k*k+41*k+33
+    by_cases hpref : t<preCost
     · exact (prefixE_positive_noF k (pairs q ++ [false])
         t hpos hpref) hphys.1
-    · have heq : t=prefix+(t-prefix) := by omega
+    · have heq : t=preCost+(t-preCost) := by omega
       rw [heq,run_add,prefix_E] at hphys
-      change IsPhysicalReturn (run (t-prefix) (ePairs (4*k+1) q []))
+      change IsPhysicalReturn (run (t-preCost) (ePairs (4*k+1) q []))
         at hphys
       exact (ePairs_first_physical (4*k+1) q []).2
-        (t-prefix) (by dsimp [prefix] at *; omega) hphys
+        (t-prefix) (by dsimp [preCost] at *; omega) hphys
 
 #print axioms cBase_internal_F
 #print axioms ePairs_toB_noReturn
