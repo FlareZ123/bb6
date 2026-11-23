@@ -282,7 +282,7 @@ theorem m1ResidueFive_q4_prefix_run
           simp [d1pow_length]
         rw [sideBit_append_right (d1pow a)
           (m1ResidueFiveSourceSuffix L q) (3*a) (by simpa [hlen])]
-        simp [m1ResidueFiveSourceSuffix,markerWord,d0,d1,sideBit]
+        simp [m1ResidueFiveSourceSuffix,markerWord,d0,d1,sideBit,d1pow_length]
     simpa [T,hside] using hcell
   have hright : T (h+1) = false := by
     have hc := s1Config_right_cell L (8*q+5) 1 a 0 b h 0
@@ -309,7 +309,7 @@ theorem m1ResidueFive_q4_prefix_run
     have hout : m1OddQ4BridgeInside (x-hN) = false := by
       simp [m1OddQ4BridgeInside,x]
       omega
-    have hcut := frameAt_tape_outside T1 hN
+    have hcut := Agent6Q4Prefix.frameAt_tape_outside T1 hN
       m1OddQ4BridgeInside m1OddQ4BridgeEnd x hout
     have hframe : T2 x = T1 x := by
       simpa [T2,m1ResidueFiveQ4CutTape] using hcut
@@ -347,7 +347,7 @@ theorem m1ResidueFive_q4_prefix_run
   have hnum : 28+12*a = 3*N+(26+(3*a-1)) := by
     dsimp [N]
     omega
-  simpa [T,N,T1,hN,T2,m1ResidueFiveQ4CutTape,hnum] using htotal
+  simpa [T,N,T1,hN,T2,m1ResidueFiveQ4CutTape,hnum,s1Config,s0Config] using htotal
 
 private theorem sideBit_s0RightFacing_eq_q4RightFacing
     (b i : Nat) (hi : 1 ≤ i) :
@@ -402,7 +402,7 @@ theorem m1ResidueFive_q4_prefix_rightFacing
     have hsrc :
         (s1Config L (8*q+5) 1 a 0 b h).tape
           (h+1+(i:Int)) = sideBit (s0RightFacing b) i := by
-      simpa [s1PhysicalRight_source,sideBit] using
+      simpa [s0RightFacing,s1PhysicalRight_source,sideBit] using
         s1Config_right_cell L (8*q+5) 1 a 0 b h i
     have hside := sideBit_s0RightFacing_eq_q4RightFacing b i hi
     calc
@@ -544,9 +544,13 @@ private theorem m1ResidueFiveLeftFacingBoundaryBit
   have hside := sideBit_append_after_local
     ([true] ++ d1pow a)
     (markerWord 0 ++ d0 ++ binDec L (8*q+4) ++ lh)
-    (3*a+1+j) (by simp [d1pow_length]; omega)
+    (3*a+1+j) (by simp [d1pow_length])
   have hidx : (3*a+1+j) - (3*a+1) = j := by omega
+  have hlen : ([true] ++ d1pow a).length = 3*a+1 := by simp [d1pow_length]
+  rw [hlen] at hside
   rw [hidx] at hside
+  rw [hside]
+  rw [m1ResidueFour_binDec L q hL hbound] at hside
   have hjCases :
       j=0 ∨ j=1 ∨ j=2 ∨ j=3 ∨ j=4 ∨ j=5 ∨ j=6 := by omega
   rcases hjCases with h0 | h1 | h2 | h3 | h4 | h5 | h6
@@ -629,7 +633,8 @@ theorem m1ResidueFive_q4_prefix_leftFacing
           rw [hrel] at hcut
           exact hcut
         have hval := hcut'.trans htarget.symm
-        exact hval
+        have hidx : i = 3*a+1+j := by dsimp [j]; omega
+        simpa only [hidx] using hval
 
 /-- The q4 right-shape contract follows from the exact right stream. -/
 theorem m1ResidueFive_q4_prefix_rightShape
