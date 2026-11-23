@@ -206,3 +206,20 @@ jobs:
           # This step is intended to run only after local RC2 preflight.
           cp "$GITHUB_WORKSPACE/im-results/agent29-forced-depth/M8SharpFamily.lean" .
           lean -o M8SharpFamily.olean M8SharpFamily.lean
+          # Agent 15: unbounded-depth all-odd M8 family and Diophantine entry theorem.
+          cp "$GITHUB_WORKSPACE/im-results/agent15-c-halting/M8UniversalAlgebra.lean" .
+          lean -o M8UniversalAlgebra.olean M8UniversalAlgebra.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent15-c-halting/M8AllOddExplicit.lean" .
+          lean -o M8AllOddExplicit.olean M8AllOddExplicit.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent15-c-halting/M8OddDeepAlgebra.lean" .
+          lean -o M8OddDeepAlgebra.olean M8OddDeepAlgebra.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent15-c-halting/M8OddDeep.lean" .
+          lean -o M8OddDeep.olean M8OddDeep.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent15-c-halting/M8OddTower.lean" .
+          lean -o M8OddTower.olean M8OddTower.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent15-c-halting/M8OddTowerPrior.lean" .
+          lean -o M8OddTowerPrior.olean M8OddTowerPrior.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent15-c-halting/M8OddTowerStructure.lean" .
+          lean -o M8OddTowerStructure.olean M8OddTowerStructure.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent15-c-halting/M8GenericHigh.lean" .
+          lean -o M8GenericHigh.olean M8GenericHigh.lean
