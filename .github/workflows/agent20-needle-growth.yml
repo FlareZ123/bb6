@@ -11,6 +11,7 @@ on:
         options:
           - quadratic
           - cubic
+          - rotation-affine
 
 permissions:
   contents: read
@@ -41,6 +42,7 @@ jobs:
           lake exe cache get
           lake build BusyBeaver.BB6.M_1RB1LA_1LC0RE_1LF1LD_0RB0LA_1RC1RE_HHH0LD
       - name: Audit source-connected unconditional step growth and conditional orbit bound
+        if: inputs.target != 'rotation-affine'
         working-directory: /tmp/cryptids
         run: |
           set -euo pipefail
@@ -78,3 +80,18 @@ jobs:
           lake env lean -o .lake/build/lib/lean/NeedleFourStep.olean NeedleFourStep.lean
           lake env lean -o .lake/build/lib/lean/NeedleCubicFuel.olean NeedleCubicFuel.lean
           lake env lean NeedleCubicSource.lean
+      - name: Audit source-connected terminal rotation and all-depth affine inverse
+        if: inputs.target == 'rotation-affine'
+        working-directory: /tmp/cryptids
+        run: |
+          set -euo pipefail
+          cp "$GITHUB_WORKSPACE/im-results/agent48-space-needle/SpaceNeedleClosed.lean" .
+          lake env lean -o .lake/build/lib/lean/SpaceNeedleClosed.olean SpaceNeedleClosed.lean
+          for module in RotationCore RotationValuation RotationFar RotationSparse RotationNear CancellationRotationBound TerminalAffineRotation; do
+            cp "$GITHUB_WORKSPACE/im-results/agent20-needle-coprime/$module.lean" .
+            lake env lean -o ".lake/build/lib/lean/$module.olean" "$module.lean" | tee "$module.axioms.log"
+            if grep -q 'sorryAx' "$module.axioms.log"; then exit 1; fi
+          done
+          cp "$GITHUB_WORKSPACE/im-results/agent20-needle-coprime/TerminalAffineRotationSource.lean" .
+          lake env lean TerminalAffineRotationSource.lean | tee TerminalAffineRotationSource.axioms.log
+          if grep -q 'sorryAx' TerminalAffineRotationSource.axioms.log; then exit 1; fi

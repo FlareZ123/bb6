@@ -83,4 +83,8 @@ The [modular-only exact reverse audit](resonance_reverse_audit.cpp) combines the
 
 The older [rotation bound](RotationCutoff.md) m^2<64r^2a, [wide residue cut](SecondLevelWideResidueCut.md), and [quotient/prime filters](SecondLevelParentSieve.md) are supporting methods. The corrected eleven-prime sieve (36.51713603% surviving residue classes) and mod-5 odd-block history filter (4.04464726% of all classes potentially supporting odd entry), plus the mod-25 refinement, remain useful inside the cutoff. See [SecondLevelOddBlockFilter.md](SecondLevelOddBlockFilter.md) and [SecondLevelPrime13Correction.md](SecondLevelPrime13Correction.md). These percentages are necessary-condition residue densities, not reachable-state counts.
 
+## All-depth affine terminal inverse
+
+[TerminalAffine.md](TerminalAffine.md) and [TerminalAffineRotation.lean](TerminalAffineRotation.lean) give an exact two-term representation of **every** reverse node of any terminal power, with invariant `d<2L`, an ordinary quadratic cutoff `m²<(H+2)m+2n`, and at most one large exact cancellation candidate. The algebra, dichotomy and uniqueness are locally Lean-kernel-checked (standard axioms only). [terminal_affine_solver.cpp](terminal_affine_solver.cpp) performs a complete modular-only inverse DFS, including the regular sector; it completely excludes K=100,000,000 with ten nodes in 22.51 seconds locally. This remains a finite exclusion, not a uniform exponent bound. The [source adapter](TerminalAffineRotationSource.lean) is pending pinned-source CI.
+
 The remaining task is to exclude the small-valuation sector uniformly, control growing reverse histories, or establish a genuine halt. Neither Space Needle nor BB(6) is decided.
