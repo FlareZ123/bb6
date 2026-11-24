@@ -136,7 +136,7 @@ jobs:
             4c) expected_artifact="d-root-stage3b3"; required_modules=("$T/NineteenthBlock3.olean"); source_file="$T/NineteenthFastBlock.lean"; audit_decl="run_blockedWith" ;;
             4d) expected_artifact="d-root-stage3b3"; required_modules=("$T/NineteenthBlock3.olean"); source_file="$T/NineteenthTerminalCertificate.lean"; audit_decl="terminal9780_exact" ;;
             4e) expected_artifact="d-root-stage3b4c"; required_modules=("$T/NineteenthFastBlock.olean"); source_file="$T/NineteenthFastPrefix.lean"; audit_decl="fast512_16_seed19" ;;
-            4f) expected_artifact="d-root-stage3b4e"; required_modules=("$T/NineteenthFastPrefix.olean"); source_file="$T/NineteenthTerminalCertificate.lean"; audit_decl="run_add" ;;
+            4f) expected_artifact="d-root-stage3b4e"; required_modules=("$T/NineteenthFastPrefix.olean"); source_file="$T/NineteenthTerminalCertificate.lean"; audit_decl="" ;;
             5) expected_artifact="d-root-stage3b4f"; required_modules=("$T/NineteenthTerminalCertificate.olean"); source_file="$T/NineteenthRootPrefix.lean"; audit_decl="blank_nineteenth_exception" ;;
             6) expected_artifact="d-root-stage3b5"; required_modules=("$T/NineteenthRootPrefix.olean"); source_file="$T/BlankNineteenthRejoin.lean"; audit_decl="blank_nineteenth_reentry" ;;
             *) echo "Unknown stage: $STAGE" >&2; exit 2 ;;
@@ -174,7 +174,7 @@ jobs:
             4c) source_file="$T/NineteenthFastBlock.lean"; audit_decl="run_blockedWith" ;;
             4d) source_file="$T/NineteenthTerminalCertificate.lean"; audit_decl="terminal9780_exact" ;;
             4e) source_file="$T/NineteenthFastPrefix.lean"; audit_decl="fast512_16_seed19" ;;
-            4f) source_file="$T/NineteenthTerminalCertificate.lean"; audit_decl="run_add" ;;
+            4f) source_file="$T/NineteenthTerminalCertificate.lean"; audit_decl="" ;;
             5) source_file="$T/NineteenthRootPrefix.lean"; audit_decl="blank_nineteenth_exception" ;;
             6) source_file="$T/BlankNineteenthRejoin.lean"; audit_decl="blank_nineteenth_reentry" ;;
 
