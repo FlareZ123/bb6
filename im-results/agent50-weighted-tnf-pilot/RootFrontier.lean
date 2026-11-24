@@ -336,6 +336,63 @@ theorem RootedFrontier.sound_of_residuals {B : Nat} {p : PartialMachine}
   · exact h
   · exact hres address q hopen.mem_residuals m hq
 
+/-- Lossless finite table payload; None means an unassigned row, while
+    some none is a fixed halt. The two must never be conflated in a manifest. -/
+abbrev PackedTable := List (Option (Option Move))
+
+def packTable (p : PartialMachine) : PackedTable :=
+  [p (0,false), p (0,true), p (1,false), p (1,true),
+   p (2,false), p (2,true), p (3,false), p (3,true),
+   p (4,false), p (4,true), p (5,false), p (5,true)]
+
+def unpackTable (rows : PackedTable) : PartialMachine := fun s =>
+  (rows[2*s.1.val + (if s.2 then 1 else 0)]?).getD none
+
+theorem unpack_packTable (p : PartialMachine) : unpackTable (packTable p) = p := by
+  funext s
+  rcases s with ⟨⟨n, hn⟩, b⟩
+  have h : n = 0 ∨ n = 1 ∨ n = 2 ∨ n = 3 ∨ n = 4 ∨ n = 5 := by omega
+  rcases h with h | h | h | h | h | h <;> subst n <;> cases b <;> rfl
+
+theorem packTable_injective {p q : PartialMachine} (h : packTable p = packTable q) : p = q := by
+  have he := congrArg unpackTable h
+  simpa only [unpack_packTable] using he
+
+theorem packTable_length (p : PartialMachine) : (packTable p).length = 12 := rfl
+
+abbrev PackedResidual := List Move × PackedTable
+
+def packResiduals (xs : List (List Move × PartialMachine)) : List PackedResidual :=
+  xs.map fun (a,p) => (a,packTable p)
+
+theorem mem_packResiduals_iff (xs : List (List Move × PartialMachine))
+    (a : List Move) (p : PartialMachine) :
+    (a,packTable p) ∈ packResiduals xs ↔ (a,p) ∈ xs := by
+  constructor
+  · intro h
+    rcases List.mem_map.mp h with ⟨⟨a',p'⟩,hm,he⟩
+    have ha : a' = a := congrArg Prod.fst he
+    have hp : p' = p := packTable_injective (congrArg Prod.snd he)
+    subst a'
+    subst p'
+    exact hm
+  · intro h
+    exact List.mem_map.mpr ⟨(a,p),h,rfl⟩
+
+/-- Exact finite-data equality suffices to consume independently exported
+    residual certificates. No string parsing or hash equality is trusted. -/
+theorem RootedFrontier.sound_of_packed_residuals {B : Nat} {p : PartialMachine}
+    (f : RootedFrontier B p) (roster : List PackedResidual)
+    (hexact : packResiduals (residuals f) = roster)
+    (hres : ∀ e ∈ roster, ∀ m, compatible (unpackTable e.2) m → WeightedBound B m) :
+    ∀ m, compatible p m → WeightedBound B m := by
+  apply f.sound_of_residuals
+  intro a q hq m hm
+  have hp : (a,packTable q) ∈ roster := by
+    rw [← hexact]
+    exact (mem_packResiduals_iff (residuals f) a q).mpr hq
+  exact hres (a,packTable q) hp m (by simpa only [unpack_packTable] using hm)
+
 /-- Machine-readable transition encoding: ? is unassigned, H is an
     assigned halt, and an ordinary transition is e.g. 1RB. -/
 def encodeState (q : Fin 6) : String :=
@@ -377,5 +434,9 @@ def residualManifest : List (String × String) :=
 #print axioms rootFrontier_residual_count
 #print axioms mem_residuals_iff
 #print axioms RootedFrontier.sound_of_residuals
+#print axioms unpack_packTable
+#print axioms packTable_injective
+#print axioms mem_packResiduals_iff
+#print axioms RootedFrontier.sound_of_packed_residuals
 
 end BB6.Agent50RootFrontier
