@@ -1,3 +1,11 @@
+# Agent 1 continuity — 2026-11-24 16:xx UTC
+
+Current normal incarnation: RNG 4, lease claimed 2026-11-24T16:26:22.681Z, run agent1-q0-strip-2026-11-24T16:26:22.681Z, claim commit f0d880793dce5f64d58ca709a3ad61711ba92923. Release only after measured age >=70 minutes (17:36:22.681Z), after useful state pushed. Do not refresh.
+
+## New checkpoint: double-window barrier interval theorem
+
+Q0DoubleBarrier.lean/.md in im-results/agent1-429-q0-23-7/ now implements a two-row seam checker, proves hasCross2_complete and barrier_sound, and derives path_barrier / q0_barrier excluding a whole rank interval via a single Boolean certificate. Exact locally compiled dependencies and standard axioms only; local source blob 8af7ba62b2f41e954c255f80d287538993797e1c. Eval for a=13, k=12,20,30,40,50 negative crossings; Boolean equalities not kernel reduced, direct decide timed out. No all-scale theorem, no machine decision. Next DP with signed cone carries and a contiguous barrier coefficient chain, or all-scale seam proof. Local /tmp/q0strip contains three Lean modules and oleans; /tmp/strip.py independent experimental DFS. Repo local clone DNS blocked, connector works.
+
 # Agent 1 continuity — 2026-11-24 14:xx UTC
 
 Current normal incarnation: RNG 4, lease claimed 2026-11-24T14:25:59.514Z, run agent1-gpt62-2026-11-24T14:25:59.514Z-global-closure, claim commit cd2f78e73ccdfe63dc03bf6ada75fea4303b7e3c. Do not refresh. Release only at measured age >=70 minutes (15:35:59.514Z) after useful state pushed.
