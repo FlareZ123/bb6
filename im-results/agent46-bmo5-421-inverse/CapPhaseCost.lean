@@ -221,6 +221,125 @@ theorem positive_boundary_cost_sharp {j s k x : Nat} {w : Int} (hw : 0<w)
   rw [Int.mul_add] at hsum ⊢
   omega
 
+
+/-- A stronger packet weight records the exact band drop: after d=j-k
+    one-band descents, B=4*3^s-A is at least 4*3^d. -/
+theorem positive_history_packet_bandweight {j s k x : Nat} {w : Int} (_hw : 0<w)
+    (h : PositiveHistory j w s k x) :
+    ∃ A C : Int, 0<A ∧ A<4*(3^s:Int) ∧ A%3≠0 ∧ C≤ -6-w ∧
+      (3^s:Int)*W k x=A*(P k:Int)+C ∧
+      4*(3^(j-k):Int)≤4*(3^s:Int)-A := by
+  induction h with
+  | first hb he =>
+    refine ⟨8,-6-w,by decide,by decide,by decide,by omega,?_,?_⟩
+    · simp
+      omega
+    · simp
+      omega
+  | @same s k x y h hr ih =>
+    obtain ⟨A,C,hA,hA',hu,hC,he,hB⟩:=ih
+    let D : Int := 3^s
+    have hD : 0<D := Int.pow_pos (by decide)
+    have hW:=w_regular_same hr
+    refine ⟨A+8*D,C-6*D,by omega,?_,?_,by omega,?_,?_⟩
+    · rw [Int.pow_succ]
+      change A+8*D<4*(D*3)
+      omega
+    · have hs : 0<s := by cases h <;> omega
+      have hd : D%3=0 := by
+        cases s with
+        | zero => omega
+        | succ s => simp [D,Int.pow_succ]
+      rw [Int.add_emod,Int.mul_emod,hd]
+      simpa using hu
+    · rw [Int.pow_succ]
+      change D*3*W k x=(A+8*D)*(P k:Int)+(C-6*D)
+      change D*W k y=A*(P k:Int)+C at he
+      grind
+    · rw [Int.pow_succ]
+      change 4*(3^(j-k):Int)≤4*(D*3)-(A+8*D)
+      have heq : 4*(D*3)-(A+8*D)=4*D-A := by omega
+      rw [heq]
+      exact hB
+  | @down s k x y h hr ih =>
+    obtain ⟨A,C,hA,hA',hu,hC,he,hB⟩:=ih
+    let D : Int := 3^s
+    have hD : 0<D := Int.pow_pos (by decide)
+    have hW:=w_regular_down hr
+    refine ⟨2*A,C,by omega,?_,?_,hC,?_,?_⟩
+    · rw [Int.pow_succ]
+      change 2*A<4*(D*3)
+      omega
+    · rw [Int.mul_emod]
+      omega
+    · rw [Int.pow_succ]
+      change D*3*W k x=2*A*(P k:Int)+C
+      rw [p_succ] at he
+      simp only [Int.natCast_mul] at he
+      change D*W (k+1) y=A*(2*(P k:Int))+C at he
+      grind
+    · rw [Int.pow_succ]
+      change 4*(3^(j-k):Int)≤4*(D*3)-2*A
+      have hidx:=positive_history_index h
+      have hd : j-k≤s := by omega
+      have hpowNat : 3^(j-k)≤3^s :=
+        Nat.pow_le_pow_right (by decide) hd
+      have hpow : (3^(j-k):Int)≤D := by exact_mod_cast hpowNat
+      have hdec : j-k=j-(k+1)+1 := by omega
+      have hprevNat : 3^(j-k)=3^(j-(k+1))*3 := by
+        rw [hdec,Nat.pow_succ]
+      have hprev : (3^(j-k):Int)=(3^(j-(k+1):Int))*3 := by
+        exact_mod_cast hprevNat
+      have hBscaled : 8*(3^(j-(k+1)):Int)≤2*(4*D-A) := by omega
+      have hDscaled : 12*(3^(j-(k+1)):Int)≤4*D := by
+        rw [hprev] at hpow
+        omega
+      have htarget : 4*(3^(j-k):Int)≤2*(4*D-A)+4*D := by
+        rw [hprev]
+        omega
+      calc
+        4*(3^(j-k):Int)≤2*(4*D-A)+4*D := htarget
+        _=4*(D*3)-2*A := by omega
+
+/-- Low-boundary returns require many same-band inversions, even when
+    arbitrary one-band descents occur in between. -/
+theorem positive_boundary_cost_bandsharp {j s k x : Nat} {w : Int} (hw : 0<w)
+    (h : PositiveHistory j w s k x) (hx : x≤P k+2) :
+    (4*(3^(j-k):Int)*(P k:Int)+6+w) ≤ (3^s:Int)*(6*(k:Int)+35) := by
+  obtain ⟨A,C,hA,hA',hu,hC,he,hB⟩:=positive_history_packet_bandweight hw h
+  let D : Int := 3^s
+  have hD : 0<D := Int.pow_pos (by decide)
+  have hb:=positive_history_band h
+  have hQNat : Q k x≤3*k+16 := by
+    have hq:=q_eq hb
+    omega
+  have hQ : (Q k x:Int)≤3*(k:Int)+16 := by exact_mod_cast hQNat
+  have hWQ : W k x+2*(Q k x:Int)=4*(P k:Int)-3 := by
+    have hq:=q_eq hb
+    have hqI : (Q k x:Int)+2*(P k:Int)=2*(x:Int)+3*(k:Int)+12 := by exact_mod_cast hq
+    unfold W
+    omega
+  have hrel : 2*D*(Q k x:Int)=(4*D-A)*(P k:Int)-3*D-C := by
+    change D*(W k x:Int)=A*(P k:Int)+C at he
+    grind
+  have hmul:=Int.mul_le_mul_of_nonneg_left hQ (Int.le_of_lt hD)
+  have hupper : 2*D*(Q k x:Int)≤D*(6*(k:Int)+32) := by grind
+  have hC' : 6+w≤-C := by omega
+  have hP0 : 0≤(P k:Int) := by exact_mod_cast Nat.zero_le (P k)
+  have hBprod : 4*(3^(j-k):Int)*(P k:Int)≤(4*D-A)*(P k:Int) :=
+    Int.mul_le_mul_of_nonneg_right hB hP0
+  have hlower :
+      4*(3^(j-k):Int)*(P k:Int)+6+w-3*D≤2*D*(Q k x:Int) := by
+    grind
+  have hsum :
+      4*(3^(j-k):Int)*(P k:Int)+6+w≤D*(6*(k:Int)+32)+3*D := by omega
+  change 4*(3^(j-k):Int)*(P k:Int)+6+w≤D*(6*(k:Int)+35)
+  rw [Int.mul_add] at hsum ⊢
+  omega
+
+#print axioms positive_history_packet_bandweight
+#print axioms positive_boundary_cost_bandsharp
+
 #print axioms positive_history_packet_weight
 #print axioms positive_history_band
 #print axioms positive_boundary_cost_sharp
