@@ -17,6 +17,8 @@ namespace BB6Coverage.Agent48CountedInc0
 open BB6Coverage
 open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent8CountedReset
+open BB6Coverage.Agent48Champion
+open BB6ChampionArithmetic
 
 /-- The parity-complete source decrement in the exact Inc0 cost interface
 used by the generic counted-drain theorem. -/
