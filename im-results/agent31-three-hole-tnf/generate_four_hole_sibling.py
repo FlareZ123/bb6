@@ -15,6 +15,11 @@ for line in (ROOT / "four_hole_dfas.txt").read_text().splitlines():
     c,a,e,f,rev,dfa = line.split()
     DFAS[c,a,e,f] = (int(rev), list(map(int,dfa)))
 
+# Additional untrusted candidate banks (e.g. raw85 canonical/SMT candidates).
+# Candidates are checked against each destination table by masks() and then
+# by the generated Lean Audit; their historical lookup keys carry no semantics.
+EXTRA_DFAS = []
+
 def classify(p):
     q,h,ones = 0,0,frozenset()
     trace = []
@@ -124,6 +129,7 @@ def build(p,depth=1):
         candidates=[]
         if key in DFAS:
             candidates.append(DFAS[key])
+        candidates.extend(v for v in EXTRA_DFAS if v not in candidates)
         candidates.extend(v for v in DFAS.values() if v not in candidates)
         chosen=None
         for rev0,dfa0 in candidates:
