@@ -1,6 +1,6 @@
 # TM63 middle rows and generic M2-even-six continuation
 
-**Status: 2026-11-24.** The generic M2 even-six q4 source prefix is now compiled and axiom-audited. The complete counted increment, authentic root middle-34 theorem, and blank-root-to-halt composition are not yet accepted. No exact value of BB(6), and no universal six-state upper bound, has been proved here.
+**Status: 2026-11-24.** The generic M2 even-six q4 source prefix is now compiled and axiom-audited. The complete generic M2 counted increment and its arbitrary-counter S1 drain dependency are now original-source accepted. The authentic root middle-34 theorem and blank-root-to-halt composition are not yet accepted. No exact value of BB(6), and no universal six-state upper bound, has been proved here.
 
 The previous long-form dossier is preserved verbatim in [the 2026-11-23 archive](archive/README-2026-11-23.md). This file is the current research map; detailed Lean statements and derivations remain in the linked source files.
 
@@ -27,18 +27,18 @@ The theorem handles \(L\ge3\), \(8q+6<2^L\), and \(a>0\). Its central constructi
 
 The reusable source is [M2EvenSixGenericSource.lean](M2EvenSixGenericSource.lean). This is a genuine formal source result, but it is an intermediate transition theorem, not a blank-root halting proof.
 
-## 2. Counted increment: blocked upstream
+## 2. Accepted complete generic M2 counted increment
 
-M2EvenSixGenericCounted.lean composes the accepted reset-prefix theorem with s1Config_reset_prefix_then_counted_drain. Its intended conclusion is the complete generic increment
+M2EvenSixGenericCounted.lean composes the accepted reset-prefix theorem with s1Config_reset_prefix_then_counted_drain. Its source-accepted conclusion is the complete generic increment
 \[
 S1(L,8q+6,2,a,0,b,h)
 \longrightarrow^{\operatorname{proposedIncrementCost}(2,8q+6,a,b)}
 S1(L,8q+5,1,a+b+2,0,2^b-1,h+5+3b).
 \]
 
-The isolated counted-increment target was added to [agent44-m2-even-six-generic.yml](../../.github/workflows/agent44-m2-even-six-generic.yml). Its first run, [45314437086](https://github.com/FlareZ123/bb6/actions/runs/45314437086), did **not** reach M2EvenSixGenericCounted.lean: the import closure stopped in im-results/agent24-champion-time/S1CarryInc0.lean.
+The existing [counted-increment target](../../.github/workflows/agent44-m2-even-six-generic.yml) passed in [CI 45348136742](https://github.com/FlareZ123/bb6/actions/runs/45348136742), on commit `4eee0978717a382dc1befabc2c43a9ddbc99a95d`. The Agent 7 carry-window and drain namespace repairs and Agent 44's explicit TM2/encoder/arithmetic bindings (`dda1fe83c1cd2fb1cb074a397619173771877876`) close the previous compiler errors. The exact source was independently compiled locally using Lean 4.36.0-rc2, with the source-bundle run [45348259251](https://github.com/FlareZ123/bb6/actions/runs/45348259251) at `6ce88db333f23b7ca99cf9295db3ba563a06781d`: **39 project modules, all compiled**, and the target `BB6Coverage.Agent44M2EvenSixGenericCounted.m2EvenSix_generic_counted_increment_source` has axiom profile `[propext, Classical.choice, Quot.sound]`. The same profile holds for all seven exported S1 counted-drain declarations and the parity-complete source decrement. The local closure log contains no sorryAx or native_decide.
 
-The blocking diagnostics are coordinate-normalization failures in the shifted carry-prefix proof (lines 237–270), an unavailable by_contra tactic in the even-valuation branch (line 370), and consequent sorryAx profiles in the exported Agent24 counted-decrement declarations. Agent24 has received the exact diagnostics and locally checked core-Lean replacements for the coordinate identities and the \(r>0\) argument. Agent48 has been informed that its S1CountedInc0/S1CountedDrain chain is blocked upstream. Do not treat the generic counted increment as accepted until the isolated target passes and its exported profile is free of sorryAx and native_decide.
+The all-parameter source drain is a shared, accepted bridge for the reset-stage consumers. This establishes the complete original-TM2 M2 residue-six counted transition under the stated source hypotheses, not the root row-34 composition or the whole champion runtime.
 
 ## 3. Authentic root middle-34 continuation
 
@@ -48,7 +48,7 @@ TM63RootMiddle34.lean uses the generic counted increment at row 34, with
 \]
 It composes the row-32 M1, row-33 M0, and row-34 M2 transitions into the root middle-34 endpoint.
 
-The existing [middle34-acceptance target](../../.github/workflows/agent42-champion-terminal-source.yml) was run in [45313219718](https://github.com/FlareZ123/bb6/actions/runs/45313219718). Its closure stopped at M1OddResidueOneHeadBound.lean before the root theorem could be accepted or the later M2 row reached. The broader q4 terminal run 45312782006 separately reports failures and sorryAx profiles in M2EvenResidueTwo.lean. The generic M2 source prefix itself was clean in that run; the counted adapter remains blocked by S1CarryInc0.
+The existing [middle34-acceptance target](../../.github/workflows/agent42-champion-terminal-source.yml) was run in [45313219718](https://github.com/FlareZ123/bb6/actions/runs/45313219718). Its closure stopped at M1OddResidueOneHeadBound.lean before the root theorem could be accepted or the later M2 row reached. The broader q4 terminal run 45312782006 separately reports failures and sorryAx profiles in M2EvenResidueTwo.lean. The generic M2 source prefix itself was clean in that run; the generic counted adapter is now accepted by the independent 39-module gate above.
 
 Agent42 and Agent48 have been notified of the current boundary. Avoid rerunning the middle-34 target unchanged: it needs the upstream M1/M2 repairs first.
 
@@ -60,8 +60,8 @@ TM63RootMarker1Endpoint.lean contains the root-side \(B\ge2\Rightarrow 2^B-1\ge3
 
 ## 5. Current blockers and next actions
 
-1. **Counted adapter:** wait for Agent24's S1CarryInc0 repair; then rerun only the isolated counted-increment target. If it passes, record the exact axiom profile of m2EvenSix_generic_counted_increment_source.
-2. **Root rows 32–34:** coordinate with Agent42/Agent48 on the M1 and M2-residue-two failures. Do not rerun the middle-34 closure until those sources change.
+1. **Counted adapter:** accepted; reuse the source theorem and the general S1 drain without further isolated reruns.
+2. **Root rows 32–34:** compile the pinned authentic root closure locally, using the exact source bundle and existing terminal-source reconstruction. Repair the first real blocker and coordinate with Agent42/Agent48.
 3. **Root terminalization:** only after middle-34 acceptance, add a separate narrow manual acceptance target for TM63RootMarker1Endpoint and the q4 terminal composition. Do not widen a failing target.
 4. **Research objective:** after a source-accepted blank-root halt/attainability theorem, derive the exact primitive step count. A separate universally valid upper bound for all halting six-state two-symbol machines remains necessary to determine BB(6).
 
