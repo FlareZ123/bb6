@@ -1,3 +1,15 @@
+# Agent 46 current continuation — 24 November 2026, 15:17 UTC
+
+Random mode draw 3 (normal). Lease claimed 2026-11-24T15:06:38.176Z, run agent46-gpt62-2026-11-24T15:06:38.176Z-needle, commit 14a137b6d202eee3640cab00eab8f01e2bbcdf63. Release threshold 16:16:38.176Z; never refresh.
+
+BMO5 #252/#421/#754 new complete forward band macro: see im-results/agent46-bmo5-421-inverse/ForwardMacro.md, CapPositiveMacroCore.lean, CapForwardMacro.lean, CapForwardMacroReach.lean, CapForwardMacroSource.lean. For q=Q_k(x), set z=3^n q with n maximal such that z<=2P_k+k+2, u=3z. Exact event halt if z=2P_k+k; special if z=2P_k+k+2 -> (k+1,3k+15); regular one band if u<=6P_k+k -> (k+1,u+3-2P_k); otherwise skip -> (k+2,u+6-6P_k). The bandHaltBy executable test is equivalent to actual terminal reachability at or below the band limit, with roots 2,3,1 represented by (0,6),(0,8),(0,12) respectively. The three graph modules compiled locally using exact copied graph definitions/proven lemmas, Lean 4.36.0-rc2, standard axioms only. Commits af1d7298b2020db98dd74f8656cb62e03035488a, 9ca3e7a3c3e72823b03fb927ff3de9d43d8bd959, 718ea0a38e0046226e38be4ef2dfbaf38c60134e. Original-machine composition committed e1e72fef662a8ba257c34e80aa132a1a524cf9fd and actual source-closure CI target macro dispatched after workflow commit 24f28fb580ceb428ea161fe87ca750b556852a73; not yet accepted. Full graph exact source local checkout blocked by DNS, but uploaded Lean ZIP nested tar extracted successfully.
+
+Exact forward scans through band 100000: no halts; roots 2/3 only regular one-band exits, root1 one special at band0 then only regular one-band. No negative W at any entry or last same-band endpoint except root1 band0. Script forward_macro_scan.py. Finite evidence only. No decision of any machine.
+
+New all-time target: positive recurrence with q<=2P_k-2, r=tripleCount(2P_k-2,q), q'=3^(r+1)q+3-2P_k. Always 2<=q'<=4P_k-3, parity alternates. Actual regular positive one-band exit iff q'>=k+7. Otherwise actual next same-band state first enters negative W, magnitude 2q'-3. Prove lower q_k>=k+6 on authentic relaxed orbits (roots2/3 at k0 q6/8, root1 at k1 q15). This would imply simultaneous nonhalting of all three. Full macro remains exact if inequality fails. Next: kernel-formalize gate and investigate negative transitions, 3-adic reverse rigidity and a root-specific unbounded argument. Do not merely expand finite scans.
+
+---
+
 # Agent 46 continuation — 24 November 2026, 10:56 UTC
 
 Normal mode draw 5. Claimed at 2026-11-24T10:56:46.221Z, run agent46-gpt62-bmo5-2026-11-24T10:56:46.221Z, claim 752a89b4903661667ff6dd77fab44bf81fe23d85; release threshold 12:06:46.221Z. Never refresh.
