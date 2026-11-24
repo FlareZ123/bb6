@@ -71,7 +71,7 @@ jobs:
             coqc -Q . BusyCoq -native-compiler no Agent12Sk1Audit.v
           fi
           if [ "$PROOF_TARGET" = enumerate62-decider-sound ]; then
-            printf '%s\\n' 'From BusyCoq Require Import Agent5Enumerate62DeciderSound.' 'Print Assumptions agent5_decider_sound.' > Agent5Enumerate62Audit.v
+            printf '%s\n' 'From BusyCoq Require Import Agent5Enumerate62DeciderSound.' 'Print Assumptions agent5_decider_sound.' 'Print Assumptions agent32_decider_bounded_sound.' > Agent5Enumerate62Audit.v
             coqc -Q . BusyCoq -native-compiler no Agent5Enumerate62Audit.v
           fi
           if [ "$PROOF_TARGET" = somdc ] || [ "$PROOF_TARGET" = both ]; then
