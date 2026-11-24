@@ -228,4 +228,116 @@ theorem excluded_sound (reach : Nat→Nat→Prop)
         obtain ⟨⟨hU,hV⟩,hrec⟩ := hh'
         exact ih _ _ _ _ _ hrec (high_lift h hp (by omega) (by omega) ha hk hU hV) hr'
 
+
+/-- Independent size exponent for the actual right coordinate. -/
+def RightLarge (q y : Nat) : Prop := 2^q ≤ y+2
+
+private theorem rightLarge_direct {q y k : Nat} (h : RightLarge q y)
+    (hq : 4≤q) (hk : 2*k+2=y) : RightLarge (q-1) k := by
+  unfold RightLarge at *
+  have he : 2^(q-1)*2=2^q := by
+    simpa using Nat.pow_sub_mul_pow 2 (by omega : 1≤q)
+  omega
+
+private theorem rightLarge_high {q x y a k n : Nat} (h : RightLarge q y)
+    (hq : n+6≤q) (ha : x+y+(x+y)%2=2^(n+1)*(a+2+(x+y)%2))
+    (hk : 2*k+a+7+3*n=x+2*y) : RightLarge (q-(n+2)) k := by
+  unfold RightLarge at *
+  have he : 2^(q-(n+2))*2^(n+2)=2^q := Nat.pow_sub_mul_pow 2 (by omega)
+  have hd : 2≤2^(n+1) := by simpa using Nat.pow_le_pow_right (by decide : 0<2) (by omega : 1≤n+1)
+  have hd' : 4≤2^(n+2) := by simpa using Nat.pow_le_pow_right (by decide : 0<2) (by omega : 2≤n+2)
+  have hp : 4*2^(q-(n+2))≤2^q := by
+    rw [←he]
+    simpa [Nat.mul_comm] using Nat.mul_le_mul_left (2^(q-(n+2))) hd'
+  have hn : 16+6*n≤2^q := by
+    have h1 : 2^(n+6)≤2^q := Nat.pow_le_pow_right (by decide) hq
+    have h2 : n<2^n := Nat.lt_pow_self (by decide)
+    rw [Nat.pow_add,show (2:Nat)^6=64 by decide] at h1
+    omega
+  have ha2 : 2*a≤x+y+(x+y)%2 := by
+    have h1 := Nat.mul_le_mul_right (a+2+(x+y)%2) hd
+    rw [←ha] at h1
+    omega
+  omega
+
+/-- Congruence-only branch guard: actual coordinate sizes are proved independently. -/
+def modGuard (p u v w : Nat) : Bool :=
+  decide (2≤p ∧ C*oddMass u v≤u+v ∧ w+1≤p ∧
+    shadowMass u v % 2^(w+1)=2^w)
+
+/-- Fuel bounds tree depth. Precision is spent only on exact residues, never on
+    proving a lower bound for the true section coordinates. -/
+def modExcluded : Nat → Nat → Nat → Nat → Bool
+  | 0,p,u,v => leaf u v && decide (2≤p)
+  | f+1,p,u,v =>
+    if leaf u v then decide (2≤p)
+    else
+      let w := valuation (shadowMass u v)
+      modGuard p u v w &&
+      (if v%2 == 0 then modExcluded f (p-1) (u+v+2*C) ((v+2*C)/2) else true) &&
+      (List.range w).all (fun n => if depthGuard u v w n then
+        hiGuard u v n && modExcluded f (p-(n+2)) (hiU u v n) (hiV u v n) else true)
+
+/-- Sound congruence-only shadow search with separate size exponent. -/
+theorem modExcluded_sound (reach : Nat→Nat→Prop)
+    (forbid : ∀ x y, 5≤y → y%2=1 → ((x+y)%4=1 ∨ (x+y)%4=2) → ¬reach x y)
+    (parent : ∀ x y w, 8≤y → (x+y+(x+y)%2)%2^(w+1)=2^w → 2^w<x+y+(x+y)%2 → reach x y →
+      (∃ a k, reach a k ∧ y%2=0 ∧ a+2=x+y ∧ 2*k+2=y) ∨
+      (∃ a k n, reach a k ∧ n+2≤w ∧ n%2=(x+1+(x+y)%2)%2 ∧
+      x+y+(x+y)%2=2^(n+1)*(a+2+(x+y)%2) ∧ 2*k+a+7+3*n=x+2*y)) :
+    ∀ f p u v q x y, modExcluded f p u v=true → lift p u v x y →
+      p+4≤q → RightLarge q y → ¬reach x y := by
+  have leafSound : ∀ p u v q x y, leaf u v=true → 2≤p → lift p u v x y → p+4≤q → RightLarge q y → ¬reach x y := by
+    intro p u v q x y hl hp h hq hL
+    have hsize : 16≤2^q := by simpa using Nat.pow_le_pow_right (by decide : 0<2) (by omega : 4≤q)
+    have hy : 2^q≤y+2 := hL
+    obtain ⟨h4x,h4y⟩ := residue4 h hp
+    simp [leaf, Bool.and_eq_true, Bool.or_eq_true, beq_iff_eq] at hl
+    exact forbid x y (by omega) (by omega) (by omega)
+  intro f
+  induction f with
+  | zero =>
+    intro p u v q x y he h hq hL
+    simp only [modExcluded,Bool.and_eq_true,decide_eq_true_eq] at he
+    exact leafSound p u v q x y he.1 he.2 h hq hL
+  | succ f ih =>
+    intro p u v q x y he h hq hL hr
+    simp only [modExcluded] at he
+    split at he
+    · rename_i hl
+      simp only [decide_eq_true_eq] at he
+      exact leafSound p u v q x y hl he h hq hL hr
+    · simp only [Bool.and_eq_true] at he
+      obtain ⟨⟨hg,hd⟩,hh⟩ := he
+      let w := valuation (shadowMass u v)
+      change modGuard p u v w=true at hg
+      simp only [modGuard,decide_eq_true_eq] at hg
+      obtain ⟨hp,hpos,hw,hval⟩ := hg
+      have hsize : 16≤2^q := by simpa using Nat.pow_le_pow_right (by decide : 0<2) (by omega : 4≤q)
+      have hlarge : 2^(w+1)≤2^q := Nat.pow_le_pow_right (by decide) (by omega)
+      rw [Nat.pow_succ] at hlarge
+      have hy' : 2^q≤y+2 := hL
+      have hy : 8≤y := by omega
+      have hqbig : 2^w<x+y+(x+y)%2 := by omega
+      have hval' := valuation_transfer h hp hw hpos hval
+      rcases parent x y w hy hval' hqbig hr with ⟨a,k,hr',hy',ha,hk⟩ | ⟨a,k,n,hr',hn,hpar,ha,hk⟩
+      · have hv' : v%2=0 := by have := (residue2 h hp).2.1; omega
+        simp [hv'] at hd
+        exact ih _ _ _ (q-1) _ _ hd (direct_lift h hp hy' ha hk) (by omega)
+          (rightLarge_direct hL (by omega) hk) hr'
+      · have hnmem : n ∈ List.range w := List.mem_range.mpr (by omega)
+        have hpar' : n%2=(u+1+oddMass u v)%2 := by
+          obtain ⟨h2x,_,ho⟩ := residue2 h hp
+          omega
+        have hh' := List.all_eq_true.mp hh n hnmem
+        change (if depthGuard u v w n then hiGuard u v n && modExcluded f (p-(n+2)) (hiU u v n) (hiV u v n) else true)=true at hh'
+        have hg' : depthGuard u v w n=true := by simp [depthGuard,hn,hpar']
+        simp only [hg',ite_true] at hh'
+        simp only [hiGuard,Bool.and_eq_true,decide_eq_true_eq] at hh'
+        obtain ⟨⟨hU,hV⟩,hrec⟩ := hh'
+        exact ih _ _ _ (q-(n+2)) _ _ hrec (high_lift h hp (by omega) hpos ha hk hU hV)
+          (by omega) (rightLarge_high hL (by omega) ha hk) hr'
+
+#print axioms modExcluded_sound
+
 end BB6.Agent19Shadow
