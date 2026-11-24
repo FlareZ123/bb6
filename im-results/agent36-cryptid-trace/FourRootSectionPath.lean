@@ -92,13 +92,13 @@ retains a normalized suffix, and contributes one Edge135 step. No
 first-return minimality is assumed or needed. -/
 theorem exists_path_of_nonhalting {n : Nat} {v : List Bool}
     (hn : 5 ≤ n) (hv : BB6.OneSided.head v = false)
-    (hnh : SourceHalts (BB6.OneSided.Section n v) = False) :
+    (hnh : ¬ SourceHalts (BB6.OneSided.Section n v)) :
     ∀ k, ∃ n' v', Path135 k (sourceMeasure n v) (sourceMeasure n' v') ∧
-      SourceHalts (BB6.OneSided.Section n' v') = False := by
+      ¬ SourceHalts (BB6.OneSided.Section n' v') := by
   suffices h : ∀ k n v, 5 ≤ n → BB6.OneSided.head v = false →
-      SourceHalts (BB6.OneSided.Section n v) = False →
+      ¬ SourceHalts (BB6.OneSided.Section n v) →
       ∃ n' v', Path135 k (sourceMeasure n v) (sourceMeasure n' v') ∧
-        SourceHalts (BB6.OneSided.Section n' v') = False by
+        ¬ SourceHalts (BB6.OneSided.Section n' v') by
     exact h _ n v hn hv hnh
   intro k
   induction k with
@@ -112,8 +112,7 @@ theorem exists_path_of_nonhalting {n : Nat} {v : List Bool}
         apply hnh
         rcases hhalt with ⟨u, hu, hstate⟩
         exact ⟨u, hstate⟩
-      · have hnh' : SourceHalts (BB6.OneSided.Section n' v') = False := by
-          apply not_congr? 
+      · have hnh' : ¬ SourceHalts (BB6.OneSided.Section n' v') := by
           intro hh
           have hiff := halts_after_exact_prefix t
             (BB6.OneSided.Section n v) (BB6.OneSided.Section n' v') hrun
@@ -125,13 +124,13 @@ theorem exists_path_of_nonhalting {n : Nat} {v : List Bool}
 /-- Each authentic D3 source start, if nonhalting, generates an infinite
 family of exact source sections whose measures follow Path135 from base 0. -/
 theorem source_D3_path_of_nonhalting
-    (hroot : SourceHalts (sourceBlank (3 : Fin 6)) = False) :
+    (hroot : ¬ SourceHalts (sourceBlank (3 : Fin 6))) :
     ∀ k, ∃ n' v', Path135 k (base 0) (sourceMeasure n' v') ∧
-      SourceHalts (BB6.OneSided.Section n' v') = False := by
+      ¬ SourceHalts (BB6.OneSided.Section n' v') := by
   have hiff : SourceHalts (sourceBlank (3 : Fin 6)) ↔
       SourceHalts (BB6.OneSided.Section (anchor 0).a anchorSuffix0) := by
     simpa only [anchor0_section_eq] using source_D3_halts_iff_anchor
-  have hanchor : SourceHalts (BB6.OneSided.Section (anchor 0).a anchorSuffix0) = False := by
+  have hanchor : ¬ SourceHalts (BB6.OneSided.Section (anchor 0).a anchorSuffix0) := by
     intro hh
     exact hroot (hiff.mpr hh)
   intro k
@@ -141,13 +140,13 @@ theorem source_D3_path_of_nonhalting
   exact ⟨n', v', by simpa [anchor0_measure] using hp, hnh'⟩
 
 theorem source_D0_path_of_nonhalting
-    (hroot : SourceHalts (sourceBlank (0 : Fin 6)) = False) :
+    (hroot : ¬ SourceHalts (sourceBlank (0 : Fin 6))) :
     ∀ k, ∃ n' v', Path135 k (base 1) (sourceMeasure n' v') ∧
-      SourceHalts (BB6.OneSided.Section n' v') = False := by
+      ¬ SourceHalts (BB6.OneSided.Section n' v') := by
   have hiff : SourceHalts (sourceBlank (0 : Fin 6)) ↔
       SourceHalts (BB6.OneSided.Section (anchor 1).a anchorSuffix1) := by
     simpa only [anchor1_section_eq] using source_D0_halts_iff_anchor
-  have hanchor : SourceHalts (BB6.OneSided.Section (anchor 1).a anchorSuffix1) = False := by
+  have hanchor : ¬ SourceHalts (BB6.OneSided.Section (anchor 1).a anchorSuffix1) := by
     intro hh
     exact hroot (hiff.mpr hh)
   intro k
@@ -157,13 +156,13 @@ theorem source_D0_path_of_nonhalting
   exact ⟨n', v', by simpa [anchor1_measure] using hp, hnh'⟩
 
 theorem source_D2_path_of_nonhalting
-    (hroot : SourceHalts (sourceBlank (2 : Fin 6)) = False) :
+    (hroot : ¬ SourceHalts (sourceBlank (2 : Fin 6))) :
     ∀ k, ∃ n' v', Path135 k (base 2) (sourceMeasure n' v') ∧
-      SourceHalts (BB6.OneSided.Section n' v') = False := by
+      ¬ SourceHalts (BB6.OneSided.Section n' v') := by
   have hiff : SourceHalts (sourceBlank (2 : Fin 6)) ↔
       SourceHalts (BB6.OneSided.Section (anchor 2).a anchorSuffix2) := by
     simpa only [anchor2_section_eq] using source_D2_halts_iff_anchor
-  have hanchor : SourceHalts (BB6.OneSided.Section (anchor 2).a anchorSuffix2) = False := by
+  have hanchor : ¬ SourceHalts (BB6.OneSided.Section (anchor 2).a anchorSuffix2) := by
     intro hh
     exact hroot (hiff.mpr hh)
   intro k
@@ -173,13 +172,13 @@ theorem source_D2_path_of_nonhalting
   exact ⟨n', v', by simpa [anchor2_measure] using hp, hnh'⟩
 
 theorem source_D1_path_of_nonhalting
-    (hroot : SourceHalts (sourceBlank (5 : Fin 6)) = False) :
+    (hroot : ¬ SourceHalts (sourceBlank (5 : Fin 6))) :
     ∀ k, ∃ n' v', Path135 k (base 3) (sourceMeasure n' v') ∧
-      SourceHalts (BB6.OneSided.Section n' v') = False := by
+      ¬ SourceHalts (BB6.OneSided.Section n' v') := by
   have hiff : SourceHalts (sourceBlank (5 : Fin 6)) ↔
       SourceHalts (BB6.OneSided.Section (anchor 3).a anchorSuffix3) := by
     simpa only [anchor3_section_eq] using source_D1_halts_iff_anchor
-  have hanchor : SourceHalts (BB6.OneSided.Section (anchor 3).a anchorSuffix3) = False := by
+  have hanchor : ¬ SourceHalts (BB6.OneSided.Section (anchor 3).a anchorSuffix3) := by
     intro hh
     exact hroot (hiff.mpr hh)
   intro k
@@ -191,7 +190,7 @@ theorem source_D1_path_of_nonhalting
 /-- Any two nonhalting-root return paths are disjoint in unary section
 length unless they have both the same root ordinal and the same return count. -/
 theorem source_paths_disjoint {a b : Fin 4} {i j : Nat}
-    {x y : Section} (p : Path135 i (base a) x) (q : Path135 j (base b) y)
+    {x y : BB6.Agent26.GrowthBands.Section} (p : Path135 i (base a) x) (q : Path135 j (base b) y)
     (h : a ≠ b ∨ i ≠ j) : x.n ≠ y.n :=
   disjoint_paths p q h
 
