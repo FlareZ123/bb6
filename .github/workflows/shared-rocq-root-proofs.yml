@@ -92,6 +92,7 @@ jobs:
         if: inputs.target == 'enumerate62-weighted-source'
         run: |
           cp "$GITHUB_WORKSPACE/research/im-results/agent8-adaptive-source-plan/Agent8SourceWF.v" original/verify/
+          cp "$GITHUB_WORKSPACE/research/im-results/agent8-adaptive-source-plan/Agent8WeightedSource.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent5-weighted-tnf-queue/Agent5Enumerate62DeciderSound.v" original/verify/
       - name: Generate project dependencies with VM fallback
         working-directory: original/verify
@@ -113,7 +114,7 @@ jobs:
             enumerate62-adaptive-checkpoint) make -f Makefile.coq -j 2 Agent8QueueCheckpointPilot.vo ;;
             enumerate62-adaptive-expansion) make -f Makefile.coq -j 2 Agent8QueueExpansionPilot.vo Agent8PackedChunk2_32_32.vo ;;
             enumerate62-packed-chunk) make -f Makefile.coq -j 2 Agent8PackedRoot.vo Agent8AdaptiveSource.vo ;;
-            enumerate62-weighted-source) make -f Makefile.coq -j 2 Agent8SourceWF.vo Agent8PackedChunk2_32_32.vo ;;
+            enumerate62-weighted-source) make -f Makefile.coq -j 2 Agent8WeightedSource.vo Agent8PackedChunk2_32_32.vo ;;
           esac
       - name: Print final original theorem assumptions
         working-directory: original/verify
