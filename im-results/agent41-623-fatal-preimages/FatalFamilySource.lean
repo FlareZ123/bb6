@@ -22,7 +22,7 @@ theorem parent_parameter (k a d : Nat) (hk : 7≤k) (ho : k%2=1) (ha : a%2=0)
     (h : highLevelNext (.D a d)=some (.D (targetX k) (targetY k))) : ParameterGate k := by
   have hbig : 2*inverseBudget (targetY k)≤targetX k := large_first k hk
   have hsmall : inverseBudget (targetY k)≤2*(k+1)+3 := budget_le k hk
-  have hn : 0<inverseBudget (targetY k) := by unfold inverseBudget; omega
+  have hn : 0 < inverseBudget (targetY k) := by unfold inverseBudget; omega
   have hy := targetY_even k hk ho
   have hgt := targetY_gt14 k hk
   have henv := parent_envelope_complete P P_sound _ _ _ _ h
