@@ -72,13 +72,24 @@ theorem oldAffineCone_subset_newAffineCone (a d : Nat)
 theorem highLevelNext_two_d (d : Nat)
     (hd : d%2=0) (hge : 36≤d) :
     highLevelNext (.D 2 d) = some (.D d 9) := by
+  simp only [highLevelNext]
+  have h0 : 2 ≠ 0 := by omega
+  simp only [if_neg h0]
   have hleftOdd : ¬(d%2=1 ∧ 2≥d+5) := by omega
+  simp only [if_neg hleftOdd]
   have hleftEven : ¬(d%2=0 ∧ 2≥d+3) := by omega
+  simp only [if_neg hleftEven]
   have hfirstOdd : 2%2≠1 := by omega
+  simp only [if_neg hfirstOdd]
   have hgapTwo : 2≠d+2 := by omega
+  simp only [if_neg hgapTwo]
   have hrightOdd : d%2≠1 := by omega
-  simp [highLevelNext, evalA, drainB,
-    hleftOdd, hleftEven, hfirstOdd, hgapTwo, hrightOdd] <;> omega
+  simp only [if_neg hrightOdd]
+  have heval : evalA (d+1-2) 2 (2*2+5) = some (d,0,9) := by
+    simp [evalA]
+    omega
+  simp only [heval, Option.bind_some]
+  simp [drainB]
 
 theorem old_cone_source (d : Nat) (hd : 36≤d) (heven : d%2=0) :
     oldAffineCone 2 d := by
@@ -113,12 +124,12 @@ theorem quadratic_gap_source_bound (C : Nat) (hC : 0<C) :
   let t := Nat.sqrt C
   let d := 36+2*t
   have hd : 36≤d := by dsimp [d]; omega
-  have hroot : C < (t+1)^2 := by
+  have hroot : C < (t+1)*(t+1) := by
     simpa [t, Nat.succ_eq_add_one] using Nat.lt_succ_sqrt C
-  have hpow : (t+1)^2 ≤ (t+14)^2 := by
-    have hbase : t+1 ≤ t+14 := by omega
-    exact Nat.pow_le_pow_left hbase 2
-  have hC' : C ≤ (t+14)^2 := Nat.le_trans (Nat.le_of_lt hroot) hpow
+  have hbase : t+1 ≤ t+14 := by omega
+  have hpow : (t+1)*(t+1) ≤ (t+14)*(t+14) :=
+    Nat.mul_le_mul hbase hbase
+  have hC' : C ≤ (t+14)*(t+14) := Nat.le_trans (Nat.le_of_lt hroot) hpow
   have hgap : canonicalGap 2 d = 2*(t+14) := by
     rw [canonicalGap_two_d d hd]
     dsimp [d]
@@ -136,7 +147,7 @@ theorem quadratic_gap_target_fails (C : Nat) (hC : 0<C) :
   let t := Nat.sqrt C
   let d := 36+2*t
   have hd : 36≤d := by dsimp [d]; omega
-  have hroot : t^2 ≤ C := by
+  have hroot : t*t ≤ C := by
     simpa [t] using Nat.sqrt_le' C
   have hgap : canonicalGap d 9 = 2*t := by
     rw [canonicalGap_d_nine d hd]
