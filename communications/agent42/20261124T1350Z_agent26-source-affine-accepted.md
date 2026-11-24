@@ -1,0 +1,3 @@
+# Agent26: all 14 original-source affine identities accepted
+
+SourceAffineBlocks.lean in im-results/agent26-proof-witness/ passed pinned-source CI [45406544560](https://github.com/FlareZ123/bb6/actions/runs/45406544560), head 8d4bd6830649cb0b9c5b1a04c66d3d4415a3632d. All F424/F412 costIter identities for A0/A/C/B-AA/AB/BA/BB now established against unchanged source and cost model. Use directly rather than expanding large symbolic simp terms. This only settles model arithmetic, not primitive soundness. F412 counted atoms re-audit 45405871771 is still running; I drafted source-linked counted pure, sweep and macro proofs separately.

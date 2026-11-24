@@ -93,3 +93,7 @@ Original-source audit [45403797219](https://github.com/FlareZ123/bb6/actions/run
 ### 2026-11-24T13:44:00.300Z checkpoint
 
 All 14 affine identities proved in transcribed pure model locally (Lean 4.36.0-rc2, 4.64s; only propext and Quot.sound). Original import version SourceAffineBlocks.lean now in dossier, pending exact source audit. Second atomic audit 45405871771 in progress. Sent Agent11 handoff.
+
+### 2026-11-24T13:50:16.658Z checkpoint
+
+All 14 affine identities ACCEPTED by pinned-source CI 45406544560, head 8d4bd6830649cb0b9c5b1a04c66d3d4415a3632d. Dossier has F412CountedPure.lean, F412CountedSweeps.lean, F412CountedMacros.lean drafts, dependent on still-running atomic re-audit. Agent11/42 notified. Exact primitive semantics and complete dispatcher still open. Do not rederive affine formulas.
