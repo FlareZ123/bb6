@@ -1,6 +1,7 @@
 From BusyCoq Require Import Agent47SourceChunk2 Agent47SourceWitness
-  Agent8WeightedSource Agent32SourceEncoding Enumerate62 Individual62.
-From Coq Require Import List Bool Lia Arith Strings.String
+  Agent8WeightedSource Agent8AdaptiveSource Agent32SourceBackwards
+  Agent8PackedChunk2_32_32 Agent32SourceEncoding Enumerate62 Individual62.
+From Coq Require Import List Bool Lia Arith NArith Strings.String
   Logic.FunctionalExtensionality.
 Import ListNotations.
 Import TNF_Node.
@@ -17,13 +18,13 @@ Definition side_candidates : list side_candidate :=
   flat_map (fun d =>
     flat_map (fun entry =>
       flat_map (fun period =>
-        map (fun budget => (d,entry,period,budget)) (seq 0 3))
+        map (fun budget => (d,(entry,(period,budget)))) (seq 0 3))
         (seq 1 13))
       (seq 0 13))
     [L;R].
 
 Definition side_candidate_check (p : TM) (c : side_candidate) : bool :=
-  let '(d,entry,period,budget) := c in
+  let '(d,(entry,(period,budget))) := c in
   source_side_check p d entry period budget.
 
 Definition find_side_candidate (p : TM) : option side_candidate :=
@@ -53,7 +54,7 @@ Lemma source_certificate_check_of_candidate bound p c :
   side_candidate_check p c = true ->
   certificate_check bound (TM_to_str p, candidate_witness c) = true.
 Proof.
-  destruct c as [[[d entry] period] budget].
+  destruct c as [d [entry [period budget]]].
   unfold side_candidate_check, candidate_witness, certificate_check,
     certificate_tm, source_witness_check, source_side_check.
   cbn.
