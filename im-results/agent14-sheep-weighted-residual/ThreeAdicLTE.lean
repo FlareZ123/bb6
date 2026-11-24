@@ -203,8 +203,100 @@ theorem type3_H_ge_9_lower_bound (H B : Nat)
     _ ≤ 2*3^(H-1)*k := hmul2
     _ = B := by rw [hk]
 
+
+theorem two_pow_mod_five (B : Nat) :
+    2^B%5 = if B%4=0 then 1 else if B%4=1 then 2 else if B%4=2 then 4 else 3 := by
+  induction B with
+  | zero => decide
+  | succ B ih =>
+    rw [Nat.pow_succ, Nat.mul_mod]
+    have hcases : B%4=0 ∨ B%4=1 ∨ B%4=2 ∨ B%4=3 := by omega
+    rcases hcases with h0|h1|h2|h3
+    · have hs : (B+1)%4=1 := by omega
+      simp [h0,hs] at *
+      omega
+    · have hs : (B+1)%4=2 := by omega
+      simp [h1,hs] at *
+      omega
+    · have hs : (B+1)%4=3 := by omega
+      simp [h2,hs] at *
+      omega
+    · have hs : (B+1)%4=0 := by omega
+      simp [h3,hs] at *
+      omega
+
+theorem four_dvd_of_five_dvd_two_pow_sub_one (B:Nat) (h:5∣2^B-1) : 4∣B := by
+  obtain ⟨q,hq⟩ := h
+  have hpos :1≤2^B := Nat.one_le_pow B 2 (by decide)
+  have hp :2^B=5*q+1 := by omega
+  have hmod :2^B%5=1 := by rw [hp]; omega
+  rw [two_pow_mod_five] at hmod
+  have hB : B%4=0 := by
+    have hcases : B%4=0 ∨ B%4=1 ∨ B%4=2 ∨ B%4=3 := by omega
+    rcases hcases with h0|h1|h2|h3
+    · exact h0
+    · simp [h1] at hmod
+    · simp [h2] at hmod
+    · simp [h3] at hmod
+  exact Nat.dvd_of_mod_eq_zero hB
+
+theorem type1_H_ge_3_lower_bound (H B : Nat)
+    (hH : 3≤H) (hB : 1≤B)
+    (hdiv3 : 3^H∣2^B-1) (hdiv5 : 5∣2^B-1) :
+    36≤B := by
+  have hdivpow := three_power_dvd_two_pow_sub_one H B (by omega) hdiv3
+  have hdiv4 := four_dvd_of_five_dvd_two_pow_sub_one B hdiv5
+  obtain ⟨k,hk⟩ := hdiv4
+  rw [hk] at hB
+  have hkpos : 1≤k := by omega
+  rw [hk] at hdivpow
+  have hdivk : 3^(H-1)∣2*k := by
+    have hh : 2*3^(H-1)∣2*(2*k) := by
+      simpa [Nat.mul_assoc, Nat.mul_comm, Nat.mul_left_comm] using hdivpow
+    exact Nat.dvd_of_mul_dvd_mul_left (by decide) hh
+  have hcop : Nat.Coprime (3^(H-1)) 2 := Nat.Coprime.pow_left (H-1) (by decide)
+  have hdivk' : 3^(H-1)∣k := Nat.Coprime.dvd_of_dvd_mul_left hcop hdivk
+  obtain ⟨j,hj⟩ := hdivk'
+  have hjpos : 1≤j := by
+    rw [hj] at hkpos
+    have hprod : 0 < 3^(H-1)*j := by omega
+    have hjpos' : 0<j := Nat.pos_of_mul_pos_left hprod
+    omega
+  have hkge : 3^(H-1)≤k := by
+    rw [hj]
+    have hh := Nat.mul_le_mul_left (3^(H-1)) hjpos
+    simpa using hh
+  have hpow : 3^2≤3^(H-1) := Nat.pow_le_pow_right (by decide : 0<3) (by omega)
+  calc
+    36 ≤ 4*3^2 := by decide
+    _ ≤ 4*3^(H-1) := Nat.mul_le_mul_left 4 hpow
+    _ ≤ 4*k := Nat.mul_le_mul_left 4 hkge
+    _ = B := hk.symm
+
+theorem type1_terminal_H_ge_3_lower_bound (k H B : Nat)
+    (hH : 3≤H) (hB : 1≤B)
+    (heq : 3^H*(5+135*k)=2^H*(2^B-1)) : 36≤B := by
+  have hdivprod3 : 3^H ∣ 2^H*(2^B-1) := by
+    refine ⟨5+135*k, ?_⟩
+    exact heq.symm
+  have hcop3 : Nat.Coprime (3^H) (2^H) :=
+    Nat.Coprime.pow H H (by decide)
+  have hdiv3 : 3^H ∣ 2^B-1 :=
+    Nat.Coprime.dvd_of_dvd_mul_left hcop3 hdivprod3
+  have hdivprod5 : 5 ∣ 2^H*(2^B-1) := by
+    refine ⟨3^H*(1+27*k), ?_⟩
+    have hfac : 5+135*k=5*(1+27*k) := by omega
+    calc
+      2^H*(2^B-1) = 3^H*(5+135*k) := heq.symm
+      _ = 5*(3^H*(1+27*k)) := by rw [hfac]; ac_rfl
+  have hcop5 : Nat.Coprime 5 (2^H) := Nat.Coprime.pow_right H (by decide)
+  have hdiv5 : 5 ∣ 2^B-1 := Nat.Coprime.dvd_of_dvd_mul_left hcop5 hdivprod5
+  exact type1_H_ge_3_lower_bound H B hH hB hdiv3 hdiv5
+
 #print axioms three_power_dvd_four_pow_sub_one
 #print axioms three_power_dvd_two_pow_sub_one
 #print axioms type3_H_ge_9_lower_bound
+#print axioms type1_H_ge_3_lower_bound
+#print axioms type1_terminal_H_ge_3_lower_bound
 
 end SheepWeightedResidual
