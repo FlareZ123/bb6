@@ -10,6 +10,7 @@ on:
         options:
           - modular-screen
           - exact-carry-cert
+          - margin-blank
 permissions:
   contents: read
 jobs:
@@ -69,6 +70,29 @@ jobs:
             (cd "$GEN" && python "$GITHUB_WORKSPACE/$AG43/gen_carry_cert.py" 350 586 16)
             lean -o "$GEN/Carry350.olean" "$GEN/Carry350.lean"
             lean "$AG43/CarryCertSource.lean"
+            exit 0
+          fi
+          if [ "${{ inputs.target }}" = margin-blank ]; then
+            RES=im-results/agent50-p1-residue
+            GEN=$(mktemp -d "$PWD/.agent43-margin.XXXXXX")
+            export LEAN_PATH="$LEAN_PATH:$RES:$GEN"
+            lean -o "$MAP/ResetGate.olean" "$MAP/ResetGate.lean"
+            for m in P1Triple P1ResidualArithmetic P1ResidualReach P1Gate; do
+              lean -o "$RES/$m.olean" "$RES/$m.lean"
+            done
+            for m in P1CarryExact P1CarryExactSource P1CarryExtinction P1CarryExactReverse P1CarryBlankArithmetic; do
+              lean -o "$CARRY/$m.olean" "$CARRY/$m.lean"
+            done
+            lean -o "$AG43/CarryCert.olean" "$AG43/CarryCert.lean"
+            lean -o "$AG43/MarginCert.olean" "$AG43/MarginCert.lean"
+            lean -o "$AG43/MarginSource.olean" "$AG43/MarginSource.lean"
+            lean -o "$AG43/Margin30.olean" "$AG43/Margin30.lean"
+            (cd "$GEN" && python "$GITHUB_WORKSPACE/$AG43/gen_margin_cert.py" 350 586 16)
+            lean -j1 -DElab.async=false -o "$GEN/Margin350.olean" "$GEN/Margin350.lean"
+            lean "$AG43/MarginFiniteSource.lean" | tee /tmp/agent43-margin-axioms.txt
+            grep -q critical_reset_no_reach_30 /tmp/agent43-margin-axioms.txt
+            grep -q critical_reset_no_reach_350 /tmp/agent43-margin-axioms.txt
+            if grep -q sorryAx /tmp/agent43-margin-axioms.txt; then exit 1; fi
             exit 0
           fi
           SCREEN=im-results/agent28-p1-modular-screen

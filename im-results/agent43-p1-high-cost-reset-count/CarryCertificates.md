@@ -1,23 +1,33 @@
-# Exact right-five carry certificates
+# Full-P carry certificates: right-five and critical reset reachability
 
-**Result:** ordinary Lean kernel checks establish the exact full-P carry automaton has no carry 2 at any layer before an empty layer for critical indices n=30 (K=82) and n=350 (K=586). Since Agent28's unchanged-source exact endpoint theorem maps every CountCone ending in d=5 to carry 2, these certificates mathematically exclude those two critical right-five gates at every inverse depth and cost. The new integrated Lean wrapper is not yet compiled against the original source closure. No whole-P1 or BB(6) conclusion is established.
+The right-five source wrappers for n=30 and n=350 are accepted by [pinned Lean CI 45424975061](https://github.com/FlareZ123/bb6/actions/runs/45424975061) at commit b318fa9199327067f7d2edcba04ed07eeefea243. The new stronger margin core and both numerical margin certificates compiled locally with Lean 4.36.0-rc2 and ordinary axioms. The new original-source blank-reachability integration is pending focused CI. No claim is made that all critical indices or P1 are decided.
 
-## Certificate construction
+## Strengthened certificate and exact source argument
 
-For Q=7·2^n−(n+3), start at [1], and at position j include c/2 if c is even and (c+Q−j)/2 if c+Q−j is even. Retain the exact list (no lossy deduplication). [CarryCert.lean](CarryCert.lean) defines the same recurrence as Agent28's [FullPrefix.lean](../agent28-p1-full-prefix/FullPrefix.lean). Its Boolean checker verifies every layer excludes 2 and the final layer equals an explicit list. The general theorem check_sound proves both claims; Safe.append composes adjacent checked segments. For n=30, safe30 is a single ordinary by decide. For n=350, the generator supplies explicit exact checkpoint lists every 16 layers and Lean proves each adjacent segment by decide. A generator error cannot yield a false accepted proof. The exact source transport interface cert_interface was locally compiled against the exact copied two carry definitions; [CarryCertSource.lean](CarryCertSource.lean) additionally imports Agent28's original ExactEndpoint and the generated Carry350.
+Set Q=7*2^n-(n+3). The full-P carry starts at 1 and at layer j admits c/2 or (c+Q-j)/2 when integral. Every original OddCone endpoint transports to carry c=(d-1)/2 (Agent28's exact-block theorem, adapted directly to OddCone). If the layer K is empty and every earlier carry satisfies c≠2 and c+L+j≤Q+2, with L=2*(n+3*K+10)+6, then every genuine critical OddCone endpoint satisfies:
 
-## Reproduce
+- m<K, by persistence of emptiness;
+- d≠5, by exact endpoint membership;
+- b/4≥n+3*K+10, by the original mass relation b+d+2*m+2*n+13=14*2^n.
 
-In this directory, with Lean 4.36.0-rc2:
-```sh
-lean -o CarryCert.olean CarryCert.lean
-python gen_carry_cert.py 350 586 16
-LEAN_PATH=. lean -o Carry350.olean Carry350.lean
-```
-The 350 proof was locally accepted (37 chunks). The tested generator originally omitted exponentiation.threshold, causing harmless exponent evaluation warnings; the published version raises that threshold. All audited exports (check_sound, Safe.append, safe30, safe350) depend only on [propext, Classical.choice, Quot.sound] or a subset thereof. No sorryAx or native_decide. The n=286 generated 16-layer checkpoint file is about 1.74 MB; the 45-second local attempt timed out, so it is not accepted. The n=350 monolithic attempt also exceeded its timeout; chunking fixed that case.
+[MarginCert.lean](MarginCert.lean) proves the computational certificate sound, including persistent emptiness and the last arithmetic implication. [MarginSource.lean](MarginSource.lean) generalizes Agent50's blank-reachability induction from early small-carry extinction to these three gate conditions, with no K≤n restriction. Large left counters rule out exceptional b=2; odd right-five exclusions rule out c=1 G-inputs; every even output lies strictly between adjacent powers 7*2^n and 14*2^n. Remaining odd outputs give genuine parents at strictly higher cost, so strong induction on K-m excludes every authentic reachable cone state. The original critical target reduction then excludes Reach 2 (14*2^n-2*n-10) for even n. The final source declarations must pass the pinned original dependency closure before reporting original-source acceptance.
 
-## Remaining four exact certificates and source lift
+## Finite results
 
-The independently accepted source theorem source_no_right_five_of_no_two is in [ExactEndpoint.lean](../agent28-p1-full-prefix/ExactEndpoint.lean), CI 45386616971. Integrate CarryCertSource with the existing manual source workflow and compile its exact dependency closure, including generating Carry350. No new workflow is required. The original source repo cannot be cloned locally (DNS failure), so the two new original-source wrapper theorem declarations are pending acceptance. For n=286,1614,2990,3342, use the same generator/checker with suitable chunk sizes or adopt a smaller deduplicated certificate; the empty layers reported by prior computation are 1442,5824,6154,13730. Avoid repeating monolithic reduction. Larger explicit lists can become expensive; a proof-producing compressed carry representation would be useful.
+| n | Empty K | Minimum left-margin bit length (experiment) | Layer attaining minimum | Kernel right-five and margin | Blank reset wrapper |
+|---:|---:|---:|---:|---|---|
+|30|82|19|38|accepted|pending|
+|286|1442|271|1319|not yet accepted|pending|
+|350|586|335|438|accepted|pending|
+|1614|5824|1597|2568|not yet accepted|pending|
+|2990|6154|2973|3787|not yet accepted|pending|
+|3342|13730|3320|7084|not yet accepted|pending|
 
-The finite modular screen from Agent28 reduces n=14..10000 to these six candidates. It remains a separate source acceptance obligation. Unbounded n>10000 and other P1 gates remain open.
+[margin_scan.py](margin_scan.py) is an exact-integer experiment for all six cases; it asserts emptiness, carry-two avoidance and the required margin at every earlier layer. The modular screen for the other indices ≤10000 is Agent28's independent work. The complete range still needs a combined original-source certificate, including all six exceptional rows.
+
+[gen_margin_cert.py](gen_margin_cert.py) generates untrusted literal checkpoints and kernel-checked composition proofs. Use `python gen_margin_cert.py 350 586 16` from a temporary directory, then Lean with LEAN_PATH including this dossier. The locally compiled margin350 used the same checkpoint data and equivalent theorem calls with the literal requiredMargin argument rather than the helper definition. The generator's new helper definition is definitionally equal. The n286 full literal file (1.7 MB) hit a memory limit with default parallel elaboration; a serial run was stopped after 4m29s to preserve RAM for the stronger margin checks, not a mathematical counterexample. For large cases investigate segmented independent compilation or a more efficient certifier.
+
+## Previous right-five-only certificate
+
+[CarryCert.lean](CarryCert.lean), [gen_carry_cert.py](gen_carry_cert.py), [CarryCertSource.lean](CarryCertSource.lean). The source integration CI above accepted n30 and n350. These are retained for comparison and dependency history; the margin certificates strictly strengthen the finite arithmetic claim.
+
