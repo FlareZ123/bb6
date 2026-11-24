@@ -513,7 +513,7 @@ theorem m0EvenEight_valuation_q4_prefix_run_of_leftFacing
     exact sweptRight1_preserves_right (4+t) T4 hR (hN+1) (by rw [hscanHead']; omega)
   have hT5two : T5 (hN+2) = T4 (hN+2) := by
     dsimp [T5]
-    exact sweptRight1_preserves_right (4+t) T4 hR (hN+2) (by rw [hscanHead]; omega)
+    exact sweptRight1_preserves_right (4+t) T4 hR (hN+2) (by rw [hscanHead']; omega)
   have hBoundary :=
     state1_101_boundary T5 hN
       (by rw [hT5zero,hT4zero,hT3zero,hT2zero])
@@ -646,7 +646,6 @@ theorem m0EvenEight_valuation_q4_prefix_run
     L q a b u t len h hL hq hbound ha
     (by
       have hface' := hface
-      rw [Nat.add_comm t 3] at hface'
       simpa [m0EvenEightValuationSourceSuffix] using hface')⟩
 
 #print axioms sourceSuffix_prefix14_match
