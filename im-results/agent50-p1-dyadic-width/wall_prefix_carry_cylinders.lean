@@ -236,9 +236,50 @@ theorem noPrefix_familyII_h2 (t : Nat) :
   rw [hEq]
   exact noPrefix_1416034_cylinder (43953 * t)
 
+
+theorem familyI_terminal_m_ge_n_aux (n P u : Nat)
+    (hP : 1100 * n ≤ P) (hU : 1058 * u + 636 = 17 * P) (hn : 1 ≤ n) :
+    n ≤ 14 * u - 2 * n - 3 := by omega
+
+theorem familyII_terminal_m_ge_n_aux (n P u : Nat)
+    (hP : 1100 * n ≤ P) (hU : 1198 * u + 712 = 87 * P) (hn : 1 ≤ n) :
+    n ≤ 14 * u - 2 * n - 3 := by omega
+
+theorem pow2_ge_1100_mul (n : Nat) (hn : 14 ≤ n) : 1100 * n ≤ 2 ^ n := by
+  induction n with
+  | zero => omega
+  | succ n ih =>
+      by_cases hbase : n = 13
+      · subst n
+        have hbase : 1100 * 14 ≤ 2 ^ 14 := by decide
+        simpa using hbase
+      · have hn' : 14 ≤ n := by omega
+        have hprev := ih hn'
+        have hpow : 1100 ≤ 2 ^ n := by omega
+        rw [Nat.pow_succ]
+        omega
+
+theorem familyI_terminal_m_ge_n (n u : Nat) (hn : 14 ≤ n)
+    (hU : 1058 * u + 636 = 17 * 2 ^ n) :
+    n ≤ 14 * u - 2 * n - 3 := by
+  apply familyI_terminal_m_ge_n_aux n (2 ^ n) u
+  · exact pow2_ge_1100_mul n hn
+  · exact hU
+  · omega
+
+theorem familyII_terminal_m_ge_n (n u : Nat) (hn : 14 ≤ n)
+    (hU : 1198 * u + 712 = 87 * 2 ^ n) :
+    n ≤ 14 * u - 2 * n - 3 := by
+  apply familyII_terminal_m_ge_n_aux n (2 ^ n) u
+  · exact pow2_ge_1100_mul n hn
+  · exact hU
+  · omega
+
 #print axioms noPrefix_familyI_h1
 #print axioms noPrefix_familyI_h2
 #print axioms noPrefix_familyII_h1
 #print axioms noPrefix_familyII_h2
+#print axioms familyI_terminal_m_ge_n
+#print axioms familyII_terminal_m_ge_n
 
 end BB6WallCarry
