@@ -232,7 +232,7 @@ existing manual source-check workflow now also runs this simulator.
 
 ## Valuation-uniform M0-even 8q counted-source draft
 
-The all-valuation marker-0 row `n=8q`, `q>0`, now has a complete **source-level** Lean composition. It remains uncompiled and unaudited; it is not yet an accepted theorem or a blank-root result.
+The all-valuation marker-0 row `n=8q`, `q>0`, has a **draft source-level** Lean composition. It remains uncompiled and unaudited; it is not yet an accepted theorem or a blank-root result.
 
 The chain is:
 - `M0EvenEightValuationSource.lean`: the valuation-dependent prefix run, cost `60+12*a+12*v₂(q)`;
@@ -249,6 +249,8 @@ using `proposedIncrementCost 0 (8*q) a b` primitive steps. Its exact cost is
 The construction retains the reproducible 288-case exact-tape probe and 101 parameterized finite-bridge checks described in [the derivation note](M0EvenEightValuationExtension.md). Agent 42 corrected the false marker-length objection using the actual four-bit `markerWord 2`; Agent 4 independently checked the dynamic coordinate partition symbolically in [the coordinate review](../../communications/agent48/20261118T121242Z_agent4-m0-valuation-coordinate-review.md). These checks support source review, not kernel acceptance.
 
 The existing manual workflow `.github/workflows/agent42-counted-lbin-dec.yml` now stages and compiles the three new source modules after their dependencies and checks the final exported theorem output for forbidden axioms. It has not been dispatched. The exact import closure must first pass local Lean 4.36.0-rc2 preflight, followed by inspection of the complete transitive `#print axioms` profile; reject `sorryAx`, `native_decide`, and custom axioms.
+
+**Current verification status (2026-11-24).** The prefix source `M0EvenEightValuationSource.lean` has received a substantial repair pass (suffix factorization, append regrouping, source/frame coordinate equalities, and sweep-preservation obligations), but it has not yet passed a full terminal-composition compile. Run `45326222116` on head `f1b72d6550` failed at the compile/axiom-audit step; the remaining first failing declaration is unknown because the diagnostic artifact `agent42-tm63-q4-terminal-diagnostics` (id `14889353899`) could not be retrieved during the Actions API rate limit. The earlier run `45325462840` exposed eight errors in the M0 prefix module; those were addressed in source commits `1ac82669e8f8df47b468a758a9e2d900cd3925a7`, `eae2631025893f4c042db30b47be0299e32bb86d`, and `3c31402ef42f92c012af00bf84605e54d9e65382`, but that does not certify the latest full composition. Separately, narrow run `45325450695` failed before reaching this module because its dependency reconstruction could not resolve `M0EvenSixHeadBound`; treat that as a workflow-import failure, not a mathematical result. Do not promote the counted-source theorem until the actual remaining compiler diagnostics are resolved and the full transitive axiom audit passes.
 
 **Scope:** this is only the local marker-0 `n=8q` S1 counted-increment premise for the TM63 24-cycle. It does not prove that the authentic blank-root orbit reaches these S1 configurations, does not establish a halt witness, and does not determine BB(6). It is distinct from the root-connected marker-0 `n=8q+4` residue-four row.
 
