@@ -347,3 +347,17 @@ The twentieth 2,040-step regular prefix and the 22nd–26th regular prefixes now
 If stage 4d succeeds, dispatch stage 3c with its run ID and artifact `d-root-stage3b4d`, then proceed sequentially through stages 3d/3e, 4a–4g, and 5a–5e. The final stage produces the Seed31 probe artifact `d-root-seed31-audit`, which feeds the existing Seed31 first-stop certificate workflow and then the conditional 34–38 / Seed39 probe workflow.
 
 This is a finite conditional trajectory program. Even a successful Seed31/Seed39 probe is not, by itself, a global proof of halting or nonhalting and does not determine BB(6).
+
+
+## 2026-11-24 continuation correction (submitted, CI pending)
+
+The older paragraph above describing stage 4d → stage 3c is superseded by the split fast route:
+
+- Stage 4e passed in [run 45151512096](https://github.com/FlareZ123/bb6/actions/runs/45151512096), producing `d-root-stage3b4e`.
+- Corrected stage 4f run [45297909834](https://github.com/FlareZ123/bb6/actions/runs/45297909834) used source `20509b53af45edce5b8a145e8714245d3d225cdd` and extension `ba79ee7587df9a806f2a77e7cdca2f1b84312152`. Attempt 1 ended with runner shutdown (exit 143) before any Lean diagnostic; this is infrastructure failure, not a mathematical counterexample or source rejection. Its failed job was requeued as attempt 2 at 2026-11-24 04:53:51Z; check that attempt before proceeding.
+- The current `.github/workflows/agent2-d-root-stage3b-fast64.yml` (main commit `58f8de8621d051e520b2a2917c9f7f01953e5ef2`) routes stage 5 from `d-root-stage3b4f` to `d-root-stage3b5`, then stage 6 to `d-root-stage3b6`. Dispatch stages 5 and 6 only after their exact predecessor artifacts succeed, using `ref=main`, source pin `20509...`, and extension pin `ba79...`.
+- Then use `.github/workflows/agent25-eleventh-root.yml` stage 3c with `d-root-stage3b6`, source pin `20509...`, and `extension_ref=main`. Current main's `BlankTwentiethEscape.lean` imports `BlankNineteenthRejoin`, matching the stage-6 artifact; the older `cb2d702...` extension has the stale `NineteenthReentryComplete` import.
+
+The arithmetic replay for the submitted `seed31` has already corrected the old conditional q=4 lookahead: the two independent BigInt searches give first undefined DRegular successor after 12,267 transitions, with `a mod 59049 = 39637`, `q=8`, `b=1`. See [seed31-38-exact-replay.md](../agent2-root-language-exit/seed31-38-exact-replay.md) and `Seed31FirstStopCertificate.lean`. The q=8 E/A return to seed32 and later seed33–39 modules remain submitted candidates, not kernel-verified blank-root continuations. Episodes 19–30 must first pass the staged original-source CI chain.
+
+No result here establishes D0 halting/nonhalting or changes BB(6). Keep the entire continuation in `im-results/` until a complete original-source proof and axiom audit pass.
