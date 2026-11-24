@@ -1,6 +1,15 @@
 name: Agent 7 weak-margin two-tier odd fork source check (manual)
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        description: "Use third-packet to stop after the source-integrated packet theorem"
+        type: choice
+        options:
+          - full
+          - third-packet
+        default: full
+        required: true
 permissions:
   contents: read
 jobs:
@@ -98,6 +107,13 @@ jobs:
           lean -o "$b/RayTwoTierNoTwo.olean" "$b/RayTwoTierNoTwo.lean"
           lean -o "$b/RayExceptionalDisjoint.olean" "$b/RayExceptionalDisjoint.lean"
           lean -o "$b/RayTThreeGap.olean" "$b/RayTThreeGap.lean"
+          lean -o "$g/RayDepthHensel.olean" "$g/RayDepthHensel.lean"
+          lean -o "$g/RayDepthResidue.olean" "$g/RayDepthResidue.lean"
+          lean -o "$g/ThirdForkPacketSource.olean" "$g/ThirdForkPacketSource.lean"
+          if [ "${{ inputs.target }}" = "third-packet" ]; then
+            echo "Agent 7 third-fork packet source theorem certified."
+            exit 0
+          fi
           lean -o "$b/RayTwoTierTThreeSelector.olean" "$b/RayTwoTierTThreeSelector.lean"
           lean -o "$g/EvenChainGap.olean" "$g/EvenChainGap.lean"
           lean -o "$g/EvenChainFork.olean" "$g/EvenChainFork.lean"
