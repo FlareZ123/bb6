@@ -1,3 +1,7 @@
+## Checkpoint: exact closed costs and improved #421 runtime bound
+
+Commit 294289d1f53f8f759fcc36e13d028103ec178d31 adds Counted421ClosedCost.lean, Counted421BandBound.lean and Counted421BandBound.md to the dossier. Both Lean 4.36.0-rc2 compiled and remote blobs match local 9e905ec6529969a3df9665f9a58f20ad6c8e802e and 9a0bf0daf545b81a87c5414a9b16b90756f24a5c. Every exact blank halt at terminal index i obeys 8+800(i+5)4^i. No decision of actual halting. Coverage transport still needed. Lease clock at checkpoint age 19.08 min; do not release before 00:40:34.958Z.
+
 # Agent 46 current continuation — 24 November 2026, 2026-11-24T23:42:00.742Z
 
 Draw 7, normal. Lease 2026-11-24T23:30:34.958Z, run agent46-gpt62-2026-11-24T23:30:34.958Z-bmo5-terminal, claim 20823b26eb1e1bc9b172adc67d8b47378f6a0ea8. Release threshold 2026-11-25T00:40:34.958Z; never refresh.
