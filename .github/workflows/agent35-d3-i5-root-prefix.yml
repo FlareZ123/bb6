@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
-      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent35-d-regular-certificate:im-results/agent32-cryptid-padding:im-results/agent2-cryptid-continuity:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent3-portfolio-raw-conjugacy:im-results/agent19-d-physical-bridge
+      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent35-d-regular-certificate:im-results/agent32-cryptid-padding:im-results/agent2-cryptid-continuity:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent3-portfolio-raw-conjugacy:im-results/agent19-d-physical-bridge:im-results/agent31-d-exceptional
     steps:
       - uses: actions/checkout@v4
       - name: Restore exact source archives
@@ -40,6 +40,7 @@ jobs:
           P19=im-results/agent19-d-physical-bridge
           R=im-results/agent35-d3-root-1711
           lean -o "$B/Boundary.olean" "$B/Boundary.lean"
+          lean -o "$B/BoundaryExtra.olean" "$B/BoundaryExtra.lean"
           for module in DoubleZero TripleUniversalBase TripleUniversalCore TripleUniversalWalk TripleUniversal TenPump TokenCode; do
             lean -o "$A/$module.olean" "$A/$module.lean"
           done
@@ -50,6 +51,7 @@ jobs:
           lean -o "$P/Generic.olean" "$P/Generic.lean"
           lean -o "$P/BoundaryPadding.olean" "$P/BoundaryPadding.lean"
           lean -o "$H/DObsSourceCandidate.olean" "$H/DObsSourceCandidate.lean"
+          lean -o "im-results/agent31-d-exceptional/DRegularBSource.olean" "im-results/agent31-d-exceptional/DRegularBSource.lean"
           lean -o "$D/BRegularSource.olean" "$D/BRegularSource.lean"
           lean -o "$D/AZeroSource.olean" "$D/AZeroSource.lean"
           lean -o "$D/EZeroSource.olean" "$D/EZeroSource.lean"
@@ -60,6 +62,7 @@ jobs:
           lean -o "$S/CryptidSix.olean" "$S/CryptidSix.lean"
           lean -o "$S/CryptidPairs.olean" "$S/CryptidPairs.lean"
           lean -o "$S/CryptidTriplePairs.olean" "$S/CryptidTriplePairs.lean"
+          lean -o "$C/EDouble.olean" "$C/EDouble.lean"
           lean -o "$D/ERemaining.olean" "$D/ERemaining.lean"
           for module in MachineConjugacy DTableWitness DStartFinite DSectionTransfer DAllStarts DExactTimes DParseRLE DSourceCorollaries; do
             lean -o "$P3/$module.olean" "$P3/$module.lean"
@@ -72,8 +75,14 @@ jobs:
           lean -o "$P19/UnaryBridge.olean" "$P19/UnaryBridge.lean"
           lean -o "$P19/RootTransfer.olean" "$P19/RootTransfer.lean"
           lean -o "$P19/ExactTime.olean" "$P19/ExactTime.lean"
+          lean -o "$R/I5Root1711.olean" "$R/I5Root1711.lean"
           lean "$R/I5Root1711.lean" 2>&1 | tee /tmp/i5-root1711.log
           if grep -q 'sorryAx' /tmp/i5-root1711.log; then
             echo 'Unexpected sorryAx in I5 root certificate' >&2
+            exit 1
+          fi
+          lean "$R/I5ExceptionalRejoin.lean" 2>&1 | tee /tmp/i5-exceptional-rejoin.log
+          if grep -q 'sorryAx' /tmp/i5-exceptional-rejoin.log; then
+            echo 'Unexpected sorryAx in I5 exceptional rejoin certificate' >&2
             exit 1
           fi
