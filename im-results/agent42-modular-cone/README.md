@@ -1,33 +1,66 @@
-# Sign-free modular inverse cones for Machine C
+# Agent 42: source-connected modular inverse cones for Machine C
 
-Status: **abstract Lean kernel accepted locally**, Lean 4.36.0-rc2; source adapter written against exact current repository interfaces, not yet compiled against the full original-source dependency closure. This is an intermediate mathematical tool, not a proof of Machine C nonhalting or BB(6).
+## Current state
 
-## Core idea
+The generic inverse-cone checker and its soundness theorem are in `ModularCone.lean`. The original-source adapter is `ModularConeSource.lean); it connects the abstract parent/forbidden-image laws to the existing Machine C source reachability relation.
 
-Agent13's negative-shadow approach requires both representatives to be positive magnitudes of small negative coordinates. Instead carry a single invariant on the actual right counter: y+2 >= 3*2^b at precision b. Residues may be arbitrary signed integers, including zero, and are reduced to canonical residues at each inverse step.
+The high-stop theorem in `ModularConeHighStop.lean` is accepted by Lean 4.36.0-rc2 CI (run [45355518699](https://github.com/FlareZ123/bb6/actions/runs/45355518699)). It proves that every accepted adaptive modular cylinder excludes the corresponding original-source `CReach` target, without imposing the previous relative-growth gate. The exact high-branch criterion integration in `ModularConeHighStopCriterion.lean` also passed CI (run [45357876925](https://github.com/FlareZ123/bb6/actions/runs/45357876925)).
 
-Direct inverse: a+2=x+y and 2*k+2=y, so 2*(k+2)=y+2. This propagates the invariant at precision b-1.
+A low-stop counterpart is in `ModularConeLowStop.lean`, including a concrete source exclusion. `ModularConeStopsCriterion.lean` adds the low-stop predicate to the exact low/high criterion. The first combined run failed only on a subtraction-normalization proof in that final criterion file; the proof has been repaired and rerun as workflow run 45361871162. Its final status is pending.
 
-High inverse at depth n: Q=x+y+o=2^(n+1)*(a+2+o), o=(x+y)%2, and 2*k+a+7+3*n=x+2*y. Since x+y-a >= 2^(n+2) >= 3*n+4, we have 2*(k+2) >= y+1. Thus 2^(n+2)*(k+2) >= y+2, preserving the invariant at precision b-(n+2).
+## Mathematical setup
 
-At b>=2 the invariant implies y>=8. If the modular valuation v is known (v+1<=b), the invariant also implies Q>2^v, excluding the exceptional pure-power branches in Agent13's source parent theorem. The all-depth fan is finite, with n+2<=v. Each recursive child consumes precision, preserving both modular correspondence and the size invariant. Every accepting leaf excludes an original-source odd-image forbidden residue. An empty parent fan is also validly rejecting. Failure to accept is inconclusive.
+For a unified stop parameter pair ((J,m)), the source target has
+[
+x=2J+1,qquad y=-J-3m-4,
+]
+and the stop equation is
+[
+k+J+3m+4=2^{2m+2}(J+2).
+]
 
-## Unified stopping families
+The modular inverse cone uses the original source parent law and forbidden odd-image law. Its checker follows every parent branch admitted by the source equations; a residue cylinder is excluded only when all compatible inverse paths reach a forbidden image. The adaptive precision is capped at 32 bits.
 
-Use j=0 for the low branch and j>=1 for high index j-1. The exact stopping equation is
-```
-y+j+3*m+4 = 2^(2*m+2)*(j+2),  x=2*j+1.
-```
-It implies y+2 >= 3*2^(2*m+1), or y+2 >= 3*2^(2*m+2) when j>=2. At any such precision b, the target is congruent to (2*j+1,-j-3*m-4). Thus one accepted residue certifies all congruent (j,m) with sufficient precision budget, **without j<=3*m+1** or any relative growth restriction.
+The unified high index is (J=j+1), where (j) is the original high-branch index. The high precision is
+[
+b_H(J,m)=min(32,2m+2)quad(Jge2),
+]
+with the smaller (2m+1) precision at (J=1). The low family is (J=0), with precision (min(32,2m+1)).
 
-Concrete kernel-checked example: b=5, j=10 (mod 32), m=2 (mod 32). For all u,v>=0, j=10+32*u and m=2+32*v, the stopping target is excluded under the complete source laws. Its canonical root (21,12) needs a direct inverse, then a high inverse of depth 0; this is not just an immediate odd-image check.
+## Exact finite census
 
-## Files and verification
+The fixed eight-bit checker is a predicate on residue pairs modulo 256. The exhaustive BigInt evaluation gives:
 
-- ModularCone.lean: fully compiled standalone locally, no sorry; the axiom audits of excluded_sound, stop_excluded, stop_cylinder_excluded, example_family are [propext, Quot.sound]. It is parameterized by ParentLaw and ForbiddenLaw.
-- ModularConeSource.lean: thin original-source specialization using Agent13UnifiedShadow.source_parent_of_right_ge8, Agent13AffineCone.parent_equations, and Agent13TwoParent.odd_forbidden_image. Requires a source-closure build before marking the original-source theorem accepted.
-- probe.py: memoized exploration of exactly the modular checker; Python counts are discovery evidence, not formal universal coverage.
+| Family | Accepted cylinders | Immediate root exclusions | Recursive exclusions |
+| --- | ---: | ---: | ---: |
+| High, all (J,m\bmod256) | 39,506 / 65,536 | 16,384 | 23,122 |
+| Low, all (m\bmod256) | 163 / 256 | 64 | 99 |
 
-At precision cap 32 (actual b=min(cap,2*m+1)): 883/1024 low parameter cases m=0..1023; 13451/16129 high cases j,m=1..127; 1916/2583 high cases outside j<=3*m+1. At cap 24: 846,12932,1876 respectively. Low unresolved m<100 at full precision: 0,2,6,8,10,15,16,27,47,82,91. No inference to unbounded coverage from these counts.
+High accepted-cylinder depth histogram: 0: 16,384; 1: 9,984; 2: 6,568; 3: 4,088; 4: 1,900; 5: 514; 6: 68.
 
-Next: use the reusable modular checker inside the existing source criterion with existing exact finite-root/mass methods, and investigate the remaining symbolic residues rather than expanding isolated affine certificates. Avoid a new redundant CI workflow; append the two files to an existing compatible source-closure workflow once practical.
+Low accepted-cylinder depth histogram: 0: 64; 1: 48; 2: 26; 3: 14; 4: 8; 5: 3.
+
+For the adaptive cap-32 probe:
+- Unified high sample (J,m\in[1,127]): 13,484 / 16,129 accepted.
+- Outside the previous unified growth gate (J\le3m+1), i.e. (J>3m+1): 1,945 / 2,583 accepted.
+- Original high index (j\in[1,127]), with (J=j+1): 13,488 / 16,129 accepted; 1,983 / 2,625 are outside the old original-index gate (j\le3m).
+- Low sample (m\in[0,1023]): 883 / 1,024 accepted. Unresolved (m<100): 0, 2, 6, 8, 10, 15, 16, 22, 27, 32, 34, 43, 47, 72, 74, 82, 86, 91, 98.
+
+The census is a finite computation, not a theorem asserting the total count. The source-connected Lean theorem proves each accepted cylinder individually.
+
+## Concrete examples
+
+- High unified (J=21,m=3): the root residue is ((43,222)\pmod{256}), not an immediate forbidden image. Nevertheless the source theorem proves (
+eg CReach(43,5854)). This is outside (J\le3m+1).
+- Low (m=11): the root residue is ((1,219)\pmod{256}), not an immediate forbidden image. The source theorem proves (
+eg CReach(1,33554395)).
+
+## Reproducibility and next work
+
+`probe.py` now mirrors the Lean checker with separate recursion-fuel and modulus arguments: each inverse edge decreases recursion fuel by one, while direct and high edges consume one or (n+2) modulus bits respectively. It reports the finite census and adaptive sample counts.
+
+Next:
+1. Confirm CI run 45361871162 for the combined low/high exact criterion.
+2. Compare the modular predicates against existing affine/late filters to identify strict new exclusions, not merely redundant necessary conditions.
+3. Analyze the remaining inverse-cone survivor paths, especially cases where the valuation reaches the current precision bound.
+4. Keep all experimental code and census data here; reserve `results/` for source-certified mathematical statements and their carefully qualified finite enumerations.
