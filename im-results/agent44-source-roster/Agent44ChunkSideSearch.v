@@ -1,8 +1,7 @@
 From BusyCoq Require Import Agent47SourceChunk2 Agent47SourceWitness
   Agent8WeightedSource Agent8AdaptiveSource Agent32SourceBackwards
   Agent8PackedChunk2_32_32 Agent32SourceEncoding Enumerate62 Individual62.
-From Coq Require Import List Bool Lia Arith NArith Strings.String
-  Logic.FunctionalExtensionality.
+From Coq Require Import List Bool Lia Arith NArith Strings.String.
 Import ListNotations.
 Import TNF_Node.
 Open Scope string_scope.
@@ -10,7 +9,11 @@ Open Scope nat_scope.
 
 (* A bounded, source-native search over the exact 50 residual nodes left by
    Agent47SourceChunk2. The verifier is the original TranslatedCyclers checker,
-   not a Lean-side simulation or a heuristic acceptance predicate. *)
+   not a Lean-side simulation or a heuristic acceptance predicate.
+
+   Search the canonical parsed table, not the pre-serialization function.
+   agent32_table_roundtrip is pointwise, which is exactly the relation needed
+   by source_refinesb; no functional extensionality axiom is needed. *)
 
 Definition side_candidate := (dir * (nat * (nat * nat)))%type.
 
@@ -51,18 +54,15 @@ Definition candidate_witness (c : side_candidate) : source_witness :=
   let '(d,(entry,(period,budget))) := c in SWside d entry period budget.
 
 Lemma source_certificate_check_of_candidate bound p c :
-  side_candidate_check p c = true ->
+  side_candidate_check (TM_from_str (TM_to_str p)) c = true ->
   certificate_check bound (TM_to_str p, candidate_witness c) = true.
 Proof.
   destruct c as [d [entry [period budget]]].
-  change (source_side_check p d entry period budget = true) in H.
+  change (source_side_check (TM_from_str (TM_to_str p))
+    d entry period budget = true) in H.
   unfold candidate_witness, certificate_check, certificate_tm,
-    source_witness_check, source_side_check.
+    source_witness_check.
   cbn.
-  assert (Htm : TM_from_str (TM_to_str p) = p).
-  { apply functional_extensionality. intro s.
-    apply agent32_table_roundtrip. }
-  rewrite Htm.
   exact H.
 Qed.
 
@@ -70,7 +70,7 @@ Fixpoint search_side_roster (xs : list T) : list source_certificate :=
   match xs with
   | [] => []
   | x :: rest =>
-      match find_side_candidate (tm x) with
+      match find_side_candidate (TM_from_str (TM_to_str (tm x))) with
       | Some c =>
           (TM_to_str (tm x), candidate_witness c) :: search_side_roster rest
       | None => search_side_roster rest
@@ -82,7 +82,7 @@ Theorem search_side_roster_checked bound xs :
 Proof.
   induction xs as [|x xs IH]; cbn [search_side_roster].
   - reflexivity.
-  - destruct (find_side_candidate (tm x)) as [c|] eqn:Hfind; cbn.
+  - destruct (find_side_candidate (TM_from_str (TM_to_str (tm x)))) as [c|] eqn:Hfind; cbn.
     + apply andb_true_intro. split.
       * apply source_certificate_check_of_candidate.
         apply find_side_candidate_sound. exact Hfind.
