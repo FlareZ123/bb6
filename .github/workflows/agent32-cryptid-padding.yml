@@ -84,8 +84,8 @@ jobs:
             lean -o "$S/$module.olean" "$S/$module.lean"
           done
           lean -o "$D/ERemaining.olean" "$D/ERemaining.lean"
-          lean -o "$D/DRegularDurationShift.olean" "$D/DRegularDurationShift.lean"
           lean -o "$D/DRegularShift.olean" "$D/DRegularShift.lean"
+          lean -o "$D/DRegularDurationShift.olean" "$D/DRegularDurationShift.lean"
           lean -o "$D/DRegularTimedShift.olean" "$D/DRegularTimedShift.lean"
           lean -o "$D/DRegularSourceShift.olean" "$D/DRegularSourceShift.lean"
           lean -o "$G/GrowthBands.olean" "$G/GrowthBands.lean"
