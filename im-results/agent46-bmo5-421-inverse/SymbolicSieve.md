@@ -1,6 +1,6 @@
 # BMO5 terminal ancestry: exact geometric residue tree and compressed sieve
 
-**Paper theorem (not yet kernel-certified):** for each depth t≥0, the set of terminal indices i≥4t+10 having at least t defined inverse steps is exactly a union of 2^(t+1) distinct residue classes modulo 2·3^t. Its natural density is (2/3)^t. Every fixed depth has infinitely many survivors.
+**Kernel-certified exact residue classification:** for each depth t≥0, the set of terminal indices i≥4t+10 having at least t defined inverse steps is exactly a union of 2^(t+1) distinct residue classes modulo 2·3^t. Its natural density is (2/3)^t. Every fixed depth has infinitely many survivors.
 
 **Finite computation:** all 0≤i≤10^12 classified; no ancestry root in {1,2,3}, no unresolved cases. This concerns the shared BMO5 section reduction for #252/#421/#754. Neither the unbounded terminal existential nor BB(6) is decided.
 
@@ -28,4 +28,11 @@ Run: g++ -O3 -std=c++17 -Wall -Wextra sieve.cpp -o sieve && ./sieve 100000000000
 
 Local 24 Nov run: 8.96 seconds, peak 1540 KB, 118803816 nodes, 42169065 singleton continuations, 136296 deep continuations, maximum inverse depth 73, classified 1000000000001, unresolved 0, rootHits 0. Literal independent histogram matched C++ exactly for 0..5000. Expected blobs: C++ e2e02c666fd7a1c89cd771c813a32b0271e7403b, Python 73cac32744a697bad458286cda2271a438d75d43.
 
-The unbounded quantifier remains. Each fixed depth has survivors; the moving index/depth constraint and eventual small-root ancestry need a proof. Kernel verification and independent novelty review remain open.
+The unbounded quantifier remains. Each fixed depth has survivors; the moving index/depth constraint and eventual small-root ancestry need a proof. Independent novelty review remains open.
+
+
+## Formal proof closure
+
+The exact finite-depth residue theorem and the actual rooted-graph bridge have been accepted in [CI 45383459136](https://github.com/FlareZ123/bb6/actions/runs/45383459136), revision `6d6cf1bae45897d8a56d35a9ee6393cbc9d62d9c`, Lean 4.36.0-rc2. The workflow compiled Cap, CapInverse, CapRoot and the six CapSieve modules, rejecting sorryAx/native_decide. `CapSieve.exact_classification` proves the duplicate-free residue list of cardinality 2^(t+1), and `CapSieve.small_root_survives` / `small_root_word` establish the necessary condition for actual roots ≤3. The density limit is a mathematical corollary of the exact list theorem; the C++ computation remains separate finite evidence.
+
+The six proof files are CapSieveCore.lean, CapSieveLift.lean, CapSieveGraph.lean, CapSieveClasses.lean, CapSieveCount.lean and CapSieveSource.lean. The arithmetic proof is independent of the C++ scan. Combined with CI 45379836827, it applies to the three unchanged upstream machines via their source-root equivalences.
