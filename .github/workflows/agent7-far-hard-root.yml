@@ -1,0 +1,86 @@
+name: Agent 7 hard-root FAR search
+on:
+  workflow_dispatch:
+    inputs:
+      samples:
+        description: Guided mutation trials per DFA size and orientation
+        type: number
+        default: 3000
+      max_dfa:
+        description: Maximum DFA size (5-10)
+        type: number
+        default: 8
+permissions:
+  contents: read
+jobs:
+  hard-roster:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix:
+        shard: [0,1,2,3,4,5,6,7]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Enumerate five-state DFAs and guided larger candidates
+        run: |
+          set -euo pipefail
+          g++ -O3 -std=c++17 -Wall -Wextra -Werror im-results/agent7-far/roster_far.cpp -o /tmp/roster_far
+          SAMPLES="${{ inputs.samples }}"
+          MAX_DFA="${{ inputs.max_dfa }}"
+          [[ "$SAMPLES" =~ ^[0-9]+$ ]] && [[ "$MAX_DFA" =~ ^[0-9]+$ ]]
+          /tmp/roster_far resources/BB6_holdouts_663_2026-10-16.txt ${{ matrix.shard }} 8 "$SAMPLES" "$MAX_DFA" | tee /tmp/hits.txt
+      - name: Install Lean if there is a candidate
+        run: |
+          if [[ -s /tmp/hits.txt ]]; then
+            curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+            sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+            echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          fi
+      - name: Independently check every hit against infinite-tape semantics
+        run: |
+          set -euo pipefail
+          if [[ ! -s /tmp/hits.txt ]]; then echo 'No candidate found in this shard'; exit 0; fi
+          python tools/lean_compile_closure.py --workdir /tmp/a7-hard --jobs 4 im-results/agent7-far/FastFAR.lean
+          export LEAN_PATH=/tmp/a7-hard
+          python3 - <<'PY'
+          from pathlib import Path
+          lines = ['import FastFAR', 'open BB6Coverage BB6Coverage.FAR', 'set_option maxRecDepth 100000', 'set_option maxHeartbeats 0']
+          def arr(xs): return '[' + ','.join(map(str,xs)) + ']'
+          for row in Path('/tmp/hits.txt').read_text().splitlines():
+              words = row.split()
+              assert words[0] == 'HIT'
+              idx, code, d, rev = int(words[1]), words[2], int(words[3]), int(words[4])
+              raw = code.replace('_','')
+              p = [raw[i:i+3] for i in range(0,36,3)]
+              ts = [24 if x=='---' else 4*(ord(x[2])-65)+2*int(x[0])+int(x[1]=='R') for x in p]
+              dfa = list(map(int,words[6:6+2*d]))
+              assert words[6+2*d]=='MASK'
+              N=6*d+1
+              masks=list(map(int,words[7+2*d:7+2*d+2*N]))
+              assert words[7+2*d+2*N]=='Z'
+              z=int(words[8+2*d+2*N])
+              lines += [f'def p{idx} : PartialMachine := fromCodes {arr(ts)}',
+                        f'def c{idx} : Data {d} := ⟨0,{arr(dfa)},{arr(masks[:N])},{arr(masks[N:])},{z}⟩']
+              if rev:
+                  lines += [f'theorem hard{idx} (m : Machine) (hm : compatible p{idx} m) : NeverHalts m :=',
+                            f'  reflectNever m (c{idx}.sound (reflectPartial p{idx}) (c{idx}.fastValid_sound _ (by decide)) (reflectTable m) (reflectCompatible p{idx} m hm))']
+              else:
+                  lines += [f'theorem hard{idx} (m : Machine) (hm : compatible p{idx} m) : NeverHalts m :=',
+                            f'  c{idx}.sound p{idx} (c{idx}.fastValid_sound _ (by decide)) m hm']
+              lines += [f'#print axioms hard{idx}']
+          Path('/tmp/a7-hard/Hits.lean').write_text('\n'.join(lines)+'\n')
+          PY
+          lean /tmp/a7-hard/Hits.lean | tee /tmp/hit-proof.log
+          if grep -qE 'sorryAx|native_decide' /tmp/hit-proof.log; then exit 1; fi
+          cat /tmp/hits.txt >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: far-hard-shard-${{ matrix.shard }}
+          path: |
+            /tmp/hits.txt
+            /tmp/a7-hard/Hits.lean
+            /tmp/hit-proof.log
+          if-no-files-found: warn
