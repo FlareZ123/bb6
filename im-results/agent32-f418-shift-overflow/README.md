@@ -59,7 +59,7 @@ A normal phase-1 episode consists of odd valuations ending at the first even val
 
 [F418NormalPath.lean](F418NormalPath.lean) proves that every normal path from (268311341,29) is genuinely reachable from the arithmetic seed. It identifies NoEven with the existing OddChain language (for positive N), proves that any arithmetic termination must encounter a first pure odd-only gate, and packages all predecessor conditions in seed_none_has_restricted_predecessor. The exceptional singleton borrow is actually fatal, not merely odd-only. The nonborrow gate may instead be recoverable; the necessary conditions are not sufficient for termination.
 
-All four new modules compiled locally with Lean 4.36.0-rc2 against the exact three arithmetic dependencies, with standard axioms only (propext, Classical.choice, Quot.sound). This reduces any possible termination to the restricted predecessor set on the genuine normal path. It does not establish avoidance of that set. The next target is a root-specific high-tail invariant using insertion history.
+All four new modules compiled locally with Lean 4.36.0-rc2 against the exact three arithmetic dependencies, with standard axioms only (propext, Classical.choice, Quot.sound). This reduces any possible termination to the restricted predecessor set on the genuine normal path. It does not establish avoidance of that set. The exact cancellation criterion and recovery branch below refine this target to an invariant across the complete pure-checkpoint orbit.
 
 ## Exact counted costs
 
@@ -115,4 +115,44 @@ The exact normal-return dynamics admit a signed representation N = x + sum(2^h f
 
 The signed floor is Euclidean integer division, including for negative x. The seed is x=268311341, H=[], W=29. [F418SignedQueue.lean](F418SignedQueue.lean) proves that the signed prefix and unconsumed high powers determine the identical natural-register prefix and that the update is exact. [F418QueueInvariant.lean](F418QueueInvariant.lean) proves distinct bit positions, low-sum bounds and preservation of spacing and width.
 
-[F418QueueHistory.lean](F418QueueHistory.lean) lifts the representation to every genuine NormalPath, with P the maximum p so far and t the number of returns. It proves -2^(7P+3)<x<=2^(29-t) (natural subtraction in the exponent), and x<0 for t>=29. A terminal candidate satisfying NoEven then has no even exponent h>=7P+5 in H. This follows from the previously checked high-bit subtraction restriction applied to the sum of the distinct powers. Hence any proof of continued presence of sufficiently high opposite-parity sources excludes the odd-only gate. The existing bounds do not themselves prove that presence, and the record P can be large. All three modules compile on Lean 4.36.0-rc2 with only standard axioms. The representation permits efficient evaluation without building the full growing register.
+[F418QueueHistory.lean](F418QueueHistory.lean) lifts the representation to every genuine NormalPath, with P the maximum p so far and t the number of returns. It proves -2^(7P+3)<x<=2^(29-t) (natural subtraction in the exponent), and x<0 for t>=29. A terminal candidate satisfying NoEven then has no even exponent h>=7P+5 in H. This follows from the previously checked high-bit subtraction restriction applied to the sum of the distinct powers. Hence any proof of continued presence of sufficiently high opposite-parity sources excludes the odd-only gate. The existing bounds do not themselves prove that presence, and the record P can be large. The exact cancellation criterion below removes this historical-record dependence. All three modules compile on Lean 4.36.0-rc2 with only standard axioms. The representation permits efficient evaluation without building the full growing register.
+
+### Exact cancellation gate and complete recovery branch
+
+For a negative signed offset write d=-x>0 and M(H)=sum(2^h for h in H). Let H=P++[a]++T, where a is the first crossing source: M(P)<d<=M(P)+2^a. Then
+
+    r = M(P)+2^a-d, 0<=r<2^a
+    N = r+M(T).
+
+Every bit of the surviving tail T is intact. Consequently NoEven(N) holds **iff** NoEven(r) and every element of T is odd. This is an exact replacement for the earlier one-sided record-P exclusion, and uses the current debt rather than its historic maximum. Spacing implies 15*M(P)<2^a, hence 15*d<16*2^a. The maximum odd-position-only remainder below 2^a satisfies 3*r+2<=2^(a+(a even ? 1 : 0)); at a gate this yields (a even ? 2^a : 2^(a+1))+2<=3*d. If k=floor(log2 d), the crossing source must be at k,k+1 or k+2 (and only k or k+1 if it is odd); spacing allows at most one source in that window. [F418SparseGate.lean](F418SparseGate.lean) checks these claims in Lean rc2 (the window consequence is elementary arithmetic). This does not assert that an actual path ever reaches a gate.
+
+The previous normal-return map stops at the first odd-only pure checkpoint, but such a checkpoint need not be fatal. The missing recovery branch has the following exact paper-level derivation. Write the successive odd relative valuations as j_i=2r_i+1, set L=sum(j_i+1), E=5L/2 and e=(5*j_last+1)/2. Let C be the phase-1 episode correction as in the normal case, but accumulated through the final odd valuation. Define U=E-e-1 and D=(C/2^e+1)/2. These are positive integers. The phase-1 exit has right register 2^(W+E)+C with width W+E+1. After the following overflow its alignment-4 register is
+
+    G = 2^(W+E)-C = 2^e*(2Q+1)
+    Q = 2^(W+U)-D.
+
+If e is even this is the existing fatal branch. If e is odd the alignment-4 collision resets to phase 0 with alignment-2 register Q and
+
+    f = floor((5e+4)/2)
+    n4 = 2^(W+E+f+2)+(2^(e+3)-3)*2^f
+    w4 = W+E+f+3.
+
+The new fact is that **Q necessarily has an even-position set bit**, for every nonzero odd-only N<2^W. To see this, represent the valuations by a nonempty word with last r or more r t. Its recursive quantities satisfy
+
+    L(last r)=2r+2, U(last r)=1, D(last r)=2^(2r+2)
+    L(more r t)=2r+2+L(t)
+    U(more r t)=5r+5+U(t)
+    D(more r t)=(2^(2r+3)-1)*2^(5r+3+U(t))+D(t).
+
+The word's highest set bit is L-1, so W>=L. Induction gives D<=2^(U+L-1), and D<2^(U+L-3) for any multi-bit word. In the singleton case Q=2^(W+1)-2^L has its even bit L set. In the multi-bit case Q is between 3*2^(W+U-2) and 2^(W+U), with both top bits set. [F418RecoveryCore.lean](F418RecoveryCore.lean) kernel-checks the factorization, width and both cases of the even-bit theorem. It is a standalone arithmetic proof, not yet an imported composition with the source event map.
+
+Therefore a recoverable odd-only pure checkpoint always returns to another pure checkpoint after exactly one additional phase-0 episode and its overflow; there cannot be another odd-only episode during this recovery. For the normal prefix of Q, denote its parameters Lb,Eb,Cb and tail R=Q>>Lb. A phase-0 episode subtracts 2^(Eb-1) from the usual phase-1 correction (only the first reset differs, and the difference is propagated through the remaining shifts). Thus its next pure checkpoint has
+
+    W2 = W+E+f+3+Eb
+    N2 = 2^(W2-1)+R-[(2^(e+3)-3)*2^(f+Eb)+Cb-2^(Eb-1)].
+
+Since Q<2^(W+U), Lb<=W+U, and R=2^(W+U-Lb)-ceil(D/2^Lb), this resets the signed queue to exactly two separated sources at W+U-Lb and W2-1, and negative offset equal to minus
+
+    ceil(D/2^Lb)+(2^(e+3)-3)*2^(f+Eb)+Cb-2^(Eb-1).
+
+The closed return formulas were compared with the existing event equations on every positive prepared N<2^W for W=1,...,13 (16,369 inputs: 16,129 normal, 162 recovered, 78 fatal). This is a finite regression for the algebra, not a root-orbit result. The remaining tasks are to compose the checked core with the source event definitions, lift the queue invariant across the recovery reset, and settle actual seed reachability of the fatal language; neither a halting nor a nonhalting verdict is established.
