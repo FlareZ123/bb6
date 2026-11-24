@@ -69,6 +69,7 @@ on:
           - sourcePurePower
           - sourceCompressedMemo
           - sourceKernelCone
+          - sourceTerminalCutoff
           - sourceBoundedShadow
           - sourceExactMemo
           - sourceLowQuarterTwoForced
@@ -278,6 +279,9 @@ jobs:
               ;;
             sourceHeightConeCriterion)
               target=im-results/agent42-modular-cone/HeightConeCriterion.lean
+              ;;
+            sourceTerminalCutoff)
+              target=im-results/agent12-c-high-shadow/Agent12TerminalCutoff.lean
               ;;
             sourceKernelCone)
               target=im-results/agent12-c-high-shadow/KernelCone.lean
