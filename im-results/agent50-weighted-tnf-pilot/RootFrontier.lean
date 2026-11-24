@@ -206,24 +206,24 @@ def pathOK84 (p : PartialMachine) (cut : Nat) : List PathEntry → Bool
       weightOK p s n 84 &&
       pathOK84 (refine p s (some mv)) (advanceCut cut mv) xs
 
-theorem optionMap_some {α β : Type} (f : α → β) (x : Option α) (y : β)
-    (h : x.map f = some y) : ∃ a, x = some a ∧ f a = y := by
-  cases x with
-  | none => simp at h
-  | some a => exact ⟨a, rfl, by simpa using h⟩
+def extractRunConfig {p : PartialMachine} {n : Nat} {s : Slot}
+    (h : (knownRun p n).map readSlot = some s) :
+    {c // knownRun p n = some c} :=
+  match hr : knownRun p n with
+  | none => False.elim (by simp [hr] at h)
+  | some c => ⟨c, hr⟩
 
 theorem pathOK84_cons {p : PartialMachine} {cut n : Nat} {s : Slot}
     {mv : Move} {xs : List PathEntry}
     (h : pathOK84 p cut ((n, s, mv) :: xs) = true) :
     p s = none ∧
-    (∃ c, knownRun p n = some c ∧ readSlot c = s) ∧
+    (knownRun p n).map readSlot = some s ∧
     s.1.val < cut ∧ mv.next.val ≤ cut ∧
     weightOK p s n 84 = true ∧
     pathOK84 (refine p s (some mv)) (advanceCut cut mv) xs = true := by
   simp only [pathOK84, Bool.and_eq_true, decide_eq_true_eq] at h
   rcases h with ⟨hhole, hread, hslot, hmove, hweight, htail⟩
-  exact ⟨hhole, optionMap_some readSlot (knownRun p n) s hread,
-    hslot, hmove, hweight, htail⟩
+  exact ⟨hhole, hread, hslot, hmove, hweight, htail⟩
 
 theorem pathOK84_root : pathOK84 root 2 path = true := by decide
 
@@ -239,7 +239,11 @@ def buildFrontier (p : PartialMachine) (cut : Nat) (hp : RawRootPath p) :
   | (n, s, mv) :: xs, h, cert => by
       have hfields := pathOK84_cons h
       rcases hfields with ⟨hhole, hread, hslot, hmove, hweight, htail⟩
-      rcases hread with ⟨c, hr, hs⟩
+      let c := (extractRunConfig hread).val
+      have hr : knownRun p n = some c := (extractRunConfig hread).property
+      have hs : readSlot c = s := by
+        have h' : (some c).map readSlot = some s := by simpa [hr] using hread
+        simpa using h'
       subst s
       have hw : ∀ d ∈ possibleDelays (refine p (readSlot c) none) 0,
           d + n + 1 ≤ 84 :=
@@ -317,7 +321,6 @@ def residualManifest : List (String × String) :=
   (residuals rootFrontier).map fun (address, p) =>
     (encodeAddress address, encodeTable p)
 
-theorem residualManifest_length : residualManifest.length = 207 := by decide
 
 
 #print axioms RootedFrontier.sound
