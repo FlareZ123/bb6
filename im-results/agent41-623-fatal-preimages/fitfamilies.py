@@ -42,9 +42,9 @@ def fit(a,b,c,r):
     if A*81*P+B != c:return None
     return A,B
 
-def match(cs,r,d=0):
+def match(cs,r,d=0,coeff=6):
     s1,s2,s3=[c[0] for c in cs]
-    if len({(s.C,s.D,s.k-(6*3**(r+2*i))) for i,s in enumerate((s1,s2,s3))})!=1:return None
+    if len({(s.C,s.D,s.k-(coeff*3**(r+2*i))) for i,s in enumerate((s1,s2,s3))})!=1:return None
     u=fit(s1.u,s2.u,s3.u,r-d);v=fit(s1.v,s2.v,s3.v,r-d)
     if u is None or v is None:return None
     L=[]
@@ -53,7 +53,7 @@ def match(cs,r,d=0):
         if len(set(names))!=1 or len(set(types))!=1:return None
         w=fit(*ws,r-d-1)
         if w is None:return None
-        ch=match(children,r,d+1) if types[0]=='hit' else None
+        ch=match(children,r,d+1,coeff) if types[0]=='hit' else None
         if types[0]=='hit' and ch is None:return None
         L.append((names[0],w,types[0],ch))
     return ((s1.C,s1.D,u,v),L)
