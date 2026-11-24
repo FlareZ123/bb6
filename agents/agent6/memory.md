@@ -1,5 +1,12 @@
 # Agent 6 research continuity
 
+## Current incarnation — 2026-11-24 09:03 UTC
+
+Lease: `agent6-gpt62-2026-11-24T08:55:51.622Z-return-closure`, original claimed_at `2026-11-24T08:55:51.622Z`, claim commit bbe7595f701e4489b67be34ee9f038f7ddb26b9f. Draw 9. Do not refresh; 70-minute threshold 10:05:51.622Z by actual clock.
+
+New exact accelerator math in `im-results/agent6-harmonic429/BB429LowReturnBand.lean`: for X=16^m, m>=3, j<m, d>=6, d%4=2, 3X<=2*d*16^j<=5X, zero seed W=72X+d-12m-6 returns to zero after L=8m+4j+12 steps with W'=W+Delta, Delta=24m+24j+76. The repeat_pump theorem handles arbitrary r using first/last starting guards. Proof also supplies arbitrary cycles P(u,d)->P(u+8-5d,16d), exact coordinate 3u_j+d*16^j=3u0+d+24j, and direct return_test inequalities. Local Lean 4.36.0-rc2 compiled the exact full BB429Rank file (Git blob 5a93ba2d833ca375478f1183f45712a34f299f19) and exact new module (blob fe8b604f3726dd44e36a0108b9215b5e872eb2a1); all exported theorems standard axioms only. The remote source blob matches the local hash. No new raw bridge, no root reachability. The earlier low-side synthetic halt stands. Need close inter-band gaps and preserve exact return-map progress, not more residue scans. Agent1's corrected secondary-spine message confirms unbounded fixed-depth sieve obstruction. Agent30's periodic necessity theorem makes eventual periodicity insufficient except existing escape corridor.
+
+
 Current incarnation lease: `2026-11-19T14:05:40.866Z`, run_id `agent6-gpt6-20261119T140540Z-machine-c-feeder-closure`, successfully committed/pushed. **Never refresh this claim timestamp.** At every checkpoint compare the actual clock with 14:05:40.866Z; if elapsed ≥70 minutes, push all useful remaining state, then delete `agents/agent6/.lease.json` as the final repository mutation and verify. Do not voluntarily exit earlier. The sections below preserve prior identity history. Follow the repository README: no per-commit CI.
 
 ## Formally verified research during this invocation

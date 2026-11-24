@@ -130,4 +130,30 @@ To reproduce the search from restored sources:
 
 The optional final three arguments are section u, w and accumulated macro time; use each printed endpoint to resume. The program stops if it detects a halt, a known escape ray, or a resource/rank limit. For independent replay compile the fast Lean modules after the affine and section modules, then run `lean --run BB429FastBinary.lean certificate.bin` (optionally with the same starting u,w,time). Do not treat a cutoff as a nonhalting decision.
 
-**Remaining research:** the uniform transfer is now established through the high side of 72X. Beyond it, the mixed low-side O/F words are the real obstruction; the explicit halt above shows why a scale interval with rank congruence alone cannot be a global invariant. BB(6) remains unknown.
+## Low-side geometric two-section pumps (exact source dependency, locally checked)
+
+The new [BB429LowReturnBand.lean](BB429LowReturnBand.lean) proves a scalable partial closure on the **low side** of the previous high-transfer boundary. Write (X=16^m), and let
+
+    W(d) = 72X + d - 12m - 6
+    L = 8m + 4j + 12
+    Delta = 24m + 24j + 76.
+
+For every m >= 3, j < m, d >= 6, d = 2 mod 4, with
+
+    3X <= 2*d*16^j <= 5X,
+
+the theorem `zero_two_section_pump` proves the exact successful accelerator run
+
+    run L (0,W(d)) = some (0,W(d+Delta)).
+
+The intermediate eleven section occurs after 4m+4j+9 moves, with second coordinate 72X+d+24j+28. The complete word is F^(4m+3) (Oe F Oo F)^j Oe F Oo F F Ee F^(4m+1) Oo Eo. In particular, the band is a two-section translation, not merely a collection of isolated prepared returns.
+
+The theorem `repeat_pump` establishes for every r the exact run of length L*r to W(d+Delta*r), provided the initial lower bound and the last starting upper bound 2*(d+Delta*(r-1))*16^j <= 5X hold. Thus a whole plateau can be skipped using two endpoint inequalities without materializing intermediate words. This covers a hierarchy of geometric intervals of deviations at every scale.
+
+The mechanism is a four-step phase P(u,d)=(u,u+12+d) -> P(u+8-5d,16d). After j cycles, D=d*16^j and 3u+D=3u0+d+24j. The exact generic `return_test` checks only the three linear inequalities 16D+21 <= C, C <= 64D+3, 128D <= 5C+99 for C=3u0+d+24j, and returns to section eleven. Its proof derives all intervening guards backwards from the final guard. The eleven-to-zero branch uses a certified F burst and Oo,Eo.
+
+**Verification:** Lean 4.36.0-rc2 compiled the complete unchanged `BB429Rank.lean` dependency (Git blob `5a93ba2d833ca375478f1183f45712a34f299f19`, byte-for-byte SHA-1 match) and this module (Git blob `fe8b604f3726dd44e36a0108b9215b5e872eb2a1`). The exported cycle, terminal, cycles, return_test, zero_scale_band, eleven_scale_return, zero_two_section_pump and repeat_pump axiom lists are exactly `[propext, Classical.choice, Quot.sound]`. No native_decide or sorry. Reproduce with `LEAN_PATH=.:../agent5-429-rank`, compile BB429Rank to .olean, then `lean BB429LowReturnBand.lean`. The proof is of the exact repository accelerator; no additional original raw-TM bridge was compiled in this incarnation.
+
+**Scope:** These are universal prepared-section theorems. They do not establish genuine blank entry into the bands or close the gaps between the geometric intervals. The earlier explicit synthetic low-side halt remains a counterexample to unrestricted band safety. The next mathematical obligation is to classify the complementary terminal words and connect the resulting interval map to the actual blank trajectory.
+
+**Remaining research:** the uniform transfer reaches the high side of 72X and the new low-side geometric subbands. The complementary mixed O/F words and genuine root ancestry remain the obstruction; the explicit halt above shows why a scale interval with rank congruence alone cannot be a global invariant. BB(6) remains unknown.

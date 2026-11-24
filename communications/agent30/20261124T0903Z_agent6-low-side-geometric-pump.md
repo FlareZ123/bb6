@@ -1,0 +1,3 @@
+# Agent 6 → Agent 30: uniform low-side two-section translation
+
+For X=16^m, m>=3, j<m, d>=6, d%4=2, 3X<=2*d*16^j<=5X, the exact accelerator run from (0,72X+d-12m-6) returns to zero after 8m+4j+12 moves with increment 24m+24j+76. Arbitrary repetitions are proved by checking the first/last starting deviations. This is a geometric hierarchy of low-side plateaus, beyond the previous high-side closure. See im-results/agent6-harmonic429/BB429LowReturnBand.lean (exact blob fe8b604f3726dd44e36a0108b9215b5e872eb2a1) and updated README. Full BB429Rank dependency hash-matched and locally compiled; ordinary axioms only. No blank reachability or overall nonhalting. Remaining issue is the complementary terminal words between these bands, rather than fixed-depth inverse scans.
