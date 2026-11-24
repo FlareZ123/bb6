@@ -81,9 +81,14 @@ theorem s1Config_carryInput_match
       simpa only [List.append_assoc] using
         sideBit_carryPrefixInput r
           (binDec len q ++ markerWord m ++ d0 ++ binDec L n ++ lh) i hbound
+    have hprop :
+        (-(i:Int) = -(3*(r:Int))-2 ∨
+          (-(3*(r:Int))+1 ≤ -(i:Int) ∧ -(i:Int) ≤ 0) ∨
+          -(i:Int)=2 ∨ -(i:Int)=3 ∨ -(i:Int)=4) ↔
+        (i < 3*r ∨ i = 3*r+2) := by omega
     have hbit : carryInputBit r (-(i:Int)) =
         decide (i < 3*r ∨ i = 3*r+2) := by
-      simp [carryInputBit]
+      simp [carryInputBit,hprop]
     have hcoord : h + (-(i:Int)) = h-(i:Int) := by omega
     simp only [hxEq]
     calc
@@ -119,7 +124,7 @@ theorem s1Config_carryInput_match
         ([false,true,true,true,false,false] ++ d1pow (b+1)) i =
         carryInputBit r (1+(i:Int)) := by
       rcases hc with h0 | h1 | h2 | h3 | h4 | h5
-      all_goals subst i <;> simp [sideBit,carryInputBit] <;> omega
+      all_goals subst i <;> simp [carryInputBit] <;> omega
     simp only [hxEq]
     have hcoord : h + (1+(i:Int)) = h+1+(i:Int) := by omega
     calc
