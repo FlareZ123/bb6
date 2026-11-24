@@ -55,6 +55,7 @@ def main():
     rows = []
     distribution = Counter()
     by_depth = defaultdict(list)
+    holes_by_depth = defaultdict(Counter)
     for entry in manifest["entries"]:
         result = simulate(entry["table"])
         rows.append({
@@ -68,14 +69,18 @@ def main():
         distribution[result["kind"] + ("@" + str(result["step"]) if result["kind"] == "hole" else "")] += 1
         if result["kind"] == "hole":
             by_depth[entry["depth"]].append(result["step"])
+            holes_by_depth[entry["depth"]][result["slot"]] += 1
     summary = {
         "schema": "bb6.partial-first-hole-analysis.v1",
+        "source": "im-results/agent13-roster-convergence/canonical-124.json",
+        "method": "Deterministic partial-machine simulation from blank. Stop at the first unassigned transition. Before each step, compare the state and the complete nonzero tape pattern normalized relative to the head; a repeated normalized configuration would certify a translating cycle. This only describes the forced prefix and is not a halting/nonhalting certificate for completions.",
         "sample_count": len(rows),
         "distribution": dict(sorted(distribution.items())),
         "by_depth": {
             str(depth): {
                 "count": len(steps),
                 "steps": sorted(steps),
+                "holes": dict(sorted(holes_by_depth[depth].items())),
                 "min": min(steps),
                 "max": max(steps),
             }
