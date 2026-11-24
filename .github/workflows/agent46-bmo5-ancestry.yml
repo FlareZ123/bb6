@@ -6,7 +6,7 @@ on:
       target:
         description: Verification target
         type: choice
-        options: [source, sieve]
+        options: [source, sieve, macro]
         default: source
         required: true
 
@@ -25,10 +25,10 @@ jobs:
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Reclaim disk for Mathlib cache
-        if: inputs.target == 'source'
+        if: inputs.target == 'source' || inputs.target == 'macro'
         run: sudo rm -rf /usr/local/lib/android /opt/hostedtoolcache /usr/share/dotnet /usr/share/swift /usr/local/share/powershell
       - name: Checkout pinned original modules
-        if: inputs.target == 'source'
+        if: inputs.target == 'source' || inputs.target == 'macro'
         run: |
           git clone --quiet https://github.com/google-deepmind/cryptids.git /tmp/cryptids
           cd /tmp/cryptids
@@ -40,7 +40,7 @@ jobs:
           lake update
           lake exe cache get
       - name: Compile all three original machine modules
-        if: inputs.target == 'source'
+        if: inputs.target == 'source' || inputs.target == 'macro'
         working-directory: /tmp/cryptids
         run: |
           lake build \
@@ -48,7 +48,7 @@ jobs:
             BusyBeaver.BB6.M_1RB0LD_1LC0RA_1RA1LB_1LA1LE_1RF0LC_HHH0RE \
             BusyBeaver.BB6.M_1RB1LC_1RC0LD_1LA0RB_1LB1LE_1RF0LA_HHH0RE
       - name: Prove shared rooted reduction with actual source
-        if: inputs.target == 'source'
+        if: inputs.target == 'source' || inputs.target == 'macro'
         working-directory: /tmp/cryptids
         shell: bash
         run: |
@@ -59,8 +59,21 @@ jobs:
           for m in Cap CapInverse CapRoot CapMulti; do
             lake env lean -o ".lake/build/lib/lean/$m.olean" "$m.lean"
           done
-          lake env lean CapSource.lean 2>&1 | tee "$RUNNER_TEMP/cap-source.log"
+          lake env lean -o ".lake/build/lib/lean/CapSource.olean" CapSource.lean 2>&1 | tee "$RUNNER_TEMP/cap-source.log"
           if grep -Eq 'sorryAx|native_decide' "$RUNNER_TEMP/cap-source.log"; then
+            exit 1
+          fi
+      - name: Compile exact forward macro against source closure
+        if: inputs.target == 'macro'
+        working-directory: /tmp/cryptids
+        shell: bash
+        run: |
+          set -euo pipefail
+          for m in CapSieveCore CapSieveLift CapSieveGraph CapSieveClasses CapSieveSource CapBandInverse CapBandRun CapBmo CapBmoSource CapPositiveMacroCore CapForwardMacro CapForwardMacroReach CapForwardMacroSource; do
+            cp "$GITHUB_WORKSPACE/im-results/agent46-bmo5-421-inverse/$m.lean" "$m.lean"
+            lake env lean -o ".lake/build/lib/lean/$m.olean" "$m.lean" 2>&1 | tee -a "$RUNNER_TEMP/cap-macro.log"
+          done
+          if grep -Eq 'sorryAx|native_decide' "$RUNNER_TEMP/cap-macro.log"; then
             exit 1
           fi
       - name: Compile symbolic sieve and exact root bridge
