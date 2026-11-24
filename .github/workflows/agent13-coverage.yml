@@ -5,7 +5,7 @@ on:
       target:
         description: 'Source closure to verify'
         type: choice
-        options: [legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole, weighted-tnf-four-hole, weighted-tnf-four-hole-sibling, weighted-tnf-r1-sweep, queue-orbit, weighted-tnf-roster-convergence]
+        options: [legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole, weighted-tnf-four-hole, weighted-tnf-four-hole-sibling, weighted-tnf-r1-sweep, queue-orbit, weighted-tnf-roster-convergence, weighted-tnf-pure-residuals]
         default: legacy
 permissions:
   contents: read
@@ -198,6 +198,20 @@ jobs:
           python tools/lean_compile_closure.py --workdir /tmp/a47-r1-sweep --jobs 4 im-results/agent47-r4-counter/R4Parent.lean | tee /tmp/a47-r1-sweep.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a47-r1-sweep.log; then
             echo "Forbidden proof placeholder or native_decide found in r1 sweep closure" >&2
+            exit 1
+          fi
+
+      - name: Experimental compile of pure four-hole residual projection
+        if: inputs.target == 'weighted-tnf-pure-residuals'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          export LEAN_PATH=im-results/agent8-coverage-contract:im-results/agent4-coverage-smoke:im-results/agent42-coverage-normal:im-results/agent13-coverage:im-results/agent13-weighted-first-one:im-results/agent6-fresh-glider:im-results/agent7-far:im-results/agent31-three-hole-tnf:im-results/agent50-weighted-tnf-pilot:im-results/agent13-roster-convergence:im-results/agent44-source-roster
+          python tools/lean_compile_closure.py --workdir /tmp/a44-pure-residuals --jobs 4 im-results/agent44-source-roster/PureFourHoleResiduals.lean | tee /tmp/a44-pure-residuals.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a44-pure-residuals.log; then
+            echo "Forbidden proof placeholder or native_decide found in pure residual projection" >&2
             exit 1
           fi
 
