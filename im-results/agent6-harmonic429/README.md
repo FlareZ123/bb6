@@ -12,6 +12,8 @@ The rooted machine is `1RB0LF_1RC1RA_0RD0RB_1LE---_0LA1LE_1RD1LA`. The pinned [C
 
 ## Missing blank-root result
 
+**Branch-9 inverse-search obstruction.** [ZeroTwoSpine.md](ZeroTwoSpine.md) and its Lean theorem `congruence_spine` establish that, at every fixed inverse depth d, all diagonal feeder parameters `m=2+2^(d+6)r` (r>0) have exact positive-coordinate F-only predecessor paths whose every vertex passes the current mod-64/mod-32 sieve. Thus a uniform fixed-depth proof cannot close this feeder with that predicate. The next step is a valuation-dependent F-burst reduction and control of its side exits and first even ancestor. This is a proof-method limitation, not a rooted machine decision.
+
 None of the surviving necessary gates has been shown reachable by the authentic blank orbit; there is also no uniform nonreachability proof. The presence of parametric **synthetic** halting states in arbitrary moduli does not establish actual blank ancestry. See the [all-moduli limitation](../agent6-429-coprime-moduli/AllMixedModuliZeroSector.md).
 
 [Q0Mod128SixRows.md](Q0Mod128SixRows.md) records a new provisional inverse-tree reduction: six of the sixteen `u mod 16` sectors of the outstanding `(n mod 32, d mod 16) = (23, 7)` q0 family appear excluded using the existing positive-even-eight root invariant. It is not yet compiled against the full source dependency closure, and ten sectors remain open; do not treat it as an integrated result.
