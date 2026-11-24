@@ -333,7 +333,9 @@ theorem low_stop_m67_z14_mod64_unreachable
     dsimp [t] at *
     omega
   intro hr
-  have hR := BB6.Agent13One307.four_step_to_rectangle u hr
+  have hr' : BB6.Agent3.CReach 1 (256*u+51) := by
+    simpa [hk] using hr
+  have hR := BB6.Agent13One307.four_step_to_rectangle u hr'
   exact low_ray_z14_mod64_unreachable t u hu hR
 
 #print axioms low_ray_z14_mod64_unreachable
