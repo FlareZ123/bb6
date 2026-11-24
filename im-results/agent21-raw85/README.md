@@ -16,7 +16,7 @@ The existing 121-entry DFA bank finds 101 candidates under the Python mask routi
 
 Canonical restricted-growth DFA enumeration matching `FAR.dfaList` through 5 states found valid start-preserving candidates for 14 of those 22 leaves (sizes 4 or 5). Candidate lookup keys and DFAs are in `dfa-candidates.txt`. These are search outputs only: they still need exact Lean `Data.fastValid` checks.
 
-The eight remaining tables are listed in `smt-frontier.txt`. Eight targeted Agent7 composed-SMT workflow runs completed successfully; for each run, the shard-0 steps “Install Lean if there is a candidate” and “Independently check every hit against infinite-tape semantics” both succeeded. Run IDs, in table order:
+The eight remaining tables are listed in `smt-frontier.txt`. Eight targeted Agent7 composed-SMT workflow runs completed successfully; for each run, the shard-0 steps “Install Lean if there is a candidate” and “Independently check every hit against infinite-tape semantics” both succeeded. However, a direct comparison of the first artifact's HIT row with the first `smt-frontier.txt` entry exposed a target-code mismatch. Therefore these eight artifacts must be treated as candidate sources, not as certificates for the eight listed frontier tables. The updated recovery workflow preserves each artifact's actual source table and DFA in `smt-candidates-provenance.md`, then tests the DFA against the actual raw85 destination leaves. Run IDs:
 
 - `45498610882`
 - `45498649689`
@@ -27,14 +27,14 @@ The eight remaining tables are listed in `smt-frontier.txt`. Eight targeted Agen
 - `45498691122`
 - `45498700780`
 
-The SMT hits are workflow-validated, but their DFA data still needs to be committed or transferred from the artifacts before the full tree can be generated.
+The SMT hits are workflow-validated for their own source tables, but the artifact target mismatch means they do not automatically close the eight `smt-frontier.txt` tables. Their DFA strings are now recovered as untrusted cross-key candidates; the generated parent-tree Lean audit must establish which actual raw85 leaves they cover.
 
 ## Next actions
 
-1. Obtain the eight hit DFAs from Agent7's workflow artifacts.
-2. Add the 14 canonical candidates and eight SMT hits to a dedicated raw85 DFA data set.
-3. Add the missing `dfa[0]=0` check to the Python mask candidate filter; keep Lean `Data.fastValid` as the trust boundary.
-4. Run the repaired dynamic-split generator over all 24 first-hole children and compile the entire audit with Lean.
+1. Run the updated artifact-recovery workflow and preserve the eight actual source-table/DFA records; do not equate them with the eight `smt-frontier.txt` entries.
+2. Try all 14 canonical and eight SMT DFAs as untrusted candidates against each actual raw85 open destination table.
+3. Compile the generated 24-child parent tree with Lean; any accepted `.far` leaf must pass the actual `Data.fastValid` check.
+4. If any of the eight listed frontier tables remain uncovered, synthesize candidates specifically for those destination tables rather than assuming the old run IDs cover them.
 5. Only after the full audit compiles, integrate the resulting theorem into the 124-table roster and update the human-readable research synthesis.
 
 Do not move this file into `results/` until the full source-checked parent-tree theorem exists.
