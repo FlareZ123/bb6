@@ -57,9 +57,10 @@ private theorem allVisit_complete (reach : P → Prop) (visit : P → Cache → 
     obtain ⟨hs,hcs⟩ := hv p (by simp) c hc
     cases he : visit p c with
     | mk v c' =>
-      rw [he] at hs hcs
+      have hv' : v = true := by simpa only [he, Prod.fst] using hs
       subst v
-      simpa only [allVisit,he,ite_true] using ih c' hcs (fun q hq => hv q (by simp [hq]))
+      have hcs' : cacheSound reach c' := by simpa only [he, Prod.snd] using hcs
+      simpa only [allVisit,he,ite_true] using ih c' hcs' (fun q hq => hv q (by simp [hq]))
 
 /-- Cache only proved excluded states; failure never contaminates a later call with more fuel. -/
 def memo (parents : P → List P) (bad : P → Bool) (seed : P) :
@@ -178,7 +179,11 @@ theorem sourceReach_iff (p : P) : sourceReach p ↔ p=(5,1) ∨ ∃ q∈sourcePa
     cases n with
     | zero =>
       left
-      simpa [BB6.Agent8Section.run] using hn.symm
+      cases p with
+      | mk x y =>
+        simp [BB6.Agent8Section.run] at hn
+        rcases hn with ⟨rfl, rfl⟩
+        rfl
     | succ n =>
       change (run secNext n (some (5,1))).bind secNext = some p at hn
       cases he : run secNext n (some (5,1)) with
@@ -225,5 +230,4 @@ theorem exactDecision_iff (x y : Nat) :
 
 #print axioms exactExcluded_sound
 #print axioms exactDecision_iff
-  (fun m => exactDecision 1 (2^(2*m+3)-(3*m+4)))
 end BB6.Agent13ExactMemo
