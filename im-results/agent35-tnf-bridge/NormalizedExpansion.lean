@@ -1,3 +1,8 @@
+import Frontier
+import Symmetry
+
+namespace BB6Coverage
+
 def swapFun (a b s : Fin 6) : Fin 6 :=
   if s = a then b else if s = b then a else s
 
