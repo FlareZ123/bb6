@@ -241,6 +241,8 @@ theorem readOneHalter_weighted_cover (B : Nat) (hB : 8 <= B) :
   .leaf readOneHalter (readOneHalter_weighted B hB)
 
 #print axioms first_hole_weighted_halt_of_margin
+#print axioms first_hole_tnf_cover_of_margin
+#print axioms last_hole_sound_of_margin
 #print axioms readOneParent_run
 #print axioms readOneHalter_delay_one
 #print axioms readOneHalter_delay_five
