@@ -571,14 +571,14 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for m in RootFrontier RecursiveResidual DepthEightSiblingData1 DepthEightSiblingData2 DepthEightSiblingData3 DepthEightSiblingData4 DepthEightSiblingCoverage BlockPumpWitness BlockPumpData1 BlockPumpData2 BlockPumpData3 BlockPumpData4 BlockPumpCoverage; do
+          for m in RootFrontier RecursiveResidual DepthEightSiblingData1 DepthEightSiblingData2 DepthEightSiblingData3 DepthEightSiblingData4 DepthEightSiblingCoverage BlockPumpWitness BlockPumpData1 BlockPumpData2 BlockPumpData3 BlockPumpData4 BlockPumpCoverage ExceptionalPumps ExceptionalCoverage; do
             cp "$GITHUB_WORKSPACE/im-results/agent50-weighted-tnf-pilot/$m.lean" BB6Agent42/
           done
           for m in SevenRoster SevenSideWitnesses RootFrontierR1R4; do
             cp "$GITHUB_WORKSPACE/im-results/agent47-rooted-tnf/$m.lean" BB6Agent42/
           done
           export LEAN_PATH=BB6Agent42
-          for m in RootFrontier SevenRoster SevenSideWitnesses RootFrontierR1R4 RecursiveResidual DepthEightSiblingData1 DepthEightSiblingData2 DepthEightSiblingData3 DepthEightSiblingData4 DepthEightSiblingCoverage BlockPumpWitness BlockPumpData1 BlockPumpData2 BlockPumpData3 BlockPumpData4 BlockPumpCoverage; do
+          for m in RootFrontier SevenRoster SevenSideWitnesses RootFrontierR1R4 RecursiveResidual DepthEightSiblingData1 DepthEightSiblingData2 DepthEightSiblingData3 DepthEightSiblingData4 DepthEightSiblingCoverage BlockPumpWitness BlockPumpData1 BlockPumpData2 BlockPumpData3 BlockPumpData4 BlockPumpCoverage ExceptionalPumps ExceptionalCoverage; do
             log="/tmp/cryptids-source-audit/$m-rooted-shard.log"
             lake env lean -o "BB6Agent42/$m.olean" "BB6Agent42/$m.lean" 2>&1 | tee "$log"
             if grep -Eq 'sorryAx|native_decide' "$log"; then
