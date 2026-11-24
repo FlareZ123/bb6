@@ -25,6 +25,13 @@ Proof.
   exact Hspec.
 Qed.
 
+Lemma agent5_halts_alias (tm0 : TM) :
+  DHTMFromTM.TM.halts tm0 DHTMFromTM.TM.c0 <-> halts tm0 c0.
+Proof.
+  unfold DHTMFromTM.TM.halts, halts.
+  split; intros [n H]; exists n; exact H.
+Qed.
+
 Lemma agent5_decide_nonhalt_sound (tm0 : TM) arg :
   decide_nonhalt tm0 arg = true ->
   ~ halts tm0 c0.
@@ -32,7 +39,9 @@ Proof.
   intro H.
   pose proof (decide_nonhalt_spec tm0 arg H) as Hn.
   rewrite <- DHTMFromTM.TM.halts_halts' in Hn.
-  exact Hn.
+  intro Hhalts.
+  apply Hn.
+  exact (proj2 (agent5_halts_alias tm0) Hhalts).
 Qed.
 
 Theorem agent5_decider_sound (tm0 : TM) :
