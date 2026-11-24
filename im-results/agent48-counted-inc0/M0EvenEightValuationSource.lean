@@ -500,7 +500,15 @@ theorem m0EvenEight_valuation_q4_prefix_run_of_leftFacing
     simp only [Option.bind_some]
     rw [run_append,hBridge]
     simp only [Option.bind_some]
-    rw [run_append,hBubble]
+    have hBridgeConfig :
+        frameAt T1 hN bridgeInside44 (bridgeMidWithBit bit) =
+          (⟨3,hH,T2⟩ : Config) := by
+      apply config_ext_by_fields
+      · rfl
+      · dsimp [frameAt,bridgeMidWithBit,hH]
+        omega
+      · rfl
+    rw [run_append,hBridgeConfig,hBubble]
     simp only [Option.bind_some]
     rw [run_append,hExit]
     simp only [Option.bind_some]
