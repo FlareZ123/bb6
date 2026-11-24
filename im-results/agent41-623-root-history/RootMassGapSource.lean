@@ -118,6 +118,16 @@ theorem run_79_exact :
     run 79 = some (.D 188536700 727823788) := by
   decide +kernel
 
+/-- Exact original-source blank-root anchor at index 80. -/
+theorem run_80_exact :
+    run 80 = some (.D 539287086 565610137) := by
+  decide +kernel
+
+/-- Exact original-source blank-root anchor at index 81. -/
+theorem run_81_exact :
+    run 81 = some (.D 26323038 1617861312) := by
+  decide +kernel
+
 /-- A second skipped root-mass interval, between indices 77 and 78. -/
 theorem run_avoids_mass_interval_77_78 (n a d : Nat)
     (h : run n = some (.D a d)) :
@@ -143,6 +153,40 @@ theorem run_avoids_mass_interval_78_79 (n a d : Nat)
     have hn' : 79 ≤ n := by omega
     have hm := run_mass_mono 79 n hn' 188536700 727823788 run_79_exact h
     omega
+
+/-- A fourth skipped root-mass interval, between indices 80 and 81. -/
+theorem run_avoids_mass_interval_80_81 (n a d : Nat)
+    (h : run n = some (.D a d)) :
+    a + d ≤ 1104897223 ∨ 1644184350 ≤ a + d := by
+  by_cases hn : n ≤ 80
+  · left
+    have hm := run_mass_mono n 80 hn a d 539287086 565610137 h run_80_exact
+    omega
+  · right
+    have hn' : 81 ≤ n := by omega
+    have hm := run_mass_mono 81 n hn' 26323038 1617861312 run_81_exact h
+    omega
+
+/-- The first ell=20 member of Agent 1's cone-only family is not root-reachable. -/
+theorem cone_only_ell20_r1_not_root (n : Nat) :
+    run n ≠ some (.D 602667616 150666804) := by
+  intro h
+  have hm := run_avoids_mass_interval_78_79 n 602667616 150666804 h
+  omega
+
+/-- The second ell=20 member of Agent 1's cone-only family is not root-reachable. -/
+theorem cone_only_ell20_r2_not_root (n : Nat) :
+    run n ≠ some (.D 947041384 236760246) := by
+  intro h
+  have hm := run_avoids_mass_interval_80_81 n 947041384 236760246 h
+  omega
+
+/-- The third ell=20 member of Agent 1's cone-only family is not root-reachable. -/
+theorem cone_only_ell20_r3_not_root (n : Nat) :
+    run n ≠ some (.D 1291415152 322853688) := by
+  intro h
+  have hm := run_avoids_mass_interval_80_81 n 1291415152 322853688 h
+  omega
 
 /-- The source of the v3 state-locality counterexample is not root-reachable:
     its mass lies strictly between the exact root masses at indices 77 and 78. -/
@@ -173,5 +217,11 @@ theorem v3_counterexample_target_not_root (n : Nat) :
 #print axioms run_avoids_mass_interval_78_79
 #print axioms v3_counterexample_source_not_root
 #print axioms v3_counterexample_target_not_root
+#print axioms run_80_exact
+#print axioms run_81_exact
+#print axioms run_avoids_mass_interval_80_81
+#print axioms cone_only_ell20_r1_not_root
+#print axioms cone_only_ell20_r2_not_root
+#print axioms cone_only_ell20_r3_not_root
 
 end BB6.Agent41RootHistory
