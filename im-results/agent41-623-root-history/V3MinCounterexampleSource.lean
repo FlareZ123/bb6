@@ -41,6 +41,42 @@ theorem buffer_exponent_20 :
     34*20+122=802 ∧ 3^6 ≤ 802 ∧ 802 < 3^7 := by
   norm_num
 
+/-- Stronger source-authentic transition: even the weaker v3(min)<=k
+    predicate is not forward-closed on the affine cone. -/
+theorem v3_at_k_counterexample_step :
+    highLevelNext (.D 465026190 116256546) =
+      some (.D 348769638 348769680) := by
+  decide +kernel
+
+/-- The stronger counterexample's source and target both have ell_S=20. -/
+theorem v3_at_k_source_mass_depth_20 :
+    3^19 < 2*(465026190+116256546)+7 ∧
+    2*(465026190+116256546)+7 ≤ 3^20 := by
+  norm_num
+
+theorem v3_at_k_target_mass_depth_20 :
+    3^19 < 2*(348769638+348769680)+7 ∧
+    2*(348769638+348769680)+7 ≤ 3^20 := by
+  norm_num
+
+/-- The stronger counterexample's source smaller counter has exact v3=7. -/
+theorem v3_at_k_source_min_v3_seven :
+    3^7 ∣ 116256546 ∧ ¬ 3^8 ∣ 116256546 := by
+  norm_num
+
+/-- The stronger counterexample's target smaller counter has exact v3=8. -/
+theorem v3_at_k_target_min_v3_eight :
+    3^8 ∣ 348769638 ∧ ¬ 3^9 ∣ 348769638 := by
+  norm_num
+
+/-- The weaker candidate v3(min)<=k holds at the source (7<=7). -/
+theorem v3_at_k_source_satisfies_candidate :
+    7 ≤ 7 := by omega
+
+/-- The weaker candidate v3(min)<=k fails at the target (8>7). -/
+theorem v3_at_k_target_violates_candidate :
+    ¬ 8 ≤ 7 := by omega
+
 /-- The source smaller counter has exact 3-adic valuation 5. -/
 theorem source_min_v3_five :
     3^5 ∣ 116226414 ∧ ¬ 3^6 ∣ 116226414 := by
@@ -60,6 +96,11 @@ theorem target_violates_candidate :
     ¬ 6 ≤ 7-2 := by omega
 
 #print axioms v3_candidate_counterexample_step
+#print axioms v3_at_k_counterexample_step
+#print axioms v3_at_k_source_mass_depth_20
+#print axioms v3_at_k_target_mass_depth_20
+#print axioms v3_at_k_source_min_v3_seven
+#print axioms v3_at_k_target_min_v3_eight
 #print axioms source_mass_depth_20
 #print axioms target_mass_depth_20
 #print axioms buffer_exponent_20
