@@ -70,5 +70,6 @@ jobs:
           lean -o im-results/agent7-far/FastFAR.olean im-results/agent7-far/FastFAR.lean
           lean -o im-results/agent7-far/WeightedTNFBridge.olean im-results/agent7-far/WeightedTNFBridge.lean
           lean -o im-results/agent6-fresh-glider/FreshRayGlider.olean im-results/agent6-fresh-glider/FreshRayGlider.lean
+          lean -o im-results/agent7-far/FARWeightedTNFExample.olean im-results/agent7-far/FARWeightedTNFExample.lean
           lean -o im-results/agent13-weighted-first-one/WeightedTNFExamples.olean im-results/agent13-weighted-first-one/WeightedTNFExamples.lean
           lean im-results/agent13-weighted-first-one/WeightedFirstOneCover.lean
