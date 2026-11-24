@@ -74,7 +74,7 @@ theorem residualHasWitness_eq_pure (q : PartialMachine) :
 
 /-- Pure, executable version of Agent31's 124-table residual roster. -/
 def pureRemainingRootRoster : List (List Move × PartialMachine) :=
-  (pureResiduals root (path.take 7)).filter fun e =>
+  (pureResiduals BB6.Agent50TNFPilot.root (BB6.Agent31FourHole.path.take 7)).filter fun e =>
     !pureResidualHasWitness e.2
 
 theorem remainingRootRoster_eq_pure :
