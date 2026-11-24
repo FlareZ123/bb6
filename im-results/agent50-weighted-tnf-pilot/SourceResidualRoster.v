@@ -1,4 +1,4 @@
-From BusyCoq Require Import Enumerate62 Agent8GlobalSource Agent8WeightedSource
+From BusyCoq Require Import Enumerate62 Agent8AdaptiveSource Agent8GlobalSource Agent8WeightedSource
   Agent8SourceWF Individual62 Eqb.
 From Coq Require Import List Bool Lia NArith.
 Import ListNotations.
