@@ -78,4 +78,56 @@ Lean source modules `BB429SectionBands.lean`, `BB429BandBridge.lean`, `BB429Band
     lean -o BB429BandBridge.olean BB429BandBridge.lean
     lean BB429BandTransfer.lean
 
-**Remaining exact induction gap:** if this entire outgoing zero-section interval can always be transferred to the next admissible dyadic zero plateau, or to a certified escape corridor, one can iterate the resulting scale theorem starting from a verified blank-origin plateau. Finite experiments confirm many scales, but no uniform theorem yet covers the intermediate region beyond `64*X`. There are synthetic halting seeds in the reset section, so a proof must actually control the entrance set, not merely all sufficiently large states with matching parity. Neither #429 nor BB(6) has been decided.
+
+## Positive-deviation closure and the remaining low-side obstacle
+
+For `n % 4 = 0`, `n >= 8`, `X = 2^n`, a second uniform theorem now covers the entire interval immediately following the preceding transfer. `BB429HighTransfer.high_exit` proves:
+
+    W % 4 = 0
+    64*X - 3*n - 12 < W <= 72*X + 20*n + 200
+        ==> exists t,Z:
+            run(t,(0,W)) = some(0,Z)
+            Z % 4 = 0
+            72*X - 3*n - 6 <= Z <= 72*X + 20*n + 200.
+
+For a state below the upper boundary, `high_return` gives strictly positive progress to another zero section with Z <= W+20*n+200. The proof uses the odd-rank phases: for R=2u+w, deviation d>0 is defined by w+d=u+12 if R%4=1, and w+d=u+8 if R%4=3. While the ordinary O/F pair persists, d quadruples, while rank grows by only 10 or 14. Bounded evacuation thus forces a reset. The exceptional rank-two reset is excluded by a uniform arithmetic theorem: for odd p >=5, p%4=1, even k, (2^p+1) does not divide 18*2^k+6*(p+4).
+
+The subsequent proof handles both odd phases and both section counters. In `BB429HighComplete.high_shape_rank_zero`, suppose a=3 or 14, k>=13 odd, u+3=a*2^k, R>=100, and d>0 as above; if R%4=3 also suppose k%4=1. Then there exists a strictly positive successful trajectory to a section with u=0 or 11 and rank divisible by four. The eleven family excludes all exceptional rank-two resets by divisibility; the zero family has two explicit exceptions (9*d=9*2^k+36 or 129*d=9*2^k+60), and both are proved to return safely to rank zero. The restriction on the odd phase index is essential to the stated theorem.
+
+**A concrete obstruction to blanket low-side induction.** Let
+
+    W = 1857086700988517619948591230277803361979046502287420036813712432.
+
+The locally kernel-checked `BB429LowCounterexample.finite_halt` establishes W%4=0, 72*2^204-3*204-6 < W < 96*2^204, and
+
+    run 217 (0,W) = some
+      (464271675247129404987147807569450840494761625571855009203428277,
+       928543350494258809974295615138901680989523251143710018406856553)
+
+with next of that endpoint equal to none. Its branch word is F^207 followed by Oeven F Oodd F Oeven F Oodd F F F. This is a prepared-state halt, **not a blank-origin halt**. It disproves the idea that every zero-section seed of the correct rank residue in the low-side interval is safe. A genuine ancestry invariant or a successful actual-root trajectory to an escape ray/halting gate is needed.
+
+The checked source modules are in [highbandproof.tar.xz.b64](highbandproof.tar.xz.b64) and [highcomplete.tar.xz.b64](highcomplete.tar.xz.b64). After restoring and compiling the preceding three band modules to .olean, compile in dependency order:
+
+    for f in BB429HighBand BB429BoundaryDivisor BB429HighTransfer \
+             BB429HighTrue BB429ElevenDivisor BB429ZeroTrueDivisor \
+             BB429ElevenHigh BB429ZeroHigh BB429HighComplete BB429LowCounterexample; do
+      lean -o "$f.olean" "$f.lean" || exit 1
+    done
+
+All these modules compiled locally with standard axioms only, against the matching BB429Rank declarations. Full original dependency CI remains outstanding.
+
+## Rank-return search and burst-aware replay
+
+The rank-coordinate implementation [rank_return.cpp](rank_return.cpp) uses A=2u+6, R=2u+w. For an affine family R(i)=R+4i after a reset, A(i)=A-4Pi with P>=0; F doubles P and either ordinary O branch maps P to 2P+1. Thus the gap increases monotonically with i and the endpoint horizon can be propagated by a simple integer inequality. It skips maximal F bursts by their exact closed form, and writes certificate triples as unsigned varints. The wide version in [fastwide.tar.xz.b64](fastwide.tar.xz.b64) supports ranks up to 2^120.
+
+The same archive contains `BB429FastReplay.lean` and `BB429FastBinary.lean`. The first proves `fastBlockNext_sound` by checking the maximal F burst's two affine endpoint guards and composing with the individual branch checker. The latter independently replays binary certificates. Its first 100,000-block test from blank accepted exactly time 128984533101 and state (11,445665742842). This is computational replay, not a kernel reduction of that concrete prefix. The C++ exploratory search then reached, in 460 million blocks from blank, the endpoint (0,22045380913412580068) at accelerator time 6772774729502350152. The entire latter prefix has not been independently replayed; it is neither a raw-machine step count nor a proof of nonhalting.
+
+To reproduce the search from restored sources:
+
+    g++ -O3 -std=c++20 rank_return_wide.cpp -o rank_return_wide
+    ./rank_return_wide 100000000 rank100m.bin
+    ./rank_return_wide 10000000 - 11 501949805622249686 152192404125175966
+
+The optional final three arguments are section u, w and accumulated macro time; use each printed endpoint to resume. The program stops if it detects a halt, a known escape ray, or a resource/rank limit. For independent replay compile the fast Lean modules after the affine and section modules, then run `lean --run BB429FastBinary.lean certificate.bin` (optionally with the same starting u,w,time). Do not treat a cutoff as a nonhalting decision.
+
+**Remaining research:** the uniform transfer is now established through the high side of 72X. Beyond it, the mixed low-side O/F words are the real obstruction; the explicit halt above shows why a scale interval with rank congruence alone cannot be a global invariant. BB(6) remains unknown.
