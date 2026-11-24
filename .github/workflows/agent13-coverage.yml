@@ -5,8 +5,12 @@ on:
       target:
         description: 'Source closure to verify'
         type: choice
-        options: [legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole, weighted-tnf-four-hole, weighted-tnf-four-hole-sibling, weighted-tnf-r1-sweep, queue-orbit, weighted-tnf-roster-convergence, weighted-tnf-roster-agent47-graft, weighted-tnf-pure-residuals, weighted-tnf-raw99, weighted-tnf-raw103, weighted-tnf-roster-composition, weighted-tnf-agent3-siblings, weighted-tnf-raw85-parent-check, weighted-tnf-raw91, weighted-tnf-raw87, weighted-tnf-raw83-pump, weighted-tnf-agent10-multi, weighted-tnf-agent10-five-new, weighted-tnf-agent10-raw106, weighted-tnf-raw63-counter]
+        options: [legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole, weighted-tnf-four-hole, weighted-tnf-four-hole-sibling, weighted-tnf-r1-sweep, queue-orbit, weighted-tnf-roster-convergence, weighted-tnf-roster-agent47-graft, weighted-tnf-pure-residuals, weighted-tnf-raw99, weighted-tnf-raw103, weighted-tnf-roster-composition, weighted-tnf-agent3-siblings, weighted-tnf-raw85-parent-check, weighted-tnf-raw91, weighted-tnf-raw87, weighted-tnf-raw83-pump, weighted-tnf-agent10-multi, weighted-tnf-agent10-five-new, weighted-tnf-agent10-raw106, weighted-tnf-raw63-counter, weighted-tnf-agent10-single]
         default: legacy
+      raw_id:
+        description: 'Single Agent 10 residual index (single target only)'
+        type: string
+        default: '68'
 permissions:
   contents: read
 jobs:
@@ -413,5 +417,26 @@ jobs:
           python tools/lean_compile_closure.py --workdir /tmp/a48-raw63 --jobs 4 im-results/agent48-raw63-counter/Raw63RosterBridge.lean | tee /tmp/a48-raw63.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a48-raw63.log; then
             echo "Forbidden proof placeholder or native_decide found in raw63 closure" >&2
+            exit 1
+          fi
+
+      - name: Check one complete candidate cylinder with the zipper checker
+        if: inputs.target == 'weighted-tnf-agent10-single'
+        env:
+          RAW_ID: ${{ inputs.raw_id }}
+        run: |
+          set -euo pipefail
+          case "$RAW_ID" in
+            63|66|67|68|69|70|71|72|73|77|78|79|80|81|82|86|88|92|93|97|98|100|101|102|104|106) ;;
+            *) echo "Unknown residual index"; exit 2 ;;
+          esac
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          if [[ "$RAW_ID" == 63 ]]; then python im-results/agent48-raw63-counter/emit_counter.py; fi
+          python im-results/agent10-tnf-multipump/generate.py "$RAW_ID"
+          python tools/lean_compile_closure.py --workdir /tmp/a10-single --jobs 4 "im-results/agent10-tnf-multipump/Raw${RAW_ID}Data.lean" | tee /tmp/a10-single.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a10-single.log; then
+            echo "Forbidden proof placeholder or native_decide" >&2
             exit 1
           fi
