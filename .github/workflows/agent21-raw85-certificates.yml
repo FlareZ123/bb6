@@ -1,0 +1,29 @@
+name: Agent 21 raw85 FAR certificate validation
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile FAR dependency closure
+        run: |
+          set -euo pipefail
+          python tools/lean_compile_closure.py --workdir /tmp/raw85-lean --jobs 4 im-results/agent7-far/WeightedTNFBridge.lean
+      - name: Verify 14 raw85 FAR certificates
+        run: |
+          set -euo pipefail
+          export LEAN_PATH=/tmp/raw85-lean
+          lean im-results/agent21-raw85/Raw85FARCertificates.lean | tee /tmp/raw85-far-proof.log
+          if grep -qE 'sorryAx|native_decide' /tmp/raw85-far-proof.log; then
+            echo 'Raw85 FAR proof used a forbidden axiom'
+            exit 1
+          fi
