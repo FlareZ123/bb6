@@ -105,78 +105,6 @@ theorem low_ray_z14_second_fan_reach_iff
 #print axioms low_ray_z14_second_fan_reach_iff
 namespace BB6.Agent13LowSecondFan
 
-/-- On the residual subfamily s=4r+3 with odd r, the unique
-    depth-one high-bounce parent in the second-generation fan is
-    forbidden by the original blank odd-image invariant.  Thus the
-    complete source fan collapses to its direct affine parent. -/
-theorem second_high_parent_odd_r_unreachable
-    (r u n a k : Nat)
-    (hu : u+12*(4*r+3)+1=2^(2048*(4*r+3)+129))
-    (hr : r%2=1)
-    (hcond : secondHighParentCondition (4*r+3) u n a k) :
-    ¬ BB6.Agent3.CReach a k := by
-  have hn1 :=
-    second_high_parent_depth_one_of_odd_r r u n a k hu hr hcond
-  subst n
-  rcases hcond with ⟨_,haodd,ha3,hregion,hmass,hcost⟩
-  have hs7 : (4*r+3)%8=7 := by omega
-  have hpow32 : 32∣(2:Nat)^(2048*(4*r+3)+129) := by
-    have hh : (2:Nat)^5∣2^(2048*(4*r+3)+129) :=
-      Nat.pow_dvd_pow 2 (by omega)
-    simpa only [show (2:Nat)^5=32 by decide] using hh
-  have hdiv32 : 32∣u+12*(4*r+3)+1 := by
-    rw [hu]
-    exact hpow32
-  have hu32 : u%32=11 := by
-    have hm := Nat.mod_eq_zero_of_dvd hdiv32
-    omega
-  have hX32 : (173*u+24)%32=7 := by omega
-  have hYnum32 : (339*u+47)%32=0 := by omega
-  have hYdiv32 : 32∣339*u+47 :=
-    Nat.dvd_of_mod_eq_zero hYnum32
-  rcases hYdiv32 with ⟨q,hq⟩
-  have hYeq : (339*u+47)/2=16*q := by omega
-  have hY16 : ((339*u+47)/2)%16=0 := by rw [hYeq]; omega
-  have hmass4 :
-      173*u+25+(339*u+47)/2=4*(a+3) := by
-    simpa using hmass
-  have ha8 : a%8=7 := by omega
-  have hcost' :
-      2*k+a+10=173*u+24+2*((339*u+47)/2) := by
-    simpa using hcost
-  have hk4 : k%4=3 := by omega
-  have hkge : 5≤k := by omega
-  have hsum : (a+k)%4=2 := by omega
-  exact BB6.Agent13TwoParent.odd_forbidden_image a k hkge
-    (by omega) (Or.inr hsum)
-
-/-- For z=8r+6 with odd r, the complete second-generation fan
-    and the odd-image invariant leave only the direct affine parent.
-    This is an exact all-time blank-root reachability equivalence. -/
-theorem low_ray_z14_second_fan_reach_iff_direct_parent
-    (r u : Nat)
-    (hu : u+12*(4*r+3)+1=2^(2048*(4*r+3)+129))
-    (hr : r%2=1) :
-    BB6.Agent3.CReach (180*u+28) (166*u+25) ↔
-    BB6.Agent3.CReach
-      (173*u+24+((339*u+47)/2)-2)
-      (((339*u+47)/2-2)/2) := by
-  have hfan := low_ray_z14_second_fan_reach_iff r u hu hr
-  constructor
-  · intro hroot
-    rcases hfan.mp hroot with hdirect | ⟨n,a,k,hcond,hparent⟩
-    · exact hdirect
-    · exact False.elim
-        (second_high_parent_odd_r_unreachable r u n a k hu hr hcond hparent)
-  · intro hdirect
-    exact hfan.mpr (Or.inl hdirect)
-
-#print axioms second_high_parent_odd_r_unreachable
-#print axioms low_ray_z14_second_fan_reach_iff_direct_parent
-
-
-/-- Elementary lower bound used only to show the source-derived
-    counters in this residual ray are large enough for the inverse lemmas. -/
 private theorem second_fan_linear_le_power (n : Nat) : n+1≤2^n := by
   induction n with
   | zero => decide
@@ -184,20 +112,145 @@ private theorem second_fan_linear_le_power (n : Nat) : n+1≤2^n := by
       rw [Nat.pow_succ]
       omega
 
-/-- The residual z=14 (mod 64) ray is blank-unreachable.  The proof
-    composes the exact second-generation fan, the odd/odd low-valuation
-    inverse, the six-residue even-right inverse, and the original
-    odd-right image obstruction. -/
-theorem low_ray_z14_mod64_unreachable
+/-- On the subfamily s=64t+7, every high-bounce parent in the
+    second-generation fan has depth one and is itself blank-unreachable.
+    Its unique odd/odd low-valuation predecessor has even/odd coordinates
+    with sum 1 modulo four, contradicting the original odd-image invariant. -/
+theorem second_high_parent_r16_one_unreachable
+    (t u n a k : Nat)
+    (hu : u+12*(64*t+7)+1=2^(2048*(64*t+7)+129))
+    (hcond : secondHighParentCondition (64*t+7) u n a k) :
+    ¬ BB6.Agent3.CReach a k := by
+  have hr : (16*t+1)%2=1 := by omega
+  have hsEq : 4*(16*t+1)+3=64*t+7 := by omega
+  have huR :
+      u+12*(4*(16*t+1)+3)+1 =
+        2^(2048*(4*(16*t+1)+3)+129) := by
+    rw [hsEq]
+    exact hu
+  have hn1 :=
+    second_high_parent_depth_one_of_odd_r (16*t+1) u n a k
+      huR hr (by simpa [hsEq] using hcond)
+  subst n
+  rcases hcond with ⟨_,haodd,ha3,hregion,hmass,hcost⟩
+  have hlin : 2048*(64*t+7)+130 ≤
+      2^(2048*(64*t+7)+129) :=
+    second_fan_linear_le_power _
+  have huLarge : 129≤u := by omega
+  have hp256 : (256:Nat)∣2^(2048*(64*t+7)+129) := by
+    have hh : (2:Nat)^8∣2^(2048*(64*t+7)+129) :=
+      Nat.pow_dvd_pow 2 (by omega)
+    simpa only [show (2:Nat)^8=256 by decide] using hh
+  have hdiv256 : 256∣u+12*(64*t+7)+1 := by
+    rw [hu]
+    exact hp256
+  have hmod256 := Nat.mod_eq_zero_of_dvd hdiv256
+  have hu256 : u%256=171 := by omega
+  have hu128 : u%128=43 := by omega
+  have hu32 : u%32=11 := by omega
+  have hnumEven : (339*u+47)%2=0 := by omega
+  have hY2 : 2*((339*u+47)/2)=339*u+47 := by
+    have hh := Nat.mod_add_div (339*u+47) 2
+    omega
+  have hmass' :
+      173*u+25+(339*u+47)/2=4*(a+3) := by
+    simpa using hmass
+  have hcost' :
+      2*k+a+10=173*u+24+2*((339*u+47)/2) := by
+    simpa using hcost
+  have haEq : 8*a=685*u+73 := by omega
+  have hkEq : 16*k=3411*u+415 := by omega
+  have hkOdd : k%2=1 := by omega
+  have hsumEq : 16*(a+k)=4781*u+561 := by omega
+  have hres64 : (4781*u+561)%64=0 := by omega
+  have hdiv64 : 64∣16*(a+k) := by
+    rw [hsumEq]
+    exact Nat.dvd_of_mod_eq_zero hres64
+  have hdiv4 : 4∣a+k := by
+    rcases hdiv64 with ⟨q,hq⟩
+    refine ⟨q,?_⟩
+    omega
+  have hsum4 : (a+k)%4=0 :=
+    Nat.mod_eq_zero_of_dvd hdiv4
+  have hsum16 : (a+k)%16≠0 := by
+    intro hzero
+    have hd16 : 16∣a+k := Nat.dvd_of_mod_eq_zero hzero
+    rcases hd16 with ⟨q,hq⟩
+    have hd256 : 256∣16*(a+k) := by
+      refine ⟨q,?_⟩
+      rw [hq]
+      omega
+    rw [hsumEq] at hd256
+    have hzero' := Nat.mod_eq_zero_of_dvd hd256
+    have hres256 : (4781*u+561)%256=192 := by omega
+    omega
+  have hsize : 24≤a+k := by omega
+  let x1 := (a+k-4)/2
+  let y1 := (a+3*k-10)/4
+  have hXeq : x1=(4781*u+497)/32 := by
+    dsimp [x1]
+    omega
+  have hYeq : y1=(11603*u+1231)/64 := by
+    dsimp [y1]
+    omega
+  have hx1mod4 : x1%4=0 := by rw [hXeq]; omega
+  have hy1mod4 : y1%4=1 := by rw [hYeq]; omega
+  have hy1odd : y1%2=1 := by omega
+  have hy1large : 5≤y1 := by rw [hYeq]; omega
+  have hsum1 : (x1+y1)%4=1 := by omega
+  intro hreach
+  have hreach1 : BB6.Agent3.CReach x1 y1 :=
+    (BB6.Agent3.oddodd_lowval_blank_reach_iff
+      a k haodd hkOdd (by omega) hsum4 hsum16 hsize).mp hreach
+  exact BB6.Agent13TwoParent.odd_forbidden_image
+    x1 y1 hy1large hy1odd (Or.inl hsum1) hreach1
+
+/-- For z=8r+6 with r=16t+1, the complete second-generation fan
+    and the odd-image invariant leave only the direct affine parent.
+    This is an exact all-time blank-root reachability equivalence. -/
+theorem low_ray_z14_second_fan_reach_iff_direct_parent_r16_one
     (t u : Nat)
-    (hu : u+6*(64*t+14)+1=2^(1024*(64*t+14)+129)) :
+    (hu : u+12*(64*t+7)+1=2^(2048*(64*t+7)+129)) :
+    BB6.Agent3.CReach (180*u+28) (166*u+25) ↔
+    BB6.Agent3.CReach
+      (173*u+24+((339*u+47)/2)-2)
+      (((339*u+47)/2-2)/2) := by
+  have hr : (16*t+1)%2=1 := by omega
+  have hsEq : 4*(16*t+1)+3=64*t+7 := by omega
+  have huR :
+      u+12*(4*(16*t+1)+3)+1 =
+        2^(2048*(4*(16*t+1)+3)+129) := by
+    rw [hsEq]
+    exact hu
+  have hfan :=
+    low_ray_z14_second_fan_reach_iff (16*t+1) u huR hr
+  constructor
+  · intro hroot
+    rcases hfan.mp hroot with hdirect | ⟨a,k,hcond,hparent⟩
+    · exact hdirect
+    · exact False.elim
+        (second_high_parent_r16_one_unreachable t u 1 a k hu
+          (by simpa [hsEq] using hcond) hparent)
+  · intro hdirect
+    exact hfan.mpr (Or.inl hdirect)
+
+
+
+/-- The residual z=14 (mod 128) ray is blank-unreachable.  The
+    direct second-generation parent is forced through the odd/odd
+    low-valuation inverse and then the six-residue even-right inverse;
+    the remaining depth-one high parent was excluded above. -/
+theorem low_ray_z14_mod128_unreachable
+    (t u : Nat)
+    (hu : u+6*(128*t+14)+1=2^(1024*(128*t+14)+129)) :
     ¬ BB6.Agent3.CReach (180*u+28) (166*u+25) := by
-  have hmassRel : 12*(32*t+7)=6*(64*t+14) := by omega
-  have hpowRel : 2048*(32*t+7)+129=1024*(64*t+14)+129 := by omega
-  have hu' : u+12*(32*t+7)+1=2^(2048*(32*t+7)+129) := by
+  have hmassRel : 12*(64*t+7)=6*(128*t+14) := by omega
+  have hpowRel : 2048*(64*t+7)+129=1024*(128*t+14)+129 := by omega
+  have hu' : u+12*(64*t+7)+1=2^(2048*(64*t+7)+129) := by
     rw [hmassRel,hpowRel]
     exact hu
-  have hr : (8*t+1)%2=1 := by omega
+  have hiff :=
+    low_ray_z14_second_fan_reach_iff_direct_parent_r16_one t u hu'
   let X := 173*u+24
   let Y := (339*u+47)/2
   let Dx := X+Y-2
@@ -208,19 +261,17 @@ theorem low_ray_z14_mod64_unreachable
   let Fy := (Ey-2)/2
   intro hroot
   have hDreach : BB6.Agent3.CReach Dx Dy := by
-    have hiff := low_ray_z14_second_fan_reach_iff_direct_parent
-      (8*t+1) u hu' hr
     have hh := hiff.mp hroot
     simpa [Dx,Dy,X,Y] using hh
-  have hlin : 2048*(32*t+7)+130≤2^(2048*(32*t+7)+129) :=
+  have hlin : 2048*(64*t+7)+130≤2^(2048*(64*t+7)+129) :=
     second_fan_linear_le_power _
   rw [←hu'] at hlin
   have huLarge : 129≤u := by omega
-  have hpow128 : 128∣2^(2048*(32*t+7)+129) := by
-    have hh : (2:Nat)^7∣2^(2048*(32*t+7)+129) :=
+  have hpow128 : 128∣2^(2048*(64*t+7)+129) := by
+    have hh : (2:Nat)^7∣2^(2048*(64*t+7)+129) :=
       Nat.pow_dvd_pow 2 (by omega)
     simpa only [show (2:Nat)^7=128 by decide] using hh
-  have hdiv128 : 128∣u+12*(32*t+7)+1 := by
+  have hdiv128 : 128∣u+12*(64*t+7)+1 := by
     rw [hu']
     exact hpow128
   have hu128 : u%128=43 := by
@@ -283,42 +334,43 @@ theorem low_ray_z14_mod64_unreachable
   exact (BB6.Agent13TwoParent.odd_forbidden_image
     Fx Fy hFy5 hFyOdd (Or.inl hFsum4)) hFreach
 
-/-- The genuine low-stop equation m=512z+67 transfers z=14 (mod 64)
-    to the residual root R_u with u satisfying the exact power relation
-    above.  This is a complete all-time exclusion of that stopping
-    progression, not a finite simulation claim. -/
-theorem low_stop_m67_z14_mod64_unreachable
+
+
+/-- The genuine low-stop equation m=512z+67 transfers z=14 (mod 128)
+    to the residual root R_u with u satisfying the exact power relation.
+    This is a complete all-time exclusion of that stopping progression. -/
+theorem low_stop_m67_z14_mod128_unreachable
     (z m k : Nat)
     (hm : m=512*z+67)
-    (hz : z%64=14)
+    (hz : z%128=14)
     (hstop : k+3*m+4=2^(2*m+3)) :
     ¬ BB6.Agent3.CReach 1 k := by
-  have hpdiv : 32768∣2^(2*m+3) := by
-    have hh : (2:Nat)^15∣2^(2*m+3) :=
+  have hpdiv : 65536∣2^(2*m+3) := by
+    have hh : (2:Nat)^16∣2^(2*m+3) :=
       Nat.pow_dvd_pow 2 (by omega)
-    simpa only [show (2:Nat)^15=32768 by decide] using hh
-  have hpmod : (2^(2*m+3))%32768=0 :=
+    simpa only [show (2:Nat)^16=65536 by decide] using hh
+  have hpmod : (2^(2*m+3))%65536=0 :=
     Nat.mod_eq_zero_of_dvd hpdiv
-  let t := z/64
-  have hzEq : z=64*t+14 := by
-    have hh := Nat.mod_add_div z 64
+  let t := z/128
+  have hzEq : z=128*t+14 := by
+    have hh := Nat.mod_add_div z 128
     dsimp [t]
     omega
-  have hkmod : k%32768=11059 := by
-    have hs : (k+3*m+4)%32768=0 := by
+  have hkmod : k%65536=43827 := by
+    have hs : (k+3*m+4)%65536=0 := by
       rw [hstop]
       exact hpmod
     rw [hm,hzEq] at hs
     omega
-  let u := 128*(k/32768)+43
-  have hu128 : u%128=43 := by
+  let u := 256*(k/65536)+171
+  have hu256 : u%256=171 := by
     dsimp [u]
-    have hh := Nat.mod_add_div k 32768
+    have hh := Nat.mod_add_div k 65536
     rw [hkmod] at hh
     omega
   have hk : k=256*u+51 := by
     dsimp [u]
-    have hh := Nat.mod_add_div k 32768
+    have hh := Nat.mod_add_div k 65536
     rw [hkmod] at hh
     omega
   have hexp : 2*m+3=1024*z+137 := by rw [hm]; omega
@@ -329,16 +381,15 @@ theorem low_stop_m67_z14_mod64_unreachable
     exact Nat.mul_comm _ _
   have hstop' := hstop
   rw [hpow,hk,hm,hzEq] at hstop'
-  have hu : u+6*(64*t+14)+1=2^(1024*(64*t+14)+129) := by
-    dsimp [t] at *
+  have hu : u+6*(128*t+14)+1=2^(1024*(128*t+14)+129) := by
     omega
   intro hr
   have hr' : BB6.Agent3.CReach 1 (256*u+51) := by
     simpa [hk] using hr
   have hR := BB6.Agent13One307.four_step_to_rectangle u hr'
-  exact low_ray_z14_mod64_unreachable t u hu hR
+  exact low_ray_z14_mod128_unreachable t u hu hR
 
-#print axioms low_ray_z14_mod64_unreachable
-#print axioms low_stop_m67_z14_mod64_unreachable
+#print axioms low_ray_z14_mod128_unreachable
+#print axioms low_stop_m67_z14_mod128_unreachable
 
 end BB6.Agent13LowSecondFan
