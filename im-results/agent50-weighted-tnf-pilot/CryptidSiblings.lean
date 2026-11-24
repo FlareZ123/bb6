@@ -1,6 +1,7 @@
 import TNFPilot
 import SideCycle
 import R3Sweep
+import R5ZeroSweep
 
 set_option maxRecDepth 24000
 set_option maxHeartbeats 0
@@ -13,6 +14,7 @@ inductive SiblingWitness where
   | last (n : Nat)
   | cycle (entry period : Nat) (right : Bool) (boundary : Int)
   | growth
+  | r5Growth (write : Bool)
   | known
 
 structure SiblingSpec where
@@ -51,6 +53,7 @@ def siblingOK (s : SiblingSpec) (mv : Move) : Bool :=
   | .cycle entry period right boundary =>
     decide (0 < period) && finiteSideCycleCheck p entry period right boundary
   | .growth => partialEq p BB6Coverage.Agent50R3Sweep.r3Table
+  | .r5Growth w => partialEq p (BB6Coverage.Agent50R5Sweep.table w)
   | .known => decide (mv = s.special)
 
 def siblingsOK (s : SiblingSpec) : Bool :=
@@ -126,6 +129,15 @@ def siblingCert (s : SiblingSpec) (v : ValidSpec s)
     exact .nonhalt hr (support6 _) hno (by
       rw [heq]
       exact BB6Coverage.Agent50R3Sweep.r3_never)
+  | r5Growth w =>
+    have h : partialEq (s.child mv) (BB6Coverage.Agent50R5Sweep.table w) = true := by
+      simpa only [siblingOK,he] using hc
+    have heq := partialEq_sound _ _ h
+    exact .nonhalt hr (support6 _) hno (by
+      rw [heq]
+      cases w
+      · exact BB6Coverage.Agent50R5ZeroSweep.never_zero
+      · exact BB6Coverage.Agent50R5Sweep.never_one)
   | known =>
     have h : mv = s.special := by
       simpa only [siblingOK,he,decide_eq_true_eq] using hc
@@ -277,6 +289,51 @@ theorem r3_valid : ValidSpec r3 := by
 
 theorem r3_reachable : FirstHolePath r3.parent 6 := spec_reachable r3 r3_valid
 
+def r5 : SiblingSpec where
+  path :=
+    [(1,(1,false),⟨false,false,2⟩), (2,(2,true),⟨true,false,3⟩),
+     (3,(3,false),⟨false,false,1⟩), (5,(2,false),⟨true,true,2⟩),
+     (9,(3,true),⟨true,false,4⟩), (10,(4,true),⟨false,true,2⟩),
+     (13,(1,true),⟨false,true,0⟩), (16,(0,true),⟨true,true,0⟩),
+     (21,(4,false),⟨true,false,5⟩)]
+  hole := (5,true)
+  splitAt := 22
+  lastSlot := (5,false)
+  bound := 28
+  special := ⟨false,false,3⟩
+  witness := fun mv =>
+    match mv.write,mv.right,mv.next.val with
+    | false,false,0 => .cycle 18 33 false 3
+    | false,false,1 => .cycle 8 32 true (-4)
+    | false,false,2 => .cycle 148 42 true (-2)
+    | false,false,3 => .known
+    | false,false,4 => .last 24
+    | false,false,5 => .last 23
+    | false,true,0 => .cycle 8 20 true (-3)
+    | false,true,1 => .r5Growth false
+    | false,true,2 => .cycle 8 34 true (-4)
+    | false,true,3 => .last 25
+    | false,true,4 => .cycle 178 46 true (-2)
+    | false,true,5 => .last 26
+    | true,false,0 => .cycle 8 22 true (-3)
+    | true,false,1 => .cycle 95 60 true (-1)
+    | true,false,2 => .last 27
+    | true,false,3 => .cycle 124 36 true (-2)
+    | true,false,4 => .last 24
+    | true,false,5 => .last 23
+    | true,true,0 => .cycle 8 20 true (-3)
+    | true,true,1 => .r5Growth true
+    | true,true,2 => .last 26
+    | true,true,3 => .cycle 8 36 true (-4)
+    | true,true,4 => .cycle 10 13 true (-3)
+    | true,true,5 => .last 26
+    | _,_,_ => .known
+
+theorem r5_valid : ValidSpec r5 := by
+  constructor <;> decide
+
+theorem r5_reachable : FirstHolePath r5.parent 6 := spec_reachable r5 r5_valid
+
 theorem r2_valid : ValidSpec r2 := by
   constructor <;> decide
 
@@ -316,6 +373,9 @@ theorem r2_attained : ∃ m, compatible r2.parent m ∧ HaltsAfter m 470 :=
 theorem r3_attained : ∃ m, compatible r3.parent m ∧ HaltsAfter m 1767 :=
   attain_last r3 r3_valid ⟨false,true,5⟩ 1767 rfl
 
+theorem r5_attained : ∃ m, compatible r5.parent m ∧ HaltsAfter m 27 :=
+  attain_last r5 r5_valid ⟨true,false,2⟩ 27 rfl
+
 theorem r6_attained : ∃ m, compatible r6.parent m ∧ HaltsAfter m 581 :=
   attain_last r6 r6_valid ⟨true,false,3⟩ 581 rfl
 
@@ -335,6 +395,9 @@ theorem exact_from_attained (s : SiblingSpec) (v : ValidSpec s)
   · intro hb m hm k d hk hd
     exact Nat.le_trans (cert.sound m hm k d hk hd) hb
 
+#print axioms r5_valid
+#print axioms r5_reachable
+#print axioms r5_attained
 #print axioms r3_valid
 #print axioms r3_reachable
 #print axioms r3_attained
