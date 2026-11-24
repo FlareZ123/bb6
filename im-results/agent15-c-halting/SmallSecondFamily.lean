@@ -33,7 +33,7 @@ theorem line_reach_to_agent6_run {s : Nat × Nat × Nat}
       have hnext : BB6Agent6.C.next s = some t := by
         simpa [BB6Agent6.C.next, BB6CLine.nextC] using hstep
       refine ⟨n+1, ?_⟩
-      simp [BB6Agent6.C.run, hn, hnext]
+      simp only [BB6Agent6.C.run, hn, Option.bind_some, hnext]
 
 /-- The sole small second-family point (j,m)=(0,0) is unreachable. -/
 theorem source_no_3_7 : ¬ BB6CLine.Reach (3,7,0) := by
