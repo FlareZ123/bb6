@@ -31,7 +31,7 @@ Lemma agent5_decide_nonhalt_sound (tm0 : TM) arg :
 Proof.
   intro H.
   pose proof (decide_nonhalt_spec tm0 arg H) as Hn.
-  rewrite <- DHTMFromTM.DHTM.halts_halts' in Hn.
+  rewrite <- DHTMFromTM.TM.halts_halts' in Hn.
   exact Hn.
 Qed.
 
