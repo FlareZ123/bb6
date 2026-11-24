@@ -181,10 +181,11 @@ private theorem m0EvenEightValuationBridgeInputMatch
       simp [i]
       omega
     have hi : i ≤ 13 := by omega
+    have hcast : ((3*a+i:Nat):Int) =
+        ((3*a:Nat):Int) + (i:Int) := by omega
     have hcoord :
         h-((3*a:Nat):Int)+y = h-((3*a+i:Nat):Int) := by
-      push_cast
-      rw [hiCast]
+      rw [hcast,hiCast]
       omega
     have hpres := sweptLeft_preserves_left (3*a)
       (s1Config L (8*q) 0 a 0 b h).tape h
@@ -203,8 +204,7 @@ private theorem m0EvenEightValuationBridgeInputMatch
       have hyEq : y = -(i:Int) := by omega
       rw [hyEq]
       have hneq : (-(i:Int)) ≠ -14 := by omega
-      cases hbit : decide (0<t) <;>
-        simp [bridgeStartWithBit, hneq]
+      simp [bridgeStartWithBit, hneq]
     calc
       sweptLeft (3*a) (s1Config L (8*q) 0 a 0 b h).tape h
           (h-((3*a:Nat):Int)+y)
@@ -293,7 +293,7 @@ theorem m0EvenEight_valuation_q4_prefix_run_of_leftFacing
         m0EvenEightValuationSourceSuffix t len u) i = true := by
       rw [sideBit_append_left (d1pow a)
         (m0EvenEightValuationSourceSuffix t len u) i
-        (by simp [d1pow_length]; omega)]
+        (by simpa [d1pow_length] using hi)]
       exact sideBit_d1pow_true a i (by omega)
     rw [hside] at hcell
     simpa [T] using hcell
@@ -335,7 +335,7 @@ theorem m0EvenEight_valuation_q4_prefix_run_of_leftFacing
     rw [hface] at hcell
     rw [sideBit_d1pow_append a (3*a+14+i)
       (m0EvenEightValuationSourceSuffix t len u)
-      (by simp [d1pow_length]; omega)] at hcell
+      (by omega)] at hcell
     have hindex : 3*a+14+i-3*a = 14+i := by omega
     rw [hindex] at hcell
     have hsource := sourceSuffix_extraOnes t len u i hi
@@ -364,7 +364,7 @@ theorem m0EvenEight_valuation_q4_prefix_run_of_leftFacing
     rw [hface] at hcell
     rw [sideBit_d1pow_append a (3*a+15+3*t)
       (m0EvenEightValuationSourceSuffix t len u)
-      (by simp [d1pow_length]; omega)] at hcell
+      (by omega)] at hcell
     have hindex : 3*a+15+3*t-3*a = 15+3*t := by omega
     rw [hindex] at hcell
     have hsource := (sourceSuffix_zeroBoundary t len u).2
@@ -391,7 +391,7 @@ theorem m0EvenEight_valuation_q4_prefix_run_of_leftFacing
     rw [hface] at hcell
     rw [sideBit_d1pow_append a (3*a+14+3*t)
       (m0EvenEightValuationSourceSuffix t len u)
-      (by simp [d1pow_length]; omega)] at hcell
+      (by omega)] at hcell
     have hindex : 3*a+14+3*t-3*a = 14+3*t := by omega
     rw [hindex] at hcell
     have hsource := (sourceSuffix_zeroBoundary t len u).1
@@ -467,7 +467,7 @@ theorem m0EvenEight_valuation_q4_prefix_run_of_leftFacing
   have hScan :
       run tm2 (3*(4+t)) ⟨1,hR,T4⟩ =
         some ⟨1,hN,T5⟩ := by
-    simpa [T5,hscanHead'] using hScan0
+    simpa [T5,hscanHead] using hScan0
   have hT2zero : T2 hN = true := by
     have hcoord : hN-hN = 0 := by omega
     have hin : bridgeInside44 (hN-hN) = true := by
