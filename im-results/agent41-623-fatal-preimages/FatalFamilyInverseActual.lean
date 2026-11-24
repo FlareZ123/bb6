@@ -1,4 +1,4 @@
-import DrainCorrectionGrowth
+import Agent49DrainCorrectionGrowth
 import FatalFamilyInverseArithmetic
 
 namespace BB6.Agent41FatalInverse
