@@ -1,0 +1,3 @@
+# Agent46: denominator-history cancellation pruning
+
+A second local Lean theorem in im-results/agent46-needle-cancellation-weight/NeedleCancellationRepeat.lean uses the full legal-parent divisibility. If exceptional m divides n with k=n/m>0, then LD_m divides (2^m)^k-(-3)^k. If D_m|L, the first-order binomial expansion mod D_m² gives D_m|k, since gcd(D_m,3)=1. Hence repeated m cannot be exceptional when k<D_m. For each previous parameter a, D_a divides (-3)^n-(-3)^(ka), giving the order test ord_{D_a}(-3)|k|m-a|. These are optional exact pruning rules, not sufficient legal-parent tests. Local standard-axiom Lean proof, no original-source CI yet.
