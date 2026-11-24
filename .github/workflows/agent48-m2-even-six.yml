@@ -28,6 +28,7 @@ jobs:
           cp im-results/agent8-counted-reset/Q4Suffix.lean /tmp/a48-m2-six/
           cp im-results/agent24-champion-time/Q4RightEndpoint.lean /tmp/a48-m2-six/
           cp im-results/agent48-counted-inc0/{M2EvenSixQ4Prefix,M2EvenResidueSix}.lean /tmp/a48-m2-six/
+          cp im-results/agent42-m0even-residue6/{M0EvenSixQ4Bridge,M0EvenSixQ4Prefix,M0EvenSixHeadBound}.lean /tmp/a48-m2-six/
           cd /tmp/a48-m2-six
           export LEAN_PATH=.
           lean --version
@@ -46,6 +47,9 @@ jobs:
           lean -o CountedRst1Prime.olean CountedRst1Prime.lean
           lean -o Q4Suffix.olean Q4Suffix.lean
           lean -o Q4RightEndpoint.olean Q4RightEndpoint.lean
+          lean -o M0EvenSixQ4Bridge.olean M0EvenSixQ4Bridge.lean
+          lean -o M0EvenSixQ4Prefix.olean M0EvenSixQ4Prefix.lean
+          lean -o M0EvenSixHeadBound.olean M0EvenSixHeadBound.lean
           : > /tmp/a48-m2-six/m2-even-six-axioms.log
           lean -o M2EvenSixQ4Prefix.olean M2EvenSixQ4Prefix.lean 2>&1 | tee /tmp/a48-m2-six/m2-even-six-axioms.log
           lean -o M2EvenResidueSix.olean M2EvenResidueSix.lean 2>&1 | tee -a /tmp/a48-m2-six/m2-even-six-axioms.log
