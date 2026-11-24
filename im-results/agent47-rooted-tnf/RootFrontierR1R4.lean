@@ -185,7 +185,7 @@ def r1Subtree : RootedFrontier 7014 r1Start := by
     simpa [r1Start, r1First, r1Cut, hs] using
       (RawRootPath.step (mv := r1First) RawRootPath.root hr hhole')
   have htail' : pathOKB 7014 r1Start r1Cut r1.path.tail = true := by
-    simpa [r1Start, r1First, r1Cut, hs, r1] using htail
+    simpa [r1Start, r1First, r1Cut, hs, r1, BB6.Agent47R1Certificate.scheduleAction] using htail
   have hcert : WeightedTNFCertificate 7014
       (pathEnd r1Start r1Cut r1.path.tail).1 6 := by
     rw [← r1_pathEnd_tail]
