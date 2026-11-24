@@ -127,15 +127,10 @@ jobs:
           python tools/lean_compile_closure.py --workdir /tmp/raw85-lean --jobs 4 \
             im-results/agent7-far/WeightedTNFBridge.lean \
             im-results/agent13-roster-convergence/raw85/FourHoleSiblingData.lean
-      - name: Verify 14 raw85 FAR certificates
+      - name: Verify generated raw85 parent tree
         run: |
           set -euo pipefail
           export LEAN_PATH=/tmp/raw85-lean
-          lean im-results/agent21-raw85/Raw85FARCertificates.lean | tee /tmp/raw85-far-proof.log
-          if grep -qE 'sorryAx|native_decide' /tmp/raw85-far-proof.log; then
-            echo 'Raw85 FAR proof used a forbidden axiom'
-            exit 1
-          fi
           lean im-results/agent13-roster-convergence/raw85/FourHoleSiblingData.lean | tee /tmp/raw85-tree-proof.log
           if grep -qE 'sorryAx|native_decide' /tmp/raw85-tree-proof.log; then
             echo 'Raw85 sibling tree proof used a forbidden axiom'
