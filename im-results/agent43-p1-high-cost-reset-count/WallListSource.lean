@@ -64,78 +64,88 @@ private theorem bitExpr_eq (n : Nat) (A : List Bool) :
     BB6WallBridge.bitExpr n A = BB6WallCarry.bitExpr n A := by
   simp only [BB6WallBridge.bitExpr, BB6WallCarry.bitExpr, sumBits_eq]
 
-/-- Uniform source-level exclusion from any proved Boolean-prefix obstruction. -/
-theorem source_wall_no_prefix (n b d m z k : Nat) (hn : 14 ≤ n)
+/-- Every original critical-root history ends with an odd right counter. -/
+theorem source_odd_right (n b d m z : Nat)
+    (h : CountCone (14*2^n-2*n-16) 3 b d m z) : d%2=1 := by
+  induction h with
+  | root => decide
+  | parent bp dp mp zp t k c hp hb hb4 hd hi hk hc ih => omega
+
+/-- No wall hypothesis is needed: an empty Boolean prefix layer bounds the
+    total cost of EVERY genuine critical-root inverse history. -/
+theorem source_countcone_cost_lt (n b d m z k : Nat) (hn : 14 ≤ n)
     (h : CountCone (14*2^n-2*n-16) 3 b d m z)
-    (hkn : k+1 ≤ n) (hkm : k+1 ≤ m)
+    (hkn : k+1 ≤ n)
     (hno : ¬ ∃ rest : List Bool, rest.length = k ∧
-      BB6WallCarry.bitExpr n rest % 2^(k+1)=1) :
-    b+4*m+4*n+20 ≠ 12*2^n := by
-  intro hw
-  obtain ⟨A,hnd,_,hstart,hId⟩ := source_wall_cost_list_identity n b d m z hn h hw
-  rw [weight_eq] at hId
-  obtain ⟨rest,hlen,hbits⟩ := BB6WallBridge.wall_identity_implies_bits
-    n m k (costPowSum A) A hnd (hstart (by omega)) hkn hkm hId
+      BB6WallCarry.bitExpr n rest % 2^(k+1)=1) : m<k+1 := by
+  by_contra hlt
+  have hkm : k+1≤m := by omega
+  obtain ⟨A,hnd,h0,hmod⟩ := witness_mod_prefix n d m (k+1)
+    (source_cost_witness n b d m z hn h) (source_odd_right n b d m z h)
+    (by omega) hkn hkm
+  rw [weight_eq] at hmod
+  obtain ⟨rest,hlen,hbits⟩ := BB6WallBridge.weighted_mod_bits n k A hnd h0
   rw [bitExpr_eq] at hbits
-  exact hno ⟨rest,hlen,hbits⟩
+  exact hno ⟨rest,hlen,hbits.symm.trans hmod⟩
 
-theorem source_no_wall_familyI_h1 (n b d m z u t : Nat)
+theorem source_no_restart_familyI_h1 (n b d m z u t : Nat)
     (hN : n=5362+595056*(1+2^56*t))
-    (hU : 1058*u+636=17*2^n) (hM : m=14*u-2*n-3)
-    (h : CountCone (14*2^n-2*n-16) 3 b d m z) :
-    b+4*m+4*n+20 ≠ 12*2^n := by
+    (hU : 1058*u+636=17*2^n) (hM : 14*u-2*n-3≤m) :
+    ¬ CountCone (14*2^n-2*n-16) 3 b d m z := by
+  intro h
   have hn : 14≤n := by omega
-  have hmN : n≤m := by
-    rw [hM]
-    exact BB6WallCarry.familyI_terminal_m_ge_n n u hn hU
-  apply source_wall_no_prefix n b d m z 59 hn h (by omega) (by omega)
-  rw [hN]
-  exact BB6WallCarry.noPrefix_familyI_h1 t
+  have hmN : n≤m := Nat.le_trans
+    (BB6WallCarry.familyI_terminal_m_ge_n n u hn hU) hM
+  have hcap := source_countcone_cost_lt n b d m z 59 hn h (by omega) (by
+    rw [hN]
+    exact BB6WallCarry.noPrefix_familyI_h1 t)
+  omega
 
-theorem source_no_wall_familyI_h2 (n b d m z u t : Nat)
+theorem source_no_restart_familyI_h2 (n b d m z u t : Nat)
     (hN : n=5362+595056*(2+2^8*t))
-    (hU : 1058*u+636=17*2^n) (hM : m=14*u-2*n-3)
-    (h : CountCone (14*2^n-2*n-16) 3 b d m z) :
-    b+4*m+4*n+20 ≠ 12*2^n := by
+    (hU : 1058*u+636=17*2^n) (hM : 14*u-2*n-3≤m) :
+    ¬ CountCone (14*2^n-2*n-16) 3 b d m z := by
+  intro h
   have hn : 14≤n := by omega
-  have hmN : n≤m := by
-    rw [hM]
-    exact BB6WallCarry.familyI_terminal_m_ge_n n u hn hU
-  apply source_wall_no_prefix n b d m z 11 hn h (by omega) (by omega)
-  rw [hN]
-  exact BB6WallCarry.noPrefix_familyI_h2 t
+  have hmN : n≤m := Nat.le_trans
+    (BB6WallCarry.familyI_terminal_m_ge_n n u hn hU) hM
+  have hcap := source_countcone_cost_lt n b d m z 11 hn h (by omega) (by
+    rw [hN]
+    exact BB6WallCarry.noPrefix_familyI_h2 t)
+  omega
 
-theorem source_no_wall_familyII_h1 (n b d m z u t : Nat)
+theorem source_no_restart_familyII_h1 (n b d m z u t : Nat)
     (hN : n=9538+703248*(1+2^10*t))
-    (hU : 1198*u+712=87*2^n) (hM : m=14*u-2*n-3)
-    (h : CountCone (14*2^n-2*n-16) 3 b d m z) :
-    b+4*m+4*n+20 ≠ 12*2^n := by
+    (hU : 1198*u+712=87*2^n) (hM : 14*u-2*n-3≤m) :
+    ¬ CountCone (14*2^n-2*n-16) 3 b d m z := by
+  intro h
   have hn : 14≤n := by omega
-  have hmN : n≤m := by
-    rw [hM]
-    exact BB6WallCarry.familyII_terminal_m_ge_n n u hn hU
-  apply source_wall_no_prefix n b d m z 13 hn h (by omega) (by omega)
-  rw [hN]
-  exact BB6WallCarry.noPrefix_familyII_h1 t
+  have hmN : n≤m := Nat.le_trans
+    (BB6WallCarry.familyII_terminal_m_ge_n n u hn hU) hM
+  have hcap := source_countcone_cost_lt n b d m z 13 hn h (by omega) (by
+    rw [hN]
+    exact BB6WallCarry.noPrefix_familyII_h1 t)
+  omega
 
-theorem source_no_wall_familyII_h2 (n b d m z u t : Nat)
+theorem source_no_restart_familyII_h2 (n b d m z u t : Nat)
     (hN : n=9538+703248*(2+2^18*t))
-    (hU : 1198*u+712=87*2^n) (hM : m=14*u-2*n-3)
-    (h : CountCone (14*2^n-2*n-16) 3 b d m z) :
-    b+4*m+4*n+20 ≠ 12*2^n := by
+    (hU : 1198*u+712=87*2^n) (hM : 14*u-2*n-3≤m) :
+    ¬ CountCone (14*2^n-2*n-16) 3 b d m z := by
+  intro h
   have hn : 14≤n := by omega
-  have hmN : n≤m := by
-    rw [hM]
-    exact BB6WallCarry.familyII_terminal_m_ge_n n u hn hU
-  apply source_wall_no_prefix n b d m z 21 hn h (by omega) (by omega)
-  rw [hN]
-  exact BB6WallCarry.noPrefix_familyII_h2 t
+  have hmN : n≤m := Nat.le_trans
+    (BB6WallCarry.familyII_terminal_m_ge_n n u hn hU) hM
+  have hcap := source_countcone_cost_lt n b d m z 21 hn h (by omega) (by
+    rw [hN]
+    exact BB6WallCarry.noPrefix_familyII_h2 t)
+  omega
 
 #print axioms source_cost_witness
 #print axioms source_wall_cost_list_identity
-#print axioms source_wall_no_prefix
-#print axioms source_no_wall_familyI_h1
-#print axioms source_no_wall_familyI_h2
-#print axioms source_no_wall_familyII_h1
-#print axioms source_no_wall_familyII_h2
+#print axioms source_odd_right
+#print axioms source_countcone_cost_lt
+#print axioms source_no_restart_familyI_h1
+#print axioms source_no_restart_familyI_h2
+#print axioms source_no_restart_familyII_h1
+#print axioms source_no_restart_familyII_h2
 end BB6.Agent43WallListSource
