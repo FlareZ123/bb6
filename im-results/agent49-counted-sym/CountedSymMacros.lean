@@ -204,10 +204,10 @@ theorem ruleB_step_exact (s_sep m_sep : List SymTok)
       (evalSym target_tm (stateB s_sep m_sep (p+1) (m+2) (k+1) d2 R_tail))
       (evalSym target_tm (stateB s_sep m_sep (p+3) (m+1) k (d2+4) R_tail)) := by
   rcases hs with rfl | rfl <;> rcases hm with rfl | rfl
-  · exact rules.ruleB_step_AA_exact p m k d2 R_tail
-  · exact rules.ruleB_step_AB_exact p m k d2 R_tail
-  · exact rules.ruleB_step_BA_exact p m k d2 R_tail
-  · exact rules.ruleB_step_BB_exact p m k d2 R_tail
+  · cases flag <;> exact rules.ruleB_step_AA_exact p m k d2 R_tail
+  · cases flag <;> exact rules.ruleB_step_AB_exact p m k d2 R_tail
+  · cases flag <;> exact rules.ruleB_step_BA_exact p m k d2 R_tail
+  · cases flag <;> exact rules.ruleB_step_BB_exact p m k d2 R_tail
 
 theorem ruleB_iter_exact (s_sep m_sep : List SymTok)
     (hs : s_sep = sep3A ∨ s_sep = sep3B) (hm : m_sep = sep3A ∨ m_sep = sep3B)
