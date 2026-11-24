@@ -138,7 +138,8 @@ theorem parent_envelope_complete (P : Nat → Nat → Nat → Nat → Nat → Pr
         exact ⟨a-d-2,d+2,h2.1,h2.2,by omega,rfl,hP _ _ _ _ _ h⟩
       · right
         by_cases h3 : a%2=1
-        · simp [highLevelNext,ha,h1,h2,h3] at h
+        · simp only [highLevelNext,if_neg ha,if_neg h1,if_neg h2,if_pos h3] at h
+          cases h
         · by_cases h4 : a=d+2
           · left
             simp only [highLevelNext,if_neg ha,if_neg h1,if_neg h2,if_neg h3,if_pos h4] at h
