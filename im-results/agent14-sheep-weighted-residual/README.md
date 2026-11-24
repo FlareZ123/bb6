@@ -168,6 +168,7 @@ Restore the source module from the Agent 16 dossier, then compile these files:
 
 ```sh
 python3 ../agent16-sheep-even-return/reconstruct.py
+LEAN_PATH=../agent16-sheep-even-return lean -o ../agent16-sheep-even-return/SheepEven.olean ../agent16-sheep-even-return/SheepEven.lean
 LEAN_PATH=../agent16-sheep-even-return lean -o GenericResidual.olean GenericResidual.lean
 LEAN_PATH=.:../agent16-sheep-even-return lean SingularCylinders.lean
 python3 check_singular_two_step.py
