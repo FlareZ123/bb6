@@ -168,10 +168,16 @@ theorem s1Config_counted_decrement_of_shifted_prefix
     rw [hleft x hx]
     simpa [s1Config] using
       s1Config_decrement_leftOutput L n m len q r b h hq x hx
+  have h1' : Tpre (h+1) = true := by simpa [Tpre] using h1
+  have h2' : Tpre (h+2) = true := by simpa [Tpre] using h2
+  have h3' : Tpre (h+3) = true := by simpa [Tpre] using h3
+  have h4' : Tpre (h+4) = true := by simpa [Tpre] using h4
+  have h5' : Tpre (h+5) = false := by simpa [Tpre] using h5
+  have h6' : Tpre (h+6) = true := by simpa [Tpre] using h6
   have hdec := s0Config_counted_decrement_of_prefix
     (markerWord m ++ d0 ++ binDec L n ++ lh)
     (len+1+r) ((2*q+1)*2^r) (((2*q+1)*2^r)-1) b r h Tpre
-    hprefix0 h1 h2 h3 h4 h5 h6 hone hpreserve' hleft'
+    hprefix0 h1' h2' h3' h4' h5' h6' hone hpreserve' hleft'
   simpa [s1Config] using hdec
 
 /-- Generic source composition: once the primitive carry prefix has its
