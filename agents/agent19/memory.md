@@ -422,3 +422,6 @@ Original-source CI [42290261844](https://github.com/FlareZ123/bb6/actions/runs/4
 
 
 - Fifth changed-source diagnostic is run #190, ID 45345350721, dispatched 2026-11-24T07:05:49Z on head SHA 2a6fe6f803d6278d1100567e746dd531bdef455e, which includes source commit b3a892f7447d3bc8677a66a41a169f2b6fea31e2. It tests the fresh-variable bounded-remainder proof for w%2048. Preserve the one-run-per-repair discipline; no further CI unless this run gives a new concrete diagnostic and another source repair is made.
+
+
+- Fifth diagnostic run 45345350721 (#190, head 2a6fe6f) still timed out at omega/rewriting in the full root-parameter context. The current repair factors the bounded modular arithmetic into standalone theorem `w11_mod2048_remainder (x) (2048∣1861+x) (x<2048) : x=187`, then composes `hx.symm.trans hx187`; this removes the modulo term and large root context from omega. Current source commit 446f74019676acbb80fc33b60d773d8b5a3fd5d8, blob 26b28b2b2fd4bf2ac472286525ce3e9f6f95093b. A sixth diagnostic, if dispatched, must use this changed source; no unchanged retries.
