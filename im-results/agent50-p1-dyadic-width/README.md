@@ -189,3 +189,22 @@ with the complete remaining parent interval \(N'+1\le2^kD\le2N'-14\). The source
 The two fourth-edge survivors have limiting restart ratios 491/21952 and 141/21952. Their ideal reverse-depth words map both to 249/343. Since ord_343(2)=147, this rational has a 147-bit binary period whose run-length word has 73 symbols and total cost 147. The exact finite-size error over one ideal cycle obeys an affine recurrence with multiplier 2^147. After their distinct initial words, the exact errors are respectively 21160n+238409 and 401982095360n+4624852107897.
 
 At the base indices, the exact reverse-parent orbits shadow the 73-symbol cycle for 2658 steps/cost 5347 (n=5362), and 4717 steps/cost 9490 (n=9538), then choose different next depths from the ideal orbit. This is exact finite computational evidence, not an actual periodic source orbit or a root-prefix decision. The new bottleneck is the post-shadowing deterministic reverse orbit: determine whether it reaches the blank-root state or is obstructed, potentially by a sequence of further rational reference cycles.
+
+
+## Root-prefix carry cylinders (2026-11-24)
+
+[wall_prefix_carry_cylinders.md](wall_prefix_carry_cylinders.md) and
+[wall_prefix_carry_cylinders.lean](wall_prefix_carry_cylinders.lean) add a
+core-Lean-checked carry certificate for four infinite parameter cylinders in
+the two fourth-edge restart families. The exact prefix recurrence is
+(c_{j+1}=(c_j+x_j(n+3+j))/2), with (c_1=(n+2)/2). Empty carry layers
+exclude all Boolean prefixes with (x_0=1) satisfying the source-wall
+congruence modulo (2^K).
+
+The four excluded classes are family I (h\equiv1\pmod{2^{56}}) and
+(h\equiv2\pmod{2^8}), and family II (h\equiv1\pmod{2^{10}}) and
+(h\equiv2\pmod{2^{18}}). The source identity is independently compiled on
+PR #99; its small characteristic-list-to-Boolean-prefix composition remains
+to be integrated. This is a partial cylinder exclusion, not a proof that
+either full restart family is impossible, not an unrestricted six-shallow
+theorem, and not a P1 or BB(6) decision.
