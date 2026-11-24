@@ -47,7 +47,9 @@ theorem cyc_R_A_exact (k : ℕ) (V s : ListBlank (Fin 2)) :
           ⟨some BusyBeaver.M_1RB1RC_1LC0LF_1RF0LD_0RE1LB_1RCHHH_1LD0RA.Solution.A, ⟨0, (0 : Fin 2) >> ((([0] : List (Fin 2)) ^ k) +> V'), s⟩⟩ :=
         ⟨3*k, ih V'⟩
     have h := witness_proof% (BusyBeaver.M_1RB1RC_1LC0LF_1RF0LD_0RE1LB_1RCHHH_1LD0RA.Solution.cyc_R_A (k+1) V s) using [hc]
-    simpa only [ReachesIn, Nat.mul_succ, Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using h
+    have hc : 3 + 3*k = 3*(k+1) := by omega
+    rw [← hc]
+    exact h
 
 private def cycleWitness (k : ℕ) (V s : ListBlank (Fin 2)) :
     ReachesStar target_tm
@@ -60,14 +62,18 @@ theorem step_DL_run2_exact (d0 : ℕ) (L1 R1 : List MItem) :
       (cfgDL target_tm (.run 2 :: L1) (.run d0 :: R1))
       (cfgCB target_tm (.run 0 :: .run 0 :: List.replicate (d0 + 1) .zero ++ L1) R1) := by
   have h := witness_replaced% (BusyBeaver.M_1RB1RC_1LC0LF_1RF0LD_0RE1LB_1RCHHH_1LD0RA.Solution.step_DL_run2 d0 L1 R1) using [] replacing [BusyBeaver.M_1RB1RC_1LC0LF_1RF0LD_0RE1LB_1RCHHH_1LD0RA.Solution.cyc_R_A := cycleWitness]
-  simpa only [ReachesIn, Nat.mul_succ, Nat.mul_add, Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using h.2
+  have hc : 6 + 3*(d0+1) + 11 = 3*d0+20 := by omega
+  rw [← hc]
+  exact h.2
 
 theorem step_CB_run0_run_pos_exact (d2 : ℕ) (L R2 : List MItem) :
     ReachesIn target_tm (3*d2+19)
       (cfgCB target_tm L (.run 0 :: .run (d2 + 1) :: R2))
       (cfgCB target_tm (.run 0 :: .run 0 :: List.replicate d2 .zero ++ bumpM L) R2) := by
   have h := witness_replaced% (BusyBeaver.M_1RB1RC_1LC0LF_1RF0LD_0RE1LB_1RCHHH_1LD0RA.Solution.step_CB_run0_run_pos d2 L R2) using [] replacing [BusyBeaver.M_1RB1RC_1LC0LF_1RF0LD_0RE1LB_1RCHHH_1LD0RA.Solution.cyc_R_A := cycleWitness]
-  simpa only [ReachesIn, Nat.mul_succ, Nat.mul_add, Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using h.2
+  have hc : 5 + 3*(d2+1) + 11 = 3*d2+19 := by omega
+  rw [← hc]
+  exact h.2
 
 #print axioms step_BB_nil_exact
 #print axioms step_BB_zero_exact
