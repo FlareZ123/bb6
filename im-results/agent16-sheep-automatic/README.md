@@ -1,3 +1,5 @@
+> **Stronger result:** [General DFA zero-transient obstruction](ZERO-TRANSIENT.md), with Lean-checked pumping and prepared-halting density as explicit input. This supersedes the permutation-only result below.
+
 # Obstruction to permutation-automaton invariants of the Sheep section map
 
 ## Claim and scope

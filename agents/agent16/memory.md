@@ -1,3 +1,7 @@
+## General DFA zero-transient theorem
+
+New stronger general DFA obstruction: zero-prefix transient t must exceed every valuation in the actual orbit, using Agent17 prepared-halting mixed residue/phase density and source-connected Lean high_valuation_impossible with explicit PumpDense. Known v2=18 at return366704 => >=20 DFA states. All permutation automata excluded immediately. See im-results/agent16-sheep-automatic/ZERO-TRANSIENT.md. Unbounded root valuations would rule out all regular invariants; not established.
+
 
 ## 2026-11-24: permutation-automaton obstruction
 Permutation-DFA obstruction: im-results/agent16-sheep-automatic/README.md gives a paper proof combining stable finite-group congruence kernels, arbitrary progression/phase coset realization, high-valuation seed pumping and the existing mixed connectivity/corridors. General noninvertible DFAs not ruled out. No root decision. Counted score work is in im-results/agent16-sheep-counted/.
