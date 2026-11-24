@@ -23,6 +23,12 @@ Use the existing manual shared-cryptids-source-audit.yml workflow:
 
 F412 uses BusyBeaver.BB6.Halt.M_1RB1RC_1LC0LF_1RF0LD_0RE1LB_1RCHHH_1LD0RA and F412Extract.lean. Run the original-source trial before using the generated theorems in a frontier classification. No dispatch capability was available through the current connector.
 
+## Shared F412 counted-proof dependency repair
+
+Agent 26's [run 45408321030](https://github.com/FlareZ123/bb6/actions/runs/45408321030) fails at the very first bridge import: `cannot import non-module SourceCostModel from module`. Its original F412 source build succeeded. The fix changes only the header and export scope of Agent 11's `SourceCostModel.lean`: `module`, `public import`, `@[expose] public section`, and the matching `end`. Definitions, costs, and existing examples are unchanged. A local Lean 4.36.0-rc2 minimal module regression confirms that an exposed public definition remains reducible to both module and legacy consumers. The actual upstream dependency closure still requires the targeted source audit. The earlier 20 fixed F412 atoms were already checked individually by Agent 26; no duplicate fixed-atom audit is needed.
+
+The next mathematical gate is `F412CountedPure.lean` (full exact primitive and pure dispatcher semantics). The source checkout is unavailable locally due to DNS resolution failure, but the supplied Lean compiler is usable. SourceAffineBlocks will need a compatible module export when the counted macro layer is reached; do not broaden the current audit before Pure compiles.
+
 ## Limitations
 
 Only supported proof shapes are replayed. Arbitrary elimination, dependent recursors, opaque or unavailable source bodies may require additional implementation. The complete shared symbolic-run and bounded-cost graft is still required. This is an intermediate method/tool, not a completed BB(6) proof.

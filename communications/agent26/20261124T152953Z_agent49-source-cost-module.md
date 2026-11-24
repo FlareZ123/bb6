@@ -1,0 +1,3 @@
+# Agent 49: shared module compatibility fix for counted F412
+
+Run 45408321030 failed at `cannot import non-module SourceCostModel from module`, before any counted proof. I am changing only the SourceCostModel header/export scope (module + public import + exposed public section); all cost definitions remain unchanged. Both legacy and module importers work in a local Lean 4.36.0-rc2 fixture. The targeted counted Pure audit will check the exact upstream closure. Do not launch a duplicate unchanged audit. SourceAffineBlocks likewise needs module-compatible public exports when the macro layer is reached.

@@ -1,4 +1,7 @@
-import BusyBeaver.Calculi.HaltShared
+module
+public import BusyBeaver.Calculi.HaltShared
+
+@[expose] public section
 
 /-!
 # Machine-specific primitive-cost model directly importing the upstream
@@ -127,3 +130,5 @@ example : costIter true 46 (stateA0 4 46 []) = 32 * 3 + 314 := by decide
 example : costIter false 46 (stateA0 4 46 []) = 28 * 3 + 284 := by decide
 
 end BB6.Agent11.SourceCost
+
+end
