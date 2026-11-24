@@ -103,3 +103,14 @@ The useful next action is to add the small `List.Nodup` characteristic-bit bridg
 
 
 The generic inequality (2^n\ge1100n) for (n\ge14), and both implications (m\ge n) from the explicit (u)-formulae, are now kernel-checked in the Lean file as `pow2_ge_1100_mul`, `familyI_terminal_m_ge_n`, and `familyII_terminal_m_ge_n`. Their `#print axioms` audits are `[propext, Quot.sound]`.
+
+
+## Relation to the earlier full-wall carry convention
+
+Put (P=2^n) and (Q=7P-(n+3)). Rearranging (1) gives the previously audited full-wall identity
+[
+\sum_{s\in A}(Q-s)2^s=2^m(P+m+n+3)-1.
+]
+For (K\le n,m), its right side is (-1\pmod{2^K}), while (Q\equiv-(n+3)\pmod{2^K}). Thus it is exactly the negative of (3), and the two prefix formulations are equivalent: the earlier (Q-s) carry tracks the all-ones target (-1\pmod{2^K}), while this Lean file tracks the cost-side target (1\pmod{2^K}).
+
+The terminal convention is also consistent with the earlier audit: the terminal start (m) is separate from the earlier-start list (A), and the formally proved (m\ge n\ge K) means it cannot contribute to any of these prefixes. This avoids the (m<n) terminal-inclusion case discussed in the earlier full-wall audit.
