@@ -37,62 +37,40 @@ For every non-final completed block the current w is divisible by 256. Hence
     a' = a + 5*w/16 - 8 = a - 8 (mod 16).
 On the q0 subfamily u=9 (mod 16), the initial a=5 (mod 16), so block-start residues alternate 5,13,5,13,... modulo 16 while the non-final block condition holds.
 
-## Competing F sibling at the S split
+## Competing F sibling: corrected exact all-F formulas
 
-At a block start (a,a+w+8), after the first F, the competing F parent at the next odd split is
-    Q1 = ((a-9)/4, (5*a + 2*w + 13)/2).
+The prior version of this section contained an arithmetic error. It gave the second coordinates after three and four consecutive F inverses as 3a+w+2 and (25a+8w-5)/8. Both are incorrect. The derived mod-128/mod-256 sibling table and its claimed exclusions are withdrawn.
 
-When 16 divides w:
-- If a=1 (mod 8), Q1 is positive even and its second coordinate is 1 (mod 4), contradicting rooted_even_parity.
-- If a=5 (mod 8), Q1 is odd with second coordinate 3 (mod 4), so F is forced. The next parent is
-      Q2 = ((a-21)/8, 3*a + w + 2).
-  If a=5 (mod 16), Q2 is positive even with second coordinate 1 (mod 4), again impossible.
-- The difficult case is a=13 (mod 16). Q2 is then odd with second coordinate 1 (mod 4), so another F is forced:
-      Q3 = ((a-45)/16, (25*a + 8*w - 5)/8).
+For any block-start state (a,a+w+8), set R=3a+w+8. The exact all-F run (while integral and legal) is
 
-For a non-final block, 256 divides w. In the difficult case a=13 (mod 16), the following residue table is exact:
+    a_k = (a+3)/2^k - 3
+    b_k = R - 2a_k - 3k.
 
-| a mod 128 | Q3 modulo 8 | Consequence |
-|---:|:---:|---|
-| 13 | even first, second 0 | excluded by rooted-even-parity |
-| 29 | (7,2) | both alternatives need further work |
-| 61 | (1,6) | excluded by rooted-not-1-6 |
-| 93 | (3,2) | both alternatives need further work |
-| 125 | (5,6) | excluded by rooted-not-5-6 |
+In particular the competing F child after the first F (instead of S), and the next two F children, are
 
-For the two remaining rows, the next inverse alternatives are:
+    F^2 = ((a-9)/4,  (5a+2w+13)/2)
+    F^3 = ((a-21)/8, (11a+4w+17)/4)
+    F^4 = ((a-45)/16,(23a+8w+13)/8).
 
-**If a=29+128s:**
-    F(Q3) = (-2+4s, 89+408s+w),
-    S(Q3) = (15+108s+w/4, 47+200s+w/2).
+The incorrect formula for F^3 had added the wrong first coordinate. Its consequences for parity and later branches are not valid.
 
-The F child is positive even with second coordinate 1 (mod 4), hence impossible. The S child is (7,7) mod 8 when s is even, hence impossible by rooted-not-7-7. The case s odd survives these particular invariants.
+For the q0 initial state, after j completed FSFE blocks,
 
-**If a=93+128s:**
-    F(Q3) = (4s, 293+408s+w),
-    S(Q3) = (69+108s+w/4, 147+200s+w/2).
+    w_j = w0/16^j
+    a_j = ((4*16^j-1)/3)*w_j + 21 - 8j.
 
-The F child is positive even with second coordinate 1 (mod 4), hence impossible. The S child has residue (5,3) mod 8 for even s, or (1,3) mod 8 for odd s. Allowed excludes (1,3), so only even s survives this check. Thus the only S-sibling cylinders left after this step are a=157 (mod 256) and a=93 (mod 256).
+The coefficient C_j=(4*16^j-1)/3 is an odd integer, and
 
-The displayed exclusions use the existing all-time root invariants rooted_even_parity, rooted_not_1_6, rooted_not_5_6, and rooted_not_7_7. The latter three are in im-results/agent39-429-1021/BB429RootMod16.lean; the four-sector calculations above are not yet a Lean theorem.
+    a_j+3 = C_j*w_j + 8(3-j).
 
-## What this isolates
+When 256 divides w_j, write a_j=21-8j+256A and w_j=256W. Then the competing F^2 child is (3-2j+64A,59-20j+640A+256W). The subsequent F^3 child is (-j+32A,62-22j+704A+256W). The first child's second coordinate is 3 mod 4, so its next F is forced if it survives. For j=1 mod 4 the F^2 child violates Allowed; for j=0 mod 4 the F^3 child is even with second coordinate 6 mod 8 and cannot be rooted. For j=2 mod 4, F^3 is even with second coordinate 2 mod 8, so E remains a candidate. For j=3 mod 4, F^3 is odd with second coordinate 0 mod 4, so F remains a candidate. Further existing predicates can prune some cases; none of these observations proves full branch closure.
 
-The repeated FSFE path has a clean 2-adic valuation clock: every completed block consumes exactly four powers of two from w, and the endpoint rank drops by 24. The competing F sibling is immediately excluded on every block-start residue a=5 (mod 16), but the a=13 (mod 16) sibling has further surviving residue branches. Therefore the valuation calculation alone is insufficient.
+## Fixed-index secondary spine: a rigorous obstruction
 
-The next mathematically discriminating task is to close the two surviving sibling cylinders a=29,93 (mod 128) under the full inverse grammar, or find a stronger source-root invariant that eliminates them. Separately, the residual valuations 1,2,3,4 require an exact terminal-tail table. Do not promote the repeated FSFE branch to a proof of nonreachability until every sibling and terminal tail is closed.
+At j=3 the additive term in a_j+3 vanishes identically:
 
+    a_3+3 = 5461*w_3.
 
-## Domain check when translating the mod-256 sibling table back to q0
+The new [Q0SecondarySpine theorem](Q0SecondarySpine.md) proves that for **every** natural K some genuine q0 parameter admits the inverse word (FSFE)^3 F^K, with all edge guards and all the residue predicates in Agent 6's depth-16 sieve satisfied at every vertex. This is a Lean-checked all-depth arithmetic model. The branch is synthetic, so it does not establish actual blank-root ancestry. It rules out closing the q0 tree by a uniform cap on all-F suffix depth after compressing only the FSFE blocks.
 
-For u=16*t+9, modulo 256:
-    a0 = 21 - 128*t,
-    w0/16 = -24*t - 16,
-and after one FSFE block
-    a1 = a0 + 5*w0/16 - 8 = 189 + 8*t (mod 256).
-
-However, the preceding mod-256 sibling table at the second block start assumes w1=w0/16 is divisible by 256. Since v2(w1)=v2(3u+5)-1=3+v2(3*t+2), this requires v2(3*t+2)>=5, equivalently t=10 (mod 32). In that case a1=13 (mod 256), which is the already-excluded a=13 (mod 128) row of the sibling table.
-
-The formal residue equations a1=157 or 93 (mod 256) would give t=28 or20 (mod 32), but these have v2(3*t+2)=1 and hence v2(w1)=4. They are outside the table's w1-divisible-by-256 hypothesis. They must not be described as surviving or excluded by that table.
-
-Therefore, for the subcase where the second block start satisfies 256|w1, the competing sibling is excluded; the final-block cases with v2(w1) in {4,5,6,7} remain to be analyzed with their exact lower-valuation grammar. This is a domain-restricted branch reduction, not a q0 nonreachability result.
+The previous mod-256 sibling exclusions are superseded by these corrected formulas. Remaining work: characterize all F/S/E siblings and terminal tails or find a new history-sensitive invariant that excludes genuine root ancestry. The FSFE valuation identity itself and the root-compatible completed-block formula earlier in this note are unchanged.

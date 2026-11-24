@@ -34,7 +34,7 @@ The 16 values are:
 | 14 | 29 | excluded by Agent 1 even-sector extension |
 | 15 | 5 | excluded by Agent 6 six-sector tree |
 
-Thus the current paper-level candidate reductions cover ten entire \(u\bmod16\) classes. Nine additional \(u\bmod64\) cylinders inside the open even classes are excluded below, giving 49 of 64 residue classes (density 49/64). The six remaining full mod-16 classes are \(u\equiv0,2,3,8,9,10\pmod{16}\); classes 2 and 8 are only partially open after the mod-64 refinement. The table is a research map, **not** a formal theorem until the derivations are compiled against the real dependency closure.
+Thus the current paper-level candidate reductions cover ten entire \(u\bmod16\) classes. The six remaining mod-16 classes in this provisional derivation are \(u\equiv0,2,3,8,9,10\pmod{16}\). The older manual mod-64 table is superseded by the independent depth-16 computation below. The table is a research map, **not** a formal theorem until the derivations are compiled against the real dependency closure.
 
 ## Six odd-u sectors (Agent 6)
 
@@ -101,89 +101,20 @@ In both cases \(P_5\) has positive even first coordinate and second coordinate \
 
 Every discarded branch is rejected by Allowed; every retained predecessor is a genuine Reach predecessor by odd_back. The bound \(a>10^6\) makes \(t\) large enough for all odd_back lower bounds and positivity conditions. This extension has been sent to Agents 6 and 39 for review; it has not yet been Lean-compiled.
 
-## Four additional mod-64 cylinders inside the open even classes
+## Corrected fine-residue coverage
 
-The odd-\(m\) continuation after \(P_5\) does not close all of \(u\equiv2,8\pmod{16}\), but it does close four specific lifts. The exact \(P_5\) states are
-\[
-P_5=((5k-4)/2,20+59k)\quad(k\text{ even},\ u\equiv8\pmod{16}),\\
-P_5=((k-5)/2,29+63k)\quad(k\text{ odd},\ u\equiv2\pmod{16}).
-\]
-In these two classes, \(P_5\) is odd with second coordinate \(2\pmod8\). Its F parent is positive even with second coordinate \(1\) or \(5\pmod8\), hence impossible by rooted_positive_even_eight. The S parent is odd with second coordinate \(3\pmod4\), so its next inverse is forced F. The resulting \(P_7\) residues depend only on \(u\bmod64\):
+Agent 6's [depth-16 sieve](../agent6-harmonic429/Q0Depth16InverseSieve.md) uses the exact F/S/E inverse grammar together with the listed source-certified root invariants. Its computed surviving base classes number 31,376 modulo 2^22, with projection modulo 64:
 
-| \(u\bmod64\) | \(k\bmod32\) | \(P_7\bmod32\) | Result |
-|---:|---:|---:|---|
-| 2 | 27 | (25,24) | survives this depth |
-| 18 | 3 | (22,30) | even first, second 6 mod8: impossible |
-| 34 | 11 | (23,28) | Allowed fails: first 7 mod8, second 0 mod4 |
-| 50 | 19 | (24,26) | survives this depth |
-| 8 | 18 | (24,18) | survives this depth |
-| 24 | 26 | (29,8) | survives this depth |
-| 40 | 2 | (14,6) | even first, second 6 mod8: impossible |
-| 56 | 10 | (19,28) | Allowed fails: first 3 mod8, second 0 mod4 |
+    0,2,8,9,16,19,24,25,26,35,41,42,50.
 
-Therefore the four cylinders \(u\equiv18,34,40,56\pmod{64}\) are additionally excluded. The other four lifts of the \(u\equiv2,8\pmod{16}\) classes remain open at this depth. This raises the paper-level residue coverage to 44/64, or 11/16. This refinement is also uncompiled and must not be mistaken for a full exclusion of either mod-16 class.
+Thus the finite computation reports 51 excluded mod-64 cylinders, with the 13 above still open (the u=0 point is checked separately). It is a computational necessary-condition sieve, not a Lean theorem or a reachability proof.
 
-## Five more mod-64 cylinders inside the open classes \(u=0,10\pmod{16}\)
+**Correction to the former manual table:** for even u, a=13+16k and k=(-24u-32)/16 mod 32; u=26 mod 64 gives k=23 mod 32, not 7. The latter belongs to u=58 mod 64. Moreover a residue for k modulo 32 cannot in general determine all divided-coordinate residues modulo 32. The previous 49/64 paper-level count and finer tables are withdrawn. Agent 6 gives the counterexample u=2330 with a depth-16 invariant-compatible inverse path, so the entire u=26 cylinder cannot be excluded by the old table.
 
-The surviving odd branch after \(P_5\) in the \(u\equiv0,10\pmod{16}\) cases can be followed two more forced F inverses.
+The broad four-even-sector formulas above remain provisional paper derivations. No combined original-source Lean theorem is claimed.
 
-For \(u\equiv0\pmod{16}\), \(k\equiv6\pmod8\) is even and
-\[
-P_5=((5k-4)/2,20+59k).
-\]
-Its S parent is positive even with second coordinate \(1\pmod4\), so rooted_even_parity excludes it. The F parent is
-\[
-P_6=((5k-10)/4,(36+123k)/2),
-\]
-odd with second coordinate \(3\pmod4\), so F is forced again:
-\[
-P_7=((5k-22)/8,(62+251k)/4).
-\]
-The four lifts give:
-- \(u\equiv0\): \(k=30\), \(P_7=(16,10)\pmod{32}\), survives this depth;
-- \(u\equiv16\): \(k=6\), \(P_7=(1,8)\pmod{32}\), survives this depth;
-- \(u\equiv32\): \(k=14\), \(P_7=(6,30)\pmod{32}\), positive even first with second 6 mod8, impossible;
-- \(u\equiv48\): \(k=22\), \(P_7=(11,20)\pmod{32}\), violates Allowed (first 3 mod8, second 0 mod4).
+## Unbounded tail obstruction
 
-For \(u\equiv10\pmod{16}\), \(k\equiv7\pmod8\) is odd and
-\[
-P_5=((k-5)/2,29+63k).
-\]
-Its S parent is again positive even with second coordinate \(1\pmod4\), so rooted_even_parity excludes it. The F parent is
-\[
-P_6=((k-11)/4,(53+127k)/2),
-\]
-odd with second coordinate \(3\pmod4\), so F is forced:
-\[
-P_7=((k-23)/8,(95+255k)/4).
-\]
-The four lifts give:
-- \(u\equiv10\): \(k=15\), \(P_7=(31,20)\pmod{32}\), violates Allowed (first 7 mod8, second 0 mod4);
-- \(u\equiv26\): \(k=7\), \(P_7=(30,22)\pmod{32}\), positive even first with second 6 mod8, impossible;
-- \(u\equiv42\): \(k=31\), \(P_7=(1,16)\pmod{32}\), survives this depth;
-- \(u\equiv58\): \(k=7\), \(P_7=(30,22)\pmod{32}\), positive even first with second 6 mod8, impossible.
+The [FSFE valuation clock](FSFE-2adic-block.md) is not the only obstacle to a fixed-depth inverse proof. The [corrected FSFE sibling analysis](FSFE-valuation-tail.md) and [Q0SecondarySpine.lean](Q0SecondarySpine.lean) give an all-depth arithmetic theorem: for every K some actual q0 parameter admits (FSFE)^3 F^K while passing the full depth-16 sieve's residue predicates. No fixed cap on the suffix length after three blocks suffices. See [the exact theorem and scope](Q0SecondarySpine.md).
 
-The additional excluded cylinders are \(u\equiv10,26,32,48,58\pmod{64}\). Combined with the previous four mod-64 exclusions and the ten complete mod-16 classes, this gives 49/64 residue classes excluded at the paper level. The 15 remaining mod-64 residues are
-\[
-0,2,3,8,9,16,19,24,25,35,41,42,50,51,57.
-\]
-This is not a full q0 proof; the surviving lifts remain open and the derivation is uncompiled.
-
-## Relation to the 2-adic FSFE block
-
-The existing [FSFE-2adic-block.md](FSFE-2adic-block.md) derives
-\[
-v_2(z+1)=3+v_2(3u+5),\qquad z=b-a-9.
-\]
-For \(u\equiv9\pmod{16}\), \(v_2(3u+5)\ge4\), and this valuation is unbounded on the class. This is the genuinely unbounded repeated-FSFE branch. For \(u\equiv3\pmod{16}\), \(v_2(3u+5)=1\); for even \(u\), the valuation is zero. The six-sector proof does not touch \(u\equiv9\pmod{16}\), and the four even-sector extension uses a different inverse path.
-
-The FSFE block is only one candidate branch: its competing F sibling at each S split must still be handled. The concrete \(u=0\) finite tree in [the q0 inverse-tree note](../agent1-429-q0-23-7-inverse-tree.md) is not a proof for all \(u\equiv0\pmod{16}\).
-
-## Evidence boundary and next work
-
-- The all-time source-equivalent root invariants Allowed, rooted_even_parity, and rooted_positive_even_eight have prior source-check history in the repository. The four even sectors need only the weaker rooted_even_parity theorem, already imported by Agent 1's BB429Q0Row237.lean.
-- The six odd sectors and four even sectors above are not yet integrated into one Lean module with the full unchanged dependency closure.
-- No local Lean compile or new CI run was possible during this review; do not call the ten-sector coverage source-certified.
-- Next: have Agent 6/39 independently check and compile the even-sector extension; integrate the six+four proof modules against the actual BB429NewResidue and BB429RootEven8 imports; then attack the six remaining \(u\bmod16\) classes without fixed-depth simulation. Prioritize \(u\equiv3\pmod{16}\) separately from the unbounded \(u\equiv9\pmod{16}\) valuation branch.
-
-All material remains in im-results/. No BB(6) value, #429 halting decision, or universal upper bound is established.
+The missing quantifier is genuine blank-root ancestry for every surviving parameter. Do not extend the same bounded sieve without a new invariant or an accelerated, fully covered recursive tail argument. No #429 decision or BB(6) value follows.

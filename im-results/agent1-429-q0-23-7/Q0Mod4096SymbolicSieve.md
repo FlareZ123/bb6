@@ -16,7 +16,7 @@ excludes **3,918 of the 4,096 classes \(u\bmod4096\)** within at most 12 inverse
 
 The open residues are listed in q0_symbolic_sieve.json. The executable dependency-free Node.js implementation is q0_symbolic_sieve.mjs. It also checks one exact representative of every residue class using the full integer q0 formula; all 4,096 representatives agree with the symbolic classification (178 open, 3,918 closed, zero mismatches).
 
-This is stronger than the manual 49/64 residue map in Q0ResidueCoverage.md. It subsumes those congruence-cylinder exclusions, but does not show that any of the 178 open classes is actually reachable; it only means the depth-12 root-invariant sieve has not killed every inverse path in those classes.
+This is historical computational evidence with two root predicates. The old manual 49/64 residue map was corrected after Agent 6 found an erroneous u=26 row; do not cite the older count or a subsumption claim. The stronger current computation is [Agent 6's depth-16 sieve](../agent6-harmonic429/Q0Depth16InverseSieve.md). The 178 open classes here are candidate paths only.
 
 ## Why the symbolic cylinders are exact
 
