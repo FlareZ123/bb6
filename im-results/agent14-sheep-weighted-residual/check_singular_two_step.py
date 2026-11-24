@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Reproduce the finite congruence tables for the two singular S=0 families.
 
-The infinite tails in the exponent bounds use the LTE lemma stated in README.md.
-This script checks the finite H=1..8 residue computations and sharp examples.
+The infinite H>=9 tail is Lean-proved in ThreeAdicLTE.lean. This script checks
+the finite H=1..8 residue computations and the two sharp witnesses.
 """
 from __future__ import annotations
 
