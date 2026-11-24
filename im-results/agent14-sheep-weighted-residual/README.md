@@ -186,14 +186,23 @@ Restore the source module from the Agent 16 dossier, then compile these files:
 ```sh
 # Run from the repository root.
 python3 im-results/agent16-sheep-even-return/reconstruct.py
+python3 im-results/agent16-sheep-even-return/reconstruct_all.py
 LEAN_PATH=im-results/agent16-sheep-even-return lean -o im-results/agent16-sheep-even-return/SheepEven.olean im-results/agent16-sheep-even-return/SheepEven.lean
 LEAN_PATH=im-results/agent16-sheep-even-return lean -o im-results/agent14-sheep-weighted-residual/GenericResidual.olean im-results/agent14-sheep-weighted-residual/GenericResidual.lean
 LEAN_PATH=im-results/agent14-sheep-weighted-residual:im-results/agent16-sheep-even-return lean im-results/agent14-sheep-weighted-residual/SingularCylinders.lean
+for mod in EvenEdge OddPrefix EvenReach; do
+  LEAN_PATH=im-results/agent16-sheep-even-return lean -o im-results/agent16-sheep-even-return/$mod.olean im-results/agent16-sheep-even-return/$mod.lean
+done
 cd im-results/agent14-sheep-weighted-residual
 lean -o ThreeAdicLTE.olean ThreeAdicLTE.lean
 lean -o SingularLowH.olean SingularLowH.lean
 LEAN_PATH=. lean -o SingularTerminal.olean SingularTerminal.lean
-LEAN_PATH=. lean SingularLanguage.lean
+LEAN_PATH=. lean -o SingularLanguage.olean SingularLanguage.lean
+for mod in ThreeAdicLift TerminalSufficiency Type1Sufficiency; do
+  LEAN_PATH=. lean -o $mod.olean $mod.lean
+done
+LEAN_PATH=.:../agent16-sheep-even-return lean SingularSource.lean
+python3 check_singular_language.py
 cd ../..
 python3 im-results/agent14-sheep-weighted-residual/check_singular_two_step.py
 ```
@@ -209,8 +218,13 @@ reproduces the full residue table and witnesses. Together with the earlier
 Lean tail theorems, `SingularTerminal.lean` now proves the two lower bounds
 for all H in one checked module. `SingularLanguage.lean` additionally proves
 that type-II H must lie in six residue classes modulo 80 (H>=1).
-See [the exact terminal language](TERMINAL_LANGUAGE.md) for a two-way
-arithmetic parametrization with its separate verification status.
+`ThreeAdicLift.lean`, `TerminalSufficiency.lean`, `Type1Sufficiency.lean`,
+and `SingularSource.lean` now prove both directions of the hidden-length
+classification for genuine prepared first-even paths, by importing the exact
+`SheepEven` relation. Type I admits every H>=1; type II admits exactly the six
+classes. The complete q-residue parametrization and uniqueness are proved
+mathematically in [the exact terminal language](TERMINAL_LANGUAGE.md);
+Lean certifies existence at each permitted H, necessity, and both all-H bounds.
 
 ## Scope and limitation
 
