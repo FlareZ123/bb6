@@ -476,15 +476,13 @@ theorem positive_history_final_run {j s k x : Nat} {w : Int}
     ∃ r z, SameRun k r x z ∧
       ((k=j ∧ 3*W j z=8*(P j:Int)-6-w) ∨
        ∃ s' y, PositiveHistory j w s' (k+1) y ∧ RegFrom k z y) := by
-  induction h with
+  induction h generalizing s k x with
   | first hb he =>
-    subst x
-    exact ⟨0,x,SameRun.zero hb,Or.inl ⟨rfl,he⟩⟩
+    exact ⟨0,_,SameRun.zero hb,Or.inl ⟨rfl,he⟩⟩
   | @same s k x y h hr ih =>
     obtain ⟨r,z,hs,hbase⟩:=ih
     exact ⟨r+1,z,SameRun.head hr hs,hbase⟩
   | @down s k x y h hr ih =>
-    subst x
     obtain ⟨r,hr0,hx,hy⟩:=hr
     have hb : Band k x := by rw [hx]; exact regular_band k r hr0
     exact ⟨0,x,SameRun.zero hb,Or.inr ⟨s,y,h,⟨r,hr0,hx,hy⟩⟩⟩
