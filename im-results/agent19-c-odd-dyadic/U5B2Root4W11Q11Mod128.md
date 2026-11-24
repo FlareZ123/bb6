@@ -1,6 +1,6 @@
 # W11 q = 11 (mod 128): both source-parent branches excluded
 
-**Status:** exact paper-level infinite blank-orbit exclusion for the W11 parent family. The arithmetic and source-theorem composition below have not yet been assembled into a Lean theorem. Keep this in im-results/.
+**Status:** the source-side exclusion and forward exact-root transfer are now Lean-compiled in [W11Q11Source.lean](W11Q11Source.lean), with a successful 51-module Lean 4.36.0-rc2 closure in [CI run 45345767224 (#191)](https://github.com/FlareZ123/bb6/actions/runs/45345767224). All seven new declarations passed axiom audits without sorryAx. The converse root-index equivalence and nonvacuity argument in §1 remain paper-level arithmetic, not yet Lean-formalized. Keep this partial result in im-results/; it is not a full W11 or BB(6) solution.
 
 ## Statement
 
@@ -113,7 +113,7 @@ Consequently the source-side B2 exclusion above rules out an infinite, explicitl
 
 ## 2. The existing P(q) parent fan
 
-The complete source-grammar reduction in U5B2Root4W11OddDirectParent.md shows that, for odd \(q\), every source predecessor of \(P(q)\) is one of exactly two states:
+The source-grammar reduction in U5B2Root4W11OddDirectParent.md identifies two candidate states for a predecessor of P(q). The Lean theorem p_parent_fan formalizes the needed containment direction: for odd q, every original-section source predecessor of P(q) is one of these two candidates (it does not assert a converse):
 \[
 Q(q)=
 (7021907149+9647698200q,\;
@@ -272,25 +272,32 @@ Because \(2a+6\) is divisible by four and \(x+y+1\) has exact 2-adic valuation t
 \]
 Consequently, B2 reachability would imply \(P(128s+11)\) reachability, contradicting the two-branch exclusion above.
 
-Thus the W11 root4 cylinder
+Thus the Lean theorem blank_no_b2_root_r11092 proves that any exact B2 root-equation solution in the W11 root4 cylinder
 \[
 \boxed{r\equiv11092\pmod{16384}}
 \]
-is excluded at the paper-argument level for the B2 residual, not merely for the intermediate P(q) state.
+is not blank-reachable. The accompanying arithmetic argument in §1 proves the cylinder is nonempty for every root index in the progression, but that converse/nonvacuity step is not yet Lean-formalized.
 
 ## 6. Conclusion
 
 For every exact B2 root-equation solution in this W11 root4 cylinder, the B2 state is not blank-reachable. This is an infinite conditional root-index exclusion. The class has r≡20 (mod 64), so it is disjoint from the separate root32 high-stop domain r≡32 (mod 64); it is not an additional member of the nine-class root32 union. It does not close the other root-index residues, decide Machine C, or determine BB(6).
 
-## Exact dependencies and validation boundary
+## Lean verification and exact dependencies
 
-The branch closure uses the existing source-level results:
+The source module [W11Q11Source.lean](W11Q11Source.lean) was compiled through the existing manual workflow's w11_q11_only target. Successful run: [45345767224 (#191)](https://github.com/FlareZ123/bb6/actions/runs/45345767224), head SHA af92702b70ff6a6592314e382b7977890eacd9a6, Lean 4.36.0-rc2, 51 modules in the exact import closure.
+
+The seven new declarations passed axiom audits:
+- p_parent_fan, q_unreachable, a_unreachable, p_unreachable, blank_no_b2_w11_q11, and blank_no_b2_root_r11092: [propext, Classical.choice, Quot.sound];
+- root_q11_parameter: [propext, Quot.sound].
+
+None depends on sorryAx. The parent fan is a containment theorem; both candidate branches are separately excluded by exact inverse chains. The B2 residual exclusion and the forward root-parameter transfer are kernel-checked through the existing source closure.
+
+The branch closure uses existing source-level results:
 - oddodd_lowval_blank_reach_iff from OddOddLowVal.lean;
 - evenodd_four_blank_reach_iff from EvenOddFourExact.lean;
 - the unique even-right reachability equivalence from EvenRightUnique.lean;
 - blank_no_odd_sum_one from M0EvenEvenSumZero.lean;
-- blank_no_odd_sum_two from HighSumTwo.lean.
+- blank_no_odd_sum_two from HighSumTwo.lean;
+- the B2-to-P4 implication and even/odd three-divisible parent reduction from U5B2Root32.lean.
 
-The P(q) two-parent fan and the upstream B2-to-P(q) composition are not yet one compiled Lean theorem. The formulas above were independently reconstructed with exact integer arithmetic, including the root congruence modulo \(2048\). No claim of kernel verification is made.
-
-The local shell and Python execution boundaries both returned ClientError when tested. In accordance with the current Critic acceptance gate, no CI substitute was dispatched and no workflow was added. The next useful step is one exact-source Lean composition after local preflight becomes available, not another residue-class enumeration.
+The exact root-index converse and nonvacuity proof remain paper-level arithmetic in §1. The result is an infinite, source-verified conditional exclusion for one W11 root4 cylinder, not a proof of the full W11 sector, Machine C, or BB(6).
