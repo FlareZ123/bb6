@@ -44,9 +44,9 @@ def endState (n : Nat) : Z0 :=
 theorem first : run0 table 24 ⟨0,[],[]⟩ = some (family 0) := by decide
 
 /-- Eight steps transfer a two-one block from the right ray to the left. -/
-theorem shift_one (R : List Bool) :
-    run0 table 8 (F [true,false,true,true] ([false,true,true] ++ R)) =
-      some (F ([true,false,true,true,true,true]) ([false] ++ R)) := by
+theorem shift_one (L R : List Bool) :
+    run0 table 8 (F ([true,false,true,true] ++ L) ([false,true,true] ++ R)) =
+      some (F ([true,false,true,true,true,true] ++ L) ([false] ++ R)) := by
   rfl
 
 theorem rep_pair (n : Nat) : rep [true,true] n = ones (2*n) := by
