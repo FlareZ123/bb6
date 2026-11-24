@@ -60,6 +60,12 @@ on:
         type: boolean
         default: false
 
+      canonical_depth:
+        description: 'If verify_far, use canonical audit at this depth (0 = old raw depth-four report)'
+        required: false
+        type: number
+        default: 0
+
 permissions:
   contents: read
 
@@ -291,7 +297,8 @@ jobs:
           set -euo pipefail
           python tools/lean_compile_closure.py --workdir /tmp/a7-far --jobs 8 \
             im-results/agent7-far/FARExample.lean \
-            im-results/agent7-far/FARFrontier.lean 2>&1 | tee /tmp/a7-far.log
+            im-results/agent7-far/FARFrontier.lean \
+            im-results/agent7-far/CanonicalSearch.lean 2>&1 | tee /tmp/a7-far.log
           if grep -qE 'sorryAx|native_decide' /tmp/a7-far.log; then
             echo 'ERROR: unexpected axiom in FAR closure'
             exit 1
@@ -300,5 +307,12 @@ jobs:
         run: |
           set -euo pipefail
           export LEAN_PATH=/tmp/a7-far
-          lean im-results/agent7-far/FARFrontierReport.lean | tee /tmp/a7-far-report.log
+          if [[ "${{ inputs.canonical_depth }}" != "0" && -n "${{ inputs.canonical_depth }}" ]]; then
+            DEPTH="${{ inputs.canonical_depth }}"
+            [[ "$DEPTH" =~ ^[1-9][0-9]*$ ]] && [[ "$DEPTH" -le 12 ]]
+            printf 'import CanonicalSearch\nset_option maxRecDepth 100000\nset_option maxHeartbeats 0\n#eval (BB6Coverage.Canonical.global 24 6 24 24 2 4 3 %s).report\n' "$DEPTH" > /tmp/a7-far/CanonicalReport.lean
+            lean /tmp/a7-far/CanonicalReport.lean | tee /tmp/a7-far-report.log
+          else
+            lean im-results/agent7-far/FARFrontierReport.lean | tee /tmp/a7-far-report.log
+          fi
           cat /tmp/a7-far-report.log >> "$GITHUB_STEP_SUMMARY"
