@@ -2097,12 +2097,16 @@ theorem stepElemCB_BB_num_sum_le (L R : List SymTok)
     symPairNumSum ((stepElemCB L R).2.1, (stepElemCB L R).2.2) ≤
       listNumSum L + listNumSum R + 3 := by
   cases R with
-  | nil => simp_all [stepElemCB, strictList_eq]
+  | nil =>
+      simp only [stepElemCB, strictList_eq] at hmode
+      cases hmode
   | cons t R1 =>
     cases t with
     | item x =>
       cases x with
-      | zero => simp_all [stepElemCB, strictList_eq]
+      | zero =>
+          simp only [stepElemCB, strictList_eq] at hmode
+          cases hmode
       | run d =>
         cases d with
         | zero =>
@@ -2125,13 +2129,17 @@ theorem stepElemCB_BB_num_sum_le (L R : List SymTok)
                   have hB := bumpSymL_num_sum_le L
                   simp [stepElemCB, stepElemCB_run0, strictList_eq, symPairNumSum, listNumSum, tokNumSum]
                   omega
-                | succ d2 => simp_all [stepElemCB, stepElemCB_run0, strictList_eq]
+                | succ d2 =>
+                    simp only [stepElemCB, stepElemCB_run0, strictList_eq] at hmode
+                    cases hmode
             | repB1 k => simp_all [stepElemCB, stepElemCB_run0, strictList_eq]
             | rep2 p => simp_all [stepElemCB, stepElemCB_run0, strictList_eq]
             | rep12 m => simp_all [stepElemCB, stepElemCB_run0, strictList_eq]
         | succ d =>
           cases d with
-          | zero => simp_all [stepElemCB, strictList_eq]
+          | zero =>
+              simp only [stepElemCB, strictList_eq] at hmode
+              cases hmode
           | succ d =>
             cases d with
             | zero =>
