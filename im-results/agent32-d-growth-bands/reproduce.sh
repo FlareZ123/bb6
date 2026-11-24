@@ -24,6 +24,10 @@ for mod in Boundary OneSidedRank OneSidedCertificate OneSidedBounds OneSidedSour
 done
 
 if [[ "${SHOW_SECTION_BANDS:-0}" == "1" ]]; then
+  echo "=== GrowthMacro key declarations ==="
+  grep -nE '^(namespace|def |abbrev |structure |theorem |lemma )' GrowthMacro.lean
+  echo "=== GrowthMacro source ==="
+  sed -n '1,180p' GrowthMacro.lean
   echo "=== SectionBands public declarations ==="
   grep -nE '^(namespace|open |def |abbrev |structure |theorem |lemma )' SectionBands.lean
   echo "=== SectionBands source ==="
