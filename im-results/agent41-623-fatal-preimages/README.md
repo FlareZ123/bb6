@@ -92,4 +92,22 @@ Require 3^(k-1)>=max(1,8-w_lo), ensuring b>=4 throughout. Every possible block b
 
 The local exact regression matched the existing inverse on 10,000 random drain-statistics cases and 1,000 random near-power targets (where the guard held). Every even p from 8 through 19,998 (9,996 values) had a closed finite reverse tree under this guarded algorithm, with maximum depth 23 at p=5,288 (34 nodes). The very large exponents 10^6, 10^9, 10^18 and 10^100 had no immediate even-first predecessor. These are finite computations from the mathematical algorithm, not all-p theorems or Lean-certified tree certificates. In particular, the max-depth observation is not a uniform bound.
 
-The next useful task is a complete symbolic ancestor argument or a reusable source-sound inverse certificate checker; do not mistake the finite closure census for the solution of #623.
+## Kernel-checkable certificates
+
+[NearPowerFastStats.lean](NearPowerFastStats.lean) verifies the executable compressed statistics, including fallback, fixed residual tails and two-cycles. [NearPowerCertificate.lean](NearPowerCertificate.lean) proves soundness of strict adjacent parity brackets and exact hits. [NearPowerTree.lean](NearPowerTree.lean) defines a recursive certificate whose two branches cover the parity-compatible parent sectors. [NearPowerTreeSource.lean](NearPowerTreeSource.lean) connects accepted certificates to exclusion of every blank-root return index. The latter adapter passed a local interface-only check; pinned original-source CI is in progress. [NearPowerGenerate.lean](NearPowerGenerate.lean) supplies an untrusted search, with the checker as the trust boundary. [NearPowerExamples.lean](NearPowerExamples.lean) contains explicit certificates for p=5288 (34 nodes, depth 23) and p=10^100 (one node). Both checker equalities are proved using `decide +kernel` in local Lean 4.36.0-rc2. No enormous counter is constructed. The source conclusions are pending the full original-source check; the local interface stub is not a certification of those conclusions.
+
+## Pumping entire inverse trees
+
+Put Q=9^n, n>=0. Near-power exponents k and signed residuals can be affine forms aQ+bn+c. For W,B constant, a residual w=WQ+B has the same low ternary residue as B if W is divisible by 3, and one drain step sends (W,B) to (W/3,R(B)). This permits a finite fixed prefix to reach a stable low residual B in {-3,-2,-1,0,1}. Then strip exactly 2n digits: write
+
+    2b = (C*3^(k-2n)+W)*3^(2n)+B.
+
+Each stable pair charges either twice its fixed drift/excess, or (0,2) on the two-cycle. The remaining block has representation 2c=C*3^(k-2n)+W+B. [NearPowerPump.lean](NearPowerPump.lean) proves this nested pumping identity for all n in Lean, with the positive merged coefficient guard >=5. The remaining fixed-prefix and stable-tail calculations give exact affine forms J,E.
+
+The all-parameter verifier [symbolic_exclusion.py](symbolic_exclusion.py) implements this algebra, checking positivity via 3^(k-2n)>=|W|+|B|+5 and the sufficient affine lower bound a>=0, a+b>=0, a+c>=bound (since 9^n>=1+n). It checks every parity-compatible sector: exact image equality, or a strict adjacent-parity bracket, then exact affine child reconstruction and recursion. The large-first guard follows from x,y>=3^(k-1), y<=(D+1)3^k and elementary exponential growth. Parities are constant since 9^n=1 modulo 8 and the coefficient of n is divisible by the relevant modulus. [fitfamilies.py](fitfamilies.py) is only a candidate discovery step; the all-parameter verification does not infer validity from three samples.
+
+Run `python symbolic_exclusion.py`. For R in {30,31}, even offsets c in [-100,100], it accepts **133 distinct infinite families**
+
+    p = 6*3^(R+2n)+c,  n>=0.
+
+In particular R=31,c=6 has a complete 39-node inverse tree, with a branch of 14 edges. The claims are symbolic mathematical exclusions using exact integer arithmetic and proved source-envelope lemmas; the entire symbolic verifier is **not yet kernel-certified**. The fixed/cycle and nested pump identities themselves are kernel-certified. Failed guards or failure to fit a tree mean unknown, never reachability or nonreachability. No result establishes that every synthetic halter, much less every possible #623 halter, is excluded.
