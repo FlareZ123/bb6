@@ -103,7 +103,10 @@ Qed.
    checkpoint before searching its 50 uncovered descendants. A single
    SWside witness for this parent would certify the whole checkpoint. *)
 Definition q32_parent_side_candidate : option side_candidate :=
-  find_side_candidate (TM_from_str (TM_to_str q32_canonical_residual_7)).
+  match decider (TM_from_str (TM_to_str q32_canonical_residual_7)) with
+  | TC62.TM.Halt _ => None
+  | _ => find_side_candidate (TM_from_str (TM_to_str q32_canonical_residual_7))
+  end.
 
 Time Eval vm_compute in q32_parent_side_candidate.
 
