@@ -1,0 +1,19 @@
+# Block-RLE search experiments, 2026-11-24
+
+Source archive `scanner-sources.tar.xz`: SHA256 0a36c9476f2ac39b5415a54e0b912f6d39d956a3c8106e6205a5aaca4d207a07, Git blob abc7b98008a77b87c43628d24dde933c264bd0c4. Extract in a temporary directory. From the extraction directory, with REPO an absolute path to this repository:
+
+    python build_roster.py "$REPO/resources/BB6_holdouts_663_2026-10-16.txt" "$REPO/im-results/agent4-dated-roster/removed-663-to-623.tsv" "$REPO/im-results/agent4-dated-roster/removed-623-to-608.tsv"
+    g++ -O2 -std=c++17 scan5.cpp -o scan5
+    g++ -O2 -std=c++17 differential.cpp -o differential
+    ./differential roster.enc
+    ./scan5 roster.enc 15000 3 1 250 10000 > hits.log 2> stats.tsv
+
+The historical 608-table derived roster retains October16 order; these are NOT original October30 row numbers. Its normalized roster.txt SHA256 is 81b29741c6179b56e60123b672ac4b58149869af04271fb05b57f9421e4500a5 and roster.enc SHA256 is 6cbe845173b8668e0d424c4b0ff44a9819cab6a65c0176f7579fec383b2da93a. The encoded stream omits the fixed initial 1RB, stores the remaining 11 slots A-X for the 24 ordinary moves (12*write+6*right+state), Y for halt. Requires Boost.Multiprecision headers.
+
+Algorithms: scan2 is signed-affine finite repeat with exact ordinary move accounting; scan3 adds affine-line and independent growing-counter cone closure; scan4 retains nested Rule bodies and linear guard constraints across jumps, using endpoint elimination for bounded inner loops. scan5 adds exact small-counter phase keys and a longer possible return period. A negative inner slope bounds the loop, and a guessed affine count is checked against the minimum endpoint of every guard. The nested variants track only lower bounds on primitive cost after jumps, never claim exact halting scores. They do not emit a Lean certificate yet. Their output is a search hypothesis only; the separately compiled Lean modules independently provide the needed semantic lemmas.
+
+Observed searches (all no certificate hits): scan2 width2 10k outer events across 608; scan3 width2 100k across 608 and width3 20k across 608 (one bounded run-cap exit in width3); scan4 width2 10k first150 and 15k remaining 458 (one run-cap exit); scan5 width3 first250. Earlier non-nested width1–6 sweeps also no hits. In scan2, the largest reported ordinary move count had 120 decimal digits at derived row320. In the deeper scan3 width2 replay the largest reported count had 1242 decimal digits at row320; these are untrusted simulator outputs, not formal step-count theorems. Do not spend more compute merely raising the same cutoffs. No hard-root verdict, coverage mass, or BB(6) bound is implied.
+
+Differential test seed 141124: each width1–6, 300 random rooted transition tables and each of the 608 derived roster entries, up to 300 macro operations. Every successful nonaccelerated block sweep endpoint compared physical head, state, and exact one-cell support against an independent primitive simulator; observed 1,341,589 successful macro comparisons and 5,187,355 primitive steps replayed. Local halt counts were compared too. The test stops before internal-cycle/ray reports, over-budget paths, or extremely large run counts. It does NOT validate nested affine jumps. The positive control 1RB1RA_1LC---_0RA1LC_------_------_------ gives scan5 width2 INVARIANT at event37; Example.lean independently proves the same rooted table nonhalting by a parameterized exact four-macro return (not a new machine discovery).
+
+Next: use search-derived trace witnesses to generate Lean proof terms for symbolic RLE configurations and exact inner-loop counts. Focus on the actual unresolved sparse TNF leaves, or on a concrete difficult authentic root with a clear repeated compressed structure. No blind larger-width search is justified by this null result.
