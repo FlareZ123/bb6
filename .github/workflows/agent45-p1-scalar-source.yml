@@ -74,5 +74,5 @@ jobs:
         if: inputs.target == 'delayed-carry'
         run: |
           set -euo pipefail
-          python3 tools/lean_compile_closure.py --jobs 4 im-results/agent45-p1-delayed-carry/LagSource.lean | tee /tmp/agent45-lag-audit.log
+          python3 tools/lean_compile_closure.py --jobs 4 im-results/agent45-p1-delayed-carry/LagSource.lean im-results/agent45-p1-delayed-carry/LagAutoMargin.lean | tee /tmp/agent45-lag-audit.log
           ! grep -q 'sorryAx' /tmp/agent45-lag-audit.log
