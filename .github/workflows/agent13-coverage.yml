@@ -5,7 +5,7 @@ on:
       target:
         description: 'Source closure to verify'
         type: choice
-        options: [legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter]
+        options: [legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage]
         default: legacy
 permissions:
   contents: read
@@ -102,3 +102,13 @@ jobs:
           export LEAN_PATH=im-results/agent8-coverage-contract:im-results/agent4-coverage-smoke:im-results/agent42-coverage-normal:im-results/agent13-coverage:im-results/agent13-weighted-first-one:im-results/agent6-fresh-glider:im-results/agent7-far
           lean im-results/agent47-weighted-halt-branch/WeightedReadOneHalt.lean
           lean im-results/agent47-weighted-halt-branch/WeightedNonhaltLeafAdapter.lean
+
+      - name: Verify generic two-list queue coverage contract
+        if: inputs.target == 'queue-coverage'
+        run: |
+          set -eu
+          lean im-results/agent13-weighted-first-one/QueueCoverageContract.lean | tee /tmp/queue-coverage-contract.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/queue-coverage-contract.log; then
+            echo "Forbidden proof placeholder or native_decide found in queue-coverage contract" >&2
+            exit 1
+          fi
