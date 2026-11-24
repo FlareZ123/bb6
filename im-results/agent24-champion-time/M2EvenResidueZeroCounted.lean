@@ -31,6 +31,7 @@ open BB6Coverage.Agent24ChampionTime
 open BB6Coverage.Agent24Q4Endpoint
 open BB6Coverage.Agent8CountedReset
 open BB6Coverage.Agent48CountedInc0
+open BB6ChampionArithmetic
 
 set_option maxHeartbeats 3000000
 
@@ -110,7 +111,7 @@ private theorem m2ZeroSourceLeft
         d1pow t ++ d0 ++ binDec ell q ++ lh := by
   have hmul := binDec_mulpow2 (L-3) k 3 hkBound
   have hlen3 : L-3+3=L := by omega
-  have hnum : k*2^3=8*k := by ring
+  have hnum : k*2^3=8*k := by omega
   have hbin8 : binDec L (8*k) =
       d1pow 3 ++ binDec (L-3) k := by
     simpa [hlen3,hnum] using hmul
@@ -136,11 +137,11 @@ private theorem m2ZeroTargetBinDec
       d0pow (t+3) ++ d1 ++ binDec ell q := by
   have hpow : 2^(t+3)=8*2^t := by
     rw [Nat.pow_add]
-    ring
+    omega
   have hnum : 8*k=(2*q+1)*2^(t+3) := by
     calc
       8*k = 8*((2*q+1)*2^t) := by rw [hfactor]
-      _ = (2*q+1)*(8*2^t) := by ring
+      _ = (2*q+1)*(8*2^t) := by ac_rfl
       _ = (2*q+1)*2^(t+3) := by rw [← hpow]
   have hlen' : L=ell+1+(t+3) := by omega
   have hcarry := binDec_sub_one_carryPrefix ell q (t+3) hq
@@ -166,7 +167,7 @@ theorem m2Even_residue0_q4_reset_prefix_source
     calc
       2^L = 2^((L-3)+3) := by congr 1 <;> omega
       _ = 2^(L-3)*2^3 := by rw [Nat.pow_add]
-      _ = 8*2^(L-3) := by ring
+      _ = 8*2^(L-3) := by omega
   have hkBound : k<2^(L-3) := by
     rw [hpowL] at hbound
     omega
@@ -235,28 +236,35 @@ theorem m2Even_residue0_q4_reset_prefix_source
     intro i hi
     rw [hleftT1 i]
     have hbit : sideBit Rsrc i=true := by
-      rw [sideBit_append]
-      simp [Rsrc,tail,d1pow_length,hi,sideBit_d1pow_true t i hi]
+      change sideBit (d1pow t ++ d0 ++ tail) i = true
+      rw [List.append_assoc,sideBit_append]
+      simpa [d1pow_length,hi] using sideBit_d1pow_true t i hi
     exact hbit
   have h0T1 : T1 (hH-(3*t:Int))=false := by
     calc
       T1 (hH-(3*t:Int)) = sideBit Rsrc (3*t) := hleftT1 (3*t)
       _ = false := by
-        simp [Rsrc,tail,sideBit_append,d1pow_length,d0,sideBit]
+        change sideBit (d1pow t ++ d0 ++ tail) _ = _
+        rw [List.append_assoc, sideBit_append_right _ _ _ (by simp [d1pow_length] <;> omega)]
+        simp [d1pow_length,d0,sideBit] <;> omega
   have hm1T1 : T1 (hH-(3*t:Int)-1)=false := by
     have hcoord : hH-(3*t:Int)-1 = hH-((3*t+1):Int) := by omega
     rw [hcoord]
     calc
       T1 (hH-((3*t+1):Int)) = sideBit Rsrc (3*t+1) := hleftT1 (3*t+1)
       _ = false := by
-        simp [Rsrc,tail,sideBit_append,d1pow_length,d0,sideBit]
+        change sideBit (d1pow t ++ d0 ++ tail) _ = _
+        rw [List.append_assoc, sideBit_append_right _ _ _ (by simp [d1pow_length] <;> omega)]
+        simp [d1pow_length,d0,sideBit] <;> omega
   have hthirdT1 : T1 (hH-(3*t:Int)-2)=true := by
     have hcoord : hH-(3*t:Int)-2 = hH-((3*t+2):Int) := by omega
     rw [hcoord]
     calc
       T1 (hH-((3*t+2):Int)) = sideBit Rsrc (3*t+2) := hleftT1 (3*t+2)
       _ = true := by
-        simp [Rsrc,tail,sideBit_append,d1pow_length,d0,sideBit]
+        change sideBit (d1pow t ++ d0 ++ tail) _ = _
+        rw [List.append_assoc, sideBit_append_right _ _ _ (by simp [d1pow_length] <;> omega)]
+        simp [d1pow_length,d0,sideBit] <;> omega
   have hrSource : T (h+1)=false := by
     simpa [T] using s1M2RightZero L k a b h
   have hrT1 : T1 (hN+1)=false := by
@@ -285,13 +293,16 @@ theorem m2Even_residue0_q4_reset_prefix_source
     have hcoord : hH+1=hN-13 := by dsimp [hH]; omega
     rw [hcoord]
     have hw := m2ZeroSetupAt_window T1 hN (-13) (by decide)
-    simpa [Tsetup,m2ZeroSetupEnd] using hw
+    change (frameAt T1 hN m2ZeroSetupInside m2ZeroSetupEnd).tape (hN-13) = false
+    rw [show hN-13 = hN+(-13) by omega, hw]
+    decide
   have honSetup : leftOnes Tsetup hH (3*t) := by
     intro i hi
     rw [hsetupLeft i]
     have hbit : sideBit Rsrc i=true := by
-      rw [sideBit_append]
-      simp [Rsrc,tail,d1pow_length,hi,sideBit_d1pow_true t i hi]
+      change sideBit (d1pow t ++ d0 ++ tail) i = true
+      rw [List.append_assoc,sideBit_append]
+      simpa [d1pow_length,hi] using sideBit_d1pow_true t i hi
     exact hbit
   have hleftHrun :=
     lbinDecHRunTape_leftFacing_of_input t Tsetup hH tail
@@ -318,7 +329,12 @@ theorem m2Even_residue0_q4_reset_prefix_source
       run tm2 ((9*a+6)+(44+(12*t+4)+14))
         (s1Config L (8*k) 2 a 0 b h) =
         some ⟨4,hN+2,Tpost⟩ := by
-    simpa [Tpost,frameAt_head] using hbase
+    rw [hbase]
+    congr 1
+    apply BB6Coverage.Agent8Rst1Prime.config_ext
+    · simp [m2ZeroPostludeEnd]
+    · simp [m2ZeroPostludeEnd]; omega
+    · rfl
 
   have hpostRight (x : Int) (hx : hN+2≤x) :
       Tpost x = T1 x := by
@@ -343,7 +359,7 @@ theorem m2Even_residue0_q4_reset_prefix_source
     intro i hi
     have hblock := sweptLeft_shifted_block N T h honN i (by omega)
     have hcoord : hN+2+(i:Int) =
-        h-(N:Int)+2+(i:Int) := by dsimp [hN]; rfl
+        h-(N:Int)+2+(i:Int) := by rfl
     calc
       Tpost (hN+2+(i:Int)) =
           T1 (hN+2+(i:Int)) :=
@@ -384,7 +400,8 @@ theorem m2Even_residue0_q4_reset_prefix_source
       have hp := hpostRight (hN+2) (by omega)
       have hb := sweptLeft_shifted_block N T h honN 0 (by omega)
       have hcoord : hN+2 =
-          h-(N:Int)+2 := by dsimp [hN]; rfl
+          h-(N:Int)+2 := by rfl
+      rw [show hN+2-((0:Nat):Int)=hN+2 by omega]
       calc
         Tpost (hN+2) = T1 (hN+2) := hp
         _ = true := by simpa [T1,hcoord,N] using hb
@@ -409,7 +426,7 @@ theorem m2Even_residue0_q4_reset_prefix_source
             simp [P,hPlen,markerWord,d0pow,d0,sideBit]
       · by_cases hi16 : 16≤i
         · have xcoord :
-            hN+2-(i:Int)=hH-((i-16):Int) := by
+            hN+2-(i:Int)=hH-((i-16:Nat):Int) := by
               dsimp [hH]
               omega
           have hout :
@@ -446,9 +463,8 @@ theorem m2Even_residue0_q4_reset_prefix_source
                 sideBit W i =
                   decide (x∈m2ZeroPostludeEnd.marked) := by
               rw [hWsplit,sideBit_append]
-              interval_cases i <;>
-                simp [P,hPlen,markerWord,d0pow,d0,sideBit,x,
-                  m2ZeroPostludeEnd]
+              have hc : i=1 ∨ i=2 ∨ i=3 ∨ i=4 ∨ i=5 ∨ i=6 ∨ i=7 ∨ i=8 ∨ i=9 ∨ i=10 ∨ i=11 ∨ i=12 ∨ i=13 ∨ i=14 := by omega
+              rcases hc with rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl <;> simp [P,markerWord,d0pow,d0,sideBit,x,m2ZeroPostludeEnd]
             change (frameAt Thrun (hN-12)
               m2ZeroPostludeInside m2ZeroPostludeEnd).tape
               (hN+2-(i:Int)) = sideBit W i
@@ -503,7 +519,7 @@ theorem m2Even_residue0_q4_reset_prefix_source
         have hqside :
             sideBit Q i=sideBit M (i-(3*a+1)) := by
           change sideBit (([true]++d1pow a)++M) i = _
-          simpa [hlenX] using hqside0
+          simpa [hlenX,d1pow_length] using hqside0
         have hwside :
             sideBit W j=sideBit M (j-1) := by
           change sideBit ([true]++M) j = _
@@ -538,13 +554,13 @@ theorem m2Even_residue0_q4_reset_prefix_source
         Tpost (h+(i:Int)) = T1 (h+(i:Int)) := hp
         _ = true := by simpa [T1,hN,N,j,hcoord] using hb
     · have hi2 : 2≤i := by omega
-      have hcoord : h+(i:Int)=h+1+((i-1):Int) := by omega
+      have hcoord : h+(i:Int)=h+1+((i-1:Nat):Int) := by omega
       have hp := hpostOriginalRight (h+(i:Int)) (by omega)
       have hcell := s1Config_right_cell L (8*k) 2 a 0 b h (i-1)
       have hbit :
           sideBit (s1PhysicalRight b) (i-1)=true := by
-        interval_cases i <;>
-          simp [s1PhysicalRight_source,sideBit]
+        have hc : i=2 ∨ i=3 ∨ i=4 := by omega
+        rcases hc with rfl|rfl|rfl <;> simp [s1PhysicalRight_source,sideBit]
       calc
         Tpost (h+(i:Int)) = T (h+(i:Int)) := hp
         _ = sideBit (s1PhysicalRight b) (i-1) := by
@@ -554,7 +570,8 @@ theorem m2Even_residue0_q4_reset_prefix_source
     have hp := hpostOriginalRight (h+5) (by omega)
     have hcell := s1Config_right_cell L (8*k) 2 a 0 b h 4
     have hcell' : T (h+5)=sideBit (s1PhysicalRight b) 4 := by
-      simpa [T] using hcell
+      rw [show h+5 = h+1+((4:Nat):Int) by omega]
+      exact hcell
     have hbit : sideBit (s1PhysicalRight b) 4=false := by
       simp [s1PhysicalRight_source,sideBit]
     exact hp.trans (hcell'.trans hbit)
@@ -562,7 +579,8 @@ theorem m2Even_residue0_q4_reset_prefix_source
     have hp := hpostOriginalRight (h+6) (by omega)
     have hcell := s1Config_right_cell L (8*k) 2 a 0 b h 5
     have hcell' : T (h+6)=sideBit (s1PhysicalRight b) 5 := by
-      simpa [T] using hcell
+      rw [show h+6 = h+1+((5:Nat):Int) by omega]
+      exact hcell
     have hbit : sideBit (s1PhysicalRight b) 5=false := by
       simp [s1PhysicalRight_source,sideBit]
     exact hp.trans (hcell'.trans hbit)
@@ -581,7 +599,7 @@ theorem m2Even_residue0_q4_reset_prefix_source
             sideBit (d1pow (b+1)) i := by
         have hs := sideBit_append_right
           [false,true,true,true,false,false] (d1pow (b+1))
-          (6+i) (by simp; omega)
+          (6+i) (by simp <;> omega)
         simpa using hs
       rw [hbase]
       exact sideBit_d1pow_true (b+1) i hi
@@ -598,7 +616,7 @@ theorem m2Even_residue0_q4_reset_prefix_source
     have hlen :
         ([false,true,true,true,false,false]++
           d1pow (b+1)).length=9+3*b := by
-      simp [d1pow_length]
+      simp [d1pow_length] <;> omega
     have hbit :
         sideBit (s1PhysicalRight b) i=false := by
       rw [s1PhysicalRight_source]
@@ -615,7 +633,7 @@ theorem m2Even_residue0_q4_reset_prefix_source
       Tpost (h+10+(3*b:Int)+(i:Int))=false := by
     intro i hi
     have hcoord :
-        h+10+(3*b:Int)+(i:Int)=h+1+((9+3*b+i):Int) := by omega
+        h+10+(3*b:Int)+(i:Int)=h+1+((9+3*b+i:Nat):Int) := by omega
     rw [hcoord]
     apply htail
     omega
@@ -628,26 +646,27 @@ theorem m2Even_residue0_q4_reset_prefix_source
     have hpow := binDec_pow2_sub_one a b
     have hbinSub := m2ZeroTargetBinDec L k q t ell hfactor hlen hq
     have hd1 := d1pow_add_right a 2
-    have hd0 : d0++d0pow(t+3)=d0pow(t+4) := by
+    have hd0 : d0++d0pow (t+3)=d0pow (t+4) := by
       have heq : t+4=(t+3)+1 := by omega
       rw [heq]
       rfl
-    have hd0comm : d0++d0pow(t+3)=d0pow(4+t) := by
+    have hd0comm : d0++d0pow (t+3)=d0pow (4+t) := by
       calc
-        d0++d0pow(t+3)=d0pow(t+4) := hd0
-        _ = d0pow(4+t) := by congr 1 <;> omega
+        d0++d0pow (t+3)=d0pow (t+4) := hd0
+        _ = d0pow (4+t) := by congr 1 <;> omega
     unfold s1LeftFacing
     rw [hpow,hbinSub,hd1]
     simp [Q,m2ZeroQ4LeftFacing,M,tail,hd0comm,
       List.drop,List.append_assoc]
+    rw [← List.append_assoc,hd0comm]
 
   have hfactor8 : 8*k=(2*q+1)*2^(t+3) := by
     have hpow : 2^(t+3)=8*2^t := by
       rw [Nat.pow_add]
-      ring
+      omega
     calc
       8*k = 8*((2*q+1)*2^t) := by rw [hfactor]
-      _ = (2*q+1)*(8*2^t) := by ring
+      _ = (2*q+1)*(8*2^t) := by ac_rfl
       _ = (2*q+1)*2^(t+3) := by rw [← hpow]
   have hv : BB6ChampionArithmetic.v2 (8*k)=t+3 :=
     v2_of_odd_factorization (8*k) q (t+3) hfactor8
