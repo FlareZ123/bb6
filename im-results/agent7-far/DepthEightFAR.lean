@@ -131,4 +131,96 @@ theorem p112_3_weightedBound (B : Nat) (m : Machine) (hm : compatible p112_3 m) 
 #print axioms p112_3_leaf
 #print axioms p112_3_weightedBound
 
+
+/-! ## Four genuine one-hole frontier closures (24 Nov 2026)
+
+These four tables belong to the 101-entry siblingFinalRoster, unlike the six
+growth-covered two-hole alternatives above. -/
+
+/-- Parent 85, F/0 hole; table 1RB0LD_1RC1LF_0RD1LA_1LD1RE_1RD0LB_---0LA.
+    Four-state original-orientation hit, Actions run 45469713882. -/
+def p85_0 : PartialMachine := fromCodes [7,12,11,22,13,2,14,19,15,4,24,0]
+def c85_0 : Data 4 := ⟨0,[0,1,2,3,2,2,0,3],
+  [4194432,256,2097160,7340096,2359808,16777728,2621568,3145728,1081344,23658624,2097152,19957760,8212,16385,32768,33131976,1083392,26561300,5767312,1048576,2097160,6291456,2097152,16777216,16777216],
+  [6815948,31457345,7373896,1024,7372872,3932872,2097152,6292480,7373896,6291456,23593088,16253128,33411020,33131983,33131983,2165760,33131976,33411035,6291456,6292480,6291456,6291456,6291456,6291456,16777216],
+  25688882⟩
+theorem p85_0_valid : c85_0.fastValid p85_0 = true := by decide
+theorem p85_0_root : p85_0 initialSlot = some (some ⟨true, true, 1⟩) := by decide
+theorem p85_0_support : TNFSupport p85_0 6 := support6 _
+theorem p85_0_noAssignedHalt : weightedTNFNoAssignedHalt p85_0 := fromCodes_noAssignedHalt _
+theorem p85_0_neverHalts (m : Machine) (hm : compatible p85_0 m) : NeverHalts m :=
+  c85_0.sound p85_0 (c85_0.fastValid_sound _ p85_0_valid) m hm
+def p85_0_leaf (B : Nat) : WeightedTNFCertificate B p85_0 6 :=
+  farDataNonhaltLeaf p85_0_root p85_0_support p85_0_noAssignedHalt c85_0 p85_0_valid
+theorem p85_0_weightedBound (B : Nat) (m : Machine) (hm : compatible p85_0 m) : WeightedBound B m :=
+  (p85_0_leaf B).sound m hm
+#print axioms p85_0_neverHalts
+#print axioms p85_0_leaf
+#print axioms p85_0_weightedBound
+
+/-- Parent 114, A/1 hole; table 1RB---_1RC1LF_0RD0RC_1LD1RE_0LB0LB_0RC0LA.
+    One-state reflected hit, Actions run 45469722441. -/
+def p114_0 : PartialMachine := fromCodes [7,24,11,22,13,9,14,19,4,4,9,0]
+def c114_0 : Data 1 := ⟨0,[0,0],[1,32,8,8,2,8,64],[64,32,8,32,2,1,64],64⟩
+theorem p114_0_valid : c114_0.fastValid (reflectPartial p114_0) = true := by decide
+theorem p114_0_root : p114_0 initialSlot = some (some ⟨true, true, 1⟩) := by decide
+theorem p114_0_support : TNFSupport p114_0 6 := support6 _
+theorem p114_0_noAssignedHalt : weightedTNFNoAssignedHalt p114_0 := fromCodes_noAssignedHalt _
+theorem p114_0_neverHalts (m : Machine) (hm : compatible p114_0 m) : NeverHalts m :=
+  reflectNever m
+    (c114_0.sound (reflectPartial p114_0)
+      (c114_0.fastValid_sound _ p114_0_valid)
+      (reflectTable m) (reflectCompatible p114_0 m hm))
+def p114_0_leaf (B : Nat) : WeightedTNFCertificate B p114_0 6 :=
+  WeightedTNFCertificate.nonhalt p114_0_root p114_0_support p114_0_noAssignedHalt
+    (fun m hm => p114_0_neverHalts m hm)
+theorem p114_0_weightedBound (B : Nat) (m : Machine) (hm : compatible p114_0 m) : WeightedBound B m :=
+  (p114_0_leaf B).sound m hm
+#print axioms p114_0_neverHalts
+#print axioms p114_0_leaf
+#print axioms p114_0_weightedBound
+
+/-- Parent 116, F/0 hole; table 1RB1LA_1RC1LF_0RD1RC_1LD1RE_0LA0LB_---0LA.
+    Six-state original-orientation hit, Actions run 45469732966. -/
+def p116_0 : PartialMachine := fromCodes [7,2,11,22,13,11,14,19,0,4,24,0]
+def c116_0 : Data 6 := ⟨0,[0,1,3,2,5,2,4,4,4,4,4,3],
+  [128,4295492034,4268168,16384,94624181697,68720541825,24584,16512,22592618682,134754598399,81739873431,73015129505,1073766529,8589959233,8589934721,8590090977,8589951105,68719612257,117571881381,107622640892,111809373370,134754598911,8589959361,68853924193,68977571328,68792484022,47397250324,134754598911,134754598911,83822266691,1734691,68830259291,241241174,8594210945,94696537831,81609295904,68719476736],
+  [16512,104221133996,57445084536,8592139287,134485077502,16512,16385,16384,42983254040,65665,116389576127,8589959841,16512,4276353,16384,88289,8589959393,8589951105,99010740215,117566078911,35501638664,133623557612,98991833079,31167509753,134754598911,134754598911,81942185406,17696012934,134754598911,136902082559,4276361,129956506777,44412656419,4276353,116263612411,8658778603,68719476736],
+  128844734258⟩
+theorem p116_0_valid : c116_0.fastValid p116_0 = true := by decide
+theorem p116_0_root : p116_0 initialSlot = some (some ⟨true, true, 1⟩) := by decide
+theorem p116_0_support : TNFSupport p116_0 6 := support6 _
+theorem p116_0_noAssignedHalt : weightedTNFNoAssignedHalt p116_0 := fromCodes_noAssignedHalt _
+theorem p116_0_neverHalts (m : Machine) (hm : compatible p116_0 m) : NeverHalts m :=
+  c116_0.sound p116_0 (c116_0.fastValid_sound _ p116_0_valid) m hm
+def p116_0_leaf (B : Nat) : WeightedTNFCertificate B p116_0 6 :=
+  farDataNonhaltLeaf p116_0_root p116_0_support p116_0_noAssignedHalt c116_0 p116_0_valid
+theorem p116_0_weightedBound (B : Nat) (m : Machine) (hm : compatible p116_0 m) : WeightedBound B m :=
+  (p116_0_leaf B).sound m hm
+#print axioms p116_0_neverHalts
+#print axioms p116_0_leaf
+#print axioms p116_0_weightedBound
+
+/-- Parent 128, E/0 hole; table 1RB0LB_1RC1LF_0RD1RF_1LD1RE_---0LB_1RB0LA.
+    Five-state original-orientation hit, Actions run 45469741496. -/
+def p128_0 : PartialMachine := fromCodes [7,4,11,22,13,23,14,19,24,4,7,0]
+def c128_0 : Data 5 := ⟨0,[0,1,4,2,3,0,4,4,4,4],
+  [160,67109120,8,2130411502,2128313838,128,379203712,16384,134352904,915943878,1078018080,679485600,34078722,67108868,2097152,128,1082130472,2,181610458,67108864,739250336,32,1484787720,33554432,47916627,68157440,706238530,2130411502,1078001664,34078720,1073741824],
+  [2130411502,545394720,910167040,3212288,2130411502,16512,34078850,32,131072,65536,310911106,2130411502,128,2130411502,32,471606654,128,68174080,710499018,545397024,545263616,378019844,714758222,70254912,2130411502,2130411502,545263616,818946048,2130411502,2130411502,1073741824],
+  2145337182⟩
+theorem p128_0_valid : c128_0.fastValid p128_0 = true := by decide
+theorem p128_0_root : p128_0 initialSlot = some (some ⟨true, true, 1⟩) := by decide
+theorem p128_0_support : TNFSupport p128_0 6 := support6 _
+theorem p128_0_noAssignedHalt : weightedTNFNoAssignedHalt p128_0 := fromCodes_noAssignedHalt _
+theorem p128_0_neverHalts (m : Machine) (hm : compatible p128_0 m) : NeverHalts m :=
+  c128_0.sound p128_0 (c128_0.fastValid_sound _ p128_0_valid) m hm
+def p128_0_leaf (B : Nat) : WeightedTNFCertificate B p128_0 6 :=
+  farDataNonhaltLeaf p128_0_root p128_0_support p128_0_noAssignedHalt c128_0 p128_0_valid
+theorem p128_0_weightedBound (B : Nat) (m : Machine) (hm : compatible p128_0 m) : WeightedBound B m :=
+  (p128_0_leaf B).sound m hm
+#print axioms p128_0_neverHalts
+#print axioms p128_0_leaf
+#print axioms p128_0_weightedBound
+
+
 end BB6.Agent7FAR.DepthEight
