@@ -125,3 +125,53 @@ Kernel-check checkpoints:
 - [Final-run decomposition](https://github.com/FlareZ123/bb6/actions/runs/45478965238)
 - [Down-run exponent uniqueness](https://github.com/FlareZ123/bb6/actions/runs/45479937736)
 
+## Exact connection to the positive gate recurrence
+
+The new module `CapPhaseCostGate.lean` closes a useful gap between the
+history decomposition and the arithmetic gate.  Under the seed condition
+[
+8P_j-6-w>0,
+]
+`positive_history_W_pos_seed` proves (W_k(x)>0) at every state in the
+history.  The same-band relation is
+(W_k(y)=3W_k(x)-8P_k+6); since (P_k\ge5), positivity of the child still
+forces positivity of its parent.  The down-band relation is
+(W_{k+1}(y)=3W_k(x)).
+
+For (k<j), `positive_history_down_is_positiveNext` now proves that the
+final suffix of every such history has exponent
+[
+r=\operatorname{positiveCount}(k,Q_k(x))
+]
+and that its next-band state satisfies
+[
+Q_{k+1}(y)=\operatorname{positiveNext}(k,Q_k(x)).
+]
+
+The key step is the sign information at the down source (z).  From
+(W_k(z)>0) and (W_k(z)+2Q_k(z)=4P_k-3), we get
+(Q_k(z)\le2P_k-2).  The exact final-run theorem gives
+(Q_k(z)=3^rQ_k(x)) and
+(3^{r+1}Q_k(x)\ge2P_k+k+4>2P_k-2).
+These are precisely the two inequalities that uniquely characterize the
+`CapMacro.tripleCount` exponent.  The regular down-edge equation then gives
+the `positiveNext` update.
+
+The three positive-gate seeds satisfy the required seed condition:
+[
+(j,w)=(0,19):15>0,\quad
+(0,31):3>0,\quad
+(1,53):21>0.
+]
+Thus the bridge applies to all three root seed families used by
+`CapPositiveGate`.  It shows that the deterministic arithmetic recurrence
+is the exact compressed transition of every positive history in this
+regime, not merely a convenient surrogate.
+
+This still leaves the central infinite problem: prove that the resulting
+`positiveOrbit` never drops below its next-band lower bound.  The new
+theorem removes ambiguity about the transition; it does not establish that
+all-time inequality.
+
+- [Positive-history / gate bridge CI](https://github.com/FlareZ123/bb6/actions/runs/45481388594)
+
