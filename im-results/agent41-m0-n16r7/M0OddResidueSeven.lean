@@ -1,5 +1,5 @@
 import M0OddQ4Prefix
-import Lean.Elab.Tactic.Omega
+import M0EvenSixHeadBound
 import Lean.Elab.Tactic.Omega
 
 /-!
