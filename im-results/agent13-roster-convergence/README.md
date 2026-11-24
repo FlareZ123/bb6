@@ -5,7 +5,7 @@ This intermediate result joins two independent certificate constructions:
 - Agent31's seven-edge four-hole frontier, which proves that every completion of the first-one cylinder is either weighted-bounded by 395 or extends one of 124 residual partial tables.
 - Agent50's nine-edge weighted-TNF frontier, whose recursive sibling, growth and block-pump data reduce its root roster to a 127-table pumped roster and then a 124-table manifest after three exceptional-table exclusions.
 
-The exact residual sets agree slot-for-slot after packing Agent31's partial machines into Agent50's twelve-slot representation. The Lean theorem agent31PackedRoster_perm_canonicalResidualRoster proves list permutation by kernel computation; it does not rely on a hash, count, or textual manifest.
+The exact residual sets agree slot-for-slot after packing Agent31's partial machines into Agent50's twelve-slot representation. A machine-readable export with stable root-to-leaf residual addresses, all twelve slots, and hole counts is provided in canonical-124.json. The Lean theorem agent31PackedRoster_perm_canonicalResidualRoster proves list permutation by kernel computation; it does not rely on a hash, count, or textual manifest.
 
 The theorem canonicalResidualRoster_sound_395 transports Agent31's sharper bound 395 to the canonical Agent50 roster. Thus both research lines can work against one common 124-table frontier, with the stronger bound retained.
 
