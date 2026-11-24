@@ -38,3 +38,11 @@ The SMT hits are workflow-validated, but their DFA data still needs to be commit
 5. Only after the full audit compiles, integrate the resulting theorem into the 124-table roster and update the human-readable research synthesis.
 
 Do not move this file into `results/` until the full source-checked parent-tree theorem exists.
+
+## Destination-table reuse and validation (24 November 2026)
+
+The four-token keys in dfa-candidates.txt are search metadata, not proof premises. A direct comparison of all 14 DFA strings with C00–C13 in Raw85FARCertificates.lean confirms that every candidate DFA is present in a Lean Data object for its actual destination table, while none of the matching historical keys equals that destination table's key (p[5], p[1], p[8], p[10]). The old exact-key-only wrapper was therefore removed. The current wrapper tries the 14 canonical candidates and eight workflow-validated SMT candidates against every actual open destination table, recomputes masks, and relies on the generated Lean Audit/Data.fastValid checks for acceptance.
+
+The shared start-zero filter correction is committed in the two four-hole generators and the three active FAR emitters. The raw85 validation workflow now retrieves the eight original shard-0 artifacts, extracts only their DFA/orientation records into smt-candidates.txt, preserves that file in the repository, runs the complete dynamic-split generator, and compiles the generated FourHoleSiblingData.lean alongside the 14 standalone Data certificates. The workflow is a 60-minute manual validation job because it includes the full 24-child parent-tree compilation.
+
+**Not yet claimed:** the full parent-tree theorem is not established until this updated workflow completes successfully. The 101-leaf census and the 79+14+8 partition remain intermediate evidence until the generated tree compiles and is integrated into the 124-table roster.
