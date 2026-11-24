@@ -86,3 +86,25 @@ theorem H4AllHidden.parent_iff_bad {y r : Nat}
 Lean 4.36.0-rc2 reports only `[propext, Classical.choice, Quot.sound]`. The 154 low-hidden-length modular rows are proved using small divisor certificates (1,490 finite checks, maximum 63 per lift) and the kernel theorem connecting `Nat.powMod` to modular exponentiation. No native_decide or admitted theorem. The high-valuation branch and constructive sufficiency are also kernel checked. This is the exact all-odd-r result, not just a finite enumeration. No proof of the preceding two-edge chain is claimed by this certificate.
 
 Restore with `python reconstruct_lean.py`. In a common Lean module directory, first restore and compile the original `SheepEven.lean` and `EvenEdge.lean` from agent16-sheep-even-return, `ResidueGap.lean` from agent40-sheep-third-preimages, and `SheepAffineSpecial.lean` then `SheepAffineSpecialSource.lean` from agent22-sheep-affine-special. Then compile `H4AllHiddenCore`, `H4LowRows`, `H4HighRoot`, `H4Sufficiency`, in that order, with LEAN_PATH pointing to the module directory and `lean -o MODULE.olean MODULE.lean`. The source archive is hash-checked by its decoder. Local compilation, not a new CI claim.
+
+## Blank-orbit exclusion fully kernel checked
+
+The missing two inverse edges and reachability composition now compile. In the exact original EvenEdge/EvenReach model:
+
+```lean
+theorem H4AllHidden.y_parent {x r : Nat} (hx : x%2=0)
+    (edge : SheepEven.EvenEdge x (3*2^(1201+1458*r))) (hr : r%2=1) :
+    3*x+4=2^(1204+1458*r)
+
+theorem H4AllHidden.x_parent {x X r : Nat} (hx : x%2=0) (hr : r%2=1)
+    (hy : 3*X+4=2^(1204+1458*r)) (edge : SheepEven.EvenEdge x X) :
+    2187*x+1868=2^(1211+1458*r)
+
+theorem H4AllHidden.y_not_blank_of_good (r : Nat) (hr : r%2=1)
+    (hg : ¬Bad r) :
+    ¬ SheepEven.EvenReach 10 (3*2^(1201+1458*r))
+```
+
+All three report only [propext, Classical.choice, Quot.sound]. The X predecessor proof uses the uniform special exclusion, the h≤4 bound from modulo 729, the previously proved large valuation gap to show b≤2h+16, and 99 explicit finite modular obstructions (331 odd residue tests, maximum period 38). The only remaining row is (h,b)=(4,2). The Y predecessor proof reuses existing coefficient-three high-valuation and special-source gap theorems. Reachability composition uses a last-edge decomposition and excludes the root 10 at all three stages by elementary exponential bounds.
+
+Restore with `python reconstruct_root_lean.py`. In addition to the earlier archive dependencies, compile original OddPrefix and EvenReach from agent16-sheep-even-return and HighValuationGap and SpecialSourceGap from agent22-sheep-special-targets. Then compile H4YParent, H4XCore, H4XRows, H4BlankReach in that order. Local Lean 4.36.0-rc2 compilation; no new CI claim. This completes the corrected all-odd-r family exclusion for the authentic orbit, but the targets are exceptional states, not halting powers. 
