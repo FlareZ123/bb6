@@ -1,6 +1,6 @@
 # Machine C: exact thin-gateway inverse fan
 
-**Status:** all-Nat Lean-checked equivalence on the unchanged CLine accelerator; neither blank nonhalting nor a raw BB(6) bound follows. The new [ThinGatewayExact.lean](ThinGatewayExact.lean) closes the entire inverse fan for each individual thin gateway, including the low exceptional entry omitted in the initial Agent13 derivation. It generalizes the old K≥8 two-branch wrapper to all even K, with both necessity and sufficiency.
+**Status:** all-Nat Lean-checked inverse equivalence and quantitative stopping suffixes on the unchanged CLine accelerator; neither blank nonhalting nor a raw BB(6) bound follows. The new [ThinGatewayExact.lean](ThinGatewayExact.lean) closes the entire inverse fan for each individual thin gateway, including the low exceptional entry omitted in the initial Agent13 derivation. It generalizes the old K≥8 two-branch wrapper to all even K, with both necessity and sufficiency.
 
 ## Exact recurrence and closed-form reduction
 
@@ -48,6 +48,28 @@ Copy both files into one directory and run `lean -o CLine.olean CLine.lean`, the
 - thin_origin_iff: [propext, Quot.sound].
 
 No sorryAx or native_decide dependency. This exact CLine dependency is unchanged and byte-identical to the repository. The upstream raw Turing-machine bridge is a separate dependency not imported by this local build; see the [CLine source dossier](../agent11-c-line/README.md). No CI workflow was added.
+
+## Exact quantitative stopping suffixes
+
+[ThinGatewayCounted.lean](ThinGatewayCounted.lean) extends the inverse-fan theorem with **exact accelerator-call counts**, and separately the sum of published rule weights. Let Path(n,w,s,t) mean n successful nextC calls from s to t, with weight sum w. The rule weights come from the comments in the pinned [Cryptids source](https://github.com/google-deepmind/cryptids/blob/c86f15861709b76042998c5211c7b2f83991621b/BusyBeaver/BB6/M_1RB1LC_1LC1RD_1LA0LB_0RB1RE_1RF0RA_HHH0RC.lean). The raw primitive-count bridge is not yet a formal premise of these theorems.
+
+For the recursive fan alone (from (0,L,D) to (0,K,C), under the two closed-form fan identities), theorem fan_counted proves
+```
+n + 2L + 5d = 2K
+3w + 51d = F(K) - F(L)
+F(x) = 8(x+4)^2 - 39(x+4).
+```
+The latter is an integer polynomial identity, stated in Lean without subtraction. The single recursive step costs K-1 calls, and its weight has the telescoping potential above. The high c=0 entry costs L calls and weight 2L²+8L+D-7; the exceptional low entry costs 3 calls and weight D+57.
+
+The terminal wing from T_j to the first c=2 state (8j+10,2,2) costs exactly 4j+4 calls and weight 32j²+122j+100. Therefore:
+- high stopping family: exact successful call count n=8j-2q-10m+2;
+- low stopping family: exact successful call count n=8j-10m+4.
+
+For both families the total weight is entry weight + recursive fan weight + terminal wing weight. The parameters are (L,D,d)=(2q+2,2k-2q,2m) or (4,2k-3,2m-1), respectively, with K=2j. The final c=2 halt call is not included; its published raw successful-transition weight is 3, and the convention for counting the terminal undefined transition is separate.
+
+Theorems high_stop_counted and low_stop_counted construct these paths for every admissible parameter, independently of blank reachability. Path.terminal_unique proves uniqueness of the length, weight, and terminal endpoint of any stopping path, without axioms. This gives a quantitative suffix certificate, not a blank-run time or a classification of C.
+
+Lean 4.36.0-rc2 compiled the new module with no warnings or errors, using the above exact dependencies; all four counted theorems report only propext, Classical.choice and Quot.sound. The file blob is 1118c4f7c8d0d281d91eebf872feb131fa33a123. Run `LEAN_PATH=. lean -o ThinGatewayCounted.olean ThinGatewayCounted.lean` after the preceding two modules. An independent primitive simulation of 4,000 small canonical triples also agreed with the published rule weights, but is finite evidence rather than a raw-source count proof.
 
 ## Remaining root obligation
 
