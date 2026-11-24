@@ -1103,4 +1103,71 @@ theorem reducedRootRoster_sound :
 #print axioms reducedRootRoster_count
 #print axioms reducedRootRoster_sound
 
+
+/-- The complete depth-eight cylinder before F0 is queried. -/
+abbrev depthEight : PartialMachine := (pathEnd root 2 (path.take 8)).1
+
+def depthEightChild (mv : Move) : PartialMachine := refine depthEight (5,false) (some mv)
+
+def depthEightChildOK (mv : Move) : Bool :=
+  let t := packTable (depthEightChild mv)
+  decide (t = packTable parent) || residualHasWitness t || deepSiblingHasWitness t
+
+theorem depthEightChildren_checked : allMoves.all depthEightChildOK = true := by decide
+
+theorem depthEightChild_sound (mv : Move) :
+    ∀ m, compatible (depthEightChild mv) m → WeightedBound 92 m := by
+  have h := List.all_eq_true.mp depthEightChildren_checked mv (allMoves_complete mv)
+  have hh : (packTable (depthEightChild mv) = packTable parent ∨
+      residualHasWitness (packTable (depthEightChild mv)) = true) ∨
+      deepSiblingHasWitness (packTable (depthEightChild mv)) = true := by
+    simpa only [depthEightChildOK, Bool.or_eq_true, decide_eq_true_eq] using h
+  intro m hm
+  rcases hh with (he | hn) | hd
+  · have hp := packTable_injective he
+    have hb := all_completions_weighted m (by simpa only [hp] using hm)
+    intro k d hk hdelay
+    exact Nat.le_trans (hb k d hk hdelay) (by decide)
+  · have hb := residualHasWitness_sound _ hn m (by simpa only [unpack_packTable] using hm)
+    intro k d hk hdelay
+    exact Nat.le_trans (hb k d hk hdelay) (by decide)
+  · exact deepSiblingHasWitness_sound _ hd m (by simpa only [unpack_packTable] using hm)
+
+theorem depthEight_bound : ∀ m, compatible depthEight m → WeightedBound 92 m := by
+  have hf : depthEight initialSlot = some (some ⟨true,true,1⟩) := by decide
+  have hh : depthEight (5,false) = none := by decide
+  have hr : (knownRun depthEight 21).map readSlot = some (5,false) := by decide
+  have hw : weightOK depthEight (5,false) 21 92 = true := by decide
+  intro m hm
+  have href (v : Option Move) (hv : m (5,false) = v) : compatible (refine depthEight (5,false) v) m := by
+    intro s u hu
+    by_cases he : s = (5,false)
+    · subst s
+      have h : u = v := by simpa [refine] using hu.symm
+      simpa [h] using hv
+    · exact hm s u (by simpa [refine,he] using hu)
+  cases ha : m (5,false) with
+  | some mv => exact depthEightChild_sound mv m (href (some mv) ha)
+  | none =>
+    cases hrun : knownRun depthEight 21 with
+    | none => simp [hrun] at hr
+    | some c =>
+      have hs : readSlot c = (5,false) := by simpa [hrun] using hr
+      exact first_hole_weighted_halt 92 depthEight 21 c hf hrun
+        (by simpa [hs] using hh)
+        (by simpa [hs] using weightOK_sound depthEight (5,false) 21 92 hw)
+        m (by simpa [hs] using href none ha)
+
+/-- A concrete 91-move computation followed by its halt query. -/
+abbrev depthEightLong : PartialMachine :=
+  refine (refine (depthEightChild ⟨true,true,0⟩) (0,true) (some ⟨false,false,5⟩)) (4,false) none
+
+theorem depthEightLong_check :
+    (knownRun (refine (depthEightChild ⟨true,true,0⟩) (0,true) (some ⟨false,false,5⟩)) 91).map readSlot =
+      some (4,false) := by decide
+
+#print axioms depthEightChildren_checked
+#print axioms depthEight_bound
+#print axioms depthEightLong_check
+
 end BB6.Agent50RootFrontier
