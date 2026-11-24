@@ -227,17 +227,15 @@ theorem noFullPrefix_of_emptyCarry (Q K : Nat)
   have hmodadd := Nat.mod_add_div total (2^K)
   rw [hmod] at hmodadd
   have hsum : total+1 = 2^K*(total/2^K+1) := by
+    have hdiv' : total = (2^K-1)+2^K*(total/2^K) := hmodadd
+    have hdivPlus := congrArg (fun x => x+1) hdiv'
     calc
-      total+1 =
-          (2^K-1 + 2^K*(total/2^K))+1 := by
-            rw [← hmodadd]
-            rfl
-      _ = 2^K*(total/2^K)+2^K := by
+      total+1 = ((2^K-1)+2^K*(total/2^K))+1 := hdivPlus
+      _ = 2^K+2^K*(total/2^K) := by
             have hsub : 2^K-1+1=2^K :=
               Nat.sub_add_cancel (Nat.one_le_pow K 2 (by decide))
-            rw [hsub]
-            ac_rfl
-      _ = 2^K*(total/2^K+1) := by rw [Nat.mul_add]
+            omega
+      _ = 2^K*(total/2^K+1) := by rw [Nat.mul_add]; ac_rfl
   have hpath : FullCarryPath Q 0 xs 1 (total/2^K+1) := by
     apply fullCarryPath_of_sum
     simpa [hlen, total] using hsum
