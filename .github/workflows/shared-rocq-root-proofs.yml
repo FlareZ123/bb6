@@ -129,6 +129,7 @@ jobs:
           cp "$GITHUB_WORKSPACE/research/im-results/agent47-rooted-tnf/Agent47SourceChunk2.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent47-rooted-tnf/Agent47SourceTree.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent44-source-roster/Agent44ChunkSideSearch.v" original/verify/
+          cp "$GITHUB_WORKSPACE/research/im-results/agent8-adaptive-source-plan/Agent8Chunk2FirstHole.v" original/verify/
       - name: Generate project dependencies with VM fallback
         working-directory: original/verify
         run: |
@@ -154,7 +155,7 @@ jobs:
             enumerate62-resume-chunk2) make -f Makefile.coq -j 2 Agent8PackedChunk2_32_32.vo ;;
             enumerate62-last20-witness) make -f Makefile.coq -j 2 Agent5Last20Witness.vo ;;
             enumerate62-resume-last20) make -f Makefile.coq -j 2 Agent5PackedChunk12800_20_1000000.vo ;;
-            enumerate62-source-roster) make -f Makefile.coq -j 2 Agent47SourceSweep.vo && make -f Makefile.coq -j 2 Agent47SourceChunk2.vo Agent47SourceTree.vo Agent44ChunkSideSearch.vo ;;
+            enumerate62-source-roster) make -f Makefile.coq -j 2 Agent47SourceSweep.vo && make -f Makefile.coq -j 2 Agent47SourceChunk2.vo Agent47SourceTree.vo Agent44ChunkSideSearch.vo && make -f Makefile.coq -j 2 Agent8Chunk2FirstHole.vo ;;
           esac
       - name: Print final original theorem assumptions
         working-directory: original/verify
