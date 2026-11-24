@@ -50,16 +50,17 @@ private theorem s0SideBit_carryPrefixInput
       decide (i < 3*r ∨ i = 3*r+2) := by
   by_cases hlt : i < 3*r
   · have hones := sideBit_d1pow_true r i hlt
+    simp only [List.append_assoc]
     rw [sideBit_append]
     simp [d1pow_length,hlt,hones]
   · have hc : i=3*r ∨ i=3*r+1 ∨ i=3*r+2 := by omega
     rcases hc with h0 | h1 | h2
     · subst i
-      simp [sideBit_append,d1pow_length,d0,sideBit]
+      simp [sideBit_append,d1pow_length,d0,sideBit] <;> omega
     · subst i
-      simp [sideBit_append,d1pow_length,d0,sideBit]
+      simp [sideBit_append,d1pow_length,d0,sideBit] <;> omega
     · subst i
-      simp [sideBit_append,d1pow_length,d0,sideBit]
+      simp [sideBit_append,d1pow_length,d0,sideBit] <;> omega
 
 /-- Every arbitrary-left-context S0 source configuration has the exact
 local input window required by the uniform counted carry prefix. -/
@@ -71,7 +72,12 @@ theorem s0Config_carryInput_match
         carryInputBit r x := by
   intro x harea
   by_cases hx0 : x ≤ 0
-  · obtain ⟨i, rfl⟩ : ∃ i : Nat, x = -(i:Int) := by omega
+  · let i : Nat := Int.toNat (-x)
+    have hxEq : x = -(i:Int) := by
+      dsimp [i]
+      rw [Int.toNat_of_nonneg (by omega : 0 ≤ -x)]
+      omega
+    rw [hxEq] at harea ⊢
     have hbound : i ≤ 3*r+2 := by
       simp [carryInputArea] at harea
       omega
@@ -84,12 +90,32 @@ theorem s0Config_carryInput_match
       rw [binDec_carryPrefix len q r hq]
     have hside := s0SideBit_carryPrefixInput r
       (binDec len q ++ l) i hbound
+    let P : Prop :=
+      (-(i:Int) = -(3*(r:Int))-2 ∨
+        (-(3*(r:Int))+1 ≤ -(i:Int) ∧ -(i:Int) ≤ 0) ∨
+        -(i:Int)=2 ∨ -(i:Int)=3 ∨ -(i:Int)=4)
+    have hprop : P ↔ (i < 3*r ∨ i = 3*r+2) := by
+      dsimp [P]
+      omega
     have hbit : carryInputBit r (-(i:Int)) =
         decide (i < 3*r ∨ i = 3*r+2) := by
-      simp [carryInputBit] <;> omega
+      change decide P = decide (i < 3*r ∨ i = 3*r+2)
+      by_cases hp : P
+      · have hq : i < 3*r ∨ i = 3*r+2 := hprop.mp hp
+        simp [hp,hq]
+      · have hq : ¬ (i < 3*r ∨ i = 3*r+2) := by
+          intro hq
+          exact hp (hprop.mpr hq)
+        simp [hp,hq]
     have hcoord : h + (-(i:Int)) = h-(i:Int) := by omega
-    rw [hcoord,hsource,hside,hbit]
-  · obtain ⟨i, hxEq⟩ : ∃ i : Nat, x = 1+(i:Int) := by omega
+    rw [hcoord,hsource]
+    simpa only [List.append_assoc,hbit] using hside
+  · let i : Nat := Int.toNat (x-1)
+    have hxEq : x = 1+(i:Int) := by
+      dsimp [i]
+      rw [Int.toNat_of_nonneg (by omega : 0 ≤ x-1)]
+      omega
+    rw [hxEq] at harea
     have hbound : i ≤ 5 := by
       simp [carryInputArea] at harea
       omega
@@ -97,13 +123,14 @@ theorem s0Config_carryInput_match
         (s0Config l (len+1+r) ((2*q+1)*2^r) b h).tape
             (h+1+(i:Int)) = sideBit (s0RightFacing b) i :=
       s0Config_right_cell l (len+1+r) ((2*q+1)*2^r) b h i
-    have hc : i=0 ∨ i=1 ∨ i=2 ∨ i=3 ∨ i=4 ∨ i=5 := by omega
-    have hside :
-        sideBit ([false,true,true,true,false,false] ++ d1pow (b+1)) i =
-          carryInputBit r (1+(i:Int)) := by
+    have hsideAll (j : Nat) (hj : j ≤ 5) :
+        sideBit ([false,true,true,true,false,false] ++ d1pow (b+1)) j =
+          carryInputBit r (1+(j:Int)) := by
+      have hc : j=0 ∨ j=1 ∨ j=2 ∨ j=3 ∨ j=4 ∨ j=5 := by omega
       rcases hc with h0 | h1 | h2 | h3 | h4 | h5
-      all_goals subst i <;> simp [sideBit,carryInputBit] <;> omega
-    rw [hxEq,hsource]
+      all_goals subst j <;> simp [sideBit,carryInputBit] <;> omega
+    have hside := hsideAll i hbound
+    rw [hxEq,show h+(1+(i:Int))=h+1+(i:Int) by omega,hsource]
     simpa [s0RightFacing] using hside
 
 /-- The arbitrary-left-context S0 right suffix supplies the complete
@@ -113,7 +140,7 @@ theorem s0Config_carryRightOnes
     ∀ i : Nat, i < 3*(b+1) →
       (s0Config l a z b h).tape (h+7+(i:Int)) = true := by
   intro i hi
-  have hcoord : h+7+(i:Int) = h+1+(6+(i:Int)) := by omega
+  have hcoord : h+7+(i:Int) = h+1+((6+i:Nat):Int) := by omega
   rw [hcoord,s0Config_right_cell]
   have hside :
       sideBit ([false,true,true,true,false,false] ++ d1pow (b+1))
@@ -138,7 +165,12 @@ theorem s0Config_decrement_leftOutput
           (s0Config l (len+1+r) ((2*q+1)*2^r) b h).tape (h+y)) x =
       (s0Config l (len+1+r) (((2*q+1)*2^r)-1) (b+1) h).tape (h+x) := by
   intro x hx
-  obtain ⟨i, rfl⟩ : ∃ i : Nat, x = -(i:Int) := by omega
+  let i : Nat := Int.toNat (-x)
+  have hxEq : x = -(i:Int) := by
+    dsimp [i]
+    rw [Int.toNat_of_nonneg (by omega : 0 ≤ -x)]
+    omega
+  rw [hxEq]
   have hin :
       (s0Config l (len+1+r) ((2*q+1)*2^r) b h).tape
           (h-(i:Int)) =
@@ -158,6 +190,7 @@ theorem s0Config_decrement_leftOutput
   · have hinTail :
         sideBit (d1pow r ++ d0 ++ binDec len q ++ l) i =
         sideBit (binDec len q ++ l) (i-(3*r+3)) := by
+      simp only [List.append_assoc]
       rw [sideBit_append]
       simp only [d1pow_length]
       have hnot1 : ¬ i < 3*r := by omega
@@ -170,6 +203,7 @@ theorem s0Config_decrement_leftOutput
     have houtTail :
         sideBit (d0pow r ++ d1 ++ binDec len q ++ l) i =
         sideBit (binDec len q ++ l) (i-(3*r+3)) := by
+      simp only [List.append_assoc]
       rw [sideBit_append]
       simp only [d0pow_length]
       have hnot1 : ¬ i < 3*r := by omega
@@ -204,6 +238,7 @@ theorem s0Config_decrement_leftOutput
     by_cases hmiddle : 3*r ≤ i
     · have hside :
         sideBit (d0pow r ++ d1 ++ binDec len q ++ l) i = true := by
+        simp only [List.append_assoc]
         rw [sideBit_append]
         simp only [d0pow_length]
         have hnot : ¬ i < 3*r := by omega
@@ -229,6 +264,7 @@ theorem s0Config_decrement_leftOutput
       have hside :
           sideBit (d0pow r ++ d1 ++ binDec len q ++ l) i =
             decide (i%3=2) := by
+        simp only [List.append_assoc]
         rw [sideBit_append]
         simp only [d0pow_length]
         simp [hsmall,sideBit_d0pow_formula]
@@ -289,35 +325,38 @@ theorem s0Config_counted_decrement_from_relative_prefix
   have hprefix0 : run tm2 (15+12*r) c0 =
       some ⟨4,h+7,Tpre⟩ := by
     simpa [shiftConfig,Tpre,hhead] using hshift
+  have hcancel (x : Int) : h+x-h=x := by omega
   let P : Int → Bool := fun x => Tpre (h+x)
-  have hP1 : P 1 = true := by simpa [P,Tpre] using h1
-  have hP2 : P 2 = true := by simpa [P,Tpre] using h2
-  have hP3 : P 3 = true := by simpa [P,Tpre] using h3
-  have hP4 : P 4 = true := by simpa [P,Tpre] using h4
-  have hP5 : P 5 = false := by simpa [P,Tpre] using h5
-  have hP6 : P 6 = true := by simpa [P,Tpre] using h6
+  have hP1 : P 1 = true := by simpa [P,Tpre,hcancel] using h1
+  have hP2 : P 2 = true := by simpa [P,Tpre,hcancel] using h2
+  have hP3 : P 3 = true := by simpa [P,Tpre,hcancel] using h3
+  have hP4 : P 4 = true := by simpa [P,Tpre,hcancel] using h4
+  have hP5 : P 5 = false := by simpa [P,Tpre,hcancel] using h5
+  have hP6 : P 6 = true := by simpa [P,Tpre,hcancel] using h6
   have hpreserveP : ∀ x, 6 < x →
       P x = c0.tape (h+x) := by
     intro x hx
-    simpa [P,Tpre,c0] using hpreserve x hx
+    simpa [P,Tpre,c0,hcancel] using hpreserve x hx
   have honeP : ∀ i : Nat, i < 3*(b+1) → P (7+(i:Int)) = true := by
     intro i hi
     rw [hpreserveP (7+(i:Int)) (by omega)]
-    exact s0Config_carryRightOnes l (len+1+r) ((2*q+1)*2^r) b h i hi
+    simpa [Int.add_assoc] using s0Config_carryRightOnes l (len+1+r) ((2*q+1)*2^r) b h i hi
   have hleftP : ∀ x, x ≤ 0 →
       P x =
         (s0Config l (len+1+r) (((2*q+1)*2^r)-1) (b+1) h).tape (h+x) := by
     intro x hx
     calc
-      P x = T' x := by simp [P,Tpre]
+      P x = T' x := by simp [P,Tpre,hcancel]
       _ = carryLeftOutputBit r
           (fun y => c0.tape (h+y)) x := by simpa [c0] using hleft x hx
       _ = (s0Config l (len+1+r) (((2*q+1)*2^r)-1) (b+1) h).tape (h+x) := by
         simpa [c0] using
           s0Config_decrement_leftOutput l len q r b h hq x hx
-  exact BB6Coverage.Agent24ChampionTime.s0Config_counted_decrement_of_prefix
+  apply BB6Coverage.Agent24ChampionTime.s0Config_counted_decrement_of_prefix
     l (len+1+r) ((2*q+1)*2^r) (((2*q+1)*2^r)-1) b r h Tpre
-    hprefix0 hP1 hP2 hP3 hP4 hP5 hP6 honeP hpreserveP hleftP
+    hprefix0 hP1 hP2 hP3 hP4 hP5 hP6 _ hpreserveP hleftP
+  intro i hi
+  simpa [P,Int.add_assoc] using honeP i hi
 
 /-- Uniform source-level S0 decrement for every 2-adic valuation r,
 including r=0 and every arbitrary left context l. -/
