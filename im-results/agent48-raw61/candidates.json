@@ -1,8 +1,8 @@
 {
-  "status": "incomplete candidate; no Lean acceptance",
+  "status": "complete candidate closure; original-source audit pending",
   "parent": "1RB---_1RC0LA_0RD---_1LD1RE_---0LB_------",
   "open_sha256": "d462bbd5b45ec9a381daa0984144f5eaa06887b14f4e7753a8c7561ba6c08a16",
-  "bound": 600,
+  "bound": 1962,
   "open": 1502,
   "far_default": "000",
   "far_groups": {
@@ -201,15 +201,12 @@
       0
     ]
   },
-  "unresolved": [
-    14,
-    227,
-    244
-  ],
-  "notes": "Indices zero-based in enumerator open.txt order. FAR default applies only to indices outside explicit groups, pump and unresolved lists. Long tuples are time, direction, state, period, event index. All candidate witnesses require formal audit. Recursive candidate leaves use emit_tripling.py, local copied-zipper Lean proof passed (propext, Quot.sound); original-source audit pending. Exclude these indices from FAR default. Additional five recursive leaves use emit_recursive_unary.py, local exact-zipper proofs compiled. Residue unary leaves use emit_residue_unary.py, local exact-zipper proofs compiled. Multiphase leaves use emit_multiphase.py, local exact-zipper proofs compiled. Seven-phase 120 and grammar 353 have locally accepted exact-zipper proofs (emit_d120.py and emit_language353.py).",
+  "unresolved": [],
+  "notes": "Indices zero-based in enumerator open.txt order. FAR default applies only to indices outside explicit groups, pump and unresolved lists. Long tuples are time, direction, state, period, event index. All candidate witnesses require formal audit. Recursive candidate leaves use emit_tripling.py, local copied-zipper Lean proof passed (propext, Quot.sound); original-source audit pending. Exclude these indices from FAR default. Additional five recursive leaves use emit_recursive_unary.py, local exact-zipper proofs compiled. Residue unary leaves use emit_residue_unary.py, local exact-zipper proofs compiled. Multiphase leaves use emit_multiphase.py, local exact-zipper proofs compiled. Seven-phase 120 and grammar 353 have locally accepted exact-zipper proofs (emit_d120.py and emit_language353.py). Leaf 14 translated cycle (entry 9600, period 1134, left, boundary -45); leaf 227 late last hole at step 1961 (F1), zero blank delay; leaf 244 four-phase symbolic proof locally compiled. Bound corrected to 1962. Late and cycle leaves excluded from FAR default.",
   "recursive_candidate": [
     120,
     147,
+    244,
     314,
     315,
     316,
@@ -221,5 +218,19 @@
     1085,
     1344,
     1346
-  ]
+  ],
+  "late": {
+    "227": [
+      1961,
+      11
+    ]
+  },
+  "late_cycle": {
+    "14": [
+      9600,
+      1134,
+      false,
+      -45
+    ]
+  }
 }

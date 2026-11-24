@@ -95,6 +95,9 @@ open BB6.Agent50TNFPilot BB6.Agent31ThreeHole BB6.Agent10ZipAudit
                 n,s=spec["late"][str(i)]
                 assert parse(code).count("---")==1 and parse(code)[s]=="---",(raw,i,code)
                 return f".last {n} {slot(s)}"
+            if str(i) in spec.get("late_cycle",{}):
+                e,k,r,b=spec["late_cycle"][str(i)]
+                return f".cycle {e} {k} {str(r).lower()} ({b})"
             a=dfa[i];rev=int(a[0]);d,D,L,R,z=masks(parse(code),rev,[int(ch,36) for ch in a[1:]])
             return f".far {str(bool(rev)).lower()} {d} ⟨0,{D},{L},{R},{z}⟩"
         assert tag=="split"
@@ -142,4 +145,4 @@ theorem all{raw} : ∀ m, compatible p{raw} m → WeightedBound {bound} m :=
 #print axioms all{raw}
 """
     emit(f"Raw{raw}Data",mods,body)
-    print("raw",raw,stats,"FAR",len(opens)-len(pumps)-len(spec.get("late",{})),"pumps",len(pumps),"late",len(spec.get("late",{})))
+    print("raw",raw,stats,"FAR",len(opens)-len(pumps)-len(spec.get("late",{}))-len(spec.get("late_cycle",{})),"pumps",len(pumps),"late",len(spec.get("late",{})))
