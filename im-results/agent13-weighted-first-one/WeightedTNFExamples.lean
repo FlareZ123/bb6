@@ -17,11 +17,57 @@ theorem threeGliderTNF_root :
 
 theorem threeGliderTNF_support :
     TNFSupport threeGliderTNFNode 3 := by
-  decide
+  classical
+  intro s t ht
+  by_cases h0 : s = (0,false)
+  · subst s
+    have ht' : t = some ⟨true,true,1⟩ := by
+      simpa [threeGliderTNFNode, BB6Coverage.threeGliderExample] using ht
+    subst t
+    constructor
+    · norm_num
+    · intro mv hm
+      have hmv : (⟨true,true,1⟩ : Move) = mv := Option.some.inj hm
+      subst mv
+      norm_num
+  · by_cases h1 : s = (1,false)
+    · subst s
+      have ht' : t = some ⟨false,false,2⟩ := by
+        simpa [threeGliderTNFNode, BB6Coverage.threeGliderExample] using ht
+      subst t
+      constructor
+      · norm_num
+      · intro mv hm
+        have hmv : (⟨false,false,2⟩ : Move) = mv := Option.some.inj hm
+        subst mv
+        norm_num
+    · by_cases h2 : s = (2,true)
+      · subst s
+        have ht' : t = some ⟨false,true,0⟩ := by
+          simpa [threeGliderTNFNode, BB6Coverage.threeGliderExample] using ht
+        subst t
+        constructor
+        · norm_num
+        · intro mv hm
+          have hmv : (⟨false,true,0⟩ : Move) = mv := Option.some.inj hm
+          subst mv
+          norm_num
+      · simp [threeGliderTNFNode, BB6Coverage.threeGliderExample, h0, h1, h2] at ht
 
 theorem threeGliderTNF_noAssignedHalt :
     weightedTNFNoAssignedHalt threeGliderTNFNode := by
-  decide
+  classical
+  intro s
+  by_cases h0 : s = (0,false)
+  · subst s
+    simp [threeGliderTNFNode, BB6Coverage.threeGliderExample]
+  · by_cases h1 : s = (1,false)
+    · subst s
+      simp [threeGliderTNFNode, BB6Coverage.threeGliderExample]
+    · by_cases h2 : s = (2,true)
+      · subst s
+        simp [threeGliderTNFNode, BB6Coverage.threeGliderExample]
+      · simp [threeGliderTNFNode, BB6Coverage.threeGliderExample, h0, h1, h2]
 
 theorem threeGliderTNF_never :
     ∀ m, compatible threeGliderTNFNode m → NeverHalts m := by
