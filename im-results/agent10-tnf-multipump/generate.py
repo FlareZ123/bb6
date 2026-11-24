@@ -49,13 +49,17 @@ for raw,spec in SPECS.items():
             print(raw,i,key,info)
     for i in spec.get("long",[]):
         p=one.parse(opens[i])
-        side,state,period=("R",4,3) if raw=="86" else ("R",0,1)
+        side,state,period=spec.get("long_params",{}).get(str(i),("R",4,3) if raw=="86" else ("R",0,1))
         ans=long_epoch.candidate(p,one.concrete_events(p,10000),side,state,period)
         assert ans is not None,(raw,i,"long")
         code,info=one.generate(i,p,ans)
         pumps[i]=f"{pumpns}.M{i}"
         pumpcode.append(code)
         print(raw,i,"long",info)
+    if spec.get("recursive"):
+        pumpcode.insert(0,"import RecursiveGrowth")
+        for i in spec["recursive"]:
+            pumps[i]=f"BB6.Agent10Recursive.R{raw}M{i}"
     pumpcode.append(f"end {pumpns}")
     (ROOT/f"Raw{raw}Pumps.lean").write_text("\n\n".join(pumpcode)+"\n")
     ns=f"BB6.Agent10Raw{raw}"
