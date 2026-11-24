@@ -117,7 +117,7 @@ theorem positive_history_packet_weight {j s k x : Nat} {w : Int} (hw : 0<w)
   induction h with
   | first hb he =>
     refine ⟨8,-6-w,by decide,by decide,by decide,by omega,?_,?_⟩
-    · simp only [Int.pow_one]
+    · simp
       omega
     · change (4:Int)*(P j:Int)≥4*(P j:Int)
       omega
@@ -206,7 +206,6 @@ theorem positive_boundary_cost_sharp {j s k x : Nat} {w : Int} (hw : 0<w)
   have hQ : (Q k x:Int)≤3*(k:Int)+16 := by exact_mod_cast hQNat
   have hWQ : W k x+2*(Q k x:Int)=4*(P k:Int)-3 := by
     have hq:=q_eq hb
-    unfold W
     have hqI : (Q k x:Int)+2*(P k:Int)=2*(x:Int)+3*(k:Int)+12 := by exact_mod_cast hq
     unfold W
     omega
