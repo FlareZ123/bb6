@@ -1,18 +1,11 @@
-import Std
+import CLine
 namespace BB6Agent6.C
 
-/-- Exact copy of the public Cryptids 3-counter acceleration used by Agent 8. -/
-def next : Nat × Nat × Nat → Option (Nat × Nat × Nat)
-  | (a,k,1) => some (a,k+1,0)
-  | (_,_,2) => none
-  | (a,k,3) => some (a,k+2,1)
-  | (0,k,0) => some (1,0,2*k+2)
-  | (1,0,0) => some (5,0,1)
-  | (1,k+1,0) => some (2,2,2*k+1)
-  | (a+2,k,0) => some (a,1,2*k+1)
-  | (0,k,d+4) => if k%2=0 then
-       some (4*(k/2)+2,2,d+1) else some (4*(k/2)+5,0,d+4)
-  | (a+1,k,d+4) => some (a,k+1,d+3)
+/-- Reuse the authoritative original-source transition map. This keeps the
+    finite certificate tied definitionally to the same CLine semantics used
+    by the source reachability proof, rather than duplicating its matcher. -/
+abbrev next : Nat × Nat × Nat → Option (Nat × Nat × Nat) :=
+  BB6CLine.nextC
 
 def run : Nat → Nat × Nat × Nat → Option (Nat × Nat × Nat)
   | 0,s => some s
