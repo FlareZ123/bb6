@@ -51,6 +51,10 @@ def refine(p,s,a):
     return p[:s]+(a,)+p[s+1:]
 
 def masks(p,rev,dfa):
+    # Every emitted FAR.Data fixes its start to state 0. fastValid requires
+    # push 0 false = 0, hence the flattened transition delta[0] must be 0.
+    if len(dfa) < 2 or len(dfa) % 2 or dfa[0] != 0:
+        raise AssertionError(("blank-start loop", show(p), dfa))
     d=len(dfa)//2
     N=6*d+1
     H=N-1
