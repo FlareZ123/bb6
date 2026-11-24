@@ -189,9 +189,10 @@ int main() {
   // Exact exceptional parameter u=0: n=23, so use the actual a, not the u>=1 representative.
   const i64 a0 = 13LL * (1LL << 23) - 19;
   const i64 b0 = 2 * a0 - 13;
-  Stats s0;
-  long long leaves0 = 0;
-  dfs(a0, b0, 0, D3, 0, s0, leaves0);
+  Stats s0_14, s0_16;
+  long long leaves0_14 = 0, leaves0_16 = 0;
+  dfs(a0, b0, 0, D2, 0, s0_14, leaves0_14);
+  dfs(a0, b0, 0, D3, 0, s0_16, leaves0_16);
 
   cout << "stage1 depth12: open mod-2^22 classes=" << open1.size()
        << ", maxD=" << s1.maxD << ", unhandled=" << s1.unhandled << "\n";
@@ -209,8 +210,10 @@ int main() {
   cout << "\nopen base classes by u mod64:";
   for (auto [k,v] : openBy64) cout << " " << k << ":" << v;
   cout << "\n";
-  cout << "u=0 exact: open inverse leaves=" << leaves0
-       << ", maxD=" << s0.maxD << ", unhandled=" << s0.unhandled << "\n";
+  cout << "u=0 exact: depth14 leaves=" << leaves0_14
+       << ", maxD=" << s0_14.maxD << ", unhandled=" << s0_14.unhandled
+       << "; depth16 leaves=" << leaves0_16
+       << ", maxD=" << s0_16.maxD << ", unhandled=" << s0_16.unhandled << "\n";
 
   // A concrete surviving synthetic inverse path in the u=2330 (mod 2^22) class.
   const i64 sampleU = 2330;
