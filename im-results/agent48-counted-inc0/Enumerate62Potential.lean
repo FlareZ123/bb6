@@ -108,8 +108,10 @@ theorem expandProjection_mass_lt (x : Node) (h : 2 ≤ x.holes) :
     unfold expandProjection
     rw [mass_append, mass_replicate]
     by_cases hc : x.cut.val < 6
-    · simp [hc, mass_replicate, existingChild, freshChild, weight, k]
-    · simp [hc, mass_replicate, existingChild, weight, k]
+    · rw [if_pos hc, mass_replicate]
+      simp [existingChild, freshChild, weight, k]
+    · rw [if_neg hc]
+      simp [mass, existingChild, weight, k]
   calc
     mass (expandProjection x h)
         = 4 * x.cut.val * k + (if x.cut.val < 6 then 4 * k else 0) := hcalc
