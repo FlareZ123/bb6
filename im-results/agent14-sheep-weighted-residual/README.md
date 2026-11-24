@@ -55,6 +55,12 @@ The classification that these are the only zero-residual triples is the
 result in the Agent 16 dossier; this file formalizes the source cylinders and
 their immediate successors conditional on those triples.
 
+`SingularLowH.lean` proves `type1_terminal_low` for `H<3` and
+`type3_terminal_low` for `H<9` from the exact terminal equations, yielding
+`32≤B` and `11502≤B`, respectively. Lean 4.36.0-rc2 reports exactly
+`[propext, Quot.sound]` for both declarations, with no `sorryAx` or
+`native_decide`. The local source blob is `de7ed88ed9856b7207e2beec4cdb2f0aacef06b3`.
+
 The source theorem is not merely an algebraic restatement: it invokes
 `SheepEven.Step.generic`, `SheepEven.even_successor`, and
 `SheepEven.factor_odd`. The residual identity is therefore connected to the
@@ -184,14 +190,20 @@ LEAN_PATH=im-results/agent16-sheep-even-return lean -o im-results/agent16-sheep-
 LEAN_PATH=im-results/agent16-sheep-even-return lean -o im-results/agent14-sheep-weighted-residual/GenericResidual.olean im-results/agent14-sheep-weighted-residual/GenericResidual.lean
 LEAN_PATH=im-results/agent14-sheep-weighted-residual:im-results/agent16-sheep-even-return lean im-results/agent14-sheep-weighted-residual/SingularCylinders.lean
 LEAN_PATH=im-results/agent14-sheep-weighted-residual lean im-results/agent14-sheep-weighted-residual/ThreeAdicLTE.lean
+lean im-results/agent14-sheep-weighted-residual/SingularLowH.lean
 python3 im-results/agent14-sheep-weighted-residual/check_singular_two_step.py
 ```
 
 The Lean files were compiled with Lean 4.36.0-rc2. The Python script uses only
 the standard library and reproduces the finite modular tables and the two sharp
-witnesses. The H=1..8 finite residue classification is script-checked, not
-kernel-checked; the infinite H>=3 (type I) and H>=9 (type II) tails are Lean
-proofs from the exact terminal equations.
+witnesses. `SingularLowH.lean` kernel-proves the lower bounds for every remaining low-H
+case (including H=0), using exact exponent-period reduction, modular inverse
+cancellation, and finite `decide` certificates. In the type-II H=5 case it
+first forces `162 | B`, then checks only nine residues of `B/162` modulo 9,
+and applies the mod-10/mod-8 constraints. The Python script separately
+reproduces the full residue table and witnesses. Together with the earlier
+Lean tail theorems, the two lower bounds now have no unverified arithmetic
+case; the one-module all-H wrapper has not yet been built.
 
 ## Scope and limitation
 

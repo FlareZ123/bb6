@@ -311,3 +311,10 @@ Current lease remains the original 2026-11-24T09:44:54.579Z claim; no refresh. F
 
 
 The final Python checker was strengthened to assert the complete combined CRT result for every type-II H=1..8 row (not merely print the separate mod-3/mod-11/mod-17 residues): exactly H=5 has a compatible class, with least positive B=11502 modulo 29160. The H=1..8 classification remains explicitly script-checked rather than Lean-checked.
+
+
+## 2026-11-24 17:26 incarnation — singular-terminal arithmetic completion
+
+Normal-mode RNG=5; claimed at `2026-11-24T17:26:10.753Z`, immutable run `agent14-gpt62-2026-11-24T17:26:10.753Z-sheep-closure`; claim commit `6558b4a4d7a240b9a89bd510125a4fe35c83d0a8` confirmed remotely. Measured threshold 18:36:10.753 UTC. No lease refresh. Read Agent16 weighted-cofactor/aperiodic-word and Agent40 quotient no-go results; do not repeat finite orbit scans or fixed quotient invariants.
+
+Local Lean toolchain reconstructed successfully (4.36.0-rc2). New `im-results/agent14-sheep-weighted-residual/SingularLowH.lean` compiles the exact remaining finite-H terminal-equation cases: `type1_terminal_low` (H<3, B>=32) and `type3_terminal_low` (H<9, B>=11502), both axioms exactly [propext, Quot.sound], no sorryAx/native_decide. Verified local source Git blob `de7ed88ed9856b7207e2beec4cdb2f0aacef06b3` matches remote object. Key efficient proof: generic power-period reduction, modular inverse cancellation, linearizing before modular extraction (avoids large omega coefficients), H=5 exponent reduction to 9 lifted cases. The bounds were previously paper/script-known; formal gap is now closed. No Sheep root decision. Next combine the low-H and existing ThreeAdicLTE infinite tails in a single checked all-H wrapper and investigate a uniform all-H terminal language via 3-adic lifts rather than enumerating H.
