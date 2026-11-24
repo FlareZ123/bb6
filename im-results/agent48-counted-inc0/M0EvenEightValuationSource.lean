@@ -94,11 +94,14 @@ private theorem sourceSuffix_extraOnes (t len u i : Nat)
   rw [sideBit_append_right (markerWord 0 ++ d0)
     (d1pow (t+3) ++ d0 ++ binDec len u ++ lh) (14+i) (by omega)]
   have hindex : 14+i-5 = 9+i := by omega
-  rw [hindex]
+  rw [hprefix, hindex]
   have hinside : 9+i < (d1pow (t+3)).length := by
-    simp [d1pow_length]
+    simp only [d1pow_length]
     omega
-  rw [sideBit_append_left (d1pow (t+3))
+  have hlist' : d1pow (t+3) ++ d0 ++ binDec len u ++ lh =
+      d1pow (t+3) ++ (d0 ++ binDec len u ++ lh) := by
+    simp [List.append_assoc]
+  rw [hlist', sideBit_append_left (d1pow (t+3))
     (d0 ++ binDec len u ++ lh) (9+i) hinside]
   exact sideBit_d1pow_true (t+3) (9+i) (by omega)
 
@@ -120,6 +123,7 @@ private theorem sourceSuffix_zeroBoundary (t len u : Nat) :
     rw [hlist]
     rw [sideBit_append_right ((markerWord 0 ++ d0) ++ d1pow (t+3))
         (d0 ++ binDec len u ++ lh) (14+3*t) (by omega)]
+    rw [hprefix]
     simp [d0, sideBit]
   · have hlist :
         m0EvenEightValuationSourceSuffix t len u =
@@ -129,7 +133,10 @@ private theorem sourceSuffix_zeroBoundary (t len u : Nat) :
     rw [hlist]
     rw [sideBit_append_right ((markerWord 0 ++ d0) ++ d1pow (t+3))
         (d0 ++ binDec len u ++ lh) (15+3*t) (by omega)]
-    simp [d0, sideBit]
+    rw [hprefix]
+    have hidx : 15+3*t-(14+3*t) = 1 := by omega
+    rw [hidx]
+    rfl
 
 /-- The twelve fixed right-hand ones in the 44-step bridge output. -/
 private theorem bridgeMid_twelve_ones (bit : Bool) (i : Nat)
@@ -204,7 +211,7 @@ private theorem m0EvenEightValuationBridgeInputMatch
       have hyEq : y = -(i:Int) := by omega
       rw [hyEq]
       have hneq : (-(i:Int)) ≠ -14 := by omega
-      simp [bridgeStartWithBit, hneq]
+      by_cases ht : 0<t <;> simp [bridgeStartWithBit, ht, hneq]
     calc
       sweptLeft (3*a) (s1Config L (8*q) 0 a 0 b h).tape h
           (h-((3*a:Nat):Int)+y)
