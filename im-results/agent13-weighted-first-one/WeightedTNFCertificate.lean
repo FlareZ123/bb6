@@ -10,6 +10,34 @@ open BB6Coverage
 def weightedTNFNoAssignedHalt (p : PartialMachine) : Prop :=
   ∀ s, p s ≠ some (none : Transition)
 
+/-- Slots are finite; this list-free rank counts exactly the assigned rows. -/
+def assignedSlots (p : PartialMachine) : Finset Slot :=
+  Finset.univ.filter (fun s => (p s).isSome = true)
+
+def assignedCount (p : PartialMachine) : Nat :=
+  (assignedSlots p).card
+
+/-- Refining one previously unknown slot adds exactly that slot to the
+    assigned-slot set. -/
+theorem assignedSlots_refine {p : PartialMachine} {slot : Slot} {mv : Move}
+    (hu : p slot = none) :
+    assignedSlots (refine p slot (some mv)) =
+      insert slot (assignedSlots p) := by
+  ext s
+  by_cases hs : s = slot
+  · subst s
+    simp [assignedSlots, refine, hu]
+  · simp [assignedSlots, refine, hs]
+
+/-- Every ordinary TNF child has assigned-slot rank exactly one greater
+    than its parent. This gives a machine-checkable strict DAG rank. -/
+theorem assignedCount_refine {p : PartialMachine} {slot : Slot} {mv : Move}
+    (hu : p slot = none) :
+    assignedCount (refine p slot (some mv)) = assignedCount p + 1 := by
+  have hnot : slot ∉ assignedSlots p := by
+    simp [assignedSlots, hu]
+  simp [assignedCount, assignedSlots_refine hu, hnot]
+
 /-- The sparse execution is defined at every finite time. This is the
     source-independent form of a nonhalting decider leaf. -/
 def weightedTNFKnownRunForever (p : PartialMachine) : Prop :=
