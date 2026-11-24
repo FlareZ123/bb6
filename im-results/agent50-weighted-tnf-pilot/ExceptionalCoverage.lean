@@ -5,7 +5,7 @@ set_option maxRecDepth 24000
 set_option maxHeartbeats 0
 
 namespace BB6.Agent50RecursiveResidual
-open BB6Coverage BB6.Agent13BlankDelay BB6.Agent50TNFPilot BB6.Agent50RootFrontier
+open BB6Coverage BB6.Agent13BlankDelay BB6.Agent50TNFPilot BB6.Agent50RootFrontier BB6.Agent8TNFPath
 open BB6Coverage.Agent50Exceptional
 
 def exceptionalCovered (t : PackedTable) : Bool :=
@@ -65,4 +65,53 @@ theorem siblingData_all_weighted (e : CheckedTree) (he : e ∈ siblingData)
 #print axioms closedSiblingRoster_empty
 #print axioms siblingData_all_weighted
 #print axioms closedRootRoster_sound
+
+/-- The seven-edge parent has four holes, including C1. All 25
+    assignments of C1 are covered by the completed sibling roster. -/
+abbrev depthSeven : PartialMachine := (pathEnd root 2 (path.take 7)).1
+
+def depthSevenChild (mv : Move) : PartialMachine :=
+  refine depthSeven (2,true) (some mv)
+
+def depthSevenChildOK (mv : Move) : Bool :=
+  let t := packTable (depthSevenChild mv)
+  decide (t = packTable depthEight) || residualHasWitness t ||
+    siblingData.any (fun e => decide (e.table=t))
+
+theorem depthSevenChildren_checked :
+    allMoves.all depthSevenChildOK = true := by decide
+
+theorem depthSevenChild_sound (mv : Move) (m : Machine)
+    (hm : compatible (depthSevenChild mv) m) : WeightedBound 400 m := by
+  have h := List.all_eq_true.mp depthSevenChildren_checked mv (allMoves_complete mv)
+  have hh : (packTable (depthSevenChild mv) = packTable depthEight ∨
+      residualHasWitness (packTable (depthSevenChild mv)) = true) ∨
+      siblingData.any (fun e => decide (e.table=packTable (depthSevenChild mv))) = true := by
+    simpa only [depthSevenChildOK,Bool.or_eq_true,decide_eq_true_eq] using h
+  rcases hh with (he|hn)|ht
+  · have hp := packTable_injective he
+    have hb := depthEight_bound m (by simpa only [hp] using hm)
+    intro k d hk hd
+    exact Nat.le_trans (hb k d hk hd) (by decide)
+  · have hb := residualHasWitness_sound _ hn m (by simpa only [unpack_packTable] using hm)
+    intro k d hk hd
+    exact Nat.le_trans (hb k d hk hd) (by decide)
+  · obtain ⟨e,he,heq⟩ := List.any_eq_true.mp ht
+    have htab : e.table=packTable (depthSevenChild mv) := of_decide_eq_true heq
+    exact siblingData_all_weighted e he m (by simpa only [htab,unpack_packTable] using hm)
+
+/-- Explicit universal bound for the whole authentic seven-edge cylinder:
+    all 390625 raw completions, with the incoming-delay allowance. -/
+theorem depthSeven_bound : ∀ m, compatible depthSeven m → WeightedBound 400 m := by
+  intro m hm
+  cases ha : m (2,true) with
+  | none =>
+    exact queryOK_sound 400 depthSeven 11 (2,true) (by decide) m
+      (compatible_refine hm (2,true) none ha)
+  | some mv =>
+    exact depthSevenChild_sound mv m (compatible_refine hm (2,true) (some mv) ha)
+
+#print axioms depthSevenChildren_checked
+#print axioms depthSeven_bound
+
 end BB6.Agent50RecursiveResidual
