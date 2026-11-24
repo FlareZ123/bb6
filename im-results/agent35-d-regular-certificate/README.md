@@ -139,3 +139,10 @@ The historical “Required next proof edge” and earlier conditional-trajectory
 Manual original-source Lean CI [45381457744](https://github.com/FlareZ123/bb6/actions/runs/45381457744) passed on Lean 4.36.0-rc2. The literal parsed D3 machine is proved not to halt at any exact time `n ≤ 15 + DRegular.accumulated 1711 DRegular.seed5`; Lean proves this horizon lies in `[10^1458, 10^1459)`. The workflow rejects `sorryAx`. This is a source-certified finite blank-root prefix, not an eventual halting/nonhalting result, and not yet a BB(6) lower bound because D3's eventual halting is unproved.
 
 The next D3/I5 continuation is still open: source-compose the q=5 E-double/B exceptional restoration and the following B return to pure unary, then restart the regular source transport. Agent 36 is independently handling the four shorter root-to-`RegularBands.anchor` bridges; avoid duplicating that work. This new result remains intermediate under `im-results/`.
+
+
+## 2026-11-24: D3/I5 exceptional re-entry now source-certified
+
+The q=5 E-double/B/B continuation that was previously listed as open is now proved in [`I5ExceptionalRejoin.lean`](../agent35-d3-root-1711/I5ExceptionalRejoin.lean). Original-source CI [45386949851](https://github.com/FlareZ123/bb6/actions/runs/45386949851) passed on Lean 4.36.0-rc2 and rejects `sorryAx`. The proof composes `full_E_double`, `full_B`, and `Agent31RegularB.b_one`, with the concrete `t % 3 = 2` fact verified in Lean. It returns the actual D3 blank-root trajectory to the pure-unary regular seed `((512*t+245)/3,0,0)`.
+
+The resulting theorem `parsed_D3_no_halt_through_reentry` extends the exact blank-root no-halt prefix through the 1711 regular returns and all three exceptional returns. The exact horizon is `15 + accumulated(1711,seed5) + eCost(t)+bCost(t)+bThirdCost(t)`. This is a source-certified re-entry, not an eventual halting/nonhalting decision or a BB(6) lower bound. Continue with the regular orbit from the new seed; Agent 36 is evaluating that orbit independently.
