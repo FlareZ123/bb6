@@ -1,4 +1,6 @@
 import FourHoleRootFrontier
+import TNFPilot
+import SideCycle
 import AlternatingResidualSweep
 
 set_option maxRecDepth 100000
@@ -6,10 +8,11 @@ set_option maxHeartbeats 0
 
 namespace BB6.Agent31FourHoleRoster
 
-open BB6Coverage BB6.Agent13BlankDelay
+open BB6Coverage BB6.Agent13BlankDelay BB6.Agent50TNFPilot
+open BB6Coverage.Agent50SideCycle
 open BB6.Agent31FourHoleFrontier
 
-theorem OpenLeaf.mem_residuals {f : RootedFrontier 395 root}
+theorem OpenLeaf.mem_residuals {p : PartialMachine} {f : RootedFrontier 395 p}
     {address : List Move} {q : PartialMachine}
     (h : OpenLeaf f address q) :
     (address, q) ∈ residuals f := by
@@ -94,7 +97,7 @@ def residualWitnessIndices : List (Nat × ResidualNonhaltWitness) :=
    (62,.side 0 10 true (0)), (64,.side 0 10 true (0)),
    (65,.side 8 7 false (1)), (84,.side 7 3 false (1))]
 
-def residualWitnessRoster :
+noncomputable def residualWitnessRoster :
     List ((List Move × PartialMachine) × ResidualNonhaltWitness) :=
   residualWitnessIndices.filterMap fun (i, w) =>
     (residuals rootFrontier)[i]?.map fun e => (e, w)
@@ -106,13 +109,14 @@ theorem residualWitnessRoster_checked :
     residualWitnessRoster.all (fun e => residualWitnessOK e.1.2 e.2) = true := by
   decide
 
-def residualHasWitness (q : PartialMachine) : Bool :=
+noncomputable def residualHasWitness (q : PartialMachine) : Bool :=
   residualWitnessRoster.any fun e => decide (sameTable e.1.2 q)
 
 theorem residualHasWitness_sound (q : PartialMachine)
     (h : residualHasWitness q = true) :
     ∀ m, compatible q m → WeightedBound 395 m := by
-  obtain ⟨⟨(address, p), w⟩, hmem, heq⟩ := List.any_eq_true.mp h
+  rcases List.any_eq_true.mp h with ⟨e, hmem, heq⟩
+  rcases e with ⟨(address, p), w⟩
   have hsame : sameTable p q = true := of_decide_eq_true heq
   have hp : p = q := sameTable_sound hsame
   subst p
@@ -120,7 +124,7 @@ theorem residualHasWitness_sound (q : PartialMachine)
   intro m hm
   exact weighted_never 395 m (residualWitnessOK_sound q w hc m hm)
 
-def remainingRootRoster : List (List Move × PartialMachine) :=
+noncomputable def remainingRootRoster : List (List Move × PartialMachine) :=
   (residuals rootFrontier).filter fun e => !residualHasWitness e.2
 
 /-- A 124-cylinder firstOneCylinder frontier at weighted bound 395. The
@@ -130,7 +134,7 @@ theorem remainingRootRoster_count : remainingRootRoster.length = 124 := by
   decide
 
 theorem remainingRootRoster_sound :
-    ∀ m, compatible root m →
+    ∀ m, compatible BB6.Agent50TNFPilot.root m →
       WeightedBound 395 m ∨
         ∃ e ∈ remainingRootRoster, compatible e.2 m := by
   intro m hm
