@@ -2,6 +2,8 @@
 
 **Current strongest result:** [no regular binary inductive invariant](NO-REGULAR-INVARIANT.md). The complete written argument excludes **every** nonempty regular language of canonical binary integers >=5 that is forward closed under genuine raw returns and excludes terminal powers. It combines the earlier zero-transient theorem with an elementary new finite phase-fibre rotation principle and the exact bounded-valuation cylinder count. No hypothesis about unbounded valuations in the authentic orbit is required. The discrete arithmetic supporting the growth bound is kernel checked; the density and compactification synthesis is mathematical prose.
 
+The [first-even-return extension](NO-REGULAR-EVEN-INVARIANT.md) also excludes every regular invariant on the accelerated even section. Its additional singular-pumping argument proves that unbounded odd-run lengths would already force full binary growth, with exact arithmetic supported by two new Lean theorems. Thus neither the raw x=5 nor accelerated x=10 formulation admits a terminal-free regular binary invariant.
+
 The [growth and finite-corridor obstruction](GROWTH.md) remains useful independently: any polynomial-growth regular language, even without forward closure, has a finite bound on the length of sufficiently large bounded-valuation corridors. Its S-unit proof does not need prepared-halting density. The earlier [general DFA zero-transient obstruction](ZERO-TRANSIENT.md) supplies the valuation bound for every hypothetical regular invariant. All these are method obstructions, not a decision of Sheep.
 
 ## Historical proof: permutation-automaton obstruction
