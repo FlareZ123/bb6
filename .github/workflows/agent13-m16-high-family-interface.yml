@@ -60,6 +60,7 @@ on:
           - source17
           - source65
           - sourceJointM32
+          - z78Probe
 
 permissions:
   contents: read
@@ -248,6 +249,9 @@ jobs:
               ;;
             sourceJointM32)
               target=im-results/agent13-residual-frontier/LowM67M32JointCriterion.lean
+              ;;
+            z78Probe)
+              target=im-results/agent42-z78-high-parent/M16ParentResidueProbe.lean
               ;;
             *)
               echo "Unsupported M16 target: $M16_TARGET" >&2
