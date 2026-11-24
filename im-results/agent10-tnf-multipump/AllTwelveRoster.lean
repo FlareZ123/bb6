@@ -87,7 +87,7 @@ noncomputable def reducedRoster := remainingRootRoster.filter fun e => !(covered
 
 theorem reduced_count : reducedRoster.length = 112 := by decide
 
-theorem reduced_sound (m : Machine) (hm : compatible firstOneCylinder m) :
+theorem reduced_sound (m : Machine) (hm : compatible BB6.Agent50TNFPilot.root m) :
     WeightedBound 7014 m ∨ ∃ e ∈ reducedRoster, compatible e.2 m := by
   rcases remainingRootRoster_sound_7014 m hm with h | ⟨e,he,hp⟩
   · exact Or.inl h
