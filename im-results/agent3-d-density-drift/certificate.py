@@ -104,12 +104,14 @@ def check_exit(X):
 
 def e_rows(X):
     E=[{} for c in CLASSES];guard=(0,0,1,0,1,0,1,0)
+    max_guard_gain_minus_p=-10**9
     for c in CANON:
         cur={(4,c):0}
         for p in range(9):
             nxt={}
             for (q,j),g in cur.items():
                 if p>=2 and p%2==0 and q in (1,3) and head(j)==0:
+                    max_guard_gain_minus_p=max(max_guard_gain_minus_p,g-p)
                     for k,h in popcanon(j).items():put(E[c],k,g+h)
                     continue
                 if q==5 and head(j):continue
@@ -117,6 +119,8 @@ def e_rows(X):
                 for (r,k),h in X[q][j].items():
                     l,h2=push(guard[p],k);put(nxt,(r,l),g+h+h2)
             cur=nxt
+    assert max_guard_gain_minus_p==4
+    print('E guard gain minus consumed length',max_guard_gain_minus_p,flush=True)
     return E
 
 
@@ -168,6 +172,7 @@ def check_full():
     E=e_rows(X);A,rounds=a_rows(E);check_a(A,E);B=[popcanon(c) if c in CANON else {} for c in CLASSES]
     for label,table in zip('AEB',[A,E,B]):
         gains=[g for c in CANON for g in table[c].values()]
+        assert -18<=min(gains)<=max(gains)<=11
         print(label,len(gains),min(gains),max(gains),flush=True)
     V=[0]*N
     for d in range(1,6):
@@ -201,3 +206,17 @@ if __name__=='__main__':
     assert 1-F(118,243*100000)+F(4095,10**10)<=q
     assert a**1337<2
     print('exponential moment inequalities checked')
+    anchors=[]
+    for n,count in ((5,10),(9,10),(15,10),(39,9)):
+        w=''
+        for _ in range(count):
+            r=n%3;ans=step(w,r);assert ans is not None
+            c,w=ans;n=8*((n-(3,4,2)[r])//3)+c
+        R=rank_short(int(w[::-1],2)) if w else 0
+        anchors.append((n,R))
+    assert anchors==[(123501,9),(196699,0),(276715,0),(277451,0)]
+    L=[5*n-23 for n,R in anchors]
+    U=[5*(n+R)+27 for n,R in anchors]
+    assert all(U[i]<L[i+1] for i in range(3))
+    assert 3*U[-1]<8*L[0]
+    print('four separated phase bands',list(zip(L,U)))
