@@ -12,6 +12,11 @@ on:
         required: false
         default: false
         type: boolean
+      reset_macro_50000_only:
+        description: "Check sharded macro prefix and source gate through 50000"
+        required: false
+        default: false
+        type: boolean
 permissions:
   contents: read
 jobs:
@@ -63,6 +68,19 @@ jobs:
           for m in FirstReturnCore ValuationDrain FullReturn ReturnInverseArithmetic ResetInverseWitnesses FirstOutcome FirstInverseComplete ResetChain ResetParentStrict ParentCheck Parents ClosedCert ReachDecide; do
             lake env lean -o "Agent10Bridge/$m.olean" "Agent10Bridge/$m.lean"
           done
+          if [ "${{ inputs.reset_macro_50000_only }}" = "true" ]; then
+            cp "$b"/{ResetBlockCore,EvenBatch,OriginalGate50001}.lean Agent10Bridge/
+            python3 "$b/generate_sharded_macro.py" --bound 50000 --chunk 64 --shard 32 --output Agent10Bridge
+            for m in ResetBlockCore EvenBatch; do
+              lake env lean -o "Agent10Bridge/$m.olean" "Agent10Bridge/$m.lean"
+            done
+            while IFS= read -r m; do
+              echo "Checking $m"
+              lake env lean -o "Agent10Bridge/$m.olean" "Agent10Bridge/$m.lean"
+            done < Agent10Bridge/modules.txt
+            lake env lean Agent10Bridge/OriginalGate50001.lean
+            exit 0
+          fi
           if [ "${{ inputs.reset_block_10000_only }}" = "true" ]; then
             cp "$b"/{ResetBlockCore,Bound10000,OriginalGate10001}.lean Agent10Bridge/
             python3 "$b/generate_reset_blocks.py" --bound 10000 --chunk 128 --output Agent10Bridge/Cert10000.lean
