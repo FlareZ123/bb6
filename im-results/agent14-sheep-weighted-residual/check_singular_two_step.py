@@ -85,6 +85,7 @@ def main() -> None:
     k2_num = 2**5 * (2**11502 - 1) // 3**5 - 19
     assert k2_num % 1683 == 0
     k2 = k2_num // 1683
+    assert k2 > 0
     assert 3**5 * (19 + 1683 * k2) == 2**5 * (2**11502 - 1)
     assert (19 + 1683 * k2) % 2**6 != 0
     print(f"sharp witnesses: H=1,B=32,k={k1}; H=5,B=11502,k has {len(str(k2))} digits")
