@@ -43,7 +43,7 @@ theorem zeroNext_none_rename_iff (e : StatePerm) (m : Machine)
   · intro hn
     rw [h] at hn
     cases hz : zeroNext m 0 with
-    | none => exact hz
+    | none => rfl
     | some q => simp [hz] at hn
   · intro hn
     rw [h, hn]
@@ -119,13 +119,13 @@ theorem tnf_branch_frontier (B cut : Nat) (p : PartialMachine) (slot : Slot)
       have hback : s.backward slot.1 = slot.1 :=
         (swapStates_fixes mv.next q slot.1 hslotA hslotQ).2
       have hrow : (renameTable s m') slot =
-          some (some ⟨mv.write,mv.right,q⟩) := by
+          some ⟨mv.write,mv.right,q⟩ := by
         unfold renameTable
         rw [hback]
         cases slot with
         | mk st bit =>
           change (m' (st,bit)).map (renameMove s) =
-            some (some ⟨mv.write,mv.right,q⟩)
+            some ⟨mv.write,mv.right,q⟩
           rw [ht]
           simp [renameMove, s, swapStates_a]
       have hc : compatible
@@ -150,7 +150,8 @@ theorem tnf_branch_frontier (B cut : Nat) (p : PartialMachine) (slot : Slot)
           simp [q] at hv
           omega
         have hs0 := (swapStates_fixes mv.next q 0 h0a h0q).1
-        simp [e', composeStatePerm, he0, hs0]
+        change s.forward (e.forward 0) = 0
+        rw [he0, hs0]
       have hcomp : renameTable e' m = renameTable s m' := by
         simpa [e', m'] using renameTable_comp s e m
       refine Or.inr ⟨⟨mv.write,mv.right,q⟩, by simp [q], e', he'0, ?_⟩
