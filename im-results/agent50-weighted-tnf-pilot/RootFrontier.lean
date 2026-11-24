@@ -286,9 +286,18 @@ theorem OpenLeaf.reachable {B : Nat} {p : PartialMachine}
 
 /-- Machine-readable transition encoding: ? is unassigned, H is an
     assigned halt, and an ordinary transition is e.g. 1RB. -/
+def encodeState (q : Fin 6) : String :=
+  match q.val with
+  | 0 => "A"
+  | 1 => "B"
+  | 2 => "C"
+  | 3 => "D"
+  | 4 => "E"
+  | _ => "F"
+
 def encodeMove (mv : Move) : String :=
   (if mv.write then "1" else "0") ++
-  (if mv.right then "R" else "L") ++ toString mv.next.val
+  (if mv.right then "R" else "L") ++ encodeState mv.next
 
 def encodeTransition : Option (Option Move) → String
   | none => "---"
@@ -307,6 +316,8 @@ def encodeAddress (address : List Move) : String :=
 def residualManifest : List (String × String) :=
   (residuals rootFrontier).map fun (address, p) =>
     (encodeAddress address, encodeTable p)
+
+theorem residualManifest_length : residualManifest.length = 207 := by decide
 
 
 #print axioms RootedFrontier.sound
