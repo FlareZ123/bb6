@@ -13,7 +13,7 @@ ans=candidate(p,concrete_events(p))
 assert ans is not None
 proof,info=generate(95,p,ans)
 assert info==(2,88,224)
-(ROOT/"Raw95Sweep.lean").write_text("import SweepPumping\nset_option maxRecDepth 100000\nset_option maxHeartbeats 0\nset_option linter.unusedVariables false\nnamespace BB6Coverage.Agent3SiblingPump\nopen BB6Coverage\n"+proof+"\nend BB6Coverage.Agent3SiblingPump\n")
+(ROOT/"Raw95Sweep.lean").write_text("import SweepPumping\nset_option maxRecDepth 100000\nset_option maxHeartbeats 0\nset_option linter.unusedVariables false\nnamespace BB6Coverage.Agent3SiblingPump\nopen BB6Coverage BB6Coverage.Agent31Pump\n"+proof+"\nend BB6Coverage.Agent3SiblingPump\n")
 PARENT="1RB---_1RC1LF_0RD---_1LD1RE_---0LB_---0RD"
 MOVES=[w+d+q for w,d,q in product("01","LR","ABCDEF")]
 subprocess.run(["g++","-std=c++17","-O3",str(ROOT.parent/"agent2-tnf-raw99/enumerate.cpp"),"-o","enumerate"],cwd=ROOT,check=True)
