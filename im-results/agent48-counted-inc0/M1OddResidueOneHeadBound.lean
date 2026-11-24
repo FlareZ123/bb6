@@ -185,11 +185,9 @@ theorem m1OddResidueOne_q4_prefix_head_bound
       simp [m1OneQ4Inside,x]
       omega
     have hframe : T2 x = T1 x := by
-      have hout' : m1OneQ4Inside (x-(h-(N:Int))) = false := by
-        simpa [hN] using houtside
-      have hf := frameAt_tape_outside T1 (h-(N:Int))
-        m1OneQ4Inside m1OddQ4BridgeEnd x hout'
-      simpa [T2,m1OneQ4CutTape,T,N,T1] using hf
+      change (frameAt T1 hN m1OneQ4Inside m1OddQ4BridgeEnd).tape x = T1 x
+      exact frameAt_tape_outside T1 hN m1OneQ4Inside
+        m1OddQ4BridgeEnd x houtside
     have hT1 : T1 x = true := by
       by_cases hx : x ≤ h
       · let j := 3*a-4-i
@@ -225,8 +223,7 @@ theorem m1OddResidueOne_q4_prefix_head_bound
               s1Config_right_cell 3 1 1 a 0 b h 2
           change sweptLeft N T h (h+3) = true
           rw [hp,hsrc]
-    change T2 x = true
-    exact hframe.trans hT1
+    simpa [x,T2] using hframe.trans hT1
   intro k hk d hd
   let p1 := 3*N
   let p2 := p1+29
