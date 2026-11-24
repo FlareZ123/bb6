@@ -1,4 +1,15 @@
 import FastFAR
+
+/-
+INVALID CANDIDATE SCRATCH MODULE (2026-11-24).
+CI run 45503416279 compiled the dependencies and found all fourteen
+Cxx.fastValid pxx assertions below to be false. Do not import or treat this
+file as a certificate. It is retained only to preserve candidate DFA strings
+and the failed destination-mask attempt. The current raw85 generator
+recomputes masks for each destination table and the generated Lean Audit is
+the acceptance boundary.
+-/
+
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 namespace BB6.Agent21Raw85FAR
