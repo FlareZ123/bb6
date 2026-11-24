@@ -23,7 +23,11 @@ theorem terminal9780_exact :
 theorem t19_mod27_exact : t19 % 27 = 12 :=
   t19_mod27
 
-#print axioms terminal9780_exact
-#print axioms t19_mod27_exact
+/-- The 9,780-step result is a composition of the already audited
+    `block19_1_exact`, `block19_2_exact`, and `terminal1588_exact`,
+    together with this generic concatenation lemma.  The predecessor
+    audit log carries the component axiom profiles; audit the only new
+    logical dependency here rather than re-expanding the large composite. -/
+#print axioms BB6.DRegularFast.run_add
 
 end BB6.Agent2NineteenthRoot
