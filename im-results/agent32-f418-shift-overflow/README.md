@@ -1,6 +1,6 @@
 # F418: complete arithmetic event partition and exact primitive costs
 
-**Status.** The two-hole table `1RB1LD_1RC0RB_1LA1RC_1LE0LA_1LF---_1LC---` has a source-level word-rule library ([F418Rules.lean](F418Rules.lean)) and a blank-entry theorem ([F418Seed.lean](F418Seed.lean)). The new arithmetic safety lemmas in [F418Arithmetic.lean](F418Arithmetic.lean) compiled locally with Lean 4.36.0-rc2; all seven printed profiles contain only propext, Classical.choice and Quot.sound. The complete event partition below is a mathematical derivation from the word rules, not a kernel-checked composition of the original machine and all arithmetic cases. [f418.py](f418.py) is a reproducible independent raw-step comparison and event evaluator. No all-time root verdict or BB(6) upper bound is claimed.
+**Status.** The literal two-hole table `1RB1LD_1RC0RB_1LA1RC_1LE0LA_1LF---_1LC---` has a kernel-checked source reduction from the blank tape to the arithmetic event orbit (see [F418Root.lean](F418Root.lean)). The exact normal-return formula and backward odd-only predecessor restrictions below are also Lean checked. No all-time root verdict or BB(6) upper bound is claimed.
 
 ## Encoding and event table
 
@@ -42,6 +42,20 @@ N_next = 2^(W+5p+2) + floor(N/2^(2p+1)) - C
 W_next = W+5p+3.
 ```
 The earlier safety invariant proves this expression is positive and <2^W_next; subtraction is ordinary integer subtraction. The first normal-return seed reached from the 670-step seed is (N,W)=(268311341,29). For p=0, C=3 and N_next=2^(W+2)+(N-7)/2, so M=N+7 satisfies M_next=2^(W+2)+M/2. A p=0 run consumes only zero low bits of M. For an odd-only episode use the general event table instead.
+
+## Exact normal-return and odd-only predecessor restrictions
+
+A normal phase-1 episode consists of odd valuations ending at the first even valuation. For its consumed length L=2p+1, exponent E=5p+2, and tail Q, define the correction C by:
+- last valuation 2r: C=(2^(2r+2)-1) 2^(5r);
+- first valuation 2r+1 followed by t: C=(2^(2r+3)-1) 2^(5r+3+E(t))+C(t).
+
+[F418NormalReturn.lean](F418NormalReturn.lean) proves the exact iteration N'=2^(W+E)+Q-C, W'=W+E+1, and the four-event seed checkpoint (N,W)=(268311341,29) from the source-connected seed. [F418ReturnBounds.lean](F418ReturnBounds.lean) proves C<2^(E+2p) (strictly stronger C<2^(E+2p-1) for prefixes starting with an odd valuation), C>=3*2^(E-2), C>2^E for p>0, and L<=W, Q<2^(W-L).
+
+**Necessary conditions for an odd-only output:**
+- Borrow Q<C: the input must be the top singleton N=2^(2r), W=2r+1, r odd. Every other borrow produces two adjacent top 1-bits, one of which is at an even index. The exceptional output is 2^(5r)(2^(2r+2)+1).
+- No borrow Q>=C: N'=2^(W+E)+R, R<2^(W-L), W+p odd; if p>0 then W>=7p+4. The top bit is separated from the lower remainder by at least E+L+1 positions.
+
+Both modules compiled locally with Lean 4.36.0-rc2 against the exact three arithmetic dependencies, with standard axioms only (propext, Classical.choice, Quot.sound). This excludes many candidate predecessors but does not establish that the actual orbit avoids an odd-only checkpoint. The next target is a backward constraint on high bits of Q-C and the history of inserted top bits.
 
 ## Exact counted costs
 
