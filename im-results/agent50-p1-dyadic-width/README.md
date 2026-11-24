@@ -1,3 +1,7 @@
+## 2026-11-24: unrestricted right-five density zero
+
+[CarryExtinction.md](CarryExtinction.md) proves density zero for the entire critical-root original OddCone right-five gate, via dyadic conservation and forced free-bit checkpoints. The finite inequality and bidirectional original-source bridge are Lean checked. Pointwise exceptional parameters remain unresolved.
+
 # P1 inverse shadow: an exact critical first-moment law
 
 ## 2026-11-24 checkpoint: exact critical carry-prefix converse
