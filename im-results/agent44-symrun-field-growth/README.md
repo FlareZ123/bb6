@@ -110,11 +110,23 @@ the BB length, numeric-mass, weight, and field-maximum declarations with no
 for the BB-sweep bounds, not for the later CB fallback or complete
 `stepSym` dispatcher.
 
-`SymRunCBFallbackAudit.lean` remains the next uncompiled dependency. It
-contains the CB sweep, BB-producing fallback, and CB-to-BB-sweep composition;
-the earlier run failed before reaching this bridge because the BB length
-proof had `sorryAx`. The accepted BB dependency now permits one focused
-exact-source run of that bridge.
+`SymRunCBFallbackAudit.lean` has now been reached by exact-source run
+[45352024498](https://github.com/FlareZ123/bb6/actions/runs/45352024498).
+The CB sweep length and numeric-sum bounds, BB-producing fallback length and
+numeric-sum bounds, fallback input field estimate, and
+`cb_fallback_then_bb_sweep_weight_le_2pow13` all compiled with standard-only
+profiles. The sole proof failure was in
+`cb_fallback_then_bb_sweep_field_max_le_2pow11`: an in-place simplification
+did not expose the left-list projection of the pair-length bound, and the
+resulting `omega` goal failed. The printed `sorryAx` for that field theorem
+is the failed elaboration artifact, not an accepted result.
+
+The field-bound proof now first derives
+`L2.length + R2.length ≤ 570` from the pair bound, then projects
+`L2.length ≤ 570`. This narrow repair is commit
+`f20740d853e1fd7a6166bd2b3eb3e9d48eb1e848`. A single exact-source retry of
+the same bridge is still pending; do not claim the CB field/weight chain
+accepted until its field theorem has a clean profile.
 
 The separate 94-token range certificate is present in
 `im-results/agent42-cryptids-upstream-191-overlap/SymRunTraceStats.lean`
