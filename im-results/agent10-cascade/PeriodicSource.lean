@@ -4,7 +4,7 @@ import ResetParentStrict
 import PeriodicWord
 
 namespace CascadePeriodic
-open CascadeResetInverse
+open CascadeResetInverse CascadeSource CascadeSweep
 
 /-- The standalone grammar is definitionally the unchanged source ResetParent. -/
 theorem source_reset_parent_iff_unified (h u : Nat) :
@@ -129,7 +129,7 @@ theorem source_periodic_root_chain (w : List Token) (h k : Nat → Nat)
 theorem source_periodic_root_reach (w : List Token) (h k : Nat → Nat)
     (h0 : h 0 = 2)
     (hf : ∀ j, SourceFollows w (h j) (k j) (h (j+1)) (k (j+1))) :
-    ∀ n, CascadeSource.ReachC (2,0) (h n,0) := by
+    ∀ n, ReachC (2,0) (h n,0) := by
   intro n
   exact reset_chain_to_cpath (source_periodic_root_chain w h k h0 hf n)
 
