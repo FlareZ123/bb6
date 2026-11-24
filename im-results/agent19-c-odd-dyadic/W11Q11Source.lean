@@ -3,7 +3,7 @@ import EvenOddFourExact
 import Lean.Elab.Tactic.Omega
 
 set_option maxRecDepth 16384
-set_option maxHeartbeats 200000
+set_option maxHeartbeats 1000000
 
 namespace BB6.Agent19W11Q11
 open BB6.Agent46
@@ -64,9 +64,9 @@ theorem p_parent_fan (s a k : Nat)
   · by_cases ha1 : a=1
     · subst a
       by_cases hk0 : k=0
-      · simp [sectionPreimageAll,hk0] at hp <;> omega
+      · simp [sectionPreimageAll,pX,pY,hk0] at hp <;> omega
       · by_cases hk1 : k=1
-        · simp [sectionPreimageAll,hk0,hk1] at hp <;> omega
+        · simp [sectionPreimageAll,pX,pY,hk0,hk1] at hp <;> omega
         · by_cases hk2 : k=2
           · simp [sectionPreimageAll,pX,pY,hk0,hk1,hk2] at hp <;> omega
           · by_cases hk3 : k=3
@@ -134,28 +134,29 @@ theorem p_parent_fan (s a k : Nat)
                 dsimp [pX,pY]
                 omega
               have hnlt2 : n<2 := by
-                by_contra hn
-                have hn2 : 2≤n := by omega
-                have hpow4 : 4∣2^n := by
-                  have h := Nat.pow_dvd_pow 2 hn2
-                  simpa only [show (2:Nat)^2=4 by decide] using h
-                have hsub : (a-1)%2=0 := by omega
-                have hfac4 : 4∣2*(a-1)+8 := by
-                  obtain ⟨b,hb⟩ := Nat.dvd_of_mod_eq_zero hsub
-                  refine ⟨b+2,?_⟩
-                  rw [hb]
+                by_cases hlt : n<2
+                · exact hlt
+                · have hn2 : 2≤n := by omega
+                  have hpow4 : 4∣2^n := by
+                    have h := Nat.pow_dvd_pow 2 hn2
+                    simpa only [show (2:Nat)^2=4 by decide] using h
+                  have hsub : (a-1)%2=0 := by omega
+                  have hfac4 : 4∣2*(a-1)+8 := by
+                    obtain ⟨b,hb⟩ := Nat.dvd_of_mod_eq_zero hsub
+                    refine ⟨b+2,?_⟩
+                    rw [hb]
+                    omega
+                  obtain ⟨u,hu⟩ := hpow4
+                  obtain ⟨v,hv⟩ := hfac4
+                  have hdiv16 : 16∣2^n*(2*(a-1)+8) := by
+                    refine ⟨u*v,?_⟩
+                    rw [hu,hv]
+                    ac_rfl
+                  have hzero :
+                      (2^n*(2*(a-1)+8))%16=0 :=
+                    Nat.mod_eq_zero_of_dvd hdiv16
+                  rw [←hpow] at hzero
                   omega
-                obtain ⟨u,hu⟩ := hpow4
-                obtain ⟨v,hv⟩ := hfac4
-                have hdiv16 : 16∣2^n*(2*(a-1)+8) := by
-                  refine ⟨u*v,?_⟩
-                  rw [hu,hv]
-                  ac_rfl
-                have hzero :
-                    (2^n*(2*(a-1)+8))%16=0 :=
-                  Nat.mod_eq_zero_of_dvd hdiv16
-                rw [←hpow] at hzero
-                omega
               have hcost' :
                   2*k+a+7+3*n=pX s+2*pY s := by omega
               have hnodd : n%2=1 := by
@@ -396,32 +397,33 @@ theorem blank_no_b2_w11_q11 (s : Nat) :
       (by dsimp [dSx,dSy]; omega)
       hstep
   have hn0 : n=0 := by
-    by_contra hn
-    have hn2 : 2≤n := by omega
-    have hpow4 : 4∣2^n := by
-      have h := Nat.pow_dvd_pow 2 hn2
-      simpa only [show (2:Nat)^2=4 by decide] using h
-    have hsub : (a-1)%2=0 := by omega
-    have hfac4 : 4∣2*a+6 := by
-      obtain ⟨b,hb⟩ := Nat.dvd_of_mod_eq_zero hsub
-      refine ⟨b+2,?_⟩
-      rw [hb]
+    by_cases hzeroN : n=0
+    · exact hzeroN
+    · have hn2 : 2≤n := by omega
+      have hpow4 : 4∣2^n := by
+        have h := Nat.pow_dvd_pow 2 hn2
+        simpa only [show (2:Nat)^2=4 by decide] using h
+      have hsub : (a-1)%2=0 := by omega
+      have hfac4 : 4∣2*a+6 := by
+        obtain ⟨b,hb⟩ := Nat.dvd_of_mod_eq_zero hsub
+        refine ⟨b+2,?_⟩
+        rw [hb]
+        omega
+      obtain ⟨v,hv⟩ := hpow4
+      obtain ⟨z,hz⟩ := hfac4
+      have hdiv16 : 16∣2^n*(2*a+6) := by
+        refine ⟨v*z,?_⟩
+        rw [hv,hz]
+        ac_rfl
+      have hdiv8 : 8∣2^n*(2*a+6) :=
+        Nat.dvd_trans (by decide : 8∣16) hdiv16
+      have hzero :
+          (2^n*(2*a+6))%8=0 := Nat.mod_eq_zero_of_dvd hdiv8
+      have hmod : (dSx s+dSy s+1)%8=4 := by
+        dsimp [dSx,dSy]
+        omega
+      rw [←hpow] at hzero
       omega
-    obtain ⟨v,hv⟩ := hpow4
-    obtain ⟨z,hz⟩ := hfac4
-    have hdiv16 : 16∣2^n*(2*a+6) := by
-      refine ⟨v*z,?_⟩
-      rw [hv,hz]
-      ac_rfl
-    have hdiv8 : 8∣2^n*(2*a+6) :=
-      Nat.dvd_trans (by decide : 8∣16) hdiv16
-    have hzero :
-        (2^n*(2*a+6))%8=0 := Nat.mod_eq_zero_of_dvd hdiv8
-    have hmod : (dSx s+dSy s+1)%8=4 := by
-      dsimp [dSx,dSy]
-      omega
-    rw [←hpow] at hzero
-    omega
   have hpow0 : dSx s+dSy s+1=2*a+6 := by
     simpa [hn0] using hpow
   have hcost0 : 2*k+a+7=dSx s+2*dSy s := by
@@ -444,9 +446,8 @@ theorem root_q11_parameter (r E u : Nat)
     (hE : E=201+3360*(6657+8192*r))
     (hRoot : 18018+211*u+22155*r=20*2^(E-13)) :
     ∃ s : Nat, u=157622+1720320*s := by
-  let R := r/16
-  have hrEq : r=16*R+4 := by
-    dsimp [R]
+  obtain ⟨R,hrEq⟩ : ∃ R : Nat, r=16*R+4 := by
+    refine ⟨r/16,?_⟩
     have h := Nat.mod_add_div r 16
     omega
   have hmod1680 :=
@@ -456,21 +457,20 @@ theorem root_q11_parameter (r E u : Nat)
     rw [hrEq] at hmod1680
     omega
   have huMod840 : u%840=542 := by omega
-  let w := u/840
-  have huEq : u=542+840*w := by
-    dsimp [w]
+  obtain ⟨w,huEq⟩ : ∃ w : Nat, u=542+840*w := by
+    refine ⟨u/840,?_⟩
     have h := Nat.mod_add_div u 840
     omega
-  have hRmod : R%1024=693 := by
-    dsimp [R]
-    omega
+  have hRmod : R%1024=693 := by omega
   have hpowStep : 2^(E-13)=2*2^(E-14) := by
     have hE14 : 14≤E := by rw [hE]; omega
     rw [show E-13=(E-14)+1 by omega, Nat.pow_succ]
     omega
   have hscaled :
       8*(27625+44310*R+22155*w)=8*(5*2^(E-14)) := by
-    rw [huEq,hrEq,hpowStep] at hRoot
+    have hRoot' := hRoot
+    rw [huEq,hrEq,hpowStep] at hRoot'
+    clear hRoot hmod1680 huMod1680 huMod840 hRmod hpowStep hE hr huEq hrEq
     omega
   have hEq : 27625+44310*R+22155*w=5*2^(E-14) := by omega
   have hEpow : 11≤E-14 := by rw [hE]; omega
@@ -494,14 +494,11 @@ theorem root_q11_parameter (r E u : Nat)
     omega
   rw [hRt] at hmodW
   have hwmod : w%2048=187 := by omega
-  let s := w/2048
-  have hwEq : w=187+2048*s := by
-    dsimp [s]
+  obtain ⟨s,hwEq⟩ : ∃ s : Nat, w=187+2048*s := by
+    refine ⟨w/2048,?_⟩
     have h := Nat.mod_add_div w 2048
     omega
-  refine ⟨s,?_⟩
-  rw [huEq,hwEq]
-  omega
+  exact ⟨s,by rw [huEq,hwEq]; omega⟩
 
 /-- Exact root-index exclusion for the W11 cylinder. This is conditional
     on the exact residual root equation; the separate arithmetic
