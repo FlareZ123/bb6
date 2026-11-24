@@ -43,6 +43,7 @@ theorem binDec_residue2 (L k : Nat) (hL : 3 ≤ L)
   have hpow3 : 2^L = 8 * 2^(L-3) := by
     rw [show L = (L-3)+3 by omega, Nat.pow_add,
       show (2:Nat)^3 = 8 by decide, Nat.mul_comm]
+    rw [show L - 3 + 3 - 3 = L - 3 by omega]
   have hpow2 : 2^(L-1) = 4 * 2^(L-3) := by
     rw [show L-1 = (L-3)+2 by omega, Nat.pow_add,
       show (2:Nat)^2 = 4 by decide, Nat.mul_comm]
@@ -76,6 +77,7 @@ theorem binDec_residue1 (L k : Nat) (hL : 3 ≤ L)
   have hpow3 : 2^L = 8 * 2^(L-3) := by
     rw [show L = (L-3)+3 by omega, Nat.pow_add,
       show (2:Nat)^3 = 8 by decide, Nat.mul_comm]
+    rw [show L - 3 + 3 - 3 = L - 3 by omega]
   have hpow2 : 2^(L-1) = 4 * 2^(L-3) := by
     rw [show L-1 = (L-3)+2 by omega, Nat.pow_add,
       show (2:Nat)^2 = 4 by decide, Nat.mul_comm]
@@ -386,7 +388,7 @@ private theorem m2EvenResidueTwo_rightFacing
         sideBit (BB6Coverage.Agent6Q4Prefix.q4RightFacing b) i := by
   intro i
   have hbase :=
-    (m2EvenResidueTwoBaseTape_spec a b h ha).2.2.2.2 i
+    (m2EvenResidueTwoBaseTape_spec a b h ha).2.2.2 i
   have hin :
       m2EvenResidueTwoInside a h (h+1+(i:Int)) = true := by
     simp [m2EvenResidueTwoInside]
@@ -459,7 +461,7 @@ private theorem m2EvenSix_bridge_prefix_lower
     simpa [m2EvenSixQ4BridgeStart] using hbridge
   rw [hbridge'] at hd
   have hdeq : d = frameAt T h m2EvenSixQ4Inside e :=
-    Option.some.inj hd
+    (Option.some.inj hd).symm
   have hinside : m2EvenSixQ4Inside e.head = true := by
     have hh := (List.all_eq_true.mp m2EvenSixQ4Bridge_heads) j
       (List.mem_range.mpr hj)
@@ -522,7 +524,7 @@ private theorem m2EvenSix_q4_prefix_head_bound
         have hside := sideBit_append_right (d1pow a)
           m2EvenResidueTwoSourceLeftSuffix (3*a+1) (by rw [d1pow_length]; omega)
         rw [hside] at hcell
-        simpa [m2EvenResidueTwoSourceLeftSuffix,markerWord,sideBit] using hcell
+        simpa [T,m2EvenResidueTwoSourceLeftSuffix,markerWord,sideBit] using hcell
   have hright : T (h+1) = false := by
     have hc := s1Config_right_cell 3 6 2 a 0 b h 0
     simpa [T,s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit] using hc
@@ -591,7 +593,7 @@ theorem m2Even_residue2_q4_prefix_source
     run tm2 (44+12*a)
       (s1Config L (8*k+2) 2 a 0 b h) =
       some ⟨4,h,m2EvenResidueTwoCutTape L k a b h ha⟩ := by
-  let base : Config := ⟨3,h,(s1Config 3 6 2 a 0 b h).tape⟩
+  let base : Config := s1Config 3 6 2 a 0 b h
   let background := (s1Config L (8*k+2) 2 a 0 b h).tape
   have hinput := m2EvenResidueTwo_input_matches L k a b h hL hbound
   have hstart :
