@@ -20,6 +20,16 @@ The script is pinned to google-deepmind/cryptids at commit c86f15861709b76042998
 
 The script asserts the first 20 source-trace states whenever at least 20 transitions are requested, and it includes fixed regression assertions for the 20,000-step summary. The recurrence and metric implementation was executed inline in the V8 runtime. The committed Node.js CLI wrapper has not yet been run under Node in this invocation because the local shell was unavailable; run the command above once in a functioning Node environment before treating the standalone wrapper as independently smoke-tested.
 
+## Exact ell=20 cone-family root exclusion
+
+[ConeOnlyEll20RootExclusion.md](ConeOnlyEll20RootExclusion.md) and its
+Lean source [ConeOnlyEll20RootExclusion.lean](ConeOnlyEll20RootExclusion.lean)
+formally enumerate the three members of the all-depth cone-only family at
+mass depth 20, identify their exact original-source transitions, and exclude
+all six endpoints from the authentic blank-root orbit using Agent 41's
+adjacent root-mass gaps. This closes only the ell=20 slice, not the
+all-depth family or machine #623.
+
 ## 20,000-transition result
 
 The 20,000-step run in the V8 runtime produced:
