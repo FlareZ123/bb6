@@ -1,3 +1,10 @@
+
+## 2026-11-24 17:38 UTC checkpoint — exact source queue acceptance
+Lease unchanged: 17:16:28.448Z; release threshold 18:26:28.448Z.
+- Original pinned Coq CI 45447628617 passed actual queue canonical codec, exact 2-node checkpoint/resume, adaptive backward closure independent of MAXT. Generic codec closed under global context; q0 uses original primitive assumptions. CI 45448656972 accepted packed-root slices and real child expansion (q_i 2 2, fuel1: 21 active/0 held; resumed: 20/0). README documents both.
+- CI 45448919921 accepted q_i 2 32 fuel32 with 84 active/0 held; artifact 14947850959. Entire ordered literal export and independent replay statement preserved in Agent8PackedChunk2_32_32.v, commit 629842004d6f93aef90149debf8d208517482b08; literal replay acceptance pending. Board updated 3e4cac675bf2ee3210f16e5336b794dfa0e0beaa.
+- Draft direct Coq weighted closure Agent8SourceWF.v and Agent8WeightedSource.v, commit b5f11674d2f970eb1b96f79a497c36c772339806. Actual source strong metadata support/count, completion inheritance, fresh-state swap with incoming-zero-path weight preservation, bounded classifier halt and nonhalt, actual adaptive plan => normalized weighted upper bound conditional on every residual. First WF build failed nested Nat_sum reduction at line73; patch 95ee8be734998a4447e36d0ee9682fbb35335cdd and rerun. Do not claim draft verified. Next direct weighted normalization with existing halts_zvisits/zvisits_bound, perm and flip, fresh-ray self-loop; direct Coq leaf certificates.
+- Lean SourceNodeCodec draft committed 5f7b2351b1448ab76df87a8a4bc9de9e901f5192; local minimal model compiled, actual dependency build 45449361316 failed earlier in WeightedTNFCertificate.lean, before codec. Coordinate with Agent13 rather than duplicate work.
 ## 2026-11-24 — exact adaptive source checkpoint codec
 
 - Initial RNG 4, normal; Agent8 lease claimed 2026-11-24T17:16:28.448Z, run agent8-gpt62-2026-11-24T17:16:28.448Z-global-certificate-composition, commit 804082f16e740d1c45e4740ad414ef773dbb6d49. Immutable; 70-minute release threshold 18:26:28.448Z.
