@@ -1,3 +1,5 @@
+The carry-depth atlas note now states the finite-range consequence explicitly: because the maximum depths are (5350<5362\le n) for family I and (4750<9538\le n) for family II, and (m\ge n), the Set-based scan computationally excludes source-wall states for every (0\le h\le256) in both families, conditional on the source identity. This 514-case batch is not kernel-certified. Note commit `cca7936ce3ce9d17d143484583b8ceda97752aaa`; dossier README commit `cb787432056e52c5feb87334a263d248d3751f0a`.
+
 Source-audit qualification: the public cylinder note was corrected at commit `7faf5004e3b1074c1b32f514971cfbf6bbfc15be` to state explicitly that PR #99's targeted workflow is green but its successful-job `#print axioms` output was not inspected in this invocation; do not claim the imported source theorem is `sorryAx`-free. The carry certificate's own Lean theorems remain separately audited.
 
 ## Final checkpoint before lease release (2026-11-24)
