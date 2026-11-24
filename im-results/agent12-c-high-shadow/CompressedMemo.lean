@@ -52,7 +52,7 @@ theorem compressedReach_iff (p : BB6.Agent13ExactMemo.P) :
       intro h
       have hy := hj.2.2
       rw [h] at hy
-      contradiction
+      omega
     simp only [hn,false_or,List.mem_singleton]
     change BB6.Agent3.CReach p.1 p.2 ↔ ∃ q, q=jumpTarget p.1 p.2 ∧ sourceReach q
     constructor
@@ -120,7 +120,7 @@ theorem oldHighSurvives_iff (j m : Nat) :
   simp only [oldHighSurvives,priorSurvives,Bool.and_eq_true,Bool.not_eq_true',
     decide_eq_true_eq,BB6.Agent27FastBool.fastHighAllowedFullBool_iff,
     highAllowedBranching,highAllowedDirect,highAllowedHeight,highAllowedFullModular,
-    ←BB6.Agent27FullBool.highAllowedFullBool_iff]
+    ←BB6.Agent27FullBool.highAllowedFullBool_iff,and_assoc]
 
 /-- Bounded additional root guard applicable to any stopping target. -/
 def highAllowedMemo (cap f j m : Nat) : Prop :=
