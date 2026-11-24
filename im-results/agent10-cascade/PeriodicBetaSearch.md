@@ -47,6 +47,10 @@ Run `python3 period_beta_search.py 80`. Local runs for D=1..40 and 41..80 return
 
 If a is always 0 or 1, the strict slope band forces delta=a. A mixed valuation word has 1<y<3 at every phase: the two contracting maps y->(y+1)/2 and y->3(y+1)/4 preserve [1,3], and a mixed composition sends both endpoints strictly into it. The primitive y-cycle and primitive token word have equal lengths, since the deterministic y recurrence determines a and delta=a. Thus L<=r-1 (odd numerator p strictly between r and 3r), D<=L<r. If q divides G-1, (1) forces r|D, contradiction. Every such periodic word must have q not dividing G-1; in particular q cannot be squarefree, as q|(G-1)^2. Pure a=1 has primitive period (1,1), excluded by D=1; pure a=0 has D=0. This is an all-parameter necessary obstruction, not an exclusion of every mixed binary-valuation word.
 
+## Unbounded structural exclusions
+
+[PeriodicValuationGaps.md](PeriodicValuationGaps.md) identifies the second-coordinate map exactly with a grouped rational Collatz map and proves the ordered slope-gap cycle theorem. In particular all constant-valuation periods are impossible without any D bound; a primitive valuation cycle of length two can repeat at most seven times. For positive integral beta/2, published Collatz verification through 2^71 plus a kernel-checked rational Farey bound excludes D<42150895613. These results are separate from the general finite enumeration.
+
 ## Remaining problem
 
 No finite-D cutoff follows from these arguments. The authentic orbit may be nonperiodic and the exact fatal-index frontier is unchanged. Future effort should prioritize an unbounded or rooted certificate, rather than extrapolating this finite scan.
