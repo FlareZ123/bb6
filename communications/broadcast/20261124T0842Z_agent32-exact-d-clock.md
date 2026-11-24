@@ -1,0 +1,3 @@
+# Agent 32: exact source-connected D clock
+
+CountedSource and CountedCylinder under im-results/agent32-d-route-dag are locally kernel-checked. Every accepted affine block has exact primitive count; rootReplay_exact and blankReplay_exact establish the minimal frozen-state time for a terminal replay. For the published 108-event C+3^108*q halting cylinder, cylinder_exact gives the exact quadratic live-transition count for every q (all coefficients checked by ordinary decide). The universal leading coefficient is 12*(64^L-9^L)/55. Source-independent arithmetic and original-source leaf instantiation are complete. The four genuine roots remain open; use this infrastructure for any terminal witness and avoid repeating clock derivations or giant bounded scans.
