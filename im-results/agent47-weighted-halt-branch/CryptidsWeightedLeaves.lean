@@ -15,37 +15,37 @@ open BB6.Agent47WeightedHalt
     leaf after erasing its unreachable halt row(s). The canonical completion
     of the erased table is the original complete machine. -/
 
-theorem r1_weighted_leaf (B : Nat) :
+def r1_weighted_leaf (B : Nat) :
     WeightedTNFCertificate B (forgetHaltRows expectedRLE_r1) 6 := by
   apply forgetHaltRows_nonhaltCertificate
   · simp [expectedRLE_r1, initialSlot]
   · exact literal_r1_never
 
-theorem r2_weighted_leaf (B : Nat) :
+def r2_weighted_leaf (B : Nat) :
     WeightedTNFCertificate B (forgetHaltRows expectedRLE_r2) 6 := by
   apply forgetHaltRows_nonhaltCertificate
   · simp [expectedRLE_r2, initialSlot]
   · exact literal_r2_never
 
-theorem r3_weighted_leaf (B : Nat) :
+def r3_weighted_leaf (B : Nat) :
     WeightedTNFCertificate B (forgetHaltRows expectedRLE_r3) 6 := by
   apply forgetHaltRows_nonhaltCertificate
   · simp [expectedRLE_r3, initialSlot]
   · exact literal_r3_never
 
-theorem r4_weighted_leaf (B : Nat) :
+def r4_weighted_leaf (B : Nat) :
     WeightedTNFCertificate B (forgetHaltRows expectedRLE_r4) 6 := by
   apply forgetHaltRows_nonhaltCertificate
   · simp [expectedRLE_r4, initialSlot]
   · exact literal_r4_never
 
-theorem r5_weighted_leaf (B : Nat) :
+def r5_weighted_leaf (B : Nat) :
     WeightedTNFCertificate B (forgetHaltRows expectedRLE_r5) 6 := by
   apply forgetHaltRows_nonhaltCertificate
   · simp [expectedRLE_r5, initialSlot]
   · exact literal_r5_never
 
-theorem r6_weighted_leaf (B : Nat) :
+def r6_weighted_leaf (B : Nat) :
     WeightedTNFCertificate B (forgetHaltRows expectedRLE_r6) 6 := by
   apply forgetHaltRows_nonhaltCertificate
   · simp [expectedRLE_r6, initialSlot]
