@@ -77,9 +77,9 @@ Lemma source_count_update t h v :
   S (get_num_undef_trans (tm_upd t h v)) = get_num_undef_trans t.
 Proof.
   intro H.
-  rewrite !source_count_formula.
   destruct h as [q s]; destruct q,s;
-    rewrite H;
+    destruct (t (q,s)) eqn:E; [discriminate|];
+    rewrite !source_count_formula;
     repeat (rewrite source_upd_hit || rewrite source_upd_miss by discriminate);
     cbn [hole_value]; lia.
 Qed.
