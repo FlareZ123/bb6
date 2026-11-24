@@ -70,7 +70,7 @@ theorem sourceWall_noPrefix_of_carry
 theorem sourceWall_excludes_familyI_h1
     (t b d m z u : Nat)
     (hU : 1058*u+636 = 17*2^(5362+595056*(1+2^56*t)))
-    (hFamilyCost : m = 14*u-2*(5362+595056*(1+2^56*t))-3)
+    (hWallCost : m = 14*u-(5362+595056*(1+2^56*t))+5)
     (hsrc : CountCone
       (14*2^(5362+595056*(1+2^56*t))-2*(5362+595056*(1+2^56*t))-16)
       3 b d m z)
@@ -79,13 +79,14 @@ theorem sourceWall_excludes_familyI_h1
   let n := 5362+595056*(1+2^56*t)
   have hn : 14 ≤ n := by dsimp [n]; omega
   have hU' : 1058*u+636 = 17*2^n := by simpa [n] using hU
-  have hFamilyCost' : m = 14*u-2*n-3 := by simpa [n] using hFamilyCost
+  have hWallCost' : m = 14*u-n+5 := by simpa [n] using hWallCost
   have hsrc' : CountCone (14*2^n-2*n-16) 3 b d m z := by
     simpa [n] using hsrc
   have hw' : b+4*m+4*n+20 = 12*2^n := by simpa [n] using hw
   have hmge : n ≤ m := by
-    rw [hFamilyCost']
-    exact familyI_terminal_m_ge_n n u hn hU'
+    rw [hWallCost']
+    have hrestart := familyI_terminal_m_ge_n n u hn hU'
+    omega
   have hKn : 60 ≤ n := by dsimp [n]; omega
   have hKm : 60 ≤ m := by omega
   have hcarry : ¬ ∃ rest : List Bool,
@@ -97,7 +98,7 @@ theorem sourceWall_excludes_familyI_h1
 theorem sourceWall_excludes_familyI_h2
     (t b d m z u : Nat)
     (hU : 1058*u+636 = 17*2^(5362+595056*(2+2^8*t)))
-    (hFamilyCost : m = 14*u-2*(5362+595056*(2+2^8*t))-3)
+    (hWallCost : m = 14*u-(5362+595056*(2+2^8*t))+5)
     (hsrc : CountCone
       (14*2^(5362+595056*(2+2^8*t))-2*(5362+595056*(2+2^8*t))-16)
       3 b d m z)
@@ -106,13 +107,14 @@ theorem sourceWall_excludes_familyI_h2
   let n := 5362+595056*(2+2^8*t)
   have hn : 14 ≤ n := by dsimp [n]; omega
   have hU' : 1058*u+636 = 17*2^n := by simpa [n] using hU
-  have hFamilyCost' : m = 14*u-2*n-3 := by simpa [n] using hFamilyCost
+  have hWallCost' : m = 14*u-n+5 := by simpa [n] using hWallCost
   have hsrc' : CountCone (14*2^n-2*n-16) 3 b d m z := by
     simpa [n] using hsrc
   have hw' : b+4*m+4*n+20 = 12*2^n := by simpa [n] using hw
   have hmge : n ≤ m := by
-    rw [hFamilyCost']
-    exact familyI_terminal_m_ge_n n u hn hU'
+    rw [hWallCost']
+    have hrestart := familyI_terminal_m_ge_n n u hn hU'
+    omega
   have hKn : 12 ≤ n := by dsimp [n]; omega
   have hKm : 12 ≤ m := by omega
   have hcarry : ¬ ∃ rest : List Bool,
@@ -124,7 +126,7 @@ theorem sourceWall_excludes_familyI_h2
 theorem sourceWall_excludes_familyII_h1
     (t b d m z u : Nat)
     (hU : 1198*u+712 = 87*2^(9538+703248*(1+2^10*t)))
-    (hFamilyCost : m = 14*u-2*(9538+703248*(1+2^10*t))-3)
+    (hWallCost : m = 14*u-(9538+703248*(1+2^10*t))+5)
     (hsrc : CountCone
       (14*2^(9538+703248*(1+2^10*t))-2*(9538+703248*(1+2^10*t))-16)
       3 b d m z)
@@ -133,13 +135,14 @@ theorem sourceWall_excludes_familyII_h1
   let n := 9538+703248*(1+2^10*t)
   have hn : 14 ≤ n := by dsimp [n]; omega
   have hU' : 1198*u+712 = 87*2^n := by simpa [n] using hU
-  have hFamilyCost' : m = 14*u-2*n-3 := by simpa [n] using hFamilyCost
+  have hWallCost' : m = 14*u-n+5 := by simpa [n] using hWallCost
   have hsrc' : CountCone (14*2^n-2*n-16) 3 b d m z := by
     simpa [n] using hsrc
   have hw' : b+4*m+4*n+20 = 12*2^n := by simpa [n] using hw
   have hmge : n ≤ m := by
-    rw [hFamilyCost']
-    exact familyII_terminal_m_ge_n n u hn hU'
+    rw [hWallCost']
+    have hrestart := familyII_terminal_m_ge_n n u hn hU'
+    omega
   have hKn : 14 ≤ n := by dsimp [n]; omega
   have hKm : 14 ≤ m := by omega
   have hcarry : ¬ ∃ rest : List Bool,
@@ -151,7 +154,7 @@ theorem sourceWall_excludes_familyII_h1
 theorem sourceWall_excludes_familyII_h2
     (t b d m z u : Nat)
     (hU : 1198*u+712 = 87*2^(9538+703248*(2+2^18*t)))
-    (hFamilyCost : m = 14*u-2*(9538+703248*(2+2^18*t))-3)
+    (hWallCost : m = 14*u-(9538+703248*(2+2^18*t))+5)
     (hsrc : CountCone
       (14*2^(9538+703248*(2+2^18*t))-2*(9538+703248*(2+2^18*t))-16)
       3 b d m z)
@@ -160,13 +163,14 @@ theorem sourceWall_excludes_familyII_h2
   let n := 9538+703248*(2+2^18*t)
   have hn : 14 ≤ n := by dsimp [n]; omega
   have hU' : 1198*u+712 = 87*2^n := by simpa [n] using hU
-  have hFamilyCost' : m = 14*u-2*n-3 := by simpa [n] using hFamilyCost
+  have hWallCost' : m = 14*u-n+5 := by simpa [n] using hWallCost
   have hsrc' : CountCone (14*2^n-2*n-16) 3 b d m z := by
     simpa [n] using hsrc
   have hw' : b+4*m+4*n+20 = 12*2^n := by simpa [n] using hw
   have hmge : n ≤ m := by
-    rw [hFamilyCost']
-    exact familyII_terminal_m_ge_n n u hn hU'
+    rw [hWallCost']
+    have hrestart := familyII_terminal_m_ge_n n u hn hU'
+    omega
   have hKn : 22 ≤ n := by dsimp [n]; omega
   have hKm : 22 ≤ m := by omega
   have hcarry : ¬ ∃ rest : List Bool,
