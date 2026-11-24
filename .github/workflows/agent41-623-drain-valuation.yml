@@ -64,7 +64,7 @@ jobs:
           compile "$p/FlatDrainSource.lean" Agent49FlatDrainSource
           compile "$p/DrainCorrectionGrowth.lean" Agent49DrainCorrectionGrowth
           compile "$p/InverseWindowSource.lean" Agent49InverseWindowSource
-          for m in FatalFamilyInverseArithmetic FatalFamilyInverseActual FatalFamilyWindow FatalFamilyInfinite NearPowerDrain FatalFamilySource; do
+          for m in FatalFamilyInverseArithmetic FatalFamilyInverseActual FatalFamilyWindow FatalFamilyInfinite NearPowerDrain FatalFamilySource NearPowerFastStats NearPowerCertificate NearPowerTree NearPowerTreeSource NearPowerGenerate NearPowerExamples; do
             compile "$q/$m.lean" "$m"
           done
           if grep -q 'sorryAx' fatal-family.log; then
