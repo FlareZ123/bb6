@@ -151,10 +151,8 @@ theorem b_source (t : Nat) :
         CryptidBoundary.Cfg) = bMiddle t := by
     unfold bMiddle DRegularSource.sourceSection
     rw [show 64*t+27-2 = 64*t+25 by omega]
-    unfold CryptidBoundary.init CryptidBoundary.oppairs
-    exact congrArg
-      (fun r : List Bool => (⟨[],false,r,5⟩ : CryptidBoundary.Cfg))
-      htargetTape
+    unfold CryptidBoundary.init
+    simpa [CryptidBoundary.oppairs, List.append_assoc] using htargetTape
   calc
     CryptidBoundary.run (bCost t) (eMiddle t) =
         CryptidBoundary.run (12*K*K+49*K+40)
