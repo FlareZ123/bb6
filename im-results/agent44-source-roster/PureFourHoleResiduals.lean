@@ -52,9 +52,9 @@ theorem residuals_buildFrontierB (B : Nat) :
       simp [buildFrontierB, residuals, pureResiduals, ih, residuals_cast]
 
 theorem rootFrontier_residuals_eq :
-    residuals BB6.Agent31FourHoleFrontier.rootFrontier = pureResiduals BB6.Agent50TNFPilot.root (BB6.Agent31FourHole.path.take 7) := by
+    residuals BB6.Agent31FourHoleFrontier.rootFrontier = pureResiduals BB6.Agent50TNFPilot.root (BB6.Agent50TNFPilot.path.take 7) := by
   exact residuals_buildFrontierB 395 BB6.Agent50TNFPilot.root 2 RawRootPath.root
-    (BB6.Agent31FourHole.path.take 7)
+    (BB6.Agent50TNFPilot.path.take 7)
     BB6.Agent31FourHoleFrontier.path_prefix_checked
     BB6.Agent31FourHoleFrontier.wideCertificate_root
 
@@ -63,7 +63,7 @@ theorem rootFrontier_residuals_eq :
 def pureResidualWitnessRoster :
     List ((List Move × PartialMachine) × ResidualNonhaltWitness) :=
   residualWitnessIndices.filterMap fun (i, w) =>
-    (pureResiduals BB6.Agent50TNFPilot.root (BB6.Agent31FourHole.path.take 7))[i]?.map fun e => (e, w)
+    (pureResiduals BB6.Agent50TNFPilot.root (BB6.Agent50TNFPilot.path.take 7))[i]?.map fun e => (e, w)
 
 theorem residualWitnessRoster_eq_pure :
     residualWitnessRoster = pureResidualWitnessRoster := by
@@ -79,7 +79,7 @@ theorem residualHasWitness_eq_pure (q : PartialMachine) :
 
 /-- Pure, executable version of Agent31's 124-table residual roster. -/
 def pureRemainingRootRoster : List (List Move × PartialMachine) :=
-  (pureResiduals BB6.Agent50TNFPilot.root (BB6.Agent31FourHole.path.take 7)).filter fun e =>
+  (pureResiduals BB6.Agent50TNFPilot.root (BB6.Agent50TNFPilot.path.take 7)).filter fun e =>
     !pureResidualHasWitness e.2
 
 theorem remainingRootRoster_eq_pure :
