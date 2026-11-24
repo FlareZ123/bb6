@@ -81,7 +81,8 @@ private theorem packet_index_even (n b t:Nat)
 private theorem packet_index_le (n a b t:Nat)
     (hn:257≤n)
     (hsector:n%6=4 ∨ n%6=5)
-    (hpacket:a+162*(b+1)+13≤n):
+    (hpacket:a+162*(b+1)+13≤n)
+    (ht:t<3):
     a+packetIndex n b t+15≤n:=by
   have hlt:=depthResidue_lt n 3
   have he:=depth_residue_even n hsector
@@ -186,7 +187,7 @@ private theorem packet_feeder_data (n a b t:Nat)
   have hjmod: j%depthPeriod 3=depthResidue n 3:=packet_index_mod n b t
   have hdivZ:(3:Int)^4∣signedZ n j:=
     (depthResidue_iff n 3 j hsector).mp hjmod
-  have hindex:a+j+15≤n:=packet_index_le n a b t hn hsector hpacket
+  have hindex:a+j+15≤n:=packet_index_le n a b t hn hsector hpacket ht
   have hm:=ray_margin_of_index n a j hn ha.2 hindex
   have hmargin: deficit n j≤2^n:=by omega
   have hnum:=signed_ray_eq_numerator n j (by omega:4≤n) hmargin
