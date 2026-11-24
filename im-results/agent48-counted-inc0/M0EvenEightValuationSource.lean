@@ -419,48 +419,72 @@ theorem m0EvenEight_valuation_q4_prefix_run_of_leftFacing
     intro i hi
     obtain ⟨h0,h1,h2⟩ :=
       sweptLeft_creates_rightOnes t T2 hH hfixed i hi
-    have hx0 : hR+3*(i:Int) ≠ hB-1 := by dsimp [hR]; omega
-    have hx1 : hR+3*(i:Int)+1 ≠ hB-1 := by dsimp [hR]; omega
-    have hx2 : hR+3*(i:Int)+2 ≠ hB-1 := by dsimp [hR]; omega
-    have hy0 : hR+3*(i:Int) ≠ hB := by dsimp [hR]; omega
-    have hy1 : hR+3*(i:Int)+1 ≠ hB := by dsimp [hR]; omega
-    have hy2 : hR+3*(i:Int)+2 ≠ hB := by dsimp [hR]; omega
-    have hz0 : hR+3*(i:Int) ≠ hB+1 := by dsimp [hR]; omega
-    have hz1 : hR+3*(i:Int)+1 ≠ hB+1 := by dsimp [hR]; omega
-    have hz2 : hR+3*(i:Int)+2 ≠ hB+1 := by dsimp [hR]; omega
+    let x : Int := hR+3*(i:Int)
+    have h0' : T3 x = true := by
+      simpa [T3,x,hR,hB] using h0
+    have h1' : T3 (x+1) = true := by
+      simpa [T3,x,hR,hB] using h1
+    have h2' : T3 (x+2) = true := by
+      simpa [T3,x,hR,hB] using h2
+    have hfar0 : hB+2 ≤ x := by dsimp [x,hR]; omega
+    have hfar1 : hB+2 ≤ x+1 := by dsimp [x,hR]; omega
+    have hfar2 : hB+2 ≤ x+2 := by dsimp [x,hR]; omega
+    have hp0 : T4 x = T3 x := by
+      dsimp [T4]
+      exact afterZeroExit4_preserves_right_local T3 hB x hfar0
+    have hp1 : T4 (x+1) = T3 (x+1) := by
+      dsimp [T4]
+      exact afterZeroExit4_preserves_right_local T3 hB (x+1) hfar1
+    have hp2 : T4 (x+2) = T3 (x+2) := by
+      dsimp [T4]
+      exact afterZeroExit4_preserves_right_local T3 hB (x+2) hfar2
     constructor
-    · simpa [T4,afterZeroExit4,hx0,hy0,hz0] using h0
+    · exact hp0.trans h0'
     constructor
-    · simpa [T4,afterZeroExit4,hx1,hy1,hz1] using h1
-    · simpa [T4,afterZeroExit4,hx2,hy2,hz2] using h2
+    · exact hp1.trans h1'
+    · exact hp2.trans h2'
   have hScan0 := counted_right_sweep_from1 (4+t) T4 hR hrightOnes
   have hscanHead : hR+3*((4+t):Int) = hN := by
     dsimp [hR,hB,hH,hN,N]
     omega
+  have hscanHead' : hR + 3 * (↑(4+t):Int) = hN := by
+    simpa only [Nat.cast_add, Nat.cast_ofNat] using hscanHead
   have hScan :
       run tm2 (3*(4+t)) ⟨1,hR,T4⟩ =
         some ⟨1,hN,T5⟩ := by
-    simpa [T5,hscanHead] using hScan0
+    simpa [T5,hscanHead'] using hScan0
   have hT2zero : T2 hN = true := by
-    have hin : bridgeInside44 (hN-hN) = true := by simp [bridgeInside44]
+    have hcoord : hN-hN = 0 := by omega
+    have hin : bridgeInside44 (hN-hN) = true := by
+      rw [hcoord]
+      simp [bridgeInside44]
     have hf := frameAt_tape_inside T1 hN bridgeInside44
       (bridgeMidWithBit bit) hN hin
     have hm : decide (0 ∈ (bridgeMidWithBit bit).marked) = true := by
-      simp [bridgeMidWithBit]
+      cases bit <;> simp [bridgeMidWithBit]
+    rw [hcoord] at hf
     simpa [T2] using hf.trans hm
   have hT2one : T2 (hN+1) = false := by
-    have hin : bridgeInside44 ((hN+1)-hN) = true := by simp [bridgeInside44]
+    have hcoord : (hN+1)-hN = 1 := by omega
+    have hin : bridgeInside44 ((hN+1)-hN) = true := by
+      rw [hcoord]
+      simp [bridgeInside44]
     have hf := frameAt_tape_inside T1 hN bridgeInside44
       (bridgeMidWithBit bit) (hN+1) hin
     have hm : decide (1 ∈ (bridgeMidWithBit bit).marked) = false := by
-      simp [bridgeMidWithBit]
+      cases bit <;> simp [bridgeMidWithBit]
+    rw [hcoord] at hf
     simpa [T2] using hf.trans hm
   have hT2two : T2 (hN+2) = true := by
-    have hin : bridgeInside44 ((hN+2)-hN) = true := by simp [bridgeInside44]
+    have hcoord : (hN+2)-hN = 2 := by omega
+    have hin : bridgeInside44 ((hN+2)-hN) = true := by
+      rw [hcoord]
+      simp [bridgeInside44]
     have hf := frameAt_tape_inside T1 hN bridgeInside44
       (bridgeMidWithBit bit) (hN+2) hin
     have hm : decide (2 ∈ (bridgeMidWithBit bit).marked) = true := by
-      simp [bridgeMidWithBit]
+      cases bit <;> simp [bridgeMidWithBit]
+    rw [hcoord] at hf
     simpa [T2] using hf.trans hm
   have hT3zero : T3 hN = T2 hN := by
     exact sweptLeft_preserves_right (3*t) T2 hH hN (by dsimp [hH]; omega)
@@ -468,21 +492,24 @@ theorem m0EvenEight_valuation_q4_prefix_run_of_leftFacing
     exact sweptLeft_preserves_right (3*t) T2 hH (hN+1) (by dsimp [hH]; omega)
   have hT3two : T3 (hN+2) = T2 (hN+2) := by
     exact sweptLeft_preserves_right (3*t) T2 hH (hN+2) (by dsimp [hH]; omega)
+  have hfarN0 : hB+2 ≤ hN := by dsimp [hB,hH,hN,N]; omega
+  have hfarN1 : hB+2 ≤ hN+1 := by dsimp [hB,hH,hN,N]; omega
+  have hfarN2 : hB+2 ≤ hN+2 := by dsimp [hB,hH,hN,N]; omega
   have hT4zero : T4 hN = T3 hN := by
-    simp [T4,afterZeroExit4]
-    all_goals dsimp [hB,hH,hN,N] at * <;> omega
+    dsimp [T4]
+    exact afterZeroExit4_preserves_right_local T3 hB hN hfarN0
   have hT4one : T4 (hN+1) = T3 (hN+1) := by
-    simp [T4,afterZeroExit4]
-    all_goals dsimp [hB,hH,hN,N] at * <;> omega
+    dsimp [T4]
+    exact afterZeroExit4_preserves_right_local T3 hB (hN+1) hfarN1
   have hT4two : T4 (hN+2) = T3 (hN+2) := by
-    simp [T4,afterZeroExit4]
-    all_goals dsimp [hB,hH,hN,N] at * <;> omega
+    dsimp [T4]
+    exact afterZeroExit4_preserves_right_local T3 hB (hN+2) hfarN2
   have hT5zero : T5 hN = T4 hN := by
     dsimp [T5]
-    exact sweptRight1_preserves_right (4+t) T4 hR hN (by rw [hscanHead])
+    exact sweptRight1_preserves_right (4+t) T4 hR hN (by rw [hscanHead'])
   have hT5one : T5 (hN+1) = T4 (hN+1) := by
     dsimp [T5]
-    exact sweptRight1_preserves_right (4+t) T4 hR (hN+1) (by rw [hscanHead]; omega)
+    exact sweptRight1_preserves_right (4+t) T4 hR (hN+1) (by rw [hscanHead']; omega)
   have hT5two : T5 (hN+2) = T4 (hN+2) := by
     dsimp [T5]
     exact sweptRight1_preserves_right (4+t) T4 hR (hN+2) (by rw [hscanHead]; omega)
