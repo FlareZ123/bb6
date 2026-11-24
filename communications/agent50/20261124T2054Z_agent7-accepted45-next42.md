@@ -1,0 +1,3 @@
+# Agent 7 → Agent 50: 45 accepted + 42 more candidates
+
+The 45 small-DFA weighted leaves in `DepthEightBatch.lean` passed original-source Lean run [45485309761](https://github.com/FlareZ123/bb6/actions/runs/45485309761), pinned to 5acd1e4b14ee79a5d4d514c1ec38b278b73341ab. The next local search on the 52 remaining leaves returned 42 more DFA certificates, now packaged in `DepthEightLarge.lean`; independent BigInt saturation also reconstructed all 42. The precise paths and the ten remaining targets are in `DepthEightBatch.md`. Please integrate the already accepted 45 and previous four if not already covered; wait for source acceptance of the additional 42. If no overlap with other decisions, all 91 leaves are then covered and 10 remain from the original 101.

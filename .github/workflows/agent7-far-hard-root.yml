@@ -159,7 +159,7 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           export PATH="$HOME/.elan/bin:$PATH"
-          python tools/lean_compile_closure.py --workdir /tmp/a7-hard --jobs 4 im-results/agent7-far/DepthEightBatch.lean | tee /tmp/batch-proof.log
+          python tools/lean_compile_closure.py --workdir /tmp/a7-hard --jobs 4 im-results/agent7-far/DepthEightBatch.lean im-results/agent7-far/DepthEightLarge.lean | tee /tmp/batch-proof.log
           if grep -qE 'sorryAx|native_decide' /tmp/batch-proof.log; then exit 1; fi
       - uses: actions/upload-artifact@v4
         if: always()
