@@ -1,6 +1,6 @@
 # Periodicity obstruction for ordinary rational-shadow paths
 
-**Status:** paper-level number-theoretic proof, not yet Lean-formalized. A necessary-condition denominator census is computational, not a termination proof. The sound original-source shadow checker itself is separately accepted in CI 45379626167.
+**Status:** the constant odd-cost existence classification and explicit infinite non-leaf examples are kernel-checked in Lean 4.36.0-rc2 in [ShadowPeriodicFamilies.lean](ShadowPeriodicFamilies.lean). The general periodic-word number-theoretic obstruction below is a paper argument; the necessary-condition denominator census is computational. The sound original-source shadow checker itself is separately accepted in CI 45379626167. None of these claims decides the authentic root32 family.
 
 ## Ordinary edges
 
@@ -15,6 +15,37 @@ Each edge preserves U,V>2C: direct is immediate; high has U'>2C and U'<= (U+V)/2
 In particular, a direct-only infinite tail would repeatedly halve V-2C, a strictly positive integer, which is impossible.
 
 The three exact root32 residual shadows of Root32ShadowRoot.lean have both numerators divisible by 105. Dividing by 105 replaces C=22155 by C=211. All ordinary transitions preserve this common factor (105 odd), as well as their parity, v2 conditions and forbidden-leaf status (105=1 mod4). The initial normalized S is 5 mod211 for every j and each of D,L,P, and its residue mod211 is preserved. The initial normalized U,V exceed 422.
+
+## Exact classification of constant odd-cost paths
+
+For every positive C and odd d>=3, a positive infinite ordinary path (U,V>2C) with constant cost d and no forbidden leaves exists **if and only if**
+
+    2^d-1 | C(3d+1)/2.
+
+Necessity is stronger than assuming a particular affine shape. Put D=2^d, q=D-1, W=C(3d+1). Along any infinite constant odd-cost path, V is even and U parity is fixed; hence B=C[D(2+o)-2o] is constant, S'=S+W and D U'=U+S+B. The integer error
+
+    e=q^2 U-q(S+B)+D W
+
+satisfies D e'=e. A nonzero integer error would have strictly decreasing positive absolute value forever, so e=0 everywhere. Subtracting consecutive zero errors gives q(U'-U)=W. The divisor q is odd, W is even, and thus q divides W/2.
+
+Conversely let delta=C(3d+1)/(2q) be integral, A=D/2 and z_k=2C+delta*k. Set
+
+    U_k=2z_k+2C,
+    V_k=(D-2)z_k+D*delta-2C.
+
+Then U_k,V_k>2C, both are even, U_k+V_k=D(z_k+delta), and the exact high-edge equations give the successor (U_(k+1),V_(k+1)). Since V is even, no point is a forbidden leaf.
+
+In particular the prime denominator C=7 has an explicit infinite non-leaf constant-cost path of d=3,
+
+    (16+10k,32+30k) -> (26+10k,62+30k).
+
+A second exact example at C=15 alternates costs 1 and 3:
+
+    (31+42k,34+84k) -> (95+126k,32+42k) -> (31+42(k+1),34+84(k+1)).
+
+Both coordinates stay above 2C and both right coordinates are even. These examples refute denominator-independent mortality, including a claim restricted to all prime denominators. They are **not** paths at C=211 and do not establish reachability of any actual Machine C target. Any proof of root32 shadow mortality must use more than positivity, monotone mass, odd denominator, and avoidance of the existing forbidden leaf.
+
+The exact theorem `BB6.Agent19PeriodicFamilies.constant_odd_iff`, its two directions, the integer-decay and affine-drift lemmas, and both explicit examples compile locally using only Lean core 4.36.0-rc2 (commit b35cb10cf2ced51a2fd1880cfdbf75c71ab7a35a). Axiom profiles are [propext, Classical.choice, Quot.sound] for the classification and drift, and [propext, Quot.sound] for the examples and integer decay; no sorryAx or native-decision axiom. The module defines the ordinary arithmetic edge relation parametrically; it does not import the source-specific root32 checker.
 
 ## Periodic cost words
 

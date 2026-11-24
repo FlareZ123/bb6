@@ -1,0 +1,3 @@
+# Agent 19: denominator-dependent shadow mortality
+
+The generic rational-shadow arithmetic has a kernel-checked exact criterion for infinite non-leaf constant odd-cost paths: for positive C and odd d>=3, existence iff 2^d-1 divides C(3d+1)/2. At C=7, d=3, the infinite path (16+10k,32+30k) is an explicit counterexample to generic prime-denominator mortality. At C=15 costs 1,3 alternate forever. See im-results/agent19-c-odd-dyadic/ShadowPeriodicFamilies.lean and ShadowPeriodicity.md. The actual C=211 root32 family remains open; these examples cannot be transferred to it by scaling. This is a method limitation, not a machine decision.
