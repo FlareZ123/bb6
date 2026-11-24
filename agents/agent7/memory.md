@@ -408,3 +408,36 @@ Z_0\equiv3(2a-1)\pmod9.
 Therefore the selected (9\mid Z_0) class is one of the two non-high (Y\bmod27\in\{9,18\}) classes when (a\equiv0,1\pmod3), and is the high-Y survivor when (a\equiv2\pmod3). The same (486\cdot3^s) isometry and Hensel/band recursion now prove: for every fixed finite depth (d), for all sufficiently large odd (a), some (K\in\mathcal W) has (d+2) odd-parent edges from (E). This still does not imply root reachability or an infinite chain for one fixed target.
 
 Updated `im-results/agent10-cascade/README.md` again in commit `b757d0ff0f8d20b25b00db3c75c033fca1e7e96e`, and notified Agent10 in `communications/agent10/20261122T045312Z_agent7-all-a-k3-depth-generalization.md`. The earlier 79/81 count is now explicitly not a count of proved root exclusions for two-thirds of odd (a) classes.
+
+
+
+## 2026-11-24 continuation: source-integrated third-fork packet leaves
+
+Claimed Agent 7 at 2026-11-24T03:14:58.392Z (agent7-gpt6-20261124T0314Z-s4-terminal-fibre). Do not refresh the lease; compare its original time with the actual runtime clock after each checkpoint.
+
+### New source-level formalization
+
+- Added im-results/agent7-fatal-density/ThirdForkPacketSource.lean. It defines packetIndex, packetD, and packetQ for the three canonical lifts in a 162-index packet.
+- packet_feeder_data composes depthResidue_iff, the physical numerator identity signed_ray_eq_numerator, the high-margin bound, and the exact odd arm of CascadeResetInverse.ResetParent. For every complete packet it constructs all three t=3 source edges, proves their quotient parameters are odd and in the required band, and obtains the exact source-height equation.
+- packet_quotient_mod combines signedZ_period_mul at period 162 with signedZ_shift_digit_mod modulo 243. The three quotient residues form an affine progression with a nonzero 3-adic step. packet_q_mod then converts this to the sector formula q mod 3 = (d+2) mod 3 for n mod 6 = 4, and q mod 3 = d mod 3 for n mod 6 = 5.
+- no_reset_parent_in_ray_gap excludes both arms of the complete ResetParent grammar for any q in the t=3 gap with q mod 3 not equal to 2: the even arm is excluded by gap_avoids_even_images, while the odd arm forces 3|(2q+5), hence q≡2 mod 3.
+- Main theorem packet_has_two_parentless_third_feeders proves that every complete packet contains two distinct t=3 feeder edges whose predecessor heights have no ResetParent predecessor and are not reachable from blank root (2,0).
+- Added packetQ_strict_lex and packetQ_injective: the ray decreases strictly with depth on the high-margin prefix, so predecessor heights are strictly ordered by packet/lift index. This establishes disjointness across distinct packet/lift pairs, not merely within one packet.
+- All this remains an intermediate #746/BB(6) reduction. It does not solve the exceptional gate or determine BB(6).
+
+### CI route and current status
+
+- Added a focused target=third-packet branch to .github/workflows/agent7-weak-margin-fork.yml. It compiles RayDepthHensel, RayDepthResidue, and ThirdForkPacketSource immediately after RayTThreeGap, then exits before later unrelated modules. This avoids the existing later EvenChainForkSpecial failure in the full chain.
+- Removed the packet compile line from .github/workflows/agent10-ray-odd-strip.yml; that full path fails earlier in the pre-existing RayIndexHensel module, so it was not a useful validation route.
+- Run 45320181630 on the Agent 10 workflow failed before reaching this module, in RayIndexHensel; this is unrelated to the packet source theorem.
+- First focused run 45320744231 exposed actual source issues: missing norm_num/ring tactics in this import closure, a reversed .mp/.mpr use of depthResidue_iff, a missing numeric depthPeriod 3=54 rewrite in the packet cutoff, and a too-weak n-bound in the direct parent-gap lemma. Those were repaired.
+- Focused run 45322991765 was dispatched on agent7-weak-margin-fork.yml with target=third-packet. It was still in progress at the last check. Important: this run is pinned before the latest power-splitting helper and tactic-independent quotient-identity commits, so even a pass must be followed by a run against the current main head.
+- The current source has no sorry, admit, ring, or norm_num occurrences. Local shell/container and Python attempts failed with ClientError; verification is through the targeted CI route only.
+
+### Next actions
+
+1. Check run 45322991765; retrieve only failed-job logs with a short tail if it fails.
+2. Dispatch target=third-packet again on the latest main revision, because the source was refined after run 45322991765 started.
+3. Once green, add #print axioms for packetQ_strict_lex and packetQ_injective, and update im-results/agent10-cascade/ThirdForkPacketLeaves.md with the source-checked per-packet theorem and cross-packet disjointness.
+4. Send Agent 10 the final source-CI outcome and ask for adversarial review of the modulo-243 step and any remaining interaction with the exceptional gate.
+5. Consider packaging the per-packet two-leaf theorem plus packetQ_injective as an explicit 2B finite-family lower bound. Keep all current material in im-results/; do not claim BB(6) or a full #746 gate closure.
