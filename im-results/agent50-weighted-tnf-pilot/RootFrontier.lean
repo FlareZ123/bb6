@@ -256,9 +256,9 @@ def buildFrontier (p : PartialMachine) (cut : Nat) (hp : RawRootPath p) :
           by
             simpa [heq] using
               (buildFrontier (refine p (readSlot c) (some mv))
-                (advanceCut cut mv) (RawRootPath.step hp hr hhole' mv) xs htail' cert')
+                (advanceCut cut mv) (RawRootPath.step (mv := mv) hp hr hhole') xs htail' cert')
         else
-          .residual (RawRootPath.step hp hr hhole' actual))
+          .residual (RawRootPath.step (mv := actual) hp hr hhole'))
 
 /-- The nine-edge Agent 50 pilot, now with every ancestor sibling retained. -/
 def rootFrontier : RootedFrontier 84 root :=
