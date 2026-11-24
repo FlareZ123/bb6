@@ -1,0 +1,29 @@
+name: Agent 10 twelve-cylinder weighted frontier
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Generate and check exact original-source twelve-cylinder closure
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent10-tnf-raw91/generate.py
+          python im-results/agent10-tnf-raw87/generate.py
+          python im-results/agent10-tnf-multipump/generate.py 86 88 92 93 97 98 100 101 102 104
+          python tools/lean_compile_closure.py --workdir /tmp/a10-twelve --jobs 4 im-results/agent10-tnf-multipump/AllTwelveRoster.lean | tee /tmp/a10-twelve.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a10-twelve.log; then
+            exit 1
+          fi
