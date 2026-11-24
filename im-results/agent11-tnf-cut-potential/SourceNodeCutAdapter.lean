@@ -43,14 +43,14 @@ theorem sourceChildAsCutNode (x : SourceNode) (slot : BB6Coverage.Slot)
       have h := hwf.2.2.1
       omega
     simp only [if_pos hlt, existingChild, sourceNodeAsCutNode]
-    apply (Node.mk.injEq).2
+    rw [Node.mk.injEq]
     constructor
     · simp [sourceChild_holes_length x slot mv hwf hhole]
     · simp [sourceChild, sourceChildFresh, hne, Nat.mod_eq_of_lt hf]
   · have heq : mv.next.val = x.fresh := by omega
     have hfresh : x.fresh < 6 := by omega
     simp only [if_neg hlt, freshChild, sourceNodeAsCutNode]
-    apply (Node.mk.injEq).2
+    rw [Node.mk.injEq]
     constructor
     · simp [sourceChild_holes_length x slot mv hwf hhole]
     · simp [sourceChild, sourceChildFresh, heq,
