@@ -55,8 +55,9 @@ Lemma source_certificate_check_of_candidate bound p c :
   certificate_check bound (TM_to_str p, candidate_witness c) = true.
 Proof.
   destruct c as [d [entry [period budget]]].
-  unfold side_candidate_check, candidate_witness, certificate_check,
-    certificate_tm, source_witness_check, source_side_check.
+  change (source_side_check p d entry period budget = true) in H.
+  unfold candidate_witness, certificate_check, certificate_tm,
+    source_witness_check, source_side_check.
   cbn.
   assert (Htm : TM_from_str (TM_to_str p) = p).
   { apply functional_extensionality. intro s.
