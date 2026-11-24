@@ -20,7 +20,7 @@ Restore SignedDrift.lean using reconstruct.py, run lean SignedDrift.lean under L
 
 Added SignedLift.lean, locally Lean checked. For signed a<=-3,b<=3 define rank R=-2a-b. Every Raw child satisfies the same signed coordinate bounds and R'<=R+11. Define Closed d as the complete depth-d signed tree ending in Bad leaves (or even no-child cases); signedCert is an executable Boolean with kernel-checked soundness. For m divisible by32 and m>=R+11d+16, and positive integer K,L, a closed signed tree excludes the positive state (K*4^d*m+a,L*4^d*m+b) under the exact ReachLaws (Bad exclusion and odd/even predecessors). Induction loses only two bits of precision per raw edge: coefficients (K,L) become (2K,4(K+L)) for F, (4K+L,2L) for E/S, with scale divided by4. Rank bound keeps actual states above original positivity guards, and m mod32 preserves all Bad predicates. This gives an explicit finite precision bound rather than an asymptotic lift.
 
-Specialized to actual feeder q+c=3*2^N (N=n-5), c>=4, a=29-32c,b=55-64c. If e>=5, 2d+e<=N, and 2^e>=128c-97+11d, signedCert d a b=true is sufficient to exclude (32q+29,64q+55). No evaluation of the huge 2^N is needed in the signed tree. The Lean specialization branch29_lift is checked under ReachLaws. SignedSource.lean connects those laws to exact repo BB429NewResidue and root-mod lemmas. The complete manual workflow passed on 2026-11-24 (run #45464411810): it compiled the pinned rank/modular dependencies, reconstructed and compiled SignedDrift and SignedLift, compiled the new SignedFRunParity theorem, and compiled SignedSource. The source adapter is now CI-checked. This validates the theorem dependency closure, not any particular signed-tree certificate or all-k exclusion.
+Specialized to actual feeder q+c=3*2^N (N=n-5), c>=4, a=29-32c,b=55-64c. If e>=5, 2d+e<=N, and 2^e>=128c-97+11d, signedCert d a b=true is sufficient to exclude (32q+29,64q+55). No evaluation of the huge 2^N is needed in the signed tree. The Lean specialization branch29_lift is checked under ReachLaws. SignedSource.lean connects those laws to exact repo BB429NewResidue and root-mod lemmas. The complete manual workflow passed twice on 2026-11-24: run #45464411810 compiled the pinned rank/modular dependencies, reconstructed and compiled SignedDrift and SignedLift, compiled the initial SignedFRunParity theorem, and compiled SignedSource; run #45466029696 repeated the dependency closure after the refined EF/SF endpoint tables were added. The source adapter and all current SignedFRunParity theorems are CI-checked. This validates the theorem dependency closure, not any particular signed-tree certificate or all-k exclusion.
 
 The all-k objective is now a clear sufficient target: prove the signed trees close with d,e satisfying these bounds for all c=3k+4,N=122+128k. No claim of that proof. The source-independent finite precision transfer and executable checker are checked with only standard Lean axioms.
 
@@ -54,3 +54,33 @@ closure theorem for the full branching inverse tree. The 14/16
 complement is ruled out only for the existence of an EF/SF pair on that
 initial F-spine. The remaining two parameter classes, and the branches
 that choose or skip an available pair, remain to be resolved.
+
+The same file now also proves refined EF/SF endpoint tables conditioned on
+the previous pair endpoint modulo four. These distinguish the possible
+`m mod 8` and `u_m mod 4` combinations after EF and after SF, rather
+than retaining only the even-run conclusion.
+
+## Full signed-tree scan (computational evidence, not proof)
+
+`signed_tree_experiment.py` transcribes the exact integer `allowed`,
+`bad`, and F/EF/SF block rules from `SignedDrift.lean`, then explores
+the complete branching tree with cycle detection and memoization. Its
+default scan covers `t=1,...,2^20`, i.e. feeder parameters
+`k=t-1=0,...,2^20-1`.
+
+Observed in that scan:
+
+- Every tree terminated; no repeated-state cycle was found.
+- Every terminal state had at least one algebraically guarded child, but
+  all such candidate children were Bad. There were no no-guard leaves.
+- The maximum depth was 31 blocks, at `k=360911` (`t=360912`);
+  that tree had 43 nodes and 6 leaves.
+- The empirical bound
+  `depth <= 2 * bit_length(t) + 1` held for every scanned parameter.
+  Equality occurred at `k=14`.
+
+These are reproducible computational observations, not a universal
+termination theorem. In particular, the scan does not replace the
+formal `Closed` certificate needed by `branch29_lift`. The empirical
+logarithmic depth bound is a promising next proof target because the
+source-lift precision budget is linear in `k`.
