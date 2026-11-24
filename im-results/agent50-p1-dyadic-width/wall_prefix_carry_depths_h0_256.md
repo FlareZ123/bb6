@@ -89,3 +89,6 @@ This is an exploratory census over (h\le256), not a universal proof. The next ma
 
 
 The full driver that loops over both families and all 257 values of (h), records maximum state-set sizes, and prints the top 20 records is [`wall_prefix_carry_depths_scan.js`](wall_prefix_carry_depths_scan.js).
+
+
+Since the maximal observed depths satisfy (5350<5362\le n) in family I and (4750<9538\le n) in family II, and the terminal-cost cutoff gives (m\ge n), this census computationally excludes a source-wall state for **every** (0\le h\le256) in either family, conditional on the source identity. This finite-range conclusion is still only as strong as the Set-based computation; unlike the four cylinders in the companion Lean file, the full (h\le256) batch has not been kernel-certified.
