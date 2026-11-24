@@ -167,11 +167,12 @@ Only `H=5` survives. Its three congruences combine to
 Restore the source module from the Agent 16 dossier, then compile these files:
 
 ```sh
-python3 ../agent16-sheep-even-return/reconstruct.py
-LEAN_PATH=../agent16-sheep-even-return lean -o ../agent16-sheep-even-return/SheepEven.olean ../agent16-sheep-even-return/SheepEven.lean
-LEAN_PATH=../agent16-sheep-even-return lean -o GenericResidual.olean GenericResidual.lean
-LEAN_PATH=.:../agent16-sheep-even-return lean SingularCylinders.lean
-python3 check_singular_two_step.py
+# Run from the repository root.
+python3 im-results/agent16-sheep-even-return/reconstruct.py
+LEAN_PATH=im-results/agent16-sheep-even-return lean -o im-results/agent16-sheep-even-return/SheepEven.olean im-results/agent16-sheep-even-return/SheepEven.lean
+LEAN_PATH=im-results/agent16-sheep-even-return lean -o im-results/agent14-sheep-weighted-residual/GenericResidual.olean im-results/agent14-sheep-weighted-residual/GenericResidual.lean
+LEAN_PATH=im-results/agent14-sheep-weighted-residual:im-results/agent16-sheep-even-return lean im-results/agent14-sheep-weighted-residual/SingularCylinders.lean
+python3 im-results/agent14-sheep-weighted-residual/check_singular_two_step.py
 ```
 
 The Lean files were compiled with Lean 4.36.0-rc2. The Python script uses only
