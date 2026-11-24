@@ -121,9 +121,11 @@ The packet invariant gives sharper costs for actual exceptional exits:
 
 Thus every actual exceptional return is covered by the universal threshold 3^s(6k+27), while a skip exit has the stronger 6k-9 factor. The separate exact return-cost theorems and skip-coordinate lemmas passed [CI 45403951106](https://github.com/FlareZ123/bb6/actions/runs/45403951106), revision 3504354e2f2a279f04a550557be9612be7d2d4f6.
 
-## Exact forward acceleration and remaining all-time gate
+## Exact signed first-return acceleration and remaining all-time gate
 
-[ForwardMacro.md](ForwardMacro.md) gives the complete four-way band macro, with a power-of-three same-band jump followed by halt, special exit, one-band advance or two-band skip. The executable bandHaltBy test is equivalent to reaching an actual terminal up to any prescribed band limit. All graph-level statements compile locally against copied exact graph dependencies; pinned original source-closure CI is requested. The finite forward experiment suggests a simpler sufficient all-time criterion: the relaxed positive-exit orbit must maintain q_k >= k+6 at every band. This is unproved; the full macro is exact regardless of that conjecture.
+[ForwardMacro.md](ForwardMacro.md) gives the source-accepted four-way band macro (CI 45423604706) and a new exact signed first-return macro, which compresses a complete negative excursion and resumes positive dynamics after either safe return. For a positive entry at band k>=1, put p=positiveNext(k,q); a halt before the next positive return is equivalent to the equation 3^n(2p-3)=2(k+n)+3 for some n. The actual exceptional weight has phase w mod 3=2^k mod 3. Two possible terminal exponents n<m must satisfy m-n=3^n c with c mod 3=2^k mod 3. Four distinct candidates at a fixed band force 4k+7>=3^85; in phase 2, three force 4k+7>=3^20. These sparse forbidden values replace the stronger sufficient condition that no negative excursion ever occurs.
+
+The signed macro agrees with bandHaltBy for every valid band coordinate and every finite band limit, checked locally with the relevant exact arithmetic definitions and standard Lean axioms. Its original-machine source composition is submitted to the existing macro workflow; acceptance remains pending. No authentic blank-root classification has been obtained. The exact remaining goal is to exclude these terminal values on all three genuine positive-return orbits, allowing safe exceptions.
 
 ## All-band and nested valuation dynamics
 
