@@ -191,9 +191,136 @@ function oneScale(s) {
   };
 }
 
+
+function oneRational(num, den) {
+  const d = 2n * den - num;
+  const D0 = 2n * den ** BigInt(K + 1);
+  const scale = (1n << 512n) * den ** BigInt(K + 1) * d;
+  assert(scale % (d * D0) === 0n, "rational fixed-point scale is not exact");
+  assert(3n * num < 2n * den, "terminal factor must be positive");
+  assert(2n * den ** 703n <= d ** 703n,
+    "period contraction is not at most one half");
+
+  function decimalR(numerator, places = 9) {
+    const unit = 10n ** BigInt(places);
+    const q = numerator * unit / scale;
+    const sign = q < 0n ? "-" : "";
+    const absolute = q < 0n ? -q : q;
+    return sign + String(absolute / unit) + "." +
+      String(absolute % unit).padStart(places, "0");
+  }
+
+  function updateR(R, prefix, c, r) {
+    if (r < K) {
+      let t = prefix[0] + 1n + c;
+      let carryNumerator = 0n;
+      for (let i = 0; i <= r; i++) {
+        carryNumerator += t * num ** BigInt(i) * den ** BigInt(K - i);
+        if (i < r) {
+          assert(t % 2n === 0n, "rational shallow carry parity");
+          t = prefix[i + 1] + 1n + t / 2n;
+        }
+      }
+      const deltaNumerator =
+        c * D0 +
+        (num - den) * carryNumerator +
+        5n * num ** BigInt(r) * den ** BigInt(K + 1 - r) -
+        num ** BigInt(r + 1) * den ** BigInt(K - r) -
+        3n * num ** BigInt(K + 1) * (c + 2n);
+      return R + deltaNumerator * (scale / D0);
+    }
+
+    const hNumerator =
+      2n * c * den ** BigInt(K + 2) +
+      c * (den - num) * num ** BigInt(K + 1) +
+      d * (5n * den - num) * num ** BigInt(K) -
+      3n * d * num ** BigInt(K + 1) * (c + 2n);
+    const hScaled = ceilDiv(hNumerator * scale, d * D0);
+    return ceilDiv(den * R, d) + hScaled;
+  }
+
+  function simulateR(start) {
+    let R = start;
+    let prefix = ROOT9.slice();
+    let deep = 0;
+    let shallow = 0;
+    let maximum = R;
+    let maximumPhase = null;
+    for (let ret = 0; ret < PERIOD; ret++) {
+      for (let stage = 0; stage < 3; stage++) {
+        const c = C[stage];
+        const r = v2cap(weight(prefix) + c, K);
+        R = updateR(R, prefix, c, r);
+        if (r < K) shallow++;
+        else deep++;
+        if (R > maximum) {
+          maximum = R;
+          maximumPhase = { ret, stage, carryDepthAtLeast: r, offset: String(c) };
+        }
+        prefix = gp(c, prefix);
+      }
+    }
+    return {
+      end: R, maximum, maximumPhase, deep, shallow,
+      closed: prefix.join(",") === ROOT9.join(",")
+    };
+  }
+
+  let initialP = 0n;
+  for (let i = 0; i < ROOT18.length; i++) {
+    initialP += (ROOT18[i] + 1n) * scale *
+      num ** BigInt(i) / den ** BigInt(i);
+  }
+  const initialR = initialP -
+    3n * num ** BigInt(K + 1) * M0 * (scale / D0);
+  const fromZero = simulateR(0n);
+  assert(fromZero.deep === 703, "rational deep-gate count mismatch");
+  assert(fromZero.shallow === 245057, "rational shallow-gate count mismatch");
+  assert(fromZero.closed, "rational nine-digit prefix did not close");
+  const periodStartCap = [
+    0n, initialR, 2n * fromZero.end + scale
+  ].reduce((a, b) => a > b ? a : b);
+  const bounded = simulateR(periodStartCap);
+  assert(bounded.closed, "rational bounded prefix cycle did not close");
+  assert(bounded.end <= periodStartCap,
+    "rational period-start invariant failed");
+  const globalConstant = ceilDiv(bounded.maximum, scale);
+
+  // Strict integer form of M*z^9*(1-3z/2) > C.
+  const thresholdNumerator =
+    globalConstant * den ** 9n * 2n * den;
+  const thresholdDenominator =
+    num ** 9n * (2n * den - 3n * num);
+  const terminalThreshold = thresholdNumerator / thresholdDenominator + 1n;
+  assert(terminalThreshold * thresholdDenominator > thresholdNumerator,
+    "rational terminal threshold is not strict");
+  assert((terminalThreshold - 1n) * thresholdDenominator <= thresholdNumerator,
+    "rational terminal threshold is not minimal");
+
+  return {
+    s: "rational",
+    z: String(num) + "/" + String(den),
+    alpha: "3*" + String(num) + "^10/(2*" + String(den) + "^10)",
+    asymptotic_D_over_M_lower_limit:
+      10 - Math.log(1.5) / Math.log(Number(den) / Number(num)),
+    deep_gates_per_period: fromZero.deep,
+    shallow_gates_per_period: fromZero.shallow,
+    initial_centered_value: decimalR(initialR),
+    period_constant_from_zero: decimalR(fromZero.end),
+    period_start_cap: decimalR(periodStartCap),
+    global_centered_cap: decimalR(bounded.maximum),
+    integer_C: String(globalConstant),
+    period_start_invariant: bounded.end <= periodStartCap,
+    period_contraction_at_most_half: true,
+    terminal_L10_minimum_mass: String(terminalThreshold),
+    maximum_phase: bounded.maximumPhase
+  };
+}
+
 const rootMass = ROOT18.reduce((sum, digit) => sum + digit + 1n, 0n);
 assert(rootMass === M0, "return-5457 root mass mismatch");
 
 const results = [];
 for (let s = 1; s <= 8; s++) results.push(oneScale(s));
+results.push(oneRational(2723n, 5000n));
 console.log(JSON.stringify(results, null, 2));
