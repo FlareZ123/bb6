@@ -84,6 +84,17 @@ jobs:
           lean -o im-results/agent13-weighted-first-one/WeightedTNFExamples.olean im-results/agent13-weighted-first-one/WeightedTNFExamples.lean
           lean im-results/agent13-weighted-first-one/WeightedFirstOneCover.lean
 
+      - name: Verify source Enumerate62 TNF expansion adapter
+        if: inputs.target == 'source-queue-adapter'
+        run: |
+          set -eu
+          export LEAN_PATH=im-results/agent8-coverage-contract:im-results/agent4-coverage-smoke:im-results/agent42-coverage-normal:im-results/agent13-coverage:im-results/agent13-weighted-first-one:im-results/agent6-fresh-glider:im-results/agent7-far
+          lean im-results/agent5-weighted-tnf-queue/Enumerate62Adapter.lean | tee /tmp/enumerate62-weighted-tnf-adapter.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/enumerate62-weighted-tnf-adapter.log; then
+            echo "Forbidden proof placeholder or native_decide found in source TNF adapter closure" >&2
+            exit 1
+          fi
+
       - name: Verify corrected read-one weighted halt branch
         if: inputs.target == 'weighted-halt-branch'
         run: |
