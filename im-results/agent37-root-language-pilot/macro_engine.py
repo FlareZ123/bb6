@@ -64,7 +64,10 @@ def step(c: Config):
                 return "A1100", p+cost+2*m+16, canonical(2*m+1, "0"+"1"*6+(v[4:] if len(v)>4 else ""))
             if v.startswith("110111"):
                 return "A110111", p+cost+2*m+24, canonical(2*m+5, "01010"+v[6:])
-            if v.startswith("1101101100"):
+            # canonical() removes terminal blank zeros. The physical halt word
+            # 1101101100 therefore also appears as the exact canonical suffix
+            # 11011011 when its unknown tail is all blank.
+            if v.startswith("1101101100") or v == "11011011":
                 return "A_halt", p+cost+68, None
             return "A_unresolved:"+v[:30], None, None
 
@@ -102,11 +105,14 @@ def step(c: Config):
         return "E110111", p+68+4*q, canonical(
             8*k+5, "0"+"1"*(2*q+6)+"01010"+v[6:]
         )
-    if v.startswith("1101100") and q == 0:
+    # Canonical physical suffixes omit trailing blank zeros: the q=0
+    # 1101100 cylinder has exact canonical form 11011 for an all-blank tail.
+    if (v.startswith("1101100") or v == "11011") and q == 0:
         return "E_halt", 12*k*k+41*k+98, None
     # Agent2 all-q proof: original-source CI 45267507107. Cost excludes the
-    # final frozen-state entry, as for the other halting branches above.
-    if v.startswith("1101101100"):
+    # final frozen-state entry, as for the other halting branches above. Its
+    # 1101101100 marker canonicalizes to exact 11011011 for an all-blank tail.
+    if v.startswith("1101101100") or v == "11011011":
         return "E_all_q_1101101100_halt", 12*k*k+41*k+105+2*q, None
     return f"E_unresolved(q={q}):{v[:30]}", None, None
 
@@ -131,6 +137,23 @@ def run(seed: int, sections: int = 20000):
     return c, "limit", counts
 
 
+def check_halt_padding_regressions():
+    """Blank-tail forms of source-proved halt words survive physical canonicalization."""
+    cases = (
+        (Config(3, "011011011"), "A_halt", 100),
+        (Config(3, "01011011011"), "A_halt", 102),
+        (Config(4, "011011"), "E_halt", 98),
+        (Config(4, "011011011"), "E_all_q_1101101100_halt", 105),
+        (Config(4, "01011011011"), "E_all_q_1101101100_halt", 107),
+    )
+    for cfg, expected_label, expected_cost in cases:
+        label, cost, nxt = step(cfg)
+        assert (label, cost, nxt) == (expected_label, expected_cost, None), (
+            cfg, label, cost, nxt, expected_label, expected_cost
+        )
+
+
 if __name__ == "__main__":
+    check_halt_padding_regressions()
     for seed in (5, 9, 15, 39):
         run(seed)
