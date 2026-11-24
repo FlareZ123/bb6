@@ -26,6 +26,7 @@ printf '%s  %s\n' 1bce2075fc4e0cd7d740fb71b3796088b190ddb6766e04640d992dadd1b650
 lean --version
 python3 tools/lean_compile_closure.py \
   im-results/agent48-counted-inc0/TM63RawUpperInterface.lean \
+  im-results/agent48-counted-inc0/Enumerate62Potential.lean \
   --source-root "$work/imports" \
   --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean \
   --override OuterLCIncPrelude=im-results/agent8-counted-reset/OuterLCIncPrelude.lean \
@@ -39,7 +40,11 @@ log = pathlib.Path(sys.argv[1]).read_text()
 allowed = {"propext", "Classical.choice", "Quot.sound"}
 for name in ("champion_halts_exact", "champion_attained_exact", "champion_maximum_of_cover",
  "champion_raw_halts_exact", "champion_weighted_bound", "exact_BB6_from_cover",
- "exact_BB6_from_weighted_cover", "exact_BB6_from_tnf_certificate"):
+ "exact_BB6_from_weighted_cover", "exact_BB6_from_tnf_certificate",
+ "expandProjection_length", "expandProjection_length_le_24", "expandProjection_mass_lt",
+ "expandProjection'_mass_lt", "update_active_mass_lt", "runUpdates_active_empty_of_bound",
+ "bfsRound_total_mass_le", "fourBfsPasses_total_mass_le", "q0_total_mass_le",
+ "chunk_active_mass_le", "every_chunk_drains"):
     m = re.search(r"'[^']*\."+name+r"' depends on axioms: \[([^\]]*)\]", log)
     if not m:
         raise SystemExit("missing axiom audit: "+name)
