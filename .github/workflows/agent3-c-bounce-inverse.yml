@@ -57,6 +57,11 @@ on:
         required: false
         type: boolean
         default: false
+      a4_r0_odd_only:
+        description: 'Compile the exact odd-s R0 residual parent fan, blank-root reachability split, and mod-5 phase equations'
+        required: false
+        type: boolean
+        default: false
       r_q3_only:
         description: 'Compile the Agent 6 R(q=3 mod 8) and D0E t=15 mod 32 source closure, then stop'
         required: false
@@ -105,6 +110,9 @@ jobs:
         run: |
           python3 tools/lean_compile_closure.py im-results/agent6-root32-highstop/A4T719Q0EvenS8.lean \
             --workdir /tmp/a4-t719-q0-closure --jobs 4 --lean "$(command -v lean)"
+      - name: Compile exact odd-s R0 residual source-parent fan
+        if: ${{ inputs.a4_r0_odd_only }}
+        run: python3 tools/lean_compile_closure.py im-results/agent3-c-bounce-inverse/A4R0OddFan.lean --workdir /tmp/a4-r0-odd-closure --jobs 4 --lean $(command -v lean)
       - name: Compile Agent 6 R q3 and D0E t15 source closure
         if: ${{ inputs.r_q3_only }}
         run: |
@@ -116,7 +124,7 @@ jobs:
           python3 tools/lean_compile_closure.py im-results/agent3-c-bounce-inverse/OddZSecondParentFan.lean \
             --workdir /tmp/odd-even-fan-closure --jobs 4 --lean "$(command -v lean)"
       - name: Verify against original unmodified section and bounce source
-        if: ${{ !inputs.root32_only && !inputs.root32_cone_only && !inputs.w11_q11_only && !inputs.a4_t719_only && !inputs.r_q3_only && !inputs.odd_even_fan_only && !inputs.forced_cylinder_only }}
+        if: ${{ !inputs.root32_only && !inputs.root32_cone_only && !inputs.w11_q11_only && !inputs.a4_t719_only && !inputs.a4_r0_odd_only && !inputs.r_q3_only && !inputs.odd_even_fan_only && !inputs.forced_cylinder_only }}
         run: |
           mkdir -p /tmp/a3-bounce
           cp im-results/agent11-c-line/CLine.lean /tmp/a3-bounce/
