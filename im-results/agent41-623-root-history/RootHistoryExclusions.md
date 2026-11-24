@@ -73,6 +73,13 @@ A further root-history check appears to exclude this particular transition from 
 
 The corresponding exact anchors and non-reachability theorems have been added to `RootMassGapSource.lean`, pending the next pinned-source CI run. If certified, this shows the state-local counterexample is itself root-inaccessible by mass, even though it invalidates the local valuation predicate.
 
+The same mass-gap method also appears to exclude the **entire depth-20 slice** of the cone-only family. At ell=20, its arithmetic progression is q_r=64,573,362 + 86,093,442*r, and exactly r=1,2,3 fall in the ell=20 mass window. Their source states and masses are:
+- D(602667616,150666804), mass 753,334,420: between root masses at indices 78 and 79;
+- D(947041384,236760246), mass 1,183,801,630: between root masses at indices 80 and 81;
+- D(1291415152,322853688), mass 1,614,268,840: also between root masses at indices 80 and 81.
+
+The new exact anchors at indices 80 and 81 and all three non-reachability theorems are also in `RootMassGapSource.lean`. This is a fixed-depth exclusion, not an all-depth proof of the cone-only family.
+
 The 20,000-step observation and the new source-authentic transition are finite replay evidence, not Lean-certified theorems. The exact transition is a useful adversarial test for any proposed valuation/carry product.
 
 ## 4. What this does and does not establish
