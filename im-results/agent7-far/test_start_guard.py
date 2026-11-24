@@ -52,9 +52,9 @@ def main() -> None:
             raise AssertionError(f"{name} accepted DFA [1, 1] with start state 0")
     print("PASS: all five FAR emitters reject non-blank-preserving start DFAs")
 
-    # The 14 canonical DFA strings are already represented by Lean Data
-    # objects for their actual raw85 destination tables. Their old lookup
-    # keys are deliberately different: keys are candidate metadata only.
+    # The 14 candidate DFA strings are mirrored in an invalid scratch Lean
+    # module. Its Cxx.fastValid pxx assertions are known false; this test
+    # checks only candidate/key metadata, never destination validity.
     bank_path = ROOT / "im-results" / "agent21-raw85" / "dfa-candidates.txt"
     cert_path = ROOT / "im-results" / "agent21-raw85" / "Raw85FARCertificates.lean"
     bank = [
