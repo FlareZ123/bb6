@@ -33,7 +33,7 @@ for raw,spec in SPECS.items():
     opens=data.decode().splitlines()
     assert len(opens)==spec["stats"]["open"]==len(set(opens))
     index={s:i for i,s in enumerate(opens)}
-    dfa=["00102030400"]*len(opens)
+    dfa=[spec.get("dfa_default","00102030400")]*len(opens)
     for row in spec["dfa"].split():
         i,a=row.split(":");dfa[int(i)]=a
     pumps={}
@@ -57,7 +57,7 @@ for raw,spec in SPECS.items():
         pumpcode.append(code)
         print(raw,i,"long",info)
     if spec.get("recursive"):
-        pumpcode.insert(0,"import RecursiveGrowth")
+        pumpcode.insert(0,"import "+spec.get("recursive_import","RecursiveGrowth"))
         for i in spec["recursive"]:
             pumps[i]=f"BB6.Agent10Recursive.R{raw}M{i}"
     pumpcode.append(f"end {pumpns}")

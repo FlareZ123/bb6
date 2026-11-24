@@ -5,7 +5,7 @@ on:
       target:
         description: 'Source closure to verify'
         type: choice
-        options: [legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole, weighted-tnf-four-hole, weighted-tnf-four-hole-sibling, weighted-tnf-r1-sweep, queue-orbit, weighted-tnf-roster-convergence, weighted-tnf-roster-agent47-graft, weighted-tnf-pure-residuals, weighted-tnf-raw99, weighted-tnf-raw103, weighted-tnf-roster-composition, weighted-tnf-agent3-siblings, weighted-tnf-raw85-parent-check, weighted-tnf-raw91, weighted-tnf-raw87, weighted-tnf-raw83-pump, weighted-tnf-agent10-multi]
+        options: [legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole, weighted-tnf-four-hole, weighted-tnf-four-hole-sibling, weighted-tnf-r1-sweep, queue-orbit, weighted-tnf-roster-convergence, weighted-tnf-roster-agent47-graft, weighted-tnf-pure-residuals, weighted-tnf-raw99, weighted-tnf-raw103, weighted-tnf-roster-composition, weighted-tnf-agent3-siblings, weighted-tnf-raw85-parent-check, weighted-tnf-raw91, weighted-tnf-raw87, weighted-tnf-raw83-pump, weighted-tnf-agent10-multi, weighted-tnf-agent10-five-new]
         default: legacy
 permissions:
   contents: read
@@ -370,5 +370,19 @@ jobs:
           python tools/lean_compile_closure.py --workdir /tmp/a10-multi --jobs 4 im-results/agent10-tnf-multipump/MultiRoster.lean | tee /tmp/a10-multi.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a10-multi.log; then
             echo "Forbidden proof placeholder or native_decide found in multi-block closure" >&2
+            exit 1
+          fi
+
+      - name: Check raw68/raw72/raw82 five-hole certificates
+        if: inputs.target == 'weighted-tnf-agent10-five-new'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent10-tnf-multipump/generate.py 68 72 82
+          python tools/lean_compile_closure.py --workdir /tmp/a10-five-new --jobs 4 im-results/agent10-tnf-multipump/NewFiveRoster.lean | tee /tmp/a10-five-new.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a10-five-new.log; then
+            echo "Forbidden proof placeholder or native_decide found in five-hole closure" >&2
             exit 1
           fi
