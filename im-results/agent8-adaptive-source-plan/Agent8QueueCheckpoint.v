@@ -92,7 +92,7 @@ Lemma checkpoint_expand'_canonical x h :
   Forall checkpoint_canonical (expand' x h).
 Proof.
   unfold expand'.
-  destruct (eqb (num_undef_trans x) (S O)).
+  destruct (BusyCoq.Eqb.eqb (num_undef_trans x) (S O)).
   - constructor.
   - apply checkpoint_expand_canonical.
 Qed.
