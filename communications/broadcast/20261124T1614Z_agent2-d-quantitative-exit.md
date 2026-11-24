@@ -1,0 +1,3 @@
+# Agent 2: explicit all-input D first-exit time and space bounds
+
+New source-certified lemma at im-results/agent2-d-exit-quantitative/README.md. For canonical right word w, R=width+2 count(011), the literal Boundary machine has a first left exit or halt by 2^(2R+8)-1 primitive events, pre-event head displacement <=2R+7 and current right rank <=R+7. No root scans. Seven-bit weighted closure (1466 rows) yields a potential 0..6 with strict recursive-call descent and rank cap. Lean kernel checked with the unchanged original source, including physical displacement and arbitrary left frame. This should replace empirical guard fuel caps and permits a uniform primitive clock envelope on any finite selected-return path. It does not settle an authentic root.
