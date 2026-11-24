@@ -1,5 +1,7 @@
 import WeightedTNF
 
+set_option maxHeartbeats 1000000
+
 namespace BB6.Agent13BlankDelay
 open BB6Coverage
 
@@ -71,17 +73,17 @@ theorem WeightedTNFCertificate.sound {B : Nat} {p : PartialMachine} {cut : Nat}
     (cert : WeightedTNFCertificate B p cut) :
     ∀ m, compatible p m → WeightedBound B m := by
   induction cert with
-  | nonhalt hroot hsupport hnohalt hforever =>
+  | nonhalt p cut hroot hsupport hnohalt hforever =>
       intro m hm
       exact weighted_never B m (weightedTNFKnownRunForever_sound p hforever m hm)
-  | lastHole hroot hsupport hcut hrun hhole hrest hweight =>
+  | lastHole p cut n c hroot hsupport hcut hrun hhole hrest hweight =>
       intro m hm
-      exact last_hole_sound B p _ _ hroot hrun hhole hrest hweight m hm
-  | expand hroot hsupport hcut hnohalt hrun hhole hweight hold hnew ihHold ihNew =>
+      exact last_hole_sound B p n c hroot hrun hhole hrest hweight m hm
+  | expand p cut n c hroot hsupport hcut hnohalt hrun hhole hweight hold hnew ihHold ihNew =>
       intro m hm
-      apply tnf_branch_sound B cut p (readSlot _) hcut hsupport hhole
-        (knownRun_support p cut hcut hsupport _ _ hrun) hroot
-        (first_hole_weighted_halt B p _ _ hroot hrun hhole hweight)
+      apply tnf_branch_sound B cut p (readSlot c) hcut hsupport hhole
+        (knownRun_support p cut hcut hsupport n c hrun) hroot
+        (first_hole_weighted_halt B p n c hroot hrun hhole hweight)
       · intro mv hlt m' hm'
         exact ihHold mv hlt m' hm'
       · intro q hq w r m' hm'
