@@ -58,3 +58,20 @@ The 16 last-hole halters all set E0=halt, which excludes every nonzero incoming 
 Run `python replay.py` in this directory to independently replay the authentic path, every witness, and the exact incoming-delay sets. The script checks finite evidence, not Lean proofs. The Lean module uses kernel `decide` for the same finite predicates and the repository's existing sound last-hole, lasso, ray and weighted-TNF rules. Its exact source closure compiled under Lean 4.36.0-rc2 through the existing manual coverage workflow's `weighted-tnf-pilot` target. The module prints the axiom profiles of all six principal exported declarations, and the workflow rejects `sorryAx` or `native_decide` in the captured compilation output. The successful-job log itself was not retrieved, so the precise printed profile beyond that guard is not independently asserted.
 
 The source checkout failed locally with DNS resolution of github.com, although the uploaded Lean 4.36.0-rc2 toolchain extracted and ran successfully. The existing manual closure runner provided the accepted original-source check; no new standalone workflow was created. The entire root-to-parent path's other siblings remain outside this pilot. It is a genuine local integration slice, not a closed authentic root or the full upstream queue schedule.
+
+
+## Larger authentic subtrees bordering three pinned Cryptids leaves
+
+The half-line checker in [SideCycle.lean](SideCycle.lean) proves recurrence from a finite observation in either direction. It retains all cells on one side of a fixed boundary, checks every consulted position lies on that side, and checks the translated end configuration agrees throughout that half-line. All earlier abandoned cells may differ. Its induction constructs arbitrarily long runs, so this is an actual nonhalting argument for every compatible completion, not a finite cutoff.
+
+[CryptidSiblings.lean](CryptidSiblings.lean) checks authentic first-hole paths and all ordinary children except the explicitly designated already-proved hard leaf, then assembles a complete weighted certificate given that leaf. The r2 and r6 source closures passed [45406543043](https://github.com/FlareZ123/bb6/actions/runs/45406543043) at `8d4bd6830649cb0b9c5b1a04c66d3d4415a3632d`. [CryptidGraft.lean](CryptidGraft.lean) imports the pinned nonhalting leaves and checks pointwise equality of the actual designated tables. Combined pinned-source run [45406904998](https://github.com/FlareZ123/bb6/actions/runs/45406904998) is pending at this checkpoint.
+
+| Parent | First hole, ordinary time | Last-hole / half-line / growth / pinned branches | Exact local weighted bound (conditional on graft acceptance) |
+|---|---|---|---:|
+| `1RB0RA_0RC0LD_1LA1RF_1LE1LD_1LB---_---1RA` | E1, 35 | 6 / 17 / 0 / 1 | 471 |
+| `1RB1RA_1RC---_0LD0RA_1RF1LE_---1LF_1LC0LF` | B1, 62 | 7 / 16 / 0 / 1 | 582 |
+| `1RB0RA_0RC0LE_1LD1RF_1LB---_1LD1LE_---1RA` | D1, 38 | 9 / 13 / 1 / 1 | 1768 |
+
+The r3 new proof uses [SparseZipper.lean](SparseZipper.lean) and [R3Sweep.lean](R3Sweep.lean). For the D1=1LB sibling, at the right blank boundary let the head be h and the tape to its left be the physical word (110)^(2n), with all other cells blank. A macro of 32+32n ordinary moves reaches the same form with n+1 and head h+2. The proof decomposes the macro into a five-step prelude, n six-step pair transfers left, a 27-step turnaround, and n 26-step pair transfers right. The zipper bridge proves it simulates the repository's ordinary sparse machine. The source-independent local Lean checks passed with only propext and Quot.sound; actual source closure run [45408170628](https://github.com/FlareZ123/bb6/actions/runs/45408170628) is pending. The r3 pinned leaf graft will be added after this check.
+
+These are distinct cut-six parents (each contains 625 total transition tables under the repository's 25-choice raw completion convention). They do not by themselves prove that the original upstream queue enumeration reaches these parents without an earlier decider pruning the route, nor close the other subtrees at the root.
