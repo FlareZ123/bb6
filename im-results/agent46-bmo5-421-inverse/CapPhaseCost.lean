@@ -170,7 +170,7 @@ theorem positive_history_packet_weight {j s k x : Nat} {w : Int} (hw : 0<w)
         (4*(D*3)-2*A)*(P k:Int)
             = (4*D-A)*(P (k+1):Int)+4*D*(P k:Int) := by rw [hp]; grind
         _ ≥ 4*(P j:Int) := by
-          have hD0 : 0≤D := le_of_lt hD
+          have hD0 : 0≤D := Int.le_of_lt hD
           have hP0 : 0≤(P k:Int) := by exact_mod_cast Nat.zero_le (P k)
           have hterm : 0≤4*D*(P k:Int) := by
             apply Int.mul_nonneg
@@ -211,14 +211,15 @@ theorem positive_boundary_cost_sharp {j s k x : Nat} {w : Int} (hw : 0<w)
     omega
   have hrel : 2*D*(Q k x:Int)=(4*D-A)*(P k:Int)-3*D-C := by
     change D*(W k x:Int)=A*(P k:Int)+C at he
-    grind [he,hWQ]
+    grind [hWQ]
   have hmul:=Int.mul_le_mul_of_nonneg_left hQ (le_of_lt hD)
   have hupper : 2*D*(Q k x:Int)≤D*(6*(k:Int)+32) := by grind [hmul]
   have hC' : 6+w≤-C := by omega
   have hlower : 4*(P j:Int)+6+w-3*D≤2*D*(Q k x:Int) := by
     grind [hB,hC',hrel]
-  have hfinal:=le_trans hlower hupper
-  grind
+  have hsum : 4*(P j:Int)+6+w≤D*(6*(k:Int)+32)+3*D := by omega
+  rw [Int.mul_add]
+  omega
 
 #print axioms positive_history_packet_weight
 #print axioms positive_history_band
