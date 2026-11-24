@@ -319,6 +319,40 @@ theorem packetQ_strict_lex (n a b1 t1 b2 t2:Nat)
     16*packetD n b1 t1-(2^n+n+2)
   omega
 
+
+/-- Distinct packet/lift pairs give distinct predecessor heights. -/
+theorem packetQ_injective (n a b1 t1 b2 t2:Nat)
+    (hn:257≤n)
+    (hsector:n%6=4 ∨ n%6=5)
+    (ha:2^a≤2*n+3 ∧ 2*n+3<2^(a+1))
+    (hpacket1:a+162*(b1+1)+13≤n)
+    (hpacket2:a+162*(b2+1)+13≤n)
+    (ht1:t1<3) (ht2:t2<3)
+    (hne:b1≠b2 ∨ t1≠t2):
+    packetQ n b1 t1≠packetQ n b2 t2:=by
+  by_cases hb:b1=b2
+  · subst b2
+    have htne:t1≠t2:=by
+      rcases hne with h|h
+      · exact False.elim (h rfl)
+      · exact h
+    have horder:t1<t2 ∨ t2<t1:=by omega
+    rcases horder with h|h
+    · have hlt:=packetQ_strict_lex n a b1 t1 b1 t2
+        hn hsector ha hpacket1 hpacket2 ht1 ht2 (Or.inr ⟨rfl,h⟩)
+      omega
+    · have hlt:=packetQ_strict_lex n a b1 t2 b1 t1
+        hn hsector ha hpacket2 hpacket1 ht2 ht1 (Or.inr ⟨rfl,h⟩)
+      omega
+  · have horder:b1<b2 ∨ b2<b1:=by omega
+    rcases horder with h|h
+    · have hlt:=packetQ_strict_lex n a b1 t1 b2 t2
+        hn hsector ha hpacket1 hpacket2 ht1 ht2 (Or.inl h)
+      omega
+    · have hlt:=packetQ_strict_lex n a b2 t2 b1 t1
+        hn hsector ha hpacket2 hpacket1 ht2 ht1 (Or.inl h)
+      omega
+
 /-- Modulo 243, the quotient of the three packet lifts is an affine
     progression with a nonzero 3-adic step. -/
 private theorem packet_quotient_mod (n b t dBase dt:Nat)
