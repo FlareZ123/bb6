@@ -144,7 +144,7 @@ theorem r0_parent_fan (s a k : Nat) (hs : s%2=1)
               (5≤r0Y s ∧ ∃ n : Nat,
                 r0H s=2^n*(2*(a-1)+8) ∧
                 (2*k-a+3)+(2*(a-1)+8)+3*n=r0X s+2*r0Y s+2) := by
-              simpa [sectionPreimageAll,ha0,ha1,hk0,hlow,haeven] using hpre
+              simpa [sectionPreimageAll,r0H,ha0,ha1,hk0,hlow,haeven] using hpre
             rcases hcase with ⟨hy3,_⟩ | ⟨_,n,hsum,hcost⟩
             · omega
             · have hnOdd : n%2=1 := by omega
@@ -185,6 +185,7 @@ theorem r0_section_preimage_iff (s : Nat) (hs : s%2=1) (a k : Nat) :
       have hpre : sectionPreimageAll (r0X s+r0Y s-2) ((r0Y s-2)/2)
           (r0X s) (r0Y s) := by
         simp [sectionPreimageAll,ha0,ha1,hk0,hlow]
+        obtain ⟨_,hy,_,hyeven,_,_,_,_,_⟩ := r0_facts s hs
         omega
       exact (section_preimage_all_iff _ _ _ _).mpr hpre
     · have hy5 : 5≤r0Y s := by
@@ -226,6 +227,7 @@ theorem r0_blank_reach_iff (s : Nat) (hs : s%2=1) :
     cases time with
     | zero =>
         simp [BB6.Agent8Section.run] at hrun
+        obtain ⟨hx,hy,_,_,_,_,_,_,_⟩ := r0_facts s hs
         omega
     | succ time =>
         cases hp : BB6.Agent8Section.run secNext time (some (5,1)) with
