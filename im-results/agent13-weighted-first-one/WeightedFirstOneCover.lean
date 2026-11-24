@@ -5,8 +5,6 @@ import TwoCylinder
 namespace BB6.Agent13BlankDelay
 open BB6Coverage
 
-/-- The weight is computed on the concrete total completion, including
-    every zero-symbol row not queried by its canonical blank run. -/
 /-- The weighted TNF root is exactly the upstream node0 table: A/0=1RB,
     with every other transition genuinely unassigned. -/
 theorem firstOneCylinder_root_action :
@@ -51,6 +49,8 @@ theorem firstOneCylinder_tnf_root :
   exact ⟨firstOneCylinder_root_action, firstOneCylinder_tnf_support,
     firstOneCylinder_no_assigned_halt⟩
 
+/-- The weight is computed on the concrete total completion, including
+    every zero-symbol row not queried by its canonical blank run. -/
 theorem weighted_of_never (B : Nat) (m : Machine) (h : NeverHalts m) :
     WeightedBound B m := by
   intro k d hk _
