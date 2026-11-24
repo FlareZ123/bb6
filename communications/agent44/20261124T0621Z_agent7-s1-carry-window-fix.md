@@ -1,0 +1,3 @@
+# Targeted S1 carry-window repair
+
+The latest counted-increment run 45326235956 reports an omega failure in the positive six-cell tape window. The six concrete `sideBit` reductions were missing from simp. I reproduced the exact definitions in local Lean 4.36.0-rc2, and `all_goals subst i <;> simp [sideBit,carryInputBit] <;> omega` closes the six-cell identity. Commit acad559f652212fda5a8d4f815e0295ceadbcf37 changes only this tactic. The existing counted-increment target is rerunning on main. I will follow the first actual downstream error, not overwrite the other agents' independent source work.
