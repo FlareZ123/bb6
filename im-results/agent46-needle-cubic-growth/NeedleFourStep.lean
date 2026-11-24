@@ -90,7 +90,7 @@ theorem small_F (x : Data) (m L b : Nat) (hm : m≤x.v)
     calc
       5*A*A*x.s m=(A*x.s m)*(5*A) := by ac_rfl
       _ <(A*x.s m)*(8*x.r) := hh
-      _ =8*(A*x.s m*x.r) := by ring
+      _ =8*(A*x.s m*x.r) := by ac_rfl
       _ =8*x.b := by rfl
   have hs : A*A*x.s m<2*b := by
     have h1 := Nat.mul_lt_mul_left 4 hs1
@@ -100,14 +100,14 @@ theorem small_F (x : Data) (m L b : Nat) (hm : m≤x.v)
     unfold Data.F
     have hcoeff : 2*x.v-3≤2*L := by omega
     calc
-      A*A*((2*x.v-3)*x.s m)=(2*x.v-3)*(A*A*x.s m) := by ring
+      A*A*((2*x.v-3)*x.s m)=(2*x.v-3)*(A*A*x.s m) := by ac_rfl
       _ ≤(2*L)*(2*b) := Nat.mul_le_mul hcoeff (Nat.le_of_lt hs)
-      _ =4*L*b := by ring
+      _ =4*L*b := by simp [Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm]
   have hmul : A*A*(4*x.F m)≤16*L*b := by
     calc
-      A*A*(4*x.F m)=4*(A*A*x.F m) := by ring
+      A*A*(4*x.F m)=4*(A*A*x.F m) := by ac_rfl
       _ ≤4*(4*L*b) := Nat.mul_le_mul_left 4 hf
-      _ =16*L*b := by ring
+      _ =16*L*b := by simp [Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm]
   change 16*L*b<A^3 at hlarge
   have hp : A^3=A*A*A := by simp [Nat.pow_succ]
   have hlt : A*A*(4*x.F m)<A*A*A := by omega
@@ -255,10 +255,10 @@ theorem four_data_cube_gain (x y z w : Data) (L : Nat)
       have hbgpow : b^2≤16*G^2 := by
         calc
           b^2≤(4*G)^2 := Nat.pow_le_pow_left hbg
-          _ =16*G^2 := by ring
+          _ =16*G^2 := by simp [Nat.pow_succ, Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm]
       have htmp : 16*G^2*(L*G)<16*G^2 := by
         calc
-          16*G^2*(L*G)=16*L*G^3 := by ring
+          16*G^2*(L*G)=16*L*G^3 := by simp [Nat.pow_succ, Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm]
           _ <b^2 := hsmall
           _ ≤16*G^2 := hbgpow
       have hLG : L*G<1 := Nat.lt_of_mul_lt_mul_left htmp
