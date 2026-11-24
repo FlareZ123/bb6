@@ -87,10 +87,10 @@ def expr_fit(pair,R,d):
     assert R>=d
     return Expr(a=A*3**(R-d),c=B)
 
-def verify(t,R,off,d=0,expected=None):
+def verify(t,R,off,d=0,expected=None,coeff=6):
     (C,D,u0,v0),edges=t
     u=expr_fit(u0,R,d);v=expr_fit(v0,R,d)
-    k=Expr(a=6*3**R,c=off-d)
+    k=Expr(a=coeff*3**R,c=off-d)
     guard(C,D,k,u,v)
     if d==0: expected=(1,13,k,Expr(c=-5),7-4*k)
     if expected is not None:assert (C,D,k,u,v)==expected
@@ -118,7 +118,7 @@ def verify(t,R,off,d=0,expected=None):
             if kind=='par':assert ap==1 or dp!=int(name in ('LO','RO'))
             else:
                 assert kind=='hit' and ch is not None
-                n,dep=verify(ch,R,off,d+1,child);nodes+=n;mx=max(mx,dep+1)
+                n,dep=verify(ch,R,off,d+1,child,coeff);nodes+=n;mx=max(mx,dep+1)
     assert len(seen)==2
     return nodes,mx
 
