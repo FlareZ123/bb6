@@ -81,3 +81,8 @@ PurePowerSource.lean connects the exact arithmetic fan to the existing complete_
 
 BranchingBlocksSource passed full source closure in [run 45421542043](https://github.com/FlareZ123/bb6/actions/runs/45421542043).
 
+
+
+## Valuation-bounded exact compressed memoization
+
+ValuationParents.lean replaces the logarithmic full scan with at most v2(Q)+3 attempted arithmetic parents on y>=8, Q=x+y+(x+y)%2. It checks direct, exceptional zero and one parents, and at most one regular candidate per valuation depth. All exact arithmetic equalities and region conditions are checked; its equivalence to RawParent compiled locally with no custom axioms. DirectJump.lean derives a ranked single edge for a whole forced block with r>=1 from Agent42's direct-block theorem; both lemmas compiled locally. CompressedMemo.lean combines these with Agent13's existing exact memoizer and Agent42's height, direct-block, and Agent12's branching-block exclusions, preserving the exact rank bound and integrating a sound bounded additional high stop guard. Source closure is pending. PurePowerSource's first audit printed all six theorem profiles with standard axioms but failed on a census binder inferred as Int rather than Nat; corrected in 5148186299c7c8fb4c6703c3e6bb71993e8f9c4f, dispatched again. The new diagnostic probes explicit pure-power families against the preceding guards and the compressed exact checker.
