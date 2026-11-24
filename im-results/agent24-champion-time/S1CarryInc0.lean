@@ -228,46 +228,34 @@ theorem s1Config_counted_decrement_of_prefix
   have hprefix0 : run tm2 (15+12*r) c0 =
       some ⟨4,h+7,Tpre⟩ := by
     simpa [shiftConfig,Tpre,hhead] using hshift
-  let P : Int → Bool := fun x => Tpre (h+x)
-  have hP : ∀ x, P x = T' x := by
-    intro x
-    simp [P,Tpre]
-  have hP1 : P 1 = true := by simpa [P,Tpre] using h1
-  have hP2 : P 2 = true := by simpa [P,Tpre] using h2
-  have hP3 : P 3 = true := by simpa [P,Tpre] using h3
-  have hP4 : P 4 = true := by simpa [P,Tpre] using h4
-  have hP5 : P 5 = false := by simpa [P,Tpre] using h5
-  have hP6 : P 6 = true := by simpa [P,Tpre] using h6
-  have hpreserveP : ∀ x, 6 < x →
-      P x = c0.tape (h+x) := by
+  have hpreserve' : ∀ x, 6 < x →
+      Tpre (h+x) =
+        (s0Config (markerWord m ++ d0 ++ binDec L n ++ lh)
+          (len+1+r) ((2*q+1)*2^r) b h).tape (h+x) := by
     intro x hx
-    simpa [P,Tpre] using hpreserve x hx
-  have honeP : ∀ i : Nat, i < 3*(b+1) → P (7+(i:Int)) = true := by
+    simpa [s1Config] using hpreserve x hx
+  have hone : ∀ i : Nat, i < 3*(b+1) →
+      Tpre (h+7+(i:Int)) = true := by
     intro i hi
-    rw [hpreserveP (7+(i:Int)) (by omega)]
+    have hpres :
+        Tpre (h+7+(i:Int)) =
+          (s1Config L n m (len+1+r) ((2*q+1)*2^r) b h).tape
+            (h+7+(i:Int)) := by
+      simpa [Int.add_assoc] using hpreserve (7+(i:Int)) (by omega)
+    rw [hpres]
     exact s1Config_carryRightOnes L n m len q r b h hq i hi
-  have hleftP : ∀ x, x ≤ 0 →
-      P x = (s0Config (markerWord m ++ d0 ++ binDec L n ++ lh)
-        (len+1+r) (((2*q+1)*2^r)-1) (b+1) h).tape (h+x) := by
-    intro x hx
-    calc
-      P x = T' x := by simp [P,Tpre]
-      _ = carryLeftOutputBit r
-          (fun y => (s1Config L n m (len+1+r) ((2*q+1)*2^r) b h).tape (h+y)) x :=
-        hleft x hx
-      _ = (s0Config (markerWord m ++ d0 ++ binDec L n ++ lh)
+  have hleft' : ∀ x, x ≤ 0 →
+      Tpre (h+x) =
+        (s0Config (markerWord m ++ d0 ++ binDec L n ++ lh)
           (len+1+r) (((2*q+1)*2^r)-1) (b+1) h).tape (h+x) := by
-        simpa [s1Config] using
-          s1Config_decrement_leftOutput L n m len q r b h hq x hx
-  have hprefix0' : run tm2 (15+12*r)
-      (s0Config (markerWord m ++ d0 ++ binDec L n ++ lh)
-        (len+1+r) ((2*q+1)*2^r) b h) =
-      some ⟨4,h+7,Tpre⟩ := by
-    simpa [c0,s1Config] using hprefix0
+    intro x hx
+    rw [hleft x hx]
+    simpa [s1Config] using
+      s1Config_decrement_leftOutput L n m len q r b h hq x hx
   have hdec := s0Config_counted_decrement_of_prefix
     (markerWord m ++ d0 ++ binDec L n ++ lh)
     (len+1+r) ((2*q+1)*2^r) (((2*q+1)*2^r)-1) b r h Tpre
-    hprefix0' hP1 hP2 hP3 hP4 hP5 hP6 honeP hpreserveP hleftP
+    hprefix0 h1 h2 h3 h4 h5 h6 hone hpreserve' hleft'
   simpa [s1Config] using hdec
 
 /-- Uniform source-level S1 decrement for every 2-adic valuation r,
@@ -367,12 +355,11 @@ theorem s1Config_counted_decrement_even
   obtain ⟨q,r,len,hr,ha,hq⟩ :=
     exists_odd_factor_bounded a z hz hzlt
   have hrpos : 0 < r := by
-    by_contra hnot
-    have hr0 : r=0 := by omega
-    have hodd : ((2*q+1)*2^r)%2=1 := by
-      simp [hr0] <;> omega
-    rw [hr] at heven
-    omega
+    by_cases hr0 : r = 0
+    · rw [hr0, Nat.pow_zero, Nat.mul_one] at hr
+      rw [hr] at heven
+      omega
+    · omega
   have hdec := s1Config_counted_decrement_allPositive
     L n m len q r b h hq hrpos
   have hinput : s1Config L n m a z b h =
