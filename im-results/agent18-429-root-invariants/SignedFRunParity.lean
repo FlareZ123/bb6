@@ -267,6 +267,59 @@ theorem sf_sf_pair_recurrence {m u d v um dm : Nat}
   have hpair := sf_u_formula (v:=um) hdm
   omega
 
+
+/-- Pair-rank update for EF followed by EF. -/
+theorem ef_ef_pair_rank {m u d v um dm : Nat}
+    (hrel : d + 2 * v = 2 * u + 2)
+    (hrun : FRun m u d um dm)
+    (hdm : dm % 8 = 0)
+    (hm : m % 2 = 0) :
+    4 * (ef um dm).1 + v = 4 * u + um + 3 * (m / 2) + 5 := by
+  have hrec := ef_ef_pair_recurrence hrel hrun hdm
+  have hmd : m = 2 * (m / 2) := by
+    have h := Nat.mod_add_div m 2
+    omega
+  omega
+
+/-- Pair-rank update for EF followed by SF. -/
+theorem ef_sf_pair_rank {m u d v um dm : Nat}
+    (hrel : d + 2 * v = 2 * u + 2)
+    (hrun : FRun m u d um dm)
+    (hdm : dm % 8 = 4)
+    (hm : m % 2 = 0) :
+    4 * (sf um dm).1 + v = 4 * u + um + 3 * (m / 2) + 11 := by
+  have hrec := ef_sf_pair_recurrence hrel hrun hdm
+  have hmd : m = 2 * (m / 2) := by
+    have h := Nat.mod_add_div m 2
+    omega
+  omega
+
+/-- Pair-rank update for SF followed by EF. -/
+theorem sf_ef_pair_rank {m u d v um dm : Nat}
+    (hrel : d + 2 * v + 6 = 2 * u)
+    (hrun : FRun m u d um dm)
+    (hdm : dm % 8 = 0)
+    (hm : m % 2 = 0) :
+    4 * (ef um dm).1 + v = 4 * u + um + 3 * (m / 2) + 1 := by
+  have hrec := sf_ef_pair_recurrence hrel hrun hdm
+  have hmd : m = 2 * (m / 2) := by
+    have h := Nat.mod_add_div m 2
+    omega
+  omega
+
+/-- Pair-rank update for SF followed by SF. -/
+theorem sf_sf_pair_rank {m u d v um dm : Nat}
+    (hrel : d + 2 * v + 6 = 2 * u)
+    (hrun : FRun m u d um dm)
+    (hdm : dm % 8 = 4)
+    (hm : m % 2 = 0) :
+    4 * (sf um dm).1 + v = 4 * u + um + 3 * (m / 2) + 7 := by
+  have hrec := sf_sf_pair_recurrence hrel hrun hdm
+  have hmd : m = 2 * (m / 2) := by
+    have h := Nat.mod_add_div m 2
+    omega
+  omega
+
 /-- Every F-run after EF that is followed by a pair has even length. -/
 theorem after_ef_run_even {m u d v um dm : Nat}
     (hrel : d + 2 * v = 2 * u + 2)
@@ -475,6 +528,10 @@ theorem initial_pair_available_iff {t : Nat} :
 #print axioms after_ef_run_even
 #print axioms after_sf_run_even
 
+#print axioms ef_ef_pair_rank
+#print axioms ef_sf_pair_rank
+#print axioms sf_ef_pair_rank
+#print axioms sf_sf_pair_rank
 #print axioms ef_u_formula
 #print axioms sf_u_formula
 #print axioms ef_ef_pair_recurrence
