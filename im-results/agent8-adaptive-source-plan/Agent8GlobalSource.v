@@ -1,4 +1,4 @@
-From BusyCoq Require Import Enumerate62 Agent8WeightedSource Individual62.
+From BusyCoq Require Import Enumerate62 Agent8AdaptiveSource Agent8WeightedSource Individual62.
 From Coq Require Import List Lia Arith NArith.
 Import ListNotations.
 Import TNF_Node.
