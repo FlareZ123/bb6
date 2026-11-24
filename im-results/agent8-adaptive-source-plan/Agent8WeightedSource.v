@@ -14,8 +14,11 @@ Lemma source_halt_transfer (t : TM) h n :
   halts_at t c0 n h.
 Proof.
   intro H. inversion H as [tt c nn q l m r Hrun Hhalt]; subst.
+  (* TC62's halts_at gives a relational run. Bridge through its executable
+     evaluator before transporting to Individual62's relational copy. *)
+  apply <- TC62.TM.multistep_c_spec in Hrun.
   change (multistep_c t n c0 = Some (q,(l,m,r))) in Hrun.
-  apply <- multistep_c_spec in Hrun.
+  apply multistep_c_spec in Hrun.
   econstructor.
   - exact Hrun.
   - exact Hhalt.
