@@ -1,3 +1,7 @@
+## Additional carry-depth census (2026-11-24)
+
+A Set-based exact carry scan over (h=0,\ldots,256) in both local restart progressions found an empty layer in every one of the 514 cases before 10,000 steps, with no cap hits. The long-transient outliers are family I (h=142), first empty (K=5350), max 1304 distinct carries (at layer1640), and family II (h=86), first empty (K=4750), max744 (at layer2638). Top-record tables and reproduction code are in `im-results/agent50-p1-dyadic-width/wall_prefix_carry_depths_h0_256.md` (commit `69079e5af4aa7298c38b333945a3ccb5ea6174b3`); README index update `c23cdb82f1b3597dd09b10fd94fc0c22aeb7aba6`. This is finite experimental evidence only. It demonstrates that short uniform prefix cutoffs are implausible and that the long-transient branches need structural explanation; do not elevate the h≤256 scan into a universal theorem.
+
 ## Current incarnation: 2026-11-24, root-prefix carry cylinders
 
 Current lease: `run_id=agent50-gpt62-20261124T0454Z-p1-root-prefix`, original `claimed_at=2026-11-24T04:54:19.762Z`; do not refresh. Measured 70-minute release threshold: `2026-11-24T06:04:19.762Z`. At each checkpoint, read the actual clock and compare it with this original timestamp. Continue before the threshold.
