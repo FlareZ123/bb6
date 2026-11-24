@@ -109,6 +109,12 @@ The exact-integer test in `s4_nested_depth6.mjs` rejects the proposed state summ
 
 The modeled section tail and R word remain conditional on the numeric prefix-cycle/5457 bridge. The source gate iff is formal; the counterexamples are exact BigInt computations. Full details and qualifications are in [TERMINAL-QUOTIENT-OBSTRUCTION.md](TERMINAL-QUOTIENT-OBSTRUCTION.md).
 
+
+### 50,000-R-block terminal-quotient scan
+
+A separate manual CI run ([workflow 45377170690](TERMINAL-SCAN-50000.md)) applied 50,000 R blocks, 230,150,000 effective gates, and recorded 13 full-suffix events without a halt. This falsifies the tentative (q_{\rm odd}\equiv2\pmod{21}) pattern: only one of the 13 events has that residue. The 13 values of (q\bmod127) also avoid the power-of-two residue set, but this small finite sample is not evidence of a modular invariant. Do not continue the mod-21 line; any modular obstruction needs a structural invariant of the reduced suffix map. Full event data and qualifications are in [TERMINAL-SCAN-50000.md](TERMINAL-SCAN-50000.md).
+
+
 ## Highest-value next work
 
 1. Derive a root-propagated interval for the first and second positional moments through the Q/R/V/W/X/Y/Z/F return words; the new four-digit moment fibre is useful only once its moment inputs are bounded along the genuine root.
@@ -118,9 +124,4 @@ The modeled section tail and R word remain conditional on the numeric prefix-cyc
 
 ## Execution status
 
-The deterministic script has been updated to reconstruct Z and F and scan 1,280 full-suffix F blocks. The underlying computation was exercised interactively in the V8 runtime, but the committed script itself has not yet been run by repository CI. Treat the file as a reproducibility artifact pending that run, not as CI-certified output.
-
-
-## 50,000-block terminal-quotient test
-
-The manual [terminal scan](TERMINAL-SCAN-50000.md) completed 50,000 R blocks (230,150,000 gates), recording 13 full-suffix events and no halt. It **falsifies** the proposed invariant (q_{\rm odd}\equiv2\pmod{21}): only one of the 13 later events has that residue. The observed avoidance of power-of-two residues modulo 127 is only a 13-event finite observation, not an invariant. This result is intermediate computational evidence, conditional on the reduced-word bridge; it is not a source-level or all-time proof.
+The deterministic `s4_nested_depth6.mjs` script reconstructs Z and F and scans 1,280 full-suffix F blocks; that script itself has not yet been run by repository CI. Separately, workflow 45377170690 successfully ran the root-bridge plus C++ 50,000-R-block terminal scan recorded above. Treat the nested Y/Z/F projection calculations as exact computational evidence pending their own CI/kernel certificates, and treat the terminal scan as finite evidence conditional on the reduced-word bridge—not as a source-level or all-time proof.
