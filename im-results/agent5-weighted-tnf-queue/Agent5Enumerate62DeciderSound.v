@@ -1,4 +1,4 @@
-From BusyCoq Require Import Enumerate62.
+From BusyCoq Require Import Enumerate62 Individual62 CTL62 TC62.
 
 Import TNF_Node.
 
