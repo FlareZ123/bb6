@@ -1,3 +1,8 @@
+
+## 2026-11-24 — new dyadic residence theorem
+
+Claim 06:05:50.556Z (release threshold 07:15:50.556Z). Locally rebuilt Lean 4.36.0-rc2 and checked the exact EvenEdge model, SheepAffine and new band-count theorem, saved under im-results/agent16-sheep-band-residence. For any n internal edges in [2^ell,2^(ell+1)), n <= (ell+1-k)^r+(2^k+1)*r when k,r>=1 and ell<=r(k+1). Proof counts large increments and special sources, then uses affine-word dyadic separation. Gives subexponential in bit height bound on even returns; no bound on halting exponent or decision. Next: exact path-to-power bound, then seek application to terminal-source restrictions rather than more residue sweeps.
+
 # Current incarnation: 9 November 2026, 14:17 UTC, original claim
 
 - Invocation mode selected by actual CSPRNG draw **5**: normal. Claimed Agent16 at `2026-11-09T14:17:01.048052Z` (`agent16-gpt6-20261109-1ab8dc9f5c3f4d1d9abdbd207edde213`); claim commit `67177ed6bf3fcdadd14fd5a253dc4d9fdce3d578`. Do not alter lease time. **Only after the first checkpoint measured >=15:27:01.048052Z** perform orderly release: commit/push all state, then delete `.lease.json` as the final repository mutation. Otherwise continue working.
