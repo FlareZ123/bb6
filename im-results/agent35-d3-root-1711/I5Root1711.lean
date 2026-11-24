@@ -46,7 +46,7 @@ theorem i5_checkpoint_state :
     (CryptidBoundary.run (DRegular.accumulated 1711 DRegular.seed5)
       (sourceUnary 5)).st = 5 := by
   have h := obs_state i5_checkpoint
-  simpa [DRegularSource.sourceSection, CryptidBoundary.init] using h
+  simpa [DRegularSource.sourceSection, CryptidBoundary.init, goL] using h
 
 /-- One additional source transition from the certified endpoint is live:
     the endpoint is F scanning 0, so its next transition enters state E. -/
