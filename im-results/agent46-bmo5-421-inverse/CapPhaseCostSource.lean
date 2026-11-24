@@ -7,12 +7,12 @@ namespace CapSieve
 theorem small_root_positive_continues {j s k x : Nat} {w : Int} (hw : 0<w)
     (h : PositiveHistory j w s k x) (hk : 6≤k) (hb : Band k x)
     (hpos : 0<W k x) (hr : Cap.rootOf x≤3)
-    (hc : (6^s:Int)*(6*(j:Int)+35)<2*(P j:Int)) :
+    (hc : (3^s:Int)*(6*(k:Int)+35)<4*(3^(j-k):Int)*(P k:Int)+6+w) :
     ∃ z, Arc z x ∧ ((PositiveHistory j w (s+1) k z ∧ 0<W k z) ∨
       (PositiveHistory j w (s+1) (k-1) z ∧ 0<W (k-1) z)) := by
   have hsafe : P k+3≤x := by
     by_cases he : x≤P k+2
-    · have hh:=positive_boundary_initial_cost hw h he
+    · have hh:=positive_boundary_cost_bandsharp hw h he
       omega
     · omega
   have hp:=p_ge_large hk
