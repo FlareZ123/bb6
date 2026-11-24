@@ -1,6 +1,6 @@
 # Space Needle: four-step cubic gain and exact target cutoff
 
-**Status (24 November 2026):** the universal arithmetic four-edge inequality, finite-prefix induction and executable fuel bound are kernel-checked in Lean 4.36.0-rc2 with only [propext, Classical.choice, Quot.sound]. The original-source adapter is preflighted against declaration-shaped interfaces, with their assumptions visible in the axiom audit. Pinned upstream source acceptance remains outstanding. No Space Needle or BB(6) decision is claimed.
+**Status (24 November 2026):** the universal arithmetic four-edge inequality, finite-prefix induction, executable fuel bound, and original blank-root source wrapper are now kernel-checked. The pinned original-source gate passed [CI run 45328855632](https://github.com/FlareZ123/bb6/actions/runs/45328855632). The audited source-facing theorem profiles are exactly [propext, Classical.choice, Quot.sound]. No Space Needle or BB(6) decision is claimed.
 
 ## Main result
 
@@ -38,10 +38,18 @@ For target d, put X=d+2 and choose
 
 Then H^3≥64L and R^3>X. A four-edge block beginning above m^3 gains G with HG≥m^2. Thus 7H blocks gain at least 7m^2≥(m+1)^3-m^3 for m≥1. Starting positive, induction gives (k+1)^3≤b_(28 H k) whenever that prefix exists. A successful prefix of length ≥28HR ending at X would contradict R^3>X.
 
-[NeedleCubicFuel.lean](NeedleCubicFuel.lean) proves the exact natural-number cutoff. The explicit fuel is O((X log X)^(1/3)) high-level transitions, asymptotically improving O(sqrt X). The constant means the earlier cutoff may remain better for modest targets. This is not a bit-complexity or primitive-step count.
+[NeedleCubicFuel.lean](NeedleCubicFuel.lean) proves the exact natural-number cutoff. The explicit fuel is O((X log X)^(1/3)) high-level transitions, asymptotically improving O(sqrt X). The constants can make the earlier cutoff better for some finite targets. This is not a bit-complexity or primitive-step count.
 
-[NeedleCubicSource.lean](NeedleCubicSource.lean) imports Agent20's existing original source bridge and scanner, and targets cubeScan_spec: cubeScan d=true iff ReachN d. The local interface preflight intentionally reports original_edge and scan_spec assumptions; original-source CI is needed to remove these. The existing manual growth workflow is the suitable acceptance gate.
+## Original-source verification
+
+[NeedleCubicSource.lean](NeedleCubicSource.lean) imports Agent20's original-source bridge and scanner, then proves:
+
+- `original_four_step_cube_gain`: the four-edge inequality for the exact original `highLevelNext`;
+- `original_iterate_cube_bound`: every successful genuine blank-root visit to target d occurs before `cubeFuel d`;
+- `cubeScan_spec`: the executable single-pass test satisfies `cubeScan d = true ↔ ReachN d`.
+
+The existing manual workflow `.github/workflows/agent20-needle-growth.yml` was reused with its `cubic` target. [Run 45328855632](https://github.com/FlareZ123/bb6/actions/runs/45328855632), on repository commit `a5f406ce6eb9d62988a551dfa47d5d454e39e8df`, rebuilt the original machine and dependencies from `google-deepmind/cryptids@ced8f9f44f67a167d5ecc03e687b048c67926371` under the upstream Lean 4.35.0-rc4 toolchain. The run compiled all three cubic modules against those unchanged source definitions. Its `#print axioms` output for the three source-facing theorems above was exactly [propext, Classical.choice, Quot.sound], with no `sorryAx` or unapproved oracle.
 
 ## Remaining work
 
-The unbounded existential over genuine terminal targets d+2=2^K remains open. Faster fixed-target decisions do not decide the machine. The next useful mathematical question is whether longer blocks yield stronger quantitative growth or a history-sensitive terminal invariant. External novelty remains unreviewed.
+The unbounded existential over genuine terminal targets d+2=2^K remains open. The theorem decides each supplied target with a stronger finite cutoff; it does not give a uniform bound on K, exclude every terminal event, or prove the authentic orbit infinite. The next useful mathematical step is a root-sensitive restriction on the terminal-feeder history that closes an unbounded family, not another finite target scan. External novelty remains unreviewed.
