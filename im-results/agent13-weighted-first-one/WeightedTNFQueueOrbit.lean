@@ -12,10 +12,10 @@ def composeStatePerm (e f : StatePerm) : StatePerm where
   backward := fun q => f.backward (e.backward q)
   leftInverse := by
     intro q
-    simp [Function.comp_def, e.leftInverse, f.leftInverse]
+    simp [e.leftInverse, f.leftInverse]
   rightInverse := by
     intro q
-    simp [Function.comp_def, e.rightInverse, f.rightInverse]
+    simp [e.rightInverse, f.rightInverse]
 
 theorem renameMove_comp (e f : StatePerm) (mv : Move) :
     renameMove e (renameMove f mv) =
@@ -29,8 +29,7 @@ theorem renameTable_comp (e f : StatePerm) (m : Machine) :
       renameTable e (renameTable f m) := by
   funext slot
   rcases slot with ⟨q,b⟩
-  simp [renameTable, composeStatePerm, Function.comp_def,
-    e.leftInverse, f.leftInverse, renameMove_comp]
+  simp [renameTable, composeStatePerm, renameMove_comp]
 
 /-- A root-fixing state renaming preserves whether state zero has a
     zero-writing successor. -/
