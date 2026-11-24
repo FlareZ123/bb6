@@ -70,7 +70,7 @@ theorem sourceWall_noPrefix_of_carry
 theorem sourceWall_excludes_familyI_h1
     (t b d m z u : Nat)
     (hU : 1058*u+636 = 17*2^(5362+595056*(1+2^56*t)))
-    (hWallCost : m = 14*u-(5362+595056*(1+2^56*t))+5)
+    (hWallCost : m = 14*u-(5362+595056*(1+2^56*t))+6)
     (hsrc : CountCone
       (14*2^(5362+595056*(1+2^56*t))-2*(5362+595056*(1+2^56*t))-16)
       3 b d m z)
@@ -79,7 +79,7 @@ theorem sourceWall_excludes_familyI_h1
   let n := 5362+595056*(1+2^56*t)
   have hn : 14 ≤ n := by dsimp [n]; omega
   have hU' : 1058*u+636 = 17*2^n := by simpa [n] using hU
-  have hWallCost' : m = 14*u-n+5 := by simpa [n] using hWallCost
+  have hWallCost' : m = 14*u-n+6 := by simpa [n] using hWallCost
   have hsrc' : CountCone (14*2^n-2*n-16) 3 b d m z := by
     simpa [n] using hsrc
   have hw' : b+4*m+4*n+20 = 12*2^n := by simpa [n] using hw
@@ -98,7 +98,7 @@ theorem sourceWall_excludes_familyI_h1
 theorem sourceWall_excludes_familyI_h2
     (t b d m z u : Nat)
     (hU : 1058*u+636 = 17*2^(5362+595056*(2+2^8*t)))
-    (hWallCost : m = 14*u-(5362+595056*(2+2^8*t))+5)
+    (hWallCost : m = 14*u-(5362+595056*(2+2^8*t))+6)
     (hsrc : CountCone
       (14*2^(5362+595056*(2+2^8*t))-2*(5362+595056*(2+2^8*t))-16)
       3 b d m z)
@@ -107,7 +107,7 @@ theorem sourceWall_excludes_familyI_h2
   let n := 5362+595056*(2+2^8*t)
   have hn : 14 ≤ n := by dsimp [n]; omega
   have hU' : 1058*u+636 = 17*2^n := by simpa [n] using hU
-  have hWallCost' : m = 14*u-n+5 := by simpa [n] using hWallCost
+  have hWallCost' : m = 14*u-n+6 := by simpa [n] using hWallCost
   have hsrc' : CountCone (14*2^n-2*n-16) 3 b d m z := by
     simpa [n] using hsrc
   have hw' : b+4*m+4*n+20 = 12*2^n := by simpa [n] using hw
@@ -126,7 +126,7 @@ theorem sourceWall_excludes_familyI_h2
 theorem sourceWall_excludes_familyII_h1
     (t b d m z u : Nat)
     (hU : 1198*u+712 = 87*2^(9538+703248*(1+2^10*t)))
-    (hWallCost : m = 14*u-(9538+703248*(1+2^10*t))+5)
+    (hWallCost : m = 14*u-(9538+703248*(1+2^10*t))+6)
     (hsrc : CountCone
       (14*2^(9538+703248*(1+2^10*t))-2*(9538+703248*(1+2^10*t))-16)
       3 b d m z)
@@ -135,7 +135,7 @@ theorem sourceWall_excludes_familyII_h1
   let n := 9538+703248*(1+2^10*t)
   have hn : 14 ≤ n := by dsimp [n]; omega
   have hU' : 1198*u+712 = 87*2^n := by simpa [n] using hU
-  have hWallCost' : m = 14*u-n+5 := by simpa [n] using hWallCost
+  have hWallCost' : m = 14*u-n+6 := by simpa [n] using hWallCost
   have hsrc' : CountCone (14*2^n-2*n-16) 3 b d m z := by
     simpa [n] using hsrc
   have hw' : b+4*m+4*n+20 = 12*2^n := by simpa [n] using hw
@@ -154,7 +154,7 @@ theorem sourceWall_excludes_familyII_h1
 theorem sourceWall_excludes_familyII_h2
     (t b d m z u : Nat)
     (hU : 1198*u+712 = 87*2^(9538+703248*(2+2^18*t)))
-    (hWallCost : m = 14*u-(9538+703248*(2+2^18*t))+5)
+    (hWallCost : m = 14*u-(9538+703248*(2+2^18*t))+6)
     (hsrc : CountCone
       (14*2^(9538+703248*(2+2^18*t))-2*(9538+703248*(2+2^18*t))-16)
       3 b d m z)
@@ -163,7 +163,7 @@ theorem sourceWall_excludes_familyII_h2
   let n := 9538+703248*(2+2^18*t)
   have hn : 14 ≤ n := by dsimp [n]; omega
   have hU' : 1198*u+712 = 87*2^n := by simpa [n] using hU
-  have hWallCost' : m = 14*u-n+5 := by simpa [n] using hWallCost
+  have hWallCost' : m = 14*u-n+6 := by simpa [n] using hWallCost
   have hsrc' : CountCone (14*2^n-2*n-16) 3 b d m z := by
     simpa [n] using hsrc
   have hw' : b+4*m+4*n+20 = 12*2^n := by simpa [n] using hw

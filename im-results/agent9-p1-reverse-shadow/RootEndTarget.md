@@ -50,8 +50,8 @@ No root-end exclusion is claimed here.
 
 ## 5. Distinguish restart cost from wall cost
 
-The symbol `m_R=14u-2n-3` in the reverse-unit analysis is the cumulative cost of the restart state measured from the root; it is **not** the terminal wall's `CountCone` cost. The locally source-valid suffix from that restart state to the wall consists of `s=(n+2)/3` depth-two edges (cost 3 each, total `n+2`) followed by three shallow/low edges of total cost 6. Thus the terminal wall cost is
+The symbol `m_R=14u-2n-3` in the reverse-unit analysis is the cumulative cost of the restart state measured from the root; it is **not** the terminal wall's `CountCone` cost. The locally source-valid suffix from that restart state to the wall consists of `s=(n+2)/3` depth-two edges (cost 3 each, total `n+2`) followed by three shallow/low edges of total cost 7. Thus the terminal wall cost is
 ```
-m_wall = m_R + (n+2) + 6 = 14u-n+5.
+m_wall = m_R + (n+2) + 7 = 14u-n+6.
 ```
-The source-wall carry wrappers use `m_wall` in the `CountCone` and wall identity. The reverse-unit terminal target in §§1–2 uses `m_R`. Confusing these two costs would make the source composition inapplicable; the PR #109 wrapper has been corrected to use `m_wall=14u-n+5`.
+The source-wall carry wrappers use `m_wall` in the `CountCone` and wall identity. The reverse-unit terminal target in §§1–2 uses `m_R`. Confusing these two costs would make the source composition inapplicable; the PR #109 wrapper has been corrected to use `m_wall=14u-n+6`.
