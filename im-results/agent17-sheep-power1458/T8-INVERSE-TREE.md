@@ -4,7 +4,7 @@
 
 This extends the exact direct-parent census in this directory. It uses the original even-return source relation at every inverse step, not a finite-horizon trajectory search.
 
-## Candidate theorem
+## Accepted subfamily theorem
 
 Let
 \[
@@ -22,7 +22,7 @@ Equivalently, the exponent indices are
 j=11\,664+15\,273\,519\,861\,600\,k.
 \]
 
-This is a candidate theorem, not yet Lean-certified. The reproducible exact-arithmetic certificate is [`inverse_tree_t8_certificate.py`](inverse_tree_t8_certificate.py). Keep it in `im-results/` until independent review, local Lean compilation, and the source-level axiom audit succeed.
+This one-class subfamily is now included in the compiled `SheepPower1458.noEvenReachFiveFamilies` theorem from [CI 45293408209](https://github.com/FlareZ123/bb6/actions/runs/45293408209), with transitive axiom profile `[propext, Classical.choice, Quot.sound]` and no `sorryAx`. It remains a partial exclusion, not a Sheep machine or BB(6) decision. Keep it in `im-results/`.
 
 ## Why the direct-parent gate does not cover this class
 
