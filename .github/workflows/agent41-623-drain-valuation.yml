@@ -9,6 +9,7 @@ on:
         options:
           - drain-valuation
           - fatal-family
+          - general-corpus
         default: drain-valuation
 
 permissions:
@@ -51,7 +52,7 @@ jobs:
           lake env lean -o .lake/build/lib/lean/Agent49ParitySource.olean Agent49ParitySource.lean
 
       - name: Compile the fatal-family source exclusion and audit axioms
-        if: ${{ inputs.check == 'fatal-family' }}
+        if: ${{ inputs.check == 'fatal-family' || inputs.check == 'general-corpus' }}
         working-directory: /tmp/cryptids
         run: |
           set -euo pipefail
@@ -64,67 +65,72 @@ jobs:
           compile "$p/FlatDrainSource.lean" Agent49FlatDrainSource
           compile "$p/DrainCorrectionGrowth.lean" Agent49DrainCorrectionGrowth
           compile "$p/InverseWindowSource.lean" Agent49InverseWindowSource
-          for m in FatalFamilyInverseArithmetic FatalFamilyInverseActual FatalFamilyWindow FatalFamilyInfinite FatalFamilyDigitDecoder NearPowerDrain FatalFamilySource FatalFamilyDigitDecoderSource FatalFamilyDecoderHuge NearPowerFastStats NearPowerCertificate NearPowerTree NearPowerTreeSource NearPowerGenerate NearPowerChecks NearPowerExamples NearPowerPump NearPowerAffine NearPowerSymbolicStats NearPowerSymbolic NearPowerSymbolicTree NearPowerSymbolicSource NearPowerFamilyCore NearPowerFamilySource NearPowerAffineFatal; do
+          for m in FatalFamilyInverseArithmetic FatalFamilyInverseActual FatalFamilyWindow FatalFamilyInfinite FatalFamilyDigitDecoder NearPowerDrain FatalFamilySource FatalFamilyDigitDecoderSource FatalFamilyDecoderHuge NearPowerFastStats NearPowerCertificate NearPowerTree NearPowerTreeSource NearPowerGenerate NearPowerChecks NearPowerExamples NearPowerPump NearPowerAffine NearPowerSymbolicStats NearPowerSymbolic NearPowerSymbolicTree NearPowerSymbolicSource NearPowerFamilyCore NearPowerFamilySource NearPowerAffineFatal NearPowerGeneralFamilyCore; do
             compile "$q/$m.lean" "$m"
           done
-          python3 "$GITHUB_WORKSPACE/$q/emit_corpus.py" > NearPowerFamilyCorpus.lean
-          lake env lean -o .lake/build/lib/lean/NearPowerFamilyCorpus.olean NearPowerFamilyCorpus.lean 2>&1 | tee -a fatal-family.log
+          if [[ "${{ inputs.check }}" == "fatal-family" ]]; then
+            python3 "$GITHUB_WORKSPACE/$q/emit_corpus.py" > NearPowerFamilyCorpus.lean
+            lake env lean -o .lake/build/lib/lean/NearPowerFamilyCorpus.olean NearPowerFamilyCorpus.lean 2>&1 | tee -a fatal-family.log
+          else
+            python3 "$GITHUB_WORKSPACE/$q/emit_general_corpus.py" > NearPowerGeneralFamilyCorpus.lean
+            lake env lean -o .lake/build/lib/lean/NearPowerGeneralFamilyCorpus.olean NearPowerGeneralFamilyCorpus.lean 2>&1 | tee -a fatal-family.log
+          fi
           if grep -q 'sorryAx' fatal-family.log; then
             echo 'sorryAx detected'
             exit 1
           fi
 
       - name: Compile the 3-adic evaluator normal form
-        if: ${{ inputs.check != 'fatal-family' }}
+        if: ${{ inputs.check == 'drain-valuation' }}
         working-directory: /tmp/cryptids
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent41-623-3euclidean/DrainValuationNormalForm.lean" Agent41DrainValuationNormalForm.lean
           lake env lean -o .lake/build/lib/lean/Agent41DrainValuationNormalForm.olean Agent41DrainValuationNormalForm.lean
 
       - name: Compile the exact weighted B-drain cocycle
-        if: ${{ inputs.check != 'fatal-family' }}
+        if: ${{ inputs.check == 'drain-valuation' }}
         working-directory: /tmp/cryptids
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent22-623-root-ray-20k/ExactDrainCocycleSource.lean" Agent22ExactDrainCocycleSource.lean
           lake env lean -o .lake/build/lib/lean/Agent22ExactDrainCocycleSource.olean Agent22ExactDrainCocycleSource.lean
 
       - name: Compile the three-state drain digit transducer
-        if: ${{ inputs.check != 'fatal-family' }}
+        if: ${{ inputs.check == 'drain-valuation' }}
         working-directory: /tmp/cryptids
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent1-machine623-3euclidean-correction-bounds/DrainDigitTransducerCarry.lean" DrainDigitTransducerCarry.lean
           lake env lean -o .lake/build/lib/lean/DrainDigitTransducerCarry.olean DrainDigitTransducerCarry.lean
 
       - name: Compile signed coordinate correction normal form
-        if: ${{ inputs.check != 'fatal-family' }}
+        if: ${{ inputs.check == 'drain-valuation' }}
         working-directory: /tmp/cryptids
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent1-machine623-3euclidean-correction-bounds/SignedCoordinateNormalForm.lean" Agent1SignedCoordinateNormalForm.lean
           lake env lean -o .lake/build/lib/lean/Agent1SignedCoordinateNormalForm.olean Agent1SignedCoordinateNormalForm.lean
 
       - name: Compile the source-exact drain/digit-statistics bridge
-        if: ${{ inputs.check != 'fatal-family' }}
+        if: ${{ inputs.check == 'drain-valuation' }}
         working-directory: /tmp/cryptids
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent1-machine623-3euclidean-correction-bounds/DrainDigitStatsSource.lean" Agent1DrainDigitStatsSource.lean
           lake env lean -o .lake/build/lib/lean/Agent1DrainDigitStatsSource.olean Agent1DrainDigitStatsSource.lean
 
       - name: Compile the source-drain mass-index bridge
-        if: ${{ inputs.check != 'fatal-family' }}
+        if: ${{ inputs.check == 'drain-valuation' }}
         working-directory: /tmp/cryptids
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent1-machine623-3euclidean-correction-bounds/DrainDigitSourceBridge.lean" Agent1DrainDigitSourceBridge.lean
           lake env lean -o .lake/build/lib/lean/Agent1DrainDigitSourceBridge.olean Agent1DrainDigitSourceBridge.lean
 
       - name: Audit source-drain mass-index theorem axioms
-        if: ${{ inputs.check != 'fatal-family' }}
+        if: ${{ inputs.check == 'drain-valuation' }}
         working-directory: /tmp/cryptids
         run: |
           printf 'import Agent1DrainDigitSourceBridge\n#print axioms BB6.Agent1DrainDigitSourceBridge.sourceDrainLength_le_of_two_mul_lt_pow\n#print axioms BB6.Agent1DrainDigitSourceBridge.sourceDrainLength_le_of_mass_index\n' > Agent1DrainLengthAxiomAudit.lean
           lake env lean Agent1DrainLengthAxiomAudit.lean
 
       - name: Compile source-derived reset and affine carry bridge
-        if: ${{ inputs.check != 'fatal-family' }}
+        if: ${{ inputs.check == 'drain-valuation' }}
         working-directory: /tmp/cryptids
         run: |
           set -euo pipefail
@@ -138,21 +144,21 @@ jobs:
           fi
 
       - name: Audit the source drain/digit bridge axioms
-        if: ${{ inputs.check != 'fatal-family' }}
+        if: ${{ inputs.check == 'drain-valuation' }}
         working-directory: /tmp/cryptids
         run: |
           printf 'import Agent1DrainDigitStatsSource\\n#print axioms BB6.Agent1DrainDigitStatsSource.drainB_digit_transducer\\n' > Agent1DrainDigitStatsAxiomAudit.lean
           lake env lean Agent1DrainDigitStatsAxiomAudit.lean
 
       - name: Compile integer carry transducer bounds
-        if: ${{ inputs.check != 'fatal-family' }}
+        if: ${{ inputs.check == 'drain-valuation' }}
         working-directory: /tmp/cryptids
         run: |
           cp "$GITHUB_WORKSPACE/im-results/agent41-623-integer-carry-transducer/IntegerCarryTransducer.lean" Agent41IntegerCarryTransducer.lean
           lake env lean -o .lake/build/lib/lean/Agent41IntegerCarryTransducer.olean Agent41IntegerCarryTransducer.lean
 
       - name: Audit theorem axioms
-        if: ${{ inputs.check != 'fatal-family' }}
+        if: ${{ inputs.check == 'drain-valuation' }}
         working-directory: /tmp/cryptids
         run: |
           printf 'import Agent41IntegerCarryTransducer\n#print axioms BB6.Agent41DrainValuationNormalForm.evalA_3adic_run\n#print axioms BB6.Agent41IntegerCarryTransducer.corrections_bounded\n#print axioms BB6.Agent41IntegerCarryTransducer.leftXCarry_closed\n#print axioms BB6.Agent41IntegerCarryTransducer.leftYCarry_closed\n#print axioms BB6.Agent41IntegerCarryTransducer.rightXCarry_closed\n#print axioms BB6.Agent41IntegerCarryTransducer.rightYCarry_closed\n#print axioms BB6.Agent41IntegerCarryTransducer.ternaryDigit_range\n#print axioms BB6.Agent41IntegerCarryTransducer.ternaryDigit_decomposition\n' > Agent41IntegerCarryAxiomAudit.lean
