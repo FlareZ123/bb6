@@ -90,8 +90,8 @@ def read(p):
     for a in range(24):
         c=p.copy();c[s]=a;kids.append(read(c))
     return f'.split {n} {slot(s)} (byMove [\n'+',\n'.join(kids[a] for a in ORDER)+'])'
-header='namespace BB6.Agent7F1"+tag+"\nopen BB6Coverage BB6Coverage.FAR BB6.Agent13BlankDelay BB6.Agent50TNFPilot BB6.Agent31ThreeHole\nset_option maxRecDepth 100000\nset_option maxHeartbeats 0\n'
-end='\nend BB6.Agent7Wide132\n'
+header='namespace BB6.Agent7F1'+tag+'\nopen BB6Coverage BB6Coverage.FAR BB6.Agent13BlankDelay BB6.Agent50TNFPilot BB6.Agent31ThreeHole\nset_option maxRecDepth 100000\nset_option maxHeartbeats 0\n'
+end='\nend BB6.Agent7F1'+tag+'\n'
 p=parse(PARENT)
 kind,n,s=next(lines).split(); assert kind=="S"; n,s=int(n),int(s)
 counts["S"]+=1
