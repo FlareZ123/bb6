@@ -65,14 +65,24 @@ This is empirical evidence only: it does not prove the hole is never reached aft
 node im-results/agent7-far/extract_depth_eight_residuals.js --one-hole --simulate-steps=1000000
 ```
 
-The next useful FAR work is on these 101 one-hole residuals, not on the six growth-covered two-hole tables. Representative targets from different hole positions include:
+Four representative one-hole targets have now produced universal FAR nonhalting certificates. Each generated `hard1` theorem was accepted by Lean with only `propext`, `Classical.choice`, and `Quot.sound`:
 
-- Parent 85, F/0 hole: `1RB0LD_1RC1LF_0RD1LA_1LD1RE_1RD0LB_---0LA`
-- Parent 114, A/1 hole: `1RB---_1RC1LF_0RD0RC_1LD1RE_0LB0LB_0RC0LA`
-- Parent 116, F/0 hole: `1RB1LA_1RC1LF_0RD1RC_1LD1RE_0LA0LB_---0LA`
-- Parent 128, E/0 hole: `1RB0LB_1RC1LF_0RD1RF_1LD1RE_---0LB_1RB0LA`
+| Parent/tree | Exact one-hole table | DFA/orientation | Run |
+|---|---|---|---|
+| 85 / tree85 | `1RB0LD_1RC1LF_0RD1LA_1LD1RE_1RD0LB_---0LA` | 4 / original | [45469713882](https://github.com/FlareZ123/bb6/actions/runs/45469713882) |
+| 114 / tree114 | `1RB---_1RC1LF_0RD0RC_1LD1RE_0LB0LB_0RC0LA` | 1 / reflected | [45469722441](https://github.com/FlareZ123/bb6/actions/runs/45469722441) |
+| 116 / tree116 | `1RB1LA_1RC1LF_0RD1RC_1LD1RE_0LA0LB_---0LA` | 6 / original | [45469732966](https://github.com/FlareZ123/bb6/actions/runs/45469732966) |
+| 128 / tree128 | `1RB0LB_1RC1LF_0RD1RF_1LD1RE_---0LB_1RB0LA` | 5 / original | [45469741496](https://github.com/FlareZ123/bb6/actions/runs/45469741496) |
 
-No FAR result has yet been claimed for these four one-hole targets.
+The corresponding weighted TNF leaves are `p85_0_leaf`, `p114_0_leaf`, `p116_0_leaf`, and `p128_0_leaf` in `DepthEightFAR.lean`. [Regression run 45470400658](https://github.com/FlareZ123/bb6/actions/runs/45470400658) compiles these four plus the six growth-covered alternatives and the residual exporter, rejecting `sorryAx` and `native_decide`.
+
+Exact paths to the open leaves, using `moveIndex = 4*next + 2*write + right`, are:
+- `DepthEightSiblingData1.lean`, `tree85`: A/1=`0LD` (12), then E/0=`1RD` (15).
+- `DepthEightSiblingData1.lean`, `tree114`: E/0=`0LB` (4), then F/0=`0RC` (9).
+- `DepthEightSiblingData2.lean`, `tree116`: E/0=`0LA` (0), then A/1=`1LA` (2).
+- `DepthEightSiblingData4.lean`, `tree128`: F/0=`1RB` (7), then A/1=`0LB` (4).
+
+These four are genuine members of the 101-entry `siblingFinalRoster`, unlike the six growth-covered two-hole tables. The proof objects therefore close four of the 101 unresolved leaves; the shared `siblingFinalRoster_count` remains 101 until Agent 50 integrates these paths into the tree. After that integration, 97 one-hole leaves will remain.
 
 ## Canonical-search to weighted-TNF bridge
 
