@@ -26,19 +26,19 @@ Lemma sweep_open v n :
     (B,(sweep_ones n sweep_zero,S1,sweep_zero)).
 Proof.
   unfold sweep_end.
-  eapply progress_intro; [apply step_left; reflexivity|].
+  eapply progress_intro; [eapply step_left; reflexivity|].
   cbn [move_left sweep_ones hd tl].
-  eapply evstep_step; [apply step_right; reflexivity|].
+  eapply evstep_step; [eapply step_right; reflexivity|].
   cbn [move_right hd tl].
-  eapply evstep_step; [apply step_left; reflexivity|].
+  eapply evstep_step; [eapply step_left; reflexivity|].
   cbn [move_left hd tl].
-  eapply evstep_step; [apply step_right; reflexivity|].
+  eapply evstep_step; [eapply step_right; reflexivity|].
   cbn [move_right hd tl].
-  eapply evstep_step; [apply step_left; reflexivity|].
+  eapply evstep_step; [eapply step_left; reflexivity|].
   cbn [move_left hd tl].
   apply evstep_refl'.
   unfold sweep_zero.
-  rewrite <- const_unfold.
+  repeat rewrite <- const_unfold.
   reflexivity.
 Qed.
 
@@ -48,11 +48,11 @@ Lemma sweep_left_run v n r :
 Proof.
   revert r; induction n as [|n IH]; intro r.
   - cbn [sweep_ones].
-    eapply evstep_step; [apply step_left; reflexivity|].
+    eapply evstep_step; [eapply step_left; reflexivity|].
     cbn [move_left sweep_zero hd tl].
     constructor.
   - cbn [sweep_ones].
-    eapply evstep_step; [apply step_left; reflexivity|].
+    eapply evstep_step; [eapply step_left; reflexivity|].
     cbn [move_left hd tl].
     specialize (IH (Cons S1 r)).
     rewrite sweep_ones_push in IH.
@@ -64,22 +64,22 @@ Lemma sweep_cross v l r :
     (C,(Cons S1 (Cons S1 l),hd r,tl r)).
 Proof.
   destruct v.
-  - eapply evstep_step; [apply step_left; reflexivity|].
+  - eapply evstep_step; [eapply step_left; reflexivity|].
     cbn [move_left hd tl].
-    eapply evstep_step; [apply step_right; reflexivity|].
+    eapply evstep_step; [eapply step_right; reflexivity|].
     cbn [move_right hd tl].
-    eapply evstep_step; [apply step_right; reflexivity|].
+    eapply evstep_step; [eapply step_right; reflexivity|].
     cbn [move_right hd tl].
     constructor.
-  - eapply evstep_step; [apply step_left; reflexivity|].
+  - eapply evstep_step; [eapply step_left; reflexivity|].
     cbn [move_left hd tl].
-    eapply evstep_step; [apply step_right; reflexivity|].
+    eapply evstep_step; [eapply step_right; reflexivity|].
     cbn [move_right hd tl].
-    eapply evstep_step; [apply step_left; reflexivity|].
+    eapply evstep_step; [eapply step_left; reflexivity|].
     cbn [move_left hd tl].
-    eapply evstep_step; [apply step_right; reflexivity|].
+    eapply evstep_step; [eapply step_right; reflexivity|].
     cbn [move_right hd tl].
-    eapply evstep_step; [apply step_right; reflexivity|].
+    eapply evstep_step; [eapply step_right; reflexivity|].
     cbn [move_right hd tl].
     constructor.
 Qed.
@@ -104,14 +104,14 @@ Lemma sweep_grow v n :
 Proof.
   eapply progress_evstep_trans; [apply sweep_open|].
   eapply evstep_trans; [apply sweep_left_run|].
-  eapply evstep_step; [apply step_right; reflexivity|].
+  eapply evstep_step; [eapply step_right; reflexivity|].
   exact (sweep_right_run v n sweep_zero).
 Qed.
 
 Lemma sweep_start v : multistep (sweep_tm v) (S (S O)) c0 (sweep_end (S O)).
 Proof.
-  eapply multistep_S; [apply step_right; reflexivity|].
-  eapply multistep_S; [apply step_right; reflexivity|].
+  eapply multistep_S; [eapply step_right; reflexivity|].
+  eapply multistep_S; [eapply step_right; reflexivity|].
   constructor.
 Qed.
 
