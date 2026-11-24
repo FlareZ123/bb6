@@ -19,6 +19,12 @@ theorem cover_of_remaining_roster
   · exact hBound
   · exact (hLeaves e he).sound m hcompat
 
+/-- WeightedBound is monotone in its numeric threshold. -/
+theorem weightedBound_mono_local {A B : Nat} (hAB : A ≤ B)
+    {m : Machine} (h : WeightedBound A m) : WeightedBound B m := by
+  intro k d hk hd
+  exact Nat.le_trans (h k d hk hd) hAB
+
 /-- Lift the composed 395 root cover to any requested larger weighted bound. -/
 theorem firstOne_cover_at_bound (B : Nat) (hB : 395 ≤ B)
     (hLeaves : ∀ e ∈ remainingRootRoster,
@@ -28,12 +34,12 @@ theorem firstOne_cover_at_bound (B : Nat) (hB : 395 ≤ B)
   intro m hm
   have hmRoot : compatible BB6.Agent50TNFPilot.root m := by
     simpa [BB6.Agent50TNFPilot.root] using hm
-  exact weightedBound_mono hB
+  exact weightedBound_mono_local hB
     ((cover_of_remaining_roster hLeaves).sound m hmRoot)
 
 /-- Turn the 124 residual Covers into the normalized certificate consumed by
     the existing universal raw-machine upper-bound theorem. -/
-theorem tnf_certificate_of_remaining_roster (B : Nat) (hB : 395 ≤ B)
+noncomputable def tnf_certificate_of_remaining_roster (B : Nat) (hB : 395 ≤ B)
     (hLeaves : ∀ e ∈ remainingRootRoster,
       Cover (WeightedBound 395) e.2) :
     WeightedTNFCertificate B BB6.CoverageAdapter.firstOneCylinder 2 :=
