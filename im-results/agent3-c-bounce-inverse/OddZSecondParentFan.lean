@@ -17,7 +17,7 @@ open BB6.Agent46
 def oddZM (z : Nat) : Nat := 512*z+67
 
 def oddZParam (z : Nat) : Nat :=
-  2^(2*oddZM z-5)-6*z-1
+  2^(2*oddZM z-5)-(6*z+1)
 
 def oddZSecondLeft (z : Nat) : Nat :=
   (173*oddZParam z+15)/4
@@ -58,7 +58,7 @@ private theorem oddZ_param_large (z : Nat) (hz : z%16=1) :
 private theorem oddZ_param_sum (z : Nat) (hz : z%16=1) :
     oddZParam z+6*z+1=2^(2*oddZM z-5) := by
   unfold oddZParam
-  omega
+  exact Nat.sub_add_cancel (oddZ_param_large z hz)
 
 theorem oddZ_param_mod16 (z : Nat) (hz : z%16=1) :
     oddZParam z%16=9 := by
@@ -110,19 +110,20 @@ theorem oddZ_second_parity_size (z : Nat) (hz : z%16=1) :
   · unfold oddZSecondRight
     omega
 
+private theorem oddZ_affine_mass_cost (u : Nat)
+    (hA : 4*((173*u+15)/4)=173*u+15)
+    (hK : 8*((1875*u+245)/8)=1875*u+245) :
+    8*((173*u+15)/4+(1875*u+245)/8+1)=2221*u+283 ∧
+    (173*u+15)/4+2*((1875*u+245)/8)=512*u+65 := by
+  constructor <;> omega
+
 theorem oddZ_second_mass_cost (z : Nat) (hz : z%16=1) :
     8*(oddZSecondLeft z+oddZSecondRight z+1)=
       2221*oddZParam z+283 ∧
     oddZSecondLeft z+2*oddZSecondRight z=
       512*oddZParam z+65 := by
   obtain ⟨hA,hK⟩ := oddZ_second_divisions z hz
-  constructor
-  · change 8*((173*oddZParam z+15)/4+
-      (1875*oddZParam z+245)/8+1)=2221*oddZParam z+283
-    omega
-  · change (173*oddZParam z+15)/4+
-      2*((1875*oddZParam z+245)/8)=512*oddZParam z+65
-    omega
+  exact oddZ_affine_mass_cost (oddZParam z) hA hK
 
 private theorem oddZ_G_lt_power (z : Nat) (hz : z%16=1) :
     2221*z+323 < 2^(2*oddZM z-8) := by
