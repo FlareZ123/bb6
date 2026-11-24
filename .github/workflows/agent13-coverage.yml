@@ -5,7 +5,7 @@ on:
       target:
         description: 'Source closure to verify'
         type: choice
-        options: [legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole, weighted-tnf-four-hole, weighted-tnf-four-hole-sibling, weighted-tnf-r1-sweep, queue-orbit, weighted-tnf-roster-convergence, weighted-tnf-roster-agent47-graft, weighted-tnf-pure-residuals, weighted-tnf-raw99, weighted-tnf-raw103, weighted-tnf-roster-composition, weighted-tnf-agent3-siblings, weighted-tnf-raw85-parent-check, weighted-tnf-raw91, weighted-tnf-raw87, weighted-tnf-raw83-pump, weighted-tnf-agent10-multi, weighted-tnf-agent10-five-new, weighted-tnf-agent10-five-roster, weighted-tnf-agent10-raw106, weighted-tnf-raw63-counter, weighted-tnf-raw61-witnesses, weighted-tnf-agent10-single]
+        options: [legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole, weighted-tnf-four-hole, weighted-tnf-four-hole-sibling, weighted-tnf-r1-sweep, queue-orbit, weighted-tnf-roster-convergence, weighted-tnf-roster-agent47-graft, weighted-tnf-pure-residuals, weighted-tnf-raw99, weighted-tnf-raw103, weighted-tnf-roster-composition, weighted-tnf-agent3-siblings, weighted-tnf-raw85-parent-check, weighted-tnf-raw91, weighted-tnf-raw87, weighted-tnf-raw83-pump, weighted-tnf-agent10-multi, weighted-tnf-agent10-five-new, weighted-tnf-agent10-five-roster, weighted-tnf-agent10-raw106, weighted-tnf-raw63-counter, weighted-tnf-raw61-witnesses, weighted-tnf-prefix-single, weighted-tnf-agent10-single]
         default: legacy
       raw_id:
         description: 'Single Agent 10 residual index (single target only)'
@@ -419,6 +419,26 @@ jobs:
             echo "Forbidden proof placeholder or native_decide found in raw63 closure" >&2
             exit 1
           fi
+
+      - name: Check one cylinder with the prefix-sharing checker
+        if: inputs.target == 'weighted-tnf-prefix-single'
+        env:
+          RAW_ID: ${{ inputs.raw_id }}
+        run: |
+          set -euo pipefail
+          case "$RAW_ID" in 61|63) ;; *) exit 2 ;; esac
+          python im-results/agent13-coverage/unpack.py
+          if [[ "$RAW_ID" == 61 ]]; then
+            for emitter in tripling recursive_unary residue_unary multiphase d120 language353 a244; do
+              python im-results/agent48-raw61/emit_${emitter}.py
+            done
+          else
+            python im-results/agent48-raw63-counter/emit_counter.py
+          fi
+          python im-results/agent10-tnf-multipump/generate.py "$RAW_ID"
+          python im-results/agent48-prefix-audit/switch_generated_checks.py "$RAW_ID"
+          python tools/lean_compile_closure.py --workdir /tmp/a48-prefix --jobs 4 "im-results/agent10-tnf-multipump/Raw${RAW_ID}Data.lean" | tee /tmp/a48-prefix.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a48-prefix.log; then exit 1; fi
 
       - name: Check raw61 nonhalting source witnesses and candidate generation
         if: inputs.target == 'weighted-tnf-raw61-witnesses'
