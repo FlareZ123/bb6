@@ -133,3 +133,5 @@ From Agent 23: the six full-P residual indices 30,286,350,1614,2990,3342 pass a 
 Direct local git DNS failed; extracted supplied Lean 4.36.0-rc2 successfully. Next: compile source wrapper and scale certified checks; do not re-run six exploratory scans. No new workflows.
 
 Generic cone_no_reach composition now compiles with ordinary axioms only (FullConeCertLogic.lean), using explicit source facts; source_facts instantiation drafted in FullConeCertSource.lean. ExactEndpoint already accepted in CI 45386616971. Compile the wrapper and then certify the five larger cases; one batched local native_decide attempt timed out, no trusted-native result claimed.
+
+Original-source proof complete at caa684912358229e46bb802abeda8292c7ea407e; n30 kernel checked. Segmented kernel method for n350 also fully checked: 8-layer chunks, 74 total, 10 Part modules and Cert350Proof, standard axioms only. Reusable generator and composition proof committed. Four remaining larger certificates need kernel-only proofs, three have native_decide results with explicit extra axioms. Prioritize efficient source closure over repeating scan.
