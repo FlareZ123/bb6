@@ -71,3 +71,18 @@ The new complement is exactly the old selected family with all genuine lower-hid
 ## Reproduction
 
 Run python3 audit_h4_all_hidden.py. It uses only standard Python and exact arithmetic, checks all complete finite periods for h<=6, the h=7,b=3 row, the high-valuation implication, disjointness, and two literal counterexamples. The special-source proof is already Lean-kernel checked, but the complete modular table and the chain composition have not yet been Lean-compiled as one theorem.
+
+## Exact predecessor iff — local Lean kernel certificate (2026-11-24)
+
+The complete theorem now compiles against the original `SheepEven.EvenEdge` relation:
+
+```lean
+theorem H4AllHidden.parent_iff_bad {y r : Nat}
+    (hr : r % 2 = 1)
+    (hy : 2187*y+1868 = 2^(1211+1458*r)) :
+    (∃ x, x%2=0 ∧ SheepEven.EvenEdge x y) ↔ H4AllHidden.Bad r
+```
+
+Lean 4.36.0-rc2 reports only `[propext, Classical.choice, Quot.sound]`. The 154 low-hidden-length modular rows are proved using small divisor certificates (1,490 finite checks, maximum 63 per lift) and the kernel theorem connecting `Nat.powMod` to modular exponentiation. No native_decide or admitted theorem. The high-valuation branch and constructive sufficiency are also kernel checked. This is the exact all-odd-r result, not just a finite enumeration. No proof of the preceding two-edge chain is claimed by this certificate.
+
+Restore with `python reconstruct_lean.py`. In a common Lean module directory, first restore and compile the original `SheepEven.lean` and `EvenEdge.lean` from agent16-sheep-even-return, `ResidueGap.lean` from agent40-sheep-third-preimages, and `SheepAffineSpecial.lean` then `SheepAffineSpecialSource.lean` from agent22-sheep-affine-special. Then compile `H4AllHiddenCore`, `H4LowRows`, `H4HighRoot`, `H4Sufficiency`, in that order, with LEAN_PATH pointing to the module directory and `lean -o MODULE.olean MODULE.lean`. The source archive is hash-checked by its decoder. Local compilation, not a new CI claim.
