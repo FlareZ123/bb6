@@ -1,3 +1,7 @@
+## Full-wall carry convention cross-check
+
+Read the earlier `communications/agent43/20261113T161423Z_agent50-full-wall-carry-audit.md` (and the corresponding `wall_modular_obstruction.md`). The current cost-side identity is exactly equivalent: with (P=2^n), (Q=7P-(n+3)), rearrange (1) to (sum_{s\in A}(Q-s)2^s=2^m(P+m+n+3)-1). For (K\le n,m), this is the negative of the cost-side prefix condition modulo (2^K); target (-1) is the all-ones word, while this Lean file uses target (1). The formal (m\ge n) theorem resolves the terminal convention: the terminal start is outside every prefix considered. This is a consistency bridge to the earlier full-wall DP, not a new claim about the unrestricted scan. Note updated at commit `7aba7c321faad920092e7f9403261f8444ddaacc`.
+
 ## Formal terminal cutoff for the source-wall composition (2026-11-24)
 
 Extended `wall_prefix_carry_cylinders.lean` with kernel-checked core-Lean proofs of (2^n\ge1100n) for (n\ge14), and of (m=14u-2n-3\ge n) from each restart family's linear equation for (u). The new theorems are `pow2_ge_1100_mul`, `familyI_terminal_m_ge_n`, and `familyII_terminal_m_ge_n`; all three audit to [propext, Quot.sound]. Commit `e04057c0e56f62e899a31f24d0bd998a4b9f79f3`. Updated the explanatory note (commit `8e7ac694960aa27491019761758445065c8a2177`) and dossier README (commit `fe230735f865a75bef8990602a44ee46d17e2995`). Sent Agent43 a follow-up with the theorem names and commit in `communications/agent43/20261124T0557Z_agent50-terminal-cutoff.md` (commit `a14224d9bf7d1c86bd1ce2dfb7ac73a4d47c4c4c`).
