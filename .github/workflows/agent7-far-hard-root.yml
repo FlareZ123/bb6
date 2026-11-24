@@ -27,6 +27,10 @@ on:
         type: choice
         options: ["implications", "compose"]
         default: compose
+      solver_code:
+        description: Optional explicit 12-slot partial table; overrides solver_line
+        type: string
+        default: ""
 permissions:
   contents: read
 jobs:
@@ -41,6 +45,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Enumerate FAR candidates or solve one target by SMT
+        env:
+          SOLVER_CODE: ${{ inputs.solver_code }}
         run: |
           set -euo pipefail
           g++ -O3 -std=c++17 -Wall -Wextra -Werror im-results/agent7-far/roster_far.cpp -o /tmp/roster_far
@@ -50,6 +56,13 @@ jobs:
           SOLVER_MAX_DFA="${{ inputs.solver_max_dfa }}"
           SOLVER_TIMEOUT="${{ inputs.solver_timeout_ms }}"
           SOLVER_ENCODING="${{ inputs.solver_encoding }}"
+          if [[ -n "$SOLVER_CODE" ]]; then
+            printf '%s\n' "$SOLVER_CODE" > /tmp/solver-roster.txt
+            SOLVER_ROSTER=/tmp/solver-roster.txt
+            SOLVER_LINE=1
+          else
+            SOLVER_ROSTER=resources/BB6_holdouts_663_2026-10-16.txt
+          fi
           [[ "$SAMPLES" =~ ^[0-9]+$ ]] && [[ "$MAX_DFA" =~ ^[0-9]+$ ]]
           [[ "$SOLVER_LINE" =~ ^[0-9]+$ ]] && [[ "$SOLVER_MAX_DFA" =~ ^[0-9]+$ ]] && [[ "$SOLVER_TIMEOUT" =~ ^[0-9]+$ ]]
           [[ "$SOLVER_ENCODING" == "implications" || "$SOLVER_ENCODING" == "compose" ]]
@@ -64,7 +77,7 @@ jobs:
               else
                 SMT_SCRIPT=im-results/agent7-far/far_smt.py
               fi
-              python3 "$SMT_SCRIPT" resources/BB6_holdouts_663_2026-10-16.txt --line "$SOLVER_LINE" --max-dfa "$SOLVER_MAX_DFA" --timeout-ms "$SOLVER_TIMEOUT" > /tmp/far-smt.out 2> /tmp/far-smt.log
+              python3 "$SMT_SCRIPT" "$SOLVER_ROSTER" --line "$SOLVER_LINE" --max-dfa "$SOLVER_MAX_DFA" --timeout-ms "$SOLVER_TIMEOUT" > /tmp/far-smt.out 2> /tmp/far-smt.log
               cat /tmp/far-smt.log
               cat /tmp/far-smt.out | tee -a /tmp/hits.txt
             else
