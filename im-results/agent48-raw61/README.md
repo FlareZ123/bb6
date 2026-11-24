@@ -1,3 +1,7 @@
 # Raw61 unary tripling
 
 Two leaves (1344,1346) share a positive return from D with left list 00(11)^(n+1), right empty, to D with left list 00(11)^(3n+3), right empty. At the inner phase D has 5+6k zeros followed by 1+2n ones. Two transfers increment k and decrement n. Terminal transfer at n=0 gives 6(k+1) ones. The blank start reaches the outer family n=2 at step 36. This proves unbounded live prefixes by induction. Both local exact-zipper proof modules compiled under Lean 4.36.0-rc2, only propext and Quot.sound; original-source wrapper awaits full audit. Run emit_tripling.py to generate the two complete modules; these are candidates until accepted by original-source Lean. Remaining 14 leaves in candidates.json.
+
+## Recursive unary counter
+
+Leaves 314,315,316,319,1085: let F(n,S) be D with left 0011 (1111)^n 0 and right S; G changes only the first zero to one. For arbitrary S, F(0,S) reaches G(0,S) in 10 moves. F(n+1,S) reaches F(0, (0000)^n 0001 S), then G(0,...). A 0000 token from G(j,...) moves to F(j+1,...), and 0001 moves to G(j+1,...). Induction simultaneously on all completed smaller parameters proves F(n,S) reaches G(n,S); the terminal blank-tail transition G(n,[]) reaches F(n+1,[]) in 18 steps. Blank start at step 31 is F(1,[]). All five complete proofs of unbounded live prefixes locally compiled with exact copied zipper, standard axioms only. Full source wrappers are emitted by emit_recursive_unary.py. Nine candidate leaves remain.
