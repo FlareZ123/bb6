@@ -573,6 +573,63 @@ theorem positive_history_boundary_final_run {j s k x : Nat} {w : Int}
     exact Nat.le_trans hmulNat hQzHi
   exact ⟨r,z,hs,hfirst,hsecond⟩
 
+/-- Exact final-run normal form.  If the history has no earlier band drop,
+the terminal same-band run accounts for the original affine seed exactly.
+If it has a preceding one-band drop, the run endpoint lies in the narrow
+interval forced by the next-band lower boundary. -/
+theorem positive_history_final_run_exact
+    {j s k x : Nat} {w : Int}
+    (h : PositiveHistory j w s k x) :
+    ∃ r z, SameRun k r x z ∧
+      ((k=j ∧
+          6*(3^r:Int)*(Q k x:Int)=4*(P k:Int)+w-3) ∨
+       ∃ s' y, PositiveHistory j w s' (k+1) y ∧ RegFrom k z y ∧
+          2*P k+k+4≤3^(r+1)*Q k x ∧
+          3^r*Q k x≤2*P k+k+2) := by
+  obtain ⟨r,z,hs,hbase⟩:=positive_history_final_run h
+  have hbz : Band k z := (same_run_bands hs).2
+  have hq : Q k z=3^r*Q k x := same_run_q hs
+  have hqzhi : Q k z≤2*P k+k+2 := (q_bounds hbz).2
+  rcases hbase with ⟨hk,hseed⟩ | ⟨s',y,hy,hr⟩
+  · have hWz:=w_add_two_q hbz
+    rw [hk] at hWz
+    have hformula : 6*(Q j z:Int)=4*(P j:Int)+w-3 := by omega
+    have hqJ : Q j z=3^r*Q j x := by simpa [hk] using hq
+    have hqJI : (Q j z:Int)=(3^r:Int)*(Q j x:Int) := by
+      exact_mod_cast hqJ
+    refine ⟨r,z,hs,Or.inl ⟨hk,?_⟩⟩
+    rw [hk]
+    rw [← hqJI]
+    exact hformula
+  · have hby : Band (k+1) y := positive_history_band hy
+    have hqlo : k+7≤Q (k+1) y := (q_bounds hby).1
+    have hdownQ :
+        3*(Q k z:Int)=(Q (k+1) y:Int)+(P (k+1):Int)-3 := by
+      have hWdown:=w_regular_down hr
+      have hWz:=w_add_two_q hbz
+      have hWy:=w_add_two_q hby
+      have hp:=p_succ k
+      omega
+    have hQzloI :
+        2*(P k:Int)+(k:Int)+4≤3*(Q k z:Int) := by
+      have hqloI : (k:Int)+7≤(Q (k+1) y:Int) := by
+        exact_mod_cast hqlo
+      have hp:=p_succ k
+      omega
+    have hQzlo : 2*P k+k+4≤3*Q k z := by
+      exact_mod_cast hQzloI
+    have hlow : 2*P k+k+4≤3^(r+1)*Q k x := by
+      calc
+        2*P k+k+4 ≤3*Q k z := hQzlo
+        _ =3*(3^r*Q k x) := by rw [hq]
+        _ =3^(r+1)*Q k x := by rw [Nat.pow_succ]; ring
+    have hhigh : 3^r*Q k x≤2*P k+k+2 := by
+      rw [← hq]
+      exact hqzhi
+    exact ⟨r,z,hs,Or.inr ⟨s',y,hy,hr,hlow,hhigh⟩⟩
+
+#print axioms positive_history_final_run_exact
+
 #print axioms positive_history_final_run
 #print axioms positive_history_final_run_q_lower
 #print axioms positive_history_boundary_final_run
