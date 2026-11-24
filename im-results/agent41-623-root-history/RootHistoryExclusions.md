@@ -73,7 +73,11 @@ A further root-history check appears to exclude this particular transition from 
 
 The corresponding exact anchors and non-reachability theorems have been added to `RootMassGapSource.lean`, pending the next pinned-source CI run. If certified, this shows the state-local counterexample is itself root-inaccessible by mass, even though it invalidates the local valuation predicate.
 
-The same mass-gap method also appears to exclude the **entire depth-20 slice** of the cone-only family. At ell=20, its arithmetic progression is q_r=64,573,362 + 86,093,442*r, and exactly r=1,2,3 fall in the ell=20 mass window. Their source states and masses are:
+The same mass-gap method also appears to exclude the **entire depth-20 slice** of the cone-only family. At ell=20, its arithmetic progression is q_r=64,573,362 + 86,093,442*r, so the source mass is
+`S_r=5*q_r+400=322,867,210+430,467,210*r`.
+The ell=20 window is exactly
+`3^19=1,162,261,467 < 2*S_r+7 <= 3^20=3,486,784,401`.
+The values of `2*S_r+7` for r=0,1,2,3,4 are respectively 645,734,427; 1,506,668,847; 2,367,603,267; 3,228,537,687; 4,089,472,107. Monotonicity in r therefore shows exactly r=1,2,3 fall in the ell=20 mass window. Their source states and masses are:
 - D(602667616,150666804), mass 753,334,420: between root masses at indices 78 and 79;
 - D(947041384,236760246), mass 1,183,801,630: between root masses at indices 80 and 81;
 - D(1291415152,322853688), mass 1,614,268,840: also between root masses at indices 80 and 81.
