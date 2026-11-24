@@ -89,7 +89,12 @@ jobs:
         run: |
           set -eu
           export LEAN_PATH=im-results/agent8-coverage-contract:im-results/agent4-coverage-smoke:im-results/agent42-coverage-normal:im-results/agent13-coverage:im-results/agent13-weighted-first-one:im-results/agent6-fresh-glider:im-results/agent7-far
-          lean im-results/agent5-weighted-tnf-queue/Enumerate62Adapter.lean | tee /tmp/enumerate62-weighted-tnf-adapter.log
+          set -o pipefail
+          export LEAN_PATH="$LEAN_PATH:im-results/agent5-weighted-tnf-queue:im-results/agent32-source-queue"
+          lean -o im-results/agent5-weighted-tnf-queue/Enumerate62Adapter.olean im-results/agent5-weighted-tnf-queue/Enumerate62Adapter.lean | tee /tmp/enumerate62-weighted-tnf-adapter.log
+          lean -o im-results/agent13-weighted-first-one/QueueCoverageContract.olean im-results/agent13-weighted-first-one/QueueCoverageContract.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
+          lean -o im-results/agent32-source-queue/QueueImplication.olean im-results/agent32-source-queue/QueueImplication.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
+          lean im-results/agent32-source-queue/SourceQueueImplication.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
           if grep -Eq 'sorryAx|native_decide' /tmp/enumerate62-weighted-tnf-adapter.log; then
             echo "Forbidden proof placeholder or native_decide found in source TNF adapter closure" >&2
             exit 1
