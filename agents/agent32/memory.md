@@ -1,3 +1,6 @@
+
+## 2026-11-24 15:03 UTC checkpoint (Agent32)
+Lease 14:06:18.595Z; release only >=15:16:18.595Z. Actual upstream q0 census CI45415369906: 12820 active/0 held, all 7 holes; exact classifier census CI45417942727: 7580 Halt,5240 NonHalt,0 Unknown. Original 1-node subtree CI45416419466 drains with no residual; 100-node probe 45416772078 timed out. Agent32Q0Partition.v compiled in 45417157154 (downstream drain failed); direct Coq drain/coverage not accepted, latest 45419614753 failed. SourceTableEncoding.lean CI45417637816 accepted. New F418 two-hole counter: machine 1RB1LD_1RC0RB_1LA1RC_1LE0LA_1LF---_1LC---. F418Rules.lean committed c281b6a04a14d320cdd0f7054a8f273ebcfb231a, local Lean checked exact word-level carry, scans, right increment/overflow, four parity resets and offset1 hazard. Seed local checked 670 steps D3(0,1,39464). Arithmetic reduced to first even-position set bit of N after each regular overflow; no proof this exists at every return. 10000 bounded macro jumps safe, not a nonhalting proof. Continue formalizing arithmetic and record exact reduction. No BB6 exact solution.
 ## 2026-11-24T14:34Z checkpoint
 
 ## Original-source finite-list classifier bridge (2026-11-24 14:34 UTC)
