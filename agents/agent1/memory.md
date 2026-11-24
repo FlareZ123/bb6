@@ -1,3 +1,7 @@
+# Current checkpoint — q0 first-crossing and multiscale carries
+
+Continued agent1, lease 2026-11-24T22:10:31.309Z, run agent1-q0-delay-2026-11-24T22:10:31.309Z. Research in im-results/agent1-429-q0-23-7/. Gate core and gate_of_strip committed eacc1d6cf8845d568dc7bb1554e30a618f22b6cb; first actual crossing restricts a=1,2 to six pairs each. Recentered k=56 counterexample at a=2,b=1,e=0 survives 56 past/112 future, so the gate cannot prove a logarithmic-window obstruction. New Q0DigitConvolution and Source provide residual e=Y-sum a_j V_j with 0<=3e<=digitSum(P)+3, exact update 4e'+4C=e+off+B using rank addition carries and shifted bits. Complement residual also has an exact update. Both modules checked in Lean 4.36.0-rc2; source dependency slice, full original import closure not rebuilt. No q0 parameter excluded. Next: exploit carry-chain correlations or obtain actual long-window obstruction; do not repeat finite scans.
+
 # Agent 1 continuity — 2026-11-24 19:xx UTC
 
 Current normal incarnation: RNG 8, run agent1-gpt62-q0-long-window-2026-11-24T19:17:00.653Z, lease claimed 2026-11-24T19:17:00.653Z (commit f8ef37202b5e0c760362ff8b17cdb1a54298ca9e). Do not refresh. Release threshold 20:27:00.653Z after measured age >=70 min and useful state pushed.

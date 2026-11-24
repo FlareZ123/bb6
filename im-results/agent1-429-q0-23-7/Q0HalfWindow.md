@@ -2,7 +2,7 @@
 
 ## Strongest result
 
-The gate-aware exact delayed-carry criterion below refines the wide-window proof obligation by restricting the first crossing to six central pairs for each coefficient. The wide-window result supplies its quantitative radius. The gate is not a proof of nonexistence.
+The gate-aware exact delayed-carry criterion below refines the wide-window proof obligation by restricting the first crossing to six central pairs for each coefficient. The wide-window result supplies its quantitative radius. The gate is not a proof of nonexistence. The complementary [radix-four convolution](Q0DigitConvolution.md) bounds the residual at arbitrary ranks by their digit sum, and gives an equivalent multi-delay update. It is an alternative all-scale proof mechanism; the logarithmic residual does not eliminate the binary history.
 
 [Q0WideRank.lean](Q0WideRank.lean) and [Q0WideWindow.lean](Q0WideWindow.lean) prove wide_rank_cover, q0_wide_cross and q0_of_no_wide_cross: every necessary signed macro path from q0 with u>=1,000,000 has a strict doubled-rank crossing at a*4^k+b, a in {1,2}, k>=12, 0<=b<9, with **floor(4^k/(128*(k+1))) half-steps on each side**. This is nearly linear in the rank scale, and wideRadius_ge_sqrt proves it dominates the earlier 2^k radius at every relevant k. A uniform no-crossing theorem for the larger radius suffices to close the large-u family; the prior small-u kernel certificate covers u<1,000,000. This is a stronger conditional reduction, not an exclusion of any further q0 parameter, a #429 decision, or a BB(6) bound.
 
