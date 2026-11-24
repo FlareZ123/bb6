@@ -89,7 +89,7 @@ def threeSectionMoves (rootSteps L n a b : Nat) : Nat :=
 /-- Uniform three-section composition. Keeping the initial counter and
     all tape lengths symbolic avoids kernel evaluation of any enormous
     concrete tower in a conversion check. -/
-theorem three_section_attainment (inc : IncrementSource) (rst : ResetSource)
+theorem three_section_halts (inc : IncrementSource) (rst : ResetSource)
     (rootSteps L n a b : Nat) (head : Int)
     (hroot : run tm2 rootSteps blank = some (s1Config L n 2 a 0 b head))
     (hL : 3 ≤ L) (hn : n < 2^L) (ha : 0 < a) (hb : 0 < b)
@@ -105,7 +105,7 @@ theorem three_section_attainment (inc : IncrementSource) (rst : ResetSource)
         2 (sectionResult n 2 a b).right (nextRight (sectionResult n 2 a b).right)).right
       (nextRight (sectionResult (resetIndex L (sectionResult n 2 a b).exponent)
         2 (sectionResult n 2 a b).right (nextRight (sectionResult n 2 a b).right)).right)).marker = 0) :
-    Attainable (threeSectionMoves rootSteps L n a b + 7) := by
+    HaltsAfter championTable (threeSectionMoves rootSteps L n a b + 6) := by
   let f := sectionResult n 2 a b
   let L1 := L+f.exponent+2
   let N1 := resetIndex L f.exponent
@@ -167,13 +167,45 @@ theorem three_section_attainment (inc : IncrementSource) (rst : ResetSource)
     exact h
   have hprefix := composeRun (composeRun (composeRun (composeRun
     (composeRun hroot first) reset1) middle) reset2) last
-  exact champion_attainable_after_s0_reset_prefix
+  exact champion_halts_after_terminal_prefix
     (rootSteps + f.cost + resetCost L f.exponent f.right + g.cost +
       resetCost L1 g.exponent g.right + j.cost)
-    L2 j.exponent j.right h4 hprefix
+    L2 j.exponent _ h4 hprefix (s0_reset_sectionBits L2 j.exponent j.right h4)
+
+theorem three_section_attainment (inc : IncrementSource) (rst : ResetSource)
+    (rootSteps L n a b : Nat) (head : Int)
+    (hroot : run tm2 rootSteps blank = some (s1Config L n 2 a 0 b head))
+    (hL : 3 ≤ L) (hn : n < 2^L) (ha : 0 < a) (hb : 0 < b)
+    (hfm : (sectionResult n 2 a b).marker = 1)
+    (hgm : (sectionResult (resetIndex L (sectionResult n 2 a b).exponent)
+      2 (sectionResult n 2 a b).right (nextRight (sectionResult n 2 a b).right)).marker = 1)
+    (hjm : (sectionResult
+      (resetIndex (L+(sectionResult n 2 a b).exponent+2)
+        (sectionResult (resetIndex L (sectionResult n 2 a b).exponent)
+          2 (sectionResult n 2 a b).right (nextRight (sectionResult n 2 a b).right)).exponent)
+      2
+      (sectionResult (resetIndex L (sectionResult n 2 a b).exponent)
+        2 (sectionResult n 2 a b).right (nextRight (sectionResult n 2 a b).right)).right
+      (nextRight (sectionResult (resetIndex L (sectionResult n 2 a b).exponent)
+        2 (sectionResult n 2 a b).right (nextRight (sectionResult n 2 a b).right)).right)).marker = 0) :
+    Attainable (threeSectionMoves rootSteps L n a b + 7) := by
+  exact ⟨championTable, threeSectionMoves rootSteps L n a b + 6,
+    three_section_halts inc rst rootSteps L n a b head hroot hL hn ha hb hfm hgm hjm, rfl⟩
 
 theorem threeSectionMoves_root : threeSectionMoves 27959 3 7 6 63 = proposedTM63Moves := by
   rfl
+
+theorem direct_root_halts_aux (inc : IncrementSource) (rst : ResetSource) :
+    HaltsAfter championTable (threeSectionMoves 27959 3 7 6 63 + 6) := by
+  have hm : (sectionResult 7 2 6 63).marker = 1 := by rw [sectionResult_marker]
+  exact three_section_halts inc rst 27959 3 7 6 63 29
+    tm2_blank_reaches_initialS1_source (by decide) (by decide) (by decide)
+    (by decide) hm middle_stage_marker_one final_stage_marker_zero
+
+theorem direct_root_halts (inc : IncrementSource) (rst : ResetSource) :
+    HaltsAfter championTable (proposedTM63Moves+6) :=
+  Eq.mp (congrArg (HaltsAfter championTable)
+    (congrArg (fun n : Nat => n+6) threeSectionMoves_root)) (direct_root_halts_aux inc rst)
 
 theorem direct_root_attainment_aux (inc : IncrementSource) (rst : ResetSource) :
     Attainable (threeSectionMoves 27959 3 7 6 63 + 7) := by
@@ -189,6 +221,7 @@ theorem direct_root_attainment (inc : IncrementSource) (rst : ResetSource) :
     Attainable (proposedTM63Moves + 7) :=
   Eq.mp (congrArg Attainable threeSectionScore_root) (direct_root_attainment_aux inc rst)
 
+#print axioms direct_root_halts
 #print axioms three_section_attainment
 #print axioms direct_root_attainment
 
