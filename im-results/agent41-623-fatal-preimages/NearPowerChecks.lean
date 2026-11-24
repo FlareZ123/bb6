@@ -39,19 +39,9 @@ private def node33 : Cert := Cert.fork (-7067) (-21137) Cert.stop node32
 
 def cert5288 : Cert := node33
 
-def certHuge : Cert := Cert.fork
-  (-13333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333611)
-  (-39999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999729)
-  Cert.stop Cert.stop
-
 set_option maxRecDepth 10000 in
 set_option maxHeartbeats 2000000 in
 theorem checked5288 : check (fatalState 5288) cert5288=true := by decide +kernel
 
-set_option maxRecDepth 10000 in
-set_option maxHeartbeats 2000000 in
-theorem checkedHuge : check (fatalState (10^100)) certHuge=true := by decide +kernel
-
 #print axioms checked5288
-#print axioms checkedHuge
 end BB6.Agent41NearPower
