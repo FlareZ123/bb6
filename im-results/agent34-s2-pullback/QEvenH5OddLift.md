@@ -70,50 +70,59 @@ S\equiv10\pmod{32}.
 The direct parent used in the existing q-even h5 residual theorem therefore
 retains the same odd-right/sum-\(2\bmod4\) exclusion.
 
-The other terminal parent has coordinates
+The critical odd-coset obstruction occurs one step earlier than the
+formal Ebx/Eby expressions suggest. The existing even-coset proof proceeds
+from
+\[
+E=(2S-2,(x+2y-2S-8)/2)
+\]
+through a six-even-right inverse, then an even/odd sum-three inverse, then
+a second six-even-right inverse. For odd \(n=2r+1\), the middle state is
 \[
 \begin{aligned}
-E_x&=71649+2944276n+11777096b,\\
-E_y&=15209+625014n+2500060b.
+E_{ax}&=1735479+3388496r+6776976b,\\
+E_{ay}&=1280448+2500056r+5000120b.
 \end{aligned}
 \]
-For even \(n\), \(E_x+E_y\equiv2\pmod4\), which is the existing
-odd-right/sum-\(2\bmod4\) endpoint. For odd \(n\),
+It has \(E_{ax}\) odd, \(E_{ay}\) even, and
 \[
-E_x+E_y\equiv0\pmod4,
+E_{ax}+E_{ay}\equiv7\pmod8.
 \]
-so the existing residual theorem cannot be reused unchanged. This is a real
-parity obstruction, not a missing arithmetic tactic.
+Therefore the second six-even-right theorem's guard (sum not \(0\) or
+\(7\bmod8\)) fails. The formal affine values
+\[
+\begin{aligned}
+E_{bx}&=3015925+5888552r+11777096b,\\
+E_{by}&=640223+1250028r+2500060b
+\end{aligned}
+\]
+are the direct-parent candidate, but reachability of \(E_{ax},E_{ay}\)
+does not force that parent: the full source grammar also has an odd-bounce
+branch. It is invalid to invoke the odd/odd low-value theorem on Ebx/Eby
+without first excluding or resolving that bounce branch.
 
-## A first odd-coset sample
-
-Write \(n=2r+1\). If \(r+b\not\equiv3\pmod4\), then
-\(E_x+E_y\) is divisible by \(4\) but not \(16\), and the low-value
-odd/odd inverse theorem supplies the parent
+For \(n=2r+1\), the sum of the formal candidate is
+\[
+E_{bx}+E_{by}=3656148+7138580r+14277156b.
+\]
+When \(r+b\not\equiv3\pmod4\), this is divisible by \(4\) but not \(16\),
+and its low-value inverse would be
 \[
 \begin{aligned}
 P_x&=1828072+3569290r+7138578b,\\
 P_y&=1234146+2409659r+4819319b.
 \end{aligned}
 \]
-For the sample \(r=b=0\), this is
-\((1828072,1234146)\), an even/even pair with sum \(2\bmod8\).
-Its unique even-right parent is \((3062216,617072)\), whose sum is
-\(8\cdot459911\) with \(459911\equiv3\bmod4\). The two parents from
-the even/even sum-zero inverse theorem are
-\[
-(3679286,308535),\qquad(919820,1688265).
-\]
-Both have odd right coordinate and sum \(1\bmod4\), hence are excluded by
-the existing odd-right/sum-\(1\bmod4\) theorem. This closes that sample,
-but not the whole odd coset.
+For \(r=b=0\), that formal P is \((1828072,1234146)\); its even-right
+parent fan has two odd-right/sum-\(1\bmod4\) endpoints. This is only a
+conditional calculation, because the source proof has not forced Ebx/Eby.
+When \(r+b\equiv3\pmod4\), the formal sum is divisible by \(16\), and
+deeper 2-adic branches arise as well.
 
-When \(r+b\equiv3\pmod4\), the odd/odd sum is divisible by \(16\).
-The sum-16 inverse theorem handles only the \(16\bmod32\) slice; the deeper
-\(0\bmod32\) slices still need a source inverse analysis. Even in the
-\(16\bmod32\) slice, the second parent is an even/odd high-valuation state
-and needs a further image classification.
-
+The exact next task is therefore to classify the odd/even high-valuation
+state Eax/Eay with sum \(7\bmod8\) using the complete source-preimage
+grammar, including its odd-bounce branch. Until that is done, neither the
+odd-coset residual nor the sample is excluded.
 ## Research status
 
 This note is an exact arithmetic reduction and a candidate expansion, not a
