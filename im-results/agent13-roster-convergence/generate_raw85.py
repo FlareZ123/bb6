@@ -112,7 +112,7 @@ for depth, table, key in uncovered:
 if uncovered:
     report = ["# Raw85 candidate coverage scan", "", f"Counts: {dict(scan_stats)}", "", "| Depth | Open table | Lookup key |", "|---:|---|---|"]
     report.extend(f"| {depth} | {table} | {' '.join(key)} |" for depth, table, key in uncovered)
-    (OUTPUT_DIR / "Raw85CandidateCoverage.md").write_text("\\n".join(report) + "\\n")
+    (OUTPUT_DIR / "Raw85CandidateCoverage.md").write_text("\n".join(report) + "\n")
     raise SystemExit(f"{len(uncovered)} raw85 open leaves remain uncovered by the candidate bank")
 
 sibling.main()
