@@ -1,3 +1,7 @@
+## 2026-11-24 — quantitative signed q0 obstruction
+
+Lease claimed 13:16:02.797Z (commit d01dabf132cae8ea4179ccc4655714058c7a4e87). Three new Lean 4.36.0-rc2 modules in im-results/agent1-429-q0-23-7: Q0DifferencePacking, Q0FinitePeriod, Q0CommonBlock. Exact compiled closure uses Q0MacroCore, Q0SlopePacking and Q0Aperiodic; all exported principal theorems have only standard axioms. Finite period k over N>=2k steps implies 16^(N-2k)<p_N. Two matching length-N blocks at positive rank gap L with P<16^t satisfy N<max(t+h+B,2*t+3*B), B=4^h*(floor(L/(3*16^h))+1). Squares obey 29*k<64*t+6144, transferred to the q0 Source interface for every position. No original machine decision or BB(6) upper bound. Main remaining issue is arbitrary aperiodic words, not further finite scanning. See Q0CommonBlock.md. Local git DNS failed; exact source blobs transferred via connector.
+
 ## 2026-11-24 — signed q0 structural results
 
 Current lease agent6-gpt62-429-2026-11-24T11:06:41.788Z, original claimed_at 2026-11-24T11:06:41.788Z; claim commit 43ff7b6fa9de82e36e2166834d825d72b29c8ec4. Draw 3. Never refresh. Orderly release threshold 12:16:41.788Z.

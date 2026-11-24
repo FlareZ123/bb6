@@ -6,6 +6,8 @@
 
 ## Supporting structural research
 
+The [quantitative matching-block theorem](Q0CommonBlock.md) strengthens aperiodicity: any square of half-length k in a strict-interior signed path obeys `29*k < 64*t+6144` for terminal rank below `16^t`. The more general arbitrary-depth packing theorem bounds matching blocks at positive rank gap. All three new modules compile against the complete exact signed-model dependency closure; `q0_word_constraint` transfers the bound to every position of the forced q0 path via its Source interface. Arbitrary aperiodic itineraries remain unresolved.
+
 - [Secondary F spine theorem and exact certificate](Q0SecondarySpine.md), [Lean source](Q0SecondarySpine.lean): the first counter after exactly three FSFE blocks satisfies a+3=5461w, exposing the second valuation clock. This proves a fixed-depth pruning limitation even after accelerating the FSFE blocks.
 - [FSFE valuation tail](FSFE-valuation-tail.md): corrected competing all-F coordinates, exact all-index block-start form and the surviving branches. The previous mod-128/mod-256 sibling tables were based on incorrect second-coordinate formulas and are withdrawn.
 - [Unbounded FSFE candidate blocks](FSFE-2adic-block.md): exact repeated-block algebra and the distinction between syntactic and residue-compatible completed blocks.
