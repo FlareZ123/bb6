@@ -135,10 +135,10 @@ Proof.
   destruct (Hsup q s w d r E) as [Hq Hr].
   destruct (Hchild (q,s)) as [Hbad|Hm]; [congruence|].
   unfold rename_swap.
-  rewrite (swap_fixed_below a b q cut Hq Ha Hb), Hm.
+  rewrite (swap_fixed_below a b q cut Hq Ha Hb), Hm, E.
   cbn [option_map].
-  f_equal; try reflexivity.
-  exact (swap_fixed_below a b r cut Hr Ha Hb).
+  rewrite (swap_fixed_below a b r cut Hr Ha Hb).
+  reflexivity.
 Qed.
 
 Lemma completion_refine (m t : TM) h v :
