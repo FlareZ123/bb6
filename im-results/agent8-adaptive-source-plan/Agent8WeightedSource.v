@@ -1,5 +1,6 @@
 From BusyCoq Require Import Enumerate62 TC62 Eqb Agent5Enumerate62DeciderSound
   Agent8SourceWF Agent8AdaptiveSource Individual62.
+From BusyCoq Require Export Agent8ZeroDelay.
 From Coq Require Import List Lia NArith.
 Import ListNotations.
 Import TNF_Node.
@@ -59,10 +60,7 @@ Qed.
 
 (* The exact weight is the zero-writing delay of the concrete completion.
    No assumption that the delay is zero on a long-running machine. *)
-Inductive zero_path (t : TM) : Q -> nat -> Q -> Prop :=
-| zp0 q : zero_path t q 0 q
-| zpS q q' z d k : t (q,S0) = Some (S0,d,q') ->
-    zero_path t q' k z -> zero_path t q (S k) z.
+(* zero_path is defined and checked in Agent8ZeroDelay. *)
 
 Definition weighted_bound (bound : nat) (t : TM) : Prop :=
   forall n k s, halts_in t c0 n -> zero_path t s k A ->
