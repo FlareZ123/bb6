@@ -152,9 +152,9 @@ theorem m1OddResidueOne_q4_prefix_head_bound
       s1Config_right_cell 3 1 1 a 0 b h 0
   have hSweep := counted_left_sweep N T h hOn hright
   have hSweep' :
-      run tm2 (3*N) (s0Config (markerWord 1 ++ (d0 ++ (binDec 3 1 ++ lh))) a 0 b h) =
+      run tm2 (3*N) (s1Config 3 1 1 a 0 b h) =
         some (⟨3,hN,T1⟩ : Config) := by
-    simpa [s0Config,T,N,hN] using hSweep
+    simpa [s1Config,s0Config,T,N,hN] using hSweep
   have hmatch0 := m1OneQ4Bridge_input_match 3 a b h (by omega)
   have hmatch : ∀ y, m1OneQ4Inside y = true →
       T1 (hN+y) = decide (y ∈ m1OddQ4BridgeStart.marked) := by
@@ -229,7 +229,7 @@ theorem m1OddResidueOne_q4_prefix_head_bound
   let p2 := p1+29
   by_cases hk1 : k < p1
   · have hd' : run tm2 k ⟨3,h,T⟩ = some d := by
-      simpa [s0Config,T] using hd
+      simpa [s1Config,s0Config,T] using hd
     have hlow :=
       BB6Coverage.Agent42M0EvenSixHeadBound.counted_left_sweep_heads
         N T h hOn hright k
