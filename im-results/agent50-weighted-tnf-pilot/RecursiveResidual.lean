@@ -24,7 +24,7 @@ def lastOK (B : Nat) (p : PartialMachine) (n : Nat) (s : Slot) : Bool :=
   queryOK B p n s && restOK p s
 
 def sideOK (p : PartialMachine) (n k : Nat) (r : Bool) (b : Int) : Bool :=
-  decide (0 < k) && finiteSideCycleCheck p n k r b
+  decide (0 < k) && fastSideCycleCheck p n k r b
 
 theorem queryOK_sound (B : Nat) (p : PartialMachine) (n : Nat) (s : Slot)
     (h : queryOK B p n s = true) :
@@ -60,10 +60,10 @@ theorem lastOK_sound (B : Nat) (p : PartialMachine) (n : Nat) (s : Slot)
 theorem sideOK_sound (B : Nat) (p : PartialMachine) (n k : Nat) (r : Bool) (b : Int)
     (h : sideOK p n k r b = true) :
     ∀ m, compatible p m → WeightedBound B m := by
-  have hh : 0 < k ∧ finiteSideCycleCheck p n k r b = true := by
+  have hh : 0 < k ∧ fastSideCycleCheck p n k r b = true := by
     simpa only [sideOK,Bool.and_eq_true,decide_eq_true_eq] using h
   intro m hm
-  exact weighted_never B m (finiteSideCycleCheck_sound p n k r b hh.1 hh.2 m hm)
+  exact weighted_never B m (fastSideCycleCheck_sound p n k r b hh.1 hh.2 m hm)
 
 def Tree.check (B : Nat) (p : PartialMachine) : Tree → Bool
   | .openLeaf => true
@@ -125,4 +125,14 @@ theorem Tree.packed_sound (B : Nat) (tree : Tree) (p : PartialMachine) (h : tree
 #print axioms lastOK_sound
 #print axioms Tree.sound
 #print axioms Tree.packed_sound
+
+/-- Each tree is checked against the exact twelve-slot table it will replace. -/
+structure CheckedTree where
+  table : PackedTable
+  tree : Tree
+  checked : tree.check 400 (unpackTable table) = true
+
+def tableAt (i : Nat) : PackedTable :=
+  ((executableRootRoster[i]?).map Prod.snd).getD []
+
 end BB6.Agent50RecursiveResidual
