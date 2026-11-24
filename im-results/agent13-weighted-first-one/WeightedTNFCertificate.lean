@@ -81,13 +81,16 @@ theorem WeightedTNFCertificate.sound {B : Nat} {p : PartialMachine} {cut : Nat}
       exact last_hole_sound B _ _ _ hroot hrun hhole hrest hweight m hm
   | expand hroot hsupport hcut hnohalt hrun hhole hweight hold hnew ihHold ihNew =>
       intro m hm
-      apply tnf_branch_sound B _ _ _ hcut hsupport hhole
+      have hbranch := tnf_branch_sound B _ _ _ hcut hsupport hhole
         (knownRun_support _ _ hcut hsupport _ _ hrun) hroot
         (first_hole_weighted_halt B _ _ _ hroot hrun hhole hweight)
-      · intro mv hlt m' hm'
-        exact ihHold mv hlt m' hm'
-      · intro q hq w r m' hm'
-        exact ihNew q hq w r m' hm'
+        (by
+          intro mv hlt m' hm'
+          exact ihHold mv hlt m' hm')
+        (by
+          intro q hq w r m' hm'
+          exact ihNew q hq w r m' hm')
+      exact hbranch m hm
 
 /-- Convert the compressed TNF tree into the repository's ordinary
     proof-carrying sparse Cover object. -/
