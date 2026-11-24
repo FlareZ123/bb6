@@ -5,7 +5,7 @@ on:
       target:
         description: 'Source closure to verify'
         type: choice
-        options: [legacy, weighted-first-one, weighted-halt-branch]
+        options: [legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter]
         default: legacy
 permissions:
   contents: read
@@ -40,7 +40,7 @@ jobs:
           lean -o FiniteLeafChecks.olean FiniteLeafChecks.lean
           lean LeafDemo.lean
       - name: Verify weighted first-write normalization against original source
-        if: inputs.target == 'weighted-first-one' || inputs.target == 'weighted-halt-branch'
+        if: inputs.target == 'weighted-first-one' || inputs.target == 'weighted-halt-branch' || inputs.target == 'source-queue-adapter'
         run: |
           set -eu
           python im-results/agent13-coverage/unpack.py
