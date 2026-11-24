@@ -1,0 +1,6 @@
+# 5 exact-target raw85 SMT DFA candidates; no-hit targets are recorded in smt-candidates-provenance.md; keys are ordering metadata only
+1RC 0LC --- 1RC 0 013241555155
+0LA 0RD --- 0RC 0 012433335101
+1RC 0RD --- 1RC 0 013241550155
+--- 0RE 0LC 1RF 0 012355410155
+0LF 1LE 0LA --- 1 012431555555
