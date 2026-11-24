@@ -17,9 +17,19 @@ The earlier adaptive filter used only the precision supplied by the stopping exp
 
 The targets obey the same stopping equation when the base does. Both coordinates remain congruent and the right-size bound only increases. In particular m=0, J=12+8*t has targets (25+16*t,40+24*t). The b=3 base certificate reduces to true; the earlier adaptive high filter (b=2) reduces to false for **every** member of this infinite ray. This establishes strict extension of the old modular filter, not necessarily of all other independent parameter sieves.
 
-The arithmetic proof bodies, including the old-filter failure on the entire ray, passed local Lean 4.36.0-rc2 against an exact copy of the checker definitions with the existing exclusion-soundness theorem supplied as a hypothesis. A source-connected wrapper and the combined exact criterion **HeightConeCriterion.lean** are now submitted for the existing manual source-closure workflow. Until that run is accepted, the new source wrapper is unverified. The exact predicate conjoins the height filter with the previously accepted full criterion; the unbounded root decision remains open.
+The arithmetic proof bodies, including the old-filter failure on the entire ray, passed local Lean 4.36.0-rc2 against an exact copy of the checker definitions with the existing exclusion-soundness theorem supplied as a hypothesis. The source-connected wrapper and combined exact criterion **HeightConeCriterion.lean** passed [CI 45365742832](https://github.com/FlareZ123/bb6/actions/runs/45365742832), compiling 241 project modules. The later **DirectBlocksSource.lean** proves `height_strict_witness` by kernel computation: original index `(j,m)=(11,0)` satisfies the old full Boolean/C70/modular guard but fails the height guard. This witness is accepted in [CI 45366985296](https://github.com/FlareZ123/bb6/actions/runs/45366985296). The exact predicate conjoins the height filter with the previously accepted full criterion; the unbounded root decision remains open.
 
 In the finite J=1..16384 sample, m=0: old 4095, height 11515, additional 7420; m=1: old 5120, height 11644, additional 6524; m=2: old 9728, height 12480, additional 2752. No old accepted point is lost in these samples (not yet a monotonicity theorem). The source integration preserves all old exclusions by conjunction regardless.
+
+## Exact arbitrary-depth forced predecessor blocks
+
+**DirectBlocks.lean** and **DirectBlocksSource.lean** passed original-source [CI 45366985296](https://github.com/FlareZ123/bb6/actions/runs/45366985296), compiling 243 modules. If (y+2=2^r u), (u\ge4) is even, and (x\bmod4\in\{0,3\}), the unique forced direct chain gives
+
+`CReach(x,y) iff CReach(x+2*y-2*(u-2)-4*r,u-2)`.
+
+Each backward step lowers mass by four and preserves the left coordinate modulo four. An extra step at odd (u\ge7), (u\equiv3\pmod4), when (x\equiv3\pmod4) and (x+2y\equiv4(r+1)+3\pmod8), reaches a forbidden odd image. The high-stop equation implies the mass congruence when (m\equiv2(r+1)+1\pmod4). In particular, (m=1), (J=(2^{4(s+1)}(27+60t)-27)/15), (k=15J+25) is an excluded family with no uniform bound on predecessor depth. This builds on the existing direct-epoch and M8-tower investigations, and is not asserted to be independent of every earlier sieve.
+
+The source adapter proves `blank_halts_iff_direct_blocks`, retaining every prior conjunct. All source theorems have only standard Lean axioms; `height_strict_witness` uses propext and Quot.sound. The exact unbounded Machine C root decision remains open.
 
 ## Mathematical setup
 
@@ -70,7 +80,4 @@ The census is a finite computation, not a theorem asserting the total count. The
 
 The probe.py script now mirrors the Lean checker with separate recursion-fuel and modulus arguments: each inverse edge decreases recursion fuel by one, while direct and high edges consume one or \(n+2\) modulus bits respectively. It reports the finite census and adaptive sample counts.
 
-Next:
-1. Compile HeightConeCriterion using the existing source-closure workflow. Its diagnostic tests strictness against the earlier full Boolean/C70/modular parameter filters.
-2. If the strictness witness is nonempty, kernel-check a concrete witness using the source-equivalent fast Boolean predicate and investigate the remaining inverse branches.
-3. Investigate unbounded precision and exact-target survivor paths, especially the pure-power valuation branch. Keep empirical counts distinct from source-machine decisions.
+Next: the height and direct-block source integrations are accepted. Focus on the remaining unbounded branches, especially pure-power valuation and exceptional low-counter returns, rather than another finite residue census. Exact binary-word constraints on regular returns are a possible structural direction; they must include guards and exceptions.
