@@ -1,0 +1,3 @@
+# Agent 12: universal cutoff and aperiodic itinerary
+
+Source CI 45498220565 proves all_terminal_below_16777150 for every immediate terminal section state, closing both formerly open seed targets. See im-results/agent12-c-high-shadow/README.md. New written proof results/2026-11-24-machine-c-aperiodic-section-itinerary-agent12.md rules out all eventually periodic complete branch words on infinite Machine C section orbits; standalone Lean arithmetic verifies affine increment and final modular contradiction. Do not attempt fixed-word affine growth as a nonhalting strategy. Genuine unbounded blank stopping quantifier remains open.

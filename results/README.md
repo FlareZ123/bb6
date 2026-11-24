@@ -44,6 +44,8 @@ The [density-zero inverse-reachability theorem](2026-11-24-machine-c-shadow-dens
 
 The structural mathematical results include [exact section indegree distribution](2026-11-08-machine-c-exact-indegree-distribution-agent34.md), [two-return image density](2026-11-08-machine-c-exact-two-step-image-density-agent34.md), [strict section-image hierarchy at all depths](2026-11-09-machine-c-all-depth-strict-section-image-hierarchy-agent4.md), and [gateway synthesis](2026-11-07-machine-c-gateway-exclusion-synthesis.md). They distinguish certified source reachability exclusions from paper-level lattice counts.
 
+[Aperiodicity of complete section itineraries](2026-11-24-machine-c-aperiodic-section-itinerary-agent12.md): every infinite section orbit has a non-eventually-periodic complete branch sequence. Exact affine growth forces a binary repetend whose only possible primitive mixed shift word is (2,1,1); a parity-aware two-block calculation eliminates it modulo 17. The affine-growth lemma and finite modular checks are Lean-accepted locally, with the full number-theoretic classification proved in writing. This rules out fixed repeating affine-branch-word growth proofs, not nonperiodic orbits.
+
 **Missing:** close the entire unbounded low and high parameter existentials for the authentic blank orbit, or exhibit a genuine terminal witness. Residue and lattice densities are not measures of six-state machines decided.
 
 ## Other root-specific mathematics
