@@ -389,6 +389,77 @@ theorem positive_skip_return_cost {j s k x z n : Nat} {w0 w1 : Int}
   rw [hreturn]
   omega
 
+
+/-- A two-band skip parent is an exceptional return with a sharper
+    denominator: its exact Q-coordinate gives 6*k-9. -/
+theorem positive_skip_parent_cost {j s k x z : Nat} {w0 : Int}
+    (hw0 : 0<w0) (hk : 2≤k)
+    (h : PositiveHistory j w0 s k x)
+    (hskip : RegFrom (k-2) z x) :
+    (4*(3^(j-k):Int)*(P k:Int)+6+w0) ≤
+      (3^s:Int)*(6*(k:Int)-9) := by
+  let w1 : Int := -W (k-2) z
+  have hb:=positive_history_band h
+  have hk' : (k-2)+2=k := by omega
+  have hband' : Band ((k-2)+2) x := by simpa [hk'] using hb
+  have hstrip : W (k-2) z=-(3^0:Int)*w1 := by
+    simp [w1]
+  have hret:=positive_skip_return_cost hw0 hk h hskip hstrip
+  have hwindow:=skip_reset_band_window hskip hband' hstrip
+  have hfactor : (3:Int)*w1+6≤6*(k:Int)-9 := by
+    have :=hwindow.2
+    simpa [w1] using this
+  have hD0 : 0≤(3^s:Int) := Int.le_of_lt (Int.pow_pos (by decide))
+  have hmul:=Int.mul_le_mul_of_nonneg_left hfactor hD0
+  have hret' :
+      4*(3^(j-k):Int)*(P k:Int)+6+w0≤
+        (3^s:Int)*((3:Int)*w1+6) := by
+    simpa [w1] using hret
+  exact le_trans hret' hmul
+
+/-- A special parent at P_k has the exact Q-coordinate 3k+12, giving
+    the complementary exceptional-return denominator 6*k+27. -/
+theorem positive_special_return_cost {j s k : Nat} {w0 : Int}
+    (hw0 : 0<w0)
+    (h : PositiveHistory j w0 s k (P k)) :
+    (4*(3^(j-k):Int)*(P k:Int)+6+w0) ≤
+      (3^s:Int)*(6*(k:Int)+27) := by
+  obtain ⟨A,C,hA,hA',hu,hC,he,hB⟩:=positive_history_packet_bandweight hw0 h
+  let D : Int := 3^s
+  have hb:=positive_history_band h
+  have hq:=q_eq hb
+  have hqI : (Q k (P k):Int)+2*(P k:Int)
+      =2*(P k:Int)+3*(k:Int)+12 := by exact_mod_cast hq
+  have hQ : 2*(Q k (P k):Int)=6*(k:Int)+24 := by omega
+  have hWQ : W k (P k)+2*(Q k (P k):Int)=4*(P k:Int)-3 := by
+    unfold W
+    omega
+  have hrel :
+      2*D*(Q k (P k):Int)=(4*D-A)*(P k:Int)-3*D-C := by
+    change D*(W k (P k):Int)=A*(P k:Int)+C at he
+    grind
+  have hreturn0 :
+      D*(2*(Q k (P k):Int))=(4*D-A)*(P k:Int)-3*D-C := by
+    simpa [Int.mul_assoc, Int.mul_left_comm, Int.mul_comm] using hrel
+  have hreturn :
+      D*(6*(k:Int)+27)=(4*D-A)*(P k:Int)-C := by
+    calc
+      D*(6*(k:Int)+27)=D*(2*(Q k (P k):Int)+3) := by rw [hQ]; omega
+      _=D*(2*(Q k (P k):Int))+3*D := by
+        simp only [Int.mul_add]
+        omega
+      _=(4*D-A)*(P k:Int)-3*D-C+3*D := by rw [hreturn0]
+      _=(4*D-A)*(P k:Int)-C := by omega
+  have hP0 : 0≤(P k:Int) := by exact_mod_cast Nat.zero_le (P k)
+  have hBprod : 4*(3^(j-k):Int)*(P k:Int)≤(4*D-A)*(P k:Int) :=
+    Int.mul_le_mul_of_nonneg_right hB hP0
+  have hC' : 6+w0≤-C := by omega
+  rw [hreturn]
+  omega
+
+#print axioms positive_skip_parent_cost
+#print axioms positive_special_return_cost
+
 #print axioms positive_skip_return_cost
 
 #print axioms positive_history_packet_weight
