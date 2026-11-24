@@ -958,3 +958,5 @@ ValuationParents.lean replaces the logarithmic full scan with at most v2(Q)+3 at
 - Independent exact forward transcription from certified M8 endpoint reached (7215288,4780931) at return 2396378, mass 16777150; also reached mass 1000000002 at return 142856000, state (704066978,147966512). Neither endpoint is source-kernel certified here. A verified live endpoint implies all earlier/lower-mass terminal targets are unreachable by existing strict-growth argument. Prefer compositional arithmetic certificates over millions of repeated forward steps.
 
 - Submitted universal terminal cutoff 16,777,150: 225 segments in 15 modules, original source M8TraceBridge runner, composed with M8 endpoint; 2,396,378 return live endpoint (7215288,4780931). Independent C++ and JS agree; local 2-segment composition test standard axioms. Source CI pending via sourceTerminalCutoff. Do not claim acceptance until CI succeeds.
+
+- `sourceKernelCone` passed original-source CI 45497710445 (commit 365ad2061cc991186b1d52c9a11f00f66bbeb05d); lowStop10_not_reachable is accepted. High seed separate kernel proof still pending, universal mass cutoff dispatched.
