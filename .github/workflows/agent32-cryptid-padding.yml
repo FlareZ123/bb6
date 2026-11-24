@@ -112,6 +112,12 @@ jobs:
             exit 1
           fi
 
+      - name: Reproduce source section bands and expose its interface
+        if: inputs.target == 'source_phase_bands'
+        run: |
+          set -euo pipefail
+          SHOW_SECTION_BANDS=1 bash im-results/agent32-d-growth-bands/reproduce.sh
+
       - name: Compile original-source padding checks (legacy only)
         if: inputs.target == 'legacy_padding_107_call'
         env:
