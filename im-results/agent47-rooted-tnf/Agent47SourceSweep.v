@@ -12,7 +12,7 @@ Definition sweep_tm (v : bool) : TM :=
 
 Definition sweep_zero : side := const S0.
 Fixpoint sweep_ones (n : nat) (r : side) : side :=
-  match n with 0 => r | S n' => Cons S1 (sweep_ones n' r) end.
+  match n with O => r | S n' => Cons S1 (sweep_ones n' r) end.
 
 Lemma sweep_ones_push n r :
   sweep_ones n (Cons S1 r) = Cons S1 (sweep_ones n r).
@@ -108,7 +108,7 @@ Proof.
   exact (sweep_right_run v n sweep_zero).
 Qed.
 
-Lemma sweep_start v : multistep (sweep_tm v) 2 c0 (sweep_end 1).
+Lemma sweep_start v : multistep (sweep_tm v) (S (S O)) c0 (sweep_end (S O)).
 Proof.
   eapply multistep_S; [apply step_right; reflexivity|].
   eapply multistep_S; [apply step_right; reflexivity|].
@@ -118,7 +118,7 @@ Qed.
 Theorem sweep_nonhalt v : ~ halts (sweep_tm v) c0.
 Proof.
   eapply skip_halts; [apply sweep_start|].
-  apply progress_nonhalt_simple with (C:=sweep_end) (i0:=1).
+  apply progress_nonhalt_simple with (C:=sweep_end) (i0:=S O).
   intro n; exists (S n); apply sweep_grow.
 Qed.
 
