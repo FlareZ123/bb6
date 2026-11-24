@@ -3,6 +3,7 @@ import BB429Even16
 import BB429RootEven8
 import BB429ZeroTwoThree
 import Lean.Elab.Tactic.Omega
+import Lean.Elab.Tactic.Ring
 
 /-!
 # Strong signed root filter for the branch-9 zero-two feeder
@@ -49,7 +50,8 @@ private theorem odd_odd_three_sum (a b : Nat) (hr : Reach a b)
     throughout the weighted 64/128 congruence cylinder. -/
 theorem strongTest_sound (a b : Int) (x y : Nat) (hx : 33≤x)
     (hr : Reach x y) (h : Near 64 a b x y) : strongTest a b = true := by
-  obtain ⟨i,j,hi,hj⟩ := h
+  have hNear := h
+  obtain ⟨i,j,hi,hj⟩ := hNear
   have ha2 : a%2=(x:Int)%2 := by omega
   have ha4 : a%4=(x:Int)%4 := by omega
   have ha8 : a%8=(x:Int)%8 := by omega
@@ -79,7 +81,7 @@ theorem strongTest_sound (a b : Int) (x y : Nat) (hx : 33≤x)
         omega
     constructor
     · intro haodd
-      exact BB429DyadicSource.basicTest_sound a b x y hx hr h
+      exact BB429DyadicSource.basicTest_sound a b x y hx hr hNear
     · intro haodd hbodd ha3
       have hxo : x%2=1 := by omega
       have hyo : y%2=1 := by omega
@@ -118,7 +120,7 @@ def zeroTwoDepth5Residues : List Nat :=
   (List.range 2048).filter zeroTwoDepth5Possible
 
 theorem zeroTwoDepth5Residues_length :
-    zeroTwoDepth5Residues.length=248 := by decide
+    zeroTwoDepth5Residues.length=216 := by decide
 
 private theorem pred_zero (z : Nat) (hz : 0<z) (hr : Reach 0 z) :
     ∃ u w, Reach u w ∧ BB429.next (u,w)=some (0,z) := by
@@ -143,8 +145,9 @@ private theorem near_upper (N : Nat) (q qrep k : Int)
     (hN : 11≤N) (hres : q-qrep=scale 5*k) :
     Near (scale 5) qrep (2*qrep+2)
       (12*(2:Int)^N+q) (24*(2:Int)^N+2*q+2) := by
+  have hs : scale 5 = (2:Int)^11 := by decide
   have hp : (2:Int)^N = scale 5*(2:Int)^(N-11) := by
-    rw [scale_pow, ← Int.pow_add, show 5+6+(N-11)=N by omega]
+    rw [hs, ← Int.pow_add, show 11+(N-11)=N by omega]
   refine ⟨12*(2:Int)^(N-11)+k,12*(2:Int)^(N-11)+k,?_,?_⟩
   · have hleft : (12*(2:Int)^N+q)-qrep = 12*(2:Int)^N+(q-qrep) := by ring
     rw [hleft,hp,hres]
@@ -158,8 +161,9 @@ private theorem near_odd (N : Nat) (q qrep k : Int)
     (hN : 11≤N) (hres : q-qrep=scale 5*k) :
     Near (scale 5) (qrep+4) (2*qrep+5)
       (12*(2:Int)^N+q+4) (24*(2:Int)^N+2*q+5) := by
+  have hs : scale 5 = (2:Int)^11 := by decide
   have hp : (2:Int)^N = scale 5*(2:Int)^(N-11) := by
-    rw [scale_pow, ← Int.pow_add, show 5+6+(N-11)=N by omega]
+    rw [hs, ← Int.pow_add, show 11+(N-11)=N by omega]
   refine ⟨12*(2:Int)^(N-11)+k,12*(2:Int)^(N-11)+k,?_,?_⟩
   · have hleft : (12*(2:Int)^N+q+4)-(qrep+4) =
         12*(2:Int)^N+(q-qrep) := by ring
@@ -212,7 +216,7 @@ theorem zero_two_depth5_restriction_of_parent
     have hwI : (w:Int)=24*(2:Int)^N+2*q+2 := by
       have hwi : (w:Int)=2*(u:Int)+2 := by exact_mod_cast hw
       rw [hu] at hwi
-      linarith
+      omega
     have hHighU : (36*2^5:Int)≤(u:Int)+3 := by rw [hu]; exact hHigh
     have hHighNat : 36*2^5≤u+3 := by exact_mod_cast hHighU
     have hnear := near_upper N q (3-3*(m%2048:Int)) k hNlarge hk
@@ -225,7 +229,7 @@ theorem zero_two_depth5_restriction_of_parent
     have hwI : (w:Int)=24*(2:Int)^N+2*q+5 := by
       have hwi : (w:Int)+3=2*(u:Int) := by exact_mod_cast hw
       rw [hu] at hwi
-      linarith
+      omega
     have hHighU : (36*2^5:Int)≤(u:Int)+3 := by rw [hu]; omega
     have hHighNat : 36*2^5≤u+3 := by exact_mod_cast hHighU
     have hnear := near_odd N q (3-3*(m%2048:Int)) k hNlarge hk
