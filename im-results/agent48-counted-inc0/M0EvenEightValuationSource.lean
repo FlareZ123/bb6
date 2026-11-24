@@ -85,7 +85,12 @@ private theorem sourceSuffix_extraOnes (t len u i : Nat)
     sideBit (m0EvenEightValuationSourceSuffix t len u) (14+i) = true := by
   have hprefix : (markerWord 0 ++ d0).length = 5 := by
     simp [markerWord, d0]
-  rw [m0EvenEightValuationSourceSuffix, List.append_assoc, List.append_assoc]
+  have hlist :
+      m0EvenEightValuationSourceSuffix t len u =
+        (markerWord 0 ++ d0) ++
+          (d1pow (t+3) ++ d0 ++ binDec len u ++ lh) := by
+    simp [m0EvenEightValuationSourceSuffix, List.append_assoc]
+  rw [hlist]
   rw [sideBit_append_right (markerWord 0 ++ d0)
     (d1pow (t+3) ++ d0 ++ binDec len u ++ lh) (14+i) (by omega)]
   have hindex : 14+i-5 = 9+i := by omega
@@ -107,11 +112,21 @@ private theorem sourceSuffix_zeroBoundary (t len u : Nat) :
     simp [markerWord, d0, d1pow_length]
     omega
   constructor
-  · rw [m0EvenEightValuationSourceSuffix, List.append_assoc]
+  · have hlist :
+        m0EvenEightValuationSourceSuffix t len u =
+          ((markerWord 0 ++ d0) ++ d1pow (t+3)) ++
+            (d0 ++ binDec len u ++ lh) := by
+      simp [m0EvenEightValuationSourceSuffix, List.append_assoc]
+    rw [hlist]
     rw [sideBit_append_right ((markerWord 0 ++ d0) ++ d1pow (t+3))
         (d0 ++ binDec len u ++ lh) (14+3*t) (by omega)]
     simp [d0, sideBit]
-  · rw [m0EvenEightValuationSourceSuffix, ← List.append_assoc, ← List.append_assoc]
+  · have hlist :
+        m0EvenEightValuationSourceSuffix t len u =
+          ((markerWord 0 ++ d0) ++ d1pow (t+3)) ++
+            (d0 ++ binDec len u ++ lh) := by
+      simp [m0EvenEightValuationSourceSuffix, List.append_assoc]
+    rw [hlist]
     rw [sideBit_append_right ((markerWord 0 ++ d0) ++ d1pow (t+3))
         (d0 ++ binDec len u ++ lh) (15+3*t) (by omega)]
     simp [d0, sideBit]
