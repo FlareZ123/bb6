@@ -18,6 +18,24 @@ theorem fRun_rank {m u d um dm : Nat} (h : FRun m u d um dm) :
       have hdiv : u = 2 * (u / 2) := by omega
       omega
 
+/-- Exact 2-adic scaling of the first coordinate through an F-run. -/
+theorem fRun_power {m u d um dm : Nat} (h : FRun m u d um dm) :
+    u = 2 ^ m * um := by
+  induction h with
+  | zero u d => simp
+  | step hu tail ih =>
+      have hdiv : u = 2 * (u / 2) := by omega
+      calc
+        u = 2 * (u / 2) := hdiv
+        _ = 2 * (2 ^ m * um) := by rw [ih]
+        _ = 2 ^ (m + 1) * um := by
+          simp [pow_succ, Nat.mul_comm, Nat.mul_left_comm, Nat.mul_assoc]
+
+/-- Every F-run consumes exactly its stated number of powers of two. -/
+theorem fRun_power_dvd {m u d um dm : Nat} (h : FRun m u d um dm) :
+    2 ^ m ∣ u := by
+  exact ⟨um, fRun_power h⟩
+
 /-- The compressed EF block. -/
 def ef (v d : Nat) : Nat × Nat :=
   (v + (d + 8) / 8, d / 4 + 4)
