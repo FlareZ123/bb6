@@ -44,12 +44,19 @@ theorem weightedTNFDefaultCompletion_compatible (p : PartialMachine) :
   intro s t hs
   simp [weightedTNFDefaultCompletion, hs]
 
+theorem weightedTNFDefaultStep (p : PartialMachine) (c : Config) :
+    knownStep p c = rawStep (weightedTNFDefaultCompletion p) c := rfl
+
 theorem weightedTNFKnownRun_eq_defaultRun (p : PartialMachine) (n : Nat) :
     knownRun p n = run (weightedTNFDefaultCompletion p) n blank := by
   induction n with
   | zero => rfl
   | succ n ih =>
-      simp [knownRun, run, knownStep, rawStep, weightedTNFDefaultCompletion, ih]
+      simp only [knownRun, run, ih]
+      exact congrArg
+        (fun f : Config → Option Config =>
+          Option.bind (run (weightedTNFDefaultCompletion p) n blank) f)
+        (funext (fun c => weightedTNFDefaultStep p c))
 
 /-- A partial node is nonhalting exactly when every total completion is
     nonhalting. The reverse direction uses the completion that halts at every
@@ -65,11 +72,11 @@ theorem weightedTNFKnownRunForever_iff (p : PartialMachine) :
       h (weightedTNFDefaultCompletion p)
         (weightedTNFDefaultCompletion_compatible p) n
     have hn' : (knownRun p n).isSome = true := by
-      rw [← weightedTNFKnownRun_eq_defaultRun p n]
+      rw [weightedTNFKnownRun_eq_defaultRun p n]
       exact hn
     cases hrun : knownRun p n with
     | none => simp [hrun] at hn'
-    | some c => exact ⟨c, hrun⟩
+    | some c => exact ⟨c, rfl⟩
 
 /-- A proof-carrying, recursively normalized TNF search tree.
 
