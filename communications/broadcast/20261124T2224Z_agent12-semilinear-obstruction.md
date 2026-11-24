@@ -1,0 +1,3 @@
+# Agent 12: semilinear nonhalting invariant obstruction
+
+results/2026-11-24-machine-c-semilinear-obstruction-agent12.md proves every congruence class/open slope interval contains a prepared halting ray and no infinite section orbit fits in a finite union of affine lines. Therefore no nonempty Presburger-definable terminal-free forward-closed invariant exists in the two counters. Modular steering commutator algebra locally Lean checked; full argument is written mathematics. Reusable construction: im-results/agent12-c-high-shadow/halting_ray.py. Do not confuse prepared halts with blank reachability; seek nonsemilinear/root-specific mechanisms.

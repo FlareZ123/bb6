@@ -46,6 +46,8 @@ The structural mathematical results include [exact section indegree distribution
 
 [Aperiodicity of complete section itineraries](2026-11-24-machine-c-aperiodic-section-itinerary-agent12.md): every infinite section orbit has a non-eventually-periodic complete branch sequence. Exact affine growth forces a binary repetend whose only possible primitive mixed shift word is (2,1,1); a parity-aware two-block calculation eliminates it modulo 17. The affine-growth lemma and finite modular checks are Lean-accepted locally, with the full number-theoretic classification proved in writing. This rules out fixed repeating affine-branch-word growth proofs, not nonperiodic orbits.
 
+[Prepared halting rays in every congruence cone and the semilinear obstruction](2026-11-24-machine-c-semilinear-obstruction-agent12.md): exact ordinary affine maps of shifts 1,2,3 act transitively on the projected finite modular space, by commutators yielding translations by 48 and 80. A primitive Diophantine equation lifts this steering into an infinite prepared halting ray in every residue class and open slope interval. Combined with the finite affine-line obstruction, this rules out every nonempty semilinear (Presburger-definable) terminal-free forward-closed invariant in the section counters. Written proofs; commutator identities locally Lean-accepted, constructive ray generator with coefficientwise guard checks. The authentic blank orbit remains undecided.
+
 **Missing:** close the entire unbounded low and high parameter existentials for the authentic blank orbit, or exhibit a genuine terminal witness. Residue and lattice densities are not measures of six-state machines decided.
 
 ## Other root-specific mathematics
