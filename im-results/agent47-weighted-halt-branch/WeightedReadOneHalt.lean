@@ -184,7 +184,9 @@ theorem readOneHalter_reRooted_four_step :
     TerminalPath.step hz1 (TerminalPath.stop 0 hz0)
   have hd : 1 ∈ delays (zeroNext m) 0 :=
     (mem_delays_iff hz0).mpr ⟨1, hp⟩
-  exact weighted_first_one_realized m 1 2 readOneHalter_root hh hd
+  have hrootm : m initialSlot = some ⟨true, true, 1⟩ :=
+    hm initialSlot (some ⟨true, true, 1⟩) readOneHalter_root
+  exact weighted_first_one_realized m 1 2 hrootm hh hd
 
 /-- For B>=8 the read-one halt child is a valid weighted leaf. -/
 theorem readOneHalter_weighted (B : Nat) (hB : 8 <= B) :
