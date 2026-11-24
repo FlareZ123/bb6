@@ -150,8 +150,8 @@ private theorem m0EvenEightValuationBridgeInputMatch
     have hi : i ≤ 13 := by omega
     have hcoord :
         h-((3*a:Nat):Int)+y = h-((3*a+i:Nat):Int) := by
-      rw [hiCast]
       push_cast
+      rw [hiCast]
       omega
     have hpres := sweptLeft_preserves_left (3*a)
       (s1Config L (8*q) 0 a 0 b h).tape h
@@ -161,6 +161,8 @@ private theorem m0EvenEightValuationBridgeInputMatch
     rw [sideBit_d1pow_append a (3*a+i)
       (m0EvenEightValuationSourceSuffix t len u)
       (by simp [d1pow_length]; omega)] at hcell
+    have hindex : 3*a+i-3*a = i := by omega
+    rw [hindex] at hcell
     have hsource := sourceSuffix_prefix14_match t len u i hi
     have hmark :
         decide (y ∈ (bridgeStartWithBit (decide (0<t))).marked) =
@@ -184,21 +186,25 @@ private theorem m0EvenEightValuationBridgeInputMatch
     · have heq : h-((3*a:Nat):Int)+1 =
         h-((3*a-1:Nat):Int) := by omega
       rw [heq]
+      have hcount : 3*a-1+1 = 3*a := by omega
       have hleft := sweptLeft_leftmost (3*a-1)
         (s1Config L (8*q) 0 a 0 b h).tape h
-      simpa [bridgeStartWithBit, m0EvenEightBridgeStart] using hleft
+      cases hbit : decide (0<t) <;>
+        simpa [bridgeStartWithBit, m0EvenEightBridgeStart,hcount,hbit] using hleft
     · have heq : h-((3*a:Nat):Int)+2 =
         h-((3*a-2:Nat):Int) := by omega
       rw [heq]
       have hblock := sweptLeft_block (3*a) (3*a-2)
         (s1Config L (8*q) 0 a 0 b h).tape h (by omega)
-      simpa [bridgeStartWithBit, m0EvenEightBridgeStart] using hblock
+      cases hbit : decide (0<t) <;>
+        simpa [bridgeStartWithBit, m0EvenEightBridgeStart,hbit] using hblock
     · have heq : h-((3*a:Nat):Int)+3 =
         h-((3*a-3:Nat):Int) := by omega
       rw [heq]
       have hblock := sweptLeft_block (3*a) (3*a-3)
         (s1Config L (8*q) 0 a 0 b h).tape h (by omega)
-      simpa [bridgeStartWithBit, m0EvenEightBridgeStart] using hblock
+      cases hbit : decide (0<t) <;>
+        simpa [bridgeStartWithBit, m0EvenEightBridgeStart,hbit] using hblock
 
 /-- The all-valuation marker-0 8q q4 cut tape, after the 9a sweep,
 44-step fixed bridge, 9t zero-bubble sweep, four-step exit, and
@@ -250,23 +256,21 @@ theorem m0EvenEight_valuation_q4_prefix_run_of_leftFacing
     intro i hi
     have hcell := s1Config_left_cell L (8*q) 0 a 0 b h i
     rw [hface] at hcell
-    rw [sideBit_d1pow_append a i
-      (m0EvenEightValuationSourceSuffix t len u)
-      (by simp [d1pow_length]; omega)] at hcell
     have hside : sideBit (d1pow a ++
         m0EvenEightValuationSourceSuffix t len u) i = true := by
       rw [sideBit_append_left (d1pow a)
         (m0EvenEightValuationSourceSuffix t len u) i
         (by simp [d1pow_length]; omega)]
       exact sideBit_d1pow_true a i (by omega)
-    simpa [T,hside] using hcell
+    rw [hside] at hcell
+    simpa [T] using hcell
   have hright0 : T (h+1) = false := by
     have hc := s1Config_right_cell L (8*q) 0 a 0 b h 0
     simpa [T,s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit] using hc
   have hSweep :
       run tm2 (3*N) (s1Config L (8*q) 0 a 0 b h) =
         some ⟨3,hN,T1⟩ := by
-    simpa [T,N,hN,T1] using counted_left_sweep N T h hOn hright0
+    simpa [T,N,hN,T1,s1Config] using counted_left_sweep N T h hOn hright0
   have hmatch := m0EvenEightValuationBridgeInputMatch
     L q a b t len u h ha hface
   have hBridge :=
