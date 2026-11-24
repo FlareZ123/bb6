@@ -1,6 +1,7 @@
 From BusyCoq Require Import Agent47SourceChunk2 Agent47SourceWitness
   Agent8WeightedSource Agent8AdaptiveSource Agent32SourceBackwards
-  Agent8PackedChunk2_32_32 Agent32SourceEncoding Enumerate62 Individual62.
+  Agent8PackedChunk2_32_32 Agent32SourceEncoding Agent44Q32CanonicalParent
+  Enumerate62 Individual62.
 From Coq Require Import List Bool Lia Arith NArith Strings.String.
 Import ListNotations.
 Import TNF_Node.
@@ -90,8 +91,32 @@ Proof.
     + exact IH.
 Qed.
 
+(* Search the exact nine-hole canonical parent of the 84-node q32
+   checkpoint before searching its 50 uncovered descendants. A single
+   SWside witness for this parent would certify the whole checkpoint. *)
+Definition q32_parent_side_candidate : option side_candidate :=
+  find_side_candidate (TM_from_str (TM_to_str q32_canonical_residual_7)).
+
+Time Eval vm_compute in q32_parent_side_candidate.
+
+Definition q32_parent_side_certs : list source_certificate :=
+  match q32_parent_side_candidate with
+  | Some c => [(TM_to_str q32_canonical_residual_7, candidate_witness c)]
+  | None => []
+  end.
+
+Theorem q32_parent_side_certs_checked bound :
+  forallb (certificate_check bound) q32_parent_side_certs = true.
+Proof.
+  unfold q32_parent_side_certs.
+  destruct q32_parent_side_candidate as [c|] eqn:Hfind; cbn.
+  - apply source_certificate_check_of_candidate.
+    apply find_side_candidate_sound. exact Hfind.
+  - reflexivity.
+Qed.
+
 Definition searched_chunk_certs : list source_certificate :=
-  search_side_roster chunk_remaining.
+  q32_parent_side_certs ++ search_side_roster chunk_remaining.
 
 Definition searched_chunk_roster : list TM :=
   certificate_roster searched_chunk_certs.
@@ -104,7 +129,10 @@ Theorem searched_chunk_roster_safe bound :
 Proof.
   unfold searched_chunk_roster, searched_chunk_certs.
   apply certificate_roster_safe.
-  apply search_side_roster_checked.
+  rewrite forallb_app.
+  split.
+  - apply q32_parent_side_certs_checked.
+  - apply search_side_roster_checked.
 Qed.
 
 Theorem searched_chunk_actual_residuals_sound bound :
