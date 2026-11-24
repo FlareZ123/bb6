@@ -2,7 +2,7 @@
 
 ## Candidate parameter lift
 
-The current source-excluded h5 family is
+The current h5 source-draft family is
 \[
 u=2+8192d,\qquad v=48+8192b.
 \]
@@ -117,7 +117,7 @@ and needs a further image classification.
 ## Research status
 
 This note is an exact arithmetic reduction and a candidate expansion, not a
-source-certified exclusion theorem. The current accepted h5 proof remains the
+source-certified exclusion theorem. The current h5 draft remains the
 even subcase \(n=2d\). To gain the factor-two cylinder, classify the
 odd-coset \(E\) parent by residues of \(r,b\), using the low-value,
 sum-16, and deeper 2-adic inverse branches. Do not promote the odd lift to
