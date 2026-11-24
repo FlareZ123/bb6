@@ -1,5 +1,6 @@
 import TNFPilot
 import SideCycle
+import AlternatingResidualSweep
 
 set_option maxRecDepth 24000
 set_option maxHeartbeats 0
@@ -527,6 +528,7 @@ inductive ResidualNonhaltWitness where
   | ray (n : Nat) (right : Bool) (mask : Nat)
   | lasso (n : Nat)
   | side (entry period : Nat) (right : Bool) (boundary : Int)
+  | alternating (w : Bool)
 
 def residualMask (mask : Nat) (q : Fin 6) : Bool := mask.testBit q.val
 
@@ -535,6 +537,7 @@ def residualWitnessOK (p : PartialMachine) : ResidualNonhaltWitness → Bool
   | .lasso n => finiteLassoCheck p n
   | .side entry period right boundary =>
       decide (0 < period) && finiteSideCycleCheck p entry period right boundary
+  | .alternating w => decide (packTable p = packTable (BB6Coverage.Agent50AlternatingSweep.table w))
 
 theorem residualWitnessOK_sound (p : PartialMachine) (w : ResidualNonhaltWitness)
     (h : residualWitnessOK p w = true) :
@@ -548,6 +551,11 @@ theorem residualWitnessOK_sound (p : PartialMachine) (w : ResidualNonhaltWitness
     have hc : 0 < period ∧ finiteSideCycleCheck p entry period right boundary = true := by
       simpa only [residualWitnessOK, Bool.and_eq_true, decide_eq_true_eq] using h
     exact finiteSideCycleCheck_sound p entry period right boundary hc.1 hc.2
+  | alternating w =>
+    have hc : packTable p = packTable (BB6Coverage.Agent50AlternatingSweep.table w) := by
+      simpa only [residualWitnessOK,decide_eq_true_eq] using h
+    rw [packTable_injective hc]
+    exact BB6Coverage.Agent50AlternatingSweep.never w
 
 def residualWitnessIndices : List (Nat × ResidualNonhaltWitness) :=
   [(1,.ray 0 true 3), (3,.ray 0 true 3), (5,.ray 0 true 3), (7,.ray 0 true 3),
@@ -576,13 +584,13 @@ def residualWitnessIndices : List (Nat × ResidualNonhaltWitness) :=
    (111,.side 7 5 false (1)),
    (118,.side 3 9 false (3)),
    (119,.side 5 7 false (2)),
-   (130,.side 7 3 false (1))]
+   (130,.side 7 3 false (1)), (92,.alternating false), (102,.alternating true)]
 
 def residualWitnessRoster : List (PackedTable × ResidualNonhaltWitness) :=
   residualWitnessIndices.filterMap fun (i,w) =>
     executableRootRoster[i]?.map fun e => (e.2,w)
 
-theorem residualWitnessRoster_count : residualWitnessRoster.length = 51 := by decide
+theorem residualWitnessRoster_count : residualWitnessRoster.length = 53 := by decide
 
 theorem residualWitnessRoster_checked :
     residualWitnessRoster.all (fun (t,w) => residualWitnessOK (unpackTable t) w) = true := by
@@ -603,9 +611,9 @@ theorem residualHasWitness_sound (t : PackedTable) (h : residualHasWitness t = t
 def remainingRootRoster : List PackedResidual :=
   executableRootRoster.filter fun e => !residualHasWitness e.2
 
-theorem remainingRootRoster_count : remainingRootRoster.length = 156 := by decide
+theorem remainingRootRoster_count : remainingRootRoster.length = 154 := by decide
 
-/-- The executable residual count decreases from 207 to 156 only by
+/-- The executable residual count decreases from 207 to 154 only by
     removing cylinders proved nonhalting for every compatible completion. -/
 theorem remainingRootRoster_sound :
     ∀ m, compatible root m → WeightedBound 84 m ∨
@@ -877,7 +885,7 @@ theorem deepSiblingHasWitness_sound (t : PackedTable) (h : deepSiblingHasWitness
 def reducedRootRoster : List PackedResidual :=
   remainingRootRoster.filter fun e => !deepSiblingHasWitness e.2
 
-theorem reducedRootRoster_count : reducedRootRoster.length = 150 := by decide
+theorem reducedRootRoster_count : reducedRootRoster.length = 148 := by decide
 
 theorem reducedRootRoster_sound :
     ∀ m, compatible root m → WeightedBound 84 m ∨
