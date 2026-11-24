@@ -121,6 +121,10 @@ The packet invariant gives sharper costs for actual exceptional exits:
 
 Thus every actual exceptional return is covered by the universal threshold 3^s(6k+27), while a skip exit has the stronger 6k-9 factor. The separate exact return-cost theorems and skip-coordinate lemmas passed [CI 45403951106](https://github.com/FlareZ123/bb6/actions/runs/45403951106), revision 3504354e2f2a279f04a550557be9612be7d2d4f6.
 
+## Exact forward acceleration and remaining all-time gate
+
+[ForwardMacro.md](ForwardMacro.md) gives the complete four-way band macro, with a power-of-three same-band jump followed by halt, special exit, one-band advance or two-band skip. The executable bandHaltBy test is equivalent to reaching an actual terminal up to any prescribed band limit. All graph-level statements compile locally against copied exact graph dependencies; pinned original source-closure CI is requested. The finite forward experiment suggests a simpler sufficient all-time criterion: the relaxed positive-exit orbit must maintain q_k >= k+6 at every band. This is unproved; the full macro is exact regardless of that conjecture.
+
 ## All-band and nested valuation dynamics
 
 [BandDynamics.md](BandDynamics.md) gives the exact inverse partition, independent bridge from the published two-counter BMO5 recurrence, exact one-band and same-band run characterizations, initial negative-unit stripping and the unbounded exclusion for stripped units 1 or 11 modulo 12. It also gives the secondary residue tree and two finite nested exponent scans for w=5 and w=7, each complete through n=10^12. Source closure accepted in CI 45386870020, 45387850562 and 45388885057; the multiplicative lifting lemma is locally kernel-certified. The full nested tree cardinality and finite scans are paper proof and computational evidence respectively. The positive-coordinate continuation, including low-boundary exceptions, remains the genuine all-time obstacle.
