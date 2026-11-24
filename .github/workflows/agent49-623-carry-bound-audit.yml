@@ -44,6 +44,30 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/Parity623Source.lean" Agent49ParitySource.lean
           lake env lean -o .lake/build/lib/lean/Agent49ParitySource.olean Agent49ParitySource.lean
 
+      - name: Compile Agent 8 ternary budget source
+        working-directory: /tmp/cryptids
+        run: |
+          set -euo pipefail
+          cp "$GITHUB_WORKSPACE/im-results/agent8-623-inverse/TernaryBudgetSource.lean" Agent8BudgetSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent8BudgetSource.olean Agent8BudgetSource.lean 2>&1 | tee Agent8BudgetSource.log
+          if grep -q 'sorryAx' Agent8BudgetSource.log; then exit 1; fi
+
+      - name: Compile Agent 49 ternary shift source
+        working-directory: /tmp/cryptids
+        run: |
+          set -euo pipefail
+          cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/TernaryShiftSource.lean" Agent49TernaryShiftSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent49TernaryShiftSource.olean Agent49TernaryShiftSource.lean 2>&1 | tee Agent49TernaryShiftSource.log
+          if grep -q 'sorryAx' Agent49TernaryShiftSource.log; then exit 1; fi
+
+      - name: Compile Agent 49 ternary buffer source
+        working-directory: /tmp/cryptids
+        run: |
+          set -euo pipefail
+          cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/TernaryBufferSource.lean" Agent49TernaryBufferSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent49TernaryBufferSource.olean Agent49TernaryBufferSource.lean 2>&1 | tee Agent49TernaryBufferSource.log
+          if grep -q 'sorryAx' Agent49TernaryBufferSource.log; then exit 1; fi
+
       - name: Compile Agent41 root-mass gap theorem against unchanged source
         working-directory: /tmp/cryptids
         run: |
@@ -74,6 +98,17 @@ jobs:
           lake env lean -o .lake/build/lib/lean/Agent27ConeOnlyEll20RootExclusion.olean Agent27ConeOnlyEll20RootExclusion.lean 2>&1 | tee Agent27ConeOnlyEll20RootExclusion.log
           if grep -q 'sorryAx' Agent27ConeOnlyEll20RootExclusion.log; then
             echo 'sorryAx detected in ell=20 cone-family root exclusion'
+            exit 1
+          fi
+
+      - name: Compile Agent27 no-uniform-quadratic-gap theorem
+        working-directory: /tmp/cryptids
+        run: |
+          set -euo pipefail
+          cp "$GITHUB_WORKSPACE/im-results/agent27-623-root-scan/QuadraticGapNoStateLocalInvariant.lean" Agent27QuadraticGapNoStateLocalInvariant.lean
+          lake env lean -o .lake/build/lib/lean/Agent27QuadraticGapNoStateLocalInvariant.olean Agent27QuadraticGapNoStateLocalInvariant.lean 2>&1 | tee Agent27QuadraticGapNoStateLocalInvariant.log
+          if grep -q 'sorryAx' Agent27QuadraticGapNoStateLocalInvariant.log; then
+            echo 'sorryAx detected in quadratic gap theorem'
             exit 1
           fi
 
