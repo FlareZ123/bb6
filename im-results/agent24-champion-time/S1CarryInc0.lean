@@ -81,14 +81,23 @@ theorem s1Config_carryInput_match
       simpa only [List.append_assoc] using
         sideBit_carryPrefixInput r
           (binDec len q ++ markerWord m ++ d0 ++ binDec L n ++ lh) i hbound
-    have hprop :
-        (-(i:Int) = -(3*(r:Int))-2 ∨
-          (-(3*(r:Int))+1 ≤ -(i:Int) ∧ -(i:Int) ≤ 0) ∨
-          -(i:Int)=2 ∨ -(i:Int)=3 ∨ -(i:Int)=4) ↔
-        (i < 3*r ∨ i = 3*r+2) := by omega
+    let P : Prop :=
+      (-(i:Int) = -(3*(r:Int))-2 ∨
+        (-(3*(r:Int))+1 ≤ -(i:Int) ∧ -(i:Int) ≤ 0) ∨
+        -(i:Int)=2 ∨ -(i:Int)=3 ∨ -(i:Int)=4)
+    have hprop : P ↔ (i < 3*r ∨ i = 3*r+2) := by
+      dsimp [P]
+      omega
     have hbit : carryInputBit r (-(i:Int)) =
         decide (i < 3*r ∨ i = 3*r+2) := by
-      simp [carryInputBit,hprop]
+      change decide P = decide (i < 3*r ∨ i = 3*r+2)
+      by_cases hp : P
+      · have hq : i < 3*r ∨ i = 3*r+2 := hprop.mp hp
+        simp [hp,hq]
+      · have hq : ¬ (i < 3*r ∨ i = 3*r+2) := by
+          intro hq
+          exact hp (hprop.mpr hq)
+        simp [hp,hq]
     have hcoord : h + (-(i:Int)) = h-(i:Int) := by omega
     simp only [hxEq]
     calc
