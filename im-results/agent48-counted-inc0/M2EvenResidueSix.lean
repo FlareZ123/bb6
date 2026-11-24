@@ -510,7 +510,7 @@ private theorem m2EvenSix_counted_left_sweep_heads
     N T h hOn hr k hk d hd
 
 private theorem m2EvenSix_q4_prefix_head_bound
-    (a b : Nat) (h : Int) :
+    (a b : Nat) (h : Int) (ha : 0 < a) :
     ∀ k, k < 44+12*a → ∀ d,
       run tm2 k (s1Config 3 6 2 a 0 b h) = some d →
       h-((3*a+2:Int))-9 ≤ d.head := by
@@ -540,6 +540,7 @@ private theorem m2EvenSix_q4_prefix_head_bound
         have hside := sideBit_append_right (d1pow a)
           m2EvenResidueSixSourceLeftSuffix (3*a) (by rw [d1pow_length]; omega)
         rw [hside] at hcell
+        rw [d1pow_length] at hcell
         simpa [T,m2EvenResidueSixSourceLeftSuffix,markerWord,sideBit] using hcell
       · subst i
         have hside := sideBit_append_right (d1pow a)
@@ -578,7 +579,7 @@ private theorem m2EvenSix_q4_prefix_head_bound
     exact hb
   have hlinear : linearRightOnes T2 (hN+2) (3*a) := by
     simpa [T2,hN,N] using
-      m2EvenSixQ4CutTape_linearRightOnes a b h (by omega)
+      m2EvenSixQ4CutTape_linearRightOnes a b h ha
   intro k hk d hd
   let p1 := 3*N
   let p2 := p1+38
@@ -632,7 +633,7 @@ theorem m2Even_residue6_q4_prefix_source
         run tm2 j base = some d →
         m2EvenResidueSixInside a h d.head = true := by
     intro j hj d hd
-    have hlow := m2EvenSix_q4_prefix_head_bound a b h j hj d hd
+    have hlow := m2EvenSix_q4_prefix_head_bound a b h ha j hj d hd
     simpa [m2EvenResidueSixInside] using hlow
   have hlift := run_frame tm2 (m2EvenResidueSixInside a h)
     background base (44+12*a) hheads
@@ -642,10 +643,21 @@ theorem m2Even_residue6_q4_prefix_source
         some (⟨4,h,m2EvenSixQ4CutTape a b h⟩ : Config) := by
     obtain ⟨hprefix,_,_,_⟩ :=
       m2EvenSix_q4_prefix_data_exact a b h ha
-    simpa [base,s1Config] using hprefix
+    change run tm2 (44+12*a) (s1Config 3 6 2 a 0 b h) =
+      some (⟨4,h,m2EvenSixQ4CutTape a b h⟩ : Config)
+    exact hprefix
   rw [hbaseRun] at hlift
   simp only [Option.map_some] at hlift
-  simpa [m2EvenResidueSixCutTape,background] using hlift
+  have hfinalConfig :
+      frame (m2EvenResidueSixInside a h) background
+        (⟨4,h,m2EvenSixQ4CutTape a b h⟩ : Config) =
+        (⟨4,h,m2EvenResidueSixCutTape L k a b h⟩ : Config) := by
+    apply m2EvenResidueSix_config_ext
+    · rfl
+    · rfl
+    · rfl
+  rw [hfinalConfig] at hlift
+  exact hlift
 
 theorem m2Even_residue6_q4_prefix_data
     (L k a b : Nat) (h : Int)
