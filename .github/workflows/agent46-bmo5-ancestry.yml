@@ -69,7 +69,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for m in CapSieveCore CapSieveLift CapSieveGraph CapSieveClasses CapSieveSource CapBandInverse CapBandRun CapBmo CapBmoSource CapPositiveMacroCore CapForwardMacro CapForwardMacroReach CapForwardMacroSource CapPositiveGate CapNegativeExitCore CapNegativeExit CapSignedMacro CapTerminalSpacing CapSignedRoots CapSignedMacroSource CapCanonicalEntry CapTerminalInverse CapRayParent CapResetInverse CapCanonicalParent CapCanonicalReach CapAnchorTerminal CapAnchorRoots CapAnchorSource; do
+          for m in CapSieveCore CapSieveLift CapSieveGraph CapSieveClasses CapSieveSource CapBandInverse CapBandRun CapBmo CapBmoSource CapPositiveMacroCore CapForwardMacro CapForwardMacroReach CapForwardMacroSource CapPositiveGate CapNegativeExitCore CapNegativeExit CapSignedMacro CapTerminalSpacing CapSignedRoots CapSignedMacroSource CapCanonicalEntry CapTerminalInverse CapRayParent CapResetInverse CapCanonicalParent CapCanonicalReach CapAnchorTerminal CapAnchorRoots CapAnchorSource CapTerminalBand CapModLift CapModNoGo CapTerminalBandSource; do
             cp "$GITHUB_WORKSPACE/im-results/agent46-bmo5-421-inverse/$m.lean" "$m.lean"
             lake env lean -o ".lake/build/lib/lean/$m.olean" "$m.lean" 2>&1 | tee -a "$RUNNER_TEMP/cap-macro.log"
           done
@@ -83,7 +83,7 @@ jobs:
         run: |
           set -euo pipefail
           export LEAN_PATH="$PWD"
-          for m in Cap CapInverse CapRoot CapMulti CapSieveCore CapSieveLift CapSieveGraph CapSieveClasses CapSieveCount CapSieveSource CapBandInverse CapBandRun CapBandBoundary CapBmo CapBmoSource CapNegativePhase CapStrip CapStripSource CapUpRun CapNestedLift CapPhase CapPhaseSource CapPhaseCost CapPhaseCostSource CapPositiveMacroCore CapForwardMacro CapForwardMacroReach CapPositiveGate CapPhaseCostGate CapNegativeExitCore CapNegativeExit CapSignedMacro CapTerminalSpacing CapSignedRoots CapCanonicalEntry CapTerminalInverse CapRayParent CapResetInverse CapCanonicalParent CapCanonicalReach CapAnchorTerminal CapAnchorRoots; do
+          for m in Cap CapInverse CapRoot CapMulti CapSieveCore CapSieveLift CapSieveGraph CapSieveClasses CapSieveCount CapSieveSource CapBandInverse CapBandRun CapBandBoundary CapBmo CapBmoSource CapNegativePhase CapStrip CapStripSource CapUpRun CapNestedLift CapPhase CapPhaseSource CapPhaseCost CapPhaseCostSource CapPositiveMacroCore CapForwardMacro CapForwardMacroReach CapPositiveGate CapPhaseCostGate CapNegativeExitCore CapNegativeExit CapSignedMacro CapTerminalSpacing CapSignedRoots CapCanonicalEntry CapTerminalInverse CapRayParent CapResetInverse CapCanonicalParent CapCanonicalReach CapAnchorTerminal CapAnchorRoots CapTerminalBand CapModLift CapModNoGo; do
             lean -o "$m.olean" "$m.lean" 2>&1 | tee -a "$RUNNER_TEMP/cap-sieve.log"
           done
           if grep -Eq 'sorryAx|native_decide' "$RUNNER_TEMP/cap-sieve.log"; then
