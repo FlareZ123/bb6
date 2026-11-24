@@ -215,9 +215,11 @@
     380,
     401,
     481,
-    1085,
+    1085
+  ],
+  "notes": "Indices zero-based in enumerator open.txt order. FAR default applies only to indices outside explicit groups, pump and unresolved lists. Long tuples are time, direction, state, period, event index. All candidate witnesses require formal audit. Recursive candidate leaves use emit_tripling.py, local copied-zipper Lean proof passed (propext, Quot.sound); original-source audit pending. Exclude these indices from FAR default.",
+  "recursive_candidate": [
     1344,
     1346
-  ],
-  "notes": "Indices zero-based in enumerator open.txt order. FAR default applies only to indices outside explicit groups, pump and unresolved lists. Long tuples are time, direction, state, period, event index. All candidate witnesses require formal audit."
+  ]
 }
