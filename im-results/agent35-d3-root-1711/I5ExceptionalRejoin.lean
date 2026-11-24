@@ -19,22 +19,22 @@ def t5 : Nat := (DRegular.terminal5.a - 4) / 9
 
 theorem terminal5_shape :
     DRegular.terminal5 = (⟨9*t5+4,5,1⟩ : DRegular.L) := by
-  cases DRegular.terminal5 with
-  | mk a q b =>
-    have hq : q = 5 := by decide
-    have hb : b = 1 := by decide
-    have ha : a % 9 = 4 := by decide
-    simp only [DRegular.L.mk.injEq]
-    constructor
-    · dsimp [t5]
-      omega
-    · exact ⟨hq,hb⟩
+  have hq : DRegular.terminal5.q = 5 := by decide
+  have hb : DRegular.terminal5.b = 1 := by decide
+  have ha : DRegular.terminal5.a % 9 = 4 := by decide
+  ext
+  · dsimp [t5]
+    omega
+  · exact hq
+  · exact hb
 
 theorem t5_mod3 : t5 % 3 = 2 := by
   decide
 
-def eCost (t : Nat) : Nat := 108*t*t + 147*t + 76
-def bCost (t : Nat) : Nat := 768*t*t + 584*t + 101
+def eCost (t : Nat) : Nat :=
+  12*(3*t)*(3*t) + 49*(3*t) + 64 + 4*3
+def bCost (t : Nat) : Nat :=
+  12*(8*t+1)*(8*t+1) + 49*(8*t+1) + 40
 def bThirdIndex (t : Nat) : Nat := (64*t+25)/3
 def bThirdCost (t : Nat) : Nat :=
   12*(bThirdIndex t)*(bThirdIndex t) + 49*(bThirdIndex t) + 40
@@ -76,9 +76,7 @@ theorem e_double_source (t : Nat) :
     simp [xs, hlen, CryptidBoundary.oppairs,
       CryptidBoundary.pairs, List.append_assoc]
   have hcost :
-      eCost t = 12*(3*t)*(3*t)+49*(3*t)+64+4*3 := by
-    dsimp [eCost]
-    ring
+      eCost t = 12*(3*t)*(3*t)+49*(3*t)+64+4*3 := rfl
   have hraw :
       CryptidBoundary.run (eCost t)
         (CryptidBoundary.init (xs ++ List.replicate 2 false)) =
@@ -100,15 +98,18 @@ theorem b_source (t : Nat) :
   have hlen : 3*K+2 = 24*t+5 := by
     dsimp [K]
     omega
+  have hfront :
+      List.replicate (24*t+5) true =
+        true :: true :: List.replicate (3*K) true := by
+    rw [show 24*t+5 = 3*K+2 by omega,
+      List.replicate_succ, List.replicate_succ]
   have hinput :
       eMiddle t =
         CryptidBoundary.init
           (List.replicate (3*K) true ++ false :: ys) := by
-    simp [eMiddle, CryptidBoundary.init, K, ys, hlen,
+    simp [eMiddle, CryptidBoundary.init, K, ys, hlen, hfront,
       List.append_assoc]
-  have hcost : bCost t = 12*K*K+49*K+40 := by
-    dsimp [bCost,K]
-    ring
+  have hcost : bCost t = 12*K*K+49*K+40 := rfl
   have hrep :
       List.replicate (8*K+9) true ++ List.replicate 10 true =
         List.replicate (64*t+27) true := by
@@ -143,6 +144,7 @@ theorem b_reentry_source (t : Nat) (ht : t % 3 = 2) :
     CryptidBoundary.run (bThirdCost t) (bMiddle t) =
       DRegularSource.sourceSection (pureReentry t) := by
   let k : Nat := bThirdIndex t
+  have hmod : (64*t+25) % 3 = 0 := by omega
   have hdiv : 3*k = 64*t+25 := by
     dsimp [k,bThirdIndex]
     omega
@@ -152,7 +154,9 @@ theorem b_reentry_source (t : Nat) (ht : t % 3 = 2) :
       _ = 8*(64*t+25)+45 := by rw [hdiv]
       _ = 512*t+245 := by omega
   have hstart : 64*t+27 = 3*k+2 := by omega
-  have htarget : 8*k+15 = (512*t+245)/3 := by omega
+  have htarget : 8*k+15 = (512*t+245)/3 := by
+    rw [← hnum]
+    simp
   have hs :
       DRegularSource.sourceSection ⟨64*t+27,1,5⟩ =
       DRegularSource.sourceSection ⟨3*k+2,1,5⟩ := by
@@ -162,6 +166,9 @@ theorem b_reentry_source (t : Nat) (ht : t % 3 = 2) :
       DRegularSource.sourceSection ⟨8*k+15,0,0⟩ =
       DRegularSource.sourceSection (pureReentry t) := by
     simp [pureReentry, htarget]
+  change CryptidBoundary.run (bThirdCost t)
+    (DRegularSource.sourceSection ⟨64*t+27,1,5⟩) =
+      DRegularSource.sourceSection (pureReentry t)
   rw [hs, htgt]
   simpa [bThirdCost,k,bThirdIndex] using
     (BB6.Agent31RegularB.b_one k 5)
@@ -328,9 +335,11 @@ theorem parsed_D3_no_halt_through_reentry (n : Nat)
     exact no_frozen_through_reentry (k+1) (by omega) hfrozen.2
 
 theorem horizon_ge_10pow1458 : 10^1458 ≤ horizon := by
-  have h := BB6.Agent35I5Root.horizon_ge_10pow1458
-  dsimp [horizon, sourceElapsed, tailCost]
-  omega
+  have hOld := BB6.Agent35I5Root.horizon_ge_10pow1458
+  have hMono : BB6.Agent35I5Root.horizon ≤ horizon := by
+    dsimp [BB6.Agent35I5Root.horizon, horizon, sourceElapsed, tailCost]
+    omega
+  exact Nat.le_trans hOld hMono
 
 #print axioms terminal5_shape
 #print axioms t5_mod3
