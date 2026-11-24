@@ -40,18 +40,25 @@ def read_candidate_bank(path: Path):
 
 
 candidate_dir = HERE.parent / "agent21-raw85"
-candidate_files = [
-    candidate_dir / "dfa-candidates.txt",
-    candidate_dir / "smt-candidates.txt",
-]
+canonical_path = candidate_dir / "dfa-candidates.txt"
+smt_path = candidate_dir / "smt-candidates.txt"
+canonical = read_candidate_bank(canonical_path)
+if len(canonical) != 14:
+    raise RuntimeError(f"expected 14 canonical raw85 candidates, found {len(canonical)}")
+if not smt_path.exists():
+    raise FileNotFoundError("commit the eight workflow-validated records as im-results/agent21-raw85/smt-candidates.txt")
+smt = read_candidate_bank(smt_path)
+if len(smt) != 8:
+    raise RuntimeError(f"expected eight SMT raw85 candidates, found {len(smt)}")
 extra = []
-for candidate_file in candidate_files:
-    bank = read_candidate_bank(candidate_file)
-    print(f"RAW85_CANDIDATE_BANK {candidate_file.name} {len(bank)}")
+for bank_name, bank in ((canonical_path.name, canonical), (smt_path.name, smt)):
+    print(f"RAW85_CANDIDATE_BANK {bank_name} {len(bank)}")
     extra.extend(candidate for candidate in bank if candidate not in extra)
 
 sibling.EXTRA_DFAS = extra
 print(f"RAW85_EXTRA_DFAS {len(sibling.EXTRA_DFAS)}")
+for stale in OUTPUT_DIR.glob("FourHoleSibling*.lean"):
+    stale.unlink()
 sibling.main()
 
 # Preserve an explicit equality between the generated path-end parent and the
