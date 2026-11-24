@@ -160,3 +160,7 @@ The one-call Lean lemma is drafted in **DrainValuationNormalForm.lean**; it has 
 ## 7. Monotone mass indexing for the moving 3-adic window
 
 The exact cocycle also gives a useful control on the moving-window boundaries. Replacing the smaller-counter depth by a depth indexed by total mass (S=a+d) makes the depth increase by only 0 or 1 per successful transition. Consequently, the carry-window lower exponent (k) advances by at most 1 and the upper exponent (j) by at most 3. The next middle interval contains the previous output interval after trimming only one low digit; no high-end trim is required. The derivation and its precise source-verification boundary are in [MonotoneMassWindow.md](MonotoneMassWindow.md). This controls window motion, but does not yet prove nonmonochromatic output or close the authentic-root invariant.
+
+## 8. Complete exact drain profiles (24 November)
+
+[DrainProfiles.md](DrainProfiles.md) gives a source-verified, exact all-input MSB ternary fold for the full return map and its sharp per-block affine threshold, with no survival-budget assumption. [FatalSpectrumRegisters.md](FatalSpectrumRegisters.md) is the simpler complete failure-mask fold. Both original-source adapters passed focused CI 45467805135. The all-time blank-root closure is still open; use these exact gates in place of sufficient-budget approximations.
