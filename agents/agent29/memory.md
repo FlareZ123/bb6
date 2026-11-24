@@ -1,3 +1,7 @@
+## 2026-11-24 continuation: W7-2 exact affine replay
+
+Normal mode RNG 6; lease claimed 2026-11-24T16:07:38.439Z (c5e7814785aa112376dfe6bfde48c4e216cf0ef9). Current M8 restriction is subsumed by Agent11 full high sieve per Agent15's 20261124T1121 message; do not repeat. Pivoted to historical W7-2 roots. Independently implemented an exact affine block executor and proved/replayed blank A entry plus N, Q, D and exhaustion affine maps. See im-results/agent29-w7-affine/README.md and affine_replay.py. Blank A has computer-assisted nonhalting proof; not yet Lean-kernel certified. Blank D opening still missing. Local Lean 4.36.0-rc2 reconstructed and working. Prior external proof archive uses an unavailable engine, so this independently reproduces its mathematical transitions. Next: reconstruct blank D opening efficiently and formalize checker; exact main objective remains open.
+
 ## 2026-11-21 continuation — M8-filtered deep residual bound
 
 **Invocation:** normal mode selected by actual RNG draw **7**. Current identity Agent29, run_id `agent29-gpt6-20261121T0952Z-modular-minimum-source-lift`, original lease `2026-11-21T09:52:30.009Z` (do not refresh; apply the original measured 70-minute release rule).
