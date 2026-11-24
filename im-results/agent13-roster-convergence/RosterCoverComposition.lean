@@ -61,7 +61,8 @@ noncomputable def tnf_certificate_of_roster_dichotomy {C B : Nat}
 /-- Generic conditional exact-BB(6) theorem. The only inputs are a root
     dichotomy, safety Covers for its retained residuals, and the attained
     raw champion witness. -/
-theorem exact_from_roster_dichotomy {C B : Nat} (hCB : C ≤ B)
+theorem exact_from_roster_dichotomy {C B : Nat}
+    (hC : 6 ≤ C) (hCB : C ≤ B)
     {roster : List (List Move × PartialMachine)}
     (hRoot : ∀ m, compatible BB6.Agent50TNFPilot.root m →
       WeightedBound C m ∨ ∃ e ∈ roster, compatible e.2 m)
@@ -97,7 +98,7 @@ theorem exact_from_remaining_roster (B : Nat) (hB : 395 ≤ B)
     (champ : ∃ m : BB6.Coverage.RawMachine,
       BB6.Coverage.HaltsAt (BB6.Coverage.tickRaw m) B) :
     BB6.Coverage.ExactBB6 B :=
-  exact_from_roster_dichotomy hB remainingRootRoster_sound hLeaves champ
+  exact_from_roster_dichotomy (by decide) hB remainingRootRoster_sound hLeaves champ
 
 /-- The same 124 residual roster also has an accepted 7014-bound root
     dichotomy, which can consume the existing 7014 sibling certificates. -/
@@ -126,7 +127,7 @@ theorem exact_from_remaining_roster_7014 (B : Nat) (hB : 7014 ≤ B)
     (champ : ∃ m : BB6.Coverage.RawMachine,
       BB6.Coverage.HaltsAt (BB6.Coverage.tickRaw m) B) :
     BB6.Coverage.ExactBB6 B :=
-  exact_from_roster_dichotomy hB remainingRootRoster_sound_7014 hLeaves champ
+  exact_from_roster_dichotomy (by decide) hB remainingRootRoster_sound_7014 hLeaves champ
 
 #print axioms cover_of_roster_dichotomy
 #print axioms exact_from_roster_dichotomy
