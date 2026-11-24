@@ -160,7 +160,7 @@ theorem prefix_cube_fuel (f : Nat → Nat) (N d : Nat)
     calc
       16*L≤16*2^(Nat.log2 L+1) := Nat.mul_le_mul_left 16 (Nat.le_of_lt hHL)
       _ ≤16*2^(3*((Nat.log2 L+1)/3)+2) := Nat.mul_le_mul_left 16 hHpow
-      _ =64*2^(3*((Nat.log2 L+1)/3)) := by rw [hpow2]; ring
+      _ =64*2^(3*((Nat.log2 L+1)/3)) := by rw [hpow2]; simp [Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm]
 
   have hRindex : L≤3*((L+2)/3) := by omega
   have hRpow := Nat.pow_le_pow_right (n:=2) (by decide : 0<2) hRindex
