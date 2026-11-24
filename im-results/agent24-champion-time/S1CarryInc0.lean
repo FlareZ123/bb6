@@ -33,6 +33,7 @@ private theorem sideBit_carryPrefixInput (r : Nat) (rest : List Bool)
       decide (i < 3*r ∨ i = 3*r+2) := by
   by_cases hlt : i < 3*r
   · have hones := sideBit_d1pow_true r i hlt
+    simp only [List.append_assoc]
     rw [sideBit_append]
     simp [d1pow_length,hlt,hones]
   · have hc : i=3*r ∨ i=3*r+1 ∨ i=3*r+2 := by omega
