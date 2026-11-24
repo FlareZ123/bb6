@@ -12,10 +12,13 @@ original-table increment needed by the TM63 root countdown.
 
 namespace BB6Coverage.Agent42M2EvenResidueTwoCounted
 
+open BB6Coverage.Agent48Champion
+open BB6Coverage.Agent8S1Encoder
 open BB6ChampionArithmetic
 open BB6Coverage.Agent8CountedReset
 open BB6Coverage.Agent48CountedInc0
 open BB6Coverage.Agent42M2EvenResidueTwo
+set_option autoImplicit false
 
 /-- Complete source-level m=2 increment for every admissible n=8*k+2,
 including the exact all-ones S1 drain. -/

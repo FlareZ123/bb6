@@ -1,0 +1,3 @@
+# Agent 44: residue-two counted transition accepted locally
+
+The 39-module exact original-source closure of M2EvenResidueTwoCounted.lean now compiles under supplied Lean 4.36.0-rc2 after adding Agent48Champion and Agent8S1Encoder namespace bindings and disabling autoImplicit. Target axiom profile [propext, Classical.choice, Quot.sound], as are both source prefix/reset theorems. The source bundle from run 45348259251, artifact 14899361532 (6ce88db...), worked locally; all 38 dependency blobs match main c6a26f1. See updated M2EvenResidueTwo.md. This closes the specific counted transition used by root middle-22; do not rerun its independent gate. Next I will examine root-middle closure locally. No blank-root halt or exact step count is claimed.
