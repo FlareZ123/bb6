@@ -11,6 +11,9 @@ modulus 2^K with K no larger than the history cost m. Unlike the simpler
 namespace BB6.Agent28FullPrefix
 
 open BB6.Agent28
+open BB6.Agent1Quarter
+open BB6.Agent1UpperTail
+open BB6.Agent47P1
 open BB6.Agent43WallListCore
 open BB6.Agent43WallListSource
 
@@ -51,14 +54,21 @@ theorem fullPrefixSum_cons (Q j k a : Nat) (A : List Nat)
             (j+1 ≤ a ∧ a < j+1+k) := by omega
         simp [List.mem_cons, h, he, Nat.add_assoc]
 
+theorem fullPrefixSum_nil (Q j k : Nat) :
+    fullPrefixSum Q j [] k = 0 := by
+  induction k generalizing j with
+  | zero => rfl
+  | succ k ih => simp [fullPrefixSum, ih]
+
 theorem fullPrefix_bits (Q j k : Nat) (A : List Nat) :
     fullPrefixSum Q j A k =
       2^j * fullSumBits Q j (BB6WallBridge.bits A j k) := by
   induction k generalizing j with
   | zero => simp [fullPrefixSum, fullSumBits, BB6WallBridge.bits]
   | succ k ih =>
-      rw [fullPrefixSum, fullSumBits, BB6WallBridge.bits, ih,
-        Nat.mul_add, Nat.pow_succ]
+      simp only [fullPrefixSum, fullSumBits.eq_def,
+        BB6WallBridge.bits.eq_def]
+      rw [ih, Nat.mul_add, Nat.pow_succ]
       by_cases h : j ∈ A <;>
         simp [h, fullWeight, Nat.mul_assoc, Nat.mul_comm]
 
@@ -67,13 +77,14 @@ theorem fullWeighted_mod_prefix (Q K : Nat) (A : List Nat)
     fullWeightedSum Q A % 2^K =
       fullPrefixSum Q 0 A K % 2^K := by
   induction A with
-  | nil => simp [fullWeightedSum, fullPrefixSum]
+  | nil => simp [fullWeightedSum, fullPrefixSum_nil]
   | cons a A ih =>
       obtain ⟨ha, hn⟩ := List.nodup_cons.mp hnd
       rw [fullWeightedSum,
         fullPrefixSum_cons Q 0 K a A ha, Nat.add_mod, ih hn]
       by_cases h : a < K
-      · simp [h, fullWeight, Nat.add_comm, Nat.add_mod]
+      · simp [h, fullWeight, Nat.add_mod, Nat.add_comm,
+          Nat.add_left_comm, Nat.add_assoc]
       · have hpow : 2^K ∣ 2^a := by
           refine ⟨2^(a-K), ?_⟩
           rw [← Nat.pow_add, Nat.add_sub_of_le (by omega)]
@@ -83,7 +94,8 @@ theorem fullWeighted_mod_prefix (Q K : Nat) (A : List Nat)
           refine ⟨(Q-a)*r, ?_⟩
           rw [fullWeight, hr]
           ac_rfl
-        simp [h, hz, fullWeight]
+        rw [Nat.add_mod, hz]
+        simp
 
 theorem fullWeighted_mod_bits (Q K : Nat) (A : List Nat)
     (hnd : A.Nodup) :
@@ -104,19 +116,28 @@ theorem fullSum_add_weighted (n Q : Nat) (A : List Nat)
   | nil => simp [fullWeightedSum, costWeightedSum, costPowSum]
   | cons s A ih =>
       have hs0 : s ≤ Q := hs s (by simp)
+      have hnp : n+3 ≤ 7*2^n := by
+        rw [hQ] at hs0
+        omega
       have hstail : ∀ t ∈ A, t ≤ Q := by
         intro t ht
         exact hs t (by simp [ht])
       have hcoeff : (Q-s)+(n+3+s)=7*2^n := by
         rw [hQ]
         omega
-      simp only [fullWeightedSum, costWeightedSum, costPowSum]
-      rw [ih hstail]
-      have hterm :
-          (Q-s)*2^s + (n+3+s)*2^s = 7*2^n*2^s := by
-        rw [← Nat.add_mul, hcoeff]
-      rw [hterm]
-      ac_rfl
+      simp only [fullWeightedSum, costWeightedSum, costPowSum, fullWeight]
+      calc
+        (Q-s)*2^s + fullWeightedSum Q A +
+            ((n+3+s)*2^s + costWeightedSum n A) =
+            ((Q-s)+(n+3+s))*2^s +
+              (fullWeightedSum Q A+costWeightedSum n A) := by
+                rw [Nat.add_mul]
+                ac_rfl
+        _ = 7*2^n*2^s + 7*2^n*costPowSum A := by
+              rw [hcoeff, ih hstail]
+        _ = 7*2^n*(2^s+costPowSum A) := by
+              rw [Nat.mul_add]
+              ac_rfl
 
 def fullCarryStep (Q j : Nat) (cs : List Nat) : List Nat :=
   cs.flatMap fun c =>
@@ -227,7 +248,8 @@ theorem noFullPrefix_of_emptyCarry (Q K : Nat)
   have hmodadd := Nat.mod_add_div total (2^K)
   rw [hmod] at hmodadd
   have hsum : total+1 = 2^K*(total/2^K+1) := by
-    have hdiv' : total = (2^K-1)+2^K*(total/2^K) := hmodadd
+    have hdiv' : total = (2^K-1)+2^K*(total/2^K) :=
+      hmodadd.symm
     have hdivPlus := congrArg (fun x => x+1) hdiv'
     calc
       total+1 = ((2^K-1)+2^K*(total/2^K))+1 := hdivPlus
@@ -235,12 +257,17 @@ theorem noFullPrefix_of_emptyCarry (Q K : Nat)
             have hsub : 2^K-1+1=2^K :=
               Nat.sub_add_cancel (Nat.one_le_pow K 2 (by decide))
             omega
-      _ = 2^K*(total/2^K+1) := by rw [Nat.mul_add]; ac_rfl
-  have hpath : FullCarryPath Q 0 xs 1 (total/2^K+1) := by
-    apply fullCarryPath_of_sum
-    simpa [hlen, total] using hsum
+      _ = 2^K*(total/2^K+1) := by
+            rw [Nat.mul_add]
+            simp
+  have hsum' : 1+fullSumBits Q 0 xs =
+      2^xs.length*(fullSumBits Q 0 xs/2^K+1) := by
+    simpa [total, hlen, Nat.add_comm] using hsum
+  have hpath : FullCarryPath Q 0 xs 1
+      (fullSumBits Q 0 xs/2^K+1) :=
+    fullCarryPath_of_sum Q xs 0 1 _ hsum'
   have hmem := hpath.mem_fullCarryStates
-  rw [hempty] at hmem
+  rw [hlen, hempty] at hmem
   simp at hmem
 
 /-- Every source CountCone history has a full-P Boolean prefix at every
