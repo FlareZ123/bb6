@@ -62,3 +62,22 @@ This is the useful integration point: the canonical search already combines phys
 
 **Source-checked.** The full canonical + weighted-TNF import closure and both concrete examples passed [CI 45389105512](https://github.com/FlareZ123/bb6/actions/runs/45389105512). The workflow rejects `sorryAx` and `native_decide` in the closure output. This is a reusable proof-interface result, not a BB(6) upper bound: the firstOne root still needs a closed audit or a complete weighted-TNF tree.
 
+
+
+## SMT synthesis for hard partial tables (24 November 2026)
+
+The existing `far_smt.py` searches the same finite-automata certificate constraints as the Lean FAR checker, using an implication-per-intermediate-state Z3 encoding. The new `far_smt_compose.py` uses QF_BV and caches the composed NFA successor mask
+`⋃ { E_write[v] | v ∈ E_oldLeftBit[intermediate] }`,
+then requires that mask to be a subset of the current configuration's successor mask. This is exactly the same left-move inclusion condition, factored as one bit-vector inclusion per predecessor-DFA state and old-left symbol. DFA-state bounds use unsigned comparisons. Candidate models remain untrusted and must pass the workflow's independent Lean `Data.fastValid_sound` check before they can be promoted to a proof.
+
+The manual workflow `.github/workflows/agent7-far-hard-root.yml` now supports:
+- `solver_encoding=implications|compose`;
+- an exact roster `solver_line`, or an arbitrary 12-slot `solver_code` override for a concrete TNF node;
+- independent Lean verification of every emitted hit.
+
+Bounded search status:
+- #746 roster line 618, implication encoding, run [45400338305](https://github.com/FlareZ123/bb6/actions/runs/45400338305): both orientations UNSAT at DFA sizes 6–8; both orientations timed out at sizes 9–10. No certificate was found.
+- #746, composed encoding, run [45401745777](https://github.com/FlareZ123/bb6/actions/runs/45401745777): pending at checkpoint.
+- Roster line 335, composed encoding, run [45402030399](https://github.com/FlareZ123/bb6/actions/runs/45402030399): pending at checkpoint.
+
+These are candidate-search experiments, not impossibility results. A timeout is not UNSAT, and a bounded failure to synthesize a FAR certificate says nothing about whether the machine halts. Any successful leaf must also be shown to occur in the actual first-one weighted-TNF/Enumerate62 coverage, not merely in the historical 663-entry roster.
