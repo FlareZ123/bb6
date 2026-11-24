@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
-      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent35-d-regular-certificate:im-results/agent32-cryptid-padding:im-results/agent2-cryptid-continuity:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent31-d-exceptional:im-results/agent35-d-sixth-rejoin:im-results/agent37-cryptid-model-bridge:im-results/agent37-d-timing-cocycle:im-results/agent36-sixth-packet:im-results/agent4-cryptid-macro-replay:im-results/agent4-cryptid-d0-review
+      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent35-d-regular-certificate:im-results/agent32-cryptid-padding:im-results/agent2-cryptid-continuity:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent31-d-exceptional:im-results/agent35-d-sixth-rejoin:im-results/agent37-cryptid-model-bridge:im-results/agent37-d-timing-cocycle:im-results/agent36-sixth-packet:im-results/agent36-cryptid-trace:im-results/agent4-cryptid-macro-replay:im-results/agent4-cryptid-d0-review
     steps:
       - uses: actions/checkout@v4
       - name: Restore pinned original D sources and DRegular proof
@@ -35,6 +35,10 @@ jobs:
           D=im-results/agent2-cryptid-continuity
           lean -o "$B/Boundary.olean" "$B/Boundary.lean"
           lean -o "$B/BoundaryExtra.olean" "$B/BoundaryExtra.lean"
+          D36=im-results/agent36-cryptid-trace
+          R13=im-results/agent4-cryptid-d0-review
+          lean -o "$D36/DAllBlankSource.olean" "$D36/DAllBlankSource.lean"
+          lean -o "$R13/StackEntryBridge.olean" "$R13/StackEntryBridge.lean"
           A=im-results/agent25-cryptid-doublezero
           C=im-results/agent35-cryptid-code
           for module in DoubleZero TripleUniversalBase TripleUniversalCore TripleUniversalWalk TripleUniversal TripleIteration TenPump TokenCode SixOnes; do
