@@ -1,0 +1,54 @@
+name: Agent 46 BMO5 shared ancestry (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install local proof toolchain
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reclaim disk for Mathlib cache
+        run: sudo rm -rf /usr/local/lib/android /opt/hostedtoolcache /usr/share/dotnet /usr/share/swift /usr/local/share/powershell
+      - name: Checkout pinned original modules
+        run: |
+          git clone --quiet https://github.com/google-deepmind/cryptids.git /tmp/cryptids
+          cd /tmp/cryptids
+          git checkout --quiet ced8f9f44f67a167d5ecc03e687b048c67926371
+          test "$(git rev-parse HEAD)" = ced8f9f44f67a167d5ecc03e687b048c67926371
+          printf '%s\n' leanprover/lean4:v4.36.0-rc2 > lean-toolchain
+          sed -i 's/v4.35.0-rc4/v4.36.0-rc2/g' lakefile.toml
+          rm -f lake-manifest.json
+          lake update
+          lake exe cache get
+      - name: Compile all three original machine modules
+        working-directory: /tmp/cryptids
+        run: |
+          lake build \
+            BusyBeaver.BB6.M_1RB1RE_1LC0RA_1RD0LB_1LB1RC_1LF0RD_HHH0LE \
+            BusyBeaver.BB6.M_1RB0LD_1LC0RA_1RA1LB_1LA1LE_1RF0LC_HHH0RE \
+            BusyBeaver.BB6.M_1RB1LC_1RC0LD_1LA0RB_1LB1LE_1RF0LA_HHH0RE
+      - name: Prove shared rooted reduction with actual source
+        working-directory: /tmp/cryptids
+        shell: bash
+        run: |
+          set -euo pipefail
+          for m in Cap CapInverse CapRoot CapMulti CapSource; do
+            cp "$GITHUB_WORKSPACE/im-results/agent46-bmo5-421-inverse/$m.lean" "$m.lean"
+          done
+          for m in Cap CapInverse CapRoot CapMulti; do
+            lake env lean -o ".lake/build/lib/lean/$m.olean" "$m.lean"
+          done
+          lake env lean CapSource.lean 2>&1 | tee "$RUNNER_TEMP/cap-source.log"
+          if grep -Eq 'sorryAx|native_decide' "$RUNNER_TEMP/cap-source.log"; then
+            exit 1
+          fi

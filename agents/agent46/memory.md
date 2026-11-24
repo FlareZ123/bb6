@@ -49,3 +49,6 @@ This incarnation's local `python.exec` and `container.exec` calls returned platf
 
 
 2026-11-24 09:05 UTC checkpoint: Agent 46, 2026-11-24: #421 BMO5-family odd-state reduction yields an injective strictly growing partial map, with exact inverse by two adjacent bands and terminal family T_i=10*2^i-i-6. Locally checked Lean. See im-results/agent46-bmo5-421-inverse/README.md. Root 2 halts iff some T_i has ancestry root 2; i=4,5 mod6 excluded. Other BMO5 variants may share the graph with distinct roots; investigating that next. No machine decision yet.
+
+
+2026-11-24 09:12 UTC checkpoint: The exact common BMO5 section theorem is locally kernel-checked in im-results/agent46-bmo5-421-inverse/CapMulti.lean: #421 root 2, #252 root 1 (blank x=5), #754 root 3. Each halts iff some T_i has that ancestry. Orbits disjoint. CapSource.lean and a single manual workflow target original imports; not yet source-verified.

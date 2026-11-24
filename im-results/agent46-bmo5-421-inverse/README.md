@@ -35,3 +35,18 @@ Follow the unique inverse until it is undefined. This terminates by strict growt
 - CapRoot.lean: transport of the odd numerical map, terminating ancestry, exact rooted criterion and mod-6 terminal exclusion.
 
 Next: exploit the shared dynamics of other BMO5 starting-state variants and derive a uniform obstruction for the remaining terminal family. Do not treat a finite inverse scan as a decision of the machine.
+
+
+## Shared BMO5 graph: #252, #421 and #754
+
+The upstream #252 (suspect_04) and #754 (suspect_41) modules have the same three-counter transition rules with different blank starts. In the common section (0,1,2n), use x=n+2. The even diagonal sweep of these rules is exactly drain(x-2,1), hence the same f as #421.
+
+| Holdout | Source section | Blank x | Unique ancestry root |
+|---|---|---:|---:|
+| #421 | C(2x-1) | 2 | 2 |
+| #252 | A2(0,1,2(x-2)) | 5 | 1 |
+| #754 | B2(0,1,2(x-2)) | 3 | 3 |
+
+CapMulti.lean proves this reduction for the exact three-counter rules, and proves that the three orbits cannot meet. Node 1 has f(1)=5, so the #252 orbit uses ancestry root 1. Each machine halts iff some terminal T_i has its corresponding ancestry root; this is a common search with three distinct goals, **not** a claim of equivalent halting behavior.
+
+The original-source modules for #252 and #754 are pinned at the same commit ced8f9f44f67a167d5ecc03e687b048c67926371, with blobs 4c56373ec8b39c24789775cddcf1641e3e68aa5e and f99faa84c3198e69233ec1c1ca3f466d2bfde559. CapSource.lean imports all three unchanged upstream modules, applies their IsValidAcceleration certificates to the shared section and states the three machine-level iff criteria. Arithmetic modules and the extracted #421 source-copy proof compiled locally; original-source workflow is to be run.
