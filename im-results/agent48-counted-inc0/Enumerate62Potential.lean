@@ -142,8 +142,8 @@ def update (decide : Node → Verdict) (hsound : HaltPositive decide)
   match q.active with
   | [] => q
   | x :: xs =>
-    match decide x with
-    | .halt => ⟨expandProjection' x (hsound x rfl), q.holdout⟩
+    match hd : decide x with
+    | .halt => ⟨expandProjection' x (hsound x hd), q.holdout⟩
     | .nonhalt => ⟨xs, q.holdout⟩
     | .unknown => ⟨xs, x :: q.holdout⟩
 
@@ -211,8 +211,8 @@ def bfsAux (decide : Node → Verdict) (hsound : HaltPositive decide) :
     List Node → List Node → List Node
   | [], holdout => holdout
   | x :: xs, holdout =>
-    match decide x with
-    | .halt => bfsAux decide hsound xs (expandProjection' x (hsound x rfl) ++ holdout)
+    match hd : decide x with
+    | .halt => bfsAux decide hsound xs (expandProjection' x (hsound x hd) ++ holdout)
     | .nonhalt => bfsAux decide hsound xs holdout
     | .unknown => bfsAux decide hsound xs (x :: holdout)
 
