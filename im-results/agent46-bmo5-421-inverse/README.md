@@ -34,7 +34,9 @@ Follow the unique inverse until it is undefined. This terminates by strict growt
 - CapInverse.lean: growth, injectivity, exact inverse and terminal family.
 - CapRoot.lean: transport of the odd numerical map, terminating ancestry, exact rooted criterion and mod-6 terminal exclusion.
 
-Next: exploit the shared dynamics of other BMO5 starting-state variants and derive a uniform obstruction for the remaining terminal family. Do not treat a finite inverse scan as a decision of the machine.
+## Symbolic inverse sieve
+
+[Exact geometric residue tree](SymbolicSieve.md): for each depth t, the indices i≥4t+10 with at least t predecessors form exactly 2^(t+1) residue classes modulo 2·3^t (paper proof, not yet kernel-certified). The compressed integer sieve classified all 0..10^12 terminal indices with no root in {1,2,3} and no unresolved cases. The unbounded terminal existential remains open. Every fixed-depth sieve has infinitely many survivors.
 
 
 ## Shared BMO5 graph: #252, #421 and #754
