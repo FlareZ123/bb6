@@ -62,7 +62,8 @@ actual Sheep even-return dynamics, rather than only to an abstract recurrence.
 
 `GenericResidual.lean` and `SingularCylinders.lean` contain ten source and
 singular-branch theorems. `ThreeAdicLTE.lean` adds the formal three-adic
-exponent-divisibility theorem and the H >= 9 lower bound. Their `#print axioms`
+exponent-divisibility theorem, the type-I H >= 3 tail bound, and the type-II
+H >= 9 tail bound. Their `#print axioms`
 reports contain only the standard `propext` and `Quot.sound`; there is no
 `sorryAx`.
 
@@ -139,7 +140,10 @@ removes one factor of `3` from the exponent and one from the valuation.
 
 For the `(1,1,2)` family, `H=0` is impossible modulo `3`. For `H>=3`,
 `B` is divisible by both `4` (modulo `5`) and `2*3^(H-1)`, hence
-`B >= 4*3^(H-1) >= 36`. The two remaining cases reduce to:
+`B >= 4*3^(H-1) >= 36`. The implication from the exact type-I terminal
+equation to this H >= 3 bound is now formalized as
+`type1_terminal_H_ge_3_lower_bound` in `ThreeAdicLTE.lean`. The two remaining
+cases reduce to:
 
 - `H=1`: `2*(2^B-1) = 15 (mod 405)`, whose solutions are
   `B = 32 (mod 108)`;
@@ -165,7 +169,9 @@ reproduced by `check_singular_two_step.py`:
 
 Only `H=5` survives. Its three congruences combine to
 `B = 11502 (mod 29160)`. For `H>=9`, LTE gives
-`B >= 2*3^8 = 13122`. This proves the stated sharp minimum.
+`B >= 2*3^8 = 13122`; this tail is formalized as
+`type3_H_ge_9_lower_bound` in `ThreeAdicLTE.lean`. This proves the stated
+sharp minimum.
 
 ## Reproduction
 
