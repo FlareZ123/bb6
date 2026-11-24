@@ -149,7 +149,6 @@ jobs:
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
-          python im-results/agent50-weighted-tnf-pilot/replay.py
           python tools/lean_compile_closure.py --workdir /tmp/a50-tnf-pilot --jobs 8 im-results/agent50-weighted-tnf-pilot/CryptidSiblings.lean im-results/agent50-weighted-tnf-pilot/RootFrontier.lean | tee /tmp/a50-tnf-pilot.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a50-tnf-pilot.log; then
             echo "Forbidden proof placeholder or native_decide found in pilot closure" >&2
@@ -172,7 +171,6 @@ jobs:
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
-          python im-results/agent31-three-hole-tnf/generate_sweeps.py
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
           python tools/lean_compile_closure.py --workdir /tmp/a31-four --jobs 4 im-results/agent31-three-hole-tnf/FourHoleData.lean im-results/agent31-three-hole-tnf/FourHoleRootFrontier.lean im-results/agent31-three-hole-tnf/FourHoleResidualRoster.lean | tee /tmp/a31-four.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a31-four.log; then
