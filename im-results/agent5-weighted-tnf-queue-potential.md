@@ -1,6 +1,6 @@
 # A well-founded potential for the pinned first-hole queue
 
-**Status:** conditional algorithmic lemma grounded in the pinned upstream source. This is not a BB(6) upper-bound proof and does not certify the computed holdout roster.
+**Status:** conditional algorithmic lemma grounded in the pinned upstream source. It closes the MAXT fuel-sufficiency issue for chunks of at most 100 nodes, but does not by itself prove global coverage or the BB(6) upper bound.
 
 ## Exact queue semantics
 
@@ -14,7 +14,11 @@ For q1=x::q1', SearchQueue_upd applies the decider:
 - NonHalt: x is dropped from q1;
 - Unknown: x is dropped from q1 and moved to q2.
 
-The source's expand x h has two parts. For each existing state q in firstn m all_qs it creates four ordinary transitions (two writes and two directions); it also creates four transitions to the least fresh state q_m when one exists. Thus there are 4(m+1) children when m<6, and 24 when m=6: at most **28** children. Every child has num_undef_trans = Nat.pred n. The wrapper expand' returns [] when n=1, so no child is produced at the final hole.
+The source's expand x h has two parts. For each existing state q in firstn m all_qs it creates four ordinary transitions (two writes and two directions); if m<6, it also creates four transitions to the least fresh state q_m. Therefore the number of children is
+[
+4m+4\quad(m<6),\qquad24\quad(m=6),
+]
+so the exact maximum is **24**, not 28. Every child has num_undef_trans = Nat.pred n. The wrapper expand' returns [] when n=1, so no child is produced at the final hole.
 
 The holdout list q2 is not processed by SearchQueue_upds. Unknown transfers a node out of the active queue; later chunk processing accumulates it in q2.
 
@@ -22,49 +26,55 @@ The holdout list q2 is not processed by SearchQueue_upds. Unknown transfers a no
 
 Let n(x)=x.num_undef_trans and define
 [
-\Phi(q)=\sum_{x\in\mathrm{fst}(q)}29^{n(x)}\in\mathbb N.
+\Phi(q)=\sum_{x\in\mathrm{fst}(q)}25^{n(x)}\in\mathbb N.
 ]
 
 Every SearchQueue_upd step with a nonempty active queue strictly decreases this potential:
 
-- Halt: remove the term 29^n and add at most 28 terms 29^(n-1), whose sum is strictly smaller because 28*29^(n-1) < 29^n.
-- NonHalt: remove the positive term 29^n.
-- Unknown: remove the positive term 29^n from q1. Do **not** include q2 in the potential: the Unknown node is transferred there unchanged.
+- Halt: if n>1, remove the term 25^n and add at most 24 terms 25^(n-1), whose sum is strictly smaller because 24*25^(n-1)<25^n. If n=1, expand' adds no children, so the term is removed.
+- NonHalt: remove the positive term 25^n.
+- Unknown: remove the positive term 25^n from q1. Do **not** include q2 in the potential: the Unknown node is transferred there unchanged.
 
-Consequently, if SearchQueue_upds is allowed to continue until q1 is empty, it must empty after finitely many updates. More quantitatively, the number of updates is at most the initial active-queue potential.
+Consequently, SearchQueue_upds must empty q1 after finitely many updates, with the number of updates bounded by the initial active-queue potential.
 
-## Connection to the fixed MAXT budget
+## The fixed MAXT budget is sufficient for 100-node chunks
 
-The source defines MAXT=2^60 and computes holdout_i l sz by running SearchQueue_upds decider (q_i l sz) MAXT, where q_i takes a chunk of the finite q0 active list and preserves q0's prior holdouts.
+The upstream root node0 has num_undef_trans=11. Every queue operation either:
+- replaces a node by children with one fewer undefined slot;
+- drops a node as NonHalt; or
+- moves a node to q2 as Unknown.
 
-Thus the potential gives a concrete route to proving that each holdout_i chunk was fully processed: prove
+The BFS reset may requeue Unknown nodes, but it does not increase their undefined-slot count. Therefore every node in q0, the frontier after four BFS passes, has n(x)≤11.
+
+For any chunk of at most 100 q0 nodes,
 [
-\Phi(q_i(l,sz))\le2^{60}
+\Phi(q_i(l,sz))\le100\cdot25^{11}
+=238,418,579,101,562,500
+<2^{60}
+=1,152,921,504,606,846,976
+=\texttt{MAXT}.
 ]
-for every actual chunk. Then the active queue must empty before the MAXT fuel expires, and the resulting q2 contains every Unknown node from that chunk.
+Thus, for every actual holdout_i call with sz≤100, the active queue must empty before the MAXT fuel expires. This proves that the chunk's holdout output is not truncated by the iteration budget. The exact q0 distribution is not needed for this bound.
 
-The crude worst-case bound for a chunk of 100 nodes with n≤11 is 100*29^11, which is slightly larger than 2^60 and therefore insufficient. If every node in a chunk has n≤10, the crude bound 100*29^10 is already below 2^60. The useful next computation is the exact per-chunk potential (or a tighter histogram bound) from q0, not another arbitrary runtime increase.
-
-The four BFS passes defining q0 use SearchQueue_upd_bfs and SearchQueue_rst. In that variant, Unknown nodes are moved to q2 and then requeued by the reset; the above strict-decrease argument applies directly to the subsequent non-BFS SearchQueue_upds used by holdout_i, not to the total q1+q2 mass during a BFS pass.
+The source defines holdout_i(l,sz) generically; its comments exhibit q_i(0,100). The conclusion is conditional on the actual external calls using chunks of size at most 100. If a larger sz was used, recompute the bound as sz*25^11.
 
 ## What remains unproved
 
-This establishes only a conditional queue-termination bound. It does not by itself prove:
+The fuel-sufficiency result does **not** by itself prove:
 
-1. that the source's computed q0 is the exact frontier intended by the root expansion;
-2. that each actual chunk's potential is at most MAXT;
-3. that SearchQueue_upd preserves a coverage invariant over all compatible total machines;
-4. that the decider's Halt and NonHalt answers are sound in the required source semantics;
-5. that the resulting holdout list has been completely classified.
+1. that the external holdout roster is the union of all holdout_i outputs for a complete partition of fst(q0);
+2. that SearchQueue_upd preserves the required coverage invariant over all compatible total machines;
+3. that every decider Halt/NonHalt classification is used with its source theorem and the correct score accounting;
+4. that the zero-prefix normalization and the upstream root_1RB queue together cover every six-state two-symbol machine.
 
 The local expansion-coverage obligation is the one represented by WeightedTNFCertificate.expand: every compatible total machine at a first hole is either in the halt case (discharged by the explicit weighted halt bound) or one of the canonical ordinary children. The queue proof must connect the pinned source's expand/expand' cases to this formal branch family, and separately prove soundness of decider classifications.
 
 ## Suggested formalization
 
 1. Import or faithfully model the exact TNF_Node.T, SearchQueue, SearchQueue_upd and expand' definitions.
-2. Prove a local lemma that every expand' child has one fewer undefined slot and that the child count is at most 28.
+2. Prove the exact child-count bound 24 and that each child has one fewer undefined slot; handle the n=1 empty expansion separately.
 3. Prove strict decrease of Phi(fst q) for each nonempty SearchQueue_upd case.
-4. Extract the exact n(x) histogram or exact Phi value for each q_i chunk and prove it is at most MAXT.
+4. Prove that every actual holdout_i call has sz≤100 (or use its exact sz) and derive the displayed MAXT inequality.
 5. Prove the independent queue coverage invariant, using the weighted TNF branch theorem for Halt expansions and source-certified decider correctness for NonHalt/Halt classifications.
 
-Termination and exhaustiveness are distinct: the potential addresses only the former.
+The fuel bound now has a short, explicit arithmetic proof. Coverage and source-faithful interpretation remain the decisive logical obligations.
