@@ -39,6 +39,6 @@ Expected output:
 
     verified 871543 cycles of F^27 Oeven F Oodd Eodd, 31 steps each, W += 112
     phase end: (0,1171354700) after 27017833 transitions from (0,1073741884)
-    next phase boundary state: (292838528,585677746), next tag F
+    next phase boundary state: (292838528,585677746) after 27017863 transitions from start; next tag F
 
 This is a finite computational segment only. The trajectory after the displayed boundary is not classified here.
