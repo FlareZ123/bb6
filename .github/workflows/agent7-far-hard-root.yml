@@ -1,4 +1,5 @@
 name: Agent 7 hard-root FAR search
+run-name: Agent 7 FAR SMT: ${{ inputs.solver_code }}
 on:
   workflow_dispatch:
     inputs:
@@ -53,7 +54,7 @@ jobs:
       fail-fast: false
       max-parallel: 8
       matrix:
-        shard: ${{ fromJSON((inputs.batch_only || inputs.wide132_only) && '[0]' || '[0,1,2,3,4,5,6,7]') }}
+        shard: ${{ fromJSON((inputs.batch_only || inputs.wide132_only || inputs.solver_code != '') && '[0]' || '[0,1,2,3,4,5,6,7]') }}
     steps:
       - uses: actions/checkout@v4
       - name: Enumerate FAR candidates or solve one target by SMT
