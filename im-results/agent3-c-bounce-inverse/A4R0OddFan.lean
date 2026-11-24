@@ -6,7 +6,7 @@ open BB6.Agent46
 
 /-- The odd-s member of the t=719 q=0 residual left by the A4 fan. -/
 def r0X (s : Nat) : Nat := 3389315364793 + 4825264211040*s
-def r0Y (s : Nat) : Nat := 839478963638 + 1195142023120*s
+def r0Y (s : Nat) : Nat := 839478963638 + 1195140423120*s
 def r0M (s : Nat) : Nat := 264299645527 + 376275289635*s
 def r0H (s : Nat) : Nat := r0X s + r0Y s + 1
 
