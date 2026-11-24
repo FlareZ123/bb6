@@ -19,7 +19,7 @@ For each of the four authentic empty-suffix roots (9, 5, 15, 39), the exact tota
 | 15 | 33,250 / 33,357 / 33,393 | 93 | 28 | 60,993 | empty |
 | 39 | 33,527 / 33,239 / 33,234 | 93 | 27 | 61,090 | `0111111` |
 
-The final unary parameters have 141,507–141,510 ternary-independent binary bits (reported as bit length by the script).
+The final unary parameters have binary bit lengths from 141,507 to 141,510 (reported by the script).
 
 The first checkpoints agree with the existing source anchors:
 - Root 9 after 10 returns: (n=196699), empty suffix.
