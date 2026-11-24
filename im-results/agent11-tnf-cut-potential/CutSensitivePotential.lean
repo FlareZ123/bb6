@@ -38,7 +38,8 @@ theorem cutWeight_expand_eq (cut holes : Nat) (hh : 2 ≤ holes) :
   have h2 : (holes - 2) + 2 = holes := by omega
   have h1 : (holes - 2) + 1 = holes - 1 := by omega
   calc
-    cutWeight cut holes = cutWeight cut ((holes - 2) + 2) := by rw [← h2]
+    cutWeight cut holes = cutWeight cut ((holes - 2) + 2) :=
+      congrArg (cutWeight cut) h2.symm
     _ = 1 + 4 * cut * cutWeight cut ((holes - 2) + 1) +
           (if cut < 6 then 4 * cutWeight (cut + 1) ((holes - 2) + 1) else 0) :=
       cutWeight_step cut (holes - 2)
