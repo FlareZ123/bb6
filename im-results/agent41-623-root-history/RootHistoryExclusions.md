@@ -67,7 +67,13 @@ would exclude the cone-only family at every depth if proved.
 `D(464905666,116226414) -> D(348679242,348679292)`.
 Both endpoints are in the affine cone. At the source, ell=20, B=802, k=7 and v3(min)=5=k-2. At the target, ell=20 and k=7 still, but v3(min)=6=k-1. Thus the proposed valuation bound is not forward-closed on the cone. If it holds on the authentic root, its proof must retain additional root-history/carry information; it cannot be justified from the current cone state and the mass-indexed buffer alone.
 
-The 20,000-step observation and the new source-authentic counterexample are finite replay evidence, not Lean-certified theorems. The exact transition is a useful adversarial test for any proposed valuation/carry product.
+A further root-history check appears to exclude this particular transition from the blank-root orbit by two larger skipped mass intervals:
+- source mass 581,132,080 lies between the proposed exact root anchors at indices 77 and 78, with masses 530,037,642 and 673,752,537;
+- target mass 697,358,534 lies between the proposed exact root anchors at indices 78 and 79, with masses 673,752,537 and 916,360,488.
+
+The corresponding exact anchors and non-reachability theorems have been added to `RootMassGapSource.lean`, pending the next pinned-source CI run. If certified, this shows the state-local counterexample is itself root-inaccessible by mass, even though it invalidates the local valuation predicate.
+
+The 20,000-step observation and the new source-authentic transition are finite replay evidence, not Lean-certified theorems. The exact transition is a useful adversarial test for any proposed valuation/carry product.
 
 ## 4. What this does and does not establish
 
