@@ -16,7 +16,8 @@ private theorem carryLeftOutputBit_bridge2
     carryLeftOutputBit r T x =
       (if x ≤ h-2 then true else decide (x % 3 = 1)) := by
   have hbound : -3*(r:Int) = h-2 := by rw [hrel]; omega
-  simp [carryLeftOutputBit,hnot,hbound]
+  have hnot' : ¬ x < h-2-2 := by simpa [hbound] using hnot
+  simp [carryLeftOutputBit, hbound, hnot']
 
 private theorem carryLeftOutputBit_bridge1
     (r : Nat) (T : Int → Bool) (h x : Int)
@@ -33,7 +34,10 @@ private theorem carryLeftOutputBit_bridge1
         rw [hrel] at hx
         omega
       subst x
-      simp [carryLeftOutputBit,hnot,hrel,hh]
+      have hfar : ¬ (-3*(r:Int)+1 < -3*(r:Int)-2) := by omega
+      have hleft : ¬ (-3*(r:Int)+1 ≤ -3*(r:Int)) := by omega
+      have hmod : (-3*(r:Int)+1) % 3 = 1 := by simpa [hrel] using hh
+      simp [carryLeftOutputBit, hrel, hfar, hleft, hmod]
     · simp [carryLeftOutputBit,hnot,hle,hx]
 
 /-- Residue 2: the bridge seed is the three-cell terminal d1 block
@@ -158,9 +162,12 @@ theorem carryLongPrefix_r2_left (k : Nat) (T : Int → Bool)
           exact hbit
         have hframe : T2 x = T1 x := by
           simp [T2,frame,shiftConfig,ha]
+        have hxval : x = -3*(4*k+2:Int)-2 := by
+          rw [hxEq, hthreshold]
+          omega
+        have hle : -3*(4*k+2:Int)-2 ≤ -3*(4*k+2:Int) := by omega
         have htarget : carryLeftOutputBit (4*k+2) T x = true := by
-          rw [hxEq,hthreshold]
-          simp [carryLeftOutputBit] <;> omega
+          simp [carryLeftOutputBit, hxval, hle]
         calc
           T2 x = T1 x := hframe
           _ = T x := by simpa [T1] using hpres
@@ -339,9 +346,12 @@ theorem carryLongPrefix_r3_left (k : Nat) (T : Int → Bool)
           exact hbit
         have hframe : T2 x = T1 x := by
           simp [T2,frame,shiftConfig,ha]
+        have hxval : x = -3*(4*k+3:Int)-2 := by
+          rw [hxEq, hthreshold]
+          omega
+        have hle : -3*(4*k+3:Int)-2 ≤ -3*(4*k+3:Int) := by omega
         have htarget : carryLeftOutputBit (4*k+3) T x = true := by
-          rw [hxEq,hthreshold]
-          simp [carryLeftOutputBit] <;> omega
+          simp [carryLeftOutputBit, hxval, hle]
         calc
           T2 x = T1 x := hframe
           _ = T x := by simpa [T1] using hpres
