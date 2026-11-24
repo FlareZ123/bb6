@@ -6,7 +6,7 @@ The generic inverse-cone checker and its soundness theorem are in **ModularCone.
 
 The high-stop theorem in **ModularConeHighStop.lean** is accepted by Lean 4.36.0-rc2 CI (run [45355518699](https://github.com/FlareZ123/bb6/actions/runs/45355518699)). It proves that every accepted adaptive modular cylinder excludes the corresponding original-source CReach target, without imposing the previous relative-growth gate. The exact high-branch criterion integration in **ModularConeHighStopCriterion.lean** also passed CI (run [45357876925](https://github.com/FlareZ123/bb6/actions/runs/45357876925)).
 
-A low-stop counterpart is in **ModularConeLowStop.lean**, including a concrete source exclusion. **ModularConeStopsCriterion.lean** adds the low-stop predicate to the exact low/high criterion. The first combined run 45361871162 reached the low/high modules and found only missing `norm_num` tactic imports in the two concrete arithmetic examples; these were replaced by kernel computation (`decide`). The broader `ModularConeFullCriterion.lean` now imports Agent27's full Boolean/phase criterion and Agent20's C70 rectangle exclusions, then conjoins both modular filters. The full-criterion proof had two arithmetic-normalization failures in run 45363035629; the power identity and high-stop equation were repaired. The current source-closure run 45363797397 is validating the repaired file.
+A low-stop counterpart is in **ModularConeLowStop.lean**, including a concrete source exclusion. **ModularConeStopsCriterion.lean** adds the low-stop predicate to the exact low/high criterion. The first combined run 45361871162 reached the low/high modules and found only missing `norm_num` tactic imports in the two concrete arithmetic examples; these were replaced by kernel computation (`decide`). The broader `ModularConeFullCriterion.lean` now imports Agent27's full Boolean/phase criterion and Agent20's C70 rectangle exclusions, then conjoins both modular filters. The low-stop theorem and concrete example passed dedicated Lean CI run 45364029622. The full-criterion run 45363797397 exposed one remaining power-successor normalization issue; it was replaced with an explicit Nat.pow_succ identity. Repaired full-criterion run 45364535182 is queued.
 
 ## Mathematical setup
 
@@ -58,7 +58,7 @@ The census is a finite computation, not a theorem asserting the total count. The
 The probe.py script now mirrors the Lean checker with separate recursion-fuel and modulus arguments: each inverse edge decreases recursion fuel by one, while direct and high edges consume one or \(n+2\) modulus bits respectively. It reports the finite census and adaptive sample counts.
 
 Next:
-1. Confirm CI run 45361871162 for the combined low/high exact criterion.
+1. Confirm CI run 45364535182 for the full Boolean/C70/modular exact criterion.
 2. Compare the modular predicates against existing affine/late filters to identify strict new exclusions, not merely redundant necessary conditions.
 3. Analyze the remaining inverse-cone survivor paths, especially cases where the valuation reaches the current precision bound.
 4. Keep all experimental code and census data here; reserve results/ for source-certified mathematical statements and their carefully qualified finite enumerations.
