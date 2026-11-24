@@ -12,6 +12,7 @@ high-bounce parents by the generic theorem in OddEvenNonPowerParentFan.
 -/
 
 namespace BB6.Agent3OddEvenFan
+open BB6.Agent46
 
 def oddZM (z : Nat) : Nat := 512*z+67
 
@@ -49,7 +50,7 @@ private theorem oddZ_param_large (z : Nat) (hz : z%16=1) :
     Nat.pow_le_pow_right (by omega) hexp
   have hpowid : 2^(z+3)=8*2^z := by
     rw [Nat.pow_add]
-    norm_num
+    rw [show (2:Nat)^3=8 by decide]
     omega
   rw [hpowid] at hpow
   omega
@@ -149,7 +150,7 @@ theorem oddZ_second_mass_gap (z : Nat) (hz : z%16=1) :
     dsimp [P]
     have hexp : 2*oddZM z-5=(2*oddZM z-8)+3 := by omega
     rw [hexp,Nat.pow_add]
-    norm_num
+    rw [show (2:Nat)^3=8 by decide]
     omega
   have hN : 2221*oddZParam z+283+6*G =
       2221*2^(2*oddZM z-5) := by
@@ -181,13 +182,13 @@ theorem oddZ_second_mass_gap (z : Nat) (hz : z%16=1) :
     dsimp [P]
     have hexp : 2*oddZM z+3=(2*oddZM z-8)+11 := by omega
     rw [hexp,Nat.pow_add]
-    norm_num
+    rw [show (2:Nat)^11=2048 by decide]
     omega
   have hPowHi : 4096*P=2^(2*oddZM z+4) := by
     dsimp [P]
     have hexp : 2*oddZM z+4=(2*oddZM z-8)+12 := by omega
     rw [hexp,Nat.pow_add]
-    norm_num
+    rw [show (2:Nat)^12=4096 by decide]
     omega
   constructor <;> omega
 
@@ -197,17 +198,17 @@ theorem oddZ_second_mass_not_power (z : Nat) (hz : z%16=1) :
   intro n hpow
   obtain ⟨hlo,hhi⟩ := oddZ_second_mass_gap z hz
   have hnlo : 2*oddZM z+3<n := by
-    by_contra h
-    have hle : n≤2*oddZM z+3 := by omega
-    have hpowle : 2^n≤2^(2*oddZM z+3) :=
-      Nat.pow_le_pow_right (by omega) hle
-    omega
+    by_cases hle : n≤2*oddZM z+3
+    · have hpowle : 2^n≤2^(2*oddZM z+3) :=
+        Nat.pow_le_pow_right (by omega) hle
+      omega
+    · omega
   have hnhi : n<2*oddZM z+4 := by
-    by_contra h
-    have hle : 2*oddZM z+4≤n := by omega
-    have hpowle : 2^(2*oddZM z+4)≤2^n :=
-      Nat.pow_le_pow_right (by omega) hle
-    omega
+    by_cases hle : 2*oddZM z+4≤n
+    · have hpowle : 2^(2*oddZM z+4)≤2^n :=
+        Nat.pow_le_pow_right (by omega) hle
+      omega
+    · omega
   omega
 
 /-- The depth-two odd-z parent really is a source predecessor of R_u. -/
@@ -233,14 +234,15 @@ theorem oddZ_second_parent_edge (z : Nat) (hz : z%16=1) :
   have hmass :
       oddZRayLeft z+oddZRayRight z+1=
         8*(oddZSecondLeft z+3) := by
-    unfold oddZRayLeft oddZRayRight
-    rw [hA]
+    change 180*oddZParam z+28+166*oddZParam z+25+1=
+      8*((173*oddZParam z+15)/4+3)
     omega
   have hcost :
       2*oddZSecondRight z+oddZSecondLeft z+13=
         oddZRayLeft z+2*oddZRayRight z := by
-    unfold oddZRayLeft oddZRayRight
-    rw [hA,hK]
+    change 2*((1875*oddZParam z+245)/8)+
+        (173*oddZParam z+15)/4+13=
+      180*oddZParam z+28+2*(166*oddZParam z+25)
     omega
   have ha0 : oddZSecondLeft z≠0 := by omega
   have ha1 : oddZSecondLeft z≠1 := by omega
@@ -256,7 +258,8 @@ theorem oddZ_second_parent_edge (z : Nat) (hz : z%16=1) :
           8*(oddZSecondLeft z+3) := hmass
       _ = 4*(2*(oddZSecondLeft z+3)) := by omega
       _ = 4*(2*(oddZSecondLeft z-1)+8) := by omega
-      _ = 2^2*(2*(oddZSecondLeft z-1)+8) := by norm_num
+      _ = 2^2*(2*(oddZSecondLeft z-1)+8) := by
+        rw [show (4:Nat)=2^2 by decide]
   have hcost' :
       (2*oddZSecondRight z-oddZSecondLeft z+3)+
         (2*(oddZSecondLeft z-1)+8)+3*2=
