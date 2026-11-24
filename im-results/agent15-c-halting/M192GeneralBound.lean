@@ -75,7 +75,7 @@ theorem source_no_c0_lowCore (a k : Nat) (hk : 8≤k)
     (hcore : lowCore (a%192) (k%192)) :
     ¬ BB6CLine.Reach (a,k,0) := by
   intro hreach
-  have hnot := source_blank_never_bad a k 0 hreach
+  have hnot := source_blank_never_bad (a,k,0) hreach
   have hbad : bad a k 0 := by
     simp [bad, low, hcore, hk]
   exact hnot hbad
