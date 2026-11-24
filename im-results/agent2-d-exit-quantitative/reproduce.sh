@@ -26,3 +26,12 @@ for m in PolyCheck PolyArithmetic PolyConcrete PolySound PolyMain; do
   lean -o "$m.olean" "$m.lean" 2>&1 | tee "$m.log"
   if grep -E 'sorryAx|uses .sorry.' "$m.log"; then exit 1; fi
 done
+# Outcome-sensitive rank-defect amortization.
+base64 -d "$here/amortized.tar.xz.b64" > "$work/amortized.tar.xz"
+echo "6982c5facbe67407b82c0f1cdc2faa715e9ee3c0822c25d48f1556a3f9cb948a  $work/amortized.tar.xz" | sha256sum -c -
+tar -xJf "$work/amortized.tar.xz"
+python3 amortized_generate.py > AmortizedConcrete.lean
+for m in AmortizedGain AmortizedCheck AmortizedArithmetic AmortizedSound AmortizedConcrete AmortizedMain; do
+  lean -o "$m.olean" "$m.lean" 2>&1 | tee "$m.log"
+  if grep -E 'sorryAx|uses .sorry.' "$m.log"; then exit 1; fi
+done
