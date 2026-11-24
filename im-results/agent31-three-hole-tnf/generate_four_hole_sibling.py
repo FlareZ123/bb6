@@ -171,7 +171,7 @@ theorem check{i:02} : check 7014 (wideChild {move(a)}) kid{i:02} = true := by de
 """)
     print(stats)
     cases="\n".join(f"  · exact check{12*w+6*r+q:02}" for q,w,r in product(range(6),range(2),range(2)))
-    body=f"""
+    body="""
 def kids : Move → Audit := byMove ["""+",".join(f"kid{i:02}" for i in range(24))+"""]
 theorem kids_checked (mv : Move) : check 7014 (wideChild mv) (kids mv) = true := by
   rcases mv with ⟨w,r,q⟩
@@ -179,9 +179,9 @@ theorem kids_checked (mv : Move) : check 7014 (wideChild mv) (kids mv) = true :=
   rcases hq with rfl|rfl|rfl|rfl|rfl|rfl
   all_goals cases w <;> cases r
 """+cases+"""
-def tree : Audit := .split {n} {slot_expr} kids
+def tree : Audit := .split QUERY_N SLOT_EXPR kids
 theorem tree_checked : check 7014 wideParent tree = true := by
-  change (queryOK 7014 wideParent {n} {slot_expr} && allMoves (fun mv => check 7014 (wideChild mv) (kids mv))) = true
+  change (queryOK 7014 wideParent QUERY_N SLOT_EXPR && allMoves (fun mv => check 7014 (wideChild mv) (kids mv))) = true
   simp only [Bool.and_eq_true]
   exact ⟨wideQuery, allMoves_of _ kids_checked⟩
 
@@ -233,6 +233,7 @@ theorem exact_weighted_threshold (B : Nat) :
 #print axioms exact_weighted_threshold
 """
     body=body[:body.index("theorem attained")] + body[body.index("#print axioms wide_reachable"):]
+    body=body.replace("QUERY_N",str(n)).replace("SLOT_EXPR",slot_expr)
     body=body.replace("#print axioms exact_weighted_threshold", "#print axioms all_completions_weighted")
     emit("FourHoleSiblingData",mods,body)
 
