@@ -392,7 +392,7 @@ theorem root_t_delta :
         27*(8^10*BB6.Agent4Root13Section.root13P) := by
     rw [show 3^3=27 by decide]
     simp [Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm]
-  simp [BB6.DRegularShift.shiftNat, cryptidCheckpoint10] at ha
+  simp only [BB6.DRegularShift.shiftNat, cryptidCheckpoint10] at ha
   rw [hscale] at ha
   rw [← externalT_exact] at ha
   omega
