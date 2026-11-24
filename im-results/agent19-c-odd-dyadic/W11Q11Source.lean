@@ -85,7 +85,7 @@ theorem p_parent_fan (s a k : Nat)
               · have hmod : (pX s+pY s+1)%16=8 := by
                   dsimp [pX,pY]
                   omega
-                have hdiv : 16∣2^n*16 := ⟨2^n,by ring⟩
+                have hdiv : 16∣2^n*16 := ⟨2^n,by ac_rfl⟩
                 have hzero : (pX s+pY s+1)%16=0 := by
                   rw [hpow]
                   exact Nat.mod_eq_zero_of_dvd hdiv
@@ -144,13 +144,13 @@ theorem p_parent_fan (s a k : Nat)
                   obtain ⟨b,hb⟩ := Nat.dvd_of_mod_eq_zero hsub
                   refine ⟨b+2,?_⟩
                   rw [hb]
-                  ring
+                  omega
                 obtain ⟨u,hu⟩ := hpow4
                 obtain ⟨v,hv⟩ := hfac4
                 have hdiv16 : 16∣2^n*(2*(a-1)+8) := by
                   refine ⟨u*v,?_⟩
                   rw [hu,hv]
-                  ring
+                  ac_rfl
                 have hzero :
                     (2^n*(2*(a-1)+8))%16=0 :=
                   Nat.mod_eq_zero_of_dvd hdiv16
@@ -406,13 +406,13 @@ theorem blank_no_b2_w11_q11 (s : Nat) :
       obtain ⟨b,hb⟩ := Nat.dvd_of_mod_eq_zero hsub
       refine ⟨b+2,?_⟩
       rw [hb]
-      ring
+      omega
     obtain ⟨v,hv⟩ := hpow4
     obtain ⟨z,hz⟩ := hfac4
     have hdiv16 : 16∣2^n*(2*a+6) := by
       refine ⟨v*z,?_⟩
       rw [hv,hz]
-      ring
+      ac_rfl
     have hdiv8 : 8∣2^n*(2*a+6) :=
       Nat.dvd_trans (by decide : 8∣16) hdiv16
     have hzero :
@@ -481,7 +481,7 @@ theorem root_q11_parameter (r E u : Nat)
     obtain ⟨z,hz⟩ := hpowDiv
     refine ⟨5*z,?_⟩
     rw [hz]
-    ring
+    ac_rfl
   have hdivW : 2048∣27625+44310*R+22155*w := by
     rw [hEq]
     exact hdiv
