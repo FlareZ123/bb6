@@ -21,7 +21,7 @@ printf '%s  %s\n' 12329036c66c3846f9261167b8f9aebd1778d9b6ea6044309956c2fa0b3e49
 printf '%s  %s\n' 1bce2075fc4e0cd7d740fb71b3796088b190ddb6766e04640d992dadd1b650ff "$work/imports/TerminalLeft.lean" | sha256sum -c -
 lean --version
 python3 tools/lean_compile_closure.py \
-  im-results/agent48-counted-inc0/TM63DirectRootAttainment.lean \
+  im-results/agent48-counted-inc0/TM63RawUpperInterface.lean \
   --source-root "$work/imports" \
   --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean \
   --override OuterLCIncPrelude=im-results/agent8-counted-reset/OuterLCIncPrelude.lean \
@@ -33,7 +33,9 @@ python3 - "$work/compile.log" <<'PY'
 import pathlib, re, sys
 log = pathlib.Path(sys.argv[1]).read_text()
 allowed = {"propext", "Classical.choice", "Quot.sound"}
-for name in ("champion_halts_exact", "champion_attained_exact", "champion_maximum_of_cover"):
+for name in ("champion_halts_exact", "champion_attained_exact", "champion_maximum_of_cover",
+ "champion_raw_halts_exact", "champion_weighted_bound", "exact_BB6_from_cover",
+ "exact_BB6_from_weighted_cover"):
     m = re.search(r"'[^']*\."+name+r"' depends on axioms: \[([^\]]*)\]", log)
     if not m:
         raise SystemExit("missing axiom audit: "+name)
