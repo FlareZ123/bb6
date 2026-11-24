@@ -186,3 +186,24 @@ if __name__ == "__main__":
           original_total, len(original_hi), "outside old j<=3m gate:",
           original_outside, len(original_out))
     print("cache:", check.cache_info())
+
+
+def stop_height(j, m, cap=32):
+    """Exact target, using all right-size-guaranteed bits up to cap."""
+    k = (1 << (2*m+2)) * (j+2) - j - 3*m - 4
+    b = min(cap, ((k+2)//3).bit_length()-1)
+    return excluded(b, 2*j+1, k)
+
+def height_census(limit=16384, max_m=10):
+    for m in range(max_m+1):
+        old = new = extra = lost = 0
+        for j in range(1, limit+1):
+            a, b = stop_auto(j, m), stop_height(j, m)
+            old += a
+            new += b
+            extra += not a and b
+            lost += a and not b
+        print("height", m, old, new, extra, lost, "/", limit)
+
+if __name__ == "__main__":
+    height_census()

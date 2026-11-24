@@ -6,7 +6,20 @@ The generic inverse-cone checker and its soundness theorem are in **ModularCone.
 
 The high-stop theorem in **ModularConeHighStop.lean** is accepted by Lean 4.36.0-rc2 CI (run [45355518699](https://github.com/FlareZ123/bb6/actions/runs/45355518699)). It proves that every accepted adaptive modular cylinder excludes the corresponding original-source CReach target, without imposing the previous relative-growth gate. The exact high-branch criterion integration in **ModularConeHighStopCriterion.lean** also passed CI (run [45357876925](https://github.com/FlareZ123/bb6/actions/runs/45357876925)).
 
-A low-stop counterpart is in **ModularConeLowStop.lean**, including a concrete source exclusion. **ModularConeStopsCriterion.lean** adds the low-stop predicate to the exact low/high criterion. The first combined run 45361871162 reached the low/high modules and found only missing `norm_num` tactic imports in the two concrete arithmetic examples; these were replaced by kernel computation (`decide`). The broader `ModularConeFullCriterion.lean` now imports Agent27's full Boolean/phase criterion and Agent20's C70 rectangle exclusions, then conjoins both modular filters. The low-stop theorem and concrete example passed dedicated Lean CI run 45364029622. The full-criterion run 45363797397 exposed one remaining power-successor normalization issue; it was replaced with an explicit Nat.pow_succ identity. Repaired full-criterion run 45364535182 is in progress.
+A low-stop counterpart is in **ModularConeLowStop.lean**, including a concrete source exclusion. **ModularConeStopsCriterion.lean** adds the low-stop predicate to the exact low/high criterion. The first combined run 45361871162 reached the low/high modules and found only missing `norm_num` tactic imports in the two concrete arithmetic examples; these were replaced by kernel computation (`decide`). The broader `ModularConeFullCriterion.lean` now imports Agent27's full Boolean/phase criterion and Agent20's C70 rectangle exclusions, then conjoins both modular filters. The low-stop theorem and concrete example passed dedicated Lean CI run 45364029622. The full-criterion run 45363797397 exposed one remaining power-successor normalization issue; it was replaced with an explicit Nat.pow_succ identity. The repaired full Boolean/C70/modular criterion passed source-closure CI [45364535182](https://github.com/FlareZ123/bb6/actions/runs/45364535182).
+
+## Exact-target height precision and fixed-depth rays
+
+The earlier adaptive filter used only the precision supplied by the stopping exponent. The exact right coordinate k permits any b satisfying 3*2^b <= k+2, regardless of m. **HeightCone.lean** takes b=min(cap, floor(log2((k+2)/3))) and runs the same certified checker on the actual (x,k). It proves soundness relative to the existing modular exclusion theorem. For a fixed m, any accepted base J0,k0 at precision b excludes every upward ray target
+
+- J=J0+2^b*t;
+- k=k0+(2^(2m+2)-1)*2^b*t.
+
+The targets obey the same stopping equation when the base does. Both coordinates remain congruent and the right-size bound only increases. In particular m=0, J=12+8*t has targets (25+16*t,40+24*t). The b=3 base certificate reduces to true; the earlier adaptive high filter (b=2) reduces to false for **every** member of this infinite ray. This establishes strict extension of the old modular filter, not necessarily of all other independent parameter sieves.
+
+The arithmetic proof bodies, including the old-filter failure on the entire ray, passed local Lean 4.36.0-rc2 against an exact copy of the checker definitions with the existing exclusion-soundness theorem supplied as a hypothesis. A source-connected wrapper and the combined exact criterion **HeightConeCriterion.lean** are now submitted for the existing manual source-closure workflow. Until that run is accepted, the new source wrapper is unverified. The exact predicate conjoins the height filter with the previously accepted full criterion; the unbounded root decision remains open.
+
+In the finite J=1..16384 sample, m=0: old 4095, height 11515, additional 7420; m=1: old 5120, height 11644, additional 6524; m=2: old 9728, height 12480, additional 2752. No old accepted point is lost in these samples (not yet a monotonicity theorem). The source integration preserves all old exclusions by conjunction regardless.
 
 ## Mathematical setup
 
@@ -58,7 +71,6 @@ The census is a finite computation, not a theorem asserting the total count. The
 The probe.py script now mirrors the Lean checker with separate recursion-fuel and modulus arguments: each inverse edge decreases recursion fuel by one, while direct and high edges consume one or \(n+2\) modulus bits respectively. It reports the finite census and adaptive sample counts.
 
 Next:
-1. Confirm CI run 45364535182 for the full Boolean/C70/modular exact criterion.
-2. Compare the modular predicates against existing affine/late filters to identify strict new exclusions, not merely redundant necessary conditions.
-3. Analyze the remaining inverse-cone survivor paths, especially cases where the valuation reaches the current precision bound.
-4. Keep all experimental code and census data here; reserve results/ for source-certified mathematical statements and their carefully qualified finite enumerations.
+1. Compile HeightConeCriterion using the existing source-closure workflow. Its diagnostic tests strictness against the earlier full Boolean/C70/modular parameter filters.
+2. If the strictness witness is nonempty, kernel-check a concrete witness using the source-equivalent fast Boolean predicate and investigate the remaining inverse branches.
+3. Investigate unbounded precision and exact-target survivor paths, especially the pure-power valuation branch. Keep empirical counts distinct from source-machine decisions.
