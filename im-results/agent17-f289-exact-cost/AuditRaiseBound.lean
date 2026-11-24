@@ -12,7 +12,7 @@ theorem decidedBelow_mono {a b : Nat} (hab : a ≤ b) (m : Machine) :
 /-- Change the certified predicate without altering the partition or its
 open leaves. This permits combining short-run audits with long-run leaves
 at a common primitive score bound. -/
-def FrontierAudit.weakenGoal {good better : Machine → Prop}
+noncomputable def FrontierAudit.weakenGoal {good better : Machine → Prop}
     (h : ∀ m, good m → better m) {p : PartialMachine}
     (audit : FrontierAudit good p) : FrontierAudit better p := by
   induction audit with
@@ -46,7 +46,7 @@ theorem FrontierAudit.weakenGoal_report {good better : Machine → Prop}
     intro t ht
     exact ih t.val t.property
 
-def FrontierAudit.raiseBound {a b : Nat} (hab : a ≤ b) {p : PartialMachine}
+noncomputable def FrontierAudit.raiseBound {a b : Nat} (hab : a ≤ b) {p : PartialMachine}
     (audit : FrontierAudit (DecidedBelow a) p) : FrontierAudit (DecidedBelow b) p :=
   audit.weakenGoal (decidedBelow_mono hab)
 
