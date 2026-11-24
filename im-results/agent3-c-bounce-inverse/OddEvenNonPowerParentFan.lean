@@ -61,8 +61,8 @@ theorem odd_even_nonpower_parent_iff
                 have hpower : x+y+1=2^(n+4) := by
                   calc
                     x+y+1 = 2^n*16 := hpow
-                    _ = 2^n*2^4 := by norm_num
-                    _ = 2^(n+4) := by rw [Nat.pow_add]; norm_num
+                    _ = 2^n*2^4 := by rw [show (16:Nat)=2^4 by norm_num]
+                    _ = 2^(n+4) := by rw [← Nat.pow_add]
                 exact (hnp (n+4) hpower).elim
       · have ha2 : 2≤a := by omega
         by_cases hk0 : k=0
