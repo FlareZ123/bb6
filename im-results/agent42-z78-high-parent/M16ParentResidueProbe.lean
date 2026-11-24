@@ -16,8 +16,8 @@ def c0RowMask (a : Nat) : Nat :=
 
 /-- The six possible abstract left coordinates for an odd source
     counter a>=8. -/
-#eval ( [9, 11, 13, 15, 21, 23].map
-  (fun a => (a, c0RowMask a)) )
+#eval ( (List.range 16).map
+  (fun i => (8+i, c0RowMask (8+i))) )
 
 /-- The exact z=78 (mod 128) high parent H and its odd/odd
     low-valuation predecessor H1 have these M16 quotient images. -/
