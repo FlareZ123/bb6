@@ -96,6 +96,12 @@ inductive WeightedTNFCertificate (B : Nat) : PartialMachine → Nat → Type whe
       (hnohalt : weightedTNFNoAssignedHalt p)
       (hnever : ∀ m, compatible p m → NeverHalts m) :
       WeightedTNFCertificate B p cut
+  | weightedLeaf {p cut}
+      (hroot : p initialSlot = some (some ⟨true, true, 1⟩))
+      (hsupport : TNFSupport p cut)
+      (hnohalt : weightedTNFNoAssignedHalt p)
+      (hweighted : ∀ m, compatible p m → WeightedBound B m) :
+      WeightedTNFCertificate B p cut
   | lastHole {p cut n c}
       (hroot : p initialSlot = some (some ⟨true, true, 1⟩))
       (hsupport : TNFSupport p cut)
@@ -123,6 +129,22 @@ inductive WeightedTNFCertificate (B : Nat) : PartialMachine → Nat → Type whe
           (refine p (readSlot c) (some ⟨w, r, q⟩)) (cut + 1)) :
       WeightedTNFCertificate B p cut
 
+/-- Import a pre-existing universal nonhalting Cover as a TNF leaf. -/
+def WeightedTNFCertificate.ofNonhaltCover {B : Nat} {p : PartialMachine} {cut : Nat}
+    (hroot : p initialSlot = some (some ⟨true, true, 1⟩))
+    (hsupport : TNFSupport p cut)
+    (hnohalt : weightedTNFNoAssignedHalt p)
+    (cert : Cover NeverHalts p) : WeightedTNFCertificate B p cut :=
+  .nonhalt hroot hsupport hnohalt cert.sound
+
+/-- Import any independently proved weighted Cover as a terminal TNF leaf. -/
+def WeightedTNFCertificate.ofWeightedCover {B : Nat} {p : PartialMachine} {cut : Nat}
+    (hroot : p initialSlot = some (some ⟨true, true, 1⟩))
+    (hsupport : TNFSupport p cut)
+    (hnohalt : weightedTNFNoAssignedHalt p)
+    (cert : Cover (WeightedBound B) p) : WeightedTNFCertificate B p cut :=
+  .weightedLeaf hroot hsupport hnohalt cert.sound
+
 /-- Every normalized TNF certificate closes all compatible total tables. -/
 theorem WeightedTNFCertificate.sound {B : Nat} {p : PartialMachine} {cut : Nat}
     (cert : WeightedTNFCertificate B p cut) :
@@ -131,6 +153,9 @@ theorem WeightedTNFCertificate.sound {B : Nat} {p : PartialMachine} {cut : Nat}
   | nonhalt hroot hsupport hnohalt hnever =>
       intro m hm
       exact weighted_never B m (hnever m hm)
+  | weightedLeaf hroot hsupport hnohalt hweighted =>
+      intro m hm
+      exact hweighted m hm
   | lastHole hroot hsupport hcut hrun hhole hrest hweight =>
       intro m hm
       exact last_hole_sound B _ _ _ hroot hrun hhole hrest hweight m hm
@@ -155,6 +180,12 @@ theorem WeightedTNFCertificate.toCover {B : Nat} {p : PartialMachine} {cut : Nat
   .leaf p cert.sound
 
 #print axioms weightedTNFKnownRunForever_sound
+#print axioms weightedTNFDefaultCompletion_compatible
+#print axioms weightedTNFDefaultStep
+#print axioms weightedTNFKnownRun_eq_defaultRun
+#print axioms weightedTNFKnownRunForever_iff
+#print axioms WeightedTNFCertificate.ofNonhaltCover
+#print axioms WeightedTNFCertificate.ofWeightedCover
 #print axioms WeightedTNFCertificate.sound
 #print axioms WeightedTNFCertificate.toCover
 end BB6.Agent13BlankDelay
