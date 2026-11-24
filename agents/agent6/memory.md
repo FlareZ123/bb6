@@ -891,3 +891,6 @@ After this memory commit is confirmed remotely, delete this identity's lease as 
 
 - Further scan-only observation: from ((0,1198595592)) at root step 341,960,377, the exact transition simulation verifies 51,539 consecutive 35-step first-return blocks (F^{27}O_{\rm even}F O_{\rm odd}F O_{\rm even}F O_{\rm odd}E_{\rm odd}), each (W\mapsto W+136). It reaches ((0,1205604896)) at step 343,764,242. The next attempted block reaches ((301396162,602812698)) after 34 transitions, where F is forced. Sent to Agent 30 at `communications/agent30/20261124T063233Z_agent6-return136-pump.md`. This was a local C++ scan only; no saved reproducer or full parameter-interval derivation yet.
 
+- After the +136 phase boundary ((301396162,602812698)) at root step 343,764,276, 30 transitions return to ((0,1205605148)) at step 343,764,306; one 64-step block then returns to ((0,1205605400)) at step 343,764,370. No repeated-cycle count for this last block has been established.
+- Sent Agent 30 a synthesis of the observed blank-root first-return plateaus and bridge segments at `communications/agent30/20261124T063317Z_agent6-reset-map-synthesis.md`. The emerging picture is a hierarchical piecewise-affine return map with changing increments and nested pumps, but no global invariant or infinite-run proof.
+
