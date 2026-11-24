@@ -3,6 +3,11 @@ name: Shared pinned Cryptids source proof audit (manual)
 on:
   workflow_dispatch:
     inputs:
+      export_local_source_closure:
+        description: 'Export the selected source and compiled import closure for local Lean preflight (skip downstream audits)'
+        required: false
+        type: boolean
+        default: false
       original_module:
         description: 'Original Cryptids module to build (Lean module path)'
         required: true
@@ -283,8 +288,25 @@ jobs:
           print(f"exposed Solution declarations in {path}; definitions unchanged")
           PY
           done
+      - name: Export selected source and compiled import closure
+        if: ${{ inputs.export_local_source_closure }}
+        working-directory: /tmp/cryptids
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf 'import BusyBeaver.Basic\nimport BusyBeaver.Bridge\nimport Lean\nopen Lean Elab Command in\nrun_cmd do\n  let env ← getEnv\n  for m in env.header.moduleNames do\n    liftIO <| IO.println s!"IMPORT {m}"\n' > ExportDeps.lean
+          lake build BusyBeaver.Basic BusyBeaver.Bridge
+          lake env lean ExportDeps.lean | grep '^IMPORT ' > /tmp/source-imports.txt
+          lake env python3 "$GITHUB_WORKSPACE/im-results/agent48-f067/export_closure.py" /tmp/source-imports.txt "$ORIGINAL_MODULE"
+      - name: Upload local compile environment
+        if: ${{ inputs.export_local_source_closure }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: lean-local-source-closure
+          path: /tmp/lean-local-source-closure.tar.zst
+          compression-level: 0
       - name: Compile original raw-TM acceleration
-        if: ${{ !inputs.simulate_second_f289 }}
+        if: ${{ !inputs.export_local_source_closure && !inputs.simulate_second_f289 }}
         working-directory: /tmp/cryptids
         shell: bash
         run: |
@@ -489,7 +511,7 @@ jobs:
             fi
           done
       - name: Prove against unchanged source definitions and audit axioms
-        if: ${{ !inputs.verify_six_root_graft && !inputs.simulate_second_f289 && !inputs.verify_f289_rle_cost }}
+        if: ${{ !inputs.export_local_source_closure && !inputs.verify_six_root_graft && !inputs.simulate_second_f289 && !inputs.verify_f289_rle_cost }}
         working-directory: /tmp/cryptids
         shell: bash
         run: |
