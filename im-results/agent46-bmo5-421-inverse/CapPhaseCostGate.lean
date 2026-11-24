@@ -15,6 +15,7 @@ theorem positive_history_W_pos_seed
   | first hb he => omega
   | @same s k x y h hr ih =>
     have hW:=w_regular_same hr
+    have hp:=p_ge k
     omega
   | @down s k x y h hr ih =>
     have hW:=w_regular_down hr
@@ -50,8 +51,8 @@ theorem positive_history_down_is_positiveNext
       unfold W
       omega
     have hqzupperI : (Q k z:Int)≤2*(P k:Int)-2 := by omega
-    have hqzupper : Q k z≤2*P k-2 := by
-      exact_mod_cast hqzupperI
+    have hp:=p_ge k
+    have hqzupper : Q k z≤2*P k-2 := by omega
     have hq : Q k z=3^r*Q k x := same_run_q hs
     have hqPos : 0<Q k x := by
       have hqlo: k+6≤Q k x := (q_bounds hbX).1
@@ -59,17 +60,20 @@ theorem positive_history_down_is_positiveNext
     have hpowPos : 0<3^r := Nat.pow_pos (by decide)
     have hmul := Nat.le_mul_of_pos_left (Q k x) hpowPos
     change Q k x≤3^r*Q k x at hmul
-    have hupper : Q k x≤2*P k-2 := by
+    have hupperPow : 3^r*Q k x≤2*P k-2 := by
+      calc
+        3^r*Q k x=Q k z := by rw [← hq]
+        _≤2*P k-2 := hqzupper
+    have hqUpper : Q k x≤2*P k-2 := by
       calc
         Q k x≤3^r*Q k x := hmul
-        _=Q k z := by rw [← hq]
-        _≤2*P k-2 := hqzupper
+        _≤2*P k-2 := hupperPow
     have hcross : 2*P k-2<3^(r+1)*Q k x := by omega
     have hcount : positiveCount k (Q k x)=r := by
       unfold positiveCount
       apply CapMacro.triple_window_unique hqPos
       · exact CapMacro.tripleCount_spec hqPos (by omega)
-      · exact ⟨hupper,hcross⟩
+      · exact ⟨hupperPow,hcross⟩
     have hprod : positiveProduct k (Q k x)=3^(r+1)*Q k x := by
       unfold positiveProduct
       rw [hcount]
@@ -101,7 +105,7 @@ theorem positive_history_down_is_positiveNext
         _=(3*3^r)*Q k x+3 := by rw [Nat.mul_assoc]
         _=(3^r*3)*Q k x+3 := by rw [Nat.mul_comm 3 (3^r)]
         _=3^(r+1)*Q k x+3 := by rw [Nat.pow_succ]
-    have hnextEq:=positive_next_equation hqPos hupper
+    have hnextEq:=positive_next_equation hqPos hqUpper
     rw [hprod] at hnextEq
     have hnext : positiveNext k (Q k x)=Q (k+1) y := by omega
     exact ⟨r,z,s',y,hs,hy,hr,hcount,hnext⟩
