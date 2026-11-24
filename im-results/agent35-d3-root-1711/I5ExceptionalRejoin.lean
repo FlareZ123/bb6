@@ -19,14 +19,22 @@ def t5 : Nat := (DRegular.terminal5.a - 4) / 9
 
 theorem terminal5_shape :
     DRegular.terminal5 = (⟨9*t5+4,5,1⟩ : DRegular.L) := by
-  have hq : DRegular.terminal5.q = 5 := by decide
-  have hb : DRegular.terminal5.b = 1 := by decide
-  have ha : DRegular.terminal5.a % 9 = 4 := by decide
-  ext
-  · dsimp [t5]
-    omega
-  · exact hq
-  · exact hb
+  have hq0 : DRegular.terminal5.q = 5 := by decide
+  have hb0 : DRegular.terminal5.b = 1 := by decide
+  have ha0 : DRegular.terminal5.a % 9 = 4 := by decide
+  cases h : DRegular.terminal5 with
+  | mk a q b =>
+    have hA : DRegular.terminal5.a = a := congrArg DRegular.L.a h
+    have hQ : DRegular.terminal5.q = q := congrArg DRegular.L.q h
+    have hB : DRegular.terminal5.b = b := congrArg DRegular.L.b h
+    have ha : a % 9 = 4 := by simpa [hA] using ha0
+    have hq : q = 5 := hQ.symm.trans hq0
+    have hb : b = 1 := hB.symm.trans hb0
+    simp only [DRegular.L.mk.injEq]
+    constructor
+    · have hval : a = 9*((a-4)/9)+4 := by omega
+      simpa [t5,hA] using hval
+    · exact ⟨hq,hb⟩
 
 theorem t5_mod3 : t5 % 3 = 2 := by
   decide
@@ -82,7 +90,8 @@ theorem e_double_source (t : Nat) :
         (CryptidBoundary.init (xs ++ List.replicate 2 false)) =
       eMiddle t := by
     rw [hinput, hcost]
-    simpa [eMiddle] using (BB6.Agent35.full_E_double (3*t) 3 [])
+    have hprefix : 8*(3*t)+5 = 24*t+5 := by omega
+    simpa [eMiddle,hprefix] using (BB6.Agent35.full_E_double (3*t) 3 [])
   rw [hraw] at hpad
   rw [hstart]
   exact hpad
@@ -127,7 +136,7 @@ theorem b_source (t : Nat) :
         CryptidBoundary.Cfg) = bMiddle t := by
     simp [bMiddle, DRegularSource.sourceSection,
       CryptidBoundary.init, CryptidBoundary.oppairs,
-      K, ys, hrep, hfront, List.append_assoc]
+      ys, hrep, hfront, List.append_assoc]
   calc
     CryptidBoundary.run (bCost t) (eMiddle t) =
         CryptidBoundary.run (12*K*K+49*K+40)
@@ -160,8 +169,7 @@ theorem b_reentry_source (t : Nat) (ht : t % 3 = 2) :
   have hs :
       DRegularSource.sourceSection ⟨64*t+27,1,5⟩ =
       DRegularSource.sourceSection ⟨3*k+2,1,5⟩ := by
-    congr 1
-    omega
+    rw [hstart]
   have htgt :
       DRegularSource.sourceSection ⟨8*k+15,0,0⟩ =
       DRegularSource.sourceSection (pureReentry t) := by
