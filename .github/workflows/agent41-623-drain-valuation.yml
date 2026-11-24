@@ -64,7 +64,7 @@ jobs:
           compile "$p/FlatDrainSource.lean" Agent49FlatDrainSource
           compile "$p/DrainCorrectionGrowth.lean" Agent49DrainCorrectionGrowth
           compile "$p/InverseWindowSource.lean" Agent49InverseWindowSource
-          for m in FatalFamilyInverseArithmetic FatalFamilyInverseActual FatalFamilyWindow FatalFamilyInfinite FatalFamilyDigitDecoder NearPowerDrain FatalFamilySource NearPowerFastStats NearPowerCertificate NearPowerTree NearPowerTreeSource NearPowerGenerate NearPowerChecks NearPowerExamples NearPowerPump NearPowerAffine NearPowerSymbolicStats NearPowerSymbolic NearPowerSymbolicTree NearPowerSymbolicSource NearPowerFamilyCore NearPowerFamilySource NearPowerAffineFatal; do
+          for m in FatalFamilyInverseArithmetic FatalFamilyInverseActual FatalFamilyWindow FatalFamilyInfinite FatalFamilyDigitDecoder NearPowerDrain FatalFamilySource FatalFamilyDigitDecoderSource FatalFamilyDecoderHuge NearPowerFastStats NearPowerCertificate NearPowerTree NearPowerTreeSource NearPowerGenerate NearPowerChecks NearPowerExamples NearPowerPump NearPowerAffine NearPowerSymbolicStats NearPowerSymbolic NearPowerSymbolicTree NearPowerSymbolicSource NearPowerFamilyCore NearPowerFamilySource NearPowerAffineFatal; do
             compile "$q/$m.lean" "$m"
           done
           python3 "$GITHUB_WORKSPACE/$q/emit_corpus.py" > NearPowerFamilyCorpus.lean
