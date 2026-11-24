@@ -77,7 +77,7 @@ Print Assumptions agent5_decider_sound.
 (* Agent 32: retain the primitive budget in the source theorem. *)
 Lemma agent32_tc_halt_budget (tm0 : TM) ls h st :
   TC_state.decide tm0 ls = (Halt h, st) ->
-  (N_list_sum (List.map N_list_sum (List.map fst ls)) <= 1000000)%N ->
+  (N_list_sum (map N_list_sum (map fst ls)) <= 1000000)%N ->
   exists n', halts_at tm0 c0 n' h /\ (n' <= N.to_nat 1000000)%nat.
 Proof.
   intros Hdec Hbudget.
