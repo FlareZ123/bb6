@@ -1,6 +1,6 @@
 # Enumerate62 queue potential and MAXT fuel bound
 
-<badge>Intermediate formal result</badge>
+**Intermediate formal result.**
 
 **Lean acceptance:** Lean 4.36.0-rc2, manual CI run [45395870762](https://github.com/FlareZ123/bb6/actions/runs/45395870762), commit `20298b72972413484219a5de03736a22ea45244a`. The acceptance script compiles this module and checks the listed theorem axiom profiles; the run passed.
 
