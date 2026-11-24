@@ -150,6 +150,10 @@ Run:
 
 The completed output has 347 radical supports, 467 base moduli, 15 nonempty prefilters (3 balanced bases), 238 exact orbit computations, zero passing candidates, and zero unexamined bases. Thus the established necessary conditions exclude **all exponents** for denominators supported on {211} union the odd primes <=47. This is a finite exact integer enumeration with a mathematical completeness argument; the enumeration has not been formalized in Lean. No claim about larger prime factors, aperiodic infinite cost words, or authentic-root nonhalting follows.
 
+## Global period finiteness
+
+[GlobalPeriodicBound.md](GlobalPeriodicBound.md) removes the fixed-prime-support restriction entirely. For C=211 every periodic candidate has index I=phi(q)/ord_q(2), positive integer K=kI divisible by 2^s for s distinct prime factors, and K*product_(p|q,p!=211) p/(p-1)=735+210 delta/b. Every proper-prefix product is separated from 735 by parity and the largest-prime argument; nonzero delta excludes full equality. A finite Fourier character-sum bound forces delta/b -> 0 uniformly as q grows. These facts yield an explicit global bound q<Q and hence only finitely many possible primitive cost periods, plus an effective finite test of existence of a prepared periodic tail. This is a paper proof, not Lean-checked; Q is far too large for the current census. It still does not constrain arbitrary aperiodic costs or decide the actual root.
+
 ## Reproducible finite census
 
 ShadowPeriodicDenominators.cpp enumerates every odd denominator divisible by 211 up to a user-specified bound, and each multiplicative-by-two orbit of reduced numerators. It uses the period length b and number ell of one digits (the number of orbit representatives x with 2x>=q). It tests W even, (1), (2), (4). For bound 700000 the run returned candidates=73, pass=0, qwithpass=0. This is a necessary-condition test only; it does not assert that any surviving candidate would give an admissible shadow path. No conclusion is drawn for denominators above the bound.
