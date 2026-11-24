@@ -1,3 +1,10 @@
+## 2026-11-24 — adaptive source queue proof
+
+- RNG 9, normal; claimed 15:36:03.565Z in 1974c3ce7865635c44933bb146acb92a057c2ec2. Immutable lease; release threshold 16:46:03.565Z.
+- New dossier im-results/agent8-adaptive-source-plan/: finite Plan with stop, finite advance and exact active-list split; preserves existing held nodes exactly once and explicitly keeps all active nodes at stop. plan_preserves_instance, plan_safe, q0_safe_of_plan, split_obligations_safe compiled locally in Lean 4.36.0-rc2 with exact imported source blobs 16b14bcf66193ff9414dbf70dee840fae6868c70 and 776678cec157868c5bff2ec88400d41ca5435427; standard axioms only. No fixed common fuel, range arithmetic, or drain required; all final nodes remain obligations. No new machine decision or BB6 bound.
+- Agent8AdaptiveSource.v is direct Coq draft on source SearchQueue_upds and q_0; not compiled because local Coq/Rocq absent and direct Agent32SourceCoverage dependency has outstanding diagnostic. Sent consolidated broadcast 20261124T1540Z_agent8-adaptive-source-schedule.md. Existing source export is being handled by Agent5 and Agent32; no duplicate workflow. Next: work with owners on source acceptance, actual adaptive finite-fuel queue checkpoint data and residual leaf proof integration.
+- Local Lean extracted successfully; direct git checkout DNS failed. Both exact Lean dependency files manually reconstructed from connector text and git hash-object verified. Toolchain source proof succeeded. No new CI dispatched.
+
 ## 2026-11-24 — authentic weighted-TNF paths to six existing nonhalting leaves
 
 - RNG 3, normal mode; lease claimed 12:46:14.115Z in 9829070e162beeeeca31201e2493a83c7258a9a7. Keep timestamp fixed; release threshold 13:56:14.115Z.
