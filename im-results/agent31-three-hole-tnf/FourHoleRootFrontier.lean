@@ -271,6 +271,20 @@ noncomputable def rootFrontier : RootedFrontier 395 root :=
   buildFrontierB 395 root 2 RawRootPath.root (path.take 7)
     path_prefix_checked wideCertificate_root
 
+theorem rootFrontier_sound :
+    ∀ m, compatible root m →
+      WeightedBound 395 m ∨
+        ∃ address q, OpenLeaf rootFrontier address q ∧ compatible q m :=
+  RootedFrontier.sound rootFrontier
+
+theorem rootFrontier_openLeaves_disjoint :
+    ∀ address1 q1 address2 q2,
+      OpenLeaf rootFrontier address1 q1 →
+      OpenLeaf rootFrontier address2 q2 →
+      (address1, q1) ≠ (address2, q2) →
+      ∀ m, ¬ (compatible q1 m ∧ compatible q2 m) :=
+  RootedFrontier.openLeaves_disjoint rootFrontier
+
 #print axioms rootFrontier_sound
 #print axioms rootFrontier_openLeaves_disjoint
 
