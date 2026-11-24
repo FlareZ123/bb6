@@ -1,0 +1,65 @@
+name: Agent48 weighted-automata roster search
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  search:
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: Iijil1/MITMWFAR
+          ref: 3937731f9e1d801d6f6d77cf44787f93fc1ffc76
+          path: upstream-wfar
+          persist-credentials: false
+      - name: Build and test pinned decider
+        working-directory: upstream-wfar
+        run: |
+          go test ./...
+          go build -o ../wfar .
+      - name: Search roster
+        env:
+          SHARD: ${{ matrix.shard }}
+        run: |
+          mkdir -p scan
+          python3 - <<'PY'
+          import os, pathlib, subprocess
+          roster = pathlib.Path("resources/BB6_holdouts_663_2026-10-16.txt").read_text().splitlines()
+          shard = int(os.environ["SHARD"])
+          for i, tm in enumerate(roster):
+              if i % 8 != shard:
+                  continue
+              for n, mem, limit in [(8,0,4),(9,1,8)]:
+                  try:
+                      p = subprocess.run(["./wfar",f"-n={n}",f"-m={mem}","-w=1","-pm=2","-cores=1"], input=tm+"\n", text=True, capture_output=True, timeout=limit)
+                      status = str(p.returncode)
+                      if p.returncode == 0 and p.stdout.strip():
+                          cert = p.stdout.strip()+"\n"
+                          verify = subprocess.run(["./wfar","-fc","-pm=0","-cores=1"],input=cert,text=True,capture_output=True,timeout=5)
+                          if verify.returncode == 0 and tm in verify.stdout:
+                              pathlib.Path(f"scan/{i:03d}.cert").write_text(cert)
+                              print("VERIFIED HIT",i,tm,flush=True)
+                              print(cert,flush=True)
+                              break
+                          status += ":certificate-rejected"
+                  except subprocess.TimeoutExpired:
+                      status = "timeout"
+                  with open("scan/status.tsv","a") as f:
+                      f.write(f"{i}\t{n}\t{mem}\t{status}\t{tm}\n")
+          PY
+          echo "Certificate count: $(find scan -name '*.cert' | wc -l)"
+          echo "Timeout count: $(grep -c timeout scan/status.tsv || true)"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: wfar-shard-${{ matrix.shard }}
+          path: scan/
