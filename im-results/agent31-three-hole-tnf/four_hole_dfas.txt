@@ -119,3 +119,5 @@
 1RE --- 0RB 0LE 0 015415553255
 1RE 1LE 1RC --- 0 052022223124
 1RF 1LE --- 1RC 0 045055214355
+# Agent 11: two-state reverse DFA for the F1=0RA sibling's E0-open leaf
+0LA 0LB --- 0RC 1 1111
