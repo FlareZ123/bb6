@@ -147,7 +147,7 @@ theorem quadratic_gap_target_fails (C : Nat) (hC : 0<C) :
   let t := Nat.sqrt C
   let d := 36+2*t
   have hd : 36≤d := by dsimp [d]; omega
-  have hroot : t*t ≤ C := by
+  have hroot : t^2 ≤ C := by
     simpa [t] using Nat.sqrt_le' C
   have hgap : canonicalGap d 9 = 2*t := by
     rw [canonicalGap_d_nine d hd]
