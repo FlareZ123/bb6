@@ -100,19 +100,20 @@ private theorem axis_odd_drain (d : Nat) (hd : d%2=1) :
   rw [h,h',zero_drain]
 
 /-- Exhaustive affine reconstruction interface for every successful parent.
-Each disjunct gives the exact branch and logarithmic window. The caller
-may discard spurious window candidates using the original transition. -/
-def ParentWindow (a d x y : Nat) : Prop :=
+A successful drain may be summarized by any sound five-argument predicate.
+The branch partition is shared by inverse and growth consumers. -/
+def ParentEnvelope (P : Nat → Nat → Nat → Nat → Nat → Prop) (a d x y : Nat) : Prop :=
   (a=0 ∧ ((d%2=0 ∧ x=d ∧ y=7) ∨ (d%2=1 ∧ x=d-1 ∧ y=14))) ∨
-  (∃ A b, d%2=1 ∧ a≥d+5 ∧ a=A+b+2 ∧ d+3=b ∧ Window A b 5 x y) ∨
-  (∃ A b, d%2=0 ∧ a≥d+3 ∧ a=A+b ∧ d+2=b ∧ Window A b 2 x y) ∨
-  (a%2=0 ∧ a=d+2 ∧ Window 0 a 2 x y) ∨
-  (∃ A b, a%2=0 ∧ d%2=1 ∧ a=b+1 ∧ d+3=A+b ∧ Window A b 3 x y) ∨
-  (∃ A b, a%2=0 ∧ d%2=0 ∧ a+1=b ∧ d+2=A+b ∧ Window A b 0 x y)
+  (∃ A b, d%2=1 ∧ a≥d+5 ∧ a=A+b+2 ∧ d+3=b ∧ P A b 5 x y) ∨
+  (∃ A b, d%2=0 ∧ a≥d+3 ∧ a=A+b ∧ d+2=b ∧ P A b 2 x y) ∨
+  (a%2=0 ∧ a=d+2 ∧ P 0 a 2 x y) ∨
+  (∃ A b, a%2=0 ∧ d%2=1 ∧ a=b+1 ∧ d+3=A+b ∧ P A b 3 x y) ∨
+  (∃ A b, a%2=0 ∧ d%2=0 ∧ a+1=b ∧ d+2=A+b ∧ P A b 0 x y)
 
-theorem parent_window_complete (a d x y : Nat)
-    (h : highLevelNext (.D a d) = some (.D x y)) : ParentWindow a d x y := by
-  unfold ParentWindow
+theorem parent_envelope_complete (P : Nat → Nat → Nat → Nat → Nat → Prop)
+    (hP : ∀ A b z x y, drainB A b z = some (.D x y) → P A b z x y)
+    (a d x y : Nat) (h : highLevelNext (.D a d) = some (.D x y)) : ParentEnvelope P a d x y := by
+  unfold ParentEnvelope
   by_cases ha : a=0
   · subst a
     left
@@ -129,33 +130,40 @@ theorem parent_window_complete (a d x y : Nat)
     by_cases h1 : d%2=1 ∧ a≥d+5
     · left
       simp only [highLevelNext,if_neg ha,if_pos h1] at h
-      exact ⟨a-d-5,d+3,h1.1,h1.2,by omega,rfl,source_drain_window _ _ _ _ _ h⟩
+      exact ⟨a-d-5,d+3,h1.1,h1.2,by omega,rfl,hP _ _ _ _ _ h⟩
     · right
       by_cases h2 : d%2=0 ∧ a≥d+3
       · left
         simp only [highLevelNext,if_neg ha,if_neg h1,if_pos h2] at h
-        exact ⟨a-d-2,d+2,h2.1,h2.2,by omega,rfl,source_drain_window _ _ _ _ _ h⟩
+        exact ⟨a-d-2,d+2,h2.1,h2.2,by omega,rfl,hP _ _ _ _ _ h⟩
       · right
         by_cases h3 : a%2=1
         · simp [highLevelNext,ha,h1,h2,h3] at h
         · by_cases h4 : a=d+2
           · left
             simp only [highLevelNext,if_neg ha,if_neg h1,if_neg h2,if_neg h3,if_pos h4] at h
-            exact ⟨by omega,h4,source_drain_window _ _ _ _ _ h⟩
+            exact ⟨by omega,h4,hP _ _ _ _ _ h⟩
           · right
             by_cases h5 : d%2=1
             · left
               simp only [highLevelNext,if_neg ha,if_neg h1,if_neg h2,if_neg h3,if_neg h4,if_pos h5] at h
-              exact ⟨d+4-a,a-1,by omega,h5,by omega,by omega,source_drain_window _ _ _ _ _ h⟩
+              exact ⟨d+4-a,a-1,by omega,h5,by omega,by omega,hP _ _ _ _ _ h⟩
             · right
               simp only [highLevelNext,if_neg ha,if_neg h1,if_neg h2,if_neg h3,if_neg h4,if_neg h5] at h
               rw [←drain_bundle] at h
-              exact ⟨d+1-a,a+1,by omega,by omega,rfl,by omega,source_drain_window _ _ _ _ _ h⟩
+              exact ⟨d+1-a,a+1,by omega,by omega,rfl,by omega,hP _ _ _ _ _ h⟩
+
+def ParentWindow := ParentEnvelope Window
+
+theorem parent_window_complete (a d x y : Nat)
+    (h : highLevelNext (.D a d) = some (.D x y)) : ParentWindow a d x y :=
+  parent_envelope_complete Window source_drain_window a d x y h
 
 #print axioms source_drain_window
 #print axioms source_large_first_trace
 #print axioms source_large_first_image
 #print axioms source_large_first_unique_block
 #print axioms source_large_first_unique
+#print axioms parent_envelope_complete
 #print axioms parent_window_complete
 end BB6.Agent49InverseWindowSource

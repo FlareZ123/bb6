@@ -38,7 +38,11 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/DrainCorrectionGrowth.lean" Agent49DrainCorrectionGrowth.lean
           lake env lean -o .lake/build/lib/lean/Agent49DrainCorrectionGrowth.olean Agent49DrainCorrectionGrowth.lean
           cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/InverseWindowSource.lean" Agent49InverseWindowSource.lean
-          lake env lean Agent49InverseWindowSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent49InverseWindowSource.olean Agent49InverseWindowSource.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/MassBandArithmetic.lean" Agent49MassBandArithmetic.lean
+          lake env lean -o .lake/build/lib/lean/Agent49MassBandArithmetic.olean Agent49MassBandArithmetic.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/MassBandSource.lean" Agent49MassBandSource.lean
+          lake env lean Agent49MassBandSource.lean
           python "$GITHUB_WORKSPACE/im-results/agent49-parity623/inverse623.py"
           cp "$GITHUB_WORKSPACE/im-results/agent8-623-survival-density/DrainDigitChargeSource.lean" Agent8DigitChargeSource.lean
           lake env lean -o .lake/build/lib/lean/Agent8DigitChargeSource.olean Agent8DigitChargeSource.lean
