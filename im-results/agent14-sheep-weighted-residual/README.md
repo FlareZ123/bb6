@@ -188,8 +188,10 @@ python3 im-results/agent14-sheep-weighted-residual/check_singular_two_step.py
 ```
 
 The Lean files were compiled with Lean 4.36.0-rc2. The Python script uses only
-the standard library and verifies the finite modular tables and the two sharp
-witnesses.
+the standard library and reproduces the finite modular tables and the two sharp
+witnesses. The H=1..8 finite residue classification is script-checked, not
+kernel-checked; the infinite H>=3 (type I) and H>=9 (type II) tails are Lean
+proofs from the exact terminal equations.
 
 ## Scope and limitation
 
