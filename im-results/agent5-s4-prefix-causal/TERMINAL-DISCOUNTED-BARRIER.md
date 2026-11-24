@@ -51,6 +51,67 @@ A final head bump of size (d\) adds (d/4) to (R). This contraction is universal:
 
 This is useful after a prefix-return factorization. The shallow original gates change only the tracked prefix; the induced suffix word consists of effective S4 gates and a possible pending head bump. The suffix potential is then contracted by the number of effective gates, without replaying every shallow original gate.
 
+
+### 1.1 Carry-depth-sensitive refinement
+
+The same exact (z=1/2) identity retains useful information about the actual carry depth (r), instead of replacing (2^{-r}) by (1). Put (Q=P(1/2)). The exact specialization of the gate identity is
+[
+Q_U=\frac23Q_S+\frac13P_{>r}(1/2)+\frac23c
++\frac{t_r+27}{3\cdot2^{r+2}}.
+]
+Since (M_U=M_S+c+2), this gives the exact centered remainder
+[
+R_U-\frac23R_S
+=\frac13P_{>r}(1/2)-\frac14M_S-\frac1{12}c-\frac32
++\frac{t_r+27}{3\cdot2^{r+2}}.
+]
+Now use
+[
+P_{>r}(1/2)\le\frac{M_S}{2^{r+1}},
+\qquad t_r\le M_S+c.
+]
+The result is the depth-sensitive bound
+[
+\boxed{
+R_U\le\frac23R_S
++\left(2^{-r-2}-\frac14\right)M_S
++\left(\frac{2^{-r-2}}3-\frac1{12}\right)c
++\frac9{2^{r+2}}-\frac32.
+}
+]
+Equivalently, with
+[
+A_k=\frac14-2^{-k-2},\quad
+B_k=\frac1{12}-\frac1{3\cdot2^{k+2}},\quad
+C_k=\frac32-\frac9{2^{k+2}},
+]
+every gate of carry depth (r\ge k\ge1) satisfies
+[
+\boxed{R_U\le\frac23R_S-A_kM_S-B_kc-C_k.}
+]
+In particular:
+[
+r=0:\quad R_U\le\frac23R_S+\frac34,
+]
+whereas
+[
+r\ge1:\quad
+\boxed{R_U\le\frac23R_S-\frac18M_S-\frac1{24}c-\frac38.}
+]
+For (r\ge2), the corresponding negative terms strengthen to
+[
+R_U\le\frac23R_S-\frac3{16}M_S-\frac1{16}c-\frac{15}{16}.
+]
+
+Thus the universal (+3/4) bound is attained only as the coarse (r=0) envelope. Any positive carry depth produces a strictly negative mass-dependent drift. This is a sharper local statement than the offset-independent contraction and may be useful when a nested suffix word supplies a carry-depth distribution. It does **not** by itself prove nonhalting: a long word can still contain many depth-zero gates, and the required root-connected depth-(L) invariant has not yet been established.
+
+For a nonempty input (S=b_0::T), the (r=0) remainder can also retain the head coefficient:
+[
+R_U\le\frac23R_S+\frac34-\frac{b_0+1}{6}-\frac{M(T)}{12}.
+]
+For the empty stack, the general (r=0) bound remains (R_U\le\frac23R_S+3/4).
+
+
 ## 2. A finite-mass terminal-halting criterion
 
 For a stack of length (L\), Jensen gives
