@@ -1,6 +1,8 @@
 import CSourceBridge16
 import Lean.Elab.Tactic.Omega
 
+set_option maxRecDepth 20000
+
 namespace BB6.Agent13M16
 
 /-- A false M16 quotient lookup contradicts source reachability from the
