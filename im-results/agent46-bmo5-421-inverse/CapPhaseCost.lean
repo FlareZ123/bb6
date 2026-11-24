@@ -476,7 +476,11 @@ theorem positive_history_final_run {j s k x : Nat} {w : Int}
     ∃ r z, SameRun k r x z ∧
       ((k=j ∧ 3*W j z=8*(P j:Int)-6-w) ∨
        ∃ s' y, PositiveHistory j w s' (k+1) y ∧ RegFrom k z y) := by
-  induction h generalizing s k x with
+  induction h using PositiveHistory.rec
+    (motive := fun s k x _ =>
+      ∃ r z, SameRun k r x z ∧
+        ((k=j ∧ 3*W j z=8*(P j:Int)-6-w) ∨
+         ∃ s' y, PositiveHistory j w s' (k+1) y ∧ RegFrom k z y)) with
   | first hb he =>
     exact ⟨0,_,SameRun.zero hb,Or.inl ⟨rfl,he⟩⟩
   | @same s k x y h hr ih =>
