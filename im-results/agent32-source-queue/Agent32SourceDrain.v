@@ -179,7 +179,7 @@ Proof.
     exfalso.
     apply (N.lt_irrefl 0).
     eapply N.lt_le_trans.
-    + exact (mass_nonempty (fst q) ltac:(rewrite E; discriminate)).
+    + exact (mass_nonempty (x :: xs) ltac:(discriminate)).
     + exact Hfuel.
   - destruct (Pos_iter_until (SearchQueue_upd f) (inl q) p) as [q'|q'] eqn:E.
     + cbn [get_SQ].
