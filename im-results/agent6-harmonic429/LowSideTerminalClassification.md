@@ -29,7 +29,7 @@ The exact scale test (theorem terminal_iff_scale) is:
 
 The congruence recovers the uniquely determined integer d with d=2 mod 4. Guard elimination guarantees all source counter inequalities. There is no simulation cutoff and no dropped guard. `terminal_source` reconstructs the actual accelerator trajectory; `terminal_complete` covers every finite terminal trajectory after the initial burst that has no intervening outputs to sections 0 or 11.
 
-Let N=M/gcd(M,abs(K/4)). This is a positive odd integer. If there is any scale witness m0, the congruence holds exactly for m=m0 mod p, where p is the multiplicative order of 16 modulo N (p=1 when N=1). Theorem `terminal_progression` proves existence and p<=N. All linear guard inequalities intersect in an interval in X, hence in the monotone scale m. This may be an empty, finite, or unbounded interval.
+Let N=M/gcd(M,abs(K/4)). This is a positive odd integer. If there is any scale witness m0, the congruence holds exactly for m=m0 mod p, where p is the multiplicative order of 16 modulo N (p=1 when N=1). Theorem `terminal_progression` proves existence and p<=N. The general affine argument gives an interval in X. The sharper guard-ray theorem below establishes that whenever the phase and congruence are compatible, it is a final ray.
 
 Moreover set
 
@@ -47,6 +47,32 @@ This is a uniform finite algorithm for the scale quantifier, for each fixed word
 - [BB429LowWordPeriod.lean](BB429LowWordPeriod.lean): exact eliminated scale criterion and guard interval.
 - [BB429LowWordProgression.lean](BB429LowWordProgression.lean): gcd-reduced period, single residue class.
 - [BB429LowWordFinite.lean](BB429LowWordFinite.lean): explicit finite scale-search bound.
+
+## Guard rays and the congruence-only existence test
+
+The earlier interval statement can be sharpened to a **final ray**. Let `v` have length n, encode F by 0 and either O by 1, and let B be the resulting binary integer. Then b=-B, M=2B+1, K=96*2^n-72M. At a prefix of length j, let q be the binary integer of the remaining suffix (length k=n-j, including the next move). The coefficient of X in each eliminated guard is exactly
+
+    F:      96*2^j*(2^k-(2q+1))
+    Oe/Oo:  96*2^j*((2q+1)-2^k)
+    Oe w:   48*2^j*(2*2^k-(2q+1)).
+
+All three are strictly positive: the leading suffix bit selects the first or second case, and 0<=q<2^k ensures the extra Oe guard. This is an exact cancellation of prefix dependence, valid for arbitrary words before any phase restriction.
+
+Every phase-valid word alternates odd/even ranks; every second move must be F. The terminal congruence forces n even. Hence the maximal binary pattern is 1010...10, giving 3M<=4*2^n-1 and **K>=24**, so the additional d>=6 guard also has positive slope. In fact n=2 mod4: r_final=3+3n mod4, c remains even, K is divisible by 4 and the congruence forces H=2 mod4. Thus r_final=1 mod4.
+
+Consequently, for every phase-valid word that has a congruence solution, the exact guard threshold is
+
+    X0 = max_l ceil((H*l.d-M*l.c)/(M*l.x+K*l.d)),
+
+where l ranges over allForms (including d>=6). Every guard is satisfied iff X>=X0. If the congruence has one exponent witness, its period p<=N from the earlier gcd-reduction theorem gives arbitrarily large exponent witnesses, and every sufficiently large one satisfies all guards. The prepared terminal scale set is therefore **empty or one arithmetic progression cut off below**, never a nonempty finite interval. Equivalently
+
+    (exists m, Terminal m v)
+    iff phases v initial and
+        (exists m0<N, 4M divides K*16^m0-H-2M).
+
+The residue witness m0 may be zero; it is lifted to a positive sufficiently large exponent along its arithmetic progression. This removes the guard-feasibility and guard-bound search from the *existence* decision for a fixed word, rather than merely bounding the search. At a prescribed scale the guards remain necessary. It does not eliminate the unrestricted word quantifier or relate a synthetically halting seed to the authentic blank root.
+
+[BB429LowWordSlopes.lean](BB429LowWordSlopes.lean) proves the slope identities, all branch slopes positive, K>=24, n mod4=2, monotonicity, eventual guard feasibility and cofinal scale tests under the established periodicity hypothesis. Local Lean 4.36.0-rc2 compiled the exact file (Git blob f0792f5e33e5e2dfd05377a119c51a72584bab9f) against a declaration slice of the unchanged LowWord/LowWordPeriod definitions and the exact symbolic_coefficients and coefficient_identity proofs; every printed axiom profile was standard only. The original dependency closure was not locally available (direct git DNS failed). [BB429LowWordCofinal.lean](BB429LowWordCofinal.lean) composes the slope results with the already-proved congruence_period and terminal_iff_scale; full source acceptance is not yet recorded. The existing manual general-escape workflow has a selectable low-word target for this exact closure, with no per-commit trigger.
 
 ## Specialized formulas and examples
 

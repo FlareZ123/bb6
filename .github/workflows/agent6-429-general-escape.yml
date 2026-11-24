@@ -2,6 +2,16 @@ name: Agent 6 BB429 all-counter nonhalting ray (manual)
 
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        description: Proof family to check
+        type: choice
+        options: [escape, low-word]
+        default: escape
+      revision:
+        description: Optional pinned source commit SHA
+        type: string
+        required: false
 
 permissions:
   contents: read
@@ -12,12 +22,15 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.revision || github.sha }}
       - name: Install Lean 4.36.0-rc2
         run: |
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Compile unchanged source accelerator, existing ray and generalization
+        if: inputs.target == 'escape'
         env:
           LEAN_PATH: im-results/agent5-429-rank:im-results/agent6-harmonic429
         run: |
@@ -26,3 +39,18 @@ jobs:
           lean -o im-results/agent6-harmonic429/EscapeRay.olean im-results/agent6-harmonic429/EscapeRay.lean
           lean -DmaxHeartbeats=10000000 -o im-results/agent6-harmonic429/GeneralEscape.olean im-results/agent6-harmonic429/GeneralEscape.lean
           lean -DmaxHeartbeats=10000000 im-results/agent6-harmonic429/HaltVsEscape.lean
+      - name: Compile exact low-side terminal-word source closure
+        if: inputs.target == 'low-word'
+        env:
+          LEAN_PATH: im-results/agent5-429-rank:im-results/agent6-harmonic429
+        run: |
+          set -euo pipefail
+          LOG=/tmp/low-word-axioms.log
+          : > "$LOG"
+          lean -o im-results/agent5-429-rank/BB429Rank.olean im-results/agent5-429-rank/BB429Rank.lean 2>&1 | tee -a "$LOG"
+          for f in BB429LowReturnBand BB429LowBoundary BB429LowZeroCycle BB429LowGeneral BB429LowEvenTerminal BB429LowPeriod BB429LowWord BB429LowWordPeriod BB429LowWordProgression BB429LowWordSlopes BB429LowWordCofinal; do
+            lean -DmaxHeartbeats=30000000 -o "im-results/agent6-harmonic429/$f.olean" "im-results/agent6-harmonic429/$f.lean" 2>&1 | tee -a "$LOG"
+          done
+          grep -F "'BB429.LowWord.Slopes.terminal_exists_iff_residue' depends on axioms:" "$LOG"
+          grep -F "'BB429.LowWord.Slopes.terminal_cofinal_of_congruence' depends on axioms:" "$LOG"
+          if grep -q sorryAx "$LOG"; then exit 1; fi
