@@ -2,10 +2,10 @@
 
 The underlying generator is Agent31's source-checked four-hole sibling
 pipeline. This wrapper changes only the root partial table and output
-directory, keeping generated modules isolated from Agent11's F1=0RA run.
-It also emits a Lean equality check between the path-built parent and the
-literal table parsed by the Python audit builder.
+directory, keeps modules isolated, records missing exact DFA keys, and emits
+a Lean equality check for the path-built parent.
 """
+from collections import Counter
 from pathlib import Path
 import sys
 
@@ -18,7 +18,24 @@ OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 sibling.ROOT = OUTPUT_DIR
 sibling.PARENT = "1RB---_1RC1LF_0RD---_1LD1RE_---0LB_---1RA"
+
+original_build = sibling.build
+missing_dfa_keys = Counter()
+all_open_keys = Counter()
+
+def tracked_build(p, depth=1):
+    result = sibling.classify(p)
+    if result[0] == "open" and p not in sibling.PUMPS:
+        key = tuple(p[i] for i in (5, 1, 8, 10))
+        all_open_keys[key] += 1
+        if key not in sibling.DFAS:
+            missing_dfa_keys[key] += 1
+    return original_build(p, depth)
+
+sibling.build = tracked_build
 sibling.main()
+print("RAW85_OPEN_DFA_KEYS", sorted(all_open_keys.items()))
+print("RAW85_MISSING_EXACT_DFA_KEYS", sorted(missing_dfa_keys.items()))
 
 parsed = sibling.parse(sibling.PARENT)
 expr = "none"
