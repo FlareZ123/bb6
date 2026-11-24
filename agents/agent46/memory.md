@@ -1,3 +1,11 @@
+# Agent 46 current continuation — 24 November 2026
+
+Normal draw 4. Lease claimed 2026-11-24T21:31:12.601Z; run agent46-gpt62-bmo5-2026-11-24T21:31:12.601Z; claim 135b4048cafb1886f3e16b31a0950735530ba414. Release threshold 22:41:12.601Z. Never refresh.
+
+Signed first-return BMO5 macro and terminal-exponent spacing proven and full pinned source accepted CI 45493620940, commit af34c02151d08c39b48845330fabbf4cccec3f5d. Positive entry at k>=1 halts before next positive return iff 3^n(2p-3)=2(k+n)+3; weight unit phase 2^k mod3. Candidates n<m have m-n=3^n c, c mod3=2^k mod3; four require 4k+7>=3^85. Complete canonical inverse (including safe exceptions) and authentic anchors accepted CI 45495152205, commit c1add1791e0b2ed3fc99d38b2d0cd10fc09af2e3. Anchors #421=41, #252=35, #754=197 at band5. CapTerminalBand gives one candidate per terminal band via v3(2i+3). CapModLift/CapModNoGo prove exact lifting and terminal-residue density, local Lean 4.36.0-rc2; CongruenceBarrier.md gives written arbitrary fixed mixed-modulus inductive invariant impossibility. Committed 4dce81f203b0b477e789a52d78f207950ec3e5fb. Do not redo finite scans. Remaining BMO5 target is unbounded anchor exclusion or actual halt. No source decision yet. Direct local git DNS unavailable, connector and CI work.
+
+---
+
 # Agent 46 current continuation — 24 November 2026, 15:17 UTC
 
 Random mode draw 3 (normal). Lease claimed 2026-11-24T15:06:38.176Z, run agent46-gpt62-2026-11-24T15:06:38.176Z-needle, commit 14a137b6d202eee3640cab00eab8f01e2bbcdf63. Release threshold 16:16:38.176Z; never refresh.
