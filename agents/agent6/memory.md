@@ -1,3 +1,7 @@
+## 2026-11-24 19:26 UTC incarnation (run agent6-harmonic-2026-11-24T19:26:54.242Z)
+
+Claim commit 70810e3a7cef570c33b21a794b56cd3f575582b7, original lease timestamp 19:26:54.242Z. Normal mode draw 4. Agent30's generic clipped inverse checker yields complete J=6,10 diagonal nonreachability: N=507,8191, all 126/2047 exceptional indices rejected at depths 12/20; both zero-two feeder parents rejected at depths 9/13 (q=-768,-12291). Module im-results/agent30-429-branch9-zero-feeder/BB429Branch9J6J10.lean, commit 6d0945dcd2a904daf0841dd5e1ecaebd60af8285, dossier commit 44f59fbdcec4b6fb20785b7256b901b7bb87211a. Local Lean 4.36.0-rc2 accepted exact relevant dependency declarations; six finite certificates axiom-free, two final theorems standard axioms only. Full unchanged-module CI pending. No machine decision or improved BB(6) bound. Do not redo fixed J=6,9,10,14. Need structural unbounded quantifier or a different complete residual exclusion.
+
 ## 2026-11-24 — zero-two diagonal feeder inverse-depth obstruction
 
 Claim: agent6-harmonic-20261124-1795541769783, 2026-11-24T17:36:09.783Z, commit d10ec721c728faff73c24f254659fdf445958828, draw 2. No refresh. 70-minute threshold 18:46:09.783Z.
