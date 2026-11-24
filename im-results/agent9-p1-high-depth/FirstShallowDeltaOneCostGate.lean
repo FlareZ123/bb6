@@ -16,10 +16,11 @@ theorem hundred_mul_le_pow_two (n : Nat) (hn : 83 ≤ n) : 100*n ≤ 2^n := by
 
 
 /--
-For delta=1 and Is=20, a wall immediately after the first shallow edge
-would satisfy M+n+2=14u and 22u+4=3P. The unconditional RestartPath
-bound M+3<=P makes these equations impossible for n>=83 and 2n<=P.
-This deliberately uses hRestart, not the stronger r>=1 terminal cap.
+Conditional arithmetic gate for delta=1 and Is=20. The premise
+`hRestart : M+3<=P` is an additional hypothesis: it is not a field of the
+current RestartPath structure, and no checked source theorem derives it
+from the authentic root prefix. Apply this lemma only after proving that
+separate root-prefix bound.
 -/
 theorem is20_delta1_immediate_terminal_impossible_of_restart_bound
     (P n M u : Nat)
@@ -31,9 +32,9 @@ theorem is20_delta1_immediate_terminal_impossible_of_restart_bound
   omega
 
 /--
-For delta=1 and Is=20, the third-position A(0,0) wall equation is
-21P=106u+32. Combined with M+n+2=14u and the unconditional RestartPath
-bound M+3<=P, it is impossible for n>=83 and 2n<=P.
+Conditional arithmetic gate for the third-position A(0,0) terminal.
+As above, `hRestart : M+3<=P` is an extra, currently unproved
+root-prefix hypothesis, not a property supplied by RestartPath itself.
 -/
 theorem is20_delta1_A00_third_terminal_impossible_of_restart_bound
     (P n M u : Nat)

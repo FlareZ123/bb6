@@ -1,8 +1,8 @@
 # Delta=1, Is=20 local inverse-grammar suffix witness at n=182
 
-**Status:** exact BigInt intermediate witness; not a BB(6) result, not a genuine RestartPath, and not root-reachable.
+**Status:** exact BigInt intermediate witness; not a BB(6) result and not root-reachable.
 
-This example shows that the delta=1, Is=20 A(0,0) third-terminal branch is locally compatible with the inverse source equations. However, the resulting prepared parent violates the global RestartPath bound M+3<=P, so this is not a genuine source restart path. It is useful as a counterexample to local-only arguments, not as a surviving BB(6) candidate.
+This example shows that the delta=1, Is=20 A(0,0) third-terminal branch is locally compatible with the inverse source equations. Its prepared parent has M+3>P, but that fact does not disqualify it under the current RestartPath structure: the previously claimed universal bound M+3<=P is not source-proved. The prepared parent is independently not root-reachable, as shown by the exact height-two root-cone calculation below. This is a local counterexample to local-only arguments, not a surviving BB(6) candidate.
 
 ## Construction
 
@@ -53,11 +53,11 @@ Equivalently, the scalar LowTrace starting at \((I,B)=(20,T)\), followed by dept
 
 The executable exact check is prepared_state_delta1_Is20_n182.mjs. It verifies every inverse power/mass equation, all parent guards \(b\ge8\), \(4\mid b\), \(d\) odd, all child parameters \(c\) odd and \(k\ge2\), the 61 depth-two transitions, the three depth-zero transitions, and both wall equations.
 
-## Why this is not a RestartPath or root path
+## Why this is not a blank-root path
 
-The construction already fails the global RestartPath field \(M+3\le P\): the exact A(0,0) equation and offset give \(53M+53n+330=147P\), which together with \(M+3\le P\) would imply \(94P\le53n+171\), contradicting \(P\ge2n\) and \(n\ge83\). The script records \(M+3>P\) directly.
+The construction has \\(M+3>P\\). An earlier claim that every genuine RestartPath carries \\(M+3\\le P\\) is withdrawn: the current `RestartPath` structure has no such field, and the conditional arithmetic lemmas take it as an explicit premise. Thus the value of M does not by itself disqualify this local suffix. If a root-prefix theorem later proves that bound, the displayed A(0,0) equation would contradict it.
 
-Independently, for this same \(n=182\), exact forward enumeration of the blank-tape root cone gives only the depth word \((0,0)\), after which no further parent exists.
+Independently, for this same \\(n=182\\), exact forward enumeration of the blank-tape root cone gives only the depth word \\( (0,0) \\), after which no further parent exists. This proves that the prepared parent is not root-reachable without relying on the withdrawn bound.
 
 The obstruction can be seen directly. At the root,
 \[
@@ -75,8 +75,8 @@ also has \(v_2(X_2)=1\), but its only candidate depth \(t=0\) gives \(2k\equiv2\
 
 ## Research consequence
 
-- The delta=1, Is=20 A(0,0) terminal equations are not ruled out by local inverse legality, the defect identity, or the LowTrace wall recurrence alone; the global RestartPath bound M+3<=P excludes this particular construction.
+- The delta=1, Is=20 A(0,0) terminal equations are not ruled out by local inverse legality, the defect identity, or the LowTrace wall recurrence alone. The proposed bound M+3<=P would exclude this particular construction if it were proved for the relevant root prefix, but no current source theorem supplies it.
 - The 93P/128 and 77P/256 caps from wall_cost_telescoping.md require \(r\ge1\) depth-two edges **after** the last shallow edge. They do not apply to this witness, whose last shallow edge is terminal (\(r=0\)).
-- This construction is excluded already by the global RestartPath cost bound; root reachability is an additional independent obstruction here. Arbitrary longer delta=1, Is=20 LowTrace tails still require a source-connected argument.
+- For n=182, the root cone height-two theorem independently excludes the prepared parent. Arbitrary longer delta=1, Is=20 LowTrace tails still require a source-connected argument.
 
 This is a deliberately explicit counterexample to an overly strong local claim, not evidence that a six-state Busy Beaver machine exists.

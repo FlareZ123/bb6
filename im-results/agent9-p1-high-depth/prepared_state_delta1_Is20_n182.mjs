@@ -80,7 +80,7 @@ const mParent = M - n - t - 1n;
 assert(mParent >= 0n, "negative high-depth parent cost");
 
 assert(M === mParent + n + t + 1n, "restart-cost identity");
-assert(M + 3n > P, "this local witness should violate RestartPath hM");
+assert(M + 3n > P, "record the prepared suffix excess over the proposed extra bound");
 assert(49n * D + 14n * M === 58n * P + 6n, "delta=1 defect");
 assert(14n * k === 40n * P + 42n * c + 50n, "high-depth energy identity");
 
@@ -166,7 +166,7 @@ console.log(JSON.stringify({
   u: String(u),
   s_depth_two: String(s),
   M: String(M),
-  violates_RestartPath_hM: M + 3n > P,
+  exceeds_proposed_extra_bound: M + 3n > P,
   D: String(D),
   high_depth: String(t),
   high_parent: { b: String(highParent.b), d: String(highParent.d), m: String(highParent.m) },
