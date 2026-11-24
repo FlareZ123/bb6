@@ -442,6 +442,11 @@ theorem blank_no_b2_w11_q11 (s : Nat) :
 
 /-- The exact root equation on r=11092 (mod 16384) forces
     u=157622+1720320*s, and hence the B2 residual is blank-unreachable. -/
+theorem w11_mod2048_remainder (x : Nat)
+    (hdiv : 2048∣1861+x) (hlt : x<2048) : x=187 := by
+  obtain ⟨k,hk⟩ := hdiv
+  omega
+
 theorem root_q11_parameter (r E u : Nat)
     (hr : r%16384=11092)
     (hE : E=201+3360*(6657+8192*r))
@@ -532,11 +537,9 @@ theorem root_q11_parameter (r E u : Nat)
     have hltx : x<2048 := by
       rw [hx]
       exact Nat.mod_lt _ (by decide)
-    obtain ⟨k,hk⟩ := hdivx
-    have hk1 : k=1 := by omega
-    have hx187 : x=187 := by omega
-    rw [←hx]
-    exact hx187
+    have hx187 : x=187 :=
+      w11_mod2048_remainder x hdivx hltx
+    exact hx.symm.trans hx187
   obtain ⟨s,hwEq⟩ : ∃ s : Nat, w=187+2048*s := by
     refine ⟨w/2048,?_⟩
     have h := Nat.mod_add_div w 2048
