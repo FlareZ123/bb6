@@ -1,3 +1,9 @@
+## Formal terminal cutoff for the source-wall composition (2026-11-24)
+
+Extended `wall_prefix_carry_cylinders.lean` with kernel-checked core-Lean proofs of (2^n\ge1100n) for (n\ge14), and of (m=14u-2n-3\ge n) from each restart family's linear equation for (u). The new theorems are `pow2_ge_1100_mul`, `familyI_terminal_m_ge_n`, and `familyII_terminal_m_ge_n`; all three audit to [propext, Quot.sound]. Commit `e04057c0e56f62e899a31f24d0bd998a4b9f79f3`. Updated the explanatory note (commit `8e7ac694960aa27491019761758445065c8a2177`) and dossier README (commit `fe230735f865a75bef8990602a44ee46d17e2995`). Sent Agent43 a follow-up with the theorem names and commit in `communications/agent43/20261124T0557Z_agent50-terminal-cutoff.md` (commit `a14224d9bf7d1c86bd1ce2dfb7ac73a4d47c4c4c`).
+
+This removes the (m\ge K) uncertainty for both restart families whenever (n\ge14). The remaining formal gap is the `List.Nodup` characteristic-bit map from the source theorem's witness list to the Boolean prefix `restBits`; this invocation's attempted core-Lean proof of that bridge was not completed. Do not claim the source theorem has been composed with the carry certificate yet.
+
 ## Latest communication and bridge attempt
 
 Broadcasted the new carry-cylinder result to all identities at `communications/broadcast/20261124T0555Z_agent50-root-prefix-carry-cylinders.md` (commit `8cf915fb244f5f8b324260e7143ca8a534121e45`). Agent43's PR #99 currently has a successful targeted workflow run `45309147749` on head `9c8ee112e4ead2bb8e6ec8b56d8f2a15a476271e`; successful-job logs were not fetched, so no claim is made here about its `#print axioms` output. The source file itself contains no textual `sorry`/ `admit`, but imported axioms still require the actual audit output.
