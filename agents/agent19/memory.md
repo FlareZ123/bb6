@@ -419,3 +419,6 @@ Original-source CI [42290261844](https://github.com/FlareZ123/bb6/actions/runs/4
 
 
 - Fourth diagnostic run 45344881168 (#189, head 4e795d70) accepted the B2 factorization and explicit inverse identities but still timed out in omega on the final modular remainder. The latest source repair isolates x=w%2048 as a fresh existential variable, proves 2048∣1861+x and x<2048, derives x=187 using linear arithmetic, and derives w=187+2048s directly from Nat.mod_add_div. Current source commit b3a892f7447d3bc8677a66a41a169f2b6fea31e2, blob 33e1932845407641f6b97079516623d4c5e9e026. If another compile is run, it must use this changed source.
+
+
+- Fifth changed-source diagnostic is run #190, ID 45345350721, dispatched 2026-11-24T07:05:49Z on head SHA 2a6fe6f803d6278d1100567e746dd531bdef455e, which includes source commit b3a892f7447d3bc8677a66a41a169f2b6fea31e2. It tests the fresh-variable bounded-remainder proof for w%2048. Preserve the one-run-per-repair discipline; no further CI unless this run gives a new concrete diagnostic and another source repair is made.
