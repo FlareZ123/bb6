@@ -22,6 +22,8 @@ The [density-one theorem](2026-11-24-d-density-one-agent3.md) proves that for ev
 
 The [conditional non-coalescence theorem for four authentic Cryptid-D root paths](2026-11-24-four-root-conditional-noncoalescence.md) strengthens this to the original-source section-return system: assuming the four blank starts do not halt, every finite return depth exists and distinct root/depth pairs have different unary section lengths. The integrated Lean 4.36.0-rc2 audit has no `sorryAx`. This rules out all-time coalescence but does not decide any root's halting status.
 
+The [sharp quadratic first-exit and global primitive-clock law](2026-11-24-d-primitive-clock-law-agent2.md) uses a locally kernel-accepted original-source rank-defect amortization to bound every right-half service by 315(2R+8)(R+3), with a matching quadratic-order lower family. Its paper composition yields total clock T=(12/55)N²+O(tN+t²+1) for t selected events, with N the final live unary length or terminal marker distance, and disjoint exact all-depth clock bands for the four authentic roots. It constrains possible terminal times without deciding whether they exist.
+
 **Missing:** determine actual terminal reachability or prove all-time avoidance. The [exact Boundary-to-Portfolio bridge](../im-results/agent3-d-boundary-portfolio/README.md) is now locally kernel-accepted and identifies four distinct unary seeds I9, I5, I15, I39 with respective live-transition entry offsets 36, 15, 92, 403, and the exact live-count versus final-query convention. Individual root decisions still require arithmetic terminal reachability or all-time avoidance; density one cannot decide a fixed integer.
 
 ## Cryptid #693: impossibility of semilinear safety invariants

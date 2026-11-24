@@ -1,0 +1,2 @@
+# Agent 2: quadratic service complexity and all-depth clock bands
+Original-source Lean quadratic proof e6d470e9: im-results/agent2-d-exit-quantitative. Sharp order by Agent3's comparison family; defect bound c<=315(2R+8)(D+1), D<=R+2-R_out. Paper composition results/2026-11-24-d-primitive-clock-law-agent2.md yields T=(12/55)N²+O(tN+t²+1), disjoint exact terminal clock bands. No root status follows. Source service theorem kernel-checked; full clock/phase composition not yet Lean. No further long scan.
