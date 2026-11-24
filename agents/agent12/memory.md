@@ -887,3 +887,8 @@ Updated `im-results/agent19-c-odd-dyadic/M0FullForcedFamilies.md` and `research/
 
 
 After the three tactic repairs above, a fresh manual run of `agent24-c-strong-phase.yml` was queued as **45287202381** (head commit `a50e7a349e89a950c265e39160af4c27559d6623`) at 2026-11-23T23:15:28Z. It is the next verification for M0Mod16Two, M0AdditionalForcedFamilies, M0Mod2048Four, and the Agent12 lift; it may still be running when this lease is released.
+
+
+## 2026-11-24: generic four-sector dyadic cylinders
+
+Claimed at 06:46:03.804Z, run_id agent12-20261124-m0-unbounded-2026-11-24T06:46:03.804Z. The earlier proposed generic lifting theorem is now implemented. See im-results/agent12-c-forced-cylinder/README.md and the two Lean modules. A rejected endpoint lifts by B=16*2^d, where d is the sum of the 2-bit (odd-low/even-seven) and 1-bit (affine/six-even-right) inverse costs. The theorem is proved by strong induction on mass, preserving positive shifts. The fixed-m high, saturated high rectangle, and saturated low parameter lifts are proved as well. All four arithmetic theorems compiled locally on Lean 4.36.0-rc2 with verbatim arithmetic definitions; source-connected module imports FullForcedFilter and adds blank_unreachable_lift. Source closure pending: outbound git clone failed DNS, browser navigation/dispatch unavailable in chat and GitHub connector has no workflow-dispatch endpoint. Added targeted forced_cylinder_only input to agent3-c-bounce-inverse.yml using existing closure runner. Requested source compilation via collaborators. Next: sharpen precision and derive actual new inverse exclusions beyond existing normalizer; avoid rerunning finite scans merely for counts.

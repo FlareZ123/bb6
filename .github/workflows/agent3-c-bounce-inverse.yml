@@ -22,6 +22,11 @@ on:
         required: false
         type: boolean
         default: false
+      forced_cylinder_only:
+        description: 'Compile the general four-sector dyadic-cylinder and parameter-lift source closure'
+        required: false
+        type: boolean
+        default: false
       balanced_only:
         description: 'Stop after source-verifying the exact balanced and odd target fibers; skip downstream experimental modules'
         required: false
@@ -70,6 +75,11 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile exact general dyadic cylinder closure
+        if: ${{ inputs.forced_cylinder_only }}
+        run: |
+          python3 tools/lean_compile_closure.py im-results/agent12-c-forced-cylinder/ForcedParameterLift.lean \
+            --workdir /tmp/forced-cylinder-closure --jobs 4 --lean "$(command -v lean)"
       - name: Compile exact U5B2Root32 import closure
         if: ${{ inputs.root32_only }}
         run: |
@@ -96,7 +106,7 @@ jobs:
           python3 tools/lean_compile_closure.py im-results/agent3-c-bounce-inverse/OddZSecondParentFan.lean \
             --workdir /tmp/odd-even-fan-closure --jobs 4 --lean "$(command -v lean)"
       - name: Verify against original unmodified section and bounce source
-        if: ${{ !inputs.root32_only && !inputs.w11_q11_only && !inputs.a4_t719_only && !inputs.r_q3_only && !inputs.odd_even_fan_only }}
+        if: ${{ !inputs.root32_only && !inputs.w11_q11_only && !inputs.a4_t719_only && !inputs.r_q3_only && !inputs.odd_even_fan_only && !inputs.forced_cylinder_only }}
         run: |
           mkdir -p /tmp/a3-bounce
           cp im-results/agent11-c-line/CLine.lean /tmp/a3-bounce/
