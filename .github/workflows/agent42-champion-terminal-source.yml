@@ -270,6 +270,28 @@ jobs:
             echo '::error::sorryAx found in source M0 odd q4 prefix theorem'
             exit 1
           fi
+          # Compile the m=0,n=6 even q4 bridge/prefix/head-bound before M0OddResidueSeven imports its head-bound theorem.
+          cp "$GITHUB_WORKSPACE/im-results/agent42-m0even-residue6/M0EvenSixQ4Bridge.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m0-even-six-q4-bridge-axioms.log
+          lean -o M0EvenSixQ4Bridge.olean M0EvenSixQ4Bridge.lean 2>&1 | tee /tmp/a42-terminal/m0-even-six-q4-bridge-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m0-even-six-q4-bridge-axioms.log; then
+            echo '::error::sorryAx found in m=0,n=6 finite bridge'
+            exit 1
+          fi
+          cp "$GITHUB_WORKSPACE/im-results/agent42-m0even-residue6/M0EvenSixQ4Prefix.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m0-even-six-q4-prefix-axioms.log
+          lean -o M0EvenSixQ4Prefix.olean M0EvenSixQ4Prefix.lean 2>&1 | tee /tmp/a42-terminal/m0-even-six-q4-prefix-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m0-even-six-q4-prefix-axioms.log; then
+            echo '::error::sorryAx found in m=0,n=6 q4 prefix'
+            exit 1
+          fi
+          cp "$GITHUB_WORKSPACE/im-results/agent42-m0even-residue6/M0EvenSixHeadBound.lean" /tmp/a42-terminal/
+          : > /tmp/a42-terminal/m0-even-six-head-bound-axioms.log
+          lean -o M0EvenSixHeadBound.olean M0EvenSixHeadBound.lean 2>&1 | tee /tmp/a42-terminal/m0-even-six-head-bound-axioms.log
+          if grep -q 'sorryAx' /tmp/a42-terminal/m0-even-six-head-bound-axioms.log; then
+            echo '::error::sorryAx found in m=0,n=6 q4 prefix head bound'
+            exit 1
+          fi
           # Agent 41: certify the generalized m=0,n=16*r+7 reset prefix independently of counted drain.
           cp "$GITHUB_WORKSPACE/im-results/agent41-m0-n16r7/M0OddResidueSeven.lean" /tmp/a42-terminal/
           : > /tmp/a42-terminal/m0-odd-residue7-axioms.log
@@ -448,27 +470,6 @@ jobs:
 
           # Agent 42: all-q m=0,n=8*q+6 source increment. The 39-step
           # n=6 bridge is lifted across the untouched higher binary tail.
-          cp "$GITHUB_WORKSPACE/im-results/agent42-m0even-residue6/M0EvenSixQ4Bridge.lean" /tmp/a42-terminal/
-          : > /tmp/a42-terminal/m0-even-six-q4-bridge-axioms.log
-          lean -o M0EvenSixQ4Bridge.olean M0EvenSixQ4Bridge.lean 2>&1 | tee /tmp/a42-terminal/m0-even-six-q4-bridge-axioms.log
-          if grep -q 'sorryAx' /tmp/a42-terminal/m0-even-six-q4-bridge-axioms.log; then
-            echo '::error::sorryAx found in m=0,n=6 finite bridge'
-            exit 1
-          fi
-          cp "$GITHUB_WORKSPACE/im-results/agent42-m0even-residue6/M0EvenSixQ4Prefix.lean" /tmp/a42-terminal/
-          : > /tmp/a42-terminal/m0-even-six-q4-prefix-axioms.log
-          lean -o M0EvenSixQ4Prefix.olean M0EvenSixQ4Prefix.lean 2>&1 | tee /tmp/a42-terminal/m0-even-six-q4-prefix-axioms.log
-          if grep -q 'sorryAx' /tmp/a42-terminal/m0-even-six-q4-prefix-axioms.log; then
-            echo '::error::sorryAx found in m=0,n=6 q4 prefix'
-            exit 1
-          fi
-          cp "$GITHUB_WORKSPACE/im-results/agent42-m0even-residue6/M0EvenSixHeadBound.lean" /tmp/a42-terminal/
-          : > /tmp/a42-terminal/m0-even-six-head-bound-axioms.log
-          lean -o M0EvenSixHeadBound.olean M0EvenSixHeadBound.lean 2>&1 | tee /tmp/a42-terminal/m0-even-six-head-bound-axioms.log
-          if grep -q 'sorryAx' /tmp/a42-terminal/m0-even-six-head-bound-axioms.log; then
-            echo '::error::sorryAx found in m=0,n=6 q4 prefix head bound'
-            exit 1
-          fi
           cp "$GITHUB_WORKSPACE/im-results/agent42-m0even-residue6/M0EvenSixGenericSource.lean" /tmp/a42-terminal/
           : > /tmp/a42-terminal/m0-even-six-generic-source-axioms.log
           lean -o M0EvenSixGenericSource.olean M0EvenSixGenericSource.lean 2>&1 | tee /tmp/a42-terminal/m0-even-six-generic-source-axioms.log
