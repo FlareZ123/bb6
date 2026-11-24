@@ -161,8 +161,14 @@ private theorem near_odd (N : Nat) (q qrep k : Int)
   have hp : (2:Int)^N = scale 5*(2:Int)^(N-11) := by
     rw [scale_pow, ← Int.pow_add, show 5+6+(N-11)=N by omega]
   refine ⟨12*(2:Int)^(N-11)+k,12*(2:Int)^(N-11)+k,?_,?_⟩
-  · linear_combination 12*hp + hres
-  · linear_combination 24*hp + 2*hres
+  · have hleft : (12*(2:Int)^N+q+4)-(qrep+4) =
+        12*(2:Int)^N+(q-qrep) := by ring
+    rw [hleft,hp,hres]
+    ring
+  · have hleft : (24*(2:Int)^N+2*q+5)-(2*qrep+5) =
+        24*(2:Int)^N+2*(q-qrep) := by ring
+    rw [hleft,hp,hres]
+    ring
 
 /-- Source-connected depth-five necessary condition for the entire
     all-F zero-two feeder family. The arithmetic hypotheses are stated
