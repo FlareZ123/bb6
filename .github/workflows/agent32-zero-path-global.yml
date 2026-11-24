@@ -54,12 +54,18 @@ on:
         type: boolean
         default: false
 
+      verify_far:
+        description: 'Compile the proof-carrying FAR extension and evaluate its depth-four report'
+        required: false
+        type: boolean
+        default: false
+
 permissions:
   contents: read
 
 jobs:
   source-proof:
-    if: ${{ github.event_name == 'workflow_dispatch' }}
+    if: ${{ github.event_name == 'workflow_dispatch' && !inputs.verify_far }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -237,7 +243,7 @@ jobs:
           retention-days: 30
 
   fresh-ray-entry-proof:
-    if: ${{ github.event_name == 'workflow_dispatch' && !inputs.export_frontier && !inputs.verify_leaf_graft && !inputs.verify_five_slot_leaf_graft && !inputs.verify_three_slot_family }}
+    if: ${{ github.event_name == 'workflow_dispatch' && !inputs.verify_far && !inputs.export_frontier && !inputs.verify_leaf_graft && !inputs.verify_five_slot_leaf_graft && !inputs.verify_three_slot_family }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -268,3 +274,31 @@ jobs:
           lean im-results/agent32-zero-prefix-global/OneTurnSource.lean
           g++ -O3 -std=c++17 -Wall -Wextra -Werror im-results/agent32-zero-prefix-global/check-one-turn.cpp -o /tmp/one-turn-count
           /tmp/one-turn-count
+
+  far-proof:
+    if: ${{ inputs.verify_far }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile original-source FAR certificate and frontier
+        run: |
+          set -euo pipefail
+          python tools/lean_compile_closure.py --workdir /tmp/a7-far --jobs 8 \
+            im-results/agent7-far/FARExample.lean \
+            im-results/agent7-far/FARFrontier.lean 2>&1 | tee /tmp/a7-far.log
+          if grep -qE 'sorryAx|native_decide' /tmp/a7-far.log; then
+            echo 'ERROR: unexpected axiom in FAR closure'
+            exit 1
+          fi
+      - name: Evaluate proof-carrying frontier mass
+        run: |
+          set -euo pipefail
+          export LEAN_PATH=/tmp/a7-far
+          lean im-results/agent7-far/FARFrontierReport.lean | tee /tmp/a7-far-report.log
+          cat /tmp/a7-far-report.log >> "$GITHUB_STEP_SUMMARY"
