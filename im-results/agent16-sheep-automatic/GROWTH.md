@@ -1,5 +1,7 @@
 # Growth restrictions on regular-language invariants for Sheep
 
+**Later stronger result:** [NO-REGULAR-INVARIANT.md](NO-REGULAR-INVARIANT.md) closes the remaining intermediate-exponential-growth invariant class using a finite phase-fibre rotation argument. The finite-corridor result here remains independently useful without forward closure or prepared-density assumptions.
+
 **Main result.** For every polynomial-growth regular language of canonical binary integers and every fixed valuation bound A, there is a finite H and a finite threshold X such that no genuine Sheep section path of H returns, starting at x >= X, stays in the language with all source valuations <= A. This is an all-starts finite-corridor obstruction, not merely a bound on the size of an automaton. In particular, no nonempty polynomial-growth regular language of integers >=5 can be terminal-free and forward closed under the exact Sheep section map. Combining this with the earlier general zero-transient theorem gives a strict intermediate exponential-growth restriction on any hypothetical regular invariant containing the authentic seed.
 
 The finite-corridor proof uses the classical Evertse–Schlickewei–Schmidt multiplicative-group unit equation theorem. The raw affine and residue-injectivity lemmas are locally kernel-checked against the unchanged SheepEven.Step relation. The regular-language and number-theoretic synthesis is a written proof, not a Lean theorem. This does not decide Sheep or BB(6).
