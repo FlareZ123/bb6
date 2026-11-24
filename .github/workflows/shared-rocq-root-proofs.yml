@@ -62,6 +62,7 @@ jobs:
         run: |
           cp "$GITHUB_WORKSPACE/research/im-results/agent32-source-queue/Agent32Q0Partition.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent32-source-queue/Agent32SourceDrain.v" original/verify/
+          cp "$GITHUB_WORKSPACE/research/im-results/agent32-source-queue/Agent32SourceCoverage.v" original/verify/
       - name: Generate project dependencies with VM fallback
         working-directory: original/verify
         run: |
@@ -78,7 +79,7 @@ jobs:
             both) make -f Makefile.coq -j 2 Sk1Machines_v2.vo SOMDCv10.vo ;;
             enumerate62-decider-sound) make -f Makefile.coq -j 2 Enumerate62.vo Agent5Enumerate62DeciderSound.vo ;;
             enumerate62-q0-count|enumerate62-chunk-probe) make -f Makefile.coq -j 2 Enumerate62.vo ;;
-            enumerate62-q0-partition) make -f Makefile.coq -j 2 Agent32Q0Partition.vo Agent32SourceDrain.vo ;;
+            enumerate62-q0-partition) make -f Makefile.coq -j 2 Agent32Q0Partition.vo Agent32SourceDrain.vo Agent32SourceCoverage.vo ;;
           esac
       - name: Print final original theorem assumptions
         working-directory: original/verify
