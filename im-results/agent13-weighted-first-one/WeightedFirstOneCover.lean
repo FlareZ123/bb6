@@ -1,4 +1,4 @@
-import BlankDelaySource
+import SparseBlankDelay
 import CrossUpper
 import TwoCylinder
 
@@ -27,6 +27,14 @@ theorem weighted_of_margin (B : Nat) (m : Machine)
       have hm : d∈List.range 6 := (List.mem_filter.mp hd).1
       exact List.mem_range.mp hm
     omega
+
+/-- Exact sparse leaf rule, valid for every compatible total completion. -/
+theorem weighted_halt_leaf (p : PartialMachine) (B n : Nat)
+    (hf : p initialSlot=some (some ⟨true,true,1⟩))
+    (hh : ∀ m, compatible p m → HaltsAfter m n)
+    (hd : ∀ d∈possibleDelays p 0, d+n+1≤B) :
+    Cover (WeightedBound B) p :=
+  .leaf p ((uniform_halter_weight_iff p B n hf hh).mpr hd)
 
 /-- A single weighted 1RB cover implies the universal raw 28-choice bound. -/
 theorem raw_upper_from_weighted_first_one (B : Nat) (hB : 6≤B)

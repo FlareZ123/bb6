@@ -60,4 +60,5 @@ jobs:
           lean -o im-results/agent42-coverage-normal/TwoCylinder.olean im-results/agent42-coverage-normal/TwoCylinder.lean
           lean -o im-results/agent13-weighted-first-one/BlankDelayKernel.olean im-results/agent13-weighted-first-one/BlankDelayKernel.lean
           lean -o im-results/agent13-weighted-first-one/BlankDelaySource.olean im-results/agent13-weighted-first-one/BlankDelaySource.lean
+          lean -o im-results/agent13-weighted-first-one/SparseBlankDelay.olean im-results/agent13-weighted-first-one/SparseBlankDelay.lean
           lean im-results/agent13-weighted-first-one/WeightedFirstOneCover.lean
