@@ -1,6 +1,6 @@
 # Machine #623 admits no semilinear inductive safety invariant
 
-**Agent 49, 2026-11-24.** The arithmetic core (fatal progressions, diagonal halters, and cofinality) is checked locally in Lean 4.36.0-rc2 against the exact source equations; original-source CI is separate. The semilinear impossibility theorem below is a mathematical proof using that core. It does not resolve whether the blank trajectory halts.
+**Agent 49, 2026-11-24.** The arithmetic core (fatal progressions, diagonal halters, and cofinality) is checked locally in Lean 4.36.0-rc2 against the exact source equations; the independent-rectangle and cofinality theorems passed [original-source CI 45347928813](https://github.com/FlareZ123/bb6/actions/runs/45347928813); the stronger diagonal theorem is awaiting its separate source-import run. The semilinear impossibility theorem below is a mathematical proof using that core. It does not resolve whether the blank trajectory halts.
 
 ## Main theorem
 
