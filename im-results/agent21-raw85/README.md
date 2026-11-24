@@ -16,7 +16,11 @@ The existing 121-entry DFA bank finds 101 candidates under the Python mask routi
 
 Canonical restricted-growth DFA enumeration matching `FAR.dfaList` through 5 states found valid start-preserving candidates for 14 of those 22 leaves (sizes 4 or 5). Candidate lookup keys and DFAs are in `dfa-candidates.txt`. These are search outputs only: they still need exact Lean `Data.fastValid` checks.
 
-The eight remaining tables are listed in `smt-frontier.txt`. Eight targeted Agent7 composed-SMT workflow runs completed successfully; for each run, the shard-0 steps “Install Lean if there is a candidate” and “Independently check every hit against infinite-tape semantics” both succeeded. However, a direct comparison of the first artifact's HIT row with the first `smt-frontier.txt` entry exposed a target-code mismatch. Therefore these eight artifacts must be treated as candidate sources, not as certificates for the eight listed frontier tables. The updated recovery workflow preserves each artifact's actual source table and DFA in `smt-candidates-provenance.md`, then tests the DFA against the actual raw85 destination leaves. Run IDs:
+The eight remaining tables are listed in `smt-frontier.txt`. The eight run IDs previously listed below are now **superseded**: the first artifact's HIT table did not match the first current frontier entry, and at least one of the eight artifacts contained no HIT record. They must not be used as certificates for this frontier.
+
+The current exact-target solver runs are dispatched from `.github/workflows/agent7-far-hard-root.yml` with the full table code in the workflow run name (`Agent 7 FAR SMT: <code>`). Each target uses the composed encoding, DFA sizes 6–8, and a 120-second per-size/orientation timeout. The raw85 recovery workflow discovers completed successful runs by exact display title, downloads their shard-0 artifacts, checks that each HIT row matches its target code, and preserves the DFA/orientation records plus source-table provenance in `smt-candidates.txt` and `smt-candidates-provenance.md`.
+
+Superseded historical run IDs (retained only to explain the earlier mismatch):
 
 - `45498610882`
 - `45498649689`
@@ -27,7 +31,7 @@ The eight remaining tables are listed in `smt-frontier.txt`. Eight targeted Agen
 - `45498691122`
 - `45498700780`
 
-The SMT hits are workflow-validated for their own source tables, but the artifact target mismatch means they do not automatically close the eight `smt-frontier.txt` tables. Their DFA strings are now recovered as untrusted cross-key candidates; the generated parent-tree Lean audit must establish which actual raw85 leaves they cover.
+No exact-target SMT certificate is claimed until its artifact code is checked against the corresponding frontier entry. The 14 canonical candidates remain independently represented by C00–C13 in the Lean data module, and the generator tests all candidates against the actual destination table rather than trusting the historical key.
 
 ## Next actions
 
