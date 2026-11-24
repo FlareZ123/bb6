@@ -186,3 +186,22 @@ at every gate boundary. The script gives \(C_s=9155,1724,1036,839,757,720,702,69
 \]
 
 The derivation uses the source-certified 81,920-return nine-digit prefix cycle and the genuine root at return 5,457. The finite constants and 703/245,057 deep/shallow census are exact BigInt computations with outward rounding, not yet Lean-kernel-enumerated. This is not a non-halting proof; its intended use is to sharpen the root-reachable tail-moment/odd-quotient intervals.
+
+
+## Carry-depth-sensitive discounted contraction (24 November 2026)
+
+The gate-local (z=1/2) estimate in [TERMINAL-DISCOUNTED-BARRIER.md](TERMINAL-DISCOUNTED-BARRIER.md) now retains the actual carry depth (r):
+[
+R_U\le\frac23R_S
++\left(2^{-r-2}-\frac14\right)M_S
++\left(\frac{2^{-r-2}}3-\frac1{12}\right)c
++\frac9{2^{r+2}}-\frac32,
+\quad R=P_S(1/2)-\frac34M_S.
+]
+In particular, every positive-depth gate satisfies
+[
+R_U\le\frac23R_S-\frac18M_S-\frac1{24}c-\frac38.
+]
+This is a paper derivation from the exact carry identity; it has not yet been Lean-formalized and does not prove nonhalting. The same note gives the precise root-connected suffix invariant still needed for a terminal exclusion.
+
+The separate [50,000-R-block terminal scan](../agent5-s4-nested-depth6/TERMINAL-SCAN-50000.md) falsifies the proposed odd-part residue (q_{\rm odd}\equiv2\pmod{21}); do not continue that modular line without a new structural invariant.
