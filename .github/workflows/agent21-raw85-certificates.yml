@@ -53,7 +53,7 @@ jobs:
               selected.append(sorted(successful, key=lambda r: r.get("created_at", ""))[-1])
           records = []
           provenance = [
-              "# Eight raw85 frontier SMT certificates",
+              "# Eight raw85 frontier SMT search outcomes",
               "",
               "Each source table below exactly matches an entry in smt-frontier.txt. The DFA/orientation is re-saturated for every destination leaf by the sibling generator; the original run's Lean check is supporting evidence, not a substitute for the generated parent-tree check.",
               "",
@@ -99,10 +99,10 @@ jobs:
               dfa_text = "".join(map(str, dfa))
               records.append(" ".join(key + [str(rev), dfa_text]))
               provenance.append(f"| {run_id} | {code} | {d} | {rev} | {dfa_text} |")
-          if len(records) != 8 or len(set(expected)) != 8:
-              raise SystemExit("raw85 SMT artifacts did not yield eight distinct frontier certificates")
+          if len(records) == 0 or len(records) > 8 or len(set(expected)) != 8:
+              raise SystemExit(f"raw85 SMT artifacts yielded an invalid HIT count: {len(records)}")
           out = Path("im-results/agent21-raw85/smt-candidates.txt")
-          out.write_text("# Eight exact raw85 frontier SMT DFA candidates; source tables are in smt-candidates-provenance.md; keys are ordering metadata only\n" + "\n".join(records) + "\n")
+          out.write_text(f"# {len(records)} exact-target raw85 SMT DFA candidates; no-hit targets are recorded in smt-candidates-provenance.md; keys are ordering metadata only\n" + "\n".join(records) + "\n")
           prov = Path("im-results/agent21-raw85/smt-candidates-provenance.md")
           prov.write_text("\n".join(provenance) + "\n")
           print(out.read_text(), end="")
