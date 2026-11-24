@@ -1,4 +1,4 @@
-name: Agent 44 M2-even n=8q+6 generic q4 source prefix (manual)
+name: Agent 44 M2-even n=8q+6 generic source and counted increment (manual)
 on:
   workflow_dispatch:
     inputs:
@@ -100,8 +100,8 @@ jobs:
         run: |
           set -euo pipefail
           profile="$(grep -A8 -F "'BB6Coverage.Agent44M2EvenSixGenericCounted.m2EvenSix_generic_counted_increment_source' depends on axioms:" /tmp/a44-m2-even-six-counted/axioms.log)"
-          printf '%s\\n' "$profile"
-          if printf '%s\\n' "$profile" | grep -qE 'sorryAx|native_decide'; then
+          printf '%s\n' "$profile"
+          if printf '%s\n' "$profile" | grep -qE 'sorryAx|native_decide'; then
             echo '::error::sorryAx or native_decide found in the generic counted increment theorem'
             exit 1
           fi
