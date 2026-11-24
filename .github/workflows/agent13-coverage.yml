@@ -5,7 +5,7 @@ on:
       target:
         description: 'Source closure to verify'
         type: choice
-        options: [legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole, weighted-tnf-four-hole, queue-orbit]
+        options: [legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole, weighted-tnf-four-hole, weighted-tnf-r1-sweep, queue-orbit]
         default: legacy
 permissions:
   contents: read
@@ -170,5 +170,16 @@ jobs:
           python tools/lean_compile_closure.py --workdir /tmp/a31-four --jobs 4 im-results/agent31-three-hole-tnf/FourHoleData.lean | tee /tmp/a31-four.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a31-four.log; then
             echo "Forbidden proof placeholder or native_decide found in four-hole closure" >&2
+            exit 1
+          fi
+
+      - name: Check authentic r1 sibling sweep
+        if: inputs.target == 'weighted-tnf-r1-sweep'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python tools/lean_compile_closure.py --workdir /tmp/a47-r1-sweep --jobs 4 im-results/agent47-r1-sweep/R1Certificate.lean | tee /tmp/a47-r1-sweep.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a47-r1-sweep.log; then
+            echo "Forbidden proof placeholder or native_decide found in r1 sweep closure" >&2
             exit 1
           fi
