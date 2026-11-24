@@ -59,7 +59,7 @@ Lean 4.36.0-rc2 (b35cb10), using exact checked-in DrainCorrectionGrowth.lean blo
     lean -o FatalFamilyInverseArithmetic.olean FatalFamilyInverseArithmetic.lean
     LEAN_PATH=/tmp lean FatalFamilyInverseActual.lean
 
-All exported proofs compile with only propext, Classical.choice and Quot.sound (some use fewer). No sorry or native_decide. No new pinned-source machine CI run was made for this note; existing source lemmas are referenced rather than re-proved.
+All exported proofs compile with only propext, Classical.choice and Quot.sound (some use fewer). No sorry or native_decide. The initial arithmetic-only derivations were later integrated with the pinned original machine; see source CI status below.
 
 Run python verify.py from this directory. It compares exact reconstructed parent sets to Agent49's existing complete inverse algorithm for 997 even exponents p=8..2000; the regression distribution is 435 with no parent, 442 with one, and 120 with two. The finite regression is not the proof of the asymptotic claim.
 
@@ -69,7 +69,7 @@ Next: formalize the complete source-envelope specialization and investigate deep
 
 For every integer r>=1, put p=6*3^r and k=p-1. Define L(t)=3t-1-2N1-N2 and R(t)=3t+P+2M+1. The maps are strictly increasing, even when the digit counts are truncated to any fixed length k. At the two adjacent integers t=2*3^r+1 and t+1 the ordinary counts are (1,1) and (0,2), giving L(t)=p-1 and L(t+1)=p+3. At t=p-3 and t+1 the balanced counts are (1,2) and (2,2), giving R(t)=3p-3 and R(t+1)=3p+1. Thus neither equation admits any natural t. This is a universal symbolic exclusion, not a bounded simulation.
 
-[FatalFamilyWindow.lean](FatalFamilyWindow.lean) proves the exact family size/positive-budget hypotheses and necessary digit gates. [FatalFamilyInfinite.lean](FatalFamilyInfinite.lean) proves the monotonicity and the all-r missing-gate theorem without nonstandard axioms in Lean 4.36.0-rc2. [FatalFamilySource.lean](FatalFamilySource.lean) connects the gate to the unchanged-source root run (including theorem power_three_root_excluded). The source adapter passed a local signature-level type check; full pinned-source CI is still required. The initial focused run 45401674640 failed in the pre-existing Agent49 parent envelope because unrestricted simp normalized the two branch inequalities. The minimal repair is commit 1b34eeb6e4b546cd808824ed09c85aff2de8a371; the source proof conclusion remains pending the next actual CI result.
+[FatalFamilyWindow.lean](FatalFamilyWindow.lean) proves the exact family size/positive-budget hypotheses and necessary digit gates. [FatalFamilyInfinite.lean](FatalFamilyInfinite.lean) proves the monotonicity and the all-r missing-gate theorem without nonstandard axioms in Lean 4.36.0-rc2. [FatalFamilySource.lean](FatalFamilySource.lean) connects the gate to the unchanged-source root run (including theorem power_three_root_excluded). The actual pinned source accepted power_three_root_excluded in runs 45404604714 and 45408251011 with standard axioms only. The initial focused run 45401674640 failed in the pre-existing Agent49 parent envelope because unrestricted simp normalized the two branch inequalities. The minimal repair is commit 1b34eeb6e4b546cd808824ed09c85aff2de8a371; the subsequent actual CI accepted the theorem.
 
 ## Compressed inverse for arbitrary near-power targets
 
@@ -94,7 +94,7 @@ The local exact regression matched the existing inverse on 10,000 random drain-s
 
 ## Kernel-checkable certificates
 
-[NearPowerFastStats.lean](NearPowerFastStats.lean) verifies the executable compressed statistics, including fallback, fixed residual tails and two-cycles. [NearPowerCertificate.lean](NearPowerCertificate.lean) proves soundness of strict adjacent parity brackets and exact hits. [NearPowerTree.lean](NearPowerTree.lean) defines a recursive certificate whose two branches cover the parity-compatible parent sectors. [NearPowerTreeSource.lean](NearPowerTreeSource.lean) connects accepted certificates to exclusion of every blank-root return index. The latter adapter passed a local interface-only check; pinned original-source CI is in progress. [NearPowerGenerate.lean](NearPowerGenerate.lean) supplies an untrusted search, with the checker as the trust boundary. [NearPowerExamples.lean](NearPowerExamples.lean) contains explicit certificates for p=5288 (34 nodes, depth 23) and p=10^100 (one node). Both checker equalities are proved using `decide +kernel` in local Lean 4.36.0-rc2. No enormous counter is constructed. The source conclusions are pending the full original-source check; the local interface stub is not a certification of those conclusions.
+[NearPowerFastStats.lean](NearPowerFastStats.lean) verifies the executable compressed statistics, including fallback, fixed residual tails and two-cycles. [NearPowerCertificate.lean](NearPowerCertificate.lean) proves soundness of strict adjacent parity brackets and exact hits. [NearPowerTree.lean](NearPowerTree.lean) defines a recursive certificate whose two branches cover the parity-compatible parent sectors. [NearPowerTreeSource.lean](NearPowerTreeSource.lean) connects accepted certificates to exclusion of every blank-root return index. The latter source adapter was accepted by pinned CI 45404604714 and 45408251011, standard axioms only. [NearPowerGenerate.lean](NearPowerGenerate.lean) supplies an untrusted search, with the checker as the trust boundary. [NearPowerExamples.lean](NearPowerExamples.lean) connects the explicit p=5288 certificate (34 nodes, depth 23) to the original source. CI [45408251011](https://github.com/FlareZ123/bb6/actions/runs/45408251011) accepts both checked5288 and excluded5288 with standard axioms only; its later symbolic step failed on an older-Lean decision-instance inference issue. The separate optional [NearPowerHugeChecks.lean](NearPowerHugeChecks.lean) has a one-node p=10^100 certificate accepted by local Lean 4.36.0-rc2, but the pinned 4.35.0-rc4 reduction gets stuck. The huge source conclusion is therefore not yet pinned-source accepted.
 
 ## Pumping entire inverse trees
 
@@ -110,4 +110,30 @@ Run `python symbolic_exclusion.py`. For R in {30,31}, even offsets c in [-100,10
 
     p = 6*3^(R+2n)+c,  n>=0.
 
-In particular R=31,c=6 has a complete 39-node inverse tree, with a branch of 14 edges. The claims are symbolic mathematical exclusions using exact integer arithmetic and proved source-envelope lemmas; the entire symbolic verifier is **not yet kernel-certified**. The fixed/cycle and nested pump identities themselves are kernel-certified. Failed guards or failure to fit a tree mean unknown, never reachability or nonreachability. No result establishes that every synthetic halter, much less every possible #623 halter, is excluded.
+In particular R=31,c=6 has a complete 39-node inverse tree, with a branch of 14 edges. The claims are symbolic mathematical exclusions using exact integer arithmetic and proved source-envelope lemmas; the original Python symbolic verifier is not the trusted implementation. A separate pure Lean symbolic checker and all 133 certificates now compile locally, as described next. Failed guards or failure to fit a tree mean unknown, never reachability or nonreachability. No result establishes that every synthetic halter, much less every possible #623 halter, is excluded.
+
+
+## Symbolic proof-carrying checker
+
+- `NearPowerAffine.lean`: affine evaluation, nonnegativity and modular bounds.
+- `NearPowerSymbolicStats.lean`: sound finite prefix-strip/pump/tail certificate.
+- `NearPowerSymbolic.lean`, `NearPowerSymbolicTree.lean`: exact all-parameter guarded inverse branches and full binary exclusion certificates. Every failed test means unknown; a successful certificate closes all real parity-compatible predecessors.
+- `NearPowerSymbolicSource.lean`: original-source transfer theorem `symCheck_excludes`. Locally type-checked against the previously accepted original-source interface, awaiting pinned CI compilation.
+- `NearPowerFamilyCore.lean`, `NearPowerFamilySource.lean`, `NearPowerAffineFatal.lean`: adapters for named and arbitrary affine exponents. Source wrappers checked locally against the interface, not claimed end-to-end until pinned acceptance.
+- `emit_corpus.py`: deterministic proof-data generator. The locally generated 133-family corpus (370 total tree nodes) was kernel-accepted by Lean 4.36.0-rc2, with `allFamilies` depending only on propext and Quot.sound. The proof is independent of the generator's soundness.
+
+The wider `general_scan.py` run normalized the leading coefficient A to even values in [2,30] not divisible by three, using R=30,31 and even offsets -100..100. It found 1,355 exact symbolically checked candidate families p=A*3^(R+2n)+c, with 3,650 tree nodes. These have not all been passed through Lean. This search is broader than, and overlaps with, the original 133-family corpus.
+
+## Shared digit decoder
+
+`FatalFamilyDigitDecoder.lean` proves, for tau(k)=(3^k-1)/2, that
+`bw(k,t)+ow(k,t+tau(k))=2k`, so
+`rightIndex(k,t)=leftIndex(k,t+tau(k))-3tau(k)+2k+2`.
+The ordinary map has exact high-digit decomposition
+`L(k+1,d*3^k+t)=3d*3^k+L(k,t)-w(d)`
+for t<3^k, d<3, w=(0,2,1). Its three digit intervals are disjoint.
+The resulting recursive decoder strips the most significant digit with two comparisons and an affine subtraction. Soundness and completeness for both gates, leading-zero padding, and all algebraic identities were kernel-accepted locally with standard axioms. There is no binary search or expansion of the target counters. `FatalFamilyDigitDecoderSource.lean` chooses m=min(k,log2(k+2)+2), proves 2(k+2)<3^m for k>=7, and transfers two missing decoder outputs into authentic root exclusion. This source adapter was locally type-checked against the actual theorem interface; pinned validation remains to be run.
+
+## Remaining quantifiers
+
+None of these results proves that every exponent p in the synthetic fatal family is excluded, that every possible halt is in that family, or that #623 is nonhalting. The entire original-machine problem, and hence BB(6), remain open. The most useful next step is to cover the unbounded remaining exponents or terminal branches by a global invariant, not simply to count more sampled inverse trees. The symbolic checker is designed for reuse on new parameter families.
