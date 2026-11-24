@@ -71,7 +71,7 @@ inductive RootedFrontier (B : Nat) : PartialMachine → Type where
 inductive OpenLeaf {B : Nat} : {p : PartialMachine} →
     RootedFrontier B p → List Move → PartialMachine → Prop where
   | here {p} (path : RawRootPath p) :
-      OpenLeaf (.open path) [] p
+      OpenLeaf (.residual path) [] p
   | child {p n c} (path : RawRootPath p)
       (hrun : knownRun p n = some c)
       (hhole : p (readSlot c) = none)
@@ -108,9 +108,9 @@ theorem OpenLeaf.extends {B : Nat} {p : PartialMachine}
         subst s
         rw [hhole] at hs
         contradiction
-      change (if s = readSlot c then some (some mv) else p s) = some t
-      rw [if_neg hne]
-      exact hs
+      have hchild : (refine p (readSlot c) (some mv)) s = some t := by
+        simp [refine, hne, hs]
+      exact ih s t hchild
 
 /-- Every completion of a frontier node is either within the weighted bound
     or belongs to one of its explicit open leaves. The halt branch is
@@ -136,7 +136,7 @@ theorem RootedFrontier.sound {B : Nat} {p : PartialMachine}
             intro s t h
             by_cases he : s = readSlot c
             · subst s
-              have ht : t = none := by simpa [refine] using h
+              have ht : t = none := by simpa [refine] using h.symm
               simpa [ht] using hstep
             · exact hm s t (by simpa [refine, he] using h)
           exact Or.inl (first_hole_weighted_halt B p n c
@@ -146,7 +146,7 @@ theorem RootedFrontier.sound {B : Nat} {p : PartialMachine}
             intro s t h
             by_cases he : s = readSlot c
             · subst s
-              have ht : t = some mv := by simpa [refine] using h
+              have ht : t = some mv := by simpa [refine] using h.symm
               simpa [ht] using hstep
             · exact hm s t (by simpa [refine, he] using h)
           rcases ih mv m hcomp with hgood | ⟨address, q, hopen, hq⟩
@@ -175,9 +175,9 @@ theorem RootedFrontier.openLeaves_disjoint {B : Nat} {p : PartialMachine}
   | @expand p n c path hrun hhole hweight children ih =>
       intro address1 q1 address2 q2 h1 h2 hne m hcomp
       cases h1 with
-      | child path hrun hhole hweight children mv1 hchild1 =>
+      | @child p1 n1 c1 path1 hrun1 hhole1 hweight1 children1 mv1 address1 q1 hchild1 =>
         cases h2 with
-        | child path hrun hhole hweight children mv2 hchild2 =>
+        | @child p2 n2 c2 path2 hrun2 hhole2 hweight2 children2 mv2 address2 q2 hchild2 =>
           by_cases heq : mv1 = mv2
           · subst mv2
             have hne' : (address1, q1) ≠ (address2, q2) := by
@@ -230,8 +230,9 @@ def buildFrontier (p : PartialMachine) (cut : Nat) (hp : RawRootPath p) :
             weightOK_sound p (readSlot c) n 84 hweight
           exact .expand hp hr hhole hw (fun actual =>
             if heq : actual = mv then
-              simpa [heq] using
-                (buildFrontier (refine p (readSlot c) (some mv))
+              by
+                simpa [heq] using
+                  (buildFrontier (refine p (readSlot c) (some mv))
                   (advanceCut cut mv) (RawRootPath.step hp hr hhole mv) xs htail cert)
             else
               .residual (RawRootPath.step hp hr hhole actual))
@@ -296,6 +297,5 @@ def residualManifest : List (String × String) :=
 #print axioms RootedFrontier.openLeaves_disjoint
 #print axioms rootFrontier_sound
 #print axioms rootFrontier_residual_count
-#print axioms residualManifest_length
 
 end BB6.Agent50RootFrontier
