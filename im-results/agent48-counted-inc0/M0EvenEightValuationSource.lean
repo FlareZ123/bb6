@@ -495,6 +495,7 @@ theorem m0EvenEight_valuation_q4_prefix_run_of_leftFacing
         (3*N+44+3*(3*t)+4+3*(4+t)+3+3*(a-1))
         (s1Config L (8*q) 0 a 0 b h) =
       some ⟨4,h,T6⟩ := by
+    simp only [Nat.add_assoc]
     rw [run_append,hSweep]
     simp only [Option.bind_some]
     rw [run_append,hBridge]
@@ -528,7 +529,8 @@ theorem m0EvenEight_valuation_q4_prefix_run
   obtain ⟨u,t,len,hfactor,hlen,hu,hface⟩ :=
     s1LeftFacing_8q_all L q a hL hq hbound
   exact ⟨t, m0EvenEight_valuation_q4_prefix_run_of_leftFacing
-    L q a b u t len h hL hq hbound ha hface⟩
+    L q a b u t len h hL hq hbound ha
+    (by simpa [m0EvenEightValuationSourceSuffix] using hface)⟩
 
 #print axioms sourceSuffix_prefix14_match
 #print axioms sourceSuffix_extraOnes
