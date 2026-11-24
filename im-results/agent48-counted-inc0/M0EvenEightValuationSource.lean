@@ -28,6 +28,24 @@ private theorem config_ext_local (c d : Config)
   cases d
   simp_all
 
+private theorem afterZeroExit4_preserves_right_local
+    (T : Int → Bool) (h x : Int) (hx : h+2 ≤ x) :
+    afterZeroExit4 T h x = T x := by
+  unfold afterZeroExit4
+  have h0 : x ≠ h-1 := by omega
+  have h1 : x ≠ h := by omega
+  have h2 : x ≠ h+1 := by omega
+  simp [h0,h1,h2]
+
+private theorem after101_preserves_right_local
+    (T : Int → Bool) (h x : Int) (hx : h+3 ≤ x) :
+    after101 T h x = T x := by
+  unfold after101
+  have h0 : x ≠ h := by omega
+  have h1 : x ≠ h+1 := by omega
+  have h2 : x ≠ h+2 := by omega
+  simp [h0,h1,h2]
+
 private theorem sweptRight1_preserves_right_local
     (n : Nat) (T : Int → Bool) (h x : Int)
     (hx : h+3*(n:Int) ≤ x) :
@@ -276,18 +294,23 @@ theorem m0EvenEight_valuation_q4_prefix_run_of_leftFacing
   have hBridge :=
     bridge_prefix44_at T1 hN bit hmatch
   have hrightBubble : T2 (hH+1) = false := by
+    have hcoord : (hH+1)-hN = -13 := by dsimp [hH]; omega
     have hin : bridgeInside44 ((hH+1)-hN) = true := by
-      simp [bridgeInside44,hH]
+      rw [hcoord]
+      simp [bridgeInside44]
     have hf := frameAt_tape_inside T1 hN bridgeInside44
       (bridgeMidWithBit bit) (hH+1) hin
     have hm :
         decide ((hH+1-hN) ∈ (bridgeMidWithBit bit).marked) = false := by
-      simp [hH,bridgeMidWithBit]
+      rw [hcoord]
+      cases bit <;> simp [bridgeMidWithBit]
     simpa [T2] using hf.trans hm
   have hleftBubble : leftOnes T2 hH (3*t) := by
     intro i hi
     have hout : bridgeInside44 ((hH-(i:Int))-hN) = false := by
-      simp [bridgeInside44,hH]
+      change decide (-13 ≤ (hH-(i:Int))-hN ∧ (hH-(i:Int))-hN ≤ 3) = false
+      apply decide_eq_false_iff_not.mpr
+      dsimp [hH]
       omega
     have hf := frameAt_tape_outside T1 hN bridgeInside44
       (bridgeMidWithBit bit) (hH-(i:Int)) hout
@@ -298,6 +321,8 @@ theorem m0EvenEight_valuation_q4_prefix_run_of_leftFacing
     rw [sideBit_d1pow_append a (3*a+14+i)
       (m0EvenEightValuationSourceSuffix t len u)
       (by simp [d1pow_length]; omega)] at hcell
+    have hindex : 3*a+14+i-3*a = 14+i := by omega
+    rw [hindex] at hcell
     have hsource := sourceSuffix_extraOnes t len u i hi
     have hcoord :
         hH-(i:Int) = h-((3*a+14+i:Nat):Int) := by
@@ -313,7 +338,9 @@ theorem m0EvenEight_valuation_q4_prefix_run_of_leftFacing
       _ = true := hsource
   have hleftZero : T2 (hB-1) = false := by
     have hout : bridgeInside44 ((hB-1)-hN) = false := by
-      simp [bridgeInside44,hB,hH]
+      change decide (-13 ≤ (hB-1)-hN ∧ (hB-1)-hN ≤ 3) = false
+      apply decide_eq_false_iff_not.mpr
+      dsimp [hB,hH]
       omega
     have hf := frameAt_tape_outside T1 hN bridgeInside44
       (bridgeMidWithBit bit) (hB-1) hout
@@ -324,6 +351,8 @@ theorem m0EvenEight_valuation_q4_prefix_run_of_leftFacing
     rw [sideBit_d1pow_append a (3*a+15+3*t)
       (m0EvenEightValuationSourceSuffix t len u)
       (by simp [d1pow_length]; omega)] at hcell
+    have hindex : 3*a+15+3*t-3*a = 15+3*t := by omega
+    rw [hindex] at hcell
     have hsource := (sourceSuffix_zeroBoundary t len u).2
     have hcoord : hB-1 = h-((3*a+15+3*t:Nat):Int) := by
       dsimp [hB,hH,hN,N]
@@ -337,7 +366,9 @@ theorem m0EvenEight_valuation_q4_prefix_run_of_leftFacing
       _ = false := hsource
   have hzero : T2 hB = false := by
     have hout : bridgeInside44 (hB-hN) = false := by
-      simp [bridgeInside44,hB,hH]
+      change decide (-13 ≤ hB-hN ∧ hB-hN ≤ 3) = false
+      apply decide_eq_false_iff_not.mpr
+      dsimp [hB,hH]
       omega
     have hf := frameAt_tape_outside T1 hN bridgeInside44
       (bridgeMidWithBit bit) hB hout
@@ -348,6 +379,8 @@ theorem m0EvenEight_valuation_q4_prefix_run_of_leftFacing
     rw [sideBit_d1pow_append a (3*a+14+3*t)
       (m0EvenEightValuationSourceSuffix t len u)
       (by simp [d1pow_length]; omega)] at hcell
+    have hindex : 3*a+14+3*t-3*a = 14+3*t := by omega
+    rw [hindex] at hcell
     have hsource := (sourceSuffix_zeroBoundary t len u).1
     have hcoord : hB = h-((3*a+14+3*t:Nat):Int) := by
       dsimp [hB,hH,hN,N]
@@ -371,13 +404,17 @@ theorem m0EvenEight_valuation_q4_prefix_run_of_leftFacing
       hzeroBoundary.1 hzeroBoundary.2.1 hzeroBoundary.2.2
   have hfixed : ∀ i : Nat, i<12 → T2 (hH+2+(i:Int)) = true := by
     intro i hi
-    have hin : bridgeInside44 ((hH+2+(i:Int))-hN) = true := by
-      simp [bridgeInside44,hH]
+    have hcoord : hH+2+(i:Int)-hN = -12+(i:Int) := by
+      dsimp [hH]
       omega
+    have hin : bridgeInside44 ((hH+2+(i:Int))-hN) = true := by
+      rw [hcoord]
+      simp [bridgeInside44]
     have hf := frameAt_tape_inside T1 hN bridgeInside44
       (bridgeMidWithBit bit) (hH+2+(i:Int)) hin
     have hm := bridgeMid_twelve_ones bit i hi
-    simpa [T2,hH] using hf.trans hm
+    rw [hcoord] at hf
+    simpa [T2] using hf.trans hm
   have hrightOnes : rightOnes T4 hR (4+t) := by
     intro i hi
     obtain ⟨h0,h1,h2⟩ :=
