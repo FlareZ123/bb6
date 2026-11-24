@@ -1,6 +1,6 @@
 # W11 q = 11 (mod 128): both source-parent branches excluded
 
-**Status:** the source-side exclusion and forward exact-root transfer are now Lean-compiled in [W11Q11Source.lean](W11Q11Source.lean), with a successful 51-module Lean 4.36.0-rc2 closure in [CI run 45345767224 (#191)](https://github.com/FlareZ123/bb6/actions/runs/45345767224). All seven new declarations passed axiom audits without sorryAx. The converse root-index equivalence and nonvacuity argument in §1 remain paper-level arithmetic, not yet Lean-formalized. Keep this partial result in im-results/; it is not a full W11 or BB(6) solution.
+**Status:** the source-side exclusion and forward exact-root transfer are now Lean-compiled in [W11Q11Source.lean](W11Q11Source.lean), with a successful 51-module Lean 4.36.0-rc2 closure in [CI run 45345767224 (#191)](https://github.com/FlareZ123/bb6/actions/runs/45345767224). All seven top-level declarations listed below passed axiom audits without sorryAx; the helper remainder lemma is included transitively in the audited root-parameter theorem. The converse root-index equivalence and nonvacuity argument in §1 remain paper-level arithmetic, not yet Lean-formalized. Keep this partial result in im-results/; it is not a full W11 or BB(6) solution.
 
 ## Statement
 
@@ -286,7 +286,7 @@ For every exact B2 root-equation solution in this W11 root4 cylinder, the B2 sta
 
 The source module [W11Q11Source.lean](W11Q11Source.lean) was compiled through the existing manual workflow's w11_q11_only target. Successful run: [45345767224 (#191)](https://github.com/FlareZ123/bb6/actions/runs/45345767224), head SHA af92702b70ff6a6592314e382b7977890eacd9a6, Lean 4.36.0-rc2, 51 modules in the exact import closure.
 
-The seven new declarations passed axiom audits:
+The seven top-level declarations passed axiom audits (the helper theorem w11_mod2048_remainder is included transitively in root_q11_parameter):
 - p_parent_fan, q_unreachable, a_unreachable, p_unreachable, blank_no_b2_w11_q11, and blank_no_b2_root_r11092: [propext, Classical.choice, Quot.sound];
 - root_q11_parameter: [propext, Quot.sound].
 
