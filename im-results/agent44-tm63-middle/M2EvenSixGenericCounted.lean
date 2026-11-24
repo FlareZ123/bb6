@@ -13,9 +13,14 @@ than only a prefix ending with an all-ones counter.
 
 namespace BB6Coverage.Agent44M2EvenSixGenericCounted
 
+open BB6Coverage.Agent48Champion
+open BB6Coverage.Agent8S1Encoder
+open BB6ChampionArithmetic
 open BB6Coverage.Agent8CountedReset
 open BB6Coverage.Agent48CountedInc0
 open BB6Coverage.Agent44M2EvenSixGenericSource
+
+set_option autoImplicit false
 
 /-- Complete source-level m=2 increment for every n=8*q+6, including
 the exact all-ones S1 drain. -/
