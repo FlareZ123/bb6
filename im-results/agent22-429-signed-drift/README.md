@@ -1,0 +1,17 @@
+# #429 branch-29 signed inverse drift exclusion
+
+This is a reduction of the signed inverse problem, **not** a closure of branch29 or a source-machine nonhalting theorem. It builds on [Agent 18's negative dyadic analysis](../agent18-429-root-invariants/NEGATIVE_DYADIC.md) and the exact modular guards of [Agent 33's inverse kernel](../agent33-429-24/BB429InverseKernel.lean).
+
+For the signed inverse model let a=-u-3, b=6-4u-D, and R=-2a-b=6u+D. The three uncompressed inverse rules are F(a,b)=((a-3)/2,b+a), E(a,b)=((4a+b-14)/4,b/2), S(a,b)=((4a+b-26)/4,(b+4)/2), with the six existing modular Bad leaves and integrality guards. These are signed offset rules; they omit positive affine lift bounds. E and S require b=2 mod4 and yield an odd second coordinate, forcing F next on an infinite path. Thus the compressed block system has only:
+- F: u'=u/2, D'=D+3u+3, R'=R+3 (u even)
+- EF: u'=u+(D+8)/8, D'=D/4+4, R'=R+10 (u odd, 8|D)
+- SF: u'=u+(D+20)/8, D'=D/4-1, R'=R+14 (u even, D=4 mod8).
+
+**Theorem.** Every hypothetical infinite signed inverse path from (29-32c,55-64c), c>=4, after the forced first F, admits a compression into these blocks staying in u>0, D>=2, D!=4. Moreover both standalone F and paired blocks must occur infinitely often.
+
+Proof: first F is forced since initial b=3 mod4; its endpoint has u=16(c-1), D=32(c-1)+18. F preserves the region. EF has D>=8 and D'>=6. SF has D>=12 and D'>=2; D'=4 would require D=20, giving u'=u+5 odd and therefore a' even, b'=6 mod8, a Bad leaf. Consequently D=0 and D=4 are inaccessible at compressed positions. The four alternating drift rays in the prior analysis are rotations of these two boundary lines: the other two rays occur at the intermediate E/S positions. In the safe region every pair strictly decreases D; every standalone F strictly decreases u. Neither can persist alone forever. For paired blocks also 4(D'-6)<=D-6, giving a logarithmic bound on uninterrupted pair-run length for D>6 until D<=6; at D<=6 another pair is impossible. Uninterrupted F-run length is bounded by the binary valuation of positive u.
+
+The Lean proof checks the exact signed modular predicates, algebra, forced compression and the infinite-path theorem (including recursive selection of compressed indices). It does not certify the source-to-signed lift nor show that infinitely many interleaved F and paired blocks cannot occur. The remaining task is to rule out such mixed paths and give a finite precision bound fitting the actual feeder exponent. A finite modulus graph alone appears inadequate: modulo 8 through 128 the exploratory compressed graph has one mixed recurrent SCC (not a proof of obstruction).
+
+## Reproduction
+Restore SignedDrift.lean using reconstruct.py, run lean SignedDrift.lean under Lean 4.36.0-rc2. All eleven printed axiom profiles are subsets of propext, Classical.choice, Quot.sound. SHA256 94a1a7a4c25f98031b8d758048c05430ab5894bb51e2c144f8ee46f6f7846a0e. No new finite k scan is claimed.
