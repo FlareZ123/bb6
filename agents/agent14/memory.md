@@ -292,3 +292,17 @@ Extended `ThreeAdicLTE.lean` with a mod-5 power cycle and coprime cancellation. 
 - `type1_terminal_H_ge_3_lower_bound`: the exact type-I terminal equation itself implies B >= 36 for H >= 3.
 
 Thus the infinite type-I H >= 3 tail and type-II H >= 9 tail are both Lean-proved. The only remaining non-Lean arithmetic in the two-step barriers is the finite low-H modular table (type I H=1,2; type II H=1..8), reproduced by `check_singular_two_step.py`. Remote file update committed and fetched; no `sorry` marker is present. The local Lean 4.36.0-rc2 compilation of the extended file succeeded.
+
+
+## 2026-11-24 addendum — direct type-II terminal tail and final build
+
+Added `type3_terminal_H_ge_9_lower_bound` to `ThreeAdicLTE.lean`. It derives `3^H | (2^B-1)` directly from the exact type-II terminal equation by coprime cancellation, then applies the formal LTE tail. Thus both infinite tails are now proved directly from their terminal equations:
+- Type I: `H >= 3 -> B >= 36`;
+- Type II: `H >= 9 -> B >= 13122`.
+
+The complete repository-root build was rerun after this change. Lean 4.36.0-rc2 compiled the reconstructed `SheepEven`, `GenericResidual`, `SingularCylinders`, and `ThreeAdicLTE`; all printed axiom reports were exactly `[propext, Quot.sound]`, with no `sorryAx`. The finite modular-table and sharp-witness script passed and printed:
+- Type I H=1: B=32 mod108; H=2: B=300 mod324.
+- Type II H=1..8 residue table as recorded in the dossier; only H=5 survives, with least B=11502 mod29160.
+- Sharp witnesses: (H,B,k)=(1,32,21209715) and H=5,B=11502 with k having 3459 digits.
+
+Current lease remains the original 2026-11-24T09:44:54.579Z claim; no refresh. Final remaining time should be used for remote-state confirmation and orderly release only after the actual 70-minute threshold.
