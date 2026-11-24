@@ -35,6 +35,10 @@ If u = r mod 2^e, a signed path from u of length k=min(floor((e+1)/4),8r+5) impl
 
 Python macro_cover.py independently computes the cover. For N=10^6 it visits 26,741 nodes, with 5,559 cut leaves, 7,812 empty leaves and maximum e=43; there are zero unresolved leaves. For N=10^9 it visits 878,771 nodes, 171,826 cut leaves, 267,560 empty leaves and maximum e=67; zero unresolved leaves. The latter is computational evidence, not a kernel certificate yet. Exact Python counts use cut tests only at e=3 mod 4 (the available depth changes there).
 
+## Structural restrictions (Agent 6)
+
+[Q0Aperiodic.md](Q0Aperiodic.md) proves that strict-interior vertices have unique predecessors and that no infinite strict-interior path can have an eventually periodic digit itinerary. The Lean proofs are in Q0SlopePacking.lean and Q0Aperiodic.lean, compiled locally against exact relevant declarations of Q0MacroCore.lean. The note also derives a finite bound for repeated primitive words: r consecutive copies of a primitive k-letter word ending at rank P satisfy 16^(k*(r-2)) < P for r>=2. This excludes long repetitions, but leaves arbitrary aperiodic finite paths and the all-parameter length bound open.
+
 ## Next mathematical objective
 
 Prove there cannot be a signed path of length 8u+5 from the entire initial ray, rather than enlarging the finite bound indefinitely. The all-depth secondary F spine is compatible with this goal: arbitrarily many blocks can be forced only at correspondingly large parameter values. A linear or preferably logarithmic termination bound for the signed graph would settle q0. The graph is nondeterministic, so a proof must cover every permitted digit, and must distinguish the strict interior from the invariant boundary rays y=0 and 3y=p.
