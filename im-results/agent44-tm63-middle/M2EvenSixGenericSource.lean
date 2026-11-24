@@ -1,4 +1,5 @@
 import M2EvenSixQ4Prefix
+import M0EvenSixHeadBound
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -27,6 +28,7 @@ open BB6Coverage.Agent8Q4Suffix
 open BB6Coverage.Agent8CountedReset
 open BB6Coverage.Agent24Q4Endpoint
 open BB6Coverage.Agent48M2EvenSixQ4
+open BB6Coverage.Agent42M0EvenSixHeadBound
 open BB6ChampionArithmetic
 
 set_option maxHeartbeats 5000000
@@ -70,17 +72,14 @@ private theorem m2EvenSixGeneric_binDec_source
     binDec L (8*q+6) =
       d1 ++ d0 ++ d0 ++ binDec (L-3) q := by
   have hpow3 : 2^L = 8 * 2^(L-3) := by
-    rw [show L = (L-3)+3 by omega, Nat.pow_add]
-    norm_num
-    ring
+    rw [show L = (L-3)+3 by omega, Nat.pow_add,
+      show (2:Nat)^3 = 8 by decide, Nat.mul_comm]
   have hpow2 : 2^(L-1) = 4 * 2^(L-3) := by
-    rw [show L-1 = (L-3)+2 by omega, Nat.pow_add]
-    norm_num
-    ring
+    rw [show L-1 = (L-3)+2 by omega, Nat.pow_add,
+      show (2:Nat)^2 = 4 by decide, Nat.mul_comm]
   have hpow1 : 2^(L-2) = 2 * 2^(L-3) := by
-    rw [show L-2 = (L-3)+1 by omega, Nat.pow_add]
-    norm_num
-    ring
+    rw [show L-2 = (L-3)+1 by omega, Nat.pow_add,
+      show (2:Nat)^1 = 2 by decide, Nat.mul_comm]
   have hq : q < 2^(L-3) := by
     rw [hpow3] at hbound
     omega
@@ -113,17 +112,14 @@ private theorem m2EvenSixGeneric_binDec_target
     binDec L (8*q+5) =
       d0 ++ d1 ++ d0 ++ binDec (L-3) q := by
   have hpow3 : 2^L = 8 * 2^(L-3) := by
-    rw [show L = (L-3)+3 by omega, Nat.pow_add]
-    norm_num
-    ring
+    rw [show L = (L-3)+3 by omega, Nat.pow_add,
+      show (2:Nat)^3 = 8 by decide, Nat.mul_comm]
   have hpow2 : 2^(L-1) = 4 * 2^(L-3) := by
-    rw [show L-1 = (L-3)+2 by omega, Nat.pow_add]
-    norm_num
-    ring
+    rw [show L-1 = (L-3)+2 by omega, Nat.pow_add,
+      show (2:Nat)^2 = 4 by decide, Nat.mul_comm]
   have hpow1 : 2^(L-2) = 2 * 2^(L-3) := by
-    rw [show L-2 = (L-3)+1 by omega, Nat.pow_add]
-    norm_num
-    ring
+    rw [show L-2 = (L-3)+1 by omega, Nat.pow_add,
+      show (2:Nat)^1 = 2 by decide, Nat.mul_comm]
   have hq : q < 2^(L-3) := by
     rw [hpow3] at hbound
     omega
