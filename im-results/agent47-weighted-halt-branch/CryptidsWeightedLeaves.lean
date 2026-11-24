@@ -53,27 +53,27 @@ def r6_weighted_leaf (B : Nat) :
 
 theorem r1_weighted_cover (B : Nat) :
     Cover (WeightedBound B) (forgetHaltRows expectedRLE_r1) :=
-  WeightedTNFCertificate.sound (r1_weighted_leaf B)
+  Cover.leaf (forgetHaltRows expectedRLE_r1) (WeightedTNFCertificate.sound (r1_weighted_leaf B))
 
 theorem r2_weighted_cover (B : Nat) :
     Cover (WeightedBound B) (forgetHaltRows expectedRLE_r2) :=
-  WeightedTNFCertificate.sound (r2_weighted_leaf B)
+  Cover.leaf (forgetHaltRows expectedRLE_r2) (WeightedTNFCertificate.sound (r2_weighted_leaf B))
 
 theorem r3_weighted_cover (B : Nat) :
     Cover (WeightedBound B) (forgetHaltRows expectedRLE_r3) :=
-  WeightedTNFCertificate.sound (r3_weighted_leaf B)
+  Cover.leaf (forgetHaltRows expectedRLE_r3) (WeightedTNFCertificate.sound (r3_weighted_leaf B))
 
 theorem r4_weighted_cover (B : Nat) :
     Cover (WeightedBound B) (forgetHaltRows expectedRLE_r4) :=
-  WeightedTNFCertificate.sound (r4_weighted_leaf B)
+  Cover.leaf (forgetHaltRows expectedRLE_r4) (WeightedTNFCertificate.sound (r4_weighted_leaf B))
 
 theorem r5_weighted_cover (B : Nat) :
     Cover (WeightedBound B) (forgetHaltRows expectedRLE_r5) :=
-  WeightedTNFCertificate.sound (r5_weighted_leaf B)
+  Cover.leaf (forgetHaltRows expectedRLE_r5) (WeightedTNFCertificate.sound (r5_weighted_leaf B))
 
 theorem r6_weighted_cover (B : Nat) :
     Cover (WeightedBound B) (forgetHaltRows expectedRLE_r6) :=
-  WeightedTNFCertificate.sound (r6_weighted_leaf B)
+  Cover.leaf (forgetHaltRows expectedRLE_r6) (WeightedTNFCertificate.sound (r6_weighted_leaf B))
 
 #print axioms r1_weighted_leaf
 #print axioms r2_weighted_leaf
