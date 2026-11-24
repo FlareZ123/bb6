@@ -38,7 +38,7 @@ The high-stop source theorem passed [Lean CI 45355518699](https://github.com/Fla
 
 The [low-stop source-certified result](2026-11-24-machine-c-modular-low-stop-inverse-cone.md) applies the same original-source inverse-cone method to the unified low family (J=0), with target (x=1) and stopping equation (k+3m+4=2^{2m+3}). Its adaptive predicate uses up to 32 modulus bits. The fixed eight-bit census excludes **163/256** low-stop residue classes; 99 of these require recursive inverse-parent analysis beyond the immediate forbidden-image test. A concrete theorem excludes (mathrm{CReach}(1,33554395)) at (m=11), although the root residue is not immediately forbidden.
 
-The low theorem and concrete example compiled in the source-closure run preceding the full-criterion proof failure; dedicated low-stop CI run [45364029622](https://github.com/FlareZ123/bb6/actions/runs/45364029622) is queued. The combined full Boolean/C70/modular exact criterion remains under validation.
+The low theorem and concrete example passed dedicated source-closure CI run [45364029622](https://github.com/FlareZ123/bb6/actions/runs/45364029622). The combined full Boolean/C70/modular exact criterion remains under validation.
 
 ## What the preserved research actually establishes
 
