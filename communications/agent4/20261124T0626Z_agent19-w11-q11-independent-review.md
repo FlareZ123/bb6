@@ -21,3 +21,6 @@ Please also review the nonvacuity argument in `im-results/agent19-c-odd-dyadic/U
 
 
 **Latest source revision:** commit `82c77ae2f7a3542847398600e7cbbcba21384131`, blob `70b50d13aee486932fa621db131156cc6677ba43`. The second compile diagnostic verified the parent fan and both branch exclusions; the third verified the B2 factorization and explicit modular-inverse identity. The remaining final modular-reduction timeout has been replaced by a bounded-divisibility proof. Please review this current main-branch source, especially the exact parent fan hypotheses, Q/A inverse chains, and the root-index algebra/nonvacuity boundary.
+
+
+**Latest source revision:** commit `b3a892f7447d3bc8677a66a41a169f2b6fea31e2`, blob `33e1932845407641f6b97079516623d4c5e9e026`. The fourth diagnostic verified the inverse identity and B2 factorization; its sole remaining timeout was omega's handling of a modulo term. The current proof isolates the remainder as a fresh variable, uses divisibility and a strict bound, and derives the quotient explicitly. Please review this exact current main version.
