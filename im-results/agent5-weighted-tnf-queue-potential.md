@@ -58,6 +58,24 @@ Thus, for every actual holdout_i call with sz≤100, the active queue must empty
 
 The source defines holdout_i(l,sz) generically; its comments exhibit q_i(0,100). The conclusion is conditional on the actual external calls using chunks of size at most 100. If a larger sz was used, recompute the bound as sz*25^11.
 
+
+## The independent coverage invariant
+
+For a fixed weighted bound B, define Good_B(m) to mean WeightedBound B m. A natural frontier invariant for a queue q=(q1,q2) is:
+
+> Every total completion m of the initial root is either Good_B(m), compatible with some node in q1, or compatible with some node in q2.
+
+The three SearchQueue_upd cases preserve this invariant, provided the imported decider and local branch lemmas are used correctly:
+
+- **Halt h:** the source TC theorem supplies a run from the blank configuration to the first undefined/halting slot h. A completion assigning halt at h is a solved halter; combine the exact run length with the firstOne possible-delay bound to show Good_B. A completion assigning an ordinary instruction at h belongs, up to the canonical fresh-state relabeling, to one of the children in expand' x h. If n=1, expand' is empty and every ordinary completion has no remaining halt row, hence is nonhalting.
+- **NonHalt:** the relevant source theorem must show that every compatible completion is nonhalting, so the entire cylinder is Good_B.
+- **Unknown:** move x from q1 to q2 unchanged; compatibility, and therefore the invariant, is preserved.
+
+The child-coverage step in the Halt case is exactly the mathematical content of WeightedTNFCertificate.expand/tnf_branch_sound: all 24 ordinary instructions are covered, with fresh labels quotiented by state symmetry, while the halt choice is handled separately. The n=1 empty-expansion case is the last-hole argument.
+
+Induction over SearchQueue_upds then preserves the invariant for any finite fuel. The potential result above additionally proves that, for chunks of at most 100 nodes, the active q1 is actually empty before MAXT. If the chunks partition fst(q0) and carry snd(q0) forward without omission or duplication, the final holdout list is therefore exhaustive relative to q0. To close the root, one must then classify every holdout or provide a weighted certificate for it.
+
+
 ## What remains unproved
 
 The fuel-sufficiency result does **not** by itself prove:
