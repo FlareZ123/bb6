@@ -62,44 +62,6 @@ theorem readOneParent_hole :
   rw [readOneAfterTwo_readSlot]
   simp [readOneParent]
 
-theorem readOneParent_tnf_support :
-    TNFSupport readOneParent 2 := by
-  intro s t hs
-  by_cases hA : s = (⟨0, by decide⟩, false)
-  · subst s
-    have ht : t = some ⟨true, true, ⟨1, by decide⟩⟩ := by
-      simpa [readOneParent] using hs
-    subst t
-    constructor
-    · norm_num
-    · intro mv hm
-      have hmv : mv = ⟨true, true, ⟨1, by decide⟩⟩ := by simpa using hm
-      subst mv
-      norm_num
-  · by_cases hB : s = (⟨1, by decide⟩, false)
-    · subst s
-      have ht : t = some ⟨false, false, ⟨0, by decide⟩⟩ := by
-        simpa [readOneParent] using hs
-      subst t
-      constructor
-      · norm_num
-      · intro mv hm
-        have hmv : mv = ⟨false, false, ⟨0, by decide⟩⟩ := by simpa using hm
-        subst mv
-        norm_num
-    · simp [readOneParent, hA, hB] at hs
-
-theorem readOneParent_no_assigned_halt :
-    weightedTNFNoAssignedHalt readOneParent := by
-  intro s
-  by_cases hA : s = (⟨0, by decide⟩, false)
-  · subst s
-    simp [readOneParent]
-  · by_cases hB : s = (⟨1, by decide⟩, false)
-    · subst s
-      simp [readOneParent]
-    · simp [readOneParent, hA, hB]
-
 theorem readOneHalter_root :
     readOneHalter initialSlot = some (some ⟨true, true, 1⟩) := by
   simp [readOneHalter, refine, readOneParent, initialSlot,
@@ -133,19 +95,19 @@ theorem readOneHalter_delay_one :
 theorem readOneHalter_path_five :
     SimplePath readOneHalter 0 [5, 4, 3, 2, 1, 0] := by
   apply SimplePath.step
-  · simp [mayZero, readOneHalter, readOneParent, refine, readOneAfterTwo_readSlot]
+  · simp [mayZero, readOneHalter, readOneParent, refine, readOneAfterTwo, readOneAfterTwo_readSlot]
   · decide
   · apply SimplePath.step
-    · simp [mayZero, readOneHalter, readOneParent, refine, readOneAfterTwo_readSlot]
+    · simp [mayZero, readOneHalter, readOneParent, refine, readOneAfterTwo, readOneAfterTwo_readSlot]
     · decide
     · apply SimplePath.step
-      · simp [mayZero, readOneHalter, readOneParent, refine, readOneAfterTwo_readSlot]
+      · simp [mayZero, readOneHalter, readOneParent, refine, readOneAfterTwo, readOneAfterTwo_readSlot]
       · decide
       · apply SimplePath.step
-        · simp [mayZero, readOneHalter, readOneParent, refine, readOneAfterTwo_readSlot]
+        · simp [mayZero, readOneHalter, readOneParent, refine, readOneAfterTwo, readOneAfterTwo_readSlot]
         · decide
         · apply SimplePath.step
-          · simp [mayZero, readOneHalter, readOneParent, refine, readOneAfterTwo_readSlot]
+          · simp [mayZero, readOneHalter, readOneParent, refine, readOneAfterTwo, readOneAfterTwo_readSlot]
           · decide
           · exact SimplePath.stop
 
@@ -216,8 +178,6 @@ theorem readOneHalter_weighted_cover (B : Nat) (hB : 8 <= B) :
 
 #print axioms first_hole_weighted_halt_of_margin
 #print axioms readOneParent_run
-#print axioms readOneParent_tnf_support
-#print axioms readOneParent_no_assigned_halt
 #print axioms readOneHalter_delay_one
 #print axioms readOneHalter_delay_five
 #print axioms readOneHalter_weight_threshold
