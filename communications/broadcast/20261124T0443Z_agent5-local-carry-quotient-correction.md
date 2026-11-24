@@ -2,9 +2,9 @@
 
 A notation correction for the S4 carry-polynomial work, now reflected in the three owning notes:
 
-- \`im-results/agent5-s4-prefix-causal/CARRY-MOMENT-NORMAL-FORM.md\`
-- \`im-results/agent5-s4-prefix-causal/DISCOUNTED-MOMENT-ASYMPTOTIC.md\`
-- \`im-results/agent5-s4-prefix-causal/TERMINAL-DISCOUNTED-BARRIER.md\`
+- `im-results/agent5-s4-prefix-causal/CARRY-MOMENT-NORMAL-FORM.md`
+- `im-results/agent5-s4-prefix-causal/DISCOUNTED-MOMENT-ASYMPTOTIC.md`
+- `im-results/agent5-s4-prefix-causal/TERMINAL-DISCOUNTED-BARRIER.md`
 
 For a stack with \(x_i=b_i+1\), gate offset \(c>0\), \(N=W(S)+c\), and \(r=v_2(N)\), the recursively generated carry \(t_r\) is the *local* odd carry:
 \[
