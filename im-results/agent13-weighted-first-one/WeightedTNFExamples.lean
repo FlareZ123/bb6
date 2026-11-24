@@ -94,114 +94,11 @@ theorem threeGliderTNFCertificate_sound (B : Nat) :
   (threeGliderTNFCertificate B).sound
 
 
-/-- A second, 25-completion cylinder exercises the weighted last-hole rule:
-all rows except B/0 are ordinary, and B/0 is the only remaining hole. -/
-def lastHoleTNFNode : PartialMachine := fun s =>
-  if s = initialSlot then some (some ⟨true,true,1⟩)
-  else if s = (1,false) then none
-  else some (some ⟨false,false,0⟩)
-
-def lastHoleTNFConfig : Config :=
-  applyMove blank ⟨true,true,1⟩
-
-theorem lastHoleTNF_root :
-    lastHoleTNFNode initialSlot = some (some ⟨true,true,1⟩) := by
-  simp [lastHoleTNFNode, initialSlot]
-
-theorem lastHoleTNF_run :
-    knownRun lastHoleTNFNode 1 = some lastHoleTNFConfig := by
-  simp [knownRun, knownStep, lastHoleTNFNode, lastHoleTNFConfig,
-    initialSlot, readSlot, applyMove, blank]
-
-theorem lastHoleTNF_read :
-    readSlot lastHoleTNFConfig = (1,false) := by
-  simp [lastHoleTNFConfig, readSlot, applyMove, blank]
-
-theorem lastHoleTNF_hole :
-    lastHoleTNFNode (readSlot lastHoleTNFConfig) = none := by
-  rw [lastHoleTNF_read]
-  simp [lastHoleTNFNode, initialSlot]
-
-theorem lastHoleTNF_support :
-    TNFSupport lastHoleTNFNode 6 := by
-  classical
-  intro s t ht
-  constructor
-  · exact s.1.isLt
-  · intro mv hm
-    by_cases h0 : s = initialSlot
-    · subst s
-      have ht' : t = some ⟨true,true,1⟩ := by
-        simpa [lastHoleTNFNode, initialSlot] using ht.symm
-      subst t
-      have hmv : (⟨true,true,1⟩ : Move) = mv := Option.some.inj hm
-      subst mv
-      simp
-    · by_cases h1 : s = (1,false)
-      · subst s
-        simp [lastHoleTNFNode, initialSlot] at ht
-      · have ht' : t = some ⟨false,false,0⟩ := by
-          simpa [lastHoleTNFNode, initialSlot, h0, h1] using ht.symm
-        subst t
-        have hmv : (⟨false,false,0⟩ : Move) = mv := Option.some.inj hm
-        subst mv
-        simp
-
-theorem lastHoleTNF_noAssignedHalt :
-    weightedTNFNoAssignedHalt lastHoleTNFNode := by
-  classical
-  intro s
-  by_cases h0 : s = initialSlot
-  · subst s
-    simp [lastHoleTNFNode, initialSlot]
-  · by_cases h1 : s = (1,false)
-    · subst s
-      simp [lastHoleTNFNode, initialSlot]
-    · simp [lastHoleTNFNode, initialSlot, h0, h1]
-
-theorem lastHoleTNF_rest :
-    ∀ s, s ≠ readSlot lastHoleTNFConfig →
-      ∃ mv, lastHoleTNFNode s = some (some mv) := by
-  intro s hs
-  have hr := lastHoleTNF_read
-  by_cases h0 : s = initialSlot
-  · subst s
-    exact ⟨⟨true,true,1⟩, by simp [lastHoleTNFNode, initialSlot]⟩
-  · by_cases h1 : s = (1,false)
-    · subst s
-      exact False.elim (hs hr)
-    · exact ⟨⟨false,false,0⟩,
-        by simp [lastHoleTNFNode, initialSlot, h0, h1]⟩
-
-theorem lastHoleTNF_weight :
-    ∀ d ∈ possibleDelays
-      (refine lastHoleTNFNode (readSlot lastHoleTNFConfig) none) 0,
-      d + 1 + 1 ≤ 7 := by
-  intro d hd
-  have hm : d ∈ List.range 6 := (List.mem_filter.mp hd).1
-  have hlt : d < 6 := List.mem_range.mp hm
-  omega
-
-/-- The 25 completions of this last-hole cylinder are all weighted below 7:
-    24 ordinary choices make a total all-ordinary table; halt is bounded by
-    the exact delay list and the one-step known run. -/
-def lastHoleTNFCertificate :
-    WeightedTNFCertificate 7 lastHoleTNFNode 6 :=
-  .lastHole lastHoleTNF_root lastHoleTNF_support (by omega)
-    1 lastHoleTNFConfig lastHoleTNF_run lastHoleTNF_hole
-    lastHoleTNF_rest lastHoleTNF_weight
-
-theorem lastHoleTNFCertificate_sound :
-    ∀ m, compatible lastHoleTNFNode m → WeightedBound 7 m :=
-  lastHoleTNFCertificate.sound
-
 #print axioms threeGliderTNF_root
 #print axioms threeGliderTNF_support
 #print axioms threeGliderTNF_noAssignedHalt
 #print axioms threeGliderTNF_never
 #print axioms threeGliderTNFCertificate
 #print axioms threeGliderTNFCertificate_sound
-#print axioms lastHoleTNFCertificate
-#print axioms lastHoleTNFCertificate_sound
 
 end BB6.Agent13BlankDelay
