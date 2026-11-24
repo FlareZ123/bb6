@@ -209,7 +209,7 @@ Proof.
       destruct (fresh_state_index cut q qs E).
         refine (@source_good_child (Build_T t n cut) h w d q (S cut)
         Hg Hhole _ _ _ _).
-      all: lia.
+      all: cbn [min_unused_state]; lia.
 Qed.
 
 Lemma source_expand'_good x h :
