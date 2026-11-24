@@ -227,8 +227,10 @@ theorem carryLongPrefix_r1_left (k : Nat) (T : Int → Bool)
       have hleft : x < -3*((4*k+1:Nat):Int)-2 := by
         rw [hthreshold]
         exact hfar
+      have hleft' : x < -3*(4*(k:Int)+1)-2 := by
+        simpa [Int.natCast_add, Int.natCast_mul] using hleft
       have htarget : carryLeftOutputBit (4*k+1) T x = T x := by
-        simp [carryLeftOutputBit,Int.natCast_add,Int.natCast_mul,hleft]
+        simp [carryLeftOutputBit, Int.natCast_add, Int.natCast_mul, hleft']
       exact hT2.trans htarget.symm
     · by_cases hspecial : x = h'-5
       · subst x
