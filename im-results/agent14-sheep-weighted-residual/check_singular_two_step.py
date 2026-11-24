@@ -60,10 +60,20 @@ def main() -> None:
         p11, s11 = type3_mod_prime(h, 11)
         p17, s17 = type3_mod_prime(h, 17)
         assert len(s3) == 1
+        combined = []
+        if len(s11) == 1 and len(s17) == 1:
+            combined = [
+                b3 + p3*t for t in range(20)
+                if (b3 := s3[0]) >= 0
+                and (b3 + p3*t) % 10 == s11[0]
+                and (b3 + p3*t) % 8 == s17[0]
+            ]
+        assert combined == ([11502] if h == 5 else [])
         print(
             f"  H={h}: mod 3^(H+2): B={s3[0]} (mod {p3}); "
             f"mod 11: {s11 or 'none'} (mod {p11}); "
-            f"mod 17: {s17 or 'none'} (mod {p17})"
+            f"mod 17: {s17 or 'none'} (mod {p17}); "
+            f"combined: {combined or 'none'}"
         )
 
     # At H=5, the three congruences combine to the least positive exponent 11502.
