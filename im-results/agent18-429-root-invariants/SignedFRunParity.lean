@@ -196,6 +196,77 @@ theorem after_sf_run_refined_residues {m u d v um dm : Nat}
     · right
       exact ⟨hu,hd,by omega⟩
 
+
+/-- The first coordinate of EF, in denominator-free form under its guard. -/
+theorem ef_u_formula {v d : Nat} (h8 : d % 8 = 0) :
+    8 * (ef v d).1 = 8 * v + d + 8 := by
+  have hd : d = 8 * (d / 8) := by
+    have h := Nat.mod_add_div d 8
+    omega
+  have hsum : d + 8 = 8 * (d / 8 + 1) := by omega
+  have hq : (d + 8) / 8 = d / 8 + 1 := by
+    rw [hsum]
+    exact Nat.mul_div_cancel_left (d / 8 + 1) (n:=8) (by decide)
+  simp [ef, hq]
+  omega
+
+/-- The first coordinate of SF, in denominator-free form under its guard. -/
+theorem sf_u_formula {v d : Nat} (h8 : d % 8 = 4) :
+    8 * (sf v d).1 = 8 * v + d + 20 := by
+  have hd : d = 8 * (d / 8) + 4 := by
+    have h := Nat.mod_add_div d 8
+    omega
+  have hsum : d + 20 = 8 * (d / 8 + 3) := by omega
+  have hq : (d + 20) / 8 = d / 8 + 3 := by
+    rw [hsum]
+    exact Nat.mul_div_cancel_left (d / 8 + 3) (n:=8) (by decide)
+  simp [sf, hq]
+  omega
+
+/-- Exact next-u recurrence when an EF edge is followed by another EF
+    after an F-run. -/
+theorem ef_ef_pair_recurrence {m u d v um dm : Nat}
+    (hrel : d + 2 * v = 2 * u + 2)
+    (hrun : FRun m u d um dm)
+    (hdm : dm % 8 = 0) :
+    8 * (ef um dm).1 + 2 * v = 8 * u + 2 * um + 3 * m + 10 := by
+  have hsum := fRun_rank hrun
+  have hpair := ef_u_formula (v:=um) hdm
+  omega
+
+/-- Exact next-u recurrence when an EF edge is followed by an SF
+    after an F-run. -/
+theorem ef_sf_pair_recurrence {m u d v um dm : Nat}
+    (hrel : d + 2 * v = 2 * u + 2)
+    (hrun : FRun m u d um dm)
+    (hdm : dm % 8 = 4) :
+    8 * (sf um dm).1 + 2 * v = 8 * u + 2 * um + 3 * m + 22 := by
+  have hsum := fRun_rank hrun
+  have hpair := sf_u_formula (v:=um) hdm
+  omega
+
+/-- Exact next-u recurrence when an SF edge is followed by an EF
+    after an F-run. -/
+theorem sf_ef_pair_recurrence {m u d v um dm : Nat}
+    (hrel : d + 2 * v + 6 = 2 * u)
+    (hrun : FRun m u d um dm)
+    (hdm : dm % 8 = 0) :
+    8 * (ef um dm).1 + 2 * v = 8 * u + 2 * um + 3 * m + 2 := by
+  have hsum := fRun_rank hrun
+  have hpair := ef_u_formula (v:=um) hdm
+  omega
+
+/-- Exact next-u recurrence when an SF edge is followed by another SF
+    after an F-run. -/
+theorem sf_sf_pair_recurrence {m u d v um dm : Nat}
+    (hrel : d + 2 * v + 6 = 2 * u)
+    (hrun : FRun m u d um dm)
+    (hdm : dm % 8 = 4) :
+    8 * (sf um dm).1 + 2 * v = 8 * u + 2 * um + 3 * m + 14 := by
+  have hsum := fRun_rank hrun
+  have hpair := sf_u_formula (v:=um) hdm
+  omega
+
 /-- Every F-run after EF that is followed by a pair has even length. -/
 theorem after_ef_run_even {m u d v um dm : Nat}
     (hrel : d + 2 * v = 2 * u + 2)
@@ -404,6 +475,12 @@ theorem initial_pair_available_iff {t : Nat} :
 #print axioms after_ef_run_even
 #print axioms after_sf_run_even
 
+#print axioms ef_u_formula
+#print axioms sf_u_formula
+#print axioms ef_ef_pair_recurrence
+#print axioms ef_sf_pair_recurrence
+#print axioms sf_ef_pair_recurrence
+#print axioms sf_sf_pair_recurrence
 #print axioms after_ef_run_refined_residues
 #print axioms after_sf_run_refined_residues
 #print axioms initial_run_refined_residues
