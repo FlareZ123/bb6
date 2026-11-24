@@ -240,3 +240,7 @@ Source-connected theorem and reproducible scan at `im-results/agent16-688-shadow
 
 ## Even-only DFA pumping
 `im-results/agent16-sheep-automatic/EVEN-RETURN-PUMPING.md`: power-avoiding E-closed LSB DFA must accept only valuations a<t, and all generic accepted even states have odd-block h<2(a+1)n+a+2. Even-only high-a proof pumps affine offset after fixing h; repeated_prefix_pump, carry arithmetic and exact source generic even block transfer kernel checked; final density contradiction paper-level. Raw F-closed simpler h<=n. No fixed root decision.
+
+## Odometer #172 (2026-11-24 21:30Z)
+
+New dossier im-results/agent16-odometer172: exact upstream root [0]; five direct equations locally kernel-checked in Word.lean (copied source); exact ternary particle events and a first exceptional charge birth at event 124075 (~3.23e113 returns), followed to 200k (~3.389e138). PROTECTED.md establishes the paper invariant charge=1 OR gap>=3*(sum of suffix gaps + suffix particle count)+phase offset+[left != H]. All moves preserve it except the newly created front gap. The first bad birth satisfies the guard (leading/nonleading gap ratio 3.762289011); global birth guard remains open. A projected suffix computation absorbs the first bad gap at the boundary if no cross-left collision; the protected-gap lemma handles cross-left mergers. No source-connected Lean proof or machine verdict. Pursue a real universal birth guard; do not repeat naive charge1 conjecture.
