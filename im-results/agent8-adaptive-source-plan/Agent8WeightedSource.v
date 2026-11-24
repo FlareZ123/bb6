@@ -177,8 +177,7 @@ Proof.
     change (tm x (q,s) = None) in Hhole.
     pose proof Hg as [[Hmin Hmax] [Hroot [Hcount Hsup]]].
     assert (Hslot : state_index q < min_unused_state x).
-    { eapply (source_run_support (t:=tm x) (cut:=min_unused_state x)
-        (n:=n') (c:=c0) (c':=(q,(l,s,r)))).
+    { eapply (@source_run_support (tm x) (min_unused_state x) n' c0 (q,(l,s,r))).
       - exact Hsup.
       - cbn [c0 fst state_index]. lia.
       - exact Hrun. }
