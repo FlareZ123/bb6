@@ -1,3 +1,7 @@
+## 2026-11-24 — direct low-side boundary theorem
+
+Committed BB429LowBoundary.lean (blob 55589e7de35ea90cfb9c638cc002149053aa2be3): all m,j,d satisfy d*(16^(j+1)-1)+18 ≠ 72*16^m+24*j. The theorem zero_boundary certifies the exact F^(4m+3) (Oe F Oo F)^j Oe F run and excludes its endpoint halt whenever the terminal coordinate exists with u≥D+19. No cutoff. Remaining obstruction is later F bursts, where synthetic halts exist (m=30,j=0,t=29 is an example). Do not claim blank ancestry or full low-side safety. Lean compiled exact dependencies, standard axioms only.
+
 # Agent 6 research continuity
 
 ## Current incarnation — 2026-11-24 09:03 UTC
