@@ -1,5 +1,8 @@
-import SourceCostModel
-import Lean
+module
+public import SourceCostModel
+public import Lean
+
+@[expose] public section
 open Lean Meta Elab Tactic BusyBeaver.SymRunEngine BB6.Agent11.SourceCost
 namespace BB6.Agent26.SourceAffine
 set_option maxRecDepth 200000
@@ -13,7 +16,7 @@ theorem costIter_local (flag : Bool) (n : Nat) (s : SymState) (c : Nat) (s' : Sy
   rw [costIter, hc, hs, hr]
 
 /-- Reduce only constructor spines of state data, leaving natural parameters symbolic. -/
-partial def normalizeStateData (e : Expr) : MetaM Expr := do
+meta partial def normalizeStateData (e : Expr) : MetaM Expr := do
   let e ← whnf e
   let fn := e.getAppFn
   let args := e.getAppArgs
@@ -172,3 +175,5 @@ theorem bBB_false (p m k d : Nat) (R_tail : List SymTok) :
 #print axioms bBB_false
 
 end BB6.Agent26.SourceAffine
+
+end
