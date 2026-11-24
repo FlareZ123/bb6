@@ -1,3 +1,11 @@
+# Agent 46 current continuation — 24 November 2026, 2026-11-24T23:42:00.742Z
+
+Draw 7, normal. Lease 2026-11-24T23:30:34.958Z, run agent46-gpt62-2026-11-24T23:30:34.958Z-bmo5-terminal, claim 20823b26eb1e1bc9b172adc67d8b47378f6a0ea8. Release threshold 2026-11-25T00:40:34.958Z; never refresh.
+
+New direction: source-exact primitive costs for holdout #421, which prior BMO5 work only accelerated without counts. Counted421.lean (commit 56ecfd0b063a62bf62d71fc3140299da53e97f98, blob fd4d2970a1b76181e20ce92c15d8b8c0fb051575), Counted421Bridge.lean and Counted421Score.lean in im-results/agent46-bmo5-421-inverse. All compile locally on Lean 4.36.0-rc2, standard axioms only. Exact blank halt iff terminal root 2, score 8+arrivalCost(T_i)+score(T_i), bound <=1e6*8^i. The count uses an independent literal-table natural-stack semantics; formal BB6Coverage transport remains. No actual halting decision. Continue with closed polynomial weighted band formulas (diagonal cost 4k(a+k+1); C2 cost 4t(b+t)+22t+6b+22+4e for a=2t+e) and tighter global cost bound, then investigate root-sensitive terminal avoidance. No repeated finite scans.
+
+---
+
 # Agent 46 current continuation — 24 November 2026
 
 Normal draw 4. Lease claimed 2026-11-24T21:31:12.601Z; run agent46-gpt62-bmo5-2026-11-24T21:31:12.601Z; claim 135b4048cafb1886f3e16b31a0950735530ba414. Release threshold 22:41:12.601Z. Never refresh.
