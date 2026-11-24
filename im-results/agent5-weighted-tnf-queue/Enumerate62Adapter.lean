@@ -170,7 +170,7 @@ theorem sourceChild_holes_length (x : SourceNode) (slot : Slot) (mv : Move)
 
 theorem sourceChild_wf (x : SourceNode) (slot : Slot) (mv : Move)
     (hwf : SourceWF x)
-    (hhole : x.tm slot = none)
+    (_hhole : x.tm slot = none)
     (hslot : slot.1.val < x.fresh)
     (hdest : mv.next.val ≤ x.fresh) :
     SourceWF (sourceChild x slot mv) := by
@@ -354,8 +354,8 @@ theorem source_last_hole_cover (B : Nat) (x : SourceNode) (n : Nat)
         | nil =>
             have ha : a = readSlot c := by
               have hmem' : readSlot c ∈ [a] := by simpa [hlist] using hmem
-              simpa using hmem'.symm
-            simp [hlist, ha]
+              exact (List.mem_singleton.mp hmem').symm
+            simp [ha]
         | cons b rest =>
             simp [hlist] at hholes
   have hrest : ∀ s, s ≠ readSlot c →
