@@ -85,8 +85,7 @@ Proof.
   rewrite Hdec in Hspec.
   destruct Hspec as [n' [Hhalt Hbound]].
   exists n'; split; [exact Hhalt|].
-  apply N2Nat.inj_le in Hbudget.
-  eapply Nat.le_trans; eassumption.
+  lia.
 Qed.
 
 Theorem agent32_decider_bounded_sound (tm0 : TM) :
