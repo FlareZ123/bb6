@@ -21,6 +21,13 @@ open BB6Coverage.Agent48M0EvenEightValuationSweepFacts
 
 set_option maxHeartbeats 3000000
 
+private theorem config_ext_local (c d : Config)
+    (hs : c.state = d.state) (hh : c.head = d.head)
+    (ht : c.tape = d.tape) : c = d := by
+  cases c
+  cases d
+  simp_all
+
 private theorem sweptRight1_preserves_right_local
     (n : Nat) (T : Int → Bool) (h x : Int)
     (hx : h+3*(n:Int) ≤ x) :
@@ -484,14 +491,16 @@ theorem m0EvenEight_valuation_q4_prefix_run_of_leftFacing
         omega
       have hT5 : T5 x = T4 x := by
         have hp := sweptRight1_preserves_right_local (4+t) T4 hR x (by
-          rw [hlast]
+          rw [hscanHead]
           dsimp [x]
           omega)
         simpa [T5] using hp
+      have hx0 : x ≠ hN := by dsimp [x]; omega
+      have hx1 : x ≠ hN+1 := by dsimp [x]; omega
+      have hx2 : x ≠ hN+2 := by dsimp [x]; omega
       have hT6 : T6 x = T5 x := by
-        simp [T6,after101,x]
-        all_goals dsimp [hN,x] at * <;> omega
-      have j : Nat := 3*a-3-i
+        simp [T6,after101,hx0,hx1,hx2]
+      let j : Nat := 3*a-3-i
       have hj : j+1 < N := by dsimp [j,N] at *; omega
       have hblock := sweptLeft_block N j T h hj
       have hcoord : x = h-(j:Int) := by
@@ -523,7 +532,7 @@ theorem m0EvenEight_valuation_q4_prefix_run_of_leftFacing
     have hBridgeConfig :
         frameAt T1 hN bridgeInside44 (bridgeMidWithBit bit) =
           (⟨3,hH,T2⟩ : Config) := by
-      apply Config.ext
+      apply config_ext_local
       · rfl
       · dsimp [frameAt,bridgeMidWithBit,hH]
         omega
