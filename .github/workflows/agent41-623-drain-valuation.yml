@@ -64,9 +64,11 @@ jobs:
           compile "$p/FlatDrainSource.lean" Agent49FlatDrainSource
           compile "$p/DrainCorrectionGrowth.lean" Agent49DrainCorrectionGrowth
           compile "$p/InverseWindowSource.lean" Agent49InverseWindowSource
-          for m in FatalFamilyInverseArithmetic FatalFamilyInverseActual FatalFamilyWindow FatalFamilyInfinite NearPowerDrain FatalFamilySource NearPowerFastStats NearPowerCertificate NearPowerTree NearPowerTreeSource NearPowerGenerate NearPowerChecks NearPowerExamples NearPowerPump; do
+          for m in FatalFamilyInverseArithmetic FatalFamilyInverseActual FatalFamilyWindow FatalFamilyInfinite NearPowerDrain FatalFamilySource NearPowerFastStats NearPowerCertificate NearPowerTree NearPowerTreeSource NearPowerGenerate NearPowerChecks NearPowerExamples NearPowerPump NearPowerAffine NearPowerSymbolicStats NearPowerSymbolic NearPowerSymbolicTree NearPowerSymbolicSource NearPowerFamilyCore NearPowerFamilySource; do
             compile "$q/$m.lean" "$m"
           done
+          python3 "$GITHUB_WORKSPACE/$q/emit_corpus.py" > NearPowerFamilyCorpus.lean
+          lake env lean -o .lake/build/lib/lean/NearPowerFamilyCorpus.olean NearPowerFamilyCorpus.lean 2>&1 | tee -a fatal-family.log
           if grep -q 'sorryAx' fatal-family.log; then
             echo 'sorryAx detected'
             exit 1
