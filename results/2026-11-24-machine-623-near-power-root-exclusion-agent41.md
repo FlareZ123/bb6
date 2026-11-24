@@ -27,7 +27,7 @@ For a general near-power target, represent the counters by (C*3^k+u)/2 and (D*3^
 
 ## Density and further exact algebra
 
-The [dossier](../im-results/agent41-623-fatal-preimages/README.md) includes a paper proof that each individual gate occurs for X/6+o(X) even exponents up to X. Therefore at least one third of even exponents are excluded already by missing both gates (lower asymptotic density). This density argument is mathematical, not yet an end-to-end Lean asymptotic theorem.
+The [dossier](../im-results/agent41-623-fatal-preimages/README.md) includes a paper proof that each individual gate occurs for X/6+o(X) even exponents up to X. Therefore at least one third of even exponents are excluded already by missing both gates (lower asymptotic density). The explicit six-character Fourier inversion in the dossier sharpens these counts to X/6+O(log X) and X/6+O(X^(log_3 2)), respectively, hence at least X/6-O(X^(log_3 2)) missing both gates. This density argument is mathematical, not yet an end-to-end Lean asymptotic theorem.
 
 The pure [shared digit decoder](../im-results/agent41-623-fatal-preimages/FatalFamilyDigitDecoder.lean) has locally kernel-accepted soundness and completeness in Lean 4.36.0-rc2. For tau=(3^m-1)/2, balanced weight is 2m minus ordinary weight at t+tau. Both index equations can use the same most-significant-digit decoder, with disjoint high-digit intervals, and only O(log p) digit steps. The source bridge and a pure finite googol-exponent missing-gate certificate are present in the dossier but await separate pinned-source acceptance.
 
