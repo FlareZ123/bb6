@@ -1,6 +1,19 @@
 #!/usr/bin/env bash
 set -euo pipefail
 here="$(cd "$(dirname "$0")" && pwd)"
+repo_root="$(cd "$here/../.." && pwd)"
+inherited_lean_path="${LEAN_PATH:-}"
+absolute_inherited_lean_path=""
+IFS=':' read -r -a inherited_lean_dirs <<< "$inherited_lean_path"
+for inherited_lean_dir in "${inherited_lean_dirs[@]}"; do
+  [[ -n "$inherited_lean_dir" ]] || continue
+  if [[ "$inherited_lean_dir" = /* ]]; then
+    resolved_lean_dir="$inherited_lean_dir"
+  else
+    resolved_lean_dir="$repo_root/$inherited_lean_dir"
+  fi
+  absolute_inherited_lean_path="${absolute_inherited_lean_path:+$absolute_inherited_lean_path:}$resolved_lean_dir"
+done
 work="$(mktemp -d)"
 trap 'rm -rf "$work"' EXIT
 cd "$work"
@@ -24,7 +37,12 @@ for mod in Boundary OneSidedRank OneSidedCertificate OneSidedBounds OneSidedSour
 done
 
 if [[ -n "${EXTRA_MODULES:-}" ]]; then
-  export LEAN_PATH="$PWD:$here/../agent26-d-phase-bands:$here/../agent36-cryptid-trace:${LEAN_PATH:-}"
+  # Extra modules may import source theorems compiled in the workflow's
+  # repository directories.  Preserve the caller's search path after
+  # resolving its relative entries against the repository root: this
+  # script compiles in a temporary directory, so relative paths otherwise
+  # silently point at the wrong place.
+  export LEAN_PATH="$PWD:$here/../agent26-d-phase-bands:$here/../agent36-cryptid-trace:$absolute_inherited_lean_path"
   IFS=',' read -ra extra_modules <<< "$EXTRA_MODULES"
   for extra_module in "${extra_modules[@]}"; do
     cp "$here/../agent36-cryptid-trace/$extra_module" "$work/$extra_module"
