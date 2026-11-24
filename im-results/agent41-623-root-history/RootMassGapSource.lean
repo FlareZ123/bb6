@@ -100,6 +100,63 @@ theorem two_call_target_not_root (n : Nat) :
   have hm := run_avoids_mass_interval n 3284 3310 h
   omega
 
+/-- Exact original-source blank-root anchor at index 77. -/
+theorem run_77_exact :
+    run 77 = some (.D 143714866 386322776) := by
+  decide +kernel
+
+/-- Exact original-source blank-root anchor at index 78. -/
+theorem run_78_exact :
+    run 78 = some (.D 242607912 431144625) := by
+  decide +kernel
+
+/-- Exact original-source blank-root anchor at index 79. -/
+theorem run_79_exact :
+    run 79 = some (.D 188536700 727823788) := by
+  decide +kernel
+
+/-- A second skipped root-mass interval, between indices 77 and 78. -/
+theorem run_avoids_mass_interval_77_78 (n a d : Nat)
+    (h : run n = some (.D a d)) :
+    a + d ≤ 530037642 ∨ 673752537 ≤ a + d := by
+  by_cases hn : n ≤ 77
+  · left
+    have hm := run_mass_mono n 77 hn a d 143714866 386322776 h run_77_exact
+    omega
+  · right
+    have hn' : 78 ≤ n := by omega
+    have hm := run_mass_mono 78 n hn' 242607912 431144625 run_78_exact h
+    omega
+
+/-- A third skipped root-mass interval, between indices 78 and 79. -/
+theorem run_avoids_mass_interval_78_79 (n a d : Nat)
+    (h : run n = some (.D a d)) :
+    a + d ≤ 673752537 ∨ 916360488 ≤ a + d := by
+  by_cases hn : n ≤ 78
+  · left
+    have hm := run_mass_mono n 78 hn a d 242607912 431144625 h run_78_exact
+    omega
+  · right
+    have hn' : 79 ≤ n := by omega
+    have hm := run_mass_mono 79 n hn' 188536700 727823788 run_79_exact h
+    omega
+
+/-- The source of the v3 state-locality counterexample is not root-reachable:
+    its mass lies strictly between the exact root masses at indices 77 and 78. -/
+theorem v3_counterexample_source_not_root (n : Nat) :
+    run n ≠ some (.D 464905666 116226414) := by
+  intro h
+  have hm := run_avoids_mass_interval_77_78 n 464905666 116226414 h
+  omega
+
+/-- The target of the v3 state-locality counterexample is not root-reachable:
+    its mass lies strictly between the exact root masses at indices 78 and 79. -/
+theorem v3_counterexample_target_not_root (n : Nat) :
+    run n ≠ some (.D 348679242 348679292) := by
+  intro h
+  have hm := run_avoids_mass_interval_78_79 n 348679242 348679292 h
+  omega
+
 #print axioms run_mass_mono
 #print axioms run_23_exact
 #print axioms run_24_exact
