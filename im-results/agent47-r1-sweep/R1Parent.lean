@@ -86,7 +86,7 @@ theorem zipQuery_sound (p : PartialMachine) (n : Nat) (s : Slot)
       (weightedTNFDefaultCompletion_compatible p) n start z hz
     rw [initial_embed] at hr
     rw [weightedTNFKnownRun_eq_defaultRun,hr]
-    simpa only [hz,Option.map_some,BB6Coverage.Agent50Zipper.read_embed] at h ⊢
+    simp only [hz,Option.map_some,BB6Coverage.Agent50Zipper.read_embed] at h ⊢
     exact h
 
 def siblingOK (s : SiblingSpec) (mv : Move) : Bool :=
@@ -235,6 +235,14 @@ def r1 : SiblingSpec where
     | true,true,5 => .growth .oRF
     | _,_,_ => .known
 
+#eval (List.finRange 6).flatMap fun q => [false,true].flatMap fun w =>
+  [false,true].map fun d =>
+    let mv : Move := ⟨w,d,q⟩
+    (w,d,q.val,siblingOK r1 mv,
+      match r1.witness mv with
+      | .last n => (zipQuery (r1.child mv) n,weightOK (r1.child mv) r1.lastSlot n r1.bound)
+      | _ => (none,true))
+
 theorem r1_valid : ValidSpec r1 := by
   constructor <;> decide
 
@@ -256,8 +264,9 @@ theorem attain_last (s : SiblingSpec) (v : ValidSpec s) (mv : Move) (n : Nat)
   have hp : compatible s.parent m :=
     refine_preserves_compat s.parent m s.hole (some mv) v.holeCheck hmp
   refine ⟨m,hp,?_⟩
+  have hread := zipQuery_sound _ _ _ h.1
   cases hrun : knownRun (s.child mv) n with
-  | none => simp [hrun] at h
+  | none => simp [hrun] at hread
   | some c =>
     have hs : readSlot c = s.lastSlot := by simpa [hrun] using (zipQuery_sound _ _ _ h.1)
     apply first_hole_halts (s.child mv) n c hrun
