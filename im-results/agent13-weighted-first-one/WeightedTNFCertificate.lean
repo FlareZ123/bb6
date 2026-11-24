@@ -15,6 +15,16 @@ def weightedTNFNoAssignedHalt (p : PartialMachine) : Prop :=
 def weightedTNFKnownRunForever (p : PartialMachine) : Prop :=
   ∀ n, ∃ c, knownRun p n = some c
 
+/-- Ordinary TNF expansion preserves the no-assigned-halt invariant. -/
+theorem weightedTNFNoAssignedHalt_refine (p : PartialMachine) (slot : Slot)
+    (mv : Move) (h : weightedTNFNoAssignedHalt p) :
+    weightedTNFNoAssignedHalt (refine p slot (some mv)) := by
+  intro s
+  by_cases hs : s = slot
+  · subst s
+    simp [refine]
+  · simpa [refine, hs] using h s
+
 theorem weightedTNFKnownRunForever_sound (p : PartialMachine)
     (h : weightedTNFKnownRunForever p) (m : Machine) (hm : compatible p m) :
     NeverHalts m := by
