@@ -314,7 +314,6 @@ theorem source_full_prefix (n b d m z K : Nat) (hn : 14≤n)
         2*(1+7*2^n*costPowSum A) =
             2+2*(7*2^n*costPowSum A) := by
               rw [Nat.mul_add]
-              simp
         _ = 2+14*2^n*costPowSum A := by rw [hprod]
         _ = 2^m*(d-1)+2*costWeightedSum n A := hInv
         _ = 2*(2^m*v+costWeightedSum n A) := by
@@ -395,7 +394,7 @@ theorem source_countcone_cost_lt_full (n b d m z K : Nat)
 #print axioms fullWeighted_mod_bits
 #print axioms fullSum_add_weighted
 #print axioms fullCarryPath_of_sum
-#print axioms fullCarryPath.mem_fullCarryStates
+#print axioms FullCarryPath.mem_fullCarryStates
 #print axioms noFullPrefix_of_emptyCarry
 #print axioms source_full_prefix
 #print axioms source_countcone_cost_lt_full
