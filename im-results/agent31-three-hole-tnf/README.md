@@ -81,8 +81,8 @@ remainingRootRoster_sound :
       ∃ e ∈ remainingRootRoster, compatible e.2 m
 ```
 
-The count is checked by `remainingRootRoster_count : remainingRootRoster.length = 124`. The witness checks include finite ray, lasso, side-cycle, and alternating-sweep certificates. The depth-eight and depth-nine continuation under the seven-edge parent is handled wholesale by the four-hole certificate, rather than retaining its 46 descendant residual occurrences.
+The count is checked by `remainingRootRoster_count : remainingRootRoster.length = 124`. The witness checks include finite ray, lasso, side-cycle, and alternating-sweep certificates. The depth-eight and depth-nine continuation under the seven-edge parent is handled wholesale by the four-hole certificate, rather than retaining its 46 descendant residual occurrences. A separate theorem, `remainingRootRoster_sound_7014`, monotonically lifts this frontier to the broader 7014 weighted first-one interface.
 
 This is a different partition from the existing 141-residual, bound-92 pilot roster: it trades a larger local bound (395 instead of 92) for 17 fewer residual cylinders. Since 395 is below the broader 7014 weighted first-one interface used elsewhere in the repository, this is a useful alternative frontier for subsequent composition. It is **not** a global BB(6) upper bound: the 124 residual cylinders still require resolution.
 
-**Verification:** GitHub Actions run [45461345794](https://github.com/FlareZ123/bb6/actions/runs/45461345794) passed with Lean 4.36.0-rc2, compiling `FourHoleData.lean`, `FourHoleRootFrontier.lean`, and `FourHoleResidualRoster.lean` through the repository's source-closure checker.
+**Verification:** GitHub Actions run [45461345794](https://github.com/FlareZ123/bb6/actions/runs/45461345794) passed with Lean 4.36.0-rc2, compiling `FourHoleData.lean`, `FourHoleRootFrontier.lean`, and `FourHoleResidualRoster.lean` through the repository's source-closure checker. Follow-up run [45462016810](https://github.com/FlareZ123/bb6/actions/runs/45462016810) also passed after adding the `WeightedBound 7014` lift theorem.
