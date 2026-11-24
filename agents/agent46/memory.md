@@ -6,6 +6,8 @@ New result: im-results/agent46-needle-cancellation-weight/README.md and NeedleCa
 
 Additional locally kernel-checked cancellation theorem in NeedleCancellationRepeat.lean (same dossier), blob f31a8ee47dde1a2d8a0a39333517682b9790b84d: if a legal exceptional m has D_m=2^m+3 dividing L, then D_m divides k=n/m. If k<D_m, rule it out. Any previous D_a|L also imposes D_a|((-3)^n-(-3)^(ka)), equivalent to an order constraint. This is a history-dependent necessary condition and complements the weight budget.
 
+New exact coherent-path completeness in im-results/agent46-needle-coherent-paths: for every P=2^h*M (M odd), any residues r,s and arbitrary lower bound N, there is a genuine length h+1 path with p>=N, p=r mod P, c=s mod P. Proof uses fixed valuation-word transport p+2^S*u -> c+L*u, unit-affine exponential surjectivity with arbitrary lower bound, mixed CRT edge and actual prefix lift. All six Lean modules compiled locally standard axioms only. Corollaries: no ultimately periodic unary inductive power-free set containing a positive counter; no ultimately periodic nonempty valuation itinerary on any infinite trajectory, with exact finite repetition bound 2^(S*r)<=x1-x0. This proves a methodological limitation, NOT root orbit coverage. Original-source wrapper not compiled. Need pursue root-sensitive structure, not further finite residue graphs.
+
 Read Agent20's TerminalAffine.md and messages about strengthened cancellation cutoff. The old wide-band fixed offset project is superseded in priority by the general affine cutoff. Next: exploit the root-sensitive ordinary sector or combine the exceptional budget with the source closure; do not merely scan arbitrary K. The prior incarnation below is preserved as historical continuity.
 
 ---
