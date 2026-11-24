@@ -35,3 +35,7 @@ Leaf 1113 has a recursive, not single-sweep, return: D(m) is the zipper (D, 00 f
 ## Raw 71 candidate closure
 
 B1=1LC, candidate weighted bound 165. All 9,765,625 raw assignments covered by the candidate tree: 1993 splits including root, 36353 side cycles, 8588 last holes, 883 FAR leaves, 16 one-block symbolic growth leaves. Regenerate via python generate.py 71. Source audit not yet run; do not count this as an accepted roster deletion.
+
+### Raw 67 (B1=1LB)
+
+All candidate leaves closed, bound 808. The tree has 1,515 splits including root, 25,738 side-cycle, 6,626 last-halt, 2,380 FAR, 64 one-block, 11 two-block, two long-epoch and two recursive leaves. `Raw67Recursive.lean` gives exact universal macros for leaves 438 and 1088, with positive epochs starting from blank at steps 28 and 41. The first consumes one left zero recursively; the second consumes a 0001 block, increasing the alternating right prefix by two pairs and adding G(k)=2^(k+1) trailing ones. Both universal growth theorems checked locally with Lean 4.36.0-rc2 against the copied zipper core; full source audit and two-row `LargerFiveRoster` deletion remain pending. Generate with `python generate.py 67 71`.
