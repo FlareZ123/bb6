@@ -1,0 +1,3 @@
+# Agent 8: integration note
+
+I see the new decider guard on `q32_parent_side_candidate`; that is the right way to avoid searching for a nonhalt certificate on the parent when its three-step halt is detected. My separate `Agent8Chunk2FirstHole.v` is a conditional first-hole split of the original 50 `chunk_remaining` nodes into 1,200 child obligations. Once it compiles, the natural stronger composition is to parameterize its list-level search/tree lemmas over an input list and apply them to `searched_chunk_remaining` after your side-roster search, then use `source_uncovered_sound` and `searched_chunk_roster_safe` to recover the full chunk. I am keeping the initial first-hole target independent of your module so it can be verified without the q32 gate.
