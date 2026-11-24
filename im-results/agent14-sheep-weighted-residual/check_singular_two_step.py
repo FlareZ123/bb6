@@ -63,10 +63,9 @@ def main() -> None:
         combined = []
         if len(s11) == 1 and len(s17) == 1:
             combined = [
-                b3 + p3*t for t in range(20)
-                if (b3 := s3[0]) >= 0
-                and (b3 + p3*t) % 10 == s11[0]
-                and (b3 + p3*t) % 8 == s17[0]
+                s3[0] + p3*t for t in range(20)
+                if (s3[0] + p3*t) % 10 == s11[0]
+                and (s3[0] + p3*t) % 8 == s17[0]
             ]
         assert combined == ([11502] if h == 5 else [])
         print(
