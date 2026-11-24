@@ -57,7 +57,11 @@ Proof.
   unfold TNF_Node.decider.
   repeat match goal with
   | |- context [TC_state.decide tm0 ?ls] =>
-      destruct (TC_state.decide tm0 ls) as [[h| |] st] eqn:?
+      let result := fresh "res" in
+      let state := fresh "st" in
+      let E := fresh "Etc" in
+      destruct (TC_state.decide tm0 ls) as [result state] eqn:E;
+      destruct result
   | |- context [decide_nonhalt tm0 ?arg] =>
       destruct (decide_nonhalt tm0 arg) eqn:?
   end.
@@ -95,7 +99,11 @@ Proof.
   unfold TNF_Node.decider.
   repeat match goal with
   | |- context [TC_state.decide tm0 ?ls] =>
-      destruct (TC_state.decide tm0 ls) as [[h| |] st] eqn:?
+      let result := fresh "res" in
+      let state := fresh "st" in
+      let E := fresh "Etc" in
+      destruct (TC_state.decide tm0 ls) as [result state] eqn:E;
+      destruct result
   | |- context [decide_nonhalt tm0 ?arg] =>
       destruct (decide_nonhalt tm0 arg) eqn:?
   end.
