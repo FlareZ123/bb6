@@ -343,6 +343,36 @@ function extractWordWithPending(prefixStart, baseWord, blocks, name) {
   assert(same(prefix, prefixStart), name + ": prefix did not return");
   return { word, pending, adds, finalPrefix: prefix };
 }
+function extractSkewedWord(prefixStart, baseWord, basePending, blocks, name) {
+  let prefix = prefixStart.slice();
+  let pending = 0n;
+  let adds = 0;
+  const word = [];
+  for (let k = 0; k < blocks; k++) {
+    for (const c of baseWord) {
+      const e = boundary(prefix, c);
+      if (e.kind === 1) { pending += e.d; adds++; }
+      else if (e.kind === 2) { word.push(e.d + pending); pending = 0n; }
+      prefix = prefixStep(prefix, c);
+    }
+    // The base map's skew is a head addition inside this tracked prefix.
+    prefix[0] = prefix[0] + basePending;
+  }
+  assert(same(prefix, prefixStart), name + ': prefix did not return');
+  return { word, pending, adds, finalPrefix: prefix };
+}
+
+function findSkewedPrefixCycle(word, pending, initial, limit) {
+  let state = initial.slice();
+  const seen = new Map();
+  for (let k = 0; k <= limit; k++) {
+    const key = state.map(String).join(',');
+    if (seen.has(key)) return { preperiod: seen.get(key), period: k - seen.get(key) };
+    seen.set(key, k);
+    state = prefixSkewedWord(word, pending, state);
+  }
+  return null;
+}
 function shiftedWord(word, delta) {
   const out = word.slice();
   out[0] += delta;
@@ -512,6 +542,39 @@ const first15Cycle = {
   periodPReturns: String(first15PeriodYBlocks * yReturns),
   first15DigitsAtCycleStart: show(first15CycleStart)
 };
+// G is the induced suffix word after 1,280 skewed F blocks. The 15-digit
+// prefix returns over this interval; the word acts on the suffix beyond it.
+// This replaces a brute-force 25,600-Y-block search with a boundary-word test.
+const tailAfter15 = F1Tail.slice(5);
+assert(tailAfter15.length >= 15, 'G requires at least 15 residual digits');
+const Gdata = extractSkewedWord(first15CycleStart, Fword, pF, 1280, 'G');
+const G = Gdata.word;
+const gMass = checkMassWithPending('G', G, Gdata.pending, 1280n * 20n * yReturns, Gdata.adds);
+const gPrefixStart = tailAfter15.slice(0, 15);
+const gPrefixCycle = findSkewedPrefixCycle(G, Gdata.pending, gPrefixStart, 10000);
+let gCarrySummary = null;
+if (gPrefixCycle !== null) {
+  let prefix = gPrefixStart.slice();
+  let maxDepth = 0;
+  let maxWitness = null;
+  let depth15Events = [];
+  const coveredBlocks = gPrefixCycle.preperiod + gPrefixCycle.period;
+  for (let phase = 0; phase < coveredBlocks; phase++) {
+    for (let gateIndex = 0; gateIndex < G.length; gateIndex++) {
+      const depth = prefixCarryDepth(prefix, G[gateIndex]);
+      if (depth > maxDepth) {
+        maxDepth = depth;
+        maxWitness = { phase, gate: gateIndex, depth, offset: String(G[gateIndex]) };
+      }
+      if (depth === 15 && depth15Events.length < 20)
+        depth15Events.push({ phase, gate: gateIndex, offset: String(G[gateIndex]) });
+      prefix = prefixStep(prefix, G[gateIndex]);
+    }
+    prefix[0] = prefix[0] + Gdata.pending;
+  }
+  gCarrySummary = { maxDepth, maxWitness, depth15Events, coveredBlocks };
+}
+const gBarrier = gPrefixCycle !== null && gCarrySummary.maxDepth < 15;
 const nestedReturnHierarchy = {
   YtoZ: {
     blocks: 5,
@@ -532,7 +595,8 @@ const nestedReturnHierarchy = {
 // Continue the exact BigInt Y-word action for 10,000 additional blocks.
 // A full-suffix event is the only place where the terminal quotient is formed;
 // its odd part equals 1 exactly when the original source gate halts.
-const Y_SCAN_ADDITIONAL_BLOCKS = 10000;
+const RUN_LEGACY_Y_SCAN = process.argv.includes('--legacy-y-scan');
+const Y_SCAN_ADDITIONAL_BLOCKS = RUN_LEGACY_Y_SCAN ? 10000 : 0;
 trackFullSuffixEvents = true;
 let yScanState = tailAfterY;
 let yScanHaltBlock = null;
@@ -609,7 +673,7 @@ function prefixCarryDepth(prefix, c) {
 }
 const yPrefix30Start = yScanState === null ? null : yScanState.slice(0, 30);
 const yPrefix30Cycle = yPrefix30Start === null
-  ? null : findCycleMaybe(Y, yPrefix30Start, 10000);
+  ? null : findCycleMaybe(Y, yPrefix30Start, RUN_LEGACY_Y_SCAN ? 10000 : 0);
 let yPrefix30CarrySummary = null;
 if (yPrefix30Cycle !== null) {
   let prefix = yPrefix30Start.slice();
@@ -703,12 +767,13 @@ const quotientNonClosure = {
 
 console.log(JSON.stringify({
   levels: {
-    Q: qMass, R: rMass, V: vMass, W: wMass, X: xMass, Y: yMass
+    Q: qMass, R: rMass, V: vMass, W: wMass, X: xMass, Y: yMass, G: gMass
   },
   prefixCycles: {
     V_eightDigit: vCycle,
     W_sevenDigit: wCycle,
-    X_eightDigit: xCycle
+    X_eightDigit: xCycle,
+    G_fifteenDigit: gPrefixCycle
   },
   yOffsetMod3Counts: Y.reduce((counts, c) => {
     counts[Number(c % 3n)]++;
@@ -717,6 +782,8 @@ console.log(JSON.stringify({
   yBlockScan,
   yPrefix30Cycle,
   yPrefix30CarrySummary,
+  gCarrySummary,
+  gBarrier,
   nestedReturnHierarchy,
   terminalQuotientObstruction,
   quotientNonClosure,
