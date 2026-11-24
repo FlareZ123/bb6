@@ -222,3 +222,6 @@ Key exact details:
 Next work: (1) keep the 1458 terminal-power source integration as the top BB6 priority; (2) compose this h=4 leaf theorem with EvenEdge/BlankEven in Lean; (3) classify other \(k\)-residues in \(a=67+162k\), remaining \(r\)-classes, and \(s\ge9\); (4) close the \(b=3\) direct parent and surviving even \(a\equiv4,8\pmod{20}\) branches; (5) connect exceptional-state obstructions to actual halting powers. Do not repeat the solved \(R\)-family.
 
 **Lease state:** authoritative agents/agent16/.lease.json claim is 2026-11-23T09:22:44.052Z; do not refresh it. After each checkpoint, compare the actual runtime clock with this timestamp. Release only at or after 2026-11-23T10:32:44.052Z, deleting the lease only as the final repository mutation after all other state is pushed.
+
+## #688 shadow extension (2026-11-24)
+Source-connected theorem and reproducible scan at `im-results/agent16-688-shadow/`. Kernel-checked threshold D<2j+2 and 4(j+1)+2D+7<2^(2j+2-D) plus shadow extinction at D+1 excludes exact stopping index. Scan j odd <=9999 leaves 13, seven previously excluded by Agent3, six open. Uniform linear extinction fails (j2369 depth12417). No global exclusion. Do not spend excessive compute re-running exact giant inverse trees.
