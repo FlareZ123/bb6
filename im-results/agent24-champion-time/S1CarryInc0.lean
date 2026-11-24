@@ -39,11 +39,11 @@ private theorem sideBit_carryPrefixInput (r : Nat) (rest : List Bool)
   · have hc : i=3*r ∨ i=3*r+1 ∨ i=3*r+2 := by omega
     rcases hc with h0 | h1 | h2
     · subst i
-      simp [sideBit_append,d1pow_length,d0,sideBit]
+      simp [sideBit_append,d1pow_length,d0,sideBit] <;> omega
     · subst i
-      simp [sideBit_append,d1pow_length,d0,sideBit]
+      simp [sideBit_append,d1pow_length,d0,sideBit] <;> omega
     · subst i
-      simp [sideBit_append,d1pow_length,d0,sideBit]
+      simp [sideBit_append,d1pow_length,d0,sideBit] <;> omega
 
 /-- The actual source S1 configuration matches the full local input
 window required by the counted carry macro, for every odd-part quotient q. -/
