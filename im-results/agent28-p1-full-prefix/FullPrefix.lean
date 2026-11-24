@@ -68,9 +68,9 @@ theorem fullPrefix_bits (Q j k : Nat) (A : List Nat) :
   | zero => simp [fullPrefixSum, fullSumBits, BB6WallBridge.bits]
   | succ k ih =>
       rw [fullPrefixSum, BB6WallBridge.bits, fullSumBits.eq_def,
-        ih, Nat.mul_add, Nat.pow_succ]
+        ih (j+1), Nat.mul_add, Nat.pow_succ]
       by_cases h : j ∈ A <;>
-        simp [h, fullWeight, Nat.mul_assoc, Nat.mul_comm]
+        simp [h, fullWeight] <;> ac_rfl
 
 theorem fullWeighted_mod_prefix (Q K : Nat) (A : List Nat)
     (hnd : A.Nodup) :
@@ -259,10 +259,9 @@ theorem noFullPrefix_of_emptyCarry (Q K : Nat)
             have hsub : 2^K-1+1=2^K :=
               Nat.sub_add_cancel (Nat.one_le_pow K 2 (by decide))
             rw [hsub]
-            ac_rfl
       _ = 2^K*(total/2^K+1) := by
             rw [Nat.mul_add]
-            simp
+            ac_rfl
   have hsum' : 1+fullSumBits Q 0 xs =
       2^xs.length*(fullSumBits Q 0 xs/2^K+1) := by
     simpa [total, hlen, Nat.add_comm] using hsum
@@ -285,11 +284,10 @@ theorem source_full_prefix (n b d m z K : Nat) (hn : 14≤n)
     counted_to_odd_cone _ _ _ _ _ _ h
   have hmass0 := odd_cone_mass
     (14*2^n-2*n-16) 3 b d m hodd
+  have hp := BB6WallCarry.pow2_ge_1100_mul n hn
+  have hP : n+3≤7*2^n := by omega
   have hroot : (14*2^n-2*n-16)+3+2*n+13=14*2^n := by omega
   have hmass : b+d+2*m+2*n+13=14*2^n := by omega
-  have hP : n+3≤7*2^n := by
-    have hp := BB6WallCarry.pow2_ge_1100_mul n hn
-    omega
   have hQm : 2*Q=2*m+b+d+7 := by
     dsimp [Q]
     omega
@@ -309,12 +307,17 @@ theorem source_full_prefix (n b d m z K : Nat) (hn : 14≤n)
       calc
         2*(1+7*2^n*costPowSum A) =
             2+14*2^n*costPowSum A := by
-              simp [Nat.mul_add, Nat.mul_assoc, Nat.mul_comm, Nat.mul_left_comm]
+              rw [Nat.mul_add]
+              simp [Nat.mul_assoc, Nat.mul_comm, Nat.mul_left_comm]
         _ = 2^m*(d-1)+2*costWeightedSum n A := hInv
         _ = 2*(2^m*v+costWeightedSum n A) := by
-              rw [hD]
-              simp [Nat.mul_add, Nat.mul_assoc, Nat.mul_comm, Nat.mul_left_comm]
-    exact Nat.eq_of_mul_eq_mul_left (by decide : 0<2) hDouble
+              rw [hD, Nat.mul_add]
+              calc
+                2^m*(2*v)+2*costWeightedSum n A =
+                    2*(2^m*v)+2*costWeightedSum n A := by ac_rfl
+                _ = 2*(2^m*v+costWeightedSum n A) := by
+                      rw [Nat.mul_add]
+    omega
   have hA : ∀ s∈A, s≤Q := by
     intro s hs
     have hslt := hlt s hs
@@ -379,9 +382,9 @@ theorem source_countcone_cost_lt_full (n b d m z K : Nat)
     (hno : ¬ ∃ xs : List Bool, xs.length=K ∧
       fullSumBits (7*2^n-(n+3)) 0 xs % 2^K = 2^K-1)
     : m<K := by
-  by_contra hnot
-  have hKm : K≤m := by omega
-  exact hno (source_full_prefix n b d m z K hn h hK hKm)
+  by_cases hKm : K≤m
+  · exact False.elim (hno (source_full_prefix n b d m z K hn h hK hKm))
+  · omega
 
 #print axioms fullPrefixSum_cons
 #print axioms fullPrefix_bits
