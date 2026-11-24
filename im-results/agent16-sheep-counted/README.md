@@ -29,6 +29,25 @@ The exact score iff is proved by strong induction on the real live halt count, u
 
 ## Reproduction
 
-Run python reconstruct.py; then lean SheepCounted.lean using Lean 4.36.0-rc2, import Std only. Local compiler succeeded; final blank_score_iff depends on propext and Quot.sound. No sorry or native_decide. This independent literal-table semantics is not yet imported into the upstream BusyBeaver library. Upstream uncounted source: google-deepmind/cryptids revision ced8f9f44f67a167d5ecc03e687b048c67926371, Sheep machine module.
+Run python reconstruct.py; then lean SheepCounted.lean using Lean 4.36.0-rc2, import Std only. Local compiler succeeded; final blank_score_iff depends on propext and Quot.sound. No sorry or native_decide. The independent literal-table semantics is now proved equivalent to two infinite tape streams in SheepStream.lean, including both directions of the exact score statement; it is not imported into the upstream BusyBeaver library. SheepCountedBridge.lean proves both directions of the unweighted path equivalence with the existing SheepEven.Steps model. Upstream uncounted source: google-deepmind/cryptids revision ced8f9f44f67a167d5ecc03e687b048c67926371, Sheep machine module.
 
 Intermediate result: exact score reduction, no new attained lower bound or whole-machine decision.
+
+## Primitive-cost potential and halting exponent
+
+Define P(x)=6(x-1)^2+5(x-1). Every odd-source section return x>=5 of cost C satisfies the exact identity
+
+    5C+25+P(x)=P(y).
+
+Every section edge has C<=2x^2 for x>=5. If M is the sum of x^2 over even-source returns only, every weighted path from 5 to T satisfies 5C+P(5)<=10M+P(T). Odd costs therefore telescope without a count factor. With T=2^j, the exact score S obeys the kernel-checked inequalities
+
+    2T^2+33 <= 3S+3T,
+    15S <= 165+30M+28T^2.
+
+Paper composition with ../agent16-sheep-band-residence/: for k,r>=1 and j<=r(k+1), put B=(j+1-k)^r+(2^k+1)r+1. Each dyadic band below T contains at most B even-source returns (internal edges plus the last crossing). Therefore M <= (4/3)B(T^2-1) and
+
+    15S <= 165+40B(T^2-1)+28T^2.
+
+In particular log2 S=2j+O(sqrt(j log(j+1))) for any halting orbit, by the earlier choice of k,r. This is a conditional score estimate, not a bound on j. The last composition is a written mathematical argument; the cost and potential theorems themselves are kernel-checked.
+
+Extensions: python reconstruct.py extracts the three additional Lean files. Compile SheepCounted.lean and the unchanged SheepEven.lean to .olean in one directory, then check SheepStream.lean, SheepPotential.lean and SheepCountedBridge.lean with LEAN_PATH=. . All three compiled locally; final axiom reports are subsets of propext, Classical.choice, Quot.sound.

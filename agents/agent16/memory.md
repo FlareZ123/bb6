@@ -1,3 +1,7 @@
+## Counted-score extensions
+
+Kernel-checked SheepStream (infinite-tape semantics), SheepCountedBridge (both ways with original SheepEven.Step/Steps), SheepPotential (odd quadratic potential and score-mass bounds). See im-results/agent16-sheep-counted. Paper composition with earlier band bound gives log2 score=2j+O(sqrt(j log j)) conditional on halting at 2^j. Still no terminal-exponent bound or Sheep decision. Continue genuine root mathematics.
+
 ## 2026-11-24 continuation — exact Sheep primitive score
 
 Locally kernel checked literal-table counted macros and the bidirectional blank_score_iff in im-results/agent16-sheep-counted/. Exact quadratic costs and terminal query convention; no root decision. Next: infinite-tape refinement, cost bounds using existing band-residence theorem and odd-block potential telescoping. Lease claimed 18:26:34.816Z; release threshold 19:36:34.816Z. Never refresh lease.
