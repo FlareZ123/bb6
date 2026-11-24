@@ -259,8 +259,12 @@ theorem carryLongPrefix_r1_left (k : Nat) (T : Int → Bool)
         have hle : h'-5 ≤ -3*((4*k+1:Nat):Int) := by
           rw [hthreshold']
           omega
+        have hnot' : ¬ (h'-5 < -3*(4*(k:Int)+1)-2) := by
+          simpa [Int.natCast_add, Int.natCast_mul] using hnot
+        have hle' : h'-5 ≤ -3*(4*(k:Int)+1) := by
+          simpa [Int.natCast_add, Int.natCast_mul] using hle
         have htarget : carryLeftOutputBit (4*k+1) T (h'-5) = true := by
-          simp [carryLeftOutputBit,Int.natCast_add,Int.natCast_mul,hnot,hle]
+          simp [carryLeftOutputBit, Int.natCast_add, Int.natCast_mul, hnot', hle']
         exact hT2.trans htarget.symm
       · by_cases hbridge4 : x = h'-4
         · subst x
@@ -290,8 +294,12 @@ theorem carryLongPrefix_r1_left (k : Nat) (T : Int → Bool)
           have hle : h'-4 ≤ -3*((4*k+1:Nat):Int) := by
             rw [hthreshold']
             omega
+          have hnot' : ¬ (h'-4 < -3*(4*(k:Int)+1)-2) := by
+            simpa [Int.natCast_add, Int.natCast_mul] using hnot
+          have hle' : h'-4 ≤ -3*(4*(k:Int)+1) := by
+            simpa [Int.natCast_add, Int.natCast_mul] using hle
           have htarget : carryLeftOutputBit (4*k+1) T (h'-4) = true := by
-            simp [carryLeftOutputBit,Int.natCast_add,Int.natCast_mul,hnot,hle]
+            simp [carryLeftOutputBit, Int.natCast_add, Int.natCast_mul, hnot', hle']
           exact hT2.trans htarget.symm
         · by_cases hbridge3 : x = h'-3
           · subst x
