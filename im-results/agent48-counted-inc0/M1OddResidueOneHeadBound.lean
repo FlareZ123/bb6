@@ -74,7 +74,7 @@ private theorem m1One_bridge_prefix_lower
       run tm2 j ⟨3,h,T⟩ = some (frameAt T h m1OneQ4Inside e) := by
     simpa [m1OddQ4BridgeStart] using hbridge
   rw [hbridge'] at hd
-  have hdeq : d = frameAt T h m1OneQ4Inside e :=
+  have hdeq : frameAt T h m1OneQ4Inside e = d :=
     Option.some.inj hd
   have hinside : m1OneQ4Inside e.head = true := by
     have hh := (List.all_eq_true.mp m1OneQ4Bridge_heads) j
@@ -83,7 +83,7 @@ private theorem m1One_bridge_prefix_lower
   have hlow : -7 ≤ e.head := by
     simp [m1OneQ4Inside] at hinside
     omega
-  rw [hdeq]
+  rw [← hdeq]
   simp [frameAt_head]
   omega
 
@@ -152,9 +152,9 @@ theorem m1OddResidueOne_q4_prefix_head_bound
       s1Config_right_cell 3 1 1 a 0 b h 0
   have hSweep := counted_left_sweep N T h hOn hright
   have hSweep' :
-      run tm2 (3*N) (s1Config 3 1 1 a 0 b h) =
+      run tm2 (3*N) (s0Config (markerWord 1 ++ (d0 ++ (binDec 3 1 ++ lh))) a 0 b h) =
         some (⟨3,hN,T1⟩ : Config) := by
-    simpa [s1Config,T,N,hN] using hSweep
+    simpa [s0Config,T,N,hN] using hSweep
   have hmatch0 := m1OneQ4Bridge_input_match 3 a b h (by omega)
   have hmatch : ∀ y, m1OneQ4Inside y = true →
       T1 (hN+y) = decide (y ∈ m1OddQ4BridgeStart.marked) := by
@@ -183,9 +183,13 @@ theorem m1OddResidueOne_q4_prefix_head_bound
       simp [m1OneQ4Inside,x]
       omega
     have hframe : T2 x = T1 x := by
-      simpa [T2,m1OneQ4CutTape] using
-        BB6Coverage.Agent6Q4Prefix.frameAt_tape_outside T1 hN m1OneQ4Inside
-          m1OddQ4BridgeEnd x houtside
+      have hframeOutside :
+          (BB6Coverage.Agent6Q4Prefix.frameAt T1 hN m1OneQ4Inside
+            m1OddQ4BridgeEnd).tape x = T1 x := by
+        exact BB6Coverage.Agent6Q4Prefix.frameAt_tape_outside
+          (T:=T1) (h:=hN) (inside:=m1OneQ4Inside)
+          (c:=m1OddQ4BridgeEnd) (x:=x) houtside
+      simpa [T2,m1OneQ4CutTape] using hframeOutside
     have hT1 : T1 x = true := by
       by_cases hx : x ≤ h
       · let j := 3*a-4-i
@@ -208,15 +212,15 @@ theorem m1OddResidueOne_q4_prefix_head_bound
         · rw [hx2]
           have hp := sweptLeft_preserves_right N T h (h+2) (by omega)
           have hsrc : T (h+2) = true := by
-            simpa [T,s1PhysicalRight_source,sideBit] using
-              s1Config_right_cell 3 1 1 a 0 b h 1
+            have hsrc0 := s1Config_right_cell 3 1 1 a 0 b h 1
+            convert hsrc0 using 1 <;> omega
           change sweptLeft N T h (h+2) = true
           rw [hp,hsrc]
         · rw [hx3]
           have hp := sweptLeft_preserves_right N T h (h+3) (by omega)
           have hsrc : T (h+3) = true := by
-            simpa [T,s1PhysicalRight_source,sideBit] using
-              s1Config_right_cell 3 1 1 a 0 b h 2
+            have hsrc0 := s1Config_right_cell 3 1 1 a 0 b h 2
+            convert hsrc0 using 1 <;> omega
           change sweptLeft N T h (h+3) = true
           rw [hp,hsrc]
     simpa [T2] using hframe.trans hT1
@@ -225,7 +229,7 @@ theorem m1OddResidueOne_q4_prefix_head_bound
   let p2 := p1+29
   by_cases hk1 : k < p1
   · have hd' : run tm2 k ⟨3,h,T⟩ = some d := by
-      simpa [s1Config,T] using hd
+      simpa [s0Config,T] using hd
     have hlow :=
       BB6Coverage.Agent42M0EvenSixHeadBound.counted_left_sweep_heads
         N T h hOn hright k
