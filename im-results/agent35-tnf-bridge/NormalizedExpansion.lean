@@ -41,7 +41,7 @@ theorem swapStatePerm_fix_below (m : Nat) (a b s : Fin 6)
     intro h
     have hv := congrArg Fin.val h
     omega
-  constructor <;> simp [swapStatePerm, hsa, hsb]
+  constructor <;> simp [swapStatePerm, swapFun, hsa, hsb]
 
 /-- State renaming that fixes the blank start preserves all-time nonhalting. -/
 theorem renameNeverHalts_iff (e : StatePerm) (m : Machine)
@@ -174,7 +174,7 @@ theorem tnf_expansion_cover
         have hsourceFixed : e.backward h.1 = h.1 :=
           (swapStatePerm_fix_below m a mv.next h.1 ha hb hsource).2
         have htarget : e.forward mv.next = a := by
-          simp [e, swapStatePerm, hneq, hneq.symm]
+          simp [e, swapStatePerm, swapFun, hneq, hneq.symm]
         have hcanonical : Cover (DecidedBelow B)
             (refine p h (some ⟨mv.write, mv.right, a⟩)) :=
           canonical mv.write mv.right a (by simp [a])
