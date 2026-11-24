@@ -5,7 +5,7 @@ on:
       target:
         description: 'Source closure to verify'
         type: choice
-        options: [legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage]
+        options: [legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot]
         default: legacy
 permissions:
   contents: read
@@ -110,5 +110,17 @@ jobs:
           lean im-results/agent13-weighted-first-one/QueueCoverageContract.lean | tee /tmp/queue-coverage-contract.log
           if grep -Eq 'sorryAx|native_decide' /tmp/queue-coverage-contract.log; then
             echo "Forbidden proof placeholder or native_decide found in queue-coverage contract" >&2
+            exit 1
+          fi
+
+      - name: Check complete authentic weighted TNF pilot
+        if: inputs.target == 'weighted-tnf-pilot'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent50-weighted-tnf-pilot/replay.py
+          python tools/lean_compile_closure.py --workdir /tmp/a50-tnf-pilot --jobs 8 im-results/agent50-weighted-tnf-pilot/TNFPilot.lean | tee /tmp/a50-tnf-pilot.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a50-tnf-pilot.log; then
+            echo "Forbidden proof placeholder or native_decide found in pilot closure" >&2
             exit 1
           fi
