@@ -20,6 +20,7 @@ open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent24ChampionTime
 open BB6Coverage.Agent8Rst1Prime
+open BB6Coverage.Agent8CountedReset
 
 /-- The source tail after markerWord 1 ++ d0 is one through the end of
 d1^L and the first two cells of lh. -/
@@ -28,6 +29,7 @@ theorem rst1Prime_source_tail_ones
     sideBit (markerWord 1 ++ d0 ++ binDec L 0 ++ lh) (5+j) = true := by
   have hmark : (markerWord 1).length = 3 := by decide
   have hd0 : d0.length = 3 := by decide
+  simp only [List.append_assoc]
   rw [sideBit_append]
   rw [hmark]
   have hnot1 : ¬ 5+j < 3 := by omega
@@ -82,9 +84,11 @@ theorem rst1Prime_secondSweep_preconditions
     · have hcases : i=0 ∨ i=1 := by omega
       rcases hcases with h0 | h1
       · subst i
-        simp [BB6Coverage.Agent8Rst1Prime.frameAt_tape,BB6Coverage.Agent8Rst1Prime.inside8,BB6Coverage.Agent8Rst1Prime.inWindow,BB6Coverage.Agent8Rst1Prime.bridge8End]
+        have hr : H - 2 - H = -2 := by omega
+        simp [BB6Coverage.Agent8Rst1Prime.frameAt_tape, hr,BB6Coverage.Agent8Rst1Prime.inside8,BB6Coverage.Agent8Rst1Prime.inWindow,BB6Coverage.Agent8Rst1Prime.bridge8End]
       · subst i
-        simp [BB6Coverage.Agent8Rst1Prime.frameAt_tape,BB6Coverage.Agent8Rst1Prime.inside8,BB6Coverage.Agent8Rst1Prime.inWindow,BB6Coverage.Agent8Rst1Prime.bridge8End]
+        have hr : H - 2 - (1 : Int) - H = -3 := by omega
+        simp [BB6Coverage.Agent8Rst1Prime.frameAt_tape, hr,BB6Coverage.Agent8Rst1Prime.inside8,BB6Coverage.Agent8Rst1Prime.inWindow,BB6Coverage.Agent8Rst1Prime.bridge8End]
     · let j := i-2
       have hj : j ≤ 3*L+2 := by omega
       have hpos : H-2-(i:Int) = H-4-(j:Int) := by omega
@@ -93,8 +97,9 @@ theorem rst1Prime_secondSweep_preconditions
         simp [BB6Coverage.Agent8Rst1Prime.inside8,BB6Coverage.Agent8Rst1Prime.inWindow,hrel]
         omega
       rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape]
-      simp only [hout]
+      simp only [hout, Bool.false_eq_true, if_false]
       rw [hpos]
+      dsimp [T]
       have hunchanged :
           sweptLeft (3*a+1) (s1Config L 0 1 a 0 b h).tape h
             (H-4-(j:Int)) =
@@ -107,7 +112,9 @@ theorem rst1Prime_secondSweep_preconditions
           H-4-(j:Int) = h-((3*a+1+(4+j):Int)) := by
         dsimp [H]
         omega
-      rw [hcoord,s1Config_left_after_d1pow]
+      have hcoord' : H-4-(j:Int) = h-((3*a+1:Int)+(↑(4+j):Int)) := by omega
+      rw [hcoord',s1Config_left_after_d1pow]
+      rw [show 4+j+1 = 5+j by omega]
       exact rst1Prime_source_tail_ones L j hj
   · rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape]
     have hrel : (H-1)-H = -1 := by omega
@@ -128,10 +135,22 @@ theorem rst1Prime_secondSweep_run
   have hpre := rst1Prime_secondSweep_preconditions L a b h
   have hrun := counted_left_sweep (3*L+5)
     (rst1PrimeAfterBridge8 L a b h).tape
-    (h-((3*a+1:Int))-2) hpre.1 hpre.2
+    (h-((3*a+1:Int))-2) hpre.1 (by
+      rw [show h-((3*a+1:Int))-2+1 = h-((3*a+1:Int))-1 by omega]
+      exact hpre.2)
   rw [run_add,hprefix]
   simp only [Option.bind_some]
-  simpa [rst1PrimeAfterBridge8,BB6Coverage.Agent8Rst1Prime.frameAt_state,BB6Coverage.Agent8Rst1Prime.frameAt_head,BB6Coverage.Agent8Rst1Prime.bridge8End] using hrun
+  have hcfg : BB6Coverage.Agent8Rst1Prime.frameAt
+      (sweptLeft (3*a+1) (s1Config L 0 1 a 0 b h).tape h)
+      (h-((3*a+1:Int))) inside8 bridge8End =
+      (⟨3, h-((3*a+1:Int))-2, (rst1PrimeAfterBridge8 L a b h).tape⟩ : Config) := by
+    apply BB6Coverage.Agent8Rst1Prime.config_ext
+    · simp [bridge8End]
+    · simp [bridge8End]
+      omega
+    · rfl
+  rw [hcfg]
+  exact hrun
 
 #print axioms rst1Prime_source_tail_ones
 #print axioms rst1PrimeAfterBridge8

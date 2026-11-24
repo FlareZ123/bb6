@@ -17,7 +17,11 @@ namespace BB6Coverage.Agent48CountedInc0
 open BB6Coverage
 open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent8CountedReset
-open BB6Coverage.Agent42ChampionTerminal
+open BB6Coverage.Agent42TerminalJoin
+open BB6Coverage.Agent48Champion
+open BB6ChampionArithmetic
+
+set_option autoImplicit false
 
 /-- Replace the terminal bridge's universal arbitrary-context Inc0
 assumption by the parity-complete S1 theorem at its actual champion context.

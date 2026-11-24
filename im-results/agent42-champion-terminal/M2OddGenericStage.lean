@@ -19,12 +19,14 @@ section but does not by itself prove the complete BB(6) itinerary.
 namespace BB6Coverage.Agent42M2OddGeneric
 
 open BB6Coverage
+open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent24Q4Endpoint
 open BB6Coverage.Agent48CountedInc0
 open BB6Coverage.Agent8CountedReset
 open BB6ChampionArithmetic
 
+set_option autoImplicit false
 set_option maxHeartbeats 3000000
 
 /-- Exact S1 drain of an all-ones binary counter, proved directly from
