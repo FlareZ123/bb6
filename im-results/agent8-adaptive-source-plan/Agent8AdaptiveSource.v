@@ -13,7 +13,7 @@ Inductive AdaptivePlan : Type :=
    or already held. Split partitions only the actual active list, keeping
    the held list exactly once. No equality of output order is presumed. *)
 Fixpoint adaptive_obligations
-    (f : TM -> DecideResult) (plan : AdaptivePlan) (q : SearchQueue) : list T :=
+    (f : TC62.TM.TM -> TC62.TM.DecideResult) (plan : AdaptivePlan) (q : SearchQueue) : list T :=
   match plan with
   | AP_stop => fst q ++ snd q
   | AP_advance fuel next =>
@@ -26,12 +26,12 @@ Fixpoint adaptive_obligations
 
 Section AdaptiveCoverage.
   Variable Safe : T -> Prop.
-  Variable f : TM -> DecideResult.
+  Variable f : TC62.TM.TM -> TC62.TM.DecideResult.
   Hypothesis Hlocal : forall x,
     match f (tm x) with
-    | Halt h => Forall Safe (expand' x h) -> Safe x
-    | NonHalt => Safe x
-    | Unknown => True
+    | TC62.TM.Halt h => Forall Safe (expand' x h) -> Safe x
+    | TC62.TM.NonHalt => Safe x
+    | TC62.TM.Unknown => True
     end.
 
   Theorem adaptive_plan_sound plan q :
@@ -71,9 +71,9 @@ End AdaptiveCoverage.
    independently scheduled job to run to MAXT. *)
 Theorem actual_source_adaptive_coverage (Safe : T -> Prop) (plan : AdaptivePlan) :
   (forall x, match decider (tm x) with
-    | Halt h => Forall Safe (expand' x h) -> Safe x
-    | NonHalt => Safe x
-    | Unknown => True
+    | TC62.TM.Halt h => Forall Safe (expand' x h) -> Safe x
+    | TC62.TM.NonHalt => Safe x
+    | TC62.TM.Unknown => True
     end) ->
   Forall Safe (adaptive_obligations decider plan q_0) ->
   Safe node0.

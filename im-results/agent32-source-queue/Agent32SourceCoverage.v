@@ -5,16 +5,16 @@ Import TNF_Node.
 
 Section ActualSourceCoverage.
   Variable Safe : T -> Prop.
-  Variable f : TM -> DecideResult.
+  Variable f : TC62.TM.TM -> TC62.TM.DecideResult.
 
   Definition safeQ (q : SearchQueue) :=
     Forall Safe (fst q) /\ Forall Safe (snd q).
 
   Hypothesis local_safe : forall x,
     match f (tm x) with
-    | Halt h => Forall Safe (expand' x h) -> Safe x
-    | NonHalt => Safe x
-    | Unknown => True
+    | TC62.TM.Halt h => Forall Safe (expand' x h) -> Safe x
+    | TC62.TM.NonHalt => Safe x
+    | TC62.TM.Unknown => True
     end.
 
   Lemma source_update_backwards q :
@@ -101,9 +101,9 @@ End ActualSourceCoverage.
    obligations are local backwards closure and residual certificates. *)
 Theorem actual_source_coverage (Safe : T -> Prop) :
   (forall x, match decider (tm x) with
-    | Halt h => Forall Safe (expand' x h) -> Safe x
-    | NonHalt => Safe x
-    | Unknown => True
+    | TC62.TM.Halt h => Forall Safe (expand' x h) -> Safe x
+    | TC62.TM.NonHalt => Safe x
+    | TC62.TM.Unknown => True
     end) ->
   (forall i, (i<129)%nat ->
     Forall Safe (snd (SearchQueue_upds decider (q_i (100*i) 100) MAXT))) ->

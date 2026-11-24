@@ -88,7 +88,7 @@ Proof.
   unfold expand' in Hy; rewrite E in Hy; cbn in Hy; contradiction.
 Qed.
 
-Lemma update_decreases (f : TM -> DecideResult) q q' :
+Lemma update_decreases (f : TC62.TM.TM -> TC62.TM.DecideResult) q q' :
   wf q ->
   SearchQueue_upd f q = inl q' ->
   wf q' /\ (mass (fst q') < mass (fst q))%N.
@@ -122,7 +122,7 @@ Qed.
 
 (* Binary positive iteration, with early exits.  If the result is still inl
    after p iterations then exactly p successful active updates occurred. *)
-Lemma pos_iter_decrease (f : TM -> DecideResult) p q q' :
+Lemma pos_iter_decrease (f : TC62.TM.TM -> TC62.TM.DecideResult) p q q' :
   wf q ->
   Pos_iter_until (SearchQueue_upd f) (inl q) p = inl q' ->
   wf q' /\ (mass (fst q') + N.pos p <= mass (fst q))%N.
@@ -146,7 +146,7 @@ Proof.
     split; [exact Hw'|lia].
 Qed.
 
-Lemma pos_iter_inr_empty (f : TM -> DecideResult) p q q' :
+Lemma pos_iter_inr_empty (f : TC62.TM.TM -> TC62.TM.DecideResult) p q q' :
   Pos_iter_until (SearchQueue_upd f) (inl q) p = inr q' ->
   fst q' = [].
 Proof.
