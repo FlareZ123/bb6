@@ -131,6 +131,39 @@ theorem positive_to_negative {j x y : Nat} (hj : 6≤j) (hy : Band j y)
     exact Or.inr (Or.inr (Or.inl ⟨h,(skip_negative h hy').2⟩))
   · exact Or.inr (Or.inr (Or.inr ⟨heq,hx,by rw [hx,special_negative]; omega⟩))
 
+
+/-- Exact Q-coordinate of a two-band skip.  The negative parent W and
+    positive target Q are not independent: 3W+2Q=3. -/
+theorem skip_exact {j x y : Nat} (h : RegFrom j x y) (hb : Band (j+2) y) :
+    3*(W j x)+2*(Q (j+2) y:Int)=3 := by
+  have hw:=w_regular_skip h
+  have hq:=q_eq hb
+  have hqI : (Q (j+2) y:Int)+2*(P (j+2):Int)
+      =2*(y:Int)+3*((j+2):Int)+12 := by exact_mod_cast hq
+  have hWQ : W (j+2) y+2*(Q (j+2) y:Int)
+      =4*(P (j+2):Int)-3 := by
+    unfold W
+    omega
+  have hp : P (j+2)=4*P j := by
+    rw [show j+2=(j+1)+1 by omega,p_succ,p_succ]
+    omega
+  have hpI : (P (j+2):Int)=4*(P j:Int) := by exact_mod_cast hp
+  omega
+
+/-- If the negative skip parent subsequently strips by 3^n to unit w,
+    the positive target has the exact coordinate 2Q=3^(n+1)w+3. -/
+theorem skip_reset_q {j x y n : Nat} {w : Int}
+    (h : RegFrom j x y) (hb : Band (j+2) y)
+    (hw : W j x=-(3^n:Int)*w) :
+    2*(Q (j+2) y:Int)=(3^(n+1):Int)*w+3 := by
+  have hq:=skip_exact h hb
+  rw [hw] at hq
+  rw [Int.pow_succ]
+  grind
+
+#print axioms skip_exact
+#print axioms skip_reset_q
+
 #print axioms positive_safe_parent
 #print axioms positive_to_negative
 #print axioms skip_negative
