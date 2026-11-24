@@ -36,10 +36,10 @@ theorem rst1PrimeAfterBridge9_eq_source_right
       H0 inside9 bridge9End).tape x =
       (s1Config L 0 1 a 0 b h).tape x
   have hrel9 : x-H0 = x-(h-((3*a+1:Int))) := by
-    dsimp [H0]
+    try dsimp [H0]
   have hout9 : inside9 (x-H0) = false := by
     simp [inside9,inWindow,hrel9]
-    dsimp [H0]
+    try dsimp [H0]
     omega
   rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape]
   simp only [hout9]
@@ -47,7 +47,7 @@ theorem rst1PrimeAfterBridge9_eq_source_right
       sweptRight (L+1) (rst1PrimeAfterBridge20 L a b h).tape H3 x =
         (rst1PrimeAfterBridge20 L a b h).tape x := by
     apply rst1Prime_sweptRight_preserves_after
-    dsimp [H0,H1,H2,H3]
+    try dsimp [H0,H1,H2,H3]
     omega
   rw [hafter3]
   change
@@ -57,7 +57,7 @@ theorem rst1PrimeAfterBridge9_eq_source_right
       (s1Config L 0 1 a 0 b h).tape x
   have hout20 : inside20 (x-H2) = false := by
     simp [inside20,inWindow]
-    dsimp [H0,H1,H2]
+    try dsimp [H0,H1,H2]
     omega
   rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape]
   simp only [hout20]
@@ -65,7 +65,7 @@ theorem rst1PrimeAfterBridge9_eq_source_right
       sweptLeft (3*L+5) (rst1PrimeAfterBridge8 L a b h).tape H1 x =
         (rst1PrimeAfterBridge8 L a b h).tape x := by
     apply sweptLeft_eq_of_gt
-    dsimp [H0,H1]
+    try dsimp [H0,H1]
     omega
   rw [hleft2]
   change
@@ -75,7 +75,7 @@ theorem rst1PrimeAfterBridge9_eq_source_right
       (s1Config L 0 1 a 0 b h).tape x
   have hout8 : inside8 (x-H0) = false := by
     simp [inside8,inWindow]
-    dsimp [H0]
+    try dsimp [H0]
     omega
   rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape]
   simp only [hout8]
@@ -131,28 +131,28 @@ theorem rst1Prime_bridge6_window_after_rightSweep
     have hlast := rst1Prime_sweptRight_lastBlock a
       (rst1PrimeAfterBridge9 L a b h).tape Hs
     have hcoord : H6+(-1:Int) = Hs+3*(a:Int)+2 := by
-      dsimp [H6,Hs,H0]
+      try dsimp [H6,Hs,H0]
       omega
     rw [hcoord]
     simpa [bridge6Start] using hlast.2.2
   · subst x
     have hafter := rst1Prime_sweptRight_preserves_after
       (a+1) (rst1PrimeAfterBridge9 L a b h).tape Hs H6 (by
-        dsimp [H6,Hs,H0]
+        try dsimp [H6,Hs,H0]
         omega)
-    rw [hafter]
+    rw [Int.add_zero,hafter]
     have hsource := rst1PrimeAfterBridge9_eq_source_right
       L a b h H6 (by dsimp [H6,Hs,H0]; omega)
     rw [hsource]
     have hcoord : H6 = h+5 := by dsimp [H6,Hs,H0]; omega
-    rw [hcoord]
+    rw [hcoord,show h+5=h+1+((4:Nat):Int) by omega]
     have hcell := s1Config_right_cell L 0 1 a 0 b h 4
     simpa [bridge6Start,s1PhysicalRight,s0PhysicalRight,
-      s0RightFacing,sideBit] using hcell
+      s0RightFacing,sideBit,d1pow,d1] using hcell
   · subst x
     have hafter := rst1Prime_sweptRight_preserves_after
       (a+1) (rst1PrimeAfterBridge9 L a b h).tape Hs (H6+1) (by
-        dsimp [H6,Hs,H0]
+        try dsimp [H6,Hs,H0]
         omega)
     rw [hafter]
     have hsource := rst1PrimeAfterBridge9_eq_source_right
@@ -162,11 +162,11 @@ theorem rst1Prime_bridge6_window_after_rightSweep
     rw [hcoord]
     have hcell := s1Config_right_cell L 0 1 a 0 b h 5
     simpa [bridge6Start,s1PhysicalRight,s0PhysicalRight,
-      s0RightFacing,sideBit] using hcell
+      s0RightFacing,sideBit,d1pow,d1] using hcell
   · subst x
     have hafter := rst1Prime_sweptRight_preserves_after
       (a+1) (rst1PrimeAfterBridge9 L a b h).tape Hs (H6+2) (by
-        dsimp [H6,Hs,H0]
+        try dsimp [H6,Hs,H0]
         omega)
     rw [hafter]
     have hsource := rst1PrimeAfterBridge9_eq_source_right
@@ -176,11 +176,11 @@ theorem rst1Prime_bridge6_window_after_rightSweep
     rw [hcoord]
     have hcell := s1Config_right_cell L 0 1 a 0 b h 6
     simpa [bridge6Start,s1PhysicalRight,s0PhysicalRight,
-      s0RightFacing,sideBit] using hcell
+      s0RightFacing,sideBit,d1pow,d1] using hcell
   · subst x
     have hafter := rst1Prime_sweptRight_preserves_after
       (a+1) (rst1PrimeAfterBridge9 L a b h).tape Hs (H6+3) (by
-        dsimp [H6,Hs,H0]
+        try dsimp [H6,Hs,H0]
         omega)
     rw [hafter]
     have hsource := rst1PrimeAfterBridge9_eq_source_right
@@ -190,7 +190,7 @@ theorem rst1Prime_bridge6_window_after_rightSweep
     rw [hcoord]
     have hcell := s1Config_right_cell L 0 1 a 0 b h 7
     simpa [bridge6Start,s1PhysicalRight,s0PhysicalRight,
-      s0RightFacing,sideBit] using hcell
+      s0RightFacing,sideBit,d1pow,d1] using hcell
 
 /-- Full configuration after bridge6. -/
 def rst1PrimeAfterBridge6
@@ -206,7 +206,7 @@ theorem rst1Prime_bridge6_after_rightSweep
       (9*a+3+8+3*(3*L+5)+20+3*(L+1)+9+3*(a+1)+6)
       (s1Config L 0 1 a 0 b h) =
       some (rst1PrimeAfterBridge6 L a b h) := by
-  rw [run_add,rst1Prime_rightSweep_after_bridge9_run_source]
+  rw [run_append,rst1Prime_rightSweep_after_bridge9_run_source]
   simp only [Option.bind_some]
   exact bridge6_at (rst1PrimeAfterRightSweepA L a b h).tape
     ((h-((3*a+1:Int))+3)+3*((a+1):Int))
@@ -226,24 +226,24 @@ theorem rst1PrimeAfterBridge6_local_right
     (rst1PrimeAfterBridge6 L a b h).tape (h+8) = false := by
   let H6 : Int := (h-((3*a+1:Int))+3)+3*((a+1):Int)
   have hH6 : H6 = h+5 := by
-    dsimp [H6]
+    try dsimp [H6]
     omega
   constructor
   · change (BB6Coverage.Agent8Rst1Prime.frameAt (rst1PrimeAfterRightSweepA L a b h).tape H6
       inside6 bridge6End).tape (h+6) = true
     rw [hH6]
-    rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape]
+    rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape,show h+6-(h+5)=1 by omega]
     simp [inside6,inWindow,bridge6End]
   constructor
   · change (BB6Coverage.Agent8Rst1Prime.frameAt (rst1PrimeAfterRightSweepA L a b h).tape H6
       inside6 bridge6End).tape (h+7) = false
     rw [hH6]
-    rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape]
+    rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape,show h+7-(h+5)=2 by omega]
     simp [inside6,inWindow,bridge6End]
   · change (BB6Coverage.Agent8Rst1Prime.frameAt (rst1PrimeAfterRightSweepA L a b h).tape H6
       inside6 bridge6End).tape (h+8) = false
     rw [hH6]
-    rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape]
+    rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape,show h+8-(h+5)=3 by omega]
     simp [inside6,inWindow,bridge6End]
 
 /-- Beyond bridge6's window and the fourth sweep's endpoint, the tape
@@ -261,7 +261,7 @@ theorem rst1PrimeAfterBridge6_eq_source_right
       (s1Config L 0 1 a 0 b h).tape x
   have hout6 : inside6 (x-H6) = false := by
     simp [inside6,inWindow]
-    dsimp [Hs,H6]
+    try dsimp [Hs,H6]
     omega
   rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape]
   simp only [hout6]
@@ -269,7 +269,7 @@ theorem rst1PrimeAfterBridge6_eq_source_right
       sweptRight (a+1) (rst1PrimeAfterBridge9 L a b h).tape Hs x =
         (rst1PrimeAfterBridge9 L a b h).tape x := by
     apply rst1Prime_sweptRight_preserves_after
-    dsimp [Hs,H6]
+    try dsimp [Hs,H6]
     omega
   rw [hafterA]
   exact rst1PrimeAfterBridge9_eq_source_right L a b h x (by omega)
@@ -281,7 +281,7 @@ theorem rst1Prime_s0RightFacing_tail_true
   change sideBit ([false,true,true,true,false,false] ++ d1pow (b+1)) i = true
   rw [sideBit_append_right _ _ _ (by simp; omega)]
   have hidx : i-6 < 3*(b+1) := by omega
-  exact sideBit_d1pow_true (b+1) (i-6) hidx
+  exact Agent6Q4Prefix.sideBit_d1pow_true (b+1) (i-6) hidx
 
 /-- Cells beyond the complete S0 right-facing source word are blank. -/
 theorem rst1Prime_s0RightFacing_tail_false
@@ -334,8 +334,10 @@ theorem rst1Prime_rightSweep_preconditions_after_bridge6
   have e0 : h+9+3*(i:Int) = h+1+((8+3*i:Int)) := by omega
   have e1 : h+9+3*(i:Int)+1 = h+1+((9+3*i:Int)) := by omega
   have e2 : h+9+3*(i:Int)+2 = h+1+((10+3*i:Int)) := by omega
-  rw [e0,e1,e2]
-  exact ⟨h0,h1,h2⟩
+  refine ⟨?_,?_,?_⟩
+  · rw [show h+9+3*(i:Int)=h+1+((8+3*i:Nat):Int) by omega]; exact h0
+  · rw [show h+9+3*(i:Int)+1=h+1+((9+3*i:Nat):Int) by omega]; exact h1
+  · rw [show h+9+3*(i:Int)+2=h+1+((10+3*i:Nat):Int) by omega]; exact h2
 
 /-- Full configuration after draining the final b right-counter blocks. -/
 def rst1PrimeAfterRightSweepB
@@ -351,15 +353,21 @@ theorem rst1Prime_rightSweep_after_bridge6_run
       (9*a+3+8+3*(3*L+5)+20+3*(L+1)+9+3*(a+1)+6+3*b)
       (s1Config L 0 1 a 0 b h) =
       some (rst1PrimeAfterRightSweepB L a b h) := by
-  rw [run_add,rst1Prime_bridge6_after_rightSweep]
+  rw [run_append,rst1Prime_bridge6_after_rightSweep]
   simp only [Option.bind_some]
   have hhead :
       ((h-((3*a+1:Int))+3)+3*((a+1):Int))+bridge6End.head = h+9 := by
     simp [bridge6End]
     omega
-  simpa [rst1PrimeAfterBridge6,BB6Coverage.Agent8Rst1Prime.frameAt,bridge6End,hhead] using
-    counted_right_sweep b (rst1PrimeAfterBridge6 L a b h).tape (h+9)
+  have heq : rst1PrimeAfterBridge6 L a b h = ⟨3,h+9,(rst1PrimeAfterBridge6 L a b h).tape⟩ := by
+    apply BB6Coverage.Agent8Rst1Prime.config_ext
+    · simp [rst1PrimeAfterBridge6,bridge6End]
+    · simp [rst1PrimeAfterBridge6,bridge6End] <;> omega
+    · rfl
+  have hrun := counted_right_sweep b (rst1PrimeAfterBridge6 L a b h).tape (h+9)
       (rst1Prime_rightSweep_preconditions_after_bridge6 L a b h)
+  rw [← heq] at hrun
+  exact hrun
 
 /-- The bridge30 input window after the final right sweep has marked
 offsets exactly -3 and 0. -/
@@ -385,7 +393,7 @@ theorem rst1Prime_bridge30_window_after_finalRightSweep
     by_cases hb : b=0
     · subst b
       have hcell := (rst1PrimeAfterBridge6_local_right L a 0 h).1
-      have hcoord : h+9+3*(0:Int)+(-3:Int) = h+6 := by omega
+      have hcoord : h+9+3*((0:Nat):Int)+(-3:Int) = h+6 := by omega
       rw [hcoord]
       simpa [bridge30Start,sweptRight] using hcell
     · obtain ⟨n,rfl⟩ := Nat.exists_eq_succ_of_ne_zero hb
@@ -394,41 +402,41 @@ theorem rst1Prime_bridge30_window_after_finalRightSweep
       have hlast := rst1Prime_sweptRight_lastBlock n
         (rst1PrimeAfterBridge6 L a (n+1) h).tape (h+9)
       have hcoord :
-          h+9+3*((n+1):Int)+(-3:Int) = h+9+3*(n:Int) := by omega
+          h+9+3*((n+1:Nat):Int)+(-3:Int) = h+9+3*(n:Int) := by omega
       rw [hcoord,hlast.1,hfirst]
       simp [bridge30Start]
   · subst x
     by_cases hb : b=0
     · subst b
       have hcell := (rst1PrimeAfterBridge6_local_right L a 0 h).2.1
-      have hcoord : h+9+3*(0:Int)+(-2:Int) = h+7 := by omega
+      have hcoord : h+9+3*((0:Nat):Int)+(-2:Int) = h+7 := by omega
       rw [hcoord]
       simpa [bridge30Start,sweptRight] using hcell
     · obtain ⟨n,rfl⟩ := Nat.exists_eq_succ_of_ne_zero hb
       have hlast := rst1Prime_sweptRight_lastBlock n
         (rst1PrimeAfterBridge6 L a (n+1) h).tape (h+9)
       have hcoord :
-          h+9+3*((n+1):Int)+(-2:Int) = h+9+3*(n:Int)+1 := by omega
+          h+9+3*((n+1:Nat):Int)+(-2:Int) = h+9+3*(n:Int)+1 := by omega
       rw [hcoord]
       simpa [bridge30Start] using hlast.2.1
   · subst x
     by_cases hb : b=0
     · subst b
       have hcell := (rst1PrimeAfterBridge6_local_right L a 0 h).2.2
-      have hcoord : h+9+3*(0:Int)+(-1:Int) = h+8 := by omega
+      have hcoord : h+9+3*((0:Nat):Int)+(-1:Int) = h+8 := by omega
       rw [hcoord]
       simpa [bridge30Start,sweptRight] using hcell
     · obtain ⟨n,rfl⟩ := Nat.exists_eq_succ_of_ne_zero hb
       have hlast := rst1Prime_sweptRight_lastBlock n
         (rst1PrimeAfterBridge6 L a (n+1) h).tape (h+9)
       have hcoord :
-          h+9+3*((n+1):Int)+(-1:Int) = h+9+3*(n:Int)+2 := by omega
+          h+9+3*((n+1:Nat):Int)+(-1:Int) = h+9+3*(n:Int)+2 := by omega
       rw [hcoord]
       simpa [bridge30Start] using hlast.2.2
   · subst x
     have hafter := rst1Prime_sweptRight_preserves_after
       b (rst1PrimeAfterBridge6 L a b h).tape (h+9) (h+9+3*(b:Int)) (by omega)
-    rw [hafter]
+    rw [Int.add_zero,hafter]
     have hsource := rst1PrimeAfterBridge6_source_bit_true L a b h
       (8+3*b) (by omega) (by omega)
     have hcoord : h+9+3*(b:Int) = h+1+((8+3*b:Int)) := by omega
@@ -498,7 +506,7 @@ theorem rst1Prime_bridge30_after_finalRightSweep
       (9*a+3+8+3*(3*L+5)+20+3*(L+1)+9+3*(a+1)+6+3*b+30)
       (s1Config L 0 1 a 0 b h) =
       some (rst1PrimeAfterBridge30 L a b h) := by
-  rw [run_add,rst1Prime_rightSweep_after_bridge6_run]
+  rw [run_append,rst1Prime_rightSweep_after_bridge6_run]
   simp only [Option.bind_some]
   exact bridge30_at (rst1PrimeAfterRightSweepB L a b h).tape
     (h+9+3*(b:Int))
@@ -530,6 +538,7 @@ theorem rst1PrimeAfterBridge30_rightFacing
   let H7 : Int := h+9
   let H8 : Int := H7+3*(b:Int)
   let Hf : Int := H8-4
+  rw [show h+5+3*(b:Int)=Hf by dsimp [Hf,H8,H7]; omega]
   change (BB6Coverage.Agent8Rst1Prime.frameAt
     (sweptRight b (rst1PrimeAfterBridge6 L a b h).tape H7)
     H8 inside30 bridge30End).tape (Hf+1+(i:Int)) =
@@ -539,68 +548,78 @@ theorem rst1PrimeAfterBridge30_rightFacing
       i=0 ∨ i=1 ∨ i=2 ∨ i=3 ∨ i=4 ∨ i=5 ∨ i=6 ∨ i=7 ∨ i=8 := by omega
     rcases hcases with hi0 | hi1 | hi2 | hi3 | hi4 | hi5 | hi6 | hi7 | hi8
     · subst i
-      have hcoord : Hf+1+(0:Int) = H8+(-3:Int) := by
-        dsimp [Hf,H8,H7]
+      have hcoord : Hf+1+((0:Nat):Int) = H8+(-3:Int) := by
+        try dsimp [Hf,H8,H7]
         omega
       rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape,hcoord]
-      simp [inside30,inWindow,bridge30End,s0RightFacing,d1pow,sideBit]
+      rw [show H8+(-3:Int)-H8=-3 by omega]
+      simp [inside30,inWindow,bridge30End,s0RightFacing,d1pow,d1,sideBit]
     · subst i
-      have hcoord : Hf+1+(1:Int) = H8+(-2:Int) := by
-        dsimp [Hf,H8,H7]
+      have hcoord : Hf+1+((1:Nat):Int) = H8+(-2:Int) := by
+        try dsimp [Hf,H8,H7]
         omega
       rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape,hcoord]
-      simp [inside30,inWindow,bridge30End,s0RightFacing,d1pow,sideBit]
+      rw [show H8+(-2:Int)-H8=-2 by omega]
+      simp [inside30,inWindow,bridge30End,s0RightFacing,d1pow,d1,sideBit]
     · subst i
-      have hcoord : Hf+1+(2:Int) = H8+(-1:Int) := by
-        dsimp [Hf,H8,H7]
+      have hcoord : Hf+1+((2:Nat):Int) = H8+(-1:Int) := by
+        try dsimp [Hf,H8,H7]
         omega
       rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape,hcoord]
-      simp [inside30,inWindow,bridge30End,s0RightFacing,d1pow,sideBit]
+      rw [show H8+(-1:Int)-H8=-1 by omega]
+      simp [inside30,inWindow,bridge30End,s0RightFacing,d1pow,d1,sideBit]
     · subst i
-      have hcoord : Hf+1+(3:Int) = H8+(0:Int) := by
-        dsimp [Hf,H8,H7]
+      have hcoord : Hf+1+((3:Nat):Int) = H8+(0:Int) := by
+        try dsimp [Hf,H8,H7]
         omega
       rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape,hcoord]
-      simp [inside30,inWindow,bridge30End,s0RightFacing,d1pow,sideBit]
+      rw [show H8+(0:Int)-H8=0 by omega]
+      simp [inside30,inWindow,bridge30End,s0RightFacing,d1pow,d1,sideBit]
     · subst i
-      have hcoord : Hf+1+(4:Int) = H8+1 := by
-        dsimp [Hf,H8,H7]
+      have hcoord : Hf+1+((4:Nat):Int) = H8+1 := by
+        try dsimp [Hf,H8,H7]
         omega
       rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape,hcoord]
-      simp [inside30,inWindow,bridge30End,s0RightFacing,d1pow,sideBit]
+      rw [show H8+1-H8=1 by omega]
+      simp [inside30,inWindow,bridge30End,s0RightFacing,d1pow,d1,sideBit]
     · subst i
-      have hcoord : Hf+1+(5:Int) = H8+2 := by
-        dsimp [Hf,H8,H7]
+      have hcoord : Hf+1+((5:Nat):Int) = H8+2 := by
+        try dsimp [Hf,H8,H7]
         omega
       rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape,hcoord]
-      simp [inside30,inWindow,bridge30End,s0RightFacing,d1pow,sideBit]
+      rw [show H8+2-H8=2 by omega]
+      simp [inside30,inWindow,bridge30End,s0RightFacing,d1pow,d1,sideBit]
     · subst i
-      have hcoord : Hf+1+(6:Int) = H8+3 := by
-        dsimp [Hf,H8,H7]
+      have hcoord : Hf+1+((6:Nat):Int) = H8+3 := by
+        try dsimp [Hf,H8,H7]
         omega
       rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape,hcoord]
-      simp [inside30,inWindow,bridge30End,s0RightFacing,d1pow,sideBit]
+      rw [show H8+3-H8=3 by omega]
+      simp [inside30,inWindow,bridge30End,s0RightFacing,d1pow,d1,sideBit]
     · subst i
-      have hcoord : Hf+1+(7:Int) = H8+4 := by
-        dsimp [Hf,H8,H7]
+      have hcoord : Hf+1+((7:Nat):Int) = H8+4 := by
+        try dsimp [Hf,H8,H7]
         omega
       rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape,hcoord]
-      simp [inside30,inWindow,bridge30End,s0RightFacing,d1pow,sideBit]
+      rw [show H8+4-H8=4 by omega]
+      simp [inside30,inWindow,bridge30End,s0RightFacing,d1pow,d1,sideBit]
     · subst i
-      have hcoord : Hf+1+(8:Int) = H8+5 := by
-        dsimp [Hf,H8,H7]
+      have hcoord : Hf+1+((8:Nat):Int) = H8+5 := by
+        try dsimp [Hf,H8,H7]
         omega
       rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape,hcoord]
-      simp [inside30,inWindow,bridge30End,s0RightFacing,d1pow,sideBit]
+      rw [show H8+5-H8=5 by omega]
+      simp [inside30,inWindow,bridge30End,s0RightFacing,d1pow,d1,sideBit]
   · have hcoord :
       Hf+1+(i:Int) = H8 + ((i:Int)-3) := by
-        dsimp [Hf]
+        try dsimp [Hf]
         omega
     have hout : inside30 ((i:Int)-3) = false := by
       simp [inside30,inWindow]
       omega
     rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape,hcoord]
-    simp only [hout]
+    rw [show H8+((i:Int)-3)-H8=(i:Int)-3 by omega]
+    simp only [hout,Bool.false_eq_true,ite_false]
     have hafter := rst1Prime_sweptRight_preserves_after
       b (rst1PrimeAfterBridge6 L a b h).tape H7
       (H8+((i:Int)-3)) (by dsimp [H7,H8]; omega)
@@ -608,11 +627,13 @@ theorem rst1PrimeAfterBridge30_rightFacing
     have hsource := rst1PrimeAfterBridge6_source_bit_false L a b h
       (5+3*b+i) (by omega)
     have hsourceCoord :
-      H8+((i:Int)-3) = h+1+((5+3*b+i:Int)) := by
-        dsimp [H7,H8]
+      H8+((i:Int)-3) = h+1+((5+3*b+i:Nat):Int) := by
+        try dsimp [H7,H8]
         omega
     rw [hsourceCoord]
-    simpa [s0RightFacing,d1pow,sideBit] using hsource
+    rw [hsource]
+    symm
+    exact rst1Prime_s0RightFacing_tail_false 0 i (by omega)
 
 #print axioms rst1PrimeAfterBridge30_head
 #print axioms rst1PrimeAfterBridge30_rightFacing
@@ -639,7 +660,7 @@ theorem rst1PrimeAfterBridge30_eq_afterBridge20_left
       (rst1PrimeAfterBridge20 L a b h).tape x
   have hout30 : inside30 (x-H8) = false := by
     simp [inside30,inWindow]
-    dsimp [H0,H1,H2,H3,Hs,H6,H8]
+    try dsimp [H0,H1,H2,H3,Hs,H6,H8]
     omega
   rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape]
   simp only [hout30]
@@ -647,7 +668,7 @@ theorem rst1PrimeAfterBridge30_eq_afterBridge20_left
       sweptRight b (rst1PrimeAfterBridge6 L a b h).tape (h+9) x =
         (rst1PrimeAfterBridge6 L a b h).tape x := by
     apply rst1Prime_sweptRight_preserves_left
-    dsimp [H0,H1,H2,H3,Hs,H6,H8]
+    try dsimp [H0,H1,H2,H3,Hs,H6,H8]
     omega
   rw [hleftB]
   change
@@ -657,7 +678,7 @@ theorem rst1PrimeAfterBridge30_eq_afterBridge20_left
       (rst1PrimeAfterBridge20 L a b h).tape x
   have hout6 : inside6 (x-H6) = false := by
     simp [inside6,inWindow]
-    dsimp [H0,H1,H2,H3,Hs,H6,H8]
+    try dsimp [H0,H1,H2,H3,Hs,H6,H8]
     omega
   rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape]
   simp only [hout6]
@@ -665,7 +686,7 @@ theorem rst1PrimeAfterBridge30_eq_afterBridge20_left
       sweptRight (a+1) (rst1PrimeAfterBridge9 L a b h).tape Hs x =
         (rst1PrimeAfterBridge9 L a b h).tape x := by
     apply rst1Prime_sweptRight_preserves_left
-    dsimp [H0,H1,H2,H3,Hs,H6,H8]
+    try dsimp [H0,H1,H2,H3,Hs,H6,H8]
     omega
   rw [hleftA]
   change
@@ -675,12 +696,12 @@ theorem rst1PrimeAfterBridge30_eq_afterBridge20_left
       (rst1PrimeAfterBridge20 L a b h).tape x
   have hout9 : inside9 (x-H0) = false := by
     simp [inside9,inWindow]
-    dsimp [H0,H1,H2,H3,Hs,H6,H8]
+    try dsimp [H0,H1,H2,H3,Hs,H6,H8]
     omega
   rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape]
   simp only [hout9]
   apply rst1Prime_sweptRight_preserves_left
-  dsimp [H0,H1,H2,H3,Hs,H6,H8]
+  try dsimp [H0,H1,H2,H3,Hs,H6,H8]
   omega
 
 /-- The six-cell left-hand source tail supplied by bridge20 survives
@@ -694,7 +715,12 @@ theorem rst1PrimeAfterBridge30_left_tail
   have heq := rst1PrimeAfterBridge30_eq_afterBridge20_left
     L a b h (H2-(i:Int)) (by dsimp [H2]; omega)
   rw [heq]
-  simpa [H2] using rst1PrimeAfterBridge20_left_cell L a b h i hi
+  change (BB6Coverage.Agent8Rst1Prime.frameAt
+    (sweptLeft (3*L+5) (rst1PrimeAfterBridge8 L a b h).tape (h-((3*a+1:Int))-2))
+    H2 inside20 bridge20End).tape (H2-(i:Int)) = sideBit lh i
+  rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape,show H2-(i:Int)-H2=-(i:Int) by omega]
+  have hic : i=0 ∨ i=1 ∨ i=2 ∨ i=3 ∨ i=4 ∨ i=5 := by omega
+  rcases hic with rfl|rfl|rfl|rfl|rfl|rfl <;> simp [inside20,inWindow,bridge20End,lh,sideBit]
 
 /-- The tape is blank strictly beyond the six-cell left source tail. -/
 theorem rst1PrimeAfterBridge30_left_blank
@@ -703,7 +729,29 @@ theorem rst1PrimeAfterBridge30_left_blank
     (rst1PrimeAfterBridge30 L a b h).tape x = false := by
   have heq := rst1PrimeAfterBridge30_eq_afterBridge20_left L a b h x (by omega)
   rw [heq]
-  exact rst1PrimeAfterBridge20_left_blank L a b h x (by omega)
+  let H0 : Int := h-((3*a+1:Int))
+  let H1 : Int := H0-2
+  let H2 : Int := H1-((3*L+5:Int))
+  change (BB6Coverage.Agent8Rst1Prime.frameAt
+    (sweptLeft (3*L+5) (rst1PrimeAfterBridge8 L a b h).tape H1)
+    H2 inside20 bridge20End).tape x = false
+  rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape]
+  have hout20 : inside20 (x-H2) = false := by simp [inside20,inWindow]; dsimp [H2,H1,H0]; omega
+  simp only [hout20,Bool.false_eq_true,if_false]
+  rw [sweptLeft_eq_of_le _ _ _ _ (by dsimp [H1,H0,H2]; omega)]
+  change (BB6Coverage.Agent8Rst1Prime.frameAt
+    (sweptLeft (3*a+1) (s1Config L 0 1 a 0 b h).tape h)
+    H0 inside8 bridge8End).tape x = false
+  rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape]
+  have hout8 : inside8 (x-H0) = false := by simp [inside8,inWindow]; dsimp [H0]; omega
+  simp only [hout8,Bool.false_eq_true,if_false]
+  rw [sweptLeft_eq_of_le _ _ _ _ (by omega)]
+  let i : Nat := (h-x).toNat
+  have hcast : (i:Int)=h-x := Int.toNat_of_nonneg (by omega)
+  rw [show x=h-(i:Int) by omega,s1Config_left_cell]
+  apply sideBit_ge_length
+  simp [s1LeftFacing,binDec_zero,d1pow_length,markerWord,d0,lh]
+  omega
 
 #print axioms rst1PrimeAfterBridge30_eq_afterBridge20_left
 #print axioms rst1PrimeAfterBridge30_left_tail
@@ -777,7 +825,7 @@ theorem rst1PrimeAfterBridge30_eq_afterThirdRightSweep_left
       sweptRight (L+1) (rst1PrimeAfterBridge20 L a b h).tape H3 x
   have hout30 : inside30 (x-H8) = false := by
     simp [inside30,inWindow]
-    dsimp [H0,H2,H3,Hs,H6,H8]
+    try dsimp [H0,H2,H3,Hs,H6,H8]
     omega
   rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape]
   simp only [hout30]
@@ -785,7 +833,7 @@ theorem rst1PrimeAfterBridge30_eq_afterThirdRightSweep_left
       sweptRight b (rst1PrimeAfterBridge6 L a b h).tape (h+9) x =
         (rst1PrimeAfterBridge6 L a b h).tape x := by
     apply rst1Prime_sweptRight_preserves_left
-    dsimp [H0,H2,H3,Hs,H6,H8]
+    try dsimp [H0,H2,H3,Hs,H6,H8]
     omega
   rw [hleftB]
   change
@@ -795,7 +843,7 @@ theorem rst1PrimeAfterBridge30_eq_afterThirdRightSweep_left
       sweptRight (L+1) (rst1PrimeAfterBridge20 L a b h).tape H3 x
   have hout6 : inside6 (x-H6) = false := by
     simp [inside6,inWindow]
-    dsimp [H0,H2,H3,Hs,H6,H8]
+    try dsimp [H0,H2,H3,Hs,H6,H8]
     omega
   rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape]
   simp only [hout6]
@@ -803,7 +851,7 @@ theorem rst1PrimeAfterBridge30_eq_afterThirdRightSweep_left
       sweptRight (a+1) (rst1PrimeAfterBridge9 L a b h).tape Hs x =
         (rst1PrimeAfterBridge9 L a b h).tape x := by
     apply rst1Prime_sweptRight_preserves_left
-    dsimp [H0,H2,H3,Hs,H6,H8]
+    try dsimp [H0,H2,H3,Hs,H6,H8]
     omega
   rw [hleftA]
   change
@@ -813,7 +861,7 @@ theorem rst1PrimeAfterBridge30_eq_afterThirdRightSweep_left
       sweptRight (L+1) (rst1PrimeAfterBridge20 L a b h).tape H3 x
   have hout9 : inside9 (x-H0) = false := by
     simp [inside9,inWindow]
-    dsimp [H0,H2,H3,Hs,H6,H8]
+    try dsimp [H0,H2,H3,Hs,H6,H8]
     omega
   rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape]
   simp [hout9]
@@ -848,15 +896,15 @@ theorem rst1PrimeAfterBridge6_local_right_d0
   have hcases : r=0 ∨ r=1 ∨ r=2 := by omega
   rcases hcases with hr0 | hr1 | hr2
   · subst r
-    have hcoord : h+8-(0:Int)=h+8 := by omega
+    have hcoord : h+8-((0:Nat):Int)=h+8 := by omega
     rw [hcoord]
     simpa [d0,sideBit] using hlocal.2.2
   · subst r
-    have hcoord : h+8-(1:Int)=h+7 := by omega
+    have hcoord : h+8-((1:Nat):Int)=h+7 := by omega
     rw [hcoord]
     simpa [d0,sideBit] using hlocal.2.1
   · subst r
-    have hcoord : h+8-(2:Int)=h+6 := by omega
+    have hcoord : h+8-((2:Nat):Int)=h+6 := by omega
     rw [hcoord]
     simpa [d0,sideBit] using hlocal.1
 
@@ -869,26 +917,32 @@ theorem rst1PrimeAfterBridge9_local_right_d0
   have hcases : r=0 ∨ r=1 ∨ r=2 := by omega
   rcases hcases with hr0 | hr1 | hr2
   · subst r
+    rw [show h-((3*a+1:Int))+2-((0:Nat):Int) = H0+2 by try dsimp [H0]; omega]
     change (BB6Coverage.Agent8Rst1Prime.frameAt
       (sweptRight (L+1) (rst1PrimeAfterBridge20 L a b h).tape
         (((H0-2)-((3*L+5:Int)))+4))
       H0 inside9 bridge9End).tape (H0+2) = false
     rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape]
-    simp [inside9,inWindow,bridge9End,d0,sideBit,H0]
+    rw [show H0+2-H0=2 by omega]
+    simp [inside9,inWindow,bridge9End,d0,sideBit]
   · subst r
+    rw [show h-((3*a+1:Int))+2-((1:Nat):Int) = H0+1 by try dsimp [H0]; omega]
     change (BB6Coverage.Agent8Rst1Prime.frameAt
       (sweptRight (L+1) (rst1PrimeAfterBridge20 L a b h).tape
         (((H0-2)-((3*L+5:Int)))+4))
       H0 inside9 bridge9End).tape (H0+1) = false
     rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape]
-    simp [inside9,inWindow,bridge9End,d0,sideBit,H0]
+    rw [show H0+1-H0=1 by omega]
+    simp [inside9,inWindow,bridge9End,d0,sideBit]
   · subst r
+    rw [show h-((3*a+1:Int))+2-((2:Nat):Int) = H0 by try dsimp [H0]; omega]
     change (BB6Coverage.Agent8Rst1Prime.frameAt
       (sweptRight (L+1) (rst1PrimeAfterBridge20 L a b h).tape
         (((H0-2)-((3*L+5:Int)))+4))
       H0 inside9 bridge9End).tape H0 = true
     rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape]
-    simp [inside9,inWindow,bridge9End,d0,sideBit,H0]
+    rw [show H0-H0=0 by omega]
+    simp [inside9,inWindow,bridge9End,d0,sideBit]
 
 /-- The bridge20 output's far-left three cells are one d0 block. -/
 theorem rst1PrimeAfterBridge20_local_right_d0
@@ -901,23 +955,29 @@ theorem rst1PrimeAfterBridge20_local_right_d0
   have hcases : r=0 ∨ r=1 ∨ r=2 := by omega
   rcases hcases with hr0 | hr1 | hr2
   · subst r
+    rw [show h-((3*a+1:Int))-2-((3*L+5:Int))+3-((0:Nat):Int) = H2+3 by dsimp [H2,H0]; omega]
     change (BB6Coverage.Agent8Rst1Prime.frameAt
       (sweptLeft (3*L+5) (rst1PrimeAfterBridge8 L a b h).tape (H0-2))
       H2 inside20 bridge20End).tape (H2+3) = false
     rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape]
-    simp [inside20,inWindow,bridge20End,d0,sideBit,H0,H2]
+    rw [show H2+3-H2=3 by omega]
+    simp [inside20,inWindow,bridge20End,d0,sideBit]
   · subst r
+    rw [show h-((3*a+1:Int))-2-((3*L+5:Int))+3-((1:Nat):Int) = H2+2 by dsimp [H2,H0]; omega]
     change (BB6Coverage.Agent8Rst1Prime.frameAt
       (sweptLeft (3*L+5) (rst1PrimeAfterBridge8 L a b h).tape (H0-2))
       H2 inside20 bridge20End).tape (H2+2) = false
     rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape]
-    simp [inside20,inWindow,bridge20End,d0,sideBit,H0,H2]
+    rw [show H2+2-H2=2 by omega]
+    simp [inside20,inWindow,bridge20End,d0,sideBit]
   · subst r
+    rw [show h-((3*a+1:Int))-2-((3*L+5:Int))+3-((2:Nat):Int) = H2+1 by dsimp [H2,H0]; omega]
     change (BB6Coverage.Agent8Rst1Prime.frameAt
       (sweptLeft (3*L+5) (rst1PrimeAfterBridge8 L a b h).tape (H0-2))
       H2 inside20 bridge20End).tape (H2+1) = true
     rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape]
-    simp [inside20,inWindow,bridge20End,d0,sideBit,H0,H2]
+    rw [show H2+1-H2=1 by omega]
+    simp [inside20,inWindow,bridge20End,d0,sideBit]
 
 /-- The complete d0^b word is supplied by the first b-1 blocks of the
 final sweep and the d0 boundary left by bridge6. -/
@@ -934,7 +994,7 @@ theorem rst1PrimeAfterBridge30_d0pow_b
     let T : Int → Bool := (rst1PrimeAfterBridge6 L a (n+1) h).tape
     have hpre := rst1Prime_rightSweep_preconditions_after_bridge6 L a (n+1) h
     have hhead : Hf = (h+9)+3*(n:Int)-1 := by
-      dsimp [Hf]
+      try dsimp [Hf]
       omega
     have hprefix : ∀ j, j<3*n →
         (rst1PrimeAfterBridge30 L a (n+1) h).tape (Hf-(j:Int)) =
@@ -944,15 +1004,15 @@ theorem rst1PrimeAfterBridge30_d0pow_b
         L a (n+1) h (Hf-(j:Int)) (by dsimp [Hf]; omega)
       rw [heq]
       rfl
-    have hboundary : ∀ r, r<3 →
+    have hboundary : ∀ r : Nat, r<3 →
         (rst1PrimeAfterBridge30 L a (n+1) h).tape
-          (Hf-((3*n+r:Int))) = sideBit d0 r := by
+          (Hf-(3*(n:Int)+(r:Int))) = sideBit d0 r := by
       intro r hr
-      have hcoord : Hf-((3*n+r:Int)) = h+8-(r:Int) := by
-        dsimp [Hf]
+      have hcoord : Hf-(3*(n:Int)+(r:Int)) = h+8-(r:Int) := by
+        try dsimp [Hf]
         omega
       have heq := rst1PrimeAfterBridge30_eq_afterRightSweepB_left
-        L a (n+1) h (Hf-((3*n+r:Int))) (by dsimp [Hf]; omega)
+        L a (n+1) h (Hf-(3*(n:Int)+(r:Int))) (by dsimp [Hf]; omega)
       rw [heq,hcoord]
       change sweptRight (n+1) T (h+9) (h+8-(r:Int)) = sideBit d0 r
       have hleft := rst1Prime_sweptRight_preserves_left
@@ -974,7 +1034,7 @@ theorem rst1PrimeAfterBridge30_d0pow_a
   let Hs : Int := H0+3
   have hpre := rst1Prime_rightSweep_preconditions_after_bridge9 L a b h
   have hhead : h+1 = Hs+3*(a:Int)-1 := by
-    dsimp [Hs,H0]
+    try dsimp [Hs,H0]
     omega
   have hprefix : ∀ j, j<3*a →
       (rst1PrimeAfterBridge30 L a b h).tape (h+1-(j:Int)) =
@@ -984,16 +1044,16 @@ theorem rst1PrimeAfterBridge30_d0pow_a
     have heq := rst1PrimeAfterBridge30_eq_afterRightSweepA_left
       L a b h (h+1-(j:Int)) (by omega)
     rw [heq]
-    rfl
-  have hboundary : ∀ r, r<3 →
+    try rfl
+  have hboundary : ∀ r : Nat, r<3 →
       (rst1PrimeAfterBridge30 L a b h).tape
-        (h+1-((3*a+r:Int))) = sideBit d0 r := by
+        (h+1-(3*(a:Int)+(r:Int))) = sideBit d0 r := by
     intro r hr
-    have hcoord : h+1-((3*a+r:Int)) = H0+2-(r:Int) := by
-      dsimp [H0]
+    have hcoord : h+1-(3*(a:Int)+(r:Int)) = H0+2-(r:Int) := by
+      try dsimp [H0]
       omega
     have heq := rst1PrimeAfterBridge30_eq_afterBridge9_left
-      L a b h (h+1-((3*a+r:Int))) (by dsimp [H0]; omega)
+      L a b h (h+1-(3*(a:Int)+(r:Int))) (by omega)
     rw [heq,hcoord]
     exact rst1PrimeAfterBridge9_local_right_d0 L a b h r hr
   have hseg := rst1Prime_d0pow_segment a
@@ -1014,7 +1074,7 @@ theorem rst1PrimeAfterBridge30_d0pow_L
   let Hhead : Int := H0-4
   have hpre := rst1Prime_rightSweep_preconditions_after_bridge20 L a b h
   have hhead : Hhead = H3+3*(L:Int)-1 := by
-    dsimp [Hhead,H3,H2,H0]
+    try dsimp [Hhead,H3,H2,H0]
     omega
   have hprefix : ∀ j, j<3*L →
       (rst1PrimeAfterBridge30 L a b h).tape (Hhead-(j:Int)) =
@@ -1024,16 +1084,16 @@ theorem rst1PrimeAfterBridge30_d0pow_L
     have heq := rst1PrimeAfterBridge30_eq_afterThirdRightSweep_left
       L a b h (Hhead-(j:Int)) (by dsimp [Hhead,H0]; omega)
     rw [heq]
-    rfl
-  have hboundary : ∀ r, r<3 →
+    try rfl
+  have hboundary : ∀ r : Nat, r<3 →
       (rst1PrimeAfterBridge30 L a b h).tape
-        (Hhead-((3*L+r:Int))) = sideBit d0 r := by
+        (Hhead-(3*(L:Int)+(r:Int))) = sideBit d0 r := by
     intro r hr
-    have hcoord : Hhead-((3*L+r:Int)) = H2+3-(r:Int) := by
-      dsimp [Hhead,H2,H0]
+    have hcoord : Hhead-(3*(L:Int)+(r:Int)) = H2+3-(r:Int) := by
+      try dsimp [Hhead,H2,H0]
       omega
     have heq := rst1PrimeAfterBridge30_eq_afterBridge20_left
-      L a b h (Hhead-((3*L+r:Int))) (by dsimp [Hhead,H2,H0]; omega)
+      L a b h (Hhead-(3*(L:Int)+(r:Int))) (by dsimp [Hhead,H2,H0]; omega)
     rw [heq,hcoord]
     exact rst1PrimeAfterBridge20_local_right_d0 L a b h r hr
   have hseg := rst1Prime_d0pow_segment L
@@ -1087,6 +1147,7 @@ theorem rst1PrimeAfterBridge30_markerWord2
     change (BB6Coverage.Agent8Rst1Prime.frameAt (rst1PrimeAfterRightSweepA L a b h).tape H6
       inside6 bridge6End).tape (H6-1) = true
     rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape]
+    rw [show H6-1-H6=(-1:Int) by omega]
     simp [inside6,inWindow,bridge6End]
   constructor
   · rw [heq3,hcoord3]
@@ -1095,9 +1156,10 @@ theorem rst1PrimeAfterBridge30_markerWord2
     rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape]
     have hout : inside6 (-2:Int) = false := by
       simp [inside6,inWindow]
-    simp only [hout]
+    rw [show H6-2-H6=(-2:Int) by omega]
+    simp only [hout,Bool.false_eq_true,if_false]
     have hcoord : H6-2 = Hs+3*(a:Int)+1 := by
-      dsimp [H6,Hs,H0]
+      try dsimp [H6,Hs,H0]
       omega
     rw [hcoord]
     exact hblock.2.1
@@ -1107,11 +1169,14 @@ theorem rst1PrimeAfterBridge30_markerWord2
     rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape]
     have hout : inside6 (-3:Int) = false := by
       simp [inside6,inWindow]
-    simp only [hout]
+    rw [show H6-3-H6=(-3:Int) by omega]
+    simp only [hout,Bool.false_eq_true,if_false]
     have hcoord : H6-3 = Hs+3*(a:Int) := by
-      dsimp [H6,Hs,H0]
+      try dsimp [H6,Hs,H0]
       omega
-    rw [hcoord,hblock.1]
+    rw [hcoord]
+    change sweptRight (a+1) (rst1PrimeAfterBridge9 L a b h).tape Hs (Hs+3*(a:Int)) = true
+    rw [hblock.1]
     exact hstart
 
 /-- The three-cell d1 marker is all ones: bridge9 supplies the two
@@ -1133,17 +1198,18 @@ theorem rst1PrimeAfterBridge30_d1
   have hfirst : (rst1PrimeAfterBridge20 L a b h).tape
       (H3+3*(L:Int)) = true := (hpre L (by omega)).1
   have heq1 := rst1PrimeAfterBridge30_eq_afterBridge9_left
-    L a b h (H0-1) (by dsimp [H0]; omega)
+    L a b h (H0-1) (by omega)
   have heq2 := rst1PrimeAfterBridge30_eq_afterBridge9_left
-    L a b h (H0-2) (by dsimp [H0]; omega)
+    L a b h (H0-2) (by omega)
   have heq3 := rst1PrimeAfterBridge30_eq_afterBridge9_left
-    L a b h (H0-3) (by dsimp [H0]; omega)
+    L a b h (H0-3) (by omega)
   constructor
   · rw [heq1]
     change (BB6Coverage.Agent8Rst1Prime.frameAt
       (sweptRight (L+1) (rst1PrimeAfterBridge20 L a b h).tape H3)
       H0 inside9 bridge9End).tape (H0-1) = true
     rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape]
+    rw [show H0-1-H0=(-1:Int) by omega]
     simp [inside9,inWindow,bridge9End]
   constructor
   · rw [heq2]
@@ -1151,6 +1217,7 @@ theorem rst1PrimeAfterBridge30_d1
       (sweptRight (L+1) (rst1PrimeAfterBridge20 L a b h).tape H3)
       H0 inside9 bridge9End).tape (H0-2) = true
     rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape]
+    rw [show H0-2-H0=(-2:Int) by omega]
     simp [inside9,inWindow,bridge9End]
   · rw [heq3]
     change (BB6Coverage.Agent8Rst1Prime.frameAt
@@ -1159,9 +1226,10 @@ theorem rst1PrimeAfterBridge30_d1
     rw [BB6Coverage.Agent8Rst1Prime.frameAt_tape]
     have hout : inside9 (-3:Int) = false := by
       simp [inside9,inWindow]
-    simp only [hout]
+    rw [show H0-3-H0=(-3:Int) by omega]
+    simp only [hout,Bool.false_eq_true,if_false]
     have hcoord : H0-3 = H3+3*(L:Int) := by
-      dsimp [H0,H2,H3]
+      try dsimp [H0,H2,H3]
       omega
     rw [hcoord,hlast.1,hfirst]
 
@@ -1185,54 +1253,55 @@ theorem rst1PrimeAfterBridge30_leftFacing
   let H2 : Int := H0-2-((3*L+5:Int))
   have hHf : h+5+3*(b:Int) = Hf := by rfl
   rw [rst1Prime_target_leftFacing_compact L a b,hHf]
+  simp only [List.append_assoc]
   by_cases hi0 : i<3*b
   · rw [sideBit_append_left (d0pow b)
-      (markerWord 2 ++ d0pow (a+1) ++ d1 ++ d0pow (L+1) ++ lh)
+      (markerWord 2 ++ (d0pow (a+1) ++ (d1 ++ (d0pow (L+1) ++ lh))))
       i (by rw [rst1Prime_d0pow_length]; exact hi0)]
     simpa [Hf] using rst1PrimeAfterBridge30_d0pow_b L a b h i hi0
   · have hi0' : 3*b≤i := by omega
     rw [sideBit_append_right (d0pow b)
-      (markerWord 2 ++ d0pow (a+1) ++ d1 ++ d0pow (L+1) ++ lh)
+      (markerWord 2 ++ (d0pow (a+1) ++ (d1 ++ (d0pow (L+1) ++ lh))))
       i (by rw [rst1Prime_d0pow_length]; exact hi0')]
     rw [rst1Prime_d0pow_length]
     let j0 : Nat := i-3*b
     by_cases hj0 : j0<4
     · rw [sideBit_append_left (markerWord 2)
-        (d0pow (a+1) ++ d1 ++ d0pow (L+1) ++ lh)
+        (d0pow (a+1) ++ (d1 ++ (d0pow (L+1) ++ lh)))
         j0 (by simp [markerWord]; exact hj0)]
       have hcoord : Hf-(i:Int) = h+5-(j0:Int) := by
-        dsimp [Hf,j0]
+        try dsimp [Hf,j0]
         omega
       rw [hcoord]
       have hcases : j0=0 ∨ j0=1 ∨ j0=2 ∨ j0=3 := by omega
       have hm := rst1PrimeAfterBridge30_markerWord2 L a b h
       rcases hcases with hj00 | hj01 | hj02 | hj03
-      · subst j0
-        simpa [markerWord,sideBit] using hm.1
-      · subst j0
-        simpa [markerWord,sideBit] using hm.2.1
-      · subst j0
-        simpa [markerWord,sideBit] using hm.2.2.1
-      · subst j0
-        simpa [markerWord,sideBit] using hm.2.2.2
+      · rw [hj00,show h+5-((0:Nat):Int)=h+5 by omega]
+        exact hm.1
+      · rw [hj01,show h+5-((1:Nat):Int)=h+4 by omega]
+        exact hm.2.1
+      · rw [hj02,show h+5-((2:Nat):Int)=h+3 by omega]
+        exact hm.2.2.1
+      · rw [hj03,show h+5-((3:Nat):Int)=h+2 by omega]
+        exact hm.2.2.2
     · have hj0' : 4≤j0 := by omega
       rw [sideBit_append_right (markerWord 2)
-        (d0pow (a+1) ++ d1 ++ d0pow (L+1) ++ lh)
+        (d0pow (a+1) ++ (d1 ++ (d0pow (L+1) ++ lh)))
         j0 (by simp [markerWord]; exact hj0')]
       simp [markerWord]
       let j1 : Nat := j0-4
       by_cases hj1 : j1<3*(a+1)
       · rw [sideBit_append_left (d0pow (a+1))
-          (d1 ++ d0pow (L+1) ++ lh)
+          (d1 ++ (d0pow (L+1) ++ lh))
           j1 (by rw [rst1Prime_d0pow_length]; exact hj1)]
         have hcoord : Hf-(i:Int) = h+1-(j1:Int) := by
-          dsimp [Hf,j0,j1]
+          try dsimp [Hf,j0,j1]
           omega
         rw [hcoord]
         exact rst1PrimeAfterBridge30_d0pow_a L a b h j1 hj1
       · have hj1' : 3*(a+1)≤j1 := by omega
         rw [sideBit_append_right (d0pow (a+1))
-          (d1 ++ d0pow (L+1) ++ lh)
+          (d1 ++ (d0pow (L+1) ++ lh))
           j1 (by rw [rst1Prime_d0pow_length]; exact hj1')]
         rw [rst1Prime_d0pow_length]
         let j2 : Nat := j1-3*(a+1)
@@ -1240,18 +1309,18 @@ theorem rst1PrimeAfterBridge30_leftFacing
         · rw [sideBit_append_left d1
             (d0pow (L+1) ++ lh) j2 (by simp [d1]; exact hj2)]
           have hcoord : Hf-(i:Int) = H0-1-(j2:Int) := by
-            dsimp [Hf,H0,j0,j1,j2]
+            try dsimp [Hf,H0,j0,j1,j2]
             omega
           rw [hcoord]
           have hD := rst1PrimeAfterBridge30_d1 L a b h
           have hcases : j2=0 ∨ j2=1 ∨ j2=2 := by omega
           rcases hcases with hj20 | hj21 | hj22
-          · subst j2
-            simpa [d1,sideBit] using hD.1
-          · subst j2
-            simpa [d1,sideBit] using hD.2.1
-          · subst j2
-            simpa [d1,sideBit] using hD.2.2
+          · rw [hj20,show H0-1-((0:Nat):Int)=H0-1 by omega]
+            exact hD.1
+          · rw [hj21,show H0-1-((1:Nat):Int)=H0-2 by omega]
+            exact hD.2.1
+          · rw [hj22,show H0-1-((2:Nat):Int)=H0-3 by omega]
+            exact hD.2.2
         · have hj2' : 3≤j2 := by omega
           rw [sideBit_append_right d1
             (d0pow (L+1) ++ lh) j2 (by simp [d1]; exact hj2')]
@@ -1261,7 +1330,7 @@ theorem rst1PrimeAfterBridge30_leftFacing
           · rw [sideBit_append_left (d0pow (L+1)) lh j3
               (by rw [rst1Prime_d0pow_length]; exact hj3)]
             have hcoord : Hf-(i:Int) = H0-4-(j3:Int) := by
-              dsimp [Hf,H0,j0,j1,j2,j3]
+              try dsimp [Hf,H0,j0,j1,j2,j3]
               omega
             rw [hcoord]
             exact rst1PrimeAfterBridge30_d0pow_L L a b h j3 hj3
@@ -1271,16 +1340,15 @@ theorem rst1PrimeAfterBridge30_leftFacing
             rw [rst1Prime_d0pow_length]
             let j4 : Nat := j3-3*(L+1)
             by_cases hj4 : j4<6
-            · rw [sideBit_append_left lh [] j4 (by simp [lh]; exact hj4)]
-              have hcoord : Hf-(i:Int) = H2-(j4:Int) := by
-                dsimp [Hf,H0,H2,j0,j1,j2,j3,j4]
+            · have hcoord : Hf-(i:Int) = H2-(j4:Int) := by
+                try dsimp [Hf,H0,H2,j0,j1,j2,j3,j4]
                 omega
               rw [hcoord]
               exact rst1PrimeAfterBridge30_left_tail L a b h j4 hj4
             · have hj4' : 6≤j4 := by omega
               rw [sideBit_ge_length lh j4 (by simp [lh]; exact hj4')]
               have hcoord : Hf-(i:Int) ≤ H2-6 := by
-                dsimp [Hf,H0,H2,j0,j1,j2,j3,j4]
+                try dsimp [Hf,H0,H2,j0,j1,j2,j3,j4]
                 omega
               exact rst1PrimeAfterBridge30_left_blank L a b h
                 (Hf-(i:Int)) hcoord
@@ -1295,7 +1363,7 @@ theorem rst1PrimeAfterBridge30_eq_s1Successor
     rst1PrimeAfterBridge30 L a b h =
       s1Config (L+a+2) (2^(L+a+2)-2^a-1) 2 b (2^b-1) 0
         (h+5+3*(b:Int)) := by
-  apply config_ext
+  apply BB6Coverage.Agent8Rst1Prime.config_ext
   · simp [rst1PrimeAfterBridge30,BB6Coverage.Agent8Rst1Prime.frameAt_state,bridge30End,s1Config]
   · exact rst1PrimeAfterBridge30_head L a b h
   · funext x
@@ -1304,12 +1372,12 @@ theorem rst1PrimeAfterBridge30_eq_s1Successor
     · let i : Nat := (Hf-x).toNat
       have hnonneg : 0≤Hf-x := by omega
       have hcast : (i:Int)=Hf-x := by
-        dsimp [i]
+        try dsimp [i]
         exact Int.toNat_of_nonneg hnonneg
       have hcoord : Hf-(i:Int)=x := by
         rw [hcast]
         omega
-      rw [hcoord]
+      rw [← hcoord]
       rw [s1Config_left_cell
         (L+a+2) (2^(L+a+2)-2^a-1) 2 b (2^b-1) 0 Hf i]
       exact rst1PrimeAfterBridge30_leftFacing L a b h i
@@ -1317,12 +1385,12 @@ theorem rst1PrimeAfterBridge30_eq_s1Successor
       let i : Nat := (x-Hf-1).toNat
       have hnonneg : 0≤x-Hf-1 := by omega
       have hcast : (i:Int)=x-Hf-1 := by
-        dsimp [i]
+        try dsimp [i]
         exact Int.toNat_of_nonneg hnonneg
       have hcoord : Hf+1+(i:Int)=x := by
         rw [hcast]
         omega
-      rw [hcoord]
+      rw [← hcoord]
       rw [s1Config_right_cell
         (L+a+2) (2^(L+a+2)-2^a-1) 2 b (2^b-1) 0 Hf i]
       simpa [s1PhysicalRight,s0PhysicalRight] using
