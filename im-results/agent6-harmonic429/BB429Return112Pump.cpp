@@ -37,5 +37,5 @@ int main(){
  if(u!=292838528||w!=585677746||next(u,w).tag!=Tag::F){std::cerr<<"phase boundary mismatch "<<u<<","<<w<<"\n";return 1;}
  std::cout<<"verified "<<N<<" cycles of F^27 Oeven F Oodd Eodd, 31 steps each, W += 112\n";
  std::cout<<"phase end: (0,"<<1171354700<<") after "<<27017833<<" transitions from (0,1073741884)\n";
- std::cout<<"next phase boundary state: ("<<u<<","<<w<<"), next tag F\n";
+ std::cout<<"next phase boundary state: ("<<u<<","<<w<<") after "<<steps<<" transitions from start; next tag F\n";
 }
