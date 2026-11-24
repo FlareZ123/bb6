@@ -232,6 +232,20 @@ theorem cone_only_ell20_r3_target_not_root (n : Nat) :
   have hm := run_avoids_mass_interval_83_84 n 968561452 968561102 h
   omega
 
+/-- The stronger v3<=k counterexample source is also outside the blank-root orbit. -/
+theorem v3_at_k_counterexample_source_not_root (n : Nat) :
+    run n ≠ some (.D 465026190 116256546) := by
+  intro h
+  have hm := run_avoids_mass_interval_77_78 n 465026190 116256546 h
+  omega
+
+/-- The stronger v3<=k counterexample target is also outside the blank-root orbit. -/
+theorem v3_at_k_counterexample_target_not_root (n : Nat) :
+    run n ≠ some (.D 348769638 348769680) := by
+  intro h
+  have hm := run_avoids_mass_interval_78_79 n 348769638 348769680 h
+  omega
+
 /-- The source of the v3 state-locality counterexample is not root-reachable:
     its mass lies strictly between the exact root masses at indices 77 and 78. -/
 theorem v3_counterexample_source_not_root (n : Nat) :
@@ -261,6 +275,8 @@ theorem v3_counterexample_target_not_root (n : Nat) :
 #print axioms run_avoids_mass_interval_78_79
 #print axioms v3_counterexample_source_not_root
 #print axioms v3_counterexample_target_not_root
+#print axioms v3_at_k_counterexample_source_not_root
+#print axioms v3_at_k_counterexample_target_not_root
 #print axioms run_80_exact
 #print axioms run_81_exact
 #print axioms run_avoids_mass_interval_80_81
