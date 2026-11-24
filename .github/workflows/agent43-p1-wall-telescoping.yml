@@ -12,6 +12,13 @@ on:
           - exact-carry-cert
           - margin-blank
           - budget-blank
+          - margin-chain
+      chain_case:
+        description: "Exceptional index for margin-chain"
+        required: false
+        type: choice
+        default: '286'
+        options: ['286', '1614', '2990', '3342']
 permissions:
   contents: read
 jobs:
@@ -73,7 +80,7 @@ jobs:
             lean "$AG43/CarryCertSource.lean"
             exit 0
           fi
-          if [ "${{ inputs.target }}" = margin-blank ] || [ "${{ inputs.target }}" = budget-blank ]; then
+          if [ "${{ inputs.target }}" = margin-blank ] || [ "${{ inputs.target }}" = budget-blank ] || [ "${{ inputs.target }}" = margin-chain ]; then
             RES=im-results/agent50-p1-residue
             GEN=$(mktemp -d "$PWD/.agent43-margin.XXXXXX")
             export LEAN_PATH="$LEAN_PATH:$RES:$GEN"
@@ -87,6 +94,26 @@ jobs:
             lean -o "$AG43/CarryCert.olean" "$AG43/CarryCert.lean"
             lean -o "$AG43/MarginCert.olean" "$AG43/MarginCert.lean"
             lean -o "$AG43/MarginSource.olean" "$AG43/MarginSource.lean"
+            if [ "${{ inputs.target }}" = margin-chain ]; then
+              SCREEN=im-results/agent28-p1-modular-screen
+              N="${{ inputs.chain_case }}"
+              case "$N" in
+                286) K=1442; BLOCK=16; GROUP=4 ;;
+                1614) K=5824; BLOCK=8; GROUP=2 ;;
+                2990) K=6154; BLOCK=8; GROUP=2 ;;
+                3342) K=13730; BLOCK=8; GROUP=2 ;;
+                *) exit 2 ;;
+              esac
+              python "$SCREEN/gen_chain_margin.py" "$N" "$K" "$BLOCK" "$GROUP" "$GEN"
+              while IFS= read -r m; do
+                lean -j1 -DElab.async=false -o "$GEN/$m.olean" "$GEN/$m.lean"
+              done < "$GEN/modules.txt"
+              set -o pipefail
+              lean "$GEN/ChainMargin${N}Source.lean" | tee /tmp/agent28-chain-axioms.txt
+              grep -q "critical_reset_no_reach_$N" /tmp/agent28-chain-axioms.txt
+              if grep -q sorryAx /tmp/agent28-chain-axioms.txt; then exit 1; fi
+              exit 0
+            fi
             if [ "${{ inputs.target }}" = margin-blank ]; then
             lean -o "$AG43/Margin30.olean" "$AG43/Margin30.lean"
             (cd "$GEN" && python "$GITHUB_WORKSPACE/$AG43/gen_margin_cert.py" 350 586 16)

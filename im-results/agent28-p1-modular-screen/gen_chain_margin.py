@@ -54,6 +54,12 @@ def generate(n, K, block, group, out):
         modules.append(name);groups.append((name,a,z))
     (out/(stem+'.lean')).write_text(f'import {groups[-1][0]}\n')
     modules.append(stem)
+    source = [f'import {stem}', 'import MarginSource',
+              f'namespace {ns}', 'open BB6.Agent43MarginSource',
+              f'theorem critical_reset_no_reach_{n} : ¬ BB6.Agent1.Reach 2 (14*2^{n}-2*{n}-10) :=',
+              f'  critical_reset_no_reach_of_margin {n} {K} (by decide) (by decide) margin{n}',
+              f'#print axioms critical_reset_no_reach_{n}', f'end {ns}']
+    (out/(stem+'Source.lean')).write_text('\n'.join(source)+'\n')
     (out/'modules.txt').write_text('\n'.join(modules)+'\n')
     print(f'n={n}, K={K}, {len(layers)-1} segments, {len(groups)} groups')
 
