@@ -17,6 +17,11 @@ on:
         required: false
         default: false
         type: boolean
+      periodic_source_only:
+        description: "Compile the periodic-word rigidity bridge against the unchanged original source ResetParent"
+        required: false
+        default: false
+        type: boolean
 permissions:
   contents: read
 jobs:
@@ -54,7 +59,7 @@ jobs:
           cp "$c"/{SourceMacro,CascadeOdd,ReverseResidue,GapCore,Mass,SurvivingSmall,SurvivingExactGate,OriginalSurvivingBridge,OriginalPhysicalGate}.lean "$GITHUB_WORKSPACE/Agent10Bridge/"
           cp "$a"/HighLevelResetBridge.lean "$GITHUB_WORKSPACE/Agent10Bridge/"
           cp "$b"/{TerminalExit,GapOddJoin,SweepInvariant,RootTerminal,ResetAncestry,FatalExclusion,SmallFatal,GateNecessary,ExactGate,ManyShield,RootMinIndex,FastShield,RootMin256,OriginalNextBridge,OriginalMinIndexBridge,OriginalRawGate}.lean "$GITHUB_WORKSPACE/Agent10Bridge/"
-          cp "$b"/{FirstReturnCore,ValuationDrain,FullReturn,ReturnInverseArithmetic,ResetInverseWitnesses,FirstOutcome,FirstInverseComplete,ResetChain,ResetParentStrict,ParentCheck,Parents,ClosedCert,ReachDecide,OriginalAlgorithmicGate,FastParents,FastClosedCert,OriginalGate268,T0Rho38RootExclusion}.lean "$GITHUB_WORKSPACE/Agent10Bridge/"
+          cp "$b"/{FirstReturnCore,ValuationDrain,FullReturn,ReturnInverseArithmetic,ResetInverseWitnesses,FirstOutcome,FirstInverseComplete,ResetChain,ResetParentStrict,ParentCheck,Parents,ClosedCert,ReachDecide,OriginalAlgorithmicGate,FastParents,FastClosedCert,OriginalGate268,T0Rho38RootExclusion,PeriodicRigidity,PeriodicReset,PeriodicWord,PeriodicSource}.lean "$GITHUB_WORKSPACE/Agent10Bridge/"
           cd "$GITHUB_WORKSPACE"
           export LEAN_PATH="$GITHUB_WORKSPACE/Agent10Bridge:$GITHUB_WORKSPACE/.lake/build/lib/lean"
           lake env lean --version
@@ -68,6 +73,14 @@ jobs:
           for m in FirstReturnCore ValuationDrain FullReturn ReturnInverseArithmetic ResetInverseWitnesses FirstOutcome FirstInverseComplete ResetChain ResetParentStrict ParentCheck Parents ClosedCert ReachDecide; do
             lake env lean -o "Agent10Bridge/$m.olean" "Agent10Bridge/$m.lean"
           done
+          if [ "${{ inputs.periodic_source_only }}" = "true" ]; then
+            for m in PeriodicRigidity PeriodicReset PeriodicWord PeriodicSource; do
+              echo "Checking source periodic module $m"
+              lake env lean -o "Agent10Bridge/$m.olean" "Agent10Bridge/$m.lean"
+            done
+            echo "Original-source periodic ResetParent bridge and periodic-word divisibility compiled; inspect #print axioms output above."
+            exit 0
+          fi
           if [ "${{ inputs.reset_macro_50000_only }}" = "true" ]; then
             cp "$b"/{ResetBlockCore,EvenBatch,OriginalGate50001}.lean Agent10Bridge/
             python3 "$b/generate_sharded_macro.py" --bound 50000 --chunk 64 --shard 32 --output Agent10Bridge
