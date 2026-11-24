@@ -55,6 +55,17 @@ jobs:
             exit 1
           fi
 
+      - name: Compile exact source counterexample to 3-adic state-locality
+        working-directory: /tmp/cryptids
+        run: |
+          set -euo pipefail
+          cp "$GITHUB_WORKSPACE/im-results/agent41-623-root-history/V3MinCounterexampleSource.lean" Agent41V3MinCounterexampleSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent41V3MinCounterexampleSource.olean Agent41V3MinCounterexampleSource.lean 2>&1 | tee Agent41V3MinCounterexampleSource.log
+          if grep -q 'sorryAx' Agent41V3MinCounterexampleSource.log; then
+            echo 'sorryAx detected in 3-adic counterexample'
+            exit 1
+          fi
+
       - name: Compile source-checked total-carry counterexample
         working-directory: /tmp/cryptids
         run: |
