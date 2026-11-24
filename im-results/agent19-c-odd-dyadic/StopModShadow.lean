@@ -149,7 +149,7 @@ theorem stopYResidue_correct (p j m k : Nat)
     _ = (P%M+(M-z%M))%M := by rw [←Nat.mod_add_mod _ M _,hprod]
     _ = (P+(M-z%M))%M := Nat.mod_add_mod _ _ _
     _ = k%M := by
-      rw [←hp,Nat.add_assoc,←Nat.mod_add_mod k _ M,←Nat.mod_add_mod z M _,hz,Nat.mod_self,Nat.add_zero]
+      rw [←hp,Nat.add_assoc,←Nat.add_mod_mod k _ M,←Nat.mod_add_mod z M _,hz,Nat.mod_self,Nat.add_zero]
 
 /-- General padded seed for an arbitrary actual coordinate. -/
 def coordinateSeed (p z : Nat) : Nat := C*2^p+(2^p-(C*z)%2^p)
