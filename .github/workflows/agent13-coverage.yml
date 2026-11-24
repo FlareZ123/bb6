@@ -5,7 +5,7 @@ on:
       target:
         description: 'Source closure to verify'
         type: choice
-        options: [legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole, weighted-tnf-four-hole, weighted-tnf-four-hole-sibling, weighted-tnf-r1-sweep, queue-orbit, weighted-tnf-roster-convergence, weighted-tnf-roster-agent47-graft, weighted-tnf-pure-residuals, weighted-tnf-raw99, weighted-tnf-raw103, weighted-tnf-roster-composition, weighted-tnf-raw85, weighted-tnf-agent3-siblings, weighted-tnf-raw85-parent-check, weighted-tnf-raw91]
+        options: [legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole, weighted-tnf-four-hole, weighted-tnf-four-hole-sibling, weighted-tnf-r1-sweep, queue-orbit, weighted-tnf-roster-convergence, weighted-tnf-roster-agent47-graft, weighted-tnf-pure-residuals, weighted-tnf-raw99, weighted-tnf-raw103, weighted-tnf-roster-composition, weighted-tnf-raw85, weighted-tnf-agent3-siblings, weighted-tnf-raw85-parent-check, weighted-tnf-raw91, weighted-tnf-raw87]
         default: legacy
 permissions:
   contents: read
@@ -344,5 +344,19 @@ jobs:
           python tools/lean_compile_closure.py --workdir /tmp/a10-raw91 --jobs 4 im-results/agent10-tnf-raw91/Raw91RosterBridge.lean | tee /tmp/a10-raw91.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a10-raw91.log; then
             echo "Forbidden proof placeholder or native_decide found in raw91 closure" >&2
+            exit 1
+          fi
+
+      - name: Check raw residual 87 and its exact roster graft
+        if: inputs.target == 'weighted-tnf-raw87'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent10-tnf-raw87/generate.py
+          python tools/lean_compile_closure.py --workdir /tmp/a10-raw87 --jobs 4 im-results/agent10-tnf-raw87/Raw87RosterBridge.lean | tee /tmp/a10-raw87.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a10-raw87.log; then
+            echo "Forbidden proof placeholder or native_decide found in raw87 closure" >&2
             exit 1
           fi
