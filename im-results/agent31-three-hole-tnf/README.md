@@ -20,3 +20,46 @@ Two independent finite enumerators agree on 1,123 halting and 14,502 nonhalting 
 - Manual `agent13-coverage.yml` target `weighted-tnf-three-hole` compiles the exact source closure and rejects placeholder/native-decision axioms. [Run 45409018102](https://github.com/FlareZ123/bb6/actions/runs/45409018102) succeeded: the exact source-closure check step completed successfully on Lean 4.36.0-rc2, including the axiom guard. Local Lean is installed, but GitHub DNS is blocked, so the original dependency closure is checked in CI.
 
 This strictly enlarges the prior 625-completion pilot and is one local component of a future global TNF upper bound. It is not an exact BB(6) determination.
+
+## Four-hole weighted subtree (accepted 2026-11-24)
+
+The same authentic path, stopped one edge earlier, gives the four-hole parent
+`wideParent = pathEnd root 2 (path.take 7)`. Its unassigned rows are A1, C1,
+E0 and F0. The next first hole is C1 at 11 ordinary moves. Expanding all 24
+ordinary C1 instructions and charging the C1=halt sibling yields a complete
+weighted TNF certificate for all (25^4 = 390,625) compatible completions.
+
+The deterministic generator `generate_four_hole.py` creates
+`FourHoleBase.lean`, the 24 `FourHoleKid00..23.lean` modules and
+`FourHoleData.lean`. Its finite classifier only proposes certificate
+constructors; Lean checks every generated branch through `ThreeHoleAudit.check`.
+The generator asserts the exact audit census:
+
+| Constructor | Count |
+|---|---:|
+| Full first-hole expansions | 285 |
+| Weighted last-hole leaves | 2,757 |
+| Exact translated side-cycle leaves | 3,670 |
+| Explicit FAR automata leaves | 120 |
+| Reused universal pump leaves | 9 |
+
+The generated theorem `BB6.Agent31FourHole.exact_weighted_threshold` proves
+that the least uniform weighted bound for this parent is **395**. An explicit
+compatible completion halts after 394 ordinary moves, and the final halt query
+is counted in the weighted score. The upper direction is the recursively
+checked TNF tree; the lower direction is the concrete halting completion.
+
+**Original-source Lean acceptance:** existing manual workflow
+`.github/workflows/agent13-coverage.yml`, target
+`weighted-tnf-four-hole`, run
+[45454698835](https://github.com/FlareZ123/bb6/actions/runs/45454698835),
+completed successfully on Lean 4.36.0-rc2. The run executed both deterministic
+generators, compiled the complete generated dependency closure, and passed the
+fail-hard `sorryAx|native_decide` guard.
+
+This is a stronger local certificate than the three-hole subtree above: it
+closes the entire C1 expansion one first-hole edge earlier, including the
+three-hole continuation as one of its 24 children. It is nevertheless only a
+subtree below the authentic firstOneCylinder root. The seven-edge path's
+off-path siblings, and the other root branches, are not covered by this
+certificate. It does not determine BB(6).
