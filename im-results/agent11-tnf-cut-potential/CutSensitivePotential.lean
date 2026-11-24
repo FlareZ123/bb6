@@ -197,6 +197,15 @@ theorem runUpdates_cutMass_active_empty_of_bound
           have hnext : cutMass (update decide q).active ≤ fuel := by omega
           simpa [runUpdates, hq] using ih (update decide q) hnext
 
+/-- Every queue drains with fuel equal to its exact initial cut-mass.
+This lets an exported chunk carry its own computable fuel bound instead of a
+single global MAXT. -/
+theorem every_queue_drains_with_cutMass_fuel
+    (decide : (x : Node) → Verdict x) (q : SearchQueue) :
+    (runUpdates decide (cutMass q.active) q).active = [] := by
+  exact runUpdates_cutMass_active_empty_of_bound decide (cutMass q.active) q
+    (Nat.le_refl _)
+
 theorem cutBfsAux_mass_le (decide : (x : Node) → Verdict x) :
     ∀ xs holdout,
       cutMass (bfsAux decide xs holdout) ≤ cutMass xs + cutMass holdout := by
