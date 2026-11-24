@@ -116,7 +116,7 @@ def canonicalResidualRoster : List PackedTable :=
 
 /-- Agent31's frontier, losslessly packed into the common twelve-slot
     representation used by Agent50's recursive certificate. -/
-def agent31PackedRoster : List PackedTable :=
+noncomputable def agent31PackedRoster : List PackedTable :=
   BB6.Agent31FourHoleRoster.remainingRootRoster.map
     (fun e => BB6.Agent50RootFrontier.packTable e.2)
 
