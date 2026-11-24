@@ -1,6 +1,14 @@
 name: Agent45 P1 scalar source integration (manual audit)
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        description: Source audit target
+        type: choice
+        default: scalar
+        options:
+          - scalar
+          - carry-wide
 permissions:
   contents: read
 jobs:
@@ -15,6 +23,7 @@ jobs:
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Decode and hash Agent28 original arithmetic and bridge
+        if: inputs.target == 'scalar'
         run: |
           set -e
           base64 -d im-results/agent28-p1-word-automaton/P1Scalar.lean.xz.b64 | xz -d > im-results/agent28-p1-word-automaton/P1Scalar.lean
@@ -23,6 +32,7 @@ jobs:
           echo "==== Agent28 original bridge source ===="
           sed -n '1,160p' im-results/agent28-p1-word-automaton/P1ScalarBridge.lean
       - name: Compile authentic inverse equations and scalar source theorem
+        if: inputs.target == 'scalar'
         run: |
           set -e
           export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent28-p1-word-automaton"
@@ -36,3 +46,26 @@ jobs:
           lean -o im-results/agent1-p1-quarter/InverseIff.olean im-results/agent1-p1-quarter/InverseIff.lean
           lean -o im-results/agent28-p1-word-automaton/P1Scalar.olean im-results/agent28-p1-word-automaton/P1Scalar.lean
           lean im-results/agent28-p1-word-automaton/P1ScalarBridge.lean
+      - name: Compile critical carry refinement and original source
+        if: inputs.target == 'carry-wide'
+        run: |
+          set -euo pipefail
+          map=im-results/agent1-p1-map
+          inv=im-results/agent47-p1-finite-inverse
+          quarter=im-results/agent1-p1-quarter
+          residue=im-results/agent50-p1-residue
+          carry=im-results/agent50-p1-dyadic-width
+          wide=im-results/agent45-p1-carry-wide
+          export LEAN_PATH="$map:$inv:$quarter:$residue:$carry:$wide"
+          compile() { local path="$1"; lean -o "$path.olean" "$path.lean"; }
+          for m in GParity GInverse PosEvenForm ResetGate; do compile "$map/$m"; done
+          compile "$inv/P1FiniteInverse"
+          compile "$quarter/MassInverse"
+          compile "$quarter/OddConeMass"
+          compile "$inv/P1InverseLog"
+          compile "$quarter/InverseIff"
+          for m in P1Triple P1ResidualArithmetic P1ResidualReach P1Gate; do compile "$residue/$m"; done
+          for m in P1CarryExact P1CarryExactSource P1CarryExtinction P1CarryExactReverse P1CarryBlankArithmetic; do compile "$carry/$m"; done
+          compile "$wide/CarryWideArithmetic"
+          lean "$wide/CarryWideSource.lean" | tee /tmp/agent45-wide-audit.log
+          ! grep -q 'sorryAx' /tmp/agent45-wide-audit.log
