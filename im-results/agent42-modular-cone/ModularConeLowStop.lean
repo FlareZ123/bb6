@@ -52,7 +52,7 @@ theorem low_stop_excluded8 (m k : Nat) (hm : 4 ≤ m)
 theorem low_stop_example_11 :
     ¬ BB6.Agent3.CReach 1 33554395 := by
   have hc : lowStopExcluded8 11 = true := by decide
-  have hs : 33554395+3*11+4 = P (2*11+2)*2 := by norm_num [P]
+  have hs : 33554395+3*11+4 = P (2*11+2)*2 := by decide
   exact low_stop_excluded8 11 33554395 (by omega) hs hc
 
 #print axioms low_stop_excluded
