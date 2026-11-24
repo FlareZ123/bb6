@@ -177,6 +177,25 @@ Both extend to infinite arithmetic progressions of locally source-valid restart 
 **Priority correction:** further local terminal-edge enumeration is not the decisive bottleneck. Work should now target the blank-root prefix/cumulative-cost carry obstruction for these surviving progressions, or a source-connected construction of such a prefix. The local compiler was unavailable in this invocation; no Lean or CI verification is claimed.
 
 
+## Current fourth-edge source-wall status (24 November 2026)
+
+The two surviving local restart families are now subject to a stronger prefix obstruction. The exact source-wall list identity from Agent43's PR #99 implies, for every prefix length (K\le n,m),
+[
+(n+3)+\sum_{s=1}^{K-1}x_s(n+3+s)2^s\equiv1\pmod{2^K},
+\qquad x_0=1.
+]
+The terminal cutoff (m\ge n) for both restart families is itself Lean-checked from their explicit (u)-formulae and (2^n\ge1100n).
+
+**Kernel-checked infinite cylinders.** [`wall_prefix_carry_cylinders.lean`](wall_prefix_carry_cylinders.lean) proves exact carry-DP completeness, the modulus lift (n\mapsto n+2^Kt), four empty-prefix certificates, and the terminal-cost inequalities. It excludes:
+- family I (h\equiv1\pmod{2^{56}}) at (K=60), and (h\equiv2\pmod{2^8}) at (K=12);
+- family II (h\equiv1\pmod{2^{10}}) at (K=14), and (h\equiv2\pmod{2^{18}}) at (K=22).
+
+**Finite computational extension.** [`wall_prefix_carry_depths_h0_256.md`](wall_prefix_carry_depths_h0_256.md) and its [reproduction script](wall_prefix_carry_depths_scan.js) scan all (h=0,\ldots,256) in both families. Every one of the 514 cases reaches an empty carry layer before 10,000; this computationally excludes the finite range (h\le256), conditional on the source identity. The longest transients are (K=5350) at family-I (h=142) and (K=4750) at family-II (h=86), so a small uniform cutoff is not credible. These deep cases and the 514-case batch are not kernel-certified.
+
+**Integration boundary.** The source identity is on PR #99 and its targeted workflow is green, but this invocation did not inspect successful-job logs or the `#print axioms` output; no claim is made that the imported source theorem is `sorryAx`-free. The `List.Nodup` characteristic-bit map from its witness list to the Boolean prefix remains to be composed. The four Lean certificates are therefore formal arithmetic obstructions, not yet a source-composed exclusion theorem.
+
+**Scope and next step.** This removes four infinite parameter cylinders and gives a finite computational exclusion through (h=256), but it does not eliminate either full restart family, prove a blank-root ancestry result, establish an unrestricted six-shallow theorem, or decide P1/BB(6). Integrate the list-to-bit bridge in PR #99, then target the uncovered (h)-classes and the long-transient branches.
+
 ## Dyadic Euclidean reverse-parent cycle (23 November 2026)
 
 The [249/343 reverse-parent analysis](dyadic_euclidean_249_343.md), with its [exact BigInt orbit scan](dyadic_euclidean_249_343.js), reformulates the original-source inverse parent map in the coordinates D=d−1, N=b+d+6 and k=t+1:
@@ -191,29 +210,3 @@ The two fourth-edge survivors have limiting restart ratios 491/21952 and 141/219
 At the base indices, the exact reverse-parent orbits shadow the 73-symbol cycle for 2658 steps/cost 5347 (n=5362), and 4717 steps/cost 9490 (n=9538), then choose different next depths from the ideal orbit. This is exact finite computational evidence, not an actual periodic source orbit or a root-prefix decision. The new bottleneck is the post-shadowing deterministic reverse orbit: determine whether it reaches the blank-root state or is obstructed, potentially by a sequence of further rational reference cycles.
 
 
-## Root-prefix carry cylinders (2026-11-24)
-
-[wall_prefix_carry_cylinders.md](wall_prefix_carry_cylinders.md) and
-[wall_prefix_carry_cylinders.lean](wall_prefix_carry_cylinders.lean) add a
-core-Lean-checked carry certificate for four infinite parameter cylinders in
-the two fourth-edge restart families. The exact prefix recurrence is
-(c_{j+1}=(c_j+x_j(n+3+j))/2), with (c_1=(n+2)/2). Empty carry layers
-exclude all Boolean prefixes with (x_0=1) satisfying the source-wall
-congruence modulo (2^K).
-
-The four excluded classes are family I (h\equiv1\pmod{2^{56}}) and
-(h\equiv2\pmod{2^8}), and family II (h\equiv1\pmod{2^{10}}) and
-(h\equiv2\pmod{2^{18}}). The source identity is independently compiled on
-PR #99; its small characteristic-list-to-Boolean-prefix composition remains
-to be integrated. This is a partial cylinder exclusion, not a proof that
-either full restart family is impossible, not an unrestricted six-shallow
-theorem, and not a P1 or BB(6) decision.
-
-
-## Carry-depth atlas (2026-11-24)
-
-[wall_prefix_carry_depths_h0_256.md](wall_prefix_carry_depths_h0_256.md) records an exact Set-based scan over (h=0,\ldots,256) in both restart progressions. Every one of the 514 cases reached an empty prefix layer before 10,000; the longest transients were (K=5350) at family-I (h=142) and (K=4750) at family-II (h=86). These outliers warn against assuming a small uniform carry cutoff. This is exploratory finite evidence, not a universal theorem.
-
-
-The same Lean certificate now also proves (2^n\ge1100n) for (n\ge14) and the two family-specific inequalities (m=14u-2n-3\ge n) from the explicit (u)-formulae, so the cutoff (m\ge K) used in the source-wall reduction is formally justified.
- The depth maxima (5350<5362\le n) and (4750<9538\le n), together with (m\ge n), give a finite-range computational exclusion of source-wall states for every (h\le256) in both families; the batch is not kernel-certified.
