@@ -23,6 +23,7 @@ open BB6Coverage.Agent8CountedReset
 open BB6Coverage.Agent24Q4Endpoint
 open BB6Coverage.Agent24M1OddQ4Prefix
 open BB6ChampionArithmetic
+open BB6Coverage.Agent48CountedInc0
 
 /-- The 29-step m=1,n=3 prefix ends four E-on-one moves into the
 ordinary q4 suffix.  Splitting the generic 39+3b suffix at those four
@@ -55,6 +56,7 @@ theorem m1Odd_q4_reset_prefix_source (a b : Nat) (h : Int) :
       (32+12*a)+(35+3*b) := by
     rw [m1Odd_resetPrefixCost_eq]
     omega
+  change run tm2 (resetPrefixCost 1 3 a b) (⟨3,h,(s1Config 3 3 1 a 0 b h).tape⟩ : Config) = _
   rw [hnum,run_append,hprefix]
   simp only [Option.bind_some]
   exact hq4

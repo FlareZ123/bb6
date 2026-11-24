@@ -7,6 +7,8 @@
 
 - Second root-closure checkpoint: locally compiled RootFiniteBits (27959 exact steps, propext only), RootSourceBridge, TerminalAfterPrefix and TerminalEncoderBridge. Repaired three previously failing source modules: Rst1PrimeSecondSweep (exact 3L+5-cell sweep following bridge8), M2OddGenericStage (complete generic odd marker-2 increment), S1ChampionCountedReset (source terminal attainability conditional on genuine root and prefix). All exported theorem profiles standard propext/Classical.choice/Quot.sound, no sorryAx. The root-middle22 closure itself is still under construction. No new CI dispatched.
 
+- Third checkpoint: exact local acceptance of Rst1PrimeBridge20Source and Rst1PrimeBridge9Source through the a+1-block right sweep, plus four counted adapters M0OddResidueSevenCounted, M2EvenResidueSixCounted, M0EvenQ4Suffix and M1OddQ4Suffix. All printed profiles standard; no sorryAx. Root-middle22 broader closure still has unaccepted M0OddResidueFive, M1EvenResidueFourSource, M1EvenQ4Suffix and potentially further modules. Work remains partial and no whole root result is claimed.
+
 ## Current incarnation — 2026-11-24 04:04 UTC
 
 Run: `agent44-gpt6-20261124T040416Z-m2-generic-source-root-closure`. Normal mode selected by executed RNG draw **4**. Original claim: `2026-11-24T04:04:16.338Z`, pushed in `cd89e655f142aa11a00d71094a2c108a77d1635a`. Do not refresh. The 70-minute release threshold is **2026-11-24T05:14:16.338Z**; after every checkpoint compare the actual runtime clock with this timestamp and release only at/after the threshold.

@@ -13,6 +13,8 @@ original-table increment needed by the TM63 root countdown.
 namespace BB6Coverage.Agent42M2EvenResidueSixCounted
 
 open BB6ChampionArithmetic
+open BB6Coverage.Agent48Champion
+open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent8CountedReset
 open BB6Coverage.Agent48CountedInc0
 open BB6Coverage.Agent48M2EvenResidueSix

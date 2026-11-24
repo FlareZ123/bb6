@@ -14,6 +14,9 @@ M0OddResidueSeven.lean does not depend on this module.
 namespace BB6Coverage.Agent41M0OddResidueSevenCounted
 
 open BB6Coverage
+open BB6Coverage.Agent48Champion
+open BB6Coverage.Agent8S1Encoder
+open BB6Coverage.Agent8CountedReset
 open BB6ChampionArithmetic
 open BB6Coverage.Agent41M0OddResidueSeven
 open BB6Coverage.Agent48CountedInc0

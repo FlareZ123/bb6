@@ -19,6 +19,7 @@ open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent24ChampionTime
 open BB6Coverage.Agent8Rst1Prime
+open BB6Coverage.Agent8CountedReset
 
 /-- The tape immediately before bridge9 has the exact three cells at
 and to the right of the phase-5 endpoint. -/
@@ -35,7 +36,7 @@ theorem rst1PrimeAfterBridge20_right_cells
   let H2 : Int := H1-((3*L+5:Int))
   let T1 : Int → Bool :=
     sweptLeft (3*a+1) (s1Config L 0 1 a 0 b h).tape h
-  let T2 : Int → Bool := frameAt T1 H0 inside8 bridge8End
+  let T2 : Int → Bool := (frameAt T1 H0 inside8 bridge8End).tape
   let T3 : Int → Bool := sweptLeft (3*L+5) T2 H1
   change (frameAt T3 H2 inside20 bridge20End).tape H0 = true ∧
     (frameAt T3 H2 inside20 bridge20End).tape (H0+1) = false ∧
@@ -66,25 +67,31 @@ theorem rst1PrimeAfterBridge20_right_cells
     omega
   constructor
   · rw [frameAt_tape]
-    simp only [hout0]
-    rw [hunchanged0,frameAt_tape]
+    simp only [hout0, Bool.false_eq_true, if_false]
+    rw [hunchanged0]
+    dsimp [T2]
+    rw [frameAt_tape]
     simp [inside8,inWindow,bridge8End]
   constructor
   · rw [frameAt_tape]
-    simp only [hout1]
-    rw [hunchanged1,frameAt_tape]
+    simp only [hout1, Bool.false_eq_true, if_false]
+    rw [hunchanged1]
+    dsimp [T2]
+    rw [frameAt_tape]
     have hout8 : inside8 ((H0+1)-H0) = false := by
-      simp [inside8,inWindow]
-    simp only [hout8]
+      simp [inside8,inWindow] <;> omega
+    simp only [hout8, Bool.false_eq_true, if_false]
     have hfalse := sweptLeft_head_plus1_eq_false
       (3*a+1) (s1Config L 0 1 a 0 b h).tape h (by omega)
     simpa [T1,H0] using hfalse
   · rw [frameAt_tape]
-    simp only [hout2]
-    rw [hunchanged2,frameAt_tape]
+    simp only [hout2, Bool.false_eq_true, if_false]
+    rw [hunchanged2]
+    dsimp [T2]
+    rw [frameAt_tape]
     have hout8 : inside8 ((H0+2)-H0) = false := by
-      simp [inside8,inWindow]
-    simp only [hout8]
+      simp [inside8,inWindow] <;> omega
+    simp only [hout8, Bool.false_eq_true, if_false]
     have htrue := sweptLeft_one_block
       (3*a+1) (s1Config L 0 1 a 0 b h).tape h 0 (by omega)
     simpa [T1,H0] using htrue
@@ -128,6 +135,7 @@ theorem rst1Prime_bridge9_window_after_rightSweep
       (L+1) (rst1PrimeAfterBridge20 L a b h).tape
       (((h-((3*a+1:Int))-2)-((3*L+5:Int)))+4)
       (h-((3*a+1:Int)) ) (by omega)
+    simp only [Int.add_zero]
     rw [hafter]
     have hcell := (rst1PrimeAfterBridge20_right_cells L a b h).1
     simpa [bridge9Start] using hcell
@@ -169,9 +177,9 @@ theorem rst1Prime_rightSweep_preconditions_after_bridge9
   let H3 : Int := H2+4
   let T1 : Int → Bool :=
     sweptLeft (3*a+1) (s1Config L 0 1 a 0 b h).tape h
-  let T2 : Int → Bool := frameAt T1 H0 inside8 bridge8End
+  let T2 : Int → Bool := (frameAt T1 H0 inside8 bridge8End).tape
   let T3 : Int → Bool := sweptLeft (3*L+5) T2 H1
-  let C2 : Int → Bool := frameAt T3 H2 inside20 bridge20End
+  let C2 : Int → Bool := (frameAt T3 H2 inside20 bridge20End).tape
   let T5 : Int → Bool := sweptRight (L+1) C2 H3
   change rightOnes (frameAt T5 H0 inside9 bridge9End).tape
     (H0+3) (a+1)
@@ -184,14 +192,17 @@ theorem rst1Prime_rightSweep_preconditions_after_bridge9
     have hout9 : inside9 (x-H0) = false := by
       simp [inside9,inWindow,hrel9]
       omega
+    change (frameAt T5 H0 inside9 bridge9End).tape x = true
     rw [frameAt_tape]
-    simp only [hout9]
+    simp only [hout9, Bool.false_eq_true, if_false]
     have hafter5 :
         sweptRight (L+1) C2 H3 x = C2 x := by
       apply rst1Prime_sweptRight_preserves_after
       dsimp [x,H0,H3,H2,H1]
       omega
+    dsimp [T5]
     rw [hafter5]
+    dsimp [C2]
     have hrel20 : x-H2 = 3*L+10+3*(i:Int)+(k:Int) := by
       dsimp [x,H0,H3,H2,H1]
       omega
@@ -199,12 +210,13 @@ theorem rst1Prime_rightSweep_preconditions_after_bridge9
       simp [inside20,inWindow,hrel20]
       omega
     rw [frameAt_tape]
-    simp only [hout20]
+    simp only [hout20, Bool.false_eq_true, if_false]
     have hunchanged2 : T3 x = T2 x := by
       apply sweptLeft_eq_of_gt
       dsimp [H1,x,H0,H3,H2]
       omega
     rw [hunchanged2]
+    dsimp [T2]
     have hrel8 : x-H0 = 3+3*(i:Int)+(k:Int) := by
       dsimp [x]
       omega
@@ -212,13 +224,14 @@ theorem rst1Prime_rightSweep_preconditions_after_bridge9
       simp [inside8,inWindow,hrel8]
       omega
     rw [frameAt_tape]
-    simp only [hout8]
+    simp only [hout8, Bool.false_eq_true, if_false]
     by_cases hia : i<a
     · have hj : 1+3*i+k < 3*a+1 := by omega
-      have hcoord : x = H0+2+((1+3*i+k:Int)) := by
+      have hcoord : x = H0+2+(↑(1+3*i+k):Int) := by
         dsimp [x]
         omega
       rw [hcoord]
+      dsimp [T1,H0]
       exact sweptLeft_one_block (3*a+1)
         (s1Config L 0 1 a 0 b h).tape h (1+3*i+k) hj
     · have hieq : i=a := by omega
@@ -231,6 +244,7 @@ theorem rst1Prime_rightSweep_preconditions_after_bridge9
           (s1Config L 0 1 a 0 b h).tape x := by
         apply sweptLeft_eq_of_gt
         exact hgt1
+      dsimp [T1]
       rw [hunchanged1]
       have hcoord : x = h+((k+2:Int)) := by
         dsimp [x,H0]
@@ -240,17 +254,17 @@ theorem rst1Prime_rightSweep_preconditions_after_bridge9
       rcases hkCases with hk0 | hk1 | hk2
       · subst k
         have hcell := s1Config_right_cell L 0 1 a 0 b h 1
-        simpa [s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit] using hcell
+        simpa [s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit,Int.add_assoc] using hcell
       · subst k
         have hcell := s1Config_right_cell L 0 1 a 0 b h 2
-        simpa [s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit] using hcell
+        simpa [s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit,Int.add_assoc] using hcell
       · subst k
         have hcell := s1Config_right_cell L 0 1 a 0 b h 3
-        simpa [s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit] using hcell
+        simpa [s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit,Int.add_assoc] using hcell
   have h0 := hone 0 (by omega)
   have h1 := hone 1 (by omega)
   have h2 := hone 2 (by omega)
-  exact ⟨h0,by simpa using h1,by simpa using h2⟩
+  exact ⟨by simpa using h0,by simpa using h1,by simpa using h2⟩
 
 /-- Compose the phase-5 right sweep with the exact nine-step bridge. -/
 theorem rst1Prime_bridge9_after_rightSweep
@@ -260,6 +274,7 @@ theorem rst1Prime_bridge9_after_rightSweep
       some (rst1PrimeAfterBridge9 L a b h) := by
   rw [run_add,rst1Prime_rightSweep_after_bridge20_run]
   simp only [Option.bind_some]
+  rw [show ((h-((3*a+1:Int))-2)-((3*L+5:Int))+4+3*((L+1):Int)) = h-((3*a+1:Int)) by omega]
   exact bridge9_at
     (sweptRight (L+1) (rst1PrimeAfterBridge20 L a b h).tape
       (((h-((3*a+1:Int))-2)-((3*L+5:Int)))+4))
@@ -283,7 +298,15 @@ theorem rst1Prime_rightSweep_after_bridge9_run
     (h-((3*a+1:Int))+3) hpre
   rw [run_add,hprefix]
   simp only [Option.bind_some]
-  simpa [rst1PrimeAfterBridge9,frameAt_state,frameAt_head,bridge9End] using hrun
+  have hcfg : rst1PrimeAfterBridge9 L a b h =
+      (⟨3,h-((3*a+1:Int))+3,(rst1PrimeAfterBridge9 L a b h).tape⟩ : Config) := by
+    apply BB6Coverage.Agent8Rst1Prime.config_ext
+    · simp [rst1PrimeAfterBridge9,bridge9End]
+    · simp [rst1PrimeAfterBridge9,bridge9End]
+      omega
+    · rfl
+  rw [hcfg]
+  exact hrun
 
 #print axioms rst1PrimeAfterBridge20_right_cells
 #print axioms rst1Prime_bridge9_window_after_rightSweep

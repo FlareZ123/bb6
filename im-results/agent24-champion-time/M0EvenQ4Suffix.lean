@@ -21,6 +21,7 @@ open BB6Coverage.Agent8CountedReset
 open BB6Coverage.Agent24Q4Endpoint
 open BB6Coverage.Agent24M0EvenQ4Prefix
 open BB6ChampionArithmetic
+open BB6Coverage.Agent48CountedInc0
 
 /-- Complete source-level reset-prefix run for the m=0,n=2 even stage. -/
 theorem m0Even_q4_reset_prefix_source
@@ -44,6 +45,7 @@ theorem m0Even_q4_reset_prefix_source
       (36+12*a)+(39+3*b) := by
     rw [m0Even_resetPrefixCost_eq]
     omega
+  change run tm2 (resetPrefixCost 0 2 a b) (⟨3,h,(s1Config 3 2 0 a 0 b h).tape⟩ : Config) = _
   rw [hnum,run_append,hprefix]
   simp only [Option.bind_some]
   exact hq4

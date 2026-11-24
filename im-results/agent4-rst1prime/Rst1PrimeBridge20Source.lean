@@ -21,6 +21,7 @@ open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent24ChampionTime
 open BB6Coverage.Agent8Rst1Prime
+open BB6Coverage.Agent8CountedReset
 
 /-- Cells strictly to the right of the first holeThree window are
 unchanged by any number of subsequent left-sweep steps. -/
@@ -34,10 +35,10 @@ theorem sweptLeft_eq_of_gt
   | succ n ih =>
       rw [sweptLeft]
       have hx' : (h-1)+1 < x := by omega
-      rw [ih (holeThree T h) (h-1) x hx']
+      rw [ih (holeThree T h) (h-1) hx']
       have hne0 : x ≠ h := by omega
       have hne1 : x ≠ h+1 := by omega
-      simp [holeThree,hne0,hne1]
+      simp [holeThree,hne0,hne1,show x ≠ h-1 by omega]
 
 /-- The cell immediately right of the new head is zero after a
 positive-length counted left sweep. -/
@@ -51,12 +52,12 @@ theorem sweptLeft_head_plus1_eq_false
   | succ n =>
       induction n generalizing T h with
       | zero =>
-          simp [sweptLeft,holeThree]
+          simp [sweptLeft,holeThree] <;> omega
       | succ n ih =>
           have hcoord :
-              h-((n+2:Int))+1 = (h-1)-((n+1:Int))+1 := by omega
+              h-(↑(n+1+1):Int)+1 = (h-1)-(↑(n+1):Int)+1 := by omega
           rw [sweptLeft,hcoord]
-          exact ih (holeThree T h) (h-1)
+          exact ih (holeThree T h) (h-1) (by omega)
 
 /-- The left-sweep output contains a contiguous block of n ones from
 its new head+2 through the original head+1. -/
@@ -70,7 +71,7 @@ theorem sweptLeft_one_block
   | succ n ih =>
       by_cases hjn : j<n
       · have hcoord :
-          h-((n+1:Int))+2+(j:Int) =
+          h-(↑(n+1):Int)+2+(j:Int) =
             (h-1)-(n:Int)+2+(j:Int) := by omega
         rw [sweptLeft,hcoord]
         exact ih (holeThree T h) (h-1) j hjn
@@ -78,7 +79,7 @@ theorem sweptLeft_one_block
         subst j
         rw [sweptLeft]
         have hcoord :
-            h-((n+1:Int))+2+(n:Int) = h+1 := by omega
+            h-(↑(n+1):Int)+2+(n:Int) = h+1 := by omega
         rw [hcoord]
         have htail :
             sweptLeft n (holeThree T h) (h-1) (h+1) =
@@ -86,7 +87,7 @@ theorem sweptLeft_one_block
           apply sweptLeft_eq_of_gt
           omega
         rw [htail]
-        simp [holeThree]
+        simp [holeThree] <;> omega
 
 /-- Beyond the fixed marker/d0 prefix and the d1^L block, the source
 left-facing word is exactly lh. -/
@@ -98,6 +99,7 @@ theorem rst1Prime_source_lh_cell
   have hd0 : d0.length = 3 := by decide
   have hbin : (binDec L 0).length = 3*L := by
     rw [binDec_zero,d1pow_length]
+  simp only [List.append_assoc]
   rw [sideBit_append,hmark]
   have hnot1 : ¬ 3*L+6+r < 3 := by omega
   simp only [if_neg hnot1]
@@ -125,7 +127,7 @@ theorem rst1Prime_bridge20_left_cell
   let H2 : Int := H1-((3*L+5:Int))
   let T1 : Int → Bool :=
     sweptLeft (3*a+1) (s1Config L 0 1 a 0 b h).tape h
-  let T2 : Int → Bool := frameAt T1 H0 inside8 bridge8End
+  let T2 : Int → Bool := (frameAt T1 H0 inside8 bridge8End).tape
   change (sweptLeft (3*L+5) T2 H1) (H2-(k:Int)) =
     sideBit lh (2+k)
   have hunchanged2 :
@@ -140,8 +142,10 @@ theorem rst1Prime_bridge20_left_cell
   have hout : inside8 ((H2-(k:Int))-H0) = false := by
     simp [inside8,inWindow,hrel]
     omega
+  dsimp [T2]
   rw [frameAt_tape]
-  simp only [hout]
+  simp only [hout, Bool.false_eq_true, if_false]
+  dsimp [T1]
   have hunchanged1 :
       sweptLeft (3*a+1) (s1Config L 0 1 a 0 b h).tape h
         (H2-(k:Int)) =
@@ -151,11 +155,11 @@ theorem rst1Prime_bridge20_left_cell
     omega
   rw [hunchanged1]
   have hcoord :
-      H2-(k:Int) = h-((3*a+1+(3*L+7+k):Int)) := by
+      H2-(k:Int) = h-((3*a+1:Int)+(↑(3*L+7+k):Int)) := by
     dsimp [H0,H1,H2]
     omega
   rw [hcoord,s1Config_left_after_d1pow]
-  have hindex : 3*L+8+k = 3*L+6+(2+k) := by omega
+  have hindex : 3*L+7+k+1 = 3*L+6+(2+k) := by omega
   rw [hindex,rst1Prime_source_lh_cell]
 
 /-- The complete bridge20 input window after the second counted sweep. -/
@@ -175,18 +179,23 @@ theorem rst1Prime_bridge20_window_after_secondSweep
   rcases hcases with h5 | h4 | h3 | h2 | h1 | h0 | hpos1 | hpos2 | hpos3
   · subst x
     have hcell := rst1Prime_bridge20_left_cell L a b h 5 (by omega)
+    rw [show (h-((3*a+1:Int))-2)-((3*L+5:Int))+(-5) = (h-((3*a+1:Int))-2)-((3*L+5:Int))-(5:Int) by omega]
     simpa [bridge20Start,lh,sideBit] using hcell
   · subst x
     have hcell := rst1Prime_bridge20_left_cell L a b h 4 (by omega)
+    rw [show (h-((3*a+1:Int))-2)-((3*L+5:Int))+(-4) = (h-((3*a+1:Int))-2)-((3*L+5:Int))-(4:Int) by omega]
     simpa [bridge20Start,lh,sideBit] using hcell
   · subst x
     have hcell := rst1Prime_bridge20_left_cell L a b h 3 (by omega)
+    rw [show (h-((3*a+1:Int))-2)-((3*L+5:Int))+(-3) = (h-((3*a+1:Int))-2)-((3*L+5:Int))-(3:Int) by omega]
     simpa [bridge20Start,lh,sideBit] using hcell
   · subst x
     have hcell := rst1Prime_bridge20_left_cell L a b h 2 (by omega)
+    rw [show (h-((3*a+1:Int))-2)-((3*L+5:Int))+(-2) = (h-((3*a+1:Int))-2)-((3*L+5:Int))-(2:Int) by omega]
     simpa [bridge20Start,lh,sideBit] using hcell
   · subst x
     have hcell := rst1Prime_bridge20_left_cell L a b h 1 (by omega)
+    rw [show (h-((3*a+1:Int))-2)-((3*L+5:Int))+(-1) = (h-((3*a+1:Int))-2)-((3*L+5:Int))-(1:Int) by omega]
     simpa [bridge20Start,lh,sideBit] using hcell
   · subst x
     have hcell := rst1Prime_bridge20_left_cell L a b h 0 (by omega)
@@ -205,6 +214,7 @@ theorem rst1Prime_bridge20_window_after_secondSweep
     have htrue := sweptLeft_one_block
       (3*L+5) (rst1PrimeAfterBridge8 L a b h).tape
       (h-((3*a+1:Int))-2) 1 (by omega)
+    rw [show (h-((3*a+1:Int))-2)-((3*L+5:Int))+3 = (h-((3*a+1:Int))-2)-((3*L+5:Int))+2+1 by omega]
     simpa [bridge20Start] using htrue
 
 /-- Full original-source configuration after bridge20. -/
@@ -238,7 +248,7 @@ theorem rst1Prime_rightSweep_preconditions_after_bridge20
       (((h-((3*a+1:Int))-2)-((3*L+5:Int)))+4) (L+1) := by
   let H1 : Int := h-((3*a+1:Int))-2
   let H2 : Int := H1-((3*L+5:Int))
-  let T2 : Int := (rst1PrimeAfterBridge8 L a b h).tape
+  let T2 : Int → Bool := (rst1PrimeAfterBridge8 L a b h).tape
   let T3 : Int → Bool := sweptLeft (3*L+5) T2 H1
   change rightOnes (frameAt T3 H2 inside20 bridge20End).tape
     (H2+4) (L+1)
@@ -254,10 +264,10 @@ theorem rst1Prime_rightSweep_preconditions_after_bridge20
       simp [inside20,inWindow,hrel]
       omega
     rw [frameAt_tape]
-    simp only [hout]
+    simp only [hout, Bool.false_eq_true, if_false]
     have hcoord :
         H2+4+3*(i:Int)+(k:Int) =
-          H1-((3*L+5:Int))+2+((2+3*i+k:Int)) := by
+          H1-((3*L+5:Int))+2+(↑(2+3*i+k):Int) := by
       dsimp [H2]
       omega
     rw [hcoord]
@@ -266,7 +276,7 @@ theorem rst1Prime_rightSweep_preconditions_after_bridge20
   have h0 := hone 0 (by omega)
   have h1 := hone 1 (by omega)
   have h2 := hone 2 (by omega)
-  exact ⟨h0,by simpa using h1,by simpa using h2⟩
+  exact ⟨by simpa using h0,by simpa using h1,by simpa using h2⟩
 
 /-- Exact original-machine run through bridge20 and the following
 L+1-block rightward sweep. -/
@@ -286,7 +296,16 @@ theorem rst1Prime_rightSweep_after_bridge20_run
     (((h-((3*a+1:Int))-2)-((3*L+5:Int)))+4) hpre
   rw [run_add,hprefix]
   simp only [Option.bind_some]
-  simpa [rst1PrimeAfterBridge20,frameAt_state,frameAt_head,bridge20End] using hrun
+  have hcfg : rst1PrimeAfterBridge20 L a b h =
+      (⟨3, ((h-((3*a+1:Int))-2)-((3*L+5:Int)))+4,
+        (rst1PrimeAfterBridge20 L a b h).tape⟩ : Config) := by
+    apply BB6Coverage.Agent8Rst1Prime.config_ext
+    · simp [rst1PrimeAfterBridge20,bridge20End]
+    · simp [rst1PrimeAfterBridge20,bridge20End]
+      omega
+    · rfl
+  rw [hcfg]
+  exact hrun
 
 #print axioms sweptLeft_eq_of_gt
 #print axioms sweptLeft_one_block
