@@ -82,8 +82,11 @@ Proof.
   rewrite !source_count_formula.
   destruct h as [q s]; destruct q,s;
     repeat (rewrite source_upd_hit || rewrite source_upd_miss by discriminate);
+    match goal with |- ?G => idtac "before Hhole:" G end;
     rewrite Hhole;
-    cbn [hole_value]; lia.
+    cbn [hole_value];
+    match goal with |- ?G => idtac "before lia:" G end;
+    lia.
 Qed.
 Lemma source_count_one t h :
   get_num_undef_trans t = 1 -> t h = None ->
