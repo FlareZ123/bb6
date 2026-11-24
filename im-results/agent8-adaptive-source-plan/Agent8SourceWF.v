@@ -232,7 +232,7 @@ Proof.
   intro H. apply in_or_app. left. apply in_flat_map.
   exists q. split; [apply state_in_prefix; exact H|].
   apply in_flat_map. exists w. split; [apply all_syms_spec|].
-  apply in_map. destruct d; simpl; auto.
+  apply in_map_iff. exists d. split; [reflexivity|]. destruct d; simpl; auto.
 Qed.
 
 Lemma source_expand_fresh_member x h w d q qs :
@@ -243,7 +243,7 @@ Proof.
   destruct x as [t n cut]; cbn [tm num_undef_trans min_unused_state expand].
   intro E. apply in_or_app. right. rewrite E.
   apply in_flat_map. exists w. split; [apply all_syms_spec|].
-  apply in_map. destruct d; simpl; auto.
+  apply in_map_iff. exists d. split; [reflexivity|]. destruct d; simpl; auto.
 Qed.
 
 Lemma source_expand'_nonlast x h :
