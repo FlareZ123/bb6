@@ -93,7 +93,7 @@ def main() -> None:
             raise AssertionError(
                 f"C{ident}: expected historical candidate keys to differ from destination key"
             )
-    print("PASS: all 14 Lean raw85 Data DFAs are reusable across different historical keys")
+    print("PASS: 14 candidate strings map across historical keys; destination validity is not asserted")
 
 if __name__ == "__main__":
     main()
