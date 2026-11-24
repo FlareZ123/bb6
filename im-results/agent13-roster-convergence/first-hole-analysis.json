@@ -1,0 +1,4255 @@
+{
+  "schema": "bb6.partial-first-hole-analysis.v1",
+  "source": "im-results/agent13-roster-convergence/canonical-124.json",
+  "method": "Deterministic partial-machine simulation from blank. Stop at the first unassigned transition. Before each step, compare the state and the complete nonzero tape pattern normalized relative to the head; a repeated normalized configuration would certify a translating cycle. This only describes the forced prefix and is not a halting/nonhalting certificate for completions.",
+  "sample_count": 124,
+  "distribution": {
+    "hole@2": 19,
+    "hole@3": 17,
+    "hole@5": 4,
+    "hole@6": 19,
+    "hole@7": 15,
+    "hole@8": 14,
+    "hole@9": 13,
+    "hole@10": 9,
+    "hole@16": 1,
+    "hole@12": 2,
+    "hole@13": 1,
+    "hole@17": 1,
+    "hole@11": 1,
+    "hole@4": 8
+  },
+  "by_depth": {
+    "1": {
+      "count": 19,
+      "steps": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "holes": {
+        "A1": 2,
+        "B1": 2,
+        "C1": 2,
+        "C0": 1,
+        "D1": 2,
+        "D0": 2,
+        "E1": 2,
+        "E0": 2,
+        "F1": 2,
+        "F0": 2
+      },
+      "min": 2,
+      "max": 2
+    },
+    "2": {
+      "count": 17,
+      "steps": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "holes": {
+        "A1": 2,
+        "B1": 2,
+        "C1": 2,
+        "D1": 2,
+        "D0": 1,
+        "E1": 2,
+        "E0": 2,
+        "F1": 2,
+        "F0": 2
+      },
+      "min": 3,
+      "max": 3
+    },
+    "3": {
+      "count": 12,
+      "steps": [
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        5,
+        5,
+        5,
+        5
+      ],
+      "holes": {
+        "B1": 1,
+        "C1": 1,
+        "D1": 2,
+        "E0": 4,
+        "F0": 4
+      },
+      "min": 4,
+      "max": 5
+    },
+    "4": {
+      "count": 19,
+      "steps": [
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ],
+      "holes": {
+        "A1": 4,
+        "B1": 4,
+        "C1": 4,
+        "E1": 3,
+        "F1": 4
+      },
+      "min": 6,
+      "max": 6
+    },
+    "5": {
+      "count": 22,
+      "steps": [
+        7,
+        7,
+        7,
+        7,
+        7,
+        7,
+        7,
+        7,
+        7,
+        7,
+        7,
+        7,
+        7,
+        7,
+        7,
+        8,
+        8,
+        8,
+        8,
+        8,
+        9,
+        9
+      ],
+      "holes": {
+        "A1": 4,
+        "B1": 3,
+        "C1": 4,
+        "E0": 7,
+        "F1": 4
+      },
+      "min": 7,
+      "max": 9
+    },
+    "6": {
+      "count": 17,
+      "steps": [
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        9,
+        9,
+        9,
+        10,
+        10,
+        10,
+        12,
+        16
+      ],
+      "holes": {
+        "A1": 2,
+        "C1": 5,
+        "E0": 7,
+        "F1": 1,
+        "F0": 2
+      },
+      "min": 8,
+      "max": 16
+    },
+    "7": {
+      "count": 18,
+      "steps": [
+        9,
+        9,
+        9,
+        9,
+        9,
+        9,
+        9,
+        9,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        11,
+        12,
+        13,
+        17
+      ],
+      "holes": {
+        "A1": 2,
+        "E0": 5,
+        "F0": 8,
+        "C1": 3
+      },
+      "min": 9,
+      "max": 17
+    }
+  },
+  "translation_cycle_count": 0,
+  "cap_count": 0,
+  "max_first_hole_steps": 17,
+  "entries": [
+    {
+      "canonical_index": 0,
+      "raw_residual_index": 0,
+      "depth": 1,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "0LA"
+        }
+      ],
+      "holes": 10,
+      "first_hole": {
+        "kind": "hole",
+        "step": 2,
+        "slot": "A1",
+        "state": 0,
+        "symbol": 1,
+        "head": 0
+      }
+    },
+    {
+      "canonical_index": 1,
+      "raw_residual_index": 2,
+      "depth": 1,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1LA"
+        }
+      ],
+      "holes": 10,
+      "first_hole": {
+        "kind": "hole",
+        "step": 2,
+        "slot": "A1",
+        "state": 0,
+        "symbol": 1,
+        "head": 0
+      }
+    },
+    {
+      "canonical_index": 2,
+      "raw_residual_index": 4,
+      "depth": 1,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "0LB"
+        }
+      ],
+      "holes": 10,
+      "first_hole": {
+        "kind": "hole",
+        "step": 2,
+        "slot": "B1",
+        "state": 1,
+        "symbol": 1,
+        "head": 0
+      }
+    },
+    {
+      "canonical_index": 3,
+      "raw_residual_index": 6,
+      "depth": 1,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1LB"
+        }
+      ],
+      "holes": 10,
+      "first_hole": {
+        "kind": "hole",
+        "step": 2,
+        "slot": "B1",
+        "state": 1,
+        "symbol": 1,
+        "head": 0
+      }
+    },
+    {
+      "canonical_index": 4,
+      "raw_residual_index": 8,
+      "depth": 1,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "0LC"
+        }
+      ],
+      "holes": 10,
+      "first_hole": {
+        "kind": "hole",
+        "step": 2,
+        "slot": "C1",
+        "state": 2,
+        "symbol": 1,
+        "head": 0
+      }
+    },
+    {
+      "canonical_index": 5,
+      "raw_residual_index": 9,
+      "depth": 1,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "0RC"
+        }
+      ],
+      "holes": 10,
+      "first_hole": {
+        "kind": "hole",
+        "step": 2,
+        "slot": "C0",
+        "state": 2,
+        "symbol": 0,
+        "head": 2
+      }
+    },
+    {
+      "canonical_index": 6,
+      "raw_residual_index": 10,
+      "depth": 1,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1LC"
+        }
+      ],
+      "holes": 10,
+      "first_hole": {
+        "kind": "hole",
+        "step": 2,
+        "slot": "C1",
+        "state": 2,
+        "symbol": 1,
+        "head": 0
+      }
+    },
+    {
+      "canonical_index": 7,
+      "raw_residual_index": 11,
+      "depth": 2,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0LA"
+        }
+      ],
+      "holes": 9,
+      "first_hole": {
+        "kind": "hole",
+        "step": 3,
+        "slot": "A1",
+        "state": 0,
+        "symbol": 1,
+        "head": 1
+      }
+    },
+    {
+      "canonical_index": 8,
+      "raw_residual_index": 13,
+      "depth": 2,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "1LA"
+        }
+      ],
+      "holes": 9,
+      "first_hole": {
+        "kind": "hole",
+        "step": 3,
+        "slot": "A1",
+        "state": 0,
+        "symbol": 1,
+        "head": 1
+      }
+    },
+    {
+      "canonical_index": 9,
+      "raw_residual_index": 15,
+      "depth": 2,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0LB"
+        }
+      ],
+      "holes": 9,
+      "first_hole": {
+        "kind": "hole",
+        "step": 3,
+        "slot": "B1",
+        "state": 1,
+        "symbol": 1,
+        "head": 1
+      }
+    },
+    {
+      "canonical_index": 10,
+      "raw_residual_index": 17,
+      "depth": 2,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "1LB"
+        }
+      ],
+      "holes": 9,
+      "first_hole": {
+        "kind": "hole",
+        "step": 3,
+        "slot": "B1",
+        "state": 1,
+        "symbol": 1,
+        "head": 1
+      }
+    },
+    {
+      "canonical_index": 11,
+      "raw_residual_index": 19,
+      "depth": 2,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0LC"
+        }
+      ],
+      "holes": 9,
+      "first_hole": {
+        "kind": "hole",
+        "step": 3,
+        "slot": "C1",
+        "state": 2,
+        "symbol": 1,
+        "head": 1
+      }
+    },
+    {
+      "canonical_index": 12,
+      "raw_residual_index": 21,
+      "depth": 2,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "1LC"
+        }
+      ],
+      "holes": 9,
+      "first_hole": {
+        "kind": "hole",
+        "step": 3,
+        "slot": "C1",
+        "state": 2,
+        "symbol": 1,
+        "head": 1
+      }
+    },
+    {
+      "canonical_index": 13,
+      "raw_residual_index": 23,
+      "depth": 2,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0LD"
+        }
+      ],
+      "holes": 9,
+      "first_hole": {
+        "kind": "hole",
+        "step": 3,
+        "slot": "D1",
+        "state": 3,
+        "symbol": 1,
+        "head": 1
+      }
+    },
+    {
+      "canonical_index": 14,
+      "raw_residual_index": 26,
+      "depth": 3,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LA"
+        }
+      ],
+      "holes": 8,
+      "first_hole": {
+        "kind": "hole",
+        "step": 5,
+        "slot": "B1",
+        "state": 1,
+        "symbol": 1,
+        "head": 3
+      }
+    },
+    {
+      "canonical_index": 15,
+      "raw_residual_index": 30,
+      "depth": 3,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LB"
+        }
+      ],
+      "holes": 8,
+      "first_hole": {
+        "kind": "hole",
+        "step": 5,
+        "slot": "C1",
+        "state": 2,
+        "symbol": 1,
+        "head": 3
+      }
+    },
+    {
+      "canonical_index": 16,
+      "raw_residual_index": 34,
+      "depth": 3,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LC"
+        }
+      ],
+      "holes": 8,
+      "first_hole": {
+        "kind": "hole",
+        "step": 5,
+        "slot": "D1",
+        "state": 3,
+        "symbol": 1,
+        "head": 3
+      }
+    },
+    {
+      "canonical_index": 17,
+      "raw_residual_index": 36,
+      "depth": 3,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "0LD"
+        }
+      ],
+      "holes": 8,
+      "first_hole": {
+        "kind": "hole",
+        "step": 5,
+        "slot": "D1",
+        "state": 3,
+        "symbol": 1,
+        "head": 1
+      }
+    },
+    {
+      "canonical_index": 18,
+      "raw_residual_index": 38,
+      "depth": 4,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "0LA"
+        }
+      ],
+      "holes": 7,
+      "first_hole": {
+        "kind": "hole",
+        "step": 6,
+        "slot": "A1",
+        "state": 0,
+        "symbol": 1,
+        "head": 0
+      }
+    },
+    {
+      "canonical_index": 19,
+      "raw_residual_index": 39,
+      "depth": 4,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "0RA"
+        }
+      ],
+      "holes": 7,
+      "first_hole": {
+        "kind": "hole",
+        "step": 6,
+        "slot": "A1",
+        "state": 0,
+        "symbol": 1,
+        "head": 2
+      }
+    },
+    {
+      "canonical_index": 20,
+      "raw_residual_index": 40,
+      "depth": 4,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1LA"
+        }
+      ],
+      "holes": 7,
+      "first_hole": {
+        "kind": "hole",
+        "step": 6,
+        "slot": "A1",
+        "state": 0,
+        "symbol": 1,
+        "head": 0
+      }
+    },
+    {
+      "canonical_index": 21,
+      "raw_residual_index": 41,
+      "depth": 4,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RA"
+        }
+      ],
+      "holes": 7,
+      "first_hole": {
+        "kind": "hole",
+        "step": 6,
+        "slot": "A1",
+        "state": 0,
+        "symbol": 1,
+        "head": 2
+      }
+    },
+    {
+      "canonical_index": 22,
+      "raw_residual_index": 42,
+      "depth": 4,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "0LB"
+        }
+      ],
+      "holes": 7,
+      "first_hole": {
+        "kind": "hole",
+        "step": 6,
+        "slot": "B1",
+        "state": 1,
+        "symbol": 1,
+        "head": 0
+      }
+    },
+    {
+      "canonical_index": 23,
+      "raw_residual_index": 43,
+      "depth": 4,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "0RB"
+        }
+      ],
+      "holes": 7,
+      "first_hole": {
+        "kind": "hole",
+        "step": 6,
+        "slot": "B1",
+        "state": 1,
+        "symbol": 1,
+        "head": 2
+      }
+    },
+    {
+      "canonical_index": 24,
+      "raw_residual_index": 44,
+      "depth": 4,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1LB"
+        }
+      ],
+      "holes": 7,
+      "first_hole": {
+        "kind": "hole",
+        "step": 6,
+        "slot": "B1",
+        "state": 1,
+        "symbol": 1,
+        "head": 0
+      }
+    },
+    {
+      "canonical_index": 25,
+      "raw_residual_index": 45,
+      "depth": 4,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RB"
+        }
+      ],
+      "holes": 7,
+      "first_hole": {
+        "kind": "hole",
+        "step": 6,
+        "slot": "B1",
+        "state": 1,
+        "symbol": 1,
+        "head": 2
+      }
+    },
+    {
+      "canonical_index": 26,
+      "raw_residual_index": 46,
+      "depth": 4,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "0LC"
+        }
+      ],
+      "holes": 7,
+      "first_hole": {
+        "kind": "hole",
+        "step": 6,
+        "slot": "C1",
+        "state": 2,
+        "symbol": 1,
+        "head": 0
+      }
+    },
+    {
+      "canonical_index": 27,
+      "raw_residual_index": 47,
+      "depth": 4,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "0RC"
+        }
+      ],
+      "holes": 7,
+      "first_hole": {
+        "kind": "hole",
+        "step": 6,
+        "slot": "C1",
+        "state": 2,
+        "symbol": 1,
+        "head": 2
+      }
+    },
+    {
+      "canonical_index": 28,
+      "raw_residual_index": 48,
+      "depth": 4,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1LC"
+        }
+      ],
+      "holes": 7,
+      "first_hole": {
+        "kind": "hole",
+        "step": 6,
+        "slot": "C1",
+        "state": 2,
+        "symbol": 1,
+        "head": 0
+      }
+    },
+    {
+      "canonical_index": 29,
+      "raw_residual_index": 49,
+      "depth": 4,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RC"
+        }
+      ],
+      "holes": 7,
+      "first_hole": {
+        "kind": "hole",
+        "step": 6,
+        "slot": "C1",
+        "state": 2,
+        "symbol": 1,
+        "head": 2
+      }
+    },
+    {
+      "canonical_index": 30,
+      "raw_residual_index": 54,
+      "depth": 4,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "0LE"
+        }
+      ],
+      "holes": 7,
+      "first_hole": {
+        "kind": "hole",
+        "step": 6,
+        "slot": "E1",
+        "state": 4,
+        "symbol": 1,
+        "head": 0
+      }
+    },
+    {
+      "canonical_index": 31,
+      "raw_residual_index": 55,
+      "depth": 4,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "0RE"
+        }
+      ],
+      "holes": 7,
+      "first_hole": {
+        "kind": "hole",
+        "step": 6,
+        "slot": "E1",
+        "state": 4,
+        "symbol": 1,
+        "head": 2
+      }
+    },
+    {
+      "canonical_index": 32,
+      "raw_residual_index": 56,
+      "depth": 4,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1LE"
+        }
+      ],
+      "holes": 7,
+      "first_hole": {
+        "kind": "hole",
+        "step": 6,
+        "slot": "E1",
+        "state": 4,
+        "symbol": 1,
+        "head": 0
+      }
+    },
+    {
+      "canonical_index": 33,
+      "raw_residual_index": 57,
+      "depth": 5,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LA"
+        }
+      ],
+      "holes": 6,
+      "first_hole": {
+        "kind": "hole",
+        "step": 7,
+        "slot": "A1",
+        "state": 0,
+        "symbol": 1,
+        "head": 1
+      }
+    },
+    {
+      "canonical_index": 34,
+      "raw_residual_index": 58,
+      "depth": 5,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0RA"
+        }
+      ],
+      "holes": 6,
+      "first_hole": {
+        "kind": "hole",
+        "step": 7,
+        "slot": "A1",
+        "state": 0,
+        "symbol": 1,
+        "head": 3
+      }
+    },
+    {
+      "canonical_index": 35,
+      "raw_residual_index": 59,
+      "depth": 5,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "1LA"
+        }
+      ],
+      "holes": 6,
+      "first_hole": {
+        "kind": "hole",
+        "step": 7,
+        "slot": "A1",
+        "state": 0,
+        "symbol": 1,
+        "head": 1
+      }
+    },
+    {
+      "canonical_index": 36,
+      "raw_residual_index": 60,
+      "depth": 5,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "1RA"
+        }
+      ],
+      "holes": 6,
+      "first_hole": {
+        "kind": "hole",
+        "step": 7,
+        "slot": "A1",
+        "state": 0,
+        "symbol": 1,
+        "head": 3
+      }
+    },
+    {
+      "canonical_index": 37,
+      "raw_residual_index": 61,
+      "depth": 6,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "0LA"
+        }
+      ],
+      "holes": 5,
+      "first_hole": {
+        "kind": "hole",
+        "step": 8,
+        "slot": "A1",
+        "state": 0,
+        "symbol": 1,
+        "head": 0
+      }
+    },
+    {
+      "canonical_index": 38,
+      "raw_residual_index": 63,
+      "depth": 6,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LA"
+        }
+      ],
+      "holes": 5,
+      "first_hole": {
+        "kind": "hole",
+        "step": 8,
+        "slot": "A1",
+        "state": 0,
+        "symbol": 1,
+        "head": 0
+      }
+    },
+    {
+      "canonical_index": 39,
+      "raw_residual_index": 66,
+      "depth": 6,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "0RB"
+        }
+      ],
+      "holes": 5,
+      "first_hole": {
+        "kind": "hole",
+        "step": 9,
+        "slot": "C1",
+        "state": 2,
+        "symbol": 1,
+        "head": 3
+      }
+    },
+    {
+      "canonical_index": 40,
+      "raw_residual_index": 67,
+      "depth": 6,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LB"
+        }
+      ],
+      "holes": 5,
+      "first_hole": {
+        "kind": "hole",
+        "step": 10,
+        "slot": "C1",
+        "state": 2,
+        "symbol": 1,
+        "head": 0
+      }
+    },
+    {
+      "canonical_index": 41,
+      "raw_residual_index": 68,
+      "depth": 6,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1RB"
+        }
+      ],
+      "holes": 5,
+      "first_hole": {
+        "kind": "hole",
+        "step": 9,
+        "slot": "C1",
+        "state": 2,
+        "symbol": 1,
+        "head": 3
+      }
+    },
+    {
+      "canonical_index": 42,
+      "raw_residual_index": 69,
+      "depth": 6,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "0LC"
+        }
+      ],
+      "holes": 5,
+      "first_hole": {
+        "kind": "hole",
+        "step": 8,
+        "slot": "C1",
+        "state": 2,
+        "symbol": 1,
+        "head": 0
+      }
+    },
+    {
+      "canonical_index": 43,
+      "raw_residual_index": 70,
+      "depth": 6,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "0RC"
+        }
+      ],
+      "holes": 5,
+      "first_hole": {
+        "kind": "hole",
+        "step": 10,
+        "slot": "E0",
+        "state": 4,
+        "symbol": 0,
+        "head": 4
+      }
+    },
+    {
+      "canonical_index": 44,
+      "raw_residual_index": 71,
+      "depth": 6,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LC"
+        }
+      ],
+      "holes": 5,
+      "first_hole": {
+        "kind": "hole",
+        "step": 8,
+        "slot": "C1",
+        "state": 2,
+        "symbol": 1,
+        "head": 0
+      }
+    },
+    {
+      "canonical_index": 45,
+      "raw_residual_index": 72,
+      "depth": 6,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1RC"
+        }
+      ],
+      "holes": 5,
+      "first_hole": {
+        "kind": "hole",
+        "step": 10,
+        "slot": "E0",
+        "state": 4,
+        "symbol": 0,
+        "head": 4
+      }
+    },
+    {
+      "canonical_index": 46,
+      "raw_residual_index": 73,
+      "depth": 6,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "0LD"
+        }
+      ],
+      "holes": 5,
+      "first_hole": {
+        "kind": "hole",
+        "step": 9,
+        "slot": "E0",
+        "state": 4,
+        "symbol": 0,
+        "head": 1
+      }
+    },
+    {
+      "canonical_index": 47,
+      "raw_residual_index": 77,
+      "depth": 6,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "0LE"
+        }
+      ],
+      "holes": 5,
+      "first_hole": {
+        "kind": "hole",
+        "step": 16,
+        "slot": "E0",
+        "state": 4,
+        "symbol": 0,
+        "head": -2
+      }
+    },
+    {
+      "canonical_index": 48,
+      "raw_residual_index": 78,
+      "depth": 6,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "0RE"
+        }
+      ],
+      "holes": 5,
+      "first_hole": {
+        "kind": "hole",
+        "step": 8,
+        "slot": "E0",
+        "state": 4,
+        "symbol": 0,
+        "head": 2
+      }
+    },
+    {
+      "canonical_index": 49,
+      "raw_residual_index": 79,
+      "depth": 6,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LE"
+        }
+      ],
+      "holes": 5,
+      "first_hole": {
+        "kind": "hole",
+        "step": 12,
+        "slot": "E0",
+        "state": 4,
+        "symbol": 0,
+        "head": 2
+      }
+    },
+    {
+      "canonical_index": 50,
+      "raw_residual_index": 80,
+      "depth": 6,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1RE"
+        }
+      ],
+      "holes": 5,
+      "first_hole": {
+        "kind": "hole",
+        "step": 8,
+        "slot": "E0",
+        "state": 4,
+        "symbol": 0,
+        "head": 2
+      }
+    },
+    {
+      "canonical_index": 51,
+      "raw_residual_index": 81,
+      "depth": 6,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "0LF"
+        }
+      ],
+      "holes": 5,
+      "first_hole": {
+        "kind": "hole",
+        "step": 8,
+        "slot": "F1",
+        "state": 5,
+        "symbol": 1,
+        "head": 0
+      }
+    },
+    {
+      "canonical_index": 52,
+      "raw_residual_index": 82,
+      "depth": 6,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "0RF"
+        }
+      ],
+      "holes": 5,
+      "first_hole": {
+        "kind": "hole",
+        "step": 8,
+        "slot": "F0",
+        "state": 5,
+        "symbol": 0,
+        "head": 2
+      }
+    },
+    {
+      "canonical_index": 53,
+      "raw_residual_index": 83,
+      "depth": 7,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LF"
+        },
+        {
+          "slot": "F1",
+          "move": "0RA"
+        }
+      ],
+      "holes": 4,
+      "first_hole": {
+        "kind": "hole",
+        "step": 9,
+        "slot": "A1",
+        "state": 0,
+        "symbol": 1,
+        "head": 1
+      }
+    },
+    {
+      "canonical_index": 54,
+      "raw_residual_index": 85,
+      "depth": 7,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LF"
+        },
+        {
+          "slot": "F1",
+          "move": "1RA"
+        }
+      ],
+      "holes": 4,
+      "first_hole": {
+        "kind": "hole",
+        "step": 9,
+        "slot": "A1",
+        "state": 0,
+        "symbol": 1,
+        "head": 1
+      }
+    },
+    {
+      "canonical_index": 55,
+      "raw_residual_index": 86,
+      "depth": 7,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LF"
+        },
+        {
+          "slot": "F1",
+          "move": "0LB"
+        }
+      ],
+      "holes": 4,
+      "first_hole": {
+        "kind": "hole",
+        "step": 12,
+        "slot": "E0",
+        "state": 4,
+        "symbol": 0,
+        "head": 2
+      }
+    },
+    {
+      "canonical_index": 56,
+      "raw_residual_index": 87,
+      "depth": 7,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LF"
+        },
+        {
+          "slot": "F1",
+          "move": "0RB"
+        }
+      ],
+      "holes": 4,
+      "first_hole": {
+        "kind": "hole",
+        "step": 10,
+        "slot": "F0",
+        "state": 5,
+        "symbol": 0,
+        "head": 0
+      }
+    },
+    {
+      "canonical_index": 57,
+      "raw_residual_index": 88,
+      "depth": 7,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LF"
+        },
+        {
+          "slot": "F1",
+          "move": "1LB"
+        }
+      ],
+      "holes": 4,
+      "first_hole": {
+        "kind": "hole",
+        "step": 10,
+        "slot": "C1",
+        "state": 2,
+        "symbol": 1,
+        "head": 0
+      }
+    },
+    {
+      "canonical_index": 58,
+      "raw_residual_index": 91,
+      "depth": 7,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LF"
+        },
+        {
+          "slot": "F1",
+          "move": "0RC"
+        }
+      ],
+      "holes": 4,
+      "first_hole": {
+        "kind": "hole",
+        "step": 9,
+        "slot": "C1",
+        "state": 2,
+        "symbol": 1,
+        "head": 1
+      }
+    },
+    {
+      "canonical_index": 59,
+      "raw_residual_index": 92,
+      "depth": 7,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LF"
+        },
+        {
+          "slot": "F1",
+          "move": "1LC"
+        }
+      ],
+      "holes": 4,
+      "first_hole": {
+        "kind": "hole",
+        "step": 13,
+        "slot": "F0",
+        "state": 5,
+        "symbol": 0,
+        "head": -1
+      }
+    },
+    {
+      "canonical_index": 60,
+      "raw_residual_index": 93,
+      "depth": 7,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LF"
+        },
+        {
+          "slot": "F1",
+          "move": "1RC"
+        }
+      ],
+      "holes": 4,
+      "first_hole": {
+        "kind": "hole",
+        "step": 9,
+        "slot": "C1",
+        "state": 2,
+        "symbol": 1,
+        "head": 1
+      }
+    },
+    {
+      "canonical_index": 61,
+      "raw_residual_index": 95,
+      "depth": 7,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LF"
+        },
+        {
+          "slot": "F1",
+          "move": "0RD"
+        }
+      ],
+      "holes": 4,
+      "first_hole": {
+        "kind": "hole",
+        "step": 10,
+        "slot": "E0",
+        "state": 4,
+        "symbol": 0,
+        "head": 2
+      }
+    },
+    {
+      "canonical_index": 62,
+      "raw_residual_index": 97,
+      "depth": 7,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LF"
+        },
+        {
+          "slot": "F1",
+          "move": "1RD"
+        }
+      ],
+      "holes": 4,
+      "first_hole": {
+        "kind": "hole",
+        "step": 10,
+        "slot": "E0",
+        "state": 4,
+        "symbol": 0,
+        "head": 2
+      }
+    },
+    {
+      "canonical_index": 63,
+      "raw_residual_index": 98,
+      "depth": 7,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LF"
+        },
+        {
+          "slot": "F1",
+          "move": "0LE"
+        }
+      ],
+      "holes": 4,
+      "first_hole": {
+        "kind": "hole",
+        "step": 9,
+        "slot": "E0",
+        "state": 4,
+        "symbol": 0,
+        "head": -1
+      }
+    },
+    {
+      "canonical_index": 64,
+      "raw_residual_index": 99,
+      "depth": 7,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LF"
+        },
+        {
+          "slot": "F1",
+          "move": "0RE"
+        }
+      ],
+      "holes": 4,
+      "first_hole": {
+        "kind": "hole",
+        "step": 17,
+        "slot": "F0",
+        "state": 5,
+        "symbol": 0,
+        "head": -1
+      }
+    },
+    {
+      "canonical_index": 65,
+      "raw_residual_index": 100,
+      "depth": 7,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LF"
+        },
+        {
+          "slot": "F1",
+          "move": "1LE"
+        }
+      ],
+      "holes": 4,
+      "first_hole": {
+        "kind": "hole",
+        "step": 9,
+        "slot": "E0",
+        "state": 4,
+        "symbol": 0,
+        "head": -1
+      }
+    },
+    {
+      "canonical_index": 66,
+      "raw_residual_index": 101,
+      "depth": 7,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LF"
+        },
+        {
+          "slot": "F1",
+          "move": "1RE"
+        }
+      ],
+      "holes": 4,
+      "first_hole": {
+        "kind": "hole",
+        "step": 11,
+        "slot": "F0",
+        "state": 5,
+        "symbol": 0,
+        "head": -1
+      }
+    },
+    {
+      "canonical_index": 67,
+      "raw_residual_index": 102,
+      "depth": 7,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LF"
+        },
+        {
+          "slot": "F1",
+          "move": "0LF"
+        }
+      ],
+      "holes": 4,
+      "first_hole": {
+        "kind": "hole",
+        "step": 9,
+        "slot": "F0",
+        "state": 5,
+        "symbol": 0,
+        "head": -1
+      }
+    },
+    {
+      "canonical_index": 68,
+      "raw_residual_index": 103,
+      "depth": 7,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LF"
+        },
+        {
+          "slot": "F1",
+          "move": "0RF"
+        }
+      ],
+      "holes": 4,
+      "first_hole": {
+        "kind": "hole",
+        "step": 10,
+        "slot": "F0",
+        "state": 5,
+        "symbol": 0,
+        "head": 2
+      }
+    },
+    {
+      "canonical_index": 69,
+      "raw_residual_index": 104,
+      "depth": 7,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LF"
+        },
+        {
+          "slot": "F1",
+          "move": "1LF"
+        }
+      ],
+      "holes": 4,
+      "first_hole": {
+        "kind": "hole",
+        "step": 9,
+        "slot": "F0",
+        "state": 5,
+        "symbol": 0,
+        "head": -1
+      }
+    },
+    {
+      "canonical_index": 70,
+      "raw_residual_index": 105,
+      "depth": 7,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LF"
+        },
+        {
+          "slot": "F1",
+          "move": "1RF"
+        }
+      ],
+      "holes": 4,
+      "first_hole": {
+        "kind": "hole",
+        "step": 10,
+        "slot": "F0",
+        "state": 5,
+        "symbol": 0,
+        "head": 2
+      }
+    },
+    {
+      "canonical_index": 71,
+      "raw_residual_index": 106,
+      "depth": 6,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1RF"
+        }
+      ],
+      "holes": 5,
+      "first_hole": {
+        "kind": "hole",
+        "step": 8,
+        "slot": "F0",
+        "state": 5,
+        "symbol": 0,
+        "head": 2
+      }
+    },
+    {
+      "canonical_index": 72,
+      "raw_residual_index": 107,
+      "depth": 5,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0RB"
+        }
+      ],
+      "holes": 6,
+      "first_hole": {
+        "kind": "hole",
+        "step": 7,
+        "slot": "B1",
+        "state": 1,
+        "symbol": 1,
+        "head": 3
+      }
+    },
+    {
+      "canonical_index": 73,
+      "raw_residual_index": 108,
+      "depth": 5,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "1LB"
+        }
+      ],
+      "holes": 6,
+      "first_hole": {
+        "kind": "hole",
+        "step": 7,
+        "slot": "B1",
+        "state": 1,
+        "symbol": 1,
+        "head": 1
+      }
+    },
+    {
+      "canonical_index": 74,
+      "raw_residual_index": 109,
+      "depth": 5,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "1RB"
+        }
+      ],
+      "holes": 6,
+      "first_hole": {
+        "kind": "hole",
+        "step": 7,
+        "slot": "B1",
+        "state": 1,
+        "symbol": 1,
+        "head": 3
+      }
+    },
+    {
+      "canonical_index": 75,
+      "raw_residual_index": 110,
+      "depth": 5,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LC"
+        }
+      ],
+      "holes": 6,
+      "first_hole": {
+        "kind": "hole",
+        "step": 7,
+        "slot": "C1",
+        "state": 2,
+        "symbol": 1,
+        "head": 1
+      }
+    },
+    {
+      "canonical_index": 76,
+      "raw_residual_index": 111,
+      "depth": 5,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0RC"
+        }
+      ],
+      "holes": 6,
+      "first_hole": {
+        "kind": "hole",
+        "step": 7,
+        "slot": "C1",
+        "state": 2,
+        "symbol": 1,
+        "head": 3
+      }
+    },
+    {
+      "canonical_index": 77,
+      "raw_residual_index": 112,
+      "depth": 5,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "1LC"
+        }
+      ],
+      "holes": 6,
+      "first_hole": {
+        "kind": "hole",
+        "step": 7,
+        "slot": "C1",
+        "state": 2,
+        "symbol": 1,
+        "head": 1
+      }
+    },
+    {
+      "canonical_index": 78,
+      "raw_residual_index": 113,
+      "depth": 5,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "1RC"
+        }
+      ],
+      "holes": 6,
+      "first_hole": {
+        "kind": "hole",
+        "step": 7,
+        "slot": "C1",
+        "state": 2,
+        "symbol": 1,
+        "head": 3
+      }
+    },
+    {
+      "canonical_index": 79,
+      "raw_residual_index": 114,
+      "depth": 5,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LD"
+        }
+      ],
+      "holes": 6,
+      "first_hole": {
+        "kind": "hole",
+        "step": 8,
+        "slot": "E0",
+        "state": 4,
+        "symbol": 0,
+        "head": 2
+      }
+    },
+    {
+      "canonical_index": 80,
+      "raw_residual_index": 115,
+      "depth": 5,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0RD"
+        }
+      ],
+      "holes": 6,
+      "first_hole": {
+        "kind": "hole",
+        "step": 8,
+        "slot": "E0",
+        "state": 4,
+        "symbol": 0,
+        "head": 4
+      }
+    },
+    {
+      "canonical_index": 81,
+      "raw_residual_index": 117,
+      "depth": 5,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "1RD"
+        }
+      ],
+      "holes": 6,
+      "first_hole": {
+        "kind": "hole",
+        "step": 8,
+        "slot": "E0",
+        "state": 4,
+        "symbol": 0,
+        "head": 4
+      }
+    },
+    {
+      "canonical_index": 82,
+      "raw_residual_index": 118,
+      "depth": 5,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LE"
+        }
+      ],
+      "holes": 6,
+      "first_hole": {
+        "kind": "hole",
+        "step": 9,
+        "slot": "E0",
+        "state": 4,
+        "symbol": 0,
+        "head": -1
+      }
+    },
+    {
+      "canonical_index": 83,
+      "raw_residual_index": 119,
+      "depth": 5,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0RE"
+        }
+      ],
+      "holes": 6,
+      "first_hole": {
+        "kind": "hole",
+        "step": 8,
+        "slot": "E0",
+        "state": 4,
+        "symbol": 0,
+        "head": 4
+      }
+    },
+    {
+      "canonical_index": 84,
+      "raw_residual_index": 120,
+      "depth": 5,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "1LE"
+        }
+      ],
+      "holes": 6,
+      "first_hole": {
+        "kind": "hole",
+        "step": 9,
+        "slot": "E0",
+        "state": 4,
+        "symbol": 0,
+        "head": -1
+      }
+    },
+    {
+      "canonical_index": 85,
+      "raw_residual_index": 121,
+      "depth": 5,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "1RE"
+        }
+      ],
+      "holes": 6,
+      "first_hole": {
+        "kind": "hole",
+        "step": 8,
+        "slot": "E0",
+        "state": 4,
+        "symbol": 0,
+        "head": 4
+      }
+    },
+    {
+      "canonical_index": 86,
+      "raw_residual_index": 122,
+      "depth": 5,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LF"
+        }
+      ],
+      "holes": 6,
+      "first_hole": {
+        "kind": "hole",
+        "step": 7,
+        "slot": "F1",
+        "state": 5,
+        "symbol": 1,
+        "head": 1
+      }
+    },
+    {
+      "canonical_index": 87,
+      "raw_residual_index": 123,
+      "depth": 5,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0RF"
+        }
+      ],
+      "holes": 6,
+      "first_hole": {
+        "kind": "hole",
+        "step": 7,
+        "slot": "F1",
+        "state": 5,
+        "symbol": 1,
+        "head": 3
+      }
+    },
+    {
+      "canonical_index": 88,
+      "raw_residual_index": 124,
+      "depth": 5,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "1LF"
+        }
+      ],
+      "holes": 6,
+      "first_hole": {
+        "kind": "hole",
+        "step": 7,
+        "slot": "F1",
+        "state": 5,
+        "symbol": 1,
+        "head": 1
+      }
+    },
+    {
+      "canonical_index": 89,
+      "raw_residual_index": 125,
+      "depth": 5,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "1RF"
+        }
+      ],
+      "holes": 6,
+      "first_hole": {
+        "kind": "hole",
+        "step": 7,
+        "slot": "F1",
+        "state": 5,
+        "symbol": 1,
+        "head": 3
+      }
+    },
+    {
+      "canonical_index": 90,
+      "raw_residual_index": 126,
+      "depth": 4,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "0LF"
+        }
+      ],
+      "holes": 7,
+      "first_hole": {
+        "kind": "hole",
+        "step": 6,
+        "slot": "F1",
+        "state": 5,
+        "symbol": 1,
+        "head": 0
+      }
+    },
+    {
+      "canonical_index": 91,
+      "raw_residual_index": 127,
+      "depth": 4,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "0RF"
+        }
+      ],
+      "holes": 7,
+      "first_hole": {
+        "kind": "hole",
+        "step": 6,
+        "slot": "F1",
+        "state": 5,
+        "symbol": 1,
+        "head": 2
+      }
+    },
+    {
+      "canonical_index": 92,
+      "raw_residual_index": 128,
+      "depth": 4,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1LF"
+        }
+      ],
+      "holes": 7,
+      "first_hole": {
+        "kind": "hole",
+        "step": 6,
+        "slot": "F1",
+        "state": 5,
+        "symbol": 1,
+        "head": 0
+      }
+    },
+    {
+      "canonical_index": 93,
+      "raw_residual_index": 129,
+      "depth": 4,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RF"
+        }
+      ],
+      "holes": 7,
+      "first_hole": {
+        "kind": "hole",
+        "step": 6,
+        "slot": "F1",
+        "state": 5,
+        "symbol": 1,
+        "head": 2
+      }
+    },
+    {
+      "canonical_index": 94,
+      "raw_residual_index": 131,
+      "depth": 3,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "0LE"
+        }
+      ],
+      "holes": 8,
+      "first_hole": {
+        "kind": "hole",
+        "step": 4,
+        "slot": "E0",
+        "state": 4,
+        "symbol": 0,
+        "head": 2
+      }
+    },
+    {
+      "canonical_index": 95,
+      "raw_residual_index": 132,
+      "depth": 3,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "0RE"
+        }
+      ],
+      "holes": 8,
+      "first_hole": {
+        "kind": "hole",
+        "step": 4,
+        "slot": "E0",
+        "state": 4,
+        "symbol": 0,
+        "head": 4
+      }
+    },
+    {
+      "canonical_index": 96,
+      "raw_residual_index": 133,
+      "depth": 3,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LE"
+        }
+      ],
+      "holes": 8,
+      "first_hole": {
+        "kind": "hole",
+        "step": 4,
+        "slot": "E0",
+        "state": 4,
+        "symbol": 0,
+        "head": 2
+      }
+    },
+    {
+      "canonical_index": 97,
+      "raw_residual_index": 134,
+      "depth": 3,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1RE"
+        }
+      ],
+      "holes": 8,
+      "first_hole": {
+        "kind": "hole",
+        "step": 4,
+        "slot": "E0",
+        "state": 4,
+        "symbol": 0,
+        "head": 4
+      }
+    },
+    {
+      "canonical_index": 98,
+      "raw_residual_index": 135,
+      "depth": 3,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "0LF"
+        }
+      ],
+      "holes": 8,
+      "first_hole": {
+        "kind": "hole",
+        "step": 4,
+        "slot": "F0",
+        "state": 5,
+        "symbol": 0,
+        "head": 2
+      }
+    },
+    {
+      "canonical_index": 99,
+      "raw_residual_index": 136,
+      "depth": 3,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "0RF"
+        }
+      ],
+      "holes": 8,
+      "first_hole": {
+        "kind": "hole",
+        "step": 4,
+        "slot": "F0",
+        "state": 5,
+        "symbol": 0,
+        "head": 4
+      }
+    },
+    {
+      "canonical_index": 100,
+      "raw_residual_index": 137,
+      "depth": 3,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LF"
+        }
+      ],
+      "holes": 8,
+      "first_hole": {
+        "kind": "hole",
+        "step": 4,
+        "slot": "F0",
+        "state": 5,
+        "symbol": 0,
+        "head": 2
+      }
+    },
+    {
+      "canonical_index": 101,
+      "raw_residual_index": 138,
+      "depth": 3,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1RF"
+        }
+      ],
+      "holes": 8,
+      "first_hole": {
+        "kind": "hole",
+        "step": 4,
+        "slot": "F0",
+        "state": 5,
+        "symbol": 0,
+        "head": 4
+      }
+    },
+    {
+      "canonical_index": 102,
+      "raw_residual_index": 139,
+      "depth": 2,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "1LD"
+        }
+      ],
+      "holes": 9,
+      "first_hole": {
+        "kind": "hole",
+        "step": 3,
+        "slot": "D1",
+        "state": 3,
+        "symbol": 1,
+        "head": 1
+      }
+    },
+    {
+      "canonical_index": 103,
+      "raw_residual_index": 140,
+      "depth": 2,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "1RD"
+        }
+      ],
+      "holes": 9,
+      "first_hole": {
+        "kind": "hole",
+        "step": 3,
+        "slot": "D0",
+        "state": 3,
+        "symbol": 0,
+        "head": 3
+      }
+    },
+    {
+      "canonical_index": 104,
+      "raw_residual_index": 141,
+      "depth": 2,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0LE"
+        }
+      ],
+      "holes": 9,
+      "first_hole": {
+        "kind": "hole",
+        "step": 3,
+        "slot": "E1",
+        "state": 4,
+        "symbol": 1,
+        "head": 1
+      }
+    },
+    {
+      "canonical_index": 105,
+      "raw_residual_index": 142,
+      "depth": 2,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RE"
+        }
+      ],
+      "holes": 9,
+      "first_hole": {
+        "kind": "hole",
+        "step": 3,
+        "slot": "E0",
+        "state": 4,
+        "symbol": 0,
+        "head": 3
+      }
+    },
+    {
+      "canonical_index": 106,
+      "raw_residual_index": 143,
+      "depth": 2,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "1LE"
+        }
+      ],
+      "holes": 9,
+      "first_hole": {
+        "kind": "hole",
+        "step": 3,
+        "slot": "E1",
+        "state": 4,
+        "symbol": 1,
+        "head": 1
+      }
+    },
+    {
+      "canonical_index": 107,
+      "raw_residual_index": 144,
+      "depth": 2,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "1RE"
+        }
+      ],
+      "holes": 9,
+      "first_hole": {
+        "kind": "hole",
+        "step": 3,
+        "slot": "E0",
+        "state": 4,
+        "symbol": 0,
+        "head": 3
+      }
+    },
+    {
+      "canonical_index": 108,
+      "raw_residual_index": 145,
+      "depth": 2,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0LF"
+        }
+      ],
+      "holes": 9,
+      "first_hole": {
+        "kind": "hole",
+        "step": 3,
+        "slot": "F1",
+        "state": 5,
+        "symbol": 1,
+        "head": 1
+      }
+    },
+    {
+      "canonical_index": 109,
+      "raw_residual_index": 146,
+      "depth": 2,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RF"
+        }
+      ],
+      "holes": 9,
+      "first_hole": {
+        "kind": "hole",
+        "step": 3,
+        "slot": "F0",
+        "state": 5,
+        "symbol": 0,
+        "head": 3
+      }
+    },
+    {
+      "canonical_index": 110,
+      "raw_residual_index": 147,
+      "depth": 2,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "1LF"
+        }
+      ],
+      "holes": 9,
+      "first_hole": {
+        "kind": "hole",
+        "step": 3,
+        "slot": "F1",
+        "state": 5,
+        "symbol": 1,
+        "head": 1
+      }
+    },
+    {
+      "canonical_index": 111,
+      "raw_residual_index": 148,
+      "depth": 2,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "1RF"
+        }
+      ],
+      "holes": 9,
+      "first_hole": {
+        "kind": "hole",
+        "step": 3,
+        "slot": "F0",
+        "state": 5,
+        "symbol": 0,
+        "head": 3
+      }
+    },
+    {
+      "canonical_index": 112,
+      "raw_residual_index": 149,
+      "depth": 1,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "0LD"
+        }
+      ],
+      "holes": 10,
+      "first_hole": {
+        "kind": "hole",
+        "step": 2,
+        "slot": "D1",
+        "state": 3,
+        "symbol": 1,
+        "head": 0
+      }
+    },
+    {
+      "canonical_index": 113,
+      "raw_residual_index": 150,
+      "depth": 1,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "0RD"
+        }
+      ],
+      "holes": 10,
+      "first_hole": {
+        "kind": "hole",
+        "step": 2,
+        "slot": "D0",
+        "state": 3,
+        "symbol": 0,
+        "head": 2
+      }
+    },
+    {
+      "canonical_index": 114,
+      "raw_residual_index": 151,
+      "depth": 1,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1LD"
+        }
+      ],
+      "holes": 10,
+      "first_hole": {
+        "kind": "hole",
+        "step": 2,
+        "slot": "D1",
+        "state": 3,
+        "symbol": 1,
+        "head": 0
+      }
+    },
+    {
+      "canonical_index": 115,
+      "raw_residual_index": 152,
+      "depth": 1,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RD"
+        }
+      ],
+      "holes": 10,
+      "first_hole": {
+        "kind": "hole",
+        "step": 2,
+        "slot": "D0",
+        "state": 3,
+        "symbol": 0,
+        "head": 2
+      }
+    },
+    {
+      "canonical_index": 116,
+      "raw_residual_index": 153,
+      "depth": 1,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "0LE"
+        }
+      ],
+      "holes": 10,
+      "first_hole": {
+        "kind": "hole",
+        "step": 2,
+        "slot": "E1",
+        "state": 4,
+        "symbol": 1,
+        "head": 0
+      }
+    },
+    {
+      "canonical_index": 117,
+      "raw_residual_index": 154,
+      "depth": 1,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "0RE"
+        }
+      ],
+      "holes": 10,
+      "first_hole": {
+        "kind": "hole",
+        "step": 2,
+        "slot": "E0",
+        "state": 4,
+        "symbol": 0,
+        "head": 2
+      }
+    },
+    {
+      "canonical_index": 118,
+      "raw_residual_index": 155,
+      "depth": 1,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1LE"
+        }
+      ],
+      "holes": 10,
+      "first_hole": {
+        "kind": "hole",
+        "step": 2,
+        "slot": "E1",
+        "state": 4,
+        "symbol": 1,
+        "head": 0
+      }
+    },
+    {
+      "canonical_index": 119,
+      "raw_residual_index": 156,
+      "depth": 1,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RE"
+        }
+      ],
+      "holes": 10,
+      "first_hole": {
+        "kind": "hole",
+        "step": 2,
+        "slot": "E0",
+        "state": 4,
+        "symbol": 0,
+        "head": 2
+      }
+    },
+    {
+      "canonical_index": 120,
+      "raw_residual_index": 157,
+      "depth": 1,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "0LF"
+        }
+      ],
+      "holes": 10,
+      "first_hole": {
+        "kind": "hole",
+        "step": 2,
+        "slot": "F1",
+        "state": 5,
+        "symbol": 1,
+        "head": 0
+      }
+    },
+    {
+      "canonical_index": 121,
+      "raw_residual_index": 158,
+      "depth": 1,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "0RF"
+        }
+      ],
+      "holes": 10,
+      "first_hole": {
+        "kind": "hole",
+        "step": 2,
+        "slot": "F0",
+        "state": 5,
+        "symbol": 0,
+        "head": 2
+      }
+    },
+    {
+      "canonical_index": 122,
+      "raw_residual_index": 159,
+      "depth": 1,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1LF"
+        }
+      ],
+      "holes": 10,
+      "first_hole": {
+        "kind": "hole",
+        "step": 2,
+        "slot": "F1",
+        "state": 5,
+        "symbol": 1,
+        "head": 0
+      }
+    },
+    {
+      "canonical_index": 123,
+      "raw_residual_index": 160,
+      "depth": 1,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RF"
+        }
+      ],
+      "holes": 10,
+      "first_hole": {
+        "kind": "hole",
+        "step": 2,
+        "slot": "F0",
+        "state": 5,
+        "symbol": 0,
+        "head": 2
+      }
+    }
+  ]
+}
