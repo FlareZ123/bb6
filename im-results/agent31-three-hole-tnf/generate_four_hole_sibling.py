@@ -178,7 +178,7 @@ theorem wideQuery : queryOK 7014 wideParent {n} {slot_expr} = true := by decide
     for i,a in enumerate(MOVES):
         name=f"FourHoleSiblingKid{i:02}"
         mods.append(name)
-        audit=build(refine(p,5,a))
+        audit=build(refine(p,s,a))
         emit(name,["FourHoleSiblingBase"],f"""
 def kid{i:02} : Audit := {audit}
 theorem check{i:02} : check 7014 (wideChild {move(a)}) kid{i:02} = true := by decide
