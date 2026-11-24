@@ -7,9 +7,6 @@ open BB6Coverage
 
 /-- The weight is computed on the concrete total completion, including
     every zero-symbol row not queried by its canonical blank run. -/
-def WeightedBound (B : Nat) (m : Machine) : Prop :=
-  ∀ k d, HaltsAfter m k → d∈delays (zeroNext m) 0 → d+k+1≤B
-
 theorem weighted_of_never (B : Nat) (m : Machine) (h : NeverHalts m) :
     WeightedBound B m := by
   intro k d hk _
