@@ -1,0 +1,156 @@
+{
+  "upstream": "3647718b5df22e1a61462dec0376bd204526285a",
+  "status": "checkpoint-matched computational candidate; source exact-count proofs pending",
+  "machines": [
+    {
+      "machineRLE": "1RB0RE_1RC0RA_0LD0LB_0LA1LE_1LC1LF_0LAHHH",
+      "checkpointMatches": [
+        "ckpt5",
+        "ckpt10",
+        "ckpt15"
+      ],
+      "finalHalted": true,
+      "rleTransitionsUpperBound": 9500,
+      "primitiveRuleCosts": {
+        "rule_B_nil": 1,
+        "rule_B_zero": 4,
+        "rule_B_succ": 2,
+        "rule_BR_nil": 1,
+        "rule_BR_zero": 2,
+        "rule_BR_one": 4,
+        "rule_BR_add_two": 5,
+        "rule_DR0_nil": 3,
+        "rule_DR0_zero": 4,
+        "rule_DR0_succ": 3,
+        "rule_C_nil": 1,
+        "rule_C_zero_nil": 3,
+        "rule_C_zero_zero": 5,
+        "rule_C_zero_one": 17,
+        "rule_C_zero_add_two": 4,
+        "rule_C_one_nil": 5,
+        "rule_C_one_zero": 7,
+        "rule_C_one_succ": 6,
+        "rule_C_add_two_step": 3
+      },
+      "initialPrimitiveStepBound": "1",
+      "chunkBounds": [
+        {
+          "index": 0,
+          "batches": 100,
+          "from": "ckpt0",
+          "to": "ckpt5",
+          "bound": "141295254433562419116308496"
+        },
+        {
+          "index": 1,
+          "batches": 100,
+          "from": "ckpt5",
+          "to": "ckpt10",
+          "bound": "20898202146405917019016446487890917"
+        },
+        {
+          "index": 2,
+          "batches": 100,
+          "from": "ckpt10",
+          "to": "ckpt15",
+          "bound": "111091883532751998918730984711790130187346565"
+        },
+        {
+          "index": 3,
+          "batches": 80,
+          "from": "ckpt15",
+          "to": null,
+          "bound": "932131443777753498525716694644667346522882411249"
+        }
+      ],
+      "rleTransitionCostCandidate": "932242535661307148726923126800831715518673957227",
+      "successfulPrimitiveStepCandidate": "932242535661307148726923126800831715518673957228",
+      "includingHaltAttemptCandidate": "932242535661307148726923126800831715518673957229",
+      "boundBits": 160,
+      "below2pow160": true
+    },
+    {
+      "machineRLE": "1RB1RF_0RC0RE_0RD1RA_1LE0LA_1LB0LD_0RDHHH",
+      "checkpointMatches": [
+        "ckpt6",
+        "ckpt12",
+        "ckpt18",
+        "ckpt24",
+        "ckpt30"
+      ],
+      "finalHalted": true,
+      "rleTransitionsUpperBound": 18500,
+      "primitiveRuleCosts": {
+        "rule_B_nil": 1,
+        "rule_B_zero": 4,
+        "rule_B_succ": 2,
+        "rule_BR_nil": 1,
+        "rule_BR_zero": 2,
+        "rule_BR_one": 4,
+        "rule_BR_add_two": 5,
+        "rule_DR0_nil": 3,
+        "rule_DR0_zero": 4,
+        "rule_DR0_succ": 3,
+        "rule_C_nil": 1,
+        "rule_C_zero_nil": 3,
+        "rule_C_zero_zero": 5,
+        "rule_C_zero_one": 17,
+        "rule_C_zero_add_two": 4,
+        "rule_C_one_nil": 5,
+        "rule_C_one_zero": 7,
+        "rule_C_one_succ": 6,
+        "rule_C_add_two_step": 3
+      },
+      "initialPrimitiveStepBound": "1",
+      "chunkBounds": [
+        {
+          "index": 0,
+          "batches": 120,
+          "from": "ckpt0",
+          "to": "ckpt6",
+          "bound": "1482037686119792058095754471315"
+        },
+        {
+          "index": 1,
+          "batches": 120,
+          "from": "ckpt6",
+          "to": "ckpt12",
+          "bound": "12275087658839159917235050050137260374341947"
+        },
+        {
+          "index": 2,
+          "batches": 120,
+          "from": "ckpt12",
+          "to": "ckpt18",
+          "bound": "84283141587124994566866246824440381552011680157949"
+        },
+        {
+          "index": 3,
+          "batches": 120,
+          "from": "ckpt18",
+          "to": "ckpt24",
+          "bound": "586857001825420845011590159535294766634275645627471626020"
+        },
+        {
+          "index": 4,
+          "batches": 120,
+          "from": "ckpt24",
+          "to": "ckpt30",
+          "bound": "41558741597296557707835313847078384244549803898290818942960412523"
+        },
+        {
+          "index": 5,
+          "batches": 140,
+          "from": "ckpt30",
+          "to": null,
+          "bound": "111579147023070743499704300592284974702869920005095477165368960643559026"
+        }
+      ],
+      "rleTransitionCostCandidate": "111579188581812927653348117002306046024821208051411619955580898884568780",
+      "successfulPrimitiveStepCandidate": "111579188581812927653348117002306046024821208051411619955580898884568781",
+      "includingHaltAttemptCandidate": "111579188581812927653348117002306046024821208051411619955580898884568782",
+      "boundBits": 237,
+      "below2pow160": false
+    }
+  ]
+}
