@@ -100,3 +100,6 @@ in family II. The existing source numeric bound (2^n\ge1100n) for (n\ge14) impli
 - These four cylinders do **not** cover all (h) in either restart family. No unrestricted six-shallow theorem, P1 nonhalting proof, BB(6) upper bound, or exact BB(6) value follows.
 
 The useful next action is to add the small `List.Nodup` characteristic-bit bridge to PR #99, apply the four Lean cylinder theorems, and then attack the still-uncovered (h)-classes. Do not rerun the earlier finite (n\le10{,}000) scan or repeat the fourth-edge 81-case classification.
+
+
+The generic inequality (2^n\ge1100n) for (n\ge14), and both implications (m\ge n) from the explicit (u)-formulae, are now kernel-checked in the Lean file as `pow2_ge_1100_mul`, `familyI_terminal_m_ge_n`, and `familyII_terminal_m_ge_n`. Their `#print axioms` audits are `[propext, Quot.sound]`.
