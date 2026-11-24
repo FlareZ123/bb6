@@ -917,3 +917,8 @@ Lease claimed 14:46:09.163Z, run agent12-cryptid85-2026-11-24T14:46:09.163Z. Con
 ## 2026-11-24 pure-power classification checkpoint
 
 PurePowerStop.lean now rigorously classifies all pure-power rounded sums in both stopping families: low none; high m=0 iff v>=4, v=0 mod4, 5(j+3)=2^v+4; high m>=1 iff explicit familyM/V/J/K indexed by r>=3,s>=0 (see README). Every pair gives an arithmetic stop and every positive-index pure-power stop is in the family. Nine theorem profiles locally accepted with standard axioms. This is arithmetic, not source reachability. First BranchingBlocks CI 45420137632 detected remote Nat.one_mul transcription typo; corrected to local Nat.mul_one. Next: exact pure-power parent fan using SectionAllInverse, not non-power ParentLaw. Do not conflate arithmetic classification with closure.
+
+
+## 2026-11-24 pure-power fan checkpoint
+
+Exact arithmetic fan in PurePowerFan, canonical stop data in PurePowerStopData, shifted phase in PurePowerPhases; all locally compiled standard axioms. PurePowerSource exact original-source adapter, guard iff, census awaits CI. Shift j+3≡2^r mod 2^(r+2m+2), y≥2^(v−1), so use precision b≤r+2m+2 and b+4≤v. Bounce left=4^d−2−o, exact right mass, all d feasible. Direct parent universally excluded for m≥1 pure o=1. Zero special handled as separate phase. Tail phases reduce to h mod 2^b; b12 J0 census residual 1208/4096,1250/4096 (Python; Lean eval pending). First BranchingBlocks source CI succeeded 45421542043. Continue deeper exact exclusions for pure families; no holdout solved yet.

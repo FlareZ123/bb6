@@ -69,3 +69,15 @@ HighShadowArithmetic.lean also provides the first-parent negative-shadow special
 ## Remaining mathematical gap
 
 The signed cone covers a wider unbounded parameter domain and provides a proof-carrying all-parent certificate, but not a universal termination or precision bound. The unresolved high and low parameter existentials remain unbounded. A naive universal negative-shadow termination theorem is false: the direct shadow at right coordinate 2 has an infinite direct path (x,2)->(x+4,2). Whether reachable from specific parameter domains requires separate analysis. The pure-power rounded residue and small original left-coordinate cases also need separate treatment. No Machine C or BB(6) decision is claimed.
+
+
+## Exact pure-power predecessor fan and shifted phase reduction
+
+PurePowerFan.lean proves an exact iff against all five arithmetic predecessor sectors, including both special a=0 and a=1 branches. For odd x and Q=x+y+(x+y)%2=2^v with v%2=1-o, o=(x+y)%2, the bounce fan has exactly the exponent interval 1<=d, 2d+1<=v. Its left coordinate is a=4^d-2-o and its mass equation is 2k+a+7+3(v-1-2d)=x+2y. Every such d has a feasible parent for y>=8. The remaining member is a direct edge if o=1, or the a=0 exceptional edge if o=0. PurePowerStopData.lean shows positive-index pure stops satisfy the required parity, r=v%(2m+2)>=3, y>=2^(v-1), and j+3=2^r modulo 2^(r+2m+2). This last shift is valid at an exponentially larger precision than r.
+
+PurePowerPhases.lean proves that with h=(v-1-2d)/2 the exact parent equation is k+j+4+2o+3h+2^(2d-1)=2^v, and y<=2k+1. For b<=r+2m+2 and b+4<=v, let J be 2^r modulo 2^b. The signed phase of every bounce parent is (2^(2d)-2-o, -J-1-2o-3h-2^(2d-1)) modulo 2^b. Compute binary powers with truncated exponent comparisons; no huge counters need to be materialized. For 2d>=b+1 the phase depends only on h mod 2^b and o. The exceptional zero parent has phase (0,-J-3 floor(v/2)). The positive-index pure root's direct parent is always unreachable by a forced direct step to a forbidden odd-right image.
+
+PurePowerSource.lean connects the exact arithmetic fan to the existing complete_section_inverse, then applies Agent42's modular cone to produce an exact pruned reachability iff for positive-index pure-power stops. All arithmetic modules compiled locally without custom axioms; raw_parent_iff was locally checked against the verbatim source criterion definition. Full source integration dispatched via sourcePurePower; success pending. Python exploration of 12-bit tail phases (J=0) gives 1208/4096 and 1250/4096 residual classes for o=0,1. These counts are computational, not claims that residual phases are reachable. The actual Lean source module includes the equivalent census. No claim of a universal nonhalt proof.
+
+BranchingBlocksSource passed full source closure in [run 45421542043](https://github.com/FlareZ123/bb6/actions/runs/45421542043).
+
