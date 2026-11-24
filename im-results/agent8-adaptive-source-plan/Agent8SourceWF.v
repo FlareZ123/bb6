@@ -76,6 +76,10 @@ Qed.
 Definition source_slot_delta (g h : Q*Sym) : nat :=
   if BusyCoq.Eqb.eqb g h then 1%nat else 0%nat.
 
+Lemma source_slot_delta_sum h :
+  (source_slot_delta (A,S0) h + source_slot_delta (A,S1) h + source_slot_delta (B,S0) h + source_slot_delta (B,S1) h + source_slot_delta (C,S0) h + source_slot_delta (C,S1) h + source_slot_delta (D,S0) h + source_slot_delta (D,S1) h + source_slot_delta (E,S0) h + source_slot_delta (E,S1) h + source_slot_delta (F,S0) h + source_slot_delta (F,S1) h = 1)%nat.
+Proof. destruct h as [q s]. destruct q,s; reflexivity. Qed.
+
 Lemma source_count_update t h v :
   t h = None ->
   S (get_num_undef_trans (tm_upd t h v)) = get_num_undef_trans t.
@@ -89,8 +93,7 @@ Proof.
     destruct (BusyCoq.Eqb.eqb_spec g h) as [He|He].
     - subst g. rewrite source_upd_hit, H. reflexivity.
     - rewrite source_upd_miss by exact He. lia. }
-  assert (Hdelta : (source_slot_delta (A,S0) h + source_slot_delta (A,S1) h + source_slot_delta (B,S0) h + source_slot_delta (B,S1) h + source_slot_delta (C,S0) h + source_slot_delta (C,S1) h + source_slot_delta (D,S0) h + source_slot_delta (D,S1) h + source_slot_delta (E,S0) h + source_slot_delta (E,S1) h + source_slot_delta (F,S0) h + source_slot_delta (F,S1) h = 1)%nat).
-  { destruct h as [q s]. destruct q,s; reflexivity. }
+  pose proof (source_slot_delta_sum h) as Hdelta.
   pose proof (Hslot (A,S0)) as H0.
   pose proof (Hslot (A,S1)) as H1.
   pose proof (Hslot (B,S0)) as H2.
@@ -112,10 +115,30 @@ Lemma source_count_one t h :
 Proof.
   intros Hcount Hh k Hne Hk.
   pose proof (source_count_formula t) as Hformula.
-  assert (Hh' : hole_value (t h) = 1%nat) by (rewrite Hh; reflexivity).
-  assert (Hk' : hole_value (t k) = 1%nat) by (rewrite Hk; reflexivity).
-  destruct h as [q s], k as [q' s']; destruct q,s,q',s';
-    try (exfalso; apply Hne; reflexivity); lia.
+  pose proof (source_slot_delta_sum h) as Hsumh.
+  pose proof (source_slot_delta_sum k) as Hsumk.
+  assert (Hlower : forall g,
+      (source_slot_delta g h + source_slot_delta g k <= hole_value (t g))%nat).
+  { intro g. unfold source_slot_delta.
+    destruct (BusyCoq.Eqb.eqb_spec g h) as [He|He];
+    destruct (BusyCoq.Eqb.eqb_spec g k) as [Hf|Hf].
+    - exfalso. apply Hne. congruence.
+    - subst g. rewrite Hh. reflexivity.
+    - subst g. rewrite Hk. reflexivity.
+    - lia. }
+  pose proof (Hlower (A,S0)) as Hb0.
+  pose proof (Hlower (A,S1)) as Hb1.
+  pose proof (Hlower (B,S0)) as Hb2.
+  pose proof (Hlower (B,S1)) as Hb3.
+  pose proof (Hlower (C,S0)) as Hb4.
+  pose proof (Hlower (C,S1)) as Hb5.
+  pose proof (Hlower (D,S0)) as Hb6.
+  pose proof (Hlower (D,S1)) as Hb7.
+  pose proof (Hlower (E,S0)) as Hb8.
+  pose proof (Hlower (E,S1)) as Hb9.
+  pose proof (Hlower (F,S0)) as Hb10.
+  pose proof (Hlower (F,S1)) as Hb11.
+  lia.
 Qed.
 
 Definition source_support (t : TM) (cut : nat) : Prop :=
