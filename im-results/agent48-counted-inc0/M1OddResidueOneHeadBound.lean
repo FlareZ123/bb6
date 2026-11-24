@@ -187,7 +187,7 @@ theorem m1OddResidueOne_q4_prefix_head_bound
     have hframe : T2 x = T1 x := by
       change (if m1OneQ4Inside (x-hN) = true then
         decide (x-hN ∈ m1OddQ4BridgeEnd.marked) else T1 x) = T1 x
-      simp [houtside]
+      simp [T2,m1OneQ4CutTape,T1,T,N,hN,houtside]
     have hT1 : T1 x = true := by
       by_cases hx : x ≤ h
       · let j := 3*a-4-i
