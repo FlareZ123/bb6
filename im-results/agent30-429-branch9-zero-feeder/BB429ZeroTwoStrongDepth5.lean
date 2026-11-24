@@ -49,8 +49,8 @@ private theorem odd_odd_three_sum (a b : Nat) (hr : Reach a b)
     throughout the weighted 64/128 congruence cylinder. -/
 theorem strongTest_sound (a b : Int) (x y : Nat) (hx : 33≤x)
     (hr : Reach x y) (h : Near 64 a b x y) : strongTest a b = true := by
-  have hNear := h
-  obtain ⟨i,j,hi,hj⟩ := hNear
+  have hOrig := h
+  obtain ⟨i,j,hi,hj⟩ := h
   have ha2 : a%2=(x:Int)%2 := by omega
   have ha4 : a%4=(x:Int)%4 := by omega
   have ha8 : a%8=(x:Int)%8 := by omega
@@ -80,7 +80,7 @@ theorem strongTest_sound (a b : Int) (x y : Nat) (hx : 33≤x)
         omega
     constructor
     · intro haodd
-      exact BB429DyadicSource.basicTest_sound a b x y hx hr hNear
+      exact BB429DyadicSource.basicTest_sound a b x y hx hr hOrig
     · intro haodd hbodd ha3
       have hxo : x%2=1 := by omega
       have hyo : y%2=1 := by omega
@@ -193,6 +193,7 @@ theorem zero_two_depth5_restriction_of_parent
     (hres : ∃ k : Int, q-(3-3*(m%2048:Int))=scale 5*k)
     (hr : Reach u w) (hs : BB429.next (u,w)=some (0,z)) :
     zeroTwoDepth5Possible (m%2048)=true := by
+  have hReachCopy := hr
   obtain ⟨n,hn⟩ := hr
   have hparts := incoming_zero_two u w z hs hzmod
   have hu129 : 129≤u := by
@@ -226,7 +227,7 @@ theorem zero_two_depth5_restriction_of_parent
     have hHighNat : 36*2^5≤u+3 := by exact_mod_cast hHighU
     have hnear := near_upper N q (3-3*(m%2048:Int)) k hNlarge hk
     have hsearch := searchStrong_sound 5 (3-3*(m%2048:Int))
-      (2*(3-3*(m%2048:Int))+2) u w hHighNat hr hnear
+      (2*(3-3*(m%2048:Int))+2) u w hHighNat hReachCopy hnear
     unfold zeroTwoDepth5Possible
     rw [hclass]
     simp [hsearch]
@@ -239,7 +240,7 @@ theorem zero_two_depth5_restriction_of_parent
     have hHighNat : 36*2^5≤u+3 := by exact_mod_cast hHighU
     have hnear := near_odd N q (3-3*(m%2048:Int)) k hNlarge hk
     have hsearch := searchStrong_sound 5 (7-3*(m%2048:Int))
-      (2*(3-3*(m%2048:Int))+5) u w hHighNat hr hnear
+      (2*(3-3*(m%2048:Int))+5) u w hHighNat hReachCopy hnear
     unfold zeroTwoDepth5Possible
     rw [hclass]
     simp [hsearch]
