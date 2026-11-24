@@ -1,9 +1,11 @@
 import SourceQueueDrain
 import WeightedFirstOneCover
+import SourceFiniteSemantics
 
 namespace BB6.Agent32SourceExact
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent5Enumerate62
 open BB6.Agent13QueueCoverage BB6.Agent32SourceQueue BB6.Agent32SourceDrain
+open BB6.Agent32FiniteSource
 
 /-- Direct encoding of the three source classifier outcomes. In particular,
 Halt retains its actual query slot, not just the fact of termination. -/
@@ -83,4 +85,42 @@ theorem exact_from_source_classifier (H B : Nat) (hB : H+6 ≤ B)
 #print axioms source_evidence_of_classifier
 #print axioms source_root_eq_firstOneCylinder
 #print axioms exact_from_source_classifier
+
+/-- The finite-list hypothesis is the exact shape of the upstream Coq
+certificate after replacing the stream tape with its finite representation. -/
+def FiniteClassifierSound (H : Nat) (classify : SourceTM → SourceVerdict) : Prop :=
+  ∀ tm, match classify tm with
+  | .halt s => ∃ n c, n ≤ H ∧ finiteRun tm n finiteBlank = some c ∧ query c = s ∧ tm s = none
+  | .nonhalt => ∀ n, ∃ c, finiteRun tm n finiteBlank = some c
+  | .unknown => True
+
+theorem source_classifier_sound_of_finite (H : Nat) (classify : SourceTM → SourceVerdict)
+    (hs : FiniteClassifierSound H classify) : SourceClassifierSound H classify := by
+  intro tm
+  have h := hs tm
+  cases hv : classify tm with
+  | halt s =>
+    simp only [hv] at h ⊢
+    obtain ⟨n,c,hn,hr,hq,hh⟩ := h
+    obtain ⟨d,hd,hdq,hdh⟩ := finite_halt_sound tm n c s hr hq hh
+    exact ⟨n,d,hn,hd,hdq,hdh⟩
+  | nonhalt =>
+    simp only [hv] at h ⊢
+    exact (finite_never_iff tm).mp h
+  | unknown => trivial
+
+theorem exact_from_finite_classifier (H B : Nat) (hB : H+6 ≤ B)
+    (classify : SourceTM → SourceVerdict) (hs : FiniteClassifierSound H classify)
+    (ranges : List (Nat × Nat))
+    (hpart : ChunkPartition (q0 (queueDecision classify) sourceRoot) ranges)
+    (hcert : ∀ r, r ∈ ranges → ∀ y,
+      y ∈ (runUpdates (queueDecision classify) BB6.Agent48Queue.maxT
+        (chunkQueue (q0 (queueDecision classify) sourceRoot) r.1 r.2)).holdout → SourceSafe B y)
+    (champ : ∃ m : BB6.Coverage.RawMachine,
+      BB6.Coverage.HaltsAt (BB6.Coverage.tickRaw m) B) : BB6.Coverage.ExactBB6 B :=
+  exact_from_source_classifier H B hB classify (source_classifier_sound_of_finite H classify hs)
+    ranges hpart hcert champ
+
+#print axioms source_classifier_sound_of_finite
+#print axioms exact_from_finite_classifier
 end BB6.Agent32SourceExact

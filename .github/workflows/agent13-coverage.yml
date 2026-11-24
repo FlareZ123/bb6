@@ -99,8 +99,8 @@ jobs:
           lean -o im-results/agent48-counted-inc0/Enumerate62Potential.olean im-results/agent48-counted-inc0/Enumerate62Potential.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
           lean -o im-results/agent32-source-queue/SourceQueueDrain.olean im-results/agent32-source-queue/SourceQueueDrain.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
           lean -o im-results/agent13-weighted-first-one/WeightedFirstOneCover.olean im-results/agent13-weighted-first-one/WeightedFirstOneCover.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
+          lean -o im-results/agent32-source-queue/SourceFiniteSemantics.olean im-results/agent32-source-queue/SourceFiniteSemantics.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
           lean im-results/agent32-source-queue/SourceQueueExact.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
-          lean im-results/agent32-source-queue/SourceFiniteSemantics.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
           if grep -Eq 'sorryAx|native_decide' /tmp/enumerate62-weighted-tnf-adapter.log; then
             echo "Forbidden proof placeholder or native_decide found in source TNF adapter closure" >&2
             exit 1

@@ -113,7 +113,7 @@ theorem move_absolute (c : FiniteCfg) (h : Int) (mv : Move) :
       simpa only [move,hr,Bool.false_eq_true,ite_false,ite_true] using a.symm
 
 theorem absolute_blank : absolute finiteBlank 0 = blank := by
-  unfold absolute finiteBlank blank emptyAt
+  unfold absolute finiteBlank blank
   congr 1
   funext i
   simp only [Int.sub_zero]
