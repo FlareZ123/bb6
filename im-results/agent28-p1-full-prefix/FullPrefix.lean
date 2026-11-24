@@ -16,6 +16,7 @@ open BB6.Agent1UpperTail
 open BB6.Agent47P1
 open BB6.Agent43WallListCore
 open BB6.Agent43WallListSource
+open BB6.Agent43LastResetStrength
 
 def fullWeight (Q s : Nat) : Nat := (Q-s)*2^s
 
@@ -66,9 +67,8 @@ theorem fullPrefix_bits (Q j k : Nat) (A : List Nat) :
   induction k generalizing j with
   | zero => simp [fullPrefixSum, fullSumBits, BB6WallBridge.bits]
   | succ k ih =>
-      simp only [fullPrefixSum, fullSumBits.eq_def,
-        BB6WallBridge.bits.eq_def]
-      rw [ih, Nat.mul_add, Nat.pow_succ]
+      rw [fullPrefixSum, BB6WallBridge.bits, fullSumBits.eq_def,
+        ih, Nat.mul_add, Nat.pow_succ]
       by_cases h : j ∈ A <;>
         simp [h, fullWeight, Nat.mul_assoc, Nat.mul_comm]
 
@@ -81,10 +81,11 @@ theorem fullWeighted_mod_prefix (Q K : Nat) (A : List Nat)
   | cons a A ih =>
       obtain ⟨ha, hn⟩ := List.nodup_cons.mp hnd
       rw [fullWeightedSum,
-        fullPrefixSum_cons Q 0 K a A ha, Nat.add_mod, ih hn]
+        fullPrefixSum_cons Q 0 K a A ha]
       by_cases h : a < K
-      · simp [h, fullWeight, Nat.add_mod, Nat.add_comm,
-          Nat.add_left_comm, Nat.add_assoc]
+      · simp only [if_pos (by omega : 0 ≤ a ∧ a < 0+K)]
+        rw [Nat.add_mod, ih hn]
+        simp [Nat.add_mod, Nat.add_comm]
       · have hpow : 2^K ∣ 2^a := by
           refine ⟨2^(a-K), ?_⟩
           rw [← Nat.pow_add, Nat.add_sub_of_le (by omega)]
@@ -94,7 +95,9 @@ theorem fullWeighted_mod_prefix (Q K : Nat) (A : List Nat)
           refine ⟨(Q-a)*r, ?_⟩
           rw [fullWeight, hr]
           ac_rfl
-        rw [Nat.add_mod, hz]
+        have hcond : (if 0 ≤ a ∧ a < 0+K then fullWeight Q a else 0)=0 := by
+          simp [h]
+        rw [hcond, Nat.add_mod, hz, ih hn]
         simp
 
 theorem fullWeighted_mod_bits (Q K : Nat) (A : List Nat)
@@ -108,6 +111,7 @@ theorem fullWeighted_mod_bits (Q K : Nat) (A : List Nat)
   simp
 
 theorem fullSum_add_weighted (n Q : Nat) (A : List Nat)
+    (hnp : n+3 ≤ 7*2^n)
     (hQ : Q = 7*2^n-(n+3))
     (hs : ∀ s ∈ A, s ≤ Q) :
     fullWeightedSum Q A + costWeightedSum n A =
@@ -116,16 +120,15 @@ theorem fullSum_add_weighted (n Q : Nat) (A : List Nat)
   | nil => simp [fullWeightedSum, costWeightedSum, costPowSum]
   | cons s A ih =>
       have hs0 : s ≤ Q := hs s (by simp)
-      have hnp : n+3 ≤ 7*2^n := by
-        rw [hQ] at hs0
-        omega
       have hstail : ∀ t ∈ A, t ≤ Q := by
         intro t ht
         exact hs t (by simp [ht])
       have hcoeff : (Q-s)+(n+3+s)=7*2^n := by
         rw [hQ]
         omega
-      simp only [fullWeightedSum, costWeightedSum, costPowSum, fullWeight]
+      change (Q-s)*2^s + fullWeightedSum Q A +
+          ((n+3+s)*2^s + costWeightedSum n A) =
+          7*2^n*(2^s+costPowSum A)
       calc
         (Q-s)*2^s + fullWeightedSum Q A +
             ((n+3+s)*2^s + costWeightedSum n A) =
@@ -253,10 +256,11 @@ theorem noFullPrefix_of_emptyCarry (Q K : Nat)
     have hdivPlus := congrArg (fun x => x+1) hdiv'
     calc
       total+1 = ((2^K-1)+2^K*(total/2^K))+1 := hdivPlus
+      _ = (2^K-1+1)+2^K*(total/2^K) := by ac_rfl
       _ = 2^K+2^K*(total/2^K) := by
             have hsub : 2^K-1+1=2^K :=
               Nat.sub_add_cancel (Nat.one_le_pow K 2 (by decide))
-            omega
+            rw [hsub]
       _ = 2^K*(total/2^K+1) := by
             rw [Nat.mul_add]
             simp
@@ -300,13 +304,20 @@ theorem source_full_prefix (n b d m z K : Nat) (hn : 14≤n)
     omega
   have hEq : 1+7*2^n*costPowSum A =
       2^m*v+costWeightedSum n A := by
-    rw [hD] at hInv
-    omega
+    have hDouble :
+        2*(1+7*2^n*costPowSum A) =
+          2*(2^m*v+costWeightedSum n A) := by
+      calc
+        2*(1+7*2^n*costPowSum A) =
+            2+14*2^n*costPowSum A := by ring
+        _ = 2^m*(d-1)+2*costWeightedSum n A := hInv
+        _ = 2*(2^m*v+costWeightedSum n A) := by rw [hD]; ring
+    exact Nat.mul_left_cancel hDouble
   have hA : ∀ s∈A, s≤Q := by
     intro s hs
     have hslt := hlt s hs
     omega
-  have hAdd := fullSum_add_weighted n Q A rfl hA
+  have hAdd := fullSum_add_weighted n Q A hP rfl hA
   have hFull : 1+fullWeightedSum Q A=2^m*v := by
     have hcancel :
         (1+fullWeightedSum Q A)+costWeightedSum n A =
@@ -341,7 +352,14 @@ theorem source_full_prefix (n b d m z K : Nat) (hn : 14≤n)
   rw [hzero] at hsumMod
   have hrem : fullWeightedSum Q A%2^K<2^K :=
     Nat.mod_lt _ (by omega)
-  have hFullMod : fullWeightedSum Q A%2^K=2^K-1 := by omega
+  have hmodZero :
+      (1+fullWeightedSum Q A%2^K)%2^K=0 := hsumMod.symm
+  have hFullMod : fullWeightedSum Q A%2^K=2^K-1 := by
+    by_cases hlt : 1+fullWeightedSum Q A%2^K<2^K
+    · rw [Nat.mod_eq_of_lt hlt] at hmodZero
+      omega
+    · have heq : 1+fullWeightedSum Q A%2^K=2^K := by omega
+      omega
   obtain ⟨xs, hlen, hbits⟩ := fullWeighted_mod_bits Q K A hnd
   refine ⟨xs, hlen, ?_⟩
   calc
