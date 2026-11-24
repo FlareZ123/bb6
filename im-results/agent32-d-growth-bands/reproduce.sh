@@ -23,6 +23,13 @@ for mod in Boundary OneSidedRank OneSidedCertificate OneSidedBounds OneSidedSour
   if grep -Eq 'sorryAx|uses .sorry.' "$mod.log"; then exit 1; fi
 done
 
+if [[ "${EXTRA_MODULE:-0}" == "1" ]]; then
+  cp "$here/../agent36-cryptid-trace/SourceSectionBandsAdapter.lean" "$work/SourceSectionBandsAdapter.lean"
+  export LEAN_PATH="$PWD:$here/../agent26-d-phase-bands:$here/../agent36-cryptid-trace"
+  lean -o SourceSectionBandsAdapter.olean SourceSectionBandsAdapter.lean 2>&1 | tee SourceSectionBandsAdapter.log
+  if grep -Eq 'sorryAx|uses .sorry.' SourceSectionBandsAdapter.log; then exit 1; fi
+fi
+
 if [[ "${SHOW_SECTION_BANDS:-0}" == "1" ]]; then
   echo "=== GrowthMacro key declarations ==="
   grep -nE '^(namespace|def |abbrev |structure |theorem |lemma )' GrowthMacro.lean
