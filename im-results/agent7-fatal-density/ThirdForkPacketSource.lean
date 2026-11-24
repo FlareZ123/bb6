@@ -49,6 +49,23 @@ private theorem linear_term_le (n:Nat) (hn:20≤n):
       congr 1
       omega
 
+
+private theorem pow_split3 (n:Nat) (hn:3≤n):
+    2^n=8*2^(n-3):=by
+  have he:n=(n-3)+3:=by omega
+  rw [he,Nat.pow_add]
+  have h3:2^3=8:=by decide
+  rw [h3]
+  omega
+
+private theorem pow_split2 (n:Nat) (hn:3≤n):
+    2^(n-1)=4*2^(n-3):=by
+  have he:n-1=(n-3)+2:=by omega
+  rw [he,Nat.pow_add]
+  have h2:2^2=4:=by decide
+  rw [h2]
+  omega
+
 private theorem depth_residue_even (n:Nat)
     (hn:n%6=4 ∨ n%6=5):
     depthResidue n 3%2=0:=by
@@ -123,14 +140,8 @@ private theorem ray_margin_of_index (n a j:Nat)
         calc
           2^11*2^(n-14)=2^(11+(n-14)):=by rw [←Nat.pow_add]
           _=2^(n-3):=by congr 1; omega
-  have hp1:2^n=8*2^(n-3):=by
-    have he:n=(n-3)+3:=by omega
-    rw [he,Nat.pow_add]
-    simp
-  have hp2:2^(n-1)=4*2^(n-3):=by
-    have he:n-1=(n-3)+2:=by omega
-    rw [he,Nat.pow_add]
-    simp
+  have hp1:2^n=8*2^(n-3):=pow_split3 n (by omega)
+  have hp2:2^(n-1)=4*2^(n-3):=pow_split2 n (by omega)
   have hsum:2^(n-3)+2^(n-1)≤2^n:=by
     rw [hp1,hp2]
     omega
@@ -145,10 +156,7 @@ private theorem source_band_of_margin (n j d:Nat)
     (hm:2048*deficit n j+16384*n+16384≤2^n)
     (hz:2*ray n j+5=81*d):
     6*2^(n-3)+1≤8*d ∧ 8*d≤8*2^(n-3)-1:=by
-  have hp:2^n=8*2^(n-3):=by
-    have he:n=(n-3)+3:=by omega
-    rw [he,Nat.pow_add]
-    simp
+  have hp:2^n=8*2^(n-3):=pow_split3 n (by omega)
   have hr:ray n j+deficit n j=4*2^n:=by
     dsimp [ray]
     omega
@@ -218,10 +226,7 @@ private theorem packet_feeder_data (n a b t:Nat)
     have he:n=(n-3)+3:=by omega
     rw [he,Nat.pow_add]
     simp
-  have hp2:2^(n-1)=4*2^(n-3):=by
-    have he:n-1=(n-3)+2:=by omega
-    rw [he,Nat.pow_add]
-    simp
+  have hp2:2^(n-1)=4*2^(n-3):=pow_split2 n (by omega)
   have hlin:=linear_term_le n (by omega)
   have hsmall:n+2≤4*2^(n-3):=by
     rw [←hp2]
