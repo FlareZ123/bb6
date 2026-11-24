@@ -111,10 +111,30 @@ jobs:
           for file in im-results/agent21-raw85/smt-candidates.txt im-results/agent21-raw85/smt-candidates-provenance.md; do
             api_path="repos/$GITHUB_REPOSITORY/contents/$file"
             encoded="$(base64 -w0 "$file")"
-            if sha="$(gh api "$api_path" --jq .sha 2>/dev/null)"; then
-              gh api --method PUT "$api_path" -f message="Agent 7: Preserve exact raw85 SMT candidates" -f content="$encoded" -f branch=main -f sha="$sha"
-            else
-              gh api --method PUT "$api_path" -f message="Agent 7: Preserve exact raw85 SMT candidates" -f content="$encoded" -f branch=main
+            current_content="$(gh api "$api_path" --jq .content 2>/dev/null | tr -d '\\n' || true)"
+            if [[ "$current_content" == "$encoded" ]]; then
+              echo "$file already matches recovered artifacts"
+              continue
+            fi
+            updated=false
+            for attempt in 1 2 3; do
+              sha="$(gh api "$api_path" --jq .sha 2>/dev/null || true)"
+              if [[ -n "$sha" ]]; then
+                if gh api --method PUT "$api_path" -f message="Agent 7: Preserve exact raw85 SMT candidates" -f content="$encoded" -f branch=main -f sha="$sha"; then
+                  updated=true
+                  break
+                fi
+              else
+                if gh api --method PUT "$api_path" -f message="Agent 7: Preserve exact raw85 SMT candidates" -f content="$encoded" -f branch=main; then
+                  updated=true
+                  break
+                fi
+              fi
+              sleep $((attempt * 2))
+            done
+            if [[ "$updated" != true ]]; then
+              echo "Could not persist $file after three fresh-SHA attempts"
+              exit 1
             fi
           done
           cat im-results/agent21-raw85/smt-candidates.txt >> "$GITHUB_STEP_SUMMARY"
