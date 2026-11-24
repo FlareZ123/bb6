@@ -15,6 +15,7 @@ on:
           - enumerate62-q0-count
           - enumerate62-q0-partition
           - enumerate62-chunk-probe
+          - enumerate62-q0-verdicts
       offset:
         description: 'Source q0 chunk start (probe only)'
         required: false
@@ -79,7 +80,7 @@ jobs:
             somdc) make -f Makefile.coq -j 2 SOMDCv10.vo ;;
             both) make -f Makefile.coq -j 2 Sk1Machines_v2.vo SOMDCv10.vo ;;
             enumerate62-decider-sound) make -f Makefile.coq -j 2 Enumerate62.vo Agent5Enumerate62DeciderSound.vo ;;
-            enumerate62-q0-count|enumerate62-chunk-probe) make -f Makefile.coq -j 2 Enumerate62.vo ;;
+            enumerate62-q0-count|enumerate62-chunk-probe|enumerate62-q0-verdicts) make -f Makefile.coq -j 2 Enumerate62.vo ;;
             enumerate62-q0-partition) make -f Makefile.coq -j 2 Agent32Q0Partition.vo Agent32SourceDrain.vo Agent32SourceCoverage.vo Agent32SourceEncoding.vo ;;
           esac
       - name: Print final original theorem assumptions
@@ -139,3 +140,24 @@ jobs:
           Time Eval vm_compute in probe_result.
           COQ
           timeout 600s coqc -Q . BusyCoq -native-compiler no Agent32ChunkProbe.v
+
+      - name: Census actual classifier verdicts on the 12820-node frontier
+        if: inputs.target == 'enumerate62-q0-verdicts'
+        working-directory: original/verify
+        run: |
+          set -eu
+          cat > Agent32Q0Verdicts.v <<'COQ'
+          From BusyCoq Require Import Enumerate62 Individual62 TC62.
+          From Coq Require Import List NArith Strings.String.
+          Import TNF_Node.
+          Definition tally (a : N * N * list string) (x : T) :=
+            let '(h,nh,u) := a in
+            match decider (tm x) with
+            | Halt _ => (N.succ h,nh,u)
+            | NonHalt => (h,N.succ nh,u)
+            | Unknown => (h,nh,TM_to_str (tm x)::u)
+            end.
+          Definition verdicts := List.fold_left tally (fst q_0) (0%N,0%N,nil).
+          Time Eval vm_compute in verdicts.
+          COQ
+          timeout 600s coqc -Q . BusyCoq -native-compiler no Agent32Q0Verdicts.v
