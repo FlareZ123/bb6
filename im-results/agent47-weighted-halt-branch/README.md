@@ -46,7 +46,7 @@ The local result is source-connected through the existing `WeightedTNFCertificat
 
 The adapter passed the Agent13 weighted source-closure workflow [run 46](https://github.com/FlareZ123/bb6/actions/runs/45391368847), with no `sorryAx`.
 
-`CryptidsWeightedLeaves.lean` instantiates the adapter for the six pinned Cryptids nonhalting machines using their existing `literal_r1_never` through `literal_r6_never` proofs. The combined upstream-source/weighted-TNF build is being checked in [shared-source run 46](https://github.com/FlareZ123/bb6/actions/runs/45391698785).
+`CryptidsWeightedLeaves.lean` instantiates the adapter for the six pinned Cryptids nonhalting machines using their existing `literal_r1_never` through `literal_r6_never` proofs. The combined upstream-source/weighted-TNF build is being checked in [shared-source run 47](https://github.com/FlareZ123/bb6/actions/runs/45393540213). Run 46 successfully compiled the six leaf definitions and generic adapter but exposed a packaging mismatch: `WeightedTNFCertificate.sound` returns the compatibility function, which must be wrapped with `Cover.leaf`. That correction is included in run 47.
 
 These are standalone certificates for the erased-row cylinders. They do not, by themselves, prove that those cylinders are descendants of a particular canonical first-hole expansion tree; that requires a refinement-path argument or a separate cover/graft composition.
 
