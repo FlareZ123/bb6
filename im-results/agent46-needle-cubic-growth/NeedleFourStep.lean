@@ -88,7 +88,7 @@ theorem small_F (x : Data) (m L b : Nat) (hm : m≤x.v)
     unfold Data.b
     rw [ha]
     calc
-      5*A*A*x.s m=(A*x.s m)*(5*A) := by ring
+      5*A*A*x.s m=(A*x.s m)*(5*A) := by ac_rfl
       _ <(A*x.s m)*(8*x.r) := hh
       _ =8*(A*x.s m*x.r) := by ring
       _ =8*x.b := by rfl
@@ -242,7 +242,7 @@ theorem four_data_cube_gain (x y z w : Data) (L : Nat)
     have hb3 : 3≤b := by
       dsimp [b,Data.b]
       calc
-        3=1*3 := by norm_num
+        3=1*3 := by omega
         _ ≤x.a*x.r := Nat.mul_le_mul ha0 hr0
     have hL2 : 2≤L := by
       by_contra hh
@@ -420,7 +420,7 @@ theorem four_step_cube_gain {b c d e f L : Nat}
 theorem four_step_bitlength_gain {b c d e f : Nat}
     (hbc : Edge b c) (hcd : Edge c d)
     (hde : Edge d e) (hef : Edge e f) :
-    b^2≤64*(Nat.log2 b+1)*(f-b)^3 := by
+    b^2≤16*(Nat.log2 b+1)*(f-b)^3 := by
   have hb : b≠0 := by
     rcases hbc with ⟨q,v,hb,_⟩
     rw [hb]
