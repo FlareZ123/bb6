@@ -5,11 +5,15 @@ pipeline. This wrapper changes only the root partial table and output
 directory, keeping generated modules isolated from Agent11's F1=0RA run.
 """
 from pathlib import Path
+import sys
+
+GENERATOR_DIR = Path(__file__).resolve().parents[1] / "agent31-three-hole-tnf"
+sys.path.insert(0, str(GENERATOR_DIR))
 import generate_four_hole_sibling as sibling
 
-ROOT = Path(__file__).parent / "raw85"
-ROOT.mkdir(parents=True, exist_ok=True)
+OUTPUT_DIR = Path(__file__).resolve().parent / "raw85"
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-sibling.ROOT = ROOT
+sibling.ROOT = OUTPUT_DIR
 sibling.PARENT = "1RB---_1RC1LF_0RD---_1LD1RE_---0LB_---1RA"
 sibling.main()
