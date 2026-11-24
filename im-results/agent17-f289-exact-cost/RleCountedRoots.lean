@@ -8,6 +8,9 @@ import RleCountedDispatch
 open Mathlib Relation Nat Turing BusyBeaver BusyBeaver.RleStackEngine
 namespace BB6.Agent17.RleCounted
 
+set_option maxRecDepth 2000000
+set_option maxHeartbeats 0
+
 def costStepsInner (n : Nat) (s : RleFullState) : Nat :=
   Nat.rec (fun _ => 0)
     (fun _ ih s =>
@@ -164,21 +167,24 @@ set_option maxHeartbeats 0 in
 theorem cost_chunk_2 : costBatches 100 ckpt10 = 111091883532751998918730984711790130187346565 := rfl
 
 theorem counted_reach_2 : StateHaltsAt First.target_tm ckpt10 932242535661286250524635425629379136653069757814 :=
-  counted_chunk_back chunk_2 cost_chunk_2 counted_reach_3
+  counted_chunk_back (b := 100) (k := 111091883532751998918730984711790130187346565) (n := 932131443777753498525716694644667346522882411249) (s1 := ckpt10) (s2 := ckpt15)
+    chunk_2 cost_chunk_2 counted_reach_3
 
 set_option maxRecDepth 2000000 in
 set_option maxHeartbeats 0 in
 theorem cost_chunk_1 : costBatches 100 ckpt5 = 20898202146405917019016446487890917 := rfl
 
 theorem counted_reach_1 : StateHaltsAt First.target_tm ckpt5 932242535661307148726781831546398153099557648731 :=
-  counted_chunk_back chunk_1 cost_chunk_1 counted_reach_2
+  counted_chunk_back (b := 100) (k := 20898202146405917019016446487890917) (n := 932242535661286250524635425629379136653069757814) (s1 := ckpt5) (s2 := ckpt10)
+    chunk_1 cost_chunk_1 counted_reach_2
 
 set_option maxRecDepth 2000000 in
 set_option maxHeartbeats 0 in
 theorem cost_chunk_0 : costBatches 100 ckpt0 = 141295254433562419116308496 := rfl
 
 theorem counted_reach_0 : StateHaltsAt First.target_tm ckpt0 932242535661307148726923126800831715518673957227 :=
-  counted_chunk_back chunk_0 cost_chunk_0 counted_reach_1
+  counted_chunk_back (b := 100) (k := 141295254433562419116308496) (n := 932242535661307148726781831546398153099557648731) (s1 := ckpt0) (s2 := ckpt5)
+    chunk_0 cost_chunk_0 counted_reach_1
 
 theorem halts_exact : CanHaltAt First.target_tm (init []) 932242535661307148726923126800831715518673957228 := by
   have h := counted_reach_0
@@ -364,35 +370,40 @@ set_option maxHeartbeats 0 in
 theorem cost_chunk_4 : costBatches 120 ckpt24 = 41558741597296557707835313847078384244549803898290818942960412523 := rfl
 
 theorem counted_reach_4 : StateHaltsAt Second.target_tm ckpt24 111579188581812340796262008427598821781254164554899375456187903603971549 :=
-  counted_chunk_back chunk_4 cost_chunk_4 counted_reach_5
+  counted_chunk_back (b := 120) (k := 41558741597296557707835313847078384244549803898290818942960412523) (n := 111579147023070743499704300592284974702869920005095477165368960643559026) (s1 := ckpt24) (s2 := ckpt30)
+    chunk_4 cost_chunk_4 counted_reach_5
 
 set_option maxRecDepth 2000000 in
 set_option maxHeartbeats 0 in
 theorem cost_chunk_3 : costBatches 120 ckpt18 = 586857001825420845011590159535294766634275645627471626020 := rfl
 
 theorem counted_reach_3 : StateHaltsAt Second.target_tm ckpt18 111579188581812927653263833848443833371413699849666009731833531075597569 :=
-  counted_chunk_back chunk_3 cost_chunk_3 counted_reach_4
+  counted_chunk_back (b := 120) (k := 586857001825420845011590159535294766634275645627471626020) (n := 111579188581812340796262008427598821781254164554899375456187903603971549) (s1 := ckpt18) (s2 := ckpt24)
+    chunk_3 cost_chunk_3 counted_reach_4
 
 set_option maxRecDepth 2000000 in
 set_option maxHeartbeats 0 in
 theorem cost_chunk_2 : costBatches 120 ckpt12 = 84283141587124994566866246824440381552011680157949 := rfl
 
 theorem counted_reach_2 : StateHaltsAt Second.target_tm ckpt12 111579188581812927653348116990030958365980566096490450113385542755755518 :=
-  counted_chunk_back chunk_2 cost_chunk_2 counted_reach_3
+  counted_chunk_back (b := 120) (k := 84283141587124994566866246824440381552011680157949) (n := 111579188581812927653263833848443833371413699849666009731833531075597569) (s1 := ckpt12) (s2 := ckpt18)
+    chunk_2 cost_chunk_2 counted_reach_3
 
 set_option maxRecDepth 2000000 in
 set_option maxHeartbeats 0 in
 theorem cost_chunk_1 : costBatches 120 ckpt6 = 12275087658839159917235050050137260374341947 := rfl
 
 theorem counted_reach_1 : StateHaltsAt Second.target_tm ckpt6 111579188581812927653348117002306046024819726013725500163522803130097465 :=
-  counted_chunk_back chunk_1 cost_chunk_1 counted_reach_2
+  counted_chunk_back (b := 120) (k := 12275087658839159917235050050137260374341947) (n := 111579188581812927653348116990030958365980566096490450113385542755755518) (s1 := ckpt6) (s2 := ckpt12)
+    chunk_1 cost_chunk_1 counted_reach_2
 
 set_option maxRecDepth 2000000 in
 set_option maxHeartbeats 0 in
 theorem cost_chunk_0 : costBatches 120 ckpt0 = 1482037686119792058095754471315 := rfl
 
 theorem counted_reach_0 : StateHaltsAt Second.target_tm ckpt0 111579188581812927653348117002306046024821208051411619955580898884568780 :=
-  counted_chunk_back chunk_0 cost_chunk_0 counted_reach_1
+  counted_chunk_back (b := 120) (k := 1482037686119792058095754471315) (n := 111579188581812927653348117002306046024819726013725500163522803130097465) (s1 := ckpt0) (s2 := ckpt6)
+    chunk_0 cost_chunk_0 counted_reach_1
 
 theorem halts_exact : CanHaltAt Second.target_tm (init []) 111579188581812927653348117002306046024821208051411619955580898884568781 := by
   have h := counted_reach_0
