@@ -571,31 +571,107 @@ const Gdata = extractSkewedWord(F1Tail.slice(0, 5), Fword, pF, 1280, 'G');
 const G = Gdata.word;
 const gMass = checkMassWithPending('G', G, Gdata.pending, 1280n * 20n * yReturns, Gdata.adds);
 const gPrefixStart = tailAfter15.slice(0, 15);
-const G_PREFIX_CYCLE_LIMIT = 16;
-const gPrefixCycle = findSkewedPrefixCycle(G, Gdata.pending, gPrefixStart, G_PREFIX_CYCLE_LIMIT);
-let gCarrySummary = null;
-if (gPrefixCycle !== null) {
-  let prefix = gPrefixStart.slice();
-  let maxDepth = 0;
-  let maxWitness = null;
-  let depth15Events = [];
-  const coveredBlocks = gPrefixCycle.preperiod + gPrefixCycle.period;
-  for (let phase = 0; phase < coveredBlocks; phase++) {
-    for (let gateIndex = 0; gateIndex < G.length; gateIndex++) {
-      const depth = prefixCarryDepth(prefix, G[gateIndex]);
+function prefixCyclesWithCarry(word, pending, initial, maxDigits, limit) {
+  const seen = Array.from({ length: maxDigits + 1 }, () => new Map());
+  const cycles = Array(maxDigits + 1).fill(null);
+  let state = initial.slice();
+  const blockCarry = [];
+  for (let k = 0; k <= limit; k++) {
+    for (let d = 1; d <= maxDigits; d++) {
+      if (cycles[d] !== null) continue;
+      const key = state.slice(0, d).map(String).join(',');
+      if (seen[d].has(key)) {
+        const previous = seen[d].get(key);
+        cycles[d] = { preperiod: previous, period: k - previous };
+      } else {
+        seen[d].set(key, k);
+      }
+    }
+    if (k === limit) break;
+    let maxDepth = 0;
+    let maxWitness = null;
+    for (let gateIndex = 0; gateIndex < word.length; gateIndex++) {
+      const depth = prefixCarryDepth(state, word[gateIndex]);
       if (depth > maxDepth) {
         maxDepth = depth;
-        maxWitness = { phase, gate: gateIndex, depth, offset: String(G[gateIndex]) };
+        maxWitness = { block: k, gate: gateIndex, depth, offset: String(word[gateIndex]) };
       }
-      if (depth === 15 && depth15Events.length < 20)
-        depth15Events.push({ phase, gate: gateIndex, offset: String(G[gateIndex]) });
-      prefix = prefixStep(prefix, G[gateIndex]);
+      state = prefixStep(state, word[gateIndex]);
     }
-    prefix[0] = prefix[0] + Gdata.pending;
+    state[0] += pending;
+    blockCarry.push({ maxDepth, maxWitness });
   }
-  gCarrySummary = { maxDepth, maxWitness, depth15Events, coveredBlocks };
+  return { cycles, blockCarry };
 }
-const gBarrier = gPrefixCycle !== null && gCarrySummary.maxDepth < 15;
+function carrySummariesForCycles(scan, maxDigits) {
+  const cycles = {};
+  const carry = {};
+  for (let d = 1; d <= maxDigits; d++) {
+    const cycle = scan.cycles[d];
+    if (cycle === null) continue;
+    cycles[d] = cycle;
+    const coveredBlocks = cycle.preperiod + cycle.period;
+    let maxDepth = 0;
+    let maxWitness = null;
+    for (let phase = 0; phase < coveredBlocks; phase++) {
+      const record = scan.blockCarry[phase];
+      const depth = Math.min(record.maxDepth, d);
+      if (depth > maxDepth) {
+        maxDepth = depth;
+        maxWitness = record.maxWitness;
+      }
+    }
+    carry[d] = { maxDepth, maxWitness, coveredBlocks, barrier: maxDepth < d };
+  }
+  return { cycles, carry };
+}
+
+const G_PREFIX_CYCLE_LIMIT = 16;
+const gPrefixStart = tailAfter15.slice(0, 15);
+const gPrefixScan = prefixCyclesWithCarry(
+  G, Gdata.pending, gPrefixStart, 15, G_PREFIX_CYCLE_LIMIT);
+const gDepthResults = carrySummariesForCycles(gPrefixScan, 15);
+const gPrefixCycle = gPrefixScan.cycles[15];
+const gCarrySummary = gDepthResults.carry[15] ?? null;
+const gBarrier = gCarrySummary !== null && gCarrySummary.barrier;
+
+// The first digit of the G suffix is a cheaper next section boundary than
+// demanding a 15-digit G cycle. Extract its exact return word, then inspect
+// the next suffix prefix under that induced word.
+const gFirstDigitCycle = gPrefixScan.cycles[1];
+let hSummary = null;
+if (gFirstDigitCycle !== null) {
+  let hRootTail = tailAfter15.slice();
+  for (let k = 0; k < gFirstDigitCycle.preperiod; k++) {
+    hRootTail = applySkewedWord(G, Gdata.pending, hRootTail);
+    assert(hRootTail !== null, "halt in G first-digit transient");
+  }
+  const hBlocks = gFirstDigitCycle.period;
+  const Hdata = extractSkewedWord(
+    hRootTail.slice(0, 1), G, Gdata.pending, hBlocks, "H");
+  const H = Hdata.word;
+  const hReturns = BigInt(hBlocks) * 1280n * 20n * yReturns;
+  const hMass = checkMassWithPending(
+    "H", H, Hdata.pending, hReturns, Hdata.adds);
+  const afterH = applySkewedWord(H, Hdata.pending, hRootTail.slice(1));
+  assert(afterH !== null, "halt in one H block");
+  const hTrackDigits = Math.min(8, afterH.length);
+  const H_PREFIX_CYCLE_LIMIT = 4;
+  const hPrefixScan = prefixCyclesWithCarry(
+    H, Hdata.pending, afterH.slice(0, hTrackDigits),
+    hTrackDigits, H_PREFIX_CYCLE_LIMIT);
+  const hDepthResults = carrySummariesForCycles(hPrefixScan, hTrackDigits);
+  hSummary = {
+    blocks: hBlocks,
+    preperiod: gFirstDigitCycle.preperiod,
+    word: hMass,
+    trackedDigits: hTrackDigits,
+    prefixCycleLimit: H_PREFIX_CYCLE_LIMIT,
+    prefixCyclesByDepth: hDepthResults.cycles,
+    carryByDepth: hDepthResults.carry,
+    afterHFirstDigits: show(afterH.slice(0, hTrackDigits))
+  };
+}
 const vCarrySummary = scanCycleCarry(V, 0n, p8BeforeV, vCycle, 8);
 const wCarrySummary = scanCycleCarry(W, 0n, p7BeforeW, wCycle, 7);
 const xCarrySummary = scanCycleCarry(X, 0n, p8BeforeX, xCycle, 8);
