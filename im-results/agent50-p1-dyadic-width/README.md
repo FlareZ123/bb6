@@ -216,3 +216,4 @@ theorem, and not a P1 or BB(6) decision.
 
 
 The same Lean certificate now also proves (2^n\ge1100n) for (n\ge14) and the two family-specific inequalities (m=14u-2n-3\ge n) from the explicit (u)-formulae, so the cutoff (m\ge K) used in the source-wall reduction is formally justified.
+ The depth maxima (5350<5362\le n) and (4750<9538\le n), together with (m\ge n), give a finite-range computational exclusion of source-wall states for every (h\le256) in both families; the batch is not kernel-certified.
