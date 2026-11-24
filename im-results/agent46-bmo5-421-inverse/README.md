@@ -61,6 +61,45 @@ The original-source modules for #252 and #754 are pinned at the same commit ced8
 
 The three original blank-root existential equivalences are established. The unbounded existential still needs a decision; the new finite sieve is computational evidence, not part of the accepted Lean proof.
 
+
+## Positive-phase return-cost barrier
+
+`CapPhaseCost.lean` now proves an all-depth affine packet for every `PositiveHistory` starting from `W=-w`, (w>0). With initial band (j), current band (k), depth (s), (D=3^s), there are (A,C\in\mathbb Z) such that
+
+\[
+0<A<4D,\quad A\not\equiv0\pmod3,\quad C\le -6-w,\quad DW_k(x)=AP_k+C,
+\]
+
+and, crucially, the band-drop weight satisfies
+
+\[
+4\cdot3^{j-k}\le 4D-A.
+\]
+
+The weight (B=4D-A) is unchanged by a same-band inverse step. A one-band descent updates it to (2B+4D); the history index bound ensures the new (D) is already at least (3^{j-k}). This proves the invariant independently of how descents are interleaved.
+
+If the history reaches the low boundary (x\le P_k+2), then
+
+\[
+\boxed{4\cdot3^{j-k}P_k+6+w\le 3^s(6k+35).}
+\]
+
+Writing (d=j-k) for the number of one-band descents and (m=s-d) for the number of same-band inversions, division by (3^d) gives
+
+\[
+4P_k+\frac{6+w}{3^d}\le3^m(6k+35),
+\qquad\text{hence}\qquad
+\boxed{4P_k\le3^m(6k+35).}
+\]
+
+Thus descents cannot substitute for same-band inversions: every low-boundary return requires at least
+\[
+m\ge\left\lceil\log_3\frac{20\cdot2^k}{6k+35}\right\rceil
+\]
+same-band steps, asymptotically (k\log_3 2-\log_3 k+O(1)). This is a necessary condition for an exceptional return, not a nonhalting proof. The source-level theorem `small_root_positive_continues` uses the strict reverse inequality to force the next positive predecessor to be regular.
+
+The packet and cost theorems, together with the updated source wrapper, passed [CI 45401516931](https://github.com/FlareZ123/bb6/actions/runs/45401516931), revision `d9d5a03eb873061f80b73221336650bc85879a1f`, Lean 4.36.0-rc2. Theorems print only standard axioms.
+
 ## All-band and nested valuation dynamics
 
 [BandDynamics.md](BandDynamics.md) gives the exact inverse partition, independent bridge from the published two-counter BMO5 recurrence, exact one-band and same-band run characterizations, initial negative-unit stripping and the unbounded exclusion for stripped units 1 or 11 modulo 12. It also gives the secondary residue tree and two finite nested exponent scans for w=5 and w=7, each complete through n=10^12. Source closure accepted in CI 45386870020, 45387850562 and 45388885057; the multiplicative lifting lemma is locally kernel-certified. The full nested tree cardinality and finite scans are paper proof and computational evidence respectively. The positive-coordinate continuation, including low-boundary exceptions, remains the genuine all-time obstacle.
