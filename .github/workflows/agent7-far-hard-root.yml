@@ -109,8 +109,11 @@ jobs:
         run: |
           set -euo pipefail
           if [[ ! -s /tmp/hits.txt ]]; then echo 'No candidate found in this shard'; exit 0; fi
-          python tools/lean_compile_closure.py --workdir /tmp/a7-hard --jobs 4 im-results/agent7-far/FastFAR.lean
+          python tools/lean_compile_closure.py --workdir /tmp/a7-hard --jobs 4 im-results/agent7-far/WeightedTNFBridge.lean
           export LEAN_PATH=/tmp/a7-hard
+          node im-results/agent7-far/extract_depth_eight_residuals.js
+          lean im-results/agent7-far/DepthEightFAR.lean | tee /tmp/depth-eight-far-proof.log
+          if grep -qE 'sorryAx|native_decide' /tmp/depth-eight-far-proof.log; then echo 'Archived depth-eight FAR proof used a forbidden axiom'; exit 1; fi
           python3 - <<'PY'
           from pathlib import Path
           lines = ['import FastFAR', 'open BB6Coverage BB6Coverage.FAR', 'set_option maxRecDepth 100000', 'set_option maxHeartbeats 0']
