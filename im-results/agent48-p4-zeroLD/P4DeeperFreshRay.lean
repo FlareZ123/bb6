@@ -58,7 +58,7 @@ theorem agent48P4ZeroLC_D0OneRD_cover :
 theorem agent48P4ZeroLC_D0OneRE_cover :
     Cover (DecidedBelow 6) agent48P4ZeroLC_D0OneRE :=
   finiteEntryMacroCheck_sound agent48P4ZeroLC_D0OneRE 6 3 6 (by decide)
-    agent48P4P4ZeroLC_D0OneRE_check
+    agent48P4ZeroLC_D0OneRE_check
 
 /-- Add the three disjoint D/0 fresh-ray cylinders to the P4 eight-child audit. -/
 noncomputable def agent48P4DeeperAudit :
