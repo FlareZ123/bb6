@@ -41,6 +41,23 @@ theorem buffer_exponent_20 :
     34*20+122=802 ∧ 3^6 ≤ 802 ∧ 802 < 3^7 := by
   norm_num
 
+/-- Exact source transitions for the three ell=20 members of the
+    cone-only synchronization family. -/
+theorem cone_only_ell20_r1_step :
+    highLevelNext (.D 602667616 150666804) =
+      some (.D 452000798 452000456) := by
+  decide +kernel
+
+theorem cone_only_ell20_r2_step :
+    highLevelNext (.D 947041384 236760246) =
+      some (.D 710281126 710280778) := by
+  decide +kernel
+
+theorem cone_only_ell20_r3_step :
+    highLevelNext (.D 1291415152 322853688) =
+      some (.D 968561452 968561102) := by
+  decide +kernel
+
 /-- Stronger source-authentic transition: even the weaker v3(min)<=k
     predicate is not forward-closed on the affine cone. -/
 theorem v3_at_k_counterexample_step :
@@ -96,6 +113,9 @@ theorem target_violates_candidate :
     ¬ 6 ≤ 7-2 := by omega
 
 #print axioms v3_candidate_counterexample_step
+#print axioms cone_only_ell20_r1_step
+#print axioms cone_only_ell20_r2_step
+#print axioms cone_only_ell20_r3_step
 #print axioms v3_at_k_counterexample_step
 #print axioms v3_at_k_source_mass_depth_20
 #print axioms v3_at_k_target_mass_depth_20
