@@ -27,7 +27,8 @@ def mass : List Node → Nat
   | x :: xs => weight x + mass xs
 
 theorem weight_pos (x : Node) : 0 < weight x := by
-  simp [weight]
+  unfold weight
+  exact Nat.pow_pos (by decide : 0 < 25)
 
 theorem mass_append (xs ys : List Node) :
     mass (xs ++ ys) = mass xs + mass ys := by
@@ -40,7 +41,9 @@ theorem mass_replicate (n : Nat) (x : Node) :
   induction n with
   | zero => simp [mass]
   | succ n ih =>
-      simp [mass, ih, Nat.succ_mul, Nat.add_comm, Nat.add_left_comm, Nat.add_assoc]
+      change weight x + mass (List.replicate n x) = (n + 1) * weight x
+      rw [ih, Nat.succ_mul]
+      omega
 
 def existingChild (x : Node) (h : 2 ≤ x.holes) : Node :=
   { holes := x.holes - 1, cut := x.cut }
@@ -82,7 +85,7 @@ theorem expandProjection_mass_lt (x : Node) (h : 2 ≤ x.holes) :
   let k : Nat := 25 ^ (x.holes - 1)
   have hk : 0 < k := by
     dsimp [k]
-    exact Nat.pow_pos (by decide : 0 < 25) _
+    exact Nat.pow_pos (by decide : 0 < 25)
   have hcut : x.cut.val ≤ 6 := by omega
   have hcnt : 4 * x.cut.val + (if x.cut.val < 6 then 4 else 0) ≤ 24 := by
     by_cases hc : x.cut.val < 6 <;> simp [hc] <;> omega
