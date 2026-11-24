@@ -128,6 +128,16 @@ theorem run_81_exact :
     run 81 = some (.D 26323038 1617861312) := by
   decide +kernel
 
+/-- Exact original-source blank-root anchor at index 83. -/
+theorem run_83_exact :
+    run 83 = some (.D 1512569104 236907517) := by
+  decide +kernel
+
+/-- Exact original-source blank-root anchor at index 84. -/
+theorem run_84_exact :
+    run 84 = some (.D 1275661570 710722607) := by
+  decide +kernel
+
 /-- A second skipped root-mass interval, between indices 77 and 78. -/
 theorem run_avoids_mass_interval_77_78 (n a d : Nat)
     (h : run n = some (.D a d)) :
@@ -167,6 +177,19 @@ theorem run_avoids_mass_interval_80_81 (n a d : Nat)
     have hm := run_mass_mono 81 n hn' 26323038 1617861312 run_81_exact h
     omega
 
+/-- A fifth skipped root-mass interval, between indices 83 and 84. -/
+theorem run_avoids_mass_interval_83_84 (n a d : Nat)
+    (h : run n = some (.D a d)) :
+    a + d ≤ 1749476621 ∨ 1986384177 ≤ a + d := by
+  by_cases hn : n ≤ 83
+  · left
+    have hm := run_mass_mono n 83 hn a d 1512569104 236907517 h run_83_exact
+    omega
+  · right
+    have hn' : 84 ≤ n := by omega
+    have hm := run_mass_mono 84 n hn' 1275661570 710722607 run_84_exact h
+    omega
+
 /-- The first ell=20 member of Agent 1's cone-only family is not root-reachable. -/
 theorem cone_only_ell20_r1_not_root (n : Nat) :
     run n ≠ some (.D 602667616 150666804) := by
@@ -186,6 +209,27 @@ theorem cone_only_ell20_r3_not_root (n : Nat) :
     run n ≠ some (.D 1291415152 322853688) := by
   intro h
   have hm := run_avoids_mass_interval_80_81 n 1291415152 322853688 h
+  omega
+
+/-- The target of the first ell=20 cone-only transition is not root-reachable. -/
+theorem cone_only_ell20_r1_target_not_root (n : Nat) :
+    run n ≠ some (.D 452000798 452000456) := by
+  intro h
+  have hm := run_avoids_mass_interval_78_79 n 452000798 452000456 h
+  omega
+
+/-- The target of the second ell=20 cone-only transition is not root-reachable. -/
+theorem cone_only_ell20_r2_target_not_root (n : Nat) :
+    run n ≠ some (.D 710281126 710280778) := by
+  intro h
+  have hm := run_avoids_mass_interval_80_81 n 710281126 710280778 h
+  omega
+
+/-- The target of the third ell=20 cone-only transition is not root-reachable. -/
+theorem cone_only_ell20_r3_target_not_root (n : Nat) :
+    run n ≠ some (.D 968561452 968561102) := by
+  intro h
+  have hm := run_avoids_mass_interval_83_84 n 968561452 968561102 h
   omega
 
 /-- The source of the v3 state-locality counterexample is not root-reachable:
@@ -223,5 +267,11 @@ theorem v3_counterexample_target_not_root (n : Nat) :
 #print axioms cone_only_ell20_r1_not_root
 #print axioms cone_only_ell20_r2_not_root
 #print axioms cone_only_ell20_r3_not_root
+#print axioms run_83_exact
+#print axioms run_84_exact
+#print axioms run_avoids_mass_interval_83_84
+#print axioms cone_only_ell20_r1_target_not_root
+#print axioms cone_only_ell20_r2_target_not_root
+#print axioms cone_only_ell20_r3_target_not_root
 
 end BB6.Agent41RootHistory
