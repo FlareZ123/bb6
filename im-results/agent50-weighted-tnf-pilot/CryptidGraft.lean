@@ -28,6 +28,9 @@ theorem r2_special_exact : r2.child r2.special = forgetHaltRows expectedRLE_r2 :
 theorem r3_special_exact : r3.child r3.special = forgetHaltRows expectedRLE_r3 :=
   tableEq_sound _ _ (by decide)
 
+theorem r5_special_exact : r5.child r5.special = forgetHaltRows expectedRLE_r5 :=
+  tableEq_sound _ _ (by decide)
+
 theorem r6_special_exact : r6.child r6.special = forgetHaltRows expectedRLE_r6 :=
   tableEq_sound _ _ (by decide)
 
@@ -38,6 +41,9 @@ def r2_certificate : WeightedTNFCertificate r2.bound r2.parent 6 :=
 
 def r3_certificate : WeightedTNFCertificate r3.bound r3.parent 6 :=
   assemble r3 r3_valid (by rw [r3_special_exact]; exact r3_weighted_leaf r3.bound)
+
+def r5_certificate : WeightedTNFCertificate r5.bound r5.parent 6 :=
+  assemble r5 r5_valid (by rw [r5_special_exact]; exact r5_weighted_leaf r5.bound)
 
 def r6_certificate : WeightedTNFCertificate r6.bound r6.parent 6 :=
   assemble r6 r6_valid (by rw [r6_special_exact]; exact r6_weighted_leaf r6.bound)
@@ -50,10 +56,17 @@ theorem r3_exact_weighted_threshold (B : Nat) :
     (∀ m, compatible r3.parent m → WeightedBound B m) ↔ 1768 ≤ B :=
   exact_from_attained r3 r3_valid r3_certificate 1767 rfl r3_attained B
 
+theorem r5_exact_weighted_threshold (B : Nat) :
+    (∀ m, compatible r5.parent m → WeightedBound B m) ↔ 28 ≤ B :=
+  exact_from_attained r5 r5_valid r5_certificate 27 rfl r5_attained B
+
 theorem r6_exact_weighted_threshold (B : Nat) :
     (∀ m, compatible r6.parent m → WeightedBound B m) ↔ 582 ≤ B :=
   exact_from_attained r6 r6_valid r6_certificate 581 rfl r6_attained B
 
+#print axioms r5_special_exact
+#print axioms r5_certificate
+#print axioms r5_exact_weighted_threshold
 #print axioms r3_special_exact
 #print axioms r3_certificate
 #print axioms r3_exact_weighted_threshold
