@@ -43,10 +43,11 @@ private theorem sideBit_replicate_true (n i : Nat) (hi : i<n) :
   | zero => omega
   | succ n ih =>
       cases i with
-      | zero => simp [sideBit]
+      | zero => rw [List.replicate_succ]; rfl
       | succ i =>
           have hi' : i<n := by omega
-          simpa [sideBit] using ih i hi'
+          rw [List.replicate_succ]
+          exact ih i hi'
 
 /-- The four-cell suffix after the leading one-run is exactly 0,1,0,0
 in head-facing order. -/
@@ -60,12 +61,12 @@ private theorem firstCycleResidualLeft_boundary (z : Nat) (tail : List Bool) :
       sideBit (firstCycleResidualLeft z tail) (m+j) =
         sideBit [false,true,false,false] j := by
     unfold firstCycleResidualLeft
+    rw [List.append_assoc]
     rw [BB6Coverage.Agent6Q4Prefix.sideBit_append_right
       (List.replicate m true) ([false,true,false,false] ++ tail) (m+j)
-      (by simp [List.length_replicate]; omega)]
+      (by simp [List.length_replicate])]
     have hidx : m+j-(List.replicate m true).length = j := by
       simp [List.length_replicate]
-      omega
     rw [hidx, sideBit_append]
     simp [hj, sideBit]
   refine ⟨?_,?_,?_,?_⟩
@@ -101,20 +102,20 @@ theorem firstCycleS0DrainOutput_leftOnes (z : Nat) (tail : List Bool) :
   have hside : sideBit (d1pow a ++ l) i = true := by
     by_cases hlt : i < 3*a
     · rw [sideBit_append, d1pow_length]
-      simp [hlt, sideBit_d1pow_true a i hlt]
+      simp [hlt, Agent6Q4Prefix.sideBit_d1pow_true a i hlt]
     · have hj : i-3*a < m := by omega
       rw [BB6Coverage.Agent6Q4Prefix.sideBit_append_right
         (d1pow a) l i (by rw [d1pow_length]; omega)]
       rw [d1pow_length]
       have hprefix : sideBit l (i-3*a) = true := by
         change sideBit
-          (List.replicate m true ++ ([false,true,false,false] ++ tail))
+          (List.replicate m true ++ [false,true,false,false] ++ tail)
           (i-3*a) = true
+        rw [List.append_assoc]
         rw [sideBit_append]
         have hltm : i-3*a < (List.replicate m true).length := by
-          simp [List.length_replicate]
-          exact hj
-        simp [hltm, List.length_replicate,
+          simpa [List.length_replicate] using hj
+        simp [hj, List.length_replicate,
           sideBit_replicate_true m (i-3*a) hj]
       exact hprefix
   calc
@@ -152,9 +153,12 @@ private theorem firstCycleS0DrainOutput_cell (z : Nat) (tail : List Bool)
     dsimp [a,m]
     omega
   have hcoord :
-      h-((3*a+m+3-x:Int)) = (x:Int) := by
-    rw [hnum]
-    dsimp [h]
+      h-((3*a+m+3-x:Nat):Int) = (x:Int) := by
+    rw [Int.ofNat_sub (by omega : x ≤ 3*a+m+3)]
+    have hc : ((3*a+m+3:Nat):Int) = h := by
+      rw [hnum]
+      dsimp [h]
+    rw [hc]
     omega
   have hleft :
       s0LeftFacing l a 0 = d1pow a ++ l := by
@@ -169,7 +173,7 @@ private theorem firstCycleS0DrainOutput_cell (z : Nat) (tail : List Bool)
       (d1pow a) l (3*a+m+3-x)
       (by rw [d1pow_length]; omega)]
     rw [d1pow_length]
-    omega
+    rw [show 3*a+m+3-x-3*a=m+3-x by dsimp [m]; omega]
   calc
     T (x:Int) =
         sideBit (d1pow a ++ l) (3*a+m+3-x) := by
