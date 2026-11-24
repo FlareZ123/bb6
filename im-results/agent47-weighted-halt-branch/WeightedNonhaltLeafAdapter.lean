@@ -54,7 +54,7 @@ theorem forgetHaltRows_all_completions_neverHalt (m : Machine)
     | none =>
         have hsome := hnever n
         simp [hrun] at hsome
-    | some c => exact ⟨c, hrun⟩
+    | some c => exact ⟨c, rfl⟩
   exact (weightedTNFKnownRunForever_iff (forgetHaltRows m)).mp hforever
 
 /-- Any complete nonhalting machine already in the 1RB root cylinder yields
