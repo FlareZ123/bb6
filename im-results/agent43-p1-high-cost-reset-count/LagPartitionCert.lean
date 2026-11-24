@@ -71,7 +71,7 @@ theorem first_covered (L n : Nat) (hb : 2*n+3<2^L) : Covered n 1 (first L n) := 
   have hprefix := covered_first n B a C c htr he
   simp only [List.mem_singleton,Prod.mk.injEq] at hprefix
   rcases hprefix with ⟨rfl,rfl⟩
-  exact ⟨_,by simp [first],rfl,rfl,lookahead_sound L n 1 1 ((n+2)/2) n C c htr he (by omega) (by omega)⟩
+  exact ⟨⟨1,(n+2)/2,lookahead L n 1 1 ((n+2)/2) n⟩,by simp [first],rfl,rfl,lookahead_sound L n 1 1 ((n+2)/2) n C c htr he (by omega) (by omega)⟩
 
 theorem next_covered (L n s h : Nat) (gs : List PackedGroup) (ps : List Plan)
     (hs : 1≤s) (hh : h≤n) (hb : 2*n+s+h+2<2^L)

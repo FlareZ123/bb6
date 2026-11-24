@@ -90,7 +90,7 @@ theorem first_covered_rev (n ends : Nat) (bad : List Nat)
   have hc := trace_strict n _ _ _ (extend_trace n 1 1 ((n+2)/2) n C c htr he)
   have hbit := cover_no_omitted hbad hdisjoint (by simpa using hw)
     (by simp [Bits] : Bits (2^((n+2)/2)) ((n+2)/2)) (by omega : c<2*n+3)
-  exact ⟨_,by simp,rfl,rfl,hbit⟩
+  exact ⟨⟨1,(n+2)/2,ends⟩,by simp,rfl,rfl,hbit⟩
 
 theorem next_covered (n s h : Nat) (gs : List PackedGroup) (ps : List Plan)
     (hs : 1≤s) (hh : h≤n)

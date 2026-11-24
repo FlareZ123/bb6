@@ -87,7 +87,7 @@ jobs:
           path: agent43-block-artifacts
       - name: Compile unchanged-source CountCone dependency chain and wall theorem
         run: |
-          set -e
+          set -e -o pipefail
           MAP=im-results/agent1-p1-map
           INV=im-results/agent47-p1-finite-inverse
           P1=im-results/agent1-p1-quarter
