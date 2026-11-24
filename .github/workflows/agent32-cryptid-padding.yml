@@ -91,6 +91,7 @@ jobs:
           lean -o "$G/GrowthBands.olean" "$G/GrowthBands.lean"
           lean -o "$G/RegularBands.olean" "$G/RegularBands.lean"
           lean -o "$X/DAllBlankSource.olean" "$X/DAllBlankSource.lean"
+          lean -o "$X/DAllBlankHalting.olean" "$X/DAllBlankHalting.lean"
           lean "$X/FourRootAnchorSource.lean" 2>&1 | tee /tmp/four-root-anchor.log
           if grep -Eq 'sorryAx|native_decide' /tmp/four-root-anchor.log; then
             echo "Forbidden axiom or native_decide in four-root anchor proof"
