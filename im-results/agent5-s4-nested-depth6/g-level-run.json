@@ -382,7 +382,49 @@
         "588197303750034286071772",
         "692220177300871062844482",
         "2375748174407187402807927"
-      ]
+      ],
+      "HtoI": {
+        "blocks": 4,
+        "preperiod": 0,
+        "word": {
+          "returns": "461168601842738790400000000",
+          "gates": 14425027,
+          "headAdds": 14419497,
+          "pending": "0",
+          "offsetSum": "472236648286964521369571149946",
+          "massTotal": "472236648286964521369600000000",
+          "massIdentity": true
+        },
+        "trackedDigits": 6,
+        "prefixCycleLimit": 4,
+        "prefixCyclesByDepth": {
+          "1": {
+            "preperiod": 0,
+            "period": 4
+          }
+        },
+        "carryByDepth": {
+          "1": {
+            "maxDepth": 1,
+            "maxWitness": {
+              "block": 0,
+              "gate": 1,
+              "depth": 6,
+              "offset": "54304247245897863840029"
+            },
+            "coveredBlocks": 4,
+            "barrier": false
+          }
+        },
+        "afterIFirstDigits": [
+          "19482765993560031175425",
+          "24524234924469007957761",
+          "106618523785949595238123",
+          "313772819977421916862995",
+          "3221745157197154948757799",
+          "4031347951680198233254779"
+        ]
+      }
     }
   },
   "terminalQuotientObstruction": {
