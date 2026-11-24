@@ -116,13 +116,12 @@ theorem residualHasWitness_sound (q : PartialMachine)
     (h : residualHasWitness q = true) :
     ∀ m, compatible q m → WeightedBound 395 m := by
   rcases List.any_eq_true.mp h with ⟨e, hmem, heq⟩
-  rcases e with ⟨(address, p), w⟩
-  have hsame : sameTable p q = true := of_decide_eq_true heq
-  have hp : p = q := sameTable_sound hsame
-  subst p
-  have hc := List.all_eq_true.mp residualWitnessRoster_checked ((address, q), w) hmem
+  have hsame : sameTable e.1.2 q = true := of_decide_eq_true heq
+  have hp : e.1.2 = q := sameTable_sound hsame
+  have hc := List.all_eq_true.mp residualWitnessRoster_checked e hmem
+  rw [hp] at hc
   intro m hm
-  exact weighted_never 395 m (residualWitnessOK_sound q w hc m hm)
+  exact weighted_never 395 m (residualWitnessOK_sound q e.2 hc m hm)
 
 noncomputable def remainingRootRoster : List (List Move × PartialMachine) :=
   (residuals rootFrontier).filter fun e => !residualHasWitness e.2
