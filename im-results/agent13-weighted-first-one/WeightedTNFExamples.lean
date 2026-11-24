@@ -22,10 +22,10 @@ theorem threeGliderTNF_support :
   by_cases h0 : s = (0,false)
   · subst s
     have ht' : t = some ⟨true,true,1⟩ := by
-      simpa [threeGliderTNFNode, BB6Coverage.threeGliderExample] using ht
+      simpa [threeGliderTNFNode, BB6Coverage.threeGliderExample] using ht.symm
     subst t
     constructor
-    · norm_num
+    · omega
     · intro mv hm
       have hmv : (⟨true,true,1⟩ : Move) = mv := Option.some.inj hm
       subst mv
