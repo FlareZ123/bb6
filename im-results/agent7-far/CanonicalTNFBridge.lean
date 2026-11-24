@@ -66,7 +66,33 @@ def canonicalAuditTNFLeaf {B : Nat} {p : PartialMachine} {cut k : Nat}
   WeightedTNFCertificate.ofWeightedCover hroot hsupport hnohalt
     (canonicalAudit_to_weightedCover hB hroot a hclosed)
 
+/-- Canonical Scoped and weighted TNF support are the same finite
+    successor-closure condition. -/
+theorem scoped_to_TNFSupport {p : PartialMachine} {k : Nat}
+    (hp : BB6Coverage.Canonical.Scoped k p) : TNFSupport p k :=
+  hp
+
+/-- Directly package a closed result of the existing canonical search as a
+    weighted-TNF certificate. The canonical search runs at B-5 because its
+    DecidedBelow measure counts primitive steps, while TNF adds at most five
+    blank-delay steps. -/
+def canonicalSearchTNFLeaf {B : Nat} {p : PartialMachine} {k : Nat}
+    (hB : 5 ≤ B)
+    (hroot : p initialSlot = some (some ⟨true, true, 1⟩))
+    (hnohalt : weightedTNFNoAssignedHalt p)
+    (rayLimit scanLimit lassoLimit entryLimit macroLimit farLimit depth : Nat)
+    (hp : BB6Coverage.Canonical.Scoped k p)
+    (hk : 0 < k ∧ k ≤ 6)
+    (hclosed :
+      (BB6Coverage.Canonical.search (B - 5) rayLimit scanLimit lassoLimit
+        entryLimit macroLimit farLimit depth k p hp hk).report.2 = 0) :
+    WeightedTNFCertificate B p k :=
+  canonicalAuditTNFLeaf hB hroot (scoped_to_TNFSupport hp) hnohalt
+    (BB6Coverage.Canonical.search (B - 5) rayLimit scanLimit lassoLimit
+      entryLimit macroLimit farLimit depth k p hp hk) hclosed
+
 #print axioms decidedBelow_to_weightedBound
 #print axioms canonicalAudit_to_weightedCover
 #print axioms canonicalAuditTNFLeaf
+#print axioms canonicalSearchTNFLeaf
 end BB6.Agent13BlankDelay
