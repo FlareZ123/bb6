@@ -67,7 +67,7 @@ The queue-work bound is therefore substantially tighter without changing the sou
 
 - Lean toolchain: repository workflow's pinned Lean 4.36.0-rc2.
 - Existing target: `source-queue-adapter`; no new workflow was created.
-- Result: successful compilation and fail-hard placeholder/native-decision scan.
+- Result: successful compilation and fail-hard placeholder/native-decision scan (including `every_queue_drains_with_cutMass_fuel`).
 - This is acceptance of the Lean projection and its imported adapter chain, not a Rocq/Coq proof that the projection matches every source record. The original-source queue bridge and all coverage obligations remain separate.
 
 ## Scope and remaining obligations
