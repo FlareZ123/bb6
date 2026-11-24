@@ -439,4 +439,84 @@ def residualManifest : List (String × String) :=
 #print axioms mem_packResiduals_iff
 #print axioms RootedFrontier.sound_of_packed_residuals
 
+/-- A proof-free enumeration of the off-path residuals. The selected branch
+    continues recursively; all other ordinary moves are retained. -/
+def pathResiduals (p : PartialMachine) : List PathEntry → List (List Move × PartialMachine)
+  | [] => []
+  | (_,s,mv)::xs =>
+      allMoves.flatMap fun actual =>
+        if actual = mv then
+          (pathResiduals (refine p s (some mv)) xs).map fun (a,q) => (actual::a,q)
+        else [([actual], refine p s (some actual))]
+
+/-- Every completion is either bounded or contained in a table from the
+    executable off-path roster. No evaluation of proof constructors is used. -/
+theorem pathResiduals_sound (p : PartialMachine) (cut : Nat) (xs : List PathEntry)
+    (hroot : p initialSlot = some (some ⟨true,true,1⟩))
+    (hpath : pathOK84 p cut xs = true)
+    (hend : ∀ m, compatible (pathEnd p cut xs).1 m → WeightedBound 84 m) :
+    ∀ m, compatible p m → WeightedBound 84 m ∨
+      ∃ a q, (a,q) ∈ pathResiduals p xs ∧ compatible q m := by
+  induction xs generalizing p cut with
+  | nil => intro m hm; exact Or.inl (hend m hm)
+  | cons x xs ih =>
+    rcases x with ⟨n,s,mv⟩
+    obtain ⟨hhole,hread,_,_,hw,htail⟩ := pathOK84_cons hpath
+    intro m hm
+    have href (v : Option Move) (hv : m s = v) : compatible (refine p s v) m := by
+      intro t u hu
+      by_cases he : t = s
+      · subst t
+        have h : u = v := by simpa [refine] using hu.symm
+        simpa [h] using hv
+      · exact hm t u (by simpa [refine,he] using hu)
+    cases ha : m s with
+    | none =>
+      cases hr : knownRun p n with
+      | none => simp [hr] at hread
+      | some c =>
+        have hs : readSlot c = s := by simpa [hr] using hread
+        exact Or.inl (first_hole_weighted_halt 84 p n c hroot hr
+          (by simpa [hs] using hhole)
+          (by simpa [hs] using weightOK_sound p s n 84 hw)
+          m (by simpa [hs] using href none ha))
+    | some actual =>
+      by_cases he : actual = mv
+      · subst actual
+        have hroot' := refine_preserves_firstOne p s (some mv) hhole hroot
+        rcases ih _ _ hroot' htail hend m (href (some mv) ha) with hb | ⟨a,q,hmem,hcomp⟩
+        · exact Or.inl hb
+        · apply Or.inr
+          refine ⟨mv::a,q,?_,hcomp⟩
+          apply List.mem_flatMap.mpr
+          refine ⟨mv,allMoves_complete mv,?_⟩
+          simp only [if_pos rfl]
+          exact List.mem_map.mpr ⟨(a,q),hmem,rfl⟩
+      · apply Or.inr
+        refine ⟨[actual],refine p s (some actual),?_,href (some actual) ha⟩
+        apply List.mem_flatMap.mpr
+        refine ⟨actual,allMoves_complete actual,?_⟩
+        simp [he]
+
+def executableRootRoster : List PackedResidual :=
+  packResiduals (pathResiduals root path)
+
+theorem executableRootRoster_count : executableRootRoster.length = 207 := by decide
+
+theorem executableRootRoster_sound :
+    ∀ m, compatible root m → WeightedBound 84 m ∨
+      ∃ e ∈ executableRootRoster, compatible (unpackTable e.2) m := by
+  intro m hm
+  rcases pathResiduals_sound root 2 path rfl pathOK84_root
+      all_completions_weighted m hm with h | ⟨a,q,hmem,hcomp⟩
+  · exact Or.inl h
+  · apply Or.inr
+    refine ⟨(a,packTable q),?_,?_⟩
+    · exact (mem_packResiduals_iff _ _ _).mpr hmem
+    · simpa only [unpack_packTable] using hcomp
+
+#print axioms pathResiduals_sound
+#print axioms executableRootRoster_count
+#print axioms executableRootRoster_sound
+
 end BB6.Agent50RootFrontier
