@@ -233,3 +233,38 @@ Updated `im-results/agent17-sheep-power1458/INVERSE-TREE-92-PROGRESSIONS.md`, `L
 **Scope:** the theorem excludes the five specified infinite progression families (75 base residues across five periods; 93 classes in the common-period presentation) in the exact `SheepEven.EvenReach` relation. The separate machine-source equivalence `BB6.Agent16.SheepEvenSource.raw_halts_iff_even_power` was accepted earlier in CI 41505950547, but `EvenSourceBridge.lean` was not recompiled in this run. Together they rule out halting witnesses at these exponents only; other exponents remain open. This is not a Sheep machine decision or a BB(6) result. Keep the candidate in `im-results/`.
 
 Next: freeze the 93-family list; do not add residues or repeat period/row audits. Seek a broader seed-sensitive invariant or a complete decision of the residual even-return orbit.
+
+
+## 2026-11-24 checkpoint — source-connected weighted residual formalization
+
+Lease for this incarnation: `agent14-20261124T094454579Z`, claimed at `2026-11-24T09:44:54.579Z` (do not refresh it; normal-mode release is due only at the measured 70-minute threshold).
+
+### Durable work
+
+Created `im-results/agent14-sheep-weighted-residual/` with:
+
+- `GenericResidual.lean`: Lean 4.36.0-rc2 formalization importing Agent 16's reconstructed `SheepEven` source. It proves `source_generic_even_return` from `SheepEven.Step.generic`, `SheepEven.even_successor`, and `SheepEven.factor_odd`; `generic_residual_identity` proves the exact integer-cleared residual equation; `generic_residual_int` gives the rearranged Int identity; and `source_generic_residual` composes the source-level theorem with the weighted identity. All four `#print axioms` outputs contain only `propext` and `Quot.sound`, with no `sorryAx`.
+- `README.md`: states the formal result and a new exact two-step terminal barrier after either zero-residual singular branch.
+- `check_singular_two_step.py`: standard-library reproduction of the finite modular residue tables and sharp witnesses.
+
+The formal identity is
+\[
+2^{b+h+1}(u'-1)=3^h(2^{a+1}+1)(u-1)+2S(a,h,b),
+\quad S=3^h(2^a+a-1)-2^h(2^b-1).
+\]
+It is now linked directly to the source-level Sheep even-return dynamics rather than only to an abstract recurrence.
+
+### New exact arithmetic consequence
+
+Using Agent 16's established zero-residual classification `(a,h,b)=(1,1,2)` or `(3,1,4)`, the next even source and next first-step excess are:
+
+- Type I, `u=1+32k`: next source `4(1+30k)`, next excess `5+135k`. If its following even-return output is `2^B), then `B >= 32`, sharply attained at `H=1, B=32, k=21,209,715`.
+- Type II, `u=1+128k`: next source `16(1+102k)`, next excess `19+1683k`. If its following even-return output is `2^B`, then `B >= 11,502`, sharply attained at `H=5, B=11,502`; the corresponding k is the explicit quotient in the dossier (3,459 decimal digits).
+
+The proof uses `v_3(4^n-1)=1+v_3(n)` plus finite congruences modulo powers of 3, 11, and 17. The script reproduces all finite residue classes. This only excludes short immediate terminal successors after the two singular edges; it does not exclude a later terminal edge or settle the blank-root trajectory.
+
+### Validation and next work
+
+Reconstructed Agent 16's `SheepEven.lean` locally, compiled `GenericResidual.lean` under Lean 4.36.0-rc2, and ran `check_singular_two_step.py` successfully. No new 100k/1M replay was needed.
+
+Next high-value actions: send Agent 16 the source-connected formalization and exact two-step bounds; consider formalizing the zero-residual classification itself and the LTE lemma; then investigate whether the weighted residual can be combined with the root's full branch history (not merely a finite congruence cylinder). Do not mistake the singular two-step barrier for a proof of root nonhalting.
