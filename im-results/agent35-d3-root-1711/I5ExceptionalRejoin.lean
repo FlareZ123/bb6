@@ -149,12 +149,9 @@ theorem b_source (t : Nat) :
   have htarget :
       (⟨[],false,List.replicate (8*K+9) true ++ ys,5⟩ :
         CryptidBoundary.Cfg) = bMiddle t := by
-    change
-      (⟨[],false,List.replicate (8*K+9) true ++ ys,5⟩ :
-        CryptidBoundary.Cfg) =
-      (⟨[],false,true :: true :: (List.replicate (64*t+25) true ++
-        (false :: true :: List.replicate 5 true)),5⟩ :
-        CryptidBoundary.Cfg)
+    unfold bMiddle DRegularSource.sourceSection
+    rw [show 64*t+27-2 = 64*t+25 by omega]
+    simp only [CryptidBoundary.init, CryptidBoundary.oppairs]
     exact congrArg
       (fun r : List Bool => (⟨[],false,r,5⟩ : CryptidBoundary.Cfg))
       htargetTape
