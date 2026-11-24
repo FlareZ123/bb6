@@ -32,3 +32,6 @@ with only propext and Quot.sound. FatalSpectrumRegistersSource.lean connects
 the theorem to the previously source-accepted badAll equivalence; its
 original-source CI acceptance is still pending. No new root orbit closure
 or BB(6) bound follows merely from computing the exact failure set.
+
+
+**Original-source acceptance (2026-11-24):** the three new theorem audits passed in CI 45465857200; an unrelated later legacy even-sector proof failed. Focused original-source CI [45467805135](https://github.com/FlareZ123/bb6/actions/runs/45467805135) subsequently passed the entire focused closure, including the stronger full-output profile.
