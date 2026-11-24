@@ -211,13 +211,13 @@ theorem m1OddResidueOne_q4_prefix_head_bound
             simpa [T,s1PhysicalRight_source,sideBit] using
               s1Config_right_cell 3 1 1 a 0 b h 1
           change sweptLeft N T h (h+2) = true
-          change sweptLeft N T h (h+3) = true
           rw [hp,hsrc]
         · rw [hx3]
           have hp := sweptLeft_preserves_right N T h (h+3) (by omega)
           have hsrc : T (h+3) = true := by
             simpa [T,s1PhysicalRight_source,sideBit] using
               s1Config_right_cell 3 1 1 a 0 b h 2
+          change sweptLeft N T h (h+3) = true
           rw [hp,hsrc]
     simpa [T2] using hframe.trans hT1
   intro k hk d hd
@@ -244,7 +244,7 @@ theorem m1OddResidueOne_q4_prefix_head_bound
     · let j := k-p2
       have hj : j < 3*a := by dsimp [j,p2,p1,N] at *; omega
       have hkEq : k = p1+(29+j) := by dsimp [j,p2,p1]; omega
-      rw [hkEq,run_add,hSweep] at hd
+      rw [hkEq,run_add,hSweep'] at hd
       simp only [Option.bind_some] at hd
       rw [run_add,hBridge'] at hd
       simp only [Option.bind_some] at hd
