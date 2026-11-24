@@ -14,6 +14,7 @@ on:
           - budget-blank
           - margin-chain
           - margin-half
+          - margin-block
           - forward-unit
       chain_case:
         description: "Exceptional index for margin-chain"
@@ -94,7 +95,7 @@ jobs:
             lean "$AG43/CarryCertSource.lean"
             exit 0
           fi
-          if [ "${{ inputs.target }}" = margin-blank ] || [ "${{ inputs.target }}" = budget-blank ] || [ "${{ inputs.target }}" = margin-chain ] || [ "${{ inputs.target }}" = margin-half ]; then
+          if [ "${{ inputs.target }}" = margin-blank ] || [ "${{ inputs.target }}" = budget-blank ] || [ "${{ inputs.target }}" = margin-chain ] || [ "${{ inputs.target }}" = margin-half ] || [ "${{ inputs.target }}" = margin-block ]; then
             RES=im-results/agent50-p1-residue
             GEN=$(mktemp -d "$PWD/.agent43-margin.XXXXXX")
             export LEAN_PATH="$LEAN_PATH:$RES:$GEN"
@@ -108,6 +109,31 @@ jobs:
             lean -o "$AG43/CarryCert.olean" "$AG43/CarryCert.lean"
             lean -o "$AG43/MarginCert.olean" "$AG43/MarginCert.lean"
             lean -o "$AG43/MarginSource.olean" "$AG43/MarginSource.lean"
+            if [ "${{ inputs.target }}" = margin-block ]; then
+              N="${{ inputs.chain_case }}"
+              case "$N" in
+                286) K=1442; GROUP=16; P=2 ;;
+                1614) K=5824; GROUP=12; P=2 ;;
+                2990) K=6154; GROUP=12; P=2 ;;
+                3342) K=13730; GROUP=6; P=1 ;;
+                *) exit 2 ;;
+              esac
+              for m in BlockCarry BlockMargin Generate BlockProposal; do
+                lean -j1 -DElab.async=false -o "$AG43/$m.olean" "$AG43/$m.lean"
+              done
+              python "$AG43/gen_block_chain.py" "$N" "$K" 8 "$GROUP" "$GEN"
+              export GEN
+              m=$(head -n1 "$GEN/modules.txt")
+              lean -j1 -DElab.async=false -o "$GEN/$m.olean" "$GEN/$m.lean"
+              sed '1d;$d' "$GEN/modules.txt" | xargs -P"$P" -I{} bash -ec 'm="$1"; echo "Checking $m"; lean -j1 -DElab.async=false -o "$GEN/$m.olean" "$GEN/$m.lean"' _ {}
+              m=$(tail -n1 "$GEN/modules.txt")
+              lean -j1 -DElab.async=false -o "$GEN/$m.olean" "$GEN/$m.lean"
+              set -o pipefail
+              lean "$GEN/BlockMargin${N}Source.lean" | tee /tmp/agent43-block-axioms.txt
+              grep -q "critical_reset_no_reach_$N" /tmp/agent43-block-axioms.txt
+              if grep -q sorryAx /tmp/agent43-block-axioms.txt; then exit 1; fi
+              exit 0
+            fi
             if [ "${{ inputs.target }}" = margin-half ]; then
               SCREEN=im-results/agent28-p1-modular-screen
               export LEAN_PATH="$LEAN_PATH:$SCREEN"
