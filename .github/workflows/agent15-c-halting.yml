@@ -158,12 +158,15 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent41-m192-reverse/Core192High.lean" .
           cp "$GITHUB_WORKSPACE/im-results/agent41-m192-reverse/Core192All.lean" .
           cp "$GITHUB_WORKSPACE/im-results/agent41-m192-reverse/Core192Source.lean" .
-          cp "$GITHUB_WORKSPACE/im-results/agent38-m192-odd-closure/HighZeroEven.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent38-m192-odd-closure/"{HighZeroOdd,HighZeroEven,CZeroLarge,CZeroBridge}.lean .
           lean -o Quotient192.olean Quotient192.lean
           lean -o CMapBridge192.olean CMapBridge192.lean
           lean -o Core192High.olean Core192High.lean
           lean -o Core192All.olean Core192All.lean
+          lean -o HighZeroOdd.olean HighZeroOdd.lean
           lean -o HighZeroEven.olean HighZeroEven.lean
+          lean -o CZeroLarge.olean CZeroLarge.lean
+          lean -o CZeroBridge.olean CZeroBridge.lean
           lean -o Core192Source.olean Core192Source.lean
           cp "$GITHUB_WORKSPACE/im-results/agent15-c-halting/M192GeneralBound.lean" .
           lean -o M192GeneralBound.olean M192GeneralBound.lean
