@@ -415,7 +415,9 @@ theorem positive_skip_parent_cost {j s k x z : Nat} {w0 : Int}
       4*(3^(j-k):Int)*(P k:Int)+6+w0≤
         (3^s:Int)*((3:Int)*w1+6) := by
     simpa [w1] using hret
-  exact le_trans hret' hmul
+  calc
+    _≤(3^s:Int)*((3:Int)*w1+6) := hret'
+    _≤(3^s:Int)*(6*(k:Int)-9) := hmul
 
 /-- A special parent at P_k has the exact Q-coordinate 3k+12, giving
     the complementary exceptional-return denominator 6*k+27. -/
@@ -444,7 +446,10 @@ theorem positive_special_return_cost {j s k : Nat} {w0 : Int}
   have hreturn :
       D*(6*(k:Int)+27)=(4*D-A)*(P k:Int)-C := by
     calc
-      D*(6*(k:Int)+27)=D*(2*(Q k (P k):Int)+3) := by rw [hQ]; omega
+      D*(6*(k:Int)+27)=D*(2*(Q k (P k):Int)+3) := by
+        rw [hQ]
+        have hnum : 6*(k:Int)+27=6*(k:Int)+24+3 := by omega
+        rw [hnum]
       _=D*(2*(Q k (P k):Int))+3*D := by
         simp only [Int.mul_add]
         omega
