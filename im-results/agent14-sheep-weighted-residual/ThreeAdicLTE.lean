@@ -293,10 +293,24 @@ theorem type1_terminal_H_ge_3_lower_bound (k H B : Nat)
   have hdiv5 : 5 ∣ 2^B-1 := Nat.Coprime.dvd_of_dvd_mul_left hcop5 hdivprod5
   exact type1_H_ge_3_lower_bound H B hH hB hdiv3 hdiv5
 
+
+theorem type3_terminal_H_ge_9_lower_bound (k H B : Nat)
+    (hH : 9≤H) (hB : 1≤B)
+    (heq : 3^H*(19+1683*k)=2^H*(2^B-1)) : 13122≤B := by
+  have hdivprod3 : 3^H ∣ 2^H*(2^B-1) := by
+    refine ⟨19+1683*k, ?_⟩
+    exact heq.symm
+  have hcop3 : Nat.Coprime (3^H) (2^H) :=
+    Nat.Coprime.pow H H (by decide)
+  have hdiv3 : 3^H ∣ 2^B-1 :=
+    Nat.Coprime.dvd_of_dvd_mul_left hcop3 hdivprod3
+  exact type3_H_ge_9_lower_bound H B hH hB hdiv3
+
 #print axioms three_power_dvd_four_pow_sub_one
 #print axioms three_power_dvd_two_pow_sub_one
 #print axioms type3_H_ge_9_lower_bound
 #print axioms type1_H_ge_3_lower_bound
 #print axioms type1_terminal_H_ge_3_lower_bound
+#print axioms type3_terminal_H_ge_9_lower_bound
 
 end SheepWeightedResidual
