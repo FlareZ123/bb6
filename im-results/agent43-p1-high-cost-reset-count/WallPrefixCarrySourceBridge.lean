@@ -25,7 +25,7 @@ theorem sumBits_eq (n j : Nat) :
     ∀ xs : List Bool,
       BB6WallBridge.sumBits n j xs = BB6WallCarry.sumBits n j xs := by
   intro xs
-  induction xs with
+  induction xs generalizing j with
   | nil => rfl
   | cons b xs ih =>
       simp [BB6WallBridge.sumBits, BB6WallCarry.sumBits, ih]
