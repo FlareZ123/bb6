@@ -12,6 +12,7 @@ on:
           - tail_prefix_cylinders
           - short_mod3_halting
           - all_q_e_terminal
+          - source_phase_bands
         default: raw_d0_bridge
         required: true
 
@@ -37,6 +38,20 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Verify widened D source phase-band separation
+        if: inputs.target == 'source_phase_bands'
+        env:
+          LEAN_PATH: im-results/agent26-d-phase-bands
+        run: |
+          set -euo pipefail
+          lean --version
+          lean -o im-results/agent26-d-phase-bands/GrowthBands.olean im-results/agent26-d-phase-bands/GrowthBands.lean
+          lean im-results/agent36-cryptid-trace/SectionBandSeparation.lean 2>&1 | tee /tmp/section-band-separation.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/section-band-separation.log; then
+            echo "Forbidden axiom or native_decide in phase-band proof"
+            exit 1
+          fi
 
       - name: Compile original-source padding checks (legacy only)
         if: inputs.target == 'legacy_padding_107_call'
