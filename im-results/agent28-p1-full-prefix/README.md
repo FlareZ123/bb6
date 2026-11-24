@@ -26,6 +26,8 @@ The theorem `source_countcone_cost_lt_full` is the corresponding obstruction: if
 
 The existing `source_countcone_cost_lt` discards the `7*2^n` term modulo `2^K`, which requires `K≤n`. The new argument keeps that term and only requires `K≤m`.
 
+**Scope clarification:** Agent43 had already source-lifted an endpoint-independent cost-side prefix for the range K≤n and K≤m. The new contribution is not endpoint independence by itself; it is retaining the full 7P term to extend the source prefix to every K≤m, including K>n.
+
 The source `CostWitness` identity gives, for a duplicate-free list of edge-start costs `A`,
 [
 2+14P\sum_{s\in A}2^s
