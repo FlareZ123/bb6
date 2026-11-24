@@ -126,21 +126,19 @@ theorem fullSum_add_weighted (n Q : Nat) (A : List Nat)
       have hcoeff : (Q-s)+(n+3+s)=7*2^n := by
         rw [hQ]
         omega
+      have hterm :
+          (Q-s)*2^s + (n+3+s)*2^s = 7*2^n*2^s := by
+        rw [← Nat.add_mul, hcoeff]
       change (Q-s)*2^s + fullWeightedSum Q A +
           ((n+3+s)*2^s + costWeightedSum n A) =
           7*2^n*(2^s+costPowSum A)
       calc
-        (Q-s)*2^s + fullWeightedSum Q A +
-            ((n+3+s)*2^s + costWeightedSum n A) =
-            ((Q-s)+(n+3+s))*2^s +
-              (fullWeightedSum Q A+costWeightedSum n A) := by
-                rw [Nat.add_mul]
-                ac_rfl
+        _ = ((Q-s)*2^s+(n+3+s)*2^s) +
+              (fullWeightedSum Q A+costWeightedSum n A) := by ac_rfl
         _ = 7*2^n*2^s + 7*2^n*costPowSum A := by
-              rw [hcoeff, ih hstail]
+              rw [hterm, ih hstail]
         _ = 7*2^n*(2^s+costPowSum A) := by
               rw [Nat.mul_add]
-              ac_rfl
 
 def fullCarryStep (Q j : Nat) (cs : List Nat) : List Nat :=
   cs.flatMap fun c =>
@@ -261,6 +259,7 @@ theorem noFullPrefix_of_emptyCarry (Q K : Nat)
             have hsub : 2^K-1+1=2^K :=
               Nat.sub_add_cancel (Nat.one_le_pow K 2 (by decide))
             rw [hsub]
+            ac_rfl
       _ = 2^K*(total/2^K+1) := by
             rw [Nat.mul_add]
             simp
@@ -309,10 +308,13 @@ theorem source_full_prefix (n b d m z K : Nat) (hn : 14≤n)
           2*(2^m*v+costWeightedSum n A) := by
       calc
         2*(1+7*2^n*costPowSum A) =
-            2+14*2^n*costPowSum A := by ring
+            2+14*2^n*costPowSum A := by
+              simp [Nat.mul_add, Nat.mul_assoc, Nat.mul_comm, Nat.mul_left_comm]
         _ = 2^m*(d-1)+2*costWeightedSum n A := hInv
-        _ = 2*(2^m*v+costWeightedSum n A) := by rw [hD]; ring
-    exact Nat.mul_left_cancel hDouble
+        _ = 2*(2^m*v+costWeightedSum n A) := by
+              rw [hD]
+              simp [Nat.mul_add, Nat.mul_assoc, Nat.mul_comm, Nat.mul_left_comm]
+    exact Nat.eq_of_mul_eq_mul_left (by decide : 0<2) hDouble
   have hA : ∀ s∈A, s≤Q := by
     intro s hs
     have hslt := hlt s hs
