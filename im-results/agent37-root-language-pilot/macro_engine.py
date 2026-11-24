@@ -95,6 +95,17 @@ def step(c: Config):
         return "E_pairs_1100", p+60+4*q, canonical(
             8*k+5, "0"+"1"*(2*q+2)+"0"+"1"*6+tail
         )
+    # Exact implicit-blank E families (Agent32, 2026-11-24):
+    # source modules E1101Blank.lean and EQ1TerminalBlank.lean in
+    # ../agent32-d-route-dag/. Costs exclude frozen-state entry.
+    if v == "1101":
+        if q == 0:
+            return "E1101_blank", p+100, canonical(8*k+3, "01111010101011")
+        return "E_pairs_1101_blank", p+64+4*q, canonical(
+            8*k+5, "0"+"1"*(2*q+2)+"0"+"1"*8
+        )
+    if q == 1 and v == "11011":
+        return "E_q1_terminal_blank", 12*k*k+41*k+146, None
     # All-q source first-return families (Agent32 E110111First.lean;
     # Agent26 E1101010111First.lean), both with arbitrary right tails.
     if v.startswith("1101010111"):
@@ -145,6 +156,7 @@ def check_halt_padding_regressions():
         (Config(4, "011011"), "E_halt", 98),
         (Config(4, "011011011"), "E_all_q_1101101100_halt", 105),
         (Config(4, "01011011011"), "E_all_q_1101101100_halt", 107),
+        (Config(4, "01011011"), "E_q1_terminal_blank", 146),
     )
     for cfg, expected_label, expected_cost in cases:
         label, cost, nxt = step(cfg)
