@@ -224,6 +224,19 @@ theorem externalT_exact :
 theorem externalT_mod27 : externalT%27=2 := by
   decide
 
+private theorem externalT_mod3 : externalT%3=2 := by
+  have h := externalT_mod27
+  omega
+
+private theorem externalTlift_mod3 (k : Nat) : externalTlift k%3=2 := by
+  have hbase := externalT_mod3
+  have hdiv : 3 ∣ 3^96*8^10*k := by
+    refine ⟨3^95*8^10*k, ?_⟩
+    simp [Nat.pow_succ, Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm]
+  have hz := Nat.mod_eq_zero_of_dvd hdiv
+  unfold externalTlift
+  omega
+
 theorem externalAfter13_trace_exact :
     externalAfter13 =
       681262754627324040494547942327349340291066102248547451314 := by
@@ -231,18 +244,22 @@ theorem externalAfter13_trace_exact :
 
 theorem externalAfter13_mod3 : externalAfter13%3=2 := by
   rw [externalAfter13_trace_exact]
-  decide
 
 theorem external_checkpoint10_lift (k : Nat) :
     DRegular.run 10 (externalSeed k) =
       some ⟨9*externalTlift k+7,4,1⟩ := by
   rw [cryptid_first10_affine k]
+  have hpow : 3^98 = 9*3^96 := by decide
   have hparam :
       3^98*(8^10*k)+cryptidCylinderC10 =
         9*externalTlift k+7 := by
-    rw [externalT_exact]
-    simp [externalTlift]
-    ring
+    calc
+      3^98*(8^10*k)+cryptidCylinderC10 =
+          9*3^96*(8^10*k)+(9*externalT+7) := by
+            rw [← externalT_exact, hpow]
+      _ = 9*(externalT + 3^96*8^10*k)+7 := by
+            rw [Nat.mul_add]
+            simp [Nat.mul_assoc, Nat.add_assoc, Nat.add_comm, Nat.add_left_comm]
   rw [hparam]
 
 theorem external_after10_original (k : Nat) :
@@ -254,7 +271,6 @@ theorem external_after10_original (k : Nat) :
   have hcanon : DRegular.Canon (externalSeed k) := by
     constructor
     · simp [externalSeed, cryptidCylinderC]
-      omega
     · right
       rfl
   have hroot :
@@ -273,29 +289,39 @@ theorem externalAfter13_lift (k : Nat) :
     outputA (externalTlift k) =
       externalAfter13 + 3^95*8^13*k := by
   have hext : 3*externalKB=64*externalT+31 :=
-    kB_exact externalT (by omega)
-  have htmod : externalTlift k%3=2 := by
-    simp [externalTlift]
-    omega
+    kB_exact externalT externalT_mod3
+  have htmod : externalTlift k%3=2 :=
+    externalTlift_mod3 k
   have hlift : 3*kB (externalTlift k) =
       64*externalTlift k+31 :=
     kB_exact (externalTlift k) htmod
+  have hpow96 : 3^96 = 3*3^95 := by decide
   have hkb :
       kB (externalTlift k) =
         externalKB+64*3^95*8^10*k := by
     have hnum :
         64*externalTlift k+31 =
           3*(externalKB+64*3^95*8^10*k) := by
-      rw [externalTlift, hext]
-      ring
+      calc
+        64*externalTlift k+31 =
+            (64*externalT+31)+64*(3^96*8^10*k) := by
+              unfold externalTlift
+              rw [Nat.mul_add]
+              omega
+        _ = 3*externalKB + 3*(64*3^95*8^10*k) := by
+              rw [← hext, hpow96]
+              simp [Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm]
+        _ = 3*(externalKB+64*3^95*8^10*k) := by
+              rw [Nat.mul_add]
     omega
   calc
     outputA (externalTlift k) =
         8*(externalKB+64*3^95*8^10*k)+10 := by
           simp [outputA, hkb]
     _ = externalAfter13+3^95*8^13*k := by
-          simp [externalAfter13, outputA]
-          ring
+          simp [externalAfter13, outputA, Nat.mul_add,
+            Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm,
+            show 8*64*8^10=8^13 by decide]
 
 theorem external_after_macro13_original (k : Nat) :
     ObsEq
@@ -342,7 +368,8 @@ theorem root_t_delta :
   have hscale :
       8^10*(3^3*BB6.Agent4Root13Section.root13P) =
         27*(8^10*BB6.Agent4Root13Section.root13P) := by
-    ring
+    rw [show 3^3=27 by decide]
+    simp [Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm]
   simp [BB6.DRegularShift.shiftNat, cryptidCheckpoint10] at ha
   omega
 
@@ -353,7 +380,7 @@ theorem root_external_after13_difference :
   have ht : BB6.Agent25SixthRoot.t6%3=2 := by
     have h := BB6.Agent35SixthRoot.true_root_t_mod27
     omega
-  have hext : externalT%3=2 := by omega
+  have hext : externalT%3=2 := externalT_mod3
   have hr := kB_exact BB6.Agent25SixthRoot.t6 ht
   have he := kB_exact externalT hext
   have hkb :
@@ -364,8 +391,20 @@ theorem root_external_after13_difference :
         3*kB BB6.Agent25SixthRoot.t6 =
           3*(kB externalT +
             64*8^10*BB6.Agent4Root13Section.root13P) := by
-      rw [hr, he, root_t_delta]
-      ring
+      calc
+        3*kB BB6.Agent25SixthRoot.t6 =
+            64*BB6.Agent25SixthRoot.t6+31 := hr
+        _ = (64*externalT+31) +
+              64*(3*8^10*BB6.Agent4Root13Section.root13P) := by
+                rw [root_t_delta, Nat.mul_add]
+                omega
+        _ = 3*kB externalT +
+              3*(64*8^10*BB6.Agent4Root13Section.root13P) := by
+                rw [← he]
+                simp [Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm]
+        _ = 3*(kB externalT +
+              64*8^10*BB6.Agent4Root13Section.root13P) := by
+                rw [Nat.mul_add]
     omega
   calc
     outputA BB6.Agent25SixthRoot.t6 =
@@ -374,8 +413,9 @@ theorem root_external_after13_difference :
             simp [outputA, hkb]
     _ = externalAfter13 +
         8^13*BB6.Agent4Root13Section.root13P := by
-          simp [externalAfter13, outputA]
-          ring
+          simp [externalAfter13, outputA, Nat.mul_add,
+            Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm,
+            show 8*64*8^10=8^13 by decide]
 
 theorem root13P_mod3 :
     BB6.Agent4Root13Section.root13P%3=1 := by
@@ -391,7 +431,6 @@ theorem root_after13_mod3 :
   have hmul :
       (8^13*BB6.Agent4Root13Section.root13P)%3=2 := by
     rw [Nat.mul_mod, hpow, hp]
-    decide
   omega
 
 /-- The authentic root and the external cylinder have the same 15-bit suffix
@@ -414,7 +453,8 @@ theorem root_not_in_external_residual_cylinder (k : Nat) :
   have hext := externalAfter13_mod3
   have hdiv : 3 ∣ 3^95*8^13*k := by
     refine ⟨3^94*8^13*k, ?_⟩
-    ring
+    rw [show 3^95=3*3^94 by decide]
+    simp [Nat.mul_assoc]
   have hz := Nat.mod_eq_zero_of_dvd hdiv
   omega
 
