@@ -36,7 +36,7 @@ def solve_one(table, d: int, reflected: bool, timeout_ms: int):
     """Find any Data d satisfying the exact finite certificate constraints."""
     n = 6 * d + 1
     halt = n - 1
-    width = max(1, (d - 1).bit_length())
+    width = max(1, d.bit_length())
     solver = SolverFor("QF_BV")
     solver.set(timeout=timeout_ms)
 
