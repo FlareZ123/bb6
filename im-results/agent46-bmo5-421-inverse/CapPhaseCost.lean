@@ -117,7 +117,7 @@ theorem positive_history_packet_weight {j s k x : Nat} {w : Int} (hw : 0<w)
   induction h with
   | first hb he =>
     refine ⟨8,-6-w,by decide,by decide,by decide,by omega,?_,?_⟩
-    · change (3:Int)*W j x=8*(P j:Int)-6-w
+    · simp only [Int.pow_one]
       omega
     · change (4:Int)*(P j:Int)≥4*(P j:Int)
       omega
@@ -143,7 +143,7 @@ theorem positive_history_packet_weight {j s k x : Nat} {w : Int} (hw : 0<w)
       grind
     · rw [Int.pow_succ]
       change (4*(D*3)-(A+8*D))*(P k:Int)≥4*(P j:Int)
-      have heq : 4*(D*3)-(A+8*D)=4*D-A := by ring
+      have heq : 4*(D*3)-(A+8*D)=4*D-A := by omega
       rw [heq]
       exact hB
   | @down s k x y h hr ih =>
@@ -168,12 +168,15 @@ theorem positive_history_packet_weight {j s k x : Nat} {w : Int} (hw : 0<w)
       have hp : (P (k+1):Int)=2*(P k:Int) := by exact_mod_cast p_succ k
       calc
         (4*(D*3)-2*A)*(P k:Int)
-            = (4*D-A)*(P (k+1):Int)+4*D*(P k:Int) := by rw [hp]; ring
+            = (4*D-A)*(P (k+1):Int)+4*D*(P k:Int) := by rw [hp]; grind
         _ ≥ 4*(P j:Int) := by
           have hD0 : 0≤D := le_of_lt hD
           have hP0 : 0≤(P k:Int) := by exact_mod_cast Nat.zero_le (P k)
-          have hterm : 0≤4*D*(P k:Int) := by positivity
-          nlinarith [hB,hterm]
+          have hterm : 0≤4*D*(P k:Int) := by
+            apply Int.mul_nonneg
+            · exact Int.mul_nonneg (by decide) (le_of_lt hD)
+            · exact hP0
+          grind [hB,hterm]
 
 /-- Every state in a positive history is in its recorded band. -/
 theorem positive_history_band {j s k x : Nat} {w : Int}
@@ -198,24 +201,25 @@ theorem positive_boundary_cost_sharp {j s k x : Nat} {w : Int} (hw : 0<w)
   have hD : 0<D := Int.pow_pos (by decide)
   have hb:=positive_history_band h
   have hQNat : Q k x≤3*k+16 := by
-    have hl:=l_add k
-    unfold Q
+    have hq:=q_eq hb
     omega
   have hQ : (Q k x:Int)≤3*(k:Int)+16 := by exact_mod_cast hQNat
   have hWQ : W k x+2*(Q k x:Int)=4*(P k:Int)-3 := by
-    have hl:=l_add k
-    unfold W Q
+    have hq:=q_eq hb
+    unfold W
+    have hqI : (Q k x:Int)+2*(P k:Int)=2*(x:Int)+3*(k:Int)+12 := by exact_mod_cast hq
+    unfold W
     omega
   have hrel : 2*D*(Q k x:Int)=(4*D-A)*(P k:Int)-3*D-C := by
     change D*(W k x:Int)=A*(P k:Int)+C at he
-    nlinarith [he,hWQ]
+    grind [he,hWQ]
   have hmul:=Int.mul_le_mul_of_nonneg_left hQ (le_of_lt hD)
-  have hupper : 2*D*(Q k x:Int)≤D*(6*(k:Int)+32) := by nlinarith
+  have hupper : 2*D*(Q k x:Int)≤D*(6*(k:Int)+32) := by grind [hmul]
   have hC' : 6+w≤-C := by omega
   have hlower : 4*(P j:Int)+6+w-3*D≤2*D*(Q k x:Int) := by
-    nlinarith [hB,hC',hrel]
+    grind [hB,hC',hrel]
   have hfinal:=le_trans hlower hupper
-  nlinarith
+  grind
 
 #print axioms positive_history_packet_weight
 #print axioms positive_history_band
