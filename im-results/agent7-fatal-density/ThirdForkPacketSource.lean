@@ -24,7 +24,7 @@ private def thirdPacketCoeff (n j : Nat) : Int :=
 
 private theorem shifted_linear_pow (m:Nat) : m+21≤2^(m+5):=by
   induction m with
-  | zero=>norm_num
+  | zero=>decide
   | succ m ih=>
     have he:m+1+5=(m+5)+1:=by omega
     rw [he,Nat.pow_succ]
@@ -40,7 +40,7 @@ private theorem n_add_one_le_pow (n:Nat) (hn:20≤n):
 private theorem linear_term_le (n:Nat) (hn:20≤n):
     16384*(n+1)≤2^(n-1):=by
   have h:=n_add_one_le_pow n hn
-  have hc:16384=2^14:=by norm_num
+  have hc:16384=2^14:=by decide
   rw [hc]
   calc
     2^14*(n+1)≤2^14*2^(n-15):=Nat.mul_le_mul_left (2^14) h
@@ -127,7 +127,7 @@ private theorem ray_margin_of_index (n a j:Nat)
   have hp2:2^(n-1)=4*2^(n-3):=by
     have he:n-1=(n-3)+2:=by omega
     rw [he,Nat.pow_add]
-    norm_num
+    simp
   have hsum:2^(n-3)+2^(n-1)≤2^n:=by
     rw [hp1,hp2]
     omega
@@ -145,7 +145,7 @@ private theorem source_band_of_margin (n j d:Nat)
   have hp:2^n=8*2^(n-3):=by
     have he:n=(n-3)+3:=by omega
     rw [he,Nat.pow_add]
-    norm_num
+    simp
   have hr:ray n j+deficit n j=4*2^n:=by
     dsimp [ray]
     omega
@@ -214,11 +214,11 @@ private theorem packet_feeder_data (n a b t:Nat)
   have hp:2^n=8*2^(n-3):=by
     have he:n=(n-3)+3:=by omega
     rw [he,Nat.pow_add]
-    norm_num
+    simp
   have hp2:2^(n-1)=4*2^(n-3):=by
     have he:n-1=(n-3)+2:=by omega
     rw [he,Nat.pow_add]
-    norm_num
+    simp
   have hlin:=linear_term_le n (by omega)
   have hsmall:n+2≤4*2^(n-3):=by
     rw [←hp2]
