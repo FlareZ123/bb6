@@ -53,7 +53,7 @@ theorem readOneParent_root :
 theorem readOneParent_run :
     knownRun readOneParent 2 = some readOneAfterTwo := by
   simp [knownRun, knownStep, readOneParent, readOneAfterTwo,
-    readSlot, applyMove, blank, initialSlot]
+    readSlot, applyMove, blank]
   funext x
   by_cases h0 : x = 0 <;> by_cases h1 : x = 1 <;> simp [h0, h1]
 
@@ -95,19 +95,19 @@ theorem readOneHalter_delay_one :
 theorem readOneHalter_path_five :
     SimplePath readOneHalter 0 [5, 4, 3, 2, 1, 0] := by
   apply SimplePath.step
-  · simp [mayZero, readOneHalter, readOneParent, refine, readOneAfterTwo, readOneAfterTwo_readSlot]
+  · simp [mayZero, readOneHalter, readOneParent, refine, readOneAfterTwo]
   · decide
   · apply SimplePath.step
-    · simp [mayZero, readOneHalter, readOneParent, refine, readOneAfterTwo, readOneAfterTwo_readSlot]
+    · simp [mayZero, readOneHalter, readOneParent, refine, readOneAfterTwo]
     · decide
     · apply SimplePath.step
-      · simp [mayZero, readOneHalter, readOneParent, refine, readOneAfterTwo, readOneAfterTwo_readSlot]
+      · simp [mayZero, readOneHalter, readOneParent, refine, readOneAfterTwo]
       · decide
       · apply SimplePath.step
-        · simp [mayZero, readOneHalter, readOneParent, refine, readOneAfterTwo, readOneAfterTwo_readSlot]
+        · simp [mayZero, readOneHalter, readOneParent, refine, readOneAfterTwo]
         · decide
         · apply SimplePath.step
-          · simp [mayZero, readOneHalter, readOneParent, refine, readOneAfterTwo, readOneAfterTwo_readSlot]
+          · simp [mayZero, readOneHalter, readOneParent, refine, readOneAfterTwo]
           · decide
           · exact SimplePath.stop
 
@@ -120,6 +120,10 @@ theorem readOneHalter_delay_five :
   simp [possibleDelays, hnonempty]
 
 /-- The exact halt-branch threshold is eight: n=2 and maximal delay d=5. -/
+theorem readOneHalter_possibleDelays_exact :
+    possibleDelays readOneHalter 0 = [0, 1, 2, 3, 4, 5] := by
+  decide
+
 theorem readOneHalter_weight_threshold (B : Nat) :
     (∀ d ∈ possibleDelays readOneHalter 0, d + 2 + 1 <= B) ↔ 8 <= B := by
   constructor
@@ -163,6 +167,25 @@ theorem readOneHalter_not_weighted_three :
   have hbound := h m hm 2 1 hh hd
   omega
 
+/-- The same cylinder also exhibits a genuine four-step blank-start
+    halter after re-rooting at B along its one-step zero prefix. -/
+theorem readOneHalter_reRooted_four_step :
+    ∃ m', HaltsAfter m' 3 := by
+  let m : Machine := weightedTNFDefaultCompletion readOneHalter
+  have hm : compatible readOneHalter m :=
+    weightedTNFDefaultCompletion_compatible readOneHalter
+  have hh := readOneHalter_raw_halts m hm
+  have hz0 : zeroNext m 0 = none :=
+    firstOne_terminal readOneHalter readOneHalter_root m hm
+  have hz1 : zeroNext m 1 = some 0 := by
+    simp [zeroNext, m, weightedTNFDefaultCompletion,
+      readOneHalter, readOneParent, refine, readOneAfterTwo]
+  have hp : TerminalPath (zeroNext m) 1 1 0 :=
+    TerminalPath.step hz1 (TerminalPath.stop 0 hz0)
+  have hd : 1 ∈ delays (zeroNext m) 0 :=
+    (mem_delays_iff hz0).mpr ⟨1, hp⟩
+  exact weighted_first_one_realized m 1 2 readOneHalter_root hh hd
+
 /-- For B>=8 the read-one halt child is a valid weighted leaf. -/
 theorem readOneHalter_weighted (B : Nat) (hB : 8 <= B) :
     ∀ m, compatible readOneHalter m → WeightedBound B m := by
@@ -180,10 +203,12 @@ theorem readOneHalter_weighted_cover (B : Nat) (hB : 8 <= B) :
 #print axioms readOneParent_run
 #print axioms readOneHalter_delay_one
 #print axioms readOneHalter_delay_five
+#print axioms readOneHalter_possibleDelays_exact
 #print axioms readOneHalter_weight_threshold
 #print axioms readOneHalter_raw_halts
 #print axioms readOneHalter_raw_cover
 #print axioms readOneHalter_not_weighted_three
+#print axioms readOneHalter_reRooted_four_step
 #print axioms readOneHalter_weighted
 #print axioms readOneHalter_weighted_cover
 
