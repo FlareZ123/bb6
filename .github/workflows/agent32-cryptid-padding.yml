@@ -106,7 +106,7 @@ jobs:
           set -euo pipefail
           lean --version
           lean -o im-results/agent26-d-phase-bands/GrowthBands.olean im-results/agent26-d-phase-bands/GrowthBands.lean
-          lean im-results/agent36-cryptid-trace/SectionBandSeparation.lean 2>&1 | tee /tmp/section-band-separation.log
+          lean -o im-results/agent36-cryptid-trace/SectionBandSeparation.olean im-results/agent36-cryptid-trace/SectionBandSeparation.lean 2>&1 | tee /tmp/section-band-separation.log
           if grep -Eq 'sorryAx|native_decide' /tmp/section-band-separation.log; then
             echo "Forbidden axiom or native_decide in phase-band proof"
             exit 1
