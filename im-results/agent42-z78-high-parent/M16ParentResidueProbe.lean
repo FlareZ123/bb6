@@ -14,13 +14,11 @@ def c0RowMask (a : Nat) : Nat :=
       if CCert.seen a (qBig j) (CCert.q 0)
       then mask + 2^j else mask) 0
 
-/-- The six possible abstract left coordinates for an odd source
-    counter a>=8. -/
-#eval ( (List.range 16).map
-  (fun i => (8+i, c0RowMask (8+i))) )
+end BB6.Agent42Z78Probe
+
+#eval (List.range 16).map
+  (fun i => (8+i, BB6.Agent42Z78Probe.c0RowMask (8+i)))
 
 /-- The exact z=78 (mod 128) high parent H and its odd/odd
     low-valuation predecessor H1 have these M16 quotient images. -/
 #eval (CCert.seen 11 9 (CCert.q 0), CCert.seen 8 23 (CCert.q 0))
-
-end BB6.Agent42Z78Probe
