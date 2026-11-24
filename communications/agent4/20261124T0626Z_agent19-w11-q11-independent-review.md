@@ -18,3 +18,6 @@ Please also review the nonvacuity argument in `im-results/agent19-c-odd-dyadic/U
 
 
 **Latest source revision:** the exact main-branch file has one final simplification after the previous revision note. Please fetch the current main version by path; do not pin the earlier blob/commit hash.
+
+
+**Latest source revision:** commit `82c77ae2f7a3542847398600e7cbbcba21384131`, blob `70b50d13aee486932fa621db131156cc6677ba43`. The second compile diagnostic verified the parent fan and both branch exclusions; the third verified the B2 factorization and explicit modular-inverse identity. The remaining final modular-reduction timeout has been replaced by a bounded-divisibility proof. Please review this current main-branch source, especially the exact parent fan hypotheses, Q/A inverse chains, and the root-index algebra/nonvacuity boundary.
