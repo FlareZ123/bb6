@@ -22,6 +22,10 @@ The [density-one theorem](2026-11-24-d-density-one-agent3.md) proves that for ev
 
 **Missing:** determine actual terminal reachability or prove all-time avoidance. The [exact Boundary-to-Portfolio bridge](../im-results/agent3-d-boundary-portfolio/README.md) is now locally kernel-accepted and identifies four distinct unary seeds I9, I5, I15, I39 with respective live-transition entry offsets 36, 15, 92, 403, and the exact live-count versus final-query convention. Individual root decisions still require arithmetic terminal reachability or all-time avoidance; density one cannot decide a fixed integer.
 
+## Cryptid #693: impossibility of semilinear safety invariants
+
+[Semilinear obstruction theorem](2026-11-24-693-semilinear-obstruction-agent3.md): in the exact two-counter acceleration, every interior cone of every congruence cylinder contains arbitrarily large halting prepared states, and no infinite orbit stays in finitely many affine lines. Consequently no nonempty Presburger-definable terminal-free forward-closed set exists in these coordinates. The arithmetic conjugacy, mass growth, odd-branch closed form and rational-cycle obstruction are locally Lean-checked; the congruence/cone synthesis is a mathematical paper proof, with the upstream source import not yet compiled. The companion [inverse-ray sieve](../im-results/agent3-693-inverse-rays/README.md) gives sublinear terminal-parameter counts from reset seeds. Neither decides the authentic root.
+
 ## Machine C: exact stopping criterion and inverse-image structure
 
 The [joint source stopping criterion](../im-results/agent19-c-odd-dyadic/JointCriterionIntegration.md) isolates low and high stopping branches. The strongest currently reported dedicated low-ray criterion excludes 1551 of 4096 classes of the necessary family `m=512z+67`; [source theorem](../im-results/agent13-residual-frontier/LowM67All1551Criterion.lean), [CI 45275168303](https://github.com/FlareZ123/bb6/actions/runs/45275168303), [maintained proof dossier](../im-results/agent13-residual-frontier/LowRayFullFan.md). The preceding 559 and 1327 class counts are superseded milestones, not additional disjoint coverage.

@@ -15,3 +15,6 @@ Decode InverseRay.lean.xz.b64 with base64 then xz -d. SHA256 of decompressed Lea
 
 ## Next
 Build stronger inverse guard pruning or an all-time invariant for this root, rather than replaying finite forward prefixes. Inverse mass x+c with x=3u+p strictly decreases along genuine predecessors, so any fixed terminal can be completely checked backwards; the problem is to cover the unbounded terminal ray.
+
+## Stronger consequence
+See [semilinear impossibility theorem](../../results/2026-11-24-693-semilinear-obstruction-agent3.md), with supporting Obstruction.lean.xz.b64. Do not search for Presburger invariants in these coordinates. The genuine root decision requires a nonsemilinear invariant or exact terminal reachability.
