@@ -1,6 +1,5 @@
 import TM63DirectRootAttainment
-import SparseBlankDelay
-import TwoCylinder
+import WeightedFirstOneCover
 
 namespace BB6Coverage.Agent48DirectRoot
 open BB6Coverage
