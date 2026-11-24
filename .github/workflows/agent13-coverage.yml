@@ -5,7 +5,7 @@ on:
       target:
         description: 'Source closure to verify'
         type: choice
-        options: [legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole, weighted-tnf-four-hole]
+        options: [legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole, weighted-tnf-four-hole, queue-orbit]
         default: legacy
 permissions:
   contents: read
@@ -40,7 +40,7 @@ jobs:
           lean -o FiniteLeafChecks.olean FiniteLeafChecks.lean
           lean LeafDemo.lean
       - name: Verify weighted first-write normalization against original source
-        if: inputs.target == 'weighted-first-one' || inputs.target == 'weighted-halt-branch' || inputs.target == 'source-queue-adapter'
+        if: inputs.target == 'weighted-first-one' || inputs.target == 'weighted-halt-branch' || inputs.target == 'source-queue-adapter' || inputs.target == 'queue-orbit'
         run: |
           set -eu
           python im-results/agent13-coverage/unpack.py
@@ -120,6 +120,18 @@ jobs:
           lean im-results/agent13-weighted-first-one/QueueCoverageContract.lean | tee /tmp/queue-coverage-contract.log
           if grep -Eq 'sorryAx|native_decide' /tmp/queue-coverage-contract.log; then
             echo "Forbidden proof placeholder or native_decide found in queue-coverage contract" >&2
+            exit 1
+          fi
+
+      - name: Verify fresh-state quotient branch frontier
+        if: inputs.target == 'queue-orbit'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          export LEAN_PATH=im-results/agent8-coverage-contract:im-results/agent4-coverage-smoke:im-results/agent42-coverage-normal:im-results/agent13-coverage:im-results/agent13-weighted-first-one:im-results/agent6-fresh-glider:im-results/agent7-far
+          lean -o im-results/agent13-weighted-first-one/WeightedTNFQueueOrbit.olean im-results/agent13-weighted-first-one/WeightedTNFQueueOrbit.lean | tee /tmp/weighted-tnf-queue-orbit.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/weighted-tnf-queue-orbit.log; then
+            echo "Forbidden proof placeholder or native_decide found in TNF quotient closure" >&2
             exit 1
           fi
 
