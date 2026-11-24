@@ -8,7 +8,7 @@ This note separates two different source-authentic counterexample families and r
 
 Agent 1's [JointSyncSquareGapNonclosure.md](../../agent1-623-sync-only/JointSyncSquareGapNonclosure.md) constructs, for every depth ell >= 30, an original-source LE-to-LE transition with the same S-window cut. The source synchronizes both full carry rectangles and has a strong old-ray square-gap; the target loses synchronization and even the factor-one square-gap.
 
-For that family, q is even, the drain block is b=q+2 (even), and the exact drain digit normal form uses
+For that family, q is even, the drain block is b=q+2 (even), and the exact drain digit normal form uses:
 - L congruent to b modulo 2;
 - D = L - 2*n2.
 
@@ -24,18 +24,20 @@ Scope matters: this parity argument does **not** exclude the earlier cone-only f
 
 Agent 1's separate source-authentic transition is
 `D(4388,1094) -> D(3284,3310)`.
-Its endpoint masses are exactly
+Its endpoint masses are exactly:
 - source: 4388+1094 = **5482**;
 - target: 3284+3310 = **6594**.
 
-A source-faithful BigInt replay of the original high-level rules gives the adjacent blank-root prefix anchors
+A source-faithful BigInt replay of the original high-level rules gives the adjacent blank-root prefix anchors:
 - index 23: `D(1228,4156)`, mass **5384**;
 - index 24: `D(2924,3705)`, mass **6629**.
 
-Agent 49's original-source theorem `next_strict_mass` proves that every successful high-level transition, from every input state, increases mass by at least 7. Thus the mass of every surviving blank-root iterate is strictly increasing. Once the two adjacent anchors are kernel-certified, they imply the global root-history exclusion
-[
-orall n,quad run(n)=D(a_n,d_n) Longrightarrowa_n+d_nle5384 lor 6629le a_n+d_n.
-]
+Agent 49's original-source theorem `next_strict_mass` proves that every successful high-level transition, from every input state, increases mass by at least 7. Thus the mass of every surviving blank-root iterate is strictly increasing. Once the two adjacent anchors are kernel-certified, they imply the global root-history exclusion:
+
+```
+run n = D(a_n,d_n)  ->  (a_n+d_n <= 5384) or (6629 <= a_n+d_n).
+```
+
 Both endpoints of the two-call witness lie strictly inside (5384,6629), so neither can occur on the blank-root orbit.
 
 The exact source-imported proof is drafted in [RootMassGapSource.lean](RootMassGapSource.lean). It imports the unmodified pinned Cryptids transition via Agent49ParitySource and proves:
@@ -45,8 +47,32 @@ The exact source-imported proof is drafted in [RootMassGapSource.lean](RootMassG
 
 **Verification status:** the exact root anchors and the combined interval theorem remain pending the next pinned-source CI run. The finite source-faithful replay and the existing source theorem motivate the proof, but they are not substitutes for that import check.
 
-## 3. What this does and does not establish
+## 3. Mass-indexed 3-adic valuation candidate for the cone-only family
 
-The two root-history filters above exclude the *stronger joint sync/square-gap family* and the *two-call witness*. They do not exclude the earlier even-first-counter cone-only family, prove that the authentic root synchronizes forever, or close any halting branch of #623. A root-restricted synchronization product must retain explicit history conditions and must not generalize from arbitrary source-cone states.
+For Agent 1's cone-only family in `InfiniteConeSyncNonclosure.md`, the smaller counter is q and
+`q_r = 3^(k+1) * (1+M*t) / 2`,
+where M is a power of 3 and `1+M*t` is coprime to 3. Therefore the family has **v3(q)=k+1** exactly. Here `B=34*ell_S+122` and k is the least exponent with `3^k>B`.
+
+In a separate 20,000-transition replay of the exact original high-level map, for every positive blank-root state I computed:
+- `m=min(a,d)`;
+- `ell_S` as the least h with `3^h >= 2*(a+d)+7`;
+- `B=34*ell_S+122`;
+- k as the least exponent with `3^k>B`.
+
+The observed maximum of `v3(m)-k` was **-2**, attained at root index 245 (ell=52, k=7, v3(m)=5). No positive root state in that finite replay had `v3(m)>=k+1`. The candidate root-history bound
+`v3(min(a,d)) <= k-2`
+would exclude the cone-only family at every depth if proved.
+
+**Crucial falsification:** this is *not* a state-local invariant, even inside the source-certified affine cone. The source-faithful replay finds the successful transition
+`D(464905666,116226414) -> D(348679242,348679292)`.
+Both endpoints are in the affine cone. At the source, ell=20, B=802, k=7 and v3(min)=5=k-2. At the target, ell=20 and k=7 still, but v3(min)=6=k-1. Thus the proposed valuation bound is not forward-closed on the cone. If it holds on the authentic root, its proof must retain additional root-history/carry information; it cannot be justified from the current cone state and the mass-indexed buffer alone.
+
+The 20,000-step observation and the new source-authentic counterexample are finite replay evidence, not Lean-certified theorems. The exact transition is a useful adversarial test for any proposed valuation/carry product.
+
+## 4. What this does and does not establish
+
+The established parity argument excludes the *stronger joint sync/square-gap family*. The mass-gap theorem, once the drafted source import passes, excludes the *two-call witness*. The 3-adic valuation bound remains a finite root-history candidate and is not a state-local invariant. None of these excludes the earlier cone-only family by a proved all-time argument, proves that the authentic root synchronizes forever, or closes any halting branch of #623.
+
+A root-restricted synchronization product must retain explicit history conditions and must not generalize from arbitrary source-cone states.
 
 No claim about BB(6)'s exact value follows.
