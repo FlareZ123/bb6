@@ -151,11 +151,13 @@ private theorem near_upper (N : Nat) (q qrep k : Int)
   refine ⟨12*(2:Int)^(N-11)+k,12*(2:Int)^(N-11)+k,?_,?_⟩
   · have hleft : (12*(2:Int)^N+q)-qrep = 12*(2:Int)^N+(q-qrep) := by omega
     rw [hleft,hp,hres]
-    ring
+    rw [hs2]
+    omega
   · have hleft : (24*(2:Int)^N+2*q+2)-(2*qrep+2) =
         24*(2:Int)^N+2*(q-qrep) := by omega
     rw [hleft,hp,hres]
-    ring
+    rw [hs2]
+    omega
 
 private theorem near_odd (N : Nat) (q qrep k : Int)
     (hN : 11≤N) (hres : q-qrep=scale 5*k) :
@@ -169,11 +171,13 @@ private theorem near_odd (N : Nat) (q qrep k : Int)
   · have hleft : (12*(2:Int)^N+q+4)-(qrep+4) =
         12*(2:Int)^N+(q-qrep) := by omega
     rw [hleft,hp,hres]
-    ring
+    rw [hs2]
+    omega
   · have hleft : (24*(2:Int)^N+2*q+5)-(2*qrep+5) =
         24*(2:Int)^N+2*(q-qrep) := by omega
     rw [hleft,hp,hres]
-    ring
+    rw [hs2]
+    omega
 
 /-- Source-connected depth-five necessary condition for the entire
     all-F zero-two feeder family. The arithmetic hypotheses are stated
