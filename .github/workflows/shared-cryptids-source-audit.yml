@@ -298,13 +298,115 @@ jobs:
           lake build BusyBeaver.Basic BusyBeaver.Bridge
           lake env lean ExportDeps.lean | grep '^IMPORT ' > /tmp/source-imports.txt
           lake env python3 "$GITHUB_WORKSPACE/im-results/agent48-f067/export_closure.py" /tmp/source-imports.txt "$ORIGINAL_MODULE"
-      - name: Upload local compile environment
+      - name: Split compile environment for artifact connector size limit
+        if: ${{ inputs.export_local_source_closure }}
+        run: |
+          split -b 128M -d -a 2 /tmp/lean-local-source-closure.tar.zst /tmp/lean-closure-part-
+          test ! -e /tmp/lean-closure-part-12
+          sha256sum /tmp/lean-local-source-closure.tar.zst > /tmp/lean-closure.sha256
+      - name: Upload selected original source
         if: ${{ inputs.export_local_source_closure }}
         uses: actions/upload-artifact@v4
         with:
-          name: lean-local-source-closure
-          path: /tmp/lean-local-source-closure.tar.zst
+          name: original-lean-source
+          path: /tmp/cryptids/BusyBeaver/BB6/Halt/*.lean
+          if-no-files-found: ignore
+      - name: Upload local closure chunk 00
+        if: ${{ inputs.export_local_source_closure }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: lean-local-source-closure-00
+          path: /tmp/lean-closure-part-00
           compression-level: 0
+          if-no-files-found: ignore
+      - name: Upload local closure chunk 01
+        if: ${{ inputs.export_local_source_closure }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: lean-local-source-closure-01
+          path: /tmp/lean-closure-part-01
+          compression-level: 0
+          if-no-files-found: ignore
+      - name: Upload local closure chunk 02
+        if: ${{ inputs.export_local_source_closure }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: lean-local-source-closure-02
+          path: /tmp/lean-closure-part-02
+          compression-level: 0
+          if-no-files-found: ignore
+      - name: Upload local closure chunk 03
+        if: ${{ inputs.export_local_source_closure }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: lean-local-source-closure-03
+          path: /tmp/lean-closure-part-03
+          compression-level: 0
+          if-no-files-found: ignore
+      - name: Upload local closure chunk 04
+        if: ${{ inputs.export_local_source_closure }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: lean-local-source-closure-04
+          path: /tmp/lean-closure-part-04
+          compression-level: 0
+          if-no-files-found: ignore
+      - name: Upload local closure chunk 05
+        if: ${{ inputs.export_local_source_closure }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: lean-local-source-closure-05
+          path: /tmp/lean-closure-part-05
+          compression-level: 0
+          if-no-files-found: ignore
+      - name: Upload local closure chunk 06
+        if: ${{ inputs.export_local_source_closure }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: lean-local-source-closure-06
+          path: /tmp/lean-closure-part-06
+          compression-level: 0
+          if-no-files-found: ignore
+      - name: Upload local closure chunk 07
+        if: ${{ inputs.export_local_source_closure }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: lean-local-source-closure-07
+          path: /tmp/lean-closure-part-07
+          compression-level: 0
+          if-no-files-found: ignore
+      - name: Upload local closure chunk 08
+        if: ${{ inputs.export_local_source_closure }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: lean-local-source-closure-08
+          path: /tmp/lean-closure-part-08
+          compression-level: 0
+          if-no-files-found: ignore
+      - name: Upload local closure chunk 09
+        if: ${{ inputs.export_local_source_closure }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: lean-local-source-closure-09
+          path: /tmp/lean-closure-part-09
+          compression-level: 0
+          if-no-files-found: ignore
+      - name: Upload local closure chunk 10
+        if: ${{ inputs.export_local_source_closure }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: lean-local-source-closure-10
+          path: /tmp/lean-closure-part-10
+          compression-level: 0
+          if-no-files-found: ignore
+      - name: Upload local closure chunk 11
+        if: ${{ inputs.export_local_source_closure }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: lean-local-source-closure-11
+          path: /tmp/lean-closure-part-11
+          compression-level: 0
+          if-no-files-found: ignore
       - name: Compile original raw-TM acceleration
         if: ${{ !inputs.export_local_source_closure && !inputs.simulate_second_f289 }}
         working-directory: /tmp/cryptids
