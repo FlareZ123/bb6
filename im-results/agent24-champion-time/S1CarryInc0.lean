@@ -134,7 +134,7 @@ theorem s1Config_carryInput_match
         ([false,true,true,true,false,false] ++ d1pow (b+1)) i =
         carryInputBit r (1+(i:Int)) := by
       rcases hc with h0 | h1 | h2 | h3 | h4 | h5
-      all_goals subst i <;> simp [carryInputBit] <;> omega
+      all_goals subst i <;> simp [sideBit,carryInputBit] <;> omega
     simp only [hxEq]
     have hcoord : h + (1+(i:Int)) = h+1+(i:Int) := by omega
     calc
