@@ -97,6 +97,11 @@ def gliderFARTNFLeaf (B : Nat) :
   farDataNonhaltLeaf gliderRoot gliderSupport gliderNoAssignedHalt
     gliderFARData gliderFARValid
 
+theorem gliderFARTNFLeaf_sound (B : Nat) :
+    ∀ m, compatible gliderExample m → WeightedBound B m :=
+  (gliderFARTNFLeaf B).sound
+
 #print axioms gliderFARValid
 #print axioms gliderFARTNFLeaf
+#print axioms gliderFARTNFLeaf_sound
 end BB6.Agent13BlankDelay
