@@ -19,4 +19,8 @@ def c0RowMask (a : Nat) : Nat :=
 #eval ( [9, 11, 13, 15, 21, 23].map
   (fun a => (a, c0RowMask a)) )
 
+/-- The exact z=78 (mod 128) high parent H and its odd/odd
+    low-valuation predecessor H1 have these M16 quotient images. -/
+#eval (CCert.seen 11 9 (CCert.q 0), CCert.seen 8 23 (CCert.q 0))
+
 end BB6.Agent42Z78Probe
