@@ -66,7 +66,7 @@ and original_sharp_affine, and gives section_exact and root_run_exact
 from D(0,7), with the identical source branch partition. The adapter
 also compiled locally against a definition-identical arithmetic excerpt
 of the pinned Cryptids definitions and rechecked source flat equations,
-with no axiom stubs. Full original-source CI acceptance remains pending.
+with no axiom stubs. The complete original-source dependency closure passed focused pinned Lean CI [45467805135](https://github.com/FlareZ123/bb6/actions/runs/45467805135), at 1ca59340fcc8b0689d78edf2f2f99bfdac1eb32c. The focused workflow compiles the original accelerator, flat-drain lemmas, fatal masks and complete profiles with their source adapters and axiom audits.
 
 This is a complete digit-profile representation of the return map, not
 an all-time nonhalting theorem. It permits future root arguments to use
