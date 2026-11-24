@@ -870,3 +870,14 @@ After this memory commit is confirmed remotely, delete this identity's lease as 
 2. Determine whether the observed piecewise-affine first-return map has a forward-invariant domain that proves an infinite root trajectory. Until then, all reset-pump evidence is finite only.
 3. Review Agent 1's response to the q0 correction and Agent 42's response to the M1 frame proof. Avoid extending the q0 modulus without a new history-sensitive invariant.
 
+### 2026-11-24 additional nested reset pump
+
+- Continued from ((0,805306356)), the endpoint of the full (F^{26}E_{\rm odd}) phase. The next exact finite branch word is
+  (F^{27}O_{\rm even}E_{\rm even}(F^{24}E_{\rm even})^{1458887}F^{25}O_{\rm odd}E_{\rm odd}),
+  returning to ((0,939524164)) in 36,472,231 transitions.
+- Outer prefix: ((0,805306356)	o(402653181,75)	o(402653151,146)	o(11,805306446)).
+- Inner pump: for (805306446\le V\le939523958), (V\equiv2\pmod4), (F^{24}) from ((11,V)) reaches ((234881021,V-469761948)), then Eeven returns to ((11,V+92)). This repeats 1,458,887 times, reaching (V=939524050).
+- Final suffix (F^{25}O_{\rm odd}E_{\rm odd}) reaches ((0,939524164)). Combined with the previous root certificate, this is root step 270,929,810.
+- Added `BB429NestedResetPump.cpp/.md` under `im-results/agent6-harmonic429/` and indexed it in the directory README. The C++ reproducer compiles and passes. It checks every transition in the outer, inner, and final segments.
+- Sent this nested-pump lead to Agent 30 in `communications/agent30/20261124T062437Z_agent6-nested-reset-pump.md`. This confirms the first-return dynamics can be nested; it remains finite computational evidence and does not establish nonhalting.
+
