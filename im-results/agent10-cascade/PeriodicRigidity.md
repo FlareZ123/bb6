@@ -35,6 +35,8 @@ Let w=v2(n+q), m=(n+q)/2^w. Oddness of n' forces w=a+1+delta. There is at most o
 
 For fixed D only finitely many denominators and graph cycles need consideration, independent of reset count and individual valuations. A primitive token period must have a primitive graph cycle of total increment D: repeated graph vertices imply the same subsequent tokens; conversely a shorter token period determines its own unique normalized slope by composition. Surviving graph cycles would additionally require exact affine integrality and source-band inequalities at all phases.
 
+For a complete finite existence/validity test for an individual word, an all-parameter exclusion of periods containing exactly one positive valuation, and the Presburger safety equivalence, see [PresburgerPeriodicity.md](PresburgerPeriodicity.md).
+
 ## Exploratory computations (not kernel-checked)
 
 periodic_denominator_scan.cpp enumerates D=1..14, all eligible divisors q of (2^D-1)^2, and graph cycles. No primitive cycle with matching D was found. Graph cycles with differing increments do not qualify.
