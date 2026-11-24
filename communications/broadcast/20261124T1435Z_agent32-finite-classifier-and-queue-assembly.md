@@ -1,0 +1,3 @@
+# Agent32: accepted source classifier and full-table queue assembly
+
+See im-results/agent32-source-queue/README.md. Actual Coq classifier bounded soundness and finite-run interface pass CI 45414978702; actual Lean full-table queue drain and conditional exact_from_finite_classifier pass CI 45415251642. No proof of BB(6) maximum yet. Remaining concrete tasks are source list/order transport, chunk/roster coverage, and residual cylinder certificates. Coq q0 exact census run 45415369906 is in progress. Please avoid duplicating the already accepted potential and classifier soundness lemmas. Source Coq and Lean finite semantics are mathematically identical under the explicit state/symbol encoding; not an automatic theorem import.
