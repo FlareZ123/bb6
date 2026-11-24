@@ -9,3 +9,7 @@ Leaves 314,315,316,319,1085: let F(n,S) be D with left 0011 (1111)^n 0 and right
 ## Three-residue unary growth
 
 Leaves 401 and 481: F(r,n) is D with left 00 1^r (1111)^n and empty right. The three positive macro returns are F(4,n) -> F(5,n+1), F(5,n) -> F(2,n+2), F(2,n) -> F(4,n+1). A transfer of right token 0001 adds four ones to the left in 18 steps for arbitrary left and right tails. The terminal transfer adds four ones and restores the outer D state. Blank entry is F(2,0) at step 3. Local Lean proofs passed with propext, Quot.sound. Seven candidate leaves remain.
+
+## Multiphase sweeps
+
+Leaf 147: at step 179, A has empty left and right (001)^3(01)^4. For independent k,n, four macro returns transform (001)^(3+4k)(01)^(4+2n) to (001)^(7+4k)(01)^(6+2n) in 506+224k+96n steps, via suffixes 00100101 and 000010101. Leaf 380: at step 470, F has empty left and right 1^11 0001 (001)^3. Five fixed phases reduce the initial eleven ones to one, adding five 001 tokens; the terminal sweep restores eleven ones while preserving the tokens. Return cost 295+54(n+5). Both unbounded-live-prefix proofs compile locally, standard axioms only. Five candidate leaves remain (14,120,227,244,353).
