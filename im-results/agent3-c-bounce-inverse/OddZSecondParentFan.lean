@@ -58,7 +58,7 @@ private theorem oddZ_param_large (z : Nat) (hz : z%16=1) :
 private theorem oddZ_param_sum (z : Nat) (hz : z%16=1) :
     oddZParam z+6*z+1=2^(2*oddZM z-5) := by
   unfold oddZParam
-  exact Nat.sub_add_cancel (oddZ_param_large z hz)
+  omega
 
 theorem oddZ_param_mod16 (z : Nat) (hz : z%16=1) :
     oddZParam z%16=9 := by
@@ -116,7 +116,13 @@ theorem oddZ_second_mass_cost (z : Nat) (hz : z%16=1) :
     oddZSecondLeft z+2*oddZSecondRight z=
       512*oddZParam z+65 := by
   obtain ⟨hA,hK⟩ := oddZ_second_divisions z hz
-  constructor <;> unfold oddZSecondLeft oddZSecondRight <;> omega
+  constructor
+  · change 8*((173*oddZParam z+15)/4+
+      (1875*oddZParam z+245)/8+1)=2221*oddZParam z+283
+    omega
+  · change (173*oddZParam z+15)/4+
+      2*((1875*oddZParam z+245)/8)=512*oddZParam z+65
+    omega
 
 private theorem oddZ_G_lt_power (z : Nat) (hz : z%16=1) :
     2221*z+323 < 2^(2*oddZM z-8) := by
@@ -125,7 +131,7 @@ private theorem oddZ_G_lt_power (z : Nat) (hz : z%16=1) :
   have hcoeff : 2221*z+323 < 4096*(z+1) := by omega
   have hpowid : 4096*2^z=2^(z+12) := by
     rw [Nat.pow_add]
-    norm_num
+    rw [show (2:Nat)^12=4096 by decide]
     omega
   have hexp : z+12≤2*oddZM z-8 := by
     unfold oddZM
@@ -148,7 +154,9 @@ theorem oddZ_second_mass_gap (z : Nat) (hz : z%16=1) :
     omega
   have hPpow : 2^(2*oddZM z-5)=8*P := by
     dsimp [P]
-    have hexp : 2*oddZM z-5=(2*oddZM z-8)+3 := by omega
+    have hexp : 2*oddZM z-5=(2*oddZM z-8)+3 := by
+      unfold oddZM
+      omega
     rw [hexp,Nat.pow_add]
     rw [show (2:Nat)^3=8 by decide]
     omega
@@ -180,13 +188,17 @@ theorem oddZ_second_mass_gap (z : Nat) (hz : z%16=1) :
       oddZSecondLeft z+oddZSecondRight z+1<2221*P := by omega
   have hPowLo : 2048*P=2^(2*oddZM z+3) := by
     dsimp [P]
-    have hexp : 2*oddZM z+3=(2*oddZM z-8)+11 := by omega
+    have hexp : 2*oddZM z+3=(2*oddZM z-8)+11 := by
+      unfold oddZM
+      omega
     rw [hexp,Nat.pow_add]
     rw [show (2:Nat)^11=2048 by decide]
     omega
   have hPowHi : 4096*P=2^(2*oddZM z+4) := by
     dsimp [P]
-    have hexp : 2*oddZM z+4=(2*oddZM z-8)+12 := by omega
+    have hexp : 2*oddZM z+4=(2*oddZM z-8)+12 := by
+      unfold oddZM
+      omega
     rw [hexp,Nat.pow_add]
     rw [show (2:Nat)^12=4096 by decide]
     omega
