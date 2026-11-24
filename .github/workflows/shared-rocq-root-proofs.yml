@@ -14,6 +14,17 @@ on:
           - enumerate62-decider-sound
           - enumerate62-q0-count
           - enumerate62-q0-partition
+          - enumerate62-chunk-probe
+      offset:
+        description: 'Source q0 chunk start (probe only)'
+        required: false
+        type: number
+        default: 0
+      size:
+        description: 'Source q0 chunk size (probe only; 1..100)'
+        required: false
+        type: number
+        default: 1
 permissions:
   contents: read
 jobs:
@@ -66,7 +77,7 @@ jobs:
             somdc) make -f Makefile.coq -j 2 SOMDCv10.vo ;;
             both) make -f Makefile.coq -j 2 Sk1Machines_v2.vo SOMDCv10.vo ;;
             enumerate62-decider-sound) make -f Makefile.coq -j 2 Enumerate62.vo Agent5Enumerate62DeciderSound.vo ;;
-            enumerate62-q0-count) make -f Makefile.coq -j 2 Enumerate62.vo ;;
+            enumerate62-q0-count|enumerate62-chunk-probe) make -f Makefile.coq -j 2 Enumerate62.vo ;;
             enumerate62-q0-partition) make -f Makefile.coq -j 2 Agent32Q0Partition.vo Agent32SourceDrain.vo ;;
           esac
       - name: Print final original theorem assumptions
@@ -104,3 +115,25 @@ jobs:
           Time Eval vm_compute in agent32_q0_summary.
           COQ
           timeout 1200s coqc -Q . BusyCoq -native-compiler no Agent32Q0Count.v
+
+      - name: Evaluate bounded original-source chunk
+        if: inputs.target == 'enumerate62-chunk-probe'
+        working-directory: original/verify
+        env:
+          OFFSET: ${{ inputs.offset }}
+          SIZE: ${{ inputs.size }}
+        run: |
+          set -eu
+          [[ "$OFFSET" =~ ^[0-9]+$ && "$SIZE" =~ ^[0-9]+$ ]]
+          (( OFFSET < 12820 && SIZE >= 1 && SIZE <= 100 ))
+          cat > Agent32ChunkProbe.v <<COQ
+          From BusyCoq Require Import Enumerate62.
+          From Coq Require Import List NArith.
+          Import TNF_Node.
+          Definition probe_q := SearchQueue_upds decider (q_i $OFFSET $SIZE) MAXT.
+          Definition probe_result :=
+            let q := probe_q in
+            (length_tail (fst q), length_tail (snd q), show_holdout q).
+          Time Eval vm_compute in probe_result.
+          COQ
+          timeout 600s coqc -Q . BusyCoq -native-compiler no Agent32ChunkProbe.v
