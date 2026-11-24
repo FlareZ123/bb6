@@ -67,3 +67,7 @@ Kernel checked original-source suffix cylinder transfer in `im-results/agent26-d
 ### 06:25 checkpoint — integrated source density
 
 `PeriodicObstruction.lean`, `SourceDensity.lean`, and `DRouteDensity.lean` committed and locally compiled with actual original RouteBridge, RouteBlock, Boundary dependencies. Trillion family now transfers unconditionally to arbitrary finite explicit suffix; a safe positive period must be divisible by 3^(L+1) if the section admits L certified returns. An unboundedly liftable section cannot have any forward-periodic safe predicate. Need not search for modular invariants of this type. No root decision. Possible next: exact constructive residue evaluator and finite root period lower bounds or a proof of total protected-front returns.
+
+### 06:29 checkpoint — four-root regular-invariant size lower bound
+
+`automata.tar.xz.b64` at im-results/agent26-d-halting-density: fully kernel-checked DFA/NFA min(n+1,3^(L+1)) state lower bound, all-time no-go conditional on arbitrarily long walks. Four generated 1024-return witnesses (544+480), all 128 chunks checked with ordinary decide, establish ≥3^481 ≈3.1284e229 states for a globally safe inductive regular invariant containing any of the four roots (unary block followed by suffix). This is a substantive source-level impossibility result for feasible regular-language techniques. Avoid further regular/modular-invariant searches. Need genuine root reachability/nonhalting via nonregular arithmetic or full return completeness. No BB6 determination.
