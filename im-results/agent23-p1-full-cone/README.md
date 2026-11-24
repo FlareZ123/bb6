@@ -1,6 +1,6 @@
 # Full-cost P1 critical-cone terminal certificate
 
-Agent 23, 2026-11-24. Status: standalone arithmetic/checker kernel-verified with Lean 4.36.0-rc2, n=30 certificate verified by kernel reduction, six exact C++ certificates passed; original-source Lean composition pending. This extends the endpoint test of Agent28/43 and the early-extinction closure of Agent50. It does not decide P1 or BB(6).
+Agent 23, 2026-11-24. Status: standalone arithmetic/checker kernel-verified with Lean 4.36.0-rc2, n=30 certificate verified by kernel reduction, six exact C++ certificates passed; generic reachability composition kernel-verified under explicit source premises; original-source instantiation drafted but not compiled. This extends the endpoint test of Agent28/43 and the early-extinction closure of Agent50. It does not decide P1 or BB(6).
 
 ## Criterion and proof
 
@@ -19,7 +19,7 @@ Proof using the accepted original-source endpoint and feeder theorems:
 3. For a potential positive-even feeder, c is even and the source equations give d+b/2+3=2^t(c+3) and 2k+c+2t+1=b+d (b divisible by 4). Parity forces t>=1. inverse_prev_odd gives a depth-(t-1) inverse with odd c0; its power equation implies c0+3=2(c+3). Its genuine OddCone child has cost l=m+t and carry y=(c0+3)/2=c+3. The source even mass equation becomes 2k+c+2l+2n+14=14P. The checked margin at (l,y) now implies 7P<2k+8<14P. No number of form 14*2^a lies in that open interval. This excludes even_left_power_shape for the proposed reachable feeder.
 4. Assume a reachable cone state. Its even left coordinate and b>=12 force b%4=0 by reachable_even_mod4. With c=1 excluded, positive_G_feeder supplies a reachable predecessor (2k-4,c+4). Even c is excluded by step 3. Odd c instead gives a genuine OddCone child with larger cost, still <K. Strong induction on K-m gives a contradiction. For even n, critical_target_implies_three transports this hub exclusion to the reset Reach 2 (14P-2n-10).
 
-The check is stronger than just excluding carry 2. It handles the other actual exit of the source feeder theorem and small-left escape at once. The proof is a paper-level composition of existing source lemmas and new kernel-verified arithmetic. The source-level Lean wrapper must still be compiled against the actual imports.
+The check is stronger than just excluding carry 2. It handles the other actual exit of the source feeder theorem and small-left escape at once. The proof is a paper-level composition of existing source lemmas and new kernel-verified arithmetic. The generic reachability composition is now fully kernel-checked in FullConeCertLogic.lean, including both terminal cases and strong induction. ConeFacts makes every source obligation explicit; no axioms or sorry are introduced. FullConeCertSource.lean instantiates this interface in a draft which must still compile against the actual source imports.
 
 ## Computation
 
@@ -40,4 +40,4 @@ FullConeCertCore.lean locally compiles with Lean 4.36.0-rc2. cert_sound, safe_le
 
 ## Integration
 
-Use Agent28 ExactEndpoint (source_full_carry_endpoint, source_countcone_cost_lt_full), Agent28 OneResetCount (odd_cone_has_count), Agent50 P1CarryWideSource/P1CarryBlankArithmetic, and Agent1 InverseIff. Source composition follows the strong induction in critical_cone_no_reach_full but replaces the early-layer hypothesis by cert_sound. Direct local GitHub clone was blocked by DNS, so no imported-module build is claimed here. Coordinate with Agents28,43,50 to avoid duplicating their certificate infrastructure.
+Use Agent28 ExactEndpoint (source_full_carry_endpoint, source_countcone_cost_lt_full), Agent28 OneResetCount (odd_cone_has_count), Agent50 P1CarryWideSource/P1CarryBlankArithmetic, and Agent1 InverseIff. The checked generic cone_no_reach theorem replaces the early-layer hypothesis by cert_member, deriving the cost bound directly from exact endpoint membership and empty-layer absorption. The source wrapper uses the existing source-verified ExactEndpoint (CI 45386616971), P1CarryWideSource and the underlying original feeder facts. Compile FullConeCertCore then FullConeCertLogic then FullConeCertSource with the actual existing dependency closure. Direct native_decide for the five larger certificates as one batch exceeded the local 35s timeout; it is not a kernel result and is not used in the committed proof. Direct local GitHub clone was blocked by DNS, so no imported-module build is claimed here. Coordinate with Agents28,43,50 to avoid duplicating their certificate infrastructure.
