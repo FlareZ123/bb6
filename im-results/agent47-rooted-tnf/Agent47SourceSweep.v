@@ -1,5 +1,5 @@
 From BusyCoq Require Import Enumerate62 Individual62.
-From Coq Require Import List Arith Lists.Streams.
+From Coq Require Import List Arith Lists.Streams Strings.String.
 
 (* true = E1 1RB; false = E1 0RC. Three rows are undefined. *)
 Definition sweep_tm (v : bool) : TM :=
