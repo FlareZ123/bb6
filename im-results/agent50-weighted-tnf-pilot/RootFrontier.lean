@@ -211,7 +211,7 @@ def extractRunConfig {p : PartialMachine} {n : Nat} {s : Slot}
     {c // knownRun p n = some c} :=
   match hr : knownRun p n with
   | none => False.elim (by simp [hr] at h)
-  | some c => ⟨c, hr⟩
+  | some c => ⟨c, rfl⟩
 
 theorem pathOK84_cons {p : PartialMachine} {cut n : Nat} {s : Slot}
     {mv : Move} {xs : List PathEntry}
@@ -244,16 +244,21 @@ def buildFrontier (p : PartialMachine) (cut : Nat) (hp : RawRootPath p) :
       have hs : readSlot c = s := by
         have h' : (some c).map readSlot = some s := by simpa [hr] using hread
         simpa using h'
-      subst s
       have hw : ∀ d ∈ possibleDelays (refine p (readSlot c) none) 0,
-          d + n + 1 ≤ 84 :=
-        weightOK_sound p (readSlot c) n 84 hweight
+          d + n + 1 ≤ 84 := by
+        simpa [hs.symm] using (weightOK_sound p s n 84 hweight)
+      have htail' : pathOK84 (refine p (readSlot c) (some mv))
+          (advanceCut cut mv) xs = true := by
+        simpa [hs.symm] using htail
+      have cert' : WeightedTNFCertificate 84
+          (pathEnd (refine p (readSlot c) (some mv)) (advanceCut cut mv) xs).1 6 := by
+        simpa [pathEnd, hs.symm] using cert
       exact .expand hp hr hhole hw (fun actual =>
         if heq : actual = mv then
           by
             simpa [heq] using
               (buildFrontier (refine p (readSlot c) (some mv))
-                (advanceCut cut mv) (RawRootPath.step hp hr hhole mv) xs htail cert)
+                (advanceCut cut mv) (RawRootPath.step hp hr hhole mv) xs htail' cert')
         else
           .residual (RawRootPath.step hp hr hhole actual))
 
