@@ -97,7 +97,7 @@
     "path_expansion_nodes": 9,
     "concrete_ordinary_moves_per_expansion": 24,
     "closed_first_hole_halt_branches": 9,
-    "maximum_halt_weighted_score": 27,
+    "halt_branch_weighted_score_upper_bound": 27,
     "terminal_closed_subtree": {
       "parent": "1RB---_1RC1LF_0RD0RB_1LD1RE_---0LB_0LE0LA",
       "threshold": 84,
