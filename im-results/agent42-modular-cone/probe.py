@@ -31,12 +31,15 @@ def stop_auto(j,m,cap=32):
 def stop8(j,m):
     return excluded(8,*canon(8,2*j+1,-j-3*m-4))
 if __name__=='__main__':
-    print('b, low rejected / tested (m=0..1023), high rejected / tested (j,m=1..127), outside j<=3m+1 rejected / tested')
+    print('cap, low rejected/tested, old high rejected/tested, adaptive high rejected/tested, adaptive outside j>3m+1 rejected/tested')
     for cap in [4,8,12,16,24,32]:
         low=sum(stop(0,m,min(2*m+1,cap)) for m in range(1024))
         hi=[(j,m) for j in range(1,128) for m in range(1,128)]
         out=[(j,m) for j,m in hi if j>3*m+1]
-        high=sum(stop(j,m,min(2*m+1,cap)) for j,m in hi)
-        outside=sum(stop(j,m,min(2*m+1,cap)) for j,m in out)
-        print(cap,low,1024,high,len(hi),outside,len(out),excluded.cache_info())
+        old_high=sum(stop(j,m,min(2*m+1,cap)) for j,m in hi)
+        high=sum(stop_auto(j,m,cap) for j,m in hi)
+        outside=sum(stop_auto(j,m,cap) for j,m in out)
+        print(cap,low,1024,old_high,len(hi),high,len(hi),outside,len(out),excluded.cache_info())
     print('low unresolved m<100:',[m for m in range(100) if not stop(0,m,2*m+1)])
+    fixed8=sum(stop8(j,m) for j in range(256) for m in range(256))
+    print('fixed b=8 accepted residue pairs modulo 256:',fixed8,'/',256*256)
