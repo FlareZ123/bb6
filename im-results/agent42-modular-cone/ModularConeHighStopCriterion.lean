@@ -47,7 +47,7 @@ theorem blank_halts_iff_modular :
                   = (2^(2*m+2)*(j+3) - (j+3*m+5)) + (j+3*m+5) := by omega
               _ = 2^(2*m+2)*(j+3) := Nat.sub_add_cancel hbound
               _ = 2^(2*m+2)*((j+1)+2) := by rfl
-          exact (high_stop_excluded (j+1) m k (by omega) hstop hc) hr
+          exact False.elim ((high_stop_excluded (j+1) m k (by omega) hstop hc) hr)
       exact Or.inr ⟨j,m,⟨hprior,hfilter⟩,hroot⟩
   · intro h
     rcases h with hlow | ⟨j,m,⟨hprior,_⟩,hroot⟩
