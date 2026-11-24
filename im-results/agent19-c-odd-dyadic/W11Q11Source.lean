@@ -523,17 +523,25 @@ theorem root_q11_parameter (r E u : Nat)
     rw [hiden] at hmulzero
     simpa [Nat.add_mod,Nat.mul_mod] using hmulzero
   have hwmod : w%2048=187 := by
-    have hdiv : 2048∣1861+w%2048 := by
-      apply Nat.dvd_of_mod_eq_zero
+    obtain ⟨x,hx⟩ : ∃ x : Nat, x=w%2048 := ⟨w%2048,rfl⟩
+    have hremx : (1861+x)%2048=0 := by
+      rw [hx]
       simpa [Nat.add_mod] using hrem
-    have hlt : w%2048<2048 := Nat.mod_lt _ (by decide)
-    obtain ⟨k,hk⟩ := hdiv
+    have hdivx : 2048∣1861+x :=
+      Nat.dvd_of_mod_eq_zero hremx
+    have hltx : x<2048 := by
+      rw [hx]
+      exact Nat.mod_lt _ (by decide)
+    obtain ⟨k,hk⟩ := hdivx
     have hk1 : k=1 := by omega
-    omega
+    have hx187 : x=187 := by omega
+    rw [←hx]
+    exact hx187
   obtain ⟨s,hwEq⟩ : ∃ s : Nat, w=187+2048*s := by
     refine ⟨w/2048,?_⟩
     have h := Nat.mod_add_div w 2048
-    omega
+    rw [hwmod] at h
+    exact h.symm
   exact ⟨s,by rw [huEq,hwEq]; omega⟩
 
 /-- Exact root-index exclusion for the W11 cylinder. This is conditional
