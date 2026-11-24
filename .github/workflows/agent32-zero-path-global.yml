@@ -53,6 +53,11 @@ on:
         required: false
         type: boolean
         default: false
+      verify_p4_frontier_graft:
+        description: 'Compile and axiom-audit the P4 exact-lasso and fresh-ray child certificates and exact report deltas'
+        required: false
+        type: boolean
+        default: false
 
       verify_far:
         description: 'Compile the proof-carrying FAR extension and evaluate its depth-four report'
@@ -113,7 +118,7 @@ jobs:
           lean -o im-results/agent4-coverage-smoke/FrontierAudit.olean im-results/agent4-coverage-smoke/FrontierAudit.lean
           lean -o im-results/agent4-coverage-smoke/FrontierMass.olean im-results/agent4-coverage-smoke/FrontierMass.lean
           lean -o im-results/agent32-zero-prefix-global/ZeroPathAudit.olean im-results/agent32-zero-prefix-global/ZeroPathAudit.lean
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ inputs.export_frontier }}" != "true" && "${{ inputs.verify_leaf_graft }}" != "true" && "${{ inputs.verify_five_slot_leaf_graft }}" != "true" && "${{ inputs.verify_three_slot_family }}" != "true" ]]; then
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ inputs.export_frontier }}" != "true" && "${{ inputs.verify_leaf_graft }}" != "true" && "${{ inputs.verify_five_slot_leaf_graft }}" != "true" && "${{ inputs.verify_three_slot_family }}" != "true" && "${{ inputs.verify_p4_frontier_graft }}" != "true" ]]; then
             lean im-results/agent32-zero-prefix-global/ZeroPathMassEval.lean
           fi
           lean -o im-results/agent32-zero-prefix-global/ControlPathAudit.olean im-results/agent32-zero-prefix-global/ControlPathAudit.lean
@@ -186,8 +191,85 @@ jobs:
         run: |
           set -euo pipefail
           node im-results/agent27-three-slot-translated/compare_family_hard_roots.cjs
+      - name: Verify P4 exact-lasso and fresh-ray frontier grafts
+        if: ${{ inputs.verify_p4_frontier_graft }}
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent8-coverage-contract:im-results/agent44-drift-closure:im-results/agent4-coverage-smoke:im-results/agent32-zero-prefix-global:im-results/agent6-fresh-glider:im-results/agent24-translated-cycle:im-results/agent27-translated-five-slot:im-results/agent48-p4-zeroLD"
+          # Rebuild the accepted five-slot source adapter imported by P4ZeroLDCycle.
+          lean -o im-results/agent8-coverage-contract/RootShift.olean im-results/agent8-coverage-contract/RootShift.lean
+          lean -o im-results/agent24-translated-cycle/TranslatedCycle.olean im-results/agent24-translated-cycle/TranslatedCycle.lean
+          lean -o im-results/agent24-translated-cycle/TranslatedFiniteOracle.olean im-results/agent24-translated-cycle/TranslatedFiniteOracle.lean
+          lean -o im-results/agent8-coverage-contract/IncrementalAudit.olean im-results/agent8-coverage-contract/IncrementalAudit.lean
+          lean -o im-results/agent27-translated-five-slot/TranslatedFiveSlot.olean im-results/agent27-translated-five-slot/TranslatedFiveSlot.lean
+          lean -o im-results/agent32-zero-prefix-global/FiveSlotLeafGraft.olean im-results/agent32-zero-prefix-global/FiveSlotLeafGraft.lean
+          mkdir -p /tmp/bb6-p4-frontier-graft
+          : > /tmp/bb6-p4-frontier-graft/lean.log
+          for m in P4ZeroLDCycle P4EightChildGraft P4DeeperFreshRay P4DeeperFreshRayReport P4ZeroRDDeeperGraft P4ZeroRDDeeperGraftReport; do
+            lean -o "im-results/agent48-p4-zeroLD/$m.olean" "im-results/agent48-p4-zeroLD/$m.lean" 2>&1 | tee -a /tmp/bb6-p4-frontier-graft/lean.log
+          done
+          python3 - <<'PY'
+          import pathlib
+          log = pathlib.Path("/tmp/bb6-p4-frontier-graft/lean.log").read_text()
+          allowed = {"propext", "Classical.choice", "Quot.sound"}
+          names = (
+              "agent48P4ZeroLD_cover",
+              "agent48P4ZeroRE_cover",
+              "agent48P4OneRE_cover",
+              "agent48P4OneRB_cover",
+              "agent48P4ZeroRA_cover",
+              "agent48P4OneRA_cover",
+              "agent48P4Halt_cover",
+              "agent48P4ZeroLC_D0ZeroLD_cover",
+              "agent48P4ZeroLC_D0ZeroLA_cover",
+              "agent48P4ZeroLC_D0ZeroRA_cover",
+              "agent48P4ZeroLC_D0OneRA_cover",
+              "agent48P4ZeroLC_D0OneRB_cover",
+              "agent48P4ZeroLC_D0ZeroRD_cover",
+              "agent48P4ZeroLC_D0OneRD_cover",
+              "agent48P4ZeroLC_D0OneRE_cover",
+              "agent48P4ZeroRD_D0ZeroRD_cover",
+              "agent48P4ZeroRD_D0OneRD_cover",
+              "agent48P4ZeroRD_D0OneRE_cover",
+              "agent48P4ZeroRD_D0ZeroRA_cover",
+              "agent48P4ZeroRD_D0OneRA_cover",
+              "agent48P4ZeroRD_D0OneRB_cover",
+              "agent48P4DeeperAudit_report",
+              "agent48P4DeeperAudit_mass_conservation",
+              "agent48P4ZeroRDDeeperAudit_report",
+              "agent48P4ZeroRDDeeperAudit_mass_conservation",
+          )
+          for name in names:
+              matches = [line for line in log.splitlines()
+                         if " depends on axioms:" in line
+                         and line.split(" depends on axioms:", 1)[0].split(".")[-1].strip() == name]
+              if len(matches) != 1:
+                  raise SystemExit(f"expected exactly one axiom profile for {name}, got {len(matches)}")
+              profile = matches[0].split("depends on axioms:", 1)[1].strip()
+              if not (profile.startswith("[") and profile.endswith("]")):
+                  raise SystemExit(f"unrecognized axiom profile for {name}: {profile}")
+              axioms = {x.strip() for x in profile[1:-1].split(",") if x.strip()}
+              bad = axioms - allowed
+              if bad:
+                  raise SystemExit(f"nonstandard axioms in {name}: {sorted(bad)}")
+              if "sorryAx" in axioms:
+                  raise SystemExit(f"sorryAx in {name}")
+              print(f"{name}: {sorted(axioms)}")
+          PY
+          if grep -R -n 'native_decide' im-results/agent48-p4-zeroLD --include='*.lean'; then
+            echo '::error::native_decide found in the P4 source closure'
+            exit 1
+          fi
+      - name: Upload P4 frontier-graft proof log
+        if: ${{ always() && inputs.verify_p4_frontier_graft }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: bb6-p4-frontier-graft-source-audit
+          path: /tmp/bb6-p4-frontier-graft/
+          if-no-files-found: ignore
+          retention-days: 7
       - name: Independently exhaust the six read-zero rows
-        if: ${{ github.event_name == 'workflow_dispatch' && !inputs.export_frontier && !inputs.verify_leaf_graft && !inputs.verify_five_slot_leaf_graft && !inputs.verify_three_slot_family }}
+        if: ${{ github.event_name == 'workflow_dispatch' && !inputs.export_frontier && !inputs.verify_leaf_graft && !inputs.verify_five_slot_leaf_graft && !inputs.verify_three_slot_family && !inputs.verify_p4_frontier_graft }}
         run: |
           g++ -O3 -std=c++17 -Wall -Wextra -Werror im-results/agent32-zero-prefix-global/check-all.cpp -o /tmp/zero-prefix-check
           /tmp/zero-prefix-check
@@ -255,7 +337,7 @@ jobs:
           retention-days: 30
 
   fresh-ray-entry-proof:
-    if: ${{ github.event_name == 'workflow_dispatch' && !inputs.verify_far && !inputs.export_frontier && !inputs.verify_leaf_graft && !inputs.verify_five_slot_leaf_graft && !inputs.verify_three_slot_family }}
+    if: ${{ github.event_name == 'workflow_dispatch' && !inputs.verify_far && !inputs.export_frontier && !inputs.verify_leaf_graft && !inputs.verify_five_slot_leaf_graft && !inputs.verify_three_slot_family && !inputs.verify_p4_frontier_graft }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
