@@ -1,6 +1,10 @@
-> **Stronger result:** [General DFA zero-transient obstruction](ZERO-TRANSIENT.md), with Lean-checked pumping and prepared-halting density as explicit input. This supersedes the permutation-only result below.
+# Regular-language obstruction for Sheep section invariants
 
-# Obstruction to permutation-automaton invariants of the Sheep section map
+**Current strongest combined result:** [growth and finite-corridor obstruction](GROWTH.md) excludes every nonempty polynomial-growth regular terminal-free forward invariant, via a uniform finite-corridor theorem and the classical S-unit theorem; this part is independent of prepared-halting density. Combined with the [general DFA zero-transient obstruction](ZERO-TRANSIENT.md), every possible nonempty regular invariant must have exponential word growth with rate strictly between 1 and 2 and a bounded valuation alphabet. The more precise upper growth rate is the root of the finite valuation-word generating equation. The raw affine cylinder injection is locally kernel checked. The full regular-language and S-unit synthesis is mathematical prose. No root decision is established.
+
+The earlier general zero-transient result proves that the initial zero transient must exceed every actual source valuation. The authentic orbit's observed valuation 18 forces at least 20 DFA states. The remaining candidate class is intermediate-exponential regular languages with a long initial zero transient, or stronger nonregular methods. Unbounded authentic valuations would exclude all regular invariants but are unproved.
+
+## Historical proof: permutation-automaton obstruction
 
 ## Claim and scope
 
