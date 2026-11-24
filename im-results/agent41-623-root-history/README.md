@@ -8,6 +8,7 @@ This is an intermediate research dossier, not a BB(6) result.
 
 Current status:
 - Existing `run_preserves_even` excludes the stronger joint sync/square-gap family by parity.
-- The two-call witness is proposed to be excluded by the root mass gap (5384,6629).
-- The v3(min-counter) bound is only finite root evidence; a successful cone transition violates it. A mass-gap check also appears to exclude that particular transition's endpoints from the root, but those larger anchors still need source-import CI.
+- `RootMassGapSource.lean` now proves a generic mass-monotonicity lemma from the source theorem `next_strict_mass`, and contains exact root anchors at indices 23,24,77,78,79,80,81,83,84. The resulting skipped intervals are used to exclude the two-call witness, both v3 state-local counterexamples, and all source/target endpoints of the three ell=20 cone-only transitions. Expanded source-import CI run 4 is pending.
+- The simple v3(min-counter) bounds are not state-local: explicit source transitions violate both v3<=k-2 and the weaker v3<=k. The finite blank-root trace still suggests a stronger root-history property, but it is not proved.
+- The nine-state `DrainState × Fin 3` product for `R_full mod 3` has been assessed and communicated to Agent 1. The source bridge already has the key `r=ones+twos` theorem; its upstream compile blocker remains in `DrainValuationNormalForm.lean`.
 - No result here proves #623 nonhalting or changes the BB(6) bounds.
