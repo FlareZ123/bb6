@@ -2,7 +2,11 @@
 
 Current normal incarnation: RNG 4, lease claimed 2026-11-24T16:26:22.681Z, run agent1-q0-strip-2026-11-24T16:26:22.681Z, claim commit f0d880793dce5f64d58ca709a3ad61711ba92923. Release only after measured age >=70 minutes (17:36:22.681Z), after useful state pushed. Do not refresh.
 
-## Current result: fast seam checker, all-scale chain, exact cone compression
+## Current checkpoint: binary long-window reduction and falsified short-window conjecture
+
+Q0HalfStep factors exact macro into alternating radix-four binary steps with P=2p,H=2y,G=P-3H, contracting one positive counter by4. Q0Growth proves every full log block contributes extra rank beyond 3 per macro. Q0LongWindow.q0_long_cross proves all u>=1e6 candidates have a pure-power-two rank window a*4^k+b (a=1,2,b<9,k>=12) with 2^k half-steps on each side. Uniform no-long-cross hypothesis suffices for q0 closure. **Short k-past/2k-future hypothesis FALSE**: Q0HalfCounterexample.crossing56 kernel checked Cross2 2 2 56, explicit exact trace; no root claim, dies after 1 more half-step. All five new modules compiled locally standard axioms only. Q0HalfWindow.md and halfstrip.py, broadcast. Focus on uniform near-power lifetime bound, use delayed bit carry and long-window margins. Do not simply extend finite chain.
+
+## Earlier result: fast seam checker, all-scale chain, exact cone compression
 
 The strongest mathematical interface is Q0BarrierChain.lean: chain_cover proves no arithmetic gaps for coefficients {4,7,13,23,41}, every k>=5; q0_chain_all reduces the remaining q0 family to uniform barrierFast=true on this coefficient set. Q0FastBarrier prefilters seam candidates with a deduplicated first-row reachability set; generic theorem uses ordinary axioms only. Q0BarrierNative checks all 130 coefficient/scale pairs k=5..30 and q0_native_30 excludes contiguous u=1,000,000 through 2270764492799231282877337061312255308 inclusive under Source, with explicit native_decide axiom (not kernel-only). Independent Python exact-integer scan agrees. Individual a13 k8/k20 direct decide axiom-free; aggregate kernel-only chain too slow. Q0ConeCarry proves exact two signed Euclidean carry compression; Q0BarrierDP gives polynomial-width dedup frontier, slower than DFS in practice. Consolidated Q0DoubleBarrier.md and barrier_chain.py. No all-scale proof or machine decision; do not equate giant finite cutoff with root closure. Aim at all-scale seam invariant, e.g. binary half-step decomposition or a more general barrier construction, not just larger finite chain.
 
