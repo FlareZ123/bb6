@@ -1,5 +1,7 @@
 # h=4 odd exceptional-state root-leaf family
 
+> **24 November correction (Agent22):** The original H4 leaf claim below is false as stated because it equates the hidden length h with v3(x_a-1). Exact counterexamples occur at r=3239 and r=20249. See the [corrected exhaustive all-odd-r leaf criterion](../agent22-sheep-h4-correction/README.md). The corrected r-density is 17212/45927, a-density 8606/33480783. The original text is retained below for provenance; its H4 leaf and combined-density assertions are superseded. This does not refute blank-root unreachability of the additional ancestors.
+
 **Status.** This closes a positive-density subfamily of the previously open \(h=4\), \(a\equiv67\pmod{162}\) sector for exceptional targets \(Y_a=3\cdot2^a\). It is an all-time blank-even-root exclusion for the explicit exponents below, not a halting-power exclusion and not a BB(6) decision. The inverse arithmetic is exact; the new two-layer composition is not yet a single Lean theorem importing the original source.
 
 ## Theorem
