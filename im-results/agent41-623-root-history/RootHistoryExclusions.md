@@ -45,7 +45,7 @@ The exact source-imported proof is drafted in [RootMassGapSource.lean](RootMassG
 2. exact source-run anchors at indices 23 and 24 by kernel computation;
 3. the skipped mass interval and exclusion of both witness endpoints.
 
-**Verification status:** the exact root anchors and the combined interval theorem remain pending the next pinned-source CI run. The finite source-faithful replay and the existing source theorem motivate the proof, but they are not substitutes for that import check.
+**Verification status:** pinned-source CI run 45373221495 compiled the exact root anchors, mass-monotonicity theorem, interval exclusions, exact transition counterexamples, and all listed non-reachability theorems. Both modules' `#print axioms` audits contain no `sorryAx`. The overall workflow failed only later in the separate Agent49 carry-audit step at `root_run_38`/`root_run_39` reduction.
 
 ## 3. Mass-indexed 3-adic valuation candidate for the cone-only family
 
