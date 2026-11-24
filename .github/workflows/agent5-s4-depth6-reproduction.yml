@@ -15,7 +15,9 @@ jobs:
       - name: Record Node version
         run: node --version
       - name: Reproduce six-level suffix renormalization and quotient counterexamples
-        run: node im-results/agent5-s4-nested-depth6/s4_nested_depth6.mjs | tee im-results/agent5-s4-nested-depth6/g-level-run.json
+        run: |
+          set -o pipefail
+          node im-results/agent5-s4-nested-depth6/s4_nested_depth6.mjs | tee im-results/agent5-s4-nested-depth6/g-level-run.json
       - name: Commit exact G-level scan output
         run: |
           git config user.name "github-actions[bot]"
