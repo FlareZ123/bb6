@@ -501,7 +501,6 @@ theorem root_q11_parameter (r E u : Nat)
     omega
   refine ⟨s,?_⟩
   rw [huEq,hwEq]
-  dsimp [s]
   omega
 
 /-- Exact root-index exclusion for the W11 cylinder. This is conditional
