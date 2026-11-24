@@ -1,5 +1,5 @@
 From BusyCoq Require Import Enumerate62 Individual62 Eqb
-  Agent8ZeroDelay Agent8SourceWF Agent8WeightedSource.
+  Agent8AdaptiveSource Agent8ZeroDelay Agent8SourceWF Agent8WeightedSource.
 From Coq Require Import List Lia Arith.
 Open Scope nat_scope.
 
