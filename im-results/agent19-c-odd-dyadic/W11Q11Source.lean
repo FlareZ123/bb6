@@ -38,8 +38,8 @@ def raY (s : Nat) : Nat := 55930601156 + 610438205160*s
 def taX (s : Nat) : Nat := 109348115553 + 1193448059160*s
 def taY (s : Nat) : Nat := 27965300577 + 305219102580*s
 
-/-- The complete original-source parent fan of P(128*s+11).
-    Every case comes from the exact all-branch source preimage grammar. -/
+/-- Every original-source predecessor of P(128*s+11) is one of Q or A.
+    This is the needed parent-containment direction; no converse is asserted. -/
 theorem p_parent_fan (s a k : Nat)
     (hedge : secNext (a,k) = some (pX s,pY s)) :
     (a=qX s ∧ k=qY s) ∨ (a=aX s ∧ k=aY s) := by
@@ -47,9 +47,9 @@ theorem p_parent_fan (s a k : Nat)
   by_cases ha0 : a=0
   · subst a
     by_cases hk0 : k=0
-    · simp [sectionPreimageAll,hk0] at hp <;> omega
+    · simp [sectionPreimageAll,pX,pY,hk0] at hp <;> omega
     · by_cases hk1 : k=1
-      · simp [sectionPreimageAll,hk0,hk1] at hp <;> omega
+      · simp [sectionPreimageAll,pX,pY,hk0,hk1] at hp <;> omega
       · have hcase :
             4≤pY s ∧ ∃ n : Nat,
               pX s+pY s=2^n*8 ∧ (2*k+1)+8+3*n=pX s+2*pY s := by
@@ -68,9 +68,9 @@ theorem p_parent_fan (s a k : Nat)
       · by_cases hk1 : k=1
         · simp [sectionPreimageAll,hk0,hk1] at hp <;> omega
         · by_cases hk2 : k=2
-          · simp [sectionPreimageAll,hk0,hk1,hk2] at hp <;> omega
+          · simp [sectionPreimageAll,pX,pY,hk0,hk1,hk2] at hp <;> omega
           · by_cases hk3 : k=3
-            · simp [sectionPreimageAll,hk0,hk1,hk2,hk3] at hp <;> omega
+            · simp [sectionPreimageAll,pX,pY,hk0,hk1,hk2,hk3] at hp <;> omega
             · have hcase :
                   (pY s=3 ∧ ∃ n : Nat,
                     pX s+6=2^n*16 ∧
@@ -92,7 +92,7 @@ theorem p_parent_fan (s a k : Nat)
                 omega
     · have ha2 : 2≤a := by omega
       by_cases hk0 : k=0
-      · simp [sectionPreimageAll,ha0,ha1,hk0] at hp <;> omega
+      · simp [sectionPreimageAll,pX,pY,ha0,ha1,hk0] at hp <;> omega
       · by_cases hlow : 2*k≤a
         · have hcase : pX s=a-2*k ∧ pY s=2*k+2 := by
             simpa [sectionPreimageAll,ha0,ha1,hk0,hlow] using hp
