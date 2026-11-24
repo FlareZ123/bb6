@@ -21,11 +21,13 @@ private theorem init_section_eq (n : Nat) (hn : 2 ≤ n) (v : List Bool) :
     CryptidBoundary.init (List.replicate (n - 2) true ++ v) =
       BB6.OneSided.Section n v := by
   simp only [BB6.OneSided.Section, CryptidBoundary.init]
-  change List.replicate 2 true ++ List.replicate (n - 2) true ++ v =
+  congr 1
+  change true :: true :: (List.replicate (n - 2) true ++ v) =
     List.replicate n true ++ v
   calc
-    List.replicate 2 true ++ List.replicate (n - 2) true ++ v =
-        List.replicate (2 + (n - 2)) true ++ v := by
+    true :: true :: (List.replicate (n - 2) true ++ v) =
+        List.replicate 2 true ++ List.replicate (n - 2) true ++ v := by rfl
+    _ = List.replicate (2 + (n - 2)) true ++ v := by
           rw [List.replicate_append_replicate]
     _ = List.replicate n true ++ v := by
           congr 1
