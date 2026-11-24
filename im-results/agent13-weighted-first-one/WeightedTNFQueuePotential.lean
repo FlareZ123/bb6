@@ -66,6 +66,7 @@ theorem sourceExpand_valid (n m : Nat) (hn : 1 ≤ n) (hm : m ≤ 6) :
   have hne : n ≠ 1 := by
     by_contra h
     simp [sourceExpand, h] at hx
+  have hgt : 1 < n := by omega
   simp [sourceExpand, hne] at hx
   obtain ⟨f, hf, rfl⟩ := List.mem_map.mp hx
   constructor
@@ -91,7 +92,7 @@ theorem queueListWeight_le_length_mul (xs : List QueueNode) (k : Nat)
         intro y hy
         exact h y (by simp [hy])
       have ih' := ih hxs
-      simp [queueListWeight] at *
+      simp [queueListWeight, Nat.succ_mul] at *
       omega
 
 /-- Each nonempty source expansion has at most 24 children, all with one
@@ -101,12 +102,11 @@ theorem sourceExpand_weight_lt (n m : Nat) (hn : 1 ≤ n) (hm : m ≤ 6) :
     queueListWeight (sourceExpand n m) < 25 ^ n := by
   by_cases h1 : n = 1
   · simp [sourceExpand, h1, queueListWeight]
-    exact Nat.pow_pos (by decide : 0 < 25) n
   · have hn' : 1 < n := by omega
     rw [sourceExpand_weight_eq n m hn']
     have hlen := sourceFreshes_length_le24 m hm
     have hpow : 0 < 25 ^ (n - 1) :=
-      Nat.pow_pos (by decide : 0 < 25) (n - 1)
+      Nat.pow_pos (by decide : 0 < 25)
     have hmul :
         (sourceFreshes m).length * 25 ^ (n - 1) ≤
           24 * 25 ^ (n - 1) :=
@@ -118,7 +118,7 @@ theorem sourceExpand_weight_lt (n m : Nat) (hn : 1 ≤ n) (hm : m ≤ 6) :
         _ = 25 ^ (n - 1) * 25 := by omega
         _ = 25 ^ ((n - 1) + 1) := by rw [← Nat.pow_succ]
         _ = 25 ^ n := by congr 1; omega
-    exact lt_of_le_of_lt hmul hstep
+    exact Nat.lt_of_le_of_lt hmul hstep
 
 inductive QueueVerdict where
   | halt
@@ -167,7 +167,7 @@ theorem bfsPass_valid (f : QueueNode → QueueVerdict) :
   induction xs with
   | nil =>
       intro hold hxs hhold
-      exact ⟨hhold, by intro x hx; simp at hx⟩
+      exact ⟨hhold, by intro x hx; cases hx⟩
   | cons x xs ih =>
       intro hold hxs hhold
       have hx : QueueNodeValid x := hxs x (by simp)
@@ -176,6 +176,7 @@ theorem bfsPass_valid (f : QueueNode → QueueVerdict) :
         exact hxs y (by simp [hy])
       cases hdec : f x with
       | halt =>
+          simp only [bfsPass, hdec]
           have hchildren := sourceExpand_valid x.holes x.fresh hx.1 hx.2
           have hhold' : QueueListValid (sourceExpand x.holes x.fresh ++ hold) := by
             intro y hy
@@ -184,8 +185,10 @@ theorem bfsPass_valid (f : QueueNode → QueueVerdict) :
             · exact hhold y hy
           exact ih (sourceExpand x.holes x.fresh ++ hold) hxs' hhold'
       | nonhalt =>
+          simp only [bfsPass, hdec]
           exact ih hold hxs' hhold
       | unknown =>
+          simp only [bfsPass, hdec]
           have hhold' : QueueListValid (x :: hold) := by
             intro y hy
             simp only [List.mem_cons] at hy
@@ -203,7 +206,7 @@ theorem bfsPass_potential_le (f : QueueNode → QueueVerdict) :
   induction xs with
   | nil =>
       intro hold hxs hhold
-      simp [bfsPass, totalPotential]
+      simp [bfsPass, totalPotential, Nat.add_comm]
   | cons x xs ih =>
       intro hold hxs hhold
       have hx : QueueNodeValid x := hxs x (by simp)
@@ -224,6 +227,7 @@ theorem bfsPass_potential_le (f : QueueNode → QueueVerdict) :
               queueListWeight (sourceExpand x.holes x.fresh ++ hold) ≤
                 queueNodeWeight x + queueListWeight hold := by
             rw [queueListWeight_append]
+            simp [queueNodeWeight] at hweight ⊢
             omega
           simp only [bfsPass, hdec]
           have h := Nat.le_trans hIH
@@ -234,7 +238,7 @@ theorem bfsPass_potential_le (f : QueueNode → QueueVerdict) :
           have hIH := ih hold hxs' hhold
           simp only [bfsPass, hdec]
           simpa [totalPotential, queueListWeight] using
-            (le_trans hIH (by omega : queueListWeight xs + queueListWeight hold ≤
+            (Nat.le_trans hIH (by omega : queueListWeight xs + queueListWeight hold ≤
               queueNodeWeight x + queueListWeight xs + queueListWeight hold))
       | unknown =>
           have hhold' : QueueListValid (x :: hold) := by
@@ -288,7 +292,7 @@ theorem bfsRounds_potential_le (f : QueueNode → QueueVerdict) :
       have hq' := bfsRound_valid f q hq
       have h1 := ih (bfsRound f q) hq'
       have h2 := bfsRound_potential_le f q hq
-      exact le_trans h1 h2
+      exact Nat.le_trans h1 h2
 
 def rootQueueNode : QueueNode := ⟨11, 2⟩
 def rootSearchQueue : SearchQueue := ⟨[rootQueueNode], []⟩
@@ -300,7 +304,7 @@ theorem rootSearchQueue_valid : SearchQueueValid rootSearchQueue := by
     subst x
     exact ⟨by decide, by decide⟩
   · intro x hx
-    simp at hx
+    cases hx
 
 theorem rootSearchQueue_potential :
     totalPotential rootSearchQueue = 25 ^ 11 := by
@@ -347,7 +351,7 @@ theorem queueListWeight_drop_le (xs : List QueueNode) (n : Nat) :
 
 theorem queueListValid_take (xs : List QueueNode) (hxs : QueueListValid xs)
     (n : Nat) : QueueListValid (xs.take n) := by
-  induction xs generalizing hxs n with
+  induction xs generalizing n with
   | nil => simp [QueueListValid]
   | cons x xs ih =>
       cases n with
@@ -421,6 +425,7 @@ theorem serialUpdate_valid (f : QueueNode → QueueVerdict) (q : SearchQueue)
             exact hq.1 y (by simp [hy])
           cases hdec : f x with
           | halt =>
+              simp only [serialUpdate, hdec]
               have hc := sourceExpand_valid x.holes x.fresh hx.1 hx.2
               have ha : QueueListValid (sourceExpand x.holes x.fresh ++ xs) := by
                 intro y hy
@@ -429,8 +434,10 @@ theorem serialUpdate_valid (f : QueueNode → QueueVerdict) (q : SearchQueue)
                 · exact hxs y hy
               exact ⟨ha, hq.2⟩
           | nonhalt =>
+              simp only [serialUpdate, hdec]
               exact ⟨hxs, hq.2⟩
           | unknown =>
+              simp only [serialUpdate, hdec]
               have hh : QueueListValid (x :: hold) := by
                 intro y hy
                 simp only [List.mem_cons] at hy
@@ -456,7 +463,7 @@ theorem activePotential_serialUpdate_lt (f : QueueNode → QueueVerdict)
               exact Nat.add_lt_add_right hlt (queueListWeight xs)
           | nonhalt =>
               have hpos : 0 < queueNodeWeight x :=
-                Nat.pow_pos (by decide : 0 < 25) x.holes
+                Nat.pow_pos (by decide : 0 < 25)
               simp [serialUpdate, hdec, activePotential, queueListWeight]
               omega
           | unknown =>
@@ -506,7 +513,6 @@ theorem sourceMAXT_bound : 25 ^ 11 < 2 ^ 60 := by
 theorem activePotential_le_total (q : SearchQueue) :
     activePotential q ≤ totalPotential q := by
   simp [activePotential, totalPotential]
-  omega
 
 /-- Every source `q_i(l,sz)` chunk drains its active queue before MAXT.
     This theorem is independent of the chunk size and of all decider outcomes. -/
