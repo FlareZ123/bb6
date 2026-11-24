@@ -35,6 +35,45 @@ the original proof-carrying frontier report is evaluated. No claim that
 the remaining hard-root roster is decided; small DFA sizes 1–4 gave no
 hits on the historical 663 roster.
 
+
+## Depth-eight FAR cross-check and the actual 101-leaf frontier (24 Nov 2026)
+
+The exporter `extract_depth_eight_residuals.js` reconstructs the checked `Tree.residuals` from `root-frontier.json` and `DepthEightSiblingData1–4.lean`. It reproduces 107 unique open leaves: 101 one-hole and six two-hole. The six two-hole tables are exactly the six existing growth-witness tables, not six new frontier reductions:
+
+| Parent/tree | A/1 child | DFA | FAR run |
+|---|---|---:|---|
+| 86 / tree86 | `0LB` | 5 | [45466300325](https://github.com/FlareZ123/bb6/actions/runs/45466300325) |
+| 86 / tree86 | `1LD` | 5 | [45466309502](https://github.com/FlareZ123/bb6/actions/runs/45466309502) |
+| 112 / tree112 | `1LC` | 4 | [45466318520](https://github.com/FlareZ123/bb6/actions/runs/45466318520) |
+| 112 / tree112 | `1RD` | 4 | [45466327492](https://github.com/FlareZ123/bb6/actions/runs/45466327492) |
+| 112 / tree112 | `1LE` | 6 | [45466336469](https://github.com/FlareZ123/bb6/actions/runs/45466336469) |
+| 112 / tree112 | `1LF` | 4 | [45466346380](https://github.com/FlareZ123/bb6/actions/runs/45466346380) |
+
+The overlap is exact: the two `0LB/1LD` tables are `Agent50TripleSweep.table false/true`; the four `1LC/1RD/1LE/1LF` tables are `Agent50OnesSweep.table 0..3`. Thus `siblingFinalRoster_count = 101` remains the actual unresolved frontier. `DepthEightFAR.lean` preserves independent FAR `Data` objects and `WeightedTNFCertificate B p 6` adapters for all six growth-covered tables; [regression run 45469255283](https://github.com/FlareZ123/bb6/actions/runs/45469255283) compiles the archived module and exporter successfully. These are alternate proofs, not a reason to change the existing tree.
+
+### One-hole residuals
+
+The 101 genuinely unresolved tables have their unique hole at F/0 (50), E/0 (24), or A/1 (27). A bounded blank-tape simulation of each table for 1,000,000 steps found:
+- 101/101 reached the step cap without querying the missing row;
+- 0 reached an assigned halt;
+- maximum absolute head displacement: 1,485;
+- maximum nonblank-cell count: 1,244.
+
+This is empirical evidence only: it does not prove the hole is never reached after the cap. Reproduce the roster and the bounded experiment with:
+
+```sh
+node im-results/agent7-far/extract_depth_eight_residuals.js --one-hole --simulate-steps=1000000
+```
+
+The next useful FAR work is on these 101 one-hole residuals, not on the six growth-covered two-hole tables. Representative targets from different hole positions include:
+
+- Parent 85, F/0 hole: `1RB0LD_1RC1LF_0RD1LA_1LD1RE_1RD0LB_---0LA`
+- Parent 114, A/1 hole: `1RB---_1RC1LF_0RD0RC_1LD1RE_0LB0LB_0RC0LA`
+- Parent 116, F/0 hole: `1RB1LA_1RC1LF_0RD1RC_1LD1RE_0LA0LB_---0LA`
+- Parent 128, E/0 hole: `1RB0LB_1RC1LF_0RD1RF_1LD1RE_---0LB_1RB0LA`
+
+No FAR result has yet been claimed for these four one-hole targets.
+
 ## Canonical-search to weighted-TNF bridge
 
 `CanonicalTNFBridge.lean` now imports the existing canonical audit/search stack into the weighted first-one certificate interface.
@@ -80,7 +119,7 @@ Bounded search status (24 November 2026):
 - #746, composed encoding, run [45401745777](https://github.com/FlareZ123/bb6/actions/runs/45401745777): both orientations UNSAT at sizes 6–7; reflected size 8 UNSAT; unreflected size 8 and both orientations at sizes 9–10 timed out.
 - Roster line 221, composed encoding, run [45404101670](https://github.com/FlareZ123/bb6/actions/runs/45404101670): both orientations UNSAT for DFA sizes 1–5.
 - Roster line 335, composed encoding, run [45402030399](https://github.com/FlareZ123/bb6/actions/runs/45402030399): pending.
-- Authentic first-hole sibling of the r1 Cryptids path, table `1RB0LC_1LC0RB_0LE0LD_1LC---_0RA1LF_1LA0LB`, composed encoding, run [45404497970](https://github.com/FlareZ123/bb6/actions/runs/45404497970): pending. Agent 50 identifies this as the F1=0LB child at the reachable r1 endpoint (D1 remains unknown), so a verified FAR hit can be grafted as an actual first-hole sibling.
+- The r1 F/1=`0LB` sibling is already covered by `Growth.zBD false` in `im-results/agent47-r1-sweep/R1Parent.lean` and assembled by `R1Graft.r1_certificate`; do not treat the earlier FAR probe as a new frontier leaf.
 - Regression test on the existing four-transition glider, run [45404260897](https://github.com/FlareZ123/bb6/actions/runs/45404260897): recovered the existing one-state certificate exactly (DFA [0,0], masks [2,1,1,64,64,64,64] / [4,64,64,64,64,64,64], zero mask 120); Lean accepted the generated theorem with standard axioms only.
 
 These are candidate-search experiments, not impossibility results. A timeout is not UNSAT, and a bounded failure to synthesize a FAR certificate says nothing about whether the machine halts. The glider run is only a regression against a known certificate, not a new machine result. Any successful hard-root leaf must also be shown to occur in the actual first-one weighted-TNF/Enumerate62 coverage, not merely in the historical 663-entry roster.

@@ -154,9 +154,49 @@ const expected = [
 ].sort();
 if (twoHole.map(x => x.table).sort().join("\n") !== expected.join("\n"))
   throw new Error("The six two-hole tables differ from the recorded roster.");
-console.log(JSON.stringify({
+function simulateBlankRun(table, cap) {
+  const codes = table.replace(/_/g, "").match(/.{3}/g);
+  const machine = codes.map(decodeMove);
+  const tape = new Map();
+  let state = 0, symbol = 0, head = 0, maxHead = 0;
+  for (let step = 0; step < cap; step++) {
+    const tr = machine[2 * state + symbol];
+    if (tr === null)
+      return { kind: "hole", steps: step,
+        slot: String.fromCharCode(65 + state) + "/" + symbol,
+        maxHead, tapeCells: tape.size };
+    if (tr.halt) return { kind: "halt", steps: step, maxHead, tapeCells: tape.size };
+    if (tr.write) tape.set(head, 1); else tape.delete(head);
+    head += tr.right ? 1 : -1;
+    maxHead = Math.max(maxHead, Math.abs(head));
+    state = tr.next;
+    symbol = tape.get(head) || 0;
+  }
+  return { kind: "cap", steps: cap, maxHead, tapeCells: tape.size };
+}
+
+const output = {
   residualOccurrences: all.length, uniqueResiduals: unique.length,
   oneHole: oneHole.length, twoHole: twoHole.length,
   twoHoleTables: twoHole.map(({ parentIndex, treeId, table, path }) =>
     ({ parentIndex, treeId, table, path }))
-}, null, 2));
+};
+if (process.argv.includes("--one-hole"))
+  output.oneHoleTables = oneHole.map(({ parentIndex, treeId, table, path }) =>
+    ({ parentIndex, treeId, table, path }));
+const simArg = process.argv.find(x => x.startsWith("--simulate-steps="));
+if (simArg) {
+  const cap = Number(simArg.split("=")[1]);
+  if (!Number.isSafeInteger(cap) || cap < 1) throw new Error("Invalid simulation step cap");
+  const runs = oneHole.map(x => ({ parentIndex: x.parentIndex, treeId: x.treeId,
+    table: x.table, ...simulateBlankRun(x.table, cap) }));
+  output.simulation = {
+    cap, capped: runs.filter(x => x.kind === "cap").length,
+    holeReached: runs.filter(x => x.kind === "hole").length,
+    halted: runs.filter(x => x.kind === "halt").length,
+    maxHead: Math.max(...runs.map(x => x.maxHead)),
+    maxTapeCells: Math.max(...runs.map(x => x.tapeCells))
+  };
+  if (process.argv.includes("--one-hole")) output.oneHoleSimulation = runs;
+}
+console.log(JSON.stringify(output, null, 2));
