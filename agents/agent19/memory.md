@@ -425,3 +425,6 @@ Original-source CI [42290261844](https://github.com/FlareZ123/bb6/actions/runs/4
 
 
 - Fifth diagnostic run 45345350721 (#190, head 2a6fe6f) still timed out at omega/rewriting in the full root-parameter context. The current repair factors the bounded modular arithmetic into standalone theorem `w11_mod2048_remainder (x) (2048∣1861+x) (x<2048) : x=187`, then composes `hx.symm.trans hx187`; this removes the modulo term and large root context from omega. Current source commit 446f74019676acbb80fc33b60d773d8b5a3fd5d8, blob 26b28b2b2fd4bf2ac472286525ce3e9f6f95093b. A sixth diagnostic, if dispatched, must use this changed source; no unchanged retries.
+
+
+- Sixth changed-source diagnostic is run #191, ID 45345767224, dispatched 2026-11-24T07:09:03Z on head SHA af92702b70ff6a6592314e382b7977890eacd9a6, containing source commit 446f74019676acbb80fc33b60d773d8b5a3fd5d8. It is still in progress at the last poll; step 6 (W11 exact-source closure) is running. No further dispatch until this run completes and, if it fails, a new concrete error is repaired.
