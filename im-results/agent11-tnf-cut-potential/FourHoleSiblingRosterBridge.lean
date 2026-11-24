@@ -7,6 +7,7 @@ set_option maxHeartbeats 0
 namespace BB6.Agent11FourHoleSiblingBridge
 
 open BB6Coverage
+open BB6.Agent50TNFPilot
 open BB6.Agent31FourHoleSibling
 open BB6.Agent31FourHoleRoster
 open BB6.Agent31ThreeHole
