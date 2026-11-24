@@ -45,6 +45,7 @@ private theorem accumulated_append (n m : Nat) :
             _ = DRegular.accumulated (n+1) s +
                   DRegular.accumulated m t := by
                   simp [DRegular.accumulated, hn]
+                  rw [← Nat.add_assoc]
 
 theorem root13_time_to_sixth :
     root13Time + DRegular.accumulated 10
@@ -78,7 +79,6 @@ theorem root13_to_sixth_original :
   have hstart :
       BB6.Agent25SixthRoot.seed.a ≥ 8 := by
     simp [BB6.Agent25SixthRoot.seed]
-    omega
   have hdouble := DRegular.run_double 4484
     BB6.Agent25SixthRoot.seed
     BB6.Agent4Root13Section.root13Section
@@ -163,6 +163,7 @@ theorem eeb_source (t : Nat) (ht : t%3=2) :
         (run (bCost t)
           (BB6.Agent31PacketSource.packet (3*kB t+2) 2 5 tail))
         (BB6.Agent31PacketSource.packet (outputA t) 1 5 tail) := by
+    unfold bCost
     rw [BB6.Agent31PacketSource.b_packet (kB t) 1 5 tail]
     exact cfgEq_refl _
   have hES := source_chain
@@ -249,6 +250,7 @@ theorem externalAfter13_mod3 : externalAfter13%3=2 := by
 theorem external_checkpoint10_lift (k : Nat) :
     DRegular.run 10 (externalSeed k) =
       some ⟨9*externalTlift k+7,4,1⟩ := by
+  unfold externalSeed
   rw [cryptid_first10_affine k]
   have hpow : 3^98 = 9*3^96 := by decide
   have hparam :
@@ -328,9 +330,21 @@ theorem externalAfter13_lift (k : Nat) :
         8*(externalKB+64*3^95*8^10*k)+10 := by
           simp [outputA, hkb]
     _ = externalAfter13+3^95*8^13*k := by
-          simp [externalAfter13, outputA, Nat.mul_add,
-            Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm,
-            show 8*64*8^10=8^13 by decide]
+          have hcoef : 8*64*8^10=8^13 := by decide
+          have hmul :
+              8*(64*3^95*8^10*k)=3^95*8^13*k := by
+            calc
+              8*(64*3^95*8^10*k) =
+                  3^95*(8*64*8^10)*k := by ac_rfl
+              _ = 3^95*8^13*k := by rw [hcoef]
+          calc
+            8*(externalKB+64*3^95*8^10*k)+10 =
+                8*externalKB+8*(64*3^95*8^10*k)+10 := by
+                  rw [Nat.mul_add]
+            _ = externalAfter13+3^95*8^13*k := by
+                  dsimp [externalAfter13, externalKB, outputA]
+                  rw [hmul]
+                  omega
 
 theorem external_after_macro13_original (k : Nat) :
     ObsEq
@@ -340,9 +354,8 @@ theorem external_after_macro13_original (k : Nat) :
         (DRegularSource.sourceSection (externalSeed k)))
       (BB6.Agent31PacketSource.packet
         (externalAfter13+3^95*8^13*k) 1 5 tail) := by
-  have htmod : externalTlift k%3=2 := by
-    simp [externalTlift]
-    omega
+  have htmod : externalTlift k%3=2 :=
+    externalTlift_mod3 k
   have h := source_chain
     (DRegular.accumulated 10 (externalSeed k))
     (eebCost (externalTlift k))
@@ -380,6 +393,8 @@ theorem root_t_delta :
     rw [show 3^3=27 by decide]
     simp [Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm]
   simp [BB6.DRegularShift.shiftNat, cryptidCheckpoint10] at ha
+  rw [hscale] at ha
+  rw [← externalT_exact] at ha
   omega
 
 theorem root_external_after13_difference :
@@ -422,9 +437,25 @@ theorem root_external_after13_difference :
             simp [outputA, hkb]
     _ = externalAfter13 +
         8^13*BB6.Agent4Root13Section.root13P := by
-          simp [externalAfter13, outputA, Nat.mul_add,
-            Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm,
-            show 8*64*8^10=8^13 by decide]
+          have hcoef : 8*64*8^10=8^13 := by decide
+          have hmul :
+              8*(64*8^10*BB6.Agent4Root13Section.root13P) =
+                8^13*BB6.Agent4Root13Section.root13P := by
+            calc
+              8*(64*8^10*BB6.Agent4Root13Section.root13P) =
+                  (8*64*8^10)*BB6.Agent4Root13Section.root13P := by ac_rfl
+              _ = 8^13*BB6.Agent4Root13Section.root13P := by rw [hcoef]
+          calc
+            8*(kB externalT +
+              64*8^10*BB6.Agent4Root13Section.root13P)+10 =
+                8*kB externalT +
+                  8*(64*8^10*BB6.Agent4Root13Section.root13P)+10 := by
+                    rw [Nat.mul_add]
+            _ = externalAfter13 +
+                  8^13*BB6.Agent4Root13Section.root13P := by
+                    dsimp [externalAfter13, outputA]
+                    rw [hmul]
+                    omega
 
 theorem root13P_mod3 :
     BB6.Agent4Root13Section.root13P%3=1 := by
