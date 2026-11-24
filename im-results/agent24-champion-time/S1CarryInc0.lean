@@ -85,7 +85,7 @@ theorem s1Config_carryInput_match
         decide (i < 3*r ∨ i = 3*r+2) := by
       simp [carryInputBit]
     have hcoord : h + (-(i:Int)) = h-(i:Int) := by omega
-    rw [hxEq]
+    simp only [hxEq]
     calc
       (s1Config L n m (len+1+r) ((2*q+1)*2^r) b h).tape
           (h + (-(i:Int))) =
@@ -120,7 +120,7 @@ theorem s1Config_carryInput_match
         carryInputBit r (1+(i:Int)) := by
       rcases hc with h0 | h1 | h2 | h3 | h4 | h5
       all_goals subst i <;> simp [sideBit,carryInputBit] <;> omega
-    rw [hxEq]
+    simp only [hxEq]
     have hcoord : h + (1+(i:Int)) = h+1+(i:Int) := by omega
     calc
       (s1Config L n m (len+1+r) ((2*q+1)*2^r) b h).tape
