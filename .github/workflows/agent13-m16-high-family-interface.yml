@@ -77,6 +77,7 @@ on:
           - source65
           - sourceJointM32
           - sourceHighFamily
+          - sourceHighIntegration
 
 permissions:
   contents: read
@@ -316,6 +317,9 @@ jobs:
               ;;
             sourceHighFamily)
               target=im-results/agent13-residual-frontier/M16StopFamilyExclusions.lean
+              ;;
+            sourceHighIntegration)
+              target=im-results/agent13-residual-frontier/ValSixM16Integration.lean
               ;;
             *)
               echo "Unsupported M16 target: $M16_TARGET" >&2
