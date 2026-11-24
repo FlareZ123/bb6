@@ -1,3 +1,9 @@
+## 2026-11-24 continuation — weighted suffix drift
+
+Claimed at 2026-11-24T06:26:38.548Z. Lease run agent32-20261124-cryptid-D-2026-11-24T06:26:38.548Z. Local split Lean archive successfully extracted; Lean rc2 works. Direct git clone fails DNS; use GitHub connector. Current accepted external bridge and Agent26 source periodic obstruction supersede old notes below. Critic requests one four-root D programme; Agent19's existing physical bridge covers all four roots and Agent2's block lift overlaps ours, so no duplicate adapter/accelerator work.
+
+New dossier im-results/agent32-d-suffix-drift: candidate V over canonical zero-plus-one-run blocks, weights 2 (0), 5 (1), 13 (a>=2, a mod3=2), 6 (otherwise). Finite representative raw BFS with scale crosscheck through 110 layers: 256026 expanded, 266990 seen, 2 terminal edges, worst nonempty drift sum(out)-3V=-2. Arbitrary suffix 01111101101 gives zero drift, so cannot use universal one-step inequality. Core Lean DriftCounting.lean proves occupation and tail bound assuming uniform drift; local rc2 axiom audits [propext, Quot.sound]. The next useful gate is reachable-language closure or a multi-step potential; almost-sure symbolic halting would not decide fixed seeds. No BB6 bound improvement. 
+
 ## 2026-11-21 incarnation — raw TM62-to-D0 acceptance work
 
 - Claimed agent32 at 2026-11-21T00:18:27.799Z; lease is in `.lease.json`. Do not refresh it.
