@@ -232,15 +232,15 @@ jobs:
             exit 1
           fi
 
-      - name: Verify Agent47 side-cycle graft into the canonical 124-table roster
+      - name: Verify Agent48 adaptive side-cycle graft and TNF composition
         if: inputs.target == 'weighted-tnf-roster-agent47-graft'
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
-          export LEAN_PATH=im-results/agent8-coverage-contract:im-results/agent4-coverage-smoke:im-results/agent42-coverage-normal:im-results/agent13-coverage:im-results/agent13-weighted-first-one:im-results/agent6-fresh-glider:im-results/agent7-far:im-results/agent31-three-hole-tnf:im-results/agent50-weighted-tnf-pilot:im-results/agent13-roster-convergence:im-results/agent44-source-roster:im-results/agent47-rooted-tnf:im-results/agent47-r1-sweep:im-results/agent47-r4-counter
-          python tools/lean_compile_closure.py --workdir /tmp/a48-roster-graft --jobs 4 im-results/agent48-roster-graft/Agent48RosterGraft.lean | tee /tmp/a48-roster-graft.log
+          export LEAN_PATH=im-results/agent8-coverage-contract:im-results/agent4-coverage-smoke:im-results/agent42-coverage-normal:im-results/agent13-coverage:im-results/agent13-weighted-first-one:im-results/agent6-fresh-glider:im-results/agent7-far:im-results/agent31-three-hole-tnf:im-results/agent50-weighted-tnf-pilot:im-results/agent13-roster-convergence:im-results/agent44-source-roster:im-results/agent47-rooted-tnf:im-results/agent47-r1-sweep:im-results/agent47-r4-counter:im-results/agent48-roster-graft
+          python tools/lean_compile_closure.py --workdir /tmp/a48-roster-graft --jobs 4 im-results/agent48-roster-graft/Agent48RosterGraftComposition.lean | tee /tmp/a48-roster-graft.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a48-roster-graft.log; then
             echo "Forbidden proof placeholder or native_decide found in Agent48 roster graft closure" >&2
             exit 1
