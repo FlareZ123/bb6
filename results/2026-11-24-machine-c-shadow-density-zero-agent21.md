@@ -1,6 +1,18 @@
-# Density-zero residuals for Machine C dyadic inverse-cone certificates
+# Density-zero inverse reachability for Machine C
 
-**Status:** new paper-level theorem, using the existing source-certified all-depth ordinary inverse grammar and large-right modular lifting law. No new kernel-certified density theorem is claimed yet. This proves a density-zero bound on the *indices not excluded by the certificate method*, not a Machine C blank-root decision or BB(6) upper bound. The decisive new ingredient is an arbitrary-multiplicity collision construction, rather than a finite residue census.
+**Status (12:37 UTC):** The abstract collision, amplification, finite-tree extinction, residue-cover, large-right reachability bridge, both full stopping-family covers and the entire reachable-section row cover are kernel-accepted locally in Lean 4.36.0-rc2, with standard axioms only. The reachability theorems take the exact complete parent law already proved in the original-source ModularConeSource module. The thin original-source import adapter has not been compiled in this invocation. No blank-root decision or BB(6) upper bound is claimed.
+
+## Main theorem (strengthened after the initial certificate-residual proof)
+
+Let Reach(x,y) denote any section-reachability predicate satisfying the complete large-right parent law below (the actual Machine C predicate has that law). For every positive integer denominator d, there is one precision n such that:
+
+- For every left counter x, all reachable right counters y with 3*2^(n+2) <= y+2 belong to a list of at most 2^n/d residues modulo 2^n. The modulus and height threshold do not depend on x.
+- For the entire low stopping family y+3m+4=2^(2m+3), Reach(1,y) with m>=n+2 forces m into a list of at most 2^n/d residues.
+- For every m, the high family y+j+3m+4=2^(2m+2)*(j+2), Reach(2j+1,y) with j>=2^(n+2) forces j into a list of at most 2^n/d residues. The same modulus works for every m.
+
+Consequently the reachable section lattice has upper natural density zero in growing square boxes, the reachable low-stop indices have density zero, and the reachable high-stop parameter pairs have density zero, with a uniform row bound. Indeed, in any interval of length L, a residue cover of size r contains at most r*(L/2^n+1) integers, and the finite lower-height exception contributes a bounded number per row. Let L grow and then d grow. This is a restriction on actual reachable targets, stronger than a numerical census of certificate successes. It does not make the exceptional sets empty.
+
+The checked declarations are in [DyadicRows.lean](../im-results/agent21-c-shadow-density/DyadicRows.lean) and [DyadicStops.lean](../im-results/agent21-c-shadow-density/DyadicStops.lean), using [DyadicReach.lean](../im-results/agent21-c-shadow-density/DyadicReach.lean) and [DyadicCover.lean](../im-results/agent21-c-shadow-density/DyadicCover.lean). The two one-line instantiations with the existing source parent law are in [DyadicSource.lean](../im-results/agent21-c-shadow-density/DyadicSource.lean).
 
 ## 1. Signed inverse coordinates
 
@@ -30,11 +42,13 @@ Give a C pair weight 2 and an A weight 1. A root with no previous gap is treated
 
 For C, use U=2Z+2+p. On reading the next bit, exactly one bit value chooses the odd-cost new gap r=1, producing a C pair; the other chooses the even-cost new gap r=2, producing an A candidate. Independently, extension of the previous gap survives this bit precisely if U-2-p is divisible by 4, producing another A. This is true on exactly one bit value. In the new-even case the candidate future U is (U+S-2(1-p))/4+2+(1-p), with future S=S+7; in the extension case it is (U-2-p)/4+2+p, with future S=S+6. These are integral once the first-bit constraint is imposed. At an A state the future candidate U has odd affine slope, so exactly one next bit gives U parity equal to its future S parity and completes a C pair; the other kills it. The C U slope is twice an odd integer, and both A slopes are odd after the bit substitution. Thus these assertions continue at every prefix.
 
-Consequently the total weight N satisfies
+Consequently, except for the empty-word initial state, the total weight N satisfies
 
     N(prefix 0)+N(prefix 1)=2*N(prefix).
 
-The initial expected weight is finite, and the empty population is absorbing. This is an integer martingale on the fair binary prefix tree. Counting histories with multiplicity is essential for the equality. The process is exact for the ordinary congruence grammar; incomplete gaps are retained until disproved, so zero width is a complete finite exhaustion, not a depth cutoff.
+At the initial state the corresponding inequality is <=. The formal argument uses the supermean inequality at every valid population.
+
+The initial expected weight is finite, and the empty population is absorbing. This is an integer supermartingale on the fair binary prefix tree. Counting histories with multiplicity is essential for the equality. The process is exact for the ordinary congruence grammar; incomplete gaps are retained until disproved, so zero width is a complete finite exhaustion, not a depth cutoff.
 
 ## 3. Duplication identity and arbitrary amplification
 
@@ -62,7 +76,7 @@ This is a uniform amplification theorem: from any nonempty population, for every
 
 ## 4. Extinction in density
 
-For a finite binary tree, stop the population at the first prefix with N=0 or N>=B. The stopped expectation is the initial expectation by the one-step averaging identity. Therefore the proportion of prefixes that have ever reached B is at most E[N_initial]/B.
+For a finite binary tree, stop the population at the first prefix with N=0 or N>=B. The stopped expectation is at most the initial expectation by the one-step supermean inequality. Therefore the proportion of prefixes that have ever reached B is at most E[N_initial]/B.
 
 On prefixes still nonempty and below B, choose k with 2^(k+1)>=B and H=F(k)+1. By amplification, among their length-H extensions at least a fraction 2^-H reaches B (or is already stopped). The proportion remaining live and below B after h such blocks is at most (1-2^-H)^h. Hence the proportion of nonempty populations at precision j is bounded by
 
@@ -70,37 +84,42 @@ On prefixes still nonempty and below B, choose k with 2^(k+1)>=B and H=F(k)+1. B
 
 Let j tend to infinity, then B tend to infinity. The fraction of parameter residues with nonempty ordinary inverse branch population tends to zero. This is an elementary finite counting proof; no probability-limit theorem is required. The bound is very weak quantitatively because F grows rapidly, but it is uniform in the affine coefficients subject to the two slope conditions.
 
-## 5. Application to the necessary low-stop ray
+## 5. Generalized admissibility and direct reachability bridge
 
-Use the existing source-certified reduction [LowRayFullFan](../im-results/agent13-residual-frontier/LowRayFullFan.md) and [NegativeShadow](../im-results/agent13-residual-frontier/NegativeShadow.lean): m=512z+67, T=1024z+129, u=2^T-6z-1, rectangle target (180u+28,166u+25), with positive negative-shadow representatives
+The formal population model permits the weaker initial conditions
 
-    U=1080z+152, V=996z+141,
-    S=3072z+434, Z=540z+75.
+    sigma = 0 (mod 2), lambda + sigma/2 = 1 (mod 2).
 
-Here r must be even, and the first r=2 is compatible identically since the recurrence numerator is 4(519z+73). At total cost 2 there is exactly one C pair (including all longer even initial gaps):
+For any nonempty positive cost word w, the coefficient of S/2 in its unrolled numerator is odd: it has the form 1+2^r*c for first positive cost r. Thus the parameter slope of that numerator is odd. Every candidate C or A in a one-bit transition is nonempty and positive. After completing any nonempty word, the affine mass slope becomes a multiple of four and its normalized Z slope is odd, giving the original stronger Good hypothesis required for the collision amplifier. The empty-word initial state can first complete the cost-one branch on its unique compatible bit. This proves extinction uniformly under the weaker Admissible condition.
 
-    S=3072z+441, Z=519z+73.
+Define OpenAt(S,Z,n) to mean either a compatible positive cost word of total cost n, or a positive word of total cost n+1 whose final cost is at least two and whose numerator is divisible by 2^n. The latter is the unfinished gap. The actual population contains exactly these completed and pending words. This exact characterization is proved by induction in DyadicPopulation.step_valid.
 
-The S slope is divisible by 4 and the Z slope is odd. The population starts at weight 2 with all bits of z still free. Thus the fraction of z residues with nonempty width after j further bits tends to zero.
+The parent law says that for reachable (x,y) with y>=8 and Q=x+y+(x+y)%2 of exact valuation v and Q>2^v, some reachable predecessor is either direct or high with cost r<=v. To prove that every reachable target with Large(n+2,y) has OpenAt:
 
-If width is zero at fixed total precision P=j+2, all possible ordinary inverse paths have exhausted at smaller cost, including the longer-gap possibilities. At each visited node the selected numerator Q has valuation strictly below the remaining precision; otherwise a pending or completed gap would survive. Each terminal leaf has no ordinary edge, so V is odd and (U+V) mod 4 is 2 or 3: the original odd-image forbidden region after negation. All visited positive shadows have mass at most 3072z+434+4P, since each edge adds 3r+1<=4r. For sufficiently large z (with P fixed), the available precision T minus spent cost exceeds log2(2*(3072z+434+4P+8))+1 and exceeds every required valuation. Hence the existing sound NegativeShadow checker has a finite successful certificate (fuel at most P+1) for every such z. The finite exceptional initial z values do not affect density.
+- n=0: the empty word is compatible.
+- If 2^n divides Q and n>0, select a single cost n of the correct parity or a pending cost n+1 of the correct parity. This gives OpenAt immediately.
+- Otherwise v<n is the exact valuation. The height condition guarantees y>=8 and Q>2^v, so the parent law applies. The actual predecessor costs r<=n, preserves Large(n-r+2, predecessor-right), and satisfies recurrence (1). By induction its OpenAt at n-r can be prepended with r.
 
-For every fixed P the zero-width condition is a union of residue classes modulo 2^(P-2). Their complement proportion tends to zero as P tends to infinity. Therefore the set of z for which **no finite negative-shadow certificate fits the prescribed 1024z+129 bit budget has upper natural density zero**.
+This is the Lean theorem DyadicReach.reach_open. It does not depend on any executable recursive exclusion checker's correctness. Congruence in S modulo 2^(n+1) and Z modulo 2^n preserves OpenAt (the accumulator difference is half the mass difference times its word coefficient). Therefore the binary-tree extinction bound directly gives a sparse residue cover of reachable targets.
 
-## 6. High-stop extension using the large-right checker
+## 6. Exact affine parameterizations
 
-In the unified original parameterization, let j>=1,m>=0 and k+j+3m+4=2^(2m+2)(j+2). At the actual target (2j+1,k) take exact signed shadow U=-(2j+1), V=-k. Then
+With x fixed and parameter y, S=-x-2y and Z=(-x-2-((-x) mod 2))/2 is constant. The slopes (-2,0) satisfy Admissible. This proves the entire row cover, uniform in x.
 
-    S=6m+7-2^(2m+3)(j+2), Z=-j-2.
+For the full low family x=1, y+3m+4=2^(2m+3),
 
-For each fixed m the affine parameter j has S slope divisible by 4 and Z slope odd, uniformly in m. Start with the root with no last-gap continuation; after one bit its two possible populations have weights 2 and 1. The same extinction-in-density argument is uniform in m.
+    S=6m+7-2^(2m+4), Z=-2.
 
-For a fixed prefix precision P with empty population, every selected numerator has exact valuation below its remaining precision, every ordinary branch terminates in the forbidden-image region, and no longer gap survives. The normalized signed child formulas are the negatives of ModularCone.direct/high. Congruence under each edge loses r bits, exactly as in the existing kernel. Choose source precision b=P+2, ensuring at least two bits at every leaf and enough bits for all exact valuation tests. The residue-normalized checker consequently accepts whenever its root Large(b,k) condition holds. To see HighValid explicitly, the selected numerator is divisible by 2^r; with r=n+2 this ensures the left quotient has the required parity, so the right quotient is integral. Changing a representative modulo 2^b preserves the valuation and these divisibilities, and the children agree modulo 2^(b-r). This is a finite induction over the exhausted word tree.
+For fixed precision n and m>=n+2, the power term vanishes modulo 2^(n+1), and Large(n+2,y) follows from 3m+4<=2^(2m+2). The admissible affine root has slopes (6,0). This proves the full low family without needing to restrict to m=512z+67. It also implies relative density zero within that fixed arithmetic progression.
 
-For every m>=0, k>=3j+4 (the linear exponential bound 2^(2m+3)>=3m+8 follows by induction). Therefore Large(b,k) holds for j>=2^b, uniformly in m. The fraction of j residues with nonempty width at fixed P tends uniformly to zero by the coefficient-independent bound in Section 4. It follows that the residual set of high pairs for which **no height-permitted finite modular certificate exists** has density zero in expanding square boxes, and indeed the upper row-density bound is uniform in m. The checker must be allowed unbounded adaptive precision; this claim does not hold for a fixed cap such as 32.
+For the high family x=2j+1, y+j+3m+4=2^(2m+2)*(j+2),
+
+    S=6m+7-2^(2m+3)*(j+2), Z=-j-2.
+
+For fixed m the slopes (-2^(2m+3),-1) satisfy the stronger Good condition. Since y>=3j+4, the height threshold holds for j>=2^(n+2), uniformly in m. The uniform sparse cover proves the asserted result.
 
 ## Evidence and scope
 
-The arithmetic collision and normalized recurrence were independently tested locally. The proof above is a paper derivation, not a new Lean source-closure claim. Existing source dependencies are the accepted ordinary inverse grammar, NegativeShadow soundness and ModularCone large-right soundness. The next formalization target is the affine word/collision lemma and finite binary-tree averaging theorem; the high-stop certificate pullback should be checked against the original module.
+[Formalization dossier](../im-results/agent21-c-shadow-density/README.md). Local Lean 4.36.0-rc2 accepts every abstract and parent-law-conditional declaration with only propext, Classical.choice, Quot.sound (reach_open itself does not need Classical.choice). No sorryAx. The original-source import adapter remains a separate integration check because the sandbox cannot check out the GitHub repository and no manual workflow dispatch connector is exposed. The interface is copied definition-for-definition from Agent42's source-certified parent law.
 
-This is a property of a specific all-time exclusion method and its infinite parameter residual, not a proportion of six-state machines decided. Density zero does not imply the exceptional set is empty. The exact Machine C halting criterion still requires eliminating every residual low and high parameter or exhibiting an actual blank-origin halt. No exact BB(6) value or improved attainable lower bound is claimed.
+The original paper-level low-ray negative-shadow certificate argument and high modular-checker argument are preserved in Git history (initial paper commit 35adf89c86a7076451195e9c38de6eccc946211a). The direct reachability bridge above supersedes the need to rely on their implementation-level pullback. This is a structural infinite-parameter theorem, not a count of six-state machines decided. Density zero does not imply emptiness. No exact BB(6) value or improved attainable lower bound is claimed.
