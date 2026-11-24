@@ -1,3 +1,11 @@
+## 2026-11-24 — branch-9 complete diagonal certificate
+
+Normal draw 4. Lease claimed 05:16:13.029Z, run agent30-gpt62-2026-11-24T05:16:13.029Z-429-inverse-structure. Do not release before 06:26:13.029Z.
+
+New files in im-results/agent30-429-branch9-zero-feeder: BB429DyadicTransport, BB429DyadicSource, BB429Branch9Diagonal, BB429Branch9J9. Generic weighted signed inverse transport, genuine root adapter, exact all-spine reduction and complete J=9 certificate (1023 exceptional indices, depth 18; all-F leaf impossible). Local Lean 4.36.0-rc2 checked exact relevant source declarations without stubs; certificate axiom-free, final theorem standard axioms only. Full unchanged module CI pending. New workflow input branch9_diagonal_certificate reuses agent30-429-even16.yml. Do not confuse with raw TM certification or entire branch-9 decision.
+
+Exploration using the basic filter found no surviving exceptional index at J=11,13,15,17 either. Seek an unbounded structural proof rather than repeated fixed-J checks; retain t,J terms in representatives, remove only top N power. The earlier ghost sieve cannot handle the boundary t,J small relative to d. Even J has an additional zero-feeder obstruction. Agent39's entropy theorem is useful but proves sparsity, not emptiness.
+
 ## Second checkpoint, 2026-11-23 05:02 UTC (same lease)
 
 **All source-certified; exact source BB429.next + Lean 4.36.0-rc2, no sorryAx, only standard axioms**:

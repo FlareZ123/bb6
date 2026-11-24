@@ -1,6 +1,24 @@
 # BB429 branch-9 diagonal feeder and exceptional-parent sieve
 
+**Latest advance:** a complete locally kernel-checked blank-root exclusion for the J=9 diagonal target, with a reusable signed inverse certificate theorem. See the certificate section below. Full-module CI pending.
+
 **Mathematical scope.** This dossier combines an exact algebraic branch-9 diagonal last-reset subfamily of the genuine `BB429.next` accelerator with source-kernel-checked all-time blank-root necessary conditions. They now exclude **27/32** exceptional-parent parameter classes modulo 32, **21/32** all-F zero-two predecessor parameter classes modulo 32, and all but **6/256** burst-index classes on the all-F central-zero branch. All cited exported Lean theorems have been compiled against the unchanged original source closure and report only `[propext, Classical.choice, Quot.sound]`, not `sorryAx`. A separate deeper exact-integer dyadic inverse sieve remains computational, not yet a Lean proof. The algebraic inverse paths and conditional root exclusions do **not** determine reachability for every parameter, the behavior of machine #429, or BB(6).
+
+## Complete diagonal certificate for J=9
+
+The new theorem `BB429Branch9J9.no_diagonal_J9` excludes the entire target
+`(12*2^4094-3,24*2^4094-24*2^9+15)` from the original accelerator's
+blank-root Reach relation, at every return time. This is a fixed-exponent
+root exclusion, not a decision of #429.
+
+- [BB429DyadicTransport.lean](BB429DyadicTransport.lean) proves generic signed inverse-tree soundness. Near(m,a,b,x,y) requires differences divisible by m and 2m respectively. Each genuine F/S/E inverse transports Near(2m) to Near(m). A bound x+3 >= 36*2^d keeps the genuine predecessors in the high-output grammar throughout depth d.
+- [BB429DyadicSource.lean](BB429DyadicSource.lean) instantiates the checker with the existing root mod-8 Allowed theorem and genuine inverse grammar.
+- [BB429Branch9Diagonal.lean](BB429Branch9Diagonal.lean) retains the exact 2^t and 2^J terms and removes only the common top 2^N contribution, eliminating the old t >= d+6 limitation. Its all-spine theorem converts a complete exceptional-index certificate and even N into nonreachability. The final all-F leaf (9,b) with b odd has unique predecessors (3,b+9) and (0,b+12); the latter violates Allowed.
+- [BB429Branch9J9.lean](BB429Branch9J9.lean) checks all 1023 indices by kernel reduction at depth 18 and instantiates the all-spine theorem.
+
+Local Lean 4.36.0-rc2 compiled all four modules against the exact relevant declarations copied from the repository accelerator modules. The finite certificate has no axioms; the root exclusion has only propext, Classical.choice and Quot.sound. Full-module source CI is pending. The finite certificate uses decide, not native_decide. No raw-machine source compilation is asserted here.
+
+The same basic-filter algorithm suggests complete exceptional-index rejection for J=11,13,15,17, but these are exploratory computations only. The unbounded J quantifier and even-J all-F feeders remain open.
 
 ## Authentic source, last-reset family, and full inverse grammar
 
@@ -175,9 +193,9 @@ The earlier exact DFS for individual `J=2,…,8` explored both exceptional alter
 
 ## Unresolved mathematical quantifiers and next tests
 
-1. The nested 25/32 and 27/32 congruence theorems are already source-certified; next translate the depth-`D` **additional** residue pruning into a source-attached Lean certificate generator on the exact `BB429.next` inverse lemmas, with weighted modulus soundness and correct base guards. Its numerical census is not yet a theorem.
+1. The generic weighted inverse checker and complete J=9 application are locally kernel-checked. Full-module acceptance is the next source gate. The old stronger-filter numerical census remains a separate uncertified computation.
 2. Prove a structural invariant for exceptional parents in the sparse surviving dyadic classes, rather than simply increasing `D` or listing more residues.
-3. Close remaining `t<22` exceptional-parent edge branches and the low-nine zero feeder, especially the `z≡0 (mod4)` non-central reset grammar. The present source-filter reductions, even if all accepted, leave these routes open.
+3. Extend the exact-power certificate beyond J=9 and close the low-nine zero feeder, especially the `z≡0 (mod4)` non-central reset grammar. The present source-filter reductions, even if all accepted, leave these routes open.
 4. Handle non-diagonal branch-9 `h≠0`; its previously derived first-even valuation filter is branch-local because alternative S predecessors remain.
 
 The 27/32 source theorem and 21/32 zero-two gateway are genuine all-parameter restrictions on named conditional feeders, not nonhalting proofs for #429. No entry is promoted to `results/` while the unresolved alternative routes, a decision consequence, and external novelty review remain open.

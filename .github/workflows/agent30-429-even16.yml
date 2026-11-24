@@ -13,6 +13,7 @@ on:
           - branch9_side
           - branch9_side_strong
           - branch9_side_depth2
+          - branch9_diagonal_certificate
           - branch9_center
           - branch9_center64
           - branch9_upper
@@ -117,3 +118,22 @@ jobs:
             lean -DmaxHeartbeats=15000000 -DmaxRecDepth=16000 -o im-results/agent1-429-root-rows/BB429RootOddRowsStrong.olean im-results/agent1-429-root-rows/BB429RootOddRowsStrong.lean
             lean -DmaxHeartbeats=30000000 -DmaxRecDepth=30000 im-results/agent30-429-branch9-zero-feeder/BB429Branch9SideDepth2.lean
           fi
+
+      - name: Check complete branch-9 diagonal certificate
+        if: ${{ inputs.proof_target == 'branch9_diagonal_certificate' }}
+        shell: bash
+        env:
+          LEAN_PATH: im-results/agent5-429-rank:im-results/agent6-harmonic429:im-results/agent30-429-branch9-zero-feeder
+        run: |
+          set -euo pipefail
+          d=im-results/agent30-429-branch9-zero-feeder
+          {
+            lean -o im-results/agent5-429-rank/BB429Rank.olean im-results/agent5-429-rank/BB429Rank.lean
+            lean -DmaxHeartbeats=10000000 -o im-results/agent6-harmonic429/BB429Mod8.olean im-results/agent6-harmonic429/BB429Mod8.lean
+            lean -DmaxHeartbeats=50000000 -DmaxRecDepth=30000 -o im-results/agent6-harmonic429/BB429NewResidue.olean im-results/agent6-harmonic429/BB429NewResidue.lean
+            for m in BB429DyadicTransport BB429DyadicSource BB429Branch9Diagonal; do
+              lean -o "$d/$m.olean" "$d/$m.lean"
+            done
+            lean "$d/BB429Branch9J9.lean"
+          } 2>&1 | tee /tmp/branch9-certificate.log
+          if grep -q sorryAx /tmp/branch9-certificate.log; then exit 1; fi
