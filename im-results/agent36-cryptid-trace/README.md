@@ -26,6 +26,13 @@ The theorem `anchor_measures` identifies these four source endpoints with the ex
 
 **First-return nuance.** The lack of first-return minimality in `section_bands` does *not* block the conditional path-separation theorem. Its positive-time halt-or-return witness suffices: if a root is nonhalting, the designated endpoint must be reached; any earlier halt would already decide that root. Agent 26's `Path` and this dossier's `Path135` accept any positive-time return. Earlier F/0 checkpoints therefore do not need to be excluded for this particular noncoalescence result. Do not claim first-return minimality.
 
+**D3's deeper source-certified re-entry.** A separate, stronger D3-specific result is already present in [Agent 35's `I5ExceptionalRejoin.lean`](../agent35-d3-root-1711/I5ExceptionalRejoin.lean). It composes the 1711 regular returns with three exact original-source exceptions (E-double, B restoration, B re-entry), proving `i5_three_exception_rejoin`: the literal parsed D3 blank root reaches a new pure-unary DRegular section `((512*t5+245)/3,0,0)`. It also proves the next transition is live and `parsed_D3_no_halt_through_reentry` for every time through
+```text
+horizon = 15 + DRegular.accumulated 1711 DRegular.seed5
+            + eCost t5 + bCost t5 + bThirdCost t5.
+```
+The concrete parameter has `t5 % 3 = 2`; the theorem establishes `10^1458 ≤ horizon`. The existing Agent35 manual workflow compiles this file and rejects `sorryAx`; the dossier cites CI 45381457744. This is a finite, source-certified D3 lower bound and a genuine regular-language re-entry, not an eventual halting/nonhalting decision. The new pure-unary seed is a promising restart point for the already source-certified DRegular contract.
+
 **Scope:** the widened arithmetic separation theorem and the four source-anchor connections are now kernel-checked. The remaining step is to instantiate `Edge135` with Agent 32's arbitrary-suffix `section_bands` theorem and construct the conditional all-time paths. This still does not decide whether any root halts, establish a closed nonhalting invariant, or change a BB(6) bound. The prepared-packet `safeZ` / `safeYPlusK0` results remain complementary sufficient return criteria, not substitutes for this root-level programme.
 
 ### Immediate next action
