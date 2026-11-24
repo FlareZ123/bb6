@@ -1,10 +1,12 @@
 import TNFPilot
+import SideCycle
 
 set_option maxRecDepth 24000
 set_option maxHeartbeats 0
 
 namespace BB6.Agent50RootFrontier
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent8TNFPath BB6.Agent50TNFPilot
+open BB6Coverage.Agent50SideCycle
 
 /-- Any ordinary assignment at a first undefined query is a genuine
     blank-root descendant. Unlike the normalized TNF path, this relation
@@ -524,12 +526,15 @@ theorem executableRootRoster_sound :
 inductive ResidualNonhaltWitness where
   | ray (n : Nat) (right : Bool) (mask : Nat)
   | lasso (n : Nat)
+  | side (entry period : Nat) (right : Bool) (boundary : Int)
 
 def residualMask (mask : Nat) (q : Fin 6) : Bool := mask.testBit q.val
 
 def residualWitnessOK (p : PartialMachine) : ResidualNonhaltWitness → Bool
   | .ray n right mask => finiteRayCheck p n right (residualMask mask)
   | .lasso n => finiteLassoCheck p n
+  | .side entry period right boundary =>
+      decide (0 < period) && finiteSideCycleCheck p entry period right boundary
 
 theorem residualWitnessOK_sound (p : PartialMachine) (w : ResidualNonhaltWitness)
     (h : residualWitnessOK p w = true) :
@@ -539,6 +544,10 @@ theorem residualWitnessOK_sound (p : PartialMachine) (w : ResidualNonhaltWitness
     exact zeroCover_never (finiteRayCheck_sound p n right (residualMask mask) 0 h)
   | lasso n =>
     exact zeroCover_never (finiteLassoCheck_sound p n 0 h)
+  | side entry period right boundary =>
+    have hc : 0 < period ∧ finiteSideCycleCheck p entry period right boundary = true := by
+      simpa only [residualWitnessOK, Bool.and_eq_true, decide_eq_true_eq] using h
+    exact finiteSideCycleCheck_sound p entry period right boundary hc.1 hc.2
 
 def residualWitnessIndices : List (Nat × ResidualNonhaltWitness) :=
   [(1,.ray 0 true 3), (3,.ray 0 true 3), (5,.ray 0 true 3), (7,.ray 0 true 3),
@@ -548,13 +557,32 @@ def residualWitnessIndices : List (Nat × ResidualNonhaltWitness) :=
    (35,.ray 0 true 15), (37,.ray 0 true 15), (50,.ray 7 false 8), (51,.ray 17 false 8),
    (52,.ray 7 false 8), (74,.ray 13 false 8), (75,.ray 11 false 8), (76,.lasso 8),
    (93,.lasso 22), (113,.ray 15 false 8), (135,.lasso 9), (136,.ray 10 false 8),
-   (140,.ray 9 false 8), (142,.ray 9 false 8), (162,.lasso 7), (176,.ray 0 true 15)]
+   (140,.ray 9 false 8), (142,.ray 9 false 8), (162,.lasso 7), (176,.ray 0 true 15),
+   (24,.side 0 4 true (0)),
+   (28,.side 1 3 true (1)),
+   (53,.side 6 3 true (2)),
+   (62,.side 0 10 true (0)),
+   (64,.side 0 10 true (0)),
+   (65,.side 8 7 false (1)),
+   (84,.side 0 18 true (-1)),
+   (87,.side 7 5 false (1)),
+   (94,.side 22 7 false (2)),
+   (96,.side 10 13 true (0)),
+   (97,.side 11 11 true (1)),
+   (98,.side 34 5 false (0)),
+   (99,.side 11 11 true (1)),
+   (104,.side 1 38 true (-1)),
+   (105,.side 20 17 false (4)),
+   (111,.side 7 5 false (1)),
+   (118,.side 3 9 false (3)),
+   (119,.side 5 7 false (2)),
+   (130,.side 7 3 false (1))]
 
 def residualWitnessRoster : List (PackedTable × ResidualNonhaltWitness) :=
   residualWitnessIndices.filterMap fun (i,w) =>
     executableRootRoster[i]?.map fun e => (e.2,w)
 
-theorem residualWitnessRoster_count : residualWitnessRoster.length = 32 := by decide
+theorem residualWitnessRoster_count : residualWitnessRoster.length = 51 := by decide
 
 theorem residualWitnessRoster_checked :
     residualWitnessRoster.all (fun (t,w) => residualWitnessOK (unpackTable t) w) = true := by
@@ -575,9 +603,9 @@ theorem residualHasWitness_sound (t : PackedTable) (h : residualHasWitness t = t
 def remainingRootRoster : List PackedResidual :=
   executableRootRoster.filter fun e => !residualHasWitness e.2
 
-theorem remainingRootRoster_count : remainingRootRoster.length = 175 := by decide
+theorem remainingRootRoster_count : remainingRootRoster.length = 156 := by decide
 
-/-- The executable residual count decreases from 207 to 175 only by
+/-- The executable residual count decreases from 207 to 156 only by
     removing cylinders proved nonhalting for every compatible completion. -/
 theorem remainingRootRoster_sound :
     ∀ m, compatible root m → WeightedBound 84 m ∨
