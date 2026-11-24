@@ -110,7 +110,7 @@ def zeroTwoGatewayClass (r : Nat) : Bool := decide (
 def zeroTwoDepth5Possible (r : Nat) : Bool :=
   zeroTwoGatewayClass r &&
     (search strongTest 5 (3-3*(r:Int)) (2*(3-3*(r:Int))+2) ||
-     search strongTest 5 (7-3*(r:Int)) (2*(3-3*(r:Int))+5))
+     search strongTest 5 ((3-3*(r:Int))+4) (2*(3-3*(r:Int))+5))
 
 /-- The finite residue certificate is small enough to be kernel-evaluated.
     Exactly 248 of the 2048 residues survive the gateway plus depth-five
@@ -247,7 +247,7 @@ theorem zero_two_depth5_restriction_of_parent
         (2*(3-3*(m%2048:Int))+5) (u:Int) (w:Int) := by
       rw [hu,hwI]
       exact hnear
-    have hsearch := searchStrong_sound 5 (7-3*(m%2048:Int))
+    have hsearch := searchStrong_sound 5 ((3-3*(m%2048:Int))+4)
       (2*(3-3*(m%2048:Int))+5) u w hHighNat hReachCopy hnear'
     unfold zeroTwoDepth5Possible
     rw [hclass]
