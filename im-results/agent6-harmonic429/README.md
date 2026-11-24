@@ -163,3 +163,15 @@ The mechanism is a four-step phase P(u,d)=(u,u+12+d) -> P(u+8-5d,16d). After j c
 ### Direct low-side boundary exclusion (2026-11-24)
 
 [BB429LowBoundary.lean](BB429LowBoundary.lean) strengthens the cycle certificate: a terminal phase with `u ≥ 15` suffices to reconstruct all preceding complete cycles. For any scale `m ≥ 1`, deviation `d ≥ 6` with `d % 4 = 2`, and cycle count `j`, put `D = d * 16^j` and suppose `72*16^m+d+24*j = 3*u+D+9`, `u ≥ D+19`. The theorem `zero_boundary` certifies the exact run of `4*m+3+4*j+2` macro steps from `(0,72*16^m+d-(12*m+6))` to `(u+6-D,u+14+3*D)`, and proves that the latter state's next transition is defined. Its immediate halting line would force `u=5*D+3`, hence `d*(16^(j+1)-1)+18=72*16^m+24*j`. The unconditional theorem `no_low_equation` excludes this for all natural m,j,d by reducing m modulo j+1 and bounding the remainder modulo `16^(j+1)-1`. This removes an entire unbounded family of candidate halt boundaries. It does not exclude later F-burst halts; indeed synthetic starts can reach those. The source compiled with the exact original BB429Rank dependency and the new LowReturnBand module under Lean 4.36.0-rc2; printed axioms are standard only.
+
+## Zero-cycle low-side terminal family — exact classification (2026-11-24)
+
+[BB429LowZeroCycle.lean](BB429LowZeroCycle.lean) gives an iff for all scales m and terminal F-burst lengths t, after the initial F^(4m+3) and Oe,F pair with no preceding four-step low-side cycles. Let X=16^m and start at (0,72X+d-12m-6), where d>=6, d=2 mod 4 and d+19<=24X-3. The terminal burst halts iff there exists s>=7, s=3 mod 4, such that
+
+    t+12 = 2^s
+    (4m+5) mod (2(t+2)) = t+2+s.
+
+Here the existential d is uniquely fixed by the clock equation. Equivalently m=(t+s-3)/4 + q*(t+2)/2 for q>=0. The first family is t=116, m=30+59q; the second is t=2036, m=511+1019q. With v=24X+6-d the determining equation is (2^(t+2)+1)v=3(2^(4m+5)+t+12). Necessity uses reduction of powers modulo 2^k+1, where k=t+2; sufficiency reconstructs positive natural counters satisfying all guards and proves the actual source run of length 4m+5+t ending at the halt test. This is a complete infinite prepared-state classification, not an authentic blank-root ancestry result.
+
+Local Lean 4.36.0-rc2 accepted the module against exact relevant source definitions and rederived supporting run-add/halting lemmas. The printed axioms for the arithmetic are propext and Quot.sound; for the iff and source halt they are propext, Classical.choice, Quot.sound. No sorry/native_decide. Complete unchanged dependency CI remains pending. Source blob f9ae79291e04631cc885d8fcc769095112e6c064, commit 050bfaea981f3236b7fd4997cb94b52492edf8be. Remaining obligation: exclude genuine blank-root ancestry and classify positive-cycle terminal bursts.
+
