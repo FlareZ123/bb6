@@ -277,13 +277,13 @@ def encodeMove (mv : Move) : String :=
   (if mv.right then "R" else "L") ++ toString mv.next.val
 
 def encodeTransition : Option (Option Move) → String
-  | none => "?"
-  | some none => "H"
+  | none => "---"
+  | some none => "HALT"
   | some (some mv) => encodeMove mv
 
 def encodeTable (p : PartialMachine) : String :=
-  String.intercalate "_" ((List.finRange 6).flatMap fun q =>
-    [false, true].map fun b => encodeTransition (p (q, b)))
+  String.intercalate "_" ((List.finRange 6).map fun q =>
+    encodeTransition (p (q, false)) ++ encodeTransition (p (q, true)))
 
 def encodeAddress (address : List Move) : String :=
   String.intercalate "/" (address.map encodeMove)
