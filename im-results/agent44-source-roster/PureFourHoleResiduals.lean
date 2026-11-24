@@ -1,3 +1,4 @@
+import RootFrontier
 import FourHoleRootFrontier
 import FourHoleResidualRoster
 
@@ -9,6 +10,8 @@ namespace BB6.Agent44SourceRoster
 open BB6Coverage
 open BB6.Agent31FourHoleFrontier
 open BB6.Agent31FourHoleRoster
+open BB6.Agent13BlankDelay
+open BB6.Agent50TNFPilot
 open BB6.Agent50RootFrontier
 
 /-- Pure projection of the off-path residual leaves of buildFrontierB.
@@ -45,7 +48,7 @@ theorem residuals_buildFrontierB (B : Nat) :
       simp [buildFrontierB, residuals, pureResiduals, ih]
 
 theorem rootFrontier_residuals_eq :
-    residuals rootFrontier = pureResiduals root (path.take 7) := by
+    residuals rootFrontier = pureResiduals BB6.Agent50TNFPilot.root (path.take 7) := by
   exact residuals_buildFrontierB 395 root 2 RawRootPath.root
     (path.take 7) path_prefix_checked wideCertificate_root
 
@@ -54,7 +57,7 @@ theorem rootFrontier_residuals_eq :
 def pureResidualWitnessRoster :
     List ((List Move × PartialMachine) × ResidualNonhaltWitness) :=
   residualWitnessIndices.filterMap fun (i, w) =>
-    (pureResiduals root (path.take 7))[i]?.map fun e => (e, w)
+    (pureResiduals BB6.Agent50TNFPilot.root (path.take 7))[i]?.map fun e => (e, w)
 
 theorem residualWitnessRoster_eq_pure :
     residualWitnessRoster = pureResidualWitnessRoster := by
@@ -89,7 +92,7 @@ theorem pureRemainingRootRoster_sound :
       WeightedBound 395 m ∨
         ∃ e ∈ pureRemainingRootRoster, compatible e.2 m := by
   intro m hm
-  rcases remainingRootRoster_sound m hm with hbound | ⟨e, he, hcomp⟩
+  rcases BB6.Agent31FourHoleRoster.remainingRootRoster_sound m hm with hbound | ⟨e, he, hcomp⟩
   · exact Or.inl hbound
   · exact Or.inr ⟨e, by simpa [remainingRootRoster_eq_pure] using he, hcomp⟩
 
