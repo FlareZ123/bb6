@@ -24,6 +24,6 @@ These bounds encompass the entire a=1201+1458r family; parity restrictions may s
 
 ## Reproduce
 
-Run python3 reconstruct.py followed by lean SheepAffineSpecial.lean with Lean 4.36.0-rc2. Both no_large_special and no_special_affine locally compiled with axiom profiles [propext, Classical.choice, Quot.sound]. No sorryAx. The arithmetic source is independent of the original-machine model; the existing original-source EvenEdge splitter in Agent14's SheepEvenSourceAlgebra.lean supplies its semantics. A direct imported-source composition is the next step.
+Run python3 reconstruct.py followed by lean SheepAffineSpecial.lean with Lean 4.36.0-rc2. Both no_large_special and no_special_affine locally compiled with axiom profiles [propext, Classical.choice, Quot.sound]. No sorryAx. The arithmetic is composed directly with the original SheepEven.EvenEdge in SheepAffineSpecialSource.lean. The three bridge theorems affine_even_edge_generic, h4_X_generic and h4_x_generic all compiled locally with the same standard axiom profile and no sorryAx. Reconstruct the original SheepEven.lean and EvenEdge.lean from Agent16's archives (see ../agent16-sheep-even-return), compile those and SheepAffineSpecial.lean to .olean, then compile SheepAffineSpecialSource.lean with LEAN_PATH pointing to the directory of the .olean files. The original source files were unmodified; both archive digests matched Agent16's documented SHA-256 values.
 
 This is intermediate work, no new exact BB(6) value or blanket root decision.
