@@ -121,6 +121,81 @@ theorem initial_run_even {m u d um dm : Nat}
   have h := initial_run_residues hrel hrun hnext
   rcases h with ⟨_, _, hm⟩ | ⟨_, _, hm⟩ <;> omega
 
+
+/-- Refined endpoint table after EF, recording the previous endpoint
+    modulo four. -/
+theorem after_ef_run_refined_residues {m u d v um dm : Nat}
+    (hrel : d + 2 * v = 2 * u + 2)
+    (hv : v % 2 = 1)
+    (hrun : FRun m u d um dm)
+    (hnext :
+      (um % 2 = 1 ∧ dm % 8 = 0) ∨
+      (um % 2 = 0 ∧ dm % 8 = 4)) :
+    (v % 4 = 1 ∧
+      ((um % 2 = 1 ∧ dm % 8 = 0 ∧
+          ((m % 8 = 2 ∧ um % 4 = 1) ∨ (m % 8 = 6 ∧ um % 4 = 3))) ∨
+       (um % 2 = 0 ∧ dm % 8 = 4 ∧
+          ((m % 8 = 0 ∧ um % 4 = 2) ∨ (m % 8 = 4 ∧ um % 4 = 0))))) ∨
+    (v % 4 = 3 ∧
+      ((um % 2 = 1 ∧ dm % 8 = 0 ∧
+          ((m % 8 = 2 ∧ um % 4 = 3) ∨ (m % 8 = 6 ∧ um % 4 = 1))) ∨
+       (um % 2 = 0 ∧ dm % 8 = 4 ∧
+          ((m % 8 = 0 ∧ um % 4 = 0) ∨ (m % 8 = 4 ∧ um % 4 = 2))))) := by
+  have hsum := fRun_rank hrun
+  by_cases hv1 : v % 4 = 1
+  · left
+    refine ⟨hv1, ?_⟩
+    rcases hnext with ⟨hu,hd⟩ | ⟨hu,hd⟩
+    · left
+      exact ⟨hu,hd,by omega⟩
+    · right
+      exact ⟨hu,hd,by omega⟩
+  · right
+    have hv3 : v % 4 = 3 := by omega
+    refine ⟨hv3, ?_⟩
+    rcases hnext with ⟨hu,hd⟩ | ⟨hu,hd⟩
+    · left
+      exact ⟨hu,hd,by omega⟩
+    · right
+      exact ⟨hu,hd,by omega⟩
+
+/-- Refined endpoint table after SF, recording the previous endpoint
+    modulo four. -/
+theorem after_sf_run_refined_residues {m u d v um dm : Nat}
+    (hrel : d + 2 * v + 6 = 2 * u)
+    (hv : v % 2 = 0)
+    (hrun : FRun m u d um dm)
+    (hnext :
+      (um % 2 = 1 ∧ dm % 8 = 0) ∨
+      (um % 2 = 0 ∧ dm % 8 = 4)) :
+    (v % 4 = 0 ∧
+      ((um % 2 = 1 ∧ dm % 8 = 0 ∧
+          ((m % 8 = 0 ∧ um % 4 = 3) ∨ (m % 8 = 4 ∧ um % 4 = 1))) ∨
+       (um % 2 = 0 ∧ dm % 8 = 4 ∧
+          ((m % 8 = 2 ∧ um % 4 = 2) ∨ (m % 8 = 6 ∧ um % 4 = 0))))) ∨
+    (v % 4 = 2 ∧
+      ((um % 2 = 1 ∧ dm % 8 = 0 ∧
+          ((m % 8 = 0 ∧ um % 4 = 1) ∨ (m % 8 = 4 ∧ um % 4 = 3))) ∨
+       (um % 2 = 0 ∧ dm % 8 = 4 ∧
+          ((m % 8 = 2 ∧ um % 4 = 0) ∨ (m % 8 = 6 ∧ um % 4 = 2))))) := by
+  have hsum := fRun_rank hrun
+  by_cases hv0 : v % 4 = 0
+  · left
+    refine ⟨hv0, ?_⟩
+    rcases hnext with ⟨hu,hd⟩ | ⟨hu,hd⟩
+    · left
+      exact ⟨hu,hd,by omega⟩
+    · right
+      exact ⟨hu,hd,by omega⟩
+  · right
+    have hv2 : v % 4 = 2 := by omega
+    refine ⟨hv2, ?_⟩
+    rcases hnext with ⟨hu,hd⟩ | ⟨hu,hd⟩
+    · left
+      exact ⟨hu,hd,by omega⟩
+    · right
+      exact ⟨hu,hd,by omega⟩
+
 /-- Every F-run after EF that is followed by a pair has even length. -/
 theorem after_ef_run_even {m u d v um dm : Nat}
     (hrel : d + 2 * v = 2 * u + 2)
@@ -329,6 +404,8 @@ theorem initial_pair_available_iff {t : Nat} :
 #print axioms after_ef_run_even
 #print axioms after_sf_run_even
 
+#print axioms after_ef_run_refined_residues
+#print axioms after_sf_run_refined_residues
 #print axioms initial_run_refined_residues
 #print axioms initial_pair_available_necessary
 #print axioms initial_EF_witness
