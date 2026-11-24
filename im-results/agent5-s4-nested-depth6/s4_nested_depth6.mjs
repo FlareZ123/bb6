@@ -551,7 +551,8 @@ const Gdata = extractSkewedWord(F1Tail.slice(0, 5), Fword, pF, 1280, 'G');
 const G = Gdata.word;
 const gMass = checkMassWithPending('G', G, Gdata.pending, 1280n * 20n * yReturns, Gdata.adds);
 const gPrefixStart = tailAfter15.slice(0, 15);
-const gPrefixCycle = findSkewedPrefixCycle(G, Gdata.pending, gPrefixStart, 10000);
+const G_PREFIX_CYCLE_LIMIT = 100;
+const gPrefixCycle = findSkewedPrefixCycle(G, Gdata.pending, gPrefixStart, G_PREFIX_CYCLE_LIMIT);
 let gCarrySummary = null;
 if (gPrefixCycle !== null) {
   let prefix = gPrefixStart.slice();
@@ -782,6 +783,7 @@ console.log(JSON.stringify({
   yBlockScan,
   yPrefix30Cycle,
   yPrefix30CarrySummary,
+  gPrefixCycleLimit: G_PREFIX_CYCLE_LIMIT,
   gCarrySummary,
   gBarrier,
   nestedReturnHierarchy,
