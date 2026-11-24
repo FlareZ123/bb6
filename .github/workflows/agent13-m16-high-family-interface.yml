@@ -59,6 +59,7 @@ on:
           - sourceDyadicDensity
           - sourceModularHighStop
           - sourceModularHighStopCriterion
+          - sourceModularStrictness
           - sourceModularLowStop
           - sourceModularStopsCriterion
           - sourceModularFullCriterion
@@ -261,6 +262,9 @@ jobs:
               ;;
             sourceModularHighStopCriterion)
               target=im-results/agent42-modular-cone/ModularConeHighStopCriterion.lean
+              ;;
+            sourceModularStrictness)
+              target=im-results/agent11-modular-cone-strictness/Agent11ModularConeStrictness.lean
               ;;
             sourceModularLowStop)
               target=im-results/agent42-modular-cone/ModularConeLowStop.lean
