@@ -4,7 +4,7 @@ namespace BB6Coverage
 
 /-- A dependent source/certificate pair for one exact leaf graft. -/
 abbrev LeafCertificate (good : Machine → Prop) :=
-  Σ src : PartialMachine, Cover good src
+  { src : PartialMachine // Cover good src }
 
 /-- Sequentially add a finite list of source certificates to the same
     frontier audit. The list is kept dependent so every certificate proves
@@ -32,7 +32,7 @@ theorem addCertificates_open_iff {good : Machine → Prop} {p : PartialMachine}
         audit.open m ∧ ∀ d ∈ c :: cs, ¬ compatible d.1 m
       rw [ih (addCertificate audit c.1 c.2)]
       rw [addCertificate_open_iff audit c.1 c.2 m hm]
-      simp
+      simp [and_assoc]
 
 /-- Every source-compatible machine is removed from the open set by a
     batch containing that source certificate. -/
