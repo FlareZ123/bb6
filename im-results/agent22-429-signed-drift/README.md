@@ -23,3 +23,34 @@ Added SignedLift.lean, locally Lean checked. For signed a<=-3,b<=3 define rank R
 Specialized to actual feeder q+c=3*2^N (N=n-5), c>=4, a=29-32c,b=55-64c. If e>=5, 2d+e<=N, and 2^e>=128c-97+11d, signedCert d a b=true is sufficient to exclude (32q+29,64q+55). No evaluation of the huge 2^N is needed in the signed tree. The Lean specialization branch29_lift is checked under ReachLaws. SignedSource.lean connects those laws to exact repo BB429NewResidue and root-mod lemmas; adapter is pending authentic CI, not yet claimed source-accepted. Manual workflow agent22-429-signed-lift.yml checks precisely this dependency closure.
 
 The all-k objective is now a clear sufficient target: prove the signed trees close with d,e satisfying these bounds for all c=3k+4,N=122+128k. No claim of that proof. The source-independent finite precision transfer and executable checker are checked with only standard Lean axioms.
+
+## Exact first-pair classification on the feeder line
+
+The signed F-run reduction is now formalized in
+[`SignedFRunParity.lean`](../agent18-429-root-invariants/SignedFRunParity.lean).
+For the post-forced-F feeder state
+`u=48t, D=96t+18`, it proves the exact equivalence
+
+`InitialPairAvailable t ↔ t % 4 = 3 ∨ t % 16 = 0`.
+
+Here `InitialPairAvailable` means that some finite run of standalone F
+blocks reaches an endpoint satisfying either the EF guard
+(`u_endpoint` odd and `D_endpoint ≡ 0 mod 8)) or the SF guard
+(`u_endpoint` even and `D_endpoint ≡ 4 mod 8)). Equivalently, with
+the original parameter `t=k+1), a first pair is available exactly
+when `k ≡ 2 (mod 4)` or `k ≡ 15 (mod 16)`.
+
+The proof strengthens the parity table to endpoint residues modulo 4,
+uses the exact telescoping identity
+`D_m + 6u_m = D + 6u + 3m` and `u=2^m u_m`, and supplies explicit
+four-F EF and six-F SF witnesses for the two surviving classes.
+The file imports only `Lean`; its local Lean 4.36.0-rc2 compilation
+succeeded. The printed axiom profile for the equivalence is
+`[propext, Classical.choice, Quot.sound]`.
+
+**Scope:** this is an exact theorem about the compressed signed inverse
+system's initial F-spine, not a positive-root exclusion and not a
+closure theorem for the full branching inverse tree. The 14/16
+complement is ruled out only for the existence of an EF/SF pair on that
+initial F-spine. The remaining two parameter classes, and the branches
+that choose or skip an available pair, remain to be resolved.
