@@ -524,7 +524,7 @@ private theorem m2EvenSix_q4_prefix_head_bound
         have hside := sideBit_append_right (d1pow a)
           m2EvenResidueTwoSourceLeftSuffix (3*a+1) (by rw [d1pow_length]; omega)
         rw [hside] at hcell
-        simpa [T,m2EvenResidueTwoSourceLeftSuffix,markerWord,sideBit] using hcell
+        simpa [T,m2EvenResidueTwoSourceLeftSuffix,markerWord,sideBit,d1pow_length] using hcell
   have hright : T (h+1) = false := by
     have hc := s1Config_right_cell 3 6 2 a 0 b h 0
     simpa [T,s1PhysicalRight,s0PhysicalRight,s0RightFacing,sideBit] using hc
