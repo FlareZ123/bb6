@@ -75,9 +75,12 @@ The manual workflow `.github/workflows/agent7-far-hard-root.yml` now supports:
 - an exact roster `solver_line`, or an arbitrary 12-slot `solver_code` override for a concrete TNF node;
 - independent Lean verification of every emitted hit.
 
-Bounded search status:
-- #746 roster line 618, implication encoding, run [45400338305](https://github.com/FlareZ123/bb6/actions/runs/45400338305): both orientations UNSAT at DFA sizes 6–8; both orientations timed out at sizes 9–10. No certificate was found.
-- #746, composed encoding, run [45401745777](https://github.com/FlareZ123/bb6/actions/runs/45401745777): pending at checkpoint.
-- Roster line 335, composed encoding, run [45402030399](https://github.com/FlareZ123/bb6/actions/runs/45402030399): pending at checkpoint.
+Bounded search status (24 November 2026):
+- #746 roster line 618, implication encoding, run [45400338305](https://github.com/FlareZ123/bb6/actions/runs/45400338305): both orientations UNSAT at DFA sizes 6–8; both orientations timed out at sizes 9–10.
+- #746, composed encoding, run [45401745777](https://github.com/FlareZ123/bb6/actions/runs/45401745777): both orientations UNSAT at sizes 6–7; reflected size 8 UNSAT; unreflected size 8 and both orientations at sizes 9–10 timed out.
+- Roster line 221, composed encoding, run [45404101670](https://github.com/FlareZ123/bb6/actions/runs/45404101670): both orientations UNSAT for DFA sizes 1–5.
+- Roster line 335, composed encoding, run [45402030399](https://github.com/FlareZ123/bb6/actions/runs/45402030399): pending.
+- Authentic first-hole sibling of the r1 Cryptids path, table `1RB0LC_1LC0RB_0LE0LD_1LC---_0RA1LF_1LA0LB`, composed encoding, run [45404497970](https://github.com/FlareZ123/bb6/actions/runs/45404497970): pending. Agent 50 identifies this as the F1=0LB child at the reachable r1 endpoint (D1 remains unknown), so a verified FAR hit can be grafted as an actual first-hole sibling.
+- Regression test on the existing four-transition glider, run [45404260897](https://github.com/FlareZ123/bb6/actions/runs/45404260897): recovered the existing one-state certificate exactly (DFA [0,0], masks [2,1,1,64,64,64,64] / [4,64,64,64,64,64,64], zero mask 120); Lean accepted the generated theorem with standard axioms only.
 
-These are candidate-search experiments, not impossibility results. A timeout is not UNSAT, and a bounded failure to synthesize a FAR certificate says nothing about whether the machine halts. Any successful leaf must also be shown to occur in the actual first-one weighted-TNF/Enumerate62 coverage, not merely in the historical 663-entry roster.
+These are candidate-search experiments, not impossibility results. A timeout is not UNSAT, and a bounded failure to synthesize a FAR certificate says nothing about whether the machine halts. The glider run is only a regression against a known certificate, not a new machine result. Any successful hard-root leaf must also be shown to occur in the actual first-one weighted-TNF/Enumerate62 coverage, not merely in the historical 663-entry roster.
