@@ -29,22 +29,22 @@ theorem cutWeight_pos (cut holes : Nat) : 0 < cutWeight cut holes := by
   | succ n =>
       cases n with
       | zero => simp [cutWeight]
-      | succ n => simp [cutWeight]
+      | succ n => simp [cutWeight]; omega
 
 theorem cutWeight_expand_eq (cut holes : Nat) (hh : 2 ≤ holes) :
     cutWeight cut holes =
       1 + 4 * cut * cutWeight cut (holes - 1) +
         (if cut < 6 then 4 * cutWeight (cut + 1) (holes - 1) else 0) := by
-  have h2 : holes = (holes - 2) + 2 := by omega
-  have h1 : holes - 1 = (holes - 2) + 1 := by omega
+  have h2 : (holes - 2) + 2 = holes := by omega
+  have h1 : (holes - 2) + 1 = holes - 1 := by omega
   calc
-    cutWeight cut holes = cutWeight cut ((holes - 2) + 2) := by rw [h2]
+    cutWeight cut holes = cutWeight cut ((holes - 2) + 2) := by rw [← h2]
     _ = 1 + 4 * cut * cutWeight cut ((holes - 2) + 1) +
           (if cut < 6 then 4 * cutWeight (cut + 1) ((holes - 2) + 1) else 0) :=
       cutWeight_step cut (holes - 2)
     _ = 1 + 4 * cut * cutWeight cut (holes - 1) +
           (if cut < 6 then 4 * cutWeight (cut + 1) (holes - 1) else 0) := by
-      rw [← h1]
+      rw [h1]
 
 def cutNodeWeight (x : Node) : Nat := cutWeight x.cut.val x.holes
 
@@ -122,7 +122,9 @@ theorem cutNodeWeight_existing (x : Node) :
 theorem cutNodeWeight_fresh (x : Node) (hc : x.cut.val < 6) :
     cutNodeWeight (freshChild x) =
       cutWeight (x.cut.val + 1) (x.holes - 1) := by
-  simp [cutNodeWeight, freshChild_cut x hc]
+  unfold cutNodeWeight
+  rw [freshChild_cut x hc]
+  rfl
 
 /-- Exact weighted mass of all ordinary children in the source expansion. -/
 theorem cutMass_expandProjection (x : Node) :
@@ -154,7 +156,9 @@ theorem expandProjection'_cutMass_lt (x : Node) (hpos : 1 ≤ x.holes) :
   · simp [expandProjection', h, cutMass, cutNodeWeight, cutWeight]
   · have htwo : 2 ≤ x.holes := by omega
     have heq := cutMass_expandProjection_succ x htwo
-    simp only [expandProjection', if_neg h]
+    change cutMass (if x.holes = 1 then [] else expandProjection x) <
+      cutNodeWeight x
+    rw [if_neg h]
     omega
 
 theorem update_cutMass_lt (decide : (x : Node) → Verdict x)
@@ -265,8 +269,34 @@ theorem cutWeight_root_lt_old_bound :
 theorem cutWeight_root_le_maxT :
     cutWeight 2 11 ≤ maxT := by decide
 
+theorem cutWeight_0_seven : cutWeight 0 7 = 888933 := by decide
+theorem cutWeight_1_seven : cutWeight 1 7 = 3810329 := by decide
+theorem cutWeight_2_seven : cutWeight 2 7 = 13980909 := by decide
+theorem cutWeight_3_seven : cutWeight 3 7 = 43268961 := by decide
+theorem cutWeight_4_seven : cutWeight 4 7 = 108653749 := by decide
+theorem cutWeight_5_seven : cutWeight 5 7 = 199411801 := by decide
+theorem cutWeight_6_seven : cutWeight 6 7 = 199411801 := by decide
+
 theorem cutWeight_seven_le (c : Fin 7) :
-    cutWeight c.val 7 ≤ 199411801 := by decide
+    cutWeight c.val 7 ≤ 199411801 := by
+  have hc : c.val < 7 := c.isLt
+  have hval : c.val = 0 ∨ c.val = 1 ∨ c.val = 2 ∨ c.val = 3 ∨
+      c.val = 4 ∨ c.val = 5 ∨ c.val = 6 := by omega
+  rcases hval with h | h | h | h | h | h | h
+  · rw [h, cutWeight_0_seven]
+    decide
+  · rw [h, cutWeight_1_seven]
+    decide
+  · rw [h, cutWeight_2_seven]
+    decide
+  · rw [h, cutWeight_3_seven]
+    decide
+  · rw [h, cutWeight_4_seven]
+    decide
+  · rw [h, cutWeight_5_seven]
+    decide
+  · rw [h, cutWeight_6_seven]
+    decide
 
 /-- The pinned MAXT bound follows from the sharper state-cut potential.
 This is still only a fuel theorem: the independent queue-coverage invariant,
