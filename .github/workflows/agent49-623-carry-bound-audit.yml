@@ -66,6 +66,17 @@ jobs:
             exit 1
           fi
 
+      - name: Compile Agent27 exact ell=20 cone-family root exclusion
+        working-directory: /tmp/cryptids
+        run: |
+          set -euo pipefail
+          cp "$GITHUB_WORKSPACE/im-results/agent27-623-root-scan/ConeOnlyEll20RootExclusion.lean" Agent27ConeOnlyEll20RootExclusion.lean
+          lake env lean -o .lake/build/lib/lean/Agent27ConeOnlyEll20RootExclusion.olean Agent27ConeOnlyEll20RootExclusion.lean 2>&1 | tee Agent27ConeOnlyEll20RootExclusion.log
+          if grep -q 'sorryAx' Agent27ConeOnlyEll20RootExclusion.log; then
+            echo 'sorryAx detected in ell=20 cone-family root exclusion'
+            exit 1
+          fi
+
       - name: Compile source-checked total-carry counterexample
         working-directory: /tmp/cryptids
         run: |
