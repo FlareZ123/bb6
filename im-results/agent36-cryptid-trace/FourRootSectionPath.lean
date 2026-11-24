@@ -20,9 +20,16 @@ obtained by adding the two fixed leading ones to a unary prefix of length n-2. -
 private theorem init_section_eq (n : Nat) (hn : 2 ≤ n) (v : List Bool) :
     CryptidBoundary.init (List.replicate (n - 2) true ++ v) =
       BB6.OneSided.Section n v := by
-  simp [BB6.OneSided.Section, CryptidBoundary.init,
-    show n = 2 + (n - 2) by omega,
-    ← List.replicate_append_replicate, List.append_assoc, List.replicate]
+  simp only [BB6.OneSided.Section, CryptidBoundary.init]
+  change List.replicate 2 true ++ List.replicate (n - 2) true ++ v =
+    List.replicate n true ++ v
+  calc
+    List.replicate 2 true ++ List.replicate (n - 2) true ++ v =
+        List.replicate (2 + (n - 2)) true ++ v := by
+          rw [List.replicate_append_replicate]
+    _ = List.replicate n true ++ v := by
+          congr 1
+          simpa [Nat.add_comm] using Nat.sub_add_cancel hn
 
 /-- The original DRegular source encoding is the exact one-sided section
 used by Agent 32, with suffix (01)^q 1^b. -/
@@ -31,7 +38,7 @@ private theorem sourceSection_eq_section (s : DRegular.L) (hs : 2 ≤ s.a) :
       BB6.OneSided.Section s.a
         (CryptidBoundary.oppairs s.q ++ List.replicate s.b true) := by
   unfold DRegularSource.sourceSection
-  rw [← List.append_assoc, init_section_eq s.a hs]
+  rw [List.append_assoc, init_section_eq s.a hs]
 
 def anchorSuffix0 : List Bool :=
   CryptidBoundary.oppairs (anchor 0).q ++ List.replicate (anchor 0).b true
@@ -99,7 +106,8 @@ theorem exists_path_of_nonhalting {n : Nat} {v : List Bool}
       ¬ SourceHalts (BB6.OneSided.Section n v) →
       ∃ n' v', Path135 k (sourceMeasure n v) (sourceMeasure n' v') ∧
         ¬ SourceHalts (BB6.OneSided.Section n' v') by
-    exact h _ n v hn hv hnh
+    intro k
+    exact h k n v hn hv hnh
   intro k
   induction k with
   | zero =>
