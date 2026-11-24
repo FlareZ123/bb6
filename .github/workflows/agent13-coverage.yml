@@ -135,6 +135,25 @@ jobs:
             exit 1
           fi
 
+      - name: Inspect finite-tape bridge API
+        if: inputs.target == 'queue-orbit'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          export LEAN_PATH=im-results/agent8-coverage-contract:im-results/agent4-coverage-smoke:im-results/agent42-coverage-normal:im-results/agent13-coverage:im-results/agent13-weighted-first-one:im-results/agent6-fresh-glider:im-results/agent7-far
+          cat > /tmp/FiniteTapeBridgeProbe.lean <<'EOF'
+          import FiniteTapeCoverage
+          open BB6Coverage
+          #check FinConfig
+          #check finiteTick
+          #check finiteTick_correct
+          #check finiteRun
+          #check finiteRun_correct
+          #check finite_run_halts_at
+          #check sameFinConfig
+          EOF
+          lean /tmp/FiniteTapeBridgeProbe.lean
+
       - name: Check complete authentic weighted TNF pilot
         if: inputs.target == 'weighted-tnf-pilot'
         run: |
