@@ -4,6 +4,7 @@ From Coq Require Import List Bool Lia Arith Strings.String.
 Import ListNotations.
 Import TNF_Node.
 Open Scope string_scope.
+Open Scope nat_scope.
 
 (* Direct original-source checking, not a cross-language assertion. *)
 Module Agent47TC := TranslatedCyclers BB62.
@@ -54,8 +55,8 @@ Proof.
 Qed.
 
 Definition source_last_check (bound : nat) (p : TM) (n : nat) : bool :=
-  Nat.eqb (get_num_undef_trans p) 1 &&
-  (Nat.leb (n+6) bound && source_trace_haltb p n).
+  andb (Nat.eqb (get_num_undef_trans p) 1)
+  (andb (Nat.leb (n+6) bound) (source_trace_haltb p n)).
 
 Theorem source_last_check_sound bound p n :
   source_last_check bound p n = true -> source_table_safe bound p.
