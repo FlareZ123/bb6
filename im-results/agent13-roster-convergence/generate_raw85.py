@@ -39,7 +39,7 @@ for i in reversed(range(12)):
 
 base_path = OUTPUT_DIR / "FourHoleSiblingBase.lean"
 source = base_path.read_text()
-marker = "\nend BB6.Agent31FourHoleSibling\n"
+footer = "end BB6.Agent31FourHoleSibling"
 diagnostic = f"""
 def sourceParent : PartialMachine := fun s => {expr}
 
@@ -50,6 +50,7 @@ theorem wideParent_matches_sourceParent : wideParent = sourceParent := by
 
 #print axioms wideParent_matches_sourceParent
 """
-if marker not in source:
+idx = source.rfind(footer)
+if idx < 0:
     raise RuntimeError("Could not locate sibling namespace footer")
-base_path.write_text(source.replace(marker, "\n" + diagnostic + marker))
+base_path.write_text(source[:idx] + "\n" + diagnostic + "\n" + source[idx:])
