@@ -1,0 +1,1 @@
+Raw61 fully candidate-covered: 1502 open leaves, all 14 bespoke live proofs compiled locally; bound candidate 1962 after late F1 query. Shared spec integrated. Raw63 original-source nine NeverHalts accepted in run 45508818219, full finite audit interrupted by runner shutdown. Single-cylinder retry 45512527005. No accepted roster removal until all61/all63 accepted.
