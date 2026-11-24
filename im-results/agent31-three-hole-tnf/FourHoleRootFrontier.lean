@@ -1,4 +1,3 @@
-import RootFrontier
 import FourHoleData
 
 set_option maxRecDepth 100000
@@ -7,7 +6,183 @@ set_option maxHeartbeats 0
 namespace BB6.Agent31FourHoleFrontier
 
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent8TNFPath
-open BB6.Agent50TNFPilot BB6.Agent50RootFrontier BB6.Agent31FourHole
+open BB6.Agent50TNFPilot BB6.Agent31FourHole
+
+/-- The exact ordinary refinement history from firstOneCylinder. -/
+inductive RawRootPath : PartialMachine → Prop where
+  | root : RawRootPath root
+  | step {p n c mv}
+      (parent : RawRootPath p)
+      (hrun : knownRun p n = some c)
+      (hhole : p (readSlot c) = none) :
+      RawRootPath (refine p (readSlot c) (some mv))
+
+theorem RawRootPath.rootRow {p : PartialMachine} (hp : RawRootPath p) :
+    p initialSlot = some (some ⟨true, true, 1⟩) := by
+  induction hp with
+  | root => rfl
+  | @step p n c mv parent hrun hhole ih =>
+      exact refine_preserves_firstOne p (readSlot c) (some mv) hhole ih
+
+/-- All 24 concrete ordinary instructions, in the certificate's stable order. -/
+def allMoves : List Move :=
+  (List.finRange 6).flatMap fun q =>
+    [false, true].flatMap fun w =>
+      [false, true].map fun r => ⟨w, r, q⟩
+
+theorem allMoves_complete (mv : Move) : mv ∈ allMoves := by
+  rcases mv with ⟨w, r, q⟩
+  have hq : q ∈ List.finRange 6 := List.mem_finRange q
+  have hw : w ∈ [false, true] := by cases w <;> simp
+  have hr : r ∈ [false, true] := by cases r <;> simp
+  unfold allMoves
+  apply List.mem_flatMap.mpr
+  refine ⟨q, hq, ?_⟩
+  apply List.mem_flatMap.mpr
+  refine ⟨w, hw, ?_⟩
+  apply List.mem_map.mpr
+  exact ⟨r, hr, rfl⟩
+
+theorem allMoves_length : allMoves.length = 24 := by decide
+
+/-- A rooted frontier retains every off-path ordinary child explicitly.
+    Closed nodes carry complete weighted certificates; residual nodes carry
+    their exact ordinary refinement history. -/
+inductive RootedFrontier (B : Nat) : PartialMachine → Type where
+  | residual {p} (path : RawRootPath p) : RootedFrontier B p
+  | closed {p} (path : RawRootPath p)
+      (cert : WeightedTNFCertificate B p 6) : RootedFrontier B p
+  | expand {p n c} (path : RawRootPath p)
+      (hrun : knownRun p n = some c)
+      (hhole : p (readSlot c) = none)
+      (hweight : ∀ d ∈ possibleDelays (refine p (readSlot c) none) 0,
+        d + n + 1 ≤ B)
+      (children : ∀ mv : Move,
+        RootedFrontier B (refine p (readSlot c) (some mv))) :
+      RootedFrontier B p
+
+inductive OpenLeaf {B : Nat} : {p : PartialMachine} →
+    RootedFrontier B p → List Move → PartialMachine → Prop where
+  | here {p} (path : RawRootPath p) :
+      OpenLeaf (.residual path) [] p
+  | child {p n c} (path : RawRootPath p)
+      (hrun : knownRun p n = some c)
+      (hhole : p (readSlot c) = none)
+      (hweight : ∀ d ∈ possibleDelays (refine p (readSlot c) none) 0,
+        d + n + 1 ≤ B)
+      (children : ∀ mv : Move,
+        RootedFrontier B (refine p (readSlot c) (some mv)))
+      (mv : Move) {address : List Move} {q : PartialMachine}
+      (hchild : OpenLeaf (children mv) address q) :
+      OpenLeaf (.expand path hrun hhole hweight children) (mv :: address) q
+
+theorem OpenLeaf.extends {B : Nat} {p : PartialMachine}
+    {f : RootedFrontier B p} {address : List Move} {q : PartialMachine}
+    (h : OpenLeaf f address q) :
+    ∀ s t, p s = some t → q s = some t := by
+  induction h with
+  | here path =>
+      intro s t hs
+      exact hs
+  | @child p n c path hrun hhole hweight children mv address q hchild ih =>
+      intro s t hs
+      have hne : s ≠ readSlot c := by
+        intro he
+        subst s
+        rw [hhole] at hs
+        contradiction
+      have hchild' : (refine p (readSlot c) (some mv)) s = some t := by
+        simp [refine, hne, hs]
+      exact ih s t hchild'
+
+def residuals {B : Nat} {p : PartialMachine} :
+    RootedFrontier B p → List (List Move × PartialMachine)
+  | .residual _ => [([], p)]
+  | .closed _ _ => []
+  | .expand _ _ _ _ children =>
+      allMoves.flatMap fun mv =>
+        (residuals (children mv)).map fun (address, q) => (mv :: address, q)
+
+/-- Every completion is either bounded or belongs to an explicit residual
+    cylinder. The halt child is charged with its exact incoming-delay weight. -/
+theorem RootedFrontier.sound {B : Nat} {p : PartialMachine}
+    (f : RootedFrontier B p) :
+    ∀ m, compatible p m →
+      WeightedBound B m ∨
+        ∃ address q, OpenLeaf f address q ∧ compatible q m := by
+  induction f with
+  | @residual p path =>
+      intro m hm
+      exact Or.inr ⟨[], p, OpenLeaf.here path, hm⟩
+  | closed path cert =>
+      intro m hm
+      exact Or.inl (cert.sound m hm)
+  | @expand p n c path hrun hhole hweight children ih =>
+      intro m hm
+      cases hstep : m (readSlot c) with
+      | none =>
+          have hcomp : compatible (refine p (readSlot c) none) m := by
+            intro s t h
+            by_cases he : s = readSlot c
+            · subst s
+              have ht : t = none := by
+                simpa [refine] using h.symm
+              simpa [ht] using hstep
+            · exact hm s t (by simpa [refine, he] using h)
+          exact Or.inl (first_hole_weighted_halt B p n c
+            (RawRootPath.rootRow path) hrun hhole hweight m hcomp)
+      | some mv =>
+          have hcomp : compatible (refine p (readSlot c) (some mv)) m := by
+            intro s t h
+            by_cases he : s = readSlot c
+            · subst s
+              have ht : t = some mv := by
+                simpa [refine] using h.symm
+              simpa [ht] using hstep
+            · exact hm s t (by simpa [refine, he] using h)
+          rcases ih mv m hcomp with hgood | ⟨address, q, hopen, hq⟩
+          · exact Or.inl hgood
+          · exact Or.inr ⟨mv :: address, q,
+              OpenLeaf.child path hrun hhole hweight children mv hopen, hq⟩
+
+/-- Distinct residual leaves have incompatible completion cylinders. -/
+theorem RootedFrontier.openLeaves_disjoint {B : Nat} {p : PartialMachine}
+    (f : RootedFrontier B p) :
+    ∀ address1 q1 address2 q2,
+      OpenLeaf f address1 q1 →
+      OpenLeaf f address2 q2 →
+      (address1, q1) ≠ (address2, q2) →
+      ∀ m, ¬ (compatible q1 m ∧ compatible q2 m) := by
+  induction f with
+  | residual path =>
+      intro address1 q1 address2 q2 h1 h2 hne m hcomp
+      cases h1
+      cases h2
+      exact hne rfl
+  | closed path cert =>
+      intro address1 q1 address2 q2 h1
+      cases h1
+  | @expand p n c path hrun hhole hweight children ih =>
+      intro address1 q1 address2 q2 h1 h2 hne m hcomp
+      cases h1 with
+      | @child p1 n1 c1 path1 hrun1 hhole1 hweight1 children1 mv1 address1 q1 hchild1 =>
+        cases h2 with
+        | @child p2 n2 c2 path2 hrun2 hhole2 hweight2 children2 mv2 address2 q2 hchild2 =>
+          by_cases heq : mv1 = mv2
+          · subst mv2
+            have hne' : (address1, q1) ≠ (address2, q2) := by
+              intro he
+              apply hne
+              cases he
+              rfl
+            exact ih mv1 address1 q1 address2 q2 hchild1 hchild2 hne' m hcomp
+          · have h1ext := OpenLeaf.extends hchild1 (readSlot c) (some mv1)
+              (by simp [refine])
+            have h2ext := OpenLeaf.extends hchild2 (readSlot c) (some mv2)
+              (by simp [refine])
+            have hs1 := hcomp.1 (readSlot c) (some mv1) h1ext
+            have hs2 := hcomp.2 (readSlot c) (some mv2) h2ext
+            exact heq (Option.some.inj (hs1.symm.trans hs2))
 
 /-- Weighted first-hole path validation at an arbitrary common bound. -/
 def pathOKB (B : Nat) (p : PartialMachine) (cut : Nat) :
@@ -39,10 +214,7 @@ def extractRunConfig {p : PartialMachine} {n : Nat} {s : Slot}
   | none => False.elim (by simp [hr] at h)
   | some c => ⟨c, rfl⟩
 
-/-- Extend the accepted rooted-frontier constructor to any weighted bound.
-    The path is checked edge-by-edge, every off-path ordinary instruction
-    remains an explicit residual, and the terminal certificate closes the
-    selected descendant. -/
+/-- Build a rooted frontier along a validated path, preserving all siblings. -/
 def buildFrontierB (B : Nat) (p : PartialMachine) (cut : Nat)
     (hp : RawRootPath p) :
     (xs : List PathEntry) →
