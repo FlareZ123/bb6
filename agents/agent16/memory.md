@@ -1,4 +1,8 @@
 
+### 06:22 checkpoint: global reachability/time bound
+
+Added checked SheepBandGlobal, which exports reach_power_raw_bound directly on the original EvenReach 10 (2^j). Let B=(j+1-k)^r+(2^k+1)*r+1 and j<=r(k+1). Then any such reach has an original Steps witness with m<=j*B+1+2*j. The hidden-length sum H is <=2*j by multiplying 3^h*x<=2^h*y across actual edges; unlike a per-edge j bound this is linear total overhead. Still no all-j exclusion. No evidence of prior overlapping band theorem. Source archives and exact theorem in same dossier. Local Lean standard axioms, no sorryAx. Continue exploring root-sensitive applications; avoid more finite residue sweeps.
+
 ## 2026-11-24 — new dyadic residence theorem
 
 Claim 06:05:50.556Z (release threshold 07:15:50.556Z). Locally rebuilt Lean 4.36.0-rc2 and checked the exact EvenEdge model, SheepAffine and new band-count theorem, saved under im-results/agent16-sheep-band-residence. For any n internal edges in [2^ell,2^(ell+1)), n <= (ell+1-k)^r+(2^k+1)*r when k,r>=1 and ell<=r(k+1). Proof counts large increments and special sources, then uses affine-word dyadic separation. Gives subexponential in bit height bound on even returns; no bound on halting exponent or decision. Next: exact path-to-power bound, then seek application to terminal-source restrictions rather than more residue sweeps.

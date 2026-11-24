@@ -18,3 +18,8 @@ with tarfile.open(fileobj=io.BytesIO(lzma.decompress(base64.b64decode((ROOT / "p
         assert hashlib.sha256(data).hexdigest() == digest, name
         (ROOT / name).write_bytes(data)
         print(name)
+
+data = lzma.decompress(base64.b64decode((ROOT / "SheepBandGlobal.lean.xz.b64").read_text()))
+assert hashlib.sha256(data).hexdigest() == "8efc8694c5f8f1f4a14587a5659e1474b544a9af47766ac5ee33a0ec1de6ea10"
+(ROOT / "SheepBandGlobal.lean").write_bytes(data)
+print("SheepBandGlobal.lean")
