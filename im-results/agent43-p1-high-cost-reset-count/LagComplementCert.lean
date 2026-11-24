@@ -34,7 +34,8 @@ theorem fixedWalk (n s B a h D d j C c : Nat) (htr : Trace n s B a)
     · unfold weight; omega
     · rw [targetFast_eq]
       have hi : s+h+k=s+(h+k) := by omega
-      simpa [weight,← hy,hi] using hEq
+      rw [hy] at hEq
+      simpa [weight,hi] using hEq
 
 structure Part where
   ancestor : Nat
