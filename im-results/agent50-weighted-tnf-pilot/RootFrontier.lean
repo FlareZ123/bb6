@@ -519,4 +519,80 @@ theorem executableRootRoster_sound :
 #print axioms executableRootRoster_count
 #print axioms executableRootRoster_sound
 
+/-- Finite nonhalting witnesses for off-path cylinders. The lookup indices
+    are only candidate data: every chosen sparse table is checked again. -/
+inductive ResidualNonhaltWitness where
+  | ray (n : Nat) (right : Bool) (mask : Nat)
+  | lasso (n : Nat)
+
+def residualMask (mask : Nat) (q : Fin 6) : Bool := mask.testBit q.val
+
+def residualWitnessOK (p : PartialMachine) : ResidualNonhaltWitness → Bool
+  | .ray n right mask => finiteRayCheck p n right (residualMask mask)
+  | .lasso n => finiteLassoCheck p n
+
+theorem residualWitnessOK_sound (p : PartialMachine) (w : ResidualNonhaltWitness)
+    (h : residualWitnessOK p w = true) :
+    ∀ m, compatible p m → NeverHalts m := by
+  cases w with
+  | ray n right mask =>
+    exact zeroCover_never (finiteRayCheck_sound p n right (residualMask mask) 0 h)
+  | lasso n =>
+    exact zeroCover_never (finiteLassoCheck_sound p n 0 h)
+
+def residualWitnessIndices : List (Nat × ResidualNonhaltWitness) :=
+  [(1,.ray 0 true 3), (3,.ray 0 true 3), (5,.ray 0 true 3), (7,.ray 0 true 3),
+   (12,.ray 0 true 7), (14,.ray 0 true 7), (16,.ray 0 true 7), (18,.ray 0 true 7),
+   (20,.ray 0 true 7), (22,.ray 0 true 7), (25,.ray 0 true 15), (27,.ray 0 true 15),
+   (29,.ray 0 true 15), (31,.ray 0 true 15), (32,.lasso 4), (33,.ray 0 true 15),
+   (35,.ray 0 true 15), (37,.ray 0 true 15), (50,.ray 7 false 8), (51,.ray 17 false 8),
+   (52,.ray 7 false 8), (74,.ray 13 false 8), (75,.ray 11 false 8), (76,.lasso 8),
+   (93,.lasso 22), (113,.ray 15 false 8), (135,.lasso 9), (136,.ray 10 false 8),
+   (140,.ray 9 false 8), (142,.ray 9 false 8), (162,.lasso 7), (176,.ray 0 true 15)]
+
+def residualWitnessRoster : List (PackedTable × ResidualNonhaltWitness) :=
+  residualWitnessIndices.filterMap fun (i,w) =>
+    executableRootRoster[i]?.map fun e => (e.2,w)
+
+theorem residualWitnessRoster_count : residualWitnessRoster.length = 32 := by decide
+
+theorem residualWitnessRoster_checked :
+    residualWitnessRoster.all (fun (t,w) => residualWitnessOK (unpackTable t) w) = true := by
+  decide
+
+def residualHasWitness (t : PackedTable) : Bool :=
+  residualWitnessRoster.any fun e => decide (e.1 = t)
+
+theorem residualHasWitness_sound (t : PackedTable) (h : residualHasWitness t = true) :
+    ∀ m, compatible (unpackTable t) m → WeightedBound 84 m := by
+  obtain ⟨⟨u,w⟩,hmem,heq⟩ := List.any_eq_true.mp h
+  have he : u = t := of_decide_eq_true heq
+  subst u
+  have hc := List.all_eq_true.mp residualWitnessRoster_checked (t,w) hmem
+  intro m hm
+  exact weighted_never 84 m (residualWitnessOK_sound (unpackTable t) w hc m hm)
+
+def remainingRootRoster : List PackedResidual :=
+  executableRootRoster.filter fun e => !residualHasWitness e.2
+
+theorem remainingRootRoster_count : remainingRootRoster.length = 175 := by decide
+
+/-- The executable residual count decreases from 207 to 175 only by
+    removing cylinders proved nonhalting for every compatible completion. -/
+theorem remainingRootRoster_sound :
+    ∀ m, compatible root m → WeightedBound 84 m ∨
+      ∃ e ∈ remainingRootRoster, compatible (unpackTable e.2) m := by
+  intro m hm
+  rcases executableRootRoster_sound m hm with hb | ⟨e,hmem,hcomp⟩
+  · exact Or.inl hb
+  · cases he : residualHasWitness e.2 with
+    | true => exact Or.inl (residualHasWitness_sound e.2 he m hcomp)
+    | false =>
+      exact Or.inr ⟨e,List.mem_filter.mpr ⟨hmem,by simp [he]⟩,hcomp⟩
+
+#print axioms residualWitnessRoster_checked
+#print axioms residualWitnessRoster_count
+#print axioms remainingRootRoster_count
+#print axioms remainingRootRoster_sound
+
 end BB6.Agent50RootFrontier
