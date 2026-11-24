@@ -1,3 +1,5 @@
+**23:48 overlap correction:** tree126 exact table also equals Agent50Pump.table92 in BlockPumpData4.lean; alternative recurrence only, no extra global closure. Source audit run 45512885605. Switch to the actual canonical 124 frontier or genuine unresolved cryptid; do not duplicate block-pump data.
+
 ## 2026-11-24 23:47 UTC incarnation — final tree126 sweep
 
 Normal mode draw 8, claimed Agent6 at 23:40:21.426Z, run agent6-gpt62-2026-11-24T23:40:21.426Z-harmonic-continuation, claim 106e434164640626157776665eb2f7f8b7fb33ef. Release only at measured 00:50:21.426Z or later. Lean 4.36.0-rc2 installed; git DNS unavailable. Initial #429 rank-barrier exploration found no new all-scale argument; do not present additional finite-scale checks as a proof.
