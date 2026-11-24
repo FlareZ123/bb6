@@ -133,3 +133,8 @@ Bounded search status (24 November 2026):
 - Regression test on the existing four-transition glider, run [45404260897](https://github.com/FlareZ123/bb6/actions/runs/45404260897): recovered the existing one-state certificate exactly (DFA [0,0], masks [2,1,1,64,64,64,64] / [4,64,64,64,64,64,64], zero mask 120); Lean accepted the generated theorem with standard axioms only.
 
 These are candidate-search experiments, not impossibility results. A timeout is not UNSAT, and a bounded failure to synthesize a FAR certificate says nothing about whether the machine halts. The glider run is only a regression against a known certificate, not a new machine result. Any successful hard-root leaf must also be shown to occur in the actual first-one weighted-TNF/Enumerate62 coverage, not merely in the historical 663-entry roster.
+
+
+## Blank-start candidate-filter correction (24 November 2026)
+
+The emitted FAR data objects use start state 0. The trusted checker `Data.fastValid` requires `C.push C.start false = C.start`; for a flattened DFA transition list this is exactly `dfa[0] = 0` (or `D[0] = 0`). The previous Python saturation routines checked that the zero-suffix bad mask omitted node 0, but that condition alone did not establish the blank-prefix loop. All five active FAR mask emitters now reject malformed or non-start-preserving DFA candidates before saturation/emission: the two four-hole generators, the F1 sibling emitter, and the wide132/wide133 emitters. The composed and implication SMT synthesizers already impose `delta[0][0] = 0` and `zero[0] = false`, so their constraints are unchanged. Lean `Data.fastValid_sound` remains the final acceptance boundary; this filter only prevents invalid candidates from reaching it.
