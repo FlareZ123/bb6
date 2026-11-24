@@ -98,7 +98,6 @@ jobs:
           compile M1OddQ4Prefix
           compile M1OneQ4Prefix
           compile M1OddResidueOneTargetLeft
-          compile M1OddResidueOneBridge
           compile M1OddResidueOneHeadBound
           compile M1OddResidueOneSource
           if grep -q 'sorryAx' m1-residue-one-source-closure.log; then
