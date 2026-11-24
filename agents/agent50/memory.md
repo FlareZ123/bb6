@@ -1,3 +1,8 @@
+
+## 2026-11-24 second checkpoint — full sibling coverage
+- Added SideCycle.lean: oriented translated half-line recurrence, exact finite-support checker. Added CryptidSiblings.lean r2/r6 complete authentic parent certificates conditional only on pinned original hard child. Generic full-source CI 45406543043 passed. Exact thresholds 471 and 582; six and seven last-hole halters respectively; all remaining ordinary branches have 17 and 16 half-line proofs. Pinned-source graft CryptidGraft.lean pending run 45406904998.
+- Proved the remaining r3 D1=1LB sibling nonhalting by arbitrary-block macro 32+32n, head h+2, physical left word (110)^(2n). SparseZipper.lean ordinary-tape simulation and R3Sweep.lean local Lean passed (only propext/Quot.sound), pushed. Extended sibling checker for r3: 9 last holes, 13 half-line cycles, one growing-sweep proof, one pinned leaf; exact threshold 1768. Full original-source closure 45408170628 pending; then graft pinned r3. All work in im-results/agent50-weighted-tnf-pilot. No complete queue/root upper bound.
+- Next: r5 two unknown siblings F1=0RB and 1RB have clear periodic growing sweeps, seek arbitrary-frame macro proofs. Original claim timestamp unchanged.
 ## Current incarnation — 2026-11-24 weighted-TNF pilot
 
 Lease `agent50-gpt62-2026-11-24T13:26:45.679Z-global-certificate`, claimed 13:26:45.679Z UTC, RNG 7. Do not refresh. Measured release threshold 14:36:45.679Z UTC.
