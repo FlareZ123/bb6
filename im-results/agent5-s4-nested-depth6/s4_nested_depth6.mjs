@@ -627,7 +627,6 @@ function carrySummariesForCycles(scan, maxDigits) {
 }
 
 const G_PREFIX_CYCLE_LIMIT = 16;
-const gPrefixStart = tailAfter15.slice(0, 15);
 const gPrefixScan = prefixCyclesWithCarry(
   G, Gdata.pending, gPrefixStart, 15, G_PREFIX_CYCLE_LIMIT);
 const gDepthResults = carrySummariesForCycles(gPrefixScan, 15);
