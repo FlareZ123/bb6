@@ -355,6 +355,26 @@ jobs:
           done
           echo "All six Cryptids machines compile as weighted-TNF nonhalt leaves with authentic first-hole paths; no sorryAx in the adapter closure."
 
+      - name: Close two authentic Cryptids parent expansions
+        if: ${{ inputs.verify_six_root_graft && inputs.verify_weighted_tnf_leaves }}
+        working-directory: /tmp/cryptids
+        shell: bash
+        run: |
+          set -euo pipefail
+          for m in TNFPilot SideCycle CryptidSiblings CryptidGraft; do
+            cp "$GITHUB_WORKSPACE/im-results/agent50-weighted-tnf-pilot/$m.lean" BB6Agent42/
+          done
+          export LEAN_PATH=BB6Agent42
+          for m in TNFPilot SideCycle CryptidSiblings CryptidGraft; do
+            log="/tmp/cryptids-source-audit/$m.log"
+            lake env lean -o "BB6Agent42/$m.olean" "BB6Agent42/$m.lean" 2>&1 | tee "$log"
+            if grep -Eq 'sorryAx|native_decide' "$log"; then
+              echo "::error::forbidden axiom or native_decide in $m"
+              exit 1
+            fi
+          done
+          echo "The two complete expanded parents have their pinned hard leaves, all 46 other ordinary children, and both halt siblings checked."
+
       - name: Compile exact F289 cost and frontier graft
         if: ${{ inputs.verify_f289_exact_graft }}
         working-directory: /tmp/cryptids
