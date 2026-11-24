@@ -341,6 +341,55 @@ theorem positive_boundary_cost_bandsharp {j s k x : Nat} {w : Int} (hw : 0<w)
 #print axioms positive_history_packet_bandweight
 #print axioms positive_boundary_cost_bandsharp
 
+
+/-- Exact cost of a complete positive-to-negative skip return.  If a
+    positive history starts at -w0, reaches a two-band skip parent, and
+    that negative parent strips to unit w1 in n steps, the two units and
+    the whole intervening history satisfy this inequality. -/
+theorem positive_skip_return_cost {j s k x z n : Nat} {w0 w1 : Int}
+    (hw0 : 0<w0) (hk : 2≤k)
+    (h : PositiveHistory j w0 s k x)
+    (hskip : RegFrom (k-2) z x)
+    (hstrip : W (k-2) z=-(3^n:Int)*w1) :
+    (4*(3^(j-k):Int)*(P k:Int)+6+w0) ≤
+      (3^s:Int)*((3^(n+1):Int)*w1+6) := by
+  obtain ⟨A,C,hA,hA',hu,hC,he,hB⟩:=positive_history_packet_bandweight hw0 h
+  let D : Int := 3^s
+  have hb:=positive_history_band h
+  have hband' : Band ((k-2)+2) x := by
+    have hk' : (k-2)+2=k := by omega
+    simpa [hk'] using hb
+  have hqskip:=skip_reset_q hskip hband' hstrip
+  have hWQ : W k x+2*(Q k x:Int)=4*(P k:Int)-3 := by
+    have hq:=q_eq hb
+    have hqI : (Q k x:Int)+2*(P k:Int)=2*(x:Int)+3*(k:Int)+12 := by exact_mod_cast hq
+    unfold W
+    omega
+  have hrel : 2*D*(Q k x:Int)=(4*D-A)*(P k:Int)-3*D-C := by
+    change D*(W k x:Int)=A*(P k:Int)+C at he
+    grind
+  have hreturn0 :
+      D*((3^(n+1):Int)*w1+3)=(4*D-A)*(P k:Int)-3*D-C := by
+    rw [←hqskip]
+    omega
+  have hreturn :
+      D*((3^(n+1):Int)*w1+6)=(4*D-A)*(P k:Int)-C := by
+    calc
+      D*((3^(n+1):Int)*w1+6)
+          =D*((3^(n+1):Int)*w1+3)+3*D := by
+            rw [Int.mul_add]
+            omega
+      _=(4*D-A)*(P k:Int)-3*D-C+3*D := by rw [hreturn0]
+      _=(4*D-A)*(P k:Int)-C := by omega
+  have hP0 : 0≤(P k:Int) := by exact_mod_cast Nat.zero_le (P k)
+  have hBprod : 4*(3^(j-k):Int)*(P k:Int)≤(4*D-A)*(P k:Int) :=
+    Int.mul_le_mul_of_nonneg_right hB hP0
+  have hC' : 6+w0≤-C := by omega
+  rw [hreturn]
+  omega
+
+#print axioms positive_skip_return_cost
+
 #print axioms positive_history_packet_weight
 #print axioms positive_history_band
 #print axioms positive_boundary_cost_sharp
