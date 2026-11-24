@@ -26,7 +26,14 @@ theorem gliderRoot :
 theorem gliderSupport : TNFSupport gliderExample 3 := by
   intro s t h
   rcases s with ⟨q, a⟩
-  fin_cases q <;> cases a <;> simp [gliderExample] at h <;> simp_all
+  fin_cases q <;> cases a <;>
+    simp [gliderExample] at h <;>
+    cases t with
+    | none => simp [gliderExample] at h
+    | some mv =>
+      simp [gliderExample] at h
+      cases h
+      constructor <;> simp
 
 theorem gliderNoAssignedHalt :
     weightedTNFNoAssignedHalt gliderExample := by
