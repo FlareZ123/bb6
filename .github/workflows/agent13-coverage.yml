@@ -1,6 +1,12 @@
 name: Agent 13 BB6 full-domain coverage (manual)
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        description: 'Source closure to verify'
+        type: choice
+        options: [legacy, weighted-first-one]
+        default: legacy
 permissions:
   contents: read
 jobs:
@@ -16,6 +22,7 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           "$HOME/.elan/bin/lean" --version
       - name: Unpack, integrity check and compile complete source chain
+        if: inputs.target == 'legacy'
         run: |
           set -e
           cd im-results/agent13-coverage
@@ -32,3 +39,25 @@ jobs:
           lean -o FiniteTapeShift.olean FiniteTapeShift.lean
           lean -o FiniteLeafChecks.olean FiniteLeafChecks.lean
           lean LeafDemo.lean
+      - name: Verify weighted first-write normalization against original source
+        if: inputs.target == 'weighted-first-one'
+        run: |
+          set -eu
+          python im-results/agent13-coverage/unpack.py
+          export LEAN_PATH=im-results/agent8-coverage-contract:im-results/agent4-coverage-smoke:im-results/agent42-coverage-normal:im-results/agent13-coverage:im-results/agent13-weighted-first-one
+          lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean
+          lean -o im-results/agent8-coverage-contract/Symmetry.olean im-results/agent8-coverage-contract/Symmetry.lean
+          lean -o im-results/agent8-coverage-contract/RootShift.olean im-results/agent8-coverage-contract/RootShift.lean
+          lean -o im-results/agent42-coverage-normal/FirstStep.olean im-results/agent42-coverage-normal/FirstStep.lean
+          lean -o im-results/agent4-coverage-smoke/WriteOneDrift.olean im-results/agent4-coverage-smoke/WriteOneDrift.lean
+          lean -o im-results/agent8-coverage-contract/Prune.olean im-results/agent8-coverage-contract/Prune.lean
+          lean -o im-results/agent42-coverage-normal/TwoFirst.olean im-results/agent42-coverage-normal/TwoFirst.lean
+          lean -o im-results/agent13-coverage/BB6Coverage.olean im-results/agent13-coverage/BB6Coverage.lean
+          lean -o im-results/agent8-coverage-contract/OneHalt.olean im-results/agent8-coverage-contract/OneHalt.lean
+          lean -o im-results/agent4-coverage-smoke/CrossCoverage.olean im-results/agent4-coverage-smoke/CrossCoverage.lean
+          lean -o im-results/agent4-coverage-smoke/CrossUpper.olean im-results/agent4-coverage-smoke/CrossUpper.lean
+          lean -o im-results/agent42-coverage-normal/CrossFirstUpper.olean im-results/agent42-coverage-normal/CrossFirstUpper.lean
+          lean -o im-results/agent42-coverage-normal/TwoCylinder.olean im-results/agent42-coverage-normal/TwoCylinder.lean
+          lean -o im-results/agent13-weighted-first-one/BlankDelayKernel.olean im-results/agent13-weighted-first-one/BlankDelayKernel.lean
+          lean -o im-results/agent13-weighted-first-one/BlankDelaySource.olean im-results/agent13-weighted-first-one/BlankDelaySource.lean
+          lean im-results/agent13-weighted-first-one/WeightedFirstOneCover.lean
