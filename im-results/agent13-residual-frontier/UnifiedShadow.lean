@@ -49,24 +49,28 @@ def uh (j m n : Nat) : Pair :=
 def validUH (j m n : Nat) : Bool := decide (
   2^(n+1)*(uh j m n).x=uq j m+2^(n+1)*(2+uo j m) ∧
   2*(uh j m n).y+(uh j m n).x=6*m+14+3*n)
-def unifiedCheckAt (f b j m : Nat) : Bool :=
+def unifiedCheckWith (accept : Nat → Pair → Bool) (b j m : Nat) : Bool :=
   let v := uv j m
   decide (j≤3*m+1 ∧ 1≤m ∧ v+1≤b ∧ uq j m % 2^(v+1)=2^v ∧ uq j m < 2^b) &&
-  (if (j+3*m+4)%2=0 then runCertAt f (b-1) (ud j m) else true) &&
+  (if (j+3*m+4)%2=0 then accept (b-1) (ud j m) else true) &&
   (List.range (v+1)).all (fun n => if n+2≤v ∧ n%2=uo j m then
-    validUH j m n && runCertAt f (b-(n+2)) (uh j m n) else true)
+    validUH j m n && accept (b-(n+2)) (uh j m n) else true)
+
+def unifiedCheckAt (f b j m : Nat) : Bool := unifiedCheckWith (runCertAt f) b j m
 
 private theorem mod2_of_dvd (b x : Nat) (hb : 1≤b) (hx : 2^b∣x) : x%2=0 :=
   Nat.mod_eq_zero_of_dvd (weaken b 1 x hb hx)
 
-theorem unified_cylinder_exclusion (reach : Nat → Nat → Prop)
+theorem unified_cylinder_exclusion_with (reach : Nat → Nat → Prop)
     (parent : ∀ x y, 8≤y → reach x y → ∃ a k, reach a k ∧ sectionPreimageCriterion a k x y)
     (forbid : ∀ x y, 5≤y → y%2=1 → ((x+y)%4=1 ∨ (x+y)%4=2) → ¬reach x y)
-    (f b j0 m0 j m k : Nat) (h : unifiedCheckAt f b j0 m0=true)
+    (accept : Nat → Pair → Bool)
+    (acceptSound : ∀ b x y s, accept b s=true → congruent b x y s → ¬reach x y)
+    (b j0 m0 j m k : Nat) (h : unifiedCheckWith accept b j0 m0=true)
     (hjj : j0≤j) (hmm : m0≤m) (hb : b≤2*m+2)
     (hjcon : 2^b∣j-j0) (hmcon : 2^b∣m-m0)
     (hstop : k+j+3*m+4=2^(2*m+2)*(j+2)) : ¬reach (2*j+1) k := by
-  simp only [unifiedCheckAt,Bool.and_eq_true,decide_eq_true_eq] at h
+  simp only [unifiedCheckWith,Bool.and_eq_true,decide_eq_true_eq] at h
   obtain ⟨⟨⟨hj0m0,hm0,hvb,hvmod,hqbound⟩,hdir⟩,hhigh⟩ := h
   let v := uv j0 m0
   let P := 2^(2*m+2)*(j+2)
@@ -127,7 +131,7 @@ theorem unified_cylinder_exclusion (reach : Nat → Nat → Prop)
       have H := Nat.dvd_sub hP (Nat.dvd_add hjcon hdiv3M)
       rw [←hl'] at H
       simpa [Nat.add_assoc,J] using H
-    apply runCertAt_sound reach (fun x y _ hy => parent x y hy) forbid f (b-1) a l (ud j0 m0) hdir _ hrp
+    apply acceptSound (b-1) a l (ud j0 m0) hdir _ hrp
     constructor
     · exact weaken _ _ _ (by omega) hda
     · apply cancel_pow b 1 _ hb1
@@ -154,13 +158,25 @@ theorem unified_cylinder_exclusion (reach : Nat → Nat → Prop)
     have hdivl : 2^(b-(n+1))∣2*(l+(uh j0 m0 n).y) := by
       have H := Nat.dvd_sub hdiv hdiva
       simpa using H
-    apply runCertAt_sound reach (fun x y _ hy => parent x y hy) forbid f (b-(n+2)) a l (uh j0 m0 n) hcert _ hrp
+    apply acceptSound (b-(n+2)) a l (uh j0 m0 n) hcert _ hrp
     constructor
     · exact weaken _ _ _ (by omega) hdiva
     · have H := cancel_pow (b-(n+1)) 1 (l+(uh j0 m0 n).y) (by omega) (by simpa using hdivl)
       rwa [show b-(n+1)-1=b-(n+2) by omega] at H
 
 
+theorem unified_cylinder_exclusion (reach : Nat → Nat → Prop)
+    (parent : ∀ x y, 8≤y → reach x y → ∃ a k, reach a k ∧ sectionPreimageCriterion a k x y)
+    (forbid : ∀ x y, 5≤y → y%2=1 → ((x+y)%4=1 ∨ (x+y)%4=2) → ¬reach x y)
+    (f b j0 m0 j m k : Nat) (h : unifiedCheckAt f b j0 m0=true)
+    (hjj : j0≤j) (hmm : m0≤m) (hb : b≤2*m+2)
+    (hjcon : 2^b∣j-j0) (hmcon : 2^b∣m-m0)
+    (hstop : k+j+3*m+4=2^(2*m+2)*(j+2)) : ¬reach (2*j+1) k :=
+  unified_cylinder_exclusion_with reach parent forbid (runCertAt f)
+    (fun b x y s h hc => runCertAt_sound reach (fun x y _ hy => parent x y hy) forbid f b x y s h hc)
+    b j0 m0 j m k h hjj hmm hb hjcon hmcon hstop
+
+#print axioms unified_cylinder_exclusion_with
 /-- A source target with right coordinate at least eight is never the initial
 section (5,1), even if its left coordinate is one. -/
 theorem source_parent_of_right_ge8 (x y : Nat) (hy : 8≤y)
