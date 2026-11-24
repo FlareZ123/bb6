@@ -356,10 +356,11 @@ theorem positive_skip_return_cost {j s k x z n : Nat} {w0 w1 : Int}
   obtain ⟨A,C,hA,hA',hu,hC,he,hB⟩:=positive_history_packet_bandweight hw0 h
   let D : Int := 3^s
   have hb:=positive_history_band h
-  have hband' : Band ((k-2)+2) x := by
-    have hk' : (k-2)+2=k := by omega
-    simpa [hk'] using hb
-  have hqskip:=skip_reset_q hskip hband' hstrip
+  have hk' : (k-2)+2=k := by omega
+  have hband' : Band ((k-2)+2) x := by simpa [hk'] using hb
+  have hqskip0:=skip_reset_q hskip hband' hstrip
+  have hqskip : 2*(Q k x:Int)=(3^(n+1):Int)*w1+3 := by
+    simpa [hk'] using hqskip0
   have hWQ : W k x+2*(Q k x:Int)=4*(P k:Int)-3 := by
     have hq:=q_eq hb
     have hqI : (Q k x:Int)+2*(P k:Int)=2*(x:Int)+3*(k:Int)+12 := by exact_mod_cast hq
@@ -371,7 +372,7 @@ theorem positive_skip_return_cost {j s k x z n : Nat} {w0 w1 : Int}
   have hreturn0 :
       D*((3^(n+1):Int)*w1+3)=(4*D-A)*(P k:Int)-3*D-C := by
     rw [←hqskip]
-    simpa [mul_assoc, mul_left_comm, mul_comm] using hrel
+    simpa [Int.mul_assoc, Int.mul_left_comm, Int.mul_comm] using hrel
   have hreturn :
       D*((3^(n+1):Int)*w1+6)=(4*D-A)*(P k:Int)-C := by
     calc
