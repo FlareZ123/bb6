@@ -33,6 +33,44 @@ theorem weightedTNFKnownRunForever_sound (p : PartialMachine)
   have hr := knownRun_sound p m hm n c hc
   simp [hr]
 
+/-- Complete a sparse table by interpreting every unassigned row as
+    an immediate halt. This is the canonical partial-machine semantics used
+    by the upstream TNF NonHalt result. -/
+def weightedTNFDefaultCompletion (p : PartialMachine) : Machine :=
+  fun s => (p s).getD none
+
+theorem weightedTNFDefaultCompletion_compatible (p : PartialMachine) :
+    compatible p (weightedTNFDefaultCompletion p) := by
+  intro s t hs
+  simp [weightedTNFDefaultCompletion, hs]
+
+theorem weightedTNFKnownRun_eq_defaultRun (p : PartialMachine) (n : Nat) :
+    knownRun p n = run (weightedTNFDefaultCompletion p) n blank := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+      simp [knownRun, run, knownStep, rawStep, weightedTNFDefaultCompletion, ih]
+
+/-- A partial node is nonhalting exactly when every total completion is
+    nonhalting. The reverse direction uses the completion that halts at every
+    still-unassigned row; if its run is infinite, no hole is ever reached. -/
+theorem weightedTNFKnownRunForever_iff (p : PartialMachine) :
+    weightedTNFKnownRunForever p ↔
+      ∀ m, compatible p m → NeverHalts m := by
+  constructor
+  · intro h m hm
+    exact weightedTNFKnownRunForever_sound p h m hm
+  · intro h n
+    have hn : (run (weightedTNFDefaultCompletion p) n blank).isSome = true :=
+      h (weightedTNFDefaultCompletion p)
+        (weightedTNFDefaultCompletion_compatible p) n
+    have hn' : (knownRun p n).isSome = true := by
+      rw [← weightedTNFKnownRun_eq_defaultRun p n]
+      exact hn
+    cases hrun : knownRun p n with
+    | none => simp [hrun] at hn'
+    | some c => exact ⟨c, hrun⟩
+
 /-- A proof-carrying, recursively normalized TNF search tree.
 
     * nonhalt closes a node whose known sparse run is infinite.
@@ -49,7 +87,7 @@ inductive WeightedTNFCertificate (B : Nat) : PartialMachine → Nat → Type whe
       (hroot : p initialSlot = some (some ⟨true, true, 1⟩))
       (hsupport : TNFSupport p cut)
       (hnohalt : weightedTNFNoAssignedHalt p)
-      (hforever : weightedTNFKnownRunForever p) :
+      (hnever : ∀ m, compatible p m → NeverHalts m) :
       WeightedTNFCertificate B p cut
   | lastHole {p cut n c}
       (hroot : p initialSlot = some (some ⟨true, true, 1⟩))
@@ -83,9 +121,9 @@ theorem WeightedTNFCertificate.sound {B : Nat} {p : PartialMachine} {cut : Nat}
     (cert : WeightedTNFCertificate B p cut) :
     ∀ m, compatible p m → WeightedBound B m := by
   induction cert with
-  | nonhalt hroot hsupport hnohalt hforever =>
+  | nonhalt hroot hsupport hnohalt hnever =>
       intro m hm
-      exact weighted_never B m (weightedTNFKnownRunForever_sound _ hforever m hm)
+      exact weighted_never B m (hnever m hm)
   | lastHole hroot hsupport hcut hrun hhole hrest hweight =>
       intro m hm
       exact last_hole_sound B _ _ _ hroot hrun hhole hrest hweight m hm
