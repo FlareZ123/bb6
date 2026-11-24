@@ -78,6 +78,44 @@ theorem weightedTNFKnownRunForever_iff (p : PartialMachine) :
     | none => simp [hrun] at hn'
     | some c => exact ⟨c, rfl⟩
 
+/-- Exact bridge from the upstream partial-machine halt semantics to
+    the first undefined row reached by the sparse blank execution. -/
+theorem weightedTNF_halt_iff_firstHole (p : PartialMachine)
+    (hnohalt : weightedTNFNoAssignedHalt p) (n : Nat) :
+    HaltsAfter (weightedTNFDefaultCompletion p) n ↔
+      ∃ c, knownRun p n = some c ∧ p (readSlot c) = none := by
+  constructor
+  · rintro ⟨hstart, hstop⟩
+    cases hrun : run (weightedTNFDefaultCompletion p) n blank with
+    | none => simp [hrun] at hstart
+    | some c =>
+        have hstep : rawStep (weightedTNFDefaultCompletion p) c = none := by
+          simpa [run, hrun] using hstop
+        have hdefault : weightedTNFDefaultCompletion p (readSlot c) = none := by
+          unfold rawStep at hstep
+          cases ht : weightedTNFDefaultCompletion p (readSlot c) with
+          | none => exact ht
+          | some mv => simp [ht] at hstep
+        have hrow : p (readSlot c) = none := by
+          change (p (readSlot c)).getD none = none at hdefault
+          cases hp : p (readSlot c) with
+          | none => exact hp
+          | some t =>
+              cases t with
+              | none => exact False.elim (hnohalt (readSlot c) hp)
+              | some mv => simp [hp] at hdefault
+        have hknown : knownRun p n = some c := by
+          rw [weightedTNFKnownRun_eq_defaultRun p n]
+          exact hrun
+        exact ⟨c, hknown, hrow⟩
+  · rintro ⟨c, hknown, hrow⟩
+    have hrun : run (weightedTNFDefaultCompletion p) n blank = some c := by
+      rw [← weightedTNFKnownRun_eq_defaultRun p n]
+      exact hknown
+    constructor
+    · simp [hrun]
+    · simp [run, hrun, rawStep, weightedTNFDefaultCompletion, hrow]
+
 /-- A proof-carrying, recursively normalized TNF search tree.
 
     * nonhalt closes a node whose known sparse run is infinite.
@@ -184,6 +222,7 @@ theorem WeightedTNFCertificate.toCover {B : Nat} {p : PartialMachine} {cut : Nat
 #print axioms weightedTNFDefaultStep
 #print axioms weightedTNFKnownRun_eq_defaultRun
 #print axioms weightedTNFKnownRunForever_iff
+#print axioms weightedTNF_halt_iff_firstHole
 #print axioms WeightedTNFCertificate.ofNonhaltCover
 #print axioms WeightedTNFCertificate.ofWeightedCover
 #print axioms WeightedTNFCertificate.sound
