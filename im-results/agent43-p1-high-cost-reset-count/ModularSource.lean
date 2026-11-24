@@ -14,7 +14,7 @@ theorem width_zero_of_modular (n r k t : Nat)
     (hn : 14 ≤ n) (hk : k+1 ≤ n)
     (hN : n=r+2^(k+1)*t) (hr : r%2=0)
     (he : listRun r 1 [((r+2)/2)] k=[]) : width (k+1) n=0 := by
-  have hp := pow2_ge_1100_mul n hn
+  have hp := BB6.P1CarryExact.pow2_ge_1100_mul n hn
   have hz := full_empty_of_modular_certificate n r k t (by omega) hk hN hr he
   by_cases hzero : width (k+1) n=0
   · exact hzero
