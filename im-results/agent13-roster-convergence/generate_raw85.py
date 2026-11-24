@@ -1,54 +1,61 @@
-"""Strict raw85/F1=1RA parent and exact-DFA-key diagnostic.
+"""Generate raw85/F1=1RA using destination-table FAR validation.
 
-This wrapper reuses Agent31's sibling generator but forbids cross-key DFA
-fallbacks. It is a diagnostic/acceptance gate, not a claim that raw85 is
-closed. A missing exact key is reported and leaves the sibling tree open.
+DFA lookup keys are only a candidate-ordering heuristic. Every candidate is
+re-saturated against the actual destination table and exact orientation; the
+generated Lean Audit is the semantic acceptance boundary.
 """
-from collections import Counter
 from pathlib import Path
 import sys
 
-GENERATOR_DIR = Path(__file__).resolve().parents[1] / "agent31-three-hole-tnf"
+HERE = Path(__file__).resolve().parent
+GENERATOR_DIR = HERE.parent / "agent31-three-hole-tnf"
 sys.path.insert(0, str(GENERATOR_DIR))
 import generate_four_hole_sibling as sibling
 
-OUTPUT_DIR = Path(__file__).resolve().parent / "raw85"
+OUTPUT_DIR = HERE / "raw85"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 sibling.ROOT = OUTPUT_DIR
 sibling.PARENT = "1RB---_1RC1LF_0RD---_1LD1RE_---0LB_---1RA"
 
-original_build = sibling.build
-original_dfas = sibling.DFAS
-missing_dfa_keys = Counter()
-all_open_keys = Counter()
 
-class MissingExactDFAKey(Exception):
-    pass
+def read_candidate_bank(path: Path):
+    candidates = []
+    if not path.exists():
+        return candidates
+    for line_number, line in enumerate(path.read_text().splitlines(), 1):
+        if not line.strip() or line.lstrip().startswith("#"):
+            continue
+        fields = line.split()
+        if len(fields) != 6:
+            raise ValueError(f"{path}:{line_number}: expected four key tokens, orientation, DFA")
+        _historical_key = tuple(fields[:4])  # ordering metadata only, never a proof premise
+        rev = int(fields[4])
+        dfa = [int(x, 36) for x in fields[5]]
+        if rev not in (0, 1):
+            raise ValueError(f"{path}:{line_number}: orientation must be 0 or 1")
+        if len(dfa) < 2 or len(dfa) % 2 or dfa[0] != 0:
+            raise ValueError(f"{path}:{line_number}: candidate must be even-sized and satisfy delta(0, false)=0")
+        candidates.append((rev, dfa))
+    return candidates
 
-def strict_build(p, depth=1):
-    result = sibling.classify(p)
-    if result[0] == "open" and p not in sibling.PUMPS:
-        key = tuple(p[i] for i in (5, 1, 8, 10))
-        all_open_keys[key] += 1
-        if key not in original_dfas:
-            missing_dfa_keys[key] += 1
-            raise MissingExactDFAKey(key)
-        previous = sibling.DFAS
-        sibling.DFAS = {key: original_dfas[key]}
-        try:
-            return original_build(p, depth)
-        finally:
-            sibling.DFAS = previous
-    return original_build(p, depth)
 
-sibling.build = strict_build
-try:
-    sibling.main()
-except MissingExactDFAKey as error:
-    print("RAW85_MISSING_EXACT_DFA_KEY", error.args[0])
-print("RAW85_OPEN_DFA_KEYS_SEEN", sorted(all_open_keys.items()))
-print("RAW85_MISSING_EXACT_DFA_KEYS", sorted(missing_dfa_keys.items()))
+candidate_dir = HERE.parent / "agent21-raw85"
+candidate_files = [
+    candidate_dir / "dfa-candidates.txt",
+    candidate_dir / "smt-candidates.txt",
+]
+extra = []
+for candidate_file in candidate_files:
+    bank = read_candidate_bank(candidate_file)
+    print(f"RAW85_CANDIDATE_BANK {candidate_file.name} {len(bank)}")
+    extra.extend(candidate for candidate in bank if candidate not in extra)
 
+sibling.EXTRA_DFAS = extra
+print(f"RAW85_EXTRA_DFAS {len(sibling.EXTRA_DFAS)}")
+sibling.main()
+
+# Preserve an explicit equality between the generated path-end parent and the
+# literal source table. This checks the path witness, not the candidate keys.
 parsed = sibling.parse(sibling.PARENT)
 expr = "none"
 for i in reversed(range(12)):
