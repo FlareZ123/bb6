@@ -37,13 +37,13 @@ private theorem run_mass_mono_aux (n k : Nat) :
   | succ k ih =>
       intro a d aa dd hN hM
       have hM' : run (n + k + 1) = some (.D aa dd) := by
-        simpa [Nat.add_succ] using hM
+        simpa only [Nat.add_succ] using hM
       rw [run] at hM'
       cases hm : run (n + k) with
       | none =>
-          have hfalse : False := by
+          have hEq : (none : Option _) = some (.D aa dd) := by
             simpa only [hm, Option.bind_none] using hM'
-          exact hfalse.elim
+          cases hEq
       | some s =>
           rcases s with ⟨x, y⟩
           have hprev : a + d ≤ x + y := ih a d x y hN hm
@@ -148,7 +148,7 @@ theorem run_avoids_mass_interval_77_78 (n a d : Nat)
     omega
   · right
     have hn' : 78 ≤ n := by omega
-    have hm := run_mass_mono 78 n hn' 242607912 431144625 run_78_exact h
+    have hm := run_mass_mono 78 n hn' 242607912 431144625 a d run_78_exact h
     omega
 
 /-- A third skipped root-mass interval, between indices 78 and 79. -/
@@ -161,7 +161,7 @@ theorem run_avoids_mass_interval_78_79 (n a d : Nat)
     omega
   · right
     have hn' : 79 ≤ n := by omega
-    have hm := run_mass_mono 79 n hn' 188536700 727823788 run_79_exact h
+    have hm := run_mass_mono 79 n hn' 188536700 727823788 a d run_79_exact h
     omega
 
 /-- A fourth skipped root-mass interval, between indices 80 and 81. -/
@@ -174,7 +174,7 @@ theorem run_avoids_mass_interval_80_81 (n a d : Nat)
     omega
   · right
     have hn' : 81 ≤ n := by omega
-    have hm := run_mass_mono 81 n hn' 26323038 1617861312 run_81_exact h
+    have hm := run_mass_mono 81 n hn' 26323038 1617861312 a d run_81_exact h
     omega
 
 /-- A fifth skipped root-mass interval, between indices 83 and 84. -/
@@ -187,7 +187,7 @@ theorem run_avoids_mass_interval_83_84 (n a d : Nat)
     omega
   · right
     have hn' : 84 ≤ n := by omega
-    have hm := run_mass_mono 84 n hn' 1275661570 710722607 run_84_exact h
+    have hm := run_mass_mono 84 n hn' 1275661570 710722607 a d run_84_exact h
     omega
 
 /-- The first ell=20 member of Agent 1's cone-only family is not root-reachable. -/
