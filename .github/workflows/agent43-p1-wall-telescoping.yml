@@ -48,4 +48,5 @@ jobs:
           lean -o "$AG43/WallListCore.olean" "$AG43/WallListCore.lean"
           lean -o "$CARRY/WallPrefixListBridge.olean" "$CARRY/WallPrefixListBridge.lean"
           lean -o "$CARRY/wall_prefix_carry_cylinders.olean" "$CARRY/wall_prefix_carry_cylinders.lean"
-          lean "$AG43/WallListSource.lean"
+          lean -o "$AG43/WallListSource.olean" "$AG43/WallListSource.lean"
+          lean "$AG28/../agent28-p1-full-prefix/FullPrefix.lean"
