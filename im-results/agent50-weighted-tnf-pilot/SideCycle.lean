@@ -190,4 +190,99 @@ theorem finiteSideCycleCheck_sound (p : PartialMachine) (entry period : Nat)
         simpa [hf] using hflag
 
 #print axioms finiteSideCycleCheck_sound
+
+/-- Single-pass window check. The old range-of-runs checker recomputes
+    every prefix; this one retains the actual reached configuration. -/
+def finiteWindow (p : PartialMachine) (right : Bool) (boundary : Int) :
+    Nat → FinRayCfg → Option FinRayCfg
+  | 0, c => some c
+  | n+1, c => (finiteWindow p right boundary n c).bind fun e =>
+      if side right boundary e.head then finitePartialStep p e else none
+
+theorem finiteWindow_sound (p : PartialMachine) (right : Bool) (boundary : Int)
+    (n : Nat) (c d : FinRayCfg) (h : finiteWindow p right boundary n c = some d) :
+    finitePartialRun p n c = some d ∧
+    ∀ j < n, ∀ e, finitePartialRun p j c = some e → side right boundary e.head := by
+  induction n generalizing d with
+  | zero =>
+    have he : c = d := Option.some.inj h
+    subst d
+    exact ⟨rfl,fun j hj => by omega⟩
+  | succ n ih =>
+    cases he : finiteWindow p right boundary n c with
+    | none => simp [finiteWindow,he] at h
+    | some a =>
+      have hh := ih a he
+      by_cases hs : side right boundary a.head
+      · have hstep : finitePartialStep p a = some d := by simpa [finiteWindow,he,hs] using h
+        refine ⟨by simp [finitePartialRun,hh.1,hstep],?_⟩
+        intro j hj e hjrun
+        by_cases hjn : j = n
+        · subst j
+          rw [hh.1] at hjrun
+          have ha : a = e := Option.some.inj hjrun
+          simpa [← ha] using hs
+        · exact hh.2 j (by omega) e hjrun
+      · simp [finiteWindow,he,hs] at h
+
+def fastSideCycleCheck (p : PartialMachine) (entry period : Nat)
+    (right : Bool) (boundary : Int) : Bool :=
+  match finitePartialRun p entry finiteBlank with
+  | none => false
+  | some c =>
+    match finiteWindow p right boundary period c with
+    | none => false
+    | some d => finiteTailEq right boundary c d
+
+theorem fastSideCycleCheck_sound (p : PartialMachine) (entry period : Nat)
+    (right : Bool) (boundary : Int) (hn : 0 < period)
+    (h : fastSideCycleCheck p entry period right boundary = true) :
+    ∀ m, compatible p m → NeverHalts m := by
+  cases hc : finitePartialRun p entry finiteBlank with
+  | none => simp [fastSideCycleCheck,hc] at h
+  | some c =>
+    cases hd : finiteWindow p right boundary period c with
+    | none => simp [fastSideCycleCheck,hc,hd] at h
+    | some d =>
+      have htail : finiteTailEq right boundary c d = true := by simpa [fastSideCycleCheck,hc,hd] using h
+      obtain ⟨hδ,hrel⟩ := finiteTailEq_sound right boundary c d htail
+      obtain ⟨hloop,hwindow⟩ := finiteWindow_sound p right boundary period c d hd
+      intro m hm
+      have hstart := finitePartialRun_sound p m hm finiteBlank c entry hc
+      rw [embedFinRay_blank] at hstart
+      have hrun := finitePartialRun_sound p m hm c d period hloop
+      apply sideCycle_never m right boundary (d.head-c.head) (embedFinRay c)
+        (embedFinRay d) entry period hn hδ hstart ?_ hrun hrel
+      intro j hj e he
+      cases hf : finitePartialRun p j c with
+      | none =>
+        -- A successful longer checked window implies every earlier run exists.
+        have hh : ∀ n k c d, finitePartialRun p n c = some d → k ≤ n →
+            ∃ e, finitePartialRun p k c = some e := by
+          intro n
+          induction n with
+          | zero =>
+            intro k c d hr hk
+            have heq : k = 0 := by omega
+            subst k
+            exact ⟨c,rfl⟩
+          | succ n ih =>
+            intro k c d hr hk
+            by_cases heq : k = n+1
+            · subst k; exact ⟨d,hr⟩
+            · cases ht : finitePartialRun p n c with
+              | none => simp [finitePartialRun,ht] at hr
+              | some t => exact ih k c t ht (by omega)
+        obtain ⟨f,hf'⟩ := hh period j c d hloop (by omega)
+        rw [hf] at hf'
+        contradiction
+      | some f =>
+        have hsource := finitePartialRun_sound p m hm c f j hf
+        have heq : e = embedFinRay f := Option.some.inj (he.symm.trans hsource)
+        subst e
+        exact hwindow j hj f hf
+
+#print axioms finiteWindow_sound
+#print axioms fastSideCycleCheck_sound
+
 end BB6Coverage.Agent50SideCycle
