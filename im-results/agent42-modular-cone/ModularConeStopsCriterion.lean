@@ -53,8 +53,11 @@ theorem blank_halts_iff_modular_both :
             exact hbound
           have hstop : k+3*m+4 = P (2*m+2)*2 := by
             dsimp [k]
-            rw [Nat.sub_add_cancel hbound']
-            exact hpow.symm
+            calc
+              (2^(2*m+3)-(3*m+4))+3*m+4
+                  = (2^(2*m+3)-(3*m+4))+(3*m+4) := by omega
+              _ = 2^(2*m+3) := Nat.sub_add_cancel hbound'
+              _ = P (2*m+2)*2 := hpow.symm
           exact False.elim ((low_stop_excluded m k hstop hc) hr)
       exact Or.inl ⟨m,⟨hlow,hfilter⟩,hroot⟩
     · exact Or.inr hhigh
