@@ -1,6 +1,7 @@
 import P4ZeroRDDeeperGraft
 
 set_option maxRecDepth 8192
+set_option maxHeartbeats 10000000
 
 namespace BB6Coverage
 

@@ -1,6 +1,6 @@
 # P4 exact child grafts: finite lasso, translated-cycle, and fresh-ray certificates
 
-**Status:** 27 new disjoint source-cylinder certificates are drafted for the P4 depth-four parent. The Lean modules and exact report theorems are **not yet accepted**. Local preflight is unavailable in this invocation. The first three targeted CI runs did not accept a P4 module: runs 45354239582 and 45354469278 stopped in unrelated optional WordLasso code; run 45354692563 reached the P4 step and exposed invalid namespace-qualified module imports. Those imports are corrected here, and the source draft now includes five additional simple D/0 cylinders. A new targeted run is required. Keep this work in `im-results/`.
+**Status:** 27 new disjoint source-cylinder certificates are drafted for the P4 depth-four parent. The Lean modules and exact report theorems are **not yet accepted**. Local preflight is unavailable in this invocation. The first seven targeted CI runs did not yet accept the complete P4 audit. They exposed optional WordLasso failures, invalid module imports, a missing lasso-soundness argument, a halt case outside the six-step bound, then default recursion-depth and heartbeat limits in exact report evaluation. Those issues have been addressed in successive commits; the latest patch raises the report heartbeat budgets. The source draft now includes six additional D/0 certificates. A new targeted run is required. Keep this work in `im-results/`.
 
 ## Authenticated parent and blank entry
 

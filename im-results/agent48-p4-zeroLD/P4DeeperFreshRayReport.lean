@@ -1,6 +1,7 @@
 import P4DeeperFreshRay
 
 set_option maxRecDepth 8192
+set_option maxHeartbeats 5000000
 
 namespace BB6Coverage
 
