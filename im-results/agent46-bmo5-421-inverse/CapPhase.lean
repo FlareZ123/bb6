@@ -161,6 +161,35 @@ theorem skip_reset_q {j x y n : Nat} {w : Int}
   rw [Int.pow_succ]
   grind
 
+
+/-- A two-band skip followed by an n-step negative strip pins the strip
+    scale to a narrow linear window in the target band. -/
+theorem skip_reset_band_window {j x y n : Nat} {w : Int}
+    (h : RegFrom j x y) (hb : Band (j+2) y)
+    (hw : W j x=-(3^n:Int)*w) :
+    2*(j:Int)+13≤(3^(n+1):Int)*w ∧
+      (3^(n+1):Int)*w≤6*(j:Int)-3 := by
+  have hq:=skip_reset_q h hb hw
+  have hqlo : j+8≤Q (j+2) y := by
+    have hqb:=q_bounds hb
+    omega
+  have hqhi : Q (j+2) y≤3*j := by
+    obtain ⟨r,hr,hx,hy⟩:=h
+    have hp : P (j+2)=4*P j := by
+      rw [show j+2=(j+1)+1 by omega,p_succ,p_succ]
+      omega
+    have hyhi : y≤P (j+2)-9 := by
+      rw [hy]
+      omega
+    have hl:=l_add (j+2)
+    unfold Q
+    omega
+  have hqloI : (j:Int)+8≤(Q (j+2) y:Int) := by exact_mod_cast hqlo
+  have hqhiI : (Q (j+2) y:Int)≤3*(j:Int) := by exact_mod_cast hqhi
+  constructor <;> omega
+
+#print axioms skip_reset_band_window
+
 #print axioms skip_exact
 #print axioms skip_reset_q
 
