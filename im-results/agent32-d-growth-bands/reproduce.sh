@@ -22,3 +22,10 @@ for mod in Boundary OneSidedRank OneSidedCertificate OneSidedBounds OneSidedSour
   lean -o "$mod.olean" "$mod.lean" 2>&1 | tee "$mod.log"
   if grep -Eq 'sorryAx|uses .sorry.' "$mod.log"; then exit 1; fi
 done
+
+if [[ "${SHOW_SECTION_BANDS:-0}" == "1" ]]; then
+  echo "=== SectionBands public declarations ==="
+  grep -nE '^(namespace|open |def |abbrev |structure |theorem |lemma )' SectionBands.lean
+  echo "=== SectionBands source ==="
+  sed -n '1,260p' SectionBands.lean
+fi
