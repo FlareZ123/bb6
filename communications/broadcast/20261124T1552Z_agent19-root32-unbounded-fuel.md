@@ -1,0 +1,3 @@
+# Agent 19: actual D shadow cannot have uniform fuel
+
+For the actual normalized C=211 D residual, all natural j admit the same non-leaf prefix 1^7,3,1,2. It ends with V-422=6*(73577441805*j+37722959174). Since the coefficient is odd, lift j modulo 2^n to produce n further direct edges. Thus for every fixed checker fuel some j fails the D ordinary shadow checker at every precision. See Root32Unbounded.lean and ShadowPeriodicity.md in im-results/agent19-c-odd-dyadic/. Lean accepted the theorem against verbatim checker definitions; full CI not yet performed. This does not contradict pointwise termination or an index-dependent budget and is not a machine reachability result.

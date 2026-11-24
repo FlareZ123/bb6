@@ -47,6 +47,25 @@ Both coordinates stay above 2C and both right coordinates are even. These exampl
 
 The exact theorem `BB6.Agent19PeriodicFamilies.constant_odd_iff`, its two directions, the integer-decay and affine-drift lemmas, and both explicit examples compile locally using only Lean core 4.36.0-rc2 (commit b35cb10cf2ced51a2fd1880cfdbf75c71ab7a35a). Axiom profiles are [propext, Classical.choice, Quot.sound] for the classification and drift, and [propext, Quot.sound] for the examples and integer decay; no sorryAx or native-decision axiom. The module defines the ordinary arithmetic edge relation parametrically; it does not import the source-specific root32 checker.
 
+## No uniform fuel for the actual D root32 shadow family
+
+The previous constant-cost examples use other denominators. The actual normalized C=211 D root family has a separate exact obstruction, proved in [Root32Unbounded.lean](Root32Unbounded.lean). From its initial coordinates
+
+    U=309991342080*j+158931736572
+    V=588402769920*j+301672535206
+
+the ten successive costs 1,1,1,1,1,1,1,3,1,2 are legal and non-leaf for every natural j. The terminal coordinates are
+
+    U'=603867580260*j+309601306391
+    V'=441464650830*j+226337755466
+    V'-422=6*(73577441805*j+37722959174).
+
+Each subsequent direct edge halves V-422, increases U, and avoids the forbidden leaf as long as V-422 is even. The coefficient 73577441805 is odd. For every n, successive single-bit lifting therefore produces a natural j with 2^n dividing 73577441805*j+37722959174. This gives an ordinary non-leaf path of length at least n+10 from the D seed. The corresponding infinite 2-adic index is the rational number -37722959174/73577441805; this is not a nonnegative integer index.
+
+The Lean module works at the unnormalized C=22155 and proves both `unboundedD` and `d_checker_no_uniform_fuel`. The latter uses the definitions of the existing recursive `excluded` checker, proving by induction that any non-leaf path longer than its fuel forces false at every precision. In particular for every fixed f some j has false D-checker result for **every** p. The seed affine forms are exactly the expansion of the D `rootShadow` formulas in Root32ShadowRoot.lean. Local Lean 4.36.0-rc2 accepted these theorems with ordinary axioms only against the verbatim relevant executable definitions of Root32ShadowArithmetic.lean. Full repository import/CI acceptance has not been performed (local GitHub checkout is blocked by DNS).
+
+Consequences: a finite uniform depth or fixed finite family of successful residue cylinders cannot close the ordinary D search across all natural j using this leaf test. There is no contradiction with the density-zero theorem: the exceptional 2-adic index has measure zero. This also does not prove an infinite path at a fixed natural j, does not prove any actual machine reachability, and does not refute a fuel bound depending on j (in particular the enormous root precision E-17). Future work should accelerate direct tails exactly and seek an index-dependent all-branches bound, rather than increase a uniform cutoff.
+
 ## Periodic cost words
 
 Suppose an infinite ordinary path has an eventually periodic cost sequence. Discard the finite prefix and choose its primitive period d_0,...,d_(ell-1). By the direct-only observation some d_i>=2. Put P_0=0, P_(i+1)=P_i+d_i, b=P_ell, D=2^b, B=sum_i 2^P_i, W=3b+ell.
@@ -103,4 +122,4 @@ Indeed h=109 d0/m mod211 and k=W/(211^(e-1)*m), and 5*109=123 mod211, 3*210=208 
 
 ShadowPeriodicDenominators.cpp enumerates every odd denominator divisible by 211 up to a user-specified bound, and each multiplicative-by-two orbit of reduced numerators. It uses the period length b and number ell of one digits (the number of orbit representatives x with 2x>=q). It tests W even, (1), (2), (4). For bound 700000 the run returned candidates=73, pass=0, qwithpass=0. This is a necessary-condition test only; it does not assert that any surviving candidate would give an admissible shadow path. No conclusion is drawn for denominators above the bound.
 
-Build with a C++17 compiler supporting unsigned __int128, then run the executable with argument 700000. Neither this bounded census nor the paper argument proves an upper bound on the cost of an aperiodic path. The actual missing universal theorem is a uniform bound that fits the exact root precision E-17, or another exclusion argument for all remaining j.
+Build with a C++17 compiler supporting unsigned __int128, then run the executable with argument 700000. Neither this bounded census nor the paper argument proves an upper bound on the cost of an aperiodic path. The actual missing universal theorem is an index-dependent bound that fits the exact root precision E-17, or another exclusion argument for all remaining j.
