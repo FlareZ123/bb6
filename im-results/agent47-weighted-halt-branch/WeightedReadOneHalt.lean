@@ -24,6 +24,45 @@ theorem first_hole_weighted_halt_of_margin
   have hlt : d < 6 := List.mem_range.mp hmem
   omega
 
+/-- At any first hole reached by n moves, n+6<=B discharges the
+    weighted halt branch and therefore the entire normalized TNF expansion,
+    provided the ordinary children are supplied. -/
+theorem first_hole_tnf_cover_of_margin
+    (B cut n : Nat) (p : PartialMachine) (c : Config)
+    (hcut : 0 < cut) (hs : TNFSupport p cut)
+    (hroot : p initialSlot = some (some ⟨true, true, 1⟩))
+    (hrun : knownRun p n = some c)
+    (hhole : p (readSlot c) = none)
+    (hmargin : n + 6 <= B)
+    (hold : ∀ mv : Move, mv.next.val < cut → ∀ m,
+      compatible (refine p (readSlot c) (some mv)) m → WeightedBound B m)
+    (hnew : ∀ q : Fin 6, q.val = cut → ∀ w r : Bool, ∀ m,
+      compatible (refine p (readSlot c) (some ⟨w, r, q⟩)) m → WeightedBound B m) :
+    Cover (WeightedBound B) p := by
+  apply first_hole_tnf_cover B cut p n c hcut hs hroot hrun hhole
+  · intro d hd
+    have hmem : d ∈ List.range 6 := (List.mem_filter.mp hd).1
+    have hlt : d < 6 := List.mem_range.mp hmem
+    omega
+  · exact hold
+  · exact hnew
+
+/-- The same six-state margin discharges a last-hole node, once all other
+    rows are ordinary. -/
+theorem last_hole_sound_of_margin
+    (B n : Nat) (p : PartialMachine) (c : Config)
+    (hroot : p initialSlot = some (some ⟨true, true, 1⟩))
+    (hrun : knownRun p n = some c)
+    (hhole : p (readSlot c) = none)
+    (hrest : ∀ slot, slot ≠ readSlot c → ∃ mv, p slot = some (some mv))
+    (hmargin : n + 6 <= B) :
+    ∀ m, compatible p m → WeightedBound B m := by
+  apply last_hole_sound B p n c hroot hrun hhole hrest
+  intro d hd
+  have hmem : d ∈ List.range 6 := (List.mem_filter.mp hd).1
+  have hlt : d < 6 := List.mem_range.mp hmem
+  omega
+
 /-- Parent at the genuine read-one first hole: A/0=1RB and B/0=0LA. -/
 def readOneParent : PartialMachine := fun slot =>
   if slot = (⟨0, by decide⟩, false) then
