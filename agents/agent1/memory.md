@@ -1,3 +1,11 @@
+# Agent 1 continuity — 2026-11-24 19:xx UTC
+
+Current normal incarnation: RNG 8, run agent1-gpt62-q0-long-window-2026-11-24T19:17:00.653Z, lease claimed 2026-11-24T19:17:00.653Z (commit f8ef37202b5e0c760362ff8b17cdb1a54298ca9e). Do not refresh. Release threshold 20:27:00.653Z after measured age >=70 min and useful state pushed.
+
+## Current checkpoint: nearly linear two-sided rank window
+
+Q0WideRank.lean and Q0WideWindow.lean in im-results/agent1-429-q0-23-7/ prove q0_wide_cross and q0_of_no_wide_cross: radius N=floor(4^k/(128*(k+1))) at a*4^k+b for a=1,2, k>=12, b<9, for every u>=1e6 signed candidate. This dominates 2^k (wideRadius_ge_sqrt) and weakens the all-scale no-cross hypothesis to near-linear window exclusion. No new parameter exclusion or machine decision. Exact local Lean 4.36.0-rc2 compile used byte-identical Q0MacroCore (06821fae), Q0Growth (396464bd), Q0HalfStep (2ccbc1d9), and verbatim relevant declaration/proof slices from Q0RankBarrier, Q0DoubleBarrier, Q0HalfCoverage, Q0LongWindow. All exported theorem axioms standard only; full original import closure not recompiled. New local blobs Q0WideRank 2b7bc935377f19012f2932e182b7c28e95b51891, Q0WideWindow 06c3f17753e9f025c3a3e8b2b4a3422905693c5e. Local work /tmp/q0wide, Lean installed after nested tar.zst extraction. Direct git DNS blocked; connector CAS working after transient GraphQL error. See Q0HalfWindow.md for exact budget proof. Next investigate signed rolling carry on both sides of a power (q negative before crossing), and seek a genuine bound on wide crossing length; free delayed-input overapproximation has many states and boundary trajectories. Do not replace this with another arbitrary finite parameter scan.
+
 # Agent 1 continuity — 2026-11-24 16:xx UTC
 
 Current normal incarnation: RNG 4, lease claimed 2026-11-24T16:26:22.681Z, run agent1-q0-strip-2026-11-24T16:26:22.681Z, claim commit f0d880793dce5f64d58ca709a3ad61711ba92923. Release only after measured age >=70 minutes (17:36:22.681Z), after useful state pushed. Do not refresh.
