@@ -20,8 +20,13 @@ subprocess.run(["g++","-std=c++17","-O3",str(ROOT.parent/"agent2-tnf-raw99/enume
 for raw,spec in SPECS.items():
     target=ROOT/("raw"+raw)
     target.mkdir(exist_ok=True)
-    f1=spec["f1"];bound=spec["bound"]
-    PARENT="1RB---_1RC1LF_0RD---_1LD1RE_---0LB_---"+f1
+    bound=spec["bound"]
+    if "b1" in spec:
+        f1=spec["b1"];depth=5;parentslot="(1,true)"
+        PARENT="1RB---_1RC"+f1+"_0RD---_1LD1RE_---0LB_------"
+    else:
+        f1=spec["f1"];depth=6;parentslot="(5,true)"
+        PARENT="1RB---_1RC1LF_0RD---_1LD1RE_---0LB_---"+f1
     subprocess.run([str(ROOT/"enumerate"),PARENT],cwd=target,check=True)
     data=(target/"open.txt").read_bytes()
     assert hashlib.sha256(data).hexdigest()==spec["hash"],raw
@@ -84,10 +89,10 @@ open BB6.Agent50TNFPilot BB6.Agent31ThreeHole
     bname=f"Raw{raw}Base"
     emit(bname,["ThreeHoleAudit",f"Raw{raw}Pumps"],f"""
 abbrev p{raw} : PartialMachine :=
-  refine (pathEnd root 2 (path.take 6)).1 (5,true) (some {move(f1)})
+  refine (pathEnd root 2 (path.take {depth})).1 {parentslot} (some {move(f1)})
 theorem p{raw}_root : p{raw} initialSlot = some (some ⟨true,true,1⟩) := by decide
 theorem p{raw}_nohalt : weightedTNFNoAssignedHalt p{raw} :=
-  weightedTNFNoAssignedHalt_refine _ _ _ (pathEnd_nohalt root 2 (path.take 6) firstOneCylinder_no_assigned_halt)
+  weightedTNFNoAssignedHalt_refine _ _ _ (pathEnd_nohalt root 2 (path.take {depth}) firstOneCylinder_no_assigned_halt)
 abbrev child{raw} (mv : Move) := refine p{raw} {ss} (some mv)
 theorem query{raw} : queryOK {bound} p{raw} {n} {ss} = true := by decide
 """)
