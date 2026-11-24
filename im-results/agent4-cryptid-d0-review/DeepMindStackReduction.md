@@ -49,3 +49,29 @@ The stack coordinates may be the natural home for the required nonregular invari
 4. Then pursue either (a) a deterministic proof that the authentic stack orbit reaches a trigger word, with exact raw step accumulation, or (b) an inductive nonregular invariant excluding every trigger. Do not treat the heuristic “probviously halting” classification as a proof.
 
 No files under `results/` should be changed on the basis of this external reduction alone.
+
+
+## Relation to the explicit 108-call halting cylinder
+
+The BusyBeaverWiki page for the same #85/#490 cryptid records @-d's 108-call word
+
+```text
+EEBBEBEEBEEEBBEBBEEBBEBEEBBEBBEEEBBEBBEBBEEBBEEEBBEBEEEBBEBBEEBBEBEEBBEBBEEEBBEBBEBE
+```
+
+and the empty-suffix halting family
+`A(3^108*k + C, "")`, where
+
+```text
+C = 1975700577069254261393123959451562008800234946348086
+```
+
+The page reports 1,057,916,215,296 length-108 halting residue classes, so this displayed word is a representative, not the entire halting set. The page explicitly leaves open whether the authentic start `A(9,"")` reaches any of these classes.
+
+The local `Root13Shadow.md` gives a striking but strictly finite/raw-replay relation: the authentic root's first thirteen A/B/E macro branches are exactly the first thirteen letters of the displayed word (E,E,B,B,E,B,E,E,B,E,E,E,B). At the next macro the root's residue is 1 while this particular external path requires residue 2. Its section-31,777 parameter satisfies
+`a-C ≡ 3^13 (mod 3^14)`; after i matching updates the difference is
+`8^i * 3^(13-i) * p`, with `p mod 3 = 1`. This is a 13-adic near-shadow of one halting cylinder, not a hit and not a nonhalting proof. The local 82,605-section screen found no exact lift for the eleven canonical A-section prefixes j=0,...,10, but it is finite arithmetic-model evidence only.
+
+The useful stack-model question is therefore not merely whether the 108-letter representative occurs. It is whether the initial stack orbit reaches **any** of the 1,057,916,215,296 valid halting residue cylinders, or another halt gate. A future stack/3-adic bridge should preserve the full family of allowed words, not only the single displayed representative.
+
+External source: [BusyBeaverWiki analysis of #85/#490](https://wiki.bbchallenge.org/wiki/1RB---_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA) (page last edited 2025-09-27). This community analysis is a research lead; the 108-word family and the root question are not formalized by the DeepMind stack-closure theorem.
