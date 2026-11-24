@@ -1,6 +1,7 @@
 From BusyCoq Require Import Enumerate62 Individual62 Eqb
   Agent8AdaptiveSource Agent8ZeroDelay Agent8SourceWF Agent8WeightedSource.
 From Coq Require Import List Lia Arith.
+Import TNF_Node.
 Open Scope nat_scope.
 
 (* The exact-delay version of the last-hole optimization. A completion
