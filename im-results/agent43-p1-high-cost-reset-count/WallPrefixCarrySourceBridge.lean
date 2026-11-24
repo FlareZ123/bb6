@@ -136,7 +136,7 @@ theorem membershipPrefixWeight_eq_bitExpr
     membershipPrefixWeight n (K+1) A =
       bitExpr n (prefixBits A K) := by
   rw [membershipPrefixWeight_eq_tail n A K]
-  rw [sumBits_prefixBits n A K]
+  rw [← sumBits_prefixBits n A K]
   simp [bitExpr, h0]
 
 theorem one_add_mod_of_dvd (K x : Nat) (hK : 1 ≤ K)
@@ -145,10 +145,18 @@ theorem one_add_mod_of_dvd (K x : Nat) (hK : 1 ≤ K)
   have hpow : 1 < 2^K := by
     cases K with
     | zero => omega
-    | succ K => simp [Nat.pow_succ]
+    | succ K =>
+        have hpos : 0 < 2^K := by
+          induction K with
+          | zero => simp
+          | succ K ih =>
+              rw [Nat.pow_succ]
+              exact Nat.mul_pos ih (by decide)
+        rw [Nat.pow_succ]
+        omega
   have hx : x%2^K = 0 := Nat.mod_eq_zero_of_dvd hdiv
   rw [Nat.add_mod, Nat.mod_eq_of_lt hpow, hx]
-  simp
+  omega
 
 /-- A genuine source CountCone history reaching the shifted wall yields a
     Boolean prefix satisfying the carry congruence whenever K<=n,m. -/
@@ -174,18 +182,21 @@ theorem sourceWall_prefix_bitExpr
   have hdivL : 2^K ∣ 7*2^n*costPowSum A := by
     refine ⟨7*2^(n-K)*costPowSum A, ?_⟩
     have hsplit : n = K+(n-K) := by omega
-    rw [hsplit, Nat.pow_add]
+    have hsub : K+(n-K)-K = n-K := by omega
+    rw [hsplit, Nat.pow_add, hsub]
     ac_rfl
   have hleft := one_add_mod_of_dvd K (7*2^n*costPowSum A) hK hdivL
   have hdivN : 2^K ∣ 2^n*2^m := by
     refine ⟨2^(n-K)*2^m, ?_⟩
     have hsplit : n = K+(n-K) := by omega
-    rw [hsplit, Nat.pow_add]
+    have hsub : K+(n-K)-K = n-K := by omega
+    rw [hsplit, Nat.pow_add, hsub]
     ac_rfl
   have hdivM : 2^K ∣ (n+3+m)*2^m := by
     refine ⟨(n+3+m)*2^(m-K), ?_⟩
     have hsplit : m = K+(m-K) := by omega
-    rw [hsplit, Nat.pow_add]
+    have hsub : K+(m-K)-K = m-K := by omega
+    rw [hsplit, Nat.pow_add, hsub]
     ac_rfl
   have htermN : (2^n*2^m)%2^K = 0 := Nat.mod_eq_zero_of_dvd hdivN
   have htermM : ((n+3+m)*2^m)%2^K = 0 := Nat.mod_eq_zero_of_dvd hdivM
@@ -237,7 +248,7 @@ theorem sourceWall_excludes_familyI_h1
     rw [hM']
     exact familyI_terminal_m_ge_n n u hn hU'
   have hKn : 60 ≤ n := by dsimp [n]; omega
-  have hKm : 60 ≤ m := le_trans hKn hmge
+  have hKm : 60 ≤ m := by omega
   have hcarry : ¬ ∃ rest : List Bool,
       rest.length = 60-1 ∧ bitExpr n rest % 2^60 = 1 := by
     simpa [n] using noPrefix_familyI_h1 t
