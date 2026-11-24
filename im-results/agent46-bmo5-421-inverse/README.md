@@ -36,8 +36,10 @@ Follow the unique inverse until it is undefined. This terminates by strict growt
 
 ## Symbolic inverse sieve
 
-[Exact geometric residue tree](SymbolicSieve.md): for each depth t, the indices i≥4t+10 with at least t predecessors form exactly 2^(t+1) residue classes modulo 2·3^t (paper proof, not yet kernel-certified). The compressed integer sieve classified all 0..10^12 terminal indices with no root in {1,2,3} and no unresolved cases. The unbounded terminal existential remains open. Every fixed-depth sieve has infinitely many survivors.
+[Exact geometric residue tree](SymbolicSieve.md): for each depth t, the indices i≥4t+10 with at least t predecessors form exactly 2^(t+1) residue classes modulo 2·3^t (kernel-certified exact residue list; density follows). The compressed integer sieve classified all 0..10^12 terminal indices with no root in {1,2,3} and no unresolved cases. The unbounded terminal existential remains open. Every fixed-depth sieve has infinitely many survivors.
 
+
+The exact finite-depth residue theorem and the actual rooted-graph bridge have been accepted in [CI 45383459136](https://github.com/FlareZ123/bb6/actions/runs/45383459136), revision `6d6cf1bae45897d8a56d35a9ee6393cbc9d62d9c`, Lean 4.36.0-rc2. The workflow compiled Cap, CapInverse, CapRoot and the six CapSieve modules, rejecting sorryAx/native_decide. `CapSieve.exact_classification` proves the duplicate-free residue list of cardinality 2^(t+1), and `CapSieve.small_root_survives` / `small_root_word` establish the necessary condition for actual roots ≤3. The density limit is a mathematical corollary of the exact list theorem; the C++ computation remains separate finite evidence.
 
 ## Shared BMO5 graph: #252, #421 and #754
 
