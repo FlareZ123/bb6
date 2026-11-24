@@ -39,7 +39,7 @@ The central theorem, blank_halts_iff_joint_val_six_full, is an exact equivalence
 
 The refined joint CI verification succeeded in [run 42252457830](https://github.com/FlareZ123/bb6/actions/runs/42252457830).
 
-A separate W11 root4 B2 branch now has a paper-level source exclusion for the B2 parameter progression u≡157622 (mod 1720320), equivalent under the exact root equation to root indices r≡11092 (mod 16384) and q≡11 (mod 128). Both P(q) source parents reduce to existing blank-image obstructions, and the exact residual equation has a solution for every root index in the progression, so the exclusion is nonvacuous. The upstream B2-to-P4 and D(w) parent reductions are in the accepted U5B2Root32 source closure; the new P(q) parent fan and root-index composition remain uncompiled. See [W11 q=11 mod128 closure](U5B2Root4W11Q11Mod128.md). This is the separate r≡20 (mod 64) root4 sector, disjoint from the r≡32 (mod 64) root32 high-stop nine-class union. All other W11 root-index classes remain open.
+A separate W11 root4 B2 branch is now **Lean source-compiled** for the infinite parameter progression u=157622+1720320s and the corresponding exact-root cylinder r≡11092 (mod 16384), q≡11 (mod 128). The new [W11Q11Source.lean](W11Q11Source.lean) module compiled its full 51-module import closure under Lean 4.36.0-rc2 in [CI run 45345767224 (#191)](https://github.com/FlareZ123/bb6/actions/runs/45345767224). Its parent-containment theorem, both Q/A inverse exclusions, P-unreachability, B2 residual exclusion, root-parameter map, and root-index B2 exclusion all passed `#print axioms`; no new declaration depends on `sorryAx`. The reported profiles are [propext, Classical.choice, Quot.sound], except `root_q11_parameter`, which has [propext, Quot.sound]. The Lean root theorem proves the forward map from r≡11092 (mod 16384) plus the exact root equation to u=157622+1720320s; the converse cylinder equivalence and nonvacuity for every index remain established in the accompanying paper-level arithmetic note, not yet Lean-formalized. See [W11 q=11 mod128 closure](U5B2Root4W11Q11Mod128.md). This is the separate r≡20 (mod 64) root4 sector, disjoint from the r≡32 (mod 64) root32 high-stop nine-class union. All other W11 root-index classes remain open.
 
 ## Main research artifacts
 
@@ -47,7 +47,7 @@ A separate W11 root4 B2 branch now has a paper-level source exclusion for the B2
 - [OddSevenSecondCylinder.lean](OddSevenSecondCylinder.lean): original-source inverse cylinder excluding the second sum-seven slope.
 - [JointFiveSieve.lean](JointFiveSieve.lean): combined Agent11/19 restrictions and the high four-link exclusion.
 - [JointAllRoot.lean](JointAllRoot.lean): joint high-root restrictions and the odd-special high families.
-- [U5B2Root4W11Q11Mod128.md](U5B2Root4W11Q11Mod128.md): paper-level B2 root-index exclusion r≡11092 (mod 16384), via the q≡11 (mod 128) two-parent fan; new composition not yet Lean-compiled.
+- [W11Q11Source.lean](W11Q11Source.lean) and [U5B2Root4W11Q11Mod128.md](U5B2Root4W11Q11Mod128.md): Lean-compiled q≡11 (mod 128) P-parent containment, Q/A blank-image exclusions, B2 residual exclusion, and forward exact-root parameter transfer; CI 45345767224, 51 modules, no `sorryAx`. Converse root-index equivalence and nonvacuity remain paper-level.
 - [SecondOneInfinite.lean](SecondOneInfinite.lean): exact infinite (m=1) family and its prior-sieve status.
 - [QuotientRectCensus.cpp](QuotientRectCensus.cpp): reproducible M512 quotient census for the mixed rectangles and the four parameter-family residue cycles.
 
@@ -68,7 +68,7 @@ The 25/4 mixed rectangle is intentionally omitted from the final high predicate.
 
 ## Next research
 
-- For the W11 root4 branch, compile the q≡11 (mod 128) two-parent fan and its root-index transfer into the existing U5B2Root32 closure. The upstream B2-to-P4 and even/odd three-divisible parent reductions are already in the accepted closure. Do not expand residue coverage before this composition is accepted.
+- For W11 root4, the q≡11 (mod 128) composition is now source-accepted. Revisit Agent3's deferred A4 sum-seven transfer (t=79/719/1167/15) as a separate next candidate; preserve its exact residual cylinders and do not generalize HighEvenRightSum7Source to y≡0 (mod 8) without a separate proof.
 - [HighDyadicConeCandidate.md](HighDyadicConeCandidate.md) now records the **completed source-certified** high stopping theorem, its proof structure, CI audit, and an **M512-admitted** sample `j=263,m=3`. The generalized arbitrary-depth proof and its source certification are linked above. Establish separate prior-sieve novelty and complete the strongest exact halting-iff integration.
 
 - Close the remaining unbounded low and high parameter domains.
