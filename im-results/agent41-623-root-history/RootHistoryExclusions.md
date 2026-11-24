@@ -78,7 +78,12 @@ The same mass-gap method also appears to exclude the **entire depth-20 slice** o
 - D(947041384,236760246), mass 1,183,801,630: between root masses at indices 80 and 81;
 - D(1291415152,322853688), mass 1,614,268,840: also between root masses at indices 80 and 81.
 
-The new exact anchors at indices 80 and 81 and all three non-reachability theorems are also in `RootMassGapSource.lean`. This is a fixed-depth exclusion, not an all-depth proof of the cone-only family.
+The exact original-source targets are:
+- r=1: D(452000798,452000456), mass 904,001,254, also between indices 78 and 79;
+- r=2: D(710281126,710280778), mass 1,420,561,904, also between indices 80 and 81;
+- r=3: D(968561452,968561102), mass 1,937,122,554, between root masses at indices 83 and 84 (1,749,476,621 and 1,986,384,177).
+
+Thus both endpoints of all three depth-20 cone-only transitions are mass-inaccessible from the blank root, provided the exact source anchors and mass-monotonicity module pass CI. The source transition equalities and all source/target non-reachability statements are now included in the two Lean modules. This is a fixed-depth exclusion, not an all-depth proof of the cone-only family.
 
 The 20,000-step observation and the new source-authentic transition are finite replay evidence, not Lean-certified theorems. The exact transition is a useful adversarial test for any proposed valuation/carry product.
 
