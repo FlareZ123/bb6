@@ -62,11 +62,11 @@ theorem withBoth_open_iff (m : Machine) :
 
 theorem closes_first : ¬ withBoth.open expectedRLE_1 := by
   intro h
-  exact (withBoth_open_iff _).mp h |>.2.1 rfl
+  exact ((withBoth_open_iff _).mp h).2.1 rfl
 
 theorem closes_second : ¬ withBoth.open expectedRLE_2 := by
   intro h
-  exact (withBoth_open_iff _).mp h |>.2.2 rfl
+  exact ((withBoth_open_iff _).mp h).2.2 rfl
 
 theorem exhaustive (m : Machine) : DecidedBelow bound m ∨ withBoth.open m :=
   withBoth.exhaustive m (empty_compatible m)
@@ -81,8 +81,8 @@ theorem withBoth_report_of_open
        cryptids608GraftedAudit.report.2 - 2) := by
   have hne : expectedRLE_2 ≠ expectedRLE_1 := by
     intro h
-    have hslot := congrFun h ((0 : Fin 6), true)
-    contradiction
+    have hslot : expectedRLE_2 ((0 : Fin 6), true) ≠ expectedRLE_1 ((0 : Fin 6), true) := by decide
+    exact hslot (congrFun h _)
   have h1fresh : ∀ m, compatible (singleton expectedRLE_1) m → raised.open m := by
     intro m hm
     rw [(compatible_singleton_iff m _).mp hm, raised_open_iff]
@@ -109,6 +109,46 @@ theorem withBoth_report_of_open
   rw [hr] at hfirst
   rw [hsecond, hfirst]
   congr 1 <;> omega
+
+private theorem incompatible_A1 {p : PartialMachine} {m : Machine} {t : Transition}
+    (hp : p ((0 : Fin 6), true) = some t)
+    (hne : m ((0 : Fin 6), true) ≠ t) : ¬ compatible p m := by
+  intro h
+  exact hne (h _ _ hp)
+
+noncomputable local instance depth4OpenDecidable (m : Machine) :
+    Decidable (depth4ResidualAudit.open m) :=
+  FrontierAudit.openDecidable depth4ResidualAudit m
+
+theorem oldOpen_1 : cryptids608GraftedAudit.open expectedRLE_1 := by
+  apply (cryptids608GraftedAudit_open_iff _).mpr
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · decide
+  · exact incompatible_A1 (t := expectedRLE_r1 ((0 : Fin 6), true)) rfl (by decide)
+  · exact incompatible_A1 (t := expectedRLE_r2 ((0 : Fin 6), true)) rfl (by decide)
+  · exact incompatible_A1 (t := expectedRLE_r3 ((0 : Fin 6), true)) rfl (by decide)
+  · exact incompatible_A1 (t := expectedRLE_r4 ((0 : Fin 6), true)) rfl (by decide)
+  · exact incompatible_A1 (t := expectedRLE_r5 ((0 : Fin 6), true)) rfl (by decide)
+  · exact incompatible_A1 (t := expectedRLE_r6 ((0 : Fin 6), true)) rfl (by decide)
+
+theorem oldOpen_2 : cryptids608GraftedAudit.open expectedRLE_2 := by
+  apply (cryptids608GraftedAudit_open_iff _).mpr
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · decide
+  · exact incompatible_A1 (t := expectedRLE_r1 ((0 : Fin 6), true)) rfl (by decide)
+  · exact incompatible_A1 (t := expectedRLE_r2 ((0 : Fin 6), true)) rfl (by decide)
+  · exact incompatible_A1 (t := expectedRLE_r3 ((0 : Fin 6), true)) rfl (by decide)
+  · exact incompatible_A1 (t := expectedRLE_r4 ((0 : Fin 6), true)) rfl (by decide)
+  · exact incompatible_A1 (t := expectedRLE_r5 ((0 : Fin 6), true)) rfl (by decide)
+  · exact incompatible_A1 (t := expectedRLE_r6 ((0 : Fin 6), true)) rfl (by decide)
+
+theorem withBoth_report : withBoth.report =
+    (cryptids608GraftedAudit.report.1 + 2, cryptids608GraftedAudit.report.2 - 2) :=
+  withBoth_report_of_open oldOpen_1 oldOpen_2
+
+#print axioms oldOpen_1
+#print axioms oldOpen_2
+#print axioms withBoth_report
 
 #print axioms withBoth_open_iff
 #print axioms withBoth_report_of_open
