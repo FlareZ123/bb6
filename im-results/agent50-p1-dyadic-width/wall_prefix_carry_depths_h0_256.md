@@ -79,3 +79,6 @@ function firstEmpty(n, maxSteps = 10000) {
 \`\`\`
 
 This is an exploratory census over (h\le256), not a universal proof. The next mathematical step is to explain the long transient structure (especially the (h=142) and (h=86) cases), rather than simply extending the same finite scan.
+
+
+The full driver that loops over both families and all 257 values of (h), records maximum state-set sizes, and prints the top 20 records is [`wall_prefix_carry_depths_scan.js`](wall_prefix_carry_depths_scan.js).
