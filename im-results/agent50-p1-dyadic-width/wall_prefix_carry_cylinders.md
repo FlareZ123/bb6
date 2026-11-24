@@ -1,6 +1,6 @@
 # Root-prefix carry cylinders for the fourth-edge restart families
 
-**Status:** exact intermediate arithmetic result. The carry recurrence and all four infinite-cylinder exclusions are Lean-checked in core Lean 4.36.0-rc2. The short bridge from the existing source-wall list identity to the Boolean prefix is written out below but has not yet been composed into the source wrapper. This does not decide P1 or BB(6).
+**Status:** exact intermediate arithmetic result. The carry recurrence and all four infinite-cylinder exclusions are Lean-checked in core Lean 4.36.0-rc2. The generic arithmetic bridge from the existing source-wall list identity to the Boolean prefix now also compiles in core Lean: see [WallPrefixListBridge.lean](WallPrefixListBridge.lean). The original CountCone wrapper on PR #99 still needs to import it and pass the full source dependency audit. This does not decide P1 or BB(6).
 
 ## 1. Source-wall reduction
 
@@ -24,7 +24,7 @@ All starts (s\ge K) vanish modulo (2^K). Since (A) is duplicate-free, define (x_
 ]
 The left side of (3) is exactly `bitExpr n rest` in the Lean file, with `rest` the Boolean list `[x₁,…,xₖ₋₁]`.
 
-Thus, once the list-to-Boolean characteristic-map lemma is composed into PR #99, a Lean theorem excluding (3) excludes every source wall state with (K\le n,m). The carry certificate below supplies that arithmetic exclusion on four infinite parameter cylinders.
+Thus, the generic Lean theorem `BB6WallBridge.wall_identity_impossible` excludes any duplicate-free list satisfying (1) whenever the corresponding Boolean prefix is impossible and (K\le n,m). Applying it to the CountCone witness of PR #99 requires only the source wrapper. The carry certificate below supplies that arithmetic exclusion on four infinite parameter cylinders.
 
 ## 2. Exact carry certificate
 
@@ -96,10 +96,10 @@ in family II. The existing source numeric bound (2^n\ge1100n) for (n\ge14) impli
 - Lean source: [`wall_prefix_carry_cylinders.lean`](wall_prefix_carry_cylinders.lean).
 - It imports only `Lean`; the carry completeness theorem, empty-layer computations, modulus lifts, and four family-cylinder statements are all kernel-checked locally with Lean 4.36.0-rc2.
 - The four `#print axioms` outputs are exactly `[propext, Quot.sound]`; there is no `sorryAx`.
-- The source identity (1) is independently present on PR #99's branch and its targeted workflow is green, but this invocation did not inspect successful-job logs or the `#print axioms` output; it therefore makes no claim that the source theorem is `sorryAx`-free. The characteristic-list-to-Boolean-prefix composition has not yet been added to that source wrapper; this is the remaining formal integration step.
+- The source identity (1) is independently present on PR #99's branch and its targeted workflow is green, but this invocation did not inspect successful-job logs or the `#print axioms` output; it therefore makes no claim that the source theorem is `sorryAx`-free. The characteristic-list-to-Boolean-prefix arithmetic bridge is now locally compiled: `weighted_mod_prefix`, `weighted_mod_bits`, `wall_identity_implies_bits`, and `wall_identity_impossible` audit to `[propext, Classical.choice, Quot.sound]`, with no `sorryAx` or `native_decide`. The source CountCone wrapper still has to import the bridge and apply it; the source file is not yet on main in its list-identity form.
 - These four cylinders do **not** cover all (h) in either restart family. No unrestricted six-shallow theorem, P1 nonhalting proof, BB(6) upper bound, or exact BB(6) value follows.
 
-The useful next action is to add the small `List.Nodup` characteristic-bit bridge to PR #99, apply the four Lean cylinder theorems, and then attack the still-uncovered (h)-classes. Do not rerun the earlier finite (n\le10{,}000) scan or repeat the fourth-edge 81-case classification.
+The useful next action is to compose the now-proved `List.Nodup` characteristic-bit bridge with PR #99, apply the four Lean cylinder theorems, and then attack the still-uncovered (h)-classes. Do not rerun the earlier finite (n\le10{,}000) scan or repeat the fourth-edge 81-case classification.
 
 
 The generic inequality (2^n\ge1100n) for (n\ge14), and both implications (m\ge n) from the explicit (u)-formulae, are now kernel-checked in the Lean file as `pow2_ge_1100_mul`, `familyI_terminal_m_ge_n`, and `familyII_terminal_m_ge_n`. Their `#print axioms` audits are `[propext, Quot.sound]`.

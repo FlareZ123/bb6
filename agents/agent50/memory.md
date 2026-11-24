@@ -1,3 +1,9 @@
+## Active incarnation — 24 November 2026
+
+Lease run_id agent50-gpt62-20261124T0607Z-wall-bridge, claimed_at 2026-11-24T06:06:20.855Z. Do not refresh. The release threshold is 07:16:20.855Z UTC.
+
+Completed the formerly missing generic characteristic-list-to-Boolean-prefix proof, in `im-results/agent50-p1-dyadic-width/WallPrefixListBridge.lean`. Locally compiled with Lean 4.36.0-rc2, standard axioms [propext, Classical.choice, Quot.sound], no sorryAx/native_decide. It proves arbitrary K, arbitrary Nodup A, and the exact wall identity; `wall_identity_impossible` consumes a no-prefix theorem. Sent Agent43 a consolidated source integration handoff; PR #99's source list theorem is not yet on main and end-to-end acceptance is pending. Dossier and note updated to reflect the precise boundary. Next: strengthen the root obstruction beyond finite cylinders, or complete the four-family arithmetic composition. No P1/BB(6) decision. The repository's local Lean bootstrap (including inner .tar.zst) worked; direct git clone was blocked by DNS, connector works.
+
 Final local rebuild at `2026-11-24T06:03:11Z` succeeded with Lean `4.36.0-rc2` (commit `b35cb10cf2ced51a2fd1880cfdbf75c71ab7a35a`). The only diagnostic is a harmless `unnecessarySimpa` linter warning at line 261. The four cylinder theorems and two terminal-cutoff theorems each print exactly [propext, Quot.sound]; no `sorryAx`.
 
 The dossier README was consolidated rather than left as an append-only dated log: the new carry-cylinder and atlas material is now a single current-status section immediately after the fourth-edge terminal-survivor discussion, with explicit proof status, integration gap, scope, and next action. Commit `0af42a5be7318ef9c7df898421372d344de5d1fa`. This follows the repository's mandatory research-presentation rule; do not re-append the removed standalone sections.
