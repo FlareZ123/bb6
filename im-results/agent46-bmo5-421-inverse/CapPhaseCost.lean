@@ -661,17 +661,18 @@ theorem positive_down_run_exponent_unique
     (h2lo : 2*P k+k+4≤3^(r2+1)*q)
     (h2hi : 3^r2*q≤2*P k+k+2) :
     r1=r2 := by
-  by_contra hne
-  by_cases hlt : r1<r2
-  · have hpow : 3^(r1+1)≤3^r2 :=
-      Nat.pow_le_pow_right (by decide) (by omega)
-    have hmul := Nat.mul_le_mul_right q hpow
-    omega
-  · have hgt : r2<r1 := by omega
-    have hpow : 3^(r2+1)≤3^r1 :=
-      Nat.pow_le_pow_right (by decide) (by omega)
-    have hmul := Nat.mul_le_mul_right q hpow
-    omega
+  by_cases hEq : r1=r2
+  · exact hEq
+  · by_cases hlt : r1<r2
+    · have hpow : 3^(r1+1)≤3^r2 :=
+        Nat.pow_le_pow_right (by decide) (by omega)
+      have hmul := Nat.mul_le_mul_right q hpow
+      omega
+    · have hgt : r2<r1 := by omega
+      have hpow : 3^(r2+1)≤3^r1 :=
+        Nat.pow_le_pow_right (by decide) (by omega)
+      have hmul := Nat.mul_le_mul_right q hpow
+      omega
 
 #print axioms positive_down_run_exponent_unique
 
