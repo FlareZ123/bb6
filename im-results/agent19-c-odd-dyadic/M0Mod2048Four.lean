@@ -514,11 +514,13 @@ private theorem affine_right_m0_2048_1159 (t : Nat) :
   · omega
   · omega
   · omega
+  · omega
 
 private theorem affine_right_m0_2048_1343 (t : Nat) :
     (BB6.Agent15.affineNormalize (4096*t+2689) (6144*t+4036)).2≠4 := by
   apply affine_right_one_step (4096*t+2689) (6144*t+4036)
     (10240*t+6723) (3072*t+2017)
+  · omega
   · omega
   · omega
   · omega
@@ -532,8 +534,10 @@ theorem m0_2048_534_admitted_and_excluded (t : Nat) :
   constructor
   · apply prior_high_allowed_m0
     · omega
-    · simpa [Nat.mul_comm, Nat.mul_left_comm, Nat.mul_assoc] using
-        affine_right_m0_2048_534 t
+    · have hx : 2*(2048*t+534)+3 = 4096*t+1071 := by omega
+      have hy : 3*(2048*t+534)+7 = 6144*t+1609 := by omega
+      rw [hx,hy]
+      exact affine_right_m0_2048_534 t
   · exact excluded_m0_2048_534 t
 
 theorem m0_2048_581_admitted_and_excluded (t : Nat) :
@@ -544,8 +548,10 @@ theorem m0_2048_581_admitted_and_excluded (t : Nat) :
   constructor
   · apply prior_high_allowed_m0
     · omega
-    · simpa [Nat.mul_comm, Nat.mul_left_comm, Nat.mul_assoc] using
-        affine_right_m0_2048_581 t
+    · have hx : 2*(2048*t+581)+3 = 4096*t+1165 := by omega
+      have hy : 3*(2048*t+581)+7 = 6144*t+1750 := by omega
+      rw [hx,hy]
+      exact affine_right_m0_2048_581 t
   · exact excluded_m0_2048_581 t
 
 theorem m0_2048_1159_admitted_and_excluded (t : Nat) :
@@ -556,8 +562,10 @@ theorem m0_2048_1159_admitted_and_excluded (t : Nat) :
   constructor
   · apply prior_high_allowed_m0
     · omega
-    · simpa [Nat.mul_comm, Nat.mul_left_comm, Nat.mul_assoc] using
-        affine_right_m0_2048_1159 t
+    · have hx : 2*(2048*t+1159)+3 = 4096*t+2321 := by omega
+      have hy : 3*(2048*t+1159)+7 = 6144*t+3484 := by omega
+      rw [hx,hy]
+      exact affine_right_m0_2048_1159 t
   · exact excluded_m0_2048_1159 t
 
 theorem m0_2048_1343_admitted_and_excluded (t : Nat) :
@@ -568,8 +576,10 @@ theorem m0_2048_1343_admitted_and_excluded (t : Nat) :
   constructor
   · apply prior_high_allowed_m0
     · omega
-    · simpa [Nat.mul_comm, Nat.mul_left_comm, Nat.mul_assoc] using
-        affine_right_m0_2048_1343 t
+    · have hx : 2*(2048*t+1343)+3 = 4096*t+2689 := by omega
+      have hy : 3*(2048*t+1343)+7 = 6144*t+4036 := by omega
+      rw [hx,hy]
+      exact affine_right_m0_2048_1343 t
   · exact excluded_m0_2048_1343 t
 
 theorem m0_2048_534_blank_unreachable (t : Nat) :
