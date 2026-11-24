@@ -99,12 +99,13 @@ The source theorem is `Exception33Q5Rejoin.exception33_q5_rejoin`. Its five audi
 
 The current `hstart` proof unfolds `sourceStart`, `DRegularSource.sourceSection`, `CryptidBoundary.init`, `oppairs`, and `pairs` with `simp`, then closes the replicate-length arithmetic with `omega`. The earlier `simp only` proof failed because it did not reassociate the appended `oppairs` suffix.
 
-The exact total duration simplifies algebraically to
-[
-57036u^2+22057u+2222+
-C(256u+43,[0,0,1,1,0,1,1]),
-]
-where (C(m,w)=	exttt{CryptidA.wordCost}) remains in its source-defined form. The endpoint is (L(512u+129,0,0)).
+The exact total primitive-step duration has now been simplified using the kernel-certified general
+\`BB6.Parikh.wordCost_closed\` identity and the token statistics of this fixed word:
+\[
+T_{33}(u)=57036u^2+28201u+3628.
+\]
+The endpoint is \(L(512u+129,0,0)\). The full arithmetic derivation and source dependencies are recorded in
+[Exception33DurationClosedForm.md](Exception33DurationClosedForm.md); the displayed specialization is an arithmetic corollary, not a newly compiled Lean theorem.
 
 Two substantive proof corrections were necessary:
 
