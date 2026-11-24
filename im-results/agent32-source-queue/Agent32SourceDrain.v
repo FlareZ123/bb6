@@ -80,13 +80,12 @@ Proof.
   intros H.
   apply Forall_forall.
   intros y Hy.
-  destruct (num_undef_trans x) as [|[|n]] eqn:E; [lia| |].
-  - unfold expand' in Hy; rewrite E in Hy; cbn in Hy; contradiction.
-  - destruct (expand_meta x h H) as [k [Hk Hmap]].
-    pose proof (in_map num_undef_trans _ _ Hy) as Hmem.
-    rewrite Hmap,E in Hmem.
-    apply repeat_spec in Hmem.
-    lia.
+  destruct (expand_meta x h H) as [k [Hk Hmap]].
+  pose proof (in_map num_undef_trans _ _ Hy) as Hmem.
+  rewrite Hmap in Hmem.
+  apply repeat_spec in Hmem.
+  destruct (num_undef_trans x) as [|[|n]] eqn:E; [lia| |lia].
+  unfold expand' in Hy; rewrite E in Hy; cbn in Hy; contradiction.
 Qed.
 
 Lemma update_decreases (f : TM -> DecideResult) q q' :
