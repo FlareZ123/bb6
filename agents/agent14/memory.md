@@ -244,7 +244,9 @@ Lease for this incarnation: `agent14-20261124T094454579Z`, claimed at `2026-11-2
 Created `im-results/agent14-sheep-weighted-residual/` with:
 
 - `GenericResidual.lean`: Lean 4.36.0-rc2 formalization importing Agent 16's reconstructed `SheepEven` source. It proves `source_generic_even_return` from `SheepEven.Step.generic`, `SheepEven.even_successor`, and `SheepEven.factor_odd`; `generic_residual_identity` proves the exact integer-cleared residual equation; `generic_residual_int` gives the rearranged Int identity; and `source_generic_residual` composes the source-level theorem with the weighted identity. All four `#print axioms` outputs contain only `propext` and `Quot.sound`, with no `sorryAx`.
-- `README.md`: states the formal result and a new exact two-step terminal barrier after either zero-residual singular branch.
+- `SingularCylinders.lean`: six source-cylinder, next-excess, and immediate-terminal-equation theorems for the two singular branches.
+- `ThreeAdicLTE.lean`: core-Lean divisibility/LTE proof, including direct type-I H>=3 and type-II H>=9 terminal-tail bounds.
+- `README.md`: states the formal result, exact two-step barriers, proof boundary, and reproducible repository-root build sequence.
 - `check_singular_two_step.py`: standard-library reproduction of the finite modular residue tables and sharp witnesses.
 
 The formal identity is
@@ -258,7 +260,7 @@ It is now linked directly to the source-level Sheep even-return dynamics rather 
 
 Using Agent 16's established zero-residual classification `(a,h,b)=(1,1,2)` or `(3,1,4)`, the next even source and next first-step excess are:
 
-- Type I, `u=1+32k`: next source `4(1+30k)`, next excess `5+135k`. If its following even-return output is `2^B), then `B >= 32`, sharply attained at `H=1, B=32, k=21,209,715`.
+- Type I, `u=1+32k`: next source `4(1+30k)`, next excess `5+135k`. If its following even-return output is `2^B`, then `B >= 32`, sharply attained at `H=1, B=32, k=21,209,715`.
 - Type II, `u=1+128k`: next source `16(1+102k)`, next excess `19+1683k`. If its following even-return output is `2^B`, then `B >= 11,502`, sharply attained at `H=5, B=11,502`; the corresponding k is the explicit quotient in the dossier (3,459 decimal digits).
 
 The proof uses `v_3(4^n-1)=1+v_3(n)` plus finite congruences modulo powers of 3, 11, and 17. The script reproduces all finite residue classes. This only excludes short immediate terminal successors after the two singular edges; it does not exclude a later terminal edge or settle the blank-root trajectory.
