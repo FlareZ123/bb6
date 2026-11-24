@@ -16,7 +16,7 @@ Definition wf (q : SearchQueue) : Prop :=
   Forall (fun x => (0 < num_undef_trans x)%nat) (fst q).
 
 Lemma weight_pos n : (0 < weight n)%N.
-Proof. induction n; simpl only [weight]; lia. Qed.
+Proof. induction n; [exact (N.lt_0_1)|]. change (0 < 25 * weight n)%N; nia. Qed.
 
 Lemma mass_cons x xs : mass (x::xs) = (weight (num_undef_trans x) + mass xs)%N.
 Proof. reflexivity. Qed.
@@ -24,7 +24,7 @@ Proof. reflexivity. Qed.
 Lemma mass_app xs ys : mass (xs++ys) = (mass xs + mass ys)%N.
 Proof.
   induction xs as [|x xs IH]; [reflexivity|].
-  simpl only [app, mass_cons]; rewrite IH; lia.
+  cbn [app]; rewrite !mass_cons, IH; lia.
 Qed.
 
 Lemma mass_nonempty xs : xs <> [] -> (0 < mass xs)%N.
@@ -36,7 +36,7 @@ Qed.
 Lemma mass_repeat n k : massCounts (repeat n k) = (N.of_nat k * weight n)%N.
 Proof.
   induction k; [reflexivity|].
-  simpl only [repeat, massCounts].
+  cbn [repeat massCounts].
   rewrite IHk, Nat2N.inj_succ.
   nia.
 Qed.
@@ -67,7 +67,7 @@ Proof.
   destruct (expand_meta x h H) as [k [Hk Hmap]].
   unfold mass; rewrite Hmap, mass_repeat.
   destruct (num_undef_trans x) as [|n] eqn:E; [lia|].
-  simpl only [Nat.pred,weight].
+  cbn [Nat.pred weight].
   pose proof (weight_pos n).
   assert (N.of_nat k <= 24)%N by lia.
   nia.
@@ -206,7 +206,7 @@ Lemma uniform_mass xs n :
 Proof.
   intros H; induction H; [reflexivity|].
   rewrite mass_cons,H,IHForall.
-  simpl only [length].
+  cbn [length].
   rewrite Nat2N.inj_succ; nia.
 Qed.
 
