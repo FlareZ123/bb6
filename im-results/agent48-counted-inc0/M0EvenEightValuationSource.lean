@@ -530,7 +530,10 @@ theorem m0EvenEight_valuation_q4_prefix_run
     s1LeftFacing_8q_all L q a hL hq hbound
   exact ⟨t, m0EvenEight_valuation_q4_prefix_run_of_leftFacing
     L q a b u t len h hL hq hbound ha
-    (by simpa [m0EvenEightValuationSourceSuffix] using hface)⟩
+    (by
+      have hface' := hface
+      rw [Nat.add_comm t 3] at hface'
+      simpa [m0EvenEightValuationSourceSuffix] using hface')⟩
 
 #print axioms sourceSuffix_prefix14_match
 #print axioms sourceSuffix_extraOnes
