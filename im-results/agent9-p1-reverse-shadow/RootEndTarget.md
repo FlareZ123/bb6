@@ -50,7 +50,7 @@ No root-end exclusion is claimed here.
 
 ## 5. Distinguish restart cost from wall cost
 
-The symbol `m_R=14u-2n-3` in the reverse-unit analysis is the cumulative cost of the restart state measured from the root; it is **not** the terminal wall's `CountCone` cost. The locally source-valid suffix from that restart state to the wall consists of `s=(n+2)/3` depth-two edges (cost 3 each, total `n+2`) followed by three shallow/low edges of total cost 7. Thus the terminal wall cost is
+The symbol `m_R=14u-2n-3` in the reverse-unit analysis is the cumulative cost of the restart state measured from the root; it is **not** the terminal wall's `CountCone` cost. The locally source-valid suffix from that restart state to the wall consists of `s=(n+2)/3` depth-two edges (cost 3 each, total `n+2`) followed by four final shallow/low edges of total cost 7. Thus the terminal wall cost is
 ```
 m_wall = m_R + (n+2) + 7 = 14u-n+6.
 ```
