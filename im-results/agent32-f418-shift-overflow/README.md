@@ -55,7 +55,11 @@ A normal phase-1 episode consists of odd valuations ending at the first even val
 - Borrow Q<C: the input must be the top singleton N=2^(2r), W=2r+1, r odd. Every other borrow produces two adjacent top 1-bits, one of which is at an even index. The exceptional output is 2^(5r)(2^(2r+2)+1).
 - No borrow Q>=C: N'=2^(W+E)+R, R<2^(W-L), W+p odd; if p>0 then W>=7p+4. The top bit is separated from the lower remainder by at least E+L+1 positions.
 
-Both modules compiled locally with Lean 4.36.0-rc2 against the exact three arithmetic dependencies, with standard axioms only (propext, Classical.choice, Quot.sound). This excludes many candidate predecessors but does not establish that the actual orbit avoids an odd-only checkpoint. The next target is a backward constraint on high bits of Q-C and the history of inserted top bits.
+[F418HighTail.lean](F418HighTail.lean) sharpens the nonborrow case: every odd-index input bit at index i>=9p+5 must be zero. Proof: for y=x-c and c<2^h with h even, the quotients by 2^h differ by at most one. If y has no even bits, its quotient has bits 0 and 2 zero; increment cannot set bit 2. Apply this to x=Q,c=C,h=i-L-2.
+
+[F418NormalPath.lean](F418NormalPath.lean) proves that every normal path from (268311341,29) is genuinely reachable from the arithmetic seed. It identifies NoEven with the existing OddChain language (for positive N), proves that any arithmetic termination must encounter a first pure odd-only gate, and packages all predecessor conditions in seed_none_has_restricted_predecessor. The exceptional singleton borrow is actually fatal, not merely odd-only. The nonborrow gate may instead be recoverable; the necessary conditions are not sufficient for termination.
+
+All four new modules compiled locally with Lean 4.36.0-rc2 against the exact three arithmetic dependencies, with standard axioms only (propext, Classical.choice, Quot.sound). This reduces any possible termination to the restricted predecessor set on the genuine normal path. It does not establish avoidance of that set. The next target is a root-specific high-tail invariant using insertion history.
 
 ## Exact counted costs
 
