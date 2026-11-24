@@ -33,6 +33,9 @@ jobs:
           cp im-results/agent8-rst1prime/CountedRst1Prime.lean /tmp/a48-m1one/
           cp im-results/agent8-counted-reset/Q4Suffix.lean /tmp/a48-m1one/
           cp im-results/agent48-final-rst1/M1OneQ4Prefix.lean /tmp/a48-m1one/
+          # The M1 head-bound proof reuses the generic counted-left-sweep head lemma
+          # from the m=0,n=6 source module; stage its exact source dependency chain.
+          cp im-results/agent42-m0even-residue6/{M0EvenSixQ4Bridge,M0EvenSixQ4Prefix,M0EvenSixHeadBound}.lean /tmp/a48-m1one/
           # Agent 24's M1OddQ4Prefix source has a module doc comment before imports;
           # move imports to the first commands in the staged copy for Lean 4.
           python3 - <<'PY'
@@ -89,6 +92,9 @@ jobs:
           compile CountedRst1Prime
           compile Q4Suffix
           compile Q4RightEndpoint
+          compile M0EvenSixQ4Bridge
+          compile M0EvenSixQ4Prefix
+          compile M0EvenSixHeadBound
           compile M1OddQ4Prefix
           compile M1OneQ4Prefix
           compile M1OddResidueOneTargetLeft
