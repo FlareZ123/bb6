@@ -27,6 +27,7 @@ open BB6Coverage.Agent6Q4Prefix
 open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent8Q4Suffix
 open BB6Coverage.Agent48M1EvenValuationBridge
+open BB6Coverage.Agent48M1EvenValuationSweep
 open BB6Coverage.Agent48CountedInc0
 open BB6Coverage.Agent24Q4Endpoint
 
@@ -87,7 +88,7 @@ private theorem m1EvenValuationSourceLeftAt
   have hside := sideBit_append_after_local
     (d1pow a ++ [true])
     ([false,true] ++ d0 ++ d1pow v ++ d0 ++ binDec len q ++ lh)
-    (3*a+1+k) (by simp [d1pow_length]; omega)
+    (3*a+1+k) (by simp [d1pow_length])
   calc
     (s1Config L n 1 a 0 b h).tape
         (h-((3*a+1+k:Nat):Int)) =
@@ -99,6 +100,15 @@ private theorem m1EvenValuationSourceLeftAt
     _ = sideBit
         ([false,true] ++ d0 ++ d1pow v ++ d0 ++ binDec len q ++ lh) k := by
           simpa [d1pow_length] using hside
+
+private theorem m1EvenValuationSweptLeftAt
+    (len q v a b : Nat) (h : Int) (i : Nat) (hq : q < 2^len) :
+    sweptLeft (3*a+1) (s1Config (len+1+v) ((2*q+1)*2^v) 1 a 0 b h).tape h
+      (h-((3*a+1:Nat):Int)-(i:Int)) =
+    sideBit ([false,true] ++ d0 ++ d1pow v ++ d0 ++ binDec len q ++ lh) i := by
+  rw [sweptLeft_preserves_left _ _ _ _ (by omega)]
+  rw [show h-((3*a+1:Nat):Int)-(i:Int) = h-((3*a+1+i:Nat):Int) by omega]
+  exact m1EvenValuationSourceLeftAt len q v a b h i hq
 
 /-- The prelude tape, viewed from the new head, has the exact regular
 left word required by the uniform valuation bridge. -/
@@ -114,73 +124,36 @@ theorem m1EvenValuationPreludeLeftAt
   let N0 : Nat := 3*a+1
   let hN : Int := h-(N0:Int)
   let T1 : Int → Bool := sweptLeft N0 T h
-  have hT1 : ∀ k : Nat,
-      T1 (hN-(k:Int)) =
-        sideBit ([false,true] ++ d0 ++ d1pow v ++ d0 ++ binDec len q ++ lh) k := by
-    intro k
-    by_cases hk : k=0
-    · subst k
-      have hblank := sweptLeft_leftmost N0 T h
-      simpa [T1,hN,N0] using hblank
-    · have hpres := sweptLeft_preserves_left N0 T h
-        (hN-(k:Int)) (by dsimp [hN,N0]; omega)
-      have hsrc := m1EvenValuationSourceLeftAt len q v a b h k hq
-      simpa [T1,hN,N0] using hpres.trans hsrc
-  by_cases hi0 : i=0
-  · subst i
-    have hbit := hT1 0
-    have hne1 : hN ≠ hN-1 := by omega
-    have hne2 : hN ≠ hN-2 := by omega
-    have hne3 : hN ≠ hN-3 := by omega
-    simpa [valuationPreludeTape,m1EvenValuationPreludeLeft,
-      sideBit,d0,d1pow,hne1,hne2,hne3] using hbit
-  · by_cases hi123 : i=1 ∨ i=2 ∨ i=3
-    · rcases hi123 with hi1 | hi2 | hi3
-      · subst i
-        simp [valuationPreludeTape,m1EvenValuationPreludeLeft,sideBit]
-      · subst i
-        simp [valuationPreludeTape,m1EvenValuationPreludeLeft,sideBit]
-      · subst i
-        simp [valuationPreludeTape,m1EvenValuationPreludeLeft,sideBit]
-    · by_cases hi4 : i=4
-      · subst i
-        have hbit := hT1 4
-        have hne1 : hN-4 ≠ hN-1 := by omega
-        have hne2 : hN-4 ≠ hN-2 := by omega
-        have hne3 : hN-4 ≠ hN-3 := by omega
-        simpa [valuationPreludeTape,m1EvenValuationPreludeLeft,
-          sideBit,d0,hne1,hne2,hne3] using hbit
-      · have hi5 : 5≤i := by omega
-        have hpres : valuationPreludeTape T1 hN (hN-(i:Int)) =
-            T1 (hN-(i:Int)) := by
-          simp [valuationPreludeTape]
-          have hne1 : hN-(i:Int) ≠ hN-1 := by omega
-          have hne2 : hN-(i:Int) ≠ hN-2 := by omega
-          have hne3 : hN-(i:Int) ≠ hN-3 := by omega
-          simp [hne1,hne2,hne3]
-        rw [hpres,hT1]
-        have hsourcePrefix :
-            ([false,true] ++ d0).length = 5 := by
-          simp [d0]
-        have htargetPrefix :
-            ([false,true,true,true,true]).length = 5 := by rfl
-        have hsrc := sideBit_append_after_local
-          ([false,true] ++ d0)
-          (d1pow v ++ d0 ++ binDec len q ++ lh) i
-          (by simp [d0]; omega)
-        have htgt := sideBit_append_after_local
-          ([false,true,true,true,true])
-          (d1pow v ++ d0 ++ binDec len q ++ lh) i
-          (by omega)
-        have hsame : sideBit
-            ([false,true] ++ d0 ++ d1pow v ++ d0 ++ binDec len q ++ lh) i =
-          sideBit (d1pow v ++ d0 ++ binDec len q ++ lh) (i-5) := by
+  change valuationPreludeTape T1 hN (hN-(i:Int)) = _
+  have hT1 (k : Nat) : T1 (hN-(k:Int)) =
+      sideBit ([false,true] ++ d0 ++ d1pow v ++ d0 ++ binDec len q ++ lh) k :=
+    m1EvenValuationSweptLeftAt len q v a b h k hq
+  by_cases hi : i=1 ∨ i=2 ∨ i=3
+  · rcases hi with rfl | rfl | rfl <;>
+      simp [valuationPreludeTape,m1EvenValuationPreludeLeft,sideBit] <;> omega
+  · have hne1 : hN-(i:Int) ≠ hN-1 := by omega
+    have hne2 : hN-(i:Int) ≠ hN-2 := by omega
+    have hne3 : hN-(i:Int) ≠ hN-3 := by omega
+    simp only [valuationPreludeTape,hne1,hne2,hne3,ite_false]
+    rw [hT1]
+    by_cases hi5 : i<5
+    · have hc : i=0 ∨ i=4 := by omega
+      rcases hc with rfl | rfl <;>
+        simp [m1EvenValuationPreludeLeft,sideBit,d0]
+    · have hsrc := sideBit_append_after_local
+        ([false,true] ++ d0)
+        (d1pow v ++ d0 ++ binDec len q ++ lh) i (by simp [d0]; omega)
+      have htgt := sideBit_append_after_local
+        [false,true,true,true,true]
+        (d1pow v ++ d0 ++ binDec len q ++ lh) i (by simp; omega)
+      have hs : sideBit
+          ([false,true] ++ d0 ++ d1pow v ++ d0 ++ binDec len q ++ lh) i =
+        sideBit (d1pow v ++ d0 ++ binDec len q ++ lh) (i-5) := by
           simpa [List.append_assoc,d0] using hsrc
-        have hsame' : sideBit
-            (m1EvenValuationPreludeLeft v (binDec len q ++ lh)) i =
-          sideBit (d1pow v ++ d0 ++ binDec len q ++ lh) (i-5) := by
+      have ht : sideBit (m1EvenValuationPreludeLeft v (binDec len q ++ lh)) i =
+        sideBit (d1pow v ++ d0 ++ binDec len q ++ lh) (i-5) := by
           simpa [m1EvenValuationPreludeLeft,List.append_assoc] using htgt
-        exact hsame.trans hsame'.symm
+      exact hs.trans ht.symm
 
 /-- The explicit tape at the generalized M1-even valuation q4 cut. -/
 def m1EvenValuationCutTape
@@ -196,7 +169,7 @@ private theorem m1EvenValuationRightCell
     (len q v a b : Nat) (h : Int) (i : Nat) :
     (s1Config (len+1+v) ((2*q+1)*2^v) 1 a 0 b h).tape
       (h+1+(i:Int)) = sideBit (s0RightFacing b) i := by
-  simpa [s1PhysicalRight] using
+  simpa [s1PhysicalRight,s0PhysicalRight] using
     (s1Config_right_cell (len+1+v) ((2*q+1)*2^v) 1 a 0 b h i)
 
 /-- The source run from S1 to the generalized M1-even q4 cut. -/
@@ -225,16 +198,16 @@ theorem m1EvenValuation_q4_prefix_run
       by_cases hi3 : i < 3*a
       · have hlen : i < (d1pow a).length := by
           simpa [d1pow_length] using hi3
-        rw [sideBit_append_left (d1pow a)
-          (markerWord 1 ++ d0 ++ d1pow v ++ d0 ++ tail) i hlen]
-        exact sideBit_d1pow_true a i hi3
+        have hs := sideBit_append_left (d1pow a)
+          (markerWord 1 ++ d0 ++ d1pow v ++ d0 ++ tail) i hlen
+        simpa [List.append_assoc] using hs.trans (Agent6Q4Prefix.sideBit_d1pow_true a i hi3)
       · have hieq : i=3*a := by omega
         subst i
         have hlen : (d1pow a).length = 3*a := by simp [d1pow_length]
-        rw [sideBit_append_right (d1pow a)
+        have hs := sideBit_append_right (d1pow a)
           (markerWord 1 ++ d0 ++ d1pow v ++ d0 ++ tail) (3*a)
-          (by simpa [hlen])]
-        simp [markerWord,sideBit]
+          (by simp [hlen])
+        simpa [hlen,List.append_assoc,markerWord,sideBit] using hs
     have hcell' : T (h-((i:Nat):Int)) =
         sideBit (d1pow a ++ markerWord 1 ++ d0 ++ d1pow v ++ d0 ++ tail) i := by
       simpa [T,henc] using hcell
@@ -243,21 +216,13 @@ theorem m1EvenValuation_q4_prefix_run
     have hc := m1EvenValuationRightCell len q v a b h 0
     simpa [s0RightFacing,sideBit] using hc
   have hSweep := counted_left_sweep N0 T h hOn hright
-  have hblank : T1 hN = false := by
-    have hs := sweptLeft_leftmost N0 T h
-    simpa [T1,hN,N0] using hs
-  have hleft1 : T1 (hN-1) = true := by
-    have hpres := sweptLeft_preserves_left N0 T h (hN-1) (by dsimp [hN,N0]; omega)
-    have hsrc := m1EvenValuationSourceLeftAt len q v a b h 1 hq
-    simpa [T1,hN,N0,sideBit] using hpres.trans hsrc
-  have hleft2 : T1 (hN-2) = false := by
-    have hpres := sweptLeft_preserves_left N0 T h (hN-2) (by dsimp [hN,N0]; omega)
-    have hsrc := m1EvenValuationSourceLeftAt len q v a b h 2 hq
-    simpa [T1,hN,N0,sideBit,d0] using hpres.trans hsrc
-  have hleft3 : T1 (hN-3) = false := by
-    have hpres := sweptLeft_preserves_left N0 T h (hN-3) (by dsimp [hN,N0]; omega)
-    have hsrc := m1EvenValuationSourceLeftAt len q v a b h 3 hq
-    simpa [T1,hN,N0,sideBit,d0] using hpres.trans hsrc
+  have hT1 (k : Nat) : T1 (hN-(k:Int)) =
+      sideBit ([false,true] ++ d0 ++ d1pow v ++ d0 ++ binDec len q ++ lh) k :=
+    m1EvenValuationSweptLeftAt len q v a b h k hq
+  have hblank : T1 hN = false := by simpa [sideBit] using hT1 0
+  have hleft1 : T1 (hN-1) = true := by simpa [sideBit] using hT1 1
+  have hleft2 : T1 (hN-2) = false := by simpa [sideBit,d0] using hT1 2
+  have hleft3 : T1 (hN-3) = false := by simpa [sideBit,d0] using hT1 3
   have hPrelude := valuation_state3_prelude6 T1 hN hblank hleft1 hleft2 hleft3
   have hpreLeft := m1EvenValuationPreludeLeftAt len q v a b h 0 hq
   have hpreLeftAll := fun i => m1EvenValuationPreludeLeftAt len q v a b h i hq
@@ -285,7 +250,6 @@ theorem m1EvenValuation_q4_prefix_run
           simp [m1EvenValuationPreludeLeft,sideBit]
       · have hi5 : 5≤i+1 := by omega
         have htail : i+1-5 < 3*v := by
-          dsimp [N0] at hi
           omega
         have hs := sideBit_append_after_local
           [false,true,true,true,true]
@@ -294,16 +258,34 @@ theorem m1EvenValuation_q4_prefix_run
           ([false,true,true,true,true] ++ (d1pow v ++ d0 ++ tail))
           (i+1) = true
         rw [hs]
-        exact sideBit_d1pow_true v (i+1-5) htail
-    simpa [P,hN,N0,T,T1] using hh.trans hbit
+        change sideBit (d1pow v ++ d0 ++ tail) (i+1-5) = true
+        have hside := sideBit_append_left (d1pow v) (d0 ++ tail)
+          (i+1-5) (by simpa [d1pow_length] using htail)
+        simpa [List.append_assoc] using hside.trans (Agent6Q4Prefix.sideBit_d1pow_true v (i+1-5) htail)
+    have hcoord : hN-1-(i:Int)=hN-((i+1:Nat):Int) := by omega
+    rw [hcoord]
+    exact hh.trans hbit
+  have hpreZero (j : Nat) (hj : j<2) :
+      P (hN-((3*(v+1)+2+j:Nat):Int)) = false := by
+    have hh := hpreLeftAll (3*(v+1)+2+j)
+    have hlen : ([false,true,true,true,true] ++ d1pow v).length = 3*(v+1)+2 := by
+      simp [d1pow_length]
+      omega
+    have hs := sideBit_append_after_local ([false,true,true,true,true] ++ d1pow v)
+      (d0 ++ tail) (3*(v+1)+2+j) (by rw [hlen]; omega)
+    have hs' : sideBit (m1EvenValuationPreludeLeft v tail) (3*(v+1)+2+j) =
+        sideBit (d0 ++ tail) j := by
+      rw [hlen, show 3*(v+1)+2+j-(3*(v+1)+2)=j by omega] at hs
+      simpa [m1EvenValuationPreludeLeft,List.append_assoc] using hs
+    have hb : sideBit (d0 ++ tail) j = false := by
+      have hc : j=0 ∨ j=1 := by omega
+      rcases hc with rfl | rfl <;> simp [d0,sideBit]
+    exact hh.trans (hs'.trans hb)
   have hzero1 : P (hN-((3*(v+1)+2:Nat):Int)) = false := by
-    have hh := hpreLeftAll (3*(v+1)+2)
-    simpa [P,hN,N0,T,T1,m1EvenValuationPreludeLeft,sideBit,d0,d1pow_length,
-      List.append_assoc] using hh
+    simpa using hpreZero 0 (by decide)
   have hzero2 : P (hN-((3*(v+1)+3:Nat):Int)) = false := by
-    have hh := hpreLeftAll (3*(v+1)+3)
-    simpa [P,hN,m1EvenValuationPreludeLeft,sideBit,d0,d1pow_length,
-      List.append_assoc] using hh
+    rw [show 3*(v+1)+3=3*(v+1)+2+1 by omega]
+    exact hpreZero 1 (by decide)
   have hR1 : T1 (hN+1) = false := by
     have hs := sweptLeft_leftmost (3*a) T h
     have hcoord : hN+1 = h-((3*a:Nat):Int) := by dsimp [hN,N0]; omega
@@ -313,7 +295,9 @@ theorem m1EvenValuation_q4_prefix_run
     by_cases ha0 : a=0
     · subst a
       have hs := sweptLeft_plus1 0 T h
-      simpa [T1,hN,N0] using hs
+      have hc : hN+2=h+1 := by dsimp [hN,N0]; omega
+      rw [hc]
+      exact hs
     · have hj : (3*a-1)+1 < N0 := by dsimp [N0]; omega
       have hs := sweptLeft_block N0 (3*a-1) T h hj
       have hcoord : hN+2 = h-((3*a-1:Nat):Int) := by dsimp [hN,N0]; omega
@@ -325,7 +309,9 @@ theorem m1EvenValuation_q4_prefix_run
       have hpres := sweptLeft_preserves_right N0 T h (h+2) (by omega)
       have hsrc := m1EvenValuationRightCell len q v 0 b h 1
       have hcoord : hN+3 = h+2 := by dsimp [hN,N0]; omega
-      rw [hcoord,hpres]
+      rw [hcoord]
+      change sweptLeft N0 T h (h+2) = true
+      rw [hpres]
       simpa [s0RightFacing,sideBit] using hsrc
     · have hj : (3*a-2)+1 < N0 := by dsimp [N0]; omega
       have hs := sweptLeft_block N0 (3*a-2) T h hj
@@ -338,7 +324,9 @@ theorem m1EvenValuation_q4_prefix_run
       have hpres := sweptLeft_preserves_right N0 T h (h+3) (by omega)
       have hsrc := m1EvenValuationRightCell len q v 0 b h 2
       have hcoord : hN+4 = h+3 := by dsimp [hN,N0]; omega
-      rw [hcoord,hpres]
+      rw [hcoord]
+      change sweptLeft N0 T h (h+3) = true
+      rw [hpres,show h+3=h+1+((2:Nat):Int) by omega]
       simpa [s0RightFacing,sideBit] using hsrc
     · have hj : (3*a-3)+1 < N0 := by dsimp [N0]; omega
       have hs := sweptLeft_block N0 (3*a-3) T h hj
@@ -378,11 +366,10 @@ theorem m1EvenValuation_q4_prefix_run
         dsimp [x]
         omega)
     have hpresPrelude : P x = T1 x := by
-      simp [P,valuationPreludeTape,x]
       have hne1 : x ≠ hN-1 := by dsimp [x]; omega
       have hne2 : x ≠ hN-2 := by dsimp [x]; omega
       have hne3 : x ≠ hN-3 := by dsimp [x]; omega
-      simp [hne1,hne2,hne3]
+      simp [P,valuationPreludeTape,hne1,hne2,hne3]
     have hT1 : T1 x = true := by
       by_cases hx : x ≤ h
       · let j : Nat := 3*a-4-i
@@ -405,12 +392,14 @@ theorem m1EvenValuation_q4_prefix_run
           · rw [hx2']
             have hpres := sweptLeft_preserves_right N0 T h (h+2) (by omega)
             have hsrc := m1EvenValuationRightCell len q v a b h 1
+            change sweptLeft N0 T h (h+2) = true
             rw [hpres]
             simpa [s0RightFacing,sideBit] using hsrc
           · rw [hx3']
             have hpres := sweptLeft_preserves_right N0 T h (h+3) (by omega)
             have hsrc := m1EvenValuationRightCell len q v a b h 2
-            rw [hpres]
+            change sweptLeft N0 T h (h+3) = true
+            rw [hpres,show h+3=h+1+((2:Nat):Int) by omega]
             simpa [s0RightFacing,sideBit] using hsrc
     calc
       m1EvenValuationBridgeTape v P hN x = P x := hpresBridge
@@ -495,6 +484,11 @@ private theorem sideBit_d0pow_mod (n i : Nat) (hi : i<3*n) :
           _ = decide ((i-3)%3=2) := hrec
           _ = decide (i%3=2) := by simp [hmod]
 
+private theorem d0pow_length (n : Nat) : (d0pow n).length = 3*n := by
+  induction n with
+  | zero => rfl
+  | succ n ih => simp [d0pow,d0,ih]; omega
+
 private theorem sideBit_m1BridgeTargetPrefix_mod
     (v i : Nat) (tail : List Bool)
     (hi : i ≤ 3*(v+1)+1) :
@@ -524,8 +518,8 @@ private theorem sideBit_m1BridgeTargetPrefix_mod
     calc
       sideBit ([false,true] ++ d0 ++ d0pow v ++ d1 ++ tail) i =
           sideBit (d0pow v ++ d1 ++ tail) (i-5) := by
-            simpa [List.append_assoc] using hside1
-      _ = sideBit (d0pow v) (i-5) := hside2
+            simpa [List.append_assoc,d0] using hside1
+      _ = sideBit (d0pow v) (i-5) := by simpa [List.append_assoc] using hside2
       _ = decide ((i-5)%3=2) := hmod
       _ = decide (i%3=1) := by simp [hmod']
 
@@ -540,10 +534,12 @@ private theorem sideBit_m1BridgeTargetD1
   have hside := sideBit_append_after_local
     ([false,true] ++ d0 ++ d0pow v) (d1 ++ tail)
     (3*(v+1)+2+j) (by rw [hlen]; omega)
-  rw [hside]
+  rw [show [false,true] ++ d0 ++ d0pow v ++ d1 ++ tail =
+    ([false,true] ++ d0 ++ d0pow v) ++ (d1 ++ tail) by simp [List.append_assoc], hside, hlen]
   have hidx : 3*(v+1)+2+j-(3*(v+1)+2)=j := by omega
   rw [hidx]
-  simp [sideBit,d1,hj]
+  have hc : j=0 ∨ j=1 ∨ j=2 := by omega
+  rcases hc with rfl | rfl | rfl <;> simp [sideBit,d1]
 
 private theorem m1EvenValuationBridgeLeftFacing
     (v : Nat) (T : Int → Bool) (h : Int) (tail : List Bool)
@@ -609,7 +605,7 @@ private theorem m1EvenValuationBridgeLeftFacing
       have hpres := state5SweptRight_preserves_left
         (v+1) Tsetup (x+1) x (by omega)
       have hsetup : Tsetup x = false := by
-        simp [Tsetup,valuationSetupTape]
+        simp [Tsetup,valuationSetupTape] <;> omega
       have hval :
           m1EvenValuationBridgeTape v T h (h-(N:Int)) = false := by
         calc
@@ -617,7 +613,7 @@ private theorem m1EvenValuationBridgeLeftFacing
               state5SweptRight (v+1) Tsetup (x+1) (h-(N:Int)) :=
             hbridge N
           _ = Tsetup x := by
-            have hcoord : h-(N:Int)=x := by simp [x]
+            have hcoord : h-(N:Int)=x := by simp [x] <;> omega
             rw [hcoord]
             exact hpres
           _ = false := hsetup
@@ -631,7 +627,7 @@ private theorem m1EvenValuationBridgeLeftFacing
         have hpres := state5SweptRight_preserves_left
           (v+1) Tsetup (x+1) (x-1) (by omega)
         have hsetup : Tsetup (x-1) = true := by
-          simp [Tsetup,valuationSetupTape]
+          simp [Tsetup,valuationSetupTape] <;> omega
         have hval :
             m1EvenValuationBridgeTape v T h (h-((N+1):Int)) = true := by
           calc
@@ -639,7 +635,7 @@ private theorem m1EvenValuationBridgeLeftFacing
                 state5SweptRight (v+1) Tsetup (x+1)
                   (h-((N+1):Int)) := hbridge (N+1)
             _ = Tsetup (x-1) := by
-              have hcoord : h-((N+1):Int)=x-1 := by simp [x]
+              have hcoord : h-((N+1):Int)=x-1 := by simp [x] <;> omega
               rw [hcoord]
               exact hpres
             _ = true := hsetup
@@ -654,7 +650,7 @@ private theorem m1EvenValuationBridgeLeftFacing
           have hpres := state5SweptRight_preserves_left
             (v+1) Tsetup (x+1) (x-2) (by omega)
           have hsetup : Tsetup (x-2) = true := by
-            simp [Tsetup,valuationSetupTape]
+            simp [Tsetup,valuationSetupTape] <;> omega
           have hval :
               m1EvenValuationBridgeTape v T h (h-((N+2):Int)) = true := by
             calc
@@ -662,7 +658,7 @@ private theorem m1EvenValuationBridgeLeftFacing
                   state5SweptRight (v+1) Tsetup (x+1)
                     (h-((N+2):Int)) := hbridge (N+2)
               _ = Tsetup (x-2) := by
-                have hcoord : h-((N+2):Int)=x-2 := by simp [x]
+                have hcoord : h-((N+2):Int)=x-2 := by simp [x] <;> omega
                 rw [hcoord]
                 exact hpres
               _ = true := hsetup
@@ -677,7 +673,7 @@ private theorem m1EvenValuationBridgeLeftFacing
             have hpres := state5SweptRight_preserves_left
               (v+1) Tsetup (x+1) (x-3) (by omega)
             have hsetup : Tsetup (x-3) = true := by
-              simp [Tsetup,valuationSetupTape]
+              simp [Tsetup,valuationSetupTape] <;> omega
             have hval :
                 m1EvenValuationBridgeTape v T h (h-((N+3):Int)) = true := by
               calc
@@ -685,7 +681,7 @@ private theorem m1EvenValuationBridgeLeftFacing
                     state5SweptRight (v+1) Tsetup (x+1)
                       (h-((N+3):Int)) := hbridge (N+3)
                 _ = Tsetup (x-3) := by
-                  have hcoord : h-((N+3):Int)=x-3 := by simp [x]
+                  have hcoord : h-((N+3):Int)=x-3 := by simp [x] <;> omega
                   rw [hcoord]
                   exact hpres
                 _ = true := hsetup
@@ -813,7 +809,7 @@ theorem m1EvenValuation_q4_leftFacing
         ([true] ++ d1pow a)
         ([false,true] ++ d0 ++ d0pow v ++ d1 ++ binDec len q ++ lh)
         i (by simp [d1pow_length,N0]; omega)
-      simpa [j,N0] using hside
+      simpa [j,N0,d1pow_length] using hside
     exact hcut.trans hQside.symm
 
 private theorem m1EvenValuationCutTapeRightCell
@@ -846,7 +842,7 @@ private theorem m1EvenValuationCutTapeRightCell
     exact sweptLeft_preserves_right N0 T h (h+1+(i:Int)) (by omega)
   have hsource :
       T (h+1+(i:Int)) = sideBit (s0RightFacing b) i := by
-    simpa [T,s1PhysicalRight] using
+    simpa [T,s1PhysicalRight,s0PhysicalRight] using
       (s1Config_right_cell (len+1+v) ((2*q+1)*2^v) 1 a 0 b h i)
   calc
     m1EvenValuationCutTape len q v a b h (h+1+(i:Int)) =
@@ -921,8 +917,8 @@ private theorem m1EvenValuationCutTapeRightOne
 
 theorem m1EvenValuation_q4_rightShape
     (len q v a b : Nat) (h : Int) :
-    q4RightShape (m1EvenValuationCutTape len q v a b h) h b := by
-  unfold q4RightShape
+    Agent8Q4Suffix.q4RightShape (m1EvenValuationCutTape len q v a b h) h b := by
+  unfold Agent8Q4Suffix.q4RightShape
   refine ⟨?_,?_,?_,?_,?_⟩
   · intro i hi
     have hcases : i=0 ∨ i=1 ∨ i=2 ∨ i=3 ∨ i=4 := by omega
@@ -935,34 +931,42 @@ theorem m1EvenValuation_q4_rightShape
       have hc := m1EvenValuationCutTapeRightCell len q v a b h 1 (by omega)
       have hb : sideBit (s0RightFacing b) 1 = true := by
         simp [s0RightFacing,sideBit]
-      simpa using hc.trans hb
+      rw [show h+((2:Nat):Int)=h+1+((1:Nat):Int) by omega]
+      exact hc.trans hb
     · subst i
       have hc := m1EvenValuationCutTapeRightCell len q v a b h 2 (by omega)
       have hb : sideBit (s0RightFacing b) 2 = true := by
         simp [s0RightFacing,sideBit]
-      simpa using hc.trans hb
+      rw [show h+((3:Nat):Int)=h+1+((2:Nat):Int) by omega]
+      exact hc.trans hb
     · subst i
       have hc := m1EvenValuationCutTapeRightCell len q v a b h 3 (by omega)
       have hb : sideBit (s0RightFacing b) 3 = true := by
         simp [s0RightFacing,sideBit]
-      simpa using hc.trans hb
+      rw [show h+((4:Nat):Int)=h+1+((3:Nat):Int) by omega]
+      exact hc.trans hb
   · have hc := m1EvenValuationCutTapeRightCell len q v a b h 4 (by omega)
     have hb : sideBit (s0RightFacing b) 4 = false := by
       simp [s0RightFacing,sideBit]
+    rw [show h+5=h+1+((4:Nat):Int) by omega]
     exact hc.trans hb
   · have hc := m1EvenValuationCutTapeRightCell len q v a b h 5 (by omega)
     have hb : sideBit (s0RightFacing b) 5 = false := by
       simp [s0RightFacing,sideBit]
+    rw [show h+6=h+1+((5:Nat):Int) by omega]
     exact hc.trans hb
   · intro i hi
     have hc := m1EvenValuationCutTapeRightCell len q v a b h (6+i) (by omega)
     have hb : sideBit (s0RightFacing b) (6+i) = true := by
       rw [s0RightFacing]
       have hside := sideBit_append_right
-        [false,true,true,true,false,false] (d1pow (b+1)) (6+i) (by simp; omega)
+        [false,true,true,true,false,false] (d1pow (b+1)) (6+i) (by simp)
       have hidx : 6+i-6=i := by omega
-      rw [hside,hidx]
+      rw [hside]
+      change sideBit (d1pow (b+1)) (6+i-6) = true
+      rw [hidx]
       exact sideBit_d1pow_true (b+1) i (by omega)
+    rw [show h+7+(i:Int)=h+1+((6+i:Nat):Int) by omega]
     exact hc.trans hb
   · intro i hi
     have hc := m1EvenValuationCutTapeRightCell len q v a b h
@@ -972,6 +976,7 @@ theorem m1EvenValuation_q4_rightShape
       omega
     have hb : sideBit (s0RightFacing b) (9+3*b+i) = false :=
       sideBit_ge_length (s0RightFacing b) (9+3*b+i) (by omega)
+    rw [show h+10+(3*b:Int)+(i:Int)=h+1+((9+3*b+i:Nat):Int) by omega]
     exact hc.trans hb
 
 theorem m1EvenValuation_q4_farTail
@@ -986,9 +991,6 @@ theorem m1EvenValuation_q4_farTail
   have hb : sideBit (s0RightFacing b) i = false :=
     sideBit_ge_length (s0RightFacing b) i (by omega)
   exact hc.trans hb
-
-def m1EvenValuationQ4LeftFacing (L n a : Nat) : List Bool :=
-  [true] ++ d1pow a ++ markerWord 0 ++ d0 ++ binDec L (n-1) ++ lh
 
 theorem m1EvenValuationQ4SuffixTargetLeft
     (L n a b : Nat) :
@@ -1009,7 +1011,7 @@ theorem m1EvenValuation_reset_prefix_source
   let T := m1EvenValuationCutTape len q v a b h
   let Q := m1EvenValuationQ4LeftFacing
     (len+1+v) ((2*q+1)*2^v) a
-  have hshape : q4RightShape T h b :=
+  have hshape : Agent8Q4Suffix.q4RightShape T h b :=
     m1EvenValuation_q4_rightShape len q v a b h
   have htail : ∀ i : Nat, 9+3*b≤i → T (h+1+(i:Int))=false :=
     m1EvenValuation_q4_farTail len q v a b h
@@ -1026,10 +1028,6 @@ theorem m1EvenValuation_reset_prefix_source
   have hfull := q4_suffix_run_to_s1Config
     T h b (len+1+v) (((2*q+1)*2^v)-1) 0 (a+b+2) (2^b-1)
     Q hshape htail hleft happend
-  have htarget :
-      s1Config (len+1+v) (((2*q+1)*2^v)-1)
-        0 (a+b+2) (2^b-1) 0 (h+5+(3*b:Int)) := by
-    rfl
   have hrest :
       run tm2 (35+3*b) ⟨4,h+4,T⟩ = some
         (s1Config (len+1+v) (((2*q+1)*2^v)-1)
