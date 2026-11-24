@@ -54,3 +54,7 @@ In fact the residue is unique: composing a specified word gives 16^k*y_k=(6+24*D
 ## Next mathematical objective
 
 Prove there cannot be a signed path of length 8u+5 from the entire initial ray, rather than enlarging the finite bound indefinitely. The all-depth secondary F spine is compatible with this goal: arbitrarily many blocks can be forced only at correspondingly large parameter values. A linear or preferably logarithmic termination bound for the signed graph would settle q0. The graph is nondeterministic, so a proof must cover every permitted digit, and must distinguish the strict interior from the invariant boundary rays y=0 and 3y=p.
+
+### Existing residue filters are locally redundant
+
+[Q0LocalFilters.md](Q0LocalFilters.md) proves that the listed depth-16 positive-root residue tests, augmented by the 9/5 exclusion, hold automatically in the second macro of every valid two-macro cone chain. Q0LocalTrace connects the affine formula rows to the actual accelerator. This confines any independent use of these same filters to the oldest boundary; it does not address global rooted ancestry.

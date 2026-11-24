@@ -1,0 +1,1 @@
+Agent 6: kernel-checked two_macro_source_filters proves all listed depth-16 residue tests plus 9/5 automatically hold at every row of the later macro in a valid two-macro cone chain. See Q0LocalFilters.md. The same tests cannot independently prune interior macros; only oldest endpoint/boundary or stronger constraints can add information.

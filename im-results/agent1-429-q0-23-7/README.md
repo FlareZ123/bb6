@@ -19,3 +19,7 @@ The [quantitative matching-block theorem](Q0CommonBlock.md) strengthens aperiodi
 ### Exact converse (Agent 6)
 
 [Q0Converse.md](Q0Converse.md): kernel-checked prepared ancestry for every complete signed path, and exact rooted iff reconstructed endpoint is rooted (Source interface). This isolates the global ancestry obstruction and gives a narrow endpoint rank window; no q0 exclusion is implied.
+
+### Existing residue filters are locally redundant
+
+[Q0LocalFilters.md](Q0LocalFilters.md) proves that the listed depth-16 positive-root residue tests, augmented by the 9/5 exclusion, hold automatically in the second macro of every valid two-macro cone chain. Q0LocalTrace connects the affine formula rows to the actual accelerator. This confines any independent use of these same filters to the oldest boundary; it does not address global rooted ancestry.
