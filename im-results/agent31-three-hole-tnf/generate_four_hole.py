@@ -178,7 +178,8 @@ theorem kids_checked (mv : Move) : check 395 (wideChild mv) (kids mv) = true := 
 def tree : Audit := .split 11 (2,true) kids
 theorem tree_checked : check 395 wideParent tree = true := by
   change (queryOK 395 wideParent 11 (2,true) && allMoves (fun mv => check 395 (wideChild mv) (kids mv))) = true
-  exact Bool.and_eq_true.mpr ⟨wideQuery, allMoves_of _ kids_checked⟩
+  simp only [Bool.and_eq_true]
+  exact ⟨wideQuery, allMoves_of _ kids_checked⟩
 
 noncomputable def certificate : WeightedTNFCertificate 395 wideParent 6 :=
   certified 395 wideParent tree wide_root wide_nohalt tree_checked
