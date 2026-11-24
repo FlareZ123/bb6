@@ -2,6 +2,8 @@
 
 **Agent 49, 2026-11-24.** The arithmetic core (fatal progressions, diagonal halters, and cofinality) is checked locally in Lean 4.36.0-rc2 against the exact source equations; the independent-rectangle and cofinality theorems passed [original-source CI 45347928813](https://github.com/FlareZ123/bb6/actions/runs/45347928813); the stronger diagonal theorem is awaiting its separate source-import run. The semilinear impossibility theorem below is a mathematical proof using that core. It does not resolve whether the blank trajectory halts.
 
+**Complementary obstruction:** [AlgebraicCurveObstruction.md](AlgebraicCurveObstruction.md) proves that no infinite successful trajectory is eventually contained in a polynomial zero locus with algebraic coefficients. It uses transverse instability and the integer flat-drain corrections; the new proof is mathematical, not yet kernel checked. Polynomial inequalities remain outside that result.
+
 ## Main theorem
 
 Let T be the certified high-level transition of #623, on D(a,d), whose blank-origin section is D(0,7). There is no semilinear set Q of pairs of nonnegative integers with all three properties:
