@@ -472,8 +472,11 @@ theorem sweepBB_field_max_le (L R : List SymTok) :
       listNumSum L + listNumSum R + 2 * L.length + 5 := by omega
   simpa [stateFieldMax] using Nat.max_le.mpr ⟨hL', hR'⟩
 
+#print axioms sweepBB_length_bound4_pair
+#print axioms sweepBB_length_bound4
 #print axioms sweepBB_length_bound
 #print axioms sweepBB_num_sum_bound
+#print axioms sweepBB_weight_bound_sharper
 #print axioms sweepBB_weight_bound_sharp
 #print axioms sweepBB_field_max_le
 
