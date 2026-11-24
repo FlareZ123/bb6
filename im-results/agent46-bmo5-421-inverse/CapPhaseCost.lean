@@ -109,7 +109,7 @@ theorem positive_boundary_initial_cost {j s k x : Nat} {w : Int} (hw : 0<w)
     B=4*3^s-A, each same-band inverse keeps B fixed, while a
     one-band descent changes B to 2*B+4*3^s.  Consequently B*P_k
     never falls below its initial value 4*P_j. -/
-theorem positive_history_packet_weight {j s k x : Nat} {w : Int} (hw : 0<w)
+theorem positive_history_packet_weight {j s k x : Nat} {w : Int} (_hw : 0<w)
     (h : PositiveHistory j w s k x) :
     ∃ A C : Int, 0<A ∧ A<4*(3^s:Int) ∧ A%3≠0 ∧ C≤ -6-w ∧
       (3^s:Int)*W k x=A*(P k:Int)+C ∧
@@ -259,7 +259,6 @@ theorem positive_history_packet_bandweight {j s k x : Nat} {w : Int} (_hw : 0<w)
       change 4*(3^(j-k):Int)≤4*(D*3)-(A+8*D)
       have heq : 4*(D*3)-(A+8*D)=4*D-A := by omega
       rw [heq]
-      exact hB
   | @down s k x y h hr ih =>
     obtain ⟨A,C,hA,hA',hu,hC,he,hB⟩:=ih
     let D : Int := 3^s
