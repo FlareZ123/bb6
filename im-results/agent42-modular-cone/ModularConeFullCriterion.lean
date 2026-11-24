@@ -29,8 +29,10 @@ private theorem low_stop_bound_full (m : Nat) :
   have hmul : 2*(4*m+4) ≤ 2*2^(2*m+2) :=
     Nat.mul_le_mul_left 2 hp
   have hpow : 2*2^(2*m+2) = 2^(2*m+3) := by
-    rw [show 2*m+3=(2*m+2)+1 by omega, Nat.pow_succ]
-    omega
+    calc
+      2*2^(2*m+2) = 2^(2*m+2)*2 := by omega
+      _ = 2^(2*m+3) := by
+        rw [show 2*m+3=(2*m+2)+1 by omega, Nat.pow_succ]
   omega
 
 private theorem high_stop_bound_full (j m : Nat) :
@@ -96,7 +98,11 @@ theorem blank_halts_iff_full_modular :
         | false => rfl
         | true =>
           have hstop' :
-              k+(j+1)+3*m+4=2^(2*m+2)*((j+1)+2) := by omega
+              k+(j+1)+3*m+4=2^(2*m+2)*((j+1)+2) := by
+            calc
+              k+(j+1)+3*m+4 = k+j+3*m+5 := by omega
+              _ = 2^(2*m+2)*(j+3) := hstop
+              _ = 2^(2*m+2)*((j+1)+2) := by congr 1 <;> omega
           exact False.elim
             ((high_stop_excluded (j+1) m k (by omega) hstop' hc) hr)
       exact Or.inr ⟨j,m,⟨hfull,hC70,hmod⟩,hroot⟩
