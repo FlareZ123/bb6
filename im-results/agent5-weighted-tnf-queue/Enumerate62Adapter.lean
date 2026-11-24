@@ -43,15 +43,20 @@ theorem sourceAllSlots_mem (s : Slot) : s ∈ sourceAllSlots := by
   rcases s with ⟨q, b⟩
   apply List.mem_flatMap.mpr
   refine ⟨q, List.mem_finRange q, ?_⟩
-  cases b <;> simp [sourceAllSlots]
+  cases b <;> simp
+
+theorem sourceAllSlots_nodup : sourceAllSlots.Nodup := by
+  decide
 
 def sourceRootHoles : List Slot := sourceAllSlots.erase initialSlot
 
 theorem sourceRootHoles_nodup : sourceRootHoles.Nodup := by
-  decide
+  exact sourceAllSlots_nodup.erase initialSlot
 
 theorem sourceRootHoles_length : sourceRootHoles.length = 11 := by
-  decide
+  have hmem := sourceAllSlots_mem initialSlot
+  have hlen : sourceAllSlots.length = 12 := by decide
+  simp [sourceRootHoles, List.length_erase_of_mem hmem, hlen]
 
 /-- The exact node0 table from Enumerate62.v:
     TM_from_str "1RB---_------_------_------_------_------". -/
@@ -62,7 +67,12 @@ theorem sourceRoot_exact (s : Slot) :
     sourceRootTM s = none ↔ s ∈ sourceRootHoles := by
   by_cases hs : s = initialSlot
   · subst s
-    simp [sourceRootTM, sourceRootHoles]
+    constructor
+    · simp [sourceRootTM]
+    · intro h
+      have hnot : initialSlot ∉ sourceRootHoles :=
+        List.Nodup.not_mem_erase sourceAllSlots_nodup
+      exact False.elim (hnot h)
   · have hmem : s ∈ sourceAllSlots := sourceAllSlots_mem s
     simp [sourceRootTM, sourceRootHoles, hs, hmem]
 
@@ -149,31 +159,13 @@ theorem sourceChild_support (x : SourceNode) (slot : Slot) (mv : Move)
     have hle := sourceChildFresh_ge x mv
     exact ⟨Nat.lt_of_lt_of_le hsrc hle, Nat.lt_of_lt_of_le hdst hle⟩
 
-theorem erase_length_of_mem {α : Type} [DecidableEq α]
-    (l : List α) (a : α) (hnodup : l.Nodup) (hmem : a ∈ l) :
-    (l.erase a).length = l.length - 1 := by
-  induction l with
-  | nil =>
-      simp at hmem
-  | cons b l ih =>
-      rcases hnodup with ⟨hnot, hnodup⟩
-      rcases hmem with hba | hmem
-      · subst a
-        simp [List.erase]
-      · have hba : b ≠ a := by
-          intro h
-          subst b
-          exact hnot hmem
-        have hlen := ih hnodup hmem
-        simp [List.erase, hba, hlen]
-        omega
-
 theorem sourceChild_holes_length (x : SourceNode) (slot : Slot) (mv : Move)
     (hwf : SourceWF x) (hhole : x.tm slot = none) :
     (sourceChild x slot mv).holes.length = x.holes.length - 1 := by
   rcases hwf with ⟨hnodup, hexact, _, _⟩
   have hmem : slot ∈ x.holes := (hexact slot).mp hhole
-  have hlen := erase_length_of_mem x.holes slot hnodup hmem
+  have hlen : (x.holes.erase slot).length = x.holes.length - 1 :=
+    List.length_erase_of_mem hmem
   simpa [sourceChild] using hlen
 
 theorem sourceChild_wf (x : SourceNode) (slot : Slot) (mv : Move)
@@ -183,11 +175,15 @@ theorem sourceChild_wf (x : SourceNode) (slot : Slot) (mv : Move)
     (hdest : mv.next.val ≤ x.fresh) :
     SourceWF (sourceChild x slot mv) := by
   rcases hwf with ⟨hnodup, hexact, hfresh, hsupport⟩
-  refine ⟨hnodup.erase, ?_, ?_, sourceChild_support x slot mv hsupport hslot hdest⟩
+  refine ⟨hnodup.erase slot, ?_, ?_, sourceChild_support x slot mv hsupport hslot hdest⟩
   · intro s
     by_cases hs : s = slot
     · subst s
-      simp [sourceChild, sourceUpdate, hhole]
+      constructor
+      · simp [sourceChild, sourceUpdate]
+      · intro h
+        have hnot : slot ∉ x.holes.erase slot := List.Nodup.not_mem_erase hnodup
+        exact False.elim (hnot h)
     · simp [sourceChild, sourceUpdate, hs, hexact s]
   · by_cases heq : mv.next.val = x.fresh
     · have hlt : x.fresh < 6 := by omega
@@ -232,7 +228,7 @@ theorem sourceChoices_mem_iff (cut : Nat) (mv : Move) :
     | mk w r q =>
         cases w <;> cases r <;> simp [h]
 
-theorem sourceChoices_branch_iff (cut : Nat) (hcut : cut ≤ 6)
+theorem sourceChoices_branch_iff (cut : Nat)
     (mv : Move) :
     mv ∈ sourceChoices cut ↔
       mv.next.val < cut ∨ (cut < 6 ∧ mv.next.val = cut) := by
@@ -358,7 +354,7 @@ theorem source_last_hole_cover (B : Nat) (x : SourceNode) (n : Nat)
         | nil =>
             have ha : a = readSlot c := by
               have hmem' : readSlot c ∈ [a] := by simpa [hlist] using hmem
-              simpa using hmem'
+              simpa using hmem'.symm
             simp [hlist, ha]
         | cons b rest =>
             simp [hlist] at hholes
