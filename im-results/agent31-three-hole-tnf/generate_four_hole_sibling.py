@@ -166,7 +166,7 @@ def main():
 abbrev siblingPath : List PathEntry := path.take 6 ++ [(8, (5,true), {f1_expr})]
 abbrev wideParent : PartialMachine := (pathEnd root 2 siblingPath).1
 theorem wide_reachable : FirstHolePath wideParent 6 := by
-  exact pathOK_sound (by decide : pathOK root 2 siblingPath = true)
+  exact pathOK_sound root 2 siblingPath FirstHolePath.root (by decide : pathOK root 2 siblingPath = true)
 theorem wide_root : wideParent initialSlot = some (some ⟨true,true,1⟩) := by decide
 theorem wide_nohalt : weightedTNFNoAssignedHalt wideParent :=
   pathEnd_nohalt root 2 siblingPath firstOneCylinder_no_assigned_halt
