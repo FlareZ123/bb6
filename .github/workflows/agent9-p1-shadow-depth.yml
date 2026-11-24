@@ -46,8 +46,19 @@ jobs:
           export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-dyadic-width:im-results/agent9-p1-first-return"
           lean --version
           git rev-parse HEAD
-          python tools/lean_compile_deps.py im-results/agent9-p1-first-return/SourceFirstReturn.lean | tee /tmp/first-return.log
+          python tools/lean_compile_deps.py im-results/agent9-p1-first-return/CostSource.lean | tee /tmp/first-return.log
           if grep -E 'sorryAx|error:' /tmp/first-return.log; then exit 1; fi
-          for lemma in gap_of_oddcone oddcone_of_gap source_right_five_iff critical_right_five_iff; do
-            grep -F "BB6.Agent9FirstReturn.$lemma' depends on axioms:" /tmp/first-return.log
-          done
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          log = Path('/tmp/first-return.log').read_text()
+          names = ("gap_of_oddcone", "oddcone_of_gap", "source_right_five_iff", "critical_right_five_iff", "shadow_bounds", "no_return_shadow", "no_return_before_two_n", "gap_return_at_cost", "source_right_five_shadow_escape", "source_right_five_cost_before_two_n", "source_right_five_cost_log")
+          for name in names:
+              m = re.search(r"'BB6\.Agent9FirstReturn\."+name+r"' depends on axioms:\s*\[([^\]]*)\]", log)
+              if not m:
+                  raise SystemExit("Missing axiom profile: "+name)
+              axioms = {a.strip() for a in m.group(1).split(",") if a.strip()}
+              if not axioms <= {"propext", "Classical.choice", "Quot.sound"}:
+                  raise SystemExit(f"Unexpected axioms in {name}: {axioms}")
+              print(name, sorted(axioms))
+          PY
