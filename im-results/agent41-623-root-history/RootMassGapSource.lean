@@ -7,10 +7,10 @@ set_option maxHeartbeats 0
 # Root-history exclusion of the #623 synchronization witnesses
 
 This file imports the unmodified pinned Cryptids transition through
-Agent49ParitySource.  It proves a strict mass monotonicity statement for
-surviving iterates, anchors the root at indices 23 and 24, and excludes the
-two-call source-authentic synchronization witness by the resulting skipped
-mass interval.
+Agent49ParitySource. It proves strict mass monotonicity between surviving
+iterates, anchors the root at indices 23 and 24, and excludes the two-call
+source-authentic synchronization witness by the resulting skipped mass
+interval.
 -/
 
 namespace BB6.Agent41RootHistory
@@ -28,7 +28,7 @@ private theorem run_mass_mono_aux (n k : Nat) :
   | zero =>
       intro a d aa dd hN hM
       have hM' : run n = some (.D aa dd) := by simpa using hM
-      have hstate : (.D a d : HighLevelState) = .D aa dd :=
+      have hstate : (.D a d) = (.D aa dd) :=
         Option.some.inj (hN.symm.trans hM')
       cases hstate
       omega
@@ -36,15 +36,17 @@ private theorem run_mass_mono_aux (n k : Nat) :
       intro a d aa dd hN hM
       have hM' : run (n + k + 1) = some (.D aa dd) := by
         simpa [Nat.add_succ] using hM
+      have hM'' := hM'
+      simp only [run] at hM''
       cases hm : run (n + k) with
       | none =>
-          simp [run, hm] at hM'
+          simp only [hm, Option.bind_none] at hM''
       | some s =>
           rcases s with ⟨x, y⟩
+          simp only [hm, Option.bind_some] at hM''
           have hprev : a + d ≤ x + y := ih a d x y hN hm
-          have hstepMass : x + y + 7 ≤ aa + dd := by
-            apply next_strict_mass x y aa dd
-            simpa [run, hm] using hM'
+          have hstepMass : x + y + 7 ≤ aa + dd :=
+            next_strict_mass x y aa dd hM''
           omega
 
 /-- Monotonicity between arbitrary surviving root indices. -/
