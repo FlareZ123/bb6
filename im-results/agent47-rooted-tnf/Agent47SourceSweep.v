@@ -122,4 +122,15 @@ Proof.
   intro n; exists (S n); apply sweep_grow.
 Qed.
 
+(* These are exactly two active tables from Agent8PackedChunk2_32_32. *)
+Open Scope string_scope.
+Lemma sweep_true_table :
+  sweep_tm true = TM_from_str "1RB1RD_1RC1LB_0LA0LE_1LA0LB_---1RB_------".
+Proof. reflexivity. Qed.
+Lemma sweep_false_table :
+  sweep_tm false = TM_from_str "1RB1RD_1RC1LB_0LA0LE_1LA0LB_---0RC_------".
+Proof. reflexivity. Qed.
+
 Print Assumptions sweep_nonhalt.
+Print Assumptions sweep_true_table.
+Print Assumptions sweep_false_table.
