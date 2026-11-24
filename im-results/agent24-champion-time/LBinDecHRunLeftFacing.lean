@@ -18,7 +18,7 @@ open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent24LBinDecHRun
 
 private theorem sideBit_append_exact (xs ys : List Bool) :
-    ∀ i, sideBit (xs ++ ys) i =
+    ∀ i : Nat, sideBit (xs ++ ys) i =
       if i < xs.length then sideBit xs i else sideBit ys (i-xs.length) := by
   intro i
   induction xs generalizing i with
@@ -55,7 +55,7 @@ private theorem lbinDecHRunTape_preserves_left
 private theorem lbinDecHRunTape_d0_region
     (n : Nat) (T : Int → Bool) (h : Int)
     (hon : leftOnes T h (3*n)) :
-    ∀ i, i < 3*n →
+    ∀ i : Nat, i < 3*n →
       lbinDecHRunTape n T h (h-(i:Int)) = decide (i%3=2) := by
   intro i hi
   let h' : Int := h-(3*n:Int)
@@ -132,9 +132,9 @@ theorem lbinDecHRunTape_leftFacing
     (hm1 : T (h-(3*n:Int)-1) = false)
     (hthird : T (h-(3*n:Int)-2) = true)
     (hr : T (h+1) = false)
-    (hleft : ∀ i, T (h-(i:Int)) =
+    (hleft : ∀ i : Nat, T (h-(i:Int)) =
       sideBit (d1pow n ++ (d0 ++ tail)) i) :
-    ∀ i, lbinDecHRunTape n T h (h-(i:Int)) =
+    ∀ i : Nat, lbinDecHRunTape n T h (h-(i:Int)) =
       sideBit (d0pow n ++ (d1 ++ tail)) i := by
   intro i
   by_cases hi0 : i < 3*n
@@ -150,16 +150,16 @@ theorem lbinDecHRunTape_leftFacing
       rcases hmid with hmid0 | hmid1 | hmid2
       · subst i
         have hd1 := lbinDecHRunTape_d1 n T h hon h0 hm1 hthird hr
-        rw [hd1.1]
-        simp [sideBit_append_exact, d0pow_length, d1]
+        rw [show h-((3*n:Nat):Int) = h-3*(n:Int) by omega, hd1.1]
+        simp [sideBit_append_exact, d0pow_length, d1, sideBit, hi0] <;> omega
       · subst i
         have hd1 := lbinDecHRunTape_d1 n T h hon h0 hm1 hthird hr
-        rw [hd1.2.1]
-        simp [sideBit_append_exact, d0pow_length, d1]
+        rw [show h-((3*n+1:Nat):Int) = h-3*(n:Int)-1 by omega, hd1.2.1]
+        simp [sideBit_append_exact, d0pow_length, d1, sideBit, hi0] <;> omega
       · subst i
         have hd1 := lbinDecHRunTape_d1 n T h hon h0 hm1 hthird hr
-        rw [hd1.2.2]
-        simp [sideBit_append_exact, d0pow_length, d1]
+        rw [show h-((3*n+2:Nat):Int) = h-3*(n:Int)-2 by omega, hd1.2.2]
+        simp [sideBit_append_exact, d0pow_length, d1, sideBit, hi0] <;> omega
     · have hx : h-(i:Int) ≤ h-(3*n:Int)-3 := by omega
       rw [lbinDecHRunTape_preserves_left n T h (h-(i:Int)) hx]
       rw [hleft i]
@@ -174,7 +174,8 @@ theorem lbinDecHRunTape_leftFacing
         have hnot2 : ¬ i-3*n < d0.length := by
           simp [d0]
           omega
-        simp [hnot2, d0]
+        rw [if_neg hnot2]
+        simp [d0]
         congr 1 <;> omega
       have houtput :
           sideBit (d0pow n ++ (d1 ++ tail)) i =
@@ -187,7 +188,8 @@ theorem lbinDecHRunTape_leftFacing
         have hnot2 : ¬ i-3*n < d1.length := by
           simp [d1]
           omega
-        simp [hnot2, d1]
+        rw [if_neg hnot2]
+        simp [d1]
         congr 1 <;> omega
       exact hinput.trans houtput.symm
 
@@ -236,31 +238,14 @@ theorem lbinDecHRunTape_rightPlus1
     simpa [lbinDecHRunTape,h',U,V] using hb.2.2
 
 
-private theorem sideBit_d1pow_true
-    (n i : Nat) (hi : i < 3*n) :
-    sideBit (d1pow n) i = true := by
-  induction n with
-  | zero =>
-      omega
-  | succ n ih =>
-      by_cases hsmall : i < 3
-      · have hcases : i=0 ∨ i=1 ∨ i=2 := by omega
-        rcases hcases with h0 | h1 | h2 <;> subst i <;>
-          simp [d1pow,d1,sideBit]
-      · have htail : i-3 < 3*n := by omega
-        have hnot : ¬ i < d1.length := by simp [d1]; omega
-        have happ := sideBit_append_exact d1 (d1pow n) i
-        rw [d1pow, happ]
-        simp [hnot,d1,d1pow_length,ih (i-3) htail]
-
 /-- Convenient source-facing API: the complete input word itself supplies
 all three left-boundary facts needed by the counted H-run theorem. -/
 theorem lbinDecHRunTape_leftFacing_of_input
     (n : Nat) (T : Int → Bool) (h : Int) (tail : List Bool)
     (hr : T (h+1) = false)
-    (hleft : ∀ i, T (h-(i:Int)) =
+    (hleft : ∀ i : Nat, T (h-(i:Int)) =
       sideBit (d1pow n ++ (d0 ++ tail)) i) :
-    ∀ i, lbinDecHRunTape n T h (h-(i:Int)) =
+    ∀ i : Nat, lbinDecHRunTape n T h (h-(i:Int)) =
       sideBit (d0pow n ++ (d1 ++ tail)) i := by
   have hon : leftOnes T h (3*n) := by
     intro i hi
@@ -270,17 +255,17 @@ theorem lbinDecHRunTape_leftFacing_of_input
     simp [hi,sideBit_d1pow_true]
   have h0 : T (h-(3*n:Int)) = false := by
     have hx := hleft (3*n)
-    simpa [sideBit_append_exact,d1pow_length,d0] using hx
+    simpa [sideBit_append_exact,d1pow_length,d0,sideBit] using hx
   have hm1 : T (h-(3*n:Int)-1) = false := by
     have hx := hleft (3*n+1)
     have hcoord : h-(3*n:Int)-1 = h-((3*n+1):Int) := by omega
     rw [hcoord]
-    simpa [sideBit_append_exact,d1pow_length,d0] using hx
+    simpa [sideBit_append_exact,d1pow_length,d0,sideBit,show ¬ 3*n+1<3*n by omega] using hx
   have hthird : T (h-(3*n:Int)-2) = true := by
     have hx := hleft (3*n+2)
     have hcoord : h-(3*n:Int)-2 = h-((3*n+2):Int) := by omega
     rw [hcoord]
-    simpa [sideBit_append_exact,d1pow_length,d0] using hx
+    simpa [sideBit_append_exact,d1pow_length,d0,sideBit,show ¬ 3*n+2<3*n by omega] using hx
   exact lbinDecHRunTape_leftFacing n T h tail hon h0 hm1 hthird hr hleft
 
 #print axioms lbinDecHRunTape_leftFacing
