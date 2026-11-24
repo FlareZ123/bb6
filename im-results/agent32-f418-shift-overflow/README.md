@@ -1,6 +1,6 @@
 # F418: complete arithmetic event partition and exact primitive costs
 
-**Status.** The literal two-hole table `1RB1LD_1RC0RB_1LA1RC_1LE0LA_1LF---_1LC---` has a kernel-checked source reduction from the blank tape to the arithmetic event orbit (see [F418Root.lean](F418Root.lean)). The exact normal-return formula and backward odd-only predecessor restrictions below are also Lean checked. No all-time root verdict or BB(6) upper bound is claimed.
+**Status.** The literal two-hole table `1RB1LD_1RC0RB_1LA1RC_1LE0LA_1LF---_1LC---` has a kernel-checked source reduction from the blank tape to the arithmetic event orbit (see [F418Root.lean](F418Root.lean)). The exact normal-return formula, backward odd-only predecessor restrictions, and signed deferred-power queue below are also Lean checked. No all-time root verdict or BB(6) upper bound is claimed.
 
 ## Encoding and event table
 
@@ -103,3 +103,16 @@ theorem source_nonhalt_iff : NeverHalts machine ↔
 All these results have axiom sets contained in `propext`, `Classical.choice`, `Quot.sound`, no `sorryAx`. The proof is unbounded; the event duration is a positive existential witness rather than the separately derived closed cost formula. In a terminating orbit the first undefined instruction is F/1, never E/1. The root decision is now exactly one unbounded arithmetic reachability question, not a gap in machine simulation.
 
 To reproduce, copy `../agent8-coverage-contract/Frontier.lean` and `../agent32-source-queue/SourceFiniteSemantics.lean` to a temporary directory alongside all nine F418 Lean files; from there set `LEAN_PATH=.` and compile in order: Frontier, SourceFiniteSemantics, F418Rules, F418Seed, F418Arithmetic, F418EventSystem, F418Episodes, F418TapeEncoding, F418SourceEvents, F418Root. Run `lean -o NAME.olean NAME.lean` for each. The exact input files used were Git blobs Frontier `115438c4f244b5416a91be4dd7a3f12103d5448d`, SourceFiniteSemantics `22418a75661de5978f9f5b50455c399ffc79a1f9`, F418Rules `ba93f60187b25571a03e8b50aeb8e47ce7911f5d`, F418Seed `1c78f0b4b3d818ec001a82d59a03f76b08038a7c`.
+
+
+## Signed deferred-power queue (kernel checked)
+
+The exact normal-return dynamics admit a signed representation N = x + sum(2^h for h in H). The sorted list H consists of surviving injected high powers, separated by at least four bit positions. For a prefix b let L=2p+1, E=5p+2, C=b.C. Divide H into low entries h<L and high entries h>=L. The update is
+
+    x' = floor((x + sum(2^h for h<L))/2^L) - C
+    H' = [h-L for h>=L] ++ [W+E]
+    W' = W+E+1.
+
+The signed floor is Euclidean integer division, including for negative x. The seed is x=268311341, H=[], W=29. [F418SignedQueue.lean](F418SignedQueue.lean) proves that the signed prefix and unconsumed high powers determine the identical natural-register prefix and that the update is exact. [F418QueueInvariant.lean](F418QueueInvariant.lean) proves distinct bit positions, low-sum bounds and preservation of spacing and width.
+
+[F418QueueHistory.lean](F418QueueHistory.lean) lifts the representation to every genuine NormalPath, with P the maximum p so far and t the number of returns. It proves -2^(7P+3)<x<=2^(29-t) (natural subtraction in the exponent), and x<0 for t>=29. A terminal candidate satisfying NoEven then has no even exponent h>=7P+5 in H. This follows from the previously checked high-bit subtraction restriction applied to the sum of the distinct powers. Hence any proof of continued presence of sufficiently high opposite-parity sources excludes the odd-only gate. The existing bounds do not themselves prove that presence, and the record P can be large. All three modules compile on Lean 4.36.0-rc2 with only standard axioms. The representation permits efficient evaluation without building the full growing register.
