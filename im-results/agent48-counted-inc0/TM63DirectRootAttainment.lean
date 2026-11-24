@@ -1,6 +1,7 @@
 import TM63CompleteIncrementSource
 import Rst1PrimeBridge6Source
 import S1CountedDrain
+import TerminalEncoderBridge
 
 namespace BB6Coverage.Agent48DirectRoot
 open BB6Coverage
@@ -30,6 +31,20 @@ theorem reset_source : ResetSource := by
 theorem champion_attained_exact : Attainable (proposedTM63Moves+7) :=
   direct_root_attainment increment_source reset_source
 
+/-- Named literal-table witness, with the final halting query excluded. -/
+theorem champion_halts_exact : HaltsAfter championTable (proposedTM63Moves+6) :=
+  direct_root_halts increment_source reset_source
+
+/-- The only remaining mathematical premise for exact BB(6) in this model
+is the universal upper-bound certificate at the now-attained score. -/
+theorem champion_maximum_of_cover
+    (cert : Cover (DecidedBelow (proposedTM63Moves+7)) emptyTable) :
+    Attainable (proposedTM63Moves+7) ∧
+    ∀ score, Attainable score → score ≤ proposedTM63Moves+7 :=
+  ⟨champion_attained_exact, maximal_runtime_if_cover _ cert⟩
+
+#print axioms champion_halts_exact
+#print axioms champion_maximum_of_cover
 #print axioms reset_source
 #print axioms champion_attained_exact
 end BB6Coverage.Agent48DirectRoot
