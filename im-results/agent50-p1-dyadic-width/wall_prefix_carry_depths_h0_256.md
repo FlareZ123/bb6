@@ -31,6 +31,10 @@ The first empty layer (K) is the first prefix depth at which no Boolean subset w
 | 29 | 134 | 40 | 94 |
 | 225 | 124 | 48 | 30 |
 | 213 | 110 | 48 | 24 |
+| 229 | 94 | 48 | 62 |
+| 33 | 92 | 40 | 54 |
+| 34 | 86 | 40 | 46 |
+| 174 | 86 | 60 | 72 |
 
 | Family II: (n=9538+703248h) | Empty depth (K) | Largest carry-set size | Layer of largest set |
 |---:|---:|---:|---:|
@@ -51,6 +55,9 @@ The first empty layer (K) is the first prefix depth at which no Boolean subset w
 | 245 | 134 | 72 | 44 |
 | 190 | 128 | 104 | 86 |
 | 197 | 100 | 40 | 78 |
+| 13 | 94 | 48 | 38 |
+| 105 | 94 | 56 | 46 |
+| 249 | 92 | 52 | 44 |
 
 The worst cases (h=142) in family I and (h=86) in family II survive 5,349 and 4,749 prefix layers respectively. Thus a proposed argument that all (h) are eliminated by a small fixed prefix depth is not credible without a new structural invariant. The four Lean-checked cylinders in [`wall_prefix_carry_cylinders.md`](wall_prefix_carry_cylinders.md) remain exact infinite subfamily results, but they do not capture these long-transient branches.
 
