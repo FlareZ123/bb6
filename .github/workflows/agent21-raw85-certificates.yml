@@ -111,7 +111,7 @@ jobs:
           for file in im-results/agent21-raw85/smt-candidates.txt im-results/agent21-raw85/smt-candidates-provenance.md; do
             api_path="repos/$GITHUB_REPOSITORY/contents/$file"
             encoded="$(base64 -w0 "$file")"
-            current_content="$(gh api "$api_path" --jq .content 2>/dev/null | tr -d '\\n' || true)"
+            current_content="$(gh api "$api_path" --jq .content 2>/dev/null | tr -d '\n' || true)"
             if [[ "$current_content" == "$encoded" ]]; then
               echo "$file already matches recovered artifacts"
               continue
