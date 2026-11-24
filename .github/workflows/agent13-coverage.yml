@@ -181,7 +181,7 @@ jobs:
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
-          python tools/lean_compile_closure.py --workdir /tmp/a47-r1-sweep --jobs 4 im-results/agent47-r1-sweep/R1Parent.lean | tee /tmp/a47-r1-sweep.log
+          python tools/lean_compile_closure.py --workdir /tmp/a47-r1-sweep --jobs 4 im-results/agent47-r4-counter/R4Parent.lean | tee /tmp/a47-r1-sweep.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a47-r1-sweep.log; then
             echo "Forbidden proof placeholder or native_decide found in r1 sweep closure" >&2
             exit 1
