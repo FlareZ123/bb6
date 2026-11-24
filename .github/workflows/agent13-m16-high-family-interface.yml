@@ -58,6 +58,8 @@ on:
           - sourceUnifiedShadow
           - sourceModularHighStop
           - sourceModularHighStopCriterion
+          - sourceModularLowStop
+          - sourceModularStopsCriterion
           - sourceBoundedShadow
           - sourceExactMemo
           - sourceLowQuarterTwoForced
@@ -247,6 +249,12 @@ jobs:
               ;;
             sourceModularHighStopCriterion)
               target=im-results/agent42-modular-cone/ModularConeHighStopCriterion.lean
+              ;;
+            sourceModularLowStop)
+              target=im-results/agent42-modular-cone/ModularConeLowStop.lean
+              ;;
+            sourceModularStopsCriterion)
+              target=im-results/agent42-modular-cone/ModularConeStopsCriterion.lean
               ;;
             sourceHighCylinder)
               target=im-results/agent13-residual-frontier/HighShadowCylinder.lean
