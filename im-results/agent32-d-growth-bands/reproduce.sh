@@ -23,11 +23,16 @@ for mod in Boundary OneSidedRank OneSidedCertificate OneSidedBounds OneSidedSour
   if grep -Eq 'sorryAx|uses .sorry.' "$mod.log"; then exit 1; fi
 done
 
-if [[ "${EXTRA_MODULE:-0}" == "1" ]]; then
-  cp "$here/../agent36-cryptid-trace/SourceSectionBandsAdapter.lean" "$work/SourceSectionBandsAdapter.lean"
+if [[ -n "${EXTRA_MODULES:-}" ]]; then
   export LEAN_PATH="$PWD:$here/../agent26-d-phase-bands:$here/../agent36-cryptid-trace"
-  lean -o SourceSectionBandsAdapter.olean SourceSectionBandsAdapter.lean 2>&1 | tee SourceSectionBandsAdapter.log
-  if grep -Eq 'sorryAx|uses .sorry.' SourceSectionBandsAdapter.log; then exit 1; fi
+  IFS=',' read -ra extra_modules <<< "$EXTRA_MODULES"
+  for extra_module in "${extra_modules[@]}"; do
+    cp "$here/../agent36-cryptid-trace/$extra_module" "$work/$extra_module"
+    extra_olean="${extra_module%.lean}.olean"
+    extra_log="${extra_module%.lean}.log"
+    lean -o "$extra_olean" "$extra_module" 2>&1 | tee "$extra_log"
+    if grep -Eq 'sorryAx|uses .sorry.' "$extra_log"; then exit 1; fi
+  done
 fi
 
 if [[ "${SHOW_SECTION_BANDS:-0}" == "1" ]]; then
