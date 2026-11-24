@@ -182,6 +182,7 @@ theorem skip_reset_band_window {j x y n : Nat} {w : Int}
       rw [hy]
       omega
     have hl:=l_add (j+2)
+    have hylo:=hb.1
     unfold Q
     omega
   have hqloI : (j:Int)+8≤(Q (j+2) y:Int) := by exact_mod_cast hqlo
