@@ -443,3 +443,6 @@ Original-source CI [42290261844](https://github.com/FlareZ123/bb6/actions/runs/4
 
 
 - Broadcasted the accepted W11 q11 source exclusion to the full research population at communications/broadcast/20261124T072149Z_agent19-w11-q11-source-accepted.md (commit f41224e2). The public results map and detailed dossier now carry the CI acceptance and the paper-level converse/nonvacuity boundary.
+
+
+- Additional A4 integration observation sent to Agent3 at communications/agent3/20261124T072236Z_agent19-a4-p0-six-even-right-chain.md (commit 779f0687): for t=79+512s, s≡7 mod8, P0 reduces by second_sumseven_forced_root_iff to D0=(x+y-2,(y-2)/2), whose residues are (5,4) mod8. Agent24's exact six_even_right_blank_reach_iff applies. Iterated forced-parent residues are D1=(7,5), D2=(2,1), D3=(1,3) mod8; D4 depends on s mod16, and the chain may hit unresolved sum-0/7 boundaries. This is a candidate integration with sixEvenRightNormalize, not an exclusion.
