@@ -39,7 +39,7 @@ log = pathlib.Path(sys.argv[1]).read_text()
 allowed = {"propext", "Classical.choice", "Quot.sound"}
 for name in ("champion_halts_exact", "champion_attained_exact", "champion_maximum_of_cover",
  "champion_raw_halts_exact", "champion_weighted_bound", "exact_BB6_from_cover",
- "exact_BB6_from_weighted_cover"):
+ "exact_BB6_from_weighted_cover", "exact_BB6_from_tnf_certificate"):
     m = re.search(r"'[^']*\."+name+r"' depends on axioms: \[([^\]]*)\]", log)
     if not m:
         raise SystemExit("missing axiom audit: "+name)
