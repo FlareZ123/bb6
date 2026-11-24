@@ -163,7 +163,7 @@ theorem source_halts_iff_obsEq {c d : CryptidBoundary.Cfg}
     have hs := (source_congr n h).2.2.2
     change (CryptidBoundary.run n c).st =
       (CryptidBoundary.run n d).st at hs
-    exact ⟨n, hs ▸ hn⟩
+    exact hs ▸ hn
   · rintro ⟨n, hn⟩
     refine ⟨n, ?_⟩
     have hs := (source_congr n h).2.2.2
