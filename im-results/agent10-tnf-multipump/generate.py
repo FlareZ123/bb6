@@ -76,7 +76,7 @@ for raw,spec in SPECS.items():
 set_option maxHeartbeats 0
 namespace {ns}
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent8TNFPath
-open BB6.Agent50TNFPilot BB6.Agent31ThreeHole BB6.Agent10FastAudit
+open BB6.Agent50TNFPilot BB6.Agent31ThreeHole BB6.Agent10ZipAudit
 """
         (ROOT/(name+".lean")).write_text("".join("import "+i+"\n" for i in imports)+header+body+f"\nend {ns}\n")
     tree=json.loads((target/"tree.json").read_text());stats=Counter()
@@ -103,39 +103,39 @@ open BB6.Agent50TNFPilot BB6.Agent31ThreeHole BB6.Agent10FastAudit
     n,s=spec["root"];ss=slot(s)
     assert tree[:3]==["split",n,s]
     bname=f"Raw{raw}Base"
-    emit(bname,["FastThreeHoleAudit",f"Raw{raw}Pumps"],f"""
+    emit(bname,["ZipThreeHoleAudit",f"Raw{raw}Pumps"],f"""
 abbrev p{raw} : PartialMachine :=
   refine (pathEnd root 2 (path.take {depth})).1 {parentslot} (some {move(f1)})
 theorem p{raw}_root : p{raw} initialSlot = some (some ⟨true,true,1⟩) := by decide
 theorem p{raw}_nohalt : weightedTNFNoAssignedHalt p{raw} :=
   weightedTNFNoAssignedHalt_refine _ _ _ (pathEnd_nohalt root 2 (path.take {depth}) firstOneCylinder_no_assigned_halt)
 abbrev child{raw} (mv : Move) := refine p{raw} {ss} (some mv)
-theorem query{raw} : queryOK {bound} p{raw} {n} {ss} = true := by decide
+theorem query{raw} : zipQueryOK {bound} p{raw} {n} {ss} = true := by decide
 """)
     mods=[]
     for i,kid in enumerate(tree[3]):
         name=f"Raw{raw}Kid{i:02}";mods.append(name)
         emit(name,[bname],f"""
 def kid{i:02} : Audit := {build(kid)}
-theorem check{i:02} : fastCheck {bound} (child{raw} {move(MOVES[i])}) kid{i:02} = true := by decide
+theorem check{i:02} : zipCheck {bound} (child{raw} {move(MOVES[i])}) kid{i:02} = true := by decide
 """)
     assert stats==Counter(spec["stats"]),stats
     cases="\n".join(f"  · exact check{12*w+6*r+q:02}" for q,w,r in product(range(6),range(2),range(2)))
     body=f"""
 def kids{raw} : Move → Audit := byMove [{",".join(f"kid{i:02}" for i in range(24))}]
-theorem kids{raw}_checked (mv : Move) : fastCheck {bound} (child{raw} mv) (kids{raw} mv) = true := by
+theorem kids{raw}_checked (mv : Move) : zipCheck {bound} (child{raw} mv) (kids{raw} mv) = true := by
   rcases mv with ⟨w,r,q⟩
   have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
   rcases hq with rfl|rfl|rfl|rfl|rfl|rfl
   all_goals cases w <;> cases r
 {cases}
 def tree{raw} : Audit := .split {n} {ss} kids{raw}
-theorem tree{raw}_checked : fastCheck {bound} p{raw} tree{raw} = true := by
-  change (queryOK {bound} p{raw} {n} {ss} && allMoves (fun mv => fastCheck {bound} (child{raw} mv) (kids{raw} mv))) = true
+theorem tree{raw}_checked : zipCheck {bound} p{raw} tree{raw} = true := by
+  change (zipQueryOK {bound} p{raw} {n} {ss} && allMoves (fun mv => zipCheck {bound} (child{raw} mv) (kids{raw} mv))) = true
   simp only [Bool.and_eq_true]
   exact ⟨query{raw}, allMoves_of _ kids{raw}_checked⟩
 noncomputable def certificate{raw} : WeightedTNFCertificate {bound} p{raw} 6 :=
-  certifiedFast {bound} p{raw} tree{raw} p{raw}_root p{raw}_nohalt tree{raw}_checked
+  certifiedZip {bound} p{raw} tree{raw} p{raw}_root p{raw}_nohalt tree{raw}_checked
 theorem all{raw} : ∀ m, compatible p{raw} m → WeightedBound {bound} m :=
   certificate{raw}.sound
 #print axioms tree{raw}_checked
