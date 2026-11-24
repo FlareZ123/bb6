@@ -25,33 +25,33 @@ theorem threeGliderTNF_support :
       simpa [threeGliderTNFNode, BB6Coverage.threeGliderExample] using ht.symm
     subst t
     constructor
-    · omega
+    · simp
     · intro mv hm
       have hmv : (⟨true,true,1⟩ : Move) = mv := Option.some.inj hm
       subst mv
-      norm_num
+      simp
   · by_cases h1 : s = (1,false)
     · subst s
       have ht' : t = some ⟨false,false,2⟩ := by
-        simpa [threeGliderTNFNode, BB6Coverage.threeGliderExample] using ht
+        simpa [threeGliderTNFNode, BB6Coverage.threeGliderExample] using ht.symm
       subst t
       constructor
-      · norm_num
+      · simp
       · intro mv hm
         have hmv : (⟨false,false,2⟩ : Move) = mv := Option.some.inj hm
         subst mv
-        norm_num
+        simp
     · by_cases h2 : s = (2,true)
       · subst s
         have ht' : t = some ⟨false,true,0⟩ := by
-          simpa [threeGliderTNFNode, BB6Coverage.threeGliderExample] using ht
+          simpa [threeGliderTNFNode, BB6Coverage.threeGliderExample] using ht.symm
         subst t
         constructor
-        · norm_num
+        · simp
         · intro mv hm
           have hmv : (⟨false,true,0⟩ : Move) = mv := Option.some.inj hm
           subst mv
-          norm_num
+          simp
       · simp [threeGliderTNFNode, BB6Coverage.threeGliderExample, h0, h1, h2] at ht
 
 theorem threeGliderTNF_noAssignedHalt :
