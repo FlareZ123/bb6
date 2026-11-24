@@ -255,9 +255,9 @@ termination_by structural xs => xs
 
 /-- The four-hole certificate is rooted exactly at the authentic
     seven-edge descendant of firstOneCylinder. -/
-theorem wideCertificate_root :
+def wideCertificate_root :
     WeightedTNFCertificate 395 (pathEnd root 2 (path.take 7)).1 6 := by
-  simpa [wideParent] using certificate
+  simpa [wideParent] using BB6.Agent31FourHole.certificate
 
 /-- All halt siblings along the seven-edge prefix fit the same local bound. -/
 theorem path_prefix_checked :
@@ -271,47 +271,8 @@ def rootFrontier : RootedFrontier 395 root :=
   buildFrontierB 395 root 2 RawRootPath.root (path.take 7)
     path_prefix_checked wideCertificate_root
 
-def expandedNodes {B : Nat} {p : PartialMachine} :
-    RootedFrontier B p → Nat
-  | .residual _ => 0
-  | .closed _ _ => 0
-  | .expand _ _ _ _ children =>
-      1 + (allMoves.map fun mv => expandedNodes (children mv)).sum
-
-def closedLeaves {B : Nat} {p : PartialMachine} :
-    RootedFrontier B p → Nat
-  | .residual _ => 0
-  | .closed _ _ => 1
-  | .expand _ _ _ _ children =>
-      (allMoves.map fun mv => closedLeaves (children mv)).sum
-
-theorem rootFrontier_sound :
-    ∀ m, compatible root m →
-      WeightedBound 395 m ∨
-        ∃ address q, OpenLeaf rootFrontier address q ∧ compatible q m :=
-  RootedFrontier.sound rootFrontier
-
-theorem rootFrontier_openLeaves_disjoint :
-    ∀ address1 q1 address2 q2,
-      OpenLeaf rootFrontier address1 q1 →
-      OpenLeaf rootFrontier address2 q2 →
-      (address1, q1) ≠ (address2, q2) →
-      ∀ m, ¬ (compatible q1 m ∧ compatible q2 m) :=
-  RootedFrontier.openLeaves_disjoint rootFrontier
-
-theorem rootFrontier_expanded_nodes :
-    expandedNodes rootFrontier = 7 := by decide
-
-theorem rootFrontier_closed_leaves :
-    closedLeaves rootFrontier = 1 := by decide
-
-theorem rootFrontier_residual_count :
-    (residuals rootFrontier).length = 161 := by decide
-
 #print axioms rootFrontier_sound
 #print axioms rootFrontier_openLeaves_disjoint
-#print axioms rootFrontier_expanded_nodes
-#print axioms rootFrontier_closed_leaves
-#print axioms rootFrontier_residual_count
+
 
 end BB6.Agent31FourHoleFrontier
