@@ -1,4 +1,5 @@
 import M1OneQ4Prefix
+import M0EvenSixHeadBound
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -14,6 +15,7 @@ namespace BB6Coverage.Agent48M1OddResidueOneHeadBound
 open BB6Coverage
 open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent6Q4Prefix
+open BB6Coverage.Agent42M0EvenSixHeadBound
 open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent8CountedReset
 open BB6Coverage.Agent8Q4Suffix
@@ -68,7 +70,10 @@ private theorem m1One_bridge_prefix_lower
       (List.mem_range.mpr hk29)
   have hbridge := bridgeAt T h m1OneQ4Inside
     m1OddQ4BridgeStart e j rfl hexact hcheckj hmatch
-  rw [hbridge] at hd
+  have hbridge' :
+      run tm2 j ⟨3,h,T⟩ = some (frameAt T h m1OneQ4Inside e) := by
+    simpa [m1OddQ4BridgeStart] using hbridge
+  rw [hbridge'] at hd
   have hdeq : d = frameAt T h m1OneQ4Inside e :=
     Option.some.inj hd
   have hinside : m1OneQ4Inside e.head = true := by
@@ -122,15 +127,23 @@ theorem m1OddResidueOne_q4_prefix_head_bound
       by_cases hi3 : i < 3*a
       · have hbit := sideBit_append_left (d1pow a)
           (markerWord 1 ++ d0 ++ d0 ++ d1 ++ d1 ++ lh) i
-          (by rw [d1pow_length]; omega)
-        rw [hbit]
+          (by simpa [d1pow_length] using hi3)
+        have hbit' :
+            sideBit (d1pow a ++ markerWord 1 ++ d0 ++ d0 ++ d1 ++ d1 ++ lh) i =
+              sideBit (d1pow a) i := by
+          simpa [List.append_assoc] using hbit
+        rw [hbit']
         exact sideBit_d1pow_true a i hi3
       · have hieq : i = 3*a := by omega
         subst i
         have hbit := sideBit_append_right (d1pow a)
           (markerWord 1 ++ d0 ++ d0 ++ d1 ++ d1 ++ lh) (3*a)
-          (by rw [d1pow_length])
-        rw [hbit]
+          (by simp [d1pow_length])
+        have hbit' :
+            sideBit (d1pow a ++ markerWord 1 ++ d0 ++ d0 ++ d1 ++ d1 ++ lh) (3*a) =
+              sideBit (markerWord 1 ++ d0 ++ d0 ++ d1 ++ d1 ++ lh) 0 := by
+          simpa [List.append_assoc,d1pow_length] using hbit
+        rw [hbit']
         simp [markerWord,sideBit]
     rw [hside] at hcell
     exact hcell
@@ -138,6 +151,10 @@ theorem m1OddResidueOne_q4_prefix_head_bound
     simpa [T,s1PhysicalRight_source,sideBit] using
       s1Config_right_cell 3 1 1 a 0 b h 0
   have hSweep := counted_left_sweep N T h hOn hright
+  have hSweep' :
+      run tm2 (3*N) (s1Config 3 1 1 a 0 b h) =
+        some (⟨3,hN,T1⟩ : Config) := by
+    simpa [s1Config,T,N,hN] using hSweep
   have hmatch0 := m1OneQ4Bridge_input_match 3 a b h (by omega)
   have hmatch : ∀ y, m1OneQ4Inside y = true →
       T1 (hN+y) = decide (y ∈ m1OddQ4BridgeStart.marked) := by
@@ -145,9 +162,20 @@ theorem m1OddResidueOne_q4_prefix_head_bound
   have hBridge := bridgeAt T1 hN m1OneQ4Inside
     m1OddQ4BridgeStart m1OddQ4BridgeEnd 29 rfl
     m1OddQ4Bridge_exact m1OneQ4Bridge_heads hmatch
+  have hBridge0 :
+      run tm2 29 ⟨3,hN,T1⟩ =
+        some (frameAt T1 hN m1OneQ4Inside m1OddQ4BridgeEnd) := by
+    simpa [m1OddQ4BridgeStart] using hBridge
+  have hframeConfig :
+      frameAt T1 hN m1OneQ4Inside m1OddQ4BridgeEnd =
+        (⟨4,hN+5,T2⟩ : Config) := by
+    apply config_ext
+    · simp [frameAt_state,m1OddQ4BridgeEnd]
+    · simp [frameAt_head,m1OddQ4BridgeEnd] <;> omega
+    · rfl
+  rw [hframeConfig] at hBridge0
   have hBridge' :
-      run tm2 29 ⟨3,hN,T1⟩ = some ⟨4,hN+5,T2⟩ := by
-    simpa [T1,T2,N,hN,m1OneQ4CutTape] using hBridge
+      run tm2 29 ⟨3,hN,T1⟩ = some ⟨4,hN+5,T2⟩ := hBridge0
   have hlinear : linearRightOnes T2 (hN+5) (3*a) := by
     intro i hi
     let x := hN+5+(i:Int)
@@ -156,7 +184,7 @@ theorem m1OddResidueOne_q4_prefix_head_bound
       omega
     have hframe : T2 x = T1 x := by
       simpa [T2,m1OneQ4CutTape] using
-        frameAt_tape_outside T1 hN m1OneQ4Inside
+        BB6Coverage.Agent6Q4Prefix.frameAt_tape_outside T1 hN m1OneQ4Inside
           m1OddQ4BridgeEnd x houtside
     have hT1 : T1 x = true := by
       by_cases hx : x ≤ h
@@ -168,7 +196,8 @@ theorem m1OddResidueOne_q4_prefix_head_bound
         have hcoord : x = h-(j:Int) := by
           dsimp [j,N,x,hN]
           omega
-        rw [hcoord] at hblock
+        change sweptLeft N T h x = true
+        rw [hcoord]
         exact hblock
       · have hxCases : x = h+1 ∨ x = h+2 ∨ x = h+3 := by
           dsimp [x,N,hN] at *
@@ -181,6 +210,8 @@ theorem m1OddResidueOne_q4_prefix_head_bound
           have hsrc : T (h+2) = true := by
             simpa [T,s1PhysicalRight_source,sideBit] using
               s1Config_right_cell 3 1 1 a 0 b h 1
+          change sweptLeft N T h (h+2) = true
+          change sweptLeft N T h (h+3) = true
           rw [hp,hsrc]
         · rw [hx3]
           have hp := sweptLeft_preserves_right N T h (h+3) (by omega)
@@ -193,15 +224,19 @@ theorem m1OddResidueOne_q4_prefix_head_bound
   let p1 := 3*N
   let p2 := p1+29
   by_cases hk1 : k < p1
-  · have hlow := counted_left_sweep_heads N T h hOn hright k
-      (by dsimp [p1,N] at *; omega) d hd
+  · have hd' : run tm2 k ⟨3,h,T⟩ = some d := by
+      simpa [s1Config,T] using hd
+    have hlow :=
+      BB6Coverage.Agent42M0EvenSixHeadBound.counted_left_sweep_heads
+        N T h hOn hright k
+        (by dsimp [p1,N] at *; omega) d hd'
     dsimp [hN,N] at *
     omega
   · by_cases hk2 : k < p2
     · let j := k-p1
       have hj : j < 29 := by dsimp [j,p1] at *; omega
       have hkEq : k = p1+j := by dsimp [j,p1]; omega
-      rw [hkEq,run_add,hSweep] at hd
+      rw [hkEq,run_add,hSweep'] at hd
       simp only [Option.bind_some] at hd
       have hlow := m1One_bridge_prefix_lower T1 hN hmatch j hj d hd
       dsimp [hN,N] at *
