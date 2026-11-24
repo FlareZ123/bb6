@@ -48,7 +48,7 @@ Proof.
 Qed.
 
 Definition candidate_witness (c : side_candidate) : source_witness :=
-  let '(d,entry,period,budget) := c in SWside d entry period budget.
+  let '(d,(entry,(period,budget))) := c in SWside d entry period budget.
 
 Lemma source_certificate_check_of_candidate bound p c :
   side_candidate_check p c = true ->
