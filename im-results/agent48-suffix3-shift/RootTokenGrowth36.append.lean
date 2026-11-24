@@ -1,4 +1,10 @@
 /-!
+WITHDRAWN 2026-11-24: universal nonhalting claim is false.
+See ../agent48-token-return-correction/README.md. Historical draft only.
+Do not dispatch this proof target or use these declarations as accepted lemmas.
+-/
+
+/-!
 Original-source Lean study of the residual-one token family.
 
 The proposed 36-step map T(s) -> T(s+5) is false. The first two exact
