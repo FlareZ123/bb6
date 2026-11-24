@@ -391,7 +391,9 @@ theorem sweepBB_num_sum_bound (L R : List SymTok) :
     cases L with
     | nil =>
       have hstep := stepElemBB_num_sum_le [] R
-      have htarget : listNumSum R + 3 ≤ listNumSum R + 5 := by omega
+      have htarget :
+          listNumSum [] + listNumSum R + 3 ≤
+            listNumSum [] + listNumSum R + 2 * n + 5 := by omega
       simpa [sweepBB] using Nat.le_trans hstep htarget
     | cons t L1 =>
       simp at hn
@@ -406,11 +408,9 @@ theorem sweepBB_num_sum_bound (L R : List SymTok) :
           have hstep := stepElemBB_num_sum_le (.item .zero :: L1) R
           calc
             symStateNumSum (sweepBB (.item .zero :: L1) R) ≤
-                listNumSum L1 + listNumSum R + 3 := by
-                  simpa [sweepBB, listNumSum, tokNumSum] using hstep
-            _ ≤ listNumSum (.item .zero :: L1) + listNumSum R +
-                2 * (L1.length + 1) + 5 := by
-                  simp [listNumSum, tokNumSum]
+                listNumSum (.item .zero :: L1) + listNumSum R + 3 := by
+                  simpa [sweepBB] using hstep
+            _ ≤ listNumSum (.item .zero :: L1) + listNumSum R + 2 * n + 5 := by
                   omega
         | run d =>
           cases d with
@@ -418,11 +418,12 @@ theorem sweepBB_num_sum_bound (L R : List SymTok) :
             have hrec' := hrec (.item (.run 0) :: R)
             calc
               symStateNumSum (sweepBB (.item (.run 0) :: L1) R) =
-                  symStateNumSum (sweepBB L1 (.item (.run 0) :: R)) := by simp [sweepBB]
+                  symStateNumSum (sweepBB L1 (.item (.run 0) :: R)) := by
+                    simp [sweepBB]
               _ ≤ listNumSum L1 + listNumSum R + 2 * L1.length + 5 := by
                     simpa [listNumSum, tokNumSum] using hrec'
               _ ≤ listNumSum (.item (.run 0) :: L1) + listNumSum R +
-                    2 * (L1.length + 1) + 5 := by
+                    2 * n + 5 := by
                     simp [listNumSum, tokNumSum]
                     omega
           | succ d =>
@@ -438,7 +439,7 @@ theorem sweepBB_num_sum_bound (L R : List SymTok) :
                       2 * L1.length + 5 := by
                       simpa [listNumSum, tokNumSum] using hrec'
                 _ ≤ listNumSum (.item (.run 1) :: L1) + listNumSum R +
-                      2 * (L1.length + 1) + 5 := by
+                      2 * n + 5 := by
                       simp [listNumSum, tokNumSum]
                       omega
             | succ d =>
@@ -450,7 +451,7 @@ theorem sweepBB_num_sum_bound (L R : List SymTok) :
                 _ ≤ listNumSum (.item (.run (d + 2)) :: L1) + listNumSum R + 3 := by
                       simpa [listNumSum, tokNumSum] using hstep
                 _ ≤ listNumSum (.item (.run (d + 2)) :: L1) + listNumSum R +
-                      2 * (L1.length + 1) + 5 := by omega
+                      2 * n + 5 := by omega
       | repB1 k =>
         have hEat := eatB1_num_sum_le k R
         have hrec' := hrec (eatB1 k R)
@@ -461,7 +462,7 @@ theorem sweepBB_num_sum_bound (L R : List SymTok) :
           _ ≤ listNumSum L1 + listNumSum (eatB1 k R) +
                 2 * L1.length + 5 := hrec'
           _ ≤ listNumSum (.repB1 k :: L1) + listNumSum R +
-                2 * (L1.length + 1) + 5 := by
+                2 * n + 5 := by
                 simp [listNumSum, tokNumSum]
                 omega
       | rep2 p =>
@@ -471,6 +472,7 @@ theorem sweepBB_num_sum_bound (L R : List SymTok) :
           have hRsum : listNumSum R = listNumSum R2 + 1 := by
             rw [hprefix, listNumSum_append]
             simp [listNumSum, tokNumSum]
+            omega
           have hEat := eatB2_num_sum_le p R2
           have hrec' := hrec (.item (.run 0) :: .item (.run 1) :: eatB2 p R2)
           have hsum :
@@ -491,7 +493,7 @@ theorem sweepBB_num_sum_bound (L R : List SymTok) :
                     simpa [Nat.add_assoc] using
                       (Nat.add_le_add_right hsum (2 * L1.length + 5))
             _ ≤ listNumSum (.rep2 p :: L1) + listNumSum R +
-                  2 * (L1.length + 1) + 5 := by omega
+                  2 * n + 5 := by omega
         | none =>
           have hPeel := peelTok_num_sum_le (.rep2 p) L1
           have hPeel' : listNumSum (peelTok (.rep2 p) L1) ≤
@@ -507,7 +509,7 @@ theorem sweepBB_num_sum_bound (L R : List SymTok) :
                   simp only [listNumSum, tokNumSum]
                   omega
             _ ≤ listNumSum (.rep2 p :: L1) + listNumSum R +
-                  2 * (L1.length + 1) + 5 := by omega
+                  2 * n + 5 := by omega
       | rep12 m =>
         cases hs : stripPrefixSym [.item (.run 0), .item (.run 1)] R with
         | some R2 =>
@@ -515,6 +517,7 @@ theorem sweepBB_num_sum_bound (L R : List SymTok) :
           have hRsum : listNumSum R = listNumSum R2 + 1 := by
             rw [hprefix, listNumSum_append]
             simp [listNumSum, tokNumSum]
+            omega
           have hEat := eatB12R_num_sum_le m R2
           have hrec' := hrec (.item (.run 0) :: .item (.run 1) :: eatB12R m R2)
           have hsum :
@@ -535,7 +538,7 @@ theorem sweepBB_num_sum_bound (L R : List SymTok) :
                     simpa [Nat.add_assoc] using
                       (Nat.add_le_add_right hsum (2 * L1.length + 5))
             _ ≤ listNumSum (.rep12 m :: L1) + listNumSum R +
-                  2 * (L1.length + 1) + 5 := by omega
+                  2 * n + 5 := by omega
         | none =>
           have hPeel := peelTok_num_sum_le (.rep12 m) L1
           have hPeel' : listNumSum (peelTok (.rep12 m) L1) ≤
@@ -551,7 +554,8 @@ theorem sweepBB_num_sum_bound (L R : List SymTok) :
                   simp only [listNumSum, tokNumSum]
                   omega
             _ ≤ listNumSum (.rep12 m :: L1) + listNumSum R +
-                  2 * (L1.length + 1) + 5 := by omega
+                  2 * n + 5 := by omega
+
 theorem sweepBB_weight_bound_sharper (L R : List SymTok) :
     symStateWeight (sweepBB L R) ≤
       L.length + R.length + listNumSum L + listNumSum R + 6 * L.length + 17 := by
