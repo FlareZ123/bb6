@@ -178,7 +178,7 @@ private theorem m0EvenEightValuationBridgeInputMatch
     rw [hface] at hcell
     rw [sideBit_d1pow_append a (3*a+i)
       (m0EvenEightValuationSourceSuffix t len u)
-      (by simp [d1pow_length]; omega)] at hcell
+      (by omega)] at hcell
     have hindex : 3*a+i-3*a = i := by omega
     rw [hindex] at hcell
     have hsource := sourceSuffix_prefix14_match t len u i hi
@@ -189,7 +189,7 @@ private theorem m0EvenEightValuationBridgeInputMatch
       rw [hyEq]
       have hneq : (-(i:Int)) ≠ -14 := by omega
       cases hbit : decide (0<t) <;>
-        simp [bridgeStartWithBit, hneq, hbit]
+        simp [bridgeStartWithBit, hneq]
     calc
       sweptLeft (3*a) (s1Config L (8*q) 0 a 0 b h).tape h
           (h-((3*a:Nat):Int)+y)
@@ -288,7 +288,7 @@ theorem m0EvenEight_valuation_q4_prefix_run_of_leftFacing
   have hSweep :
       run tm2 (3*N) (s1Config L (8*q) 0 a 0 b h) =
         some ⟨3,hN,T1⟩ := by
-    simpa [T,N,hN,T1,s1Config] using counted_left_sweep N T h hOn hright0
+    simpa [T,N,hN,T1,s1Config,s0Config] using counted_left_sweep N T h hOn hright0
   have hmatch := m0EvenEightValuationBridgeInputMatch
     L q a b t len u h ha hface
   have hBridge :=
@@ -406,7 +406,8 @@ theorem m0EvenEight_valuation_q4_prefix_run_of_leftFacing
       omega
     have hin : bridgeInside44 ((hH+2+(i:Int))-hN) = true := by
       rw [hcoord]
-      simp [bridgeInside44]
+      have hbound : -13 ≤ -12+(i:Int) ∧ -12+(i:Int) ≤ 3 := by omega
+      simp [bridgeInside44,hbound]
     have hf := frameAt_tape_inside T1 hN bridgeInside44
       (bridgeMidWithBit bit) (hH+2+(i:Int)) hin
     have hm := bridgeMid_twelve_ones bit i hi
@@ -505,7 +506,7 @@ theorem m0EvenEight_valuation_q4_prefix_run_of_leftFacing
     exact afterZeroExit4_preserves_right_local T3 hB (hN+2) hfarN2
   have hT5zero : T5 hN = T4 hN := by
     dsimp [T5]
-    exact sweptRight1_preserves_right (4+t) T4 hR hN (by rw [hscanHead'])
+    exact sweptRight1_preserves_right (4+t) T4 hR hN (by rw [hscanHead']; omega)
   have hT5one : T5 (hN+1) = T4 (hN+1) := by
     dsimp [T5]
     exact sweptRight1_preserves_right (4+t) T4 hR (hN+1) (by rw [hscanHead']; omega)
@@ -545,7 +546,8 @@ theorem m0EvenEight_valuation_q4_prefix_run_of_leftFacing
       have hT6 : T6 (hN+3) = T5 (hN+3) := by
         dsimp [T6]
         exact after101_preserves_right_local T5 hN (hN+3) (by omega)
-      rw [hT6,hT5,hT4,hT3,hT2]
+      simpa [Int.add_zero] using
+        hT6.trans (hT5.trans (hT4.trans (hT3.trans hT2)))
     · have hpos : 0 < i := by omega
       let x : Int := hN+3+(i:Int)
       have hcoord : x-hN = 3+(i:Int) := by dsimp [x]; omega
@@ -583,8 +585,7 @@ theorem m0EvenEight_valuation_q4_prefix_run_of_leftFacing
         omega
       have hT1 : T1 x = true := by
         change sweptLeft N T h x = true
-        rw [hcoord]
-        exact hblock
+        simpa [hcoord] using hblock
       rw [hT6,hT5,hT4,hT3,hT2,hT1]
   have hE := E_scan T6 (hN+3) (3*(a-1)) hLinear
   have hhead : hN+3+3*((a-1:Nat):Int) = h := by
