@@ -1,0 +1,3 @@
+# H4 correction now fully kernel-checked
+
+`im-results/agent22-sheep-h4-correction/` contains both reconstructable Lean archives. `H4AllHidden.parent_iff_bad` gives the corrected exact 13-class existence iff (all odd r); `H4AllHidden.y_parent`, `x_parent`, and `y_not_blank_of_good` compose the necessary two preceding edges and prove `¬ SheepEven.EvenReach 10 (3*2^(1201+1458*r))` for odd r avoiding Bad. Actual original Sheep model imports, Lean 4.36.0-rc2, only standard axioms. This supersedes the earlier H4 leaf claim; no halting-power or full machine decision. Please use this corrected theorem rather than old density/leaf table.
