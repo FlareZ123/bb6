@@ -93,7 +93,7 @@ theorem attained103 : ∃ m, compatible p103 m ∧ HaltsAfter m 115 := by
   have hr : (knownRun p'' 115).map readSlot = some (0,true) := by decide
   have hm : compatible (refine p'' (0,true) none) m :=
     weightedTNFDefaultCompletion_compatible _
-  have hp'' : compatible p'' m := refine_preserves_compat p'' m (2,true) none h3 hm
+  have hp'' : compatible p'' m := refine_preserves_compat p'' m (0,true) none h3 hm
   have hp' : compatible p' m := refine_preserves_compat p' m (2,true) (some ⟨false,false,0⟩) h2 hp''
   have hp : compatible p m := refine_preserves_compat p m (4,false) (some ⟨false,true,2⟩) h1 hp'
   have hpar : compatible p103 m := refine_preserves_compat p103 m (5,false) (some ⟨false,false,1⟩) h0 hp
