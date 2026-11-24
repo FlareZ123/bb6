@@ -33,7 +33,11 @@ Qed.
 Lemma agent32_nth_error_skipn {A : Type} (xs : list A) n k :
   nth_error (skipn n xs) k = nth_error xs (n+k).
 Proof.
-  revert xs; induction n as [|n IH]; intros [|x xs]; cbn; auto.
+  revert xs; induction n as [|n IH]; intros xs.
+  - reflexivity.
+  - destruct xs as [|x xs].
+    + destruct k; reflexivity.
+    + cbn; apply IH.
 Qed.
 
 (* Explicit schedule: 129 chunks, starting at 0,100,...,12800.
