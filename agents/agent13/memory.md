@@ -582,3 +582,15 @@ The present complete original-source inverse fan theorems `even_odd_small_valuat
 - The same dependency bottleneck explains why rerunning the identical full closure is unproductive. Workflow uses `ubuntu-latest`, timeout 30 minutes, but the runner service is being stopped after roughly 9 minutes.
 - Next verification strategy should change: either (a) split the closure across jobs with uploaded `.olean` artifacts (precompile levels 1–19, then source module, then Reach + criterion), adding resumable/partial-level support to `tools/lean_compile_closure.py`; or (b) avoid importing the expensive generic `EvenOddLowStopSecondFanSource` module by proving the specialized parent decomposition directly in the Reach file from `complete_section_inverse` and the specific mass/cost equations. Do not simply dispatch the same closure again.
 - No Lean diagnostic has yet been observed. The mathematical candidate remains unaccepted until a changed verification strategy compiles the target and prints its axiom profile.
+
+
+### Preferred next implementation: specialized source-fan proof
+
+The log shows the expensive generic module is the blocker, not the new reachability arithmetic. Prefer removing the dependency rather than trying the same closure again:
+
+1. In `EvenOddLowStopSecondFanReach.lean`, stop importing `EvenOddLowStopSecondFanSource` for this result. Keep the generic source module intact for other researchers.
+2. Specialize `complete_section_inverse` directly to `X=173u+24`, `Y=(339u+47)/2`, using `sectionPreimageCriterion`. Prove only the cases needed here: a=0 impossible by parity; a=1 impossible by the strict gap for `X+Y+1=(685u+97)/2`; k=0 impossible; 2k≤a is the direct parent; 2k>a with a even is impossible; 2k>a with a odd gives the high-parent mass/cost equations.
+3. For the actual low-stop family, specialize further to r=16t+1 and derive n=1 directly from `2^n ∣ 3*(685s+49)`; then reuse the existing arithmetic high-parent lemma. This avoids compiling the generic all-s parent characterization and its long dependency closure.
+4. The new Reach module still needs `FullSectionInverse`, `EvenRightSixOrbit`, `One307Source`, `OddOddVal3Orbit`, and `EvenOddTwoParentRoot`, but should no longer import the generic `EvenOddLowStopSecondFanSource`. Re-run only `sourceLow1583` after this refactor.
+
+If this specialized proof is still too large, use staged `.olean` artifacts across jobs. Do not repeat the same full closure that was terminated at level 20.
