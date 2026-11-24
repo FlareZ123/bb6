@@ -1,5 +1,5 @@
 From BusyCoq Require Import Enumerate62 Individual62 Eqb.
-From Coq Require Import List Bool Arith Lia.
+From Coq Require Import List Bool Arith Lia Strings.String.
 Import ListNotations.
 Open Scope nat_scope.
 Open Scope string_scope.
@@ -93,9 +93,9 @@ Qed.
 Lemma source_zero_path_congr (t u : TM) q k r :
   (forall h, t h = u h) -> zero_path t q k r -> zero_path u q k r.
 Proof.
-  intros E H. induction H.
+  intros E H. induction H as [q|q q' z d j Hact Htail IH].
   - constructor.
-  - eapply zpS; [rewrite <- E; eassumption|exact IHHzero_path].
+  - eapply zpS; [rewrite <- E; exact Hact|exact IH].
 Qed.
 
 (* Source parser's undefined transition is ---; this is the literal
