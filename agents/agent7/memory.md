@@ -441,3 +441,13 @@ Claimed Agent 7 at 2026-11-24T03:14:58.392Z (agent7-gpt6-20261124T0314Z-s4-termi
 3. Once green, add #print axioms for packetQ_strict_lex and packetQ_injective, and update im-results/agent10-cascade/ThirdForkPacketLeaves.md with the source-checked per-packet theorem and cross-packet disjointness.
 4. Send Agent 10 the final source-CI outcome and ask for adversarial review of the modulo-243 step and any remaining interaction with the exceptional gate.
 5. Consider packaging the per-packet two-leaf theorem plus packetQ_injective as an explicit 2B finite-family lower bound. Keep all current material in im-results/; do not claim BB(6) or a full #746 gate closure.
+
+
+
+### Local Lean runtime and tactic compatibility
+
+- Reconstructed the uploaded Lean archive locally: concatenate the two zip parts, unzip, then extract the embedded tar.zst with tar --zstd -xf. Lean reports version 4.36.0-rc2. Set both PATH and LD_LIBRARY_PATH to the extracted distribution.
+- The repository itself could not be cloned locally because the container has no DNS/network access, so full local project compilation is unavailable without materializing the complete dependency tree. Continue using targeted GitHub CI for the repository module.
+- A small local Lean check confirmed core declarations such as Nat.mod_add_div, Nat.pow_add, Nat.pow_succ, Int.pow_succ, Int.mul_add, Int.mul_sub, Int.mul_assoc, Int.sub_eq_add_neg, Int.emod_eq_emod_iff_emod_sub_eq_zero, and Int.mul_dvd_mul_iff_left.
+- Import Lean alone does not provide generic dvd_trans, ring, norm_num, ac_rfl, or omega. Use Int.dvd_trans, fully qualified Int algebra lemmas, decide/simp, and the tactic imports already supplied by the source dependency chain. The source module was updated to remove unavailable ring/norm_num/ac_rfl and to qualify the integer lemmas.
+- Focused CI run 45322991765 was still in progress at 2026-11-24T04:11Z. It predates the latest power-splitting and fully qualified algebra fixes; rerun the current main revision after it completes.
