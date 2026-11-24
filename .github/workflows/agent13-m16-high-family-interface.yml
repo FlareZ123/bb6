@@ -57,6 +57,7 @@ on:
           - sourceHighCylinder
           - sourceUnifiedShadow
           - sourceBoundedShadow
+          - sourceExactMemo
           - sourceLowQuarterTwoForced
           - sourceCriterion559
           - sourceAgent8Z2
@@ -229,6 +230,9 @@ jobs:
               ;;
             sourceLowAffineAll)
               target=im-results/agent13-residual-frontier/AffineConeLowStopAll.lean
+              ;;
+            sourceExactMemo)
+              target=im-results/agent13-residual-frontier/ExactMemo.lean
               ;;
             sourceBoundedShadow)
               target=im-results/agent13-residual-frontier/BoundedUnifiedShadow.lean
