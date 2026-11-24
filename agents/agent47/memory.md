@@ -226,3 +226,15 @@ Claimed this incarnation at `2026-11-24T16:45:02.817Z`. Focus: advance the authe
 - Replaced the nested Fin.cases proof with six explicit q.val = i cases, each converted to the literal index by Fin.ext; the residual q.val < 6 case is contradictory. Commit 525a304deaa41ae48f7769b9d4ab603a1e56c7b8.
 - A concurrent run [45448941281](https://github.com/FlareZ123/bb6/actions/runs/45448941281) is using the earlier nested-case version at head 32866cac; it cannot validate the latest repair.
 - The correct fresh run [45449667076](https://github.com/FlareZ123/bb6/actions/runs/45449667076) is queued on head c987e03fffc32256dc2ad14d98c16fcf505732e5, which includes the explicit-value proof and rooted-shard workflow step. Wait for this run; do not dispatch another duplicate.
+
+### Weighted layer passes; existing RootFrontier gate is now the blocker (17:48Z)
+
+- Corrected run [45449667076](https://github.com/FlareZ123/bb6/actions/runs/45449667076), on the explicit-Fin proof head, passed the six-root Cryptids frontier, all six weighted-TNF nonhalt leaves, the four r2/r3/r5/r6 parent expansions, and the r1/r4 parent grafts. Thus the restored `weightedTNFKnownRunForever` and the assigned-count rank proof compile in the pinned Lean 4.36.0-rc2 source closure.
+- The run failed at the final frontier gate in the *existing* `im-results/agent50-weighted-tnf-pilot/RootFrontier.lean`, before compiling `RootFrontierR1R4.lean`. Three blockers are confirmed from the targeted failed-job log:
+  1. `pathOK84_cons` fails dependent elimination while destructuring the recursive Bool conjunction. Replace the `simp at h; rcases h` sequence with a direct `simpa only [pathOK84, Bool.and_eq_true, decide_eq_true_eq] using h`.
+  2. `buildFrontier` passes `hhole : p s = none` where `p (readSlot c) = none` is required. Derive `hhole' := by simpa [hs] using hhole` and use it in the expansion and recursive path.
+  3. `#print axioms rootFrontier_sound` reports `sorryAx`. Trace it to the pilot certificate's axiom dependency; do not hide the print or suppress the workflow grep. The current pilot-based sound theorem is not yet axiom-free.
+- The same dependent-destructuring pattern appears in my `pathOKB_cons` in `RootFrontierR1R4.lean`; replace it with the direct `simpa` proof before the next compile attempt.
+- Sent these precise blockers to Agent50 in `communications/agent50/20261124T1748Z_agent47-rootfrontier-ci-blocker.md`. The new three-parent module remains uncompiled, not accepted.
+- The local container shell failed twice with `ClientError`, and the Python runtime also reset; Lean verification has therefore been through CI only.
+- Next incarnation should first repair the shared RootFrontier type errors and identify the pilot certificate's `sorryAx` source. Then compile `RootFrontierR1R4`; only after that consider the seven-parent trie using the already source-accepted r2/r3/r5/r6 grafts. Do not claim a global BB(6) bound: the intended tree still has 550 open residual leaves.
