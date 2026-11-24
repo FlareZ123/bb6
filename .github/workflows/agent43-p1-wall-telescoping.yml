@@ -17,6 +17,7 @@ on:
           - margin-block
           - margin-block-parallel
           - forward-unit
+          - finite-gate-join
       chain_case:
         description: "Exceptional index for margin-chain"
         required: false
@@ -97,7 +98,7 @@ jobs:
           for m in GParity GInverse PosEvenForm; do
             lean -o "$MAP/$m.olean" "$MAP/$m.lean"
           done
-          if [ "${{ inputs.target }}" = forward-unit ]; then
+          if [ "${{ inputs.target }}" = forward-unit ] || [ "${{ inputs.target }}" = finite-gate-join ]; then
             FWD=im-results/agent28-p1-forward
             export LEAN_PATH="$LEAN_PATH:$FWD"
             lean -o "$CARRY/ReverseUnitMap.olean" "$CARRY/ReverseUnitMap.lean"
@@ -106,6 +107,14 @@ jobs:
               lean -o "$FWD/$m.olean" "$FWD/$m.lean"
             done | tee /tmp/agent28-forward-axioms.txt
             grep -q blank_critical_clock_iff /tmp/agent28-forward-axioms.txt
+            if [ "${{ inputs.target }}" = finite-gate-join ]; then
+              lean -o "$MAP/ResetGate.olean" "$MAP/ResetGate.lean"
+              lean -j1 -DElab.async=false -o "$AG43/EarlyGate.olean" "$AG43/EarlyGate.lean"
+              lean "$AG43/GateJoin.lean" | tee /tmp/agent43-join-axioms.txt
+              grep -q halt_iff_remaining /tmp/agent43-join-axioms.txt
+              grep -q full_finite_cover /tmp/agent43-join-axioms.txt
+              if grep -q sorryAx /tmp/agent43-join-axioms.txt; then exit 1; fi
+            fi
             if grep -q sorryAx /tmp/agent28-forward-axioms.txt; then exit 1; fi
             exit 0
           fi
