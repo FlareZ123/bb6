@@ -205,7 +205,7 @@ def r1 : SiblingSpec where
   hole := (5,true)
   splitAt := 52
   lastSlot := (3,true)
-  bound := 7012
+  bound := 7014
   special := ⟨true,false,5⟩
   witness := fun mv =>
     match mv.write,mv.right,mv.next.val with
@@ -234,14 +234,6 @@ def r1 : SiblingSpec where
     | true,true,4 => .cycle 51 2 true (-2)
     | true,true,5 => .growth .oRF
     | _,_,_ => .known
-
-#eval (List.finRange 6).flatMap fun q => [false,true].flatMap fun w =>
-  [false,true].map fun d =>
-    let mv : Move := ⟨w,d,q⟩
-    (w,d,q.val,siblingOK r1 mv,
-      match r1.witness mv with
-      | .last n => (zipQuery (r1.child mv) n,weightOK (r1.child mv) r1.lastSlot n r1.bound)
-      | _ => (none,true))
 
 theorem r1_valid : ValidSpec r1 := by
   constructor <;> decide
@@ -276,21 +268,36 @@ theorem attain_last (s : SiblingSpec) (v : ValidSpec s) (mv : Move) (n : Nat)
 theorem r1_attained : ∃ m, compatible r1.parent m ∧ HaltsAfter m 7011 :=
   attain_last r1 r1_valid ⟨false,true,2⟩ 7011 rfl
 
-theorem exact_from_attained (s : SiblingSpec) (v : ValidSpec s)
-    (cert : WeightedTNFCertificate s.bound s.parent 6)
-    (n : Nat) (hn : n+1 = s.bound)
-    (ha : ∃ m, compatible s.parent m ∧ HaltsAfter m n) (B : Nat) :
-    (∀ m, compatible s.parent m → WeightedBound B m) ↔ s.bound ≤ B := by
+/-- The fixed C0/E0 blank prefix allows an incoming delay of two
+    for every completion, independently of the two unknown rows. -/
+theorem r1_delay_two (m : Machine) (hm : compatible r1.parent m) :
+    2 ∈ delays (zeroNext m) 0 := by
+  have hz := firstOne_terminal r1.parent r1_valid.rootCheck m hm
+  have hC := hm ((2 : Fin 6),false) (some ⟨false,false,4⟩)
+    (show r1.parent (2,false) = some (some ⟨false,false,4⟩) by decide)
+  have hE := hm ((4 : Fin 6),false) (some ⟨false,true,0⟩)
+    (show r1.parent (4,false) = some (some ⟨false,true,0⟩) by decide)
+  have hce : zeroNext m 2 = some 4 := by simp [zeroNext,hC]
+  have hea : zeroNext m 4 = some 0 := by simp [zeroNext,hE]
+  exact (mem_delays_iff hz).mpr ⟨2, TerminalPath.step hce (TerminalPath.step hea (TerminalPath.stop 0 hz))⟩
+
+theorem exact_from_attained
+    (cert : WeightedTNFCertificate r1.bound r1.parent 6) (B : Nat) :
+    (∀ m, compatible r1.parent m → WeightedBound B m) ↔ 7014 ≤ B := by
   constructor
   · intro h
-    obtain ⟨m,hm,hh⟩ := ha
-    have hz := firstOne_terminal s.parent v.rootCheck m hm
-    have hd : 0 ∈ delays (zeroNext m) 0 :=
-      (mem_delays_iff hz).mpr ⟨0, TerminalPath.stop 0 hz⟩
-    have hb := h m hm n 0 hh hd
+    obtain ⟨m,hm,hh⟩ := r1_attained
+    have hb := h m hm 7011 2 hh (r1_delay_two m hm)
     omega
   · intro hb m hm k d hk hd
     exact Nat.le_trans (cert.sound m hm k d hk hd) hb
+
+theorem raw_upper (cert : WeightedTNFCertificate r1.bound r1.parent 6)
+    (m : Machine) (hm : compatible r1.parent m) (n : Nat)
+    (hn : HaltsAfter m n) : n+1 ≤ 7012 := by
+  have hb := cert.sound m hm n 2 hn (r1_delay_two m hm)
+  change 2+n+1 ≤ 7014 at hb
+  omega
 
 #print axioms r1_valid
 #print axioms r1_reachable
