@@ -1,5 +1,5 @@
 import RosterConvergence
-import SevenSideWitnesses
+import SideWitnessCore
 
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
