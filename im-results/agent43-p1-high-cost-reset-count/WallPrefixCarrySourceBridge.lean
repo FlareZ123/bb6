@@ -8,6 +8,32 @@ open BB6.Agent43WallTelescoping
 open BB6.Agent28 BB6.Agent1Quarter BB6.Agent1UpperTail BB6.Agent47P1
 open BB6WallCarry
 
+/-- The source and bridge weighted-list folds are extensionally equal. -/
+theorem source_costWeightedSum_eq (n : Nat) :
+    ∀ A : List Nat,
+      BB6.Agent43WallTelescoping.costWeightedSum n A =
+        BB6WallBridge.costWeightedSum n A := by
+  intro A
+  induction A with
+  | nil => rfl
+  | cons s A ih =>
+      simp [BB6.Agent43WallTelescoping.costWeightedSum,
+        BB6WallBridge.costWeightedSum, BB6WallBridge.weight, ih]
+
+/-- The two independently named Boolean folds have the same recursion. -/
+theorem sumBits_eq (n j : Nat) :
+    ∀ xs : List Bool,
+      BB6WallBridge.sumBits n j xs = BB6WallCarry.sumBits n j xs := by
+  intro xs
+  induction xs with
+  | nil => rfl
+  | cons b xs ih =>
+      simp [BB6WallBridge.sumBits, BB6WallCarry.sumBits, ih]
+
+theorem bitExpr_eq (n : Nat) (rest : List Bool) :
+    BB6WallBridge.bitExpr n rest = BB6WallCarry.bitExpr n rest := by
+  simp [BB6WallBridge.bitExpr, BB6WallCarry.bitExpr, sumBits_eq]
+
 /-- Compose Agent 43's duplicate-free source wall list with Agent 50's
     characteristic-prefix bridge and carry obstruction. -/
 theorem sourceWall_noPrefix_of_carry
@@ -28,11 +54,18 @@ theorem sourceWall_noPrefix_of_carry
   have hKm' : (K-1)+1 ≤ m := by
     simpa [Nat.sub_add_cancel hK] using hKm
   have hcarry' : ¬ ∃ rest : List Bool,
-      rest.length = K-1 ∧ BB6WallBridge.bitExpr n rest % 2^K = 1 := by
-    simpa [BB6WallBridge.bitExpr, BB6WallBridge.sumBits] using hcarry
+      rest.length = K-1 ∧
+        BB6WallBridge.bitExpr n rest % 2^((K-1)+1) = 1 := by
+    intro hex
+    rcases hex with ⟨rest, hlen, hbit⟩
+    apply hcarry
+    refine ⟨rest, hlen, ?_⟩
+    simpa [Nat.sub_add_cancel hK, bitExpr_eq] using hbit
   have hneq := BB6WallBridge.wall_identity_impossible
     n m (K-1) (costPowSum A) A hnd h0 hKn' hKm' hcarry'
-  exact hneq hId
+  have hId' := hId
+  rw [source_costWeightedSum_eq n A] at hId'
+  exact hneq hId'
 
 theorem sourceWall_excludes_familyI_h1
     (t b d m z u : Nat)
