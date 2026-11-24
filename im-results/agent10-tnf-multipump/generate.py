@@ -12,7 +12,9 @@ sys.path.insert(0,str(ROOT.parent/"agent31-three-hole-tnf"))
 from generate_four_hole import masks,slot,move,parse
 import generate_sweeps as one
 import multi
+import long_epoch
 SPECS=json.loads((ROOT/"specs.json").read_text())
+SPECS={k:SPECS[k] for k in (sys.argv[1:] or ["92","100","101"])}
 MOVES=[w+d+q for w,d,q in product("01","LR","ABCDEF")]
 subprocess.run(["g++","-std=c++17","-O3",str(ROOT.parent/"agent2-tnf-raw99/enumerate.cpp"),"-o",str(ROOT/"enumerate")],check=True)
 for raw,spec in SPECS.items():
@@ -40,6 +42,15 @@ for raw,spec in SPECS.items():
             pumps[i]=f"{pumpns}.M{i}"
             pumpcode.append(code)
             print(raw,i,key,info)
+    for i in spec.get("long",[]):
+        p=one.parse(opens[i])
+        side,state,period=("R",4,3) if raw=="86" else ("R",0,1)
+        ans=long_epoch.candidate(p,one.concrete_events(p,10000),side,state,period)
+        assert ans is not None,(raw,i,"long")
+        code,info=one.generate(i,p,ans)
+        pumps[i]=f"{pumpns}.M{i}"
+        pumpcode.append(code)
+        print(raw,i,"long",info)
     pumpcode.append(f"end {pumpns}")
     (ROOT/f"Raw{raw}Pumps.lean").write_text("\n\n".join(pumpcode)+"\n")
     ns=f"BB6.Agent10Raw{raw}"
