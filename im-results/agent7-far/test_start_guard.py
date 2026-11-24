@@ -101,9 +101,9 @@ def main() -> None:
     # start-preserving Lean certificate. CI separately compiles R4PairHits.lean.
     r4_path = ROOT / "im-results" / "agent7-far" / "R4PairHits.lean"
     r4_source = r4_path.read_text()
-    pm = re.search(r"def r4_0ra : PartialMachine := fromCodes \\[([^\\]]+)\\]", r4_source)
+    pm = re.search(r"def r4_0ra : PartialMachine := fromCodes \[([^\]]+)\]", r4_source)
     dm = re.search(
-        r"def r4_0ra_data : Data 6 := ⟨0,\\[([^\\]]+)\\],\\[([^\\]]+)\\],\\[([^\\]]+)\\],(\\d+)⟩",
+        r"def r4_0ra_data : Data 6 := ⟨0,\[([^\]]+)\],\[([^\]]+)\],\[([^\]]+)\],(\d+)⟩",
         r4_source,
     )
     if pm is None or dm is None:
