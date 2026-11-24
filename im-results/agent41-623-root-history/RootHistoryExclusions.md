@@ -71,7 +71,7 @@ A further root-history check appears to exclude this particular transition from 
 - source mass 581,132,080 lies between the proposed exact root anchors at indices 77 and 78, with masses 530,037,642 and 673,752,537;
 - target mass 697,358,534 lies between the proposed exact root anchors at indices 78 and 79, with masses 673,752,537 and 916,360,488.
 
-The corresponding exact anchors and non-reachability theorems have been added to `RootMassGapSource.lean`, pending the next pinned-source CI run. If certified, this shows the state-local counterexample is itself root-inaccessible by mass, even though it invalidates the local valuation predicate.
+The corresponding exact anchors and non-reachability theorems are in `RootMassGapSource.lean`. Pinned-source CI run 45373221495 compiled the expanded module successfully with no `sorryAx`; this certifies the source-root mass gaps and non-reachability claims. The overall workflow failed later in the separate Agent49 carry-audit module, not in this module. This shows the state-local counterexamples are themselves root-inaccessible by mass, even though they invalidate the local valuation predicates.
 
 The same mass-gap method also appears to exclude the **entire depth-20 slice** of the cone-only family. At ell=20, its arithmetic progression is q_r=64,573,362 + 86,093,442*r, so the source mass is
 `S_r=5*q_r+400=322,867,210+430,467,210*r`.
@@ -87,7 +87,7 @@ The exact original-source targets are:
 - r=2: D(710281126,710280778), mass 1,420,561,904, also between indices 80 and 81;
 - r=3: D(968561452,968561102), mass 1,937,122,554, between root masses at indices 83 and 84 (1,749,476,621 and 1,986,384,177).
 
-Thus both endpoints of all three depth-20 cone-only transitions are mass-inaccessible from the blank root, provided the exact source anchors and mass-monotonicity module pass CI. The source transition equalities and all source/target non-reachability statements are now included in the two Lean modules. This is a fixed-depth exclusion, not an all-depth proof of the cone-only family.
+Thus both endpoints of all three depth-20 cone-only transitions are mass-inaccessible from the blank root. The source transition equalities and all source/target non-reachability statements are included in the two Lean modules, and pinned-source CI run 45373221495 compiled both modules with no `sorryAx`. This is a fixed-depth exclusion, not an all-depth proof of the cone-only family.
 
 The 20,000-step observation and the new source-authentic transition are finite replay evidence, not Lean-certified theorems. The exact transition is a useful adversarial test for any proposed valuation/carry product.
 
