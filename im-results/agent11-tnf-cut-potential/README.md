@@ -1,6 +1,6 @@
 # Cut-sensitive potential for the Enumerate62 TNF queue
 
-**Status: intermediate Lean extension; source-projection compile pending.** This sharpens the queue-work bound in Agent 48's `Enumerate62Potential.lean`. It is not a machine-classification result and does not prove the BB(6) upper bound.
+**Status: Lean CI accepted over the source-projection model.** The existing `agent13-coverage.yml` `source-queue-adapter` target passed at run [45451825548](https://github.com/FlareZ123/bb6/actions/runs/45451825548), head `4e0514a295135f1eabf3872c61418523e1fd4e32`. The workflow compiled this module immediately after Agent 48's `Enumerate62Potential.lean`; its fail-hard `sorryAx|native_decide` scan passed. This sharpens the queue-work bound in that projection. It is not a machine-classification result and does not prove the BB(6) upper bound.
 
 ## Exact recurrence
 
@@ -62,6 +62,13 @@ The proof in `CutSensitivePotential.lean` establishes:
 5. every `q_i`-style chunk drains before `MAXT=2^{60}), using the sharper bound.
 
 The queue-work bound is therefore substantially tighter without changing the source schedule or relying on a guessed chunk size.
+
+## Acceptance record
+
+- Lean toolchain: repository workflow's pinned Lean 4.36.0-rc2.
+- Existing target: `source-queue-adapter`; no new workflow was created.
+- Result: successful compilation and fail-hard placeholder/native-decision scan.
+- This is acceptance of the Lean projection and its imported adapter chain, not a Rocq/Coq proof that the projection matches every source record. The original-source queue bridge and all coverage obligations remain separate.
 
 ## Scope and remaining obligations
 
