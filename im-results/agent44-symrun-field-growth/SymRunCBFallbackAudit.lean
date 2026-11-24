@@ -598,6 +598,47 @@ theorem cb_fallback_then_bb_sweep_field_max_le_2pow11 (L R : List SymTok)
     _ ≤ 94 * stateFieldMax (.CB, L, R) + 285 + 2 * 570 + 5 := by omega
     _ ≤ 2^11 * (stateFieldMax (.CB, L, R) + 1) := by omega
 
+theorem cb_fallback_then_bb_sweep_weight_le_2pow13 (L R : List SymTok)
+    (hT : L.length + R.length ≤ 94)
+    (hBB : (stepElemCB (sweepCB L R).1 (sweepCB L R).2).1 = .BB) :
+    1 + symStateWeight
+        (sweepBB
+          (stepElemCB (sweepCB L R).1 (sweepCB L R).2).2.1
+          (stepElemCB (sweepCB L R).1 (sweepCB L R).2).2.2) ≤
+      2^13 * (stateFieldMax (.CB, L, R) + 1) := by
+  let L2 := (stepElemCB (sweepCB L R).1 (sweepCB L R).2).2.1
+  let R2 := (stepElemCB (sweepCB L R).1 (sweepCB L R).2).2.2
+  have hSweep := sweepCB_num_sum_le_94M282 L R hT
+  have hElem := stepElemCB_BB_num_sum_le (sweepCB L R).1 (sweepCB L R).2 hBB
+  have hSweep' :
+      listNumSum (sweepCB L R).1 + listNumSum (sweepCB L R).2 + 3 ≤
+        94 * stateFieldMax (.CB, L, R) + 285 := by
+    have hS : listNumSum (sweepCB L R).1 + listNumSum (sweepCB L R).2 ≤
+        94 * stateFieldMax (.CB, L, R) + 282 := by
+      simpa [symPairNumSum] using hSweep
+    omega
+  have hsum : listNumSum L2 + listNumSum R2 ≤
+      94 * stateFieldMax (.CB, L, R) + 285 := by
+    simpa [L2, R2, symPairNumSum] using Nat.le_trans hElem hSweep'
+  have hlen := stepElemCB_after_sweep_570 L R hT hBB
+  have hlen' : L2.length + R2.length ≤ 570 := by
+    simpa [symPairLen, L2, R2] using hlen
+  have hweight := sweepBB_weight_bound_sharper L2 R2
+  have hweight' :
+      1 + symStateWeight (sweepBB L2 R2) ≤
+        1 + (L2.length + R2.length + listNumSum L2 + listNumSum R2 +
+          6 * L2.length + 17) := Nat.add_le_add_left hweight 1
+  calc
+    1 + symStateWeight (sweepBB L2 R2) ≤
+        1 + (L2.length + R2.length + listNumSum L2 + listNumSum R2 +
+          6 * L2.length + 17) := hweight'
+    _ ≤ 1 + 570 + (94 * stateFieldMax (.CB, L, R) + 285) + 6 * 570 + 17 := by
+          omega
+    _ ≤ 2^13 * (stateFieldMax (.CB, L, R) + 1) := by
+          norm_num
+          omega
+
+
 #print axioms bumpSymL_num_sum_le
 #print axioms eatC2_num_sum_le
 #print axioms eatC12_num_sum_le
@@ -610,5 +651,6 @@ theorem cb_fallback_then_bb_sweep_field_max_le_2pow11 (L R : List SymTok)
 #print axioms stepElemCB_BB_length_bound
 #print axioms stepElemCB_after_sweep_570
 #print axioms cb_fallback_then_bb_sweep_field_max_le_2pow11
+#print axioms cb_fallback_then_bb_sweep_weight_le_2pow13
 
 end BusyBeaver.SymRunAudit
