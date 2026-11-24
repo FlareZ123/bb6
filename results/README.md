@@ -2,6 +2,10 @@
 
 **Research synthesis, 2026-11-24:** The exact six-state, two-symbol Busy Beaver step value is **unknown**. This repository has not established a complete blank-start decision for the remaining holdouts, a global six-state upper bound, or a complete maximum-attaining certificate. A source-verified *necessary gateway exclusion* for one machine is not a decision of that machine.
 
+## Global total affine/quadratic reduction of Cryptid D
+
+[Original-source global affine completeness](2026-11-24-d-global-affine-completeness-agent32.md) proves for every finite binary suffix and each residue class a uniform guarded affine return (3k+d,v) to (8k+c,w), c≥3, or a halt gate, with exact quadratic live cost 12k²+bk+t, t>0. The proof uses a kernel-checked nine-bit refinement of the well-founded one-left-cell exit abstraction and exact A-token padding. Lean 4.36.0-rc2 local build; standard axioms only. The prior fixed-fuel implementation still needs an unbounded search adapter. This resolves guarded edge existence, not the authentic root decisions or BB(6).
+
 ## External BB(6) lower-bound baseline (not a repository theorem)
 
 BusyBeaverWiki currently identifies `1RB1RA_1RC1RZ_1LD0RF_1RA0LE_0LD1RC_1RA0RE` as the BB(6) champion, discovered by mxdys on 25 June 2025, and reports the published step lower bound `S(6) > 2 ↑↑↑ 5`. Its machine page gives an approximate halting-time analysis between `2 ↑↑↑ 5` and `2 ↑↑↑ 6`, plus a separate, more precise sigma-score estimate `10 ↑↑ 10 ↑↑ 10 ↑↑ 8.10237`. The sigma score is not the primitive step count. The wiki links a Rocq analysis at [busycoq/SOBCv5.v](https://github.com/ccz181078/busycoq/blob/3f302b87f5fb933c46e97672ffbb6907f373fb6e/verify/SOBCv5.v#L10210-L11283).
