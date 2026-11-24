@@ -1,4 +1,5 @@
 import AffineConeKernel
+import Root32Precision
 import Root32HighStopP7
 import Root32HighStopIndexMap
 import Lean.Elab.Tactic.Omega
@@ -148,4 +149,65 @@ theorem root32_no_highstop (r E u : Nat)
 #print axioms certificates_checked
 #print axioms root32_no_highstop_of_t
 #print axioms root32_no_highstop
+
+/-- An executable exact-root exclusion at any binary precision. This is not
+    restricted to the nine previously listed cylinders or modulus 8192. -/
+def precisionExcluded (f p j : Nat) : Bool :=
+  threeExcluded f (BB6.Agent19Root32Precision.rootResidue j p) (2^p)
+
+theorem precisionExcluded_periodic (f p j : Nat) :
+    precisionExcluded f p j=precisionExcluded f p (j%2^p) := by
+  unfold precisionExcluded
+  rw [← BB6.Agent19Root32Precision.rootResidue_periodic j p]
+
+/-- Complete-source exclusion for every root whose residue is accepted
+    by the all-parent certificate, at any precision p≤E-17. -/
+theorem root32_no_highstop_at_precision (r E u f p : Nat)
+    (hr64 : r%64=32)
+    (hE : E=201+3360*(6657+8192*r))
+    (hroot : 18018+211*u+22155*r=20*2^(E-13))
+    (hp : p≤E-17)
+    (hc : precisionExcluded f p (r/64)=true) :
+    ¬RunReach (1048576*u+70538) 3 := by
+  intro hT
+  obtain ⟨t,hu,hr⟩ := BB6.Agent3Root32HighStopP7.root32_highstop_reduces_to_three_residuals
+    r E u hr64 hE hroot hT
+  let j := r/64
+  have hrj : r=32+64*j := by
+    have he := Nat.mod_add_div r 64
+    rw [hr64] at he
+    exact he.symm
+  have heq := BB6.Agent3Root32HighStopIndexMap.root32_original_to_tj u r t j E (by omega) hu hrj hroot
+  have hb := BB6.Agent19Root32Precision.rootResidue_exact t j E p hp heq
+  have ht : t=BB6.Agent19Root32Precision.rootResidue j p+2^p*(t/2^p) := by
+    have he := Nat.mod_add_div t (2^p)
+    rw [hb] at he
+    exact he.symm
+  rw [ht] at hr
+  exact three_excluded_sound f _ _ (t/2^p) hc hr
+
+/-- Two previously unresolved root cylinders become provably excluded
+    at precision 16, using all three residuals and all source parents. -/
+theorem precision16_new_examples :
+    precisionExcluded 24 16 60533=true ∧
+    precisionExcluded 24 16 51765=true := by decide
+
+theorem root32_no_highstop_precision16_examples (r E u : Nat)
+    (hr64 : r%64=32)
+    (hE : E=201+3360*(6657+8192*r))
+    (hroot : 18018+211*u+22155*r=20*2^(E-13))
+    (hj : (r/64)%65536=60533 ∨ (r/64)%65536=51765) :
+    ¬RunReach (1048576*u+70538) 3 := by
+  apply root32_no_highstop_at_precision r E u 24 16 hr64 hE hroot (by omega)
+  rw [precisionExcluded_periodic]
+  change precisionExcluded 24 16 ((r/64)%65536)=true
+  rcases hj with hj | hj
+  · rw [hj]; exact precision16_new_examples.1
+  · rw [hj]; exact precision16_new_examples.2
+
+#print axioms precisionExcluded_periodic
+#print axioms root32_no_highstop_at_precision
+#print axioms precision16_new_examples
+#print axioms root32_no_highstop_precision16_examples
+
 end BB6.Agent19Root32Cone

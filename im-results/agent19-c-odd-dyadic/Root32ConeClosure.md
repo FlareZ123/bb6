@@ -1,6 +1,6 @@
 # Machine C root32: simultaneous full three-residual affine-cone closure
 
-**Status:** local Lean 4.36.0-rc2 kernel-accepted certificate arithmetic and interface-level composition. Original-source transitive build and axiom audit pending. The new construction closes all three corrected residuals on the listed parameter rays, subject to acceptance of the genuine imported source theorems. It does not prove Machine C nonhalting or BB(6).
+**Status:** the original nine-cylinder proof is source-accepted in CI [45358255752](https://github.com/FlareZ123/bb6/actions/runs/45358255752), 60 project modules, standard axioms only (certificate list has no axioms). The new arbitrary-precision extension below awaits a targeted source build. No whole-machine or BB(6) decision.
 
 ## Exact target and mechanism
 
@@ -27,3 +27,11 @@ The nine disjoint cylinders are a simultaneous three-branch closure, including f
 The local toolchain was reconstructed successfully (Lean 4.36.0-rc2, b35cb10cf2ced51a2fd1880cfdbf75c71ab7a35a). The actual executable definitions of Agent13's checker were copied verbatim to a local module, and the new wrapper was compiled against abstract interfaces with the exact signatures of the imported source facts. In that preflight, certificates_checked had **no axioms**, and the full wrapper compiled against those explicitly assumed interfaces. This does not yet certify source imports or their transitive axioms. Local git ls-remote failed with Could not resolve host: github.com; the source archive was unavailable through the download path. The exact original source checkout cannot be built locally in this environment. A focused source-closure acceptance check on the existing manual Agent3 workflow is the next step. No new workflow and no broad or per-commit dispatch.
 
 Exported source statements to audit: run_cone_excluded, three_excluded_sound, certificates_checked, root32_no_highstop_of_t, root32_no_highstop. The last is the actual high-stop exclusion under the original exact root equation.
+
+## Arbitrary-precision root-index bridge (24 November, current incarnation)
+
+The exact normalized equation implies 17300+22155(t+j) ≡ 0 mod 2^p for every p≤E−17. Since 22155 is odd, the solution in t modulo 2^p is unique. [Root32Precision.lean](Root32Precision.lean) computes it via one binary lift at a time, and proves correctness and periodicity for all p,j,t in local Lean 4.36.0-rc2, with standard axioms only. The proof does not construct the enormous root exponent or enumerate all residues. The added source wrapper `root32_no_highstop_at_precision` takes any p and proof-tree fuel f with `precisionExcluded f p (r/64)=true`, covering all three corrected residuals on the root cylinder. This replaces fixed-modulus certificate-list construction by a general executable criterion. It is pending original-source compilation; the standalone arithmetic proof is already compiled locally.
+
+Two new witness cylinders at p=16 are t=49743 mod65536 (a refinement of t=79 mod512) and t=58511 mod65536 (a refinement of t=1167 mod4096); their root indices are j=60533 or 51765 mod65536, i.e. r=3874144 or 3312992 mod4194304. A local Python implementation of the unchanged checker closes all three residuals in each case at fuel 13; the new source uses fuel 24 and kernel `by decide`. This is a new target exclusion conditional on source acceptance, not a claim that other lifts of either formerly unresolved class are excluded.
+
+Local exact repository checkout remains blocked by DNS for github.com; no new workflow. The existing focused root32_cone_only action is the acceptance gate for the changed source.
