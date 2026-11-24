@@ -588,9 +588,9 @@ theorem cb_fallback_then_bb_sweep_field_max_le_2pow11 (L R : List SymTok)
       94 * stateFieldMax (.CB, L, R) + 285 := by
     simpa [L2, R2, symPairNumSum] using Nat.le_trans hElem hSweep'
   have hlen := stepElemCB_after_sweep_570 L R hT hBB
-  have hlenL : L2.length ≤ 570 := by
-    simp [symPairLen, L2, R2] at hlen
-    omega
+  have hlen' : L2.length + R2.length ≤ 570 := by
+    simpa [symPairLen, L2, R2] using hlen
+  have hlenL : L2.length ≤ 570 := by omega
   have hbb := sweepBB_field_max_le L2 R2
   calc
     stateFieldMax (sweepBB L2 R2) ≤
