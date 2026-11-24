@@ -27,3 +27,7 @@ The full A/E/B finite suffix exploration (dexpanded.py) resolved 48,139 previous
 Run reproduce-block.sh with Lean 4.36.0-rc2, g++, GMP and Python. It decodes the exact original source and two checked bundles, builds the complete Lean dependency chain, and compares the C++ endpoint to direct arithmetic at 100,000 returns. To regenerate the large run use `bash reproduce-block.sh 1073741824`. Reproduction takes minutes depending on hardware. For the finite graph search, unpack route-block-cpp.tar.xz.b64 and run dexpanded.py. No CI queue or further large scans are needed to interpret these findings.
 
 Next: source-verify any additional finite frontier tables and solve the all-time actual root problem. The replay method enables large exact experiments, but brute-force random-looking route search is unlikely to reach a 3^108 target at feasible scales. Seek an algebraic invariant or a stronger global event partition rather than treating more bounded sections as progress toward an all-time theorem.
+
+## Exact counted replay extension
+
+See [CountedReplay.md](CountedReplay.md) for kernel-checked generic quadratic-clock block composition, partial and terminal lifting, and a recursive evaluator. This extends the block algorithm to the exact primitive clock; the D-specific source oracle adapter is still required. A 65,536-return numerical clock run was completed for all four roots; no new root halt was found.
