@@ -1,6 +1,6 @@
 # Cryptids #429: original-source halting gates and inverse obstructions
 
-**Research state (6 November 2026): source-verified necessary halting-gate reductions; the genuine blank-start decision remains open.** The full original argument, residue derivations, experiments and verification chronology remain in [FULL_RESEARCH_LOG.md](FULL_RESEARCH_LOG.md).
+**Research state (24 November 2026): source-verified necessary halting-gate reductions; the genuine blank-start decision remains open.** The full original argument, residue derivations, experiments and verification chronology remain in [FULL_RESEARCH_LOG.md](FULL_RESEARCH_LOG.md).
 
 ## Source and strongest integrated gate
 
@@ -22,19 +22,31 @@ None of the surviving necessary gates has been shown reachable by the authentic 
 
 [Q0Depth16InverseSieve.md](Q0Depth16InverseSieve.md) and its [C++ reproducer](Q0Depth16InverseSieve.cpp) enumerate the exact inverse branches for the outstanding q0 family against the already source-certified root invariants from Agents 1, 6, and 39. The depth-16 sieve leaves 31,376 residue classes modulo 2^22 (1,004,032 lifts modulo 2^27), and identifies a correction to the older [Q0ResidueCoverage note](../agent1-429-q0-23-7/Q0ResidueCoverage.md): its u=26 mod-64 row substitutes the k residue for u=58. This remains an intermediate computational filter, not a Lean theorem or reachability result. The surviving inverse paths are synthetic candidates; the next step must distinguish genuine blank-root ancestry rather than blindly increasing the modulus.
 
-## Blank-root reset pump (finite computational segment)
+## Exact affine reset certificates
 
-[BB429RootResetPump.md](BB429RootResetPump.md) and its [C++ reproducer](BB429RootResetPump.cpp) verify a 3,128,158-cycle (F^{26}E_{\rm odd}) first-return phase on the actual blank-root orbit: ((0,530028452)) at step 149,997,313 returns by repeated 27-step blocks to ((0,805306356)) at step 234,457,579, with the second coordinate increasing by 88 each cycle. This is an exact finite segment and an algebraic macro identity, not an infinite-run or nonhalting proof; the next phase boundary remains open.
+The accelerator has a proof-carrying fast-forward mechanism, rather than separate manually scanned plateaus.
 
-## Nested reset pump after the first phase
+- [BB429AffinePump.lean](BB429AffinePump.lean): all eleven successful branches preserve affine lines `u(i)=u₀+2pi, w(i)=w₀+4qi`. The guard is a linear inequality/equality in `g=w-2u`, a fixed residue modulo four, and (for the +7 branch) a linear constraint on w. Thus checking both endpoints of a parameter interval suffices for the entire interval. `checkWord_sound` proves the whole branch word against `BB429.next`; `repeated_pump` proves every repetition of a translation by `4q`, with its exact macro time.
+- [BB429AffineReplay.lean](BB429AffineReplay.lean): a compact block certificate is (word length, repetition count, quarter of translation). The checker reconstructs the word, independently checks its endpoint guards and output slopes, and composes all blocks via `replay_sound`. A single-count block uses the exact source run.
+- [affine_replay.py](affine_replay.py) generates these certificates with arbitrary precision integers, choosing maximal valid guard horizons; [BB429AffineCSV.lean](BB429AffineCSV.lean) replays and checks every endpoint and cumulative time, starting from (0,0).
+- [BB429AffineExamples.lean](BB429AffineExamples.lean) is a concrete kernel-checked ten-block transfer: `BB429.run 233404010 (0,402653204) = some (0,1207812076)`. Its prepared start is a root state in the numerical replay, but the complete root prefix to it has not yet been established as a kernel proof. The first full F^26 Eodd phase uses 4,575,604 cycles, not merely the 3,128,158-cycle subphase previously located. The +136 phase has 51,540 total 35-step cycles, ending at root macro time 343,764,243 (correcting the earlier scan-only one-step discrepancy).
 
-[BB429NestedResetPump.md](BB429NestedResetPump.md) and its [C++ reproducer](BB429NestedResetPump.cpp) continue from ((0,805306356)) and verify the exact branch word (F^{27}O_{\rm even}E_{\rm even}(F^{24}E_{\rm even})^{1458887}F^{25}O_{\rm odd}E_{\rm odd}), returning to ((0,939524164)) after 36,472,231 transitions. Combined with the preceding root certificate, this reaches that state at root step 270,929,810. This remains a finite computational segment only.
+**Verification boundary:** the two proof modules and examples compiled locally on Lean 4.36.0-rc2 against the matching BB429Rank definitions and run-add theorem, with only `propext, Classical.choice, Quot.sound`. Full untouched-module CI is not claimed. The Python generator's 100,000-row certificate was independently replayed by the Lean VM, yielding
 
-## (W\mapsto W+204) reset pump
+    accepted 100000 blocks; root macro time 130346087692; state (11, 450565424558)
 
-[BB429Return204Pump.md](BB429Return204Pump.md) and its [C++ reproducer](BB429Return204Pump.cpp) verify 657,930 consecutive 56-step first-return blocks (F^{27}O_{\rm even}E_{\rm even}F^{25}O_{\rm odd}E_{\rm odd}), taking ((0,939524164)) to ((0,1073741884)). Combined with the earlier certificates, the blank-root orbit reaches that state at step 307,773,890. This remains a finite segment; the following phase is open.
+This is a finite computational root trajectory; the general replay soundness theorem is kernel checked, but the entire concrete CSV equality has not been reduced in the kernel. Times are accelerator transitions, not original raw steps. The old finite scans are subsumed by this method: [first pump](BB429RootResetPump.md), [nested pump](BB429NestedResetPump.md), [+204](BB429Return204Pump.md), [+112](BB429Return112Pump.md). Their C++ files remain as independent finite evidence.
 
-## (W\mapsto W+112) reset pump
+To reproduce from this directory with Lean 4.36.0-rc2:
 
-[BB429Return112Pump.md](BB429Return112Pump.md) and its [C++ reproducer](BB429Return112Pump.cpp) verify 871,543 consecutive 31-step blocks (F^{27}O_{\rm even}F O_{\rm odd}E_{\rm odd}), taking ((0,1073741884)) to ((0,1171354700)). The following block fails at the Eodd position, reaching ((292838528,585677746)) where F is forced. Composed with prior certificates, the root reaches ((0,1171354700)) at step 334,791,723; the next 30-step prefix reaches ((292838528,585677746)) at step 334,791,753, where F is forced. Finite segment only.
+```sh
+export LEAN_PATH=.:../agent5-429-rank
+lean -o ../agent5-429-rank/BB429Rank.olean ../agent5-429-rank/BB429Rank.lean
+lean -o BB429AffinePump.olean BB429AffinePump.lean
+lean -o BB429AffineReplay.olean BB429AffineReplay.lean
+lean BB429AffineExamples.lean
+python3 affine_replay.py 100000 blocks.csv
+lean --run BB429AffineCSV.lean blocks.csv
+```
 
+**Next proof obligation:** obtain an all-time history-sensitive invariant of the reset return map (or reach a known nonhalting escape ray or the actual halting line). The finite accelerator does not decide #429 and does not establish BB(6). The symbolic guard horizons make exact return-cell boundaries available for this investigation.
