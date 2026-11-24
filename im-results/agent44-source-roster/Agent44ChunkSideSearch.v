@@ -91,6 +91,14 @@ Proof.
     + exact IH.
 Qed.
 
+Theorem chunk_remaining_refines_canonical_residual_7 :
+  Forall (fun x => is_child_of (tm x) q32_canonical_residual_7)
+    chunk_remaining.
+Proof.
+  unfold chunk_remaining, source_uncovered.
+  apply q32_active_filter_refines_canonical_residual_7.
+Qed.
+
 (* Search the exact nine-hole canonical parent of the 84-node q32
    checkpoint before searching its 50 uncovered descendants. A single
    SWside witness for this parent would certify the whole checkpoint. *)
