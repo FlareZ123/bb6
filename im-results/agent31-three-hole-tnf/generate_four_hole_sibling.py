@@ -117,8 +117,23 @@ def build(p,depth=1):
             ns=f"BB6Coverage.Agent31Pump.M{PUMPS[p]}"
             return f".proven {ns}.table {ns}.never"
         key=tuple(p[i] for i in (5,1,8,10))
-        rev,dfa=DFAS[key]
-        d,D,L,R,z=masks(p,rev,dfa)
+        candidates=[]
+        if key in DFAS:
+            candidates.append(DFAS[key])
+        candidates.extend(v for v in DFAS.values() if v not in candidates)
+        chosen=None
+        for rev0,dfa0 in candidates:
+            try:
+                d,D,L,R,z=masks(p,rev0,dfa0)
+                chosen=(rev0,dfa0)
+                break
+            except AssertionError:
+                continue
+        if chosen is None:
+            raise KeyError(key)
+        rev,dfa=chosen
+        if key not in DFAS or DFAS[key] != chosen:
+            stats["dfa_fallback"]+=1
         stats["far"]+=1
         return f".far {str(bool(rev)).lower()} {d} ⟨0,{D},{L},{R},{z}⟩"
     _,n,s=res
