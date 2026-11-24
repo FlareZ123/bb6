@@ -10,6 +10,10 @@ open BB6Coverage
 def weightedTNFNoAssignedHalt (p : PartialMachine) : Prop :=
   ∀ s, p s ≠ some (none : Transition)
 
+/-- The sparse execution is defined at every finite time. This is the source-independent form of a nonhalting decider leaf. -/
+def weightedTNFKnownRunForever (p : PartialMachine) : Prop :=
+  ∀ n, ∃ c, knownRun p n = some c
+
 /-- Number of assigned transition slots at a fixed state. -/
 def assignedAtState (p : PartialMachine) (q : Fin 6) : Nat :=
   (if (p (q, false)).isSome then 1 else 0) +
@@ -27,24 +31,28 @@ theorem assignedCount_refine {p : PartialMachine} {q : Fin 6} {b : Bool}
     assignedCount (refine p (q, b) (some mv)) = assignedCount p + 1 := by
   cases q using Fin.cases with
   | zero =>
-    cases b <;> simp [assignedCount, assignedAtState, refine, hu]
+      cases b <;> simp [assignedCount, assignedAtState, refine, hu] <;> omega
   | succ q =>
     cases q using Fin.cases with
     | zero =>
-      cases b <;> simp [assignedCount, assignedAtState, refine, hu]
+        cases b <;> simp [assignedCount, assignedAtState, refine, hu] <;> omega
     | succ q =>
       cases q using Fin.cases with
       | zero =>
-        cases b <;> simp [assignedCount, assignedAtState, refine, hu]
+          cases b <;> simp [assignedCount, assignedAtState, refine, hu] <;> omega
       | succ q =>
         cases q using Fin.cases with
         | zero =>
-          cases b <;> simp [assignedCount, assignedAtState, refine, hu]
+            cases b <;> simp [assignedCount, assignedAtState, refine, hu] <;> omega
         | succ q =>
           cases q using Fin.cases with
           | zero =>
-            cases b <;> simp [assignedCount, assignedAtState, refine, hu]
-          | succ q => cases q
+              cases b <;> simp [assignedCount, assignedAtState, refine, hu] <;> omega
+          | succ q =>
+            cases q using Fin.cases with
+            | zero =>
+                cases b <;> simp [assignedCount, assignedAtState, refine, hu] <;> omega
+            | succ q => cases q
 
 /-- Ordinary TNF expansion preserves the no-assigned-halt invariant. -/
 theorem weightedTNFNoAssignedHalt_refine (p : PartialMachine) (slot : Slot)
