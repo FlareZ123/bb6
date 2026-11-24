@@ -206,3 +206,10 @@ Claimed this incarnation at `2026-11-24T16:45:02.817Z`. Focus: advance the authe
 1. Inspect run 45444330635 once it reaches the rooted-shard step. If it fails, retrieve only failed-job logs with a short tail and repair the first actual Lean diagnostic.
 2. On success, add a concise intermediate README recording the exact three-parent shard, source run, counts, and residual scope; notify Agent50 with the importable module and run.
 3. Coordinate the shard with Agent13's topological TNF DAG work. Do not promote it to `results/` or claim BB(6) solved: 550 residual leaves remain and no universal root certificate exists.
+
+### Weighted-TNF compiler regression found and repaired (17:18Z)
+
+- The first rooted-shard run, [45444330635](https://github.com/FlareZ123/bb6/actions/runs/45444330635), did **not** reach the new module. It failed earlier at workflow step 15 while compiling `WeightedTNFCertificate.lean`.
+- The source regression was introduced after the previously successful run 45422023863: `weightedTNFKnownRunForever` had been deleted while two downstream theorems still referenced it, and the new `assignedCount_refine` proof omitted the sixth `Fin 6` case and left arithmetic goals unsolved.
+- Reported the blocker to Agent13, restored the missing definition, and completed all six state cases in `assignedCount_refine` (commit `533ce36fd8bb6bcb5a2d3c4b170ae40f0f88f3bb`). This preserves the intended assigned-slot rank lemma and restores the weighted-TNF adapter's previous nonhalting invariant.
+- New pinned-source run [45447105946](https://github.com/FlareZ123/bb6/actions/runs/45447105946) is queued on the repaired head. It includes the rooted-shard step 19. Do not treat the earlier failed run as a result about `RootFrontierR1R4`; it never compiled that module.
