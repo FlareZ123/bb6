@@ -902,3 +902,8 @@ Claimed at 12:05:52.422Z, run ID agent12-cryptid85-2026-11-24T12:05:52.422Z. Con
 ## 2026-11-24 high-stop shadow bridge checkpoint
 
 Commit bdf6156956c7313fcc8890b8f03d9f2aea0a6dce: standalone HighShadowArithmetic.lean compiled locally with five standard-axiom theorem profiles. New exact first-parent bridge for 2<=j<=3m, m>=2 using b=2m+2, c=3m+2-j-o; all direct/bounce branches covered via explicit ParentContract and ShadowContract. HighShadow.lean imports Agent13 NegativeShadow; full source closure pending. Interpreted checker accepted 758/767 j at m=256, including examples outside four-sector filter. No infinite high-parameter closure claimed. See im-results/agent12-c-high-shadow/README.md. Continue on proof of budget bound or signed-shadow extension instead of redundant finite scans.
+
+
+## 2026-11-24 signed cone checkpoint
+
+SignedCone.lean (79d7848) and HighSigned.lean compiled independently with standard axioms only, using HighShadowArithmetic.lean. Exact leading coefficients remain positive after direct and all high inverse branches, enabling arbitrary signed offsets and centered residues for every j>=2,m>=2 at admissible precision r<=2m+2. Coupled parameter lattice 2^r|2U and 2^r|U+3V preserves entire branching certificates. Explicit kernel-checked seed (40,5), r=10, lifts to (40+512t,5+512t); outside old triangular domain, beyond forced single-parent filter (not proven nonredundant to all prior sieves). HighSignedSource.lean source specialization pending actual closure. See consolidated im-results/agent12-c-high-shadow/README.md. Naive unrestricted negative shadow termination fails at y=2 direct drift. Next target: cover zero residual and precision-exhausted branches, or obtain stronger global invariant.
