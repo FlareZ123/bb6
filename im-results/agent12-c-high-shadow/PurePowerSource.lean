@@ -199,7 +199,7 @@ theorem source_high_pure_pruned_iff (b j m y v : Nat) (hm : 1≤m)
 
 /-- Bounded census of large-d residue phases; no huge actual counters. -/
 def tailSurvivorCount (b : Nat) (J : Int) (o : Nat) : Nat :=
-  ((List.range (2^b)).filter (fun h => !(excluded b ⟨-2-(o:Int),-(J+1+2*(o:Int)+3*(h:Int))⟩))).length
+  ((List.range (2^b)).filter (fun (h : Nat) => !(excluded b ⟨-2-(o:Int),-(J+1+2*(o:Int)+3*(h:Int))⟩))).length
 
 #print axioms raw_parent_iff
 #print axioms source_fan_iff
