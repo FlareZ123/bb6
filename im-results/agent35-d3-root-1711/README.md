@@ -35,3 +35,10 @@ The result concerns D3 only. It does not settle the other three rooted D-family 
 ## Reproduction
 
 Run the manual workflow `.github/workflows/agent35-d3-i5-root-prefix.yml`. It reconstructs the exact DRegular and ERemaining archives, compiles the original Cryptid boundary and padding modules, compiles the Agent 3/19 raw-root and source bridges, then checks this module under Lean 4.36.0-rc2.
+
+
+## CI result
+
+**Passed:** [GitHub Actions run 45381457744](https://github.com/FlareZ123/bb6/actions/runs/45381457744), Lean 4.36.0-rc2. The workflow compiles the original source dependency chain, prints the theorem axiom reports, and fails if `sorryAx` occurs. It passed with no `sorryAx`.
+
+The exact no-halt theorem is now source-kernel verified for the literal parsed D3 blank-root machine. The numerical corollary covers all exact times through (10^{1458}); the stronger symbolic horizon is (T=15+\operatorname{accumulated}(1711,\mathrm{seed5})), with (10^{1458}\le T<10^{1459}).
