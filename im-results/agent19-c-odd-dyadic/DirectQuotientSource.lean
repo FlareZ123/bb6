@@ -139,6 +139,45 @@ theorem source_high2_closed (J : State → Prop) (hc : Closed J) (a k : Nat)
     rw [hh] at h5
     simpa [hp1] using h5
 
+/-- Two odd-right bounces, followed by the normal return, for even a. -/
+theorem source_high3_even_closed (J : State → Prop) (hc : Closed J) (a k : Nat)
+    (ha : 8≤a) (hp : a%2=0) (h1 : 3*a+6≤2*k) (h2 : 2*k+8≤7*a)
+    (h : J (a,k,0)) : J (7*a-2*k+6,2*k-3*a+2,0) := by
+  have hA : a=(a-2)+2 := by omega
+  have hs : BB6CLine.nextC (a,k,0)=some (a-2,1,2*k+1) := by
+    conv => lhs; rw [hA]
+    rfl
+  have h0 := hc _ _ h hs
+  let c := 2*k-a-1
+  have he : 2*k+1=c+(a-2)+4 := by dsimp [c]; omega
+  rw [he] at h0
+  have hz := countdown_left J hc (a-2) 1 c h0
+  rw [show 1+(a-2)=a-1 by omega] at hz
+  have hp' : (a-1)%2=1 := by omega
+  have hb : 4*((a-1)/2)+5=2*a+1 := by omega
+  have hs' : BB6CLine.nextC (0,a-1,c+4)=some (2*a+1,0,c+4) := by
+    simp only [BB6CLine.nextC,show ¬(a-1)%2=0 by omega,ite_false,hb]
+  have hr := hc _ _ hz hs'
+  let d := 2*k-3*a-2
+  have hd : c+4=d+(2*a+1)+4 := by dsimp [c,d]; omega
+  rw [hd] at hr
+  have hzz := countdown_left J hc (2*a+1) 0 d hr
+  rw [Nat.zero_add] at hzz
+  have hs'' : BB6CLine.nextC (0,2*a+1,d+4)=some (4*a+5,0,d+4) := by
+    simp only [BB6CLine.nextC,show ¬(2*a+1)%2=0 by omega,ite_false,
+      show 4*((2*a+1)/2)+5=4*a+5 by omega]
+  have hr' := hc _ _ hzz hs''
+  let n := 2*k-3*a-1
+  have h3 : 4*a+5=(7*a-2*k+6)+n := by dsimp [n]; omega
+  have h4 : d+4=n+3 := by dsimp [d,n]; omega
+  rw [h3,h4] at hr'
+  have hret := countdown J hc n (7*a-2*k+6) 0 hr'
+  have h5 := hc _ _ hret (show BB6CLine.nextC (7*a-2*k+6,0+n,3)=some (7*a-2*k+6,0+n+2,1) by rfl)
+  have h6 := hc _ _ h5 (show BB6CLine.nextC (7*a-2*k+6,0+n+2,1)=some (7*a-2*k+6,0+n+2+1,0) by rfl)
+  rw [show 0+n+2+1=2*k-3*a+2 by dsimp [n]; omega] at h6
+  exact h6
+
+#print axioms source_high3_even_closed
 #print axioms source_high2_closed
 
 #print axioms seed12
