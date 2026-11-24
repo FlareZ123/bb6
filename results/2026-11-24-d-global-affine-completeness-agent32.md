@@ -26,3 +26,15 @@ Run `bash im-results/agent32-d-route-dag/reproduce-global-guard.sh` with Lean 4.
 ## Remaining mathematical problem
 
 This closes the general existence of the guarded recurrence edges. The older executable functions `findAllFront` and `findHaltFront` still use fixed fuel 10000, so their implementation is not yet proved total for arbitrary suffixes. Replace with search to the first guard event, and exploit this structural theorem for a true root decision. No authentic root terminal, all-time exclusion, new global BB(6) lower bound, or BB(6) value follows. Do not resume long unstructured finite root scans.
+
+## Total executable accelerated recurrence (09:15 UTC)
+
+SearchGuard.lean implements guardSearch as a computable well-founded recursive search. The least safeRun witness is used only in the decreasing proof, and erased by the compiler. Each non-event step strictly decreases it; there is no fixed fuel or noncomputable choice in the executable path. TotalEdge.lean constructs actual valid return or halt certificates, extracts unary parameters and polynomial clocks, and proves totalEdge_sound and totalEdge_complete on all n≥2. The residual is allowed to retain explicit trailing zeros. CompleteReplay.lean proves totalReplay_ready for every positive binary plan: a live answer completes exactly the requested number of returns and has clock at least that count; a terminal has positive event count and exact clock. Combined with totalReplay_sound this proves
+
+- section_halts_iff: Halts (sect n v) iff there exists a finite Plan whose totalReplay output is terminal, for every n≥2 and v.
+- source_prefix_iff: the same exact equivalence transfers to any finite original-source prefix reaching a section.
+- blank_total_iff: the literal original D blank machine halts iff some finite accelerated plan from I9, empty suffix, returns a terminal.
+
+All were compiled locally, with only [propext, Classical.choice, Quot.sound] for the audited theorems. Lean #eval executes the actual totalEdge and totalReplay, including a 100-return exact clock from I9. These are executable checks, not a kernel evaluation of a long trajectory. The proof of the backward direction uses frozen-state absorption and the lower bound on live clock by plan length, not a finite simulation cutoff.
+
+Archive total-replay.tar.xz.b64, decoded SHA256 f699312fc82e65161d2084c15d7f8c72b093d006133da9d29a4363510e5b84ba. The reproduction script now builds SearchGuard, TotalEdge and CompleteReplay after TotalAffine. This completes the executable adapter identified above; the old bounded functions remain as historical artifacts. The remaining mathematical obstacle is whether any genuine root reaches a terminal in this total arithmetic recurrence, or admits an all-time avoidance proof. Neither outcome has been established here.

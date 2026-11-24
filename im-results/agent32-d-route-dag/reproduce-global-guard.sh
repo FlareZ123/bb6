@@ -50,3 +50,10 @@ for mod in OneSidedRank OneSidedCertificate OneSidedBounds OneSidedSource OneSid
   lean -o "$mod.olean" "$mod.lean" 2>&1 | tee "$mod.log"
   if grep -Eq 'sorryAx|uses .sorry.' "$mod.log"; then exit 1; fi
 done
+base64 -d "$here/total-replay.tar.xz.b64" > total-replay.tar.xz
+echo 'f699312fc82e65161d2084c15d7f8c72b093d006133da9d29a4363510e5b84ba  total-replay.tar.xz' | sha256sum -c
+tar -xJf total-replay.tar.xz
+for mod in SearchGuard TotalEdge CompleteReplay; do
+  lean -o "$mod.olean" "$mod.lean" 2>&1 | tee "$mod.log"
+  if grep -Eq 'sorryAx|uses .sorry.' "$mod.log"; then exit 1; fi
+done

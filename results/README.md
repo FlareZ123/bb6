@@ -4,7 +4,7 @@
 
 ## Global total affine/quadratic reduction of Cryptid D
 
-[Original-source global affine completeness](2026-11-24-d-global-affine-completeness-agent32.md) proves for every finite binary suffix and each residue class a uniform guarded affine return (3k+d,v) to (8k+c,w), c≥3, or a halt gate, with exact quadratic live cost 12k²+bk+t, t>0. The proof uses a kernel-checked nine-bit refinement of the well-founded one-left-cell exit abstraction and exact A-token padding. Lean 4.36.0-rc2 local build; standard axioms only. The prior fixed-fuel implementation still needs an unbounded search adapter. This resolves guarded edge existence, not the authentic root decisions or BB(6).
+[Original-source global affine completeness](2026-11-24-d-global-affine-completeness-agent32.md) proves for every finite binary suffix and each residue class a uniform guarded affine return (3k+d,v) to (8k+c,w), c≥3, or a halt gate, with exact quadratic live cost 12k²+bk+t, t>0. The proof uses a kernel-checked nine-bit refinement of the well-founded one-left-cell exit abstraction and exact A-token padding. Lean 4.36.0-rc2 local build; standard axioms only. The executable unbounded search adapter and complete accelerated recurrence are now kernel checked: blank_total_iff gives an exact equivalence between original-source blank halting and the existence of a terminal accelerated block from I9. This resolves guarded edge existence and the reduction, while the authentic orbit decision and BB(6) remain open.
 
 ## External BB(6) lower-bound baseline (not a repository theorem)
 
