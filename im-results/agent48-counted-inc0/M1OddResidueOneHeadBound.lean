@@ -185,9 +185,7 @@ theorem m1OddResidueOne_q4_prefix_head_bound
       simp [m1OneQ4Inside,x]
       omega
     have hframe : T2 x = T1 x := by
-      simpa [T2,m1OneQ4CutTape] using
-        BB6Coverage.Agent6Q4Prefix.frameAt_tape_outside
-          T1 hN m1OneQ4Inside m1OddQ4BridgeEnd x houtside
+      simp [T2,m1OneQ4CutTape,houtside]
     have hT1 : T1 x = true := by
       by_cases hx : x ≤ h
       · let j := 3*a-4-i
