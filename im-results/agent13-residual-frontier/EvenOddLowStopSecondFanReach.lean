@@ -103,8 +103,6 @@ theorem low_ray_z14_second_fan_reach_iff
 #print axioms low_ray_z14_second_fan_reach_iff
 #print axioms second_parent_reach_iff
 #print axioms low_ray_z14_second_fan_reach_iff
-namespace BB6.Agent13LowSecondFan
-
 private theorem second_fan_linear_le_power (n : Nat) : n+1≤2^n := by
   induction n with
   | zero => decide
