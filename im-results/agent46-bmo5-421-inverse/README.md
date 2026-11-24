@@ -100,6 +100,27 @@ same-band steps, asymptotically (k\log_3 2-\log_3 k+O(1)). This is a necessary c
 
 The packet and cost theorems, together with the updated source wrapper, passed [CI 45401516931](https://github.com/FlareZ123/bb6/actions/runs/45401516931), revision `d9d5a03eb873061f80b73221336650bc85879a1f`, Lean 4.36.0-rc2. Theorems print only standard axioms.
 
+
+### Exact exceptional exits
+
+The two-band skip has the exact coordinate identity
+
+    3 W_j(x) + 2 Q_(j+2)(y) = 3
+
+whenever RegFrom j x y and Band (j+2) y. If its negative parent has W_j(x) = -3^n w, then
+
+    2 Q_(j+2)(y) = 3^(n+1) w + 3,
+    2j + 13 ≤ 3^(n+1) w ≤ 6j - 3.
+
+The second inequality uses the exact band window of the skip image.
+
+The packet invariant gives sharper costs for actual exceptional exits:
+
+- **Skip parent** RegFrom (k-2) z x: 4·3^(j-k)P_k + 6 + w0 ≤ 3^s(6k-9).
+- **Special parent** at x=P_k: 4·3^(j-k)P_k + 6 + w0 ≤ 3^s(6k+27).
+
+Thus every actual exceptional return is covered by the universal threshold 3^s(6k+27), while a skip exit has the stronger 6k-9 factor. The separate exact return-cost theorems and skip-coordinate lemmas passed [CI 45403951106](https://github.com/FlareZ123/bb6/actions/runs/45403951106), revision 3504354e2f2a279f04a550557be9612be7d2d4f6.
+
 ## All-band and nested valuation dynamics
 
 [BandDynamics.md](BandDynamics.md) gives the exact inverse partition, independent bridge from the published two-counter BMO5 recurrence, exact one-band and same-band run characterizations, initial negative-unit stripping and the unbounded exclusion for stripped units 1 or 11 modulo 12. It also gives the secondary residue tree and two finite nested exponent scans for w=5 and w=7, each complete through n=10^12. Source closure accepted in CI 45386870020, 45387850562 and 45388885057; the multiplicative lifting lemma is locally kernel-certified. The full nested tree cardinality and finite scans are paper proof and computational evidence respectively. The positive-coordinate continuation, including low-boundary exceptions, remains the genuine all-time obstacle.
