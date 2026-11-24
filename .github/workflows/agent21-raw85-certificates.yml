@@ -25,52 +25,63 @@ jobs:
             im-results/agent7-far/wide132/emit.py \
             im-results/agent7-far/wide133/emit.py
           python3 im-results/agent7-far/test_start_guard.py
-      - name: Recover eight workflow-validated SMT candidates
+      - name: Recover eight exact raw85 frontier SMT candidates
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          runs=(
-            45498610882 45498649689 45498658720 45498667128
-            45498673310 45498681222 45498691122 45498700780
-          )
+          gh api "repos/$GITHUB_REPOSITORY/actions/workflows/agent7-far-hard-root.yml/runs?per_page=100" > /tmp/far-smt-runs.json
           mkdir -p /tmp/raw85-artifacts
-          for run in "${runs[@]}"; do
-            dest="/tmp/raw85-artifacts/$run"
-            mkdir -p "$dest"
-            gh run download "$run" --repo "$GITHUB_REPOSITORY" --name far-hard-shard-0 --dir "$dest"
-          done
           python3 - <<'PY'
           from pathlib import Path
-
+          import json
+          import re
           root = Path("/tmp/raw85-artifacts")
-          run_ids = [
-              45498610882, 45498649689, 45498658720, 45498667128,
-              45498673310, 45498681222, 45498691122, 45498700780,
-          ]
+          run_data = json.loads(Path("/tmp/far-smt-runs.json").read_text())["workflow_runs"]
+          frontier = Path("im-results/agent21-raw85/smt-frontier.txt").read_text().splitlines()
+          expected = [m.group(1) for line in frontier if (m := re.match(r"^\d+\.\s+(.*)$", line))]
+          if len(expected) != 8:
+              raise SystemExit(f"expected eight raw85 frontier tables, found {len(expected)}")
+          selected = []
+          for code in expected:
+              title = f"Agent 7 FAR SMT: {code}"
+              matches = [r for r in run_data if r.get("display_title") == title and r.get("event") == "workflow_dispatch"]
+              successful = [r for r in matches if r.get("status") == "completed" and r.get("conclusion") == "success"]
+              if not successful:
+                  states = [(r.get("id"), r.get("status"), r.get("conclusion")) for r in matches]
+                  raise SystemExit(f"no completed successful solver run for {code}; matching runs={states}")
+              selected.append(sorted(successful, key=lambda r: r.get("created_at", ""))[-1])
           records = []
           provenance = [
-              "# Eight composed-SMT FAR candidate artifacts",
+              "# Eight raw85 frontier SMT certificates",
               "",
-              "These are the exact source tables and DFA/orientation models emitted by the listed runs. They are untrusted candidates for reuse on raw85 destination tables; their source-table identity does not assert that they are the eight smt-frontier entries.",
+              "Each source table below exactly matches an entry in smt-frontier.txt. The DFA/orientation is re-saturated for every destination leaf by the sibling generator; the original run's Lean check is supporting evidence, not a substitute for the generated parent-tree check.",
               "",
               "| Workflow run | Source table | DFA states | Reflected | DFA |",
               "|---:|---|---:|---:|---|",
           ]
-          seen_codes = set()
-          for run_id in run_ids:
-              hit_files = list((root / str(run_id)).rglob("hits.txt"))
+          for code, run in zip(expected, selected):
+              run_id = run["id"]
+              dest = root / str(run_id)
+              import subprocess
+              subprocess.run(
+                  ["gh", "run", "download", str(run_id), "--repo", __import__("os").environ["GITHUB_REPOSITORY"], "--name", "far-hard-shard-0", "--dir", str(dest)],
+                  check=True,
+              )
+              hit_files = list(dest.rglob("hits.txt"))
               if len(hit_files) != 1:
                   raise SystemExit(f"run {run_id}: expected one hits.txt, found {len(hit_files)}")
               hits = [line.split() for line in hit_files[0].read_text().splitlines() if line.startswith("HIT ")]
               if len(hits) != 1:
-                  raise SystemExit(f"run {run_id}: expected one HIT record, found {len(hits)}")
+                  raise SystemExit(f"run {run_id}: expected one HIT record for {code}, found {len(hits)}")
               words = hits[0]
-              code, d, rev = words[2], int(words[3]), int(words[4])
+              hit_code, d, rev = words[2], int(words[3]), int(words[4])
+              if hit_code != code:
+                  raise SystemExit(f"run {run_id}: target mismatch: {hit_code} != {code}")
               if words[0] != "HIT" or words[5] != "DFA" or rev not in (0, 1):
                   raise SystemExit(f"run {run_id}: malformed DFA/orientation fields")
-              if len(code.replace("_", "")) != 36:
-                  raise SystemExit(f"run {run_id}: malformed 12-slot source table {code}")
+              if len(hit_code.replace("_", "")) != 36:
+                  raise SystemExit(f"run {run_id}: malformed 12-slot source table {hit_code}")
               dfa = list(map(int, words[6:6 + 2*d]))
               n = 6*d + 1
               mask_tag = 6 + 2*d
@@ -79,19 +90,16 @@ jobs:
                   raise SystemExit(f"run {run_id}: malformed mask payload")
               if not dfa or dfa[0] != 0 or any(x < 0 or x >= d for x in dfa):
                   raise SystemExit(f"run {run_id}: DFA violates start-preserving/range constraints")
-              if code in seen_codes:
-                  raise SystemExit(f"duplicate source table across SMT runs: {code}")
-              seen_codes.add(code)
               raw = code.replace("_", "")
               tokens = [raw[j:j+3] for j in range(0, 36, 3)]
               key = [tokens[j] for j in (5, 1, 8, 10)]
               dfa_text = "".join(map(str, dfa))
               records.append(" ".join(key + [str(rev), dfa_text]))
               provenance.append(f"| {run_id} | {code} | {d} | {rev} | {dfa_text} |")
-          if len(records) != 8 or len(seen_codes) != 8:
-              raise SystemExit("raw85 SMT artifacts did not yield eight distinct source tables")
+          if len(records) != 8 or len(set(expected)) != 8:
+              raise SystemExit("raw85 SMT artifacts did not yield eight distinct frontier certificates")
           out = Path("im-results/agent21-raw85/smt-candidates.txt")
-          out.write_text("# Eight workflow-validated composed-SMT DFA candidates; source tables are recorded in smt-candidates-provenance.md; keys are ordering metadata only\n" + "\n".join(records) + "\n")
+          out.write_text("# Eight exact raw85 frontier SMT DFA candidates; source tables are in smt-candidates-provenance.md; keys are ordering metadata only\n" + "\n".join(records) + "\n")
           prov = Path("im-results/agent21-raw85/smt-candidates-provenance.md")
           prov.write_text("\n".join(provenance) + "\n")
           print(out.read_text(), end="")
@@ -101,9 +109,9 @@ jobs:
             api_path="repos/$GITHUB_REPOSITORY/contents/$file"
             encoded="$(base64 -w0 "$file")"
             if sha="$(gh api "$api_path" --jq .sha 2>/dev/null)"; then
-              gh api --method PUT "$api_path" -f message="Agent 7: Preserve raw85 SMT candidate provenance" -f content="$encoded" -f branch=main -f sha="$sha"
+              gh api --method PUT "$api_path" -f message="Agent 7: Preserve exact raw85 SMT candidates" -f content="$encoded" -f branch=main -f sha="$sha"
             else
-              gh api --method PUT "$api_path" -f message="Agent 7: Preserve raw85 SMT candidate provenance" -f content="$encoded" -f branch=main
+              gh api --method PUT "$api_path" -f message="Agent 7: Preserve exact raw85 SMT candidates" -f content="$encoded" -f branch=main
             fi
           done
           cat im-results/agent21-raw85/smt-candidates.txt >> "$GITHUB_STEP_SUMMARY"
