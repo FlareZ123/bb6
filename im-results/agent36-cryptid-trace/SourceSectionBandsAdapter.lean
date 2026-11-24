@@ -26,16 +26,24 @@ corresponding widened phase-band edge. -/
 theorem edge135_of_returnWitness {n : Nat} {v : List Bool}
     (hn : 5 ≤ n) (h : BB6.OneSided.ReturnWitness n v) :
     ∃ t n' v', 0 < t ∧
+      CryptidBoundary.run t (BB6.OneSided.Section n v) =
+        BB6.OneSided.Section n' v' ∧
+      BB6.OneSided.head v' = false ∧
       Edge135 (sourceMeasure n v) (sourceMeasure n' v') := by
-  rcases h with ⟨t, n', v', ht, _, hgood⟩
-  exact ⟨t, n', v', ht, edge135_of_goodReturn hn hgood⟩
+  rcases h with ⟨t, n', v', ht, hrun, hgood⟩
+  rcases hgood with ⟨hv', hlo, hup⟩
+  exact ⟨t, n', v', ht, hrun, hv', edge135_of_bounds hn hlo hup⟩
 
 /-- The global arbitrary-suffix theorem is now in the exact form needed by
-Path135: every normalized section either halts or supplies an Edge135 step. -/
+Path135: every normalized section either halts or supplies a positive-time
+exact source return, a normalized successor suffix, and an Edge135 step. -/
 theorem section_edge_or_halt {n : Nat} {v : List Bool}
     (hn : 5 ≤ n) (hv : BB6.OneSided.head v = false) :
     BB6.OneSided.HaltWitness n v ∨
       ∃ t n' v', 0 < t ∧
+        CryptidBoundary.run t (BB6.OneSided.Section n v) =
+          BB6.OneSided.Section n' v' ∧
+        BB6.OneSided.head v' = false ∧
         Edge135 (sourceMeasure n v) (sourceMeasure n' v') := by
   rcases BB6.OneSided.section_bands n v (by omega) hv with hhalt | hreturn
   · exact Or.inl hhalt
