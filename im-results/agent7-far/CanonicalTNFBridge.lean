@@ -69,8 +69,18 @@ def canonicalAuditTNFLeaf {B : Nat} {p : PartialMachine} {cut k : Nat}
 /-- Canonical Scoped and weighted TNF support are the same finite
     successor-closure condition. -/
 theorem scoped_to_TNFSupport {p : PartialMachine} {k : Nat}
-    (hp : BB6Coverage.Canonical.Scoped k p) : TNFSupport p k :=
-  hp
+    (hp : BB6Coverage.Canonical.Scoped k p) : TNFSupport p k := by
+  intro s t h
+  rcases hp s t h with ⟨hs, hnext⟩
+  constructor
+  · exact hs
+  · intro mv hmv
+    cases t with
+    | none => simp at hmv
+    | some mv' =>
+      have hEq : mv' = mv := Option.some.inj hmv
+      subst mv
+      exact hnext
 
 /-- Directly package a closed result of the existing canonical search as a
     weighted-TNF certificate. The canonical search runs at B-5 because its
