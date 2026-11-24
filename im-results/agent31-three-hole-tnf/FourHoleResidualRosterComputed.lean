@@ -8,6 +8,7 @@ namespace BB6.Agent31FourHoleRosterComputed
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent50TNFPilot
 open BB6.Agent31FourHoleFrontier
 open BB6.Agent31FourHoleRoster
+open BB6.Agent8TNFPath
 
 /-- Compute the off-path residual cylinders from the validated first-hole path
     alone. Unlike the proof-carrying RootedFrontier object, this finite list
@@ -32,7 +33,7 @@ theorem buildFrontierB_residuals (B : Nat) (p : PartialMachine) (cut : Nat)
     (cert : WeightedTNFCertificate B (pathEnd p cut xs).1 6) :
     residuals (buildFrontierB B p cut hp xs h cert) =
       enumerateResiduals p xs := by
-  induction xs generalizing p cut hp h cert with
+  induction xs generalizing p cut hp with
   | nil =>
       simp [buildFrontierB, residuals, enumerateResiduals]
   | cons entry xs ih =>
@@ -58,7 +59,7 @@ theorem buildFrontierB_residuals (B : Nat) (p : PartialMachine) (cut : Nat)
         simpa [pathEnd, hs.symm] using cert
       have hp' : RawRootPath (refine p (readSlot c) (some mv)) :=
         RawRootPath.step (mv := mv) hp hr hhole'
-      have ih' := ih hp' htail' cert'
+      have ih' := ih (refine p (readSlot c) (some mv)) (advanceCut cut mv) hp' htail' cert'
       simp [buildFrontierB, residuals, enumerateResiduals, hs, ih']
 
 /-- The computable enumeration agrees exactly with the certified frontier's
