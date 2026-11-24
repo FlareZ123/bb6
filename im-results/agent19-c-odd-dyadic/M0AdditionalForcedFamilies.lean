@@ -19,6 +19,26 @@ private def m0AdditionalFamily (j : Nat) : Prop :=
   (∃ t, j=512*t+406) ∨
   (∃ t, j=512*t+191)
 
+/-- On every m=0 high target, the affine right-four normalizer either stops
+    immediately at an odd/even right counter different from four, or takes
+    one step to an odd right counter and therefore stops. -/
+private theorem affine_right_m0_not_four (j : Nat) :
+    (BB6.Agent15.affineNormalize (2*j+3) (3*j+7)).2 ≠ 4 := by
+  unfold BB6.Agent15.affineNormalize
+  by_cases hgate :
+      4≤3*j+7 ∧ (3*j+7)%2=0 ∧
+        ((2*j+3)+(3*j+7))%4=1
+  · rw [dif_pos hgate]
+    unfold BB6.Agent15.affineNormalize
+    have hnext :
+        ¬(4≤((3*j+7)-2)/2 ∧ ((3*j+7)-2)/2%2=0 ∧
+          (((2*j+3)+(3*j+7)-2)+((3*j+7)-2)/2)%4=1) := by
+      omega
+    rw [dif_neg hnext]
+    omega
+  · rw [dif_neg hgate]
+    omega
+
 /-- All nine progressions are admitted by the complete preceding
     C70+C23+all-phase+even-right high sieve. -/
 private theorem prior_high_allowed_m0_of_family (j : Nat)
@@ -55,15 +75,8 @@ private theorem prior_high_allowed_m0_of_family (j : Nat)
       unfold BB6.Agent19Five.highAllowed
       exact ⟨hAgent11,by omega⟩
     have hright0 :
-        (BB6.Agent15.affineNormalize (2*j+3) (3*j+7)).2≠4 := by
-      unfold BB6.Agent15.affineNormalize
-      by_cases hgate :
-          4≤3*j+7 ∧ (3*j+7)%2=0 ∧
-            ((2*j+3)+(3*j+7))%4=1
-      · rw [dif_pos hgate]
-        omega
-      · rw [dif_neg hgate]
-        omega
+        (BB6.Agent15.affineNormalize (2*j+3) (3*j+7)).2≠4 :=
+      affine_right_m0_not_four j
     have hy :
         2^(2*0+2)*(j+3)-(j+3*0+5)=3*j+7 := by
       change 4*(j+3)-(j+5)=3*j+7
@@ -930,72 +943,10 @@ theorem m0_four_more_families_blank_unreachable :
 
 #print axioms m0_four_more_families_blank_unreachable
 
-/-- Concrete residual target j=534, normalized by the exact source function. -/
-theorem full_forced_normalize_m0_residual_534 :
-    BB6.Agent3.fullForcedNormalize 1071 1609=(3570,343) := by decide
-/-- Concrete residual target j=581. -/
-theorem full_forced_normalize_m0_residual_581 :
-    BB6.Agent3.fullForcedNormalize 1165 1750=(1586,1523) := by decide
-/-- Concrete residual target j=1046. -/
-theorem full_forced_normalize_m0_residual_1046 :
-    BB6.Agent3.fullForcedNormalize 2095 3145=(8010,167) := by decide
-/-- Concrete residual target j=1093. -/
-theorem full_forced_normalize_m0_residual_1093 :
-    BB6.Agent3.fullForcedNormalize 2189 3286=(7532,577) := by decide
-/-- Concrete residual target j=1159. -/
-theorem full_forced_normalize_m0_residual_1159 :
-    BB6.Agent3.fullForcedNormalize 2321 3484=(3386,2935) := by decide
-/-- Concrete residual target j=1343. -/
-theorem full_forced_normalize_m0_residual_1343 :
-    BB6.Agent3.fullForcedNormalize 2689 4036=(8954,887) := by decide
-
-/-- The six points left after removing the eleven infinite progressions
-    are individually excluded by the authentic blank-orbit theorem. -/
-theorem m0_six_residuals_blank_unreachable :
-    (¬ BB6.Agent3.CReach 1071 1609) ∧
-    (¬ BB6.Agent3.CReach 1165 1750) ∧
-    (¬ BB6.Agent3.CReach 2095 3145) ∧
-    (¬ BB6.Agent3.CReach 2189 3286) ∧
-    (¬ BB6.Agent3.CReach 2321 3484) ∧
-    (¬ BB6.Agent3.CReach 2689 4036) := by
-  refine ⟨?_,?_,?_,?_,?_,?_⟩
-  · intro h
-    rcases h with ⟨time,hrun⟩
-    exact (BB6.Agent3.fullForcedExcluded_sound 1071 1609 (by
-      simp [BB6.Agent3.fullForcedExcluded, full_forced_normalize_m0_residual_534]
-      omega) time) hrun
-  · intro h
-    rcases h with ⟨time,hrun⟩
-    exact (BB6.Agent3.fullForcedExcluded_sound 1165 1750 (by
-      simp [BB6.Agent3.fullForcedExcluded, full_forced_normalize_m0_residual_581]
-      omega) time) hrun
-  · intro h
-    rcases h with ⟨time,hrun⟩
-    exact (BB6.Agent3.fullForcedExcluded_sound 2095 3145 (by
-      simp [BB6.Agent3.fullForcedExcluded, full_forced_normalize_m0_residual_1046]
-      omega) time) hrun
-  · intro h
-    rcases h with ⟨time,hrun⟩
-    exact (BB6.Agent3.fullForcedExcluded_sound 2189 3286 (by
-      simp [BB6.Agent3.fullForcedExcluded, full_forced_normalize_m0_residual_1093]
-      omega) time) hrun
-  · intro h
-    rcases h with ⟨time,hrun⟩
-    exact (BB6.Agent3.fullForcedExcluded_sound 2321 3484 (by
-      simp [BB6.Agent3.fullForcedExcluded, full_forced_normalize_m0_residual_1159]
-      omega) time) hrun
-  · intro h
-    rcases h with ⟨time,hrun⟩
-    exact (BB6.Agent3.fullForcedExcluded_sound 2689 4036 (by
-      simp [BB6.Agent3.fullForcedExcluded, full_forced_normalize_m0_residual_1343]
-      omega) time) hrun
-
-#print axioms full_forced_normalize_m0_residual_534
-#print axioms full_forced_normalize_m0_residual_581
-#print axioms full_forced_normalize_m0_residual_1046
-#print axioms full_forced_normalize_m0_residual_1093
-#print axioms full_forced_normalize_m0_residual_1159
-#print axioms full_forced_normalize_m0_residual_1343
-#print axioms m0_six_residuals_blank_unreachable
+/- The six finite-scan residues 534, 581, 1046, 1093, 1159, and 1343 are
+   now covered by the source-compiled infinite lifts in M0Mod2048Four.lean
+   and M0Residual1093Lift.lean. The earlier point-only `decide` block was
+   redundant and did not kernel-reduce the recursive normalizer, so it is
+   intentionally not part of this module's certified interface. -/
 
 end BB6.Agent19M0Additional
