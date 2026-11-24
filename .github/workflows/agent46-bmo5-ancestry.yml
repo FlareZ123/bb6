@@ -70,7 +70,7 @@ jobs:
         run: |
           set -euo pipefail
           export LEAN_PATH="$PWD"
-          for m in Cap CapInverse CapRoot CapMulti CapSieveCore CapSieveLift CapSieveGraph CapSieveClasses CapSieveCount CapSieveSource CapBandInverse CapBandRun CapBandBoundary CapBmo CapBmoSource CapNegativePhase CapStrip CapStripSource CapUpRun; do
+          for m in Cap CapInverse CapRoot CapMulti CapSieveCore CapSieveLift CapSieveGraph CapSieveClasses CapSieveCount CapSieveSource CapBandInverse CapBandRun CapBandBoundary CapBmo CapBmoSource CapNegativePhase CapStrip CapStripSource CapUpRun CapNestedLift CapPhase CapPhaseSource; do
             lean -o "$m.olean" "$m.lean" 2>&1 | tee -a "$RUNNER_TEMP/cap-sieve.log"
           done
           if grep -Eq 'sorryAx|native_decide' "$RUNNER_TEMP/cap-sieve.log"; then
