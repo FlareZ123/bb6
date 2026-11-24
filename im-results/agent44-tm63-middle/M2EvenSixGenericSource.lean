@@ -72,14 +72,26 @@ private theorem m2EvenSixGeneric_binDec_source
     binDec L (8*q+6) =
       d1 ++ d0 ++ d0 ++ binDec (L-3) q := by
   have hpow3 : 2^L = 8 * 2^(L-3) := by
-    rw [show L = (L-3)+3 by omega, Nat.pow_add,
-      show (2:Nat)^3 = 8 by decide, Nat.mul_comm]
+    calc
+      2^L = 2^((L-3)+3) := by congr 1; omega
+      _ = 2^(L-3) * 2^3 := by rw [Nat.pow_add]
+      _ = 8 * 2^(L-3) := by
+        rw [show (2:Nat)^3 = 8 by decide]
+        exact Nat.mul_comm _ _
   have hpow2 : 2^(L-1) = 4 * 2^(L-3) := by
-    rw [show L-1 = (L-3)+2 by omega, Nat.pow_add,
-      show (2:Nat)^2 = 4 by decide, Nat.mul_comm]
+    calc
+      2^(L-1) = 2^((L-3)+2) := by congr 1; omega
+      _ = 2^(L-3) * 2^2 := by rw [Nat.pow_add]
+      _ = 4 * 2^(L-3) := by
+        rw [show (2:Nat)^2 = 4 by decide]
+        exact Nat.mul_comm _ _
   have hpow1 : 2^(L-2) = 2 * 2^(L-3) := by
-    rw [show L-2 = (L-3)+1 by omega, Nat.pow_add,
-      show (2:Nat)^1 = 2 by decide, Nat.mul_comm]
+    calc
+      2^(L-2) = 2^((L-3)+1) := by congr 1; omega
+      _ = 2^(L-3) * 2^1 := by rw [Nat.pow_add]
+      _ = 2 * 2^(L-3) := by
+        rw [show (2:Nat)^1 = 2 by decide]
+        exact Nat.mul_comm _ _
   have hq : q < 2^(L-3) := by
     rw [hpow3] at hbound
     omega
@@ -112,14 +124,26 @@ private theorem m2EvenSixGeneric_binDec_target
     binDec L (8*q+5) =
       d0 ++ d1 ++ d0 ++ binDec (L-3) q := by
   have hpow3 : 2^L = 8 * 2^(L-3) := by
-    rw [show L = (L-3)+3 by omega, Nat.pow_add,
-      show (2:Nat)^3 = 8 by decide, Nat.mul_comm]
+    calc
+      2^L = 2^((L-3)+3) := by congr 1; omega
+      _ = 2^(L-3) * 2^3 := by rw [Nat.pow_add]
+      _ = 8 * 2^(L-3) := by
+        rw [show (2:Nat)^3 = 8 by decide]
+        exact Nat.mul_comm _ _
   have hpow2 : 2^(L-1) = 4 * 2^(L-3) := by
-    rw [show L-1 = (L-3)+2 by omega, Nat.pow_add,
-      show (2:Nat)^2 = 4 by decide, Nat.mul_comm]
+    calc
+      2^(L-1) = 2^((L-3)+2) := by congr 1; omega
+      _ = 2^(L-3) * 2^2 := by rw [Nat.pow_add]
+      _ = 4 * 2^(L-3) := by
+        rw [show (2:Nat)^2 = 4 by decide]
+        exact Nat.mul_comm _ _
   have hpow1 : 2^(L-2) = 2 * 2^(L-3) := by
-    rw [show L-2 = (L-3)+1 by omega, Nat.pow_add,
-      show (2:Nat)^1 = 2 by decide, Nat.mul_comm]
+    calc
+      2^(L-2) = 2^((L-3)+1) := by congr 1; omega
+      _ = 2^(L-3) * 2^1 := by rw [Nat.pow_add]
+      _ = 2 * 2^(L-3) := by
+        rw [show (2:Nat)^1 = 2 by decide]
+        exact Nat.mul_comm _ _
   have hq : q < 2^(L-3) := by
     rw [hpow3] at hbound
     omega
@@ -184,12 +208,10 @@ private theorem m2EvenSixGeneric_targetLeftFacing
 private theorem m2EvenSixGeneric_inputPrefix_length (a : Nat) :
     (m2EvenSixGenericInputPrefix a).length = 3*a+12 := by
   simp [m2EvenSixGenericInputPrefix,d1pow_length,markerWord,d0,d1]
-  omega
 
 private theorem m2EvenSixGeneric_targetPrefix_length (a : Nat) :
     (m2EvenSixGenericTargetPrefix a).length = 3*a+12 := by
   simp [m2EvenSixGenericTargetPrefix,d1pow_length,markerWord,d0,d1]
-  omega
 
 private theorem m2EvenSixGeneric_input_matches
     (L q a b : Nat) (h : Int)
@@ -220,6 +242,8 @@ private theorem m2EvenSixGeneric_input_matches
     rw [hcoord] at hsrc hbase
     rw [hsourceLeft] at hsrc
     rw [hbaseLeft] at hbase
+    change (s1Config L (8*q+6) 2 a 0 b h).tape x =
+      sideBit (m2EvenSixGenericInputPrefix a ++ m2EvenSixGenericCommonTail L q) i at hsrc
     have hsrcBit := sideBit_append_left
       (m2EvenSixGenericInputPrefix a)
       (m2EvenSixGenericCommonTail L q) i hiPrefix
@@ -268,7 +292,7 @@ private theorem m2EvenSixGeneric_bridge_prefix_lower
     (hd : run tm2 j ⟨3,h,T⟩ = some d) :
     h-9 ≤ d.head := by
   obtain ⟨e,hexact⟩ :=
-    fRun_prefix_exists m2EvenSixQ4Bridge_exact (by omega)
+    fRun_prefix_exists (k := j) m2EvenSixQ4Bridge_exact (by omega)
   have hcheckj :
       (List.range j).all (fun k =>
         match fRun tm2 k m2EvenSixQ4BridgeStart with
@@ -281,11 +305,14 @@ private theorem m2EvenSixGeneric_bridge_prefix_lower
       omega
     exact (List.all_eq_true.mp m2EvenSixQ4Bridge_heads) k
       (List.mem_range.mpr hj')
-  have hbridge := bridgeAt T h m2EvenSixQ4Inside
+  have hbridgeFrame := bridgeAt T h m2EvenSixQ4Inside
     m2EvenSixQ4BridgeStart e j rfl hexact hcheckj hmatch
+  have hbridge : run tm2 j ⟨3,h,T⟩ =
+      some (frameAt T h m2EvenSixQ4Inside e) := by
+    simpa [m2EvenSixQ4BridgeStart] using hbridgeFrame
   rw [hbridge] at hd
   have hdeq : d = frameAt T h m2EvenSixQ4Inside e :=
-    Option.some.inj hd
+    (Option.some.inj hd).symm
   have hinside : m2EvenSixQ4Inside e.head = true := by
     have hh := (List.all_eq_true.mp m2EvenSixQ4Bridge_heads) j
       (List.mem_range.mpr hj)
@@ -309,11 +336,11 @@ private theorem m2EvenSixGeneric_E_scan_prefix_head
   have hrun := E_scan T h j hlinearJ
   rw [hrun] at hd
   have heq := Option.some.inj hd
-  simp at heq
-  omega
+  cases heq
+  rfl
 
 private theorem m2EvenSixGeneric_q4_prefix_head_bound
-    (a b : Nat) (h : Int) :
+    (a b : Nat) (h : Int) (ha : 0<a) :
     ∀ k, k < 44+12*a → ∀ d,
       run tm2 k (s1Config 3 6 2 a 0 b h) = some d →
       h-((3*a+11:Int)) ≤ d.head := by
@@ -373,7 +400,7 @@ private theorem m2EvenSixGeneric_q4_prefix_head_bound
     exact hb
   have hlinear : linearRightOnes T2 (hN+2) (3*a) := by
     simpa [T2,hN,N] using
-      m2EvenSixQ4CutTape_linearRightOnes a b h (by omega)
+      m2EvenSixQ4CutTape_linearRightOnes a b h ha
   intro k hk d hd
   let p1 := 3*N
   let p2 := p1+38
@@ -386,7 +413,9 @@ private theorem m2EvenSixGeneric_q4_prefix_head_bound
     · let j := k-p1
       have hj : j<38 := by dsimp [j,p1] at *; omega
       have hkEq : k=p1+j := by dsimp [j,p1]; omega
-      rw [hkEq,run_add,hSweep] at hd
+      rw [hkEq] at hd
+      dsimp [p1] at hd
+      rw [run_add,hSweep] at hd
       simp only [Option.bind_some] at hd
       have hlow := m2EvenSixGeneric_bridge_prefix_lower T1 hN hmatch j hj d hd
       dsimp [hN,N] at *
@@ -394,7 +423,9 @@ private theorem m2EvenSixGeneric_q4_prefix_head_bound
     · let j := k-p2
       have hj : j<3*a := by dsimp [j,p2,p1,N] at *; omega
       have hkEq : k=p1+(38+j) := by dsimp [j,p2,p1]; omega
-      rw [hkEq,run_add,hSweep] at hd
+      rw [hkEq] at hd
+      dsimp [p1] at hd
+      rw [run_add,hSweep] at hd
       simp only [Option.bind_some] at hd
       rw [run_add,hBridge] at hd
       simp only [Option.bind_some] at hd
@@ -428,7 +459,7 @@ theorem m2EvenSix_generic_q4_prefix_source
         run tm2 j base = some d →
         m2EvenSixGenericInside a h d.head = true := by
     intro j hj d hd
-    have hlow := m2EvenSixGeneric_q4_prefix_head_bound a b h j hj d hd
+    have hlow := m2EvenSixGeneric_q4_prefix_head_bound a b h ha j hj d hd
     simpa [m2EvenSixGenericInside] using hlow
   have hlift := run_frame tm2 (m2EvenSixGenericInside a h)
     background base (44+12*a) hheads
@@ -436,10 +467,8 @@ theorem m2EvenSix_generic_q4_prefix_source
   have hbaseRun :
       run tm2 (44+12*a) base =
         some (⟨4,h,m2EvenSixQ4CutTape a b h⟩ : Config) := by
-    obtain ⟨Tq,hprefix,_,_,_⟩ :=
-      m2EvenSix_q4_prefix_data a b h ha
-    have hTq : Tq = m2EvenSixQ4CutTape a b h := by rfl
-    simpa [base,hTq] using hprefix
+    simpa [base] using
+      (m2EvenSix_q4_prefix_data_exact a b h ha).1
   rw [hbaseRun] at hlift
   simp only [Option.map_some] at hlift
   simpa [m2EvenSixGenericCutTape,background] using hlift
@@ -472,11 +501,8 @@ theorem m2EvenSix_generic_q4_prefix_leftFacing
   have htargetPrefixLength := m2EvenSixGeneric_targetPrefix_length a
   have hbaseLeft : ∀ i : Nat,
       m2EvenSixQ4CutTape a b h (h-(i:Int)) =
-        sideBit (m2EvenSixQ4LeftFacing a) i := by
-    obtain ⟨Tq,_,hleft,_,_⟩ :=
-      m2EvenSix_q4_prefix_data a b h ha
-    have hTq : Tq = m2EvenSixQ4CutTape a b h := by rfl
-    simpa [hTq] using hleft
+        sideBit (m2EvenSixQ4LeftFacing a) i :=
+    (m2EvenSix_q4_prefix_data_exact a b h ha).2.1
   intro i
   by_cases hi : i ≤ 3*a+11
   · have hin :
@@ -515,6 +541,10 @@ theorem m2EvenSix_generic_q4_prefix_leftFacing
       (m2EvenSixGenericTargetPrefix a)
       (m2EvenSixGenericCommonTail L q) i
       (by rw [htargetPrefixLength]; omega)
+    change sideBit
+      (m2EvenSixGenericInputPrefix a ++ m2EvenSixGenericCommonTail L q) i =
+      sideBit
+        (m2EvenSixGenericTargetPrefix a ++ m2EvenSixGenericCommonTail L q) i
     rw [hsourceBit,htargetBit]
 
 private theorem m2EvenSixGeneric_q4RightShape_congr
@@ -546,11 +576,8 @@ private theorem m2EvenSixGeneric_q4_rightFacing
         sideBit (BB6Coverage.Agent6Q4Prefix.q4RightFacing b) i := by
   have hbase : ∀ i : Nat,
       m2EvenSixQ4CutTape a b h (h+1+(i:Int)) =
-        sideBit (BB6Coverage.Agent6Q4Prefix.q4RightFacing b) i := by
-    obtain ⟨Tq,_,_,_,hright⟩ :=
-      m2EvenSix_q4_prefix_data a b h ha
-    have hTq : Tq = m2EvenSixQ4CutTape a b h := by rfl
-    simpa [hTq] using hright
+        sideBit (BB6Coverage.Agent6Q4Prefix.q4RightFacing b) i :=
+    (m2EvenSix_q4_prefix_data_exact a b h ha).2.2.2
   intro i
   have hin :
       m2EvenSixGenericInside a h (h+1+(i:Int)) = true := by
@@ -572,10 +599,7 @@ private theorem m2EvenSixGeneric_q4_rightShape
       omega
     symm
     exact m2EvenSixGeneric_cut_eq_base_inside L q a b h x hin
-  · obtain ⟨Tq,_,_,hshape,_⟩ :=
-      m2EvenSix_q4_prefix_data a b h ha
-    have hTq : Tq = m2EvenSixQ4CutTape a b h := by rfl
-    simpa [hTq] using hshape
+  · exact (m2EvenSix_q4_prefix_data_exact a b h ha).2.2.1
 
 private theorem m2EvenSixGeneric_q4_far_tail
     (L q a b : Nat) (h : Int) (ha : 0<a) :
