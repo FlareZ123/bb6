@@ -63,3 +63,21 @@ A low-boundary return x≤P_k+2 therefore requires
     4*3^(j-k)*P_k + 6+w ≤ 3^s*(6*k+35).
 
 Writing d=j-k and m=s-d, this yields 4*P_k≤3^m*(6*k+35). Thus **the number of same-band inversions alone** must be at least ceil(log_3(20*2^k/(6*k+35))), regardless of how many one-band descents occur. This is an all-depth necessary condition, not a proof of nonhalting. The source-level `small_root_positive_continues` theorem uses the strict reverse inequality to force regular continuation. The packet, cost and source-wrapper theorems passed [CI 45401516931](https://github.com/FlareZ123/bb6/actions/runs/45401516931), revision d9d5a03eb873061f80b73221336650bc85879a1f, Lean 4.36.0-rc2.
+
+
+## Exact exceptional-return costs
+
+For a two-band skip RegFrom j x y with Band (j+2) y, the exact coordinate relation is
+
+    3 W_j(x) + 2 Q_(j+2)(y) = 3.
+
+If W_j(x) = -3^n w, then 2Q = 3^(n+1)w + 3 and the band geometry sharpens this to
+
+    2j + 13 ≤ 3^(n+1)w ≤ 6j - 3.
+
+Combining the skip coordinate with the band-drop packet yields the exceptional-return costs:
+
+- Skip parent from band k-2: 4·3^(j-k)P_k + 6 + w0 ≤ 3^s(6k-9).
+- Special parent at P_k: 4·3^(j-k)P_k + 6 + w0 ≤ 3^s(6k+27).
+
+Consequently, 3^s(6k+27) is a universal upper threshold for an actual exceptional return; the skip case is strictly cheaper. Both return-cost theorems and the exact skip-coordinate lemmas passed [CI 45403951106](https://github.com/FlareZ123/bb6/actions/runs/45403951106), revision 3504354e2f2a279f04a550557be9612be7d2d4f6.
