@@ -15,9 +15,9 @@ The new `WeightedTNFQueuePotential.lean` is presently a projection/model over `Q
 
 Keep these obligations separate and make each explicit in the maintained dossier:
 
-1. **Exact source correspondence:** prove the projection matches the pinned source revision's `SearchQueue`, `SearchQueue_upd`, `SearchQueue_upd_bfs`, `SearchQueue_rst`, `expand`, `expand'`, `holdout_i`, and all `q_i) chunk construction. In particular, prove the 24-child bound, one-hole decrease, and final-hole behavior against the actual definitions, not just the projected model.
+1. **Exact source correspondence:** prove the projection matches the pinned source revision's `SearchQueue`, `SearchQueue_upd`, `SearchQueue_upd_bfs`, `SearchQueue_rst`, `expand`, `expand'`, `holdout_i`, and all `q_i` chunk construction. In particular, prove the 24-child bound, one-hole decrease, and final-hole behavior against the actual definitions, not just the projected model.
 2. **Coverage invariant:** for every compatible total completion of the authentic `root_1RB`, prove the halt / nonhalt / unknown cases preserve the partition into solved weighted machines and active/held cylinders. Include source-decider soundness, the halt score plus incoming-delay accounting, and the fresh-label symmetry argument.
-3. **Queue exhaustion and partition:** prove the `q_i) chunks partition the active frontier without omission or duplication, preserve holdouts, and that the source's actual `MAXT` calls drain. The potential can discharge the fuel sub-obligation only after its source bridge is established.
+3. **Queue exhaustion and partition:** prove the `q_i` chunks partition the active frontier without omission or duplication, preserve holdouts, and that the source's actual `MAXT` calls drain. The potential can discharge the fuel sub-obligation only after its source bridge is established.
 4. **Final exhaustive artifact:** either produce the kernel-checkable weighted certificate tree/DAG for the authentic root or prove the source queue's complete expansion/coverage trace and classify every final holdout. A finite roster, a successful bounded run, or a queue-drain theorem alone is not exhaustive coverage.
 5. **Exact theorem composition:** connect that exhaustive cover to the already accepted raw champion witness and verify the final primitive-transition / final-query convention in the same theorem.
 
