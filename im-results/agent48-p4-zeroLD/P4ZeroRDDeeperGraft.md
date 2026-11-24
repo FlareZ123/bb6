@@ -34,7 +34,7 @@ These children lie under the still-open P4 E/0=0RD branch and are added to agent
 
 Adding them to the ten-child E/0=0LC report pair gives:
 
-- decided: 40,570,885,253,906,250
-- open: 19,033,759,521,484,375
+- decided: 40,570,885,009,765,625
+- open: 19,033,759,765,625,000
 
 The total remains 25^12 = 59,604,644,775,390,625.

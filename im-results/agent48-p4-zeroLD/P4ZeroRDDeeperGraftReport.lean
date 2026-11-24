@@ -5,7 +5,7 @@ namespace BB6Coverage
 /-- Exact report after the P4 first-level and both deeper child grafts. -/
 theorem agent48P4ZeroRDDeeperAudit_report :
     agent48P4ZeroRDDeeperAudit.report =
-      (40570885253906250, 19033759521484375) := by
+      (40570885009765625, 19033759765625000) := by
   decide
 
 /-- Exact mass conservation for the extended P4 audit. -/

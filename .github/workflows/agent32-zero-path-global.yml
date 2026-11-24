@@ -229,7 +229,6 @@ jobs:
               "agent48P4ZeroLC_D0OneRD_cover",
               "agent48P4ZeroLC_D0OneRE_cover",
               "agent48P4ZeroLC_D0OneLD_cover",
-              "agent48P4ZeroLC_D0Halt_cover",
               "agent48P4ZeroRD_D0ZeroRD_cover",
               "agent48P4ZeroRD_D0OneRD_cover",
               "agent48P4ZeroRD_D0OneRE_cover",
