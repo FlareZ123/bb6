@@ -1,4 +1,10 @@
 /-!
+WITHDRAWN 2026-11-24: universal nonhalting claim is false.
+See ../agent48-token-return-correction/README.md. Historical draft only.
+Do not dispatch this proof target or use these declarations as accepted lemmas.
+-/
+
+/-!
 Source-local closure of the residual-one S-family into the nonhalting T-family.
 
 This fragment depends on the corrected RootCountdownSweep fragment,
