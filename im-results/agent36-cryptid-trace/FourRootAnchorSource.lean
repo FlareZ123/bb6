@@ -161,10 +161,14 @@ theorem source_halts_iff_obsEq {c d : CryptidBoundary.Cfg}
   · rintro ⟨n, hn⟩
     refine ⟨n, ?_⟩
     have hs := (source_congr n h).2.2.2
+    change (CryptidBoundary.run n d).st =
+      (CryptidBoundary.run n c).st at hs
     exact ⟨n, hs ▸ hn⟩
   · rintro ⟨n, hn⟩
     refine ⟨n, ?_⟩
     have hs := (source_congr n h).2.2.2
+    change (CryptidBoundary.run n d).st =
+      (CryptidBoundary.run n c).st at hs
     exact hs.symm ▸ hn
 
 /-- Each of the four authentic source-table blank starts has exactly the
