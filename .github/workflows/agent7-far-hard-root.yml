@@ -15,9 +15,13 @@ on:
         type: number
         default: 0
       solver_max_dfa:
-        description: Maximum DFA size for SMT synthesis (6-10)
+        description: Maximum DFA size for SMT synthesis (1-10)
         type: number
         default: 7
+      solver_min_dfa:
+        description: Minimum DFA size for composed SMT synthesis (1-10)
+        type: number
+        default: 6
       solver_timeout_ms:
         description: Z3 timeout per DFA size and orientation
         type: number
@@ -54,6 +58,7 @@ jobs:
           MAX_DFA="${{ inputs.max_dfa }}"
           SOLVER_LINE="${{ inputs.solver_line }}"
           SOLVER_MAX_DFA="${{ inputs.solver_max_dfa }}"
+          SOLVER_MIN_DFA="${{ inputs.solver_min_dfa }}"
           SOLVER_TIMEOUT="${{ inputs.solver_timeout_ms }}"
           SOLVER_ENCODING="${{ inputs.solver_encoding }}"
           if [[ -n "$SOLVER_CODE" ]]; then
@@ -64,11 +69,14 @@ jobs:
             SOLVER_ROSTER=resources/BB6_holdouts_663_2026-10-16.txt
           fi
           [[ "$SAMPLES" =~ ^[0-9]+$ ]] && [[ "$MAX_DFA" =~ ^[0-9]+$ ]]
-          [[ "$SOLVER_LINE" =~ ^[0-9]+$ ]] && [[ "$SOLVER_MAX_DFA" =~ ^[0-9]+$ ]] && [[ "$SOLVER_TIMEOUT" =~ ^[0-9]+$ ]]
+          [[ "$SOLVER_LINE" =~ ^[0-9]+$ ]] && [[ "$SOLVER_MAX_DFA" =~ ^[0-9]+$ ]] && [[ "$SOLVER_MIN_DFA" =~ ^[0-9]+$ ]] && [[ "$SOLVER_TIMEOUT" =~ ^[0-9]+$ ]]
+          [[ "$SOLVER_MIN_DFA" -ge 1 && "$SOLVER_MIN_DFA" -le "$SOLVER_MAX_DFA" && "$SOLVER_MAX_DFA" -le 10 && "$SOLVER_TIMEOUT" -gt 0 ]]
           [[ "$SOLVER_ENCODING" == "implications" || "$SOLVER_ENCODING" == "compose" ]]
           : > /tmp/hits.txt
           if [[ "$SOLVER_LINE" -gt 0 ]]; then
-            [[ "$SOLVER_MAX_DFA" -ge 6 && "$SOLVER_MAX_DFA" -le 10 && "$SOLVER_TIMEOUT" -gt 0 ]]
+            if [[ "$SOLVER_ENCODING" == "implications" ]]; then
+              [[ "$SOLVER_MIN_DFA" -eq 6 && "$SOLVER_MAX_DFA" -ge 6 ]]
+            fi
             TARGET_SHARD=$(( (SOLVER_LINE - 1) % 8 ))
             if [[ "${{ matrix.shard }}" -eq "$TARGET_SHARD" ]]; then
               python3 -m pip install --user --quiet z3-solver
@@ -77,7 +85,11 @@ jobs:
               else
                 SMT_SCRIPT=im-results/agent7-far/far_smt.py
               fi
-              python3 "$SMT_SCRIPT" "$SOLVER_ROSTER" --line "$SOLVER_LINE" --max-dfa "$SOLVER_MAX_DFA" --timeout-ms "$SOLVER_TIMEOUT" > /tmp/far-smt.out 2> /tmp/far-smt.log
+              if [[ "$SOLVER_ENCODING" == "compose" ]]; then
+                python3 "$SMT_SCRIPT" "$SOLVER_ROSTER" --line "$SOLVER_LINE" --min-dfa "$SOLVER_MIN_DFA" --max-dfa "$SOLVER_MAX_DFA" --timeout-ms "$SOLVER_TIMEOUT" > /tmp/far-smt.out 2> /tmp/far-smt.log
+              else
+                python3 "$SMT_SCRIPT" "$SOLVER_ROSTER" --line "$SOLVER_LINE" --max-dfa "$SOLVER_MAX_DFA" --timeout-ms "$SOLVER_TIMEOUT" > /tmp/far-smt.out 2> /tmp/far-smt.log
+              fi
               cat /tmp/far-smt.log
               cat /tmp/far-smt.out | tee -a /tmp/hits.txt
             else
