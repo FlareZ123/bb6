@@ -30,6 +30,8 @@ Consequently a nonhalting invariant for the reset dynamics cannot be expressed b
 
 ### 2.1 Unique gate root in each parity and freely tunable quotient
 
+This section is independently kernel checked in [ModularCylinderHensel.lean](ModularCylinderHensel.lean), Lean 4.36.0-rc2, with standard axioms only. The remainder of the cylinder theorem is a paper proof.
+
 For s>=0 and nonnegative integer t, binomial induction gives 4^(3^s t)=1 (mod 3^(s+1)). Therefore
 
     G(n+2*3^s*t) - G(n) = -4*3^s*t (mod 3^(s+1)).         (3)
