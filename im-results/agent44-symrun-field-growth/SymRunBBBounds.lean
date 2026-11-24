@@ -160,7 +160,7 @@ theorem sweepBB_length_bound4_pair (L : List SymTok) :
                   stateTokenCount (sweepBB L1 (.item (.run 0) :: .item (.run 0) :: R1)) := by
                     simp [sweepBB]
               _ ≤ L1.length + R1.length + 1 + 1 + 4 * L1.length + 11 := by
-                    simpa using hrec'
+                    simpa [Nat.add_assoc] using hrec'
               _ ≤ (L1.length + 1) + R1.length + 1 + 4 * (L1.length + 1) + 11 := by omega
           | succ d =>
             cases d with
@@ -174,7 +174,7 @@ theorem sweepBB_length_bound4_pair (L : List SymTok) :
                       (.item (.run 0) :: .item (.run 1) :: R1)) := by
                         simp [sweepBB, strictList_eq, hBump]
                 _ ≤ L1.length + R1.length + 1 + 1 + 4 * L1.length + 11 := by
-                      simpa using hrec'
+                      simpa [Nat.add_assoc] using hrec'
                 _ ≤ (L1.length + 1) + R1.length + 1 + 4 * (L1.length + 1) + 11 := by omega
             | succ d =>
               have hstep := stepElemBB_length_le (.item (.run (d + 2)) :: L1) (.item (.run 0) :: R1)
@@ -185,6 +185,7 @@ theorem sweepBB_length_bound4_pair (L : List SymTok) :
                 _ ≤ L1.length + 1 + (R1.length + 1) + 7 := by simpa using hstep
                 _ ≤ (L1.length + 1) + R1.length + 1 + 4 * (L1.length + 1) + 11 := by omega
       | repB1 k =>
+        have hRlen : (.item (.run 0) :: R1).length = R1.length + 1 := by simp
         have hEat := eatB1_length_le k (.item (.run 0) :: R1)
         have hrec' := hrecA (eatB1 k (.item (.run 0) :: R1))
         calc
@@ -202,6 +203,10 @@ theorem sweepBB_length_bound4_pair (L : List SymTok) :
           have hRlen : (.item (.run 0) :: R1).length = R2.length + 2 := by
             rw [hprefix]
             simp
+          have hRlen' : R1.length = R2.length + 1 := by
+            have h := hRlen
+            simp at h
+            omega
           have hEat := eatB2_length_le p R2
           have hrec' := hrec0 (.item (.run 1) :: eatB2 p R2)
           calc
@@ -232,6 +237,10 @@ theorem sweepBB_length_bound4_pair (L : List SymTok) :
           have hRlen : (.item (.run 0) :: R1).length = R2.length + 2 := by
             rw [hprefix]
             simp
+          have hRlen' : R1.length = R2.length + 1 := by
+            have h := hRlen
+            simp at h
+            omega
           have hEat := eatB12R_length_le m R2
           have hrec' := hrec0 (.item (.run 1) :: eatB12R m R2)
           calc
