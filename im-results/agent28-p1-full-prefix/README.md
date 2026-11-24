@@ -92,3 +92,7 @@ The existing manual workflow `.github/workflows/agent43-p1-wall-telescoping.yml`
 ## Next useful step
 
 Accept the exact endpoint source wrapper, and formalize six full-P certificates excluding carry 2 up to each empty layer. This direct endpoint test supersedes the need to certify the two branches separately if successful. The existing wall and prefix proofs remain useful for unbounded parameter classes. Do not promote the JS scan itself to a theorem.
+
+## Exact endpoint (source-verified)
+
+`ExactEndpoint.lean` strengthens the prefix obstruction to exact carry membership at the original history endpoint: v=(d-1)/2, Q=7*2^n-(n+3), and every original counted history of cost m satisfies v ∈ fullCarryStates Q 0 [1] m. Each inverse edge of depth t becomes one selected bit followed by t omitted bits. The theorem `source_no_right_five_of_no_two` excludes every right-five endpoint if an empty layer occurs and carry 2 is absent at all earlier layers. Verified against the unchanged original source in [CI 45386616971](https://github.com/FlareZ123/bb6/actions/runs/45386616971) at b32089e786a834513009f6240abbb8d65fd1ff49; ordinary axiom dependencies only. This gives a unified high/low reset gate test; it does not yet decide P1 or BB(6).

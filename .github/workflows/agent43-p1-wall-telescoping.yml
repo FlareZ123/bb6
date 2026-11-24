@@ -54,7 +54,7 @@ jobs:
           lean -o "$FULL/FullPrefix.olean" "$FULL/FullPrefix.lean"
           lean "$FULL/ExactEndpoint.lean"
           SCREEN=im-results/agent28-p1-modular-screen
-          GEN=$(mktemp -d)
+          GEN=$(mktemp -d "$PWD/.agent28-cert.XXXXXX")
           python "$SCREEN/generate.py" "$GEN"
           export LEAN_PATH="$LEAN_PATH:$SCREEN:$GEN"
           lean -o "$SCREEN/BitCarry.olean" "$SCREEN/BitCarry.lean"
