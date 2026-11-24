@@ -253,6 +253,176 @@ theorem zero_two_depth5_restriction_of_parent
     rw [hclass]
     simp [hsearch]
 
+
+/-!
+## Specialization to the actual branch-9 zero-two feeder
+
+For m ≥ 2, put J=4m+2, N=8·2^J+J−11,
+z=48·2^N−24·2^J−3N+3, and q=−12·2^J−3m+3.
+The following arithmetic lemmas discharge the hypotheses of the
+source-connected parent theorem, yielding a uniform necessary condition
+for every parameter in this feeder family.
+-/
+
+private def Jf (m : Nat) : Nat := 4*m+2
+private def Nf (m : Nat) : Nat := 8*2^(Jf m)+Jf m-11
+private def Zf (m : Nat) : Nat := 48*2^(Nf m)-24*2^(Jf m)-3*Nf m+3
+private def Qf (m : Nat) : Int := -12*(2:Int)^(Jf m)-3*(m:Int)+3
+
+private theorem nat_le_two_pow (n : Nat) : n ≤ 2^n := by
+  induction n with
+  | zero => decide
+  | succ n ih =>
+      have hp : 1 ≤ 2^n := Nat.one_le_pow n 2 (by decide)
+      have h : n+1 ≤ 2^n+2^n := by omega
+      calc
+        n+1 ≤ 2^n+2^n := h
+        _ = 2^(n+1) := by
+          rw [Nat.pow_succ]
+          omega
+
+private theorem jpow_ge2 (m : Nat) : 2 ≤ 2^(Jf m) := by
+  have hJ : 1 ≤ Jf m := by simp [Jf]
+  have hdecomp : Jf m = 1 + (Jf m-1) := by omega
+  rw [hdecomp, Nat.pow_add]
+  have hp : 1 ≤ 2^(Jf m-1) := Nat.one_le_pow (Jf m-1) 2 (by decide)
+  omega
+
+private theorem jpow_ge (m : Nat) (hm : 2≤m) : 1024 ≤ 2^(Jf m) := by
+  have hJ : 10 ≤ Jf m := by simp [Jf]; omega
+  have hdecomp : Jf m = 10 + (Jf m-10) := by omega
+  rw [hdecomp, Nat.pow_add]
+  have h10 : 2^10=1024 := by decide
+  rw [h10]
+  have hp : 1 ≤ 2^(Jf m-10) := Nat.one_le_pow (Jf m-10) 2 (by decide)
+  omega
+
+private theorem n_ge_j4 (m : Nat) (hm : 2≤m) : Jf m+4 ≤ Nf m := by
+  have hJ : 10 ≤ Jf m := by simp [Jf]; omega
+  have hJpow : 2 ≤ 2^(Jf m) := jpow_ge2 m
+  simp [Nf]
+  omega
+
+private theorem m_le_jpow (m : Nat) : m ≤ 2^(Jf m) := by
+  have hMJ : m ≤ Jf m := by simp [Jf]; omega
+  have hJpow : Jf m ≤ 2^(Jf m) := nat_le_two_pow (Jf m)
+  exact Nat.le_trans hMJ hJpow
+
+private theorem jpow_to_npow (m : Nat) (hm : 2≤m) :
+    16*2^(Jf m) ≤ 2^(Nf m) := by
+  have hN : Jf m+4 ≤ Nf m := n_ge_j4 m hm
+  have hpow : 2^(Jf m+4) ≤ 2^(Nf m) :=
+    Nat.pow_le_pow_right (by decide : 0<2) hN
+  have h16 : 2^4=16 := by decide
+  have hEq : 2^(Jf m+4)=16*2^(Jf m) := by
+    rw [Nat.pow_add, h16]
+    omega
+  calc
+    16*2^(Jf m) = 2^(Jf m+4) := hEq.symm
+    _ ≤ 2^(Nf m) := hpow
+
+private theorem feeder_high (m : Nat) (hm : 2≤m) :
+    (36*2^5:Int) ≤ 12*(2:Int)^(Nf m)+Qf m+3 := by
+  have hJpow := jpow_ge m hm
+  have hNPow := jpow_to_npow m hm
+  have hmPow := m_le_jpow m
+  have hNPowI : (16:Int)*(2:Int)^(Jf m) ≤ (2:Int)^(Nf m) := by exact_mod_cast hNPow
+  have hmPowI : (m:Int) ≤ (2:Int)^(Jf m) := by exact_mod_cast hmPow
+  have hJPowI : (1024:Int) ≤ (2:Int)^(Jf m) := by exact_mod_cast hJpow
+  dsimp [Qf]
+  omega
+
+private theorem q_residue (m : Nat) (hm : 2≤m) :
+    ∃ k : Int, Qf m-(3-3*(m%2048:Int)) = 2048*k := by
+  have hJ : 9 ≤ Jf m := by simp [Jf]; omega
+  have hmodN : (m:Int)-(m%2048:Int)=2048*(m/2048:Int) := by
+    have hh : m%2048+2048*(m/2048)=m := Nat.mod_add_div m 2048
+    exact_mod_cast (by omega)
+  have hdecomp : Jf m = 9+(Jf m-9) := by omega
+  have hpow9 : (12:Int)*(2:Int)^(Jf m) = 2048*(3*(2:Int)^(Jf m-9)) := by
+    rw [hdecomp, Int.pow_add]
+    have h512 : (2:Int)^9=512 := by decide
+    rw [h512]
+    have hexp : 9+(Jf m-9)-9=Jf m-9 := by omega
+    simp [hexp]
+    have hcoeff : (12:Int)*512=2048*3 := by decide
+    omega
+  refine ⟨-(3*(2:Int)^(Jf m-9)+3*(m/2048:Int)), ?_⟩
+  dsimp [Qf]
+  omega
+
+private theorem z_nat_eq (m : Nat) (hm : 2≤m) :
+    Zf m+24*2^(Jf m)+3*Nf m=48*2^(Nf m)+3 := by
+  have hNPow : 16*2^(Jf m)≤2^(Nf m) := jpow_to_npow m hm
+  have hNle : Nf m≤2^(Nf m) := nat_le_two_pow (Nf m)
+  have hbound : 24*2^(Jf m)+3*Nf m ≤ 48*2^(Nf m)+3 := by omega
+  simp [Zf]
+  omega
+
+private theorem z_mod_four (m : Nat) (hm : 2≤m) : Zf m%4=2 := by
+  have hJmod : Jf m%4=2 := by simp [Jf]
+  have hNmod : Nf m%4=3 := by
+    have hJpow : 2 ≤ 2^(Jf m) := jpow_ge2 m
+    have hNbound : 11 ≤ 8*2^(Jf m)+Jf m := by omega
+    unfold Nf
+    omega
+  have hEq := z_nat_eq m hm
+  omega
+
+private theorem z_feeder_eq (m : Nat) (hm : 2≤m) :
+    Zf m+48*2^(Jf m)+3*Jf m=12*2^(Nf m+2)+36 := by
+  have hEq := z_nat_eq m hm
+  have hN : Nf m=8*2^(Jf m)+Jf m-11 := rfl
+  have hJpow : 2 ≤ 2^(Jf m) := jpow_ge2 m
+  have hNbound : 11 ≤ 8*2^(Jf m)+Jf m := by omega
+  have hpow : 2^(Nf m+2)=4*2^(Nf m) := by
+    rw [Nat.pow_add]
+    have h4 : 2^2=4 := by decide
+    rw [h4]
+    omega
+  rw [hpow]
+  omega
+
+private theorem z_int_eq (m : Nat) (hm : 2≤m) :
+    (Zf m:Int)=48*(2:Int)^(Nf m)+4*Qf m+18 := by
+  have hNat := z_nat_eq m hm
+  have hNplus : (Nf m:Int)+11=8*(2:Int)^(Jf m)+(Jf m:Int) := by
+    have hJpow : 2 ≤ 2^(Jf m) := jpow_ge2 m
+    have hNbound : 11 ≤ 8*2^(Jf m)+Jf m := by omega
+    have hNnat' : Nf m+11=8*2^(Jf m)+Jf m := by
+      dsimp [Nf]
+      omega
+    exact_mod_cast hNnat'
+  have hJnat : Jf m=4*m+2 := rfl
+  have hJ : (Jf m:Int)=4*(m:Int)+2 := by exact_mod_cast hJnat
+  have hNatI : (Zf m:Int)+24*(2:Int)^(Jf m)+3*(Nf m:Int)=48*(2:Int)^(Nf m)+3 := by
+    exact_mod_cast hNat
+  dsimp [Qf]
+  omega
+
+/-- Every reachable blank-root state in the branch-9 all-F zero-two feeder
+    family has its parameter in the 216-element depth-five residue filter. -/
+theorem branch9_zero_two_depth5_restriction (m : Nat) (hm : 2≤m)
+    (hr : Reach 0 (Zf m)) :
+    zeroTwoDepth5Possible (m%2048)=true := by
+  have hJlarge : 3≤Jf m := by simp [Jf]; omega
+  have hNge : Jf m+4≤Nf m := n_ge_j4 m hm
+  have hJge : 10≤Jf m := by simp [Jf]; omega
+  have hNlarge : 11≤Nf m := by omega
+  have hzmod := z_mod_four m hm
+  have hzpos : 0<Zf m := by omega
+  obtain ⟨u,w,hparent,hs⟩ := pred_zero (Zf m) hzpos hr
+  obtain ⟨k,hres2048⟩ := q_residue m hm
+  have hscale : scale 5 = 2048 := by rfl
+  have hres : Qf m-(3-3*(m%2048:Int))=scale 5*k := by
+    rw [hscale]
+    exact hres2048
+  exact zero_two_depth5_restriction_of_parent
+    m (Jf m) (Nf m) (Zf m) u w (Qf m)
+    rfl hJlarge hNlarge hzmod
+    (z_feeder_eq m hm) (z_int_eq m hm) (feeder_high m hm)
+    ⟨k,hres⟩ hparent hs
+
 #print axioms strongTest_sound
 #print axioms zeroTwoDepth5Residues_length
 #print axioms zero_two_depth5_restriction_of_parent
