@@ -11,6 +11,10 @@ def parse(s):
     s=s.replace("_","")
     return [24 if s[i:i+3]=="---" else MOVES.index(s[i:i+3]) for i in range(0,36,3)]
 def masks(p,rev,D):
+    # Every emitted FAR.Data fixes its start to state 0. fastValid requires
+    # push 0 false = 0, hence the flattened transition delta[0] must be 0.
+    if len(D) < 2 or len(D) % 2 or D[0] != 0:
+        raise AssertionError(("blank-start loop", p, rev, D))
     d=len(D)//2
     N=6*d+1
     h=1<<(N-1)
