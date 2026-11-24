@@ -43,6 +43,7 @@ inductive SiblingWitness where
   | last (n : Nat)
   | cycle (entry period : Nat) (right : Bool) (boundary : Int)
   | growth (g : Growth)
+  | external (p : PartialMachine) (h : ∀ m, compatible p m → NeverHalts m)
   | known
 
 structure SiblingSpec where
@@ -99,6 +100,7 @@ def siblingOK (s : SiblingSpec) (mv : Move) : Bool :=
   | .cycle entry period right boundary =>
     decide (0 < period) && finiteSideCycleCheck p entry period right boundary
   | .growth g => partialEq p (tableWith g.action)
+  | .external t _ => partialEq p t
   | .known => decide (mv = s.special)
 
 def siblingsOK (s : SiblingSpec) : Bool :=
@@ -174,6 +176,11 @@ def siblingCert (s : SiblingSpec) (v : ValidSpec s)
     exact .nonhalt hr (support6 _) hno (by
       rw [heq]
       exact never_of_defined g.action g.defined)
+  | external t ht =>
+    have h : partialEq (s.child mv) t = true := by
+      simpa only [siblingOK,he] using hc
+    have heq := partialEq_sound _ _ h
+    exact .nonhalt hr (support6 _) hno (by rw [heq]; exact ht)
   | known =>
     have h : mv = s.special := by
       simpa only [siblingOK,he,decide_eq_true_eq] using hc
