@@ -94,7 +94,12 @@ jobs:
           lean -o im-results/agent5-weighted-tnf-queue/Enumerate62Adapter.olean im-results/agent5-weighted-tnf-queue/Enumerate62Adapter.lean | tee /tmp/enumerate62-weighted-tnf-adapter.log
           lean -o im-results/agent13-weighted-first-one/QueueCoverageContract.olean im-results/agent13-weighted-first-one/QueueCoverageContract.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
           lean -o im-results/agent32-source-queue/QueueImplication.olean im-results/agent32-source-queue/QueueImplication.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
-          lean im-results/agent32-source-queue/SourceQueueImplication.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
+          export LEAN_PATH="$LEAN_PATH:im-results/agent48-counted-inc0"
+          lean -o im-results/agent32-source-queue/SourceQueueImplication.olean im-results/agent32-source-queue/SourceQueueImplication.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
+          lean -o im-results/agent48-counted-inc0/Enumerate62Potential.olean im-results/agent48-counted-inc0/Enumerate62Potential.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
+          lean -o im-results/agent32-source-queue/SourceQueueDrain.olean im-results/agent32-source-queue/SourceQueueDrain.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
+          lean -o im-results/agent13-weighted-first-one/WeightedFirstOneCover.olean im-results/agent13-weighted-first-one/WeightedFirstOneCover.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
+          lean im-results/agent32-source-queue/SourceQueueExact.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
           if grep -Eq 'sorryAx|native_decide' /tmp/enumerate62-weighted-tnf-adapter.log; then
             echo "Forbidden proof placeholder or native_decide found in source TNF adapter closure" >&2
             exit 1
