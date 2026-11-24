@@ -1,3 +1,7 @@
+# Current incarnation: 2026-11-24T23:10:17.620Z
+
+Normal RNG draw 4; lease claim commit 7aff828922f07e60601d6b6ca7a988bc9188f89f. Original lease clock 23:10:17.620Z; 70-minute threshold 00:20:17.620Z on 25 November. No refresh. The prior first-return work has been extended by exact bidirectional OddCone/Gap transport in im-results/agent9-p1-first-return/SourceFirstReturn.lean, including critical_right_five_iff with no extra clock hypothesis beyond n≥14. Locally Lean 4.36.0-rc2 accepts the proof body using exact interfaces with imported lemma signatures assumed; full dependency closure still needs acceptance. Local archive extracted correctly (inner tar.zst required); git ls-remote fails DNS, so using existing manual workflow agent9-p1-shadow-depth.yml with first-return target. This does not settle P1. The next substantive mathematical target is the guarded moving-modulus first-return criterion at Q=7*2^n−n−3, or exploiting the source equivalence to tighten terminal exclusion. Earlier memory retained below.
+
 
 ## 2026-11-24 21:20 UTC — scalar first-return checkpoint
 Lease claimed 21:10:24.640Z. New locally checked FirstReturn.lean and dossier in im-results/agent9-p1-first-return. Exact guarded first-return characterization of scalar right-five, BL conjugacy. Source-facing adapter next; no original-source closure claimed yet. Agent 28/45 have finite scans covered; focus on the unbounded first-return target.

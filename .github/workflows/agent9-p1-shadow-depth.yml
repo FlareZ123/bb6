@@ -1,6 +1,15 @@
 name: Agent9 P1 shadow source audit
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        type: choice
+        options: [shadow, first-return]
+        default: shadow
+      source_ref:
+        description: Exact source commit (optional; defaults to dispatch SHA)
+        type: string
+        required: false
 permissions:
   contents: read
 jobs:
@@ -9,12 +18,15 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_ref || github.sha }}
       - name: Install Lean
         run: |
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Check full original P1 shadow cones, finite q29 certificate
+        if: inputs.target == 'shadow'
         run: |
           set -eo pipefail
           : > /tmp/audit.log
@@ -27,3 +39,15 @@ jobs:
           done
           lean -o "im-results/agent50-p1-dyadic-width/ShadowGraphConverseWide.olean" "im-results/agent50-p1-dyadic-width/ShadowGraphConverseWide.lean" | tee -a /tmp/audit.log
           if grep -Fq sorryAx /tmp/audit.log; then exit 1; fi
+      - name: Check exact original P1 first-return equivalence
+        if: inputs.target == 'first-return'
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-dyadic-width:im-results/agent9-p1-first-return"
+          lean --version
+          git rev-parse HEAD
+          python tools/lean_compile_deps.py im-results/agent9-p1-first-return/SourceFirstReturn.lean | tee /tmp/first-return.log
+          if grep -E 'sorryAx|error:' /tmp/first-return.log; then exit 1; fi
+          for lemma in gap_of_oddcone oddcone_of_gap source_right_five_iff critical_right_five_iff; do
+            grep -F "BB6.Agent9FirstReturn.$lemma' depends on axioms:" /tmp/first-return.log
+          done
