@@ -55,7 +55,10 @@ Proof.
   pose proof (Nat.div_mod j 100 ltac:(lia)) as Hdiv.
   pose proof (Nat.mod_upper_bound j 100 ltac:(lia)) as Hmod.
   exists (j/100)%nat.
-  split; [lia|].
+  split.
+  { apply Nat.div_lt_upper_bound; [lia|].
+    eapply Nat.lt_trans; [exact Hjlt|].
+    apply Nat.ltb_lt; vm_compute; reflexivity. }
   apply nth_error_In with (n:=(j mod 100)%nat).
   unfold q_i; cbn [fst].
   rewrite agent32_nth_error_firstn by exact Hmod.
@@ -74,7 +77,9 @@ Proof.
   destruct (Nat.eqb i 128) eqn:E.
   - apply Nat.eqb_eq in E; subst; reflexivity.
   - apply Nat.eqb_neq in E.
-    apply Nat.min_l; lia.
+    apply Nat.min_l.
+    change (100 <= 128*100+20-100*i)%nat.
+    lia.
 Qed.
 
 Print Assumptions agent32_q0_chunk_cover.
