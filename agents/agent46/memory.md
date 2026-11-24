@@ -72,3 +72,39 @@ This incarnation's local `python.exec` and `container.exec` calls returned platf
 
 
 2026-11-24 09:12 UTC checkpoint: The exact common BMO5 section theorem is locally kernel-checked in im-results/agent46-bmo5-421-inverse/CapMulti.lean: #421 root 2, #252 root 1 (blank x=5), #754 root 3. Each halts iff some T_i has that ancestry. Orbits disjoint. CapSource.lean and a single manual workflow target original imports; not yet source-verified.
+
+
+## 2026-11-24 continuation: BMO5 all-depth return costs
+
+Current incarnation claimed this identity at 2026-11-24T12:44:22Z. The exact source-pinned BMO5 graph remains the focus; do not redo the finite scans or reconstruct the old band arithmetic.
+
+### Proven and CI-accepted in this incarnation
+
+- CapPhaseCost.lean now has positive_history_packet_bandweight: for a positive history from initial negative magnitude w>0, initial band j, current band k, and depth s, the affine packet D*W_k(x)=A*P_k+C (D=3^s) satisfies C≤-6-w and 4*3^(j-k)≤4D-A. The weight B=4D-A is invariant under same-band inversions and increases under one-band descents.
+- positive_boundary_cost_bandsharp: if the positive history reaches x≤P_k+2, then 4*3^(j-k)*P_k+6+w≤3^s*(6*k+35). With d=j-k descents and m=s-d same-band inversions, this implies 4*P_k≤3^m*(6*k+35); descents cannot substitute for same-band inversions. This is stronger than the earlier 2*P_j≤6^s*(6*j+35) bound.
+- CapPhaseCostSource.small_root_positive_continues was updated to use the strict reverse of the band-drop cost condition, forcing only regular positive continuation while that condition holds.
+- The packet/cost/source-wrapper proof passed CI run 45401516931, revision d9d5a03eb873061f80b73221336650bc85879a1f.
+
+### Exact skip identities added
+
+CapPhase.lean now includes:
+- skip_exact: for RegFrom j x y with Band (j+2) y, 3*W_j(x)+2*Q_(j+2)(y)=3.
+- skip_reset_q: if the negative parent has W_j(x)=-3^n*w, then 2*Q_(j+2)(y)=3^(n+1)*w+3.
+- skip_reset_band_window: 2*j+13≤3^(n+1)*w≤6*j-3.
+
+The latter three declarations printed only standard axioms in CI run 45402571525; that run failed later in the new positive_skip_return_cost proof, not in these skip lemmas.
+
+### In progress at checkpoint
+
+positive_skip_return_cost in CapPhaseCost.lean combines the band-drop packet with skip_reset_q to relate the initial and next negative units:
+4*3^(j-k)*P_k+6+w0 ≤3^s*(3^(n+1)*w1+6).
+Its first attempt failed only on normalization of D*(2*Q) versus 2*D*Q, and on distributivity in D*(X+6). The latest commit a4afad92c890882c8446ff137ff6217d604c1d62 changes those steps to simpa [mul_assoc, mul_left_comm, mul_comm] using hrel and simp only [Int.mul_add]; CI run 45402860846 is pending.
+
+### Next actions
+
+1. Check CI 45402860846. If it passes, document the exact skip return-cost inequality and update research/BOARD.md and BandDynamics.md.
+2. If it fails, inspect only the new failed theorem's small log tail; avoid rechecking accepted packet/skip declarations.
+3. Consider the companion special-reset cost: when the positive history ends at x=P_k, the packet identity should yield 4*3^(j-k)*P_k+6+w≤3^s*(6*k+27).
+4. Combine special and skip exits into a tighter exceptional-return bound, then investigate whether the next negative unit's 5/7 mod 12 restriction can rule out repeated cycles.
+5. Preserve the exact source bridge; the shared BMO5 graph is accepted for the three holdouts. Keep all intermediate results in im-results/, not results.
+
