@@ -1,5 +1,6 @@
 import AffineConeKernel
 import Root32Precision
+import Root32ShadowRoot
 import Root32HighStopP7
 import Root32HighStopIndexMap
 import Lean.Elab.Tactic.Omega
@@ -209,5 +210,62 @@ theorem root32_no_highstop_precision16_examples (r E u : Nat)
 #print axioms root32_no_highstop_at_precision
 #print axioms precision16_new_examples
 #print axioms root32_no_highstop_precision16_examples
+
+/-- Shadow search specialized to the verified, complete original source
+    predecessor relation, including every ordinary high depth. -/
+theorem run_shadow_excluded (f p u v x y : Nat)
+    (hc : BB6.Agent19Shadow.excluded f p u v=true)
+    (hl : BB6.Agent19Shadow.lift p u v x y) : ¬RunReach x y := by
+  apply BB6.Agent19Shadow.excluded_sound RunReach ?_ ?_ f p u v x y hc hl
+  · intro x y hy ho hs hr
+    rcases hr with ⟨n,hn⟩
+    cases n with
+    | zero => simp [BB6.Agent8Section.run] at hn; omega
+    | succ n =>
+      have hi := BB6.Agent3.blank_section_odd_image n x y hn hy ho
+      omega
+  · intro x y w hx hy hv hq hr
+    obtain ⟨a,k,hp,hedge⟩ := run_parent_of_left_gt5 x y hx hr
+    have hi := (complete_section_inverse a k x y (by omega)).mp hedge
+    rcases parent_equations a k x y w hy hv hq hi with hd | ⟨n,hn⟩
+    · exact Or.inl ⟨a,k,hp,hd⟩
+    · exact Or.inr ⟨a,k,n,hp,hn⟩
+
+/-- Exact root32 target exclusion using compact shadow arithmetic. The
+    parameter p can be much larger than machine-word size without
+    materializing any modulus or enormous root coordinates. -/
+theorem root32_no_highstop_shadow (r E u f p : Nat)
+    (hr64 : r%64=32)
+    (hE : E=201+3360*(6657+8192*r))
+    (hroot : 18018+211*u+22155*r=20*2^(E-13))
+    (hp : p≤E-17)
+    (hc : BB6.Agent19Shadow.threeShadowExcluded f p (r/64)=true) :
+    ¬RunReach (1048576*u+70538) 3 := by
+  intro hT
+  obtain ⟨t,hu,hr⟩ := BB6.Agent3Root32HighStopP7.root32_highstop_reduces_to_three_residuals
+    r E u hr64 hE hroot hT
+  let j := r/64
+  have hrj : r=32+64*j := by
+    have he := Nat.mod_add_div r 64
+    rw [hr64] at he
+    exact he.symm
+  have heq := BB6.Agent3Root32HighStopIndexMap.root32_original_to_tj u r t j E (by omega) hu hrj hroot
+  obtain ⟨hd,hl,hP⟩ := BB6.Agent19Shadow.three_shadow_lift t j (E-17) p hp heq
+  simp only [BB6.Agent19Shadow.threeShadowExcluded,Bool.and_eq_true] at hc
+  rcases hr with hD | hL | hP'
+  · exact run_shadow_excluded _ _ _ _ _ _ hc.1.1 hd hD
+  · exact run_shadow_excluded _ _ _ _ _ _ hc.1.2 hl hL
+  · exact run_shadow_excluded _ _ _ _ _ _ hc.2 hP hP'
+
+theorem root32_no_highstop_first_root (E u : Nat)
+    (hE : E=201+3360*(6657+8192*32))
+    (hroot : 18018+211*u+22155*32=20*2^(E-13)) :
+    ¬RunReach (1048576*u+70538) 3 := by
+  exact root32_no_highstop_shadow 32 E u 100 256 (by decide) hE hroot (by omega)
+    BB6.Agent19Shadow.first_root_shadow_checked
+
+#print axioms run_shadow_excluded
+#print axioms root32_no_highstop_shadow
+#print axioms root32_no_highstop_first_root
 
 end BB6.Agent19Root32Cone
