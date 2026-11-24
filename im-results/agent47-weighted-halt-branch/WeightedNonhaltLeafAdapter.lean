@@ -19,7 +19,7 @@ def forgetHaltRows (m : Machine) : PartialMachine := fun s =>
 theorem forgetHaltRows_defaultCompletion (m : Machine) :
     weightedTNFDefaultCompletion (forgetHaltRows m) = m := by
   funext s
-  cases h : m s <;> rfl
+  cases h : m s <;> simp [weightedTNFDefaultCompletion, forgetHaltRows, h]
 
 theorem forgetHaltRows_root (m : Machine)
     (hroot : m initialSlot = some ⟨true, true, 1⟩) :
@@ -51,14 +51,16 @@ theorem forgetHaltRows_all_completions_neverHalt (m : Machine)
     rw [weightedTNFKnownRun_eq_defaultRun (forgetHaltRows m) n,
       forgetHaltRows_defaultCompletion]
     cases hrun : run m n blank with
-    | none => exact False.elim (hnever n hrun)
+    | none =>
+        have hsome := hnever n
+        simp [hrun] at hsome
     | some c => exact ⟨c, hrun⟩
   exact (weightedTNFKnownRunForever_iff (forgetHaltRows m)).mp hforever
 
 /-- Any complete nonhalting machine already in the 1RB root cylinder yields
     a source-independent weighted-TNF nonhalt leaf, even if its literal
     table contains unreachable halt rows. -/
-theorem forgetHaltRows_nonhaltCertificate (B : Nat) (m : Machine)
+def forgetHaltRows_nonhaltCertificate (B : Nat) (m : Machine)
     (hroot : m initialSlot = some ⟨true, true, 1⟩)
     (hnever : NeverHalts m) :
     WeightedTNFCertificate B (forgetHaltRows m) 6 :=
