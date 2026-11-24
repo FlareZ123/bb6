@@ -37,7 +37,11 @@ For fixed D only finitely many denominators and graph cycles need consideration,
 
 For a complete finite existence/validity test for an individual word, an all-parameter exclusion of periods containing exactly one positive valuation, and the Presburger safety equivalence, see [PresburgerPeriodicity.md](PresburgerPeriodicity.md).
 
-## Exploratory computations (not kernel-checked)
+## Stronger finite test and computational scope
+
+[PeriodicBetaSearch.md](PeriodicBetaSearch.md) derives a second rational dynamical coordinate beta/2 and the necessary identity q/gcd(q,2^D-1)=r/gcd(r,D). It bounds valuation totals, word lengths and lifted denominators, then enumerates exact beta cycles and piecewise-affine slope fixed points. No surviving periodic itinerary for D=1..80. The arithmetic denominator lemmas are locally kernel-checked in PeriodBetaDenominator.lean; the full completeness proof is paper-level and the finite enumeration is computational.
+
+## Earlier exploratory computations (not kernel-checked)
 
 periodic_denominator_scan.cpp enumerates D=1..14, all eligible divisors q of (2^D-1)^2, and graph cycles. No primitive cycle with matching D was found. Graph cycles with differing increments do not qualify.
 

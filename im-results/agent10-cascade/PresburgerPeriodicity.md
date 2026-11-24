@@ -2,6 +2,8 @@
 
 **Status (2026-11-24): paper theorem over the exact source ResetParent grammar, with a locally kernel-checked recurrence/congruence lemma.** The complete cylinder density theorem used below is a paper proof, not a source-integrated Lean result. This does not decide #746 or BB(6). It converts a broad invariant-synthesis problem into a concrete periodic-itinerary problem and gives a finite exact certificate test for any proposed period.
 
+The complementary [two-coordinate finite exclusion](PeriodicBetaSearch.md) now rules out every periodic itinerary of total level increment D<=80 by exact computation and paper completeness proof. It does not resolve the unbounded-period case of the equivalence below.
+
 ## 1. Equivalence theorem
 
 For a nonfatal height h and its unique sweep level k, set p=2^k and x=(h+k+4)/p. Validity means 4p<h+k+4 and h+k+5<8p. An inductive safety set is a set of valid heights closed under every genuine ResetParent edge, hence excluding all fatal gate heights. Consider predicates P(h,k,p) definable in ordinary Presburger arithmetic, with p interpreted as 2^k (the exponentiation is external to the formula). Quantification over auxiliary integer variables is permitted. Bounded-level exceptions are permitted.
