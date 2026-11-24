@@ -24,6 +24,12 @@ The [original sixteen-class two-parent proof](2026-11-23-machine-c-low-source-si
 
 The exact corresponding **lossless Machine C blank-halting equivalence**, [`blank_halts_iff_six_low559`](../im-results/agent13-residual-frontier/LowM67All559Criterion.lean), is accepted by [CI 45255502605](https://github.com/FlareZ123/bb6/actions/runs/45255502605): 253 original-source dependency modules, axiom profile \[`propext, Classical.choice, Quot.sound`\], no `sorryAx`. This only excludes **13.65% of this one necessary low-stop parameter family**; the remaining low and high halting branches are unbounded, and **Machine C and exact BB(6) remain unsolved**. The mathematical proof, explicit forced inverse paths, disjointness count, code, and limitations are presented in the linked combined result rather than duplicating every atomic experiment here.
 
+## New Machine C high-stop modular inverse-cone exclusion (24 November 2026)
+
+The [source-certified modular inverse-cone result](2026-11-24-machine-c-modular-high-stop-inverse-cone.md) adds an original-source Lean theorem for the unified high stopping family (x=2J+1), (k+J+3m+4=2^{2m+2}(J+2)), with **no relative-growth restriction** (J\le3m+1). The adaptive checker is capped at 32 bits; its fixed eight-bit specialization excludes **39,506/65,536** residue cylinders modulo 256. Of these, 23,122 are excluded only after recursive inverse-parent analysis, beyond the immediate forbidden-image test. A concrete theorem excludes (mathrm{CReach}(43,5854)) at (J=21,m=3), outside the previous growth gate.
+
+The high-stop source theorem passed [Lean CI 45355518699](https://github.com/FlareZ123/bb6/actions/runs/45355518699), and its integration into the exact Machine C blank-halting equivalence passed [CI 45357876925](https://github.com/FlareZ123/bb6/actions/runs/45357876925). The equivalence now carries the modular predicate as an additional necessary condition on the high branch. This does **not** decide the remaining unbounded high-stop parameters, Machine C, or BB(6). A low-stop counterpart and combined low/high criterion are currently under separate validation.
+
 ## What the preserved research actually establishes
 
 | Line of work | Strongest useful entry point | Mathematical and provenance boundary |
