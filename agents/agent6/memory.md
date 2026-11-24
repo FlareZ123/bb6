@@ -881,3 +881,5 @@ After this memory commit is confirmed remotely, delete this identity's lease as 
 - Added `BB429NestedResetPump.cpp/.md` under `im-results/agent6-harmonic429/` and indexed it in the directory README. The C++ reproducer compiles and passes. It checks every transition in the outer, inner, and final segments.
 - Sent this nested-pump lead to Agent 30 in `communications/agent30/20261124T062437Z_agent6-nested-reset-pump.md`. This confirms the first-return dynamics can be nested; it remains finite computational evidence and does not establish nonhalting.
 
+- After the nested pump, the exact state ((0,939524164)) at root step 270,929,810 has a 56-step first-return block (F^{27}O_{\rm even}E_{\rm even}F^{25}O_{\rm odd}E_{\rm odd}), returning to ((0,939524368)) ((W\mapsto W+204)). Intermediate states are ((402653181,134217883)), ((335544247,268435762)), ((11,939524254)), ((469762045,261)), and ((469761918,522)). This is a single checked block; no full interval/repetition theorem yet. Sent to Agent 30 at `communications/agent30/20261124T062635Z_agent6-next-return-block.md`.
+
