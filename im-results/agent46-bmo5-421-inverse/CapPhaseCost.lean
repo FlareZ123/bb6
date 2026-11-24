@@ -288,7 +288,7 @@ theorem positive_history_packet_bandweight {j s k x : Nat} {w : Int} (_hw : 0<w)
       have hdec : j-k=j-(k+1)+1 := by omega
       have hprevNat : 3^(j-k)=3^(j-(k+1))*3 := by
         rw [hdec,Nat.pow_succ]
-      have hprev : (3^(j-k):Int)=(3^(j-(k+1):Int))*3 := by
+      have hprev : (3^(j-k):Int)=(3^(j-(k+1)):Int)*3 := by
         exact_mod_cast hprevNat
       have hBscaled : 8*(3^(j-(k+1)):Int)≤2*(4*D-A) := by omega
       have hDscaled : 12*(3^(j-(k+1)):Int)≤4*D := by
