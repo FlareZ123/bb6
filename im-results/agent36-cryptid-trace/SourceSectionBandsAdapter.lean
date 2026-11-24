@@ -10,7 +10,7 @@ open BB6.Agent26.GrowthBands
 open BB6.Agent36.SectionBandSeparation
 
 /-- The numeric phase-band measure of an arbitrary normalized source suffix. -/
-def sourceMeasure (n : Nat) (v : List Bool) : Section :=
+def sourceMeasure (n : Nat) (v : List Bool) : BB6.Agent26.GrowthBands.Section :=
   ⟨n, (CryptidBoundary.trim v).length⟩
 
 /-- Agent 32's exact GoodReturn inequalities instantiate the widened
