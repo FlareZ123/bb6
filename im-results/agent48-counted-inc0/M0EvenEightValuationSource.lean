@@ -211,7 +211,8 @@ private theorem m0EvenEightValuationBridgeInputMatch
         = (s1Config L (8*q) 0 a 0 b h).tape
             (h-((3*a:Nat):Int)+y) := hpres
       _ = sideBit (m0EvenEightValuationSourceSuffix t len u) i := by
-        simpa [hcoord] using hcell
+        rw [← hcoord] at hcell
+        exact hcell
       _ = decide ((-(i:Int)) ∈ m0EvenEightBridgeStart.marked) := hsource
       _ = decide (y ∈ (bridgeStartWithBit (decide (0<t))).marked) := hmark.symm
   · have hypos : y=1 ∨ y=2 ∨ y=3 := by omega
