@@ -208,3 +208,8 @@ PR #99; its small characteristic-list-to-Boolean-prefix composition remains
 to be integrated. This is a partial cylinder exclusion, not a proof that
 either full restart family is impossible, not an unrestricted six-shallow
 theorem, and not a P1 or BB(6) decision.
+
+
+## Carry-depth atlas (2026-11-24)
+
+[wall_prefix_carry_depths_h0_256.md](wall_prefix_carry_depths_h0_256.md) records an exact Set-based scan over (h=0,\ldots,256) in both restart progressions. Every one of the 514 cases reached an empty prefix layer before 10,000; the longest transients were (K=5350) at family-I (h=142) and (K=4750) at family-II (h=86). These outliers warn against assuming a small uniform carry cutoff. This is exploratory finite evidence, not a universal theorem.
