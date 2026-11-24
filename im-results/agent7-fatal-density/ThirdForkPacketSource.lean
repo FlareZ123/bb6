@@ -65,8 +65,9 @@ private theorem depth_residue_even (n:Nat)
 
 private theorem packet_index_mod (n b t:Nat):
     packetIndex n b t%depthPeriod 3=depthResidue n 3:=by
-  have hp:depthPeriod 3=54:=by norm_num [depthPeriod]
+  have hp:depthPeriod 3=54:=by decide
   have hlt:=depthResidue_lt n 3
+  rw [hp] at hlt
   rw [hp]
   unfold packetIndex
   omega
@@ -85,6 +86,8 @@ private theorem packet_index_le (n a b t:Nat)
     (ht:t<3):
     a+packetIndex n b t+15≤n:=by
   have hlt:=depthResidue_lt n 3
+  have hp:depthPeriod 3=54:=by decide
+  rw [hp] at hlt
   have he:=depth_residue_even n hsector
   have hbase:depthResidue n 3≤52:=by
     omega
@@ -104,9 +107,7 @@ private theorem ray_margin_of_index (n a j:Nat)
     calc
       2^j*(2*n+3)≤2^j*2^(a+1):=Nat.mul_le_mul_left (2^j) hc
       _=2^(j+a+1):=by
-        rw [←Nat.pow_add]
-        congr 1
-        omega
+        simpa [Nat.add_assoc] using (Nat.pow_add 2 j (a+1)).symm
   have hpow:2^(j+a+1)≤2^(n-14):=
     Nat.pow_le_pow_right (by decide:0<(2:Nat)) (by omega)
   have hD: deficit n j≤2^(n-14):=by omega
@@ -114,14 +115,15 @@ private theorem ray_margin_of_index (n a j:Nat)
     calc
       2048*deficit n j≤2048*2^(n-14):=Nat.mul_le_mul_left 2048 hD
       _=2^(n-3):=by
-        have h2048:2048=2^11:=by norm_num
-        rw [h2048,←Nat.pow_add]
-        congr 1
-        omega
+        have h2048:2048=2^11:=by decide
+        rw [h2048]
+        calc
+          2^11*2^(n-14)=2^(11+(n-14)):=by rw [←Nat.pow_add]
+          _=2^(n-3):=by congr 1; omega
   have hp1:2^n=8*2^(n-3):=by
     have he:n=(n-3)+3:=by omega
     rw [he,Nat.pow_add]
-    norm_num
+    simp
   have hp2:2^(n-1)=4*2^(n-3):=by
     have he:n-1=(n-3)+2:=by omega
     rw [he,Nat.pow_add]
@@ -152,7 +154,9 @@ private theorem source_band_of_margin (n j d:Nat)
   have hp256:256≤2^n:=by
     have hpow:2^8≤2^n:=
       Nat.pow_le_pow_right (by decide:0<(2:Nat)) (by omega)
-    norm_num at hpow
+    have h256:2^8=256:=by decide
+    rw [h256] at hpow
+    exact hpow
   have hlow:81*(6*2^(n-3)+1)≤8*(2*ray n j+5):=by
     rw [hp] at hx
     omega
@@ -186,13 +190,13 @@ private theorem packet_feeder_data (n a b t:Nat)
   let j:=packetIndex n b t
   have hjmod: j%depthPeriod 3=depthResidue n 3:=packet_index_mod n b t
   have hdivZ:(3:Int)^4∣signedZ n j:=
-    (depthResidue_iff n 3 j hsector).mp hjmod
+    (depthResidue_iff n 3 j hsector).mpr hjmod
   have hindex:a+j+15≤n:=packet_index_le n a b t hn hsector hpacket ht
   have hm:=ray_margin_of_index n a j hn ha.2 hindex
   have hmargin: deficit n j≤2^n:=by omega
   have hnum:=signed_ray_eq_numerator n j (by omega:4≤n) hmargin
   have hdivX:(81:Int)∣(2*ray n j+5:Int):=by
-    have hp:(3:Int)^4=81:=by norm_num
+    have hp:(3:Int)^4=81:=by decide
     rw [←hnum,←hp]
     exact hdivZ
   have hdivNat:81∣2*ray n j+5:=by exact_mod_cast hdivX
@@ -204,7 +208,7 @@ private theorem packet_feeder_data (n a b t:Nat)
   have hd:d%2=1:=by
     have hxodd:(2*ray n j+5)%2=1:=by omega
     rw [hz] at hxodd
-    norm_num at hxodd
+    have h81:81%2=1:=by decide
     omega
   have hb:=source_band_of_margin n j d hn hm hz
   have hp:2^n=8*2^(n-3):=by
@@ -236,7 +240,10 @@ private theorem packet_feeder_data (n a b t:Nat)
     · simpa using hb
     · simpa using hz
     · calc
-        2*(2^3*d)=16*d:=by norm_num
+        2*(2^3*d)=16*d:=by
+          have h:2^3=8:=by decide
+          rw [h]
+          omega
         _=8*2^(n-3)+q+(n-3)+5:=heOdd
   have hphys:signedZ n j=(81*(d:Int)):=by
     rw [hnum]
@@ -363,11 +370,11 @@ private theorem packet_quotient_mod (n b t dBase dt:Nat)
       ((dBase:Int)-thirdPacketCoeff n (depthResidue n 3)*t)%3:=by
   let base:=depthResidue n 3
   let A:=thirdPacketCoeff n base
-  have hp3:depthPeriod 3=54:=by norm_num [depthPeriod]
-  have hp4:depthPeriod 4=162:=by norm_num [depthPeriod]
-  have hpow4:(3:Int)^(3+1)=81:=by norm_num
-  have hpow5:(3:Int)^(3+2)=243:=by norm_num
-  have hpow5a:(3:Int)^(4+1)=243:=by norm_num
+  have hp3:depthPeriod 3=54:=by decide
+  have hp4:depthPeriod 4=162:=by decide
+  have hpow4:(3:Int)^(3+1)=81:=by decide
+  have hpow5:(3:Int)^(3+2)=243:=by decide
+  have hpow5a:(3:Int)^(4+1)=243:=by decide
   have hidx:packetIndex n b t=base+t*54+b*162:=by
     unfold packetIndex
     dsimp [base]
@@ -401,10 +408,10 @@ private theorem packet_quotient_mod (n b t dBase dt:Nat)
   rw [hfactor] at hsub
   have hdiv:(243:Int)∣81*((dt:Int)-(dBase:Int)+A*t):=
     Int.dvd_iff_emod_eq_zero.mpr hsub
-  have h243:(243:Int)=81*3:=by norm_num
+  have h243:(243:Int)=81*3:=by decide
   rw [h243] at hdiv
   have hquot:(3:Int)∣((dt:Int)-(dBase:Int)+A*t):=
-    (Int.mul_dvd_mul_iff_left (by norm_num:(81:Int)≠0)).mp hdiv
+    (Int.mul_dvd_mul_iff_left (by decide:(81:Int)≠0)).mp hdiv
   have hzero:(((dt:Int)-(dBase:Int)+A*t)%3)=0:=
     Int.dvd_iff_emod_eq_zero.mp hquot
   omega
