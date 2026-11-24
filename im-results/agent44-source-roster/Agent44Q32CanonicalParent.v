@@ -56,10 +56,10 @@ Theorem q32_active_refines_canonical_residual_7 :
     (fst (decode_queue packed_chunk_2_32_32)).
 Proof.
   apply Forall_forall. intros x Hx.
-  apply q32_source_refinesb_spec.
-  unfold q32_active_refines_residual_7b in q32_active_refines_residual_7b_true.
-  apply forallb_forall with (x:=x) in q32_active_refines_residual_7b_true;
-    [exact q32_active_refines_residual_7b_true|exact Hx].
+  apply (proj1 (q32_source_refinesb_spec (tm x) q32_canonical_residual_7)).
+  pose proof q32_active_refines_residual_7b_true as Htrue.
+  unfold q32_active_refines_residual_7b in Htrue.
+  apply forallb_forall with (x:=x) in Htrue; [exact Htrue|exact Hx].
 Qed.
 
 Theorem q32_checkpoint_refines_canonical_residual_7 :
@@ -73,7 +73,7 @@ Qed.
 Theorem q32_canonical_residual_7_extends_root :
   is_child_of q32_canonical_residual_7 (tm node0).
 Proof.
-  apply q32_source_refinesb_spec.
+  apply (proj1 (q32_source_refinesb_spec q32_canonical_residual_7 (tm node0))).
   vm_compute. reflexivity.
 Qed.
 
@@ -83,8 +83,8 @@ Theorem q32_checkpoint_refines_root :
 Proof.
   apply Forall_forall. intros x Hx.
   eapply child_trans.
-  - apply Forall_forall with (x:=x) in q32_checkpoint_refines_canonical_residual_7;
-      [exact q32_checkpoint_refines_canonical_residual_7|exact Hx].
+  - pose proof q32_checkpoint_refines_canonical_residual_7 as Hactive.
+    apply Forall_forall with (x:=x) in Hactive; [exact Hactive|exact Hx].
   - exact q32_canonical_residual_7_extends_root.
 Qed.
 
