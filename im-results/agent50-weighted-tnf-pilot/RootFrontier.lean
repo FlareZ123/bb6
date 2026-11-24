@@ -122,7 +122,7 @@ theorem RootedFrontier.sound {B : Nat} {p : PartialMachine}
       WeightedBound B m ∨
         ∃ address q, OpenLeaf f address q ∧ compatible q m := by
   induction f with
-  | residual path =>
+  | @residual p path =>
       intro m hm
       exact Or.inr ⟨[], p, OpenLeaf.here path, hm⟩
   | closed path cert =>
@@ -206,6 +206,25 @@ def pathOK84 (p : PartialMachine) (cut : Nat) : List PathEntry → Bool
       weightOK p s n 84 &&
       pathOK84 (refine p s (some mv)) (advanceCut cut mv) xs
 
+theorem optionMap_some {α β : Type} (f : α → β) (x : Option α) (y : β)
+    (h : x.map f = some y) : ∃ a, x = some a ∧ f a = y := by
+  cases x with
+  | none => simp at h
+  | some a => exact ⟨a, rfl, by simpa using h⟩
+
+theorem pathOK84_cons {p : PartialMachine} {cut n : Nat} {s : Slot}
+    {mv : Move} {xs : List PathEntry}
+    (h : pathOK84 p cut ((n, s, mv) :: xs) = true) :
+    p s = none ∧
+    (∃ c, knownRun p n = some c ∧ readSlot c = s) ∧
+    s.1.val < cut ∧ mv.next.val ≤ cut ∧
+    weightOK p s n 84 = true ∧
+    pathOK84 (refine p s (some mv)) (advanceCut cut mv) xs = true := by
+  simp only [pathOK84, Bool.and_eq_true, decide_eq_true_eq] at h
+  rcases h with ⟨hhole, hread, hslot, hmove, hweight, htail⟩
+  exact ⟨hhole, optionMap_some readSlot (knownRun p n) s hread,
+    hslot, hmove, hweight, htail⟩
+
 theorem pathOK84_root : pathOK84 root 2 path = true := by decide
 
 /-- Turn a validated first-hole path into a complete prefix tree: at each
@@ -218,24 +237,21 @@ def buildFrontier (p : PartialMachine) (cut : Nat) (hp : RawRootPath p) :
     RootedFrontier 84 p
   | [], _, cert => .closed hp cert
   | (n, s, mv) :: xs, h, cert => by
-      simp only [pathOK84, Bool.and_eq_true, decide_eq_true_eq] at h
-      rcases h with ⟨hhole, hread, hslot, hmove, hweight, htail⟩
-      cases hr : knownRun p n with
-      | none => simp [hr] at hread
-      | some c =>
-          have hs : readSlot c = s := by simpa [hr] using hread
-          subst s
-          have hw : ∀ d ∈ possibleDelays (refine p (readSlot c) none) 0,
-              d + n + 1 ≤ 84 :=
-            weightOK_sound p (readSlot c) n 84 hweight
-          exact .expand hp hr hhole hw (fun actual =>
-            if heq : actual = mv then
-              by
-                simpa [heq] using
-                  (buildFrontier (refine p (readSlot c) (some mv))
-                  (advanceCut cut mv) (RawRootPath.step hp hr hhole mv) xs htail cert)
-            else
-              .residual (RawRootPath.step hp hr hhole actual))
+      have hfields := pathOK84_cons h
+      rcases hfields with ⟨hhole, hread, hslot, hmove, hweight, htail⟩
+      rcases hread with ⟨c, hr, hs⟩
+      subst s
+      have hw : ∀ d ∈ possibleDelays (refine p (readSlot c) none) 0,
+          d + n + 1 ≤ 84 :=
+        weightOK_sound p (readSlot c) n 84 hweight
+      exact .expand hp hr hhole hw (fun actual =>
+        if heq : actual = mv then
+          by
+            simpa [heq] using
+              (buildFrontier (refine p (readSlot c) (some mv))
+                (advanceCut cut mv) (RawRootPath.step hp hr hhole mv) xs htail cert)
+        else
+          .residual (RawRootPath.step hp hr hhole actual))
 
 /-- The nine-edge Agent 50 pilot, now with every ancestor sibling retained. -/
 def rootFrontier : RootedFrontier 84 root :=
