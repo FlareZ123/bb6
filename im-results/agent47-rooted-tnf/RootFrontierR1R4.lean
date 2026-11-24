@@ -59,7 +59,7 @@ theorem pathOKB_cons {B : Nat} {p : PartialMachine} {cut n : Nat}
     s.1.val < cut ∧ mv.next.val ≤ cut ∧
     weightOK p s n B = true ∧
     pathOKB B (refine p s (some mv)) (advanceCut cut mv) xs = true := by
-  simpa only [pathOKB, Bool.and_eq_true, decide_eq_true_eq] using h
+  simpa only [pathOKB, Bool.and_eq_true, decide_eq_true_eq, and_assoc] using h
 
 /-- Build a complete prefix tree along one validated first-hole path, leaving
     every off-path ordinary instruction as an explicit residual leaf. -/
