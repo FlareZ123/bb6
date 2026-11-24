@@ -26,3 +26,7 @@ None of the surviving necessary gates has been shown reachable by the authentic 
 
 [BB429RootResetPump.md](BB429RootResetPump.md) and its [C++ reproducer](BB429RootResetPump.cpp) verify a 3,128,158-cycle (F^{26}E_{\rm odd}) first-return phase on the actual blank-root orbit: ((0,530028452)) at step 149,997,313 returns by repeated 27-step blocks to ((0,805306356)) at step 234,457,579, with the second coordinate increasing by 88 each cycle. This is an exact finite segment and an algebraic macro identity, not an infinite-run or nonhalting proof; the next phase boundary remains open.
 
+## Nested reset pump after the first phase
+
+[BB429NestedResetPump.md](BB429NestedResetPump.md) and its [C++ reproducer](BB429NestedResetPump.cpp) continue from ((0,805306356)) and verify the exact branch word (F^{27}O_{\rm even}E_{\rm even}(F^{24}E_{\rm even})^{1458887}F^{25}O_{\rm odd}E_{\rm odd}), returning to ((0,939524164)) after 36,472,231 transitions. Combined with the preceding root certificate, this reaches that state at root step 270,929,810. This remains a finite computational segment only.
+
