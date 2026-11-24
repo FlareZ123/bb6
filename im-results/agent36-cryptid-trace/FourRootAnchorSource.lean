@@ -3,6 +3,9 @@ import RegularBands
 import DRegularSourceShift
 import Lean.Elab.Tactic.Omega
 
+set_option maxRecDepth 10000
+set_option maxHeartbeats 20000000
+
 namespace BB6.Agent36
 
 open CryptidBoundary
@@ -176,26 +179,34 @@ same all-time halting status as its large DRegular anchor section. -/
 theorem source_D3_halts_iff_anchor :
     SourceHalts (sourceBlank (3 : Fin 6)) ↔
       SourceHalts (DRegularSource.sourceSection (anchor 0)) :=
-  (halts_after_exact_prefix 15 _ _ root_D3_to_seed5).trans
-    (source_halts_iff_obsEq seed0_to_anchor0)
+by
+  have hp := halts_after_exact_prefix 15 _ _ root_D3_to_seed5
+  have ha := source_halts_iff_obsEq seed0_to_anchor0
+  exact hp.trans ha
 
 theorem source_D0_halts_iff_anchor :
     SourceHalts (sourceBlank (0 : Fin 6)) ↔
       SourceHalts (DRegularSource.sourceSection (anchor 1)) :=
-  (halts_after_exact_prefix 36 _ _ root_D0_to_seed9).trans
-    (source_halts_iff_obsEq seed1_to_anchor1)
+by
+  have hp := halts_after_exact_prefix 36 _ _ root_D0_to_seed9
+  have ha := source_halts_iff_obsEq seed1_to_anchor1
+  exact hp.trans ha
 
 theorem source_D2_halts_iff_anchor :
     SourceHalts (sourceBlank (2 : Fin 6)) ↔
       SourceHalts (DRegularSource.sourceSection (anchor 2)) :=
-  (halts_after_exact_prefix 92 _ _ root_D2_to_seed15).trans
-    (source_halts_iff_obsEq seed2_to_anchor2)
+by
+  have hp := halts_after_exact_prefix 92 _ _ root_D2_to_seed15
+  have ha := source_halts_iff_obsEq seed2_to_anchor2
+  exact hp.trans ha
 
 theorem source_D1_halts_iff_anchor :
     SourceHalts (sourceBlank (5 : Fin 6)) ↔
       SourceHalts (DRegularSource.sourceSection (anchor 3)) :=
-  (halts_after_exact_prefix 403 _ _ root_D1_to_seed39).trans
-    (source_halts_iff_obsEq seed3_to_anchor3)
+by
+  have hp := halts_after_exact_prefix 403 _ _ root_D1_to_seed39
+  have ha := source_halts_iff_obsEq seed3_to_anchor3
+  exact hp.trans ha
 
 /-- The four original-source endpoints have exactly the arithmetic measures
 used by the widened phase-band separation theorem. -/
