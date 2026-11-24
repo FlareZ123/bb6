@@ -53,6 +53,7 @@ on:
           - sourceLowAffine
           - sourceLowAffineAll
           - sourceNegativeShadow
+          - sourceHighShadow
           - sourceLowQuarterTwoForced
           - sourceCriterion559
           - sourceAgent8Z2
@@ -225,6 +226,9 @@ jobs:
               ;;
             sourceLowAffineAll)
               target=im-results/agent13-residual-frontier/AffineConeLowStopAll.lean
+              ;;
+            sourceHighShadow)
+              target=im-results/agent13-residual-frontier/HighNegativeShadow.lean
               ;;
             sourceNegativeShadow)
               target=im-results/agent13-residual-frontier/NegativeShadow.lean
