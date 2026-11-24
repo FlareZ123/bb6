@@ -77,16 +77,13 @@ Lemma source_count_update t h v :
   S (get_num_undef_trans (tm_upd t h v)) = get_num_undef_trans t.
 Proof.
   intro H.
-  assert (Hhole : hole_value (t h) = 1%nat) by
-    (unfold hole_value; rewrite H; reflexivity).
   rewrite !source_count_formula.
-  destruct h as [q s]; destruct q,s;
-    repeat (rewrite source_upd_hit || rewrite source_upd_miss by discriminate);
-    match goal with |- ?G => idtac "before Hhole:" G end;
-    rewrite Hhole;
-    cbn [hole_value];
-    match goal with |- ?G => idtac "before lia:" G end;
-    lia.
+  destruct h as [q s].
+  change (t (q,s) = None) in H.
+  destruct q,s;
+    rewrite H;
+    repeat (rewrite source_upd_hit || rewrite source_upd_miss by congruence);
+    cbn [hole_value]; lia.
 Qed.
 Lemma source_count_one t h :
   get_num_undef_trans t = 1 -> t h = None ->
