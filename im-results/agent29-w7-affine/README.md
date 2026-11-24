@@ -1,6 +1,6 @@
 # Independent affine execution of W7-2
 
-**Current result (24 November 2026):** independent computer-assisted reproduction of the entire blank-A nonhalting argument, and of the Q/D/exhaustion symbolic transitions for blank-D. These are source-table exact Python computations with a mathematical induction on affine rewrite certificates, not Lean-kernel certificates. The blank-D entry remains to be reconstructed. Neither root is claimed to be a newly discovered community holdout; both were deleted from the historical October roster. No universal BB(6) bound follows.
+**Current result (24 November 2026):** independent computer-assisted reproduction of both entire blank-root nonhalting arguments. These are source-table exact Python computations with a mathematical induction on affine rewrite certificates, not Lean-kernel certificates. Neither root is claimed to be a newly discovered community holdout; both were deleted from the historical October roster. No universal BB(6) bound follows.
 
 Literal table: `1RB1LB_1RC0LA_1RD0RE_1LA0LB_1RF---_1RB1LD`. Historical row 146 is blank A; [Agent29's conjugacy](../agent29-roster-six-audit/Row146Conjugacy.lean) identifies row 411 with the mirrored/renamed blank D. Prior [Agent3 physical-block proof](../agent3-w7-physical-block/README.md) proves seven sweep identities. The targets come from [Dennis Koshta's informal proof](https://github.com/DennisKoshta/denniskoshta-portfolio/blob/b48bd32fab8b476135d47ffa4e5f9bfb9a80d8c7/public/busy-beaver/machines/1RB1LB_1RC0LA_1RD0RE_1LA0LB_1RF---_1RB1LD/proof.md.html), not a newly inferred invariant. Our implementation is independent of his engine, which was not present in the archived scripts directory.
 
@@ -22,7 +22,7 @@ The independent executor reached, and the recursive replay with exact shape chec
 | D(100+x,130+b,30+a) | D(454337500+1048576x,10+b,6+a) | 413778 | 19608 |
 | D(349479900+1048576z,5759218639205926131,13) | Q(23036877419765819664+8589934592z) | 256274 | 10322 |
 
-Each parameter is an independent natural number. The counts are accelerated operations, not primitive TM scores. The first two lines imply blank-A nonhalting: the successor of every N(Y), Y >= 22, is N(262144Y+32859022), again in the same domain, by a positive finite run. Iteration gives arbitrarily long defined primitive runs. The second root additionally requires its own actual blank-D entry.
+Each parameter is an independent natural number. The counts are accelerated operations, not primitive TM scores. The first two lines imply blank-A nonhalting: the successor of every N(Y), Y >= 22, is N(262144Y+32859022), again in the same domain, by a positive finite run. Iteration gives arbitrarily long defined primitive runs. The second root follows from its independently replayed blank-D entry and the D iteration below.
 
 ## Soundness argument
 
@@ -34,8 +34,29 @@ A difference rule has a fixed tape shape, fixed counts on some slots, lower thre
 
 The replay uses shared primitive and affine semantics with the discovery engine, but does not trust the latter's history/heuristic or sampled outcomes. It is not yet a Lean formalization or a second independent implementation of the semantics. The displayed arithmetic endpoints were computed before explicit shape guards were added to the discovery engine; all five used proof DAGs were subsequently replayed with mandatory shape guards and accepted. The stored script includes guards in both discovery and replay. Reproduce using `python3 affine_replay.py N A Q D E` (or individual case names), then compare endpoints; the guarded discovery can choose a different valid trace. The script deliberately fails if an endpoint is not found within its finite discovery budget; the proof itself has no extrapolation cutoff.
 
-## Remaining obligation
+## Blank-D root: complete opening, exhaustion, and nonhalting
 
-Reconstruct blank-D to D(X0,10456559309013950571,939468133961604901), X0 >= 100; then iterate the D rule exactly 39144505581733537 times, obtaining Y2=5759218639205926131 and Y1=13. The last X update has form 349479900+1048576z. The independently reproduced exhaustion rule leads to Q, whose independently reproduced cycle proves nonhalting. The opening trace is the missing link; do not label row411 decided by this implementation until it is obtained.
+The separate memory-bounded [stream generator and replay](stream_entry.py) reached exactly
 
-Next formalization target is a small Lean certificate checker for these exact block steps and affine translations, reusing the existing physical-tape source. The external author's enormous intermediate counter values need never be materialized during the symbolic iteration. No new workflow is needed at this stage.
+    D(70691118354036414594808423388,10456559309013950571,939468133961604901)
+
+from blank D, in 6,160,484 top-level accelerated operations. It emitted 69,021 difference-rule definitions in topological order, with a gzip JSONL certificate of 1,941,761 bytes. A separate sequential replay of the emitted certificate accepted all 69,021 rules, all 6,160,484 operations, and the exact endpoint. The opening executable and replay share the same primitive and affine semantics as the first five traces.
+
+Set X0=70691118354036414594808423388, Y20=10456559309013950571, Y10=939468133961604901. The independently checked universal D-cycle implies that for X>=100, Y2>=130, Y1>=30,
+
+    D(X,Y2,Y1) ->+ D(1048576X+349479900,Y2-120,Y1-24).
+
+Take n=39144505581733537. Straight integer arithmetic gives Y10-24n=13 and Y20-120n=5759218639205926131. Before the last application the two counters are 37 and 5759218639205926251, so every application satisfies the lower thresholds; X increases and remains >=100. By induction the last X has form 1048576z+349479900 for a natural z. We need never expand that enormous integer.
+
+The independently checked exhaustion transition from the table above gives Q(23036877419765819664+8589934592z). Its parameter exceeds 14. The universal Q-cycle then stays forever in Q with a strictly increasing parameter, and each cycle takes a positive finite number of raw steps. Thus blank D cannot halt. The existing exact row411 conjugacy transfers this result to historical row411. Both roots now have complete independently reproduced computer-assisted nonhalting arguments.
+
+Reproduce the long opening with:
+
+    python3 stream_entry.py discover w7-D-entry.jsonl.gz
+    python3 stream_entry.py verify w7-D-entry.jsonl.gz
+
+The first local run took about 215 seconds; the second independently replayed the stream. No code from the original external engine was used. These are intermediate findings pending formal verification; the original external argument already asserted both outcomes, and this work does not establish a new community roster count or solve BB(6).
+
+## Formalization route
+
+A local Lean 4.36.0-rc2 development now proves the literal source block evaluator sound in arbitrary ambient tape; stack-to-raw-tape transfer, all-length sweep, affine arithmetic, and symbolic ordinary execution are also accepted. The difference-rule repeat checker and full trace acceptance remain to be integrated. Preserve these intermediate findings here until the source-anchored end-to-end theorem is established.
