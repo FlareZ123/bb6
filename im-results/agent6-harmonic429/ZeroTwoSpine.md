@@ -22,6 +22,30 @@ A whole infinite class of genuine parameter values escapes each finite depth. Ev
 
 Reproduce from this directory with LEAN_PATH=.:../agent5-429-rank; compile BB429Rank.lean to .olean, then lean ZeroTwoSpine.lean.
 
+## Exact valuation-dependent cover
+
+The arbitrary-depth obstruction motivates a complete compressed inverse F burst, proved in [ZeroTwoEndpoint.lean](ZeroTwoEndpoint.lean), with actual blank-root alternatives in [ZeroTwoRootCover.lean](ZeroTwoRootCover.lean). Suppose a+3=2^k c, c>=9 odd, k>=4, and the starting upper boundary is U=(a,2a+2). At inverse index i<=k,
+
+    a_i = 2^(k-i)c-3,
+    2a_i+b_i+3i = 4a+2.
+
+Every F edge along this path is exact. If U is rooted (some run from (0,0)), either the endpoint at i=k is rooted or a genuine S-side parent p=(x,y) enters one of the intermediate states. The side exit necessarily has i<k, i mod4=2, and
+
+    4x+26=4a_i+b_i,  2y=b_i+4,
+    2x+21=y+2*2^(k-i)c.
+
+The complete rooted endpoint is even, so BB429Even16.rooted_even_sixteen forces precisely these necessary pairs (k mod16,c mod8):
+
+    (0,1), (4,7), (8,5), (12,3).
+
+[ZeroTwoDiagonalCover.lean](ZeroTwoDiagonalCover.lean) specializes this to the actual diagonal feeder, m=2+2^k*r with r odd and k>=4. It proves a+3=2^k*c for some odd c>=9 with c+3r=0 mod8; hence k is indeed the valuation of a+3. Therefore the necessary disjunction for genuine rooted upper ancestry is a rooted S exit or the four endpoint pairs (k mod16,r mod8):
+
+    (0,5), (4,3), (8,1), (12,7).
+
+This is an infinite-parameter reduction, not a sieve restricted to a fixed number of inverse steps. It does not exclude the remaining four endpoint pairs or any asserted S exit, the odd-reset alternative, m=2 or k<4. In particular the diagonal family is still open.
+
+All three new modules compiled locally in Lean 4.36.0-rc2 with the complete unchanged BB429Rank, BB429Mod8, BB429RootEven8, BB429NoThree and BB429Even16 dependencies. Exact new source blob hashes: ZeroTwoEndpoint 9099f39948d56598e5d650c014b1cba2fb4f048d; ZeroTwoRootCover ce1244819db07f40321d1b981b1c845950957923; ZeroTwoDiagonalCover 8f25391d0d7f1152df28a92fcdba746698b4b6c7. Each exported theorem has only standard logical axioms. No new CI claim. The root cover uses the source theorem BB429Even16.rooted_even_sixteen rather than assuming soundness of the copied sieve.
+
 ## Next missing argument
 
-Collapse the complete inverse F burst by the valuation v2(a+3). For m>2 in the displayed family, the valuation is exactly v2(m−2), since J,N are larger than it. The first even ancestor and any non-F exits are the meaningful proof obligations. A proof that excludes the terminal even ancestor uniformly, or a stronger root invariant on row 61, may still close this feeder. No positive root ancestry is asserted.
+Exclude every genuine S side exit and strengthen the endpoint restrictions to close all remaining classes. For i=4l+2, write A=2^k c and B=2^(k-i)c. Then the exact S parent has x=A+B/2-12-3l, y=2A-B-3-6l. This is the previously studied PowerMinusThree side line; when k-i is sufficiently large, existing source-verified exclusions transport to these parameters. Do not restart an independent fixed-depth sieve. The remaining near-end cases and arbitrary high valuation need a genuine root-history invariant. No positive root ancestry is asserted.
