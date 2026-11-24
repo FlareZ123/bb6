@@ -43,3 +43,7 @@ python tools/lean_compile_closure.py --workdir /tmp/a48-raw63 --jobs 4 im-result
 
 Do not remove raw63 from the accepted canonical roster until the full
 source closure, raw63 audit, and exact roster bridge compile.
+
+## Original-source checkpoint
+
+Run [45508818219](https://github.com/FlareZ123/bb6/actions/runs/45508818219) compiled Agent48CounterCore and all nine original-source NeverHalts theorems, each with propext and Quot.sound only. The complete certificate build did not finish: runner shutdown (exit 143) interrupted Raw63Kid05. The independent single-cylinder audit has been dispatched without the expensive older roster dependency.

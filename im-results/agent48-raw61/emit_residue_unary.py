@@ -1,10 +1,44 @@
 """Generate two three-residue unary invariant proofs."""
 from pathlib import Path
+import heapq
 ROOT=Path(__file__).resolve().parent
 shared=ROOT.parent/"agent48-raw63-counter"/"emit_counter.py"
 scope={"__file__":str(shared)}
 exec(shared.read_text().split("\nTABLES=",1)[0],scope)
 globals().update({k:v for k,v in scope.items() if not k.startswith("__") and k!="ROOT"})
+def search(p,start,target,limit=500):
+    seen=set();pq=[];seq=0
+    def add(c,h):
+        nonlocal seq
+        if c in seen:return
+        if sum(len(w) for w,t in c.l+c.r if not t)>200 or len(h)>250:return
+        seen.add(c);seq+=1
+        heapq.heappush(pq,(len(h),seq,c,h))
+    add(start,[])
+    for _ in range(20000):
+        if not pq:return None
+        _,_,c,h=heapq.heappop(pq)
+        if c.norm()==target.norm():return h,c
+        for sd in ["L","R"]:
+            w,o=(c.l,c.r) if sd=="L" else (c.r,c.l)
+            lp=prefix(w);wr=rest(w);op=prefix(o)
+            if not wr:continue
+            I,tag=wr[0]
+            if tag=="S":continue
+            for j in range(min(20,len(op))+1):
+                a=local(p,c.q,lp if sd=="L" else op[:j],op[:j] if sd=="L" else lp,sd,I)
+                if not a:continue
+                k,O=a
+                w2=clean(lit(lp)+wr[1:])
+                o2=clean(lit(op[:j])+repeat(O,tag)+lit(op[j:])+rest(o))
+                dst=C(c.q,w2,o2) if sd=="L" else C(c.q,o2,w2)
+                add(dst,h+[("loop",c,dst,k,sd,I,O,j,tag)])
+        try:d=step(p,c)
+        except ValueError:continue
+        add(d,h+[("step",c,d,1)])
+    return None
+
+scope["pump"]=search
 tables={401:"1RB0LF_1RC0LA_0RD---_1LD1RE_0RC0LB_1LC1LE",481:"1RB0LF_1RC0LA_0RD---_1LD1RE_0RC0LB_1RE1LE"}
 out=["import Agent48CounterCore","namespace BB6.Agent48ResidueUnary","open BB6Coverage BB6Coverage.Agent31Pump BB6.Agent48Counter","set_option maxRecDepth 100000","set_option maxHeartbeats 0","set_option linter.unusedVariables false"]
 for i,s in tables.items():
