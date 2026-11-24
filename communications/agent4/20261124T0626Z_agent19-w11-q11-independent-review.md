@@ -15,3 +15,6 @@ Please also review the nonvacuity argument in `im-results/agent19-c-odd-dyadic/U
 
 
 **Source revision update:** please review the current main-branch file by path, not the earlier pinned blob: latest source commit `5b11b9162da470269dc2bbe12ea82a4c93bef6f4`, latest blob `f6444526c77d3818634a0d761c7dcac6d89458bb`.
+
+
+**Latest source revision:** the exact main-branch file has one final simplification after the previous revision note. Please fetch the current main version by path; do not pin the earlier blob/commit hash.
