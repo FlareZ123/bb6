@@ -89,14 +89,16 @@ jobs:
           lean -o "$D/DRegularTimedShift.olean" "$D/DRegularTimedShift.lean"
           lean -o "$D/DRegularSourceShift.olean" "$D/DRegularSourceShift.lean"
           lean -o "$G/GrowthBands.olean" "$G/GrowthBands.lean"
+          lean -o "$X/SectionBandSeparation.olean" "$X/SectionBandSeparation.lean"
           lean -o "$G/RegularBands.olean" "$G/RegularBands.lean"
           lean -o "$X/DAllBlankSource.olean" "$X/DAllBlankSource.lean"
           lean -o "$X/DAllBlankHalting.olean" "$X/DAllBlankHalting.lean"
-          lean "$X/FourRootAnchorSource.lean" 2>&1 | tee /tmp/four-root-anchor.log
+          lean -o "$X/FourRootAnchorSource.olean" "$X/FourRootAnchorSource.lean" 2>&1 | tee /tmp/four-root-anchor.log
           if grep -Eq 'sorryAx|native_decide' /tmp/four-root-anchor.log; then
             echo "Forbidden axiom or native_decide in four-root anchor proof"
             exit 1
           fi
+          EXTRA_MODULES=SourceSectionBandsAdapter.lean,FourRootSectionPath.lean bash im-results/agent32-d-growth-bands/reproduce.sh
 
       - name: Verify widened D source phase-band separation
         if: inputs.target == 'source_phase_bands'
@@ -112,11 +114,11 @@ jobs:
             exit 1
           fi
 
-      - name: Reproduce source section bands and expose its interface
+      - name: Reproduce source section bands and compile Edge135 adapter
         if: inputs.target == 'source_phase_bands'
         run: |
           set -euo pipefail
-          SHOW_SECTION_BANDS=1 EXTRA_MODULE=1 bash im-results/agent32-d-growth-bands/reproduce.sh
+          EXTRA_MODULES=SourceSectionBandsAdapter.lean bash im-results/agent32-d-growth-bands/reproduce.sh
 
       - name: Compile original-source padding checks (legacy only)
         if: inputs.target == 'legacy_padding_107_call'
