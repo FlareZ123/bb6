@@ -6,6 +6,17 @@ set_option maxHeartbeats 0
 namespace BB6.Agent7FAR.DepthEight
 open BB6Coverage BB6Coverage.FAR BB6.Agent13BlankDelay
 
+/-- Every six-state partial machine has support below cut six. -/
+theorem support6 (p : PartialMachine) : TNFSupport p 6 := by
+  intro s t h
+  exact ⟨s.1.isLt, fun mv _ => mv.next.isLt⟩
+
+/-- The FAR code encoding has only ordinary rows or unassigned rows, never a halt row. -/
+theorem fromCodes_noAssignedHalt (xs : List Nat) :
+    weightedTNFNoAssignedHalt (fromCodes xs) := by
+  intro s
+  simp [weightedTNFNoAssignedHalt, fromCodes]
+
 /-- Parent residual 86; original-orientation FAR certificate from Actions run 45466300325.
     Table: 1RB0LB_1RC1LF_0RD1RA_1LD1RE_---0LB_---0LA. DFA size 5. -/
 def p86_0 : PartialMachine := fromCodes [7,4,11,22,13,3,14,19,24,4,24,0]
