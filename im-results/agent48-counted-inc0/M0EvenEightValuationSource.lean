@@ -85,7 +85,7 @@ private theorem sourceSuffix_extraOnes (t len u i : Nat)
     sideBit (m0EvenEightValuationSourceSuffix t len u) (14+i) = true := by
   have hprefix : (markerWord 0 ++ d0).length = 5 := by
     simp [markerWord, d0]
-  rw [m0EvenEightValuationSourceSuffix, ← List.append_assoc]
+  rw [m0EvenEightValuationSourceSuffix, List.append_assoc, List.append_assoc]
   rw [sideBit_append_right (markerWord 0 ++ d0)
     (d1pow (t+3) ++ d0 ++ binDec len u ++ lh) (14+i) (by omega)]
   have hindex : 14+i-5 = 9+i := by omega
@@ -107,7 +107,7 @@ private theorem sourceSuffix_zeroBoundary (t len u : Nat) :
     simp [markerWord, d0, d1pow_length]
     omega
   constructor
-  · rw [m0EvenEightValuationSourceSuffix, ← List.append_assoc, ← List.append_assoc]
+  · rw [m0EvenEightValuationSourceSuffix, List.append_assoc]
     rw [sideBit_append_right ((markerWord 0 ++ d0) ++ d1pow (t+3))
         (d0 ++ binDec len u ++ lh) (14+3*t) (by omega)]
     simp [d0, sideBit]
@@ -196,8 +196,7 @@ private theorem m0EvenEightValuationBridgeInputMatch
         = (s1Config L (8*q) 0 a 0 b h).tape
             (h-((3*a:Nat):Int)+y) := hpres
       _ = sideBit (m0EvenEightValuationSourceSuffix t len u) i := by
-        rw [hcoord]
-        exact hcell
+        simpa [hcoord] using hcell
       _ = decide ((-(i:Int)) ∈ m0EvenEightBridgeStart.marked) := hsource
       _ = decide (y ∈ (bridgeStartWithBit (decide (0<t))).marked) := hmark.symm
   · have hypos : y=1 ∨ y=2 ∨ y=3 := by omega
@@ -334,8 +333,7 @@ theorem m0EvenEight_valuation_q4_prefix_run_of_leftFacing
         simpa [T2] using hf
       _ = T (hH-(i:Int)) := hp
       _ = sideBit (m0EvenEightValuationSourceSuffix t len u) (14+i) := by
-        rw [hcoord]
-        exact hcell
+        simpa [hcoord] using hcell
       _ = true := hsource
   have hleftZero : T2 (hB-1) = false := by
     have hout : bridgeInside44 ((hB-1)-hN) = false := by
@@ -362,8 +360,7 @@ theorem m0EvenEight_valuation_q4_prefix_run_of_leftFacing
       T2 (hB-1) = T1 (hB-1) := by simpa [T2] using hf
       _ = T (hB-1) := hp
       _ = sideBit (m0EvenEightValuationSourceSuffix t len u) (15+3*t) := by
-        rw [hcoord]
-        exact hcell
+        simpa [hcoord] using hcell
       _ = false := hsource
   have hzero : T2 hB = false := by
     have hout : bridgeInside44 (hB-hN) = false := by
@@ -390,8 +387,7 @@ theorem m0EvenEight_valuation_q4_prefix_run_of_leftFacing
       T2 hB = T1 hB := by simpa [T2] using hf
       _ = T hB := hp
       _ = sideBit (m0EvenEightValuationSourceSuffix t len u) (14+3*t) := by
-        rw [hcoord]
-        exact hcell
+        simpa [hcoord] using hcell
       _ = false := hsource
   have hzeroBoundary := sweptLeft_zeroBoundary t T2 hH
     hleftZero hzero hrightBubble
@@ -449,7 +445,9 @@ theorem m0EvenEight_valuation_q4_prefix_run_of_leftFacing
     dsimp [hR,hB,hH,hN,N]
     omega
   have hscanHead' : hR + 3 * (↑(4+t):Int) = hN := by
-    simpa only [Nat.cast_add, Nat.cast_ofNat] using hscanHead
+    have hcast : (↑(4+t):Int) = 4 + (t:Int) := by omega
+    rw [hcast]
+    exact hscanHead
   have hScan :
       run tm2 (3*(4+t)) ⟨1,hR,T4⟩ =
         some ⟨1,hN,T5⟩ := by
