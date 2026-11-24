@@ -1,5 +1,4 @@
 import FourHoleResidualRoster
-import PureFourHoleResiduals
 import RecursiveResidual
 import DepthEightSiblingData1
 import DepthEightSiblingData2
@@ -117,8 +116,8 @@ def canonicalResidualRoster : List PackedTable :=
 
 /-- Agent31's frontier, losslessly packed into the common twelve-slot
     representation used by Agent50's recursive certificate. -/
-def agent31PackedRoster : List PackedTable :=
-  BB6.Agent44SourceRoster.pureRemainingRootRoster.map
+noncomputable def agent31PackedRoster : List PackedTable :=
+  BB6.Agent31FourHoleRoster.remainingRootRoster.map
     (fun e => BB6.Agent50RootFrontier.packTable e.2)
 
 /-- Exact equality of the two independently generated residual frontiers,
@@ -139,7 +138,7 @@ theorem canonicalResidualRoster_sound_395 :
       WeightedBound 395 m ∨
       ∃ q ∈ canonicalResidualRoster, compatible (BB6.Agent50RootFrontier.unpackTable q) m := by
   intro m hm
-  rcases BB6.Agent44SourceRoster.pureRemainingRootRoster_sound m hm with hbound | ⟨e, he, hc⟩
+  rcases BB6.Agent31FourHoleRoster.remainingRootRoster_sound m hm with hbound | ⟨e, he, hc⟩
   · exact Or.inl hbound
   · have hpack : BB6.Agent50RootFrontier.packTable e.2 ∈ agent31PackedRoster := by
       exact List.mem_map.mpr ⟨e, he, rfl⟩
