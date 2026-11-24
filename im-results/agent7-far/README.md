@@ -19,7 +19,13 @@ certificate. FARFrontier.lean adds the checked oracle only to unresolved
 leaves of the existing depth-four physical lasso audit; the old branches
 and old certified leaves are unchanged. The exhaustive and mass
 conservation statements are independent of the certificate generator.
-The original-source integration and numerical report are pending CI.
+The core FAR/Frontier closure passed original-source Lean 4.36.0-rc2 CI in [run 45342809760](https://github.com/FlareZ123/bb6/actions/runs/45342809760). The later bitset-optimized `FastFAR` checker and `FastCanonical` integration passed the current source closure, with a depth-one canonical report, in [run 45383596624](https://github.com/FlareZ123/bb6/actions/runs/45383596624). The specific depth-four `FARFrontierReport` count is not recorded here; the numerical figures below remain computational predictions, not a kernel theorem.
+
+## Hard-root search update (24 November 2026)
+
+The pinned [663-machine holdout roster](../../resources/BB6_holdouts_663_2026-10-16.txt) was searched again by the existing untrusted C++ generator. [Run 45383617366](https://github.com/FlareZ123/bb6/actions/runs/45383617366) completed all eight shards with exact enumeration of canonical five-state DFAs and 30,000 guided mutation trials per DFA size 6–10, in both tape orientations, for every roster entry. No candidate certificate was emitted. The #746 table is included at roster line 618.
+
+This is a bounded heuristic search result only. It does not prove that a certificate of these sizes is impossible, does not rule out larger automata or other invariant classes, and gives no verdict on any machine. Do not spend further compute merely increasing the same random-mutation budget; a materially different synthesis method or a deeper TNF-leaf application is needed.
 
 A separate canonical enumeration predicts the exact old baseline
 40,570,831,298,828,125 (68.06656%) and 2,011,108,398,437,500 additional
