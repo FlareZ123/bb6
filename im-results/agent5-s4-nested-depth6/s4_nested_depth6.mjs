@@ -542,12 +542,12 @@ const first15Cycle = {
   periodPReturns: String(first15PeriodYBlocks * yReturns),
   first15DigitsAtCycleStart: show(first15CycleStart)
 };
-// G is the induced suffix word after 1,280 skewed F blocks. The 15-digit
-// prefix returns over this interval; the word acts on the suffix beyond it.
+// G is the induced suffix word after 1,280 skewed F blocks. The outer ten
+// digits are fixed by the Z/F hierarchy; F's own five-digit prefix returns.
 // This replaces a brute-force 25,600-Y-block search with a boundary-word test.
 const tailAfter15 = F1Tail.slice(5);
 assert(tailAfter15.length >= 15, 'G requires at least 15 residual digits');
-const Gdata = extractSkewedWord(first15CycleStart, Fword, pF, 1280, 'G');
+const Gdata = extractSkewedWord(F1Tail.slice(0, 5), Fword, pF, 1280, 'G');
 const G = Gdata.word;
 const gMass = checkMassWithPending('G', G, Gdata.pending, 1280n * 20n * yReturns, Gdata.adds);
 const gPrefixStart = tailAfter15.slice(0, 15);
