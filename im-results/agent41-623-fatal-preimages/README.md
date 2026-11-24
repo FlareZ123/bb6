@@ -52,10 +52,10 @@ The union of the two sets has size at most X/3+o(X), while the number of even ex
 
 Lean 4.36.0-rc2 (b35cb10), using exact checked-in DrainCorrectionGrowth.lean blob ccdbb69e7e12b816f919289954f1e41ad67b47df from main commit 73fe7340da2b55535b61132443a712092fc3dde3:
 
-    cp ../agent49-parity623/DrainCorrectionGrowth.lean /tmp/DrainCorrectionGrowth.lean
+    cp ../agent49-parity623/DrainCorrectionGrowth.lean /tmp/Agent49DrainCorrectionGrowth.lean
     cp FatalFamilyInverse{Arithmetic,Actual}.lean /tmp/
     cd /tmp
-    lean -o DrainCorrectionGrowth.olean DrainCorrectionGrowth.lean
+    lean -o Agent49DrainCorrectionGrowth.olean Agent49DrainCorrectionGrowth.lean
     lean -o FatalFamilyInverseArithmetic.olean FatalFamilyInverseArithmetic.lean
     LEAN_PATH=/tmp lean FatalFamilyInverseActual.lean
 
@@ -64,3 +64,32 @@ All exported proofs compile with only propext, Classical.choice and Quot.sound (
 Run python verify.py from this directory. It compares exact reconstructed parent sets to Agent49's existing complete inverse algorithm for 997 even exponents p=8..2000; the regression distribution is 435 with no parent, 442 with one, and 120 with two. The finite regression is not the proof of the asymptotic claim.
 
 Next: formalize the complete source-envelope specialization and investigate deeper inverse ancestors of the surviving parameter families, ideally a parameter-level descent rather than more finite enumeration. The result does not exclude all possible terminal gates, or even the whole synthetic family.
+
+## Explicit infinite missing-gate subfamily
+
+For every integer r>=1, put p=6*3^r and k=p-1. Define L(t)=3t-1-2N1-N2 and R(t)=3t+P+2M+1. The maps are strictly increasing, even when the digit counts are truncated to any fixed length k. At the two adjacent integers t=2*3^r+1 and t+1 the ordinary counts are (1,1) and (0,2), giving L(t)=p-1 and L(t+1)=p+3. At t=p-3 and t+1 the balanced counts are (1,2) and (2,2), giving R(t)=3p-3 and R(t+1)=3p+1. Thus neither equation admits any natural t. This is a universal symbolic exclusion, not a bounded simulation.
+
+[FatalFamilyWindow.lean](FatalFamilyWindow.lean) proves the exact family size/positive-budget hypotheses and necessary digit gates. [FatalFamilyInfinite.lean](FatalFamilyInfinite.lean) proves the monotonicity and the all-r missing-gate theorem without nonstandard axioms in Lean 4.36.0-rc2. [FatalFamilySource.lean](FatalFamilySource.lean) connects the gate to the unchanged-source root run (including theorem power_three_root_excluded). The source adapter passed a local signature-level type check; full pinned-source CI is still required. The initial focused run 45401674640 failed in the pre-existing Agent49 parent envelope because unrestricted simp normalized the two branch inequalities. The minimal repair is commit 1b34eeb6e4b546cd808824ed09c85aff2de8a371; the source proof conclusion remains pending the next actual CI result.
+
+## Compressed inverse for arbitrary near-power targets
+
+Write target counters as ((C*3^k+u)/2,(D*3^k+v)/2), C,D>0 and integral natural coordinates. For a block b=(D*3^h+w)/2, h>=1, the positive-budget recurrence strips one ternary level by
+
+    r = (2*w) mod 3
+    w' = (w+4*r-6)/3
+    b' = (D*3^(h-1)+w')/2.
+
+The associated (drift,excess) charges are (+1,0),(-1,4),(-1,2) for r=0,1,2. Since 3*abs(w')<=abs(w)+6, the residual contracts outside [-3,3]. It eventually hits one of three fixed residuals -3,-1,1, or the two-cycle -2,0. A fixed tail contributes a linear function of its length, and a full two-cycle contributes (0,2). [NearPowerDrain.lean](NearPowerDrain.lean) proves the exact recurrence, contraction, and universal fixed/cycle jump theorems using the actual existing drain statistics; all compile with standard foundational axioms.
+
+For a guarded large-first target, n=2k+max(bitlength(D),bitlength(abs(v)))+2 bounds the true logarithmic inverse budget. The guard 3^k>=max(4n-u,30-v,1) ensures x>=2n and y>=15. For each eligible sector z, set h=k-1 and
+
+    ceil((v-2z-8n)/3) <= w <= floor((v-2z)/3),
+    w = 2*blockParity - D*3^(k-1) (mod 4).
+
+Require 3^(k-1)>=max(1,8-w_lo), ensuring b>=4 throughout. Every possible block belongs to this interval by the source window; the exact image equation becomes v=3w+2(E(b)+z). Agent49's image step-two theorem permits binary search on that residue progression. From the unique block, A=x-J(b) determines the parent. The restored near-power coefficients are (3C+D,D) or (D,3C+D), and the offsets are obtained by the exact affine parent table. The actual positive-budget trace exists because b<2^n and A>=n using the true output budget, and b>=4 makes the reconstructed branch offsets valid. Parity filtering gives the full even-first list. If a sufficient guard fails, return unknown rather than asserting there are no parents.
+
+[near_power.py](near_power.py) implements this arithmetic without constructing 3^k in the long-tail case; the guard uses bit lengths, and ordinary small-integer fallback is used when needed. Complexity per node is O(log(n+1)*(log(abs(w)+2)+log(D+2))) arithmetic operations, ignoring bit costs and allowing the direct fallback exponent to be O(log(abs(w)+2)). Thus for fixed reverse depth and the original near-power family the cost is polynomial in log p, rather than in p. The Python implementation itself is not kernel verified.
+
+The local exact regression matched the existing inverse on 10,000 random drain-statistics cases and 1,000 random near-power targets (where the guard held). Every even p from 8 through 19,998 (9,996 values) had a closed finite reverse tree under this guarded algorithm, with maximum depth 23 at p=5,288 (34 nodes). The very large exponents 10^6, 10^9, 10^18 and 10^100 had no immediate even-first predecessor. These are finite computations from the mathematical algorithm, not all-p theorems or Lean-certified tree certificates. In particular, the max-depth observation is not a uniform bound.
+
+The next useful task is a complete symbolic ancestor argument or a reusable source-sound inverse certificate checker; do not mistake the finite closure census for the solution of #623.
