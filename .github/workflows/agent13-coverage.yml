@@ -5,7 +5,7 @@ on:
       target:
         description: 'Source closure to verify'
         type: choice
-        options: [legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole, weighted-tnf-four-hole, weighted-tnf-four-hole-sibling, weighted-tnf-r1-sweep, queue-orbit, weighted-tnf-roster-convergence, weighted-tnf-roster-agent47-graft, weighted-tnf-pure-residuals, weighted-tnf-raw99, weighted-tnf-raw103, weighted-tnf-roster-composition, weighted-tnf-agent3-siblings, weighted-tnf-raw85-parent-check, weighted-tnf-raw91, weighted-tnf-raw87, weighted-tnf-raw83-pump, weighted-tnf-agent10-multi, weighted-tnf-agent10-five-new, weighted-tnf-agent10-raw106, weighted-tnf-raw63-counter, weighted-tnf-agent10-single]
+        options: [legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole, weighted-tnf-four-hole, weighted-tnf-four-hole-sibling, weighted-tnf-r1-sweep, queue-orbit, weighted-tnf-roster-convergence, weighted-tnf-roster-agent47-graft, weighted-tnf-pure-residuals, weighted-tnf-raw99, weighted-tnf-raw103, weighted-tnf-roster-composition, weighted-tnf-agent3-siblings, weighted-tnf-raw85-parent-check, weighted-tnf-raw91, weighted-tnf-raw87, weighted-tnf-raw83-pump, weighted-tnf-agent10-multi, weighted-tnf-agent10-five-new, weighted-tnf-agent10-five-roster, weighted-tnf-agent10-raw106, weighted-tnf-raw63-counter, weighted-tnf-agent10-single]
         default: legacy
       raw_id:
         description: 'Single Agent 10 residual index (single target only)'
@@ -417,6 +417,21 @@ jobs:
           python tools/lean_compile_closure.py --workdir /tmp/a48-raw63 --jobs 4 im-results/agent48-raw63-counter/Raw63RosterBridge.lean | tee /tmp/a48-raw63.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a48-raw63.log; then
             echo "Forbidden proof placeholder or native_decide found in raw63 closure" >&2
+            exit 1
+          fi
+
+      - name: Check raw66/raw70/raw80 and compose the 121-residual cut
+        if: inputs.target == 'weighted-tnf-agent10-five-roster'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent10-tnf-multipump/generate.py 66 70 80
+          export LEAN_PATH=im-results/agent8-coverage-contract:im-results/agent4-coverage-smoke:im-results/agent42-coverage-normal:im-results/agent13-coverage:im-results/agent13-weighted-first-one:im-results/agent6-fresh-glider:im-results/agent7-far:im-results/agent31-three-hole-tnf:im-results/agent50-weighted-tnf-pilot:im-results/agent10-tnf-multipump:im-results/agent13-roster-convergence
+          python tools/lean_compile_closure.py --workdir /tmp/a10-fivehole-roster --jobs 4 im-results/agent13-roster-convergence/FiveHoleRosterComposition.lean | tee /tmp/a10-fivehole-roster.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a10-fivehole-roster.log; then
+            echo "Forbidden proof placeholder or native_decide found in 121-residual composition closure" >&2
             exit 1
           fi
 
