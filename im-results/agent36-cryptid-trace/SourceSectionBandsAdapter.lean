@@ -11,7 +11,7 @@ open BB6.Agent36.SectionBandSeparation
 
 /-- The numeric phase-band measure of an arbitrary normalized source suffix. -/
 def sourceMeasure (n : Nat) (v : List Bool) : BB6.Agent26.GrowthBands.Section :=
-  ⟨n, (CryptidBoundary.trim v).length⟩
+  ⟨n, (BB6.OneSided.trim v).length⟩
 
 /-- Agent 32's exact GoodReturn inequalities instantiate the widened
 Agent 36 Edge135 relation without any additional simulation assumptions. -/
@@ -33,7 +33,7 @@ theorem edge135_of_returnWitness {n : Nat} {v : List Bool}
 /-- The global arbitrary-suffix theorem is now in the exact form needed by
 Path135: every normalized section either halts or supplies an Edge135 step. -/
 theorem section_edge_or_halt {n : Nat} {v : List Bool}
-    (hn : 5 ≤ n) (hv : CryptidBoundary.head v = false) :
+    (hn : 5 ≤ n) (hv : BB6.OneSided.head v = false) :
     BB6.OneSided.HaltWitness n v ∨
       ∃ t n' v', 0 < t ∧
         Edge135 (sourceMeasure n v) (sourceMeasure n' v') := by
