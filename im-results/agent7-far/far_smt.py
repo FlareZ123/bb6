@@ -78,8 +78,11 @@ def solve_one(table, d: int, reflected: bool, timeout_ms: int):
                     right = not right
 
                 if right:
-                    dst = 6 * delta[left_state][write] + next_control
-                    solver.add(has_edge(edges[symbol][src], dst))
+                    for dst_left_state in range(d):
+                        solver.add(Implies(
+                            delta[left_state][write] == dst_left_state,
+                            has_edge(edges[symbol][src], 6 * dst_left_state + next_control),
+                        ))
                 else:
                     # If delta(j,b)=left_state, then reading the old left
                     # head bit b and the newly written bit must compose.
@@ -96,7 +99,7 @@ def solve_one(table, d: int, reflected: bool, timeout_ms: int):
 
     result = solver.check()
     if result != sat:
-        return result, None, solver.reason_unknown() if result == sat else ""
+        return result, None, solver.reason_unknown()
 
     model = solver.model()
     dfa = [model.eval(delta[l][b], model_completion=True).as_long()
