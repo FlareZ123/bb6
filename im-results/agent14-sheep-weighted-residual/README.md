@@ -189,8 +189,12 @@ python3 im-results/agent16-sheep-even-return/reconstruct.py
 LEAN_PATH=im-results/agent16-sheep-even-return lean -o im-results/agent16-sheep-even-return/SheepEven.olean im-results/agent16-sheep-even-return/SheepEven.lean
 LEAN_PATH=im-results/agent16-sheep-even-return lean -o im-results/agent14-sheep-weighted-residual/GenericResidual.olean im-results/agent14-sheep-weighted-residual/GenericResidual.lean
 LEAN_PATH=im-results/agent14-sheep-weighted-residual:im-results/agent16-sheep-even-return lean im-results/agent14-sheep-weighted-residual/SingularCylinders.lean
-LEAN_PATH=im-results/agent14-sheep-weighted-residual lean im-results/agent14-sheep-weighted-residual/ThreeAdicLTE.lean
-lean im-results/agent14-sheep-weighted-residual/SingularLowH.lean
+cd im-results/agent14-sheep-weighted-residual
+lean -o ThreeAdicLTE.olean ThreeAdicLTE.lean
+lean -o SingularLowH.olean SingularLowH.lean
+LEAN_PATH=. lean -o SingularTerminal.olean SingularTerminal.lean
+LEAN_PATH=. lean SingularLanguage.lean
+cd ../..
 python3 im-results/agent14-sheep-weighted-residual/check_singular_two_step.py
 ```
 
@@ -202,8 +206,11 @@ cancellation, and finite `decide` certificates. In the type-II H=5 case it
 first forces `162 | B`, then checks only nine residues of `B/162` modulo 9,
 and applies the mod-10/mod-8 constraints. The Python script separately
 reproduces the full residue table and witnesses. Together with the earlier
-Lean tail theorems, the two lower bounds now have no unverified arithmetic
-case; the one-module all-H wrapper has not yet been built.
+Lean tail theorems, `SingularTerminal.lean` now proves the two lower bounds
+for all H in one checked module. `SingularLanguage.lean` additionally proves
+that type-II H must lie in six residue classes modulo 80 (H>=1).
+See [the exact terminal language](TERMINAL_LANGUAGE.md) for a two-way
+arithmetic parametrization with its separate verification status.
 
 ## Scope and limitation
 
