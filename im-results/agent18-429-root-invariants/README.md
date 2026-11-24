@@ -22,7 +22,7 @@ The corollary `no_halt_five_mod32` excludes the terminal sector `a%32=5`; this s
 
 **Unaccepted finite-range extension:** `BB429Branch29Prefix.lean` contains an adaptive dyadic cover intended to prove `n ≥ 128000127), and `BB429Branch29Source.lean` contains the corresponding original-source wrapper. The key `cover_one_million` computation and its source wrapper have **not** been accepted. The local manual workflow run [45416601834](https://github.com/FlareZ123/bb6/actions/runs/45416601834) was stopped by a runner shutdown before the Prefix module, with no compiler diagnostic. The original-source chain run [45124760705](https://github.com/FlareZ123/bb6/actions/runs/45124760705) also failed after about 57 minutes; its failed-job logs were unavailable (HTTP 404), so no Lean error was established. Do not report the stronger bound as source-checked. Do not rerun the unchanged expensive cover; optimize or split it only if that finite result remains useful.
 
-## Signed inverse structure: new parity reduction
+## Signed inverse structure: parity and exact first-pair reduction
 
 [Agent22's signed-drift analysis](../agent22-429-signed-drift/README.md) identifies the remaining difficulty: mixed infinite signed inverse paths are not excluded by the existing six Bad leaves. The exact hand derivation in [SIGNED_F_RUN_PARITY.md](SIGNED_F_RUN_PARITY.md) adds a structural restriction:
 
@@ -30,6 +30,9 @@ The corollary `no_halt_five_mod32` excludes the terminal sector `a%32=5`; this s
 - Modulo 4, the F-run length is (2) when the preceding and following pair types agree, and (0) when they differ (with the initial state treated as a virtual (S)-pair).
 
 This is an exact congruence argument from the compressed transition rules, but it is **not yet formalized in Lean** and does not itself eliminate the mixed recurrent SCC. The derivation has been sent to Agent22 for integration or adversarial review.
+
+The exact initial-state classification is recorded in [INITIAL_PAIR_CLASSIFICATION.md](INITIAL_PAIR_CLASSIFICATION.md): a first paired transition exists **iff** \(k\equiv2\pmod4\) or \(k\equiv15\pmod{16}\). In the first class the first pair is EF after four further F-blocks; in the second it is SF after six. For every other \(k\), the entire signed inverse path is the finite F-spine and terminates before any pair. Thus 11/16 of the branch-29 parameters are eliminated at the first paired-transition test. This is a theorem about the compressed signed system, not yet a Lean/source-root theorem.
+
 
 ## Why the root congruence tower works
 

@@ -95,6 +95,16 @@ The special `c=1` gives `(a,b)=(-3,-9)`, with an endless F spine; it lies outsid
 
 This is an exact hand proof, not yet formalized in Lean. It narrows the mixed-path problem but does not eliminate the mixed recurrent SCC. The derivation was sent to Agent22 for review and possible integration.
 
+## Exact first-pair classification
+
+[INITIAL_PAIR_CLASSIFICATION.md](INITIAL_PAIR_CLASSIFICATION.md) proves that, from the initial branch-29 signed state \(u=48(k+1)\), \(D=96(k+1)+18\), a first paired transition exists **if and only if**
+\[
+k\equiv2\pmod4\quad\text{or}\quad k\equiv15\pmod{16}.
+\]
+The first pair is EF after exactly four further F-blocks in the first class, and SF after exactly six in the second. For every other \(k\), no pair is possible anywhere on the F-spine; the signed inverse path terminates when its first coordinate becomes odd. This removes 11/16 of all integer parameters before the mixed-path problem begins.
+
+This is an exact hand proof from the compressed block equations, not yet formalized in Lean or transported to a source-root theorem. The remaining cases are the separate EF-start family \(k\equiv2\pmod4\) and SF-start family \(k\equiv15\pmod{16}\); neither is yet proved terminating.
+
 ## Highest-value next result
 
-Formalize the even-F-run reduction and use it to constrain the mixed recurrent SCC. The objective remains a well-founded, parameter-sensitive inverse theorem for the special line, or a genuine blank-root history invariant separating it from the other signed surviving rays. Prioritize an all-`k` result over another fixed-modulus residue list.
+Formalize the even-F-run and first-pair theorems, then analyze only the two surviving parameter families. The objective remains a well-founded, parameter-sensitive inverse theorem for the special line, or a genuine blank-root history invariant separating it from the other signed surviving rays. Prioritize eliminating the two all-`k` residue families over another fixed-modulus residue list.
