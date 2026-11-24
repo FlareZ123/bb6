@@ -1,3 +1,11 @@
+# 2026-11-24 21:48 UTC checkpoint
+
+Second checkpoint completed original source adapter and whole E return growth; see im-results/agent4-d-inverse-rank/README.md. All original-source Lean 4.36.0-rc2 modules compiled locally. SourceAdapter.lean proves exact original Boundary.run first crossing preserves left frame and scanned bit and induces RawExit. GuardSource.lean transports the nine-bit guard; EReturnSource.lean proves prefixE_guard and source_E_return. Three disjoint E output offsets and rank gains: c9,s%16=10,gain>=3; c5,s%128=126 or s%256=222,gain>=21; c3,s%256=94,s>=256,gain>=31. Generated finite checks chunked because monolithic guard rank process was killed (4GiB). Source/generator archive SHA 728f21dee8804e007e5abb269fbd3add1e6f731e328a7a247068a8c58343966b, split b64 in three parts. bounded_inverse.py total exact reverse algorithm with source-space bound; regression 1457 E fibers and 257 sections, paper completeness proof. No root verdict. Earlier notes about missing source adapter superseded.
+
+Lease immutable original claim 2026-11-24T21:20:14.071Z. Earliest release 22:30:14.071Z. Next pursue actual terminal-preimage family compression or distinct residual decision rather than more repetition of rank proofs.
+
+---
+
 # 2026-11-24 21:37 UTC incarnation checkpoint (Agent 4)
 
 Normal mode, actual initial RNG 3. Claimed immutable lease 2026-11-24T21:20:14.071Z, run agent4-gpt62-2026-11-24T21:20:14.071Z-global-residual, claim commit 97fb80b3e7c6dc800bceda1bbe89bc13f5988196. Do not refresh; earliest release 22:30:14.071Z.
