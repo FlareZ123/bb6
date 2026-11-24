@@ -15,6 +15,7 @@ on:
           - margin-chain
           - margin-half
           - margin-block
+          - margin-block-parallel
           - forward-unit
       chain_case:
         description: "Exceptional index for margin-chain"
@@ -25,7 +26,47 @@ on:
 permissions:
   contents: read
 jobs:
+  block-shards:
+    if: inputs.target == 'margin-block-parallel'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: true
+      matrix:
+        shard: [0, 1, 2, 3]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check independent block shards
+        run: |
+          set -euo pipefail
+          AG43=im-results/agent43-p1-high-cost-reset-count
+          GEN="$PWD/agent43-block-shard"
+          mkdir -p "$GEN"
+          export GEN LEAN_PATH="$AG43:$GEN"
+          N="${{ inputs.chain_case }}"
+          test "$N" = 3342
+          for m in CarryCert MarginCert BlockCarry BlockMargin Generate BlockProposal; do
+            lean -j1 -DElab.async=false -o "$AG43/$m.olean" "$AG43/$m.lean"
+          done
+          python "$AG43/gen_block_chain.py" "$N" 13730 8 6 "$GEN"
+          m=$(head -n1 "$GEN/modules.txt")
+          lean -j1 -DElab.async=false -o "$GEN/$m.olean" "$GEN/$m.lean"
+          sed '1d;$d' "$GEN/modules.txt" | awk -v shard="${{ matrix.shard }}" '(NR-1)%4==shard' | xargs -P2 -I{} bash -ec 'm="$1"; echo "Checking $m"; lean -j1 -DElab.async=false -o "$GEN/$m.olean" "$GEN/$m.lean"' _ {}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: agent43-block-shard-${{ matrix.shard }}
+          path: agent43-block-shard/BlockMargin3342G*.olean
+          if-no-files-found: error
+          compression-level: 1
+          retention-days: 3
   source-wall:
+    needs: block-shards
+    if: always() && (needs.block-shards.result == 'success' || needs.block-shards.result == 'skipped')
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -35,6 +76,12 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        if: inputs.target == 'margin-block-parallel'
+        with:
+          pattern: agent43-block-shard-*
+          merge-multiple: true
+          path: agent43-block-artifacts
       - name: Compile unchanged-source CountCone dependency chain and wall theorem
         run: |
           set -e
@@ -95,7 +142,7 @@ jobs:
             lean "$AG43/CarryCertSource.lean"
             exit 0
           fi
-          if [ "${{ inputs.target }}" = margin-blank ] || [ "${{ inputs.target }}" = budget-blank ] || [ "${{ inputs.target }}" = margin-chain ] || [ "${{ inputs.target }}" = margin-half ] || [ "${{ inputs.target }}" = margin-block ]; then
+          if [ "${{ inputs.target }}" = margin-blank ] || [ "${{ inputs.target }}" = budget-blank ] || [ "${{ inputs.target }}" = margin-chain ] || [ "${{ inputs.target }}" = margin-half ] || [ "${{ inputs.target }}" = margin-block ] || [ "${{ inputs.target }}" = margin-block-parallel ]; then
             RES=im-results/agent50-p1-residue
             GEN=$(mktemp -d "$PWD/.agent43-margin.XXXXXX")
             export LEAN_PATH="$LEAN_PATH:$RES:$GEN"
@@ -109,7 +156,7 @@ jobs:
             lean -o "$AG43/CarryCert.olean" "$AG43/CarryCert.lean"
             lean -o "$AG43/MarginCert.olean" "$AG43/MarginCert.lean"
             lean -o "$AG43/MarginSource.olean" "$AG43/MarginSource.lean"
-            if [ "${{ inputs.target }}" = margin-block ]; then
+            if [ "${{ inputs.target }}" = margin-block ] || [ "${{ inputs.target }}" = margin-block-parallel ]; then
               N="${{ inputs.chain_case }}"
               case "$N" in
                 286) K=1442; GROUP=16; P=2 ;;
@@ -125,7 +172,15 @@ jobs:
               export GEN
               m=$(head -n1 "$GEN/modules.txt")
               lean -j1 -DElab.async=false -o "$GEN/$m.olean" "$GEN/$m.lean"
-              sed '1d;$d' "$GEN/modules.txt" | xargs -P"$P" -I{} bash -ec 'm="$1"; echo "Checking $m"; lean -j1 -DElab.async=false -o "$GEN/$m.olean" "$GEN/$m.lean"' _ {}
+              if [ "${{ inputs.target }}" = margin-block-parallel ]; then
+                test "$N" = 3342
+                cp agent43-block-artifacts/*.olean "$GEN/"
+                while IFS= read -r m; do
+                  test -s "$GEN/$m.olean"
+                done < <(sed '1d;$d' "$GEN/modules.txt")
+              else
+                sed '1d;$d' "$GEN/modules.txt" | xargs -P"$P" -I{} bash -ec 'm="$1"; echo "Checking $m"; lean -j1 -DElab.async=false -o "$GEN/$m.olean" "$GEN/$m.lean"' _ {}
+              fi
               m=$(tail -n1 "$GEN/modules.txt")
               lean -j1 -DElab.async=false -o "$GEN/$m.olean" "$GEN/$m.lean"
               set -o pipefail
