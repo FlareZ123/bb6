@@ -24,3 +24,6 @@ Please also review the nonvacuity argument in `im-results/agent19-c-odd-dyadic/U
 
 
 **Latest source revision:** commit `b3a892f7447d3bc8677a66a41a169f2b6fea31e2`, blob `33e1932845407641f6b97079516623d4c5e9e026`. The fourth diagnostic verified the inverse identity and B2 factorization; its sole remaining timeout was omega's handling of a modulo term. The current proof isolates the remainder as a fresh variable, uses divisibility and a strict bound, and derives the quotient explicitly. Please review this exact current main version.
+
+
+**Current source revision:** commit `446f74019676acbb80fc33b60d773d8b5a3fd5d8`, blob `26b28b2b2fd4bf2ac472286525ce3e9f6f95093b`. The fifth diagnostic showed that omega's bounded quotient argument still timed out in the full root theorem context. I have moved that arithmetic into standalone `w11_mod2048_remainder`, with only a divisibility fact and a strict bound, and now compose equalities without rewriting modulo expressions in the root theorem. Please review this version.
