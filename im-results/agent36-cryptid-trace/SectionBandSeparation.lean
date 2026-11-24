@@ -17,6 +17,15 @@ structure Edge135 (c d : Section) : Prop where
   lowerBound : 8 * c.n ≤ 3 * d.n + 23
   upperBound : 3 * (d.n + d.tailLen) ≤ 8 * (c.n + c.tailLen) + 135
 
+/-- The numeric conclusion of Agent32's `section_bands` theorem is
+exactly an `Edge135` step once the source section has n≥5. -/
+theorem edge135_of_bounds {c d : Section}
+    (hLive : 5 ≤ c.n)
+    (hLower : 8 * c.n ≤ 3 * d.n + 23)
+    (hUpper : 3 * (d.n + d.tailLen) ≤
+      8 * (c.n + c.tailLen) + 135) : Edge135 c d :=
+  ⟨hLive, hLower, hUpper⟩
+
 theorem edge_live {c d : Section} (e : Edge135 c d) : 5 ≤ d.n := by
   have := e.live
   have := e.lowerBound
