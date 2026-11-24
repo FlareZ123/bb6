@@ -44,6 +44,17 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/Parity623Source.lean" Agent49ParitySource.lean
           lake env lean -o .lake/build/lib/lean/Agent49ParitySource.olean Agent49ParitySource.lean
 
+      - name: Compile Agent41 root-mass gap theorem against unchanged source
+        working-directory: /tmp/cryptids
+        run: |
+          set -euo pipefail
+          cp "$GITHUB_WORKSPACE/im-results/agent41-623-root-history/RootMassGapSource.lean" Agent41RootMassGapSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent41RootMassGapSource.olean Agent41RootMassGapSource.lean 2>&1 | tee Agent41RootMassGapSource.log
+          if grep -q 'sorryAx' Agent41RootMassGapSource.log; then
+            echo 'sorryAx detected in root-mass gap theorem'
+            exit 1
+          fi
+
       - name: Compile source-checked total-carry counterexample
         working-directory: /tmp/cryptids
         run: |
