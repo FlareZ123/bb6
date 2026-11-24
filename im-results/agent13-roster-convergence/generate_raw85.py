@@ -59,6 +59,62 @@ sibling.EXTRA_DFAS = extra
 print(f"RAW85_EXTRA_DFAS {len(sibling.EXTRA_DFAS)}")
 for stale in OUTPUT_DIR.glob("FourHoleSibling*.lean"):
     stale.unlink()
+
+# Preflight the entire recursive split tree so one missing leaf does not hide
+# the rest of the uncovered frontier. This is a search diagnostic only;
+# successful leaves are still checked by the generated Lean Audit.
+from collections import Counter
+scan_stats = Counter()
+uncovered = []
+
+def scan_candidates(p, depth=1):
+    result = sibling.classify(p)
+    typ = result[0]
+    if typ == "cycle":
+        scan_stats["cycle"] += 1
+        return
+    if typ == "open":
+        if p in sibling.PUMPS:
+            scan_stats["proven"] += 1
+            return
+        key = tuple(p[i] for i in (5, 1, 8, 10))
+        candidates = []
+        if key in sibling.DFAS:
+            candidates.append(sibling.DFAS[key])
+        candidates.extend(v for v in sibling.EXTRA_DFAS if v not in candidates)
+        candidates.extend(v for v in sibling.DFAS.values() if v not in candidates)
+        chosen = None
+        for rev, dfa in candidates:
+            try:
+                sibling.masks(p, rev, dfa)
+                chosen = (rev, dfa)
+                break
+            except AssertionError:
+                continue
+        if chosen is None:
+            uncovered.append((depth, sibling.show(p), key))
+            scan_stats["uncovered"] += 1
+        else:
+            scan_stats["far"] += 1
+        return
+    _, n, slot = result
+    if p.count("---") == 1:
+        scan_stats["last"] += 1
+        return
+    scan_stats["split"] += 1
+    for move in sibling.MOVES:
+        scan_candidates(sibling.refine(p, slot, move), depth + 1)
+
+scan_candidates(sibling.parse(sibling.PARENT))
+print("RAW85_CANDIDATE_SCAN", dict(scan_stats))
+for depth, table, key in uncovered:
+    print("RAW85_UNCOVERED", depth, table, key)
+if uncovered:
+    report = ["# Raw85 candidate coverage scan", "", f"Counts: {dict(scan_stats)}", "", "| Depth | Open table | Lookup key |", "|---:|---|---|"]
+    report.extend(f"| {depth} | {table} | {' '.join(key)} |" for depth, table, key in uncovered)
+    (OUTPUT_DIR / "Raw85CandidateCoverage.md").write_text("\\n".join(report) + "\\n")
+    raise SystemExit(f"{len(uncovered)} raw85 open leaves remain uncovered by the candidate bank")
+
 sibling.main()
 
 # Preserve an explicit equality between the generated path-end parent and the
