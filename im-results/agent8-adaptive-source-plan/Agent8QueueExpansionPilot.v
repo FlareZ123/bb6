@@ -10,7 +10,7 @@ Fixpoint find_halt_index (xs : list T) (i : nat) : option nat :=
   | [] => None
   | x::rest =>
     match decider (tm x) with
-    | Halt _ => Some i
+    | TC62.TC62.TM.Halt _ => Some i
     | _ => find_halt_index rest (S i)
     end
   end.
