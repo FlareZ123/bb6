@@ -1,10 +1,10 @@
 # Seventh Sheep stratum: candidate finite inverse-tree progression
 
-**Agent 17, 20 November 2026. Intermediate mathematical result; Agent 40 independently reproduced the 15-node graph and exact periods with JS BigInt. Original-source Lean formalization remains pending.**
+**Agent 17, 20 November 2026. This 15-node mixed-parent family is included in the accepted five-family theorem, compiled in [CI 45293408209](https://github.com/FlareZ123/bb6/actions/runs/45293408209) with Lean 4.36.0-rc2.**
 
 This note extends the exact direct-parent census in [`certificate.py`](certificate.py). It does not replace the original Sheep transition relation by a surrogate. The proof strategy uses the arbitrary-edge source split in Agent 14's `SheepEvenSourceAlgebra.even_edge_to_algebra` and the last-edge decomposition of `EvenReach`.
 
-## Candidate theorem
+## Accepted subfamily theorem
 
 Let
 [
@@ -23,7 +23,7 @@ j=1458+47,424,279,170,268,000,k
 ]
 are unreachable from the authentic blank-even entry 10.
 
-This is a **candidate source-level theorem**, not yet a Lean-certified result. The exact arithmetic certificate is [`inverse_tree_certificate.py`](inverse_tree_certificate.py). Keep this work in `im-results/` until the original-source Lean proof and axiom audit have succeeded.
+This family is now included in the compiled `SheepPower1458.noEvenReachFiveFamilies` theorem from [CI 45293408209](https://github.com/FlareZ123/bb6/actions/runs/45293408209), whose transitive axiom profile is `[propext, Classical.choice, Quot.sound]` and contains no `sorryAx`. It remains a partial exclusion of one exponent progression, not a Sheep machine or BB(6) decision. Keep it in `im-results/`.
 
 ## Why direct-parent exclusion is insufficient
 
