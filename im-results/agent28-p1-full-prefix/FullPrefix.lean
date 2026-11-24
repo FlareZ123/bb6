@@ -268,6 +268,7 @@ theorem source_full_prefix (n b d m z K : Nat) (hn : 14≤n)
   have hmq : m≤Q := by omega
   obtain ⟨A, hnd, hlt, hstart, hInv⟩ :=
     source_cost_witness n b d m z hn h
+  have hd : d%2=1 := source_odd_right n b d m z h
   let v := (d-1)/2
   have hD : d-1=2*v := by
     dsimp [v]
