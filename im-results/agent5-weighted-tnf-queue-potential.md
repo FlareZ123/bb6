@@ -76,6 +76,12 @@ The child-coverage step in the Halt case is exactly the mathematical content of 
 Induction over SearchQueue_upds then preserves the invariant for any finite fuel. The potential result above additionally proves that, for chunks of at most 100 nodes, the active q1 is actually empty before MAXT. If the chunks partition fst(q0) and carry snd(q0) forward without omission or duplication, the final holdout list is therefore exhaustive relative to q0. To close the root, one must then classify every holdout or provide a weighted certificate for it.
 
 
+
+## Upstream scope warning
+
+The pinned upstream README (https://github.com/ccz181078/busycoq/blob/33209bc7dc282b38c8cd6be507bfc551fea56108/README.md) reports about 607 BB(6) holdouts and explicitly says the correctness of its TNF enumeration has not been proved in Rocq. It also says the individual-proof and decider pipeline over that enumeration is not part of the ordinary make build because the run is estimated to take about a month. Therefore the existence of the 607-entry holdout roster is not itself an exhaustive BB(6) certificate. The potential above only proves that the MAXT fuel does not truncate any documented chunk of at most 100 nodes; the missing enumeration-coverage theorem remains real.
+
+
 ## What remains unproved
 
 The fuel-sufficiency result does **not** by itself prove:
