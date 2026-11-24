@@ -58,6 +58,11 @@ on:
         required: false
         type: boolean
         default: false
+      verify_f289_exact_graft:
+        description: 'Extend the six-root audit with exact primitive-step certificates for both F289 halting roots'
+        required: false
+        type: boolean
+        default: false
       bridge_path:
         description: 'Repo-relative Lean source proof importing original module and dependency'
         required: true
@@ -110,6 +115,9 @@ jobs:
             test -f "$EXTRA_DEPENDENCY_PATH"
             test "$EXTRA_DEPENDENCY_PATH" != "$DEPENDENCY_PATH"
             test "$EXTRA_DEPENDENCY_PATH" != "$BRIDGE_PATH"
+          fi
+          if [[ "${{ inputs.verify_f289_exact_graft }}" == "true" ]]; then
+            test "$VERIFY_SIX_ROOT_GRAFT" = "true"
           fi
           if [[ "$VERIFY_SIX_ROOT_GRAFT" == "true" ]]; then
             test "$ORIGINAL_MODULE" = "BusyBeaver.Bridge"
@@ -296,6 +304,32 @@ jobs:
             exit 1
           fi
           echo "Six-root graft compiled; no sorryAx in exported axiom profiles."
+      - name: Compile exact F289 cost and frontier graft
+        if: ${{ inputs.verify_f289_exact_graft }}
+        working-directory: /tmp/cryptids
+        shell: bash
+        run: |
+          set -euo pipefail
+          lake build \
+            BusyBeaver.BB6.Halt.M_1RB0RE_1RC0RA_0LD0LB_0LA1LE_1LC1LF_0LAHHH \
+            BusyBeaver.BB6.Halt.M_1RB1RF_0RC0RE_0RD1RA_1LE0LA_1LB0LD_0RDHHH
+          src="$GITHUB_WORKSPACE/im-results"
+          for m in RleCostAlgebra RleCountedAtoms RleCountedAll AuditRaiseBound RleCoverageGraft RleFrontierGraft; do
+            cp "$src/agent17-f289-exact-cost/$m.lean" BB6Agent42/
+          done
+          cp "$src/agent4-coverage-smoke/CryptidsHaltIff.lean" BB6Agent42/
+          for m in AuditReportMeasure IncrementalAuditReport; do
+            cp "$src/agent8-coverage-contract/$m.lean" BB6Agent42/
+          done
+          export LEAN_PATH=BB6Agent42
+          for m in RleCostAlgebra RleCountedAtoms RleCountedAll CryptidsHaltIff AuditRaiseBound AuditReportMeasure IncrementalAuditReport RleCoverageGraft RleFrontierGraft; do
+            log="/tmp/cryptids-source-audit/$m.log"
+            lake env lean -o "BB6Agent42/$m.olean" "BB6Agent42/$m.lean" 2>&1 | tee "$log"
+            if grep -Eq 'sorryAx|native_decide' "$log"; then
+              echo "::error::forbidden axiom or native_decide in $m"
+              exit 1
+            fi
+          done
       - name: Prove against unchanged source definitions and audit axioms
         if: ${{ !inputs.verify_six_root_graft && !inputs.simulate_second_f289 && !inputs.verify_f289_rle_cost }}
         working-directory: /tmp/cryptids
