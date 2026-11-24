@@ -591,8 +591,10 @@ theorem positive_history_final_run_exact
   have hq : Q k z=3^r*Q k x := same_run_q hs
   have hqzhi : Q k z≤2*P k+k+2 := (q_bounds hbz).2
   rcases hbase with ⟨hk,hseed⟩ | ⟨s',y,hy,hr⟩
-  · have hWz:=w_add_two_q hbz
-    rw [hk] at hWz
+  · have hbzJ : Band j z := by simpa [hk] using hbz
+    have hWQ : W j z+2*(Q j z:Int)=4*(P j:Int)-3 := by
+      unfold W
+      omega
     have hformula : 6*(Q j z:Int)=4*(P j:Int)+w-3 := by omega
     have hqJ : Q j z=3^r*Q j x := by simpa [hk] using hq
     have hqJI : (Q j z:Int)=(3^r:Int)*(Q j x:Int) := by
@@ -601,20 +603,34 @@ theorem positive_history_final_run_exact
     rw [hk]
     rw [← hqJI]
     exact hformula
-  · have hby : Band (k+1) y := positive_history_band hy
-    have hqlo : k+7≤Q (k+1) y := (q_bounds hby).1
+  · have hby := positive_history_band hy
+    have hqx := q_eq hbz
+    have hqy := q_eq hby
+    have hqxI : (Q k z:Int)+2*(P k:Int)=2*(z:Int)+3*(k:Int)+12 := by
+      exact_mod_cast hqx
+    have hqyI : (Q (k+1) y:Int)+2*(P (k+1):Int)
+        =2*(y:Int)+3*((k+1):Int)+12 := by
+      exact_mod_cast hqy
+    have hWQx : W k z+2*(Q k z:Int)=4*(P k:Int)-3 := by
+      unfold W
+      omega
+    have hWQy : W (k+1) y+2*(Q (k+1) y:Int)
+        =4*(P (k+1):Int)-3 := by
+      unfold W
+      omega
+    have hWdown := w_regular_down hr
+    have hpI : (P (k+1):Int)=2*(P k:Int) := by
+      exact_mod_cast p_succ k
     have hdownQ :
         3*(Q k z:Int)=(Q (k+1) y:Int)+(P (k+1):Int)-3 := by
-      have hWdown:=w_regular_down hr
-      have hWz:=w_add_two_q hbz
-      have hWy:=w_add_two_q hby
-      have hp:=p_succ k
       omega
+    have hqlo : k+7≤Q (k+1) y := by
+      have hqb:=q_bounds hby
+      omega
+    have hqloI : (k:Int)+7≤(Q (k+1) y:Int) := by
+      exact_mod_cast hqlo
     have hQzloI :
         2*(P k:Int)+(k:Int)+4≤3*(Q k z:Int) := by
-      have hqloI : (k:Int)+7≤(Q (k+1) y:Int) := by
-        exact_mod_cast hqlo
-      have hp:=p_succ k
       omega
     have hQzlo : 2*P k+k+4≤3*Q k z := by
       exact_mod_cast hQzloI
@@ -622,12 +638,14 @@ theorem positive_history_final_run_exact
       calc
         2*P k+k+4 ≤3*Q k z := hQzlo
         _ =3*(3^r*Q k x) := by rw [hq]
-        _ =3^(r+1)*Q k x := by rw [Nat.pow_succ]; ring
+        _ =3^(r+1)*Q k x := by
+          rw [Nat.pow_succ]
+          rw [Nat.mul_assoc]
+          rw [Nat.mul_comm 3 (3^r)]
     have hhigh : 3^r*Q k x≤2*P k+k+2 := by
       rw [← hq]
       exact hqzhi
     exact ⟨r,z,hs,Or.inr ⟨s',y,hy,hr,hlow,hhigh⟩⟩
-
 #print axioms positive_history_final_run_exact
 
 #print axioms positive_history_final_run
