@@ -55,7 +55,7 @@ Qed.
 (* Last-hole trace: all ordinary fills are total tables; the halt fill
    has the recorded raw time. Charge <=5 incoming zero writes + query. *)
 Theorem source_last_hole_cylinder bound p n h :
-  get_num_undef_trans p = 1 ->
+  get_num_undef_trans p = 1%nat ->
   halts_at p c0 n h ->
   (n + 6 <= bound)%nat ->
   source_table_safe bound p.
