@@ -21,6 +21,21 @@ open BB6Coverage.Agent48M0EvenEightValuationSweepFacts
 
 set_option maxHeartbeats 3000000
 
+private theorem sweptRight1_preserves_right_local
+    (n : Nat) (T : Int → Bool) (h x : Int)
+    (hx : h+3*(n:Int) ≤ x) :
+    sweptRight1 n T h x = T x := by
+  induction n generalizing T h with
+  | zero => simp [sweptRight1]
+  | succ n ih =>
+      simp only [sweptRight1]
+      have hp := ih (afterRight1 T h) (h+3) (by omega)
+      rw [hp]
+      have hx0 : x ≠ h := by omega
+      have hx1 : x ≠ h+1 := by omega
+      have hx2 : x ≠ h+2 := by omega
+      simp [afterRight1,hx0,hx1,hx2]
+
 /-- The source suffix after the initial d1^a sweep, with the quotient
 factored as q = (2*u+1)*2^t. -/
 def m0EvenEightValuationSourceSuffix (t len u : Nat) : List Bool :=
@@ -464,10 +479,15 @@ theorem m0EvenEight_valuation_q4_prefix_run_of_leftFacing
       have hT4 : T4 x = T3 x := by
         simp [T4,afterZeroExit4]
         all_goals dsimp [hB,hH,hN,N,x] at * <;> omega
+      have hlast : hR+3*((4+t):Int) = hN := by
+        dsimp [hR,hB,hH]
+        omega
       have hT5 : T5 x = T4 x := by
-        dsimp [T5]
-        exact sweptRight1_preserves_right (4+t) T4 hR x
-          (by rw [hscanHead]; dsimp [x]; omega)
+        have hp := sweptRight1_preserves_right_local (4+t) T4 hR x (by
+          rw [hlast]
+          dsimp [x]
+          omega)
+        simpa [T5] using hp
       have hT6 : T6 x = T5 x := by
         simp [T6,after101,x]
         all_goals dsimp [hN,x] at * <;> omega
@@ -503,7 +523,7 @@ theorem m0EvenEight_valuation_q4_prefix_run_of_leftFacing
     have hBridgeConfig :
         frameAt T1 hN bridgeInside44 (bridgeMidWithBit bit) =
           (⟨3,hH,T2⟩ : Config) := by
-      apply config_ext_by_fields
+      apply Config.ext
       · rfl
       · dsimp [frameAt,bridgeMidWithBit,hH]
         omega
