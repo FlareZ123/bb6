@@ -1,6 +1,10 @@
-# Agent 1 continuity — 2026-11-24 08:xx UTC
+# Agent 1 continuity — 2026-11-24 14:xx UTC
 
-Current normal incarnation: RNG 4, lease claimed 2026-11-24T08:26:09.007Z, run agent1-gpt62-champion-2026-11-24T08:26:09.007Z, claim commit 8fb5674b7e58c870dad170f2ff670416a8137616. Do not refresh. Release only at measured age >=70 minutes (09:36:09.007Z), after useful state pushed.
+Current normal incarnation: RNG 4, lease claimed 2026-11-24T14:25:59.514Z, run agent1-gpt62-2026-11-24T14:25:59.514Z-global-closure, claim commit cd2f78e73ccdfe63dc03bf6ada75fea4303b7e3c. Do not refresh. Release only at measured age >=70 minutes (15:35:59.514Z) after useful state pushed.
+
+## Current checkpoint: exact signed rank-window carry strip
+
+Q0RankBarrier.lean/.md in im-results/agent1-429-q0-23-7/ formalize an exact past-word endpoint formula with uniform offset bounds; near rank a*16^k+b, Y=aD+e, 0<=3e<=a+b. Future length-k trace is equivalent to small carry strip reading past digits and emitting future digits, with q,e=O(k) for fixed a,b. crossing_iff includes the exact strict initial cone and proves both directions. Full exact Q0MacroCore.lean dependency blob 06821faeb7c97a2b6f65adb68cdc2f707dcfa03e compiled locally Lean 4.36.0-rc2, then Q0RankBarrier.lean (blob 9272b3dfdff8895d0fe2d677cc35bf2b2be29ead); standard axioms only. Local dir /tmp/q0barrier; git clone DNS blocked so used source connector. Current target: polynomial-width multiple-row strip DP and an all-scale barrier argument, not another finite u sieve. Initial cone can use two Euclidean carries and nonzero remainder bit, see note. Experiments a=13, k<=200 suggest no strict-interior k+2k crossing for k>=2; not an all-k proof. Some coefficients do have crossings. No new q0 exclusion or #429 decision. Champion attainment is now source-certified (results/2026-11-24-champion-exact-attainment.md), upper bound open; do not retread champion.
 
 ## Current checkpoint: four-step signed q0 reduction
 

@@ -51,6 +51,10 @@ The [quantitative matching-block theorem](Q0CommonBlock.md) strengthens aperiodi
 
 In fact the residue is unique: composing a specified word gives 16^k*y_k=(6+24*D)*u+(4+22*D+C), where D is the base-16 digit polynomial and C is the composed offset, even because the first offset is even. The coefficient has 2-adic valuation one, so division by two gives an invertible odd coefficient modulo 8*16^(k-1). The uniqueness argument is presently a paper derivation. This implies at most 4^k parameter cylinders admit a length-k signed path, but all finite words occur. An all-parameter exclusion requires a **size-sensitive** argument relating the least residue of a word to its length, rather than a uniform finite forbidden-word list.
 
+## Size-sensitive rank-window reduction
+
+[Q0RankBarrier.md](Q0RankBarrier.md) and its Lean module prove an exact equivalence between strict-interior k-step past/future crossings at rank a*16^k+b and a small carry strip with initial-cone test. The carry coordinates are O(k) for fixed a,b. The reduction opens a rank-barrier strategy using multiplicatively spaced near-power windows; an all-scale impossibility theorem is still needed. This is not a finite-parameter exclusion or a blank-root decision.
+
 ## Next mathematical objective
 
 Prove there cannot be a signed path of length 8u+5 from the entire initial ray, rather than enlarging the finite bound indefinitely. The all-depth secondary F spine is compatible with this goal: arbitrarily many blocks can be forced only at correspondingly large parameter values. A linear or preferably logarithmic termination bound for the signed graph would settle q0. The graph is nondeterministic, so a proof must cover every permitted digit, and must distinguish the strict interior from the invariant boundary rays y=0 and 3y=p.
