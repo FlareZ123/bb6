@@ -77,8 +77,16 @@ theorem exact_BB6_from_weighted_cover
   exact cert.sound m ((compatible_refine_iff emptyTable m initialSlot rfl
     (some ⟨true,true,(1 : Fin 6)⟩)).mpr ⟨empty_compatible m,hf⟩)
 
+/-- A single source-certified weighted TNF tree at the authentic 1RB root,
+    together with the exact raw champion witness, proves exact BB(6). -/
+theorem exact_BB6_from_tnf_certificate
+    (cert : WeightedTNFCertificate (proposedTM63Moves+7) firstOneCylinder 2) :
+    BB6.Coverage.ExactBB6 (proposedTM63Moves+7) :=
+  exact_from_tnf_certificate _ champion_score_ge_six cert champion_raw_witness
+
 #print axioms champion_raw_halts_exact
 #print axioms champion_weighted_bound
 #print axioms exact_BB6_from_cover
 #print axioms exact_BB6_from_weighted_cover
+#print axioms exact_BB6_from_tnf_certificate
 end BB6Coverage.Agent48DirectRoot
