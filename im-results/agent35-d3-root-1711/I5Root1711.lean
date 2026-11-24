@@ -102,9 +102,9 @@ private theorem no_frozen_before_live_endpoint
       CryptidBoundary.run N c =
         CryptidBoundary.run (N - n) (CryptidBoundary.run n c) := by
     calc
-      CryptidBoundary.run N c =
-          CryptidBoundary.run (n + (N - n)) c := by rw [← ht]
-      _ = _ := CryptidBoundary.run_add n (N - n) c
+      _ = CryptidBoundary.run (n + (N - n)) c :=
+        congrArg (fun m => CryptidBoundary.run m c) ht.symm
+      _ = _ := CryptidBoundary.run_add _ _ _
   have hfinal : (CryptidBoundary.run N c).st = 6 := by
     rw [hrun, frozen_run (CryptidBoundary.run n c) (N - n) hst]
     exact hst
