@@ -84,7 +84,7 @@ theorem word_zero (n m v w u z B : Nat) (h : WordBound n m v w B)
   have hlu : D*(2*z)=2*D*z := by ac_rfl
   have hrw : D*(n+m+3)=(n+m+3)*D := Nat.mul_comm _ _
   have ht : D*total n=total n*D := Nat.mul_comm _ _
-  rw [hru,hrw,ht] at hl
+  rw [hlu,hrw,ht] at hl
   rw [hlu] at hr
   omega
 
