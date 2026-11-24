@@ -75,7 +75,7 @@ theorem renameHaltsAfter_iff (e : StatePerm) (m : Machine)
     HaltsAfter (renameTable e m) n ↔ HaltsAfter m n := by
   have h := rename_haltsAt_iff e m (0 : Fin 6) n
   rw [hroot] at h
-  simpa [HaltsAfterAt, blankAt_zero] using h
+  simpa [HaltsAfter, HaltsAfterAt, blankAt_zero] using h
 
 theorem renameDecidedBelow_iff (B : Nat) (e : StatePerm) (m : Machine)
     (hroot : e.forward (0 : Fin 6) = 0) :
@@ -166,17 +166,17 @@ theorem tnf_expansion_cover
             have htr : tr = some ⟨mv.write, mv.right, a⟩ :=
               (Option.some.inj hs').symm
             subst tr
-            have hraw : machine h = some (some mv) :=
+            have hraw : machine h = some mv :=
               hcomp h (some mv) (by simp [refine])
             simp [machine', renameTable, hsourceFixed, hraw, renameMove, htarget]
           · have hp : p slot = some tr := by
               simpa [refine, hslot] using hs
             have hslotUsed : slot.1.val < m := by
-              by_contra hnot
-              have hge : m ≤ slot.1.val := Nat.le_of_not_gt hnot
-              have hnone := wf.unusedSource slot.1 slot.2 hge
-              rw [hp] at hnone
-              contradiction
+              by_cases hge : m ≤ slot.1.val
+              · have hnone := wf.unusedSource slot.1 slot.2 hge
+                rw [hp] at hnone
+                contradiction
+              · omega
             have hback : e.backward slot.1 = slot.1 :=
               (swapStatePerm_fix_below m a mv.next slot.1 ha hb hslotUsed).2
             have hraw : machine slot = tr :=
@@ -191,6 +191,7 @@ theorem tnf_expansion_cover
                   (swapStatePerm_fix_below m a mv.next mv2.next ha hb htargetUsed).1
                 simp [machine', renameTable, hback, hraw, renameMove, hforward]
         have hgood : DecidedBelow B machine' := hcanonical.sound machine' hcomp'
+        change DecidedBelow B (renameTable e machine) at hgood
         exact (renameDecidedBelow_iff B e machine hroot).mp hgood
 
 #print axioms tnf_expansion_cover
