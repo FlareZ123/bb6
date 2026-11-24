@@ -336,13 +336,16 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent42-coverage-normal/CrossFirstUpper.lean" BB6Agent42/
           cp "$GITHUB_WORKSPACE/im-results/agent42-coverage-normal/TwoCylinder.lean" BB6Agent42/
           cp "$GITHUB_WORKSPACE/im-results/agent13-coverage/BB6Coverage.lean" BB6Agent42/
-          for m in BlankDelayKernel BlankDelaySource SparseBlankDelay WeightedTNF WeightedTNFCertificate; do
+          for m in BlankDelayKernel BlankDelaySource SparseBlankDelay WeightedTNF WeightedTNFCertificate WeightedFirstOneCover; do
             cp "$GITHUB_WORKSPACE/im-results/agent13-weighted-first-one/$m.lean" BB6Agent42/
           done
           cp "$GITHUB_WORKSPACE/im-results/agent47-weighted-halt-branch/WeightedNonhaltLeafAdapter.lean" BB6Agent42/
           cp "$GITHUB_WORKSPACE/im-results/agent47-weighted-halt-branch/CryptidsWeightedLeaves.lean" BB6Agent42/
+          for m in FirstHolePath CryptidsFirstHolePaths; do
+            cp "$GITHUB_WORKSPACE/im-results/agent8-cryptids-tnf-paths/$m.lean" BB6Agent42/
+          done
           export LEAN_PATH=BB6Agent42
-          for m in RootShift FirstStep WriteOneDrift Prune TwoFirst BB6Coverage OneHalt CrossCoverage CrossUpper CrossFirstUpper TwoCylinder BlankDelayKernel BlankDelaySource SparseBlankDelay WeightedTNF WeightedTNFCertificate WeightedNonhaltLeafAdapter CryptidsWeightedLeaves; do
+          for m in RootShift FirstStep WriteOneDrift Prune TwoFirst BB6Coverage OneHalt CrossCoverage CrossUpper CrossFirstUpper TwoCylinder BlankDelayKernel BlankDelaySource SparseBlankDelay WeightedTNF WeightedTNFCertificate WeightedFirstOneCover WeightedNonhaltLeafAdapter CryptidsWeightedLeaves FirstHolePath CryptidsFirstHolePaths; do
             log="/tmp/cryptids-source-audit/$m-weighted-tnf.log"
             lake env lean -o "BB6Agent42/$m.olean" "BB6Agent42/$m.lean" 2>&1 | tee "$log"
             if grep -Eq 'sorryAx|native_decide' "$log"; then
@@ -350,7 +353,7 @@ jobs:
               exit 1
             fi
           done
-          echo "All six Cryptids machines compile as weighted-TNF nonhalt leaves; no sorryAx in the adapter closure."
+          echo "All six Cryptids machines compile as weighted-TNF nonhalt leaves with authentic first-hole paths; no sorryAx in the adapter closure."
 
       - name: Compile exact F289 cost and frontier graft
         if: ${{ inputs.verify_f289_exact_graft }}
