@@ -14,6 +14,7 @@ on:
           - budget-blank
           - margin-chain
           - margin-half
+          - forward-unit
       chain_case:
         description: "Exceptional index for margin-chain"
         required: false
@@ -48,6 +49,18 @@ jobs:
           for m in GParity GInverse PosEvenForm; do
             lean -o "$MAP/$m.olean" "$MAP/$m.lean"
           done
+          if [ "${{ inputs.target }}" = forward-unit ]; then
+            FWD=im-results/agent28-p1-forward
+            export LEAN_PATH="$LEAN_PATH:$FWD"
+            lean -o "$CARRY/ReverseUnitMap.olean" "$CARRY/ReverseUnitMap.lean"
+            set -o pipefail
+            for m in ForwardUnit ForwardPhase ForwardEven ForwardReset ForwardHalt; do
+              lean -o "$FWD/$m.olean" "$FWD/$m.lean"
+            done | tee /tmp/agent28-forward-axioms.txt
+            grep -q blank_critical_clock_iff /tmp/agent28-forward-axioms.txt
+            if grep -q sorryAx /tmp/agent28-forward-axioms.txt; then exit 1; fi
+            exit 0
+          fi
           lean -o "$INV/P1FiniteInverse.olean" "$INV/P1FiniteInverse.lean"
           for m in MassInverse OddConeMass; do
             lean -o "$P1/$m.olean" "$P1/$m.lean"
