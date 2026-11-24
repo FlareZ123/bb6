@@ -5,7 +5,7 @@ on:
       target:
         description: 'Source closure to verify'
         type: choice
-        options: [legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole]
+        options: [legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole, weighted-tnf-four-hole]
         default: legacy
 permissions:
   contents: read
@@ -133,5 +133,18 @@ jobs:
           python tools/lean_compile_closure.py --workdir /tmp/a31-tnf --jobs 8 im-results/agent31-three-hole-tnf/ThreeHoleData.lean | tee /tmp/a31-tnf.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a31-tnf.log; then
             echo "Forbidden proof placeholder or native_decide found in three-hole closure" >&2
+            exit 1
+          fi
+
+      - name: Check full four-hole weighted TNF subtree
+        if: inputs.target == 'weighted-tnf-four-hole'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python tools/lean_compile_closure.py --workdir /tmp/a31-four --jobs 4 im-results/agent31-three-hole-tnf/FourHoleData.lean | tee /tmp/a31-four.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a31-four.log; then
+            echo "Forbidden proof placeholder or native_decide found in four-hole closure" >&2
             exit 1
           fi
