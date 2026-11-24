@@ -16,29 +16,30 @@ D(S)=P'_S(1)=\sum_i i x_i,\qquad
 W(S)=P_S(2).
 \]
 
-Fix a positive gate offset \(c\). Let
-\[
-N=W(S)+c,\qquad r=v_2(N),\qquad m=N/2^r.
-\]
-The existing source theorem says that the gate halts exactly when \(N\) is a power of two, equivalently \(m=1\). In the successful case \(m>1\) is odd.
-
-Define the carry sequence through the first odd carry by
+Fix a positive gate offset \(c\), and write \(N=W(S)+c\) and \(r=v_2(N)\). Define the carry sequence through its first odd value by
 \[
 t_0=x_0+c,\qquad
-t_{i+1}=x_{i+1}+t_i/2\quad(0\le i<r).
+t_{i+1}=x_{i+1}+t_i/2\quad(0\le i<r),
 \]
-The divisions are integral because \(t_i\) is even for every \(i<r\). The recurrence is continued with \(x_i=0\) after the original stack ends. Unrolling gives
+where \(t_i\) is even for every \(i<r\), and use \(x_i=0\) after the original stack ends. Unrolling gives
 \[
-t_i=\frac{c+\sum_{j=0}^{i}2^j x_j}{2^i},
-\qquad t_r=m.
+t_i=\frac{c+\sum_{j=0}^{i}2^j x_j}{2^i}.
 \]
+In particular, \(t_r\) is the **local terminal odd carry**.
+
+It is important not to confuse \(t_r\) with the global odd quotient \(q=N/2^r\). The exact relation is
+\[
+q=t_r+\sum_{j=r+1}^{n-1}2^{j-r}x_j.
+\]
+Thus \(q=t_r\) only when no nonzero stack coefficient remains beyond \(r\); if \(r<n-1\), then \(q\ge t_r+2>1\). The source theorem says that the gate halts exactly when \(N\) is a power of two, equivalently \(q=1\). Therefore a halt is possible only after the carry has reached or passed the end of the stack, and then it occurs exactly when \(t_r=1\).
+
 In a successful gate, the output coefficients \(u_i=G(c,S)_i+1\) have the exact form
 \[
 u_i=t_i/2\ (i<r),\qquad
 u_r=(t_r+5)/2,\qquad
 u_{r+1}=x_{r+1}+(t_r-1)/2,
 \]
-with \(u_i=x_i\) for \(i\ge r+2\). The convention \(x_i=0\) for \(i\ge n\) makes this one formula cover both a carry that stops inside the stack and a carry that drains beyond its end. The case \(m=1\) would require \(u_{r+1}=0\), corresponding to a tape digit \(-1\), and is precisely the halting case.
+with \(u_i=x_i\) for \(i\ge r+2\). The convention \(x_i=0\) for \(i\ge n\) covers both a carry that stops inside the stack and one that drains beyond its end. In the halting case there is no remaining coefficient beyond \(r\), so \(t_r=1\) makes \(u_{r+1}=0\), corresponding to the blank-tape halting condition.
 
 ## 2. Exact generating-function identity
 

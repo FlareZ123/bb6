@@ -38,10 +38,10 @@ Let (G_c(S)=U) be a successful gate. Write (r=v_2(W(S)+c)), and let (t_0,ldots,t
 t_0=x_0+c,qquad
 t_{i+1}=x_{i+1}+t_i/2quad(i<r),
 ]
-where (t_i) is even for (i<r) and (t_r=m) is odd. Missing input coefficients are zero. The carry identities give
+where (t_i) is even for (i<r) and (t_r) is the local terminal odd carry, not generally the global odd quotient (W(S)+c)/2^r when coefficients remain beyond r. Missing input coefficients are zero. The carry identities give
 [
 (2-z)\sum_{i=0}^r t_i z^i
-=2\left(\sum_{i=0}^r x_i z^i+c\right)-m z^{r+1}.
+=2\left(\sum_{i=0}^r x_i z^i+c\right)-t_r z^{r+1}.
 ]
 Combining this with the weighted-output identity
 [
@@ -54,7 +54,7 @@ gives the exact generating-function update
 P_U(z)={}&\frac{P_S(z)}{2-z}
 +\frac{1-z}{2-z}P_{>r}(z)
 +\frac{c}{2-z}\\
-&+\frac{(1-z)m z^{r+1}}{2(2-z)}
+&+\frac{(1-z)t_r z^{r+1}}{2(2-z)}
 +\frac{(5-z)z^r}{2},
 \end{aligned}
 ]
@@ -62,7 +62,7 @@ where (P_{>r}(z)=\sum_{i>r}x_i z^i).
 
 Fix (k=9). At a deep gate, (r\ge k), so
 [
-P_{>r}(z)\le Mz^{k+1},\qquad m\le M+c
+P_{>r}(z)\le Mz^{k+1},\qquad t_r\le M+c
 ]
 for (0<z<1). Therefore
 [

@@ -8,10 +8,10 @@ Write a stack as coefficients (x_i=b_i+1\ge 1), with
 \[
 M=\sum_i x_i,\qquad P(z)=\sum_i x_i z^i,\qquad W=\sum_i x_i2^i.
 \]
-For a successful S4 gate with offset (c\), let (r) be the carry depth and (m) the final odd carry. The exact carry identities are
+For a successful S4 gate with offset (c\), let (r) be the carry depth and (t_r) the local final odd carry. The exact carry identities are
 \[
 (2-z)\sum_{i=0}^{r}t_i z^i
-=2(P_{\le r}(z)+c)-m z^{r+1},
+=2(P_{\le r}(z)+c)-t_r z^{r+1},
 \]
 and
 \[
@@ -19,7 +19,7 @@ P_{U}(z)-P_{S}(z)
 =c+\frac{z-1}{2}\sum_{i=0}^{r}t_i z^i
 +\frac{5z^r-z^{r+1}}2.
 \]
-Using (P_{>r}(z)\le Mz^{r+1}), (m\le M+c), and (z^r\le1), one obtains, for (0<z<1),
+Using (P_{>r}(z)\le Mz^{r+1}), (t_r\le M+c), and (z^r\le1), one obtains, for (0<z<1),
 \[
 P_U(z)\le aP_S(z)+\beta M+\gamma c+\delta,
 \]
@@ -47,7 +47,7 @@ Consequently, after (g) successful suffix gates,
 R_g\le\left(\frac23\right)^gR_0
 +\frac94\left(1-\left(\frac23\right)^g\right).
 \]
-A final head bump of size (d\) adds (d/4) to (R). This contraction is universal: it does not require a bound on the gate offset or carry depth.
+A final head bump of size (d\) adds (d/4) to (R). This contraction is universal: it does not require a bound on the gate offset or carry depth. Here \(t_r\) is the local terminal carry; if a nonempty stack tail remains beyond \(r\), the global odd quotient is \(q=t_r+\sum_{j>r}2^{j-r}x_j>t_r\). The two coincide only when the carry reaches or passes the end of the stack.
 
 This is useful after a prefix-return factorization. The shallow original gates change only the tracked prefix; the induced suffix word consists of effective S4 gates and a possible pending head bump. The suffix potential is then contracted by the number of effective gates, without replaying every shallow original gate.
 
@@ -81,6 +81,8 @@ In particular, at (z=1/2), the sufficient condition is
 For a fixed constant (C), the geometric factor (z^{L-1}(1-3z/2)) is maximized at (z=2(L-1)/(3L)), with maximum (L^{-1}(2(L-1)/(3L))^{L-1}). In an actual application (C=C(z)), so the true optimization must include the (z)-dependence of the invariant constant.
 
 The criterion also applies **after stripping a fixed prefix**. By the exact boundary-word factorization, a gate that crosses a tracked prefix induces a gate on the remaining suffix with an effective offset. If the original gate halts, that induced suffix gate must satisfy the same power-of-two condition. Thus it is enough to establish the discounted invariant on the active suffix, not necessarily on the entire stack at once.
+
+**Important scope restriction.** The invariant \(P(z)\le\frac32z^L M+C(z)\) must be proved for the active suffix at that depth; it does not follow merely by shifting the existing full-stack nine-prefix bound. Indeed \(P_{\rm full}(z)=P_{\rm prefix}(z)+z^kP_{\rm suffix}(z)\), so subtracting the prefix and dividing by \(z^k\) changes the coefficient and additive constant. The universal \(z=\frac12\) gate-local contraction alone yields \(P_{\rm suffix}(1/2)\le\frac34M+\frac94\) after a long word, not the required \(\frac32\,2^{-L}M+C\). Establishing the stronger depth-\(L\) bound remains an open proof obligation.
 
 ## 3. Macro-prefix barrier lemma
 
