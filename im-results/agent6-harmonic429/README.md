@@ -49,4 +49,33 @@ python3 affine_replay.py 100000 blocks.csv
 lean --run BB429AffineCSV.lean blocks.csv
 ```
 
-**Next proof obligation:** obtain an all-time history-sensitive invariant of the reset return map (or reach a known nonhalting escape ray or the actual halting line). The finite accelerator does not decide #429 and does not establish BB(6). The symbolic guard horizons make exact return-cell boundaries available for this investigation.
+## Uniform dyadic-band transfer (all parameters, locally kernel-checked)
+
+Write `F` for the first branch, and `Eodd`, `Eeven`, `Oodd`, `Oeven` for the successful gap branches in the affine checker. For every `k ≡ 2 (mod 4)` and `w ≡ 0 (mod 4)`,
+
+    L_k = 6*2^k - 6 - 3*k
+    U_k = 12*2^k - 18 - 3*k
+    d_k = 3*k + 10
+    L_k <= w <= U_k  ==>  run(k+1,(0,w)) = some(0,w+d_k).
+
+The exact branch word is F^k Eodd. All repeated blocks are certified until the exit interval `U_k < z <= U_k+d_k`. This replaces each individual plateau calculation with a universal theorem.
+
+More strongly, put `n=k-2`, `X=2^n`, so `n ≡ 0 (mod 4), n >= 4`. The following **single all-scale transfer theorem** covers every possible exit offset, including the exceptional equality branches:
+
+    w % 4 = 0
+    48*X - 3*n - 24 < w <= 48*X - 8
+       ==> exists t,z:
+         run(t,(0,w)) = some(0,z)
+         z % 4 = 0
+         64*X - 3*n - 12 < z <= 64*X + 3*n + 48.
+
+The proof composes a finite boundary dispatcher, the eleven-section plateau `F^n Eeven` (translation 3n+20), its unique R0 exception, and the alternating eleven/zero pair plateau `F^(n+1) Oodd Eodd F^(n+3) Oeven Eeven` (translation 6n+60), followed by a final eleven-to-zero block. The generic translation-exit theorem handles arbitrary repetition counts. It is independent of the original blank trajectory and proves a positive interval of progress for **all** eligible prepared states, not only sampled scales.
+
+Lean source modules `BB429SectionBands.lean`, `BB429BandBridge.lean`, `BB429BandTransfer.lean` are archived together in [bandproof.tar.xz.b64](bandproof.tar.xz.b64), restored by [restore_bands.py](restore_bands.py). All three compiled locally against the matching BB429Rank declarations with Lean 4.36.0-rc2, standard axioms only; complete original dependency CI is not claimed. Restore and compile in order after BB429Rank:
+
+    python3 restore_bands.py
+    lean -o BB429SectionBands.olean BB429SectionBands.lean
+    lean -o BB429BandBridge.olean BB429BandBridge.lean
+    lean BB429BandTransfer.lean
+
+**Remaining exact induction gap:** if this entire outgoing zero-section interval can always be transferred to the next admissible dyadic zero plateau, or to a certified escape corridor, one can iterate the resulting scale theorem starting from a verified blank-origin plateau. Finite experiments confirm many scales, but no uniform theorem yet covers the intermediate region beyond `64*X`. There are synthetic halting seeds in the reset section, so a proof must actually control the entrance set, not merely all sufficiently large states with matching parity. Neither #429 nor BB(6) has been decided.
