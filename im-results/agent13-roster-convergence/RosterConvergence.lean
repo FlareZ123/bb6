@@ -117,7 +117,8 @@ def canonicalResidualRoster : List PackedTable :=
 /-- Agent31's frontier, losslessly packed into the common twelve-slot
     representation used by Agent50's recursive certificate. -/
 def agent31PackedRoster : List PackedTable :=
-  remainingRootRoster.map fun e => packTable e.2
+  BB6.Agent31FourHoleRoster.remainingRootRoster.map
+    (fun e => BB6.Agent50RootFrontier.packTable e.2)
 
 /-- Exact equality of the two independently generated residual frontiers,
     checked over all twelve transition slots by kernel computation. -/
@@ -137,14 +138,14 @@ theorem canonicalResidualRoster_sound_395 :
       WeightedBound 395 m ∨
       ∃ q ∈ canonicalResidualRoster, compatible (unpackTable q) m := by
   intro m hm
-  rcases remainingRootRoster_sound m hm with hbound | ⟨e, he, hc⟩
+  rcases BB6.Agent31FourHoleRoster.remainingRootRoster_sound m hm with hbound | ⟨e, he, hc⟩
   · exact Or.inl hbound
-  · have hpack : packTable e.2 ∈ agent31PackedRoster := by
+  · have hpack : BB6.Agent50RootFrontier.packTable e.2 ∈ agent31PackedRoster := by
       exact List.mem_map.mpr ⟨e, he, rfl⟩
     have hcanonical : packTable e.2 ∈ canonicalResidualRoster :=
       (List.Perm.mem_iff agent31PackedRoster_perm_canonicalResidualRoster).mp hpack
-    exact Or.inr ⟨packTable e.2, hcanonical, by
-      simpa only [unpack_packTable] using hc⟩
+    exact Or.inr ⟨BB6.Agent50RootFrontier.packTable e.2, hcanonical, by
+      simpa only [BB6.Agent50RootFrontier.unpack_packTable] using hc⟩
 
 #print axioms agent31PackedRoster_perm_canonicalResidualRoster
 #print axioms canonicalResidualRoster_count
