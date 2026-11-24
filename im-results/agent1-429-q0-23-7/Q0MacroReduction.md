@@ -13,7 +13,7 @@ For a genuinely reachable q0 target satisfying n=23+32u, a+24u+19=13*2^n and b+1
 | 4 | FFFE | 4 | 18 |
 | 5 | FSFE | 6 | 32 |
 
-The strict interior 0<3y<p is preserved. This is a necessary condition, not a converse.
+The strict interior 0<3y<p is preserved. Path existence is necessary for blank reachability and sufficient for a prepared-state ancestry, as proved by the exact converse below.
 
 Q0MacroCore.lean contains the full formal derivation with an explicit Source interface, and Q0MacroCheck.lean proves soundness of a purely Boolean recursive cover of dyadic parameter cylinders. Both compiled locally using Lean 4.36.0-rc2, with only standard axioms. Q0MacroFinite.lean proved cover 43 0 0 1000000 = true, with no axioms, in 12.7 seconds locally. Q0MacroSource.lean instantiates Source from BB429NewResidue and BB429RootEven8. The adapter compiled locally against exact extracted original declarations (BB429.next/run, Allowed and its rooted proof, exact odd/even inverse and rooted predecessor proofs, rooted_positive_even_eight); no stubs or added axioms. The full repository-file CI build has not been performed. The theorem q0_excluded_below_million excludes genuine accelerator-root reachability for u<10^6. No raw machine #429 decision follows yet.
 
@@ -28,6 +28,10 @@ Q0MacroCore.macro_back proves this, including every small-counter guard under x>
     x+y=26*16^m, r+p=104*16^m, x>=25*16^m.
 
 Therefore the complete length-m signed path is forced. This eliminates the enormous exponential counters without using any unproved residue tests or assuming a particular inverse word. No arbitrary fixed inverse-depth cap is used.
+
+## Exact converse and rooted endpoint
+
+[Q0Converse.md](Q0Converse.md) proves the four-digit path lift back into the actual accelerator, with exact branch guards. A path of length m=8u+5 ending at (P,Y) with little-endian digit polynomial D reconstructs a prepared ancestor in shifted coordinates X,R with R+P=104*16^m and X+Y=26+104*D; its actual 4m-step run returns the q0 target. Under Source Rooted the target is rooted iff one such endpoint is rooted. Signed path existence alone does not imply blank reachability. The endpoint rank window has width 12m, suggesting direct blank-orbit analysis.
 
 ## Adaptive cover
 

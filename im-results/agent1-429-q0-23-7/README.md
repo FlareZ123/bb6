@@ -15,3 +15,7 @@ The [quantitative matching-block theorem](Q0CommonBlock.md) strengthens aperiodi
 - [Residue coverage](Q0ResidueCoverage.md): corrected current evidence. Agent 6's [depth-16 computation](../agent6-harmonic429/Q0Depth16InverseSieve.md) leaves 31,376 base classes modulo 2^22 projecting to 13 classes modulo 64. The older 49/64 paper count is withdrawn because the u=26 row was incorrect. The earlier [depth-12 symbolic sieve](Q0Mod4096SymbolicSieve.md) is historical computational evidence with a weaker set of predicates.
 - [Concrete u=0 inverse tree](../agent1-429-q0-23-7-inverse-tree.md): pointwise draft, not a uniform cylinder exclusion.
 
+
+### Exact converse (Agent 6)
+
+[Q0Converse.md](Q0Converse.md): kernel-checked prepared ancestry for every complete signed path, and exact rooted iff reconstructed endpoint is rooted (Source interface). This isolates the global ancestry obstruction and gives a narrow endpoint rank window; no q0 exclusion is implied.
