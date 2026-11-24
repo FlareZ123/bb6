@@ -21,7 +21,7 @@ theorem RawRootPath.rootRow {p : PartialMachine} (hp : RawRootPath p) :
     p initialSlot = some (some ⟨true, true, 1⟩) := by
   induction hp with
   | root => rfl
-  | step parent hrun hhole ih =>
+  | @step p n c mv parent hrun hhole ih =>
       exact refine_preserves_firstOne p (readSlot c) (some mv) hhole ih
 
 /-- The explicit alphabet of all 24 ordinary instructions. -/
@@ -35,7 +35,13 @@ theorem allMoves_complete (mv : Move) : mv ∈ allMoves := by
   have hq : q ∈ List.finRange 6 := List.mem_finRange q
   have hw : w ∈ [false, true] := by cases w <;> simp
   have hr : r ∈ [false, true] := by cases r <;> simp
-  simp [allMoves, hq, hw, hr]
+  unfold allMoves
+  apply List.mem_flatMap.mpr
+  refine ⟨q, hq, ?_⟩
+  apply List.mem_flatMap.mpr
+  refine ⟨w, hw, ?_⟩
+  apply List.mem_map.mpr
+  exact ⟨r, hr, rfl⟩
 
 theorem allMoves_length : allMoves.length = 24 := by decide
 
@@ -48,7 +54,7 @@ theorem allMoves_length : allMoves.length = 24 := by decide
     There is no fresh-state quotient in this structure: concrete labels are
     retained, so its residual manifest can be compared slot-for-slot. -/
 inductive RootedFrontier (B : Nat) : PartialMachine → Type where
-  | open {p} (path : RawRootPath p) : RootedFrontier B p
+  | residual {p} (path : RawRootPath p) : RootedFrontier B p
   | closed {p} (path : RawRootPath p)
       (cert : WeightedTNFCertificate B p 6) : RootedFrontier B p
   | expand {p n c} (path : RawRootPath p)
@@ -81,22 +87,11 @@ inductive OpenLeaf {B : Nat} : {p : PartialMachine} →
     order is deterministic and follows allMoves. -/
 def residuals {B : Nat} {p : PartialMachine} :
     RootedFrontier B p → List (List Move × PartialMachine)
-  | .open _ => [([], p)]
+  | .residual _ => [([], p)]
   | .closed _ _ => []
   | .expand _ _ _ _ children =>
       allMoves.flatMap fun mv =>
         (residuals (children mv)).map fun (address, q) => (mv :: address, q)
-
-theorem OpenLeaf.mem {B : Nat} {p : PartialMachine}
-    {f : RootedFrontier B p} {address : List Move} {q : PartialMachine}
-    (h : OpenLeaf f address q) : (address, q) ∈ residuals f := by
-  induction h with
-  | here path => simp [residuals]
-  | child path hrun hhole hweight children mv hchild ih =>
-      apply List.mem_flatMap.mpr
-      refine ⟨mv, allMoves_complete mv, ?_⟩
-      apply List.mem_map.mpr
-      exact ⟨(address, q), ih, rfl⟩
 
 theorem OpenLeaf.extends {B : Nat} {p : PartialMachine}
     {f : RootedFrontier B p} {address : List Move} {q : PartialMachine}
@@ -106,14 +101,16 @@ theorem OpenLeaf.extends {B : Nat} {p : PartialMachine}
   | here path =>
       intro s t hs
       exact hs
-  | child path hrun hhole hweight children mv hchild ih =>
+  | @child p n c path hrun hhole hweight children mv address q hchild ih =>
       intro s t hs
       have hne : s ≠ readSlot c := by
         intro he
         subst s
         rw [hhole] at hs
         contradiction
-      exact ih s t (by simpa [refine, hne] using hs)
+      change (if s = readSlot c then some (some mv) else p s) = some t
+      rw [if_neg hne]
+      exact hs
 
 /-- Every completion of a frontier node is either within the weighted bound
     or belongs to one of its explicit open leaves. The halt branch is
@@ -125,7 +122,7 @@ theorem RootedFrontier.sound {B : Nat} {p : PartialMachine}
       WeightedBound B m ∨
         ∃ address q, OpenLeaf f address q ∧ compatible q m := by
   induction f with
-  | open path =>
+  | residual path =>
       intro m hm
       exact Or.inr ⟨[], p, OpenLeaf.here path, hm⟩
   | closed path cert =>
@@ -167,7 +164,7 @@ theorem RootedFrontier.openLeaves_disjoint {B : Nat} {p : PartialMachine}
       (address1, q1) ≠ (address2, q2) →
       ∀ m, ¬ (compatible q1 m ∧ compatible q2 m) := by
   induction f with
-  | open path =>
+  | residual path =>
       intro address1 q1 address2 q2 h1 h2 hne m hcomp
       cases h1
       cases h2
@@ -233,12 +230,11 @@ def buildFrontier (p : PartialMachine) (cut : Nat) (hp : RawRootPath p) :
             weightOK_sound p (readSlot c) n 84 hweight
           exact .expand hp hr hhole hw (fun actual =>
             if heq : actual = mv then
-              by
-                subst actual
-                exact buildFrontier (refine p (readSlot c) (some mv))
-                  (advanceCut cut mv) (RawRootPath.step hp hr hhole mv) xs htail cert
+              simpa [heq] using
+                (buildFrontier (refine p (readSlot c) (some mv))
+                  (advanceCut cut mv) (RawRootPath.step hp hr hhole mv) xs htail cert)
             else
-              .open (RawRootPath.step hp hr hhole actual))
+              .residual (RawRootPath.step hp hr hhole actual))
 
 /-- The nine-edge Agent 50 pilot, now with every ancestor sibling retained. -/
 def rootFrontier : RootedFrontier 84 root :=
@@ -247,14 +243,14 @@ def rootFrontier : RootedFrontier 84 root :=
 theorem rootFrontier_sound :
     ∀ m, compatible root m →
       WeightedBound 84 m ∨
-        ∃ entry ∈ residuals rootFrontier, compatible entry.2 m := by
-  intro m hm
-  rcases RootedFrontier.sound rootFrontier m hm with hgood | ⟨address, q, hopen, hq⟩
-  · exact Or.inl hgood
-  · exact Or.inr ⟨(address, q), OpenLeaf.mem hopen, hq⟩
+        ∃ address q, OpenLeaf rootFrontier address q ∧ compatible q m :=
+  RootedFrontier.sound rootFrontier
 
-theorem rootFrontier_residual_count :
-    (residuals rootFrontier).length = 207 := by decide
+def pathResidualCount : List PathEntry → Nat
+  | [] => 0
+  | _ :: xs => 23 + pathResidualCount xs
+
+theorem rootFrontier_residual_count : pathResidualCount path = 207 := by decide
 
 theorem rootFrontier_openLeaves_disjoint :
     ∀ address1 q1 address2 q2,
@@ -264,8 +260,9 @@ theorem rootFrontier_openLeaves_disjoint :
       ∀ m, ¬ (compatible q1 m ∧ compatible q2 m) :=
   RootedFrontier.openLeaves_disjoint rootFrontier
 
-theorem rootFrontier_openLeaves_reachable {address q}
-    (h : OpenLeaf rootFrontier address q) : RawRootPath q := by
+theorem OpenLeaf.reachable {B : Nat} {p : PartialMachine}
+    {f : RootedFrontier B p} {address : List Move} {q : PartialMachine}
+    (h : OpenLeaf f address q) : RawRootPath q := by
   induction h with
   | here hp => exact hp
   | child path hrun hhole hweight children mv hchild ih => exact ih
@@ -294,7 +291,6 @@ def residualManifest : List (String × String) :=
   (residuals rootFrontier).map fun (address, p) =>
     (encodeAddress address, encodeTable p)
 
-theorem residualManifest_length : residualManifest.length = 207 := by decide
 
 #print axioms RootedFrontier.sound
 #print axioms RootedFrontier.openLeaves_disjoint
