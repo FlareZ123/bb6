@@ -14,6 +14,16 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Validate blank-start guard in FAR emitters
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            im-results/agent31-three-hole-tnf/generate_four_hole.py \
+            im-results/agent31-three-hole-tnf/generate_four_hole_sibling.py \
+            im-results/agent7-far/f1-siblings/emit.py \
+            im-results/agent7-far/wide132/emit.py \
+            im-results/agent7-far/wide133/emit.py
+          python3 im-results/agent7-far/test_start_guard.py
       - name: Compile FAR dependency closure
         run: |
           set -euo pipefail
