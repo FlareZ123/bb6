@@ -40,7 +40,7 @@ theorem r0_facts (s : Nat) (hs : s%2=1) :
   have hxodd := r0X_mod_two s
   have hyeven := r0Y_mod_two s
   have hH16 : r0H s=16*r0M s := by
-    dsimp [r0H,r0X,r0Y,r0M]
+    simp only [r0H,r0X,r0Y,r0M,Nat.mul_add]
     omega
   have hM5 := r0M_mod_five s
   have hX5 := r0X2Y_mod_five s
