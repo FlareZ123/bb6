@@ -10,39 +10,43 @@ nonhalting.
 `GenericResidual.lean` imports the independently checked `SheepEven` source
 module and proves four theorems:
 
-- `source_generic_even_return`: every generic even source `x = 2^a u`, with
+- `source_generic_even_return`: every generic even source `x = 2^a*u`, with
   `a >= 1`, `u` odd and `u >= 5`, admits exact odd-run/even-return parameters
-  `h,v,b,u'` satisfying
-  [
-  2^{h+1}v+3=(2^{a+1}+1)u+2a,
-  qquad 2^b u'=1+3^h v.
-  ]
+  `h,v,b,u'` satisfying:
+
+  ```text
+  2^(h+1)*v + 3 = (2^(a+1)+1)*u + 2*a
+  2^b*u' = 1 + 3^h*v
+  ```
+
 - `source_generic_residual`: composes the source theorem with the `Int`
   identity, so the weighted-cofactor equation is obtained directly from an
   actual generic source of the Sheep return map.
 - `generic_residual_identity`: these source equations imply the exact
-  integer-cleared identity
-  [
-  2^{b+h+1}u' + 2^{h+1}(2^b-1)
-  = 2^{b+h+1}+3^h(2^{a+1}+1)(u-1)
-    +2,3^h(2^a+a-1).
-  ]
-- `generic_residual_int`: after rearrangement in `Int`,
-  [
-  2^{b+h+1}(u'-1)
-  =3^h(2^{a+1}+1)(u-1)+2S(a,h,b),
-  ]
-  where
-  [
-  S(a,h,b)=3^h(2^a+a-1)-2^h(2^b-1).
-  ]
+  integer-cleared identity:
+
+  ```text
+  2^(b+h+1)*u' + 2^(h+1)*(2^b-1)
+    = 2^(b+h+1) + 3^h*(2^(a+1)+1)*(u-1)
+      + 2*3^h*(2^a+a-1)
+  ```
+
+- `generic_residual_int`: after rearrangement in `Int`:
+
+  ```text
+  2^(b+h+1)*(u'-1)
+    = 3^h*(2^(a+1)+1)*(u-1) + 2*S(a,h,b)
+
+  S(a,h,b) = 3^h*(2^a+a-1) - 2^h*(2^b-1)
+  ```
 
 `SingularCylinders.lean` imports that module and proves six additional theorems:
+
 - `singular_type1_cylinder` and `singular_type3_cylinder`: the exact branch
   equations and oddness of the returned cofactors force the source cylinders
-  `u=1+32k, u'=1+30k` and `u=1+128k, u'=1+102k`, respectively.
+  `u=1+32*k, u'=1+30*k` and `u=1+128*k, u'=1+102*k`, respectively.
 - `singular_type1_next_excess` and `singular_type3_next_excess`: certify the
-  next first-step excesses `5+135k` and `19+1683k`.
+  next first-step excesses `5+135*k` and `19+1683*k`.
 - `singular_type1_terminal_equation` and `singular_type3_terminal_equation`:
   certify the exact Diophantine equations obeyed by any immediate terminal
   successor.
@@ -65,36 +69,31 @@ Both Lean files include `#print axioms` for their theorems (ten in total). On Le
 The weighted-cofactor analysis in the Agent 16 dossier identifies exactly two
 zero-residual branch triples:
 
-[
-(a,h,b)=(1,1,2),qquad (a,h,b)=(3,1,4).
-]
+- Type I: `(a,h,b) = (1,1,2)`
+- Type II: `(a,h,b) = (3,1,4)`
 
-For their genuine source families, write respectively
+For their genuine source families, write respectively:
 
-[
-u=1+32k,qquad u=1+128k,qquad kge1.
-]
+```text
+Type I:  u = 1 + 32*k,   k >= 1
+Type II: u = 1 + 128*k,  k >= 1
+```
 
 After the singular edge, the next even source and its next first-step excess are
 exactly:
 
 | First singular edge | Next even source | Next `F(x_next)-1` |
 |---|---:|---:|
-| `(1,1,2)` | `4(1+30k)` | `5+135k` |
-| `(3,1,4)` | `16(1+102k)` | `19+1683k` |
+| `(1,1,2)` | `4*(1+30*k)` | `5+135*k` |
+| `(3,1,4)` | `16*(1+102*k)` | `19+1683*k` |
 
 Let `H = v2(F(x_next)-1)` on that next source. If its following even-return
-output is a power of two `2^B`, then the exact terminal equations are
+output is a power of two `2^B`, then the exact terminal equations are:
 
-[
-3^H(5+135k)=2^H(2^B-1)
-]
-for the first family, and
-
-[
-3^H(19+1683k)=2^H(2^B-1)
-]
-for the second.
+```text
+Type I:  3^H*(5+135*k)    = 2^H*(2^B-1)
+Type II: 3^H*(19+1683*k)  = 2^H*(2^B-1)
+```
 
 **Sharp lower bounds:**
 
@@ -102,43 +101,44 @@ for the second.
   Equality occurs at `H=1`, `B=32`, `k=21,209,715`.
 - After `(3,1,4)`, any two-step terminal output has `B >= 11,502`.
   Equality occurs at `H=5`, `B=11,502`, with
-  [
-  k=rac{2^5(2^{11502}-1)/3^5-19}{1683},
-  ]
+
+  ```text
+  k = (2^5*(2^11502-1)/3^5 - 19)/1683
+  ```
+
   an integer with 3,459 decimal digits.
 
 ### Proof of the bounds
 
 For every `H >= 1`, the LTE identity
 
-[
-v_3(4^n-1)=1+v_3(n)
-]
+```text
+v3(4^n-1) = 1 + v3(n), for n >= 1
+```
 
-for `n >= 1` implies
+implies
 
-[
-3^Hmid 2^B-1quadLongrightarrowquad
-2,3^{H-1}mid B.
-]
+```text
+3^H | (2^B-1)  ==>  2*3^(H-1) | B.
+```
 
 A short proof of the LTE identity is obtained from
-`4^n = (1+3)^n = 1+3n (mod 9)` and
+`4^n = (1+3)^n = 1+3*n (mod 9)` and
 
-[
-4^{3m}-1=(4^m-1)(4^{2m}+4^m+1),
-]
+```text
+4^(3*m)-1 = (4^m-1)*(4^(2*m)+4^m+1),
+```
 
 where the second factor is exactly `3 (mod 9)`. Iterating the factorization
 removes one factor of `3` from the exponent and one from the valuation.
 
 For the `(1,1,2)` family, `H=0` is impossible modulo `3`. For `H>=3`,
 `B` is divisible by both `4` (modulo `5`) and `2*3^(H-1)`, hence
-`B >= 4*3^(H-1) >= 36`. The two remaining cases reduce to
+`B >= 4*3^(H-1) >= 36`. The two remaining cases reduce to:
 
-- `H=1`: `2(2^B-1) = 15 (mod 405)`, whose solutions are
+- `H=1`: `2*(2^B-1) = 15 (mod 405)`, whose solutions are
   `B = 32 (mod 108)`;
-- `H=2`: `4(2^B-1) = 45 (mod 1215)`, whose solutions are
+- `H=2`: `4*(2^B-1) = 45 (mod 1215)`, whose solutions are
   `B = 300 (mod 324)`.
 
 For the `(3,1,4)` family, `H=0` is impossible: modulo `9` it forces
@@ -164,7 +164,7 @@ Only `H=5` survives. Its three congruences combine to
 
 ## Reproduction
 
-Restore the source module from the Agent 16 dossier, then compile this file:
+Restore the source module from the Agent 16 dossier, then compile these files:
 
 ```sh
 python3 ../agent16-sheep-even-return/reconstruct.py
@@ -173,7 +173,7 @@ LEAN_PATH=.:../agent16-sheep-even-return lean SingularCylinders.lean
 python3 check_singular_two_step.py
 ```
 
-The Lean file was compiled with Lean 4.36.0-rc2. The Python script uses only
+The Lean files were compiled with Lean 4.36.0-rc2. The Python script uses only
 the standard library and verifies the finite modular tables and the two sharp
 witnesses.
 
@@ -182,8 +182,8 @@ witnesses.
 These results strengthen the exact arithmetic description of the two
 zero-residual branches and provide a source-connected formalization of the
 weighted identity, the two singular source cylinders, and the exact equations
-for an immediate terminal successor. They do **not** show that the blank-root trajectory enters
-one of these branches, that it avoids them, or that the Sheep machine halts or
-runs forever. In particular, the barriers apply only when a zero-residual
-edge is followed immediately by a terminal edge; they do not exclude a later
-terminal edge after additional generic returns.
+for an immediate terminal successor. They do **not** show that the blank-root
+trajectory enters one of these branches, that it avoids them, or that the Sheep
+machine halts or runs forever. In particular, the barriers apply only when a
+zero-residual edge is followed immediately by a terminal edge; they do not
+exclude a later terminal edge after additional generic returns.
