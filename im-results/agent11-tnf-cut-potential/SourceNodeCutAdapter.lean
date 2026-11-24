@@ -1,3 +1,4 @@
+import Enumerate62Adapter
 import CutSensitivePotential
 
 namespace BB6.Agent11CutPotential
