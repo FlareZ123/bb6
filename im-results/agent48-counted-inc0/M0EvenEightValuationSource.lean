@@ -188,7 +188,8 @@ private theorem m0EvenEightValuationBridgeInputMatch
       have hyEq : y = -(i:Int) := by omega
       rw [hyEq]
       have hneq : (-(i:Int)) ≠ -14 := by omega
-      simp [bridgeStartWithBit, hneq]
+      cases hbit : decide (0<t) <;>
+        simp [bridgeStartWithBit, hneq, hbit]
     calc
       sweptLeft (3*a) (s1Config L (8*q) 0 a 0 b h).tape h
           (h-((3*a:Nat):Int)+y)
