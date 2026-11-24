@@ -2,6 +2,15 @@ name: Agent20 Space Needle logarithmic growth source theorem (manual)
 
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        description: Source proof gate
+        type: choice
+        required: true
+        default: quadratic
+        options:
+          - quadratic
+          - cubic
 
 permissions:
   contents: read
@@ -49,9 +58,23 @@ jobs:
           lake env lean -o .lake/build/lib/lean/NeedleGrowthRoot.olean NeedleGrowthRoot.lean
           cp "$GITHUB_WORKSPACE/im-results/agent20-needle-coprime/NeedleGrowthScan.lean" .
           lake env lean -o .lake/build/lib/lean/NeedleGrowthScan.olean NeedleGrowthScan.lean
+      - name: Audit existing quadratic cutoff
+        if: inputs.target == 'quadratic'
+        working-directory: /tmp/cryptids
+        run: |
+          set -euo pipefail
           cp "$GITHUB_WORKSPACE/im-results/agent20-needle-coprime/NeedleTwoStep.lean" .
           lake env lean -o .lake/build/lib/lean/NeedleTwoStep.olean NeedleTwoStep.lean
           cp "$GITHUB_WORKSPACE/im-results/agent20-needle-coprime/NeedleQuadratic.lean" .
           lake env lean -o .lake/build/lib/lean/NeedleQuadratic.olean NeedleQuadratic.lean
           cp "$GITHUB_WORKSPACE/im-results/agent20-needle-coprime/NeedleQuadraticSource.lean" .
           lake env lean NeedleQuadraticSource.lean
+      - name: Audit four-step cube gain and cubic cutoff
+        if: inputs.target == 'cubic'
+        working-directory: /tmp/cryptids
+        run: |
+          set -euo pipefail
+          cp "$GITHUB_WORKSPACE/im-results/agent46-needle-cubic-growth/"*.lean .
+          lake env lean -o .lake/build/lib/lean/NeedleFourStep.olean NeedleFourStep.lean
+          lake env lean -o .lake/build/lib/lean/NeedleCubicFuel.olean NeedleCubicFuel.lean
+          lake env lean NeedleCubicSource.lean
