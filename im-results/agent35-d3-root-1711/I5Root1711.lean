@@ -71,7 +71,7 @@ theorem i5_checkpoint_next_live :
       (CryptidBoundary.run 1
         (DRegularSource.sourceSection DRegular.terminal5)).st ≠ 6 := by
     simp [CryptidBoundary.run, CryptidBoundary.step,
-      DRegularSource.sourceSection, CryptidBoundary.init]
+      DRegularSource.sourceSection, CryptidBoundary.init, goL]
   exact hright (hstate.symm.trans hbad)
 
 private theorem frozen_step (c : CryptidBoundary.Cfg) (h : c.st = 6) :
