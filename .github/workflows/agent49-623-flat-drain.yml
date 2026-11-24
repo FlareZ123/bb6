@@ -58,4 +58,8 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/FatalCylinder.lean" Agent49FatalCylinder.lean
           lake env lean -o .lake/build/lib/lean/Agent49FatalCylinder.olean Agent49FatalCylinder.lean
           cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/FatalRectangleSource.lean" Agent49FatalRectangleSource.lean
-          lake env lean Agent49FatalRectangleSource.lean
+          lake env lean -o .lake/build/lib/lean/Agent49FatalRectangleSource.olean Agent49FatalRectangleSource.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/FatalAllPrefix.lean" Agent49FatalAllPrefix.lean
+          lake env lean -o .lake/build/lib/lean/Agent49FatalAllPrefix.olean Agent49FatalAllPrefix.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/FatalDiagonalSource.lean" Agent49FatalDiagonalSource.lean
+          lake env lean Agent49FatalDiagonalSource.lean
