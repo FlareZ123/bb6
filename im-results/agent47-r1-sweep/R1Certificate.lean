@@ -18,7 +18,9 @@ theorem r1_never (m : Machine) (hm : compatible table m) : NeverHalts m := by
   obtain ⟨z,hz⟩ := all_defined n
   have H := zrun_sound table m hm n start z hz
   rw [initial_embed] at H
-  simp [H]
+  change (run m n blank).isSome = true
+  rw [H]
+  rfl
 
 #print axioms r1_never
 end BB6Coverage.Agent47R1Sweep
