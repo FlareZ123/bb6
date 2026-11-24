@@ -495,6 +495,7 @@ private theorem m2EvenSix_q4_prefix_head_bound
   let N := 3*a+2
   let T1 := sweptLeft N T h
   let hN : Int := h-(N:Int)
+  have hN_eq : hN = h-(3*a+2:Int) := by simp [hN,N]
   let T2 := m2EvenSixQ4CutTape a b h
   have hface : s1LeftFacing 3 6 2 a 0 =
       d1pow a ++ m2EvenResidueTwoSourceLeftSuffix := by
@@ -532,7 +533,9 @@ private theorem m2EvenSix_q4_prefix_head_bound
   have hSweep' :
       run tm2 (3*N) (s1Config 3 6 2 a 0 b h) =
         some ⟨3,h-(N:Int),T1⟩ := by
-    simpa [T] using hSweep
+    change run tm2 (3*N) (⟨3,h,T⟩ : Config) =
+      some (⟨3,h-(N:Int),T1⟩ : Config)
+    exact hSweep
   have hmatch := m2EvenSixQ4Bridge_input_match a b h
   have hBridge :
       run tm2 38 ⟨3,hN,T1⟩ =
@@ -551,34 +554,35 @@ private theorem m2EvenSix_q4_prefix_head_bound
     rw [hframe] at hb
     exact hb
   have hlinear : linearRightOnes T2 (hN+2) (3*a) := by
-    convert m2EvenSixQ4CutTape_linearRightOnes a b h ha using 1 <;>
-      dsimp [T2,hN,N] <;> omega
+    have hhead : hN+2 = h-(3*a:Int) := by rw [hN_eq]; omega
+    rw [hhead]
+    exact m2EvenSixQ4CutTape_linearRightOnes a b h ha
   intro k hk d hd
   let p1 := 3*N
   let p2 := p1+38
   by_cases hk1 : k < p1
   · have hlow := counted_left_sweep_heads N T h hOn hright k
-      (by dsimp [p1] at *; omega) d hd
-    dsimp [hN,N] at *
+      (by omega) d hd
+    have hlow' : h-(3*a+2:Int) ≤ d.head := by simpa [N] using hlow
     omega
   · by_cases hk2 : k < p2
     · let j := k-p1
-      have hj : j<38 := by dsimp [j,p1] at *; omega
-      have hkEq : k=p1+j := by dsimp [j,p1]; omega
+      have hj : j<38 := by omega
+      have hkEq : k=p1+j := by omega
       rw [hkEq,run_add,hSweep'] at hd
       simp only [Option.bind_some] at hd
       have hlow := m2EvenSix_bridge_prefix_lower T1 hN hmatch j hj d hd
-      dsimp [hN,N] at *
+      rw [hN_eq] at hlow
       omega
     · let j := k-p2
-      have hj : j<3*a := by dsimp [j,p2,p1,N] at *; omega
-      have hkEq : k=p1+(38+j) := by dsimp [j,p2,p1]; omega
+      have hj : j<3*a := by omega
+      have hkEq : k=p1+(38+j) := by omega
       rw [hkEq,run_add,hSweep'] at hd
       simp only [Option.bind_some] at hd
       rw [run_add,hBridge] at hd
       simp only [Option.bind_some] at hd
       have hhead := E_scan_prefix_head T2 (hN+2) (3*a) hlinear j hj d hd
-      dsimp [hN,N] at *
+      rw [hN_eq] at hhead
       omega
 
 theorem m2Even_residue2_q4_prefix_source
