@@ -82,7 +82,7 @@ The depth-16 projection also excludes u mod 64 classes 3, 51, 57 using the Agent
 
 ## Interpretation and limitation
 
-This is a finite necessary-condition sieve only. A surviving inverse path is a synthetic candidate and does not establish ancestry from (0,0). The surviving set stabilizes substantially between depths 14 and 16 but remains nonempty; this is consistent with the already-known 2-adic FSFE obstruction. Do not blindly increase the depth or modulus without a new invariant or a way to distinguish genuine blank-root ancestry from synthetic inverse paths.
+This is a finite necessary-condition sieve only. A surviving inverse path is a synthetic candidate and does not establish ancestry from (0,0). The sieve continues to shrink from 56,960 to 31,376 base classes between depths 14 and 16, but it remains nonempty. This is consistent with the already-known 2-adic FSFE obstruction. Do not blindly increase the depth or modulus without a new invariant or a way to distinguish genuine blank-root ancestry from synthetic inverse paths.
 
 ## Reproduction
 
