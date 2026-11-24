@@ -478,13 +478,16 @@ theorem positive_history_final_run {j s k x : Nat} {w : Int}
        ∃ s' y, PositiveHistory j w s' (k+1) y ∧ RegFrom k z y) := by
   induction h with
   | first hb he =>
+    subst x
     exact ⟨0,x,SameRun.zero hb,Or.inl ⟨rfl,he⟩⟩
   | @same s k x y h hr ih =>
     obtain ⟨r,z,hs,hbase⟩:=ih
     exact ⟨r+1,z,SameRun.head hr hs,hbase⟩
   | @down s k x y h hr ih =>
-    obtain ⟨r,hr0,_,_⟩:=hr
-    exact ⟨0,x,SameRun.zero (regular_band k r hr0),Or.inr ⟨s,y,h,hr⟩⟩
+    have hreg : RegFrom k x y := hr
+    obtain ⟨r,hr0,hx,hy⟩:=hreg
+    have hb : Band k x := by rw [hx]; exact regular_band k r hr0
+    exact ⟨0,x,SameRun.zero hb,Or.inr ⟨s,y,h,hreg⟩⟩
 
 /-- The start of the final same-band suffix always has Q at least
     (2*P_k-1)/3, whether it is the initial positive state or follows
@@ -505,8 +508,10 @@ theorem positive_history_final_run_q_lower {j s k x : Nat} {w : Int}
       unfold W
       omega
     omega
-  · obtain ⟨r0,hr0,_,_⟩:=hr
-    have hbz:Band k z:=regular_band k r0 hr0
+  · have hreg : RegFrom k z y := hr
+    have hwreg:=w_regular_down hreg
+    obtain ⟨r0,hr0,hz,hyEq⟩:=hreg
+    have hbz:Band k z := by rw [hz]; exact regular_band k r0 hr0
     have hby:=positive_history_band hy
     have hqx:=q_eq hbz
     have hqy:=q_eq hby
@@ -521,7 +526,6 @@ theorem positive_history_final_run_q_lower {j s k x : Nat} {w : Int}
         =4*(P (k+1):Int)-3 := by
       unfold W
       omega
-    have hwreg:=w_regular_down hr
     have hpI : (P (k+1):Int)=2*(P k:Int) := by
       exact_mod_cast p_succ k
     have hdownQ :
