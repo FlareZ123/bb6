@@ -62,6 +62,24 @@ The table follows by using odd residues (1,3,5,7\pmod8) for odd variables and ev
 
 ## Consequences
 
+The F-run relation also gives the exact scaling identity
+[
+u_0=2^m u_m.
+]
+Thus the endpoint parity is a 2-adic valuation statement: if the next block is EF, (u_m) is odd and (v_2(u_0)=m); if the next block is SF, (u_m) is even and (v_2(u_0)\ge m+1). Combining this with the table yields:
+
+| Starting point | Next block | Consequence for (v_2(u_0)) |
+|---|---|---|
+| Initial | EF | (v_2(u_0)\equiv0\pmod4) |
+| Initial | SF | (v_2(u_0)\ge3) |
+| After EF | EF | (v_2(u_0)\equiv2\pmod4) |
+| After EF | SF | (v_2(u_0)\ge1) |
+| After SF | EF | (v_2(u_0)\equiv0\pmod4) |
+| After SF | SF | (v_2(u_0)\ge3) |
+
+In particular, since the initial (u_0=16(c-1)), an initial run ending in EF requires (v_2(c-1)\equiv0\pmod4). This is a necessary condition for that branch, not a restriction on an initial SF branch.
+
+
 1. **Every F-run followed by another pair block has even length.** This includes every F-run on a hypothetical infinite path, because Agent 22's theorem already establishes that such a path has infinitely many standalone (F)-blocks and paired blocks. Runs of length zero are included.
 
 2. **The pair-type transition controls the run length modulo 4.** If the previous pair is (P\in\{E,S\}) and the next pair is (Q\in\{E,S\}), then
