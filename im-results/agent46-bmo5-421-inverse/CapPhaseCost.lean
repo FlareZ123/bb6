@@ -484,6 +484,7 @@ theorem positive_history_final_run {j s k x : Nat} {w : Int}
     obtain ⟨r,z,hs,hbase⟩:=ih
     exact ⟨r+1,z,SameRun.head hr hs,hbase⟩
   | @down s k x y h hr ih =>
+    subst x
     have hreg : RegFrom k x y := hr
     obtain ⟨r,hr0,hx,hy⟩:=hreg
     have hb : Band k x := by rw [hx]; exact regular_band k r hr0
