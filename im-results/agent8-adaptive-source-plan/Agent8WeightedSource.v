@@ -179,7 +179,8 @@ Proof.
     assert (Hslot : state_index q < min_unused_state x).
     { eapply (@source_run_support (tm x) (min_unused_state x) n' c0 (q,(l,s,r))).
       - exact Hsup.
-      - cbn [c0 fst state_index]. lia.
+      - change (state_index A < min_unused_state x).
+        exact (proj1 (Hsup A S0 S1 R B Hroot)).
       - exact Hrun. }
     destruct (m (q,s)) as [[[w d] dst]|] eqn:Eact.
     + destruct (Nat.eq_dec (num_undef_trans x) 1) as [Hlast|Hnot].
