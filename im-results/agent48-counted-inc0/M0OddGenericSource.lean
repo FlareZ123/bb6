@@ -1,5 +1,5 @@
 import M0OddQ4Prefix
-import M0OddResidueFive
+import M0OddHeadBound
 import S1CountedDrain
 import Lean.Elab.Tactic.Omega
 
@@ -26,7 +26,7 @@ open BB6Coverage.Agent8Q4Suffix
 open BB6Coverage.Agent8CountedReset
 open BB6Coverage.Agent24Q4Endpoint
 open BB6Coverage.Agent24M0OddQ4Prefix
-open BB6Coverage.Agent24M0OddResidueFive
+open BB6Coverage.Agent48M0OddHeadBound
 open BB6Coverage.Agent48CountedInc0
 open BB6ChampionArithmetic
 
@@ -65,8 +65,9 @@ private theorem m0OddGeneric_quotient_bound (L k : Nat)
     (hL : 0 < L) (hbound : 2*k+1 < 2^L) :
     k < 2^(L-1) := by
   have hpow : 2^L = 2*2^(L-1) := by
-    rw [show L = (L-1)+1 by omega, Nat.pow_succ]
-    omega
+    calc
+      2^L = 2^((L-1)+1) := congrArg (fun x => 2^x) (by omega)
+      _ = 2*2^(L-1) := by rw [Nat.pow_succ, Nat.mul_comm]
   rw [hpow] at hbound
   omega
 
@@ -93,9 +94,8 @@ private theorem m0OddGeneric_binDec_three_four :
 private theorem m0OddGeneric_inputPrefix_length (a : Nat) :
     (m0OddGenericInputPrefix a).length = 3*a+8 := by
   simp [m0OddGenericInputPrefix,d1pow_length,markerWord,d0,d1]
-  omega
 
-private theorem m0OddGeneric_targetPrefix_length (a : Nat) :
+private theorem m0OddGeneric_targetPrefix_length (a : Nat) (ha : 0<a) :
     (m0OddGenericTargetPrefix a).length = 3*a+8 := by
   simp [m0OddGenericTargetPrefix,d1pow_length,markerWord,d0,d1]
   omega
@@ -172,7 +172,7 @@ theorem m0Odd_generic_q4_prefix_source
     run tm2 (24+12*a)
       (s1Config L (2*k+1) 0 a 0 b h) =
       some ⟨4,h,m0OddGenericCutTape L k a b h⟩ := by
-  let base : Config := ⟨3,h,(s1Config 3 5 0 a 0 b h).tape⟩
+  let base : Config := s1Config 3 5 0 a 0 b h
   let background := (s1Config L (2*k+1) 0 a 0 b h).tape
   have hinput := m0OddGeneric_input_matches L k a b h hL hbound
   have hstart :
@@ -203,10 +203,16 @@ theorem m0Odd_generic_q4_prefix_source
   have hbaseRun :
       run tm2 (24+12*a) base =
         some (⟨4,h,m0OddQ4CutTape a b h⟩ : Config) := by
-    simpa [base] using m0Odd_q4_prefix_run a b h ha
+    have heq : base = ⟨3,h,(s1Config 3 5 0 a 0 b h).tape⟩ := by
+      apply config_ext_by_fields <;> simp [base]
+    rw [heq]
+    exact m0Odd_q4_prefix_run a b h ha
   rw [hbaseRun] at hlift
   simp only [Option.map_some] at hlift
-  simpa [m0OddGenericCutTape,background] using hlift
+  have heq : frame (m0OddGenericInside a h) background (⟨4,h,m0OddQ4CutTape a b h⟩ : Config) = ⟨4,h,m0OddGenericCutTape L k a b h⟩ := by
+    apply config_ext_by_fields <;> rfl
+  rw [heq] at hlift
+  exact hlift
 
 private theorem m0OddGeneric_cut_eq_base_inside
     (L k a b : Nat) (h x : Int)
@@ -238,7 +244,7 @@ theorem m0Odd_generic_q4_prefix_leftFacing
   have hsourceLeft := m0OddGeneric_sourceLeftFacing L k a hL hbound
   have hbaseLeft := m0OddGeneric_baseCutLeftFacing a
   have hinputPrefixLength := m0OddGeneric_inputPrefix_length a
-  have htargetPrefixLength := m0OddGeneric_targetPrefix_length a
+  have htargetPrefixLength := m0OddGeneric_targetPrefix_length a ha
   intro i
   by_cases hi : i ≤ 3*a+7
   · have hin :
@@ -278,9 +284,9 @@ theorem m0Odd_generic_q4_prefix_leftFacing
 private theorem m0OddGeneric_q4RightShape_congr
     (T U : Int → Bool) (h : Int) (b : Nat)
     (heq : ∀ x, h ≤ x → T x = U x)
-    (hT : q4RightShape T h b) :
-    q4RightShape U h b := by
-  unfold q4RightShape at *
+    (hT : Agent8Q4Suffix.q4RightShape T h b) :
+    Agent8Q4Suffix.q4RightShape U h b := by
+  unfold Agent8Q4Suffix.q4RightShape at *
   rcases hT with ⟨h0,h5,h6,h79,hzero⟩
   refine ⟨?_,?_,?_,?_,?_⟩
   · intro i hi
@@ -299,7 +305,7 @@ private theorem m0OddGeneric_q4RightShape_congr
 
 private theorem m0OddGeneric_q4_rightShape
     (L k a b : Nat) (h : Int) (ha : 0<a) :
-    q4RightShape (m0OddGenericCutTape L k a b h) h b := by
+    Agent8Q4Suffix.q4RightShape (m0OddGenericCutTape L k a b h) h b := by
   apply m0OddGeneric_q4RightShape_congr
     (m0OddQ4CutTape a b h) (m0OddGenericCutTape L k a b h) h b
   · intro x hx
@@ -404,7 +410,8 @@ theorem m0Odd_counted_increment_source
       (s1Config L n 0 a 0 b h) =
       some (s1Config L (n-1) 2 (a+b+1) 0 (2^b-1)
         (h+5+3*b)) := by
-  obtain ⟨k,hk⟩ : ∃ k, n = 2*k+1 := by omega
+  have hk : n = 2*(n/2)+1 := by omega
+  obtain ⟨k,hk⟩ : ∃ k, n = 2*k+1 := ⟨n/2,hk⟩
   subst n
   have hbound' : 2*k+1 < 2^L := by simpa using hbound
   have hrow := m0Odd_counted_increment_source_k
