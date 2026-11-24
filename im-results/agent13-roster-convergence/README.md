@@ -15,7 +15,7 @@ The Lean bridge deliberately imports only the pure data modules (RecursiveResidu
 
 The three exceptional tables are reproduced as data exclusions only. No exceptional nonhalting claim or Agent50 coverage-wrapper soundness theorem is used. The 395-bound soundness theorem here comes solely from Agent31's checked remainingRootRoster_sound theorem plus the exact table permutation.
 
-This is an intermediate upper-bound component, not a complete BB(6) proof: the 124 residual cylinders still require resolution, and the first-one cylinder is only one part of the global machine space.
+This is an intermediate upper-bound component, not a complete BB(6) proof: three source-checked five-hole cylinders (raw66, raw70, raw80) have since been removed from the frontier, leaving 121 residual cylinders to resolve; the first-one cylinder is only one part of the global machine space.
 
 ## Verification
 
@@ -27,9 +27,27 @@ The CI target weighted-tnf-roster-convergence regenerates the source-derived fou
 
 - `cover_of_roster_dichotomy` turns any sound root dichotomy into a finite residual roster, plus one `Cover (WeightedBound C)` for each residual, into a single root `Cover`.
 - `exact_from_roster_dichotomy` lifts that cover to B≥C, converts it to the normalized `WeightedTNFCertificate`, and combines it with the raw champion witness.
-- Specializations consume Agent31's accepted 124-cylinder dichotomies at both 395 and 7014. The 7014 interface allows sibling certificates at that bound to be used without pretending they prove the stronger 395 bound.
+- Specializations consume Agent31's accepted 124-cylinder dichotomies at both 395 and 7014. The 7014 interface allows sibling certificates at that bound to be used without pretending they prove the stronger 395 bound. The separate FiveHoleRoster theorem below removes raw66/raw70/raw80 at the sharper 395 bound.
 
 The generalized module and its full import closure passed the manual CI target `weighted-tnf-roster-composition` in run [45489676758](https://github.com/FlareZ123/bb6/actions/runs/45489676758). The workflow rejects `sorryAx` and `native_decide` in the compiled closure.
 
-This is a conditional theorem, not a completed upper bound: the per-residual safety Covers and the attained champion witness still have to be supplied. No member of the 124 residual roster is declared closed by this interface alone.
+This is a conditional theorem, not a completed upper bound: the per-residual safety Covers and the attained champion witness still have to be supplied. The generic interface alone closes no residual; the separate FiveHoleRoster source certificate closes exactly three and leaves 121.
 
+
+## Three source-checked five-hole closures: raw66, raw70, raw80
+
+The existing Agent10 candidate generator and pinned specs now have a source-checked Lean bridge through `FiveHoleRoster.lean`. The three canonical partial tables match residual indices 66, 70, and 80 slot-for-slot:
+
+| Residual | Fixed B1 transition | Weighted bound | Open FAR leaves |
+|---|---:|---:|---:|
+| raw66 | 0RB | 120 | 125 |
+| raw70 | 0RC | 104 | 22 |
+| raw80 | 1RE | 164 | 395 |
+
+Each is a complete five-hole cylinder (25^5 completions). The generated exhaustive trees contain 2,009 split nodes, 39,013 cycle leaves, 6,724 last-hole leaves, and 542 open leaves in total. The generator checks the committed open-list hashes and tree statistics; Lean checks every open FAR certificate and the exact-table transfer. All three bounds are below 395.
+
+The Lean closure in run [45510820286](https://github.com/FlareZ123/bb6/actions/runs/45510820286) successfully compiled `Raw66Data`, `Raw70Data`, `Raw80Data`, and `BB6.Agent10FiveHoleRoster.reduced_sound`; their printed assumptions were only `propext`, `Classical.choice`, and `Quot.sound`. The overall run failed only when the newly added `FiveHoleRosterComposition.lean` wrapper referenced `WeightedBound` and `WeightedTNFCertificate` without opening `BB6.Agent13BlankDelay`. That namespace import is now fixed. The full wrapper rerun is [45513767248](https://github.com/FlareZ123/bb6/actions/runs/45513767248) and remains pending.
+
+The roster bridge proves `reduced_count = 121` and the sound dichotomy: every completion of the authentic 1RB root is either already bounded by 395 or compatible with one of the 121 retained residual tables. `FiveHoleRosterComposition.lean` exposes the corresponding root Cover, normalized TNF certificate, and conditional exact-BB(6) theorem once the remaining 121 Covers and champion witness are supplied. Do not describe the specialized wrapper as fully Lean-checked until run 45513767248 succeeds.
+
+This is a genuine reduction of the intermediate frontier, not a global upper bound: the remaining 121 safety obligations are still open.
