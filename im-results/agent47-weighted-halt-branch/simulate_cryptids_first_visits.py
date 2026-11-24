@@ -45,16 +45,20 @@ def simulate(rows):
     state = 0
     head = 0
     first_visit: dict[str, int] = {}
+    first_visit_order: list[str] = []
     steps = 0
     ordinary = sum(move is not None for row in rows for move in row)
     while steps < 1_000_000 and len(first_visit) < ordinary:
         symbol = tape.get(head, 0)
         slot = f"{state}/{symbol}"
-        first_visit.setdefault(slot, steps)
+        if slot not in first_visit:
+            first_visit[slot] = steps
+            first_visit_order.append(slot)
         move = rows[state][symbol]
         if move is None:
             return {
                 "halts_at": steps,
+                "first_visit_order": first_visit_order,
                 "first_visits": first_visit,
                 "ordinary_rows": ordinary,
                 "all_ordinary_seen": len(first_visit) == ordinary,
@@ -66,6 +70,7 @@ def simulate(rows):
     return {
         "halts_at": None,
         "steps_at_coverage": steps,
+        "first_visit_order": first_visit_order,
         "first_visits": first_visit,
         "ordinary_rows": ordinary,
         "all_ordinary_seen": len(first_visit) == ordinary,
