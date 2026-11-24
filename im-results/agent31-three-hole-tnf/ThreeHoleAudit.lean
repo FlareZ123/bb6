@@ -52,7 +52,7 @@ theorem farSound {d : Nat} (p : PartialMachine) (rev : Bool) (C : FAR.Data d)
   · exact FAR.reflectNever m (C.sound (FAR.reflectPartial p)
       (C.fastValid_sound _ h) (reflectTable m) (FAR.reflectCompatible p m hm))
 
-def certified (B : Nat) (p : PartialMachine) (t : Audit)
+noncomputable def certified (B : Nat) (p : PartialMachine) (t : Audit)
     (hroot : p initialSlot = some (some ⟨true,true,1⟩))
     (hno : weightedTNFNoAssignedHalt p)
     (h : check B p t = true) : WeightedTNFCertificate B p 6 := by
