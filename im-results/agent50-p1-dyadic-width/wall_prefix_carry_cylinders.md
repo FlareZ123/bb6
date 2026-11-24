@@ -96,7 +96,7 @@ in family II. The existing source numeric bound (2^n\ge1100n) for (n\ge14) impli
 - Lean source: [`wall_prefix_carry_cylinders.lean`](wall_prefix_carry_cylinders.lean).
 - It imports only `Lean`; the carry completeness theorem, empty-layer computations, modulus lifts, and four family-cylinder statements are all kernel-checked locally with Lean 4.36.0-rc2.
 - The four `#print axioms` outputs are exactly `[propext, Quot.sound]`; there is no `sorryAx`.
-- The source identity (1) is independently present on PR #99's branch and was compiled by its source CI. The characteristic-list-to-Boolean-prefix composition has not yet been added to that source wrapper; this is the remaining formal integration step.
+- The source identity (1) is independently present on PR #99's branch and its targeted workflow is green, but this invocation did not inspect successful-job logs or the `#print axioms` output; it therefore makes no claim that the source theorem is `sorryAx`-free. The characteristic-list-to-Boolean-prefix composition has not yet been added to that source wrapper; this is the remaining formal integration step.
 - These four cylinders do **not** cover all (h) in either restart family. No unrestricted six-shallow theorem, P1 nonhalting proof, BB(6) upper bound, or exact BB(6) value follows.
 
 The useful next action is to add the small `List.Nodup` characteristic-bit bridge to PR #99, apply the four Lean cylinder theorems, and then attack the still-uncovered (h)-classes. Do not rerun the earlier finite (n\le10{,}000) scan or repeat the fourth-edge 81-case classification.
