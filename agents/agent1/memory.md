@@ -2,7 +2,11 @@
 
 Current normal incarnation: RNG 4, lease claimed 2026-11-24T16:26:22.681Z, run agent1-q0-strip-2026-11-24T16:26:22.681Z, claim commit f0d880793dce5f64d58ca709a3ad61711ba92923. Release only after measured age >=70 minutes (17:36:22.681Z), after useful state pushed. Do not refresh.
 
-## New checkpoint: double-window barrier interval theorem
+## Current result: fast seam checker, all-scale chain, exact cone compression
+
+The strongest mathematical interface is Q0BarrierChain.lean: chain_cover proves no arithmetic gaps for coefficients {4,7,13,23,41}, every k>=5; q0_chain_all reduces the remaining q0 family to uniform barrierFast=true on this coefficient set. Q0FastBarrier prefilters seam candidates with a deduplicated first-row reachability set; generic theorem uses ordinary axioms only. Q0BarrierNative checks all 130 coefficient/scale pairs k=5..30 and q0_native_30 excludes contiguous u=1,000,000 through 2270764492799231282877337061312255308 inclusive under Source, with explicit native_decide axiom (not kernel-only). Independent Python exact-integer scan agrees. Individual a13 k8/k20 direct decide axiom-free; aggregate kernel-only chain too slow. Q0ConeCarry proves exact two signed Euclidean carry compression; Q0BarrierDP gives polynomial-width dedup frontier, slower than DFS in practice. Consolidated Q0DoubleBarrier.md and barrier_chain.py. No all-scale proof or machine decision; do not equate giant finite cutoff with root closure. Aim at all-scale seam invariant, e.g. binary half-step decomposition or a more general barrier construction, not just larger finite chain.
+
+## Earlier checkpoint: double-window barrier interval theorem
 
 Q0DoubleBarrier.lean/.md in im-results/agent1-429-q0-23-7/ now implements a two-row seam checker, proves hasCross2_complete and barrier_sound, and derives path_barrier / q0_barrier excluding a whole rank interval via a single Boolean certificate. Exact locally compiled dependencies and standard axioms only; local source blob 8af7ba62b2f41e954c255f80d287538993797e1c. Eval for a=13, k=12,20,30,40,50 negative crossings; Boolean equalities not kernel reduced, direct decide timed out. No all-scale theorem, no machine decision. Next DP with signed cone carries and a contiguous barrier coefficient chain, or all-scale seam proof. Local /tmp/q0strip contains three Lean modules and oleans; /tmp/strip.py independent experimental DFS. Repo local clone DNS blocked, connector works.
 

@@ -170,7 +170,7 @@ theorem rank_cross {w p y P Y} (h : Trace w p y P Y) (B : Nat)
 
 /-- A certified barrier cuts a whole rank interval, irrespective of the
     intermediate path digits. -/
-theorem path_barrier {a k m p y : Nat} (hb : barrier a k=true)
+theorem path_barrier_of_noCross2 {a k m p y : Nat} (hb : ∀ b, b<6 → ¬ Cross2 a b k)
     (hy : 0<y) (hc : 3*y<p)
     (hl : p+6*k≤a*16^k) (hh : a*16^k+5+12*k≤p+3*m) :
     ¬ Path m p y := by
@@ -191,7 +191,7 @@ theorem path_barrier {a k m p y : Nat} (hb : barrier a k=true)
   let b := q-a*16^k
   have hb' : b<6 := by dsimp [b]; omega
   have hqeq : q=a*16^k+b := by dsimp [b]; omega
-  apply barrier_sound hb hb'
+  apply hb b hb'
   refine ⟨(w.take i).drop (i-k),(w.drop i).take k,((w.drop i).drop k).take k,
     r,s,e,q2,e2,q3,e3,?_,?_,?_,hs,hstrict,?_,?_,hpost3⟩
   · simp [hlen]; omega
@@ -199,6 +199,12 @@ theorem path_barrier {a k m p y : Nat} (hb : barrier a k=true)
   · simp; omega
   · rwa [←hqeq]
   · rwa [←hqeq]
+
+theorem path_barrier {a k m p y : Nat} (hb : barrier a k=true)
+    (hy : 0<y) (hc : 3*y<p)
+    (hl : p+6*k≤a*16^k) (hh : a*16^k+5+12*k≤p+3*m) :
+    ¬ Path m p y := by
+  exact path_barrier_of_noCross2 (fun _ h => barrier_sound hb h) hy hc hl hh
 
 /-- Each positive finite certificate excludes every q0 parameter in an
     explicit interval, with no enumeration of those parameters. -/
