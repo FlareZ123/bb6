@@ -35,3 +35,8 @@ Connect the genuine blank-derived section I_9 to any of these cylinders, or find
 ## Modular membership (checked)
 
 RouteMembership.lean proves routeTest_iff_path and routeTest_mod_invariant for any suffix and any valid remaining layered graph. For d=remaining layers+1, evaluate the test on n%3^d+3^d. The theorem small_test_sound transfers a positive result to the original n, and root_section_halts transports actual blank reachability through observational equality. All four theorems compiled with standard axioms only.
+
+
+## Accelerated authentic-root replay
+
+See [BlockReplay.md](BlockReplay.md) for the source-certified arbitrary A/E/B block-lifting and exact partial replay algorithms, and the independent C++ computational result of 2^30 completed returns from I_9. The actual blank-orbit all-time decision remains open.
