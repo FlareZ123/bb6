@@ -28,7 +28,9 @@ private theorem run_mass_mono_aux (n k : Nat) :
   | zero =>
       intro a d aa dd hN hM
       have hM' : run n = some (.D aa dd) := by simpa using hM
-      have hstate : (.D a d) = (.D aa dd) :=
+      have hstate :
+          BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D a d =
+          BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D aa dd :=
         Option.some.inj (hN.symm.trans hM')
       cases hstate
       omega
@@ -36,17 +38,18 @@ private theorem run_mass_mono_aux (n k : Nat) :
       intro a d aa dd hN hM
       have hM' : run (n + k + 1) = some (.D aa dd) := by
         simpa [Nat.add_succ] using hM
-      have hM'' := hM'
-      simp only [run] at hM''
+      rw [run] at hM'
       cases hm : run (n + k) with
       | none =>
-          simp only [hm, Option.bind_none] at hM''
+          have hfalse : False := by
+            simpa only [hm, Option.bind_none] using hM'
+          exact hfalse.elim
       | some s =>
           rcases s with ⟨x, y⟩
-          simp only [hm, Option.bind_some] at hM''
           have hprev : a + d ≤ x + y := ih a d x y hN hm
-          have hstepMass : x + y + 7 ≤ aa + dd :=
-            next_strict_mass x y aa dd hM''
+          have hstepMass : x + y + 7 ≤ aa + dd := by
+            apply next_strict_mass x y aa dd
+            simpa only [hm, Option.bind_some] using hM'
           omega
 
 /-- Monotonicity between arbitrary surviving root indices. -/
