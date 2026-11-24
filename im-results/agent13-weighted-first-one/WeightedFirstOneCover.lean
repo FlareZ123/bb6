@@ -7,6 +7,50 @@ open BB6Coverage
 
 /-- The weight is computed on the concrete total completion, including
     every zero-symbol row not queried by its canonical blank run. -/
+/-- The weighted TNF root is exactly the upstream node0 table: A/0=1RB,
+    with every other transition genuinely unassigned. -/
+theorem firstOneCylinder_root_action :
+    BB6.CoverageAdapter.firstOneCylinder initialSlot =
+      some (some ⟨true, true, (1 : Fin 6)⟩) := by
+  simp [BB6.CoverageAdapter.firstOneCylinder, refine, initialSlot]
+
+theorem firstOneCylinder_tnf_support :
+    TNFSupport BB6.CoverageAdapter.firstOneCylinder 2 := by
+  intro s t h
+  by_cases hs : s = initialSlot
+  · subst s
+    have h' :
+        some (some ⟨true, true, (1 : Fin 6)⟩ : Transition) = some t := by
+      simpa [BB6.CoverageAdapter.firstOneCylinder, refine] using h
+    have ht : (some ⟨true, true, (1 : Fin 6)⟩ : Transition) = t :=
+      Option.some.inj h'
+    subst t
+    constructor
+    · decide
+    · intro mv hm
+      have hm' : mv = ⟨true, true, (1 : Fin 6)⟩ :=
+        (Option.some.inj hm).symm
+      subst mv
+      decide
+  · simp [BB6.CoverageAdapter.firstOneCylinder, refine, emptyTable, hs] at h
+
+theorem firstOneCylinder_no_assigned_halt :
+    weightedTNFNoAssignedHalt BB6.CoverageAdapter.firstOneCylinder := by
+  intro s
+  by_cases hs : s = initialSlot
+  · subst s
+    simp [weightedTNFNoAssignedHalt, BB6.CoverageAdapter.firstOneCylinder, refine]
+  · simp [weightedTNFNoAssignedHalt, BB6.CoverageAdapter.firstOneCylinder,
+      refine, emptyTable, hs]
+
+theorem firstOneCylinder_tnf_root :
+    BB6.CoverageAdapter.firstOneCylinder initialSlot =
+        some (some ⟨true, true, (1 : Fin 6)⟩) ∧
+    TNFSupport BB6.CoverageAdapter.firstOneCylinder 2 ∧
+    weightedTNFNoAssignedHalt BB6.CoverageAdapter.firstOneCylinder := by
+  exact ⟨firstOneCylinder_root_action, firstOneCylinder_tnf_support,
+    firstOneCylinder_no_assigned_halt⟩
+
 theorem weighted_of_never (B : Nat) (m : Machine) (h : NeverHalts m) :
     WeightedBound B m := by
   intro k d hk _
