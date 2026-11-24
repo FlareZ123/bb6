@@ -51,7 +51,7 @@ No sorryAx or native_decide dependency. This exact CLine dependency is unchanged
 
 ## Exact quantitative stopping suffixes
 
-[ThinGatewayCounted.lean](ThinGatewayCounted.lean) extends the inverse-fan theorem with **exact accelerator-call counts**, and separately the sum of published rule weights. Let Path(n,w,s,t) mean n successful nextC calls from s to t, with weight sum w. The rule weights come from the comments in the pinned [Cryptids source](https://github.com/google-deepmind/cryptids/blob/c86f15861709b76042998c5211c7b2f83991621b/BusyBeaver/BB6/M_1RB1LC_1LC1RD_1LA0LB_0RB1RE_1RF0RA_HHH0RC.lean). The raw primitive-count bridge is not yet a formal premise of these theorems.
+[ThinGatewayCounted.lean](ThinGatewayCounted.lean) extends the inverse-fan theorem with **exact accelerator-call counts**, and separately the sum of published rule weights. Let Path(n,w,s,t) mean n successful nextC calls from s to t, with weight sum w. The rule weights come from the comments in the pinned [Cryptids source](https://github.com/google-deepmind/cryptids/blob/c86f15861709b76042998c5211c7b2f83991621b/BusyBeaver/BB6/M_1RB1LC_1LC1RD_1LA0LB_0RB1RE_1RF0RA_HHH0RC.lean). The raw primitive-count bridge is established in the next section.
 
 For the recursive fan alone (from (0,L,D) to (0,K,C), under the two closed-form fan identities), theorem fan_counted proves
 ```
@@ -65,11 +65,25 @@ The terminal wing from T_j to the first c=2 state (8j+10,2,2) costs exactly 4j+4
 - high stopping family: exact successful call count n=8j-2q-10m+2;
 - low stopping family: exact successful call count n=8j-10m+4.
 
-For both families the total weight is entry weight + recursive fan weight + terminal wing weight. The parameters are (L,D,d)=(2q+2,2k-2q,2m) or (4,2k-3,2m-1), respectively, with K=2j. The final c=2 halt call is not included; its published raw successful-transition weight is 3, and the convention for counting the terminal undefined transition is separate.
+For both families the total weight is entry weight + recursive fan weight + terminal wing weight. The parameters are (L,D,d)=(2q+2,2k-2q,2m) or (4,2k-3,2m-1), respectively, with K=2j. The final c=2 halt call is not included; the raw bridge below proves its three successful transitions, followed by one terminal halting query.
 
 Theorems high_stop_counted and low_stop_counted construct these paths for every admissible parameter, independently of blank reachability. Path.terminal_unique proves uniqueness of the length, weight, and terminal endpoint of any stopping path, without axioms. This gives a quantitative suffix certificate, not a blank-run time or a classification of C.
 
 Lean 4.36.0-rc2 compiled the new module with no warnings or errors, using the above exact dependencies; all four counted theorems report only propext, Classical.choice and Quot.sound. The file blob is 1118c4f7c8d0d281d91eebf872feb131fa33a123. Run `LEAN_PATH=. lean -o ThinGatewayCounted.olean ThinGatewayCounted.lean` after the preceding two modules. An independent primitive simulation of 4,000 small canonical triples also agreed with the published rule weights, but is finite evidence rather than a raw-source count proof.
+
+## Exact primitive-move bridge and Busy Beaver score
+
+[CRawCountBridge.lean](CRawCountBridge.lean) removes the conditional interpretation of the rule weights. It imports unchanged global coverage semantics `im-results/agent8-coverage-contract/Frontier.lean` (blob 115438c4f244b5416a91be4dd7a3f12103d5448d) and the counted/inverse modules above. The literal `cMachine : BB6Coverage.Machine` is the historical holdout #39 table `1RB1LC_1LC1RD_1LA0LB_0RB1RE_1RF0RA_---0RC`, states A–F numbered 0–5. Physical semantics is `BB6Coverage.run`.
+
+The proof uses a relative infinite-stream zipper (two Nat→Bool streams), four exact arbitrary-length sweeps (C left, B left, B right, E right), and finite local microprograms on arbitrary untouched tails. For every successful nextC edge, zrule_counted proves its exact primitive weight. The c=2 rule makes three ordinary moves and then has no successor; the original blank tape reaches (5,0,1) after exactly 12 ordinary moves. embed_move proves single-move commutation with the actual Int-indexed tape for both directions and every cell.
+
+```lean
+theorem raw_haltsAfter_iff (N : Nat) : HaltsAfter cMachine N ↔
+    ∃ n w t, Path n w (5,0,1) t ∧ nextC t=none ∧ N=15+w
+```
+Here w sums successful accelerator-edge weights and N counts ordinary moves. Frontier counts the terminal query as one additional step: **BB score = 16+w**. Both directions hold; reverse uses positivity of weights and absorbing undefined physical states. Theorems high_blank_score and low_blank_score give actual HaltsAfter and Attainable witnesses conditional only on a weighted authentic blank prefix to the stopping parameter. raw_haltsAfter_iff_families combines both into a complete score-specific iff. No numerical score or C classification is claimed.
+
+**Local acceptance:** exact unchanged Frontier, CLine, ThinGatewayExact, ThinGatewayCounted and CRawCountBridge compiled under Lean 4.36.0-rc2. New source blob 1af5a0bf050620ff5e873c1f4745dbff5c622661. raw_haltsAfter_iff and raw_path axioms [propext, Quot.sound]; family witnesses and combined iff additionally Classical.choice. No sorryAx, custom axioms, native_decide. Copy Frontier.lean into the same build directory and run `lean -o Frontier.olean Frontier.lean` then `LEAN_PATH=. lean -o CRawCountBridge.olean CRawCountBridge.lean`. Consumers using the separate MachineCPath.machineC name may prove definitional equality when importing both modules.
 
 ## Remaining root obligation
 
