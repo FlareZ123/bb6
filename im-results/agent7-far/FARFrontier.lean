@@ -39,6 +39,29 @@ theorem depth4_conserves (limit : Nat) :
     _ = cylinderMass emptyTable := (depth4 limit).report_conserves
     _ = 25^12 := by decide
 
+/-- Executable implementation of the existing structural mass report.
+    The imported report is marked noncomputable despite its finite body. -/
+def evalReport {good : Machine → Prop} {p : PartialMachine} :
+    FrontierAudit good p → Nat × Nat
+  | .certified p _ => (cylinderMass p,0)
+  | .unresolved p => (0,cylinderMass p)
+  | .branch _ _ _ kids =>
+    (choices.attach.map (fun t => evalReport (kids t.val t.property))).foldl
+      (fun acc x => (acc.1+x.1,acc.2+x.2)) (0,0)
+
+theorem evalReport_eq {good : Machine → Prop} {p : PartialMachine}
+    (a : FrontierAudit good p) : evalReport a = a.report := by
+  induction a with
+  | certified p cert => rfl
+  | unresolved p => rfl
+  | branch p s fresh kids ih =>
+    simp only [evalReport,FrontierAudit.report]
+    congr 1
+    apply List.map_congr_left
+    intro t ht
+    exact ih t.val t.property
+
+#print axioms evalReport_eq
 #print axioms augment_open_subset
 #print axioms depth4_exhaustive
 #print axioms depth4_conserves
