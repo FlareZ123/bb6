@@ -10,6 +10,23 @@ def r0Y (s : Nat) : Nat := 839478963638 + 1195142023120*s
 def r0M (s : Nat) : Nat := 264299645527 + 376275289635*s
 def r0H (s : Nat) : Nat := r0X s + r0Y s + 1
 
+private theorem r0X_mod_two (s : Nat) : r0X s%2=1 := by
+  simp [r0X,Nat.add_mod,Nat.mul_mod]
+
+private theorem r0Y_mod_two (s : Nat) : r0Y s%2=0 := by
+  simp [r0Y,Nat.add_mod,Nat.mul_mod]
+
+private theorem r0M_mod_two (s : Nat) (hs : s%2=1) :
+    r0M s%2=0 := by
+  simp [r0M,Nat.add_mod,Nat.mul_mod,hs]
+
+private theorem r0M_mod_five (s : Nat) : r0M s%5=2 := by
+  simp [r0M,Nat.add_mod,Nat.mul_mod]
+
+private theorem r0X2Y_mod_five (s : Nat) :
+    (r0X s+2*r0Y s)%5=4 := by
+  simp [r0X,r0Y,Nat.add_mod,Nat.mul_mod]
+
 /-- Exact affine arithmetic for the residual: its height is 16*M,
     M is 2 modulo 5, and x+2y is 4 modulo 5. -/
 theorem r0_facts (s : Nat) (hs : s%2=1) :
@@ -18,11 +35,26 @@ theorem r0_facts (s : Nat) (hs : s%2=1) :
     r0H s=16*r0M s ∧ r0M s%5=2 ∧
     (r0X s+2*r0Y s)%5=4 ∧
     48 ≤ r0H s ∧ r0H s%32=0 := by
-  have hsdiv : s%2 + 2*(s/2)=s := Nat.mod_add_div s 2
-  have hs' : s=2*(s/2)+1 := by omega
-  rw [hs']
-  dsimp [r0X,r0Y,r0M,r0H]
-  omega
+  have hx : 5<r0X s := by dsimp [r0X]; omega
+  have hy : 6≤r0Y s := by dsimp [r0Y]; omega
+  have hxodd := r0X_mod_two s
+  have hyeven := r0Y_mod_two s
+  have hH16 : r0H s=16*r0M s := by
+    dsimp [r0H,r0X,r0Y,r0M]
+    omega
+  have hM5 := r0M_mod_five s
+  have hX5 := r0X2Y_mod_five s
+  have hM2 := r0M_mod_two s hs
+  have hdiv : 2∣r0M s := Nat.dvd_of_mod_eq_zero hM2
+  rcases hdiv with ⟨t,ht⟩
+  have hmul : 16*(2*t)=32*t := by omega
+  have hH32 : r0H s%32=0 := by
+    rw [hH16,ht,hmul]
+    simp [Nat.mul_mod]
+  have hbig : 48≤r0H s := by
+    dsimp [r0H,r0X,r0Y]
+    omega
+  exact ⟨hx,hy,hxodd,hyeven,hH16,hM5,hX5,hbig,hH32⟩
 
 private theorem pow_four_mod_five (m : Nat) :
     (4^m)%5=1 ∨ (4^m)%5=4 := by
@@ -31,8 +63,7 @@ private theorem pow_four_mod_five (m : Nat) :
       decide
   | succ m ih =>
       have hstep : (4^(m+1))%5 = ((4^m)%5*4)%5 := by
-        rw [Nat.pow_succ, Nat.mul_mod]
-        simp
+        simp [Nat.pow_succ,Nat.mul_mod]
       rw [hstep]
       rcases ih with h | h
       · right
@@ -47,9 +78,9 @@ private theorem pow_two_double (m : Nat) : 2^(2*m)=4^m := by
   | succ m ih =>
       calc
         2^(2*(m+1)) = 2^(2*m+2) := by congr 1 <;> omega
-        _ = 2^(2*m)*2^2 := by rw [Nat.pow_add]
-        _ = 4^m*4 := by rw [ih]; rfl
-        _ = 4^(m+1) := by rw [Nat.pow_succ]; rfl
+        _ = 2^(2*m)*2^2 := by simp [Nat.pow_add]
+        _ = 4^m*4 := by simp [ih]
+        _ = 4^(m+1) := by simp [Nat.pow_succ]
 
 private theorem pow_two_even_mod_five_ne_two (n : Nat)
     (hn : n%2=0) : (2^n)%5≠2 := by
