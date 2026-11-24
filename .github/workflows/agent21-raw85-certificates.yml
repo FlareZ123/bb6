@@ -2,7 +2,8 @@ name: Agent 21 raw85 FAR certificate validation
 on:
   workflow_dispatch:
 permissions:
-  contents: read
+  actions: read
+  contents: write
 jobs:
   validate:
     runs-on: ubuntu-latest
@@ -24,6 +25,78 @@ jobs:
             im-results/agent7-far/wide132/emit.py \
             im-results/agent7-far/wide133/emit.py
           python3 im-results/agent7-far/test_start_guard.py
+      - name: Recover eight workflow-validated SMT candidates
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          runs=(
+            45498610882 45498649689 45498658720 45498667128
+            45498673310 45498681222 45498691122 45498700780
+          )
+          mkdir -p /tmp/raw85-artifacts
+          for run in "${runs[@]}"; do
+            dest="/tmp/raw85-artifacts/$run"
+            mkdir -p "$dest"
+            gh run download "$run" --repo "$GITHUB_REPOSITORY" --name far-hard-shard-0 --dir "$dest"
+          done
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          root = Path("/tmp/raw85-artifacts")
+          run_ids = [
+              45498610882, 45498649689, 45498658720, 45498667128,
+              45498673310, 45498681222, 45498691122, 45498700780,
+          ]
+          frontier = Path("im-results/agent21-raw85/smt-frontier.txt").read_text().splitlines()
+          expected = [m.group(1) for line in frontier if (m := re.match(r"^\d+\.\s+(.*)$", line))]
+          if len(expected) != 8:
+              raise SystemExit(f"expected eight raw85 frontier tables, found {len(expected)}")
+          records = []
+          seen_codes = set()
+          for i, run_id in enumerate(run_ids):
+              hit_files = list((root / str(run_id)).rglob("hits.txt"))
+              if len(hit_files) != 1:
+                  raise SystemExit(f"run {run_id}: expected one hits.txt, found {len(hit_files)}")
+              hits = [line.split() for line in hit_files[0].read_text().splitlines() if line.startswith("HIT ")]
+              if len(hits) != 1:
+                  raise SystemExit(f"run {run_id}: expected one HIT record, found {len(hits)}")
+              words = hits[0]
+              if words[0] != "HIT":
+                  raise SystemExit(f"run {run_id}: malformed hit row")
+              code, d, rev = words[2], int(words[3]), int(words[4])
+              if code != expected[i]:
+                  raise SystemExit(f"run {run_id}: target mismatch: {code} != {expected[i]}")
+              if words[5] != "DFA" or rev not in (0, 1):
+                  raise SystemExit(f"run {run_id}: malformed DFA/orientation fields")
+              dfa = list(map(int, words[6:6 + 2*d]))
+              n = 6*d + 1
+              mask_tag = 6 + 2*d
+              z_tag = mask_tag + 1 + 2*n
+              if len(dfa) != 2*d or words[mask_tag] != "MASK" or words[z_tag] != "Z" or z_tag + 2 != len(words):
+                  raise SystemExit(f"run {run_id}: malformed mask payload")
+              if not dfa or dfa[0] != 0 or any(x < 0 or x >= d for x in dfa):
+                  raise SystemExit(f"run {run_id}: DFA violates start-preserving/range constraints")
+              raw = code.replace("_", "")
+              tokens = [raw[j:j+3] for j in range(0, 36, 3)]
+              key = [tokens[j] for j in (5, 1, 8, 10)]
+              records.append(" ".join(key + [str(rev), "".join(map(str, dfa))]))
+              seen_codes.add(code)
+          if len(records) != 8 or len(seen_codes) != 8:
+              raise SystemExit("raw85 SMT records are not eight distinct destination tables")
+          out = Path("im-results/agent21-raw85/smt-candidates.txt")
+          out.write_text("# Eight Lean-validated composed-SMT DFA candidates; keys are ordering metadata only\n" + "\n".join(records) + "\n")
+          print(out.read_text(), end="")
+          PY
+          api_path="repos/$GITHUB_REPOSITORY/contents/im-results/agent21-raw85/smt-candidates.txt"
+          encoded="$(base64 -w0 im-results/agent21-raw85/smt-candidates.txt)"
+          if sha="$(gh api "$api_path" --jq .sha 2>/dev/null)"; then
+            gh api --method PUT "$api_path" -f message="Agent 7: Preserve eight raw85 SMT DFA candidates" -f content="$encoded" -f branch=main -f sha="$sha"
+          else
+            gh api --method PUT "$api_path" -f message="Agent 7: Preserve eight raw85 SMT DFA candidates" -f content="$encoded" -f branch=main
+          fi
+          cat im-results/agent21-raw85/smt-candidates.txt >> "$GITHUB_STEP_SUMMARY"
       - name: Generate raw85 destination-checked sibling tree
         run: |
           set -euo pipefail
