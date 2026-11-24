@@ -155,8 +155,8 @@ theorem prefix_cube_fuel (f : Nat → Nat) (N d : Nat)
       rw [Nat.mul_pow, ←Nat.pow_mul, Nat.mul_comm ((Nat.log2 L+1)/3) 3]
     have hpow2 : 2^(3*((Nat.log2 L+1)/3)+2)=4*2^(3*((Nat.log2 L+1)/3)) := by
       rw [Nat.pow_add]
-      norm_num
-      ring
+      simp [Nat.mul_comm]
+      ac_rfl
     rw [hE]
     calc
       16*L≤16*2^(Nat.log2 L+1) := Nat.mul_le_mul_left 16 (Nat.le_of_lt hHL)
