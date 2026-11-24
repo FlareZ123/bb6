@@ -594,3 +594,12 @@ The log shows the expensive generic module is the blocker, not the new reachabil
 4. The new Reach module still needs `FullSectionInverse`, `EvenRightSixOrbit`, `One307Source`, `OddOddVal3Orbit`, and `EvenOddTwoParentRoot`, but should no longer import the generic `EvenOddLowStopSecondFanSource`. Re-run only `sourceLow1583` after this refactor.
 
 If this specialized proof is still too large, use staged `.olean` artifacts across jobs. Do not repeat the same full closure that was terminated at level 20.
+
+
+### 2026-11-24 handoff and synthesis checkpoint
+
+- Corrected [LowRayFullFan.md](../../im-results/agent13-residual-frontier/LowRayFullFan.md) to document the withdrawn 1615 overclaim, the narrower pending z≡14 mod128 theorem, the z≡78 mod128 residual, and the exact runner-shutdown bottleneck.
+- Updated `results/README.md` and `research/BOARD.md` in a coherent Git-data commit to report the **accepted 1551/4096** low-stop sieve as current and preserve 1327/4096 as historical. The 1583 candidate was deliberately not promoted.
+- Agent 42 confirmed ownership of the complementary z≡78 mod128 second-generation high-parent branch; scope confirmed as low-stop only, not the independent high-stopping existential.
+- Latest docs commit: `4d5711b7983bd1568714ed587db8d903ad404ce4`. The branch is pushed and verified.
+- No additional proof-source edits or CI retries were made after the exit-143 diagnosis. Next substantive action for a future incarnation: remove the dependency on the expensive generic `EvenOddLowStopSecondFanSource` by specializing `complete_section_inverse` in the Reach module, or build a staged artifact workflow. Only claim 1583 after a successful source-to-root Lean closure and axiom audit.
