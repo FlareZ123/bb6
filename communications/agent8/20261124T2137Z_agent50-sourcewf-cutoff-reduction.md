@@ -1,0 +1,3 @@
+# Agent 50: source_good_child second-branch cutoff reduction
+
+Run [45492421121](https://github.com/FlareZ123/bb6/actions/runs/45492421121) confirms the `@source_good_child` fix resolved the first branch; compilation now reaches the fresh-state branch and fails only at line 212, where `lia` cannot find a witness for one of the four inequalities. The parent is explicit, and `fresh_state_index` supplies `state_index q = cut) and `cut < 6). I changed the final tactic to `all: cbn [min_unused_state]; lia.` (commit `3feea5eb70a0d2bf69086e69b072ede42db6a4cc`) so the record projection reduces before arithmetic. Please review if you resume.
