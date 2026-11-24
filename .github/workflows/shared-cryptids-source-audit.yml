@@ -43,6 +43,11 @@ on:
         required: true
         type: string
         default: 'v4.35.0-rc4'
+      verify_weighted_tnf_leaves:
+        description: 'Also compile six Cryptids nonhalt roots as source-checked WeightedTNFCertificate leaves'
+        required: false
+        type: boolean
+        default: false
       verify_six_root_graft:
         description: 'Compile and axiom-audit the six pinned upstream NonHalt roots grafted into the local depth-four frontier'
         required: false
@@ -87,6 +92,7 @@ jobs:
       LEAN_TOOLCHAIN: ${{ inputs.lean_toolchain }}
       DEPENDENCY_VERSION: ${{ inputs.dependency_version }}
       VERIFY_SIX_ROOT_GRAFT: ${{ inputs.verify_six_root_graft }}
+      VERIFY_WEIGHTED_TNF_LEAVES: ${{ inputs.verify_weighted_tnf_leaves }}
       SIMULATE_SECOND_F289: ${{ inputs.simulate_second_f289 }}
       VERIFY_F289_RLE_COST: ${{ inputs.verify_f289_rle_cost }}
     steps:
@@ -118,6 +124,12 @@ jobs:
           fi
           if [[ "${{ inputs.verify_f289_exact_graft }}" == "true" ]]; then
             test "$VERIFY_SIX_ROOT_GRAFT" = "true"
+          fi
+          if [[ "$VERIFY_WEIGHTED_TNF_LEAVES" == "true" ]]; then
+            test "$VERIFY_SIX_ROOT_GRAFT" = "true"
+            test "$UPSTREAM_SHA" = "3647718b5df22e1a61462dec0376bd204526285a"
+            test "$LEAN_TOOLCHAIN" = "leanprover/lean4:v4.36.0-rc2"
+            test "$DEPENDENCY_VERSION" = "v4.36.0-rc2"
           fi
           if [[ "$VERIFY_SIX_ROOT_GRAFT" == "true" ]]; then
             test "$ORIGINAL_MODULE" = "BusyBeaver.Bridge"
@@ -304,6 +316,42 @@ jobs:
             exit 1
           fi
           echo "Six-root graft compiled; no sorryAx in exported axiom profiles."
+      - name: Compile six Cryptids roots as weighted-TNF nonhalt leaves
+        if: ${{ inputs.verify_six_root_graft && inputs.verify_weighted_tnf_leaves }}
+        working-directory: /tmp/cryptids
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$GITHUB_WORKSPACE"
+          python im-results/agent13-coverage/unpack.py
+          cd /tmp/cryptids
+          cp "$GITHUB_WORKSPACE/im-results/agent8-coverage-contract/RootShift.lean" BB6Agent42/
+          cp "$GITHUB_WORKSPACE/im-results/agent8-coverage-contract/Prune.lean" BB6Agent42/
+          cp "$GITHUB_WORKSPACE/im-results/agent8-coverage-contract/OneHalt.lean" BB6Agent42/
+          cp "$GITHUB_WORKSPACE/im-results/agent42-coverage-normal/FirstStep.lean" BB6Agent42/
+          cp "$GITHUB_WORKSPACE/im-results/agent42-coverage-normal/TwoFirst.lean" BB6Agent42/
+          cp "$GITHUB_WORKSPACE/im-results/agent4-coverage-smoke/WriteOneDrift.lean" BB6Agent42/
+          cp "$GITHUB_WORKSPACE/im-results/agent4-coverage-smoke/CrossCoverage.lean" BB6Agent42/
+          cp "$GITHUB_WORKSPACE/im-results/agent4-coverage-smoke/CrossUpper.lean" BB6Agent42/
+          cp "$GITHUB_WORKSPACE/im-results/agent42-coverage-normal/CrossFirstUpper.lean" BB6Agent42/
+          cp "$GITHUB_WORKSPACE/im-results/agent42-coverage-normal/TwoCylinder.lean" BB6Agent42/
+          cp "$GITHUB_WORKSPACE/im-results/agent13-coverage/BB6Coverage.lean" BB6Agent42/
+          for m in BlankDelayKernel BlankDelaySource SparseBlankDelay WeightedTNF WeightedTNFCertificate; do
+            cp "$GITHUB_WORKSPACE/im-results/agent13-weighted-first-one/$m.lean" BB6Agent42/
+          done
+          cp "$GITHUB_WORKSPACE/im-results/agent47-weighted-halt-branch/WeightedNonhaltLeafAdapter.lean" BB6Agent42/
+          cp "$GITHUB_WORKSPACE/im-results/agent47-weighted-halt-branch/CryptidsWeightedLeaves.lean" BB6Agent42/
+          export LEAN_PATH=BB6Agent42
+          for m in RootShift FirstStep WriteOneDrift Prune TwoFirst BB6Coverage OneHalt CrossCoverage CrossUpper CrossFirstUpper TwoCylinder BlankDelayKernel BlankDelaySource SparseBlankDelay WeightedTNF WeightedTNFCertificate WeightedNonhaltLeafAdapter CryptidsWeightedLeaves; do
+            log="/tmp/cryptids-source-audit/$m-weighted-tnf.log"
+            lake env lean -o "BB6Agent42/$m.olean" "BB6Agent42/$m.lean" 2>&1 | tee "$log"
+            if grep -Eq 'sorryAx|native_decide' "$log"; then
+              echo "::error::forbidden axiom or native_decide in weighted TNF module $m"
+              exit 1
+            fi
+          done
+          echo "All six Cryptids machines compile as weighted-TNF nonhalt leaves; no sorryAx in the adapter closure."
+
       - name: Compile exact F289 cost and frontier graft
         if: ${{ inputs.verify_f289_exact_graft }}
         working-directory: /tmp/cryptids
