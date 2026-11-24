@@ -523,8 +523,12 @@ theorem root_q11_parameter (r E u : Nat)
     rw [hiden] at hmulzero
     simpa [Nat.add_mod,Nat.mul_mod] using hmulzero
   have hwmod : w%2048=187 := by
-    have h := hrem
-    simp [Nat.add_mod] at h
+    have hdiv : 2048∣1861+w%2048 := by
+      apply Nat.dvd_of_mod_eq_zero
+      simpa [Nat.add_mod] using hrem
+    have hlt : w%2048<2048 := Nat.mod_lt _ (by decide)
+    obtain ⟨k,hk⟩ := hdiv
+    have hk1 : k=1 := by omega
     omega
   obtain ⟨s,hwEq⟩ : ∃ s : Nat, w=187+2048*s := by
     refine ⟨w/2048,?_⟩
