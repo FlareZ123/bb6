@@ -145,6 +145,7 @@ theorem positive_history_packet_weight {j s k x : Nat} {w : Int} (_hw : 0<w)
       change (4*(D*3)-(A+8*D))*(P k:Int)≥4*(P j:Int)
       have heq : 4*(D*3)-(A+8*D)=4*D-A := by omega
       rw [heq]
+      exact hB
   | @down s k x y h hr ih =>
     obtain ⟨A,C,hA,hA',hu,hC,he,hB⟩:=ih
     let D : Int := 3^s
@@ -234,7 +235,6 @@ theorem positive_history_packet_bandweight {j s k x : Nat} {w : Int} (_hw : 0<w)
     · simp
       omega
     · simp
-      omega
   | @same s k x y h hr ih =>
     obtain ⟨A,C,hA,hA',hu,hC,he,hB⟩:=ih
     let D : Int := 3^s
@@ -259,6 +259,7 @@ theorem positive_history_packet_bandweight {j s k x : Nat} {w : Int} (_hw : 0<w)
       change 4*(3^(j-k):Int)≤4*(D*3)-(A+8*D)
       have heq : 4*(D*3)-(A+8*D)=4*D-A := by omega
       rw [heq]
+      exact hB
   | @down s k x y h hr ih =>
     obtain ⟨A,C,hA,hA',hu,hC,he,hB⟩:=ih
     let D : Int := 3^s
