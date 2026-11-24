@@ -37,12 +37,26 @@ module and proves four theorems:
   S(a,h,b)=3^h(2^a+a-1)-2^h(2^b-1).
   ]
 
+`SingularCylinders.lean` imports that module and proves six additional theorems:
+- `singular_type1_cylinder` and `singular_type3_cylinder`: the exact branch
+  equations and oddness of the returned cofactors force the source cylinders
+  `u=1+32k, u'=1+30k` and `u=1+128k, u'=1+102k`, respectively.
+- `singular_type1_next_excess` and `singular_type3_next_excess`: certify the
+  next first-step excesses `5+135k` and `19+1683k`.
+- `singular_type1_terminal_equation` and `singular_type3_terminal_equation`:
+  certify the exact Diophantine equations obeyed by any immediate terminal
+  successor.
+
+The classification that these are the only zero-residual triples is the
+result in the Agent 16 dossier; this file formalizes the source cylinders and
+their immediate successors conditional on those triples.
+
 The source theorem is not merely an algebraic restatement: it invokes
 `SheepEven.Step.generic`, `SheepEven.even_successor`, and
 `SheepEven.factor_odd`. The residual identity is therefore connected to the
 actual Sheep even-return dynamics, rather than only to an abstract recurrence.
 
-The Lean file includes `#print axioms` for all four theorems. On Lean
+Both Lean files include `#print axioms` for their theorems (ten in total). On Lean
 4.36.0-rc2 the only reported axioms are the standard `propext` and
 `Quot.sound`; there is no `sorryAx`.
 
@@ -154,7 +168,8 @@ Restore the source module from the Agent 16 dossier, then compile this file:
 
 ```sh
 python3 ../agent16-sheep-even-return/reconstruct.py
-LEAN_PATH=../agent16-sheep-even-return lean GenericResidual.lean
+LEAN_PATH=../agent16-sheep-even-return lean -o GenericResidual.olean GenericResidual.lean
+LEAN_PATH=.:../agent16-sheep-even-return lean SingularCylinders.lean
 python3 check_singular_two_step.py
 ```
 
@@ -166,7 +181,8 @@ witnesses.
 
 These results strengthen the exact arithmetic description of the two
 zero-residual branches and provide a source-connected formalization of the
-weighted identity. They do **not** show that the blank-root trajectory enters
+weighted identity, the two singular source cylinders, and the exact equations
+for an immediate terminal successor. They do **not** show that the blank-root trajectory enters
 one of these branches, that it avoids them, or that the Sheep machine halts or
 runs forever. In particular, the barriers apply only when a zero-residual
 edge is followed immediately by a terminal edge; they do not exclude a later
