@@ -13,6 +13,7 @@ inductive Audit where
   | last (n : Nat) (s : Slot)
   | cycle (entry period : Nat) (right : Bool) (boundary : Int)
   | far (rev : Bool) (d : Nat) (C : FAR.Data d)
+  | proven (p : PartialMachine) (safe : ∀ m, compatible p m → NeverHalts m)
   | split (n : Nat) (s : Slot) (kids : Move → Audit)
 
 def allMoves (f : Move → Bool) : Bool :=
@@ -35,10 +36,33 @@ theorem queryOK_sound {B p n s} (h : queryOK B p n s = true) :
     (knownRun p n).map readSlot = some s ∧ p s = none ∧ weightOK p s n B = true := by
   simpa only [queryOK, Bool.and_eq_true, decide_eq_true_eq] using h
 
+/-- An external semantic proof is imported only after an exact 12-slot match. -/
+def tableOK (p q : PartialMachine) : Bool :=
+  (List.finRange 6).all fun s => [false,true].all fun b => decide (p (s,b) = q (s,b))
+
+theorem tableOK_sound (p q : PartialMachine) (h : tableOK p q = true) : p = q := by
+  funext s
+  rcases s with ⟨k,b⟩
+  have hk := List.all_eq_true.mp h k (List.mem_finRange k)
+  have hb : b ∈ [false,true] := by cases b <;> simp
+  exact of_decide_eq_true (List.all_eq_true.mp hk b hb)
+
+theorem allMoves_of (f : Move → Bool) (h : ∀ mv, f mv = true) :
+    allMoves f = true := by
+  unfold allMoves
+  apply List.all_eq_true.mpr
+  intro q _
+  apply List.all_eq_true.mpr
+  intro w _
+  apply List.all_eq_true.mpr
+  intro r _
+  exact h ⟨w,r,q⟩
+
 def check (B : Nat) (p : PartialMachine) : (t : Audit) → Bool
   | .last n s => queryOK B p n s && restOK p s
   | .cycle e k r b => decide (0 < k) && finiteSideCycleCheck p e k r b
   | .far rev _ C => C.fastValid (if rev then FAR.reflectPartial p else p)
+  | .proven q _ => tableOK p q
   | .split n s kids => queryOK B p n s &&
       allMoves (fun mv => check B (refine p s (some mv)) (kids mv))
 termination_by structural t => t
@@ -75,6 +99,10 @@ noncomputable def certified (B : Nat) (p : PartialMachine) (t : Audit)
     exact .nonhalt hroot (support6 p) hno (finiteSideCycleCheck_sound p e k r b hv.1 hv.2)
   | far rev d C =>
     exact .nonhalt hroot (support6 p) hno (farSound p rev C (by simpa only [check] using h))
+  | proven q safe =>
+    have he : p = q := tableOK_sound p q (by simpa only [check] using h)
+    subst q
+    exact .nonhalt hroot (support6 p) hno safe
   | split n s kids ih =>
     have hv : queryOK B p n s = true ∧
         allMoves (fun mv => check B (refine p s (some mv)) (kids mv)) = true := by
