@@ -166,5 +166,12 @@ theorem v3_counterexample_target_not_root (n : Nat) :
 #print axioms run_avoids_mass_interval
 #print axioms two_call_source_not_root
 #print axioms two_call_target_not_root
+#print axioms run_77_exact
+#print axioms run_78_exact
+#print axioms run_79_exact
+#print axioms run_avoids_mass_interval_77_78
+#print axioms run_avoids_mass_interval_78_79
+#print axioms v3_counterexample_source_not_root
+#print axioms v3_counterexample_target_not_root
 
 end BB6.Agent41RootHistory
