@@ -935,12 +935,16 @@ theorem stepElemCB_BB_length_bound (L R : List SymTok)
     (hmode : (stepElemCB L R).1 = .BB) :
     symPairLen ((stepElemCB L R).2.1, (stepElemCB L R).2.2) ≤ L.length + R.length + 6 := by
   cases R with
-  | nil => simp [stepElemCB] at hmode
+  | nil =>
+      simp only [stepElemCB, strictList_eq] at hmode
+      cases hmode
   | cons t R1 =>
     cases t with
     | item x =>
       cases x with
-      | zero => simp [stepElemCB] at hmode
+      | zero =>
+          simp only [stepElemCB, strictList_eq] at hmode
+          cases hmode
       | run d =>
         cases d with
         | zero =>
@@ -963,13 +967,17 @@ theorem stepElemCB_BB_length_bound (L R : List SymTok)
                   have hL := bumpSymL_length_le L
                   simp [stepElemCB, stepElemCB_run0, strictList_eq, symPairLen]
                   omega
-                | succ d2 => simp [stepElemCB, stepElemCB_run0] at hmode
+                | succ d2 =>
+                    simp only [stepElemCB, stepElemCB_run0, strictList_eq] at hmode
+                    cases hmode
             | repB1 k => simp [stepElemCB, stepElemCB_run0] at hmode
             | rep2 p => simp [stepElemCB, stepElemCB_run0] at hmode
             | rep12 m => simp [stepElemCB, stepElemCB_run0] at hmode
         | succ d =>
           cases d with
-          | zero => simp [stepElemCB] at hmode
+          | zero =>
+              simp only [stepElemCB, strictList_eq] at hmode
+              cases hmode
           | succ d =>
             cases d with
             | zero =>
