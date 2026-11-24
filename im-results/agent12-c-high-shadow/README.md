@@ -1,5 +1,23 @@
 # Machine C: signed-residue all-parent cone certificates
 
+## Exact classification of exceptional pure-power stopping sums (PurePowerStop.lean)
+
+The usual necessary inverse law excludes rounded sums Q=x+y+(x+y mod 2) that are pure powers of two. This is now a completely classified arithmetic subset of the genuine stopping equations, rather than an unspecified singular case.
+
+For a high target x=2j+3, k+j+3m+5=P(j+3), P=2^b, b=2m+2, write o=(j+m) mod 2. Then Q=(P+1)(j+3)-(3m+5-o). For m>=1, the complement c=3m+5-o lies in [1,P/2]. Powers of two modulo P+1 have the exact residue 2^(v mod b) if floor(v/b) is even, and P+1-2^(v mod b) if it is odd. Thus Q=2^v iff the latter parity holds, c=2^(v mod b), and (P+1)(j+3)=2^v+c. Modulo three determines o from the remaining exponent.
+
+The complete positive-index parametrization is, for every r>=3 and s>=0,
+
+    m=(2^r+1-(r mod 2)-5)/3
+    b=2m+2
+    v=b*(2s+1)+r
+    j=(2^v+2^r)/(2^b+1)-3
+    k=2^b*(j+3)-(j+3m+5).
+
+Both directions are proved, including integrality, nonnegative natural subtraction, and the canonical stop equation. The m=0 boundary has Q=2^v iff v>=4, v=0 mod4, 5(j+3)=2^v+4. In the low stopping family, Q is strictly between 2^(2m+2) and 2^(2m+3), for every m>=0, so no pure-power exception occurs there.
+
+All nine printed theorem profiles compiled locally on 4.36.0-rc2 with standard axioms only. The key exact construction is family_exact and its exhaustive converse is high_power_family_complete. This arithmetic classification is independent of the source-parent axioms and makes no claim of actual reachability or nonreachability of any pure-power member. Subsequent proof work should target these explicit exponent families rather than using the non-power parent law on them.
+
 ## Unbounded forced prefix followed by a genuine inverse branch (BranchingBlocks.lean)
 
 The earlier Agent42 DirectBlocks theorem is reused, not reproved. Write y+2=2^(t+1)H with H>=7 odd. If (x mod 4,H mod 4) is (3,3) or (0,1), the first t direct inverse edges are forced and lead to (a,2H-2), preserving the left residue modulo four and reducing weighted mass x+2y by 4t. The terminal is genuinely outside the six-residue forced-direct gate. If its rounded sum is 24 modulo 32, its valuation is exactly three and the necessary inverse grammar admits only the direct and depth-one alternatives. Both parents satisfy the forbidden odd-right criterion. The test is equivalently
@@ -10,7 +28,7 @@ The proof excludes the entire unbounded family without spending one bit of a fin
 
 For high stopping targets x=2j+3, k+j+3m+5=2^(2m+2)(j+3), the sufficient phase condition becomes H+3m+2t+14=0 mod 16, with H=3 mod 4. An explicit infinite two-parameter family is m>=5, m=1 mod 4, q>=1, q=11m+4 mod 32, j+3m+3=q*2^(2m+2). The block has t=2m+2; H=(j+3-q)/2. It exhausts the original signed-cone precision budget before the branching terminal. For m>=17 the prefix also exceeds the current 32-bit cap.
 
-All six exported theorems in BranchingBlocks.lean compiled locally on Lean 4.36.0-rc2 against the verbatim existing DirectBlocks.lean (only propext, Quot.sound, and where needed Classical.choice). BranchingBlocksSource.lean specializes to the certified original-source laws and conjoins the guard with the existing direct-block halting equivalence. That adapter awaits source-closure CI. The old finite-budget signed cone remains useful for arbitrary branching away from this special family.
+All six exported theorems in BranchingBlocks.lean compiled locally on Lean 4.36.0-rc2 against the verbatim existing DirectBlocks.lean (only propext, Quot.sound, and where needed Classical.choice). BranchingBlocksSource.lean specializes to the certified original-source laws and conjoins the guard with the existing direct-block halting equivalence. Initial source-closure CI 45420137632 caught a remote transcription typo (Nat.one_mul in place of Nat.mul_one), now corrected to the locally accepted expression; retry pending. The old finite-budget signed cone remains useful for arbitrary branching away from this special family.
 
 ## Signed-residue method (SignedCone.lean and HighSigned.lean)
 

@@ -152,7 +152,7 @@ theorem high_branching_family (reach : Nat → Nat → Prop)
   change j+3*m+3=q*P at hj
   have hqp : q*(3*m+15)≤q*P := Nat.mul_le_mul_left q (by omega)
   have hqmul : q*(3*m+15)=q*(3*m+14)+q := by
-    rw [show 3*m+15=3*m+14+1 by omega,Nat.mul_add,Nat.one_mul]
+    rw [show 3*m+15=3*m+14+1 by omega,Nat.mul_add,Nat.mul_one]
   have hbase : 3*m+14≤q*(3*m+14) := by
     simpa using Nat.mul_le_mul_right (3*m+14) hq
   have hq_bound : q+14≤j+3 := by omega
