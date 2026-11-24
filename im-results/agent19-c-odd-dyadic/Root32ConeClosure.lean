@@ -1,6 +1,7 @@
 import AffineConeKernel
 import Root32Precision
 import Root32ShadowRoot
+import StopModShadow
 import Root32HighStopP7
 import Root32HighStopIndexMap
 import Lean.Elab.Tactic.Omega
@@ -267,5 +268,98 @@ theorem root32_no_highstop_first_root (E u : Nat)
 #print axioms run_shadow_excluded
 #print axioms root32_no_highstop_shadow
 #print axioms root32_no_highstop_first_root
+
+
+/-- The blank seed has right coordinate one, so large right size alone
+    guarantees a source parent, with no restriction on the left coordinate. -/
+theorem run_parent_of_right_ge8 (x y : Nat) (hy : 8≤y) (hr : RunReach x y) :
+    ∃ a k, RunReach a k ∧ secNext (a,k)=some (x,y) := by
+  rcases hr with ⟨time,ht⟩
+  cases time with
+  | zero => simp [BB6.Agent8Section.run] at ht; omega
+  | succ n =>
+    cases hp : BB6.Agent8Section.run secNext n (some (5,1)) with
+    | none => simp [BB6.Agent8Section.run,hp] at ht
+    | some p =>
+      rcases p with ⟨a,k⟩
+      refine ⟨a,k,⟨n,hp⟩,?_⟩
+      simpa [BB6.Agent8Section.run,hp] using ht
+
+theorem run_mod_excluded (f p u v q x y : Nat)
+    (hc : BB6.Agent19Shadow.modExcluded f p u v=true)
+    (hl : BB6.Agent19Shadow.lift p u v x y)
+    (hq : p+4≤q) (hs : BB6.Agent19Shadow.RightLarge q y) : ¬RunReach x y := by
+  apply BB6.Agent19Shadow.modExcluded_sound RunReach ?_ ?_ f p u v q x y hc hl hq hs
+  · intro x y hy ho hs hr
+    rcases hr with ⟨n,hn⟩
+    cases n with
+    | zero => simp [BB6.Agent8Section.run] at hn; omega
+    | succ n =>
+      have hi := BB6.Agent3.blank_section_odd_image n x y hn hy ho
+      omega
+  · intro x y w hy hv hq hr
+    obtain ⟨a,k,hp,hedge⟩ := run_parent_of_right_ge8 x y hy hr
+    have hi := (complete_section_inverse a k x y (by omega)).mp hedge
+    rcases parent_equations a k x y w hy hv hq hi with hd | ⟨n,hn⟩
+    · exact Or.inl ⟨a,k,hp,hd⟩
+    · exact Or.inr ⟨a,k,n,hp,hn⟩
+
+/-- All three residuals excluded for an entire root-index cylinder, using
+    only the cylinder precision plus the corresponding slope valuations. -/
+theorem root32_no_highstop_mod_cylinder (r E u f m j0 : Nat)
+    (hr64 : r%64=32)
+    (hE : E=201+3360*(6657+8192*r))
+    (hroot : 18018+211*u+22155*r=20*2^(E-13))
+    (hj : j0≤r/64) (hcon : 2^m∣r/64-j0)
+    (hp : m+18≤E-17)
+    (hc : BB6.Agent19Shadow.threeCylinderExcluded f m j0=true) :
+    ¬RunReach (1048576*u+70538) 3 := by
+  intro hT
+  obtain ⟨t,hu,hr⟩ := BB6.Agent3Root32HighStopP7.root32_highstop_reduces_to_three_residuals
+    r E u hr64 hE hroot hT
+  let j := r/64
+  have hrj : r=32+64*j := by
+    have he := Nat.mod_add_div r 64
+    rw [hr64] at he
+    exact he.symm
+  have heq := BB6.Agent3Root32HighStopIndexMap.root32_original_to_tj u r t j E (by omega) hu hrj hroot
+  obtain ⟨hd,hl,hp'⟩ := BB6.Agent19Shadow.three_cylinder_lift t j0 j (E-17) m hj hcon (by omega) heq
+  have hlin : BB6.Agent19Shadow.C*j+17300≤E-17+1 := by
+    simp only [BB6.Agent19Shadow.C]
+    omega
+  obtain ⟨sd,sl,sp⟩ := BB6.Agent19Shadow.three_root_large t j (E-17) (by omega) hlin heq
+  simp only [BB6.Agent19Shadow.threeCylinderExcluded,Bool.and_eq_true] at hc
+  rcases hr with hD | hL | hP
+  · exact run_mod_excluded _ _ _ _ _ _ _ hc.1.1 hd (by omega) sd hD
+  · exact run_mod_excluded _ _ _ _ _ _ _ hc.1.2 hl (by omega) sl hL
+  · exact run_mod_excluded _ _ _ _ _ _ _ hc.2 hp' (by omega) sp hP
+
+theorem mod_cylinder_examples :
+    BB6.Agent19Shadow.threeCylinderExcluded 19 5 22=true ∧
+    BB6.Agent19Shadow.threeCylinderExcluded 20 6 31=true := by decide
+
+/-- General low/high stop exclusion. No bound j≤3m+1 is needed. -/
+theorem run_stop_mod_excluded (f p j m k : Nat) (hp : p+4≤2*m+2)
+    (hc : BB6.Agent19StopMod.stopExcluded f p j m=true)
+    (hstop : k+j+3*m+4=2^(2*m+2)*(j+2)) : ¬RunReach (2*j+1) k :=
+  run_mod_excluded f p _ _ (2*m+2) _ _ hc
+    (BB6.Agent19StopMod.stop_lift p j m k (by omega) hstop) hp
+    (BB6.Agent19StopMod.stop_rightLarge j m k hstop)
+
+/-- Even precision above the stopping exponent is available when j is large. -/
+theorem run_stop_general_excluded (f p q j m k : Nat)
+    (hp : p+4≤2*m+1+q) (hq : 2^q≤j+2)
+    (hc : BB6.Agent19StopMod.generalExcluded f p j m=true)
+    (hstop : k+j+3*m+4=2^(2*m+2)*(j+2)) : ¬RunReach (2*j+1) k :=
+  run_mod_excluded f p _ _ (2*m+1+q) _ _ hc
+    (BB6.Agent19StopMod.general_lift p j m k hstop) hp
+    (BB6.Agent19StopMod.stop_rightLarge_product j m k q hq hstop)
+
+#print axioms run_parent_of_right_ge8
+#print axioms run_mod_excluded
+#print axioms root32_no_highstop_mod_cylinder
+#print axioms mod_cylinder_examples
+#print axioms run_stop_mod_excluded
+#print axioms run_stop_general_excluded
 
 end BB6.Agent19Root32Cone
