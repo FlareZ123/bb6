@@ -4,6 +4,7 @@ import ValuationParents
 import DirectJump
 import ExactMemo
 import Lean.Elab.Tactic.Omega
+import Lean.Elab.Tactic.NativeDecide
 
 set_option maxHeartbeats 4000000
 
