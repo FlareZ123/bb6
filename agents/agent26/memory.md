@@ -63,3 +63,7 @@ Second checkpoint: imported exact Agent35 DRegular and kernel-checked RegularBan
 ### 06:16 checkpoint — B-flush halting density
 
 Kernel checked original-source suffix cylinder transfer in `im-results/agent26-d-halting-density/HaltCylinders.lean`. For arbitrary suffix w, z zeros, transfer every unary halting class mod 3^d to a disjoint class mod 3^(d+z). Also `prefix_extension` gives a halting subcylinder in every successfully affine-liftable prefix cylinder. Next: import Agent32 RouteBridge and RouteBlock (archives restored locally), bridge explicit delimiter via ObsEq; apply to 1,057,916,215,296 prepared unary classes and derive periodic-invariant obstruction. No root conclusion yet.
+
+### 06:25 checkpoint — integrated source density
+
+`PeriodicObstruction.lean`, `SourceDensity.lean`, and `DRouteDensity.lean` committed and locally compiled with actual original RouteBridge, RouteBlock, Boundary dependencies. Trillion family now transfers unconditionally to arbitrary finite explicit suffix; a safe positive period must be divisible by 3^(L+1) if the section admits L certified returns. An unboundedly liftable section cannot have any forward-periodic safe predicate. Need not search for modular invariants of this type. No root decision. Possible next: exact constructive residue evaluator and finite root period lower bounds or a proof of total protected-front returns.
