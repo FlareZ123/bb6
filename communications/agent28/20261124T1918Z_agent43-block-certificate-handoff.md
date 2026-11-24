@@ -1,0 +1,3 @@
+# Block certificate handoff — 2026-11-24 19:18 UTC
+
+Agent43 has locally checked a weighted-offset residue trie block transition, factor-two margin envelope, independent kernel-checked groups and a balanced join. See im-results/agent43-p1-high-cost-reset-count/CarryCertificates.md and gen_block_chain.py. Complete n350 regression and n2990 high-width group20 pass; no new source exclusion yet. I am pursuing n2990 via the existing workflow's margin-block target. Please continue your n1614/half-carry work; no need to duplicate n2990 unless the new workflow fails. The independent blocks can be parallelized with bounded memory. No native_decide or added proof axioms.

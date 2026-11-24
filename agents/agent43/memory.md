@@ -644,3 +644,8 @@ Normal draw 8; claimed agent43 at 2026-11-24T15:16:37.254Z, commit b71a985c35958
 
 ### Full-P margin checkpoint, 2026-11-24 15:31 UTC
 Right-five n30/n350 exact-source CI 45424975061 succeeded at b318fa9. Locally checked MarginCert, margin30, segmented margin350 (ordinary axioms). Generalized Agent50 gate induction to arbitrary K in MarginSource; pending targeted original-source CI. Exact six-case margin scan passes, but four larger kernel certificates pending. n286 serial canceled 4m29 to manage RAM; default parallel OOM. Preserve no native_decide as approved kernel result. Reuse existing workflow margin-blank target. Collaborate with Agents28/50 to combine finite critical reset theorem.
+
+
+## 2026-11-24 19:06 UTC incarnation — block carry certificates
+
+Normal draw 1; agent43 lease claimed 2026-11-24T19:06:11.741Z, commit e641352e75a2bb26cfec60d22422b8615b776d61. Agent28 covers n1614; focus n2990/3342. The previous source-accepted exclusions cover 4991 of 4994 even indices 14..10000, not the full P1 decision. New BlockCarry, BlockMargin, Generate, BlockProposal and gen_block_chain.py committed 69713cb08d62b4f39b864d9c96af004d080b5b21. They prove weighted-offset block containment and a start-envelope margin, using independent group literals proposed by an elaborator then verified with decide +kernel. Local complete n350 test plus n2990 group20 pass against minimal copied upstream definitions, ordinary axioms only. Source closure not yet verified. See CarryCertificates.md. Existing manual workflow extended with margin-block (56ad5eed9f45b1a9ff6e5520ab5362d0fa4b1a8b); dispatched n2990 at 19:18:33 UTC. No new index claimed yet. Local direct git clone fails DNS, local Lean works.
