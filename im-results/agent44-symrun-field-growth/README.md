@@ -86,21 +86,45 @@ list-length associativity mismatches. The dependent
 `sweepBB_weight_bound_sharp` therefore still reported `sorryAx` in that
 run. The mass and field-maximum theorems did not.
 
-The weaker length theorem has since been replaced in source by a direct
-corollary of the stronger `sweepBB_length_bound4` theorem. Axiom-profile
-prints for `sweepBB_length_bound4_pair`, `sweepBB_length_bound4`,
-`sweepBB_length_bound`, and `sweepBB_weight_bound_sharper` have been added.
-The BB mass induction has also been rewritten explicitly; its successful
-axiom profile was already observed in run 45296816853.
+The weaker length theorem is now a direct corollary of the stronger
+`sweepBB_length_bound4` theorem. The five diagnosed failures in the earlier
+run (two addition-association mismatches and three missing suffix-length
+relations) were repaired without changing theorem statements or numerical
+constants.
 
-The CB fallback proof has been extracted into the third module and includes
-the four explicit impossible-mode eliminations in both its numeric-mass and
-length arguments. The new length wrapper and CB-to-BB composition have not
-yet been kernel-checked. A fresh exact-source run is required before claiming
-the complete chain.
+Pinned exact-source run
+[45349792391](https://github.com/FlareZ123/bb6/actions/runs/45349792391)
+completed successfully at head
+`badafa29e69e55025c6490649cba969d49b24018`, using the original F424/F412
+modules, Lean `v4.36.0-rc2`, `SymRunBBBase.lean`,
+`SymRunBBBounds.lean`, and `SymRunTraceStatsAudit.lean`. The run proves
+the BB length, numeric-mass, weight, and field-maximum declarations with no
+`sorryAx` or `native_decide`. The printed profiles for
+`sweepBB_length_bound4_pair`, `sweepBB_length_bound4`,
+`sweepBB_length_bound`, `sweepBB_num_sum_bound`,
+`sweepBB_weight_bound_sharp`, `sweepBB_weight_bound_sharper`, and
+`sweepBB_field_max_le` are all
+`[propext, Classical.choice, Quot.sound]`. Component profiles for
+`stepElemBB_num_sum_le` and `peelTok_length_le` are smaller
+(`[propext, Quot.sound]`). This is exact imported-source Lean acceptance
+for the BB-sweep bounds, not for the later CB fallback or complete
+`stepSym` dispatcher.
 
-Acceptance requires successful compilation of the complete dependency
-closure and exported axiom profiles without `sorryAx` or
+`SymRunCBFallbackAudit.lean` remains the next uncompiled dependency. It
+contains the CB sweep, BB-producing fallback, and CB-to-BB-sweep composition;
+the earlier run failed before reaching this bridge because the BB length
+proof had `sorryAx`. The accepted BB dependency now permits one focused
+exact-source run of that bridge.
+
+The separate 94-token range certificate is present in
+`im-results/agent42-cryptids-upstream-191-overlap/SymRunTraceStats.lean`
+as 18 F424 and 6 F412 chunk folds plus source checkpoint chains, but the
+dossier there still records the exact imported-source compile as pending.
+Do not infer a complete blank-root range certificate merely from the
+computational replay or checkpoint endpoints.
+
+Acceptance requires successful compilation of the relevant exact-source
+dependency closure and exported axiom profiles without `sorryAx` or
 `native_decide`. Standard Lean axioms such as `propext`,
 `Classical.choice`, and `Quot.sound` are not equivalent to admitting an
 unproved theorem.
@@ -118,13 +142,17 @@ a bound on the full `stepSym` transition or blank-root primitive runtime.
 
 Next steps, in dependency order:
 
-1. Run the updated pinned chain and confirm the stronger BB length theorem,
-   its wrapper, the sharper BB weight theorem, and the CB fallback module.
-2. Prove the 94-token premise from the F424/F412 blank-start checkpoint
-   chains, with kernel-checked range certificates.
-3. Connect the accepted BB/CB bounds to the actual `stepSym` dispatcher and
-   source-native primitive-cost envelope.
-4. Audit the complete macro-to-primitive bridge and its transitive axioms.
+1. Exact-compile `SymRunCBFallbackAudit.lean` against the now-accepted
+   `SymRunBBBase -> SymRunBBBounds` dependency chain, then audit its
+   CB-fallback and CB-to-BB theorem profiles.
+2. Exact-compile the 94-token and field-range folds in
+   `im-results/agent42-cryptids-upstream-191-overlap/SymRunTraceStats.lean`
+   against the pinned F424/F412 source modules; preserve the per-chunk
+   all-intermediate-state bounds, not only checkpoint maxima.
+3. Connect the accepted BB/CB bounds and range certificates to the actual
+   `stepSym` dispatcher and source-native primitive-cost envelope.
+4. Audit the complete macro-to-primitive bridge, the initial
+   `runElemFast` prefix, and their transitive axioms.
 5. Keep all F424/F412 runtime classifications conditional until the original
    one-step and macro-dispatch bridges are kernel-checked.
 
