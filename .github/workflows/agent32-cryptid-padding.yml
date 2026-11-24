@@ -13,6 +13,7 @@ on:
           - short_mod3_halting
           - all_q_e_terminal
           - source_phase_bands
+          - four_root_anchor_bridge
         default: raw_d0_bridge
         required: true
 
@@ -27,7 +28,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Restore original source with SHA verification (legacy only)
-        if: inputs.target == 'legacy_padding_107_call' || inputs.target == 'all_q_e_terminal'
+        if: inputs.target == 'legacy_padding_107_call' || inputs.target == 'all_q_e_terminal' || inputs.target == 'four_root_anchor_bridge'
         run: |
           python3 -m pip install --quiet filelock
           python3 im-results/agent31-cryptid-boundary/unpack.py
@@ -38,6 +39,61 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Authenticate four blank roots to exact D phase-band anchors
+        if: inputs.target == 'four_root_anchor_bridge'
+        env:
+          LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent25-cryptid-doublezero:im-results/agent32-cryptid-third:im-results/agent32-cryptid-padding:im-results/agent35-cryptid-code:im-results/agent35-d-regular-certificate:im-results/agent2-cryptid-continuity:im-results/agent36-cryptid-trace:im-results/agent26-d-phase-bands
+        run: |
+          set -euo pipefail
+          python3 -m pip install --quiet filelock
+          python3 im-results/agent35-d-regular-certificate/restore_sources.py
+          python3 im-results/agent25-cryptid-doublezero/unpack.py
+          python3 im-results/agent2-cryptid-continuity/restore_a_regular.py
+          python3 im-results/agent2-cryptid-continuity/restore_e_regular.py
+          B=im-results/agent31-cryptid-boundary
+          A=im-results/agent25-cryptid-doublezero
+          P=im-results/agent32-cryptid-padding
+          S=im-results/agent32-cryptid-third
+          H=im-results/agent35-d-regular-certificate
+          D=im-results/agent2-cryptid-continuity
+          X=im-results/agent36-cryptid-trace
+          G=im-results/agent26-d-phase-bands
+          lean --version
+          lean -o "$B/Boundary.olean" "$B/Boundary.lean"
+          lean -o "$B/BoundaryExtra.olean" "$B/BoundaryExtra.lean"
+          for module in DoubleZero TripleUniversalBase TripleUniversalCore TripleUniversalWalk TripleUniversal TenPump TokenCode; do
+            lean -o "$A/$module.olean" "$A/$module.lean"
+          done
+          lean -o "$H/DRegular.olean" "$H/DRegular.lean"
+          lean -o "$H/DTransport.olean" "$H/DTransport.lean"
+          lean -o "$H/DObservedTransport.olean" "$H/DObservedTransport.lean"
+          lean -o "$P/Generic.olean" "$P/Generic.lean"
+          lean -o "$P/BoundaryPadding.olean" "$P/BoundaryPadding.lean"
+          lean -o "$H/DObsSourceCandidate.olean" "$H/DObsSourceCandidate.lean"
+          lean -o "$D/BRegularSource.olean" "$D/BRegularSource.lean"
+          lean -o "$D/AZeroSource.olean" "$D/AZeroSource.lean"
+          lean -o "$D/EZeroSource.olean" "$D/EZeroSource.lean"
+          lean -o "$D/AOneSource.olean" "$D/AOneSource.lean"
+          lean -o "$D/AWordAlgebra.olean" "$D/AWordAlgebra.lean"
+          lean -o "$D/ATwoSource.olean" "$D/ATwoSource.lean"
+          lean -o "$D/ARegularFull.olean" "$D/ARegularFull.lean"
+          for module in CryptidSix CryptidPairs CryptidTriplePairs; do
+            lean -o "$S/$module.olean" "$S/$module.lean"
+          done
+          lean -o "$D/ERemaining.olean" "$D/ERemaining.lean"
+          lean -o "$D/DRegularDurationShift.olean" "$D/DRegularDurationShift.lean"
+          lean -o "$D/DRegularShift.olean" "$D/DRegularShift.lean"
+          lean -o "$D/DRegularTimedShift.olean" "$D/DRegularTimedShift.lean"
+          lean -o "$D/DRegularSourceShift.olean" "$D/DRegularSourceShift.lean"
+          lean -o "$G/GrowthBands.olean" "$G/GrowthBands.lean"
+          lean -o "$G/RegularBands.olean" "$G/RegularBands.lean"
+          lean -o "$X/DAllBlankSource.olean" "$X/DAllBlankSource.lean"
+          lean "$X/FourRootAnchorSource.lean" 2>&1 | tee /tmp/four-root-anchor.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/four-root-anchor.log; then
+            echo "Forbidden axiom or native_decide in four-root anchor proof"
+            exit 1
+          fi
 
       - name: Verify widened D source phase-band separation
         if: inputs.target == 'source_phase_bands'
