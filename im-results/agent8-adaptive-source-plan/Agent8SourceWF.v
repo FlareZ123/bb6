@@ -81,6 +81,7 @@ Proof.
   destruct (t (q,s)) eqn:E; [discriminate|].
   destruct q,s;
     rewrite !source_count_formula;
+    rewrite E;
     repeat (rewrite source_upd_hit || rewrite source_upd_miss by discriminate);
     cbn [hole_value]; lia.
 Qed.
