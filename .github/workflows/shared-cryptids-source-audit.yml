@@ -441,6 +441,25 @@ jobs:
             fi
           done
 
+      - name: Assemble rooted three-parent TNF frontier shard
+        if: ${{ inputs.verify_six_root_graft && inputs.verify_weighted_tnf_leaves }}
+        working-directory: /tmp/cryptids
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp "$GITHUB_WORKSPACE/im-results/agent50-weighted-tnf-pilot/RootFrontier.lean" BB6Agent42/
+          cp "$GITHUB_WORKSPACE/im-results/agent47-rooted-tnf/RootFrontierR1R4.lean" BB6Agent42/
+          export LEAN_PATH=BB6Agent42
+          for m in RootFrontier RootFrontierR1R4; do
+            log="/tmp/cryptids-source-audit/$m-rooted-shard.log"
+            lake env lean -o "BB6Agent42/$m.olean" "BB6Agent42/$m.lean" 2>&1 | tee "$log"
+            if grep -Eq 'sorryAx|native_decide' "$log"; then
+              echo "::error::forbidden axiom or native_decide in rooted TNF shard module $m"
+              exit 1
+            fi
+          done
+          echo "Rooted three-parent TNF frontier shard compiled; all off-path ordinary children remain explicit residuals."
+
       - name: Compile exact F289 cost and frontier graft
         if: ${{ inputs.verify_f289_exact_graft }}
         working-directory: /tmp/cryptids
