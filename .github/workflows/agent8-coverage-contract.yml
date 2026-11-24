@@ -2,12 +2,19 @@ name: Agent 8 sparse BB6 global coverage contract (manual)
 
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        description: Verification target
+        type: choice
+        options: [all, symbolic-report]
+        default: all
 
 permissions:
   contents: read
 
 jobs:
   formal-check:
+    if: inputs.target != 'symbolic-report'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -80,6 +87,7 @@ jobs:
           lean im-results/agent8-coverage-contract/RootShift.lean
 
   agent42-first-action-normal-form:
+    if: inputs.target != 'symbolic-report'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -119,6 +127,7 @@ jobs:
           lean im-results/agent42-coverage-normal/PathMask.lean
 
   agent35-tnf-normalized-expansion:
+    if: inputs.target != 'symbolic-report'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -143,3 +152,55 @@ jobs:
           lean NormalizedExpansion.lean
           lean -o ZeroPrefixOffset.olean ZeroPrefixOffset.lean
           lean ZeroPrefixOffset.lean
+
+  symbolic-report:
+    if: inputs.target == 'symbolic-report'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile exact symbolic-report source closure and audit axioms
+        run: |
+          set -euo pipefail
+          A=im-results/agent8-coverage-contract
+          B=im-results/agent4-coverage-smoke
+          C=im-results/agent27-three-slot-translated
+          export LEAN_PATH="$A:$B:$C"
+          {
+            lean -o "$A/Frontier.olean" "$A/Frontier.lean"
+            lean -o "$B/FrontierAudit.olean" "$B/FrontierAudit.lean"
+            lean -o "$B/FrontierMass.olean" "$B/FrontierMass.lean"
+            lean -o "$A/IncrementalAudit.olean" "$A/IncrementalAudit.lean"
+            lean -o "$A/AuditReportMeasure.olean" "$A/AuditReportMeasure.lean"
+            lean -o "$A/IncrementalAuditReport.olean" "$A/IncrementalAuditReport.lean"
+            lean -o "$C/CertificateBatch.olean" "$C/CertificateBatch.lean"
+            lean -o "$C/CertificateBatchReport.olean" "$C/CertificateBatchReport.lean"
+            lean "$C/SparseCylinderCheck.lean"
+          } | tee /tmp/symbolic-report.log
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          log = Path('/tmp/symbolic-report.log').read_text()
+          allowed = {'propext', 'Classical.choice', 'Quot.sound'}
+          expected = {
+              'audit_report_eq_of_open_iff', 'audit_report_delta_of_open_iff',
+              'graftCertificate_report_of_extends', 'addCertificate_report_of_open',
+              'addCertificate_global_report_of_open', 'incompatible_of_slot_conflict',
+              'addCertificates_report_of_open', 'addCertificates_global_report_of_open',
+              'extendsCheck_sound', 'conflictCheck_sound', 'pairwiseConflictCheck_sound'
+          }
+          seen = set()
+          for name, axioms in re.findall(r"'([^']+)' depends on axioms: \[([^\]]*)\]", log):
+              actual = {a.strip() for a in axioms.split(',') if a.strip()}
+              assert actual <= allowed, (name, actual - allowed)
+              seen.add(name.rsplit('.', 1)[-1])
+          for name in re.findall(r"'([^']+)' does not depend on any axioms", log):
+              seen.add(name.rsplit('.', 1)[-1])
+          assert expected <= seen, expected - seen
+          print('Symbolic report axiom gate passed.')
+          PY
