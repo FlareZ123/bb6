@@ -106,7 +106,7 @@ jobs:
         if: inputs.target == 'enumerate62-q32-canonical-parent'
         run: |
           cp "$GITHUB_WORKSPACE/research/im-results/agent44-source-roster/Agent44Q32CanonicalParent.v" original/verify/
-          cp "$GITHUB_WORKSPACE/research/im-results/agent44-source-roster/Agent44Q32ParentSideProbe.v" original/verify/
+          cp "$GITHUB_WORKSPACE/research/im-results/agent44-source-roster/Agent44Q32FirstHoleCoverageProbe.v" original/verify/
       - name: Add exact final twenty-root checkpoint
         if: inputs.target == 'enumerate62-resume-last20' || inputs.target == 'enumerate62-last20-witness'
         run: |
@@ -170,7 +170,7 @@ jobs:
             enumerate62-zero-delay) make -f Makefile.coq -j 2 Agent8ZeroDelay.vo ;;
             enumerate62-weighted-source) make -f Makefile.coq -j 2 Agent8GlobalSource.vo Agent8PackedChunk2_32_32.vo Agent8ExactLeaf.vo ;;
             enumerate62-resume-chunk2) make -f Makefile.coq -j 2 Agent8PackedChunk2_32_32.vo ;;
-            enumerate62-q32-canonical-parent) make -f Makefile.coq -j 2 Agent8PackedChunk2_32_32.vo Agent44Q32CanonicalParent.vo Agent44Q32ParentSideProbe.vo ;;
+            enumerate62-q32-canonical-parent) make -f Makefile.coq -j 2 Agent8PackedChunk2_32_32.vo Agent44Q32CanonicalParent.vo Agent44Q32FirstHoleCoverageProbe.vo ;;
             enumerate62-last20-witness) make -f Makefile.coq -j 2 Agent5Last20Witness.vo ;;
             enumerate62-resume-last20) make -f Makefile.coq -j 2 Agent5PackedChunk12800_20_1000000.vo ;;
             enumerate62-source-roster) make -f Makefile.coq -j 2 Agent47SourceSweep.vo && make -f Makefile.coq -j 2 Agent47SourceChunk2.vo Agent47SourceTree.vo Agent44ChunkSideSearch.vo && make -f Makefile.coq -j 2 Agent8Chunk2FirstHole.vo ;;
