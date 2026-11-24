@@ -15,3 +15,11 @@ The Lean proof checks the exact signed modular predicates, algebra, forced compr
 
 ## Reproduction
 Restore SignedDrift.lean using reconstruct.py, run lean SignedDrift.lean under Lean 4.36.0-rc2. All eleven printed axiom profiles are subsets of propext, Classical.choice, Quot.sound. SHA256 94a1a7a4c25f98031b8d758048c05430ab5894bb51e2c144f8ee46f6f7846a0e. No new finite k scan is claimed.
+
+## Quantitative finite precision lifting
+
+Added SignedLift.lean, locally Lean checked. For signed a<=-3,b<=3 define rank R=-2a-b. Every Raw child satisfies the same signed coordinate bounds and R'<=R+11. Define Closed d as the complete depth-d signed tree ending in Bad leaves (or even no-child cases); signedCert is an executable Boolean with kernel-checked soundness. For m divisible by32 and m>=R+11d+16, and positive integer K,L, a closed signed tree excludes the positive state (K*4^d*m+a,L*4^d*m+b) under the exact ReachLaws (Bad exclusion and odd/even predecessors). Induction loses only two bits of precision per raw edge: coefficients (K,L) become (2K,4(K+L)) for F, (4K+L,2L) for E/S, with scale divided by4. Rank bound keeps actual states above original positivity guards, and m mod32 preserves all Bad predicates. This gives an explicit finite precision bound rather than an asymptotic lift.
+
+Specialized to actual feeder q+c=3*2^N (N=n-5), c>=4, a=29-32c,b=55-64c. If e>=5, 2d+e<=N, and 2^e>=128c-97+11d, signedCert d a b=true is sufficient to exclude (32q+29,64q+55). No evaluation of the huge 2^N is needed in the signed tree. The Lean specialization branch29_lift is checked under ReachLaws. SignedSource.lean connects those laws to exact repo BB429NewResidue and root-mod lemmas; adapter is pending authentic CI, not yet claimed source-accepted. Manual workflow agent22-429-signed-lift.yml checks precisely this dependency closure.
+
+The all-k objective is now a clear sufficient target: prove the signed trees close with d,e satisfying these bounds for all c=3k+4,N=122+128k. No claim of that proof. The source-independent finite precision transfer and executable checker are checked with only standard Lean axioms.
