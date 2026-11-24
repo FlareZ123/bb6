@@ -86,6 +86,7 @@ jobs:
           cp "$GITHUB_WORKSPACE/research/im-results/agent8-adaptive-source-plan/Agent8QueueCheckpointPilot.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent8-adaptive-source-plan/Agent8PackedRoot.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent8-adaptive-source-plan/Agent8QueueExpansionPilot.v" original/verify/
+          cp "$GITHUB_WORKSPACE/research/im-results/agent8-adaptive-source-plan/Agent8PackedChunk2_32_32.v" original/verify/
       - name: Generate project dependencies with VM fallback
         working-directory: original/verify
         run: |
@@ -104,7 +105,7 @@ jobs:
             enumerate62-q0-count|enumerate62-chunk-probe|enumerate62-chunk-probe-native|enumerate62-q0-verdicts) make -f Makefile.coq -j 2 Enumerate62.vo ;;
             enumerate62-q0-partition) make -f Makefile.coq -j 2 Agent32Q0Partition.vo Agent32SourceDrain.vo Agent32SourceCoverage.vo Agent32SourceEncoding.vo Agent8AdaptiveSource.vo ;;
             enumerate62-adaptive-checkpoint) make -f Makefile.coq -j 2 Agent8QueueCheckpointPilot.vo ;;
-            enumerate62-adaptive-expansion) make -f Makefile.coq -j 2 Agent8QueueExpansionPilot.vo ;;
+            enumerate62-adaptive-expansion) make -f Makefile.coq -j 2 Agent8QueueExpansionPilot.vo Agent8PackedChunk2_32_32.vo ;;
             enumerate62-packed-chunk) make -f Makefile.coq -j 2 Agent8PackedRoot.vo Agent8AdaptiveSource.vo ;;
           esac
       - name: Print final original theorem assumptions
