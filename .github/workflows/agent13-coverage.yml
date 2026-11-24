@@ -185,8 +185,9 @@ jobs:
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
           python im-results/agent31-three-hole-tnf/generate_four_hole_sibling.py
-          python tools/lean_compile_closure.py --workdir /tmp/a31-four-sib --jobs 4 im-results/agent31-three-hole-tnf/FourHoleSiblingData.lean | tee /tmp/a31-four-sib.log
+          python tools/lean_compile_closure.py --workdir /tmp/a31-four-sib --jobs 4 im-results/agent31-three-hole-tnf/FourHoleSiblingData.lean im-results/agent11-tnf-cut-potential/FourHoleSiblingRosterBridge.lean | tee /tmp/a31-four-sib.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a31-four-sib.log; then
             echo "Forbidden proof placeholder or native_decide found in sibling four-hole closure" >&2
             exit 1
