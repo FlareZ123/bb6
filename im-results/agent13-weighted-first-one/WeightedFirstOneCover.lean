@@ -37,9 +37,8 @@ theorem firstOneCylinder_no_assigned_halt :
   intro s
   by_cases hs : s = initialSlot
   · subst s
-    simp [weightedTNFNoAssignedHalt, BB6.CoverageAdapter.firstOneCylinder, refine]
-  · simp [weightedTNFNoAssignedHalt, BB6.CoverageAdapter.firstOneCylinder,
-      refine, emptyTable, hs]
+    simp [BB6.CoverageAdapter.firstOneCylinder, refine]
+  · simp [BB6.CoverageAdapter.firstOneCylinder, refine, emptyTable, hs]
 
 theorem firstOneCylinder_tnf_root :
     BB6.CoverageAdapter.firstOneCylinder initialSlot =
@@ -119,5 +118,9 @@ theorem exact_from_tnf_certificate (B : Nat) (hB : 6≤B)
 
 #print axioms raw_upper_from_tnf_certificate
 #print axioms exact_from_tnf_certificate
+#print axioms firstOneCylinder_root_action
+#print axioms firstOneCylinder_tnf_support
+#print axioms firstOneCylinder_no_assigned_halt
+#print axioms firstOneCylinder_tnf_root
 
 end BB6.Agent13BlankDelay
