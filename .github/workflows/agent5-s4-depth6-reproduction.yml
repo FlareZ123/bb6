@@ -18,18 +18,24 @@ jobs:
         run: |
           set -euo pipefail
           node im-results/agent5-s4-nested-depth6/s4_nested_depth6.mjs | tee im-results/agent5-s4-nested-depth6/g-level-run.json
-      - name: Preserve exact output
+      - name: Reproduce dyadic and rational discounted-moment bounds
+        run: |
+          set -euo pipefail
+          node im-results/agent5-s4-prefix-causal/discounted_moment_bounds.mjs | tee im-results/agent5-s4-prefix-causal/discounted-moment-bounds-run.json
+      - name: Preserve exact outputs
         uses: actions/upload-artifact@v4
         with:
-          name: agent5-s4-depth6-reproduction
-          path: im-results/agent5-s4-nested-depth6/g-level-run.json
+          name: agent5-s4-computational-reproduction
+          path: |
+            im-results/agent5-s4-nested-depth6/g-level-run.json
+            im-results/agent5-s4-prefix-causal/discounted-moment-bounds-run.json
       - name: Commit exact G-level scan output
         shell: bash
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add im-results/agent5-s4-nested-depth6/g-level-run.json
+          git add im-results/agent5-s4-nested-depth6/g-level-run.json im-results/agent5-s4-prefix-causal/discounted-moment-bounds-run.json
           if git diff --cached --quiet; then
             echo "No output change"
             exit 0
