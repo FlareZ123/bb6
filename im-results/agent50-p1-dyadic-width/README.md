@@ -213,3 +213,6 @@ theorem, and not a P1 or BB(6) decision.
 ## Carry-depth atlas (2026-11-24)
 
 [wall_prefix_carry_depths_h0_256.md](wall_prefix_carry_depths_h0_256.md) records an exact Set-based scan over (h=0,\ldots,256) in both restart progressions. Every one of the 514 cases reached an empty prefix layer before 10,000; the longest transients were (K=5350) at family-I (h=142) and (K=4750) at family-II (h=86). These outliers warn against assuming a small uniform carry cutoff. This is exploratory finite evidence, not a universal theorem.
+
+
+The same Lean certificate now also proves (2^n\ge1100n) for (n\ge14) and the two family-specific inequalities (m=14u-2n-3\ge n) from the explicit (u)-formulae, so the cutoff (m\ge K) used in the source-wall reduction is formally justified.
