@@ -1,7 +1,6 @@
 import M1EvenValuationBridge
 import M1EvenValuationBridgeFootprint
 import M1EvenQ4Prefix
-import M1EvenQ4Suffix
 import Q4RightEndpoint
 import S1Encoder
 import S1CountedDrain
