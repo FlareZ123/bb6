@@ -1,0 +1,3 @@
+# Exact coverage transport for BMO5 #421
+
+Counted421Coverage.lean maps the two binary natural stacks to the full Int-indexed tape, and proves all attempted instruction counts commute with the literal Agent8 Frontier machine. `haltsAfter_iff_terminal`, `never_iff_terminal_exclusion`, and `decidedBelow_iff_terminal_score` give exact necessary and sufficient arithmetic obligations for the normalized table. `decidedBelow_of_terminal_bound` is a simple sufficient condition using the sharp conditional runtime bound. Local Lean 4.36.0-rc2 checked against an exact definition slice of Frontier. Full Frontier closure in manual counted workflow is pending. No machine decision, no claim of completed coverage.

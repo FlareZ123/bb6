@@ -6,7 +6,7 @@ on:
       target:
         description: Verification target
         type: choice
-        options: [source, sieve, macro]
+        options: [source, sieve, macro, counted]
         default: source
         required: true
 
@@ -87,5 +87,20 @@ jobs:
             lean -o "$m.olean" "$m.lean" 2>&1 | tee -a "$RUNNER_TEMP/cap-sieve.log"
           done
           if grep -Eq 'sorryAx|native_decide' "$RUNNER_TEMP/cap-sieve.log"; then
+            exit 1
+          fi
+
+      - name: Compile exact counted holdout and coverage transport
+        if: inputs.target == 'counted'
+        working-directory: im-results/agent46-bmo5-421-inverse
+        shell: bash
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="$PWD"
+          lean -o Frontier.olean "$GITHUB_WORKSPACE/im-results/agent8-coverage-contract/Frontier.lean" 2>&1 | tee "$RUNNER_TEMP/counted421.log"
+          for m in Cap CapInverse CapRoot Counted421 Counted421Bridge Counted421Score Counted421ClosedCost Counted421BandBound Counted421Coverage; do
+            lean -o "$m.olean" "$m.lean" 2>&1 | tee -a "$RUNNER_TEMP/counted421.log"
+          done
+          if grep -Eq 'sorryAx|native_decide' "$RUNNER_TEMP/counted421.log"; then
             exit 1
           fi
