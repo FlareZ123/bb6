@@ -69,7 +69,8 @@ Lemma source_count_formula t :
    hole_value (t (F,S0)) + hole_value (t (F,S1)))%nat.
 Proof.
   unfold get_num_undef_trans, Nat_sum, hole_value.
-  cbn [all_qs all_syms BB62.all_qs BB62.all_syms map fold_right].
+  cbn [all_qs all_syms BB62.all_qs BB62.all_syms map fold_right Nat_sum].
+  repeat rewrite Nat.add_0_r.
   lia.
 Qed.
 
