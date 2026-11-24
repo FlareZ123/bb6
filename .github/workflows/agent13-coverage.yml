@@ -5,7 +5,7 @@ on:
       target:
         description: 'Source closure to verify'
         type: choice
-        options: [legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole, weighted-tnf-four-hole, weighted-tnf-four-hole-sibling, weighted-tnf-r1-sweep, queue-orbit, weighted-tnf-roster-convergence, weighted-tnf-roster-agent47-graft, weighted-tnf-pure-residuals, weighted-tnf-raw99, weighted-tnf-raw103, weighted-tnf-roster-composition, weighted-tnf-raw85]
+        options: [legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole, weighted-tnf-four-hole, weighted-tnf-four-hole-sibling, weighted-tnf-r1-sweep, queue-orbit, weighted-tnf-roster-convergence, weighted-tnf-roster-agent47-graft, weighted-tnf-pure-residuals, weighted-tnf-raw99, weighted-tnf-raw103, weighted-tnf-roster-composition, weighted-tnf-raw85, weighted-tnf-agent3-siblings]
         default: legacy
 permissions:
   contents: read
@@ -300,5 +300,20 @@ jobs:
           python tools/lean_compile_closure.py --workdir /tmp/a13-raw85 --jobs 4 im-results/agent13-roster-convergence/raw85/FourHoleSiblingData.lean | tee /tmp/a13-raw85.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a13-raw85.log; then
             echo "Forbidden proof placeholder or native_decide found in raw85 sibling closure" >&2
+            exit 1
+          fi
+
+      - name: Check complete raw95 and raw105 with universal sweep leaves
+        if: inputs.target == 'weighted-tnf-agent3-siblings'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent3-tnf-raw95/generate.py
+          python im-results/agent3-tnf-raw105/generate.py
+          python tools/lean_compile_closure.py --workdir /tmp/a3-siblings --jobs 4 im-results/agent3-tnf-raw95/RawSiblingRosterBridge.lean | tee /tmp/a3-siblings.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a3-siblings.log; then
+            echo "Forbidden proof placeholder or native_decide found in sibling closure" >&2
             exit 1
           fi
