@@ -9,14 +9,19 @@ namespace BB6.Agent44SourceRoster
 open BB6Coverage
 open BB6.Agent31FourHoleFrontier
 open BB6.Agent31FourHoleRoster
-open BB6.Agent31FourHole
 open BB6.Agent13BlankDelay
 open BB6.Agent50TNFPilot
+
+@[simp] theorem residuals_cast {B : Nat} {p q : PartialMachine}
+    (h : p = q) (f : RootedFrontier B p) :
+    residuals (h ▸ f) = residuals f := by
+  cases h
+  rfl
 
 /-- Pure projection of the off-path residual leaves of buildFrontierB.
     It depends only on the concrete path entries and ordinary move list,
     not on the weighted certificate carried by the closed terminal node. -/
-def pureResiduals (p : PartialMachine) : List PathEntry →
+def pureResiduals (p : PartialMachine) : List BB6.Agent50TNFPilot.PathEntry →
     List (List Move × PartialMachine)
   | [] => []
   | (n, s, mv) :: xs =>
@@ -32,7 +37,7 @@ def pureResiduals (p : PartialMachine) : List PathEntry →
     certificate) is irrelevant to the finite table list. -/
 theorem residuals_buildFrontierB (B : Nat) :
     ∀ (p : PartialMachine) (cut : Nat) (hp : RawRootPath p)
-      (xs : List PathEntry)
+      (xs : List BB6.Agent50TNFPilot.PathEntry)
       (h : pathOKB B p cut xs = true)
       (cert : WeightedTNFCertificate B (pathEnd p cut xs).1 6),
       residuals (buildFrontierB B p cut hp xs h cert) = pureResiduals p xs := by
@@ -44,7 +49,7 @@ theorem residuals_buildFrontierB (B : Nat) :
   | cons entry xs ih =>
       rcases entry with ⟨n, s, mv⟩
       intro h cert
-      simp [buildFrontierB, residuals, pureResiduals, ih]
+      simp [buildFrontierB, residuals, pureResiduals, ih, residuals_cast]
 
 theorem rootFrontier_residuals_eq :
     residuals BB6.Agent31FourHoleFrontier.rootFrontier = pureResiduals BB6.Agent50TNFPilot.root (BB6.Agent31FourHole.path.take 7) := by
