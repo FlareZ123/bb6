@@ -1,5 +1,5 @@
 import Agent49InverseWindowSource
-import FatalFamilyWindow
+import FatalFamilyInfinite
 
 /-! Root exclusion for the explicit near-power three-return halting family.
 The original-machine transition, parity invariant, and complete parent
@@ -76,7 +76,29 @@ theorem root_excluded (k : Nat) (hk : 7≤k) (ho : k%2=1) (hgate : ¬ ParameterG
     ∀ i, BB6.Agent49ParitySource.run i ≠ some (.D (targetX k) (targetY k)) :=
   fun i h => hgate (root_parameter k i hk ho h)
 
+/-- Every exponent p=6*3^r, r>=1, gives an authentic root exclusion at
+all return indices, despite its synthetic three-return halt. -/
+theorem power_three_root_excluded (r : Nat) (hr : 1≤r) :
+    let k := 6*3^r-1
+    ∀ i, BB6.Agent49ParitySource.run i ≠ some (.D (targetX k) (targetY k)) := by
+  dsimp only
+  let k := 6*3^r-1
+  have hp : 3≤3^r := by
+    obtain ⟨s,hs⟩ := Nat.exists_eq_succ_of_ne_zero (by omega : r≠0)
+    rw [hs,Nat.pow_succ]
+    have hpos : 0<3^s := Nat.pow_pos (by decide)
+    omega
+  have hk : 7≤k := by dsimp [k]; omega
+  have ho : k%2=1 := by dsimp [k]; omega
+  obtain ⟨hl,hh⟩ := power_three_gates_excluded r hr
+  apply root_excluded k hk ho
+  intro hg
+  rcases hg with ⟨t,_,ht⟩|⟨t,_,ht⟩
+  · exact hl t ht
+  · exact hh t ht
+
 #print axioms parent_parameter
 #print axioms root_parameter
 #print axioms root_excluded
+#print axioms power_three_root_excluded
 end BB6.Agent41FatalInverseSource
