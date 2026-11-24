@@ -28,6 +28,11 @@ on:
         required: false
         type: string
         default: ''
+      dependency_manifest:
+        description: 'Optional repo-relative .txt manifest of additional Lean dependencies in topological order'
+        required: false
+        type: string
+        default: ''
       upstream_sha:
         description: 'Exact google-deepmind/cryptids commit to check out'
         required: true
@@ -88,6 +93,7 @@ jobs:
       DEPENDENCY_PATH: ${{ inputs.dependency_path }}
       BRIDGE_PATH: ${{ inputs.bridge_path }}
       EXTRA_DEPENDENCY_PATH: ${{ inputs.extra_dependency_path }}
+      DEPENDENCY_MANIFEST: ${{ inputs.dependency_manifest }}
       UPSTREAM_SHA: ${{ inputs.upstream_sha }}
       LEAN_TOOLCHAIN: ${{ inputs.lean_toolchain }}
       DEPENDENCY_VERSION: ${{ inputs.dependency_version }}
@@ -121,6 +127,32 @@ jobs:
             test -f "$EXTRA_DEPENDENCY_PATH"
             test "$EXTRA_DEPENDENCY_PATH" != "$DEPENDENCY_PATH"
             test "$EXTRA_DEPENDENCY_PATH" != "$BRIDGE_PATH"
+          fi
+          if [[ -n "$DEPENDENCY_MANIFEST" ]]; then
+            [[ "$DEPENDENCY_MANIFEST" =~ ^im-results/[A-Za-z0-9_./-]+\.txt$ ]]
+            [[ "$DEPENDENCY_MANIFEST" != *..* ]]
+            test -f "$DEPENDENCY_MANIFEST"
+            test "$VERIFY_SIX_ROOT_GRAFT" != "true"
+            test "$SIMULATE_SECOND_F289" != "true"
+            test "$VERIFY_F289_RLE_COST" != "true"
+            declare -A seen_modules=()
+            for p in "$DEPENDENCY_PATH" "$EXTRA_DEPENDENCY_PATH" "$BRIDGE_PATH"; do
+              [[ -n "$p" ]] || continue
+              name="$(basename "$p")"
+              [[ -z "${seen_modules[$name]+x}" ]]
+              seen_modules[$name]=1
+            done
+            count=0
+            while IFS= read -r p || [[ -n "$p" ]]; do
+              [[ "$p" =~ ^im-results/[A-Za-z0-9_./-]+\.lean$ ]]
+              [[ "$p" != *..* ]]
+              test -f "$p"
+              name="$(basename "$p")"
+              [[ -z "${seen_modules[$name]+x}" ]]
+              seen_modules[$name]=1
+              count=$((count+1))
+              [[ "$count" -le 32 ]]
+            done < "$DEPENDENCY_MANIFEST"
           fi
           if [[ "${{ inputs.verify_f289_exact_graft }}" == "true" ]]; then
             test "$VERIFY_SIX_ROOT_GRAFT" = "true"
@@ -429,6 +461,18 @@ jobs:
               echo "::error::forbidden axiom or native_decide in $extra_base"
               exit 1
             fi
+          fi
+          if [[ -n "$DEPENDENCY_MANIFEST" ]]; then
+            while IFS= read -r p || [[ -n "$p" ]]; do
+              additional_base="$(basename "$p")"
+              cp "$GITHUB_WORKSPACE/$p" "$additional_base"
+              additional_log="/tmp/cryptids-source-audit/$additional_base.log"
+              lake env lean -o ".lake/build/lib/lean/${additional_base%.lean}.olean" "$additional_base" 2>&1 | tee "$additional_log"
+              if grep -qE 'sorryAx|native_decide' "$additional_log"; then
+                echo "::error::forbidden axiom or native_decide in $additional_base"
+                exit 1
+              fi
+            done < "$GITHUB_WORKSPACE/$DEPENDENCY_MANIFEST"
           fi
           bridge_log="/tmp/cryptids-source-audit/$bridge_base.log"
           lake env lean -o ".lake/build/lib/lean/${bridge_base%.lean}.olean" "$bridge_base" 2>&1 | tee "$bridge_log"
