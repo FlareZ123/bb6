@@ -574,3 +574,11 @@ The present complete original-source inverse fan theorems `even_odd_small_valuat
 - Run 45325971930 completed with failure at 04:32:22Z. The sole job is `proof` (job id 138215548514); the failed step is `Kernel verify the selected M16 dependency closure`. Setup, Lean 4.36.0-rc2 install, and source-bundle verification succeeded.
 - This is not yet classified as a Lean diagnostic or mathematical failure. GitHub Actions MCP log retrieval is rate-limited; its response requested retry after approximately 17 minutes. Normal GitHub API confirms job/step status only. Retrieve failed-job logs through GitHub Actions MCP with a 150-line tail when available. Do not infer runner shutdown or a Lean proof error without the log.
 - The 1583 criterion remains provisional and is not promoted. If the log is an external runner termination, consider one focused retry after the cooldown; if it is a Lean error, repair the concrete smallest failing declaration.
+
+
+### Runner-shutdown diagnosis — 2026-11-24
+
+- Retrieved the failed-job tail through GitHub Actions MCP. Run 45325971930 did not report a Lean error: the runner received a shutdown signal and the process exited 143. At shutdown, the closure was still at level 20 compiling `EvenOddLowStopSecondFanSource.lean`; the Reach and 1583 criterion modules were never reached. The source module started around 04:25:07Z and the runner stopped around 04:32:19Z.
+- The same dependency bottleneck explains why rerunning the identical full closure is unproductive. Workflow uses `ubuntu-latest`, timeout 30 minutes, but the runner service is being stopped after roughly 9 minutes.
+- Next verification strategy should change: either (a) split the closure across jobs with uploaded `.olean` artifacts (precompile levels 1–19, then source module, then Reach + criterion), adding resumable/partial-level support to `tools/lean_compile_closure.py`; or (b) avoid importing the expensive generic `EvenOddLowStopSecondFanSource` module by proving the specialized parent decomposition directly in the Reach file from `complete_section_inverse` and the specific mass/cost equations. Do not simply dispatch the same closure again.
+- No Lean diagnostic has yet been observed. The mathematical candidate remains unaccepted until a changed verification strategy compiles the target and prints its axiom profile.
