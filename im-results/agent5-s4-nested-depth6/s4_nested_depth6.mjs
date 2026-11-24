@@ -373,6 +373,26 @@ function findSkewedPrefixCycle(word, pending, initial, limit) {
   }
   return null;
 }
+function scanCycleCarry(word, pending, initial, cycle, digits) {
+  let prefix = initial.slice();
+  let maxDepth = 0;
+  let maxWitness = null;
+  let boundaryEvents = 0;
+  const coveredBlocks = cycle.preperiod + cycle.period;
+  for (let phase = 0; phase < coveredBlocks; phase++) {
+    for (let gateIndex = 0; gateIndex < word.length; gateIndex++) {
+      const depth = prefixCarryDepth(prefix, word[gateIndex]);
+      if (depth > maxDepth) {
+        maxDepth = depth;
+        maxWitness = { phase, gate: gateIndex, depth, offset: String(word[gateIndex]) };
+      }
+      if (depth === digits) boundaryEvents++;
+      prefix = prefixStep(prefix, word[gateIndex]);
+    }
+    prefix[0] = prefix[0] + pending;
+  }
+  return { maxDepth, maxWitness, boundaryEvents, coveredBlocks, barrier: maxDepth < digits };
+}
 function shiftedWord(word, delta) {
   const out = word.slice();
   out[0] += delta;
@@ -551,7 +571,7 @@ const Gdata = extractSkewedWord(F1Tail.slice(0, 5), Fword, pF, 1280, 'G');
 const G = Gdata.word;
 const gMass = checkMassWithPending('G', G, Gdata.pending, 1280n * 20n * yReturns, Gdata.adds);
 const gPrefixStart = tailAfter15.slice(0, 15);
-const G_PREFIX_CYCLE_LIMIT = 100;
+const G_PREFIX_CYCLE_LIMIT = 1;
 const gPrefixCycle = findSkewedPrefixCycle(G, Gdata.pending, gPrefixStart, G_PREFIX_CYCLE_LIMIT);
 let gCarrySummary = null;
 if (gPrefixCycle !== null) {
@@ -576,6 +596,9 @@ if (gPrefixCycle !== null) {
   gCarrySummary = { maxDepth, maxWitness, depth15Events, coveredBlocks };
 }
 const gBarrier = gPrefixCycle !== null && gCarrySummary.maxDepth < 15;
+const vCarrySummary = scanCycleCarry(V, 0n, p8BeforeV, vCycle, 8);
+const wCarrySummary = scanCycleCarry(W, 0n, p7BeforeW, wCycle, 7);
+const xCarrySummary = scanCycleCarry(X, 0n, p8BeforeX, xCycle, 8);
 const nestedReturnHierarchy = {
   YtoZ: {
     blocks: 5,
@@ -786,6 +809,9 @@ console.log(JSON.stringify({
   gPrefixCycleLimit: G_PREFIX_CYCLE_LIMIT,
   gCarrySummary,
   gBarrier,
+  vCarrySummary,
+  wCarrySummary,
+  xCarrySummary,
   nestedReturnHierarchy,
   terminalQuotientObstruction,
   quotientNonClosure,
