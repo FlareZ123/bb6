@@ -79,8 +79,9 @@ Proof.
   intro H.
   rewrite !source_count_formula.
   destruct h as [q s]; destruct q,s;
+    rewrite H;
     repeat (rewrite source_upd_hit || rewrite source_upd_miss by discriminate);
-    rewrite H; cbn [hole_value]; lia.
+    cbn [hole_value]; lia.
 Qed.
 
 Lemma source_count_one t h :
