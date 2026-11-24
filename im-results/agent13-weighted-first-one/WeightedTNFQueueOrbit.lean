@@ -23,13 +23,18 @@ theorem renameMove_comp (e f : StatePerm) (mv : Move) :
   cases mv
   rfl
 
+theorem renameMove_comp_fn (e f : StatePerm) :
+    renameMove e ∘ renameMove f = renameMove (composeStatePerm e f) := by
+  funext mv
+  exact renameMove_comp e f mv
+
 /-- Renaming a machine twice is the same as composing the state permutations. -/
 theorem renameTable_comp (e f : StatePerm) (m : Machine) :
     renameTable (composeStatePerm e f) m =
       renameTable e (renameTable f m) := by
   funext slot
   rcases slot with ⟨q,b⟩
-  simp [renameTable, composeStatePerm, renameMove_comp]
+  simp [renameTable, composeStatePerm, renameMove_comp_fn]
 
 /-- A root-fixing state renaming preserves whether state zero has a
     zero-writing successor. -/
