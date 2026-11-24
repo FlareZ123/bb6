@@ -136,7 +136,10 @@ jobs:
           lean -o Frontier.olean Frontier.lean
           export LEAN_PATH=.
           lean -o Symmetry.olean Symmetry.lean
+          lean -o RootShift.olean RootShift.lean
           cd ../agent35-tnf-bridge
           export LEAN_PATH=../agent8-coverage-contract:.
           lean -o NormalizedExpansion.olean NormalizedExpansion.lean
           lean NormalizedExpansion.lean
+          lean -o ZeroPrefixOffset.olean ZeroPrefixOffset.lean
+          lean ZeroPrefixOffset.lean
