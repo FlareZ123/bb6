@@ -20,6 +20,7 @@ open BB6ChampionArithmetic
 open BB6Coverage.Agent48FinalRst1
 open BB6Coverage.Agent48M1OddResidueOneTargetLeft
 open BB6Coverage.Agent48M1OddResidueOneHeadBound
+open BB6Coverage.Agent24Q4Endpoint
 
 set_option maxHeartbeats 3000000
 
@@ -155,7 +156,7 @@ theorem m1OddResidueOne_q4_prefix_source
   rw [hstart] at hlift
   rw [m1One_q4_prefix_run 3 a b h (by omega)] at hlift
   simp only [Option.map_some] at hlift
-  simpa [m1OddResidueOneCutTape,background] using hlift
+  simpa [m1OddResidueOneCutTape,background,frame] using hlift
 
 private theorem m1OddResidueOne_cut_eq_base
     (L k a b : Nat) (h x : Int) (hx : h ≤ x) :
@@ -183,9 +184,9 @@ private theorem m1OddResidueOne_cut_eq_input
 private theorem q4RightShape_congr
     (T U : Int → Bool) (h : Int) (b : Nat)
     (heq : ∀ x, h ≤ x → T x = U x)
-    (hT : q4RightShape T h b) :
-    q4RightShape U h b := by
-  unfold q4RightShape at *
+    (hT : Agent8Q4Suffix.q4RightShape T h b) :
+    Agent8Q4Suffix.q4RightShape U h b := by
+  unfold Agent8Q4Suffix.q4RightShape at *
   rcases hT with ⟨h0,h5,h6,h67,hzero⟩
   refine ⟨?_,?_,?_,?_,?_⟩
   · intro i hi
@@ -207,8 +208,9 @@ private theorem sideBit_residue1_eq_residue0_after2
     sideBit (d0 ++ d1 ++ d1 ++ tail) i =
       sideBit (d1 ++ d1 ++ d1 ++ tail) i := by
   by_cases hi9 : i < 9
-  · have hle : i ≤ 8 := by omega
-    interval_cases i <;> simp [sideBit,d0,d1]
+  · have hcases : i = 2 ∨ i = 3 ∨ i = 4 ∨ i = 5 ∨ i = 6 ∨ i = 7 ∨ i = 8 := by omega
+    rcases hcases with h2 | h3 | h4 | h5 | h6 | h7 | h8
+    all_goals subst i <;> simp [sideBit,d0,d1]
   · have hlen0 : (d0 ++ d1 ++ d1).length = 9 := by simp [d0,d1]
     have hlen1 : (d1 ++ d1 ++ d1).length = 9 := by simp [d0,d1]
     have h0 := sideBit_append_right (d0 ++ d1 ++ d1) tail i
@@ -220,7 +222,7 @@ private theorem sideBit_residue1_eq_residue0_after2
 private theorem m1OddResidueOne_leftFacing
     (L k a b : Nat) (h : Int)
     (hL : 3 ≤ L) (hbound : 8*k+1 < 2^L) :
-    ∀ i, m1OddResidueOneCutTape L k a b h (h-(i:Int)) =
+    ∀ i : Nat, m1OddResidueOneCutTape L k a b h (h-(i:Int)) =
       sideBit (m1OddResidueOneLeftFacing L k a) i := by
   have hbin3 := binDec_residue1 L k hL hbound
   have hbaseLeft :
@@ -290,7 +292,7 @@ private theorem m1OddResidueOne_leftFacing
 
 private theorem m1OddResidueOne_rightShape
     (L k a b : Nat) (h : Int) :
-    q4RightShape (m1OddResidueOneCutTape L k a b h) h b := by
+    Agent8Q4Suffix.q4RightShape (m1OddResidueOneCutTape L k a b h) h b := by
   apply q4RightShape_congr (m1OneQ4CutTape 3 a b h)
     (m1OddResidueOneCutTape L k a b h) h b
   · intro x hx
@@ -374,7 +376,7 @@ theorem m1OddResidueOne_counted_increment_source
     (by simpa [hcost] using hprefix)
     (by simpa [resetDelta] using hdrainBound)
   rw [proposedIncrementCost_decomp 1 (8*k+1) a b,hcost]
-  exact hrun
+  simpa [hcost] using hrun
 
 /-- The symbolic endpoint matches the additive notation used by sectionResult. -/
 theorem m1OddResidueOne_counted_increment_source_symbolic
