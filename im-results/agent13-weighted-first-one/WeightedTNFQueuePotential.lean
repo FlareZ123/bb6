@@ -1,3 +1,4 @@
+import Std
 import WeightedTNFCertificate
 
 namespace BB6.Agent13BlankDelay
@@ -29,7 +30,7 @@ theorem queueListWeight_map_uniform (fs : List Nat) (n : Nat) :
   induction fs with
   | nil => simp [queueListWeight]
   | cons f fs ih =>
-      simp [queueListWeight, ih, Nat.succ_mul,
+      simp [queueListWeight, queueNodeWeight, ih, Nat.succ_mul,
         Nat.add_assoc, Nat.add_comm, Nat.add_left_comm]
 
 /-- Exact fresh-label multiplicities in the pinned upstream `expand`:
@@ -468,7 +469,7 @@ theorem activePotential_serialUpdate_lt (f : QueueNode → QueueVerdict)
               omega
           | unknown =>
               have hpos : 0 < queueNodeWeight x :=
-                Nat.pow_pos (by decide : 0 < 25) x.holes
+                Nat.pow_pos (by decide : 0 < 25)
               simp [serialUpdate, hdec, activePotential, queueListWeight]
               omega
 
@@ -490,7 +491,7 @@ theorem serialRun_empty_of_potential (f : QueueNode → QueueVerdict) :
           | cons x xs =>
               have hx : QueueNodeValid x := hq.1 x (by simp)
               have hpos : 0 < queueNodeWeight x :=
-                Nat.pow_pos (by decide : 0 < 25) x.holes
+                Nat.pow_pos (by decide : 0 < 25)
               simp [activePotential, queueListWeight] at hpot
               omega
   | succ fuel ih =>
