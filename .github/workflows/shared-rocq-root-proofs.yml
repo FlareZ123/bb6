@@ -17,6 +17,7 @@ on:
           - enumerate62-adaptive-checkpoint
           - enumerate62-adaptive-expansion
           - enumerate62-packed-chunk
+          - enumerate62-packed-batch
           - enumerate62-weighted-source
           - enumerate62-zero-delay
           - enumerate62-source-roster
@@ -42,6 +43,11 @@ on:
         required: false
         type: number
         default: 1
+      batch_ranges:
+        description: 'Up to eight offset:size:fuel ranges, comma-separated'
+        required: false
+        type: string
+        default: '34:16:64,4096:16:64,8192:16:64,12000:16:64'
 permissions:
   contents: read
 jobs:
@@ -63,7 +69,7 @@ jobs:
           path: original
           persist-credentials: false
       - name: Checkout research repository proof artifact
-        if: inputs.target == 'enumerate62-decider-sound' || inputs.target == 'enumerate62-q0-partition' || inputs.target == 'enumerate62-adaptive-checkpoint' || inputs.target == 'enumerate62-adaptive-expansion' || inputs.target == 'enumerate62-packed-chunk' || inputs.target == 'enumerate62-resume-chunk2' || inputs.target == 'enumerate62-resume-last20' || inputs.target == 'enumerate62-last20-witness' || inputs.target == 'enumerate62-weighted-source' || inputs.target == 'enumerate62-source-roster' || inputs.target == 'enumerate62-zero-delay'
+        if: inputs.target == 'enumerate62-decider-sound' || inputs.target == 'enumerate62-q0-partition' || inputs.target == 'enumerate62-adaptive-checkpoint' || inputs.target == 'enumerate62-adaptive-expansion' || inputs.target == 'enumerate62-packed-chunk' || inputs.target == 'enumerate62-packed-batch' || inputs.target == 'enumerate62-resume-chunk2' || inputs.target == 'enumerate62-resume-last20' || inputs.target == 'enumerate62-last20-witness' || inputs.target == 'enumerate62-weighted-source' || inputs.target == 'enumerate62-source-roster' || inputs.target == 'enumerate62-zero-delay'
         uses: actions/checkout@v4
         with:
           repository: FlareZ123/bb6
@@ -84,7 +90,7 @@ jobs:
           cp "$GITHUB_WORKSPACE/research/im-results/agent32-source-queue/Agent32SourceEncoding.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent8-adaptive-source-plan/Agent8AdaptiveSource.v" original/verify/
       - name: Add independent adaptive checkpoint proof and pilot
-        if: inputs.target == 'enumerate62-adaptive-checkpoint' || inputs.target == 'enumerate62-adaptive-expansion' || inputs.target == 'enumerate62-packed-chunk' || inputs.target == 'enumerate62-resume-chunk2' || inputs.target == 'enumerate62-resume-last20' || inputs.target == 'enumerate62-last20-witness' || inputs.target == 'enumerate62-weighted-source' || inputs.target == 'enumerate62-source-roster'
+        if: inputs.target == 'enumerate62-adaptive-checkpoint' || inputs.target == 'enumerate62-adaptive-expansion' || inputs.target == 'enumerate62-packed-chunk' || inputs.target == 'enumerate62-packed-batch' || inputs.target == 'enumerate62-resume-chunk2' || inputs.target == 'enumerate62-resume-last20' || inputs.target == 'enumerate62-last20-witness' || inputs.target == 'enumerate62-weighted-source' || inputs.target == 'enumerate62-source-roster'
         run: |
           cp "$GITHUB_WORKSPACE/research/im-results/agent32-source-queue/Agent32SourceBackwards.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent32-source-queue/Agent32SourceEncoding.v" original/verify/
@@ -142,7 +148,7 @@ jobs:
             enumerate62-q0-partition) make -f Makefile.coq -j 2 Agent32Q0Partition.vo Agent32SourceDrain.vo Agent32SourceCoverage.vo Agent32SourceEncoding.vo Agent8AdaptiveSource.vo ;;
             enumerate62-adaptive-checkpoint) make -f Makefile.coq -j 2 Agent8QueueCheckpointPilot.vo ;;
             enumerate62-adaptive-expansion) make -f Makefile.coq -j 2 Agent8QueueExpansionPilot.vo Agent8PackedChunk2_32_32.vo ;;
-            enumerate62-packed-chunk) make -f Makefile.coq -j 2 Agent8PackedRoot.vo Agent8AdaptiveSource.vo ;;
+            enumerate62-packed-chunk|enumerate62-packed-batch) make -f Makefile.coq -j 2 Agent8PackedRoot.vo Agent8AdaptiveSource.vo ;;
             enumerate62-zero-delay) make -f Makefile.coq -j 2 Agent8ZeroDelay.vo ;;
             enumerate62-weighted-source) make -f Makefile.coq -j 2 Agent8GlobalSource.vo Agent8PackedChunk2_32_32.vo Agent8ExactLeaf.vo ;;
             enumerate62-resume-chunk2) make -f Makefile.coq -j 2 Agent8PackedChunk2_32_32.vo ;;
@@ -294,6 +300,20 @@ jobs:
             original/verify/Agent8PackedChunk.v
             original/verify/Agent8PackedChunk.vo
             original/verify/chunk-data.txt
+          if-no-files-found: error
+
+      - name: Export multiple exact finite-fuel checkpoints
+        if: inputs.target == 'enumerate62-packed-batch'
+        working-directory: original/verify
+        env:
+          BATCH_RANGES: ${{ inputs.batch_ranges }}
+        run: bash "$GITHUB_WORKSPACE/research/im-results/agent8-adaptive-source-plan/export-source-batch.sh"
+      - name: Preserve batch proof artifacts including partial failures
+        if: always() && inputs.target == 'enumerate62-packed-batch'
+        uses: actions/upload-artifact@v4
+        with:
+          name: source-packed-batch
+          path: original/verify/agent8-batch/
           if-no-files-found: error
 
       - name: Continue the exact 84-node source checkpoint
