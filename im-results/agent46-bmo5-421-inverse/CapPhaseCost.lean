@@ -406,9 +406,9 @@ theorem positive_skip_parent_cost {j s k x z : Nat} {w0 : Int}
     simp [w1]
   have hret:=positive_skip_return_cost hw0 hk h hskip hstrip
   have hwindow:=skip_reset_band_window hskip hband' hstrip
-  have hfactor : (3:Int)*w1+6≤6*(k:Int)-9 := by
-    have :=hwindow.2
-    simpa [w1] using this
+  have hfactor0 : (3:Int)*w1≤6*(((k-2):Nat):Int)-3 := by
+    simpa using hwindow.2
+  have hfactor : (3:Int)*w1+6≤6*(k:Int)-9 := by omega
   have hD0 : 0≤(3^s:Int) := Int.le_of_lt (Int.pow_pos (by decide))
   have hmul:=Int.mul_le_mul_of_nonneg_left hfactor hD0
   have hret' :
