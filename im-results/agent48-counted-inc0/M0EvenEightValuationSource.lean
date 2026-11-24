@@ -46,7 +46,7 @@ private theorem sweptRight1_preserves_right_local
 /-- The source suffix after the initial d1^a sweep, with the quotient
 factored as q = (2*u+1)*2^t. -/
 def m0EvenEightValuationSourceSuffix (t len u : Nat) : List Bool :=
-  markerWord 0 ++ d0 ++ d1pow (3+t) ++ d0 ++ binDec len u ++ lh
+  markerWord 0 ++ d0 ++ d1pow (t+3) ++ d0 ++ binDec len u ++ lh
 
 /-- The first fourteen head-facing cells are independent of the valuation. -/
 private theorem sourceSuffix_prefix14_match (t len u i : Nat)
@@ -59,7 +59,7 @@ private theorem sourceSuffix_prefix14_match (t len u i : Nat)
   rcases hcases with h | h | h | h | h | h | h | h | h | h | h | h | h | h
     <;> subst i
     <;> simp [m0EvenEightValuationSourceSuffix, markerWord, d0, d1,
-      d1pow, sideBit, m0EvenEightBridgeStart]
+      d1pow, sideBit, m0EvenEightBridgeStart, List.append_assoc]
 
 /-- The valuation-dependent run of ones begins exactly at source offset 14. -/
 private theorem sourceSuffix_extraOnes (t len u i : Nat)
@@ -67,17 +67,17 @@ private theorem sourceSuffix_extraOnes (t len u i : Nat)
     sideBit (m0EvenEightValuationSourceSuffix t len u) (14+i) = true := by
   have hprefix : (markerWord 0 ++ d0).length = 5 := by
     simp [markerWord, d0]
-  rw [m0EvenEightValuationSourceSuffix, sideBit_append_right
-    (markerWord 0 ++ d0)
-    (d1pow (3+t) ++ d0 ++ binDec len u ++ lh) (14+i) (by omega)]
+  rw [m0EvenEightValuationSourceSuffix, ← List.append_assoc]
+  rw [sideBit_append_right (markerWord 0 ++ d0)
+    (d1pow (t+3) ++ d0 ++ binDec len u ++ lh) (14+i) (by omega)]
   have hindex : 14+i-5 = 9+i := by omega
   rw [hindex]
-  have hinside : 9+i < (d1pow (3+t)).length := by
+  have hinside : 9+i < (d1pow (t+3)).length := by
     simp [d1pow_length]
     omega
-  rw [sideBit_append_left (d1pow (3+t))
+  rw [sideBit_append_left (d1pow (t+3))
     (d0 ++ binDec len u ++ lh) (9+i) hinside]
-  exact sideBit_d1pow_true (3+t) (9+i) (by omega)
+  exact sideBit_d1pow_true (t+3) (9+i) (by omega)
 
 /-- The first two cells after the valuation-dependent one-run are the
 zero boundary consumed by the four-step exit. -/
@@ -85,16 +85,16 @@ private theorem sourceSuffix_zeroBoundary (t len u : Nat) :
     sideBit (m0EvenEightValuationSourceSuffix t len u) (14+3*t) = false ∧
     sideBit (m0EvenEightValuationSourceSuffix t len u) (15+3*t) = false := by
   have hprefix :
-      (markerWord 0 ++ d0 ++ d1pow (3+t)).length = 14+3*t := by
+      ((markerWord 0 ++ d0) ++ d1pow (t+3)).length = 14+3*t := by
     simp [markerWord, d0, d1pow_length]
     omega
   constructor
-  · rw [m0EvenEightValuationSourceSuffix,
-      sideBit_append_right (markerWord 0 ++ d0 ++ d1pow (3+t))
+  · rw [m0EvenEightValuationSourceSuffix, ← List.append_assoc, ← List.append_assoc]
+    rw [sideBit_append_right ((markerWord 0 ++ d0) ++ d1pow (t+3))
         (d0 ++ binDec len u ++ lh) (14+3*t) (by omega)]
     simp [d0, sideBit]
-  · rw [m0EvenEightValuationSourceSuffix,
-      sideBit_append_right (markerWord 0 ++ d0 ++ d1pow (3+t))
+  · rw [m0EvenEightValuationSourceSuffix, ← List.append_assoc, ← List.append_assoc]
+    rw [sideBit_append_right ((markerWord 0 ++ d0) ++ d1pow (t+3))
         (d0 ++ binDec len u ++ lh) (15+3*t) (by omega)]
     simp [d0, sideBit]
 
@@ -107,7 +107,7 @@ private theorem bridgeMid_twelve_ones (bit : Bool) (i : Nat)
       i=6 ∨ i=7 ∨ i=8 ∨ i=9 ∨ i=10 ∨ i=11 := by omega
   rcases hcases with h | h | h | h | h | h | h | h | h | h | h | h
     <;> subst i
-    <;> simp [bridgeMidWithBit]
+    <;> cases bit <;> simp [bridgeMidWithBit]
 
 /-- The rightward 111-to-001 sweep leaves every cell at or beyond its
 final head unchanged. -/
