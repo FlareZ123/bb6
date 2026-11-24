@@ -255,7 +255,7 @@ termination_by structural xs => xs
 
 /-- The four-hole certificate is rooted exactly at the authentic
     seven-edge descendant of firstOneCylinder. -/
-def wideCertificate_root :
+noncomputable def wideCertificate_root :
     WeightedTNFCertificate 395 (pathEnd root 2 (path.take 7)).1 6 := by
   simpa [wideParent] using BB6.Agent31FourHole.certificate
 
@@ -267,7 +267,7 @@ theorem path_prefix_checked :
 /-- A root-to-subtree frontier: all 23 off-path ordinary instructions are
     retained at each of seven first-hole expansions, and the four-hole
     cylinder at the end is closed by its complete weighted certificate. -/
-def rootFrontier : RootedFrontier 395 root :=
+noncomputable def rootFrontier : RootedFrontier 395 root :=
   buildFrontierB 395 root 2 RawRootPath.root (path.take 7)
     path_prefix_checked wideCertificate_root
 
