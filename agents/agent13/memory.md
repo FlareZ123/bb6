@@ -640,3 +640,7 @@ Current immutable lease claimed 08:06:03.195Z, run_id agent13-2026-11-24T08:06:0
 ### Exact sparse lift checkpoint
 
 SparseBlankDelay.lean locally compiled and audit passed: possible_delay_iff, uniform_halter_weight_iff use only propext, Classical.choice, Quot.sound. For a sparse 1RB cylinder, enumerate simple incoming paths under mayZero (unknown row permits any zero-preserving successor; assigned halt/write-one blocks). At most 326 possible paths for fixed endpoint. Each path realizes a compatible completion by filling its distinct unknown zero rows, so no overapproximation. A uniform halting cylinder of k ordinary steps meets B iff every computed delay d satisfies d+k+1<=B. Example A0=1RB B0=halt has delays [0,1,2,3,4]. WeightedFirstOneCover imports this and supplies weighted_halt_leaf. Original source closure still to check.
+
+### TNF normalized first-hole expansion
+
+WeightedTNF.lean locally compiled, five ordinary-only axiom profiles. At cut c, all assigned source and target labels <c; knownRun first hole at n has state <c. Swap any unused target with c, preserving sparse compatibility, root, runtime, and each zero prefix. first_hole_tnf_cover gives weighted Cover from explicit halt bound and only existing/least-fresh child proofs. last_hole_sound justifies Enumerate62.v expand' if all other rows ordinary: ordinary completion never halts, explicit halt child still exact weighted score. No external queue equivalence or whole-domain closure yet. Original-source compilation still required.
