@@ -12,7 +12,7 @@ Open Scope nat_scope.
    Agent47SourceChunk2. The verifier is the original TranslatedCyclers checker,
    not a Lean-side simulation or a heuristic acceptance predicate. *)
 
-Definition side_candidate := (dir * nat * nat * nat)%type.
+Definition side_candidate := (dir * (nat * (nat * nat)))%type.
 
 Definition side_candidates : list side_candidate :=
   flat_map (fun d =>
