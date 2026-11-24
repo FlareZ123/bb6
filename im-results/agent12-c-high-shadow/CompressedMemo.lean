@@ -159,3 +159,56 @@ theorem blank_halts_iff_compressed_memo (cap f : Nat) :
 
 
 end BB6.Agent12CompressedMemo
+
+namespace BB6.Agent12CompressedMemo.SeedExclusions
+open BB6.Agent13ExactMemo BB6.Agent46
+
+private theorem sourceRank_le_of_run (n : Nat) :
+    ∀ p q : Nat × Nat,
+      BB6.Agent8Section.run secNext n (some p) = some q →
+        sourceRank p ≤ sourceRank q := by
+  induction n with
+  | zero =>
+      intro p q h
+      have hpq : p = q := by
+        exact Option.some.inj (by simpa [BB6.Agent8Section.run] using h)
+      subst q
+      exact Nat.le_refl _
+  | succ n ih =>
+      intro p q h
+      rw [BB6.Agent8Section.run_succ_head] at h
+      cases hs : secNext p with
+      | none =>
+          have hrunNone : BB6.Agent8Section.run secNext n none = none :=
+            BB6.Agent8Section.run_none secNext n
+          have hfalse : False := by simpa [hs, hrunNone] using h
+          exact False.elim hfalse
+      | some r =>
+          have htail : BB6.Agent8Section.run secNext n (some r) = some q := by
+            simpa [hs] using h
+          have hstep : sourceRank p < sourceRank r := by
+            apply sourceRank_lt r p
+            exact (totalFastCandidates_exact p.1 p.2 r.1 r.2).mpr hs
+          have hrest : sourceRank r ≤ sourceRank q := ih r q htail
+          omega
+
+theorem highStopSeed_3_0_not_reachable : ¬ BB6.Agent3.CReach 13 115 := by
+  rintro ⟨n, hn⟩
+  have h37 : BB6.Agent8Section.run secNext 37 (some (5, 1)) = some (31, 104) := by decide
+  have h38 : BB6.Agent8Section.run secNext 38 (some (5, 1)) = some (21, 114) := by decide
+  by_cases hle : n ≤ 37
+  · have hdecomp : 37 = n + (37 - n) := by omega
+    rw [hdecomp, BB6.Agent8Section.run_add] at h37
+    rw [hn] at h37
+    have hrank : sourceRank (13, 115) ≤ sourceRank (31, 104) :=
+      sourceRank_le_of_run (37 - n) (13, 115) (31, 104) h37
+    norm_num [sourceRank] at hrank
+  · have hge : 38 ≤ n := by omega
+    have hdecomp : n = 38 + (n - 38) := by omega
+    rw [hdecomp, BB6.Agent8Section.run_add] at hn
+    rw [h38] at hn
+    have hrank : sourceRank (21, 114) ≤ sourceRank (13, 115) :=
+      sourceRank_le_of_run (n - 38) (21, 114) (13, 115) hn
+    norm_num [sourceRank] at hrank
+
+end BB6.Agent12CompressedMemo.SeedExclusions
