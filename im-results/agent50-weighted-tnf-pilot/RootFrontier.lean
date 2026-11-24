@@ -221,7 +221,7 @@ theorem pathOK84_cons {p : PartialMachine} {cut n : Nat} {s : Slot}
     s.1.val < cut ∧ mv.next.val ≤ cut ∧
     weightOK p s n 84 = true ∧
     pathOK84 (refine p s (some mv)) (advanceCut cut mv) xs = true := by
-  simpa only [pathOK84, Bool.and_eq_true, decide_eq_true_eq] using h
+  simpa only [pathOK84, Bool.and_eq_true, decide_eq_true_eq, and_assoc] using h
 
 def buildFrontier (p : PartialMachine) (cut : Nat) (hp : RawRootPath p) :
     (xs : List PathEntry) →
@@ -255,7 +255,7 @@ def buildFrontier (p : PartialMachine) (cut : Nat) (hp : RawRootPath p) :
               (buildFrontier (refine p (readSlot c) (some mv))
                 (advanceCut cut mv) (RawRootPath.step hp hr hhole' mv) xs htail' cert')
         else
-          .residual (RawRootPath.step hp hr hhole actual))
+          .residual (RawRootPath.step hp hr hhole' actual))
 
 /-- The nine-edge Agent 50 pilot, now with every ancestor sibling retained. -/
 def rootFrontier : RootedFrontier 84 root :=
