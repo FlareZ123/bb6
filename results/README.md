@@ -10,7 +10,7 @@ The externally reported champion is `1RB1RA_1RC1RZ_1LD0RF_1RA0LE_0LD1RC_1RA0RE`,
 - The [global physical-trace classifier](../im-results/agent32-zero-prefix-global/README.md) has source-sound certified-or-open leaves and mass conservation. Its depth-four raw-table coverage of 68.066560% is an interpreted Lean VM report, not a separately kernel-certified numerical cardinality. The separate 60.328335360% sufficient-predicate census overlaps it. Six pinned upstream Cryptids nonhalting roots have been grafted into the frontier; this is not an exhaustive closure.
 - The [weighted first-write normalization](../im-results/agent13-weighted-first-one/README.md) and recursive `WeightedTNFCertificate` interface account for up to five preceding zero-writing moves and now pass the pinned original-source Lean CI with standard axioms only. This is a source-accepted proof interface, not yet a concrete exhaustive certificate tree or a source-faithful upstream queue-drain/expansion trace; no finite holdout roster is treated as exhaustive. The work remains intermediate infrastructure.
 
-**Missing:** exact primitive-transition score under a consistent final-query convention; a proof-carrying exhaustive partition covering every remaining machine with nonhalting certificates or appropriate score bounds. See the [decision board](../research/BOARD.md).
+**Missing:** a proof-carrying exhaustive partition covering every remaining machine with nonhalting certificates or appropriate score bounds, composed with the exact champion witness under the standard final-query convention. See the [decision board](../research/BOARD.md).
 
 ## Cryptid D: total affine reduction and executable equivalence
 
