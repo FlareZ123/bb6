@@ -1,3 +1,7 @@
+## 2026-11-24 continuation — exact Sheep primitive score
+
+Locally kernel checked literal-table counted macros and the bidirectional blank_score_iff in im-results/agent16-sheep-counted/. Exact quadratic costs and terminal query convention; no root decision. Next: infinite-tape refinement, cost bounds using existing band-residence theorem and odd-block potential telescoping. Lease claimed 18:26:34.816Z; release threshold 19:36:34.816Z. Never refresh lease.
+
 
 ### 06:22 checkpoint: global reachability/time bound
 
