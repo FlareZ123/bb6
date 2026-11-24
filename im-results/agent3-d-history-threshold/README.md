@@ -1,6 +1,6 @@
 # D E-guard: an unbounded suffix-comparison family
 
-**Status:** all-parameter mathematical proof by compositional crossing histories and 14 fixed, executable local certificates. Original literal table; not yet Lean-checked. This is a prepared-section result, not a verdict on I5/I9/I15/I39 or a BB(6) bound.
+**Status:** all-parameter mathematical proof by compositional crossing histories and 14 fixed, executable local certificates. Original literal table; source endpoint existence is now Lean-checked (see verification section). This is a prepared-section result, not a verdict on I5/I9/I15/I39 or a BB(6) bound.
 
 Write P = 0101101011, M = 01100, J = 111111. At the E delimiter section of machine D, with scanned/right word P^r M J^s followed by blank cells and left guard 00101010 (nearest first), for every r,s >= 0:
 
@@ -50,4 +50,24 @@ The local G may be generated inside an earlier P; a live final blank-cell reply 
 
 For any 1 <= i < j, the continuation M J^i distinguishes P^i from P^j: the former returns and the latter halts. Both complete input words are canonical (begin with 0, end with 1). Hence the exact E-guard terminal language on canonical finite suffixes has infinitely many Myhill-Nerode classes. No finite-state exact one-step classifier exists, even ignoring cost and output. Moreover successful histories at the P/M boundary are XT^r, of unbounded length; a universal fixed crossing-history cap is impossible even for returning computations. This is a specific barrier to the previous finite-prefix graph / bounded-history approach, not a proof that all inductive invariants fail or that the four roots are infinite.
 
-Run python3 threshold_check.py for the fourteen finite checks. The parameterized conclusions follow from the two composition rules and finite certificates, not from bounded testing of r or s. A Lean implementation of the service composition lemma is the next task. The original source prefix and return-sweep facts are in the Agent31 Boundary module.
+Run python3 threshold_check.py for the fourteen finite checks. The parameterized conclusions follow from the two composition rules and finite certificates, not from bounded testing of r or s. The service composition lemma and original-source endpoints are now Lean-checked. The original source prefix and return-sweep facts are in the Agent31 Boundary module.
+
+## Lean verification of the original source endpoints
+
+The archive history-proof.tar.xz.b64 contains ServiceCore.lean, Threshold.lean, GuardSource.lean and generate_cert.py. Decode with base64, extract, and copy threshold_check.py into the same directory. Restore Agent31's original Boundary.lean (SHA256 0d9f160644d919adf7239b49857fa6cd62ee6cdecadfe0a75ec312a612194883). With Lean 4.36.0-rc2 and LEAN_PATH=. run:
+
+    python3 threshold_check.py
+    python3 generate_cert.py > FixedCertificates.lean
+    lean -o Boundary.olean Boundary.lean
+    lean -o ServiceCore.olean ServiceCore.lean
+    lean -o FixedCertificates.olean FixedCertificates.lean
+    lean -o Threshold.olean Threshold.lean
+    lean -o GuardSource.olean GuardSource.lean
+
+All compiled locally. The archive SHA256 is d3c464e1791187210bf56129bf5ffa39b52bec4d5cdeccf67b9d3082384fdc82; generated FixedCertificates.lean SHA256 a5095dffeb7e0f7f5189bf87bb8c1c71d5528aff41ed2a7c9915a662db0a5d61. The generator is untrusted: it emits explicit proof terms checked by the kernel.
+
+ServiceCore.Exit.sound connects the recursive first-exit service derivation to the literal source run for arbitrary left contexts. Chain.seq and Chain.spatial prove temporal and spatial composition; Chain.apply turns an arbitrary finite chain into actual source exits. Threshold.successful_services and failing_services_exact are all-parameter theorems with arbitrary preserved right continuation in the success case and the exact implicit blank tail in the failure case.
+
+GuardSource.prepared_return proves existence of an original source run from the unary section n=3k+4 with suffix P^r M J^r y to F/0 with unary n'=8k+3, followed by gp=0111101 and (01)^(5r) 01010 (10)^(3r) y. GuardSource.prepared_halt proves actual frozen-state reachability for every s<r from the source section P^r M J^s. The four guard/source and three service theorem audits report only propext, Classical.choice, Quot.sound. No sorryAx.
+
+The exact cost sums and first-event claim above are mathematical proofs from the local history certificates; the current Lean adapter establishes endpoint existence (not exact cost, first-event minimality, or a formal automata-language theorem). This distinction is intentional.
