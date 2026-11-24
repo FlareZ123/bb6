@@ -44,6 +44,12 @@ def solve_one(table, d: int, reflected: bool, timeout_ms: int):
     # The blank prefix is recognized by the start state itself.
     solver.add(delta[0][0] == 0)
 
+    # Remove unreachable-state symmetries. Any finite reachable DFA can
+    # be renumbered so each nonzero state has a predecessor of lower index.
+    for state in range(1, d):
+        predecessors = [delta[j][b] == state for j in range(state) for b in range(2)]
+        solver.add(Or(*predecessors))
+
     # E[a][s] is the N-bit set of NFA successors from node s on symbol a.
     # Nodes 0..6d-1 are (left-DFA state, control state); node 6d is halt.
     edges = [[BitVec(f"edge_{d}_{reflected}_{a}_{s}", n) for s in range(n)] for a in range(2)]
