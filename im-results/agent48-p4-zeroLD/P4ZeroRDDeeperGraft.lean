@@ -92,7 +92,7 @@ theorem agent48P4ZeroRD_D0ZeroRD_cover :
     agent48P4ZeroRD_D0ZeroRD_check
 
 theorem agent48P4ZeroRD_D0OneRD_cover :
-    Cover (DecidedBelow 6) agent48P4P4ZeroRD_D0OneRD :=
+    Cover (DecidedBelow 6) agent48P4ZeroRD_D0OneRD :=
   finiteEntryMacroCheck_sound agent48P4ZeroRD_D0OneRD 5 1 6 (by decide)
     agent48P4ZeroRD_D0OneRD_check
 
@@ -179,7 +179,7 @@ noncomputable def agent48P4ZeroRDDeeperAudit :
     agent48P4ZeroRD_D0ZeroRE agent48P4ZeroRD_D0ZeroRE_cover
 
 #print axioms agent48P4ZeroRD_D0ZeroRD_cover
-#print axioms agent48P4P4ZeroRD_D0OneRD_cover
+#print axioms agent48P4ZeroRD_D0OneRD_cover
 #print axioms agent48P4ZeroRD_D0OneRE_cover
 #print axioms agent48P4ZeroRD_D0ZeroRA_cover
 #print axioms agent48P4ZeroRD_D0OneRA_cover
