@@ -17,3 +17,12 @@ for m in Boundary CostTree FiniteCheck Concrete ExitSound Evaluator SourceBridge
   lean -o "$m.olean" "$m.lean" 2>&1 | tee "$m.log"
   if grep -E 'sorryAx|uses .sorry.' "$m.log"; then exit 1; fi
 done
+# Stronger outcome-sensitive polynomial certificate.
+base64 -d "$here/cubic.tar.xz.b64" > "$work/cubic.tar.xz"
+echo "e2577127b2f3445e1b4447203b81fd3bab82d9787624168414418892ed845ab1  $work/cubic.tar.xz" | sha256sum -c -
+tar -xJf "$work/cubic.tar.xz"
+python3 poly_generate.py > PolyConcrete.lean
+for m in PolyCheck PolyArithmetic PolyConcrete PolySound PolyMain; do
+  lean -o "$m.olean" "$m.lean" 2>&1 | tee "$m.log"
+  if grep -E 'sorryAx|uses .sorry.' "$m.log"; then exit 1; fi
+done
