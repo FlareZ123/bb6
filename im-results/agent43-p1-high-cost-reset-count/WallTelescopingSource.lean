@@ -164,14 +164,7 @@ theorem source_weighted_cost_list_invariant
   induction h with
   | root =>
       refine ⟨[], ?_, ?_, ?_, ?_, ?_⟩
-      · simp
-      · intro s hs
-        simp at hs
-      · intro hm
-        rfl
-      · intro hm
-        omega
-      · simp [costPowSum, costWeightedSum]
+      all_goals simp_all [costPowSum, costWeightedSum]
   | parent bp dp mp zp t k c hp hb hb4 hd hi hk hc ih =>
       obtain ⟨A, hnodup, hlt, hzero, hstart, hInv⟩ := ih
       have hodd : OddCone (14*2^n-2*n-16) 3 bp dp mp :=
@@ -265,7 +258,8 @@ theorem source_weighted_cost_list_invariant
             have hcoeff : 2*(mp+n+3)*2^mp =
                 2*((n+3+mp)*2^mp) := by
               have hlin : mp+n+3 = n+3+mp := by omega
-              rw [hlin, Nat.mul_assoc]
+              rw [hlin]
+              ac_rfl
             rw [hcoeff]
             ac_rfl
           _ = 2^(mp+t+1)*(c+3)+
@@ -273,7 +267,7 @@ theorem source_weighted_cost_list_invariant
             have hdist :
                 2*((costWeightedSum n A)+(n+3+mp)*2^mp) =
                   2*(costWeightedSum n A)+2*((n+3+mp)*2^mp) := by
-              exact Nat.mul_add 2 (costWeightedSum n A) ((n+3+mp)*2^mp)
+              omega
             calc
               _ = 2^(mp+t+1)*(c+3)+
                     (2*(costWeightedSum n A)+2*((n+3+mp)*2^mp)) := by ac_rfl
