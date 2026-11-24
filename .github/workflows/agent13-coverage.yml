@@ -5,7 +5,7 @@ on:
       target:
         description: 'Source closure to verify'
         type: choice
-        options: [legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole, weighted-tnf-four-hole, weighted-tnf-four-hole-sibling, weighted-tnf-r1-sweep, queue-orbit, weighted-tnf-roster-convergence, weighted-tnf-roster-agent47-graft, weighted-tnf-pure-residuals, weighted-tnf-raw99, weighted-tnf-raw103, weighted-tnf-roster-composition, weighted-tnf-agent3-siblings, weighted-tnf-raw85-parent-check, weighted-tnf-raw91, weighted-tnf-raw87, weighted-tnf-raw83-pump, weighted-tnf-agent10-multi, weighted-tnf-agent10-five-new, weighted-tnf-agent10-raw106]
+        options: [legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole, weighted-tnf-four-hole, weighted-tnf-four-hole-sibling, weighted-tnf-r1-sweep, queue-orbit, weighted-tnf-roster-convergence, weighted-tnf-roster-agent47-graft, weighted-tnf-pure-residuals, weighted-tnf-raw99, weighted-tnf-raw103, weighted-tnf-roster-composition, weighted-tnf-agent3-siblings, weighted-tnf-raw85-parent-check, weighted-tnf-raw91, weighted-tnf-raw87, weighted-tnf-raw83-pump, weighted-tnf-agent10-multi, weighted-tnf-agent10-five-new, weighted-tnf-agent10-raw106, weighted-tnf-raw63-counter]
         default: legacy
 permissions:
   contents: read
@@ -398,5 +398,20 @@ jobs:
           python tools/lean_compile_closure.py --workdir /tmp/a10-raw106 --jobs 4 im-results/agent10-tnf-multipump/Raw106Roster.lean | tee /tmp/a10-raw106.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a10-raw106.log; then
             echo "Forbidden proof placeholder or native_decide found in raw106 closure" >&2
+            exit 1
+          fi
+
+      - name: Check raw63 five-hole counter closure and exact roster bridge
+        if: inputs.target == 'weighted-tnf-raw63-counter'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent48-raw63-counter/emit_counter.py
+          python im-results/agent10-tnf-multipump/generate.py 63
+          python tools/lean_compile_closure.py --workdir /tmp/a48-raw63 --jobs 4 im-results/agent48-raw63-counter/Raw63RosterBridge.lean | tee /tmp/a48-raw63.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a48-raw63.log; then
+            echo "Forbidden proof placeholder or native_decide found in raw63 closure" >&2
             exit 1
           fi
