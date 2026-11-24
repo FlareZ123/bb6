@@ -1,5 +1,7 @@
 import P4ZeroRDDeeperGraft
 
+set_option maxRecDepth 8192
+
 namespace BB6Coverage
 
 /-- Exact report after the P4 first-level and both deeper child grafts. -/
@@ -13,7 +15,7 @@ theorem agent48P4ZeroRDDeeperAudit_mass_conservation :
     agent48P4ZeroRDDeeperAudit.report.1 +
       agent48P4ZeroRDDeeperAudit.report.2 = 25^12 := by
   rw [agent48P4ZeroRDDeeperAudit_report]
-  norm_num
+  decide
 
 #print axioms agent48P4ZeroRDDeeperAudit_report
 #print axioms agent48P4ZeroRDDeeperAudit_mass_conservation

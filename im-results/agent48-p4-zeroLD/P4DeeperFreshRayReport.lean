@@ -1,5 +1,7 @@
 import P4DeeperFreshRay
 
+set_option maxRecDepth 8192
+
 namespace BB6Coverage
 
 /-- Exact decided/open counts after ten D/0 children under E/0 = 0LC. -/
@@ -13,7 +15,7 @@ theorem agent48P4DeeperAudit_mass_conservation :
     agent48P4DeeperAudit.report.1 + agent48P4DeeperAudit.report.2 =
       25^12 := by
   rw [agent48P4DeeperAudit_report]
-  norm_num
+  decide
 
 #print axioms agent48P4DeeperAudit_report
 #print axioms agent48P4DeeperAudit_mass_conservation
