@@ -30,3 +30,7 @@ None of the surviving necessary gates has been shown reachable by the authentic 
 
 [BB429NestedResetPump.md](BB429NestedResetPump.md) and its [C++ reproducer](BB429NestedResetPump.cpp) continue from ((0,805306356)) and verify the exact branch word (F^{27}O_{\rm even}E_{\rm even}(F^{24}E_{\rm even})^{1458887}F^{25}O_{\rm odd}E_{\rm odd}), returning to ((0,939524164)) after 36,472,231 transitions. Combined with the preceding root certificate, this reaches that state at root step 270,929,810. This remains a finite computational segment only.
 
+## (W\mapsto W+204) reset pump
+
+[BB429Return204Pump.md](BB429Return204Pump.md) and its [C++ reproducer](BB429Return204Pump.cpp) verify 657,930 consecutive 56-step first-return blocks (F^{27}O_{\rm even}E_{\rm even}F^{25}O_{\rm odd}E_{\rm odd}), taking ((0,939524164)) to ((0,1073741884)). Combined with the earlier certificates, the blank-root orbit reaches that state at step 307,773,890. This remains a finite segment; the following phase is open.
+
