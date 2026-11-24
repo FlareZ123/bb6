@@ -248,6 +248,38 @@ theorem closedChildren_count : closedChildren.length = 115 := by decide
 
 theorem graftedRoster_count : graftedRoster.length = 441 := by decide
 
+/-- Two packed cylinders are incompatible when they assign different
+    transition values to at least one common row. -/
+def incompatibleTables (a b : PackedTable) : Prop :=
+  ∃ s : Slot, unpackTable a s ≠ none ∧
+    unpackTable b s ≠ none ∧ unpackTable a s ≠ unpackTable b s
+
+/-- The 115 safe leaves are pairwise incompatible, hence their cylinders
+    are pairwise disjoint. -/
+theorem closedChildren_pairwise_disjoint :
+    closedChildren.Pairwise incompatibleTables := by decide
+
+/-- Number of completions represented by a packed cylinder: each unassigned
+    transition row has 25 choices (24 moves or halt). -/
+def tableCylinderMass (t : PackedTable) : Nat :=
+  25 ^ (t.filter fun row => row.isNone).length
+
+def rosterCylinderMass (r : List PackedTable) : Nat :=
+  r.foldl (fun total t => total + tableCylinderMass t) 0
+
+theorem canonicalRoster_cylinderMass :
+    rosterCylinderMass canonicalResidualRoster = 1878783620312500 := by decide
+
+theorem closedChildren_cylinderMass :
+    rosterCylinderMass closedChildren = 52658388671875 := by decide
+
+theorem graftedRoster_cylinderMass :
+    rosterCylinderMass graftedRoster = 1826125231640625 := by decide
+
+theorem cylinderMass_partition :
+    rosterCylinderMass canonicalResidualRoster =
+      rosterCylinderMass graftedRoster + rosterCylinderMass closedChildren := by decide
+
 #print axioms graftedRoster_sound_7014
 #print axioms graftedRoster_count
 
