@@ -32,10 +32,18 @@ jobs:
           ref: 33209bc7dc282b38c8cd6be507bfc551fea56108
           path: original
           persist-credentials: false
+      - name: Checkout research repository proof artifact
+        if: inputs.target == 'enumerate62-decider-sound'
+        uses: actions/checkout@v4
+        with:
+          repository: FlareZ123/bb6
+          ref: ${{ github.sha }}
+          path: research
+          persist-credentials: false
       - name: Add Agent 5 Enumerate62 decider soundness theorem
         if: inputs.target == 'enumerate62-decider-sound'
         run: |
-          cp "$GITHUB_WORKSPACE/im-results/agent5-weighted-tnf-queue/Agent5Enumerate62DeciderSound.v" original/verify/
+          cp "$GITHUB_WORKSPACE/research/im-results/agent5-weighted-tnf-queue/Agent5Enumerate62DeciderSound.v" original/verify/
       - name: Generate project dependencies with VM fallback
         working-directory: original/verify
         run: |
