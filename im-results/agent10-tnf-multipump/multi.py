@@ -195,3 +195,29 @@ def generate(idx,p,ans):
     ls.append(f'theorem never (m : Machine) (hm : compatible table m) : NeverHalts m :=\n  never_of_growth table family {t} (fun n => {a}+{b}*n) entry (by intro n; omega) growth m hm')
     ls.extend(['#print axioms never',f'end M{idx}'])
     return '\n\n'.join(ls),(t,a,b)
+
+
+def long_candidate(p,ev,side,q,period,maxdiff=64):
+    """Propose two insertions at a fixed same-state boundary-return period."""
+    es=[(t,c) for t,s,c in ev if s==side and c.q==q
+        and (not c.l.pre if side=='L' else not c.r.pre)]
+    for i in range(min(40,len(es)-2*period)):
+        t,c=es[i];_,d=es[i+period];_,e=es[i+2*period]
+        a,b,z=[v.r.pre if side=='L' else v.l.pre for v in (c,d,e)]
+        diff=len(b)-len(a)
+        if not 2<=diff<=maxdiff or len(z)-len(b)!=diff:continue
+        for k in range(len(a)+1):
+            if a[:k]!=b[:k]:break
+            for d1 in range(1,diff):
+                I=b[k:k+d1]
+                for j in range(k,len(a)+1):
+                    if b[k+d1:j+d1]!=a[k:j]:break
+                    J=b[j+d1:j+diff]
+                    if b[j+diff:]!=a[j:] or a[:k]+I*2+a[k:j]+J*2+a[j:]!=z:continue
+                    w=clean(lit(a[:k])+rep(I)+lit(a[k:j])+rep(J)+lit(a[j:]))
+                    v=clean(lit(a[:k]+I)+rep(I)+lit(a[k:j]+J)+rep(J)+lit(a[j:]))
+                    st=C(q,w if side=='R' else (),() if side=='R' else w)
+                    tg=C(q,v if side=='R' else (),() if side=='R' else v)
+                    ans=pump(p,st,tg,3000)
+                    if ans:return t,st,tg,ans
+    return None

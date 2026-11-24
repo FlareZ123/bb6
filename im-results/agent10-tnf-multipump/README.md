@@ -47,3 +47,7 @@ All candidate leaves closed, revised bound 1,326. 2,227 splits including root, 4
 ### Raw 79 (B1=1LE)
 
 All candidate leaves closed, revised bound 2,354. 1,164 splits including root, 20,820 side cycles, 4,788 original last holes, 1,104 FAR, 27 one-block, three two-block, two long-epoch, two explicit symbolic growth and four delayed last-hole leaves. Leaf 748 alternates two parity-dependent sweeps and returns from B([], (01)^n) to B([], (01)^(n+5)) for every n>0. Leaf 740 executes a binary counter with three-cell digits 000 and 100; its return B([],1^(3k)0101^b) -> B([],1^(3k+3)0101^(b+2^(k+1))) is proved for all k,b. The blank run enters k=1,b=3 at step 30, so b=2^(k+1)-1 persists. `Raw79Recursive.lean` contains both locally Lean-checked exact return families and source `never_of_growth` bridges. The 2,351-step delayed leaf 58 fixes the weighted bound at 2,354; the original discovery cap was 1,000. Generate with `python generate.py 79`. Source audit pending.
+
+### Raw77: complete candidate closure
+
+Raw77 B1=0LE: 634 split nodes, 11,169 side-cycle leaves, 2,396 initial last-hole leaves, and 995 formerly open leaves. Partition: 786 FAR, 148 single-block, 40 two-block, 14 extended single-block, three extended two-block, four delayed last-hole. Weighted bound 1601. Extended two-block cases 289/352/378 enter at 16/76/2433 with exact costs 170+168n/492+372n/1042. All three growth equalities checked locally in Lean 4.36.0-rc2 against copied zipper/moveCut core, standard axioms only. Original source audit pending.

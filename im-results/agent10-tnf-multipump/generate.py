@@ -56,6 +56,14 @@ for raw,spec in SPECS.items():
         pumps[i]=f"{pumpns}.M{i}"
         pumpcode.append(code)
         print(raw,i,"long",info)
+    for idx,params in spec.get("long_two",{}).items():
+        i=int(idx);p=one.parse(opens[i])
+        ans=multi.long_candidate(p,one.concrete_events(p,20000),*params)
+        assert ans is not None,(raw,i,"long_two")
+        code,info=multi.generate(i,p,ans)
+        pumps[i]=f"{pumpns}.M{i}"
+        pumpcode.append(code)
+        print(raw,i,"long_two",info)
     if spec.get("recursive"):
         pumpcode.insert(0,"import "+spec.get("recursive_import","RecursiveGrowth"))
         for i in spec["recursive"]:
@@ -134,4 +142,4 @@ theorem all{raw} : ∀ m, compatible p{raw} m → WeightedBound {bound} m :=
 #print axioms all{raw}
 """
     emit(f"Raw{raw}Data",mods,body)
-    print("raw",raw,stats,"FAR",len(opens)-len(pumps),"pumps",len(pumps))
+    print("raw",raw,stats,"FAR",len(opens)-len(pumps)-len(spec.get("late",{})),"pumps",len(pumps),"late",len(spec.get("late",{})))
