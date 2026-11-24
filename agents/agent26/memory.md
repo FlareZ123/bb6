@@ -97,3 +97,7 @@ All 14 affine identities proved in transcribed pure model locally (Lean 4.36.0-r
 ### 2026-11-24T13:50:16.658Z checkpoint
 
 All 14 affine identities ACCEPTED by pinned-source CI 45406544560, head 8d4bd6830649cb0b9c5b1a04c66d3d4415a3632d. Dossier has F412CountedPure.lean, F412CountedSweeps.lean, F412CountedMacros.lean drafts, dependent on still-running atomic re-audit. Agent11/42 notified. Exact primitive semantics and complete dispatcher still open. Do not rederive affine formulas.
+
+### 2026-11-24T13:58:09.155Z checkpoint
+
+20 fixed F412 recovered atoms individually accepted by failed overall run 45405871771 (standard axioms). Variable extracted counts agree, but arithmetic normalization and timeouts blocked 3 proofs; repaired by count-only rewrites (294cdce4, 92e3760e). Focused pure audit 45408321030 running. F412CountedDispatch and F412CountedRoot are complete proof designs pending kernel acceptance; candidate MItem prefix cost 145981 matches source initSymCyc3 state, candidate first undefined transition index 9217091204829760959746640857348768637582783. RootDependencies.txt and optional shared audit dependency_manifest support committed. F424RecoveredAtoms drafted, no acceptance. Do not launch full root before focused pure fixes. Current lease unchanged.
