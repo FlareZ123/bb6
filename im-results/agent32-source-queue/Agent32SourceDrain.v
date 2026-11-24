@@ -176,7 +176,11 @@ Proof.
   destruct fuel as [|p].
   - cbn [get_SQ].
     destruct (fst q) as [|x xs] eqn:E; [reflexivity|].
-    pose proof (mass_nonempty (fst q) ltac:(rewrite E; discriminate)); lia.
+    exfalso.
+    apply (N.lt_irrefl 0).
+    eapply N.lt_le_trans.
+    + exact (mass_nonempty (fst q) ltac:(rewrite E; discriminate)).
+    + exact Hfuel.
   - destruct (Pos_iter_until (SearchQueue_upd f) (inl q) p) as [q'|q'] eqn:E.
     + cbn [get_SQ].
       destruct (pos_iter_decrease f p q q' Hw E) as [_ Hm].
