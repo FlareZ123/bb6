@@ -42,20 +42,23 @@ jobs:
           done
           python3 - <<'PY'
           from pathlib import Path
-          import re
 
           root = Path("/tmp/raw85-artifacts")
           run_ids = [
               45498610882, 45498649689, 45498658720, 45498667128,
               45498673310, 45498681222, 45498691122, 45498700780,
           ]
-          frontier = Path("im-results/agent21-raw85/smt-frontier.txt").read_text().splitlines()
-          expected = [m.group(1) for line in frontier if (m := re.match(r"^\d+\.\s+(.*)$", line))]
-          if len(expected) != 8:
-              raise SystemExit(f"expected eight raw85 frontier tables, found {len(expected)}")
           records = []
+          provenance = [
+              "# Eight composed-SMT FAR candidate artifacts",
+              "",
+              "These are the exact source tables and DFA/orientation models emitted by the listed runs. They are untrusted candidates for reuse on raw85 destination tables; their source-table identity does not assert that they are the eight smt-frontier entries.",
+              "",
+              "| Workflow run | Source table | DFA states | Reflected | DFA |",
+              "|---:|---|---:|---:|---|",
+          ]
           seen_codes = set()
-          for i, run_id in enumerate(run_ids):
+          for run_id in run_ids:
               hit_files = list((root / str(run_id)).rglob("hits.txt"))
               if len(hit_files) != 1:
                   raise SystemExit(f"run {run_id}: expected one hits.txt, found {len(hit_files)}")
@@ -63,13 +66,11 @@ jobs:
               if len(hits) != 1:
                   raise SystemExit(f"run {run_id}: expected one HIT record, found {len(hits)}")
               words = hits[0]
-              if words[0] != "HIT":
-                  raise SystemExit(f"run {run_id}: malformed hit row")
               code, d, rev = words[2], int(words[3]), int(words[4])
-              if code != expected[i]:
-                  raise SystemExit(f"run {run_id}: target mismatch: {code} != {expected[i]}")
-              if words[5] != "DFA" or rev not in (0, 1):
+              if words[0] != "HIT" or words[5] != "DFA" or rev not in (0, 1):
                   raise SystemExit(f"run {run_id}: malformed DFA/orientation fields")
+              if len(code.replace("_", "")) != 36:
+                  raise SystemExit(f"run {run_id}: malformed 12-slot source table {code}")
               dfa = list(map(int, words[6:6 + 2*d]))
               n = 6*d + 1
               mask_tag = 6 + 2*d
@@ -78,25 +79,35 @@ jobs:
                   raise SystemExit(f"run {run_id}: malformed mask payload")
               if not dfa or dfa[0] != 0 or any(x < 0 or x >= d for x in dfa):
                   raise SystemExit(f"run {run_id}: DFA violates start-preserving/range constraints")
+              if code in seen_codes:
+                  raise SystemExit(f"duplicate source table across SMT runs: {code}")
+              seen_codes.add(code)
               raw = code.replace("_", "")
               tokens = [raw[j:j+3] for j in range(0, 36, 3)]
               key = [tokens[j] for j in (5, 1, 8, 10)]
-              records.append(" ".join(key + [str(rev), "".join(map(str, dfa))]))
-              seen_codes.add(code)
+              dfa_text = "".join(map(str, dfa))
+              records.append(" ".join(key + [str(rev), dfa_text]))
+              provenance.append(f"| {run_id} | {code} | {d} | {rev} | {dfa_text} |")
           if len(records) != 8 or len(seen_codes) != 8:
-              raise SystemExit("raw85 SMT records are not eight distinct destination tables")
+              raise SystemExit("raw85 SMT artifacts did not yield eight distinct source tables")
           out = Path("im-results/agent21-raw85/smt-candidates.txt")
-          out.write_text("# Eight Lean-validated composed-SMT DFA candidates; keys are ordering metadata only\n" + "\n".join(records) + "\n")
+          out.write_text("# Eight workflow-validated composed-SMT DFA candidates; source tables are recorded in smt-candidates-provenance.md; keys are ordering metadata only\n" + "\n".join(records) + "\n")
+          prov = Path("im-results/agent21-raw85/smt-candidates-provenance.md")
+          prov.write_text("\n".join(provenance) + "\n")
           print(out.read_text(), end="")
+          print(prov.read_text(), end="")
           PY
-          api_path="repos/$GITHUB_REPOSITORY/contents/im-results/agent21-raw85/smt-candidates.txt"
-          encoded="$(base64 -w0 im-results/agent21-raw85/smt-candidates.txt)"
-          if sha="$(gh api "$api_path" --jq .sha 2>/dev/null)"; then
-            gh api --method PUT "$api_path" -f message="Agent 7: Preserve eight raw85 SMT DFA candidates" -f content="$encoded" -f branch=main -f sha="$sha"
-          else
-            gh api --method PUT "$api_path" -f message="Agent 7: Preserve eight raw85 SMT DFA candidates" -f content="$encoded" -f branch=main
-          fi
+          for file in im-results/agent21-raw85/smt-candidates.txt im-results/agent21-raw85/smt-candidates-provenance.md; do
+            api_path="repos/$GITHUB_REPOSITORY/contents/$file"
+            encoded="$(base64 -w0 "$file")"
+            if sha="$(gh api "$api_path" --jq .sha 2>/dev/null)"; then
+              gh api --method PUT "$api_path" -f message="Agent 7: Preserve raw85 SMT candidate provenance" -f content="$encoded" -f branch=main -f sha="$sha"
+            else
+              gh api --method PUT "$api_path" -f message="Agent 7: Preserve raw85 SMT candidate provenance" -f content="$encoded" -f branch=main
+            fi
+          done
           cat im-results/agent21-raw85/smt-candidates.txt >> "$GITHUB_STEP_SUMMARY"
+          cat im-results/agent21-raw85/smt-candidates-provenance.md >> "$GITHUB_STEP_SUMMARY"
       - name: Generate raw85 destination-checked sibling tree
         run: |
           set -euo pipefail
