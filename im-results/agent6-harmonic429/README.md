@@ -22,3 +22,7 @@ None of the surviving necessary gates has been shown reachable by the authentic 
 
 [Q0Depth16InverseSieve.md](Q0Depth16InverseSieve.md) and its [C++ reproducer](Q0Depth16InverseSieve.cpp) enumerate the exact inverse branches for the outstanding q0 family against the already source-certified root invariants from Agents 1, 6, and 39. The depth-16 sieve leaves 31,376 residue classes modulo 2^22 (1,004,032 lifts modulo 2^27), and identifies a correction to the older [Q0ResidueCoverage note](../agent1-429-q0-23-7/Q0ResidueCoverage.md): its u=26 mod-64 row substitutes the k residue for u=58. This remains an intermediate computational filter, not a Lean theorem or reachability result. The surviving inverse paths are synthetic candidates; the next step must distinguish genuine blank-root ancestry rather than blindly increasing the modulus.
 
+## Blank-root reset pump (finite computational segment)
+
+[BB429RootResetPump.md](BB429RootResetPump.md) and its [C++ reproducer](BB429RootResetPump.cpp) verify a 3,128,157-cycle (F^{26}E_{\rm odd}) first-return phase on the actual blank-root orbit: ((0,530028452)) at step 149,997,313 returns by repeated 27-step blocks to ((0,805306268)) at step 234,457,552, with the second coordinate increasing by 88 each cycle. This is an exact finite segment and an algebraic macro identity, not an infinite-run or nonhalting proof; the next phase boundary remains open.
+
