@@ -479,6 +479,7 @@ theorem c_stepCleanB_halts (c0 : ℕ) (segs : List (ℕ × ℕ)) (bot : ℕ) (R 
             split at hh
             · next hq1 =>
               set q := minNat cnt bot
+              have hqge : 1 ≤ minNat cnt bot := Nat.ble_eq.mp hq1
               have hqcnt : q ≤ cnt := minNat_le_left cnt bot
               have hqbot : q ≤ bot := minNat_le_right cnt bot
               countTransfer hh
@@ -515,6 +516,7 @@ theorem c_stepCleanB_halts (c0 : ℕ) (segs : List (ℕ × ℕ)) (bot : ℕ) (R 
               split at hh
               · next hq1 =>
                 set q := minNat cnt (bot / (r + 1))
+                have hqge : 1 ≤ minNat cnt (bot / (r + 1)) := Nat.ble_eq.mp hq1
                 have hqcnt : q ≤ cnt := minNat_le_left cnt _
                 have hqdiv : q ≤ bot / (r + 1) := minNat_le_right cnt _
                 have hqmul : q * (r + 1) ≤ bot :=
@@ -674,6 +676,7 @@ theorem c_stepCleanDR0_halts (c0 : ℕ) (segs : List (ℕ × ℕ)) (bot : ℕ) (
             split at hh
             · next hq1 =>
               set q := minNat rz bot
+              have hqge : 1 ≤ minNat rz bot := Nat.ble_eq.mp hq1
               have hqrz : q ≤ rz := minNat_le_left rz bot
               have hqbot : q ≤ bot := minNat_le_right rz bot
               countTransfer hh
@@ -714,16 +717,30 @@ theorem c_rleStep_halts (s : RleFullState) (n : Nat) (hh : StateHaltsAt target_t
     | none =>
       rw [hpk] at hh
       cases mode with
-      | B => countUse c_stepRawB_halts items R n hh
-      | BR => countUse c_stepRawBR_halts items R n hh
-      | DR0 => countUse c_stepRawDR0_halts items R n hh
-      | C => countUse c_stepRawC_halts items R n hh
+      | B => 
+        countPrep
+        simpa [evalRle, evalStackCfg1, decLState] using c_stepRawB_halts items R n hh
+      | BR => 
+        countPrep
+        simpa [evalRle, evalStackCfg1, decLState] using c_stepRawBR_halts items R n hh
+      | DR0 => 
+        countPrep
+        simpa [evalRle, evalStackCfg1, decLState] using c_stepRawDR0_halts items R n hh
+      | C => 
+        countPrep
+        simpa [evalRle, evalStackCfg1, decLState] using c_stepRawC_halts items R n hh
   | clean c0 segs bot =>
     dsimp only at hh
     cases mode with
-    | B => countUse c_stepCleanB_halts c0 segs bot R n hh
-    | BR => countUse c_stepCleanBR_halts c0 segs bot R n hh
-    | DR0 => countUse c_stepCleanDR0_halts c0 segs bot R n hh
+    | B => 
+        countPrep
+        simpa [evalRle, evalStackCfg1, decLState] using c_stepCleanB_halts c0 segs bot R n hh
+    | BR => 
+        countPrep
+        simpa [evalRle, evalStackCfg1, decLState] using c_stepCleanBR_halts c0 segs bot R n hh
+    | DR0 => 
+        countPrep
+        simpa [evalRle, evalStackCfg1, decLState] using c_stepCleanDR0_halts c0 segs bot R n hh
     | C =>
       countTransfer hh
       simp [evalRle, evalStackCfg1, decLState, decL_unpackClean]
