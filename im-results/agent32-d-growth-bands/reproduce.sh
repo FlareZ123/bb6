@@ -24,7 +24,7 @@ for mod in Boundary OneSidedRank OneSidedCertificate OneSidedBounds OneSidedSour
 done
 
 if [[ -n "${EXTRA_MODULES:-}" ]]; then
-  export LEAN_PATH="$PWD:$here/../agent26-d-phase-bands:$here/../agent36-cryptid-trace"
+  export LEAN_PATH="$PWD:$here/../agent26-d-phase-bands:$here/../agent36-cryptid-trace:${LEAN_PATH:-}"
   IFS=',' read -ra extra_modules <<< "$EXTRA_MODULES"
   for extra_module in "${extra_modules[@]}"; do
     cp "$here/../agent36-cryptid-trace/$extra_module" "$work/$extra_module"
