@@ -1,0 +1,151 @@
+import AffineConeKernel
+import Root32HighStopP7
+import Root32HighStopIndexMap
+import Lean.Elab.Tactic.Omega
+
+set_option maxHeartbeats 4000000
+set_option maxRecDepth 65536
+
+namespace BB6.Agent19Root32Cone
+open BB6.Agent13AffineCone
+open BB6.Agent46
+open BB6.Agent3Root32HighStopIntegrated (RunReach run_parent_of_left_gt5)
+
+/-- Specialize the already sound, complete-parent affine-cone checker to
+    the literal blank-section run of the corrected root32 reduction. -/
+theorem run_cone_excluded (f : Nat) (ray : Ray) (h : excluded f ray=true)
+    (s : Nat) : ¬RunReach (ray.x.eval s) (ray.y.eval s) := by
+  apply excluded_sound RunReach ?_ ?_ f ray h s
+  · intro x y hx hy hr
+    obtain ⟨a,k,hp,hedge⟩ := run_parent_of_left_gt5 x y hx hr
+    exact ⟨a,k,hp,(complete_section_inverse a k x y (by omega)).mp hedge⟩
+  · intro x y hy ho hs hr
+    rcases hr with ⟨n,hn⟩
+    cases n with
+    | zero => simp [BB6.Agent8Section.run] at hn; omega
+    | succ n =>
+      have hi := BB6.Agent3.blank_section_odd_image n x y hn hy ho
+      omega
+
+def residualRay (ax bx ay by_ b m : Nat) : Ray :=
+  ⟨⟨ax*m,ax*b+bx⟩,⟨ay*m,ay*b+by_⟩⟩
+
+@[simp] theorem residualRay_x (ax bx ay by_ b m s : Nat) :
+    (residualRay ax bx ay by_ b m).x.eval s=ax*(b+m*s)+bx := by
+  simp [residualRay,Linear.eval,Nat.mul_add,Nat.mul_assoc]
+  omega
+
+@[simp] theorem residualRay_y (ax bx ay by_ b m s : Nat) :
+    (residualRay ax bx ay by_ b m).y.eval s=ay*(b+m*s)+by_ := by
+  simp [residualRay,Linear.eval,Nat.mul_add,Nat.mul_assoc]
+  omega
+
+def d0Ray (b m : Nat) : Ray :=
+  residualRay 1469153280 393975148 2788638720 747814654 b m
+
+def lRay (b m : Nat) : Ray :=
+  residualRay 5065196640 1358307257 990617040 265648583 b m
+
+def pRay (b m : Nat) : Ray :=
+  residualRay 1376399640 369101882 2835015540 760251268 b m
+
+def threeExcluded (f b m : Nat) : Bool :=
+  excluded f (d0Ray b m) && excluded f (lRay b m) && excluded f (pRay b m)
+
+/-- All three corrected residuals are discharged simultaneously,
+    without assuming the erroneous old two-residual reduction. -/
+theorem three_excluded_sound (f b m s : Nat) (h : threeExcluded f b m=true) :
+    ¬(RunReach (1469153280*(b+m*s)+393975148) (2788638720*(b+m*s)+747814654) ∨
+      RunReach (5065196640*(b+m*s)+1358307257) (990617040*(b+m*s)+265648583) ∨
+      RunReach (1376399640*(b+m*s)+369101882) (2835015540*(b+m*s)+760251268)) := by
+  simp only [threeExcluded,Bool.and_eq_true] at h
+  intro hr
+  rcases hr with hd | hl | hp
+  · exact (run_cone_excluded f (d0Ray b m) h.1.1 s) (by simpa [d0Ray] using hd)
+  · exact (run_cone_excluded f (lRay b m) h.1.2 s) (by simpa [lRay] using hl)
+  · exact (run_cone_excluded f (pRay b m) h.2 s) (by simpa [pRay] using hp)
+
+/-- Generic exact-root high-stop exclusion for any successful
+    all-three-residual affine certificate. -/
+theorem root32_no_highstop_of_t (r E u f b m : Nat)
+    (hr64 : r%64=32)
+    (hE : E=201+3360*(6657+8192*r))
+    (hroot : 18018+211*u+22155*r=20*2^(E-13))
+    (hcone : threeExcluded f b m=true)
+    (hparam : ∃ s, u=1802+6720*(b+m*s)) :
+    ¬RunReach (1048576*u+70538) 3 := by
+  intro hT
+  obtain ⟨t,hu,hr⟩ := BB6.Agent3Root32HighStopP7.root32_highstop_reduces_to_three_residuals
+    r E u hr64 hE hroot hT
+  obtain ⟨s,hs⟩ := hparam
+  have ht : t=b+m*s := by omega
+  rw [ht] at hr
+  exact three_excluded_sound f b m s hcone hr
+
+/-- Nine accepted affine cylinders selected from the prior root32 families.
+    Pairs are (modulus, residue). The list is checked by kernel reduction. -/
+def certificates : List (Nat × Nat) :=
+  [(16,1),(2048,47),(8192,559),(256,31),(8192,7183),(8192,2575),
+   (1024,159),(8192,719),(8192,7839)]
+
+def certOK (p : Nat × Nat) : Bool :=
+  decide (0<p.1 ∧ p.2<p.1 ∧ 8192%p.1=0) && threeExcluded 24 p.2 p.1
+
+theorem certificates_checked : certificates.all certOK=true := by decide
+
+/-- The root-index predicate uses the already proved relation
+    (t+j)%8192=3780, with j=r/64. -/
+def coveredJ (j : Nat) : Bool :=
+  certificates.any (fun p => (j+p.2)%p.1 == 3780%p.1)
+
+private theorem cancel_mod_right (x y j m : Nat) (hm : 0<m)
+    (h : (x+j)%m=(y+j)%m) : x%m=y%m := by
+  let c := m-j%m
+  have hj : j%m+c=m := Nat.add_sub_of_le (Nat.le_of_lt (Nat.mod_lt _ hm))
+  have hc (z : Nat) : ((z+j)%m+c)%m=z%m := by
+    rw [←Nat.add_mod_mod z j m,Nat.mod_add_mod,Nat.add_assoc,hj,Nat.add_mod_right]
+  exact (hc x).symm.trans ((congrArg (fun z => (z+c)%m) h).trans (hc y))
+
+/-- All-time exclusion of the actual high-stop target, for the certified
+    root-index union. No bound is imposed on the blank orbit or j. -/
+theorem root32_no_highstop (r E u : Nat)
+    (hr64 : r%64=32)
+    (hE : E=201+3360*(6657+8192*r))
+    (hroot : 18018+211*u+22155*r=20*2^(E-13))
+    (hc : coveredJ (r/64)=true) : ¬RunReach (1048576*u+70538) 3 := by
+  intro hT
+  obtain ⟨t,hu,hr⟩ := BB6.Agent3Root32HighStopP7.root32_highstop_reduces_to_three_residuals
+    r E u hr64 hE hroot hT
+  let j := r/64
+  have hrj : r=32+64*j := by
+    have he := Nat.mod_add_div r 64
+    rw [hr64] at he
+    exact he.symm
+  have hE30 : 30≤E := by omega
+  have heq := BB6.Agent3Root32HighStopIndexMap.root32_original_to_tj u r t j E hE30 hu hrj hroot
+  have hmod := BB6.Agent3Root32HighStopIndexMap.root32_tj_mod8192 t j E hE30 heq
+  obtain ⟨p,hmem,hp⟩ := List.any_eq_true.mp hc
+  have hpc := List.all_eq_true.mp certificates_checked p hmem
+  simp only [certOK,Bool.and_eq_true,decide_eq_true_eq] at hpc
+  obtain ⟨⟨hm,hb,hd⟩,hcone⟩ := hpc
+  have hdiv : p.1 ∣ 8192 := Nat.dvd_of_mod_eq_zero hd
+  have htj : (t+j)%p.1=3780%p.1 := by
+    rw [←Nat.mod_mod_of_dvd (t+j) hdiv,hmod]
+  have hp' : (j+p.2)%p.1=3780%p.1 := beq_iff_eq.mp hp
+  have hcancel : (t+j)%p.1=(p.2+j)%p.1 := by
+    rw [Nat.add_comm p.2 j,hp']; exact htj
+  have ht : t%p.1=p.2 := by
+    rw [cancel_mod_right t p.2 j p.1 hm hcancel,Nat.mod_eq_of_lt hb]
+  have hte : t=p.2+p.1*(t/p.1) := by
+    have hh := Nat.mod_add_div t p.1
+    rw [ht] at hh
+    exact hh.symm
+  rw [hte] at hr
+  exact three_excluded_sound 24 p.2 p.1 (t/p.1) hcone hr
+
+#print axioms run_cone_excluded
+#print axioms three_excluded_sound
+#print axioms certificates_checked
+#print axioms root32_no_highstop_of_t
+#print axioms root32_no_highstop
+end BB6.Agent19Root32Cone

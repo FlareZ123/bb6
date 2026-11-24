@@ -42,6 +42,11 @@ on:
         required: false
         type: boolean
         default: false
+      root32_cone_only:
+        description: 'Compile simultaneous corrected root32 three-residual affine-cone closure'
+        required: false
+        type: boolean
+        default: false
       w11_q11_only:
         description: 'Compile the W11 q=11 mod128 exact-source composition and print axiom profiles, then stop'
         required: false
@@ -85,6 +90,11 @@ jobs:
         run: |
           python3 tools/lean_compile_closure.py im-results/agent3-c-bounce-inverse/U5B2Root32.lean \
             --workdir /tmp/root32-closure --jobs 4 --lean "$(command -v lean)"
+      - name: Compile root32 three-residual affine-cone closure
+        if: ${{ inputs.root32_cone_only }}
+        run: |
+          python3 tools/lean_compile_closure.py im-results/agent19-c-odd-dyadic/Root32ConeClosure.lean \
+            --workdir /tmp/root32-cone-closure --jobs 4 --lean "$(command -v lean)"
       - name: Compile W11 q11 exact source closure
         if: ${{ inputs.w11_q11_only }}
         run: |
@@ -106,7 +116,7 @@ jobs:
           python3 tools/lean_compile_closure.py im-results/agent3-c-bounce-inverse/OddZSecondParentFan.lean \
             --workdir /tmp/odd-even-fan-closure --jobs 4 --lean "$(command -v lean)"
       - name: Verify against original unmodified section and bounce source
-        if: ${{ !inputs.root32_only && !inputs.w11_q11_only && !inputs.a4_t719_only && !inputs.r_q3_only && !inputs.odd_even_fan_only && !inputs.forced_cylinder_only }}
+        if: ${{ !inputs.root32_only && !inputs.root32_cone_only && !inputs.w11_q11_only && !inputs.a4_t719_only && !inputs.r_q3_only && !inputs.odd_even_fan_only && !inputs.forced_cylinder_only }}
         run: |
           mkdir -p /tmp/a3-bounce
           cp im-results/agent11-c-line/CLine.lean /tmp/a3-bounce/
