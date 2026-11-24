@@ -13,6 +13,7 @@ namespace BB6Coverage.Agent48M1OddResidueOneHeadBound
 
 open BB6Coverage
 open BB6Coverage.Agent48Champion
+open BB6Coverage.Agent6Q4Prefix
 open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent8CountedReset
 open BB6Coverage.Agent8Q4Suffix
@@ -52,7 +53,7 @@ private theorem m1One_bridge_prefix_lower
     (hd : run tm2 j ⟨3,h,T⟩ = some d) :
     h-7 ≤ d.head := by
   obtain ⟨e,hexact⟩ :=
-    fRun_prefix_exists m1OddQ4Bridge_exact (by omega)
+    fRun_prefix_exists (k := j) m1OddQ4Bridge_exact (by omega)
   have hcheckj :
       (List.range j).all (fun k =>
         match fRun tm2 k m1OddQ4BridgeStart with
@@ -92,8 +93,8 @@ private theorem E_scan_prefix_head
     exact hlinear i (by omega)
   have hrun := E_scan T h j hlinearJ
   rw [hrun] at hd
-  have heq := Option.some.inj hd
-  simp at heq
+  have heqHead : h + (j:Int) = d.head := by
+    simpa using congrArg (fun c : Config => c.head) (Option.some.inj hd)
   omega
 
 /-- Every head in the 32+12*a fixed n=1 q4 prefix is at least
@@ -140,7 +141,7 @@ theorem m1OddResidueOne_q4_prefix_head_bound
   have hmatch0 := m1OneQ4Bridge_input_match 3 a b h (by omega)
   have hmatch : ∀ y, m1OneQ4Inside y = true →
       T1 (hN+y) = decide (y ∈ m1OddQ4BridgeStart.marked) := by
-    simpa [T1,hN] using hmatch0
+    simpa [T1,hN,N,T] using hmatch0
   have hBridge := bridgeAt T1 hN m1OneQ4Inside
     m1OddQ4BridgeStart m1OddQ4BridgeEnd 29 rfl
     m1OddQ4Bridge_exact m1OneQ4Bridge_heads hmatch
