@@ -71,6 +71,15 @@ jobs:
           lean -o im-results/agent7-far/WeightedTNFBridge.olean im-results/agent7-far/WeightedTNFBridge.lean
           lean -o im-results/agent6-fresh-glider/FreshRayGlider.olean im-results/agent6-fresh-glider/FreshRayGlider.lean
           lean -o im-results/agent7-far/FARWeightedTNFExample.olean im-results/agent7-far/FARWeightedTNFExample.lean
+      - name: Verify canonical-audit to weighted-TNF bridge
+        if: inputs.target == 'weighted-first-one'
+        run: |
+          set -euo pipefail
+          python tools/lean_compile_closure.py --workdir /tmp/a7-canonical-tnf --jobs 8 im-results/agent7-far/CanonicalTNFBridge.lean | tee /tmp/a7-canonical-tnf.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a7-canonical-tnf.log; then
+            echo "Forbidden proof placeholder or native_decide found in canonical-TNF closure" >&2
+            exit 1
+          fi
           lean -o im-results/agent13-weighted-first-one/WeightedTNFExamples.olean im-results/agent13-weighted-first-one/WeightedTNFExamples.lean
           lean im-results/agent13-weighted-first-one/WeightedFirstOneCover.lean
 
