@@ -1,10 +1,4 @@
-"""Generate and cross-check the raw85 / F1=1RA four-hole sibling.
-
-The underlying generator is Agent31's source-checked four-hole sibling
-pipeline. This wrapper changes only the root partial table and output
-directory, keeps modules isolated, records missing exact DFA keys, and emits
-a Lean equality check for the path-built parent.
-"""
+"""Generate and cross-check the raw85 / F1=1RA four-hole sibling."""
 from collections import Counter
 from pathlib import Path
 import sys
@@ -15,7 +9,6 @@ import generate_four_hole_sibling as sibling
 
 OUTPUT_DIR = Path(__file__).resolve().parent / "raw85"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-
 sibling.ROOT = OUTPUT_DIR
 sibling.PARENT = "1RB---_1RC1LF_0RD---_1LD1RE_---0LB_---1RA"
 
@@ -46,7 +39,7 @@ for i in reversed(range(12)):
 
 base_path = OUTPUT_DIR / "FourHoleSiblingBase.lean"
 source = base_path.read_text()
-marker = "\\nend BB6.Agent31FourHoleSibling\\n"
+marker = "\nend BB6.Agent31FourHoleSibling\n"
 diagnostic = f"""
 def sourceParent : PartialMachine := fun s => {expr}
 
@@ -59,4 +52,4 @@ theorem wideParent_matches_sourceParent : wideParent = sourceParent := by
 """
 if marker not in source:
     raise RuntimeError("Could not locate sibling namespace footer")
-base_path.write_text(source.replace(marker, "\\n" + diagnostic + marker))
+base_path.write_text(source.replace(marker, "\n" + diagnostic + marker))
