@@ -19,9 +19,9 @@ Qed.
 Lemma zero_path_run (t : TM) q k r :
   zero_path t q k r -> multistep t k (q,tape0) (r,tape0).
 Proof.
-  intro H. induction H.
+  intro H. induction H as [q|q q' z d k Hact Htail IH].
   - constructor.
-  - eapply multistep_S; [exact (@zero_step t q d q' Hact)|assumption].
+  - eapply multistep_S; [exact (@zero_step t q d q' Hact)|exact IH].
 Qed.
 
 (* If the first nonzero write remains in the same state, the machine
