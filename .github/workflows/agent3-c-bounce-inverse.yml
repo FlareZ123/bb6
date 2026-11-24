@@ -48,7 +48,7 @@ on:
         type: boolean
         default: false
       odd_even_fan_only:
-        description: 'Compile the exact generic odd/even non-power source-parent fan against FullSectionInverse, then stop'
+        description: 'Compile the generic odd/even fan and the odd-z second-generation parent fan, then stop'
         required: false
         type: boolean
         default: false
@@ -83,7 +83,7 @@ jobs:
       - name: Compile exact odd/even non-power source-parent fan
         if: ${{ inputs.odd_even_fan_only }}
         run: |
-          python3 tools/lean_compile_closure.py im-results/agent3-c-bounce-inverse/OddEvenNonPowerParentFan.lean \
+          python3 tools/lean_compile_closure.py im-results/agent3-c-bounce-inverse/OddZSecondParentFan.lean \
             --workdir /tmp/odd-even-fan-closure --jobs 4 --lean "$(command -v lean)"
       - name: Verify against original unmodified section and bounce source
         if: ${{ !inputs.root32_only && !inputs.a4_t719_only && !inputs.r_q3_only && !inputs.odd_even_fan_only }}
