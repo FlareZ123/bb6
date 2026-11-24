@@ -23,6 +23,26 @@ archives = {
             "BB429HighTransfer.lean": "812c9af88041a8e16a9b08b986e6607a5e1ca41748ea5f934ca813ddba74ebbe",
         },
     ),
+    "highcomplete.tar.xz.b64": (
+        "105d246cd4a69a78c5152f805511017a22c49f482dd505796a64ebe66a3db7a5",
+        {
+            "BB429HighTrue.lean": "8d570043b334b9ccadeb04267bd1392ad26a452b53ba392e24d317fcbc551d43",
+            "BB429ElevenDivisor.lean": "6fbaeeb96e2e155dd37b6b096fb443af0b2249087ab9129ccaedfb42d66f97ed",
+            "BB429ZeroTrueDivisor.lean": "57c55986b5dde6c45a2251be8dd03b5b80a99bf96fc2c9de739e8ac3fa189d5e",
+            "BB429ElevenHigh.lean": "ea2db7517e845233d33b655c3012949577e87be28845d43d2b98c8dd4438d5e0",
+            "BB429ZeroHigh.lean": "7260171f7ac35d3003a11c1224889ae4c41bad39611593fe1099fc00af752546",
+            "BB429HighComplete.lean": "ff530f50b2dc669433e5166f4a270f3e8eca7fc3418bc7718d3b9cb42bde6f9f",
+            "BB429LowCounterexample.lean": "394596eb3979555dafc92188e05a1a8bbc60db922ab47db9a318b93ccadcab3d",
+        },
+    ),
+    "fastwide.tar.xz.b64": (
+        "a8323620bc816885193c1ef072134e8ad2f4dac31a1d6f7182d86433f731e293",
+        {
+            "BB429FastReplay.lean": "6b020e000be82545e2c5978756d617a06ce9c13c36f3d642d14bdc8963a3b852",
+            "BB429FastBinary.lean": "e0319cff5431a98198d8b236d8c280bfc1f3808d2972e1c1e9e2d5f9a1b0469a",
+            "rank_return_wide.cpp": "d8502edf6dc4726af7016dd454c95f4a35187d42882fb4ad758e831a42dec518",
+        },
+    ),
 }
 for filename, (archive_digest, expected) in archives.items():
     raw = base64.b64decode((root / filename).read_text())
