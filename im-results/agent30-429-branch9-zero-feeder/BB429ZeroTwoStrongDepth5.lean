@@ -3,7 +3,6 @@ import BB429Even16
 import BB429RootEven8
 import BB429ZeroTwoThree
 import Lean.Elab.Tactic.Omega
-import Lean.Elab.Tactic.Ring
 
 /-!
 # Strong signed root filter for the branch-9 zero-two feeder
@@ -146,14 +145,15 @@ private theorem near_upper (N : Nat) (q qrep k : Int)
     Near (scale 5) qrep (2*qrep+2)
       (12*(2:Int)^N+q) (24*(2:Int)^N+2*q+2) := by
   have hs : scale 5 = (2:Int)^11 := by decide
+  have hs2 : scale 5 = 2048 := by rfl
   have hp : (2:Int)^N = scale 5*(2:Int)^(N-11) := by
     rw [hs, ← Int.pow_add, show 11+(N-11)=N by omega]
   refine ⟨12*(2:Int)^(N-11)+k,12*(2:Int)^(N-11)+k,?_,?_⟩
-  · have hleft : (12*(2:Int)^N+q)-qrep = 12*(2:Int)^N+(q-qrep) := by ring
+  · have hleft : (12*(2:Int)^N+q)-qrep = 12*(2:Int)^N+(q-qrep) := by omega
     rw [hleft,hp,hres]
     ring
   · have hleft : (24*(2:Int)^N+2*q+2)-(2*qrep+2) =
-        24*(2:Int)^N+2*(q-qrep) := by ring
+        24*(2:Int)^N+2*(q-qrep) := by omega
     rw [hleft,hp,hres]
     ring
 
@@ -162,15 +162,16 @@ private theorem near_odd (N : Nat) (q qrep k : Int)
     Near (scale 5) (qrep+4) (2*qrep+5)
       (12*(2:Int)^N+q+4) (24*(2:Int)^N+2*q+5) := by
   have hs : scale 5 = (2:Int)^11 := by decide
+  have hs2 : scale 5 = 2048 := by rfl
   have hp : (2:Int)^N = scale 5*(2:Int)^(N-11) := by
     rw [hs, ← Int.pow_add, show 11+(N-11)=N by omega]
   refine ⟨12*(2:Int)^(N-11)+k,12*(2:Int)^(N-11)+k,?_,?_⟩
   · have hleft : (12*(2:Int)^N+q+4)-(qrep+4) =
-        12*(2:Int)^N+(q-qrep) := by ring
+        12*(2:Int)^N+(q-qrep) := by omega
     rw [hleft,hp,hres]
     ring
   · have hleft : (24*(2:Int)^N+2*q+5)-(2*qrep+5) =
-        24*(2:Int)^N+2*(q-qrep) := by ring
+        24*(2:Int)^N+2*(q-qrep) := by omega
     rw [hleft,hp,hres]
     ring
 
