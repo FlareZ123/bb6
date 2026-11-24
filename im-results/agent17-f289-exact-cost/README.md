@@ -9,7 +9,7 @@
 | `1RB0RE_1RC0RA_0LD0LB_0LA1LE_1LC1LF_0LA---` | 932242535661307148726923126800831715518673957228 | 932242535661307148726923126800831715518673957229 |
 | `1RB1RF_0RC0RE_0RD1RA_1LE0LA_1LB0LD_0RD---` | 111579188581812927653348117002306046024821208051411619955580898884568781 | 111579188581812927653348117002306046024821208051411619955580898884568782 |
 
-Both numbers are independently reproduced by BigInt replay and Lean evaluation of the accelerated RLE states. All ten checkpoint cost equalities were accepted locally by the Lean kernel (4.36.0-rc2; `propext` only), and the pinned-source audit [45370740330](https://github.com/FlareZ123/bb6/actions/runs/45370740330) accepted the counted primitive rules for both machines. The full primitive-step certificate is still conditional on successful source compilation of the macro/dispatcher/concatenation proof. The corrected combined source audit is [45372456012](https://github.com/FlareZ123/bb6/actions/runs/45372456012).
+Both numbers are independently reproduced by BigInt replay and Lean evaluation of the accelerated RLE states. All ten checkpoint cost equalities were accepted locally by the Lean kernel (4.36.0-rc2; `propext` only), and the pinned-source audit [45370740330](https://github.com/FlareZ123/bb6/actions/runs/45370740330) accepted the counted primitive rules for both machines. The combined source audit [45372456012](https://github.com/FlareZ123/bb6/actions/runs/45372456012) rejected four raw dispatcher branches because `countPrep` unfolded costs on only one side, then encountered a stack overflow. The revised dispatcher preserves the same opaque branch cost on both sides. The original coarse chunks are subdivided into 56 kernel-checkable 20-batch edges (19 and 37); independent BigInt replay agrees with every original coarse checkpoint, cost, and both totals. A local Lean 4.36.0-rc2 model accepted the restricted simplification pattern, but full pinned-source compilation is pending (local GitHub DNS unavailable).
 
 These scores are less than $2^{160}$ and $2^{237}$ respectively; neither is a new champion candidate.
 
@@ -40,17 +40,17 @@ The counted relation `ReachesIn M n a b` specifies exactly n successful primitiv
 * Pin upstream `google-deepmind/cryptids@3647718b5df22e1a61462dec0376bd204526285a`, Lean 4.36.0-rc2 and matching Mathlib.
 * [RleCountedAtoms.lean](RleCountedAtoms.lean): original-source primitive rule proofs and machine-specific initial conditions.
 * [RleCountedMacros.lean](RleCountedMacros.lean), [RleDispatchCosts.lean](RleDispatchCosts.lean), [RleCountedDispatch.lean](RleCountedDispatch.lean): uniform counted contractions and backward exact-halt theorem.
-* [RleCountedRoots.lean](RleCountedRoots.lean): original checkpoint states, kernel-reducible cost equalities, exact root composition.
+* [RleCountedRoots.lean](RleCountedRoots.lean): original checkpoint states, 56 smaller run and cost equalities, exact root composition. [generate_micro_checkpoints.js](generate_micro_checkpoints.js) regenerates the same file idempotently and checks all original boundaries.
 * [RleExactTransfer.lean](RleExactTransfer.lean): canonical source-machine step semantics.
-* [RleCountedAll.lean](RleCountedAll.lean): combined audit source, after compiling RleCostAlgebra and RleCountedAtoms.
+* [RleCountedAll.lean](RleCountedAll.lean): compatibility import and final axiom profiles; the existing audit now compiles each dependency separately and gives root reductions a larger thread stack.
 * [replay_exact_cost.js](replay_exact_cost.js), [exact-candidate-counts.json](exact-candidate-counts.json), [RleStandaloneCompute.lean](RleStandaloneCompute.lean): independent executable checks and exact candidate counts. Executable replay by itself does not prove the original machine's primitive cost.
 
 ## Global frontier integration
 
 The locally kernel-checked [AuditRaiseBound.lean](AuditRaiseBound.lean) proves that changing an audit's predicate to a weaker one preserves every open leaf and the exact count report. This applies in particular to raising a primitive-score cutoff from 6 to $2^{237}$.
 
-[RleCoverageGraft.lean](RleCoverageGraft.lean) and [RleFrontierGraft.lean](RleFrontierGraft.lean) are the source-dependent integration: transfer the two literal-machine scores into BB6Coverage, raise the existing six-root audit's bound, remove both singleton cylinders, prove exact residual open-set equivalence, and transfer exactly two units from open mass to certified mass. Their combined manual audit has been submitted using the existing shared source-audit workflow, with `verify_six_root_graft=true` and `verify_f289_exact_graft=true`. Until this succeeds, the exact leaf closure is not certified.
+[RleCoverageGraft.lean](RleCoverageGraft.lean) and [RleFrontierGraft.lean](RleFrontierGraft.lean) are the source-dependent integration: transfer the two literal-machine scores into BB6Coverage, raise the existing six-root audit's bound, remove both singleton cylinders, prove exact residual open-set equivalence, and transfer exactly two units from open mass to certified mass. The revised audit uses the existing shared source-audit workflow, with `verify_six_root_graft=true` and `verify_f289_exact_graft=true`. Until this succeeds, the exact leaf closure is not certified.
 
 ## Remaining obligation
 
-Complete the source check and repair any remaining elaboration failures. If accepted, the two root certificates close two previously open *local frontier* leaves and strengthen the score-aware classification. All other open leaves remain, and the complete universal upper bound and champion exact score remain separate obligations.
+Complete the source check and repair any remaining elaboration failures. If accepted, the two root certificates close two previously open *local frontier* leaves and strengthen the score-aware classification. All other open leaves remain. The champion's exact score has been separately established; the universal upper bound remains open.

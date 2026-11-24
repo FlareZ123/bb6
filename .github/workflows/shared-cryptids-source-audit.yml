@@ -365,7 +365,7 @@ jobs:
             BusyBeaver.BB6.Halt.M_1RB0RE_1RC0RA_0LD0LB_0LA1LE_1LC1LF_0LAHHH \
             BusyBeaver.BB6.Halt.M_1RB1RF_0RC0RE_0RD1RA_1LE0LA_1LB0LD_0RDHHH
           src="$GITHUB_WORKSPACE/im-results"
-          for m in RleCostAlgebra RleCountedAtoms RleCountedAll AuditRaiseBound RleCoverageGraft RleFrontierGraft; do
+          for m in RleCostAlgebra RleCountedAtoms RleCountedMacros RleDispatchCosts RleCountedDispatch RleCountedRoots RleExactTransfer RleCountedAll AuditRaiseBound RleCoverageGraft RleFrontierGraft; do
             cp "$src/agent17-f289-exact-cost/$m.lean" BB6Agent42/
           done
           cp "$src/agent4-coverage-smoke/CryptidsHaltIff.lean" BB6Agent42/
@@ -373,9 +373,11 @@ jobs:
             cp "$src/agent8-coverage-contract/$m.lean" BB6Agent42/
           done
           export LEAN_PATH=BB6Agent42
-          for m in RleCostAlgebra RleCountedAtoms RleCountedAll CryptidsHaltIff AuditRaiseBound AuditReportMeasure IncrementalAuditReport RleCoverageGraft RleFrontierGraft; do
+          for m in RleCostAlgebra RleCountedAtoms RleCountedMacros RleDispatchCosts RleCountedDispatch RleCountedRoots RleExactTransfer RleCountedAll CryptidsHaltIff AuditRaiseBound AuditReportMeasure IncrementalAuditReport RleCoverageGraft RleFrontierGraft; do
             log="/tmp/cryptids-source-audit/$m.log"
-            lake env lean -o "BB6Agent42/$m.olean" "BB6Agent42/$m.lean" 2>&1 | tee "$log"
+            opts=()
+            if [[ "$m" == RleCountedRoots ]]; then opts=(-j 1 -s 131072); fi
+            lake env lean "${opts[@]}" -o "BB6Agent42/$m.olean" "BB6Agent42/$m.lean" 2>&1 | tee "$log"
             if grep -Eq 'sorryAx|native_decide' "$log"; then
               echo "::error::forbidden axiom or native_decide in $m"
               exit 1
