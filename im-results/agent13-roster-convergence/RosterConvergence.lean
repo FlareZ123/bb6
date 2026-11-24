@@ -1,5 +1,14 @@
 import FourHoleResidualRoster
-import BlockPumpCoverage
+import RecursiveResidual
+import DepthEightSiblingData1
+import DepthEightSiblingData2
+import DepthEightSiblingData3
+import DepthEightSiblingData4
+import C1Growth
+import BlockPumpData1
+import BlockPumpData2
+import BlockPumpData3
+import BlockPumpData4
 
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
@@ -10,9 +19,47 @@ open BB6Coverage BB6.Agent13BlankDelay BB6.Agent50TNFPilot
 open BB6.Agent50RootFrontier
 open BB6.Agent31FourHoleRoster
 open BB6.Agent50RecursiveResidual
+open BB6Coverage.Agent50Pump
 
-/-- First exceptional table from the generated nested-pump catalogue,
-    with the Boolean parameter set to false. -/
+/-- Reassemble the checked depth-eight sibling data without importing the
+    coverage wrapper whose soundness proof currently has a Lean defect. -/
+def siblingData : List CheckedTree :=
+  siblingData1 ++ siblingData2 ++ siblingData3 ++ siblingData4
+
+def localReplaceResidual (t : PackedTable) : List PackedTable :=
+  match siblingData.find? (fun e => decide (e.table = t)) with
+  | none => [t]
+  | some e => e.tree.packedResiduals (unpackTable t)
+
+def refinedRootRoster : List PackedTable :=
+  reducedRootRoster.flatMap fun e => localReplaceResidual e.2
+
+/-- The six growth tables are the four one-hole sweeps and two triple sweeps
+    already defined in C1Growth. -/
+def growthTables : List PackedTable :=
+  ([0,1,2,3] : List (Fin 4)).map
+    (fun i => packTable (BB6Coverage.Agent50OnesSweep.table i)) ++
+  [ packTable (BB6Coverage.Agent50TripleSweep.table false),
+    packTable (BB6Coverage.Agent50TripleSweep.table true) ]
+
+def growthCovered (t : PackedTable) : Bool :=
+  growthTables.any (fun g => decide (g = t))
+
+def finalRootRoster : List PackedTable :=
+  refinedRootRoster.filter (fun t => !growthCovered t)
+
+/-- Reassemble the 98 checked block-pump data entries without importing
+    BlockPumpCoverage's theorem layer. -/
+def pumpRoster : List CheckedPump :=
+  pumpRoster1 ++ pumpRoster2 ++ pumpRoster3 ++ pumpRoster4
+
+def pumpCovered (t : PackedTable) : Bool :=
+  pumpRoster.any (fun w => decide (w.table = t))
+
+def dataPumpedRootRoster : List PackedTable :=
+  finalRootRoster.filter (fun t => !pumpCovered t)
+
+/-- First exceptional table from the nested-pump catalogue, Boolean false. -/
 def nestedFalse : PackedTable :=
   [ some (some ⟨true,true,1⟩),
     some (some ⟨false,false,2⟩),
@@ -27,8 +74,7 @@ def nestedFalse : PackedTable :=
     none,
     some (some ⟨false,false,0⟩) ]
 
-/-- Second exceptional table from the generated nested-pump catalogue,
-    with the Boolean parameter set to true. -/
+/-- Second exceptional table from the nested-pump catalogue, Boolean true. -/
 def nestedTrue : PackedTable :=
   [ some (some ⟨true,true,1⟩),
     some (some ⟨false,false,2⟩),
@@ -43,7 +89,7 @@ def nestedTrue : PackedTable :=
     none,
     some (some ⟨false,false,0⟩) ]
 
-/-- Third exceptional table from the generated two-block-growth catalogue. -/
+/-- Third exceptional table from the two-block-growth catalogue. -/
 def doubleGrow : PackedTable :=
   [ some (some ⟨true,true,1⟩),
     some (some ⟨true,false,0⟩),
@@ -58,27 +104,23 @@ def doubleGrow : PackedTable :=
     none,
     some (some ⟨false,false,0⟩) ]
 
-/-- These are data exclusions only.  No exceptional-pump theorem is used
-    in the convergence or soundness proofs below. -/
+/-- Data exclusions only; no exceptional-pump nonhalting theorem is used. -/
 def exceptionalTables : List PackedTable :=
   [nestedFalse, nestedTrue, doubleGrow]
 
 def exceptionalCovered (t : PackedTable) : Bool :=
   exceptionalTables.any (fun e => decide (e = t))
 
-/-- Reconstruct the 124-table manifest without importing the current
-    ExceptionalPumps proof module (whose never lemmas are not accepted). -/
 def canonicalResidualRoster : List PackedTable :=
-  pumpedRootRoster.filter (fun t => !exceptionalCovered t)
+  dataPumpedRootRoster.filter (fun t => !exceptionalCovered t)
 
 /-- Agent31's frontier, losslessly packed into the common twelve-slot
-    representation used by the Agent50 recursive certificate. -/
+    representation used by Agent50's recursive certificate. -/
 def agent31PackedRoster : List PackedTable :=
   remainingRootRoster.map fun e => packTable e.2
 
-/-- The two independently constructed residual frontiers are exactly the
-    same finite set of partial transition tables.  This is checked by kernel
-    computation over all twelve slots, not by hashes or cardinalities. -/
+/-- Exact equality of the two independently generated residual frontiers,
+    checked over all twelve transition slots by kernel computation. -/
 theorem agent31PackedRoster_perm_canonicalResidualRoster :
     List.Perm agent31PackedRoster canonicalResidualRoster := by
   decide
@@ -87,20 +129,21 @@ theorem canonicalResidualRoster_count :
     canonicalResidualRoster.length = 124 := by
   decide
 
-/-- Transfer the sharper 395 weighted bound from the seven-edge proof to
-    the canonical Agent50 roster.  The roster equality is the only bridge:
-    no exceptional nonhalting claim is used. -/
+/-- Transfer Agent31's checked 395 weighted bound to the canonical roster.
+    The proof uses only Agent31's soundness theorem and the table permutation;
+    it does not depend on Agent50's current coverage-wrapper theorems. -/
 theorem canonicalResidualRoster_sound_395 :
-    ∀ m, compatible root m → WeightedBound 395 m ∨
+    ∀ m, compatible BB6.Agent50TNFPilot.root m →
+      WeightedBound 395 m ∨
       ∃ q ∈ canonicalResidualRoster, compatible (unpackTable q) m := by
   intro m hm
   rcases remainingRootRoster_sound m hm with hbound | ⟨e, he, hc⟩
   · exact Or.inl hbound
   · have hpack : packTable e.2 ∈ agent31PackedRoster := by
       exact List.mem_map.mpr ⟨e, he, rfl⟩
-    have hclosed : packTable e.2 ∈ canonicalResidualRoster :=
+    have hcanonical : packTable e.2 ∈ canonicalResidualRoster :=
       (List.Perm.mem_iff agent31PackedRoster_perm_canonicalResidualRoster).mp hpack
-    exact Or.inr ⟨packTable e.2, hclosed, by
+    exact Or.inr ⟨packTable e.2, hcanonical, by
       simpa only [unpack_packTable] using hc⟩
 
 #print axioms agent31PackedRoster_perm_canonicalResidualRoster
