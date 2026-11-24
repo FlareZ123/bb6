@@ -16,21 +16,32 @@ jobs:
         run: node --version
       - name: Reproduce six-level suffix renormalization and quotient counterexamples
         run: |
-          set -o pipefail
+          set -euo pipefail
           node im-results/agent5-s4-nested-depth6/s4_nested_depth6.mjs | tee im-results/agent5-s4-nested-depth6/g-level-run.json
-      - name: Commit exact G-level scan output
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add im-results/agent5-s4-nested-depth6/g-level-run.json
-          if git diff --cached --quiet; then
-            echo "No output change"
-          else
-            git commit -m "Agent 5: preserve G-level barrier scan output"
-            git push origin HEAD:main
-          fi
       - name: Preserve exact output
         uses: actions/upload-artifact@v4
         with:
           name: agent5-s4-depth6-reproduction
           path: im-results/agent5-s4-nested-depth6/g-level-run.json
+      - name: Commit exact G-level scan output
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add im-results/agent5-s4-nested-depth6/g-level-run.json
+          if git diff --cached --quiet; then
+            echo "No output change"
+            exit 0
+          fi
+          git commit -m "Agent 5: preserve G-level barrier scan output"
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            sleep $((attempt * 5))
+          done
+          echo "Could not publish output after rebasing on latest main" >&2
+          exit 1
