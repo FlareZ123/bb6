@@ -6,6 +6,39 @@ namespace BB6.Agent11ModularStrictness
 
 open BB6.Agent42ModularCone
 
+/-- The older Agent 11 predicate already rejects (20,3): its late-depth
+    three-cone has the exact candidate depth r=5. -/
+theorem late_candidate_20_3 :
+    BB6.Agent11LateDepthGate.candidateAllowedBool 20 3 = true := by
+  decide
+
+theorem late_allowed_20_3_false :
+    BB6.Agent11LateDepthGate.allowedBool 20 3 = false := by
+  simp [BB6.Agent11LateDepthGate.allowedBool, late_candidate_20_3]
+
+theorem late_wrapper_not_allowed_20_3 :
+    ¬ BB6.Agent11LateFastWrapper.highAllowed 20 3 := by
+  intro h
+  have hallowed : BB6.Agent11LateDepthGate.allowedBool 20 3 = true := h.2
+  rw [late_allowed_20_3_false] at hallowed
+  contradiction
+
+theorem diagonal_late_not_allowed_20_3 :
+    ¬ BB6.Agent11DiagonalLate.highAllowed 20 3 := by
+  intro h
+  exact late_wrapper_not_allowed_20_3 h.1
+
+theorem m0deep_not_allowed_20_3 :
+    ¬ BB6.Agent11DiagonalM0DeepFull.highAllowed 20 3 := by
+  intro h
+  exact diagonal_late_not_allowed_20_3 h.1.1
+
+theorem old_high_allowed_20_3_false :
+    ¬ BB6.Agent11SixAll.highAllowed 20 3 := by
+  intro h
+  unfold BB6.Agent11SixAll.highAllowed BB6.Agent11SixCriterion.highAllowed at h
+  exact m0deep_not_allowed_20_3 h.1
+
 /-- The full Boolean/phase high predicate admits the C58 all-depth
     residue-family representative (j,m)=(215,3) before modular filtering. -/
 theorem full_bool_high_allowed_215_3 :
