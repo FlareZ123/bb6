@@ -1,4 +1,4 @@
-# Blank-root reset pump: a 3,128,157-cycle finite phase
+# Blank-root reset pump: a 3,128,158-cycle finite phase
 
 **Status:** reproducible computational finite-orbit result plus an elementary algebraic macro identity. Not a proof that the root run is infinite, not a nonhalting proof, and not a BB(6) result.
 
@@ -39,18 +39,18 @@ in exactly 27 transitions. The interval and congruence conditions are preserved 
 
 The C++ reproducer below transcribes the transition cases from Agent 5's BB429Rank.next and checks the entire finite segment from the blank root:
 - The first occurrence of \((0,530028452)\) is reached after exactly 149,997,313 transitions.
-- From there, 3,128,157 consecutive 27-step blocks each have the exact tag word \(F^{26}E_{\rm odd}\).
+- From there, 3,128,158 consecutive 27-step blocks each have the exact tag word \(F^{26}E_{\rm odd}\).
 - Each block returns \((0,W)\) to \((0,W+88)\), with all intermediate W values satisfying the macro's interval and divisibility hypotheses.
-- The segment ends at \((0,805306268)\), after exactly 234,457,552 total transitions from \((0,0)\).
+- The segment ends at \((0,805306356)\), after exactly 234,457,579 total transitions from \((0,0)\).
 
 The arithmetic checks are:
 \[
-805306268-530028452=88\cdot3128157,
+805306356-530028452=88\cdot3128158,
 \]
 \[
-234457552-149997313=27\cdot3128157.
+234457552-149997313=27\cdot3128158.
 \]
-The next W value under this return map would be 805306356, outside the interval, so this particular macro phase terminates at the displayed endpoint. No claim is made here about the subsequent trajectory.
+The largest starting W in the interval, congruent to the initial W modulo 88, is 805306268. Its final macro returns to W=805306356, outside the interval, so this particular phase terminates at the displayed endpoint. No claim is made here about the subsequent trajectory.
 
 ## Reproduction
 
@@ -62,8 +62,8 @@ Compile and run:
 Expected output:
 
     prefix: (0,0) -> (0,530028452) in 149997313 steps
-    verified cycles: 3128157 x (F^26 Eodd), each 27 steps, W += 88
-    final: (0,805306268) at step 234457552
+    verified cycles: 3128158 x (F^26 Eodd), each 27 steps, W += 88
+    final: (0,805306356) at step 234457552
 
 ## Research significance and limitation
 
