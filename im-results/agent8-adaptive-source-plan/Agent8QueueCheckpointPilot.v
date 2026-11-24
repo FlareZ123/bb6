@@ -1,7 +1,8 @@
 From BusyCoq Require Import Enumerate62 Agent8QueueCheckpoint Agent8AdaptiveSource.
-From Coq Require Import List NArith.
+From Coq Require Import List NArith Strings.String.
 Import ListNotations.
 Import TNF_Node.
+Open Scope string_scope.
 
 (* One source update from a two-node slice, so the result is not drained. *)
 Definition pilot_input := q_i 0 2.
@@ -39,6 +40,7 @@ Qed.
 Print Assumptions pilot_checkpoint_exact.
 Print Assumptions pilot_remaining_active.
 Print Assumptions pilot_resume_exact.
+Set Printing Depth 10000.
 Set Printing Width 120.
 Print pilot_data.
 Print pilot_resumed_data.

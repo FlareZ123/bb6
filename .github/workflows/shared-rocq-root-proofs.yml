@@ -15,6 +15,8 @@ on:
           - enumerate62-q0-count
           - enumerate62-q0-partition
           - enumerate62-adaptive-checkpoint
+          - enumerate62-adaptive-expansion
+          - enumerate62-packed-chunk
           - enumerate62-chunk-probe
           - enumerate62-chunk-probe-native
           - enumerate62-q0-verdicts
@@ -25,6 +27,11 @@ on:
         default: 0
       size:
         description: 'Source q0 chunk size (probe only; 1..100)'
+        required: false
+        type: number
+        default: 1
+      fuel:
+        description: 'Exact finite source-update fuel (packed-chunk only)'
         required: false
         type: number
         default: 1
@@ -49,7 +56,7 @@ jobs:
           path: original
           persist-credentials: false
       - name: Checkout research repository proof artifact
-        if: inputs.target == 'enumerate62-decider-sound' || inputs.target == 'enumerate62-q0-partition' || inputs.target == 'enumerate62-adaptive-checkpoint'
+        if: inputs.target == 'enumerate62-decider-sound' || inputs.target == 'enumerate62-q0-partition' || inputs.target == 'enumerate62-adaptive-checkpoint' || inputs.target == 'enumerate62-adaptive-expansion' || inputs.target == 'enumerate62-packed-chunk'
         uses: actions/checkout@v4
         with:
           repository: FlareZ123/bb6
@@ -70,13 +77,15 @@ jobs:
           cp "$GITHUB_WORKSPACE/research/im-results/agent32-source-queue/Agent32SourceEncoding.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent8-adaptive-source-plan/Agent8AdaptiveSource.v" original/verify/
       - name: Add independent adaptive checkpoint proof and pilot
-        if: inputs.target == 'enumerate62-adaptive-checkpoint'
+        if: inputs.target == 'enumerate62-adaptive-checkpoint' || inputs.target == 'enumerate62-adaptive-expansion' || inputs.target == 'enumerate62-packed-chunk'
         run: |
           cp "$GITHUB_WORKSPACE/research/im-results/agent32-source-queue/Agent32SourceBackwards.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent32-source-queue/Agent32SourceEncoding.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent8-adaptive-source-plan/Agent8AdaptiveSource.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent8-adaptive-source-plan/Agent8QueueCheckpoint.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent8-adaptive-source-plan/Agent8QueueCheckpointPilot.v" original/verify/
+          cp "$GITHUB_WORKSPACE/research/im-results/agent8-adaptive-source-plan/Agent8PackedRoot.v" original/verify/
+          cp "$GITHUB_WORKSPACE/research/im-results/agent8-adaptive-source-plan/Agent8QueueExpansionPilot.v" original/verify/
       - name: Generate project dependencies with VM fallback
         working-directory: original/verify
         run: |
@@ -95,6 +104,8 @@ jobs:
             enumerate62-q0-count|enumerate62-chunk-probe|enumerate62-chunk-probe-native|enumerate62-q0-verdicts) make -f Makefile.coq -j 2 Enumerate62.vo ;;
             enumerate62-q0-partition) make -f Makefile.coq -j 2 Agent32Q0Partition.vo Agent32SourceDrain.vo Agent32SourceCoverage.vo Agent32SourceEncoding.vo Agent8AdaptiveSource.vo ;;
             enumerate62-adaptive-checkpoint) make -f Makefile.coq -j 2 Agent8QueueCheckpointPilot.vo ;;
+            enumerate62-adaptive-expansion) make -f Makefile.coq -j 2 Agent8QueueExpansionPilot.vo ;;
+            enumerate62-packed-chunk) make -f Makefile.coq -j 2 Agent8PackedRoot.vo Agent8AdaptiveSource.vo ;;
           esac
       - name: Print final original theorem assumptions
         working-directory: original/verify
@@ -196,3 +207,48 @@ jobs:
           Time Eval vm_compute in verdicts.
           COQ
           timeout 600s coqc -Q . BusyCoq -native-compiler no Agent32Q0Verdicts.v
+
+      - name: Export and certify exact finite-fuel source queue
+        if: inputs.target == 'enumerate62-packed-chunk'
+        working-directory: original/verify
+        env:
+          OFFSET: ${{ inputs.offset }}
+          SIZE: ${{ inputs.size }}
+          FUEL: ${{ inputs.fuel }}
+        run: |
+          set -euo pipefail
+          [[ "$OFFSET" =~ ^[0-9]+$ && "$SIZE" =~ ^[0-9]+$ && "$FUEL" =~ ^[0-9]+$ ]]
+          (( OFFSET < 12820 && SIZE >= 1 && SIZE <= 12820 - OFFSET && FUEL <= 1000000 ))
+          cat > Agent8PackedChunk.v <<COQ
+          From BusyCoq Require Import Enumerate62 Agent8QueueCheckpoint Agent8PackedRoot.
+          From Coq Require Import List NArith Strings.String.
+          Import ListNotations.
+          Import TNF_Node.
+          Open Scope string_scope.
+          Definition chunk_input := q_i $OFFSET $SIZE.
+          Definition chunk_fuel : N := $FUEL%N.
+          Time Definition chunk_data := Eval vm_compute in
+            encode_queue (SearchQueue_upds decider chunk_input chunk_fuel).
+          Theorem chunk_data_exact :
+            SearchQueue_upds decider chunk_input chunk_fuel = decode_queue chunk_data.
+          Proof.
+            apply source_checkpoint_decode.
+            - apply checkpoint_chunk_canonical.
+            - vm_compute. reflexivity.
+          Qed.
+          Print Assumptions chunk_data_exact.
+          Set Printing Depth 100000.
+          Set Printing Width 120.
+          Print chunk_data.
+          COQ
+          timeout 1200s coqc -Q . BusyCoq -native-compiler no Agent8PackedChunk.v 2>&1 | tee chunk-data.txt
+      - name: Preserve full proof-bearing chunk export
+        if: inputs.target == 'enumerate62-packed-chunk'
+        uses: actions/upload-artifact@v4
+        with:
+          name: source-packed-chunk
+          path: |
+            original/verify/Agent8PackedChunk.v
+            original/verify/Agent8PackedChunk.vo
+            original/verify/chunk-data.txt
+          if-no-files-found: error
