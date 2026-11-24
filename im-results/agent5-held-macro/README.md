@@ -28,6 +28,17 @@ The stop rows record arrival at E1; the remaining right ray includes that scanne
 
 Each of the four printed axiom sets contains only propext, Classical.choice and/or Quot.sound. No source bridge or nonhalting theorem is claimed.
 
-## Next step
+## Stronger reachable-state theorem
 
-Seek a closed right-language invariant that excludes the two E1 patterns. Finite simulations suggest adjacent pairs of ones occur only near the head, with strong state-specific positions. Gap sequence 1 then 3 (pattern 1010001) appears to be restricted to A0 at offset 1. These are hypotheses, not theorems. Ordinary bounded forward/backward window abstractions, and one-sided stack-language saturations using the left grammar plus small left suffixes, admitted spurious stops. A refined relational language is needed. The exact macro rules considerably simplify this task. Once a closed invariant exists, bridge the Nat tape model to the original BusyCoq/source-weighted certificate before removing this held obligation.
+HeldStrong.lean imports HeldMacro and proves, for every reachable macro boundary:
+
+* The far-to-near left word belongs to GoodL: adding a 1 is always allowed, while adding a 0 requires the previous word not to end in 00 or 1001. In particular, the nonblank left word has neither 000 nor 10010 as a factor.
+* B has nearest-first right prefix b10, and D has b01, where b is the currently scanned bit.
+* At B0 and D0 the left residue modulo 8 is not 4.
+* Every reachable stopping macro has state A (macroReach_stop_A). Thus B011 is impossible, as is B00, and A0011 is the sole remaining stopping pattern.
+
+The proof uses the exact affine macro table, a finite 3 x 2 x 32 symbolic check, and inductive preservation of GoodL. Both original and new files were compiled locally with Lean 4.36.0-rc2; the three printed axiom sets for the new file contain only propext, Classical.choice and Quot.sound. This is an all-time statement about the exact independent Nat model, not a source certificate or a proof of nonhalting.
+
+## Remaining problem
+
+Exclude A0011 by an inductive right-language invariant or a complete symbolic sweep argument, then transfer the result to the original BusyCoq/source-weighted certificate. Finite simulations suggest adjacent right ones occur only near the head, with state-specific positions; gap sequence 1 then 3 (1010001) appears only in a special A0 context. These are hypotheses, not theorems. Bounded windows, sampled local-factor grammars and sampled two-ray NFA safety games admit spurious stops. Increasing their bounds without a new relational invariant has not resolved the obstruction.
