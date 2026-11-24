@@ -13,6 +13,7 @@ on:
           - both
           - enumerate62-decider-sound
           - enumerate62-q0-count
+          - enumerate62-q0-partition
 permissions:
   contents: read
 jobs:
@@ -34,7 +35,7 @@ jobs:
           path: original
           persist-credentials: false
       - name: Checkout research repository proof artifact
-        if: inputs.target == 'enumerate62-decider-sound'
+        if: inputs.target == 'enumerate62-decider-sound' || inputs.target == 'enumerate62-q0-partition'
         uses: actions/checkout@v4
         with:
           repository: FlareZ123/bb6
@@ -45,6 +46,9 @@ jobs:
         if: inputs.target == 'enumerate62-decider-sound'
         run: |
           cp "$GITHUB_WORKSPACE/research/im-results/agent5-weighted-tnf-queue/Agent5Enumerate62DeciderSound.v" original/verify/
+      - name: Add source q0 partition theorem
+        if: inputs.target == 'enumerate62-q0-partition'
+        run: cp "$GITHUB_WORKSPACE/research/im-results/agent32-source-queue/Agent32Q0Partition.v" original/verify/
       - name: Generate project dependencies with VM fallback
         working-directory: original/verify
         run: |
@@ -61,6 +65,7 @@ jobs:
             both) make -f Makefile.coq -j 2 Sk1Machines_v2.vo SOMDCv10.vo ;;
             enumerate62-decider-sound) make -f Makefile.coq -j 2 Enumerate62.vo Agent5Enumerate62DeciderSound.vo ;;
             enumerate62-q0-count) make -f Makefile.coq -j 2 Enumerate62.vo ;;
+            enumerate62-q0-partition) make -f Makefile.coq -j 2 Agent32Q0Partition.vo ;;
           esac
       - name: Print final original theorem assumptions
         working-directory: original/verify
