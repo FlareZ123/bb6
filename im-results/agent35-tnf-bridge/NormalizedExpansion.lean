@@ -1,36 +1,28 @@
-import Symmetry
+def swapFun (a b s : Fin 6) : Fin 6 :=
+  if s = a then b else if s = b then a else s
 
-namespace BB6Coverage
+theorem swapFun_involutive (a b s : Fin 6) :
+    swapFun a b (swapFun a b s) = s := by
+  by_cases hab : a = b
+  · subst b
+    simp [swapFun]
+  · by_cases hsa : s = a
+    · subst s
+      simp [swapFun, hab]
+    · by_cases hsb : s = b
+      · subst s
+        simp [swapFun, hab]
+      · simp [swapFun, hsa, hsb, hab]
 
-/-- A transposition of two state labels, used to move an unused successor
-    state to the least unused label without changing the blank root. -/
 def swapStatePerm (a b : Fin 6) : StatePerm where
-  forward := fun s => if s = a then b else if s = b then a else s
-  backward := fun s => if s = a then b else if s = b then a else s
+  forward := swapFun a b
+  backward := swapFun a b
   leftInverse := by
     intro s
-    by_cases hab : a = b
-    · subst b
-      simp [swapStatePerm]
-    · by_cases hsa : s = a
-      · subst s
-        simp [swapStatePerm, hab]
-      · by_cases hsb : s = b
-        · subst s
-          simp [swapStatePerm, hab]
-        · simp [swapStatePerm, hsa, hsb, hab]
+    exact swapFun_involutive a b s
   rightInverse := by
     intro s
-    by_cases hab : a = b
-    · subst b
-      simp [swapStatePerm]
-    · by_cases hsa : s = a
-      · subst s
-        simp [swapStatePerm, hab]
-      · by_cases hsb : s = b
-        · subst s
-          simp [swapStatePerm, hab]
-        · simp [swapStatePerm, hsa, hsb, hab]
+    exact swapFun_involutive a b s
 
 theorem swapStatePerm_fix_below (m : Nat) (a b s : Fin 6)
     (ha : m ≤ a.val) (hb : m ≤ b.val) (hs : s.val < m) :
@@ -73,9 +65,37 @@ theorem renameNeverHalts_iff (e : StatePerm) (m : Machine)
 theorem renameHaltsAfter_iff (e : StatePerm) (m : Machine)
     (hroot : e.forward (0 : Fin 6) = 0) (n : Nat) :
     HaltsAfter (renameTable e m) n ↔ HaltsAfter m n := by
-  have h := rename_haltsAt_iff e m (0 : Fin 6) n
-  rw [hroot] at h
-  simpa [HaltsAfter, HaltsAfterAt, blankAt_zero] using h
+  have hblank : renameConfig e blank = blank := by
+    simp [renameConfig, blank, hroot]
+  have hrun : ∀ k, run (renameTable e m) k blank =
+      (run m k blank).map (renameConfig e) := by
+    intro k
+    simpa [hblank] using (rename_run e m blank k)
+  constructor
+  · intro h
+    constructor
+    · have hn := h.1
+      rw [hrun n] at hn
+      cases hr : run m n blank with
+      | none => simp [hr] at hn
+      | some c => simp [hr]
+    · have hn := h.2
+      rw [hrun (n + 1)] at hn
+      cases hr : run m (n + 1) blank with
+      | none => simp [hr]
+      | some c => simp [hr] at hn
+  · intro h
+    constructor
+    · have hn := h.1
+      rw [hrun n]
+      cases hr : run m n blank with
+      | none => simp [hr] at hn
+      | some c => simp [hr]
+    · have hn := h.2
+      rw [hrun (n + 1)]
+      cases hr : run m (n + 1) blank with
+      | none => simp [hr]
+      | some c => simp [hr] at hn
 
 theorem renameDecidedBelow_iff (B : Nat) (e : StatePerm) (m : Machine)
     (hroot : e.forward (0 : Fin 6) = 0) :
