@@ -1,6 +1,6 @@
 # Compact forward reset-path certificate: #746 fatal indices through 10,000
 
-**Established locally in Lean 4.36.0-rc2:** no height `4*2^n-n-4` for any `n≤10000` is reachable from 2 in the arithmetic Edge relation, whose definition is identical to `CascadeResetInverse.ResetParent`. The checker uses ordinary kernel `by decide`, not native_decide, and the final theorem has exactly [propext, Quot.sound]. The separate original-source adapter is written but must be compiled against the pinned upstream dependencies before reporting the raw-TM theorem as accepted. This is a bounded fatal-index exclusion, not a decision of #746.
+**Original-source accepted (24 November 2026):** no height `4*2^n-n-4` for any `n≤10000` is reachable from the blank-root reset height 2. The arithmetic certificate uses ordinary kernel `by decide`, and `OriginalGate10001.lean` now compiles against the unmodified upstream six-state machine at Cryptids revision `c86f15861709b76042998c5211c7b2f83991621b`. The raw-machine halting equivalence requires `n≥10001`, with `n mod 6∈{4,5}`. This is a bounded fatal-index exclusion; the unbounded family and #746 remain open.
 
 ## Mathematical mechanism
 
@@ -24,6 +24,6 @@ In this directory, with Lean 4.36.0-rc2:
 
 The locally completed run generated 12,884 successful resets in 101 blocks, endpoint bit length 10,003, 312,970 bytes of generated Lean source. Certificate compilation took about 14 seconds in the local container. The certificate is generated deterministically instead of checked in as a large source file. Core and bound were compiled cleanly; the generated prefix theorem depends on propext and the exclusion theorem on propext and Quot.sound. A 50,000-index attempt with 512-reset blocks did not complete within the local tool timeout; it is not an accepted stronger bound.
 
-`OriginalGate10001.lean` contains the definitional grammar bridge, conversion of source ResetChain to Path, and the strengthened original raw machine gate (10001≤n). **This adapter is not yet source-compiled.** Existing source-accepted OriginalGate268 remains the maintained original-machine bound until this adapter passes its actual upstream compile and axiom audit.
+The original-source run [45336867924](https://github.com/FlareZ123/bb6/actions/runs/45336867924), research commit `3cdfd2ce44bcc47d68466cbbb17566d021b04b51`, built unmodified upstream with Lean 4.35.0-rc4 and accepted the complete adapter. Its log reports no axioms for `edge_iff_source`; `[propext, Quot.sound]` for `no_fatal_through_10000`; and `[propext, Classical.choice, Quot.sound]` for both `source_no_fatal_through_10000` and `original_machine_halts_iff_surviving_10001`. No `sorryAx` or native-decision axiom occurs in those profiles.
 
-Next: run the focused existing original-source workflow target for the adapter; after acceptance, use block-size tuning and sharded certificates to extend the bound without repeated inverse enumeration. The all-index existential remains open; the bounded certificate is useful for finite pruning but does not replace an all-time rooted invariant.
+Next: use batched same-level even resets and sharded certificates for a stronger finite bound, and develop an all-time invariant for the resulting accelerated level-entry map. The existing original-source theorem now supersedes OriginalGate268 for the bounded gate.
