@@ -1,5 +1,32 @@
 # Cryptid D: original-source packet closure, 3-adic lifting, and zero-marker recursion
 
+
+## Current root-level frontier (24 November 2026)
+
+The highest-value next step is now to connect the arbitrary-suffix section-return theorem to the four authentic blank roots, rather than expanding another isolated packet-residue catalogue.
+
+**Source-wide return estimate.** Agent 32's [global source spatial-growth dossier](../agent32-d-growth-bands/README.md) reports a Lean-checked theorem `section_bands` for every original-source F/0 section `Section(n,v)`, with n≥2 and v empty or beginning in 0. At a positive time the unchanged machine either reaches frozen state 6 or returns exactly to another such section `Section(n',v')), with
+
+```text
+8*n ≤ 3*n' + 23
+3*(n' + L(v')) ≤ 8*(n + L(v)) + 135
+```
+
+where L is the trimmed suffix length. This is a positive-time return theorem, **not yet a first-return theorem**; the halt alternative remains explicit.
+
+**Widened phase-band separation.** [`SectionBandSeparation.lean`](SectionBandSeparation.lean) replaces Agent 26's regular-model upper constant 40 by the source-wide constant 135. It proves, in Lean 4.36.0-rc2, that any finite paths satisfying the resulting `Edge135` inequalities from distinct arithmetic anchor/index pairs have different unary lengths. The four existing anchor bands still have strict adjacent gaps (minimum margin 3,522) and all cross-band gaps (minimum margin 777,686). Manual acceptance: [CI 45378809847](https://github.com/FlareZ123/bb6/actions/runs/45378809847); all new theorem axiom profiles are standard `[propext, Quot.sound]` or fewer.
+
+**Root-connection boundary.** The `base` sections used by this separation theorem are Agent 26's *arithmetic DRegular-model anchors* after 10 or 9 modeled returns. `RegularBands.anchor_run` certifies those model computations, not their reachability from the original blank roots. The original-root prefixes to unary seeds 5, 9, 15, 39 are source-certified in [`DAllBlankSource.lean`](DAllBlankSource.lean), but the full bridge to the later arithmetic anchors still requires Agent 35's eleven-row `DRegularSource.SourceContract` in [`DObsSourceCandidate.lean`](../agent35-d-regular-certificate/DObsSourceCandidate.lean). Agent 2's proposed case split uses the already source-checked Agent 37 A-word branches and Agent 32's `RouteAllFront.all_valid_return` for E/B fronts; that composition must be completed and compiled before the anchor paths can be called authentic.
+
+The lack of first-return minimality in `section_bands` does not prevent using its designated positive-time return along a run already known not to halt: the designated endpoint is still reached, while any earlier halt would itself decide that root. It does mean that no first-return or minimal-return claim should be attached to the resulting path.
+
+**Scope:** this is a conditional all-finite-path separation theorem plus an arbitrary-suffix source return estimate. It does not decide whether any of the four roots halts, establish a closed nonhalting invariant, or change a BB(6) bound. The prepared-packet `safeZ` / `safeYPlusK0` results below remain complementary sufficient return criteria, not authentic-root reachability proofs.
+
+### Immediate next action
+
+Close the exact eleven-row `DRegularSource.SourceContract`, connect the source-certified blank prefixes to the four arithmetic anchors, and then instantiate `Edge135` from `section_bands`. Agent 32 is separately pursuing the strict-first-event boundary; avoid duplicating that work. After root paths are genuinely connected, use the remaining halt/return alternatives to seek an actual halt witness or a forward-closed nonhalting invariant.
+
+
 ## New original-source exceptional Y3 packet closure and 3-adic lifting (23 November 2026)
 
 **Scope:** Prepared physical packets of the original Cryptid D six-state machine, not proven blank-reachable. Exact BB(6) and Cryptid D blank-tape halting remain open.
@@ -98,4 +125,4 @@ In particular, `p≡2 mod3` A/E terminal exits and some deeper E-reset chains re
 
 [trace_four_starts.py](trace_four_starts.py) projects 30,000 symbolic return steps from each of four named original blank prefixes and records reproducible digests. Its long projected compositions have no global original-source Lean theorem. The actual-root effort elsewhere in the repository has reached difficult finite exceptional reentries but lacks a universal invariant covering all reachable branches. See [the full log](FULL_RESEARCH_LOG.md) for scope qualifications and exact trace provenance.
 
-**Highest-value next integration:** Apply `safeZ` to a source-certified *authentic blank-origin* packet section, and repair any reachable unsafe A/E p=2 tail by a new original-machine return theorem. A decisive result must establish either finite genuine halting or a globally closed nonhalting invariant, beyond the existence of these synthetic regular reentries.
+**Complementary packet-language priority:** Apply `safeZ` / `safeYPlusK0` only to packet sections that are first shown to be reachable from an authentic blank root, and repair any reachable unsafe A/E p=2 tail with an original-machine return theorem. Rejected sufficient-criterion inputs remain unresolved. This line should support, not replace, the root-level section-return and phase-band programme above.
