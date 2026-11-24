@@ -1,3 +1,7 @@
+## 2026-11-24 23:05 UTC checkpoint
+
+Raw71 complete candidates, bound165: 883 FAR plus 16 standard one-block pump witnesses. Specs committed; regenerate 71, batch future source CI with other new cylinders. Raw79 search found many standard pumps but at least 9 misses; raw67/77/81 bank3 hit 2376/2459, 783/995, 1645/1793. Raw106 source run dispatched. Continue actual new research and check lease timestamp after checkpoint.
+
 ## 2026-11-24 23:02 UTC checkpoint
 
 Raw106 (B1=1RF) complete candidate audit, weighted bound 253. 1307 open leaves resolved by 1305 FAR, one linear sweep and one recursive sweep. Leaf375 required 11-state FAR code 00387840644120516841a13 (base36 after orientation); generator extended to base36. Leaf1113: D(10n+4)->D(10(n+1)+4) in positive time, source Raw106Rec.lean; local checked allA/epoch/entry/growth in Lean 4.36.0-rc2 against copied exact core. New target weighted-tnf-agent10-raw106, Raw106Roster.lean. Three previous five-hole audit source run 45505705187 in progress as of 23:02. Continue remaining five-hole cylinders; raw71 883/899 FAR candidates, raw79 1102/1142, raw77 and 81 partial, raw67 not yet searched. No early lease release.
