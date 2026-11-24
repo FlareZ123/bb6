@@ -41,7 +41,9 @@ private theorem run_mass_mono_aux (n k : Nat) :
       rw [run] at hM'
       cases hm : run (n + k) with
       | none =>
-          have hEq : (none : Option _) = some (.D aa dd) := by
+          have hEq :
+              (none : Option BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState) =
+                some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D aa dd) := by
             simpa only [hm, Option.bind_none] using hM'
           cases hEq
       | some s =>
