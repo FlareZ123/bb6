@@ -4,6 +4,7 @@ From BusyCoq Require Export Agent8ZeroDelay.
 From Coq Require Import List Lia NArith.
 Import ListNotations.
 Import TNF_Node.
+Open Scope nat_scope.
 
 (* Use the original Individual62 relations and source Permute/Enumerate
    lemmas. TC62 has generative copies of the relational constructors; its

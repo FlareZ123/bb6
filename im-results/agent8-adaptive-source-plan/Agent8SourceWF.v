@@ -2,6 +2,7 @@ From BusyCoq Require Import Enumerate62 Individual62 TC62 Eqb.
 From Coq Require Import List Lia NArith Arith.
 Import ListNotations.
 Import TNF_Node.
+Open Scope nat_scope.
 
 (* Actual-source metadata invariant, independent of the abstract Lean queue. *)
 Definition state_index (q : Q) : nat :=
