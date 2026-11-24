@@ -108,7 +108,6 @@ private theorem q4Tail_left_stream
       rw [Agent6Q4Prefix.sideBit_append_right (d0pow (n-1)) ell i
         (by rw [hprefixLen]; exact hge)]
       rw [hprefixLen]
-      simp [j]
     calc
       U.tape (H-(i:Int)) = U.tape x := by rfl
       _ = d0Sweep n T h x := hframe
