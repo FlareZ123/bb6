@@ -39,9 +39,16 @@ theorem r0_facts (s : Nat) (hs : s%2=1) :
   have hy : 6≤r0Y s := by dsimp [r0Y]; omega
   have hxodd := r0X_mod_two s
   have hyeven := r0Y_mod_two s
+  have hconst : 3389315364793+839478963638+1=16*264299645527 := by decide
+  have hcoeff : 4825264211040+1195140423120=16*376275289635 := by decide
   have hH16 : r0H s=16*r0M s := by
-    simp only [r0H,r0X,r0Y,r0M,Nat.mul_add]
-    omega
+    dsimp [r0H,r0X,r0Y,r0M]
+    calc
+      (3389315364793+4825264211040*s)+(839478963638+1195140423120*s)+1
+          =(3389315364793+839478963638+1)+(4825264211040+1195140423120)*s := by omega
+      _=16*264299645527+(16*376275289635)*s := by rw [hconst,hcoeff]
+      _=16*(264299645527+376275289635*s) := by
+        rw [Nat.mul_add,← Nat.mul_assoc]
   have hM5 := r0M_mod_five s
   have hX5 := r0X2Y_mod_five s
   have hM2 := r0M_mod_two s hs
