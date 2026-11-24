@@ -33,3 +33,19 @@ The manual workflow target `weighted-halt-branch` compiles the full weighted fir
 - The axiom audit reports only `propext`, `Classical.choice`, and `Quot.sound` for the generic wrappers and read-one theorems; no `sorryAx` appears.
 
 The local result is source-connected through the existing `WeightedTNFCertificate` and `BlankDelaySource` imports. It is not an upper-bound certificate for the full first-one cylinder.
+
+
+## Importing complete nonhalting machines
+
+`WeightedNonhaltLeafAdapter.lean` adds a generic adapter for an existing full-machine nonhalting proof:
+
+- `forgetHaltRows m` retains every ordinary row and makes every halting row unassigned.
+- Its canonical `weightedTNFDefaultCompletion` is definitionally equal to the original complete machine (m).
+- If (m) never halts, its sparse known run is defined at every finite time. The existing `weightedTNFKnownRunForever_iff` theorem then proves that every compatible completion of the erased table also never halts.
+- `forgetHaltRows_nonhaltCertificate` packages this as a `WeightedTNFCertificate B ... 6` for any 1RB-rooted nonhalting machine, without changing the certificate inductive type.
+
+The adapter passed the Agent13 weighted source-closure workflow [run 46](https://github.com/FlareZ123/bb6/actions/runs/45391368847), with no `sorryAx`.
+
+`CryptidsWeightedLeaves.lean` instantiates the adapter for the six pinned Cryptids nonhalting machines using their existing `literal_r1_never` through `literal_r6_never` proofs. The combined upstream-source/weighted-TNF build is being checked in [shared-source run 46](https://github.com/FlareZ123/bb6/actions/runs/45391698785).
+
+These are standalone certificates for the erased-row cylinders. They do not, by themselves, prove that those cylinders are descendants of a particular canonical first-hole expansion tree; that requires a refinement-path argument or a separate cover/graft composition.
