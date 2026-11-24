@@ -29,30 +29,32 @@ def assignedCount (p : PartialMachine) : Nat :=
 theorem assignedCount_refine {p : PartialMachine} {q : Fin 6} {b : Bool}
     {mv : Move} (hu : p (q, b) = none) :
     assignedCount (refine p (q, b) (some mv)) = assignedCount p + 1 := by
-  cases q using Fin.cases with
-  | zero =>
+  have hq : q.val < 6 := q.isLt
+  by_cases h0 : q.val = 0
+  · have hq0 : q = 0 := Fin.ext h0
+    subst q
+    cases b <;> simp [assignedCount, assignedAtState, refine, hu] <;> omega
+  · by_cases h1 : q.val = 1
+    · have hq1 : q = 1 := Fin.ext h1
+      subst q
       cases b <;> simp [assignedCount, assignedAtState, refine, hu] <;> omega
-  | succ q =>
-    cases q using Fin.cases with
-    | zero =>
+    · by_cases h2 : q.val = 2
+      · have hq2 : q = 2 := Fin.ext h2
+        subst q
         cases b <;> simp [assignedCount, assignedAtState, refine, hu] <;> omega
-    | succ q =>
-      cases q using Fin.cases with
-      | zero =>
+      · by_cases h3 : q.val = 3
+        · have hq3 : q = 3 := Fin.ext h3
+          subst q
           cases b <;> simp [assignedCount, assignedAtState, refine, hu] <;> omega
-      | succ q =>
-        cases q using Fin.cases with
-        | zero =>
+        · by_cases h4 : q.val = 4
+          · have hq4 : q = 4 := Fin.ext h4
+            subst q
             cases b <;> simp [assignedCount, assignedAtState, refine, hu] <;> omega
-        | succ q =>
-          cases q using Fin.cases with
-          | zero =>
+          · by_cases h5 : q.val = 5
+            · have hq5 : q = 5 := Fin.ext h5
+              subst q
               cases b <;> simp [assignedCount, assignedAtState, refine, hu] <;> omega
-          | succ q =>
-            cases q using Fin.cases with
-            | zero =>
-                cases b <;> simp [assignedCount, assignedAtState, refine, hu] <;> omega
-            | succ q => cases q
+            · omega
 
 /-- Ordinary TNF expansion preserves the no-assigned-halt invariant. -/
 theorem weightedTNFNoAssignedHalt_refine (p : PartialMachine) (slot : Slot)
