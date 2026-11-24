@@ -78,7 +78,7 @@ namespace H252
 open BusyBeaver.M_1RB0LD_1LC0RA_1RA1LB_1LA1LE_1RF0LC_HHH0RE
 
 theorem rules : Cap.TripleRules next State.A2 := by
-  constructor <;> intros <;> rfl
+  constructor <;> intros <;> simp [next]
 
 def embed (n : Nat) : State := .A2 0 1 (2*n)
 
@@ -96,7 +96,7 @@ namespace H754
 open BusyBeaver.M_1RB1LC_1RC0LD_1LA0RB_1LB1LE_1RF0LA_HHH0RE
 
 theorem rules : Cap.TripleRules next State.B2 := by
-  constructor <;> intros <;> rfl
+  constructor <;> intros <;> simp [next]
 
 def embed (n : Nat) : State := .B2 0 1 (2*n)
 
