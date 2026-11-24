@@ -132,8 +132,10 @@ jobs:
       - name: Compile normalized TNF expansion soundness
         run: |
           set -eu
-          export LEAN_PATH=im-results/agent8-coverage-contract:im-results/agent35-tnf-bridge
-          lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean
-          lean -o im-results/agent8-coverage-contract/Symmetry.olean im-results/agent8-coverage-contract/Symmetry.lean
-          lean -o im-results/agent35-tnf-bridge/NormalizedExpansion.olean im-results/agent35-tnf-bridge/NormalizedExpansion.lean
-          lean im-results/agent35-tnf-bridge/NormalizedExpansion.lean
+          cd im-results/agent8-coverage-contract
+          lean -o Frontier.olean Frontier.lean
+          lean -o Symmetry.olean Symmetry.lean
+          cd ../agent35-tnf-bridge
+          export LEAN_PATH=../agent8-coverage-contract:.
+          lean -o NormalizedExpansion.olean NormalizedExpansion.lean
+          lean NormalizedExpansion.lean
