@@ -79,7 +79,7 @@ private theorem depth_residue_even (n:Nat)
     calc
       (3:Int)^4=(3:Int)^3*3:=by
         rw [show 4=3+1 by decide,pow_succ]
-      _=(3:Int)*(3:Int)^3:=by ac_rfl
+      _=(3:Int)*(3:Int)^3:=by simp [mul_comm]
   have hz:=Int.dvd_iff_emod_eq_zero.mp h3
   exact (signedZ_mod_three_even_iff n (depthResidue n 3) hn).mp hz
 
@@ -412,7 +412,13 @@ private theorem packet_quotient_mod (n b t dBase dt:Nat)
     simpa [hphysT] using hh
   have hfactor:
       (81:Int)*((dt:Int)-(dBase:Int)+A*t)=
-      81*(dt:Int)-(81*(dBase:Int)-81*A*t):=by omega
+      81*(dt:Int)-(81*(dBase:Int)-81*A*t):=by
+    calc
+      81*((dt:Int)-(dBase:Int)+A*t)
+          =81*((dt:Int)-(dBase:Int))+81*(A*t):=by rw [mul_add]
+      _=81*(dt:Int)-81*(dBase:Int)+81*(A*t):=by rw [mul_sub]
+      _=81*(dt:Int)-(81*(dBase:Int)-81*A*t):=by
+        simp [mul_assoc,sub_eq_add_neg,add_assoc,add_comm,add_left_comm]
   rw [hfactor] at hsub
   have hdiv:(243:Int)∣81*((dt:Int)-(dBase:Int)+A*t):=
     Int.dvd_iff_emod_eq_zero.mpr hsub
@@ -454,7 +460,7 @@ private theorem no_reset_parent_in_ray_gap (n q:Nat)
   · have hdiv:3∣2*q+5:=by
       refine ⟨3^t*d,?_⟩
       rw [hout,Nat.pow_succ]
-      ac_rfl
+      simp [Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm]
     have hzero:(2*q+5)%3=0:=Nat.dvd_iff_mod_eq_zero.mp hdiv
     have hqmod:q%3=2:=by omega
     exact hmod hqmod
