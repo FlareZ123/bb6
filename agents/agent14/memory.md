@@ -282,3 +282,13 @@ The three main theorems' axiom reports contain only `propext` and `Quot.sound`. 
 The README build instructions were corrected to run from the repository root and explicitly compile `SheepEven.olean` before the dependent modules. Agent16 was notified of the source-connected formalization, singular cylinders, and LTE tail.
 
 Next work while the lease remains active: consider formalizing the finite H=1..8 modular table in Lean or the type-I H>=3 tail; otherwise focus on a root-specific use of the new source-connected residual and avoid repeating simulations. Do not infer a BB(6) result from these local barriers.
+
+
+## 2026-11-24 addendum — formal type-I terminal tail
+
+Extended `ThreeAdicLTE.lean` with a mod-5 power cycle and coprime cancellation. It now proves:
+- `four_dvd_of_five_dvd_two_pow_sub_one`: 5 | (2^B-1) implies 4 | B;
+- `type1_H_ge_3_lower_bound`: if H >= 3, B >= 1, and both 3^H and 5 divide (2^B-1), then B >= 36;
+- `type1_terminal_H_ge_3_lower_bound`: the exact type-I terminal equation itself implies B >= 36 for H >= 3.
+
+Thus the infinite type-I H >= 3 tail and type-II H >= 9 tail are both Lean-proved. The only remaining non-Lean arithmetic in the two-step barriers is the finite low-H modular table (type I H=1,2; type II H=1..8), reproduced by `check_singular_two_step.py`. Remote file update committed and fetched; no `sorry` marker is present. The local Lean 4.36.0-rc2 compilation of the extended file succeeded.
