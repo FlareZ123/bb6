@@ -27,7 +27,9 @@ theorem replaceResidual_sound (t : PackedTable) (m : Machine)
   | none =>
     exact Or.inr ⟨t,by simp [replaceResidual,he],hm⟩
   | some e =>
-    have htable : e.table = t := of_decide_eq_true (List.find?_some he)
+    have hp : decide (e.table = t) = true :=
+      List.find?_some (p := fun x : CheckedTree => decide (x.table = t)) he
+    have htable : e.table = t := of_decide_eq_true hp
     have hcheck : e.tree.check 400 (unpackTable t) = true := by
       simpa only [htable] using e.checked
     simpa only [replaceResidual,he] using e.tree.packed_sound 400 (unpackTable t) hcheck m hm
