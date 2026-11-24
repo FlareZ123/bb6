@@ -45,43 +45,45 @@ theorem mass_replicate (n : Nat) (x : Node) :
       rw [ih, Nat.succ_mul]
       omega
 
-def existingChild (x : Node) (h : 2 ≤ x.holes) : Node :=
+def existingChild (x : Node) : Node :=
   { holes := x.holes - 1, cut := x.cut }
 
-def freshChild (x : Node) (h : 2 ≤ x.holes)
-    (hc : x.cut.val < 6) : Node :=
-  { holes := x.holes - 1, cut := ⟨x.cut.val + 1, by omega⟩ }
+/-- Totalized successor label; in the fresh-child branch `cut<6`, so
+modulo 7 is exactly the source's least-fresh label `cut+1`. -/
+def freshChild (x : Node) : Node :=
+  { holes := x.holes - 1
+    cut := ⟨(x.cut.val + 1) % 7, Nat.mod_lt _ (by decide)⟩ }
+
+theorem freshChild_cut (x : Node) (hc : x.cut.val < 6) :
+    (freshChild x).cut.val = x.cut.val + 1 := by
+  simp [freshChild, Nat.mod_eq_of_lt (by omega : x.cut.val + 1 < 7)]
 
 /-- Exact `(holes,cut)` projection of the source's `expand`. -/
-def expandProjection (x : Node) (h : 2 ≤ x.holes) : List Node :=
-  List.replicate (4 * x.cut.val) (existingChild x h) ++
-    (if hc : x.cut.val < 6 then
-      List.replicate 4 (freshChild x h hc)
-    else [])
+def expandProjection (x : Node) : List Node :=
+  List.replicate (4 * x.cut.val) (existingChild x) ++
+    (if x.cut.val < 6 then List.replicate 4 (freshChild x) else [])
 
 /-- Source `expand'`: when one undefined transition remains, there are no
 ordinary children; otherwise use the source expansion. -/
 def expandProjection' (x : Node) (hpos : 1 ≤ x.holes) : List Node :=
   if h : x.holes = 1 then [] else
-    expandProjection x (by
-      have hp : 1 ≤ x.holes := hpos
-      omega)
+    expandProjection x
 
-theorem expandProjection_length (x : Node) (h : 2 ≤ x.holes) :
-    (expandProjection x h).length =
+theorem expandProjection_length (x : Node) :
+    (expandProjection x).length =
       4 * x.cut.val + (if x.cut.val < 6 then 4 else 0) := by
   by_cases hc : x.cut.val < 6
   · simp [expandProjection, hc]
   · simp [expandProjection, hc]
 
-theorem expandProjection_length_le_24 (x : Node) (h : 2 ≤ x.holes) :
+theorem expandProjection_length_le_24 (x : Node) :
     (expandProjection x h).length ≤ 24 := by
   rw [expandProjection_length]
   have hcut : x.cut.val ≤ 6 := by omega
   by_cases hc : x.cut.val < 6 <;> simp [hc] <;> omega
 
 theorem expandProjection_mass_lt (x : Node) (h : 2 ≤ x.holes) :
-    mass (expandProjection x h) < weight x := by
+    mass (expandProjection x) < weight x := by
   let k : Nat := 25 ^ (x.holes - 1)
   have hk : 0 < k := by
     dsimp [k]
@@ -103,17 +105,17 @@ theorem expandProjection_mass_lt (x : Node) (h : 2 ≤ x.holes) :
     Nat.mul_le_mul_right k hcnt
   have hstrict : 24 * k < 25 * k := by omega
   have hcalc :
-      mass (expandProjection x h) =
+      mass (expandProjection x) =
         4 * x.cut.val * k + (if x.cut.val < 6 then 4 * k else 0) := by
     unfold expandProjection
     rw [mass_append, mass_replicate]
     by_cases hc : x.cut.val < 6
-    · rw [dif_pos hc, mass_replicate]
+    · rw [if_pos hc, mass_replicate]
       simp [existingChild, freshChild, weight, k]
-    · rw [dif_neg hc]
+    · rw [if_neg hc]
       simp [mass, existingChild, weight, k]
   calc
-    mass (expandProjection x h)
+    mass (expandProjection x)
         = 4 * x.cut.val * k + (if x.cut.val < 6 then 4 * k else 0) := hcalc
     _ = (4 * x.cut.val + (if x.cut.val < 6 then 4 else 0)) * k := hfactor
     _ ≤ 24 * k := hbound
