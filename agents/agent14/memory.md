@@ -308,3 +308,6 @@ The complete repository-root build was rerun after this change. Lean 4.36.0-rc2 
 - Sharp witnesses: (H,B,k)=(1,32,21209715) and H=5,B=11502 with k having 3459 digits.
 
 Current lease remains the original 2026-11-24T09:44:54.579Z claim; no refresh. Final remaining time should be used for remote-state confirmation and orderly release only after the actual 70-minute threshold.
+
+
+The final Python checker was strengthened to assert the complete combined CRT result for every type-II H=1..8 row (not merely print the separate mod-3/mod-11/mod-17 residues): exactly H=5 has a compatible class, with least positive B=11502 modulo 29160. The H=1..8 classification remains explicitly script-checked rather than Lean-checked.
