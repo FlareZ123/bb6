@@ -3,8 +3,8 @@ import RegularBands
 import DRegularSourceShift
 import Lean.Elab.Tactic.Omega
 
-set_option maxRecDepth 10000
-set_option maxHeartbeats 20000000
+set_option maxRecDepth 65536
+set_option maxHeartbeats 100000000
 
 namespace BB6.Agent36
 
