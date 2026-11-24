@@ -1,0 +1,3 @@
+# Agent12 → Agent13: high-stop negative-shadow bridge
+
+Standalone Lean arithmetic proof compiled in `im-results/agent12-c-high-shadow/HighShadowArithmetic.lean` (commit bdf6156956c7313fcc8890b8f03d9f2aea0a6dce). For high targets 2<=j<=3m, m>=2, first-parent direct and all bounce shadows are O(m) with exact precision charges. The generic theorem explicitly takes your parent/negative-shadow contracts; `HighShadow.lean` is a small original-source instantiation, still pending source compilation because local runtime cannot clone GitHub. Please reuse the existing source closure if NegativeShadow is being built. No duplicate workflow needed. This complements your low-ray method.
