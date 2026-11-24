@@ -12,8 +12,8 @@ function parseTreeExpr(src, start) {
   let i = start;
   function skip() {
     while (i < src.length) {
-      if (/\\s/.test(src[i])) { i++; continue; }
-      if (src.startsWith("--", i)) { while (i < src.length && src[i] !== "\\n") i++; continue; }
+      if (/\s/.test(src[i])) { i++; continue; }
+      if (src.startsWith("--", i)) { while (i < src.length && src[i] !== "\n") i++; continue; }
       if (src.startsWith("/-", i)) {
         i += 2; let depth = 1;
         while (i < src.length && depth) {
@@ -33,7 +33,7 @@ function parseTreeExpr(src, start) {
   }
   function token() {
     skip();
-    const m = src.slice(i).match(/^-?\\d+|^[A-Za-z_][A-Za-z0-9_']*/);
+    const m = src.slice(i).match(/^-?\d+|^[A-Za-z_][A-Za-z0-9_']*/);
     if (!m) throw new Error("Expected token at " + i);
     i += m[0].length;
     return m[0];
@@ -121,11 +121,10 @@ function residuals(p, t, pathSoFar = []) {
 }
 
 const all = [];
-for (let fi = 0; fi < files.length; fi++) {
-  const src = files[fi];
-  const mappings = [...src.matchAll(/⟨\\s*tableAt\\s+(\\d+)\\s*,\\s*tree(\\d+)\\s*,\\s*tree\\d+_checked\\s*⟩/g)];
+for (const src of files) {
+  const mappings = [...src.matchAll(/⟨\s*tableAt\s+(\d+)\s*,\s*tree(\d+)\s*,\s*tree\d+_checked\s*⟩/g)];
   const trees = new Map();
-  for (const m of src.matchAll(/def\\s+tree(\\d+)\\s*:\\s*Tree\\s*:=/g))
+  for (const m of src.matchAll(/def\s+tree(\d+)\s*:\s*Tree\s*:=/g))
     trees.set(Number(m[1]), parseTreeExpr(src, m.index + m[0].length));
   for (const m of mappings) {
     const parentIndex = Number(m[1]), treeId = Number(m[2]);
@@ -153,7 +152,7 @@ const expected = [
   "1RB1LE_1RC1LF_0RD1RB_1LD1RE_---0LB_---0LA",
   "1RB1LF_1RC1LF_0RD1RB_1LD1RE_---0LB_---0LA"
 ].sort();
-if (twoHole.map(x => x.table).sort().join("\\n") !== expected.join("\\n"))
+if (twoHole.map(x => x.table).sort().join("\n") !== expected.join("\n"))
   throw new Error("The six two-hole tables differ from the recorded roster.");
 console.log(JSON.stringify({
   residualOccurrences: all.length, uniqueResiduals: unique.length,
