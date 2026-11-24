@@ -29,7 +29,7 @@ def siblingData : List CheckedTree :=
 def localReplaceResidual (t : PackedTable) : List PackedTable :=
   match siblingData.find? (fun e => decide (e.table = t)) with
   | none => [t]
-  | some e => e.tree.packedResiduals (unpackTable t)
+  | some e => e.tree.packedResiduals (BB6.Agent50RootFrontier.unpackTable t)
 
 def refinedRootRoster : List PackedTable :=
   reducedRootRoster.flatMap fun e => localReplaceResidual e.2
@@ -136,13 +136,13 @@ theorem canonicalResidualRoster_count :
 theorem canonicalResidualRoster_sound_395 :
     ∀ m, compatible BB6.Agent50TNFPilot.root m →
       WeightedBound 395 m ∨
-      ∃ q ∈ canonicalResidualRoster, compatible (unpackTable q) m := by
+      ∃ q ∈ canonicalResidualRoster, compatible (BB6.Agent50RootFrontier.unpackTable q) m := by
   intro m hm
   rcases BB6.Agent31FourHoleRoster.remainingRootRoster_sound m hm with hbound | ⟨e, he, hc⟩
   · exact Or.inl hbound
   · have hpack : BB6.Agent50RootFrontier.packTable e.2 ∈ agent31PackedRoster := by
       exact List.mem_map.mpr ⟨e, he, rfl⟩
-    have hcanonical : packTable e.2 ∈ canonicalResidualRoster :=
+    have hcanonical : BB6.Agent50RootFrontier.packTable e.2 ∈ canonicalResidualRoster :=
       (List.Perm.mem_iff agent31PackedRoster_perm_canonicalResidualRoster).mp hpack
     exact Or.inr ⟨BB6.Agent50RootFrontier.packTable e.2, hcanonical, by
       simpa only [BB6.Agent50RootFrontier.unpack_packTable] using hc⟩
