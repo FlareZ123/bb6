@@ -185,7 +185,12 @@ Proof.
     + cbn [get_SQ].
       destruct (pos_iter_decrease f p q q' Hw E) as [_ Hm].
       destruct (fst q') as [|x xs] eqn:E'; [reflexivity|].
-      pose proof (mass_nonempty (fst q') ltac:(rewrite E'; discriminate)); lia.
+      rewrite E' in Hm.
+      pose proof (mass_nonempty (x :: xs) ltac:(discriminate)) as Hpos.
+      apply (N.lt_irrefl (N.pos p)).
+      eapply N.lt_le_trans.
+      * nia.
+      * eapply N.le_trans; [exact Hm|exact Hfuel].
     + cbn [get_SQ]. eapply pos_iter_inr_empty; exact E.
 Qed.
 
