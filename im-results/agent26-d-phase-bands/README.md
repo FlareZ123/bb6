@@ -82,3 +82,9 @@ Connect the regular initial paths to the source Lean relation. Extend the
 bounds to the generic protected-front evaluator, or identify a counterexample.
 Only then assert unconditional noncoalescence of the actual section orbits.
 Even that conclusion would not establish whether any of the four roots halts.
+
+## Kernel-checked regular-model specialization (2026-11-24)
+
+`RegularBands.lean` imports the actual Agent35 DRegular arithmetic model, restored from its exact source archive. The four anchor values are proved by ordinary kernel `decide` in `anchor_run`. `regular_edge` proves both phase inequalities automatically on every successful regular step for a≥5 (including all eleven successful branch rows); `regular_path` and `regular_disjoint` then give the unbounded phase separation for all surviving regular-model paths. The 39 pre-anchor states are individually distinct, present, and all strictly smaller in unary length than any anchor, by `early_nodup`, `early_survives`, and `early_before_base`. Two early states have equal unary length 289 but different suffixes. This checks anchor arithmetic, not a fresh source-level physical bridge: the existing ERemaining.source_contract and DRegular.transport_obs give the source semantics for successful canonical regular paths. Exceptional returns remain outside this specialization.
+
+Local Lean 4.36.0-rc2 compiled all these theorems with only standard axioms [propext, Classical.choice, Quot.sound]. Reproduce with `bash reproduce-regular.sh` from this directory (Lean on PATH).
