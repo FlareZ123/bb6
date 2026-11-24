@@ -371,13 +371,13 @@ theorem positive_skip_return_cost {j s k x z n : Nat} {w0 w1 : Int}
   have hreturn0 :
       D*((3^(n+1):Int)*w1+3)=(4*D-A)*(P k:Int)-3*D-C := by
     rw [←hqskip]
-    omega
+    simpa [mul_assoc, mul_left_comm, mul_comm] using hrel
   have hreturn :
       D*((3^(n+1):Int)*w1+6)=(4*D-A)*(P k:Int)-C := by
     calc
       D*((3^(n+1):Int)*w1+6)
           =D*((3^(n+1):Int)*w1+3)+3*D := by
-            rw [Int.mul_add]
+            simp only [Int.mul_add]
             omega
       _=(4*D-A)*(P k:Int)-3*D-C+3*D := by rw [hreturn0]
       _=(4*D-A)*(P k:Int)-C := by omega
