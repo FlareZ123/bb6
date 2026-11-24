@@ -2,6 +2,10 @@
 
 **Scope.** This dossier collects original-table TM63 counted sweeps, the S1 binary-decrement/drain interface, and root-connected reset-prefix candidates. It does not establish that TM63 halts, a complete primitive-step score, or a universal six-state upper bound. All uncompiled compositions remain in `im-results/`.
 
+## Enumerate62 queue fuel projection
+
+The separate [Enumerate62 potential note](Enumerate62Potential.md) records a Lean-accepted potential proof for the potential-relevant projection of the upstream queue. It proves that any `q_i(l,sz)` slice drains within the source's `MAXT=2^60` fuel, under the local source fact that a `Halt h` result names an undefined slot. Zero-hole `Unknown` nodes are allowed. This discharges fuel truncation only; it does not prove decider soundness, exact Coq-to-Lean queue equivalence, chunk scheduling/partition, holdout coverage, or a BB(6) upper bound. Keep this in `im-results/`.
+
 ## Strongest established components
 
 ### Original-machine counted sweeps
