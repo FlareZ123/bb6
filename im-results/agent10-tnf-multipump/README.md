@@ -43,3 +43,7 @@ All candidate leaves closed, bound 808. The tree has 1,515 splits including root
 ### Raw 81 (B1=0LF)
 
 All candidate leaves closed, revised bound 1,326. 2,227 splits including root, 40,778 side-cycle, 8,628 original last-halt, 1,648 FAR, 116 one-block, 22 two-block, six long-epoch, and one delayed last-hole leaf (1161: t=1325, E0). The generator supports `late` exact last-hole checks beyond the discovery cutoff; it verifies the table has precisely one missing transition before emitting this proof candidate. The delayed leaf follows a unary recurrence until it reaches E0, so it is not a nonhalting claim. Generate with `python generate.py 81`; source audit pending.
+
+### Raw 79 (B1=1LE)
+
+All candidate leaves closed, revised bound 2,354. 1,164 splits including root, 20,820 side cycles, 4,788 original last holes, 1,104 FAR, 27 one-block, three two-block, two long-epoch, two explicit symbolic growth and four delayed last-hole leaves. Leaf 748 alternates two parity-dependent sweeps and returns from B([], (01)^n) to B([], (01)^(n+5)) for every n>0. Leaf 740 executes a binary counter with three-cell digits 000 and 100; its return B([],1^(3k)0101^b) -> B([],1^(3k+3)0101^(b+2^(k+1))) is proved for all k,b. The blank run enters k=1,b=3 at step 30, so b=2^(k+1)-1 persists. `Raw79Recursive.lean` contains both locally Lean-checked exact return families and source `never_of_growth` bridges. The 2,351-step delayed leaf 58 fixes the weighted bound at 2,354; the original discovery cap was 1,000. Generate with `python generate.py 79`. Source audit pending.
