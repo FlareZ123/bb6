@@ -131,9 +131,10 @@ jobs:
             lean -o im-results/agent5-429-rank/BB429Rank.olean im-results/agent5-429-rank/BB429Rank.lean
             lean -DmaxHeartbeats=10000000 -o im-results/agent6-harmonic429/BB429Mod8.olean im-results/agent6-harmonic429/BB429Mod8.lean
             lean -DmaxHeartbeats=50000000 -DmaxRecDepth=30000 -o im-results/agent6-harmonic429/BB429NewResidue.olean im-results/agent6-harmonic429/BB429NewResidue.lean
-            for m in BB429DyadicTransport BB429DyadicSource BB429Branch9Diagonal; do
+            for m in BB429DyadicTransport BB429DyadicSource BB429Branch9Diagonal BB429Branch9Clip BB429Branch9Cover; do
               lean -o "$d/$m.olean" "$d/$m.lean"
             done
             lean "$d/BB429Branch9J9.lean"
+            lean "$d/BB429Branch9J14.lean"
           } 2>&1 | tee /tmp/branch9-certificate.log
           if grep -q sorryAx /tmp/branch9-certificate.log; then exit 1; fi
