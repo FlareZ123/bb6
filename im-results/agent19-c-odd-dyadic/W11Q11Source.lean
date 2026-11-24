@@ -411,7 +411,7 @@ theorem blank_no_b2_w11_q11 (s : Nat) :
       rw [hv,hz]
       ring
     have hdiv8 : 8∣2^n*(2*a+6) :=
-      Nat.dvd_trans (by norm_num : 8∣16) hdiv16
+      Nat.dvd_trans (by decide : 8∣16) hdiv16
     have hzero :
         (2^n*(2*a+6))%8=0 := Nat.mod_eq_zero_of_dvd hdiv8
     have hmod : (dSx s+dSy s+1)%8=4 := by
