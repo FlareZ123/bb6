@@ -55,6 +55,7 @@ theorem source_evidence_of_classifier (H : Nat) (classify : SourceTM → SourceV
     intro n
     rw [source_knownRun]
     have hn := h n
+    change (run x.tm n blank).isSome = true at hn
     cases hr : run x.tm n blank with
     | none => simp [hr] at hn
     | some c => exact ⟨c,rfl⟩
