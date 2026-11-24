@@ -199,14 +199,17 @@ Proof.
     apply in_flat_map in Hy. destruct Hy as [w [_ Hy]].
     apply in_map_iff in Hy. destruct Hy as [d [<- _]].
     apply state_in_prefix in Hq.
-    eapply source_good_child; cbn [tm min_unused_state]; eauto; lia.
+    exact (source_good_child (Build_T t n cut) h w d q cut
+      Hg Hhole (Nat.le_refl cut) Hmax Hslot Hq).
   - destruct (skipn cut all_qs) as [|q qs] eqn:E.
     + constructor.
     + apply Forall_forall. intros y Hy.
       apply in_flat_map in Hy. destruct Hy as [w [_ Hy]].
       apply in_map_iff in Hy. destruct Hy as [d [<- _]].
       destruct (fresh_state_index cut q qs E).
-      eapply source_good_child; cbn [tm min_unused_state]; eauto; lia.
+        refine (source_good_child (Build_T t n cut) h w d q (S cut)
+        Hg Hhole _ _ _ _).
+      all: lia.
 Qed.
 
 Lemma source_expand'_good x h :
