@@ -97,6 +97,7 @@ jobs:
           export LEAN_PATH="$LEAN_PATH:im-results/agent48-counted-inc0"
           lean -o im-results/agent32-source-queue/SourceQueueImplication.olean im-results/agent32-source-queue/SourceQueueImplication.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
           lean -o im-results/agent48-counted-inc0/Enumerate62Potential.olean im-results/agent48-counted-inc0/Enumerate62Potential.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
+          lean -o im-results/agent11-tnf-cut-potential/CutSensitivePotential.olean im-results/agent11-tnf-cut-potential/CutSensitivePotential.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
           lean -o im-results/agent32-source-queue/SourceQueueDrain.olean im-results/agent32-source-queue/SourceQueueDrain.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
           lean -o im-results/agent13-weighted-first-one/WeightedFirstOneCover.olean im-results/agent13-weighted-first-one/WeightedFirstOneCover.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
           lean -o im-results/agent32-source-queue/SourceFiniteSemantics.olean im-results/agent32-source-queue/SourceFiniteSemantics.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
