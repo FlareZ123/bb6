@@ -1,4 +1,4 @@
-import SparseBlankDelay
+import WeightedTNFCertificate
 import CrossUpper
 import TwoCylinder
 
@@ -55,4 +55,25 @@ theorem exact_from_weighted_first_one (B : Nat) (hB : 6≤B)
 
 #print axioms raw_upper_from_weighted_first_one
 #print axioms exact_from_weighted_first_one
+
+/-- A single recursively normalized TNF certificate for the authentic
+    1RB root supplies the weighted cover needed for a global BB(6) bound. -/
+theorem raw_upper_from_tnf_certificate (B : Nat) (hB : 6≤B)
+    (cert : WeightedTNFCertificate B BB6.CoverageAdapter.firstOneCylinder 2) :
+    ∀ m : BB6.Coverage.RawMachine, ∀ n : Nat,
+      BB6.Coverage.HaltsAt (BB6.Coverage.tickRaw m) n → n≤B :=
+  raw_upper_from_weighted_first_one B hB (WeightedTNFCertificate.toCover cert)
+
+/-- The exact BB(6) theorem now has one explicit global input: a sound
+    normalized 1RB TNF certificate, plus an attained raw champion witness. -/
+theorem exact_from_tnf_certificate (B : Nat) (hB : 6≤B)
+    (cert : WeightedTNFCertificate B BB6.CoverageAdapter.firstOneCylinder 2)
+    (champ : ∃ m : BB6.Coverage.RawMachine,
+      BB6.Coverage.HaltsAt (BB6.Coverage.tickRaw m) B) :
+    BB6.Coverage.ExactBB6 B :=
+  ⟨champ, raw_upper_from_tnf_certificate B hB cert⟩
+
+#print axioms raw_upper_from_tnf_certificate
+#print axioms exact_from_tnf_certificate
+
 end BB6.Agent13BlankDelay
