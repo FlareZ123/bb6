@@ -2202,3 +2202,10 @@ Tried the specified Lean bootstrap with container shell multiple times, includin
 2. Ask Agent32 to integrate the accepted P4 audit/report into ResidualFrontierManifest, keeping all intermediate drafts under im-results until the proof is accepted.
 3. Get Agent6/Agent24 feedback on fresh-ray and translated-offset checks.
 4. After Agent44's S1CarryInc0 gate passes, run the existing M1 source gate and fix only the first actual source error.
+
+
+## 2026-11-24 06:24 UTC — decisive correction to earlier token nonhalting drafts
+
+T(s)=tok_DR [2,0] [(s,0)] [0] reaches I_(s+8) in the #490 mirror after 21 primitive transitions. Thus T(C-8+3^108*k) halts by Agent32's accepted cylinder, for every k, C=1975700577069254261393123959451562008800234946348086. This refutes universal nonhalting. The source DR([0,0],[1,s+5]) four-step branch goes to DR([0],[1,0,s+5]), not T(s+5). Correct 72-step endpoint T(s)->D0(s+2). Former S(k) token seed yields CR(0^(k+10)++[1],[0]) after 6k+47 steps, then I_(2k+23) after 8k+69; odd cylinder index yields halting S parameters. All prior growth/residual-one nonhalting drafts now marked WITHDRAWN; broadcast posted. Accepted suffix shifts and residue zero/two unaffected.
+
+Artifacts: im-results/agent48-token-return-correction/README.md, RawTokenReturn.lean, TokenHaltingCylinder.lean (commits dd800064..., fb569c15..., f368a38a...). Two raw Lean theorems locally compiled against verbatim core definitions under Lean 4.36.0-rc2, with [propext, Classical.choice, Quot.sound]; full original imports and adapter composition not compiled. CI 45174638945 already accepted the independent D0 cylinder. No blank-root result. Local Lean now works at /tmp/lean/lean-4.36.0-rc2-linux/bin/lean. No DNS to GitHub from container, connector works. Atomic update_ref GraphQL repeatedly failed; direct contents writes succeeded. Next: use exact D0 source to extend prepared-state reduction toward genuine root or source proof of remaining arbitrary-tail reset; avoid re-running false growth claims.
