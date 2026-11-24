@@ -1,4 +1,4 @@
-From BusyCoq Require Import Enumerate62 Individual62 TC62 CTL62 Eqb Agent32Q0Partition Agent32SourceDrain Agent32SourceCoverage.
+From BusyCoq Require Import Enumerate62 Individual62 TC62 CTL62 Eqb Agent32SourceBackwards.
 From Coq Require Import List NArith.
 Import ListNotations.
 Import TNF_Node.
@@ -7,7 +7,7 @@ Import TNF_Node.
 Inductive AdaptivePlan : Type :=
 | AP_stop
 | AP_advance (fuel : N) (next : AdaptivePlan)
-| AP_split (n : nat) (left right : AdaptivePlan).
+| AP_split (n : nat) (pl pr : AdaptivePlan).
 
 (* All nodes remaining at a stop are explicit obligations, whether active
    or already held. Split partitions only the actual active list, keeping
@@ -18,10 +18,10 @@ Fixpoint adaptive_obligations
   | AP_stop => fst q ++ snd q
   | AP_advance fuel next =>
       adaptive_obligations f next (SearchQueue_upds f q fuel)
-  | AP_split n left right =>
+  | AP_split n pl pr =>
       snd q ++
-        (adaptive_obligations f left (firstn n (fst q), []) ++
-         adaptive_obligations f right (skipn n (fst q), []))
+        (adaptive_obligations f pl (firstn n (fst q), []) ++
+         adaptive_obligations f pr (skipn n (fst q), []))
   end.
 
 Section AdaptiveCoverage.
@@ -38,7 +38,7 @@ Section AdaptiveCoverage.
     Forall Safe (adaptive_obligations f plan q) -> safeQ Safe q.
   Proof.
     revert q.
-    induction plan as [|fuel next IH|n left IHleft right IHright];
+    induction plan as [|fuel next IH|n pl IHleft pr IHright];
       intros q H; cbn [adaptive_obligations] in H.
     - unfold safeQ. apply Forall_app in H. exact H.
     - apply (source_updates_backwards Safe f Hlocal q fuel).

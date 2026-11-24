@@ -14,6 +14,7 @@ on:
           - enumerate62-decider-sound
           - enumerate62-q0-count
           - enumerate62-q0-partition
+          - enumerate62-adaptive-checkpoint
           - enumerate62-chunk-probe
           - enumerate62-chunk-probe-native
           - enumerate62-q0-verdicts
@@ -48,7 +49,7 @@ jobs:
           path: original
           persist-credentials: false
       - name: Checkout research repository proof artifact
-        if: inputs.target == 'enumerate62-decider-sound' || inputs.target == 'enumerate62-q0-partition'
+        if: inputs.target == 'enumerate62-decider-sound' || inputs.target == 'enumerate62-q0-partition' || inputs.target == 'enumerate62-adaptive-checkpoint'
         uses: actions/checkout@v4
         with:
           repository: FlareZ123/bb6
@@ -65,8 +66,17 @@ jobs:
           cp "$GITHUB_WORKSPACE/research/im-results/agent32-source-queue/Agent32Q0Partition.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent32-source-queue/Agent32SourceDrain.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent32-source-queue/Agent32SourceCoverage.v" original/verify/
+          cp "$GITHUB_WORKSPACE/research/im-results/agent32-source-queue/Agent32SourceBackwards.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent32-source-queue/Agent32SourceEncoding.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent8-adaptive-source-plan/Agent8AdaptiveSource.v" original/verify/
+      - name: Add independent adaptive checkpoint proof and pilot
+        if: inputs.target == 'enumerate62-adaptive-checkpoint'
+        run: |
+          cp "$GITHUB_WORKSPACE/research/im-results/agent32-source-queue/Agent32SourceBackwards.v" original/verify/
+          cp "$GITHUB_WORKSPACE/research/im-results/agent32-source-queue/Agent32SourceEncoding.v" original/verify/
+          cp "$GITHUB_WORKSPACE/research/im-results/agent8-adaptive-source-plan/Agent8AdaptiveSource.v" original/verify/
+          cp "$GITHUB_WORKSPACE/research/im-results/agent8-adaptive-source-plan/Agent8QueueCheckpoint.v" original/verify/
+          cp "$GITHUB_WORKSPACE/research/im-results/agent8-adaptive-source-plan/Agent8QueueCheckpointPilot.v" original/verify/
       - name: Generate project dependencies with VM fallback
         working-directory: original/verify
         run: |
@@ -84,6 +94,7 @@ jobs:
             enumerate62-decider-sound) make -f Makefile.coq -j 2 Enumerate62.vo Agent5Enumerate62DeciderSound.vo ;;
             enumerate62-q0-count|enumerate62-chunk-probe|enumerate62-chunk-probe-native|enumerate62-q0-verdicts) make -f Makefile.coq -j 2 Enumerate62.vo ;;
             enumerate62-q0-partition) make -f Makefile.coq -j 2 Agent32Q0Partition.vo Agent32SourceDrain.vo Agent32SourceCoverage.vo Agent32SourceEncoding.vo Agent8AdaptiveSource.vo ;;
+            enumerate62-adaptive-checkpoint) make -f Makefile.coq -j 2 Agent8QueueCheckpointPilot.vo ;;
           esac
       - name: Print final original theorem assumptions
         working-directory: original/verify
