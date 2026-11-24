@@ -22,9 +22,9 @@ The exact starting coordinates for roots 2, 3, 1 are respectively (0,6), (0,8), 
 - CapPositiveMacroCore.lean: total power-of-three threshold function, maximality and uniqueness.
 - CapForwardMacro.lean: coordinate realization and the four-way sound macro.
 - CapForwardMacroReach.lean: bandHaltBy, exact bounded and unbounded reachability equivalences and three seed instantiations.
-- CapForwardMacroSource.lean: composition with the existing original-machine root criteria; source-closure CI requested through agent46-bmo5-ancestry.yml target macro.
+- CapForwardMacroSource.lean: composition with the existing original-machine root criteria; source-closure CI through agent46-bmo5-ancestry.yml target macro.
 
-All arithmetic and graph theorems in the first three files compiled locally with Lean 4.36.0-rc2, with the printed dependencies [propext, Classical.choice, Quot.sound], using exact copied definitions and proven lemmas from the real CapBandRun/CapBmo dependency chain. This is local graph-level proof checking, not yet a full pinned upstream source-closure check. The last file requires the actual BusyBeaver modules. No nonhalting theorem for an original machine is claimed.
+**Accepted:** [CI 45423604706](https://github.com/FlareZ123/bb6/actions/runs/45423604706) succeeded at revision 24f28fb580ceb428ea161fe87ca750b556852a73, using Lean 4.36.0-rc2, the original pinned Cryptids source, the full graph dependency chain and the three original-machine iff declarations. The workflow audits against sorryAx and native_decide. The graph-level proofs also compiled locally with standard axioms only. No nonhalting theorem for an original machine is claimed.
 
 ## Concrete all-time target
 
@@ -40,4 +40,4 @@ Thus a sufficient nonhalting theorem is that q_k>=k+6 forever for each of the th
 
 An exact integer exploratory run through band 100000 on each root found no halt: #421 and #754 exclusively one-band regular events; #252 one initial special event then exclusively one-band regular events. There was no negative W entry or maximal same-band endpoint except #252 at band zero. The maximum same-band run lengths for roots 1,2,3 were 12,10,9. This is finite evidence only. The all-time lower inequality is still open; do not substitute a probabilistic argument or finite scan for its proof.
 
-The full macro remains exact even if this conjecture fails.
+The full macro remains exact even if this conjecture fails. CapPositiveGate.lean formally proves the pass case, the first authentic negative state in the fail case, and the sufficient nonhalting obligations for all three seeds. It compiled locally against the exact copied graph dependencies; full source closure for this newer module is pending. Reproduce the exploratory experiment with python forward_macro_scan.py 100000.
