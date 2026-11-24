@@ -55,6 +55,26 @@ theorem root_D1_to_seed39 :
   rw [seed39_section]
   exact source_blank_F403
 
+private theorem seed0_canon : DRegular.Canon (seed 0) := by
+  constructor
+  · simp [seed]
+  · exact Or.inr rfl
+
+private theorem seed1_canon : DRegular.Canon (seed 1) := by
+  constructor
+  · simp [seed]
+  · exact Or.inr rfl
+
+private theorem seed2_canon : DRegular.Canon (seed 2) := by
+  constructor
+  · simp [seed]
+  · exact Or.inr rfl
+
+private theorem seed3_canon : DRegular.Canon (seed 3) := by
+  constructor
+  · simp [seed]
+  · exact Or.inr rfl
+
 /-- The source-authenticated eleven-row contract transports every
 canonical DRegular path to an original-machine observational return. -/
 private theorem seed0_to_anchor0 :
@@ -62,7 +82,7 @@ private theorem seed0_to_anchor0 :
       (CryptidBoundary.run (DRegular.accumulated (shift 0) (seed 0))
         (DRegularSource.sourceSection (seed 0)))
       (DRegularSource.sourceSection (anchor 0)) := by
-  have hc : DRegular.Canon (seed 0) := by decide
+  have hc : DRegular.Canon (seed 0) := seed0_canon
   exact (BB6.DRegularSourceShift.paired_original_run
     (seed 0) (anchor 0) (shift 0) 0 hc (anchor_run 0)).1
 
@@ -71,7 +91,7 @@ private theorem seed1_to_anchor1 :
       (CryptidBoundary.run (DRegular.accumulated (shift 1) (seed 1))
         (DRegularSource.sourceSection (seed 1)))
       (DRegularSource.sourceSection (anchor 1)) := by
-  have hc : DRegular.Canon (seed 1) := by decide
+  have hc : DRegular.Canon (seed 1) := seed1_canon
   exact (BB6.DRegularSourceShift.paired_original_run
     (seed 1) (anchor 1) (shift 1) 0 hc (anchor_run 1)).1
 
@@ -80,7 +100,7 @@ private theorem seed2_to_anchor2 :
       (CryptidBoundary.run (DRegular.accumulated (shift 2) (seed 2))
         (DRegularSource.sourceSection (seed 2)))
       (DRegularSource.sourceSection (anchor 2)) := by
-  have hc : DRegular.Canon (seed 2) := by decide
+  have hc : DRegular.Canon (seed 2) := seed2_canon
   exact (BB6.DRegularSourceShift.paired_original_run
     (seed 2) (anchor 2) (shift 2) 0 hc (anchor_run 2)).1
 
@@ -89,7 +109,7 @@ private theorem seed3_to_anchor3 :
       (CryptidBoundary.run (DRegular.accumulated (shift 3) (seed 3))
         (DRegularSource.sourceSection (seed 3)))
       (DRegularSource.sourceSection (anchor 3)) := by
-  have hc : DRegular.Canon (seed 3) := by decide
+  have hc : DRegular.Canon (seed 3) := seed3_canon
   exact (BB6.DRegularSourceShift.paired_original_run
     (seed 3) (anchor 3) (shift 3) 0 hc (anchor_run 3)).1
 
