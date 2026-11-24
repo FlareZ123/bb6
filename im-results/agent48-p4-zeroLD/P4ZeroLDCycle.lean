@@ -1,4 +1,5 @@
-import BB6Coverage.FiveSlotLeafGraft
+import FiveSlotLeafGraft
+import FiniteLassoOracle
 
 namespace BB6Coverage
 
@@ -23,7 +24,6 @@ theorem agent48P4ZeroLD_cover :
     Cover (DecidedBelow 6) agent48P4ZeroLD :=
   finiteLassoCheck_sound agent48P4ZeroLD 6 agent48P4ZeroLD_check
 
-#eval agent48P4ZeroLD_check
 #print axioms agent48P4ZeroLD_cover
 
 end BB6Coverage

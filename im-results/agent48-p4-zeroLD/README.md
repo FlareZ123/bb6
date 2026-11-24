@@ -1,6 +1,6 @@
-# P4 exact child grafts: finite lasso and fresh-ray certificates
+# P4 exact child grafts: finite lasso, translated-cycle, and fresh-ray certificates
 
-**Status:** 21 new disjoint source-cylinder certificates are drafted for the P4 depth-four parent. The Lean modules and exact report theorems are **not yet accepted**. Local preflight is unavailable in this invocation. The first focused CI run, 45354239582, stopped in the pre-existing optional `WordLassoTraceAudit.lean` branch before the P4 step; the P4 step was skipped. The workflow guard has been repaired to isolate this target, and a new targeted run is required. Keep this work in `im-results/`.
+**Status:** 26 new disjoint source-cylinder certificates are drafted for the P4 depth-four parent. The Lean modules and exact report theorems are **not yet accepted**. Local preflight is unavailable in this invocation. The first three targeted CI runs did not accept a P4 module: runs 45354239582 and 45354469278 stopped in unrelated optional WordLasso code; run 45354692563 reached the P4 step and exposed invalid namespace-qualified module imports. Those imports are corrected here, and the source draft now includes five additional simple D/0 cylinders. A new targeted run is required. Keep this work in `im-results/`.
 
 ## Authenticated parent and blank entry
 
@@ -35,11 +35,11 @@ Each first-level child fixes five slots and has mass (25^7=6,103,515,625). The s
 
 ## Deeper E/0 branches
 
-Two additional E/0 branches admit useful D/0 refinements.
+Two additional E/0 branches admit D/0 refinements.
 
 ### E/0 = 0LC
 
-The six-move blank entry A/0, B/0, C/1, D/1, E/0, C/1 clears the tape and reaches D at head 2 on a blank tape. Eight D/0 children have source certificates:
+The six-move blank entry A/0, B/0, C/1, D/1, E/0, C/1 clears the tape and reaches D at head 2 on a blank tape. Ten D/0 children have source certificates:
 
 | D/0 action | Certificate | Length | Shift |
 |---|---|---:|---:|
@@ -51,27 +51,36 @@ The six-move blank entry A/0, B/0, C/1, D/1, E/0, C/1 clears the tape and reache
 | 0RD | fresh right ray | 1 | +1 |
 | 1RD | fresh right ray | 1 | +1 |
 | 1RE | fresh right ray | 3 | +1 |
+| 1LD | fresh left ray | 1 | -1 |
+| halt | immediate halt at the six-move entry | 0 | — |
 
-The translated checks compare the entire finite marked-cell support; they do not assume every intermediate head stays to the right of the entry head.
+The translated checks compare the entire finite marked-cell support. The 1LD child is a leftward fresh-ray proof: D/0 writes 1, moves left, and re-enters D on the next blank cell; the six-step entry has a pristine left ray. The halt child stops immediately at the D/0 slot.
 
 ### E/0 = 0RD
 
-The five-move blank entry reaches D at head 3 with a mark behind the head at cell 1; the complete right ray from head 3 is blank. Six D/0 children have fresh-ray certificates:
+The five-move blank entry reaches D at head 3 with a mark behind the head at cell 1; the complete right ray from head 3 is blank. Nine D/0 children have certificates:
 
-| D/0 action | Macro | Length | Shift |
+| D/0 action | Certificate | Length | Shift |
 |---|---|---:|---:|
-| 0RD | D | 1 | +1 |
-| 1RD | D | 1 | +1 |
-| 1RE | D,E | 2 | +2 |
-| 0RA | D,A,B,C,D,E | 6 | +4 |
-| 1RA | D,A,B,C,D,E | 6 | +4 |
-| 1RB | D,B,C,D,E | 5 | +3 |
+| 0RD | fresh right ray | 1 | +1 |
+| 1RD | fresh right ray | 1 | +1 |
+| 1RE | fresh right ray | 2 | +2 |
+| 0RA | fresh right ray | 6 | +4 |
+| 1RA | fresh right ray | 6 | +4 |
+| 1RB | fresh right ray | 5 | +3 |
+| 0LB | translated finite support | 5 | +1 |
+| 0LE | exact finite configuration lasso | 2 | 0 |
+| halt | immediate halt at the five-move entry | 0 | — |
+
+The 0LB macro clears the old mark and translates the finite support one cell right. The 0LE macro is an exact two-step D,E lasso. The halt child stops at the D/0 slot.
 
 Each deeper child fixes six slots and has mass (25^6=244,140,625). Within each parent, the D/0 assignments are pairwise disjoint.
 
-## Exact frontier arithmetic (draft until Lean acceptance)
+## Exact P4-audit arithmetic (draft until Lean acceptance)
 
-The existing P4-specific audit `agent27GraftedAudit` before these refinements (it already includes the E/0=1LC child) is:
+The baseline is the P4-specific `agent27GraftedAudit` report, which already includes the E/0=1LC certificate. It is a separate grafted audit built on the same physical depth-four base as `depth4ResidualAudit`; the top-level global manifest has not yet been updated.
+
+Baseline P4-specific report:
 
 - decided: 40,570,837,402,343,750
 - open: 19,033,807,373,046,875
@@ -81,36 +90,36 @@ Adding the seven new E/0 children gives:
 - decided: 40,570,880,126,953,125
 - open: 19,033,764,648,437,500
 
-Adding the eight E/0=0LC / D/0 children gives:
+Adding the ten E/0=0LC / D/0 children gives:
 
-- decided: 40,570,882,080,078,125
-- open: 19,033,762,695,312,500
+- decided: 40,570,882,568,359,375
+- open: 19,033,762,207,031,250
 
-Adding the six E/0=0RD / D/0 children gives the final drafted report pair:
+Adding the nine E/0=0RD / D/0 children gives the final drafted P4-specific report pair:
 
-- decided: 40,570,883,544,921,875
-- open: 19,033,761,230,468,750
+- decided: 40,570,884,765,625,000
+- open: 19,033,760,009,765,625
 
-The added decided mass is exactly
+The added decided mass beyond `agent27GraftedAudit` is exactly
 [
-7\cdot25^7+14\cdot25^6=46,142,578,125,
+7\cdot25^7+19\cdot25^6=47,363,281,250,
 ]
-and the final report still sums to (25^{12}=59,604,644,775,390,625). These are local exact cylinder counts, not a universal BB(6) upper bound or a complete P4 closure.
+and the final report still sums to (25^{12}=59,604,644,775,390,625). Including the pre-existing E/0=1LC child, the P4 grafted audit classifies 53,466,796,875 completions beyond the ungrafted global depth-four base. These are local exact cylinder counts, not a universal BB(6) upper bound or a complete P4 closure.
 
 ## Lean artifacts and acceptance boundary
 
 - `P4ZeroLDCycle.lean`: finite lasso and `agent48P4ZeroLD_cover`.
-- `P4EightChildGraft.lean`: five fresh-ray children and one halt child, added to the existing 1LC graft.
-- `P4DeeperFreshRay.lean`: eight D/0 children under E/0=0LC.
-- `P4ZeroRDDeeperGraft.lean`: six D/0 children under E/0=0RD.
+- `P4EightChildGraft.lean`: seven new E/0 children and the existing 1LC graft.
+- `P4DeeperFreshRay.lean`: ten D/0 children under E/0=0LC, including a left-ray and a halt child.
+- `P4ZeroRDDeeperGraft.lean`: nine D/0 children under E/0=0RD, including translated, exact-lasso, and halt children.
 - `P4DeeperFreshRayReport.lean` and `P4ZeroRDDeeperGraftReport.lean`: exact report-pair and mass-conservation theorems.
 
-Agent 6's 2026-11-24 static review found the listed macro lengths, translations, fresh-tail conditions, and count arithmetic consistent with the source drafts. That review is not a Lean compile or a formal acceptance claim.
+Agent 6's 2026-11-24 static review covered the original 21-child draft's macro lengths, translations, fresh-tail conditions, and count arithmetic. The five new D/0 children were derived in this invocation and still await Lean checking. Static review is not a Lean compile or a formal acceptance claim.
 
 The local preflight was attempted with the supplied Lean 4.36.0-rc2 split archive using the requested reconstruction/unzip/version command. `container.exec` returned a tool-level `CAAS ClientError` before any shell output; `python.exec` likewise returned `ClientError`. No archive size, ZIP integrity, local Lean version, or source compilation was obtained in this invocation. This is an execution-environment blocker, not evidence that the archive is corrupt.
 
-The first targeted CI run, [45354239582](https://github.com/FlareZ123/bb6/actions/runs/45354239582), successfully installed Lean and compiled the shared base modules, then failed in the unrelated optional `WordLassoTraceAudit.lean` branch (`Function expected` at line 70 and a `sorryAx` profile at line 78). After guarding its prerequisite block, [run 45354469278](https://github.com/FlareZ123/bb6/actions/runs/45354469278) showed that the separate consumer block still ran while `WordMirror` compilation was skipped (`unknown module prefix 'WordMirror'`). Neither run reached the P4 step. Both WordLasso blocks are now explicitly excluded for `verify_p4_frontier_graft`; the axiom parser also accepts Lean's quoted names and the `does not depend on any axioms` form.
+The focused `verify_p4_frontier_graft` input is part of the existing `.github/workflows/agent32-zero-path-global.yml`. Run 45354692563 compiled the shared dependencies and then failed at `P4ZeroLDCycle.lean:1` with `unknown module prefix 'BB6Coverage'`: Lean module imports must use flat file-module names, not the declaration namespace. The six P4 source imports now use their actual module paths. The next targeted run compiles the full dependency closure, all 30 cover/report axiom profiles, and rejects `sorryAx` or `native_decide`.
 
-A focused `verify_p4_frontier_graft` input has been added to the existing `.github/workflows/agent32-zero-path-global.yml` rather than creating another workflow. It compiles the existing five-slot dependency closure, all six P4 modules, all 25 cover/report axiom profiles, and rejects `sorryAx` or `native_decide`. One targeted run is the fallback diagnostic for this unavailable local preflight. After source acceptance, Agent32 still needs to graft these certificates into `ResidualFrontierManifest.lean`; this P4 work is not yet part of the global report.
+After source acceptance, Agent32 still needs to graft these certificates into `ResidualFrontierManifest.lean`; this P4-specific audit is not yet the global report. The global manifest remains unchanged.
 
 No universal six-state upper bound, BB(6) exact value, or complete decision of the P4 parent is established.

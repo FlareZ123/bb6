@@ -1,6 +1,8 @@
-import BB6Coverage.P4EightChildGraft
-import BB6Coverage.EntryMacroOracle
-import BB6Coverage.TranslatedFiniteOracle
+import P4EightChildGraft
+import EntryMacroOracle
+import TranslatedFiniteOracle
+import EntryMacroLeft
+import FiniteHalting
 
 namespace BB6Coverage
 
@@ -44,6 +46,14 @@ def agent48P4ZeroLC_D0OneRD : PartialMachine :=
 def agent48P4ZeroLC_D0OneRE : PartialMachine :=
   refine agent48P4ZeroLC agent48D0 (some ⟨true, true, 4⟩)
 
+/-- D/0 = 1LD: a one-step leftward fresh-ray macro. -/
+def agent48P4ZeroLC_D0OneLD : PartialMachine :=
+  refine agent48P4ZeroLC agent48D0 (some ⟨true, false, 3⟩)
+
+/-- D/0 = halt: the six-move blank entry ends at the assigned halt slot. -/
+def agent48P4ZeroLC_D0Halt : PartialMachine :=
+  refine agent48P4ZeroLC agent48D0 none
+
 theorem agent48P4ZeroLC_D0ZeroLD_check :
     finiteTranslatedCheck agent48P4ZeroLC_D0ZeroLD 6 1 = true := by decide
 
@@ -67,6 +77,12 @@ theorem agent48P4ZeroLC_D0OneRD_check :
 
 theorem agent48P4ZeroLC_D0OneRE_check :
     finiteEntryMacroCheck agent48P4ZeroLC_D0OneRE 6 3 = true := by decide
+
+theorem agent48P4ZeroLC_D0OneLD_check :
+    finiteEntryMacroLeftCheck agent48P4ZeroLC_D0OneLD 6 1 = true := by decide
+
+theorem agent48P4ZeroLC_D0Halt_check :
+    finiteHaltCheck agent48P4ZeroLC_D0Halt 6 = true := by decide
 
 theorem agent48P4ZeroLC_D0ZeroLD_cover :
     Cover (DecidedBelow 6) agent48P4ZeroLC_D0ZeroLD :=
@@ -108,8 +124,18 @@ theorem agent48P4ZeroLC_D0OneRE_cover :
   finiteEntryMacroCheck_sound agent48P4ZeroLC_D0OneRE 6 3 6 (by decide)
     agent48P4ZeroLC_D0OneRE_check
 
-/-- Add the eight disjoint D/0 cylinders to the P4 eight-child audit. -/
-noncomputable def agent48P4DeeperAudit :
+theorem agent48P4ZeroLC_D0OneLD_cover :
+    Cover (DecidedBelow 6) agent48P4ZeroLC_D0OneLD :=
+  finiteEntryMacroLeftCheck_sound agent48P4ZeroLC_D0OneLD 6 1 6
+    (by decide) agent48P4ZeroLC_D0OneLD_check
+
+theorem agent48P4ZeroLC_D0Halt_cover :
+    Cover (DecidedBelow 6) agent48P4ZeroLC_D0Halt :=
+  finiteHaltCheck_sound agent48P4ZeroLC_D0Halt 6 6 (by decide)
+    agent48P4ZeroLC_D0Halt_check
+
+/-- The original eight D/0 certificates under E/0 = 0LC. -/
+noncomputable def agent48P4DeeperAuditBase :
     FrontierAudit (DecidedBelow 6) emptyTable :=
   addCertificate
     (addCertificate
@@ -129,6 +155,15 @@ noncomputable def agent48P4DeeperAudit :
       agent48P4ZeroLC_D0OneRD agent48P4ZeroLC_D0OneRD_cover)
     agent48P4ZeroLC_D0OneRE agent48P4ZeroLC_D0OneRE_cover
 
+/-- Add the left-ray and halting D/0 cylinders under E/0 = 0LC. -/
+noncomputable def agent48P4DeeperAudit :
+    FrontierAudit (DecidedBelow 6) emptyTable :=
+  addCertificate
+    (addCertificate
+      agent48P4DeeperAuditBase
+      agent48P4ZeroLC_D0OneLD agent48P4ZeroLC_D0OneLD_cover)
+    agent48P4ZeroLC_D0Halt agent48P4ZeroLC_D0Halt_cover
+
 #print axioms agent48P4ZeroLC_D0ZeroLD_cover
 #print axioms agent48P4ZeroLC_D0ZeroLA_cover
 #print axioms agent48P4ZeroLC_D0ZeroRA_cover
@@ -137,5 +172,7 @@ noncomputable def agent48P4DeeperAudit :
 #print axioms agent48P4ZeroLC_D0ZeroRD_cover
 #print axioms agent48P4ZeroLC_D0OneRD_cover
 #print axioms agent48P4ZeroLC_D0OneRE_cover
+#print axioms agent48P4ZeroLC_D0OneLD_cover
+#print axioms agent48P4ZeroLC_D0Halt_cover
 
 end BB6Coverage

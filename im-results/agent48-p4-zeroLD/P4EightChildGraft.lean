@@ -1,7 +1,7 @@
-import BB6Coverage.P4ZeroLDCycle
-import BB6Coverage.EntryMacroOracle
-import BB6Coverage.FiniteHalting
-import BB6Coverage.IncrementalAudit
+import P4ZeroLDCycle
+import EntryMacroOracle
+import FiniteHalting
+import IncrementalAudit
 
 namespace BB6Coverage
 

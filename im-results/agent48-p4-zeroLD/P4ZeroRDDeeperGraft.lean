@@ -1,5 +1,7 @@
-import BB6Coverage.P4DeeperFreshRay
-import BB6Coverage.EntryMacroOracle
+import P4DeeperFreshRay
+import EntryMacroOracle
+import TranslatedFiniteOracle
+import FiniteHalting
 
 namespace BB6Coverage
 
@@ -31,6 +33,18 @@ def agent48P4ZeroRD_D0OneRA : PartialMachine :=
 def agent48P4ZeroRD_D0OneRB : PartialMachine :=
   refine agent48P4ZeroRD agent48D0 (some ⟨true, true, 1⟩)
 
+/-- D/0 = 0LB: a five-step translated finite-support recurrence. -/
+def agent48P4ZeroRD_D0ZeroLB : PartialMachine :=
+  refine agent48P4ZeroRD agent48D0 (some ⟨false, false, 1⟩)
+
+/-- D/0 = 0LE: a two-step exact finite configuration lasso. -/
+def agent48P4ZeroRD_D0ZeroLE : PartialMachine :=
+  refine agent48P4ZeroRD agent48D0 (some ⟨false, false, 4⟩)
+
+/-- D/0 = halt: the five-move blank entry ends at the assigned halt slot. -/
+def agent48P4ZeroRD_D0Halt : PartialMachine :=
+  refine agent48P4ZeroRD agent48D0 none
+
 theorem agent48P4ZeroRD_D0ZeroRD_check :
     finiteEntryMacroCheck agent48P4ZeroRD_D0ZeroRD 5 1 = true := by decide
 
@@ -48,6 +62,15 @@ theorem agent48P4ZeroRD_D0OneRA_check :
 
 theorem agent48P4ZeroRD_D0OneRB_check :
     finiteEntryMacroCheck agent48P4ZeroRD_D0OneRB 5 5 = true := by decide
+
+theorem agent48P4ZeroRD_D0ZeroLB_check :
+    finiteTranslatedCheck agent48P4ZeroRD_D0ZeroLB 5 5 = true := by decide
+
+theorem agent48P4ZeroRD_D0ZeroLE_check :
+    finiteTranslatedCheck agent48P4ZeroRD_D0ZeroLE 5 2 = true := by decide
+
+theorem agent48P4ZeroRD_D0Halt_check :
+    finiteHaltCheck agent48P4ZeroRD_D0Halt 5 = true := by decide
 
 theorem agent48P4ZeroRD_D0ZeroRD_cover :
     Cover (DecidedBelow 6) agent48P4ZeroRD_D0ZeroRD :=
@@ -79,8 +102,23 @@ theorem agent48P4ZeroRD_D0OneRB_cover :
   finiteEntryMacroCheck_sound agent48P4ZeroRD_D0OneRB 5 5 6 (by decide)
     agent48P4ZeroRD_D0OneRB_check
 
-/-- Add six disjoint D/0 fresh-ray cylinders under E/0 = 0RD. -/
-noncomputable def agent48P4ZeroRDDeeperAudit :
+theorem agent48P4ZeroRD_D0ZeroLB_cover :
+    Cover (DecidedBelow 6) agent48P4ZeroRD_D0ZeroLB :=
+  finiteTranslatedCheck_sound agent48P4ZeroRD_D0ZeroLB 5 5 6 (by decide)
+    agent48P4ZeroRD_D0ZeroLB_check
+
+theorem agent48P4ZeroRD_D0ZeroLE_cover :
+    Cover (DecidedBelow 6) agent48P4ZeroRD_D0ZeroLE :=
+  finiteTranslatedCheck_sound agent48P4ZeroRD_D0ZeroLE 5 2 6 (by decide)
+    agent48P4ZeroRD_D0ZeroLE_check
+
+theorem agent48P4ZeroRD_D0Halt_cover :
+    Cover (DecidedBelow 6) agent48P4ZeroRD_D0Halt :=
+  finiteHaltCheck_sound agent48P4ZeroRD_D0Halt 5 6 (by decide)
+    agent48P4ZeroRD_D0Halt_check
+
+/-- The original six D/0 fresh-ray certificates under E/0 = 0RD. -/
+noncomputable def agent48P4ZeroRDDeeperAuditBase :
     FrontierAudit (DecidedBelow 6) emptyTable :=
   addCertificate
     (addCertificate
@@ -96,11 +134,25 @@ noncomputable def agent48P4ZeroRDDeeperAudit :
       agent48P4ZeroRD_D0OneRA agent48P4ZeroRD_D0OneRA_cover)
     agent48P4ZeroRD_D0OneRB agent48P4ZeroRD_D0OneRB_cover
 
+/-- Add the translated, exact-lasso, and halting D/0 cylinders under E/0 = 0RD. -/
+noncomputable def agent48P4ZeroRDDeeperAudit :
+    FrontierAudit (DecidedBelow 6) emptyTable :=
+  addCertificate
+    (addCertificate
+      (addCertificate
+        agent48P4ZeroRDDeeperAuditBase
+        agent48P4ZeroRD_D0ZeroLB agent48P4ZeroRD_D0ZeroLB_cover)
+      agent48P4ZeroRD_D0ZeroLE agent48P4ZeroRD_D0ZeroLE_cover)
+    agent48P4ZeroRD_D0Halt agent48P4ZeroRD_D0Halt_cover
+
 #print axioms agent48P4ZeroRD_D0ZeroRD_cover
 #print axioms agent48P4ZeroRD_D0OneRD_cover
 #print axioms agent48P4ZeroRD_D0OneRE_cover
 #print axioms agent48P4ZeroRD_D0ZeroRA_cover
 #print axioms agent48P4ZeroRD_D0OneRA_cover
 #print axioms agent48P4ZeroRD_D0OneRB_cover
+#print axioms agent48P4ZeroRD_D0ZeroLB_cover
+#print axioms agent48P4ZeroRD_D0ZeroLE_cover
+#print axioms agent48P4ZeroRD_D0Halt_cover
 
 end BB6Coverage
