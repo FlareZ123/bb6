@@ -65,8 +65,8 @@ def expandProjection (x : Node) : List Node :=
 
 /-- Source `expand'`: when one undefined transition remains, there are no
 ordinary children; otherwise use the source expansion. -/
-def expandProjection' (x : Node) (hpos : 1 ≤ x.holes) : List Node :=
-  if h : x.holes = 1 then [] else
+def expandProjection' (x : Node) (_hpos : 1 ≤ x.holes) : List Node :=
+  if _h : x.holes = 1 then [] else
     expandProjection x
 
 theorem expandProjection_length (x : Node) :
@@ -77,7 +77,7 @@ theorem expandProjection_length (x : Node) :
   · simp [expandProjection, hc]
 
 theorem expandProjection_length_le_24 (x : Node) :
-    (expandProjection x h).length ≤ 24 := by
+    (expandProjection x).length ≤ 24 := by
   rw [expandProjection_length]
   have hcut : x.cut.val ≤ 6 := by omega
   by_cases hc : x.cut.val < 6 <;> simp [hc] <;> omega
@@ -341,6 +341,7 @@ theorem every_chunk_drains (decide : (x : Node) → Verdict x) (l sz : Nat) :
   have hmax := maxT_ge_25_pow_11
   exact Nat.le_trans (Nat.le_trans hchunk hq0) hmax
 
+#print axioms freshChild_cut
 #print axioms expandProjection_length
 #print axioms expandProjection_length_le_24
 #print axioms expandProjection_mass_lt
