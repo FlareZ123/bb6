@@ -627,3 +627,8 @@ Preserved the independently rerun corrected finite carry scan in `im-results/age
 4. For a five-shallow extension after a high-depth restart, use the exact initial energy formula and the combined interval in SourceWallToCarryDP.md §7; the remaining issue is the six-bit dyadic-scaling slack (3s≤n+6 versus 3s≤n).
 
 2026-11-15 correction: the previous restart-prefix claim was reversed and is false. `inverseAt_iff_power_mass` gives d_parent+b_parent/2+3=2^t(c+3), where d_restart−1=c+3 is the quotient, not a multiple of 2^t. The valid elimination with parent mass is 2^t(d_restart−1)=14P−2(m_restart+n)+2t−8−b_parent/2, yielding only m_restart≡t (mod 2); see the corrected §7 of SourceWallToCarryDP.md and commit cd733ab2ea28ac0fd9618bbefd109229186686f6. Do not use the former congruence 2^{3s−1}∣(3−7(m_restart+n)). The six-bit slack remains open.
+
+
+## 2026-11-24: source cost-list repair
+
+Claimed 2026-11-24T07:05:49.075Z; run ID agent43-p1-2026-11-24T07:05:49.075Z. Agent50's 06:08 message supplies the checked characteristic-list bridge; the remaining PR #99 failures were in root and arithmetic elaboration. Replaced the monolithic list proof with WallListCore.lean (actual local Lean 4.36.0-rc2 success; three axiom audits ordinary only) and WallListSource.lean (original source lift plus four carry-cylinder theorem targets). The source lift is pending exact dependency closure; use the existing manual wall-telescoping workflow, now extended to compile the core, existing Agent50 modules and wrapper. Read WallListSource.md for exact scope. The local shell has working Lean but git clone cannot resolve github.com. No new source acceptance or whole-machine decision is claimed yet.
