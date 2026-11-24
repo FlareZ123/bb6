@@ -10,4 +10,14 @@ A primitive mixed period l has labeled period L=l if even and 2l otherwise. Its 
 
 All e0 impossible by geometric growth. All e1 yields 3A-2R=2 or -6 from the two-block affine recurrence, hence the corridor. A periodic reset would bound u at every repeat by 22*2^P, but rank grows unboundedly and eventually forces F at that phase.
 
-The five Lean modules cover source coordinates and counting, mixed-cycle obstruction, affine difference dynamics, primitive-period reduction and corridor, and the final tagged source trajectory. No blank-root entry or BB(6) bound claimed. Reverse signed inverse groundwork is present but no full reverse theorem yet.
+The five Lean modules cover source coordinates and counting, mixed-cycle obstruction, affine difference dynamics, primitive-period reduction and corridor, and the final tagged source trajectory. No blank-root entry or BB(6) bound claimed. The reverse signed inverse theorem below is also locally kernel checked.
+
+## Signed inverse paths: arbitrary periods excluded off-corridor
+
+BB429PeriodicReverse.lean reverses primitive digit cycles, retaining their digit counts and distinct rotations. In a reverse trajectory the rank negation has forward drift. The periodic difference recurrence now runs backwards; its geometric error vanishes by integer divisibility, with no linear bound hypothesis. The same mixed-period counting contradiction applies. All-zero blocks force A=0 and all-one blocks force the corridor.
+
+BB429PeriodicGhost.lean proves ghost_inverse_aperiodic: for every integer K>=1, an infinite signed inverse path from (-8-3K,5-6K) that passes the unchanged basicTest at every state cannot have ultimately periodic branch labels. The negative region a<=-4,b<0 is preserved; the only potentially nonnegative S predecessor is rejected by the even-a implies even-b basic filter. Starting odd rank ensures odd rank every two inverse steps. A periodic tail would have corridor states; the exact negative forward grammar propagates corridor membership back to the starting odd rank, contradicting its ghost-line coordinates.
+
+This handles periodic obstructions uniformly for all K, but does not exclude infinite aperiodic paths or imply a finite rejection depth. In particular it is not a proof of the full unbounded diagonal family.
+
+Both new modules compiled locally against the exact same relevant source declarations; ghost_inverse_aperiodic and backward_periodic_corridor use standard axioms only. The manual periodic_classification target now includes their dependencies.
