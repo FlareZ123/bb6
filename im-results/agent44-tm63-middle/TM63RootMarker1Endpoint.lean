@@ -73,7 +73,7 @@ theorem tm63_blank_reaches_after_middle34_marker1_s0_input_bounds :
 private theorem root_pow2_ge_four (n : Nat) (hn : 2 ≤ n) : 4 ≤ 2^n := by
   obtain ⟨k, hk⟩ := Nat.exists_eq_add_of_le hn
   rw [hk, Nat.pow_add]
-  norm_num
+  rw [show (2:Nat)^2 = 4 by decide]
   have hp : 0 < 2^k := Nat.pow_pos (by decide)
   omega
 
