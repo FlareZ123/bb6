@@ -33,6 +33,7 @@ def main() -> None:
     # Exercise both current four-hole generators on the concrete invalid
     # two-state DFA from the checker audit: delta(0, false) = 1.
     sys.path.insert(0, str(AGENT31))
+    loaded = {}
     for name in ("generate_four_hole", "generate_four_hole_sibling"):
         path = AGENT31 / f"{name}.py"
         spec = importlib.util.spec_from_file_location(f"guard_test_{name}", path)
@@ -40,6 +41,7 @@ def main() -> None:
             raise RuntimeError(f"cannot load {path}")
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
+        loaded[name] = module
         table = module.parse(module.PARENT)
         try:
             module.masks(table, 0, [1, 1])
@@ -94,6 +96,31 @@ def main() -> None:
                 f"C{ident}: expected historical candidate keys to differ from destination key"
             )
     print("PASS: 14 candidate strings map across historical keys; destination validity is not asserted")
+
+    # Cross-check the Python saturation routine against a known accepted
+    # start-preserving Lean certificate. CI separately compiles R4PairHits.lean.
+    r4_path = ROOT / "im-results" / "agent7-far" / "R4PairHits.lean"
+    r4_source = r4_path.read_text()
+    pm = re.search(r"def r4_0ra : PartialMachine := fromCodes \\[([^\\]]+)\\]", r4_source)
+    dm = re.search(
+        r"def r4_0ra_data : Data 6 := ⟨0,\\[([^\\]]+)\\],\\[([^\\]]+)\\],\\[([^\\]]+)\\],(\\d+)⟩",
+        r4_source,
+    )
+    if pm is None or dm is None:
+        raise AssertionError("could not parse known accepted r4_0ra certificate")
+    if "theorem r4_0ra_valid : r4_0ra_data.fastValid r4_0ra = true := by decide" not in r4_source:
+        raise AssertionError("R4PairHits no longer contains its Lean fastValid proof")
+    r4_codes = [int(x.strip()) for x in pm.group(1).split(",")]
+    r4_dfa = [int(x.strip()) for x in dm.group(1).split(",")]
+    r4_masks0 = [int(x.strip()) for x in dm.group(2).split(",")]
+    r4_masks1 = [int(x.strip()) for x in dm.group(3).split(",")]
+    r4_z = int(dm.group(4))
+    sibling_module = loaded["generate_four_hole_sibling"]
+    r4_table = sibling_module.parse("_".join(token(x) for x in r4_codes))
+    d, dfa, masks0, masks1, z = sibling_module.masks(r4_table, 0, r4_dfa)
+    if (d, dfa, masks0, masks1, z) != (6, r4_dfa, r4_masks0, r4_masks1, r4_z):
+        raise AssertionError("Python masks() disagrees with the known Lean-accepted r4_0ra Data")
+    print("PASS: Python masks() reproduces the known Lean-accepted r4_0ra destination certificate")
 
 if __name__ == "__main__":
     main()
