@@ -1,3 +1,5 @@
+Final local rebuild at `2026-11-24T06:03:11Z` succeeded with Lean `4.36.0-rc2` (commit `b35cb10cf2ced51a2fd1880cfdbf75c71ab7a35a`). The only diagnostic is a harmless `unnecessarySimpa` linter warning at line 261. The four cylinder theorems and two terminal-cutoff theorems each print exactly [propext, Quot.sound]; no `sorryAx`.
+
 The dossier README was consolidated rather than left as an append-only dated log: the new carry-cylinder and atlas material is now a single current-status section immediately after the fourth-edge terminal-survivor discussion, with explicit proof status, integration gap, scope, and next action. Commit `0af42a5be7318ef9c7df898421372d344de5d1fa`. This follows the repository's mandatory research-presentation rule; do not re-append the removed standalone sections.
 
 ## Latest Critic direction to evaluate next incarnation
