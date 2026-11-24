@@ -174,39 +174,40 @@ theorem source_halts_iff_obsEq {c d : CryptidBoundary.Cfg}
       (CryptidBoundary.run n d).st at hs
     exact hs.symm ▸ hn
 
+/-- Compose an exact finite source prefix with observationally equivalent
+endpoints, preserving the all-time frozen-state predicate. -/
+private theorem halts_iff_after_prefix_obsEq
+    {t : Nat} {c s d : CryptidBoundary.Cfg}
+    (hpref : CryptidBoundary.run t c = s) (hobs : ObsEq s d) :
+    SourceHalts c ↔ SourceHalts d := by
+  have hprefix : SourceHalts c ↔ SourceHalts s :=
+    halts_after_exact_prefix t c s hpref
+  have hendpoint : SourceHalts s ↔ SourceHalts d :=
+    source_halts_iff_obsEq hobs
+  exact ⟨fun h => hendpoint.mp (hprefix.mp h),
+    fun h => hprefix.mpr (hendpoint.mpr h)⟩
+
 /-- Each of the four authentic source-table blank starts has exactly the
 same all-time halting status as its large DRegular anchor section. -/
 theorem source_D3_halts_iff_anchor :
     SourceHalts (sourceBlank (3 : Fin 6)) ↔
       SourceHalts (DRegularSource.sourceSection (anchor 0)) :=
-by
-  have hp := halts_after_exact_prefix 15 _ _ root_D3_to_seed5
-  have ha := source_halts_iff_obsEq seed0_to_anchor0
-  exact hp.trans ha
+  halts_iff_after_prefix_obsEq root_D3_to_seed5 seed0_to_anchor0
 
 theorem source_D0_halts_iff_anchor :
     SourceHalts (sourceBlank (0 : Fin 6)) ↔
       SourceHalts (DRegularSource.sourceSection (anchor 1)) :=
-by
-  have hp := halts_after_exact_prefix 36 _ _ root_D0_to_seed9
-  have ha := source_halts_iff_obsEq seed1_to_anchor1
-  exact hp.trans ha
+  halts_iff_after_prefix_obsEq root_D0_to_seed9 seed1_to_anchor1
 
 theorem source_D2_halts_iff_anchor :
     SourceHalts (sourceBlank (2 : Fin 6)) ↔
       SourceHalts (DRegularSource.sourceSection (anchor 2)) :=
-by
-  have hp := halts_after_exact_prefix 92 _ _ root_D2_to_seed15
-  have ha := source_halts_iff_obsEq seed2_to_anchor2
-  exact hp.trans ha
+  halts_iff_after_prefix_obsEq root_D2_to_seed15 seed2_to_anchor2
 
 theorem source_D1_halts_iff_anchor :
     SourceHalts (sourceBlank (5 : Fin 6)) ↔
       SourceHalts (DRegularSource.sourceSection (anchor 3)) :=
-by
-  have hp := halts_after_exact_prefix 403 _ _ root_D1_to_seed39
-  have ha := source_halts_iff_obsEq seed3_to_anchor3
-  exact hp.trans ha
+  halts_iff_after_prefix_obsEq root_D1_to_seed39 seed3_to_anchor3
 
 /-- The four original-source endpoints have exactly the arithmetic measures
 used by the widened phase-band separation theorem. -/
