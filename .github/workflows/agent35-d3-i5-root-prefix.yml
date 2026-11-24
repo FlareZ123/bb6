@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
-      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent35-d-regular-certificate:im-results/agent32-cryptid-padding:im-results/agent2-cryptid-continuity:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent3-portfolio-raw-conjugacy:im-results/agent19-d-physical-bridge:im-results/agent31-d-exceptional:im-results/agent35-d3-root-1711
+      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent35-d-regular-certificate:im-results/agent32-cryptid-padding:im-results/agent2-cryptid-continuity:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent3-portfolio-raw-conjugacy:im-results/agent19-d-physical-bridge:im-results/agent31-d-exceptional:im-results/agent35-d3-root-1711:im-results/agent36-cryptid-trace
     steps:
       - uses: actions/checkout@v4
       - name: Restore exact source archives
@@ -81,8 +81,9 @@ jobs:
             echo 'Unexpected sorryAx in I5 root certificate' >&2
             exit 1
           fi
-          lean "$R/I5ExceptionalRejoin.lean" 2>&1 | tee /tmp/i5-exceptional-rejoin.log
+          lean -o "$R/I5ExceptionalRejoin.olean" "$R/I5ExceptionalRejoin.lean" 2>&1 | tee /tmp/i5-exceptional-rejoin.log
           if grep -q 'sorryAx' /tmp/i5-exceptional-rejoin.log; then
             echo 'Unexpected sorryAx in I5 exceptional rejoin certificate' >&2
             exit 1
           fi
+          lean im-results/agent36-cryptid-trace/I5ReentryRestartEval.lean 2>&1 | tee /tmp/i5-reentry-restart-eval.log
