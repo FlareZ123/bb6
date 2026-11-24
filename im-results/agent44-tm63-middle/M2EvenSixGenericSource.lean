@@ -483,7 +483,7 @@ theorem m2EvenSix_generic_q4_prefix_source
       (m2EvenSix_q4_prefix_data_exact a b h ha).1
   rw [hbaseRun] at hlift
   simp only [Option.map_some] at hlift
-  simpa [m2EvenSixGenericCutTape,background] using hlift
+  simpa [m2EvenSixGenericCutTape,background,frame] using hlift
 
 private theorem m2EvenSixGeneric_cut_eq_base_inside
     (L q a b : Nat) (h x : Int)
