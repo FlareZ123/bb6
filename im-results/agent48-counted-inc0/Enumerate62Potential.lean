@@ -58,12 +58,17 @@ def expandProjection (x : Node) (h : 2 ≤ x.holes) : List Node :=
 /-- Source `expand'`: when one undefined transition remains, there are no
 ordinary children; otherwise use the source expansion. -/
 def expandProjection' (x : Node) : List Node :=
-  if h : x.holes = 1 then [] else expandProjection x (by omega)
+  if h : x.holes = 1 then [] else
+    expandProjection x (by
+      have hp : 1 ≤ x.holes := x.holes_pos
+      omega)
 
 theorem expandProjection_length (x : Node) (h : 2 ≤ x.holes) :
     (expandProjection x h).length =
       4 * x.cut.val + (if x.cut.val < 6 then 4 else 0) := by
-  simp [expandProjection, List.length_append, List.length_replicate]
+  by_cases hc : x.cut.val < 6
+  · simp [expandProjection, hc]
+  · simp [expandProjection, hc]
 
 theorem expandProjection_length_le_24 (x : Node) (h : 2 ≤ x.holes) :
     (expandProjection x h).length ≤ 24 := by
@@ -74,7 +79,9 @@ theorem expandProjection_length_le_24 (x : Node) (h : 2 ≤ x.holes) :
 theorem expandProjection_mass_lt (x : Node) (h : 2 ≤ x.holes) :
     mass (expandProjection x h) < weight x := by
   let k : Nat := 25 ^ (x.holes - 1)
-  have hk : 0 < k := by simp [k]
+  have hk : 0 < k := by
+    dsimp [k]
+    exact Nat.pow_pos (by decide : 0 < 25) _
   have hcut : x.cut.val ≤ 6 := by omega
   have hcnt : 4 * x.cut.val + (if x.cut.val < 6 then 4 else 0) ≤ 24 := by
     by_cases hc : x.cut.val < 6 <;> simp [hc] <;> omega
@@ -94,8 +101,11 @@ theorem expandProjection_mass_lt (x : Node) (h : 2 ≤ x.holes) :
   have hcalc :
       mass (expandProjection x h) =
         4 * x.cut.val * k + (if x.cut.val < 6 then 4 * k else 0) := by
-    simp [expandProjection, mass_append, mass_replicate,
-      existingChild, freshChild, weight, k]
+    by_cases hc : x.cut.val < 6
+    · simp [expandProjection, hc, mass_append, mass_replicate,
+        existingChild, freshChild, weight, k]
+    · simp [expandProjection, hc, mass_append, mass_replicate,
+        existingChild, freshChild, weight, k]
   calc
     mass (expandProjection x h)
         = 4 * x.cut.val * k + (if x.cut.val < 6 then 4 * k else 0) := hcalc
@@ -109,7 +119,8 @@ theorem expandProjection'_mass_lt (x : Node) :
   unfold expandProjection'
   by_cases h : x.holes = 1
   · simp [h, mass, weight]
-  · have htwo : 2 ≤ x.holes := by omega
+  · have hp : 1 ≤ x.holes := x.holes_pos
+    have htwo : 2 ≤ x.holes := by omega
     simpa [h] using expandProjection_mass_lt x htwo
 
 inductive Verdict where
@@ -222,6 +233,7 @@ theorem bfsAux_mass_le (decide : Node → Verdict) :
           omega
       | unknown =>
           have hrec := ih (x :: holdout)
+          simp [mass] at hrec
           simp only [bfsAux, hd, mass]
           omega
 
@@ -238,14 +250,13 @@ def fourBfsPasses (decide : Node → Verdict) (q : SearchQueue) : SearchQueue :=
 theorem fourBfsPasses_total_mass_le (decide : Node → Verdict) (q : SearchQueue) :
     totalMass (fourBfsPasses decide q) ≤ totalMass q := by
   unfold fourBfsPasses
-  calc
-    totalMass (bfsRound decide (bfsRound decide (bfsRound decide (bfsRound decide q)))
-        ≤ totalMass (bfsRound decide (bfsRound decide (bfsRound decide q)) :=
-      bfsRound_total_mass_le decide _
-    _ ≤ totalMass (bfsRound decide (bfsRound decide q)) :=
-      bfsRound_total_mass_le decide _
-    _ ≤ totalMass (bfsRound decide q) := bfsRound_total_mass_le decide _
-    _ ≤ totalMass q := bfsRound_total_mass_le decide _
+  have h1 := bfsRound_total_mass_le decide
+    (bfsRound decide (bfsRound decide (bfsRound decide q)))
+  have h2 := bfsRound_total_mass_le decide
+    (bfsRound decide (bfsRound decide q))
+  have h3 := bfsRound_total_mass_le decide (bfsRound decide q)
+  have h4 := bfsRound_total_mass_le decide q
+  exact Nat.le_trans h1 (Nat.le_trans h2 (Nat.le_trans h3 h4))
 
 def rootNode : Node := ⟨11, by decide, ⟨2, by decide⟩⟩
 
@@ -258,7 +269,7 @@ theorem q0_total_mass_le (decide : Node → Verdict) :
     totalMass (q0 decide) ≤ 25 ^ 11 := by
   have hroot : totalMass rootQueue = 25 ^ 11 := by
     simp [totalMass, rootQueue, rootNode, mass, weight]
-  exact le_trans (fourBfsPasses_total_mass_le decide rootQueue) (le_of_eq hroot)
+  exact Nat.le_trans (fourBfsPasses_total_mass_le decide rootQueue) (le_of_eq hroot)
 
 def chunkQueue (q : SearchQueue) (l sz : Nat) : SearchQueue :=
   ⟨(q.active.drop l).take sz, q.holdout⟩
@@ -295,7 +306,7 @@ theorem mass_chunk_le (xs : List Node) (l sz : Nat) :
 
 theorem chunk_active_mass_le (q : SearchQueue) (l sz : Nat) :
     mass (chunkQueue q l sz).active ≤ totalMass q := by
-  unfold chunkQueue totalMass
+  change mass ((q.active.drop l).take sz) ≤ mass q.active + mass q.holdout
   have h := mass_chunk_le q.active l sz
   omega
 
@@ -316,7 +327,7 @@ theorem every_chunk_drains (decide : Node → Verdict) (l sz : Nat) :
   have hchunk := chunk_active_mass_le (q0 decide) l sz
   have hq0 := q0_total_mass_le decide
   have hmax := maxT_ge_25_pow_11
-  exact le_trans (le_trans hchunk hq0) hmax
+  exact Nat.le_trans (Nat.le_trans hchunk hq0) hmax
 
 #print axioms expandProjection_length
 #print axioms expandProjection_length_le_24
