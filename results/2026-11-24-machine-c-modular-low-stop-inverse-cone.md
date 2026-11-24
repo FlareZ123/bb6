@@ -72,4 +72,4 @@ This is a finite computational sample, not a universal statement about all \(m\)
 - Low-stop theorem and example: [ModularConeLowStop.lean](../im-results/agent42-modular-cone/ModularConeLowStop.lean).
 - Exact finite probe: [probe.py](../im-results/agent42-modular-cone/probe.py).
 
-The low-stop module compiled in the source-closure validation preceding the later full-criterion proof failure; a dedicated low-stop CI run, 45364029622, is queued. This result excludes a substantial family of infinite low-stop cylinders. It does not prove that every low-stop parameter is excluded, does not establish Machine C nonhalting, and does not determine \(BB(6)\).
+The low-stop module compiled in the source-closure validation preceding the later full-criterion proof failure; a dedicated low-stop CI run, 45364029622, is in progress. This result excludes a substantial family of infinite low-stop cylinders. It does not prove that every low-stop parameter is excluded, does not establish Machine C nonhalting, and does not determine \(BB(6)\).
