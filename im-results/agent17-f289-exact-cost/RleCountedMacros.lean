@@ -49,7 +49,9 @@ theorem reindex {M : Machine (Fin 2) (Fin 6)} {m n : Nat} {a b : Cfg (Fin 2) (Fi
 
 macro "countExact" t:term : tactic => `(tactic| (
   refine reindex $t ?_
-  simp only [sourceWeightPush, weightNil, weightCons, drBot, drBotZeros, sweep, drOne, drZeros, rnilOne, rnilPow, p1One, p1Pow, p2One, p2Pow] <;> ring))
+  first
+  | rfl
+  | (try simp only [sourceWeightPush, weightNil, weightCons, drBot, drBotZeros, sweep, drOne, drZeros, rnilOne, rnilPow, p1One, p1Pow, p2One, p2Pow]); ring))
 
 macro "countNormList" : tactic => `(tactic|
   simp only [HPow.hPow, List.append_eq,
