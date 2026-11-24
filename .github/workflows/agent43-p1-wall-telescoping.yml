@@ -176,7 +176,9 @@ jobs:
                 lean -o "$LAG/$m.olean" "$LAG/$m.lean"
               done
               lean -o "$AG43/ReverseSet.olean" "$AG43/ReverseSet.lean"
-              lean "$AG43/LagPartitionCert.lean" | tee /tmp/agent43-lag-axioms.txt
+              lean -o "$AG43/ReverseComplement.olean" "$AG43/ReverseComplement.lean"
+              lean -o "$AG43/PackedReverse.olean" "$AG43/PackedReverse.lean"
+              lean -o "$AG43/LagPartitionCert.olean" "$AG43/LagPartitionCert.lean" | tee /tmp/agent43-lag-axioms.txt
               grep -q cert_next_packed /tmp/agent43-lag-axioms.txt
               if grep -q sorryAx /tmp/agent43-lag-axioms.txt; then exit 1; fi
               exit 0
