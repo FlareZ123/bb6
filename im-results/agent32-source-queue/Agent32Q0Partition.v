@@ -1,5 +1,5 @@
 From BusyCoq Require Import Enumerate62.
-From Coq Require Import List NArith Lia.
+From Coq Require Import List NArith Lia Arith.PeanoNat.
 Import ListNotations.
 
 (* The census is a VM-checked equality of the original pinned source,
