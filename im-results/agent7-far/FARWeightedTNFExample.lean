@@ -24,22 +24,71 @@ theorem gliderRoot :
   simp [initialSlot, gliderExample]
 
 theorem gliderSupport : TNFSupport gliderExample 3 := by
-  intro s t h
-  rcases s with ⟨q, a⟩
-  fin_cases q <;> cases a <;>
-    simp [gliderExample] at h <;>
-    cases t with
-    | none => simp [gliderExample] at h
-    | some mv =>
-      simp [gliderExample] at h
-      cases h
-      constructor <;> simp
+  classical
+  intro s t ht
+  by_cases h0 : s = (0,false)
+  · subst s
+    have ht' : t = some ⟨true,true,1⟩ := by
+      simpa [gliderExample] using ht.symm
+    subst t
+    constructor
+    · simp
+    · intro mv hm
+      have hmv : (⟨true,true,1⟩ : Move) = mv := Option.some.inj hm
+      subst mv
+      simp
+  · by_cases h1 : s = (1,false)
+    · subst s
+      have ht' : t = some ⟨false,false,0⟩ := by
+        simpa [gliderExample] using ht.symm
+      subst t
+      constructor
+      · simp
+      · intro mv hm
+        have hmv : (⟨false,false,0⟩ : Move) = mv := Option.some.inj hm
+        subst mv
+        simp
+    · by_cases h2 : s = (0,true)
+      · subst s
+        have ht' : t = some ⟨false,true,2⟩ := by
+          simpa [gliderExample] using ht.symm
+        subst t
+        constructor
+        · simp
+        · intro mv hm
+          have hmv : (⟨false,true,2⟩ : Move) = mv := Option.some.inj hm
+          subst mv
+          simp
+      · by_cases h3 : s = (2,false)
+        · subst s
+          have ht' : t = some ⟨false,true,0⟩ := by
+            simpa [gliderExample] using ht.symm
+          subst t
+          constructor
+          · simp
+          · intro mv hm
+            have hmv : (⟨false,true,0⟩ : Move) = mv := Option.some.inj hm
+            subst mv
+            simp
+        · simp [gliderExample, h0, h1, h2, h3] at ht
 
 theorem gliderNoAssignedHalt :
     weightedTNFNoAssignedHalt gliderExample := by
-  intro s h
-  rcases s with ⟨q, a⟩
-  fin_cases q <;> cases a <;> simp [gliderExample] at h
+  classical
+  intro s
+  by_cases h0 : s = (0,false)
+  · subst s
+    simp [gliderExample]
+  · by_cases h1 : s = (1,false)
+    · subst s
+      simp [gliderExample]
+    · by_cases h2 : s = (0,true)
+      · subst s
+        simp [gliderExample]
+      · by_cases h3 : s = (2,false)
+        · subst s
+          simp [gliderExample]
+        · simp [gliderExample, h0, h1, h2, h3]
 
 /-- A concrete weighted-TNF nonhalting leaf built from an explicit
     one-state FAR certificate, not from the FAR search procedure. -/
