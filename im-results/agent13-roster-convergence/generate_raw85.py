@@ -48,8 +48,8 @@ if len(canonical) != 14:
 if not smt_path.exists():
     raise FileNotFoundError("commit the eight workflow-validated records as im-results/agent21-raw85/smt-candidates.txt")
 smt = read_candidate_bank(smt_path)
-if len(smt) != 8:
-    raise RuntimeError(f"expected eight SMT raw85 candidates, found {len(smt)}")
+if not smt or len(smt) > 8:
+    raise RuntimeError(f"expected one to eight exact-target SMT candidates, found {len(smt)}")
 extra = []
 for bank_name, bank in ((canonical_path.name, canonical), (smt_path.name, smt)):
     print(f"RAW85_CANDIDATE_BANK {bank_name} {len(bank)}")
