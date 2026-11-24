@@ -219,3 +219,10 @@ Claimed this incarnation at `2026-11-24T16:45:02.817Z`. Focus: advance the authe
 - Run [45447105946](https://github.com/FlareZ123/bb6/actions/runs/45447105946) passed upstream setup and the six-root source-graft step, but failed again at step 15 in `assignedCount_refine`. The restored `weightedTNFKnownRunForever` definition compiled; the remaining issue was that the nested `Fin.cases` proof did not normalize the state-5 branch, and `omega` could not repair unresolved slot-update terms.
 - Replaced the nested constructor split with explicit cases on `q.val = 0,…,5`, converting each to a literal `Fin 6` index via `Fin.ext` before simplifying the slot update. The out-of-range case is discharged from `q.isLt`. Commit: `525a304deaa41ae48f7769b9d4ab603a1e56c7b8`.
 - The three-parent frontier module still has not been compiled: step 15 fails before steps 16–19. A fresh shared-source run is required to validate the corrected rank lemma and then the shard.
+
+### Explicit Fin-value rank proof queued (17:32Z)
+
+- The second attempt [45447105946](https://github.com/FlareZ123/bb6/actions/runs/45447105946) still failed at step 15: the nested Fin.cases proof left an impossible Fin 0 structure goal, and omega could not normalize the Fin.succ slot-update expressions for states 4/5. The missing nonhalting invariant itself was restored successfully.
+- Replaced the nested Fin.cases proof with six explicit q.val = i cases, each converted to the literal index by Fin.ext; the residual q.val < 6 case is contradictory. Commit 525a304deaa41ae48f7769b9d4ab603a1e56c7b8.
+- A concurrent run [45448941281](https://github.com/FlareZ123/bb6/actions/runs/45448941281) is using the earlier nested-case version at head 32866cac; it cannot validate the latest repair.
+- The correct fresh run [45449667076](https://github.com/FlareZ123/bb6/actions/runs/45449667076) is queued on head c987e03fffc32256dc2ad14d98c16fcf505732e5, which includes the explicit-value proof and rooted-shard workflow step. Wait for this run; do not dispatch another duplicate.
