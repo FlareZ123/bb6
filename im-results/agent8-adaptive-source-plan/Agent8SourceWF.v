@@ -83,7 +83,9 @@ Proof.
     rewrite !source_count_formula;
     rewrite E;
     repeat (rewrite source_upd_hit || rewrite source_upd_miss by discriminate);
-    cbn [hole_value]; Show; lia.
+    cbn [hole_value];
+    match goal with |- ?G => idtac "source_count_update goal:" G end;
+    lia.
 Qed.
 
 Lemma source_count_one t h :
