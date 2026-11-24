@@ -1,4 +1,5 @@
 import FourHoleSiblingData
+import ThreeHoleAudit
 import FourHoleResidualRoster
 
 set_option maxRecDepth 100000
@@ -16,14 +17,14 @@ open BB6.Agent31ThreeHole
     left by the 395-bound seven-edge first-one frontier. -/
 theorem sibling_in_roster :
     ∃ e ∈ remainingRootRoster, e.2 = wideParent := by
-  have h : remainingRootRoster.any (fun e => tableOK e.2 wideParent) = true := by
+  have h : remainingRootRoster.any (fun e => BB6.Agent31ThreeHole.tableOK e.2 wideParent) = true := by
     decide
   obtain ⟨e, he, hcheck⟩ := List.any_eq_true.mp h
-  exact ⟨e, he, tableOK_sound _ _ hcheck⟩
+  exact ⟨e, he, BB6.Agent31ThreeHole.tableOK_sound _ _ hcheck⟩
 
 /-- Remove the now-certified sibling from the 124-cylinder residual roster. -/
 def reducedRosterRA : List (List Move × PartialMachine) :=
-  remainingRootRoster.filter fun e => !(tableOK e.2 wideParent)
+  remainingRootRoster.filter fun e => !(BB6.Agent31ThreeHole.tableOK e.2 wideParent)
 
 theorem reducedRosterRA_count : reducedRosterRA.length = 123 := by
   decide
@@ -36,9 +37,9 @@ theorem reducedRosterRA_sound (m : Machine)
       ∃ e ∈ reducedRosterRA, compatible e.2 m := by
   rcases remainingRootRoster_sound_7014 m hm with hbound | ⟨e, he, hp⟩
   · exact Or.inl hbound
-  · by_cases hcheck : tableOK e.2 wideParent = true
+  · by_cases hcheck : BB6.Agent31ThreeHole.tableOK e.2 wideParent = true
     · left
-      have heq := tableOK_sound _ _ hcheck
+      have heq := BB6.Agent31ThreeHole.tableOK_sound _ _ hcheck
       exact all_completions_weighted m (heq ▸ hp)
     · right
       exact ⟨e, List.mem_filter.mpr ⟨he, by simpa using hcheck⟩, hp⟩
