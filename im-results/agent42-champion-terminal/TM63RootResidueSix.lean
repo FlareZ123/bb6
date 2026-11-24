@@ -1,5 +1,5 @@
 import TM63RootResidueSeven
-import M2EvenResidueSixCounted
+import M2EvenSixGenericCounted
 import M1OddResidueFive
 import Lean.Elab.Tactic.Omega
 
@@ -22,7 +22,7 @@ open BB6Coverage.Agent42RootAttainable
 open BB6Coverage.Agent42RootCountdown
 open BB6Coverage.Agent42MiddleSectionCountdown
 open BB6Coverage.Agent41TM63ResidueSeven
-open BB6Coverage.Agent42M2EvenResidueSixCounted
+open BB6Coverage.Agent44M2EvenSixGenericCounted
 open BB6Coverage.Agent24M1ResidueFive
 
 private theorem run_compose_local {n m : Nat} {c1 c2 c3 : Config}
@@ -105,11 +105,24 @@ theorem tm63_blank_reaches_after_middle10 :
       some (s1Config tm63Length1
         (16*tm63RootResidueSixK+5) 1
         tm63MiddleAfter10A 0 tm63MiddleAfter10B tm63MiddleAfter10Head) := by
-  have hrow := m2Even_residue6_counted_increment_source
-    tm63Length1 tm63RootResidueSixK
+  have hmul : 8*(2*tm63RootResidueSixK) = 16*tm63RootResidueSixK := by omega
+  have hboundGeneric :
+      8*(2*tm63RootResidueSixK)+6 < 2^tm63Length1 := by
+    simpa [hmul] using tm63_root_residue6_bound
+  have hrowGeneric := m2EvenSix_generic_counted_increment_source
+    tm63Length1 (2*tm63RootResidueSixK)
     tm63RootResidueSixA tm63RootResidueSixB tm63RootResidueSixHead
-    tm63_root_length_ge_four tm63_root_residue6_bound
-    tm63_root_residue6_a_pos
+    (by omega) hboundGeneric tm63_root_residue6_a_pos
+  have hrow :
+      run tm2 (proposedIncrementCost 2 (16*tm63RootResidueSixK+6)
+        tm63RootResidueSixA tm63RootResidueSixB)
+        (s1Config tm63Length1 (16*tm63RootResidueSixK+6) 2
+          tm63RootResidueSixA 0 tm63RootResidueSixB tm63RootResidueSixHead) =
+      some (s1Config tm63Length1 (16*tm63RootResidueSixK+5) 1
+        (tm63RootResidueSixA+tm63RootResidueSixB+2) 0
+        (2^tm63RootResidueSixB-1)
+        (tm63RootResidueSixHead+5+3*tm63RootResidueSixB)) := by
+    simpa [hmul] using hrowGeneric
   have hcomp := run_compose_local
     tm63_blank_reaches_after_middle9 hrow
   simpa [tm63MiddleFirst10Moves, tm63RootResidueSixK,
