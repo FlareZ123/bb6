@@ -131,12 +131,33 @@ theorem b_source (t : Nat) :
         true :: true :: List.replicate (64*t+25) true := by
     rw [show 64*t+27 = (64*t+25)+1+1 by omega,
       List.replicate_succ, List.replicate_succ]
+  have htargetTape :
+      List.replicate (8*K+9) true ++ ys =
+        true :: true :: (List.replicate (64*t+25) true ++
+          (false :: true :: List.replicate 5 true)) := by
+    calc
+      _ = (List.replicate (8*K+9) true ++ List.replicate 10 true) ++
+          (false :: List.replicate 6 true) := by
+            simp [ys, List.append_assoc]
+      _ = List.replicate (64*t+27) true ++
+          (false :: List.replicate 6 true) := by rw [hrep]
+      _ = (true :: true :: List.replicate (64*t+25) true) ++
+          (false :: List.replicate 6 true) := by rw [hfront]
+      _ = true :: true :: (List.replicate (64*t+25) true ++
+          (false :: true :: List.replicate 5 true)) := by
+            simp [List.append_assoc, List.replicate_succ]
   have htarget :
       (⟨[],false,List.replicate (8*K+9) true ++ ys,5⟩ :
         CryptidBoundary.Cfg) = bMiddle t := by
-    simp [bMiddle, DRegularSource.sourceSection,
-      CryptidBoundary.init, CryptidBoundary.oppairs,
-      ys, hrep, hfront, List.append_assoc]
+    change
+      (⟨[],false,List.replicate (8*K+9) true ++ ys,5⟩ :
+        CryptidBoundary.Cfg) =
+      (⟨[],false,true :: true :: (List.replicate (64*t+25) true ++
+        (false :: true :: List.replicate 5 true)),5⟩ :
+        CryptidBoundary.Cfg)
+    exact congrArg
+      (fun r : List Bool => (⟨[],false,r,5⟩ : CryptidBoundary.Cfg))
+      htargetTape
   calc
     CryptidBoundary.run (bCost t) (eMiddle t) =
         CryptidBoundary.run (12*K*K+49*K+40)
@@ -177,7 +198,7 @@ theorem b_reentry_source (t : Nat) (ht : t % 3 = 2) :
   change CryptidBoundary.run (bThirdCost t)
     (DRegularSource.sourceSection ⟨64*t+27,1,5⟩) =
       DRegularSource.sourceSection (pureReentry t)
-  rw [hs, htgt]
+  rw [hs, ← htgt]
   simpa [bThirdCost,k,bThirdIndex] using
     (BB6.Agent31RegularB.b_one k 5)
 
