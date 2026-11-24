@@ -31,10 +31,10 @@ theorem r6_special_exact : r6.child r6.special = forgetHaltRows expectedRLE_r6 :
 /-- Full expanded parents. The designated child is supplied by the pinned
     upstream nonhalting theorem, never by a simulation cutoff. -/
 def r2_certificate : WeightedTNFCertificate r2.bound r2.parent 6 :=
-  assemble r2 r2_valid (r2_special_exact ▸ r2_weighted_leaf r2.bound)
+  assemble r2 r2_valid (by rw [r2_special_exact]; exact r2_weighted_leaf r2.bound)
 
 def r6_certificate : WeightedTNFCertificate r6.bound r6.parent 6 :=
-  assemble r6 r6_valid (r6_special_exact ▸ r6_weighted_leaf r6.bound)
+  assemble r6 r6_valid (by rw [r6_special_exact]; exact r6_weighted_leaf r6.bound)
 
 theorem r2_exact_weighted_threshold (B : Nat) :
     (∀ m, compatible r2.parent m → WeightedBound B m) ↔ 471 ≤ B :=
