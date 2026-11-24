@@ -1,6 +1,6 @@
-# Eight raw85 partial tables passed targeted composed-SMT FAR search
+# Eight raw85 partial tables with no start-preserving canonical DFA through 5 states
 
-These are the eight leaves that had no start-preserving canonical DFA through 5 states. The corresponding workflow run IDs are in README.md, in the same order.
+These are the current eight destination tables to target with composed-SMT FAR search. Current successful run IDs and exact DFA/orientation records belong in smt-candidates-provenance.md; do not infer them from the superseded run list in README.md.
 
 1. 1RB0LC_1RC1LF_0RD1RC_1LD1RE_---0LB_1RC1RA
 2. 1RB0LE_1RC1LF_0RD1RF_1LD1RE_---0LB_0RC1RA
