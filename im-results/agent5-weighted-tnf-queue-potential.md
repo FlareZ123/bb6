@@ -1,49 +1,70 @@
-# A well-founded potential for first-hole queue expansion
+# A well-founded potential for the pinned first-hole queue
 
-**Status:** conditional algorithmic lemma for the weighted-TNF programme. This is not a BB(6) upper-bound proof and does not certify the upstream queue implementation.
+**Status:** conditional algorithmic lemma grounded in the pinned upstream source. This is not a BB(6) upper-bound proof and does not certify the computed holdout roster.
 
-## Setup
+## Exact queue semantics
 
-Let (Q) be a finite queue of sparse partial tables. Let (u(p)) be the number of unassigned transition slots in a queued node (p). A first-hole expansion removes one node (p) and does one of two things:
+The pinned source is ccz181078/busycoq, file verify/Enumerate62.v, revision 33209bc7dc282b38c8cd6be507bfc551fea56108. Its SearchQueue is a pair q=(q1,q2):
 
-1. classifies (p) and enqueues no children; or
-2. replaces (p) by a complete family of children, each obtained by assigning the current hole, hence each with exactly (u(p)-1) unassigned slots.
+- q1=fst q is the active queue;
+- q2=snd q is the holdout list.
 
-For canonical TNF expansion at support cut (c), the ordinary children are indexed by
+For q1=x::q1', SearchQueue_upd applies the decider:
+- Halt h: q1 becomes expand' x h ++ q1', q2 is unchanged;
+- NonHalt: x is dropped from q1;
+- Unknown: x is dropped from q1 and moved to q2.
+
+The source's expand x h has two parts. For each existing state q in firstn m all_qs it creates four ordinary transitions (two writes and two directions); it also creates four transitions to the least fresh state q_m when one exists. Thus there are 4(m+1) children when m<6, and 24 when m=6: at most **28** children. Every child has num_undef_trans = Nat.pred n. The wrapper expand' returns [] when n=1, so no child is produced at the final hole.
+
+The holdout list q2 is not processed by SearchQueue_upds. Unknown transfers a node out of the active queue; later chunk processing accumulates it in q2.
+
+## Potential on the active queue
+
+Let n(x)=x.num_undef_trans and define
 [
-(w,dir,q),quad w,dir\in\{0,1\},quad q<c,
+\Phi(q)=\sum_{x\in\mathrm{fst}(q)}29^{n(x)}\in\mathbb N.
 ]
-and the fresh-label children by ((w,dir)) with successor (q=c). Thus there are exactly (4(c+1)\le28) ordinary children when (c\le6). If an implementation separately enqueues the halt branch, the total is at most 29.
 
-## Potential
+Every SearchQueue_upd step with a nonempty active queue strictly decreases this potential:
 
-For a safe uniform branch bound of 29, define
+- Halt: remove the term 29^n and add at most 28 terms 29^(n-1), whose sum is strictly smaller because 28*29^(n-1) < 29^n.
+- NonHalt: remove the positive term 29^n.
+- Unknown: remove the positive term 29^n from q1. Do **not** include q2 in the potential: the Unknown node is transferred there unchanged.
+
+Consequently, if SearchQueue_upds is allowed to continue until q1 is empty, it must empty after finitely many updates. More quantitatively, the number of updates is at most the initial active-queue potential.
+
+## Connection to the fixed MAXT budget
+
+The source defines MAXT=2^60 and computes holdout_i l sz by running SearchQueue_upds decider (q_i l sz) MAXT, where q_i takes a chunk of the finite q0 active list and preserves q0's prior holdouts.
+
+Thus the potential gives a concrete route to proving that each holdout_i chunk was fully processed: prove
 [
-\Phi(Q)=\sum_{p\in Q}30^{u(p)}\in\mathbb N.
+\Phi(q_i(l,sz))\le2^{60}
 ]
+for every actual chunk. Then the active queue must empty before the MAXT fuel expires, and the resulting q2 contains every Unknown node from that chunk.
 
-If a node with (u=u(p)>0) is classified, its contribution (30^u) disappears. If it is expanded into at most 29 children, their total contribution is at most
-[
-29\cdot30^{u-1}<30^u.
-]
-All other queue entries are unchanged. Therefore every queue update strictly decreases (\Phi). Since (\mathbb N) is well-founded, no infinite sequence of such updates exists. Starting from one node with (u_0) holes, the number of updates is bounded by (30^{u_0}).
+The crude worst-case bound for a chunk of 100 nodes with n≤11 is 100*29^11, which is slightly larger than 2^60 and therefore insufficient. If every node in a chunk has n≤10, the crude bound 100*29^10 is already below 2^60. The useful next computation is the exact per-chunk potential (or a tighter histogram bound) from q0, not another arbitrary runtime increase.
 
-The base 30 is deliberately conservative. If the source queue uses all 24 ordinary instructions and handles halt separately, base 25 suffices; if it includes the halt option as a queued branch, base 26 suffices. The canonical TNF bound gives 28 ordinary children, or 29 including halt, so base 30 covers either convention.
+The four BFS passes defining q0 use SearchQueue_upd_bfs and SearchQueue_rst. In that variant, Unknown nodes are moved to q2 and then requeued by the reset; the above strict-decrease argument applies directly to the subsequent non-BFS SearchQueue_upds used by holdout_i, not to the total q1+q2 mass during a BFS pass.
 
-## What this does and does not establish
+## What remains unproved
 
-This is a clean termination argument for a queue that actually removes one node and either classifies it or replaces it by its complete first-hole expansion. It is independent of the soundness of any decider.
+This establishes only a conditional queue-termination bound. It does not by itself prove:
 
-It does **not** establish that the pinned `Enumerate62.v` implementation satisfies those assumptions. In particular, the exact `SearchQueue_upd` code must be checked for requeueing, unchanged nodes, duplicate bookkeeping, and whether every child adds exactly one assigned slot. The potential also does not prove that a computed holdout list is exhaustive unless the update's coverage invariant is proved.
+1. that the source's computed q0 is the exact frontier intended by the root expansion;
+2. that each actual chunk's potential is at most MAXT;
+3. that SearchQueue_upd preserves a coverage invariant over all compatible total machines;
+4. that the decider's Halt and NonHalt answers are sound in the required source semantics;
+5. that the resulting holdout list has been completely classified.
 
-The local coverage obligation is precisely the one formalized by `WeightedTNFCertificate.expand`: for every compatible total machine, the current hole is either the halt case (discharged by the first-hole weighted bound) or one of the canonical ordinary children. The remaining source-level work is to connect the actual queue update to this complete branch family and prove the queue's initial-to-final coverage invariant.
+The local expansion-coverage obligation is the one represented by WeightedTNFCertificate.expand: every compatible total machine at a first hole is either in the halt case (discharged by the explicit weighted halt bound) or one of the canonical ordinary children. The queue proof must connect the pinned source's expand/expand' cases to this formal branch family, and separately prove soundness of decider classifications.
 
 ## Suggested formalization
 
-After importing the exact upstream queue representation, define its hole count and queue potential. Prove a local lemma for each `SearchQueue_upd` case:
+1. Import or faithfully model the exact TNF_Node.T, SearchQueue, SearchQueue_upd and expand' definitions.
+2. Prove a local lemma that every expand' child has one fewer undefined slot and that the child count is at most 28.
+3. Prove strict decrease of Phi(fst q) for each nonempty SearchQueue_upd case.
+4. Extract the exact n(x) histogram or exact Phi value for each q_i chunk and prove it is at most MAXT.
+5. Prove the independent queue coverage invariant, using the weighted TNF branch theorem for Halt expansions and source-certified decider correctness for NonHalt/Halt classifications.
 
-- a classified node contributes no replacement queue entries;
-- an expanded node contributes at most 29 entries, each with one fewer hole;
-- no update leaves the selected node unchanged or requeues it without progress.
-
-Then derive strict decrease by `Nat.pow_succ` and `omega`, and use well-founded recursion on (\Phi) to prove queue drain. Keep the independent machine-coverage theorem separate; termination alone is not exhaustiveness.
+Termination and exhaustiveness are distinct: the potential addresses only the former.
