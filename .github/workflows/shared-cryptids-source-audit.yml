@@ -424,6 +424,23 @@ jobs:
             fi
           done
 
+      - name: Close sixth authentic Cryptids parent expansion (r4)
+        if: ${{ inputs.verify_six_root_graft && inputs.verify_weighted_tnf_leaves }}
+        working-directory: /tmp/cryptids
+        shell: bash
+        run: |
+          set -euo pipefail
+          export LEAN_PATH=BB6Agent42
+          for m in R4Counter R4Parent R4Graft; do
+            cp "$GITHUB_WORKSPACE/im-results/agent47-r4-counter/$m.lean" BB6Agent42/
+            log="/tmp/cryptids-source-audit/$m.log"
+            lake env lean -o "BB6Agent42/$m.olean" "BB6Agent42/$m.lean" 2>&1 | tee "$log"
+            if grep -Eq 'sorryAx|native_decide' "$log"; then
+              echo "::error::forbidden axiom or native_decide in $m"
+              exit 1
+            fi
+          done
+
       - name: Compile exact F289 cost and frontier graft
         if: ${{ inputs.verify_f289_exact_graft }}
         working-directory: /tmp/cryptids
