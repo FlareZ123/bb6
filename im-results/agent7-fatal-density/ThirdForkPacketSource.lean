@@ -253,6 +253,71 @@ private theorem packet_feeder_data (n a b t:Nat)
       signedZ n j=(81*(d:Int)) from
       ⟨hd,hm,hb.1,hb.2,hz,hqeq,heOdd,hparent,hphys⟩)
 
+
+private theorem ray_strict_decreasing_on_margin (n j1 j2:Nat)
+    (hn:4≤n)
+    (hm1:deficit n j1≤2^n)
+    (hm2:deficit n j2≤2^n)
+    (hindex:j1<j2):
+    ray n j2<ray n j1:=by
+  have hpowle:2^j1≤2^(j2-1):=
+    Nat.pow_le_pow_right (by decide:0<(2:Nat)) (by omega)
+  have hpbase:1≤2^(j2-1):=Nat.one_le_pow (j2-1) 2 (by decide)
+  have hstep:j2=(j2-1)+1:=by omega
+  have hpowlt:2^(j2-1)<2^j2:=by
+    rw [hstep,Nat.pow_succ]
+    omega
+  have hpow:2^j1<2^j2:=lt_of_le_of_lt hpowle hpowlt
+  have hc:0<2*n+3:=by omega
+  have hclosed1:=deficit_closed n j1 (by omega)
+  have hclosed2:=deficit_closed n j2 (by omega)
+  have hprod:2^j1*(2*n+3)<2^j2*(2*n+3):=
+    Nat.mul_lt_mul_of_pos_right hpow hc
+  have hdef: deficit n j1<deficit n j2:=by omega
+  have hr1:ray n j1+deficit n j1=4*2^n:=by
+    dsimp [ray]
+    omega
+  have hr2:ray n j2+deficit n j2=4*2^n:=by
+    dsimp [ray]
+    omega
+  omega
+
+private theorem packet_index_lex (n b1 t1 b2 t2:Nat)
+    (ht1:t1<3) (ht2:t2<3)
+    (hlex:b1<b2 ∨ (b1=b2 ∧ t1<t2)):
+    packetIndex n b1 t1<packetIndex n b2 t2:=by
+  unfold packetIndex
+  rcases hlex with h|⟨rfl,h⟩ <;> omega
+
+/-- The predecessor heights are strictly ordered by packet and lift index.
+    This certifies disjointness of the per-packet parentless families. -/
+theorem packetQ_strict_lex (n a b1 t1 b2 t2:Nat)
+    (hn:257≤n)
+    (hsector:n%6=4 ∨ n%6=5)
+    (ha:2^a≤2*n+3 ∧ 2*n+3<2^(a+1))
+    (hpacket1:a+162*(b1+1)+13≤n)
+    (hpacket2:a+162*(b2+1)+13≤n)
+    (ht1:t1<3) (ht2:t2<3)
+    (hlex:b1<b2 ∨ (b1=b2 ∧ t1<t2)):
+    packetQ n b2 t2<packetQ n b1 t1:=by
+  obtain ⟨hd1,hm1,hb1L,hb1U,hz1,hqeq1,he1,hp1,hphys1⟩ :=
+    packet_feeder_data n a b1 t1 hn hsector ha hpacket1 ht1
+  obtain ⟨hd2,hm2,hb2L,hb2U,hz2,hqeq2,he2,hp2,hphys2⟩ :=
+    packet_feeder_data n a b2 t2 hn hsector ha hpacket2 ht2
+  have hmargin1:deficit n (packetIndex n b1 t1)≤2^n:=by omega
+  have hmargin2:deficit n (packetIndex n b2 t2)≤2^n:=by omega
+  have hj:=packet_index_lex n b1 t1 b2 t2 ht1 ht2 hlex
+  have hr:=ray_strict_decreasing_on_margin n
+    (packetIndex n b1 t1) (packetIndex n b2 t2) (by omega)
+    hmargin1 hmargin2 hj
+  have hX:2*ray n (packetIndex n b2 t2)+5<
+      2*ray n (packetIndex n b1 t1)+5:=by omega
+  have hd:packetD n b2 t2<packetD n b1 t1:=by
+    rw [hz1,hz2] at hX
+    omega
+  rw [hqeq1,hqeq2]
+  omega
+
 /-- Modulo 243, the quotient of the three packet lifts is an affine
     progression with a nonzero 3-adic step. -/
 private theorem packet_quotient_mod (n b t dBase dt:Nat)
