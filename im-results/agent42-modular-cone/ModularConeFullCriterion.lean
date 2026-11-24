@@ -30,14 +30,15 @@ private theorem low_stop_bound_full (m : Nat) :
     Nat.mul_le_mul_left 2 hp
   have hpow : 2*2^(2*m+2) = 2^(2*m+3) := by
     rw [show 2*m+3=(2*m+2)+1 by omega, Nat.pow_succ]
-    rfl
+    omega
   omega
 
 private theorem high_stop_bound_full (j m : Nat) :
     j+3*m+5 ≤ 2^(2*m+2)*(j+3) := by
   have hp : 4*m+4 ≤ 2^(2*m+2) :=
     BB6.Agent29New.power_linear_bound m
-  have hp1 : 1 ≤ 2^(2*m+2) := Nat.pow_pos (by decide)
+  have hp0 : 0 < 2^(2*m+2) := Nat.pow_pos (by decide)
+  have hp1 : 1 ≤ 2^(2*m+2) := by omega
   have hj : j ≤ 2^(2*m+2)*j := by
     simpa only [Nat.one_mul] using Nat.mul_le_mul_right j hp1
   rw [Nat.mul_add]
@@ -65,7 +66,7 @@ theorem blank_halts_iff_full_modular :
         (BB6.Agent3ValSix.valSixMixedRootDecision_iff 1 k).mp hroot
       have hstop : k+3*m+4=2^(2*m+3) := by
         dsimp [k]
-        exact Nat.sub_add_cancel (low_stop_bound_full m)
+        omega
       have hC70 : m%128 ≠ 18 := by
         intro hm
         exact (BB6.Agent20C70.blank_no_low_depth_18_mod128 m k hm hstop) hr
@@ -83,7 +84,7 @@ theorem blank_halts_iff_full_modular :
         (BB6.Agent3ValSix.valSixMixedRootDecision_iff (2*j+3) k).mp hroot
       have hstop : k+j+3*m+5=2^(2*m+2)*(j+3) := by
         dsimp [k]
-        exact Nat.sub_add_cancel (high_stop_bound_full j m)
+        omega
       have hC70 :
           ¬((j%128=63 ∧ m%128=82) ∨ (j%128=127 ∧ m%128=18)) := by
         intro hres
