@@ -1,5 +1,7 @@
 # Rotated sparse-remainder cutoff for cancellation ancestry
 
+**Superseding result:** [SharpenedRotationBound.md](SharpenedRotationBound.md) kernel-checks a stronger bound for r>=8 and the second-level progression; the r=7 branches are now closed by the affine extension. This file retains the original paper argument.
+
 **Status:** paper-level universal arithmetic proof, with reproducible exact GMP finite checks. The cutoff and source composition are not yet Lean-checked. The eighth cancellation feeder has no incoming high-level edge; the seventh has precisely two. These results use the existing exact source inverse equation and the new cutoff. The unbounded terminal exponent and authentic blank-root decision for Space Needle remain open.
 
 ## Theorem

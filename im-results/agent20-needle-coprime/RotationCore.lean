@@ -106,6 +106,7 @@ theorem rotation_zero_of_gap (m B h : Nat) (ts : List Term)
     omega
   exact Int.eq_zero_of_dvd_of_natAbs_lt_natAbs (rotated_divisibility m h ts hd) hsmall
 
+/-- Two shifts separated by at least B cannot both land in the same bad interval. -/
 theorem bad_shift_unique (m B e j k : Nat) (hB : 0 < B)
     (hj : j*B < m) (hk : k*B ≤ m-B)
     (hjk : j < k)
@@ -126,6 +127,8 @@ theorem bad_shift_unique (m B e j k : Nat) (hB : 0 < B)
   rw [hs, Nat.mod_eq_sub_mod (show (e+j*B)%m+d ≥ m by omega), Nat.mod_eq_of_lt (show (e+j*B)%m+d-m<m by omega)] at hbk
   omega
 
+/-- With a distinguished constant term at exponent zero, n other exponents
+    admit a rotation among n+1 equally spaced cuts if (n+1)*B ≤ m. -/
 theorem exists_good_shift (es : List Nat) (m B : Nat)
     (hB : 0 < B) (hsize : (es.length+1)*B ≤ m) :
     ∃ h : Nat, h < m ∧ h ≤ m-B ∧ ∀ e ∈ es, (e+h)%m ≤ m-B := by

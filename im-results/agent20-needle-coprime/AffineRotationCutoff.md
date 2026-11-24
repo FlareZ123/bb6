@@ -1,5 +1,7 @@
 # Affine reverse-history rotation cutoff and complete seventh-feeder exclusion
 
+**Current extension:** [SharpenedRotationBound.md](SharpenedRotationBound.md) supplies the checked three-term resonance theorem, stronger source-equation cutoff and modular-only r=9 exclusion. The affine cutoff in this note remains a paper proof.
+
 This extends [RotationCutoff.md](RotationCutoff.md) to every fixed reverse history satisfying the explicit hypotheses below. The cutoff is presently a paper proof; the finite checks are exact GMP integer calculations, not a Lean certificate.
 
 Let N=9^r, a=(N+5)/2, A=2^a, P=(A^(2r)-N)/(A+3), M=2ra, and write a shifted target as 2b=(c AP+d)/L, where c is a positive power of two, d even, L positive odd and coprime to 3. Suppose 3≤b≤AP/2. For m=w+1≥1 an incoming edge requires
