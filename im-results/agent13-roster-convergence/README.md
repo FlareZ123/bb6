@@ -17,4 +17,4 @@ This is an intermediate upper-bound component, not a complete BB(6) proof: the 1
 
 ## Verification
 
-The CI target weighted-tnf-roster-convergence regenerates the source-derived four-hole data and the Agent50 replay manifest, compiles the import closure without ExceptionalPumps, and rejects sorryAx or native_decide in the output.
+The CI target weighted-tnf-roster-convergence regenerates the source-derived four-hole data and uses the committed Agent50 replay manifest and sweep data, compiles the import closure without ExceptionalPumps, and rejects sorryAx or native_decide in the output.
