@@ -447,7 +447,7 @@ jobs:
           set -euo pipefail
           cd im-results/agent32-f418-shift-overflow
           export LEAN_PATH=.
-          for m in F418Arithmetic F418EventSystem F418Episodes F418ReturnBounds F418NormalReturn F418HighTail F418NormalPath F418SparseGate F418RecoveryCore F418FullReturn; do
+          for m in F418Arithmetic F418EventSystem F418Episodes F418ReturnBounds F418NormalReturn F418HighTail F418NormalPath F418SparseGate F418RecoveryCore F418FullReturn F418SignedQueue F418QueueInvariant F418QueueHistory F418FullQueue; do
             lean -o "$m.olean" "$m.lean" 2>&1 | tee -a /tmp/f418-return-proof.log
           done
           if grep -q 'sorryAx' /tmp/f418-return-proof.log; then
@@ -463,4 +463,6 @@ jobs:
           for ax in matches:
               assert {x.strip() for x in ax.split(',') if x.strip()} <= allowed, ax
           assert "seed_none_iff_fatal_pure" in s
+          assert "fullQueue_sound" in s
+          assert "even_above_debtWidth" in s
           PY
