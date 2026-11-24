@@ -12,7 +12,7 @@ from pathlib import Path
 
 from z3 import (
     And, BitVec, BitVecVal, Bool, Extract, If, Implies, Or,
-    SolverFor, is_true, sat, unsat,
+    SolverFor, ULT, is_true, sat, unsat,
 )
 
 
@@ -46,7 +46,7 @@ def solve_one(table, d: int, reflected: bool, timeout_ms: int):
     ]
     for l in range(d):
         for b in range(2):
-            solver.add(delta[l][b] < BitVecVal(d, width))
+            solver.add(ULT(delta[l][b], BitVecVal(d, width)))
     solver.add(delta[0][0] == BitVecVal(0, width))
 
     # Remove unreachable-state symmetries: every nonzero DFA state has a
