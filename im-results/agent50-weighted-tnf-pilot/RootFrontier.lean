@@ -221,15 +221,8 @@ theorem pathOK84_cons {p : PartialMachine} {cut n : Nat} {s : Slot}
     s.1.val < cut ∧ mv.next.val ≤ cut ∧
     weightOK p s n 84 = true ∧
     pathOK84 (refine p s (some mv)) (advanceCut cut mv) xs = true := by
-  simp only [pathOK84, Bool.and_eq_true, decide_eq_true_eq] at h
-  rcases h with ⟨hhole, hread, hslot, hmove, hweight, htail⟩
-  exact ⟨hhole, hread, hslot, hmove, hweight, htail⟩
+  simpa only [pathOK84, Bool.and_eq_true, decide_eq_true_eq] using h
 
-theorem pathOK84_root : pathOK84 root 2 path = true := by decide
-
-/-- Turn a validated first-hole path into a complete prefix tree: at each
-    path node the selected edge continues, while all 23 other ordinary
-    instructions are retained as explicit open siblings. -/
 def buildFrontier (p : PartialMachine) (cut : Nat) (hp : RawRootPath p) :
     (xs : List PathEntry) →
     pathOK84 p cut xs = true →
@@ -244,6 +237,8 @@ def buildFrontier (p : PartialMachine) (cut : Nat) (hp : RawRootPath p) :
       have hs : readSlot c = s := by
         have h' : (some c).map readSlot = some s := by simpa [hr] using hread
         simpa using h'
+      have hhole' : p (readSlot c) = none := by
+        simpa [hs] using hhole
       have hw : ∀ d ∈ possibleDelays (refine p (readSlot c) none) 0,
           d + n + 1 ≤ 84 := by
         simpa [hs.symm] using (weightOK_sound p s n 84 hweight)
@@ -253,12 +248,12 @@ def buildFrontier (p : PartialMachine) (cut : Nat) (hp : RawRootPath p) :
       have cert' : WeightedTNFCertificate 84
           (pathEnd (refine p (readSlot c) (some mv)) (advanceCut cut mv) xs).1 6 := by
         simpa [pathEnd, hs.symm] using cert
-      exact .expand hp hr hhole hw (fun actual =>
+      exact .expand hp hr hhole' hw (fun actual =>
         if heq : actual = mv then
           by
             simpa [heq] using
               (buildFrontier (refine p (readSlot c) (some mv))
-                (advanceCut cut mv) (RawRootPath.step hp hr hhole mv) xs htail' cert')
+                (advanceCut cut mv) (RawRootPath.step hp hr hhole' mv) xs htail' cert')
         else
           .residual (RawRootPath.step hp hr hhole actual))
 
