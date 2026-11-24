@@ -97,7 +97,13 @@ theorem s1Config_carryRightOnes
         (h+7+(i:Int)) = true := by
   intro i hi
   have hcoord : h+7+(i:Int) = h+1+(6+(i:Int)) := by omega
-  rw [hcoord,s1Config_right_cell,s1PhysicalRight_source]
+  have hsource :
+      (s1Config L n m (len+1+r) ((2*q+1)*2^r) b h).tape
+          (h+1+(6+(i:Int))) =
+        sideBit (s1PhysicalRight b) (6+i) := by
+    simpa using
+      s1Config_right_cell L n m (len+1+r) ((2*q+1)*2^r) b h (6+i)
+  rw [s1PhysicalRight_source] at hsource
   have hside :
       sideBit
         ([false,true,true,true,false,false] ++ d1pow (b+1))
@@ -108,6 +114,7 @@ theorem s1Config_carryRightOnes
     have hidx : 6+i-6 = i := by omega
     simp [hlen,hnot,hidx]
     exact sideBit_d1pow_true (b+1) i hi
+  rw [hcoord,hsource,hside]
   exact hside
 
 /-- Direct composition interface for prefix theorems already shifted
@@ -144,6 +151,13 @@ theorem s1Config_counted_decrement_of_shifted_prefix
       change T (x-h) = c0.tape x
       dsimp [T]
       rw [show h + (x-h) = x by omega]
+  have hrun' := hrun
+  rw [hstart] at hrun'
+  have hprefix0 : run tm2 (15+12*r)
+      (s0Config (markerWord m ++ d0 ++ binDec L n ++ lh)
+        (len+1+r) ((2*q+1)*2^r) b h) =
+      some ⟨4,h+7,Tpre⟩ := by
+    simpa [c0,s1Config] using hrun'
   have hpreserve' : ∀ x, 6 < x →
       Tpre (h+x) =
         (s0Config (markerWord m ++ d0 ++ binDec L n ++ lh)
@@ -201,6 +215,7 @@ theorem s1Config_counted_decrement_of_prefix
   rcases hprefix with
     ⟨T',hprun,h1,h2,h3,h4,h5,h6,hpreserve,hleft⟩
   let Tpre : Int → Bool := fun x => T' (x-h)
+  have hcancel (x : Int) : h+x-h = x := by omega
   have hstart : shiftConfig h ⟨3,0,T⟩ = c0 := by
     apply config_ext_by_fields
     · simp [shiftConfig,c0,s1Config]
@@ -222,7 +237,7 @@ theorem s1Config_counted_decrement_of_prefix
         (s0Config (markerWord m ++ d0 ++ binDec L n ++ lh)
           (len+1+r) ((2*q+1)*2^r) b h).tape (h+x) := by
     intro x hx
-    simpa [Tpre, s1Config] using hpreserve x hx
+    simpa [Tpre, hcancel, s1Config] using hpreserve x hx
   have hone : ∀ i : Nat, i < 3*(b+1) →
       Tpre (h+7+(i:Int)) = true := by
     intro i hi
@@ -230,7 +245,7 @@ theorem s1Config_counted_decrement_of_prefix
         Tpre (h+7+(i:Int)) =
           (s1Config L n m (len+1+r) ((2*q+1)*2^r) b h).tape
             (h+7+(i:Int)) := by
-      simpa [Tpre, Int.add_assoc] using hpreserve (7+(i:Int)) (by omega)
+      simpa [Tpre, hcancel, Int.add_assoc] using hpreserve (7+(i:Int)) (by omega)
     rw [hpres]
     exact s1Config_carryRightOnes L n m len q r b h hq i hi
   have hleft' : ∀ x, x ≤ 0 →
@@ -242,17 +257,17 @@ theorem s1Config_counted_decrement_of_prefix
       Tpre (h+x) =
           carryLeftOutputBit r
             (fun y => (s1Config L n m (len+1+r) ((2*q+1)*2^r) b h).tape (h+y)) x := by
-        simpa [Tpre] using hleft x hx
+        simpa [Tpre, hcancel] using hleft x hx
       _ = (s0Config (markerWord m ++ d0 ++ binDec L n ++ lh)
           (len+1+r) (((2*q+1)*2^r)-1) (b+1) h).tape (h+x) := by
         simpa [s1Config] using
           s1Config_decrement_leftOutput L n m len q r b h hq x hx
-  have h1' : Tpre (h+1) = true := by simpa [Tpre] using h1
-  have h2' : Tpre (h+2) = true := by simpa [Tpre] using h2
-  have h3' : Tpre (h+3) = true := by simpa [Tpre] using h3
-  have h4' : Tpre (h+4) = true := by simpa [Tpre] using h4
-  have h5' : Tpre (h+5) = false := by simpa [Tpre] using h5
-  have h6' : Tpre (h+6) = true := by simpa [Tpre] using h6
+  have h1' : Tpre (h+1) = true := by simpa [Tpre, hcancel] using h1
+  have h2' : Tpre (h+2) = true := by simpa [Tpre, hcancel] using h2
+  have h3' : Tpre (h+3) = true := by simpa [Tpre, hcancel] using h3
+  have h4' : Tpre (h+4) = true := by simpa [Tpre, hcancel] using h4
+  have h5' : Tpre (h+5) = false := by simpa [Tpre, hcancel] using h5
+  have h6' : Tpre (h+6) = true := by simpa [Tpre, hcancel] using h6
   have hdec := s0Config_counted_decrement_of_prefix
     (markerWord m ++ d0 ++ binDec L n ++ lh)
     (len+1+r) ((2*q+1)*2^r) (((2*q+1)*2^r)-1) b r h Tpre
