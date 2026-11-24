@@ -18,6 +18,8 @@ theorem r0_facts (s : Nat) (hs : s%2=1) :
     r0H s=16*r0M s ∧ r0M s%5=2 ∧
     (r0X s+2*r0Y s)%5=4 ∧
     48 ≤ r0H s ∧ r0H s%32=0 := by
+  have hs' : ∃ t, s=2*t+1 := by omega
+  rcases hs' with ⟨t,rfl⟩
   dsimp [r0X,r0Y,r0M,r0H]
   omega
 
@@ -25,28 +27,35 @@ private theorem pow_four_mod_five (m : Nat) :
     (4^m)%5=1 ∨ (4^m)%5=4 := by
   induction m with
   | zero =>
-      left
-      norm_num
+      decide
   | succ m ih =>
       have hstep : (4^(m+1))%5 = ((4^m)%5*4)%5 := by
         rw [pow_succ, Nat.mul_mod]
-        norm_num
+        simp
       rw [hstep]
       rcases ih with h | h
       · right
         rw [h]
-        norm_num
+        decide
       · left
         rw [h]
-        norm_num
+        decide
+
+private theorem pow_two_double (m : Nat) : 2^(2*m)=4^m := by
+  induction m with
+  | zero =>
+      rfl
+  | succ m ih =>
+      calc
+        2^(2*(m+1)) = 2^(2*m+2) := by congr 1 <;> omega
+        _ = 2^(2*m)*2^2 := by rw [Nat.pow_add]
+        _ = 4^m*4 := by rw [ih]; rfl
+        _ = 4^(m+1) := by rw [Nat.pow_succ]; rfl
 
 private theorem pow_two_even_mod_five_ne_two (n : Nat)
     (hn : n%2=0) : (2^n)%5≠2 := by
   have hn' : n=2*(n/2) := by omega
-  have hpow : 2^(2*(n/2))=4^(n/2) := by
-    rw [pow_mul]
-    norm_num
-  rw [hn',hpow]
+  rw [hn',pow_two_double]
   rcases pow_four_mod_five (n/2) with h | h <;> omega
 
 /-- Complete original-source inverse fan for the odd-s R0 family.
@@ -96,7 +105,7 @@ theorem r0_parent_fan (s a k : Nat) (hs : s%2=1)
                 (5≤r0Y s ∧ ∃ n : Nat,
                   r0H s=2^n*16 ∧
                   (2*k-3)+16+3*n=r0X s+2*r0Y s+2) := by
-                simpa [sectionPreimageAll,ha0,ha1,hk0,hk1,hk2,hk3] using hpre
+                simpa [sectionPreimageAll,r0H,ha0,ha1,hk0,hk1,hk2,hk3] using hpre
               rcases hcase with ⟨hy3,_⟩ | ⟨_,n,hsum,hcost⟩
               · omega
               · have hnEven : n%2=0 := by omega
@@ -108,7 +117,7 @@ theorem r0_parent_fan (s a k : Nat) (hs : s%2=1)
                   omega
                 have hbad := hM5
                 rw [hMpow] at hbad
-                exact (pow_two_even_mod_five_ne_two n hnEven) hbad
+                exact False.elim ((pow_two_even_mod_five_ne_two n hnEven) hbad)
     · have ha2 : 2≤a := by omega
       by_cases hk0 : k=0
       · simp [sectionPreimageAll,ha0,ha1,hk0] at hpre
