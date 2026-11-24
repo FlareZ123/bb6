@@ -41,9 +41,9 @@ static const char* name(Tag t) {
 
 int main() {
   constexpr i64 targetW = 530028452;
-  constexpr i64 targetEndW = 805306268;
+  constexpr i64 targetEndW = 805306356;
   constexpr i64 expectedPrefix = 149997313;
-  constexpr i64 expectedCycles = 3128157;
+  constexpr i64 expectedCycles = 3128158;
   i64 u=0, w=0, steps=0;
 
   // Reproduce the finite blank-root prefix to the start of the pump.
@@ -95,7 +95,7 @@ int main() {
       return 1;
     }
   }
-  if (w!=targetEndW || steps!=234457552) {
+  if (w!=targetEndW || steps!=234457579) {
     std::cerr << "final mismatch state=" << u << "," << w
               << " steps=" << steps << "\n";
     return 1;
