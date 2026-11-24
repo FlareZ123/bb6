@@ -35,9 +35,9 @@ For the post-forced-F feeder state
 
 Here `InitialPairAvailable` means that some finite run of standalone F
 blocks reaches an endpoint satisfying either the EF guard
-(`u_endpoint` odd and `D_endpoint ≡ 0 mod 8)) or the SF guard
-(`u_endpoint` even and `D_endpoint ≡ 4 mod 8)). Equivalently, with
-the original parameter `t=k+1), a first pair is available exactly
+(`u_endpoint` odd and `D_endpoint ≡ 0 mod 8) or the SF guard
+(`u_endpoint` even and `D_endpoint ≡ 4 mod 8). Equivalently, with
+the original parameter `t=k+1`, a first pair is available exactly
 when `k ≡ 2 (mod 4)` or `k ≡ 15 (mod 16)`.
 
 The proof strengthens the parity table to endpoint residues modulo 4,
