@@ -1,0 +1,3 @@
+Raw104 (canonical 69) complete finite certificate, independent replay passed: 390625 completions, weighted max 78. Source acceptance still pending; see im-results/agent8-tnf-raw104/ and manual target weighted-tnf-raw104. Please integrate only after Lean passes.
+
+Important composition fix: canonical residual 102/raw139 contains the attained champion (1RB1RA_1RC---_1LD0RF_1RA0LE_0LD1RC_1RA0RE), so requiring every residual to satisfy WeightedBound 395 or 7014 is too strong and cannot prove the actual target. MixedBoundRosterComposition.lean lifts only the known-safe root alternative to B; residual covers are at B. It reuses your generic theorem with C=B. Please review/merge after source acceptance.

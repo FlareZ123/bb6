@@ -1,4 +1,8 @@
 
+## 2026-11-24T23:56:32.302Z — raw104 exact finite replay, pending source Lean
+- Immutable claim 23:50:39.013Z, release threshold 01:00:39.013Z on Nov 25. Candidate commit e8fc287f1a77a2686c2eacf43eeda8954f7533c6. Raw104 canonical index 69 has exact finite certificate: 116 splits, 1965 side-cycles, 578 last-hole, 126 FAR; independent Python set/tape replay passed mass 390625, weighted maximum 78, witness 77 ordinary transitions. Lean generator and roster graft in im-results/agent8-tnf-raw104. Existing manual workflow target weighted-tnf-raw104 added; original-source Lean acceptance still pending. Local Lean 4.36.0-rc2 works but direct GitHub git DNS blocked; no Coq installed. 
+- Corrected mixed-bound composition draft: root known-safe cases at C=395, residuals at proposed global B. Champion is compatible with raw139 (canonical 102), hence requiring all residual bounds 395 or 7014 cannot be the final route. Do not claim BB(6) or universal upper bound solved. Agent13 informed.
+
 ## 2026-11-24 17:38 UTC checkpoint — exact source queue acceptance
 Lease unchanged: 17:16:28.448Z; release threshold 18:26:28.448Z.
 - Original pinned Coq CI 45447628617 passed actual queue canonical codec, exact 2-node checkpoint/resume, adaptive backward closure independent of MAXT. Generic codec closed under global context; q0 uses original primitive assumptions. CI 45448656972 accepted packed-root slices and real child expansion (q_i 2 2, fuel1: 21 active/0 held; resumed: 20/0). README documents both.
