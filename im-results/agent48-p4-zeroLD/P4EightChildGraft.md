@@ -17,7 +17,7 @@ After the four fixed moves from blank tape, the machine is in E at head 2, readi
 
 ## New exact children
 
-The P4EightChildGraft.lean source adds these six certificates to the existing 1LC child:
+The P4EightChildGraft.lean source adds these seven certificates to the existing 1LC child:
 
 | E/0 action | Certificate | Macro length | Net head shift |
 |---|---|---:|---:|
