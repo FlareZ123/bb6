@@ -1,7 +1,8 @@
 import CarryBudget
 import BitCarry
 namespace BB6.Agent28CarryBudget
-open BB6.Agent43CarryCert BB6.Agent28BitCarry
+open BB6.Agent43CarryCert
+open BB6.Agent28BitCarry (listStep listRun)
 theorem half_dvd (k a b : Nat) (h : 2^(k+1) ∣ a+b)
     (ha : a%2=0) (hb : b%2=0) : 2^k ∣ a/2+b/2 := by
   have he : a+b=2*(a/2+b/2) := by omega
