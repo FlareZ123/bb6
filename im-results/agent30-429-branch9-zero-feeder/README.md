@@ -1,6 +1,6 @@
 # BB429 branch-9 diagonal feeder and exceptional-parent sieve
 
-**Latest advance:** complete locally kernel-checked blank-root exclusions for the J=9 and J=14 diagonal targets, with a reusable signed inverse certificate theorem. See the certificate section below. Full-module CI pending.
+**Latest advance:** complete locally kernel-checked blank-root exclusions for the J=6, 9, 10 and 14 diagonal targets, with a reusable signed inverse certificate theorem. See the certificate section below. Full-module CI pending.
 
 **Mathematical scope.** This dossier combines an exact algebraic branch-9 diagonal last-reset subfamily of the genuine `BB429.next` accelerator with source-kernel-checked all-time blank-root necessary conditions. They now exclude **27/32** exceptional-parent parameter classes modulo 32, **21/32** all-F zero-two predecessor parameter classes modulo 32, and all but **6/256** burst-index classes on the all-F central-zero branch. The previously CI-cited exported Lean theorems have been compiled against the unchanged original source closure and report only `[propext, Classical.choice, Quot.sound]`, not `sorryAx`. A separate deeper exact-integer dyadic inverse sieve remains computational, not yet a Lean proof. The algebraic inverse paths and conditional root exclusions do **not** determine reachability for every parameter, the behavior of machine #429, or BB(6).
 
@@ -20,9 +20,30 @@ Local Lean 4.36.0-rc2 compiled all four modules against the exact relevant decla
 
 The same basic-filter algorithm suggests complete exceptional-index rejection for J=11,13,15,17, but these are exploratory computations only. The unbounded J quantifier and even-J all-F feeders remain open.
 
+## Complete even-exponent diagonal exclusions: J=6 and J=10
+
+[BB429Branch9J6J10.lean](BB429Branch9J6J10.lean) proves all-time
+nonreachability of the diagonal targets
+`(12*2^N-3,24*2^N-24*2^J+15)` for the following parameters:
+
+| J | N | Exceptional indices | Side depth | Zero-feeder depth |
+|---|---|---|---|---|
+| 6 | 507 | 126 | 12 | 9 |
+| 10 | 8191 | 2047 | 20 | 13 |
+
+Both upper and odd-reset zero-feeder parents are rejected, with signed
+parameters q=-768 and q=-12291 respectively. All exceptional indices
+are covered, including the near-end clipped terms. Six finite
+certificates are axiom-free (kernel decide), and the two all-time
+theorems use only propext, Classical.choice and Quot.sound.
+Local Lean 4.36.0-rc2 accepted the module with exact relevant
+source declarations; unchanged full dependency CI remains pending.
+These are complete fixed-parameter exclusions, not the unbounded J
+family or a whole-machine decision.
+
 ## Complete even-exponent diagonal exclusion: J=14
 
-The second complete root exclusion is `BB429Branch9J14.no_diagonal_J14`:
+Another complete root exclusion is `BB429Branch9J14.no_diagonal_J14`:
 the target (12*2^131075-3,24*2^131075-24*2^14+15) is unreachable from
 the genuine accelerator root, for every return time. Here N is odd, so
 the previous odd-J all-F parity argument is unavailable.
