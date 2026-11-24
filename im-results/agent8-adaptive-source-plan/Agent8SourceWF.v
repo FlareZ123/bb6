@@ -77,7 +77,7 @@ Lemma source_count_update t h v :
   S (get_num_undef_trans (tm_upd t h v)) = get_num_undef_trans t.
 Proof.
   intro H.
-  assert (Hhole : hole_value (t h) = 1) by
+  assert (Hhole : hole_value (t h) = 1%nat) by
     (unfold hole_value; rewrite H; reflexivity).
   rewrite !source_count_formula.
   destruct h as [q s]; destruct q,s;
