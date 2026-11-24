@@ -1,10 +1,20 @@
 name: Agent 44 M2-even n=8q+6 generic q4 source prefix (manual)
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        description: "Choose the generic M2-even-six acceptance target"
+        required: true
+        type: choice
+        default: q4-source-prefix
+        options:
+          - q4-source-prefix
+          - counted-increment
 permissions:
   contents: read
 jobs:
   verify:
+    if: ${{ inputs.target == 'q4-source-prefix' }}
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
@@ -64,5 +74,43 @@ jobs:
         with:
           name: agent44-m2-even-six-generic-${{ github.run_id }}
           path: /tmp/a44-m2-even-six/m2-even-six-generic-axioms.log
+          if-no-files-found: ignore
+          retention-days: 3
+  counted-increment:
+    if: ${{ inputs.target == 'counted-increment' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile the exact generic counted-increment import closure
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/a44-m2-even-six-counted
+          python tools/lean_compile_closure.py \
+            --workdir /tmp/a44-m2-even-six-counted \
+            --jobs 8 \
+            im-results/agent44-tm63-middle/M2EvenSixGenericCounted.lean \
+            2>&1 | tee /tmp/a44-m2-even-six-counted/axioms.log
+      - name: Audit the exported counted increment theorem
+        run: |
+          set -euo pipefail
+          profile="$(grep -A8 -F "'BB6Coverage.Agent44M2EvenSixGenericCounted.m2EvenSix_generic_counted_increment_source' depends on axioms:" /tmp/a44-m2-even-six-counted/axioms.log)"
+          printf '%s\\n' "$profile"
+          if printf '%s\\n' "$profile" | grep -qE 'sorryAx|native_decide'; then
+            echo '::error::sorryAx or native_decide found in the generic counted increment theorem'
+            exit 1
+          fi
+          echo 'Generic M2-even-six counted increment compiled without sorryAx or native_decide.' >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload counted-increment diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent44-m2-even-six-counted-${{ github.run_id }}
+          path: /tmp/a44-m2-even-six-counted/axioms.log
           if-no-files-found: ignore
           retention-days: 3
