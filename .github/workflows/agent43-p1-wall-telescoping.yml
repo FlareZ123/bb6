@@ -11,6 +11,7 @@ on:
           - modular-screen
           - exact-carry-cert
           - margin-blank
+          - budget-blank
 permissions:
   contents: read
 jobs:
@@ -72,7 +73,7 @@ jobs:
             lean "$AG43/CarryCertSource.lean"
             exit 0
           fi
-          if [ "${{ inputs.target }}" = margin-blank ]; then
+          if [ "${{ inputs.target }}" = margin-blank ] || [ "${{ inputs.target }}" = budget-blank ]; then
             RES=im-results/agent50-p1-residue
             GEN=$(mktemp -d "$PWD/.agent43-margin.XXXXXX")
             export LEAN_PATH="$LEAN_PATH:$RES:$GEN"
@@ -86,6 +87,7 @@ jobs:
             lean -o "$AG43/CarryCert.olean" "$AG43/CarryCert.lean"
             lean -o "$AG43/MarginCert.olean" "$AG43/MarginCert.lean"
             lean -o "$AG43/MarginSource.olean" "$AG43/MarginSource.lean"
+            if [ "${{ inputs.target }}" = margin-blank ]; then
             lean -o "$AG43/Margin30.olean" "$AG43/Margin30.lean"
             (cd "$GEN" && python "$GITHUB_WORKSPACE/$AG43/gen_margin_cert.py" 350 586 16)
             lean -j1 -DElab.async=false -o "$GEN/Margin350.olean" "$GEN/Margin350.lean"
@@ -94,6 +96,7 @@ jobs:
             grep -q critical_reset_no_reach_350 /tmp/agent43-margin-axioms.txt
             if grep -q sorryAx /tmp/agent43-margin-axioms.txt; then exit 1; fi
             exit 0
+            fi
           fi
           SCREEN=im-results/agent28-p1-modular-screen
           GEN=$(mktemp -d "$PWD/.agent28-cert.XXXXXX")
@@ -105,4 +108,14 @@ jobs:
             lean -o "$GEN/Cert$i.olean" "$GEN/Cert$i.lean"
           done
           lean -o "$SCREEN/ModScreen.olean" "$SCREEN/ModScreen.lean"
-          lean "$SCREEN/SourceFiniteScreen.lean"
+          if [ "${{ inputs.target }}" = budget-blank ]; then
+            for m in CarryBudget CarryProjection BudgetCore Margin34 BudgetCoverage; do
+              lean -j1 -DElab.async=false -o "$SCREEN/$m.olean" "$SCREEN/$m.lean"
+            done
+            set -o pipefail
+            lean "$SCREEN/SourceBudgetScreen.lean" | tee /tmp/agent28-budget-axioms.txt
+            grep -q critical_reset_no_reach_budget_screen /tmp/agent28-budget-axioms.txt
+            if grep -q sorryAx /tmp/agent28-budget-axioms.txt; then exit 1; fi
+          else
+            lean "$SCREEN/SourceFiniteScreen.lean"
+          fi
