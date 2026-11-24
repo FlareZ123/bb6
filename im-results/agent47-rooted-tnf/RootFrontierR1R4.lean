@@ -94,10 +94,10 @@ def buildFrontierB (B : Nat) (p : PartialMachine) (cut : Nat)
           by
             simpa [heq] using
               (buildFrontierB B (refine p (readSlot c) (some mv))
-                (advanceCut cut mv) (RawRootPath.step hp hr hhole' mv)
+                (advanceCut cut mv) (RawRootPath.step (mv := mv) hp hr hhole')
                 xs htail' cert')
         else
-          .residual (RawRootPath.step hp hr hhole' actual))
+          .residual (RawRootPath.step (mv := actual) hp hr hhole'))
 
 /-- A one-edge endpoint equation for the path fold. -/
 theorem pathEnd_cons (p : PartialMachine) (cut n : Nat) (s : Slot)
@@ -181,7 +181,7 @@ def r1Subtree : RootedFrontier 7014 r1Start := by
   have hhole' : root (readSlot c) = none := by simpa [hs] using hhole
   have hp : RawRootPath r1Start := by
     simpa [r1Start, r1First, r1Cut, hs] using
-      (RawRootPath.step RawRootPath.root hr hhole' r1First)
+      (RawRootPath.step (mv := r1First) RawRootPath.root hr hhole')
   have htail' : pathOKB 7014 r1Start r1Cut r1.path.tail = true := by
     simpa [r1Start, r1First, r1Cut, hs] using htail
   have hcert : WeightedTNFCertificate 7014
@@ -204,7 +204,7 @@ def pilotR4Subtree : RootedFrontier 7014 pilotStart := by
   have hhole1' : root (readSlot c1) = none := by simpa [hs1] using hhole1
   have raw1 : RawRootPath pilotStart := by
     simpa [pilotStart, pilotFirst, hs1] using
-      (RawRootPath.step RawRootPath.root hr1 hhole1' pilotFirst)
+      (RawRootPath.step (mv := pilotFirst) RawRootPath.root hr1 hhole1')
   have tail1' : pathOKB 7014 pilotStart pilotCut path.tail = true := by
     simpa [pilotStart, pilotFirst, pilotCut, hs1] using htail1
 
@@ -223,10 +223,10 @@ def pilotR4Subtree : RootedFrontier 7014 pilotStart := by
     simpa [hs2.symm] using (weightOK_sound pilotStart (2,false) 2 7014 hweight2)
   have rawPilot2 : RawRootPath pilotAfterSecond := by
     simpa [pilotAfterSecond, pilotSecond, hs2] using
-      (RawRootPath.step raw1 hr2 hhole2' pilotSecond)
+      (RawRootPath.step (mv := pilotSecond) raw1 hr2 hhole2')
   have rawR4Second : RawRootPath r4AfterSecond := by
     simpa [r4AfterSecond, r4Second, hs2] using
-      (RawRootPath.step raw1 hr2 hhole2' r4Second)
+      (RawRootPath.step (mv := r4Second) raw1 hr2 hhole2')
   have pilotTail2 : pathOKB 7014 pilotAfterSecond afterSecondCut path.tail.tail = true := by
     simpa [pilotAfterSecond, pilotSecond, afterSecondCut, hs2] using htail2
   have pilotCertTail : WeightedTNFCertificate 7014
@@ -271,7 +271,7 @@ def pilotR4Subtree : RootedFrontier 7014 pilotStart := by
   · subst mv
     exact buildFrontierB 7014 r4AfterSecond r4AfterSecondCut rawR4Second
       r4.path.tail.tail r4Tail2 r4CertTail
-  · exact .residual (RawRootPath.step raw1 hr2 hhole2' mv)
+  · exact .residual (RawRootPath.step (mv := mv) raw1 hr2 hhole2')
 
 /-- A rooted three-parent shard: the Agent 50 84-bound pilot, Agent 47's
     r1 parent (7014), and Agent 47's r4 parent (42). Every unselected ordinary
@@ -297,7 +297,7 @@ def rootFrontierR1R4 : RootedFrontier 7014 root := by
   by_cases hPilot : mv = pilotFirst
   · subst mv
     simpa [pilotStart, pilotFirst, hs] using pilotR4Subtree
-  · exact .residual (RawRootPath.step RawRootPath.root hr hhole' mv)
+  · exact .residual (RawRootPath.step (mv := mv) RawRootPath.root hr hhole')
 
 /-- Count explicit first-hole expansions in a rooted frontier. -/
 def expandedNodes {B : Nat} {p : PartialMachine} :
