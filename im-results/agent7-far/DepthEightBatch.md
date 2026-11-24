@@ -117,3 +117,19 @@ These have no certificate from the above search; their halt status is unknown. N
 | `1RB1LF_1RC1LF_0RD1RC_1LD1RE_1LF0LB_---0LA` | tree116: [[8,22],[1,22]] |
 | `1RB0RB_1RC1LF_0RD0LF_1LD1RE_---0LB_0RF0LA` | tree125: [[1,5],[10,21]] |
 | `1RB1RF_1RC1LF_0RD0RF_1LD1RE_---0LB_0RE0LA` | tree126: [[10,17],[1,23]] |
+
+## Warm-started automata search on the final ten
+
+The local `large_far.cpp` search (128-bit masks, warm starts from sibling certificates, scored mutations and state splitting, 50,000 trials per nominal size 5–16 and orientation, seed 123) found nine more candidates. Independent BigInt saturation reproduced all nine. The single remaining target is `1RB1RF_1RC1LF_0RD0RF_1LD1RE_---0LB_0RE0LA` at tree126 path `[[10,17],[1,23]]`. These are pending original-source acceptance.
+
+| Leaf | Table | Tree path | DFA / reflected |
+|---|---|---|---|
+| leaf1 | `1RB0RF_1RC1LF_0RD1RA_1LD1RE_---0LB_1LA0LA` | tree86: [[1,21],[10,2]] | 8 / 0 |
+| leaf2 | `1RB---_1RC1LF_0RD1LC_1LD1RE_1RC0LB_0RF0LA` | tree115: [[10,21],[8,11]] | 7 / 0 |
+| leaf3 | `1RB---_1RC1LF_0RD1LC_1LD1RE_0RE0LB_0RF0LA` | tree115: [[10,21],[8,17]] | 9 / 0 |
+| leaf4 | `1RB1LA_1RC1LF_0RD1RC_1LD1RE_1RB0LB_---0LA` | tree116: [[8,7],[1,2]] | 7 / 1 |
+| leaf5 | `1RB1LA_1RC1LF_0RD1RC_1LD1RE_0LE0LB_---0LA` | tree116: [[8,16],[1,2]] | 8 / 0 |
+| leaf6 | `1RB1RD_1RC1LF_0RD1RC_1LD1RE_1LF0LB_---0LA` | tree116: [[8,22],[1,15]] | 12 / 1 |
+| leaf7 | `1RB1LE_1RC1LF_0RD1RC_1LD1RE_1LF0LB_---0LA` | tree116: [[8,22],[1,18]] | 7 / 0 |
+| leaf8 | `1RB1LF_1RC1LF_0RD1RC_1LD1RE_1LF0LB_---0LA` | tree116: [[8,22],[1,22]] | 12 / 0 |
+| leaf9 | `1RB0RB_1RC1LF_0RD0LF_1LD1RE_---0LB_0RF0LA` | tree125: [[1,5],[10,21]] | 11 / 0 |

@@ -1,0 +1,3 @@
+# Agent 7 → Agent 50: final one-hole sibling target
+
+Nine more candidates from the ten residual tables have been reconstructed as Lean proof data in `DepthEightXL.lean` (pending verification). One target remains without a FAR candidate: `1RB1RF_1RC1LF_0RD0RF_1LD1RE_---0LB_0RE0LA`, tree126 F/0=0RE then A/1=1RF. I am pursuing this last target; avoid overlapping it unless you have a ready source proof. If all new certificates pass, the original 101 one-hole roster has 100 proof-carrying closures and one remaining root, before reconciliation with your other work.
