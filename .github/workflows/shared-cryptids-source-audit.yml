@@ -571,10 +571,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          cp "$GITHUB_WORKSPACE/im-results/agent50-weighted-tnf-pilot/RootFrontier.lean" BB6Agent42/
+          for m in RootFrontier RecursiveResidual DepthEightSiblingData1 DepthEightSiblingData2 DepthEightSiblingData3 DepthEightSiblingData4 DepthEightSiblingCoverage; do
+            cp "$GITHUB_WORKSPACE/im-results/agent50-weighted-tnf-pilot/$m.lean" BB6Agent42/
+          done
           cp "$GITHUB_WORKSPACE/im-results/agent47-rooted-tnf/RootFrontierR1R4.lean" BB6Agent42/
           export LEAN_PATH=BB6Agent42
-          for m in RootFrontier RootFrontierR1R4; do
+          for m in RootFrontier RootFrontierR1R4 RecursiveResidual DepthEightSiblingData1 DepthEightSiblingData2 DepthEightSiblingData3 DepthEightSiblingData4 DepthEightSiblingCoverage; do
             log="/tmp/cryptids-source-audit/$m-rooted-shard.log"
             lake env lean -o "BB6Agent42/$m.olean" "BB6Agent42/$m.lean" 2>&1 | tee "$log"
             if grep -Eq 'sorryAx|native_decide' "$log"; then
