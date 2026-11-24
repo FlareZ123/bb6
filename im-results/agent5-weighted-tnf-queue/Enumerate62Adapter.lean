@@ -16,11 +16,11 @@ abbrev SourceTM := Slot → Option Move
 def sourcePartial (tm : SourceTM) : PartialMachine :=
   fun s => (tm s).map (fun mv => some mv)
 
-def sourceHoles (tm : SourceTM) : Finset Slot :=
+def enum62Holes (tm : SourceTM) : Finset Slot :=
   Finset.univ.filter (fun s => tm s = none)
 
 def sourceUndefCount (tm : SourceTM) : Nat :=
-  (sourceHoles tm).card
+  (enum62Holes tm).card
 
 def sourceSupport (tm : SourceTM) (cut : Nat) : Prop :=
   ∀ s mv, tm s = some mv →
@@ -74,23 +74,23 @@ theorem sourceRoot_holes : sourceUndefCount sourceRootTM = 11 := by
 def sourceUpdate (tm : SourceTM) (slot : Slot) (mv : Move) : SourceTM :=
   fun s => if s = slot then some mv else tm s
 
-theorem sourceHoles_update (tm : SourceTM) (slot : Slot) (mv : Move)
+theorem enum62Holes_update (tm : SourceTM) (slot : Slot) (mv : Move)
     (hhole : tm slot = none) :
-    sourceHoles (sourceUpdate tm slot mv) = (sourceHoles tm).erase slot := by
+    enum62Holes (sourceUpdate tm slot mv) = (enum62Holes tm).erase slot := by
   ext s
   by_cases hs : s = slot
   · subst s
-    simp [sourceHoles, sourceUpdate, hhole]
-  · simp [sourceHoles, sourceUpdate, hs]
+    simp [enum62Holes, sourceUpdate, hhole]
+  · simp [enum62Holes, sourceUpdate, hs]
 
 theorem sourceUndefCount_update (tm : SourceTM) (slot : Slot) (mv : Move)
     (hhole : tm slot = none) :
     sourceUndefCount (sourceUpdate tm slot mv) =
       sourceUndefCount tm - 1 := by
   unfold sourceUndefCount
-  rw [sourceHoles_update tm slot mv hhole]
-  have hmem : slot ∈ sourceHoles tm := by
-    simp [sourceHoles, hhole]
+  rw [enum62Holes_update tm slot mv hhole]
+  have hmem : slot ∈ enum62Holes tm := by
+    simp [enum62Holes, hhole]
   simp [Finset.card_erase_of_mem hmem]
 
 /-- A single missing source transition is the unique hole when the
@@ -100,29 +100,27 @@ theorem source_last_hole_rest (tm : SourceTM) (slot : Slot)
     (hcount : sourceUndefCount tm = 1) (hhole : tm slot = none) :
     ∀ s, s ≠ slot → ∃ mv, tm s = some mv := by
   intro s hne
-  by_contra hnot
-  have hsnone : tm s = none := by
-    cases ht : tm s with
-    | none => rfl
-    | some mv => simp [ht] at hnot
-  have hslot : slot ∈ sourceHoles tm := by
-    simp [sourceHoles, hhole]
-  have hs : s ∈ sourceHoles tm := by
-    simp [sourceHoles, hsnone]
-  have hsubset : insert slot {s} ⊆ sourceHoles tm := by
-    intro t ht
-    simp only [Finset.mem_insert, Finset.mem_singleton] at ht
-    rcases ht with ht | ht
-    · subst t
-      exact hslot
-    · subst t
-      exact hs
-  have hcard : (insert slot {s} : Finset Slot).card ≤ (sourceHoles tm).card :=
-    Finset.card_le_card hsubset
-  have htwo : (insert slot {s} : Finset Slot).card = 2 := by
-    simp [hne]
-  rw [htwo] at hcard
-  omega
+  cases ht : tm s with
+  | some mv => exact ⟨mv, ht⟩
+  | none =>
+      have hslot : slot ∈ enum62Holes tm := by
+        simp [enum62Holes, hhole]
+      have hs : s ∈ enum62Holes tm := by
+        simp [enum62Holes, ht]
+      have hsubset : insert slot {s} ⊆ enum62Holes tm := by
+        intro t ht'
+        simp only [Finset.mem_insert, Finset.mem_singleton] at ht'
+        rcases ht' with ht' | ht'
+        · subst t
+          exact hslot
+        · subst t
+          exact hs
+      have hcard : (insert slot {s} : Finset Slot).card ≤ (enum62Holes tm).card :=
+        Finset.card_le_card hsubset
+      have htwo : (insert slot {s} : Finset Slot).card = 2 := by
+        simp [hne]
+      rw [htwo] at hcard
+      omega
 
 def sourceChildFresh (x : SourceNode) (mv : Move) : Nat :=
   if mv.next.val = x.fresh then x.fresh + 1 else x.fresh
@@ -161,7 +159,7 @@ theorem sourceChild_support (x : SourceNode) (slot : Slot) (mv : Move)
   · subst s
     have hv' : v = mv := by
       simp [sourceChild, sourceUpdate] at hv
-      exact Option.some.inj hv
+      exact hv.symm
     subst v
     exact ⟨Nat.lt_of_lt_of_le hslot (sourceChildFresh_ge x mv),
       sourceChildFresh_gt_dest x mv hdest⟩
@@ -185,7 +183,7 @@ theorem sourceChoices_mem_iff (cut : Nat) (mv : Move) :
   constructor
   · intro h
     obtain ⟨q, hq, hmv⟩ := List.mem_flatMap.mp h
-    have hq' : q.val ≤ cut := (List.mem_filter.mp hq).2
+    have hq' : q.val ≤ cut := of_decide_eq_true (List.mem_filter.mp hq).2
     have heq : mv.next = q := by
       cases mv with
       | mk w r qmv =>
@@ -194,7 +192,7 @@ theorem sourceChoices_mem_iff (cut : Nat) (mv : Move) :
   · intro h
     apply List.mem_flatMap.mpr
     refine ⟨mv.next,
-      List.mem_filter.mpr ⟨List.mem_finRange mv.next, h⟩, ?_⟩
+      List.mem_filter.mpr ⟨List.mem_finRange mv.next, of_decide_eq_true h⟩, ?_⟩
     cases mv with
     | mk w r q =>
         cases w <;> cases r <;> simp
@@ -304,11 +302,11 @@ theorem source_expand_cover (B : Nat) (x : SourceNode) (n : Nat)
     hcut hsupport hroot hrun hhole hweight
     (by
       intro mv hlt m hm
-      rw [sourceChild_partial] at hm
+      rw [← sourceChild_partial] at hm
       exact hold mv hlt m hm)
     (by
       intro q hq w r m hm
-      rw [sourceChild_partial] at hm
+      rw [← sourceChild_partial] at hm
       exact hnew q hq w r m hm)
 
 /-- The upstream expand' optimization: one remaining undefined row
@@ -335,7 +333,7 @@ theorem source_last_hole_cover (B : Nat) (x : SourceNode) (n : Nat)
       (refine (sourcePartial x.tm) (readSlot c) none) 0,
         d + n + 1 ≤ B) :
     Cover (WeightedBound B) (sourcePartial x.tm) := by
-  have hwf := sourceReachable_wf hreach
+  rcases sourceReachable_wf hreach with ⟨hnum, _, _⟩
   have hcount : sourceUndefCount x.tm = 1 := by omega
   have htmhole : x.tm (readSlot c) = none := by
     cases ht : x.tm (readSlot c) with
