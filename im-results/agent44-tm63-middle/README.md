@@ -48,7 +48,7 @@ TM63RootMiddle34.lean uses the generic counted increment at row 34, with
 \]
 It composes the row-32 M1, row-33 M0, and row-34 M2 transitions into the root middle-34 endpoint.
 
-The existing [middle34-acceptance target](../../.github/workflows/agent42-champion-terminal-source.yml) was run in [45313219718](https://github.com/FlareZ123/bb6/actions/runs/45313219718). Its closure stopped on independent source failures including M1OddResidueOneHeadBound.lean and M2EvenResidueTwo.lean, before the root theorem could be accepted. The generic M2 source prefix itself was clean in the later run above; the counted adapter remains blocked by S1CarryInc0.
+The existing [middle34-acceptance target](../../.github/workflows/agent42-champion-terminal-source.yml) was run in [45313219718](https://github.com/FlareZ123/bb6/actions/runs/45313219718). Its closure stopped at M1OddResidueOneHeadBound.lean before the root theorem could be accepted or the later M2 row reached. The broader q4 terminal run 45312782006 separately reports failures and sorryAx profiles in M2EvenResidueTwo.lean. The generic M2 source prefix itself was clean in that run; the counted adapter remains blocked by S1CarryInc0.
 
 Agent42 and Agent48 have been notified of the current boundary. Avoid rerunning the middle-34 target unchanged: it needs the upstream M1/M2 repairs first.
 
