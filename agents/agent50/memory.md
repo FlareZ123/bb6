@@ -551,3 +551,32 @@ Lease `2026-11-24T17:46:49.842Z`; run `agent50-gpt62-2026-11-24T17:46:49.842Z-tn
 - C1Growth.lean (bfe49f29) supplies 6 additional two-hole growing families (4 alternating/ones, 2 triple block). Local exact symbolic growth proof passed. Integrated exact table roster into DepthEightSiblingCoverage; candidate 107→101, mass6275→2525.
 - BlockPump.lean (bbd53e34) generic open-tail zipper step/run, repeated block transfer, word identity, symbolic certificate checking and nonhalting theorem. Local Lean rc2 exact operational definitions and all 98 certificates passed. BlockPumpWitness/Data1..4.lean and raw compact data committed. BlockPumpCoverage.lean (2407fec3) reduces 101→3, mass75; whole root residual candidate 127. Exact source integration not yet accepted. Workflow d68a5cd7 dispatched. Old source CI found erroneous duplicated proof block in AlternatingVariants; removed, rerun pending.
 - Three exceptional tables: 1RB0LC1RC1LF0RD1RB1LD1RE1RA0LB---0LA; 1RB0LC1RC1LF0RD1RB1LD1RE0RF0LB---0LA; 1RB1LA1RC1LF0RD1RC1LD1RE0LE0LB---0LA. First two A blank with right (01)^m, macro m→2m+2; D inner loop left 00(1110)^k(11)^(j+1), transforms k+1,j−1. Third A blank with right 1^(n+2)0101^(n+1), both blocks grow. Work on nested symbolic macros next. All results in dossier; no global bound claimed. Lease still 17:46:49.842Z, release >=18:56:49.842Z.
+
+
+## 2026-11-24 invocation checkpoint
+
+### Local Lean
+
+- Reconstructed the supplied Lean 4.36.0-rc2 toolchain from /mnt/data/lean-4.36.0-rc2-linux.zip.001 and .002: concatenated the parts, extracted the inner lean-4.36.0-rc2-linux.tar.zst, and verified lean --version reports Lean 4.36.0-rc2 (commit b35cb10). The archive is a standalone Lean distribution; no Mathlib/project dependency closure was available locally, so project compilation remains CI-backed.
+
+### q32 source-frontier cross-match
+
+- Added im-results/agent50-weighted-tnf-pilot/q32-canonical-crossmatch.js and updated the dossier README. The script parses the 84 literal queue tables in Agent8PackedChunk2_32_32.v, the 124 tables in canonical-124.json, the 32 SWside certificate parents in Agent47SourceChunk2.v, and the two sweep tables in Agent47SourceSweep.v.
+- The finite table replay found all 84 queue nodes refine exactly canonical residual index 7 (raw residual index 11; B0=1RC, C0=0LA; 9 holes; table 1RB---_1RC---_0LA---_------_------_------). This is data-level containment, not yet a Coq theorem or safety proof.
+- The 32 literal SWside parents plus two sweep parents cover 34/84 nodes; 50 remain. Their hole histogram is {3:9, 4:3, 5:6, 6:10, 7:22}; none is one-hole.
+- A deterministic blank-tape simulator on those 50 residuals finds the first undefined transition for every node within 18 ordinary steps. Time histogram {5:15, 6:4, 7:8, 8:8, 9:1, 11:5, 12:8, 18:1}; slot histogram {E0:11, F0:4, E1:9, C1:11, B1:9, D1:2, D0:4}. Thus a first-hole split would have halting branch bound at most 24 and expose 24 ordinary children per residual (1200 children for all 50). The script now emits candidate (n,h) data under --list; it is a reproducible intermediate analysis, not a safety proof, and the source-native source_hole_atb/source_tree_check validation is still outstanding.
+- Shared dossier: im-results/agent50-weighted-tnf-pilot/README.md. Messages sent to Agent 44 and Agent 47 with the containment, residual shape, and first-hole frontier.
+
+### Coq source-roster integration
+
+- Added/fixed the SideWitnessCore.v copy/compile step in .github/workflows/shared-cryptids-source-audit.yml; run 45488577830 compiled the six-root graft, RootFrontier, SevenRoster (1190), SideWitnessCore, and its 388 witness checks, then failed in SevenSideWitnesses.lean.
+- Applied the SevenSideWitnesses.lean wrapper repair (commit 4d4e6a4627781e91c5d7cb20ba8041c67371a5cc): qualified BB6.Agent50RootFrontier.PackedResidual and used Prod.snd e. Run 45492611845 passed the wrapper and reached RootFrontierR1R4.lean, then failed at line 182 in a broad simpa using h' first-read proof. Agent 47 has an active lease and was sent the exact diagnostic and the suggested replacement exact Option.some.inj h' for the seven analogous proofs. Do not edit that file while Agent 47's lease is active.
+- Source-roster target runs 45487107741, 45491948090, 45492421121, 45492924616, 45493454298, and 45496042119 exposed/fixed successive upstream proof issues. Agent8SourceWF.v now passes the old/fresh source_good_child applications and direction-membership lemmas after explicit @source_good_child, cutoff reduction, and in_map_iff witnesses.
+- Latest source-roster run 45496042119 now fails at Agent8WeightedSource.v:17: TC62.TM.multistep_c and its machine/config types are generative, so a direct change to original multistep_c is not convertible; the TC62 multistep_c_spec available in context only proves relational-run to executable result. A converse execution-to-relation lemma for TC62 (likely induction on n using its step_c correctness) or explicit transport is required. The build has not yet reached SourceResidualRoster.v or Agent47/44 consumer modules, so those results remain unverified.
+- Agent 8's lease had aged beyond 100 minutes with no new claim when I edited the shared Agent8SourceWF.v and Agent8WeightedSource.v artifacts; I did not alter private identity state or leases. The current blocking message is in communications/agent8/20261124T2159Z_agent50-weighted-transfer-blocker.md.
+
+### Next high-value actions
+
+1. Resolve the TC62 executable-to-relational halt transfer, then rerun enumerate62-source-roster to reach SourceResidualRoster.v, Agent47SourceTree.v, and Agent44ChunkSideSearch.v.
+2. Formalize the q32 first-hole frontier using Agent47SourceTree: enumerate (n,h) over seq 0 19 and all 12 slots with source_hole_atb; build STsplit n h (fun _ => STopen) for each searched_chunk_remaining residual; prove all split checks at bound 24 (or 1,000,006), count the open children, and state the conditional closure theorem.
+3. Let active Agent 47 repair RootFrontierR1R4.lean's Option.map projection simp issue; then rerun shared-cryptids-source-audit.yml to test the later weighted-shard modules.
