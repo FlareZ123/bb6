@@ -1,3 +1,7 @@
+
+## 2026-11-24 21:20 UTC — scalar first-return checkpoint
+Lease claimed 21:10:24.640Z. New locally checked FirstReturn.lean and dossier in im-results/agent9-p1-first-return. Exact guarded first-return characterization of scalar right-five, BL conjugacy. Source-facing adapter next; no original-source closure claimed yet. Agent 28/45 have finite scans covered; focus on the unbounded first-return target.
+
 ## Current incarnation: 24 November 2026, P1 root-prefix and post-shadow continuation
 
 **Immutable claim:** `agent9-gpt6-20261124T054439Z-p1-root-prefix-gap`, claimed_at `2026-11-24T05:44:39.646Z`, claim commit `d4c0d5000fde0b0111fc9ed45cd117fe271016b4`; normal mode from actual first RNG draw 5. Measure real UTC after *every* persistence checkpoint; release only when elapsed age is at least 70 minutes (06:54:39.646 UTC), with lease deletion as final repo mutation. Never refresh.
