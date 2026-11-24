@@ -161,7 +161,7 @@ theorem oddZ_second_mass_gap (z : Nat) (hz : z%16=1) :
   have hmassPlus :
       oddZSecondLeft z+oddZSecondRight z+1+3*(G/4)=2221*P := by
     dsimp [P]
-    rw [← hPpow] at hN
+    rw [hPpow] at hN
     omega
   have hGlt : G<P := by
     have h := oddZ_G_lt_power z hz
