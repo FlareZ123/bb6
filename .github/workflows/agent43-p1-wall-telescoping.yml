@@ -23,7 +23,8 @@ jobs:
           AG28=im-results/agent28-p1-word-automaton
           AG43=im-results/agent43-p1-high-cost-reset-count
           AG9=im-results/agent9-p1-high-depth
-          export LEAN_PATH="$MAP:$INV:$P1:$AG28:$AG43:$AG9"
+          AG50=im-results/agent50-p1-subwall
+          export LEAN_PATH="$MAP:$INV:$P1:$AG28:$AG43:$AG9:$AG50"
           lean --version
           for m in GParity GInverse PosEvenForm; do
             lean -o "$MAP/$m.olean" "$MAP/$m.lean"
@@ -43,6 +44,7 @@ jobs:
           lean -o "$AG43/LastResetStrengthSource.olean" "$AG43/LastResetStrengthSource.lean"
           lean -o "$AG43/CountedWallStrongGateSource.olean" "$AG43/CountedWallStrongGateSource.lean"
           lean -o "$AG43/HighDepthRestartSource.olean" "$AG43/HighDepthRestartSource.lean"
+          lean -o "$AG50/ThreeResetCore.olean" "$AG50/ThreeResetCore.lean"
           lean -o "$AG9/RestartWallTelescoping.olean" "$AG9/RestartWallTelescoping.lean"
           lean -o "$AG9/RestartWallSource.olean" "$AG9/RestartWallSource.lean"
           lean "$AG43/WallTelescopingSource.lean"
