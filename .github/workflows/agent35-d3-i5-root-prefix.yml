@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
-      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent35-d-regular-certificate:im-results/agent32-cryptid-padding:im-results/agent2-cryptid-continuity:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent3-portfolio-raw-conjugacy:im-results/agent19-d-physical-bridge:im-results/agent31-d-exceptional
+      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent35-d-regular-certificate:im-results/agent32-cryptid-padding:im-results/agent2-cryptid-continuity:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent3-portfolio-raw-conjugacy:im-results/agent19-d-physical-bridge:im-results/agent31-d-exceptional:im-results/agent35-d3-root-1711
     steps:
       - uses: actions/checkout@v4
       - name: Restore exact source archives
