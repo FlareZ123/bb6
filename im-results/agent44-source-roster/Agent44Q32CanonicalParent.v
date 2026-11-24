@@ -1,5 +1,5 @@
 From BusyCoq Require Import Enumerate62 Eqb Individual62
-  Agent8PackedChunk2_32_32 Agent32SourceEncoding.
+  Agent8QueueCheckpoint Agent8PackedChunk2_32_32 Agent32SourceEncoding.
 From Coq Require Import List Bool Strings.String NArith.
 Import ListNotations.
 Import TNF_Node.
