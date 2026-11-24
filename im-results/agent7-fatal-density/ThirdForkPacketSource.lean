@@ -74,12 +74,12 @@ private theorem depth_residue_even (n:Nat)
     apply (depthResidue_iff n 3 (depthResidue n 3) hn).2
     exact Nat.mod_eq_of_lt hlt
   have h3:(3:Int)∣signedZ n (depthResidue n 3):=by
-    apply dvd_trans ?_ hdiv
+    apply Int.dvd_trans ?_ hdiv
     refine ⟨(3:Int)^3,?_⟩
     calc
       (3:Int)^4=(3:Int)^3*3:=by
-        rw [show 4=3+1 by decide,pow_succ]
-      _=(3:Int)*(3:Int)^3:=by simp [mul_comm]
+        rw [show 4=3+1 by decide,Int.pow_succ]
+      _=(3:Int)*(3:Int)^3:=by simp [Int.mul_comm]
   have hz:=Int.dvd_iff_emod_eq_zero.mp h3
   exact (signedZ_mod_three_even_iff n (depthResidue n 3) hn).mp hz
 
@@ -415,10 +415,11 @@ private theorem packet_quotient_mod (n b t dBase dt:Nat)
       81*(dt:Int)-(81*(dBase:Int)-81*A*t):=by
     calc
       81*((dt:Int)-(dBase:Int)+A*t)
-          =81*((dt:Int)-(dBase:Int))+81*(A*t):=by rw [mul_add]
-      _=81*(dt:Int)-81*(dBase:Int)+81*(A*t):=by rw [mul_sub]
+          =81*((dt:Int)-(dBase:Int))+81*(A*t):=by rw [Int.mul_add]
+      _=81*(dt:Int)-81*(dBase:Int)+81*(A*t):=by rw [Int.mul_sub]
       _=81*(dt:Int)-(81*(dBase:Int)-81*A*t):=by
-        simp [mul_assoc,sub_eq_add_neg,add_assoc,add_comm,add_left_comm]
+        rw [←Int.mul_assoc]
+        omega
   rw [hfactor] at hsub
   have hdiv:(243:Int)∣81*((dt:Int)-(dBase:Int)+A*t):=
     Int.dvd_iff_emod_eq_zero.mpr hsub
