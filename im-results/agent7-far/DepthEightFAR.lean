@@ -15,7 +15,13 @@ theorem support6 (p : PartialMachine) : TNFSupport p 6 := by
 theorem fromCodes_noAssignedHalt (xs : List Nat) :
     weightedTNFNoAssignedHalt (fromCodes xs) := by
   intro s
-  simp [weightedTNFNoAssignedHalt, fromCodes]
+  unfold fromCodes
+  cases h : xs[2 * s.1.val + s.2.toNat]? with
+  | none => simp [h]
+  | some n =>
+      by_cases hn : n < 24
+      · simp [h, hn]
+      · simp [h, hn]
 
 /-- Parent residual 86; original-orientation FAR certificate from Actions run 45466300325.
     Table: 1RB0LB_1RC1LF_0RD1RA_1LD1RE_---0LB_---0LA. DFA size 5. -/
