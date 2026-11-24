@@ -48,7 +48,7 @@ Theorem q32_active_refines_residual_7b_true :
 Proof. vm_compute. reflexivity. Qed.
 
 Theorem q32_active_count :
-  length (fst (decode_queue packed_chunk_2_32_32)) = 84%nat.
+  List.length (fst (decode_queue packed_chunk_2_32_32)) = 84%nat.
 Proof. vm_compute. reflexivity. Qed.
 
 Theorem q32_active_refines_canonical_residual_7 :
