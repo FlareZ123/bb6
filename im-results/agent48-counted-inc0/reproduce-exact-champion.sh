@@ -41,7 +41,7 @@ allowed = {"propext", "Classical.choice", "Quot.sound"}
 for name in ("champion_halts_exact", "champion_attained_exact", "champion_maximum_of_cover",
  "champion_raw_halts_exact", "champion_weighted_bound", "exact_BB6_from_cover",
  "exact_BB6_from_weighted_cover", "exact_BB6_from_tnf_certificate",
- "expandProjection_length", "expandProjection_length_le_24", "expandProjection_mass_lt",
+ "freshChild_cut", "expandProjection_length", "expandProjection_length_le_24", "expandProjection_mass_lt",
  "expandProjection'_mass_lt", "update_active_mass_lt", "runUpdates_active_empty_of_bound",
  "bfsRound_total_mass_le", "fourBfsPasses_total_mass_le", "q0_total_mass_le",
  "chunk_active_mass_le", "every_chunk_drains"):
