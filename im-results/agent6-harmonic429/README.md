@@ -175,3 +175,15 @@ Here the existential d is uniquely fixed by the clock equation. Equivalently m=(
 
 Local Lean 4.36.0-rc2 accepted the module against exact relevant source definitions and rederived supporting run-add/halting lemmas. The printed axioms for the arithmetic are propext and Quot.sound; for the iff and source halt they are propext, Classical.choice, Quot.sound. No sorry/native_decide. Complete unchanged dependency CI remains pending. Source blob f9ae79291e04631cc885d8fcc769095112e6c064, commit 050bfaea981f3236b7fd4997cb94b52492edf8be. Remaining obligation: exclude genuine blank-root ancestry and classify positive-cycle terminal bursts.
 
+
+
+### General low-side terminal arithmetic (2026-11-24)
+
+The modules [BB429LowGeneral.lean](BB429LowGeneral.lean), [BB429LowEvenTerminal.lean](BB429LowEvenTerminal.lean), and [BB429LowPeriod.lean](BB429LowPeriod.lean) extend the zero-cycle classification to arbitrary complete cycles and both terminal F-burst patterns. Write `X=16^m`, `W=72X+d-12m-6`, and let `j` be the number of complete Oe F Oo F cycles after the initial F burst. Let `e=1` for a final Oe F pair, or `e=0` for a direct terminal F burst (j>=1 in the latter case). Define
+
+- L=4*2^t, K=(4^e*16^j-1)/3, C=24X+8j+6e, H=16-4e+3t, M=L*K+1.
+- The exact terminal parameter equations are v+K*d=C, L*v=3C+H+d, with the natural-number and guard conditions in the respective TerminalHalt definitions. Hence M*d=(L-3)*C-H.
+- A necessary test at every scale is t mod 4=2(1-e) and (L-3)*C mod M=H mod M. For C>=M*(H+28), that test is also sufficient, by reconstruction of d and v and source-level execution witnesses. The odd pattern excludes j=2 mod 3 unconditionally.
+- The progression theorems prove: for fixed j,t, either there is no halting scale, or every witness lies in one residue class modulo the least positive order of 16 modulo M; above the explicit threshold, every scale in that class halts for this prepared terminal pattern. In the presence of any witness, M is coprime to 3 and 2, and L-3 is coprime to M since M-K*(L-3)=3K+1 is a power of two. This proves uniqueness, not merely eventual periodicity. The finite pigeonhole/order argument is also formalized in Lean.
+
+Exact computational examples (separate concrete Lean certification still in progress): e=1,j=1,t=12 gives M=344065, 16^m mod M=82431, m=161 mod 17203; e=0,j=2,t=2 gives M=1361, 16^m mod M=392, m=51 mod 170. The latter contains the earlier prepared m=51 counterexample. These are prepared-state results; the source theorem does not assert that blank-root execution reaches W. General theorem modules passed local Lean 4.36.0-rc2 using exact relevant source declarations and rederived supporting lemmas, with standard axioms only. Full unchanged dependency integration is not yet checked. Commits: a9181689, d4f865f6, ffd225ae.
