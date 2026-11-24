@@ -151,8 +151,22 @@ theorem m0_j_mod16_two_new_bool_filter (s : Nat) (hs : 1≤s) :
         (16*s+2) 0 = true :=
     (BB6.Agent3FullForcedResidual.highAllowedC23WithEvenRightBool_iff
       (16*s+2) 0).mpr (prior_high_allowed_m0_j16_two s hs)
+  have hx :
+      BB6.Agent3FullForcedResidual.highTargetX (16*s+2)=32*s+7 := by
+    simp [BB6.Agent3FullForcedResidual.highTargetX]
+    omega
+  have hy :
+      BB6.Agent3FullForcedResidual.highTargetY (16*s+2) 0=48*s+13 := by
+    simp [BB6.Agent3FullForcedResidual.highTargetY]
+    omega
+  have hforced :
+      BB6.Agent3.fullForcedExcluded
+        (BB6.Agent3FullForcedResidual.highTargetX (16*s+2))
+        (BB6.Agent3FullForcedResidual.highTargetY (16*s+2) 0)=true := by
+    rw [hx,hy]
+    exact full_forced_excluded_m0_j16_two s hs
   simp [BB6.Agent3FullForcedResidual.highAllowedC23WithEvenRightFullForcedBool,
-    hprior,full_forced_excluded_m0_j16_two s hs]
+    hprior, hforced]
 
 #print axioms prior_high_allowed_m0_j16_two
 #print axioms m0_j_mod16_two_new_infinite_exclusion
