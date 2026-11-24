@@ -137,3 +137,10 @@ The resulting recursive decoder strips the most significant digit with two compa
 ## Remaining quantifiers
 
 None of these results proves that every exponent p in the synthetic fatal family is excluded, that every possible halt is in that family, or that #623 is nonhalting. The entire original-machine problem, and hence BB(6), remain open. The most useful next step is to cover the unbounded remaining exponents or terminal branches by a global invariant, not simply to count more sampled inverse trees. The symbolic checker is designed for reuse on new parameter families.
+
+
+### Exact finite-range gate counts
+
+`count_gates.py` counts the two gate image cardinalities separately in the even exponents 8..X without enumerating exponents. Strict monotonicity turns the cutoff into an interval of candidate t. The left gate counts odd nonzero-digit parity; the right gate is translated by tau and counts ordinary digits 0 and 2 satisfying (2N0+N2 mod 3,N0 mod 2)=(2,1). A standard finite-group prefix digit DP computes both exactly. For X=2000 it returns 997 total exponents, 331 left gates, 351 right gates, and at least 315 with neither gate (435 in the full finite inverse census). For X=10^6 it proves the union-bound count >=165462 of 499997. This is a mathematical exact counting algorithm, not a new Lean cardinality theorem. The two gate counts overlap, so their sum is not the number of exponents with a predecessor.
+
+The direct decoder also replaces the earlier huge-certificate reduction: `FatalFamilyDecoderHuge.lean` proves that both decoder outputs for p=10^100 are none with no axioms, in local Lean 4.36.0-rc2 (0.7 s including import and elaboration). The source transfer was locally type-checked using the original interface stub; it is included in the next manual pinned workflow.
