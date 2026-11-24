@@ -20,6 +20,7 @@ on:
           - enumerate62-weighted-source
           - enumerate62-source-roster
           - enumerate62-resume-chunk2
+          - enumerate62-held-probe
           - enumerate62-chunk-probe
           - enumerate62-chunk-probe-native
           - enumerate62-q0-verdicts
@@ -120,7 +121,7 @@ jobs:
             somdc) make -f Makefile.coq -j 2 SOMDCv10.vo ;;
             both) make -f Makefile.coq -j 2 Sk1Machines_v2.vo SOMDCv10.vo ;;
             enumerate62-decider-sound) make -f Makefile.coq -j 2 Enumerate62.vo Agent5Enumerate62DeciderSound.vo ;;
-            enumerate62-q0-count|enumerate62-chunk-probe|enumerate62-chunk-probe-native|enumerate62-q0-verdicts) make -f Makefile.coq -j 2 Enumerate62.vo ;;
+            enumerate62-held-probe|enumerate62-q0-count|enumerate62-chunk-probe|enumerate62-chunk-probe-native|enumerate62-q0-verdicts) make -f Makefile.coq -j 2 Enumerate62.vo ;;
             enumerate62-q0-partition) make -f Makefile.coq -j 2 Agent32Q0Partition.vo Agent32SourceDrain.vo Agent32SourceCoverage.vo Agent32SourceEncoding.vo Agent8AdaptiveSource.vo ;;
             enumerate62-adaptive-checkpoint) make -f Makefile.coq -j 2 Agent8QueueCheckpointPilot.vo ;;
             enumerate62-adaptive-expansion) make -f Makefile.coq -j 2 Agent8QueueExpansionPilot.vo Agent8PackedChunk2_32_32.vo ;;
@@ -320,3 +321,24 @@ jobs:
             original/verify/Agent47ResumeChunk2.vo
             original/verify/resume-data.txt
           if-no-files-found: error
+
+      - name: Probe the genuine one-hole source holdout
+        if: inputs.target == 'enumerate62-held-probe'
+        working-directory: original/verify
+        run: |
+          set -euo pipefail
+          cat > Agent47HeldProbe.v <<'COQ'
+          From BusyCoq Require Import CTL62 Individual62.
+          From Coq Require Import NArith Strings.String.
+          Open Scope string_scope.
+          Definition held := TM_from_str "1RB1RD_1RC0LD_0LA0RE_1LA1LB_0RF---_0LA1RA".
+          Time Eval vm_compute in (decide_nonhalt held (NG 0 1000 100000 4 0 0 0 false)).
+          Time Eval vm_compute in (decide_nonhalt held (NG 0 1000 100000 5 0 0 0 false)).
+          Time Eval vm_compute in (decide_nonhalt held (NG 0 1000 100000 6 0 0 0 false)).
+          Time Eval vm_compute in (decide_nonhalt held (NG 0 1000 100000 8 0 0 0 false)).
+          Time Eval vm_compute in (decide_nonhalt held (NG 0 1000 100000 10 0 0 0 false)).
+          Time Eval vm_compute in (decide_nonhalt held (NG 0 1000 100000 4 4 4 0 true)).
+          Time Eval vm_compute in (decide_nonhalt held (NG 1001 1000 100000 5 4 4 0 true)).
+          Time Eval vm_compute in (decide_nonhalt held (RWL_mod 1001 1000 100000 5 320 2 2 8 0)).
+          COQ
+          timeout 1200s coqc -Q . BusyCoq -native-compiler no Agent47HeldProbe.v
