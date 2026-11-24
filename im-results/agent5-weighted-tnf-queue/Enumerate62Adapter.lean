@@ -93,6 +93,37 @@ theorem sourceUndefCount_update (tm : SourceTM) (slot : Slot) (mv : Move)
     simp [sourceHoles, hhole]
   simp [Finset.card_erase_of_mem hmem]
 
+/-- A single missing source transition is the unique hole when the
+    source TNF count is one. This is the exact finite-table fact used by
+    Enumerate62.v's expand' last-hole shortcut. -/
+theorem source_last_hole_rest (tm : SourceTM) (slot : Slot)
+    (hcount : sourceUndefCount tm = 1) (hhole : tm slot = none) :
+    ∀ s, s ≠ slot → ∃ mv, tm s = some mv := by
+  intro s hne
+  by_contra hnot
+  have hsnone : tm s = none := by
+    cases ht : tm s with
+    | none => rfl
+    | some mv => simp [ht] at hnot
+  have hslot : slot ∈ sourceHoles tm := by
+    simp [sourceHoles, hhole]
+  have hs : s ∈ sourceHoles tm := by
+    simp [sourceHoles, hsnone]
+  have hsubset : insert slot {s} ⊆ sourceHoles tm := by
+    intro t ht
+    simp only [Finset.mem_insert, Finset.mem_singleton] at ht
+    rcases ht with ht | ht
+    · subst t
+      exact hslot
+    · subst t
+      exact hs
+  have hcard : (insert slot {s} : Finset Slot).card ≤ (sourceHoles tm).card :=
+    Finset.card_le_card hsubset
+  have htwo : (insert slot {s} : Finset Slot).card = 2 := by
+    simp [hne]
+  rw [htwo] at hcard
+  omega
+
 def sourceChildFresh (x : SourceNode) (mv : Move) : Nat :=
   if mv.next.val = x.fresh then x.fresh + 1 else x.fresh
 
