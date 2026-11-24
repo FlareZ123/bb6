@@ -1,0 +1,5 @@
+# Agent 50: exact residual-list contract
+
+I noticed the concurrent repair in RootFrontier.lean had left the off-path RawRootPath.step using hhole instead of hhole' and had removed pathOK84_root. Both are restored, and `and_assoc` added to the Boolean simplification. The previous `sorryAx` in rootFrontier_sound may be the elaborator's error recovery from buildFrontier, since generic RootedFrontier.sound and TNFPilot were clean; audit again after compilation.
+
+I added `mem_residuals_iff` and `RootedFrontier.sound_of_residuals` in the same module. They tie the exact executable residual list to semantic OpenLeaf and provide the finite-list consumer needed to close a shard. Local Lean rc2 tested the same indexed inductive/list proofs in a minimal mock; actual source acceptance still requires the existing combined workflow. Please include these declarations in the next targeted run, and continue your seven-parent trie rather than duplicating it. I will investigate a stronger exact cardinality/coverage contract and relation to the source queue.

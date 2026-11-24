@@ -223,6 +223,9 @@ theorem pathOK84_cons {p : PartialMachine} {cut n : Nat} {s : Slot}
     pathOK84 (refine p s (some mv)) (advanceCut cut mv) xs = true := by
   simpa only [pathOK84, Bool.and_eq_true, decide_eq_true_eq, and_assoc] using h
 
+theorem pathOK84_root : pathOK84 root 2 path = true := by decide
+
+/-- Build the authenticated path and retain every off-path ordinary sibling. -/
 def buildFrontier (p : PartialMachine) (cut : Nat) (hp : RawRootPath p) :
     (xs : List PathEntry) →
     pathOK84 p cut xs = true →
@@ -288,6 +291,51 @@ theorem OpenLeaf.reachable {B : Nat} {p : PartialMachine}
   | here hp => exact hp
   | child path hrun hhole hweight children mv hchild ih => exact ih
 
+/-- The executable residual list contains every semantic open leaf. -/
+theorem OpenLeaf.mem_residuals {B : Nat} {p : PartialMachine}
+    {f : RootedFrontier B p} {address : List Move} {q : PartialMachine}
+    (h : OpenLeaf f address q) : (address, q) ∈ residuals f := by
+  induction h with
+  | here path => simp [residuals]
+  | child path hrun hhole hweight children mv hchild ih =>
+      apply List.mem_flatMap.mpr
+      refine ⟨mv, allMoves_complete mv, ?_⟩
+      exact List.mem_map.mpr ⟨_, ih, rfl⟩
+
+/-- Conversely no extraneous table/address occurs in the exported list. -/
+theorem mem_residuals_openLeaf {B : Nat} {p : PartialMachine}
+    (f : RootedFrontier B p) (address : List Move) (q : PartialMachine)
+    (h : (address, q) ∈ residuals f) : OpenLeaf f address q := by
+  induction f generalizing address q with
+  | @residual p path =>
+      have he : (address, q) = ([], p) := by simpa [residuals] using h
+      cases he
+      exact OpenLeaf.here path
+  | closed path cert => simp [residuals] at h
+  | @expand p n c path hrun hhole hweight children ih =>
+      rcases List.mem_flatMap.mp h with ⟨mv, _, hm⟩
+      rcases List.mem_map.mp hm with ⟨⟨a, t⟩, ha, he⟩
+      have hchild := OpenLeaf.child path hrun hhole hweight children mv (ih mv a t ha)
+      cases he
+      exact hchild
+
+theorem mem_residuals_iff {B : Nat} {p : PartialMachine}
+    (f : RootedFrontier B p) (address : List Move) (q : PartialMachine) :
+    (address, q) ∈ residuals f ↔ OpenLeaf f address q :=
+  ⟨mem_residuals_openLeaf f address q, OpenLeaf.mem_residuals⟩
+
+/-- A finite list of residual proofs suffices to close the entire frontier.
+    This is the exact proof obligation for an enumerated residual manifest. -/
+theorem RootedFrontier.sound_of_residuals {B : Nat} {p : PartialMachine}
+    (f : RootedFrontier B p)
+    (hres : ∀ address q, (address, q) ∈ residuals f →
+      ∀ m, compatible q m → WeightedBound B m) :
+    ∀ m, compatible p m → WeightedBound B m := by
+  intro m hm
+  rcases f.sound m hm with h | ⟨address, q, hopen, hq⟩
+  · exact h
+  · exact hres address q hopen.mem_residuals m hq
+
 /-- Machine-readable transition encoding: ? is unassigned, H is an
     assigned halt, and an ordinary transition is e.g. 1RB. -/
 def encodeState (q : Fin 6) : String :=
@@ -327,5 +375,7 @@ def residualManifest : List (String × String) :=
 #print axioms RootedFrontier.openLeaves_disjoint
 #print axioms rootFrontier_sound
 #print axioms rootFrontier_residual_count
+#print axioms mem_residuals_iff
+#print axioms RootedFrontier.sound_of_residuals
 
 end BB6.Agent50RootFrontier
