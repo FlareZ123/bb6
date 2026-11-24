@@ -23,3 +23,28 @@ The finite fan is universal in j: for every internal affine ray compute Q0 and s
 
 ## Evidence and limits
 Standalone Lean 4.36.0-rc2 compilation of ShadowScalar.lean succeeded locally: scalar_iff, step_good, decode_exists, incoming_unique, child_iff_not_bad, sibling_mass_cube, common_no_incoming, ray_cost_iff, ray_child_step, common_cut_checked, common_cut, source_ray_coordinates. The latter proves the six exact source affine coordinate identities. Only propext, Classical.choice and Quot.sound appear. The locally checked proof is being persisted separately; direct import into the accepted Root32ShadowRoot checker is still required. No CI or machine-level acceptance is claimed here. The key remaining problem is a uniform accumulated-cost cap within the root32 precision budget, not further periodic enumeration. BB(6) remains open.
+
+
+## Exact congruence for a complete cost word
+
+`ShadowWords.lean` proves a non-recursive endpoint characterization. For a positive cost word (d_1,ldots,d_l), write (P=sum d_i), (B(m)=211lfloor m/2floor+108), and recursively define
+
+```
+nextM(m,d) = m+3d+1
+offset(m,[]) = 0
+offset(m,d::ds) = B(m)+211(nextM(m,d) mod 2)+2^d offset(nextM(m,d),ds)
+mask([]) = 0
+mask(d::ds) = 1+2^d mask(ds)
+```
+
+There is a path with the specified word from (m,x) exactly when (2^Pmid x+offset(m,ds)). Its terminal coordinates are (m'=m+3P+l) and (x'=(x+offset(m,ds))/2^P). Divisibility at the final denominator implies all intermediate divisibilities **and** branch parities, so no additional tests are needed. Good is invariant under the path.
+
+For the generic common-root line (m=78+4e, x=3852+211e), shifting m by 4e shifts offset by (422e,mask(ds)). Consequently the exact word condition is
+
+```
+2^P | 3852+offset(78,ds)+211(1+2 mask(ds))e.
+```
+
+The slope is odd. Constructive one-bit lifting in Lean proves that there is precisely one residue of e modulo 2^P realizing each positive word, without any other constraints on e. Every natural representative is valid. The actual root32 progression is e=903171544+1761607680j, so it fixes the initial 24 bits and imposes an additional odd-modulus restriction. This characterization holds for every finite prefix of arbitrary, including aperiodic, paths; it does not imply mortality. For the unrestricted common line, the 2^(P-1) compositions of P give exactly 2^(P-1) word/residue pairs over 2^P residues (mean one-half). This is an exact first moment, not an independent-branch or worst-case bound. Any claim of a universally forbidden finite cost word on the full generic line is false.
+
+Checked locally in Lean 4.36.0-rc2; `word_iff`, `word_good`, `offset_shift`, `root_word_iff`, `odd_affine_residue`, and `root_word_unique_residue` use only ordinary Lean axioms.
