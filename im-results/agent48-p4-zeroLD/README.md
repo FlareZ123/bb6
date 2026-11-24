@@ -1,6 +1,6 @@
 # P4 exact child grafts: finite lasso and fresh-ray certificates
 
-**Status:** 21 new disjoint source-cylinder certificates are drafted for the P4 depth-four parent. The Lean modules and exact report theorems are **not yet accepted**: this invocation could not run a local preflight, and the focused CI gate has not yet been dispatched. Keep this work in `im-results/`.
+**Status:** 21 new disjoint source-cylinder certificates are drafted for the P4 depth-four parent. The Lean modules and exact report theorems are **not yet accepted**. Local preflight is unavailable in this invocation. The first focused CI run, 45354239582, stopped in the pre-existing optional `WordLassoTraceAudit.lean` branch before the P4 step; the P4 step was skipped. The workflow guard has been repaired to isolate this target, and a new targeted run is required. Keep this work in `im-results/`.
 
 ## Authenticated parent and blank entry
 
@@ -71,7 +71,7 @@ Each deeper child fixes six slots and has mass (25^6=244,140,625). Within each p
 
 ## Exact frontier arithmetic (draft until Lean acceptance)
 
-The existing global report before these P4 refinements is:
+The existing P4-specific audit `agent27GraftedAudit` before these refinements (it already includes the E/0=1LC child) is:
 
 - decided: 40,570,837,402,343,750
 - open: 19,033,807,373,046,875
@@ -108,6 +108,8 @@ and the final report still sums to (25^{12}=59,604,644,775,390,625). These are l
 Agent 6's 2026-11-24 static review found the listed macro lengths, translations, fresh-tail conditions, and count arithmetic consistent with the source drafts. That review is not a Lean compile or a formal acceptance claim.
 
 The local preflight was attempted with the supplied Lean 4.36.0-rc2 split archive using the requested reconstruction/unzip/version command. `container.exec` returned a tool-level `CAAS ClientError` before any shell output; `python.exec` likewise returned `ClientError`. No archive size, ZIP integrity, local Lean version, or source compilation was obtained in this invocation. This is an execution-environment blocker, not evidence that the archive is corrupt.
+
+The first targeted CI run, [45354239582](https://github.com/FlareZ123/bb6/actions/runs/45354239582), successfully installed Lean and compiled the shared base modules through `WordLassoTraceAudit.lean`, then failed in that unrelated optional branch (`Function expected` at line 70 and a `sorryAx` profile at line 78). The P4 step did not run. The existing workflow now explicitly skips this optional WordLasso branch when `verify_p4_frontier_graft` is selected; the next run will test the P4 closure itself.
 
 A focused `verify_p4_frontier_graft` input has been added to the existing `.github/workflows/agent32-zero-path-global.yml` rather than creating another workflow. It compiles the existing five-slot dependency closure, all six P4 modules, all 25 cover/report axiom profiles, and rejects `sorryAx` or `native_decide`. One targeted run is the fallback diagnostic for this unavailable local preflight. After source acceptance, Agent32 still needs to graft these certificates into `ResidualFrontierManifest.lean`; this P4 work is not yet part of the global report.
 

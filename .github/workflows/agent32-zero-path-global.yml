@@ -104,7 +104,7 @@ jobs:
           lean -o im-results/agent6-fresh-glider/RayMacro.olean im-results/agent6-fresh-glider/RayMacro.lean
           lean -o im-results/agent6-fresh-glider/EntryMacroOracle.olean im-results/agent6-fresh-glider/EntryMacroOracle.lean
           lean -o im-results/agent6-fresh-glider/EntryMacroLeft.olean im-results/agent6-fresh-glider/EntryMacroLeft.lean
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ inputs.verify_three_slot_family }}" != "true" && ( "${{ inputs.verify_five_slot_leaf_graft }}" != "true" || "${{ inputs.verify_leaf_graft }}" == "true" ) ]]; then
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ inputs.verify_three_slot_family }}" != "true" && ( "${{ inputs.verify_five_slot_leaf_graft }}" != "true" || "${{ inputs.verify_leaf_graft }}" == "true" ) && "${{ inputs.verify_p4_frontier_graft }}" != "true" ]]; then
             lean -o im-results/agent6-fresh-glider/MarkerTailExample.olean im-results/agent6-fresh-glider/MarkerTailExample.lean
             lean -o im-results/agent6-fresh-glider/MarkerOracle.olean im-results/agent6-fresh-glider/MarkerOracle.lean
             lean -o im-results/agent6-fresh-glider/MarkerMirror.olean im-results/agent6-fresh-glider/MarkerMirror.lean
