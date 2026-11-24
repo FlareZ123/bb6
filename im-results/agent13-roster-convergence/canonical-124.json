@@ -5395,5 +5395,20 @@
         null
       ]
     }
-  ]
+  ],
+  "slot_order": [
+    "A0",
+    "A1",
+    "B0",
+    "B1",
+    "C0",
+    "C1",
+    "D0",
+    "D1",
+    "E0",
+    "E1",
+    "F0",
+    "F1"
+  ],
+  "transition_encoding": "Each assigned ordinary transition is a three-character string: write bit (0/1), direction (L/R), target state (A-F); null denotes an unassigned slot. The roster contains no assigned-halt slot."
 }
