@@ -82,4 +82,13 @@ theorem literal_score_2 : HaltsAfter expectedRLE_2 11157918858181292765334811700
 
 #print axioms literal_score_2
 
+theorem first_score_attainable : Attainable 932242535661307148726923126800831715518673957229 :=
+  ⟨expectedRLE_1, 932242535661307148726923126800831715518673957228, literal_score_1, rfl⟩
+
+theorem second_score_attainable : Attainable 111579188581812927653348117002306046024821208051411619955580898884568782 :=
+  ⟨expectedRLE_2, 111579188581812927653348117002306046024821208051411619955580898884568781, literal_score_2, rfl⟩
+
+#print axioms first_score_attainable
+#print axioms second_score_attainable
+
 end BB6.Agent17.F289Coverage
