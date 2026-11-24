@@ -1,0 +1,54 @@
+import WitnessExtract
+import BusyBeaver.BB6.Halt.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH
+
+set_option maxRecDepth 100000
+set_option maxHeartbeats 0
+
+#extract_exact "BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution.step_CB_run1" as F424_step_CB_run1_exact cost 3
+#extract_exact "BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution.step_CB_run_ge3" as F424_step_CB_run_ge3_exact cost 5
+#extract_exact "BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution.step_BB_nil" as F424_step_BB_nil_exact cost 1
+#extract_exact "BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution.step_BB_zero" as F424_step_BB_zero_exact cost 1
+#extract_exact "BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution.step_BB_run0" as F424_step_BB_run0_exact cost 8
+#extract_exact "BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution.step_BB_run1" as F424_step_BB_run1_exact cost 3
+#extract_exact "BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution.step_BB_run2" as F424_step_BB_run2_exact cost 5
+#extract_exact "BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution.step_BB_run3" as F424_step_BB_run3_exact cost 9
+#extract_exact "BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution.step_BB_run_ge4" as F424_step_BB_run_ge4_exact cost 9
+#extract_exact "BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution.exit_R_A" as F424_exit_R_A_exact cost 13
+#extract_exact "BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution.step_DL_run0" as F424_step_DL_run0_exact cost 1
+#extract_exact "BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution.step_DL_run1" as F424_step_DL_run1_exact cost 3
+#extract_exact "BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution.step_CB_nil" as F424_step_CB_nil_exact cost 2
+#extract_exact "BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution.step_CB_zero" as F424_step_CB_zero_exact cost 2
+#extract_exact "BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution.step_CB_run0_nil" as F424_step_CB_run0_nil_exact cost 3
+#extract_exact "BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution.step_CB_run0_zero" as F424_step_CB_run0_zero_exact cost 3
+#extract_exact "BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution.step_CB_run0_run0" as F424_step_CB_run0_run0_exact cost 6
+#extract_exact "BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution.step_CB_run2" as F424_step_CB_run2_exact cost 5
+#extract_exact "BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution.step_DL_zero_halt" as F424_step_DL_zero_halt_exact cost 1
+#extract_exact "BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution.init_to_CB" as F424_init_to_CB_exact cost 18
+
+#extract_induction "BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution.cyc_R_A" as F424_cyc_R_A_exact cost_by (fun k => 3*k)
+#extract_composed "BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution.step_DL_run2" as F424_step_DL_run2_exact using ["BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution.cyc_R_A" => F424_cyc_R_A_exact]
+#extract_composed "BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution.step_CB_run0_run_pos" as F424_step_CB_run0_run_pos_exact using ["BusyBeaver.M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.Solution.cyc_R_A" => F424_cyc_R_A_exact]
+
+#print axioms F424_step_CB_run1_exact
+#print axioms F424_step_CB_run_ge3_exact
+#print axioms F424_step_BB_nil_exact
+#print axioms F424_step_BB_zero_exact
+#print axioms F424_step_BB_run0_exact
+#print axioms F424_step_BB_run1_exact
+#print axioms F424_step_BB_run2_exact
+#print axioms F424_step_BB_run3_exact
+#print axioms F424_step_BB_run_ge4_exact
+#print axioms F424_exit_R_A_exact
+#print axioms F424_step_DL_run0_exact
+#print axioms F424_step_DL_run1_exact
+#print axioms F424_step_CB_nil_exact
+#print axioms F424_step_CB_zero_exact
+#print axioms F424_step_CB_run0_nil_exact
+#print axioms F424_step_CB_run0_zero_exact
+#print axioms F424_step_CB_run0_run0_exact
+#print axioms F424_step_CB_run2_exact
+#print axioms F424_step_DL_zero_halt_exact
+#print axioms F424_init_to_CB_exact
+#print axioms F424_cyc_R_A_exact
+#print axioms F424_step_DL_run2_exact
+#print axioms F424_step_CB_run0_run_pos_exact
