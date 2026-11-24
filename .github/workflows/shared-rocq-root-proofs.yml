@@ -11,6 +11,7 @@ on:
           - sk1
           - somdc
           - both
+          - enumerate62-decider-sound
 permissions:
   contents: read
 jobs:
@@ -31,6 +32,10 @@ jobs:
           ref: 33209bc7dc282b38c8cd6be507bfc551fea56108
           path: original
           persist-credentials: false
+      - name: Add Agent 5 Enumerate62 decider soundness theorem
+        if: inputs.target == 'enumerate62-decider-sound'
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent5-weighted-tnf-queue/Agent5Enumerate62DeciderSound.v" original/verify/
       - name: Generate project dependencies with VM fallback
         working-directory: original/verify
         run: |
@@ -45,6 +50,7 @@ jobs:
             sk1) make -f Makefile.coq -j 2 Sk1Machines_v2.vo ;;
             somdc) make -f Makefile.coq -j 2 SOMDCv10.vo ;;
             both) make -f Makefile.coq -j 2 Sk1Machines_v2.vo SOMDCv10.vo ;;
+            enumerate62-decider-sound) make -f Makefile.coq -j 2 Enumerate62.vo Agent5Enumerate62DeciderSound.vo ;;
           esac
       - name: Print final original theorem assumptions
         working-directory: original/verify
@@ -55,6 +61,10 @@ jobs:
           if [ "$PROOF_TARGET" = sk1 ] || [ "$PROOF_TARGET" = both ]; then
             printf '%s\n' 'From BusyCoq Require Import Sk1Machines_v2.' 'Print Assumptions Sk1Machines_v2.TM25.nonhalt.' 'Print Assumptions Sk1Machines_v2.TM26.nonhalt.' 'Print Assumptions Sk1Machines_v2.TM23.nonhalt.' > Agent12Sk1Audit.v
             coqc -Q . BusyCoq -native-compiler no Agent12Sk1Audit.v
+          fi
+          if [ "$PROOF_TARGET" = enumerate62-decider-sound ]; then
+            printf '%s\\n' 'From BusyCoq Require Import Agent5Enumerate62DeciderSound.' 'Print Assumptions agent5_decider_sound.' > Agent5Enumerate62Audit.v
+            coqc -Q . BusyCoq -native-compiler no Agent5Enumerate62Audit.v
           fi
           if [ "$PROOF_TARGET" = somdc ] || [ "$PROOF_TARGET" = both ]; then
             printf '%s\n' 'From BusyCoq Require Import SOMDCv10.' 'Print Assumptions SOMDCv10.TM4.halt.' > Agent12SomdcAudit.v
