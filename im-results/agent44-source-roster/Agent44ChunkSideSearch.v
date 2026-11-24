@@ -116,7 +116,10 @@ Proof.
 Qed.
 
 Definition searched_chunk_certs : list source_certificate :=
-  q32_parent_side_certs ++ search_side_roster chunk_remaining.
+  match q32_parent_side_candidate with
+  | Some _ => q32_parent_side_certs
+  | None => search_side_roster chunk_remaining
+  end.
 
 Definition searched_chunk_roster : list TM :=
   certificate_roster searched_chunk_certs.
@@ -128,11 +131,11 @@ Theorem searched_chunk_roster_safe bound :
   Forall (source_table_safe bound) searched_chunk_roster.
 Proof.
   unfold searched_chunk_roster, searched_chunk_certs.
-  apply certificate_roster_safe.
-  rewrite forallb_app.
-  split.
-  - apply q32_parent_side_certs_checked.
-  - apply search_side_roster_checked.
+  destruct q32_parent_side_candidate as [c|] eqn:Hfind; cbn.
+  - apply certificate_roster_safe.
+    apply q32_parent_side_certs_checked.
+  - apply certificate_roster_safe.
+    apply search_side_roster_checked.
 Qed.
 
 Theorem searched_chunk_actual_residuals_sound bound :
