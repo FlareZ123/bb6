@@ -214,7 +214,7 @@ theorem low_ray_z14_mod64_unreachable
     simpa [Dx,Dy,X,Y] using hh
   have hlin : 2048*(32*t+7)+130≤2^(2048*(32*t+7)+129) :=
     second_fan_linear_le_power _
-  rw [hu'] at hlin
+  rw [←hu'] at hlin
   have huLarge : 129≤u := by omega
   have hpow128 : 128∣2^(2048*(32*t+7)+129) := by
     have hh : (2:Nat)^7∣2^(2048*(32*t+7)+129) :=
