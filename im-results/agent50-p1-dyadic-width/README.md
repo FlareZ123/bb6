@@ -1,5 +1,9 @@
 # P1 inverse shadow: an exact critical first-moment law
 
+## 2026-11-24 checkpoint: exact critical carry-prefix converse
+
+New source-checked theorem: for n>=14 and a positive prefix length K<=n, every weighted carry word with leading one satisfying the existing modular condition gives an actual OddCone history from the critical inverse root, with cost exactly K. All seven source dependency blobs were compiled locally with Lean 4.36.0-rc2; both theorem axiom reports contain only standard axioms. Together with Agent43's endpoint-independent necessity this characterizes unrestricted prefix existence. [Proof, reproduction, implications and limits](CarryPrefixExact.md). This is not a result about the authentic blank orbit or a fixed terminal endpoint.
+
 **Status, 9 November 2026:** exact all-generation first-moment and local offspring-distribution theorems for the source-derived **abstract two-counter P1 inverse shadow**, with self-contained cylinder/valuation proofs, independent exact-integer regressions, and Lean-checked universal arithmetic lemmas. Original-source Lean integration of the *statistical theorem* has not been completed; external novelty has not been assessed. Neither the original P1 machine nor BB(6) is decided.
 
 ## The precise model and theorem
