@@ -660,6 +660,52 @@ if (gFirstDigitCycle !== null) {
     H, Hdata.pending, afterH.slice(0, hTrackDigits),
     hTrackDigits, H_PREFIX_CYCLE_LIMIT);
   const hDepthResults = carrySummariesForCycles(hPrefixScan, hTrackDigits);
+
+  // The first H-suffix digit also returns after a short cycle. Extract the
+  // next exact suffix word I=H^period and inspect its next local prefix.
+  const hFirstDigitCycle = hPrefixScan.cycles[1];
+  let iSummary = null;
+  if (hFirstDigitCycle !== null &&
+      hFirstDigitCycle.preperiod + hFirstDigitCycle.period <= 8) {
+    let iRootTail = afterH.slice();
+    for (let k = 0; k < hFirstDigitCycle.preperiod; k++) {
+      iRootTail = applySkewedWord(H, Hdata.pending, iRootTail);
+      assert(iRootTail !== null, "halt in H first-digit transient");
+    }
+    const iBlocks = hFirstDigitCycle.period;
+    const Idata = extractSkewedWord(
+      iRootTail.slice(0, 1), H, Hdata.pending, iBlocks, "I");
+    const I = Idata.word;
+    const iReturns = hReturns * BigInt(iBlocks);
+    const iMass = checkMassWithPending(
+      "I", I, Idata.pending, iReturns, Idata.adds);
+    const afterI = applySkewedWord(I, Idata.pending, iRootTail.slice(1));
+    assert(afterI !== null, "halt in one I block");
+    const iTrackDigits = Math.min(6, afterI.length);
+    const I_PREFIX_CYCLE_LIMIT = 4;
+    const iPrefixScan = prefixCyclesWithCarry(
+      I, Idata.pending, afterI.slice(0, iTrackDigits),
+      iTrackDigits, I_PREFIX_CYCLE_LIMIT);
+    const iDepthResults = carrySummariesForCycles(iPrefixScan, iTrackDigits);
+    iSummary = {
+      blocks: iBlocks,
+      preperiod: hFirstDigitCycle.preperiod,
+      word: iMass,
+      trackedDigits: iTrackDigits,
+      prefixCycleLimit: I_PREFIX_CYCLE_LIMIT,
+      prefixCyclesByDepth: iDepthResults.cycles,
+      carryByDepth: iDepthResults.carry,
+      afterIFirstDigits: show(afterI.slice(0, iTrackDigits))
+    };
+  } else {
+    iSummary = {
+      status: hFirstDigitCycle === null
+        ? "no first-digit H cycle within the bounded scan"
+        : "H first-digit cycle exceeds the safe extraction budget",
+      cycle: hFirstDigitCycle
+    };
+  }
+
   hSummary = {
     blocks: hBlocks,
     preperiod: gFirstDigitCycle.preperiod,
@@ -668,7 +714,8 @@ if (gFirstDigitCycle !== null) {
     prefixCycleLimit: H_PREFIX_CYCLE_LIMIT,
     prefixCyclesByDepth: hDepthResults.cycles,
     carryByDepth: hDepthResults.carry,
-    afterHFirstDigits: show(afterH.slice(0, hTrackDigits))
+    afterHFirstDigits: show(afterH.slice(0, hTrackDigits)),
+    HtoI: iSummary
   };
 }
 const vCarrySummary = scanCycleCarry(V, 0n, p8BeforeV, vCycle, 8);
