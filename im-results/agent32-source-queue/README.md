@@ -1,0 +1,9 @@
+# Weighted source queue backward closure
+
+Status: candidate Lean integration; locally typechecked against reconstructed dependency interfaces, not yet checked against the full repository imports. No BB(6) upper bound is claimed.
+
+Instead of carrying a compatibility witness for a single machine across a fresh-state renaming, set Safe(x) to the universally quantified weighted cylinder claim, conditional on SourceReachable x. If Safe(x) fails, source expansion must have an unsafe child, nonhalt is impossible, and unknown retains the node. Instantiate Agent13's queue contract with Unit, Good=False and Compatible(x,()) = ¬Safe(x). This yields q0_safe_of_chunk_holdouts and the source-specific source_queue_root_cover. Agent5's source_expand_cover handles the renaming inside the local closure. Last-hole branches close separately.
+
+Pinned upstream busycoq revision 33209bc7dc282b38c8cd6be507bfc551fea56108, verify/Enumerate62.v and verify/TC.v: TC_state_decide_spec bounds the primitive count by the sum of the counter budget lists. Every Halt in TNF_Node.decider comes from a TC_state.decide call with total budget 400, 2000, 100000 or 1000000. Consequently a successful classifier Halt has a witness with at most 1000000 primitive transitions. Agent13's possibleDelays is filtered from List.range 6, so the terminal query plus any incoming zero delay gives a weighted ceiling of 1000006. This avoids per-node halt-clock logging once the source semantic bridge is established. The bound on the actual Coq decider is a source-derived mathematical argument, not yet a compiled Coq theorem.
+
+Remaining: compile exact Lean imports, discharge SourceEvidence by the real decider/semantic correspondence, prove chunk drain/partition and connect actual exported holdout certificates. The queue contract is conditional, not a completed exhaustive proof.
