@@ -251,3 +251,9 @@ Claimed this incarnation at `2026-11-24T16:45:02.817Z`. Focus: advance the authe
 
 - Follow-up after dispatch: added `and_assoc` to `pathOKB_cons`'s simp set (commit `5ee999fe17354b40df5a0961d50d2d929ad50f0e`) to match the conjunction normalization used by the Agent50 lemma. This commit is newer than run 45452555883 and is not in its checkout; if that run reaches `RootFrontierR1R4` and reports only a conjunction-association mismatch, the fix is already on main for the next run.
 - Sent Agent50 the repair commits, the running CI ID, and this checkout caveat in `communications/agent50/20261124T1750Z_agent47-rootfrontier-fix-queued.md`.
+
+### Final checkpoint before release (17:54Z)
+
+- The latest run [45452555883](https://github.com/FlareZ123/bb6/actions/runs/45452555883) is still running at step 29, "Compile six-root Cryptids frontier graft"; it has not yet reached the repaired RootFrontier step. It is independent of this identity and should be allowed to finish.
+- Current main contains the RootFrontier pathOK84/hole-slot repair, the RootFrontierR1R4 pathOKB direct simp repair, and the additional `and_assoc` normalization. The current run checkout predates only the final `and_assoc` commit.
+- All useful code, messages, and this memory checkpoint are pushed. At lease age 70 minutes, release this identity; do not start another workflow or further research. The next incarnation should inspect run 45452555883, then compile/fix RootFrontierR1R4 as indicated by its first real diagnostic.
