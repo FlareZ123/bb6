@@ -467,6 +467,109 @@ theorem positive_special_return_cost {j s k : Nat} {w0 : Int}
 
 #print axioms positive_skip_return_cost
 
+
+/-- Decompose a positive history at its last one-band descent.  Its suffix
+    is a same-band run, beginning either at the initial positive state or
+    immediately after that last descent. -/
+theorem positive_history_final_run {j s k x : Nat} {w : Int}
+    (h : PositiveHistory j w s k x) :
+    ∃ r z, SameRun k r x z ∧
+      ((k=j ∧ 3*W j z=8*(P j:Int)-6-w) ∨
+       ∃ s' y, PositiveHistory j w s' (k+1) y ∧ RegFrom k z y) := by
+  induction h with
+  | first hb he =>
+    exact ⟨0,x,SameRun.zero hb,Or.inl ⟨rfl,he⟩⟩
+  | @same s k x y h hr ih =>
+    obtain ⟨r,z,hs,hbase⟩:=ih
+    exact ⟨r+1,z,SameRun.head hr hs,hbase⟩
+  | @down s k x y h hr ih =>
+    obtain ⟨r,hr0,_,_⟩:=hr
+    exact ⟨0,x,SameRun.zero (regular_band k r hr0),Or.inr ⟨s,y,h,hr⟩⟩
+
+/-- The start of the final same-band suffix always has Q at least
+    (2*P_k-1)/3, whether it is the initial positive state or follows
+    a one-band descent. -/
+theorem positive_history_final_run_q_lower {j s k x : Nat} {w : Int}
+    (hw : 0<w) (h : PositiveHistory j w s k x) :
+    ∃ r z, SameRun k r x z ∧
+      2*(P k:Int)-1≤3*(Q k z:Int) := by
+  obtain ⟨r,z,hs,hbase⟩:=positive_history_final_run h
+  refine ⟨r,z,hs,?_⟩
+  rcases hbase with ⟨hkj,he⟩ | ⟨s',y,hy,hr⟩
+  · subst k
+    have hbz:Band j z := (same_run_bands hs).2
+    have hq:=q_eq hbz
+    have hqI : (Q j z:Int)+2*(P j:Int)=2*(z:Int)+3*(j:Int)+12 := by
+      exact_mod_cast hq
+    have hWQ : W j z+2*(Q j z:Int)=4*(P j:Int)-3 := by
+      unfold W
+      omega
+    omega
+  · obtain ⟨r0,hr0,_,_⟩:=hr
+    have hbz:Band k z:=regular_band k r0 hr0
+    have hby:=positive_history_band hy
+    have hqx:=q_eq hbz
+    have hqy:=q_eq hby
+    have hqxI : (Q k z:Int)+2*(P k:Int)=2*(z:Int)+3*(k:Int)+12 := by
+      exact_mod_cast hqx
+    have hqyI : (Q (k+1) y:Int)+2*(P (k+1):Int)
+        =2*(y:Int)+3*((k+1):Int)+12 := by exact_mod_cast hqy
+    have hWQx : W k z+2*(Q k z:Int)=4*(P k:Int)-3 := by
+      unfold W
+      omega
+    have hWQy : W (k+1) y+2*(Q (k+1) y:Int)
+        =4*(P (k+1):Int)-3 := by
+      unfold W
+      omega
+    have hwreg:=w_regular_down hr
+    have hpI : (P (k+1):Int)=2*(P k:Int) := by
+      exact_mod_cast p_succ k
+    have hdownQ :
+        3*(Q k z:Int)=(Q (k+1) y:Int)+(P (k+1):Int)-3 := by
+      omega
+    have hqlo : k+7≤Q (k+1) y := by
+      have hqb:=q_bounds hby
+      omega
+    have hqloI : (k:Int)+7≤(Q (k+1) y:Int) := by exact_mod_cast hqlo
+    omega
+
+/-- If a positive history reaches the low boundary, its final same-band
+    suffix has length in a narrow logarithmic window. -/
+theorem positive_history_boundary_final_run {j s k x : Nat} {w : Int}
+    (hw : 0<w) (h : PositiveHistory j w s k x) (hx : x≤P k+2) :
+    ∃ r z, SameRun k r x z ∧
+      2*P k≤3^(r+1)*(3*k+16)+1 ∧
+      3^r*(k+6)≤2*P k+k+2 := by
+  obtain ⟨r,z,hs,hstart⟩:=positive_history_final_run_q_lower hw h
+  obtain ⟨q,hq,hqlo,hqhi⟩:=boundary_run_divisor hs hx
+  have hbz:Band k z:=(same_run_bands hs).2
+  have hQzHi : Q k z≤2*P k+k+2 := (q_bounds hbz).2
+  have hfirst : 2*P k≤3^(r+1)*(3*k+16)+1 := by
+    have hstartI : 2*(P k:Int)≤3*(Q k z:Int)+1 := by omega
+    have hqCast : (Q k z:Int)=(3^r:Int)*(q:Int) := by exact_mod_cast hq
+    have hpow : 3*(Q k z:Int)=(3^(r+1):Int)*(q:Int) := by
+      rw [hqCast,Int.pow_succ]
+      simp [Int.mul_assoc,Int.mul_left_comm,Int.mul_comm]
+    have hqhiI : (q:Int)≤3*(k:Int)+16 := by exact_mod_cast hqhi
+    have hmul : (3^(r+1):Int)*(q:Int)≤
+        (3^(r+1):Int)*(3*(k:Int)+16) :=
+      Int.mul_le_mul_of_nonneg_left hqhiI
+        (Int.le_of_lt (Int.pow_pos (by decide)))
+    have hfinalI :
+        2*(P k:Int)≤(3^(r+1):Int)*(3*(k:Int)+16)+1 := by
+      rw [hpow] at hstartI
+      omega
+    exact_mod_cast hfinalI
+  have hsecond : 3^r*(k+6)≤2*P k+k+2 := by
+    have hmulNat:=Nat.mul_le_mul_left (3^r) hqlo
+    rw [←hq] at hmulNat
+    exact Nat.le_trans hmulNat hQzHi
+  exact ⟨r,z,hs,hfirst,hsecond⟩
+
+#print axioms positive_history_final_run
+#print axioms positive_history_final_run_q_lower
+#print axioms positive_history_boundary_final_run
+
 #print axioms positive_history_packet_weight
 #print axioms positive_history_band
 #print axioms positive_boundary_cost_sharp
