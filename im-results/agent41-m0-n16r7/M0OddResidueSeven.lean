@@ -442,7 +442,9 @@ private theorem m0Odd_base_prefix_head_bound
   have hSweep' :
       run tm2 (3*N) (s1Config 3 5 0 a 0 b h) =
         some (⟨3,hN,T1⟩ : Config) := by
-    simpa [T,N,hN,T1] using hSweep
+    change run tm2 (3*N) (⟨3,h,T⟩ : Config) =
+      some (⟨3,hN,T1⟩ : Config)
+    exact hSweep
   have hmatch := m0OddQ4Bridge_input_match a b h ha
   have hBridge := m0OddQ4Bridge27At T1 hN hmatch
   have hBridge' :
@@ -493,14 +495,14 @@ private theorem m0Odd_base_prefix_head_bound
   let p2 := p1+27
   by_cases hk1 : k < p1
   · have hlow := m0Odd_counted_left_sweep_heads N T h hOn hright k
-      (by dsimp [p1]; omega) d hd
+      (by omega) d hd
     have hlow' : h - (3*a:Int) ≤ d.head := by
       simpa [N] using hlow
     omega
   · by_cases hk2 : k < p2
     · let j := k-p1
       have hj : j<27 := by dsimp [j,p1] at *; omega
-      have hkEq : k=p1+j := by dsimp [j,p1]; omega
+      have hkEq : k=p1+j := by omega
       rw [hkEq,run_add,hSweep'] at hd
       simp only [Option.bind_some] at hd
       have hlow := m0Odd_bridge_prefix_lower T1 hN hmatch j hj d hd
@@ -508,7 +510,7 @@ private theorem m0Odd_base_prefix_head_bound
       omega
     · let j := k-p2
       have hj : j<3*(a-1) := by dsimp [j,p2,p1,N] at *; omega
-      have hkEq : k=p1+(27+j) := by dsimp [j,p2,p1]; omega
+      have hkEq : k=p1+(27+j) := by omega
       rw [hkEq,run_add,hSweep'] at hd
       simp only [Option.bind_some] at hd
       rw [run_add,hBridge'] at hd
