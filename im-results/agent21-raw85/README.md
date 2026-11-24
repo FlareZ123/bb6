@@ -31,23 +31,30 @@ Superseded historical run IDs (retained only to explain the earlier mismatch):
 - `45498691122`
 - `45498700780`
 
-No exact-target SMT certificate is claimed until its artifact code is checked against the corresponding frontier entry. The 14 canonical candidate strings are mirrored by C00–C13 in Raw85FARCertificates.lean, but that file is an invalid scratch module: CI run 45503416279 found every Cxx.fastValid pxx assertion false. These strings remain untrusted candidate suggestions only; the generator recomputes masks for each actual destination table and Lean must validate the generated parent tree.
+The exact-target runs have now completed: five of the eight tables produced HIT records and three produced no hit at DFA sizes 6–8 with 120 seconds per size/orientation. The five actual DFA/orientation records and all eight run outcomes are preserved in smt-candidates.txt and smt-candidates-provenance.md. The three no-hit tables are:
+
+- `1RB0LE_1RC1LF_0RD1RF_1LD1RE_---0LB_0RC1RA`
+- `1RB0LE_1RC1LF_0RD---_1LD1RE_1RA0LB_0RF1RA`
+- `1RB0RD_1RC1LF_0RD1RF_1LD1RE_---0LB_1RC1RA`
+
+The first uncovered key reported by the initial generator attempt is `('1RF','0LE','---','0RC')`, exactly the first of these no-hit tables. The complete scan now being added will enumerate any further uncovered leaves across the whole 24-child tree.
+
+The 14 canonical candidate strings are mirrored by C00–C13 in Raw85FARCertificates.lean, but that file is an invalid scratch module: CI run 45503416279 found every Cxx.fastValid pxx proposition false. These strings remain untrusted candidate suggestions only; the generator recomputes masks for each actual destination table and Lean must validate the generated parent tree.
 
 ## Next actions
 
-1. Wait for the eight exact-target solver runs named `Agent 7 FAR SMT: <table code>` to complete; confirm each successful run contains exactly one HIT for its target.
-2. Run the artifact-recovery workflow to preserve the eight target-matched DFA/orientation records and their run provenance.
-3. Try all 14 canonical and eight exact-target SMT DFAs as untrusted candidates against each actual raw85 open destination table, recomputing masks.
+1. Use the all-leaf candidate scan to enumerate every raw85 open table not covered by the current global bank plus 14 canonical and five exact-target SMT candidate DFAs.
+2. Search the three no-hit frontier tables and any additional uncovered leaves with larger DFA sizes/timeouts or a different synthesis strategy.
+3. Re-run the destination-table generator after each useful candidate batch; all masks are recomputed and Lean remains the acceptance boundary.
 4. Compile the generated 24-child parent tree with Lean; any accepted `.far` leaf must pass the actual `Data.fastValid` check.
-5. If any exact frontier target has no SMT hit or any open leaf remains uncovered, synthesize additional candidates specifically for that destination table.
-6. Only after the full audit compiles, integrate the resulting theorem into the 124-table roster and update the human-readable research synthesis.
+5. Only after the full audit compiles, integrate the resulting theorem into the 124-table roster and update the human-readable research synthesis.
 
 Do not move this file into `results/` until the full source-checked parent-tree theorem exists.
 
 ## Destination-table reuse and validation (24 November 2026)
 
-The four-token keys in dfa-candidates.txt are search metadata, not proof premises. A direct comparison shows that the 14 candidate DFA strings were copied into the dfa fields of C00–C13 in Raw85FARCertificates.lean, and their historical keys differ from the corresponding destination-table keys (p[5], p[1], p[8], p[10]). However, CI run 45503416279 found every Cxx.fastValid pxx proposition false: those copied Data objects are invalid. This comparison therefore establishes only the candidate/key relationship, not successful cross-key reuse. The old exact-key-only wrapper was removed; the current wrapper treats the 14 canonical and eight exact-target SMT DFAs as untrusted candidates, recomputes masks for each actual destination table, and relies on the generated Lean Audit/Data.fastValid checks for acceptance.
+The four-token keys in dfa-candidates.txt are search metadata, not proof premises. A direct comparison shows that the 14 candidate DFA strings were copied into the dfa fields of C00–C13 in Raw85FARCertificates.lean, and their historical keys differ from the corresponding destination-table keys (p[5], p[1], p[8], p[10]). However, CI run 45503416279 found every Cxx.fastValid pxx proposition false: those copied Data objects are invalid. This comparison therefore establishes only the candidate/key relationship, not successful cross-key reuse. The old exact-key-only wrapper was removed; the current wrapper treats the 14 canonical and five exact-target SMT DFAs as untrusted candidates, recomputes masks for each actual destination table, and relies on the generated Lean Audit/Data.fastValid checks for acceptance.
 
-The shared start-zero filter correction is committed in the two four-hole generators and the three active FAR emitters. The raw85 validation workflow now discovers the eight exact-target solver runs by their run names, downloads their shard-0 artifacts, checks each HIT table against smt-frontier.txt, extracts DFA/orientation records into smt-candidates.txt, preserves candidate and provenance files, runs the complete dynamic-split generator, and compiles the generated FourHoleSiblingData.lean. The known-invalid Raw85FARCertificates.lean scratch module is deliberately excluded from the proof workflow. The workflow is a 60-minute manual validation job because it includes the full 24-child parent-tree compilation.
+The shared start-zero filter correction is committed in the two four-hole generators and the three active FAR emitters. The raw85 validation workflow now discovers the eight exact-target solver runs by their run names and records five HIT/three NO HIT outcomes, downloads their shard-0 artifacts, checks each HIT table against smt-frontier.txt, extracts DFA/orientation records into smt-candidates.txt, preserves candidate and provenance files, runs the complete dynamic-split generator, and compiles the generated FourHoleSiblingData.lean. The known-invalid Raw85FARCertificates.lean scratch module is deliberately excluded from the proof workflow. The workflow is a 60-minute manual validation job because it includes the full 24-child parent-tree compilation.
 
-**Not yet claimed:** the full parent-tree theorem is not established until this updated workflow completes successfully. The 101-leaf census and the 79-old-bank + 14-Python-candidate + 8-targeted-SMT search partition remain intermediate search evidence; none of those counts is a count of Lean-accepted leaves until the generated tree compiles and is integrated into the 124-table roster.
+**Not yet claimed:** the full parent-tree theorem is not established until this updated workflow completes successfully. The 101-leaf census and the 79-old-bank + 14-Python-candidate + 5-targeted-SMT-HIT search partition remain intermediate search evidence; none of those counts is a count of Lean-accepted leaves until the generated tree compiles and is integrated into the 124-table roster.
