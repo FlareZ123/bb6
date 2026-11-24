@@ -53,9 +53,9 @@ This follows because a normal left carry costs 10v2(x+1)+10 and the right increm
 
 ## Reproduction and remaining gate
 
-- `lean F418Arithmetic.lean` with Lean 4.36.0-rc2 checked the arithmetic theorem file locally, no sorryAx. The original source word rules and seed are prior local checks; this invocation could not directly clone the source (DNS failure), and no new full source-import composition was compiled. The formal follow-through should build the blank-padded register encoder and compose arbitrary-length counted increments with those exact word lemmas.
+- `lean F418Arithmetic.lean` with Lean 4.36.0-rc2 checked the arithmetic theorem file locally, no sorryAx. The original source word rules and seed were recompiled from exact Git blobs retrieved via the connector after direct clone failed (DNS). Full source-import composition is now compiled; see the section below.
 - `python f418.py --events 10000` passed the raw 670-step seed and 3603 seeded synthetic event/cost comparisons, then replayed 10,000 arithmetic events without a terminal query (d=2, a=1, N width 34499, n width 34500, successful-step-count bitlength 34504). This is bounded computation, not all-time safety.
-- A separate exploratory run of 100,000 collapsed normal returns remained in the regular case; width reached 860094 and the largest p observed was 116. No probability assumption can turn this into an all-time proof. The useful next problem is the regular-language exclusion under the collapsed map, not repeated longer finite replay. Source-level completion and an actual all-time decision are still needed before global frontier grafting.
+- A separate exploratory run of 100,000 collapsed normal returns remained in the regular case; width reached 860094 and the largest p observed was 116. No probability assumption can turn this into an all-time proof. The useful next problem is the regular-language exclusion under the collapsed map, not repeated longer finite replay. An actual all-time decision is still needed before global frontier grafting.
 
 ## Kernel-checked arithmetic orbit and terminal-language equivalence
 
@@ -69,4 +69,19 @@ lean -o F418Arithmetic.olean F418Arithmetic.lean
 LEAN_PATH=. lean -o F418EventSystem.olean F418EventSystem.lean
 LEAN_PATH=. lean F418Episodes.lean
 ```
-All printed axiom sets are subsets of `propext`, `Classical.choice`, `Quot.sound`. There are no added axioms or `sorryAx`. These are arithmetic-model theorems; the general raw-tape composition of all source word rules into `advance` is still a separate Lean obligation. The open problem is the actual seed's fatal-language reachability, not the event case partition.
+All printed axiom sets are subsets of `propext`, `Classical.choice`, `Quot.sound`. There are no added axioms or `sorryAx`. These are arithmetic-model theorems; their exact source-level connection is proved below. The open problem is the actual seed's fatal-language reachability, not the event case partition.
+
+## Source-level equivalence (18:30 UTC)
+
+The reduction now has a complete Lean 4.36.0-rc2 proof starting from the literal partial table and the blank tape. `F418TapeEncoding.lean` establishes blank-padded word and configuration equivalence, transport through primitive moves and finite runs, and the arbitrary-width register encoding and carry decomposition. `F418SourceEvents.lean` constructs positive counted primitive runs implementing every defined safe arithmetic event (`advance_source`) and a successful primitive prefix reaching the missing F/1 instruction for every terminal event (`terminal_source`). `F418Root.lean` checks the exact 670-step seed, composes finite arithmetic prefixes, and proves:
+
+```lean
+theorem source_termination_iff : (∃ k, finiteRun machine k finiteBlank = none) ↔
+    ∃ s, Reaches EventSystem.seed s ∧ Fatal s
+theorem source_nonhalt_iff : NeverHalts machine ↔
+    ¬ ∃ s, Reaches EventSystem.seed s ∧ Fatal s
+```
+
+All these results have axiom sets contained in `propext`, `Classical.choice`, `Quot.sound`, no `sorryAx`. The proof is unbounded; the event duration is a positive existential witness rather than the separately derived closed cost formula. In a terminating orbit the first undefined instruction is F/1, never E/1. The root decision is now exactly one unbounded arithmetic reachability question, not a gap in machine simulation.
+
+To reproduce, copy `../agent8-coverage-contract/Frontier.lean` and `../agent32-source-queue/SourceFiniteSemantics.lean` to a temporary directory alongside all nine F418 Lean files; from there set `LEAN_PATH=.` and compile in order: Frontier, SourceFiniteSemantics, F418Rules, F418Seed, F418Arithmetic, F418EventSystem, F418Episodes, F418TapeEncoding, F418SourceEvents, F418Root. Run `lean -o NAME.olean NAME.lean` for each. The exact input files used were Git blobs Frontier `115438c4f244b5416a91be4dd7a3f12103d5448d`, SourceFiniteSemantics `22418a75661de5978f9f5b50455c399ffc79a1f9`, F418Rules `ba93f60187b25571a03e8b50aeb8e47ce7911f5d`, F418Seed `1c78f0b4b3d818ec001a82d59a03f76b08038a7c`.
