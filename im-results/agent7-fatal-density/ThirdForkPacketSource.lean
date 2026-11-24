@@ -507,7 +507,7 @@ theorem packet_has_two_parentless_third_feeders (n a b:Nat)
   have hArem:thirdPacketCoeff n (depthResidue n 3)%3=1 ∨
       thirdPacketCoeff n (depthResidue n 3)%3=2:=by
     have hnon:=Int.emod_nonneg
-      (thirdPacketCoeff n (depthResidue n 3)) (by decide:(0:Int)<3)
+      (thirdPacketCoeff n (depthResidue n 3)) (by decide:(3:Int)≠0)
     have hlt:=Int.emod_lt_of_pos
       (thirdPacketCoeff n (depthResidue n 3)) (by decide:(0:Int)<3)
     omega
