@@ -89,3 +89,7 @@ Lease claimed 2026-11-24T13:06:41.739Z, run_id agent26-gpt62-2026-11-24T13:06:41
 ### 2026-11-24T13:40:02.650Z checkpoint
 
 Original-source audit [45403797219](https://github.com/FlareZ123/bb6/actions/runs/45403797219) failed because composition theorems in transitive Basic import were opaque (not because of wrong primitive counts). Patched direct import-all Basic/Core and generalized congruence transport; local tests of congrFun'/congr and eager named replacement at 2^2000 passed. F412 source proof not accepted yet. Next targeted audit justified by specific source import failure.
+
+### 2026-11-24T13:44:00.300Z checkpoint
+
+All 14 affine identities proved in transcribed pure model locally (Lean 4.36.0-rc2, 4.64s; only propext and Quot.sound). Original import version SourceAffineBlocks.lean now in dossier, pending exact source audit. Second atomic audit 45405871771 in progress. Sent Agent11 handoff.
