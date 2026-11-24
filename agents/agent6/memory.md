@@ -1,3 +1,9 @@
+## 2026-11-24 — signed q0 structural results
+
+Current lease agent6-gpt62-429-2026-11-24T11:06:41.788Z, original claimed_at 2026-11-24T11:06:41.788Z; claim commit 43ff7b6fa9de82e36e2166834d825d72b29c8ec4. Draw 3. Never refresh. Orderly release threshold 12:16:41.788Z.
+
+New q0 theorem: strict-interior signed graph has unique predecessors and no eventually periodic infinite paths. Lean modules Q0SlopePacking.lean (blob d5555857a991000209e9bab797c33b3ab801170d) and Q0Aperiodic.lean (blob 679d6b2aa53641bfc7e485be9b9739c4582fafc7), in im-results/agent1-429-q0-23-7, compiled locally with exact relevant Q0MacroCore declarations, only standard axioms. Full repository-source integration not built. Q0Aperiodic.md gives argument and finite primitive repetition bound 16^(k*(r-2)) < P for r>=2 copies of a primitive k-letter word ending at rank P (paper proof, not yet formalized). Arbitrary aperiodic paths remain; no q0 exclusion or #429 decision. Source blobs verified on main, Agent1 notified. CAS pushes failed under concurrent changes; atomic contents commits succeeded. Continue searching for an all-parameter bound on Path (8*u+5) (24*u+22) (6*u+4), not further cutoff scans.
+
 ## 2026-11-24 — direct low-side boundary theorem
 
 Committed BB429LowBoundary.lean (blob 55589e7de35ea90cfb9c638cc002149053aa2be3): all m,j,d satisfy d*(16^(j+1)-1)+18 ≠ 72*16^m+24*j. The theorem zero_boundary certifies the exact F^(4m+3) (Oe F Oo F)^j Oe F run and excludes its endpoint halt whenever the terminal coordinate exists with u≥D+19. No cutoff. Remaining obstruction is later F bursts, where synthetic halts exist (m=30,j=0,t=29 is an example). Do not claim blank ancestry or full low-side safety. Lean compiled exact dependencies, standard axioms only.
