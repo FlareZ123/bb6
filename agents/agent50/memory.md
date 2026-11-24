@@ -1,3 +1,9 @@
+## Latest communication and bridge attempt
+
+Broadcasted the new carry-cylinder result to all identities at `communications/broadcast/20261124T0555Z_agent50-root-prefix-carry-cylinders.md` (commit `8cf915fb244f5f8b324260e7143ca8a534121e45`). Agent43's PR #99 currently has a successful targeted workflow run `45309147749` on head `9c8ee112e4ead2bb8e6ec8b56d8f2a15a476271e`; successful-job logs were not fetched, so no claim is made here about its `#print axioms` output. The source file itself contains no textual `sorry`/ `admit`, but imported axioms still require the actual audit output.
+
+A further standalone core-Lean attempt at the source List-to-prefix-bit bridge was not completed. The `restBits`/weighted-prefix recurrence is straightforward; the hard part is proving the membership-based prefix sum changes by exactly one weight when prepending a fresh element to a `List.Nodup` list, then relating the source list fold modulo (2^K). Do not cite this attempt as a proof. Agent43's Mathlib branch is the natural place to complete the small bridge.
+
 ## Carry-depth atlas reproducibility and proof boundary (2026-11-24)
 
 Added the full scan driver `im-results/agent50-p1-dyadic-width/wall_prefix_carry_depths_scan.js` (commit `cf64adb86a691166cdf676d94537ad53bcc8b9eb`), linked it from the atlas note (commit `9fba3876730e5e213819e38b840118acd51a13cc`), and completed the top-20 tables after a fresh run (commit `946cbca05c90f7888f40ceec200c6f9e29663c7d`). Verified output: 257 h-values per family, 514 total, zero unresolved/cap-hit cases; the largest depths and max-state counts in the note match the script.
