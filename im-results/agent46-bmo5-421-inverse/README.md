@@ -1,6 +1,6 @@
-# Exact injective inverse dynamics for BB6 holdout #421 (BMO5-family)
+# Exact shared BMO5 ancestry reduction for BB6 holdouts #252, #421 and #754
 
-Machine `1RB1RE_1LC0RA_1RD0LB_1LB1RC_1LF0RD_---0LE` (#421, suspect_13). The upstream reduction is [M_1RB1RE_1LC0RA_1RD0LB_1LB1RC_1LF0RD_HHH0LE.lean](https://github.com/google-deepmind/cryptids/blob/ced8f9f44f67a167d5ecc03e687b048c67926371/BusyBeaver/BB6/M_1RB1RE_1LC0RA_1RD0LB_1LB1RC_1LF0RD_HHH0LE.lean), blob 03828ae956bdb640b73787f42c8511f06274229a. Its high-level initial state is C(3). Cap.eval is the numerical copy of evalD0 with constructor C erased. All local numerical modules were checked by Lean 4.36.0-rc2, standard axioms only. The initial original-source integration run reached the final wrapper but failed on the two triple-rule proofs; see Source acceptance below. No global halting classification claimed.
+Machine `1RB1RE_1LC0RA_1RD0LB_1LB1RC_1LF0RD_---0LE` (#421, suspect_13). The upstream reduction is [M_1RB1RE_1LC0RA_1RD0LB_1LB1RC_1LF0RD_HHH0LE.lean](https://github.com/google-deepmind/cryptids/blob/ced8f9f44f67a167d5ecc03e687b048c67926371/BusyBeaver/BB6/M_1RB1RE_1LC0RA_1RD0LB_1LB1RC_1LF0RD_HHH0LE.lean), blob 03828ae956bdb640b73787f42c8511f06274229a. Its high-level initial state is C(3). Cap.eval is the numerical copy of evalD0 with constructor C erased. All local numerical modules were checked by Lean 4.36.0-rc2, standard axioms only. The full original-source wrapper now compiles for all three machines with standard axioms only; see Source acceptance below. No global halting classification claimed.
 
 ## Closed bands
 
@@ -55,4 +55,6 @@ The original-source modules for #252 and #754 are pinned at the same commit ced8
 
 ## Source acceptance
 
-The initial [manual CI run 45363130008](https://github.com/FlareZ123/bb6/actions/runs/45363130008) compiled the pinned original modules and reported the standard-only axiom profile for H421.root_criterion, but the whole wrapper failed because the H252/H754 rules used `rfl` on equation-compiler definitions. The corrected proof uses `simp [next]`, checked locally against the exact upstream numerical definition under Lean 4.36.0-rc2. The full corrected original-source wrapper still requires one focused acceptance run. No halting/nonhalting decision follows from these equivalences.
+**Accepted:** [manual CI 45379836827](https://github.com/FlareZ123/bb6/actions/runs/45379836827), repository revision `824d4d03030407eed24ef0a58139acb67b1a6912`, pinned Cryptids revision `ced8f9f44f67a167d5ecc03e687b048c67926371`, Lean 4.36.0-rc2. The exact full source closure compiled. All three exported `CapSource.H421.root_criterion`, `CapSource.H252.root_criterion`, `CapSource.H754.root_criterion` depend on `[propext, Classical.choice, Quot.sound]` only, as printed in the successful job 138395692176. The earlier failed run 45363130008 diagnosed the equation-compiler `rfl` issue, repaired by `simp [next]`; it is superseded.
+
+The three original blank-root existential equivalences are established. The unbounded existential still needs a decision; the new finite sieve is computational evidence, not part of the accepted Lean proof.

@@ -1,3 +1,13 @@
+# Agent 46 continuation — 24 November 2026, 10:56 UTC
+
+Normal mode draw 5. Claimed at 2026-11-24T10:56:46.221Z, run agent46-gpt62-bmo5-2026-11-24T10:56:46.221Z, claim 752a89b4903661667ff6dd77fab44bf81fe23d85; release threshold 12:06:46.221Z. Never refresh.
+
+BMO5 #252/#421/#754: corrected equation proofs in 4bf74b227b644da37571f017af1fc91158d92500; full original-source acceptance completed in CI 45379836827 at revision 824d4d03030407eed24ef0a58139acb67b1a6912. All three root_criterion declarations standard axioms only; no additional run needed. Exact shared map and distinct roots 1/2/3 established, no machine decision.
+
+New result commit ac24731b6de3e3252996a67e55a39a0c51d09dba: im-results/agent46-bmo5-421-inverse/SymbolicSieve.md gives exact paper proof of depth-t surviving terminal indices i≥4t+10, 2^(t+1) distinct classes mod 2·3^t; density (2/3)^t. C++ sieve classified 0..10^12 inclusive, no roots 1,2,3 or unresolved, max inverse depth 73, 8.96 s. Exact local/remote code blobs e2e02c666fd7a1c89cd771c813a32b0271e7403b and 73cac32744a697bad458286cda2271a438d75d43. Independent literal histogram 0..5000 matches. This is finite computation, not a kernel certificate. Next: kernel-certify symbolic recurrence and residue lifting; investigate moving-depth index constraint. Fixed-depth sieve cannot decide the existential.
+
+---
+
 # Agent 46 continuity — 24 November 2026, second incarnation
 
 Claimed 2026-11-24T08:36:18.132Z, run agent46-gpt62-needle-2026-11-24T08:36:18.132Z, claim d4b967394a8a332e77ac6473aa5c361824940632. Random draw 7. Lease threshold 09:46:18.132Z; do not refresh. Actual remote claim confirmed.
