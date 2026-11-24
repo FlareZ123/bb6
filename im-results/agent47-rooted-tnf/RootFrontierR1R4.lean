@@ -19,7 +19,7 @@ theorem weightedBound_mono {B C : Nat} (hBC : B ≤ C) {m : Machine}
   exact Nat.le_trans (h k d hk hd) hBC
 
 /-- Lift a checked TNF certificate to any weaker (larger) score bound. -/
-def liftCert {B C : Nat} (hBC : B ≤ C) {p : PartialMachine} {cut : Nat}
+noncomputable def liftCert {B C : Nat} (hBC : B ≤ C) {p : PartialMachine} {cut : Nat}
     (cert : WeightedTNFCertificate B p cut) :
     WeightedTNFCertificate C p cut := by
   induction cert with
@@ -157,16 +157,18 @@ theorem pilotPathOK : pathOKB 7014 root 2 path = true := by decide
 theorem r1PathOK : pathOKB 7014 root 2 r1.path = true := by decide
 theorem r4PathOK : pathOKB 7014 root 2 r4.path = true := by decide
 
-def pilotCert : WeightedTNFCertificate 7014 (pathEnd root 2 path).1 6 := by
+noncomputable def pilotCert : WeightedTNFCertificate 7014 (pathEnd root 2 path).1 6 := by
   have h := liftCert (B:=84) (C:=7014) (by decide) certificate
   simpa [parent] using h
 
 def r1Cert : WeightedTNFCertificate 7014 (pathEnd root 2 r1.path).1 6 := by
-  simpa [r1.bound, r1.parent] using r1_certificate
+  change WeightedTNFCertificate 7014 r1.parent 6
+  exact r1_certificate
 
-def r4Cert : WeightedTNFCertificate 7014 (pathEnd root 2 r4.path).1 6 := by
+noncomputable noncomputable def r4Cert : WeightedTNFCertificate 7014 (pathEnd root 2 r4.path).1 6 := by
   have h := liftCert (B:=42) (C:=7014) (by decide) r4_certificate
-  simpa [r4.bound, r4.parent] using h
+  change WeightedTNFCertificate 7014 r4.parent 6
+  exact h
 
 /-- The r1 path occupies the B0=1LC child of the root's first hole. -/
 def r1Subtree : RootedFrontier 7014 r1Start := by
@@ -183,7 +185,7 @@ def r1Subtree : RootedFrontier 7014 r1Start := by
     simpa [r1Start, r1First, r1Cut, hs] using
       (RawRootPath.step (mv := r1First) RawRootPath.root hr hhole')
   have htail' : pathOKB 7014 r1Start r1Cut r1.path.tail = true := by
-    simpa [r1Start, r1First, r1Cut, hs] using htail
+    simpa [r1Start, r1First, r1Cut, hs, r1] using htail
   have hcert : WeightedTNFCertificate 7014
       (pathEnd r1Start r1Cut r1.path.tail).1 6 := by
     rw [← r1_pathEnd_tail]
@@ -192,7 +194,7 @@ def r1Subtree : RootedFrontier 7014 r1Start := by
 
 /-- The pilot and r4 paths share the B0=1RC edge and split at the next
     first hole C0: 0RD continues the pilot, while 0LD enters r4. -/
-def pilotR4Subtree : RootedFrontier 7014 pilotStart := by
+noncomputable def pilotR4Subtree : RootedFrontier 7014 pilotStart := by
   have hp := pathOKB_cons pilotPathOK
   rcases hp with ⟨hhole1,hread1,_,_,_,htail1⟩
   let c1 := (extractRunConfig hread1).val
@@ -206,7 +208,7 @@ def pilotR4Subtree : RootedFrontier 7014 pilotStart := by
     simpa [pilotStart, pilotFirst, hs1] using
       (RawRootPath.step (mv := pilotFirst) RawRootPath.root hr1 hhole1')
   have tail1' : pathOKB 7014 pilotStart pilotCut path.tail = true := by
-    simpa [pilotStart, pilotFirst, pilotCut, hs1] using htail1
+    simpa [pilotStart, pilotFirst, pilotCut, hs1, path] using htail1
 
   have hp2 := pathOKB_cons tail1'
   rcases hp2 with ⟨hhole2,hread2,_,_,hweight2,htail2⟩
@@ -228,7 +230,7 @@ def pilotR4Subtree : RootedFrontier 7014 pilotStart := by
     simpa [r4AfterSecond, r4Second, hs2] using
       (RawRootPath.step (mv := r4Second) raw1 hr2 hhole2')
   have pilotTail2 : pathOKB 7014 pilotAfterSecond afterSecondCut path.tail.tail = true := by
-    simpa [pilotAfterSecond, pilotSecond, afterSecondCut, hs2] using htail2
+    simpa [pilotAfterSecond, pilotSecond, afterSecondCut, hs2, path] using htail2
   have pilotCertTail : WeightedTNFCertificate 7014
       (pathEnd pilotAfterSecond afterSecondCut path.tail.tail).1 6 := by
     rw [← pilot_pathEnd_tail2]
@@ -243,7 +245,7 @@ def pilotR4Subtree : RootedFrontier 7014 pilotStart := by
       simpa [hrR1] using hreadR1
     simpa using h'
   have r4Tail1 : pathOKB 7014 pilotStart pilotCut r4.path.tail = true := by
-    simpa [pilotStart, pilotFirst, pilotCut, hsR1] using htailR1
+    simpa [pilotStart, pilotFirst, pilotCut, hsR1, r4] using htailR1
 
   have hr4second := pathOKB_cons r4Tail1
   rcases hr4second with ⟨_,hreadR2,_,_,_,htailR2⟩
@@ -255,7 +257,7 @@ def pilotR4Subtree : RootedFrontier 7014 pilotStart := by
     simpa using h'
   have r4Tail2 : pathOKB 7014 r4AfterSecond r4AfterSecondCut r4.path.tail.tail = true := by
     simpa [r4AfterSecond, r4Second, pilotStart, pilotFirst, r4AfterSecondCut,
-      hsR1, hsR2] using htailR2
+      hsR1, hsR2, r4] using htailR2
   have r4CertTail : WeightedTNFCertificate 7014
       (pathEnd r4AfterSecond r4AfterSecondCut r4.path.tail.tail).1 6 := by
     rw [← r4_pathEnd_tail2]
@@ -276,7 +278,7 @@ def pilotR4Subtree : RootedFrontier 7014 pilotStart := by
 /-- A rooted three-parent shard: the Agent 50 84-bound pilot, Agent 47's
     r1 parent (7014), and Agent 47's r4 parent (42). Every unselected ordinary
     instruction remains an explicit residual leaf. -/
-def rootFrontierR1R4 : RootedFrontier 7014 root := by
+noncomputable def rootFrontierR1R4 : RootedFrontier 7014 root := by
   have h := pathOKB_cons pilotPathOK
   rcases h with ⟨hhole,hread,_,_,hweight,_⟩
   let c := (extractRunConfig hread).val
