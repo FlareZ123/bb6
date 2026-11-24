@@ -315,7 +315,8 @@ theorem packetQ_strict_lex (n a b1 t1 b2 t2:Nat)
   have hd:packetD n b2 t2<packetD n b1 t1:=by
     rw [hz1,hz2] at hX
     omega
-  rw [hqeq1,hqeq2]
+  change 16*packetD n b2 t2-(2^n+n+2) <
+    16*packetD n b1 t1-(2^n+n+2)
   omega
 
 /-- Modulo 243, the quotient of the three packet lifts is an affine
