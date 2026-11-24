@@ -142,6 +142,115 @@ theorem source_no_restart_familyII_h2 (n b d m z u t : Nat)
     exact BB6WallCarry.noPrefix_familyII_h2 t)
   omega
 
+theorem source_cost_zero_right_three (n b d m z : Nat)
+    (h : CountCone (14*2^n-2*n-16) 3 b d m z) (hm : m=0) : d=3 := by
+  cases h with
+  | root => rfl
+  | parent bp dp mp zp t k c hp hb hb4 hd hi hk hc => omega
+
+theorem source_small_cost_right (n b d m z : Nat) (hn : 14≤n)
+    (h : CountCone (14*2^n-2*n-16) 3 b d m z) (hm : m≤n)
+    (hmpos : 0<m) : 15≤d :=
+  witness_small_cost_right n d m (source_cost_witness n b d m z hn h)
+    hn (BB6WallCarry.pow2_ge_1100_mul n hn) hm hmpos (source_odd_right n b d m z h)
+
+/-- This closes the entire critical right-five gate for every index n with
+    any impossible carry prefix of length K≤n, over all inverse depths. -/
+theorem source_no_right_five_of_no_prefix (n b m z k : Nat) (hn : 14≤n)
+    (hkn : k+1≤n)
+    (hno : ¬ ∃ rest : List Bool, rest.length = k ∧
+      BB6WallCarry.bitExpr n rest % 2^(k+1)=1) :
+    ¬ CountCone (14*2^n-2*n-16) 3 b 5 m z := by
+  intro h
+  have hcap := source_countcone_cost_lt n b 5 m z k hn h hkn hno
+  have hmpos : 0<m := by
+    by_cases hm : m=0
+    · have heq := source_cost_zero_right_three n b 5 m z h hm
+      omega
+    · omega
+  have hright := source_small_cost_right n b 5 m z hn h (by omega) hmpos
+  omega
+
+/-- A short carry obstruction excluding all positive histories at odd indices. -/
+theorem noPrefix_odd (n : Nat) (hn : n%2=1) :
+    ¬ ∃ rest : List Bool, rest.length = 0 ∧ BB6WallCarry.bitExpr n rest % 2^1=1 := by
+  rintro ⟨rest,hlen,hmod⟩
+  have heq : rest=[] := List.length_eq_zero_iff.mp hlen
+  subst rest
+  simp [BB6WallCarry.bitExpr, BB6WallCarry.sumBits] at hmod
+  omega
+
+theorem noPrefix_mod16 (n : Nat) (heven : n%2=0)
+    (h2 : n%16≠2) (h14 : n%16≠14) :
+    ¬ ∃ rest : List Bool, rest.length = 3 ∧ BB6WallCarry.bitExpr n rest % 2^4=1 := by
+  let r := n%16
+  have hrEven : r%2=0 := by dsimp [r]; omega
+  have hrCases : r=0 ∨ r=4 ∨ r=6 ∨ r=8 ∨ r=10 ∨ r=12 := by
+    dsimp [r] at *
+    omega
+  have hempty : BB6WallCarry.carryStatesFrom r 1 [((r+2)/2)] 3 = [] := by
+    rcases hrCases with h | h | h | h | h | h <;> rw [h] <;> decide
+  have h := BB6WallCarry.noBitSubset_of_add_multiple r 3 (n/16) hrEven hempty
+  have heq : r+2^(3+1)*(n/16)=n := by dsimp [r]; omega
+  rw [heq] at h
+  exact h
+
+/-- Unlike the previous wall-only mod-16 criterion, this covers all right-five
+    critical histories, including the high-cost non-wall branch. -/
+theorem source_right_five_forces_mod16 (n b m z : Nat) (hn : 14≤n)
+    (h : CountCone (14*2^n-2*n-16) 3 b 5 m z) :
+    n%16=2 ∨ n%16=14 := by
+  by_cases h2 : n%16=2
+  · exact Or.inl h2
+  · by_cases h14 : n%16=14
+    · exact Or.inr h14
+    · exfalso
+      by_cases heven : n%2=0
+      · exact source_no_right_five_of_no_prefix n b m z 3 hn (by omega)
+          (noPrefix_mod16 n heven h2 h14) h
+      · exact source_no_right_five_of_no_prefix n b m z 0 hn (by omega)
+          (noPrefix_odd n (by omega)) h
+
+theorem source_no_right_five_familyI_h1 (n b m z t : Nat)
+    (hN : n=5362+595056*(1+2^56*t)) :
+    ¬ CountCone (14*2^n-2*n-16) 3 b 5 m z := by
+  have hn : 14≤n := by omega
+  exact source_no_right_five_of_no_prefix n b m z 59 hn (by omega) (by
+    rw [hN]
+    exact BB6WallCarry.noPrefix_familyI_h1 t)
+
+theorem source_no_right_five_familyI_h2 (n b m z t : Nat)
+    (hN : n=5362+595056*(2+2^8*t)) :
+    ¬ CountCone (14*2^n-2*n-16) 3 b 5 m z := by
+  have hn : 14≤n := by omega
+  exact source_no_right_five_of_no_prefix n b m z 11 hn (by omega) (by
+    rw [hN]
+    exact BB6WallCarry.noPrefix_familyI_h2 t)
+
+theorem source_no_right_five_familyII_h1 (n b m z t : Nat)
+    (hN : n=9538+703248*(1+2^10*t)) :
+    ¬ CountCone (14*2^n-2*n-16) 3 b 5 m z := by
+  have hn : 14≤n := by omega
+  exact source_no_right_five_of_no_prefix n b m z 13 hn (by omega) (by
+    rw [hN]
+    exact BB6WallCarry.noPrefix_familyII_h1 t)
+
+theorem source_no_right_five_familyII_h2 (n b m z t : Nat)
+    (hN : n=9538+703248*(2+2^18*t)) :
+    ¬ CountCone (14*2^n-2*n-16) 3 b 5 m z := by
+  have hn : 14≤n := by omega
+  exact source_no_right_five_of_no_prefix n b m z 21 hn (by omega) (by
+    rw [hN]
+    exact BB6WallCarry.noPrefix_familyII_h2 t)
+
+#print axioms source_small_cost_right
+#print axioms source_no_right_five_of_no_prefix
+#print axioms source_right_five_forces_mod16
+#print axioms source_no_right_five_familyI_h1
+#print axioms source_no_right_five_familyI_h2
+#print axioms source_no_right_five_familyII_h1
+#print axioms source_no_right_five_familyII_h2
+
 #print axioms source_cost_witness
 #print axioms source_wall_cost_list_identity
 #print axioms source_odd_right

@@ -112,6 +112,53 @@ theorem witness_mod_prefix (n d m K : Nat) (h : CostWitness n d m)
   rw [hleft,hright] at hmod
   exact hmod.symm
 
+theorem costWeightedSum_le (n m : Nat) (A : List Nat)
+    (hlt : ∀ s∈A, s<m) : costWeightedSum n A ≤ (n+m+3)*costPowSum A := by
+  induction A with
+  | nil => simp [costWeightedSum,costPowSum]
+  | cons s A ih =>
+    have hs := hlt s (by simp)
+    have htail := ih (fun t ht => hlt t (List.mem_cons_of_mem _ ht))
+    have hterm : (n+3+s)*2^s ≤ (n+m+3)*2^s :=
+      Nat.mul_le_mul_right _ (by omega)
+    simp only [costWeightedSum,costPowSum]
+    rw [Nat.mul_add]
+    omega
+
+theorem costPowSum_pos_of_zero (A : List Nat) (h0 : 0∈A) : 1≤costPowSum A := by
+  induction A with
+  | nil => simp at h0
+  | cons s A ih =>
+    rcases List.mem_cons.mp h0 with h | h
+    · subst s; simp [costPowSum]
+    · exact Nat.le_trans (ih h) (Nat.le_add_left _ _)
+
+/-- A nonroot history of total cost at most n cannot have a small odd
+    right counter. In particular, the exceptional right-five gate is absent. -/
+theorem witness_small_cost_right (n d m : Nat) (h : CostWitness n d m)
+    (hn : 14≤n) (hP : 1100*n≤2^n) (hm : m≤n) (hmpos : 0<m)
+    (hd : d%2=1) : 15≤d := by
+  by_cases hbig : 15≤d
+  · exact hbig
+  · exfalso
+    obtain ⟨A,_,hlt,hstart,hInv⟩ := h
+    have hS := costPowSum_pos_of_zero A (hstart hmpos)
+    have hU := costWeightedSum_le n m A hlt
+    have hd12 : d-1≤12 := by omega
+    have hpow : 2^m≤2^n := Nat.pow_le_pow_right (by decide) hm
+    have hD : 2^m*(d-1)≤12*2^n := by
+      calc
+        _ ≤ 2^m*12 := Nat.mul_le_mul_left _ hd12
+        _ ≤ 2^n*12 := Nat.mul_le_mul_right _ hpow
+        _ = _ := by ac_rfl
+    have hgap : 13*2^n+2*(n+m+3)≤14*2^n := by omega
+    have hMul := Nat.mul_le_mul_right (costPowSum A) hgap
+    rw [Nat.add_mul, Nat.mul_assoc 2] at hMul
+    have hS13 : 13*2^n≤13*2^n*costPowSum A := by
+      simpa using Nat.mul_le_mul_left (13*2^n) hS
+    omega
+
+#print axioms witness_small_cost_right
 #print axioms witness_mod_prefix
 #print axioms witness_root
 #print axioms witness_step
