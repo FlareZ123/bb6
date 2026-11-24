@@ -15,7 +15,7 @@ private theorem stable_bounds {w : Int} (h : stable w) : -3≤w ∧ w≤1 := by
 
 private theorem stable_next {w : Int} (h : stable w) : stable (residualStep w) ∧ residualStep (residualStep w)=w := by
   unfold stable fixed cycling at h
-  rcases h with ((h|h|h)|(h|h)) <;> subst w <;> decide
+  rcases h with ((h|h|h)|(h|h)) <;> subst w <;> unfold stable fixed cycling <;> decide
 
 private theorem positive_rep (C k b : Nat) (w : Int) (hC : 5≤C) (hw : -3≤w)
     (h : 2*(b:Int)=(C:Int)*3^k+w) : 0<b := by
