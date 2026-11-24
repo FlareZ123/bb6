@@ -94,7 +94,9 @@ structure CycleCertificate (D Dnew : Int) (L : Nat) (G : Int) where
   V : Int
   Dfactor : D=7*G*U
   Mfactor : (2:Int)^L-1=7*G*V
-  Lfactor : (L:Int)=3*G
+  l : Int
+  Lfactor : (L:Int)=l*G
+  lunit : l%7≠0
   next : 7*D*((2:Int)^L-1)=G*Dnew
   next7 : Dnew%7=0
 
@@ -108,7 +110,9 @@ def cert0 : CycleCertificate D0 D1 3 1 where
   V := 1
   Dfactor := by decide
   Mfactor := by decide
+  l := 3
   Lfactor := by decide
+  lunit := by decide
   next := by decide
   next7 := by decide
 
@@ -122,7 +126,9 @@ def cert1 : CycleCertificate D1 D2 147 49 where
   V := ((2:Int)^147-1)/343
   Dfactor := by decide
   Mfactor := by decide
+  l := 3
   Lfactor := by decide
+  lunit := by decide
   next := by decide
   next7 := by decide
 
@@ -136,7 +142,9 @@ def cert2 : CycleCertificate D2 D3 7203 2401 where
   V := ((2:Int)^7203-1)/16807
   Dfactor := by decide
   Mfactor := by decide
+  l := 3
   Lfactor := by decide
+  lunit := by decide
   next := by decide
   next7 := by decide
 
@@ -156,7 +164,7 @@ theorem certified_block (q d n ell L : Nat) (D Dnew G p a B C Bnew : Int)
       Bound (Dnew*(run q d n:Int)-7*(2:Int)^n*p') (Dnew*Bnew) := by
   let K := n-ell
   obtain ⟨hK,hsub,hs,hg⟩ := window_from_scale n ell D (D*((2:Int)^L-1)) B C hscale hsmall hgap
-  obtain ⟨hall,p',hp',hp'D,hp'7,hbound⟩ := renewal_block q d n K L D p a C B G Dnew cert.U cert.V cert.pos cert.odd hp hpD hp7 hdq hclock cert.divides cert.Mpos cert.Gpos cert.Dfactor cert.Mfactor cert.Lfactor cert.next cert.next7 hC hB ha hinit hK hs hg
+  obtain ⟨hall,p',hp',hp'D,hp'7,hbound⟩ := renewal_block q d n K L D p a C B G Dnew cert.U cert.V cert.l cert.pos cert.odd hp hpD hp7 hdq hclock cert.divides cert.Mpos cert.Gpos cert.Dfactor cert.Mfactor cert.Lfactor cert.lunit cert.next cert.next7 hC hB ha hinit hK hs hg
   refine ⟨hall,p',hp',hp'D,hp'7,?_⟩
   have hDn : 0≤Dnew := by omega
   rw [hsub] at hbound

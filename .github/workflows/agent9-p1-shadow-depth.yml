@@ -46,14 +46,14 @@ jobs:
           export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-dyadic-width:im-results/agent9-p1-first-return"
           lean --version
           git rev-parse HEAD
-          python tools/lean_compile_deps.py im-results/agent9-p1-first-return/RenewalSource.lean | tee /tmp/first-return.log
+          python tools/lean_compile_deps.py im-results/agent9-p1-first-return/RenewalUnboundedSource.lean | tee /tmp/first-return.log
           if grep -E 'sorryAx|error:' /tmp/first-return.log; then exit 1; fi
           python - <<'PY'
           import re
           from pathlib import Path
           log = Path('/tmp/first-return.log').read_text()
-          names = ("gap_of_oddcone", "oddcone_of_gap", "source_right_five_iff", "critical_right_five_iff", "shadow_bounds", "no_return_shadow", "no_return_before_two_n", "gap_return_at_cost", "source_right_five_shadow_escape", "source_right_five_cost_before_two_n", "source_right_five_cost_log", "source_right_five_cost_four_n")
-          renewal = ("cycle_shift", "cycle_range", "cycle_mod", "same_wrap", "early_shadow", "late_shadow", "separate_phase", "numerator_factor", "renewal_block", "numeric_dom", "window_from_scale", "cert0", "cert1", "cert2", "certified_block", "polynomial_scale", "polynomial_block", "three_blocks", "no_return_four_n")
+          names = ("gap_of_oddcone", "oddcone_of_gap", "source_right_five_iff", "critical_right_five_iff", "shadow_bounds", "no_return_shadow", "no_return_before_two_n", "gap_return_at_cost", "source_right_five_shadow_escape", "source_right_five_cost_before_two_n", "source_right_five_cost_log", "source_right_five_cost_four_n", "source_right_five_cost_many")
+          renewal = ("cycle_shift", "cycle_range", "cycle_mod", "same_wrap", "early_shadow", "late_shadow", "separate_phase", "numerator_factor", "renewal_block", "numeric_dom", "window_from_scale", "cert0", "cert1", "cert2", "certified_block", "polynomial_scale", "polynomial_block", "three_blocks", "no_return_four_n", "power_linear", "power_lift7", "grid_next", "exp_dom", "coefficient_dom", "generic_scale", "generic_block", "advance_valid", "many_blocks", "no_return_many")
           names = [("Agent9FirstReturn", name) for name in names] + [("Agent9Renewal", name) for name in renewal]
           for namespace, name in names:
               m = re.search(r"'BB6\."+namespace+r"\."+name+r"' depends on axioms:\s*\[([^\]]*)\]", log)

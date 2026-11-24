@@ -5,26 +5,41 @@ set_option maxHeartbeats 1000000
 namespace BB6.Agent9Renewal
 open BB6P1Unit
 
+/-- Products of nonzero residues modulo seven remain nonzero. -/
+theorem unit_mul7 (x y : Int) (hx : x%7≠0) (hy : y%7≠0) : (x*y)%7≠0 := by
+  rw [Int.mul_emod]
+  have hx' := Int.emod_nonneg x (by decide : (7:Int) ≠ 0)
+  have hy' := Int.emod_nonneg y (by decide : (7:Int) ≠ 0)
+  have hxu := Int.emod_lt_of_pos x (by decide : 0<(7:Int))
+  have hyu := Int.emod_lt_of_pos y (by decide : 0<(7:Int))
+  have hxc : x%7=1 ∨ x%7=2 ∨ x%7=3 ∨ x%7=4 ∨ x%7=5 ∨ x%7=6 := by omega
+  rcases hxc with h|h|h|h|h|h <;> rw [h] <;> omega
+
 /-- The next phase numerator is exactly a 7-unit after division by G.
 This is the finite form of the denominator-growth argument. -/
-theorem numerator_factor (D p a d G U V : Int) (L : Nat)
+theorem numerator_factor (D p a d G U V l : Int) (L : Nat)
     (hdiv : D ∣ (2:Int)^L-1) (hD : D=7*G*U) (hM : (2:Int)^L-1=7*G*V)
-    (hL : (L:Int)=3*G) (hp : p%7≠0) :
+    (hL : (L:Int)=l*G) (hl : l%7≠0) (hp : p%7≠0) :
     ∃ u : Int, D*((2:Int)^L-1)*d-((2:Int)^L-1)*a*p-cycleSum D p L=G*u ∧ u%7≠0 := by
   obtain ⟨z,hz⟩ := cycle_mod (p:=p) L hdiv
-  refine ⟨-3*p+7*(U*((2:Int)^L-1)*d-V*a*p-U*z),?_,?_⟩
+  refine ⟨-l*p+7*(U*((2:Int)^L-1)*d-V*a*p-U*z),?_,?_⟩
   · grind
   · rw [Int.add_mul_emod_self_left]
-    omega
+    have hn : (-l)%7≠0 := by
+      intro h
+      have he := Int.emod_add_mul_ediv (-l) 7
+      have he' := Int.emod_add_mul_ediv l 7
+      omega
+    exact unit_mul7 (-l) p hn hp
 
 /-- A full n-step block, with an exact interior endpoint on the next
 rational grid, using only finite integer arithmetic. -/
-theorem renewal_block (q d n K L : Nat) (D p a C B G Dnew U V : Int)
+theorem renewal_block (q d n K L : Nat) (D p a C B G Dnew U V l : Int)
     (hD : 0<D) (hodd : D%2=1) (hp : 0<p) (hpD : p<D) (hp7 : p%7≠0)
     (hdq : d<q) (hclock : (q:Int)=7*(2:Int)^n+a)
     (hdiv : D ∣ (2:Int)^L-1) (hM : 0<(2:Int)^L-1)
     (hG : 0<G) (hDfactor : D=7*G*U) (hMfactor : (2:Int)^L-1=7*G*V)
-    (hL : (L:Int)=3*G) (hnew : 7*D*((2:Int)^L-1)=G*Dnew) (hnew7 : Dnew%7=0)
+    (hL : (L:Int)=l*G) (hl : l%7≠0) (hnew : 7*D*((2:Int)^L-1)=G*Dnew) (hnew7 : Dnew%7=0)
     (hC : 0≤C) (hB : 0≤B) (ha : ∀ j : Nat, j≤n → Bound (a+j) C)
     (hinit : Bound (D*(d:Int)-7*(2:Int)^n*p) (D*B))
     (hK : K≤n) (hsmall : D*(2:Int)^K*(B+C)<(2:Int)^n)
@@ -45,7 +60,7 @@ theorem renewal_block (q d n K L : Nat) (D p a C B G Dnew U V : Int)
   have hnewpos : 0<Dnew := by
     have hh := Int.lt_of_mul_lt_mul_left (show G*0<G*Dnew by rw [←hnew']; simp; omega) (show 0≤G by omega)
     omega
-  obtain ⟨u,hu,hu7⟩ := numerator_factor D p a d G U V L hdiv hDfactor hMfactor hL hp7
+  obtain ⟨u,hu,hu7⟩ := numerator_factor D p a d G U V l L hdiv hDfactor hMfactor hL hl hp7
   change N=G*u at hu
   have hN : ¬ (7*R ∣ N) := by
     rintro ⟨z,hz⟩
