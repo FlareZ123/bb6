@@ -60,5 +60,5 @@ This is the useful integration point: the canonical search already combines phys
 
 `CanonicalTNFExample.lean` exercises the conversion on the four-row glider: it turns the explicit FAR certificate into a certified canonical audit, then into a weighted-TNF leaf, and proves `WeightedBound B` for every (B\ge5). The direct FAR-to-TNF example and its soundness theorem are in `FARWeightedTNFExample.lean`.
 
-<badge>Source-checked</badge> The full canonical + weighted-TNF import closure and both concrete examples passed [CI 45389105512](https://github.com/FlareZ123/bb6/actions/runs/45389105512). The workflow rejects `sorryAx` and `native_decide` in the closure output. This is a reusable proof-interface result, not a BB(6) upper bound: the firstOne root still needs a closed audit or a complete weighted-TNF tree.
+**Source-checked.** The full canonical + weighted-TNF import closure and both concrete examples passed [CI 45389105512](https://github.com/FlareZ123/bb6/actions/runs/45389105512). The workflow rejects `sorryAx` and `native_decide` in the closure output. This is a reusable proof-interface result, not a BB(6) upper bound: the firstOne root still needs a closed audit or a complete weighted-TNF tree.
 
