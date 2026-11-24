@@ -101,7 +101,8 @@ jobs:
           lean -o im-results/agent13-weighted-first-one/WeightedFirstOneCover.olean im-results/agent13-weighted-first-one/WeightedFirstOneCover.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
           lean -o im-results/agent32-source-queue/SourceFiniteSemantics.olean im-results/agent32-source-queue/SourceFiniteSemantics.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
           lean im-results/agent32-source-queue/SourceQueueExact.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
-          lean im-results/agent32-source-queue/SourceTableEncoding.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
+          lean -o im-results/agent32-source-queue/SourceTableEncoding.olean im-results/agent32-source-queue/SourceTableEncoding.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
+          lean im-results/agent8-adaptive-source-plan/SourceNodeCodec.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
           export LEAN_PATH="$LEAN_PATH:im-results/agent32-f418-shift-overflow"
           lean -o im-results/agent32-f418-shift-overflow/F418Rules.olean im-results/agent32-f418-shift-overflow/F418Rules.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
           lean im-results/agent32-f418-shift-overflow/F418Seed.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
