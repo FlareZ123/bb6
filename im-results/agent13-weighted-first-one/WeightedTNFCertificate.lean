@@ -94,12 +94,12 @@ theorem weightedTNF_halt_iff_firstHole (p : PartialMachine)
         have hdefault : weightedTNFDefaultCompletion p (readSlot c) = none := by
           unfold rawStep at hstep
           cases ht : weightedTNFDefaultCompletion p (readSlot c) with
-          | none => exact ht
+          | none => rfl
           | some mv => simp [ht] at hstep
         have hrow : p (readSlot c) = none := by
           change (p (readSlot c)).getD none = none at hdefault
           cases hp : p (readSlot c) with
-          | none => exact hp
+          | none => rfl
           | some t =>
               cases t with
               | none => exact False.elim (hnohalt (readSlot c) hp)
