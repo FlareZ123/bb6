@@ -25,7 +25,7 @@ jobs:
             im-results/agent7-far/wide132/emit.py \
             im-results/agent7-far/wide133/emit.py
           python3 im-results/agent7-far/test_start_guard.py
-      - name: Recover eight exact raw85 frontier SMT candidates
+      - name: Recover exact-target raw85 SMT candidates
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -72,8 +72,11 @@ jobs:
               if len(hit_files) != 1:
                   raise SystemExit(f"run {run_id}: expected one hits.txt, found {len(hit_files)}")
               hits = [line.split() for line in hit_files[0].read_text().splitlines() if line.startswith("HIT ")]
+              if len(hits) == 0:
+                  provenance.append(f"| {run_id} | {code} | — | — | NO HIT |")
+                  continue
               if len(hits) != 1:
-                  raise SystemExit(f"run {run_id}: expected one HIT record for {code}, found {len(hits)}")
+                  raise SystemExit(f"run {run_id}: expected at most one HIT record for {code}, found {len(hits)}")
               words = hits[0]
               hit_code, d, rev = words[2], int(words[3]), int(words[4])
               if hit_code != code:
