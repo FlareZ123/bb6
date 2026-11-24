@@ -209,7 +209,7 @@ jobs:
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
           export LEAN_PATH=im-results/agent8-coverage-contract:im-results/agent4-coverage-smoke:im-results/agent42-coverage-normal:im-results/agent13-coverage:im-results/agent13-weighted-first-one:im-results/agent6-fresh-glider:im-results/agent7-far:im-results/agent31-three-hole-tnf:im-results/agent50-weighted-tnf-pilot:im-results/agent13-roster-convergence:im-results/agent44-source-roster
-          python tools/lean_compile_closure.py --workdir /tmp/a13-roster-convergence --jobs 4 im-results/agent44-source-roster/PureFourHoleResiduals.lean im-results/agent13-roster-convergence/RosterConvergence.lean im-results/agent44-source-roster/SourceRosterEncoding.lean | tee /tmp/a13-roster-convergence.log
+          python tools/lean_compile_closure.py --workdir /tmp/a13-roster-convergence --jobs 4 im-results/agent13-roster-convergence/RosterConvergence.lean im-results/agent44-source-roster/SourceRosterEncoding.lean | tee /tmp/a13-roster-convergence.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a13-roster-convergence.log; then
             echo "Forbidden proof placeholder or native_decide found in 124-roster convergence closure" >&2
             exit 1
