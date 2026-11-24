@@ -31,3 +31,22 @@ The core declarations are `BB6.Agent19MixedStrip.mixed_transitive` in MixedStrip
 ## Consequence for the root32 search
 
 The previously proved D-shadow arbitrary direct tails make this obstruction relevant: no pure modular leaf test of this class can cut any sufficiently large direct-tail node whose true right coordinate is -2 modulo the dyadic part of the modulus. This alone does not establish survival of every connecting prefix, or prove the machine nonhalting. It indicates that size-sensitive or nonperiodic invariants, accelerated treatment of arbitrarily long direct tails, or bounds depending on the actual root exponent are necessary. Do not spend more resources on unbounded modulus refinement alone. A full source-level root-family theorem remains the priority.
+
+
+## Strengthening: no uniform depth even on the authentic D-family
+
+`Root32ModularBarrier.lean` now proves `root32_mixed_no_uniform_depth`: for every p>=2, odd L, desired n, and every J as above, there exist actual natural j,t satisfying the exact root equation
+
+    e=903171544+1761607680*j,
+    17300+22155*(t+j)=5*2^e,
+
+such that the true D residual (1469153280*t+393975148, 2788638720*t+747814654) has a backwards path of n+10 genuine CLine section returns, all of whose points are in J. Exact root existence for every j is proved using 2^420=1 mod 22155 and e mod 420=184, without evaluating huge exponents.
+
+The fixed D prefix of costs 1^7,3,1,2 reaches the exact pair (2861931660*t+767469219,2092249530*t+561067594). The two-bounce even return is derived from source countdowns, not merely inverted arithmetic equations. Put k=2092249530*t+561067594. The identity
+
+    22155*(k+2)+630*(73577441805*j+37722959174)
+      =2092249530*5*2^e
+
+allows the odd coefficient to lift j to any requested valuation p+n, and j can be made arbitrarily large in that cylinder. Since e>=p+n and t>=2^n, k+2 is divisible by 2^(p+n) and large enough to perform n actual inverse directs, each remaining in the forced strip. Source closure propagates J along the exact prefix back to D. This is not merely a shadow-compatible word: every return edge is derived from the genuine CLine recurrence, and every vertex is J-accepted.
+
+Thus no fixed path-depth cutoff can exclude the complete D family even with any fixed simultaneous modular invariant. The depth may still depend on j, or the algorithm may accelerate an entire direct block at once. No inference about blank reachability, the actual machine halting, or BB(6) follows without additional arguments. All four new main declarations compile locally, with standard axioms only.
