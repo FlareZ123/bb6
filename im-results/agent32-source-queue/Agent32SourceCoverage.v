@@ -1,5 +1,5 @@
-From BusyCoq Require Import Enumerate62 Eqb Agent32Q0Partition Agent32SourceDrain.
-From Coq Require Import List NArith Lia.
+From BusyCoq Require Import Enumerate62 Individual62 TC62 CTL62 Eqb Agent32Q0Partition Agent32SourceDrain.
+From Coq Require Import List NArith Lia Arith.PeanoNat.
 Import ListNotations.
 Import TNF_Node.
 
@@ -91,7 +91,8 @@ Section ActualSourceCoverage.
       (length_tail (fst q)))) as s.
     destruct s as [a b].
     unfold SearchQueue_rst, safeQ in H; cbn [fst snd] in H.
-    exact (proj1 (Forall_app a b) (proj1 H)).
+    destruct H as [H _].
+    apply Forall_app in H; exact H.
   Qed.
 End ActualSourceCoverage.
 
