@@ -20,3 +20,16 @@ This is an intermediate upper-bound component, not a complete BB(6) proof: the 1
 ## Verification
 
 The CI target weighted-tnf-roster-convergence regenerates the source-derived four-hole data, uses the committed Agent50 tree/pump data, compiles the import closure without the defective coverage wrappers or ExceptionalPumps, and rejects sorryAx or native_decide in the output.
+
+## Root-to-leaf composition contract (Lean-checked)
+
+`RosterCoverComposition.lean` supplies the missing logical composition interface without requiring a second explicit root tree or the noncomputable Agent31/Agent50 roster permutation.
+
+- `cover_of_roster_dichotomy` turns any sound root dichotomy into a finite residual roster, plus one `Cover (WeightedBound C)` for each residual, into a single root `Cover`.
+- `exact_from_roster_dichotomy` lifts that cover to B≥C, converts it to the normalized `WeightedTNFCertificate`, and combines it with the raw champion witness.
+- Specializations consume Agent31's accepted 124-cylinder dichotomies at both 395 and 7014. The 7014 interface allows sibling certificates at that bound to be used without pretending they prove the stronger 395 bound.
+
+The generalized module and its full import closure passed the manual CI target `weighted-tnf-roster-composition` in run [45489676758](https://github.com/FlareZ123/bb6/actions/runs/45489676758). The workflow rejects `sorryAx` and `native_decide` in the compiled closure.
+
+This is a conditional theorem, not a completed upper bound: the per-residual safety Covers and the attained champion witness still have to be supplied. No member of the 124 residual roster is declared closed by this interface alone.
+
