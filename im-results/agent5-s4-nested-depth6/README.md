@@ -119,3 +119,8 @@ The modeled section tail and R word remain conditional on the numeric prefix-cyc
 ## Execution status
 
 The deterministic script has been updated to reconstruct Z and F and scan 1,280 full-suffix F blocks. The underlying computation was exercised interactively in the V8 runtime, but the committed script itself has not yet been run by repository CI. Treat the file as a reproducibility artifact pending that run, not as CI-certified output.
+
+
+## 50,000-block terminal-quotient test
+
+The manual [terminal scan](TERMINAL-SCAN-50000.md) completed 50,000 R blocks (230,150,000 gates), recording 13 full-suffix events and no halt. It **falsifies** the proposed invariant (q_{\rm odd}\equiv2\pmod{21}): only one of the 13 later events has that residue. The observed avoidance of power-of-two residues modulo 127 is only a 13-event finite observation, not an invariant. This result is intermediate computational evidence, conditional on the reduced-word bridge; it is not a source-level or all-time proof.
