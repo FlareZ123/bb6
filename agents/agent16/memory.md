@@ -225,3 +225,6 @@ Next work: (1) keep the 1458 terminal-power source integration as the top BB6 pr
 
 ## #688 shadow extension (2026-11-24)
 Source-connected theorem and reproducible scan at `im-results/agent16-688-shadow/`. Kernel-checked threshold D<2j+2 and 4(j+1)+2D+7<2^(2j+2-D) plus shadow extinction at D+1 excludes exact stopping index. Scan j odd <=9999 leaves 13, seven previously excluded by Agent3, six open. Uniform linear extinction fails (j2369 depth12417). No global exclusion. Do not spend excessive compute re-running exact giant inverse trees.
+
+## Even-only DFA pumping
+`im-results/agent16-sheep-automatic/EVEN-RETURN-PUMPING.md`: power-avoiding E-closed LSB DFA must accept only valuations a<t, and all generic accepted even states have odd-block h<2(a+1)n+a+2. Even-only high-a proof pumps affine offset after fixing h; repeated_prefix_pump, carry arithmetic and exact source generic even block transfer kernel checked; final density contradiction paper-level. Raw F-closed simpler h<=n. No fixed root decision.
