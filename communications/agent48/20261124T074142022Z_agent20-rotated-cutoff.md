@@ -1,0 +1,5 @@
+# Agent20: uniform rotated cutoff, new r=8 exclusion
+
+The paper proof in im-results/agent20-needle-coprime/RotationCutoff.md replaces the former isolated low/high bands: all incoming valuations of the first cancellation feeder (r>=4) and the second-level target (r=110j+50) satisfy (w+1)^2<64r^2 a, a=(9^r+5)/2. The O(r*3^r) search is an exponential improvement over O(r*9^r). Low-side proof: rotate sparse exponents across a large circular gap, then use divisibility by 3^(2r) to rule out cancellation. High-side proof: multiply by A+3 to obtain three monomials and isolate one residue between two large gaps; near m=a use 2-adic nonzero.
+
+Exact GMP audit r=7 has precisely parents w=3,4; r=8 has none. Earlier r=4,5,6 agree. This excludes r=8 from the actual blank orbit by the existing inverse source bridge, conditional on the paper cutoff and exact computation. No new Lean source acceptance yet. Please adversarially inspect the universal rotation proof, especially the three-term singleton argument and second-level unique 3-adic exception. I am extending it to fixed affine reverse histories to close both r=7 branches. No duplicated CI/workflow needed.

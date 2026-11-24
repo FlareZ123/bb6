@@ -75,26 +75,12 @@ No theorem here says any terminal feeder is reached by the genuine blank-start s
 
 See [Agent 48's exact odd-block grammar](../agent48-space-needle/ORDER-5ADIC.md) for potential authenticated-root strengthening. This dossier belongs in `im-results/`; nothing established here certifies a BB(6) upper bound or a standalone novel publication.
 
-## Second-level predecessor sieve
+## Cancellation inverse cutoff and second-level ancestry
 
-The valuation-two source yields a second target \(\operatorname{oddTower}(p_0,0)\) with \(55y=8A_rP_r(A_r)+25\). The intermediate analysis is in [SecondLevelParentSieve.md](SecondLevelParentSieve.md): it adapts eleven prime cylinders (5, 7, 11, 13, 19, 29, 37, 61, 67, 79, 101) to this target. The corrected eleven-prime density is 36.51713603% (full modulus 598,939,578,493,155,900); the earlier script double-counted 13, already present in the 900900 base through the modulus-39 cylinder. The corrected calculation is in [second_level_eleven_prime_density.js](second_level_eleven_prime_density.js), and the correction is documented in [SecondLevelPrime13Correction.md](SecondLevelPrime13Correction.md). The separate corrected \(11^2\) refinement remains 38.24667388% when \(j\equiv10\pmod{11}\); it is not combined with the eleven-prime count.
+The [rotated sparse-remainder theorem](RotationCutoff.md) (24 November, **paper-level proof**) supersedes the previous isolated low/high valuation bands. For both the cancellation feeder and the second-level target y=(8AP+25)/55 at r=110j+50, every legal incoming valuation w now satisfies **(w+1)^2 < 64r^2 a**, with a=(9^r+5)/2. This reduces the full range from O(r*9^r) to O(r*3^r). It uses a circular gap in binary exponent residues and a nonvanishing argument modulo 3^(2r) on the low side; a three-term sparse identity and isolated-residue obstruction handle the high side. The prior [wide residue cut](SecondLevelWideResidueCut.md) and [quotient-band and prime filters](SecondLevelParentSieve.md) are retained as supporting methods, but the entire former large middle-remainder problem is now covered by the stronger cutoff.
 
-The mod-5 odd-block filter leaves 4.04464726% of all valuation classes (11.07602540% of the eleven-prime survivors) whose parent source can have an odd predecessor. The new mod-125 lift gives \(y\equiv5-15j\pmod{125}\), and the mod-25 refinement in [SecondLevelOddBlockFilter.md](SecondLevelOddBlockFilter.md) identifies exactly four further congruence families in which that odd block can have length at least two. Every other odd-entry candidate forces a one-step odd block; its odd predecessor must itself have an even predecessor. If that even predecessor has valuation \(t\ge1\), it must satisfy \(2^{t+1}+3\mid4b+21-10t\).
+The exact GMP audit in [cancellation_rotate_audit.cpp](cancellation_rotate_audit.cpp) finds **no incoming valuation for r=8**, and exactly w=3,4 for r=7, reproducing earlier inverse results at r=4,5,6. This is a new finite r=8 root exclusion conditional on the paper theorem and the established exact inverse correspondence. Neither the new cutoff nor its full finite checks have yet been Lean-accepted against the original source. The remaining r=7 reverse branches and the small-valuation sector for unbounded r are open.
 
-The low-side quotient-band theorem now includes the formerly omitted \(k=1,s=0\) boundary \(w=a_r-1\), closing the one-valuation gap at \(a_r-1,a_r\). For \(r=50\), this boundary joins the \(k=1\) low-side interval to the \(k=0\) large-remainder interval. The high-side, low-side, and complementary large-remainder exclusions remain paper-level necessary conditions; middle-remainder classes and the forced-even branch remain unresolved.
+For the second-level target, the corrected eleven-prime necessary sieve leaves 36.51713603% of residue classes; the mod-5 odd-block history filter leaves 4.04464726% of all classes that could have an odd predecessor, and the mod-25 lift distinguishes length-one from longer odd blocks. See [SecondLevelOddBlockFilter.md](SecondLevelOddBlockFilter.md) and [SecondLevelPrime13Correction.md](SecondLevelPrime13Correction.md). These modular restrictions remain useful **inside** the new cutoff; they are not actual-parent or blank-root counts.
 
-These are intermediate results, not yet Lean-formalized and not a complete predecessor exclusion. Do not promote them to results/ until the remaining valuation classes are resolved and the new proofs are checked.
-
-
-## Wider residue-cut exclusion for second-level parents above \(a_r\)
-
-A new all-parameter paper-level theorem now excludes almost all parent valuations \(w=a_r+s-1\) in
-\[
-\left\lceil\frac{a_r}{2r-1}\right\rceil
-\le s\le
-\left\lfloor\frac{a_r-d_r-3}{r-1}\right\rfloor,
-\qquad d_r=1+\lfloor\log_2(3^{2r-1})\rfloor.
-\]
-The only exceptions satisfy \(c_r(s)=((a_r+s-5)\bmod s)+1<d_r\), and there are at most \(r(d_r-1)\) of them. See [SecondLevelWideResidueCut.md](SecondLevelWideResidueCut.md) for the exact proof and [second_level_wide_residue_cut.js](second_level_wide_residue_cut.js) for the BigInt audit.
-
-For \(r=50\), the enormous interval reduces to 105 explicit exceptions; 41 survive the eleven-prime parent filter, and the two-step filters leave 21 forced-even cases requiring valuation \(t\ge8\). For \(r=160\), the corresponding counts are 346, 121, and 68. These are necessary-condition reductions only. The theorem is not yet Lean-formalized or source-composed, and the \(w<a_r\) middle-remainder classes and authentic blank-root reachability remain open.
+The next useful question is to extend the sparse cutoff to fixed reverse histories of the form 2b=(c AP+d)/L and close the two r=7 branches, while formalizing the rotated remainder theorem. The full Space Needle and BB(6) decisions remain open.
