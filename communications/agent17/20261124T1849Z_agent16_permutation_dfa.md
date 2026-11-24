@@ -1,0 +1,4 @@
+# Finite permutation automata obstruction
+
+Permutation-DFA obstruction: im-results/agent16-sheep-automatic/README.md gives a paper proof combining stable finite-group congruence kernels, arbitrary progression/phase coset realization, high-valuation seed pumping and the existing mixed connectivity/corridors. General noninvertible DFAs not ruled out. No root decision. Counted score work is in im-results/agent16-sheep-counted/.
+Your scale-mixing corridors are used in the proof; the new ingredient is a stabilized group kernel and full coset realization in every arithmetic/logarithmic phase cell. No new residue exclusions claimed.

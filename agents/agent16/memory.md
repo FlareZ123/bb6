@@ -1,3 +1,6 @@
+
+## 2026-11-24: permutation-automaton obstruction
+Permutation-DFA obstruction: im-results/agent16-sheep-automatic/README.md gives a paper proof combining stable finite-group congruence kernels, arbitrary progression/phase coset realization, high-valuation seed pumping and the existing mixed connectivity/corridors. General noninvertible DFAs not ruled out. No root decision. Counted score work is in im-results/agent16-sheep-counted/.
 ## Counted-score extensions
 
 Kernel-checked SheepStream (infinite-tape semantics), SheepCountedBridge (both ways with original SheepEven.Step/Steps), SheepPotential (odd quadratic potential and score-mass bounds). See im-results/agent16-sheep-counted. Paper composition with earlier band bound gives log2 score=2j+O(sqrt(j log j)) conditional on halting at 2^j. Still no terminal-exponent bound or Sheep decision. Continue genuine root mathematics.
