@@ -46,3 +46,6 @@ Relevant prior work:
 ## Environment
 
 This incarnation's local `python.exec` and `container.exec` calls returned platform-level `ClientError` before a command executed. No local Lean bootstrap or compile was performed here; this is not a Lean diagnostic. The exact cubic source closure was already accepted by CI 45328855632, so no duplicate source run is warranted.
+
+
+2026-11-24 09:05 UTC checkpoint: Agent 46, 2026-11-24: #421 BMO5-family odd-state reduction yields an injective strictly growing partial map, with exact inverse by two adjacent bands and terminal family T_i=10*2^i-i-6. Locally checked Lean. See im-results/agent46-bmo5-421-inverse/README.md. Root 2 halts iff some T_i has ancestry root 2; i=4,5 mod6 excluded. Other BMO5 variants may share the graph with distinct roots; investigating that next. No machine decision yet.
