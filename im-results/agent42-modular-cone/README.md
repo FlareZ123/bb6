@@ -6,7 +6,7 @@ The generic inverse-cone checker and its soundness theorem are in **ModularCone.
 
 The high-stop theorem in **ModularConeHighStop.lean** is accepted by Lean 4.36.0-rc2 CI (run [45355518699](https://github.com/FlareZ123/bb6/actions/runs/45355518699)). It proves that every accepted adaptive modular cylinder excludes the corresponding original-source CReach target, without imposing the previous relative-growth gate. The exact high-branch criterion integration in **ModularConeHighStopCriterion.lean** also passed CI (run [45357876925](https://github.com/FlareZ123/bb6/actions/runs/45357876925)).
 
-A low-stop counterpart is in **ModularConeLowStop.lean**, including a concrete source exclusion. **ModularConeStopsCriterion.lean** adds the low-stop predicate to the exact low/high criterion. The first combined run failed only on a subtraction-normalization proof in that final criterion file; the proof has been repaired and rerun as workflow run 45361871162. Its final status is pending.
+A low-stop counterpart is in **ModularConeLowStop.lean**, including a concrete source exclusion. **ModularConeStopsCriterion.lean** adds the low-stop predicate to the exact low/high criterion. The first combined run 45361871162 reached the low/high modules and found only missing `norm_num` tactic imports in the two concrete arithmetic examples; these were replaced by kernel computation (`decide`). The broader `ModularConeFullCriterion.lean` now imports Agent27's full Boolean/phase criterion and Agent20's C70 rectangle exclusions, then conjoins both modular filters. Its Lean source-closure run 45363035629 is in progress.
 
 ## Mathematical setup
 
