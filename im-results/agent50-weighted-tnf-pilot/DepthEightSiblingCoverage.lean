@@ -2,6 +2,7 @@ import DepthEightSiblingData1
 import DepthEightSiblingData2
 import DepthEightSiblingData3
 import DepthEightSiblingData4
+import C1Growth
 
 set_option maxRecDepth 24000
 set_option maxHeartbeats 0
@@ -65,4 +66,56 @@ theorem refinedRootRoster_count : refinedRootRoster.length = 231 := by decide
 #print axioms siblingOpenRoster_count
 #print axioms siblingOpenRoster_mass
 #print axioms refinedRootRoster_count
+
+inductive GrowthWitness where
+  | ones (i : Fin 4)
+  | triple (w : Bool)
+
+def GrowthWitness.table : GrowthWitness → PartialMachine
+  | .ones i => BB6Coverage.Agent50OnesSweep.table i
+  | .triple w => BB6Coverage.Agent50TripleSweep.table w
+
+theorem GrowthWitness.never (w : GrowthWitness) (m : Machine)
+    (hm : compatible w.table m) : NeverHalts m := by
+  cases w with
+  | ones i => exact BB6Coverage.Agent50OnesSweep.never i m hm
+  | triple b => exact BB6Coverage.Agent50TripleSweep.never b m hm
+
+def growthWitnesses : List GrowthWitness :=
+  (List.finRange 4).map GrowthWitness.ones ++ [.triple false,.triple true]
+
+def growthCovered (t : PackedTable) : Bool :=
+  growthWitnesses.any (fun w => decide (packTable w.table = t))
+
+theorem growthCovered_never (t : PackedTable) (m : Machine)
+    (h : growthCovered t = true) (hm : compatible (unpackTable t) m) :
+    NeverHalts m := by
+  obtain ⟨w,hw,he⟩ := List.any_eq_true.mp h
+  have ht : packTable w.table = t := of_decide_eq_true he
+  exact w.never m (by simpa only [← ht,unpack_packTable] using hm)
+
+def finalRootRoster : List PackedTable :=
+  refinedRootRoster.filter (fun t => !growthCovered t)
+
+def siblingFinalRoster : List PackedTable :=
+  siblingOpenRoster.filter (fun t => !growthCovered t)
+
+theorem finalRootRoster_sound :
+    ∀ m, compatible root m → WeightedBound 400 m ∨
+      ∃ q ∈ finalRootRoster, compatible (unpackTable q) m := by
+  intro m hm
+  rcases refinedRootRoster_sound m hm with hb | ⟨q,hq,hc⟩
+  · exact Or.inl hb
+  · cases hg : growthCovered q with
+    | true => exact Or.inl (weighted_never 400 m (growthCovered_never q m hg hc))
+    | false => exact Or.inr ⟨q,List.mem_filter.mpr ⟨hq,by simp [hg]⟩,hc⟩
+
+theorem siblingFinalRoster_count : siblingFinalRoster.length = 101 := by decide
+theorem siblingFinalRoster_mass : rawMass siblingFinalRoster = 2525 := by decide
+theorem finalRootRoster_count : finalRootRoster.length = 225 := by decide
+
+#print axioms growthCovered_never
+#print axioms finalRootRoster_sound
+#print axioms siblingFinalRoster_mass
+
 end BB6.Agent50RecursiveResidual
