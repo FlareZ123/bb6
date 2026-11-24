@@ -18,8 +18,9 @@ theorem r0_facts (s : Nat) (hs : s%2=1) :
     r0H s=16*r0M s ∧ r0M s%5=2 ∧
     (r0X s+2*r0Y s)%5=4 ∧
     48 ≤ r0H s ∧ r0H s%32=0 := by
-  have hs' : ∃ t, s=2*t+1 := by omega
-  rcases hs' with ⟨t,rfl⟩
+  have hsdiv : s%2 + 2*(s/2)=s := Nat.mod_add_div s 2
+  have hs' : s=2*(s/2)+1 := by omega
+  rw [hs']
   dsimp [r0X,r0Y,r0M,r0H]
   omega
 
@@ -30,16 +31,14 @@ private theorem pow_four_mod_five (m : Nat) :
       decide
   | succ m ih =>
       have hstep : (4^(m+1))%5 = ((4^m)%5*4)%5 := by
-        rw [pow_succ, Nat.mul_mod]
+        rw [Nat.pow_succ, Nat.mul_mod]
         simp
       rw [hstep]
       rcases ih with h | h
       · right
         rw [h]
-        decide
       · left
         rw [h]
-        decide
 
 private theorem pow_two_double (m : Nat) : 2^(2*m)=4^m := by
   induction m with
