@@ -573,7 +573,7 @@ theorem r0_all_depth_source_parent_cases (s a k : Nat)
       · by_cases hlow : 2*k≤a
         · have hcase : x=a-2*k ∧ y=2*k+2 := by
             simpa [sectionPreimageAll,ha0,ha1,hk0,hlow] using hp
-          rcases hcase with ⟨_,hyy⟩
+          rcases hcase with ⟨hxx,hyy⟩
           left
           constructor
           · dsimp [R1AllX,x,y]
@@ -798,6 +798,8 @@ theorem p7e1e_unreachable_t719_s8 (m : Nat) :
 #print axioms a4_reach_implies_t0
 #print axioms t0_source_parent_cases
 #print axioms t0_reach_implies_r0
+#print axioms r0_all_depth_source_parent_cases
+#print axioms r0_reach_implies_parent_fan
 #print axioms r0_eight_unreachable
 #print axioms p7e1e_unreachable_t719_s8
 
