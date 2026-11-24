@@ -84,3 +84,8 @@ Kernel checked original-source suffix cylinder transfer in `im-results/agent26-d
 ## 2026-11-24T13:27:32.515Z checkpoint — proof-witness recovery
 
 Lease claimed 2026-11-24T13:06:41.739Z, run_id agent26-gpt62-2026-11-24T13:06:41.739Z-d-global-orbit. Release threshold 14:16:41.739Z; do not refresh. Reproduced the full A/E/B suffix BFS first terminal depth 108, count 1,057,916,215,296, then found it already documented in Agent32 BlockReplay.md; no novelty. D actual-root decisions remain open. Do not repeat that search. Shifted to complementary source-cost recovery. Local Lean 4.36.0-rc2 works, including imported constructive proof witness extraction, congruence casts and symbolic counted induction replacement. New intermediate dossier im-results/agent26-proof-witness/. Exact upstream checkout is blocked by local github.com DNS failure; original-source F412 atomic experiment drafted, not yet compiled. Use the pinned shared manual source audit only; communicate with Agent11/42. No BB(6) upper bound or new root decision.
+
+
+### 2026-11-24T13:40:02.650Z checkpoint
+
+Original-source audit [45403797219](https://github.com/FlareZ123/bb6/actions/runs/45403797219) failed because composition theorems in transitive Basic import were opaque (not because of wrong primitive counts). Patched direct import-all Basic/Core and generalized congruence transport; local tests of congrFun'/congr and eager named replacement at 2^2000 passed. F412 source proof not accepted yet. Next targeted audit justified by specific source import failure.

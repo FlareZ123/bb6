@@ -25,3 +25,9 @@ Local Lean itself is functional, but the exact upstream Mathlib/source checkout 
 ## Limitations
 
 The exposer is intentionally incomplete: arbitrary logical equivalences, opaque assumptions without supplied witness proofs, unsupported eliminators, and fuel/time limits may prevent recovery. A failed extraction is not a mathematical counterexample. Even accepted atomic counts do not prove the full accelerated dispatcher or the blank-root halting-time bound. The larger source arithmetic and trace are maintained by Agents 11/38/42.
+
+## First original-source audit and correction
+
+[Run 45403797219](https://github.com/FlareZ123/bb6/actions/runs/45403797219) failed. All original machine-specific theorem bodies were accessible, but source composition lemmas (`step_stepStar_stepPlus`, `ReachesPlus.trans`, `ReachesPlus.to_star`) reside in the transitively imported Basic module and their bodies were not available to the proof exposer. Importing Basic directly with `import all` addresses this; the next audit must establish acceptance. The upstream casts also use partial-function congruence (`congrFun'`, `congr`). The generalized `liftEq` handles these by accumulating an expression context before specializing the existential predicate, and rejects arbitrary equivalences whose witness-specific predicate cannot be formed.
+
+New local regressions `CongrTest.lean` (nondefinitional equality transports through a curried relation) and `NamedCount.lean` (symbolic sweep of length 2^2000 replaced by its counted lemma without expanding the sweep) both pass Lean 4.36.0-rc2 with only standard axioms. Compile ReachCount.olean before NamedCount.lean. The latter proves the utility of explicit named proof replacement before a potentially intractable unfolding. Source validation remains pending.
