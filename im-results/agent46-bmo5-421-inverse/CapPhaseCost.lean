@@ -217,6 +217,7 @@ theorem positive_boundary_cost_sharp {j s k x : Nat} {w : Int} (hw : 0<w)
   have hlower : 4*(P j:Int)+6+w-3*D≤2*D*(Q k x:Int) := by
     grind
   have hsum : 4*(P j:Int)+6+w≤D*(6*(k:Int)+32)+3*D := by omega
+  change 4*(P j:Int)+6+w≤D*(6*(k:Int)+35)
   rw [Int.mul_add] at hsum ⊢
   omega
 
