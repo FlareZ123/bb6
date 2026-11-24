@@ -104,4 +104,121 @@ theorem positive_boundary_initial_cost {j s k x : Nat} {w : Int} (hw : 0<w)
 #print axioms positive_history_packet
 #print axioms positive_history_index
 #print axioms positive_boundary_cost
+
+/-- The affine packet carries a second, monotone weight.  Writing
+    B=4*3^s-A, each same-band inverse keeps B fixed, while a
+    one-band descent changes B to 2*B+4*3^s.  Consequently B*P_k
+    never falls below its initial value 4*P_j. -/
+theorem positive_history_packet_weight {j s k x : Nat} {w : Int} (hw : 0<w)
+    (h : PositiveHistory j w s k x) :
+    ∃ A C : Int, 0<A ∧ A<4*(3^s:Int) ∧ A%3≠0 ∧ C≤ -6-w ∧
+      (3^s:Int)*W k x=A*(P k:Int)+C ∧
+      (4*(3^s:Int)-A)*(P k:Int) ≥4*(P j:Int) := by
+  induction h with
+  | first hb he =>
+    refine ⟨8,-6-w,by decide,by decide,by decide,by omega,?_,?_⟩
+    · change (3:Int)*W j x=8*(P j:Int)-6-w
+      omega
+    · change (4:Int)*(P j:Int)≥4*(P j:Int)
+      omega
+  | @same s k x y h hr ih =>
+    obtain ⟨A,C,hA,hA',hu,hC,he,hB⟩:=ih
+    let D : Int := 3^s
+    have hD : 0<D := Int.pow_pos (by decide)
+    have hW:=w_regular_same hr
+    refine ⟨A+8*D,C-6*D,by omega,?_,?_,by omega,?_,?_⟩
+    · rw [Int.pow_succ]
+      change A+8*D<4*(D*3)
+      omega
+    · have hs : 0<s := by cases h <;> omega
+      have hd : D%3=0 := by
+        cases s with
+        | zero => omega
+        | succ s => simp [D,Int.pow_succ]
+      rw [Int.add_emod,Int.mul_emod,hd]
+      simpa using hu
+    · rw [Int.pow_succ]
+      change D*3*W k x=(A+8*D)*(P k:Int)+(C-6*D)
+      change D*W k y=A*(P k:Int)+C at he
+      grind
+    · rw [Int.pow_succ]
+      change (4*(D*3)-(A+8*D))*(P k:Int)≥4*(P j:Int)
+      have heq : 4*(D*3)-(A+8*D)=4*D-A := by ring
+      rw [heq]
+      exact hB
+  | @down s k x y h hr ih =>
+    obtain ⟨A,C,hA,hA',hu,hC,he,hB⟩:=ih
+    let D : Int := 3^s
+    have hD : 0<D := Int.pow_pos (by decide)
+    have hW:=w_regular_down hr
+    refine ⟨2*A,C,by omega,?_,?_,hC,?_,?_⟩
+    · rw [Int.pow_succ]
+      change 2*A<4*(D*3)
+      omega
+    · rw [Int.mul_emod]
+      omega
+    · rw [Int.pow_succ]
+      change D*3*W k x=2*A*(P k:Int)+C
+      rw [p_succ] at he
+      simp only [Int.natCast_mul] at he
+      change D*W (k+1) y=A*(2*(P k:Int))+C at he
+      grind
+    · rw [Int.pow_succ]
+      change (4*(D*3)-2*A)*(P k:Int)≥4*(P j:Int)
+      have hp : (P (k+1):Int)=2*(P k:Int) := by exact_mod_cast p_succ k
+      calc
+        (4*(D*3)-2*A)*(P k:Int)
+            = (4*D-A)*(P (k+1):Int)+4*D*(P k:Int) := by rw [hp]; ring
+        _ ≥ 4*(P j:Int) := by
+          have hD0 : 0≤D := le_of_lt hD
+          have hP0 : 0≤(P k:Int) := by exact_mod_cast Nat.zero_le (P k)
+          have hterm : 0≤4*D*(P k:Int) := by positivity
+          nlinarith [hB,hterm]
+
+/-- Every state in a positive history is in its recorded band. -/
+theorem positive_history_band {j s k x : Nat} {w : Int}
+    (h : PositiveHistory j w s k x) : Band k x := by
+  induction h with
+  | first hb he => exact hb
+  | @same s k x y h hr ih =>
+    obtain ⟨r,hr,rfl,rfl⟩:=hr
+    exact regular_band k r hr
+  | @down s k x y h hr ih =>
+    obtain ⟨r,hr,rfl,rfl⟩:=hr
+    exact regular_band k r hr
+
+/-- A sharp all-depth cost barrier for a positive excursion that reaches
+    the low boundary x<=P_k+2.  The extra factor comes from the monotone
+    packet weight (4*3^s-A)*P_k, not from a finite-depth estimate. -/
+theorem positive_boundary_cost_sharp {j s k x : Nat} {w : Int} (hw : 0<w)
+    (h : PositiveHistory j w s k x) (hx : x≤P k+2) :
+    (4*(P j:Int)+6+w) ≤ (3^s:Int)*(6*(k:Int)+35) := by
+  obtain ⟨A,C,hA,hA',hu,hC,he,hB⟩:=positive_history_packet_weight hw h
+  let D : Int := 3^s
+  have hD : 0<D := Int.pow_pos (by decide)
+  have hb:=positive_history_band h
+  have hQNat : Q k x≤3*k+16 := by
+    have hl:=l_add k
+    unfold Q
+    omega
+  have hQ : (Q k x:Int)≤3*(k:Int)+16 := by exact_mod_cast hQNat
+  have hWQ : W k x+2*(Q k x:Int)=4*(P k:Int)-3 := by
+    have hl:=l_add k
+    unfold W Q
+    omega
+  have hrel : 2*D*(Q k x:Int)=(4*D-A)*(P k:Int)-3*D-C := by
+    change D*(W k x:Int)=A*(P k:Int)+C at he
+    nlinarith [he,hWQ]
+  have hmul:=Int.mul_le_mul_of_nonneg_left hQ (le_of_lt hD)
+  have hupper : 2*D*(Q k x:Int)≤D*(6*(k:Int)+32) := by nlinarith
+  have hC' : 6+w≤-C := by omega
+  have hlower : 4*(P j:Int)+6+w-3*D≤2*D*(Q k x:Int) := by
+    nlinarith [hB,hC',hrel]
+  have hfinal:=le_trans hlower hupper
+  nlinarith
+
+#print axioms positive_history_packet_weight
+#print axioms positive_history_band
+#print axioms positive_boundary_cost_sharp
+
 end CapSieve
