@@ -11,10 +11,9 @@ deliberately erased. The projection keeps the exact expansion multiplicities:
 Every child has one fewer hole. This proves the MAXT fuel bound only; it does
 not prove decider soundness, queue coverage, or the holdout partition.
 
-Total nodes with zero holes are allowed: the source decider may leave a total
-machine Unknown. The only semantic premise needed for the potential argument
-is that a Halt result identifies an undefined slot, hence has at least one
-hole.
+Total nodes with zero holes are allowed: a decider may leave a total machine
+Unknown. A Halt result carries the source fact that it names an undefined
+slot, represented here by a proof that at least one hole remains.
 -/
 
 structure Node where
@@ -124,39 +123,33 @@ theorem expandProjection'_mass_lt (x : Node) (hpos : 1 ≤ x.holes) :
   · have htwo : 2 ≤ x.holes := by omega
     simpa [h] using expandProjection_mass_lt x htwo
 
-inductive Verdict where
-  | halt
+/-- A source decider's Halt result carries a proof that an undefined slot exists. -/
+inductive Verdict (x : Node) where
+  | halt (hpos : 1 ≤ x.holes)
   | nonhalt
   | unknown
-deriving DecidableEq
-
-def HaltPositive (decide : Node → Verdict) : Prop :=
-  ∀ x, decide x = .halt → 1 ≤ x.holes
 
 structure SearchQueue where
   active : List Node
   holdout : List Node
 
-def update (decide : Node → Verdict) (hsound : HaltPositive decide)
-    (q : SearchQueue) : SearchQueue :=
+def update (decide : (x : Node) → Verdict x) (q : SearchQueue) : SearchQueue :=
   match q.active with
   | [] => q
   | x :: xs =>
-    match hd : decide x with
-    | .halt => ⟨expandProjection' x (hsound x hd), q.holdout⟩
+    match decide x with
+    | .halt hpos => ⟨expandProjection' x hpos ++ xs, q.holdout⟩
     | .nonhalt => ⟨xs, q.holdout⟩
     | .unknown => ⟨xs, x :: q.holdout⟩
 
-theorem update_active_mass_lt (decide : Node → Verdict)
-    (hsound : HaltPositive decide) (q : SearchQueue)
-    (hne : q.active ≠ []) :
-    mass (update decide hsound q).active < mass q.active := by
+theorem update_active_mass_lt (decide : (x : Node) → Verdict x)
+    (q : SearchQueue) (hne : q.active ≠ []) :
+    mass (update decide q).active < mass q.active := by
   cases hq : q.active with
   | nil => exact False.elim (hne hq)
   | cons x xs =>
     cases hd : decide x with
-    | halt =>
-        have hpos : 1 ≤ x.holes := hsound x hd
+    | halt hpos =>
         simp [update, hq, hd, mass_append]
         exact Nat.add_lt_add_right (expandProjection'_mass_lt x hpos) (mass xs)
     | nonhalt =>
@@ -167,13 +160,13 @@ theorem update_active_mass_lt (decide : Node → Verdict)
         exact Nat.lt_add_of_pos_left (weight_pos x)
 
 /-- The source's non-BFS `SearchQueue_upds`, with its stop-on-empty behavior. -/
-def runUpdates (decide : Node → Verdict) (hsound : HaltPositive decide) :
+def runUpdates (decide : (x : Node) → Verdict x) :
     Nat → SearchQueue → SearchQueue
   | 0, q => q
   | n + 1, q =>
     match q.active with
     | [] => q
-    | _ :: _ => runUpdates decide hsound n (update decide hsound q)
+    | _ :: _ => runUpdates decide n (update decide q)
 
 theorem mass_zero_iff_nil (xs : List Node) :
     mass xs = 0 ↔ xs = [] := by
@@ -188,10 +181,9 @@ theorem mass_zero_iff_nil (xs : List Node) :
       · intro h
         cases h
 
-theorem runUpdates_active_empty_of_bound (decide : Node → Verdict)
-    (hsound : HaltPositive decide) (fuel : Nat) (q : SearchQueue)
-    (hbound : mass q.active ≤ fuel) :
-    (runUpdates decide hsound fuel q).active = [] := by
+theorem runUpdates_active_empty_of_bound (decide : (x : Node) → Verdict x)
+    (fuel : Nat) (q : SearchQueue) (hbound : mass q.active ≤ fuel) :
+    (runUpdates decide fuel q).active = [] := by
   induction fuel generalizing q with
   | zero =>
       have hmass : mass q.active = 0 := by omega
@@ -201,29 +193,28 @@ theorem runUpdates_active_empty_of_bound (decide : Node → Verdict)
       cases hq : q.active with
       | nil => simp [runUpdates, hq]
       | cons x xs =>
-          have hdec := update_active_mass_lt decide hsound q (by simp [hq])
-          have hnext : mass (update decide hsound q).active ≤ fuel := by omega
-          simpa [runUpdates, hq] using ih (update decide hsound q) hnext
+          have hdec := update_active_mass_lt decide q (by simp [hq])
+          have hnext : mass (update decide q).active ≤ fuel := by omega
+          simpa [runUpdates, hq] using ih (update decide q) hnext
 
 /-- One source BFS pass: process exactly the initial active list, append
 children/unknowns to the holdout list, then reset holdouts to active. -/
-def bfsAux (decide : Node → Verdict) (hsound : HaltPositive decide) :
+def bfsAux (decide : (x : Node) → Verdict x) :
     List Node → List Node → List Node
   | [], holdout => holdout
   | x :: xs, holdout =>
-    match hd : decide x with
-    | .halt => bfsAux decide hsound xs (expandProjection' x (hsound x hd) ++ holdout)
-    | .nonhalt => bfsAux decide hsound xs holdout
-    | .unknown => bfsAux decide hsound xs (x :: holdout)
+    match decide x with
+    | .halt hpos => bfsAux decide xs (expandProjection' x hpos ++ holdout)
+    | .nonhalt => bfsAux decide xs holdout
+    | .unknown => bfsAux decide xs (x :: holdout)
 
-def bfsRound (decide : Node → Verdict) (hsound : HaltPositive decide)
-    (q : SearchQueue) : SearchQueue :=
-  ⟨bfsAux decide hsound q.active q.holdout, []⟩
+def bfsRound (decide : (x : Node) → Verdict x) (q : SearchQueue) : SearchQueue :=
+  ⟨bfsAux decide q.active q.holdout, []⟩
 
 def totalMass (q : SearchQueue) : Nat := mass q.active + mass q.holdout
 
-theorem bfsAux_mass_le (decide : Node → Verdict) (hsound : HaltPositive decide) :
-    ∀ xs holdout, mass (bfsAux decide hsound xs holdout) ≤ mass xs + mass holdout := by
+theorem bfsAux_mass_le (decide : (x : Node) → Verdict x) :
+    ∀ xs holdout, mass (bfsAux decide xs holdout) ≤ mass xs + mass holdout := by
   intro xs
   induction xs with
   | nil =>
@@ -232,8 +223,7 @@ theorem bfsAux_mass_le (decide : Node → Verdict) (hsound : HaltPositive decide
   | cons x xs ih =>
       intro holdout
       cases hd : decide x with
-      | halt =>
-          have hpos : 1 ≤ x.holes := hsound x hd
+      | halt hpos =>
           have hrec := ih (expandProjection' x hpos ++ holdout)
           rw [mass_append] at hrec
           have hchild := expandProjection'_mass_lt x hpos
@@ -249,44 +239,42 @@ theorem bfsAux_mass_le (decide : Node → Verdict) (hsound : HaltPositive decide
           simp only [bfsAux, hd, mass]
           omega
 
-theorem bfsRound_total_mass_le (decide : Node → Verdict)
-    (hsound : HaltPositive decide) (q : SearchQueue) :
-    totalMass (bfsRound decide hsound q) ≤ totalMass q := by
+theorem bfsRound_total_mass_le (decide : (x : Node) → Verdict x)
+    (q : SearchQueue) :
+    totalMass (bfsRound decide q) ≤ totalMass q := by
   unfold totalMass bfsRound
   simp [mass]
-  exact bfsAux_mass_le decide hsound q.active q.holdout
+  exact bfsAux_mass_le decide q.active q.holdout
 
 /-- Four source BFS passes, matching the definition of `q_0`. -/
-def fourBfsPasses (decide : Node → Verdict) (hsound : HaltPositive decide)
-    (q : SearchQueue) : SearchQueue :=
-  bfsRound decide hsound (bfsRound decide hsound
-    (bfsRound decide hsound (bfsRound decide hsound q)))
+def fourBfsPasses (decide : (x : Node) → Verdict x) (q : SearchQueue) : SearchQueue :=
+  bfsRound decide (bfsRound decide (bfsRound decide (bfsRound decide q)))
 
-theorem fourBfsPasses_total_mass_le (decide : Node → Verdict)
-    (hsound : HaltPositive decide) (q : SearchQueue) :
-    totalMass (fourBfsPasses decide hsound q) ≤ totalMass q := by
+theorem fourBfsPasses_total_mass_le (decide : (x : Node) → Verdict x)
+    (q : SearchQueue) :
+    totalMass (fourBfsPasses decide q) ≤ totalMass q := by
   unfold fourBfsPasses
-  have h1 := bfsRound_total_mass_le decide hsound
-    (bfsRound decide hsound (bfsRound decide hsound (bfsRound decide hsound q)))
-  have h2 := bfsRound_total_mass_le decide hsound
-    (bfsRound decide hsound (bfsRound decide hsound q))
-  have h3 := bfsRound_total_mass_le decide hsound (bfsRound decide hsound q)
-  have h4 := bfsRound_total_mass_le decide hsound q
+  have h1 := bfsRound_total_mass_le decide
+    (bfsRound decide (bfsRound decide (bfsRound decide q)))
+  have h2 := bfsRound_total_mass_le decide
+    (bfsRound decide (bfsRound decide q))
+  have h3 := bfsRound_total_mass_le decide (bfsRound decide q)
+  have h4 := bfsRound_total_mass_le decide q
   exact Nat.le_trans h1 (Nat.le_trans h2 (Nat.le_trans h3 h4))
 
 def rootNode : Node := ⟨11, ⟨2, by decide⟩⟩
 
 def rootQueue : SearchQueue := ⟨[rootNode], []⟩
 
-def q0 (decide : Node → Verdict) (hsound : HaltPositive decide) : SearchQueue :=
-  fourBfsPasses decide hsound rootQueue
+def q0 (decide : (x : Node) → Verdict x) : SearchQueue :=
+  fourBfsPasses decide rootQueue
 
-theorem q0_total_mass_le (decide : Node → Verdict) (hsound : HaltPositive decide) :
-    totalMass (q0 decide hsound) ≤ 25 ^ 11 := by
+theorem q0_total_mass_le (decide : (x : Node) → Verdict x) :
+    totalMass (q0 decide) ≤ 25 ^ 11 := by
   have hroot : totalMass rootQueue = 25 ^ 11 := by
     simp [totalMass, rootQueue, rootNode, mass, weight]
   rw [← hroot]
-  exact fourBfsPasses_total_mass_le decide hsound rootQueue
+  exact fourBfsPasses_total_mass_le decide rootQueue
 
 def chunkQueue (q : SearchQueue) (l sz : Nat) : SearchQueue :=
   ⟨(q.active.drop l).take sz, q.holdout⟩
@@ -327,8 +315,8 @@ theorem chunk_active_mass_le (q : SearchQueue) (l sz : Nat) :
   have h := mass_chunk_le q.active l sz
   omega
 
-theorem q0_holdout_empty (decide : Node → Verdict) (hsound : HaltPositive decide) :
-    (q0 decide hsound).holdout = [] := by
+theorem q0_holdout_empty (decide : (x : Node) → Verdict x) :
+    (q0 decide).holdout = [] := by
   simp [q0, fourBfsPasses, bfsRound]
 
 def maxT : Nat := 2 ^ 60
@@ -337,14 +325,12 @@ theorem maxT_ge_25_pow_11 : 25 ^ 11 ≤ maxT := by
   decide
 
 /-- Every `q_i l sz` slice of the four-pass queue drains before the pinned
-`MAXT=2^60` fuel is exhausted, for every decider satisfying the source fact
-that a `Halt h` result requires at least one undefined transition. -/
-theorem every_chunk_drains (decide : Node → Verdict)
-    (hsound : HaltPositive decide) (l sz : Nat) :
-    (runUpdates decide hsound maxT (chunkQueue (q0 decide hsound) l sz)).active = [] := by
+`MAXT=2^60` fuel is exhausted, for any source-style decider. -/
+theorem every_chunk_drains (decide : (x : Node) → Verdict x) (l sz : Nat) :
+    (runUpdates decide maxT (chunkQueue (q0 decide) l sz)).active = [] := by
   apply runUpdates_active_empty_of_bound
-  have hchunk := chunk_active_mass_le (q0 decide hsound) l sz
-  have hq0 := q0_total_mass_le decide hsound
+  have hchunk := chunk_active_mass_le (q0 decide) l sz
+  have hq0 := q0_total_mass_le decide
   have hmax := maxT_ge_25_pow_11
   exact Nat.le_trans (Nat.le_trans hchunk hq0) hmax
 
