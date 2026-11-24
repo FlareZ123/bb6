@@ -10,6 +10,18 @@ on:
         description: Maximum DFA size (5-10)
         type: number
         default: 8
+      solver_line:
+        description: Optional 1-based roster line for SMT synthesis (0 disables)
+        type: number
+        default: 0
+      solver_max_dfa:
+        description: Maximum DFA size for SMT synthesis (6-10)
+        type: number
+        default: 7
+      solver_timeout_ms:
+        description: Z3 timeout per DFA size and orientation
+        type: number
+        default: 120000
 permissions:
   contents: read
 jobs:
@@ -23,14 +35,32 @@ jobs:
         shard: [0,1,2,3,4,5,6,7]
     steps:
       - uses: actions/checkout@v4
-      - name: Enumerate five-state DFAs and guided larger candidates
+      - name: Enumerate FAR candidates or solve one target by SMT
         run: |
           set -euo pipefail
           g++ -O3 -std=c++17 -Wall -Wextra -Werror im-results/agent7-far/roster_far.cpp -o /tmp/roster_far
           SAMPLES="${{ inputs.samples }}"
           MAX_DFA="${{ inputs.max_dfa }}"
+          SOLVER_LINE="${{ inputs.solver_line }}"
+          SOLVER_MAX_DFA="${{ inputs.solver_max_dfa }}"
+          SOLVER_TIMEOUT="${{ inputs.solver_timeout_ms }}"
           [[ "$SAMPLES" =~ ^[0-9]+$ ]] && [[ "$MAX_DFA" =~ ^[0-9]+$ ]]
-          /tmp/roster_far resources/BB6_holdouts_663_2026-10-16.txt ${{ matrix.shard }} 8 "$SAMPLES" "$MAX_DFA" | tee /tmp/hits.txt
+          [[ "$SOLVER_LINE" =~ ^[0-9]+$ ]] && [[ "$SOLVER_MAX_DFA" =~ ^[0-9]+$ ]] && [[ "$SOLVER_TIMEOUT" =~ ^[0-9]+$ ]]
+          : > /tmp/hits.txt
+          if [[ "$SOLVER_LINE" -gt 0 ]]; then
+            [[ "$SOLVER_MAX_DFA" -ge 6 && "$SOLVER_MAX_DFA" -le 10 && "$SOLVER_TIMEOUT" -gt 0 ]]
+            TARGET_SHARD=$(( (SOLVER_LINE - 1) % 8 ))
+            if [[ "${{ matrix.shard }}" -eq "$TARGET_SHARD" ]]; then
+              python3 -m pip install --user --quiet z3-solver
+              python3 im-results/agent7-far/far_smt.py resources/BB6_holdouts_663_2026-10-16.txt --line "$SOLVER_LINE" --max-dfa "$SOLVER_MAX_DFA" --timeout-ms "$SOLVER_TIMEOUT" > /tmp/far-smt.out 2> /tmp/far-smt.log
+              cat /tmp/far-smt.log
+              cat /tmp/far-smt.out | tee -a /tmp/hits.txt
+            else
+              echo "SMT target line $SOLVER_LINE belongs to shard $TARGET_SHARD; no target on this shard" >&2
+            fi
+          else
+            /tmp/roster_far resources/BB6_holdouts_663_2026-10-16.txt ${{ matrix.shard }} 8 "$SAMPLES" "$MAX_DFA" | tee -a /tmp/hits.txt
+          fi
       - name: Install Lean if there is a candidate
         run: |
           if [[ -s /tmp/hits.txt ]]; then
@@ -83,4 +113,6 @@ jobs:
             /tmp/hits.txt
             /tmp/a7-hard/Hits.lean
             /tmp/hit-proof.log
+            /tmp/far-smt.out
+            /tmp/far-smt.log
           if-no-files-found: warn
