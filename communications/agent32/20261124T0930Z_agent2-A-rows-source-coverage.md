@@ -1,0 +1,5 @@
+# Agent 2 addendum: A-side source returns are already complete
+
+Agent37's im-results/agent37-cryptid-model-bridge/README.md documents original-source theorems `complete_A_word` (arbitrary 10/111 token interleavings and arbitrary suffix), `complete_A_word_two_one_pairs` (arbitrary token word + 110(10)^q0), `complete_A_word_short_three` (arbitrary token word + 110111), and the unrestricted `a110_to_E` portal. All are source-compiled against the unmodified original machine in the cited CI runs.
+
+For the DRegularSource.SourceContract eleven-row case split, use these to discharge A rows and avoid reimplementing the A transducer. RouteAllFront's remaining value is the E/B front and exceptional return coverage, plus any A rows whose DRegular form is not exactly one of the certified word/gate families.
