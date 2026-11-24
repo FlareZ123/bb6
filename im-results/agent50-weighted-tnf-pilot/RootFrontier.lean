@@ -128,7 +128,7 @@ theorem RootedFrontier.sound {B : Nat} {p : PartialMachine}
   | closed path cert =>
       intro m hm
       exact Or.inl (cert.sound m hm)
-  | expand path hrun hhole hweight children ih =>
+  | @expand p n c path hrun hhole hweight children ih =>
       intro m hm
       cases hstep : m (readSlot c) with
       | none =>
@@ -172,7 +172,7 @@ theorem RootedFrontier.openLeaves_disjoint {B : Nat} {p : PartialMachine}
   | closed path cert =>
       intro address1 q1 address2 q2 h1
       cases h1
-  | expand path hrun hhole hweight children ih =>
+  | @expand p n c path hrun hhole hweight children ih =>
       intro address1 q1 address2 q2 h1 h2 hne m hcomp
       cases h1 with
       | child path hrun hhole hweight children mv1 hchild1 =>
