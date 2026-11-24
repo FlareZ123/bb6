@@ -592,6 +592,10 @@ theorem positive_history_final_run_exact
   have hqzhi : Q k z≤2*P k+k+2 := (q_bounds hbz).2
   rcases hbase with ⟨hk,hseed⟩ | ⟨s',y,hy,hr⟩
   · have hbzJ : Band j z := by simpa [hk] using hbz
+    have hqSeed := q_eq hbzJ
+    have hqSeedI : (Q j z:Int)+2*(P j:Int)
+        =2*(z:Int)+3*(j:Int)+12 := by
+      exact_mod_cast hqSeed
     have hWQ : W j z+2*(Q j z:Int)=4*(P j:Int)-3 := by
       unfold W
       omega
