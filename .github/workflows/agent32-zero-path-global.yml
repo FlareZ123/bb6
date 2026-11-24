@@ -239,6 +239,8 @@ jobs:
               "agent48P4ZeroRD_D0ZeroLB_cover",
               "agent48P4ZeroRD_D0ZeroLE_cover",
               "agent48P4ZeroRD_D0Halt_cover",
+              "agent48P4ZeroRD_D0ZeroLD_cover",
+              "agent48P4ZeroRD_D0ZeroRE_cover",
               "agent48P4DeeperAudit_report",
               "agent48P4DeeperAudit_mass_conservation",
               "agent48P4ZeroRDDeeperAudit_report",

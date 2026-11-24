@@ -1,6 +1,6 @@
 # P4 exact child grafts: finite lasso, translated-cycle, and fresh-ray certificates
 
-**Status:** 26 new disjoint source-cylinder certificates are drafted for the P4 depth-four parent. The Lean modules and exact report theorems are **not yet accepted**. Local preflight is unavailable in this invocation. The first three targeted CI runs did not accept a P4 module: runs 45354239582 and 45354469278 stopped in unrelated optional WordLasso code; run 45354692563 reached the P4 step and exposed invalid namespace-qualified module imports. Those imports are corrected here, and the source draft now includes five additional simple D/0 cylinders. A new targeted run is required. Keep this work in `im-results/`.
+**Status:** 28 new disjoint source-cylinder certificates are drafted for the P4 depth-four parent. The Lean modules and exact report theorems are **not yet accepted**. Local preflight is unavailable in this invocation. The first three targeted CI runs did not accept a P4 module: runs 45354239582 and 45354469278 stopped in unrelated optional WordLasso code; run 45354692563 reached the P4 step and exposed invalid namespace-qualified module imports. Those imports are corrected here, and the source draft now includes five additional simple D/0 cylinders. A new targeted run is required. Keep this work in `im-results/`.
 
 ## Authenticated parent and blank entry
 
@@ -95,10 +95,10 @@ Adding the ten E/0=0LC / D/0 children gives:
 - decided: 40,570,882,568,359,375
 - open: 19,033,762,207,031,250
 
-Adding the nine E/0=0RD / D/0 children gives the final drafted P4-specific report pair:
+Adding the eleven E/0=0RD / D/0 children gives the final drafted P4-specific report pair:
 
-- decided: 40,570,884,765,625,000
-- open: 19,033,760,009,765,625
+- decided: 40,570,885,253,906,250
+- open: 19,033,759,521,484,375
 
 The added decided mass beyond `agent27GraftedAudit` is exactly
 [
@@ -111,14 +111,14 @@ and the final report still sums to (25^{12}=59,604,644,775,390,625). Including t
 - `P4ZeroLDCycle.lean`: finite lasso and `agent48P4ZeroLD_cover`.
 - `P4EightChildGraft.lean`: seven new E/0 children and the existing 1LC graft.
 - `P4DeeperFreshRay.lean`: ten D/0 children under E/0=0LC, including a left-ray and a halt child.
-- `P4ZeroRDDeeperGraft.lean`: nine D/0 children under E/0=0RD, including translated, exact-lasso, and halt children.
+- `P4ZeroRDDeeperGraft.lean`: eleven D/0 children under E/0=0RD, including translated, exact-lasso, and halt children.
 - `P4DeeperFreshRayReport.lean` and `P4ZeroRDDeeperGraftReport.lean`: exact report-pair and mass-conservation theorems.
 
-Agent 6's 2026-11-24 static review covered the original 21-child draft's macro lengths, translations, fresh-tail conditions, and count arithmetic. The five new D/0 children were derived in this invocation and still await Lean checking. Static review is not a Lean compile or a formal acceptance claim.
+Agent 6's 2026-11-24 static review covered the original 21-child draft's macro lengths, translations, fresh-tail conditions, and count arithmetic. The seven new D/0 children (left-ray, translated-cycle, fresh-ray, and halting cases) were derived in this invocation and still await Lean checking. Static review is not a Lean compile or a formal acceptance claim.
 
 The local preflight was attempted with the supplied Lean 4.36.0-rc2 split archive using the requested reconstruction/unzip/version command. `container.exec` returned a tool-level `CAAS ClientError` before any shell output; `python.exec` likewise returned `ClientError`. No archive size, ZIP integrity, local Lean version, or source compilation was obtained in this invocation. This is an execution-environment blocker, not evidence that the archive is corrupt.
 
-The focused `verify_p4_frontier_graft` input is part of the existing `.github/workflows/agent32-zero-path-global.yml`. Run 45354692563 compiled the shared dependencies and then failed at `P4ZeroLDCycle.lean:1` with `unknown module prefix 'BB6Coverage'`: Lean module imports must use flat file-module names, not the declaration namespace. The six P4 source imports now use their actual module paths. The next targeted run compiles the full dependency closure, all 30 cover/report axiom profiles, and rejects `sorryAx` or `native_decide`.
+The focused `verify_p4_frontier_graft` input is part of the existing `.github/workflows/agent32-zero-path-global.yml`. Run 45354692563 compiled the shared dependencies and then failed at `P4ZeroLDCycle.lean:1` with `unknown module prefix 'BB6Coverage'`: Lean module imports must use flat file-module names, not the declaration namespace. The six P4 source imports now use their actual module paths. The next targeted run compiles the full dependency closure, all 32 cover/report axiom profiles, and rejects `sorryAx` or `native_decide`.
 
 After source acceptance, Agent32 still needs to graft these certificates into `ResidualFrontierManifest.lean`; this P4-specific audit is not yet the global report. The global manifest remains unchanged.
 
