@@ -349,19 +349,19 @@ theorem sourceElemBB_exact (L R : List SymTok) :
         · simp only [costElemBB, stepElemBB, strictList_eq,
             SymRunEngine.strictNat_eq, evalSym, evalM, encSymL, encSymR,
             encSymR_bumpSymR]
-   exact rules.step_BB_run0_exact (encSymL L1) (encSymR R)
+          exact rules.step_BB_run0_exact (encSymL L1) (encSymR R)
         · simp only [costElemBB, stepElemBB, strictList_eq, SymRunEngine.strictNat_eq,
             evalSym, evalM, encSymL, encSymR, encSymR_bumpSymR]
-   exact rules.step_BB_run1_exact (encSymL L1) (encSymR R)
+          exact rules.step_BB_run1_exact (encSymL L1) (encSymR R)
         · simp only [costElemBB, stepElemBB, strictList_eq, SymRunEngine.strictNat_eq,
             evalSym, evalM, encSymL, encSymR, encSymR_bumpSymR]
-   exact rules.step_BB_run2_exact (encSymL L1) (encSymR R)
+          exact rules.step_BB_run2_exact (encSymL L1) (encSymR R)
         · simp only [costElemBB, stepElemBB, strictList_eq, SymRunEngine.strictNat_eq,
             evalSym, evalM, encSymL, encSymR, encSymR_bumpSymR]
-   exact rules.step_BB_run3_exact (encSymL L1) (encSymR R)
+          exact rules.step_BB_run3_exact (encSymL L1) (encSymR R)
         · simp only [costElemBB, stepElemBB, strictList_eq, SymRunEngine.strictNat_eq,
             evalSym, evalM, encSymL, encSymR, encSymR_bumpSymR]
-   exact rules.step_BB_run_ge4_exact d (encSymL L1) (encSymR R)
+          exact rules.step_BB_run_ge4_exact d (encSymL L1) (encSymR R)
     | repB1 _ => rfl
     | rep2 _ => rfl
     | rep12 _ => rfl
@@ -430,10 +430,10 @@ theorem sourceElemDL_exact (L R : List SymTok) :
         rcases d with _ | _ | _ | d
         · simp only [costElemDL, stepElemDL, strictList_eq,
             evalSym, evalM, encSymL, encSymR_bumpSymR]
-   exact rules.step_DL_run0_exact (encSymL L1) (encSymR R)
+          exact rules.step_DL_run0_exact (encSymL L1) (encSymR R)
         · simp only [costElemDL, stepElemDL, strictList_eq,
             evalSym, evalM, encSymL, encSymR, encSymR_bumpSymR]
-   exact rules.step_DL_run1_exact (encSymL L1) (encSymR R)
+          exact rules.step_DL_run1_exact (encSymL L1) (encSymR R)
         · cases R with
           | nil => rfl
           | cons rt R1 =>
@@ -491,11 +491,11 @@ theorem sourceElemCBRun0_exact (L R1 : List SymTok) :
         · simp only [costElemCBRun0, stepElemCB_run0, strictList_eq,
             evalSym, evalM, encSymL, encSymR, encSymL_bumpSymL,
             encSymL_prependZeroSym]
-   exact rules.step_CB_run0_run0_exact (encSymL L) (encSymR R2)
+          exact rules.step_CB_run0_run0_exact (encSymL L) (encSymR R2)
         · simp only [costElemCBRun0, stepElemCB_run0,
             strictList_eq, evalSym, evalM, encSymL, encSymR,
             encSymL_bumpSymL, encSymL_prependZeroSym]
-   exact rules.step_CB_run0_run_pos_exact d (encSymL L) (encSymR R2)
+          exact rules.step_CB_run0_run_pos_exact d (encSymL L) (encSymR R2)
     | repB1 _ => rfl
     | rep2 _ => rfl
     | rep12 _ => rfl
@@ -522,13 +522,13 @@ theorem sourceElemCB_exact (L R : List SymTok) :
         · simpa only [costElemCB, stepElemCB] using rules.sourceElemCBRun0_exact L R1
         · simp only [costElemCB, stepElemCB, strictList_eq, evalSym, evalM,
             encSymL, encSymR, encSymL_bumpSymL]
-   exact rules.step_CB_run1_exact (encSymL L) (encSymR R1)
+          exact rules.step_CB_run1_exact (encSymL L) (encSymR R1)
         · simp only [costElemCB, stepElemCB, strictList_eq, evalSym, evalM,
             encSymL, encSymR, encSymL_bumpSymL]
-   exact rules.step_CB_run2_exact (encSymL L) (encSymR R1)
+          exact rules.step_CB_run2_exact (encSymL L) (encSymR R1)
         · simp only [costElemCB, stepElemCB, strictList_eq, SymRunEngine.strictNat_eq,
             evalSym, evalM, encSymL, encSymR, encSymL_bumpSymL]
-   exact rules.step_CB_run_ge3_exact d (encSymL L) (encSymR R1)
+          exact rules.step_CB_run_ge3_exact d (encSymL L) (encSymR R1)
     | repB1 _ => rfl
     | rep2 _ => rfl
     | rep12 _ => rfl
