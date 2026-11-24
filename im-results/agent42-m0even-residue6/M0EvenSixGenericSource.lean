@@ -1,6 +1,7 @@
 import M0EvenSixQ4Prefix
 import M0EvenSixHeadBound
 import S1CountedDrain
+import Q4RightEndpoint
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -26,6 +27,7 @@ open BB6Coverage.Agent42M0EvenSixQ4Prefix
 open BB6Coverage.Agent42M0EvenSixHeadBound
 open BB6Coverage.Agent48CountedInc0
 open BB6ChampionArithmetic
+open BB6Coverage.Agent24Q4Endpoint
 
 set_option maxHeartbeats 4000000
 
@@ -72,17 +74,17 @@ private theorem m0EvenSix_binDec_source
     binDec L (8*q+6) =
       d1 ++ d0 ++ d0 ++ binDec (L-3) q := by
   have hpow3 : 2^L = 8 * 2^(L-3) := by
-    rw [show L = (L-3)+3 by omega, Nat.pow_add]
-    norm_num
-    ring
+    calc
+      2^(L) = 2^((L-3)+3) := congrArg (fun x => 2^x) (by omega)
+      _ = _ := by rw [Nat.pow_add]; omega
   have hpow2 : 2^(L-1) = 4 * 2^(L-3) := by
-    rw [show L-1 = (L-3)+2 by omega, Nat.pow_add]
-    norm_num
-    ring
+    calc
+      2^(L-1) = 2^((L-3)+2) := congrArg (fun x => 2^x) (by omega)
+      _ = _ := by rw [Nat.pow_add]; omega
   have hpow1 : 2^(L-2) = 2 * 2^(L-3) := by
-    rw [show L-2 = (L-3)+1 by omega, Nat.pow_add]
-    norm_num
-    ring
+    calc
+      2^(L-2) = 2^((L-3)+1) := congrArg (fun x => 2^x) (by omega)
+      _ = _ := by rw [Nat.pow_add]; omega
   have hq : q < 2^(L-3) := by
     rw [hpow3] at hbound
     omega
@@ -115,17 +117,17 @@ private theorem m0EvenSix_binDec_target
     binDec L (8*q+5) =
       d0 ++ d1 ++ d0 ++ binDec (L-3) q := by
   have hpow3 : 2^L = 8 * 2^(L-3) := by
-    rw [show L = (L-3)+3 by omega, Nat.pow_add]
-    norm_num
-    ring
+    calc
+      2^(L) = 2^((L-3)+3) := congrArg (fun x => 2^x) (by omega)
+      _ = _ := by rw [Nat.pow_add]; omega
   have hpow2 : 2^(L-1) = 4 * 2^(L-3) := by
-    rw [show L-1 = (L-3)+2 by omega, Nat.pow_add]
-    norm_num
-    ring
+    calc
+      2^(L-1) = 2^((L-3)+2) := congrArg (fun x => 2^x) (by omega)
+      _ = _ := by rw [Nat.pow_add]; omega
   have hpow1 : 2^(L-2) = 2 * 2^(L-3) := by
-    rw [show L-2 = (L-3)+1 by omega, Nat.pow_add]
-    norm_num
-    ring
+    calc
+      2^(L-2) = 2^((L-3)+1) := congrArg (fun x => 2^x) (by omega)
+      _ = _ := by rw [Nat.pow_add]; omega
   have hq : q < 2^(L-3) := by
     rw [hpow3] at hbound
     omega
@@ -179,7 +181,6 @@ private theorem m0EvenSix_baseCutLeftFacing (a : Nat) :
 private theorem m0EvenSixGeneric_inputPrefix_length (a : Nat) :
     (m0EvenSixGenericInputPrefix a).length = 3*a+11 := by
   simp [m0EvenSixGenericInputPrefix,d1pow_length,markerWord,d0,d1]
-  omega
 
 private theorem m0EvenSixGeneric_targetPrefix_length (a : Nat)
     (ha : 0<a) :
@@ -222,6 +223,7 @@ private theorem m0EvenSixGeneric_input_matches
     have hbaseBit := Agent6Q4Prefix.sideBit_append_left
       (m0EvenSixGenericInputPrefix a)
       (d0 ++ lh) i hiPrefix
+    change _ = sideBit (m0EvenSixGenericInputPrefix a ++ m0EvenSixGenericCommonTail L q) i at hsrc
     rw [hsrcBit] at hsrc
     rw [hbaseBit] at hbase
     exact hsrc.trans hbase.symm
@@ -243,7 +245,7 @@ theorem m0EvenSix_generic_q4_prefix_source
     run tm2 (36+12*a)
       (s1Config L (8*q+6) 0 a 0 b h) =
       some ⟨4,h,m0EvenSixGenericCutTape L q a b h⟩ := by
-  let base : Config := ⟨3,h,(s1Config 3 6 0 a 0 b h).tape⟩
+  let base : Config := s1Config 3 6 0 a 0 b h
   let background := (s1Config L (8*q+6) 0 a 0 b h).tape
   have hinput := m0EvenSixGeneric_input_matches L q a b h hL hbound
   have hstart :
@@ -273,10 +275,16 @@ theorem m0EvenSix_generic_q4_prefix_source
   have hbaseRun :
       run tm2 (36+12*a) base =
         some (⟨4,h,m0EvenSixQ4CutTape a b h⟩ : Config) := by
-    simpa [base] using m0EvenSix_q4_prefix_run a b h ha
+    have heq : base = ⟨3,h,(s1Config 3 6 0 a 0 b h).tape⟩ := by
+      apply config_ext_by_fields <;> simp [base]
+    rw [heq]
+    exact m0EvenSix_q4_prefix_run a b h ha
   rw [hbaseRun] at hlift
   simp only [Option.map_some] at hlift
-  simpa [m0EvenSixGenericCutTape,background] using hlift
+  have heq : frame (m0EvenSixGenericInside a h) background (⟨4,h,m0EvenSixQ4CutTape a b h⟩ : Config) = ⟨4,h,m0EvenSixGenericCutTape L q a b h⟩ := by
+    apply config_ext_by_fields <;> rfl
+  rw [heq] at hlift
+  exact hlift
 
 private theorem m0EvenSixGeneric_cut_eq_base_inside
     (L q a b : Nat) (h x : Int)
@@ -347,9 +355,9 @@ theorem m0EvenSix_generic_q4_prefix_leftFacing
 private theorem m0EvenSixGeneric_q4RightShape_congr
     (T U : Int → Bool) (h : Int) (b : Nat)
     (heq : ∀ x, h ≤ x → T x = U x)
-    (hT : q4RightShape T h b) :
-    q4RightShape U h b := by
-  unfold q4RightShape at *
+    (hT : Agent8Q4Suffix.q4RightShape T h b) :
+    Agent8Q4Suffix.q4RightShape U h b := by
+  unfold Agent8Q4Suffix.q4RightShape at *
   rcases hT with ⟨h0,h5,h6,h79,hzero⟩
   refine ⟨?_,?_,?_,?_,?_⟩
   · intro i hi
@@ -368,7 +376,7 @@ private theorem m0EvenSixGeneric_q4RightShape_congr
 
 private theorem m0EvenSixGeneric_q4_rightShape
     (L q a b : Nat) (h : Int) (ha : 0<a) :
-    q4RightShape (m0EvenSixGenericCutTape L q a b h) h b := by
+    Agent8Q4Suffix.q4RightShape (m0EvenSixGenericCutTape L q a b h) h b := by
   apply m0EvenSixGeneric_q4RightShape_congr
     (m0EvenSixQ4CutTape a b h)
     (m0EvenSixGenericCutTape L q a b h) h b
