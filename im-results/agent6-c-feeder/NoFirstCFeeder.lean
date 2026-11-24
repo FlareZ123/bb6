@@ -17,17 +17,17 @@ theorem no_incoming_zero_zero_large (s : Nat × Nat × Nat) (c : Nat)
   rcases s with ⟨a,k,d⟩
   rcases d with _ | _ | _ | _ | d
   · rcases a with _ | _ | a
-    · simp [next]
-    · rcases k with _ | k <;> simp [next]
-    · simp [next]
-  · simp [next]
-  · simp [next]
-  · simp [next]
+    · simp [next, BB6CLine.nextC]
+    · rcases k with _ | k <;> simp [next, BB6CLine.nextC]
+    · simp [next, BB6CLine.nextC]
+  · simp [next, BB6CLine.nextC]
+  · simp [next, BB6CLine.nextC]
+  · simp [next, BB6CLine.nextC]
   · rcases a with _ | a
     · by_cases hk : k%2=0
-      · simp [next,hk]
-      · simp [next,hk]
-    · simp [next]
+      · simp [next, BB6CLine.nextC, hk]
+      · simp [next, BB6CLine.nextC, hk]
+    · simp [next, BB6CLine.nextC]
 
 /-- Exclude j=0 in the published sparse feeder family. -/
 theorem blank_ne_feeder_zero (n : Nat) :
