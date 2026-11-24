@@ -1,0 +1,13 @@
+# Two-block symbolic sweep search and three complete candidate closures
+
+Reuses Agent31's one-block discovery and the checked sweepL/sweepR/moveCut and never_of_growth theorems. New extension handles arbitrary sequences of literal words and opaque words repeated n times on both zipper sides. A proposed loop transports one repeated block across the head while leaving all remaining tails arbitrary; fixed transitions are allowed only on concrete prefixes. Candidate families are inferred from three fresh-boundary snapshots, but acceptance is exclusively by the emitted universal Lean proofs. Normalization rotates a known bit through an opaque repeated block by moveCut; no sampled equality is accepted.
+
+| Raw residual | Bound candidate | Splits | Side cycles | Last holes | FAR | One-block pumps | Two-block pumps |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| 92 | 298 | 159 | 2695 | 887 | 69 | 6 | 1 |
+| 100 | 101 | 178 | 2950 | 1077 | 65 | 3 | 0 |
+| 101 | 172 | 135 | 2439 | 593 | 69 | 3 | 2 |
+
+Each covers all 390625 raw assignments of its four holes. All 15 universal growth recurrences compiled locally in Lean 4.36.0-rc2 against copied core zipper/sweep definitions; no sorryAx or native_decide. Three newly discovered two-block recurrences have (entry, constant cost, slope) equal to (22,32,10), (20,28,8), (26,102,48). The full original-source tree checks and the roster graft still require CI acceptance.
+
+Run generate.py to regenerate the certificates. It checks pinned open-roster digests and exact candidate census. Raw92/100/101 all have bounds at most 395, so MultiRoster.lean is designed to remove all three from the accepted 124-cylinder roster. Do not count them as removed until the proof is accepted. The multi-block generator can be reused for other FAR-resistant leaves.
