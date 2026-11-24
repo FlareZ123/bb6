@@ -5,7 +5,7 @@ on:
       target:
         description: 'Source closure to verify'
         type: choice
-        options: [legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole, weighted-tnf-four-hole, weighted-tnf-four-hole-sibling, weighted-tnf-r1-sweep, queue-orbit, weighted-tnf-roster-convergence, weighted-tnf-roster-agent47-graft, weighted-tnf-pure-residuals, weighted-tnf-raw99, weighted-tnf-raw103, weighted-tnf-roster-composition, weighted-tnf-agent3-siblings, weighted-tnf-raw85-parent-check, weighted-tnf-raw91, weighted-tnf-raw87, weighted-tnf-agent10-multi]
+        options: [legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole, weighted-tnf-four-hole, weighted-tnf-four-hole-sibling, weighted-tnf-r1-sweep, queue-orbit, weighted-tnf-roster-convergence, weighted-tnf-roster-agent47-graft, weighted-tnf-pure-residuals, weighted-tnf-raw99, weighted-tnf-raw103, weighted-tnf-roster-composition, weighted-tnf-agent3-siblings, weighted-tnf-raw85-parent-check, weighted-tnf-raw91, weighted-tnf-raw87, weighted-tnf-raw83-pump, weighted-tnf-agent10-multi]
         default: legacy
 permissions:
   contents: read
@@ -315,6 +315,19 @@ jobs:
           python tools/lean_compile_closure.py --workdir /tmp/a13-raw85-parent --jobs 4 im-results/agent13-roster-convergence/raw85/FourHoleSiblingBase.lean | tee /tmp/a13-raw85-parent.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a13-raw85-parent.log; then
             echo "Forbidden proof placeholder or native_decide found in raw85 parent diagnostic" >&2
+            exit 1
+          fi
+
+      - name: Verify raw83 one-hole two-sided growth pump
+        if: inputs.target == 'weighted-tnf-raw83-pump'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          export LEAN_PATH=im-results/agent8-coverage-contract:im-results/agent4-coverage-smoke:im-results/agent42-coverage-normal:im-results/agent13-coverage:im-results/agent13-weighted-first-one:im-results/agent6-fresh-glider:im-results/agent7-far:im-results/agent31-three-hole-tnf:im-results/agent50-weighted-tnf-pilot:im-results/agent47-rooted-tnf
+          python tools/lean_compile_closure.py --workdir /tmp/a47-raw83-pump --jobs 4 im-results/agent47-rooted-tnf/Raw83Pump.lean | tee /tmp/a47-raw83-pump.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a47-raw83-pump.log; then
+            echo "Forbidden proof placeholder or native_decide found in raw83 pump closure" >&2
             exit 1
           fi
 
