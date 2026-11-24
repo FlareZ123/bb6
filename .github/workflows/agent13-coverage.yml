@@ -76,7 +76,7 @@ jobs:
         run: |
           set -euo pipefail
           export LEAN_PATH=im-results/agent8-coverage-contract:im-results/agent4-coverage-smoke:im-results/agent42-coverage-normal:im-results/agent13-coverage:im-results/agent13-weighted-first-one:im-results/agent6-fresh-glider:im-results/agent7-far
-          python tools/lean_compile_closure.py --workdir /tmp/a7-canonical-tnf --jobs 8 im-results/agent7-far/CanonicalTNFBridge.lean | tee /tmp/a7-canonical-tnf.log
+          python tools/lean_compile_closure.py --workdir /tmp/a7-canonical-tnf --jobs 8 im-results/agent7-far/CanonicalTNFBridge.lean im-results/agent7-far/CanonicalTNFExample.lean | tee /tmp/a7-canonical-tnf.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a7-canonical-tnf.log; then
             echo "Forbidden proof placeholder or native_decide found in canonical-TNF closure" >&2
             exit 1
