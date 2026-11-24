@@ -1,4 +1,4 @@
-import DAllBlankSource
+import DAllBlankHalting
 import RegularBands
 import DRegularSourceShift
 import Lean.Elab.Tactic.Omega
@@ -153,6 +153,46 @@ theorem root_D1_to_anchor :
   rw [CryptidBoundary.run_add, root_D1_to_seed39]
   exact seed3_to_anchor3
 
+/-- Observational equality preserves the complete frozen-state
+halting predicate at every future time. -/
+theorem source_halts_iff_obsEq {c d : CryptidBoundary.Cfg}
+    (h : ObsEq c d) : SourceHalts c ↔ SourceHalts d := by
+  constructor
+  · rintro ⟨n, hn⟩
+    refine ⟨n, ?_⟩
+    have hs := (source_congr n h).2.2.2
+    simpa [hs] using hn
+  · rintro ⟨n, hn⟩
+    refine ⟨n, ?_⟩
+    have hs := (source_congr n h).2.2.2
+    simpa [hs] using hn
+
+/-- Each of the four authentic source-table blank starts has exactly the
+same all-time halting status as its large DRegular anchor section. -/
+theorem source_D3_halts_iff_anchor :
+    SourceHalts (sourceBlank (3 : Fin 6)) ↔
+      SourceHalts (DRegularSource.sourceSection (anchor 0)) :=
+  (halts_after_exact_prefix 15 _ _ root_D3_to_seed5).trans
+    (source_halts_iff_obsEq seed0_to_anchor0)
+
+theorem source_D0_halts_iff_anchor :
+    SourceHalts (sourceBlank (0 : Fin 6)) ↔
+      SourceHalts (DRegularSource.sourceSection (anchor 1)) :=
+  (halts_after_exact_prefix 36 _ _ root_D0_to_seed9).trans
+    (source_halts_iff_obsEq seed1_to_anchor1)
+
+theorem source_D2_halts_iff_anchor :
+    SourceHalts (sourceBlank (2 : Fin 6)) ↔
+      SourceHalts (DRegularSource.sourceSection (anchor 2)) :=
+  (halts_after_exact_prefix 92 _ _ root_D2_to_seed15).trans
+    (source_halts_iff_obsEq seed2_to_anchor2)
+
+theorem source_D1_halts_iff_anchor :
+    SourceHalts (sourceBlank (5 : Fin 6)) ↔
+      SourceHalts (DRegularSource.sourceSection (anchor 3)) :=
+  (halts_after_exact_prefix 403 _ _ root_D1_to_seed39).trans
+    (source_halts_iff_obsEq seed3_to_anchor3)
+
 /-- The four original-source endpoints have exactly the arithmetic measures
 used by the widened phase-band separation theorem. -/
 theorem anchor_measures :
@@ -171,5 +211,10 @@ theorem anchor_measures :
 #print axioms root_D2_to_anchor
 #print axioms root_D1_to_anchor
 #print axioms anchor_measures
+#print axioms source_halts_iff_obsEq
+#print axioms source_D3_halts_iff_anchor
+#print axioms source_D0_halts_iff_anchor
+#print axioms source_D2_halts_iff_anchor
+#print axioms source_D1_halts_iff_anchor
 
 end BB6.Agent36
