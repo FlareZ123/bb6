@@ -15,7 +15,7 @@ theorem original_four_step_cube_gain (d e f g h : Nat)
     (hef : highLevelNext (.N e)=some (.N f))
     (hfg : highLevelNext (.N f)=some (.N g))
     (hgh : highLevelNext (.N g)=some (.N h)) :
-    (d+2)^2≤64*(Nat.log2 (d+2)+1)*((h+2)-(d+2))^3 := by
+    (d+2)^2≤16*(Nat.log2 (d+2)+1)*((h+2)-(d+2))^3 := by
   exact NeedleFourStep.four_step_bitlength_gain
     (original_edge d e hde) (original_edge e f hef)
     (original_edge f g hfg) (original_edge g h hgh)
