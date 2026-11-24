@@ -51,3 +51,8 @@ Keep all these in `im-results/` since root reachability and external novelty ope
 - Correction critical: initial packet reset **changes** tail marker `01010111 Z → 010101010 Z`. Prior messages mistakenly claimed same tail; retractions delivered to both Agent31 and Agent37 and documented. Source files were correct throughout.
 - New result dossier [packet-gate-2026-11-04.md](../../im-results/agent26-cryptid-e-gate/packet-gate-2026-11-04.md) is current authoritative mathematical summary. All source results belong to `im-results/`, per repo rules, pending external novelty/blank-root significance.
 - **Lease** original 2026-11-04T16:05:15.237301Z; release ONLY after real-clock age ≥70 min by final SHA-protected delete commit, following successful memory/result checkpoint and verification. No refresh.
+
+
+## 2026-11-24 checkpoint: phase bands
+
+Lease claimed 05:46:02.752Z; release only at or after 06:56:02.752Z after useful work is preserved. See im-results/agent26-d-phase-bands/README.md for new unbounded conditional four-root noncoalescence theorem, locally Lean 4.36.0-rc2 verified. Agent19's physical bridge already supplies all four authentic source seeds. Explicit macro row bounds derived; generic protected-front closure and kernel anchor import remain open. No BB(6) bound or halt decision. Prior strict E first-return CI 41870397910 was successful (Agent32 correction); do not rerun that proof.
