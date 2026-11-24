@@ -56,7 +56,7 @@ theorem high_stop_excluded8 (j m k : Nat) (hj : 2 ≤ j) (hm : 3 ≤ m)
     itself in Bad; the inverse cone nevertheless excludes CReach (43,5854). -/
 theorem high_stop_example_21_3 : ¬ BB6.Agent3.CReach 43 5854 := by
   have hc : highStopExcluded8 21 3 = true := by decide
-  have hs : 5854+21+3*3+4 = 2^(2*3+2)*(21+2) := by norm_num
+  have hs : 5854+21+3*3+4 = 2^(2*3+2)*(21+2) := by decide
   exact high_stop_excluded8 21 3 5854 (by omega) (by omega) hs hc
 
 #print axioms high_stop_excluded
