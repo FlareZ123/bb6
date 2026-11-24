@@ -268,7 +268,7 @@ theorem noFullPrefix_of_emptyCarry (Q K : Nat)
   have hpath : FullCarryPath Q 0 xs 1
       (fullSumBits Q 0 xs/2^K+1) :=
     fullCarryPath_of_sum Q xs 0 1 _ hsum'
-  have hmem := hpath.mem_fullCarryStates
+  have hmem := FullCarryPath.mem_fullCarryStates hpath
   rw [hlen, hempty] at hmem
   simp at hmem
 
@@ -301,23 +301,26 @@ theorem source_full_prefix (n b d m z K : Nat) (hn : 14≤n)
     omega
   have hEq : 1+7*2^n*costPowSum A =
       2^m*v+costWeightedSum n A := by
+    have hprod :
+        2*(7*2^n*costPowSum A)=14*2^n*costPowSum A := by
+      calc
+        2*(7*2^n*costPowSum A) =
+            (2*7)*2^n*costPowSum A := by ac_rfl
+        _ = 14*2^n*costPowSum A := by simp
     have hDouble :
         2*(1+7*2^n*costPowSum A) =
           2*(2^m*v+costWeightedSum n A) := by
       calc
         2*(1+7*2^n*costPowSum A) =
-            2+14*2^n*costPowSum A := by
+            2+2*(7*2^n*costPowSum A) := by
               rw [Nat.mul_add]
-              simp [Nat.mul_assoc, Nat.mul_comm, Nat.mul_left_comm]
+              simp
+        _ = 2+14*2^n*costPowSum A := by rw [hprod]
         _ = 2^m*(d-1)+2*costWeightedSum n A := hInv
         _ = 2*(2^m*v+costWeightedSum n A) := by
               rw [hD, Nat.mul_add]
-              calc
-                2^m*(2*v)+2*costWeightedSum n A =
-                    2*(2^m*v)+2*costWeightedSum n A := by ac_rfl
-                _ = 2*(2^m*v+costWeightedSum n A) := by
-                      rw [Nat.mul_add]
-    omega
+              ac_rfl
+    exact Nat.eq_of_mul_eq_mul_left (by decide : 0<2) hDouble
   have hA : ∀ s∈A, s≤Q := by
     intro s hs
     have hslt := hlt s hs
