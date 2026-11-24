@@ -1,5 +1,6 @@
 import CanonicalSearch
 import TranslatedFiniteOracle
+import FastFAR
 namespace BB6Coverage.Canonical
 
 /-- Produce the actual observed trace once; every proposed terminal
@@ -66,8 +67,8 @@ def fastLeaf (p : PartialMachine) (bound rayLimit lassoLimit entryLimit macroLim
       | none =>
         if h : finiteEntryMacroBiOracle p entryLimit macroLimit=true then
           some ⟨finiteEntryMacroBiOracle_sound p entryLimit macroLimit bound h⟩
-        else if h : FAR.oracle p farLimit=true then
-          some ⟨.leaf p (fun m hm => Or.inl (FAR.oracle_sound p farLimit h m hm))⟩
+        else if h : FAR.fastOracle p farLimit=true then
+          some ⟨.leaf p (fun m hm => Or.inl (FAR.fastOracle_sound p farLimit h m hm))⟩
         else none
 
 /-- Split first when an actual unknown row is reached. In that case there
