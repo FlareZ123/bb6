@@ -56,3 +56,17 @@ This follows because a normal left carry costs 10v2(x+1)+10 and the right increm
 - `lean F418Arithmetic.lean` with Lean 4.36.0-rc2 checked the arithmetic theorem file locally, no sorryAx. The original source word rules and seed are prior local checks; this invocation could not directly clone the source (DNS failure), and no new full source-import composition was compiled. The formal follow-through should build the blank-padded register encoder and compose arbitrary-length counted increments with those exact word lemmas.
 - `python f418.py --events 10000` passed the raw 670-step seed and 3603 seeded synthetic event/cost comparisons, then replayed 10,000 arithmetic events without a terminal query (d=2, a=1, N width 34499, n width 34500, successful-step-count bitlength 34504). This is bounded computation, not all-time safety.
 - A separate exploratory run of 100,000 collapsed normal returns remained in the regular case; width reached 860094 and the largest p observed was 116. No probability assumption can turn this into an all-time proof. The useful next problem is the regular-language exclusion under the collapsed map, not repeated longer finite replay. Source-level completion and an actual all-time decision are still needed before global frontier grafting.
+
+## Kernel-checked arithmetic orbit and terminal-language equivalence
+
+`F418EventSystem.lean` defines a normalized, deterministic arithmetic event map with five state constructors, explicit binary valuation extraction, the counter-width/gap invariant `Safe`, and a concrete seed. `safe_advance` and `seed_orbit_safe` establish preservation for every finite orbit prefix. `advance_none_iff` proves that only a nonempty alignment-1 collision terminates the map.
+
+`F418Episodes.lean` defines the inductive binary language `OddChain N last` and proves `episode_partition`, `fatal_episode`, `recoverable_episode` and `seed_termination_iff`. The latter states that some arithmetic iterate is `none` **iff** some reachable alignment-2 state satisfies `OddChain N last` with `last % 4 = 3`. The proof does not assume that the particular seed avoids this language. It checks the initial phase-1 overflow is not a terminal gateway, then traces any terminal gateway backward to a fatal episode; the other direction constructs a finite path to alignment 1. The recoverable case `last % 4 = 1` exits to alignment 2, phase 0.
+
+Local reproduction (Lean 4.36.0-rc2, from this directory):
+```sh
+lean -o F418Arithmetic.olean F418Arithmetic.lean
+LEAN_PATH=. lean -o F418EventSystem.olean F418EventSystem.lean
+LEAN_PATH=. lean F418Episodes.lean
+```
+All printed axiom sets are subsets of `propext`, `Classical.choice`, `Quot.sound`. There are no added axioms or `sorryAx`. These are arithmetic-model theorems; the general raw-tape composition of all source word rules into `advance` is still a separate Lean obligation. The open problem is the actual seed's fatal-language reachability, not the event case partition.
