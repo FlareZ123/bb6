@@ -100,7 +100,7 @@ Proof.
   rewrite HA,swap_state_a in Hw2.
   destruct d.
   - assert (Hw3 : flip t2 (A,S0) = Some (S1,R,B)).
-    { unfold flip. rewrite Hw2. reflexivity. }
+    { apply flip_some. simpl. exact Hw2. }
     pose proof (flip_halts_in t2 (A,tape0) n Hn2) as Hn3.
     change (halts_in (flip t2) c0 n) in Hn3.
     exact (Hnorm (flip t2) Hw3 n k _ Hn3 (zero_path_flip _ _ _ _ Hz2) Hk).
