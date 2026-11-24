@@ -136,8 +136,9 @@ Proof.
   destruct (Hchild (q,s)) as [Hbad|Hm]; [congruence|].
   unfold rename_swap.
   rewrite (swap_fixed_below a b q cut Hq Ha Hb), Hm.
-  cbn [option_map]. rewrite (swap_fixed_below a b r cut Hr Ha Hb).
-  reflexivity.
+  cbn [option_map].
+  f_equal; try reflexivity.
+  exact (swap_fixed_below a b r cut Hr Ha Hb).
 Qed.
 
 Lemma completion_refine (m t : TM) h v :
