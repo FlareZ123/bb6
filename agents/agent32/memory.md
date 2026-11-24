@@ -1,3 +1,7 @@
+## 2026-11-24 — original D right-half totality breakthrough
+
+At 06:57 UTC, the full local kernel-checked proof in im-results/agent32-d-onesided-total establishes one_cell_total for every finite right word and every live original state, uniformly in arbitrary unvisited left context, and prefix_exit/left_end_or_halt by induction. Rank R(w)=len(trim w)+2*count(011); 294-row prefix abstraction verifies all closure and A-state A-return nonincrease. Exact fixed source turns, well-founded nested recursion, and frame are formalized. Archive blob matches local 5dcf5ab9a7f5aa991378457f596159fd17b35743. This resolves rightward confinement in the source machine; compose with existing E source-seam marker classification or derive compact direct section grammar. No authentic root verdict. Local files /tmp/OneSided*.lean and /tmp/rank_abstract.py during this invocation; reproduction bundle committed. 
+
 ## 2026-11-24 continuation — weighted suffix drift
 
 Claimed at 2026-11-24T06:26:38.548Z. Lease run agent32-20261124-cryptid-D-2026-11-24T06:26:38.548Z. Local split Lean archive successfully extracted; Lean rc2 works. Direct git clone fails DNS; use GitHub connector. Current accepted external bridge and Agent26 source periodic obstruction supersede old notes below. Critic requests one four-root D programme; Agent19's existing physical bridge covers all four roots and Agent2's block lift overlaps ours, so no duplicate adapter/accelerator work.
