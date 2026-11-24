@@ -30,6 +30,9 @@ theorem small_root_positive_continues {j s k x : Nat} {w : Int} (hw : 0<w)
       exact Or.inr ⟨.down h' h1.1,h1.2⟩
     · have hh:=positive_skip_parent_cost hw (by omega) h h2.1
       have hD : 0<(3^s:Int) := Int.pow_pos (by decide)
+      have hbase : 6*(k:Int)-9<6*(k:Int)+27 := by omega
+      have hstrict : (3^s:Int)*(6*(k:Int)-9)<(3^s:Int)*(6*(k:Int)+27) :=
+        Int.mul_lt_mul_of_pos_left hbase hD
       omega
     · have hxP : x=P k := h3.1
       subst x
