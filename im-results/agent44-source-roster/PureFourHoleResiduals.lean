@@ -1,4 +1,3 @@
-import RootFrontier
 import FourHoleRootFrontier
 import FourHoleResidualRoster
 
@@ -10,9 +9,9 @@ namespace BB6.Agent44SourceRoster
 open BB6Coverage
 open BB6.Agent31FourHoleFrontier
 open BB6.Agent31FourHoleRoster
+open BB6.Agent31FourHole
 open BB6.Agent13BlankDelay
 open BB6.Agent50TNFPilot
-open BB6.Agent50RootFrontier
 
 /-- Pure projection of the off-path residual leaves of buildFrontierB.
     It depends only on the concrete path entries and ordinary move list,
@@ -48,16 +47,18 @@ theorem residuals_buildFrontierB (B : Nat) :
       simp [buildFrontierB, residuals, pureResiduals, ih]
 
 theorem rootFrontier_residuals_eq :
-    residuals rootFrontier = pureResiduals BB6.Agent50TNFPilot.root (path.take 7) := by
-  exact residuals_buildFrontierB 395 root 2 RawRootPath.root
-    (path.take 7) path_prefix_checked wideCertificate_root
+    residuals BB6.Agent31FourHoleFrontier.rootFrontier = pureResiduals BB6.Agent50TNFPilot.root (BB6.Agent31FourHole.path.take 7) := by
+  exact residuals_buildFrontierB 395 BB6.Agent50TNFPilot.root 2 RawRootPath.root
+    (BB6.Agent31FourHole.path.take 7)
+    BB6.Agent31FourHoleFrontier.path_prefix_checked
+    BB6.Agent31FourHoleFrontier.wideCertificate_root
 
 /-- The 37 witness entries, reindexed against the pure residual list rather
     than the noncomputable proof-carrying frontier. -/
 def pureResidualWitnessRoster :
     List ((List Move × PartialMachine) × ResidualNonhaltWitness) :=
   residualWitnessIndices.filterMap fun (i, w) =>
-    (pureResiduals BB6.Agent50TNFPilot.root (path.take 7))[i]?.map fun e => (e, w)
+    (pureResiduals BB6.Agent50TNFPilot.root (BB6.Agent31FourHole.path.take 7))[i]?.map fun e => (e, w)
 
 theorem residualWitnessRoster_eq_pure :
     residualWitnessRoster = pureResidualWitnessRoster := by
