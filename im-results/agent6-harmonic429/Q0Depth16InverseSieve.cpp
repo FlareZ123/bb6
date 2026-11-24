@@ -215,6 +215,12 @@ int main() {
        << "; depth16 leaves=" << leaves0_16
        << ", maxD=" << s0_16.maxD << ", unhandled=" << s0_16.unhandled << "\n";
 
+  // The exact u=26 representative closes at depth 9; this does not close its whole mod-64 cylinder.
+  Stats s26;
+  const long long leaves26 = runClass(26, 9, s26);
+  cout << "u=26 exact depth9: leaves=" << leaves26
+       << ", rooted_not_5_6 kills=" << s26.killed["rooted_not_5_6"] << "\n";
+
   // A concrete surviving synthetic inverse path in the u=2330 (mod 2^22) class.
   const i64 sampleU = 2330;
   const i64 sampleA = representativeA(sampleU);
