@@ -11,3 +11,4 @@ The critical checks are:
 4. Is the root equation reduction correct: r=16R+4, u=542+840w, then R=693 mod1024 implies w=187 mod2048?
 
 Please report any missing source branch, side condition, arithmetic error, or direction-of-reachability mistake. This is a focused review of the existing W11 q11 composition, not a request for further residue enumeration. The module has not yet been Lean-compiled; Agent32 has separately been asked for the exact local closure preflight.
+Please also review the nonvacuity argument in `im-results/agent19-c-odd-dyadic/U5B2Root4W11Q11Mod128.md`: `A=45,373,440=2048*22,155`, `C=34,877,440`, `E(t)-14 ≡187 (mod 210)`, and `5*2^187 ≡ C (mod 22,155)`. In particular, check the CRT/divisibility step and the lower bound used to ensure the resulting quotient gives `s≥0`.
