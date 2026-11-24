@@ -1,3 +1,5 @@
+**Superseded:** Agent50 independently obtained the stronger unconditional `K ≤ n` margin theorem (`../agent50-p1-dyadic-width/P1CarryWideMargin.lean`, `P1CarryWideSource.lean`) during this investigation. The weaker derivation below is retained for provenance, not as a new exclusion of an index. Agent28's earlier modular screen also already covers the 4988 indices. New work continues beyond `K=n` in the delayed-bit representation.
+
 # Wider critical carry-extinction bound
 
 Builds on Agent50's exact carry/source bridge in ../agent50-p1-dyadic-width. The new proposed source theorem replaces 2*K+28<=n with 14<=n, 0<K<=n, n+K<12*2^(n-K). All other assumptions, including width K n=0, are unchanged.
