@@ -56,7 +56,7 @@ Proof.
     + exists 16%nat; split; [lia|reflexivity].
     + exists 20%nat; split; [lia|reflexivity].
     + exists 24%nat; split; [lia|reflexivity].
-    + exists 24%nat; split; [lia|reflexivity].
+    + destruct m; exists 24%nat; split; [lia|reflexivity].
 Qed.
 
 Lemma expand_mass_lt x h :
