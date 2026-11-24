@@ -107,6 +107,27 @@ The current experiment searches for a cycle of the next fifteen-digit suffix pre
 
 The first implementation mistakenly passed the full fifteen-digit prefix to the F-level extractor; that was corrected to use `F1Tail.slice(0, 5)`. The CI pipeline now uses `set -o pipefail` and preserves the exact JSON output, so a failed computation cannot be mistaken for a successful run with an empty artifact.
 
+### First carry-depth census and G extraction (2026-11-24)
+
+The first compressed census is preserved in `im-results/agent5-s4-nested-depth6/g-level-run.json`. All Q/R/V/W/X/Y/Z/F/G mass identities reported by the script are true. The new induced word has:
+
+- (G=F^{1280}), i.e. 25,600 Y blocks;
+- 3,605,465 effective suffix gates;
+- zero final pending head addition;
+- exact mass identity.
+
+The first fifteen-digit residual prefix is **not fixed after one G block**. This only rejects period one; it is not a negative result about eventual periodicity. The next run searches a bounded 16-block transient-plus-cycle window.
+
+The cheaper carry-depth scans of the already-known V/W/X cycles found no barrier:
+
+| Macro | Tracked digits | Preperiod + period | Maximum carry depth | First boundary witness |
+|---|---:|---:|---:|---|
+| V | 8 | 65 | 8 | phase 0, gate 152, offset 9,873,943,417,132 |
+| W | 7 | 641 | 7 | phase 0, gate 172, offset 1,867,506,164,787,075 |
+| X | 8 | 129 | 8 | phase 0, gate 38, offset 777,213,453,706,679,331 |
+
+These witnesses are the next boundary gates, not halting witnesses. The strict-barrier condition fails at each of these three levels, so the hierarchy must continue into the next suffix.
+
 ## 5. Proof obligations still open
 
 1. Obtain and inspect the G-level cycle/carry-depth result.
