@@ -15,13 +15,13 @@ open BB6.Agent50RecursiveResidual
     with the Boolean parameter set to false. -/
 def nestedFalse : PackedTable :=
   [ some (some ⟨true,true,1⟩),
-    some (some ⟨false,true,2⟩),
+    some (some ⟨false,false,2⟩),
     some (some ⟨true,true,2⟩),
     some (some ⟨true,false,5⟩),
-    some (some ⟨false,false,3⟩),
+    some (some ⟨false,true,3⟩),
     some (some ⟨true,true,1⟩),
     some (some ⟨true,false,3⟩),
-    some (some ⟨true,false,4⟩),
+    some (some ⟨true,true,4⟩),
     some (some ⟨false,true,5⟩),
     some (some ⟨false,false,1⟩),
     none,
@@ -31,10 +31,10 @@ def nestedFalse : PackedTable :=
     with the Boolean parameter set to true. -/
 def nestedTrue : PackedTable :=
   [ some (some ⟨true,true,1⟩),
-    some (some ⟨false,true,2⟩),
+    some (some ⟨false,false,2⟩),
     some (some ⟨true,true,2⟩),
     some (some ⟨true,false,5⟩),
-    some (some ⟨false,false,3⟩),
+    some (some ⟨false,true,3⟩),
     some (some ⟨true,true,1⟩),
     some (some ⟨true,false,3⟩),
     some (some ⟨true,false,4⟩),
