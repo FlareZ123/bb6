@@ -54,14 +54,7 @@ theorem source_evidence_of_classifier (H : Nat) (classify : SourceTM → SourceV
     simp only [queueDecision,hv]
     intro n
     rw [source_knownRun]
-    have hn := h n
-    change (run x.tm n blank).isSome = true at hn
-    cases hr : run x.tm n blank with
-    | none =>
-      change run x.tm n (emptyAt 0) = none at hr
-      rw [hr] at hn
-      contradiction
-    | some c => exact ⟨c,rfl⟩
+    exact Option.isSome_iff_exists.mp (h n)
   | unknown => simp [queueDecision,hv]
 
 theorem source_root_eq_firstOneCylinder :
