@@ -81,3 +81,6 @@ Combining the skip coordinate with the band-drop packet yields the exceptional-r
 - Special parent at P_k: 4·3^(j-k)P_k + 6 + w0 ≤ 3^s(6k+27).
 
 Consequently, 3^s(6k+27) is a universal upper threshold for an actual exceptional return; the skip case is strictly cheaper. Both return-cost theorems and the exact skip-coordinate lemmas passed [CI 45403951106](https://github.com/FlareZ123/bb6/actions/runs/45403951106), revision 3504354e2f2a279f04a550557be9612be7d2d4f6.
+
+
+The source-level small-root continuation theorem now uses the sharper threshold 3^s(6k+27) < 4·3^(j-k)P_k+6+w. It classifies the actual predecessor and excludes the skip and special branches using their respective 6k-9 and 6k+27 return costs. Hence only regular same-band or one-band-descent positive continuation remains. This source theorem passed [CI 45404455240](https://github.com/FlareZ123/bb6/actions/runs/45404455240).
