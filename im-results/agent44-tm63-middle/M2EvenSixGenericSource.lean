@@ -168,17 +168,17 @@ private theorem m2EvenSixGeneric_baseCutLeftFacing (a : Nat) :
       m2EvenSixGenericTargetPrefix a ++ ([true] ++ d0 ++ lh) := by
   have hbin : binDec 3 5 = d0 ++ d1 ++ d0 := by decide
   rw [m2EvenSixQ4LeftFacing_eq_q4LeftFacing]
-  simp [q4LeftFacing,m2EvenSixGenericTargetPrefix,
+  simp [BB6Coverage.Agent8Q4Suffix.q4LeftFacing,m2EvenSixGenericTargetPrefix,
     hbin,d0,d1,markerWord,List.append_assoc]
 
 private theorem m2EvenSixGeneric_targetLeftFacing
     (L q a : Nat) (hL : 3 ≤ L)
     (hbound : 8*q+6 < 2^L) :
-    q4LeftFacing L (8*q+5) a =
+    BB6Coverage.Agent8Q4Suffix.q4LeftFacing L (8*q+5) a =
       m2EvenSixGenericTargetPrefix a ++
         m2EvenSixGenericCommonTail L q := by
   have hbin := m2EvenSixGeneric_binDec_target L q hL hbound
-  simp [q4LeftFacing,m2EvenSixGenericTargetPrefix,
+  simp [BB6Coverage.Agent8Q4Suffix.q4LeftFacing,m2EvenSixGenericTargetPrefix,
     m2EvenSixGenericCommonTail,hbin,d0,d1,markerWord,List.append_assoc]
 
 private theorem m2EvenSixGeneric_inputPrefix_length (a : Nat) :
@@ -464,7 +464,7 @@ theorem m2EvenSix_generic_q4_prefix_leftFacing
     (hL : 3 ≤ L) (hbound : 8*q+6 < 2^L) (ha : 0<a) :
     ∀ i : Nat,
       m2EvenSixGenericCutTape L q a b h (h-(i:Int)) =
-        sideBit (q4LeftFacing L (8*q+5) a) i := by
+        sideBit (BB6Coverage.Agent8Q4Suffix.q4LeftFacing L (8*q+5) a) i := by
   have hsourceLeft := m2EvenSixGeneric_sourceLeftFacing L q a hL hbound
   have hbaseCutLeft := m2EvenSixGeneric_baseCutLeftFacing a
   have htargetLeft := m2EvenSixGeneric_targetLeftFacing L q a hL hbound
@@ -520,9 +520,9 @@ theorem m2EvenSix_generic_q4_prefix_leftFacing
 private theorem m2EvenSixGeneric_q4RightShape_congr
     (T U : Int → Bool) (h : Int) (b : Nat)
     (heq : ∀ x, h ≤ x → T x = U x)
-    (hT : q4RightShape T h b) :
-    q4RightShape U h b := by
-  unfold q4RightShape at *
+    (hT : BB6Coverage.Agent8Q4Suffix.q4RightShape T h b) :
+    BB6Coverage.Agent8Q4Suffix.q4RightShape U h b := by
+  unfold BB6Coverage.Agent8Q4Suffix.q4RightShape at *
   rcases hT with ⟨h0,h5,h6,h79,hzero⟩
   refine ⟨?_,?_,?_,?_,?_⟩
   · intro i hi
@@ -543,10 +543,10 @@ private theorem m2EvenSixGeneric_q4_rightFacing
     (L q a b : Nat) (h : Int) (ha : 0<a) :
     ∀ i : Nat,
       m2EvenSixGenericCutTape L q a b h (h+1+(i:Int)) =
-        sideBit (q4RightFacing b) i := by
+        sideBit (BB6Coverage.Agent6Q4Prefix.q4RightFacing b) i := by
   have hbase : ∀ i : Nat,
       m2EvenSixQ4CutTape a b h (h+1+(i:Int)) =
-        sideBit (q4RightFacing b) i := by
+        sideBit (BB6Coverage.Agent6Q4Prefix.q4RightFacing b) i := by
     obtain ⟨Tq,_,_,_,hright⟩ :=
       m2EvenSix_q4_prefix_data a b h ha
     have hTq : Tq = m2EvenSixQ4CutTape a b h := by rfl
@@ -562,7 +562,7 @@ private theorem m2EvenSixGeneric_q4_rightFacing
 
 private theorem m2EvenSixGeneric_q4_rightShape
     (L q a b : Nat) (h : Int) (ha : 0<a) :
-    q4RightShape (m2EvenSixGenericCutTape L q a b h) h b := by
+    BB6Coverage.Agent8Q4Suffix.q4RightShape (m2EvenSixGenericCutTape L q a b h) h b := by
   apply m2EvenSixGeneric_q4RightShape_congr
     (m2EvenSixQ4CutTape a b h)
     (m2EvenSixGenericCutTape L q a b h) h b
@@ -584,7 +584,7 @@ private theorem m2EvenSixGeneric_q4_far_tail
   intro i hi
   rw [m2EvenSixGeneric_q4_rightFacing L q a b h ha i]
   apply sideBit_ge_length
-  rw [q4RightFacing_length]
+  rw [BB6Coverage.Agent6Q4Prefix.q4RightFacing_length]
   omega
 
 private theorem m2EvenSixGeneric_resetPrefixCost
@@ -618,7 +618,7 @@ theorem m2EvenSix_generic_q4_reset_prefix_source
   have happend := q4SuffixTargetLeft L (8*q+5) a b
   have hsuffix := q4_suffix_run_to_s1Config Tq h b
     L (8*q+5) 1 (a+b+2) (2^b-1)
-    (q4LeftFacing L (8*q+5) a)
+    (BB6Coverage.Agent8Q4Suffix.q4LeftFacing L (8*q+5) a)
     hshape htail hleft happend
   have hsum := m2EvenSixGeneric_resetPrefixCost q a b
   rw [hsum,run_add,hprefix]
