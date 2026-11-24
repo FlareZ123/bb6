@@ -4,7 +4,6 @@ import ValuationParents
 import DirectJump
 import ExactMemo
 import Lean.Elab.Tactic.Omega
-import Lean.Elab.Tactic.NativeDecide
 
 set_option maxHeartbeats 4000000
 
@@ -148,17 +147,6 @@ theorem blank_halts_iff_compressed_memo (cap f : Nat) :
     · exact Or.inr ⟨j,m,hallow.1,hroot⟩
 
 
-/-- First pure-power high-stop target beyond the existing terminal-mass cutoff.
-    The bounded memo result, if true, is a sound exclusion; false is inconclusive. -/
-set_option maxRecDepth 100000
-set_option maxHeartbeats 0
-theorem highStopSeed_3_2_compressedExcluded :
-    compressedExcluded 24 256 986893 7401715 = true := by native_decide
-
-theorem highStopSeed_3_2_not_reachable :
-    ¬ BB6.Agent3.CReach 986893 7401715 :=
-  compressedExcluded_sound 24 256 986893 7401715 highStopSeed_3_2_compressedExcluded
-
 #print axioms valuation_length
 #print axioms plainParents_mem
 #print axioms compressedReach_iff
@@ -168,8 +156,6 @@ theorem highStopSeed_3_2_not_reachable :
 #print axioms compressedDecision_iff
 #print axioms oldHighSurvives_iff
 #print axioms blank_halts_iff_compressed_memo
-#print axioms highStopSeed_3_2_compressedExcluded
-#print axioms highStopSeed_3_2_not_reachable
 
 
 end BB6.Agent12CompressedMemo

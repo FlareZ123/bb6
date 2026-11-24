@@ -68,6 +68,7 @@ on:
           - sourceBranchingBlocks
           - sourcePurePower
           - sourceCompressedMemo
+          - sourceKernelCone
           - sourceBoundedShadow
           - sourceExactMemo
           - sourceLowQuarterTwoForced
@@ -277,6 +278,9 @@ jobs:
               ;;
             sourceHeightConeCriterion)
               target=im-results/agent42-modular-cone/HeightConeCriterion.lean
+              ;;
+            sourceKernelCone)
+              target=im-results/agent12-c-high-shadow/KernelCone.lean
               ;;
             sourceCompressedMemo)
               target=im-results/agent12-c-high-shadow/CompressedMemo.lean
