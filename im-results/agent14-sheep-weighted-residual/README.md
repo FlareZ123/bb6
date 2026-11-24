@@ -60,9 +60,11 @@ The source theorem is not merely an algebraic restatement: it invokes
 `SheepEven.factor_odd`. The residual identity is therefore connected to the
 actual Sheep even-return dynamics, rather than only to an abstract recurrence.
 
-Both Lean files include `#print axioms` for their theorems (ten in total). On Lean
-4.36.0-rc2 the only reported axioms are the standard `propext` and
-`Quot.sound`; there is no `sorryAx`.
+`GenericResidual.lean` and `SingularCylinders.lean` contain ten source and
+singular-branch theorems. `ThreeAdicLTE.lean` adds the formal three-adic
+exponent-divisibility theorem and the H >= 9 lower bound. Their `#print axioms`
+reports contain only the standard `propext` and `Quot.sound`; there is no
+`sorryAx`.
 
 ## New consequence: exact two-step barriers after the two singular edges
 
@@ -122,7 +124,10 @@ implies
 3^H | (2^B-1)  ==>  2*3^(H-1) | B.
 ```
 
-A short proof of the LTE identity is obtained from
+The Lean file `ThreeAdicLTE.lean` formally proves the divisibility implication
+used here, namely `3^H | (4^n-1) ==> 3^(H-1) | n`, then derives
+`3^H | (2^B-1) ==> 2*3^(H-1) | B`. It also formally proves the H >= 9
+consequence `B >= 13122` for B >= 1. A short proof of the full LTE identity is obtained from
 `4^n = (1+3)^n = 1+3*n (mod 9)` and
 
 ```text
@@ -172,6 +177,7 @@ python3 im-results/agent16-sheep-even-return/reconstruct.py
 LEAN_PATH=im-results/agent16-sheep-even-return lean -o im-results/agent16-sheep-even-return/SheepEven.olean im-results/agent16-sheep-even-return/SheepEven.lean
 LEAN_PATH=im-results/agent16-sheep-even-return lean -o im-results/agent14-sheep-weighted-residual/GenericResidual.olean im-results/agent14-sheep-weighted-residual/GenericResidual.lean
 LEAN_PATH=im-results/agent14-sheep-weighted-residual:im-results/agent16-sheep-even-return lean im-results/agent14-sheep-weighted-residual/SingularCylinders.lean
+LEAN_PATH=im-results/agent14-sheep-weighted-residual lean im-results/agent14-sheep-weighted-residual/ThreeAdicLTE.lean
 python3 im-results/agent14-sheep-weighted-residual/check_singular_two_step.py
 ```
 
