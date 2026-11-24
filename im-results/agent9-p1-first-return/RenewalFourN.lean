@@ -13,7 +13,7 @@ theorem polynomial_block (q d n L dExp mExp b p : Nat) (D Dnew G v a : Int)
     (hexp : dExp+mExp+2*(dExp+b+2+p)+5≤7740)
     (hv : 0<v) (hvD : v<D) (hv7 : v%7≠0) (hdq : d<q)
     (hclock : (q:Int)=7*(2:Int)^n+a)
-    (ha : ∀ j : Nat, j≤n → Bound (a+j) (5*(n:Int)))
+    (ha : ∀ j : Nat, j≤n → Bound (a+j) (6*(n:Int)))
     (hinit : Bound (D*(d:Int)-7*(2:Int)^n*v) (D*((2:Int)^b*(n:Int)^p))) :
     (∀ j≤n, 2≤run q d j ∧ run q d j+8≤q+j) ∧
     ∃ v' : Int, 0<v' ∧ v'<Dnew ∧ v'%7≠0 ∧
@@ -32,16 +32,16 @@ theorem polynomial_block (q d n L dExp mExp b p : Nat) (D Dnew G v a : Int)
   let ell := dExp+b+2+p*(n.log2+1)
   obtain ⟨hs,hsml,hgap,hE⟩ := polynomial_scale n D.toNat M.toNat dExp mExp b p hn hDN hMN hDmaxN hMmaxN hb hp hpmax hexp
   change 2^ell≤2^n at hs
-  change D.toNat*(2^b*n^p+5*n)<2^ell at hsml
-  change D.toNat*M.toNat*2^ell*(2^ell*(2*(5*n)+2)+5*n+8)<2^n at hgap
-  change 2^ell*(2*(5*n)+2)≤2^(dExp+b+2+p+4)*n^(p+1) at hE
+  change D.toNat*(2^b*n^p+6*n)<2^ell at hsml
+  change D.toNat*M.toNat*2^ell*(2^ell*(2*(6*n)+2)+6*n+8)<2^n at hgap
+  change 2^ell*(2*(6*n)+2)≤2^(dExp+b+2+p+4)*n^(p+1) at hE
   have hsI : (2:Int)^ell≤(2:Int)^n := by exact_mod_cast hs
-  have hsmlI : D*((2:Int)^b*(n:Int)^p+5*(n:Int))<(2:Int)^ell := by
+  have hsmlI : D*((2:Int)^b*(n:Int)^p+6*(n:Int))<(2:Int)^ell := by
     rw [←hDcast]; exact_mod_cast hsml
-  have hgapI : D*M*(2:Int)^ell*((2:Int)^ell*(2*(5*(n:Int))+2)+5*(n:Int)+8)<(2:Int)^n := by
+  have hgapI : D*M*(2:Int)^ell*((2:Int)^ell*(2*(6*(n:Int))+2)+6*(n:Int)+8)<(2:Int)^n := by
     rw [←hDcast,←hMcast]; exact_mod_cast hgap
-  have hEI : (2:Int)^ell*(2*(5*(n:Int))+2)≤(2:Int)^(dExp+b+2+p+4)*(n:Int)^(p+1) := by exact_mod_cast hE
-  exact certified_block q d n ell L D Dnew G v a ((2:Int)^b*(n:Int)^p) (5*(n:Int)) ((2:Int)^(dExp+b+2+p+4)*(n:Int)^(p+1)) cert hv hvD hv7 hdq hclock (by omega) (Int.mul_nonneg (Int.pow_nonneg (by decide)) (Int.pow_nonneg (by omega))) ha hinit hsI hsmlI hgapI hEI
+  have hEI : (2:Int)^ell*(2*(6*(n:Int))+2)≤(2:Int)^(dExp+b+2+p+4)*(n:Int)^(p+1) := by exact_mod_cast hE
+  exact certified_block q d n ell L D Dnew G v a ((2:Int)^b*(n:Int)^p) (6*(n:Int)) ((2:Int)^(dExp+b+2+p+4)*(n:Int)^(p+1)) cert hv hvD hv7 hdq hclock (by omega) (Int.mul_nonneg (Int.pow_nonneg (by decide)) (Int.pow_nonneg (by omega))) ha hinit hsI hsmlI hgapI hEI
 
 #print axioms polynomial_block
 
@@ -50,8 +50,11 @@ theorem large_power (n : Nat) (hn : 8000≤n) : 16*n<2^n := by
   have h2 : 16≤2^7740 := Nat.pow_le_pow_right (show 0<2 by decide) (show 4≤7740 by decide)
   exact Nat.lt_of_le_of_lt (Nat.mul_le_mul h2 h1) (numeric_dom n hn)
 
-theorem three_blocks (n k : Nat) (hn : 8000≤n) (hk : k≤4*n+3) :
-    ∀ j≤3*n, 2≤run (7*2^n-k) (2^n+k) j := by
+theorem three_blocks_endpoint (n k : Nat) (hn : 8000≤n) (hk : k≤5*n+3) :
+    (∀ j≤3*n, 2≤run (7*2^n-k) (2^n+k) j) ∧
+    ∃ p : Int, 0<p ∧ p<D3 ∧ p%7≠0 ∧
+      Bound (D3*(run (7*2^n-k) (2^n+k) (3*n):Int)-7*(2:Int)^n*p)
+        (D3*((2:Int)^192*(n:Int)^4)) := by
   let P := 2^n
   let q0 := 7*P-k
   let d0 := P+k
@@ -67,9 +70,9 @@ theorem three_blocks (n k : Nat) (hn : 8000≤n) (hk : k≤4*n+3) :
   have hd0q0 : d0<q0 := by dsimp [d0]; omega
   have hclock1 : (q1:Int)=7*(2:Int)^n+(-(k:Int)+(n:Int)) := by dsimp [q1]; push_cast; omega
   have hclock2 : (q2:Int)=7*(2:Int)^n+(-(k:Int)+2*(n:Int)) := by dsimp [q2,q1]; push_cast; omega
-  have ha0 : ∀ j : Nat, j≤n → Bound (-(k:Int)+j) (5*(n:Int)) := by intro j hj; unfold Bound; omega
-  have ha1 : ∀ j : Nat, j≤n → Bound (-(k:Int)+(n:Int)+j) (5*(n:Int)) := by intro j hj; unfold Bound; omega
-  have ha2 : ∀ j : Nat, j≤n → Bound (-(k:Int)+2*(n:Int)+j) (5*(n:Int)) := by intro j hj; unfold Bound; omega
+  have ha0 : ∀ j : Nat, j≤n → Bound (-(k:Int)+j) (6*(n:Int)) := by intro j hj; unfold Bound; omega
+  have ha1 : ∀ j : Nat, j≤n → Bound (-(k:Int)+(n:Int)+j) (6*(n:Int)) := by intro j hj; unfold Bound; omega
+  have ha2 : ∀ j : Nat, j≤n → Bound (-(k:Int)+2*(n:Int)+j) (6*(n:Int)) := by intro j hj; unfold Bound; omega
   have hst0 : Bound (D0*(d0:Int)-7*(2:Int)^n*1) (D0*((2:Int)^3*(n:Int)^1)) := by
     have he : (d0:Int)=(2:Int)^n+(k:Int) := by dsimp [d0,P]
     rw [he]; unfold Bound D0; simp only [Int.pow_one]; omega
@@ -77,16 +80,25 @@ theorem three_blocks (n k : Nat) (hn : 8000≤n) (hk : k≤4*n+3) :
   have hd1q1 : d1<q1 := run_lt q0 d0 n hd0q0
   obtain ⟨hs1,v2,hv2,hv2D,hv27,hB2⟩ := polynomial_block q1 d1 n 147 9 147 13 2 D1 D2 49 v1 (-(k:Int)+(n:Int)) cert1 hn (by decide) (by decide) (by decide) (by decide) (by decide) (by decide) hv1 hv1D hv17 hd1q1 hclock1 ha1 hB1
   have hd2q2 : d2<q2 := run_lt q1 d1 n hd1q1
-  obtain ⟨hs2,_,_,_,_,_⟩ := polynomial_block q2 d2 n 7203 153 7203 30 3 D2 D3 2401 v2 (-(k:Int)+2*(n:Int)) cert2 hn (by decide) (by decide) (by decide) (by decide) (by decide) (by decide) hv2 hv2D hv27 hd2q2 hclock2 ha2 hB2
-  intro j hj
-  change 2≤run q0 d0 j
-  by_cases h0 : j≤n
-  · exact (hs0 j h0).1
-  · by_cases h1 : j≤2*n
-    · have he : n+(j-n)=j := by omega
-      rw [←he,run_add]; exact (hs1 (j-n) (by omega)).1
-    · have he : n+(n+(j-2*n))=j := by omega
-      rw [←he,run_add,run_add]; exact (hs2 (j-2*n) (by omega)).1
+  obtain ⟨hs2,v3,hv3,hv3D,hv37,hB3⟩ := polynomial_block q2 d2 n 7203 153 7203 30 3 D2 D3 2401 v2 (-(k:Int)+2*(n:Int)) cert2 hn (by decide) (by decide) (by decide) (by decide) (by decide) (by decide) hv2 hv2D hv27 hd2q2 hclock2 ha2 hB2
+  constructor
+  · intro j hj
+    change 2≤run q0 d0 j
+    by_cases h0 : j≤n
+    · exact (hs0 j h0).1
+    · by_cases h1 : j≤2*n
+      · have he : n+(j-n)=j := by omega
+        rw [←he,run_add]; exact (hs1 (j-n) (by omega)).1
+      · have he : n+(n+(j-2*n))=j := by omega
+        rw [←he,run_add,run_add]; exact (hs2 (j-2*n) (by omega)).1
+  · refine ⟨v3,hv3,hv3D,hv37,?_⟩
+    change Bound (D3*(run q0 d0 (3*n):Int)-7*(2:Int)^n*v3) (D3*((2:Int)^192*(n:Int)^4))
+    rw [show 3*n=n+(n+n) by omega,run_add,run_add]
+    exact hB3
+
+theorem three_blocks (n k : Nat) (hn : 8000≤n) (hk : k≤4*n+3) :
+    ∀ j≤3*n, 2≤run (7*2^n-k) (2^n+k) j :=
+  (three_blocks_endpoint n k hn (by omega)).1
 
 private theorem initial_doubling (n q j : Nat) (hq : 4*2^n<q+1)
     (hj : j≤n+2) : run q 1 j=2^j := by

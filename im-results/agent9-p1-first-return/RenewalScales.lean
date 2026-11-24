@@ -34,7 +34,7 @@ theorem polynomial_scale (n D M dExp mExp b p : Nat)
     let ell := c+p*(n.log2+1)
     let S := 2^ell
     let B := 2^b*n^p
-    let C := 5*n
+    let C := 6*n
     let Bnew := 2^(c+p+4)*n^(p+1)
     S≤2^n ∧ D*(B+C)<S ∧ D*M*S*(S*(2*C+2)+C+8)<2^n ∧ S*(2*C+2)≤Bnew := by
   dsimp only
@@ -42,14 +42,14 @@ theorem polynomial_scale (n D M dExp mExp b p : Nat)
   let ell := c+p*(n.log2+1)
   let S := 2^ell
   let B := 2^b*n^p
-  let C := 5*n
+  let C := 6*n
   let Bnew := 2^(c+p+4)*n^(p+1)
   change S≤2^n ∧ D*(B+C)<S ∧ D*M*S*(S*(2*C+2)+C+8)<2^n ∧ S*(2*C+2)≤Bnew
   have hnp : n≤n^p := by
     simpa using Nat.pow_le_pow_right (show 0<n by omega) hp
   have h2b := Nat.pow_le_pow_right (show 0<2 by decide) hb
   have hC : C≤B := by
-    have hh := Nat.mul_le_mul (show 5≤2^b by omega) hnp
+    have hh := Nat.mul_le_mul (show 6≤2^b by omega) hnp
     exact hh
   have hBpos : 0<B := Nat.mul_pos (Nat.two_pow_pos _) (Nat.pow_pos (by omega))
   have hSpos : 0<S := Nat.two_pow_pos _
