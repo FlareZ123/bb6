@@ -71,17 +71,17 @@ def main() -> None:
     for i in range(14):
         ident = f"{i:02d}"
         pm = re.search(
-            rf"def p{ident} : PartialMachine := fromCodes \\[([^\\]]+)\\]", cert
+            rf"def p{ident} : PartialMachine := fromCodes \[([^\]]+)\]", cert
         )
         dm = re.search(
-            rf"def C{ident} : Data \\d+ := \\{{\\s*start := [^\\n]+\\n\\s*dfa := \\[([^\\]]+)\\]",
+            rf"def C{ident} : Data \d+ := \{{\s*start := [^\n]+\n\s*dfa := \[([^\]]+)\]",
             cert,
         )
         if pm is None or dm is None:
             raise AssertionError(f"missing p{ident}/C{ident} in Lean certificate source")
         table = [int(x.strip()) for x in pm.group(1).split(",")]
         dfa = "".join(
-            x for x in re.findall(r"⟨(\\d+),", dm.group(1))
+            x for x in re.findall(r"⟨(\d+),", dm.group(1))
         )
         if not dfa:
             raise AssertionError(f"C{ident} has no parsed DFA")
