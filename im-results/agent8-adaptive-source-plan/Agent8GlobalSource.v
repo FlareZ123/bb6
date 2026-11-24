@@ -21,7 +21,7 @@ Lemma zero_path_run (t : TM) q k r :
 Proof.
   intro H. induction H.
   - constructor.
-  - eapply multistep_S; [apply zero_step; eassumption|assumption].
+  - eapply multistep_S; [exact (@zero_step t q d q' Hact)|assumption].
 Qed.
 
 (* If the first nonzero write remains in the same state, the machine
