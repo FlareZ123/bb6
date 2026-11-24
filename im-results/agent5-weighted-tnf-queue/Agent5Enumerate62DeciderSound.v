@@ -78,7 +78,7 @@ Print Assumptions agent5_decider_sound.
 Lemma agent32_tc_halt_budget (tm0 : TM) ls h st :
   TC_state.decide tm0 ls = (Halt h, st) ->
   (N_list_sum (map N_list_sum (map fst ls)) <= 1000000)%N ->
-  exists n', halts_at tm0 c0 n' h /\\ (n' <= N.to_nat 1000000)%nat.
+  exists n', halts_at tm0 c0 n' h /\ (n' <= N.to_nat 1000000)%nat.
 Proof.
   intros Hdec Hbudget.
   pose proof (TC_state_decide_spec tm0 ls) as Hspec.
@@ -91,7 +91,7 @@ Qed.
 
 Theorem agent32_decider_bounded_sound (tm0 : TM) :
   match TNF_Node.decider tm0 with
-  | Halt h => exists n', halts_at tm0 c0 n' h /\\ (n' <= N.to_nat 1000000)%nat
+  | Halt h => exists n', halts_at tm0 c0 n' h /\ (n' <= N.to_nat 1000000)%nat
   | NonHalt => ~ halts tm0 c0
   | Unknown => True
   end.
