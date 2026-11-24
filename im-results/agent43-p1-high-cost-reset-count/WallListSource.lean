@@ -78,15 +78,17 @@ theorem source_countcone_cost_lt (n b d m z k : Nat) (hn : 14 ≤ n)
     (hkn : k+1 ≤ n)
     (hno : ¬ ∃ rest : List Bool, rest.length = k ∧
       BB6WallCarry.bitExpr n rest % 2^(k+1)=1) : m<k+1 := by
-  by_contra hlt
-  have hkm : k+1≤m := by omega
-  obtain ⟨A,hnd,h0,hmod⟩ := witness_mod_prefix n d m (k+1)
-    (source_cost_witness n b d m z hn h) (source_odd_right n b d m z h)
-    (by omega) hkn hkm
-  rw [weight_eq] at hmod
-  obtain ⟨rest,hlen,hbits⟩ := BB6WallBridge.weighted_mod_bits n k A hnd h0
-  rw [bitExpr_eq] at hbits
-  exact hno ⟨rest,hlen,hbits.symm.trans hmod⟩
+  by_cases hlt : m < k+1
+  · exact hlt
+  · exfalso
+    have hkm : k+1≤m := by omega
+    obtain ⟨A,hnd,h0,hmod⟩ := witness_mod_prefix n d m (k+1)
+      (source_cost_witness n b d m z hn h) (source_odd_right n b d m z h)
+      (by omega) hkn hkm
+    rw [weight_eq] at hmod
+    obtain ⟨rest,hlen,hbits⟩ := BB6WallBridge.weighted_mod_bits n k A hnd h0
+    rw [bitExpr_eq] at hbits
+    exact hno ⟨rest,hlen,hbits.symm.trans hmod⟩
 
 theorem source_no_restart_familyI_h1 (n b d m z u t : Nat)
     (hN : n=5362+595056*(1+2^56*t))
