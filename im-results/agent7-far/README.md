@@ -19,7 +19,7 @@ certificate. FARFrontier.lean adds the checked oracle only to unresolved
 leaves of the existing depth-four physical lasso audit; the old branches
 and old certified leaves are unchanged. The exhaustive and mass
 conservation statements are independent of the certificate generator.
-The core FAR/Frontier closure passed original-source Lean 4.36.0-rc2 CI in [run 45342809760](https://github.com/FlareZ123/bb6/actions/runs/45342809760). The later bitset-optimized `FastFAR` checker and `FastCanonical` integration passed the current source closure, with a depth-one canonical report, in [run 45383596624](https://github.com/FlareZ123/bb6/actions/runs/45383596624). The specific depth-four `FARFrontierReport` count is not recorded here; the numerical figures below remain computational predictions, not a kernel theorem.
+The core FAR/Frontier closure passed original-source Lean 4.36.0-rc2 CI in [run 45342809760](https://github.com/FlareZ123/bb6/actions/runs/45342809760). The later bitset-optimized `FastFAR` checker and `FastCanonical` integration passed the current source closure, with a depth-one canonical report, in [run 45383596624](https://github.com/FlareZ123/bb6/actions/runs/45383596624). The `WeightedTNFBridge.lean` adapter, which turns `fastOracle_sound` into the existing weighted-TNF nonhalting leaf, also passed the combined original-source closure in [run 45384542491](https://github.com/FlareZ123/bb6/actions/runs/45384542491). The specific depth-four `FARFrontierReport` count is not recorded here; the numerical figures below remain computational predictions, not a kernel theorem.
 
 ## Hard-root search update (24 November 2026)
 
