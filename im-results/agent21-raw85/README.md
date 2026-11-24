@@ -35,18 +35,19 @@ No exact-target SMT certificate is claimed until its artifact code is checked ag
 
 ## Next actions
 
-1. Run the updated artifact-recovery workflow and preserve the eight actual source-table/DFA records; do not equate them with the eight `smt-frontier.txt` entries.
-2. Try all 14 canonical and eight SMT DFAs as untrusted candidates against each actual raw85 open destination table.
-3. Compile the generated 24-child parent tree with Lean; any accepted `.far` leaf must pass the actual `Data.fastValid` check.
-4. If any of the eight listed frontier tables remain uncovered, synthesize candidates specifically for those destination tables rather than assuming the old run IDs cover them.
-5. Only after the full audit compiles, integrate the resulting theorem into the 124-table roster and update the human-readable research synthesis.
+1. Wait for the eight exact-target solver runs named `Agent 7 FAR SMT: <table code>` to complete; confirm each successful run contains exactly one HIT for its target.
+2. Run the artifact-recovery workflow to preserve the eight target-matched DFA/orientation records and their run provenance.
+3. Try all 14 canonical and eight exact-target SMT DFAs as untrusted candidates against each actual raw85 open destination table, recomputing masks.
+4. Compile the generated 24-child parent tree with Lean; any accepted `.far` leaf must pass the actual `Data.fastValid` check.
+5. If any exact frontier target has no SMT hit or any open leaf remains uncovered, synthesize additional candidates specifically for that destination table.
+6. Only after the full audit compiles, integrate the resulting theorem into the 124-table roster and update the human-readable research synthesis.
 
 Do not move this file into `results/` until the full source-checked parent-tree theorem exists.
 
 ## Destination-table reuse and validation (24 November 2026)
 
-The four-token keys in dfa-candidates.txt are search metadata, not proof premises. A direct comparison of all 14 DFA strings with C00–C13 in Raw85FARCertificates.lean confirms that every candidate DFA is present in a Lean Data object for its actual destination table, while none of the matching historical keys equals that destination table's key (p[5], p[1], p[8], p[10]). The old exact-key-only wrapper was therefore removed. The current wrapper tries the 14 canonical candidates and eight workflow-validated SMT candidates against every actual open destination table, recomputes masks, and relies on the generated Lean Audit/Data.fastValid checks for acceptance.
+The four-token keys in dfa-candidates.txt are search metadata, not proof premises. A direct comparison of all 14 DFA strings with C00–C13 in Raw85FARCertificates.lean confirms that every candidate DFA is present in a Lean Data object for its actual destination table, while none of the matching historical keys equals that destination table's key (p[5], p[1], p[8], p[10]). The old exact-key-only wrapper was therefore removed. The current wrapper tries the 14 canonical candidates and the eight exact-target SMT candidates (once recovered) against every actual open destination table, recomputes masks, and relies on the generated Lean Audit/Data.fastValid checks for acceptance.
 
-The shared start-zero filter correction is committed in the two four-hole generators and the three active FAR emitters. The raw85 validation workflow now retrieves the eight original shard-0 artifacts, extracts only their DFA/orientation records into smt-candidates.txt, preserves that file in the repository, runs the complete dynamic-split generator, and compiles the generated FourHoleSiblingData.lean alongside the 14 standalone Data certificates. The workflow is a 60-minute manual validation job because it includes the full 24-child parent-tree compilation.
+The shared start-zero filter correction is committed in the two four-hole generators and the three active FAR emitters. The raw85 validation workflow now discovers the eight exact-target solver runs by their run names, downloads their shard-0 artifacts, checks each HIT table against smt-frontier.txt, extracts DFA/orientation records into smt-candidates.txt, preserves candidate and provenance files, runs the complete dynamic-split generator, and compiles the generated FourHoleSiblingData.lean alongside the 14 standalone Data certificates. The workflow is a 60-minute manual validation job because it includes the full 24-child parent-tree compilation.
 
 **Not yet claimed:** the full parent-tree theorem is not established until this updated workflow completes successfully. The 101-leaf census and the 79+14+8 partition remain intermediate evidence until the generated tree compiles and is integrated into the 124-table roster.
