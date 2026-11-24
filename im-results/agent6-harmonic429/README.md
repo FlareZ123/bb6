@@ -36,5 +36,5 @@ None of the surviving necessary gates has been shown reachable by the authentic 
 
 ## (W\mapsto W+112) reset pump
 
-[BB429Return112Pump.md](BB429Return112Pump.md) and its [C++ reproducer](BB429Return112Pump.cpp) verify 871,543 consecutive 31-step blocks (F^{27}O_{\rm even}F O_{\rm odd}E_{\rm odd}), taking ((0,1073741884)) to ((0,1171354700)). The following block fails at the Eodd position, reaching ((292838528,585677746)) where F is forced. Composed with prior certificates, the root reaches the phase boundary at step 334,791,723. Finite segment only.
+[BB429Return112Pump.md](BB429Return112Pump.md) and its [C++ reproducer](BB429Return112Pump.cpp) verify 871,543 consecutive 31-step blocks (F^{27}O_{\rm even}F O_{\rm odd}E_{\rm odd}), taking ((0,1073741884)) to ((0,1171354700)). The following block fails at the Eodd position, reaching ((292838528,585677746)) where F is forced. Composed with prior certificates, the root reaches ((0,1171354700)) at step 334,791,723; the next 30-step prefix reaches ((292838528,585677746)) at step 334,791,753, where F is forced. Finite segment only.
 
