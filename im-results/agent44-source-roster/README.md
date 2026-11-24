@@ -24,9 +24,9 @@ The focused original-source Coq gate `enumerate62-q32-canonical-parent` passed i
 
 An existing finite cross-match reports 34 source certificates (32 side-cycle certificates and two sweep cases), leaving 50 unresolved descendants. Their hole-count histogram is 3:9, 4:3, 5:6, 6:10, 7:22; none is a one-hole node.
 
-`Agent44ChunkSideSearch.v` now first searches the nine-hole parent for a single source-side cycle witness. If one is found, it can cover the entire 84-node checkpoint and the descendant search is skipped. Otherwise it searches the 50 remaining nodes with the existing bounded grid (directions L/R, entry 0–12, period 1–13, budget 0–2).
+The literal parent itself has a three-transition blank-tape prefix: A0=1RB, B0=1RC, C0=0LA, after which the head is at A1, an undefined slot. Thus the parent is a halting partial machine, not a nonhalting cylinder; an SWside witness on the parent is the wrong closure method. `Agent44ChunkSideSearch.v` guards its parent-side search with the source decider and skips it when the parent is classified Halt. It then searches the 50 remaining descendants with the existing bounded grid (directions L/R, entry 0–12, period 1–13, budget 0–2).
 
-`Agent44Q32ParentSideProbe.v` is a lightweight, source-only probe of that parent-level grid; it avoids the currently blocked weighted-source dependency. Its result is pending CI.
+`Agent44Q32FirstHoleCoverageProbe.v` computes the exact first-hole split at A1 and checks whether the 84-node checkpoint covers every ordinary child. This is the more relevant parent-closure interface: the A1=halt branch is the exact three-step halt, while the ordinary children must be certified. Its Coq result is pending CI. `Agent44Q32ParentSideProbe.v` is a superseded, compute-only experiment and is no longer in the workflow.
 
 ## Boundary
 
