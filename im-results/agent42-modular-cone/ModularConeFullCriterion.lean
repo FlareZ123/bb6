@@ -32,7 +32,8 @@ private theorem low_stop_bound_full (m : Nat) :
     calc
       2*2^(2*m+2) = 2^(2*m+2)*2 := by omega
       _ = 2^(2*m+3) := by
-        rw [show 2*m+3=(2*m+2)+1 by omega, Nat.pow_succ]
+        simpa [show 2*m+3=(2*m+2)+1 by omega] using
+          (Nat.pow_succ 2 (2*m+2)).symm
   omega
 
 private theorem high_stop_bound_full (j m : Nat) :
