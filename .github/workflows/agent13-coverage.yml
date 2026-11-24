@@ -172,7 +172,7 @@ jobs:
           python im-results/agent13-coverage/unpack.py
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
-          python tools/lean_compile_closure.py --workdir /tmp/a31-four --jobs 4 im-results/agent31-three-hole-tnf/FourHoleData.lean | tee /tmp/a31-four.log
+          python tools/lean_compile_closure.py --workdir /tmp/a31-four --jobs 4 im-results/agent31-three-hole-tnf/FourHoleData.lean im-results/agent31-three-hole-tnf/FourHoleRootFrontier.lean | tee /tmp/a31-four.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a31-four.log; then
             echo "Forbidden proof placeholder or native_decide found in four-hole closure" >&2
             exit 1
