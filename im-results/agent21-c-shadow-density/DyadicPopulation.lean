@@ -45,14 +45,25 @@ theorem passes_iff (a : Affine) (n : Nat) (b : Int) (w : List Nat) :
     passes a n b w=true ↔ P n∣rnum a w b := by
   simp [passes,Int.dvd_iff_emod_eq_zero]
 
-theorem rnum_bit (a : Affine) (n : Nat) (b : Int) (w : List Nat) (h : Good a) :
+theorem rnum_bit (a : Affine) (n : Nat) (b : Int) (w : List Nat) (h : Admissible a) :
     rnum a w (shiftBit n b true)=rnum a w b+P n*slope a w.reverse := by
   unfold rnum shiftBit
   simp only [if_true]
-  rw [numer_affine _ _ _ h,numer_affine _ _ _ h,Int.mul_add,Int.mul_comm (slope a w.reverse) (P n)]
+  rw [numer_affine_even _ _ _ h.1,numer_affine_even _ _ _ h.1,Int.mul_add,Int.mul_comm (slope a w.reverse) (P n)]
   omega
 
-theorem bit_unique (a : Affine) (n : Nat) (b : Int) (w : List Nat) (h : Good a) :
+theorem rword_nonempty (w : List Nat) (hp : rpos w) (hn : w≠[]) :
+    ∃ r v, w.reverse=r::v ∧ 0<r := by
+  cases he : w.reverse with
+  | nil => exact False.elim (hn (by simpa using he))
+  | cons r v =>
+    refine ⟨r,v,rfl,?_⟩
+    unfold rpos at hp
+    rw [he] at hp
+    exact hp r (by simp)
+
+theorem bit_unique (a : Affine) (n : Nat) (b : Int) (w : List Nat) (h : Admissible a)
+    (hp : rpos w) (hn : w≠[]) :
     ¬(passes a (n+1) (shiftBit n b false) w=true ∧ passes a (n+1) (shiftBit n b true) w=true) := by
   intro ⟨h0,h1⟩
   rw [passes_iff] at h0 h1
@@ -61,12 +72,12 @@ theorem bit_unique (a : Affine) (n : Nat) (b : Int) (w : List Nat) (h : Good a) 
   have hd := Int.dvd_sub h1 h0
   rw [show rnum a w b+P n*slope a w.reverse-rnum a w b=P n*slope a w.reverse by omega,P_add] at hd
   have he := (Int.mul_dvd_mul_iff_left (P_ne n)).mp hd
-  have ho := slope_odd a w.reverse h
+  have ho := slope_odd_nonempty a w.reverse h (rword_nonempty w hp hn)
   change 2∣slope a w.reverse at he
   have hm := Int.emod_eq_zero_of_dvd he
   omega
 
-theorem bit_down (a : Affine) (n : Nat) (b : Int) (e : Bool) (w : List Nat) (h : Good a)
+theorem bit_down (a : Affine) (n : Nat) (b : Int) (e : Bool) (w : List Nat) (h : Admissible a)
     (hp : P n∣rnum a w (shiftBit n b e)) : P n∣rnum a w b := by
   cases e
   · simpa [shiftBit] using hp
@@ -74,8 +85,8 @@ theorem bit_down (a : Affine) (n : Nat) (b : Int) (e : Bool) (w : List Nat) (h :
     have hd := Int.dvd_sub hp (Int.dvd_mul_right (P n) (slope a w.reverse))
     simpa using hd
 
-theorem bit_exists (a : Affine) (n : Nat) (b : Int) (w : List Nat) (h : Good a)
-    (hp : P n∣rnum a w b) : ∃ e : Bool, passes a (n+1) (shiftBit n b e) w=true := by
+theorem bit_exists (a : Affine) (n : Nat) (b : Int) (w : List Nat) (h : Admissible a)
+    (hpos : rpos w) (hn : w≠[]) (hp : P n∣rnum a w b) : ∃ e : Bool, passes a (n+1) (shiftBit n b e) w=true := by
   obtain ⟨q,hq⟩ := hp
   by_cases he : q%2=0
   · refine ⟨false,(passes_iff _ _ _ _).mpr ?_⟩
@@ -87,7 +98,7 @@ theorem bit_exists (a : Affine) (n : Nat) (b : Int) (w : List Nat) (h : Good a)
     rw [rnum_bit _ _ _ _ h,hq,←Int.mul_add,P_add]
     apply (Int.mul_dvd_mul_iff_left (P_ne n)).mpr
     apply Int.dvd_of_emod_eq_zero
-    have ho := slope_odd a w.reverse h
+    have ho := slope_odd_nonempty a w.reverse h (rword_nonempty w hpos hn)
     change (q+slope a w.reverse)%2=0
     omega
 
@@ -136,7 +147,7 @@ theorem prefix_dvd (a : Affine) (r : Nat) (w : List Nat) (b : Int)
   have h' := Int.dvd_sub h (Int.dvd_mul_right (P (rcost w)) (offset (mass a b+drift w.reverse) r))
   simpa using h'
 
-theorem step_valid (a : Affine) (n : Nat) (b : Int) (Q : Pop) (e : Bool) (h : Good a)
+theorem step_valid (a : Affine) (n : Nat) (b : Int) (Q : Pop) (e : Bool) (h : Admissible a)
     (hv : ValidPop a n b Q) : ValidPop a (n+1) (shiftBit n b e) (step a n b Q e) := by
   constructor
   · intro w
@@ -207,22 +218,51 @@ theorem step_valid (a : Affine) (n : Nat) (b : Int) (Q : Pop) (e : Bool) (h : Go
 def weight (Q : Pop) : Nat := 2*Q.c.length+Q.p.length
 
 private theorem filters_le {α : Type} (p q : α→Bool) (l : List α)
-    (h : ∀ x, ¬(p x=true ∧ q x=true)) :
+    (h : ∀ x∈l, ¬(p x=true ∧ q x=true)) :
     (l.filter p).length+(l.filter q).length≤l.length := by
   induction l with
   | nil => simp
   | cons x l ih =>
-    have hx := h x
+    have hx := h x (by simp)
+    have hi := ih (fun y hy=>h y (by simp [hy]))
     cases hp : p x <;> cases hq : q x <;> simp [List.filter_cons,hp,hq] at * <;> omega
 
-theorem step_supermean (a : Affine) (n : Nat) (b : Int) (Q : Pop) (h : Good a) :
+theorem step_supermean (a : Affine) (n : Nat) (b : Int) (Q : Pop) (h : Admissible a) (hv : ValidPop a n b Q) :
     weight (step a n b Q false)+weight (step a n b Q true)≤2*weight Q := by
   let L := Q.c.map (1::·)++Q.p
   let R := Q.c.map (2::·)++Q.c.filterMap extendLast
   let p := passes a (n+1) (shiftBit n b false)
   let q := passes a (n+1) (shiftBit n b true)
-  have hL := filters_le p q L (fun w=>bit_unique a n b w h)
-  have hR := filters_le p q R (fun w=>bit_unique a n b w h)
+  have hL := filters_le p q L (by
+    intro w hw
+    apply bit_unique a n b w h
+    · simp only [L,List.mem_append,List.mem_map] at hw
+      rcases hw with ⟨v,hv',rfl⟩|hw
+      · exact (rpos_cons _ _).mpr ⟨by decide,((hv.1 v).mp hv').1⟩
+      · exact ((hv.2 w).mp hw).2.1
+    · simp only [L,List.mem_append,List.mem_map] at hw
+      rcases hw with ⟨v,hv',rfl⟩|hw
+      · simp
+      · obtain ⟨r,v,rfl,_⟩ := ((hv.2 w).mp hw).1
+        simp)
+  have hR := filters_le p q R (by
+    intro w hw
+    apply bit_unique a n b w h
+    · simp only [R,List.mem_append,List.mem_map,List.mem_filterMap] at hw
+      rcases hw with ⟨v,hv',rfl⟩|⟨v,hv',he⟩
+      · exact (rpos_cons _ _).mpr ⟨by decide,((hv.1 v).mp hv').1⟩
+      · cases v with
+        | nil => simp [extendLast] at he
+        | cons r v =>
+          simp [extendLast] at he
+          subst w
+          exact (rpos_cons _ _).mpr ⟨by omega,((rpos_cons _ _).mp ((hv.1 (r::v)).mp hv').1).2⟩
+    · simp only [R,List.mem_append,List.mem_map,List.mem_filterMap] at hw
+      rcases hw with ⟨v,hv',rfl⟩|⟨v,hv',he⟩
+      · simp
+      · cases v with
+        | nil => simp [extendLast] at he
+        | cons r v => simp [extendLast] at he; subst w; simp)
   have hl : L.length=Q.c.length+Q.p.length := by simp [L]
   have hr : R.length≤2*Q.c.length := by
     have hh := List.length_filterMap_le extendLast Q.c
@@ -238,7 +278,7 @@ structure Cylinder (a : Affine) where
   valid : ValidPop a n b pop
 
 def root (a : Affine) : Cylinder a := ⟨0,0,⟨[[]],[]⟩,initial_valid a⟩
-def next (a : Affine) (h : Good a) (s : Cylinder a) (e : Bool) : Cylinder a :=
+def next (a : Affine) (h : Admissible a) (s : Cylinder a) (e : Bool) : Cylinder a :=
   ⟨s.n+1,shiftBit s.n s.b e,step a s.n s.b s.pop e,step_valid a s.n s.b s.pop e h s.valid⟩
 
 def runBits {α : Type} (next : α→Bool→α) (s : α) : List Bool→α
@@ -251,7 +291,7 @@ theorem runBits_append {α : Type} (f : α→Bool→α) (s : α) (u v : List Boo
   | nil => rfl
   | cons e u ih => exact ih (f s e)
 
-theorem chooseBits (a : Affine) (h : Good a) (s : Cylinder a) (n : Nat) (t : Int)
+theorem chooseBits (a : Affine) (h : Admissible a) (s : Cylinder a) (n : Nat) (t : Int)
     (ht0 : 0≤t) (ht1 : t<P n) :
     ∃ bits : List Bool, bits.length=n ∧ (runBits (next a h) s bits).n=s.n+n ∧
       (runBits (next a h) s bits).b=s.b+P s.n*t := by
@@ -291,14 +331,30 @@ private theorem nodup_map_inj {α β : Type} (f : α→β) (l : List α)
     obtain ⟨y,hy,he⟩ := List.mem_map.mp hm
     exact hl.1 (hinj y x he ▸ hy)
 
-theorem amplify_completed (a : Affine) (h : Good a) (s : Cylinder a) (w : List Nat)
-    (hw : w∈s.pop.c) (k : Nat) :
+theorem amplify_completed (a : Affine) (h : Admissible a) (s : Cylinder a) (w : List Nat)
+    (hw : w∈s.pop.c) (hne : w≠[]) (k : Nat) :
     ∃ bits : List Bool, bits.length≤F k ∧
       2^k≤(runBits (next a h) s bits).pop.c.length := by
   obtain ⟨hp,hc,hd⟩ := (s.valid.1 w).mp hw
   have hcomp : Compatible a w.reverse s.b := by unfold Compatible; change P (rcost w)∣rnum a w s.b; rwa [hc]
   let a1 := follow a w.reverse s.b
-  have hg : Good a1 := follow_good _ _ _ h
+  have hg : Good a1 := by
+    have hne' := rword_nonempty w hp hne
+    obtain ⟨r,v,he,hr⟩ := hne'
+    have hcost : 0<cost w.reverse := by rw [he,cost_cons]; omega
+    refine ⟨?_,slope_odd_nonempty a w.reverse h ⟨r,v,he,hr⟩⟩
+    change (a.sigma*P (cost w.reverse))%4=0
+    obtain ⟨k,hk⟩ := Nat.exists_eq_succ_of_ne_zero (by omega : cost w.reverse≠0)
+    rw [hk,show k.succ=k+1 by rfl,P_add]
+    have hσ := h.1
+    change (a.sigma*(P k*2))%4=0
+    have heσ : a.sigma=2*(a.sigma/2) := by omega
+    have hmul : a.sigma*(P k*2)=4*((a.sigma/2)*P k) := by
+      calc
+        a.sigma*(P k*2)=(2*(a.sigma/2))*(P k*2) := congrArg (fun t:Int=>t*(P k*2)) heσ
+        _=(2*2)*((a.sigma/2)*P k) := by ac_rfl
+        _=4*((a.sigma/2)*P k) := rfl
+    rw [hmul]; omega
   obtain ⟨n,hn,W,hW⟩ := amplify k a1 hg
   obtain ⟨bits,hbl,hdepth,hprefix⟩ := chooseBits a h s n W.b W.lo W.hi
   let s' := runBits (next a h) s bits
@@ -317,7 +373,7 @@ theorem amplify_completed (a : Affine) (h : Good a) (s : Cylinder a) (w : List N
     · simp [rcost,cost_append,hvc]
       change rcost w+n=s'.n
       rw [hc,hdepth]
-    · have hh := append_compatible a w.reverse v s.b W.b h hcomp hvd
+    · have hh := append_compatible_even a w.reverse v s.b W.b h.1 hcomp hvd
       unfold Compatible at hh
       change P (cost (w.reverse++v))∣numer a (w.reverse++v) (s.b+P (rcost w)*W.b) at hh
       rw [cost_append,hvc] at hh
@@ -335,30 +391,45 @@ theorem pow_ge_self (k : Nat) : k≤2^k := by
   | zero => decide
   | succ k ih => have h := Nat.two_pow_pos k; rw [Nat.pow_succ]; omega
 
-theorem amplify_population (a : Affine) (h : Good a) (s : Cylinder a) (B : Nat)
+theorem amplify_population (a : Affine) (h : Admissible a) (s : Cylinder a) (B : Nat)
     (hlive : 0<weight s.pop) :
     ∃ bits : List Bool, bits.length≤F B+1 ∧
       B≤weight (runBits (next a h) s bits).pop := by
   by_cases hc : s.pop.c=[]
   · have hp : s.pop.p≠[] := by intro he; simp [weight,hc,he] at hlive
     obtain ⟨w,hw⟩ := List.exists_mem_of_ne_nil _ hp
-    have hdiv := ((s.valid.2 w).mp hw).2.2.2
-    obtain ⟨e,he⟩ := bit_exists a s.n s.b w h hdiv
+    have hspec := (s.valid.2 w).mp hw
+    have hne : w≠[] := by obtain ⟨r,v,rfl,_⟩ := hspec.1; simp
+    obtain ⟨e,he⟩ := bit_exists a s.n s.b w h hspec.2.1 hne hspec.2.2.2
     have hw' : w∈(next a h s e).pop.c := by
       simp only [next,step,List.mem_filter,List.mem_append,he,and_true]
       exact Or.inr hw
-    obtain ⟨bits,hlen,hm⟩ := amplify_completed a h (next a h s e) w hw' B
+    obtain ⟨bits,hlen,hm⟩ := amplify_completed a h (next a h s e) w hw' hne B
     refine ⟨e::bits,by simp; omega,?_⟩
     change B≤weight (runBits (next a h) (next a h s e) bits).pop
     unfold weight
     have hh := pow_ge_self B
     omega
   · obtain ⟨w,hw⟩ := List.exists_mem_of_ne_nil _ hc
-    obtain ⟨bits,hlen,hm⟩ := amplify_completed a h s w hw B
-    refine ⟨bits,by omega,?_⟩
-    unfold weight
-    have hh := pow_ge_self B
-    omega
+    by_cases hne : w=[]
+    · subst w
+      have hn : s.n=0 := by have he := ((s.valid.1 []).mp hw).2.1; simpa [rcost,cost] using he.symm
+      have hdiv : P s.n∣rnum a [1] s.b := by rw [hn]; simp [P]
+      obtain ⟨e,he⟩ := bit_exists a s.n s.b [1] h (by simp [rpos,Positive]) (by simp) hdiv
+      have hw' : [1]∈(next a h s e).pop.c := by
+        simp only [next,step,List.mem_filter,List.mem_append,he,and_true,List.mem_map]
+        exact Or.inl ⟨[],hw,rfl⟩
+      obtain ⟨bits,hlen,hm⟩ := amplify_completed a h (next a h s e) [1] hw' (by simp) B
+      refine ⟨e::bits,by simp; omega,?_⟩
+      change B≤weight (runBits (next a h) (next a h s e) bits).pop
+      unfold weight
+      have hh := pow_ge_self B
+      omega
+    · obtain ⟨bits,hlen,hm⟩ := amplify_completed a h s w hw hne B
+      refine ⟨bits,by omega,?_⟩
+      unfold weight
+      have hh := pow_ge_self B
+      omega
 
 #print axioms step_valid
 #print axioms step_supermean

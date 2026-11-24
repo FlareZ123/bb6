@@ -230,18 +230,21 @@ theorem geometric_small (M d : Nat) (hM : 0<M) :
     at some depth at most 1/d of binary continuations still have positive weight.
     The depth depends only on d, initial weight and the uniform amplification
     bound, not on the transition system's starting state. -/
-theorem extinction (f : α→Bool→α) (v : α→Nat)
+def extinctionDepth (H : Nat→Nat) (w d : Nat) : Nat :=
+  (2*d*2^(H (2*d*(w+1)))) * H (2*d*(w+1))
+
+theorem extinction_at (f : α→Bool→α) (v : α→Nat)
     (h : ∀ s, v (f s false)+v (f s true)≤2*v s)
     (H : Nat→Nat)
     (amp : ∀ B s, 0<v s→∃ bits : List Bool, bits.length≤H B ∧ B≤v (runBits f s bits))
     (s : α) (d : Nat) (hd : 0<d) :
-    ∃ n, d*count f (live v) n s≤2^n := by
+    d*count f (live v) (extinctionDepth H (v s) d) s≤2^(extinctionDepth H (v s) d) := by
   let B := 2*d*(v s+1)
   have hB : 0<B := Nat.mul_pos (by omega) (by omega)
   let M := 2^(H B)
   let k := 2*d*M
   let n := k*H B
-  refine ⟨n,?_⟩
+  change d*count f (live v) n s≤2^n
   have hhi := high_count_bound f v B n h s
   have hhi' : 2*d*count (stop f v B) (high v B) n s≤2^n := by
     let c := count (stop f v B) (high v B) n s
@@ -272,16 +275,34 @@ theorem extinction (f : α→Bool→α) (v : α→Nat)
   rw [Nat.mul_add, Nat.mul_assoc] at hh
   omega
 
+theorem extinction (f : α→Bool→α) (v : α→Nat)
+    (h : ∀ s, v (f s false)+v (f s true)≤2*v s)
+    (H : Nat→Nat)
+    (amp : ∀ B s, 0<v s→∃ bits : List Bool, bits.length≤H B ∧ B≤v (runBits f s bits))
+    (s : α) (d : Nat) (hd : 0<d) :
+    ∃ n, d*count f (live v) n s≤2^n :=
+  ⟨_,extinction_at f v h H amp s d hd⟩
+
 end FiniteTree
 
 /-- For every good affine inverse family, surviving binary cylinders have
     arbitrarily small density. -/
-theorem affine_extinction (a : Affine) (h : Good a) (d : Nat) (hd : 0<d) :
+theorem affine_extinction (a : Affine) (h : Admissible a) (d : Nat) (hd : 0<d) :
     ∃ n, d*FiniteTree.count (next a h) (FiniteTree.live (fun s=>weight s.pop)) n (root a)≤2^n :=
   FiniteTree.extinction (next a h) (fun s=>weight s.pop)
-    (fun s=>step_supermean a s.n s.b s.pop h) (fun B=>F B+1)
+    (fun s=>step_supermean a s.n s.b s.pop h s.valid) (fun B=>F B+1)
     (fun B s hs=>amplify_population a h s B hs) (root a) d hd
 
+theorem affine_extinction_uniform (d : Nat) (hd : 0<d) :
+    ∃ n, ∀ (a : Affine) (h : Admissible a), d*FiniteTree.count (next a h)
+      (FiniteTree.live (fun s=>weight s.pop)) n (root a)≤2^n := by
+  refine ⟨FiniteTree.extinctionDepth (fun B=>F B+1) 2 d,?_⟩
+  intro a h
+  exact FiniteTree.extinction_at (next a h) (fun s=>weight s.pop)
+    (fun s=>step_supermean a s.n s.b s.pop h s.valid) (fun B=>F B+1)
+    (fun B s hs=>amplify_population a h s B hs) (root a) d hd
+
+#print axioms affine_extinction_uniform
 #print axioms FiniteTree.extinction
 #print axioms affine_extinction
 end BB6.Agent21Dyadic

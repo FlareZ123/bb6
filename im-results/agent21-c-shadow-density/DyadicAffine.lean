@@ -91,13 +91,40 @@ private theorem half_mul (a b : Int) (h : a%2=0) : (a*b)/2=(a/2)*b := by
     _=2*((a/2)*b)/2 := by rw [Int.mul_assoc]
     _=(a/2)*b := Int.mul_ediv_cancel_left _ (by decide)
 
-theorem numer_affine (a : Affine) (w : List Nat) (t : Int) (h : Good a) :
+theorem numer_affine_even (a : Affine) (w : List Nat) (t : Int) (he : a.sigma%2=0) :
     numer a w t=a.z+acc a.s w+slope a w*t := by
-  have he : a.sigma%2=0 := by unfold Good at h; omega
   unfold numer norm mass slope
   rw [acc_translate _ _ _ (even_mul _ _ he),half_mul _ _ he,Int.add_mul]
   rw [Int.mul_right_comm (a.sigma/2) t (coeff w)]
   ac_rfl
+
+theorem numer_affine (a : Affine) (w : List Nat) (t : Int) (h : Good a) :
+    numer a w t=a.z+acc a.s w+slope a w*t :=
+  numer_affine_even a w t (by unfold Good at h; omega)
+
+/-- Admissibility of a root for nonempty positive words.  Unlike Good, this
+    includes roots with an even Z slope and an odd half-mass slope. -/
+def Admissible (a : Affine) : Prop := a.sigma%2=0 ∧ (a.lam+a.sigma/2)%2=1
+
+theorem good_admissible (a : Affine) (h : Good a) : Admissible a := by
+  unfold Admissible Good at *; omega
+
+theorem coeff_odd (w : List Nat) (hw : ∃ r v, w=r::v ∧ 0<r) : coeff w%2=1 := by
+  obtain ⟨r,v,rfl,hr⟩ := hw
+  obtain ⟨k,rfl⟩ := Nat.exists_eq_succ_of_ne_zero (by omega : r≠0)
+  unfold coeff
+  rw [show k.succ=k+1 by rfl,P_add]
+  change (1+P k*2*coeff v)%2=1
+  rw [Int.mul_right_comm (P k) 2]
+  omega
+
+theorem slope_odd_nonempty (a : Affine) (w : List Nat) (h : Admissible a)
+    (hw : ∃ r v, w=r::v ∧ 0<r) : slope a w%2=1 := by
+  have hc := coeff_odd w hw
+  unfold slope
+  rw [Int.add_emod,Int.mul_emod,hc,Int.mul_one]
+  have he := h.2
+  simpa [Int.add_emod] using he
 
 theorem slope_odd (a : Affine) (w : List Nat) (h : Good a) : slope a w%2=1 := by
   have he : (a.sigma/2)%2=0 := by unfold Good at h; omega
@@ -151,17 +178,22 @@ theorem follow_mass (a : Affine) (w : List Nat) (b t : Int) :
   change (a.s+a.sigma*b+drift w)+a.sigma*P (cost w)*t = a.s+a.sigma*(b+P (cost w)*t)+drift w
   rw [Int.mul_add,Int.mul_assoc]; ac_rfl
 
-theorem follow_norm (a : Affine) (w : List Nat) (b t : Int) (h : Good a)
+theorem follow_norm_even (a : Affine) (w : List Nat) (b t : Int) (h : a.sigma%2=0)
     (hb : Compatible a w b) :
     P (cost w)*norm (follow a w b) t=numer a w (b+P (cost w)*t) := by
   have hd := Int.ediv_mul_cancel hb
   unfold norm follow; dsimp
   rw [Int.mul_add,Int.mul_comm (P (cost w)) (numer a w b/P (cost w)),hd]
-  rw [numer_affine _ _ _ h,numer_affine _ _ _ h,Int.mul_add]
+  rw [numer_affine_even _ _ _ h,numer_affine_even _ _ _ h,Int.mul_add]
   rw [Int.mul_left_comm (P (cost w)) (slope a w)]
   omega
 
-theorem append_compatible (a : Affine) (w v : List Nat) (b t : Int) (h : Good a)
+theorem follow_norm (a : Affine) (w : List Nat) (b t : Int) (h : Good a)
+    (hb : Compatible a w b) :
+    P (cost w)*norm (follow a w b) t=numer a w (b+P (cost w)*t) :=
+  follow_norm_even a w b t (by unfold Good at h; omega) hb
+
+theorem append_compatible_even (a : Affine) (w v : List Nat) (b t : Int) (h : a.sigma%2=0)
     (hb : Compatible a w b) (ht : Compatible (follow a w b) v t) :
     Compatible a (w++v) (b+P (cost w)*t) := by
   unfold Compatible at *
@@ -169,12 +201,17 @@ theorem append_compatible (a : Affine) (w v : List Nat) (b t : Int) (h : Good a)
   have he : numer a (w++v) (b+P (cost w)*t)=P (cost w)*numer (follow a w b) v t := by
     unfold numer
     rw [acc_append,←follow_mass,Int.mul_add]
-    have hf := follow_norm a w b t h hb
+    have hf := follow_norm_even a w b t h hb
     unfold numer at hf
     omega
   rw [he]
   obtain ⟨k,hk⟩ := ht
   exact ⟨k,by rw [hk,Int.mul_assoc]⟩
+
+theorem append_compatible (a : Affine) (w v : List Nat) (b t : Int) (h : Good a)
+    (hb : Compatible a w b) (ht : Compatible (follow a w b) v t) :
+    Compatible a (w++v) (b+P (cost w)*t) :=
+  append_compatible_even a w v b t (by unfold Good at h; omega) hb ht
 
 #print axioms word_exists
 #print axioms append_compatible
