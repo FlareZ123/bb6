@@ -5,7 +5,7 @@ on:
       target:
         description: 'Source closure to verify'
         type: choice
-        options: [legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot]
+        options: [legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole]
         default: legacy
 permissions:
   contents: read
@@ -122,5 +122,16 @@ jobs:
           python tools/lean_compile_closure.py --workdir /tmp/a50-tnf-pilot --jobs 8 im-results/agent50-weighted-tnf-pilot/CryptidSiblings.lean | tee /tmp/a50-tnf-pilot.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a50-tnf-pilot.log; then
             echo "Forbidden proof placeholder or native_decide found in pilot closure" >&2
+            exit 1
+          fi
+
+      - name: Check complete three-hole weighted TNF subtree
+        if: inputs.target == 'weighted-tnf-three-hole'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python tools/lean_compile_closure.py --workdir /tmp/a31-tnf --jobs 8 im-results/agent31-three-hole-tnf/ThreeHoleData.lean | tee /tmp/a31-tnf.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a31-tnf.log; then
+            echo "Forbidden proof placeholder or native_decide found in three-hole closure" >&2
             exit 1
           fi
