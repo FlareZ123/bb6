@@ -1,4 +1,10 @@
 /-!
+WITHDRAWN 2026-11-24: universal nonhalting claim is false.
+See ../agent48-token-return-correction/README.md. Historical draft only.
+Do not dispatch this proof target or use these declarations as accepted lemmas.
+-/
+
+/-!
 Source-exact residual-one token recurrence for Cryptid #85.
 
 The direct one-shot 36-step claim T(s) -> T(s+5) is false. The correct
