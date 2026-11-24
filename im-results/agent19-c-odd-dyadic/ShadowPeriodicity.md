@@ -1,6 +1,6 @@
 # Periodicity obstruction for ordinary rational-shadow paths
 
-**Status:** the constant odd-cost existence classification and explicit infinite non-leaf examples are kernel-checked in Lean 4.36.0-rc2 in [ShadowPeriodicFamilies.lean](ShadowPeriodicFamilies.lean). The general periodic-word number-theoretic obstruction below is a paper argument; the necessary-condition denominator census is computational. The sound original-source shadow checker itself is separately accepted in CI 45379626167. None of these claims decides the authentic root32 family.
+**Status:** the constant odd-cost existence classification and explicit infinite non-leaf examples are kernel-checked in Lean 4.36.0-rc2 in [ShadowPeriodicFamilies.lean](ShadowPeriodicFamilies.lean). The full-fiber imbalance and lift-divisibility theorems are also kernel-checked in [ShadowPrimeLifts.lean](ShadowPrimeLifts.lean). The general periodic-word number-theoretic obstruction and fixed-support reduction are paper arguments; the exact denominator and support censuses are computational. The sound original-source shadow checker itself is separately accepted in CI 45379626167. None of these claims decides the authentic root32 family.
 
 ## Ordinary edges
 
@@ -117,6 +117,38 @@ The case 211|h implies 211|k, hence q|W, already impossible. Therefore v_211(D-1
     ell/211^(e-1) = 126 d0 mod211.
 
 Indeed h=109 d0/m mod211 and k=W/(211^(e-1)*m), and 5*109=123 mod211, 3*210=208 mod211. In particular the bit period cannot be balanced (ell=b/2 would give ell/211^(e-1)=105 d0 instead). Thus every remaining periodic candidate has an unbalanced binary repetend, even W, 211|q, (1), (2), (4).
+
+
+## Full prime-power lifts: finite reduction for an arbitrary fixed prime support
+
+Let q0 be an odd modulus, m odd, q=q0*m and suppose ord_q(2)=m*ord_q0(2). Write b0=ord_q0(2), b=m*b0. For a reduced numerator a modulo q, project its multiplication-by-two orbit onto the corresponding reduced orbit modulo q0. Each of the b0 representatives x has exactly m distinct lifts x+t*q0, 0<=t<m, in the large orbit: the projection is contained in the small orbit, its fibers have size at most m, and the large orbit has exactly m*b0 distinct points. If m=2h+1, the lower h lifts are below q/2, the upper h are above q/2, and the central lift has upper-half status identical to x modulo q0. Thus, with ell and ell0 the respective binary weights,
+
+    ell = ell0+(m-1)*b0/2,
+    delta := ell-b/2 = ell0-b0/2 =: delta0.
+
+This is an exact identity, not equidistribution or a heuristic estimate. [ShadowPrimeLifts.lean](ShadowPrimeLifts.lean) proves the full-fiber permutation theorem, the weight identity, invariant doubled imbalance, and the divisibility theorem below for arbitrary finite lists and arbitrary positive C. All audited declarations compile using Lean 4.36.0-rc2, with only propext, Classical.choice, Quot.sound. The multiplicative-order reduction and following finite census are paper argument and exact integer computation respectively, not a kernel-checked universal periodicity theorem.
+
+For C=211, every candidate q contains 211 and has b even, W=3b+ell, q|211 W, k=211 W/q positive even, and delta nonzero (as above). If 211|q0, then q0/211 times m divides W. Since
+
+    W = 7*m*b0/2+delta0,
+
+m divides delta0, so 1<=m<=|delta0|<b0/2. Also q/b<422 since W<4b and k>=2. Consequently q0/b0<422.
+
+For any fixed prime support P containing 211, let R be its radical, L=ord_R(2)=lcm_{p in P} ord_p(2), and e_p=v_p(2^L-1). For an arbitrary q=product p^f_p, define q0=product p^min(f_p,e_p) and m=product p^max(0,f_p-e_p). The elementary odd-prime lifting formula v_p(2^(L*t)-1)=e_p+v_p(t) proves ord_q0(2)=L and ord_q(2)=L*m: any admissible exponent is a multiple of L and needs exactly the indicated prime-power factors in its multiplier. Therefore every possible denominator with that support belongs to an explicitly finite set,
+
+    q0 | product p^e_p,
+    m < L/2, m supported on primes saturated in q0,
+    m | delta0 for some base orbit.
+
+In particular q < (L/2)*product p^e_p, even when there is no prior bound on any individual exponent. This reduces an infinite family of denominators to finite checks, unlike a cutoff q<=N. The ratio bound q0/b0<422 also implies at most nine distinct prime factors: ord_q(2)<=phi(q)/2^(s-1) for s distinct odd primes (all component orders are even), hence q/b>2^(s-1). It does not bound the sizes of the primes.
+
+The exact arithmetic scan [PrimeSupportScan.py](PrimeSupportScan.py) implements the reduction. The support recursion may prune R>=422L permanently because adding a new prime p multiplies R by p and L by at most p-1. For each base q0 and multiplier m, compute h=((2^b-1)/q) mod211 by modular exponentiation modulo 211q. The previously established necessary conditions restrict k to a positive even integer below 844 with k=5h mod211. The required base imbalance is exactly m*(k*(q0/211)-7L/2). The scanner enumerates all base orbits only when at least one required nonzero imbalance lies strictly between -L/2 and L/2, and excludes bases for which -1 is in the subgroup generated by 2 (all their orbits are balanced).
+
+Run:
+
+    python PrimeSupportScan.py --prime-limit 47 --orbit-limit 20000000
+
+The completed output has 347 radical supports, 467 base moduli, 15 nonempty prefilters (3 balanced bases), 238 exact orbit computations, zero passing candidates, and zero unexamined bases. Thus the established necessary conditions exclude **all exponents** for denominators supported on {211} union the odd primes <=47. This is a finite exact integer enumeration with a mathematical completeness argument; the enumeration has not been formalized in Lean. No claim about larger prime factors, aperiodic infinite cost words, or authentic-root nonhalting follows.
 
 ## Reproducible finite census
 
