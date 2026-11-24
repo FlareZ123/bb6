@@ -1,6 +1,6 @@
 # Thirteen-step 3-adic raw-replay shadow of the authentic root
 
-**Status:** exact BigInt computation using the repository's DRegular model and the sparse raw-machine A_step2 replay simulator. This is not yet a Lean proof of the full original-machine path.
+**Status:** exact DRegular arithmetic plus kernel-checked original-source Lean proof of the root segment from section 31,777 through the sixth exception and next regular reentry. The episode-20 cylinder screen remains finite evidence; this is not a halting/nonhalting verdict.
 
 ## Root section and modular certificate
 
