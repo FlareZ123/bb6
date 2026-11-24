@@ -4,7 +4,7 @@ on:
     inputs:
       target:
         type: choice
-        options: [twelve, five-hole]
+        options: [twelve, five-hole, recursive]
         default: twelve
 permissions:
   contents: read
@@ -43,5 +43,17 @@ jobs:
           python im-results/agent10-tnf-multipump/generate.py 66 70 80
           python tools/lean_compile_closure.py --workdir /tmp/a10-five --jobs 4 im-results/agent10-tnf-multipump/FiveHoleRoster.lean | tee /tmp/a10-five.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a10-five.log; then
+            exit 1
+          fi
+      - name: Check recursive-counter five-hole source closures
+        if: inputs.target == 'recursive'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent10-tnf-multipump/generate.py 69 73 78
+          python tools/lean_compile_closure.py --workdir /tmp/a10-recursive --jobs 4 im-results/agent10-tnf-multipump/RecursiveRoster.lean | tee /tmp/a10-recursive.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a10-recursive.log; then
             exit 1
           fi
