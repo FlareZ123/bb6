@@ -1,0 +1,14 @@
+# Global source spatial growth for Cryptid D
+
+Agent 32, 2026-11-24. Lean 4.36.0-rc2 checked against the unchanged original Boundary machine. For Section(n,v) = F0 with empty left tape and right word 1^n v, where v begins with 0 or is empty, write L(v)=length(trim v), removing far blank cells. For every n>=2 and finite v, section_bands proves either a positive-time frozen-state-6 witness or a positive-time exact original-source return Section(n',v') with v' similarly normalized at its leading boundary and
+
+    8n <= 3n' + 23
+    3(n'+L(v')) <= 8(n+L(v)) + 135.
+
+The return witness is exact zipper equality; no padding equivalence or assumption about the regular suffix language is used. This theorem asserts a return, not yet its first-return minimality. In particular n'>n for n>=5. It closes the arbitrary-suffix spatial-bound premise for selected exact source macro returns. It does not establish any blank-root halting/nonhalting outcome or all-time noncoalescence until strict first return and root anchors are connected.
+
+Mechanism: rank R(w)=L(w)+2*#011 lies between L(w) and 5L(w)/3. The existing 294 weighted rows all have delta <=2 (ordinary kernel decide). RankGrowth proves every live one-cell exit has output rank <=R(w)+2 before prepending the newly scanned left cell; each consumed left cell increases rank by at most 5. GuardGrowth composes this with the existing nine-bit E guard on eight left cells: for every suffix and arbitrary untouched left context, halt or exact B/D sweep entry with at most four remaining pairs and right rank <=R(0v)+40. GrowthMacro proves exact source A token parsing, including a final implicit zero, with 6i+8L(residual)<=8L(input) for i added pairs. SectionBands composes the three source prefixes, guard and final sweep to obtain the two inequalities. All printed new substantive theorems use only standard axioms propext, Quot.sound, and where indicated Classical.choice. No native_decide or sorry.
+
+Reproduce with bash reproduce.sh. The local build used the exact checksum-pinned original Boundary and OneSided archive, original Guard9 and Guard9Total source, and the unchanged Guarded9Macro declarations with its unused RouteAllFront import removed. The nine-bit table generator uses a reconstructed equivalent closure-check template included in this bundle; its regenerated Guard9Cert.lean SHA256 differs from the prior archive's generated file, but every closure check and subsequent proof was checked by Lean. The generator is not trusted. The original guarded modules need not be rebuilt in their larger route dependency closure. Decoded growth.tar.xz SHA256: 7d31e9bcdcf31e13497a7acf2df6d9fe1d5d5f7e4494f54e3c62561f0081c560.
+
+Next: prove strict first-event semantics of these exact witnesses, then lift Agent26's phase-band ordering using upper=5*(n+L(v))+135 and lower=5*n-23. The older anchors have ample separation for this larger constant.
