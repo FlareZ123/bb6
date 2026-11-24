@@ -1,5 +1,5 @@
 From BusyCoq Require Import Enumerate62 Individual62 TC62 Eqb.
-From Coq Require Import List Lia NArith.
+From Coq Require Import List Lia NArith Arith.
 Import ListNotations.
 Import TNF_Node.
 
