@@ -13,3 +13,7 @@ Leaves 401 and 481: F(r,n) is D with left 00 1^r (1111)^n and empty right. The t
 ## Multiphase sweeps
 
 Leaf 147: at step 179, A has empty left and right (001)^3(01)^4. For independent k,n, four macro returns transform (001)^(3+4k)(01)^(4+2n) to (001)^(7+4k)(01)^(6+2n) in 506+224k+96n steps, via suffixes 00100101 and 000010101. Leaf 380: at step 470, F has empty left and right 1^11 0001 (001)^3. Five fixed phases reduce the initial eleven ones to one, adding five 001 tokens; the terminal sweep restores eleven ones while preserving the tokens. Return cost 295+54(n+5). Both unbounded-live-prefix proofs compile locally, standard axioms only. Five candidate leaves remain (14,120,227,244,353).
+
+## Alternating-block macro and recursive language
+
+Leaf 120: seven-phase return from D at step 1398 with left word 0011111(01)^(19+n)10011011, right empty, to same family with n+14. Exact 1882+54n step cost. Leaf 353: define Good words by bases empty, 1, 11 and left prefixes 1111, 110, 010. F(w,R)=D with left 00w/right R; G(w,R)=D with left 10w/right R. For every Good w and n, F((1111)^(n+1)w,R) reaches some G(w',R) with Good w'. This uses recursive carry into the suffix at prefix 110, saving 001/0001 tokens to right, and restoring 010 plus repeated 1111 on return. The positive blank-tail macro G(w',[]) -> F(1111w',[]) in 18 steps closes the invariant; blank start reaches F(1111,[]) at step 26. Full local Lean unbounded-live proofs accepted with propext, Quot.sound. Remaining three candidate leaves: 14,227,244.

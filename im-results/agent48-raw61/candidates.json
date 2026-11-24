@@ -203,18 +203,18 @@
   },
   "unresolved": [
     14,
-    120,
     227,
-    244,
-    353
+    244
   ],
-  "notes": "Indices zero-based in enumerator open.txt order. FAR default applies only to indices outside explicit groups, pump and unresolved lists. Long tuples are time, direction, state, period, event index. All candidate witnesses require formal audit. Recursive candidate leaves use emit_tripling.py, local copied-zipper Lean proof passed (propext, Quot.sound); original-source audit pending. Exclude these indices from FAR default. Additional five recursive leaves use emit_recursive_unary.py, local exact-zipper proofs compiled. Residue unary leaves use emit_residue_unary.py, local exact-zipper proofs compiled. Multiphase leaves use emit_multiphase.py, local exact-zipper proofs compiled.",
+  "notes": "Indices zero-based in enumerator open.txt order. FAR default applies only to indices outside explicit groups, pump and unresolved lists. Long tuples are time, direction, state, period, event index. All candidate witnesses require formal audit. Recursive candidate leaves use emit_tripling.py, local copied-zipper Lean proof passed (propext, Quot.sound); original-source audit pending. Exclude these indices from FAR default. Additional five recursive leaves use emit_recursive_unary.py, local exact-zipper proofs compiled. Residue unary leaves use emit_residue_unary.py, local exact-zipper proofs compiled. Multiphase leaves use emit_multiphase.py, local exact-zipper proofs compiled. Seven-phase 120 and grammar 353 have locally accepted exact-zipper proofs (emit_d120.py and emit_language353.py).",
   "recursive_candidate": [
+    120,
     147,
     314,
     315,
     316,
     319,
+    353,
     380,
     401,
     481,
