@@ -6,7 +6,7 @@ namespace CascadeThirdForkPacketSource
 
 open CascadeRayDepthResidue CascadeRayDepthHensel CascadeRayPeriod
 open CascadeOddRay CascadeFiveForced CascadeResetInverse CascadeSweep
-open CascadeRayTThreeGap
+open CascadeRayTThreeGap CascadeForkOddDead
 
 /-- The three 3-adic lifts in a canonical 162-index ray packet. -/
 def packetIndex (n b t : Nat) : Nat :=
@@ -267,6 +267,7 @@ private theorem packet_quotient_mod (n b t dBase dt:Nat)
   have hp4:depthPeriod 4=162:=by norm_num [depthPeriod]
   have hpow4:(3:Int)^(3+1)=81:=by norm_num
   have hpow5:(3:Int)^(3+2)=243:=by norm_num
+  have hpow5a:(3:Int)^(4+1)=243:=by norm_num
   have hidx:packetIndex n b t=base+t*54+b*162:=by
     unfold packetIndex
     dsimp [base]
@@ -275,7 +276,7 @@ private theorem packet_quotient_mod (n b t dBase dt:Nat)
   have hper':
       signedZ n (packetIndex n b t)%243=
       signedZ n (base+t*54)%243:=by
-    simpa [hidx,hp4,hpow5] using hper
+    simpa [hidx,hp4,hpow5a] using hper
   have hshift:=signedZ_shift_digit_mod n base 3 t ht
   have hshift':
       signedZ n (base+t*54)%243=
