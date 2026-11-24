@@ -602,16 +602,47 @@ theorem drainB_digit_transducer (b a d aa dd : Nat)
     exact hsummaryCounts.2
   rcases hsource with ⟨hfirst, hweighted⟩
   constructor
-  · simpa [stats, L] using hfirst
+  · rw [htwos]
+    simpa [L] using hfirst
   · have htarget : dd + 4 * (drainDigitSummary b).twos =
         d + 3 * b + 2 * (drainDigitSummary b).length
           + 2 * ((drainDigitSummary b).ones + (drainDigitSummary b).twos) := by
       omega
     have htarget' : dd + 4 * stats.twos =
         d + 3 * b + 2 * L + 2 * (stats.ones + stats.twos) := by
-      rw [← hones, ← htwos]
+      rw [hones, htwos]
       simpa [L] using htarget
-    simpa [stats] using htarget'
+    exact htarget'
+
+/-- The full source evaluator-call count, reduced modulo three, is exactly
+the phase register of the nine-state drain product.  The weighted source
+identity identifies the full call count with the number of nonzero emitted
+digits, while `drainNineRun_count_mod3` computes that count in finite state. -/
+def drainDigitPhase9 (b : Nat) : Nat :=
+  (drainNineRun (drainDigitSummary b).length
+    (b % 3 ^ (drainDigitSummary b).length) (DrainState.A, 0)).2
+
+theorem drainB_full_count_mod3
+    (b a d aa dd : Nat)
+    (hbudget : b ≤ ternaryOnes a)
+    (hdrain : drainB a b d = some (.D aa dd)) :
+    ∃ r : Nat,
+      2 * aa + dd = 2 * a + d + 3 * b + 2 * r ∧
+      r % 3 = drainDigitPhase9 b := by
+  let L := (drainDigitSummary b).length
+  let stats := runStats L (b % 3 ^ L) DrainState.A
+  obtain ⟨r, hr⟩ := drainB_weighted_exact b a d aa dd hbudget hdrain
+  have htrans := drainB_digit_transducer b a d aa dd hbudget hdrain
+  have hcount : r = stats.ones + stats.twos := by
+    dsimp [stats, L] at *
+    omega
+  have hphase := drainNineRun_count_mod3 L (b % 3 ^ L) DrainState.A
+  refine ⟨r, hr, ?_⟩
+  dsimp [drainDigitPhase9, L]
+  rw [hcount]
+  simpa [stats] using hphase.symm
+
+#print axioms drainB_full_count_mod3
 
 #print axioms drainB_digit_transducer
 

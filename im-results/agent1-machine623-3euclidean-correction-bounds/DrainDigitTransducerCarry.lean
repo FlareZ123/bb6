@@ -470,3 +470,77 @@ theorem runStats_weight_bounds (L b : Nat) (s : DrainState) :
   have h := runStats_count_bounds L b s
   simp [weightedE, weightedR] at ⊢
   omega
+
+/-! ## Nine-state product: drain state × nonzero-output count modulo 3
+
+The second register counts emitted digits 1 and 2 modulo 3.  Since the
+underlying drain transducer has three states, this is a nine-state
+deterministic product.  It is the exact finite memory needed for the
+passive-register low-digit update in the #623 two-coordinate cocycle.
+-/
+
+def nonzeroOutputWeight (out : Int) : Nat := if out = 0 then 0 else 1
+
+def drainNineStep (s : DrainState × Nat) (d : Nat) : DrainState × Nat :=
+  let (s', out) := step s.1 d
+  (s', (s.2 + nonzeroOutputWeight out) % 3)
+
+def drainNineRun : Nat → Nat → DrainState × Nat → DrainState × Nat
+  | 0, _, (s, rho) => (s, rho % 3)
+  | n + 1, b, s => drainNineRun n (b / 3) (drainNineStep s (b % 3))
+
+theorem nonzeroOutputWeight_eq_count (out : Int)
+    (hout : 0 ≤ out ∧ out ≤ 2) :
+    nonzeroOutputWeight out =
+      (if out = 1 then 1 else 0) + (if out = 2 then 1 else 0) := by
+  unfold nonzeroOutputWeight
+  by_cases h0 : out = 0
+  · simp [h0]
+  · have h12 : out = 1 ∨ out = 2 := by omega
+    rcases h12 with h1 | h2 <;> simp [h0, h1, h2]
+
+theorem drainNineRun_count (n b : Nat) (s : DrainState) (rho : Nat) :
+    (drainNineRun n b (s, rho)).2 =
+      (rho + (runStats n b s).ones + (runStats n b s).twos) % 3 := by
+  induction n generalizing b s rho with
+  | zero => simp [drainNineRun, runStats]
+  | succ n ih =>
+      cases hst : step s (b % 3) with
+      | mk s' out =>
+          have hout := step_output_bounds s (b % 3)
+          simp [hst] at hout
+          have hinc := nonzeroOutputWeight_eq_count out hout
+          have htail := ih (b / 3) s' ((rho + nonzeroOutputWeight out) % 3)
+          simp only [drainNineRun, drainNineStep, hst]
+          rw [htail]
+          simp only [runStats, hst]
+          rw [hinc]
+          omega
+
+theorem drainNineRun_finalState (n b : Nat) (s : DrainState) (rho : Nat) :
+    (drainNineRun n b (s, rho)).1 = (run n b s).2 := by
+  induction n generalizing b s rho with
+  | zero => simp [drainNineRun, run]
+  | succ n ih =>
+      cases hst : step s (b % 3) with
+      | mk s' out =>
+          have htail := ih (b / 3) s' ((rho + nonzeroOutputWeight out) % 3)
+          simp [drainNineRun, drainNineStep, run, hst, htail]
+
+theorem drainNineRun_phase_lt_three (n b : Nat) (s : DrainState) (rho : Nat)
+    (hrho : rho < 3) : (drainNineRun n b (s, rho)).2 < 3 := by
+  induction n generalizing b s rho with
+  | zero => simpa [drainNineRun] using hrho
+  | succ n ih =>
+      cases hst : step s (b % 3) with
+      | mk s' out =>
+          apply ih
+          simp [drainNineStep, hst]
+
+theorem drainNineRun_count_mod3 (n b : Nat) (s : DrainState) :
+    (drainNineRun n b (s, 0)).2 =
+      ((runStats n b s).ones + (runStats n b s).twos) % 3 := by
+  simpa using drainNineRun_count n b s 0
+
+#print axioms drainNineRun_count
+#print axioms drainNineRun_finalState
