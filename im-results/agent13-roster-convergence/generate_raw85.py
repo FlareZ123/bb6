@@ -39,6 +39,8 @@ for i in reversed(range(12)):
 
 base_path = OUTPUT_DIR / "FourHoleSiblingBase.lean"
 source = base_path.read_text()
+if not source.startswith("import Mathlib"):
+    source = "import Mathlib\\n" + source
 footer = "end BB6.Agent31FourHoleSibling"
 diagnostic = f"""
 def sourceParent : PartialMachine := fun s => {expr}
