@@ -34,3 +34,31 @@ nonhalting completions (3.37408 percentage points; 160 three-row and
 the original proof-carrying frontier report is evaluated. No claim that
 the remaining hard-root roster is decided; small DFA sizes 1–4 gave no
 hits on the historical 663 roster.
+
+## Canonical-search to weighted-TNF bridge
+
+`CanonicalTNFBridge.lean` now imports the existing canonical audit/search stack into the weighted first-one certificate interface.
+
+The crucial bound conversion is:
+
+[
+\operatorname{DecidedBelow}(B-5)(M)
+\quad\Longrightarrow\quad
+\operatorname{WeightedBound}(B)(M),
+]
+
+provided the partial table has the authentic first-one root `A/0 = 1RB). The proof uses `firstOne_terminal` to establish that state 0 is a terminal node of the zero-writing graph, then `delays_subset_possible` to place every weighted delay in `possibleDelays p 0`. That list is filtered from `List.range 6`, so every delay is at most five. Halting-time uniqueness identifies the primitive halting index in the canonical decision with the index used by the weighted bound. The five-step margin is therefore a proved six-state graph bound, not a heuristic allowance.
+
+The exported interfaces are:
+
+- `decidedBelow_to_weightedBound`: converts one machine's primitive decision at (B-5) into its weighted bound at (B).
+- `canonicalAudit_to_weightedCover`: converts a closed `Canonical.Audit` (the unresolved report component is zero) into `Cover (WeightedBound B) p`.
+- `canonicalAuditTNFLeaf`: packages that cover as a `WeightedTNFCertificate`.
+- `canonicalSearchTNFLeaf`: wraps the existing `Canonical.search` directly. It takes the same ray/scan/lasso/entry/macro/FAR limits and depth, runs the canonical search at (B-5), and consumes a proof that its unresolved report is zero. `Canonical.Scoped` is explicitly translated to the slightly stronger-shaped `TNFSupport` predicate.
+
+This is the useful integration point: the canonical search already combines physical-trace, lasso, entry-macro, and FAR leaf oracles. A closed result can now become a weighted-TNF leaf without implementing a second copy of those search methods. It does not make an incomplete audit complete; the required `report.2 = 0` proof remains the exact closure obligation.
+
+`CanonicalTNFExample.lean` exercises the conversion on the four-row glider: it turns the explicit FAR certificate into a certified canonical audit, then into a weighted-TNF leaf, and proves `WeightedBound B` for every (B\ge5). The direct FAR-to-TNF example and its soundness theorem are in `FARWeightedTNFExample.lean`.
+
+<badge>Source-checked</badge> The full canonical + weighted-TNF import closure and both concrete examples passed [CI 45389105512](https://github.com/FlareZ123/bb6/actions/runs/45389105512). The workflow rejects `sorryAx` and `native_decide` in the closure output. This is a reusable proof-interface result, not a BB(6) upper bound: the firstOne root still needs a closed audit or a complete weighted-TNF tree.
+
