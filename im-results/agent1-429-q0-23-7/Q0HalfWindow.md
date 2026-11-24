@@ -2,7 +2,7 @@
 
 ## Strongest result
 
-The equivalent signed delayed-carry criterion below is the current proof obligation; the wide-window result supplies its quantitative radius.
+The gate-aware exact delayed-carry criterion below refines the wide-window proof obligation by restricting the first crossing to six central pairs for each coefficient. The wide-window result supplies its quantitative radius. The gate is not a proof of nonexistence.
 
 [Q0WideRank.lean](Q0WideRank.lean) and [Q0WideWindow.lean](Q0WideWindow.lean) prove wide_rank_cover, q0_wide_cross and q0_of_no_wide_cross: every necessary signed macro path from q0 with u>=1,000,000 has a strict doubled-rank crossing at a*4^k+b, a in {1,2}, k>=12, 0<=b<9, with **floor(4^k/(128*(k+1))) half-steps on each side**. This is nearly linear in the rank scale, and wideRadius_ge_sqrt proves it dominates the earlier 2^k radius at every relevant k. A uniform no-crossing theorem for the larger radius suffices to close the large-u family; the prior small-u kernel certificate covers u<1,000,000. This is a stronger conditional reduction, not an exclusion of any further q0 parameter, a #429 decision, or a BB(6) bound.
 
@@ -55,6 +55,17 @@ In particular negative q is legitimate. Keeping only Nat carries on the past sid
 [Q0DelayStrip.lean](Q0DelayStrip.lean) implements the exact rolling history and lattice, and proves delay_of_exact and exact_of_delay. The latter reconstructs all intermediate full-rank coordinates. There is no free choice of r: it is removed from the history and d appended. Q0StripCross adds the closed-form seed test, using p=a*M+q-L and y=M*e-q*D-E, and proves history_of_seed, seed_of_history and strip_cross_iff. This is equivalence with ExactCrossWindow whenever 0<k<=N and 5(b+9N)<=2*4^k, conditions proved for wideRadius at every relevant scale. Thus the initial large height and all intermediate large-rank arithmetic can be eliminated in favour of signed carries and one k-bit history. The remaining all-scale proof is to exclude the exact long delayed-carry window, not to establish another translation.
 
 Local Lean 4.36.0-rc2 compiled these four complete new source files using the same original/selected-verbatim dependency closure as the wide rank proof. The exported theorem axioms are propext, Classical.choice, Quot.sound or subsets; no sorry or native_decide. Full untouched original dependency closure remains to be checked. The exact reduction does not itself exclude another q0 parameter, decide #429, or prove a BB(6) upper bound.
+
+## First-crossing gate
+
+[Q0CrossGateCore.lean](Q0CrossGateCore.lean) proves a scale-independent necessary gate with two incoming and two outgoing projected edges. At the first nonnegative offset q=b, the permitted pairs (b,e) are:
+
+- a=1: (0,0),(1,0),(2,1),(3,0),(3,1),(5,2).
+- a=2: (0,0),(1,0),(1,1),(3,0),(3,1),(7,3).
+
+[Q0CrossGate.lean](Q0CrossGate.lean) proves gate_of_strip: every StripCross with k+10<=N yields GateStrip with the complete original seed and delayed history, centered at the first crossing. At most eight half-steps move from the past to the future, and the gate is imposed on that center. Since wideRadius k>=2^k>=k+10 for k>=12, the existing q0 wide-crossing implication composes with this theorem. Gate membership is necessary, not sufficient. Local Lean 4.36.0-rc2 compiled the complete gate core, and the adapter against a verbatim slice of the actual strip definitions and split/initial lemmas; full original import closure remains unchecked. The two finite gate equalities have no axioms; the general theorems use only standard axioms.
+
+The first-crossing restriction does not make the short-window conjecture true. Recenter the existing k=56 witness one step earlier, prepending a valid zero step to its history. Starting in phase B at (10384593717069655257060992658440017,66789340999524836591357550133248), the words 0^48 10110000, 0^47 101111111, and 1^47 001010010 give 56 past and 112 future half-steps. The center is at (a,b,e)=(2,1,0), with preceding offset -4. Exact integer replay checks integrality, phase lattice and strict interior. This recentered witness is computationally verified, not a new kernel theorem or authentic-root ancestry.
 
 ## The short-window counterexample
 
