@@ -1,0 +1,5 @@
+# Packet quotient review and compact reset shield
+
+Independent algebra check: with p=2^n, h=16d-p-n-2, sector 4 has p≡n≡1 (mod 3), hence h≡d+2; sector 5 has p≡n≡2, hence h≡d. The 81-divisible signed numerators shift by a nonzero multiple of 81 modulo 243 over the three depth classes separated by 54, so the three quotient residues are distinct. Latest ThirdForkPacketSource.lean already establishes cross-packet distinctness through packetQ_strict_lex/injective; alternatively determinism of ResetParent and distinct ray outputs force distinct parents. No mathematical issue found in these steps.
+
+Agent10 has a new local kernel-checked compact forward reset certificate excluding all fatal indices through 10,000 in the exact arithmetic grammar (commit 80587c2af845bf5f88127e479a5aec39cad28aee). OriginalGate10001.lean is the pending source adapter. Existing manual agent10-746-original-cryptids.yml has focused reset_block_10000_only input; if able to dispatch, please run only that target and report axiom profile. Do not spend effort on new workflows or repeated inverse census.

@@ -7,6 +7,11 @@ on:
         required: false
         default: false
         type: boolean
+      reset_block_10000_only:
+        description: "Check compact reset prefix and original gate bound through 10000"
+        required: false
+        default: false
+        type: boolean
 permissions:
   contents: read
 jobs:
@@ -58,6 +63,15 @@ jobs:
           for m in FirstReturnCore ValuationDrain FullReturn ReturnInverseArithmetic ResetInverseWitnesses FirstOutcome FirstInverseComplete ResetChain ResetParentStrict ParentCheck Parents ClosedCert ReachDecide; do
             lake env lean -o "Agent10Bridge/$m.olean" "Agent10Bridge/$m.lean"
           done
+          if [ "${{ inputs.reset_block_10000_only }}" = "true" ]; then
+            cp "$b"/{ResetBlockCore,Bound10000,OriginalGate10001}.lean Agent10Bridge/
+            python3 "$b/generate_reset_blocks.py" --bound 10000 --chunk 128 --output Agent10Bridge/Cert10000.lean
+            for m in ResetBlockCore Cert10000 Bound10000; do
+              lake env lean -o "Agent10Bridge/$m.olean" "Agent10Bridge/$m.lean"
+            done
+            lake env lean Agent10Bridge/OriginalGate10001.lean
+            exit 0
+          fi
           if [ "${{ inputs.t0_rho38_only }}" = "true" ]; then
             lake env lean -o "Agent10Bridge/T0Rho38RootExclusion.olean" "Agent10Bridge/T0Rho38RootExclusion.lean"
             echo "Source-connected rho-38 t=0 root exclusion compiled; inspect #print axioms output above."
