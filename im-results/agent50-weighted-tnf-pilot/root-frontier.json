@@ -1,0 +1,8186 @@
+{
+  "schema": "bb6-weighted-tnf-residual-frontier-v1",
+  "purpose": "Explicit open residual cylinders for the authentic firstOneCylinder path; each entry preserves the full twelve-slot partial table.",
+  "root": {
+    "name": "BB6.CoverageAdapter.firstOneCylinder",
+    "rows": [
+      [
+        "1RB",
+        null
+      ],
+      [
+        null,
+        null
+      ],
+      [
+        null,
+        null
+      ],
+      [
+        null,
+        null
+      ],
+      [
+        null,
+        null
+      ],
+      [
+        null,
+        null
+      ]
+    ],
+    "table": "1RB---_------_------_------_------_------"
+  },
+  "source": {
+    "repository": "FlareZ123/bb6",
+    "upstream_coq_revision": "33209bc7dc282b38c8cd6be507bfc551fea56108",
+    "pilot_proof_commit": "20db4dbe086ea0e6436eacbb5fab725957d3bda2",
+    "frontier_proof": "RootFrontier.lean"
+  },
+  "path": [
+    {
+      "depth": 1,
+      "ordinary_moves": 1,
+      "first_hole_slot": "B0",
+      "assigned_move": "1RC"
+    },
+    {
+      "depth": 2,
+      "ordinary_moves": 2,
+      "first_hole_slot": "C0",
+      "assigned_move": "0RD"
+    },
+    {
+      "depth": 3,
+      "ordinary_moves": 3,
+      "first_hole_slot": "D0",
+      "assigned_move": "1LD"
+    },
+    {
+      "depth": 4,
+      "ordinary_moves": 5,
+      "first_hole_slot": "D1",
+      "assigned_move": "1RE"
+    },
+    {
+      "depth": 5,
+      "ordinary_moves": 6,
+      "first_hole_slot": "E1",
+      "assigned_move": "0LB"
+    },
+    {
+      "depth": 6,
+      "ordinary_moves": 7,
+      "first_hole_slot": "B1",
+      "assigned_move": "1LF"
+    },
+    {
+      "depth": 7,
+      "ordinary_moves": 8,
+      "first_hole_slot": "F1",
+      "assigned_move": "0LA"
+    },
+    {
+      "depth": 8,
+      "ordinary_moves": 11,
+      "first_hole_slot": "C1",
+      "assigned_move": "0RB"
+    },
+    {
+      "depth": 9,
+      "ordinary_moves": 21,
+      "first_hole_slot": "F0",
+      "assigned_move": "0LE"
+    }
+  ],
+  "summary": {
+    "path_expansion_nodes": 9,
+    "concrete_ordinary_moves_per_expansion": 24,
+    "closed_first_hole_halt_branches": 9,
+    "maximum_halt_weighted_score": 27,
+    "terminal_closed_subtree": {
+      "parent": "1RB---_1RC1LF_0RD0RB_1LD1RE_---0LB_0LE0LA",
+      "threshold": 84,
+      "raw_completions": 625,
+      "expand_nodes": 1,
+      "last_hole_nodes": 16,
+      "nonhalt_nodes": 8
+    },
+    "residual_leaf_occurrences": 207
+  },
+  "residuals": [
+    {
+      "address": [
+        "0LA"
+      ],
+      "deviation_depth": 1,
+      "branch_slot": "B0",
+      "branch_move": "0LA",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "0LA",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_0LA---_------_------_------_------"
+    },
+    {
+      "address": [
+        "0RA"
+      ],
+      "deviation_depth": 1,
+      "branch_slot": "B0",
+      "branch_move": "0RA",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "0RA",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_0RA---_------_------_------_------"
+    },
+    {
+      "address": [
+        "1LA"
+      ],
+      "deviation_depth": 1,
+      "branch_slot": "B0",
+      "branch_move": "1LA",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1LA",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1LA---_------_------_------_------"
+    },
+    {
+      "address": [
+        "1RA"
+      ],
+      "deviation_depth": 1,
+      "branch_slot": "B0",
+      "branch_move": "1RA",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RA",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RA---_------_------_------_------"
+    },
+    {
+      "address": [
+        "0LB"
+      ],
+      "deviation_depth": 1,
+      "branch_slot": "B0",
+      "branch_move": "0LB",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "0LB",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_0LB---_------_------_------_------"
+    },
+    {
+      "address": [
+        "0RB"
+      ],
+      "deviation_depth": 1,
+      "branch_slot": "B0",
+      "branch_move": "0RB",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "0RB",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_0RB---_------_------_------_------"
+    },
+    {
+      "address": [
+        "1LB"
+      ],
+      "deviation_depth": 1,
+      "branch_slot": "B0",
+      "branch_move": "1LB",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1LB",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1LB---_------_------_------_------"
+    },
+    {
+      "address": [
+        "1RB"
+      ],
+      "deviation_depth": 1,
+      "branch_slot": "B0",
+      "branch_move": "1RB",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RB",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RB---_------_------_------_------"
+    },
+    {
+      "address": [
+        "0LC"
+      ],
+      "deviation_depth": 1,
+      "branch_slot": "B0",
+      "branch_move": "0LC",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "0LC",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_0LC---_------_------_------_------"
+    },
+    {
+      "address": [
+        "0RC"
+      ],
+      "deviation_depth": 1,
+      "branch_slot": "B0",
+      "branch_move": "0RC",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "0RC",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_0RC---_------_------_------_------"
+    },
+    {
+      "address": [
+        "1LC"
+      ],
+      "deviation_depth": 1,
+      "branch_slot": "B0",
+      "branch_move": "1LC",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1LC",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1LC---_------_------_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0LA"
+      ],
+      "deviation_depth": 2,
+      "branch_slot": "C0",
+      "branch_move": "0LA",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0LA",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0LA---_------_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RA"
+      ],
+      "deviation_depth": 2,
+      "branch_slot": "C0",
+      "branch_move": "0RA",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RA",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RA---_------_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "1LA"
+      ],
+      "deviation_depth": 2,
+      "branch_slot": "C0",
+      "branch_move": "1LA",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "1LA",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_1LA---_------_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "1RA"
+      ],
+      "deviation_depth": 2,
+      "branch_slot": "C0",
+      "branch_move": "1RA",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "1RA",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_1RA---_------_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0LB"
+      ],
+      "deviation_depth": 2,
+      "branch_slot": "C0",
+      "branch_move": "0LB",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0LB",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0LB---_------_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RB"
+      ],
+      "deviation_depth": 2,
+      "branch_slot": "C0",
+      "branch_move": "0RB",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RB",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RB---_------_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "1LB"
+      ],
+      "deviation_depth": 2,
+      "branch_slot": "C0",
+      "branch_move": "1LB",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "1LB",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_1LB---_------_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "1RB"
+      ],
+      "deviation_depth": 2,
+      "branch_slot": "C0",
+      "branch_move": "1RB",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "1RB",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_1RB---_------_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0LC"
+      ],
+      "deviation_depth": 2,
+      "branch_slot": "C0",
+      "branch_move": "0LC",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0LC",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0LC---_------_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RC"
+      ],
+      "deviation_depth": 2,
+      "branch_slot": "C0",
+      "branch_move": "0RC",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RC",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RC---_------_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "1LC"
+      ],
+      "deviation_depth": 2,
+      "branch_slot": "C0",
+      "branch_move": "1LC",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "1LC",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_1LC---_------_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "1RC"
+      ],
+      "deviation_depth": 2,
+      "branch_slot": "C0",
+      "branch_move": "1RC",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_1RC---_------_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0LD"
+      ],
+      "deviation_depth": 2,
+      "branch_slot": "C0",
+      "branch_move": "0LD",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0LD",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0LD---_------_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "0LA"
+      ],
+      "deviation_depth": 3,
+      "branch_slot": "D0",
+      "branch_move": "0LA",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "0LA",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_0LA---_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "0RA"
+      ],
+      "deviation_depth": 3,
+      "branch_slot": "D0",
+      "branch_move": "0RA",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "0RA",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_0RA---_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LA"
+      ],
+      "deviation_depth": 3,
+      "branch_slot": "D0",
+      "branch_move": "1LA",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LA",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LA---_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1RA"
+      ],
+      "deviation_depth": 3,
+      "branch_slot": "D0",
+      "branch_move": "1RA",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1RA",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1RA---_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "0LB"
+      ],
+      "deviation_depth": 3,
+      "branch_slot": "D0",
+      "branch_move": "0LB",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "0LB",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_0LB---_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "0RB"
+      ],
+      "deviation_depth": 3,
+      "branch_slot": "D0",
+      "branch_move": "0RB",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "0RB",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_0RB---_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LB"
+      ],
+      "deviation_depth": 3,
+      "branch_slot": "D0",
+      "branch_move": "1LB",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LB",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LB---_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1RB"
+      ],
+      "deviation_depth": 3,
+      "branch_slot": "D0",
+      "branch_move": "1RB",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1RB",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1RB---_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "0LC"
+      ],
+      "deviation_depth": 3,
+      "branch_slot": "D0",
+      "branch_move": "0LC",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "0LC",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_0LC---_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "0RC"
+      ],
+      "deviation_depth": 3,
+      "branch_slot": "D0",
+      "branch_move": "0RC",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "0RC",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_0RC---_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LC"
+      ],
+      "deviation_depth": 3,
+      "branch_slot": "D0",
+      "branch_move": "1LC",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LC",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LC---_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1RC"
+      ],
+      "deviation_depth": 3,
+      "branch_slot": "D0",
+      "branch_move": "1RC",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1RC---_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "0LD"
+      ],
+      "deviation_depth": 3,
+      "branch_slot": "D0",
+      "branch_move": "0LD",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "0LD",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_0LD---_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "0RD"
+      ],
+      "deviation_depth": 3,
+      "branch_slot": "D0",
+      "branch_move": "0RD",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_0RD---_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "0LA"
+      ],
+      "deviation_depth": 4,
+      "branch_slot": "D1",
+      "branch_move": "0LA",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "0LA"
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD0LA_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "0RA"
+      ],
+      "deviation_depth": 4,
+      "branch_slot": "D1",
+      "branch_move": "0RA",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "0RA"
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD0RA_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1LA"
+      ],
+      "deviation_depth": 4,
+      "branch_slot": "D1",
+      "branch_move": "1LA",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1LA"
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD1LA_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RA"
+      ],
+      "deviation_depth": 4,
+      "branch_slot": "D1",
+      "branch_move": "1RA",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RA"
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD1RA_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "0LB"
+      ],
+      "deviation_depth": 4,
+      "branch_slot": "D1",
+      "branch_move": "0LB",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "0LB"
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD0LB_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "0RB"
+      ],
+      "deviation_depth": 4,
+      "branch_slot": "D1",
+      "branch_move": "0RB",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "0RB"
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD0RB_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1LB"
+      ],
+      "deviation_depth": 4,
+      "branch_slot": "D1",
+      "branch_move": "1LB",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1LB"
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD1LB_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RB"
+      ],
+      "deviation_depth": 4,
+      "branch_slot": "D1",
+      "branch_move": "1RB",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RB"
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD1RB_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "0LC"
+      ],
+      "deviation_depth": 4,
+      "branch_slot": "D1",
+      "branch_move": "0LC",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "0LC"
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD0LC_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "0RC"
+      ],
+      "deviation_depth": 4,
+      "branch_slot": "D1",
+      "branch_move": "0RC",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "0RC"
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD0RC_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1LC"
+      ],
+      "deviation_depth": 4,
+      "branch_slot": "D1",
+      "branch_move": "1LC",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1LC"
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD1LC_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RC"
+      ],
+      "deviation_depth": 4,
+      "branch_slot": "D1",
+      "branch_move": "1RC",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RC"
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD1RC_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "0LD"
+      ],
+      "deviation_depth": 4,
+      "branch_slot": "D1",
+      "branch_move": "0LD",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "0LD"
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD0LD_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "0RD"
+      ],
+      "deviation_depth": 4,
+      "branch_slot": "D1",
+      "branch_move": "0RD",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "0RD"
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD0RD_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1LD"
+      ],
+      "deviation_depth": 4,
+      "branch_slot": "D1",
+      "branch_move": "1LD",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1LD"
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD1LD_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RD"
+      ],
+      "deviation_depth": 4,
+      "branch_slot": "D1",
+      "branch_move": "1RD",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RD"
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD1RD_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "0LE"
+      ],
+      "deviation_depth": 4,
+      "branch_slot": "D1",
+      "branch_move": "0LE",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "0LE"
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD0LE_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "0RE"
+      ],
+      "deviation_depth": 4,
+      "branch_slot": "D1",
+      "branch_move": "0RE",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "0RE"
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD0RE_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1LE"
+      ],
+      "deviation_depth": 4,
+      "branch_slot": "D1",
+      "branch_move": "1LE",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1LE"
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD1LE_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LA"
+      ],
+      "deviation_depth": 5,
+      "branch_slot": "E1",
+      "branch_move": "0LA",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LA"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD1RE_---0LA_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0RA"
+      ],
+      "deviation_depth": 5,
+      "branch_slot": "E1",
+      "branch_move": "0RA",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0RA"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD1RE_---0RA_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "1LA"
+      ],
+      "deviation_depth": 5,
+      "branch_slot": "E1",
+      "branch_move": "1LA",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "1LA"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD1RE_---1LA_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "1RA"
+      ],
+      "deviation_depth": 5,
+      "branch_slot": "E1",
+      "branch_move": "1RA",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "1RA"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD1RE_---1RA_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "0LA"
+      ],
+      "deviation_depth": 6,
+      "branch_slot": "B1",
+      "branch_move": "0LA",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "0LA"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC0LA_0RD---_1LD1RE_---0LB_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "0RA"
+      ],
+      "deviation_depth": 6,
+      "branch_slot": "B1",
+      "branch_move": "0RA",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "0RA"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC0RA_0RD---_1LD1RE_---0LB_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LA"
+      ],
+      "deviation_depth": 6,
+      "branch_slot": "B1",
+      "branch_move": "1LA",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LA"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC1LA_0RD---_1LD1RE_---0LB_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1RA"
+      ],
+      "deviation_depth": 6,
+      "branch_slot": "B1",
+      "branch_move": "1RA",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1RA"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC1RA_0RD---_1LD1RE_---0LB_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "0LB"
+      ],
+      "deviation_depth": 6,
+      "branch_slot": "B1",
+      "branch_move": "0LB",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "0LB"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC0LB_0RD---_1LD1RE_---0LB_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "0RB"
+      ],
+      "deviation_depth": 6,
+      "branch_slot": "B1",
+      "branch_move": "0RB",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "0RB"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC0RB_0RD---_1LD1RE_---0LB_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LB"
+      ],
+      "deviation_depth": 6,
+      "branch_slot": "B1",
+      "branch_move": "1LB",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LB"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC1LB_0RD---_1LD1RE_---0LB_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1RB"
+      ],
+      "deviation_depth": 6,
+      "branch_slot": "B1",
+      "branch_move": "1RB",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1RB"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC1RB_0RD---_1LD1RE_---0LB_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "0LC"
+      ],
+      "deviation_depth": 6,
+      "branch_slot": "B1",
+      "branch_move": "0LC",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "0LC"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC0LC_0RD---_1LD1RE_---0LB_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "0RC"
+      ],
+      "deviation_depth": 6,
+      "branch_slot": "B1",
+      "branch_move": "0RC",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "0RC"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC0RC_0RD---_1LD1RE_---0LB_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LC"
+      ],
+      "deviation_depth": 6,
+      "branch_slot": "B1",
+      "branch_move": "1LC",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LC"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC1LC_0RD---_1LD1RE_---0LB_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1RC"
+      ],
+      "deviation_depth": 6,
+      "branch_slot": "B1",
+      "branch_move": "1RC",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1RC"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC1RC_0RD---_1LD1RE_---0LB_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "0LD"
+      ],
+      "deviation_depth": 6,
+      "branch_slot": "B1",
+      "branch_move": "0LD",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "0LD"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC0LD_0RD---_1LD1RE_---0LB_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "0RD"
+      ],
+      "deviation_depth": 6,
+      "branch_slot": "B1",
+      "branch_move": "0RD",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "0RD"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC0RD_0RD---_1LD1RE_---0LB_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LD"
+      ],
+      "deviation_depth": 6,
+      "branch_slot": "B1",
+      "branch_move": "1LD",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LD"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC1LD_0RD---_1LD1RE_---0LB_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1RD"
+      ],
+      "deviation_depth": 6,
+      "branch_slot": "B1",
+      "branch_move": "1RD",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1RD"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC1RD_0RD---_1LD1RE_---0LB_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "0LE"
+      ],
+      "deviation_depth": 6,
+      "branch_slot": "B1",
+      "branch_move": "0LE",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "0LE"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC0LE_0RD---_1LD1RE_---0LB_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "0RE"
+      ],
+      "deviation_depth": 6,
+      "branch_slot": "B1",
+      "branch_move": "0RE",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "0RE"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC0RE_0RD---_1LD1RE_---0LB_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LE"
+      ],
+      "deviation_depth": 6,
+      "branch_slot": "B1",
+      "branch_move": "1LE",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LE"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC1LE_0RD---_1LD1RE_---0LB_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1RE"
+      ],
+      "deviation_depth": 6,
+      "branch_slot": "B1",
+      "branch_move": "1RE",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1RE"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC1RE_0RD---_1LD1RE_---0LB_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "0LF"
+      ],
+      "deviation_depth": 6,
+      "branch_slot": "B1",
+      "branch_move": "0LF",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "0LF"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC0LF_0RD---_1LD1RE_---0LB_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "0RF"
+      ],
+      "deviation_depth": 6,
+      "branch_slot": "B1",
+      "branch_move": "0RF",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "0RF"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC0RF_0RD---_1LD1RE_---0LB_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "0LA"
+      ],
+      "deviation_depth": 8,
+      "branch_slot": "C1",
+      "branch_move": "0LA",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "0LA"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD0LA_1LD1RE_---0LB_---0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "0RA"
+      ],
+      "deviation_depth": 8,
+      "branch_slot": "C1",
+      "branch_move": "0RA",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "0RA"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD0RA_1LD1RE_---0LB_---0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "1LA"
+      ],
+      "deviation_depth": 8,
+      "branch_slot": "C1",
+      "branch_move": "1LA",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "1LA"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD1LA_1LD1RE_---0LB_---0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "1RA"
+      ],
+      "deviation_depth": 8,
+      "branch_slot": "C1",
+      "branch_move": "1RA",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "1RA"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD1RA_1LD1RE_---0LB_---0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "0LB"
+      ],
+      "deviation_depth": 8,
+      "branch_slot": "C1",
+      "branch_move": "0LB",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "0LB"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD0LB_1LD1RE_---0LB_---0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "0RB",
+        "0LA"
+      ],
+      "deviation_depth": 9,
+      "branch_slot": "F0",
+      "branch_move": "0LA",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "0RB"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          "0LA",
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD0RB_1LD1RE_---0LB_0LA0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "0RB",
+        "0RA"
+      ],
+      "deviation_depth": 9,
+      "branch_slot": "F0",
+      "branch_move": "0RA",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "0RB"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          "0RA",
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD0RB_1LD1RE_---0LB_0RA0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "0RB",
+        "1LA"
+      ],
+      "deviation_depth": 9,
+      "branch_slot": "F0",
+      "branch_move": "1LA",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "0RB"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          "1LA",
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD0RB_1LD1RE_---0LB_1LA0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "0RB",
+        "1RA"
+      ],
+      "deviation_depth": 9,
+      "branch_slot": "F0",
+      "branch_move": "1RA",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "0RB"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          "1RA",
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD0RB_1LD1RE_---0LB_1RA0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "0RB",
+        "0LB"
+      ],
+      "deviation_depth": 9,
+      "branch_slot": "F0",
+      "branch_move": "0LB",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "0RB"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          "0LB",
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD0RB_1LD1RE_---0LB_0LB0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "0RB",
+        "0RB"
+      ],
+      "deviation_depth": 9,
+      "branch_slot": "F0",
+      "branch_move": "0RB",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "0RB"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          "0RB",
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD0RB_1LD1RE_---0LB_0RB0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "0RB",
+        "1LB"
+      ],
+      "deviation_depth": 9,
+      "branch_slot": "F0",
+      "branch_move": "1LB",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "0RB"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          "1LB",
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD0RB_1LD1RE_---0LB_1LB0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "0RB",
+        "1RB"
+      ],
+      "deviation_depth": 9,
+      "branch_slot": "F0",
+      "branch_move": "1RB",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "0RB"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          "1RB",
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD0RB_1LD1RE_---0LB_1RB0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "0RB",
+        "0LC"
+      ],
+      "deviation_depth": 9,
+      "branch_slot": "F0",
+      "branch_move": "0LC",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "0RB"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          "0LC",
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD0RB_1LD1RE_---0LB_0LC0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "0RB",
+        "0RC"
+      ],
+      "deviation_depth": 9,
+      "branch_slot": "F0",
+      "branch_move": "0RC",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "0RB"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          "0RC",
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD0RB_1LD1RE_---0LB_0RC0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "0RB",
+        "1LC"
+      ],
+      "deviation_depth": 9,
+      "branch_slot": "F0",
+      "branch_move": "1LC",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "0RB"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          "1LC",
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD0RB_1LD1RE_---0LB_1LC0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "0RB",
+        "1RC"
+      ],
+      "deviation_depth": 9,
+      "branch_slot": "F0",
+      "branch_move": "1RC",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "0RB"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          "1RC",
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD0RB_1LD1RE_---0LB_1RC0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "0RB",
+        "0LD"
+      ],
+      "deviation_depth": 9,
+      "branch_slot": "F0",
+      "branch_move": "0LD",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "0RB"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          "0LD",
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD0RB_1LD1RE_---0LB_0LD0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "0RB",
+        "0RD"
+      ],
+      "deviation_depth": 9,
+      "branch_slot": "F0",
+      "branch_move": "0RD",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "0RB"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          "0RD",
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD0RB_1LD1RE_---0LB_0RD0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "0RB",
+        "1LD"
+      ],
+      "deviation_depth": 9,
+      "branch_slot": "F0",
+      "branch_move": "1LD",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "0RB"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          "1LD",
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD0RB_1LD1RE_---0LB_1LD0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "0RB",
+        "1RD"
+      ],
+      "deviation_depth": 9,
+      "branch_slot": "F0",
+      "branch_move": "1RD",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "0RB"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          "1RD",
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD0RB_1LD1RE_---0LB_1RD0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "0RB",
+        "0RE"
+      ],
+      "deviation_depth": 9,
+      "branch_slot": "F0",
+      "branch_move": "0RE",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "0RB"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          "0RE",
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD0RB_1LD1RE_---0LB_0RE0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "0RB",
+        "1LE"
+      ],
+      "deviation_depth": 9,
+      "branch_slot": "F0",
+      "branch_move": "1LE",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "0RB"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          "1LE",
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD0RB_1LD1RE_---0LB_1LE0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "0RB",
+        "1RE"
+      ],
+      "deviation_depth": 9,
+      "branch_slot": "F0",
+      "branch_move": "1RE",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "0RB"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          "1RE",
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD0RB_1LD1RE_---0LB_1RE0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "0RB",
+        "0LF"
+      ],
+      "deviation_depth": 9,
+      "branch_slot": "F0",
+      "branch_move": "0LF",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "0RB"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          "0LF",
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD0RB_1LD1RE_---0LB_0LF0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "0RB",
+        "0RF"
+      ],
+      "deviation_depth": 9,
+      "branch_slot": "F0",
+      "branch_move": "0RF",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "0RB"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          "0RF",
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD0RB_1LD1RE_---0LB_0RF0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "0RB",
+        "1LF"
+      ],
+      "deviation_depth": 9,
+      "branch_slot": "F0",
+      "branch_move": "1LF",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "0RB"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          "1LF",
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD0RB_1LD1RE_---0LB_1LF0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "0RB",
+        "1RF"
+      ],
+      "deviation_depth": 9,
+      "branch_slot": "F0",
+      "branch_move": "1RF",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "0RB"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          "1RF",
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD0RB_1LD1RE_---0LB_1RF0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "1LB"
+      ],
+      "deviation_depth": 8,
+      "branch_slot": "C1",
+      "branch_move": "1LB",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "1LB"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD1LB_1LD1RE_---0LB_---0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "1RB"
+      ],
+      "deviation_depth": 8,
+      "branch_slot": "C1",
+      "branch_move": "1RB",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "1RB"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD1RB_1LD1RE_---0LB_---0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "0LC"
+      ],
+      "deviation_depth": 8,
+      "branch_slot": "C1",
+      "branch_move": "0LC",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "0LC"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD0LC_1LD1RE_---0LB_---0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "0RC"
+      ],
+      "deviation_depth": 8,
+      "branch_slot": "C1",
+      "branch_move": "0RC",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "0RC"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD0RC_1LD1RE_---0LB_---0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "1LC"
+      ],
+      "deviation_depth": 8,
+      "branch_slot": "C1",
+      "branch_move": "1LC",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "1LC"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD1LC_1LD1RE_---0LB_---0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "1RC"
+      ],
+      "deviation_depth": 8,
+      "branch_slot": "C1",
+      "branch_move": "1RC",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "1RC"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD1RC_1LD1RE_---0LB_---0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "0LD"
+      ],
+      "deviation_depth": 8,
+      "branch_slot": "C1",
+      "branch_move": "0LD",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "0LD"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD0LD_1LD1RE_---0LB_---0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "0RD"
+      ],
+      "deviation_depth": 8,
+      "branch_slot": "C1",
+      "branch_move": "0RD",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "0RD"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD0RD_1LD1RE_---0LB_---0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "1LD"
+      ],
+      "deviation_depth": 8,
+      "branch_slot": "C1",
+      "branch_move": "1LD",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "1LD"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD1LD_1LD1RE_---0LB_---0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "1RD"
+      ],
+      "deviation_depth": 8,
+      "branch_slot": "C1",
+      "branch_move": "1RD",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "1RD"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD1RD_1LD1RE_---0LB_---0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "0LE"
+      ],
+      "deviation_depth": 8,
+      "branch_slot": "C1",
+      "branch_move": "0LE",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "0LE"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD0LE_1LD1RE_---0LB_---0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "0RE"
+      ],
+      "deviation_depth": 8,
+      "branch_slot": "C1",
+      "branch_move": "0RE",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "0RE"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD0RE_1LD1RE_---0LB_---0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "1LE"
+      ],
+      "deviation_depth": 8,
+      "branch_slot": "C1",
+      "branch_move": "1LE",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "1LE"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD1LE_1LD1RE_---0LB_---0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "1RE"
+      ],
+      "deviation_depth": 8,
+      "branch_slot": "C1",
+      "branch_move": "1RE",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "1RE"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD1RE_1LD1RE_---0LB_---0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "0LF"
+      ],
+      "deviation_depth": 8,
+      "branch_slot": "C1",
+      "branch_move": "0LF",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "0LF"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD0LF_1LD1RE_---0LB_---0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "0RF"
+      ],
+      "deviation_depth": 8,
+      "branch_slot": "C1",
+      "branch_move": "0RF",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "0RF"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD0RF_1LD1RE_---0LB_---0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "1LF"
+      ],
+      "deviation_depth": 8,
+      "branch_slot": "C1",
+      "branch_move": "1LF",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "1LF"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD1LF_1LD1RE_---0LB_---0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LA",
+        "1RF"
+      ],
+      "deviation_depth": 8,
+      "branch_slot": "C1",
+      "branch_move": "1RF",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          "1RF"
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "0LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD1RF_1LD1RE_---0LB_---0LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0RA"
+      ],
+      "deviation_depth": 7,
+      "branch_slot": "F1",
+      "branch_move": "0RA",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "0RA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD---_1LD1RE_---0LB_---0RA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "1LA"
+      ],
+      "deviation_depth": 7,
+      "branch_slot": "F1",
+      "branch_move": "1LA",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "1LA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD---_1LD1RE_---0LB_---1LA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "1RA"
+      ],
+      "deviation_depth": 7,
+      "branch_slot": "F1",
+      "branch_move": "1RA",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "1RA"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD---_1LD1RE_---0LB_---1RA"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LB"
+      ],
+      "deviation_depth": 7,
+      "branch_slot": "F1",
+      "branch_move": "0LB",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "0LB"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD---_1LD1RE_---0LB_---0LB"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0RB"
+      ],
+      "deviation_depth": 7,
+      "branch_slot": "F1",
+      "branch_move": "0RB",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "0RB"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD---_1LD1RE_---0LB_---0RB"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "1LB"
+      ],
+      "deviation_depth": 7,
+      "branch_slot": "F1",
+      "branch_move": "1LB",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "1LB"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD---_1LD1RE_---0LB_---1LB"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "1RB"
+      ],
+      "deviation_depth": 7,
+      "branch_slot": "F1",
+      "branch_move": "1RB",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "1RB"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD---_1LD1RE_---0LB_---1RB"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LC"
+      ],
+      "deviation_depth": 7,
+      "branch_slot": "F1",
+      "branch_move": "0LC",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "0LC"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD---_1LD1RE_---0LB_---0LC"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0RC"
+      ],
+      "deviation_depth": 7,
+      "branch_slot": "F1",
+      "branch_move": "0RC",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "0RC"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD---_1LD1RE_---0LB_---0RC"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "1LC"
+      ],
+      "deviation_depth": 7,
+      "branch_slot": "F1",
+      "branch_move": "1LC",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "1LC"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD---_1LD1RE_---0LB_---1LC"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "1RC"
+      ],
+      "deviation_depth": 7,
+      "branch_slot": "F1",
+      "branch_move": "1RC",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "1RC"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD---_1LD1RE_---0LB_---1RC"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LD"
+      ],
+      "deviation_depth": 7,
+      "branch_slot": "F1",
+      "branch_move": "0LD",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "0LD"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD---_1LD1RE_---0LB_---0LD"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0RD"
+      ],
+      "deviation_depth": 7,
+      "branch_slot": "F1",
+      "branch_move": "0RD",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "0RD"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD---_1LD1RE_---0LB_---0RD"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "1LD"
+      ],
+      "deviation_depth": 7,
+      "branch_slot": "F1",
+      "branch_move": "1LD",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "1LD"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD---_1LD1RE_---0LB_---1LD"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "1RD"
+      ],
+      "deviation_depth": 7,
+      "branch_slot": "F1",
+      "branch_move": "1RD",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "1RD"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD---_1LD1RE_---0LB_---1RD"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LE"
+      ],
+      "deviation_depth": 7,
+      "branch_slot": "F1",
+      "branch_move": "0LE",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "0LE"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD---_1LD1RE_---0LB_---0LE"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0RE"
+      ],
+      "deviation_depth": 7,
+      "branch_slot": "F1",
+      "branch_move": "0RE",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "0RE"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD---_1LD1RE_---0LB_---0RE"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "1LE"
+      ],
+      "deviation_depth": 7,
+      "branch_slot": "F1",
+      "branch_move": "1LE",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "1LE"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD---_1LD1RE_---0LB_---1LE"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "1RE"
+      ],
+      "deviation_depth": 7,
+      "branch_slot": "F1",
+      "branch_move": "1RE",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "1RE"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD---_1LD1RE_---0LB_---1RE"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0LF"
+      ],
+      "deviation_depth": 7,
+      "branch_slot": "F1",
+      "branch_move": "0LF",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "0LF"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD---_1LD1RE_---0LB_---0LF"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "0RF"
+      ],
+      "deviation_depth": 7,
+      "branch_slot": "F1",
+      "branch_move": "0RF",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "0RF"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD---_1LD1RE_---0LB_---0RF"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "1LF"
+      ],
+      "deviation_depth": 7,
+      "branch_slot": "F1",
+      "branch_move": "1LF",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "1LF"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD---_1LD1RE_---0LB_---1LF"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1LF",
+        "1RF"
+      ],
+      "deviation_depth": 7,
+      "branch_slot": "F1",
+      "branch_move": "1RF",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1LF"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          "1RF"
+        ]
+      ],
+      "table": "1RB---_1RC1LF_0RD---_1LD1RE_---0LB_---1RF"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LB",
+        "1RF"
+      ],
+      "deviation_depth": 6,
+      "branch_slot": "B1",
+      "branch_move": "1RF",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          "1RF"
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LB"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC1RF_0RD---_1LD1RE_---0LB_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0RB"
+      ],
+      "deviation_depth": 5,
+      "branch_slot": "E1",
+      "branch_move": "0RB",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0RB"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD1RE_---0RB_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "1LB"
+      ],
+      "deviation_depth": 5,
+      "branch_slot": "E1",
+      "branch_move": "1LB",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "1LB"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD1RE_---1LB_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "1RB"
+      ],
+      "deviation_depth": 5,
+      "branch_slot": "E1",
+      "branch_move": "1RB",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "1RB"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD1RE_---1RB_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LC"
+      ],
+      "deviation_depth": 5,
+      "branch_slot": "E1",
+      "branch_move": "0LC",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LC"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD1RE_---0LC_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0RC"
+      ],
+      "deviation_depth": 5,
+      "branch_slot": "E1",
+      "branch_move": "0RC",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0RC"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD1RE_---0RC_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "1LC"
+      ],
+      "deviation_depth": 5,
+      "branch_slot": "E1",
+      "branch_move": "1LC",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "1LC"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD1RE_---1LC_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "1RC"
+      ],
+      "deviation_depth": 5,
+      "branch_slot": "E1",
+      "branch_move": "1RC",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "1RC"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD1RE_---1RC_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LD"
+      ],
+      "deviation_depth": 5,
+      "branch_slot": "E1",
+      "branch_move": "0LD",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LD"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD1RE_---0LD_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0RD"
+      ],
+      "deviation_depth": 5,
+      "branch_slot": "E1",
+      "branch_move": "0RD",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0RD"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD1RE_---0RD_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "1LD"
+      ],
+      "deviation_depth": 5,
+      "branch_slot": "E1",
+      "branch_move": "1LD",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "1LD"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD1RE_---1LD_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "1RD"
+      ],
+      "deviation_depth": 5,
+      "branch_slot": "E1",
+      "branch_move": "1RD",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "1RD"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD1RE_---1RD_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LE"
+      ],
+      "deviation_depth": 5,
+      "branch_slot": "E1",
+      "branch_move": "0LE",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LE"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD1RE_---0LE_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0RE"
+      ],
+      "deviation_depth": 5,
+      "branch_slot": "E1",
+      "branch_move": "0RE",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0RE"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD1RE_---0RE_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "1LE"
+      ],
+      "deviation_depth": 5,
+      "branch_slot": "E1",
+      "branch_move": "1LE",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "1LE"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD1RE_---1LE_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "1RE"
+      ],
+      "deviation_depth": 5,
+      "branch_slot": "E1",
+      "branch_move": "1RE",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "1RE"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD1RE_---1RE_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0LF"
+      ],
+      "deviation_depth": 5,
+      "branch_slot": "E1",
+      "branch_move": "0LF",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0LF"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD1RE_---0LF_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "0RF"
+      ],
+      "deviation_depth": 5,
+      "branch_slot": "E1",
+      "branch_move": "0RF",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "0RF"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD1RE_---0RF_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "1LF"
+      ],
+      "deviation_depth": 5,
+      "branch_slot": "E1",
+      "branch_move": "1LF",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "1LF"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD1RE_---1LF_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RE",
+        "1RF"
+      ],
+      "deviation_depth": 5,
+      "branch_slot": "E1",
+      "branch_move": "1RF",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RE"
+        ],
+        [
+          null,
+          "1RF"
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD1RE_---1RF_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "0LF"
+      ],
+      "deviation_depth": 4,
+      "branch_slot": "D1",
+      "branch_move": "0LF",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "0LF"
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD0LF_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "0RF"
+      ],
+      "deviation_depth": 4,
+      "branch_slot": "D1",
+      "branch_move": "0RF",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "0RF"
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD0RF_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1LF"
+      ],
+      "deviation_depth": 4,
+      "branch_slot": "D1",
+      "branch_move": "1LF",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1LF"
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD1LF_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LD",
+        "1RF"
+      ],
+      "deviation_depth": 4,
+      "branch_slot": "D1",
+      "branch_move": "1RF",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LD",
+          "1RF"
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LD1RF_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1RD"
+      ],
+      "deviation_depth": 3,
+      "branch_slot": "D0",
+      "branch_move": "1RD",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1RD",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1RD---_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "0LE"
+      ],
+      "deviation_depth": 3,
+      "branch_slot": "D0",
+      "branch_move": "0LE",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "0LE",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_0LE---_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "0RE"
+      ],
+      "deviation_depth": 3,
+      "branch_slot": "D0",
+      "branch_move": "0RE",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "0RE",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_0RE---_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LE"
+      ],
+      "deviation_depth": 3,
+      "branch_slot": "D0",
+      "branch_move": "1LE",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LE",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LE---_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1RE"
+      ],
+      "deviation_depth": 3,
+      "branch_slot": "D0",
+      "branch_move": "1RE",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1RE",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1RE---_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "0LF"
+      ],
+      "deviation_depth": 3,
+      "branch_slot": "D0",
+      "branch_move": "0LF",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "0LF",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_0LF---_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "0RF"
+      ],
+      "deviation_depth": 3,
+      "branch_slot": "D0",
+      "branch_move": "0RF",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "0RF",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_0RF---_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1LF"
+      ],
+      "deviation_depth": 3,
+      "branch_slot": "D0",
+      "branch_move": "1LF",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1LF",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1LF---_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RD",
+        "1RF"
+      ],
+      "deviation_depth": 3,
+      "branch_slot": "D0",
+      "branch_move": "1RF",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          "1RF",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RD---_1RF---_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "1LD"
+      ],
+      "deviation_depth": 2,
+      "branch_slot": "C0",
+      "branch_move": "1LD",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "1LD",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_1LD---_------_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "1RD"
+      ],
+      "deviation_depth": 2,
+      "branch_slot": "C0",
+      "branch_move": "1RD",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "1RD",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_1RD---_------_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0LE"
+      ],
+      "deviation_depth": 2,
+      "branch_slot": "C0",
+      "branch_move": "0LE",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0LE",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0LE---_------_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RE"
+      ],
+      "deviation_depth": 2,
+      "branch_slot": "C0",
+      "branch_move": "0RE",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RE",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RE---_------_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "1LE"
+      ],
+      "deviation_depth": 2,
+      "branch_slot": "C0",
+      "branch_move": "1LE",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "1LE",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_1LE---_------_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "1RE"
+      ],
+      "deviation_depth": 2,
+      "branch_slot": "C0",
+      "branch_move": "1RE",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "1RE",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_1RE---_------_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0LF"
+      ],
+      "deviation_depth": 2,
+      "branch_slot": "C0",
+      "branch_move": "0LF",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0LF",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0LF---_------_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "0RF"
+      ],
+      "deviation_depth": 2,
+      "branch_slot": "C0",
+      "branch_move": "0RF",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "0RF",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_0RF---_------_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "1LF"
+      ],
+      "deviation_depth": 2,
+      "branch_slot": "C0",
+      "branch_move": "1LF",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "1LF",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_1LF---_------_------_------"
+    },
+    {
+      "address": [
+        "1RC",
+        "1RF"
+      ],
+      "deviation_depth": 2,
+      "branch_slot": "C0",
+      "branch_move": "1RF",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RC",
+          null
+        ],
+        [
+          "1RF",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RC---_1RF---_------_------_------"
+    },
+    {
+      "address": [
+        "0LD"
+      ],
+      "deviation_depth": 1,
+      "branch_slot": "B0",
+      "branch_move": "0LD",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "0LD",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_0LD---_------_------_------_------"
+    },
+    {
+      "address": [
+        "0RD"
+      ],
+      "deviation_depth": 1,
+      "branch_slot": "B0",
+      "branch_move": "0RD",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "0RD",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_0RD---_------_------_------_------"
+    },
+    {
+      "address": [
+        "1LD"
+      ],
+      "deviation_depth": 1,
+      "branch_slot": "B0",
+      "branch_move": "1LD",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1LD",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1LD---_------_------_------_------"
+    },
+    {
+      "address": [
+        "1RD"
+      ],
+      "deviation_depth": 1,
+      "branch_slot": "B0",
+      "branch_move": "1RD",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RD",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RD---_------_------_------_------"
+    },
+    {
+      "address": [
+        "0LE"
+      ],
+      "deviation_depth": 1,
+      "branch_slot": "B0",
+      "branch_move": "0LE",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "0LE",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_0LE---_------_------_------_------"
+    },
+    {
+      "address": [
+        "0RE"
+      ],
+      "deviation_depth": 1,
+      "branch_slot": "B0",
+      "branch_move": "0RE",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "0RE",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_0RE---_------_------_------_------"
+    },
+    {
+      "address": [
+        "1LE"
+      ],
+      "deviation_depth": 1,
+      "branch_slot": "B0",
+      "branch_move": "1LE",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1LE",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1LE---_------_------_------_------"
+    },
+    {
+      "address": [
+        "1RE"
+      ],
+      "deviation_depth": 1,
+      "branch_slot": "B0",
+      "branch_move": "1RE",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RE",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RE---_------_------_------_------"
+    },
+    {
+      "address": [
+        "0LF"
+      ],
+      "deviation_depth": 1,
+      "branch_slot": "B0",
+      "branch_move": "0LF",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "0LF",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_0LF---_------_------_------_------"
+    },
+    {
+      "address": [
+        "0RF"
+      ],
+      "deviation_depth": 1,
+      "branch_slot": "B0",
+      "branch_move": "0RF",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "0RF",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_0RF---_------_------_------_------"
+    },
+    {
+      "address": [
+        "1LF"
+      ],
+      "deviation_depth": 1,
+      "branch_slot": "B0",
+      "branch_move": "1LF",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1LF",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1LF---_------_------_------_------"
+    },
+    {
+      "address": [
+        "1RF"
+      ],
+      "deviation_depth": 1,
+      "branch_slot": "B0",
+      "branch_move": "1RF",
+      "rows": [
+        [
+          "1RB",
+          null
+        ],
+        [
+          "1RF",
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ],
+      "table": "1RB---_1RF---_------_------_------_------"
+    }
+  ]
+}
