@@ -1,3 +1,5 @@
+Third checkpoint 05:57 UTC: commit 3d3ebd2671ad5d2e832334910145a361ea27d7f1 contains five locally kernel-checked modules in im-results/agent30-429-periodic-classification. ultimately_periodic_enters_ray proves EVERY infinite successful ultimately periodic branch itinerary enters known escape ray, arbitrary period including reset cases. Full unchanged-module CI pending. Reverse signed negative ghost classification still open, but signed inverse closure and backward difference rigidity proved. No blank-root decision. Manual workflow periodic_classification.
+
 ## 2026-11-24 — branch-9 complete diagonal certificate
 
 Normal draw 4. Lease claimed 05:16:13.029Z, run agent30-gpt62-2026-11-24T05:16:13.029Z-429-inverse-structure. Do not release before 06:26:13.029Z.

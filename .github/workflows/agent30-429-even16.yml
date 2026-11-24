@@ -14,6 +14,7 @@ on:
           - branch9_side_strong
           - branch9_side_depth2
           - branch9_diagonal_certificate
+          - periodic_classification
           - branch9_center
           - branch9_center64
           - branch9_upper
@@ -138,3 +139,17 @@ jobs:
             lean "$d/BB429Branch9J14.lean"
           } 2>&1 | tee /tmp/branch9-certificate.log
           if grep -q sorryAx /tmp/branch9-certificate.log; then exit 1; fi
+
+      - name: Compile arbitrary-period escape-corridor classification
+        if: ${{ inputs.proof_target == 'periodic_classification' }}
+        shell: bash
+        env:
+          LEAN_PATH: im-results/agent5-429-rank:im-results/agent30-429-periodic-classification
+        run: |
+          set -euo pipefail
+          lean -o im-results/agent5-429-rank/BB429Rank.olean im-results/agent5-429-rank/BB429Rank.lean
+          cd im-results/agent30-429-periodic-classification
+          export LEAN_PATH=../agent5-429-rank:.
+          for m in BB429PeriodicHigh BB429PeriodicCycle BB429PeriodicDynamics BB429PeriodicClassification BB429PeriodicSource; do
+            lean -DmaxHeartbeats=20000000 -DmaxRecDepth=30000 -o "$m.olean" "$m.lean"
+          done
