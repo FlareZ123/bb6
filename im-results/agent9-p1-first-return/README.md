@@ -2,7 +2,7 @@
 
 **Mathematical claim.** For every n≥14 put Q=7·2^n−n−3. An original-source odd inverse history from (14·2^n−2n−16,3) to any (b,5) exists exactly when some q≥5 and k>0 satisfy q+k=Q, the moving-modulus recurrence r_0=1, r_j=2r_(j−1) mod (q+j) has its first positive return to 1 at j=k, and each wrap satisfies r_j+8≤q+j. This reduces the right-five gate itself, not blank-start reachability of every P1 terminal or BB(6).
 
-**Proof status.** Original-source equivalence passed the exact dependency-closure Lean 4.36.0-rc2 workflow at commit 62e88e75ccf52af7c3fd872d32e3168c7a6f745b ([run 45508108201](https://github.com/FlareZ123/bb6/actions/runs/45508108201)). The new cost bound below passed local core compilation and interface preflight; full-source validation is pending.
+**Proof status.** Original-source equivalence passed the exact dependency-closure Lean 4.36.0-rc2 workflow at commit 62e88e75ccf52af7c3fd872d32e3168c7a6f745b ([run 45508108201](https://github.com/FlareZ123/bb6/actions/runs/45508108201)). The near-2n cost bound passed the exact original-source dependency closure with strict standard-axiom checks at commit ca1fe6517197faede9ccf45080b82898adb7fc23 ([run 45508888563](https://github.com/FlareZ123/bb6/actions/runs/45508888563)). The stronger superlinear result below has a rigorous paper proof and exact arithmetic regressions but its rational-renewal argument is not yet Lean certified.
 
 ## Exact scalar and source equivalence
 
@@ -23,6 +23,10 @@ hence
     m > 2n − floor(log₂(2n−1)).
 
 This improves the earlier 1.5n+O(1) uniform floor for large n without a reset-count hypothesis. For instance n=10002 requires m>19990. The proof starts from P=2^n. For a proposed return with 2^max(0,k−n−2)·k≤P, the first n+2 steps double exactly. If k exceeds n+2, step n+3 gives P+k at modulus 7P−k. From there the ideal cycle is P,2P,4P; after s steps the actual value lies between its ideal phase and that phase plus (2^(s+1)−1)k. The error bound is sufficient to preserve each wrap decision up to the proposed terminal time. Every terminal residue in this regime is ≥P, contradicting return to 1. The proof even excludes unguarded returns in that range. The remaining challenge is an upper bound on feasible history costs or an exclusion of the longer return lengths.
+
+## Superlinear cost floor (paper proof)
+
+[RenewalCost.md](RenewalCost.md) strengthens the floor further: for every fixed integer B≥1, for all sufficiently large n every original right-five history satisfies m>(B+1)n+2. The threshold is effective. In particular the explicit three-block proof gives m>4n+2 for EVERY n≥8000, including all currently unresolved critical indices n≥10002. The first return lands near phase 1/7; the exact renewal adapted from Agent50's rational block lemma has successive phase denominator 7-valuations 1,3,5,7,..., so no phase can vanish. Uniform error and clock bounds prove safety of any fixed number of n-step blocks as n grows. Exact constants and independent trajectory regressions are in [renewal_check.py](renewal_check.py). This is a paper theorem with a source-checked return adapter; it does not exclude superlinear costs or settle P1.
 
 ## Remaining mathematical target
 

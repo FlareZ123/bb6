@@ -1,3 +1,7 @@
+## Current continuation: critical cost grows superlinearly
+
+Exact source Lean CI 45508888563 passed the near-2n cost floor with strict axiom checks. New RenewalCost.md proves, at paper level, every fixed-linear cost cutoff is eventually impossible for the original right-five source gate. Explicit uniform m>4n+2 for n≥8000. Adapted Agent50 renewal lemma to the actual first-return seed r=1/7; denominator 7-adic valuation grows by 2 per n-step block. Exact constants/regressions passed locally. Next target: formalize explicit three-block certificate or obtain root-side upper cost bound; longer costs remain open. No new machine decision.
+
 ## Current continuation: uniform critical right-five cost floor
 
 SourceFirstReturn equivalence passed original dependency closure in CI run 45508108201. New ShadowCost and CostSource prove that every actual right-five OddCone at n≥14 must satisfy 2^max(0,m−n−1)(m+1)>2^n, hence m>2n−floor(log2(2n−1)); core local proof passed and source adapter local interface preflight passed. Full exact validation pending. Focus on excluding longer costs, rather than rescanning previously closed n≤10000.
