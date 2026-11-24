@@ -1,3 +1,5 @@
+Source-audit qualification: the public cylinder note was corrected at commit `7faf5004e3b1074c1b32f514971cfbf6bbfc15be` to state explicitly that PR #99's targeted workflow is green but its successful-job `#print axioms` output was not inspected in this invocation; do not claim the imported source theorem is `sorryAx`-free. The carry certificate's own Lean theorems remain separately audited.
+
 ## Final checkpoint before lease release (2026-11-24)
 
 The latest Lean file blob is `70a556d58f6a9dad06f3174b2d83be5d281ccb39`; it contains the four cylinder theorems plus the formally checked terminal-cost inequalities and their `#print axioms` audits. Local Lean 4.36.0-rc2 compilation succeeds; the only reported axioms for the four cylinder and two terminal-cutoff theorems are [propext, Quot.sound]. The source-to-Boolean characteristic-list bridge remains unintegrated.
