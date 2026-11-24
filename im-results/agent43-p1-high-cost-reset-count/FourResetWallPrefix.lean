@@ -10,6 +10,80 @@ open BB6.Agent28 BB6.Agent1UpperTail BB6.Agent1Quarter
 open BB6.Agent43LastResetStrength BB6.Agent43LastResetDraft BB6.Agent43CountedEnergy
 open BB6.Agent50RightFive BB6.Agent50RightFiveThree
 
+private theorem p_gt_80 (n P : Nat) (hn : 14≤n) (hP1100 : 1100*n≤P) : 80*n+147 < 6*P := by
+  have h1 : 80*n+147 < 6600*n := by omega
+  have h2 : 6600*n ≤ 6*P := by
+    calc
+      6600*n = 6*(1100*n) := by omega
+      _ ≤ 6*P := Nat.mul_le_mul_left 6 hP1100
+  omega
+
+private theorem p_gt_444 (n P : Nat) (hn : 14≤n) (hP1100 : 1100*n≤P) : 444*n+1077 < 6*P := by
+  have h1 : 444*n+1077 < 6600*n := by omega
+  have h2 : 6600*n ≤ 6*P := by
+    calc
+      6600*n = 6*(1100*n) := by omega
+      _ ≤ 6*P := Nat.mul_le_mul_left 6 hP1100
+  omega
+
+private theorem p_gt_2344 (n P : Nat) (hn : 14≤n) (hP1100 : 1100*n≤P) : 2344*n+8535 < 6*P := by
+  have h1 : 2344*n+8535 < 6600*n := by omega
+  have h2 : 6600*n ≤ 6*P := by
+    calc
+      6600*n = 6*(1100*n) := by omega
+      _ ≤ 6*P := Nat.mul_le_mul_left 6 hP1100
+  omega
+
+private theorem no_d3_bad (d P n m : Nat)
+    (hD : d+6*P=10*m+10*n+47)
+    (hm : m≤7*n+10)
+    (hP : 80*n+147 < 6*P) : False := by
+  have hupper : d+6*P≤80*n+147 := by rw [hD]; omega
+  omega
+
+private theorem no_d2_bad (d P n m : Nat)
+    (hD : d+6*P=74*m+74*n+559)
+    (hm : m≤5*n+7)
+    (hP : 444*n+1077 < 6*P) : False := by
+  have hupper : d+6*P≤444*n+1077 := by rw [hD]; omega
+  omega
+
+private theorem no_d1_bad (d P n m : Nat)
+    (hD : d+6*P=586*m+586*n+6191)
+    (hm : m≤3*n+4)
+    (hP : 2344*n+8535 < 6*P) : False := by
+  have hupper : d+6*P≤2344*n+8535 := by rw [hD]; omega
+  omega
+
+private theorem four_reset_two_tail_wall_identity
+    (b m n P c : Nat)
+    (hwall : b+4*m+4*n+20+8*(c+3)=28*P)
+    (hC : c+3=2*P+146*m+146*n+1692) :
+    b+1172*m+1172*n+13556=12*P := by
+  omega
+
+private theorem four_reset_mass_d1
+    (b d m n P : Nat)
+    (hMass : b+d+2*m+2*n+13=14*P)
+    (hB : b+1172*m+1172*n+13556=12*P) :
+    d=2*P+1170*m+1170*n+13543 := by
+  omega
+
+private theorem four_reset_lower_b1
+    (b m n P : Nat)
+    (hn : 14≤n) (hP1100 : 1100*n≤P)
+    (hm : m≤3*n+4)
+    (hB : b+1172*m+1172*n+13556=12*P) :
+    6*P≤b := by
+  omega
+
+private theorem c2one_from_cost (P n m2 m1 t2 c2 : Nat)
+    (hC2 : c2+3=2*P+146*m2+146*n+1254)
+    (hpost2Cost : m2=m1+t2+1) (ht2eq : t2=1) :
+    c2+3=2*P+146*m1+146*n+1546 := by
+  rw [hpost2Cost, ht2eq] at hC2
+  omega
+
 private theorem source_predecessor_wall_relation_four
     (bp dp mp n P t c : Nat)
     (hMass : bp+dp+2*mp+2*n+13=14*P)
@@ -25,14 +99,10 @@ private theorem upper_tail_one_right
     (h : UpperTail b0 d0 m0 b d m 1) :
     d=d0+b0/2+4 := by
   cases h with
-  | root => omega
-  | step b' d' m' r k c hprev hb hb4 hd hi hk hc =>
-    have hr : r=0 := by omega
-    subst r
-    cases hprev with
-    | root =>
-      have hzero := inv0_halve b0 d0 k c hi hk
-      omega
+  | step b' d' m' _ k c hprev hb hb4 hd hi hk hc =>
+    cases hprev
+    have hzero := inv0_halve b0 d0 k c hi hk
+    exact hzero.2
 
 /-- No original-source four-positive-reset CountCone prefix can lie on the
 exact shifted 12*2^n wall for n>=14. The proof peels all four positive resets,
@@ -111,7 +181,10 @@ theorem source_no_four_reset_shifted_wall
         have hh := Nat.pow_le_pow_right (by decide : 0<(2:Nat)) ht3
         simpa using hh
       have hmul : 16*P≤2^t4*(c4+3) := by
-        have h8 : 16*P≤8*(c4+3) := Nat.mul_le_mul_left 8 hC4Lower
+        have h8 : 16*P≤8*(c4+3) := by
+          calc
+            16*P = 8*(2*P) := by omega
+            _ ≤ 8*(c4+3) := Nat.mul_le_mul_left 8 hC4Lower
         have hpowmul : 8*(c4+3)≤2^t4*(c4+3) :=
           Nat.mul_le_mul_right (c4+3) hpow
         exact Nat.le_trans h8 hpowmul
@@ -126,8 +199,8 @@ theorem source_no_four_reset_shifted_wall
       rw [hpow4] at hwallPre4
       exact hwallPre4
     have hD3Bad : d3+6*P=10*m3+10*n+47 := by omega
-    have hPBad : 6*P>80*n+147 := by omega
-    omega
+    have hPBad := p_gt_80 n P hn hP1100
+    exact no_d3_bad d3 P n m3 hD3Bad hcost3Bound hPBad
   · have hC4two : c4+3=2*P+2*m3+2*n+12 := by
       rw [hpost4Cost, ht4eq] at hC4
       omega
@@ -191,7 +264,10 @@ theorem source_no_four_reset_shifted_wall
         have hpow : 8≤2^t3 := by
           have hh := Nat.pow_le_pow_right (by decide : 0<(2:Nat)) htLarge
           simpa using hh
-        have h8 : 16*P≤8*(c3+3) := Nat.mul_le_mul_left 8 hC3Lower
+        have h8 : 16*P≤8*(c3+3) := by
+          calc
+            16*P = 8*(2*P) := by omega
+            _ ≤ 8*(c3+3) := Nat.mul_le_mul_left 8 hC3Lower
         have hpowmul : 8*(c3+3)≤2^t3*(c3+3) :=
           Nat.mul_le_mul_right (c3+3) hpow
         have hmul : 16*P≤2^t3*(c3+3) := Nat.le_trans h8 hpowmul
@@ -206,8 +282,8 @@ theorem source_no_four_reset_shifted_wall
         rw [hpow3] at hwallPre3
         exact hwallPre3
       have hD2Bad : d2+6*P=74*m2+74*n+559 := by omega
-      have hPBad : 6*P>444*n+1077 := by omega
-      omega
+      have hPBad := p_gt_444 n P hn hP1100
+      exact no_d2_bad d2 P n m2 hD2Bad hcost2Bound hPBad
     · have hC3two : c3+3=2*P+18*m2+18*n+156 := by
         rw [hpost3Cost, ht3eq] at hC3
         omega
@@ -268,32 +344,37 @@ theorem source_no_four_reset_shifted_wall
           have hpow : 8≤2^t2 := by
             have hh := Nat.pow_le_pow_right (by decide : 0<(2:Nat)) htLarge
             simpa using hh
-          have h8 : 16*P≤8*(c2+3) := Nat.mul_le_mul_left 8 hC2Lower
+          have h8 : 16*P≤8*(c2+3) := by
+            calc
+              16*P = 8*(2*P) := by omega
+              _ ≤ 8*(c2+3) := Nat.mul_le_mul_left 8 hC2Lower
           have hpowmul : 8*(c2+3)≤2^t2*(c2+3) :=
             Nat.mul_le_mul_right (c2+3) hpow
           have hmul : 16*P≤2^t2*(c2+3) := Nat.le_trans h8 hpowmul
           omega
       have ht2Cases : t2=1 ∨ t2=2 := by omega
       rcases ht2Cases with ht2eq | ht2eq
-      · have hC2one : c2+3=2*P+146*m1+146*n+1546 := by
-          rw [hpost2Cost, ht2eq] at hC2
-          omega
+      · have hC2one := c2one_from_cost P n m2 m1 t2 c2 hC2 hpost2Cost ht2eq
         have hpow2 : 2^(t2+1)=4 := by simp [ht2eq]
         have hwallPre2one : b1+4*m1+4*n+20+4*(c2+3)=28*P := by
           rw [hpow2] at hwallPre2
           exact hwallPre2
         have hD1Bad : d1+6*P=586*m1+586*n+6191 := by omega
-        have hPBad : 6*P>2344*n+8535 := by omega
-        omega
+        have hPBad := p_gt_2344 n P hn hP1100
+        exact no_d1_bad d1 P n m1 hD1Bad hcost1Bound hPBad
       · have hC2two : c2+3=2*P+146*m1+146*n+1692 := by
           rw [hpost2Cost, ht2eq] at hC2
           omega
         have hpow2 : 2^(t2+1)=8 := by simp [ht2eq]
-        have hB1Exact : b1+1172*m1+1172*n+13556=12*P := by
-          rw [hpow2] at hwallPre2
-          omega
-        have hD1Exact : d1=2*P+1170*m1+1170*n+13543 := by omega
-        have hb1Large : 6*P≤b1 := by omega
+        have hwallPre2Eight :
+            b1+4*m1+4*n+20+8*(c2+3)=28*P := by
+          simpa [hpow2] using hwallPre2
+        have hB1Exact := four_reset_two_tail_wall_identity
+          b1 m1 n P c2 hwallPre2Eight hC2two
+        have hD1Exact := four_reset_mass_d1
+          b1 d1 m1 n P hpre1MassExact hB1Exact
+        have hb1Large := four_reset_lower_b1
+          b1 m1 n P hn hP1100 hcost1Bound hB1Exact
 
         obtain ⟨B,D,R,r,u,j,c1,s1,hupperPre,hB,hB4,hD,hInv1,hj,
             hc1,hu,hupperPost⟩ :=
