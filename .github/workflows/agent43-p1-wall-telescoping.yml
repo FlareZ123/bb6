@@ -23,7 +23,9 @@ jobs:
           AG28=im-results/agent28-p1-word-automaton
           AG43=im-results/agent43-p1-high-cost-reset-count
           AG50=im-results/agent50-p1-subwall
-          export LEAN_PATH="$MAP:$INV:$P1:$AG28:$AG43:$AG50"
+          AG50D=im-results/agent50-p1-dyadic-width
+          AG9=im-results/agent9-p1-reverse-shadow
+          export LEAN_PATH="$MAP:$INV:$P1:$AG28:$AG43:$AG50:$AG50D:$AG9"
           lean --version
           for m in GParity GInverse PosEvenForm; do
             lean -o "$MAP/$m.olean" "$MAP/$m.lean"
@@ -43,4 +45,9 @@ jobs:
           lean -o "$AG43/LastResetStrengthSource.olean" "$AG43/LastResetStrengthSource.lean"
           lean -o "$AG43/CountedWallStrongGateSource.olean" "$AG43/CountedWallStrongGateSource.lean"
           lean -o "$AG50/ThreeResetCore.olean" "$AG50/ThreeResetCore.lean"
-          lean "$AG43/WallTelescopingSource.lean"
+          lean -o "$AG43/WallTelescopingSource.olean" "$AG43/WallTelescopingSource.lean"
+          lean -o "$AG50D/wall_prefix_carry_cylinders.olean" "$AG50D/wall_prefix_carry_cylinders.lean"
+          lean -o "$AG50D/WallPrefixListBridge.olean" "$AG50D/WallPrefixListBridge.lean"
+          lean -o "$AG43/WallPrefixCarrySourceBridge.olean" "$AG43/WallPrefixCarrySourceBridge.lean"
+          lean -o "$AG50D/ReverseUnitMap.olean" "$AG50D/ReverseUnitMap.lean"
+          lean -o "$AG9/RootTerminalConstraint.olean" "$AG9/RootTerminalConstraint.lean"
