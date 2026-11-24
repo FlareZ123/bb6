@@ -1,13 +1,16 @@
 # SymRun symbolic-state growth and field potential
 
-This dossier develops source-level bounds for the symbolic-run engine in
-`google-deepmind/cryptids` commit
-`3647718b5df22e1a61462dec0376bd204526285a`.
+This dossier develops exact-source growth bounds for the symbolic-run engine
+in `google-deepmind/cryptids` at commit
+`3647718b5df22e1a61462dec0376bd204526285a`. The audited machine modules are
+F424 and F412, compiled with Lean `v4.36.0-rc2`.
 
-## Current strongest BB-sweep argument
+## Mathematical statements under development
 
-The current BB-sweep route separates output token length from numeric-field
-mass and combines them only after the two inductions:
+### BB sweep
+
+The BB-sweep argument separates token length from numeric-field mass and
+combines them only after the two inductions:
 
 - `sweepBB_length_bound4_pair`: simultaneous induction with an ordinary
   right-stack bound and a one-unit stronger bound when the right stack begins
@@ -16,100 +19,100 @@ mass and combines them only after the two inductions:
   `|L| + |R| + 4*|L| + 12`.
 - `sweepBB_num_sum_bound`: output numeric-field sum is at most
   `numSum(L) + numSum(R) + 2*|L| + 5`.
-- `sweepBB_weight_bound_sharper`: with
-  `symStateWeight = tokenCount + numericFieldSum`, the combined estimate is
-  `W_out ≤ W_in + 6*|L| + 17`.
+- `sweepBB_weight_bound_sharper`: for
+  `symStateWeight = tokenCount + numericFieldSum`, the output is bounded by
+  `|L| + |R| + numSum(L) + numSum(R) + 6*|L| + 17`.
 - `sweepBB_field_max_le`: output maximum numeric field is at most
   `numSum(L) + numSum(R) + 2*|L| + 5`.
 
-Here the corresponding augmented input potential is
-`W_in = 1 + |L| + |R| + numSum(L) + numSum(R)`, and the output potential
-adds the leading 1 to `symStateWeight). Algebraically, the draft estimate
-implies `W_out ≤ 7*W_in + 11 ≤ 9*(W_in + 1)` for `W_in ≥ 1`.
-This is a source-generic BB-sweep lemma, not yet a bound on the full
-`stepSym` transition or on blank-root primitive runtime.
+With augmented potential
+`W = 1 + |L| + |R| + numSum(L) + numSum(R)`, the weight statement gives
+`W_out <= 7*W_in + 11 <= 9*(W_in + 1)` for `W_in >= 1`. This is a
+source-generic BB-sweep bound, not yet a bound on the full `stepSym`
+transition or blank-root primitive runtime.
 
-The key amortized invariant is the leading-run0 shield. In the ordinary
-induction case, a run-1 head can incur the generic five-token bump expansion,
-but the recursive right stack is prefixed by run 0 and therefore admits the
-stronger bound. In the shielded case, bumping a right stack already beginning
-with run 0 changes its head to run 1 without increasing its length. Successful
-B2/B12R eats preserve the shield; B1 eats may lose it but shorten the right
-stack enough to use the ordinary bound.
+### CB sweep followed by the BB-producing fallback
 
-## Exact-source module split
+`SymRunCBFallbackAudit.lean` isolates the CB-to-BB numeric-mass proof from
+the unrelated trace aggregates and primitive-cost drafts in the broad
+`SymRunTraceStats.lean` workfile. It reuses `SymRunBBBase.lean` and
+`SymRunBBBounds.lean` and states the following conditional bounds:
 
-The earlier broad workfile
-`../agent42-cryptids-upstream-191-overlap/SymRunTraceStats.lean` is not a
-valid exact-source dependency as a whole. The pinned RC2 run
-[45137136319](https://github.com/FlareZ123/bb6/actions/runs/45137136319)
-reported independent errors outside the BB-sweep helper closure, including:
+- `sweepCB_num_sum_le_94M282`: if `|L|+|R| <= 94`, then after the CB sweep
+  the numeric sum is at most `94*M + 282`, where `M` is the input maximum
+  numeric field.
+- `cb_fallback_bb_input_field_max_le_94M285`: if the next CB element step
+  enters BB, its output maximum field is at most `94*M + 285`, hence at most
+  `2^9*(M+1)`.
+- `stepElemCB_after_sweep_570`: the CB sweep and BB-producing element step
+  leave at most 570 symbolic tokens.
+- `cb_fallback_then_bb_sweep_field_max_le_2pow11`: under the same 94-token
+  premise and BB-branch hypothesis, the subsequent BB sweep has maximum field
+  at most `2^11*(M+1)`.
 
-- theorem proof constants incorrectly used as propositions in the
-  F424/F412 range aggregates and checkpoint certificates;
-- unresolved field-growth and `stepPure` proof goals;
-- unresolved branches in `stepElemCB_BB_length_bound`.
+These are conditional symbolic-state inequalities. They do not by themselves
+establish the 94-token invariant for a blank-start trace, prove the complete
+`stepSym` dispatcher, or classify F424/F412 primitive runtime.
 
-The BB-specific helper declarations near the end of that file did compile
-without `sorryAx`, but the module-wide errors prevented acceptance of any
-downstream certificate. Rather than silently treating those declarations as
-accepted or repairing unrelated code merely to unblock this result, the
-needed helper closure was extracted to
-`SymRunBBBase.lean`. It contains the exact-source BB length, numeric-mass,
-and field-maximum lemmas, without the unrelated legacy declarations.
+## Exact-source modules and current CI status
 
-`SymRunBBBounds.lean` now imports `SymRunBBBase`; the theorem
-`sweepBB_weight_bound_sharper` is placed after
-`sweepBB_num_sum_bound` to avoid a forward reference.
-`SymRunTraceStatsAudit.lean` imports the isolated base and BB bounds and
-prints the transitive axiom profiles of the resulting lemmas.
+The dependency chain is:
 
-## Status and acceptance boundary
+`SymRunBBBase.lean -> SymRunBBBounds.lean -> SymRunCBFallbackAudit.lean`.
 
-**The BB-sweep bounds remain unaccepted drafts.** The exact-source audit
-[45147110361](https://github.com/FlareZ123/bb6/actions/runs/45147110361)
-is the current focused run, pinned to the Cryptids commit above and Lean
-`v4.36.0-rc2`, with dependency chain:
+- `SymRunBBBase.lean` contains the isolated generic BB length, numeric-mass,
+  and field-maximum helper closure.
+- `SymRunBBBounds.lean` proves the BB-sweep length and mass bounds and their
+  derived weight/field estimates.
+- `SymRunCBFallbackAudit.lean` adds the CB sweep, BB-producing fallback, and
+  CB-to-BB-sweep composition.
 
-`SymRunBBBase.lean → SymRunBBBounds.lean → SymRunTraceStatsAudit.lean`.
+Pinned run [45294708124](https://github.com/FlareZ123/bb6/actions/runs/45294708124)
+successfully compiled the two original upstream machine modules and
+`SymRunBBBase.lean`, then failed in the earlier version of
+`sweepBB_num_sum_bound`. The errors exposed missing final induction steps
+from `L1.length + 1 = n`, repeat-counter normalization in the failed-prefix
+branches, and associativity normalization in the recursive repeat branches.
 
-The preceding runs [45144046165](https://github.com/FlareZ123/bb6/actions/runs/45144046165)
-and [45144654362](https://github.com/FlareZ123/bb6/actions/runs/45144654362)
-were cancelled before the proof stage after static dependency review found
-successive omissions in the isolated field-maximum closure. Run
-[45145550915](https://github.com/FlareZ123/bb6/actions/runs/45145550915)
-then failed immediately because Lean requires imports to precede module
-documentation comments. All three module headers have been corrected. These
-three runs provide no mathematical proof evidence.
+Those BB mass-induction cases have now been rewritten explicitly. The
+four impossible CB-to-BB mode branches in both
+`stepElemCB_BB_num_sum_le` and `stepElemCB_BB_length_bound` have also been
+made explicit by reducing the mode hypothesis and eliminating the impossible
+constructor equality. The broad `SymRunTraceStats.lean` module itself remains
+unaccepted and is not imported by this isolated dependency chain.
 
-The earlier exact-source runs
-[45129145926](https://github.com/FlareZ123/bb6/actions/runs/45129145926) and
-[45132510153](https://github.com/FlareZ123/bb6/actions/runs/45132510153)
-also failed. The local source-equivalent Lean harnesses used for earlier
-field-growth, CB-length, counter-sum, and numeric-sum experiments are useful
-development evidence only; they do not replace the pinned source audit.
+The current pinned audit is
+[45296816853](https://github.com/FlareZ123/bb6/actions/runs/45296816853),
+using the exact upstream SHA above, Lean `v4.36.0-rc2`, and the full
+Base -> BB bounds -> CB fallback audit chain. Its result is pending; none of
+the statements in this dossier should be treated as kernel-accepted until
+that run and its transitive axiom profiles pass.
 
-The intended acceptance standard is kernel-checked compilation of the
-complete dependency closure and exported transitive axiom profiles without
-`sorryAx` or `native_decide`. Standard Lean axioms such as `propext`,
-`Quot.sound`, and where justified `Classical.choice` are not equivalent to
-admitting an unproved theorem.
+Acceptance requires successful compilation of the complete dependency
+closure and exported axiom profiles without `sorryAx` or
+`native_decide`. Standard Lean axioms such as `propext` and
+`Quot.sound` are not equivalent to admitting an unproved theorem.
 
-## Remaining route to a full source-cost bound
+## Research significance and remaining work
 
-1. Complete the focused BB-sweep exact-source audit and repair only concrete
-   compiler failures.
-2. Isolate and repair the CB-sweep and BB-producing fallback length/mass
-   lemmas. The current broad Stats module's
-   `stepElemCB_BB_length_bound` has unresolved branches and its F424/F412
-   trace aggregates are not yet valid certificates.
-3. Coordinate the accepted BB/CB exports with Agent 42's independent
-   `stepSym` wrapper composition.
-4. Compose the complete macro-cost inequality with source-native primitive
-   cost envelopes and exact blank-root checkpoint chains.
-5. Keep every candidate primitive-time classification conditional until
-   the original-machine one-step and macro-dispatch bridges are
-   kernel-checked.
+The potential estimates offer a reusable way to bound symbolic-run state
+growth without enumerating every represented primitive transition. The BB
+sweep has a linear augmented-weight bound; the CB-to-BB fallback has a
+conditional maximum-field bound with factor `2^11` after the subsequent BB
+sweep. This is a candidate component of a source-certified macro-cost
+argument, not a universal upper bound for six-state machines.
 
-No claim here establishes a universal six-state upper bound or determines
-BB(6).
+Next steps, in dependency order:
+
+1. Finish the current pinned compile and repair only the first concrete Lean
+   failure.
+2. Establish the 94-token premise from the F424/F412 blank-start checkpoint
+   chains, with kernel-checked range certificates.
+3. Connect the accepted BB/CB bounds to the actual `stepSym` dispatcher and
+   source-native primitive-cost envelope.
+4. Audit the complete macro-to-primitive bridge and its transitive axioms.
+5. Keep all F424/F412 runtime classifications conditional until the original
+   one-step and macro-dispatch bridges are kernel-checked.
+
+No claim in this dossier determines BB(6) or proves a universal six-state
+upper bound.
