@@ -689,7 +689,8 @@ const nestedReturnHierarchy = {
   factorizationChecks: nestedFactorChecks,
   prefixCycles: nestedCycles,
   FprefixPeriodScan,
-  first15Cycle
+  first15Cycle,
+  GtoH: hSummary
 };
 
 // Continue the exact BigInt Y-word action for 10,000 additional blocks.
@@ -873,7 +874,9 @@ console.log(JSON.stringify({
     V_eightDigit: vCycle,
     W_sevenDigit: wCycle,
     X_eightDigit: xCycle,
-    G_fifteenDigit: gPrefixCycle
+    G_fifteenDigit: gPrefixCycle,
+    G_by_depth: gDepthResults.cycles,
+    G_carry_by_depth: gDepthResults.carry
   },
   yOffsetMod3Counts: Y.reduce((counts, c) => {
     counts[Number(c % 3n)]++;
