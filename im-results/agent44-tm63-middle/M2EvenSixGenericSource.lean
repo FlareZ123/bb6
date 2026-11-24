@@ -348,6 +348,12 @@ private theorem m2EvenSixGeneric_q4_prefix_head_bound
   let N := 3*a+2
   let T1 := sweptLeft N T h
   let hN : Int := h-(N:Int)
+  have hbaseConfig : s1Config 3 6 2 a 0 b h =
+      (⟨3,h,T⟩ : Config) := by
+    apply config_ext_by_fields
+    · simp
+    · simp
+    · rfl
   let T2 := m2EvenSixQ4CutTape a b h
   have hface : s1LeftFacing 3 6 2 a 0 =
       d1pow a ++ (markerWord 2 ++ d0 ++ binDec 3 6 ++ lh) := by
@@ -399,7 +405,11 @@ private theorem m2EvenSixGeneric_q4_prefix_head_bound
     rw [hframe] at hb
     exact hb
   have hlinear : linearRightOnes T2 (hN+2) (3*a) := by
-    simpa [T2,hN,N] using
+    have hcoord : hN+2 = h-(3*a:Int) := by
+      dsimp [hN,N]
+      omega
+    rw [hcoord]
+    simpa [T2] using
       m2EvenSixQ4CutTape_linearRightOnes a b h ha
   intro k hk d hd
   let p1 := 3*N
@@ -415,6 +425,7 @@ private theorem m2EvenSixGeneric_q4_prefix_head_bound
       have hkEq : k=p1+j := by dsimp [j,p1]; omega
       rw [hkEq] at hd
       dsimp [p1] at hd
+      rw [hbaseConfig] at hd
       rw [run_add,hSweep] at hd
       simp only [Option.bind_some] at hd
       have hlow := m2EvenSixGeneric_bridge_prefix_lower T1 hN hmatch j hj d hd
@@ -425,6 +436,7 @@ private theorem m2EvenSixGeneric_q4_prefix_head_bound
       have hkEq : k=p1+(38+j) := by dsimp [j,p2,p1]; omega
       rw [hkEq] at hd
       dsimp [p1] at hd
+      rw [hbaseConfig] at hd
       rw [run_add,hSweep] at hd
       simp only [Option.bind_some] at hd
       rw [run_add,hBridge] at hd
@@ -441,7 +453,7 @@ theorem m2EvenSix_generic_q4_prefix_source
     run tm2 (44+12*a)
       (s1Config L (8*q+6) 2 a 0 b h) =
       some ⟨4,h,m2EvenSixGenericCutTape L q a b h⟩ := by
-  let base : Config := ⟨3,h,(s1Config 3 6 2 a 0 b h).tape⟩
+  let base : Config := s1Config 3 6 2 a 0 b h
   let background := (s1Config L (8*q+6) 2 a 0 b h).tape
   have hinput := m2EvenSixGeneric_input_matches L q a b h hL hbound
   have hstart :
@@ -546,6 +558,7 @@ theorem m2EvenSix_generic_q4_prefix_leftFacing
       sideBit
         (m2EvenSixGenericTargetPrefix a ++ m2EvenSixGenericCommonTail L q) i
     rw [hsourceBit,htargetBit]
+    rw [hinputPrefixLength,htargetPrefixLength]
 
 private theorem m2EvenSixGeneric_q4RightShape_congr
     (T U : Int → Bool) (h : Int) (b : Nat)
