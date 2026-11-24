@@ -101,3 +101,73 @@ theorem low_ray_z14_second_fan_reach_iff
 #print axioms second_parent_reach_iff
 #print axioms low_ray_z14_second_fan_reach_iff
 end BB6.Agent13LowSecondFan
+
+
+/-- On the residual subfamily s=4r+3 with odd r, the unique
+    depth-one high-bounce parent in the second-generation fan is
+    forbidden by the original blank odd-image invariant.  Thus the
+    complete source fan collapses to its direct affine parent. -/
+theorem second_high_parent_odd_r_unreachable
+    (r u n a k : Nat)
+    (hu : u+12*(4*r+3)+1=2^(2048*(4*r+3)+129))
+    (hr : r%2=1)
+    (hcond : secondHighParentCondition (4*r+3) u n a k) :
+    ¬ BB6.Agent3.CReach a k := by
+  have hn1 :=
+    second_high_parent_depth_one_of_odd_r r u n a k hu hr hcond
+  subst n
+  rcases hcond with ⟨_,haodd,ha3,hregion,hmass,hcost⟩
+  have hs7 : (4*r+3)%8=7 := by omega
+  have hpow32 : 32∣(2:Nat)^(2048*(4*r+3)+129) := by
+    have hh : (2:Nat)^5∣2^(2048*(4*r+3)+129) :=
+      Nat.pow_dvd_pow 2 (by omega)
+    simpa only [show (2:Nat)^5=32 by decide] using hh
+  have hdiv32 : 32∣u+12*(4*r+3)+1 := by
+    rw [hu]
+    exact hpow32
+  have hu32 : u%32=11 := by
+    have hm := Nat.mod_eq_zero_of_dvd hdiv32
+    omega
+  have hX32 : (173*u+24)%32=7 := by omega
+  have hYnum32 : (339*u+47)%32=0 := by omega
+  have hYdiv32 : 32∣339*u+47 :=
+    Nat.dvd_of_mod_eq_zero hYnum32
+  rcases hYdiv32 with ⟨q,hq⟩
+  have hYeq : (339*u+47)/2=16*q := by omega
+  have hY16 : ((339*u+47)/2)%16=0 := by rw [hYeq]; omega
+  have hmass4 :
+      173*u+25+(339*u+47)/2=4*(a+3) := by
+    simpa using hmass
+  have ha8 : a%8=7 := by omega
+  have hcost' :
+      2*k+a+10=173*u+24+2*((339*u+47)/2) := by
+    simpa using hcost
+  have hk4 : k%4=3 := by omega
+  have hkge : 5≤k := by omega
+  have hsum : (a+k)%4=2 := by omega
+  exact BB6.Agent13TwoParent.odd_forbidden_image a k hkge
+    (by omega) (Or.inr hsum)
+
+/-- For z=8r+6 with odd r, the complete second-generation fan
+    and the odd-image invariant leave only the direct affine parent.
+    This is an exact all-time blank-root reachability equivalence. -/
+theorem low_ray_z14_second_fan_reach_iff_direct_parent
+    (r u : Nat)
+    (hu : u+12*(4*r+3)+1=2^(2048*(4*r+3)+129))
+    (hr : r%2=1) :
+    BB6.Agent3.CReach (180*u+28) (166*u+25) ↔
+    BB6.Agent3.CReach
+      (173*u+24+((339*u+47)/2)-2)
+      (((339*u+47)/2-2)/2) := by
+  have hfan := low_ray_z14_second_fan_reach_iff r u hu hr
+  constructor
+  · intro hroot
+    rcases hfan.mp hroot with hdirect | ⟨n,a,k,hcond,hparent⟩
+    · exact hdirect
+    · exact False.elim
+        (second_high_parent_odd_r_unreachable r u n a k hu hr hcond hparent)
+  · intro hdirect
+    exact hfan.mpr (Or.inl hdirect)
+
+#print axioms second_high_parent_odd_r_unreachable
+#print axioms low_ray_z14_second_fan_reach_iff_direct_parent
