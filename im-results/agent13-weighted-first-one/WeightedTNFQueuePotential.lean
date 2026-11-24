@@ -30,8 +30,8 @@ theorem queueListWeight_map_uniform (fs : List Nat) (n : Nat) :
   induction fs with
   | nil => simp [queueListWeight]
   | cons f fs ih =>
-      simp [queueListWeight, queueNodeWeight, ih, Nat.succ_mul,
-        Nat.add_assoc, Nat.add_comm, Nat.add_left_comm]
+      simp [queueListWeight, queueNodeWeight, ih, Nat.succ_mul]
+  omega
 
 /-- Exact fresh-label multiplicities in the pinned upstream `expand`:
     four write/direction choices for each existing state, plus four for
@@ -42,8 +42,11 @@ def sourceFreshes (m : Nat) : List Nat :=
 
 theorem sourceFreshes_length_le24 (m : Nat) (hm : m ≤ 6) :
     (sourceFreshes m).length ≤ 24 := by
-  simp [sourceFreshes, List.length_append, List.length_replicate]
-  split_ifs <;> omega
+  by_cases h : m < 6
+  · simp [sourceFreshes, h]
+    omega
+  · simp [sourceFreshes, h]
+    omega
 
 /-- Exact projection of upstream `expand'` to its two integer node fields.
     At one remaining undefined row, upstream `expand'` returns no children. -/
@@ -65,8 +68,9 @@ theorem sourceExpand_valid (n m : Nat) (hn : 1 ≤ n) (hm : m ≤ 6) :
     ∀ x, x ∈ sourceExpand n m → 1 ≤ x.holes ∧ x.fresh ≤ 6 := by
   intro x hx
   have hne : n ≠ 1 := by
-    by_contra h
-    simp [sourceExpand, h] at hx
+    intro h
+    subst n
+    simp [sourceExpand] at hx
   have hgt : 1 < n := by omega
   simp [sourceExpand, hne] at hx
   obtain ⟨f, hf, rfl⟩ := List.mem_map.mp hx
