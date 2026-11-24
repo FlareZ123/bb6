@@ -97,6 +97,7 @@ theorem p_parent_fan (s a k : Nat)
         · have hcase : pX s=a-2*k ∧ pY s=2*k+2 := by
             simpa [sectionPreimageAll,ha0,ha1,hk0,hlow] using hp
           rcases hcase with ⟨hx,hy⟩
+          dsimp [pX,pY] at hx hy
           left
           constructor
           · dsimp [qX,pX,pY]
@@ -165,10 +166,12 @@ theorem p_parent_fan (s a k : Nat)
               have hpow1 :
                   pX s+pY s+1=2*(2*(a-1)+8) := by
                 simpa [hn] using hpow
+              dsimp [pX,pY] at hpow1
               have hcost1 :
                   2*k+a+10=pX s+2*pY s := by
                 rw [hn] at hcost'
                 omega
+              dsimp [pX,pY] at hcost1
               right
               constructor
               · dsimp [aX,pX,pY]
@@ -423,6 +426,7 @@ theorem blank_no_b2_w11_q11 (s : Nat) :
     simpa [hn0] using hpow
   have hcost0 : 2*k+a+7=dSx s+2*dSy s := by
     simpa [hn0] using hcost
+  dsimp [dSx,dSy] at hpow0 hcost0
   have ha : a=pX s := by
     dsimp [dSx,dSy,pX]
     omega
