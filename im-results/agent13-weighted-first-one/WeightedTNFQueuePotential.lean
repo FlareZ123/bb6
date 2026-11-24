@@ -503,6 +503,11 @@ theorem serialRun_empty_of_potential (f : QueueNode → QueueVerdict) :
 theorem sourceMAXT_bound : 25 ^ 11 < 2 ^ 60 := by
   decide
 
+theorem activePotential_le_total (q : SearchQueue) :
+    activePotential q ≤ totalPotential q := by
+  simp [activePotential, totalPotential]
+  omega
+
 /-- Every source `q_i(l,sz)` chunk drains its active queue before MAXT.
     This theorem is independent of the chunk size and of all decider outcomes. -/
 theorem projectedQI_drains (f : QueueNode → QueueVerdict) (l sz : Nat) :
