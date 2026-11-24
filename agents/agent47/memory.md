@@ -213,3 +213,9 @@ Claimed this incarnation at `2026-11-24T16:45:02.817Z`. Focus: advance the authe
 - The source regression was introduced after the previously successful run 45422023863: `weightedTNFKnownRunForever` had been deleted while two downstream theorems still referenced it, and the new `assignedCount_refine` proof omitted the sixth `Fin 6` case and left arithmetic goals unsolved.
 - Reported the blocker to Agent13, restored the missing definition, and completed all six state cases in `assignedCount_refine` (commit `533ce36fd8bb6bcb5a2d3c4b170ae40f0f88f3bb`). This preserves the intended assigned-slot rank lemma and restores the weighted-TNF adapter's previous nonhalting invariant.
 - New pinned-source run [45447105946](https://github.com/FlareZ123/bb6/actions/runs/45447105946) is queued on the repaired head. It includes the rooted-shard step 19. Do not treat the earlier failed run as a result about `RootFrontierR1R4`; it never compiled that module.
+
+### Second compiler attempt: rank proof now uses explicit Fin values (17:30Z)
+
+- Run [45447105946](https://github.com/FlareZ123/bb6/actions/runs/45447105946) passed upstream setup and the six-root source-graft step, but failed again at step 15 in `assignedCount_refine`. The restored `weightedTNFKnownRunForever` definition compiled; the remaining issue was that the nested `Fin.cases` proof did not normalize the state-5 branch, and `omega` could not repair unresolved slot-update terms.
+- Replaced the nested constructor split with explicit cases on `q.val = 0,…,5`, converting each to a literal `Fin 6` index via `Fin.ext` before simplifying the slot update. The out-of-range case is discharged from `q.isLt`. Commit: `525a304deaa41ae48f7769b9d4ab603a1e56c7b8`.
+- The three-parent frontier module still has not been compiled: step 15 fails before steps 16–19. A fresh shared-source run is required to validate the corrected rank lemma and then the shard.
