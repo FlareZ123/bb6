@@ -1,0 +1,184 @@
+[
+  {
+    "s": 1,
+    "z": "1/2^1",
+    "alpha": "3/2048",
+    "asymptotic_D_over_M_lower_limit": 9.415037499278844,
+    "deep_gates_per_period": 703,
+    "shallow_gates_per_period": 245057,
+    "initial_centered_value": "-2604.940834045",
+    "period_constant_from_zero": "3600.443647288",
+    "period_start_cap": "7201.887294577",
+    "global_centered_cap": "9154.925868796",
+    "integer_C": "9155",
+    "period_start_invariant": true,
+    "maximum_phase": {
+      "ret": 140,
+      "stage": 1,
+      "carryDepthAtLeast": 0,
+      "offset": "290"
+    }
+  },
+  {
+    "s": 2,
+    "z": "1/2^2",
+    "alpha": "3/2097152",
+    "asymptotic_D_over_M_lower_limit": 9.707518749639421,
+    "deep_gates_per_period": 703,
+    "shallow_gates_per_period": 245057,
+    "initial_centered_value": "653.763676835",
+    "period_constant_from_zero": "660.533186324",
+    "period_start_cap": "1322.066372648",
+    "global_centered_cap": "1723.467876688",
+    "integer_C": "1724",
+    "period_start_invariant": true,
+    "maximum_phase": {
+      "ret": 220,
+      "stage": 1,
+      "carryDepthAtLeast": 0,
+      "offset": "290"
+    }
+  },
+  {
+    "s": 3,
+    "z": "1/2^3",
+    "alpha": "3/2147483648",
+    "asymptotic_D_over_M_lower_limit": 9.805012499759615,
+    "deep_gates_per_period": 703,
+    "shallow_gates_per_period": 245057,
+    "initial_centered_value": "420.755236905",
+    "period_constant_from_zero": "420.762027913",
+    "period_start_cap": "842.524055827",
+    "global_centered_cap": "1035.873985675",
+    "integer_C": "1036",
+    "period_start_invariant": true,
+    "maximum_phase": {
+      "ret": 220,
+      "stage": 0,
+      "carryDepthAtLeast": 0,
+      "offset": "509"
+    }
+  },
+  {
+    "s": 4,
+    "z": "1/2^4",
+    "alpha": "3/2199023255552",
+    "asymptotic_D_over_M_lower_limit": 9.853759374819711,
+    "deep_gates_per_period": 703,
+    "shallow_gates_per_period": 245057,
+    "initial_centered_value": "345.443545553",
+    "period_constant_from_zero": "345.443552243",
+    "period_start_cap": "691.887104487",
+    "global_centered_cap": "838.266425045",
+    "integer_C": "839",
+    "period_start_invariant": true,
+    "maximum_phase": {
+      "ret": 200,
+      "stage": 0,
+      "carryDepthAtLeast": 0,
+      "offset": "509"
+    }
+  },
+  {
+    "s": 5,
+    "z": "1/2^5",
+    "alpha": "3/2251799813685248",
+    "asymptotic_D_over_M_lower_limit": 9.883007499855768,
+    "deep_gates_per_period": 703,
+    "shallow_gates_per_period": 245057,
+    "initial_centered_value": "313.414002668",
+    "period_constant_from_zero": "313.414002675",
+    "period_start_cap": "627.828005350",
+    "global_centered_cap": "756.928058913",
+    "integer_C": "757",
+    "period_start_invariant": true,
+    "maximum_phase": {
+      "ret": 200,
+      "stage": 0,
+      "carryDepthAtLeast": 0,
+      "offset": "509"
+    }
+  },
+  {
+    "s": 6,
+    "z": "1/2^6",
+    "alpha": "3/2305843009213693952",
+    "asymptotic_D_over_M_lower_limit": 9.902506249879806,
+    "deep_gates_per_period": 703,
+    "shallow_gates_per_period": 245057,
+    "initial_centered_value": "298.425410717",
+    "period_constant_from_zero": "298.425410717",
+    "period_start_cap": "597.850821434",
+    "global_centered_cap": "719.497228184",
+    "integer_C": "720",
+    "period_start_invariant": true,
+    "maximum_phase": {
+      "ret": 200,
+      "stage": 0,
+      "carryDepthAtLeast": 0,
+      "offset": "509"
+    }
+  },
+  {
+    "s": 7,
+    "z": "1/2^7",
+    "alpha": "3/2361183241434822606848",
+    "asymptotic_D_over_M_lower_limit": 9.916433928468406,
+    "deep_gates_per_period": 703,
+    "shallow_gates_per_period": 245057,
+    "initial_centered_value": "291.147613787",
+    "period_constant_from_zero": "291.147613787",
+    "period_start_cap": "583.295227574",
+    "global_centered_cap": "701.516043140",
+    "integer_C": "702",
+    "period_start_invariant": true,
+    "maximum_phase": {
+      "ret": 200,
+      "stage": 0,
+      "carryDepthAtLeast": 0,
+      "offset": "509"
+    }
+  },
+  {
+    "s": 8,
+    "z": "1/2^8",
+    "alpha": "3/2417851639229258349412352",
+    "asymptotic_D_over_M_lower_limit": 9.926879687409855,
+    "deep_gates_per_period": 703,
+    "shallow_gates_per_period": 245057,
+    "initial_centered_value": "287.558177094",
+    "period_constant_from_zero": "287.558177094",
+    "period_start_cap": "576.116354189",
+    "global_centered_cap": "692.700938203",
+    "integer_C": "693",
+    "period_start_invariant": true,
+    "maximum_phase": {
+      "ret": 200,
+      "stage": 0,
+      "carryDepthAtLeast": 0,
+      "offset": "509"
+    }
+  },
+  {
+    "s": "rational",
+    "z": "2723/5000",
+    "alpha": "3*2723^10/(2*5000^10)",
+    "asymptotic_D_over_M_lower_limit": 9.332791442692889,
+    "deep_gates_per_period": 703,
+    "shallow_gates_per_period": 245057,
+    "initial_centered_value": "-8778.058039079",
+    "period_constant_from_zero": "5346.634667215",
+    "period_start_cap": "10694.269334430",
+    "global_centered_cap": "13310.964438604",
+    "integer_C": "13311",
+    "period_start_invariant": true,
+    "period_contraction_at_most_half": true,
+    "terminal_L10_minimum_mass": "17251371",
+    "maximum_phase": {
+      "ret": 140,
+      "stage": 1,
+      "carryDepthAtLeast": 0,
+      "offset": "290"
+    }
+  }
+]

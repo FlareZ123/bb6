@@ -65,7 +65,41 @@
       "preperiod": 1,
       "period": 128
     },
-    "G_fifteenDigit": null
+    "G_fifteenDigit": null,
+    "G_by_depth": {
+      "1": {
+        "preperiod": 0,
+        "period": 4
+      },
+      "2": {
+        "preperiod": 0,
+        "period": 16
+      }
+    },
+    "G_carry_by_depth": {
+      "1": {
+        "maxDepth": 1,
+        "maxWitness": {
+          "block": 0,
+          "gate": 13153,
+          "depth": 15,
+          "offset": "6377869135913282792413"
+        },
+        "coveredBlocks": 4,
+        "barrier": false
+      },
+      "2": {
+        "maxDepth": 2,
+        "maxWitness": {
+          "block": 0,
+          "gate": 13153,
+          "depth": 15,
+          "offset": "6377869135913282792413"
+        },
+        "coveredBlocks": 16,
+        "barrier": false
+      }
+    }
   },
   "yOffsetMod3Counts": [
     6033,
@@ -111,7 +145,7 @@
   },
   "yPrefix30Cycle": null,
   "yPrefix30CarrySummary": null,
-  "gPrefixCycleLimit": 1,
+  "gPrefixCycleLimit": 16,
   "gCarrySummary": null,
   "gBarrier": false,
   "vCarrySummary": {
@@ -304,6 +338,50 @@
         "1934094707247186541779",
         "1149120246030680941703",
         "5832425563795378288919"
+      ]
+    },
+    "GtoH": {
+      "blocks": 4,
+      "preperiod": 0,
+      "word": {
+        "returns": "115292150460684697600000000",
+        "gates": 7211131,
+        "headAdds": 7210729,
+        "pending": "3447492631781094473421",
+        "offsetSum": "118059158624248498561291104317",
+        "massTotal": "118059162071741130342400000000",
+        "massIdentity": true
+      },
+      "trackedDigits": 8,
+      "prefixCycleLimit": 4,
+      "prefixCyclesByDepth": {
+        "1": {
+          "preperiod": 0,
+          "period": 4
+        }
+      },
+      "carryByDepth": {
+        "1": {
+          "maxDepth": 1,
+          "maxWitness": {
+            "block": 0,
+            "gate": 162,
+            "depth": 8,
+            "offset": "51949226175453841112108"
+          },
+          "coveredBlocks": 4,
+          "barrier": false
+        }
+      },
+      "afterHFirstDigits": [
+        "12227057001794526829424",
+        "19482765993560031175428",
+        "87446800630372437115533",
+        "149995388736386283869479",
+        "626531268383636063363723",
+        "588197303750034286071772",
+        "692220177300871062844482",
+        "2375748174407187402807927"
       ]
     }
   },
