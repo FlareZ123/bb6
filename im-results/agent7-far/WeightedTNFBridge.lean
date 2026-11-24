@@ -21,6 +21,26 @@ def farNonhaltLeaf {B : Nat} {p : PartialMachine} {cut : Nat}
   WeightedTNFCertificate.ofNonhaltCover hroot hsupport hnohalt
     (farNonhaltCover p limit h)
 
+/-- Direct adapter for an explicit FAR mask certificate. This is the
+    preferred interface for independently generated SAT/SMT candidates:
+    the search procedure is irrelevant once `fastValid` has been checked. -/
+theorem farDataNonhaltCover {d : Nat} (p : PartialMachine) (C : FAR.Data d)
+    (h : C.fastValid p = true) : Cover NeverHalts p :=
+  .leaf p (fun m hm => C.sound p (C.fastValid_sound p h) m hm)
+
+/-- Import an explicit, kernel-checked FAR certificate as a weighted TNF leaf. -/
+def farDataNonhaltLeaf {B : Nat} {p : PartialMachine} {cut : Nat} {d : Nat}
+    (hroot : p initialSlot = some (some ⟨true, true, 1⟩))
+    (hsupport : TNFSupport p cut)
+    (hnohalt : weightedTNFNoAssignedHalt p)
+    (C : FAR.Data d) (h : C.fastValid p = true) :
+    WeightedTNFCertificate B p cut :=
+  WeightedTNFCertificate.ofNonhaltCover hroot hsupport hnohalt
+    (farDataNonhaltCover p C h)
+
+#print axioms farDataNonhaltCover
+#print axioms farDataNonhaltLeaf
+
 #print axioms farNonhaltCover
 #print axioms farNonhaltLeaf
 end BB6.Agent13BlankDelay
