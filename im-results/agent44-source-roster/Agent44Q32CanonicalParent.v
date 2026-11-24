@@ -62,6 +62,17 @@ Proof.
   apply forallb_forall with (x:=x) in Htrue; [exact Htrue|exact Hx].
 Qed.
 
+Theorem q32_active_filter_refines_canonical_residual_7 (f : T -> bool) :
+  Forall (fun x => is_child_of (tm x) q32_canonical_residual_7)
+    (filter f (fst (decode_queue packed_chunk_2_32_32))).
+Proof.
+  apply Forall_forall. intros x Hx.
+  pose proof q32_active_refines_canonical_residual_7 as Hactive.
+  apply Forall_forall with (x:=x) in Hactive.
+  - exact Hactive.
+  - apply filter_In in Hx. exact (proj1 Hx).
+Qed.
+
 Theorem q32_checkpoint_refines_canonical_residual_7 :
   Forall (fun x => is_child_of (tm x) q32_canonical_residual_7)
     (fst (SearchQueue_upds decider (q_i 2 32) 32%N)).
