@@ -1,5 +1,5 @@
-From BusyCoq Require Import Enumerate62 Eqb Agent32Q0Partition.
-From Coq Require Import List NArith Lia.
+From BusyCoq Require Import Enumerate62 Individual62 TC62 CTL62 Eqb Agent32Q0Partition.
+From Coq Require Import List NArith Lia Arith.PeanoNat.
 Import ListNotations.
 Import TNF_Node.
 
@@ -192,9 +192,12 @@ Proof.
   apply Forall_forall; intros x Hx.
   apply agent32_q0_uniform.
   unfold q_i in Hx; cbn [fst] in Hx.
-  apply in_firstn in Hx.
-  apply in_skipn in Hx.
-  exact Hx.
+  assert (H : In x (firstn sz (skipn l (fst q_0)) ++ skipn sz (skipn l (fst q_0)))).
+  { apply in_or_app; left; exact Hx. }
+  rewrite firstn_skipn in H.
+  assert (H' : In x (firstn l (fst q_0) ++ skipn l (fst q_0))).
+  { apply in_or_app; right; exact H. }
+  rewrite firstn_skipn in H'; exact H'.
 Qed.
 
 Lemma uniform_mass xs n :
