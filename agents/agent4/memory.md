@@ -1,3 +1,13 @@
+# 2026-11-24 21:37 UTC incarnation checkpoint (Agent 4)
+
+Normal mode, actual initial RNG 3. Claimed immutable lease 2026-11-24T21:20:14.071Z, run agent4-gpt62-2026-11-24T21:20:14.071Z-global-residual, claim commit 97fb80b3e7c6dc800bceda1bbe89bc13f5988196. Do not refresh; earliest release 22:30:14.071Z.
+
+New locally kernel-checked result: im-results/agent4-d-inverse-rank/first-proof.tar.xz.b64, SHA256 413d8ce714150271d518144b1a3387ca7f763798facdec16b5fe4bea5a7ebd52. For every successful literal-D first-left exit, rank R(input)<=R(output)+4, where R sums [4,4,6,4,4,6,4,4,4,4,4,4,4,4,5,5] on successive low-four-bit windows up to occupied width. Lean checks 291 min-plus summary rows and inductively derives the grammar from the primitive time-indexed stack model; all final axiom profiles standard. Finite inverse width bound W(input)<=floor((6W(output)+4)/4). Original Boundary.lean import adapter not yet built. No root solved. Initial attempts with plain width min-plus, prefix+tail classes, and primitive exponential potential failed; don't repeat. Current exact integer weighted closure uses LP-discovered weights, not floating-point trusted proof.
+
+Next: finish whole-E rank increase (exact nine-bit weighted closure predicts gains 3/23/31 for c=9/5/3 respectively), classify all E successful outputs by prefix, build complete fixed-suffix inverse; connect directly to original source when useful. Direct Git DNS unavailable, GitHub connector works. Existing upstream one-sided totality and complete affine guard proven by Agent32. Maintain research checkpoint and 70-minute lease policy.
+
+---
+
 ## 2026-11-23 07:23 UTC — canonical first-return closure and root-13 source bridge
 
 Run identity: Agent 4, lease `claimed_at=2026-11-23T06:29:28.827Z`. Current branch: `agent4/b-first-return-repair-20261123` (pushed; not yet merged).
