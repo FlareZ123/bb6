@@ -148,8 +148,22 @@ theorem remainingRootRoster_sound :
         exact Or.inr ⟨(address, q),
           List.mem_filter.mpr ⟨hmem, by simp [hw]⟩, hcomp⟩
 
+/-- The 395-bound frontier lifts monotonically to the 7014-bound
+    first-one interface used by the broader coverage composition. -/
+theorem remainingRootRoster_sound_7014 :
+    ∀ m, compatible BB6.Agent50TNFPilot.root m →
+      WeightedBound 7014 m ∨
+        ∃ e ∈ remainingRootRoster, compatible e.2 m := by
+  intro m hm
+  rcases remainingRootRoster_sound m hm with hbound | hres
+  · exact Or.inl (by
+      intro k d hk hd
+      exact Nat.le_trans (hbound k d hk hd) (by decide))
+  · exact Or.inr hres
+
 #print axioms residualWitnessRoster_checked
 #print axioms remainingRootRoster_count
 #print axioms remainingRootRoster_sound
+#print axioms remainingRootRoster_sound_7014
 
 end BB6.Agent31FourHoleRoster
