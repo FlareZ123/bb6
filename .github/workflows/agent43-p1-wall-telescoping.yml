@@ -18,6 +18,7 @@ on:
           - margin-block-parallel
           - forward-unit
           - finite-gate-join
+          - modular-unbounded
       chain_case:
         description: "Exceptional index for margin-chain"
         required: false
@@ -151,7 +152,7 @@ jobs:
             lean "$AG43/CarryCertSource.lean"
             exit 0
           fi
-          if [ "${{ inputs.target }}" = margin-blank ] || [ "${{ inputs.target }}" = budget-blank ] || [ "${{ inputs.target }}" = margin-chain ] || [ "${{ inputs.target }}" = margin-half ] || [ "${{ inputs.target }}" = margin-block ] || [ "${{ inputs.target }}" = margin-block-parallel ]; then
+          if [ "${{ inputs.target }}" = modular-unbounded ] || [ "${{ inputs.target }}" = margin-blank ] || [ "${{ inputs.target }}" = budget-blank ] || [ "${{ inputs.target }}" = margin-chain ] || [ "${{ inputs.target }}" = margin-half ] || [ "${{ inputs.target }}" = margin-block ] || [ "${{ inputs.target }}" = margin-block-parallel ]; then
             RES=im-results/agent50-p1-residue
             GEN=$(mktemp -d "$PWD/.agent43-margin.XXXXXX")
             export LEAN_PATH="$LEAN_PATH:$RES:$GEN"
@@ -165,6 +166,20 @@ jobs:
             lean -o "$AG43/CarryCert.olean" "$AG43/CarryCert.lean"
             lean -o "$AG43/MarginCert.olean" "$AG43/MarginCert.lean"
             lean -o "$AG43/MarginSource.olean" "$AG43/MarginSource.lean"
+            if [ "${{ inputs.target }}" = modular-unbounded ]; then
+              SCREEN=im-results/agent28-p1-modular-screen
+              export LEAN_PATH="$LEAN_PATH:$SCREEN"
+              for m in P1CarryWideMargin P1CarryWideArithmetic P1CarryWideSource; do
+                lean -o "$CARRY/$m.olean" "$CARRY/$m.lean"
+              done
+              for m in BitCarry CertCore CarryBudget CarryProjection; do
+                lean -o "$SCREEN/$m.olean" "$SCREEN/$m.lean"
+              done
+              lean "$AG43/ModularSource.lean" | tee /tmp/agent43-modular-axioms.txt
+              grep -q critical_reset_no_reach_certificate /tmp/agent43-modular-axioms.txt
+              if grep -q sorryAx /tmp/agent43-modular-axioms.txt; then exit 1; fi
+              exit 0
+            fi
             if [ "${{ inputs.target }}" = margin-block ] || [ "${{ inputs.target }}" = margin-block-parallel ]; then
               N="${{ inputs.chain_case }}"
               case "$N" in
