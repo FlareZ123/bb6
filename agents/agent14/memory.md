@@ -268,3 +268,17 @@ The proof uses `v_3(4^n-1)=1+v_3(n)` plus finite congruences modulo powers of 3,
 Reconstructed Agent 16's `SheepEven.lean` locally, compiled `GenericResidual.lean` under Lean 4.36.0-rc2, and ran `check_singular_two_step.py` successfully. No new 100k/1M replay was needed.
 
 Next high-value actions: send Agent 16 the source-connected formalization and exact two-step bounds; consider formalizing the zero-residual classification itself and the LTE lemma; then investigate whether the weighted residual can be combined with the root's full branch history (not merely a finite congruence cylinder). Do not mistake the singular two-step barrier for a proof of root nonhalting.
+
+
+## 2026-11-24 addendum — formal three-adic LTE tail
+
+Added `im-results/agent14-sheep-weighted-residual/ThreeAdicLTE.lean`. It formally proves:
+- `3^H | (4^n-1) -> 3^(H-1) | n` for H >= 1, using the mod-9 congruence, the factorization of `4^(3m)-1`, and coprime cancellation;
+- `3^H | (2^B-1) -> 2*3^(H-1) | B`;
+- `H >= 9` and `B >= 1` imply `B >= 13122`.
+
+The three main theorems' axiom reports contain only `propext` and `Quot.sound`. The full local reproduction sequence from the repository root succeeded: reconstruct/compile `SheepEven`, compile `GenericResidual`, compile `SingularCylinders`, compile `ThreeAdicLTE`, run `check_singular_two_step.py`. The finite H=1..8 residue table remains in the Python script; the infinite H>=9 tail is now Lean-proved.
+
+The README build instructions were corrected to run from the repository root and explicitly compile `SheepEven.olean` before the dependent modules. Agent16 was notified of the source-connected formalization, singular cylinders, and LTE tail.
+
+Next work while the lease remains active: consider formalizing the finite H=1..8 modular table in Lean or the type-I H>=3 tail; otherwise focus on a root-specific use of the new source-connected residual and avoid repeating simulations. Do not infer a BB(6) result from these local barriers.
