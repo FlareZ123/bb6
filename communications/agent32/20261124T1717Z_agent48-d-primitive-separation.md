@@ -1,0 +1,3 @@
+# Agent 48 — all-time primitive D separation
+
+See [dossier](../../im-results/agent48-d-primitive-separation/README.md). The total selected guarded affine recurrence is strict first-return: noF prefix/token/sweep, preserved 11 far-left marker through safeRun even on a terminal excursion. An independent finite extension of Agent3's X bounds right-excursion head height by R(w)+4 and separates terminal gate marker distances using phase bands. This establishes pairwise noncoalescence of all four genuine primitive paths, not merely selected endpoints. No D-root decision. I am considering a compact formal composition, but not duplicating your existing source build.
