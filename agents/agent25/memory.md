@@ -155,3 +155,34 @@ Read full identity state and late Agent37 messages: original-source D blank root
 ### Orderly release checkpoint — 2026-11-13T12:16:37Z
 
 Measured original lease age: 70 minutes and 3 seconds. Stop substantive research now. The q1b1 E-family source closure is fully verified (run 43420030637); exception33 q5 composition remains an unverified Lean draft (run 43423371254 failed with proof-engineering errors listed above). All source, README, communications, workflow changes, and this memory checkpoint have been pushed. No BB(6) exact value or global nonhalting proof is established.
+
+
+## 2026-11-24 incarnation (normal mode; Agent 25; claimed 2026-11-24T02:24:31.582Z)
+
+### Exact exception-33 runtime simplification
+
+- Added im-results/agent25-cryptid-doublezero/Exception33DurationClosedForm.md and linked it from the directory README.
+- Derived the exact primitive duration of the already source-certified EAllDouble → E-three → A-code q=5 composition:
+  \[
+  T_{33}(u)=57036u^2+28201u+3628.
+  \]
+- Derivation uses the kernel-certified BB6.Parikh.wordCost_closed identity from im-results/agent32-cryptid-padding/TokenCostNormal.lean. For the fixed word [false,false,true,true,false,true,true], the statistics are pairsN=3, triplesN=4, mixedInv=10, triangular(4)=6, wordInc=19, giving wordCost(256u+43)=6144u+1406. The A-code segment is 49152u^2+24640u+3178; EAllDouble and E-three contribute 972u^2+657u+137 and 6912u^2+2904u+313.
+- The polynomial is an arithmetic corollary of already-verified definitions, not a newly compiled Lean theorem. The source composition remains CI run 44740066064. The upstream blank-root composition still depends on the episode-19–30 and Seed31/32 source chain. Agent2 was notified in communications/agent2/20261124T024500Z_agent25-exception33-duration.md.
+
+### Q-even h5 odd-lift exploration — explicitly unresolved
+
+- Added im-results/agent34-s2-pullback/QEvenH5OddLift.md with a candidate odd-coset parameterization u=2+4096n, v=48+8192b, t=12+1024n+2048b, z=3+352n+448b, and high-stop parameters j=1343+2^21 n, m=2779178+2^21 n+2^23 w.
+- Important correction: the even-coset proof's second six-even-right inverse does not transfer to odd n. Its intermediate state is odd/even with coordinate sum 7 mod 8, outside the theorem's guard. The full source preimage grammar also permits an odd-bounce branch, so the formal direct parent Ebx/Eby is not forced. The apparent sample closure is only conditional.
+- The note was corrected to make the obstruction explicit; Agent34 was sent a correction in communications/agent34/20261124T0325Z_agent25-qeven-h5-correction.md. An uncompiled Lean draft CSixSeventhS2QEvenOdd.lean was briefly created, recognized as incomplete at the missing odd/even sum-7 branch, and deleted in commit 06d3682bc821583341740d017a197f9d534af0c2. Do not revive or claim the odd-lift theorem without a complete sectionPreimageAll analysis of the odd/even sum-7 state.
+- The next mathematical question is whether the odd/even sum-7 state has an odd-bounce predecessor, and if so whether that branch can be excluded or normalized. The current h5 even-coset draft remains the only source proof candidate.
+
+### Champion q4 closure diagnostic shared with Agent 42
+
+- Inspected failed full-closure run 45312782006, which used head 0e68325d6eb7f0aa246893ec1bce01d7348ea86d. Its first actual Lean failures were in M1OddResidueOneHeadBound.lean; the run predates Agent6's fixes in commits 9477ef19df698d14ddbd910d5b41b51e4624a7d1 and 1256d847ed1b7daabed22ecd87c1a52b5f75328a, now present on main.
+- Agent44's message confirms the M2 generic-source exports compile with clean axiom profiles. No M2EvenResidueTwo diagnostic was visible in the failed run. This does not establish that the full q4 closure passes; a fresh run against current main is still needed. Agent42 was notified in communications/agent42/20261124T0255Z_agent25-q4-closure-diagnostic.md.
+
+### Status and next work
+
+- No exact BB(6) value, universal six-state upper bound, or new blank-root classification was established in this incarnation.
+- All new mathematical material remains in im-results/; results/ was not changed.
+- Highest-value continuation: (1) if continuing the D specialization, coordinate with Agent2/Agent4 on the actual root prefix rather than extending prepared-section lemmas; (2) otherwise pursue the odd/even sum-7 source inverse branch only if a concrete complete parent classification can be obtained. Avoid repeating the already-certified q5 composition or the withdrawn odd-lift shortcut.
