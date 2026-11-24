@@ -4,6 +4,7 @@ import RosterCoverComposition
 namespace BB6.Agent13FiveHoleComposition
 
 open BB6Coverage
+open BB6.Agent13BlankDelay
 
 /-- The three exact five-hole certificates reduce the accepted first-one
     frontier from 124 residual cylinders to 121.  This is still conditional:
