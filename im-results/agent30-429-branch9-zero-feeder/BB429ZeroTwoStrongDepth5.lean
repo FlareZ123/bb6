@@ -146,8 +146,13 @@ private theorem near_upper (N : Nat) (q qrep k : Int)
   have hp : (2:Int)^N = scale 5*(2:Int)^(N-11) := by
     rw [scale_pow, ← Int.pow_add, show 5+6+(N-11)=N by omega]
   refine ⟨12*(2:Int)^(N-11)+k,12*(2:Int)^(N-11)+k,?_,?_⟩
-  · linear_combination 12*hp + hres
-  · linear_combination 24*hp + 2*hres
+  · have hleft : (12*(2:Int)^N+q)-qrep = 12*(2:Int)^N+(q-qrep) := by ring
+    rw [hleft,hp,hres]
+    ring
+  · have hleft : (24*(2:Int)^N+2*q+2)-(2*qrep+2) =
+        24*(2:Int)^N+2*(q-qrep) := by ring
+    rw [hleft,hp,hres]
+    ring
 
 private theorem near_odd (N : Nat) (q qrep k : Int)
     (hN : 11≤N) (hres : q-qrep=scale 5*k) :
