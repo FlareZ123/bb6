@@ -70,6 +70,7 @@ on:
           - sourceCompressedMemo
           - sourceKernelCone
           - sourceTerminalCutoff
+          - sourceClosedBounce
           - sourceBoundedShadow
           - sourceExactMemo
           - sourceLowQuarterTwoForced
@@ -279,6 +280,9 @@ jobs:
               ;;
             sourceHeightConeCriterion)
               target=im-results/agent42-modular-cone/HeightConeCriterion.lean
+              ;;
+            sourceClosedBounce)
+              target=im-results/agent12-c-high-shadow/ClosedBounce.lean
               ;;
             sourceTerminalCutoff)
               target=im-results/agent12-c-high-shadow/Agent12TerminalCutoff.lean
