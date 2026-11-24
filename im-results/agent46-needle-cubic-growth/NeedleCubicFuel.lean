@@ -25,24 +25,24 @@ theorem prefix_end_bound (f : Nat → Nat) (N i : Nat)
 theorem block_gain (f : Nat → Nat) (N i L H m : Nat)
     (hp : Prefix f N) (hi : i+4≤N)
     (hL : 0<L) (hbits : f N<2^L)
-    (hH : 64*L≤H^3) (hm : m^3≤f i) :
+    (hH : 16*L≤H^3) (hm : m^3≤f i) :
     H*f i+m^2≤H*f (i+4) := by
   have hbit : f i<2^L := Nat.lt_of_le_of_lt (prefix_end_bound f N i hp (by omega)) hbits
   have h0 := hp i (by omega)
   have h1 := hp (i+1) (by omega)
   have h2 := hp (i+2) (by omega)
   have h3 := hp (i+3) (by omega)
-  have hg : (f i)^2≤64*L*(f (i+4)-f i)^3 :=
+  have hg : (f i)^2≤16*L*(f (i+4)-f i)^3 :=
     four_step_cube_gain hL hbit h0 h1 h2 h3
   let G := f (i+4)-f i
-  change (f i)^2≤64*L*G^3 at hg
+  change (f i)^2≤16*L*G^3 at hg
   have hpow1 := Nat.pow_le_pow_left hm 2
   have hpow2 : (m^2)^3≤(f i)^2 := by
     have heq : (m^2)^3=(m^3)^2 := by grind
     rwa [heq]
   have hpow3 : (f i)^2≤(H*G)^3 := by
     calc
-      (f i)^2 ≤ (64*L)*G^3 := hg
+      (f i)^2 ≤ (16*L)*G^3 := hg
       _ ≤ H^3*G^3 := Nat.mul_le_mul_right _ hH
       _ = (H*G)^3 := by grind
   have hgain : m^2≤H*G := by
@@ -59,7 +59,7 @@ theorem block_gain (f : Nat → Nat) (N i L H m : Nat)
 theorem batch_gain (f : Nat → Nat) (N i L H m t : Nat)
     (hp : Prefix f N) (hi : i+4*t≤N)
     (hL : 0<L) (hbits : f N<2^L)
-    (hH : 64*L≤H^3) (hm : m^3≤f i) :
+    (hH : 16*L≤H^3) (hm : m^3≤f i) :
     H*f i+t*m^2≤H*f (i+4*t) := by
   induction t with
   | zero => simp
@@ -83,7 +83,7 @@ theorem cube_next (m : Nat) (hm : 1≤m) :
 theorem batch_cube_gain (f : Nat → Nat) (N i L H m : Nat)
     (hp : Prefix f N) (hi : i+28*H≤N)
     (hL : 0<L) (hbits : f N<2^L)
-    (hH : 64*L≤H^3) (hm : 1≤m) (hstart : m^3≤f i) :
+    (hH : 16*L≤H^3) (hm : 1≤m) (hstart : m^3≤f i) :
     (m+1)^3≤f (i+28*H) := by
   have ht : i+4*(7*H)≤N := by omega
   have h := batch_gain f N i L H m (7*H) hp ht hL hbits hH hstart
@@ -102,7 +102,7 @@ theorem batch_cube_gain (f : Nat → Nat) (N i L H m : Nat)
 
 theorem prefix_cubic (f : Nat → Nat) (N L H k : Nat)
     (hp : Prefix f N) (hbase : 1≤f 0)
-    (hL : 0<L) (hbits : f N<2^L) (hH : 64*L≤H^3)
+    (hL : 0<L) (hbits : f N<2^L) (hH : 16*L≤H^3)
     (hk : 28*H*k≤N) :
     (k+1)^3≤f (28*H*k) := by
   induction k with
@@ -117,7 +117,7 @@ theorem prefix_cubic (f : Nat → Nat) (N L H k : Nat)
 
 theorem prefix_cutoff (f : Nat → Nat) (N L H R : Nat)
     (hp : Prefix f N) (hbase : 1≤f 0)
-    (hL : 0<L) (hbits : f N<2^L) (hH : 64*L≤H^3)
+    (hL : 0<L) (hbits : f N<2^L) (hH : 16*L≤H^3)
     (hR : f N<R^3) :
     N<28*H*R := by
   by_cases hN : N<28*H*R
@@ -130,7 +130,7 @@ theorem prefix_cutoff (f : Nat → Nat) (N L H R : Nat)
 
 def cubeFuel (d : Nat) : Nat :=
   let L := Nat.log2 (d+2)+1
-  let H := 4*2^((Nat.log2 L+3)/3)
+  let H := 4*2^((Nat.log2 L+1)/3)
   let R := 2^((L+2)/3)
   28*H*R
 
@@ -140,21 +140,29 @@ theorem prefix_cube_fuel (f : Nat → Nat) (N d : Nat)
     (hp : Prefix f N) (hbase : 1≤f 0) (hend : f N=d+2) :
     N<cubeFuel d := by
   let L := Nat.log2 (d+2)+1
-  let H := 4*2^((Nat.log2 L+3)/3)
+  let H := 4*2^((Nat.log2 L+1)/3)
   let R := 2^((L+2)/3)
   have hL : 0<L := by dsimp [L]; omega
   have hbit : f N<2^L := by
     rw [hend]
     exact ((Nat.log2_eq_iff (by omega : d+2≠0)).mp rfl).2
   have hHL : L<2^(Nat.log2 L+1) := ((Nat.log2_eq_iff (by omega : L≠0)).mp rfl).2
-  have hHindex : Nat.log2 L+1≤3*((Nat.log2 L+3)/3) := by omega
+  have hHindex : Nat.log2 L+1≤3*((Nat.log2 L+1)/3)+2 := by omega
   have hHpow := Nat.pow_le_pow_right (n:=2) (by decide : 0<2) hHindex
-  have hH : 64*L≤H^3 := by
-    have hE : H^3=64*2^(3*((Nat.log2 L+3)/3)) := by
+  have hH : 16*L≤H^3 := by
+    have hE : H^3=64*2^(3*((Nat.log2 L+1)/3)) := by
       unfold H
-      rw [Nat.mul_pow, ←Nat.pow_mul, Nat.mul_comm ((Nat.log2 L+3)/3) 3]
+      rw [Nat.mul_pow, ←Nat.pow_mul, Nat.mul_comm ((Nat.log2 L+1)/3) 3]
+    have hpow2 : 2^(3*((Nat.log2 L+1)/3)+2)=4*2^(3*((Nat.log2 L+1)/3)) := by
+      rw [Nat.pow_add]
+      norm_num
+      ring
     rw [hE]
-    exact Nat.mul_le_mul_left 64 (by omega)
+    calc
+      16*L≤16*2^(Nat.log2 L+1) := Nat.mul_le_mul_left 16 (Nat.le_of_lt hHL)
+      _ ≤16*2^(3*((Nat.log2 L+1)/3)+2) := Nat.mul_le_mul_left 16 hHpow
+      _ =64*2^(3*((Nat.log2 L+1)/3)) := by rw [hpow2]; ring
+
   have hRindex : L≤3*((L+2)/3) := by omega
   have hRpow := Nat.pow_le_pow_right (n:=2) (by decide : 0<2) hRindex
   have hR : f N<R^3 := by
