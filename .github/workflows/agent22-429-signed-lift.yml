@@ -25,6 +25,7 @@ jobs:
             lean -DmaxRecDepth=16000 -DmaxHeartbeats=15000000 -o im-results/agent39-429-1021/$name.olean im-results/agent39-429-1021/$name.lean
           done
           lean -DmaxRecDepth=30000 -DmaxHeartbeats=50000000 -o im-results/agent6-harmonic429/BB429NewResidue.olean im-results/agent6-harmonic429/BB429NewResidue.lean
+          lean -DmaxRecDepth=30000 -DmaxHeartbeats=50000000 -o im-results/agent18-429-root-invariants/SignedFRunParity.olean im-results/agent18-429-root-invariants/SignedFRunParity.lean
           p=im-results/agent22-429-signed-drift
           python "$p/reconstruct.py"
           lean -o "$p/SignedDrift.olean" "$p/SignedDrift.lean"
