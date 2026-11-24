@@ -1,5 +1,5 @@
 import LowM67All1551Criterion
-import EvenOddLowStopSecondFanReach
+import EvenOddLowStopSecondFanSpecialized
 import Lean.Elab.Tactic.Omega
 set_option maxHeartbeats 0
 
@@ -63,7 +63,7 @@ theorem blank_halts_iff_six_low1583 :
         have hz : z%128=14 := by
           rw [hm] at hm0
           omega
-        exact (BB6.Agent13LowSecondFan.low_stop_m67_z14_mod128_unreachable
+        exact (BB6.Agent13LowSecondFanSpecialized.low_stop_m67_z14_mod128_unreachable
           z m k hm hz hstop) hr
       exact Or.inl ⟨m,⟨hprior,hnon14⟩,hroot⟩
     · exact Or.inr ⟨j,m,hprior,hroot⟩

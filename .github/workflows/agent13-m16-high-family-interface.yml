@@ -49,6 +49,7 @@ on:
           - sourceLowSecondFanSource
           - sourceLowSecondFanReach
           - sourceLow1583
+          - sourceLowSpecialized
           - sourceLowQuarterTwoForced
           - sourceCriterion559
           - sourceAgent8Z2
@@ -212,6 +213,9 @@ jobs:
               ;;
             sourceLowSecondFanReach)
               target=im-results/agent13-residual-frontier/EvenOddLowStopSecondFanReach.lean
+              ;;
+            sourceLowSpecialized)
+              target=im-results/agent13-residual-frontier/EvenOddLowStopSecondFanSpecialized.lean
               ;;
             sourceLow1583)
               target=im-results/agent13-residual-frontier/LowM67All1583Criterion.lean
