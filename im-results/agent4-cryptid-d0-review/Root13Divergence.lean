@@ -232,7 +232,8 @@ private theorem externalTlift_mod3 (k : Nat) : externalTlift k%3=2 := by
   have hbase := externalT_mod3
   have hdiv : 3 ∣ 3^96*8^10*k := by
     refine ⟨3^95*8^10*k, ?_⟩
-    simp [Nat.pow_succ, Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm]
+    have hcoef : 3^96*8^10 = 3*(3^95*8^10) := by decide
+    rw [hcoef, Nat.mul_assoc]
   have hz := Nat.mod_eq_zero_of_dvd hdiv
   unfold externalTlift
   omega
@@ -258,8 +259,16 @@ theorem external_checkpoint10_lift (k : Nat) :
           9*3^96*(8^10*k)+(9*externalT+7) := by
             rw [← externalT_exact, hpow]
       _ = 9*(externalT + 3^96*8^10*k)+7 := by
-            rw [Nat.mul_add]
-            simp [Nat.mul_assoc, Nat.add_assoc, Nat.add_comm, Nat.add_left_comm]
+            have hprod : 3^96*8^10*k = 3^96*(8^10*k) := by
+              rw [Nat.mul_assoc]
+            calc
+              9*3^96*(8^10*k)+(9*externalT+7) =
+                  9*(3^96*(8^10*k))+(9*externalT+7) := by
+                    rw [Nat.mul_assoc]
+              _ = 9*(3^96*8^10*k)+(9*externalT+7) := by
+                    rw [← hprod]
+              _ = 9*externalT + 9*(3^96*8^10*k)+7 := by omega
+              _ = 9*(externalT+3^96*8^10*k)+7 := by rw [Nat.mul_add]
   rw [hparam]
 
 theorem external_after10_original (k : Nat) :
@@ -453,8 +462,8 @@ theorem root_not_in_external_residual_cylinder (k : Nat) :
   have hext := externalAfter13_mod3
   have hdiv : 3 ∣ 3^95*8^13*k := by
     refine ⟨3^94*8^13*k, ?_⟩
-    rw [show 3^95=3*3^94 by decide]
-    simp [Nat.mul_assoc]
+    have hcoef : 3^95*8^13 = 3*(3^94*8^13) := by decide
+    rw [hcoef, Nat.mul_assoc]
   have hz := Nat.mod_eq_zero_of_dvd hdiv
   omega
 
