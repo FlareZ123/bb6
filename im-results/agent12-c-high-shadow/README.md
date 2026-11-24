@@ -123,3 +123,16 @@ Independent exact forward evaluators in C++ and JavaScript agree: after the alre
 ## Constant-candidate closed-form bounce (24 November)
 
 [`ClosedBounce.lean`](ClosedBounce.lean) eliminates recursive bounce simulation while preserving the exact section clock. Set (B=k+b), (b=3) for odd middle counter and (b=4) for even. The first exit depth is the least (n) with (c+2B+3n\le 2^{n+2}B). It lies among the three candidates beginning at `max(0, log2(c+2B)-log2(B)-2)`. At that depth the counters are (K=2^nB-b), (C=c+2k+3n-2K). The odd clock is (c+n), the even ordinary or terminal clock is (c-2n-3), and the even exceptional (C=4) clock is (c-2n-2). Small input guards are handled separately. Theorems `closedBounce_eq` and `closedSection_eq` compiled locally against verbatim copies of the source definitions with standard axioms only. The original-source CI target `sourceClosedBounce` is submitted separately. This accelerates exact arithmetic; it does not close the unbounded blank-orbit decision.
+
+## Endpoint-only ordinary word certificates
+
+For section mass M=a+2k and left counter A=a, define G=M-A, and for a positive ordinary shift r write o=M mod 2. The affine branch, including the direct r=1 case, is
+```
+M'=M+3r+1
+A'=2^r(A+2+o)-M'-2o.
+```
+For a word with total shift R, compose the affine equations to A'=P A-Q M+C, M'=M+W, P=2^R. If the initial A and M have equal parity, M≥8P, and the composed endpoint satisfies A'≥0 and M'-A'+4≥20P, then **every edge in the word is a genuine ordinary section edge**. No intermediate guard replay is required. The proof runs backwards: each ordinary affine step with sufficient mass and a valid output gap ≥16 has valid input counters, the correct direct/regular branch inequalities, and G'+4≤2^r(G+4). The exact inverse theorem then supplies the source edge. Induct backward through the word to propagate the endpoint gap budget. The coefficient composition theorem supplies a constant number of endpoint arithmetic operations after the word coefficients are precomputed.
+
+`WordBlock.lean` contains the complete kernel-checked generic certificate, including decoding and parity, with standard axioms only. `WordBlockSource.lean` instantiates the arithmetic edge law with the existing complete_section_inverse theorem; the instantiation compiled locally against its verbatim predicate. Original-source CI target sourceWordBlock is submitted. The condition is sufficient, not necessary: fallback to the exact single-return evaluator whenever the margins fail. This is a proof-oriented accelerator, not an infinite-orbit claim.
+
+The constant-candidate closed-bounce proof has now passed original-source CI [45502202006](https://github.com/FlareZ123/bb6/actions/runs/45502202006).

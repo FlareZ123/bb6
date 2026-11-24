@@ -71,6 +71,7 @@ on:
           - sourceKernelCone
           - sourceTerminalCutoff
           - sourceClosedBounce
+          - sourceWordBlock
           - sourceBoundedShadow
           - sourceExactMemo
           - sourceLowQuarterTwoForced
@@ -280,6 +281,9 @@ jobs:
               ;;
             sourceHeightConeCriterion)
               target=im-results/agent42-modular-cone/HeightConeCriterion.lean
+              ;;
+            sourceWordBlock)
+              target=im-results/agent12-c-high-shadow/WordBlockSource.lean
               ;;
             sourceClosedBounce)
               target=im-results/agent12-c-high-shadow/ClosedBounce.lean
