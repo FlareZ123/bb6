@@ -477,7 +477,7 @@ theorem positive_history_final_run {j s k x : Nat} {w : Int}
       ((k=j ∧ 3*W j z=8*(P j:Int)-6-w) ∨
        ∃ s' y, PositiveHistory j w s' (k+1) y ∧ RegFrom k z y) := by
   refine PositiveHistory.rec
-    (motive := fun s k x =>
+    (motive := fun {s k x} (_h : PositiveHistory j w s k x) =>
       ∃ r z, SameRun k r x z ∧
         ((k=j ∧ 3*W j z=8*(P j:Int)-6-w) ∨
          ∃ s' y, PositiveHistory j w s' (k+1) y ∧ RegFrom k z y))
