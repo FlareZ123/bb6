@@ -10,7 +10,7 @@ inductive PositiveHistory (j : Nat) (w : Int) : Nat → Nat → Nat → Prop whe
 
 /-- The exact affine packet remains strictly below the top coefficient.
     This is independent of how long the positive sector survives. -/
-theorem positive_history_packet {j s k x : Nat} {w : Int} (hw : 0<w)
+theorem positive_history_packet {j s k x : Nat} {w : Int} (_hw : 0<w)
     (h : PositiveHistory j w s k x) :
     ∃ A C : Int, 0<A ∧ A<4*(3^s:Int) ∧ A%3≠0 ∧ C<0 ∧
       (3^s:Int)*W k x=A*(P k:Int)+C := by
@@ -145,7 +145,6 @@ theorem positive_history_packet_weight {j s k x : Nat} {w : Int} (hw : 0<w)
       change (4*(D*3)-(A+8*D))*(P k:Int)≥4*(P j:Int)
       have heq : 4*(D*3)-(A+8*D)=4*D-A := by omega
       rw [heq]
-      exact hB
   | @down s k x y h hr ih =>
     obtain ⟨A,C,hA,hA',hu,hC,he,hB⟩:=ih
     let D : Int := 3^s
@@ -284,7 +283,9 @@ theorem positive_history_packet_bandweight {j s k x : Nat} {w : Int} (_hw : 0<w)
       have hd : j-k≤s := by omega
       have hpowNat : 3^(j-k)≤3^s :=
         Nat.pow_le_pow_right (by decide) hd
-      have hpow : (3^(j-k):Int)≤D := by exact_mod_cast hpowNat
+      have hpow : (3^(j-k):Int)≤D := by
+        change (3^(j-k):Int)≤(3^s:Int)
+        exact_mod_cast hpowNat
       have hdec : j-k=j-(k+1)+1 := by omega
       have hprevNat : 3^(j-k)=3^(j-(k+1))*3 := by
         rw [hdec,Nat.pow_succ]
