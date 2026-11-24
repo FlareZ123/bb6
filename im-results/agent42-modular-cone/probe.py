@@ -21,6 +21,15 @@ def excluded(b,x,y):
     return True
 
 def stop(j,m,b):return excluded(b,*canon(b,2*j+1,-j-3*m-4))
+def stop_bits(j,m,cap=32):
+    # One extra bit is available for the unified high family j>=2.
+    return min(cap, 2*m+(2 if j>=2 else 1))
+
+def stop_auto(j,m,cap=32):
+    return excluded(stop_bits(j,m,cap),*canon(stop_bits(j,m,cap),2*j+1,-j-3*m-4))
+
+def stop8(j,m):
+    return excluded(8,*canon(8,2*j+1,-j-3*m-4))
 if __name__=='__main__':
     print('b, low rejected / tested (m=0..1023), high rejected / tested (j,m=1..127), outside j<=3m+1 rejected / tested')
     for cap in [4,8,12,16,24,32]:
