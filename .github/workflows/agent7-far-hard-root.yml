@@ -2,6 +2,10 @@ name: Agent 7 hard-root FAR search
 on:
   workflow_dispatch:
     inputs:
+      wide132_only:
+        description: Verify complete F1=0LB four-hole cylinder
+        type: boolean
+        default: false
       batch_only:
         description: Verify the archived depth-eight batch without new search
         type: boolean
@@ -49,11 +53,11 @@ jobs:
       fail-fast: false
       max-parallel: 8
       matrix:
-        shard: ${{ fromJSON(inputs.batch_only && '[0]' || '[0,1,2,3,4,5,6,7]') }}
+        shard: ${{ fromJSON((inputs.batch_only || inputs.wide132_only) && '[0]' || '[0,1,2,3,4,5,6,7]') }}
     steps:
       - uses: actions/checkout@v4
       - name: Enumerate FAR candidates or solve one target by SMT
-        if: ${{ !inputs.batch_only }}
+        if: ${{ !inputs.batch_only && !inputs.wide132_only }}
         env:
           SOLVER_CODE: ${{ inputs.solver_code }}
         run: |
@@ -104,7 +108,7 @@ jobs:
             /tmp/roster_far resources/BB6_holdouts_663_2026-10-16.txt ${{ matrix.shard }} 8 "$SAMPLES" "$MAX_DFA" | tee -a /tmp/hits.txt
           fi
       - name: Install Lean if there is a candidate
-        if: ${{ !inputs.batch_only }}
+        if: ${{ !inputs.batch_only && !inputs.wide132_only }}
         run: |
           if [[ -s /tmp/hits.txt ]]; then
             curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
@@ -112,7 +116,7 @@ jobs:
             echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           fi
       - name: Independently check every hit against infinite-tape semantics
-        if: ${{ !inputs.batch_only }}
+        if: ${{ !inputs.batch_only && !inputs.wide132_only }}
         run: |
           set -euo pipefail
           if [[ ! -s /tmp/hits.txt ]]; then echo 'No candidate found in this shard'; exit 0; fi
@@ -153,7 +157,7 @@ jobs:
           if grep -qE 'sorryAx|native_decide' /tmp/hit-proof.log; then exit 1; fi
           cat /tmp/hits.txt >> "$GITHUB_STEP_SUMMARY"
       - name: Compile archived depth-eight batch
-        if: ${{ inputs.batch_only }}
+        if: ${{ inputs.batch_only && !inputs.wide132_only }}
         run: |
           set -euo pipefail
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
@@ -161,11 +165,28 @@ jobs:
           export PATH="$HOME/.elan/bin:$PATH"
           python tools/lean_compile_closure.py --workdir /tmp/a7-hard --jobs 4 im-results/agent7-far/DepthEightBatch.lean im-results/agent7-far/DepthEightLarge.lean im-results/agent7-far/DepthEightXL.lean | tee /tmp/batch-proof.log
           if grep -qE 'sorryAx|native_decide' /tmp/batch-proof.log; then exit 1; fi
+      - name: Check complete four-hole F1=0LB cylinder
+        if: ${{ inputs.wide132_only }}
+        run: |
+          set -euo pipefail
+          d=im-results/agent7-far/wide132
+          g++ -O3 -std=c++17 "$d/scan.cpp" -o /tmp/a7-wide132
+          /tmp/a7-wide132 '1RB---_1RC1LF_0RD---_1LD1RE_---0LB_---0LB' /tmp/wide132 900
+          python "$d/emit.py" /tmp/wide132.tree
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          export PATH="$HOME/.elan/bin:$PATH"
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python tools/lean_compile_closure.py --workdir /tmp/a7-wide --jobs 4 "$d/Wide132Data.lean" "$d/Wide132RosterBridge.lean" | tee /tmp/wide132-proof.log
+          if grep -qE 'sorryAx|native_decide' /tmp/wide132-proof.log; then exit 1; fi
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: far-hard-shard-${{ matrix.shard }}
           path: |
+            /tmp/wide132-proof.log
             /tmp/batch-proof.log
             /tmp/hits.txt
             /tmp/a7-hard/Hits.lean
