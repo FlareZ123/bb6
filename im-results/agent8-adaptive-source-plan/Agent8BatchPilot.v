@@ -1,0 +1,342 @@
+From BusyCoq Require Import Enumerate62 Agent8QueueCheckpoint Agent8PackedRoot.
+From Coq Require Import List NArith Strings.String.
+Import ListNotations TNF_Node.
+Open Scope string_scope.
+
+(* Literal ordered source outputs of CI 45475740347, artifact 14960865262. *)
+
+Definition batch_34_16_64 : packed_queue := ([
+  ("1RB1LD_1RC0LE_0LA0LB_0LA1LD_0LF1LB_0LD---", 1, 6);
+  ("1RB1LD_1RC0LE_0LA0LB_0LA1LD_0LF1LB_0RD---", 1, 6);
+  ("1RB1LD_1RC0LE_0LA0LB_0LA1LD_0LF1LB_1LD---", 1, 6);
+  ("1RB1LD_1RC0LE_0LA0LB_0LA1LD_0LF1LB_1RD---", 1, 6);
+  ("1RB1LD_1RC0LE_0LA0LB_0LA1LD_0LF1LB_0LE---", 1, 6);
+  ("1RB1LD_1RC0LE_0LA0LB_0LA1LD_0LF1LB_0RE---", 1, 6);
+  ("1RB1LD_1RC0LE_0LA0LB_0LA1LD_0LF1LB_1LE---", 1, 6);
+  ("1RB1LD_1RC0LE_0LA0LB_0LA1LD_0LF1LB_1RE---", 1, 6);
+  ("1RB1LD_1RC0LE_0LA0LB_0LA1LD_0LF1LB_0LF---", 1, 6);
+  ("1RB1LD_1RC0LE_0LA0LB_0LA1LD_0LF1LB_0RF---", 1, 6);
+  ("1RB1LD_1RC0LE_0LA0LB_0LA1LD_0LF1LB_1LF---", 1, 6);
+  ("1RB1LD_1RC0LE_0LA0LB_0LA1LD_0LF1LB_1RF---", 1, 6);
+  ("1RB1LD_1RC0LE_0LA0LB_0LA1LD_0RF1LB_------", 2, 6);
+  ("1RB1LD_1RC0LE_0LA0LB_0LA1LD_1LF1LB_------", 2, 6);
+  ("1RB1LD_1RC0LE_0LA0LB_0LA1LD_1RF1LB_------", 2, 6);
+  ("1RB1LD_1RC0LE_0LA0LB_0LA1LD_---1RB_------", 3, 5);
+  ("1RB1LD_1RC0LE_0LA0LB_0LA1LD_---0LC_------", 3, 5);
+  ("1RB1LD_1RC0LE_0LA0LB_0LA1LD_---0RC_------", 3, 5);
+  ("1RB1LD_1RC0LE_0LA0LB_0LA1LD_---1LC_------", 3, 5);
+  ("1RB1LD_1RC0LE_0LA0LB_0LA1LD_---1RC_------", 3, 5);
+  ("1RB1LD_1RC0LE_0LA0LB_0LA1LD_---0LD_------", 3, 5);
+  ("1RB1LD_1RC0LE_0LA0LB_0LA1LD_---0RD_------", 3, 5);
+  ("1RB1LD_1RC0LE_0LA0LB_0LA1LD_---1LD_------", 3, 5);
+  ("1RB1LD_1RC0LE_0LA0LB_0LA1LD_---1RD_------", 3, 5);
+  ("1RB1LD_1RC0LE_0LA0LB_0LA1LD_---0LE_------", 3, 5);
+  ("1RB1LD_1RC0LE_0LA0LB_0LA1LD_---0RE_------", 3, 5);
+  ("1RB1LD_1RC0LE_0LA0LB_0LA1LD_---1LE_------", 3, 5);
+  ("1RB1LD_1RC0LE_0LA0LB_0LA1LD_---1RE_------", 3, 5);
+  ("1RB1LD_1RC0LE_0LA0LB_0LA1LD_---0LF_------", 3, 6);
+  ("1RB1LD_1RC0LE_0LA0LB_0LA1LD_---0RF_------", 3, 6);
+  ("1RB1LD_1RC0LE_0LA0LB_0LA1LD_---1LF_------", 3, 6);
+  ("1RB1LD_1RC0LE_0LA0LB_0LA1LD_---1RF_------", 3, 6);
+  ("1RB1LD_1RC0RE_0LA0LB_0LA1LD_------_------", 4, 5);
+  ("1RB1LD_1RC1LE_0LA0LB_0LA1LD_------_------", 4, 5);
+  ("1RB1LD_1RC1RE_0LA0LB_0LA1LD_------_------", 4, 5);
+  ("1RB1LD_1RC---_0LA0RB_0LA1LD_------_------", 5, 4);
+  ("1RB1LD_1RC---_0LA1LB_0LA1LD_------_------", 5, 4);
+  ("1RB1LD_1RC---_0LA1RB_0LA1LD_------_------", 5, 4);
+  ("1RB1LD_1RC---_0LA0LC_0LA1LD_------_------", 5, 4);
+  ("1RB1LD_1RC---_0LA0RC_0LA1LD_------_------", 5, 4);
+  ("1RB1LD_1RC---_0LA1LC_0LA1LD_------_------", 5, 4);
+  ("1RB1LD_1RC---_0LA1RC_0LA1LD_------_------", 5, 4);
+  ("1RB1LD_1RC---_0LA0LD_0LA1LD_------_------", 5, 4);
+  ("1RB1LD_1RC---_0LA0RD_0LA1LD_------_------", 5, 4);
+  ("1RB1LD_1RC---_0LA1LD_0LA1LD_------_------", 5, 4);
+  ("1RB1LD_1RC---_0LA1RD_0LA1LD_------_------", 5, 4);
+  ("1RB1LD_1RC---_0LA0LE_0LA1LD_------_------", 5, 5);
+  ("1RB1LD_1RC---_0LA0RE_0LA1LD_------_------", 5, 5);
+  ("1RB1LD_1RC---_0LA1LE_0LA1LD_------_------", 5, 5);
+  ("1RB1LD_1RC---_0LA1RE_0LA1LD_------_------", 5, 5);
+  ("1RB1LD_1RC---_0LA---_0RA1LD_------_------", 6, 4);
+  ("1RB1LD_1RC---_0LA---_1LA1LD_------_------", 6, 4);
+  ("1RB1LD_1RC---_0LA---_1RA1LD_------_------", 6, 4);
+  ("1RB1LD_1RC---_0LA---_0LB1LD_------_------", 6, 4);
+  ("1RB1LD_1RC---_0LA---_0RB1LD_------_------", 6, 4);
+  ("1RB1LD_1RC---_0LA---_1LB1LD_------_------", 6, 4);
+  ("1RB1LD_1RC---_0LA---_1RB1LD_------_------", 6, 4);
+  ("1RB1LD_1RC---_0LA---_0LC1LD_------_------", 6, 4);
+  ("1RB1LD_1RC---_0LA---_0RC1LD_------_------", 6, 4);
+  ("1RB1LD_1RC---_0LA---_1LC1LD_------_------", 6, 4);
+  ("1RB1LD_1RC---_0LA---_1RC1LD_------_------", 6, 4);
+  ("1RB1LD_1RC---_0LA---_0LD1LD_------_------", 6, 4);
+  ("1RB1LD_1RC---_0LA---_0RD1LD_------_------", 6, 4);
+  ("1RB1LD_1RC---_0LA---_1LD1LD_------_------", 6, 4);
+  ("1RB1LD_1RC---_0LA---_1RD1LD_------_------", 6, 4);
+  ("1RB1LD_1RC---_0LA---_0LE1LD_------_------", 6, 5);
+  ("1RB1LD_1RC---_0LA---_0RE1LD_------_------", 6, 5);
+  ("1RB1LD_1RC---_0LA---_1LE1LD_------_------", 6, 5);
+  ("1RB1LD_1RC---_0LA---_1RE1LD_------_------", 6, 5);
+  ("1RB1LD_1RC---_0LA---_---1RD_------_------", 7, 4);
+  ("1RB1LD_1RC---_0LA---_---0LE_------_------", 7, 5);
+  ("1RB1LD_1RC---_0LA---_---0RE_------_------", 7, 5);
+  ("1RB1LD_1RC---_0LA---_---1LE_------_------", 7, 5);
+  ("1RB1LD_1RC---_0LA---_---1RE_------_------", 7, 5);
+  ("1RB0RD_1RC---_0LA---_0LA---_------_------", 7, 4);
+  ("1RB0RD_1RC---_0LA---_0RA---_------_------", 7, 4);
+  ("1RB0RD_1RC---_0LA---_1LA---_------_------", 7, 4);
+  ("1RB0RD_1RC---_0LA---_1RA---_------_------", 7, 4);
+  ("1RB0RD_1RC---_0LA---_0LB---_------_------", 7, 4);
+  ("1RB0RD_1RC---_0LA---_0RB---_------_------", 7, 4);
+  ("1RB0RD_1RC---_0LA---_1LB---_------_------", 7, 4);
+  ("1RB0RD_1RC---_0LA---_1RB---_------_------", 7, 4);
+  ("1RB0RD_1RC---_0LA---_0LC---_------_------", 7, 4);
+  ("1RB0RD_1RC---_0LA---_0RC---_------_------", 7, 4)
+], []).
+Theorem batch_34_16_64_exact :
+  SearchQueue_upds decider (q_i 34 16) 64%N = decode_queue batch_34_16_64.
+Proof.
+  apply source_checkpoint_decode.
+  - apply checkpoint_chunk_canonical.
+  - vm_compute. reflexivity.
+Qed.
+Print Assumptions batch_34_16_64_exact.
+
+Definition batch_4096_16_64 : packed_queue := ([
+  ("1RB1LA_1LC0LB_1RD1RC_0LA0LE_0LF0LE_0LA---", 1, 6);
+  ("1RB1LA_1LC0LB_1RD1RC_0LA0LE_0LF0LE_0RA---", 1, 6);
+  ("1RB1LA_1LC0LB_1RD1RC_0LA0LE_0LF0LE_1LA---", 1, 6);
+  ("1RB1LA_1LC0LB_1RD1RC_0LA0LE_0LF0LE_1RA---", 1, 6);
+  ("1RB1LA_1LC0LB_1RD1RC_0LA0LE_0LF0LE_0LB---", 1, 6);
+  ("1RB1LA_1LC0LB_1RD1RC_0LA0LE_0LF0LE_0RB---", 1, 6);
+  ("1RB1LA_1LC0LB_1RD1RC_0LA0LE_0LF0LE_1LB---", 1, 6);
+  ("1RB1LA_1LC0LB_1RD1RC_0LA0LE_0LF0LE_1RB---", 1, 6);
+  ("1RB1LA_1LC0LB_1RD1RC_0LA0LE_0LF0LE_0LC---", 1, 6);
+  ("1RB1LA_1LC0LB_1RD1RC_0LA0LE_0LF0LE_0RC---", 1, 6);
+  ("1RB1LA_1LC0LB_1RD1RC_0LA0LE_0LF0LE_1LC---", 1, 6);
+  ("1RB1LA_1LC0LB_1RD1RC_0LA0LE_0LF0LE_1RC---", 1, 6);
+  ("1RB1LA_1LC0LB_1RD1RC_0LA0LE_0LF0LE_0LD---", 1, 6);
+  ("1RB1LA_1LC0LB_1RD1RC_0LA0LE_0LF0LE_0RD---", 1, 6);
+  ("1RB1LA_1LC0LB_1RD1RC_0LA0LE_0LF0LE_1LD---", 1, 6);
+  ("1RB1LA_1LC0LB_1RD1RC_0LA0LE_0LF0LE_1RD---", 1, 6);
+  ("1RB1LA_1LC0LB_1RD1RC_0LA0LE_0LF0LE_0LE---", 1, 6);
+  ("1RB1LA_1LC0LB_1RD1RC_0LA0LE_0LF0LE_0RE---", 1, 6);
+  ("1RB1LA_1LC0LB_1RD1RC_0LA0LE_0LF0LE_1LE---", 1, 6);
+  ("1RB1LA_1LC0LB_1RD1RC_0LA0LE_0LF0LE_1RE---", 1, 6);
+  ("1RB1LA_1LC0LB_1RD1RC_0LA0LE_0LF0LE_0LF---", 1, 6);
+  ("1RB1LA_1LC0LB_1RD1RC_0LA0LE_0LF0LE_0RF---", 1, 6);
+  ("1RB1LA_1LC0LB_1RD1RC_0LA0LE_0LF0LE_1LF---", 1, 6);
+  ("1RB1LA_1LC0LB_1RD1RC_0LA0LE_0LF0LE_1RF---", 1, 6);
+  ("1RB1LA_1LC0LB_1RD1RC_0LA0LE_0RF0LE_------", 2, 6);
+  ("1RB1LA_1LC0LB_1RD1RC_0LA0LE_1LF0LE_------", 2, 6);
+  ("1RB1LA_1LC0LB_1RD1RC_0LA0LE_1RF0LE_------", 2, 6);
+  ("1RB1LA_1LC0LB_1RD1RC_0LA0LE_---0RE_------", 3, 5);
+  ("1RB1LA_1LC0LB_1RD1RC_0LA0LE_---1LE_------", 3, 5);
+  ("1RB1LA_1LC0LB_1RD1RC_0LA0LE_---1RE_------", 3, 5);
+  ("1RB1LA_1LC0LB_1RD1RC_0LA0LE_---0LF_------", 3, 6);
+  ("1RB1LA_1LC0LB_1RD1RC_0LA0LE_---0RF_------", 3, 6);
+  ("1RB1LA_1LC0LB_1RD1RC_0LA0LE_---1LF_------", 3, 6);
+  ("1RB1LA_1LC0LB_1RD1RC_0LA0LE_---1RF_------", 3, 6);
+  ("1RB1LA_1LC0LB_1RD1RC_0LA0RE_------_------", 4, 5);
+  ("1RB1LA_1LC0LB_1RD1RC_0LA1LE_------_------", 4, 5);
+  ("1RB1LA_1LC0LB_1RD1RC_0LA1RE_------_------", 4, 5);
+  ("1RB1LA_1LC0RB_1RD1RC_0LA---_------_------", 5, 4);
+  ("1RB1LA_1LC1LB_1RD1RC_0LA---_------_------", 5, 4);
+  ("1RB1LA_1LC1RB_1RD1RC_0LA---_------_------", 5, 4);
+  ("1RB1LA_1LC0LC_1RD1RC_0LA---_------_------", 5, 4);
+  ("1RB1LA_1LC0RC_1RD1RC_0LA---_------_------", 5, 4);
+  ("1RB1LA_1LC1LC_1RD1RC_0LA---_------_------", 5, 4);
+  ("1RB1LA_1LC1RC_1RD1RC_0LA---_------_------", 5, 4);
+  ("1RB1LA_1LC0LD_1RD1RC_0LA---_------_------", 5, 4);
+  ("1RB1LA_1LC0RD_1RD1RC_0LA---_------_------", 5, 4);
+  ("1RB1LA_1LC1LD_1RD1RC_0LA---_------_------", 5, 4);
+  ("1RB1LA_1LC1RD_1RD1RC_0LA---_------_------", 5, 4);
+  ("1RB1LA_1LC0LE_1RD1RC_0LA---_------_------", 5, 5);
+  ("1RB1LA_1LC0RE_1RD1RC_0LA---_------_------", 5, 5);
+  ("1RB1LA_1LC1LE_1RD1RC_0LA---_------_------", 5, 5);
+  ("1RB1LA_1LC1RE_1RD1RC_0LA---_------_------", 5, 5);
+  ("1RB1RA_1LC---_1RD1RC_0LA---_------_------", 6, 4);
+  ("1RB0LB_1LC---_1RD1RC_0LA---_------_------", 6, 4);
+  ("1RB0RB_1LC---_1RD1RC_0LA---_------_------", 6, 4);
+  ("1RB1LB_1LC---_1RD1RC_0LA---_------_------", 6, 4);
+  ("1RB1RB_1LC---_1RD1RC_0LA---_------_------", 6, 4);
+  ("1RB0LC_1LC---_1RD1RC_0LA---_------_------", 6, 4);
+  ("1RB0RC_1LC---_1RD1RC_0LA---_------_------", 6, 4);
+  ("1RB1LC_1LC---_1RD1RC_0LA---_------_------", 6, 4);
+  ("1RB1RC_1LC---_1RD1RC_0LA---_------_------", 6, 4);
+  ("1RB0LD_1LC---_1RD1RC_0LA---_------_------", 6, 4);
+  ("1RB0RD_1LC---_1RD1RC_0LA---_------_------", 6, 4);
+  ("1RB1LD_1LC---_1RD1RC_0LA---_------_------", 6, 4);
+  ("1RB1RD_1LC---_1RD1RC_0LA---_------_------", 6, 4);
+  ("1RB0LE_1LC---_1RD1RC_0LA---_------_------", 6, 5);
+  ("1RB0RE_1LC---_1RD1RC_0LA---_------_------", 6, 5);
+  ("1RB1LE_1LC---_1RD1RC_0LA---_------_------", 6, 5);
+  ("1RB1RE_1LC---_1RD1RC_0LA---_------_------", 6, 5);
+  ("1RB---_1LC---_1RD1RC_0RA---_------_------", 7, 4);
+  ("1RB---_1LC---_1RD1RC_1LA---_------_------", 7, 4);
+  ("1RB---_1LC---_1RD1RC_1RA---_------_------", 7, 4);
+  ("1RB---_1LC---_1RD1RC_0LB---_------_------", 7, 4);
+  ("1RB---_1LC---_1RD1RC_0RB---_------_------", 7, 4);
+  ("1RB---_1LC---_1RD1RC_1LB---_------_------", 7, 4);
+  ("1RB---_1LC---_1RD1RC_1RB---_------_------", 7, 4);
+  ("1RB---_1LC---_1RD1RC_0LC---_------_------", 7, 4);
+  ("1RB---_1LC---_1RD1RC_0RC---_------_------", 7, 4);
+  ("1RB---_1LC---_1RD1RC_1LC---_------_------", 7, 4);
+  ("1RB---_1LC---_1RD1RC_1RC---_------_------", 7, 4);
+  ("1RB---_1LC---_1RD1RC_0LD---_------_------", 7, 4);
+  ("1RB---_1LC---_1RD1RC_0RD---_------_------", 7, 4);
+  ("1RB---_1LC---_1RD1RC_1LD---_------_------", 7, 4);
+  ("1RB---_1LC---_1RD1RC_1RD---_------_------", 7, 4)
+], []).
+Theorem batch_4096_16_64_exact :
+  SearchQueue_upds decider (q_i 4096 16) 64%N = decode_queue batch_4096_16_64.
+Proof.
+  apply source_checkpoint_decode.
+  - apply checkpoint_chunk_canonical.
+  - vm_compute. reflexivity.
+Qed.
+Print Assumptions batch_4096_16_64_exact.
+
+Definition batch_8192_16_64 : packed_queue := ([
+  ("1RB---_0LC0LD_1RB1LC_0LE0LD_1RD0RD_------", 3, 5);
+  ("1RB---_0LC0LD_1RB1LC_0LE0LD_1RD1LD_------", 3, 5);
+  ("1RB---_0LC0LD_1RB1LC_0LE0LD_1RD1RD_------", 3, 5);
+  ("1RB---_0LC0LD_1RB1LC_0LE0LD_1RD0LE_------", 3, 5);
+  ("1RB---_0LC0LD_1RB1LC_0LE0LD_1RD0RE_------", 3, 5);
+  ("1RB---_0LC0LD_1RB1LC_0LE0LD_1RD1LE_------", 3, 5);
+  ("1RB---_0LC0LD_1RB1LC_0LE0LD_1RD1RE_------", 3, 5);
+  ("1RB---_0LC0LD_1RB1LC_0LE0LD_1RD0LF_------", 3, 6);
+  ("1RB---_0LC0LD_1RB1LC_0LE0LD_1RD0RF_------", 3, 6);
+  ("1RB---_0LC0LD_1RB1LC_0LE0LD_1RD1LF_------", 3, 6);
+  ("1RB---_0LC0LD_1RB1LC_0LE0LD_1RD1RF_------", 3, 6);
+  ("1RB---_0LC0LD_1RB1LC_0LE0LD_0LE---_------", 4, 5);
+  ("1RB---_0LC0LD_1RB1LC_0LE0LD_0RE---_------", 4, 5);
+  ("1RB---_0LC0LD_1RB1LC_0LE0LD_1LE---_------", 4, 5);
+  ("1RB---_0LC0LD_1RB1LC_0LE0LD_1RE---_------", 4, 5);
+  ("1RB---_0LC0LD_1RB1LC_0LE0LD_0LF---_------", 4, 6);
+  ("1RB---_0LC0LD_1RB1LC_0LE0LD_0RF---_------", 4, 6);
+  ("1RB---_0LC0LD_1RB1LC_0LE0LD_1LF---_------", 4, 6);
+  ("1RB---_0LC0LD_1RB1LC_0LE0LD_1RF---_------", 4, 6);
+  ("1RB---_0LC0LD_1RB1LC_0RE0LD_------_------", 5, 5);
+  ("1RB---_0LC0LD_1RB1LC_1LE0LD_------_------", 5, 5);
+  ("1RB---_0LC0LD_1RB1LC_1RE0LD_------_------", 5, 5);
+  ("1RB---_0LC0LD_1RB1LC_---0RD_------_------", 6, 4);
+  ("1RB---_0LC0LD_1RB1LC_---1LD_------_------", 6, 4);
+  ("1RB---_0LC0LD_1RB1LC_---1RD_------_------", 6, 4);
+  ("1RB---_0LC0LD_1RB1LC_---0LE_------_------", 6, 5);
+  ("1RB---_0LC0LD_1RB1LC_---0RE_------_------", 6, 5);
+  ("1RB---_0LC0LD_1RB1LC_---1LE_------_------", 6, 5);
+  ("1RB---_0LC0LD_1RB1LC_---1RE_------_------", 6, 5);
+  ("1RB---_0LC0RD_1RB1LC_------_------_------", 7, 4);
+  ("1RB---_0LC1LD_1RB1LC_------_------_------", 7, 4);
+  ("1RB---_0LC1RD_1RB1LC_------_------_------", 7, 4);
+  ("1RB---_0LC0LA_0RB1LC_------_------_------", 7, 3);
+  ("1RB---_0LC0RA_0RB1LC_------_------_------", 7, 3);
+  ("1RB---_0LC1LA_0RB1LC_------_------_------", 7, 3);
+  ("1RB---_0LC1RA_0RB1LC_------_------_------", 7, 3);
+  ("1RB---_0LC0LB_0RB1LC_------_------_------", 7, 3);
+  ("1RB---_0LC0RB_0RB1LC_------_------_------", 7, 3);
+  ("1RB---_0LC1LB_0RB1LC_------_------_------", 7, 3);
+  ("1RB---_0LC1RB_0RB1LC_------_------_------", 7, 3)
+], []).
+Theorem batch_8192_16_64_exact :
+  SearchQueue_upds decider (q_i 8192 16) 64%N = decode_queue batch_8192_16_64.
+Proof.
+  apply source_checkpoint_decode.
+  - apply checkpoint_chunk_canonical.
+  - vm_compute. reflexivity.
+Qed.
+Print Assumptions batch_8192_16_64_exact.
+
+Definition batch_12000_16_64 : packed_queue := ([
+  ("1RB1LC_1LA0LD_1LA0RB_0LE1RA_0LF1RA_1RC---", 1, 6);
+  ("1RB1LC_1LA0LD_1LA0RB_0LE1RA_0LF1RA_0LD---", 1, 6);
+  ("1RB1LC_1LA0LD_1LA0RB_0LE1RA_0LF1RA_0RD---", 1, 6);
+  ("1RB1LC_1LA0LD_1LA0RB_0LE1RA_0LF1RA_1LD---", 1, 6);
+  ("1RB1LC_1LA0LD_1LA0RB_0LE1RA_0LF1RA_1RD---", 1, 6);
+  ("1RB1LC_1LA0LD_1LA0RB_0LE1RA_0LF1RA_0LE---", 1, 6);
+  ("1RB1LC_1LA0LD_1LA0RB_0LE1RA_0LF1RA_0RE---", 1, 6);
+  ("1RB1LC_1LA0LD_1LA0RB_0LE1RA_0LF1RA_1LE---", 1, 6);
+  ("1RB1LC_1LA0LD_1LA0RB_0LE1RA_0LF1RA_1RE---", 1, 6);
+  ("1RB1LC_1LA0LD_1LA0RB_0LE1RA_0LF1RA_0LF---", 1, 6);
+  ("1RB1LC_1LA0LD_1LA0RB_0LE1RA_0LF1RA_0RF---", 1, 6);
+  ("1RB1LC_1LA0LD_1LA0RB_0LE1RA_0LF1RA_1LF---", 1, 6);
+  ("1RB1LC_1LA0LD_1LA0RB_0LE1RA_0LF1RA_1RF---", 1, 6);
+  ("1RB1LC_1LA0LD_1LA0RB_0LE1RA_0RF1RA_------", 2, 6);
+  ("1RB1LC_1LA0LD_1LA0RB_0LE1RA_1LF1RA_------", 2, 6);
+  ("1RB1LC_1LA0LD_1LA0RB_0LE1RA_1RF1RA_------", 2, 6);
+  ("1RB1LC_1LA0LD_1LA0RB_0LE1RA_---0LB_------", 3, 5);
+  ("1RB1LC_1LA0LD_1LA0RB_0LE1RA_---0RB_------", 3, 5);
+  ("1RB1LC_1LA0LD_1LA0RB_0LE1RA_---1LB_------", 3, 5);
+  ("1RB1LC_1LA0LD_1LA0RB_0LE1RA_---1RB_------", 3, 5);
+  ("1RB1LC_1LA0LD_1LA0RB_0LE1RA_---0LC_------", 3, 5);
+  ("1RB1LC_1LA0LD_1LA0RB_0LE1RA_---0RC_------", 3, 5);
+  ("1RB1LC_1LA0LD_1LA0RB_0LE1RA_---1LC_------", 3, 5);
+  ("1RB1LC_1LA0LD_1LA0RB_0LE1RA_---1RC_------", 3, 5);
+  ("1RB1LC_1LA0LD_1LA0RB_0LE1RA_---0LD_------", 3, 5);
+  ("1RB1LC_1LA0LD_1LA0RB_0LE1RA_---0RD_------", 3, 5);
+  ("1RB1LC_1LA0LD_1LA0RB_0LE1RA_---1LD_------", 3, 5);
+  ("1RB1LC_1LA0LD_1LA0RB_0LE1RA_---1RD_------", 3, 5);
+  ("1RB1LC_1LA0LD_1LA0RB_0LE1RA_---0LE_------", 3, 5);
+  ("1RB1LC_1LA0LD_1LA0RB_0LE1RA_---0RE_------", 3, 5);
+  ("1RB1LC_1LA0LD_1LA0RB_0LE1RA_---1LE_------", 3, 5);
+  ("1RB1LC_1LA0LD_1LA0RB_0LE1RA_---1RE_------", 3, 5);
+  ("1RB1LC_1LA0LD_1LA0RB_0LE1RA_---0LF_------", 3, 6);
+  ("1RB1LC_1LA0LD_1LA0RB_0LE1RA_---0RF_------", 3, 6);
+  ("1RB1LC_1LA0LD_1LA0RB_0LE1RA_---1LF_------", 3, 6);
+  ("1RB1LC_1LA0LD_1LA0RB_0LE1RA_---1RF_------", 3, 6);
+  ("1RB1LC_1LA0LD_1LA0RB_0RE1RA_------_------", 4, 5);
+  ("1RB1LC_1LA0LD_1LA0RB_1LE1RA_------_------", 4, 5);
+  ("1RB1LC_1LA0LD_1LA0RB_1RE1RA_------_------", 4, 5);
+  ("1RB1LC_1LA0LD_1LA1LB_---1RA_------_------", 5, 4);
+  ("1RB1LC_1LA0LD_1LA1RB_---1RA_------_------", 5, 4);
+  ("1RB1LC_1LA0LD_1LA0LC_---1RA_------_------", 5, 4);
+  ("1RB1LC_1LA0LD_1LA0RC_---1RA_------_------", 5, 4);
+  ("1RB1LC_1LA0LD_1LA1LC_---1RA_------_------", 5, 4);
+  ("1RB1LC_1LA0LD_1LA1RC_---1RA_------_------", 5, 4);
+  ("1RB1LC_1LA0LD_1LA0LD_---1RA_------_------", 5, 4);
+  ("1RB1LC_1LA0LD_1LA0RD_---1RA_------_------", 5, 4);
+  ("1RB1LC_1LA0LD_1LA1LD_---1RA_------_------", 5, 4);
+  ("1RB1LC_1LA0LD_1LA1RD_---1RA_------_------", 5, 4);
+  ("1RB1LC_1LA0LD_1LA0LE_---1RA_------_------", 5, 5);
+  ("1RB1LC_1LA0LD_1LA0RE_---1RA_------_------", 5, 5);
+  ("1RB1LC_1LA0LD_1LA1LE_---1RA_------_------", 5, 5);
+  ("1RB1LC_1LA0LD_1LA1RE_---1RA_------_------", 5, 5);
+  ("1RB1LC_1LA0LD_1LA---_---0LB_------_------", 6, 4);
+  ("1RB1LC_1LA0LD_1LA---_---0RB_------_------", 6, 4);
+  ("1RB1LC_1LA0LD_1LA---_---1LB_------_------", 6, 4);
+  ("1RB1LC_1LA0LD_1LA---_---1RB_------_------", 6, 4);
+  ("1RB1LC_1LA0LD_1LA---_---0LC_------_------", 6, 4);
+  ("1RB1LC_1LA0LD_1LA---_---0RC_------_------", 6, 4);
+  ("1RB1LC_1LA0LD_1LA---_---1LC_------_------", 6, 4);
+  ("1RB1LC_1LA0LD_1LA---_---1RC_------_------", 6, 4);
+  ("1RB1LC_1LA0LD_1LA---_---0LD_------_------", 6, 4);
+  ("1RB1LC_1LA0LD_1LA---_---0RD_------_------", 6, 4);
+  ("1RB1LC_1LA0LD_1LA---_---1LD_------_------", 6, 4);
+  ("1RB1LC_1LA0LD_1LA---_---1RD_------_------", 6, 4);
+  ("1RB1LC_1LA0LD_1LA---_---0LE_------_------", 6, 5);
+  ("1RB1LC_1LA0LD_1LA---_---0RE_------_------", 6, 5);
+  ("1RB1LC_1LA0LD_1LA---_---1LE_------_------", 6, 5);
+  ("1RB1LC_1LA0LD_1LA---_---1RE_------_------", 6, 5);
+  ("1RB1LC_1LA0RD_1LA---_------_------_------", 7, 4);
+  ("1RB1LC_1LA1LD_1LA---_------_------_------", 7, 4);
+  ("1RB1LC_1LA1RD_1LA---_------_------_------", 7, 4);
+  ("1RB1RC_1LA---_---1RD_0LA---_------_------", 7, 4);
+  ("1RB1RC_1LA---_---1RD_0RA---_------_------", 7, 4);
+  ("1RB1RC_1LA---_---1RD_1LA---_------_------", 7, 4);
+  ("1RB1RC_1LA---_---1RD_1RA---_------_------", 7, 4);
+  ("1RB1RC_1LA---_---1RD_0LB---_------_------", 7, 4);
+  ("1RB1RC_1LA---_---1RD_0RB---_------_------", 7, 4);
+  ("1RB1RC_1LA---_---1RD_1LB---_------_------", 7, 4);
+  ("1RB1RC_1LA---_---1RD_1RB---_------_------", 7, 4);
+  ("1RB1RC_1LA---_---1RD_0LC---_------_------", 7, 4);
+  ("1RB1RC_1LA---_---1RD_0RC---_------_------", 7, 4);
+  ("1RB1RC_1LA---_---1RD_1LC---_------_------", 7, 4);
+  ("1RB1RC_1LA---_---1RD_1RC---_------_------", 7, 4)
+], []).
+Theorem batch_12000_16_64_exact :
+  SearchQueue_upds decider (q_i 12000 16) 64%N = decode_queue batch_12000_16_64.
+Proof.
+  apply source_checkpoint_decode.
+  - apply checkpoint_chunk_canonical.
+  - vm_compute. reflexivity.
+Qed.
+Print Assumptions batch_12000_16_64_exact.
