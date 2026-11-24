@@ -23,6 +23,7 @@ open BB6Coverage.Agent8S1Encoder
 open BB6Coverage.Agent24LBinDecHRun
 open BB6Coverage.Agent24ChampionTime
 open BB6Coverage.Agent48Champion
+open BB6Coverage.Agent8Rst1Prime
 
 /--
 At the n=1,m=2 root branch, the outer H-run has valuation zero.  Its
@@ -92,14 +93,11 @@ theorem outerLCIncSourceT3_leftFacing_m2
     · have hi2 : i = 2 := by omega
       subst i
       simp [sideBit,d0,d1]
-    · have hd0 : ¬ i < d0.length := by
-        simp [d0]
-        omega
-      have hd1 : ¬ i < d1.length := by
-        simp [d1]
-        omega
-      rw [sideBit_append,sideBit_append]
-      simp [d0,d1,hd0,hd1]
+    · have hd0 : d0.length ≤ i := by simp [d0]; omega
+      have hd1 : d1.length ≤ i := by simp [d1]; omega
+      rw [Agent6Q4Prefix.sideBit_append_right _ _ _ hd0,
+        Agent6Q4Prefix.sideBit_append_right _ _ _ hd1]
+      rfl
   intro i
   by_cases hi0 : i = 0
   · subst i
@@ -109,9 +107,10 @@ theorem outerLCIncSourceT3_leftFacing_m2
       have hlt : 0 < (d1pow L).length := by omega
       simp [hlt]
       exact sideBit_d1pow_true L 0 (by omega)
+    simp only [Int.natCast_zero, Int.sub_zero]
     calc
       outerLCIncSourceT3 T h a 2 0 h1 =
-          afterLIncBridge T2 h1 h1 := hT3eq 0
+          afterLIncBridge T2 h1 h1 := by simpa using hT3eq 0
       _ = true := by simp [afterLIncBridge]
       _ = sideBit (d1pow L ++ lh) 0 := htarget.symm
   · by_cases hi1 : i = 1
@@ -168,9 +167,12 @@ private theorem outerLCIncAfterFive_local
     outerLCIncAfterFive T h a m
       (outerLCIncH1 h a m+2+(k:Int)) =
       if k=2 ∨ k=4 then true else false := by
-  interval_cases k <;>
-    norm_num [outerLCIncAfterFive,frameAt_tape,
-      outerLCIncFiveInside,outerLCIncFiveEnd]
+  rw [outerLCIncAfterFive,frameAt_tape]
+  have heq : outerLCIncH1 h a m+2+(k:Int)-(outerLCIncH1 h a m+2)=(k:Int) := by omega
+  rw [heq]
+  have hc : k=0 ∨ k=1 ∨ k=2 ∨ k=3 ∨ k=4 := by omega
+  rcases hc with h0|h1|h2|h3|h4 <;> subst k <;>
+    simp [outerLCIncFiveInside,outerLCIncFiveEnd]
 
 /--
 The six cells immediately after the zero-valuation H-run are exactly
@@ -190,10 +192,11 @@ private theorem outerLCIncAfterZero_m2_middleCell
     (h1+6-(k:Int)) hxleft
   by_cases hk5 : k=5
   · subst k
-    have hpres0' :
-        outerLCIncAfterZero T h a 2 (h1+1) =
-          outerLCIncAfterFive T h a 2 (h1+1) := by
-      simpa using hpres0
+    have heq : h1+6-(5:Nat)=h1+1 := by omega
+    rw [heq] at hpres0
+    change outerLCIncAfterZero T h a 2 (h1+6-(5:Nat)) = _
+    rw [heq]
+    have hpres0' := hpres0
     have hpres5 := outerLCIncAfterFive_preserves_left T h a 2 (h1+1) (by omega)
     have hbridge : T (h1+1) = true := by
       simpa [h1] using hT3right
@@ -207,16 +210,18 @@ private theorem outerLCIncAfterZero_m2_middleCell
       _ = sideBit (markerWord 1 ++ d0) 5 := htarget.symm
   · have hk4 : k ≤ 4 := by omega
     have hcoord :
-        h1+6-(k:Int) = h1+2+((4-k):Int) := by omega
+        h1+6-(k:Int) = h1+2+((4-k : Nat):Int) := by omega
     have hlocal := outerLCIncAfterFive_local T h a 2 (4-k) (by omega)
     calc
       outerLCIncAfterZero T h a 2 (h1+6-(k:Int)) =
           outerLCIncAfterFive T h a 2 (h1+6-(k:Int)) := hpres0
-      _ = outerLCIncAfterFive T h a 2 (h1+2+((4-k):Int)) := by
+      _ = outerLCIncAfterFive T h a 2 (h1+2+((4-k : Nat):Int)) := by
         rw [hcoord]
       _ = (if (4-k)=2 ∨ (4-k)=4 then true else false) := hlocal
       _ = sideBit (markerWord 1 ++ d0) k := by
-        interval_cases k <;> norm_num [sideBit,markerWord,d0]
+        have hc : k=0 ∨ k=1 ∨ k=2 ∨ k=3 ∨ k=4 := by omega
+        rcases hc with h0|h1|h2|h3|h4 <;> subst k <;>
+          decide
 
 /--
 The left-facing tape at the pre-sweep head h+5 is
@@ -243,6 +248,7 @@ theorem outerLCIncAfterZero_leftFacing_m2
   have hprefixLen :
       (d1pow (a+2) ++ (markerWord 1 ++ d0)).length = 3*a+12 := by
     simp [d1pow_length,markerWord,d0]
+    omega
   have htargetOne (i : Nat) (hi : i < 3*(a+2)) :
       sideBit (d1pow (a+2) ++ ((markerWord 1 ++ d0) ++
         (d1pow L ++ lh))) i = true := by
@@ -257,22 +263,12 @@ theorem outerLCIncAfterZero_leftFacing_m2
       sideBit (d1pow (a+2) ++ ((markerWord 1 ++ d0) ++
         (d1pow L ++ lh))) i =
       sideBit (markerWord 1 ++ d0) k := by
-    rw [hcoord,sideBit_append]
-    have hlen1 : (d1pow (a+2)).length = 3*(a+2) := by
-      simp [d1pow_length]
-    have hnot1 : ¬ 3*(a+2)+k < (d1pow (a+2)).length := by omega
-    have hsub1 : 3*(a+2)+k-(d1pow (a+2)).length = 6+k := by
-      rw [hlen1]
-      omega
-    simp [hnot1,hsub1]
-    rw [sideBit_append]
-    have hlen2 : (markerWord 1 ++ d0).length = 6 := by
-      simp [markerWord,d0]
-    have hnot2 : ¬ 6+k < (markerWord 1 ++ d0).length := by omega
-    have hsub2 : 6+k-(markerWord 1 ++ d0).length = k := by
-      rw [hlen2]
-      omega
-    simp [hnot2,hsub2]
+    have hlen1 : (d1pow (a+2)).length = 3*(a+2) := d1pow_length (a+2)
+    have hge1 : (d1pow (a+2)).length ≤ i := by rw [hlen1]; omega
+    rw [Agent6Q4Prefix.sideBit_append_right _ _ _ hge1]
+    have hsub : i-(d1pow (a+2)).length = k := by rw [hlen1]; omega
+    rw [hsub]
+    exact Agent6Q4Prefix.sideBit_append_left _ _ _ (by simpa [markerWord,d0] using hk)
   have htargetTail (i j : Nat) (hj : 3*a+12 ≤ i)
       (hcoord : i=3*a+12+j) :
       sideBit (d1pow (a+2) ++ ((markerWord 1 ++ d0) ++
@@ -282,21 +278,19 @@ theorem outerLCIncAfterZero_leftFacing_m2
         d1pow (a+2) ++ ((markerWord 1 ++ d0) ++ (d1pow L ++ lh)) =
         (d1pow (a+2) ++ (markerWord 1 ++ d0)) ++ (d1pow L ++ lh) := by
       simp [List.append_assoc]
-    rw [hword,sideBit_append]
-    have hnot : ¬ i < (d1pow (a+2) ++ (markerWord 1 ++ d0)).length := by
-      rw [hprefixLen]
-      omega
-    have hsub :
-        i-(d1pow (a+2) ++ (markerWord 1 ++ d0)).length = j := by
-      rw [hprefixLen]
-      omega
-    simp [hnot,hsub]
+    rw [hword]
+    have hge : (d1pow (a+2) ++ (markerWord 1 ++ d0)).length ≤ i := by
+      rw [hprefixLen]; omega
+    rw [Agent6Q4Prefix.sideBit_append_right _ _ _ hge]
+    have hsub : i-(d1pow (a+2) ++ (markerWord 1 ++ d0)).length = j := by
+      rw [hprefixLen]; omega
+    rw [hsub]
   intro i
   by_cases hi0 : i=0
   · subst i
     have hcell := outerLCIncAfterZero_cells T3 h a 2
     have htarget := htargetOne 0 (by omega)
-    exact hcell.1.trans htarget.symm
+    simpa [T3] using hcell.1.trans htarget.symm
   · by_cases hishort : i < 3*(a+2)
     · let j : Nat := 3*a+5-i
       have hj : j < 3*a+2+3 := by
@@ -334,7 +328,7 @@ theorem outerLCIncAfterZero_leftFacing_m2
               (d1pow (a+2) ++ ((markerWord 1 ++ d0) ++ (d1pow L ++ lh))) i :=
             (htargetMiddle i k hk hcoordI).symm
       · let j : Nat := i-(3*a+12)
-        have hj : 3*a+12 ≤ i := by dsimp [j]; omega
+        have hj : 3*a+12 ≤ i := by omega
         have hcoordX :
             h+5-(i:Int) = h1-(j:Int) := by
           dsimp [j,h1,outerLCIncH1]
@@ -424,10 +418,7 @@ theorem outerLCIncAfterSweep_leftFacing_m2
         _ = sideBit
             (d0pow b ++
               (d1pow (a+2) ++ ((markerWord 1 ++ d0) ++ (d1pow L ++ lh)))) i := by
-              rw [sideBit_append]
-              have hlen : (d0pow b).length=3*b := d0pow_length b
-              have hnot : i < (d0pow b).length := by rw [hlen]; omega
-              simp [hnot]
+              rw [Agent6Q4Prefix.sideBit_append_left _ _ _ (by rw [d0pow_length]; exact hi)]
               exact htarget.symm
     · let j : Nat := b-q-1
       have hj : j < b+1 := by dsimp [j]; omega
@@ -447,10 +438,7 @@ theorem outerLCIncAfterSweep_leftFacing_m2
         _ = sideBit
             (d0pow b ++
               (d1pow (a+2) ++ ((markerWord 1 ++ d0) ++ (d1pow L ++ lh)))) i := by
-              rw [sideBit_append]
-              have hlen : (d0pow b).length=3*b := d0pow_length b
-              have hnot : i < (d0pow b).length := by rw [hlen]; omega
-              simp [hnot]
+              rw [Agent6Q4Prefix.sideBit_append_left _ _ _ (by rw [d0pow_length]; exact hi)]
               exact htarget.symm
     · by_cases hlast : q+1=b
       · have hcoord : H-(i:Int)=h+6 := by
@@ -473,10 +461,7 @@ theorem outerLCIncAfterSweep_leftFacing_m2
           _ = sideBit
               (d0pow b ++
                 (d1pow (a+2) ++ ((markerWord 1 ++ d0) ++ (d1pow L ++ lh)))) i := by
-              rw [sideBit_append]
-              have hlen : (d0pow b).length=3*b := d0pow_length b
-              have hnot : i < (d0pow b).length := by rw [hlen]; omega
-              simp [hnot]
+              rw [Agent6Q4Prefix.sideBit_append_left _ _ _ (by rw [d0pow_length]; exact hi)]
               exact htarget.symm
       · have hq' : q+1 < b := by omega
         let j : Nat := b-q-2
@@ -497,13 +482,10 @@ theorem outerLCIncAfterSweep_leftFacing_m2
           _ = sideBit
               (d0pow b ++
                 (d1pow (a+2) ++ ((markerWord 1 ++ d0) ++ (d1pow L ++ lh)))) i := by
-                rw [sideBit_append]
-                have hlen : (d0pow b).length=3*b := d0pow_length b
-                have hnot : i < (d0pow b).length := by rw [hlen]; omega
-                simp [hnot]
+                rw [Agent6Q4Prefix.sideBit_append_left _ _ _ (by rw [d0pow_length]; exact hi)]
                 exact htarget.symm
   · let j : Nat := i-3*b
-    have hj : 3*b ≤ i := by dsimp [j]; omega
+    have hj : 3*b ≤ i := by omega
     have hcoord : H-(i:Int) = h+5-(j:Int) := by
       dsimp [H,j]
       omega
@@ -587,10 +569,12 @@ theorem outerLCIncPostludeTape_rightFacing_m2
       (outerLCInc_s1_right_facts L 1 2 a b h).2.2.2.2.2.2
   intro i
   by_cases hi : i < 9
-  · interval_cases i <;>
-      norm_num [outerLCIncPostludeTape,frameAt_tape,
-        outerLCIncTailInside,outerLCIncTailEnd,H,
-        s0RightFacing,d1pow,d1,sideBit]
+  · rw [outerLCIncPostludeTape,frameAt_tape]
+    have heq : h+3*(b:Int)+6+(i:Int)-(h+3*(b:Int)+9)=(i:Int)-3 := by omega
+    rw [heq]
+    have hc : i=0 ∨ i=1 ∨ i=2 ∨ i=3 ∨ i=4 ∨ i=5 ∨ i=6 ∨ i=7 ∨ i=8 := by omega
+    rcases hc with h0|h1|h2|h3|h4|h5|h6|h7|h8 <;> subst i <;>
+      simp [outerLCIncTailInside,outerLCIncTailEnd,s0RightFacing,d1pow,d1,sideBit]
   · have hnot : outerLCIncTailInside
         ((H+1+(i:Int))-(h+3*b+9)) = false := by
       simp [outerLCIncTailInside,H]
@@ -600,19 +584,27 @@ theorem outerLCIncPostludeTape_rightFacing_m2
           outerLCIncAfterZeroExit T3 h a 2 b (H+1+(i:Int)) := by
       simp [outerLCIncPostludeTape,frameAt_tape,hnot]
     have hcoord :
-        H+1+(i:Int) = h+3*b+10+((i-4):Int) := by
+        H+1+(i:Int) = h+3*b+10+((i-4 : Nat):Int) := by
       dsimp [H]
       omega
     have hzeroExit := outerLCIncAfterZeroExit_preserves T3 h a 2 b
       (H+1+(i:Int)) (by dsimp [H]; omega)
+    have hT3blank : ∀ j : Nat, T3 (h+3*b+10+j) = false := by
+      intro j
+      rw [show T3 (h+3*b+10+j) = T (h+3*b+10+j) by
+        apply outerLCIncSourceT3_preserves_right
+        omega]
+      exact hblank j
     have hswblank :=
-      outerLCIncAfterSweep_blank T h a 2 b 0 (i-4) hblank
+      outerLCIncAfterSweep_blank T3 h a 2 b 0 (i-4) hT3blank
     have hlen : (s0RightFacing 0).length = 9 := by
       simp [s0RightFacing,d1pow_length]
     have htarget :
         sideBit (s0RightFacing 0) i = false :=
       BB6Coverage.Agent6Q4Prefix.sideBit_ge_length
         (s0RightFacing 0) i (by omega)
+    have hH : h+3*(b:Int)+6+(i:Int)=H+1+(i:Int) := by dsimp [H]; omega
+    rw [hH]
     calc
       outerLCIncPostludeTape T3 h a 2 b (H+1+(i:Int)) =
           outerLCIncAfterZeroExit T3 h a 2 b (H+1+(i:Int)) := hframe
@@ -665,7 +657,9 @@ theorem outerLCIncPostludeTape_eq_s1Config_m2
     have hword : s1PhysicalRight 0 = s0RightFacing 0 := by
       simp [s1PhysicalRight,s0PhysicalRight]
     rw [hword] at hcell
-    simpa [H] using hright.trans hcell.symm
+    have hcoord' : h+3*(b:Int)+6+(i:Int)=H+1+(i:Int) := by dsimp [H]; omega
+    rw [hcoord'] at hright
+    exact hright.trans hcell.symm
 
 
 /-- Same endpoint stated directly in the S0 input interface used by the
@@ -692,5 +686,9 @@ theorem outerLCInc_marker1S0_inputBounds (a b : Nat) :
     have hpos : 0 < 2^b := Nat.pow_pos (by decide)
     omega
 
+
+#print axioms outerLCIncSourceT3_leftFacing_m2
+#print axioms outerLCIncPostludeTape_eq_s1Config_m2
+#print axioms outerLCIncPostludeTape_eq_marker1S0_m2
 
 end BB6Coverage.Agent42OuterLCInc
