@@ -1,7 +1,7 @@
 From BusyCoq Require Import Enumerate62 TC62 Eqb Agent5Enumerate62DeciderSound
   Agent8SourceWF Agent8AdaptiveSource Individual62.
 From BusyCoq Require Export Agent8ZeroDelay.
-From Coq Require Import List Lia NArith.
+From Coq Require Import List Lia Arith NArith.
 Import ListNotations.
 Import TNF_Node.
 Open Scope nat_scope.
