@@ -62,6 +62,7 @@ on:
           - sourceModularStopsCriterion
           - sourceModularFullCriterion
           - sourceHeightConeCriterion
+          - sourceDirectBlocks
           - sourceBoundedShadow
           - sourceExactMemo
           - sourceLowQuarterTwoForced
@@ -263,6 +264,9 @@ jobs:
               ;;
             sourceHeightConeCriterion)
               target=im-results/agent42-modular-cone/HeightConeCriterion.lean
+              ;;
+            sourceDirectBlocks)
+              target=im-results/agent42-modular-cone/DirectBlocksSource.lean
               ;;
             sourceHighCylinder)
               target=im-results/agent13-residual-frontier/HighShadowCylinder.lean
