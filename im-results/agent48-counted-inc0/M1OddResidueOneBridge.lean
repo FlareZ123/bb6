@@ -19,7 +19,8 @@ def m1OddResidueOneBridgeStart : FConfig :=
   ⟨3, 0, [-9,-8,-7,-4,-1,2,3,4]⟩
 
 def m1OddResidueOneBridgeEnd : FConfig :=
-  ⟨4, 5, [-9,-8,-7,-6,-5,-4,-1,1,2,3,4]⟩
+  -- `FConfig.marked` is an ordered list; fMove prepends each newly written cell.
+  ⟨4, 5, [4,3,2,1,-1,-4,-5,-6,-9,-8,-7]⟩
 
 /-- Exact 29-step bridge for the m=1, n=1 (mod 8) source row. -/
 theorem m1OddResidueOneBridge_exact :
