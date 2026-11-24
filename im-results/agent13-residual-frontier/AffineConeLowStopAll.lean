@@ -23,6 +23,7 @@ theorem rectangleRay_eval (z u t : Nat) (hu : u=16384*t+payloadBase z) :
     (rectangleRay z).x.eval t=180*u+28 ∧ (rectangleRay z).y.eval t=166*u+25 := by
   rw [hu]
   simp only [rectangleRay,Linear.eval,Nat.mul_add,Nat.mul_assoc]
+  omega
 
 /-- Every accepting inverse tree excludes an entire stopping-index cylinder,
     for all natural z, including arbitrarily large odd z with many parents. -/
