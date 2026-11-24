@@ -2,6 +2,10 @@ name: Agent 7 hard-root FAR search
 on:
   workflow_dispatch:
     inputs:
+      batch_only:
+        description: Verify the archived depth-eight batch without new search
+        type: boolean
+        default: false
       samples:
         description: Guided mutation trials per DFA size and orientation
         type: number
@@ -45,10 +49,11 @@ jobs:
       fail-fast: false
       max-parallel: 8
       matrix:
-        shard: [0,1,2,3,4,5,6,7]
+        shard: ${{ fromJSON(inputs.batch_only && '[0]' || '[0,1,2,3,4,5,6,7]') }}
     steps:
       - uses: actions/checkout@v4
       - name: Enumerate FAR candidates or solve one target by SMT
+        if: ${{ !inputs.batch_only }}
         env:
           SOLVER_CODE: ${{ inputs.solver_code }}
         run: |
@@ -99,6 +104,7 @@ jobs:
             /tmp/roster_far resources/BB6_holdouts_663_2026-10-16.txt ${{ matrix.shard }} 8 "$SAMPLES" "$MAX_DFA" | tee -a /tmp/hits.txt
           fi
       - name: Install Lean if there is a candidate
+        if: ${{ !inputs.batch_only }}
         run: |
           if [[ -s /tmp/hits.txt ]]; then
             curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
@@ -106,6 +112,7 @@ jobs:
             echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           fi
       - name: Independently check every hit against infinite-tape semantics
+        if: ${{ !inputs.batch_only }}
         run: |
           set -euo pipefail
           if [[ ! -s /tmp/hits.txt ]]; then echo 'No candidate found in this shard'; exit 0; fi
@@ -145,11 +152,21 @@ jobs:
           lean /tmp/a7-hard/Hits.lean | tee /tmp/hit-proof.log
           if grep -qE 'sorryAx|native_decide' /tmp/hit-proof.log; then exit 1; fi
           cat /tmp/hits.txt >> "$GITHUB_STEP_SUMMARY"
+      - name: Compile archived depth-eight batch
+        if: ${{ inputs.batch_only }}
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          export PATH="$HOME/.elan/bin:$PATH"
+          python tools/lean_compile_closure.py --workdir /tmp/a7-hard --jobs 4 im-results/agent7-far/DepthEightBatch.lean | tee /tmp/batch-proof.log
+          if grep -qE 'sorryAx|native_decide' /tmp/batch-proof.log; then exit 1; fi
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: far-hard-shard-${{ matrix.shard }}
           path: |
+            /tmp/batch-proof.log
             /tmp/hits.txt
             /tmp/a7-hard/Hits.lean
             /tmp/hit-proof.log
