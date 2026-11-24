@@ -1,5 +1,4 @@
 import CompressedMemo
-import PurePowerSource
 
 namespace BB6.Agent12CompressedMemoAudit
 open BB6.Agent12CompressedMemo BB6.Agent12PurePower
