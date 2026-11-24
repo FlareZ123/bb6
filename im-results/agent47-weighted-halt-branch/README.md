@@ -49,3 +49,10 @@ The adapter passed the Agent13 weighted source-closure workflow [run 46](https:/
 `CryptidsWeightedLeaves.lean` instantiates the adapter for the six pinned Cryptids nonhalting machines using their existing `literal_r1_never` through `literal_r6_never` proofs. The combined upstream-source/weighted-TNF build is being checked in [shared-source run 46](https://github.com/FlareZ123/bb6/actions/runs/45391698785).
 
 These are standalone certificates for the erased-row cylinders. They do not, by themselves, prove that those cylinders are descendants of a particular canonical first-hole expansion tree; that requires a refinement-path argument or a separate cover/graft composition.
+
+
+### Exploratory Cryptids run-support trace
+
+`simulate_cryptids_first_visits.py` parses the six pinned RLE definitions and deterministically records first visits to state/symbol rows. The current trace visits all 11 ordinary rows before the unique halt row for each machine, after respectively 53, 36, 39, 16, 23, and 63 moves.
+
+This is reproducible computational evidence, not a Lean theorem and not a proof of a canonical TNF refinement path. It suggests that the erased-row leaves may be reached after the corresponding sequence of first-hole refinements; formalizing that path remains open.
