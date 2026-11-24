@@ -585,7 +585,7 @@ private theorem m2EvenSix_q4_prefix_head_bound
   have hlinear : linearRightOnes T2 (hN+2) (3*a) := by
     have hhead : hN+2 = h-(3*a:Int) := by rw [hN_eq]; omega
     rw [hhead]
-    exact m2EvenSixQ4CutTape_linearRightRightOnes a b h ha
+    exact m2EvenSixQ4CutTape_linearRightOnes a b h ha
   intro k hk d hd
   let p1 := 3*N
   let p2 := p1+38
