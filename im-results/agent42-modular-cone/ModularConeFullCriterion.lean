@@ -65,6 +65,7 @@ theorem blank_halts_iff_full_modular :
       have hr : BB6.Agent3.CReach 1 k :=
         (BB6.Agent3ValSix.valSixMixedRootDecision_iff 1 k).mp hroot
       have hstop : k+3*m+4=2^(2*m+3) := by
+        have hbound := low_stop_bound_full m
         dsimp [k]
         omega
       have hC70 : m%128 ≠ 18 := by
@@ -83,6 +84,7 @@ theorem blank_halts_iff_full_modular :
       have hr : BB6.Agent3.CReach (2*j+3) k :=
         (BB6.Agent3ValSix.valSixMixedRootDecision_iff (2*j+3) k).mp hroot
       have hstop : k+j+3*m+5=2^(2*m+2)*(j+3) := by
+        have hbound := high_stop_bound_full j m
         dsimp [k]
         omega
       have hC70 :
