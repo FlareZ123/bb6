@@ -36,6 +36,7 @@ theorem odd_even_nonpower_parent_iff
       · simp [sectionPreimageCriterion,ha0,hk0] at hp
       · by_cases hk1 : k=1
         · simp [sectionPreimageCriterion,ha0,hk0,hk1] at hp
+          omega
         · simp only [sectionPreimageCriterion,if_pos ha0,
               if_neg hk0,if_neg hk1] at hp
           rcases hp with ⟨n,hpow,_⟩
@@ -61,7 +62,7 @@ theorem odd_even_nonpower_parent_iff
                 have hpower : x+y+1=2^(n+4) := by
                   calc
                     x+y+1 = 2^n*16 := hpow
-                    _ = 2^n*2^4 := by congr 1; decide
+                    _ = 2^n*2^4 := by congr 1
                     _ = 2^(n+4) := by rw [← Nat.pow_add]
                 exact (hnp (n+4) hpower).elim
       · have ha2 : 2≤a := by omega
