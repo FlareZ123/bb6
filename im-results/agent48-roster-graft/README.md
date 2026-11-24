@@ -25,7 +25,7 @@ The adaptive tree then splits only partial children that still have exact side-w
 | 10 | C/1; if 13, D/0; if 11, C/0; if 17, E/0 |
 | 23 | D/1; if 19, E/1; if 5, E/0; if 15, C/1; also if E/1=23, F/0; if 11, D/0 |
 
-The Lean file defines all 18 internal split nodes as explicit refinements and proves that each split row is unassigned.
+The Lean file defines all 18 internal split nodes as explicit refinements and proves that each split row is unassigned. It also proves the 115-leaf and 441-residual cardinalities by kernel reduction.
 
 ## Combined theorem
 
@@ -50,6 +50,6 @@ The side-witness data/checker is factored into `SideWitnessCore.lean`, which imp
 
 ## Validation status
 
-The combined theorem and exact list cardinalities are in Lean source and are intended to be compiled through the existing manual `agent13-coverage.yml` target `weighted-tnf-roster-agent47-graft`. The first compile exposed a local proof-script issue in `splitChildren_cover`; the proof was corrected and the target is being rerun. Until that CI run succeeds, treat the combined theorem as unverified source, not an accepted result.
+The combined theorem and exact list cardinalities are in Lean source. `Agent48RosterGraftComposition.lean` additionally exposes the conditional `ExactBB6` theorem: if each of the 441 residual tables has a `Cover (WeightedBound 7014)` and the existing champion witness is supplied, the standard `WeightedTNFCertificate` normalization proves `ExactBB6 B`. This reuses `WeightedFirstOneCover` rather than duplicating global normalization. Both modules are intended to be compiled through the existing manual `agent13-coverage.yml` target `weighted-tnf-roster-agent47-graft`. The first compile exposed a local proof-script issue in `splitChildren_cover`; the proof was corrected and the adaptive tree expanded. Until the rerun succeeds, treat the combined theorems as unverified source, not accepted results.
 
 This graft does **not** decide the 441 remaining residual cylinders and does not establish the universal upper bound for BB(6). It is an exact reduction of the first-one frontier using already checked side-cycle certificates.
