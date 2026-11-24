@@ -3,7 +3,7 @@ import SideCycle
 import R1RF
 import R1Certificate
 
-set_option maxRecDepth 24000
+set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 
 namespace BB6.Agent47R1Parent
@@ -71,11 +71,29 @@ theorem partialEq_sound (p q : PartialMachine) (h : partialEq p q = true) : p = 
   have hb : b ∈ [false,true] := by cases b <;> simp
   exact of_decide_eq_true (List.all_eq_true.mp hi b hb)
 
+/-- Execute on a finite zipper rather than a long function-update chain. -/
+def zipQuery (p : PartialMachine) (n : Nat) : Option Slot :=
+  (BB6Coverage.Agent50Zipper.zrun p n start).map (fun z => (z.q,z.l.headD false))
+
+theorem zipQuery_sound (p : PartialMachine) (n : Nat) (s : Slot)
+    (h : zipQuery p n = some s) :
+    (knownRun p n).map readSlot = some s := by
+  unfold zipQuery at h
+  cases hz : BB6Coverage.Agent50Zipper.zrun p n start with
+  | none => simp [hz] at h
+  | some z =>
+    have hr := BB6Coverage.Agent50Zipper.zrun_sound p (weightedTNFDefaultCompletion p)
+      (weightedTNFDefaultCompletion_compatible p) n start z hz
+    rw [initial_embed] at hr
+    rw [weightedTNFKnownRun_eq_defaultRun,hr]
+    simpa only [hz,Option.map_some,BB6Coverage.Agent50Zipper.read_embed] at h ⊢
+    exact h
+
 def siblingOK (s : SiblingSpec) (mv : Move) : Bool :=
   let p := s.child mv
   match s.witness mv with
   | .last n =>
-    decide ((knownRun p n).map readSlot = some s.lastSlot) &&
+    decide (zipQuery p n = some s.lastSlot) &&
       (decide (p s.lastSlot = none) &&
         (restOK p s.lastSlot && weightOK p s.lastSlot n s.bound))
   | .cycle entry period right boundary =>
@@ -138,11 +156,11 @@ def siblingCert (s : SiblingSpec) (v : ValidSpec s)
     weightedTNFNoAssignedHalt_refine s.parent s.hole mv (spec_nohalt s)
   cases he : s.witness mv with
   | last n =>
-    have h : ((knownRun (s.child mv) n).map readSlot = some s.lastSlot) ∧
+    have h : (zipQuery (s.child mv) n = some s.lastSlot) ∧
         s.child mv s.lastSlot = none ∧ restOK (s.child mv) s.lastSlot = true ∧
         weightOK (s.child mv) s.lastSlot n s.bound = true := by
       simpa only [siblingOK, he, Bool.and_eq_true, decide_eq_true_eq] using hc
-    exact lastCertAt _ n s.lastSlot s.bound hr h.1 h.2.1 h.2.2.1 h.2.2.2
+    exact lastCertAt _ n s.lastSlot s.bound hr (zipQuery_sound _ _ _ h.1) h.2.1 h.2.2.1 h.2.2.2
   | cycle entry period right boundary =>
     have h : 0 < period ∧
         finiteSideCycleCheck (s.child mv) entry period right boundary = true := by
@@ -226,7 +244,7 @@ theorem attain_last (s : SiblingSpec) (v : ValidSpec s) (mv : Move) (n : Nat)
     (hw : s.witness mv = .last n) :
     ∃ m, compatible s.parent m ∧ HaltsAfter m n := by
   have hc := sibling_checked s v mv
-  have h : ((knownRun (s.child mv) n).map readSlot = some s.lastSlot) ∧
+  have h : (zipQuery (s.child mv) n = some s.lastSlot) ∧
       s.child mv s.lastSlot = none ∧ restOK (s.child mv) s.lastSlot = true ∧
       weightOK (s.child mv) s.lastSlot n s.bound = true := by
     simpa only [siblingOK, hw, Bool.and_eq_true, decide_eq_true_eq] using hc
@@ -241,7 +259,7 @@ theorem attain_last (s : SiblingSpec) (v : ValidSpec s) (mv : Move) (n : Nat)
   cases hrun : knownRun (s.child mv) n with
   | none => simp [hrun] at h
   | some c =>
-    have hs : readSlot c = s.lastSlot := by simpa [hrun] using h.1
+    have hs : readSlot c = s.lastSlot := by simpa [hrun] using (zipQuery_sound _ _ _ h.1)
     apply first_hole_halts (s.child mv) n c hrun
     · simpa [hs] using h.2.1
     · simpa [hs] using hm
