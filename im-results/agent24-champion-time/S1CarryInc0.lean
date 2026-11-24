@@ -53,7 +53,16 @@ theorem s1Config_carryInput_match
         carryInputBit r x := by
   intro x harea
   by_cases hx0 : x ≤ 0
-  · obtain ⟨i, rfl⟩ : ∃ i : Nat, x = -(i:Int) := by omega
+  · let i : Nat := Int.toNat (-x)
+    have hxEq : x = -(i:Int) := by
+      dsimp [i]
+      have hnonneg : 0 ≤ -x := Int.neg_nonneg.mpr hx0
+      have hcast : (Int.toNat (-x) : Int) = -x :=
+        Int.toNat_of_nonneg hnonneg
+      calc
+        x = -(-x) := by simp
+        _ = -(Int.toNat (-x) : Int) := by rw [hcast]
+    rw [hxEq] at harea
     have hbound : i ≤ 3*r+2 := by
       simp [carryInputArea] at harea
       omega
@@ -64,14 +73,42 @@ theorem s1Config_carryInput_match
             (d1pow r ++ d0 ++ binDec len q ++
               markerWord m ++ d0 ++ binDec L n ++ lh) i :=
       s1Config_left_carryCells L n m len q r b h i hq
-    have hside := sideBit_carryPrefixInput r
-      (binDec len q ++ markerWord m ++ d0 ++ binDec L n ++ lh) i hbound
+    have hside :
+        sideBit
+          (d1pow r ++ d0 ++ binDec len q ++
+            markerWord m ++ d0 ++ binDec L n ++ lh) i =
+          decide (i < 3*r ∨ i = 3*r+2) := by
+      simpa only [List.append_assoc] using
+        sideBit_carryPrefixInput r
+          (binDec len q ++ markerWord m ++ d0 ++ binDec L n ++ lh) i hbound
+    have hprop :
+        (-(i:Int) = -(3*(r:Int))-2 ∨
+          (-(3*(r:Int))+1 ≤ -(i:Int) ∧ -(i:Int) ≤ 0) ∨
+          -(i:Int)=2 ∨ -(i:Int)=3 ∨ -(i:Int)=4) ↔
+        (i < 3*r ∨ i = 3*r+2) := by omega
     have hbit : carryInputBit r (-(i:Int)) =
         decide (i < 3*r ∨ i = 3*r+2) := by
-      simp [carryInputBit] <;> omega
+      simp [carryInputBit,hprop]
     have hcoord : h + (-(i:Int)) = h-(i:Int) := by omega
-    rw [hcoord,hsource,hside,hbit]
-  · obtain ⟨i, hxEq⟩ : ∃ i : Nat, x = 1+(i:Int) := by omega
+    calc
+      (s1Config L n m (len+1+r) ((2*q+1)*2^r) b h).tape (h+x) =
+          (s1Config L n m (len+1+r) ((2*q+1)*2^r) b h).tape
+            (h-(i:Int)) := by rw [hxEq,hcoord]
+      _ = sideBit
+          (d1pow r ++ d0 ++ binDec len q ++
+            markerWord m ++ d0 ++ binDec L n ++ lh) i := hsource
+      _ = decide (i < 3*r ∨ i = 3*r+2) := hside
+      _ = carryInputBit r (-(i:Int)) := hbit.symm
+  · let i : Nat := Int.toNat (x-1)
+    have hxEq : x = 1+(i:Int) := by
+      dsimp [i]
+      have hnonneg : 0 ≤ x-1 := by omega
+      have hcast : (Int.toNat (x-1) : Int) = x-1 :=
+        Int.toNat_of_nonneg hnonneg
+      calc
+        x = 1+(x-1) := by omega
+        _ = 1+(Int.toNat (x-1) : Int) := by rw [hcast]
+    rw [hxEq] at harea
     have hbound : i ≤ 5 := by
       simp [carryInputArea] at harea
       omega
@@ -86,8 +123,16 @@ theorem s1Config_carryInput_match
         carryInputBit r (1+(i:Int)) := by
       rcases hc with h0 | h1 | h2 | h3 | h4 | h5
       all_goals subst i <;> simp [sideBit,carryInputBit] <;> omega
-    rw [hxEq,hsource,hside]
-
+    rw [hxEq]
+    have hcoord : h + (1+(i:Int)) = h+1+(i:Int) := by omega
+    calc
+      (s1Config L n m (len+1+r) ((2*q+1)*2^r) b h).tape
+          (h+(1+(i:Int))) =
+        (s1Config L n m (len+1+r) ((2*q+1)*2^r) b h).tape
+          (h+1+(i:Int)) := by rw [hcoord]
+      _ = sideBit ([false,true,true,true,false,false] ++ d1pow (b+1)) i :=
+        hsource
+      _ = carryInputBit r (1+(i:Int)) := hside
 /-- The source S1 right side supplies the entire 111^(b+1) run
 needed by the even counted suffix. -/
 theorem s1Config_carryRightOnes
@@ -115,7 +160,6 @@ theorem s1Config_carryRightOnes
     simp [hlen,hnot,hidx]
     exact sideBit_d1pow_true (b+1) i hi
   rw [hcoord,hsource,hside]
-  exact hside
 
 /-- Direct composition interface for prefix theorems already shifted
 to the source configuration's absolute head coordinate. -/
