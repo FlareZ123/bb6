@@ -37,21 +37,23 @@ theorem sourceChildAsCutNode (x : SourceNode) (slot : BB6Coverage.Slot)
         existingChild (sourceNodeAsCutNode x)
       else
         freshChild (sourceNodeAsCutNode x) := by
-  apply congrArg₂ Node.mk
-  · simp [sourceNodeAsCutNode,
-      sourceChild_holes_length x slot mv hwf hhole,
-      existingChild, freshChild]
-  · by_cases hlt : mv.next.val < x.fresh
-    · have hne : mv.next.val ≠ x.fresh := by omega
-      have hf : x.fresh < 7 := by
-        have h := hwf.2.2.1
-        omega
-      simp [hlt, sourceNodeAsCutNode, sourceChild, sourceChildFresh, hne,
-        existingChild, freshChild, Nat.mod_eq_of_lt hf]
-    · have heq : mv.next.val = x.fresh := by omega
-      have hfresh : x.fresh < 6 := by omega
-      simp [hlt, heq, sourceNodeAsCutNode, sourceChild, sourceChildFresh,
-        existingChild, freshChild,
+  by_cases hlt : mv.next.val < x.fresh
+  · have hne : mv.next.val ≠ x.fresh := by omega
+    have hf : x.fresh < 7 := by
+      have h := hwf.2.2.1
+      omega
+    simp only [if_pos hlt, existingChild, sourceNodeAsCutNode]
+    apply (Node.mk.injEq).2
+    constructor
+    · simp [sourceChild_holes_length x slot mv hwf hhole]
+    · simp [sourceChild, sourceChildFresh, hne, Nat.mod_eq_of_lt hf]
+  · have heq : mv.next.val = x.fresh := by omega
+    have hfresh : x.fresh < 6 := by omega
+    simp only [if_neg hlt, freshChild, sourceNodeAsCutNode]
+    apply (Node.mk.injEq).2
+    constructor
+    · simp [sourceChild_holes_length x slot mv hwf hhole]
+    · simp [sourceChild, sourceChildFresh, heq,
         Nat.mod_eq_of_lt (by omega : x.fresh < 7),
         Nat.mod_eq_of_lt (by omega : x.fresh + 1 < 7)]
 
@@ -71,7 +73,7 @@ theorem cutNodeWeight_sourceChild (x : SourceNode) (slot : BB6Coverage.Slot)
     have hfresh : x.fresh < 6 := by omega
     have hcut : (sourceNodeAsCutNode x).cut.val < 6 := by
       simpa [sourceNodeAsCutNode_cut x hwf] using hfresh
-    simp [hlt, heq, cutNodeWeight_fresh (sourceNodeAsCutNode x) hcut,
+    simp [heq, cutNodeWeight_fresh (sourceNodeAsCutNode x) hcut,
       sourceNodeAsCutNode_cut x hwf, sourceNodeAsCutNode_holes x]
 
 #print axioms sourceNodeAsCutNode_cut
