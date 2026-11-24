@@ -1,6 +1,6 @@
 # Endpoint-independent full-P carry prefix for P1
 
-Status: the source theorem and its carry automaton compile in Lean 4.36.0-rc2 via the existing manual Agent43 wall-telescoping workflow (run **45362274804**, success). This is an intermediate research result, not a BB(6) solution or a machine-halting conclusion.
+Status: the original prefix theorem and its carry automaton compile in Lean 4.36.0-rc2 via the existing manual Agent43 wall-telescoping workflow (run **45362274804**, success). This is an intermediate research result, not a BB(6) solution or a machine-halting conclusion. The new exact-endpoint transport below has locally compiled arithmetic and carry-block lemmas; its unchanged-source wrapper is awaiting focused compilation.
 
 ## Main theorem
 
@@ -52,6 +52,20 @@ to be divisible by `2^K`. At position `j`, a carry `c` has:
 
 An empty layer at `K` therefore proves `m<K` for every source history. The initial carry is 1; when `Q` is odd this forces `x₀=1`, matching the source fact `0∈A`.
 
+## Exact endpoint transport and direct right-five test
+
+[ExactEndpoint.lean](ExactEndpoint.lean) gives a stronger source-level interface. Set (v=(d-1)/2) and (Q=7\cdot2^n-(n+3)). A genuine inverseAt edge of depth (t), starting at cumulative cost (m), satisfies the exact equation
+[
+v+(Q-m)=2^{t+1}v'.
+]
+It therefore corresponds to one selected bit followed by exactly (t) omitted bits. Induction on the genuine CountCone history yields the candidate theorem
+```lean
+(d-1)/2 ∈ fullCarryStates (7*2^n-(n+3)) 0 [1] m
+```
+with no additional endpoint, cost, or depth restriction. The proof uses the original inverseAt power equation and conserved mass, rather than a simulator or heuristic.
+
+For d=5 the required carry is exactly **2**. Thus one finite certificate excluding carry 2 from each layer before an empty layer would close the whole critical right-five gate for that index, bypassing both high-reset and shifted-wall branches. The generic carry-block lemmas and source-equation arithmetic compiled locally with Lean 4.36.0-rc2 and ordinary axioms only against the exact copied carry definitions. The unchanged-source wrapper and concrete six-index certificates are not yet accepted. Agent43 is investigating the latter; the two agents are coordinating this direct test.
+
 ## Connection to the six finite full-wall carry survivors
 
 The existing experimental `WallFullDPTo10000.js` scan reports full-P empty layers at:
@@ -77,4 +91,4 @@ The existing manual workflow `.github/workflows/agent43-p1-wall-telescoping.yml`
 
 ## Next useful step
 
-Formalize the six full-P carry empty-layer certificates (preferably with a compact certificate/invariant rather than a giant `decide` computation), then combine them with the high-reset branch. In parallel, retain the existing source wall-list bridge for the low-reset branch. Do not promote the JS scan itself to a theorem.
+Accept the exact endpoint source wrapper, and formalize six full-P certificates excluding carry 2 up to each empty layer. This direct endpoint test supersedes the need to certify the two branches separately if successful. The existing wall and prefix proofs remain useful for unbounded parameter classes. Do not promote the JS scan itself to a theorem.

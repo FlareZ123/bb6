@@ -49,4 +49,7 @@ jobs:
           lean -o "$CARRY/WallPrefixListBridge.olean" "$CARRY/WallPrefixListBridge.lean"
           lean -o "$CARRY/wall_prefix_carry_cylinders.olean" "$CARRY/wall_prefix_carry_cylinders.lean"
           lean -o "$AG43/WallListSource.olean" "$AG43/WallListSource.lean"
-          lean "$AG28/../agent28-p1-full-prefix/FullPrefix.lean"
+          FULL=im-results/agent28-p1-full-prefix
+          export LEAN_PATH="$LEAN_PATH:$FULL"
+          lean -o "$FULL/FullPrefix.olean" "$FULL/FullPrefix.lean"
+          lean "$FULL/ExactEndpoint.lean"
