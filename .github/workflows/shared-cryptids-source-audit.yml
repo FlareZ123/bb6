@@ -517,11 +517,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for m in TNFPilot SideCycle SparseZipper AlternatingResidualSweep R3Sweep R5Sweep R5ZeroSweep CryptidSiblings CryptidGraft; do
+          for m in TNFPilot SideCycle SparseZipper AlternatingResidualSweep AlternatingVariants R3Sweep R5Sweep R5ZeroSweep CryptidSiblings CryptidGraft; do
             cp "$GITHUB_WORKSPACE/im-results/agent50-weighted-tnf-pilot/$m.lean" BB6Agent42/
           done
           export LEAN_PATH=BB6Agent42
-          for m in TNFPilot SideCycle SparseZipper AlternatingResidualSweep R3Sweep R5Sweep R5ZeroSweep CryptidSiblings CryptidGraft; do
+          for m in TNFPilot SideCycle SparseZipper AlternatingResidualSweep AlternatingVariants R3Sweep R5Sweep R5ZeroSweep CryptidSiblings CryptidGraft; do
             log="/tmp/cryptids-source-audit/$m.log"
             lake env lean -o "BB6Agent42/$m.olean" "BB6Agent42/$m.lean" 2>&1 | tee "$log"
             if grep -Eq 'sorryAx|native_decide' "$log"; then

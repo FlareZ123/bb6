@@ -1,6 +1,7 @@
 import TNFPilot
 import SideCycle
 import AlternatingResidualSweep
+import AlternatingVariants
 
 set_option maxRecDepth 24000
 set_option maxHeartbeats 0
@@ -634,31 +635,55 @@ theorem remainingRootRoster_sound :
 /-- Last-hole or directional-cycle certificates for the ordinary children
     of a two-hole residual. All 24 moves are checked, and the halt sibling
     is charged separately. -/
+def lastCert92 (p : PartialMachine) (n : Nat) (hole : Slot)
+    (hf : p initialSlot = some (some ⟨true,true,1⟩))
+    (hread : (knownRun p n).map readSlot = some hole)
+    (hh : p hole = none) (hrest : restOK p hole = true)
+    (hw : weightOK p hole n 92 = true) :
+    WeightedTNFCertificate 92 p 6 := by
+  cases hr : knownRun p n with
+  | none => simp [hr] at hread
+  | some c =>
+    have hs : readSlot c = hole := by simpa [hr] using hread
+    exact .lastHole hf (support6 p) (by decide) hr
+      (by simpa [hs] using hh)
+      (by simpa [hs] using restOK_sound p hole hrest)
+      (by simpa [hs] using weightOK_sound p hole n 92 hw)
+
 inductive DeepChildWitness where
   | last (n : Nat) (s : Slot)
   | side (entry period : Nat) (right : Bool) (boundary : Int)
+  | alternating (i : Fin 17)
 
 def deepChildOK (p : PartialMachine) : DeepChildWitness → Bool
   | .last n s =>
       decide ((knownRun p n).map readSlot = some s) &&
-      (decide (p s = none) && (restOK p s && weightOK p s n 84))
+      (decide (p s = none) && (restOK p s && weightOK p s n 92))
   | .side entry period right boundary =>
       decide (0 < period) && finiteSideCycleCheck p entry period right boundary
+  | .alternating i => decide (packTable p = packTable (BB6Coverage.Agent50AlternatingVariants.vt i))
 
 theorem deepChildOK_sound (p : PartialMachine) (w : DeepChildWitness)
     (hroot : p initialSlot = some (some ⟨true,true,1⟩))
-    (h : deepChildOK p w = true) : ∀ m, compatible p m → WeightedBound 84 m := by
+    (h : deepChildOK p w = true) : ∀ m, compatible p m → WeightedBound 92 m := by
   cases w with
   | last n s =>
     have hh : (knownRun p n).map readSlot = some s ∧ p s = none ∧
-        restOK p s = true ∧ weightOK p s n 84 = true := by
+        restOK p s = true ∧ weightOK p s n 92 = true := by
       simpa only [deepChildOK, Bool.and_eq_true, decide_eq_true_eq] using h
-    exact (lastCert p n s hroot hh.1 hh.2.1 hh.2.2.1 hh.2.2.2).sound
+    exact (lastCert92 p n s hroot hh.1 hh.2.1 hh.2.2.1 hh.2.2.2).sound
   | side entry period right boundary =>
     have hh : 0 < period ∧ finiteSideCycleCheck p entry period right boundary = true := by
       simpa only [deepChildOK, Bool.and_eq_true, decide_eq_true_eq] using h
     intro m hm
-    exact weighted_never 84 m (finiteSideCycleCheck_sound p entry period right boundary hh.1 hh.2 m hm)
+    exact weighted_never 92 m (finiteSideCycleCheck_sound p entry period right boundary hh.1 hh.2 m hm)
+  | alternating i =>
+    have he : packTable p = packTable (BB6Coverage.Agent50AlternatingVariants.vt i) := by
+      simpa only [deepChildOK, decide_eq_true_eq] using h
+    have hp := packTable_injective he
+    subst p
+    intro m hm
+    exact weighted_never 92 m (BB6Coverage.Agent50AlternatingVariants.never i m hm)
 
 structure DeepSiblingWitness where
   n : Nat
@@ -668,15 +693,15 @@ structure DeepSiblingWitness where
 def deepSiblingOK (p : PartialMachine) (w : DeepSiblingWitness) : Bool :=
   decide (p initialSlot = some (some ⟨true,true,1⟩)) &&
   (decide ((knownRun p w.n).map readSlot = some w.slot) &&
-  (decide (p w.slot = none) && (weightOK p w.slot w.n 84 &&
+  (decide (p w.slot = none) && (weightOK p w.slot w.n 92 &&
    allMoves.all fun mv => (allMoves.zip w.children).any fun e =>
      decide (e.1 = mv) && deepChildOK (refine p w.slot (some e.1)) e.2)))
 
 theorem deepSiblingOK_sound (p : PartialMachine) (w : DeepSiblingWitness)
-    (h : deepSiblingOK p w = true) : ∀ m, compatible p m → WeightedBound 84 m := by
+    (h : deepSiblingOK p w = true) : ∀ m, compatible p m → WeightedBound 92 m := by
   have hh : p initialSlot = some (some ⟨true,true,1⟩) ∧
       (knownRun p w.n).map readSlot = some w.slot ∧ p w.slot = none ∧
-      weightOK p w.slot w.n 84 = true ∧
+      weightOK p w.slot w.n 92 = true ∧
       (allMoves.all fun mv => (allMoves.zip w.children).any fun e =>
         decide (e.1 = mv) && deepChildOK (refine p w.slot (some e.1)) e.2) = true := by
     simpa only [deepSiblingOK, Bool.and_eq_true, decide_eq_true_eq] using h
@@ -695,9 +720,9 @@ theorem deepSiblingOK_sound (p : PartialMachine) (w : DeepSiblingWitness)
     | none => simp [hr] at hread
     | some c =>
       have hs : readSlot c = w.slot := by simpa [hr] using hread
-      exact first_hole_weighted_halt 84 p w.n c hroot hr
+      exact first_hole_weighted_halt 92 p w.n c hroot hr
         (by simpa [hs] using hhole)
-        (by simpa [hs] using weightOK_sound p w.slot w.n 84 hw)
+        (by simpa [hs] using weightOK_sound p w.slot w.n 92 hw)
         m (by simpa [hs] using href none ha)
   | some mv =>
     obtain ⟨⟨v,cw⟩,_,hc⟩ := List.any_eq_true.mp
@@ -859,13 +884,188 @@ def deepSiblingIndices : List (Nat × DeepSiblingWitness) := [
     .side 32 1 false (-2),
     .side 34 1 false (0),
     .side 32 1 false (-2),
-    .side 33 9 false (1)]⟩)]
+    .side 33 9 false (1)]⟩),
+  (88,⟨22,(0,true),[
+    .last 27 (4,false),
+    .side 7 17 true (-1),
+    .side 26 10 false (0),
+    .side 22 4 true (2),
+    .side 20 25 false (4),
+    .side 10 13 true (0),
+    .side 10 15 true (0),
+    .side 10 13 true (0),
+    .alternating 0,
+    .last 25 (4,false),
+    .last 25 (4,false),
+    .last 25 (4,false),
+    .last 41 (4,false),
+    .side 20 15 false (4),
+    .alternating 1,
+    .alternating 2,
+    .last 23 (4,false),
+    .last 23 (4,false),
+    .last 23 (4,false),
+    .last 23 (4,false),
+    .last 43 (4,false),
+    .side 9 15 true (-1),
+    .alternating 3,
+    .side 21 2 true (2)]⟩),
+  (89,⟨22,(0,true),[
+    .last 27 (4,false),
+    .side 12 15 true (2),
+    .side 26 14 false (2),
+    .side 22 4 true (4),
+    .side 1 38 true (-1),
+    .side 12 11 true (2),
+    .side 10 13 true (0),
+    .side 12 11 true (2),
+    .alternating 4,
+    .last 25 (4,false),
+    .last 25 (4,false),
+    .last 25 (4,false),
+    .side 23 17 false (3),
+    .side 23 29 false (5),
+    .alternating 5,
+    .side 17 6 true (3),
+    .last 23 (4,false),
+    .last 23 (4,false),
+    .last 23 (4,false),
+    .last 23 (4,false),
+    .side 12 13 true (2),
+    .side 0 26 true (-1),
+    .side 21 2 true (3),
+    .side 0 26 true (-1)]⟩),
+  (90,⟨22,(0,true),[
+    .side 20 64 false (4),
+    .side 12 17 true (2),
+    .side 26 10 false (0),
+    .side 24 4 true (4),
+    .side 20 17 false (4),
+    .side 42 14 false (2),
+    .side 28 11 false (1),
+    .side 26 8 true (1),
+    .side 20 15 false (4),
+    .side 54 21 false (2),
+    .side 26 12 false (2),
+    .side 20 4 true (2),
+    .side 18 15 false (5),
+    .side 33 18 false (0),
+    .side 20 13 false (4),
+    .last 33 (4,false),
+    .last 23 (4,false),
+    .last 27 (4,false),
+    .last 23 (4,false),
+    .alternating 6,
+    .last 30 (4,false),
+    .side 8 15 true (-1),
+    .side 23 7 false (1),
+    .side 21 4 true (2)]⟩),
+  (91,⟨22,(0,true),[
+    .side 20 30 false (4),
+    .side 12 15 true (2),
+    .side 28 12 false (0),
+    .side 22 4 true (4),
+    .last 31 (4,false),
+    .side 12 11 true (2),
+    .side 62 3 false (-2),
+    .side 12 11 true (2),
+    .last 27 (4,false),
+    .last 25 (4,false),
+    .side 20 4 true (3),
+    .last 25 (4,false),
+    .last 24 (4,false),
+    .side 3 34 true (-1),
+    .last 33 (4,false),
+    .alternating 7,
+    .side 23 15 false (3),
+    .last 23 (4,false),
+    .alternating 8,
+    .last 23 (4,false),
+    .last 91 (4,false),
+    .side 21 15 true (3),
+    .alternating 9,
+    .side 21 15 true (3)]⟩),
+  (95,⟨24,(0,true),[
+    .last 29 (4,false),
+    .side 7 19 true (-1),
+    .side 26 12 false (2),
+    .side 22 4 true (2),
+    .side 20 29 false (4),
+    .side 10 15 true (0),
+    .side 10 17 true (0),
+    .side 10 15 true (0),
+    .alternating 10,
+    .last 27 (4,false),
+    .last 27 (4,false),
+    .last 27 (4,false),
+    .last 45 (4,false),
+    .side 20 17 false (4),
+    .alternating 11,
+    .alternating 12,
+    .last 25 (4,false),
+    .last 25 (4,false),
+    .last 25 (4,false),
+    .last 25 (4,false),
+    .last 29 (4,false),
+    .side 7 19 true (-1),
+    .alternating 13,
+    .side 21 4 true (2)]⟩),
+  (100,⟨23,(4,false),[
+    .last 24 (0,true),
+    .last 24 (0,true),
+    .last 24 (0,true),
+    .last 24 (0,true),
+    .alternating 14,
+    .side 20 4 true (2),
+    .side 24 9 false (2),
+    .last 26 (0,true),
+    .side 10 15 true (0),
+    .side 11 13 true (1),
+    .side 18 19 false (5),
+    .side 11 13 true (1),
+    .side 22 2 true (2),
+    .side 16 12 true (2),
+    .alternating 15,
+    .last 33 (0,true),
+    .last 33 (0,true),
+    .side 1 42 true (-1),
+    .side 20 21 false (4),
+    .side 33 1 true (7),
+    .last 46 (0,true),
+    .last 48 (0,true),
+    .last 33 (0,true),
+    .last 25 (0,true)]⟩),
+  (110,⟨23,(0,true),[
+    .side 20 30 false (4),
+    .side 12 13 true (2),
+    .side 28 12 false (0),
+    .side 12 13 true (2),
+    .side 24 15 false (3),
+    .last 27 (4,false),
+    .side 24 9 false (2),
+    .last 27 (4,false),
+    .side 98 1 false (-2),
+    .side 25 35 false (5),
+    .last 31 (4,false),
+    .side 2 38 true (-1),
+    .last 25 (4,false),
+    .alternating 16,
+    .side 24 17 false (3),
+    .last 35 (4,false),
+    .last 34 (4,false),
+    .last 24 (4,false),
+    .last 28 (4,false),
+    .last 24 (4,false),
+    .side 20 30 false (4),
+    .side 28 1 true (6),
+    .last 31 (4,false),
+    .side 28 1 true (6)]⟩)]
 
 def deepSiblingRoster : List (PackedTable × DeepSiblingWitness) :=
   deepSiblingIndices.filterMap fun (i,w) =>
     executableRootRoster[i]?.map fun e => (e.2,w)
 
-theorem deepSiblingRoster_count : deepSiblingRoster.length = 6 := by decide
+theorem deepSiblingRoster_count : deepSiblingRoster.length = 13 := by decide
 
 theorem deepSiblingRoster_checked :
     deepSiblingRoster.all (fun (t,w) => deepSiblingOK (unpackTable t) w) = true := by
@@ -875,7 +1075,7 @@ def deepSiblingHasWitness (t : PackedTable) : Bool :=
   deepSiblingRoster.any fun e => decide (e.1 = t)
 
 theorem deepSiblingHasWitness_sound (t : PackedTable) (h : deepSiblingHasWitness t = true) :
-    ∀ m, compatible (unpackTable t) m → WeightedBound 84 m := by
+    ∀ m, compatible (unpackTable t) m → WeightedBound 92 m := by
   obtain ⟨⟨u,w⟩,hmem,heq⟩ := List.any_eq_true.mp h
   have he : u = t := of_decide_eq_true heq
   subst u
@@ -885,14 +1085,14 @@ theorem deepSiblingHasWitness_sound (t : PackedTable) (h : deepSiblingHasWitness
 def reducedRootRoster : List PackedResidual :=
   remainingRootRoster.filter fun e => !deepSiblingHasWitness e.2
 
-theorem reducedRootRoster_count : reducedRootRoster.length = 148 := by decide
+theorem reducedRootRoster_count : reducedRootRoster.length = 141 := by decide
 
 theorem reducedRootRoster_sound :
-    ∀ m, compatible root m → WeightedBound 84 m ∨
+    ∀ m, compatible root m → WeightedBound 92 m ∨
       ∃ e ∈ reducedRootRoster, compatible (unpackTable e.2) m := by
   intro m hm
   rcases remainingRootRoster_sound m hm with hb | ⟨e,hmem,hcomp⟩
-  · exact Or.inl hb
+  · exact Or.inl (fun k d hk hd => Nat.le_trans (hb k d hk hd) (by decide))
   · cases he : deepSiblingHasWitness e.2 with
     | true => exact Or.inl (deepSiblingHasWitness_sound e.2 he m hcomp)
     | false => exact Or.inr ⟨e,List.mem_filter.mpr ⟨hmem,by simp [he]⟩,hcomp⟩
