@@ -146,10 +146,8 @@ private theorem near_upper (N : Nat) (q qrep k : Int)
   have hp : (2:Int)^N = scale 5*(2:Int)^(N-11) := by
     rw [scale_pow, ← Int.pow_add, show 5+6+(N-11)=N by omega]
   refine ⟨12*(2:Int)^(N-11)+k,12*(2:Int)^(N-11)+k,?_,?_⟩
-  · rw [hp,hres]
-    ring
-  · rw [hp,hres]
-    ring
+  · linear_combination 12*hp + hres
+  · linear_combination 24*hp + 2*hres
 
 private theorem near_odd (N : Nat) (q qrep k : Int)
     (hN : 11≤N) (hres : q-qrep=scale 5*k) :
@@ -158,10 +156,8 @@ private theorem near_odd (N : Nat) (q qrep k : Int)
   have hp : (2:Int)^N = scale 5*(2:Int)^(N-11) := by
     rw [scale_pow, ← Int.pow_add, show 5+6+(N-11)=N by omega]
   refine ⟨12*(2:Int)^(N-11)+k,12*(2:Int)^(N-11)+k,?_,?_⟩
-  · rw [hp,hres]
-    ring
-  · rw [hp,hres]
-    ring
+  · linear_combination 12*hp + hres
+  · linear_combination 24*hp + 2*hres
 
 /-- Source-connected depth-five necessary condition for the entire
     all-F zero-two feeder family. The arithmetic hypotheses are stated
