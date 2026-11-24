@@ -68,53 +68,59 @@ theorem g_identity (x : Data) (hv : 2≤x.v) : 2*x.g = (2*x.v-3)+3*x.r := by
 
 theorem small_F (x : Data) (m L b : Nat) (hm : m≤x.v)
     (hv : 2≤x.v) (hL : x.v≤L)
-    (hA : 2*L≤2^m) (hg : 2^m≤x.g)
-    (hb : x.b≤2*b) (hlarge : 64*L*b<(2^m)^3) :
+    (hA : 16*L<2^m) (hg : 2^m≤x.g)
+    (hb : 4*x.b<5*b) (hlarge : 16*L*b<(2^m)^3) :
     4*x.F m<2^m := by
   let A := 2^m
   have ha : x.a=A*x.s m := a_eq x m hm
   have hApos : 0<A := Nat.two_pow_pos _
+  have hspos : 0<x.s m := by unfold Data.s; exact Nat.two_pow_pos _
+  have hAspos : 0<A*x.s m := Nat.mul_pos hApos hspos
   have hid := g_identity x hv
-  have hr : A≤3*x.r := by
-    change 2*L≤A at hA
-    change A≤x.g at hg
+  have h2A : 2*A≤2*x.g := Nat.mul_le_mul_left 2 hg
+  have hrel : 2*A≤2*L+3*x.r := by
+    have hcoeff : 2*x.v-3≤2*L := by omega
     omega
-  have hs : A*A*x.s m≤3*x.b := by
-    have hh := Nat.mul_le_mul_left (A*x.s m) hr
+  have hrel8 : 16*A≤16*L+24*x.r := by omega
+  have hr : 5*A<8*x.r := by omega
+  have hs1 : 5*A*A*x.s m<8*x.b := by
+    have hh := Nat.mul_lt_mul_of_pos_left hr hAspos
     unfold Data.b
     rw [ha]
     calc
-      A*A*x.s m = (A*x.s m)*A := by grind
-      _ ≤ (A*x.s m)*(3*x.r) := hh
-      _ = 3*(A*x.s m*x.r) := by grind
-  have hf : A*A*x.F m≤12*L*b := by
+      5*A*A*x.s m=(A*x.s m)*(5*A) := by ring
+      _ <(A*x.s m)*(8*x.r) := hh
+      _ =8*(A*x.s m*x.r) := by ring
+      _ =8*x.b := by rfl
+  have hs : A*A*x.s m<2*b := by
+    have h1 := Nat.mul_lt_mul_left 4 hs1
+    have h2 := Nat.mul_lt_mul_left 8 hb
+    nlinarith
+  have hf : A*A*x.F m≤4*L*b := by
     unfold Data.F
     have hcoeff : 2*x.v-3≤2*L := by omega
     calc
-      A*A*((2*x.v-3)*x.s m) = (2*x.v-3)*(A*A*x.s m) := by grind
-      _ ≤ (2*L)*(3*x.b) := Nat.mul_le_mul hcoeff hs
-      _ ≤ (2*L)*(3*(2*b)) := Nat.mul_le_mul_left _ (Nat.mul_le_mul_left _ hb)
-      _ = 12*L*b := by grind
-  have hmul : A*A*(4*x.F m)≤48*L*b := by
+      A*A*((2*x.v-3)*x.s m)=(2*x.v-3)*(A*A*x.s m) := by ring
+      _ ≤(2*L)*(2*b) := Nat.mul_le_mul hcoeff (Nat.le_of_lt hs)
+      _ =4*L*b := by ring
+  have hmul : A*A*(4*x.F m)≤16*L*b := by
     calc
-      A*A*(4*x.F m) = 4*(A*A*x.F m) := by grind
-      _ ≤ 4*(12*L*b) := Nat.mul_le_mul_left 4 hf
-      _ = 48*L*b := by grind
-  have h48 : 48*L*b≤64*L*b := by
-    exact Nat.mul_le_mul_right b (Nat.mul_le_mul_right L (by decide))
-  change 64*L*b<A^3 at hlarge
+      A*A*(4*x.F m)=4*(A*A*x.F m) := by ring
+      _ ≤4*(4*L*b) := Nat.mul_le_mul_left 4 hf
+      _ =16*L*b := by ring
+  change 16*L*b<A^3 at hlarge
   have hp : A^3=A*A*A := by simp [Nat.pow_succ]
   have hlt : A*A*(4*x.F m)<A*A*A := by omega
   exact Nat.lt_of_mul_lt_mul_left hlt
 
 theorem small_k (A L G k : Nat) (_hA : 0<A) (hL : 0<L)
-    (hG : A*k≤G) (hlarge : 64*L*G<A*A) : 12*k<A := by
-  have h1 : 12≤64*L := by omega
-  have h2 : A*(12*k)≤64*L*G := by
+    (hG : A*k≤G) (hlarge : 16*L*G<A*A) : 12*k<A := by
+  have h1 : 12≤16*L := by omega
+  have h2 : A*(12*k)≤16*L*G := by
     calc
       A*(12*k)=12*(A*k) := by grind
-      _ ≤ (64*L)*G := Nat.mul_le_mul h1 hG
-      _ = 64*L*G := rfl
+      _ ≤ (16*L)*G := Nat.mul_le_mul h1 hG
+      _ = 16*L*G := rfl
   exact Nat.lt_of_mul_lt_mul_left (Nat.lt_of_le_of_lt h2 hlarge)
 
 theorem adjacent_small (x y : Data) (m k l : Nat)
@@ -179,16 +185,16 @@ bit-length parameter may be any positive L with x.b < 2^L. -/
 theorem four_data_cube_gain (x y z w : Data) (L : Nat)
     (hL : 0<L) (hbits : x.b<2^L)
     (hxy : Adj x y) (hyz : Adj y z) (hzw : Adj z w) :
-    x.b^2≤64*L*(x.g+y.g+z.g+w.g)^3 := by
+    x.b^2≤16*L*(x.g+y.g+z.g+w.g)^3 := by
   let b := x.b
   let G := x.g+y.g+z.g+w.g
   let m := min x.v (min y.v (min z.v w.v))
   let A := 2^m
-  change b^2≤64*L*G^3
-  by_cases hgoal : b^2≤64*L*G^3
+  change b^2≤16*L*G^3
+  by_cases hgoal : b^2≤16*L*G^3
   · exact hgoal
   · exfalso
-    have hsmall : 64*L*G^3<b^2 := by omega
+    have hsmall : 16*L*G^3<b^2 := by omega
     have hbpos : 0<b := b_pos x
     have hxg := gain_pos x
     have hyg := gain_pos y
@@ -228,25 +234,49 @@ theorem four_data_cube_gain (x y z w : Data) (L : Nat)
       · simpa [A,h,Data.a] using Nat.le_trans hby hybg
       · simpa [A,h,Data.a] using Nat.le_trans hbz hzbg
       · simpa [A,h,Data.a] using Nat.le_trans hbw hwbg
-    have hGlt : G<b := by
-      by_cases hh : G<b
-      · exact hh
-      · have hpow : b^3≤G^3 := Nat.pow_le_pow_left (by omega) _
-        have hpow2 : b^2≤b^3 := Nat.pow_le_pow_right hbpos (by decide)
-        have hmult : G^3≤64*L*G^3 := by
-          simpa using Nat.mul_le_mul_right (G^3) (by omega : 1≤64*L)
-        omega
+    have ha0 : 1≤x.a := by
+      unfold Data.a
+      have hp := Nat.two_pow_pos x.v
+      omega
+    have hr0 : 3≤x.r := by unfold Data.r; omega
+    have hb3 : 3≤b := by
+      dsimp [b,Data.b]
+      calc
+        3=1*3 := by norm_num
+        _ ≤x.a*x.r := Nat.mul_le_mul ha0 hr0
+    have hL2 : 2≤L := by
+      by_contra hh
+      have hL1 : L≤1 := by omega
+      have hp := Nat.pow_le_pow_right (n:=2) (by decide : 0<2) hL1
+      omega
+    have hGquarter : 4*G<b := by
+      by_contra hh
+      have hbg : b≤4*G := by omega
+      have hbgpow : b^2≤16*G^2 := by
+        calc
+          b^2≤(4*G)^2 := Nat.pow_le_pow_left hbg
+          _ =16*G^2 := by ring
+      have htmp : 16*G^2*(L*G)<16*G^2 := by
+        calc
+          16*G^2*(L*G)=16*L*G^3 := by ring
+          _ <b^2 := hsmall
+          _ ≤16*G^2 := hbgpow
+      have hLG : L*G<1 := Nat.lt_of_mul_lt_mul_left htmp
+      have hGone : 1≤G := by omega
+      have hLG2 : 2≤L*G := Nat.mul_le_mul hL2 hGone
+      omega
+    have hGlt : G<b := by omega
     have hb2 := Nat.pow_le_pow_left hbAG 2
-    have hlt : 64*L*G^3<(A*G)^2 := Nat.lt_of_lt_of_le hsmall hb2
-    have hlt' : G^2*(64*L*G)<G^2*(A*A) := by
-      have h1 : G^2*(64*L*G)=64*L*G^3 := by grind
+    have hlt : 16*L*G^3<(A*G)^2 := Nat.lt_of_lt_of_le hsmall hb2
+    have hlt' : G^2*(16*L*G)<G^2*(A*A) := by
+      have h1 : G^2*(16*L*G)=16*L*G^3 := by grind
       have h2 : G^2*(A*A)=(A*G)^2 := by grind
       rwa [h1,h2]
-    have hA2 : 64*L*G<A*A := Nat.lt_of_mul_lt_mul_left hlt'
-    have hA3 : 64*L*b<A^3 := by
+    have hA2 : 16*L*G<A*A := Nat.lt_of_mul_lt_mul_left hlt'
+    have hA3 : 16*L*b<A^3 := by
       calc
-        64*L*b ≤ (64*L)*(A*G) := Nat.mul_le_mul_left _ hbAG
-        _ = A*(64*L*G) := by grind
+        16*L*b ≤ (16*L)*(A*G) := Nat.mul_le_mul_left _ hbAG
+        _ = A*(16*L*G) := by grind
         _ < A*(A*A) := Nat.mul_lt_mul_of_pos_left hA2 hApos
         _ = A^3 := by grind
     have hdx := gain_dvd x y m hmx hmy hxy
@@ -256,12 +286,11 @@ theorem four_data_cube_gain (x y z w : Data) (L : Nat)
     have hAgy : A≤y.g := Nat.le_of_dvd hyg hdy
     have hAgz : A≤z.g := Nat.le_of_dvd hzg hdz
     have hAG : A≤G := Nat.le_trans hAgx hGx
-    have hAstrong : 64*L<A := by
-      apply Nat.lt_of_mul_lt_mul_left (a:=A) (b:=64*L) (c:=A)
-      have h1 := Nat.mul_le_mul_left (64*L) hAG
-      have h2 : A*(64*L)=(64*L)*A := Nat.mul_comm _ _
+    have hAstrong : 16*L<A := by
+      apply Nat.lt_of_mul_lt_mul_left (a:=A) (b:=16*L) (c:=A)
+      have h1 := Nat.mul_le_mul_left (16*L) hAG
+      have h2 : A*(16*L)=(16*L)*A := Nat.mul_comm _ _
       omega
-    have hAweak : 2*L≤A := by omega
     have hm2 : 2≤m := by
       by_cases hh : 2≤m
       · exact hh
@@ -273,15 +302,33 @@ theorem four_data_cube_gain (x y z w : Data) (L : Nat)
       rw [Nat.pow_succ]
       change b<2^L at hbits
       omega
-    have hxB : x.b≤2*b := by dsimp [b]; omega
-    have hyB : y.b≤2*b := by unfold Adj at hxy; dsimp [b] at *; omega
-    have hzB : z.b≤2*b := by unfold Adj at hyz; unfold Adj at hxy; dsimp [G,b] at *; omega
+    have hprefixB : ∀ u : Nat, u≤b+G → 4*u<5*b := by
+      intro u hu
+      have hmul := Nat.mul_le_mul_left 4 hu
+      dsimp [G] at hGquarter
+      omega
+    have hxB4 : 4*x.b<5*b := hprefixB x.b (by dsimp [b]; omega)
+    have hyB4 : 4*y.b<5*b := by
+      have hyPrefix : y.b≤b+G := by
+        unfold Adj at hxy
+        dsimp [b,G]
+        omega
+      exact hprefixB y.b hyPrefix
+    have hzB4 : 4*z.b<5*b := by
+      have hzPrefix : z.b≤b+G := by
+        unfold Adj at hxy hyz
+        dsimp [b,G]
+        omega
+      exact hprefixB z.b hzPrefix
+    have hxB : x.b≤2*b := by omega
+    have hyB : y.b≤2*b := by omega
+    have hzB : z.b≤2*b := by omega
     have hxL := v_bound x L (hbound _ hxB)
     have hyL := v_bound y L (hbound _ hyB)
     have hzL := v_bound z L (hbound _ hzB)
-    have hxF := small_F x m L b hmx (by omega) hxL hAweak hAgx hxB hA3
-    have hyF := small_F y m L b hmy (by omega) hyL hAweak hAgy hyB hA3
-    have hzF := small_F z m L b hmz (by omega) hzL hAweak hAgz hzB hA3
+    have hxF := small_F x m L b hmx (by omega) hxL hAstrong hAgx hxB4 hA3
+    have hyF := small_F y m L b hmy (by omega) hyL hAstrong hAgy hyB4 hA3
+    have hzF := small_F z m L b hmz (by omega) hzL hAstrong hAgz hzB4 hA3
     obtain ⟨k,hk⟩ := hdx
     obtain ⟨l,hl⟩ := hdy
     obtain ⟨n,hn⟩ := hdz
@@ -334,7 +381,7 @@ theorem four_step_cube_gain {b c d e f L : Nat}
     (hL : 0<L) (hbits : b<2^L)
     (hbc : Edge b c) (hcd : Edge c d)
     (hde : Edge d e) (hef : Edge e f) :
-    b^2≤64*L*(f-b)^3 := by
+    b^2≤16*L*(f-b)^3 := by
   rcases hbc with ⟨q0,v0,hb,hc⟩
   rcases hcd with ⟨q1,v1,hc',hd⟩
   rcases hde with ⟨q2,v2,hd',he⟩
