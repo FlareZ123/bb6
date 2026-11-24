@@ -129,12 +129,13 @@ theorem s1Config_carryInput_match
             (h+1+(i:Int)) = sideBit (s1PhysicalRight b) i :=
       s1Config_right_cell L n m (len+1+r) ((2*q+1)*2^r) b h i
     rw [s1PhysicalRight_source] at hsource
-    have hc : i=0 ∨ i=1 ∨ i=2 ∨ i=3 ∨ i=4 ∨ i=5 := by omega
-    have hside : sideBit
-        ([false,true,true,true,false,false] ++ d1pow (b+1)) i =
-        carryInputBit r (1+(i:Int)) := by
+    have hsideAll (j : Nat) (hj : j ≤ 5) :
+        sideBit ([false,true,true,true,false,false] ++ d1pow (b+1)) j =
+          carryInputBit r (1+(j:Int)) := by
+      have hc : j=0 ∨ j=1 ∨ j=2 ∨ j=3 ∨ j=4 ∨ j=5 := by omega
       rcases hc with h0 | h1 | h2 | h3 | h4 | h5
-      all_goals subst i <;> simp [sideBit,carryInputBit] <;> omega
+      all_goals subst j <;> simp [sideBit,carryInputBit] <;> omega
+    have hside := hsideAll i hbound
     simp only [hxEq]
     have hcoord : h + (1+(i:Int)) = h+1+(i:Int) := by omega
     calc
