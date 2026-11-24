@@ -164,7 +164,7 @@ private theorem m2EvenResidueSix_source_base_left (a : Nat) :
     s1LeftFacing 3 6 2 a 0 =
       m2EvenResidueSixInputPrefix a ++ m2EvenResidueSixBaseTail := by
   simp [s1LeftFacing,m2EvenResidueSixInputPrefix,
-    m2EvenResidueSixBaseTail,binDec_three_six,d0,d1,List.append_assoc]
+    m2EvenResidueSixBaseTail,binDec_three_six,binDec_zero,d1pow,d0,d1,List.append_assoc]
 
 private theorem m2EvenResidueSix_target_base_left (a : Nat) :
     BB6Coverage.Agent8Q4Suffix.q4LeftFacing 3 5 a =
@@ -179,7 +179,7 @@ private theorem m2EvenResidueSix_source_left
         m2EvenResidueSixSharedTail L k := by
   simp [s1LeftFacing,m2EvenResidueSixInputPrefix,
     m2EvenResidueSixSharedTail,binDec_residue6 L k hL hbound,
-    d0,d1,List.append_assoc]
+    binDec_zero,d1pow,d0,d1,List.append_assoc]
 
 private theorem m2EvenResidueSix_target_left
     (L k a : Nat) (hL : 4 ≤ L) (hbound : 16*k+5 < 2^L) :
@@ -387,11 +387,15 @@ private theorem m2EvenResidueSix_leftFacing
       (by rw [m2EvenResidueSixTargetPrefix_length]; omega)
     rw [hsrcBit] at hcell
     rw [htgtBit]
+    have hlen : (m2EvenResidueSixInputPrefix a).length =
+        (m2EvenResidueSixTargetPrefix a).length := by
+      rw [m2EvenResidueSixInputPrefix_length,m2EvenResidueSixTargetPrefix_length]
+    rw [hlen] at hcell
     exact hcell
 
 private theorem m2EvenResidueSix_rightFacing
     (L k a b : Nat) (h : Int)
-    (hL : 4 ≤ L) (hbound : 16*k+6 < 2^L) :
+    (hL : 4 ≤ L) (hbound : 16*k+6 < 2^L) (ha : 0<a) :
     ∀ i : Nat,
       m2EvenResidueSixCutTape L k a b h (h+1+(i:Int)) =
         sideBit (q4RightFacing b) i := by
@@ -399,7 +403,7 @@ private theorem m2EvenResidueSix_rightFacing
   have hbase : m2EvenSixQ4CutTape a b h (h+1+(i:Int)) =
       sideBit (q4RightFacing b) i := by
     obtain ⟨_,_,_,hright⟩ :=
-      m2EvenSix_q4_prefix_data_exact a b h (by omega)
+      m2EvenSix_q4_prefix_data_exact a b h ha
     exact hright i
   have hin :
       m2EvenResidueSixInside a h (h+1+(i:Int)) = true := by
@@ -546,6 +550,7 @@ private theorem m2EvenSix_q4_prefix_head_bound
         have hside := sideBit_append_right (d1pow a)
           m2EvenResidueSixSourceLeftSuffix (3*a+1) (by rw [d1pow_length]; omega)
         rw [hside] at hcell
+        rw [d1pow_length] at hcell
         simpa [T,m2EvenResidueSixSourceLeftSuffix,markerWord,sideBit] using hcell
   have hright : T (h+1) = false := by
     have hc := s1Config_right_cell 3 6 2 a 0 b h 0
@@ -578,8 +583,9 @@ private theorem m2EvenSix_q4_prefix_head_bound
     rw [hframe] at hb
     exact hb
   have hlinear : linearRightOnes T2 (hN+2) (3*a) := by
-    simpa [T2,hN,N] using
-      m2EvenSixQ4CutTape_linearRightOnes a b h ha
+    have hhead : hN+2 = h-(3*a:Int) := by rw [hN_eq]; omega
+    rw [hhead]
+    exact m2EvenSixQ4CutTape_linearRightRightOnes a b h ha
   intro k hk d hd
   let p1 := 3*N
   let p2 := p1+38
@@ -634,7 +640,7 @@ theorem m2Even_residue6_q4_prefix_source
         m2EvenResidueSixInside a h d.head = true := by
     intro j hj d hd
     have hlow := m2EvenSix_q4_prefix_head_bound a b h ha j hj d hd
-    simpa [m2EvenResidueSixInside] using hlow
+    simp [m2EvenResidueSixInside] <;> omega
   have hlift := run_frame tm2 (m2EvenResidueSixInside a h)
     background base (44+12*a) hheads
   rw [hstart] at hlift
@@ -675,7 +681,7 @@ theorem m2Even_residue6_q4_prefix_data
   · simpa [m2EvenResidueSixLeftFacing] using
       m2EvenResidueSix_leftFacing L k a b h hL hbound ha
   · exact m2EvenResidueSix_prefix_rightShape L k a b h hL hbound ha
-  · exact m2EvenResidueSix_rightFacing L k a b h hL hbound
+  · exact m2EvenResidueSix_rightFacing L k a b h hL hbound ha
 
 private theorem m2EvenResidueSix_prefix_far_tail
     (L k a b : Nat) (h : Int)
@@ -683,7 +689,7 @@ private theorem m2EvenResidueSix_prefix_far_tail
     ∀ i : Nat, 9+3*b ≤ i →
       m2EvenResidueSixCutTape L k a b h (h+1+(i:Int)) = false := by
   intro i hi
-  rw [m2EvenResidueSix_rightFacing L k a b h hL hbound i]
+  rw [m2EvenResidueSix_rightFacing L k a b h hL hbound ha i]
   apply sideBit_ge_length
   rw [q4RightFacing_length]
   omega
