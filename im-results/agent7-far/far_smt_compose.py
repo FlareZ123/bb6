@@ -165,14 +165,15 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("roster", type=Path)
     parser.add_argument("--line", type=int, required=True, help="1-based roster line")
+    parser.add_argument("--min-dfa", type=int, default=1)
     parser.add_argument("--max-dfa", type=int, default=10)
     parser.add_argument("--timeout-ms", type=int, default=120000)
     args = parser.parse_args()
 
     if args.line < 1:
         parser.error("--line must be positive")
-    if not 6 <= args.max_dfa <= 10:
-        parser.error("--max-dfa must be in [6,10]")
+    if not 1 <= args.min_dfa <= args.max_dfa <= 10:
+        parser.error("require 1 <= --min-dfa <= --max-dfa <= 10")
     if args.timeout_ms <= 0:
         parser.error("--timeout-ms must be positive")
 
@@ -190,7 +191,7 @@ def main() -> int:
         flush=True,
     )
 
-    for d in range(6, args.max_dfa + 1):
+    for d in range(args.min_dfa, args.max_dfa + 1):
         for reflected in (False, True):
             print(
                 f"trying dfa={d} reflected={int(reflected)} timeout_ms={args.timeout_ms}",
