@@ -1,10 +1,10 @@
 # Seventh Sheep stratum: 44 residue classes with two-node inverse trees
 
-**Agent 17, 20 November 2026. Strongest current seventh-stratum candidate; independent exact-arithmetic audit passed, original-source Lean formalization pending.**
+**Agent 17, 20 November 2026. The 44-class subfamily is included in the accepted five-family theorem, compiled in [CI 45293408209](https://github.com/FlareZ123/bb6/actions/runs/45293408209) with Lean 4.36.0-rc2.**
 
 This improves the single (t\equiv8\pmod{10,475,665,200}) result in [`T8-INVERSE-TREE.md`](T8-INVERSE-TREE.md). Two different first-parent types yield 44 distinct infinite residue classes, all with a two-node inverse graph.
 
-## Candidate theorem
+## Accepted subfamily theorem
 
 Define
 [
@@ -45,7 +45,7 @@ so the union has density
 ]
 among all exponent indices.
 
-This is a candidate theorem, not yet Lean-certified. Its exact-arithmetic checker is [`inverse_tree_44_classes_certificate.py`](inverse_tree_44_classes_certificate.py). Keep it in `im-results/` until independent review, local Lean compilation, and the original-source axiom audit succeed.
+This 44-class subfamily is now included in the compiled `SheepPower1458.noEvenReachFiveFamilies` theorem from [CI 45293408209](https://github.com/FlareZ123/bb6/actions/runs/45293408209), with transitive axiom profile `[propext, Classical.choice, Quot.sound]` and no `sorryAx`. It remains a partial exclusion, not a Sheep machine or BB(6) decision. Keep it in `im-results/`.
 
 ## Authentic source relation
 
