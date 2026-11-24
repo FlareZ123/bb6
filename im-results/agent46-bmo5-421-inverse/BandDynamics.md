@@ -84,3 +84,44 @@ Consequently, 3^s(6k+27) is a universal upper threshold for an actual exceptiona
 
 
 The source-level small-root continuation theorem now uses the sharper threshold 3^s(6k+27) < 4·3^(j-k)P_k+6+w. It classifies the actual predecessor and excludes the skip and special branches using their respective 6k-9 and 6k+27 return costs. Hence only regular same-band or one-band-descent positive continuation remains. This source theorem passed [CI 45404455240](https://github.com/FlareZ123/bb6/actions/runs/45404455240).
+
+## Exact final-run normal form
+
+The final same-band suffix is now characterized more sharply by
+`CapPhaseCost.positive_history_final_run_exact`:
+
+For every `PositiveHistory j w s k x`, there are `r,z` with
+`SameRun k r x z`, and exactly one of these structural cases is supplied:
+
+1. **No earlier band drop:** `k=j` and
+   [
+   6\cdot 3^r Q_k(x)=4P_k+w-3.
+   ]
+   This is an exact equation for the original affine seed, not merely a
+   denominator estimate.
+
+2. **A preceding one-band drop:** there are `s',y` with
+   `PositiveHistory j w s' (k+1) y` and `RegFrom k z y`, and
+   [
+   2P_k+k+4\le 3^{r+1}Q_k(x),\qquad
+   3^r Q_k(x)\le 2P_k+k+2.
+   ]
+
+The second interval determines at most one exponent.  The Lean theorem
+`positive_down_run_exponent_unique` proves this: if two exponents differed,
+the smaller exponent's lower bound, multiplied by the next factor of three,
+would contradict the larger exponent's upper bound.
+
+The lower endpoint uses the next-band lower bound (Q_{k+1}(y)\ge k+7);
+the upper endpoint uses the band bound on (z).  This is stronger than the
+earlier uniform (2P_k-1\le 3Q_k(z)) estimate and preserves the exact
+terminal state coordinate (Q_k(x)).
+
+The result is a local normal form for every positive history.  It does **not**
+settle the separate global problem of proving
+(Q_{k+n}(x_n)\ge k+n+6) for all (n) along the relaxed positive orbit.
+
+Kernel-check checkpoints:
+- [Final-run decomposition](https://github.com/FlareZ123/bb6/actions/runs/45478965238)
+- [Down-run exponent uniqueness](https://github.com/FlareZ123/bb6/actions/runs/45479937736)
+
