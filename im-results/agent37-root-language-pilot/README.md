@@ -32,6 +32,14 @@ For outputs with a trailing literal zero in the old source theorem, the displaye
 
 **Source provenance**: `im-results/agent31-cryptid-boundary/README.md` and `Boundary.lean.xz.b64` (B and A prefix); `im-results/agent35-cryptid-code/ABridgeCode.lean` and `ABridgeTwo.lean` (arbitrary mixed A tokens and 1100); `im-results/agent32-cryptid-padding/CodeImplicitNil.lean`, `EZeroPair.lean`, `EAllDouble.lean`, `PaddedApplications.lean` (physical implicit-blank specializations); `im-results/agent32-cryptid-third/CryptidPairs.lean` and `CryptidTriplePairs.lean` (E suffix families). Several of these were previously compiled against full original sources in successful manual CI, as their individual README files record. **Our combined table has no independent end-to-end original-source CI audit.**
 
+## Canonical halt-suffix correction (2026-11-24)
+
+The physical canonicalizer strips trailing blank zeros, so the source-proved terminal words do not always remain literal prefixes in the finite suffix representation. In particular, an all-blank tail turns A's `1101101100` into exact suffix `11011011`, E's q=0 `1101100` into `11011`, and the all-q E `1101101100` into `11011011`. The previous `macro_engine.py` recognizers required the untrimmed forms and returned unresolved on these valid blank-tail configurations.
+
+Commit `06af74c08d25a4c444d0277aa85d7a0a3faae620` adds the exact canonical alternatives and five regression checks (A with/without a leading 10 code token; E q=0; E all-q q=0 and q=1). The expected successful-transition costs are 100, 102, 98, 105, and 107 respectively, matching the source theorem conventions (the final undefined transition/frozen-state entry is not counted as a successful move). The corresponding source results are `CryptidAHalt.full_A_halt`, `Agent32EZeroHalt.full_E_zero_halt`, and `Agent2AllQE1101101100.full_E_all_q_exact_first_halt`.
+
+An independent branch-level runtime check passed all five cases. The Python self-check is installed in `macro_engine.py` and runs before the seed scans, but was not executed in this environment because the local Python/container boundary returned errors. This correction repairs general halt recognition; it does not establish that the existing 921,600-transition root18 path encounters any of these suffixes, nor does it change that checkpoint into a proof.
+
 ## Reproducible numerical investigations and failures
 
 1. An independently authored sparse `Int→Bool` physical-tape interpreter and a separately authored dense-tape C++ interpreter verified the actual four unary starting configurations. Up to 120,000,000 primitive transitions per seed, none halted or had a genuine physically blank-left F/0 section outside L. Some intermediate F/0 visits had nonblank cells left of the head; those are deliberately excluded from the section count.
