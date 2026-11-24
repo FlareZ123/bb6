@@ -165,7 +165,7 @@ def r1Cert : WeightedTNFCertificate 7014 (pathEnd root 2 r1.path).1 6 := by
   change WeightedTNFCertificate 7014 r1.parent 6
   exact r1_certificate
 
-noncomputable noncomputable def r4Cert : WeightedTNFCertificate 7014 (pathEnd root 2 r4.path).1 6 := by
+noncomputable def r4Cert : WeightedTNFCertificate 7014 (pathEnd root 2 r4.path).1 6 := by
   have h := liftCert (B:=42) (C:=7014) (by decide) r4_certificate
   change WeightedTNFCertificate 7014 r4.parent 6
   exact h
