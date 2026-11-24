@@ -56,3 +56,17 @@ These are standalone certificates for the erased-row cylinders. They do not, by 
 `simulate_cryptids_first_visits.py` parses the six pinned RLE definitions and deterministically records first visits to state/symbol rows. The current trace visits all 11 ordinary rows before the unique halt row for each machine, after respectively 53, 36, 39, 16, 23, and 63 moves.
 
 This is reproducible computational evidence, not a Lean theorem and not a proof of a canonical TNF refinement path. It suggests that the erased-row leaves may be reached after the corresponding sequence of first-hole refinements; formalizing that path remains open.
+
+
+The first-visit orders (state names A–F correspond to indices 0–5; suffix 0/1 is the symbol) are:
+
+| Machine | First-visit order of ordinary rows | Unvisited halt row | Moves until all ordinary rows seen |
+|---|---|---|---:|
+| r1 | A0, B0, C1, D0, C0, E0, B1, E1, F0, A1, F1 | D1 | 53 |
+| r2 | A0, B0, C0, B1, D1, D0, E0, C1, F1, A1, E1 | F0 | 36 |
+| r3 | A0, B0, C0, D0, B1, E0, C1, F1, E1, A1, D1 | F0 | 39 |
+| r4 | A0, B0, C0, D1, E1, E0, D0, A1, B1, C1, F0 | F1 | 16 |
+| r5 | A0, B0, C1, D0, C0, D1, E1, B1, A1, E0, F1 | F0 | 23 |
+| r6 | A0, B0, C0, D1, E1, F0, D0, C1, A1, F1, B1 | E0 | 63 |
+
+These sequences are useful candidate refinement orders, but the table remains a simulation output. A Lean proof that each listed slot is the successive first hole is still required before treating the path as certified.
