@@ -582,7 +582,7 @@ theorem positive_history_final_run_exact
     (h : PositiveHistory j w s k x) :
     ∃ r z, SameRun k r x z ∧
       ((k=j ∧
-          6*(3^r:Int)*(Q k x:Int)=4*(P k:Int)+w-3) ∨
+          6*((3^r:Int)*(Q k x:Int))=4*(P k:Int)+w-3) ∨
        ∃ s' y, PositiveHistory j w s' (k+1) y ∧ RegFrom k z y ∧
           2*P k+k+4≤3^(r+1)*Q k x ∧
           3^r*Q k x≤2*P k+k+2) := by
@@ -642,10 +642,12 @@ theorem positive_history_final_run_exact
       calc
         2*P k+k+4 ≤3*Q k z := hQzlo
         _ =3*(3^r*Q k x) := by rw [hq]
+        _ =(3*3^r)*Q k x := by
+          rw [Nat.mul_assoc]
+        _ =(3^r*3)*Q k x := by
+          rw [Nat.mul_comm 3 (3^r)]
         _ =3^(r+1)*Q k x := by
           rw [Nat.pow_succ]
-          rw [Nat.mul_assoc]
-          rw [Nat.mul_comm 3 (3^r)]
     have hhigh : 3^r*Q k x≤2*P k+k+2 := by
       rw [← hq]
       exact hqzhi
