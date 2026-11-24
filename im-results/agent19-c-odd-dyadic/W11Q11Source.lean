@@ -47,9 +47,9 @@ theorem p_parent_fan (s a k : Nat)
   by_cases ha0 : a=0
   · subst a
     by_cases hk0 : k=0
-    · simp [sectionPreimageAll,pX,pY,hk0] at hp <;> omega
+    · simp [sectionPreimageAll,hk0] at hp <;> omega
     · by_cases hk1 : k=1
-      · simp [sectionPreimageAll,pX,pY,hk0,hk1] at hp <;> omega
+      · simp [sectionPreimageAll,pX,pY,hk1] at hp <;> omega
       · have hcase :
             4≤pY s ∧ ∃ n : Nat,
               pX s+pY s=2^n*8 ∧ (2*k+1)+8+3*n=pX s+2*pY s := by
@@ -66,11 +66,11 @@ theorem p_parent_fan (s a k : Nat)
       by_cases hk0 : k=0
       · simp [sectionPreimageAll,pX,pY,hk0] at hp <;> omega
       · by_cases hk1 : k=1
-        · simp [sectionPreimageAll,pX,pY,hk0,hk1] at hp <;> omega
+        · simp [sectionPreimageAll,pX,pY,hk1] at hp <;> omega
         · by_cases hk2 : k=2
-          · simp [sectionPreimageAll,pX,pY,hk0,hk1,hk2] at hp <;> omega
+          · simp [sectionPreimageAll,pX,pY,hk2] at hp <;> omega
           · by_cases hk3 : k=3
-            · simp [sectionPreimageAll,pX,pY,hk0,hk1,hk2,hk3] at hp <;> omega
+            · simp [sectionPreimageAll,pX,pY,hk3] at hp <;> omega
             · have hcase :
                   (pY s=3 ∧ ∃ n : Nat,
                     pX s+6=2^n*16 ∧
@@ -406,8 +406,9 @@ theorem blank_no_b2_w11_q11 (s : Nat) :
       have hsub : (a-1)%2=0 := by omega
       have hfac4 : 4∣2*a+6 := by
         obtain ⟨b,hb⟩ := Nat.dvd_of_mod_eq_zero hsub
+        have haEq : a=2*b+1 := by omega
         refine ⟨b+2,?_⟩
-        rw [hb]
+        rw [haEq]
         omega
       obtain ⟨v,hv⟩ := hpow4
       obtain ⟨z,hz⟩ := hfac4
@@ -493,7 +494,38 @@ theorem root_q11_parameter (r E u : Nat)
     have h := Nat.mod_add_div R 1024
     omega
   rw [hRt] at hmodW
-  have hwmod : w%2048=187 := by omega
+  have hmodEq :
+      27625+44310*(693+1024*t)+22155*w
+        = (119+1675*w)+2048*(15007+22155*t+10*w) := by omega
+  have hred : (119+1675*w)%2048=0 := by
+    rw [hmodEq] at hmodW
+    simpa [Nat.add_mod,Nat.mul_mod] using hmodW
+  have hdivRed : 2048∣119+1675*w :=
+    Nat.dvd_of_mod_eq_zero hred
+  have hdivMul : 2048∣291*(119+1675*w) := by
+    obtain ⟨z,hz⟩ := hdivRed
+    refine ⟨291*z,?_⟩
+    rw [hz]
+    ac_rfl
+  have hconst : 291*119=2048*16+1861 := by decide
+  have hcoef : 291*1675=2048*238+1 := by decide
+  have hiden :
+      291*(119+1675*w)=2048*(16+238*w)+(1861+w) := by
+    calc
+      291*(119+1675*w) = 291*119+291*(1675*w) := by rw [Nat.mul_add]
+      _ = 291*119+(291*1675)*w := by rw [Nat.mul_assoc]
+      _ = (2048*16+1861)+(2048*238+1)*w := by rw [hconst,hcoef]
+      _ = 2048*(16+238*w)+(1861+w) := by omega
+  have hmulzero :
+      (291*(119+1675*w))%2048=0 :=
+    Nat.mod_eq_zero_of_dvd hdivMul
+  have hrem : (1861+w)%2048=0 := by
+    rw [hiden] at hmulzero
+    simpa [Nat.add_mod,Nat.mul_mod] using hmulzero
+  have hwmod : w%2048=187 := by
+    have h := hrem
+    simp [Nat.add_mod] at h
+    omega
   obtain ⟨s,hwEq⟩ : ∃ s : Nat, w=187+2048*s := by
     refine ⟨w/2048,?_⟩
     have h := Nat.mod_add_div w 2048
