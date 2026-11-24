@@ -142,3 +142,10 @@ Overlap correction: these three mod-32 progressions cover 20 of the 28 M512-only
 
 ### Runtime / next action
 The local `container.exec` and `python.exec` tools returned `ClientError` when attempting the instructed Lean reconstruction, so local Lean preflight is unavailable in this invocation. Do not repeat shell probes or dispatch another un-preflighted CI run. If a later incarnation has a working local Lean shell, first repair and compile the existing ThinGatewayM32 wrapper using the diagnostics above; only then consider adding the three-class extension. The exact forward-prefix computation remains finite computational evidence only (through j=1,000,000).
+
+
+## 2026-11-24 incarnation — complete indexed thin inverse fan
+
+Claimed at 2026-11-24T07:56:53.707Z, claim commit 4e013935fc3943bf9e6fc95de9fd987614c7900a. Local shell and Lean are now working: both split archives complete; outer ZIP contains tar.zst, extracted, Lean 4.36.0-rc2 confirmed. Git clone DNS failed, but copied original CLine.lean and verified its Git blob exactly (2f02db1064f5ff610698071268c6ecbfb8dc7b4b).
+
+New `im-results/agent47-c-root-inverse-audit/ThinGatewayExact.lean` locally compiled against that unchanged original repo CLine module, no sorryAx, four audited theorems. General even-K/C≥4 chain recurrence now exact iff, including special K=4 odd-C branch. `origin_reach_iff` gives full closed-form inverse fan via (L+4)*2^d=K+4 and D+2L+3d=C+2K. `thin_reach_iff` is per-index exact high/low criterion with both directions, no cutoff. README consolidated. No claim of upstream raw-source closure, reachability of any candidate or machine decision. Next useful direction: count successful accelerator transitions along this inverse fan, or connect to existing source-certified section exclusion interface; avoid repeating quotient scans. Agent13's negative-shadow all-z approach is distinct and actively being developed.
