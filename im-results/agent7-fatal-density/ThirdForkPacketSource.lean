@@ -324,6 +324,25 @@ private theorem packet_q_mod (n d q:Nat)
     simp [h5]
     omega
 
+
+/-- The exact two-arm ResetParent grammar has no parent in the t=3 gap:
+    the even arm misses every band, while the odd arm forces q=2 mod 3. -/
+private theorem no_reset_parent_in_ray_gap (n q:Nat)
+    (hn:3≤n)
+    (hmod:q%3≠2)
+    (hgap:2^(n-1)<q ∧ 2*q+2<3*2^(n-1)):
+    ¬∃w, ResetParent w q:=by
+  rintro ⟨w,hp⟩
+  rcases hp with ⟨k,hband,heq⟩ | ⟨k,t,d,hd,hband,hout,heq⟩
+  · exact (gap_avoids_even_images (n-1) q (by omega) hgap.1 hgap.2 k hband)
+  · have hdiv:3∣2*q+5:=by
+      refine ⟨3^t*d,?_⟩
+      rw [hout,Nat.pow_succ]
+      ring
+    have hzero:(2*q+5)%3=0:=Nat.dvd_iff_mod_eq_zero.mp hdiv
+    have hqmod:q%3=2:=by omega
+    exact hmod hqmod
+
 /-- Every complete 162-index physical packet on either surviving #746 gate
     ray contains two distinct genuine t=3 ResetParent feeders that themselves
     have no predecessor in the complete original source reset grammar. -/
@@ -337,6 +356,8 @@ theorem packet_has_two_parentless_third_feeders (n a b:Nat)
       packetQ n b t0≠packetQ n b t1 ∧
       ResetParent (packetQ n b t0) (ray n (packetIndex n b t0)) ∧
       ResetParent (packetQ n b t1) (ray n (packetIndex n b t1)) ∧
+      (¬∃w, ResetParent w (packetQ n b t0)) ∧
+      (¬∃w, ResetParent w (packetQ n b t1)) ∧
       ¬ReachC (2,0) (packetQ n b t0,0) ∧
       ¬ReachC (2,0) (packetQ n b t1,0):=by
   have hpacket0:a+162*(0+1)+13≤n:=by omega
@@ -412,6 +433,21 @@ theorem packet_has_two_parentless_third_feeders (n a b:Nat)
       omega
     · simp [h5] at *
       omega
+  have hgap0:=ray_tthree_parent_gap n (packetIndex n b 0) (n-3)
+    (packetD n b 0) (packetQ n b 0) (by omega) hm0 hz0 ⟨hb0L,hb0U⟩ he0
+  have hgap1:=ray_tthree_parent_gap n (packetIndex n b 1) (n-3)
+    (packetD n b 1) (packetQ n b 1) (by omega) hm1 hz1 ⟨hb1L,hb1U⟩ he1
+  have hgap2:=ray_tthree_parent_gap n (packetIndex n b 2) (n-3)
+    (packetD n b 2) (packetQ n b 2) (by omega) hm2 hz2 ⟨hb2L,hb2U⟩ he2
+  have hnoParent0:packetQ n b 0%3≠2→¬∃w,ResetParent w (packetQ n b 0):=by
+    intro hmod
+    exact no_reset_parent_in_ray_gap n (packetQ n b 0) (by omega) hmod hgap0
+  have hnoParent1:packetQ n b 1%3≠2→¬∃w,ResetParent w (packetQ n b 1):=by
+    intro hmod
+    exact no_reset_parent_in_ray_gap n (packetQ n b 1) (by omega) hmod hgap1
+  have hnoParent2:packetQ n b 2%3≠2→¬∃w,ResetParent w (packetQ n b 2):=by
+    intro hmod
+    exact no_reset_parent_in_ray_gap n (packetQ n b 2) (by omega) hmod hgap2
   have hdead0:packetQ n b 0%3≠2→
       ¬ReachC (2,0) (packetQ n b 0,0):=by
     intro hmod
@@ -437,20 +473,26 @@ theorem packet_has_two_parentless_third_feeders (n a b:Nat)
     have hgood2:packetQ n b 2%3≠2:=by
       intro hbad2
       exact hQ02 (by omega)
-    refine ⟨1,2,by decide,by decide,by decide,?_,hp1,hp2,?_,?_⟩
+    refine ⟨1,2,by decide,by decide,by decide,?_,hp1,hp2,?_,?_,?_,?_⟩
     · exact fun h=>hQ12 (by omega)
+    · exact hnoParent1 hgood1
+    · exact hnoParent2 hgood2
     · exact hdead1 hgood1
     · exact hdead2 hgood2
   · by_cases hbad1:packetQ n b 1%3=2
     · have hgood2:packetQ n b 2%3≠2:=by
         intro hbad2
         exact hQ12 (by omega)
-      refine ⟨0,2,by decide,by decide,by decide,?_,hp0,hp2,?_,?_⟩
+      refine ⟨0,2,by decide,by decide,by decide,?_,hp0,hp2,?_,?_,?_,?_⟩
       · exact fun h=>hQ02 (by omega)
+      · exact hnoParent0 hbad0
+      · exact hnoParent2 hgood2
       · exact hdead0 hbad0
       · exact hdead2 hgood2
-    · refine ⟨0,1,by decide,by decide,by decide,?_,hp0,hp1,?_,?_⟩
+    · refine ⟨0,1,by decide,by decide,by decide,?_,hp0,hp1,?_,?_,?_,?_⟩
       · exact fun h=>hQ01 (by omega)
+      · exact hnoParent0 hbad0
+      · exact hnoParent1 hbad1
       · exact hdead0 hbad0
       · exact hdead1 hbad1
 
