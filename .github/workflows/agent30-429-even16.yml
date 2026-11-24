@@ -106,7 +106,10 @@ jobs:
             lean -DmaxHeartbeats=15000000 -DmaxRecDepth=16000 -o im-results/agent1-429-root-rows/BB429NewRootRows.olean im-results/agent1-429-root-rows/BB429NewRootRows.lean
             lean -DmaxHeartbeats=15000000 -DmaxRecDepth=16000 -o im-results/agent1-429-root-rows/BB429RootOddRowsStrong.olean im-results/agent1-429-root-rows/BB429RootOddRowsStrong.lean
             lean -DmaxHeartbeats=30000000 -DmaxRecDepth=30000 -o im-results/agent30-429-branch9-zero-feeder/BB429OddResetImproved.olean im-results/agent30-429-branch9-zero-feeder/BB429OddResetImproved.lean
-            lean -DmaxHeartbeats=30000000 -DmaxRecDepth=30000 im-results/agent30-429-branch9-zero-feeder/BB429ZeroTwoThree.lean
+            lean -DmaxHeartbeats=30000000 -DmaxRecDepth=30000 -o im-results/agent30-429-branch9-zero-feeder/BB429ZeroTwoThree.olean im-results/agent30-429-branch9-zero-feeder/BB429ZeroTwoThree.lean
+            lean -DmaxHeartbeats=15000000 -DmaxRecDepth=30000 -o im-results/agent30-429-branch9-zero-feeder/BB429DyadicTransport.olean im-results/agent30-429-branch9-zero-feeder/BB429DyadicTransport.lean
+            lean -DmaxHeartbeats=15000000 -DmaxRecDepth=30000 -o im-results/agent30-429-branch9-zero-feeder/BB429DyadicSource.olean im-results/agent30-429-branch9-zero-feeder/BB429DyadicSource.lean
+            lean -DmaxHeartbeats=40000000 -DmaxRecDepth=30000 -o im-results/agent30-429-branch9-zero-feeder/BB429ZeroTwoStrongDepth5.olean im-results/agent30-429-branch9-zero-feeder/BB429ZeroTwoStrongDepth5.lean
           fi
 
           if [ "${{ inputs.proof_target }}" = "branch9_side_strong" ] || [ "${{ inputs.proof_target }}" = "branch9_side_depth2" ]; then
