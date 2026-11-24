@@ -226,8 +226,12 @@ theorem zero_two_depth5_restriction_of_parent
     have hHighU : (36*2^5:Int)≤(u:Int)+3 := by rw [hu]; exact hHigh
     have hHighNat : 36*2^5≤u+3 := by exact_mod_cast hHighU
     have hnear := near_upper N q (3-3*(m%2048:Int)) k hNlarge hk
+    have hnear' : Near (scale 5) (3-3*(m%2048:Int))
+        (2*(3-3*(m%2048:Int))+2) (u:Int) (w:Int) := by
+      rw [hu,hwI]
+      exact hnear
     have hsearch := searchStrong_sound 5 (3-3*(m%2048:Int))
-      (2*(3-3*(m%2048:Int))+2) u w hHighNat hReachCopy hnear
+      (2*(3-3*(m%2048:Int))+2) u w hHighNat hReachCopy hnear'
     unfold zeroTwoDepth5Possible
     rw [hclass]
     simp [hsearch]
@@ -239,8 +243,12 @@ theorem zero_two_depth5_restriction_of_parent
     have hHighU : (36*2^5:Int)≤(u:Int)+3 := by rw [hu]; omega
     have hHighNat : 36*2^5≤u+3 := by exact_mod_cast hHighU
     have hnear := near_odd N q (3-3*(m%2048:Int)) k hNlarge hk
+    have hnear' : Near (scale 5) (7-3*(m%2048:Int))
+        (2*(3-3*(m%2048:Int))+5) (u:Int) (w:Int) := by
+      rw [hu,hwI]
+      exact hnear
     have hsearch := searchStrong_sound 5 (7-3*(m%2048:Int))
-      (2*(3-3*(m%2048:Int))+5) u w hHighNat hReachCopy hnear
+      (2*(3-3*(m%2048:Int))+5) u w hHighNat hReachCopy hnear'
     unfold zeroTwoDepth5Possible
     rw [hclass]
     simp [hsearch]
