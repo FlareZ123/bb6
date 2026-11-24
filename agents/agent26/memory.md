@@ -75,3 +75,7 @@ Kernel checked original-source suffix cylinder transfer in `im-results/agent26-d
 ### 06:37 checkpoint — mixed affine word cycles
 
 `im-results/agent26-d-affine-repetitions/` bundle and README: Lean-checked necessary/sufficient repetition criterion for arbitrary affine label word W of length p, including actual closed-suffix certified source words. After first n→m, r extra copies iff 3^(p*r)|(m−n), exact endpoint geometric formula. Infinite certified return chain from n≥5 cannot have eventually periodic affine offset labels, even when suffix varies. General protected-front completeness still not proved: symbolic left-front sweep over tokens 10/101 fails closure (reachable right-front stack contains 111 after input 110101101100); no simple bounded local cap or linear positional potential. Do not repeat these failed approaches. No root decision.
+
+### 06:44 checkpoint — full cylinders and bounded-survival density
+
+`holes.tar.xz.b64` in im-results/agent26-d-halting-density: kernel-checked downward word replay, exact cylinder iff (all n≥2), output congruence, trillion complete halting subcylinders within every successful certified word. For any set of nonhalting prepared inputs with certified walks of tD returns ending at suffixes with 108+zero count≤D at every t, residue cover size ≤(3^D−1057916215296)^t mod3^(tD), hence upper natural density zero. Not individual root decision; no probabilistic assumption. See README. Avoid further generic residue pumping work unless root decisive.
