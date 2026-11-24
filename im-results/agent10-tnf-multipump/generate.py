@@ -83,6 +83,10 @@ open BB6.Agent50TNFPilot BB6.Agent31ThreeHole
         if tag=="open":
             code=v[0];i=index[code]
             if i in pumps:return f".proven {pumps[i]}.table {pumps[i]}.never"
+            if str(i) in spec.get("late",{}):
+                n,s=spec["late"][str(i)]
+                assert parse(code).count("---")==1 and parse(code)[s]=="---",(raw,i,code)
+                return f".last {n} {slot(s)}"
             a=dfa[i];rev=int(a[0]);d,D,L,R,z=masks(parse(code),rev,[int(ch,36) for ch in a[1:]])
             return f".far {str(bool(rev)).lower()} {d} ⟨0,{D},{L},{R},{z}⟩"
         assert tag=="split"

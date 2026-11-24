@@ -39,3 +39,7 @@ B1=1LC, candidate weighted bound 165. All 9,765,625 raw assignments covered by t
 ### Raw 67 (B1=1LB)
 
 All candidate leaves closed, bound 808. The tree has 1,515 splits including root, 25,738 side-cycle, 6,626 last-halt, 2,380 FAR, 64 one-block, 11 two-block, two long-epoch and two recursive leaves. `Raw67Recursive.lean` gives exact universal macros for leaves 438 and 1088, with positive epochs starting from blank at steps 28 and 41. The first consumes one left zero recursively; the second consumes a 0001 block, increasing the alternating right prefix by two pairs and adding G(k)=2^(k+1) trailing ones. Both universal growth theorems checked locally with Lean 4.36.0-rc2 against the copied zipper core; full source audit and two-row `LargerFiveRoster` deletion remain pending. Generate with `python generate.py 67 71`.
+
+### Raw 81 (B1=0LF)
+
+All candidate leaves closed, revised bound 1,326. 2,227 splits including root, 40,778 side-cycle, 8,628 original last-halt, 1,648 FAR, 116 one-block, 22 two-block, six long-epoch, and one delayed last-hole leaf (1161: t=1325, E0). The generator supports `late` exact last-hole checks beyond the discovery cutoff; it verifies the table has precisely one missing transition before emitting this proof candidate. The delayed leaf follows a unary recurrence until it reaches E0, so it is not a nonhalting claim. Generate with `python generate.py 81`; source audit pending.
