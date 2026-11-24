@@ -208,16 +208,16 @@
     227,
     244,
     353,
-    380,
-    401,
-    481
+    380
   ],
-  "notes": "Indices zero-based in enumerator open.txt order. FAR default applies only to indices outside explicit groups, pump and unresolved lists. Long tuples are time, direction, state, period, event index. All candidate witnesses require formal audit. Recursive candidate leaves use emit_tripling.py, local copied-zipper Lean proof passed (propext, Quot.sound); original-source audit pending. Exclude these indices from FAR default. Additional five recursive leaves use emit_recursive_unary.py, local exact-zipper proofs compiled.",
+  "notes": "Indices zero-based in enumerator open.txt order. FAR default applies only to indices outside explicit groups, pump and unresolved lists. Long tuples are time, direction, state, period, event index. All candidate witnesses require formal audit. Recursive candidate leaves use emit_tripling.py, local copied-zipper Lean proof passed (propext, Quot.sound); original-source audit pending. Exclude these indices from FAR default. Additional five recursive leaves use emit_recursive_unary.py, local exact-zipper proofs compiled. Residue unary leaves use emit_residue_unary.py, local exact-zipper proofs compiled.",
   "recursive_candidate": [
     314,
     315,
     316,
     319,
+    401,
+    481,
     1085,
     1344,
     1346

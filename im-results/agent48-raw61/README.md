@@ -5,3 +5,7 @@ Two leaves (1344,1346) share a positive return from D with left list 00(11)^(n+1
 ## Recursive unary counter
 
 Leaves 314,315,316,319,1085: let F(n,S) be D with left 0011 (1111)^n 0 and right S; G changes only the first zero to one. For arbitrary S, F(0,S) reaches G(0,S) in 10 moves. F(n+1,S) reaches F(0, (0000)^n 0001 S), then G(0,...). A 0000 token from G(j,...) moves to F(j+1,...), and 0001 moves to G(j+1,...). Induction simultaneously on all completed smaller parameters proves F(n,S) reaches G(n,S); the terminal blank-tail transition G(n,[]) reaches F(n+1,[]) in 18 steps. Blank start at step 31 is F(1,[]). All five complete proofs of unbounded live prefixes locally compiled with exact copied zipper, standard axioms only. Full source wrappers are emitted by emit_recursive_unary.py. Nine candidate leaves remain.
+
+## Three-residue unary growth
+
+Leaves 401 and 481: F(r,n) is D with left 00 1^r (1111)^n and empty right. The three positive macro returns are F(4,n) -> F(5,n+1), F(5,n) -> F(2,n+2), F(2,n) -> F(4,n+1). A transfer of right token 0001 adds four ones to the left in 18 steps for arbitrary left and right tails. The terminal transfer adds four ones and restores the outer D state. Blank entry is F(2,0) at step 3. Local Lean proofs passed with propext, Quot.sound. Seven candidate leaves remain.
