@@ -303,7 +303,7 @@ theorem chunkOutputs_cover_root {Node : Type u} {Machine : Type v}
       obtain ⟨r, hr, hxr⟩ := hpart x hx
       have hchunk : coveredBy Good Compatible (chunkQueue q r.1 r.2) m := by
         simp [coveredBy, chunkQueue, hqhold]
-        exact Or.inr (Or.inl ⟨x, hxr, hxm⟩)
+        exact Or.inr ⟨x, hxr, hxm⟩
       have hprocessed := runUpdates_preserves_instance decide Good Compatible hsound
         fuel (chunkQueue q r.1 r.2) m hchunk
       have hdr := hdrain r hr
@@ -311,8 +311,7 @@ theorem chunkOutputs_cover_root {Node : Type u} {Machine : Type v}
       · exact Or.inl hg
       · rcases hprocessed with hactive' | hhold'
         · rcases hactive' with ⟨y, hy, hym⟩
-          have hfalse : False := by simpa [hdr] using hy
-          exact False.elim hfalse
+          simp [hdr] at hy
         · rcases hhold' with ⟨y, hy, hym⟩
           exact Or.inr ⟨r, hr, y, hy, hym⟩
     · rcases hhold with ⟨x, hx, hxm⟩
