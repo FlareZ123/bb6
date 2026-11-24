@@ -29,7 +29,7 @@ theorem seed17 : BB6CLine.Reach (17,11,0) := run_reach 59 _ (by decide)
 theorem seed18 : BB6CLine.Reach (18,16,0) := run_reach 95 _ (by decide)
 theorem seed23 : BB6CLine.Reach (23,17,0) := run_reach 129 _ (by decide)
 
-private theorem accepted_reach (J : State → Prop) (hj : J (5,0,1)) (hc : Closed J)
+theorem accepted_reach (J : State → Prop) (hj : J (5,0,1)) (hc : Closed J)
     (s : State) (h : BB6CLine.Reach s) : J s := by
   induction h with
   | init => exact hj
@@ -74,6 +74,72 @@ theorem source_direct_tail_forced (p : Nat) (hp : 2≤p) (J : State → Prop)
   have hs : Seeds (secPred J) := ⟨accepted_reach J hj hc _ seed12,accepted_reach J hj hc _ seed17,
       accepted_reach J hj hc _ seed18,accepted_reach J hj hc _ seed23⟩
   exact direct_tail_forced p hp (secPred J) hcon (source_direct_closed J hc) hs a k ha hk hK
+
+private theorem countdown_left (J : State → Prop) (hc : Closed J) (n k c : Nat)
+    (h : J (n,k,c+n+4)) : J (0,k+n,c+4) := by
+  induction n generalizing k with
+  | zero => simpa using h
+  | succ n ih =>
+    have he : c+(n+1)+4=(c+n+1)+4 := by omega
+    have hs' : BB6CLine.nextC (n+1,k,c+(n+1)+4)=some (n,k+1,c+n+4) := by
+      rw [he]
+      change BB6CLine.nextC (n+1,k,(c+n+1)+4)=some (n,k+1,c+n+4)
+      have he' : c+n+1+3=c+n+4 := by omega
+      rw [←he']
+      rfl
+    have h' := hc _ _ h hs'
+    have ht := ih (k+1) h'
+    simpa [Nat.add_assoc,Nat.add_comm 1 n] using ht
+
+/-- Exact one-bounce (cost two) high section return on a large cone. -/
+theorem source_high2_closed (J : State → Prop) (hc : Closed J) (a k : Nat)
+    (ha : 8≤a) (hk : 8≤k) (h1 : a+8≤2*k) (h2 : 2*k+8≤3*a)
+    (h : J (a,k,0)) :
+    J (3*a-2*k+1+2*(a%2),2*k-a+3-a%2,0) := by
+  have hA : a=(a-2)+2 := by omega
+  have hs : BB6CLine.nextC (a,k,0)=some (a-2,1,2*k+1) := by
+    conv => lhs; rw [hA]
+    rfl
+  have h0 := hc _ _ h hs
+  let c := 2*k-a-1
+  have he : 2*k+1=c+(a-2)+4 := by dsimp [c]; omega
+  rw [he] at h0
+  have hz := countdown_left J hc (a-2) 1 c h0
+  have hm : 1+(a-2)=a-1 := by omega
+  rw [hm] at hz
+  by_cases hp : a%2=0
+  · have hp' : (a-1)%2=1 := by omega
+    have hb : 4*((a-1)/2)+5=2*a+1 := by omega
+    have hs' : BB6CLine.nextC (0,a-1,c+4)=some (2*a+1,0,c+4) := by
+      simp only [BB6CLine.nextC,show ¬(a-1)%2=0 by omega,ite_false,hb]
+    have hr := hc _ _ hz hs'
+    let n := 2*k-a
+    have he1 : 2*a+1=(3*a-2*k+1)+n := by dsimp [n]; omega
+    have he2 : c+4=n+3 := by dsimp [c,n]; omega
+    rw [he1,he2] at hr
+    have h3 := countdown J hc n (3*a-2*k+1) 0 hr
+    have h4 := hc _ _ h3 (show BB6CLine.nextC (3*a-2*k+1,0+n,3)=some (3*a-2*k+1,0+n+2,1) by rfl)
+    have h5 := hc _ _ h4 (show BB6CLine.nextC (3*a-2*k+1,0+n+2,1)=some (3*a-2*k+1,0+n+2+1,0) by rfl)
+    have hh : 0+n+2+1=2*k-a+3 := by dsimp [n]; omega
+    simpa [hp,hh] using h5
+  · have hp' : (a-1)%2=0 := by omega
+    have hb : 4*((a-1)/2)+2=2*a := by omega
+    have hs' : BB6CLine.nextC (0,a-1,c+4)=some (2*a,2,c+1) := by
+      simp only [BB6CLine.nextC,hp',ite_true,hb]
+    have hr := hc _ _ hz hs'
+    let n := 2*k-a-3
+    have he1 : 2*a=(3*a-2*k+3)+n := by dsimp [n]; omega
+    have he2 : c+1=n+3 := by dsimp [c,n]; omega
+    rw [he1,he2] at hr
+    have h3 := countdown J hc n (3*a-2*k+3) 2 hr
+    have h4 := hc _ _ h3 (show BB6CLine.nextC (3*a-2*k+3,2+n,3)=some (3*a-2*k+3,2+n+2,1) by rfl)
+    have h5 := hc _ _ h4 (show BB6CLine.nextC (3*a-2*k+3,2+n+2,1)=some (3*a-2*k+3,2+n+2+1,0) by rfl)
+    have hh : 2+n+2+1=2*k-a+2 := by dsimp [n]; omega
+    have hp1 : a%2=1 := by omega
+    rw [hh] at h5
+    simpa [hp1] using h5
+
+#print axioms source_high2_closed
 
 #print axioms seed12
 #print axioms seed17
