@@ -34,6 +34,11 @@ def P0y (s : Nat) : Nat := 1678957927278 + 2390280846240*s
 def R0x (s : Nat) : Nat := 3389315364793 + 4825264211040*s
 def R0y (s : Nat) : Nat := 839478963638 + 1195140423120*s
 
+/-- The direct low-branch predecessor of R0(s). -/
+def R1AllX (s : Nat) : Nat := R0x s + R0y s - 2
+
+def R1AllY (s : Nat) : Nat := (R0y s - 2) / 2
+
 def R1x (m : Nat) : Nat := 4228794328429 + 48163237073280*m
 def R1y (m : Nat) : Nat := 419739481818 + 4780561692480*m
 
@@ -81,6 +86,24 @@ private theorem no_pow2_mul_odd_gt_one (d w n : Nat)
       rw [hw]
       exact Nat.mod_eq_zero_of_dvd hdiv2
     omega
+
+
+private theorem pow_two_even_mod5 (n : Nat) (hn : n%2=0) :
+    (2^n)%5=1 ∨ (2^n)%5=4 := by
+  obtain ⟨m,hm⟩ : ∃ m, n=2*m := by omega
+  subst n
+  have hpow : 2^(2*m)=4^m := by
+    rw [pow_mul]
+    norm_num
+  rw [hpow]
+  induction m with
+  | zero => simp
+  | succ m ih =>
+    rcases ih with h | h
+    · right
+      simp [pow_succ,Nat.mul_mod,h]
+    · left
+      simp [pow_succ,Nat.mul_mod,h]
 
 /-- The even/even sum-two source fan has only its direct parent. -/
 theorem even_even_sum2_reach_forces_direct (x y : Nat)
@@ -483,6 +506,134 @@ theorem t0_reach_implies_r0 (s : Nat)
       (BB6.Agent3Root32HighStopA4Core.run_no_odd_sum_two
         (T0Q1x s) (T0Q1y s) hfacts.1 hfacts.2.1 hfacts.2.2.1
         hfacts.2.2.2 hP2reach)
+
+/-- Exact all-depth source-parent fan for the q=0 secondary state R0(s).
+The only parents are its direct low predecessor R1All(s), or an odd-depth
+high-bounce parent.  The latter is not truncated at any fixed depth. -/
+theorem r0_all_depth_source_parent_cases (s a k : Nat)
+    (hstep : secNext (a,k) = some (R0x s,R0y s)) :
+    (a=R1AllX s ∧ k=R1AllY s) ∨
+    (∃ n : Nat, n%2=1 ∧ 3≤a ∧ a%2=1 ∧ 0<k ∧ a<2*k ∧
+      R0x s+R0y s+1=2^n*(2*a+6) ∧
+      (2*k-a+3)+(2*a+6)+3*n=R0x s+2*R0y s+2) := by
+  let x := R0x s
+  let y := R0y s
+  let W := 264299645527 + 376275289635*s
+  have hx : x%2=1 := by dsimp [x,R0x]; omega
+  have hy : y%2=0 := by dsimp [y,R0y]; omega
+  have hy5 : 5≤y := by dsimp [y,R0y]; omega
+  have hH : x+y+1=16*W := by
+    dsimp [x,y,W,R0x,R0y]
+    omega
+  have hWmod : W%5=2 := by dsimp [W]; omega
+  have hp := (section_preimage_all_iff a k x y).mp hstep
+  by_cases ha0 : a=0
+  · by_cases hk0 : k=0
+    · simp [sectionPreimageAll,ha0,hk0] at hp <;> omega
+    · by_cases hk1 : k=1
+      · simp [sectionPreimageAll,ha0,hk0,hk1] at hp <;> omega
+      · have hcase : 4≤y ∧ ∃ n : Nat,
+            x+y=2^n*8 ∧ (2*k+1)+8+3*n=x+2*y := by
+          simpa [sectionPreimageAll,ha0,hk0,hk1] using hp
+        rcases hcase with ⟨_,n,hpow,_⟩
+        have heven : (x+y)%2=0 := by
+          rw [hpow]
+          simp [Nat.mul_mod]
+        omega
+  · by_cases ha1 : a=1
+    · by_cases hk0 : k=0
+      · simp [sectionPreimageAll,ha0,ha1,hk0] at hp <;> omega
+      · by_cases hk1 : k=1
+        · simp [sectionPreimageAll,ha0,ha1,hk0,hk1] at hp <;> omega
+        · by_cases hk2 : k=2
+          · simp [sectionPreimageAll,ha0,ha1,hk0,hk1,hk2] at hp <;> omega
+          · by_cases hk3 : k=3
+            · simp [sectionPreimageAll,ha0,ha1,hk0,hk1,hk2,hk3] at hp <;> omega
+            · have hcase :
+                  (y=3 ∧ ∃ n : Nat, x+6=2^n*16 ∧
+                    (2*k-3)+16+3*n=x+10) ∨
+                  (5≤y ∧ ∃ n : Nat, x+y+1=2^n*16 ∧
+                    (2*k-3)+16+3*n=x+2*y+2) := by
+                simpa [sectionPreimageAll,ha0,ha1,hk0,hk1,hk2,hk3] using hp
+              rcases hcase with ⟨hy3,_⟩ | ⟨_,n,hpow,hcost⟩
+              · omega
+              · have hnEven : n%2=0 := by omega
+                have hmul : 16*W=16*2^n := by
+                  calc
+                    16*W = x+y+1 := hH.symm
+                    _ = 2^n*16 := hpow
+                    _ = 16*2^n := Nat.mul_comm _ _
+                have hWeq : W=2^n := by omega
+                have hpowmod := pow_two_even_mod5 n hnEven
+                rw [hWeq] at hWmod
+                rcases hpowmod with h1 | h4 <;> omega
+    · have ha2 : 2≤a := by omega
+      by_cases hk0 : k=0
+      · simp [sectionPreimageAll,ha0,ha1,hk0] at hp <;> omega
+      · by_cases hlow : 2*k≤a
+        · have hcase : x=a-2*k ∧ y=2*k+2 := by
+            simpa [sectionPreimageAll,ha0,ha1,hk0,hlow] using hp
+          rcases hcase with ⟨_,hyy⟩
+          left
+          constructor
+          · dsimp [R1AllX,x,y]
+            omega
+          · dsimp [R1AllY,y]
+            omega
+        · by_cases haeven : a%2=0
+          · have hcase : 4≤y ∧ ∃ n : Nat,
+                x+y=2^n*(2*(a-1)+6) ∧
+                (2*k-a+3)+(2*(a-1)+6)+3*n=x+2*y := by
+              simpa [sectionPreimageAll,ha0,ha1,hk0,hlow,haeven] using hp
+            rcases hcase with ⟨_,n,hpow,_⟩
+            have hfactor : 2*(a-1)+6=2*a+4 := by omega
+            have heven : (x+y)%2=0 := by
+              rw [hpow,hfactor]
+              simp [Nat.mul_mod]
+            omega
+          · have hcase :
+                (y=3 ∧ ∃ n : Nat, x+6=2^n*(2*(a-1)+8) ∧
+                  (2*k-a+3)+(2*(a-1)+8)+3*n=x+10) ∨
+                (5≤y ∧ ∃ n : Nat, x+y+1=2^n*(2*(a-1)+8) ∧
+                  (2*k-a+3)+(2*(a-1)+8)+3*n=x+2*y+2) := by
+              simpa [sectionPreimageAll,ha0,ha1,hk0,hlow,haeven] using hp
+            rcases hcase with ⟨hy3,_⟩ | ⟨_,n,hpow,hcost⟩
+            · omega
+            · have hfactor : 2*(a-1)+8=2*a+6 := by omega
+              have hsum' : x+y+1=2^n*(2*a+6) := by
+                simpa [hfactor] using hpow
+              have hcost' :
+                  (2*k-a+3)+(2*a+6)+3*n=x+2*y+2 := by
+                simpa [hfactor] using hcost
+              have hnOdd : n%2=1 := by omega
+              have haOdd : a%2=1 := by omega
+              have hsum'' : R0x s+R0y s+1=2^n*(2*a+6) := by
+                simpa [x,y] using hsum'
+              have hcost'' :
+                  (2*k-a+3)+(2*a+6)+3*n=R0x s+2*R0y s+2 := by
+                simpa [x,y] using hcost'
+              right
+              exact ⟨n,hnOdd,by omega,haOdd,by omega,by omega,hsum'',hcost''⟩
+
+/-- Reachability of R0(s) must come from the direct predecessor or one
+member of its unbounded odd-depth high-bounce fan. -/
+theorem r0_reach_implies_parent_fan (s : Nat)
+    (hR0 : RunReach (R0x s) (R0y s)) :
+    RunReach (R1AllX s) (R1AllY s) ∨
+    (∃ n a k : Nat, n%2=1 ∧ 3≤a ∧ a%2=1 ∧ 0<k ∧ a<2*k ∧
+      R0x s+R0y s+1=2^n*(2*a+6) ∧
+      (2*k-a+3)+(2*a+6)+3*n=R0x s+2*R0y s+2 ∧
+      RunReach a k) := by
+  obtain ⟨a,k,hprev,hstep⟩ :=
+    BB6.Agent3Root32HighStopA4Core.run_parent_of_left_gt5
+      (R0x s) (R0y s) (by dsimp [R0x]; omega) hR0
+  rcases r0_all_depth_source_parent_cases s a k hstep with hdirect | hhigh
+  · rcases hdirect with ⟨ha,hk⟩
+    left
+    simpa only [ha,hk] using hprev
+  · rcases hhigh with ⟨n,hn,ha3,haodd,hkpos,hahigh,hsum,hcost⟩
+    right
+    exact ⟨n,a,k,hn,ha3,haodd,hkpos,hahigh,hsum,hcost,hprev⟩
 
 /-- The exact R0(8*m) sum-seven inverse forces the R1 target. -/
 theorem r0_eight_unreachable (m : Nat) :
