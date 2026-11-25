@@ -283,6 +283,14 @@ jobs:
               "Raw114CompleteData", "TM63RawUpperInterface", "Raw107ParentClosure",
               "Canonical77ExactComposition", "CanonicalTwoParentAccepted"
           ]
+          def module_olean(name):
+              for candidate in (
+                  root / (name + ".olean"),
+                  pathlib.Path("/tmp/a47-canonical") / (name + ".olean"),
+              ):
+                  if candidate.is_file():
+                      return candidate
+              raise SystemExit("missing compiled module: " + name)
           metadata = {
               "claim": "Conditional exactness reduces to Covers for 76 residual quotient representatives; this is not a completed BB(6) upper bound.",
               "canonical77_artifact_run_id": 45554648116,
@@ -299,18 +307,10 @@ jobs:
               "shared_core_manifest_sha256": digest(pathlib.Path("manifest/shared-core-manifest.json")),
               "precompiled_reused_module_count": shared["precompiled_core"]["reused_module_count"],
               "precompiled_reused_modules": shared["precompiled_core"]["reused_modules"],
-              def module_olean(name):
-                  for candidate in (
-                      root / (name + ".olean"),
-                      pathlib.Path("/tmp/a47-canonical") / (name + ".olean"),
-                  ):
-                      if candidate.is_file():
-                          return candidate
-                  raise SystemExit("missing compiled module: " + name)
-              metadata["modules"] = {
+              "modules": {
                   name: {"olean_sha256": digest(module_olean(name))}
                   for name in modules
-              }
+              },
               "lean_binary_path": pathlib.Path("/tmp/a31/lean-binary-path.txt").read_text().strip(),
               "lean_binary_sha256": pathlib.Path("/tmp/a31/lean-binary.sha256").read_text().strip(),
           }
