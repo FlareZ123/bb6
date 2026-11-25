@@ -11,7 +11,7 @@ MOVES=[w+d+q for w,d,q in product("01","LR","ABCDEF")]
 subprocess.run(["g++","-std=c++17","-O3",str(ROOT.parent/"agent2-tnf-raw99"/"enumerate.cpp"),"-o",str(ROOT/"enumerate")],check=True)
 subprocess.run([str(ROOT/"enumerate"),PARENT],cwd=ROOT,check=True)
 raw=(ROOT/"open.txt").read_bytes()
-assert hashlib.sha256(raw).hexdigest()=="6efd8ce1d52920d5282b9e4e65e97d7edbed6b1232f325550945e30ae8574f8f5"
+assert hashlib.sha256(raw).hexdigest()=="6efd8ce1d52920d542b9e4e65e97d7edbed6b1232f325550945e30ae8574f8f5"
 opens=raw.decode().splitlines()
 assert len(opens)==282 and len(set(opens))==282
 index={s:i for i,s in enumerate(opens)}
