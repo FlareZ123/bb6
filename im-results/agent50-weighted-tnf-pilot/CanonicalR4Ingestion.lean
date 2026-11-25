@@ -133,6 +133,9 @@ noncomputable def r4Remaining : List (List Move × PartialMachine) := residuals 
 theorem r4Subtree_expandedNodes : expandedNodes r4Subtree = 7 := by
   decide
 
+/-- This counts explicit `.closed` nodes only. Each of the seven expansions
+    also discharges its first-hole halt branch through `hweight`; those
+    branches are covered by `RootedFrontier.sound` but are not counted here. -/
 theorem r4Subtree_closedLeaves : closedLeaves r4Subtree = 1 := by
   decide
 
