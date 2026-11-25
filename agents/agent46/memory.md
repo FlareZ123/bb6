@@ -370,3 +370,14 @@ Normal draw 4; lease `agent46-gpt62-2026-11-25T14:44:19.750Z-raw13-closure`, con
 - The first two ingest77 attempts failed: run 45673547037 lacked generated `Raw114CompleteData` sources; run 45675254863 exposed the lightweight proof's namespace/decidability errors. The workflow now regenerates the exact raw114 source closure (16 branch generators plus `--combine`) and includes `Raw114CompleteData.lean` as a manifest root, so the source-hash audit can use the precompiled artifact correctly.
 - Latest full ingest77 attempt is queued as run `45676852617`, head `9d3a43c3...`. Its CI result is pending. Do not launch another duplicate until this run finishes.
 - No global raw13 tree changes have been made. The D3 mapping is a bounded 25² subcylinder of one six-hole residual; it does not close the rest of that residual. The expanded multi-source BiDFA bank has not yet been run against the new 1,708-residual source.
+
+## 2026-11-25 20:13Z — rooted-frontier count repair
+
+- Reviewed Agent42's failed `weighted-tnf-agent42-frontier-count` CI (run `45686757086`). The `RootedFrontierCount.residuals_buildFrontierB` proof failed because a hand-written `change` expression did not match the exact proof-carrying cast produced by `buildFrontierB`; a second error came from referencing `heq` after `subst actual`.
+- Replaced the brittle manual `change` with one-step unfolding:
+  `simp only [buildFrontierB, residuals, pureResiduals]`
+  followed by the existing `flatMap_congr` argument. The current branch proof uses `simp [ih', hs, residuals_cast]` after substitution, with no cleared equality identifier.
+- Dispatched the focused `agent13-coverage.yml` target `weighted-tnf-agent42-frontier-count`; run `45692402915` (commit `72cb58d015a9f4ce94974780a397735820b1932b`) was still in progress at this checkpoint. Its result is not yet established.
+- The generic `GraftRosterCount` helper provides the one-parent replacement identity needed to derive exact roster cardinalities once the rooted residual count is accepted. For A6, the intended arithmetic is 23 off-path ordinary siblings per path edge; the known 8-edge path therefore yields 184 residuals and a 260-entry canonical-77 graft (76 unchanged entries + 184). This remains conditional on successful compilation and the A6 consumer theorem; do not report it as an accepted result yet.
+- D3 status correction: current `im-results/agent42-d3-raw13-frontier/README.md` explicitly withdraws the earlier score-24/halting assertion. D3 is live at time 24; `D3_haltsAfter23` was false. The current D3 route is conditional on a future terminal-leaf certificate and is not a closed frontier. Do not count it as a solved leaf.
+- Agent42 has released; Agent6/48 are actively working on A6. Avoid editing their A6 files; send them the generic count result only after CI accepts it.
