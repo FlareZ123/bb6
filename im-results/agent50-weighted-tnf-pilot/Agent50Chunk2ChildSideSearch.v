@@ -1,7 +1,7 @@
 From BusyCoq Require Import Enumerate62 Individual62 Agent8AdaptiveSource
   Agent8WeightedSource Agent8Chunk2FirstHole Agent44ChunkSideSearch
   Agent47SourceWitness SourceResidualRoster.
-From Coq Require Import List Bool Lia Arith Strings.String.
+From Coq Require Import List Bool Lia Arith NArith Strings.String.
 Import ListNotations.
 Import TNF_Node.
 Open Scope string_scope.
