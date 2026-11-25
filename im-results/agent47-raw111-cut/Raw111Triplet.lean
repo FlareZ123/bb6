@@ -58,8 +58,8 @@ theorem dSweepFramed (L R : List Bool) :
     run0 table 3 ⟨3,[false,false]++Z++L,R⟩ =
       some ⟨3,[false,false]++L,O++R⟩ := by rfl
 
-theorem fEntry (L : List Bool) :
-    run0 table 2 ⟨5,L,[]⟩ = some ⟨3,[false,false]++L,[]⟩ := by rfl
+theorem fEntry (n : Nat) :
+    run0 table 2 (f n) = some ⟨3,[false,false]++Z++rep Z n++S,[]⟩ := by rfl
 theorem fExit (R : List Bool) :
     run0 table 9 ⟨3,[false,false]++Z++S,R⟩ =
       some (a true 0 (true::R)) := by rfl
@@ -69,7 +69,9 @@ theorem fReturn (n : Nat) :
       some (a true 0 (rep O n ++ [true])) := by
   have h1 : run0 table 2 (f n) =
       some ⟨3,[false,false]++rep Z n++Z++S,[]⟩ := by
-    simpa only [f,List.append_assoc,rep_snoc Z n] using fEntry (Z++rep Z n++S)
+    have hz : rep Z n ++ (Z ++ S) = Z ++ (rep Z n ++ S) := by
+      simpa only [List.append_assoc] using congrArg (· ++ S) (rep_snoc Z n)
+    simpa only [List.append_assoc, hz] using fEntry n
   have h2 := sweepL table 3 [false,false] [] Z O 3 dSweepFramed n (Z++S) []
   simp only [List.nil_append,List.append_nil,List.append_assoc] at h2
   have H := join0 (join0 h1 h2) (fExit (rep O n))
