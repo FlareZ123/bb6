@@ -67,6 +67,11 @@ on:
         required: false
         type: boolean
         default: false
+      q_even_h5_odd_only:
+        description: 'Compile Agent 25 complete affine odd-lift inverse certificate against source'
+        required: false
+        type: boolean
+        default: false
       odd_even_fan_only:
         description: 'Compile the generic odd/even fan and the odd-z second-generation parent fan, then stop'
         required: false
@@ -123,8 +128,17 @@ jobs:
         run: |
           python3 tools/lean_compile_closure.py im-results/agent3-c-bounce-inverse/OddZSecondParentFan.lean \
             --workdir /tmp/odd-even-fan-closure --jobs 4 --lean "$(command -v lean)"
+      - name: Compile full odd-lift inverse certificate
+        if: ${{ inputs.q_even_h5_odd_only }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/agent25-odd
+          base64 -d im-results/agent25-c-odd-lift/QEvenH5OddCertificate.lean.xz.b64 | xz -d > /tmp/agent25-odd/QEvenH5OddCertificate.lean
+          echo 'd4d45b635a6736c7384164a24a619a339a7590c9ee379d9ec24161c007ab53b7  /tmp/agent25-odd/QEvenH5OddCertificate.lean' | sha256sum -c -
+          python3 tools/lean_compile_closure.py /tmp/agent25-odd/QEvenH5OddCertificate.lean --workdir /tmp/agent25-odd-build --jobs 4 --lean "$(command -v lean)" | tee /tmp/agent25-odd.log
+          if grep -E 'depends on axioms:.*(sorryAx|native_decide)' /tmp/agent25-odd.log; then exit 1; fi
       - name: Verify against original unmodified section and bounce source
-        if: ${{ !inputs.root32_only && !inputs.root32_cone_only && !inputs.w11_q11_only && !inputs.a4_t719_only && !inputs.a4_r0_odd_only && !inputs.r_q3_only && !inputs.odd_even_fan_only && !inputs.forced_cylinder_only }}
+        if: ${{ !inputs.root32_only && !inputs.root32_cone_only && !inputs.w11_q11_only && !inputs.a4_t719_only && !inputs.a4_r0_odd_only && !inputs.r_q3_only && !inputs.odd_even_fan_only && !inputs.forced_cylinder_only && !inputs.q_even_h5_odd_only }}
         run: |
           mkdir -p /tmp/a3-bounce
           cp im-results/agent11-c-line/CLine.lean /tmp/a3-bounce/
