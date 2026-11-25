@@ -34,7 +34,8 @@ theorem prefix_advance {q v : Nat} (i : Nat) (hr : MacroReach q v)
     have hp := Expanded.pending (i+1) hr hv hz'
     simpa only [Nat.add_assoc,BB6P1Unit.run] using hp
   · have hb : bit (q+i) (R q v i)=1 := by
-      unfold BB6P1Unit.bit at *
+      change (if q+i+1≤2*R q v i then 1 else 0) ≠ 0 at h
+      change (if q+i+1≤2*R q v i then 1 else 0) = 1
       split at h <;> simp_all
     have hf : firstWrap q v (i+1) := by
       refine ⟨by omega,?_,?_⟩
@@ -60,6 +61,7 @@ theorem small_is_boundary {q v : Nat} (he : Expanded q v) (hv : v≤2) :
   cases he with
   | boundary hr => exact hr
   | @pending q v i hr hv' hz =>
+    exfalso
     have hvq := macro_reach_valid hr
     unfold valid at hvq
     have hp := BB6P1Unit.run_zero_prefix q v i (by omega) hz
@@ -90,7 +92,9 @@ theorem fast_block {q v k : Nat} (he : Expanded q v) (hq : 0<q)
     rcases hs with h|⟨r,a,h,h'⟩
     · exact BB6.Agent43ForwardBlock.no_small_of_zero_word q v k hq hv hv3 (hw ▸ h)
     · exact BB6.Agent43ForwardBlock.no_small_of_lowbit q v k r a hf (hw ▸ h) (hr ▸ h')
-  rw [hr,run_eq]
+  rw [hr]
+  change Expanded (q+k) (B q v k)
+  rw [run_eq q v k]
   apply expanded_block he
   intro i hi
   by_cases h : i=0
