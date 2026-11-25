@@ -85,9 +85,16 @@ Theorem agent50_q32_parent_tree_checked :
     agent50_q32_parent_tree = true.
 Proof.
   unfold agent50_q32_parent_tree.
-  cbn [source_tree_check].
+  change (Nat.leb 9 7014 &&
+    (source_hole_atb q32_canonical_residual_7 3 (A,S1) &&
+     forallb (fun v =>
+       source_tree_check 7014
+         (tm_upd q32_canonical_residual_7 (A,S1) v)
+         (agent50_q32_child_tree
+           (tm_upd q32_canonical_residual_7 (A,S1) v)))
+       source_moves)) = true.
   apply andb_true_iff. split.
-  - apply Nat.leb_le. lia.
+  - vm_compute. reflexivity.
   - apply andb_true_iff. split.
     + vm_compute. reflexivity.
     + apply forallb_forall. intros v Hv.
