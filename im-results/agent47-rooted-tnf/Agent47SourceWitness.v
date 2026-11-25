@@ -10,9 +10,9 @@ Open Scope nat_scope.
 Module Agent47TC := TranslatedCyclers BB62.
 
 Lemma translated_nonhalt_transfer (p : TM) :
-  ~ Agent47TC.TM.halts p Agent47TC.TM.c0 -> ~ halts p c0.
+  ~ Agent47TC.Flip.Compute.TM.halts p Agent47TC.Flip.Compute.TM.c0 -> ~ halts p c0.
 Proof.
-  rewrite Agent47TC.TM.halts_halts', halts_halts'.
+  rewrite Agent47TC.Flip.Compute.TM.halts_halts', halts_halts'.
   exact (fun h => h).
 Qed.
 
