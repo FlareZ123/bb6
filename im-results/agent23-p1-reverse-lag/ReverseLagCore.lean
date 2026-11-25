@@ -266,6 +266,81 @@ theorem extend_to_DWalk (n s B a k C c : Nat)
         (targetsRev n s (C+2^(s+k)*x) k) c
         (target n (s+k) (C+2^(s+k)*x)) d hwalk hedge'
 
+
+/-- Every reverse-walk edge chooses one of the two legal extension bits. -/
+theorem dWalk_to_extend (n s B a k c : Nat) (hk : k≤n)
+    (hwalk : DWalk (n+s+3) a (targetsRev n s B k) c) :
+    ∃ C, Extend n s B a k C c := by
+  revert c hk
+  induction k with
+  | zero =>
+    intro c hk hwalk
+    cases hwalk
+    exact ⟨B,Extend.nil⟩
+  | succ k ih =>
+    intro c hk hwalk
+    have hklt : k<n := by omega
+    change DWalk (n+s+3) a
+      (target n (s+k) B :: targetsRev n s B k) c at hwalk
+    cases hwalk with
+    | snoc ys z y w hprev hedge =>
+      have hprev' : DWalk (n+s+3) a (targetsRev n s B k) z := by
+        simpa using hprev
+      obtain ⟨C,hExt⟩ := ih z (by omega) hprev'
+      obtain ⟨R,hR⟩ := extend_mod n s B a k C z hExt
+      have htarget : target n (s+k) C = target n (s+k) B := by
+        rw [hR]
+        exact target_prefix n s (s+k) B R (by omega)
+      have hedge' :
+          EdgeY (n+s+k+3) (target n (s+k) B) z w := by
+        simpa [targetsRev_length,Nat.add_assoc,Nat.add_comm,Nat.add_left_comm] using hedge
+      rcases hedge' with ⟨hz,hw,hy,hbranch⟩
+      rcases hbranch with h0|h1
+      · refine ⟨C+2^(s+k)*0,?_⟩
+        apply Extend.step k C z 0 w hExt (by omega)
+        rw [htarget]
+        simpa [Nat.add_assoc] using h0
+      · refine ⟨C+2^(s+k)*1,?_⟩
+        apply Extend.step k C z 1 w hExt (by omega)
+        rw [htarget]
+        simpa [Nat.add_assoc] using h1
+
+/-- The reverse-live set is exactly the set of prefixes admitting an
+    n-bounded delayed-carry extension. -/
+theorem reverseLive_iff_extend (n s B a k : Nat)
+    (hn : 0<n) (hk : k≤n) (hTrace : Trace n s B a) :
+    a ∈ reverseLive (n+s+3) (targetsRev n s B k) ↔
+      ∃ C c, Extend n s B a k C c := by
+  have hys := targetsRev_bits n s B k
+  constructor
+  · intro hmem
+    obtain ⟨z,hwalk,_⟩ :=
+      (mem_reverseLive (n+s+3) a (targetsRev n s B k) hys).mp hmem
+    obtain ⟨C,hExt⟩ := dWalk_to_extend n s B a k z hk hwalk
+    exact ⟨C,z,hExt⟩
+  · rintro ⟨C,c,hExt⟩
+    have hwalk0 := extend_to_DWalk n s B a k C c hn hTrace hExt
+    obtain ⟨R,hR⟩ := extend_mod n s B a k C c hExt
+    have htargets : targetsRev n s C k = targetsRev n s B k := by
+      rw [hR]
+      exact targetsRev_prefix_stable n s B R k hk
+    have hwalk : DWalk (n+s+3) a (targetsRev n s B k) c := by
+      rw [htargets] at hwalk0
+      exact hwalk0
+    have htr := extend_trace n s B a k C c hTrace hExt
+    have hb := (trace_bounds n (s+k) C c htr).2.2.2
+    apply (mem_reverseLive (n+s+3) a (targetsRev n s B k) hys).mpr
+    refine ⟨c,hwalk,?_⟩
+    simp only [targetsRev_length]
+    omega
+
+/-- The Boolean reverse lookahead is an exact existence decision. -/
+theorem reverseLookahead_iff_extend (n s B a k : Nat)
+    (hn : 0<n) (hk : k≤n) (hTrace : Trace n s B a) :
+    reverseLookahead n s B a k = true ↔
+      ∃ C c, Extend n s B a k C c := by
+  simp [reverseLookahead,reverseLive_iff_extend n s B a k hn hk hTrace]
+
 /-- The reverse-live set is a sound, exact Boolean lookahead for any
     delayed-carry extension of length k. -/
 theorem reverseLookahead_sound (n s B a k C c : Nat)
@@ -304,21 +379,17 @@ theorem covered_next_reverse (n s h : Nat) (ps : List Prefix)
     extend_prefix n s D d (h+n) C c n hfull (by omega)
   have hm := hcover D d F f hpre hshort
   have hm' := extend_in_advance n s D d h B a ps hm hExt'
-  obtain ⟨R,hR⟩ := extend_mod n (s+h) B a n C c hE
-  have htargets :
-      targetsRev n (s+h) C n = targetsRev n (s+h) B n := by
-    rw [hR]
-    exact targetsRev_prefix_stable n (s+h) B R n (by omega)
-  have hrev := reverseLookahead_sound n (s+h) B a n C c hn htr hE
-  rw [htargets] at hrev
-  have hfilter : reverseLookahead n (s+h) B a n = true := by
-    simp [reverseLookahead,hrev]
+  have hfilter : reverseLookahead n (s+h) B a n = true :=
+    (reverseLookahead_iff_extend n (s+h) B a n hn (by omega) htr).2 ⟨C,c,hE⟩
   simp [nextBlockReverse,hm',hfilter]
 
 #print axioms mem_backY
 #print axioms mem_reverseLive
 #print axioms extend_to_DWalk
 #print axioms reverseLookahead_sound
+#print axioms dWalk_to_extend
+#print axioms reverseLive_iff_extend
+#print axioms reverseLookahead_iff_extend
 #print axioms covered_next_reverse
 
 end BB6.Agent23ReverseLag
