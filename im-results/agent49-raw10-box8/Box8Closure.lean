@@ -30,8 +30,7 @@ theorem source_exact : raw10Remainder[8]! = box := by
   funext s
   have h := exact_box_at_index (8 : Fin 34) s
   change raw10Remainder[8]! s = (boxes[8]! (slotIndex s)).map decodeCode at h
-  rw [h, encoded_exact]
-  rfl
+  simpa only [box, encoded_exact] using h
 
 /-- F0=0 is an assigned halt, not a wildcard; F1 is explicitly optional. -/
 def partial (c : Fin 25) (f1 : Option Transition) : PartialMachine := fun s =>
@@ -104,14 +103,16 @@ theorem cycle_never (c : Fin 25) (hc : c ∈ witnesses.map Witness.code)
 theorem sweep_left_table : BB6BlockFAR.partialTable (BB6.Agent49Box8Sweep.machine false) =
     partial 1 none := by
   funext s
-  exact (show ∀ s : Slot, BB6BlockFAR.partialTable (BB6.Agent49Box8Sweep.machine false) s =
-    partial 1 none s by decide) s
+  have h : ∀ s : Slot, BB6BlockFAR.partialTable (BB6.Agent49Box8Sweep.machine false) s =
+    partial 1 none s := by decide
+  exact h s
 
 theorem sweep_right_table : BB6BlockFAR.partialTable (BB6.Agent49Box8Sweep.machine true) =
     partial 14 none := by
   funext s
-  exact (show ∀ s : Slot, BB6BlockFAR.partialTable (BB6.Agent49Box8Sweep.machine true) s =
-    partial 14 none s by decide) s
+  have h : ∀ s : Slot, BB6BlockFAR.partialTable (BB6.Agent49Box8Sweep.machine true) s =
+    partial 14 none s := by decide
+  exact h s
 
 theorem sweep_left_never (m : Machine) (hm : compatible (partial 1 none) m) : NeverHalts m :=
   BB6BlockFAR.transfer_never (BB6.Agent49Box8Sweep.machine false) m
@@ -171,7 +172,7 @@ theorem three_halt_slice (c : Fin 25) (hc : c = 12 ∨ c = 22 ∨ c = 24)
       intro t ht
       have h : (none : Transition) = t := Option.some.inj ht
       simpa [← h] using hf)
-    apply weighted_of_margin 38 m _ (by decide)
+    refine weighted_of_margin 38 m ?_ (by decide)
     rcases hc with rfl|rfl|rfl
     · exact (finiteHaltCheck_sound _ 32 33 (by decide) halt12_checked).sound m hp
     · exact (finiteHaltCheck_sound _ 11 33 (by decide) halt22_checked).sound m hp
@@ -198,6 +199,34 @@ theorem box8_bound (m : Machine) (hm : Fits box m) : WeightedBound 38 m := by
 theorem original_box8_bound (m : Machine) (hm : Fits raw10Remainder[8]! m) :
     WeightedBound 38 m := box8_bound m (by simpa [source_exact] using hm)
 
+/-- Every subrectangle of the original box is also closed.  This avoids
+relying on a particular ordering of the later combined remainder. -/
+def subsetMatch (r : Box Slot Transition) : Bool :=
+  (List.finRange 6).all fun q =>
+    [false,true].all fun b =>
+      (r (q,b)).all fun v => decide (v ∈ box (q,b))
+
+theorem subsetMatch_sound (r : Box Slot Transition) (h : subsetMatch r = true)
+    (m : Machine) (hm : Fits r m) : Fits box m := by
+  intro s
+  obtain ⟨q,b⟩ := s
+  have hq := List.all_eq_true.mp h q (List.mem_finRange q)
+  have hb := List.all_eq_true.mp hq b (by cases b <;> simp)
+  exact of_decide_eq_true (List.all_eq_true.mp hb (m (q,b)) (hm (q,b)))
+
+theorem residual_without_box8 (B : Nat) (hB : 38 ≤ B)
+    (rs : List (Box Slot Transition))
+    (hopen : ∀ r ∈ rs, subsetMatch r = false → ∀ m, Fits r m → WeightedBound B m) :
+    ∀ r ∈ rs, ∀ m, Fits r m → WeightedBound B m := by
+  intro r hr m hm
+  cases h : subsetMatch r with
+  | false => exact hopen r hr h m hm
+  | true =>
+    have hb := box8_bound m (subsetMatch_sound r h m hm)
+    intro k d hk hd
+    exact Nat.le_trans (hb k d hk hd) hB
+
+#print axioms residual_without_box8
 #print axioms encoded_exact
 #print axioms source_exact
 #print axioms witnesses_checked
