@@ -150,7 +150,7 @@ Proof.
   simpl in Hp.
   subst p.
   apply q2800_tree_check_sound.
-  apply forallb_forall with (x := (s,t)) in q2800_trees_checked.
+  eapply forallb_forall.
   - exact q2800_trees_checked.
   - exact HIn.
 Qed.
