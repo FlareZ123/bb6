@@ -4,7 +4,29 @@ on:
 permissions:
   contents: read
 jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check prefix equivalence and one generated audit subtree
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          cd im-results/agent47-raw114-cut
+          python paired_counter.py
+          python long_sweep.py
+          python generate_complete.py 0LA
+          cd ../..
+          python tools/lean_compile_closure.py --workdir /tmp/a47-preflight --jobs 4 im-results/agent47-raw114-cut/Raw114Complete0LAKid00.lean | tee /tmp/a47-preflight.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a47-preflight.log; then exit 1; fi
   branch:
+    needs: preflight
     strategy:
       fail-fast: false
       max-parallel: 8
