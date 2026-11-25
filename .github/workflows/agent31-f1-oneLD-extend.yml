@@ -17,7 +17,7 @@ jobs:
         with:
           name: raw139-f1-oneLD-discovery
           run-id: 45618468915
-          github-token: \${{ github.token }}
+          github-token: ${{ github.token }}
           path: /tmp/a31-oneLD-artifact
       - name: Extend the three unresolved leaves
         run: python im-results/agent31-f1-cycle-siblings/extend_oneLD.py /tmp/a31-oneLD-artifact
