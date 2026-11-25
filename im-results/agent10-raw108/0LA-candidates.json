@@ -86,7 +86,8 @@
   "1012344514444",
   "101234453446441",
   "101635573295955482842",
-  "10526333332172345"
+  "10526333332172345",
+  "0012345677899a188bc87627bc4"
  ],
  "auto": {
   "13": [
@@ -4241,8 +4242,7 @@
   ]
  },
  "remaining": [
-  114,
-  1099
+  114
  ],
- "status": "Candidate descriptors only; original-source Lean validation pending. Bound 26340 is conservative pending remaining leaves; not a theorem."
+ "status": "Candidate descriptors only; original-source Lean validation pending. Bound 26340 is conservative pending remaining leaf; not a theorem."
 }
