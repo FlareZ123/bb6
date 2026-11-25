@@ -941,3 +941,14 @@ Actual RNG 3 (normal). Claimed Agent13 19:35:34.911Z, run_id agent13-gpt62-2026-
   - `M2EvenResidueTwo` → `im-results/agent42-champion-terminal/M2EvenResidueTwo.lean`
   Added their source roots and provenance inputs.
 - Current retry **45711333512** is queued on commit `dc472ffd84343090922063d19fe5c17e803e1f3c`. Artifact merge, raw107 generation, Raw114 branch generation, and Box18to24 generation have each passed in the immediately preceding run; this retry should now reach Lean's source/type checking.
+
+
+## 2026-11-25 22:17 UTC — source closure finally reaches Lean compilation
+
+- Current run **45711333512** has passed:
+  - canonical77 and raw107 artifact downloads;
+  - merged-manifest validation, including every referenced `.olean` path;
+  - held-leaf, raw107, and all 16 Raw114 branch source generation (384 Kid modules);
+  - exact seven-rectangle source generation.
+- It is now running the single Lean closure compile for `HeldBlockRaw10Combined`, `Raw10Box18to24CombinedBridge`, `CanonicalTwoParentRosterOnly`, `Canonical76Raw10Membership`, and `Canonical76Raw10Boxes18to24Consumer`, followed by the required axiom audit. This is the first attempt to reach actual Lean theorem checking after the setup repairs.
+- Do not start another overlapping compile while this run is active. If it fails, inspect only the failed-job tail and fix the specific Lean or audit issue.
