@@ -15,18 +15,20 @@ Raw index 59 of Agent31's 124-cylinder roster: `1RB---_1RC---_0RD---_1LD1RE_---1
 | 0RB | 241 | 1481 | 26750 | 7006 | 306 FAR + 2 ngram | [passed](https://github.com/FlareZ123/bb6/actions/runs/45532160410) |
 | 0LD | 125 | 1413 | 25038 | 6748 | 698 FAR + 11 ngram + 5 sweeps | [passed](https://github.com/FlareZ123/bb6/actions/runs/45532361189) |
 | 1RC | 190 | 1619 | 28427 | 8164 | 645 FAR + sweep + shared RC | [passed](https://github.com/FlareZ123/bb6/actions/runs/45534269425) |
-| 0RC | 226 | 1787 | 31130 | 9692 | 278 FAR + sweep + shared RC | submitted |
-| 0RF | 223 | 2301 | 42708 | 9471 | 731 FAR + 8 ngram + 6 sweeps | retry: first run failed Lean installation (503) |
-| 1LA | 293 | 1047 | 16645 | 4556 | 2861 FAR + 12 ngram + 7 sweeps + counter | submitted |
+| 0RC | 226 | 1787 | 31130 | 9692 | 278 FAR + sweep + shared RC | [passed](https://github.com/FlareZ123/bb6/actions/runs/45534341369) |
+| 0RF | 223 | 2301 | 42708 | 9471 | 731 FAR + 8 ngram + 6 sweeps | [passed](https://github.com/FlareZ123/bb6/actions/runs/45535002020) |
+| 1LA | 293 | 1047 | 16645 | 4556 | 2861 FAR + 12 ngram + 7 sweeps + counter | [passed](https://github.com/FlareZ123/bb6/actions/runs/45534793732) |
+| 1RF | 376 | 2531 | 45809 | 10651 | 1724 FAR + 15 ngram + 5 sweeps + 10 manual | complete candidate, CI pending |
 | 0RA, 1LD, 1RA, 1RE | 395 | 0 | 1 each | 0 | direct cycles | pending combined |
 | halt | 395 | 0 | 0 | 0 | zero-delay graph | pending combined |
 
-The independent branch successes cover 29,296,875 literal completions. The combined theorem `Raw59Refinement.lean` is a candidate graft covering 17 of 25 first-hole choices (166,015,625 completions), leaving 8 five-hole children (78,125,000 completions) and 131 entries in the overall residual roster. No global upper bound is asserted. Pending entries must not be counted as accepted until their original-source proof checks succeed.
+The independent branch successes cover 58,593,750 literal completions. The combined theorem `Raw59Refinement.lean` is a candidate graft covering 17 of 25 first-hole choices (166,015,625 completions), leaving 8 five-hole children (78,125,000 completions) and 131 entries in the overall residual roster. No global upper bound is asserted. Pending entries must not be counted as accepted until their original-source proof checks succeed.
 
 ## Mathematical holdouts
 
 * [Shared RC finite-language invariant](Raw59RC.md): two ten-plus-one-transition machines with B1 unassigned; all completions never halt. Exact universal macro composition, finite language closure, arbitrary live duration, and bridge to actual source semantics passed [CI](https://github.com/FlareZ123/bb6/actions/runs/45534189368).
-* [1LA binary counter](Raw59LACount.lean): arbitrary width, exact cost recurrence c(0)=0, c(n+1)=2c(n)+10+2n; epoch length 12*2^n-2. Local proof checked against copied computational zipper definitions, original-source bridge submitted.
+* [1LA binary counter](Raw59LACount.lean): arbitrary width, exact cost recurrence c(0)=0, c(n+1)=2c(n)+10+2n; epoch length 12*2^n-2. Local proof checked against copied computational zipper definitions, [original-source certificate passed](https://github.com/FlareZ123/bb6/actions/runs/45534793732).
+* 1RF: five recursive restoration counters with a shared parametric proof [accepted](https://github.com/FlareZ123/bb6/actions/runs/45535386620), one triple-block grammar machine [accepted](https://github.com/FlareZ123/bb6/actions/runs/45535698689), four finite-language scan/flush machines (core Lean proof checked, original-machine bridge correction submitted). The entire 1RF branch certificate candidate combines these with FAR, n-gram and framed sweeps.
 * [Three-cell recursive counter](Raw59RBCount.lean), [alternating sweep](Raw59RDSweep.lean), and generated exact sweeps. All macro rules preserve arbitrary untouched tails.
 
 ## Reproduce
