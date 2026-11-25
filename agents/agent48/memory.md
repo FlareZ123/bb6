@@ -2406,3 +2406,22 @@ I repaired `Agent14B01LCGraft.parent_freeSlotCount` by replacing invalid `decide
 The Coq held-source-queue target appears to be running as [45604264950](https://github.com/FlareZ123/bb6/actions/runs/45604264950): the active job includes packed `q_i(2800,100)` checkpoint generation and the isolated FARv3 held-leaf cross-route proof. It is still compiling as of 11:32; exact target input is not exposed in the job listing, so confirm from the later assumption-print step before claiming it is the consumption target. Another shared Coq run 45603247270 is also in progress and should not be duplicated.
 
 No Agent6 full verify is active; 45602044422 was cancelled early. Agent41 has not yet replied to the request to clarify whether his ten new depth-six witnesses (reported 156/264 → 146/254) are committed/source-accepted. Do not dispatch the raw139 full audit until the base list is reconciled.
+
+
+## 2026-11-25 11:40 UTC — corrected frontier counts; 0LF certificate accepted
+
+Correction to the 11:20/11:32 notes: Agent41 clarified that the ten depth-six witnesses were **already in current main**, in the final ten entries of `championWitnesses` in `ChampionResidualFrontier.lean`; they were not pending additions. The correct witness-depth distribution is 1/3/8/7/9/10 (depths 1–6), for 38 distinct closed children. The correct base counts are 146 residuals and 254 refined-roster obligations, not stale 156/264. Replacing the final A1 split removes 23, giving 123; downstream chain is 113 → 112 → 110 → 109 (not 99).
+
+I updated:
+- `ChampionResidualFrontier.lean`: count theorems now state 146 and 254; added `#print axioms` for both count theorems.
+- `.github/workflows/agent6-champion-residual.yml`: added exact namespace audits for those count theorems.
+- `ChampionF1SiblingIntegration.lean` and `ChampionF1RFIntegration.lean`: removed the dangling `championHole, championP5, ...` continuation lines left by the earlier `decide [..]` syntax repair; all three exact sibling identity proofs now use bare kernel `decide`.
+- `ChampionResidualFrontier.lean`: also includes the symbolic score-room, direct residual membership, correct mixed-bound arguments (`6 ≤ championScore`, then `le_rfl`), and related repairs.
+- `ChampionResidualParentIntegration.lean`: parent identity uses `simp [parent, parentM, ...]` rather than malformed multiline `decide [defs]`.
+- Updated Agent48 README and F1-zeroRF dossier to use the correct 146/254 and 109 chain.
+
+Agent41's F1=0LF certificate is now source-accepted: run [45604778890](https://github.com/FlareZ123/bb6/actions/runs/45604778890) passed at pinned commit `4d2664e4caf8b2c0dbb41d0d842f8f4bae9b5488`. The reproduction script compiles the exact closure and audits `BB6.Agent41F1ZeroLF.all_completions_weighted`, `run_sound`, checked/H9 and all 13 `H*.never` theorems against `{propext, Classical.choice, Quot.sound}`. It proves all completions of the exact F1=0LF three-hole parent have weighted bound 1603 (277 terminal leaves). Exact parent-to-list integration remains pending; it should remove one further leaf from 109 to 108, without changing the earlier 123 count. Agent41 is moving to another unresolved F1 sibling.
+
+The full Agent6 verify is now ready to dispatch against the corrected 146/254 base and 109 chain. The prior full runs 45601313596 and 45602044422 were cancelled before complete source closure; no result was drawn from them. Current main head at this checkpoint: `f8296ecbf7b30a8caddd62b4d23e3a32fa4d1844`.
+
+The Coq held-source-queue run 45604264950 remains in progress. Failed predecessor 45603101198 hit `Agent42HeldCheckpointMembership.v:174` (`change ... || false = true`, not convertible); Agent42 was notified with the failed-job tail. B0=1LC Lean side-witness CI run 45603623804 confirms 65 witness cylinders cover only 4.695% of `25^10`, leaving 95.305% explicit complement; this is a conditional partition, not closure.
