@@ -42,7 +42,8 @@ jobs:
           set -euo pipefail
           cp im-results/agent47-rooted-tnf/CanonicalTwoParentGraft.lean pinned/im-results/agent47-rooted-tnf/
           cp im-results/agent47-rooted-tnf/CanonicalRaw114Accepted.lean pinned/im-results/agent47-rooted-tnf/
-          cp im-results/agent47-rooted-tnf/Canonical77ExactComposition.lean pinned/im-results/agent47-rooted-tnf/
+          mkdir -p pinned/im-results/agent31-shared-core
+          cp im-results/agent31-shared-core/CanonicalTwoParentRosterOnly.lean pinned/im-results/agent31-shared-core/
           rm -rf pinned/im-results/agent11-raw107
           cp -a im-results/agent11-raw107 pinned/im-results/
           rm -rf pinned/im-results/agent1-raw107
@@ -72,6 +73,7 @@ jobs:
             test -s "/tmp/a47-canonical/$required"
           done
           python tools/lean_compile_closure.py im-results/agent47-rooted-tnf/CanonicalTwoParentGraft.lean \
+            im-results/agent47-rooted-tnf/CanonicalRaw114Accepted.lean \
             --workdir /tmp/a31-canonical-manifest-work \
             --manifest /tmp/a31-canonical-manifest.json \
             --manifest-only \
@@ -80,6 +82,7 @@ jobs:
             --artifact-name canonical77-certified \
             --jobs 8 \
             --provenance-input im-results/agent47-rooted-tnf/CanonicalTwoParentGraft.lean \
+            --provenance-input im-results/agent47-rooted-tnf/CanonicalRaw114Accepted.lean \
             --provenance-input im-results/agent13-coverage/BB6Coverage.lean.xz.b64 \
             --provenance-input im-results/agent13-coverage/unpack.py \
             --provenance-input im-results/agent31-three-hole-tnf/generate_sweeps.py \
@@ -90,7 +93,7 @@ jobs:
             --provenance-input .tmp/a31/canonical-generator-arguments.txt \
             --provenance-input /tmp/a31/lean-version.txt \
             --provenance-input /tmp/a31/lean-binary.sha256
-      - name: Generate raw107 and compile champion plus raw107 against one shared core
+      - name: Generate raw107 and compile the champion-independent canonical76 roster
         run: |
           set -euo pipefail
           cd pinned
@@ -103,9 +106,18 @@ jobs:
           for prefix in Raw107RD Raw107RC Raw107RE Raw107B1RE Raw107B1LC Raw107B1LE Raw107B1LB Raw107B0RF Raw107B1RF Raw107B0LE Raw107B0LF Raw107B1LA Raw107B1LF; do
             python im-results/agent10-tnf-multipump/chunk_checks.py "$root" "$prefix" --limit 180
           done
-          work="$PWD/.tmp/a31-shared"
-          mkdir -p "$work/imports" /tmp/a31-shared
-          cat > "$work/generator-arguments.txt" <<'EOF'
+          mkdir -p .tmp/a31 .tmp/a31-shared
+          cat > .tmp/a31/canonical-generator-arguments.txt <<'EOF'
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent10-tnf-raw87/generate.py
+          python im-results/agent10-tnf-raw91/generate.py
+          python im-results/agent10-tnf-multipump/generate.py 66 70 80
+          python im-results/agent10-tnf-multipump/generate.py 68 72 82
+          python im-results/agent10-tnf-multipump/generate.py 86 88 92 93 97 98 100 101 102 104
+          EOF
+          cat > .tmp/a31-shared/generator-arguments.txt <<'EOF'
           python im-results/agent11-raw107/generate.py
           python im-results/agent11-raw107/generate_rc.py
           python im-results/agent11-raw107/generate_re.py
@@ -135,39 +147,21 @@ jobs:
               json.dumps(provenance, indent=2, sort_keys=True) + "\n"
           )
           PY
-          python3 - <<'PY'
-          import base64, io, lzma, pathlib, tarfile
-          root = pathlib.Path(".tmp/a31-shared/imports")
-          p = pathlib.Path("im-results/agent42-champion-terminal")
-          with tarfile.open(fileobj=io.BytesIO(base64.b64decode((p/"TerminalProofs.tar.xz.b64").read_text())), mode="r:xz") as archive:
-              member = next(m for m in archive.getmembers() if pathlib.PurePosixPath(m.name).name == "TerminalFinish.lean")
-              (root/"TerminalFinish.lean").write_bytes(archive.extractfile(member).read())
-          (root/"TerminalLeft.lean").write_bytes(lzma.decompress(base64.b64decode((p/"TerminalLeftExact.lean.xz.b64").read_text())))
-          PY
-          printf '%s  %s\n' 12329036c66c3846f9261167b8f9aebd1778d9b6ea6044309956c2fa0b3e49b7 "$work/imports/TerminalFinish.lean" | sha256sum -c -
-          printf '%s  %s\n' 1bce2075fc4e0cd7d740fb71b3796088b190ddb6766e04640d992dadd1b650ff "$work/imports/TerminalLeft.lean" | sha256sum -c -
-          cp -a /tmp/a47-canonical/. "$work/"
           python tools/lean_compile_closure.py \
-            im-results/agent48-counted-inc0/TM63RawUpperInterface.lean \
-            "$root/Raw107ParentClosure.lean" \
+            im-results/agent31-shared-core/CanonicalTwoParentRosterOnly.lean \
             --workdir /tmp/a31-shared \
             --manifest /tmp/a31-shared-manifest.json \
-            --label canonical77-tm63-raw107-shared-core \
+            --label canonical76-raw107-raw114-roster \
             --jobs 4 \
             --precompiled-manifest /tmp/a31-canonical-manifest.json \
             --precompiled-dir /tmp/a47-canonical \
-            --source-root .tmp/a31-shared/imports \
-            --theorem BB6.Agent11Raw107ParentClosure.all_completions \
-            --weighted-bound 815 \
-            --provenance-input im-results/agent42-champion-terminal/TerminalProofs.tar.xz.b64 \
-            --provenance-input im-results/agent42-champion-terminal/TerminalLeftExact.lean.xz.b64 \
-            --provenance-input im-results/agent13-coverage/BB6Coverage.lean.xz.b64 \
-            --provenance-input im-results/agent13-coverage/unpack.py \
-            --provenance-input im-results/agent31-three-hole-tnf/generate_sweeps.py \
-            --provenance-input im-results/agent31-three-hole-tnf/generate_four_hole.py \
-            --provenance-input im-results/agent10-tnf-raw87/generate.py \
-            --provenance-input im-results/agent10-tnf-raw91/generate.py \
-            --provenance-input im-results/agent10-tnf-multipump/generate.py \
+            --theorem BB6.Agent31CanonicalTwoParentRosterOnly.exact_at_target \
+            --parent-table "raw107 E1=0RB; raw114 E1=0LD" \
+            --weighted-bound 7014 \
+            --artifact-name canonical76-two-parent-roster-certified \
+            --provenance-input im-results/agent31-shared-core/CanonicalTwoParentRosterOnly.lean \
+            --provenance-input im-results/agent47-rooted-tnf/CanonicalTwoParentGraft.lean \
+            --provenance-input im-results/agent47-rooted-tnf/CanonicalRaw114Accepted.lean \
             --provenance-input im-results/agent11-raw107/Raw107ParentClosure.lean \
             --provenance-input im-results/agent11-raw107/Raw107RootCut.lean \
             --provenance-input im-results/agent1-raw107/Raw107LABridge.lean \
@@ -176,77 +170,44 @@ jobs:
             --provenance-input im-results/agent11-raw107/bank.txt \
             --provenance-input im-results/agent11-raw107/specs_more.json \
             --provenance-input im-results/agent11-raw107/specs_partial.json \
-            --provenance-input im-results/agent47-rooted-tnf/CanonicalRaw114Accepted.lean \
-            --provenance-input im-results/agent47-rooted-tnf/Canonical77ExactComposition.lean \
-            --provenance-input im-results/agent11-raw107/CanonicalTwoParentAccepted.lean \
             --provenance-input im-results/agent11-raw107/generate.py \
             --provenance-input im-results/agent11-raw107/generate_rc.py \
             --provenance-input im-results/agent11-raw107/generate_re.py \
             --provenance-input im-results/agent11-raw107/generate_more.py \
             --provenance-input im-results/agent11-raw107/generate_partial.py \
             --provenance-input im-results/agent10-tnf-multipump/chunk_checks.py \
+            --provenance-input im-results/agent10-tnf-multipump/generate.py \
+            --provenance-input im-results/agent13-coverage/BB6Coverage.lean.xz.b64 \
+            --provenance-input im-results/agent13-coverage/unpack.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_sweeps.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_four_hole.py \
+            --provenance-input .tmp/a31/canonical-generator-arguments.txt \
             --provenance-input .tmp/a31-shared/generator-arguments.txt \
             --provenance-input .tmp/a31/raw107-source-provenance.json \
-            --provenance-input .tmp/a31/canonical-generator-arguments.txt \
             --provenance-input /tmp/a31-canonical-manifest.json \
             --provenance-input /tmp/a31/lean-version.txt \
+            --provenance-input /tmp/a31/lean-binary-path.txt \
             --provenance-input /tmp/a31/lean-binary.sha256 \
             --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean \
             --override OuterLCIncPrelude=im-results/agent8-counted-reset/OuterLCIncPrelude.lean \
             --override M0OddResidueSeven=im-results/agent41-m0-n16r7/M0OddResidueSeven.lean \
             --override M0EvenEightValuationEncoding=im-results/agent48-counted-inc0/M0EvenEightValuationEncoding.lean \
             --override M2EvenResidueTwo=im-results/agent42-champion-terminal/M2EvenResidueTwo.lean \
-            | tee /tmp/a31-shared.log
-          if grep -Eq 'sorryAx|native_decide' /tmp/a31-shared.log; then
-            exit 1
-          fi
-      - name: Compile the two-parent consumer and audit its complete axiom profile
-        run: |
-          set -euo pipefail
-          cp im-results/agent47-rooted-tnf/CanonicalRaw114Accepted.lean /tmp/a31-shared/
-          cp im-results/agent47-rooted-tnf/Canonical77ExactComposition.lean /tmp/a31-shared/
-          cp im-results/agent11-raw107/CanonicalTwoParentAccepted.lean /tmp/a31-shared/
-          cp pinned/im-results/agent47-rooted-tnf/CanonicalTwoParentGraft.lean /tmp/a31-shared/
-          cd /tmp/a31-shared
-          export LEAN_PATH="$PWD:/tmp/a47-canonical"
-          test -s /tmp/a47-canonical/CanonicalTwoParentGraft.olean
-          test -s /tmp/a47-canonical/CanonicalRaw114Accepted.olean
-          test -s /tmp/a47-canonical/Raw114CompleteData.olean
-          test -s "$PWD/TM63RawUpperInterface.olean"
-          test -s "$PWD/Raw107ParentClosure.olean"
-          sha_before=$(sha256sum /tmp/a47-canonical/CanonicalRaw114Accepted.olean | cut -d' ' -f1)
-          lean -o CanonicalRaw114Accepted.olean CanonicalRaw114Accepted.lean 2>&1 | tee /tmp/a31-raw114-adapter.log
-          sha_after=$(sha256sum CanonicalRaw114Accepted.olean | cut -d' ' -f1)
-          printf 'CanonicalRaw114Accepted.olean before=%s after=%s\n' "$sha_before" "$sha_after"
-          lean -o Canonical77ExactComposition.olean Canonical77ExactComposition.lean 2>&1 | tee /tmp/a31-exact77.log
-          lean -o CanonicalTwoParentAccepted.olean CanonicalTwoParentAccepted.lean 2>&1 | tee /tmp/a31-two-parent.log
-          if grep -Eq 'sorryAx|native_decide' /tmp/a31-raw114-adapter.log /tmp/a31-exact77.log /tmp/a31-two-parent.log; then
-            exit 1
-          fi
-          python3 - /tmp/a31-shared.log /tmp/a31-raw114-adapter.log /tmp/a31-exact77.log /tmp/a31-two-parent.log <<'PY'
-          import re, pathlib
-          logs = "\n".join(pathlib.Path(p).read_text() for p in __import__("sys").argv[1:])
+            2>&1 | tee /tmp/a31-shared.log
+          python3 - /tmp/a31-shared.log <<'PY'
+          import pathlib, re, sys
+          log = pathlib.Path(sys.argv[1]).read_text()
           allowed = {"propext", "Classical.choice", "Quot.sound"}
           required = (
-              "BB6.Agent11Raw107TwoParent.p107_matches_raw107",
-              "BB6.Agent11Raw107TwoParent.p107_bound",
-              "BB6.Agent11Raw107TwoParent.p114_bound",
-              "BB6.Agent11Raw107TwoParent.roster76_sound",
-              "BB6.Agent11Raw107TwoParent.exact_at_target",
-              "BB6.Agent11Raw107TwoParent.exact_from_canonical76_at_champion_score",
-              "BB6.Agent47CanonicalRaw114Accepted.count",
-              "BB6.Agent47CanonicalRaw114Accepted.parent_bound",
-              "BB6.Agent47CanonicalRaw114Accepted.sound",
-              "BB6.Agent11Raw107ParentClosure.all_completions",
-              "BB6Coverage.Agent48DirectRoot.champion_raw_witness",
-              "BB6.Agent31Canonical77Exact.champion_score_gt_7014",
-              "BB6.Agent31Canonical77Exact.exact_from_canonical77_at_champion_score",
-              "BB6.Agent47CanonicalTwoParent.count76",
-              "BB6.Agent47CanonicalTwoParent.roster76_sound",
+              "BB6.Agent31CanonicalTwoParentRosterOnly.p107_matches_raw107",
+              "BB6.Agent31CanonicalTwoParentRosterOnly.p107_bound",
+              "BB6.Agent31CanonicalTwoParentRosterOnly.p114_bound",
+              "BB6.Agent31CanonicalTwoParentRosterOnly.roster76_sound",
+              "BB6.Agent31CanonicalTwoParentRosterOnly.exact_at_target",
           )
           profiles = {}
-          for full_name, axioms in re.findall(r"'([^']+)' depends on axioms: \[([^\]]*)\]", logs):
-              profiles[full_name] = {x.strip() for x in axioms.split(",") if x.strip()}
+          for name, axioms in re.findall(r"'([^']+)' depends on axioms: \[([^\]]*)\]", log):
+              profiles[name] = {x.strip() for x in axioms.split(",") if x.strip()}
           for name in required:
               if name not in profiles:
                   raise SystemExit("missing axiom profile: " + name)
@@ -255,66 +216,62 @@ jobs:
                   raise SystemExit(f"{name}: unexpected axioms {sorted(bad)}")
               print(f"{name}: {sorted(profiles[name])}")
           PY
-          mkdir -p manifest
-          cp /tmp/a31-canonical-manifest.json manifest/canonical77-base-manifest.json
-          cp /tmp/a31-shared-manifest.json manifest/shared-core-manifest.json
-          cp "$GITHUB_WORKSPACE/pinned/.tmp/a31/raw107-source-provenance.json" manifest/
-          cp "$GITHUB_WORKSPACE/pinned/.tmp/a31/canonical-generator-arguments.txt" manifest/
-          cp "$GITHUB_WORKSPACE/pinned/.tmp/a31-shared/generator-arguments.txt" manifest/
-          cp /tmp/a31/lean-version.txt manifest/
-          cp /tmp/a31/lean-binary-path.txt manifest/
-          cp /tmp/a31/lean-binary.sha256 manifest/
+          mkdir -p /tmp/a31-shared/manifest
+          cp /tmp/a31-canonical-manifest.json /tmp/a31-shared/manifest/canonical77-base-manifest.json
+          cp /tmp/a31-shared-manifest.json /tmp/a31-shared/manifest/shared-core-manifest.json
+          cp .tmp/a31/raw107-source-provenance.json /tmp/a31-shared/manifest/
+          cp .tmp/a31/canonical-generator-arguments.txt /tmp/a31-shared/manifest/
+          cp .tmp/a31-shared/generator-arguments.txt /tmp/a31-shared/manifest/
+          cp /tmp/a31/lean-version.txt /tmp/a31-shared/manifest/
+          cp /tmp/a31/lean-binary-path.txt /tmp/a31-shared/manifest/
+          cp /tmp/a31/lean-binary.sha256 /tmp/a31-shared/manifest/
           python3 - <<'PY'
           import hashlib, json, os, pathlib
-          root = pathlib.Path(".")
+          root = pathlib.Path("/tmp/a31-shared")
           def digest(path):
               h = hashlib.sha256()
               with path.open("rb") as stream:
                   for chunk in iter(lambda: stream.read(1024 * 1024), b""):
                       h.update(chunk)
               return h.hexdigest()
-          shared = json.loads(pathlib.Path("manifest/shared-core-manifest.json").read_text())
-          base = json.loads(pathlib.Path("manifest/canonical77-base-manifest.json").read_text())
-          actual_lean_binary_sha256 = pathlib.Path("/tmp/a31/lean-binary.sha256").read_text().split()[0]
-          if shared["lean_binary"]["sha256"] != actual_lean_binary_sha256:
-              raise SystemExit("manifest/compiler binary digest differs from recorded compiler")
-          modules = [
+          shared = json.loads((root / "manifest/shared-core-manifest.json").read_text())
+          base = json.loads((root / "manifest/canonical77-base-manifest.json").read_text())
+          modules = {entry["module"]: entry for entry in shared["modules"]}
+          required = (
               "CanonicalTwoParentGraft", "CanonicalRaw114Accepted",
-              "Raw114CompleteData", "TM63RawUpperInterface", "Raw107ParentClosure",
-              "Canonical77ExactComposition", "CanonicalTwoParentAccepted"
-          ]
-          def module_olean(name):
-              for candidate in (
-                  root / (name + ".olean"),
-                  pathlib.Path("/tmp/a47-canonical") / (name + ".olean"),
-              ):
-                  if candidate.is_file():
-                      return candidate
-              raise SystemExit("missing compiled module: " + name)
+              "Raw114CompleteData", "Raw107ParentClosure",
+              "CanonicalTwoParentRosterOnly",
+          )
+          missing = [name for name in required if name not in modules]
+          if missing:
+              raise SystemExit("missing compiled modules in shared manifest: " + ", ".join(missing))
           metadata = {
-              "claim": "Conditional exactness reduces to Covers for 76 residual quotient representatives; this is not a completed BB(6) upper bound.",
+              "claim": "At any B>=7014, exactness reduces to Covers for 76 residual quotient representatives plus an attaining blank-start witness; this is not a completed BB(6) upper bound.",
+              "theorem": "BB6.Agent31CanonicalTwoParentRosterOnly.exact_at_target",
+              "residual_count": 76,
+              "weighted_bound": 7014,
               "canonical77_artifact_run_id": 45554648116,
               "canonical77_artifact_id": 14997966221,
               "canonical77_artifact_head_sha": "1217c6166525b6297191a35f2627eeea5691f17f",
-              "raw114_parent_artifact_run_id": 45553564319,
-              "raw107_parent_source_acceptance_run_id": 45533196624,
-              "raw107_parent_source_reference_revision": "1cea9dacc5a369bdd96a674486b642c45e7a59c4",
+              "raw114_source_acceptance_run_id": 45553564319,
+              "raw107_source_acceptance_run_id": 45533196624,
+              "raw107_source_reference_revision": "1cea9dacc5a369bdd96a674486b642c45e7a59c4",
               "build_source_revision": os.environ.get("GITHUB_SHA"),
               "canonical_core_source_revision": base["proof_source_revision"],
               "lean_version": shared["lean_version"],
               "lean_binary_sha256": shared["lean_binary"]["sha256"],
-              "canonical_base_manifest_sha256": digest(pathlib.Path("manifest/canonical77-base-manifest.json")),
-              "shared_core_manifest_sha256": digest(pathlib.Path("manifest/shared-core-manifest.json")),
               "precompiled_reused_module_count": shared["precompiled_core"]["reused_module_count"],
               "precompiled_reused_modules": shared["precompiled_core"]["reused_modules"],
               "modules": {
-                  name: {"olean_sha256": digest(module_olean(name))}
-                  for name in modules
+                  name: {
+                      "source_sha256": modules[name]["source_sha256"],
+                      "olean_sha256": modules[name]["olean_sha256"],
+                      "module_identity_sha256": modules[name]["module_identity_sha256"],
+                  }
+                  for name in required
               },
-              "lean_binary_path": pathlib.Path("/tmp/a31/lean-binary-path.txt").read_text().strip(),
-              "lean_binary_sha256": pathlib.Path("/tmp/a31/lean-binary.sha256").read_text().strip(),
           }
-          pathlib.Path("manifest/two-parent-consumer.json").write_text(
+          (root / "manifest/roster-consumer.json").write_text(
               json.dumps(metadata, indent=2, sort_keys=True) + "\n"
           )
           entries = []
@@ -323,7 +280,7 @@ jobs:
                   continue
               entries.append(f"{digest(path)}  {path.relative_to(root).as_posix()}\n")
           tree_digest = hashlib.sha256("".join(entries).encode()).hexdigest()
-          pathlib.Path("manifest/artifact-tree.sha256").write_text(tree_digest + "\n")
+          (root / "manifest/artifact-tree.sha256").write_text(tree_digest + "\n")
           print(json.dumps({
               "residual_count": 76,
               "precompiled_reused_module_count": metadata["precompiled_reused_module_count"],
@@ -332,6 +289,6 @@ jobs:
           PY
       - uses: actions/upload-artifact@v4
         with:
-          name: canonical76-two-parent-consumer-certified
+          name: canonical76-two-parent-roster-certified
           path: /tmp/a31-shared
           if-no-files-found: error
