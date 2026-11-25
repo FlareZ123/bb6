@@ -10,7 +10,9 @@ import sys
 
 DEFAULT_TABLE = '1RB0RD_1LC1LB_0LE1RA_0LC0RA_1LF1LD_1RD---'
 
-def generate(table, out, width=3, cap=2, mod=4, runs=2, flip=False, name="HeldBlock", minimize_left=False, sparse=False):
+def generate(table, out, width=3, cap=2, mod=4, runs=2, flip=False, name="HeldBlock", minimize_left=False, sparse=False, offset=0):
+    assert 0 <= offset < width
+    assert offset == 0 or (width == 4 and not sparse and not flip), "offset proof backend currently supports unreflected width four"
     alphabet=2**width
     suffix="" if width==3 else str(width)
     ns="BB6BlockFAR"+suffix+"." + ("Held" if name=="HeldBlock" else name)
@@ -64,7 +66,29 @@ def generate(table, out, width=3, cap=2, mod=4, runs=2, flip=False, name="HeldBl
         j = leftids[ys]; delta[key] = j; pred[j].append(key)
         for q,w,v in pending[j]: applyleft(l,a,q,w,v)
         return j
-    push(0,0); add(0,0,0); copy(ctrl(0,0,True),0)
+    push(0,0); add(0,0,0)
+    if offset == 0:
+        copy(ctrl(0,0,True),0)
+    else:
+        q,h,a,steps = 0,offset,0,0
+        seen = set()
+        while 0 <= h < width:
+            key = (q,h,a)
+            assert key not in seen, "initial block cycle"
+            seen.add(key)
+            mv = moves[2*q+(a>>h&1)]
+            assert mv is not None, "initial block queried missing row"
+            w,d,q = mv
+            a = (a & ~(1<<h)) | (w<<h)
+            h += 1 if d else -1
+            steps += 1
+        initial_exit = (steps,q,d,a)
+        if d:
+            copy(ctrl(push(0,a),q,True),0)
+        else:
+            initial = node(('initial',))
+            add(initial,a,0)
+            add(ctrl(0,q,False),0,initial)
     count = 0
     while event:
         s,a,v = event.popleft(); count += 1
@@ -130,7 +154,8 @@ def generate(table, out, width=3, cap=2, mod=4, runs=2, flip=False, name="HeldBl
         D=D2
     pred = defaultdict(list)
     for (l,a),j in sorted(delta.items()): pred[j].append((l,a))
-    assert delta[0,0] == 0 and ctr[0,0,1] in z2
+    assert delta[0,0] == 0
+    if offset == 0: assert ctr[0,0,1] in z2
     zeroNext = [min(r2[s,0]&z2) if s in z2 else dead for s in range(C)]
     checkcount = 0
     for l in range(D):
@@ -219,6 +244,9 @@ namespace BB6BlockFAR.Held
 
 theorem base_ok : cert.baseCheck = true := by decide +kernel
 '''
+    if offset:
+        s = s.replace("import RangeCheck\n", "import RangeCheck\nimport OffsetBlockFAR4\n")
+        s = s.replace("cert.baseCheck", "cert.coreCheck")
     for kind,f in [('pred','(fun l => symbols.all (cert.predCheckAt l))'),('rows','(cert.rowsAt machine)')]:
         for i in range(0,D,1 if width>=5 or D>200 else 10):
             s += f'theorem {kind}_{i} : rangeCheck {D-1} {f} {i} {min(1 if width>=5 or D>200 else 10,D-i)} = true := by decide +kernel\n'
@@ -234,6 +262,25 @@ theorem never : ∀ k, ∃ c, run machine k primBlank = some c := cert.sound mac
 #print axioms never
 end BB6BlockFAR.Held
 '''
+    if offset:
+        steps,q,d,a = initial_exit
+        direction = str(d).lower()
+        left_word = f"[Sym.ofCode {a}]" if d else "[]"
+        right_word = "[]" if d else f"[Sym.zero,Sym.ofCode {a}]"
+        s = s[:s.index("theorem valid :")]
+        s += f"""theorem valid : cert.CoreValid machine := ⟨base_ok,pred_ok,rows_ok⟩
+def firstExit : Exit := ⟨{steps},{q},{direction},Sym.ofCode {a}⟩
+def entry : BlockConfig := ⟨{q},{direction},{left_word},{right_word}⟩
+theorem initial_exit : macroRun machine {6*width*alphabet+1} 0 .p{offset} Sym.zero = some firstExit := by decide +kernel
+theorem initial_run : run machine {steps} primBlank = some entry.render := by
+  have H := (macroRun_sound machine {6*width*alphabet+1} 0 .p{offset} Sym.zero [] [] firstExit initial_exit).2
+  simpa [offset_blank,entry,firstExit,BlockConfig.render,EntryPos] using H
+theorem entry_ok : cert.entryCheck entry = true := by decide +kernel
+theorem never : ∀ k, ∃ c, run machine k primBlank = some c :=
+  cert.soundFrom machine valid entry entry_ok {steps} initial_run
+#print axioms never
+end BB6BlockFAR.Held
+"""
     (out/(name+'Proof.lean')).write_text(s.replace('BB6BlockFAR.Held',ns).replace('import BlockFAR\n','import BlockFAR'+suffix+'\n').replace('import RangeCheck\n','import RangeCheck'+suffix+'\n').replace('import HeldBlockPacked','import '+name+'Packed'),encoding='utf8')
 
     # Also expose the same finite certificate to independent source checkers.
