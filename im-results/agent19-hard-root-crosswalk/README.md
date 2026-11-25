@@ -48,3 +48,24 @@ Three new modules compiled locally using the **unmodified accepted canonical77 c
 * HardRootLeaves.lean: for all 15 roots, the actual original FirstHolePath checker proves an exact first-hole path at cut six; each leaf completion is compatible with the appropriate accepted parent, and each `*_cover_iff` certifies the exact necessary and sufficient score obligation. For D2 the surcharge is 1, for A6 and r1 it is 2, for all others zero. `A6_sibling` proves every completion of the A6 leaf extends raw139 D1=0LC. `A6_certificate` and `A6_cover` produce the reusable weighted leaf from the explicit hypothesis NeverHalts A6. The source theorem CryptidsF287.literal_never already exists; importing that separate source closure and identifying its table remains to be done for an end-to-end A6 theorem in this module. No other root verdict or parent closure is inferred. The all-permutation alias/uniqueness computation remains the independently reproducible JSON calculation.
 
 Reproduce: extract the exact canonical77-certified artifact to a single directory; set LEAN_PATH to this folder and the current source directory, then compile HardRootCore.lean, HardRootParents.lean, HardRootLeaves.lean in that order. Do not mix the independently built raw117 artifact: BB6Coverage.olean differs. `node generate_leaves.cjs` reproduces the generated leaf source. Locally compiled Git blob hashes: core d7beb2658516aa18cdb91a5552ed8035781bf32e; parents ecfe03570c5142c650368dee23502afaccb2de08; leaves 32357b05679ffda30ba1d12a0e6d6d0950af2825.
+
+
+## 2026-11-25: source-backed raw10 last-hole leaf (CI pending)
+
+A new candidate was found by crossmatching the pinned Cryptids NonHalt modules against the exact current raw10 residual boxes, not merely against the parent table:
+
+- Upstream commit: `3647718b5df22e1a61462dec0376bd204526285a`
+- Module: `BusyBeaver.BB6.NonHalt.M_1RB0LC_1LC0RE_1LA1LD_1LA1LB_0RF1RA_HHH0RE`
+- Local RLE: `1RB0LC_1LC0RE_1LA1LD_1LA1LB_0RF1RA_---0RE`
+- Sole halt slot: F0.
+- The pinned source exposes `is_not_halt : IsNotHalt target`; `Raw10CryptidsLeaf.lean` transfers it through the existing `CryptidsTapeAdapter` and the weighted `forgetHaltRows` adapter.
+- The first-use trace, with initial A0 at time 0, is B0@1, C1@2, D0@3, B1@5, E1@6, A1@7, C0@11, E0@14, F1@15, D1@20. Thus all eleven ordinary slots are visited and F0 is the unique last hole.
+- Under the identity A/B-fixing state naming, the entire 25-completion leaf is contained in residual box 0 of the existing 41-box, 90,737,503,713,725-mass complement. The candidate is outside the dated 663 list and is not one of the six previously grafted roots.
+- Adding this leaf splits box 0 into nine first-mismatch rectangles: the exact complement becomes 49 boxes with mass 90,737,503,713,700. Exactly 25 completions are removed; the other 48 rectangles remain open.
+
+Artifacts:
+- `Raw10CryptidsLeaf.lean`: source-to-local nonhalting transfer, first-hole path, weighted leaf, box-0 containment, exact 49-box residual characterization, and conditional score-B consumer.
+- `raw10-cryptids-leaf-crosswalk.cjs`: reproducible finite replay of the 68-certificate partition, source pin, holdout exclusion, first-use trace, and 25-completion subtraction.
+- `reproduce-raw10-cryptids-leaf.sh`: CI reproduction using the accepted canonical77 base artifacts and pinned upstream source.
+
+**Status:** the source theorem and finite routing evidence are identified, but the new Lean adapter has not yet passed its targeted CI compile. The conditional consumer still requires Covers for all 49 residual rectangles and every other canonical roster entry. This is not a raw10 parent closure or an exact BB(6) upper bound. Keep this intermediate work in `im-results/`.
