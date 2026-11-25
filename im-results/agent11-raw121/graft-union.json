@@ -1,0 +1,13 @@
+{
+  "artifact_prefix": "raw121-graft",
+  "allow_mixed_revisions": true,
+  "groups": {
+    "canonical77": [
+      "CanonicalTwoParentGraft",
+      "CanonicalRaw114Accepted"
+    ],
+    "parent": [
+      "Raw121Data"
+    ]
+  }
+}
