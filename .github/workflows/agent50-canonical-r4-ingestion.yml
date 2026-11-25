@@ -60,7 +60,7 @@ jobs:
           github-token: ${{ github.token }}
           run-id: ${{ inputs.canonical77_manifest_run_id }}
           name: raw107-canonical-shared-core
-          path: .tmp/canonical77-manifest
+          path: /tmp/canonical77-manifest
 
       - name: Recreate the canonical77 source closure inputs
         run: |
@@ -86,7 +86,7 @@ jobs:
           set -euo pipefail
           test -s "$GITHUB_WORKSPACE/.tmp/canonical77/CanonicalRaw114Accepted.olean"
           test -s "$GITHUB_WORKSPACE/.tmp/canonical77/CanonicalTwoParentGraft.olean"
-          test -s "$GITHUB_WORKSPACE/.tmp/canonical77-manifest/manifest/canonical77-base-manifest.json"
+          test -s "/tmp/canonical77-manifest/manifest/canonical77-base-manifest.json"
           test "$(git rev-parse HEAD)" = "${{ inputs.upstream_sha }}"
           lake update
           lake build BusyBeaver.Bridge Cryptids.Machines
@@ -94,7 +94,7 @@ jobs:
       - name: Compile the canonical77 r4 graft with its complete source closure
         env:
           CANONICAL77_DIR: ${{ github.workspace }}/.tmp/canonical77
-          CANONICAL77_MANIFEST: ${{ github.workspace }}/.tmp/canonical77-manifest/manifest/canonical77-base-manifest.json
+          CANONICAL77_MANIFEST: /tmp/canonical77-manifest/manifest/canonical77-base-manifest.json
           UPSTREAM_ROOT: ${{ github.workspace }}/upstream
           WORKDIR: ${{ github.workspace }}/.tmp/agent50-canonical-r4
           JOBS: "4"
