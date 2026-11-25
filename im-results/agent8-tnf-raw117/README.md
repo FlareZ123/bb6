@@ -63,15 +63,24 @@ This is currently a draft, not yet original-source accepted and not a complete p
 Neither sibling closes the whole canonical frontier. The global BB(6) upper bound and exact value remain open.
 
 
-## Additional E1 siblings now queued for source audit
+## Canonical E1 sibling composition: 72-roster draft
 
-The same 22-entry E1 sibling cluster contains further independently generated parent certificates:
+The six distinct E1 siblings raw107, raw113, raw114, raw115, raw117 and raw119 have a written quotient-roster composition in `Canonical72Raw107Raw113Raw114Raw115Raw117Raw119.lean`. Its current champion-coupled imports are unsuitable for independent source acceptance, so the parallel `Canonical72RosterOnly.lean` separates the roster layer from the champion score wrapper.
 
-- **raw107 / E1=0RB / canonical index 72**: complete original-source accepted parent bound 815, [CI 45533196624](https://github.com/FlareZ123/bb6/actions/runs/45533196624).
-- **raw113 / E1=1RC / canonical index 78**: `Raw113Exact` gives exact weighted maximum 2,674; target `weighted-tnf-raw113` is running.
-- **raw115 / E1=0RD / canonical index 80**: generated `all115` parent bound 458.
-- **raw119 / E1=0RE / canonical index 83**: generated `all119` parent bound 572; the candidate certificate is complete locally.
+The roster-only interface is:
 
-Raw115 and raw119 are audited together by target `weighted-tnf-agent8-six`. The stronger six-parent composition in [Canonical72Raw107Raw113Raw114Raw115Raw117Raw119.lean](Canonical72Raw107Raw113Raw114Raw115Raw117Raw119.lean) uses the already accepted raw107, raw114 and raw117 bounds plus the pending raw113/raw115/raw119 source audits. If those three pass, its intended exact `decide` count is **72** while retaining the 7,014 root dichotomy. This composition is not yet source-compiled; do not treat 72 as accepted until Lean checks the count, soundness and champion consumer.
+- exact `roster.length = 72` by `decide`;
+- a source-rooted dichotomy at weighted bound **7,014**, with the six discharged parent cylinders removed and all retained quotient-compatible entries explicit;
+- generic `exact_at_target` for any (B\ge 7014), with all 72 residual `Cover` premises and an attaining blank-start witness explicit;
+- no import of `Canonical77ExactComposition` or `TM63RawUpperInterface`.
 
-The earlier five-parent [Canonical73Raw113Raw114Raw115Raw117Raw119.lean](Canonical73Raw113Raw114Raw115Raw117Raw119.lean) omits raw107 and is retained as a fallback. The conditional three-parent [Canonical75Raw107Raw114Raw117.lean](Canonical75Raw107Raw114Raw117.lean) is also retained as a fallback interface.
+This is still an intermediate draft. The required dependencies are not yet jointly source-accepted:
+
+- raw107 parent closure: source-accepted, [CI 45533196624](https://github.com/FlareZ123/bb6/actions/runs/45533196624);
+- raw114 parent closure and canonical77 base: source-accepted, [CI 45554648116](https://github.com/FlareZ123/bb6/actions/runs/45554648116);
+- raw117 six-hole cylinder and canonical cut: source-accepted, [CI 45561386072](https://github.com/FlareZ123/bb6/actions/runs/45561386072);
+- raw113 exact parent: audit pending in [CI 45628984219](https://github.com/FlareZ123/bb6/actions/runs/45628984219);
+- raw115/raw119 sibling audit: pending in [CI 45628975402](https://github.com/FlareZ123/bb6/actions/runs/45628975402); earlier run 45581575103 was cancelled before compilation completed;
+- the champion-independent raw107+raw114 roster base and the new 72-roster consumer still require a joint Lean source/axiom audit.
+
+The next integration should compile `CanonicalTwoParentRosterOnly` first, then `Canonical72RosterOnly` against the accepted raw117, raw113, raw115 and raw119 source closures. The exactness theorem remains conditional: even after the roster proof is accepted, BB(6) is not determined until all 72 retained Covers are established at the champion score. Do not report 72 as an accepted global frontier or as an upper bound.
