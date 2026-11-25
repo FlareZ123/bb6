@@ -383,7 +383,7 @@ jobs:
           pattern: raw118-wide-*
           run-id: ${{ inputs.raw118_wide_run_id }}
           github-token: ${{ github.token }}
-          path: .tmp/raw118-wide-artifacts
+          path: /tmp/raw118-wide-artifacts
       - name: Download repaired Raw118 wide-window artifacts
         if: inputs.target == 'weighted-tnf-raw118-consumer' && inputs.raw118_wide_repair_run_id != ''
         uses: actions/download-artifact@v4
@@ -391,7 +391,7 @@ jobs:
           pattern: raw118-wide-*
           run-id: ${{ inputs.raw118_wide_repair_run_id }}
           github-token: ${{ github.token }}
-          path: .tmp/raw118-wide-artifacts
+          path: /tmp/raw118-wide-artifacts
       - name: Compose and source-check the complete Raw118 parent residual cover
         if: inputs.target == 'weighted-tnf-raw118-consumer'
         run: |
@@ -416,11 +416,11 @@ jobs:
           python im-results/agent16-raw118/tree_emit.py > im-results/agent16-raw118/Raw118Tree.lean
           python im-results/agent16-raw118/generate_late_traces.py /tmp/raw118-data
           python im-results/agent16-raw118/search_tree_bank.py /tmp/raw118-data
-          python im-results/agent40-raw118-independent/merge_wide_artifacts.py .tmp/raw118-wide-artifacts .tmp/raw118-wide-precompiled im-results/agent1-bidfa-sat/wide-generated
+          python im-results/agent40-raw118-independent/merge_wide_artifacts.py /tmp/raw118-wide-artifacts /tmp/raw118-wide-precompiled im-results/agent1-bidfa-sat/wide-generated
           python im-results/agent1-bidfa-sat/emit_raw118.py > im-results/agent1-bidfa-sat/Raw118SatHits.lean
           python "$D/run_summary.py" 430 437 440 456 1181 3908 1120 1127 1174 1326 1390 1391 1392 1816 2867 3921 4093 4125 4342 4443
           python im-results/agent16-raw118/emit_consumer.py /tmp/raw118-data
-          python tools/lean_compile_closure.py --workdir /tmp/a16-raw118-consumer --jobs 4 --source-root im-results/agent1-bidfa-sat/wide-generated --source-root im-results/agent40-raw118-independent/run-generated --precompiled-manifest .tmp/raw118-wide-precompiled/manifest.json --precompiled-dir .tmp/raw118-wide-precompiled im-results/agent16-raw118/Raw118Consumer.lean im-results/agent16-raw118/Raw118CanonicalMembership.lean im-results/agent1-bidfa-sat/Raw118SatHits.lean | tee /tmp/a16-raw118-consumer.log
+          python tools/lean_compile_closure.py --workdir /tmp/a16-raw118-consumer --jobs 4 --source-root im-results/agent1-bidfa-sat/wide-generated --source-root im-results/agent40-raw118-independent/run-generated --precompiled-manifest /tmp/raw118-wide-precompiled/manifest.json --precompiled-dir /tmp/raw118-wide-precompiled im-results/agent16-raw118/Raw118Consumer.lean | tee /tmp/a16-raw118-consumer.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a16-raw118-consumer.log; then exit 1; fi
       - name: Preserve generated Raw118 parent consumer
         if: inputs.target == 'weighted-tnf-raw118-consumer'
