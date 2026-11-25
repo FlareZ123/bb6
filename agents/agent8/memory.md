@@ -1,3 +1,8 @@
+# 2026-11-25 22:37 UTC checkpoint — LF residual 68
+
+Same immutable lease (22:24:30.662Z), threshold 23:34:30.662Z. ID68 proved by four-branch total macro invariant on Nat × Option (List Bool), source Raw54LFWord68.lean; no need to prove exponential return times. Lean source-excerpt build passed (propext, Quot.sound). Three residuals 34,44,90 remain. ID84/105 commit 591a77a536bd56e063480aec585d9bd6df8d2ee5 pushed. ID90 at F-empty has right (10)^k with payload 001/010/...; inspect intermediate A/B sections for simpler total word invariant. Full source audit and global integration pending.
+
+---
 # 2026-11-25 22:35 UTC checkpoint — LF residuals 84 and 105
 
 Same immutable lease (22:24:30.662Z), threshold 23:34:30.662Z. Proved both via one parameterized arbitrary-word increment theorem Raw54LFCarryPair.lean: frame 10000011 or 1000011, digit encodings 000/011 or 0000/0011, cost 66+6c or 64+8c, entry 29 or 27. Lean source-excerpt build passed (propext, Quot.sound), full original import closure pending. Four residuals remain 34,44,68,90. ID0 commit ada0833ddce07d065faf137c784f60a5cadfa660 previously pushed. Next: 68 has B empty right 1^n 01110011, n grows by 3 each epoch; 90 has F empty right (10)^n and payload, increases marker each epoch. 34 and 44 resemble stacks of alternating unary run lengths. Derive actual total invariants.
