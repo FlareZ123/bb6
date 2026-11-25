@@ -47,11 +47,11 @@ theorem runAt_eq (p : PartialMachine) (c : Cursor) (n : Nat)
     (hc : c.Valid p) : runAt p c n = zrun p n start := by
   unfold runAt
   split
-  · have ht : n = c.t + (n-c.t) := by omega
-    rw [ht,zrun_add,hc]
-    simp only [Option.bind_some]
-    congr 2
-    omega
+  · have hr := zrun_add p c.t (n-c.t) start
+    rw [hc] at hr
+    simp only [Option.bind_some] at hr
+    rw [show c.t + (n-c.t) = n by omega] at hr
+    exact hr.symm
   · rfl
 
 def queryAt (B : Nat) (p : PartialMachine) (n : Nat) (s : Slot) (z : Z) : Bool :=
