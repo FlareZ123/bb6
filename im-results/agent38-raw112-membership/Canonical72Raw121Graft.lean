@@ -58,6 +58,7 @@ theorem exact_at_target (B : Nat) (hB : 6766859 ≤ B)
     BB6.Coverage.ExactBB6 B :=
   exact_from_quotient_roster (by omega) hB sound hLeaves champ
 
+#print axioms BB6.Agent11Raw121.all121
 #print axioms parent_present
 #print axioms count
 #print axioms sound
