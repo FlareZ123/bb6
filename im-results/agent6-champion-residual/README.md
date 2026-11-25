@@ -92,6 +92,23 @@ This is the current intended global composition, but it is **not source-accepted
 
 A further draft consumer composes the 106-leaf raw139 decomposition with four additional source-accepted F1 sibling Covers (0RB, 0LA, 1RD, 1LB), leaving 102 raw139 leaves and 178 total obligations. Its conditional exactness theorem is still downstream of the canonical77 membership proof and the four sibling-to-frontier checks; it does not reduce the number of physical completions or discharge any of the 178 Covers.
 
+
+## Cross-root A6 + champion composition (draft)
+
+Agent48's raw139 hard-root programme follows the other first-hole branch: D/1 = 0LC (A6), whereas the champion path begins D/1 = 0LE. The A6 source bridge identifies the exact original machine, imports the pinned Cryptids nonhalting theorem, adapts it to a weighted nonhalting certificate, and builds a sound first-hole frontier for the eight remaining A6 path decisions. Its terminal A6 leaf is closed; the off-path siblings remain explicit.
+
+`A6ChampionComposition.lean` composes that frontier with this champion chain. It filters the champion's D/1=0LE child out of the A6 residual family and discharges that child using `cover_championResidual_from_raw139_leaves`, i.e. the existing 106-leaf champion refinement. The resulting theorems are:
+
+- `A6_remaining_sound_at_championScore`: the A6 branch is bounded at the champion score or reaches one of the retained A6 siblings;
+- `A6ChampionCombinedRoster_sound`: grafts the composed raw139 family into the accepted canonical77 dichotomy;
+- `combined_A6_parent_cover`: constructs a Cover of raw139 from Covers of the retained A6 siblings and the 106 champion descendants;
+- `exact_from_canonical77_with_A6_champion_refinement`: conditional exact BB(6), assuming Covers for the other canonical77 entries, retained A6 siblings, and the 106 champion descendants.
+
+The expected raw A6 frontier size is 184 and the expected retained A6 family size is 183 after removing the champion child; this would give 259 top-level entries (76 other canonical entries + 183 A6 siblings), with the 106 champion Covers serving as the nested proof for the removed child. **None of these new cardinalities is claimed as proved.** The original `by decide` count reductions triggered a Lean 4.36.0-rc2 IR panic and were removed from `A6Ingestion.lean`; structural counting is separate work. The soundness and exactness interfaces do not depend on those counts.
+
+The combined module is draft pending source-matched CI. A6 ingestion run [45689774972](https://github.com/FlareZ123/bb6/actions/runs/45689774972) is compiling the source-connected A6 module; champion core run [45686501436](https://github.com/FlareZ123/bb6/actions/runs/45686501436) is compiling the repaired champion dependency closure. The Agent6 workflow now accepts an `a6_run_id` and a content-hash-verified core artifact so the two proof chains can be compiled together without redoing an unchanged core.
+
+
 ### Pending canonical76 rebase via raw121
 
 Agent11 has prepared `Raw121Canonical77Graft.lean` and `.github/workflows/agent11-raw121-canonical77-graft.yml` to graft the source-accepted raw121 parent Cover (bound 4063) into the accepted canonical77 roster. Raw121 is a C/0=0RD sibling, distinct from raw139's C/0=1LD cylinder. If that cross-artifact workflow succeeds, it produces a 76-entry roster with target bound 7014, already below the proven champion lower bound 49394.
