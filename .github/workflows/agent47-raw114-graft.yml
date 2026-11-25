@@ -844,6 +844,10 @@ jobs:
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          ref: d4164a4457e62ba7ec8e3fba6e38b251d04ffc83
+          path: pinned
       - name: Validate the canonical76 shared-core run ID
         env:
           CANONICAL76_RUN_ID: ${{ inputs.canonical76_run_id }}
@@ -911,6 +915,19 @@ jobs:
           test -s im-results/agent7-raw110/Raw110PairMacro.lean
           python im-results/agent7-raw110/gen_late_trace.py /tmp/raw110-generated --compressed
           test -s /tmp/raw110-generated/Raw110WordTrace.lean
+      - name: Reconstruct the pinned Raw114 source closure
+        run: |
+          set -euo pipefail
+          cat > /tmp/a31-raw114-generator-commands.txt <<'EOF'
+          cd pinned/im-results/agent47-raw114-cut
+          python paired_counter.py
+          python long_sweep.py
+          printf '%s\n' 0LA 0LB 0LC 0LF 0RA 0RB 0RC 0RF 1LA 1LB 1LC 1LF 1RA 1RB 1RC 1RF | xargs -P 4 -I{} python generate_complete.py {}
+          python generate_complete.py --combine
+          EOF
+          bash /tmp/a31-raw114-generator-commands.txt
+          test -s pinned/im-results/agent47-raw114-cut/Raw114CompleteData.lean
+          test "$(find pinned/im-results/agent47-raw114-cut -maxdepth 1 -name 'Raw114Complete*Kid*.lean' | wc -l)" -eq 384
       - name: Compile the complete canonical73 consumer against the shared core
         run: |
           set -euo pipefail
@@ -925,6 +942,7 @@ jobs:
             --jobs 4 \
             --source-root /tmp/raw110-generated \
             --source-root im-results/agent10-tnf-multipump \
+            --source-root pinned/im-results/agent47-raw114-cut \
             --override ThreeHoleAudit=im-results/agent31-three-hole-tnf/ThreeHoleAudit.lean \
             --override TNFPilot=im-results/agent50-weighted-tnf-pilot/TNFPilot.lean \
             --precompiled-manifest /tmp/a31-base/manifest/raw107-shared-manifest.json \
@@ -990,6 +1008,20 @@ jobs:
             --provenance-input im-results/agent10-tnf-raw91/dfa.txt \
             --provenance-input im-results/agent10-tnf-raw91/Raw91Pump.lean \
             --provenance-input /tmp/a31-canonical73-generator-commands.txt \
+            --provenance-input /tmp/a31-raw114-generator-commands.txt \
+            --provenance-input pinned/im-results/agent47-raw114-cut/generate_complete.py \
+            --provenance-input pinned/im-results/agent47-raw114-cut/paired_counter.py \
+            --provenance-input pinned/im-results/agent47-raw114-cut/long_sweep.py \
+            --provenance-input pinned/im-results/agent47-raw114-cut/multi_sweep.py \
+            --provenance-input pinned/im-results/agent47-raw114-cut/raw114-hard-manifest.txt \
+            --provenance-input pinned/im-results/agent47-raw114-cut/all-far-bank.txt \
+            --provenance-input pinned/im-results/agent47-raw114-cut/seeded_far.cpp \
+            --provenance-input pinned/im-results/agent31-three-hole-tnf/generate_sweeps.py \
+            --provenance-input pinned/im-results/agent31-three-hole-tnf/generate_four_hole.py \
+            --provenance-input pinned/im-results/agent1-ngram/emit_ngram.py \
+            --provenance-input pinned/im-results/agent1-ngram/ngram.cpp \
+            --provenance-input pinned/im-results/agent2-tnf-raw99/enumerate.cpp \
+            --provenance-input pinned/im-results/agent47-raw114-cut/Raw114CompleteData.lean \
             --provenance-input im-results/agent31-three-hole-tnf/ThreeHoleAudit.lean \
             --provenance-input tools/lean_compile_closure.py \
             --provenance-input /tmp/a31-base/manifest/raw107-shared-manifest.json \
