@@ -1,10 +1,16 @@
 name: Agent 47 raw112 parent-cover composition audit
 on:
   workflow_dispatch:
+    inputs:
+      mode:
+        type: choice
+        options: [parent, carry]
+        default: parent
 permissions:
   contents: read
 jobs:
   parent_cover:
+    if: inputs.mode == 'parent'
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
@@ -70,3 +76,32 @@ jobs:
             im-results/agent47-raw112-cut/unresolved.txt
             /tmp/a47-raw112-generate.log
             /tmp/a47-raw112-parent-cover-lean.log
+
+  carry:
+    if: inputs.mode == 'carry'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Unpack original semantics
+        run: python im-results/agent13-coverage/unpack.py
+      - name: Compile recursive carry nonhalting theorem
+        run: |
+          set -euo pipefail
+          python tools/lean_compile_closure.py im-results/agent47-raw112-cut/Raw112CarryNever.lean --workdir /tmp/a47-carry --jobs 4 | tee /tmp/a47-carry.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a47-carry.log; then
+            exit 1
+          fi
+      - name: Preserve proof logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw112-carry-original-source
+          path: |
+            /tmp/a47-carry/
+            /tmp/a47-carry.log
