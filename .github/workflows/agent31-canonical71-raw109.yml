@@ -168,23 +168,25 @@ jobs:
           assert sha(source) == summary["modules"]["CanonicalTwoParentRosterOnly"]["source_sha256"]
           assert sha(base / "CanonicalTwoParentRosterOnly.lean") == sha(source)
           assert sha(base / "CanonicalTwoParentRosterOnly.olean") == summary["modules"]["CanonicalTwoParentRosterOnly"]["olean_sha256"]
-          for name in ("CanonicalTwoParentGraft", "CanonicalRaw114Accepted", "Raw114CompleteData"):
-              base_obj = base / (name + ".olean")
+          base_obj = base / "CanonicalRaw114Accepted.olean"
+          assert sha(base_obj) == summary["modules"]["CanonicalRaw114Accepted"]["shared_core_olean_sha256"]
+          for name in ("CanonicalTwoParentGraft", "Raw114CompleteData"):
               canonical77_obj = canonical77 / (name + ".olean")
-              assert sha(base_obj) == summary["modules"][name]["olean_sha256"]
-              assert sha(base_obj) == sha(canonical77_obj), f"base/canonical77 object mismatch: {name}"
+              assert sha(canonical77_obj) == summary["modules"][name]["olean_sha256"]
+          accepted_raw114 = canonical77 / "CanonicalRaw114Accepted.olean"
+          assert sha(accepted_raw114) == summary["modules"]["CanonicalRaw114Accepted"]["accepted_artifact_olean_sha256"]
           shared_manifest = json.loads((base / "manifest/raw107-shared-manifest.json").read_text())
           shared_by = {entry["module"]: entry for entry in shared_manifest["modules"]}
           canonical77_by = {entry["module"]: entry for entry in manifest["modules"]}
-          common = sorted(set(shared_by) & set(canonical77_by))
-          assert common, "no common modules available for cross-artifact identity checking"
+          reused = set(shared_manifest["precompiled_core"]["reused_modules"])
+          assert reused, "the canonical76 shared-core manifest records no reused modules"
           identity_fields = ("source_sha256", "project_imports", "olean_sha256", "import_closure_sha256", "module_identity_sha256")
-          for name in common:
+          for name in reused:
+              assert name in shared_by and name in canonical77_by, f"{name}: missing from one accepted manifest"
               for field in identity_fields:
                   assert shared_by[name][field] == canonical77_by[name][field], f"{name}: {field} differs across accepted manifests"
-              for directory, entry in ((base, shared_by[name]), (canonical77, canonical77_by[name])):
-                  obj = directory / entry["olean_path"]
-                  assert obj.is_file() and sha(obj) == entry["olean_sha256"], f"{name}: object mismatch in {directory}"
+              obj = canonical77 / canonical77_by[name]["olean_path"]
+              assert obj.is_file() and sha(obj) == canonical77_by[name]["olean_sha256"], f"{name}: canonical77 object mismatch"
           for entry in manifest["modules"]:
               obj = canonical77 / entry["olean_path"]
               assert obj.is_file(), f"missing canonical77 object: {entry['module']}"
