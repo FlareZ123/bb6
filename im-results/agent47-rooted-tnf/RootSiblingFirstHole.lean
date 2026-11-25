@@ -165,11 +165,12 @@ def rootSiblingIsClosed (parent child : Move) : Bool :=
 theorem rootSiblingIsClosed_sound (parent child : Move)
     (h : rootSiblingIsClosed parent child = true) :
     ∀ m, compatible (rootSiblingChild parent child) m → NeverHalts m := by
+  unfold rootSiblingIsClosed at h
   have hmem : ∃ w ∈ rootSiblingWitnesses,
       decide (w.parent = parent ∧ w.child = child) = true :=
     List.any_eq_true.mp h
   rcases hmem with ⟨w, hw, hpair⟩
-  have hOK : residualWitnessOK (rootSiblingChild w.parent w.child) w.witness :=
+  have hOK : residualWitnessOK (rootSiblingChild w.parent w.child) w.witness = true :=
     (List.all_eq_true.mp rootSiblingWitnessesOK) w hw
   have hpair' : w.parent = parent ∧ w.child = child := of_decide_eq_true hpair
   rcases hpair' with ⟨rfl, rfl⟩
