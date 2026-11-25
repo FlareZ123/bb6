@@ -21,16 +21,17 @@ def lateMachine : Machine := weightedTNFDefaultCompletion (refine p448 (5,false)
 theorem late_compatible : compatible p448 lateMachine :=
   refine_preserves_compat _ _ _ _ (by decide) (weightedTNFDefaultCompletion_compatible _)
 
-theorem late_compatible_raw120 : compatible p120 lateMachine := by
+theorem late_compatible_RF : compatible pRF lateMachine := by
   have h3 : compatible p3 lateMachine :=
     refine_preserves_compat _ _ _ _ (by decide) late_compatible
   have h2 : compatible p2 lateMachine :=
     refine_preserves_compat _ _ _ _ (by decide) h3
   have h1 : compatible p1 lateMachine :=
     refine_preserves_compat _ _ _ _ (by decide) h2
-  have hRF : compatible pRF lateMachine :=
-    refine_preserves_compat _ _ _ _ (by decide) h1
-  exact refine_preserves_compat _ _ _ _ (by decide) hRF
+  exact refine_preserves_compat _ _ _ _ (by decide) h1
+
+theorem late_compatible_raw120 : compatible p120 lateMachine :=
+  refine_preserves_compat _ _ _ _ (by decide) late_compatible_RF
 
 theorem late_halts : HaltsAfter lateMachine 14415 := by
   obtain ⟨hr,hh,_⟩ := zipQueryOK_sound late_query_checked
