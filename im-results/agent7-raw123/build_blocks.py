@@ -5,6 +5,7 @@ ROOT=Path(__file__).resolve().parent
 BLOCK=ROOT.parent/"agent13-block-far"
 sys.path.insert(0,str(BLOCK))
 from generate_multi import generate
+from emit_active import emit_active, specialize_active
 
 def rows():
     return [line.split() for line in (ROOT/"special.txt").read_text().splitlines() if line and not line.startswith("#") and line.split()[1]=="B"]
@@ -29,7 +30,10 @@ def build(selected):
         ns="BB6BlockFAR"+suffix+"."+name
         # Sparse lookup avoids enormous packed arrays for large alphabets.
         sparse=width>=5 or j==5
-        generate(table,ROOT,width,cap,mod,runs,bool(flip),name,minimize_left=sparse,sparse=sparse)
+        data = generate(table,ROOT,width,cap,mod,runs,bool(flip),name,minimize_left=sparse,sparse=sparse)
+        if j == 20:
+            specialize_active(BLOCK,width)
+            emit_active(data,ROOT,name)
         s=f"import {name}Proof\nimport BlockFARBridge{suffix}\n"
         if flip:s+="import FARBi\n"
         s+=f"\nnamespace BB6.Agent7{name}\nopen BB6Coverage\n\n"
