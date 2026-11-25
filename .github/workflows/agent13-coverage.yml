@@ -1646,7 +1646,8 @@ jobs:
           if [ "${{ inputs.target }}" = weighted-tnf-raw60-0lf-witnesses ]; then
             python im-results/agent1-raw60/generate_0lf_pumps.py
             python im-results/agent1-raw60/generate_0lf_unary.py
-            roots=(im-results/agent1-raw60/Raw60LFUnary.lean)
+            python im-results/agent1-raw60/generate_0lf_second.py
+            roots=(im-results/agent1-raw60/Raw60LFSecond.lean)
           else
             roots=(im-results/agent1-raw60/{Raw60RootProgress,Raw60LABinary,Raw60LAAlternating,Raw60RFUnary,Raw60BCBinary,Raw60LBFour,Raw60LCGlider,Raw60LDBinaryCounters}.lean)
           fi
