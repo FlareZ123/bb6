@@ -60,6 +60,13 @@ Time Eval vm_compute in
   (map (fun x => (TM_to_str (tm x), q32_parent_child_class x))
     q32_parent_children).
 
+Theorem q32_parent_child_classes_exact :
+  map q32_parent_child_class q32_parent_children =
+    [1;1;0;1;0;1;0;1;0;1;0;1;0;0;0;0].
+Proof. vm_compute. reflexivity. Qed.
+
+Print Assumptions q32_parent_child_classes_exact.
+
 Definition q32_active_a1_class (x : T) : nat :=
   match tm x (A,S1) with
   | Some (S1,L,D) => 0
