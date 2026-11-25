@@ -11,6 +11,7 @@ namespace BB6.Agent31DepthEightSiblingClosure
 open BB6Coverage
 open BB6.Agent50RecursiveResidual
 open BB6.Agent50RootFrontier
+open BB6.Agent50TNFPilot
 
 /-- The 42 large-DFA and nine XL-DFA source-accepted leaves, plus the
     independently source-accepted tree126 recurrence. These are added to the
