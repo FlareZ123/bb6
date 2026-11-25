@@ -281,7 +281,7 @@ jobs:
 
       - name: Compile and audit the conditional 68-residual E1 consumer
         env:
-          CANONICAL76_RUN_ID: \${{ inputs.canonical76_run_id }}
+          CANONICAL76_RUN_ID: ${{ inputs.canonical76_run_id }}
         run: |
           set -euo pipefail
           base=/tmp/a31-accepted76/a31-shared
