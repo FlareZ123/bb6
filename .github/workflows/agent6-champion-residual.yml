@@ -12,6 +12,16 @@ on:
         type: string
         required: false
         default: ""
+      source_sha:
+        description: Optional exact commit to check out; pass the same SHA used by core_run_id
+        type: string
+        required: false
+        default: ""
+      core_run_id:
+        description: Optional run ID containing agent6-champion-residual-core
+        type: string
+        required: false
+        default: ""
 
 permissions:
   contents: read
@@ -24,6 +34,8 @@ jobs:
     timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha || github.sha }}
       - name: Install Lean 4.36.0-rc2
         run: |
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
@@ -87,7 +99,43 @@ jobs:
           tar -xJf "$work/proofs.tar.xz" -C "$work/imports"
       - name: Reconstruct additional source-accepted F1 sibling modules
         run: python3 im-results/agent6-champion-residual/reconstruct_f1_batch.py
+      - name: Download precompiled champion residual core checkpoint
+        if: ${{ inputs.core_run_id != '' }}
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.core_run_id }}
+          name: agent6-champion-residual-core
+          path: /tmp/a6-champion-residual
+      - name: Verify source-matched champion residual core checkpoint
+        if: ${{ inputs.core_run_id != '' }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, json, pathlib, subprocess
+          root = pathlib.Path('/tmp/a6-champion-residual')
+          summary = json.loads((root / 'core.json').read_text())
+          source_sha = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+          if summary['source_sha'] != source_sha:
+              raise SystemExit(f"core source SHA {summary['source_sha']} != checkout {source_sha}")
+          lean_version = subprocess.check_output(['lean', '--version'], text=True).strip()
+          if summary['lean_version'] != lean_version:
+              raise SystemExit(f"Lean version mismatch: {summary['lean_version']} != {lean_version}")
+          prefix = pathlib.Path(subprocess.check_output(['lean', '--print-prefix'], text=True).strip())
+          binary_hash = hashlib.sha256((prefix / 'bin/lean').read_bytes()).hexdigest()
+          if summary['lean_binary_sha256'] != binary_hash:
+              raise SystemExit('Lean binary hash mismatch')
+          manifest_hash = hashlib.sha256((root / 'manifest.json').read_bytes()).hexdigest()
+          if summary['manifest_sha256'] != manifest_hash:
+              raise SystemExit('core manifest hash mismatch')
+          build = root / 'build'
+          count = len(list(build.rglob('*.olean')))
+          if count != summary['build_olean_count'] or count == 0:
+              raise SystemExit(f"core object count mismatch: {count} != {summary['build_olean_count']}")
+          print(f"reusing {count} Lean objects from source-matched run {summary['source_run_id']}")
+          PY
       - name: Compile the champion frontier and depth-five F1 sibling refinement
+        if: ${{ inputs.core_run_id == '' }}
         run: |
           set -euo pipefail
           work=/tmp/a6-champion-residual
@@ -113,7 +161,8 @@ jobs:
             --override M0OddResidueSeven=im-results/agent41-m0-n16r7/M0OddResidueSeven.lean \
             --override M0EvenEightValuationEncoding=im-results/agent48-counted-inc0/M0EvenEightValuationEncoding.lean \
             --override M2EvenResidueTwo=im-results/agent42-champion-terminal/M2EvenResidueTwo.lean \
-            --workdir "$work/build" --jobs 4 | tee "$work/compile.log"
+            --workdir "$work/build" --manifest "$work/manifest.json" \
+            --label agent6-champion-residual-core --jobs 4 | tee "$work/compile.log"
           if grep -Eq 'sorryAx|native_decide' "$work/compile.log"; then
             echo "Forbidden proof placeholder or native_decide found in champion residual closure" >&2
             exit 1
@@ -221,6 +270,48 @@ jobs:
                   raise SystemExit(f"nonstandard axioms: {name}: {used-allowed}")
               print(f"{name}: {sorted(used)}")
           PY
+      - name: Merge reused F1 objects and persist champion residual core
+        if: ${{ inputs.core_run_id == '' }}
+        run: |
+          set -euo pipefail
+          work=/tmp/a6-champion-residual
+          mkdir -p "$work/build"
+          cp -rn .tmp/a41-f1-zeroLF/build/. "$work/build/"
+          prefix="$(lean --print-prefix)"
+          lean --version > "$work/lean-version.txt"
+          sha256sum "$prefix/bin/lean" > "$work/lean-binary.sha256"
+          python3 - "$work/manifest.json" "$work/core.json" "$work/lean-version.txt" "$work/lean-binary.sha256" "$work/build" <<'PY'
+          import hashlib, json, pathlib, subprocess, sys
+          manifest, output, version_file, binary_file, build_dir = map(pathlib.Path, sys.argv[1:])
+          digest = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
+          version = version_file.read_text().strip()
+          binary_hash = binary_file.read_text().split()[0]
+          objects = list(pathlib.Path(build_dir).rglob('*.olean'))
+          summary = {
+              'source_sha': subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(),
+              'source_run_id': int(__import__('os').environ['GITHUB_RUN_ID']),
+              'lean_version': version,
+              'lean_binary_sha256': binary_hash,
+              'manifest_sha256': digest(manifest),
+              'build_olean_count': len(objects),
+              'artifact_name': 'agent6-champion-residual-core',
+          }
+          if not objects:
+              raise SystemExit('no compiled Lean objects to checkpoint')
+          output.write_text(json.dumps(summary, indent=2, sort_keys=True) + '\\n')
+          print(json.dumps(summary, indent=2, sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: ${{ inputs.core_run_id == '' }}
+        with:
+          name: agent6-champion-residual-core
+          include-hidden-files: true
+          path: |
+            /tmp/a6-champion-residual/build
+            /tmp/a6-champion-residual/manifest.json
+            /tmp/a6-champion-residual/core.json
+          if-no-files-found: error
+          retention-days: 14
       - name: Download source-accepted Raw121 canonical76 graft artifact
         if: ${{ inputs.raw121_graft_run_id != '' }}
         uses: actions/download-artifact@v4
