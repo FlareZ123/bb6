@@ -30,7 +30,27 @@ The exact B0=1LC parent is
 
 It is a retained member of the 109-entry weighted first-one roster (canonical index 6). The source theorem `recovered_held_2800_parent_leaf_partition` proves that every completion of this parent either extends the FARv3-certified leaf or disagrees at a slot fixed by the leaf and left open by the parent. The complement is therefore explicit and retained.
 
-Agent 14 separately grafts 65 accepted side-witness cylinders into this same parent and retains their open complement. The FARv3 held leaf and those 65 cylinders are not silently combined: a consuming audit must preserve all remaining parent completions.
+The 65 side-witness cylinders are now combined with the q2800 held leaf, the cycle-return cylinder, and the forced-halt cylinder in the exact four-family partition `Agent13HeldBlockRaw10Combined`. The partition retains all 41 complement boxes; the held leaf has an independent Lean BlockFAR proof (`Agent13HeldBlock.held_weighted`). The weighted 109-roster composition below consumes this entire partition rather than silently dropping any parent completion.
+
+
+## B0=1LC weighted 109-roster composition — CI pending
+
+The new intermediate Lean module `Agent42B01LC109SourceConsumer.lean` composes three existing formal interfaces:
+
+1. `Agent14B01LC109Graft.otherRoster`: the 108 entries of the 109-entry mixed-bound roster other than the exact B0=1LC parent;
+2. `Agent13HeldBlockRaw10Combined.raw10_cover_with_cycle_and_halt`: a weighted cover of that exact parent from the four certified families and the 41 exact complement boxes;
+3. `MixedBound109Composition.exact_from_reduced_roster_at_champion_score`: the existing champion-score exact-BB(6) composition.
+
+Its theorem `exact_from_108_and_41_boxes` is conditional: if all 108 other roster entries and all 41 retained complement boxes are covered at the attained champion score, then `ExactBB6` follows. The parent completion mass is 95,367,431,640,625; the four certified families account for 4,629,927,926,900 completions; the remaining 41 boxes account for 90,737,503,713,725. The refined unresolved frontier is therefore 108 other entries plus 41 boxes (149 obligations), not a closed BB(6) proof.
+
+The q2800 held leaf is included in the four-family cover through the Lean BlockFAR theorem `Agent13HeldBlock.held_weighted`, not merely through the separate Coq FARv3 source certificate. The exact complement is formalized by `raw10RemainderWithCycleAndHalt_exact`; the weighted cover is `raw10CoverWithCycleAndHalt`.
+
+CI history:
+- Base run [45651264742](https://github.com/FlareZ123/bb6/actions/runs/45651264742) exposed a Lean 4.36 parser error in `RootRaw10Core.decodeMove` (record literal fields `right` and `next` were rejected). The branch patch replaces the record literal with the `Move` constructor.
+- Full retry [45653497419](https://github.com/FlareZ123/bb6/actions/runs/45653497419) includes that fix and the new composition module; it is still compiling. The extended axiom audit now also requires the exact parent-partition, held-leaf, and weighted-cover theorem profiles. Because that audit extension landed after run 45653497419 started, a successful run should be followed by a precompiled-closure run using input `b0_1lc_base_run_id=45653497419`.
+- Until the compile and extended audit pass, treat this as a proposed composition, not a CI-accepted result.
+
+The source-queue consumer above remains a separate route: it discharges one exact source-held-table obligation but does not itself establish the weighted 109-roster parent cover.
 
 ## Source consumer and scope
 
@@ -71,4 +91,4 @@ Its safety follows by `Forall_app` from Agent 5's held-roster theorem and Agent 
 
 The separate Agent 14 q2800-only consumer is redundant with Agent 5's already accepted generic `roster_checkpoint_consumption` / `roster_filtered_global_upper` route. Its latest run, [45625068546](https://github.com/FlareZ123/bb6/actions/runs/45625068546), failed in the duplicate `Forall_filter_partition` proof at line 30. Do not spend further compute repairing that duplicate unless it acquires a distinct purpose. Agent 42's exact checkpoint-membership module compiled and its assumption audit ran in [45624293740](https://github.com/FlareZ123/bb6/actions/runs/45624293740); its printed dependencies include Coq primitive-array (`PArray`) axioms and `LibTactics.inj_pair2`, which must be disclosed rather than calling the computation axiom-free.
 
-The earlier unsharded combined pilot, run `45604264950`, was cancelled at the 43-minute job timeout while compiling the monolithic tree-roster checker. The replacement five-shard plus combined-roster pilot is [run 45629659854](https://github.com/FlareZ123/bb6/actions/runs/45629659854), currently in progress. Its compiler and assumption audit are still pending; do not claim the 95-tree roster or the 89-residual count source-accepted until it completes successfully.
+The earlier unsharded combined pilot, run `45604264950`, was cancelled at the 43-minute job timeout while compiling the monolithic tree-roster checker. The unsharded combined pilot [45629659854](https://github.com/FlareZ123/bb6/actions/runs/45629659854) was canceled at the 43-minute timeout. The replacement uses `q2800_shards.py` and separate shard01..05 workflow targets. First attempt [45649454225](https://github.com/FlareZ123/bb6/actions/runs/45649454225) exposed a missing direct `SourceResidualRoster` import in `Agent42Q2800BatchData.v`; that import is now fixed (source commit `5e00f3c7dc2959b6ad155b2e875d0881af1c53e3`). Shard01 [45649689177](https://github.com/FlareZ123/bb6/actions/runs/45649689177) is still compiling on branch `agent42-q2800-shards-v2-20261125`. Do not dispatch shards 02..05 until shard01 and its strict manifest pack pass. The 95-tree roster and 89-residual source-queue count remain unaccepted until all five shards and the assembler pass.
