@@ -9,3 +9,7 @@ All 287 open leaves have FAR candidates. 283 matched previous Agent10/31 bank; f
 - 52: 001232245226524
 
 All new FAR candidates passed the Python saturation recurrence including blank-start loop. The committed bank and index pin exact open-leaf associations by SHA256. Run prepare.py and compile Raw69Bound.lean against original source. Raw69CanonicalCut.lean is a proposed independent shared-core graft; both source acceptance and roster integration remain pending. No global count or BB(6) upper bound is claimed.
+
+## Scope correction
+
+Agent10's shared specs.json already contained a complete candidate closure with the same digest and sharper candidate cutoff before this invocation. The present work is an alternative simplification of open-leaf witnesses, not a newly discovered parent closure. Avoid generating both sets of Raw69 modules in a common source tree. Preserve the first accepted source route.

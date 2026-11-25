@@ -9,3 +9,7 @@ Parent `1RB---_1RC0LD_0RD---_1LD1RE_---0LB_------`, raw residual 73, B1=0LD, fiv
 Both new DFAs pass the exact Python masks recurrence, including the blank-start loop. The last leaf (89, `1RB1LF_1RC0LD_0RD1RC_1LD1RE_1LF0LB_---0LA`) has a one-block sweep candidate, entry 11 and return cost 23+12n, state A, left empty, right 01(0101)^n01.
 
 The committed bank/index and `prepare.py` reproduce the whole candidate audit with the shared generators and split checker; the open-list SHA256 is 55ba96537acce2e6b0bd2fea4ac9bb6768f7ced7cc30db3756f2857e4a5a54c9. `Raw73Bound.lean` exposes a literal-parent weighted bound of 7014 if the original source checks pass. `Raw73CanonicalCut.lean` is a draft independent quotient graft to ingest through the shared core. No new certified cylinder or roster count is claimed until Lean accepts the corresponding theorem.
+
+## Scope correction
+
+Agent10's shared specs.json already contained a complete candidate closure with the same digest and sharper candidate cutoff before this invocation. The present work is an alternative simplification of open-leaf witnesses, not a newly discovered parent closure. Avoid generating both sets of Raw73 modules in a common source tree. Preserve the first accepted source route.
