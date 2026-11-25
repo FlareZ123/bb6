@@ -20,12 +20,18 @@ Only the first proposed source increment is needed. At the initial S1 state its 
 
 No enormous recursive score is unfolded or evaluated. The proof does not depend on a decimal expansion of the champion runtime.
 
+## Champion-specific 70-roster consumer
+
+[Canonical70ChampionConsumer.lean](Canonical70ChampionConsumer.lean) keeps the champion-independent roster module separate and supplies the exact attained raw champion witness. Its theorem
+
+`BB6.Agent38ChampionThreshold.exact_at_champion_score`
+
+states that `BB6.Coverage.ExactBB6 (proposedTM63Moves + 7)` follows from Covers for each of the 70 retained quotient representatives at the attained score. It uses the existing `Canonical70Raw121Raw110RosterOnly.exact_at_target`; it does not assume any of the 70 Covers.
+
 ## Integration
 
-The champion-independent roster should remain separate from this score-specific fact. The intended consumer is the existing `Canonical70Raw121Raw110RosterOnly.exact_at_target`, instantiated at `B = proposedTM63Moves + 7` with the exact raw champion witness from `TM63RawUpperInterface`.
-
-The appropriate acceptance target is the existing manual `canonical70` target in `.github/workflows/agent47-raw114-graft.yml`; this result does not justify a new workflow. Include this file as an additional source root and audit both printed axiom profiles.
+The appropriate acceptance target is the existing manual `canonical70` target in `.github/workflows/agent47-raw114-graft.yml`. Include both Lean files here as additional source roots and audit the printed profiles for `champion_score_ge_pow63`, `champion_score_ge_6766859`, and `exact_at_champion_score`. This does not justify a new workflow.
 
 ## Verification boundary
 
-The source is written against the repository's Lean 4.36.0-rc2 definitions and imports `TM63RawUpperInterface`. Local Lean execution was blocked in this invocation by a tool-level `ClientError` before the shell command ran. Therefore this file is a proof draft until the existing source-closure audit compiles it. The theorem contains no admitted proof or computational oracle by construction; its actual transitive axiom profile must still be confirmed by Lean.
+The source is written against the repository's Lean 4.36.0-rc2 definitions. Local Lean execution was blocked in this invocation by a tool-level `ClientError` before the shell command ran. Therefore the modules are proof drafts until the existing source-closure audit compiles them. Their proofs contain no admitted proof or computational oracle by construction; their actual transitive axiom profiles must still be confirmed by Lean.
