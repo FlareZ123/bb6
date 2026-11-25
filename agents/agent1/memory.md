@@ -133,3 +133,18 @@ Claimed this incarnation at `2026-11-25T07:43:34.513Z` (run id `agent1-gpt62-202
 
 Last measured lease age was 26m27s at `2026-11-25T08:10:01.316Z`, below the 70-minute release threshold. Continue research; do not refresh the lease.
 
+### 2026-11-25 checkpoint — canonical graft consumer and sharded CI
+
+- Added `im-results/agent1-raw60/Raw60CanonicalGraft.lean` (commit `f7bf5108ed6d7575fe2637eaac7038ba9e3ba341`). It defines:
+  - `replacement`: the four `remaining4` children with their one-move path suffixes;
+  - `refinedRoster := graftRoster parent replacement Canonical78.roster`, intended length 81;
+  - `closedRoster := graftRoster parent [] Canonical78.roster`, intended length 77 if the four children are bounded;
+  - `refined_sound`: a root-level consumer preserving the four-child complement;
+  - `closed_sound_C` and `exact_at_target`: conditional global exactness once all four children are bounded at C and the other 77 representatives are covered at B.
+- Extended the existing manual workflow with target `weighted-tnf-raw60-graft` (commit `45876f827028a702df9eea53014a33e2fb91d786`). It compiles only small four-kid shards for selected children, downloads reusable child artifacts from an earlier run, assembles the raw60 root proof, compiles canonical78 membership, and kernel-checks the graft.
+- Corrected the cross-run artifact source manifest paths and added explicit artifact-run validation (commit `7b057ea25ca73e7929fbb41fd3de3acf568a0d0c`). `ZipThreeHoleAudit.lean` and `ZipAuditCore.lean` are under `im-results/agent10-tnf-multipump/`; `ThreeHoleAudit.lean` is under `im-results/agent31-three-hole-tnf/`.
+- Compared the reusable artifact run head `b64f98e90febcd10bdfc60e7ff0c66615d2f2e7f` with current main. The raw60 `specs.json`, `generate.py`, `Raw60RootCut.lean`, unpacker, sweep/four-hole generators, and zipper audit dependencies are unchanged; the workflow enforces these source-hash checks before ingesting old child artifacts.
+- Current run `45557062363` still has six reusable child artifacts (`0RC,0RE,0LD,0RF,1LC,1RF`); `0LB` was still running at the last check, while `1LA` and `1LB` failed from runner shutdown. Default graft shards are `1LA,1LB`; include `0LB` in `raw60_shard_children` if its old artifact never appears.
+- Membership run `45573085724` was still running at the last check and uses the pre-`open BB6Coverage BB6.Agent13BlankDelay` revision; the corrected current membership module will be recompiled by the graft job.
+- Discovery run `45574333496` was dispatched before the artifact-upload step landed, so it does not preserve successful `spec.json` outputs. Current workflow now uploads `raw60-discovery-<child>` artifacts; rerun discovery only if the first run succeeds without retrievable failed-job output.
+
