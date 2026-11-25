@@ -8,6 +8,7 @@ on:
         default: parent
 permissions:
   contents: read
+  actions: read
 jobs:
   parent_cover:
     if: inputs.mode == 'parent' || inputs.mode == 'closed' || inputs.mode == 'integrated'
@@ -36,6 +37,62 @@ jobs:
           test -s im-results/agent47-raw112-cut/Raw112ParentCoverComposition.lean
           echo "=== Exact residual leaves ==="
           cat im-results/agent47-raw112-cut/unresolved.txt
+      - uses: actions/download-artifact@v4
+        if: inputs.mode == 'integrated'
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45597857116
+          name: raw110-complete-parent
+          path: /tmp/raw110-artifact
+      - uses: actions/download-artifact@v4
+        if: inputs.mode == 'integrated'
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45609071050
+          name: raw112-parent-cover-mixed-bound-composition
+          path: /tmp/raw112-artifact
+      - name: Prepare verified raw110 sources and raw112 precompiled core
+        if: inputs.mode == 'integrated'
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib, json, shutil
+          raw110 = Path("/tmp/raw110-artifact")
+          raw112 = Path("/tmp/raw112-artifact")
+          sources = sorted(raw110.rglob("*.lean"))
+          if not sources:
+              raise SystemExit("raw110 artifact contains no Lean source files")
+          by_module = {}
+          for source in sources:
+              old = by_module.get(source.stem)
+              if old is not None and old.read_bytes() != source.read_bytes():
+                  raise SystemExit(f"conflicting raw110 source copies for {source.stem}")
+              by_module[source.stem] = source
+          override_lines = []
+          for module, source in sorted(by_module.items()):
+              override_lines.extend(["--override", f"{module}={source.resolve()}"])
+          Path("/tmp/raw110-overrides.txt").write_text("\n".join(override_lines) + "\n")
+          manifests = list(raw112.rglob("a47-raw112-parent-cover-manifest.json"))
+          if len(manifests) != 1:
+              raise SystemExit(f"expected one raw112 manifest, found {len(manifests)}")
+          olean_roots = [p.parent for p in raw112.rglob("Raw112ClosedCover.olean")]
+          if len(olean_roots) != 1:
+              raise SystemExit(f"expected one compiled raw112 closure, found {len(olean_roots)}")
+          precompiled = Path("/tmp/raw112-precompiled")
+          shutil.copytree(olean_roots[0], precompiled, dirs_exist_ok=True)
+          shutil.copy2(manifests[0], "/tmp/raw112-precompiled-manifest.json")
+          Path("/tmp/raw110-artifact-provenance.txt").write_text(
+              "Raw110 complete-parent artifact: run 45597857116, head 3416108ec22f7e4519a365723a004b894dbbeed6, "
+              "artifact 15014940132, sha256 5a5302602f5bdf563c7fc135919af39d6599d9e5ae745c90a87812162b87f0bb\n"
+          )
+          Path("/tmp/raw112-artifact-provenance.txt").write_text(
+              "Raw112 closed-parent artifact: run 45609071050, source revision c66a7b8bf64eda3aa057d023f1344fbb3ea07ed5; "
+              "manifest and compiled import closure are preserved from that run\n"
+          )
+          print(f"raw110 source modules: {len(by_module)}")
+          print(f"raw112 precompiled objects: {len(list(precompiled.rglob('*.olean')))}")
+          PY
       - name: Compile the parent-cover composition theorem and full import closure
         run: |
           set -euo pipefail
@@ -50,29 +107,36 @@ jobs:
             artifact=raw112-closed-parent-cover
           fi
           if [ "${{ inputs.mode }}" = integrated ]; then
-            root=im-results/agent31-shared-core/Canonical74Raw107Raw114Raw117Raw112RosterOnly.lean
-            theorem=BB6.Agent31Canonical74RosterOnly.exact_at_target
-            label=canonical74-raw112-mixed-bound-roster-composition
-            artifact=canonical74-raw112-mixed-bound-roster-composition
+            root=im-results/agent47-rooted-tnf/Canonical73Raw110Composition.lean
+            theorem=BB6.Agent47Canonical73Raw110.exact_at_target
+            label=canonical73-raw110-raw112-mixed-bound-roster-composition
+            artifact=canonical73-raw110-raw112-mixed-bound-roster-composition
           fi
-          python tools/lean_compile_closure.py "$root" \
+          precompiled_args=()
+          provenance_args=()
+          override_args=()
+          if [ "${{ inputs.mode }}" = integrated ]; then
+            precompiled_args+=(--precompiled-manifest /tmp/raw112-precompiled-manifest.json --precompiled-dir /tmp/raw112-precompiled)
+            provenance_args+=(--provenance-input /tmp/raw110-artifact-provenance.txt --provenance-input /tmp/raw112-artifact-provenance.txt)
+            mapfile -t override_args < /tmp/raw110-overrides.txt
+          fi
+          python tools/lean_compile_closure.py "$root" "${override_args[@]}" "${precompiled_args[@]}" \
             --workdir /tmp/a47-raw112-parent-cover \
             --manifest /tmp/a47-raw112-parent-cover-manifest.json \
             --label "$label" \
             --theorem "$theorem" \
-            --parent-table '1RB---_1RC---_0RD---_1LD1RE_---1LC_------' \
-            --weighted-bound 100000 \
+            --parent-table '1RB---_1RC---_0RD---_1LD1RE_---0LC_------' \
+            --weighted-bound 6766859 \
             --artifact-name "$artifact" \
             --provenance-input im-results/agent47-raw112-cut/generate.py \
             --provenance-input im-results/agent47-raw112-cut/symbolic.py \
             --provenance-input im-results/agent47-raw112-cut/inductive-generators.tar.xz \
-            --provenance-input im-results/agent47-raw112-cut/Raw112ParentCoverComposition.lean \
-            --provenance-input im-results/agent31-shared-core/Canonical74Raw107Raw114Raw117Raw112RosterOnly.lean \
-            --provenance-input im-results/agent31-shared-core/Canonical75RosterOnly.lean \
-            --provenance-input im-results/agent31-shared-core/CanonicalTwoParentRosterOnly.lean \
+            --provenance-input im-results/agent47-rooted-tnf/Canonical73Raw110Composition.lean \
+            --provenance-input im-results/agent7-raw110/Raw110ParentLateCover.lean \
             --provenance-input im-results/agent47-raw115-cut/counter.py \
             --provenance-input im-results/agent31-three-hole-tnf/generate_sweeps.py \
             --provenance-input im-results/agent31-three-hole-tnf/generate_four_hole.py \
+            "${provenance_args[@]}" \
             --jobs 4 | tee /tmp/a47-raw112-parent-cover-lean.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a47-raw112-parent-cover-lean.log; then
             echo "Forbidden axiom/proof mechanism in raw112 parent-cover composition" >&2
@@ -82,7 +146,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: raw112-parent-cover-mixed-bound-composition
+          name: ${{ inputs.mode == 'integrated' && 'canonical73-raw110-raw112-mixed-bound-roster-composition' || inputs.mode == 'closed' && 'raw112-closed-parent-cover' || 'raw112-parent-cover-mixed-bound-composition' }}
           path: |
             /tmp/a47-raw112-parent-cover/
             /tmp/a47-raw112-parent-cover-manifest.json
