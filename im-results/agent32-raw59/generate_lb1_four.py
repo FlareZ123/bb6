@@ -64,7 +64,17 @@ def main(branch="1LB", opens=None):
                  name=name, minimize_left=True, offset=offset[0] if offset else 0)
         # Reuse the exact Frontier source bridge with the specialized block types.
         bridge_mod = "BlockFARBridge" if width == 3 else f"Raw59LB1BlockBridge{width}"
-        if width != 3:
+        if width == 2:
+            # BlockMacro2 exports the SAME primitive types and run as BlockMacro.
+            text = """import BlockFAR2
+import BlockFARBridge
+namespace BB6BlockFAR2
+abbrev partialTable := BB6BlockFAR.partialTable
+abbrev transfer_never := BB6BlockFAR.transfer_never
+end BB6BlockFAR2
+"""
+            (ROOT / f"{bridge_mod}.lean").write_text(text)
+        elif width != 3:
             text = bridge.replace("import BlockFAR\n", f"import BlockFAR{width}\n").replace("BB6BlockFAR", ns)
             (ROOT / f"{bridge_mod}.lean").write_text(text)
         (ROOT / f"{prefix}Block{i}.lean").write_text(f"""import {name}Proof
