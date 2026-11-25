@@ -69,12 +69,16 @@ def late_hole(table, limit):
     return None
 
 def generate(raw,upgrade=False):
+    B=70000 if upgrade and raw=='0LA' else 7014
     folder=ROOT/(('upgrade_' if upgrade else 'partial_')+raw);folder.mkdir(exist_ok=True)
     parent=f'1RB{raw}_1RC---_0RD---_1LD1RE_---1LA_------'
     subprocess.run(['g++','-std=c++17','-O3',str(ROOT.parent/'agent2-tnf-raw99/enumerate.cpp'),'-o',str(folder/'enumerate')],check=True)
     subprocess.run([str(folder/'enumerate'),parent],cwd=folder,check=True)
     data=(folder/'open.txt').read_bytes();assert hashlib.sha256(data).hexdigest()==SHA[raw]
     opens=data.decode().splitlines();assert len(opens)==len(set(opens))
+    if upgrade:
+        from generate_lb1_four import main as block_generate, cases_for
+        block_generate(raw,opens)
     certs={};pumps={};late={};imports=['Raw59Base','PartialAudit']
     for rle in opens:
         for a in BANK:
@@ -108,9 +112,8 @@ def generate(raw,upgrade=False):
         assert rle=="1RB1LB_1RC0LB_0RD0RF_1LD1RE_1RD1LA_---1RA"
         pumps[rle]=("BB6.Agent32Raw59LB1Block194.table","BB6.Agent32Raw59LB1Block194.never")
         if "Raw59LB1Block194" not in imports: imports.append("Raw59LB1Block194")
-    if upgrade and raw in ('0LB','1LE'):
-        from generate_lb1_four import EXTRA
-        for i,(table,*_) in EXTRA[raw].items():
+    if upgrade and raw!='1LB':
+        for i,(table,*_) in cases_for(raw,opens).items():
             assert opens[i]==table
             module=f'Raw59{raw}Block{i}'
             ns='BB6.Agent32'+module
@@ -282,7 +285,9 @@ theorem residual_sound : ∀ m, compatible {p} m → WeightedBound {B} m ∨
 '''
     if not unresolved:
         body+=f'''
-theorem residuals_empty : residuals = [] := by decide
+theorem residuals_empty : residuals = [] := by
+  have h : residuals.isEmpty = true := by decide
+  exact List.isEmpty_iff.mp h
 theorem bound : ∀ m, compatible {p} m → WeightedBound {B} m := by
   intro m hm
   rcases residual_sound m hm with h | ⟨e,he,_⟩
