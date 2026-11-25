@@ -40,8 +40,9 @@ theorem firstOneB0_1LC_exact_member :
 
 /-- Decode the compact 0..23 transition code used in CrossRouteHeldLeaf
     into the standard Lean move record: 4*state + 2*write + direction. -/
-def decodeMove (mv : BB6CrossRouteHeldLeaf.Move) : BB6Coverage.Move :=
-  { write := decide ((mv.val / 2) % 2 = 1)
+def decodeMove (mv : BB6CrossRouteHeldLeaf.Move) : BB6Coverage.Move := by
+  have hlt : mv.val < 24 := mv.isLt
+  exact { write := decide ((mv.val / 2) % 2 = 1)
     right := decide (mv.val % 2 = 1)
     next := ⟨mv.val / 4, by omega⟩ }
 
@@ -75,14 +76,14 @@ theorem refinesMachineB_sound {child parent : BB6Coverage.PartialMachine}
     parent. Each is a complete cylinder proof at weighted bound 7014. -/
 def b0_1lcSideWitnesses : List BB6.Agent47SevenSideWitnesses.SideWitness :=
   BB6.Agent47SevenSideWitnesses.witnesses.filter fun w =>
-    refinesMachineB (BB6Coverage.unpackTable w.table) firstOneB0_1LC
+    refinesMachineB (BB6.Agent50RootFrontier.unpackTable w.table) firstOneB0_1LC
 
 theorem b0_1lcSideWitnesses_count : b0_1lcSideWitnesses.length = 65 := by decide
 
 theorem b0_1lcSideWitnesses_safe :
     ∀ w ∈ b0_1lcSideWitnesses, ∀ m,
-      BB6Coverage.compatible (BB6Coverage.unpackTable w.table) m →
-      BB6Coverage.WeightedBound 7014 m := by
+      BB6Coverage.compatible (BB6.Agent50RootFrontier.unpackTable w.table) m →
+      BB6.Agent13BlankDelay.WeightedBound 7014 m := by
   intro w hw m hm
   have hmem : w ∈ BB6.Agent47SevenSideWitnesses.witnesses :=
     (List.mem_filter.mp hw).1
@@ -114,19 +115,19 @@ def c1_0laParent : BB6Coverage.PartialMachine :=
 
 theorem c1_0la_parent_matches :
     BB6.Agent31FourHoleRoster.sameTable
-      (BB6Coverage.unpackTable c1_0laPacked) c1_0laParent = true := by decide
+      (BB6.Agent50RootFrontier.unpackTable c1_0laPacked) c1_0laParent = true := by decide
 
 /-- The entire C1=0LA child of raw10 is closed by one existing SideWitness
     cylinder, with no restriction on its remaining nine slots. -/
 theorem c1_0la_parent_is_complete_side_witness :
     ∀ m, BB6Coverage.compatible c1_0laParent m →
-      BB6Coverage.WeightedBound 7014 m := by
+      BB6.Agent13BlankDelay.WeightedBound 7014 m := by
   intro m hm
   have hEq :
-      BB6Coverage.unpackTable c1_0laPacked = c1_0laParent :=
+      BB6.Agent50RootFrontier.unpackTable c1_0laPacked = c1_0laParent :=
     BB6.Agent31FourHoleRoster.sameTable_sound c1_0la_parent_matches
   have hm' : BB6Coverage.compatible
-      (BB6Coverage.unpackTable c1_0laPacked) m := by
+      (BB6.Agent50RootFrontier.unpackTable c1_0laPacked) m := by
     rw [← hEq]
     exact hm
   exact BB6.Agent47SevenSideWitnesses.hasWitness_sound
@@ -136,7 +137,7 @@ theorem c1_0la_parent_is_complete_side_witness :
     cylinders, so its 25 completions are genuinely additional. -/
 theorem heldLeaf_disjoint_from_all_sideWitnesses :
     (BB6.Agent47SevenSideWitnesses.witnesses.all fun w =>
-      !(compatibleMachineB (BB6Coverage.unpackTable w.table)
+      !(compatibleMachineB (BB6.Agent50RootFrontier.unpackTable w.table)
         (toPartialMachine BB6CrossRouteHeldLeaf.heldTable))) = true := by decide
 
 /-- The parent table in the 109 roster is exactly the parent used by the
