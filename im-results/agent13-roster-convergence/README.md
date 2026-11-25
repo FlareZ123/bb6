@@ -51,3 +51,37 @@ The Lean closure in run [45510820286](https://github.com/FlareZ123/bb6/actions/r
 The machine-readable [canonical-121.json](canonical-121.json) export preserves original canonical indices, stable addresses, the removed entries, the reduced roster's hole histogram (18/14/22/19/12/17/19 for 4–10 holes), and exact completion mass 1,878,783,591,015,625. The roster bridge proves `reduced_count = 121` and the sound dichotomy: every completion of the authentic 1RB root is either already bounded by 395 or compatible with one of the 121 retained residual tables. `FiveHoleRosterComposition.lean` exposes the corresponding root Cover, normalized TNF certificate, and conditional exact-BB(6) theorem once the remaining 121 Covers and champion witness are supplied. The specialized wrapper is now fully Lean-checked by run 45513767248.
 
 This is a genuine reduction of the intermediate frontier, not a global upper bound: the remaining 121 safety obligations are still open.
+
+## Mixed-bound maximality contract and 109-roster ingestion
+
+The earlier same-threshold composition theorems remain logically sound, but their premise
+`∀ e ∈ roster, Cover (WeightedBound C) e.2` is not the right target for a maximality
+proof when the attained champion has score `B > C`. Requiring every retained cylinder
+to be safe at the early classification cutoff would force the champion below that cutoff.
+
+`RosterCoverComposition.lean` now also supplies the mixed-bound interface:
+
+- the root dichotomy is retained at the early cutoff `C`;
+- each retained cylinder is required to have `Cover (WeightedBound B)`;
+- the already-bounded root branch is lifted from `C` to `B`, while residual leaves
+  are consumed directly at `B`.
+
+The new `MixedBound109Composition.lean` instantiates this contract against the
+source-accepted `Combined109Roster.reduced_sound` dichotomy at `C = 7014` and the
+exact champion score `B = proposedTM63Moves + 7`. It proves, using the exact champion
+run and its exact blank-delay list, that:
+
+1. `B > 7014`;
+2. the champion is compatible with the authentic first-one root;
+3. the champion is not `WeightedBound 7014`, so the accepted 109-way dichotomy places
+   it in one of the 109 retained residual cylinders;
+4. the complete champion table is a concrete singleton `Cover (WeightedBound B)`
+   but cannot be a `Cover (WeightedBound 7014)`;
+5. if all 109 residual cylinders receive `B`-bound Covers, the mixed adapter yields
+   the normalized first-one TNF certificate and conditional `ExactBB6 B`.
+
+This is a corrected, satisfiable proof contract and a concrete larger-bound leaf test,
+**not** a completed upper bound. The 109 full-cylinder safety obligations at `B`
+remain unproved; the singleton example does not discharge its containing residual
+cylinder. The combined manual CI target is being extended to compile the original
+champion source closure and the mixed-bound adapter together.
