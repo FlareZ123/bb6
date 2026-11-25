@@ -40,11 +40,11 @@ def cases_for(branch, opens=None):
         for row in (ROOT / "block_groups.txt").read_text().splitlines():
             if not row or row.startswith("#"): continue
             left, right = row.split(":")
-            b, w, c, m, r = left.split()
+            b, w, c, m, r, *offset = left.split()
             if b != branch: continue
             for i in map(int, right.split()):
                 assert i not in cases
-                cases[i] = (opens[i], *map(int, (w,c,m,r)))
+                cases[i] = (opens[i], *map(int, (w,c,m,r)), *map(int,offset))
         for i,(table,*_) in cases.items():
             assert opens[i] == table
     return cases
@@ -57,11 +57,11 @@ def main(branch="1LB", opens=None):
     # Frontier defines the BB6Coverage types used by raw59 (via RootShift/Symmetry).
     bridge = (BLOCK / "BlockFARBridge.lean").read_text()
     prefix = "Raw59LB1" if branch == "1LB" else f"Raw59{branch}"
-    for i, (table, width, cap, mod, runs) in cases.items():
+    for i, (table, width, cap, mod, runs, *offset) in cases.items():
         name = f"{prefix}M{i}"
         ns = "BB6BlockFAR" if width == 3 else f"BB6BlockFAR{width}"
         generate(table, ROOT, width=width, cap=cap, mod=mod, runs=runs,
-                 name=name, minimize_left=True)
+                 name=name, minimize_left=True, offset=offset[0] if offset else 0)
         # Reuse the exact Frontier source bridge with the specialized block types.
         bridge_mod = "BlockFARBridge" if width == 3 else f"Raw59LB1BlockBridge{width}"
         if width != 3:
