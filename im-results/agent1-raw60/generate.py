@@ -11,6 +11,8 @@ from generate_four_hole import masks,slot,move,parse
 import generate_sweeps as one
 import multi
 import long_epoch
+sys.path.insert(0,str(ROOT.parent/"agent1-ngram"))
+from emit_ngram import emit as emit_ngram
 
 MOVES=[w+d+q for w,d,q in product("01","LR","ABCDEF")]
 SPECS=json.loads((ROOT/"specs.json").read_text())
@@ -54,6 +56,26 @@ def main(a):
         assert opens[int(i)]==table,(a,i)
         pumps[int(i)]=nspace
         if mod not in manual:manual.append(mod)
+    ngids=spec.get("ngram",[])
+    if ngids:
+        assert not (set(ngids)&set(pumps))
+        subprocess.run(["g++","-std=c++17","-O3",str(ROOT.parent/"agent1-ngram/ngram.cpp"),"-o",str(target/"ngram")],check=True)
+        inp="".join(f"{i} {opens[i]}\n" for i in ngids)
+        out=subprocess.run([str(target/"ngram"),"12"],input=inp,text=True,capture_output=True,check=True)
+        certs=dict(l.split(maxsplit=1) for l in out.stdout.splitlines())
+        assert set(map(int,certs))==set(ngids),out.stderr
+        mod=pre+"NGram"
+        gn=ns+"NGram"
+        code=["import NGramCertificate","set_option maxRecDepth 100000","set_option maxHeartbeats 0",f"namespace {gn}","open BB6Coverage BB6.Agent1NGram"]
+        for i in ngids:
+            code.extend([f"namespace M{i}",emit_ngram(i,opens[i],certs[str(i)]),
+                         f"abbrev table := p{i}",
+                         f"theorem never (m : Machine) (hm : compatible table m) : NeverHalts m := never{i} m hm",
+                         f"end M{i}"])
+            pumps[i]=f"{gn}.M{i}"
+        code.append(f"end {gn}")
+        (ROOT/(mod+".lean")).write_text("\n\n".join(code)+"\n")
+        manual.append(mod)
     exceptions={int(i):t for i,t in spec["unresolved"].items()}
     assert all(opens[i]==t for i,t in exceptions.items())
     assert not (set(pumps)&set(exceptions))
