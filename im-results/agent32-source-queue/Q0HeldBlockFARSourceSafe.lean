@@ -16,11 +16,15 @@ open BB6.Agent32SourceBlockFAR
     reachability metadata is irrelevant to SourceSafe; the theorem is
     completion-universal. -/
 def q00300Node : SourceNode :=
-  ⟨sourceTMOfBlockFAR BB6Generated.Q00300.literal, [], 0⟩
+  { tm := sourceTMOfBlockFAR BB6Generated.Q00300.literal
+    holes := [((4 : Fin 6), true)]
+    fresh := 6 }
 
 /-- The exact q0 offset-400b table, represented as a SourceNode. -/
 def q0400BNode : SourceNode :=
-  ⟨sourceTMOfBlockFAR BB6Generated.Q0400B.literal, [], 0⟩
+  { tm := sourceTMOfBlockFAR BB6Generated.Q0400B.literal
+    holes := [((4 : Fin 6), false)]
+    fresh := 6 }
 
 theorem q00300_sourceSafe (B : Nat) : SourceSafe B q00300Node := by
   apply sourceSafe_of_blockFAR_table B q00300Node BB6Generated.Q00300.literal
