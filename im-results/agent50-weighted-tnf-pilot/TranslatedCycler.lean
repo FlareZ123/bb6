@@ -187,7 +187,7 @@ theorem BRun_replay {m : Machine} {n k k' : Nat}
       | zero k₀ c₀ =>
           exact ⟨k₀, d, BRun.zero (m := m) k₀ d, heq⟩
   | succ n ih =>
-      intro k c k' c' d heq hRun
+      intro k c k' c' d hRun heq
       cases hRun with
       | succ hstep hrest =>
           obtain ⟨d₁, hstep', heq₁⟩ := BStep_replay hstep heq
