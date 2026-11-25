@@ -38,6 +38,8 @@ def main(work: Path) -> None:
     bank_hits = json.loads((A1 / "raw118-sat-hits.json").read_text())
     sat_ids = {int(x["index"]) for x in bank_hits}
     assert len(sat_ids) == 11
+    wide_ids = {int(i) for i in json.loads((A1 / "raw118-wide-widths.json").read_text())}
+    assert len(wide_ids) == 47 and not (wide_ids & sat_ids)
     automata = {
         tuple(int(v) for v in x[side])
         for x in bank_hits for side in ("left", "right")
@@ -46,9 +48,9 @@ def main(work: Path) -> None:
     assert len(automata) >= 20, len(automata)
 
     treebank = json.loads((A16 / "Raw118TreeBank.json").read_text())
-    targets = sorted(set(int(i) for i in treebank["target_indices"]) - sat_ids)
+    targets = sorted(set(int(i) for i in treebank["target_indices"]) - sat_ids - wide_ids)
     assert len(treebank["target_indices"]) == 87
-    assert len(targets) == 76, len(targets)
+    assert len(targets) == 29, len(targets)
 
     pairs = [(dl, dr) for dl in automata for dr in automata]
     print(
