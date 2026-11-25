@@ -2,7 +2,7 @@
 from collections import defaultdict, Counter
 from itertools import product
 from pathlib import Path
-from generate_sweeps import TABLES, parse, show
+from generate_sweeps import TABLES, parse, show, candidate as sweep_candidate, concrete_events, generate as generate_sweep
 
 ROOT = Path(__file__).parent
 PARENT = "1RB---_1RC1LF_0RD---_1LD1RE_---0LB_---0RA"
@@ -19,6 +19,25 @@ for line in (ROOT / "four_hole_dfas.txt").read_text().splitlines():
 # Candidates are checked against each destination table by masks() and then
 # by the generated Lean Audit; their historical lookup keys carry no semantics.
 EXTRA_DFAS = []
+
+def synthesize_pump(p):
+    """Try a universally quantified block-growth proof when the DFA bank has no witness."""
+    ans = sweep_candidate(p, concrete_events(p))
+    if ans is None:
+        return None
+    idx = max(PUMPS.values(), default=-1) + 1
+    code, info = generate_sweep(idx, p, ans)
+    path = ROOT / "SweepData.lean"
+    source = path.read_text(encoding="utf-8")
+    marker = "\\nend BB6Coverage.Agent31Pump"
+    pos = source.rfind(marker)
+    if pos < 0:
+        raise RuntimeError("SweepData.lean is missing its Agent31Pump namespace terminator")
+    source = source[:pos] + "\\n\\n" + code + source[pos:]
+    path.write_text(source, encoding="utf-8")
+    PUMPS[p] = idx
+    print("AUTO_PUMP", idx, show(p), "entry/intercept/slope =", info)
+    return idx
 
 def classify(p):
     q,h,ones = 0,0,frozenset()
@@ -141,6 +160,10 @@ def build(p,depth=1):
             except AssertionError:
                 continue
         if chosen is None:
+            idx = synthesize_pump(p)
+            if idx is not None:
+                stats["proven"]+=1
+                return f".proven BB6Coverage.Agent31Pump.M{idx}.table BB6Coverage.Agent31Pump.M{idx}.never"
             missing.append((key, show(p)))
             stats["missing"]+=1
             # Placeholder used only to finish collecting all missing leaves.
