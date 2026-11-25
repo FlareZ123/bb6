@@ -65,9 +65,9 @@ on:
         type: boolean
         default: false
       raw59_child:
-        description: Raw59 proof target (all, 0RB, 0LD, or RCShared)
+        description: Raw59 proof target (all, 0RB, 0LD, 1RC, or RCShared)
         type: choice
-        options: [all, 0RB, 0LD, RCShared]
+        options: [all, 0RB, 0LD, 1RC, RCShared]
         default: all
 
       verify_f418_return:
@@ -501,7 +501,7 @@ jobs:
           case "$RAW59_CHILD" in
             RCShared) target=im-results/agent32-raw59/Raw59RCBridge.lean ;;
             all) python im-results/agent32-raw59/generate.py; target=im-results/agent32-raw59/Raw59Refinement.lean ;;
-            0RB|0LD) python im-results/agent32-raw59/generate.py "$RAW59_CHILD"; target="im-results/agent32-raw59/generated_$RAW59_CHILD/Raw59A${RAW59_CHILD}Data.lean" ;;
+            0RB|0LD|1RC) python im-results/agent32-raw59/generate.py "$RAW59_CHILD"; target="im-results/agent32-raw59/generated_$RAW59_CHILD/Raw59A${RAW59_CHILD}Data.lean" ;;
             *) exit 2 ;;
           esac
           python tools/lean_compile_closure.py --workdir /tmp/a32-raw59 --jobs 4 "$target" | tee /tmp/a32-raw59.log
