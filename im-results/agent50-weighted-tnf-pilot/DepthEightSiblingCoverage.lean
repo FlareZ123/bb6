@@ -22,12 +22,16 @@ def farLeaves : List PartialMachine := [p85_0, p114_0, p116_0, p128_0]
 
 theorem farLeaves_never (p : PartialMachine) (m : Machine)
     (hp : p ∈ farLeaves) (hm : compatible p m) : NeverHalts m := by
-  simp only [farLeaves, List.mem_cons, List.mem_singleton] at hp
+  simp [farLeaves] at hp
   rcases hp with h | h | h | h
-  · exact p85_0_neverHalts m (by simpa [h] using hm)
-  · exact p114_0_neverHalts m (by simpa [h] using hm)
-  · exact p116_0_neverHalts m (by simpa [h] using hm)
-  · exact p128_0_neverHalts m (by simpa [h] using hm)
+  · subst p
+    exact p85_0_neverHalts m hm
+  · subst p
+    exact p114_0_neverHalts m hm
+  · subst p
+    exact p116_0_neverHalts m hm
+  · subst p
+    exact p128_0_neverHalts m hm
 
 def farCovered (t : PackedTable) : Bool :=
   farLeaves.any (fun p => decide (packTable p = t))
