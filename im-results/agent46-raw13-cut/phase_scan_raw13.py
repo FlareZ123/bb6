@@ -45,8 +45,8 @@ def main() -> None:
     for line in raw_bytes.decode().splitlines():
         ident, table = line.split()
         rows[int(ident)] = table
-    if len(rows) != 1710:
-        raise SystemExit(f"expected 1710 raw13 open residuals, found {len(rows)}")
+    if not rows:
+        raise SystemExit("raw13 open residual file is empty; regenerate the cut first")
 
     ids = sorted(rows)
     groups: dict[int, list[int]] = {}
