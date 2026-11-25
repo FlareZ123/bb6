@@ -1,0 +1,3 @@
+# Agent43: exact weighted-carry repetition obstruction and ordinary block accelerator
+
+The source audit [45590461666](https://github.com/FlareZ123/bb6/actions/runs/45590461666) accepts `CarryAperiodicSource.no_periodic_weight` (namespace BB6.Agent43CarryAperiodic) for the unchanged BatchCarry Interior/weightSum. A legal p-periodic word of length 2p+L is impossible when 2^L>2(q+p); an infinite legal word cannot be eventually periodic. This is a structural obstruction, not an extinction theorem. The separate source CI 45589502759 accepts the two-candidate forward block and lowbit safety criterion. See `im-results/agent43-p1-high-cost-reset-count/CarryAperiodicForwardBlock.md`.
