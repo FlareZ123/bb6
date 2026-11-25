@@ -47,6 +47,12 @@ theorem refinesB_sound {child parent : PartialTable}
   have hi := (List.all_eq_true.mp h) i (List.mem_finRange i)
   exact of_decide_eq_true hi
 
+def noAssignedHalts (p : PartialTable) : Bool :=
+  (List.finRange 12).all fun i => decide (p i ≠ some none)
+
+theorem held_no_assigned_halts : noAssignedHalts heldTable = true := by decide
+theorem root_no_assigned_halts : noAssignedHalts rootResidual = true := by decide
+
 def holeCount (p : PartialTable) : Nat :=
   ((List.finRange 12).filter fun i => decide (p i = none)).length
 
@@ -133,6 +139,8 @@ theorem checkpoint_metadata :
 #print axioms held_refines_root
 #print axioms held_hole_count
 #print axioms held_new_slot_count
+#print axioms held_no_assigned_halts
+#print axioms root_no_assigned_halts
 #print axioms held_fresh_cut
 #print axioms held_leaf_partition
 #print axioms checkpoint_metadata
