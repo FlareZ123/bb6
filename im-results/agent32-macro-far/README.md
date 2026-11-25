@@ -7,3 +7,7 @@ The standalone Lean theorem MacroFAR.never and finite checker MacroFAR.Data.soun
 Run python unpack.py to recover the source files, candidate lists and Python search/emitter. Compile lean/MacroFARCore.lean then lean/MacroFARCheck.lean with LEAN_PATH pointing at their .olean directory. The packed source uses the repo's established digest-checked transport pattern; no compiled binary is included.
 
 Experimental candidate counts are distinct from accepted global coverage. The 0LB, 1LB, 1LE macro6 and macro8 files hold exact machines and DFA codes. Some overlap prior FAR/sweep certificates, so do not sum counts across methods. The macro8 1LE scan was interrupted and is a prefix of the worklist. Additional primitive FAR and sweep candidate lists are included as intermediate state. All require a source adapter to become BB6 certificates.
+
+## Original-source acceptance
+
+[CI 45546616573](https://github.com/FlareZ123/bb6/actions/runs/45546616573) passed the complete source closure, including MacroFARBridge.never and the concrete 0LB693 certificate, using Lean 4.36.0-rc2. The theorem states NeverHalts for every compatible completion of the partial table. The method and this leaf are accepted; the remaining candidate files are still experimental. The pilot is not yet an ingested parent branch certificate.
