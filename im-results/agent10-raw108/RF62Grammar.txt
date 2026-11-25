@@ -1,0 +1,100 @@
+abbrev Q := [true,true]
+abbrev H := [false,true,true,true,true]
+abbrev I := [true,true,true,true,true]
+abbrev Z := [false,false,false,false,true]
+abbrev O := [false,false,true,true,true]
+abbrev M := [false,true]
+
+def enc : List Bool → List Bool
+  | [] => Z
+  | false::bs => Z++enc bs
+  | true::bs => O++enc bs
+
+def stack (n j : Nat) := I++rep H j++rep Q n++M
+
+inductive Section
+  | start : Nat → List Bool → Section
+  | carry : Nat → Nat → List Bool → Section
+  | drain : Nat → Nat → List Bool → Section
+
+def sectionCfg : Section → Z0
+  | .start n bs => ⟨0,[],[true,false,false,false,false,true]++rep Q n++enc bs⟩
+  | .carry n j bs => ⟨1,stack n j,enc bs⟩
+  | .drain n j bs => ⟨0,stack n j,enc bs⟩
+
+def next : Section → Section
+  | .start n bs => .carry n 0 bs
+  | .carry n j [] => .drain n (j+1) []
+  | .carry n j (false::bs) => .carry n (j+1) bs
+  | .carry n j (true::bs) => .drain n j (false::bs)
+  | .drain n 0 bs => .start (n+1) bs
+  | .drain n (j+1) bs => .drain n j (true::bs)
+
+def cost : Section → Nat
+  | .start n _ => 10+8*n
+  | .carry _ _ [] => 27
+  | .carry _ _ (false::_) => 9
+  | .carry _ _ (true::_) => 12
+  | .drain n 0 _ => 16+2*n
+  | .drain _ (_+1) _ => 9
+
+theorem carryZero (L R : List Bool) :
+    run0 table 9 ⟨1,I++L,Z++[false,false]++R⟩ =
+      some ⟨1,I++H++L,[false,false]++R⟩ := by rfl
+theorem carryOne (L R : List Bool) :
+    run0 table 12 ⟨1,I++L,O++R⟩ = some ⟨0,I++L,Z++R⟩ := by rfl
+theorem carryEnd (L : List Bool) :
+    run0 table 27 ⟨1,I++L,Z⟩ = some ⟨0,I++H++L,Z⟩ := by rfl
+theorem drainOne (L R : List Bool) :
+    run0 table 9 ⟨0,I++H++L,R⟩ = some ⟨0,I++L,O++R⟩ := by rfl
+
+theorem advance (s : Section) : run0 table (cost s) (sectionCfg s) = some (sectionCfg (next s)) := by
+  cases s with
+  | start n bs =>
+    cases bs with
+    | nil =>
+      simpa only [cost,next,sectionCfg,stack,enc,rep,List.nil_append,List.append_nil,List.append_assoc,Z,I,Q,M,List.cons_append] using entryRaw n [false,false,true]
+    | cons b bs =>
+      cases b
+      · simpa only [cost,next,sectionCfg,stack,enc,rep,List.nil_append,List.append_nil,List.append_assoc,Z,I,Q,M,List.cons_append] using entryRaw n ([false,false,true]++enc bs)
+      · simpa only [cost,next,sectionCfg,stack,enc,rep,List.nil_append,List.append_nil,List.append_assoc,O,I,Q,M,List.cons_append] using entryRaw n ([true,true,true]++enc bs)
+  | carry n j bs =>
+    cases bs with
+    | nil =>
+      simpa only [cost,next,sectionCfg,stack,enc,rep,List.append_assoc] using carryEnd (rep H j++rep Q n++M)
+    | cons b bs =>
+      cases b
+      · cases bs with
+        | nil =>
+          simpa only [cost,next,sectionCfg,stack,enc,rep,List.append_assoc,Z,List.cons_append,List.nil_append] using carryZero (rep H j++rep Q n++M) [false,false,true]
+        | cons c bs =>
+          cases c
+          · simpa only [cost,next,sectionCfg,stack,enc,rep,List.append_assoc,Z,List.cons_append,List.nil_append] using carryZero (rep H j++rep Q n++M) ([false,false,true]++enc bs)
+          · simpa only [cost,next,sectionCfg,stack,enc,rep,List.append_assoc,Z,O,List.cons_append,List.nil_append] using carryZero (rep H j++rep Q n++M) ([true,true,true]++enc bs)
+      · simpa only [cost,next,sectionCfg,stack,enc,List.append_assoc] using carryOne (rep H j++rep Q n++M) (enc bs)
+  | drain n j bs =>
+    cases j with
+    | zero =>
+      simpa only [cost,next,sectionCfg,stack,rep,List.nil_append,List.append_nil,List.append_assoc,I,Q,M,List.cons_append] using finishRaw n (enc bs)
+    | succ j =>
+      simpa only [cost,next,sectionCfg,stack,enc,rep,List.append_assoc] using drainOne (rep H j++rep Q n++M) (enc bs)
+
+theorem positive (s : Section) : 0 < cost s := by
+  cases s with
+  | start n bs => simp [cost]; omega
+  | carry n j bs => cases bs with
+    | nil => simp [cost]
+    | cons b bs => cases b <;> simp [cost]
+  | drain n j bs => cases j <;> simp [cost] <;> omega
+
+def orbit : Nat → Section
+  | 0 => .start 0 []
+  | n+1 => next (orbit n)
+def family (n : Nat) := sectionCfg (orbit n)
+theorem entry : run0 table 47 ⟨0,[],[]⟩ = some (family 0) := by rfl
+theorem growth (n : Nat) : run0 table (cost (orbit n)) (family n) = some (family (n+1)) := advance (orbit n)
+theorem never (m : Machine) (hm : compatible table m) : NeverHalts m :=
+  never_of_growth table family 47 (fun n => cost (orbit n)) entry (fun n => positive (orbit n)) growth m hm
+#print axioms growth
+#print axioms never
+end BB6.Agent10Raw108RF62
