@@ -1686,6 +1686,7 @@ jobs:
           for prefix in Raw107RD Raw107RC Raw107RE Raw107B1RE Raw107B1LC Raw107B1LE Raw107B1LB Raw107B0RF Raw107B1RF Raw107B0LE Raw107B0LF Raw107B1LA Raw107B1LF; do
             python im-results/agent10-tnf-multipump/chunk_checks.py "$root" "$prefix" --limit 180
           done
+          python im-results/agent47-raw114-cut/generate_complete.py --combine
           python im-results/agent13-block-far/generate.py im-results/agent13-block-far
           python im-results/agent13-cross-route-pilot/analyze_b0_1lc_sidewitness_cover.py
           mkdir -p .tmp/a13-heldleaf109/imports
@@ -1724,6 +1725,8 @@ jobs:
             --source-root im-results/agent11-raw107 \
             --source-root im-results/agent1-raw107 \
             --source-root im-results/agent10-tnf-multipump \
+            --source-root im-results/agent47-raw114-cut \
+            --source-root im-results/agent47-rooted-tnf \
             --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean \
             --override Frontier=im-results/agent8-coverage-contract/Frontier.lean \
             --override Symmetry=im-results/agent8-coverage-contract/Symmetry.lean \
@@ -1732,6 +1735,7 @@ jobs:
             --override M0OddResidueSeven=im-results/agent11-raw107/M0OddResidueSeven.lean \
             --override M0EvenEightValuationEncoding=im-results/agent11-raw107/M0EvenEightValuationEncoding.lean \
             --override M2EvenResidueTwo=im-results/agent11-raw107/M2EvenResidueTwo.lean \
+            --override Raw114CompleteData=im-results/agent47-raw114-cut/Raw114CompleteData.lean \
             --precompiled-manifest /tmp/a31-base/manifest/combined-canonical77-raw107-manifest.json \
             --precompiled-dir /tmp/a31-base \
             --manifest /tmp/a13-raw10-34box/manifest.json \
@@ -1745,6 +1749,7 @@ jobs:
             --provenance-input im-results/agent13-block-far/HeldBlockRaw10Combined.lean \
             --provenance-input im-results/agent50-weighted-tnf-pilot/Canonical76Raw10Membership.lean \
             --provenance-input im-results/agent31-shared-core/CanonicalTwoParentRosterOnly.lean \
+            --provenance-input im-results/agent47-raw114-cut/generate_complete.py \
             --provenance-input /tmp/a31-base/manifest/canonical77-base-manifest.json \
             --provenance-input /tmp/a31-base/manifest/raw107-shared-manifest.json \
             --provenance-input /tmp/a31-base/manifest/combined-canonical77-raw107-manifest.json \
