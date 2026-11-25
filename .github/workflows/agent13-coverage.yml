@@ -672,12 +672,12 @@ jobs:
         run: |
           set -euo pipefail
           python im-results/agent13-cross-route-pilot/analyze_b0_1lc_sidewitness_cover.py
-      - name: Prove B0=1LC is an exact member of the 109 retained obligations
+      - name: Prove B0=1LC membership and compile the 65-witness consumer
         run: |
           set -euo pipefail
-          python tools/lean_compile_closure.py --workdir /tmp/a13-heldleaf109 --jobs 4 im-results/agent13-cross-route-pilot/Root109Membership.lean | tee /tmp/a13-heldleaf109.log
+          python tools/lean_compile_closure.py --workdir /tmp/a13-heldleaf109 --jobs 4 im-results/agent13-cross-route-pilot/Root109Membership.lean im-results/agent14-b0-1lc-consumer/Agent14B01LCGraft.lean | tee /tmp/a13-heldleaf109.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a13-heldleaf109.log; then
-            echo "Forbidden proof placeholder or native_decide found in held-leaf 109 membership proof" >&2
+            echo "Forbidden proof placeholder or native_decide found in B0=1LC membership/consumer proof" >&2
             exit 1
           fi
 
