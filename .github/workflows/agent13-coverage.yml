@@ -684,10 +684,19 @@ jobs:
         run: |
           set -euo pipefail
           python im-results/agent13-cross-route-pilot/analyze_b0_1lc_sidewitness_cover.py
+
+      - name: Reconstruct exact terminal source imports for the held-leaf bridge
+        run: |
+          set -euo pipefail
+          mkdir -p .tmp/a13-heldleaf109/imports
+          python3 -c "import base64,io,pathlib,tarfile; p=pathlib.Path('im-results/agent42-champion-terminal/TerminalProofs.tar.xz.b64'); d=base64.b64decode(p.read_text()); tarfile.open(fileobj=io.BytesIO(d),mode='r:xz').extractall('.tmp/a13-heldleaf109/imports',filter='data')"
+          python3 -c "import base64,lzma,pathlib; p=pathlib.Path('im-results/agent42-champion-terminal/TerminalLeftExact.lean.xz.b64'); pathlib.Path('.tmp/a13-heldleaf109/imports/TerminalLeft.lean').write_bytes(lzma.decompress(base64.b64decode(p.read_text())))"
+          echo "12329036c66c3846f9261167b8f9aebd1778d9b6ea6044309956c2fa0b3e49b7  .tmp/a13-heldleaf109/imports/TerminalFinish.lean" | sha256sum -c -
+          echo "1bce2075fc4e0cd7d740fb71b3796088b190ddb6766e04640d992dadd1b650ff  .tmp/a13-heldleaf109/imports/TerminalLeft.lean" | sha256sum -c -
       - name: Prove B0=1LC membership and compile the 65-witness consumer
         run: |
           set -euo pipefail
-          python tools/lean_compile_closure.py --workdir /tmp/a13-heldleaf109 --jobs 4 --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean im-results/agent13-cross-route-pilot/Root109Membership.lean im-results/agent14-b0-1lc-consumer/Agent14B01LCGraft.lean im-results/agent14-b0-1lc-consumer/Agent14B01LC109Graft.lean | tee /tmp/a13-heldleaf109.log
+          python tools/lean_compile_closure.py --workdir /tmp/a13-heldleaf109 --jobs 4 --source-root .tmp/a13-heldleaf109/imports --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean --override Frontier=im-results/agent8-coverage-contract/Frontier.lean --override Symmetry=im-results/agent8-coverage-contract/Symmetry.lean --override RootShift=im-results/agent8-coverage-contract/RootShift.lean im-results/agent13-cross-route-pilot/Root109Membership.lean im-results/agent14-b0-1lc-consumer/Agent14B01LCGraft.lean im-results/agent14-b0-1lc-consumer/Agent14B01LC109Graft.lean | tee /tmp/a13-heldleaf109.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a13-heldleaf109.log; then
             echo "Forbidden proof placeholder or native_decide found in B0=1LC membership/consumer proof" >&2
             exit 1
