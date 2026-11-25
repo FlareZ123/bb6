@@ -151,6 +151,9 @@ def run(args: argparse.Namespace) -> dict:
     parents = parse_export(args.roster_tsv)
     sources = collect_sources(args.cryptids_root)
     counts = collections.Counter(s["kind"] for s in sources)
+    theorem_counts = collections.Counter(s["theorem_hint"] for s in sources)
+    if args.expected_source_count == 191 and (counts["NonHalt"] != 159 or counts["Halt"] != 32):
+        raise ValueError(f"pinned catalogue class drift: expected NonHalt=159,Halt=32, got {dict(counts)}")
     if args.expected_source_count is not None and len(sources) != args.expected_source_count:
         raise ValueError(
             f"pinned source catalogue drift: expected {args.expected_source_count}, got {len(sources)} "
@@ -230,6 +233,7 @@ def run(args: argparse.Namespace) -> dict:
         "source_commit": args.source_commit,
         "source_modules": len(sources),
         "source_kind_counts": dict(counts),
+        "source_theorem_hint_counts": dict(theorem_counts),
         "root_fixing_permutations_checked": len(perms),
         "frontier_parent_records": len(parents),
         "frontier_record_counts": dict(collections.Counter(p["kind"] for p in parents)),
