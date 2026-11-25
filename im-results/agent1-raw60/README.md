@@ -55,3 +55,19 @@ Reproduction: compile enumerate.cpp with C++17/O3; run on the parent in a scratc
 All nine enumerated children now have empty unresolved maps in specs.json. Raw60LABinary (1LA/1379), Raw60LAAlternating (1LA/1383,1384), Raw60RFUnary (1RF/390,498,502), Raw60BCBinary (1LB/1039 and 1LC/580), Raw60LBFour (1LB/1068), and Raw60LCGlider (1LC/83,85) passed the original-source kernel audit [45556311280](https://github.com/FlareZ123/bb6/actions/runs/45556311280). They use respectively arbitrary-tail zero-pair recursion, alternating-block doubling, three-phase unary growth, binary recursion, fourfold recursion, and four-phase block gliding. The 0LD/100 exception (global 1488) is handled by Raw60LDBinaryCounters: two synchronized little-endian counters, initially lengths n+6 and n+4 with values 2^(n+5) and 2^(n+4)-7. The right counter overflows after seven increments; then 2^(n+5)-8 ordinary paired increments and one final right increment/left overflow produce the next family. Entry at 2437 steps. Local exact-semantic-slice kernel check passed; source assembly pending.
 
 Raw60RootProgress now proves the conditional four-choice reduction, and Raw60RootAssembly consumes nine generated exact child bounds (maximum 1175), leaving A1 = 0LC, 0LF, 1LF, 1RE. The five-choice conditional theorem passed 45556311280; the nine-child/four-choice original-source assembly is running in [45557062363](https://github.com/FlareZ123/bb6/actions/runs/45557062363). No accepted unconditional raw60 closure or global canonical count change is claimed yet.
+
+## Canonical78 integration (in progress)
+
+The raw60 parent is being integrated as a named member of `BB6.Agent47Canonical78.roster`.
+`Raw60CanonicalMembership.lean` proves exact table membership and the required initial-slot action.
+`Raw60CanonicalGraft.lean` defines two root-level consumers:
+
+- `refinedRoster`: replace p60 by its four explicit residual children; intended roster length 81, with the complement preserved by `refined_sound`.
+- `closedRoster`: remove p60 entirely; intended roster length 77, conditional on proving all four children bounded at C. `closed_sound_C` and `exact_at_target` state the resulting global exactness interface.
+
+These are intermediate results until the dedicated Lean workflow accepts the modules. Do not report the 77-entry reduction as unconditional.
+
+The reusable child artifacts from workflow run `45557062363` include six completed branches: `0RC, 0RE, 0LD, 0RF, 1LC, 1RF`. The 1LA/1LB/0LB child closures are rebuilt as four-kid shards by workflow target `weighted-tnf-raw60-graft`; pass `raw60_artifact_run_id=45557062363`, `raw60_artifact_sha=b64f98e90febcd10bdfc60e7ff0c66615d2f2e7f`, and `raw60_shard_children=["0LB","1LA","1LB"]` when using that artifact set. Run `45576191585` is the current sharded graft attempt.
+
+The four unresolved children are `0LC, 0LF, 1LF, 1RE`. Discovery run `45574333496` has completed `1LF`; the other three were still running at the last check. That run predates the discovery-artifact upload step. The current workflow preserves `spec.json` files as artifacts and allows a 60-minute discovery window; rerun discovery with the current workflow if the first run does not yield retrievable specs.
+
