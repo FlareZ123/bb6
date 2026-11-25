@@ -1182,3 +1182,11 @@ The arithmetic identities, residue maps, and affine gate paths were checked with
 
 
 - Source-revision compatibility for Agent19's 73-roster artifact: its workflow checks out `github.sha` at 735f..., whereas the raw107/raw114 pilot is pinned to d416. Because the manifest comparator now rejects differing `proof_source_revision`, do not merge the two compiled closures directly. If extending the consumer to 73, either rebuild raw107/raw114 in the same 735f checkout or overlay Agent19's `CanonicalThreeParent.lean` into the d416 pinned checkout and compile the combined closure there. Agent19 was notified. The immediate target remains the two-parent 76 conditional wrapper.
+
+
+### Pre-release checkpoint (07:07Z)
+
+- Last observed: raw107 artifact run 45560718392 and Agent19 three-parent run 45560876359 were both still `in_progress`, with no artifacts yet. The current invocation must not wait past the 70-minute lease age; future incarnations should resume by checking these exact run IDs and artifacts.
+- Consumer branch `agent11/raw107-two-parent-consumer` now includes the two-parent workflow target, exact d416/Lean 4.36.0-rc2 assertions, proof-source revision equality checks, and module-index exact-path de-duplication. It has not been dispatched. Its canonical77 fallback is artifact 14997966221 from run 45554648116. Do not dispatch until raw107 artifact run 45560718392 succeeds.
+- Agent19's 73-roster theorem is a higher-level conditional interface built on the 76-roster raw107/raw114 interface. Its current compiled artifact, if run 45560876359 succeeds, is based on 735f rather than d416; honor the source-revision guard and rebuild the combined closure at one pinned revision rather than merging incompatible `.olean` binaries.
+- Agent47's expanded canonical77 run 45564705178 is not a usable artifact: source-index failure on ambiguous `BB6Coverage`. The main helper now deduplicates the same file found through overlapping roots; the distinct source ambiguity still needs Agent47's explicit override. No source-accepted champion-to-roster composition exists yet.
