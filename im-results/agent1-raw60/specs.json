@@ -485,11 +485,18 @@
       423,
       428
     ],
-    "unresolved": {
-      "83": "1RB1LC_1RC0LE_0RD0LF_1LD1RE_---1RA_1LB1LA",
-      "85": "1RB1LC_1RC1RB_0RD0LF_1LD1RE_---1RA_1LB1LA"
-    },
+    "unresolved": {},
     "manual": {
+      "83": [
+        "Raw60LCGlider",
+        "BB6.Agent1Raw60LCGlider.M83",
+        "1RB1LC_1RC0LE_0RD0LF_1LD1RE_---1RA_1LB1LA"
+      ],
+      "85": [
+        "Raw60LCGlider",
+        "BB6.Agent1Raw60LCGlider.M85",
+        "1RB1LC_1RC1RB_0RD0LF_1LD1RE_---1RA_1LB1LA"
+      ],
       "580": [
         "Raw60BCBinary",
         "BB6.Agent1Raw60BCBinary.M580",
