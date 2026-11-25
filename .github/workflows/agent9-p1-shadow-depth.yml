@@ -163,8 +163,8 @@ jobs:
           from pathlib import Path
           log = Path('/tmp/reverse-live-block.log').read_text()
           for name in ("edgeY_to_walk", "walk_to_edgeY", "dWalk_iff_walk", "blockLookahead_iff_extend", "covered_next_block"):
-              m = re.search(r"'BB6\\.Agent45ReverseBlock\\."+re.escape(name)+r"' depends on axioms:\\s*\\[([^\\]]*)\\]", log)
-              if not m and re.search(r"'BB6\\.Agent45ReverseBlock\\."+re.escape(name)+r"' does not depend on any axioms", log):
+              m = re.search(r"'BB6\.Agent45ReverseBlock\."+re.escape(name)+r"' depends on axioms:\s*\[([^\]]*)\]", log)
+              if not m and re.search(r"'BB6\.Agent45ReverseBlock\."+re.escape(name)+r"' does not depend on any axioms", log):
                   print(name, [])
                   continue
               if not m:
