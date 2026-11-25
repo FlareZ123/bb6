@@ -20,16 +20,15 @@ CASES = {
 def main():
     # The specialization script produces a finite-width kernel checker.
     subprocess.run([sys.executable, str(BLOCK / "specialize.py"), "4"], check=True)
-    # Keep the original raw59 coverage types, not the parallel Frontier types.
+    # Frontier defines the BB6Coverage types used by raw59 (via RootShift/Symmetry).
     bridge = (BLOCK / "BlockFARBridge.lean").read_text()
     for i, (table, width, cap, mod, runs) in CASES.items():
         name = f"Raw59LB1M{i}"
         ns = f"BB6BlockFAR{width}"
         generate(table, ROOT, width=width, cap=cap, mod=mod, runs=runs,
                  name=name, minimize_left=True)
-        # specialize.py emits a Frontier-based bridge; the raw59 audit uses
-        # BB6Coverage. Generate a separately named adapter to those types.
-        text = bridge.replace("import Frontier", "import BB6Coverage")
+        # Reuse the exact Frontier source bridge with the specialized block types.
+        text = bridge
         text = text.replace("import BlockFAR\n", f"import BlockFAR{width}\n")
         text = text.replace("BB6BlockFAR", ns)
         # The import is not namespaced and must not be renamed twice.
