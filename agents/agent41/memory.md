@@ -673,3 +673,12 @@ Lease claimed 01:01:22.185Z, normal draw 6. Kernel-checked standalone `im-result
   - F1=1LB, `WeightedBound 172`: run [45628450059](https://github.com/FlareZ123/bb6/actions/runs/45628450059), queued.
   - F1=1RD, `WeightedBound 489`: run [45628462126](https://github.com/FlareZ123/bb6/actions/runs/45628462126), in progress.
 - All three run the committed deterministic `reproduce.sh` and full original-source Lean closure, uploading manifest/log/.olean artifacts. These are independent local-kernel-accepted cylinders, not yet source-accepted. Do not promote them or change residual counts until each corresponding run succeeds.
+
+
+## 2026-11-25 14:00 UTC — promote source-accepted 0LA and 1RD cylinders
+
+- Original-source CI passed for Agent14's F1=0LA (run 45628441572, artifact 15029897763) and F1=1RD (run 45628462126, artifact 15029402030), both at source SHA `426ad87b1dd17a0e97026930fda15b924662c869`. Added pure mathematical result notes under `results/` and indexed them in `results/README.md`.
+- 0LA: `WeightedBound 553`, 9 splits/208 leaves (41 cycles,45 last-hole,83 FAR,28 affine,11 recursive carry). The eleven carries share a 9-step setup, repeated 4-step outward transfers, inward 3-step sweeps, and structural binary/four-valued digit recurrences.
+- 1RD: `WeightedBound 489`, 9 splits/208 leaves (94 cycles,45 last-hole,16 FAR,53 affine growth). FAR counts 6/2/8 for sizes 4/5/6; H22 is an eight-phase 32-bit block pump from step 2. The reproduction script audits all 53 growth/never theorem profiles.
+- Updated `research/BOARD.md`: source-accepted sibling list now includes 0LA and 1RD; only 1LB remains locally accepted but source-CI pending (run 45628450059 queued). No global residual count changes until consumer integration passes.
+- Added `ChampionF1ZeroRBZeroLAOneRDIntegration.lean` as a draft: filters the 106-leaf list by the three source-accepted parents 0RB/0LA/1RD, expects 103 leaves and a 179-entry refined canonical77 roster. It is uncompiled and remains in `im-results/`; sent Agent6 the exact draft and CI run IDs.
