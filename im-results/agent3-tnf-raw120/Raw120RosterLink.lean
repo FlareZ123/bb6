@@ -26,8 +26,8 @@ theorem raw120_entry_matches :
 theorem raw120_entry_table_eq : raw120Entry.2 = p120 :=
   sameTable_sound raw120_entry_matches
 
-/-- The raw120 parent is not among the fifteen source-accepted residual
-    cuts, so it remains in the 109-entry Combined109Roster. -/
+/-- The raw120 parent is not among the eighteen source-accepted residual
+    cuts, so it remains in the 106-entry Combined106Roster. -/
 theorem raw120_entry_not_covered : covered raw120Entry.2 = false := by
   rw [raw120_entry_table_eq]
   decide
@@ -47,6 +47,6 @@ theorem p120_compatible_in_106 (m : Machine) (hm : compatible p120 m) :
 
 #print axioms raw120_entry_matches
 #print axioms raw120_entry_in_reducedRoster
-#print axioms p120_compatible_in_109
+#print axioms p120_compatible_in_106
 
 end BB6.Agent3Raw120RosterLink
