@@ -782,3 +782,16 @@ Broadcasts:
 5. A global pairwise-disjointness theorem for the 237-entry roster remains open; the existing `CanonicalRaw114Accepted` and `CanonicalRosterRefinement` files do not currently state such a theorem. Do not claim it.
 6. Keep all current material in `im-results/`; no exact BB(6) upper bound has been established.
 
+
+## 2026-11-25 — Raw10 CTL partialization
+
+- Investigated the pinned Cryptids NonHalt modules for the Raw10 parent A0=1RB, B0=1LC. Scanned all 73 matching upstream modules; exactly two expose `ctlAcc` certificates.
+- Key structural observation: upstream `BusyBeaver.CtlCert.ctlCheck` reads the machine only at state-symbol pairs projected from `ctlAcc`. A generic congruence lemma should transfer `ctl_certificate_implies_is_does_not_halt` to every completion agreeing on only those pairs, leaving all other transitions free.
+- Four-pair source module `BusyBeaver.BB6.NonHalt.M_1RB0RC_1LC1RD_1RA1LE_1LA0RD_0LE1RF_1LBHHH`: fixes A0=1RB, B0=1LC, C1=1LE, E0=0LE; 8 holes; `25^8 = 152,587,890,625` completions.
+- Five-pair source module `BusyBeaver.BB6.NonHalt.M_1RB0RC_1LC0LD_1RA1RC_1RA1LE_0LB1RE_HHH1RA`: fixes A0=1RB, A1=0RC, B0=1LC, C0=1RA, C1=1RC; 7 holes; `25^7 = 6,103,515,625` completions. These cylinders are disjoint because C1 differs.
+- Product-domain crosswalk against the current 41-box Raw10 complement: the 4-pair cylinder is fully contained, intersecting six boxes with total intersection mass exactly 25^8; the 5-pair cylinder is fully contained in one box. Subtracting the 4-pair cylinder alone gives 47 boxes and mass 90,584,915,823,100. Subtracting both (5-pair then 4-pair) gives 51 boxes and mass 90,578,812,307,475, removing 158,691,406,250 completions. These are currently script-derived crosswalk numbers pending Lean reproduction.
+- Added `im-results/agent50-weighted-tnf-pilot/Raw10CtlPartialLeaf.lean` with the four-pair partial table, inverse adapter, `ctlCheck_congr`, all-completions nonhalting proof, weighted certificate, and exact 47-box remainder/cover consumer. Added explanatory note `CTLPartialization.md`.
+- CI run 457047 failed before the leaf proof because `Raw10Box0Halt`/`Raw10Box8Cycle` used obsolete namespace opens. Patched them to use `BB6Coverage` and `BB6.Agent13BlankDelay`, and imported `Mathlib.Tactic` for `interval_cases`.
+- CI run 45709376748 is currently compiling the combined one-hole and CTL partial roots. Its checked-out head predates the later added `#print axioms` lines for the CTL count/mass theorems, while the script requires those profiles; expect to add/re-run after inspecting the compile outcome.
+- Broadcasted the CTL cylinder result and sent Agent 19 a direct update. See `communications/broadcast/*ctl-partial-cylinder-breakthrough.md` and `communications/agent19/*ctl-partial-ci.md`.
+- Next: inspect run 457093 logs; fix Lean errors in `Raw10CtlPartialLeaf.lean`; verify all theorem profiles; then factor the generic CTL partialization lemma and add the five-pair certificate. Keep all material in `im-results/` until kernel verification and exact remainder proof pass.
