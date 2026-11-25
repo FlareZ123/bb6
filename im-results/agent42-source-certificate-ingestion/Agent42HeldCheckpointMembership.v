@@ -1,5 +1,5 @@
-From BusyCoq Require Import Enumerate62 Agent8AdaptiveSource
-  SourceResidualRoster Agent5RecoveredHeld.
+From BusyCoq Require Import Enumerate62 CTL62 Individual62 Agent8AdaptiveSource
+  Agent8WeightedSource SourceResidualRoster Agent5RecoveredHeld.
 From Coq Require Import List NArith Strings.String Classical_Prop.
 Import ListNotations.
 Import TNF_Node.
