@@ -268,7 +268,7 @@ jobs:
         if: inputs.target == 'enumerate62-held-farv3-pilot'
         working-directory: original/verify
         run: |
-          printf '%s\\n' 'From BusyCoq Require Import Agent13CrossRouteHeldLeaf Agent42HeldCheckpointMembership.' 'Print Assumptions recovered_held_2800_child_of_first_one_root.' 'Print Assumptions recovered_held_2800_safe_for_all_bounds.' 'Print Assumptions recovered_held_2800_checkpoint_member.' 'Print Assumptions recovered_held_2800_adaptive_obligation.' > Agent13CrossRouteHeldAudit.v
+          printf '%s\n' 'From BusyCoq Require Import Agent13CrossRouteHeldLeaf Agent42HeldCheckpointMembership.' 'Print Assumptions recovered_held_2800_child_of_first_one_root.' 'Print Assumptions recovered_held_2800_safe_for_all_bounds.' 'Print Assumptions recovered_held_2800_checkpoint_member.' 'Print Assumptions recovered_held_2800_adaptive_obligation.' > Agent13CrossRouteHeldAudit.v
           coqc -Q . BusyCoq -native-compiler no Agent13CrossRouteHeldAudit.v
 
 
@@ -276,7 +276,7 @@ jobs:
         if: inputs.target == 'enumerate62-held-checkpoint-membership'
         working-directory: original/verify
         run: |
-          printf '%s\\n' 'From BusyCoq Require Import Agent42HeldCheckpointMembership.' 'Print Assumptions recovered_held_2800_parent_leaf_partition.' 'Print Assumptions recovered_held_2800_checkpoint_member.' 'Print Assumptions recovered_held_2800_adaptive_obligation.' > Agent42HeldCheckpointAudit.v
+          printf '%s\n' 'From BusyCoq Require Import Agent42HeldCheckpointMembership.' 'Print Assumptions recovered_held_2800_parent_leaf_partition.' 'Print Assumptions recovered_held_2800_checkpoint_member.' 'Print Assumptions recovered_held_2800_adaptive_obligation.' > Agent42HeldCheckpointAudit.v
           coqc -Q . BusyCoq -native-compiler no Agent42HeldCheckpointAudit.v
 
       - name: Compute exact source q0 census
