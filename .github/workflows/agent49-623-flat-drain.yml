@@ -56,6 +56,10 @@ jobs:
           lake env lean -o .lake/build/lib/lean/DrainImageSource.olean DrainImageSource.lean
           cp "$GITHUB_WORKSPACE/im-results/agent41-623-3euclidean/ExactParentRays.lean" ExactParentRays.lean
           lake env lean ExactParentRays.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent41-623-3euclidean/DrainImageAP.lean" DrainImageAP.lean
+          lake env lean -o .lake/build/lib/lean/DrainImageAP.olean DrainImageAP.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent41-623-3euclidean/FatalBandSource.lean" FatalBandSource.lean
+          lake env lean FatalBandSource.lean
       - name: Check remaining source families
         if: inputs.check != 'decoder'
         working-directory: /tmp/cryptids
