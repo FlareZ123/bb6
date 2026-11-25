@@ -1576,26 +1576,55 @@ jobs:
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           "$HOME/.elan/bin/lean" --version
-      - name: Download the source-accepted 76-residual shared core
+      - name: Download the source-accepted canonical77/raw107 shared core
         uses: actions/download-artifact@v4
         with:
           github-token: ${{ github.token }}
           run-id: 45647053824
           name: raw107-canonical-shared-core
           path: /tmp/a31-base
-      - name: Verify the common core artifact
+      - name: Merge and validate canonical77 and raw107 precompiled manifests
         run: |
           set -euo pipefail
-          test -s /tmp/a31-base/manifest/raw107-shared-manifest.json
           python3 - <<'PY'
-          import json, pathlib
-          manifest = json.loads(pathlib.Path("/tmp/a31-base/manifest/raw107-shared-manifest.json").read_text())
-          names = {entry["module"] for entry in manifest["modules"]}
-          required = {"Raw107ParentClosure", "CanonicalTwoParentGraft", "CanonicalRaw114Accepted"}
-          missing = required - names
-          if missing:
-              raise SystemExit(f"shared-core manifest missing required modules: {sorted(missing)}")
-          print(f"Validated {len(names)} modules in shared-core manifest, including {sorted(required)}")
+          import hashlib, json, pathlib
+          root = pathlib.Path("/tmp/a31-base")
+          base_path = root / "manifest/canonical77-base-manifest.json"
+          raw_path = root / "manifest/raw107-shared-manifest.json"
+          base = json.loads(base_path.read_text())
+          raw = json.loads(raw_path.read_text())
+          if base["lean_version"] != raw["lean_version"]:
+              raise SystemExit("canonical77/raw107 Lean versions differ")
+          if base["lean_binary"]["sha256"] != raw["lean_binary"]["sha256"]:
+              raise SystemExit("canonical77/raw107 Lean compiler binaries differ")
+          base_modules = {x["module"]: x for x in base["modules"]}
+          raw_modules = {x["module"]: x for x in raw["modules"]}
+          if not {"CanonicalTwoParentGraft", "CanonicalRaw114Accepted"} <= set(base_modules):
+              raise SystemExit("canonical77 base manifest lacks required two-parent modules")
+          if "Raw107ParentClosure" not in raw_modules:
+              raise SystemExit("raw107 shared manifest lacks Raw107ParentClosure")
+          merged = dict(base_modules)
+          for name, entry in raw_modules.items():
+              if name in merged:
+                  for field in ("source_sha256", "project_imports", "olean_sha256", "import_closure_sha256", "module_identity_sha256"):
+                      if merged[name].get(field) != entry.get(field):
+                          raise SystemExit(f"conflicting precompiled identity for {name}: {field}")
+              merged[name] = entry
+          for name, entry in merged.items():
+              artifact = root / entry["olean_path"]
+              if not artifact.is_file():
+                  raise SystemExit(f"precompiled object missing for {name}: {artifact}")
+          combined = dict(raw)
+          combined["modules"] = [merged[name] for name in sorted(merged)]
+          combined["module_count"] = len(combined["modules"])
+          combined["precompiled_core"] = {
+              "kind": "merged canonical77 base plus raw107 shared core",
+              "canonical77_manifest_sha256": hashlib.sha256(base_path.read_bytes()).hexdigest(),
+              "raw107_manifest_sha256": hashlib.sha256(raw_path.read_bytes()).hexdigest(),
+          }
+          out = root / "manifest/combined-canonical77-raw107-manifest.json"
+          out.write_text(json.dumps(combined, indent=2, sort_keys=True) + "\\n")
+          print(f"Validated {len(base_modules)} canonical77 and {len(raw_modules)} raw107 modules; merged {len(merged)} precompiled objects.")
           PY
       - name: Reconstruct held-leaf source dependencies
         run: |
@@ -1643,11 +1672,18 @@ jobs:
             --workdir /tmp/a13-raw10-34box \
             --jobs 4 \
             --source-root "$W" \
+            --source-root im-results/agent11-raw107 \
+            --source-root im-results/agent1-raw107 \
+            --source-root im-results/agent10-tnf-multipump \
             --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean \
             --override Frontier=im-results/agent8-coverage-contract/Frontier.lean \
             --override Symmetry=im-results/agent8-coverage-contract/Symmetry.lean \
             --override RootShift=im-results/agent8-coverage-contract/RootShift.lean \
-            --precompiled-manifest /tmp/a31-base/manifest/raw107-shared-manifest.json \
+            --override OuterLCIncPrelude=im-results/agent11-raw107/OuterLCIncPrelude.lean \
+            --override M0OddResidueSeven=im-results/agent11-raw107/M0OddResidueSeven.lean \
+            --override M0EvenEightValuationEncoding=im-results/agent11-raw107/M0EvenEightValuationEncoding.lean \
+            --override M2EvenResidueTwo=im-results/agent11-raw107/M2EvenResidueTwo.lean \
+            --precompiled-manifest /tmp/a31-base/manifest/combined-canonical77-raw107-manifest.json \
             --precompiled-dir /tmp/a31-base \
             --manifest /tmp/a13-raw10-34box/manifest.json \
             --label raw10-34box-canonical76-consumer \
@@ -1660,7 +1696,9 @@ jobs:
             --provenance-input im-results/agent13-block-far/HeldBlockRaw10Combined.lean \
             --provenance-input im-results/agent50-weighted-tnf-pilot/Canonical76Raw10Membership.lean \
             --provenance-input im-results/agent31-shared-core/CanonicalTwoParentRosterOnly.lean \
+            --provenance-input /tmp/a31-base/manifest/canonical77-base-manifest.json \
             --provenance-input /tmp/a31-base/manifest/raw107-shared-manifest.json \
+            --provenance-input /tmp/a31-base/manifest/combined-canonical77-raw107-manifest.json \
             --provenance-input tools/lean_compile_closure.py \
             2>&1 | tee /tmp/a13-raw10-34box.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a13-raw10-34box.log; then
