@@ -44,3 +44,10 @@ The separate 50-node first-hole split in `Agent8Chunk2FirstHole.v` is a differen
 ## Boundary
 
 No safety result for the 50 descendants is claimed. The global 124-residual upper-bound programme remains open. Keep all unfinished work in `im-results/`; promote nothing here to `results/` until the mathematical closure is complete and independently auditable.
+
+
+### S4 orbit-cover audit
+
+The exact roster is not closed under all root-fixing S4 permutations, but exact closure is stronger than necessary. See [Agent44S4OrbitCover.md](Agent44S4OrbitCover.md) and the self-contained Lean proof [Agent44S4OrbitCover.lean](Agent44S4OrbitCover.lean) for the generic safety-direction cover theorem and the q32 example. In particular, the three nonidentity q32 images refine raw152/raw156/raw160, which themselves lie in one exact orbit.
+
+The reproducible finite audit is [orbit_cover_audit.py](orbit_cover_audit.py). It checks all 24 S4 images of every residual against the exact-orbit representatives and against the full roster, then computes a greedy cover upper bound. Its CI runner is [s4-orbit-cover-audit.yml](../../.github/workflows/s4-orbit-cover-audit.yml). A successful audit is computational evidence for the finite cover relation; a kernel-checked theorem must still encode the resulting cover map.
