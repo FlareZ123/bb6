@@ -52,15 +52,28 @@ The accepted `Raw58MoreCut2.parent_dichotomy` still leaves exactly five A1 child
 - `LE` index 56 is assigned to `Raw58LE56.lean`. Its two-bit block counter constructs arbitrarily long live prefixes and `Raw58Live.never_of_live` lifts the result to every compatible completion.
 - `LF` index 157 is assigned to `Raw58LF157.lean`. Its four-bit block counter proves the same kind of unbounded live-prefix property. The `more.json` entry now imports this module.
 - The LE56 and LF157 mappings are candidate leaf discharges until the complete source audit below succeeds. The generator's `zipCheck` is the compatibility gate; a wrong leaf index cannot silently close a cylinder.
-- The latest candidate census recorded 5,020 open leaves across the five children: 4,552 reused FAR witnesses, 346 fixed n-grams, 76 sweep witnesses, two late single-hole cases, seven 0RF custom witnesses, two recursive counter cases, four sparse wide n-grams, and nineteen run-length relations. The 19 run-length parameter sets are now included in `more.json`; the generator checks them against each exact open table and emits the `TwoSidedAutomata` Lean certificates. The generator also tries the reusable sparse width-23 n-gram checker on remaining unclassified leaves, so the four previously observed sparse candidates are now tested through the same reproducible path. Twelve candidate leaves remained unresolved at the earlier checkpoint. These counts describe candidate ingestion, not accepted proof coverage.
+- The latest candidate census recorded 5,020 open leaves across the five children: 4,552 reused FAR witnesses, 346 fixed n-grams, 76 sweep witnesses, two late single-hole cases, seven 0RF custom witnesses, two recursive counter cases, four sparse wide n-grams, and nineteen run-length relations. The 19 run-length parameter sets are now included in `more.json`; the generator checks them against each exact open table and emits the `TwoSidedAutomata` Lean certificates. The generator also tries the reusable sparse width-23 n-gram checker on remaining unclassified leaves. A targeted LF run found eleven additional sparse certificates; six leaves remained. These are candidate certificates, not yet source-accepted.
 
-### Child audit and full parent closure
+### Child audit and remaining LF leaves
 
 The first full `raw58-more3` attempt, run [45659821185](https://github.com/FlareZ123/bb6/actions/runs/45659821185), was deliberately cancelled after it had regenerated the LE and begun LF. It did not reach the complete generator/Lean audit and provides no closure evidence.
 
-The generator has since been improved: all 19 RLE parameter sets are ingested, auto-classification skips explicitly assigned automata/ngram/custom leaves, and the sparse width-23 checker is applied to remaining unclassified leaves. A targeted `raw58-child` audit for `LF` is now running as [45663400144](https://github.com/FlareZ123/bb6/actions/runs/45663400144). This is a child-level test of the new ingestion path, not a parent closure.
+The first targeted `raw58-child` LF run [45663400144](https://github.com/FlareZ123/bb6/actions/runs/45663400144) found eleven sparse width-23 certificates at indices 70, 71, 89, 508, 527, 536, 555, 584, 589, 602, and 845. The five LF run-length automata candidates were also ingested. The run then failed the completeness gate with six unclassified one-hole leaves:
 
-Once the individual child data are fully covered, rerun the existing `raw58-more3` target to compile `Raw58MoreCut3.all_completions` against the original source closure. No complete Raw58 parent closure is claimed until that full audit succeeds and its final axiom profile is inspected.
+```
+294 1RB0LF_1RC0RA_0RD1RB_1LD1RE_---0RA_1LA0LF
+296 1RB0LF_1RC0RE_0RD---_1LD1RE_1RD0RA_1LA0LF
+314 1RB0LF_1RC1LD_0RD1RB_1LD1RE_---0RA_1LA0LF
+411 1RB0LF_1RC0RA_0RD0RB_1LD1RE_---0RA_1LA1LB
+415 1RB0LF_1RC1LD_0RD0RB_1LD1RE_---0RA_1LA1LB
+917 1RB0LF_1RC1RA_0RD0RB_1LD1RE_---0RA_1LB1LA
+```
+
+A targeted 250,000-step diagnostic did not reach the missing transition in any of these six machines. Their traces show sustained one-sided tape growth and monotone head drift, consistent with nonhalting counter dynamics, but this is computational evidence only and is not a proof.
+
+The generator now has an optional bounded search over known symmetric and asymmetric finite-stack relation parameters for these remaining leaves. Run [45664984551](https://github.com/FlareZ123/bb6/actions/runs/45664984551) is queued to test that route and preserve the exact trace diagnostics. If it finds parameters, persist them in `more.json` and rerun the child to compile the generated `TwoSidedAutomata` certificate. If it does not, the six traces provide the concrete target for a direct `Raw58Live` recurrence proof.
+
+Once the child is fully covered, repeat the same process for the other residual children and then rerun `raw58-more3` to compile `Raw58MoreCut3.all_completions` against the original source closure. No complete Raw58 parent closure is claimed until that full audit succeeds and its final axiom profile is inspected.
 
 ### Global-roster handoff
 
