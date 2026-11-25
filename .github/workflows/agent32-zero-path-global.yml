@@ -67,7 +67,7 @@ on:
       raw59_child:
         description: Raw59 proof target (all, 0RB, 0LD, 0RC, 1RC, 0RF, 1LA, RCShared, RFCount, or RFTriple)
         type: choice
-        options: [UpgradeAll, Upgrade0LA, Upgrade0LB, Upgrade0LE, Upgrade0LF, Upgrade1LB, Upgrade1LE, Upgrade1LF, AsymAll, Asym0LB, Asym1LB, Asym1LE, all, 0RB, 0LD, 0RC, 1RC, 0RF, 1LA, RCShared, RFCount, RFTriple, RFScan, 1RF, CanonicalPilot, CanonicalAll, PartialAll, Partial0LB, Partial1LB, Partial1LE, MacroFARPilot, Return1582, ReturnFamily, LB1Four, LB1Sweep583, LB1Sweep1734, 0RD, 1LC, 1RB, 1RD, 0LC, 0RE]
+        options: [UpgradeAll, Upgrade0LA, Upgrade0LB, Upgrade0LE, Upgrade0LF, Upgrade1LB, Upgrade1LE, Upgrade1LF, AsymAll, Asym0LB, Asym1LB, Asym1LE, all, 0RB, 0LD, 0RC, 1RC, 0RF, 1LA, RCShared, RFCount, RFTriple, RFScan, 1RF, CanonicalPilot, CanonicalAll, PartialAll, Partial0LB, Partial1LB, Partial1LE, MacroFARPilot, Return1582, ReturnFamily, Late190, OffsetPilot, Width2Pilot, LB1Four, LB1Sweep583, LB1Sweep1734, 0RD, 1LC, 1RB, 1RD, 0LC, 0RE]
         default: all
 
       verify_f418_return:
@@ -542,6 +542,9 @@ jobs:
                 python im-results/agent32-raw59/generate.py 0RB
                 target=im-results/agent32-raw59/Raw59CanonicalPilot.lean
               fi ;;
+            Late190) python im-results/agent32-raw59/generate_late190.py; target=im-results/agent32-raw59/Raw590LB190Data.lean ;;
+            OffsetPilot) (cd im-results/agent32-raw59 && python -c 'from generate_lb1_four import main; main("0LA", override={215:("1RB0LA_1RC1RF_0RD0RB_1LD1RE_---1LA_1RB0LE",4,2,2,5,1)})'); target=im-results/agent32-raw59/Raw590LABlock215.lean ;;
+            Width2Pilot) (cd im-results/agent32-raw59 && python -c 'from generate_lb1_four import main,CASES; main("1LB", override={194:CASES[194]})'); target=im-results/agent32-raw59/Raw59LB1Block194.lean ;;
             LB1Four) python im-results/agent32-raw59/generate_lb1_four.py; target=im-results/agent32-raw59/Raw59LB1Four.lean ;;
             LB1Sweep583) target=im-results/agent32-raw59/Raw59LB1Sweep583.lean ;;
             LB1Sweep1734) target=im-results/agent32-raw59/Raw59LB1Sweep1734.lean ;;
