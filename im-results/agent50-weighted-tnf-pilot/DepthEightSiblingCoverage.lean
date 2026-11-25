@@ -3,7 +3,6 @@ import DepthEightSiblingData2
 import DepthEightSiblingData3
 import DepthEightSiblingData4
 import DepthEightFAR
-import DepthEightSMTBatch
 import C1Growth
 
 set_option maxRecDepth 24000
@@ -12,7 +11,6 @@ set_option maxHeartbeats 0
 namespace BB6.Agent50RecursiveResidual
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent50TNFPilot BB6.Agent50RootFrontier
 open BB6.Agent7FAR.DepthEight
-open BB6.Agent7FAR.DepthEightSMTBatch
 
 def siblingData : List CheckedTree :=
   siblingData1 ++ siblingData2 ++ siblingData3 ++ siblingData4
