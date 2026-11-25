@@ -28,10 +28,10 @@ theorem cycle_child (mv : Move) (e k : Nat) (r : Bool) (b : Int)
   (certifiedZip 395 (child mv) (.cycle e k r b)
     (refine_preserves_firstOne p59 (0,true) (some mv) (by decide) p59_root)
     (weightedTNFNoAssignedHalt_refine _ _ _ p59_nohalt) h).sound
-theorem all_0RA := cycle_child ⟨false,true,0⟩ 0 10 true 0 (by decide)
-theorem all_1RA := cycle_child ⟨true,true,0⟩ 0 10 true 0 (by decide)
-theorem all_1LD := cycle_child ⟨true,false,3⟩ 11 1 false (-1) (by decide)
-theorem all_1RE := cycle_child ⟨true,true,4⟩ 6 2 true 1 (by decide)
+theorem all_0RA : ∀ m, compatible (child ⟨false,true,0⟩) m → WeightedBound 395 m := cycle_child ⟨false,true,0⟩ 0 10 true 0 (by decide)
+theorem all_1RA : ∀ m, compatible (child ⟨true,true,0⟩) m → WeightedBound 395 m := cycle_child ⟨true,true,0⟩ 0 10 true 0 (by decide)
+theorem all_1LD : ∀ m, compatible (child ⟨true,false,3⟩) m → WeightedBound 395 m := cycle_child ⟨true,false,3⟩ 11 1 false (-1) (by decide)
+theorem all_1RE : ∀ m, compatible (child ⟨true,true,4⟩) m → WeightedBound 395 m := cycle_child ⟨true,true,4⟩ 6 2 true 1 (by decide)
 #print axioms halt_branch
 #print axioms all_0RA
 #print axioms all_1RA

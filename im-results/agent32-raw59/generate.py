@@ -10,6 +10,12 @@ MOVES=[w+d+q for w,d,q in product('01','LR','ABCDEF')]
 SPECS={
 '0RD':(157,12,8,85,632,11674,2778,'6145fc9050a5aeb9147edd345911ad9c81a8c3a0ec317bb01965fe2cf6bcbb75','000 00101 1012121 00102343444 1012101'),
 '1LC':(84,None,None,178,1066,18816,5525,'b4de3ebe4f0b496574e81eadb4976e8a4f1bd6050c90b1c0d178034fded46a85','101213333 10101 001230120 000 0010201 001213333 00101 00123242344 001232201 0012101 0010202 0012111 00123224101 0012322452221 10123222401 00123224022'),
+'1RB':(135,None,None,649,1398,25275,6231,'ac64fc94f0a887129e58a6d4e926f490d3d2428031f7853d63e902ae2c9583ab','000 00101 0010202 001020303 00102340101 001213121 00123014301 001232202 00123224101 00123224122 00123224221 0012341415555 0012344514401 0050104333132 005052224132422 1012101 10123212424 10123224322 10123440144 1012344555155 10214675441134344'),
+'1RD':(93,None,None,682,547,9528,2372,'3e7403f557e1ba547bef92685c5e61e2a24480806109c1dcad6e55bc0e369dac','000 00101 0010202 001020303 0010212 001212333 001213333 001230123 00123224101 00414570253666612 0050104333132 005052224132422 10101 101121313 1012101 1012121 10121340121 10123222423 10123224101 10623557155452376'),
+}
+MANUAL={
+'1RB':(157,'1RB1RB_1RC0RF_0RD0RB_1LD1RE_---1LA_0RC0LD','Raw59RBCount','BB6.Agent32Raw59RB'),
+'1RD':(499,'1RB1RD_1RC---_0RD0LE_1LD1RE_1LF1LA_0LB1LC','Raw59RDSweep','BB6.Agent32Raw59RD'),
 }
 CHUNK=240
 def generate(raw):
@@ -20,14 +26,18 @@ def generate(raw):
     subprocess.run([str(folder/'enumerate'),parent],cwd=folder,check=True)
     data=(folder/'open.txt').read_bytes();assert hashlib.sha256(data).hexdigest()==sha
     opens=data.decode().splitlines();assert len(opens)==len(set(opens))==nopen
-    certs={}
+    certs={};pumps={};imports=['Raw59Base']
+    if raw in MANUAL:
+        i,rle,module,ns=MANUAL[raw]
+        assert opens[i]==rle
+        pumps[rle]=(ns+'.table',ns+'.never');imports.append(module)
     for rle in opens:
+        if rle in pumps:continue
         for a in bank.split():
             try: masks(parse(rle),int(a[0]),[int(x,36) for x in a[1:]])
             except AssertionError: continue
             certs[rle]=a;break
         else: raise RuntimeError(('unresolved',rle))
-    pumps={}
     used=set()
 
     tree=json.loads((folder/'tree.json').read_text());assert tree[0]=='split';first,root_slot=tree[1:3]
@@ -56,7 +66,7 @@ theorem split_checked (p : PartialMachine) (n : Nat) (s : Slot) (kids : Move →
   simp only [Bool.and_eq_true]
   exact ⟨hq, allMoves_of _ hk⟩
 '''
-    emit(prefix+'Base',['Raw59Base'],base)
+    emit(prefix+'Base',imports,base)
     stats=Counter()
     def size(t):
         stats[t[0]]+=1
