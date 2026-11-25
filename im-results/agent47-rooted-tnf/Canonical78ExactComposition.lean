@@ -14,7 +14,7 @@ open BB6Coverage.Agent48DirectRoot
 open BB6.Agent47CanonicalFrontier
 
 /-- The attained champion score in the original raw semantics. -/
-def championScore : Nat := proposedTM63Moves + 7
+abbrev championScore : Nat := proposedTM63Moves + 7
 
 private theorem exact_rootSteps_le_score (rootSteps L n a b : Nat) :
     rootSteps ≤ threeSectionMoves rootSteps L n a b + 7 :=
@@ -23,11 +23,9 @@ private theorem exact_rootSteps_le_score (rootSteps L n a b : Nat) :
 theorem champion_score_gt_7014 : 7014 < championScore := by
   have hroot : 27959 ≤ threeSectionMoves 27959 3 7 6 63 + 7 :=
     exact_rootSteps_le_score 27959 3 7 6 63
-  have hscore : 7014 < threeSectionMoves 27959 3 7 6 63 + 7 :=
-    Nat.lt_of_lt_of_le (by decide) hroot
   change 7014 < proposedTM63Moves + 7
-  exact Eq.mp
-    (congrArg (fun n : Nat => 7014 < n + 7) threeSectionMoves_root) hscore
+  rw [← threeSectionMoves_root]
+  omega
 
 /-- The literal champion extends the authentic first-one root. -/
 theorem champion_compatible_root :
