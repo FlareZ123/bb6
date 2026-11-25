@@ -231,6 +231,7 @@ jobs:
           names = (
               "BB6.Agent6Canonical77ChampionIntegration.championResidual_mem_canonical77",
               "BB6.Agent6Canonical77ChampionIntegration.championResidual_unique_canonical77",
+              "BB6.Agent6Canonical77ChampionIntegration.championResidual_unique_by_table",
               "BB6.Agent6Canonical77ChampionIntegration.canonical77_other_address_count",
               "BB6.Agent6Canonical77ChampionIntegration.cover_championResidual_from_raw139_leaves",
               "BB6.Agent6Canonical77ChampionIntegration.refinedCanonical77Roster_count",
