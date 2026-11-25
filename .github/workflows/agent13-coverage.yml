@@ -1408,6 +1408,13 @@ jobs:
         env:
           CHILD: ${{ matrix.child }}
         run: python im-results/agent1-raw60/discover.py "$CHILD"
+      - name: Preserve raw60 discovery outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw60-discovery-${{ matrix.child }}
+          path: im-results/agent1-raw60/discover_${{ matrix.child }}/*.json
+          if-no-files-found: warn
 
   raw113:
     if: inputs.target == 'weighted-tnf-raw113'
