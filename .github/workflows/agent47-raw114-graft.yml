@@ -51,9 +51,9 @@ jobs:
           q = pathlib.Path("im-results/agent13-coverage/BB6Coverage.lean.xz.b64")
           (root/"BB6Coverage.lean").write_bytes(lzma.decompress(base64.b64decode(q.read_text())))
           PY
-          printf '%s  %s\\n' fbe453c5c170029885ba328bfdd9262600f918a8ce2371c60ecbb843897fd6bd "$work/imports/BB6Coverage.lean" | sha256sum -c -
-          printf '%s  %s\\n' 12329036c66c3846f9261167b8f9aebd1778d9b6ea6044309956c2fa0b3e49b7 "$work/imports/TerminalFinish.lean" | sha256sum -c -
-          printf '%s  %s\\n' 1bce2075fc4e0cd7d740fb71b3796088b190ddb6766e04640d992dadd1b650ff "$work/imports/TerminalLeft.lean" | sha256sum -c -
+          printf '%s  %s\n' fbe453c5c170029885ba328bfdd9262600f918a8ce2371c60ecbb843897fd6bd "$work/imports/BB6Coverage.lean" | sha256sum -c -
+          printf '%s  %s\n' 12329036c66c3846f9261167b8f9aebd1778d9b6ea6044309956c2fa0b3e49b7 "$work/imports/TerminalFinish.lean" | sha256sum -c -
+          printf '%s  %s\n' 1bce2075fc4e0cd7d740fb71b3796088b190ddb6766e04640d992dadd1b650ff "$work/imports/TerminalLeft.lean" | sha256sum -c -
           python tools/lean_compile_closure.py --workdir /tmp/a47-canonical --source-root "$work/imports" --jobs 4 im-results/agent47-rooted-tnf/CanonicalTwoParentGraft.lean im-results/agent48-counted-inc0/TM63RawUpperInterface.lean --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean --override OuterLCIncPrelude=im-results/agent8-counted-reset/OuterLCIncPrelude.lean --override M0OddResidueSeven=im-results/agent41-m0-n16r7/M0OddResidueSeven.lean --override M0EvenEightValuationEncoding=im-results/agent48-counted-inc0/M0EvenEightValuationEncoding.lean --override M2EvenResidueTwo=im-results/agent42-champion-terminal/M2EvenResidueTwo.lean | tee /tmp/a47-canonical.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a47-canonical.log; then exit 1; fi
       - name: Link the accepted cylinder theorem, check count and composition
