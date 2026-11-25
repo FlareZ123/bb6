@@ -40,8 +40,8 @@ jobs:
           cp "../im-results/agent8-623-inverse/SquareGapTerminalBridge.lean" SquareGapTerminalBridge.lean
           lake env lean -o .lake/build/lib/lean/SquareGapTerminalBridge.olean SquareGapTerminalBridge.lean 2>&1 | tee square-gap-terminal-bridge.log
 
-          cp "../im-results/agent8-623-inverse/RootCancellationBudgetBridge.lean" RootCancellationBudgetBridge.lean
-          lake env lean -o .lake/build/lib/lean/RootCancellationBudgetBridge.olean RootCancellationBudgetBridge.lean 2>&1 | tee root-cancellation-budget-bridge.log
+          cp "../im-results/agent8-623-inverse/RootCancellationBudgetBridge.lean" Agent8RootCancellationBudgetBridge.lean
+          lake env lean -o .lake/build/lib/lean/Agent8RootCancellationBudgetBridge.olean Agent8RootCancellationBudgetBridge.lean 2>&1 | tee agent8-agent8-root-cancellation-budget-bridge.log
 
           cp "../im-results/agent48-623-budget-composition/RootExclusion.lean" RootExclusion.lean
           lake env lean -o .lake/build/lib/lean/RootExclusion.olean RootExclusion.lean 2>&1 | tee root-exclusion.log
