@@ -12,7 +12,6 @@ open BB6Coverage.FAR BB6.Agent48F1Integration
 theorem zeroRF_is_depth5_sibling :
     sameTable BB6.Agent48F1ZeroRF.parent (championChild 5 ⟨false,true,5⟩) = true := by
   decide
-    championP1, championResidual, championRootAfterB, refine, root]
 
 theorem cover_zeroRF (B : Nat) (hB : 211 ≤ B) :
     Cover (WeightedBound B) BB6.Agent48F1ZeroRF.parent := by
