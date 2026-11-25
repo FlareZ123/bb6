@@ -5,7 +5,7 @@ on:
       audit:
         description: Source audit to run
         type: choice
-        options: [champion, parent]
+        options: [champion, parent, rc-triple]
         default: champion
 permissions:
   contents: read
@@ -26,3 +26,18 @@ jobs:
       - name: Compile champion parent cover and audit sibling proofs
         if: inputs.audit == 'parent'
         run: bash im-results/agent48-champion-root/reproduce-parent.sh
+      - name: Compile raw139 0RC triple counter and audit completion covers
+        if: inputs.audit == 'rc-triple'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python tools/lean_compile_closure.py im-results/agent48-champion-root/Champion0RCTriple.lean --workdir /tmp/a48-rc-triple --jobs 4 | tee /tmp/a48-rc-triple.log
+          python - <<'PY'
+          import re
+          log = open('/tmp/a48-rc-triple.log').read()
+          for name in ('aCarry','aOverflow','bCarry','bOverflow','entry','arbitrary_live_prefix','never','cover_zeroRC'):
+              m = re.search(r"'BB6.Agent48CounterRC\."+name+r"' depends on axioms: \[([^\]]*)\]", log)
+              if not m: raise SystemExit('missing axiom audit: '+name)
+              used = {x.strip() for x in m.group(1).split(',') if x.strip()}
+              assert used <= {'propext','Classical.choice','Quot.sound'}, (name,used)
+          PY
