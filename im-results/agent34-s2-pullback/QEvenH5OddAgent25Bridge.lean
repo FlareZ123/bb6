@@ -1,6 +1,10 @@
-import AffineH5Quarter
 import OddEvenNonPowerParentFan
 import Lean.Elab.Tactic.Omega
+
+#check Nat.div_pos
+#check Nat.div_lt_iff_lt_mul
+#check Nat.mod_add_div
+#check Nat.div_eq_one_iff_lt_two_mul
 
 namespace BB6.Agent34H5OddBridge
 
@@ -36,7 +40,7 @@ theorem nat_succ_le_two_pow (n : Nat) : n+1 ≤ 2^n := by
         omega
       omega
 
-lemma pow_two_mono {a b : Nat} (h : a ≤ b) : 2^a ≤ 2^b := by
+theorem pow_two_mono {a b : Nat} (h : a ≤ b) : 2^a ≤ 2^b := by
   induction b with
   | zero =>
       have ha : a=0 := by omega
@@ -71,25 +75,6 @@ theorem h5OddB_add_D (r w : Nat) :
     omega
   dsimp [h5OddB]
   exact Nat.sub_add_cancel hdle
-
-theorem h5OddB_ge_35r (r w : Nat) : 35*r ≤ h5OddB r w := by
-  have hlin : 35*r + h5OddD r w < h5OddExp r w + 1 := by
-    dsimp [h5OddD, h5OddExp]
-    omega
-  have hpow : h5OddExp r w + 1 ≤ 2^(h5OddExp r w) :=
-    nat_succ_le_two_pow (h5OddExp r w)
-  have hj : 1 ≤ h5OddJ r + 3 := by
-    dsimp [h5OddJ]
-    omega
-  have hmul : 2^(h5OddExp r w) ≤
-      2^(h5OddExp r w) * (h5OddJ r + 3) := by
-    have h := Nat.mul_le_mul_left (2^(h5OddExp r w)) hj
-    simpa using h
-  have hT : 35*r + h5OddD r w ≤ h5OddT r w := by
-    dsimp [h5OddT]
-    omega
-  dsimp [h5OddB]
-  omega
 
 theorem h5OddK_gate (r w : Nat) :
     h5OddK r w + h5OddJ r + 3*h5OddM r w + 5 =
@@ -259,17 +244,5 @@ theorem h5Odd_parent_fan (r w : Nat) :
     (by dsimp [h5OddEay]; omega)
     (by dsimp [h5OddEay]; omega)
     (h5OddMass_not_power r w)
-
-theorem h5OddQuarterHighSource (r w : Nat)
-    (hg : BB6.Agent25OddLift.h5PhaseGuard r w) :
-    ¬ BB6.Agent25OddLift.Reach secNext
-        (2*h5OddJ r+3) (h5OddK r w) := by
-  have hgate := h5OddK_gate r w
-  simpa [h5OddJ, h5OddM] using
-    (BB6.Agent25OddLift.h5QuarterHighSource r w (h5OddK r w) hg hgate)
-
-#check BB6.Agent25OddLift.h5QuarterHighSource
-#check BB6.Agent25OddLift.highStopSource
-#check BB6.Agent3OddEvenFan.blank_reach_iff_odd_even_nonpower_parent_fan
 
 end BB6.Agent34H5OddBridge
