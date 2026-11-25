@@ -1,11 +1,19 @@
 name: Agent 47 ingest accepted raw114 into canonical frontier
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        description: Select raw114-only or two-parent proof ingestion
+        type: choice
+        options: [raw114-only, two-parent]
+        default: raw114-only
+        required: true
 permissions:
-  contents: read
+  contents: write
   actions: read
 jobs:
   graft:
+    if: inputs.target == 'raw114-only'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -54,3 +62,317 @@ jobs:
           name: canonical77-certified
           path: /tmp/a47-canonical/*.olean
           if-no-files-found: error
+
+  two-parent:
+    if: inputs.target == 'two-parent'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          ref: proof-source/bb6-raw107-raw114-d416
+          path: pinned
+      - name: Install Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: \${{ github.token }}
+          run-id: 45553564319
+          name: raw114-certified-root
+          path: /tmp/a47-raw114-certified
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: \${{ github.token }}
+          run-id: 45554648116
+          name: canonical77-certified
+          path: /tmp/a47-canonical77
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: \${{ github.token }}
+          run-id: 45560718392
+          name: raw107-certified-root
+          path: /tmp/a47-raw107-certified
+      - name: Reconstruct pinned sources, audit manifests, and compose both parents
+        run: |
+          set -euo pipefail
+          cp tools/lean_compile_closure.py pinned/tools/lean_compile_closure.py
+          cp im-results/agent47-rooted-tnf/CanonicalTwoParentGraft.lean pinned/im-results/agent47-rooted-tnf/
+          cp im-results/agent47-rooted-tnf/CanonicalRaw114Accepted.lean pinned/im-results/agent47-rooted-tnf/
+          cp im-results/agent11-raw107/CanonicalTwoParentAccepted.lean pinned/im-results/agent11-raw107/
+          cd pinned
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+
+          # Recreate all raw114 generated source modules at the pinned revision.
+          cd im-results/agent47-raw114-cut
+          python paired_counter.py
+          python long_sweep.py
+          for branch in 0LA 0LB 0LC 0LF 0RA 0RB 0RC 0RF 1LA 1LB 1LC 1LF 1RA 1RB 1RC 1RF; do
+            python generate_complete.py "$branch"
+          done
+          python generate_complete.py --combine
+          cd ../..
+
+          # Recreate the raw107 parent closure source modules at the same revision.
+          root=im-results/agent11-raw107
+          python "$root/generate.py"
+          python "$root/generate_rc.py"
+          python "$root/generate_re.py"
+          python "$root/generate_more.py" 1RE 1LC 1LE 1LB 0RF 1RF 0LE
+          python "$root/generate_partial.py" 0LF 1LA 1LF
+          for prefix in Raw107RD Raw107RC Raw107RE Raw107B1RE Raw107B1LC Raw107B1LE Raw107B1LB Raw107B0RF Raw107B1RF Raw107B0LE Raw107B0LF Raw107B1LA Raw107B1LF; do
+            python im-results/agent10-tnf-multipump/chunk_checks.py "$root" "$prefix" --limit 180
+          done
+
+          # Reconstruct the raw114 manifest from the existing compiled artifact.
+          python tools/lean_compile_closure.py \
+            --manifest-only --artifact-dir /tmp/a47-raw114-certified \
+            --manifest /tmp/a47-raw114-manifest.json \
+            --label raw114-parent \
+            --theorem BB6.Agent47Raw114Complete.raw114_all \
+            --parent-table "1RB---_1RC---_0RD---_1LD1RE_---0LD_------" \
+            --weighted-bound 7014 --artifact-name raw114-certified-root \
+            --provenance-input im-results/agent13-coverage/unpack.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_sweeps.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_four_hole.py \
+            --provenance-input im-results/agent47-raw114-cut/paired_counter.py \
+            --provenance-input im-results/agent47-raw114-cut/long_sweep.py \
+            --provenance-input im-results/agent47-raw114-cut/multi_sweep.py \
+            --provenance-input im-results/agent47-raw114-cut/generate_complete.py \
+            --provenance-input im-results/agent47-raw114-cut/generate_far_cut.py \
+            --provenance-input im-results/agent47-raw114-cut/all-far-bank.txt \
+            --provenance-input im-results/agent47-raw114-cut/far-cut-bank.txt \
+            --provenance-input im-results/agent47-raw114-cut/pump-far-bank.txt \
+            --provenance-input im-results/agent47-raw114-cut/raw114-hard-manifest.txt \
+            --provenance-input im-results/agent47-raw114-cut/enumerate_cut.cpp \
+            --provenance-input im-results/agent47-raw114-cut/seeded_far.cpp \
+            im-results/agent47-raw114-cut/Raw114CompleteData.lean
+
+          # Audit the canonical77 artifact against the raw114 closure.
+          python tools/lean_compile_closure.py \
+            --manifest-only --artifact-dir /tmp/a47-canonical77 \
+            --manifest /tmp/a47-canonical77-manifest.json \
+            --label canonical77-raw114-graft \
+            --theorem BB6.Agent47CanonicalRaw114Accepted.exact_at_target \
+            --parent-table "raw114 parent in canonical 77-roster graft" \
+            --weighted-bound 7014 --artifact-name canonical77-certified \
+            --provenance-input im-results/agent47-rooted-tnf/CanonicalTwoParentGraft.lean \
+            --provenance-input im-results/agent47-rooted-tnf/CanonicalRaw114Accepted.lean \
+            --compare-manifest /tmp/a47-raw114-manifest.json \
+            im-results/agent47-rooted-tnf/CanonicalRaw114Accepted.lean
+
+          # Re-audit the raw107 artifact and compare all overlapping modules.
+          cp /tmp/a47-raw107-certified/manifest.json /tmp/a47-raw107-build-manifest.json
+          python tools/lean_compile_closure.py \
+            --manifest-only --artifact-dir /tmp/a47-raw107-certified \
+            --manifest /tmp/a47-raw107-replay-manifest.json \
+            --label raw107-parent-replay \
+            --theorem BB6.Agent11Raw107ParentClosure.all_completions \
+            --parent-table "1RB---_1RC---_0RD---_1LD1RE_---0RB_------" \
+            --weighted-bound 815 --artifact-name raw107-certified-root \
+            --provenance-input im-results/agent13-coverage/unpack.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_sweeps.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_four_hole.py \
+            --provenance-input im-results/agent10-tnf-multipump/chunk_checks.py \
+            --provenance-input im-results/agent11-raw107/generate.py \
+            --provenance-input im-results/agent11-raw107/generate_rc.py \
+            --provenance-input im-results/agent11-raw107/generate_re.py \
+            --provenance-input im-results/agent11-raw107/generate_more.py \
+            --provenance-input im-results/agent11-raw107/generate_partial.py \
+            --provenance-input im-results/agent11-raw107/specs_more.json \
+            --provenance-input im-results/agent11-raw107/specs_partial.json \
+            --provenance-input im-results/agent11-raw107/bank.txt \
+            --provenance-input im-results/agent11-raw107/bank.cpp \
+            --compare-manifest /tmp/a47-raw107-build-manifest.json \
+            --compare-manifest /tmp/a47-raw114-manifest.json \
+            --compare-manifest /tmp/a47-canonical77-manifest.json \
+            im-results/agent11-raw107/Raw107ParentClosure.lean
+
+          # Merge raw107 source and compiled files only when byte-identical on collision.
+          while IFS= read -r -d '' src; do
+            rel="\${src#/tmp/a47-raw107-certified/}"
+            dst="/tmp/a47-canonical77/$rel"
+            mkdir -p "$(dirname "$dst")"
+            if [[ -e "$dst" ]]; then
+              if ! cmp -s "$src" "$dst"; then
+                echo "UNRESOLVED RAW107/CANONICAL COLLISION: $rel" >&2
+                exit 1
+              fi
+            else
+              cp -p "$src" "$dst"
+            fi
+          done < <(find /tmp/a47-raw107-certified -type f \( -name '*.lean' -o -name '*.olean' \) -print0)
+
+          # Preserve the generated raw114 source snapshot alongside the merged proof closure.
+          while IFS= read -r -d '' src; do
+            rel="\${src#pinned/}"
+            dst="/tmp/a47-canonical77/$rel"
+            mkdir -p "$(dirname "$dst")"
+            if [[ -e "$dst" ]]; then
+              if ! cmp -s "$src" "$dst"; then
+                echo "UNRESOLVED RAW114 SOURCE COLLISION: $rel" >&2
+                exit 1
+              fi
+            else
+              cp -p "$src" "$dst"
+            fi
+          done < <(find pinned/im-results/agent47-raw114-cut -maxdepth 1 -type f -name '*.lean' -print0)
+
+          cp pinned/im-results/agent11-raw107/CanonicalTwoParentAccepted.lean /tmp/a47-canonical77/
+          cd /tmp/a47-canonical77
+          export LEAN_PATH="$PWD"
+          lean -o CanonicalTwoParentAccepted.olean CanonicalTwoParentAccepted.lean | tee /tmp/a47-two-parent.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a47-two-parent.log; then exit 1; fi
+          cd "$GITHUB_WORKSPACE/pinned"
+
+          # Record the complete source closure and prove that all three inputs still agree.
+          python tools/lean_compile_closure.py \
+            --manifest-only --artifact-dir /tmp/a47-canonical77 \
+            --manifest /tmp/a47-canonical77/manifest-canonical76.json \
+            --label canonical76-two-parent \
+            --theorem BB6.Agent11Raw107TwoParent.exact_at_target \
+            --parent-table "raw107(815)+raw114(7014) canonical two-parent graft" \
+            --artifact-name canonical76-certified \
+            --provenance-input im-results/agent13-coverage/unpack.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_sweeps.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_four_hole.py \
+            --provenance-input im-results/agent10-tnf-multipump/chunk_checks.py \
+            --provenance-input im-results/agent11-raw107/generate.py \
+            --provenance-input im-results/agent11-raw107/generate_rc.py \
+            --provenance-input im-results/agent11-raw107/generate_re.py \
+            --provenance-input im-results/agent11-raw107/generate_more.py \
+            --provenance-input im-results/agent11-raw107/generate_partial.py \
+            --provenance-input im-results/agent11-raw107/specs_more.json \
+            --provenance-input im-results/agent11-raw107/specs_partial.json \
+            --provenance-input im-results/agent11-raw107/bank.txt \
+            --provenance-input im-results/agent11-raw107/bank.cpp \
+            --provenance-input im-results/agent47-raw114-cut/paired_counter.py \
+            --provenance-input im-results/agent47-raw114-cut/long_sweep.py \
+            --provenance-input im-results/agent47-raw114-cut/generate_complete.py \
+            --compare-manifest /tmp/a47-raw107-replay-manifest.json \
+            --compare-manifest /tmp/a47-raw114-manifest.json \
+            --compare-manifest /tmp/a47-canonical77-manifest.json \
+            im-results/agent11-raw107/CanonicalTwoParentAccepted.lean
+
+          mkdir -p /tmp/canonical76-certified
+          cp CanonicalTwoParentAccepted.olean /tmp/canonical76-certified/
+          cp CanonicalTwoParentAccepted.lean /tmp/canonical76-certified/
+          cp manifest-canonical76.json /tmp/canonical76-certified/manifest.json
+      - name: Upload canonical76 conditional proof module
+        id: upload_canonical76
+        uses: actions/upload-artifact@v4
+        with:
+          name: canonical76-certified
+          path: /tmp/canonical76-certified
+          retention-days: 90
+          if-no-files-found: error
+      - name: Preserve manifests, artifact identifiers, and conditional result
+        env:
+          GH_TOKEN: \${{ github.token }}
+          CANONICAL76_ARTIFACT_ID: \${{ steps.upload_canonical76.outputs.artifact-id }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import os
+          import urllib.request
+
+          repo = os.environ["GITHUB_REPOSITORY"]
+          token = os.environ["GH_TOKEN"]
+
+          def api(path):
+              request = urllib.request.Request(
+                  f"https://api.github.com/repos/{repo}/{path}",
+                  headers={
+                      "Accept": "application/vnd.github+json",
+                      "Authorization": f"Bearer {token}",
+                      "X-GitHub-Api-Version": "2022-11-28",
+                  },
+              )
+              with urllib.request.urlopen(request, timeout=30) as response:
+                  return json.load(response)
+
+          def artifact_by_id(artifact_id):
+              return api(f"actions/artifacts/{artifact_id}")
+
+          def artifact_by_run(run_id, name):
+              data = api(f"actions/runs/{run_id}/artifacts")
+              for artifact in data.get("artifacts", []):
+                  if artifact.get("name") == name:
+                      return artifact_by_id(artifact["id"])
+              raise RuntimeError(f"artifact {name!r} missing from run {run_id}")
+
+          def annotate(path, artifact, parent_artifacts=None):
+              with open(path, encoding="utf-8") as stream:
+                  manifest = json.load(stream)
+              workflow_run = artifact.get("workflow_run") or {}
+              manifest["artifact"] = {
+                  "id": artifact.get("id"),
+                  "name": artifact.get("name"),
+                  "size_in_bytes": artifact.get("size_in_bytes"),
+                  "created_at": artifact.get("created_at"),
+                  "expires_at": artifact.get("expires_at"),
+                  "retention_days": 90,
+                  "build_run_id": workflow_run.get("id"),
+                  "workflow_head_sha": workflow_run.get("head_sha"),
+                  "proof_source_revision": manifest.get("proof_source_revision"),
+              }
+              if parent_artifacts is not None:
+                  manifest["parent_artifacts"] = parent_artifacts
+              with open(path, "w", encoding="utf-8") as stream:
+                  json.dump(manifest, stream, indent=2, sort_keys=True)
+                  stream.write("\n")
+
+          raw107 = artifact_by_run(45560718392, "raw107-certified-root")
+          raw114 = artifact_by_id("14994284886")
+          canonical77 = artifact_by_id("14997966221")
+          canonical76 = artifact_by_id(os.environ["CANONICAL76_ARTIFACT_ID"])
+
+          annotate("/tmp/a47-raw107-certified/manifest.json", raw107)
+          annotate("/tmp/a47-raw107-replay-manifest.json", raw107)
+          annotate("/tmp/a47-raw114-manifest.json", raw114)
+          annotate("/tmp/a47-canonical77-manifest.json", canonical77)
+          parents = [
+              {key: artifact.get(key) for key in ("id", "name", "size_in_bytes", "created_at", "expires_at")}
+              | {"build_run_id": (artifact.get("workflow_run") or {}).get("id")}
+              for artifact in (raw107, raw114, canonical77)
+          ]
+          annotate(
+              "/tmp/a47-canonical77/manifest-canonical76.json",
+              canonical76,
+              parent_artifacts=parents,
+          )
+          PY
+          mkdir -p im-results/agent11-raw107/manifests
+          cp /tmp/a47-raw107-certified/manifest.json im-results/agent11-raw107/manifests/raw107-d416.json
+          cp /tmp/a47-raw107-replay-manifest.json im-results/agent11-raw107/manifests/raw107-d416-replay.json
+          cp /tmp/a47-raw114-manifest.json im-results/agent11-raw107/manifests/raw114-d416.json
+          cp /tmp/a47-canonical77-manifest.json im-results/agent11-raw107/manifests/canonical77-d416.json
+          cp /tmp/a47-canonical77/manifest-canonical76.json im-results/agent11-raw107/manifests/canonical76-d416.json
+          python - <<'PY'
+          from pathlib import Path
+          p = Path("im-results/agent11-raw107/README.md")
+          text = p.read_text(encoding="utf-8")
+          old = "**This is a source-audit draft, not yet an accepted two-parent theorem.**"
+          new = (
+              "**Source-audited two-parent theorem:** run "
+              + __import__("os").environ["GITHUB_RUN_ID"]
+              + " compiled the raw107+raw114 wrapper at Lean 4.36.0-rc2. "
+              "The 76-residual dichotomy is accepted; conditional exactness "
+              "still requires Covers for all 76 residuals and the attaining champion witness. "
+              "The compact wrapper artifact and full closure manifest are recorded below."
+          )
+          if old not in text:
+              raise SystemExit("expected draft status sentence missing from raw107 README")
+          p.write_text(text.replace(old, new), encoding="utf-8")
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add im-results/agent11-raw107/README.md im-results/agent11-raw107/manifests/
+          git commit -m "Agent 11: preserve source-accepted canonical76 manifests"
+          git push origin "HEAD:$GITHUB_REF_NAME"
