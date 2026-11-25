@@ -1,5 +1,4 @@
 import ZipThreeHoleAudit
-import FourHoleResidualRoster
 
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
@@ -21,10 +20,20 @@ def partialCheck (B : Nat) (p : PartialMachine) : PartialAudit → Bool
       BB6.Agent31ThreeHole.allMoves (fun mv => partialCheck B (refine p s (some mv)) (kids mv))
 termination_by structural t => t
 
+def auditMoves : List Move :=
+  (List.finRange 6).flatMap fun q =>
+    [false,true].flatMap fun w => [false,true].map fun r => ⟨w,r,q⟩
+
+theorem auditMoves_complete (mv : Move) : mv ∈ auditMoves := by
+  rcases mv with ⟨w,r,q⟩
+  exact List.mem_flatMap.mpr ⟨q, List.mem_finRange q,
+    List.mem_flatMap.mpr ⟨w, by cases w <;> simp,
+      List.mem_map.mpr ⟨r, by cases r <;> simp, rfl⟩⟩⟩
+
 def partialResiduals (p : PartialMachine) : PartialAudit → List (List Move × PartialMachine)
   | .unresolved => [([],p)]
   | .closed _ => []
-  | .split _ s kids => BB6.Agent31FourHoleFrontier.allMoves.flatMap fun mv =>
+  | .split _ s kids => auditMoves.flatMap fun mv =>
       (partialResiduals (refine p s (some mv)) (kids mv)).map fun e => (mv :: e.1, e.2)
 termination_by structural t => t
 
@@ -67,7 +76,7 @@ theorem partialSound (B : Nat) (p : PartialMachine) (t : PartialAudit)
       rcases ih mv (refine p s (some mv)) hf' hn' hchild m hc with hb | ⟨e,he,hec⟩
       · exact Or.inl hb
       · exact Or.inr ⟨(mv :: e.1,e.2), List.mem_flatMap.mpr
-          ⟨mv, BB6.Agent31FourHoleFrontier.allMoves_complete mv, List.mem_map.mpr ⟨e,he,rfl⟩⟩,hec⟩
+          ⟨mv, auditMoves_complete mv, List.mem_map.mpr ⟨e,he,rfl⟩⟩,hec⟩
 
 def byPartialMove (xs : List PartialAudit) (mv : Move) : PartialAudit :=
   xs[12*mv.write.toNat+6*mv.right.toNat+mv.next.val]?.getD .unresolved
