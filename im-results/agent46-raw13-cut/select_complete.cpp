@@ -31,14 +31,30 @@ template<int L,int W,int MAXPER> Res classify(Table const&p){
  return {0,0,0,0,0,0,0};
 }
 struct Node{Res a;int child[24]{};string p;};vector<Node> nodes;
-bool extended=false, zeroRE=false, zeroRC=false, zeroRD=false, zeroLC=false, zeroLB=false, oneRD=false, zeroRA=false, oneLA=false, oneRA=false, zeroRB=false, oneLC=false, oneRE=false, oneRC=false, zeroRE5=false;
+bool extended=false, zeroRE=false, zeroRC=false, zeroRD=false, zeroLC=false, zeroLB=false, oneRD=false, zeroRA=false, oneLA=false, oneRA=false, zeroRB=false, oneLC=false, oneRE=false, oneRC=false, zeroRE5=false, oneLE=false;
 int complete(Table p,int cut,int holes){
- if(nodes.size()>=((oneRE||zeroRE5)?100000:15000))return -1;
+ if(nodes.size()>=((oneRE||zeroRE5||oneLE)?100000:15000))return -1;
  int i=nodes.size();nodes.push_back({});int m=mask(p);if(m){nodes[i].a={3,m,0,0,0,0,0};return i;}
  auto a=classify<120,256,120>(p);
  if(extended && !a.typ)a=classify<1000,2048,256>(p);
  if(!a.typ){
     auto raw=show(p);
+    if(oneLE){
+      static const array<string,90> ps={"---0LF0LE1RF1RB","1RA0LF0LA1RD---","1RA0LF0LA0LC---","0RA0LF0RA0LB---","0RA0LF1LA0LB---","---0LF0LF1RB1LA","1LB0LF1LF1RB---","---0LF0RE1RB0LF","1RC0LF0RC1RB---","1RD0LF0RC1LA---","0RA0LF0RA1LA---","0RA0LF1LA1LA---","1RE0RF---0LC0RF","0LA0RF---0RC1RF","---0RF1RA1RF0LE","1LD0RF1RE---1RC","1LB0RF1RE---1RC","---0RF0LE1RF1RB","1RE0RF0LA---1RB","1RE0RF0RA---1RB","1RE0RF1LA---1RB","1LB0RF0RE---0RA","0LF1LF---1RF0RC","1RC1LF0RC1RE---","1RC1LF0RC1RD---","1RF1LF0RC1LB---","1RD1LF0RC1LB---","0LA1LF0RC1LB---","1RA1LF0LA0LA---","---1RF1RA1RE0RF","---1RF1LD0LD0RF","0RD1RF---0LC0RF","---1RF1RC1RA0RF","---1RF1RA1RE1RF","1RE1RF0RA---0LE","---1RF0LF1LB0RE","---1RF1LC1LF1RE","---1RF1LC1RD1RE","1LB1RF---0RC1RE","---1RF1LC1LC1RE","---1RF1LC1RC1RE","1LB1RF---0LB1RE","1LB1RF---1LB1RE","---1RF1LC1RA1RE","0RF1RF---1LC0RD","0RF1RF---0LB0RD","1LD1RF1RE---0LC","1LB1RF1RE---0LC","---1RF0LE1RF1RB","0LD1RF1RE---1RB","0LB1RF1RE---1RB","0RE1RF0LD---1RB","0RE1RF1LD---1RB","0RD1RF1LF---1RA","0LA0RE1RF0RC---","1RF0RE1LC1RD---","---1RE0RF1RA1LB","1RF0RD0LA0RE---","1RF0RD0LE1RD---","1RF0RD1LC1RD---","1RA0RD1LF---1LE","1RE1RD0RF---1RC","1RE1RD1RF---0LC","1RD0LC1RF---0RE","1RD0LC1RF---1RE","0LF0RC---1RF0RC","1RF1LC---0RF1RB","0RF1RC---1RD0RA","1RD1RC1RF---0RE","1RA0LB1LF---1LE","0LF1RB0LA1RE---","0LF1RB0LA1RA---","0RF1RB1LD1RA---","---0LA0LF0RE1LA","---0LA0LF1LE1LB","0RF0LA0LF0RC---","1LB0LA0LF0RC---","0RF0LA0LF1LB---","1LE0LA0LF1LB---","0RB0LA0LF1LB---","1LB0LA0LF1LB---","---0LA0LF1RB1LA","1LB0LA1LF1RB---","0LF0LA0RE---1LB","0LF0LA0RC0RB---","0LF0LA0RC1LB---","1RF0RA1LC1RD---","1RA0RA1LF---1LE","1RF1LA1LC1RD---","1RA1LA1LF---1LE"};
+      for(int v=0;v<90;v++)if(raw=="1RB1LC1RC0LD1LA0RB1LE"+ps[v]){
+        switch(v){
+          case 1: nodes[i].a={2,0,0,13,391,0,3}; break;
+          case 2: nodes[i].a={2,0,0,29,403,0,3}; break;
+          case 28: nodes[i].a={2,0,0,11,385,0,3}; break;
+          case 57: nodes[i].a={2,0,0,97,312,1,-4}; break;
+          case 70: nodes[i].a={2,0,0,98,258,0,2}; break;
+          case 71: nodes[i].a={2,0,0,98,258,0,2}; break;
+          case 75: nodes[i].a={5,9,0,0,0,0,0};nodes[i].p=raw;break;
+          default: nodes[i].a={26,1011000+v,0,0,0,0,0};
+        }
+        return i;
+      }
+    }
     if(zeroRE5){
       static const array<string,75> ps={"0LA0RF1LB---1LD","1RA0RF1LB---1LD","1RF0RF---1LD1LB","0LE0RF---0LA1LB","0RD0RF0RF---1LB","0RD0RF1RF---1LB","0RD0RF0LD---1LB","0RD0RF0LC---1LB","0RD0RF1RC---1LB","0RD0RF0LA---1LB","1LD0RF0LA---1LB","1RD0RF0RF---1LB","1RD0RF1RF---1LB","1RD0RF0LD---1LB","1RD0RF1RC---1LB","1RD0RF0LA---1LB","0LA0RF------1LB","1RA0RF------1LB","0RA1RF0LC---1LE","0RD1RF1RC---1LE","1RD1RF1RC---1LE","0LA1RF1RC---1LE","1RA1RF1RC---1LE","0LD1RF---1LD1RE","1LB1RF---0RC1RE","0LD1RF---1LB1RE","0LB1RF---1LB1RE","1LB1RF---1LB1RE","0RF1RF---1LE0RB","0LE1RF---1RC0RB","0RD1RF1RF---0RB","0RD1RF0LD---0RB","0RD1RF0LC---0RB","0RD1RF1RC---0RB","0RD1RF0LA---0RB","1LD1RF0LA---0RB","1RD1RF1RF---0RB","1RD1RF0LD---0RB","1RD1RF1RC---0RB","1RD1RF0LA---0RB","0LA1RF------0RB","1RA1RF------0RB","0LF0RE1LB1RB---","0LD1RE1RF1LD---","0LD1RE1RF1LB---","0RD1LD0RF---1LB","1RD1LD0RF---1LB","0LA1LD0RF---1LB","1RA1LD0RF---1LB","0RD1LD1RF---0RB","1RD1LD1RF---0RB","0LA1LD1RF---0RB","1RA1LD1RF---0RB","1RF0LC0RE1RD---","1RF0LC1LA1RD---","1RD0LC0RF---0RE","1RD0LC0RF---1LA","1RD0LC1RF---0RE","1RD0LC1RF---0LD","1LF0RC1LB1LD---","1RD0RC0LF0LE---","0RD1RC1RF---0RE","0RD1RC1RF---1RE","1RD1RC0RF---1LA","1RD1RC1RF---0RE","1RD1RC1RF---1RE","1RD1RC1RF---0LD","1RD0LB1RF---1RB","0LF0RB---1RE0LE","1LF0RB---0LE1LC","0RD0RB0RF---1RE","1RD0RB0RF---1RE","1LD1RB0RF1LB---","1LD1RB1RF0RB---","0LE0RA1LF---0LC"};
       for(int v=0;v<75;v++)if(raw=="1RB1LC1RC0LD1LA0RB0RE"+ps[v]){nodes[i].a={25,1010000+v,0,0,0,0,0};return i;}
@@ -153,7 +169,7 @@ int complete(Table p,int cut,int holes){
     if(raw=="1RB1LC1RC0LD1LA0RB1LB1LE1RF0RC---1RE"){nodes[i].a={6,0,0,0,0,0,0};return i;}
     if(raw=="1RB1LC1RC0LD1LA0RB1LB1LE0RE1RF0RC---"||raw=="1RB1LC1RC0LD1LA0RB1LB1LE0RF---0RC1RF"||raw=="1RB1LC1RC0LD1LA0RB1LB1LE1LF---1RF0RC"){nodes[i].a={7,0,0,0,0,0,0};nodes[i].p=raw;return i;}
     bool shared=raw.substr(0,24)=="1RB1LC1RC0LD1LA0RB1LB1LE" && (raw.substr(24,3)=="0RE"||raw.substr(24,3)=="0RF"||raw.substr(24,3)=="1LF");
-    for(int k=1;k<=((zeroRE||zeroRC||zeroRD||zeroLC||zeroLB||oneRD||zeroRA||oneLA||oneRA||zeroRB||oneLC||oneRE||oneRC||zeroRE5)?7:extended?6:shared?7:(raw=="1RB1LC1RC0LD1LA0RB1LB1LE1RF1RC---1RE"?5:4));k++){NGram ng(raw,k);if(ng.check()){nodes[i].a={5,k,0,0,0,0,0};nodes[i].p=raw;return i;}}
+    for(int k=1;k<=((zeroRE||zeroRC||zeroRD||zeroLC||zeroLB||oneRD||zeroRA||oneLA||oneRA||zeroRB||oneLC||oneRE||oneRC||zeroRE5||oneLE)?7:extended?6:shared?7:(raw=="1RB1LC1RC0LD1LA0RB1LB1LE1RF1RC---1RE"?5:4));k++){NGram ng(raw,k);if(ng.check()){nodes[i].a={5,k,0,0,0,0,0};nodes[i].p=raw;return i;}}
     if(!extended)a=classify<1000,2048,256>(p);if(!a.typ)return -1;
  }
  nodes[i].a=a;if(a.typ==2||holes==1)return i;
@@ -164,6 +180,7 @@ int complete(Table p,int cut,int holes){
  return i;
 }
 void emit(int i){auto n=nodes[i];auto a=n.a;
+ if(a.typ==26){cout<<"[\"oneLEHard\","<<a.n<<']';return;}
  if(a.typ==25){cout<<"[\"zeroRE5Hard\","<<a.n<<']';return;}
  if(a.typ==24){cout<<"[\"oneRCHard\","<<a.n<<']';return;}
  if(a.typ==23){cout<<"[\"oneREHard\","<<a.n<<']';return;}
@@ -191,4 +208,4 @@ void emit(int i){auto n=nodes[i];auto a=n.a;
  cout<<"[\"split\","<<a.n<<','<<a.s<<",[";
  for(int j=0;j<24;j++){if(j)cout<<',';if(n.child[j])emit(n.child[j]-1);else cout<<"null";}cout<<"]]";
 }
-int main(){string s;int cut,holes;while(cin>>s>>cut>>holes){zeroRE=s=="1RB1LC1RC0LD1LA0RB1LB0RE------------";zeroRC=s=="1RB1LC1RC0LD1LA0RB0RC---------------";zeroRD=s=="1RB1LC1RC0LD1LA0RB0RD---------------";zeroLC=s=="1RB1LC1RC0LD1LA0RB0LC---------------";zeroLB=s=="1RB1LC1RC0LD1LA0RB0LB---------------";oneRD=s=="1RB1LC1RC0LD1LA0RB1RD---------------";zeroRA=s=="1RB1LC1RC0LD1LA0RB0RA---------------";oneLA=s=="1RB1LC1RC0LD1LA0RB1LA---------------";oneRA=s=="1RB1LC1RC0LD1LA0RB1RA---------------";zeroRB=s=="1RB1LC1RC0LD1LA0RB0RB---------------";oneLC=s=="1RB1LC1RC0LD1LA0RB1LC---------------";oneRE=s=="1RB1LC1RC0LD1LA0RB1RE---------------";oneRC=s=="1RB1LC1RC0LD1LA0RB1RC---------------";zeroRE5=s=="1RB1LC1RC0LD1LA0RB0RE---------------";extended=zeroRE5||oneRC||oneRE||zeroRB||oneLC||oneLA||oneRA||zeroRA||oneRD||zeroRE||zeroRC||zeroRD||zeroLC||zeroLB||s=="1RB1LC1RC0LD1LA0RB1LB0LE------------"||s=="1RB1LC1RC0LD1LA0RB1LB1RE------------";nodes.clear();int i=complete(parse(s),cut,holes);if(i<0){cerr<<"unresolved "<<s<<'\n';return 1;}cout<<s<<' ';emit(i);cout<<'\n';}}
+int main(){string s;int cut,holes;while(cin>>s>>cut>>holes){zeroRE=s=="1RB1LC1RC0LD1LA0RB1LB0RE------------";zeroRC=s=="1RB1LC1RC0LD1LA0RB0RC---------------";zeroRD=s=="1RB1LC1RC0LD1LA0RB0RD---------------";zeroLC=s=="1RB1LC1RC0LD1LA0RB0LC---------------";zeroLB=s=="1RB1LC1RC0LD1LA0RB0LB---------------";oneRD=s=="1RB1LC1RC0LD1LA0RB1RD---------------";zeroRA=s=="1RB1LC1RC0LD1LA0RB0RA---------------";oneLA=s=="1RB1LC1RC0LD1LA0RB1LA---------------";oneRA=s=="1RB1LC1RC0LD1LA0RB1RA---------------";zeroRB=s=="1RB1LC1RC0LD1LA0RB0RB---------------";oneLC=s=="1RB1LC1RC0LD1LA0RB1LC---------------";oneRE=s=="1RB1LC1RC0LD1LA0RB1RE---------------";oneRC=s=="1RB1LC1RC0LD1LA0RB1RC---------------";zeroRE5=s=="1RB1LC1RC0LD1LA0RB0RE---------------";oneLE=s=="1RB1LC1RC0LD1LA0RB1LE---------------";extended=oneLE||zeroRE5||oneRC||oneRE||zeroRB||oneLC||oneLA||oneRA||zeroRA||oneRD||zeroRE||zeroRC||zeroRD||zeroLC||zeroLB||s=="1RB1LC1RC0LD1LA0RB1LB0LE------------"||s=="1RB1LC1RC0LD1LA0RB1LB1RE------------";nodes.clear();int i=complete(parse(s),cut,holes);if(i<0){cerr<<"unresolved "<<s<<'\n';return 1;}cout<<s<<' ';emit(i);cout<<'\n';}}
