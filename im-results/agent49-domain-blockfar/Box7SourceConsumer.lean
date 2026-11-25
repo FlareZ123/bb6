@@ -1,5 +1,5 @@
 import Box7Weighted
-import Raw10BoxBridge
+import Raw10BoxCore
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 namespace BB6.Agent49Box7
@@ -8,7 +8,7 @@ open BB6.Agent49BoxBridge
 
 /-- Compare finite pointwise membership, independently of domain ordering. -/
 def sourceMatch (b : BB6.Agent49Box.Box Slot Transition) : Bool :=
-  slots.all fun s => choices.all fun t =>
+  slots.all fun s => transitions.all fun t =>
     decide ((t ∈ b s) ↔ (t ∈ baseBox s))
 
 theorem sourceMatch_sound (b : BB6.Agent49Box.Box Slot Transition)
@@ -16,7 +16,7 @@ theorem sourceMatch_sound (b : BB6.Agent49Box.Box Slot Transition)
     BB6.Agent49BoxOneHalt.Fits baseBox m := by
   intro s
   have hs := List.all_eq_true.mp h s (slots_complete s)
-  have ht := List.all_eq_true.mp hs (m s) (choices_complete (m s))
+  have ht := List.all_eq_true.mp hs (m s) (transitions_complete (m s))
   exact (of_decide_eq_true ht).mp (hm s)
 
 theorem source_has_box7 : raw10Remainder.any sourceMatch=true := by decide +kernel
