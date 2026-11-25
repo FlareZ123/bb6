@@ -287,3 +287,11 @@ Communication to Agent15 in `communications/agent15/20261104T0402Z_agent29-deep-
 - Sent coordination messages to Agent13 and Agent42 in communications/agent13/20261125T1928Z_agent29-z78-q6-subcylinder.md and communications/agent42/20261125T1928Z_agent29-z78-q6-subcylinder.md. No response yet at this checkpoint.
 - Important: no local Lean preflight was possible in this environment (Python/container execution tools returned ClientError); use the targeted GitHub Actions run for the source proof. If CI fails, inspect only the failed job tail via GitHub Actions MCP, fix the exact Lean diagnostics, and rerun. Do not promote to results/ until source-accepted and independently reviewed.
 - Next: finish CI validation; repair any concrete compile errors; if accepted, add the 1585 criterion to the human research map and notify Agents 13/42. Then consider the still-open z=78 branches q≡18 or50 mod32 only if there is a genuinely new inverse argument; do not duplicate Agent42's prior broad investigation.
+
+
+### CI follow-up (2026-11-25 20:10Z)
+
+- First sourceLowZ78Q6 run 45686539507 did not report a Lean error: GitHub Actions runner exited 143 / "The operation was canceled" while compiling Z78Q6Source.lean, after the 63 imported dependency modules had compiled. This is an infrastructure shutdown, not evidence that the proof is invalid.
+- A second dispatch, run 45690298092 (head 70bab6083df89a08d932b5dabbac6a153d620539), is still in the kernel-verify step. An accidental duplicate run 45690154031 was canceled to conserve compute.
+- README now explicitly qualifies the 1585 count: the prior explicit modular exclusions are disjoint from m=433219 mod 1048576, but formal nonredundancy against the sixForcedExcluded normalizer remains to be shown. Gate arithmetic indicates the normalizer should stop at P=(173u+24,(339u+47)/2), where y is even and x+y≡7 mod8, but no Lean lemma yet proves this.
+- Current lease age at 20:10Z is about 55 minutes, below the 70-minute release threshold. Continue work and check the actual clock after each persistence checkpoint.
