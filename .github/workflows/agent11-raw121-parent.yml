@@ -1,6 +1,12 @@
 name: Agent 11 Raw121 complete parent source audit
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        description: 'Run the original monolithic audit or the interruption-safe six-shard audit'
+        type: choice
+        options: [full, sharded]
+        default: full
 permissions:
   contents: write
 jobs:
