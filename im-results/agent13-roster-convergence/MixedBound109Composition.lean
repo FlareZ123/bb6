@@ -83,7 +83,7 @@ noncomputable def tnf_certificate_of_reduced_roster_at_champion_score
     WeightedTNFCertificate championScore
       BB6.CoverageAdapter.firstOneCylinder 2 :=
   BB6.Agent13RosterComposition.tnf_certificate_of_roster_dichotomy_mixed
-    (by omega) reduced_sound hLeaves
+    (Nat.le_of_lt champion_score_gt_7014) reduced_sound hLeaves
 
 /-- Conditional exact BB(6) theorem with the correct 109 residual
     obligations: each retained cylinder is bounded at the champion score,
