@@ -5,7 +5,7 @@ on:
       target:
         description: Proof target
         type: choice
-        options: [core, cut]
+        options: [core, cut, ingest]
         default: core
 permissions:
   contents: read
@@ -31,6 +31,9 @@ jobs:
             ROOT="$D/Agent46Raw13Base.lean"
           else
             python "$D/generate.py"
+            ROOT="$D/Agent46Raw13Data.lean"
+          fi
+          if [ "$TARGET" = ingest ]; then
             python im-results/agent31-three-hole-tnf/generate_sweeps.py
             python im-results/agent31-three-hole-tnf/generate_four_hole.py
             python im-results/agent10-tnf-raw87/generate.py
