@@ -21,7 +21,7 @@ The initial undefined transition is D/1. The eight successive first-hole refinem
 | 6 | F/0 | 1RA | 53 |
 | 7 | A/1 | 1RA | 213 |
 
-After these refinements the only missing transition is B/1. The default completion is the published champion table. The exact champion primitive-step count is `proposedTM63Moves + 7`, including the final halting query; this is a certified attainable lower bound, not a universal upper bound.
+After these refinements the only missing transition is B/1. The default completion is the published champion table. The exact champion primitive-step count is `proposedTM63Moves + 7`, including the final halting query; this is a certified attainable lower bound, not a universal upper bound. The lemma `champion_score_ge_49394` used to lift small sibling bounds is only an auxiliary floor; 49,394 is not the champion's runtime.
 
 ## Proof-bearing frontier
 
