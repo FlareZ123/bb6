@@ -19,7 +19,9 @@ theorem champion_score_gt_7014 : 7014 < championScore := by
     BB6Coverage.Agent48DirectRoot.rootSteps_le_score 27959 3 7 6 63
   have hscore : 7014 < threeSectionMoves 27959 3 7 6 63 + 7 :=
     Nat.lt_of_lt_of_le (by decide) hroot
-  simpa only [championScore, ← threeSectionMoves_root] using hscore
+  change 7014 < proposedTM63Moves + 7
+  exact Eq.mp
+    (congrArg (fun n : Nat => 7014 < n + 7) threeSectionMoves_root) hscore
 
 /-- The champion is compatible with the authentic first-one root. -/
 theorem champion_compatible_root :
@@ -38,8 +40,7 @@ theorem champion_not_weighted_7014 :
     rw [champion_delays_exact]
     simp
   have hscore := h (proposedTM63Moves + 6) 0 champion_halts_exact hd
-  have hB : 7014 < proposedTM63Moves + 7 := by
-    simpa only [championScore] using champion_score_gt_7014
+  have hB : 7014 < proposedTM63Moves + 7 := champion_score_gt_7014
   omega
 
 /-- Therefore the accepted 109-way dichotomy places the actual champion in
