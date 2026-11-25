@@ -95,7 +95,7 @@ def generate():
                 assert ans is not None,(i,kind)
                 code,actual=mod.generate(i,p,ans)
                 assert actual==(t,a,b),(i,actual,info)
-                name=f"Raw123Pump{i}";ns=f"{NS}.Pump{i}"
+                name=f"A25Raw123Pump{i}";ns=f"{NS}.Pump{i}"
                 emit(name,["SweepPumping"],code,ns,"BB6Coverage BB6Coverage.Agent31Pump")
                 cert[i]=f".proven {ns}.M{i}.table {ns}.M{i}.never";modules[i]=name
         for key,k in S["ngram"].items():
@@ -103,7 +103,7 @@ def generate():
             out=subprocess.check_output([str(work/"ngram"),str(k)],input=f"{i} {rows[i]}\n",text=True)
             ident,data=out.strip().split(maxsplit=1)
             assert int(ident)==i and int(data.split()[0])==k
-            name=f"Raw123NGram{i}";ns=f"{NS}.NGram{i}"
+            name=f"A25Raw123NGram{i}";ns=f"{NS}.NGram{i}"
             emit(name,["NGramCertificate"],emit_ngram.emit(str(i),rows[i],data),ns,"BB6Coverage BB6.Agent1NGram")
             cert[i]=f".proven {ns}.p{i} {ns}.never{i}";modules[i]=name
         for key,(l,r,n) in S["asym"].items():
@@ -111,7 +111,7 @@ def generate():
             out=subprocess.check_output([str(work/"asym")],input=f"{i} {rows[i]} {l} {r}\n",text=True)
             ident,data=out.strip().split(maxsplit=1)
             assert int(ident)==i and list(map(int,data.split()[:3]))==[l,r,n]
-            name=f"Raw123Asym{i}"
+            name=f"A25Raw123Asym{i}"
             generate_asym.emit(OUT,name,rows[i],data)
             ns=f"BB6.Agent32AsymNGram.{name}"
             cert[i]=f".proven {ns}.table {ns}.never";modules[i]=name
@@ -126,7 +126,7 @@ def generate():
             i=int(key)
             code,nn,ee=bidfa_emit.emit(i,rows[i],dl,dr)
             assert (nn,ee)==(n,e)
-            name=f"Raw123BiDFA{i}";ns=f"{NS}.BiDFA{i}"
+            name=f"A25Raw123BiDFA{i}";ns=f"{NS}.BiDFA{i}"
             emit(name,["BiDFA"],code,ns,"BB6Coverage BB6Coverage.Agent16BiDFA")
             cert[i]=f".proven {ns}.M{i}.table {ns}.M{i}.never"
             modules[i]=name
@@ -163,7 +163,7 @@ def generate():
             if t[0]=="split":
                 return set().union(*(deps(k) for k in t[3]))
             return set()
-        emit("Raw123Base",["Raw111Prefix"],f"""
+        emit("A25Raw123Base",["Raw111Prefix"],f"""
 abbrev p123 : PartialMachine :=
   refine (pathEnd root 2 (path.take 4)).1 (4,true) (some ⟨false,true,5⟩)
 theorem p123_root : p123 initialSlot = some (some ⟨true,true,1⟩) := by decide
@@ -208,9 +208,9 @@ theorem c_{name} : partialCheck {B} {p} t_{name} = true := by
             out.append(combine(p,name,n,s,names))
             return "".join(out)
         def shard(t,p,name):
-            mod=f"Raw123Shard_{name}"
+            mod=f"A25Raw123Shard_{name}"
             if sizes[id(t)]<=SHARD:
-                emit(mod,["Raw123Base",*sorted(deps(t))],
+                emit(mod,["A25Raw123Base",*sorted(deps(t))],
                      f"abbrev p_{name} := {p}\n"+local(t,f"p_{name}",name))
                 return mod
             assert t[0]=="split"
@@ -222,7 +222,7 @@ theorem c_{name} : partialCheck {B} {p} t_{name} = true := by
             return mod
         mod=shard(tree,"p123","root")
         assert used==set(range(len(rows)))
-        emit("Raw123Data",[mod],f"""
+        emit("A25Raw123Data",[mod],f"""
 def residuals123 := partialResiduals p123 t_root
 theorem sound123 : ∀ m, compatible p123 m →
     WeightedBound {B} m ∨ ∃ e ∈ residuals123, compatible e.2 m :=
