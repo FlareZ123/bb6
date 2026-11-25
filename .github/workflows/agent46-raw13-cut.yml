@@ -6,7 +6,7 @@ on:
       target:
         description: Proof target
         type: choice
-        options: [core, cut, corridor, ingest, ingest77, phase, pump0RE, late0RE, zeroRE, zeroRC, zeroRD, zeroLC, zeroLB, zeroRA, oneLA, oneRA, oneRD, pump0LE5]
+        options: [core, cut, corridor, ingest, ingest77, phase, pump0RE, late0RE, zeroRE, zeroRC, zeroRD, zeroLC, zeroLB, zeroRA, oneLA, oneRA, zeroRB, oneLC, oneRD, pump0LE5]
         default: core
       source_ref:
         description: Exact source commit (optional)
@@ -106,6 +106,12 @@ jobs:
           elif [ "$TARGET" = oneLA ]; then
             python "$D/generate0RE.py" 1LA
             ROOT="$D/Agent46Raw13OneLA.lean"
+          elif [ "$TARGET" = zeroRB ]; then
+            python "$D/generate0RE.py" 0RB
+            ROOT="$D/Agent46Raw13ZeroRB.lean"
+          elif [ "$TARGET" = oneLC ]; then
+            python "$D/generate0RE.py" 1LC
+            ROOT="$D/Agent46Raw13OneLC.lean"
           elif [ "$TARGET" = oneRA ]; then
             python "$D/generate0RE.py" 1RA
             ROOT="$D/Agent46Raw13OneRA.lean"
@@ -132,6 +138,8 @@ jobs:
             python "$D/generate0RE.py" 0RA
             python "$D/generate0RE.py" 1LA
             python "$D/generate0RE.py" 1RA
+            python "$D/generate0RE.py" 0RB
+            python "$D/generate0RE.py" 1LC
             python "$D/emitauto.py" "$D/auto1RD.json" "$D/Agent46Raw13Auto1RD.lean" Raw13Auto1RD
             python "$D/generate0RE.py" 1RD
             python "$D/generate.py"
