@@ -8,7 +8,7 @@ open BB6Coverage.Agent48CountedInc0 BB6Coverage.Agent48DirectRoot
 
 theorem champion_score_ge_3512 : 3512 ≤ proposedTM63Moves + 7 := by
   have hroot : 27959 ≤ threeSectionMoves 27959 3 7 6 63 + 7 :=
-    BB6Coverage.Agent48DirectRoot.rootSteps_le_score 27959 3 7 6 63
+    BB6.Agent48TM63RawUpperInterface.rootSteps_le_score 27959 3 7 6 63
   change 3512 ≤ proposedTM63Moves + 7
   rw [← threeSectionMoves_root]
   omega
