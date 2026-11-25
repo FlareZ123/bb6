@@ -77,7 +77,7 @@ jobs:
           cd im-results/agent47-raw114-cut
           python paired_counter.py
           python long_sweep.py
-          printf '%s\\n' 0LA 0LB 0LC 0LF 0RA 0RB 0RC 0RF 1LA 1LB 1LC 1LF 1RA 1RB 1RC 1RF | xargs -P 4 -I{} python generate_complete.py {}
+          printf '%s\n' 0LA 0LB 0LC 0LF 0RA 0RB 0RC 0RF 1LA 1LB 1LC 1LF 1RA 1RB 1RC 1RF | xargs -P 4 -I{} python generate_complete.py {}
           python generate_complete.py --combine
 
       - name: Validate the base artifacts and prepare upstream dependencies
