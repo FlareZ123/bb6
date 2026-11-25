@@ -38,3 +38,19 @@ Offsets 2700 and 2800 are children of the `firstOneB0_1LC` parent (they fix A0=1
 ## Current verification runs
 
 Run IDs and outcomes are maintained in the conversation/Actions history and should be updated here only after the corresponding Lean proof has completed. A failed generator or compilation attempt must not be described as a mathematical result.
+
+
+## Verified outputs and pending runs (2026-11-25)
+
+Two generated nonhalting certificates have passed Lean CI:
+
+- Offset 300: workflow run [45580723979](https://github.com/FlareZ123/bb6/actions/runs/45580723979), artifact `q0-held-blockfar-Q00300-runs-7` (ID `15007077503`, 689,170 bytes). This is a direct certificate for the original partial table.
+- Offset 400b: workflow run [45581935636](https://github.com/FlareZ123/bb6/actions/runs/45581935636), artifact `q0-held-blockfar-Q0400B-runs-2` (ID `15006473349`, 94,149 bytes). This includes the mirrored certificate and the kernel-checked `never_original` transport theorem.
+
+The following direct-certificate runs were still compiling at the last status check:
+
+- Offset 2700: run `45580679383`.
+- Offset 400a: run `45580736857`.
+- Offset 700: run `45580752871`.
+
+The canonical-parent membership audit is run `45583404503` and was still in progress. Earlier audit attempts failed on workflow setup only; the current run uses the corrected unpack output path and Lean executable path. No parent membership should be assumed until this audit returns its computed matches.
