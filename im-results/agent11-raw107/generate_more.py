@@ -44,6 +44,11 @@ def main(a):
             pumps[i]=f"{pn}.M{i}"
             pumpcode.append(code)
             print(a,i,info)
+    manual=[]
+    for i,(mod,nspace,table) in spec.get("manual",{}).items():
+        assert opens[int(i)]==table,(a,i)
+        pumps[int(i)]=nspace
+        if mod not in manual:manual.append(mod)
     pumpcode.append(f"end {pn}")
     (ROOT/(pre+"Pumps.lean")).write_text("\n\n".join(pumpcode)+"\n")
     def emit(name,imports,body):
@@ -73,7 +78,7 @@ open BB6.Agent50TNFPilot BB6.Agent31ThreeHole BB6.Agent10ZipAudit
         return f".split {nn} {slot(ss)} (byMove [\n"+",\n".join(build(k) for k in kids)+"])"
     assert tree[:3]==["split",n,s]
     bname=pre+"Base"
-    emit(bname,["ZipThreeHoleAudit",pre+"Pumps"],f"""
+    emit(bname,["ZipThreeHoleAudit",pre+"Pumps"]+manual,f"""
 abbrev p107 : PartialMachine :=
   refine (pathEnd root 2 (path.take 4)).1 (4,true) (some ⟨false,true,1⟩)
 abbrev parent : PartialMachine := refine p107 (1,true) (some {move(a)})

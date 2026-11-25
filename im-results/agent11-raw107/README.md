@@ -1,6 +1,6 @@
 # Canonical raw107: five-hole B1=0RD child candidate and six-hole census
 
-Parent: `1RB---_1RC---_0RD---_1LD1RE_---0RB_------`. This is canonical residual 107, with six holes. The first undefined row is B1 at time 7. This work closes a candidate **six-child** audit, not the whole parent or the BB(6) upper bound.
+Parent: `1RB---_1RC---_0RD---_1LD1RE_---0RB_------`. This is canonical residual 107, with six holes. The first undefined row is B1 at time 7. This work closes a candidate **seven-child** audit, not the whole parent or the BB(6) upper bound.
 
 ## B1=0RD child
 
@@ -45,6 +45,12 @@ All three formerly open rosters have been assigned explicit FAR or one-/two-bloc
 Each has total mass 9,765,625 raw assignments. Max finite witnesses: 1RE `1RBHHH_1RC1RE_0RD0LF_1LD1RE_1LC0RB_1LE0LA`, time 157; 1LC `1RBHHH_1RC1LC_0RD0LF_1LD1RE_1LC0RB_1LE0LA`, time 193; 1LE `1RB0LA_1RC1LE_0RD0RF_1LD1RE_1LA0RB_HHH0RD`, time 230. All zero delay. Three two-block exceptions have (index,entry,intercept,slope)=(146,1,25,12), (133,1,29,12), (110,11,29,10) respectively. The 30 generated growth theorems compiled locally with standard axioms only against copied primitives, as did all 14 earlier raw107 recurrences. Full source check still pending.
 
 Six nontrivial child audits now cover candidate mass 58,593,750 (24% of raw107). Eleven additional root children have immediate side cycles in the enumerator, but their original-source proofs have not been assembled here.
+
+## B1=1LB child
+
+Candidate weighted bound **212**; first query C1 at t=9. Counts: 708 split, 13203 cycles, 2494 last, 588 open (579 FAR + nine symbolic). Mass cycle 8,637,675, halt 602,194, total-defined nonhalt 59,856, open 465,900; total 9,765,625. Max finite witness `1RB0LB_1RC1LB_0RD1RF_1LD1RE_HHH0RB_0RC0LA`, time 211, delay zero. Roster hash in specs_more.json. Generate with `python generate_more.py 1LB`.
+
+Exceptional leaf 152 `1RB0LB_1RC1LB_0RD0RF_1LD1RE_---0RB_1LA1RF` has B at left boundary, right word 1^(2n+5), entered at t17. Raw107LBSweep.lean proves an inner transfer of one pair of ones from a shrinking run to two growing runs, cost 4k+5, then inductively iterates the inner transfer. Epoch cost 2n^2+14n+27 (equivalently innerCost(n+2)+3n+13, innerCost(k+1)=innerCost(k)+4k+5). All nine entry/growth proofs compiled locally with exact copied primitives. Original-source check pending. Seven nontrivial candidate children cover 68,359,375 raw assignments (28% of raw107), 53 symbolic recurrences locally compiled.
 
 ## Full raw107 census
 
