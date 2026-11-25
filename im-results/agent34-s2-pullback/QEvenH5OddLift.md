@@ -51,7 +51,7 @@ Agent 25's theorem **h5QuarterHighSource**, checked against the original Machine
 5r+3w+4&\equiv0\pmod8,\\
 5r+3w+17&\equiv0\pmod{16},\\
 37r+3w+t&\equiv0\pmod{64}
-\quad\text{for some }t\in\{26,48,51,54\}.
+\quad\text{for some }t\in\{26,48,51,56\}.
 \end{aligned}
 \]
 The six disjoint classes occupy exactly \(16/64=1/4\) of the \((r,w)\)-parameter lattice. The CI dossier reports only [propext, Classical.choice, Quot.sound] for checkCertificate_sound, autoCheck_sound, quarterExcludes, h5QuarterHigh, and h5QuarterHighSource; no sorryAx is reported.
