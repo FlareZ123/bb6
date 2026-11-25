@@ -1,0 +1,21 @@
+# Exact disjoint residual rectangles for cross-route certificate ingestion
+
+**Claim and status.** For any finite sequence of certified partial-table cylinders, the complement inside a parent cylinder can be represented by pairwise disjoint multi-valued transition rectangles, each restricting the allowed transition values at each slot. The generic equivalence, pairwise disjointness and consumer theorem in BoxComplement.lean were kernel-checked locally with Lean 4.36.0-rc2 (b35cb10cf2ced51a2fd1880cfdbf75c71ab7a35a); all three axiom reports contain only propext, Classical.choice, Quot.sound. This is a general proof mechanism, not a decision of the remaining machine space. Keep in im-results.
+
+## Mathematical partition
+
+For a box R and a cylinder C fixing the ordered slot/value pairs x_1,...,x_k, split R minus C into k first-mismatch rectangles: the i-th matches x_1,...,x_(i-1) and rejects x_i. This construction is disjoint even when the incoming certificates overlap, are not rooted first-hole children, or constrain repeated slots. Delete rectangles with an empty listed domain; if any required value is absent already, keep R intact. Iterate over all certified cylinders, preserving pairwise disjointness by induction. The exact equivalence is subtractMany_exact; subtractMany_disjoint proves disjointness; consume constructs a parent-wide safety proof from proofs of the removed cylinders and every resulting box. It quantifies over actual total functions, including halting transition values. No state-introduction or physical-step assumption is used in the generic proof.
+
+## Current raw10 pilot
+
+The parent is A0=1RB, B0=1LC (raw10 / canonical index 6). Agent13's Root109Membership supplies the 65 side-witness cylinders at weighted bound 7014, and q_i 2800 is the separate held one-hole cylinder. The prior union calculation in Agent13's dossier is reused, rather than presenting this as newly closed mass. The new first-mismatch partition has only **34 disjoint residual rectangles** with sum-of-products mass **90,890,091,604,975** out of 95,367,431,640,625. The exact rectangle count and mass were reproduced with integer bit masks in the connector JS runtime and by Lean #eval in Raw10Encoded.lean. Ordinary decide on the functional representation did not finish within a 25-second local test; the two numbers are VM/computational results, not separate kernel numerical theorems. Each slot domain includes halt (code 0 in completed values, distinct from wildcard in certificate rows).
+
+Raw10BoxBridge.lean imports actual Root109Membership and Canonical78Roster. It translates sparse PartialMachine compatibility to rectangle/cube membership, gives the exact disjoint retained complement, and constructs Cover (WeightedBound B) for raw10 from the already checked side-witness bounds, the explicit hHeld premise for the held leaf and bounds on all residual boxes. exact_from_raw10_remainder consumes that Cover in the existing quotient roster at B and keeps every other roster entry. The source adapter elaborated against a local minimal interface fixture with the same signatures; **the exact imported dependency closure is not yet compiled**. The Coq held nonhalting-to-Lean bridge remains an explicit premise hHeld. The original source audit must verify this module and the roster membership before changing any reported global coverage. No new standalone workflow is proposed; use the existing Agent13 weighted-tnf-held-leaf-109-membership / Agent47 canonical roster check, extending its target if needed.
+
+## Reproduce and use
+
+From this directory with Lean 4.36.0-rc2:
+    lean -o BoxComplement.olean BoxComplement.lean
+    LEAN_PATH=. lean Raw10Encoded.lean
+
+The literal encoded fixture is not trusted for the source adapter: the latter derives the actual certificates from b0_1lcSideWitnesses and heldTable. For the next search, operate on the explicit rectangle restrictions rather than reintroducing the 66 already-covered cylinders. A certificate generated for a smaller rectangle can be consumed by the same generic construction. Do not treat a box-count change as a machine decision. The missing quantifier is safety of all 34 retained boxes at B, the held bridge, and the other quotient entries. No BB(6) upper bound is claimed.
