@@ -4,7 +4,7 @@ on:
     inputs:
       target:
         type: choice
-        options: [twelve, five-hole, recursive, raw107-witness, raw107-child, raw107-child-chunked, raw107-root-cut, raw108-root-cut, raw108-child, raw58-cut, raw58-more, raw58-rc, raw58-child]
+        options: [twelve, five-hole, recursive, raw107-witness, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-child, raw58-cut, raw58-more, raw58-rc, raw58-child]
         default: twelve
       raw108_child:
         type: string
@@ -148,6 +148,24 @@ jobs:
           python im-results/agent13-coverage/unpack.py
           python tools/lean_compile_closure.py --workdir /tmp/a10-raw107-root --jobs 4 im-results/agent11-raw107/Raw107RootCut.lean | tee /tmp/a10-raw107-root.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a10-raw107-root.log; then exit 1; fi
+      - name: Check the complete raw107 parent at weighted bound 815
+        if: inputs.target == 'raw107-parent'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          root=im-results/agent11-raw107
+          python "$root/generate.py"
+          python "$root/generate_rc.py"
+          python "$root/generate_re.py"
+          python "$root/generate_more.py" 1RE 1LC 1LE 1LB 0RF 1RF 0LE
+          python "$root/generate_partial.py" 0LF 1LA 1LF
+          for prefix in Raw107RD Raw107RC Raw107RE Raw107B1RE Raw107B1LC Raw107B1LE Raw107B1LB Raw107B0RF Raw107B1RF Raw107B0LE Raw107B0LF Raw107B1LA Raw107B1LF; do
+            python im-results/agent10-tnf-multipump/chunk_checks.py "$root" "$prefix" --limit 180
+          done
+          python tools/lean_compile_closure.py --workdir /tmp/a10-raw107-parent --jobs 2 "$root/Raw107ParentClosure.lean" | tee /tmp/a10-raw107-parent.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a10-raw107-parent.log; then exit 1; fi
       - name: Check raw58 0RC child closure and exact counter recurrences
         if: inputs.target == 'raw58-rc'
         run: |
