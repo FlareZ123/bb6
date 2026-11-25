@@ -12,46 +12,29 @@ All checks below used the existing manual `agent13-coverage.yml` workflow, Lean 
 
 These three sets are pairwise disjoint and contribute **72 source-accepted rows** to the Raw118 hard set. The shared parent consumer independently checks the disjointness and containment assertions.
 
-## Additional two-sided tree-bank result
+## Residual frontier and run-aware stack certificates
 
-On 25 November, the existing tree-bank search cross-combined 49 distinct left/right automata pairs over the 87-row one-hole complement remaining after the prior 187 accepted hard-set rows. It found one additional exact table:
+The 274-row hard set originally had 187 disjoint accepted leaves (105 symbolic pumps, 72 above, ten BiDFA/TreeBiDFA). The tree-bank proof for 2873 passed [45661562068](https://github.com/FlareZ123/bb6/actions/runs/45661562068). Eleven SAT proofs, including duplicate 2873, passed [45666893278](https://github.com/FlareZ123/bb6/actions/runs/45666893278). The 47 wide-window candidates are disjoint from these: 44 individual proof jobs succeeded in [45667306290](https://github.com/FlareZ123/bb6/actions/runs/45667306290); the three interrupted jobs (5180, 5187, 5368) are being repaired in [45672887654](https://github.com/FlareZ123/bb6/actions/runs/45672887654).
 
-- **Index 2873:** `1RB---_1RC1LE_0RD0RF_1LD1RE_1LB0LE_1RA0RC`
-- Pair: `L2874-R2874`; 436 abstract states and 61 stack edges.
-- Lean theorem: `BB6Coverage.Agent16BiDFA.Raw118TreeBank.M2873.never`.
-- Original-source closure and allowed-axiom check passed in [CI 45661562068](https://github.com/FlareZ123/bb6/actions/runs/45661562068); the theorem reports only `[propext, Quot.sound]`.
+From the exact 87-row one-hole roster, subtract the 11 SAT and 47 wide candidate indices. This leaves 29 rows. Cross-combining 34 distinct known automata (33,524 pairs over the 29 rows) yielded a new certificate for 3970, table `1RB---_1RC0RA_0RD1RB_1LD1RE_1LF0LE_0RB0LE`, 47 abstract states and 25 stack edges. [Raw118SatCrossBank.lean](Raw118SatCrossBank.lean) passed original-source CI [45675206842](https://github.com/FlareZ123/bb6/actions/runs/45675206842).
 
-This is one more source-accepted nonhalting leaf. It reduces the pre-consumer hard-set complement from 87 to **86** one-hole rows. The generated theorem and manifest are preserved as the `raw118-treebank-generated` workflow artifact (artifact 15044129837); the deterministic search is in [search_tree_bank.py](../agent16-raw118/search_tree_bank.py).
+### Run-aware abstraction
 
+A stack summary reads from the distant end toward its head. For raw bit b, use either b itself or its XOR with the bit d positions earlier (initial history zero). Retain the last d raw bits for deterministic updates, the most recent transformed bit, and the lengths of the last k transformed runs. Each length is exact below c and periodic modulo p above it. Optionally identify distant all-zero padding with the empty stack. This captures unbounded periodic raw words by bounded transformed run summaries.
 
-## SAT-synthesized two-sided candidates (source check pending)
+Discover the least reachable abstract configuration and stack-edge closure, including the implicit empty-stack blank edge. Fill unobserved DFA entries with zero and independently replay the ordinary two-sided DFA witness checker. The existing IndexedBiDFA theorem source-checks the explicit generated finite certificate; neither search nor compression is a trusted proof step.
 
-The separate SAT search [CI 45662297549](https://github.com/FlareZ123/bb6/actions/runs/45662297549) completed its 87-row search and found the following 11 candidate certificates. The first ten below are new beyond the accepted tree-bank leaf 2873; 2873 is the duplicate tree-bank case. The search artifact is preserved in `im-results/agent1-bidfa-sat/raw118-sat-hits.json`.
+Reproduce with `python run_summary.py` (or specific indices). The exact 87-row TSV SHA-256 is checked, as is disjointness from SAT, wide and cross-bank hits. The generator produces explicit left/right DFAs, Lean modules, and a manifest. Two source-check batches are pending:
 
-| Index | Hole | Left/right DFA states | Reachable certificate states | Stack edges |
-|---:|:---:|---:|---:|---:|
-| 1125 | F1 | 12 / 12 | 114 | 36 |
-| 3900 | B1 | 12 / 12 | 54 | 29 |
-| 3909 | C1 | 16 / 16 | 86 | 36 |
-| 4098 | A1 | 12 / 12 | 47 | 25 |
-| 4222 | C1 | 8 / 8 | 140 | 29 |
-| 4223 | C1 | 6 / 6 | 131 | 23 |
-| 4224 | C1 | 10 / 10 | 133 | 35 |
-| 4343 | C1 | 6 / 6 | 93 | 22 |
-| 5491 | C1 | 16 / 16 | 236 | 41 |
-| 5495 | C1 | 16 / 16 | 146 | 33 |
+| Batch | New indices | Original-source CI |
+|---|---|---|
+| Raw/lag-one runs | 1120, 1127, 1174, 1326, 1390, 1391, 1392, 1816, 2867, 3921, 4093, 4125, 4342, 4443 | [45675655736](https://github.com/FlareZ123/bb6/actions/runs/45675655736) |
+| Trimmed and higher-lag runs | 430, 437, 440, 456, 1181, 3908 | [45676449188](https://github.com/FlareZ123/bb6/actions/runs/45676449188) |
 
-The first SAT run's generated Lean files failed because `TreeCheck.never` was unqualified outside the Agent16 namespace; this was an emitter-resolution error, not a counterexample. The shared `tree_emit.py` was corrected to call `BB6Coverage.Agent16BiDFA.TreeCheck.never` fully qualified. The existing `weighted-tnf-raw120-1lb-sat-cert` target is being used to regenerate and source-check these 11 candidates without repeating the SAT search.
+If all pending certificates pass, eight hard rows remain: **10, 434, 655, 657, 2869, 3981, 4188, 4197**. These are candidate-level counts until the exact parent consumer compiles. The 20 run-aware certificates are not yet source-accepted.
 
-The Raw118 consumer generator and workflow have also been updated to import the 11-hit module, exclude the duplicate 2873, and include the ten new leaves. If the source check passes, the hard-set complement will shrink from 86 to **76** one-hole rows, and the parent-level accepted count will rise from 873 to **883** of 959. This 76-row partition is still pending its own complete consumer source check; do not treat candidate counts as accepted theorems.
+## Parent closure boundary
 
+The parent residual list has 959 rows: 679 sparse candidates, 274 hard rows and six delayed first-hole leaves. The prior consumer [45661985524](https://github.com/FlareZ123/bb6/actions/runs/45661985524) was cancelled; canonical membership [45639243857](https://github.com/FlareZ123/bb6/actions/runs/45639243857) ended in runner shutdown. Index 439's 756,495-step first-hole query has an accepted weighted certificate [45575655393](https://github.com/FlareZ123/bb6/actions/runs/45575655393).
 
-## Exact boundary: leaf proofs are not parent closure
-
-Before the new tree-bank hit, the 274-row hard set had 187 pairwise-disjoint accepted leaves: 105 symbolic pumps, the 72 rows above, and 10 original BiDFA/TreeBiDFA rows from [Agent16's Raw118 dossier](../agent16-raw118/README.md). With index 2873, 188 hard-set rows are source-accepted and 86 remain in that hard-set complement.
-
-The larger parent-level residual list has 959 rows: 679 sparse n-gram candidates, 274 hard rows, and six delayed first-hole leaves. The sparse check [45642047107](https://github.com/FlareZ123/bb6/actions/runs/45642047107) was cancelled before acceptance. Index 439's 756,495-step first-hole query has its own accepted original-source weighted certificate [45575655393](https://github.com/FlareZ123/bb6/actions/runs/45575655393); the other five delayed leaves still need their packed source certificates. The canonical-membership/partial-audit run [45639243857](https://github.com/FlareZ123/bb6/actions/runs/45639243857) ended with runner shutdown (exit 143), not a Lean theorem diagnostic.
-
-The full existing `weighted-tnf-raw118-consumer` target is now running as [CI 45661985524](https://github.com/FlareZ123/bb6/actions/runs/45661985524). It regenerates the sparse, symbolic, counter, phase, tree-bank and delayed-trace modules, then attempts the exact parent consumer and canonical-membership theorem. Until that run succeeds, the 86-row complement is a precise research frontier, **not** a source-checked parent residual theorem. Even a successful consumer will leave those 86 one-hole tables to be bounded at the **local Raw118 bound 756496**. This is the threshold fixed by the 756,495-step index-439 halter, not the global BB(6) champion score (the latter is the much larger recursive integer C in [the exact-attainment result](../../results/2026-11-24-champion-exact-attainment.md)). Closing Raw118 would discharge one retained cylinder; it would not establish global maximality.
-
-Do not promote these intermediate certificates to `results/`; no universal upper bound or exact BB(6) value follows yet.
+The target is the **local Raw118 bound 756496**, not the much larger exact champion score C in [the attainment result](../../results/2026-11-24-champion-exact-attainment.md). On success, this would discharge one canonical cylinder by bound monotonicity. No parent cover, global upper bound or exact BB(6) value is claimed.
