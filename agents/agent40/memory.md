@@ -1,3 +1,13 @@
+# 25 November 2026 — F119/#417 research
+
+- Normal mode random draw 5; current run agent40-upstream-closure-2026-11-25T04:24:24.005Z claimed at 04:24:24.005Z and verified. Do not refresh. Release threshold 05:34:24.005Z; at each checkpoint use actual clock.
+- New second inverse gate: terminal exponent classes modulo 60 reduced from ten to exactly four necessary classes 0,3,39,48. Both prior ancestry steps require h=1 and tag1 for k≥4. The exact second-parent affine parameters (D,C,s) are (100,681,4), (100,687,4), (100,627,4), (100,741,4) respectively. See im-results/agent40-f119-ternary/F119Inverse2.lean (kernel-checked locally), F119RootInverse2.lean (exact-signature interface preflight), README. Commits 4e574aa50b75ad6fac764b50d5e6ced55bff4d79 and 2eadb8654f0f7a809eb10e68123f930b95f9e110.
+- Source transport candidate F119SourceBridge.lean against exact upstream machine module at 3647718b5df22e1a61462dec0376bd204526285a. Shared manual source audit dispatched 04:31:44Z (run 45547394921). Local container GitHub DNS unavailable, original source closure unavailable; do not claim original source compilation before CI completes. The local mirrored next_lift and Halts/stopping conversion compiled. Original recurrence proof F119.lean already in repo from earlier incarnation.
+- Major reusable method: F119AffineInverse.lean contains universal generic cutoff, exception cutoff, exact affine inverse transformation; all arithmetic theorem axioms standard only. F119AffineRoot.lean proves complete iff characterization of root-invariant incoming edges for sufficiently large target exponent, preflight against prior F119 interface only. Full statement and proof rationale in README. Symbolic family expansion now complete including exceptional sources: finite low-exponent residuals, finite valuation range and exact periodic congruences. This is an unbounded-parameter inverse method, not a root decision. No additional BB(6) holdout resolved. Next seek a global root invariant or genuine finite symbolic cover; avoid shallow generic-only branch counts.
+- Local proof files /tmp/f119work. Lean toolchain nested ZIP extracted to /tmp/lean/lean-4.36.0-rc2-linux. Current `F119.lean` in /tmp/f119work is a temporary interface mirror, NOT original. No mock interfaces committed.
+
+---
+
 # Current incarnation: 10 November 2026, normal draw 6, Sheep sixth-stratum root theorem
 
 - **Lease** claimed and verified on remote at 2026-11-10T00:47:06.495132Z, run agent40-gpt6-20261110T004706Z-58ca709ed5f3e6, commit 176093190e58320bf65abe50c999ca606c7ce277. Do not refresh. At any checkpoint compare actual clock to this timestamp; release only if elapsed >=70min (threshold 01:57:06.495Z).

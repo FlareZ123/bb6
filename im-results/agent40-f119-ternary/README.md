@@ -56,3 +56,31 @@ For k<4 the residue restriction follows directly from the earlier mod-12 restric
 **Proof status:** [F119Inverse2.lean](F119Inverse2.lean) compiled with Lean 4.36.0-rc2, using only propext, Classical.choice and Quot.sound. [F119RootInverse2.lean](F119RootInverse2.lean) compiled locally against temporary exact-signature interfaces of the prior local recurrence; original dependency compilation is required before claiming full kernel closure. [F119SourceBridge.lean](F119SourceBridge.lean) transports every branch to the pinned original Cryptids acceleration and composes the four-class root equivalence. Its branch map and local stopping/iteration conversion were locally checked on literal definition mirrors; the original source import is pending a manual source audit. No mock interfaces are committed.
 
 The next mathematical target is actual exclusion or attainment of the remaining four power families, preferably a root invariant or an unbounded inverse-tree argument rather than repeated finite-depth enumeration. The exact BB(6) champion bound remains unchanged.
+
+
+## Uniform affine inverse theorem
+
+This generalizes the two special inverse gates to arbitrary affine exponential targets. Write a target as (y,1) with D*y+C=3^N, D>0, 3∤D, C≥0. Let H,A≥2 satisfy
+
+    2(C+D(H+4)) < 3^H,
+    B(D,C,A) = (A+1)(D(6A+17)+3C) < 3^A.
+
+Both inequalities persist at every larger index (proved by induction). Such H,A always exist because an exponential dominates a polynomial. If additionally
+
+    3^N > D(2·3^A+3A+7)+C,
+
+then **every root-invariant predecessor is generic tag 1 with h<H**, and conversely every legal such generic branch is an actual edge. See `F119AffineRoot.edge_iff_branch`. Thus symbolic expansion of each exponential-affine family is finite: for h=0,...,H−1 and r=1,2 check divisibility and positivity in the equation
+
+    3^N = D(3·3^h+1)t + C + D(3^h r + H_r),
+    H_r = h+3+[r=2].
+
+The congruence is periodic in N modulo the multiplicative order of 3 modulo D(3·3^h+1), since this modulus is coprime to 3. Once a legal t is obtained, the exact predecessor has
+
+    D' = D(3·3^h+1)
+    C' = 3^h(3C+D(3H_r−r))
+    N' = N+h+1
+    D'x+C' = 3^N'.
+
+The generic exclusion reduces D*r modulo 3 to 3q+u (u=1,2). Its target residue mod M=3·3^h+1 is u·3^h+E−q, E=C+D H_r, with 1<E−q<3^h/2. It lies strictly between consecutive signed-power residues. The pure-power exception yields 3^N=3^a D + (D(a+3)+C), impossible for 0<remainder<3^a. For the tag-2 exception x=3^a+a+1, exact factorization implies 3^h divides a+1, hence 3^h≤a+1. Multiplying the target by 3^(h+1) yields 3^(N+h+1)=3^a D(3·3^h+1)+E', where 0<E'≤B(D,C,a). For a≥A it is impossible by the same remainder argument. All a<A produce y≤2·3^A+3A+7, hence cannot meet the stated large-N bound. For N below the cutoff, check the finitely many exact low-exponent targets directly.
+
+**Status:** All arithmetic lemmas in [F119AffineInverse.lean](F119AffineInverse.lean) compile locally with Lean 4.36.0-rc2 and ordinary kernel axioms only. [F119AffineRoot.lean](F119AffineRoot.lean) compiles against the temporary exact-signature F119 interface and actual affine arithmetic module; its only nonstandard axiom is the interface theorem invariant_power_tag, whose actual implementation is in F119.lean. Do not interpret the interface test as a complete source audit. This establishes a reusable finite branching theorem, not a proof that the infinite ancestry tree misses the blank root.
