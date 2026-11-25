@@ -1,133 +1,117 @@
-# Q-even h5: candidate odd-lift cylinder and the remaining inverse branch
+# Q-even h5 odd lift: exact partial source closure and remaining parent fan
 
-## Candidate parameter lift
+## Exact parameter cylinder
 
-The current h5 source-draft family is
+The complementary q-even lift is
 \[
-u=2+8192d,\qquad v=48+8192b.
+u=2+4096n,\qquad v=48+8192b,
 \]
-Its direct-parent proof relies on the second terminal parent having odd right
-coordinate and coordinate sum \(2\bmod4\). This is exactly why the current
-family takes an even value of the normalized \(4096\)-step lift parameter.
-
-A natural next cylinder is
-\[
-u=2+4096n,\qquad v=48+8192b.
-\]
-Set
+with
 \[
 t=(u+v-2)/4=12+1024n+2048b,\qquad
 z=(12+11t-v)/32=3+352n+448b.
 \]
-The h5 congruence is automatic:
+It satisfies
 \[
-53u+57v\equiv 53\cdot2+57\cdot48=794\pmod{1024}.
+53u+57v\equiv794\pmod{1024},
 \]
+equivalently the adjacent h5 lift \((2t-z)\bmod8=5\).
 
-This is also compatible with the high-stop parameterization. Let
+The corresponding high-stop parameters are
 \[
-j=319+512u=1343+2^{21}n,\qquad
-m=2779178+2^{21}n+2^{23}w.
+j=1343+2^{21}n,\qquad m=2779178+2^{21}n+2^{23}w.
 \]
-Then
+Since
 \[
-j+3m+5+49726=2^{23}(1+n+3w).
+j+3m+5+49726=2^{23}(1+n+3w),
 \]
-Since \(2^{2m+2}(j+3)\) is divisible by \(2^{23}\), the high-stop value
+the high-stop value
 \[
 K=2^{2m+2}(j+3)-(j+3m+5)
 \]
-satisfies \(K\equiv49726\pmod{2^{23}}\). Writing
-\(K=49726+2^{23}b\) gives precisely \(v=48+8192b\).
-The existing family is the even subcase \(n=2d\); this candidate adds the
-odd coset \(n=2r+1\).
+satisfies \(K\equiv49726\pmod{2^{23}}\). Write \(K=49726+2^{23}b\); then \(v=48+8192b\).
 
-## What the existing residual proof does and does not cover
+The even coset \(n=2d\) is the parameter family in Agent 4's theorem **blank_ne_s2q_even_image_h5_progression**. Its exact source proof is in **im-results/agent4-c-seven-image/CSixSeventhS2QEven.lean**; do not call the new high-stop pullback an accepted source theorem without the corresponding focused CI/axiom audit.
 
-For the generalized \(t,z\), the same first parent calculations give
+## Source-certified odd-coset subcylinder
+
+For \(n=2r+1\),
+\[
+j=2098495+2^{22}r,\qquad
+m=4876330+2^{22}r+2^{23}w.
+\]
+This is exactly Agent 25's high-stop specialization. The original high-stop identity gives
+\[
+(2j+3,K)=(4196993+2^{23}r,\ 49726+2^{23}b).
+\]
+
+Agent 25's theorem **h5QuarterHighSource**, checked against the original Machine C section source in [CI 45531058201](https://github.com/FlareZ123/bb6/actions/runs/45531058201), proves \(\neg CReach(2j+3,K)\) whenever at least one guard holds:
 \[
 \begin{aligned}
-A&=41704+1714176n+6852608b,\\
-B&=30198+1240064n+4962304b,\\
-W&=3775+155008n+620288b.
+5r+3w+4&\equiv0\pmod8,\\
+5r+3w+17&\equiv0\pmod{16},\\
+37r+3w+t&\equiv0\pmod{64}
+\quad\text{for some }t\in\{26,48,51,54\}.
 \end{aligned}
 \]
-In particular \(B+2=8W\) and \(W\equiv3\pmod4\). The second residual pair
-and its scale are
-\[
-\begin{aligned}
-x&=86996+3574272n+14296064b,\\
-y&=7548+310016n+1240576b,\\
-S&=(x+y)/8=11818+485536n+1942080b.
-\end{aligned}
-\]
-The useful terminal congruences persist for every \(n,b\):
-\[
-x\equiv20\pmod{64},\quad
-y\equiv60\pmod{64},\quad
-S\equiv10\pmod{32}.
-\]
-The direct parent used in the existing q-even h5 residual theorem therefore
-retains the same odd-right/sum-\(2\bmod4\) exclusion.
+The six disjoint classes occupy exactly \(16/64=1/4\) of the \((r,w)\)-parameter lattice. The CI dossier reports only [propext, Classical.choice, Quot.sound] for checkCertificate_sound, autoCheck_sound, quarterExcludes, h5QuarterHigh, and h5QuarterHighSource; no sorryAx is reported.
 
-The critical odd-coset obstruction occurs one step earlier than the
-formal Ebx/Eby expressions suggest. The existing even-coset proof proceeds
-from
-\[
-E=(2S-2,(x+2y-2S-8)/2)
-\]
-through a six-even-right inverse, then an even/odd sum-three inverse, then
-a second six-even-right inverse. For odd \(n=2r+1\), the middle state is
+The reusable certificate is stored in compressed source form:
+- im-results/agent25-c-odd-lift/QEvenH5OddCertificate.lean.xz.b64 (decoded SHA-256 d4d45b635a6736c7384164a24a619a339a7590c9ee379d9ec24161c007ab53b7);
+- im-results/agent25-c-odd-lift/AffineH5Quarter.lean.xz.b64 (decoded SHA-256 af25d65ff7dcd1b4fdde3cf3058388ddb3a24fa79b65189ad49da7defdecb740).
+
+The proof uses the complete original-source predecessor grammar, including the odd-bounce alternatives; it is not a direct-parent-only argument. This closes a genuine subset of the odd coset, not the full odd coset and not Machine C.
+
+## Remaining odd/even high-valuation parent
+
+For \(n=2r+1\), the state reached after the already established affine pullbacks is
 \[
 \begin{aligned}
 E_{ax}&=1735479+3388496r+6776976b,\\
 E_{ay}&=1280448+2500056r+5000120b.
 \end{aligned}
 \]
-It has \(E_{ax}\) odd, \(E_{ay}\) even, and
+It has odd left coordinate, even right coordinate, and
 \[
 E_{ax}+E_{ay}\equiv7\pmod8.
 \]
-Therefore the second six-even-right theorem's guard (sum not \(0\) or
-\(7\bmod8\)) fails. The formal affine values
+Thus the even-coset six-even-right guard does not apply.
+
+The direct parent candidate is
 \[
 \begin{aligned}
 E_{bx}&=3015925+5888552r+11777096b,\\
-E_{by}&=640223+1250028r+2500060b
+E_{by}&=640223+1250028r+2500060b.
 \end{aligned}
 \]
-are the direct-parent candidate, but reachability of \(E_{ax},E_{ay}\)
-does not force that parent: the full source grammar also has an odd-bounce
-branch. It is invalid to invoke the odd/odd low-value theorem on Ebx/Eby
-without first excluding or resolving that bounce branch.
-
-For \(n=2r+1\), the sum of the formal candidate is
-\[
-E_{bx}+E_{by}=3656148+7138580r+14277156b.
-\]
-When \(r+b\not\equiv3\pmod4\), this is divisible by \(4\) but not \(16\),
-and its low-value inverse would be
+When \(r+b\not\equiv3\pmod4\), its sum is divisible by \(4\) but not \(16\), and its low-value inverse is
 \[
 \begin{aligned}
 P_x&=1828072+3569290r+7138578b,\\
 P_y&=1234146+2409659r+4819319b.
 \end{aligned}
 \]
-For \(r=b=0\), that formal P is \((1828072,1234146)\); its even-right
-parent fan has two odd-right/sum-\(1\bmod4\) endpoints. This is only a
-conditional calculation, because the source proof has not forced Ebx/Eby.
-When \(r+b\equiv3\pmod4\), the formal sum is divisible by \(16\), and
-deeper 2-adic branches arise as well.
+When \(r+b\equiv3\pmod4\), deeper 2-adic branches occur.
 
-The exact next task is therefore to classify the odd/even high-valuation
-state Eax/Eay with sum \(7\bmod8\) using the complete source-preimage
-grammar, including its odd-bounce branch. Until that is done, neither the
-odd-coset residual nor the sample is excluded.
-## Research status
+The direct parent is not forced. For any odd/even target \((x,y)\) with \(x+y+1\) not a power of two, the exact original-source theorem
+**BB6.Agent3OddEvenFan.blank_reach_iff_odd_even_nonpower_parent_fan**
+splits blank-root reachability into:
+1. the direct parent \((x+y-2,(y-2)/2)\); or
+2. every odd-depth, odd-left high-bounce parent satisfying
+   \[
+   x+y+1=2^{n+1}(a+3),\qquad
+   2k+a+7+3n=x+2y.
+   \]
+The unresolved work is to eliminate this complete high-bounce fan uniformly, or to find a different invariant for its remaining branches. Do not infer the formal direct-parent path from the existence of a direct parent.
 
-This note is an exact arithmetic reduction and a candidate expansion, not a
-source-certified exclusion theorem. The current h5 draft remains the
-even subcase \(n=2d\). To gain the factor-two cylinder, classify the
-odd-coset \(E\) parent by residues of \(r,b\), using the low-value,
-sum-16, and deeper 2-adic inverse branches. Do not promote the odd lift to
-results/ until both parents are excluded by original-source theorems.
+## Cross-filter diagnostics (not a new theorem)
+
+Agent 42's accepted 32-bit adaptive modular high-stop filter is another source-certified exclusion mechanism. For the base odd-coset parameter pair \(r=w=0\), its exact probe.py recurrence returns false, and Agent 25's six guards also fail. This only says those two particular filters do not certify that instance; it does not imply that the target is reachable, and other source filters have not been exhausted here.
+
+A small 16-by-16 diagnostic evaluation of Agent 42's 32-bit recurrence accepted all sampled Agent 25 guard cases. This is not a proof of containment or a full-period overlap audit. Agent 25's own memory explicitly makes no novelty claim relative to all previous modular sieves. Therefore do not count its quarter as additional global coverage until the overlap with existing filters is established.
+
+## Next mathematically useful work
+
+1. Obtain Agent 25's exact theorem signature/import interface and check whether its accepted source module can be consumed directly by an Agent 34 bridge.
+2. Analyze the complete odd/even high-bounce fan above, not just the direct parent. The parameter \(Q=376991+736069r+1465887b\) satisfies \(E_{ax}+E_{ay}+1=8Q\); high-bounce exponents are controlled by \(v_2(Q)\). Look for a uniform descent or a finite residue partition that closes all remaining branches.
+3. Keep any new parameter classes in im-results/ until their original-source theorem and complete parent obligations are accepted. The odd coset remains unresolved outside the stated certified subset.
