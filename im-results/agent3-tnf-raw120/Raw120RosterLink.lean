@@ -1,4 +1,4 @@
-import Combined109Roster
+import Combined106Roster
 import Raw120Late
 
 set_option maxRecDepth 100000
@@ -9,7 +9,7 @@ namespace BB6.Agent3Raw120RosterLink
 open BB6Coverage
 open BB6.Agent13BlankDelay
 open BB6.Agent31FourHoleRoster
-open BB6.Agent47Combined109
+open BB6.Agent47Combined106
 open BB6.Agent3Raw120
 
 /-- The 85th entry of the exact 124-entry first-one residual list.
@@ -40,7 +40,7 @@ theorem raw120_entry_in_reducedRoster : raw120Entry ∈ reducedRoster := by
 /-- Any completion of p120 is therefore still represented by one of the
     exact 109 residual cylinders; this identifies the local raw120 work
     with a concrete outstanding global maximality obligation. -/
-theorem p120_compatible_in_109 (m : Machine) (hm : compatible p120 m) :
+theorem p120_compatible_in_106 (m : Machine) (hm : compatible p120 m) :
     ∃ e ∈ reducedRoster, compatible e.2 m := by
   refine ⟨raw120Entry, raw120_entry_in_reducedRoster, ?_⟩
   simpa [raw120_entry_table_eq] using hm
