@@ -8,6 +8,8 @@ namespace BB6.Agent6CanonicalTwoParentComposition
 
 open BB6Coverage
 open BB6.Agent13BlankDelay
+open BB6.Agent13MixedBound109
+open BB6.Agent31Canonical78Exact
 open BB6.Agent6ChampionResidual
 open BB6.Agent31ChampionParentIntegration
 open BB6.Agent6F0.Integration
