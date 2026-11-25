@@ -18,8 +18,13 @@ theorem parent_mem :
   change (BB6.Agent32Raw59Partition.address, BB6.Agent32Raw59.p59) ∈
     BB6.Agent47CanonicalRefinement.graftRoster
       BB6.Agent47CanonicalRaw114Accepted.p114 [] BB6.Agent47Canonical78.roster
-  decide
-
+  have hraw := BB6.Agent32Raw59Partition.raw59_mem
+  have hne : sameTable BB6.Agent32Raw59.p59
+      BB6.Agent47CanonicalRaw114Accepted.p114 = false := by decide
+  apply List.mem_flatMap.mpr
+  refine ⟨(BB6.Agent32Raw59Partition.address, BB6.Agent32Raw59.p59), hraw, ?_⟩
+  simp [BB6.Agent47CanonicalRefinement.graftRoster,
+    BB6.Agent47CanonicalRefinement.graftEntry, hne]
 /-- The remaining roster after consuming the Raw59 parent bound. -/
 noncomputable def remainingRoster :
     List (List Move × PartialMachine) :=
