@@ -64,6 +64,11 @@ on:
         required: false
         type: boolean
         default: false
+      raw59_child:
+        description: Raw59 proof target (all or 0RB)
+        type: choice
+        options: [all, 0RB]
+        default: all
 
       verify_f418_return:
         description: 'Check the complete F418 normal and recovery return-map theorem chain only'
@@ -485,11 +490,17 @@ jobs:
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Generate and check raw59 retained-child refinement
+        env:
+          RAW59_CHILD: ${{ inputs.raw59_child }}
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
-          python im-results/agent32-raw59/generate.py
-          python tools/lean_compile_closure.py --workdir /tmp/a32-raw59 --jobs 4 im-results/agent32-raw59/Raw59Refinement.lean | tee /tmp/a32-raw59.log
+          case "$RAW59_CHILD" in
+            all) python im-results/agent32-raw59/generate.py; target=im-results/agent32-raw59/Raw59Refinement.lean ;;
+            0RB) python im-results/agent32-raw59/generate.py 0RB; target=im-results/agent32-raw59/generated_0RB/Raw59A0RBData.lean ;;
+            *) exit 2 ;;
+          esac
+          python tools/lean_compile_closure.py --workdir /tmp/a32-raw59 --jobs 4 "$target" | tee /tmp/a32-raw59.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a32-raw59.log; then exit 1; fi

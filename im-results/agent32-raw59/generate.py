@@ -9,6 +9,7 @@ from generate_four_hole import masks,slot,move,parse
 import generate_sweeps as sweeps
 MOVES=[w+d+q for w,d,q in product('01','LR','ABCDEF')]
 SPECS={
+'0RB':(241,None,None,308,1481,26750,7006,'9ebb3daf00c893b439f90ad922a54308fc143a709c0f41b0e66758d05a81e698','000 00100 00101 0010202 001020303 00102343444 0012101 001210321 001213121 00121342144 00123004010 001230123 00123014101 00123014356272343 00123104101 00123410121 0012344514401 00123445674740147 0012345650123782345 0012345678444812348 0020351434242 100 1012101 1012121 101213333 10121342144 10121343321 10123222423 1012322242511 1012322245521 101232242256223 10123414444 101234565554551 104245333613533 10623557155452376'),
 '0RD':(157,12,8,85,632,11674,2778,'6145fc9050a5aeb9147edd345911ad9c81a8c3a0ec317bb01965fe2cf6bcbb75','000 00101 1012121 00102343444 1012101'),
 '1LC':(84,None,None,178,1066,18816,5525,'b4de3ebe4f0b496574e81eadb4976e8a4f1bd6050c90b1c0d178034fded46a85','101213333 10101 001230120 000 0010201 001213333 00101 00123242344 001232201 0012101 0010202 0012111 00123224101 0012322452221 10123222401 00123224022'),
 '1RB':(135,None,None,649,1398,25275,6231,'ac64fc94f0a887129e58a6d4e926f490d3d2428031f7853d63e902ae2c9583ab','000 00101 0010202 001020303 00102340101 001213121 00123014301 001232202 00123224101 00123224122 00123224221 0012341415555 0012344514401 0050104333132 005052224132422 1012101 10123212424 10123224322 10123440144 1012344555155 10214675441134344'),
@@ -28,6 +29,10 @@ AUTO={
 MANUAL={
 '1RB':(157,'1RB1RB_1RC0RF_0RD0RB_1LD1RE_---1LA_0RC0LD','Raw59RBCount','BB6.Agent32Raw59RB'),
 '1RD':(499,'1RB1RD_1RC---_0RD0LE_1LD1RE_1LF1LA_0LB1LC','Raw59RDSweep','BB6.Agent32Raw59RD'),
+}
+NGRAM={
+'0RB':[(66,'1RB0RB_1RC0LF_0RD0RA_1LD1RE_---1LA_1LB0RC',9,1371),
+       (70,'1RB0RB_1RC0LF_0RD0RC_1LD1RE_1RC1LA_1LB---',6,504)],
 }
 CHUNK=240
 def generate(raw):
@@ -58,6 +63,21 @@ def generate(raw):
             pumps[rle]=(ns+'.M'+str(i)+'.table',ns+'.M'+str(i)+'.never')
         pieces.append('end '+ns)
         (folder/(module+'.lean')).write_text('\n\n'.join(pieces)+'\n')
+        imports.append(module)
+    if raw in NGRAM:
+        ng=ROOT.parent/'agent1-ngram'
+        module='Raw59NGram'+raw;ns='BB6.Agent32Raw59NGram'+raw
+        cases=NGRAM[raw]
+        for i,rle,k,n in cases:
+            assert opens[i]==rle
+            pumps[rle]=(ns+'.p'+str(i),ns+'.never'+str(i))
+        inputs=folder/'ngram-input.txt';outputs=folder/'ngram-output.txt'
+        inputs.write_text(''.join(f'{i} {rle}\n' for i,rle,k,n in cases))
+        subprocess.run(['g++','-std=c++17','-O3',str(ng/'ngram.cpp'),'-o',str(folder/'ngram')],check=True)
+        with inputs.open() as inp, outputs.open('w') as out:
+            subprocess.run([str(folder/'ngram'),'9'],stdin=inp,stdout=out,check=True)
+        assert [tuple(map(int,line.split()[:3])) for line in outputs.read_text().splitlines()]==[(i,k,n) for i,rle,k,n in cases]
+        subprocess.run([sys.executable,str(ng/'emit_ngram.py'),str(inputs),str(outputs),str(folder/(module+'.lean')),'--namespace',ns],check=True)
         imports.append(module)
     for rle in opens:
         if rle in pumps:continue
