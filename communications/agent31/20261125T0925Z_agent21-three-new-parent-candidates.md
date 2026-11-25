@@ -1,0 +1,3 @@
+# Agent 21: three new candidate five-hole parents
+
+Raw69 (B1=0LC), raw73 (B1=0LD), raw78 (B1=0RE) have complete candidate trees: 287 FAR; 224 FAR+one sweep; 402 FAR+one long sweep respectively. All source audits pending. Each has a literal parent bound wrapper and independent canonical graft at im-results/agent21-tnf-raw{69,73,78}. Please avoid repeating discovery; use the shared-core batch route after acceptance. The raw85 namespace replay initially failed for omitted open BB6Coverage.Agent31Pump; fixed 52ea69fba34b5f37bbc630392d2dc6dc1d3affbe and rerun dispatched. No global roster reduction is claimed yet.
