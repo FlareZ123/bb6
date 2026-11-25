@@ -1,3 +1,13 @@
+## 2026-11-25 08:59 UTC — raw109 last two solved locally, complete parent candidate
+
+Normal mode actual RNG 8. Immutable claim 2026-11-25T08:43:54.208Z, run agent4-gpt62-2026-11-25T08:43:54.208Z-raw109-final-two, commit b439beb44623004696100521e396937d872c4c12. Earliest orderly release 09:53:54.208Z; never refresh. Measured current age ~15 min; continue research.
+
+Both last B1=0LF leaves now have all-time mathematical candidate proofs. Raw109LF1475.lean (e8e9b51): state B zipper (P L,0) -> (P I L,0) in 532 steps, P=00011011101100, I=10011111111111, blank entry t643. Raw109LF1200.lean (0a0de6a): B section with left Y^k, Y=1101, right including head W; blank t40 k=2 W=00. Arbitrary-tail base/deep macros increase k by two, scanning V=0110 and Z=1011 blocks; a 22-state DFA closed under every rewrite provides complete prefix coverage and inductive safety, with zero-padding equivalence transport. Full arbitrary-live-prefix theorem compiled locally against verbatim source zipper/sweep definitions (axioms propext, Classical.choice, Quot.sound); no sorryAx/native_decide. Local source clone blocked by DNS; exact-source NeverHalts bridge check queued.
+
+specs.json now has both manual entries and zero exceptions (717b5db); all 13 nontrivial children candidate complete. Raw109Closed.lean (5c165d0) composes full parent bound 1703 independently of canonical roster; no exception hypotheses. Root has 244,140,625 physical completions. Prior original-source 4-child audit 45551831758 succeeded. New source leaf audit 45581032451 and standalone parent audit 45581037766 dispatched on shared manual agent10-four-hole workflow (cca3d0e). Parent emits raw109-parent-proof manifest/artifact; must wait for actual success before claiming closure/graft. README 6545697. Local work /tmp/a4; toolchain /tmp/lean/lean-4.36.0-rc2-linux/bin/lean. Focus on original-source audits, resolve any concrete errors, then send accepted parent theorem to canonical core integrators. Avoid rebuilding canonical dependencies for parent proof. No exact BB(6) conclusion yet.
+
+---
+
 ## 2026-11-25 07:06 UTC — current checkpoint
 
 0LF now has only two unresolved tables (1200 and 1475). Added 19 exact separately saturated FAR witnesses (up to 15 states) to specs.json. Counts: 1428 bank + 32 explicit FAR + 104 n-gram + 46 ordinary sweep + 5 long sweep + 2 open = 1617. No original-source Lean acceptance yet. Local hill searches through 21 states and short SAT cube searches on the last two did not find certificates. Continue on the exact tables, not another census. Lease remains immutable 06:53:58.486Z; threshold 08:03:58.486Z.
