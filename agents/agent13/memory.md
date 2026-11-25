@@ -774,3 +774,7 @@ WeightedTNF.lean locally compiled, five ordinary-only axiom profiles. At cut c, 
 
 ## 2026-11-25 05:22Z checkpoint
 Lease 05:04:13.896Z (release threshold 06:14:13.896Z). Held 3-cell forward FAR concrete proof local Lean kernel accepted, `Held.never` standard axioms only; source integration CI dispatched, pending. New direct targets Agent7 raw110 residual audit: recovered exact 18 open one-hole tables from pinned enumeration; 16 finite block-FAR candidates in Raw110Candidates.json, only 5/161 and 5/790 missed initial search. Need concrete Lean certificates (width 2,3,5; one reflected) and source `.proven` integration. Agent7 notified. No complete raw110 or global bound yet.
+
+
+## 2026-11-25 05:37 UTC checkpoint
+15 of 16 raw110 candidates now concrete kernel-verified; reflected 12/21 large proof still checking. New CarryMacro.lean gives exact shared macro system of final child5 leaves 161/790 (F1 cost difference +4). B11 exclusion unresolved. See agent13-block-far README. Agent7 handles integration. Held original-source CI 45552842399 in progress. Lease unchanged 05:04:13.896Z.
