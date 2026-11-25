@@ -1,3 +1,5 @@
+**Update 2026-11-25:** [Margin-free delayed-carry source bridge](LongConeSource.md) passed original-source CI 45587713288. An empty delayed cover by the practical long-cone cutoff now excludes the authentic critical reset without additional margin checks. No new unconditional index exclusion.
+
 **Update 2026-11-24 19:47 UTC:** [CarryCertificates.md](CarryCertificates.md) records source-certified exclusion of every critical index <=10000 and every odd index (all n), with exact halting-criterion composition. The final n3342 source proof passed [CI 45470826613](https://github.com/FlareZ123/bb6/actions/runs/45470826613); the n2990 block proof accelerated Agent28's earlier accepted proof. P1 remains open for even n>=10002.
 
 # P1: counted inverse-history energy, walls and shallow obstructions
