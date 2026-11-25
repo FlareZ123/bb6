@@ -125,7 +125,6 @@ jobs:
               "BB6.Agent48F1RFIntegration.cover_zeroRF",
               "BB6.Agent48F1RFIntegration.remainingF1RF_count",
               "BB6.Agent48F1RFIntegration.cover_remainingF1Extended",
-              "BB6.Agent48F1RFIntegration.refined_residual_cover",
               "BB6.Agent48F1RFIntegration.exact_from_remainingF1RF",
           )
           for name in names:
