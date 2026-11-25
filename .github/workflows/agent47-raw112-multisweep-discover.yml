@@ -26,6 +26,14 @@ jobs:
           python im-results/agent13-coverage/unpack.py
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
+      - name: Compile recursive raw112 counter grammar
+        run: |
+          set -euo pipefail
+          lean im-results/agent47-raw112-cut/HighCounterGrammar.lean | tee /tmp/raw112-high-counter-grammar.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/raw112-high-counter-grammar.log; then
+            echo "Forbidden axiom/proof mechanism in high-counter grammar" >&2
+            exit 1
+          fi
       - name: Discover and generate candidate counter proofs
         run: |
           set -euo pipefail
@@ -68,6 +76,8 @@ jobs:
             im-results/agent47-raw112-cut/Raw112Multisweep10.lean
             im-results/agent47-raw112-cut/Raw112Multisweep15.lean
             /tmp/raw112-multisweep-discovery.log
+            im-results/agent47-raw112-cut/HighCounterGrammar.lean
+            /tmp/raw112-high-counter-grammar.log
             /tmp/Raw112Hard23Family23/
             /tmp/Raw112Hard23Family10/
             /tmp/Raw112Hard23Family15/
