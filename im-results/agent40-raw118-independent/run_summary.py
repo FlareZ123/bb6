@@ -2,9 +2,9 @@
 """Finite run-aware stack abstraction for the exact Raw118 residual roster.
 
 Each stack summary reads bits from the distant end towards the head. It stores
-the last k runs of raw bits or successive XOR differences, with each length
-represented exactly below c and modulo p thereafter. The last raw bit is
-retained for XOR updates. Empty stack is a separate state and has its own
+the last k runs of raw bits or lagged XOR differences, with each length
+represented exactly below c and modulo p thereafter. The last lag raw bits are retained for XOR updates; optional blank
+padding normalization maps an initial zero push to the empty state. Empty stack is a separate state and has its own
 implicit blank-pop edge. Only observed push transitions are needed; remaining
 DFA entries are filled with zero and the independent BiDFA replay must pass.
 
@@ -25,9 +25,15 @@ from bidfa_emit import witness
 from wide_cert import emit
 
 ROSTER_SHA = "0fd10d3adcc48fba9badb4357ad3b19453f5215ce35fdb57f38034ebc3933c0c"
-# (left parameters, right parameters), (k, c, p, mode).
-# mode 0: raw run symbols; mode 1: XOR differences; mode 2: raw bit window.
+# (left parameters, right parameters), (k, c, p, XOR lag[, trim]).
+# Lag zero means raw bits; positive lag compares with the earlier raw bit.
 HITS = {
+    430: ((3,4,6,0,1),(3,4,6,0,1)),
+    437: ((4,3,8,2,1),(4,3,8,2,1)),
+    440: ((3,4,6,0,1),(3,4,6,0,1)),
+    456: ((4,4,6,0,1),(4,4,6,0,1)),
+    1181: ((5,6,5,0,1),(5,6,5,1,1)),
+    3908: ((4,2,2,0,1),(4,2,2,4,1)),
     1120: ((3,3,4,0),(3,3,4,1)),
     1127: ((3,2,4,1),(3,2,4,1)),
     1174: ((3,3,4,0),(3,3,4,1)),
@@ -46,7 +52,8 @@ HITS = {
 
 class Side:
     def __init__(self, params):
-        self.k,self.c,self.p,self.mode = params
+        self.k,self.c,self.p,self.mode = params[:4]
+        self.trim = bool(params[4]) if len(params) == 5 else False
         assert self.k >= 1 and self.c >= 1 and self.p >= 1
         self.keys = [0]
         self.ids = {0:0}
@@ -59,22 +66,24 @@ class Side:
         if dest >= 0:
             return dest
         v = self.keys[i]
-        if self.mode == 2:
-            key = ((v << 1) | b) & ((1 << self.k)-1)
+        if self.trim and v == 0 and b == 0:
+            self.delta[i][b] = 0
+            return 0
+        h = max(1,self.mode)
+        mask = (1 << h)-1
+        hist = v & mask
+        prev = (v >> h) & 1
+        digits = v >> (h+1)
+        bit = b ^ ((hist >> (h-1)) & 1) if self.mode else b
+        count = digits & 31
+        if not count or bit != prev:
+            digits = ((digits << 5) | 1) & ((1 << (5*self.k))-1)
         else:
-            digits = v >> 2
-            last = v & 1
-            prev = (v >> 1) & 1
-            bit = (last ^ b) if self.mode == 1 else b
-            count = digits & 31
-            if not count or bit != prev:
-                digits = ((digits << 5) | 1) & ((1 << (5*self.k))-1)
-            else:
-                n = count+1
-                if n >= self.c+self.p:
-                    n = self.c
-                digits = (digits & ~31) | n
-            key = (digits << 2) | (bit << 1) | b
+            n = count+1
+            if n >= self.c+self.p:
+                n = self.c
+            digits = (digits & ~31) | n
+        key = (digits << (h+1)) | (bit << h) | (((hist << 1) | b) & mask)
         dest = self.ids.get(key)
         if dest is None:
             dest = len(self.keys)
