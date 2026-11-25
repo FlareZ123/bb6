@@ -1,6 +1,29 @@
 # Raw109 first-hole refinement and score-B consumer
 
-Parent raw109, `1RB---_1RC---_0RD---_1LD1RE_---1RB_------`, is a retained canonical78 residual (six holes, 25^6 = 244,140,625 compatible completions). The first unassigned query is B1 at ordinary step 7. The complete parent remains open.
+Parent raw109, `1RB---_1RC---_0RD---_1LD1RE_---1RB_------`, is a retained canonical residual (six holes, 25^6 = 244,140,625 compatible completions). The first unassigned query is B1 at ordinary step 7. **The complete parent remains open.**
+
+## Current candidate partition
+
+Eleven ordinary B1 alternatives have immediate side-cycle certificates; the halt alternative is bounded by the root query. Twelve of the thirteen remaining alternatives have complete candidate trees in [specs.json](specs.json), with a common proposed bound 1703, consumed by [Raw109Refinement12.lean](Raw109Refinement12.lean). The last alternative is B1=0LF.
+
+| B1=0LF candidate tree | Count |
+| --- | ---: |
+| Split nodes | 1,314 |
+| Side-cycle leaves | 23,675 |
+| Last-hole leaves | 4,931 |
+| Initial open leaves | 1,617 |
+| Pooled FAR witnesses | 1,428 |
+| N-gram candidates (width ≤12) | 104 |
+| Single-block sweeps | 46 |
+| Long-epoch sweeps | 5 |
+| New explicit FAR witnesses (5–6 states) | 13 |
+| Unresolved leaves | 21 |
+
+The exact enumeration was reproduced with the existing C++ generator algorithm and an independent JS implementation: open-list SHA256 `413916c71af62ae660bf5feb4939bf663d7e0706a0c7e0b210d341f00c79455a`; maximum weighted query bound 904, first query (8,F1). All 21 remaining leaf tables and the candidate indices/codes are recorded in the 0LF spec. Each is a one-hole table. The 17 with F0=0LB exhibit nested left growth, three others (1334,1404,1452) exhibit unary right-boundary expansion with internal counter phases, and 1475 exhibits a different bidirectional growth pattern. These are observations, not decisions.
+
+**Proof status:** all 0LF additions are candidate-generation results. FAR and n-gram fixed points were computed; the existing symbolic sweep algorithm found the 51 sweep witnesses. The full original-source Lean compilation, local exception proofs, and source-accepted parent closure are not established. The existing generator will preserve all 21 unresolved leaves as explicit hypotheses. No roster entry may be deleted on the strength of this census.
+
+The following sections preserve the earlier mathematical constructions and candidate partitions; their intermediate remaining-branch counts are superseded by the current candidate partition above.
 
 ## Complete candidate children
 

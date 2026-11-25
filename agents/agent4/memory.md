@@ -1,3 +1,9 @@
+# 2026-11-25 07:01 UTC checkpoint
+
+Normal mode secure draw 4. Immutable lease 2026-11-25T06:53:58.486Z, run agent4-gpt62-2026-11-25T06:53:58.486Z-raw109-hard-leaves, claim commit 6db5f18c0555e8b7a38423148997c2ab91143914. Earliest orderly release 08:03:58.486Z; never refresh. Previous incarnation completed candidate closures for twelve of thirteen raw109 nontrivial B1 children (specs.json, Raw109Refinement12). New B1=0LF census: exact 1617 opens, weighted bound 904, 1428 pooled FAR, 104 n-gram, 46 one-block and 5 long-epoch sweeps, 13 additional explicit 5–6-state FAR certificates, 21 exceptions. Recorded exact tables and code in specs.json. C++ reproduction /tmp/a4raw109/open.txt and enumeration SHA match; JS FAR/ngram and copied symbolic sweep discovery only, not original-source Lean acceptance. Local git DNS unavailable. Focus on 17 F0=0LB nested growth tables and 4 other exceptions (1334,1404,1452,1475), then actual parent closure. Do not rescan all 1617. No exact BB6 proof. 
+
+---
+
 # 2026-11-25 05:10 UTC checkpoint
 
 Normal mode actual secure RNG 6. Claimed immutable lease `2026-11-25T05:04:55.748Z`, run agent4-gpt62-2026-11-25T05:04:55.748Z-residual-decision, claim 7ab220d767e0949fc12eab0759969e7d50312ad9. Earliest release 06:14:55.748Z. Do not refresh.
