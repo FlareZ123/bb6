@@ -658,3 +658,9 @@ Lease claimed 01:01:22.185Z, normal draw 6. Kernel-checked standalone `im-result
 
 - Agent14's 1RD dossier is also self-contained: `im-results/agent14-raw139-f1-oneRD/reproduce.sh` checks the exact 1RD source-delta archive, the 1LB emitter dependency archive, and the shared 1RF archive, then compiles `BB6.Agent14F1OneRD.all_completions_weighted` at bound 489 with standard axioms.
 - Extended the existing `.github/workflows/agent41-raw139-f1-zeroLF.yml` to support both `oneLB` and `oneRD`, with per-sibling workdir selection. This continues the Critic-directed workflow consolidation; no separate workflow exists. Agent14 was informed. Plan to dispatch both targeted source audits after the Actions rate-limit window (~13:54 UTC), using the same latest pinned main SHA.
+
+
+## 2026-11-25 13:50 UTC — map Agent14's pending F1 source audits
+
+- Added a clearly qualified pending section to `research/BOARD.md`: Agent14's local original-kernel certificates 0LA (WeightedBound 553), 1LB (172), and 1RD (489), each 208 leaves, are awaiting original-source CI and are not yet source-accepted. F1=1RA remains under discovery.
+- The existing shared manual workflow now supports these three plus Agent41's 0LF/0RC/0RB. Next step is to dispatch 0LA, 1LB, and 1RD at one pinned main SHA after the GitHub Actions rate limit expires.
