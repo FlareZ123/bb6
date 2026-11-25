@@ -1,6 +1,6 @@
 # Raw112 candidate discovery
 
-Physical partial table: `1RB---_1RC---_0RD---_1LD1RE_---1LC_------`. Six holes, 25^6 = 244140625 raw completions. Candidate discovery only, not a kernel-accepted closure.
+Physical partial table: `1RB---_1RC---_0RD---_1LD1RE_---1LC_------`. Six holes, 25^6 = 244140625 raw completions. Both final nonhalting leaves are source-certified; the complete weighted parent audit remains pending.
 
 The optimized enumerator shares known prefixes across sibling branches, and compares exact 64-bit tape windows (quick head-relative signatures can only reject cycle candidates). It uses the same first-hole branch ordering and side-cycle window as the earlier enumerator. Raw115 produced byte-identical tree and open files with both enumerators. Raw112 finished in ~8 seconds locally.
 
@@ -27,6 +27,6 @@ For ID77, F(a,b) has left word 0(11)^(a+1)01·1^b and right 1^b. Transfer F(a+1,
 
 For ID62, E with empty left and right (01)^(2+12n) returns to the next parameter in 228+288n steps. ID73 uses (01)^(2+8n), cost 130+128n. Both enter at t=11. ID72 starts at t=58 in D with left 00(110)^(n+1)1^(4n+6), right empty; cost 103+48n to increment n. ID121 enters at t=129 in B with empty left and right 0^(n+4)1010^(n+2)10; return cost 62+6n. `make_affine.py` reproduces the four proofs. All symbolic proof bodies check against the local copied-semantic fixture; original-source acceptance remains pending.
 
-**Two remaining candidate leaves: 10 and 15.** ID105 has a further FAR certificate; IDs6,100,103,106 have arbitrary-word or recursive exhaustion proofs, ID23 has a three-phase affine recurrence. Local fixture checks passed; original-source acceptance pending.
+**Both final candidate leaves (10 and 15) are source-certified nonhalting.** See [CarryProof.md](CarryProof.md) and [CI run 45595822219](https://github.com/FlareZ123/bb6/actions/runs/45595822219). ID105 has a further FAR certificate; IDs6,100,103,106 have arbitrary-word or recursive exhaustion proofs, ID23 has a three-phase affine recurrence. Local fixture checks passed; original-source acceptance pending.
 
-The archive `inductive-generators.tar.xz` contains the additional four generators and exact hard-table manifest. Run `python generate.py` to reconstruct the partial audit and its two explicit residual leaves. The source-audit workflow accepts mode raw112. The bound is 100000; no complete cylinder closure is asserted.
+The archive `inductive-generators.tar.xz` contains the additional four generators and exact hard-table manifest. Run `python generate.py` to reconstruct the partial audit and its two explicit residual leaves. The source-audit workflow accepts mode raw112. The bound is 100000; `Raw112ClosedCover.lean` combines the two certified leaves with the generated parent audit. Full parent source acceptance remains pending.
