@@ -35,29 +35,26 @@ theorem raw10RemainderWithCycleAndHalt_exact (m : Machine) :
       ¬ compatible table m ∧
       ¬ compatible haltTable m := by
   rw [raw10RemainderWithCycleAndHalt, remainder_exact]
+  simp only [certifiedTablesWithCycleAndHalt, List.mem_append, sideTables,
+    List.mem_map, List.mem_cons, List.mem_singleton]
   constructor
   · rintro ⟨hp, hn⟩
     refine ⟨hp, ?_, ?_, ?_, ?_⟩
     · intro w hw
-      exact hn (unpackTable w.table)
-        (List.mem_append.mpr (Or.inl
-          (List.mem_map.mpr ⟨w, hw, rfl⟩)))
-    · exact hn held (List.mem_append.mpr (Or.inr (by simp)))
-    · exact hn table (List.mem_append.mpr (Or.inr (by simp)))
-    · exact hn haltTable (List.mem_append.mpr (Or.inr (by simp)))
+      exact hn _ (Or.inl ⟨w, hw, rfl⟩)
+    · exact hn held (Or.inr (Or.inl rfl))
+    · exact hn table (Or.inr (Or.inr (Or.inl rfl)))
+    · exact hn haltTable (Or.inr (Or.inr (Or.inr rfl)))
   · rintro ⟨hp, hs, hh, hc, hhalt⟩
     refine ⟨hp, ?_⟩
     intro q hq
-    rcases List.mem_append.mp hq with hside | htail
-    · obtain ⟨w, hw, hqeq⟩ := List.mem_map.mp hside
-      subst q
+    rcases hq with hside | htail
+    · obtain ⟨w, hw, rfl⟩ := hside
       exact hs w hw
-    · rcases List.mem_cons.mp htail with hHeld | htail
-      · simpa [hHeld] using hh
-      · rcases List.mem_cons.mp htail with hCycle | htail
-        · simpa [hCycle] using hc
-        · rcases List.mem_singleton.mp htail with hHalt
-          simpa [hHalt] using hhalt
+    · rcases htail with rfl | rfl | rfl
+      · exact hh
+      · exact hc
+      · exact hhalt
 
 theorem raw10RemainderWithCycleAndHalt_disjoint :
     raw10RemainderWithCycleAndHalt.Pairwise Disjoint :=
