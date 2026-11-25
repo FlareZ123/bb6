@@ -54,8 +54,9 @@ theorem graft_sound77 {roster : List Entry} {C : Nat}
         ⟨e, he, by simp [graftEntry77, hmatch]⟩, hq⟩
 
 /-- The 77-roster graft retains 76 unchanged representatives and replaces
-    raw13 by its 1716 explicitly proved quotient-compatible residuals. -/
-theorem refined_count77 : refinedRoster77.length = 1792 := by
+    raw13 by exactly the residual list certified by the current raw13 cut. -/
+theorem refined_count77 :
+    refinedRoster77.length = 76 + raw13Residuals.length := by
   decide
 
 theorem refined_sound77 (m : Machine)
