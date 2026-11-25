@@ -90,8 +90,10 @@ Theorem chunk2_first_hole_children_safe bound :
   Forall (source_table_safe bound) chunk2_first_hole_side_remaining ->
   Forall (source_table_safe bound) chunk2_first_hole_children.
 Proof.
-  apply source_uncovered_tm_sound.
-  apply chunk2_first_hole_side_roster_safe.
+  intro Hremaining.
+  eapply source_uncovered_tm_sound.
+  - apply chunk2_first_hole_side_roster_safe.
+  - exact Hremaining.
 Qed.
 
 Theorem chunk2_first_hole_initial_safe_from_side_search bound :
