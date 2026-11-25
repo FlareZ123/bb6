@@ -12,6 +12,8 @@ open BB6Coverage BB6.Agent13BlankDelay
 open BB6.Agent50TNFPilot
 open BB6.Agent50RootFrontier
 open BB6.Agent47RootedTNF
+open BB6.Agent47R4Parent
+open BB6.Agent31FourHoleRoster
 open BB6.Agent19HardRoot
 open BB6.Agent47CanonicalRaw114Accepted
 open BB6.Agent47CanonicalRefinement
