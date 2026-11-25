@@ -24,6 +24,17 @@ theorem partialTable_sourceTable (tm : SourceTM) :
   rcases s with ⟨q,b⟩
   cases h : tm (q,b) <;> rfl
 
+/-- Read a BlockFAR table back into the exact Enumerate62 SourceTM
+    representation. -/
+def sourceTMOfBlockFAR (M : BB6BlockFAR.Table) : SourceTM :=
+  fun q b => (M q b).map BB6BlockFAR.sourceMove
+
+theorem sourcePartial_sourceTMOfBlockFAR (M : BB6BlockFAR.Table) :
+    sourcePartial (sourceTMOfBlockFAR M) = BB6BlockFAR.partialTable M := by
+  funext s
+  rcases s with ⟨q,b⟩
+  cases h : M q b <;> rfl
+
 /-- A nonhalting proof for every compatible completion is already
     exactly the semantic content needed by SourceSafe. -/
 theorem sourceSafe_of_never (B : Nat) (x : SourceNode)
@@ -43,20 +54,43 @@ theorem sourceSafe_of_blockFAR_table (B : Nat) (x : SourceNode)
   intro m hm
   exact hNever m (by simpa [hEq] using hm)
 
-/-- Any valid BlockFAR certificate for a source node immediately discharges
-    its SourceSafe obligation for every compatible total completion. -/
+/-- A BlockFAR `Data.Valid` certificate and an explicit equality of
+    partial-machine representations discharge the exact source-node
+    `SourceSafe` obligation. -/
+theorem sourceSafe_of_blockFAR_certificate {d n} (B : Nat) (x : SourceNode)
+    (M : BB6BlockFAR.Table) (C : BB6BlockFAR.Data d n)
+    (hC : C.Valid M)
+    (hEq : BB6BlockFAR.partialTable M = sourcePartial x.tm) :
+    SourceSafe B x := by
+  apply sourceSafe_of_blockFAR_table B x M hEq
+  intro m hm
+  exact BB6BlockFAR.Data.source_never C M hC m hm
+
+/-- If a source node is literally the SourceTM view of a BlockFAR table,
+    the equality premise is automatic. -/
+theorem sourceSafe_of_blockFAR_sourceTM {d n} (B : Nat) (x : SourceNode)
+    (M : BB6BlockFAR.Table) (C : BB6BlockFAR.Data d n)
+    (hC : C.Valid M)
+    (hTM : x.tm = sourceTMOfBlockFAR M) :
+    SourceSafe B x := by
+  apply sourceSafe_of_blockFAR_certificate B x M C hC
+  rw [hTM, sourcePartial_sourceTMOfBlockFAR]
+
+/-- Any valid BlockFAR certificate for the table reconstructed from a
+    source node immediately discharges its SourceSafe obligation. -/
 theorem sourceSafe_of_blockFAR {d n} (B : Nat) (x : SourceNode)
     (C : BB6BlockFAR.Data d n)
     (hC : C.Valid (sourceTable x.tm)) :
     SourceSafe B x := by
-  apply sourceSafe_of_blockFAR_table B x (sourceTable x.tm)
-    (partialTable_sourceTable x.tm)
-  intro m hm
-  exact BB6BlockFAR.Data.source_never C (sourceTable x.tm) hC m hm
+  apply sourceSafe_of_blockFAR_certificate B x (sourceTable x.tm) C hC
+  exact partialTable_sourceTable x.tm
 
 #print axioms partialTable_sourceTable
+#print axioms sourcePartial_sourceTMOfBlockFAR
 #print axioms sourceSafe_of_never
 #print axioms sourceSafe_of_blockFAR_table
+#print axioms sourceSafe_of_blockFAR_certificate
+#print axioms sourceSafe_of_blockFAR_sourceTM
 #print axioms sourceSafe_of_blockFAR
 
 end BB6.Agent32SourceBlockFAR
