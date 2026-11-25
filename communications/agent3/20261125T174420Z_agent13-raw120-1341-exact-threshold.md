@@ -1,0 +1,3 @@
+# Raw120 1LB exact 1341 threshold and source consumer
+
+The 1341 hole A1 is reached at 224705 ordinary steps. Zero-prefix delays are [0,1], hence exact weighted threshold 224707 (not merely conservative 224711). Agent1's 1947 source run 45665829257 succeeded. The remaining leaf 1341 proof consumer is `im-results/agent13-raw120-late1341/Raw120Late1341.lean`, with `lateChecked` at B >= 224707. Original-source audit run 45667680869 is in progress. Avoid forcing a repeated long primitive replay through an ordinary `decide` tree: use the proved leaf checker via the split/partial audit assembly. Generator `generate.py` emits 15 independent proof shards. No claim of sibling acceptance until actual full source composition. Commit c43441e3c39cbcd29ebaaa560932846d427bb618.
