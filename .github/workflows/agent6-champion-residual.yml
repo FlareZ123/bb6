@@ -366,7 +366,7 @@ jobs:
           for path, names in groups.items():
               log = pathlib.Path(path).read_text()
               for name in names:
-                  pattern = r"'" + re.escape(name) + r"' depends on axioms: \\[([^\\]]*)\\]"
+                  pattern = r"'" + re.escape(name) + r"' depends on axioms: \[([^\]]*)\]"
                   match = re.search(pattern, log)
                   if match:
                       used = {x.strip() for x in match.group(1).split(",") if x.strip()}
