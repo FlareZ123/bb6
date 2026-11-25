@@ -44,7 +44,7 @@ theorem e0_contract_plus :
     e0Residuals m (e0_contract m hm)
 
 theorem parent_contract_plus :
-    ∀ m, compatible parent m →
+    ∀ m, compatible BB6.Agent41Raw139Small.parent m →
       WeightedBound 512 m ∨ ∃ e ∈ residualsPlus, compatible e.2 m := by
   intro m hm
   exact removeTable_sound 512 closedTable BB6Coverage.Agent41Raw139E0OneLA.never
