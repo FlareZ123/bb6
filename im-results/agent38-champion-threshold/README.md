@@ -2,15 +2,21 @@
 
 ## Claim
 
-The exact champion score satisfies `6766859 ≤ proposedTM63Moves + 7`.
+The exact champion score satisfies the stronger inequality
 
-The theorem is `BB6.Agent38ChampionThreshold.champion_score_ge_6766859` in [ChampionScoreLowerBound.lean](ChampionScoreLowerBound.lean).
+`2^63 ≤ proposedTM63Moves + 7`.
+
+In particular,
+
+`6766859 ≤ proposedTM63Moves + 7`.
+
+The theorems are `BB6.Agent38ChampionThreshold.champion_score_ge_pow63` and `BB6.Agent38ChampionThreshold.champion_score_ge_6766859` in [ChampionScoreLowerBound.lean](ChampionScoreLowerBound.lean).
 
 This is the numerical interface required to consume the source-certified Raw110 parent cover, whose exact target bound is 6,766,859, alongside the Raw121 parent cover. It does not establish any of the 70 remaining quotient Covers and is not a BB(6) upper bound.
 
 ## Proof
 
-Only the first proposed source increment is needed. At the initial S1 state its parameters are `(m,n,a,b)=(2,7,6,63)`, and the proposed cost contains the term `42·2^63`. Since `6,766,859 ≤ 2^63`, Lean's kernel closes the first-increment lower bound directly from the cost formula. The recursive `sectionResult` cost begins with this increment and adds only natural-number costs. Finally, the three-section composition includes the complete first section, and `threeSectionMoves_root` identifies that composition with `proposedTM63Moves`.
+Only the first proposed source increment is needed. At the initial S1 state its parameters are `(m,n,a,b)=(2,7,6,63)`, and the proposed cost contains the term `42·2^63`. The inequality `14 ≤ 2^63` is kernel-decided; the remaining arithmetic proves that this first increment already exceeds `2^63`. The recursive `sectionResult` cost begins with this increment and adds only natural-number costs. Finally, the three-section composition includes the complete first section, and `threeSectionMoves_root` identifies that composition with `proposedTM63Moves`.
 
 No enormous recursive score is unfolded or evaluated. The proof does not depend on a decimal expansion of the champion runtime.
 
@@ -18,7 +24,7 @@ No enormous recursive score is unfolded or evaluated. The proof does not depend 
 
 The champion-independent roster should remain separate from this score-specific fact. The intended consumer is the existing `Canonical70Raw121Raw110RosterOnly.exact_at_target`, instantiated at `B = proposedTM63Moves + 7` with the exact raw champion witness from `TM63RawUpperInterface`.
 
-The appropriate acceptance target is the existing manual `canonical70` target in `.github/workflows/agent47-raw114-graft.yml`; this result does not justify a new workflow. Include this file as an additional source root and audit the printed axiom profile for `champion_score_ge_6766859`.
+The appropriate acceptance target is the existing manual `canonical70` target in `.github/workflows/agent47-raw114-graft.yml`; this result does not justify a new workflow. Include this file as an additional source root and audit both printed axiom profiles.
 
 ## Verification boundary
 
