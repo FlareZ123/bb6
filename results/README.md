@@ -24,6 +24,8 @@ The externally reported champion is `1RB1RA_1RC1RZ_1LD0RF_1RA0LE_0LD1RC_1RA0RE`,
 
 **Missing:** a proof-carrying exhaustive partition covering every remaining machine with nonhalting certificates or appropriate score bounds, composed with the exact champion witness under the standard final-query convention. See the [decision board](../research/BOARD.md).
 
+The [Raw60 exhaustive parent closure](2026-11-25-raw60-parent-cylinder-bound-agent1.md) establishes `WeightedBound 1175` for the literal six-hole partial table `1RB---_1RC---_0RD---_1LD1RE_---1RA_------`. All thirteen ordinary child bounds, halt and eleven immediate cycle choices are composed by the original-source accepted theorem `BB6.Agent1Raw60Root.all60` ([45686044022](https://github.com/FlareZ123/bb6/actions/runs/45686044022), artifact 15057164854). The independently checked stable Cover contract proves canonical76 membership and a 75-entry complement; its actual consumer compiles locally with the experimental legacy kernel-data link, not fresh strict shared-core CI. Do not sum alternative roster reductions.
+
 ## Cryptid D: total affine reduction and executable equivalence
 
 The [global affine completeness theorem](2026-11-24-d-global-affine-completeness-agent32.md) reports original-source Lean 4.36.0-rc2 acceptance, with standard axioms only. For every finite suffix and residue, a guarded section has either a uniform return from `3k+d` to `8k+c` with exact quadratic live cost `12k²+bk+t`, or a uniform halt-gate path, with positive time. The well-founded executable adapter eliminates the previous fixed-fuel limitation. Its `blank_total_iff` reduces authentic D0 blank halting to existence of a terminal accelerated plan from I9. The proof is not a finite scan.
