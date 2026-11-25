@@ -104,7 +104,14 @@ jobs:
               exit 1
             fi
           done
-          python tools/lean_compile_closure.py "${roots[@]}" \
+          echo "RAW112 preflight passed: shard=$SHARD roots=${roots[*]}"
+          python --version
+          python -u tools/lean_compile_closure.py --help > /tmp/a47-raw112-help.txt 2>&1
+          head -n 4 /tmp/a47-raw112-help.txt
+          stdout="/tmp/a47-raw112-shard-$SHARD.stdout"
+          stderr="/tmp/a47-raw112-shard-$SHARD.stderr"
+          set +e
+          python -u tools/lean_compile_closure.py "${roots[@]}" \
             --workdir "$work" \
             --manifest "$work/manifest.json" \
             --label "raw112-shard-$SHARD" \
@@ -134,17 +141,26 @@ jobs:
             --provenance-input im-results/agent4-raw109/merge_shards.py \
             --provenance-input im-results/agent4-raw109/audit_axioms.py \
             --provenance-input im-results/agent47-raw112-cut/shard-config.json \
-            2>&1 | tee "/tmp/a47-raw112-shard-$SHARD.log"
-          if grep -Eq 'sorryAx|native_decide' "/tmp/a47-raw112-shard-$SHARD.log"; then
+            > "$stdout" 2> "$stderr"
+          status=$?
+          set -e
+          echo "lean_compile_closure exit status: $status"
+          cat "$stdout"
+          cat "$stderr" >&2
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq 'sorryAx|native_decide' "$stdout" "$stderr"; then
             echo "Forbidden axiom/proof mechanism in raw112 shard $SHARD" >&2
             exit 1
           fi
-          cp "/tmp/a47-raw112-shard-$SHARD.log" "$work/audit.log"
+          cat "$stdout" "$stderr" > "$work/audit.log"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: raw112-shard-${{ matrix.shard }}
-          path: /tmp/a47-raw112-shard-${{ matrix.shard }}/
+          path: |
+            /tmp/a47-raw112-shard-${{ matrix.shard }}/
+            /tmp/a47-raw112-shard-${{ matrix.shard }}.stdout
+            /tmp/a47-raw112-shard-${{ matrix.shard }}.stderr
           if-no-files-found: warn
           retention-days: 30
 
