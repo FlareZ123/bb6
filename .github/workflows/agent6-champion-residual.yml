@@ -44,6 +44,8 @@ jobs:
           PY
           printf '%s  %s\n' 12329036c66c3846f9261167b8f9aebd1778d9b6ea6044309956c2fa0b3e49b7 "$work/imports/TerminalFinish.lean" | sha256sum -c -
           printf '%s  %s\n' 1bce2075fc4e0cd7d740fb71b3796088b190ddb6766e04640d992dadd1b650ff "$work/imports/TerminalLeft.lean" | sha256sum -c -
+      - name: Generate Raw68/Raw72/Raw82 source modules
+        run: python3 im-results/agent10-tnf-multipump/generate.py 68 72 82
       - name: Compile the 109-roster replacement and champion frontier
         run: |
           set -euo pipefail
