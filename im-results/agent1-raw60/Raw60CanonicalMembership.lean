@@ -5,6 +5,7 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 
 namespace BB6.Agent1Raw60CanonicalMembership
+open BB6Coverage BB6.Agent13BlankDelay
 
 /-- The raw60 six-hole parent is an exact member of the current
     78-representative canonical quotient roster. -/
