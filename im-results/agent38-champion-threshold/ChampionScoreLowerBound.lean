@@ -8,6 +8,15 @@ namespace BB6.Agent38ChampionThreshold
 open BB6ChampionArithmetic
 open BB6Coverage.Agent48DirectRoot
 
+/-- The first section cost is one summand of the complete three-section
+    champion score; all other terms are nonnegative. -/
+private theorem first_section_cost_le_three_section_score
+    (rootSteps L n a b : Nat) :
+    (sectionResult n 2 a b).cost ≤
+      threeSectionMoves rootSteps L n a b + 7 := by
+  unfold threeSectionMoves
+  omega
+
 /-- The first authentic source increment already costs at least 2^126
     primitive steps. The rest of the first section, both resets, the next
     two sections, and the terminal drain are all nonnegative additions. -/
@@ -27,9 +36,9 @@ theorem champion_score_ge_two_pow_126 :
   have hsection :
       2^126 ≤ (sectionResult 7 2 6 63).cost :=
     Nat.le_trans hcost hfirst
+  have hscore := first_section_cost_le_three_section_score 27959 3 7 6 63
   rw [← threeSectionScore_root]
-  unfold threeSectionMoves
-  omega
+  exact Nat.le_trans hsection hscore
 
 /-- Conveniently lifts every parent certificate below 2^126 to the exact
     attained champion score, including the raw110 bound 6,766,859. -/
