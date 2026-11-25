@@ -27,9 +27,9 @@ function moveCode(write, right, next) {
 }
 
 function parseEncodedRows(source) {
-  const match = source.match(/def rows : List \\(List Nat\\) := \\[([\\s\\S]*?)\\]\\ndef slots/);
+  const match = source.match(/def rows : List \(List Nat\) := \[([\s\S]*?)\]\ndef slots/);
   if (!match) throw new Error("Could not find Raw10Encoded.rows");
-  const rows = [...match[1].matchAll(/\\[([0-9,\\s]+)\\]/g)]
+  const rows = [...match[1].matchAll(/\[([0-9,\s]+)\]/g)]
     .map(x => x[1].split(",").map(v => Number(v.trim())));
   if (rows.length !== 66 || rows.some(r => r.length !== 12))
     throw new Error("Expected 66 twelve-slot Raw10Encoded rows");
@@ -38,14 +38,14 @@ function parseEncodedRows(source) {
 
 function parsePartialCube(source, name) {
   const start = source.indexOf("def " + name + " : PartialMachine :=");
-  const end = source.indexOf("\\n\\ndef witness", start);
+  const end = source.indexOf("\n\ndef witness", start);
   if (start < 0 || end < 0) throw new Error("Missing PartialMachine " + name);
   const body = source.slice(start, end);
   const pairs = [];
-  for (const x of body.matchAll(/s = \\((\\d+),(false|true)\\) then some \\(some ⟨(true|false),(true|false),(\\d+)⟩\\)/g))
+  for (const x of body.matchAll(/s = \((\d+),(false|true)\) then some \(some ⟨(true|false),(true|false),(\d+)⟩\)/g))
     pairs.push([2 * Number(x[1]) + (x[2] === "true" ? 1 : 0),
       moveCode(x[3], x[4], x[5])]);
-  for (const x of body.matchAll(/s = \\((\\d+),(false|true)\\) then some none/g))
+  for (const x of body.matchAll(/s = \((\d+),(false|true)\) then some none/g))
     pairs.push([2 * Number(x[1]) + (x[2] === "true" ? 1 : 0), 0]);
   pairs.sort((a,b) => a[0] - b[0]);
   if (!pairs.length) throw new Error("No assignments parsed for " + name);
@@ -151,10 +151,10 @@ if (boxes.length !== 41 || baseMass !== 90737503713725)
 const sourceCommit = execFileSync("git", ["-C", UPSTREAM, "rev-parse", "HEAD"], {encoding:"utf8"}).trim();
 if (sourceCommit !== PINNED) throw new Error("Upstream source is not at the pinned commit");
 const sourceText = fs.readFileSync(NONHALT, "utf8");
-if (!/theorem is_not_halt\\s*:\\s*IsNotHalt target/.test(sourceText))
+if (!/theorem is_not_halt\s*:\s*IsNotHalt target/.test(sourceText))
   throw new Error("Pinned source module does not expose is_not_halt");
 
-const raw = MODULE.replace(/^M_/, "").replace(/\\.lean$/, "");
+const raw = MODULE.replace(/^M_/, "").replace(/\.lean$/, "");
 const segments = raw.split("_");
 if (segments.length !== 6 || segments.some(x => x.length !== 6))
   throw new Error("Candidate filename is not a six-row RLE");
@@ -163,7 +163,7 @@ if (tokens[0] !== "1RB" || tokens.filter(x => x === "HHH").length !== 1)
   throw new Error("Candidate is not a 1RB-rooted one-halt table");
 
 const holdouts = new Set(local("resources/BB6_holdouts_663_2026-10-16.txt")
-  .split(/\\r?\\n/).map(x => x.trim().replaceAll("_","")).filter(Boolean));
+  .split(/\r?\n/).map(x => x.trim().replaceAll("_","")).filter(Boolean));
 const accepted608 = [
   "1RB0LC_1LC0RB_0LE0LD_1LC---_0RA1LF_1LA1LF",
   "1RB0RA_0RC0LD_1LA1RF_1LE1LD_1LB1RE_---1RA",
