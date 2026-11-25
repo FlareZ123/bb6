@@ -22,7 +22,7 @@ it proves `recovered_held_2800_nonhalt`, then `recovered_held_2800_safe bound` f
 4. Apply the existing `source_roster_safe` consumer to obtain `source_weighted_safe bound x`.
 5. Exhibit that exact node in `adaptive_obligations decider (AP_advance 1000000 AP_stop) (q_i 2800 100)`, the interface consumed by `actual_source_chunks_packed_global_upper`.
 
-The theorem closes one whole held-node cylinder in the finite checkpoint's adaptive obligations. It does not certify the other active or held nodes, nor the other 128 source chunks. Those remain explicit obligations.
+The theorem closes one whole held-node cylinder in the finite checkpoint's adaptive obligations. It does not certify the other active or held nodes, nor the other 128 source chunks. Those remain explicit obligations. The same Coq module also proves `recovered_held_2800_parent_leaf_partition` directly in the original source `is_child_of` relation: any completion of the B0=1LC parent either extends the FARv3 leaf or disagrees at a slot left open by the parent and fixed by the leaf. This source-side complement statement is independent of the Lean table model.
 
 ## Root-frontier complement
 
@@ -32,6 +32,6 @@ This branch is distinct from the `B0=1RC` path used by the 109 mixed-bound champ
 
 ## Verification and next step
 
-The existing manual workflow target `enumerate62-held-farv3-pilot` has been extended to compile both the root-frontier bridge and the exact checkpoint-membership module, then print their assumptions. The module has not yet received a successful CI result; treat its theorem statements as a proof draft until that run passes.
+The existing manual workflow target `enumerate62-held-farv3-pilot` has been extended to compile both the root-frontier bridge and the exact checkpoint-membership module, then print their assumptions. A narrower `enumerate62-held-checkpoint-membership` target isolates the new source checkpoint, source-side complement, and adaptive-consumer proofs from the separate root-bridge module. The module has not yet received a successful CI result; treat its theorem statements as a proof draft until that run passes.
 
 After acceptance, the useful scale-up is to feed additional already-accepted whole-cylinder certificates into the same source-roster/adaptive-obligation consumer, retaining every uncovered active/held node. Do not infer global coverage from one matched leaf.
