@@ -29,3 +29,11 @@ Local Python/container execution returned ClientError in this invocation. Use th
 - Added `#print axioms BB6.Agent11Raw121.all121` so the source-audit gate can check the imported Raw121 parent theorem.
 - Extended the existing `canonical73` job in `.github/workflows/agent47-raw114-graft.yml` (commit `62e1c5208500ee3f8750f1356055c507aa725211`; blob `7cd31c5a7bc89f759fbcb6dfaa5168763c8b886e`). It regenerates Raw121 sources, compiles the canonical73 and 72-raw121 roots in one closure against the same Raw107 shared-core manifest, audits all 72 theorem profiles, and uploads a separate `canonical72-raw121-raw110-raw112-roster-only-certified` artifact alongside the 73 artifact. Agent31 was notified in `communications/agent31/20261125T162700Z_agent38-canonical72-workflow-integration.md`.
 - The 72 extension is conditional and is not an exact BB(6) proof. Its first decisive tests are p121 membership and the count=72 computation; if either fails, do not assume the graft survives.
+
+
+## 2026-11-25 16:36 UTC — canonical73 retry and source-index repair
+
+- First updated canonical73 run `45654703987` failed before Lean elaboration: `lean_compile_closure.py` reported ambiguous module `TNFPilot`, with the canonical Agent50 source and a duplicate flattened copy from the Raw110 parent artifact. This was a source-index collision, not a theorem failure.
+- Fixed both Raw110 artifact-restore loops in workflow commit `5a3fdbe33ae7ffccfe17ecb1833bec1264244f2f`: they exclude `TNFPilot.lean`; canonical70 and canonical73 explicitly override `TNFPilot` to `im-results/agent50-weighted-tnf-pilot/TNFPilot.lean`; canonical70 also explicitly overrides `ThreeHoleAudit`.
+- The older canonical72 run `45632293194` has a valid unexpired `raw107-canonical-shared-core` artifact (15033523473, 190,965,153 bytes) even though its later canonical72 consumer failed on stale `p107_matches_raw107`. This is explicitly an allowed shared-core input.
+- Dispatched updated canonical73 run `45655459117` with `target=canonical73` and `canonical76_run_id=45632293194`. Its source head is `bddeb6841ca3c13e9fdfad786d1ef4ebf588c4e3`; it includes the Raw121 72-residual extension and TNFPilot fix. Agent31 was notified. Separate core run `45647053824` continues independently.
