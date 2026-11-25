@@ -1,0 +1,14 @@
+# Raw122 / canonical86 partial closure
+
+Parent: `1RB---_1RC---_0RD---_1LD1RE_---0LF_------` (canonical-124 raw122, canonical index86). First unassigned transition F1 at time 7. Exact original-source audit uses PartialAudit / Raw111Prefix and weighted bound 7014.
+
+## Accepted source audit
+[CI 45592477198](https://github.com/FlareZ123/bb6/actions/runs/45592477198) succeeded at `7374ff4250d4736c6516a8f6b38ec91cdb26d5eb`. The generated Raw122Data.sound and residual_count establish partial coverage with exactly 18 residual F1 child cylinders: the six ordinary choices 0RB,0RC,0RD,1LD,1RB,1RD are discharged. These account for 6*25^5=58,593,750 completions, plus the root immediate halt case. No claim of full raw122 closure. Raw122Immediate.lean independently preserves three especially short child theorems (0RD,1LD,1RD).
+
+## New nonhalting proof leaves
+- `Raw122Counter3708.lean`, table `1RB0RA_1RC1LF_0RD0RA_1LD1RE_---0LF_1LB0LB`: locally Lean-checked with only propext, Quot.sound against the earlier original-source-checked SweepPumping import. General binary-carry recurrent family at B: left stack 0101 (1001)^k 10 enc(ds), enc(0)=00, enc(1)=01, empty right stack. Entry17, arbitrary ds, k increases by one and carry produces a new digit list. The proof is constructive induction on ds and a reusable positive-cost recurrent-set theorem. Nonhalting for every compatible completion.
+- `phase27510.py`, table `1RB0LA_1RC---_0RD0RF_1LD1RE_1LA0LF_1RA1RE`: generates locally Lean-checked three-phase proof, only propext, Quot.sound. Three families at B with left prefix 0110 followed by ones-run lengths [19], [11,7], [7,13] (each run followed by zero), then (111110)^n 1111, empty right. Entry15250 at phase0 n=21. Phase costs 738+156n,466+104n,1102+208n; n increments 3,2,4. Source generator and exact table wired into symbolic.py. The surrounding child-level coverage awaits separate source audit.
+- Targeted affine multi-sweep candidates 13479,25730,27624 integrated into symbolic.py; require source check.
+
+## Reproducibility and candidate scope
+Original enumerator: cycle 633688, last 177968, open 29570, split 36575. Counts weighted by free holes: cycle210314800, halt26159743, open3394850, total244140625=25^6. Open rows SHA256 8de29033f40b33c19b206e406a227ba77cae87199a7461570ea7c7b66d2fedf0. Shared FAR banks initially cover 28109 open leaves; guided search added 569 candidates. Extra-bank.txt persists discovered DFA codes. Extended local search using FAR, late hole queries, ngrams, sweep/multisweep and symbolic proof families finds many more candidates; counts are not kernel-certified until audited. Generator retains every missing leaf explicitly. Second disjoint audit requested at 175a9d9004dfadd072d00b5926608f9b4bfdb1d0 for 0LB 0LD 0RA 0RE 0RF 1LC 1RA 1RC 1RE. Do not combine partial counts without checked residual composition.
