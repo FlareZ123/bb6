@@ -1,10 +1,10 @@
 # Raw121: candidate proof dossier
 
-**Current status: 13 unresolved leaves, no accepted parent certificate.** This is the six-hole cylinder `1RB---_1RC---_0RD---_1LD1RE_---1RE_------` (E1=1RE, canonical index 85, raw index 121). The first free query is E0 at ordinary time 8. All numbers here are discovery results unless a source checker is explicitly identified.
+**Current status: 4 unresolved leaves, no accepted parent certificate.** This is the six-hole cylinder `1RB---_1RC---_0RD---_1LD1RE_---1RE_------` (E1=1RE, canonical index 85, raw index 121). The first free query is E0 at ordinary time 8. All numbers here are discovery results unless a source checker is explicitly identified.
 
 The deterministic 1,000-step candidate enumeration contains 8,892 split nodes, 150,577 side-cycle leaves, 39,663 last-hole leaves, and 14,277 open leaves; raw assignment mass 244,140,625 (25^6). Mass: cycle 224,584,825; immediate halt 16,215,963; total-defined 951,912; open 2,387,925. Open roster SHA256: `30a72b502df5ea47f06886d114fb9ab8af7f918bfd3a1066a73b16634e3e07c9`.
 
-Open-leaf partition: 14,156 FAR candidates (84 distinct reusable codes), 71 one-block sweeps, 12 two-block sweeps, 14 quadratic nested-sweep proofs, 5 recursive counter proofs, 4 long affine candidates, 2 delayed first holes, 13 unresolved. Both delayed leaves have one free row F0 and reach it after 4062 and 2546 ordinary transitions respectively. Candidate halt scores must account for the final halt and blank delay; the initial 1001-step maximum is not a bound on this cylinder.
+Open-leaf partition: 14,156 FAR candidates (84 distinct reusable codes), 71 one-block sweeps, 12 two-block sweeps, 14 quadratic nested-sweep proofs, 6 recursive counter proofs, 4 additional quadratic proofs, 4 arbitrary-tail binary-fill proofs, 4 long affine candidates, 2 delayed first holes, 4 unresolved. Both delayed leaves have one free row F0 and reach it after 4062 and 2546 ordinary transitions respectively. Candidate halt scores must account for the final halt and blank delay; the initial 1001-step maximum is not a bound on this cylinder.
 
 ## New exact quadratic recurrence
 
@@ -18,12 +18,20 @@ The exact outer return cost is (a+4n+I_b(n)+c+n), where (I_b(0)=0) and (I_b(n+1)
 
 ## Recursive counters and longer epochs
 
-For five additional partial machines (4463, 4759, 8393, 9402, 10521), the configuration A(n,R) is state E with left zipper 0 1^(n+k) S and arbitrary right tail R. One descending macro maps A(n+1,R) to A(0,0^n 1 R), with cost d+s*n. A base advance and the E1 transition restore the unary count; simultaneous induction on two recursive costs proves the entire return A(n,[]) to A(n+1,[]). The source generators are counter.py and counter_codegen.py (run in a separate process from quad generation because counter uses a modified normalization). All five entry/growth equalities were compiled locally using reconstructed zipper/sweep definitions with standard axioms [propext, Quot.sound]; original-source nonhalting composition remains pending. 
+For six additional partial machines (4463, 4759, 4820, 8393, 9402, 10521), the configuration A(n,R) is state E with left zipper 0 1^(n+k) S and arbitrary right tail R. One descending macro maps A(n+1,R) to A(0,0^n 1 R), with cost d+s*n. A base advance and the E1 transition restore the unary count; simultaneous induction on two recursive costs proves the entire return A(n,[]) to A(n+1,[]). The source generators are counter.py and counter_codegen.py (run in a separate process from quad generation because counter uses a modified normalization). All six entry/growth equalities were compiled locally using reconstructed zipper/sweep definitions with standard axioms [propext, Quot.sound]; original-source nonhalting composition remains pending. 
 
 Four additional exact symbolic decompositions (4050,4669,7065,9673) are stored in long.json, as [index, entry, state, initial-left, initial-right, final-left, final-right]. Each part is [word, repeated]. Reproduce with multi.pump at limit 3000 and emit with multi.generate; those full Lean growth certificates remain to be checked. The two delayed first-hole leaves are to be certified using the existing last-hole rule, including the ordinary-defined alternatives.
+
+## Further quadratic and arbitrary-tail binary-fill certificates
+
+The additional pair-transfer variants 9650,9651,9668 use the same middle family as the 14 original quadratic variants, with coefficient 8,6,8 respectively in their diminishing-run phases. 318 transfers triples, with entry E(0 1^7,[]) at step 34; F(n)→M(n,0), M(n+1,j)→M(n,j+1), and M(0,j)→F(j+1), where M(n,j)=E(0 1^(3n+4) 0 1^(3j+3),[]). Costs 20+6n, 20+6n, 26. All four entry/growth equalities compiled locally; quad_extra_codegen.py emits the checked phase structure.
+
+Raw121BinaryA.lean proves arbitrary-tail growth for 888 (.plain), 10492 (.pair), 10491 (.triple), 13655 (.extra). Its simultaneous induction restores zero blocks of width 2 or 3 while preserving a separator 000 and permitting an arbitrary finite tail beyond the separator to change. The source proves closure for all tails including empty/all-one cases, then uses positive return costs and choice to define an infinite sequence. Local Lean checked entry, growth and chosen-family growth against the exact reconstructed zipper/sweep definitions, with [propext, Quot.sound] and Classical.choice only for chosen tails. The original-source never bridge is included but not yet compiled.
+
+Delayed leaves 7825 and 10046 have exactly one hole and zero incoming blank delay. Their candidate weighted halt scores are 4063 and 2547; their nonhalt assignments are total defined tables, so existing last-hole rule is applicable. No need to branch those 24 ordinary-defined moves separately. Both must be checked in the actual audit.
 
 ## Reproduction
 
 Compile `fast_enum.cpp` with C++17 -O3; run with the parent string from an empty working directory. It is the earlier producer with head-relative polynomial fingerprints as a rejection-only filter before exact side-cycle tape comparison. On raw103 the generated tree/open files matched the previous producer byte for byte. Compile `bank.cpp` with C++20 -O3 and pass `bank.txt`; feed indexed ungrouped 36-character tables. The original Lean checker must accept any candidate. The `specs.json` pins exact leaf identities and indices. The 84-code bank is the union of actual selected witnesses, including 17 found after the initial reused bank scan. Use the existing one-/two-block proof generators with 6000-event step limit. No claim is made yet that all assignments satisfy a fixed score bound.
 
-The next work is to prove the remaining 13 explicit exceptions or classify them as delayed first holes, then generate a complete source-auditable tree and integrate it into the canonical roster. Do not repeat the raw121 initial enumeration or broad FAR search.
+The next work is to prove the remaining 4 explicit exceptions or classify them as delayed first holes, then generate a complete source-auditable tree and integrate it into the canonical roster. Do not repeat the raw121 initial enumeration or broad FAR search.
