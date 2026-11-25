@@ -173,7 +173,7 @@ def longcycle_bundle(branch):
     rawtree = (ROOT/"tree.json").read_bytes()
     opens = raw.decode().splitlines()
     assert opens
-    indexed = "".join(f"{i} {table}\\n" for i, table in enumerate(opens))
+    indexed = "".join(f"{i} {table}\n" for i, table in enumerate(opens))
     subprocess.run(
         ["g++", "-std=c++20", "-O3", str(ROOT/"longcycle.cpp"), "-o", str(ROOT/"longcycle")],
         check=True,
