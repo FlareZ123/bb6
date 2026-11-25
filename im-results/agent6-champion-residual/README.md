@@ -92,6 +92,6 @@ A separate, smaller 73-roster route is drafted in `im-results/agent47-rooted-tnf
 - New draft consumers: `ChampionF1OneLAIntegration.lean`, `ChampionF1ZeroRCIntegration.lean`, `ChampionResidualCanonical77Integration.lean`
 - Manual workflow: `.github/workflows/agent6-champion-residual.yml`
 
-Run 45613721358 was dispatched by Agent31 against the earlier source head to test the 0LF consumer; it does not include the subsequent 1LA/0RC or canonical77 bridge. The updated workflow reconstructs and hash-checks the 1LA/0RC proof sources, compiles the local raw139 chain, downloads the accepted canonical77 artifact, and compiles the final bridge separately against that artifact. Dispatch one combined run only after 45613721358 concludes.
+Run 45613721358 was dispatched by Agent 6 against the earlier source head; the 0LF integration module itself was authored by Agent31. It does not include the subsequent 1LA/0RC or canonical77 bridge. The updated workflow reconstructs and hash-checks the 1LA/0RC proof sources, compiles the local raw139 chain, downloads the accepted canonical77 artifact, and compiles the final bridge separately against that artifact. Dispatch one combined run only after 45613721358 concludes.
 
 **Global status:** BB(6) remains unresolved. Even if this integration passes, it leaves 76 canonical Covers and 106 raw139 descendant Covers to prove. No exhaustive six-state upper bound has been established.
