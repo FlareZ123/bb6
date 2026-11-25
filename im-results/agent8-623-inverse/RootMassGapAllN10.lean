@@ -340,7 +340,7 @@ theorem absDiff_comm (x y : Nat) : absDiff x y = absDiff y x := by
 /-- Convert the exact n=10 ternary scale hypotheses to their integer band. -/
 theorem n10_scale_bounds (m : Nat)
     (hmin : 3^9-3 <= m) (hmax : m+3 < 3^10) :
-    19680 <= m /\\ m <= 59045 := by
+    19680 <= m /\ m <= 59045 := by
   norm_num at hmin hmax
   omega
 
