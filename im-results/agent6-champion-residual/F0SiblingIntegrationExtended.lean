@@ -49,12 +49,15 @@ theorem refined_residual_cover
     (hLeaves : ∀ e ∈ remainingExtended,
       Cover (WeightedBound championScore) e.2) :
     Cover (WeightedBound championScore) championResidual := by
+  have hB : 49394 ≤ championScore := champion_score_ge_49394
   apply cover_of_championResidual_frontier
   intro e he
   by_cases hc : closedF0 e.2 = true
   · exact cover_closed championScore champion_score_ge_49394 e.2 hc
   · by_cases hRA : parentZeroRA e.2 = true
-    · rw [sameTable_sound hRA]
+    · have hRA' : sameTable e.2 (parent ⟨false,true,0⟩) = true := by
+        simpa [parentZeroRA] using hRA
+      rw [sameTable_sound hRA']
       exact BB6.Agent48RA.cover_zeroRA championScore (by omega)
     · by_cases hRC : parentZeroRC e.2 = true
       · have hChild :
@@ -65,7 +68,9 @@ theorem refined_residual_cover
           refine ⟨e, he, ?_⟩
           simp [refineResidual, parentZeroRA, parentZeroRC, parentOneRE,
             hc, hRA, hRC]
-        rw [sameTable_sound hRC]
+        have hRC' : sameTable e.2 (parent ⟨false,true,2⟩) = true := by
+          simpa [parentZeroRC] using hRC
+        rw [sameTable_sound hRC']
         exact BB6.Agent48Remaining.cover_zeroRC_of_RD championScore
           (by omega) (hLeaves _ hChild)
       · by_cases hRE : parentOneRE e.2 = true
@@ -77,7 +82,9 @@ theorem refined_residual_cover
             refine ⟨e, he, ?_⟩
             simp [refineResidual, parentZeroRA, parentZeroRC, parentOneRE,
               hc, hRA, hRC, hRE]
-          rw [sameTable_sound hRE]
+          have hRE' : sameTable e.2 (parent ⟨true,true,4⟩) = true := by
+            simpa [parentOneRE] using hRE
+          rw [sameTable_sound hRE']
           exact BB6.Agent48Remaining.cover_oneRE_of_RD championScore
             (by omega) (hLeaves _ hChild)
         · have hMem : e ∈ remainingExtended := by
