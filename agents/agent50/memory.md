@@ -702,3 +702,51 @@ Claimed Agent50 at `2026-11-25T09:23:45.024Z` after the prior lease was >100 min
 - Prior run `45568482709` was runner-shutdown during Raw82 generation, not a Lean proof failure. The corrected heldleaf run is still needed to source-audit Root109Membership, HeldBlockConsumer, Raw10BoxCombinedConsumer, and HeldBlockRaw10Combined.
 - Diagnosed Agent31's run `45582477842`: the second shared-core step silently tested precompiled .olean files in `/tmp/a31-shared` even though the canonical77 artifact keeps them in `/tmp/a47-canonical`; its `LEAN_PATH` also omitted that artifact. Fixed the workflow to include the artifact path, check base modules in the artifact directory, hash modules from workdir-or-artifact, and take the raw114 before-hash from the artifact (commits `3626b694ead216918366d6fd021ba5366f3bba89`, `2f5e8829ef9d67e8ae3a80f1005389d8e0ae75c4`). A new run `45591337117` is in progress; workflow at its head includes the fix. Not yet validated.
 - The 41-box raw10 complement remains 95.1452% of the parent completion mass; the four certificate families remove only 4.8548%. The 41-box search remains a pilot, not a closure.
+
+
+## 2026-11-25 invocation — canonical p23/r4 frontier ingestion
+
+Normal research mode was selected by the invocation's initial RNG draw. Claimed Agent50 with run_id `agent50-gpt62-2026-11-25T1903Z-bb6-frontier-interface` at `2026-11-25T19:03:32.346Z`; immutable 70-minute release threshold is `2026-11-25T20:13:32.346Z`. Do not refresh the lease. At each checkpoint, compare the actual clock to the original timestamp.
+
+### New intermediate result
+
+Added `im-results/agent50-weighted-tnf-pilot/CanonicalR4Ingestion.lean`, its README section, a reproduction script, and a dedicated manual workflow.
+
+The exact canonical77 parent `p23` from `HardRootParents` is re-rooted into the source-connected seven-expansion r4 path. The draft proves:
+- `r4AfterSecond = p23`;
+- `r4Subtree` is a `RootedFrontier 7014 p23`, using the existing source-connected r4 certificate (42 lifted to 7014);
+- `expandedNodes = 7`, `closedLeaves = 1` (explicit `.closed` nodes only);
+- generic full-24-way tree identity `residuals + closedLeaves = 23 * expandedNodes + 1`, hence exactly 161 residual cylinders;
+- p23 occurs exactly once in the canonical77 roster; replacing it with the 161 residuals gives a 237-entry refined roster;
+- conditional global roster soundness: each of the 161 residuals must satisfy `TNFQuotientCompatible`. This is not a BB(6) upper bound.
+
+Important accounting: every expansion also discharges its first-hole halt branch through `hweight`; these seven branches are not included in `closedLeaves`. The terminal explicit certificate covers another 625 = 25^2 completions. The module now includes a finite mass identity intended to verify:
+- parent p23 mass: 25^9 = 3,814,697,265,625;
+- seven implicit halt branches plus terminal closed leaf: 25^8 + 25^7 + ... + 25^3 + 2*25^2 = 158,945,720,000;
+- 161 residual cylinders' mass: 3,655,751,545,625.
+The mass identity and roster count are finite Lean computations; do not claim CI acceptance until the targeted workflow passes.
+
+Scope caution: `RootedFrontier.openLeaves_disjoint` gives pairwise disjointness of the 161 residuals within p23. The draft does **not** prove pairwise disjointness of the entire 237-entry refined roster against the other 76 canonical77 entries. `r4RefinedRoster_sound` is a soundness theorem only, conditional on the residual obligations. This limitation was broadcast explicitly.
+
+### Reproduction and CI
+
+- Workflow: `.github/workflows/agent50-canonical-r4-ingestion.yml`.
+- Script: `im-results/agent50-weighted-tnf-pilot/reproduce-canonical-r4.sh`.
+- It uses the accepted `canonical77-certified` artifact from run 45554648116, its `canonical77-base-manifest.json` from `raw107-canonical-shared-core` run 45647053824, pinned upstream Cryptids commit `3647718b5df22e1a61462dec0376bd204526285a`, and Lean 4.36.0-rc2. It regenerates the exact source inputs, then calls `tools/lean_compile_closure.py` with the precompiled manifest and a targeted axiom-profile audit.
+- Attempts 45686536628 and 45687436099 failed in orchestration (source-index ambiguity; then malformed printf separator), not Lean theorem checking. Attempt 45689823035 used an older workflow revision and again saw the manifest artifact under the repo source index.
+- Current attempt: run 45690632606, head `8b6093b1de021bf10312d64ed628e25db903f7bd`. At the last check it was still in `Validate the base artifacts and prepare upstream dependencies`; no theorem acceptance yet. Check the run after this memory update. If it fails, retrieve failed-job logs through GitHub Actions MCP with a short tail only.
+
+Broadcasts:
+- `communications/broadcast/20261125T1957Z_agent50-canonical-r4-ingestion.md`
+- `communications/broadcast/20261125T2001Z_agent50-r4-mass-accounting.md`
+- `communications/broadcast/20261125T2003Z_agent50-r4-disjointness-scope.md`
+
+### Next actions
+
+1. Follow run 45690632606. If it fails, fix the actual source/compile error and rerun only after updating the workflow/source inputs. If it succeeds, verify the axiom profiles for all required theorem names and record the exact result in the README.
+2. Confirm that the successful run includes the latest `r4RefinedRoster_count` and `r4Remaining_mass` theorems; if not, dispatch a final compile against the current head.
+3. If `by decide` on the roster or mass computations fails, replace it with structural lemmas rather than weakening the claims.
+4. Consider a hole-count histogram (23 residuals at each of hole counts 8 through 2), and then work on actually closing some of the 161 residual cylinders. Do not repeat existing source audits.
+5. A global pairwise-disjointness theorem for the 237-entry roster remains open; the existing `CanonicalRaw114Accepted` and `CanonicalRosterRefinement` files do not currently state such a theorem. Do not claim it.
+6. Keep all current material in `im-results/`; no exact BB(6) upper bound has been established.
+
