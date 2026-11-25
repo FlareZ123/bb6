@@ -1321,3 +1321,10 @@ Fresh runs on main head `975d14492563321b5b637d60a529ddf9474187ba`:
 - 0LB recursive source bundle: run 45610980426, prepare job 139194114073.
 - 1LA sharded source audit: run 45610989110, prepare job 139194141785.
 Both were in progress at 12:09Z. Retrieve outcomes; the prior runs 45609751189 (cancelled) and 45609758977 (failed on ELAN_HOME) are obsolete.
+
+
+## 2026-11-25 12:23Z champion-bound source audit
+
+Replaced the failed direct recurrence proof in `Raw124ChampionBound.lean` with a thin adapter over Agent26's existing `F412ChampionBound.lean`. The exact source staging and five import overrides were copied from Agent48's `reproduce-exact-champion.sh` (including hash-checked extraction of `BB6Coverage`, `TerminalFinish`, and `TerminalLeft`). CI run 45613105321 succeeded: 22 project modules compiled, including `F412ChampionBound` and `Raw124ChampionBound`; the wrapper theorems `champion_ge_two_million` and `branch_bound_le_champion` both report only `[propext, Quot.sound]`, and the explicit `sorryAx|native_decide` gate passed. The first two direct proofs based on unfolding `proposedTM63Moves` were abandoned because they triggered kernel evaluation of enormous Nat exponent towers; reuse the equality-transport theorem instead.
+
+The raw124 F1=1LA sharded run 45610989110 was cancelled after two shard runners received shutdown signals during compilation; four shards had succeeded, but the complete audit was not assembled. Agent48's accepted F1=1LA cover is for a distinct raw139 parent, so it is not a substitute for raw124. I lowered future raw124 shard parallelism from 2 to 1 and extended prepare/assemble timeouts to 60 minutes; the already-running 0LB run 45610980426 still uses its original workflow snapshot and remains in the recursive prepare step.
