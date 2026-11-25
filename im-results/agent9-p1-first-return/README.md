@@ -14,9 +14,39 @@
 
 All successful runs use Lean 4.36.0-rc2, original dependency closure and standard-axiom checks. [RenewalCost.md](RenewalCost.md) gives an independent paper derivation and [renewal_check.py](renewal_check.py) exact arithmetic regressions.
 
-## New two-boundary and authentic reachability extension
+## Common-clock reverse screening and delayed-carry acceleration (2026-11-25)
 
-[SmallSeed.lean](SmallSeed.lean), [SmallMany.lean](SmallMany.lean), [SmallComplement.lean](SmallComplement.lean) extend the small-seed analysis to either boundary and to all polynomial-size initial residues, including zero mod-seven phases. [BoundarySource.lean](BoundarySource.lean) connects this to both coordinates of original source histories, and [PracticalSource.lean](PracticalSource.lean) derives explicit first-crossing intervals. These new adapters are under exact-source CI [45514702164](https://github.com/FlareZ123/bb6/actions/runs/45514702164); the scalar lemmas and source-interface preflights passed locally. First attempt failed due to one argument order mismatch in an imported source lemma, corrected in ec591510ef3f9d36b27bb980f5057c70b9df5d81.
+For even n, remove the compulsory first selected bit from the modular carry recurrence. Its start is c=(n+2)/2 at clock q=n+4. Every later signed carry lies in 1≤c≤q−3; a legal edge to z at q+1 satisfies 2z=c or 2z=c+q. Consequently its predecessor, if interior, is uniquely (2z) mod q. A single sweep from all terminal interior states at clock F to earlier clocks computes the exact live sets of *all* starts sharing F. A central root is absent precisely when the existing modular width at K=F−n−3 is zero. For 14≤n and 1≤K≤n this excludes the actual critical blank reset, by Agent50's P1CarryWideSource.
+
+[BatchCarry.lean](BatchCarry.lean) proves the exact word/walk and reverse-set equivalences, including a common-clock sweep collecting surviving central births; [BatchCarrySource.lean](BatchCarrySource.lean) proves the universal original-source theorem critical_reset_no_reach_batch and whole-interval corollary. Original dependency closure and ordinary axioms accepted by [CI 45536490304](https://github.com/FlareZ123/bb6/actions/runs/45536490304), pinned source ddec41cfee5f40139f12b3203e696848b5c75e9c. The finite broadword checker [BatchCarryBit.lean](BatchCarryBit.lean) uses Agent28's proved bit spread and only one-sided containment; [BatchCarryFinite.lean](BatchCarryFinite.lean) proposes a single kernel computation for the entire even interval 10002..15000. The identical arithmetic check passed locally via decide +kernel; original-source finite CI dispatched at 3e5ebb8624866c3ac7e63bccc93b964490db136b, pending. This is separate from the large numerical runs below.
+
+### Exact-integer experiments (not kernel-certified numerical intervals)
+
+Build [batch.cpp](batch.cpp) with g++ -O3 -std=c++17. Run batch L R, where the common clock is F=2L+3 and R+4≤F. No heuristic cutoff or floating arithmetic enters the recurrence. Observed full scans:
+
+| Even interval L..R | Reverse endpoint visits | Surviving indices at F |
+|---|---:|---|
+|1000002..1500000|90573065|none|
+|1500002..2250000|136508015|2078306, 2017122|
+|2250002..3375000|217480630|2917282, 2779710|
+|3375002..5062500|346978927|none|
+|5062502..7593750|505970701|none|
+
+A singleton batch at F=2n+3 eliminates n=2017122, leaving precisely three indices not covered by the modular n-horizon screen. For those, [reverse_lag.cpp](reverse_lag.cpp) reuses Agent45's exact delayed target model and low-prefix grouping, but replaces the costly initial and subsequent long-window forward bitset images by reverse forests. For a fixed target bit y_i, every bounded endpoint z has at most one predecessor (2z+y_i) mod C_i; the quotient determines the selected bit, and 2z+y_i≥2C_i invalidates the edge. Merge equal predecessor groups using disjoint sets while preserving terminal endpoint IDs; after rewinding, retain exactly the terminal IDs whose roots lie in the specified start set. This computes an exact forward image without iterating through each large forward population. The known delayed targets for each block are reconstructed from the shared low prefix exactly as in laggroup.cpp; the required Agent45 margin inequality is checked for every bit of every proposed block, even one that later dies. In particular the result is a safe block-end extinction cost, not a claim about its minimal value.
+
+Build reverse_lag.cpp with g++ -O3 -std=c++17. Commands: reverse_lag n (10*n) floor(n/8). Results:
+
+| n | Width at n+1 | Safe empty cost K | Max low-prefix groups | Max gap |
+|---:|---:|---:|---:|---:|
+|2078306|89472|2338095|1|18|
+|2779710|1812344|5559415|4|21|
+|2917282|553840|8387183|4|25|
+
+Combined with the already completed [Agent28 range 10002..1000000](../agent28-p1-delayed-carry/RANGE-1000000.md), this gives exact-integer computational evidence for every even critical index through 7593750. The prior finite source proofs cover through 10000; the new generic theorem is accepted, while the large interval checks and delayed-forest algorithm outputs are **not** yet numerical Lean certificates. No P1 decision or BB(6) upper bound follows. Do not repeat this scan or infer an unbounded theorem from the empirical sparsity.
+
+## Two-boundary and authentic reachability extension
+
+[SmallSeed.lean](SmallSeed.lean), [SmallMany.lean](SmallMany.lean), [SmallComplement.lean](SmallComplement.lean) extend the small-seed analysis to either boundary and to all polynomial-size initial residues, including zero mod-seven phases. [BoundarySource.lean](BoundarySource.lean) connects this to both coordinates of original source histories, and [PracticalSource.lean](PracticalSource.lean) derives explicit first-crossing intervals. These adapters passed exact-source CI [45514702164](https://github.com/FlareZ123/bb6/actions/runs/45514702164); the scalar lemmas and source-interface preflights passed locally. First attempt failed due to one argument order mismatch in an imported source lemma, corrected in ec591510ef3f9d36b27bb980f5057c70b9df5d81.
 
 For fixed h,B,p (B≥2,p≥1) and n above the explicit smallThreshold, every OddCone at m≤hn has
 
