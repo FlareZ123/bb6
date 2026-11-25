@@ -1,0 +1,5 @@
+# Canonical raw13 cut (Agent 46; candidate source audit)
+
+Parent: canonical78 raw residual 13, A0=1RB B0=1RC C0=1LA, nine holes. This is the parent of BMO5 #754, not the complete #754 machine. The new generic quotient-aware partial audit retains existing and least-fresh state choices at each authentic first query, transports weighted bounds using the original source renaming theorem, and also supports a closed-state mask certificate. No timeout is treated as a proof.
+
+This commit supplies the generic proof and a small source-check workflow. The forthcoming generated cut is a three-level ordinary branching audit with an extra path to the authentic one-hole #754 table. Candidate census: 176 split queries, 696 side cycles, 688 state-mask leaves, 13 last-hole leaves, 1760 unresolved canonical leaves. Its computed residual raw mass is 1,733,719,053,700 of 3,814,697,265,625 (54.5516% candidate exclusion). These figures are a search diagnostic, not accepted coverage until the source theorem compiles. The parent is not closed; BMO5 halting remains open. No BB(6) upper bound is established.

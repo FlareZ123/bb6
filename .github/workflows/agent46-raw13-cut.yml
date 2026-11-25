@@ -1,0 +1,39 @@
+name: Agent 46 canonical raw13 source cut
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Proof target
+        type: choice
+        options: [core, cut]
+        default: core
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Verify actual dependency closure
+        env:
+          TARGET: ${{ inputs.target }}
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          D=im-results/agent46-raw13-cut
+          if [ "$TARGET" = core ]; then
+            ROOT="$D/Agent46Raw13Base.lean"
+          else
+            python "$D/generate.py"
+            python im-results/agent31-three-hole-tnf/generate_sweeps.py
+            python im-results/agent31-three-hole-tnf/generate_four_hole.py
+            ROOT="$D/Agent46Raw13Ingest.lean"
+          fi
+          python tools/lean_compile_closure.py --workdir /tmp/a46-raw13 --jobs 4 "$ROOT" | tee /tmp/a46-raw13.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a46-raw13.log; then exit 1; fi
