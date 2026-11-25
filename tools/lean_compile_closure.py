@@ -364,6 +364,7 @@ def compile_closure(
     artifact_name: str | None = None,
     precompiled_manifest_path: Path | None = None,
     precompiled_dir: Path | None = None,
+    absolute_source_path: bool = False,
 ) -> None:
     index = module_index(extra_source_roots)
     sources: dict[str, Path] = {}
@@ -521,7 +522,10 @@ def compile_closure(
                 flush=True,
             )
             result = subprocess.run(
-                [lean, "-o", str(olean), str(target)],
+                # Lean serializes source paths into some .olean metadata.
+                # Relative source names are stable across independent workdirs.
+                [lean, "-o", str(olean),
+                 str(target if absolute_source_path else target.relative_to(workdir))],
                 cwd=workdir,
                 env=env,
                 text=True,
@@ -606,6 +610,8 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("roots", nargs="+", help="root .lean source paths")
     parser.add_argument("--workdir", default="/tmp/lean-closure")
+    parser.add_argument("--absolute-source-path", action="store_true",
+                        help="use legacy absolute source arguments when reproducing old object identities")
     parser.add_argument("--source-root", action="append", default=[], metavar="DIR",
                         help="additional directory containing reconstructed Lean source files")
     parser.add_argument("--jobs", type=int, default=8)
@@ -704,6 +710,7 @@ def main() -> int:
             args.artifact_name,
             Path(args.precompiled_manifest).resolve() if args.precompiled_manifest else None,
             Path(args.precompiled_dir).resolve() if args.precompiled_dir else None,
+            args.absolute_source_path,
         )
     except Exception as exc:
         print(f"[lean-closure] ERROR: {exc}", file=sys.stderr, flush=True)
