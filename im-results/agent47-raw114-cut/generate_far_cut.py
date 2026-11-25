@@ -7,14 +7,35 @@ import hashlib, json, subprocess, tempfile, sys
 ROOT=Path(__file__).resolve().parent
 sys.path.insert(0,str(ROOT.parent/"agent31-three-hole-tnf"))
 from generate_four_hole import parse, masks
+from generate_sweeps import candidate, concrete_events, generate as generate_pump
 MOVES=[w+d+q for w,d,q in product("01","LR","ABCDEF")]
 PARENT="1RB---_1RC---_0RD---_1LD1RE_---0LD_------"
 EXPECTED={
+    "0RB":(541,9943,2135,366,3,"6b44d039c3b57475394193134abf2145c4e5f07e191bd38d0684e6917eb3cb25"),
+    "1RC":(504,9350,2023,220,5,"d6a97d7920f8c05b830495f37b40d6ad35ca2e8b17a1046b1e72d1a93f562273"),
     "0LB":(810,15221,2964,446,3,"cbcb4008a9608012b3674c46fa6120fe8b6cad9ac2c7b9f34c321f06ff11f6d2"),
     "0LC":(758,13981,3271,183,5,"52c1d8aabb0a198a273ab34f9406bf8cebfabadee39d47d74959921904a22801"),
     "0RC":(521,9579,2194,211,5,"7d54fde6d04c02ac1fb0945b75a0c378c2bfde4da45730446b9bd5df235871fe"),
     "1LC":(1108,20288,4974,223,5,"948fd7e5c9a9bad562c1fb7d52893f649cafaa5bca9f9f34a606c05799d025f9")
 }
+PUMPS={
+    "1RB0LA_1RC0LF_0RD1RF_1LD1RE_0RB0LD_1LA---":(108,220,104),
+    "1RB1LF_1RC0LA_0RD0LB_1LD1RE_1RC0LD_---1LB":(3,19,8),
+    "1RB1LF_1RC0LA_0RD0LB_1LD1RE_1RC0LD_---1LE":(3,19,8),
+}
+def emit_pumps():
+    parts=["import SweepPumping","set_option maxRecDepth 100000",
+           "set_option maxHeartbeats 0","set_option linter.unusedVariables false",
+           "namespace BB6Coverage.Agent31Pump.Raw114Hard","open BB6Coverage"]
+    for i,(row,expected) in enumerate(PUMPS.items()):
+        p=parse(row)
+        ans=candidate(p,concrete_events(p))
+        assert ans is not None,row
+        code,info=generate_pump(i,p,ans)
+        assert info==expected,(row,info)
+        parts.append(code)
+    parts.append("end BB6Coverage.Agent31Pump.Raw114Hard")
+    (ROOT/"Raw114HardPumps.lean").write_text("\n\n".join(parts)+"\n")
 def move(a):
     return f"⟨{str(a[0]=='1').lower()},{str(a[1]=='R').lower()},{ord(a[2])-65}⟩"
 def slot(s):
@@ -50,11 +71,15 @@ def generate(a,work):
     assert hashlib.sha256(raw).hexdigest()==sha,(a,hashlib.sha256(raw).hexdigest())
     rows=raw.decode().splitlines()
     assert len(rows)==len(set(rows))==op
-    out=subprocess.check_output([str(work/"far"),str(work/"open.txt"),"0",str(op),"0",str(ROOT/"far-cut-bank.txt")],text=True)
+    farrows=[row for row in rows if row not in PUMPS]
+    (work/"far-rows.txt").write_text("\n".join(farrows)+"\n")
+    bank="pump-far-bank.txt" if a in ("0RB","1RC") else "far-cut-bank.txt"
+    out=subprocess.check_output([str(work/"far"),str(work/"far-rows.txt"),"0",str(len(farrows)),"0",str(ROOT/bank)],text=True)
     found=dict((int(i),v) for i,v in (line.split(":") for line in out.splitlines()))
-    assert set(found)==set(range(op))
-    certs={}
-    for i,row in enumerate(rows):
+    assert set(found)==set(range(len(farrows)))
+    certs={row:f".proven BB6Coverage.Agent31Pump.Raw114Hard.M{i}.table BB6Coverage.Agent31Pump.Raw114Hard.M{i}.never"
+           for i,row in enumerate(PUMPS) if row in rows}
+    for i,row in enumerate(farrows):
         code=found[i]
         d,D,L,R,z=masks(parse(row),int(code[0]),[int(c,16) for c in code[1:]])
         certs[row]=f".far {str(code[0]=='1').lower()} {d} ⟨0,{D},{L},{R},{z}⟩"
@@ -83,7 +108,7 @@ theorem check{a}{i:02} : zipCheck 7014
     (refine (raw114Child {move(a)}) {slot(s)} (some {move(MOVES[i])}))
     kid{a}{i:02} = true := by decide
 """
-        emit(name,["Raw114FarBase"],body)
+        emit(name,["Raw114FarBase"]+(["Raw114HardPumps"] if a in ("0RB","1RC") else []),body)
     stats["split"]+=1
     assert stats==Counter(split=sp,cycle=cy,last=la,open=op),(a,stats)
     cases="\n".join(f"  · exact check{a}{12*w+6*r+q:02}" for q,w,r in product(range(6),range(2),range(2)))
@@ -140,6 +165,7 @@ theorem cut{a}_sound :
 #print axioms residual{a}_count
 """)
     print(a,stats)
+emit_pumps()
 with tempfile.TemporaryDirectory() as d:
     work=Path(d)
     subprocess.run(["g++","-std=c++17","-O3",str(ROOT.parent/"agent2-tnf-raw99"/"enumerate.cpp"),"-o",str(work/"enumerate")],check=True)
