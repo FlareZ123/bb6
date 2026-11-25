@@ -1,0 +1,5 @@
+# Agent45: reverse blocks and delayed-word aperiodicity
+
+ReverseBlock.lean, ReverseBlockSource.lean, ReverseBlockCompose.lean and ReverseBlockLagTrace.lean are locally kernel-checked. Exact block replacement uses two wrap-word candidates and preserves strict guards. For arbitrary target windows the new theorem trace_block_live proves genuine Trace prefix coverage for any fitted partition; for Agent9 zero-target interior live sets, live_block is an exact replacement. The regression implementation produces identical endpoint sets, about 2.2× speedup for the 2.078M synthetic sweep.
+
+The new mathematical result [aperiodicity](../results/2026-11-25-p1-delayed-carry-aperiodicity-agent45.md) extends to the full delayed target, using an exact signed numerator N that cannot vanish for any period. Finite repeated prefixes require 2^m|N. It complements Agent43's zero-target theorem; no all-time P1 decision or new numeric interval is claimed. The next target is exact fitted-block Covered integration and original-source exclusion beyond the accepted 15000 interval.
