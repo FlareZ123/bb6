@@ -1,0 +1,22 @@
+name: Agent 47 raw112 generator inspection
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract inductive generator source
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/raw112-generators
+          tar -xJf im-results/agent47-raw112-cut/inductive-generators.tar.xz -C /tmp/raw112-generators
+          find /tmp/raw112-generators -maxdepth 2 -type f -printf '%P\n'
+      - name: Preserve generator source for local inspection
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw112-inductive-generator-source
+          path: /tmp/raw112-generators/
