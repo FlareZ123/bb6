@@ -21,6 +21,10 @@ TABLES = [
     "1RB1LA_1RC1LF_0RD1RC_1LD1RE_1RB0LB_---0LA",
     # F1=0RA sibling E0-open leaf: candidate for a symbolic counter/sweep proof.
     "1RB0LB_1RC1LF_0RD0LA_1LD1RE_---0LB_0RC0RA",
+    # Raw85: three previously reported FAR no-hit leaves (Agent 40).
+    "1RB0LE_1RC1LF_0RD1RF_1LD1RE_---0LB_0RC1RA",
+    "1RB0LE_1RC1LF_0RD---_1LD1RE_1RA0LB_0RF1RA",
+    "1RB0RD_1RC1LF_0RD1RF_1LD1RE_---0LB_1RC1RA",
 ]
 
 def parse(s):
