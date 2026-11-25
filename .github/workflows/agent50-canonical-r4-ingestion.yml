@@ -126,7 +126,9 @@ jobs:
           cp lakefile.toml "$GITHUB_WORKSPACE/.tmp/agent19-raw10-cryptids-leaf/upstream-lakefile.toml"
           cp lake-manifest.json "$GITHUB_WORKSPACE/.tmp/agent19-raw10-cryptids-leaf/upstream-lake-manifest.json"
           sha256sum "$GITHUB_WORKSPACE/.tmp/agent19-raw10-cryptids-leaf/upstream-lakefile.toml" "$GITHUB_WORKSPACE/.tmp/agent19-raw10-cryptids-leaf/upstream-lake-manifest.json" > "$GITHUB_WORKSPACE/.tmp/agent19-raw10-cryptids-leaf/upstream-dependencies.sha256"
-          lake build BusyBeaver.Bridge Cryptids.Machines
+          lake build BusyBeaver.Basic BusyBeaver.Bridge Cryptids.Machines
+          test -s .lake/build/lib/lean/BusyBeaver/Basic.olean
+          test -s .lake/build/lib/lean/Cryptids/Machines.olean
 
       - name: Compile the canonical77 r4 graft with its complete source closure
         if: ${{ !inputs.compile_raw10_cryptids_leaf }}
