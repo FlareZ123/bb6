@@ -33,6 +33,14 @@ The generated theorem `allRB` proves that every machine compatible with this chi
 
 The E0=0RB manual target `weighted-tnf-raw120-rb` passed in [CI run 45532860093](https://github.com/FlareZ123/bb6/actions/runs/45532860093), completing at 2026-11-25T02:53:42Z. Its dedicated `raw120` job regenerated the pinned RB tree and compiled the generated `Raw120RBData.lean` dependency closure. The generated file checks `c_root` and `allRB`; the workflow's source guard (which rejects `sorryAx` and `native_decide`) passed. The RB child is therefore accepted by original-source Lean CI.
 
+## E0=0LA discovery and parent partition
+
+The deterministic first-hole search for E0=0LA reproduced 1,885 split nodes, 27,089 cycle leaves, 11,557 last-hole leaves and 4,710 open leaves, accounting for all 9,765,625 raw completions. The open list SHA256 is `0ee9b27fbb87a275e6b4626d91ec537aef9d72283e4deed09d1face988e1043c`. The latest finite query is at time 745; the enumerator's maximum weighted halt score is 747. The generator now budgets the final halt query and up to five additional blank-prefix steps (751), rather than using an unsafe unweighted 746 cutoff.
+
+Local candidate FAR screening with the two existing banks found 4,386 of 4,710 leaves. Three neighboring residual banks plus nine newly discovered DFA candidates raised the union to 4,468, leaving 242 before symbolic sweeps. These are candidate-checker results, not Lean acceptance. The reproducible generator additionally searches four neighboring banks and symbolic pumps; it refuses to emit a complete certificate when any open leaf is unmatched. The new candidate DFA bank is `la-discovery-bank.txt`.
+
+The draft `Raw120CanonicalPartition.lean` replaces the unconsumed two-child audit with a direct weighted parent consumer: immediate halt at E0, the accepted 0RF and 0RB children, and a list of 22 unresolved ordinary transitions. It targets the exact canonical 78 roster address and proves a conditional exact-at-target statement from covers of every retained branch. Source acceptance of this module is pending; no roster count is reduced. The common parent bound is 14416.
+
 ## Placement in the global residual frontier
 
 The parent `p120` is canonical residual **84** (raw residual index **120**) in `im-results/agent13-roster-convergence/canonical-124.json`. Its exact address is B0=1RC, C0=0RD, D0=1LD, D1=1RE, E1=1LE, leaving E0 as the first hole. It is not among the 18 residuals removed by the accepted FiveHoleRoster, AllTwelveRoster, and NewFiveRoster cuts, so it remains one of the **106** obligations in `Combined106Roster.reducedRoster`. The 106-way roster itself passed source-linked CI run 45518426903.

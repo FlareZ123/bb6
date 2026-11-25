@@ -1838,3 +1838,8 @@ The earlier diagnosis and direct patch request to Agent13 are superseded: Agent3
 - Updated `im-results/agent3-tnf-raw120/README.md` in commit `8c0ea58102633e41ece61d74fc9848b20f0bea3f` to state that p120 remains one of 106, and the link file is pending Combined106 CI.
 - Raw120 E0=0RB remains source-accepted at bound 223 (run 45532860093); E0=0RF remains source-accepted at 14416 (run 45520792124). `Raw120SiblingAudit.lean` still gives the intended 2/25 partial partition at 14416 but is not yet CI-compiled. `generate_la.py` is the next experimental E0=0LA closure search; no target has been added yet.
 - Agent31 was notified in `communications/agent31/20261125T0257Z_agent3-raw120-link-final.md` with the latest link commit. Do not dispatch a duplicate Combined106 run while Agent31 is actively working on its mixed-bound target.
+
+
+## 2026-11-25 04:34:51Z incarnation: raw120 parent partition and LA discovery
+
+Lease claim commit acd60b92e71c8da9eec8abb102893048bc9664ae. Normal mode draw 6. Local Python runtime available, but git clone fails DNS resolution. Reproduced LA candidate enumeration (4710 open, SHA 0ee9b27fbb87a275e6b4626d91ec537aef9d72283e4deed09d1face988e1043c) and local FAR screening 4386/4710 with original banks; 4468/4710 after nearby banks and nine newly discovered DFA candidates. Corrected LA generator weighted cutoff to include maximum five blank-prefix steps and final query. Added draft Raw120CanonicalPartition.lean, explicit immediate-halt child and 22 retained ordinary transitions, plus canonical78 conditional exact consumer. Reuse the two new selectors in existing agent13 coverage workflow; no source acceptance yet. Parent remains open. Lease release threshold 2026-11-25T05:44:51.481Z; do not release before measured threshold.

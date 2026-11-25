@@ -24,6 +24,7 @@ import multi
 MOVES = ["".join(x) for x in product("01", "LR", "ABCDEF")]
 PARENT = "1RB---_1RC---_0RD---_1LD1RE_0LA1LE_------"
 EXPECTED_OPEN = 4710
+EXPECTED_SHA = "0ee9b27fbb87a275e6b4626d91ec537aef9d72283e4deed09d1face988e1043c"
 EVENT_LIMIT = 20000
 CHUNK = 240
 FOLDER = ROOT / "la"
@@ -40,7 +41,7 @@ open_bytes = (FOLDER / "open.txt").read_bytes()
 open_sha = hashlib.sha256(open_bytes).hexdigest()
 opens = open_bytes.decode().splitlines()
 assert len(opens) == len(set(opens)), "duplicate raw open-leaf encoding"
-if len(opens) != EXPECTED_OPEN:
+if len(opens) != EXPECTED_OPEN or open_sha != EXPECTED_SHA:
     raise RuntimeError(
         f"previous incarnation recorded {EXPECTED_OPEN} open leaves; "
         f"reproduced {len(opens)} (SHA256 {open_sha})")
@@ -54,7 +55,16 @@ subprocess.run(
 # harmless; keep the first exact mask so regeneration is deterministic.
 certs = {}
 bank_counts = {}
-for bank_name in ("bank.txt", "rb-bank.txt"):
+for bank_name in (
+    "bank.txt", "rb-bank.txt", "la-discovery-bank.txt",
+    "../agent8-tnf-six/raw115/bank.txt",
+    "../agent8-tnf-six/raw119/bank.txt",
+    "../agent11-raw121/bank.txt",
+    "../agent47-raw114-cut/all-far-bank.txt",
+    "../agent8-tnf-raw117/bank112.txt",
+    "../agent8-tnf-raw117/bank112extra.txt",
+    "../agent8-tnf-raw117/bank117.txt",
+):
     hits = subprocess.check_output(
         [str(FOLDER / "bank"), str(ROOT / bank_name),
          str(FOLDER / "open.txt")], text=True)
@@ -128,11 +138,14 @@ for i, code in enumerate(opens):
 tree = json.loads((FOLDER / "tree.json").read_text())
 stats = Counter()
 max_last = 0
+max_query = 0
 
 def inspect(t):
-    global max_last
+    global max_last, max_query
     tag, *v = t
     stats[tag] += 1
+    if tag in ("split", "last"):
+        max_query = max(max_query, v[0])
     if tag == "split":
         for child in v[2]:
             inspect(child)
@@ -140,7 +153,7 @@ def inspect(t):
         max_last = max(max_last, v[0])
 
 inspect(tree)
-B = max_last + 1
+B = max_query + 6  # final query plus up to five zero-write prefix steps
 summary = {
     "parent": PARENT,
     "expected_open_count": EXPECTED_OPEN,
@@ -164,7 +177,7 @@ print(json.dumps(summary, indent=2, sort_keys=True))
 
 if missing:
     raise SystemExit(
-        f"{len(missing)} open leaves still lack FAR or one-block growth witnesses")
+        f"{len(missing)} open leaves still lack FAR or symbolic growth witnesses")
 
 pump_code.append(f"end {pumpns}")
 (FOLDER / "Raw120LASweeps.lean").write_text(
