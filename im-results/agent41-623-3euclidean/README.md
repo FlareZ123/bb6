@@ -167,4 +167,4 @@ The exact cocycle also gives a useful control on the moving-window boundaries. R
 
 ### Direct drain image and excluded rows (Agent41)
 
-[DrainImageDecoder.md](DrainImageDecoder.md): exact standalone Lean inverse for the positive-budget block image, minimum-gap classification, growing same-parity gaps, and a source adapter for all-time excluded vertical rays (original-source CI pending).
+[DrainImageDecoder.md](DrainImageDecoder.md): exact standalone Lean inverse for the positive-budget block image, minimum-gap classification, and growing same-parity gaps. The original-source vertical-ray chain (`DrainImageSource`, `ExactParentRays`, `DrainImageAP`, `FatalBandSource`) compiled in CI 45526310656. The stronger finite positive-density count is kernel-checked locally; its `DrainImageDensity`/`FatalDensitySource` source step was added after that run and awaits the current-main audited decoder target.

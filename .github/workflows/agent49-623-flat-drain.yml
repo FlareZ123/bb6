@@ -48,22 +48,29 @@ jobs:
       - name: Check direct image decoder and authentic excluded rows
         working-directory: /tmp/cryptids
         run: |
+          set -euo pipefail
+          log=/tmp/drain-image-source.log
+          : > "$log"
           cp "$GITHUB_WORKSPACE/im-results/agent41-623-3euclidean/DrainImageDecoder.lean" DrainImageDecoder.lean
-          lake env lean -o .lake/build/lib/lean/DrainImageDecoder.olean DrainImageDecoder.lean
+          lake env lean -o .lake/build/lib/lean/DrainImageDecoder.olean DrainImageDecoder.lean 2>&1 | tee -a "$log"
           cp "$GITHUB_WORKSPACE/im-results/agent41-623-3euclidean/DrainImageGates.lean" DrainImageGates.lean
-          lake env lean -o .lake/build/lib/lean/DrainImageGates.olean DrainImageGates.lean
+          lake env lean -o .lake/build/lib/lean/DrainImageGates.olean DrainImageGates.lean 2>&1 | tee -a "$log"
           cp "$GITHUB_WORKSPACE/im-results/agent41-623-3euclidean/DrainImageSource.lean" DrainImageSource.lean
-          lake env lean -o .lake/build/lib/lean/DrainImageSource.olean DrainImageSource.lean
+          lake env lean -o .lake/build/lib/lean/DrainImageSource.olean DrainImageSource.lean 2>&1 | tee -a "$log"
           cp "$GITHUB_WORKSPACE/im-results/agent41-623-3euclidean/ExactParentRays.lean" ExactParentRays.lean
-          lake env lean ExactParentRays.lean
+          lake env lean ExactParentRays.lean 2>&1 | tee -a "$log"
           cp "$GITHUB_WORKSPACE/im-results/agent41-623-3euclidean/DrainImageAP.lean" DrainImageAP.lean
-          lake env lean -o .lake/build/lib/lean/DrainImageAP.olean DrainImageAP.lean
+          lake env lean -o .lake/build/lib/lean/DrainImageAP.olean DrainImageAP.lean 2>&1 | tee -a "$log"
           cp "$GITHUB_WORKSPACE/im-results/agent41-623-3euclidean/FatalBandSource.lean" FatalBandSource.lean
-          lake env lean -o .lake/build/lib/lean/FatalBandSource.olean FatalBandSource.lean
+          lake env lean -o .lake/build/lib/lean/FatalBandSource.olean FatalBandSource.lean 2>&1 | tee -a "$log"
           cp "$GITHUB_WORKSPACE/im-results/agent41-623-3euclidean/DrainImageDensity.lean" DrainImageDensity.lean
-          lake env lean -o .lake/build/lib/lean/DrainImageDensity.olean DrainImageDensity.lean
+          lake env lean -o .lake/build/lib/lean/DrainImageDensity.olean DrainImageDensity.lean 2>&1 | tee -a "$log"
           cp "$GITHUB_WORKSPACE/im-results/agent41-623-3euclidean/FatalDensitySource.lean" FatalDensitySource.lean
-          lake env lean FatalDensitySource.lean
+          lake env lean FatalDensitySource.lean 2>&1 | tee -a "$log"
+          if grep -Eq 'sorryAx|native_decide' "$log"; then
+            echo "Unapproved trust dependency in direct image source closure" >&2
+            exit 1
+          fi
       - name: Check remaining source families
         if: inputs.check != 'decoder'
         working-directory: /tmp/cryptids
