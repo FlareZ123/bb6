@@ -85,3 +85,21 @@ I independently compiled the current `im-results/agent2-tnf-raw99/enumerate.cpp`
 The parent is `BB6.Agent4Raw58Cut.parent = BB6.Agent4Raw58RE.p58`, defined by the first four entries of the root path followed by E1=0RA. It is distinct from the already-used p107 and p114 E1 branches. Agent47 has finite membership/count drafts for the canonical77 and canonical72 rosters; neither Raw58 parent Cover nor the 72→71 graft has been source-audited. The 72-roster consumer must use the corrected 19310 premise.
 
 Use the existing `raw58-cut`, `raw58-more`, `raw58-more2`, `raw58-more3`, `raw58-rc`, and `raw58-child` targets in `.github/workflows/agent10-four-hole.yml`. After the current individual child audits are resolved, run the existing `raw58-more3` target once against the current source tree and inspect its complete original-source closure and axiom profile. No complete Raw58 parent closure or global roster reduction is currently claimed. BB(6) remains unresolved.
+
+
+## Conditional 76-to-75 graft against the accepted two-parent roster
+
+`Canonical75Raw58Graft.lean` is a new conditional consumer of the **source-accepted** `CanonicalTwoParentRosterOnly` 76-residual theorem, rather than the older canonical77-only Raw58 wrapper. It proves by kernel reduction that the exact E1=0RA Raw58 parent `p58` occurs exactly once in the accepted `roster76`, and that empty-replacement grafting removes it to produce `roster75` with length 75.
+
+Its `sound` theorem states that, assuming the Raw58 parent has a `WeightedBound 19310` proof, every normalized root machine is either below the canonical target 6,766,859 or quotient-compatible with one of the 75 retained representatives. `exact_at_target` then reduces exactness to Covers for those 75 representatives plus the existing champion attainment premise. The 19310 premise is essential: the 1LE/LE1 child sets the current parent bound, so the old 7014 premise is not valid for the full Raw58 closure.
+
+**Local artifact-backed compilation (not yet a new source-accepted CI audit):**
+
+- Source: `Canonical75Raw58Graft.lean`, Git blob `3f33d09c6a6dfc5f30e277eca2feb89581545d3d`.
+- Toolchain: Lean 4.36.0-rc2, commit `b35cb10cf2ced51a2fd1880cfdbf75c71ab7a35a`.
+- Accepted 76 artifact: run [45647053824](https://github.com/FlareZ123/bb6/actions/runs/45647053824), artifact 15043876968 (uploaded under a misleading canonical73 label; its embedded manifest identifies `CanonicalTwoParentRosterOnly.exact_at_target` and 76 residuals). ZIP SHA256 `cfa00335da67bb71caf725c8a8fa6f0fd7c257035a4dfddc43531282924e305c`.
+- Canonical77 dependency artifact: run [45554648116](https://github.com/FlareZ123/bb6/actions/runs/45554648116), artifact 14997966221. ZIP SHA256 `b55e4c939da70aaa4d2f50f5721b9183ab776682f1b682f647ee27aa6cc5da17`.
+- The 76 artifact's `CanonicalTwoParentRosterOnly.lean` source SHA256 is `a40280b24920f9f56b3f74738c2250b6f8e7bcb6b7fbb233bd0b409b9cb72600`, matching the current repository source. Its accepted `.olean` hash is `3f0c42b25500b64b47a63c4a825f52bc4b36e37bb1bddd4332b623a3043b1369`; the reused `CanonicalTwoParentGraft.olean` hash is `e39b1ac0e6093c81cbffbe5ea7f47a3c8e9469901fd7fd3f9cd7ea0f457e3579`.
+- With `LEAN_PATH=/tmp/canonical76/a31-shared:/tmp/canonical77`, the committed module compiles locally. `#print axioms` for `parent_count`, `count`, `base_sound_at_target`, `sound`, and `exact_at_target` reports only `propext`, `Classical.choice`, and `Quot.sound`; no `sorryAx` or `native_decide`.
+
+This is a conditional quotient-roster reduction, not an unconditional BB(6) upper bound. It still needs an original-source CI audit consuming the actual Raw58 parent theorem at 19310. The existing Raw58 parent closure remains the critical dependency; do not report 75 residuals as accepted until that parent theorem and this consumer both pass the source/axiom audit.
