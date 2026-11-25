@@ -7,36 +7,22 @@ set_option maxHeartbeats 0
 namespace BB6.Agent19HardRoot
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent47WeightedHalt BB6.Agent8TNFPath
 
-/-- The checked first-hole path fixes the first undefined transition at
-    primitive step 23. Convert that concrete known-run witness to the
-    upstream HaltsAfter predicate. -/
-theorem D3_haltsAfter23 : HaltsAfter D3 23 := by
-  rw [← forgetHaltRows_defaultCompletion D3]
-  apply (weightedTNF_halt_iff_firstHole
-    (forgetHaltRows D3) (forgetHaltRows_noAssignedHalt D3) 23).2
-  have hrun : knownRun (forgetHaltRows D3) 23 ≠ none := by
-    decide
-  cases hc : knownRun (forgetHaltRows D3) 23 with
-  | none => exact False.elim (hrun hc)
-  | some c =>
-      refine ⟨c, rfl, ?_⟩
-      decide
+/-- Step 23 is the first query of the ordinary D1 transition, not a halt. -/
+theorem D3_query23 : (run D3 23 blank).map readSlot = some (3,true) := by decide
 
-/-- Determinism makes 23 the only possible first-halting index. -/
-theorem D3_halt_bound24 :
-    ∀ k, HaltsAfter D3 k → k + 1 ≤ 24 := by
-  intro k hk
-  have heq := halting_time_unique D3 k 23 hk D3_haltsAfter23
-  omega
+theorem D3_live24 : (run D3 24 blank).isSome = true := by decide
 
-/-- Every completion of the erased D3 halt row is covered at the exact
-    primitive score bound 24. -/
-theorem D3_cover24 :
-    Cover (WeightedBound 24) (forgetHaltRows D3) :=
-  (D3_cover_iff 24).2 D3_halt_bound24
+theorem D3_noHaltUpTo23 (k : Nat) (hk : k ≤ 23) : ¬ HaltsAfter D3 k := by
+  intro hh
+  have h24 : run D3 24 blank = none := by
+    have hsum : k + 1 + (24 - (k+1)) = 24 := by omega
+    rw [← hsum]
+    exact run_none_add D3 blank (k+1) (24-(k+1)) hh.2
+  have hlive := D3_live24
+  simp [h24] at hlive
 
-#print axioms D3_haltsAfter23
-#print axioms D3_halt_bound24
-#print axioms D3_cover24
+#print axioms D3_query23
+#print axioms D3_live24
+#print axioms D3_noHaltUpTo23
 
 end BB6.Agent19HardRoot

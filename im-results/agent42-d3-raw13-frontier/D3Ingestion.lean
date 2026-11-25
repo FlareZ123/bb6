@@ -108,117 +108,34 @@ theorem D3_tail_pathOK :
   rw [← D3_parent_eq, ← D3_parent_cut]
   decide
 
-/-- Lift the already-proved exact score-24 D3 leaf to the global 21269
-    threshold. No new simulation or halt claim is introduced here. -/
-theorem d3Leaf_cover21269 :
-    Cover (WeightedBound 21269) d3Leaf := by
-  intro m hm k d hk hd
-  have h := d3Leaf_weightedBound m hm k d hk hd
-  omega
+/-- D3's score is unknown. A terminal certificate must be supplied at the
+    actual target bound. The five halt siblings can be discharged at that bound
+    if the path checker is supplied. -/
+noncomputable def D3_frontier (B : Nat)
+    (hpath : BB6.Agent31FourHoleFrontier.pathOKB B
+      d3ResidualEntry.2 4 D3_tail = true)
+    (hD3 : Cover (WeightedBound B) d3Leaf) :
+    RootedFrontier B d3ResidualEntry.2 :=
+  buildFrontierB B d3ResidualEntry.2 4 D3_parent_rawRootPath
+    D3_tail hpath
+    (by
+      rw [D3_tail_endpoint]
+      exact WeightedTNFCertificate.ofWeightedCover
+        (forgetHaltRows_root D3 (by decide))
+        (forgetHaltRows_tnfSupport D3)
+        (forgetHaltRows_noAssignedHalt D3) hD3)
 
-/-- A certificate suitable for the existing sibling-preserving frontier
-    builder, obtained from the source-checked D3 weighted cover. -/
-noncomputable def d3Leaf_certificate :
-    WeightedTNFCertificate 21269 d3Leaf 6 :=
-  WeightedTNFCertificate.ofWeightedCover
-    (forgetHaltRows_root D3 (by decide))
-    (forgetHaltRows_tnfSupport D3)
-    (forgetHaltRows_noAssignedHalt D3)
-    d3Leaf_cover21269
-
-/-- Refine only the unique raw13 descendant along D3's remaining five
-    first-hole decisions. Halt siblings are bounded; ordinary siblings stay
-    as explicit residual leaves. -/
-noncomputable def D3_frontier :
-    RootedFrontier 21269 d3ResidualEntry.2 :=
-  buildFrontierB 21269 d3ResidualEntry.2 4 D3_parent_rawRootPath
-    D3_tail D3_tail_pathOK
-    (by rw [D3_tail_endpoint]; exact d3Leaf_certificate)
-
-theorem D3_frontier_sound :
+theorem D3_frontier_sound (B : Nat)
+    (hpath : BB6.Agent31FourHoleFrontier.pathOKB B
+      d3ResidualEntry.2 4 D3_tail = true)
+    (hD3 : Cover (WeightedBound B) d3Leaf) :
     ∀ m, compatible d3ResidualEntry.2 m →
-      WeightedBound 21269 m ∨
-        ∃ address q, OpenLeaf D3_frontier address q ∧ compatible q m :=
-  RootedFrontier.sound D3_frontier
-
-def D3_remaining : List (List Move × PartialMachine) :=
-  residuals D3_frontier
-
-theorem D3_remaining_count : D3_remaining.length = 115 := by
-  unfold D3_remaining D3_frontier
-  rw [residuals_length_buildFrontierB 21269 d3ResidualEntry.2 4
-    D3_parent_rawRootPath D3_tail D3_tail_pathOK
-    (by rw [D3_tail_endpoint]; exact d3Leaf_certificate)]
-  have htail : D3_tail.length = 5 := by decide
-  rw [htail]
-  norm_num
-
-/-- Exact local cover: every completion of this raw13 residual is either
-    below the bound or lies in one of the 115 retained ordinary siblings. -/
-theorem D3_remaining_sound :
-    ∀ m, compatible d3ResidualEntry.2 m →
-      WeightedBound 21269 m ∨
-        ∃ e ∈ D3_remaining, compatible e.2 m := by
-  intro m hm
-  rcases D3_frontier_sound m hm with hbound | ⟨address,q,hopen,hcompat⟩
-  · exact Or.inl hbound
-  · exact Or.inr ⟨(address,q), OpenLeaf_mem_residuals hopen, hcompat⟩
-
-/-- Replace exactly the D3 descendant in the already accepted 1,792-entry
-    canonical-77 roster. The original other 1,791 entries are preserved. -/
-noncomputable def D3_refinedRoster77 : List (List Move × PartialMachine) :=
-  graftRoster d3ResidualEntry.2 D3_remaining refinedRoster77
-
-theorem D3_parent_count77 :
-    (refinedRoster77.filter
-      (fun e => sameTable e.2 d3ResidualEntry.2)).length = 1 := by
-  decide
-
-theorem D3_refinedRoster_sound (m : Machine)
-    (hm : compatible BB6.Agent50TNFPilot.root m) :
-    WeightedBound 21269 m ∨
-      ∃ e ∈ D3_refinedRoster77, TNFQuotientCompatible e.2 m := by
-  simpa [D3_refinedRoster77] using
-    (graftRoster_sound
-      (p := d3ResidualEntry.2)
-      (replacement := D3_remaining)
-      (roster := refinedRoster77)
-      (by decide)
-      refined_sound77
-      D3_remaining_sound) m hm
-
-theorem D3_refinedRoster_count :
-    D3_refinedRoster77.length = 1906 := by
-  have h := graftRoster_length_of_one d3ResidualEntry.2
-    D3_remaining refinedRoster77 (by
-      simpa [graftMatchCount] using D3_parent_count77)
-  change D3_refinedRoster77.length + 1 =
-    refinedRoster77.length + D3_remaining.length at h
-  rw [refined_count77, residual_count, D3_remaining_count] at h
-  omega
-
-/-- Conditional global cover after all retained residuals are discharged. -/
-theorem cover_at_target_D3 (B : Nat) (hB : 21269 ≤ B)
-    (hLeaves : ∀ e ∈ D3_refinedRoster77, Cover (WeightedBound B) e.2) :
-    Cover (WeightedBound B) BB6.CoverageAdapter.firstOneCylinder :=
-  cover_of_quotient_roster hB D3_refinedRoster_sound hLeaves
-
-/-- Conditional exactness interface after the D3 frontier graft. -/
-theorem exact_at_target_D3 (B : Nat) (hB : 21269 ≤ B)
-    (hLeaves : ∀ e ∈ D3_refinedRoster77, Cover (WeightedBound B) e.2)
-    (champ : ∃ m : BB6.Coverage.RawMachine,
-      BB6.Coverage.HaltsAt (BB6.Coverage.tickRaw m) B) :
-    BB6.Coverage.ExactBB6 B :=
-  exact_from_quotient_roster (by omega) hB D3_refinedRoster_sound hLeaves champ
+      WeightedBound B m ∨
+        ∃ address q, OpenLeaf (D3_frontier B hpath hD3) address q ∧ compatible q m :=
+  RootedFrontier.sound (D3_frontier B hpath hD3)
 
 #print axioms D3_parent_rawRootPath
 #print axioms D3_tail_endpoint
-#print axioms d3Leaf_cover21269
 #print axioms D3_frontier_sound
-#print axioms D3_remaining_sound
-#print axioms D3_refinedRoster_sound
-#print axioms D3_refinedRoster_count
-#print axioms cover_at_target_D3
-#print axioms exact_at_target_D3
 
 end BB6.Agent42D3Ingestion

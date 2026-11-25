@@ -80,7 +80,7 @@ theorem exact_at_target77 (B : Nat) (hB : 21269 ≤ B)
     BB6.Coverage.ExactBB6 B :=
   exact_from_quotient_roster (by omega) hB refined_sound77 hLeaves champ
 
-/-- The 25² hard-root D3 cylinder is a refinement of exactly one
+/-- The 25-completion hard-root D3 cylinder is a refinement of exactly one
     open residual in the current raw13 cut. This identifies the descendant
     without claiming that the surrounding six-hole residual is closed. -/
 def d3Leaf : PartialMachine :=
@@ -104,12 +104,11 @@ theorem d3ResidualEntry_address :
       [⟨false,false,2⟩, ⟨false,false,3⟩, ⟨false,true,1⟩] := by
   decide
 
-/-- All completions of the identified descendant have primitive score at
-    most 24; the parent raw13 residual remains open until its other branches
-    are separately covered. -/
-theorem d3Leaf_weightedBound :
-    Cover (BB6.Agent47WeightedHalt.WeightedBound 24) d3Leaf :=
-  BB6.Agent19HardRoot.D3_cover24
+/-- The hard-root leaf remains conditional on the actual score obligation. -/
+theorem d3Leaf_weightedBound_iff (B : Nat) :
+    Cover (BB6.Agent47WeightedHalt.WeightedBound B) d3Leaf ↔
+      ∀ k, HaltsAfter BB6.Agent19HardRoot.D3 k → k+1 ≤ B := by
+  simpa [d3Leaf] using BB6.Agent19HardRoot.D3_cover_iff B
 
 #print axioms parent_count77
 #print axioms refined_count77

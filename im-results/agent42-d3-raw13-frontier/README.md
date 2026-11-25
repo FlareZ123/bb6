@@ -1,28 +1,9 @@
-# D3 raw13 frontier graft (intermediate; CI pending)
+# D3 raw13 routing (intermediate; source CI pending)
 
-## Purpose
+**Correction, 25 November 2026:** The last ordinary row of D3 is first queried at time 23, but this row is D1=0RA. The sole halt row is F1. The earlier score-24 assertion was false and did not pass Lean. The literal table is `1RB0LC_1RC1RE_1LA0LD_0RB0RA_1RB1RF_1RD---`. Its run remains live at time 24. A separate direct simulation also remains live through 100000 ordinary moves, which does not decide eventual halting.
 
-This module attempts to refine the unique D3 descendant in Agent46's raw13 residual roster without dropping any ordinary sibling. It is an intermediate frontier construction, not an upper bound for BB(6).
+The corrected HardRootD3Bound module states the finite live-prefix and no-halt-through-23 lemmas. A local Lean 4.36.0-rc2 preflight on copied exact transition semantics accepted these lemmas; original-source compilation remains pending. The raw13 ingest now exposes the existing conditional D3 cover equivalence instead of asserting score 24.
 
-## Source inputs
+D3Ingestion preserves the first-hole route to the unique raw13 descendant (relative address A1=0LC,C1=0LD,D0=0RB), then the five ordinary decisions to the one-hole D3 leaf. Its frontier builder explicitly requires a D3 weighted Cover at the requested bound and a checked path at that bound. The proposed unconditional 1906-entry graft is withdrawn: the existing 1792-entry raw13 composition remains the reference, with D3 unresolved. No new upper bound, no machine decision, and no reduction in the accepted frontier is claimed.
 
-- `../agent46-raw13-cut/Agent46Raw13Ingest77.lean` defines `d3ResidualEntry`, identifies its address as `A1=0LC, C1=0LD, D0=0RB`, and provides the erased-halt D3 leaf's score-24 weighted cover.
-- `../agent19-hard-root-crosswalk/HardRootD3Bound.lean` supplies the checked D3 schedule and score-24 hard-root bound.
-- `../agent42-frontier-count/RootedFrontierCount.lean` is intended to prove the exact residual projection and the (23n) ordinary-sibling count for a path of length (n).
-- `../agent42-frontier-count/GraftRosterCount.lean` is intended to provide structural length arithmetic for one-parent roster replacement.
-
-## Construction
-
-The first five D3 schedule entries are used to prove that the raw13 residual table is exactly the prefix endpoint. The remaining five entries reach the erased-halt D3 leaf. At threshold 21269, the five-edge frontier retains 115 ordinary off-path residuals and discharges the checked D3 leaf plus the halt siblings.
-
-The local frontier is grafted into `refinedRoster77`. A separate finite count establishes that exactly one existing roster entry matches the D3 parent. If all these proofs compile, the new roster has 1,906 entries (1,792 - 1 + 115), and its quotient-compatible soundness theorem preserves the other 1,791 entries.
-
-## Validation status
-
-**Not yet Lean-accepted.** The construction is written in `D3Ingestion.lean`; the structural helper proofs have undergone several CI-driven corrections and still require a passing run.
-
-- `.github/workflows/agent13-coverage.yml`, target `weighted-tnf-agent42-frontier-count`: structural helper compilation.
-- `.github/workflows/agent46-raw13-cut.yml`, target `d3frontier`: full raw13 source regeneration and D3 compilation.
-- `.github/workflows/agent42-d3-prebuilt.yml`: cached path using the previously certified raw13 closure (run 45639704742), canonical77 artifact (run 45554648116), and the prior canonical77 manifest. The cached raw13 data is reused only after checking that the generator's data-producing prefix (lines 1–281) is byte-identical to the source used by the cached artifact; the later changed section is proof-selection mapping. The canonical raw114 source hash is checked in the workflow.
-
-Even after this frontier compiles, exact BB(6) requires discharging all 1,906 retained residuals and combining that universal upper bound with an attained lower bound.
+The previously attempted structural helper CI run 45689232664 terminated with runner shutdown before the target completed. Do not rerun the false score-24 proof or treat any previous draft count as accepted.
