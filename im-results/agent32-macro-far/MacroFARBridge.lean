@@ -12,11 +12,12 @@ theorem step_sound (p : PartialMachine) (m : Machine) (hm : compatible p m)
     (hs : MacroFAR.step (project p) z = some z') :
     ∃ c', rawStep m c = some c' ∧ c'.state = z'.q ∧ FAR.Represents c' z'.l z'.r := by
   rcases z with ⟨q,l,r⟩
+  change (((p (q,r.headD false)).bind id).map (fun mv => (mv.write,mv.right,mv.next))).map (fun (w,right,q') => if right then ⟨q',w::l,r.tail⟩ else ⟨q',l.tail,l.headD false::w::r.tail⟩) = some z' at hs
   cases hp : p (q,r.headD false) with
-  | none => simp [MacroFAR.step,project,hp] at hs
+  | none => rw [hp] at hs; contradiction
   | some v =>
     cases v with
-    | none => simp [MacroFAR.step,project,hp] at hs
+    | none => rw [hp] at hs; contradiction
     | some mv =>
       have hstep : rawStep m c = some (applyMove c mv) := by
         unfold rawStep readSlot
@@ -25,14 +26,24 @@ theorem step_sound (p : PartialMachine) (m : Machine) (hm : compatible p m)
       cases hd : mv.right with
       | true =>
         have he : z' = ⟨mv.next,mv.write::l,r.tail⟩ := by
-          simpa [MacroFAR.step,project,hp,hd] using hs.symm
+          rw [hp] at hs
+          simpa [hd] using hs.symm
         subst z'
         exact ⟨_,hstep,rfl,FAR.rep_right hr mv hd⟩
       | false =>
         have he : z' = ⟨mv.next,l.tail,l.headD false::mv.write::r.tail⟩ := by
-          simpa [MacroFAR.step,project,hp,hd] using hs.symm
+          rw [hp] at hs
+          simpa [hd] using hs.symm
         subst z'
         exact ⟨_,hstep,rfl,FAR.rep_left hr mv hd⟩
+
+theorem run_front (m : Machine) (n : Nat) (c : Config) :
+    run m (n+1) c = (rawStep m c).bind (run m n) := by
+  induction n generalizing c with
+  | zero => simp [run]
+  | succ n ih =>
+    rw [run,ih]
+    cases h : rawStep m c <;> simp [h,run]
 
 theorem run_sound (p : PartialMachine) (m : Machine) (hm : compatible p m)
     (n : Nat) (c : Config) (z z' : MacroFAR.WordConfig (Fin 6))
@@ -53,9 +64,8 @@ theorem run_sound (p : PartialMachine) (m : Machine) (hm : compatible p m)
       obtain ⟨d,hd,hqd,hrd⟩ := step_sound p m hm c z y hq hr ht
       obtain ⟨e,he,hqe,hre⟩ := ih d y hqd hrd hy
       refine ⟨e,?_,hqe,hre⟩
-      rw [show n+1=1+n by omega,run_append]
-      have h1 : run m 1 c = some d := by simpa [run] using hd
-      simp [h1,he]
+      rw [run_front,hd]
+      exact he
 
 theorem never_of_live (p : PartialMachine)
     (h : ∀ n, (MacroFAR.run (project p) n ⟨0,[],[]⟩).isSome = true)
