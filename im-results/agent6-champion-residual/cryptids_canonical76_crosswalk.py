@@ -132,7 +132,7 @@ def simulate_first_use(tokens: list[str], max_steps: int = 100_000) -> dict:
     }
 
 
-def route_from_first_use(parent: list[str], source: list[str], schedule_slots: list[int]) -> dict | None:
+def route_from_first_use(parent: list[str], source: list[str], schedule_slots: list[int], source_kind: str) -> dict | None:
     """Use the machine's actual first-visit schedule, not lexicographic slot order."""
     holes = [i for i, token in enumerate(parent) if token == "---"]
     visited = set(schedule_slots)
@@ -140,7 +140,11 @@ def route_from_first_use(parent: list[str], source: list[str], schedule_slots: l
     path_moves = [source[i] for i in schedule_slots if i in set(holes)]
     if len(unvisited) == 1 and source[unvisited[0]] == "HHH":
         return {
-            "match_type": "one_hole_leaf",
+            # A NonHalt theorem proves the HHH row is unreachable, so every
+            # completion of this one-hole cylinder is nonhalting. A Halt
+            # theorem proves only the single HHH completion, not the other
+            # 24 transitions at that row.
+            "match_type": "one_hole_leaf" if source_kind == "NonHalt" else "halt_completion_candidate",
             "path_moves": path_moves,
             "halt_slot": unvisited[0],
             "unvisited_holes": unvisited,
@@ -222,7 +226,7 @@ def run(args: argparse.Namespace) -> dict:
                     2 * perm[slot // 2] + (slot % 2)
                     for slot in source["simulation"]["first_use_order"]
                 ]
-                route = route_from_first_use(parent["table"], renamed, schedule_slots)
+                route = route_from_first_use(parent["table"], renamed, schedule_slots, source["kind"])
                 if route is None:
                     continue
                 path_moves = route["path_moves"]
@@ -273,28 +277,30 @@ def run(args: argparse.Namespace) -> dict:
     for m in matches:
         if m["match_type"] != "one_hole_leaf":
             continue
-        if m["source_kind"] == "NonHalt" and m["theorem_hint"] != "is_not_halt":
-            continue
-        if m["source_kind"] == "Halt" and m["theorem_hint"] != "is_halt":
+        if m["source_kind"] != "NonHalt" or m["theorem_hint"] != "is_not_halt":
             continue
         pid = f"{m['parent_kind']}:{','.join(m['parent_address']) or '-'}"
-        leaf_by_parent.setdefault(pid, {"NonHalt": set(), "Halt": set()})[m["source_kind"]].add(
-            ",".join(m["leaf_address"])
-        )
+        leaf_by_parent.setdefault(pid, set()).add(",".join(m["leaf_address"]))
 
     parent_summaries = []
     for parent in parents:
         pid = f"{parent['kind']}:{','.join(parent['address']) or '-'}"
-        found = leaf_by_parent.get(pid, {"NonHalt": set(), "Halt": set()})
+        found = leaf_by_parent.get(pid, set())
+        halt_count = sum(
+            m["parent_kind"] == parent["kind"]
+            and m["parent_address"] == parent["address"]
+            and m["match_type"] == "halt_completion_candidate"
+            and m["theorem_hint"] == "is_halt"
+            for m in matches
+        )
         expected = 24 ** max(parent["holes"] - 1, 0) if parent["holes"] else 1
-        nonhalt_count = len(found["NonHalt"])
-        halt_count = len(found["Halt"])
+        nonhalt_count = len(found)
         parent_summaries.append({
             "parent_id": pid,
             "holes": parent["holes"],
             "expected_one_hole_leaves_if_all_ordinary_prefixes_are_split": expected,
-            "distinct_nonhalt_one_hole_leaves": nonhalt_count,
-            "distinct_halt_one_hole_candidates": halt_count,
+            "distinct_nonhalt_one_hole_leaf_matches": nonhalt_count,
+            "halt_single_completion_candidates": halt_count,
             "one_hole_parent_has_nonhalt_candidate": bool(parent["holes"] == 1 and nonhalt_count >= 1),
             "full_nonhalt_leaf_match_coverage": bool(parent["holes"] > 0 and nonhalt_count >= expected),
         })
@@ -312,10 +318,9 @@ def run(args: argparse.Namespace) -> dict:
         "frontier_record_counts": dict(collections.Counter(p["kind"] for p in parents)),
         "distinct_source_parent_route_candidates": len(matches),
         "source_parent_permutation_hits": sum(len(m["permutations"]) for m in matches),
-        "one_hole_leaf_matches": sum(m["match_type"] == "one_hole_leaf" for m in matches),
-        "singleton_completion_matches": sum(m["match_type"] == "singleton_completion" for m in matches),
         "nonhalt_one_hole_leaf_matches": sum(m["match_type"] == "one_hole_leaf" and m["source_kind"] == "NonHalt" and m["theorem_hint"] == "is_not_halt" for m in matches),
-        "halt_one_hole_candidates": sum(m["match_type"] == "one_hole_leaf" and m["source_kind"] == "Halt" and m["theorem_hint"] == "is_halt" for m in matches),
+        "halt_single_completion_candidates": sum(m["match_type"] == "halt_completion_candidate" and m["source_kind"] == "Halt" and m["theorem_hint"] == "is_halt" for m in matches),
+        "singleton_completion_matches": sum(m["match_type"] == "singleton_completion" for m in matches),
         "parents_with_one_hole_nonhalt_candidates": sum(p["one_hole_parent_has_nonhalt_candidate"] for p in parent_summaries),
         "parents_with_full_nonhalt_leaf_match_coverage": sum(p["full_nonhalt_leaf_match_coverage"] for p in parent_summaries),
         "parent_summaries": parent_summaries,
