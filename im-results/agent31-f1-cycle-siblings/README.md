@@ -27,3 +27,15 @@ The scan was cross-checked against the existing ZeroLD candidate: it reproduced 
 - The separate F/1=1LD sibling (code 14) is being explored by `discover_oneLD.py` using the existing Agent48 scanner and pump search, with width-4 FAR search and a 600-step first-hole limit. Workflow: `.github/workflows/agent31-f1-oneLD-discovery.yml`. A Lean package is generated only if every open leaf receives a pump witness.
 - Cycle sibling source audit workflow: `.github/workflows/agent31-f1-cycle-siblings.yml`. Current run: [45618644127](https://github.com/FlareZ123/bb6/actions/runs/45618644127). The earlier run failed because the module omitted the `F0SiblingCover` and `BB6.Agent31ThreeHole` imports; those imports have been added for the current run.
 - F/1=1LD discovery run: [45618468915](https://github.com/FlareZ123/bb6/actions/runs/45618468915).
+
+## F/1=1LD discovery result (intermediate)
+
+The first width-4 / 600-step scan of code 14 completed in Actions run [45618468915](https://github.com/FlareZ123/bb6/actions/runs/45618468915). It found 170 cycle leaves, 53 last-hole leaves, 51 FAR leaves, 13 splits, and 26 open leaves. The autopump search produced 23 growth witnesses; three leaves remain unresolved (original open indices 3, 22, 25):
+
+- `[7,1,11,24,14,21,3,16,12,11,24,14]`
+- `[7,11,11,24,14,21,3,16,12,11,3,14]`
+- `[7,19,11,24,14,21,3,16,12,11,7,14]`
+
+The discovery artifact is `raw139-f1-oneLD-discovery` (artifact ID `15022853856`). The workflow's packaging/audit shell guard had a heredoc indentation error after discovery; the discovery data itself was uploaded. `agent31-f1-oneLD-extend.yml` now downloads that artifact and tries longer scans plus an expanded pump search on only these three leaves. No complete 1LD cover is claimed yet.
+
+The current cycle-sibling Lean audit is run [45620996424](https://github.com/FlareZ123/bb6/actions/runs/45620996424). Earlier failures were tooling/import-resolution issues; the current attempt adds explicit FAR/weighted/audit source roots and uses concrete parent constants.
