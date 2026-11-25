@@ -1,8 +1,8 @@
 {
-  "status": "candidate, not yet Lean-certified",
+  "status": "complete candidate classification, original-source Lean audit pending",
   "parent": "1RB---_1RC---_0RD---_1LD1RE_---1RC_------",
   "rawIndex": 113,
-  "weightedTarget": 7014,
+  "weightedTarget": 2674,
   "openSHA256": "f4fd9aae8f53679197fd0fb9ed9f835f59f562dd2b032c4b4a9debec1ab41b2d",
   "treeSHA256": "436cb53c4b4a2a6eca3c7eb970ccb2514eedfe94264849140132fa64ec182fd7",
   "stats": {
@@ -190,26 +190,153 @@
       3
     ]
   },
-  "unresolved": {
-    "30": "1RB0LF1RC1RE0RD0LA1LD1RE1RA1RC---1LC",
-    "182": "1RB1LB1RC1LC0RD0LA1LD1RE1RF1RC1RB---",
-    "262": "1RB1LF1RC0RB0RD0LA1LD1RE1LB1RC---0LC",
-    "265": "1RB1LF1RC1LA0RD0LA1LD1RE1RA1RC---0LC",
-    "320": "1RB1LF1RC0RF0RD0LA1LD1RE---1RC0LB1LA",
-    "507": "1RB0LF1RC1LA0RD0LB1LD1RE1RA1RC---1LC",
-    "1186": "1RB---1RC1LC0RD0LF1LD1RE1RA1RC1RB1LB",
-    "1188": "1RB---1RC1LC0RD0LF1LD1RE1RA1RC1RD1LB",
-    "1313": "1RB---1RC1RA0RD0LF1LD1RE0RC1RC1RA1LC",
-    "1582": "1RB0RF1RC1RA0RD0LF1LD1RE---1RC0LB1LF",
-    "1643": "1RB1RA1RC0LE0RD0LF1LD1RE---1RC1LA1LF",
-    "1650": "1RB1RA1RC0RD0RD0LF1LD1RE---1RC1LA1LF",
-    "1696": "1RB0RC1RC0RF0RD0LF1LD1RE---1RC1RA1LF",
-    "1698": "1RB0RC1RC1RA0RD0LF1LD1RE---1RC1RA1LF",
-    "2108": "1RB1LA1RC1LF0RD0RF1LD1RE---1RC1LA0LA",
-    "2109": "1RB---1RC1LF0RD0RF1LD1RE0LF1RC1LA0LB",
-    "2123": "1RB1LF1RC1RF0RD0RF1LD1RE---1RC1LA0LB",
-    "2376": "1RB0LB1RC1RF0RD1LA1LD1RE---1RC1LC0RA",
-    "2470": "1RB0LF1RC1LD0RD1LA1LD1RE0RC1RC---1LC",
-    "5180": "1RB---1RC1LF0RD1RE1LD1RE0LF1RC1LA0LB"
+  "unresolved": {},
+  "pumps": {
+    "30": [
+      "single",
+      22,
+      19,
+      6,
+      "1RB0LF1RC1RE0RD0LA1LD1RE1RA1RC---1LC"
+    ],
+    "182": [
+      "single",
+      16,
+      51,
+      26,
+      "1RB1LB1RC1LC0RD0LA1LD1RE1RF1RC1RB---"
+    ],
+    "262": [
+      "single",
+      19,
+      30,
+      6,
+      "1RB1LF1RC0RB0RD0LA1LD1RE1LB1RC---0LC"
+    ],
+    "265": [
+      "single",
+      16,
+      59,
+      38,
+      "1RB1LF1RC1LA0RD0LA1LD1RE1RA1RC---0LC"
+    ],
+    "320": [
+      "single",
+      95,
+      41,
+      8,
+      "1RB1LF1RC0RF0RD0LA1LD1RE---1RC0LB1LA"
+    ],
+    "507": [
+      "single",
+      11,
+      27,
+      36,
+      "1RB0LF1RC1LA0RD0LB1LD1RE1RA1RC---1LC"
+    ],
+    "1186": [
+      "single",
+      16,
+      51,
+      26,
+      "1RB---1RC1LC0RD0LF1LD1RE1RA1RC1RB1LB"
+    ],
+    "1188": [
+      "single",
+      18,
+      55,
+      28,
+      "1RB---1RC1LC0RD0LF1LD1RE1RA1RC1RD1LB"
+    ],
+    "1313": [
+      "single",
+      48,
+      25,
+      8,
+      "1RB---1RC1RA0RD0LF1LD1RE0RC1RC1RA1LC"
+    ],
+    "1582": [
+      "single",
+      37,
+      56,
+      32,
+      "1RB0RF1RC1RA0RD0LF1LD1RE---1RC0LB1LF"
+    ],
+    "1643": [
+      "single",
+      2,
+      26,
+      18,
+      "1RB1RA1RC0LE0RD0LF1LD1RE---1RC1LA1LF"
+    ],
+    "1650": [
+      "single",
+      2,
+      24,
+      16,
+      "1RB1RA1RC0RD0RD0LF1LD1RE---1RC1LA1LF"
+    ],
+    "1696": [
+      "single",
+      40,
+      69,
+      20,
+      "1RB0RC1RC0RF0RD0LF1LD1RE---1RC1RA1LF"
+    ],
+    "1698": [
+      "single",
+      32,
+      54,
+      16,
+      "1RB0RC1RC1RA0RD0LF1LD1RE---1RC1RA1LF"
+    ],
+    "2108": [
+      "multi",
+      33,
+      76,
+      40,
+      "1RB1LA1RC1LF0RD0RF1LD1RE---1RC1LA0LA"
+    ],
+    "2109": [
+      "single",
+      3,
+      146,
+      150,
+      "1RB---1RC1LF0RD0RF1LD1RE0LF1RC1LA0LB"
+    ],
+    "2123": [
+      "multi",
+      21,
+      103,
+      36,
+      "1RB1LF1RC1RF0RD0RF1LD1RE---1RC1LA0LB"
+    ],
+    "2376": [
+      "single",
+      3,
+      82,
+      76,
+      "1RB0LB1RC1RF0RD1LA1LD1RE---1RC1LC0RA"
+    ],
+    "2470": [
+      "single",
+      18,
+      61,
+      30,
+      "1RB0LF1RC1LD0RD1LA1LD1RE0RC1RC---1LC"
+    ],
+    "5180": [
+      "single",
+      8,
+      49,
+      32,
+      "1RB---1RC1LF0RD1RE1LD1RE0LF1RC1LA0LB"
+    ]
+  },
+  "lateMaximumCandidate": {
+    "weighted": 2674,
+    "steps": 2673,
+    "delay": 0,
+    "table": "1RB0LA_1RCHHH_0RD0LF_1LD1RE_0RC1RC_0RB1LA"
   }
 }
