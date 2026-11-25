@@ -1,5 +1,6 @@
 From BusyCoq Require Import Enumerate62 CTL62 Individual62 Agent8AdaptiveSource
-  Agent8WeightedSource SourceResidualRoster Agent5RecoveredHeld.
+  Agent8WeightedSource SourceResidualRoster Agent5RecoveredHeld
+  Agent8Batch_2800_100_1000000.
 From Coq Require Import List Bool NArith Strings.String Classical_Prop Classical_Pred_Type.
 Import ListNotations.
 Import TNF_Node.
@@ -69,7 +70,15 @@ Proof.
 Qed.
 
 Definition recovered_held_2800_checkpoint :=
-  SearchQueue_upds decider (q_i 2800 100) 1000000%N.
+  decode_queue Agent8Batch_2800_100_1000000.chunk_data.
+
+Theorem recovered_held_2800_checkpoint_exact :
+    SearchQueue_upds decider (q_i 2800 100) 1000000%N =
+      recovered_held_2800_checkpoint.
+Proof.
+  unfold recovered_held_2800_checkpoint.
+  exact Agent8Batch_2800_100_1000000.chunk_data_exact.
+Qed.
 
 (* Exact pointwise table equality, computed from the source transition
     serializer. This avoids relying on the source roster's boolean checker
@@ -183,8 +192,10 @@ Proof.
   exists x.
   constructor.
   - unfold adaptive_obligations.
-    change In x (fst recovered_held_2800_checkpoint ++
-      snd recovered_held_2800_checkpoint).
+    change In x
+      (fst (SearchQueue_upds decider (q_i 2800 100) 1000000%N) ++
+       snd (SearchQueue_upds decider (q_i 2800 100) 1000000%N)).
+    rewrite recovered_held_2800_checkpoint_exact.
     apply in_or_app.
     right.
     exact Hx.
@@ -203,6 +214,7 @@ Qed.
 
 Print Assumptions recovered_held_2800_refines_parent.
 Print Assumptions recovered_held_2800_parent_leaf_partition.
+Print Assumptions recovered_held_2800_checkpoint_exact.
 Print Assumptions recovered_held_2800_checkpoint_member.
 Print Assumptions recovered_held_2800_checkpoint_leaf.
 Print Assumptions recovered_held_2800_checkpoint_leaf_safe.
