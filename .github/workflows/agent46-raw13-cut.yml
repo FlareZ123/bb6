@@ -174,7 +174,7 @@ jobs:
             python "$D/phase_bank_raw13.py"
             # Recover the earlier seed-46 sample whose artifact was not
             # persisted, then add a disjoint deterministic sample.
-            python "$D/phase_scan_raw13.py" --limit 25 --cap 5000 --seed 46
+            python "$D/phase_scan_raw13.py" --limit 25 --cap 5000 --seed 46 --include-d3
             python "$D/phase_scan_raw13.py" --limit 25 --cap 5000 --seed 47
             python "$D/audit_bidfa_raw13.py"
             python "$D/generate.py"
