@@ -1,0 +1,165 @@
+name: Agent 47 raw111 complete cylinder
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate all deterministic candidate certificates
+        run: |
+          set -euo pipefail
+          python im-results/agent47-raw111-cut/generate.py
+      - name: Plan disjoint audit shards
+        id: plan
+        run: |
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import pathlib,json
+          root=pathlib.Path("im-results/agent47-raw111-cut")
+          jobs=[]
+          for i in range(24):
+              b=f"{i:02}"
+              for h in ([0,1] if (root/f"Raw111Kid{b}_00.lean").exists() else [-1]):
+                  jobs.append({"branch":b,"half":h})
+          print("matrix="+json.dumps({"include":jobs},separators=(",",":")))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw111-generated-source
+          path: im-results/agent47-raw111-cut/*.lean
+          if-no-files-found: error
+  preflight:
+    needs: generate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw111-generated-source
+          path: im-results/agent47-raw111-cut
+      - name: Kernel-check general sparse semantics and all new carry invariants
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          root=im-results/agent47-raw111-cut
+          python tools/lean_compile_closure.py --workdir /tmp/a47-raw111-preflight --jobs 4 "$root/SparseNGram.lean" "$root/Raw111Prefix.lean" "$root/Raw111Ternary.lean" "$root/Raw111Triplet.lean" "$root/Raw111QuadCounter.lean" "$root/Raw111TripleCounter.lean" | tee /tmp/a47-raw111-preflight.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a47-raw111-preflight.log; then exit 1; fi
+  sparse:
+    needs: [generate, preflight]
+    strategy:
+      fail-fast: false
+      matrix:
+        id: [3,9]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw111-generated-source
+          path: im-results/agent47-raw111-cut
+      - name: Check all 12 rows of one sparse certificate
+        env:
+          ID: ${{ matrix.id }}
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python tools/lean_compile_closure.py --workdir /tmp/a47-sparse --jobs 4 "im-results/agent47-raw111-cut/Raw111Sparse${ID}.lean" | tee /tmp/a47-sparse.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a47-sparse.log; then exit 1; fi
+  branch:
+    needs: [generate, preflight]
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix: ${{ fromJSON(needs.generate.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw111-generated-source
+          path: im-results/agent47-raw111-cut
+      - name: Check selected disjoint audit subtree
+        env:
+          BRANCH: ${{ matrix.branch }}
+          HALF: ${{ matrix.half }}
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          root=im-results/agent47-raw111-cut
+          roots=()
+          if [ "$HALF" = -1 ]; then
+            roots+=("$root/Raw111Branch${BRANCH}.lean")
+          else
+            for ((i=12*HALF;i<12*(HALF+1);i++)); do
+              printf -v name 'Raw111Kid%s_%02d.lean' "$BRANCH" "$i"
+              roots+=("$root/$name")
+            done
+          fi
+          python tools/lean_compile_closure.py --workdir /tmp/a47-raw111 --jobs 4 "${roots[@]}" | tee /tmp/a47-raw111.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a47-raw111.log; then exit 1; fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw111-audit-${{ matrix.branch }}-${{ matrix.half }}
+          path: /tmp/a47-raw111/*.olean
+          if-no-files-found: error
+  assemble:
+    needs: [branch,sparse]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw111-generated-source
+          path: /tmp/a47-raw111
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw111-audit-*
+          path: /tmp/a47-raw111
+          merge-multiple: true
+      - name: Compose kernel-checked branches and prove no residual
+        run: |
+          set -euo pipefail
+          cd /tmp/a47-raw111
+          export LEAN_PATH="$PWD"
+          for i in $(seq -w 0 23); do
+            if [ ! -f Raw111Branch${i}.olean ]; then
+              lean -o Raw111Branch${i}.olean Raw111Branch${i}.lean
+            fi
+          done
+          lean -o Raw111Data.olean Raw111Data.lean | tee /tmp/a47-raw111-root.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a47-raw111-root.log; then exit 1; fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw111-certified-root
+          path: /tmp/a47-raw111/*.olean
+          if-no-files-found: error
