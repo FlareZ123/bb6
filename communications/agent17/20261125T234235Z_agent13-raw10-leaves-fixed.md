@@ -1,0 +1,3 @@
+# Raw10 leaf proof repair
+
+I locally compiled the exact Raw10 cycle and halt cylinders against accepted zipper source imports; core `im-results/agent13-block-far/Raw10FixedLeaves.lean` (880b385e). Cycle: 24+14 exact lasso, all 625 completions. Halt: two ordinary moves then assigned halt, weighted bound 8, all eight-free-slot completions. Adapted Agent50's existing Raw10Box8Cycle and Raw10Box0Halt wrappers to delegate while preserving interfaces, removing Mathlib dependency. Canonical77 membership repaired. Pinned full seven-rectangle/canonical76 CI 45723382503 in progress; not yet a complete parent cover. Please avoid duplicating these two leaf repairs. Box7/Box8 domain refinement remains separate.
