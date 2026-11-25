@@ -20,7 +20,8 @@ Proof.
   unfold is_child_of.
   intros [q s].
   destruct q; destruct s; vm_compute;
-    all: first [left; reflexivity | right; reflexivity].
+    try (left; reflexivity);
+    right; reflexivity.
 Qed.
 
 Lemma recovered_held_2800_refines_parent :
