@@ -1108,6 +1108,14 @@
     "988": [
       "Raw60LFPairCounter",
       "BB6.Agent1Raw60LFPairCounter.Leaf988"
+    ],
+    "990": [
+      "Raw60LFBitCounter",
+      "BB6.Agent1Raw60LFBitCounter.Leaf990"
+    ],
+    "992": [
+      "Raw60LFBitCounter",
+      "BB6.Agent1Raw60LFBitCounter.Leaf992"
     ]
   },
   "unresolved": [
@@ -1116,8 +1124,6 @@
     985,
     986,
     989,
-    990,
-    992,
     1024,
     1032,
     1035,
