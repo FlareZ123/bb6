@@ -109,6 +109,12 @@ jobs:
           lean -o "${MODULE_NAME}Packed.olean" "${MODULE_NAME}Packed.lean"
           lean -o "${MODULE_NAME}Proof.olean" "${MODULE_NAME}Proof.lean" | tee /tmp/q0-blockfar/compile.log
           cp "${MODULE_NAME}Packed.olean" "${MODULE_NAME}Proof.olean" /tmp/q0-blockfar/
+          if [ "$MODULE_NAME" = "Q02700" ] && [ "$FLIP" = "false" ]; then
+            lean -o /tmp/q0-blockfar/Frontier.olean ../agent8-coverage-contract/Frontier.lean
+            lean -o BlockFARBridge.olean BlockFARBridge.lean
+            lean -o /tmp/q0-blockfar/Q02700Consumer.olean ../agent5-q0-held-blockfar/Q02700Consumer.lean | tee -a /tmp/q0-blockfar/compile.log
+            cp BlockFARBridge.olean /tmp/q0-blockfar/
+          fi
           if [ "$FLIP" = "true" ]; then
             cp ../agent5-q0-held-blockfar/MirrorTransport.lean .
             lean -o MirrorTransport.olean MirrorTransport.lean
@@ -131,6 +137,33 @@ jobs:
           if grep -Eq 'sorryAx|native_decide' /tmp/q0-blockfar/compile.log; then
             echo "Forbidden proof placeholder or native_decide found" >&2
             exit 1
+          fi
+          if [ "$MODULE_NAME" = "Q02700" ] && [ "$FLIP" = "false" ]; then
+            python3 - <<'PY'
+          import pathlib, re
+          log = pathlib.Path("/tmp/q0-blockfar/compile.log").read_text()
+          allowed = {"propext", "Classical.choice", "Quot.sound"}
+          required = [
+              "BB6BlockFAR.Q02700.never",
+              "BB6.Agent5Q0HeldBlock.q2700_generated_table_exact",
+              "BB6.Agent5Q0HeldBlock.q0_2700_never",
+              "BB6.Agent5Q0HeldBlock.q0_2700_parent_slots",
+              "BB6.Agent5Q0HeldBlock.q0_2700_D0_is_the_only_hole",
+          ]
+          for name in required:
+              no_axioms = f"'{name}' does not depend on any axioms"
+              match = re.search(rf"'{re.escape(name)}' depends on axioms: \\[(.*?)\\]", log)
+              if match:
+                  actual = {x.strip() for x in match.group(1).split(",") if x.strip()}
+              elif no_axioms in log:
+                  actual = set()
+              else:
+                  raise SystemExit(f"missing #print axioms output for {name}")
+              bad = actual - allowed
+              if bad:
+                  raise SystemExit(f"unexpected axioms for {name}: {sorted(bad)}")
+          print("Q02700 source transfer axiom profiles accepted")
+          PY
           fi
       - name: Upload generated certificate and kernel log
         if: always()
