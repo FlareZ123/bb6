@@ -133,6 +133,7 @@ Theorem recovered_held_2800_checkpoint_member :
     recovered_held_2800_checkpoint_memberb = true.
 Proof.
   vm_compute.
+  reflexivity.
 Qed.
 
 Theorem recovered_held_2800_checkpoint_leaf :
