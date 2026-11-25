@@ -66,10 +66,28 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p pinned/im-results pinned/tools pinned/.github/workflows
+          cp im-results/agent47-rooted-tnf/CanonicalTwoParentGraft.lean pinned/im-results/agent47-rooted-tnf/
+          cp im-results/agent47-rooted-tnf/CanonicalRaw114Accepted.lean pinned/im-results/agent47-rooted-tnf/
+          mkdir -p pinned/im-results/agent31-shared-core
+          cp im-results/agent31-shared-core/CanonicalTwoParentRosterOnly.lean pinned/im-results/agent31-shared-core/
+          cp im-results/agent31-shared-core/Canonical75RosterOnly.lean pinned/im-results/agent31-shared-core/
+          cp im-results/agent31-shared-core/Canonical74Raw107Raw114Raw117Raw112RosterOnly.lean pinned/im-results/agent31-shared-core/
+          cp im-results/agent47-rooted-tnf/CanonicalRosterRefinement.lean pinned/im-results/agent47-rooted-tnf/
+          cp im-results/agent47-rooted-tnf/Canonical73Raw110Composition.lean pinned/im-results/agent47-rooted-tnf/
+          rm -rf pinned/im-results/agent8-tnf-raw117
+          cp -a im-results/agent8-tnf-raw117 pinned/im-results/
+          rm -rf pinned/im-results/agent47-raw112-cut
+          cp -a im-results/agent47-raw112-cut pinned/im-results/
+          rm -rf pinned/im-results/agent7-raw110
+          cp -a im-results/agent7-raw110 pinned/im-results/
+          rm -rf pinned/im-results/agent11-raw107
+          cp -a im-results/agent11-raw107 pinned/im-results/
+          rm -rf pinned/im-results/agent1-raw107
+          cp -a im-results/agent1-raw107 pinned/im-results/
           rm -rf pinned/im-results/agent11-raw121
           cp -a im-results/agent11-raw121 pinned/im-results/
           cp tools/lean_compile_closure.py pinned/tools/lean_compile_closure.py
-          mkdir -p pinned/im-results/agent4-raw109
+          mkdir -p pinned/im-results/agent4-raw109 pinned/im-results/agent31-three-hole-tnf pinned/im-results/agent10-tnf-multipump pinned/im-results/agent13-coverage
           cp im-results/agent4-raw109/audit_axioms.py pinned/im-results/agent4-raw109/
           cp im-results/agent31-three-hole-tnf/generate_sweeps.py pinned/im-results/agent31-three-hole-tnf/
           cp im-results/agent31-three-hole-tnf/generate_four_hole.py pinned/im-results/agent31-three-hole-tnf/
