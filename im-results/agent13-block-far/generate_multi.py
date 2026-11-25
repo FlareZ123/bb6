@@ -236,5 +236,10 @@ end BB6BlockFAR.Held
 '''
     (out/(name+'Proof.lean')).write_text(s.replace('BB6BlockFAR.Held',ns).replace('import BlockFAR\n','import BlockFAR'+suffix+'\n').replace('import RangeCheck\n','import RangeCheck'+suffix+'\n').replace('import HeldBlockPacked','import '+name+'Packed'),encoding='utf8')
 
+    # Also expose the same finite certificate to independent source checkers.
+    # Existing Lean callers can continue ignoring the return value.
+    return dict(width=width, moves=moves, left_states=D, right_nodes=C,
+                zero_states=sorted(z2), **data)
+
 if __name__ == '__main__':
     generate(sys.argv[2] if len(sys.argv)>2 else DEFAULT_TABLE, Path(sys.argv[1] if len(sys.argv)>1 else '.'))
