@@ -27,8 +27,15 @@ ROOT = Path(__file__).resolve().parents[2]
 ENCODED = ROOT / "im-results/agent49-box-complement/Raw10Encoded.lean"
 GENERATOR = ROOT / "im-results/agent13-block-far/generate.py"
 COMPILER = ROOT / "tools/lean_compile_closure.py"
-EXPECTED_BOXES = 34
-EXPECTED_MASS = 90_890_091_604_975
+EXPECTED_PARTITIONS = {
+    (False, False): (34, 90_890_091_604_975),
+    (True, False): (40, 90_890_091_604_350),
+    (False, True): (35, 90_737_503_714_350),
+    (True, True): (41, 90_737_503_713_725),
+}
+RAW10_BOX8_CYCLE_ROW = (8, 14, 11, 0, 17, 4, 9, 2, 23, 15, 10, 0)
+# 25 is an experiment-only sentinel for a forced halt; 0 remains wildcard.
+RAW10_BOX0_HALT_ROW = (8, 25, 11, 0, 0, 25, 0, 0, 0, 0, 0, 0)
 
 
 def parse_rows() -> list[tuple[int, ...]]:
@@ -50,15 +57,22 @@ def live(box: list[list[int]]) -> bool:
     return all(domain for domain in box)
 
 
+def decode_row_value(value: int) -> int:
+    # The encoded source rows reserve 0 for wildcard. Extra halt rows use 25
+    # as a sentinel for the actual Fin 25 halt value 0.
+    return 0 if value == 25 else value
+
+
 def possible(box: list[list[int]], cube: list[tuple[int, int]]) -> bool:
-    return all(value in box[slot] for slot, value in cube)
+    return all(decode_row_value(value) in box[slot] for slot, value in cube)
 
 
 def pieces(box: list[list[int]], cube: list[tuple[int, int]]) -> list[list[list[int]]]:
     """Exact first-mismatch pieces used by BB6.Agent49Box.pieces."""
     current = [domain[:] for domain in box]
     out: list[list[list[int]]] = []
-    for slot, value in cube:
+    for slot, raw_value in cube:
+        value = decode_row_value(raw_value)
         rejected = [domain[:] for domain in current]
         rejected[slot] = [x for x in rejected[slot] if x != value]
         if live(rejected):
@@ -134,6 +148,10 @@ def main() -> None:
                         help="run Agent13's existing BlockFAR generator for each projection")
     parser.add_argument("--compile", action="store_true",
                         help="compile every generated certificate with lean_compile_closure.py")
+    parser.add_argument("--include-cycle", action="store_true",
+                        help="subtract Agent50's 625-completion cycle table (use only after CI acceptance)")
+    parser.add_argument("--include-halt", action="store_true",
+                        help="subtract Agent50's 25^8 halt table (use only after CI acceptance)")
     parser.add_argument("--min-fixed", type=int, default=2,
                         help="skip boxes with fewer singleton ordinary moves")
     parser.add_argument("--max-boxes", type=int, default=EXPECTED_BOXES,
@@ -155,12 +173,21 @@ def main() -> None:
     if held_table != expected_held:
         raise RuntimeError(f"Fin 25 move-code mapping mismatch: {held_table}")
 
-    boxes = reconstruct_boxes(rows)
-    if len(boxes) != EXPECTED_BOXES:
-        raise RuntimeError(f"expected {EXPECTED_BOXES} boxes, found {len(boxes)}")
+    extra_rows = []
+    if args.include_cycle:
+        extra_rows.append(RAW10_BOX8_CYCLE_ROW)
+    if args.include_halt:
+        extra_rows.append(RAW10_BOX0_HALT_ROW)
+    all_rows = rows + extra_rows
+    boxes = reconstruct_boxes(all_rows)
+    expected_boxes, expected_mass = EXPECTED_PARTITIONS[
+        (args.include_cycle, args.include_halt)
+    ]
+    if len(boxes) != expected_boxes:
+        raise RuntimeError(f"expected {expected_boxes} boxes, found {len(boxes)}")
     total_mass = sum(__import__("math").prod(map(len, box)) for box in boxes)
-    if total_mass != EXPECTED_MASS:
-        raise RuntimeError(f"box mass mismatch: {total_mass} != {EXPECTED_MASS}")
+    if total_mass != expected_mass:
+        raise RuntimeError(f"box mass mismatch: {total_mass} != {expected_mass}")
 
     args.output.mkdir(parents=True, exist_ok=True)
     generator = load_generator() if args.generate else None
@@ -233,6 +260,8 @@ def main() -> None:
 
     summary = {
         "encoded_cylinders": len(rows),
+        "included_cycle": args.include_cycle,
+        "included_halt": args.include_halt,
         "box_count": len(boxes),
         "total_box_mass": total_mass,
         "tested_boxes": len(results),
