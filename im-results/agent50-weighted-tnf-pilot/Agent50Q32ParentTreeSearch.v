@@ -33,6 +33,16 @@ Definition agent50_q32_parent_tree : source_tree :=
     (fun v => agent50_bounded_source_tree 1
       (tm_upd q32_canonical_residual_7 (A,S1) v)).
 
+Lemma agent50_find_first_true {A : Type} (f : A -> bool) (xs : list A) (x : A) :
+  find f xs = Some x -> f x = true.
+Proof.
+  induction xs as [|a xs IH]; cbn; intro H.
+  - discriminate.
+  - destruct (f a) eqn:Ha.
+    + inversion H; subst. exact Ha.
+    + eapply IH. exact H.
+Qed.
+
 Lemma agent50_find_some_in {A : Type} (f : A -> bool) (xs : list A) (x : A) :
   find f xs = Some x -> In x xs.
 Proof.
