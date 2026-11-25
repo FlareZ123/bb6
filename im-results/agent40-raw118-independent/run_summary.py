@@ -28,6 +28,8 @@ ROSTER_SHA = "0fd10d3adcc48fba9badb4357ad3b19453f5215ce35fdb57f38034ebc3933c0c"
 # (left parameters, right parameters), (k, c, p, XOR lag[, trim]).
 # Lag zero means raw bits; positive lag compares with the earlier raw bit.
 HITS = {
+    4188: ((1,2,3,0,1,3,2,2,1),(1,2,3,0,1,3,2,2,1)),
+    4197: ((1,2,3,0,1,3,2,2,1),(1,2,3,0,1,3,2,2,1)),
     430: ((3,4,6,0,1),(3,4,6,0,1)),
     437: ((4,3,8,2,1),(4,3,8,2,1)),
     440: ((3,4,6,0,1),(3,4,6,0,1)),
@@ -53,10 +55,12 @@ HITS = {
 class Side:
     def __init__(self, params):
         self.k,self.c,self.p,self.mode = params[:4]
-        self.trim = bool(params[4]) if len(params) == 5 else False
+        self.trim = bool(params[4]) if len(params) >= 5 else False
+        self.second = params[5:] if len(params) > 5 else None
         assert self.k >= 1 and self.c >= 1 and self.p >= 1
-        self.keys = [0]
-        self.ids = {0:0}
+        initial = (0,0) if self.second else 0
+        self.keys = [initial]
+        self.ids = {initial:0}
         self.delta = [[-1,-1]]
         self.edges = [set([(0,0)])]
         self.wait = [[]]
@@ -66,7 +70,11 @@ class Side:
         if dest >= 0:
             return dest
         v = self.keys[i]
-        if self.trim and v == 0 and b == 0:
+        if self.second:
+            v, enc = v
+        else:
+            enc = 0
+        if self.trim and v == 0 and enc == 0 and b == 0:
             self.delta[i][b] = 0
             return 0
         h = max(1,self.mode)
@@ -77,6 +85,19 @@ class Side:
         bit = b ^ ((hist >> (h-1)) & 1) if self.mode else b
         count = digits & 31
         if not count or bit != prev:
+            if count and self.second:
+                k2,c2,p2,lag = self.second
+                tm = (1 << (5*lag))-1
+                tokhist = enc & tm
+                delta = count ^ ((tokhist >> (5*(lag-1))) & 31)
+                runs = enc >> (5*lag)
+                top,kind = runs & 31,(runs >> 5) & 31
+                if not top or delta != kind:
+                    runs = ((runs << 10) | (delta << 5) | 1) & ((1 << (10*k2))-1)
+                else:
+                    n = top+1
+                    runs = (runs & ~31) | (c2 if n >= c2+p2 else n)
+                enc = (runs << (5*lag)) | (((tokhist << 5) | count) & tm)
             digits = ((digits << 5) | 1) & ((1 << (5*self.k))-1)
         else:
             n = count+1
@@ -84,6 +105,8 @@ class Side:
                 n = self.c
             digits = (digits & ~31) | n
         key = (digits << (h+1)) | (bit << h) | (((hist << 1) | b) & mask)
+        if self.second:
+            key = (key,enc)
         dest = self.ids.get(key)
         if dest is None:
             dest = len(self.keys)
