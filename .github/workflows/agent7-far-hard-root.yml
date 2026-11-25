@@ -378,7 +378,8 @@ jobs:
           block=()
           if [[ "$BLOCK" == true ]]; then block+=(--block-far); fi
           python "$d/assemble_partial.py" "${block[@]}"
-          LEAN_PATH=/tmp/raw110-join lean "$d/Raw110DeepRoster.lean" | tee /tmp/raw110-join.log
+          LEAN_PATH=/tmp/raw110-join lean -o /tmp/raw110-join/Raw110DeepParent.olean "$d/Raw110DeepParent.lean" | tee /tmp/raw110-join.log
+          LEAN_PATH=/tmp/raw110-join lean "$d/Raw110DeepRoster.lean" | tee -a /tmp/raw110-join.log
           if grep -qE 'sorryAx|native_decide' /tmp/raw110-join.log; then exit 1; fi
       - uses: actions/upload-artifact@v4
         if: always()
