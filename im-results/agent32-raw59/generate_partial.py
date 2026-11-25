@@ -57,7 +57,7 @@ def generate(raw,upgrade=False):
     subprocess.run([str(folder/'enumerate'),parent],cwd=folder,check=True)
     data=(folder/'open.txt').read_bytes();assert hashlib.sha256(data).hexdigest()==SHA[raw]
     opens=data.decode().splitlines();assert len(opens)==len(set(opens))
-    certs={};pumps={};imports=['Raw59Base','PartialAudit']
+    certs={};pumps={};late={};imports=['Raw59Base','PartialAudit']
     for rle in opens:
         for a in BANK:
             try: masks(parse(rle),int(a[0]),[int(x,36) for x in a[1:]])
@@ -90,6 +90,30 @@ def generate(raw,upgrade=False):
         assert rle=="1RB1LB_1RC0LB_0RD0RF_1LD1RE_1RD1LA_---1RA"
         pumps[rle]=("BB6.Agent32Raw59LB1Block194.table","BB6.Agent32Raw59LB1Block194.never")
         if "Raw59LB1Block194" not in imports: imports.append("Raw59LB1Block194")
+    if upgrade and raw in ('0LB','1LE'):
+        from generate_lb1_four import EXTRA
+        for i,(table,*_) in EXTRA[raw].items():
+            assert opens[i]==table
+            module=f'Raw59{raw}Block{i}'
+            ns='BB6.Agent32'+module
+            pumps[table]=(ns+'.table',ns+'.never')
+            imports.append(module)
+        late_cases={
+            '0LB':[
+                (129,5847,10,'1RB0LB_1RC0LB_0RD0RF_1LD1RE_0RA1LA_---1RC'),
+                (192,1402,5,'1RB0LB_1RC0LB_0RD---_1LD1RE_0RF1LA_1RA1LC'),
+                (193,1312,5,'1RB0LB_1RC0LB_0RD---_1LD1RE_0RF1LA_1RA1RE'),
+                (347,1063,5,'1RB0LB_1RC0LF_0RD---_1LD1RE_1RF1LA_1RC0LE'),
+                (770,4157,10,'1RB0LB_1RC1LB_0RD0RD_1LD1RE_1LF1LA_---1LE'),
+            ],
+            '1LE':[
+                (168,1731,5,'1RB1LE_1RC0LB_0RD---_1LD1RE_0RF1LA_0RA0LB'),
+                (473,3038,5,'1RB1LE_1RC0LF_0RD---_1LD1RE_0RF1LA_0RA0LB'),
+            ],
+        }
+        for i,n,s,table in late_cases[raw]:
+            assert opens[i]==table and table.count('---')==1
+            late[table]=(n,s)
     module='Raw59PartialSweep'+raw;ns='BB6Coverage.Agent31Pump.'+module
     pieces=['import SweepPumping','set_option maxRecDepth 100000','set_option maxHeartbeats 0','namespace '+ns,'open BB6Coverage']
     sweep_rows=SWEEPS
@@ -153,7 +177,7 @@ def generate(raw,upgrade=False):
         subprocess.run([sys.executable,str(ng/'emit_ngram.py'),str(inputs),str(outputs),str(folder/(module+'.lean')),'--namespace',ns],check=True)
         imports.append(module)
     if upgrade:upgrade_data.add_ngrams(raw,folder,opens,certs,pumps,imports)
-    unresolved=set(opens)-set(certs)-set(pumps)
+    unresolved=set(opens)-set(certs)-set(pumps)-set(late)
     (folder/'residual.txt').write_text(''.join(f'{i} {rle}\n' for i,rle in enumerate(opens) if rle in unresolved))
     print(raw,'FAR',len(certs),'semantic',len(pumps),'retained',len(unresolved),flush=True)
     used=set()
@@ -200,6 +224,8 @@ theorem split_checked (p : PartialMachine) (n : Nat) (s : Slot) (kids : Move →
         if tag=='open':
             code=v[0];assert code not in used;used.add(code)
             if code in unresolved:return '.unresolved'
+            if code in late:
+                n,s=late[code];return f'.closed (.last {n} {slot(s)})'
             if code in pumps:return '.closed (.proven '+ ' '.join(pumps[code])+')'
             a=certs[code]
             d,D,L,R,z=masks(parse(code),int(a[0]),[int(x,36) for x in a[1:]])
@@ -243,6 +269,16 @@ theorem residual_sound : ∀ m, compatible {p} m → WeightedBound {B} m ∨
     ∃ e ∈ residuals, compatible e.2 m :=
   partialSound {B} {p} t_root {p}_root {p}_nohalt c_root
 #print axioms residual_sound
+'''
+    if not unresolved:
+        body+=f'''
+theorem residuals_empty : residuals = [] := by decide
+theorem bound : ∀ m, compatible {p} m → WeightedBound {B} m := by
+  intro m hm
+  rcases residual_sound m hm with h | ⟨e,he,_⟩
+  · exact h
+  · simp [residuals_empty] at he
+#print axioms bound
 '''
     assert used==set(opens)
     emit(prefix+'Data',mods,body)
