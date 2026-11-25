@@ -295,6 +295,10 @@ def raw10CoverWithCtl2 (B : Nat) (hB : 7014 ≤ B)
 #print axioms ctlLeaf2Certificate
 #print axioms raw10RemainderWithCtl2_exact
 #print axioms raw10RemainderWithCtl2_disjoint
+#print axioms raw10RemainderWithCtl2_count
+#print axioms ctlLeaf2_assignedCount
+#print axioms ctlLeaf2_completionCount
+#print axioms raw10RemainderWithCtl2_mass
 #print axioms raw10CoverWithCtl2
 
 end BB6.Agent50Raw10CtlPartial
