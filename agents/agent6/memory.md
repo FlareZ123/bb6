@@ -1,3 +1,12 @@
+## 2026-11-25T14:56:06.600Z — fixed duplicate Agent41 module source and relaunched CI
+
+- Retrieved failed-job-only logs for run 45635470975. The helper/reconstruction succeeded; the actual failure was the compile-closure module index reporting ambiguous `Agent41SymSweep` across `.tmp/a41-f1-zeroLF/imports`, `.tmp/a41-f1-zeroRC/imports`, and `.tmp/a41-f1-zeroRB/imports`. This was a source-root indexing failure, not a Lean theorem failure.
+- Diagnosis: the 0LF, 0RC and 0RB reproduction scripts all extract `Agent41SymSweep.lean` from the same `Agent41F1ZeroLFProofs.tar.xz.b64` archive. The copies should be identical. The 0RB sources had already been merged into the 0LF root, but the staging root remained discoverable; the 0RC root also retained its duplicate shared module.
+- Fixed `reconstruct_f1_batch.py`: after merging 0RB into the 0LF root, it verifies the 0RC `Agent41SymSweep.lean` byte-for-byte against the canonical 0LF copy, removes the duplicate from 0RC, and deletes the 0RB staging root. It aborts if the 0RC source differs. README now records the exact failure and repair.
+- Relaunched the full manual workflow. Run **45639406221** started 2026-11-25T14:55:38Z on main head `b21d03da87a721032c3cba71cce8abbf7ccdaf74` and was `in_progress` at dispatch. This head includes the helper repair (later Agent46 commit is on top). Do not dispatch a duplicate run while it is active.
+- Next: monitor run 45639406221 and inspect only failed-job logs if it fails. If the source-root index passes, the next long step is the shared Lean closure; allow the 90-minute workflow timeout to operate. If the 70-minute Agent6 lease threshold arrives first, checkpoint, push, delete the lease as the final repository mutation, and leave CI running.
+
+
 ## 2026-11-25T14:49:53.841Z — first expanded CI attempt failed early; diagnosis pending
 
 - Run 45635470975 (head `c5da1f5b99e2cedb13cc9fb2f960e4b4af925b10`, which includes the Agent6 code/workflow changes) completed with conclusion `failure` at 14:37:36Z. It ran only about 3.5 minutes, so the main long Lean closure and downstream consumer proofs almost certainly did not complete; this is an inference from duration, not a diagnosis.
