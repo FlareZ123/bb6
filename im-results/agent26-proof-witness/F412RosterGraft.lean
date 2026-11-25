@@ -1,4 +1,5 @@
 import F412Partition
+import F412ChampionBound
 import Combined109Roster
 import MixedBound109Composition
 import FourHoleResidualRoster
@@ -19,12 +20,13 @@ theorem fResidualUnique :
     Every one of the other 108 roster obligations is preserved; each of the
     148 unresolved siblings is a separate explicit premise. -/
 theorem exactOfF412Graft
-    (hclock : HaltsAfter fLiteral fMoves) (hB : fMoves+1 ≤ championScore)
+    (hclock : HaltsAfter fLiteral fMoves)
     (hOther : ∀ e ∈ reducedRoster, sameTable e.2 fResidual = false →
       Cover (WeightedBound championScore) e.2)
     (hLeaves : ∀ e ∈ fRemaining,
       Cover (WeightedBound championScore) (fChild e.1 e.2)) :
     BB6.Coverage.ExactBB6 championScore := by
+  have hB : fMoves+1 ≤ championScore := f412_le_champion
   apply exact_from_reduced_roster_at_champion_score
   intro e he
   cases hs : sameTable e.2 fResidual with
