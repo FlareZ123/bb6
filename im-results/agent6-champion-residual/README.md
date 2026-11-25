@@ -158,7 +158,7 @@ The current strongest draft combines the accepted 76-entry two-parent roster wit
 - The F1 chain leaves 102 residual cylinders after 1LB and 0RB/0LA/1RD, then lifts through 0RC, 1LA, 0LF, 0RF and the existing F0 refinement.
 - `ChampionResidualCanonicalTwoParentComposition.lean` composes these into a conditional exactness theorem requiring **75 + 102 = 177 Covers**. It also checks that the 177 assembled addresses are pairwise distinct.
 
-This is a conditional interface, not an exact BB(6) proof. Every one of the 177 Covers remains an explicit proof obligation. The 187-obligation composition is retained as an older fallback baseline; the 177 draft supersedes it if CI confirms the new composition.
+This is a conditional interface, not an exact BB(6) proof. Every one of the 177 Covers remains an explicit proof obligation. The earlier 187-obligation baseline is superseded in the active source by the 177 draft; its earlier commit and CI run remain in Git history for comparison.
 
 The workflow has a `catalogue_crosswalk` mode that can reuse a previously built core artifact, compile the F1 batch, and then compile and axiom-audit the 177 theorem. It is gated separately from the raw139 leaf pilot.
 
