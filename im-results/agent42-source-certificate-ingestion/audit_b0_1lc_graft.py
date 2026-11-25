@@ -31,6 +31,11 @@ required = {
     "BB6.Agent42B01LC109SourceConsumer.exact_from_108_and_41_boxes",
     "BB6.Agent42B01LC109SourceConsumer.refined_obligation_count",
     "BB6.Agent42B01LC109SourceConsumer.b0_1lc_mass_conservation",
+    "BB6.Agent13CrossRouteHeldLeaf109.firstOneB0_1LC_exact_member",
+    "BB6.Agent13HeldBlock.held_weighted",
+    "BB6.Agent17Raw10CombinedConsumer.raw10RemainderWithCycleAndHalt_exact",
+    "BB6.Agent17Raw10CombinedConsumer.raw10CoverWithCycleAndHalt",
+    "BB6.Agent13HeldBlockRaw10Combined.raw10_cover_with_cycle_and_halt",
 }
 missing = sorted(required - profiles.keys())
 if missing:
