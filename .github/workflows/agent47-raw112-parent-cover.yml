@@ -93,6 +93,17 @@ jobs:
             exit 1
           fi
           work="/tmp/a47-raw112-shard-$SHARD"
+          for input in \
+            im-results/agent47-raw112-cut/Raw112Data.lean \
+            im-results/agent47-raw112-cut/unresolved.txt \
+            im-results/agent47-raw112-cut/shard-config.json \
+            im-results/agent47-raw115-cut/counter.py \
+            im-results/agent47-raw114-cut/multi_sweep.py; do
+            if [ ! -f "$input" ]; then
+              echo "Missing raw112 compile/provenance input: $input" >&2
+              exit 1
+            fi
+          done
           python tools/lean_compile_closure.py "${roots[@]}" \
             --workdir "$work" \
             --manifest "$work/manifest.json" \
@@ -123,7 +134,7 @@ jobs:
             --provenance-input im-results/agent4-raw109/merge_shards.py \
             --provenance-input im-results/agent4-raw109/audit_axioms.py \
             --provenance-input im-results/agent47-raw112-cut/shard-config.json \
-            | tee "/tmp/a47-raw112-shard-$SHARD.log"
+            2>&1 | tee "/tmp/a47-raw112-shard-$SHARD.log"
           if grep -Eq 'sorryAx|native_decide' "/tmp/a47-raw112-shard-$SHARD.log"; then
             echo "Forbidden axiom/proof mechanism in raw112 shard $SHARD" >&2
             exit 1
