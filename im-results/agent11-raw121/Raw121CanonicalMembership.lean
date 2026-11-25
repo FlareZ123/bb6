@@ -16,7 +16,7 @@ def parent : PartialMachine :=
     (some ⟨true, true, 4⟩)
 
 /-- Match the exact finite 12-slot table, not a hash or an enumeration index. -/
-def inCanonical78 : Bool :=
+noncomputable def inCanonical78 : Bool :=
   BB6.Agent47Canonical78.roster.any fun e => sameTable e.2 parent
 
 theorem inCanonical78_checked : inCanonical78 = true := by
