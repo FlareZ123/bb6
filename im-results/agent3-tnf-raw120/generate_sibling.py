@@ -158,6 +158,8 @@ if BRANCH == "1RA":
         pumps[code] = (f"({ns0}.table {variant})", f"({ns0}.never {variant})")
     assert opens[2309] == "1RB1LF_1RC1RF_0RD1RB_1LD1RE_1RA1LE_---0LA"
     late[opens[2309]] = (13311, 10)
+    assert opens[437] == "1RB0LF_1RC0RE_0RD---_1LD1RE_1RA1LE_1LE1LA"
+    pumps[opens[437]] = ("BB6.Agent3Raw120OneRAParity.table", "BB6.Agent3Raw120OneRAParity.never")
 
 if BRANCH == "1LA":
     assert opens[1794] == "1RB0LE_1RC0RF_0RD---_1LD1RE_1LA1LE_0RB1RA"
@@ -355,7 +357,7 @@ summary = {
     "one_block_pumps": one_count,
     "multi_block_pumps": multi_count,
     "late_leaves": len(late),
-    "custom_counter_and_nested_leaves": {"1RA": 2, "1LA": 1, "0RC": 4, "1RC": 3, "0RA": 13, "1LF": 6, "0LB": 6, "0LF": 18}.get(BRANCH, 0),
+    "custom_counter_and_nested_leaves": {"1RA": 3, "1LA": 1, "0RC": 4, "1RC": 3, "0RA": 13, "1LF": 6, "0LB": 6, "0LF": 18}.get(BRANCH, 0),
     "unresolved": len(missing),
     "unresolved_sample": [{"index": i, "table": code} for i, code in missing[:100]],
 }
@@ -470,7 +472,7 @@ theorem split_checked (p : PartialMachine) (n : Nat) (s : Slot)
   simp only [Bool.and_eq_true]
   exact ⟨hq, allMoves_of _ hk⟩
 """
-emit(prefix + "Base", ["Raw120Late"] + ({"1RA": ["Raw120OneRABiDFA", "Raw120OneRAStack"], "1LA": ["Raw120OneLABiDFA"], "0RC": ["Raw120RCCounter"], "1RC": ["Raw120OneRCCounter"], "1LF": ["Raw120OneLFCounter", "Raw120OneLFTwo", "Raw120OneLFStack"], "0LB": ["Raw120ZeroLBMirror", "Raw120ZeroLBReset", "Raw120ZeroLBShuttle", "Raw120ZeroLBTriple"], "0LF": ["Raw120ZeroLFRecursive", "Raw120ZeroLFWord"], "0RA": ["Raw120RAPhases", "Raw120RABiDFA", "Raw120RA423BlockAdapter"]}.get(BRANCH, [])) + [prefix + "Sweeps"], base)
+emit(prefix + "Base", ["Raw120Late"] + ({"1RA": ["Raw120OneRABiDFA", "Raw120OneRAStack", "Raw120OneRAParity"], "1LA": ["Raw120OneLABiDFA"], "0RC": ["Raw120RCCounter"], "1RC": ["Raw120OneRCCounter"], "1LF": ["Raw120OneLFCounter", "Raw120OneLFTwo", "Raw120OneLFStack"], "0LB": ["Raw120ZeroLBMirror", "Raw120ZeroLBReset", "Raw120ZeroLBShuttle", "Raw120ZeroLBTriple"], "0LF": ["Raw120ZeroLFRecursive", "Raw120ZeroLFWord"], "0RA": ["Raw120RAPhases", "Raw120RABiDFA", "Raw120RA423BlockAdapter"]}.get(BRANCH, [])) + [prefix + "Sweeps"], base)
 
 assert tree[0] == "split"
 root_n, root_slot, root_kids = tree[1], tree[2], tree[3]
