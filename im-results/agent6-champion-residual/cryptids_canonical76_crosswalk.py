@@ -88,6 +88,14 @@ def compatible(parent: list[str], source: list[str]) -> bool:
     return all(p == "---" or p == s for p, s in zip(parent, source))
 
 
+def first_use_payload(first_use: dict[int, int]) -> dict:
+    ordered = sorted(first_use.items(), key=lambda item: item[1])
+    return {
+        "first_use_order": [slot for slot, _ in ordered],
+        "first_use_schedule": [{"slot": slot, "time": time} for slot, time in ordered],
+    }
+
+
 def simulate_first_use(tokens: list[str], max_steps: int = 100_000) -> dict:
     """Simulate from blank tape until all ordinary rows are first visited, halt, or cap."""
     state = 0
@@ -102,14 +110,14 @@ def simulate_first_use(tokens: list[str], max_steps: int = 100_000) -> dict:
         if token == "HHH":
             return {
                 "status": "halted",
-                "first_use_order": [i for i, _ in sorted(first_use.items(), key=lambda item: item[1])],
+                **first_use_payload(first_use),
                 "halt_steps": step,
                 "halt_slot": slot,
             }
         if token == "---":
             return {
                 "status": "undefined",
-                "first_use_order": [i for i, _ in sorted(first_use.items(), key=lambda item: item[1])],
+                **first_use_payload(first_use),
                 "halt_steps": None,
                 "undefined_slot": slot,
             }
@@ -120,24 +128,30 @@ def simulate_first_use(tokens: list[str], max_steps: int = 100_000) -> dict:
         if ordinary <= set(first_use):
             return {
                 "status": "all_ordinary_visited",
-                "first_use_order": [i for i, _ in sorted(first_use.items(), key=lambda item: item[1])],
+                **first_use_payload(first_use),
                 "halt_steps": None,
                 "halt_slot": None,
             }
     return {
         "status": "step_limit",
-        "first_use_order": [i for i, _ in sorted(first_use.items(), key=lambda item: item[1])],
+        **first_use_payload(first_use),
         "halt_steps": None,
         "halt_slot": None,
     }
 
 
-def route_from_first_use(parent: list[str], source: list[str], schedule_slots: list[int], source_kind: str) -> dict | None:
+def route_from_first_use(parent: list[str], source: list[str], schedule_entries: list[dict], source_kind: str) -> dict | None:
     """Use the machine's actual first-visit schedule, not lexicographic slot order."""
     holes = [i for i, token in enumerate(parent) if token == "---"]
+    hole_set = set(holes)
+    schedule_slots = [entry["slot"] for entry in schedule_entries]
     visited = set(schedule_slots)
     unvisited = [i for i in holes if i not in visited]
-    path_moves = [source[i] for i in schedule_slots if i in set(holes)]
+    path_schedule = [
+        {"slot": entry["slot"], "time": entry["time"], "move": source[entry["slot"]]}
+        for entry in schedule_entries if entry["slot"] in hole_set
+    ]
+    path_moves = [entry["move"] for entry in path_schedule]
     if len(unvisited) == 1 and source[unvisited[0]] == "HHH":
         return {
             # A NonHalt theorem proves the HHH row is unreachable, so every
@@ -146,6 +160,7 @@ def route_from_first_use(parent: list[str], source: list[str], schedule_slots: l
             # 24 transitions at that row.
             "match_type": "one_hole_leaf" if source_kind == "NonHalt" else "halt_completion_candidate",
             "path_moves": path_moves,
+            "path_schedule": path_schedule,
             "halt_slot": unvisited[0],
             "unvisited_holes": unvisited,
         }
@@ -153,6 +168,7 @@ def route_from_first_use(parent: list[str], source: list[str], schedule_slots: l
         return {
             "match_type": "singleton_completion",
             "path_moves": path_moves,
+            "path_schedule": path_schedule,
             "halt_slot": None,
             "unvisited_holes": [],
         }
@@ -222,11 +238,14 @@ def run(args: argparse.Namespace) -> dict:
                 renamed = rename_table(source["tokens"], perm)
                 if not compatible(parent["table"], renamed):
                     continue
-                schedule_slots = [
-                    2 * perm[slot // 2] + (slot % 2)
-                    for slot in source["simulation"]["first_use_order"]
+                schedule_entries = [
+                    {
+                        "slot": 2 * perm[item["slot"] // 2] + (item["slot"] % 2),
+                        "time": item["time"],
+                    }
+                    for item in source["simulation"]["first_use_schedule"]
                 ]
-                route = route_from_first_use(parent["table"], renamed, schedule_slots, source["kind"])
+                route = route_from_first_use(parent["table"], renamed, schedule_entries, source["kind"])
                 if route is None:
                     continue
                 path_moves = route["path_moves"]
@@ -249,6 +268,10 @@ def run(args: argparse.Namespace) -> dict:
                     "halt_slot": slot_name(route.get("halt_slot")),
                     "simulation_status": source["simulation"]["status"],
                     "halt_steps": source["simulation"]["halt_steps"],
+                    "path_schedule": [
+                        {"slot": slot_name(item["slot"]), "time": item["time"], "move": item["move"]}
+                        for item in route["path_schedule"]
+                    ],
                     "permutations": [],
                 })
                 perm_text = "".join(LETTERS[perm[i]] for i in range(6))
