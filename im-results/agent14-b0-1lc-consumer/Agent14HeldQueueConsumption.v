@@ -27,22 +27,32 @@ Lemma Forall_filter_partition {A : Type} (f : A -> bool) (P : A -> Prop)
 Proof.
   split.
   - intro Hall.
-    apply Forall_forall in Hall.
-    split; apply Forall_forall; intros x Hx;
-      apply filter_In in Hx as [Hin _];
-      exact (Hall x Hin).
+    pose proof (proj1 (@Forall_forall A P xs) Hall) as Hpoint.
+    split.
+    + apply (proj2 (@Forall_forall A P (filter f xs))).
+      intros x Hx.
+      apply filter_In in Hx as [Hin _].
+      exact (Hpoint x Hin).
+    + apply (proj2 (@Forall_forall A P
+        (filter (fun x => negb (f x)) xs))).
+      intros x Hx.
+      apply filter_In in Hx as [Hin _].
+      exact (Hpoint x Hin).
   - intros [Hyes Hno].
-    apply Forall_forall in Hyes.
-    apply Forall_forall in Hno.
-    apply Forall_forall.
+    pose proof
+      (proj1 (@Forall_forall A P (filter f xs)) Hyes) as Hyes_point.
+    pose proof
+      (proj1 (@Forall_forall A P
+        (filter (fun x => negb (f x)) xs)) Hno) as Hno_point.
+    apply (proj2 (@Forall_forall A P xs)).
     intros x Hx.
     destruct (f x) eqn:Hfx.
-    + apply Hyes.
+    + apply Hyes_point.
       apply filter_In.
-      split; [exact Hx|exact Hfx].
-    + apply Hno.
+      split; [exact Hx | exact Hfx].
+    + apply Hno_point.
       apply filter_In.
-      split; [exact Hx|].
+      split; [exact Hx |].
       simpl.
       rewrite Hfx.
       reflexivity.
