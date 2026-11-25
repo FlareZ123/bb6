@@ -2,7 +2,7 @@
 
 **Status (2026-11-25): intermediate computational work; no BB(6) upper bound has been proved here.**
 
-This directory tracks the bridge from the original Coq Enumerate62 source queue to the source-root coverage work in `im-results/agent32-source-queue/`. The immediate missing object is a reproducible export of the 129 q0 chunk checkpoints and the exact residual obligations they leave.
+This directory tracks the bridge from the original Coq Enumerate62 source queue to the source-root coverage work in `im-results/agent32-source-queue/`. The immediate missing objects are the independently scheduled 129 exact chunk checkpoints and certificates for all resulting residual obligations.
 
 ## Established components
 
@@ -10,6 +10,8 @@ This directory tracks the bridge from the original Coq Enumerate62 source queue 
 - `im-results/agent8-adaptive-source-plan/Agent8QueueCheckpoint.v` defines the packed queue encoding and the exact `source_checkpoint_decode` theorem.
 - `im-results/agent8-adaptive-source-plan/Agent8AdaptiveSource.v` provides finite-checkpoint and adaptive-plan soundness, including the active-plus-held residual interface. The relevant checkpoint modules were exercised in CI run `45463102601`.
 - `im-results/agent32-source-queue/` contains the q0 partition, source-drain, and source-coverage development. Its intended partition is the 129 slices `q_i (100*i) 100`, with the final slice naturally truncated to 20 input nodes.
+
+- `Agent5ChunkCoverage.v` supplies a candidate original-source composition theorem from all 129 chunk-specific adaptive plans and their exact packed checkpoint equations to the global weighted bound. It uses the existing verified partition, codec and weighted-normalization contracts. Compilation has not yet been accepted; the shared weighted-source target now includes this module.
 
 The critical semantic distinction is that a finite checkpoint may leave both an active queue and held nodes. Both are obligations. A nonempty active queue is not a drained queue.
 
@@ -43,7 +45,7 @@ The VM computation itself took 64.821 seconds. This supports the existing batch 
 
 - `check-q0-export.cjs` parses packed queue values, checks the six-row table encoding, independently checks undefined-transition counts and fresh-state metadata, and writes a roster TSV plus JSON manifest. Its full mode expects exactly 129 chunks at offsets 0, 100, ..., 12800, requested size 100, and a consistent source/research revision.
 - `.github/workflows/shared-rocq-root-proofs.yml` now runs the parser self-test and emits per-chunk Coq logs for `enumerate62-packed-batch`, making the exact values machine-readable through the Actions logs.
-- Current batch run `45523811152` uses research revision `8350420137f3b1b45302be198e4cb2c9a2751d1a` and covers offsets 100 through 800 at fuel 1,000,000. It is the first eight-chunk batch and tests the workflow/parser integration.
+- [Batch 45523811152](https://github.com/FlareZ123/bb6/actions/runs/45523811152), research revision `8350420137f3b1b45302be198e4cb2c9a2751d1a`, verified offsets 100 and 200 with (112 active, 0 held) and (136 active, 0 held), respectively. Offsets 300 through 800 timed out at 180 seconds (exit 124). Its partial artifact 14983730290 retains the successful outputs. The uniform 1m schedule is not a reliable throughput assumption.
 
 ## Native-computation caveat
 
@@ -62,10 +64,10 @@ These are not assumed to belong to the current source-generated roster. The firs
 
 ## Next steps
 
-1. Complete and inspect batch run `45523811152`.
-2. If it passes, export the remaining 120 chunks in 15 eight-chunk batches at fuel 1,000,000, keeping a fixed research revision.
-3. Parse all 129 exact active/held checkpoint values into `q0-export/q0-checkpoint-roster.tsv` and `q0-export/q0-checkpoint-manifest.json`.
-4. Compare the complete roster with the historical 663 snapshot.
-5. Work with Agent32 to discharge the finite residual obligations through the adaptive-plan coverage theorem. If the 1m residual roster is too large to certify directly, deepen only the difficult chunks rather than attempting another VM MAXT drain.
+1. Source-check the chunk-specific adaptive coverage adapter in the existing shared target.
+2. Recover the two verified batch chunks and repair the exporter/parser for partial success and truncated final chunks.
+3. Use finite fuel/range scheduling based on measured cost; preserve exact active and held outputs for every successful range.
+4. Assemble all 129 chunk obligations and compare their exact tables with the historical snapshot, without equating the rosters by counts.
+5. Discharge the residual obligations through the weighted source theorem; an unfinished checkpoint is never a machine decision.
 
 All computational exports and pilot data remain in `im-results/`; none is presented as an academically publishable result or as a solution to BB(6).
