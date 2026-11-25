@@ -1,0 +1,41 @@
+name: Agent 21 raw73 candidate certificate audit
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Generate and check original source
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent21-tnf-raw73/prepare.py
+          dir=im-results/agent21-tnf-raw73
+          python tools/lean_compile_closure.py --workdir /tmp/a21-raw73 --jobs 4 \
+            --manifest /tmp/a21-raw73/manifest.json \
+            --label raw73-bound --theorem BB6.Agent21Raw73.all_completions \
+            --weighted-bound 7014 --artifact-name raw73-bound-certified \
+            --provenance-input "$dir/prepare.py" \
+            --provenance-input "$dir/dfa-bank.txt" \
+            --provenance-input "$dir/dfa-index.txt" \
+            --provenance-input "$dir/specs.json" \
+            "$dir/Raw73Bound.lean" | tee /tmp/a21-raw73.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a21-raw73.log; then exit 1; fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw73-bound-certified
+          path: |
+            /tmp/a21-raw73/*.olean
+            /tmp/a21-raw73/manifest.json
+          if-no-files-found: error
