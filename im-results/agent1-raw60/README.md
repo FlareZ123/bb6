@@ -1,9 +1,28 @@
-# Raw60 candidate classification
+# Raw60 partial closure
 
-Canonical raw residual 60 (index 36), E1=1RA, parent `1RB---_1RC---_0RD---_1LD1RE_---1RA_------`, six holes. First hole A1 after seven ordinary transitions. This is a new candidate search, not a certified closure.
+Raw residual 60 (canonical index 36), E1=1RA, parent `1RB---_1RC---_0RD---_1LD1RE_---1RA_------`, six holes. First hole A1 after seven ordinary transitions.
 
-Run the existing agent2-tnf-raw99/enumerate.cpp on the parent (cutoff 1000, side-cycle window 256). Its deterministic census gives 14,534 splits, 252,125 side-cycle leaves, 69,602 last-hole leaves, 12,556 open leaves. Masses: cycle 220,279,925; halt 18,679,552; total-defined 1,670,448; open 3,510,700; total 244,140,625 = 25^6. Open-list SHA256 f99d4f305af5f37284edca62fa8ceba353ea363d67fd839f7933a47b092ee25a. Maximum weighted score in this finite census is 929 (928 ordinary transitions, zero incoming delay), table `1RB1LF_1RC0LB_0RD0RF_1LD1RE_HHH1RA_1RC1LB`.
+## Source-accepted children
 
-The pooled bank from agent11-raw107/bank.txt, agent3-tnf-raw120/bank.txt, agent8-tnf-six/raw115/bank.txt, agent8-tnf-six/raw119/bank.txt contains 431 distinct valid numeric DFA codes of at most ten states, with first DFA symbol zero. The existing agent11-raw107/bank.cpp saturation checker finds 11,664 candidates, leaving 892 open. Exact Lean FAR and tree acceptance are still required. Targeted symbolic induction and additional FAR searches are in progress.
+[CI run 45526080641](https://github.com/FlareZ123/bb6/actions/runs/45526080641), pinned head 68130504c543e151395a29a0fde7a4be1e50e765, passed both raw60 jobs and the forbidden-axiom guard. Each generated `BB6.Agent1Raw60A{move}.all_closed` is a weighted upper-bound theorem for every compatible completion of its exact child. The generators retain the complete first-hole tree, and use source-checked side cycles, last-hole rules, FAR and universal pumps.
 
-No accepted parent deletion is claimed. Reproduction: compile enumerate.cpp with C++17/O3; run on the parent in a scratch directory; compile bank.cpp with C++20/O3; pipe zero-based open indices and underscore-free codes into bank with the pooled bank file. All ordinary first-hole branches must be retained in the eventual source certificate.
+| A1 | Bound | Splits | Side cycles | Last-hole leaves | Open leaves discharged | Accepted job |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| 0RC | 376 | 821 | 15133 | 3525 | 226 | 138909656398 |
+| 0RE | 719 | 526 | 9265 | 2713 | 121 | 138909656912 |
+
+These are disjoint cylinders, each of mass 25^5=9,765,625. A complete raw60 parent closure is not yet established. The raw60 certificate generator and its exact specs are maintained in this directory.
+
+## Further mathematical reductions
+
+For global open-list entries 1398/1399, the shared binary-block proof `Raw60LDBinary.lean` proves for arbitrary untouched tails L,R that D((00)^(n+1)11L,R) reaches F with identical tapes. Cost T(0)=8; T(n+1)=2T(n)+8 or +10 according to F1=0LD/0LE. From blank time 2 the C-family grows two zeros per epoch.
+
+For entries 1676/1677, `Raw60LDTernary.lean` proves an arbitrary-tail recursive traverse F(1^(3n+k)0L,R) -> B(0 1^(3n+k-1)0L,R), k=2 or 1, cost T(n+1)=2T(n)+26. Exact blank entries at t=18 and t=74 give an E-boundary family growing three ones each epoch. Local copied operational-model Lean checks passed both recurrences. The original-source wrapper audit for these four additional holdouts remains pending.
+
+## Reproducible candidate frontier
+
+The existing agent2-tnf-raw99/enumerate.cpp on the parent (cutoff 1000, side-cycle window 256) gives 14,534 splits, 252,125 side-cycle leaves, 69,602 last-hole leaves, 12,556 open leaves. Masses: cycle 220,279,925; halt 18,679,552; total-defined 1,670,448; open 3,510,700; total 244,140,625 = 25^6. Open-list SHA256 f99d4f305af5f37284edca62fa8ceba353ea363d67fd839f7933a47b092ee25a. Maximum weighted score in this finite census is 929 (928 ordinary transitions, zero incoming delay), table `1RB1LF_1RC0LB_0RD0RF_1LD1RE_HHH1RA_1RC1LB`.
+
+The pooled bank (agent11-raw107, agent3-tnf-raw120, agent8-tnf-six/raw115 and raw119) contains 431 distinct valid numeric DFA codes of at most ten states, with first DFA symbol zero. The agent11-raw107/bank.cpp saturation checker finds 11,664 candidates, leaving 892. Enumerating 20,225 normalized five-state DFAs (plus the smaller sizes) finds 60 more, leaving 832 before pumps. A million-step simulation of these 832 finds one late unassigned transition (global index 4338, step 1169, E0) and 831 still open. These are discovery results, not proof of the remaining cylinders' bounds.
+
+Reproduction: compile enumerate.cpp with C++17/O3; run on the parent in a scratch directory; compile bank.cpp with C++20/O3; pipe zero-based open indices and underscore-free codes into bank with the pooled bank file. For accepted children use `python im-results/agent13-coverage/unpack.py`, `python im-results/agent1-raw60/generate.py 0RC 0RE` and the strict Lean closure compiler on `Raw60A0RCData.lean` and `Raw60A0REData.lean`.
