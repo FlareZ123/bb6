@@ -185,6 +185,31 @@ Qed.
 Eval vm_compute in length q0_2800_consumed_obligations.
 Eval vm_compute in length q0_2800_residual_obligations.
 
+(* Identify the exact packed chunk-28 residual with the original
+   q_i(2800,100) checkpoint after 1,000,000 source updates. The continuation
+   at that packed checkpoint is AP_stop; this is the exact source queue whose
+   held table was found above. *)
+Theorem q0_2800_packed_chunk28_residual_eq
+    (fuel : nat -> N) (packed : nat -> packed_queue)
+    (plans : nat -> AdaptivePlan)
+    (Hfuel28 : fuel 28 = 1000000%N)
+    (Hplan28 : plans 28 = AP_stop)
+    (Hpacked : forall i, i < 129 ->
+      encode_queue (SearchQueue_upds decider (q_i (100*i) 100) (fuel i)) =
+        packed i) :
+    without_recovered_held_2800
+      (adaptive_obligations decider (plans 28) (decode_queue (packed 28))) =
+      q0_2800_residual_obligations.
+Proof.
+  unfold q0_2800_residual_obligations, q0_2800_adaptive_obligations.
+  rewrite Hplan28.
+  rewrite (source_checkpoint_decode decider (q_i (100*28) 100)
+    (fuel 28) (packed 28) (checkpoint_chunk_canonical (100*28) 100)
+    (Hpacked 28 ltac:(lia))).
+  rewrite Hfuel28.
+  reflexivity.
+Qed.
+
 (* Drop only the exact q_i(2800,100) held table from chunk 28's adaptive
    obligations. All other 128 chunks retain their original full lists.
    The existing packed global-upper consumer then applies unchanged. *)
@@ -219,6 +244,39 @@ Proof.
       exact (Hres 28 Hi).
     + exact (Hres i Hi).
 Qed.
+
+
+(* Concrete source-queue consumer: at chunk 28 use exactly the residual list
+   above; retain the full adaptive obligations for all other 128 chunks. *)
+Theorem actual_source_chunks_packed_global_upper_after_q0_2800_consumption
+    (bound : nat) (fuel : nat -> N) (packed : nat -> packed_queue)
+    (plans : nat -> AdaptivePlan) :
+    N.to_nat 1000000 + 6 <= bound ->
+    (forall i, i < 129 ->
+      encode_queue (SearchQueue_upds decider (q_i (100*i) 100) (fuel i)) =
+        packed i) ->
+    fuel 28 = 1000000%N ->
+    plans 28 = AP_stop ->
+    Forall (source_weighted_safe bound) q0_2800_residual_obligations ->
+    (forall i, i < 129 -> i <> 28 ->
+      Forall (source_weighted_safe bound)
+        (adaptive_obligations decider (plans i) (decode_queue (packed i)))) ->
+    forall t : TM, forall n, halts_in t c0 n -> S n <= bound.
+Proof.
+  intros Hmargin Hpacked Hfuel28 Hplan28 Hres28 HresOther.
+  apply actual_source_chunks_packed_global_upper_after_held_consumption
+    with (fuel := fuel) (packed := packed) (plans := plans).
+  - exact Hmargin.
+  - exact Hpacked.
+  - intros i Hi.
+    destruct (Nat.eq_dec i 28) as [Heq|Hne].
+    + subst i.
+      rewrite (q0_2800_packed_chunk28_residual_eq
+        fuel packed plans Hfuel28 Hplan28 Hpacked).
+      exact Hres28.
+    + exact (HresOther i Hi Hne).
+Qed.
+
 
 Print Assumptions recovered_held_2800_filter_safe.
 Print Assumptions source_weighted_safe_iff_without_recovered_held_2800.
