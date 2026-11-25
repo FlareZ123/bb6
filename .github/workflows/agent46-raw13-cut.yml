@@ -6,7 +6,7 @@ on:
       target:
         description: Proof target
         type: choice
-        options: [core, cut, corridor, ingest, ingest77, pump0RE, late0RE, zeroRE, zeroRC, zeroRD, zeroLC, zeroLB, oneRD, pump0LE5]
+        options: [core, cut, corridor, ingest, ingest77, phase, pump0RE, late0RE, zeroRE, zeroRC, zeroRD, zeroLC, zeroLB, oneRD, pump0LE5]
         default: core
       source_ref:
         description: Exact source commit (optional)
@@ -28,7 +28,7 @@ jobs:
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Download accepted canonical77 artifact for raw13 graft
-        if: inputs.target == 'ingest77'
+        if: inputs.target == 'ingest77' || inputs.target == 'phase'
         uses: actions/download-artifact@v4
         with:
           github-token: ${{ github.token }}
@@ -36,7 +36,7 @@ jobs:
           name: canonical77-certified
           path: /tmp/a47-canonical
       - name: Build checked canonical77 dependency manifest
-        if: inputs.target == 'ingest77'
+        if: inputs.target == 'ingest77' || inputs.target == 'phase'
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
@@ -124,10 +124,15 @@ jobs:
             python "$D/generate.py"
             ROOT="$D/Agent46Raw13Data.lean"
           fi
+          if [ "$TARGET" = phase ]; then
+            python "$D/phase_scan_raw13.py" --limit 25 --cap 5000
+            python "$D/audit_bidfa_raw13.py"
+            python "$D/generate.py"
+          fi
           if [ "$TARGET" = corridor ]; then
             ROOT="$D/Agent46Raw13Corridor.lean"
           fi
-          if [ "$TARGET" = ingest ] || [ "$TARGET" = ingest77 ]; then
+          if [ "$TARGET" = ingest ] || [ "$TARGET" = ingest77 ] || [ "$TARGET" = phase ]; then
             python im-results/agent31-three-hole-tnf/generate_sweeps.py
             python im-results/agent31-three-hole-tnf/generate_four_hole.py
             python im-results/agent10-tnf-raw87/generate.py
@@ -141,7 +146,7 @@ jobs:
               ROOT="$D/Agent46Raw13Data.lean"
             fi
           fi
-          if [ "$TARGET" = ingest77 ]; then
+          if [ "$TARGET" = ingest77 ] || [ "$TARGET" = phase ]; then
             python tools/lean_compile_closure.py --workdir /tmp/a46-raw13 --jobs 4 \
               --precompiled-manifest /tmp/a46-canonical-manifest.json \
               --precompiled-dir /tmp/a47-canonical "$ROOT" | tee /tmp/a46-raw13.log
@@ -149,6 +154,18 @@ jobs:
             python tools/lean_compile_closure.py --workdir /tmp/a46-raw13 --jobs 4 "$ROOT" | tee /tmp/a46-raw13.log
           fi
           if grep -Eq 'sorryAx|native_decide' /tmp/a46-raw13.log; then exit 1; fi
+      - name: Preserve raw13 phase-BiDFA sample and proof sources
+        if: inputs.target == 'phase'
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw13-phase-bidfa-sample
+          path: |
+            im-results/agent46-raw13-cut/raw13-open-residuals.txt
+            im-results/agent46-raw13-cut/raw13-bidfa-spec.json
+            im-results/agent46-raw13-cut/Agent46Raw13BiDFAAudit.lean
+            /tmp/a46-raw13/Agent46Raw13Data.olean
+            /tmp/a46-raw13.log
+            /tmp/a46-canonical-manifest.json
       - name: Preserve compiled raw13 source closure
         if: inputs.target == 'ingest77'
         uses: actions/upload-artifact@v4
