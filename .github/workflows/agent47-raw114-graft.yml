@@ -1,4 +1,4 @@
-name: Agent47 shared-core canonical73 raw110/raw112 roster source audit
+name: BB6 shared-core canonical roster source audit
 on:
   workflow_dispatch:
     inputs:
@@ -13,7 +13,7 @@ on:
         default: all
         required: true
       canonical72_run_id:
-        description: "Successful run ID containing canonical72-roster-only-certified (required for target=canonical71)"
+        description: "Successful run ID containing canonical72-roster-only-certified (required for target=canonical71 or canonical70)"
         type: string
         required: false
 permissions:
@@ -388,7 +388,7 @@ jobs:
 
   canonical72:
     name: Source-audit champion-independent 72-residual roster
-    if: ${{ inputs.target != 'canonical71' }}
+    if: ${{ inputs.target != 'canonical71' && inputs.target != 'canonical70' }}
     needs: exactness
     runs-on: ubuntu-latest
     timeout-minutes: 120
