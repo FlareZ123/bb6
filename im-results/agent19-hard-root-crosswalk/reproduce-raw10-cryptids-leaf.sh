@@ -24,8 +24,8 @@ printf '%s\n' "$PINNED" > "$WORKDIR/upstream-commit.txt"
 # Record the exact local dependency overlay and fully resolved Lake lock.
 cp "$UPSTREAM_ROOT/lakefile.toml" "$WORKDIR/upstream-lakefile.toml"
 cp "$UPSTREAM_ROOT/lake-manifest.json" "$WORKDIR/upstream-lake-manifest.json"
-sha256sum "$WORKDIR/upstream-lakefile.toml" "$WORKDIR/upstream-lake-manifest.json" \
-  > "$WORKDIR/upstream-dependencies.sha256"
+(cd "$WORKDIR" && sha256sum upstream-lakefile.toml upstream-lake-manifest.json \
+  > upstream-dependencies.sha256)
 
 node "$ROOT/im-results/agent19-hard-root-crosswalk/raw10-cryptids-leaf-crosswalk.cjs" "$UPSTREAM_ROOT" \
   | tee "$WORKDIR/crosswalk.json"
@@ -37,7 +37,10 @@ set -euo pipefail
 UPSTREAM_ROOT="${UPSTREAM_ROOT:?}"
 LEAN_BIN="${LEAN_BIN:?}"
 UPSTREAM_LEAN_PATH="$(cd "$UPSTREAM_ROOT" && lake env printenv LEAN_PATH)"
-export LEAN_PATH="${LEAN_PATH:+$LEAN_PATH:}$UPSTREAM_LEAN_PATH"
+UPSTREAM_LIB="$UPSTREAM_ROOT/.lake/build/lib/lean"
+test -s "$UPSTREAM_LIB/BusyBeaver/Basic.olean"
+test -s "$UPSTREAM_LIB/Cryptids/Machines.olean"
+export LEAN_PATH="${LEAN_PATH:+$LEAN_PATH:}$UPSTREAM_LIB${UPSTREAM_LEAN_PATH:+:$UPSTREAM_LEAN_PATH}"
 exec "$LEAN_BIN" "$@"
 WRAPPER
 chmod +x "$WORKDIR/lean-with-upstream"
