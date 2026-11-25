@@ -2284,6 +2284,10 @@ jobs:
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           "$HOME/.elan/bin/lean" --version
+      - name: Install Boost multiprecision headers
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libboost-dev
       - name: Generate selected raw124 bundle branch and compile common core
         run: |
           set -euo pipefail
