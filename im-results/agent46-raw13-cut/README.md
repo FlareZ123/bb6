@@ -131,3 +131,22 @@ The deterministic parent census is 392 splits and halt branches, 6027 cycles, 71
 The updated candidate census has 353 split queries, 2708 cycles, 948 state masks, 999 last-hole leaves, 15 initial and 826 selected dense n-gram leaves, one sparse n-gram leaf, three original and six additional pumping leaves, and 1716 unresolved canonical leaves after replacing D1=0RE and D0=0RC,0RD,0LC,0LB,1RD by their standalone bounded parent certificates. The raw13 parent has 25^9=3814697265625 literal completions; the computed retained mass is 1725263672025. Before this incarnation's two new four-hole candidates the cut retained 1724 leaves and mass 1725417187650. The three four-hole and five five-hole closures now add an exact candidate mass removal of 3·6·25^4 + 5·3·25^5 relative to the preceding cut. The 0RE,0RC,0RD,0LC,0LB,1RD parent theorems are independently source-accepted; the new global graft requires its own source check. The global graft is 78−1+1716=1793 quotient obligations, including the exact surviving complement. The earlier D1=0LE-only revision was cancelled in [CI 45557634300](https://github.com/FlareZ123/bb6/actions/runs/45557634300); the 0RE-only ingest was also cancelled in [CI 45572030362](https://github.com/FlareZ123/bb6/actions/runs/45572030362). Neither cancellation establishes global acceptance.
 
 To reproduce, invoke the existing manual workflow `agent46-raw13-cut.yml` with target `ingest`. It generates the proof data, compiles the original-source import closure, and rejects sorryAx or native_decide in the printed profiles. A failed source check leaves the parent obligation intact. The canonical raw13 parent is still open, #754 remains open, and no BB(6) upper bound follows without the remaining covers at the exact attained score.
+
+
+## Canonical77 composition and phase-aware residual search (25 November 2026)
+
+The accepted raw114 result has reduced the canonical roster from 78 to 77 entries. The new consumer `Agent46Raw13Ingest77.lean` composes the existing raw13 cut with that accepted 77-entry roster:
+
+- `parent_count77` checks that the raw13 parent occurs exactly once.
+- `graft_sound77` replaces that parent with the current raw13 residual list and retains the other 76 representatives.
+- `refined_count77` is stated parametrically as `76 + raw13Residuals.length`; before any new BiDFA closures this is 1792 (=76+1716), rather than the older canonical78 consumer's 1793.
+- `cover_at_target77` proves the conditional cover at any weighted bound (B\ge21269), assuming Covers for every retained representative.
+- `exact_at_target77` is conditional on those same Covers and an actual machine halting at (B). It is not an exact BB(6) result.
+
+The first full dependency build (350 Lean modules) succeeded in run 45606457426, but the consumer's final exactness theorem used `by decide` for a bound depending on free (B), so that run is not accepted. The proof now uses `by omega`, matching the accepted canonical consumer. Run 45609617663 is the corrected `ingest77` source audit; check its conclusion before claiming acceptance.
+
+### Experimental phase-aware BiDFA extension
+
+The generator now exports the exact 1716 open partial tables to `raw13-open-residuals.txt` with stable IDs. `phase_scan_raw13.py` applies Agent25's phase-aware two-sided DFA candidate search to a deterministic sample (default: 25 IDs, seed 46, cap 5000), then independently replays/minimizes candidates through `minimize_phase.py`. `audit_bidfa_raw13.py` emits Lean certificates using Agent16's `BiDFA` checker. The generator only replaces open leaves after verifying the exact source-list SHA-256; it updates the open count and completion mass accordingly.
+
+Workflow target `phase` runs the candidate search, emits the Lean audit module, regenerates the cut, and compiles both the raw13 cut and the canonical77 consumer. C++ output is candidate discovery only; no residual is considered closed until its Lean `BiDFA` proof compiles with no `sorryAx` or `native_decide`. The phase target has not yet been run as of this README update, and no new BiDFA candidates are claimed.
