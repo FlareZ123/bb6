@@ -334,6 +334,18 @@ jobs:
         env:
           BATCH_RANGES: ${{ inputs.batch_ranges }}
         run: bash "$GITHUB_WORKSPACE/research/im-results/agent8-adaptive-source-plan/export-source-batch.sh"
+      - name: Self-test q0 checkpoint parser against final-20 proof
+        if: inputs.target == 'enumerate62-packed-batch'
+        run: node "$GITHUB_WORKSPACE/research/im-results/agent5-weighted-tnf-queue/check-q0-export.cjs" --self-test "$GITHUB_WORKSPACE/research"
+      - name: Emit packed batch logs for exact roster extraction
+        if: inputs.target == 'enumerate62-packed-batch'
+        working-directory: original/verify
+        run: |
+          set -euo pipefail
+          for f in agent8-batch/*.log; do
+            printf '\\n===== %s =====\\n' "${f##*/}"
+            cat "$f"
+          done
       - name: Preserve batch proof artifacts including partial failures
         if: always() && inputs.target == 'enumerate62-packed-batch'
         uses: actions/upload-artifact@v4
