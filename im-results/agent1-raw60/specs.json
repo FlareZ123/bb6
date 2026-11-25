@@ -155,9 +155,18 @@
         "1RB0RF_1RC0LB_0RD1RD_1LD1RE_---1RA_1LF1LB"
       ]
     },
-    "unresolved": {
-      "575": "1RB0RF_1RC0LB_0RD1LD_1LD1RE_---1RA_1LF1LB",
-      "576": "1RB0RF_1RC0LB_0RD1RA_1LD1RE_---1RA_1LF1LB"
+    "unresolved": {},
+    "manual": {
+      "575": [
+        "Raw60RFGlider",
+        "BB6.Agent1Raw60RFGlider.M4335",
+        "1RB0RF_1RC0LB_0RD1LD_1LD1RE_---1RA_1LF1LB"
+      ],
+      "576": [
+        "Raw60RFGlider",
+        "BB6.Agent1Raw60RFGlider.M4336",
+        "1RB0RF_1RC0LB_0RD1RA_1LD1RE_---1RA_1LF1LB"
+      ]
     }
   }
 }
