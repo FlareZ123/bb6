@@ -104,6 +104,7 @@ jobs:
         env:
           MODULE_NAME: ${{ inputs.name }}
           FLIP: ${{ inputs.flip }}
+          WIDTH: ${{ inputs.width }}
         run: |
           set -euo pipefail
           cd im-results/agent13-block-far
@@ -113,6 +114,11 @@ jobs:
           lean -o BlockMacro.olean BlockMacro.lean
           lean -o BlockFAR.olean BlockFAR.lean
           lean -o RangeCheck.olean RangeCheck.lean
+          if [ "$WIDTH" = 2 ]; then
+            for m in BlockMacro2 BlockFAR2 RangeCheck2; do
+              lean -o "$m.olean" "$m.lean"
+            done
+          fi
           lean -o "${MODULE_NAME}Packed.olean" "${MODULE_NAME}Packed.lean"
           lean -o "${MODULE_NAME}Proof.olean" "${MODULE_NAME}Proof.lean" 2>&1 | tee /tmp/q0-blockfar/compile.log
           cp "${MODULE_NAME}Packed.olean" "${MODULE_NAME}Proof.olean" /tmp/q0-blockfar/
@@ -135,16 +141,18 @@ jobs:
           if [ "$FLIP" = "true" ]; then
             cp ../agent5-q0-held-blockfar/MirrorTransport.lean .
             lean -o MirrorTransport.olean MirrorTransport.lean
+            NAMESPACE=BB6BlockFAR
+            if [ "$WIDTH" = 2 ]; then NAMESPACE=BB6BlockFAR2; fi
             cat > "${MODULE_NAME}MirrorConsumer.lean" <<EOF
           import ${MODULE_NAME}Proof
           import MirrorTransport
           namespace BB6BlockFAR.${MODULE_NAME}MirrorConsumer
           open BB6BlockFAR
-          def originalMachine : Table := mirrorTable BB6BlockFAR.${MODULE_NAME}.machine
+          def originalMachine : Table := mirrorTable ${NAMESPACE}.${MODULE_NAME}.machine
           theorem never_original : ∀ n, ∃ c, run originalMachine n primBlank = some c := by
             apply never_of_mirror originalMachine
             intro n
-            simpa [originalMachine, mirrorTable_involutive] using BB6BlockFAR.${MODULE_NAME}.never n
+            simpa [originalMachine, mirrorTable_involutive] using ${NAMESPACE}.${MODULE_NAME}.never n
           #print axioms never_original
           end BB6BlockFAR.${MODULE_NAME}MirrorConsumer
           EOF
