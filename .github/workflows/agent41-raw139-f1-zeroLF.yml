@@ -9,7 +9,7 @@ on:
       sibling:
         description: Sibling to compile
         type: choice
-        options: [zeroLF, zeroRC]
+        options: [zeroLF, zeroRC, zeroRB]
         default: zeroLF
 permissions:
   contents: read
@@ -31,6 +31,7 @@ jobs:
           case "${{ inputs.sibling }}" in
             zeroLF) bash im-results/agent41-raw139-f1-zeroLF/reproduce.sh ;;
             zeroRC) bash im-results/agent41-raw139-f1-zeroLF/reproduce-zeroRC.sh ;;
+            zeroRB) bash im-results/agent41-raw139-f1-zeroLF/reproduce-zeroRB.sh ;;
           esac
       - uses: actions/upload-artifact@v4
         with:
