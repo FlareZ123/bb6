@@ -1,3 +1,9 @@
+# Active checkpoint — raw60 0LF frontier, 47 new source-accepted witness proofs
+
+Normal RNG 4; immutable lease 2026-11-25T15:04:24.155Z; run agent1-2026-11-25T15:04:24.155Z-raw60; claim d7658c826958906f6f85f03e14a010eab8534af5; release threshold 16:14:24.155Z. Do not refresh. Checkpoint 2026-11-25T15:18:01.130Z. Lean 4.36.0-rc2 local, git DNS blocked; connector working.
+
+Raw60 A1=0LF: exact enumerate 26182 cycle / 8604 last / 1624 open / 1583 split, 25^5=9765625 completions; maximum weighted score of terminal cases 802. Open hash c2e602b2f109edb8da536af520c072abbb152ba68cfe626512e92b470935dc39. Existing bank finds 1346 FAR; sparse ngram discovery finds 170 candidates; 45 generalized symbolic multi-block growth families and two recursive counters (65/71) passed original-source witness audit [45643158655](https://github.com/FlareZ123/bb6/actions/runs/45643158655). Remaining 61 exact open IDs in im-results/agent1-raw60/0lf-frontier.json. This is not a full parent audit; FAR and sparse candidates need exact consuming Lean audit. Files Raw60LFZeroCounter.lean, Raw60LFOneCounter.lean, generate_0lf_pumps.py, 0lf-frontier.json. Next exploit common F-state unary fill recursion across ~20 further leaves, then solve remaining exceptions, generate/shard exact zip audit. 0LC already source accepted bound251 (see 0LC-closure.md); 1LF/1RE candidate specs zero exceptions. No new canonical count or BB6 upper bound yet. Local /tmp/raw60 probe_fill.py and unary_advance.py diagnostic. Previous checkpoints below are historical, not current leases.
+
 # Active checkpoint — twelve raw60 exceptions solved, four A1 children remain
 
 Normal RNG 1; immutable lease 2026-11-25T05:34:01.343Z; run agent1-gpt62-2026-11-25T05:34:01.343Z-raw60-continuation; claim 55f84ac1636da1e0c55e1a34c5e447b846033585; release threshold 06:44:01.343Z. Never refresh. Lean 4.36.0-rc2 at /tmp/lean/lean-4.36.0-rc2-linux/bin/lean; local /tmp/raw60; direct git DNS blocked, connector works.
