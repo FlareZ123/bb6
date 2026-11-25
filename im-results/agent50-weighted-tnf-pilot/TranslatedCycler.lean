@@ -247,7 +247,11 @@ theorem finiteRun_append (m : Machine) (c : FiniteCfg) (a b : Nat) :
   | zero => simp [finiteRun]
   | succ a ih =>
       simp only [Nat.succ_add, finiteRun]
-      rw [ih]
+      have ih' : finiteRun m (a+b) =
+          fun c' => (finiteRun m a c').bind (finiteRun m b) := by
+        funext c'
+        exact ih c'
+      rw [ih']
       simp [Option.bind_assoc]
 
 theorem finiteRun_none_add (m : Machine) (c : FiniteCfg) (n k : Nat)
@@ -293,16 +297,13 @@ theorem TranslatedCycle.neverFrom {m : Machine} {period budget : Nat}
     ∀ n, ∃ d, finiteRun m n c = some d := by
   intro n
   obtain ⟨d,hrun,_⟩ := h.repeat n
-  by_cases hn : finiteRun m n c
-  · exact ⟨_,hn⟩
-  · have hnone : finiteRun m n c = none := by
-      cases hr : finiteRun m n c with
-      | none => rfl
-      | some d => exact False.elim (hn (some d))
+  cases hn : finiteRun m n c with
+  | some d₀ => exact ⟨d₀,hn⟩
+  | none =>
     have hp : 1 ≤ period := by omega
     have hmul := Nat.mul_le_mul_right n hp
     have hle : n ≤ period*n := by simpa using hmul
-    have hlarge := finiteRun_none_add m c n (period*n-n) hnone
+    have hlarge := finiteRun_none_add m c n (period*n-n) hn
     have hindex : n + (period*n-n) = period*n := by omega
     rw [hindex,hrun] at hlarge
     contradiction
@@ -319,16 +320,13 @@ theorem TranslatedCycle.neverBlank {m : Machine} {entry period budget : Nat}
     have hlarge : finiteRun m (entry + period*n) finiteBlank = some d := by
       rw [finiteRun_append,hentry]
       exact hrun
-    by_cases hn : finiteRun m n finiteBlank
-    · exact ⟨_,hn⟩
-    · have hnone : finiteRun m n finiteBlank = none := by
-        cases hr : finiteRun m n finiteBlank with
-        | none => rfl
-        | some d => exact False.elim (hn (some d))
+    cases hn : finiteRun m n finiteBlank with
+    | some d₀ => exact ⟨d₀,hn⟩
+    | none =>
       have hp : 1 ≤ period := by omega
       have hmul := Nat.mul_le_mul_right n hp
       have hle : n ≤ entry + period*n := by omega
-      have hnone' := finiteRun_none_add m finiteBlank n (entry+period*n-n) hnone
+      have hnone' := finiteRun_none_add m finiteBlank n (entry+period*n-n) hn
       have hindex : n + (entry+period*n-n) = entry+period*n := by omega
       rw [hindex,hlarge] at hnone'
       contradiction
