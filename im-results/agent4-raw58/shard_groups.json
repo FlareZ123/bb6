@@ -1,0 +1,77 @@
+{
+  "artifact_prefix": "raw58-shard",
+  "groups": {
+    "cut": [
+      "Raw58MoreCut2"
+    ],
+    "le": [
+      "Raw58LEData"
+    ],
+    "rf": [
+      "Raw58RFData"
+    ],
+    "le1": [
+      "Raw58LE1Data"
+    ],
+    "lf-a": [
+      "Raw58LFKid00",
+      "Raw58LFKid01",
+      "Raw58LFKid02",
+      "Raw58LFKid03",
+      "Raw58LFKid04",
+      "Raw58LFKid05",
+      "Raw58LFKid06",
+      "Raw58LFKid07"
+    ],
+    "lf-b": [
+      "Raw58LFKid08",
+      "Raw58LFKid09",
+      "Raw58LFKid10",
+      "Raw58LFKid11",
+      "Raw58LFKid12",
+      "Raw58LFKid13",
+      "Raw58LFKid14",
+      "Raw58LFKid15"
+    ],
+    "lf-c": [
+      "Raw58LFKid16",
+      "Raw58LFKid17",
+      "Raw58LFKid18",
+      "Raw58LFKid19",
+      "Raw58LFKid20",
+      "Raw58LFKid21",
+      "Raw58LFKid22",
+      "Raw58LFKid23"
+    ],
+    "lf1-a": [
+      "Raw58LF1Kid00",
+      "Raw58LF1Kid01",
+      "Raw58LF1Kid02",
+      "Raw58LF1Kid03",
+      "Raw58LF1Kid04",
+      "Raw58LF1Kid05",
+      "Raw58LF1Kid06",
+      "Raw58LF1Kid07"
+    ],
+    "lf1-b": [
+      "Raw58LF1Kid08",
+      "Raw58LF1Kid09",
+      "Raw58LF1Kid10",
+      "Raw58LF1Kid11",
+      "Raw58LF1Kid12",
+      "Raw58LF1Kid13",
+      "Raw58LF1Kid14",
+      "Raw58LF1Kid15"
+    ],
+    "lf1-c": [
+      "Raw58LF1Kid16",
+      "Raw58LF1Kid17",
+      "Raw58LF1Kid18",
+      "Raw58LF1Kid19",
+      "Raw58LF1Kid20",
+      "Raw58LF1Kid21",
+      "Raw58LF1Kid22",
+      "Raw58LF1Kid23"
+    ]
+  }
+}

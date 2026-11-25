@@ -4,7 +4,7 @@ on:
     inputs:
       target:
         type: choice
-        options: [twelve, five-hole, recursive, raw107-witness, raw121-witness, raw121-membership, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-gap, raw108-long, raw108-le-trace, raw108-block10-core, raw108-block895, raw108-block895-narrow, raw108-split1930-narrow, raw108-lb0, raw108-lb0-reuse, raw108-weight-core, cached-audit-core, raw108-sharded, raw108-resume, raw108-compose, raw108-child, raw108-graft, raw58-cut, raw58-more, raw58-more2, raw58-more3, raw58-rc, raw58-child, raw109-cut, raw109-refine, raw109-refine6, raw109-refine7, raw109-refine8, raw109-refine9, raw109-refine12, raw109-final-leaves, raw109-closed, raw109-sharded]
+        options: [twelve, five-hole, recursive, raw107-witness, raw121-witness, raw121-membership, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-gap, raw108-long, raw108-le-trace, raw108-block10-core, raw108-block895, raw108-block895-narrow, raw108-split1930-narrow, raw108-lb0, raw108-lb0-reuse, raw108-weight-core, cached-audit-core, raw108-sharded, raw108-resume, raw108-compose, raw108-child, raw108-graft, raw58-cut, raw58-more, raw58-more2, raw58-more3, raw58-rc, raw58-child, raw58-shard, raw58-compose, raw109-cut, raw109-refine, raw109-refine6, raw109-refine7, raw109-refine8, raw109-refine9, raw109-refine12, raw109-final-leaves, raw109-closed, raw109-sharded]
         default: twelve
       raw108_pins:
         description: 'JSON per-group run_id and full revision pins for raw108-compose'
@@ -13,6 +13,14 @@ on:
       raw108_child:
         type: string
         default: 1LC
+      raw58_groups:
+        description: 'JSON list of disjoint Raw58 proof shard groups'
+        type: string
+        default: '["lf-a","lf-b","lf-c"]'
+      raw58_pins:
+        description: 'JSON group to run_id and 40-character source revision for Raw58 composition'
+        type: string
+        default: '{}'
       raw58_child:
         type: choice
         options: [LA1, LB1, RF1, LE, LF, RF, LE1, LF1]
@@ -31,7 +39,7 @@ permissions:
   actions: read
 jobs:
   check:
-    if: inputs.target != 'raw109-sharded' && inputs.target != 'raw108-sharded' && inputs.target != 'raw108-resume' && inputs.target != 'raw108-lb0' && inputs.target != 'raw108-lb0-reuse' && inputs.target != 'raw108-compose'
+    if: inputs.target != 'raw109-sharded' && inputs.target != 'raw108-sharded' && inputs.target != 'raw108-resume' && inputs.target != 'raw108-lb0' && inputs.target != 'raw108-lb0-reuse' && inputs.target != 'raw108-compose' && inputs.target != 'raw58-shard' && inputs.target != 'raw58-compose'
     runs-on: ubuntu-latest
     # Raw58 child and parent closures can exceed 60m; use 2 Lean workers for child audits to reduce runner pressure.
     timeout-minutes: ${{ (inputs.target == 'raw58-child' || inputs.target == 'raw58-more3') && 120 || 60 }}
@@ -913,4 +921,109 @@ jobs:
         with:
           name: raw108-exact-proof
           path: /tmp/a10-raw108-exact/
+          retention-days: 30
+
+  raw58-shards:
+    if: inputs.target == 'raw58-shard'
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        group: ${{ fromJSON(inputs.raw58_groups) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Certify disjoint Raw58 shard and retain its exact closure
+        env:
+          GROUP: ${{ matrix.group }}
+        run: |
+          set -euo pipefail
+          root=im-results/agent4-raw58
+          work=/tmp/a4-raw58-shard
+          plan=/tmp/a4-raw58-plan
+          python "$root/shard_plan.py" prepare "$GROUP" "$plan"
+          mapfile -t roots < "$plan/roots.txt"
+          mapfile -t theorems < "$plan/theorems.txt"
+          python tools/lean_compile_closure.py --workdir "$work" --jobs 2 \
+            --manifest "$work/manifest.json" --label "raw58-shard-$GROUP" \
+            --artifact-name "raw58-shard-$GROUP" \
+            --provenance-input "$root/generate.py" --provenance-input "$root/generate_more.py" \
+            --provenance-input "$root/more.json" --provenance-input "$root/shard_groups.json" \
+            --provenance-input "$root/shard_plan.py" \
+            --provenance-input im-results/agent10-tnf-multipump/chunk_checks.py \
+            --provenance-input im-results/agent2-tnf-raw99/enumerate.cpp \
+            --provenance-input im-results/agent13-coverage/unpack.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_sweeps.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_four_hole.py \
+            "${roots[@]}" 2>&1 | tee /tmp/a4-raw58-shard.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a4-raw58-shard.log "${theorems[@]}"
+          cp /tmp/a4-raw58-shard.log "$work/audit.log"
+          cp "$plan/"* "$work/"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw58-shard-${{ matrix.group }}
+          path: /tmp/a4-raw58-shard/
+          retention-days: 30
+
+  raw58-compose:
+    if: inputs.target == 'raw58-compose'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Restore pinned shards and check the original parent theorem
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PINS: ${{ inputs.raw58_pins }}
+        run: |
+          set -euo pipefail
+          root=im-results/agent4-raw58
+          downloads=/tmp/a4-raw58-downloads
+          union=/tmp/a4-raw58-union
+          work=/tmp/a4-raw58-parent
+          printf '%s' "$PINS" > /tmp/a4-raw58-pins.json
+          python "$root/shard_plan.py" fetch /tmp/a4-raw58-pins.json "$downloads"
+          python im-results/agent10-raw108/merge_resume.py "$downloads" "$union" "$root/shard_groups.json" /tmp/a4-raw58-pins.json
+          python "$root/shard_plan.py" restore-data "$downloads"
+          python tools/lean_compile_closure.py --workdir "$work" --jobs 2 \
+            --precompiled-dir "$union" --precompiled-manifest "$union/manifest.json" \
+            --manifest "$work/manifest.json" --label raw58 \
+            --theorem BB6.Agent4Raw58MoreCut3.all_completions \
+            --parent-table "1RB---_1RC---_0RD---_1LD1RE_---0RA_------" \
+            --weighted-bound 19310 --artifact-name raw58-parent-proof \
+            --provenance-input "$root/shard_groups.json" --provenance-input "$root/shard_plan.py" \
+            --provenance-input "$union/manifest.json" \
+            "$root/Raw58MoreCut3.lean" 2>&1 | tee /tmp/a4-raw58-parent.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a4-raw58-parent.log BB6.Agent4Raw58MoreCut3.all_completions
+          python - "$work/manifest.json" <<'PY'
+          import json, sys
+          m = json.load(open(sys.argv[1]))
+          new = {"Raw58LFData", "Raw58LF1Data", "Raw58MoreCut3"}
+          expected = {item["module"] for item in m["modules"]} - new
+          reused = set(m["precompiled_core"]["reused_modules"])
+          if reused != expected:
+              raise SystemExit(f"Unexpected reused/rebuilt dependency set: {sorted(reused ^ expected)}")
+          PY
+          cp /tmp/a4-raw58-parent.log "$work/audit.log"
+          cp "$union/manifest.json" "$work/shard-union.json"
+          cp -r "$union/original-shard-manifests" "$work/"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw58-parent-proof
+          path: /tmp/a4-raw58-parent/
           retention-days: 30

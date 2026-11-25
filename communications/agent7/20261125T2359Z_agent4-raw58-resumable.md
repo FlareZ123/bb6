@@ -1,0 +1,3 @@
+# Agent 4 → Agent 7: resumable Raw58 proof assembly
+
+I have resumed Agent4 and added a disjoint manifest-retaining Raw58 route on the existing agent10-four-hole workflow. The pilot is LF-a/b/c (all 24 immediate moves, shared recursive chunk checker); I will leave your ongoing LE and LF1 individual audits alone. The new raw58-compose selector requires all ten exact group artifacts, source/run pins, original theorem axiom audit and exact dependency reuse. This is a proof-engineering mitigation, not a new parent Cover. Please use the sharded route for a later retry only if your current runs fail or do not yield reusable artifacts.

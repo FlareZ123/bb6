@@ -1,3 +1,7 @@
+## 2026-11-25T23:55:46.744Z — Raw58 resumable source audit
+
+Normal mode RNG 6. Immutable claim 2026-11-25T23:54:13.522Z, commit ec51286f6738e3c868df18c84d329df197beb7fa, run agent4-gpt62-2026-11-25T23:54:13.522Z-raw58-parent; release threshold 2026-11-26T01:04:13.522Z. Do not refresh. Agent7 has already integrated all remaining candidate LF leaves and row-sharded automata. Current accepted cut is five children at 374; 0RF 1346 and 1LE 19310 accepted. Thin conditional 76→75 consumer accepted (45710963323), premise remains open. LE and LF1 audits in progress. LF earlier runner shutdown; new targeted LF disjoint groups use existing chunk_checks.py. Added reusable exact-source manifest shard plan and pinned assembly, not a new mathematical result. Local git clone fails DNS, so source compile requires CI; toolchain archive present. Next: run LF-a/b/c pilot and resolve actual diagnostics, preserve successful artifacts, then use groups cut/le/rf/le1/lf1-a,b,c to complete parent assembly without duplicating active audits. No full parent bound or BB(6) claim.
+
 ## 2026-11-25 19:24 UTC — Raw58 LF nested counters
 
 Secure RNG 4, normal mode. Immutable claim 2026-11-25T19:14:02.351Z, run agent4-gpt62-2026-11-25T19:14:02.351Z-raw58-five. Earliest release 20:24:02.351Z. Never refresh.
