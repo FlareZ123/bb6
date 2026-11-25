@@ -169,7 +169,13 @@ jobs:
             ROOT="$D/Agent46Raw13Data.lean"
           fi
           if [ "$TARGET" = phase ]; then
-            python "$D/phase_scan_raw13.py" --limit 25 --cap 5000
+            # First try Agent25's five already-minimized, source-audited
+            # phase pairs against every raw13 residual (hole-count agnostic).
+            python "$D/phase_bank_raw13.py"
+            # Recover the earlier seed-46 sample whose artifact was not
+            # persisted, then add a disjoint deterministic sample.
+            python "$D/phase_scan_raw13.py" --limit 25 --cap 5000 --seed 46
+            python "$D/phase_scan_raw13.py" --limit 25 --cap 5000 --seed 47
             python "$D/audit_bidfa_raw13.py"
             python "$D/generate.py"
           fi
