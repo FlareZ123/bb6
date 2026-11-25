@@ -156,6 +156,8 @@ def main() -> None:
                         help="skip boxes with fewer singleton ordinary moves")
     parser.add_argument("--max-boxes", type=int, default=41,
                         help="limit the number of boxes for a quick pilot")
+    parser.add_argument("--rank-promising", action="store_true",
+                        help="try boxes with more singleton ordinary moves and smaller mass first")
     parser.add_argument("--jobs", type=int, default=2)
     parser.add_argument("--compile-timeout", type=int, default=900)
     parser.add_argument("--output", type=Path,
@@ -192,7 +194,17 @@ def main() -> None:
     args.output.mkdir(parents=True, exist_ok=True)
     generator = load_generator() if args.generate else None
     results = []
-    for i, box in enumerate(boxes[:args.max_boxes]):
+    indexed_boxes = list(enumerate(boxes))
+    if args.rank_promising:
+        indexed_boxes.sort(
+            key=lambda item: (
+                -len(singleton_projection(item[1])[1]),
+                __import__("math").prod(map(len, item[1])),
+                item[0],
+            )
+        )
+    selected_boxes = indexed_boxes[:args.max_boxes]
+    for i, box in selected_boxes:
         table, fixed_slots = singleton_projection(box)
         mass = __import__("math").prod(map(len, box))
         item = {
@@ -266,6 +278,7 @@ def main() -> None:
         "total_box_mass": total_mass,
         "tested_boxes": len(results),
         "min_fixed": args.min_fixed,
+        "rank_promising": args.rank_promising,
         "generated": sum(x["generator"] == "success" for x in results),
         "compiled": sum(x["compiled"] is True for x in results),
         "results": results,
