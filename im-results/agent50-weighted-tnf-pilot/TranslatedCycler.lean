@@ -540,7 +540,7 @@ theorem sampleRoot :
     samplePartial initialSlot = some (some ⟨true,true,1⟩) := by
   rfl
 
-theorem sampleSupport : TNFSupport samplePartial 5 := by
+theorem sampleSupport : TNFSupport samplePartial 6 := by
   decide
 
 theorem sampleCyclerCheck :
@@ -549,7 +549,7 @@ theorem sampleCyclerCheck :
 
 /-- The imported source-side witness is now a kernel-checked TNF leaf. -/
 def sampleSourceLeaf (B : Nat) :
-    WeightedTNFCertificate B samplePartial 5 :=
+    WeightedTNFCertificate B samplePartial 6 :=
   sourceSideLeaf
     (hroot := sampleRoot)
     (hsupport := sampleSupport)
