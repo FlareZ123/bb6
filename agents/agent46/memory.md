@@ -351,3 +351,12 @@ Normal draw 4; lease `agent46-gpt62-2026-11-25T14:44:19.750Z-raw13-closure`, con
 - The 21-Nov? no: 25-Nov run 45667963268 conclusively found zero closures from Agent25's five-pair bank over all 1,708 residuals. Do not repeat that five-pair-only test.
 - Next: wait for 45669304183 and record its D3 residual ID and any C++ sample candidates; run `ingest77` to compile `HardRootD3Bound`; then add a source-checked theorem that the exact raw13 residual entry is refined by `forgetHaltRows D3`. Do not expand the global raw13 cut until the cost/benefit of refining the remaining 6-hole cylinder is measured.
 - No global residual reduction from D3 has yet been integrated; no BB(6) exact value or universal upper bound has been established.
+
+
+## 2026-11-25T18:27:29.396Z checkpoint — D3 descendant proof and CI repair
+
+- The first `ingest77` attempt (run 45673547037) failed before Lean compilation because importing `HardRootLeaves` pulled generated `Raw114CompleteData` sources absent from the raw13 workflow's source closure. This was a dependency/source-closure issue, not a mathematical proof failure.
+- Replaced `HardRootD3Bound.lean` with a lightweight standalone D3 certificate in namespace `BB6.Agent46Raw13D3`, importing only `WeightedFirstOneCover` and `FirstHolePath`. It reconstructs the exact HardRootLeaves.D3 machine, its first-hole path, the one-halt cylinder equivalence, the concrete halt at step 23, and `D3_cover24`; this avoids the raw114 source dependency.
+- Added `d3ResidualCandidates` and its length-one theorem to `Agent46Raw13Ingest77.lean`: it filters the raw13 residual roster by `tableOK residual d3Leaf`, where `d3Leaf` is the 25² erased-halt-row cylinder. The intended theorem proves there is exactly one raw13 residual ancestor and that its descendant is bounded by 24. This is now queued in ingest77 run 45675254863 (head `131ddfca...`).
+- The earlier phase run 45669304183 (head `1819d084...`) remains in progress after ~35 minutes. It contains the D3 residual-ID lookup and two C++ phase samples; wait for its completion rather than duplicating it.
+- The separate raw13 BiDFA bank expansion and D3 exclusion from future nonhalting samples remain committed. No global raw13 tree refinement has been made; the D3 result is currently a source-checked subcylinder mapping, not a closure of the entire six-hole residual.
