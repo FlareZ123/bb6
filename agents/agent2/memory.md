@@ -1333,3 +1333,10 @@ The raw124 F1=1LA sharded run 45610989110 was cancelled after two shard runners 
 ## 2026-11-25 12:31Z recursive-search scheduling correction
 
 The first recursive helper escalated the global cap as soon as any table returned `open`, inadvertently sending newly generated child tables to the larger cap too. Updated `longcycle_bundle` to defer hard leaves and finish all current-cap descendants before escalating only the deferred set. This should avoid unnecessary million-step reruns. The already-running run 45610980426 uses its earlier workflow snapshot and does not contain this optimization; it was still in the common generation step at 12:33Z, with its original 30-minute prepare timeout. Future reruns use the corrected queue, 60-minute prepare/assemble timeouts, and serial Lean shard compilation.
+
+
+## 2026-11-25 12:38Z first corrected 0LB bundle timed out
+
+Run 45610980426's `raw124_bundle_prepare` job 139194114073 reached its original 30-minute job limit while still in `Generate selected raw124 bundle branch and compile common core`; the job was cancelled and the artifact-upload step skipped. Its logs endpoint returned 403 even after retry, so no pass-level counts are available. This run used the pre-optimization snapshot: serial `longcycle` batches, immediate global cap escalation, and the 30-minute timeout.
+
+The current generator now uses two independent C++ subprocesses per pending batch, defers open leaves until all current-cap descendants are processed, escalates only deferred leaves, and asserts the generated bound is at most 2,000,000. The workflow now gives bundle preparation/assembly 60 minutes and compiles Lean shard modules serially to reduce runner pressure. A fresh run is required; no 0LB classification or source theorem was produced by 45610980426.
