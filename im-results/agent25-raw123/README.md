@@ -9,3 +9,7 @@ Run `python im-results/agent25-raw123/generate.py` to regenerate the partial pro
 ### Recursive batch checkpoint
 
 Five formerly unresolved tables (4247, 4357, 9109, 11095, 11096) have new induction proofs. Recursive and grammar return lemmas compiled locally against copied exact run0/step0/move0/list definitions. Source transfer wrappers and full weighted consumer still need original-source CI. Decode Raw123RecursiveBatch.lean.zlib.b64 using generate.py, SHA256 ee1b102ca8de7f12201cf4082f1100e968c7d15161c6dd632e38a07ad77e6112. Eight one-hole residuals remain (200 full completions). 4247 uses mutually recursive D/F macros, 11095/11096 a shared strong-induction F return, 4357/9109 triple-token grammar returns. Initial full source check for 13-residual predecessor: run 45598191639. No accepted global closure claimed.
+
+### Phase-aware two-sided finite automata
+
+Four additional residuals have finite BiDFA certificates: 8155 (480 abstract states), 8156 (90), 8174 (506), 8175 (92). Stack summaries combine bounded near-head suffix and length modulo an integer measured since the first 1 from the blank end. Discovered push/pop edges are saturated under the exact Agent16 BiDFA algorithm, independently reproduced with the supplied DFA arrays. Four candidate residuals remain: 573,5465,8146,8209 (100 full tables). Original-source audit is still required. The first CI (45598191639) was interrupted by runner shutdown; completed n-gram modules passed their axiom checks. Isolated new recursive batch audit dispatched at 10:58 UTC.
