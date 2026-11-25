@@ -39,14 +39,28 @@ lemma alt_even (n : Nat) :
   induction n with
   | zero => rfl
   | succ n ih =>
-      simp [rep, Nat.mul_succ, ih, List.append_assoc]
+      calc
+        [false,true] ++ rep [false,true] (2*(n+1)) ++ [true]
+            = [false,true] ++ [false,true] ++
+                ([false,true] ++ rep [false,true] (2*n) ++ [true]) := by
+                  simp [rep, Nat.mul_succ, List.append_assoc]
+        _ = [false,true] ++ [false,true] ++
+                ([false] ++ rep [true,false] (2*n) ++ [true,true]) := by rw [ih]
+        _ = [false] ++ rep [true,false] (2*(n+1)) ++ [true,true] := by
+                  simp [rep, Nat.mul_succ, List.append_assoc]
 
 lemma rep10_of_rep01 (n : Nat) :
     [true] ++ rep [false,true] n ++ [false] = rep [true,false] (n+1) := by
   induction n with
   | zero => rfl
   | succ n ih =>
-      simp [rep, ih, List.append_assoc]
+      calc
+        [true] ++ rep [false,true] (n+1) ++ [false]
+            = [true,false] ++
+                ([true] ++ rep [false,true] n ++ [false]) := by
+                  simp [rep, List.append_assoc]
+        _ = [true,false] ++ rep [true,false] (n+1) := by rw [ih]
+        _ = rep [true,false] (n+2) := by rfl
 
 /-! The four two-step sweeps used by both macros. -/
 
@@ -76,13 +90,13 @@ lemma inner_pre (j t : Nat) (ht : 2 ≤ t) :
       some ⟨5,
         rep [false,true] (2*t-3) ++ [true,false,true] ++ rep [false,true] j,
         rep [false,true] 4 ++ [false]⟩ := by
-  have hnum : 1 + 2*t = 4 + (2*t-3) := by omega
+  have hnum : 2*t+1 = 4 + (2*t-3) := by omega
   have hsplit :
       [false,true] ++ rep [false,true] (2*t) =
         rep [false,true] 4 ++ rep [false,true] (2*t-3) := by
     calc
       [false,true] ++ rep [false,true] (2*t)
-          = rep [false,true] (1+2*t) := by simp [rep]
+          = rep [false,true] (2*t+1) := by rfl
       _ = rep [false,true] (4+(2*t-3)) := by rw [hnum]
       _ = rep [false,true] 4 ++ rep [false,true] (2*t-3) :=
         rep_add [false,true] 4 (2*t-3)
@@ -113,14 +127,22 @@ theorem inner (j t : Nat) :
     (by intro L R; exact sweep_F_left L R) (2*t-3)
     ([true,false,true] ++ rep [false,true] j)
     (rep [false,true] 4 ++ [false])
+  have hrep :
+      rep [false,true] (2*t-3) ++ rep [false,true] 4 =
+        rep [false,true] (2*t+1) := by
+    calc
+      rep [false,true] (2*t-3) ++ rep [false,true] 4
+          = rep [false,true] ((2*t-3)+4) := by
+              rw [← rep_add]
+      _ = rep [false,true] (2*t+1) := by congr 1 <;> omega
   have hF1 :
       run0 raw58LF411 1
         ⟨5, [true,false,true] ++ rep [false,true] j,
-          rep [false,true] (2*t+1) ++ [false]⟩ =
+          rep [false,true] (2*t-3) ++ (rep [false,true] 4 ++ [false])⟩ =
         some ⟨1, [false,true] ++ rep [false,true] j,
           rep [true,false] (2*t+2)⟩ := by
-    have h := rep10_of_rep01 (2*t+1)
-    rw [← h]
+    rw [← List.append_assoc, hrep]
+    rw [← rep10_of_rep01 (2*t+1)]
     rfl
   have hB := sweepR raw58LF411 1 [false] [] [true,false] [false,true] 2
     (by intro L R; exact sweep_B_right L R) (2*t+2)
@@ -181,57 +203,64 @@ theorem reset (k : Nat) :
   simpa [htime] using hcomp'
 
 /-- Drain j inner ticks, transferring C(j,t) to C(0,t+j). -/
+def drainTime : Nat → Nat → Nat
+  | 0, t => 0
+  | j+1, t => (8*t+14) + drainTime j (t+1)
+
 theorem drain (j t : Nat) :
-    run0 raw58LF411 (8*j*t + 4*j*j + 10*j) (C j t) =
+    run0 raw58LF411 (drainTime j t) (C j t) =
       some (C 0 (t+j)) := by
   induction j generalizing t with
   | zero =>
-      simp [C, run0]
+      simp [drainTime, C, run0]
   | succ j ih =>
       have hfirst := inner j t
       have htail := ih (t+1)
       have hcomp := join0 hfirst htail
-      have htime :
-          (8*t+14) + (8*j*(t+1) + 4*j*j + 10*j) =
-            8*(j+1)*t + 4*(j+1)*(j+1) + 10*(j+1) := by omega
-      simpa [htime, Nat.mul_add, Nat.add_mul, Nat.add_assoc, Nat.add_left_comm,
-        Nat.add_comm] using hcomp
+      simpa [drainTime, Nat.add_assoc] using hcomp
 
 /-- A complete growth cycle C(k,0) -> C(2k+4,0). -/
-theorem grow (k : Nat) :
-    run0 raw58LF411 (4*k*k + 26*k + 37) (C k 0) =
-      some (C (2*k+4) 0) := by
-  have hdrain := drain k 0
-  have hreset := reset k
-  have hcomp := join0 hdrain hreset
-  have htime :
-      (8*k*0 + 4*k*k + 10*k) + (16*k+37) = 4*k*k+26*k+37 := by omega
-  simpa [htime] using hcomp
+def cycleTime (k : Nat) : Nat := drainTime k 0 + (16*k+37)
 
-/-- The blank run reaches the first C-counter state. -/
-theorem entry :
-    run0 raw58LF411 39 ⟨0, [], []⟩ = some (C 4 0) := by
-  rfl
+theorem grow (k : Nat) :
+    run0 raw58LF411 (cycleTime k) (C k 0) =
+      some (C (2*k+4) 0) := by
+  have hcomp := join0 (drain k 0) (reset k)
+  simpa [cycleTime] using hcomp
 
 def index : Nat → Nat
   | 0 => 4
   | n+1 => 2*index n + 4
 
+def elapsed : Nat → Nat
+  | 0 => 39
+  | n+1 => elapsed n + cycleTime (index n)
+
+theorem iter_run (n : Nat) :
+    run0 raw58LF411 (elapsed n) ⟨0, [], []⟩ =
+      some (C (index n) 0) := by
+  induction n with
+  | zero =>
+      simpa [elapsed, index] using entry
+  | succ n ih =>
+      have hcomp := join0 ih (grow (index n))
+      simpa [elapsed, index, cycleTime] using hcomp
+
+theorem elapsed_ge (n : Nat) : n ≤ elapsed n := by
+  induction n with
+  | zero => simp [elapsed]
+  | succ n ih =>
+      have hpos : 1 ≤ cycleTime (index n) := by
+        unfold cycleTime
+        omega
+      simp only [elapsed]
+      omega
+
 /-- Repeated growth gives arbitrarily long finite live prefixes. -/
 theorem long (n : Nat) :
     ∃ t, n ≤ t ∧ run0 raw58LF411 t ⟨0, [], []⟩ =
       some (C (index n) 0) := by
-  induction n with
-  | zero =>
-      exact ⟨39, by omega, entry⟩
-  | succ n ih =>
-      obtain ⟨t, ht, hrun⟩ := ih
-      have hgrow := grow (index n)
-      refine ⟨t + (4*(index n)*(index n) + 26*(index n) + 37), ?_, ?_⟩
-      · omega
-      · have hjoin := join0 hrun hgrow
-        simpa [index, Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm,
-          Nat.add_assoc, Nat.add_left_comm, Nat.add_comm] using hjoin
+  exact ⟨elapsed n, elapsed_ge n, iter_run n⟩
 
 theorem arbitrary : Arbitrary raw58LF411 := by
   intro n
