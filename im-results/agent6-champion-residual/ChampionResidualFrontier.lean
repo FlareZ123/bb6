@@ -501,7 +501,7 @@ def championResidualResiduals :
   RootedFrontier.residuals championFrontier
 
 theorem championResidualResidualsCount :
-    championResidualResiduals.length = 156 := by decide
+    championResidualResiduals.length = 146 := by decide
 
 theorem championResidualFrontierSound (m : Machine)
     (hm : compatible championResidual m) :
@@ -536,7 +536,7 @@ def championResidualRefinedRoster :
     championResidualResiduals
 
 theorem championResidualRefinedRosterCount :
-    championResidualRefinedRoster.length = 264 := by decide
+    championResidualRefinedRoster.length = 254 := by decide
 
 theorem championResidualRefinedRosterSound (m : Machine)
     (hm : compatible BB6.Agent50TNFPilot.root m) :
