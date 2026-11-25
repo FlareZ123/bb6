@@ -20,7 +20,6 @@ permissions:
   actions: read
 jobs:
   generate:
-    if: inputs.artifact_run_id == ''
     runs-on: ubuntu-latest
     timeout-minutes: 15
     outputs:
