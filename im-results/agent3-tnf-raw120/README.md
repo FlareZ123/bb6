@@ -1,6 +1,26 @@
-# Raw120 E0 sibling certificates: 0RF and 0RB
+# Raw120 E0 sibling certificates
 
-Raw120 parent: `1RB---_1RC---_0RD---_1LD1RE_---1LE_------`. First undefined row E0 at ordinary time 9. This dossier contains complete source-checked certificates for the E0=0RF and E0=0RB children; the other E0 choices remain open.
+Raw120 parent: `1RB---_1RC---_0RD---_1LD1RE_---1LE_------`. First undefined row E0 at ordinary time 9. This dossier contains source-checked certificates for 12 of the 25 children, candidate-complete certificates for two additional children, and explicit residual work. The parent is not yet closed.
+
+## Current coverage (2026-11-25 09:22Z)
+
+Each E0 alternative has mass 25^5 = 9,765,625 raw completions. The ten immediate translated cycles and the two previously accepted RF/RB certificates cover 12 disjoint alternatives; the immediate-halt branch is also an explicit draft proof. No canonical roster entry has been removed.
+
+| E0 | Status | Weighted bound | Source |
+| --- | --- | ---: | --- |
+| 0LC, 0LD, 0LE, 0RD, 0RE, 1LC, 1LD, 1LE, 1RD, 1RE | Original-source accepted | 0 | Raw120EasyCycles.lean; run [45582268224](https://github.com/FlareZ123/bb6/actions/runs/45582268224) |
+| 0RF | Original-source accepted, exact | 14416 | run [45520792124](https://github.com/FlareZ123/bb6/actions/runs/45520792124) |
+| 0RB | Original-source accepted | 223 | run [45532860093](https://github.com/FlareZ123/bb6/actions/runs/45532860093) |
+| Halt | Draft direct proof | 15 | Raw120CanonicalPartition.lean |
+| 0RC | Candidate complete; source CI pending | 716 | generate_rc.py; run [45584144941](https://github.com/FlareZ123/bb6/actions/runs/45584144941) |
+| 1RB | Candidate complete; source CI pending | 749 | generate_sibling.py 1RB; run [45584422715](https://github.com/FlareZ123/bb6/actions/runs/45584422715) |
+| Others | Open | — | see LA and other sibling research |
+
+The 0RC enumeration pins 934 splits, 15226 cycles, 4043 last-hole leaves, and 2214 open leaves, SHA256 `01f82938bb361d4335146c22191f1fec517d993c76d71488fbc804910629e78f`. The open leaves are assigned 2195 FAR witnesses, 12 one-block and 3 multi-block pumps, and four new invariants. Raw120RCCounter.lean proves arbitrary-length counter growth for leaves 1370/1380 by strong induction on the counter, with untouched suffixes; rc_nested.py constructs invariants for 1633/1639 with variable alternating-block and unary-tail counts. All short-tail cases and arbitrary-tail transfers passed local Lean 4.36.0-rc2 preflight with copied source zipper/sweep definitions. The repository source-transfer and complete coverage are pending the source CI run.
+
+The 1RB enumeration pins 1099 splits, 17152 cycles, 4476 last-hole leaves, and 3650 open leaves, SHA256 `156d9b5ff6210dfc4ba03a36e0b723a647a291d1eb91053d6df8eb2b4078b23e`. All 3650 have candidate witnesses (3624 FAR, 23 one-block, 3 multi-block). Reuse generate_sibling.py rather than duplicate the certificate checker.
+
+The 1RC sibling has 3075 open leaves, 3048 FAR hits and 24 generic sweep candidates. Its three remaining leaves are 939, 1928, and 1934; the latter two have the same nested-sweep structure as 0RC. Do not claim closure until source checks pass.
 
 ## E0=0RF exact child result
 
@@ -45,7 +65,7 @@ The draft `Raw120CanonicalPartition.lean` replaces the unconsumed two-child audi
 
 The parent `p120` is canonical residual **84** (raw residual index **120**) in `im-results/agent13-roster-convergence/canonical-124.json`. Its exact address is B0=1RC, C0=0RD, D0=1LD, D1=1RE, E1=1LE, leaving E0 as the first hole. It is not among the 18 residuals removed by the accepted FiveHoleRoster, AllTwelveRoster, and NewFiveRoster cuts, so it remains one of the **106** obligations in `Combined106Roster.reducedRoster`. The 106-way roster itself passed source-linked CI run 45518426903.
 
-The accepted `allRF` and `allRB` theorems cover only the E0=0RF and E0=0RB children of this residual. The draft `Raw120SiblingAudit.lean` records these two certificates in a 25-way first-hole audit at common threshold 14416; its intended report is `(2*25^5, 23*25^5)`, with two certified and 23 unresolved child cylinders. That audit module still requires its own CI compile. The parent `p120` is **not** closed; the other E0 alternatives still require a complete sibling cover before residual 120 can be removed from the current 106-way maximality obligation.
+The accepted `allRF` and `allRB` theorems cover their respective children; `Raw120EasyCycles` covers ten more, as recorded above. The draft `Raw120SiblingAudit.lean` records these two certificates in a 25-way first-hole audit at common threshold 14416; its intended report is `(2*25^5, 23*25^5)`, with two certified and 23 unresolved child cylinders. That audit module still requires its own CI compile. The parent `p120` is **not** closed; a complete sibling cover is still required before residual 120 can be removed from a current canonical maximality obligation.
 
 ## Proof structure
 
