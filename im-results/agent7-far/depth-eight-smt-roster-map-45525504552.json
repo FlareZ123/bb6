@@ -1,0 +1,1484 @@
+[
+  {
+    "rosterLine": 1,
+    "table": "1RB0LD_1RC1LF_0RD1RA_1LD1RE_0LB0LB_---0LA",
+    "parentIndex": 86,
+    "treeId": 86,
+    "path": [
+      {
+        "slot": "A/1",
+        "move": "0LD"
+      },
+      {
+        "slot": "E/0",
+        "move": "0LB"
+      }
+    ],
+    "dfaStates": 5,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 2,
+    "table": "1RB0LD_1RC1LF_0RD1RA_1LD1RE_1LD0LB_---0LA",
+    "parentIndex": 86,
+    "treeId": 86,
+    "path": [
+      {
+        "slot": "A/1",
+        "move": "0LD"
+      },
+      {
+        "slot": "E/0",
+        "move": "1LD"
+      }
+    ],
+    "dfaStates": 5,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 3,
+    "table": "1RB0RE_1RC1LF_0RD1RA_1LD1RE_0LD0LB_---0LA",
+    "parentIndex": 86,
+    "treeId": 86,
+    "path": [
+      {
+        "slot": "A/1",
+        "move": "0RE"
+      },
+      {
+        "slot": "E/0",
+        "move": "0LD"
+      }
+    ],
+    "dfaStates": 5,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 6,
+    "table": "1RB0RF_1RC1LF_0RD1RA_1LD1RE_---0LB_0LD0LA",
+    "parentIndex": 86,
+    "treeId": 86,
+    "path": [
+      {
+        "slot": "A/1",
+        "move": "0RF"
+      },
+      {
+        "slot": "F/0",
+        "move": "0LD"
+      }
+    ],
+    "dfaStates": 4,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 7,
+    "table": "1RB1RF_1RC1LF_0RD1RA_1LD1RE_---0LB_0LE0LA",
+    "parentIndex": 86,
+    "treeId": 86,
+    "path": [
+      {
+        "slot": "A/1",
+        "move": "1RF"
+      },
+      {
+        "slot": "F/0",
+        "move": "0LE"
+      }
+    ],
+    "dfaStates": 6,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 8,
+    "table": "1RB0LC_1RC1LF_0RD1RB_1LD1RE_0LA0LB_---0LA",
+    "parentIndex": 112,
+    "treeId": 112,
+    "path": [
+      {
+        "slot": "A/1",
+        "move": "0LC"
+      },
+      {
+        "slot": "E/0",
+        "move": "0LA"
+      }
+    ],
+    "dfaStates": 5,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 9,
+    "table": "1RB0LC_1RC1LF_0RD1RB_1LD1RE_1RA0LB_---0LA",
+    "parentIndex": 112,
+    "treeId": 112,
+    "path": [
+      {
+        "slot": "A/1",
+        "move": "0LC"
+      },
+      {
+        "slot": "E/0",
+        "move": "1RA"
+      }
+    ],
+    "dfaStates": 5,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 10,
+    "table": "1RB0LC_1RC1LF_0RD1RB_1LD1RE_1RB0LB_---0LA",
+    "parentIndex": 112,
+    "treeId": 112,
+    "path": [
+      {
+        "slot": "A/1",
+        "move": "0LC"
+      },
+      {
+        "slot": "E/0",
+        "move": "1RB"
+      }
+    ],
+    "dfaStates": 5,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 11,
+    "table": "1RB0LC_1RC1LF_0RD1RB_1LD1RE_0RF0LB_---0LA",
+    "parentIndex": 112,
+    "treeId": 112,
+    "path": [
+      {
+        "slot": "A/1",
+        "move": "0LC"
+      },
+      {
+        "slot": "E/0",
+        "move": "0RF"
+      }
+    ],
+    "dfaStates": 5,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 12,
+    "table": "1RB0LD_1RC1LF_0RD1RB_1LD1RE_1LC0LB_---0LA",
+    "parentIndex": 112,
+    "treeId": 112,
+    "path": [
+      {
+        "slot": "A/1",
+        "move": "0LD"
+      },
+      {
+        "slot": "E/0",
+        "move": "1LC"
+      }
+    ],
+    "dfaStates": 4,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 13,
+    "table": "1RB0LD_1RC1LF_0RD1RB_1LD1RE_1RD0LB_---0LA",
+    "parentIndex": 112,
+    "treeId": 112,
+    "path": [
+      {
+        "slot": "A/1",
+        "move": "0LD"
+      },
+      {
+        "slot": "E/0",
+        "move": "1RD"
+      }
+    ],
+    "dfaStates": 4,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 15,
+    "table": "1RB0LD_1RC1LF_0RD1RB_1LD1RE_1LF0LB_---0LA",
+    "parentIndex": 112,
+    "treeId": 112,
+    "path": [
+      {
+        "slot": "A/1",
+        "move": "0LD"
+      },
+      {
+        "slot": "E/0",
+        "move": "1LF"
+      }
+    ],
+    "dfaStates": 4,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 16,
+    "table": "1RB1RE_1RC1LF_0RD1RB_1LD1RE_1LA0LB_---0LA",
+    "parentIndex": 112,
+    "treeId": 112,
+    "path": [
+      {
+        "slot": "A/1",
+        "move": "1RE"
+      },
+      {
+        "slot": "E/0",
+        "move": "1LA"
+      }
+    ],
+    "dfaStates": 4,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 17,
+    "table": "1RB1RE_1RC1LF_0RD1RB_1LD1RE_0LB0LB_---0LA",
+    "parentIndex": 112,
+    "treeId": 112,
+    "path": [
+      {
+        "slot": "A/1",
+        "move": "1RE"
+      },
+      {
+        "slot": "E/0",
+        "move": "0LB"
+      }
+    ],
+    "dfaStates": 4,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 18,
+    "table": "1RB1RE_1RC1LF_0RD1RB_1LD1RE_1LD0LB_---0LA",
+    "parentIndex": 112,
+    "treeId": 112,
+    "path": [
+      {
+        "slot": "A/1",
+        "move": "1RE"
+      },
+      {
+        "slot": "E/0",
+        "move": "1LD"
+      }
+    ],
+    "dfaStates": 4,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 19,
+    "table": "1RB1RF_1RC1LF_0RD1RB_1LD1RE_---0LB_0LB0LA",
+    "parentIndex": 112,
+    "treeId": 112,
+    "path": [
+      {
+        "slot": "A/1",
+        "move": "1RF"
+      },
+      {
+        "slot": "F/0",
+        "move": "0LB"
+      }
+    ],
+    "dfaStates": 4,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 20,
+    "table": "1RB1RF_1RC1LF_0RD1RB_1LD1RE_---0LB_1LD0LA",
+    "parentIndex": 112,
+    "treeId": 112,
+    "path": [
+      {
+        "slot": "A/1",
+        "move": "1RF"
+      },
+      {
+        "slot": "F/0",
+        "move": "1LD"
+      }
+    ],
+    "dfaStates": 2,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 21,
+    "table": "1RB---_1RC1LF_0RD0RC_1LD1RE_1LB0LB_0RC0LA",
+    "parentIndex": 114,
+    "treeId": 114,
+    "path": [
+      {
+        "slot": "E/0",
+        "move": "1LB"
+      },
+      {
+        "slot": "F/0",
+        "move": "0RC"
+      }
+    ],
+    "dfaStates": 1,
+    "reflected": true,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 22,
+    "table": "1RB0LD_1RC1LF_0RD0RC_1LD1RE_1RB0LB_---0LA",
+    "parentIndex": 114,
+    "treeId": 114,
+    "path": [
+      {
+        "slot": "E/0",
+        "move": "1RB"
+      },
+      {
+        "slot": "A/1",
+        "move": "0LD"
+      }
+    ],
+    "dfaStates": 6,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 23,
+    "table": "1RB---_1RC1LF_0RD0RC_1LD1RE_0LC0LB_0RC0LA",
+    "parentIndex": 114,
+    "treeId": 114,
+    "path": [
+      {
+        "slot": "E/0",
+        "move": "0LC"
+      },
+      {
+        "slot": "F/0",
+        "move": "0RC"
+      }
+    ],
+    "dfaStates": 1,
+    "reflected": true,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 24,
+    "table": "1RB---_1RC1LF_0RD0RC_1LD1RE_0LC0LB_0RD0LA",
+    "parentIndex": 114,
+    "treeId": 114,
+    "path": [
+      {
+        "slot": "E/0",
+        "move": "0LC"
+      },
+      {
+        "slot": "F/0",
+        "move": "0RD"
+      }
+    ],
+    "dfaStates": 1,
+    "reflected": true,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 25,
+    "table": "1RB---_1RC1LF_0RD0RC_1LD1RE_0RC0LB_0RC0LA",
+    "parentIndex": 114,
+    "treeId": 114,
+    "path": [
+      {
+        "slot": "E/0",
+        "move": "0RC"
+      },
+      {
+        "slot": "F/0",
+        "move": "0RC"
+      }
+    ],
+    "dfaStates": 1,
+    "reflected": true,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 26,
+    "table": "1RB---_1RC1LF_0RD0RC_1LD1RE_0RC0LB_0RD0LA",
+    "parentIndex": 114,
+    "treeId": 114,
+    "path": [
+      {
+        "slot": "E/0",
+        "move": "0RC"
+      },
+      {
+        "slot": "F/0",
+        "move": "0RD"
+      }
+    ],
+    "dfaStates": 1,
+    "reflected": true,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 27,
+    "table": "1RB---_1RC1LF_0RD0RC_1LD1RE_0RC0LB_0LE0LA",
+    "parentIndex": 114,
+    "treeId": 114,
+    "path": [
+      {
+        "slot": "E/0",
+        "move": "0RC"
+      },
+      {
+        "slot": "F/0",
+        "move": "0LE"
+      }
+    ],
+    "dfaStates": 1,
+    "reflected": true,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 28,
+    "table": "1RB---_1RC1LF_0RD0RC_1LD1RE_0RC0LB_1LE0LA",
+    "parentIndex": 114,
+    "treeId": 114,
+    "path": [
+      {
+        "slot": "E/0",
+        "move": "0RC"
+      },
+      {
+        "slot": "F/0",
+        "move": "1LE"
+      }
+    ],
+    "dfaStates": 1,
+    "reflected": true,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 29,
+    "table": "1RB---_1RC1LF_0RD0RC_1LD1RE_1LC0LB_0RC0LA",
+    "parentIndex": 114,
+    "treeId": 114,
+    "path": [
+      {
+        "slot": "E/0",
+        "move": "1LC"
+      },
+      {
+        "slot": "F/0",
+        "move": "0RC"
+      }
+    ],
+    "dfaStates": 1,
+    "reflected": true,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 30,
+    "table": "1RB---_1RC1LF_0RD0RC_1LD1RE_1LC0LB_0RD0LA",
+    "parentIndex": 114,
+    "treeId": 114,
+    "path": [
+      {
+        "slot": "E/0",
+        "move": "1LC"
+      },
+      {
+        "slot": "F/0",
+        "move": "0RD"
+      }
+    ],
+    "dfaStates": 1,
+    "reflected": true,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 31,
+    "table": "1RB---_1RC1LF_0RD0RC_1LD1RE_1LD0LB_0RC0LA",
+    "parentIndex": 114,
+    "treeId": 114,
+    "path": [
+      {
+        "slot": "E/0",
+        "move": "1LD"
+      },
+      {
+        "slot": "F/0",
+        "move": "0RC"
+      }
+    ],
+    "dfaStates": 1,
+    "reflected": true,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 32,
+    "table": "1RB---_1RC1LF_0RD1LC_1LD1RE_0RC0LB_0LB0LA",
+    "parentIndex": 115,
+    "treeId": 115,
+    "path": [
+      {
+        "slot": "F/0",
+        "move": "0LB"
+      },
+      {
+        "slot": "E/0",
+        "move": "0RC"
+      }
+    ],
+    "dfaStates": 3,
+    "reflected": true,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 33,
+    "table": "1RB---_1RC1LF_0RD1LC_1LD1RE_0RD0LB_0LB0LA",
+    "parentIndex": 115,
+    "treeId": 115,
+    "path": [
+      {
+        "slot": "F/0",
+        "move": "0LB"
+      },
+      {
+        "slot": "E/0",
+        "move": "0RD"
+      }
+    ],
+    "dfaStates": 1,
+    "reflected": true,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 38,
+    "table": "1RB1LA_1RC1LF_0RD1RC_1LD1RE_0LF0LB_---0LA",
+    "parentIndex": 116,
+    "treeId": 116,
+    "path": [
+      {
+        "slot": "E/0",
+        "move": "0LF"
+      },
+      {
+        "slot": "A/1",
+        "move": "1LA"
+      }
+    ],
+    "dfaStates": 6,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 40,
+    "table": "1RB0LD_1RC1LF_0RD1RC_1LD1RE_1LF0LB_---0LA",
+    "parentIndex": 116,
+    "treeId": 116,
+    "path": [
+      {
+        "slot": "E/0",
+        "move": "1LF"
+      },
+      {
+        "slot": "A/1",
+        "move": "0LD"
+      }
+    ],
+    "dfaStates": 6,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 43,
+    "table": "1RB1RE_1RC1LF_0RD1RC_1LD1RE_1LF0LB_---0LA",
+    "parentIndex": 116,
+    "treeId": 116,
+    "path": [
+      {
+        "slot": "E/0",
+        "move": "1LF"
+      },
+      {
+        "slot": "A/1",
+        "move": "1RE"
+      }
+    ],
+    "dfaStates": 4,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 45,
+    "table": "1RB0LB_1RC1LF_0RD0LD_1LD1RE_1RA0LB_---0LA",
+    "parentIndex": 117,
+    "treeId": 117,
+    "path": [
+      {
+        "slot": "E/0",
+        "move": "1RA"
+      },
+      {
+        "slot": "A/1",
+        "move": "0LB"
+      }
+    ],
+    "dfaStates": 5,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 46,
+    "table": "1RB1LD_1RC1LF_0RD0LD_1LD1RE_1RA0LB_---0LA",
+    "parentIndex": 117,
+    "treeId": 117,
+    "path": [
+      {
+        "slot": "E/0",
+        "move": "1RA"
+      },
+      {
+        "slot": "A/1",
+        "move": "1LD"
+      }
+    ],
+    "dfaStates": 5,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 47,
+    "table": "1RB---_1RC1LF_0RD0LD_1LD1RE_0RB0LB_0LB0LA",
+    "parentIndex": 117,
+    "treeId": 117,
+    "path": [
+      {
+        "slot": "E/0",
+        "move": "0RB"
+      },
+      {
+        "slot": "F/0",
+        "move": "0LB"
+      }
+    ],
+    "dfaStates": 1,
+    "reflected": true,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 48,
+    "table": "1RB---_1RC1LF_0RD0LD_1LD1RE_0RB0LB_1LD0LA",
+    "parentIndex": 117,
+    "treeId": 117,
+    "path": [
+      {
+        "slot": "E/0",
+        "move": "0RB"
+      },
+      {
+        "slot": "F/0",
+        "move": "1LD"
+      }
+    ],
+    "dfaStates": 1,
+    "reflected": true,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 49,
+    "table": "1RB1RD_1RC1LF_0RD0LD_1LD1RE_1RB0LB_---0LA",
+    "parentIndex": 117,
+    "treeId": 117,
+    "path": [
+      {
+        "slot": "E/0",
+        "move": "1RB"
+      },
+      {
+        "slot": "A/1",
+        "move": "1RD"
+      }
+    ],
+    "dfaStates": 4,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 50,
+    "table": "1RB1LE_1RC1LF_0RD0LD_1LD1RE_1RB0LB_---0LA",
+    "parentIndex": 117,
+    "treeId": 117,
+    "path": [
+      {
+        "slot": "E/0",
+        "move": "1RB"
+      },
+      {
+        "slot": "A/1",
+        "move": "1LE"
+      }
+    ],
+    "dfaStates": 6,
+    "reflected": true,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 51,
+    "table": "1RB1LF_1RC1LF_0RD0LD_1LD1RE_1RB0LB_---0LA",
+    "parentIndex": 117,
+    "treeId": 117,
+    "path": [
+      {
+        "slot": "E/0",
+        "move": "1RB"
+      },
+      {
+        "slot": "A/1",
+        "move": "1LF"
+      }
+    ],
+    "dfaStates": 4,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 52,
+    "table": "1RB---_1RC1LF_0RD0LD_1LD1RE_0RC0LB_0RC0LA",
+    "parentIndex": 117,
+    "treeId": 117,
+    "path": [
+      {
+        "slot": "E/0",
+        "move": "0RC"
+      },
+      {
+        "slot": "F/0",
+        "move": "0RC"
+      }
+    ],
+    "dfaStates": 1,
+    "reflected": true,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 53,
+    "table": "1RB---_1RC1LF_0RD0LE_1LD1RE_0RD0LB_0LB0LA",
+    "parentIndex": 121,
+    "treeId": 121,
+    "path": [
+      {
+        "slot": "F/0",
+        "move": "0LB"
+      },
+      {
+        "slot": "E/0",
+        "move": "0RD"
+      }
+    ],
+    "dfaStates": 1,
+    "reflected": true,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 54,
+    "table": "1RB0LC_1RC1LF_0RD0RE_1LD1RE_0LA0LB_---0LA",
+    "parentIndex": 122,
+    "treeId": 122,
+    "path": [
+      {
+        "slot": "E/0",
+        "move": "0LA"
+      },
+      {
+        "slot": "A/1",
+        "move": "0LC"
+      }
+    ],
+    "dfaStates": 5,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 55,
+    "table": "1RB1RD_1RC1LF_0RD0RE_1LD1RE_0LA0LB_---0LA",
+    "parentIndex": 122,
+    "treeId": 122,
+    "path": [
+      {
+        "slot": "E/0",
+        "move": "0LA"
+      },
+      {
+        "slot": "A/1",
+        "move": "1RD"
+      }
+    ],
+    "dfaStates": 5,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 56,
+    "table": "1RB1LE_1RC1LF_0RD0RE_1LD1RE_0LA0LB_---0LA",
+    "parentIndex": 122,
+    "treeId": 122,
+    "path": [
+      {
+        "slot": "E/0",
+        "move": "0LA"
+      },
+      {
+        "slot": "A/1",
+        "move": "1LE"
+      }
+    ],
+    "dfaStates": 5,
+    "reflected": true,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 57,
+    "table": "1RB1LF_1RC1LF_0RD0RE_1LD1RE_0LA0LB_---0LA",
+    "parentIndex": 122,
+    "treeId": 122,
+    "path": [
+      {
+        "slot": "E/0",
+        "move": "0LA"
+      },
+      {
+        "slot": "A/1",
+        "move": "1LF"
+      }
+    ],
+    "dfaStates": 5,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 59,
+    "table": "1RB---_1RC1LF_0RD0RE_1LD1RE_0RB0LB_0LD0LA",
+    "parentIndex": 122,
+    "treeId": 122,
+    "path": [
+      {
+        "slot": "E/0",
+        "move": "0RB"
+      },
+      {
+        "slot": "F/0",
+        "move": "0LD"
+      }
+    ],
+    "dfaStates": 5,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 60,
+    "table": "1RB---_1RC1LF_0RD0RE_1LD1RE_0RC0LB_0LC0LA",
+    "parentIndex": 122,
+    "treeId": 122,
+    "path": [
+      {
+        "slot": "E/0",
+        "move": "0RC"
+      },
+      {
+        "slot": "F/0",
+        "move": "0LC"
+      }
+    ],
+    "dfaStates": 4,
+    "reflected": true,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 61,
+    "table": "1RB---_1RC1LF_0RD0RE_1LD1RE_1RC0LB_0LB0LA",
+    "parentIndex": 122,
+    "treeId": 122,
+    "path": [
+      {
+        "slot": "E/0",
+        "move": "1RC"
+      },
+      {
+        "slot": "F/0",
+        "move": "0LB"
+      }
+    ],
+    "dfaStates": 5,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 62,
+    "table": "1RB---_1RC1LF_0RD0RE_1LD1RE_1RC0LB_1LD0LA",
+    "parentIndex": 122,
+    "treeId": 122,
+    "path": [
+      {
+        "slot": "E/0",
+        "move": "1RC"
+      },
+      {
+        "slot": "F/0",
+        "move": "1LD"
+      }
+    ],
+    "dfaStates": 5,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 63,
+    "table": "1RB1RF_1RC1LF_0RD1LE_1LD1RE_---0LB_0RA0LA",
+    "parentIndex": 123,
+    "treeId": 123,
+    "path": [
+      {
+        "slot": "F/0",
+        "move": "0RA"
+      },
+      {
+        "slot": "A/1",
+        "move": "1RF"
+      }
+    ],
+    "dfaStates": 3,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 64,
+    "table": "1RB---_1RC1LF_0RD1LE_1LD1RE_0RD0LB_0LB0LA",
+    "parentIndex": 123,
+    "treeId": 123,
+    "path": [
+      {
+        "slot": "F/0",
+        "move": "0LB"
+      },
+      {
+        "slot": "E/0",
+        "move": "0RD"
+      }
+    ],
+    "dfaStates": 1,
+    "reflected": true,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 65,
+    "table": "1RB---_1RC1LF_0RD1LE_1LD1RE_0RD0LB_1RC0LA",
+    "parentIndex": 123,
+    "treeId": 123,
+    "path": [
+      {
+        "slot": "F/0",
+        "move": "1RC"
+      },
+      {
+        "slot": "E/0",
+        "move": "0RD"
+      }
+    ],
+    "dfaStates": 2,
+    "reflected": true,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 66,
+    "table": "1RB---_1RC1LF_0RD1RE_1LD1RE_0RB0LB_0LE0LA",
+    "parentIndex": 124,
+    "treeId": 124,
+    "path": [
+      {
+        "slot": "E/0",
+        "move": "0RB"
+      },
+      {
+        "slot": "F/0",
+        "move": "0LE"
+      }
+    ],
+    "dfaStates": 6,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 67,
+    "table": "1RB0LB_1RC1LF_0RD1RE_1LD1RE_1RB0LB_---0LA",
+    "parentIndex": 124,
+    "treeId": 124,
+    "path": [
+      {
+        "slot": "E/0",
+        "move": "1RB"
+      },
+      {
+        "slot": "A/1",
+        "move": "0LB"
+      }
+    ],
+    "dfaStates": 5,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 68,
+    "table": "1RB1LC_1RC1LF_0RD1RE_1LD1RE_1RB0LB_---0LA",
+    "parentIndex": 124,
+    "treeId": 124,
+    "path": [
+      {
+        "slot": "E/0",
+        "move": "1RB"
+      },
+      {
+        "slot": "A/1",
+        "move": "1LC"
+      }
+    ],
+    "dfaStates": 5,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 69,
+    "table": "1RB1LD_1RC1LF_0RD1RE_1LD1RE_1RB0LB_---0LA",
+    "parentIndex": 124,
+    "treeId": 124,
+    "path": [
+      {
+        "slot": "E/0",
+        "move": "1RB"
+      },
+      {
+        "slot": "A/1",
+        "move": "1LD"
+      }
+    ],
+    "dfaStates": 5,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 70,
+    "table": "1RB1RD_1RC1LF_0RD1RE_1LD1RE_1RC0LB_---0LA",
+    "parentIndex": 124,
+    "treeId": 124,
+    "path": [
+      {
+        "slot": "E/0",
+        "move": "1RC"
+      },
+      {
+        "slot": "A/1",
+        "move": "1RD"
+      }
+    ],
+    "dfaStates": 5,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 72,
+    "table": "1RB1LF_1RC1LF_0RD1RE_1LD1RE_1RC0LB_---0LA",
+    "parentIndex": 124,
+    "treeId": 124,
+    "path": [
+      {
+        "slot": "E/0",
+        "move": "1RC"
+      },
+      {
+        "slot": "A/1",
+        "move": "1LF"
+      }
+    ],
+    "dfaStates": 5,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 73,
+    "table": "1RB0LC_1RC1LF_0RD1RE_1LD1RE_1RD0LB_---0LA",
+    "parentIndex": 124,
+    "treeId": 124,
+    "path": [
+      {
+        "slot": "E/0",
+        "move": "1RD"
+      },
+      {
+        "slot": "A/1",
+        "move": "0LC"
+      }
+    ],
+    "dfaStates": 4,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 74,
+    "table": "1RB0LD_1RC1LF_0RD1RE_1LD1RE_1RD0LB_---0LA",
+    "parentIndex": 124,
+    "treeId": 124,
+    "path": [
+      {
+        "slot": "E/0",
+        "move": "1RD"
+      },
+      {
+        "slot": "A/1",
+        "move": "0LD"
+      }
+    ],
+    "dfaStates": 4,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 75,
+    "table": "1RB1RD_1RC1LF_0RD1RE_1LD1RE_1RD0LB_---0LA",
+    "parentIndex": 124,
+    "treeId": 124,
+    "path": [
+      {
+        "slot": "E/0",
+        "move": "1RD"
+      },
+      {
+        "slot": "A/1",
+        "move": "1RD"
+      }
+    ],
+    "dfaStates": 5,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 76,
+    "table": "1RB1LF_1RC1LF_0RD1RE_1LD1RE_1RD0LB_---0LA",
+    "parentIndex": 124,
+    "treeId": 124,
+    "path": [
+      {
+        "slot": "E/0",
+        "move": "1RD"
+      },
+      {
+        "slot": "A/1",
+        "move": "1LF"
+      }
+    ],
+    "dfaStates": 5,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 77,
+    "table": "1RB0RD_1RC1LF_0RD1RE_1LD1RE_0RF0LB_---0LA",
+    "parentIndex": 124,
+    "treeId": 124,
+    "path": [
+      {
+        "slot": "E/0",
+        "move": "0RF"
+      },
+      {
+        "slot": "A/1",
+        "move": "0RD"
+      }
+    ],
+    "dfaStates": 5,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 79,
+    "table": "1RB1RD_1RC1LF_0RD0RF_1LD1RE_---0LB_0LA0LA",
+    "parentIndex": 126,
+    "treeId": 126,
+    "path": [
+      {
+        "slot": "F/0",
+        "move": "0LA"
+      },
+      {
+        "slot": "A/1",
+        "move": "1RD"
+      }
+    ],
+    "dfaStates": 2,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 81,
+    "table": "1RB1LF_1RC1LF_0RD0RF_1LD1RE_---0LB_0LA0LA",
+    "parentIndex": 126,
+    "treeId": 126,
+    "path": [
+      {
+        "slot": "F/0",
+        "move": "0LA"
+      },
+      {
+        "slot": "A/1",
+        "move": "1LF"
+      }
+    ],
+    "dfaStates": 2,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 82,
+    "table": "1RB0RF_1RC1LF_0RD0RF_1LD1RE_---0LB_1LA0LA",
+    "parentIndex": 126,
+    "treeId": 126,
+    "path": [
+      {
+        "slot": "F/0",
+        "move": "1LA"
+      },
+      {
+        "slot": "A/1",
+        "move": "0RF"
+      }
+    ],
+    "dfaStates": 5,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 83,
+    "table": "1RB0LC_1RC1LF_0RD0RF_1LD1RE_---0LB_1RA0LA",
+    "parentIndex": 126,
+    "treeId": 126,
+    "path": [
+      {
+        "slot": "F/0",
+        "move": "1RA"
+      },
+      {
+        "slot": "A/1",
+        "move": "0LC"
+      }
+    ],
+    "dfaStates": 3,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 84,
+    "table": "1RB1RD_1RC1LF_0RD0RF_1LD1RE_---0LB_1RA0LA",
+    "parentIndex": 126,
+    "treeId": 126,
+    "path": [
+      {
+        "slot": "F/0",
+        "move": "1RA"
+      },
+      {
+        "slot": "A/1",
+        "move": "1RD"
+      }
+    ],
+    "dfaStates": 3,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 85,
+    "table": "1RB1LF_1RC1LF_0RD0RF_1LD1RE_---0LB_1RA0LA",
+    "parentIndex": 126,
+    "treeId": 126,
+    "path": [
+      {
+        "slot": "F/0",
+        "move": "1RA"
+      },
+      {
+        "slot": "A/1",
+        "move": "1LF"
+      }
+    ],
+    "dfaStates": 2,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 86,
+    "table": "1RB0RD_1RC1LF_0RD0RF_1LD1RE_---0LB_1LB0LA",
+    "parentIndex": 126,
+    "treeId": 126,
+    "path": [
+      {
+        "slot": "F/0",
+        "move": "1LB"
+      },
+      {
+        "slot": "A/1",
+        "move": "0RD"
+      }
+    ],
+    "dfaStates": 5,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 87,
+    "table": "1RB---_1RC1LF_0RD0RF_1LD1RE_0LC0LB_0RD0LA",
+    "parentIndex": 126,
+    "treeId": 126,
+    "path": [
+      {
+        "slot": "F/0",
+        "move": "0RD"
+      },
+      {
+        "slot": "E/0",
+        "move": "0LC"
+      }
+    ],
+    "dfaStates": 4,
+    "reflected": true,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 89,
+    "table": "1RB1RF_1RC1LF_0RD0RF_1LD1RE_---0LB_1LF0LA",
+    "parentIndex": 126,
+    "treeId": 126,
+    "path": [
+      {
+        "slot": "F/0",
+        "move": "1LF"
+      },
+      {
+        "slot": "A/1",
+        "move": "1RF"
+      }
+    ],
+    "dfaStates": 4,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 90,
+    "table": "1RB1LD_1RC1LF_0RD1RF_1LD1RE_---0LB_1RB0LA",
+    "parentIndex": 128,
+    "treeId": 128,
+    "path": [
+      {
+        "slot": "F/0",
+        "move": "1RB"
+      },
+      {
+        "slot": "A/1",
+        "move": "1LD"
+      }
+    ],
+    "dfaStates": 4,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 91,
+    "table": "1RB0RF_1RC1LF_0RD1RF_1LD1RE_---0LB_0RC0LA",
+    "parentIndex": 128,
+    "treeId": 128,
+    "path": [
+      {
+        "slot": "F/0",
+        "move": "0RC"
+      },
+      {
+        "slot": "A/1",
+        "move": "0RF"
+      }
+    ],
+    "dfaStates": 2,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 92,
+    "table": "1RB1RD_1RC1LF_0RD1RF_1LD1RE_---0LB_1RC0LA",
+    "parentIndex": 128,
+    "treeId": 128,
+    "path": [
+      {
+        "slot": "F/0",
+        "move": "1RC"
+      },
+      {
+        "slot": "A/1",
+        "move": "1RD"
+      }
+    ],
+    "dfaStates": 2,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 94,
+    "table": "1RB1LF_1RC1LF_0RD1RF_1LD1RE_---0LB_1RC0LA",
+    "parentIndex": 128,
+    "treeId": 128,
+    "path": [
+      {
+        "slot": "F/0",
+        "move": "1RC"
+      },
+      {
+        "slot": "A/1",
+        "move": "1LF"
+      }
+    ],
+    "dfaStates": 2,
+    "reflected": false,
+    "runId": 45525504552
+  },
+  {
+    "rosterLine": 95,
+    "table": "1RB0RD_1RC1LF_0RD1RF_1LD1RE_---0LB_0RF0LA",
+    "parentIndex": 128,
+    "treeId": 128,
+    "path": [
+      {
+        "slot": "F/0",
+        "move": "0RF"
+      },
+      {
+        "slot": "A/1",
+        "move": "0RD"
+      }
+    ],
+    "dfaStates": 5,
+    "reflected": false,
+    "runId": 45525504552
+  }
+]
