@@ -6,6 +6,12 @@ on:
         description: Exact source commit SHA to compile
         required: true
         type: string
+      kind:
+        description: Branch depth (f1 or c1)
+        required: true
+        type: choice
+        options: [f1, c1]
+        default: f1
       sibling:
         description: Sibling proof spec name
         required: true
@@ -16,7 +22,7 @@ permissions:
 jobs:
   certify:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
         with:
@@ -28,14 +34,20 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Reproduce and certify the exact sibling
         env:
+          KIND: ${{ inputs.kind }}
           SIBLING: ${{ inputs.sibling }}
-        run: bash im-results/agent48-raw139-f1-oneLA/reproduce-sibling.sh "$SIBLING"
+        run: |
+          if [[ "$KIND" == c1 ]]; then
+            bash im-results/agent48-raw139-f1-oneRA/reproduce-blocks.sh c1 "$SIBLING"
+          else
+            bash im-results/agent48-raw139-f1-oneLA/reproduce-sibling.sh "$SIBLING"
+          fi
       - uses: actions/upload-artifact@v4
         with:
-          name: raw139-f1-${{ inputs.sibling }}-certified
+          name: raw139-${{ inputs.kind }}-${{ inputs.sibling }}-certified
           include-hidden-files: true
           path: |
-            .tmp/a48-f1-${{ inputs.sibling }}/manifest.json
-            .tmp/a48-f1-${{ inputs.sibling }}/log
-            .tmp/a48-f1-${{ inputs.sibling }}/imports/*.lean
-            .tmp/a48-f1-${{ inputs.sibling }}/build/*.olean
+            .tmp/a48-${{ inputs.kind }}-${{ inputs.sibling }}/manifest.json
+            .tmp/a48-${{ inputs.kind }}-${{ inputs.sibling }}/log
+            .tmp/a48-${{ inputs.kind }}-${{ inputs.sibling }}/imports/*.lean
+            .tmp/a48-${{ inputs.kind }}-${{ inputs.sibling }}/build/*.olean
