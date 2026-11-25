@@ -71,23 +71,16 @@ jobs:
           cd im-results/agent47-raw114-cut
           python paired_counter.py
           python long_sweep.py
-          for branch in 0LA 0LB 0LC 0LF 0RA 0RB 0RC 0RF 1LA 1LB 1LC 1LF 1RA 1RB 1RC 1RF; do
-            python generate_complete.py "$branch"
-          done
-          python generate_complete.py --combine
-          cd ../../
-          cd im-results/agent47-raw114-cut
-          python paired_counter.py
-          python long_sweep.py
-          printf '%s\\n' 0LA 0LB 0LC 0LF 0RA 0RB 0RC 0RF 1LA 1LB 1LC 1LF 1RA 1RB 1RC 1RF | xargs -P 4 -I{} python generate_complete.py {}
+          printf '%s\n' 0LA 0LB 0LC 0LF 0RA 0RB 0RC 0RF 1LA 1LB 1LC 1LF 1RA 1RB 1RC 1RF | xargs -P 4 -I{} python generate_complete.py {}
           python generate_complete.py --combine
           cd ../..
           mkdir -p .tmp/a31
           cat > .tmp/a31/raw114-generator-arguments.txt <<'EOF'
+          python im-results/agent13-coverage/unpack.py
           cd im-results/agent47-raw114-cut
           python paired_counter.py
           python long_sweep.py
-          printf '%s\\n' 0LA 0LB 0LC 0LF 0RA 0RB 0RC 0RF 1LA 1LB 1LC 1LF 1RA 1RB 1RC 1RF | xargs -P 4 -I{} python generate_complete.py {}
+          printf '%s\n' 0LA 0LB 0LC 0LF 0RA 0RB 0RC 0RF 1LA 1LB 1LC 1LF 1RA 1RB 1RC 1RF | xargs -P 4 -I{} python generate_complete.py {}
           python generate_complete.py --combine
           EOF
           cat > .tmp/a31/canonical-generator-arguments.txt <<'EOF'
@@ -99,16 +92,6 @@ jobs:
           python im-results/agent10-tnf-multipump/generate.py 66 70 80
           python im-results/agent10-tnf-multipump/generate.py 68 72 82
           python im-results/agent10-tnf-multipump/generate.py 86 88 92 93 97 98 100 101 102 104
-          EOF
-          cat > .tmp/a31/raw114-generator-arguments.txt <<'EOF'
-          python im-results/agent13-coverage/unpack.py
-          cd im-results/agent47-raw114-cut
-          python paired_counter.py
-          python long_sweep.py
-          for branch in 0LA 0LB 0LC 0LF 0RA 0RB 0RC 0RF 1LA 1LB 1LC 1LF 1RA 1RB 1RC 1RF; do
-            python generate_complete.py "$branch"
-          done
-          python generate_complete.py --combine
           EOF
           for required in CanonicalTwoParentGraft.olean CanonicalRaw114Accepted.olean Raw114CompleteData.olean; do
             test -s "/tmp/a47-canonical/$required"
@@ -132,6 +115,7 @@ jobs:
             --provenance-input im-results/agent10-tnf-multipump/multi_sweep.py \
             --provenance-input im-results/agent1-ngram/emit_ngram.py \
             --provenance-input .tmp/a31/raw114-generator-arguments.txt \
+            --provenance-input .tmp/a31/canonical-generator-arguments.txt \
             --provenance-input im-results/agent13-coverage/BB6Coverage.lean.xz.b64 \
             --provenance-input im-results/agent13-coverage/unpack.py \
             --provenance-input im-results/agent31-three-hole-tnf/generate_sweeps.py \
@@ -229,6 +213,25 @@ jobs:
           if grep -Eq 'sorryAx|native_decide' /tmp/a31-shared.log; then
             exit 1
           fi
+      - name: Preserve reusable raw107 shared-core artifact before consumer compilation
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/a31-shared/manifest
+          cp /tmp/a31-canonical-manifest.json /tmp/a31-shared/manifest/canonical77-base-manifest.json
+          cp /tmp/a31-shared-manifest.json /tmp/a31-shared/manifest/raw107-shared-manifest.json
+          cp "$GITHUB_WORKSPACE/pinned/.tmp/a31/raw107-source-provenance.json" /tmp/a31-shared/manifest/
+          cp "$GITHUB_WORKSPACE/pinned/.tmp/a31/raw114-generator-arguments.txt" /tmp/a31-shared/manifest/
+          cp "$GITHUB_WORKSPACE/pinned/.tmp/a31/canonical-generator-arguments.txt" /tmp/a31-shared/manifest/
+          cp "$GITHUB_WORKSPACE/pinned/.tmp/a31-shared/generator-arguments.txt" /tmp/a31-shared/manifest/
+          cp /tmp/a31/lean-version.txt /tmp/a31-shared/manifest/
+          cp /tmp/a31/lean-binary-path.txt /tmp/a31-shared/manifest/
+          cp /tmp/a31/lean-binary.sha256 /tmp/a31-shared/manifest/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw107-canonical-shared-core
+          path: /tmp/a31-shared
+          if-no-files-found: error
+          retention-days: 14
       - name: Compile the champion-independent two-parent roster and audit its axiom profile
         run: |
           set -euo pipefail
@@ -281,14 +284,6 @@ jobs:
           )
           PY
           mkdir -p manifest
-          cp /tmp/a31-canonical-manifest.json manifest/canonical77-base-manifest.json
-          cp /tmp/a31-shared-manifest.json manifest/raw107-shared-manifest.json
-          cp .tmp/a31/raw107-source-provenance.json manifest/
-          cp .tmp/a31/raw114-generator-arguments.txt manifest/
-          cp .tmp/a31-shared/generator-arguments.txt manifest/
-          cp /tmp/a31/lean-version.txt manifest/
-          cp /tmp/a31/lean-binary-path.txt manifest/
-          cp /tmp/a31/lean-binary.sha256 manifest/
           python3 - <<'PY'
           import hashlib, json, os, pathlib
           root = pathlib.Path(".")
