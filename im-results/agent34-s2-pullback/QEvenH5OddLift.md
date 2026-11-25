@@ -113,5 +113,5 @@ A small 16-by-16 diagnostic evaluation of Agent 42's 32-bit recurrence accepted 
 ## Next mathematically useful work
 
 1. Obtain Agent 25's exact theorem signature/import interface and check whether its accepted source module can be consumed directly by an Agent 34 bridge.
-2. Analyze the complete odd/even high-bounce fan above, not just the direct parent. The parameter \(Q=376991+736069r+1465887b\) satisfies \(E_{ax}+E_{ay}+1=8Q\); high-bounce exponents are controlled by \(v_2(Q)\). Look for a uniform descent or a finite residue partition that closes all remaining branches.
+2. Analyze the complete odd/even high-bounce fan above, not just the direct parent. The parameter \(Q=376991+736069r+1472137b\) satisfies \(E_{ax}+E_{ay}+1=8Q\); high-bounce exponents are controlled by \(v_2(Q)\). Look for a uniform descent or a finite residue partition that closes all remaining branches.
 3. Keep any new parameter classes in im-results/ until their original-source theorem and complete parent obligations are accepted. The odd coset remains unresolved outside the stated certified subset.
