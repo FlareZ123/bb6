@@ -172,7 +172,8 @@ def enhance_selected(t):
         binpath = tmp/"selected"
         subprocess.run(["g++","-std=c++17","-O3",str(D/"select_complete.cpp"),"-o",str(binpath)],check=True)
         with (D/"selected.txt").open() as inp:
-            proc = subprocess.run([str(binpath)],stdin=inp,text=True,capture_output=True,check=True)
+            proc = subprocess.run([str(binpath)],stdin=inp,text=True,capture_output=True)
+        assert proc.returncode == 0, proc.stderr
         selected = {raw:json.loads(data) for raw,data in (line.split(" ",1) for line in proc.stdout.splitlines())}
         assert len(selected)==14
         grams = []
@@ -191,7 +192,7 @@ def enhance_selected(t):
         subprocess.run(["g++","-std=c++17","-O3",str(ng/"ngram.cpp"),"-o",str(ngram)],check=True)
         certs = tmp/"certs.txt"
         with data.open() as inp, certs.open("w") as out:
-            subprocess.run([str(ngram),"4"],stdin=inp,stdout=out,check=True)
+            subprocess.run([str(ngram),"5"],stdin=inp,stdout=out,check=True)
         assert len(certs.read_text().splitlines())==127
         all_lines = certs.read_text().splitlines()
         names = []

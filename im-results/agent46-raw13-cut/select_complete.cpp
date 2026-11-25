@@ -38,7 +38,7 @@ int complete(Table p,int cut,int holes){
  if(!a.typ){
     auto raw=show(p);
     if(raw=="1RB1LC1RC0LD1LA0RB1LB1LE1RF0RC---1RE"){nodes[i].a={6,0,0,0,0,0,0};return i;}
-    for(int k=1;k<=4;k++){NGram ng(raw,k);if(ng.check()){nodes[i].a={5,k,0,0,0,0,0};nodes[i].p=raw;return i;}}
+    for(int k=1;k<=(raw=="1RB1LC1RC0LD1LA0RB1LB1LE1RF1RC---1RE"?5:4);k++){NGram ng(raw,k);if(ng.check()){nodes[i].a={5,k,0,0,0,0,0};nodes[i].p=raw;return i;}}
     a=classify<1000,2048,256>(p);if(!a.typ)return -1;
  }
  nodes[i].a=a;if(a.typ==2||holes==1)return i;
