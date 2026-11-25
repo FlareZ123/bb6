@@ -158,7 +158,8 @@ theorem sideWitness_refines_parent (e : WitnessEntry) :
 theorem parent_is_exact_109_member :
     ∃ e ∈ BB6.Agent47Combined109.reducedRoster,
       BB6.Agent31FourHoleRoster.sameTable e.2 Parent = true := by
-  exact sourceHeldParent_is_exact_109_member
+  obtain ⟨e, he, hsame⟩ := firstOneB0_1LC_in_reducedRoster
+  exact ⟨e, he, hsame⟩
 
 #print axioms weightedBound_mono
 #print axioms witnessCover
