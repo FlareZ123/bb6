@@ -1,5 +1,7 @@
 name: Agent 50 canonical r4 ingestion
 
+run-name: Agent 50 ${{ inputs.compile_raw10_cryptids_leaf && 'raw10 Cryptids leaf' || 'canonical r4 ingestion' }}
+
 on:
   workflow_dispatch:
     inputs:
@@ -93,6 +95,13 @@ jobs:
           test -s "/tmp/canonical77/CanonicalTwoParentGraft.olean"
           test -s "/tmp/canonical77-manifest/manifest/canonical77-base-manifest.json"
           test "$(git rev-parse HEAD)" = "${{ inputs.upstream_sha }}"
+          # The upstream checkout pins Lean 4.35.0-rc4, but its .olean files
+          # are consumed by the repository's 4.36.0-rc2 proof closure. Override
+          # the checkout locally so every upstream dependency is rebuilt with
+          # the exact consumer toolchain.
+          elan override set leanprover/lean4:v4.36.0-rc2
+          lean --version
+          lake --version
           lake update
           lake build BusyBeaver.Bridge Cryptids.Machines
 
