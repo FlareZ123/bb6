@@ -38,6 +38,7 @@ DATA={
 
 def generate(branch,grams):
     a=json.loads((D/"oneRC-far.json").read_text()) if branch=="1RC" else DATA[branch]
+    if a.get("sorted"): grams=sorted(grams)
     assert len(grams)==len(a["grams"])
     assert hashlib.sha256("\n".join(grams).encode()).hexdigest()==a["sha"]
     assert len(set(grams))==len(grams)
