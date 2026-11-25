@@ -45,8 +45,8 @@ theorem parts30_fitted (s B : Nat) :
     Fitted (30+s+3) (parts30 s B) := by
   simp [parts30,Fitted,targetWord_length] <;> omega
 
-/-- Seven four-bit Covered steps, beginning at the authentic cost-one
-    prefix, reach s=29 (total cost n+s=59). -/
+/-- Twelve four-bit Covered steps, beginning at the authentic cost-one
+    prefix, reach s=49. -/
 def run30 : Nat → List Prefix
   | 0 => [(1,16)]
   | k+1 =>
@@ -72,20 +72,34 @@ theorem run30_covered (k : Nat) :
       (fun B => parts30 (1+4*k+4) B) (by omega) ih hflat hfit
     simpa [run30,Nat.mul_succ,Nat.add_assoc] using hnext
 
-theorem final30_covered : Covered 30 29 (run30 7) := by
-  simpa using run30_covered 7
+/-- The final three-bit extension reaches s=52, so n+s=82. -/
+def final30 : List Prefix :=
+  nextBlockByFold 30 49 3 (fun B => parts30 52 B) (run30 12)
 
-theorem final30_empty : run30 7=[] := by decide
+theorem final30_covered : Covered 30 52 final30 := by
+  have hprev : Covered 30 49 (run30 12) := by
+    simpa using run30_covered 12
+  have hflat : ∀ B, (parts30 52 B).flatten=targetWord 30 52 B 30 := by
+    intro B
+    exact parts30_flat _ _
+  have hfit : ∀ B, Fitted (30+52+3) (parts30 52 B) := by
+    intro B
+    exact parts30_fitted _ _
+  have hnext := covered_next_block 30 49 3 (run30 12)
+    (fun B => parts30 52 B) (by omega) hprev hflat hfit
+  simpa [final30] using hnext
+
+theorem final30_empty : final30=[] := by decide
 
 /-- The same block filter propagates the existing arithmetic margin
-    certificate; the final finite list is empty at K=59. -/
+    certificate; the final finite list is empty. -/
 theorem run30_cert (k : Nat) :
-    Cert 30 59 (1+4*k) (run30 k) := by
+    Cert 30 82 (1+4*k) (run30 k) := by
   induction k with
   | zero =>
-    exact cert_first 30 59 (by decide)
+    exact cert_first 30 82 (by decide)
   | succ k ih =>
-    have hgood : MarginOK 30 59 (1+4*k) 4 (run30 k)=true := by decide
+    have hgood : MarginOK 30 82 (1+4*k) 4 (run30 k)=true := by decide
     have hflat : ∀ B,
         (parts30 (1+4*k+4) B).flatten =
           targetWord 30 (1+4*k+4) B 30 := by
@@ -95,22 +109,29 @@ theorem run30_cert (k : Nat) :
         Fitted (30+(1+4*k+4)+3) (parts30 (1+4*k+4) B) := by
       intro B
       exact parts30_fitted _ _
-    have hnext := cert_next_block 30 59 (1+4*k) 4 (run30 k)
+    have hnext := cert_next_block 30 82 (1+4*k) 4 (run30 k)
       (fun B => parts30 (1+4*k+4) B) (by omega) ih hgood hflat hfit
     simpa [run30,Nat.mul_succ,Nat.add_assoc] using hnext
 
-theorem cert30 : Cert 30 59 29 [] := by
-  have hcert := run30_cert 7
-  simpa [final30_empty] using hcert
+theorem cert30 : Cert 30 82 52 [] := by
+  have hprev := run30_cert 12
+  have hgood : MarginOK 30 82 49 3 (run30 12)=true := by decide
+  have hflat : ∀ B, (parts30 52 B).flatten=targetWord 30 52 B 30 := by
+    intro B
+    exact parts30_flat _ _
+  have hfit : ∀ B, Fitted (30+52+3) (parts30 52 B) := by
+    intro B
+    exact parts30_fitted _ _
+  have hnext := cert_next_block 30 82 49 3 (run30 12)
+    (fun B => parts30 52 B) (by omega) hprev hgood hflat hfit
+  simpa [final30] using hnext
 
-/-- A source-level exclusion of the n=30 critical reset, obtained through
-    the fitted reverse-block certificate rather than a forward scan. -/
+/-- Reprove the existing n=30 critical-reset exclusion using the fitted
+    reverse-block Covered/Cert bridge. -/
 theorem noCriticalReset30 :
     ¬ BB6.Agent1.Reach 2 (14*2^30-2*30-10) := by
-  exact critical_reset_no_reach_of_lag 30 59 29
+  exact critical_reset_no_reach_of_lag 30 82 52
     (by omega) (by decide) (by omega) (by decide) (by decide) cert30
-
-#eval run30 7
 
 #print axioms parts30_flat
 #print axioms parts30_fitted
