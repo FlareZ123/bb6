@@ -369,3 +369,133 @@ jobs:
             /tmp/a47-raw112
             /tmp/a47-raw110
           if-no-files-found: error
+
+  canonical72:
+    name: Source-audit champion-independent 72-residual roster
+    needs: exactness
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Download the source-accepted canonical two-parent base
+        uses: actions/download-artifact@v4
+        with:
+          name: canonical73-raw110-raw112-roster-consumer-certified
+          path: /tmp/a31-base
+      - name: Regenerate raw117, raw113, raw115 and raw119 source data
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent8-tnf-raw117/generate.py
+          python im-results/agent25-raw113/generate.py
+          python im-results/agent8-tnf-six/generate.py
+      - name: Compile the 72-residual roster against the accepted shared core
+        run: |
+          set -euo pipefail
+          test -s /tmp/a31-base/manifest/raw107-shared-manifest.json
+          python tools/lean_compile_closure.py \
+            im-results/agent8-tnf-raw117/Canonical72RosterOnly.lean \
+            --workdir /tmp/a31-canonical72 \
+            --manifest /tmp/a31-canonical72-manifest.json \
+            --label canonical72-roster-only \
+            --theorem BB6.Agent8Canonical72RosterOnly.exact_at_target \
+            --weighted-bound 7014 \
+            --artifact-name canonical72-roster-only-certified \
+            --jobs 8 \
+            --precompiled-manifest /tmp/a31-base/manifest/raw107-shared-manifest.json \
+            --precompiled-dir /tmp/a31-base \
+            --override Raw115Base=im-results/agent8-tnf-six/raw115/Raw115Base.lean \
+            --provenance-input im-results/agent8-tnf-raw117/Canonical72RosterOnly.lean \
+            --provenance-input im-results/agent8-tnf-raw117/generate.py \
+            --provenance-input im-results/agent25-raw113/generate.py \
+            --provenance-input im-results/agent25-raw113/spec.json \
+            --provenance-input im-results/agent8-tnf-six/generate.py \
+            --provenance-input im-results/agent8-tnf-six/bank.cpp \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_sweeps.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_four_hole.py \
+            --provenance-input im-results/agent31-shared-core/CanonicalTwoParentRosterOnly.lean \
+            --provenance-input im-results/agent47-rooted-tnf/CanonicalRosterRefinement.lean \
+            2>&1 | tee /tmp/a31-canonical72.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a31-canonical72.log; then
+            echo "Forbidden proof placeholder or native_decide in canonical72 closure" >&2
+            exit 1
+          fi
+          python3 - /tmp/a31-canonical72.log <<'PY'
+          import pathlib, re, sys
+          log = pathlib.Path(sys.argv[1]).read_text()
+          allowed = {"propext", "Classical.choice", "Quot.sound"}
+          profiles = {}
+          for name, axioms in re.findall(r"'([^']+)' depends on axioms: \\[([^\\]]*)\\]", log):
+              profiles[name] = {x.strip() for x in axioms.split(",") if x.strip()}
+          for name in re.findall(r"'([^']+)' does not depend on any axioms", log):
+              profiles[name] = set()
+          required = (
+              "BB6.Agent8Canonical72RosterOnly.count",
+              "BB6.Agent8Canonical72RosterOnly.sound",
+              "BB6.Agent8Canonical72RosterOnly.exact_at_target",
+          )
+          for name in required:
+              if name not in profiles:
+                  raise SystemExit("missing axiom profile: " + name)
+              bad = profiles[name] - allowed
+              if bad:
+                  raise SystemExit(f"{name}: unexpected axioms {sorted(bad)}")
+              print(f"{name}: {sorted(profiles[name])}")
+          PY
+      - name: Record the canonical72 source and object manifest
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, json, os, pathlib, subprocess
+          work = pathlib.Path("/tmp/a31-canonical72")
+          source = pathlib.Path("im-results/agent8-tnf-raw117/Canonical72RosterOnly.lean")
+          manifest = pathlib.Path("/tmp/a31-canonical72-manifest.json")
+          olean = work / "BB6/Agent8Canonical72RosterOnly.olean"
+          def digest(path):
+              h = hashlib.sha256()
+              with path.open("rb") as stream:
+                  for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+                      h.update(chunk)
+              return h.hexdigest()
+          summary = {
+              "theorem": "BB6.Agent8Canonical72RosterOnly.exact_at_target",
+              "residual_count": 72,
+              "early_root_bound": 7014,
+              "status": "conditional roster theorem; all 72 residual Covers remain explicit",
+              "source_audit_run_id": int(os.environ["GITHUB_RUN_ID"]),
+              "source_revision": os.environ["GITHUB_SHA"],
+              "raw107_source_acceptance_run_id": 45533196624,
+              "raw114_source_acceptance_run_id": 45553564319,
+              "canonical77_base_run_id": 45554648116,
+              "raw117_source_acceptance_run_id": 45561386072,
+              "lean_version": subprocess.check_output(["lean", "--version"], text=True).strip(),
+              "lean_binary_sha256": digest(pathlib.Path(subprocess.check_output(["lean", "--print-prefix"], text=True).strip()) / "bin/lean"),
+              "source_sha256": digest(source),
+              "manifest_sha256": digest(manifest),
+              "olean_sha256": digest(olean),
+              "axiom_allowlist": ["propext", "Classical.choice", "Quot.sound"],
+          }
+          pathlib.Path("/tmp/a31-canonical72-summary.json").write_text(
+              json.dumps(summary, indent=2, sort_keys=True) + "\\n"
+          )
+          print(json.dumps(summary, indent=2, sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: canonical72-roster-only-certified
+          path: |
+            /tmp/a31-canonical72
+            /tmp/a31-canonical72-manifest.json
+            /tmp/a31-canonical72-summary.json
+            /tmp/a31-canonical72.log
+          if-no-files-found: error
+          retention-days: 14
