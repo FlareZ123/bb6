@@ -5,15 +5,15 @@ Import ListNotations.
 Import TNF_Node.
 Open Scope nat_scope.
 
-/-- The exact source update checkpoint used by the recovered FARv3 leaf.
+(* The exact source update checkpoint used by the recovered FARv3 leaf.
     The adaptive plan below stops here, so both active and held nodes remain
-    obligations. -/
+    obligations. *)
 Definition recovered_held_2800_checkpoint :=
   SearchQueue_upds decider (q_i 2800 100) 1000000%N.
 
-/-- Test the actual held checkpoint, not a copied table string or a count:
+(* Test the actual held checkpoint, not a copied table string or a count:
     some held node is a source refinement of the independently certified
-    FARv3 residual. -/
+    FARv3 residual. *)
 Definition recovered_held_2800_checkpoint_memberb : bool :=
   existsb
     (fun x => source_refinesb (tm x) recovered_held_2800)
@@ -42,10 +42,10 @@ Proof.
     exact Href.
 Qed.
 
-/-- The source-roster consumer converts the FARv3 cylinder theorem into the
+(* The source-roster consumer converts the FARv3 cylinder theorem into the
     exact weighted-safety predicate expected by Agent 5's adaptive queue
     coverage interface. The implication is for every completion of the
-    checkpoint node, not only the displayed source table. -/
+    checkpoint node, not only the displayed source table. *)
 Theorem recovered_held_2800_checkpoint_leaf_safe
     (bound : nat) (x : T)
     (h : is_child_of (tm x) recovered_held_2800) :
@@ -61,10 +61,10 @@ Proof.
     exact h.
 Qed.
 
-/-- One exact held node of the finite q_i(2800,100) checkpoint is now
+(* One exact held node of the finite q_i(2800,100) checkpoint is now
     discharged in the same adaptive-obligation language consumed by
     actual_source_chunks_packed_global_upper. Every other active/held node
-    remains in the list and is not claimed safe by this pilot. -/
+    remains in the list and is not claimed safe by this pilot. *)
 Theorem recovered_held_2800_adaptive_obligation
     (bound : nat) :
     exists x,
