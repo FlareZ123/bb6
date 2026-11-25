@@ -62,6 +62,43 @@ def encode_high(k: int) -> list[str]:
     return HIGH_PREFIX[residue, quotient % 2] + encode_high(quotient)
 
 
+def recursive_carry_cost(k: int) -> int:
+    """Observed recursive cost for the high-counter carry subroutine."""
+    q, r = divmod(k, 6)
+    if r == 0:
+        return 326
+    if r == 1:
+        return 350 if q % 2 == 0 else 344
+    if r == 2:
+        return 378 if q % 2 == 0 else 372
+    if r == 3:
+        return 338
+    if r == 4:
+        return 320
+    if q == 0:
+        return 416
+    if q == 1:
+        return 440
+    if q == 2:
+        return 468
+    return recursive_carry_cost(q) + 90
+
+
+def observed_macro_cost(n: int) -> int:
+    """Conjectured C(n)->C(n+1) cost, empirically checked by this script."""
+    base = 144 * n
+    r = n % 6
+    if r == 0:
+        return base + 312
+    if r in (1, 4):
+        return base + 242
+    if r == 2 or r == 5:
+        return base + recursive_carry_cost(n // 3)
+    if r == 3:
+        return base + 300
+    raise AssertionError(r)
+
+
 def bits_near_to_far(word: int) -> str:
     return "".join("1" if (word >> i) & 1 else "0"
                    for i in range(word.bit_length()))
@@ -151,6 +188,21 @@ def trace(max_steps: int):
             "suffix_length": len(suffix),
         })
 
+    # Check the observed macro-cost recurrence between every adjacent pair.
+    for i, row in enumerate(records[:-1]):
+        actual = records[i + 1]["step"] - row["step"]
+        predicted = observed_macro_cost(row["n"])
+        if actual != predicted:
+            raise AssertionError(
+                f"macro cost mismatch at n={row['n']}: "
+                f"observed={actual}, predicted={predicted}"
+            )
+        row["observed_macro_cost"] = actual
+        row["predicted_macro_cost"] = predicted
+    if records:
+        records[-1]["observed_macro_cost"] = ""
+        records[-1]["predicted_macro_cost"] = ""
+
     return records, undefined, f_visits, a1_with_zero_right
 
 
@@ -164,6 +216,10 @@ def main() -> None:
     args = parser.parse_args()
 
     records, undefined, f_visits, a1_bad = trace(args.steps)
+    if undefined is not None:
+        raise AssertionError(f"undefined transition reached: {undefined}")
+    if a1_bad != 0:
+        raise AssertionError(f"A/1 with zero to the right observed {a1_bad} times")
     by_n = {row["n"]: row for row in records}
     high_rows = []
     for k in sorted({n // 3 for n in by_n}):
@@ -198,6 +254,8 @@ def main() -> None:
           f"max_n={max((row['n'] for row in records), default=0)}")
     print(f"high_counter_states={len(high_rows)} F_visits={f_visits} "
           f"A1_with_zero_right={a1_bad}")
+    print(f"macro_costs_checked={max(0, len(records) - 1)} "
+          f"formula=144*n+phase_or_recursive_F")
     print(f"undefined_transition={undefined}")
     print(f"csv={args.out}")
     print(f"high_csv={args.high_out}")
