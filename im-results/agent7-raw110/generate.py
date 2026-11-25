@@ -92,7 +92,7 @@ with tempfile.TemporaryDirectory() as d:
                 return f".far {str(bool(rev)).lower()} {n} ⟨0,{D},{L},{R},{z}⟩"
             assert tag=="split"
             n,s0,kids=v;assert len(kids)==24
-            return f".split {n} {slot(s0)} (byMove [\n"+",\n".join(build(k) for k in kids)+"\n])"
+            return f".split {n} {slot(s0)} (byMove [\n"+",\n".join(build(k) for k in kids)+"])"
         tree=json.loads((tmp/"tree.json").read_text())
         name=f"Raw110Kid{i:02}";mods.append(name)
         emit(name,["Raw110Base",pumpname],f"""
