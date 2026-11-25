@@ -43,7 +43,7 @@ theorem sound :
     rcases BB6.Agent8Canonical71Raw121RosterOnly.sound m hm with hb | hres
     · exact Or.inl (by
         intro k d hk hd
-        exact Nat.le_trans (hb m hm k d hk hd) (by decide))
+        exact Nat.le_trans (hb k d hk hd) (by decide))
     · exact Or.inr hres
   · intro m hm
     exact Or.inl
