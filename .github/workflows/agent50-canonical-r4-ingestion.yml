@@ -78,7 +78,6 @@ jobs:
           CANONICAL77_DIR: ${{ github.workspace }}/.tmp/canonical77
           CANONICAL77_MANIFEST: ${{ github.workspace }}/.tmp/canonical77-manifest/manifest/canonical77-base-manifest.json
           UPSTREAM_ROOT: ${{ github.workspace }}/upstream
-          LEAN_BIN: ${{ github.home }}/.elan/bin/lean
           WORKDIR: ${{ github.workspace }}/.tmp/agent50-canonical-r4
           JOBS: "4"
         run: |
