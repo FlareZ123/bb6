@@ -158,6 +158,8 @@ jobs:
             python "$D/generate0RE.py" 1RE
             python "$D/emitauto.py" "$D/auto1RC.json" "$D/Agent46Raw13Auto1RC.lean" Raw13Auto1RC
             python "$D/generate0RE.py" 1RC
+            python "$D/emitauto.py" "$D/auto0RE5.json" "$D/Agent46Raw13Auto0RE5.lean" Raw13Auto0RE5
+            python "$D/generate0RE.py" 0RE5
             python "$D/emitauto.py" "$D/auto1RD.json" "$D/Agent46Raw13Auto1RD.lean" Raw13Auto1RD
             python "$D/generate0RE.py" 1RD
             python "$D/generate.py"
