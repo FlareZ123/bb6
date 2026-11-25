@@ -51,24 +51,8 @@ def hard4 : PartialMachine := fromRows [
   some (some ⟨true,true,1⟩), some (some ⟨false,false,5⟩)
 ]
 
-end BB6.Agent2Raw124ZeroLFProbe
 
-/-- Diagnostic only: a true Boolean is a candidate transfer, not a theorem until
-the corresponding Certificate.never adapter is exported and source-checked. -/
-#eval ("hard0", BB6.Agent2Raw124ZeroLFBlockGrowth.c1539.check BB6.Agent2Raw124ZeroLFProbe.hard0,
-               BB6.Agent2Raw124ZeroLFBlockGrowth.c1547.check BB6.Agent2Raw124ZeroLFProbe.hard0)
-#eval ("hard1", BB6.Agent2Raw124ZeroLFBlockGrowth.c1539.check BB6.Agent2Raw124ZeroLFProbe.hard1,
-               BB6.Agent2Raw124ZeroLFBlockGrowth.c1547.check BB6.Agent2Raw124ZeroLFProbe.hard1)
-#eval ("hard2", BB6.Agent2Raw124ZeroLFBlockGrowth.c1539.check BB6.Agent2Raw124ZeroLFProbe.hard2,
-               BB6.Agent2Raw124ZeroLFBlockGrowth.c1547.check BB6.Agent2Raw124ZeroLFProbe.hard2)
-#eval ("hard3", BB6.Agent2Raw124ZeroLFBlockGrowth.c1539.check BB6.Agent2Raw124ZeroLFProbe.hard3,
-               BB6.Agent2Raw124ZeroLFBlockGrowth.c1547.check BB6.Agent2Raw124ZeroLFProbe.hard3)
-#eval ("hard4", BB6.Agent2Raw124ZeroLFBlockGrowth.c1539.check BB6.Agent2Raw124ZeroLFProbe.hard4,
-               BB6.Agent2Raw124ZeroLFBlockGrowth.c1547.check BB6.Agent2Raw124ZeroLFProbe.hard4)
-
-
-open BB6.Agent2Raw124ZeroLFBlockGrowth BB6.Agent2Raw124ZeroLFProbe
-open BB6Coverage.Agent50Pump
+open BB6Coverage.Agent50Pump BB6.Agent2Raw124ZeroLFBlockGrowth
 
 def fin6 (n : Nat) : Fin 6 := ⟨n % 6, Nat.mod_lt _ (by decide)⟩
 
@@ -98,6 +82,7 @@ def transformCert (p : List Nat) (mirror : Bool) (c : Certificate) : Certificate
     { c' with shape := reflectShape c'.shape, ops := c'.ops.map reflectOp }
   else c'
 
+/-- The 120 state permutations fixing the blank-start state A. -/
 def statePerms : List (List Nat) := [
   [0, 1, 2, 3, 4, 5],
   [0, 1, 2, 3, 5, 4],
@@ -221,18 +206,58 @@ def statePerms : List (List Nat) := [
   [0, 5, 4, 3, 2, 1]
 ]
 
-def matches (p : PartialMachine) (c : Certificate) (mirror : Bool) : List (List Nat) :=
-  statePerms.filter (fun sigma => (transformCert sigma mirror c).check p)
+def validStatePerm (p : List Nat) : Bool :=
+  decide (p.length = 6) && decide (p.head? = some 0) &&
+  decide p.Nodup && p.all (fun n => decide (n < 6))
 
-#eval ("control1539", (matches p1539 c1539 false).head?, (matches p1539 c1539 true).head?)
-#eval ("control1547", (matches p1547 c1547 false).head?, (matches p1547 c1547 true).head?)
-#eval ("hard0", (matches hard0 c1539 false).head?, (matches hard0 c1539 true).head?,
-                 (matches hard0 c1547 false).head?, (matches hard0 c1547 true).head?)
-#eval ("hard1", (matches hard1 c1539 false).head?, (matches hard1 c1539 true).head?,
-                 (matches hard1 c1547 false).head?, (matches hard1 c1547 true).head?)
-#eval ("hard2", (matches hard2 c1539 false).head?, (matches hard2 c1539 true).head?,
-                 (matches hard2 c1547 false).head?, (matches hard2 c1547 true).head?)
-#eval ("hard3", (matches hard3 c1539 false).head?, (matches hard3 c1539 true).head?,
-                 (matches hard3 c1547 false).head?, (matches hard3 c1547 true).head?)
-#eval ("hard4", (matches hard4 c1539 false).head?, (matches hard4 c1539 true).head?,
-                 (matches hard4 c1547 false).head?, (matches hard4 c1547 true).head?)
+theorem statePerms_length : statePerms.length = 120 := by decide
+theorem statePerms_nodup : statePerms.Nodup := by decide
+theorem statePerms_valid : statePerms.all validStatePerm = true := by decide
+
+def noTransfer (p : PartialMachine) (c : Certificate) (mirror : Bool) : Bool :=
+  statePerms.all (fun sigma => !(transformCert sigma mirror c).check p)
+
+theorem control1539 :
+    (transformCert [0,1,2,3,4,5] false c1539).check p1539 = true := by decide
+theorem control1547 :
+    (transformCert [0,1,2,3,4,5] false c1547).check p1547 = true := by decide
+
+theorem noTransferHard0 :
+    noTransfer hard0 c1539 false = true ∧
+    noTransfer hard0 c1539 true = true ∧
+    noTransfer hard0 c1547 false = true ∧
+    noTransfer hard0 c1547 true = true := by decide
+
+theorem noTransferHard1 :
+    noTransfer hard1 c1539 false = true ∧
+    noTransfer hard1 c1539 true = true ∧
+    noTransfer hard1 c1547 false = true ∧
+    noTransfer hard1 c1547 true = true := by decide
+
+theorem noTransferHard2 :
+    noTransfer hard2 c1539 false = true ∧
+    noTransfer hard2 c1539 true = true ∧
+    noTransfer hard2 c1547 false = true ∧
+    noTransfer hard2 c1547 true = true := by decide
+
+theorem noTransferHard3 :
+    noTransfer hard3 c1539 false = true ∧
+    noTransfer hard3 c1539 true = true ∧
+    noTransfer hard3 c1547 false = true ∧
+    noTransfer hard3 c1547 true = true := by decide
+
+theorem noTransferHard4 :
+    noTransfer hard4 c1539 false = true ∧
+    noTransfer hard4 c1539 true = true ∧
+    noTransfer hard4 c1547 false = true ∧
+    noTransfer hard4 c1547 true = true := by decide
+
+#print axioms control1539
+#print axioms control1547
+#print axioms noTransferHard0
+#print axioms noTransferHard1
+#print axioms noTransferHard2
+#print axioms noTransferHard3
+#print axioms noTransferHard4
+
+end BB6.Agent2Raw124ZeroLFProbe
