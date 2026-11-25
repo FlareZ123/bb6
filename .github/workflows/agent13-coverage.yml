@@ -819,6 +819,10 @@ jobs:
     if: inputs.target == 'weighted-tnf-raw107-1la'
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5]
     steps:
       - uses: actions/checkout@v4
       - name: Install Lean 4.36.0-rc2
@@ -826,14 +830,63 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-          "$HOME/.elan/bin/lean" --version
-      - name: Generate and kernel-check complete raw107 B1=1LA cylinder
+      - name: Generate and check disjoint 1LA audit shard
+        env:
+          SHARD: ${{ matrix.shard }}
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
           python im-results/agent11-raw107/generate_partial.py 1LA
-          python tools/lean_compile_closure.py --workdir /tmp/raw107-1la --jobs 4 im-results/agent1-raw107/Raw107LABridge.lean | tee /tmp/raw107-1la.log
+          roots=()
+          for ((i=4*SHARD;i<4*SHARD+4;i++)); do
+            printf -v nn '%02d' "$i"
+            roots+=("im-results/agent11-raw107/Raw107B1LAKid${nn}.lean")
+          done
+          python tools/lean_compile_closure.py --workdir /tmp/raw107-1la --jobs 4 "${roots[@]}" | tee /tmp/raw107-1la.log
           if grep -Eq 'sorryAx|native_decide' /tmp/raw107-1la.log; then exit 1; fi
+          mkdir -p /tmp/raw107-shard
+          if [ "$SHARD" = 0 ]; then
+            find /tmp/raw107-1la -name '*.olean' -exec cp {} /tmp/raw107-shard/ \;
+          else
+            cp /tmp/raw107-1la/Raw107B1LAKid*.olean /tmp/raw107-shard/
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw107-1la-${{ matrix.shard }}
+          path: /tmp/raw107-shard
+          if-no-files-found: error
+
+  raw107_1la_assemble:
+    if: inputs.target == 'weighted-tnf-raw107-1la'
+    needs: raw107_1la
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw107-1la-*
+          path: /tmp/raw107-1la
+          merge-multiple: true
+      - name: Kernel-check the exact unconditional 1LA graft
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent11-raw107/generate_partial.py 1LA
+          python tools/lean_compile_closure.py --workdir /tmp/raw107-witnesses --jobs 4 im-results/agent1-raw107/Raw107LAUnary.lean im-results/agent11-raw107/Raw107LAPairCounter.lean im-results/agent11-raw107/Raw107LA385.lean | tee /tmp/raw107-witnesses.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/raw107-witnesses.log; then exit 1; fi
+          cp /tmp/raw107-witnesses/Raw107LAUnary.olean /tmp/raw107-witnesses/Raw107LAPairCounter.olean /tmp/raw107-witnesses/Raw107LA385.olean /tmp/raw107-1la/
+          cp im-results/agent11-raw107/Raw107B1LAData.lean im-results/agent1-raw107/Raw107LABridge.lean /tmp/raw107-1la/
+          cd /tmp/raw107-1la
+          export LEAN_PATH="$PWD"
+          for i in $(seq -w 0 23); do test -f "Raw107B1LAKid${i}.olean"; done
+          { lean -o Raw107B1LAData.olean Raw107B1LAData.lean && lean -o Raw107LABridge.olean Raw107LABridge.lean; } | tee /tmp/raw107-assemble.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/raw107-assemble.log; then exit 1; fi
 
   raw60:
     if: inputs.target == 'weighted-tnf-raw60'
