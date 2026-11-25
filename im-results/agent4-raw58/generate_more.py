@@ -176,7 +176,7 @@ def build_child(key,spec):
         for i in unclassified:
             try:
                 proc=subprocess.run([str(sparse_exe),"23"],
-                    input=f"{i} {opens[i]}\\n",text=True,capture_output=True,
+                    input=f"{i} {opens[i]}\n",text=True,capture_output=True,
                     check=True,timeout=90)
                 fields=proc.stdout.strip().split(maxsplit=1)
                 if len(fields)!=2: raise ValueError("missing sparse certificate output")
@@ -198,7 +198,7 @@ def build_child(key,spec):
         imports.extend(sparse_modules)
     print(key,"sparse certificates",len(sparse_modules),"remaining",len(unclassified))
     if unclassified:
-        print(key,"UNRESOLVED",*[f"{i} {opens[i]}" for i in unclassified],sep="\\n")
+        print(key,"UNRESOLVED",*[f"{i} {opens[i]}" for i in unclassified],sep="\n")
         raise SystemExit(3)
     def emit(name,imports,body):
         header=f"""set_option maxRecDepth 100000
