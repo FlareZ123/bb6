@@ -143,3 +143,27 @@ The constant-candidate closed-bounce proof has now passed original-source CI [45
 
 [block_c.cpp](block_c.cpp) is the independent fixed-width exploratory implementation. Build with `g++ -O3 -std=c++20 block_c.cpp -o block_c`; arguments are starting return, a, k, ending return, prefix bits (defaults 0,5,1,1000000000,12). The first billion returns agree with the single-return evaluator: (358994343,3320495488), mass 6999985319. The second billion ends at (4673821904,4663082990), mass 13999987884. The block run took 2.48 s for the first billion versus 11.73 s for the single-return implementation in this environment. Independent evaluators agree at every overlapping billion-return checkpoint. The accelerated search passed 125 billion returns, endpoint (838842302846,18079374398), mass 875001051642, with no terminal event. These are computational endpoints, not kernel-certified finite witnesses or nonhalting claims. The existing kernel-certified terminal cutoff remains 16777150 until a stronger source certificate is accepted.
 
+## Exact primitive-clock acceleration
+
+[OrdinaryClock.lean](OrdinaryClock.lean), [CountedOrdinary.lean](CountedOrdinary.lean), [WeightedWord.lean](WeightedWord.lean) and [WeightedWordSource.lean](WeightedWordSource.lean) extend the endpoint-only ordinary block theorem to exact CLine calls and primitive moves. For A=a, M=a+2k, X=successor left counter, o=M%2, ordinary positive shift r, six times the primitive cost is the polynomial
+
+    -4 A²+16 A o-22 A+4 M²-4 M X-8 M o+24 M r-M
+      +4 X²-8 X o-12 X r+11 X-96 o r+96 o+36 r²-51 r+39.
+
+The CLine call count is M-A+r+o(3-3r). Substitution of affine prefix forms yields six precomputed quadratic coefficients and three linear coefficients for a whole block. The kernel theorem block_raw_execution uses the original Agent47 ThinGatewayCounted/CRawCountBridge literal-machine path, so it has no unchecked source simulator assumption. Full original-source CI [45539039923](https://github.com/FlareZ123/bb6/actions/runs/45539039923) passed at 510314bf7b68d54f0334713594ad002efdc23efd.
+
+[clock_block.cpp](clock_block.cpp) implements this polynomial and independently tests every pair a,k<128 against a literal CLine interpreter and 100,000 random pairs (99,976 accepted blocks at 12 bits). Its fixed-width explorer has checked 128-bit clock accumulation and a 2^41 mass cap. [unweighted.cpp](unweighted.cpp) is the smaller 14-bit-table endpoint-only explorer. These are computational implementations, not kernel evaluations of the full traces. The three relative weighted segments were:
+
+| Returns | Endpoint (a,k) | Primitive nonhalting moves in segment | CLine calls in segment |
+|---|---|---:|---:|
+| 0 to 100,000,000,000 | (275133587597,212433398910) | 5444467942584747322477887332687250 | 17500061408415500929561 |
+| 100,000,000,000 to 125,000,000,000 | (838842302846,18079374398) | 5189235901283050767015204543304192 | 9843743679985846229590 |
+| 125,000,000,000 to 200,000,000,000 | (740396216379,329803495692) | 32922224457075400481166569706123508 | 42656624824206565090781 |
+
+Adding the initial 14 primitive moves and one CLine call to the relative sums gives 43555928300943198570659661582114964 primitive moves and 70000429912607912249933 calls at the 200-billion-return checkpoint (mass 1400003207763). The amended explorer includes this initial correction automatically only when started at return 0, (5,1). No halt was observed; this is not a new kernel-certified mass cutoff.
+
+## Uniform dyadic ancestry sparsity
+
+The new [Haar-null ancestry and finite-sieve density theorem](../../results/2026-11-25-machine-c-dyadic-density-completeness-agent12.md) proves arbitrarily small admitted fractions of high-stop j residues uniformly in every m, and of the low-stop m tail, by analyzing the critical affine IFS on Z₂² × parity. Its central mechanism is arbitrary multiplicity of coincident two-return image cylinders combined with a uniform-marginal argument. The algebra, collision construction and closure theorem in DyadicAncestry.lean, DyadicAncestryBridge.lean and DyadicAncestrySource.lean passed original-source CI [45540503720](https://github.com/FlareZ123/bb6/actions/runs/45540503720); Haar measure and convergence are paper proofs, not Lean theorems.
+
+The experimental [dyadic_sieve.cpp](dyadic_sieve.cpp) finite BFS includes every exceptional birth. At K=13 it admits 50,610,768 of 134,217,728 residue triples, 2,824 of 8,192 low-line residues, and at most 3,464 of 8,192 residues on any high-family line. These are overapproximation counts, not reachability or machine decisions. Negative-shadow experiments also found paths surviving beyond the available exponent precision for some low stopping indices. Do not assume uniform pointwise extinction from the density theorem.
