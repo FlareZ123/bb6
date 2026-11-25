@@ -44,8 +44,14 @@ def main(a):
         import multi
         aname=f"Raw108Auto{a}"
         nsa=f"BB6.Agent10{aname}"
-        parts=["import SweepPumping","set_option maxRecDepth 100000","set_option maxHeartbeats 0",
-               f"namespace {nsa}","open BB6Coverage BB6Coverage.Agent31Pump"]
+        header=["import SweepPumping","set_option maxRecDepth 100000","set_option maxHeartbeats 0",
+                f"namespace {nsa}","open BB6Coverage BB6Coverage.Agent31Pump"]
+        parts=[]; shards=[]
+        def flush_auto():
+            if not parts:return
+            name=f"{aname}Shard{len(shards):02}"
+            (ROOT/(name+".lean")).write_text("\n\n".join(header+parts+[f"end {nsa}"])+"\n")
+            shards.append(name);parts.clear()
         def cv(w):return tuple((s,b) for s,b in w)
         for i,(t,q,l,r,L,R) in spec["auto"].items():
             i=int(i);assert i not in witnesses
@@ -55,8 +61,9 @@ def main(a):
             assert ans is not None,(a,i)
             code,info=multi.generate(i,p,(t,st,tg,ans))
             parts.append(code);witnesses[i]=("proven",f"{nsa}.M{i}")
-        parts.append(f"end {nsa}")
-        (ROOT/(aname+".lean")).write_text("\n\n".join(parts)+"\n")
+            if len(parts)>=16:flush_auto()
+        flush_auto()
+        (ROOT/(aname+".lean")).write_text("".join("import "+name+"\n" for name in shards))
         manual.append(aname)
     if spec.get("grammar115"):
         import grammar115
