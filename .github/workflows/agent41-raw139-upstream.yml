@@ -33,7 +33,7 @@ jobs:
         run: |
           set -euo pipefail
           python3 im-results/agent13-coverage/unpack.py
-          python3 tools/lean_compile_closure.py --workdir /tmp/a41-upstream-local --jobs 8 --theorem BB6.Agent41Raw139SmallPlus.parent_contract_plus im-results/agent41-raw139-small/Raw139SmallPlus.lean
+          python3 tools/lean_compile_closure.py --workdir /tmp/a41-upstream-local --jobs 8 --theorem BB6.Agent41Raw139SmallPair.parent_contract_pair im-results/agent41-raw139-small/Raw139SmallPair.lean
       - name: Source-connected transfer
         run: |
           set -euo pipefail
