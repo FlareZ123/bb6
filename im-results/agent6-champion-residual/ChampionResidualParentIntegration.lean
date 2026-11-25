@@ -20,8 +20,7 @@ theorem parent_eq_championP7 :
   funext s
   rcases s with ⟨q,b⟩
   fin_cases q <;> cases b <;>
-    decide
-      BB6.Agent48Parent.a1, BB6.Agent47WeightedHalt.forgetHaltRows,
+    simp [BB6.Agent48Parent.a1, BB6.Agent47WeightedHalt.forgetHaltRows,
       BB6.Agent6ChampionResidual.championP7,
       BB6.Agent6ChampionResidual.championP6,
       BB6.Agent6ChampionResidual.championP5,
@@ -32,7 +31,7 @@ theorem parent_eq_championP7 :
       BB6.Agent6ChampionResidual.championResidual,
       BB6.Agent6ChampionResidual.championRootAfterB,
       BB6.Agent13BlankDelay.refine,
-      BB6Coverage.Agent48Champion.championTable]
+      BB6Coverage.Agent48Champion.championTable]]
 
 /-- Transport the source-checked two-hole parent certificate to the exact
     Agent6 frontier node. -/
