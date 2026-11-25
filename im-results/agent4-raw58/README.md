@@ -52,11 +52,15 @@ The accepted `Raw58MoreCut2.parent_dichotomy` still leaves exactly five A1 child
 - `LE` index 56 is assigned to `Raw58LE56.lean`. Its two-bit block counter constructs arbitrarily long live prefixes and `Raw58Live.never_of_live` lifts the result to every compatible completion.
 - `LF` index 157 is assigned to `Raw58LF157.lean`. Its four-bit block counter proves the same kind of unbounded live-prefix property. The `more.json` entry now imports this module.
 - The LE56 and LF157 mappings are candidate leaf discharges until the complete source audit below succeeds. The generator's `zipCheck` is the compatibility gate; a wrong leaf index cannot silently close a cylinder.
-- The latest candidate census recorded 5,020 open leaves across the five children: 4,552 reused FAR witnesses, 346 fixed n-grams, 76 sweep witnesses, two late single-hole cases, seven 0RF custom witnesses, two recursive counter cases, four sparse wide n-grams, and nineteen run-length relations. Twelve candidate leaves remained unresolved at that checkpoint. These counts describe candidate ingestion, not accepted proof coverage.
+- The latest candidate census recorded 5,020 open leaves across the five children: 4,552 reused FAR witnesses, 346 fixed n-grams, 76 sweep witnesses, two late single-hole cases, seven 0RF custom witnesses, two recursive counter cases, four sparse wide n-grams, and nineteen run-length relations. The 19 run-length parameter sets are now included in `more.json`; the generator checks them against each exact open table and emits the `TwoSidedAutomata` Lean certificates. The generator also tries the reusable sparse width-23 n-gram checker on remaining unclassified leaves, so the four previously observed sparse candidates are now tested through the same reproducible path. Twelve candidate leaves remained unresolved at the earlier checkpoint. These counts describe candidate ingestion, not accepted proof coverage.
 
-### Full parent audit
+### Child audit and full parent closure
 
-The existing workflow `.github/workflows/agent10-four-hole.yml` target `raw58-more3` was dispatched as run [45659821185](https://github.com/FlareZ123/bb6/actions/runs/45659821185). It regenerates all five child trees, checks them at weighted cutoff 7014, and compiles `Raw58MoreCut3.all_completions` against the original source closure. At this README update the run is still in progress. No complete Raw58 parent closure is claimed until that run succeeds and its final axiom audit is inspected.
+The first full `raw58-more3` attempt, run [45659821185](https://github.com/FlareZ123/bb6/actions/runs/45659821185), was deliberately cancelled after it had regenerated the LE and begun LF. It did not reach the complete generator/Lean audit and provides no closure evidence.
+
+The generator has since been improved: all 19 RLE parameter sets are ingested, auto-classification skips explicitly assigned automata/ngram/custom leaves, and the sparse width-23 checker is applied to remaining unclassified leaves. A targeted `raw58-child` audit for `LF` is now running as [45663400144](https://github.com/FlareZ123/bb6/actions/runs/45663400144). This is a child-level test of the new ingestion path, not a parent closure.
+
+Once the individual child data are fully covered, rerun the existing `raw58-more3` target to compile `Raw58MoreCut3.all_completions` against the original source closure. No complete Raw58 parent closure is claimed until that full audit succeeds and its final axiom profile is inspected.
 
 ### Global-roster handoff
 
