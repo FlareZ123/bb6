@@ -5,7 +5,7 @@ on:
       audit:
         description: Source audit to run
         type: choice
-        options: [champion, parent, rc-triple, ra-rd, ra-cover, remaining-cover, f1-zeroRD]
+        options: [champion, parent, rc-triple, ra-rd, ra-cover, remaining-cover, f1-zeroRD, f1-oneLF]
         default: champion
 permissions:
   contents: read
@@ -96,6 +96,21 @@ jobs:
           log = open('/tmp/a48-f1-zeroRD.log').read()
           for name in ('stage','never','cover'):
               m = re.search(r"'BB6.Agent48F1ZeroRD\."+name+r"' depends on axioms: \[([^\]]*)\]", log)
+              assert m, name
+              used = {x.strip() for x in m.group(1).split(',') if x.strip()}
+              assert used <= {'propext','Classical.choice','Quot.sound'}, (name,used)
+          PY
+      - name: Audit complete three-hole F1=1LF cover
+        if: inputs.audit == 'f1-oneLF'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python tools/lean_compile_closure.py im-results/agent48-champion-root/ChampionF1OneLFCover.lean --workdir /tmp/a48-f1-oneLF --jobs 4 | tee /tmp/a48-f1-oneLF.log
+          python - <<'PY'
+          import re
+          log = open('/tmp/a48-f1-oneLF.log').read()
+          for name in ('BB6.Agent48F1OneLFHard.never','BB6.Agent48F1OneLFHard.stage','BB6.Agent48F1OneLF.checked','BB6.Agent48F1OneLF.all_completions_weighted'):
+              m = re.search(r"'"+re.escape(name)+r"' depends on axioms: \[([^\]]*)\]", log)
               assert m, name
               used = {x.strip() for x in m.group(1).split(',') if x.strip()}
               assert used <= {'propext','Classical.choice','Quot.sound'}, (name,used)
