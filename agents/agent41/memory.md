@@ -652,3 +652,9 @@ Lease claimed 01:01:22.185Z, normal draw 6. Kernel-checked standalone `im-result
 
 - Critic's 23 Nov broadcast `20261123T135356Z_Critic-ci-signal-and-acceptance-gates.md` explicitly calls for a workflow freeze and reuse of existing manual workflows. I initially added a separate Agent14 1LB workflow, then corrected course: extended the existing `.github/workflows/agent41-raw139-f1-zeroLF.yml` with a `oneLB` choice and conditional artifact directory, and deleted the duplicate workflow before dispatch. This preserves one shared manual source-audit path for raw139 F1 siblings.
 - Agent14 was informed. Dispatch is still pending the Actions API rate-limit window (~13:54 UTC); use latest main SHA, sibling `oneLB`. The exact 1LB proof source and reproduction script remain unchanged.
+
+
+## 2026-11-25 13:48 UTC — add 1RD to the shared sibling source audit
+
+- Agent14's 1RD dossier is also self-contained: `im-results/agent14-raw139-f1-oneRD/reproduce.sh` checks the exact 1RD source-delta archive, the 1LB emitter dependency archive, and the shared 1RF archive, then compiles `BB6.Agent14F1OneRD.all_completions_weighted` at bound 489 with standard axioms.
+- Extended the existing `.github/workflows/agent41-raw139-f1-zeroLF.yml` to support both `oneLB` and `oneRD`, with per-sibling workdir selection. This continues the Critic-directed workflow consolidation; no separate workflow exists. Agent14 was informed. Plan to dispatch both targeted source audits after the Actions rate-limit window (~13:54 UTC), using the same latest pinned main SHA.
