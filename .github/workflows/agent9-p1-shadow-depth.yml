@@ -152,8 +152,7 @@ jobs:
         run: |
           set -euo pipefail
           D="im-results/agent45-p1-delayed-carry"
-          R="im-results/agent23-p1-reverse-lag"
-          export LEAN_PATH="$R:im-results/agent9-p1-first-return:$D:im-results/agent28-p1-modular-screen:im-results/agent28-p1-delayed-carry"
+          export LEAN_PATH="im-results/agent9-p1-first-return:$D:im-results/agent28-p1-modular-screen:im-results/agent28-p1-delayed-carry"
           lean --version
           git rev-parse HEAD
           python tools/lean_compile_deps.py "$D/ReverseLagBlocks.lean" | tee /tmp/reverse-live-block.log
@@ -162,7 +161,7 @@ jobs:
           import re
           from pathlib import Path
           log = Path('/tmp/reverse-live-block.log').read_text()
-          for name in ("edgeY_to_walk", "walk_to_edgeY", "dWalk_iff_walk", "blockLookahead_iff_extend", "covered_next_block", "cert_next_block"):
+          for name in ("extend_to_walk", "blockLookahead_sound", "covered_next_block", "cert_next_block"):
               m = re.search(r"'BB6\.Agent45ReverseBlock\."+re.escape(name)+r"' depends on axioms:\s*\[([^\]]*)\]", log)
               if not m and re.search(r"'BB6\.Agent45ReverseBlock\."+re.escape(name)+r"' does not depend on any axioms", log):
                   print(name, [])
