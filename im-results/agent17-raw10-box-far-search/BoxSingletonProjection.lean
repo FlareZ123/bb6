@@ -1,4 +1,4 @@
-import Raw10BoxBridge
+import Raw10BoxCore
 import BlockFARBridge
 import WeightedFirstOneCover
 
