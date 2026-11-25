@@ -208,12 +208,12 @@ jobs:
           cp im-results/agent11-raw107/CanonicalTwoParentAccepted.lean /tmp/a31-shared/
           cp pinned/im-results/agent47-rooted-tnf/CanonicalTwoParentGraft.lean /tmp/a31-shared/
           cd /tmp/a31-shared
-          export LEAN_PATH="$PWD"
-          test -s CanonicalTwoParentGraft.olean
-          test -s CanonicalRaw114Accepted.olean
-          test -s Raw114CompleteData.olean
-          test -s TM63RawUpperInterface.olean
-          test -s Raw107ParentClosure.olean
+          export LEAN_PATH="$PWD:/tmp/a47-canonical"
+          test -s /tmp/a47-canonical/CanonicalTwoParentGraft.olean
+          test -s /tmp/a47-canonical/CanonicalRaw114Accepted.olean
+          test -s /tmp/a47-canonical/Raw114CompleteData.olean
+          test -s "$PWD/TM63RawUpperInterface.olean"
+          test -s "$PWD/Raw107ParentClosure.olean"
           sha_before=$(sha256sum CanonicalRaw114Accepted.olean | cut -d' ' -f1)
           lean -o CanonicalRaw114Accepted.olean CanonicalRaw114Accepted.lean 2>&1 | tee /tmp/a31-raw114-adapter.log
           sha_after=$(sha256sum CanonicalRaw114Accepted.olean | cut -d' ' -f1)
