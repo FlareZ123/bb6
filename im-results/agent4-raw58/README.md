@@ -39,7 +39,7 @@ The remaining children and their current local bounds in `more.json` are:
 
 | A1 move | Data module | Weighted bound | Status |
 |---|---|---:|---|
-| `0LE` | `Raw58LEData` | 927 | Prior runs 45700746076 and 45721009333 ended by runner shutdown; retry 45722280324 queued with 2 Lean workers |
+| `0LE` | `Raw58LEData` | 927 | Prior runs 45700746076 and 45721009333 ended by runner shutdown; retry 45722280324 in progress with 2 Lean workers |
 | `0LF` | `Raw58LFData` | 7014 | Candidate custom/automata leaves; run 45701329862 interrupted by runner shutdown, not a proof failure |
 | `0RF` | `Raw58RFData` | 1346 | Source-accepted |
 | `1LE` | `Raw58LE1Data` | 19310 | **Source-accepted** (CI 45700639859) |
@@ -67,7 +67,7 @@ These are leaf-level nonhalting arguments, not claims that an entire parent cyli
 ## Current child evidence
 
 - **0RF:** complete 1346-bound source-accepted child, above.
-- **0LE:** `more.json` contains the LE56 custom witness, one two-sided automaton entry, seven single-block pumps, twenty n-gram entries, and multi-seed counter candidates. Prior run 45700746076 reached `ControlPathAudit` and prior retry 45721009333 reached `Raw58LEAutomata`; both ended with runner shutdown (exit 143), not Lean proof diagnostics. Retry 45722280324 is queued with the 120-minute raw58-child timeout and reduced `--jobs 2`.
+- **0LE:** `more.json` contains the LE56 custom witness, one two-sided automaton entry, seven single-block pumps, twenty n-gram entries, and multi-seed counter candidates. Prior run 45700746076 reached `ControlPathAudit` and prior retry 45721009333 reached `Raw58LEAutomata`; both ended with runner shutdown (exit 143), not Lean proof diagnostics. Retry 45722280324 is in progress with the 120-minute raw58-child timeout and reduced `--jobs 2`.
 - **0LF:** current `more.json` maps 157, 294, 296, 314, 411, 415, and 917 to custom proof modules and has five additional two-sided automata entries. Agent4's 294/314/296 and Agent7's 411/415/917 proofs were checked locally against exact primitive definitions; the original-source child audit is still pending.
 - **1LE:** current `more.json` contains eight two-sided automata entries and late leaves 625 (19304) and 626 (1170). Original-source child audit [45700639859](https://github.com/FlareZ123/bb6/actions/runs/45700639859) **succeeded**; this child is accepted at bound 19310.
 - **1LF:** current `more.json` contains nine two-sided automata entries. Prior audit [45700751534](https://github.com/FlareZ123/bb6/actions/runs/45700751534) ran the individual child step for 60 minutes and was cancelled; it produced no source acceptance or Lean diagnostic. Targeted retry [45718748609](https://github.com/FlareZ123/bb6/actions/runs/45718748609) is in progress.
