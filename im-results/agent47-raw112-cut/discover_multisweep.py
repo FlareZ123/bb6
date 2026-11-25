@@ -52,6 +52,57 @@ def discover_extended(p, limit=100000, max_events=250, window=15, maxrep=4, maxl
     print(f"EXTENDED_ATTEMPTS={attempts}")
     return None
 
+def discover_both_sides(p, limit=100000, max_events=300, window=20, maxrep=4, maxlen=24):
+    """Infer affine repeated-block families on both tape sides, not only one empty side."""
+    from collections import defaultdict
+    events = pump.concrete_events(p, limit)
+    groups = defaultdict(list)
+    for t, side, config in events:
+        groups[(side, config.q)].append((t, config.l.pre, config.r.pre))
+    attempts = 0
+    seen = set()
+    for (side, q), group in groups.items():
+        for i, (t, l0, r0) in enumerate(group[:max_events]):
+            for j in range(i + 1, min(i + window, len(group))):
+                _, l1, r1 = group[j]
+                dl, dr = len(l1) - len(l0), len(r1) - len(r0)
+                if not (0 <= dl <= maxlen and 0 <= dr <= maxlen and (dl or dr)):
+                    continue
+                for k in range(j + 1, min(j + window, len(group))):
+                    _, l2, r2 = group[k]
+                    if len(l2) - len(l1) != dl or len(r2) - len(r1) != dr:
+                        continue
+                    if dl:
+                        left_words = list(ms.infer(l0, l1, l2, maxrep=maxrep, maxlen=maxlen))
+                    elif l0 == l1 == l2:
+                        left_words = [ms.Word.of(l0)]
+                    else:
+                        continue
+                    if dr:
+                        right_words = list(ms.infer(r0, r1, r2, maxrep=maxrep, maxlen=maxlen))
+                    elif r0 == r1 == r2:
+                        right_words = [ms.Word.of(r0)]
+                    else:
+                        continue
+                    for lw in left_words[:16]:
+                        for rw in right_words[:16]:
+                            reps = sum(isinstance(x, ms.Rep) for x in lw.parts + rw.parts)
+                            if reps < 1:
+                                continue
+                            start = ms.Config(q, lw, rw)
+                            target = ms.Config(q, lw.inc(), rw.inc())
+                            key = (start, target)
+                            if key in seen:
+                                continue
+                            seen.add(key)
+                            attempts += 1
+                            result = ms.execute(p, start, target, limit=5000)
+                            if result:
+                                print(f"BOTH_SIDES_ATTEMPTS={attempts}")
+                                return t, start, target, result
+    print(f"BOTH_SIDES_ATTEMPTS={attempts}")
+    return None
+
 def try_hard23_family(i, p):
     # The solved hard[23] cylinder differs from hard[10]/hard[15] only at E0/F1.
     # Reuse its discovered family as an adversarial transfer test.
@@ -85,6 +136,9 @@ def main():
         if ans is None:
             print(f"DEFAULT_NO_FAMILY index={i} limit={args.limit}")
             ans = discover_extended(p, limit=max(args.limit, 100000))
+        if ans is None:
+            print(f"NO_SINGLE_FAMILY index={i} limit={args.limit}")
+            ans = discover_both_sides(p, limit=max(args.limit, 100000))
         if ans is None:
             print(f"NO_FAMILY index={i} limit={args.limit}")
             continue
