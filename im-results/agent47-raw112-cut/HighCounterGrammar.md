@@ -1,6 +1,6 @@
 # Recursive high-counter grammar for the F1=0LE residual
 
-**Status:** kernel-checked recursive encoding and finite trace fit; not yet a proof of nonhalting.
+**Status:** source-certified all-depth nonhalting proof; the grammar below is its discovery precursor. See [CarryProof.md](CarryProof.md) and CI run [45595822219](https://github.com/FlareZ123/bb6/actions/runs/45595822219).
 
 ## Boundary representation
 
@@ -58,15 +58,6 @@ The recursion is a base-six digit grammar. The prefix depends on the current low
 - `matches_observed` is kernel-checked and confirms exact equality with all 38 observed rows, k=0..37.
 - The proof uses no `sorry` or `native_decide`; the finite agreement theorem is closed by kernel reduction.
 
-## What remains open
+## Machine-level closure
 
-The finite fit and recursive grammar do **not** establish that the Turing machine reaches this boundary configuration for every k, nor that its execution from the k-th boundary to the (k+1)-st boundary follows the grammar. The decisive next result is a machine-level macro theorem:
-
-1. prove the state-C boundary configuration has the stated form for arbitrary k;
-2. prove the machine's sweep implements the six prefix transitions;
-3. handle the r=5 carry by recursion on m, using the same H grammar;
-4. show every intermediate configuration avoids the undefined F0 query.
-
-The carry case is the central proof obligation. The grammar makes it explicit rather than hiding it in a long empirical trace.
-
-The data were extracted from Agent 19's run 45586978698 (`high-counter.csv` and `counter-trace.csv`). The source-level machine proof remains uncompleted.
+`Raw112HighIncrement.lean` and `Raw112CarrySweeps.lean` prove the recursive carry and outer sweeps at arbitrary depth. `Raw112CarryRoot.lean` joins these into a positive-cost recurrence starting at the blank-entry configuration; `Raw112CarryNever.lean` transfers the result to the original machine semantics. `Raw112SiblingNever.lean` additionally proves the F1=1RB sibling nonhalting via exact bounded stuttering simulation.
