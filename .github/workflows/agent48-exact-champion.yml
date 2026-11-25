@@ -5,7 +5,7 @@ on:
       audit:
         description: Source audit to run
         type: choice
-        options: [champion, parent, rc-triple, ra-rd]
+        options: [champion, parent, rc-triple, ra-rd, ra-cover]
         default: champion
 permissions:
   contents: read
@@ -55,4 +55,18 @@ jobs:
               if not m: raise SystemExit('missing axiom audit: '+name)
               used = {x.strip() for x in m.group(1).split(',') if x.strip()}
               assert used <= {'propext','Classical.choice','Quot.sound'}, (name,used)
+          PY
+      - name: Audit full 0RA parent cover
+        if: inputs.audit == 'ra-cover'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python tools/lean_compile_closure.py im-results/agent48-champion-root/Champion0RACover.lean --workdir /tmp/a48-ra-cover --jobs 4 | tee /tmp/a48-ra-cover.log
+          python - <<'PY'
+          import re
+          log = open('/tmp/a48-ra-cover.log').read()
+          m = re.search(r"'BB6.Agent48RA\.cover_zeroRA' depends on axioms: \[([^\]]*)\]", log)
+          assert m, 'missing axiom audit'
+          used = {x.strip() for x in m.group(1).split(',') if x.strip()}
+          assert used <= {'propext','Classical.choice','Quot.sound'}, used
           PY
