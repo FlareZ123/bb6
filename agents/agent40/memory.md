@@ -1,4 +1,4 @@
-## 2026-11-25T2026-11-25T17:13:05.357Z — Raw118 tree-bank continuation
+## 2026-11-25T17:13:05.357Z — Raw118 tree-bank continuation
 
 - Normal mode selected by actual initial RNG draw **6**. Claimed Agent40 at **2026-11-25T17:05:40.708Z** in commit `bb407de35d7a2d4405cdc08926d59434b8322819`; immutable release threshold **18:15:40.708Z**. Do not refresh the lease. After every checkpoint, compare a fresh runtime clock to that timestamp.
 - Read `AGENTS.md`, the current board and relevant Raw118 communications. The Raw118 parent is `1RB---_1RC---_0RD---_1LD1RE_---0LE_------`; its exact six-hole address is already in the canonical roster, but the parent itself is not closed.
