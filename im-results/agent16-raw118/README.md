@@ -26,3 +26,24 @@ Stable zero-based leaves 1648, 2202, 2874, 5666 (622, 686, 436, 71 abstract conf
 TreeBiDFA.lean refines the existing BiDFA checker: successful lookup in a binary tree implies membership in its flattening, regardless of the key's injectivity or whether the tree is ordered; every node is checked, so TreeCheck.never invokes the original source-connected theorem. The generator balances the tree and emits independent subtree checks of at most eight states. Python/C++ candidate search is not trusted. Locally compiled each generated leaf independently with Lean 4.36.0-rc2, exact Git blobs Frontier 115438c4, Symmetry 84f62dce, RootShift 80b56fb0, SparseZipper 8081dc82, SweepPumping e518c288, BiDFA d0d1edb8, pinned claim commit 8599b132. All four final M*.never axioms: [propext, Quot.sound]. Local per-leaf compile times for 1648, 2202, 2874, 5666: 8.63, 8.78, 5.92, 1.23 seconds respectively. Generate one module via python tree_emit.py 1648 > Raw118Tree1648.lean (substitute index); or all four by omitting indices. New theorem namespace BB6Coverage.Agent16BiDFA.Raw118Tree.M{index}.never. Exact local checked source blob TreeBiDFA c75d8ab4d18ced55a3b1c70cf99cbe7530c537b2, generator 255f9ffff7534c904033ee626558be063b2a03c2.
 
 Discovery: asymmetric stack DFA summaries with suffix bits, phase modulo m, reset on a two-/three-bit marker, modular counts of patterns (including three-bit words), optional initial prefix. 1648/2202 use (left k=4, m=2, reset on 110, right k=5 plain); 2874 uses (left k=4 m=2 reset on 100, right k=5 m=2 count 111); 5666 uses (left k=2, m=2, initial prefix length 2, right k=3 m=2). Search details and residual roster will be preserved separately. This is not yet a raw118 parent proof.
+
+
+## Source-closure status and exact residual accounting (25 November 2026)
+
+The 274-row hard set after the extended FAR5 pass has a reproducible, pairwise-disjoint certificate partition:
+
+- 105 symbolic pump certificates: source-accepted in [CI run 45640895310](https://github.com/FlareZ123/bb6/actions/runs/45640895310).
+- 10 independent-counter certificates: source-accepted in [CI run 45600114599](https://github.com/FlareZ123/bb6/actions/runs/45600114599).
+- 48 finite phase-graph certificates: source-accepted in [CI run 45601298658](https://github.com/FlareZ123/bb6/actions/runs/45601298658).
+- 14 recursive-counter certificates: source-accepted in [CI run 45638645532](https://github.com/FlareZ123/bb6/actions/runs/45638645532), which compiles both the six-case and eight-case generators.
+- 6 original BiDFA and 4 phase-aware TreeBiDFA certificates: source-accepted in [CI run 45637228733](https://github.com/FlareZ123/bb6/actions/runs/45637228733).
+
+These are 187 distinct hard-set indices. The remaining 87 hard-set indices are all one-hole rows. `search_tree_bank.py` reconstructs the six source sets, asserts pairwise disjointness and containment in the 274-row hard set, checks the exact 87-row complement, and replays a bank of 26 previously successful two-sided DFA pairs against that complement. The new `weighted-tnf-raw118-treebank` target source-checks any additional certificates found by that replay.
+
+The 959 residual leaves emitted by `generate_partial.py` are a different, larger parent-level set: 679 sparse n-gram rows + 274 hard rows + 6 delayed first-hole rows with more than 10,000 steps. The partial audit currently leaves all 959 unresolved because it consumes only FAR and short delayed-first-hole checks. Thus the 87 count is the exact complement *inside the hard set*, not yet the residual count of a Lean-checked parent consumer.
+
+The 679 sparse n-gram certificates are being source-checked in [CI run 45642047107](https://github.com/FlareZ123/bb6/actions/runs/45642047107); do not count them as accepted until that run succeeds. Of the six long delayed-first-hole leaves, index 439 already has an original-source weighted certificate in [CI run 45575655393](https://github.com/FlareZ123/bb6/actions/runs/45575655393). `generate_late_traces.py` now constructs packed certificates for all six, but its expanded `weighted-tnf-raw118-long` target has not yet run.
+
+`Raw118Consumer` and the `weighted-tnf-raw118-consumer` target now assemble the intended parent proof: consume 679 sparse + 187 hard-set + 6 long-first-hole certificates from the 959 residuals, then prove the exact remaining list has 87 one-hole tables (or fewer if the DFA-bank replay finds more). This is a target and generator, not yet a checked theorem. Likewise, `Raw118CanonicalMembership.lean` states that the parent is in the canonical 78-roster, but its source-closure run [45639243857](https://github.com/FlareZ123/bb6/actions/runs/45639243857) is still in progress; no membership claim is made until it succeeds.
+
+No global BB(6) upper bound or completed Raw118 parent closure is asserted. The only established numerical constraint from this parent remains the 756,496 lower-bound witness.
