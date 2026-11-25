@@ -1,3 +1,4 @@
+import Lean.Elab.Tactic.Omega
 import HardRootLeaves
 
 set_option maxRecDepth 100000
