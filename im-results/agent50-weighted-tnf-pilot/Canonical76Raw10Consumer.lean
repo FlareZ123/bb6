@@ -14,7 +14,7 @@ open BB6.Agent47CanonicalTwoParent
 
 /-- Three-parent conditional exactness consumer.
 
-The two-parent quotient dichotomy is unchanged. Its 76th obligation is
+The two-parent quotient dichotomy is unchanged. One of its 76 obligations is
 resolved by the B0=1LC cover assembled from the 65 side witnesses, the
 held BlockFAR leaf, Agent50's 625-machine lasso cylinder, and the
 25^8 forced-halt cylinder. The only remaining local obligations are the
