@@ -20,9 +20,9 @@ def firstOneB0_1LC : PartialMachine :=
     into the standard Lean move record: 4*state + 2*write + direction. -/
 def decodeMove (mv : BB6CrossRouteHeldLeaf.Move) : BB6Coverage.Move := by
   have hlt : mv.val < 24 := mv.isLt
-  exact { write := decide ((mv.val / 2) % 2 = 1),
-    right := decide (mv.val % 2 = 1),
-    next := ⟨mv.val / 4, by omega⟩ }
+  exact ⟨decide ((mv.val / 2) % 2 = 1),
+    decide (mv.val % 2 = 1),
+    ⟨mv.val / 4, by omega⟩⟩
 
 /-- Translate the twelve-slot table used by the standalone partition proof
     into the same PartialMachine type as the 109 residual roster. -/
