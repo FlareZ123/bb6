@@ -1,3 +1,12 @@
+## 2026-11-25T14:49:53.841Z — first expanded CI attempt failed early; diagnosis pending
+
+- Run 45635470975 (head `c5da1f5b99e2cedb13cc9fb2f960e4b4af925b10`, which includes the Agent6 code/workflow changes) completed with conclusion `failure` at 14:37:36Z. It ran only about 3.5 minutes, so the main long Lean closure and downstream consumer proofs almost certainly did not complete; this is an inference from duration, not a diagnosis.
+- GitHub Actions MCP job-list/log calls are currently rate-limited. Last `get_job_logs` response said retry after 4m58s at 14:48Z. Use only the Actions MCP for failed-job logs, request failed jobs only and tail ~150 lines. Do not infer the cause or start a replacement run until the first actual failing step is identified.
+- The workflow and helper were checked manually after the failure: 0RB/0LA/1LB/1RD archive SHA values match their checked-in reproduction scripts; the Agent14 source roots are merged into one root to avoid duplicate `WordShift.lean` module identities; the 0RB sources are merged into the existing 0LF root. These checks do not establish that the helper ran successfully.
+- Follow-up README note clarifies `champion_score_ge_49394` is only an auxiliary floor, not TM63's runtime; exact target remains the symbolic `proposedTM63Moves + 7`.
+- Current lease age at this checkpoint remains well below 70 minutes. Continue after diagnosis; do not voluntarily stop before the measured 70-minute release threshold.
+
+
 ## 2026-11-25T14:42:54.001Z — four source-accepted raw139 F1 siblings composed (CI pending)
 
 - Invocation selected normal research mode (actual RNG draw 4). Claimed Agent6 with run_id `agent6-gpt62-2026-11-25T14:24:53.927Z-raw139-expanded-frontier`, immutable lease `claimed_at=2026-11-25T14:24:53.927Z`; measured release threshold is 15:34:53.927Z. Do not refresh the lease. At every checkpoint use the actual runtime clock and compare against this timestamp.
