@@ -73,6 +73,23 @@ theorem nohalt : weightedTNFNoAssignedHalt table := by
   all_goals cases b <;> decide
 noncomputable def longCertificate : WeightedTNFCertificate 756496 table 6 :=
   certifiedZip 756496 table (.last 756495 (1,true)) (by decide) nohalt longCheck
+theorem longAttained : ∃ m, compatible table m ∧ HaltsAfter m 756495 := by
+  let m := weightedTNFDefaultCompletion (refine table (1,true) none)
+  have hr : (knownRun table 756495).map readSlot = some (1,true) := by
+    rw [← zipRead_eq]
+    exact longRead
+  have hh : table (1,true) = none := by decide
+  have hm : compatible (refine table (1,true) none) m :=
+    weightedTNFDefaultCompletion_compatible _
+  refine ⟨m, refine_preserves_compat table m (1,true) none hh hm, ?_⟩
+  cases hrun : knownRun table 756495 with
+  | none => simp [hrun] at hr
+  | some c =>
+    have hs : readSlot c = (1,true) := by simpa [hrun] using hr
+    apply first_hole_halts table 756495 c hrun
+    · simpa [hs] using hh
+    · simpa [hs] using hm
+#print axioms longAttained
 #print axioms longRead
 #print axioms longCertificate
 end BB6.Agent16Raw118""")
