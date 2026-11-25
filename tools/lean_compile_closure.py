@@ -12,6 +12,8 @@ from __future__ import annotations
 
 import argparse
 import concurrent.futures
+import hashlib
+import json
 import os
 import re
 import shutil
@@ -83,12 +85,188 @@ def parse_imports(path: Path) -> list[str]:
     return imports
 
 
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def git_revision(root: Path) -> str:
+    result = subprocess.run(
+        ["git", "rev-parse", "HEAD"],
+        cwd=root,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=True,
+    )
+    return result.stdout.strip()
+
+
+def tracked_source_paths(root: Path) -> set[str]:
+    result = subprocess.run(
+        ["git", "ls-files", "-z"],
+        cwd=root,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=True,
+    )
+    return {
+        item.decode("utf-8")
+        for item in result.stdout.split(b"\0")
+        if item
+    }
+
+
+def source_kind(path: Path, tracked: set[str]) -> str:
+    try:
+        relative = path.relative_to(ROOT).as_posix()
+    except ValueError:
+        return "external"
+    return "tracked" if relative in tracked else "generated-or-untracked"
+
+
+def build_manifest(
+    roots: list[Path],
+    sources: dict[str, Path],
+    graph: dict[str, list[str]],
+    artifact_dir: Path,
+    lean: str,
+    label: str | None,
+    provenance_inputs: list[Path],
+) -> dict:
+    if not artifact_dir.is_dir():
+        raise FileNotFoundError(f"compiled artifact directory does not exist: {artifact_dir}")
+
+    revision = git_revision(ROOT)
+    tracked = tracked_source_paths(ROOT)
+    version = subprocess.run(
+        [lean, "--version"],
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        check=True,
+    ).stdout.strip()
+
+    modules = []
+    for module in sorted(sources):
+        source = sources[module]
+        olean = artifact_dir / (module.replace(".", "/") + ".olean")
+        if not olean.is_file():
+            raise FileNotFoundError(
+                f"compiled artifact for {module!r} is missing: {olean}"
+            )
+        modules.append({
+            "module": module,
+            "source_path": display_source(source),
+            "source_kind": source_kind(source, tracked),
+            "source_sha256": sha256_file(source),
+            "project_imports": graph[module],
+            "olean_path": module.replace(".", "/") + ".olean",
+            "olean_sha256": sha256_file(olean),
+        })
+
+    root_entries = []
+    for root in roots:
+        root_entries.append({
+            "module": root.stem,
+            "source_path": display_source(root),
+            "source_sha256": sha256_file(root),
+        })
+
+    input_entries = []
+    for path in sorted(provenance_inputs):
+        if not path.is_file():
+            raise FileNotFoundError(f"provenance input does not exist: {path}")
+        input_entries.append({
+            "path": display_source(path),
+            "sha256": sha256_file(path),
+        })
+
+    return {
+        "schema_version": 1,
+        "label": label,
+        "proof_source_revision": revision,
+        "workflow": {
+            "name": os.environ.get("GITHUB_WORKFLOW"),
+            "run_id": os.environ.get("GITHUB_RUN_ID"),
+            "run_attempt": os.environ.get("GITHUB_RUN_ATTEMPT"),
+            "workflow_head_sha": os.environ.get("GITHUB_SHA"),
+        },
+        "lean_version": version,
+        "roots": root_entries,
+        "module_count": len(modules),
+        "modules": modules,
+        "provenance_inputs": input_entries,
+    }
+
+
+def compare_manifests(primary_path: Path, other_paths: list[Path]) -> None:
+    primary = json.loads(primary_path.read_text(encoding="utf-8"))
+    primary_modules = {item["module"]: item for item in primary["modules"]}
+    primary_inputs = {item["path"]: item["sha256"] for item in primary["provenance_inputs"]}
+
+    for other_path in other_paths:
+        other = json.loads(other_path.read_text(encoding="utf-8"))
+        other_modules = {item["module"]: item for item in other["modules"]}
+        other_inputs = {item["path"]: item["sha256"] for item in other["provenance_inputs"]}
+        common = sorted(primary_modules.keys() & other_modules.keys())
+        mismatches: list[str] = []
+
+        if primary["lean_version"] != other["lean_version"]:
+            mismatches.append(
+                "Lean version differs: "
+                f"{primary['lean_version']!r} != {other['lean_version']!r}"
+            )
+
+        for module in common:
+            left = primary_modules[module]
+            right = other_modules[module]
+            for field in ("source_sha256", "project_imports", "olean_sha256"):
+                if left[field] != right[field]:
+                    mismatches.append(
+                        f"{module}: {field} differs "
+                        f"({left[field]!r} != {right[field]!r})"
+                    )
+
+        for path in sorted(primary_inputs.keys() & other_inputs.keys()):
+            if primary_inputs[path] != other_inputs[path]:
+                mismatches.append(
+                    f"provenance input {path}: SHA-256 differs "
+                    f"({primary_inputs[path]} != {other_inputs[path]})"
+                )
+
+        print(
+            "[lean-closure] manifest comparison "
+            f"{primary.get('label') or primary_path.name} vs "
+            f"{other.get('label') or other_path.name}: "
+            f"{len(common)} shared module(s), "
+            f"{len(mismatches)} mismatch(es); proof revisions "
+            f"{primary['proof_source_revision']} / {other['proof_source_revision']}",
+            flush=True,
+        )
+        if mismatches:
+            for mismatch in mismatches:
+                print(f"[lean-closure] MANIFEST MISMATCH: {mismatch}", file=sys.stderr)
+            raise RuntimeError(
+                f"manifest compatibility failed against {other_path}"
+            )
+
+
 def compile_closure(
     roots: list[Path],
     workdir: Path,
     jobs: int,
     lean: str,
     extra_source_roots: list[Path] | None = None,
+    manifest_path: Path | None = None,
+    manifest_only: bool = False,
+    artifact_dir: Path | None = None,
+    label: str | None = None,
+    provenance_inputs: list[Path] | None = None,
+    compare_manifest_paths: list[Path] | None = None,
 ) -> None:
     index = module_index(extra_source_roots)
     sources: dict[str, Path] = {}
@@ -117,62 +295,103 @@ def compile_closure(
     for root in roots:
         visit(root.stem, root)
 
-    workdir.mkdir(parents=True, exist_ok=True)
-    for module, source in sources.items():
-        target = workdir / (module.replace(".", "/") + ".lean")
-        target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(source, target)
+    compiled_dir = artifact_dir or workdir
+    if not manifest_only:
+        workdir.mkdir(parents=True, exist_ok=True)
+        for module, source in sources.items():
+            target = workdir / (module.replace(".", "/") + ".lean")
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(source, target)
 
-    env = os.environ.copy()
-    env["LEAN_PATH"] = str(workdir)
-    remaining = set(sources)
-    compiled: set[str] = set()
-    level_no = 0
+        env = os.environ.copy()
+        env["LEAN_PATH"] = str(workdir)
+        remaining = set(sources)
+        compiled: set[str] = set()
+        level_no = 0
 
-    def compile_one(module: str) -> tuple[str, int]:
-        target = workdir / (module.replace(".", "/") + ".lean")
-        olean = workdir / (module.replace(".", "/") + ".olean")
-        print(f"[lean-closure] compiling {module} <- {display_source(sources[module])}", flush=True)
-        result = subprocess.run(
-            [lean, "-o", str(olean), str(target)],
-            cwd=workdir,
-            env=env,
-            text=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
+        def compile_one(module: str) -> tuple[str, int]:
+            target = workdir / (module.replace(".", "/") + ".lean")
+            olean = workdir / (module.replace(".", "/") + ".olean")
+            print(
+                f"[lean-closure] compiling {module} <- {display_source(sources[module])}",
+                flush=True,
+            )
+            result = subprocess.run(
+                [lean, "-o", str(olean), str(target)],
+                cwd=workdir,
+                env=env,
+                text=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+            )
+            if result.stdout:
+                print(result.stdout, end="", flush=True)
+            if result.returncode != 0:
+                raise subprocess.CalledProcessError(result.returncode, result.args)
+            return module, result.returncode
+
+        while remaining:
+            ready = sorted(
+                module for module in remaining
+                if all(dep in compiled or is_standard(dep) for dep in graph[module])
+            )
+            if not ready:
+                blocked = {
+                    module: [
+                        dep for dep in graph[module]
+                        if dep not in compiled and not is_standard(dep)
+                    ]
+                    for module in sorted(remaining)
+                }
+                raise RuntimeError(f"no compilable import layer remains: {blocked}")
+            level_no += 1
+            print(
+                f"[lean-closure] level {level_no}: {len(ready)} module(s)",
+                flush=True,
+            )
+            with concurrent.futures.ThreadPoolExecutor(max_workers=jobs) as pool:
+                futures = [pool.submit(compile_one, module) for module in ready]
+                for future in concurrent.futures.as_completed(futures):
+                    future.result()
+            compiled.update(ready)
+            remaining.difference_update(ready)
+
+        print(
+            f"[lean-closure] SUCCESS: compiled {len(compiled)} project modules "
+            f"from {len(roots)} root(s) into {workdir}",
+            flush=True,
         )
-        if result.stdout:
-            print(result.stdout, end="", flush=True)
-        if result.returncode != 0:
-            raise subprocess.CalledProcessError(result.returncode, result.args)
-        return module, result.returncode
-
-    while remaining:
-        ready = sorted(
-            module for module in remaining
-            if all(dep in compiled or is_standard(dep) for dep in graph[module])
+    else:
+        print(
+            f"[lean-closure] resolved {len(sources)} project modules "
+            f"from {len(roots)} root(s); compiler execution skipped",
+            flush=True,
         )
-        if not ready:
-            blocked = {
-                module: [dep for dep in graph[module] if dep not in compiled and not is_standard(dep)]
-                for module in sorted(remaining)
-            }
-            raise RuntimeError(f"no compilable import layer remains: {blocked}")
-        level_no += 1
-        print(f"[lean-closure] level {level_no}: {len(ready)} module(s)", flush=True)
-        with concurrent.futures.ThreadPoolExecutor(max_workers=jobs) as pool:
-            futures = [pool.submit(compile_one, module) for module in ready]
-            for future in concurrent.futures.as_completed(futures):
-                future.result()
-        compiled.update(ready)
-        remaining.difference_update(ready)
 
-    print(
-        f"[lean-closure] SUCCESS: compiled {len(compiled)} project modules "
-        f"from {len(roots)} root(s) into {workdir}",
-        flush=True,
-    )
-
+    if manifest_path is not None:
+        manifest = build_manifest(
+            roots,
+            sources,
+            graph,
+            compiled_dir,
+            lean,
+            label,
+            provenance_inputs or [],
+        )
+        manifest_path.parent.mkdir(parents=True, exist_ok=True)
+        manifest_path.write_text(
+            json.dumps(manifest, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+        print(
+            f"[lean-closure] wrote manifest for {len(sources)} modules "
+            f"to {manifest_path}",
+            flush=True,
+        )
+        if compare_manifest_paths:
+            compare_manifests(manifest_path, compare_manifest_paths)
+    elif manifest_only:
+        raise ValueError("--manifest-only requires --manifest")
 
 def main() -> int:
     parser = argparse.ArgumentParser()
@@ -182,6 +401,31 @@ def main() -> int:
                         help="additional directory containing reconstructed Lean source files")
     parser.add_argument("--jobs", type=int, default=8)
     parser.add_argument("--lean", default="lean")
+    parser.add_argument("--manifest", help="write a JSON source/import/olean hash manifest")
+    parser.add_argument(
+        "--manifest-only",
+        action="store_true",
+        help="resolve source closure and hash precompiled oleans without compiling",
+    )
+    parser.add_argument(
+        "--artifact-dir",
+        help="directory containing precompiled oleans (defaults to --workdir)",
+    )
+    parser.add_argument("--label", help="human-readable name for this proof closure")
+    parser.add_argument(
+        "--provenance-input",
+        action="append",
+        default=[],
+        metavar="PATH",
+        help="hash a generator, specification, or other non-Lean input; repeatable",
+    )
+    parser.add_argument(
+        "--compare-manifest",
+        action="append",
+        default=[],
+        metavar="PATH",
+        help="require shared modules and provenance inputs to have identical hashes",
+    )
     parser.add_argument(
         "--override",
         action="append",
@@ -190,6 +434,12 @@ def main() -> int:
         help="resolve an ambiguous project module to a repository-relative source path",
     )
     args = parser.parse_args()
+    if args.manifest_only and not args.manifest:
+        parser.error("--manifest-only requires --manifest")
+    if args.compare_manifest and not args.manifest:
+        parser.error("--compare-manifest requires --manifest")
+    if args.manifest_only and not args.artifact_dir:
+        parser.error("--manifest-only requires --artifact-dir")
     for entry in args.override:
         if "=" not in entry:
             parser.error(f"invalid --override {entry!r}; expected MODULE=PATH")
@@ -197,18 +447,32 @@ def main() -> int:
         if not module or not source_path:
             parser.error(f"invalid --override {entry!r}; expected MODULE=PATH")
         OVERRIDES[module] = source_path
-    roots = [(ROOT / p).resolve() for p in args.roots]
+    roots = [
+        (ROOT / p).resolve() if not Path(p).is_absolute() else Path(p).resolve()
+        for p in args.roots
+    ]
     for root in roots:
         if not root.is_file():
             parser.error(f"root source does not exist: {root}")
     try:
         extra_roots = [Path(p).resolve() for p in args.source_root]
+        provenance_inputs = [
+            (ROOT / p).resolve() if not Path(p).is_absolute() else Path(p).resolve()
+            for p in args.provenance_input
+        ]
+        compare_paths = [Path(p).resolve() for p in args.compare_manifest]
         compile_closure(
             roots,
             Path(args.workdir).resolve(),
             max(1, args.jobs),
             args.lean,
             extra_roots,
+            Path(args.manifest).resolve() if args.manifest else None,
+            args.manifest_only,
+            Path(args.artifact_dir).resolve() if args.artifact_dir else None,
+            args.label,
+            provenance_inputs,
+            compare_paths,
         )
     except Exception as exc:
         print(f"[lean-closure] ERROR: {exc}", file=sys.stderr, flush=True)
