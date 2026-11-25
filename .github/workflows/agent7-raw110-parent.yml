@@ -1,0 +1,81 @@
+name: Agent7 raw110 parent certificate
+on:
+  workflow_dispatch:
+    inputs:
+      late_run:
+        description: Successful raw110 late trace run ID; empty checks only the cut
+        type: string
+        default: ''
+permissions:
+  contents: read
+  actions: read
+jobs:
+  parent:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45557356900
+          pattern: raw110-proof-*
+          path: /tmp/raw110-parts
+      - name: Check parent cut from seven accepted child partitions
+        run: |
+          set -euxo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          export PATH="$HOME/.elan/bin:$PATH"
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          d=im-results/agent7-raw110
+          python "$d/merge_proof_parts.py" --parent-only /tmp/raw110-parts /tmp/raw110-parent
+          for f in /tmp/raw110-parent/Raw110Partial[0-9][0-9].lean; do cp "$f" "$d/"; done
+          python "$d/assemble_partial.py" --block-far --parent-only
+          export LEAN_PATH=/tmp/raw110-parent
+          for m in Raw110ParentConsumer Raw110PairMacro Raw110DeepParent Raw110ParentResidualMatch; do
+            if [[ -f /tmp/raw110-parent/$m.lean ]]; then
+              cmp "$d/$m.lean" /tmp/raw110-parent/$m.lean
+            else
+              cp "$d/$m.lean" /tmp/raw110-parent/
+            fi
+            if [[ ! -f /tmp/raw110-parent/$m.olean ]]; then
+              (cd /tmp/raw110-parent && lean -o "$m.olean" "$m.lean") | tee "/tmp/$m.log"
+              if grep -qE 'sorryAx|native_decide' "/tmp/$m.log"; then exit 1; fi
+            fi
+          done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw110-parent-cut
+          path: /tmp/raw110-parent/
+          if-no-files-found: error
+          retention-days: 3
+      - uses: actions/download-artifact@v4
+        if: ${{ inputs.late_run != '' }}
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.late_run }}
+          name: raw110-word-final
+          path: /tmp/raw110-late
+      - uses: actions/checkout@v4
+        if: ${{ inputs.late_run != '' }}
+        with:
+          ref: 66ab8ad185b14ecaf5f98962619ae41128108155
+          path: late-source
+      - name: Compose exact late covers with the parent cut
+        if: ${{ inputs.late_run != '' }}
+        run: |
+          set -euxo pipefail
+          (cd late-source && python im-results/agent13-coverage/unpack.py)
+          python im-results/agent7-raw110/merge_late_proofs.py /tmp/raw110-parent /tmp/raw110-late late-source
+          cp im-results/agent7-raw110/Raw110ParentLateCover.lean /tmp/raw110-parent/
+          cd /tmp/raw110-parent
+          LEAN_PATH="$PWD" lean -o Raw110ParentLateCover.olean Raw110ParentLateCover.lean | tee /tmp/raw110-complete.log
+          if grep -qE 'sorryAx|native_decide' /tmp/raw110-complete.log; then exit 1; fi
+      - uses: actions/upload-artifact@v4
+        if: ${{ inputs.late_run != '' }}
+        with:
+          name: raw110-complete-parent
+          path: /tmp/raw110-parent/
+          if-no-files-found: error
+          retention-days: 3
