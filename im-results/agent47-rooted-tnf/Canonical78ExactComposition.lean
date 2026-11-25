@@ -27,7 +27,10 @@ theorem champion_score_gt_7014 : 7014 < championScore := by
 /-- The literal champion extends the authentic first-one root. -/
 theorem champion_compatible_root :
     compatible BB6.Agent50TNFPilot.root championTable := by
-  decide
+  change compatible BB6.CoverageAdapter.firstOneCylinder championTable
+  exact (compatible_refine_iff emptyTable championTable initialSlot rfl
+    (some ⟨true,true,(1 : Fin 6)⟩)).mpr
+      ⟨empty_compatible championTable, by decide [championTable]⟩
 
 /-- The champion's exact halt at B rules out the early 7014 bound. -/
 theorem champion_not_weighted_7014 :
