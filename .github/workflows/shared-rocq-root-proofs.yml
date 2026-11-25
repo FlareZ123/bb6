@@ -62,6 +62,7 @@ jobs:
     timeout-minutes: 43
     steps:
       - name: Install original-source proof compiler
+        if: inputs.target != 'enumerate62-chunk-probe-native'
         run: |
           sudo apt-get update -qq
           sudo DEBIAN_FRONTEND=noninteractive apt-get install -y coq
@@ -183,10 +184,12 @@ jobs:
           cp "$GITHUB_WORKSPACE/research/im-results/agent5-weighted-tnf-queue/Agent5RecoveredHeld.v" original/verify/
           node "$GITHUB_WORKSPACE/research/im-results/agent5-weighted-tnf-queue/recover-batch-witnesses.cjs" recovered-batches original/verify/Agent5RecoveredBatchWitnesses.v
       - name: Generate project dependencies with VM fallback
+        if: inputs.target != 'enumerate62-chunk-probe-native'
         working-directory: original/verify
         run: |
           coq_makefile -Q . BusyCoq -native-compiler no -o Makefile.coq *.v
       - name: Compile requested original theorem source
+        if: inputs.target != 'enumerate62-chunk-probe-native'
         working-directory: original/verify
         env:
           PROOF_TARGET: ${{ inputs.target }}
@@ -304,7 +307,23 @@ jobs:
             (length_tail (fst q), length_tail (snd q), show_holdout q).
           Time Eval native_compute in probe_result.
           COQ
-          timeout 600s coqc -Q . BusyCoq -native-compiler yes Agent32ChunkProbeNative.v
+          # A native-enabled Coq distribution is required; Debian's VM-only
+          # package silently substitutes vm_compute for native_compute.
+          docker run --rm --user root -e HOME=/home/coq -e OPAMROOT=/home/coq/.opam \
+            -v "$GITHUB_WORKSPACE/original:/work" -w /work/verify \
+            --entrypoint bash coqorg/coq:8.20-native -lc '
+              set -eu
+              eval "$(opam env)"
+              coqc --version
+              coqc -config
+              printf "Goal True. native_compute. exact I. Qed.\n" > NativeSmoke.v
+              coqc -native-compiler yes NativeSmoke.v 2>&1 | tee native-smoke.log
+              if grep -Eiq "falling back|native.compiler.*disabled|native.compiler.*not available" native-smoke.log; then exit 1; fi
+              rm -f NativeSmoke.v
+              coq_makefile -Q . BusyCoq -native-compiler yes -o Makefile.coq *.v
+              make -f Makefile.coq -j 2 Enumerate62.vo
+              timeout 600s coqc -Q . BusyCoq -native-compiler yes Agent32ChunkProbeNative.v
+            '
 
       - name: Census actual classifier verdicts on the 12820-node frontier
         if: inputs.target == 'enumerate62-q0-verdicts'
