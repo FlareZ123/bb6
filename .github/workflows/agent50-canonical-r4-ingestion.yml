@@ -95,14 +95,37 @@ jobs:
           test -s "/tmp/canonical77/CanonicalTwoParentGraft.olean"
           test -s "/tmp/canonical77-manifest/manifest/canonical77-base-manifest.json"
           test "$(git rev-parse HEAD)" = "${{ inputs.upstream_sha }}"
-          # The upstream checkout pins Lean 4.35.0-rc4, but its .olean files
-          # are consumed by the repository's 4.36.0-rc2 proof closure. Override
-          # the checkout locally so every upstream dependency is rebuilt with
-          # the exact consumer toolchain.
+          # Preserve the exact Cryptids source commit, but align its pinned
+          # Mathlib/Verso dependency graph with the consumer's Lean 4.36.0-rc2.
+          # The 4.35 manifest's Batteries and Mathlib sources do not compile
+          # against 4.36 (new Lean Expr.Key cases and Doc.Parser API).
           elan override set leanprover/lean4:v4.36.0-rc2
           lean --version
           lake --version
+          sed -i '/name = "verso"/,/^$/ s/rev = "v4.35.0-rc4"/rev = "71a2035b44e7f54a797ce799fd1b03cdd3a44684"/' lakefile.toml
+          sed -i '/name = "mathlib"/,/^$/ s/rev = "v4.35.0-rc4"/rev = "9d581dfff2e41de989072ea63abf3daf69311520"/' lakefile.toml
+          grep -Fq 'rev = "71a2035b44e7f54a797ce799fd1b03cdd3a44684"' lakefile.toml
+          grep -Fq 'rev = "9d581dfff2e41de989072ea63abf3daf69311520"' lakefile.toml
+          ! grep -Fq 'v4.35.0-rc4' lakefile.toml
           lake update
+          python3 - <<'PY'
+          import json
+          p = {x["name"]: x["rev"] for x in json.load(open("lake-manifest.json"))["packages"]}
+          expected = {
+              "mathlib": "9d581dfff2e41de989072ea63abf3daf69311520",
+              "verso": "71a2035b44e7f54a797ce799fd1b03cdd3a44684",
+              "batteries": "d4c39b228d4a06f3b00748c2c445a7b9f056a6e3",
+              "Cli": "c09cb1e4f1e6e1c231a1175a12b681b075054a1b",
+          }
+          bad = {k: (p.get(k), v) for k, v in expected.items() if p.get(k) != v}
+          if bad:
+              raise SystemExit(f"Unexpected 4.36 dependency lock: {bad}")
+          print("Verified 4.36.0-rc2 dependency lock:", expected)
+          PY
+          mkdir -p "$GITHUB_WORKSPACE/.tmp/agent19-raw10-cryptids-leaf"
+          cp lakefile.toml "$GITHUB_WORKSPACE/.tmp/agent19-raw10-cryptids-leaf/upstream-lakefile.toml"
+          cp lake-manifest.json "$GITHUB_WORKSPACE/.tmp/agent19-raw10-cryptids-leaf/upstream-lake-manifest.json"
+          sha256sum "$GITHUB_WORKSPACE/.tmp/agent19-raw10-cryptids-leaf/upstream-lakefile.toml" "$GITHUB_WORKSPACE/.tmp/agent19-raw10-cryptids-leaf/upstream-lake-manifest.json" > "$GITHUB_WORKSPACE/.tmp/agent19-raw10-cryptids-leaf/upstream-dependencies.sha256"
           lake build BusyBeaver.Bridge Cryptids.Machines
 
       - name: Compile the canonical77 r4 graft with its complete source closure
@@ -138,6 +161,9 @@ jobs:
             .tmp/agent19-raw10-cryptids-leaf/crosswalk.json
             .tmp/agent19-raw10-cryptids-leaf/crosswalk.sha256
             .tmp/agent19-raw10-cryptids-leaf/axiom-summary.json
+            .tmp/agent19-raw10-cryptids-leaf/upstream-lakefile.toml
+            .tmp/agent19-raw10-cryptids-leaf/upstream-lake-manifest.json
+            .tmp/agent19-raw10-cryptids-leaf/upstream-dependencies.sha256
           if-no-files-found: error
           include-hidden-files: true
           retention-days: 30
