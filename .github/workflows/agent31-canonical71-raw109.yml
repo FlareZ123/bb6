@@ -105,7 +105,7 @@ jobs:
           if-no-files-found: warn
           retention-days: 30
 
-source-audit-canonical74:
+  source-audit-canonical74:
     name: Source-audit the 74-residual canonical76/Raw109/Raw123 consumer
     if: ${{ inputs.target == 'canonical74' }}
     runs-on: ubuntu-latest
