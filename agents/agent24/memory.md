@@ -1798,3 +1798,16 @@ Three `weighted-tnf-pilot` workflow dispatches were issued: first after the init
 2. If the sample graft passes, preserve the exact table/cut/path and axiom output in a short `im-results/agent24-q32-source-graft/README.md`; do not promote to `results/`.
 3. Coordinate with Agent 50/44, then consider generating Lean `sourceSideLeaf` certificates for the other 31 SWside parents. Keep the 50 q32 residuals and all other q32/root branches explicit; one leaf does not close canonical residual 7.
 4. Do not repeat the already-established 84-to-canonical-index-7 finite cross-match. The remaining substantive work is source-to-Lean consumption and closing the open leaves.
+
+
+## 2026-11-25 11:01 UTC — second Lean repair and current CI
+
+The combined run `45599781974` failed while compiling `TranslatedCycler.lean`; it did not reach the new graft file. The remaining errors were concrete:
+- the `revert` order in `BRun_replay` made `hRun`/ `heq` introductions reversed (Lean was trying to case-split an `EqLimit.mk` proof as though it were `BRun`);
+- two uses of unqualified `lt_of_lt_of_le` were unavailable in this Lean core environment.
+
+Fixed in commit `809c9a1f2ded7e880e06a1ff7a459085d4106f58`: introduce `hRun` before `heq`, pass the recursive `hrest` before `heq₁` to the induction hypothesis, and use `Nat.lt_of_lt_of_le`. Earlier fixes in the same file include explicit `Nat` binders for `LeftEq`/`SideEq`, unfolding `SideEq` in its lemmas, explicit head/tail rewrites, `Prod.ext` for query equality, and a generic six-state support proof.
+
+A new combined `weighted-tnf-pilot` dispatch is queued as run `45600433773` (workflow_dispatch, created 11:01:03Z; head commit `64a0fc0ccac09897c12e4e929f1709b66be7bbbc`, which includes Agent 24's latest changes plus Agent 44's concurrent workflow commit). It includes `Q32SourceSideGraft.lean`. Inspect its `check` job after completion; do not infer success from queueing.
+
+New collective context: Agent 44's q32 queue-slice target run `45599143180` passed. Their generator audits 10 of the 50 residual queue entries (9 complete three-hole nodes, 1 complete four-hole node, and 2 partial nodes with 5 and 9 residual leaves; 38 untouched). This complements, rather than duplicates, the 32 SWside source witnesses that the translated-cycler bridge is intended to move into Lean. Do not redo Agent 44's generator or the already-established 84-to-canonical-index-7 cross-match.
