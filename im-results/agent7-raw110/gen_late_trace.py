@@ -65,13 +65,13 @@ def generate(out):
                 if z is not None:
                     lines.append(f'def s{j+1} : State := {state(z)}')
                     lines.append(f'theorem ck{j} : replay {b} {n} s{j} = .next {c} s{j+1} := by rfl')
-                    lines.append(f'theorem step{j} : BB6BlockFAR.run (machine {b}) {c} s{j}.render = some s{j+1}.render := checked_next {b} {n} {c} _ _ ck{j}')
-                    proof=f'step{j}' if j==0 else f'BB6Raw110Word.join {b} pre{j-1} step{j}'
+                    lines.append(f'theorem step{j} : BB6BlockFAR.run (machine {b}) {c} s{j}.render = some s{j+1}.render := checked_next {b} {n} {c} s{j} s{j+1} ck{j}')
+                    proof=f'step{j}' if j==0 else f'@BB6Raw110Word.join {b} s0.render s{j}.render s{j+1}.render {total} {c} pre{j-1} step{j}'
                     lines.append(f'theorem pre{j} : BB6BlockFAR.run (machine {b}) {total+c} s0.render = some s{j+1}.render := {proof}')
                 else:
                     lines.append(f'theorem ck{j} : replay {b} {n} s{j} = .halt {c} := by rfl')
-                    lines.append(f'theorem step{j} : (Outcome.halt {c}).sound {b} s{j}.render := checked_halt {b} {n} {c} _ ck{j}')
-                    proof=f'step{j}' if j==0 else f'prepend_sound {b} pre{j-1} step{j}'
+                    lines.append(f'theorem step{j} : (Outcome.halt {c}).sound {b} s{j}.render := checked_halt {b} {n} {c} s{j} ck{j}')
+                    proof=f'step{j}' if j==0 else f'@prepend_sound {b} s0.render s{j}.render {total} (.halt {c}) pre{j-1} step{j}'
                     lines.append(f'theorem pre{j} : (Outcome.halt {total+c}).sound {b} s0.render := {proof}')
                 total+=c
             lines.extend([f'end {mod}',''])
@@ -81,11 +81,11 @@ def generate(out):
         prev=f'first_sound {b}'
         for mod,j,c,halt in segments:
             if halt:
-                assembly.append(f'theorem {variant.lower()}_trace : (Outcome.halt {total+c}).sound {b} primBlank := prepend_sound {b} ({prev}) {mod}.pre{j}')
+                assembly.append(f'theorem {variant.lower()}_trace : (Outcome.halt {total+c}).sound {b} primBlank  := @prepend_sound {b} primBlank {mod}.s0.render {total} (.halt {c}) ({prev}) {mod}.pre{j}')
                 assembly.append(f'#print axioms {variant.lower()}_trace')
             else:
                 name=f'{variant.lower()}_{mod[-2:]}'
-                assembly.append(f'theorem {name} : BB6BlockFAR.run (machine {b}) {total+c} primBlank = some {mod}.s{j+1}.render := BB6Raw110Word.join {b} ({prev}) {mod}.pre{j}')
+                assembly.append(f'theorem {name} : BB6BlockFAR.run (machine {b}) {total+c} primBlank = some {mod}.s{j+1}.render  := @BB6Raw110Word.join {b} primBlank {mod}.s0.render {mod}.s{j+1}.render {total} {c} ({prev}) {mod}.pre{j}')
                 prev=name
             total+=c
     (out/'Raw110WordTrace.lean').write_text('\n'.join('import '+m for m in imports)+'\n'+HEADER+'namespace BB6Raw110Trace\n'+'\n'.join(assembly)+'\nend BB6Raw110Trace\n')
