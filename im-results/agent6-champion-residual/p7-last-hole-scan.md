@@ -30,7 +30,7 @@ For each, the B/1 halt completion is a candidate last-hole leaf. Since the large
 
 ## Not resolved by this bounded scan
 
-The following eight children neither reached B/1 within one million successful moves nor yielded a side-cycle witness within the stated search bounds:
+The following eight children neither reached B/1 within one million successful moves nor yielded a side-cycle witness within the stated search bounds. A deeper follow-up raised the simulation cap to five million and widened the side-cycle bounds to entry ≤ 20, period ≤ 50, boundary radius ≤ 50; all eight still capped without a hole, lasso, or side-cycle witness:
 
 `0LA, 0LC, 1LC, 1LD, 1RD, 0LE, 1RE, 1LF`.
 
