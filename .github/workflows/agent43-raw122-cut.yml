@@ -10,6 +10,11 @@ on:
         description: Reuse generated and audited artifacts from an earlier run; requires source_ref to match that run's head SHA
         required: false
         type: string
+      generate_only:
+        description: Generate candidate coverage without compiling Lean shards
+        required: false
+        default: false
+        type: boolean
       branches:
         description: Space-separated F1 child codes
         required: false
@@ -53,7 +58,7 @@ jobs:
           path: im-results/agent43-raw122-cut/*.lean
           if-no-files-found: error
   branch:
-    if: inputs.artifact_run_id == ''
+    if: inputs.artifact_run_id == '' && inputs.generate_only != true
     needs: generate
     strategy:
       fail-fast: false
@@ -100,7 +105,7 @@ jobs:
           path: /tmp/a43-audit/*.olean
           if-no-files-found: error
   assemble:
-    if: inputs.artifact_run_id == ''
+    if: inputs.artifact_run_id == '' && inputs.generate_only != true
     needs: [generate, branch]
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -144,7 +149,7 @@ jobs:
   # assembly-only path that consumes the already uploaded artifacts.
 
   recover:
-    if: inputs.artifact_run_id != ''
+    if: inputs.artifact_run_id != '' && inputs.generate_only != true
     needs: generate
     strategy:
       fail-fast: false
@@ -201,7 +206,7 @@ jobs:
           retention-days: 30
 
   assemble-existing:
-    if: inputs.artifact_run_id != ''
+    if: inputs.artifact_run_id != '' && inputs.generate_only != true
     needs: [generate, recover]
     runs-on: ubuntu-latest
     timeout-minutes: 20
