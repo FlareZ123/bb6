@@ -136,6 +136,10 @@ def build_manifest(
     lean: str,
     label: str | None,
     provenance_inputs: list[Path],
+    theorem: str | None,
+    parent_table: str | None,
+    weighted_bound: int | None,
+    artifact_name: str | None,
 ) -> dict:
     if not artifact_dir.is_dir():
         raise FileNotFoundError(f"compiled artifact directory does not exist: {artifact_dir}")
@@ -196,6 +200,12 @@ def build_manifest(
             "workflow_head_sha": os.environ.get("GITHUB_SHA"),
         },
         "lean_version": version,
+        "claim": {
+            "theorem": theorem,
+            "parent_table": parent_table,
+            "weighted_bound": weighted_bound,
+        },
+        "artifact_name": artifact_name,
         "roots": root_entries,
         "module_count": len(modules),
         "modules": modules,
@@ -267,6 +277,10 @@ def compile_closure(
     label: str | None = None,
     provenance_inputs: list[Path] | None = None,
     compare_manifest_paths: list[Path] | None = None,
+    theorem: str | None = None,
+    parent_table: str | None = None,
+    weighted_bound: int | None = None,
+    artifact_name: str | None = None,
 ) -> None:
     index = module_index(extra_source_roots)
     sources: dict[str, Path] = {}
@@ -377,6 +391,10 @@ def compile_closure(
             lean,
             label,
             provenance_inputs or [],
+            theorem,
+            parent_table,
+            weighted_bound,
+            artifact_name,
         )
         manifest_path.parent.mkdir(parents=True, exist_ok=True)
         manifest_path.write_text(
@@ -412,6 +430,10 @@ def main() -> int:
         help="directory containing precompiled oleans (defaults to --workdir)",
     )
     parser.add_argument("--label", help="human-readable name for this proof closure")
+    parser.add_argument("--theorem", help="exact exported theorem established by this closure")
+    parser.add_argument("--parent-table", help="literal partial transition table certified by the theorem")
+    parser.add_argument("--weighted-bound", type=int, help="weighted first-one bound certified for the parent")
+    parser.add_argument("--artifact-name", help="expected GitHub Actions artifact name")
     parser.add_argument(
         "--provenance-input",
         action="append",
@@ -473,6 +495,10 @@ def main() -> int:
             args.label,
             provenance_inputs,
             compare_paths,
+            args.theorem,
+            args.parent_table,
+            args.weighted_bound,
+            args.artifact_name,
         )
     except Exception as exc:
         print(f"[lean-closure] ERROR: {exc}", file=sys.stderr, flush=True)
