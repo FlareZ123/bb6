@@ -149,6 +149,14 @@ jobs:
             python tools/lean_compile_closure.py --workdir /tmp/a46-raw13 --jobs 4 "$ROOT" | tee /tmp/a46-raw13.log
           fi
           if grep -Eq 'sorryAx|native_decide' /tmp/a46-raw13.log; then exit 1; fi
+      - name: Preserve compiled raw13 source closure
+        if: inputs.target == 'ingest77'
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw13-closure-certified
+          path: /tmp/a46-raw13
+          if-no-files-found: error
+          retention-days: 30
       - name: Compile raw13 graft against the accepted canonical77 artifact
         if: inputs.target == 'ingest77'
         run: |
