@@ -4,8 +4,12 @@ on:
     inputs:
       target:
         type: choice
-        options: [twelve, five-hole, recursive, raw107-witness, raw121-witness, raw121-membership, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-gap, raw108-long, raw108-le-trace, raw108-block10-core, raw108-block895, raw108-block895-narrow, raw108-lb0, raw108-weight-core, cached-audit-core, raw108-sharded, raw108-resume, raw108-child, raw108-graft, raw58-cut, raw58-more, raw58-more2, raw58-more3, raw58-rc, raw58-child, raw109-cut, raw109-refine, raw109-refine6, raw109-refine7, raw109-refine8, raw109-refine9, raw109-refine12, raw109-final-leaves, raw109-closed, raw109-sharded]
+        options: [twelve, five-hole, recursive, raw107-witness, raw121-witness, raw121-membership, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-gap, raw108-long, raw108-le-trace, raw108-block10-core, raw108-block895, raw108-block895-narrow, raw108-lb0, raw108-weight-core, cached-audit-core, raw108-sharded, raw108-resume, raw108-compose, raw108-child, raw108-graft, raw58-cut, raw58-more, raw58-more2, raw58-more3, raw58-rc, raw58-child, raw109-cut, raw109-refine, raw109-refine6, raw109-refine7, raw109-refine8, raw109-refine9, raw109-refine12, raw109-final-leaves, raw109-closed, raw109-sharded]
         default: twelve
+      raw108_pins:
+        description: 'JSON per-group run_id and full revision pins for raw108-compose'
+        type: string
+        default: '{}'
       raw108_child:
         type: string
         default: 1LC
@@ -27,7 +31,7 @@ permissions:
   actions: read
 jobs:
   check:
-    if: inputs.target != 'raw109-sharded' && inputs.target != 'raw108-sharded' && inputs.target != 'raw108-resume' && inputs.target != 'raw108-lb0'
+    if: inputs.target != 'raw109-sharded' && inputs.target != 'raw108-sharded' && inputs.target != 'raw108-resume' && inputs.target != 'raw108-lb0' && inputs.target != 'raw108-compose'
     runs-on: ubuntu-latest
     # Raw58 child and parent closures can exceed 60m; keep unrelated targets at 60m.
     timeout-minutes: ${{ (inputs.target == 'raw58-child' || inputs.target == 'raw58-more3') && 120 || 60 }}
@@ -736,4 +740,106 @@ jobs:
         with:
           name: raw108-parent-proof
           path: /tmp/a10-raw108-parent/
+          retention-days: 30
+
+  raw108-compose:
+    if: inputs.target == 'raw108-compose'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Retrieve exact pinned child proof artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHARD_PINS: ${{ inputs.raw108_pins }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, pathlib, re, subprocess
+          root = pathlib.Path("im-results/agent10-raw108")
+          config = json.loads((root / "shard_groups.json").read_text())
+          pins = json.loads(os.environ["SHARD_PINS"])
+          assert set(pins) == set(config["groups"])
+          dest = pathlib.Path("/tmp/a10-raw108-shards")
+          dest.mkdir()
+          for group, pin in pins.items():
+              run = str(pin["run_id"])
+              rev = pin["revision"]
+              assert re.fullmatch(r"[0-9]+", run)
+              assert re.fullmatch(r"[0-9a-f]{40}", rev)
+              metadata = json.loads(subprocess.check_output(
+                  ["gh", "run", "view", run, "--json", "headSha"], text=True))
+              assert metadata["headSha"] == rev, (group, metadata, pin)
+              if subprocess.run(["git", "cat-file", "-e", rev+"^{commit}"]).returncode:
+                  subprocess.run(["git", "fetch", "--no-tags", "origin", rev], check=True)
+              artifact = config["artifact_prefix"] + "-" + group
+              subprocess.run(["gh", "run", "download", run, "--name", artifact,
+                              "--dir", str(dest / artifact)], check=True)
+          pathlib.Path("/tmp/a10-raw108-pins.json").write_text(json.dumps(pins, indent=2))
+          PY
+      - name: Compose conservative parent proof from existing child certificates
+        run: |
+          set -euo pipefail
+          root=im-results/agent10-raw108
+          union=/tmp/a10-raw108-union
+          work=/tmp/a10-raw108-parent
+          python "$root/merge_resume.py" /tmp/a10-raw108-shards "$union" "$root/shard_groups.json" /tmp/a10-raw108-pins.json
+          python tools/lean_compile_closure.py --workdir "$work" --jobs 1 \
+            --precompiled-dir "$union" --precompiled-manifest "$union/manifest.json" \
+            --manifest "$work/manifest.json" --label raw108 \
+            --theorem BB6.Agent10Raw108Closed.all_closed \
+            --parent-table "1RB---_1RC---_0RD---_1LD1RE_---1LB_------" \
+            --weighted-bound 4136180 --artifact-name raw108-parent-proof \
+            --provenance-input "$root/shard_groups.json" \
+            --provenance-input /tmp/a10-raw108-pins.json \
+            --provenance-input "$union/manifest.json" \
+            "$root/Raw108Closed.lean" 2>&1 | tee /tmp/a10-raw108-parent.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a10-raw108-parent.log BB6.Agent10Raw108Closed.all_closed
+          python - "$work/manifest.json" <<'PY'
+          import json, sys
+          m = json.load(open(sys.argv[1]))
+          expected = {item["module"] for item in m["modules"]} - {"Raw108Closed"}
+          reused = set(m["precompiled_core"]["reused_modules"])
+          if reused != expected:
+              raise SystemExit(f"Unexpected rebuilt dependencies: {sorted(expected - reused)}")
+          print(f"Reused all {len(expected)} audited dependencies")
+          PY
+          cp /tmp/a10-raw108-parent.log "$work/audit.log"
+          cp "$union/manifest.json" "$work/shard-union.json"
+          cp -r "$union/original-shard-manifests" "$work/"
+      - name: Retain conservative parent proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw108-parent-proof
+          path: /tmp/a10-raw108-parent/
+          retention-days: 30
+      - name: Establish exact weighted parent maximum
+        run: |
+          set -euo pipefail
+          root=im-results/agent10-raw108
+          base=/tmp/a10-raw108-parent
+          work=/tmp/a10-raw108-exact
+          python tools/lean_compile_closure.py --workdir "$work" --jobs 1 \
+            --precompiled-dir "$base" --precompiled-manifest "$base/manifest.json" \
+            --manifest "$work/manifest.json" --label raw108-exact \
+            --theorem BB6.Agent10Raw108Exact.exact_upper \
+            --parent-table "1RB---_1RC---_0RD---_1LD1RE_---1LB_------" \
+            --weighted-bound 4136175 --artifact-name raw108-exact-proof \
+            "$root/Raw108Exact.lean" 2>&1 | tee /tmp/a10-raw108-exact.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a10-raw108-exact.log BB6.Agent10Raw108Exact.exact_upper BB6.Agent10Raw108Exact.exact_bound
+          cp /tmp/a10-raw108-exact.log "$work/audit.log"
+          cp "$base/manifest.json" "$work/conservative-parent.json"
+      - name: Retain exact parent proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw108-exact-proof
+          path: /tmp/a10-raw108-exact/
           retention-days: 30
