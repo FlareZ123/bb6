@@ -56,6 +56,15 @@ def main(a):
         parts.append(f"end {nsa}")
         (ROOT/(aname+".lean")).write_text("\n\n".join(parts)+"\n")
         manual.append(aname)
+    if spec.get("countergen"):
+        import countergen
+        countergen.main()
+    if spec.get("phase_sections"):
+        import phase_sections
+        for i,desc in spec["phase_sections"].items():
+            mod,nspace,table=spec["manual"][i]
+            assert desc["table"]==table
+            phase_sections.emit(desc,mod,nspace)
     if spec.get("phase_chain"):
         import phase_chain
         for i,desc in spec["phase_chain"].items():
