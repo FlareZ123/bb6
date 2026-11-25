@@ -20,6 +20,10 @@ jobs:
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
+      - name: Reproduce recursive counter trace
+        run: |
+          set -euo pipefail
+          python -u im-results/agent19-raw112-residual/counter_trace.py --steps 1000000
       - name: Search late boundary events for a residual pump
         run: |
           set -euo pipefail
@@ -57,6 +61,8 @@ jobs:
           path: |
             im-results/agent19-raw112-residual/generate.py
             im-results/agent19-raw112-residual/Raw112Residual0LE.lean
+            im-results/agent19-raw112-residual/counter-trace.csv
+            im-results/agent19-raw112-residual/high-counter.csv
             /tmp/a19-raw112-residual/
             /tmp/a19-raw112-residual-manifest.json
             /tmp/a19-raw112-residual-generate.log
