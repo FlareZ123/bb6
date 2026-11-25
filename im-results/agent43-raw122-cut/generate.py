@@ -94,13 +94,20 @@ def main():
     index={r:i for i,r in enumerate(rows)}
     needed={r for i,n in enumerate(tree[3]) if MOVES[i] in selected for r in opens(n)}
     missing=[r for r in needed if index[r] not in found]
-    assert not missing, missing[:10]
     certs={}
-    for row in sorted(needed):
+    for row in sorted(needed-set(missing)):
         code=found[index[row]]
         d,D,L,R,z=masks(parse(row),int(code[0]),[int(c,36) for c in code[1:]])
         certs[row]=f".far {str(code[0]=='1').lower()} {d} ⟨0,{D},{L},{R},{z}⟩"
     imports={}
+    if missing:
+        import symbolic
+        with tempfile.TemporaryDirectory() as tmp:
+            extra,imports=symbolic.generate([(index[r],r) for r in sorted(missing)],Path(tmp))
+        certs.update(extra)
+    unresolved=[r for r in sorted(needed) if r not in certs]
+    (ROOT/"residual-candidates.txt").write_text("".join(f"{index[r]} {r}\n" for r in unresolved))
+    residual_count=24-len(selected)+len(unresolved)
     stats=Counter()
 
     def build(node):
@@ -186,7 +193,7 @@ theorem checked : partialCheck 7014 parent tree = true := by
   simp only [Bool.and_eq_true]
   exact ⟨by decide, allMoves_of _ rootKids_checked⟩
 def residuals := partialResiduals parent tree
-theorem residual_count : residuals.length = {24-len(selected)} := by decide
+theorem residual_count : residuals.length = {residual_count} := by decide
 theorem sound :
     ∀ m, compatible parent m → WeightedBound 7014 m ∨
       ∃ e ∈ residuals, compatible e.2 m :=
@@ -194,7 +201,7 @@ theorem sound :
 #print axioms sound
 #print axioms residual_count
 """)
-    print(stats, "FAR", len(certs), "retained first children", 24-len(selected))
+    print(stats, "FAR", len(certs), "total residuals", residual_count)
 
 if __name__=="__main__":
     main()
