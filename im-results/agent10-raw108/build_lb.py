@@ -46,12 +46,12 @@ def emit_ngram_group(spec, opens, target):
         spec["manual"][str(i)]=[mod,ns,opens[i]]
 
 
-def emit_block(mod, ns, table, params):
+def emit_block(mod, ns, table, params, active=False):
     width=params["width"]
     suffix="" if width==3 else str(width)
     if width!=3:
         subprocess.run([sys.executable,str(BLOCK/"specialize.py"),str(width)],check=True)
-        if width>=5:
+        if width>=5 or active:
             s=(BLOCK/"SparseBlockFAR.lean").read_text()
             k=2**width
             s=re.sub(r"\b48\b",str(6*k),s)
@@ -61,8 +61,12 @@ def emit_block(mod, ns, table, params):
     sys.path.insert(0,str(BLOCK))
     from generate_multi import generate
     flip=params.get("flip",False)
-    sparse=width>=5
-    generate(table,BLOCK,width,params["cap"],params["mod"],params["runs"],flip,mod,minimize_left=True,sparse=sparse)
+    sparse=width>=5 or active
+    data=generate(table,BLOCK,width,params["cap"],params["mod"],params["runs"],flip,mod,minimize_left=True,sparse=sparse)
+    if active:
+        from emit_active import specialize_active, emit_active
+        specialize_active(BLOCK,width)
+        emit_active(data,BLOCK,mod)
     bns=f"BB6BlockFAR{suffix}.{mod}"
     s=f"import {mod}Proof\nimport BlockFARBridge{suffix}\n"
     if flip:s+="import FARBi\n"
@@ -95,9 +99,15 @@ def prepare(spec, opens, target, witnesses, manual, slot):
         mod=f"Raw108LBBlock{i}";ns=f"BB6.Agent10{mod}"
         emit_block(mod,ns,opens[int(i)],params)
         spec["manual"][i]=[mod,ns,opens[int(i)]]
+    kids=emit_split1930(spec,opens[1930],manual,slot)
+    n,s=spec["delayed"]["query"]
+    witnesses[1930]=("subtree",f".split {n} {slot(s)} (byMove [\n"+",\n".join(kids)+"])")
+
+def emit_split1930(spec, base_table, manual, slot):
     d=spec["delayed"];n,s=d["query"]
     assert d["ordinary_order"]=="product('01','LR','ABCDEF')"
-    base=opens[1930].replace("_","")
+    base=base_table.replace("_","")
+    assert base=="1RB---_1RC0LB_0RD---_1LD1RE_0RF1LB_1RA0LB".replace("_","")
     assert base[3*s:3*s+3]=="---"
     assert set(map(int,d["last"]))|set(map(int,d["block"]))==set(range(24))
     assert not set(d["last"])&set(d["block"])
@@ -110,7 +120,12 @@ def prepare(spec, opens, target, witnesses, manual, slot):
             mod=f"Raw108LBSplit1930Kid{i}";ns=f"BB6.Agent10{mod}"
             compact=base[:3*s]+mv+base[3*s+3:]
             tab="_".join(compact[j:j+6] for j in range(0,36,6))
-            emit_block(mod,ns,tab,d["block"][str(i)])
+            emit_block(mod,ns,tab,d["block"][str(i)],active=True)
             manual.append(mod)
             kids.append(f".proven {ns}.table {ns}.never")
-    witnesses[1930]=("subtree",f".split {n} {slot(s)} (byMove [\n"+",\n".join(kids)+"])")
+    return kids
+
+if __name__=="__main__":
+    assert sys.argv[1:]==["--split1930"]
+    emit_split1930(load(),"1RB---_1RC0LB_0RD---_1LD1RE_0RF1LB_1RA0LB",[],
+                   lambda i:f"({i//2},{str(bool(i%2)).lower()})")
