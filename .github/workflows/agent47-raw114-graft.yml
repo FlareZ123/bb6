@@ -8,6 +8,7 @@ on:
         options:
           - all
           - canonical72
+          - canonical73
           - canonical71
           - canonical70
         default: all
@@ -377,18 +378,14 @@ jobs:
           }, indent=2))
       - uses: actions/upload-artifact@v4
         with:
-          name: canonical73-raw110-raw112-roster-consumer-certified
-          path: |
-            /tmp/a31-shared
-            /tmp/a31-raw117
-            /tmp/a31-consumer
-            /tmp/a47-raw112
-            /tmp/a47-raw110
+          name: canonical76-raw107-raw114-roster-only-certified
+          path: /tmp/a31-shared
           if-no-files-found: error
+          retention-days: 14
 
   canonical72:
     name: Source-audit champion-independent 72-residual roster
-    if: ${{ inputs.target != 'canonical71' && inputs.target != 'canonical70' }}
+    if: ${{ inputs.target == 'all' || inputs.target == 'canonical72' }}
     needs: exactness
     runs-on: ubuntu-latest
     timeout-minutes: 120
@@ -404,7 +401,7 @@ jobs:
       - name: Download the source-accepted canonical two-parent base
         uses: actions/download-artifact@v4
         with:
-          name: canonical73-raw110-raw112-roster-consumer-certified
+          name: raw107-canonical-shared-core
           path: /tmp/a31-base
       - name: Regenerate raw117, raw113, raw115 and raw119 source data
         run: |
@@ -818,5 +815,191 @@ jobs:
             /tmp/a31-canonical70-manifest.json
             /tmp/a31-canonical70-summary.json
             /tmp/a31-canonical70.log
+          if-no-files-found: error
+          retention-days: 14
+
+  canonical73:
+    name: Source-audit the 73-residual raw107/raw114/raw117/raw112/raw110 roster
+    needs: exactness
+    if: ${{ inputs.target == 'canonical73' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Download the canonical77 plus raw107 shared proof core
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ github.run_id }}
+          name: raw107-canonical-shared-core
+          path: /tmp/a31-base
+      - name: Restore the accepted raw110 parent source closure
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45593652030
+          name: raw110-parent-cut
+          path: /tmp/raw110-parent
+      - name: Reconstruct raw112, raw117, raw110 and common source data
+        run: |
+          set -euo pipefail
+          test -s /tmp/a31-base/manifest/raw107-shared-manifest.json
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent8-tnf-raw117/generate.py
+          python im-results/agent47-raw112-cut/generate.py | tee /tmp/a31-raw112-generation.log
+          find /tmp/raw110-parent -type f -name '*.lean' -print0 |
+            while IFS= read -r -d '' src; do
+              dest="im-results/agent7-raw110/$(basename "$src")"
+              if [ ! -f "$dest" ]; then cp "$src" "$dest"; fi
+            done
+          test -s im-results/agent47-raw112-cut/Raw112Data.lean
+          test "$(find im-results/agent47-raw112-cut -maxdepth 1 -name 'Raw112Branch*.lean' | wc -l)" -eq 24
+          test -s im-results/agent7-raw110/Raw110DeepParent.lean
+          test -s im-results/agent7-raw110/Raw110PairMacro.lean
+          python im-results/agent7-raw110/gen_late_trace.py /tmp/raw110-generated --compressed
+          test -s /tmp/raw110-generated/Raw110WordTrace.lean
+      - name: Compile the complete canonical73 consumer against the shared core
+        run: |
+          set -euo pipefail
+          python tools/lean_compile_closure.py im-results/agent47-rooted-tnf/Canonical73Raw110Composition.lean \
+            --workdir /tmp/a31-canonical73 \
+            --manifest /tmp/a31-canonical73-manifest.json \
+            --label canonical73-raw107-raw114-raw117-raw112-raw110 \
+            --theorem BB6.Agent47Canonical73Raw110.exact_at_target \
+            --weighted-bound 6766859 \
+            --artifact-name canonical73-raw110-raw112-roster-only-certified \
+            --jobs 4 \
+            --source-root /tmp/raw110-generated \
+            --precompiled-manifest /tmp/a31-base/manifest/raw107-shared-manifest.json \
+            --precompiled-dir /tmp/a31-base \
+            --provenance-input im-results/agent47-rooted-tnf/Canonical73Raw110Composition.lean \
+            --provenance-input im-results/agent31-shared-core/Canonical74Raw107Raw114Raw117Raw112RosterOnly.lean \
+            --provenance-input im-results/agent31-shared-core/Canonical75RosterOnly.lean \
+            --provenance-input im-results/agent31-shared-core/CanonicalTwoParentRosterOnly.lean \
+            --provenance-input im-results/agent47-rooted-tnf/CanonicalRosterRefinement.lean \
+            --provenance-input im-results/agent8-tnf-raw117/Raw117CanonicalCut.lean \
+            --provenance-input im-results/agent8-tnf-raw117/generate.py \
+            --provenance-input im-results/agent47-raw112-cut/Raw112ClosedCover.lean \
+            --provenance-input im-results/agent47-raw112-cut/Raw112SiblingNever.lean \
+            --provenance-input im-results/agent47-raw112-cut/generate.py \
+            --provenance-input im-results/agent47-raw112-cut/inductive-generators.tar.xz \
+            --provenance-input im-results/agent47-raw112-cut/Raw112Data.lean \
+            --provenance-input im-results/agent47-raw112-cut/unresolved.txt \
+            --provenance-input im-results/agent47-raw112-cut/shard-config.json \
+            --provenance-input im-results/agent7-raw110/Raw110ParentLateCover.lean \
+            --provenance-input im-results/agent7-raw110/Raw110ParentResidualMatch.lean \
+            --provenance-input im-results/agent7-raw110/Raw110LateCover.lean \
+            --provenance-input im-results/agent7-raw110/gen_late_trace.py \
+            --provenance-input im-results/agent7-raw110/Raw110DeepParent.lean \
+            --provenance-input im-results/agent7-raw110/Raw110PairMacro.lean \
+            --provenance-input /tmp/raw110-generated/Raw110WordTrace.lean \
+            --provenance-input im-results/agent16-raw118/ResidualCover.lean \
+            --provenance-input im-results/agent13-coverage/BB6Coverage.lean.xz.b64 \
+            --provenance-input im-results/agent13-coverage/unpack.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_sweeps.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_four_hole.py \
+            --provenance-input tools/lean_compile_closure.py \
+            --provenance-input /tmp/a31-base/manifest/raw107-shared-manifest.json \
+            2>&1 | tee /tmp/a31-canonical73.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a31-canonical73.log; then
+            echo "Forbidden proof placeholder or native_decide in canonical73 closure" >&2
+            exit 1
+          fi
+          python3 - /tmp/a31-canonical73.log <<'PY'
+          import pathlib, re, sys
+          log = pathlib.Path(sys.argv[1]).read_text()
+          allowed = {"propext", "Classical.choice", "Quot.sound"}
+          profiles = {}
+          for name, axioms in re.findall(r"'([^']+)' depends on axioms: \\[([^\\]]*)\\]", log):
+              profiles[name] = {x.strip() for x in axioms.split(",") if x.strip()}
+          for name in re.findall(r"'([^']+)' does not depend on any axioms", log):
+              profiles[name] = set()
+          required = (
+              "BB6.Agent47Raw112.residuals_covered",
+              "BB6.Agent47Raw112.parent_cover",
+              "BB6.Agent7Raw110.raw110_cover",
+              "BB6.Agent31CanonicalTwoParentRosterOnly.p107_matches_raw107",
+              "BB6.Agent31CanonicalTwoParentRosterOnly.p107_bound",
+              "BB6.Agent31CanonicalTwoParentRosterOnly.p114_bound",
+              "BB6.Agent31CanonicalTwoParentRosterOnly.roster76_sound",
+              "BB6.Agent31CanonicalTwoParentRosterOnly.exact_at_target",
+              "BB6.Agent31Canonical75RosterOnly.count",
+              "BB6.Agent31Canonical75RosterOnly.sound",
+              "BB6.Agent31Canonical75RosterOnly.exact_at_target",
+              "BB6.Agent31Canonical74RosterOnly.raw112_parent_present",
+              "BB6.Agent31Canonical74RosterOnly.count",
+              "BB6.Agent31Canonical74RosterOnly.sound",
+              "BB6.Agent31Canonical74RosterOnly.exact_at_target",
+              "BB6.Agent47Canonical73Raw110.raw110_parent_present",
+              "BB6.Agent47Canonical73Raw110.count",
+              "BB6.Agent47Canonical73Raw110.sound",
+              "BB6.Agent47Canonical73Raw110.exact_at_target",
+          )
+          for name in required:
+              if name not in profiles:
+                  raise SystemExit("missing axiom profile: " + name)
+              bad = profiles[name] - allowed
+              if bad:
+                  raise SystemExit(f"{name}: unexpected axioms {sorted(bad)}")
+              print(f"{name}: {sorted(profiles[name])}")
+          PY
+      - name: Record the canonical73 source and object manifest
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, json, os, pathlib, subprocess
+          def digest(path):
+              h = hashlib.sha256()
+              with path.open("rb") as stream:
+                  for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+                      h.update(chunk)
+              return h.hexdigest()
+          source = pathlib.Path("im-results/agent47-rooted-tnf/Canonical73Raw110Composition.lean")
+          manifest = pathlib.Path("/tmp/a31-canonical73-manifest.json")
+          raw112 = pathlib.Path("im-results/agent47-raw112-cut/Raw112Data.lean")
+          raw110 = pathlib.Path("/tmp/raw110-generated/Raw110WordTrace.lean")
+          summary = {
+              "theorem": "BB6.Agent47Canonical73Raw110.exact_at_target",
+              "residual_count": 73,
+              "weighted_bound": 6766859,
+              "status": "conditional roster theorem; all 73 retained quotient Covers remain explicit",
+              "source_audit_run_id": int(os.environ["GITHUB_RUN_ID"]),
+              "source_revision": os.environ["GITHUB_SHA"],
+              "canonical77_base_run_id": 45554648116,
+              "raw107_source_acceptance_run_id": 45533196624,
+              "raw114_source_acceptance_run_id": 45553564319,
+              "raw117_source_acceptance_run_id": 45561386072,
+              "raw110_parent_certificate_run_id": 45597857116,
+              "raw110_parent_cut_artifact_run_id": 45593652030,
+              "raw112_parent_cover": "rebuilt from committed sources in this run against the canonical shared core",
+              "lean_version": subprocess.check_output(["lean", "--version"], text=True).strip(),
+              "lean_binary_sha256": digest(pathlib.Path(subprocess.check_output(["lean", "--print-prefix"], text=True).strip()) / "bin/lean"),
+              "source_sha256": digest(source),
+              "manifest_sha256": digest(manifest),
+              "raw112_generated_data_sha256": digest(raw112),
+              "raw112_branch_count": len(list(raw112.parent.glob("Raw112Branch*.lean"))),
+              "raw110_trace_sha256": digest(raw110),
+              "axiom_allowlist": ["propext", "Classical.choice", "Quot.sound"],
+          }
+          pathlib.Path("/tmp/a31-canonical73-summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True) + "\\n")
+          print(json.dumps(summary, indent=2, sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: canonical73-raw110-raw112-roster-only-certified
+          path: |
+            /tmp/a31-canonical73
+            /tmp/a31-canonical73-manifest.json
+            /tmp/a31-canonical73.log
+            /tmp/a31-canonical73-summary.json
           if-no-files-found: error
           retention-days: 14
