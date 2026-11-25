@@ -93,13 +93,13 @@ Use the existing `raw58-cut`, `raw58-more`, `raw58-more2`, `raw58-more3`, `raw58
 
 Its `sound` theorem states that, assuming the Raw58 parent has a `WeightedBound 19310` proof, every normalized root machine is either below the canonical target 6,766,859 or quotient-compatible with one of the 75 retained representatives. `exact_at_target` then reduces exactness to Covers for those 75 representatives plus the existing champion attainment premise. The 19310 premise is essential: the 1LE/LE1 child sets the current parent bound, so the old 7014 premise is not valid for the full Raw58 closure.
 
-**Local artifact-backed compilation (not yet a new source-accepted CI audit):**
+**Source-accepted conditional-graft audit:**
 
-- Source: `Canonical75Raw58Graft.lean`, Git blob `3f33d09c6a6dfc5f30e277eca2feb89581545d3d`.
-- Toolchain: Lean 4.36.0-rc2, commit `b35cb10cf2ced51a2fd1880cfdbf75c71ab7a35a`.
-- Accepted 76 artifact: run [45647053824](https://github.com/FlareZ123/bb6/actions/runs/45647053824), artifact 15043876968 (uploaded under a misleading canonical73 label; its embedded manifest identifies `CanonicalTwoParentRosterOnly.exact_at_target` and 76 residuals). ZIP SHA256 `cfa00335da67bb71caf725c8a8fa6f0fd7c257035a4dfddc43531282924e305c`.
-- Canonical77 dependency artifact: run [45554648116](https://github.com/FlareZ123/bb6/actions/runs/45554648116), artifact 14997966221. ZIP SHA256 `b55e4c939da70aaa4d2f50f5721b9183ab776682f1b682f647ee27aa6cc5da17`.
-- The 76 artifact's `CanonicalTwoParentRosterOnly.lean` source SHA256 is `a40280b24920f9f56b3f74738c2250b6f8e7bcb6b7fbb233bd0b409b9cb72600`, matching the current repository source. Its accepted `.olean` hash is `3f0c42b25500b64b47a63c4a825f52bc4b36e37bb1bddd4332b623a3043b1369`; the reused `CanonicalTwoParentGraft.olean` hash is `e39b1ac0e6093c81cbffbe5ea7f47a3c8e9469901fd7fd3f9cd7ea0f457e3579`.
-- With `LEAN_PATH=/tmp/canonical76/a31-shared:/tmp/canonical77`, the committed module compiles locally. `#print axioms` for `parent_count`, `count`, `base_sound_at_target`, `sound`, and `exact_at_target` reports only `propext`, `Classical.choice`, and `Quot.sound`; no `sorryAx` or `native_decide`.
+- Existing manual workflow target: `canonical75raw58` in `.github/workflows/agent47-raw114-graft.yml`.
+- CI run [45710963323](https://github.com/FlareZ123/bb6/actions/runs/45710963323), job `canonical75raw58`: **success**. The other workflow jobs were skipped; no unrelated canonical rebuild was run.
+- Uploaded artifact 15067462143, `canonical75-raw58-graft-conditional-source-audited`; ZIP SHA256 `8783c59115dad53dbd66cfca3f2b98251dc10e646dd6c8ca3e374e1c703a0aa7`.
+- Source revision: `6eac07ba9839cacbc85504fa7bb61cd6752ab597`. Source SHA256: `e929df0d772691367b3b5d50c9c842646a48968147963a2732d057fc0718f5a1`. CI `.olean` SHA256: `a7345b33ba39d9a7e8b073ca50587370681b0c8216093301e8b3981f693ad7c9`.
+- The accepted 76 base artifact is run 45647053824 / artifact 15043876968; its canonical77 dependency is run 45554648116 / artifact 14997966221. The workflow verifies the accepted 76 manifest, the source hash of `CanonicalTwoParentRosterOnly.lean` against the current repository, the accepted object hashes, and the exact Lean 4.36.0-rc2 compiler binary hash before compiling the consumer.
+- Axiom profiles for `parent_count`, `count`, `base_sound_at_target`, `sound`, and `exact_at_target` contain only `propext`, `Classical.choice`, and `Quot.sound`; no `sorryAx` or `native_decide`.
 
-This is a conditional quotient-roster reduction, not an unconditional BB(6) upper bound. It still needs an original-source CI audit consuming the actual Raw58 parent theorem at 19310. The existing Raw58 parent closure remains the critical dependency; do not report 75 residuals as accepted until that parent theorem and this consumer both pass the source/axiom audit.
+This CI result accepts the **conditional roster consumer**, not the missing Raw58 parent Cover. The 19310 parent premise and all 75 retained Covers remain explicit; do not report an unconditional 75-residual upper bound. The full Raw58 parent closure still needs its own original-source audit.
