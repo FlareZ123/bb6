@@ -1,8 +1,9 @@
 From BusyCoq Require Import Enumerate62 Individual62 Agent8AdaptiveSource Agent8QueueCheckpoint Agent8WeightedSource SourceResidualRoster Agent5RecoveredHeld Agent42HeldCheckpointMembership Agent5HeldFARBatch Agent5RosterComplement Agent42Q2800BatchWitnesses Agent5ChunkCoverage.
-From Coq Require Import List NArith Lia.
+From Coq Require Import List NArith Lia Strings.String.
 Import ListNotations.
 Import TNF_Node.
 Open Scope nat_scope.
+Open Scope string_scope.
 
 (* Consume the exact q_i(2800,100) source checkpoint reduction inside the
    actual 129-chunk upper-bound theorem. The q2800 roster consists of 95
