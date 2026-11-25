@@ -288,4 +288,59 @@ theorem rootSibling_mass_partition :
 #print axioms rootSiblingResidualRoster_count
 #print axioms rootSibling_mass_partition
 
+abbrev RosterEntry := List Move × PartialMachine
+
+/-- Only exact table matches are eligible for replacement. The address test
+    is an optimization, not a semantic assumption. -/
+def siblingParentOf (e : RosterEntry) : Option Move :=
+  rootLevelMoves.find? fun parent =>
+    decide (e.1 = [parent]) && sameTable e.2 (rootSiblingParent parent)
+
+def refineSiblingEntry (e : RosterEntry) : List RosterEntry :=
+  match siblingParentOf e with
+  | none => [e]
+  | some parent => (rootSiblingOpenMoves parent).map fun child =>
+      ([parent, child], rootSiblingChild parent child)
+
+theorem refineSiblingEntry_sound (e : RosterEntry) (m : Machine)
+    (hm : compatible e.2 m) :
+    WeightedBound 7014 m ∨
+      ∃ e' ∈ refineSiblingEntry e, compatible e'.2 m := by
+  cases h : siblingParentOf e with
+  | none => exact Or.inr ⟨e, by simp [refineSiblingEntry, h], hm⟩
+  | some parent =>
+      have hf : rootLevelMoves.find? (fun parent =>
+          decide (e.1 = [parent]) && sameTable e.2 (rootSiblingParent parent)) = some parent := h
+      have hp : parent ∈ rootLevelMoves := List.mem_of_find?_eq_some hf
+      have hmatch := List.find?_some hf
+      have hs : sameTable e.2 (rootSiblingParent parent) = true := by
+        simp only [Bool.and_eq_true] at hmatch
+        exact hmatch.2
+      have heq : e.2 = rootSiblingParent parent := sameTable_sound hs
+      have hcompat : compatible (rootSiblingParent parent) m := heq ▸ hm
+      rcases rootSiblingParent_sound parent hp m hcompat with hb | ⟨child, hc, hmc⟩
+      · exact Or.inl hb
+      · exact Or.inr ⟨([parent, child], rootSiblingChild parent child),
+          by simp only [refineSiblingEntry, h]; exact List.mem_map.mpr ⟨child, hc, rfl⟩, hmc⟩
+
+/-- A composable global frontier refinement: unmatched cylinders are retained,
+    matched cylinders are replaced by all surviving children. -/
+def refineSiblingRoster (roster : List RosterEntry) : List RosterEntry :=
+  roster.flatMap refineSiblingEntry
+
+theorem refineSiblingRoster_sound {root : PartialMachine} {roster : List RosterEntry}
+    (hroot : ∀ m, compatible root m → WeightedBound 7014 m ∨
+      ∃ e ∈ roster, compatible e.2 m) :
+    ∀ m, compatible root m → WeightedBound 7014 m ∨
+      ∃ e ∈ refineSiblingRoster roster, compatible e.2 m := by
+  intro m hm
+  rcases hroot m hm with hb | ⟨e, he, hc⟩
+  · exact Or.inl hb
+  · rcases refineSiblingEntry_sound e m hc with hb | ⟨e', he', hc'⟩
+    · exact Or.inl hb
+    · exact Or.inr ⟨e', List.mem_flatMap.mpr ⟨e, he, he'⟩, hc'⟩
+
+#print axioms refineSiblingEntry_sound
+#print axioms refineSiblingRoster_sound
+
 end BB6.Agent47RootSiblingSweep
