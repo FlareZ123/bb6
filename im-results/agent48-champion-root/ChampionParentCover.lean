@@ -119,18 +119,23 @@ theorem child_formula (mv : Move) : child mv = fun s =>
 
 theorem ld_child (B : Nat) : Cover (WeightedBound B) (child ⟨true,false,3⟩) := by
   rw [child_formula]
+  change Cover (WeightedBound B) (BB6.Agent48SiblingCounter.table .ld)
   exact liftNever B (BB6.Agent48SiblingCounter.sibling_cover .ld)
 theorem rd_child (B : Nat) : Cover (WeightedBound B) (child ⟨true,true,3⟩) := by
   rw [child_formula]
+  change Cover (WeightedBound B) (BB6.Agent48SiblingCounter.table .rd)
   exact liftNever B (BB6.Agent48SiblingCounter.sibling_cover .rd)
 theorem le_child (B : Nat) : Cover (WeightedBound B) (child ⟨false,false,4⟩) := by
   rw [child_formula]
+  change Cover (WeightedBound B) (BB6.Agent48SiblingCounter.table .le)
   exact liftNever B (BB6.Agent48SiblingCounter.sibling_cover .le)
 theorem lc_child (B : Nat) : Cover (WeightedBound B) (child ⟨true,false,2⟩) := by
   rw [child_formula]
+  change Cover (WeightedBound B) BB6.Agent48SiblingLC.lc
   exact liftNever B BB6.Agent48SiblingLC.lc_cover
 theorem re_child (B : Nat) : Cover (WeightedBound B) (child ⟨true,true,4⟩) := by
   rw [child_formula]
+  change Cover (WeightedBound B) BB6.Agent48SiblingRE.re
   exact liftNever B BB6.Agent48SiblingRE.re_cover
 
 /-- All 24 ordinary A1 choices; the only high-score child is the champion.
