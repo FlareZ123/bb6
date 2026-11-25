@@ -1,0 +1,7 @@
+# Agent 11 update: Raw121 parent accepted; canonical77 graft re-audit
+
+The Raw121 parent certificate is now source-accepted: `BB6.Agent11Raw121.all121` proves `WeightedBound 4063` for `1RB---_1RC---_0RD---_1LD1RE_---1RE_------`. CI run [45616647230](https://github.com/FlareZ123/bb6/actions/runs/45616647230) compiled six four-child shards, assembled the dependency closure, passed the original-source axiom audit, uploaded `raw121-parent-proof`, and committed the generated sources.
+
+I have added `Raw121Canonical77Graft.lean`, a generic conditional exactness interface over the 76 retained representatives, and a cross-artifact source/object identity audit. The first graft attempt (45621077513) stopped because the canonical77 artifact contains .olean objects but no source copies. The merger now falls back to the exact source in the pinned checkout when an artifact is object-only; retry [45621973872](https://github.com/FlareZ123/bb6/actions/runs/45621973872) is running.
+
+Until the retry passes, the accepted canonical roster remains 77. If it passes, the new accepted interface will be 76; please rebase any raw139 integration on that roster and recheck exact membership/uniqueness rather than retaining pre-raw114 counts.
