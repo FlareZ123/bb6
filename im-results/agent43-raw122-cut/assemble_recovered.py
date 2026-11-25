@@ -6,6 +6,7 @@ import hashlib, os, shutil, subprocess, sys
 root=Path.cwd()
 cut=root/"im-results/agent43-raw122-cut"
 source=Path("/tmp/a43-source")
+source_ref=os.environ["SOURCE_REF"]
 out=Path("/tmp/a43-audit")
 out.mkdir(parents=True,exist_ok=True)
 seen={}
@@ -41,7 +42,42 @@ if "sorryAx" in log_text or "native_decide" in log_text:
 for line in (out/"Raw122Data.lean").read_text(encoding="utf-8").splitlines():
     if "theorem residual_count" in line or "theorem sound" in line:
         print(line,flush=True)
-prov=["im-results/agent43-raw122-cut/generate.py","im-results/agent43-raw122-cut/symbolic.py","im-results/agent43-raw122-cut/long-plans.json","im-results/agent43-raw122-cut/extra-bank.txt","tools/lean_compile_closure.py"]
+prov=[
+"im-results/agent43-raw122-cut/generate.py",
+"im-results/agent43-raw122-cut/symbolic.py",
+"im-results/agent43-raw122-cut/long-plans.json",
+"im-results/agent43-raw122-cut/extra-bank.txt",
+"im-results/agent43-raw122-cut/phase27510.py",
+"im-results/agent43-raw122-cut/Raw122Immediate.lean",
+"im-results/agent43-raw122-cut/Raw122Counter3708.lean",
+"im-results/agent43-raw122-cut/Raw122TailGrowth.lean",
+"im-results/agent43-raw122-cut/Raw122Base.lean",
+"im-results/agent31-three-hole-tnf/generate_four_hole.py",
+"im-results/agent31-three-hole-tnf/generate_sweeps.py",
+"im-results/agent47-raw114-cut/multi_sweep.py",
+"im-results/agent2-tnf-raw99/enumerate.cpp",
+"im-results/agent8-tnf-six/bank.cpp",
+"im-results/agent1-ngram/ngram.cpp",
+"im-results/agent47-raw111-cut/ngram_sparse.cpp",
+"im-results/agent8-tnf-raw117/bank117.txt",
+"im-results/agent8-tnf-raw117/bank112.txt",
+"im-results/agent8-tnf-raw117/bank112extra.txt",
+"im-results/agent8-tnf-six/raw115/bank.txt",
+"im-results/agent8-tnf-six/raw119/bank.txt",
+"im-results/agent47-raw111-cut/far-bank.txt",
+"im-results/agent47-raw112-cut/far-bank.txt",
+"im-results/agent47-raw112-cut/far-extra.txt",
+"im-results/agent47-raw115-cut/far-bank.txt",
+"im-results/agent3-tnf-raw120/bank.txt",
+"im-results/agent3-tnf-raw120/rb-bank.txt",
+"im-results/agent3-tnf-raw120/la-discovery-bank.txt",
+"im-results/agent47-raw111-cut/emit_sparse.py",
+"im-results/agent1-ngram/emit_ngram.py",
+"im-results/agent13-coverage/unpack.py",
+"tools/lean_compile_closure.py"]
+checkout=[p for p in prov if p!="tools/lean_compile_closure.py"]
+subprocess.run(["git","fetch","--no-tags","--depth=1","origin",source_ref],cwd=root,check=True)
+subprocess.run(["git","checkout",source_ref,"--",*checkout],cwd=root,check=True)
 cmd=[sys.executable,"tools/lean_compile_closure.py","--workdir",str(out),"--manifest",str(out/"manifest.json"),"--manifest-only","--artifact-dir",str(out),"--label","raw122-partial-audit","--theorem","BB6.Agent43Raw122.sound","--parent-table","1RB---_1RC---_0RD---_1LD1RE_---0LF_------","--weighted-bound","7014","--artifact-name","raw122-certified-root"]
 for p in prov: cmd += ["--provenance-input",p]
 cmd += [str((cut/"Raw122Data.lean").relative_to(root))]
