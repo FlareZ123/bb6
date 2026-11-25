@@ -26,6 +26,14 @@ def q0400BNode : SourceNode :=
     holes := [((4 : Fin 6), false)]
     fresh := 6 }
 
+theorem q00300_only_hole :
+    ∀ s : Slot, q00300Node.tm s = none ↔ s = ((4 : Fin 6), true) := by
+  decide
+
+theorem q0400B_only_hole :
+    ∀ s : Slot, q0400BNode.tm s = none ↔ s = ((4 : Fin 6), false) := by
+  decide
+
 /-- These are exact table-specific SourceSafe witnesses. The separate
     proof that a particular adaptive checkpoint's holdout list contains
     these nodes is not asserted by this module. -/
@@ -46,6 +54,8 @@ theorem q0400B_sourceSafe (B : Nat) : SourceSafe B q0400BNode := by
     exact BB6Generated.Q0400B.source_never m
       (by simpa [BB6Generated.Q0400B.sourceTable] using hm)
 
+#print axioms q00300_only_hole
+#print axioms q0400B_only_hole
 #print axioms q00300_sourceSafe
 #print axioms q0400B_sourceSafe
 
