@@ -62,6 +62,9 @@ proof required a left-associated product destruct; the corrected pattern is
 now in `Agent42HeldCheckpointMembership.v`. The dedicated Coq workflow target
 `enumerate62-held-checkpoint-consumption` has been added but not yet run.
 
-A separate Lean FAR synthesis attempt on the held table found no certificate
-in the tested range: DFA sizes 6–7 were UNSAT in both orientations; sizes
-8–10 timed out. A second, implications-based encoding is still running.
+Two independent Lean FAR encodings on the held table found no certificate in
+DFA sizes 6–10: both composition-based and implications-based searches returned
+UNSAT at sizes 6–7 in both orientations and UNKNOWN/timeout at sizes 8–10 in
+both orientations. This excludes only the completed solver instances, not
+larger automata or other certificate forms. A follow-up composition search for
+DFA sizes 11–12 is running.
