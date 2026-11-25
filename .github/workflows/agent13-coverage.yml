@@ -717,7 +717,7 @@ jobs:
 
 
   combined106:
-    if: inputs.target == 'weighted-tnf-combined-106' || inputs.target == 'weighted-tnf-canonical-78' || inputs.target == 'weighted-tnf-canonical-78-exact' || inputs.target == 'weighted-tnf-canonical-two-parent' || inputs.target == 'weighted-tnf-raw10-box'
+    if: inputs.target == 'weighted-tnf-combined-106' || inputs.target == 'weighted-tnf-canonical-78' || inputs.target == 'weighted-tnf-canonical-78-exact' || inputs.target == 'weighted-tnf-canonical-two-parent' || inputs.target == 'weighted-tnf-raw10-box' || inputs.target == 'weighted-tnf-raw120-partition'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -749,6 +749,11 @@ jobs:
           if [ "$TARGET" = weighted-tnf-canonical-78 ] || [ "$TARGET" = weighted-tnf-canonical-78-exact ]; then target=im-results/agent47-rooted-tnf/Canonical78Roster.lean; fi
           if [ "$TARGET" = weighted-tnf-canonical-two-parent ]; then target=im-results/agent47-rooted-tnf/CanonicalTwoParentGraft.lean; fi
           if [ "$TARGET" = weighted-tnf-raw10-box ]; then target=im-results/agent49-box-complement/Raw10BoxBridge.lean; fi
+          if [ "$TARGET" = weighted-tnf-raw120-partition ]; then
+            python im-results/agent3-tnf-raw120/generate.py
+            python im-results/agent3-tnf-raw120/generate_rb.py
+            target=im-results/agent3-tnf-raw120/Raw120CanonicalPartition.lean
+          fi
           python tools/lean_compile_closure.py --workdir /tmp/a47-combined106 --jobs 4 "$target" | tee /tmp/a47-combined106.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a47-combined106.log; then
             echo "Forbidden proof placeholder or native_decide found in combined 106-residual closure" >&2
@@ -872,7 +877,7 @@ jobs:
           fi
 
   raw120:
-    if: inputs.target == 'weighted-tnf-raw120-late' || inputs.target == 'weighted-tnf-raw120-rf' || inputs.target == 'weighted-tnf-raw120-rb' || inputs.target == 'weighted-tnf-raw120-partition' || inputs.target == 'weighted-tnf-raw120-la-carry' || inputs.target == 'weighted-tnf-raw120-la'
+    if: inputs.target == 'weighted-tnf-raw120-late' || inputs.target == 'weighted-tnf-raw120-rf' || inputs.target == 'weighted-tnf-raw120-rb' || inputs.target == 'weighted-tnf-raw120-la-carry' || inputs.target == 'weighted-tnf-raw120-la'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -896,10 +901,6 @@ jobs:
           elif [ "$TARGET" = weighted-tnf-raw120-rb ]; then
             python im-results/agent3-tnf-raw120/generate_rb.py
             target=im-results/agent3-tnf-raw120/rb/Raw120RBData.lean
-          elif [ "$TARGET" = weighted-tnf-raw120-partition ]; then
-            python im-results/agent3-tnf-raw120/generate.py
-            python im-results/agent3-tnf-raw120/generate_rb.py
-            target=im-results/agent3-tnf-raw120/Raw120CanonicalPartition.lean
           elif [ "$TARGET" = weighted-tnf-raw120-la-carry ]; then
             target=im-results/agent3-tnf-raw120/Raw120LACarry.lean
           elif [ "$TARGET" = weighted-tnf-raw120-la ]; then
