@@ -98,7 +98,7 @@ jobs:
         run: |
           cp "$GITHUB_WORKSPACE/research/im-results/agent5-weighted-tnf-queue/Agent5Enumerate62DeciderSound.v" original/verify/
       - name: Add source q0 partition theorem
-        if: inputs.target == 'enumerate62-q0-partition' || inputs.target == 'enumerate62-held-checkpoint-consumption' || inputs.target == 'enumerate62-held-far-batch' || inputs.target == 'enumerate62-phase-consume' || inputs.target == 'enumerate62-fast-resume' || inputs.target == 'enumerate62-prefix-drain' || inputs.target == 'enumerate62-fast-held-discharge'
+        if: inputs.target == 'enumerate62-q0-partition' || inputs.target == 'enumerate62-held-farv3-pilot' || inputs.target == 'enumerate62-held-checkpoint-consumption' || inputs.target == 'enumerate62-held-far-batch' || inputs.target == 'enumerate62-phase-consume' || inputs.target == 'enumerate62-fast-resume' || inputs.target == 'enumerate62-prefix-drain' || inputs.target == 'enumerate62-fast-held-discharge'
         run: |
           cp "$GITHUB_WORKSPACE/research/im-results/agent32-source-queue/Agent32Q0Partition.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent32-source-queue/Agent32SourceDrain.v" original/verify/
@@ -158,7 +158,7 @@ jobs:
           test -s Agent8Batch_2800_100_1000000.vo
 
       - name: Add independently scheduled source chunk coverage
-        if: inputs.target == 'enumerate62-weighted-source' || inputs.target == 'enumerate62-held-checkpoint-consumption' || inputs.target == 'enumerate62-held-far-batch' || inputs.target == 'enumerate62-phase-consume' || inputs.target == 'enumerate62-fast-resume' || inputs.target == 'enumerate62-prefix-drain' || inputs.target == 'enumerate62-fast-held-discharge'
+        if: inputs.target == 'enumerate62-held-farv3-pilot' || inputs.target == 'enumerate62-weighted-source' || inputs.target == 'enumerate62-held-checkpoint-consumption' || inputs.target == 'enumerate62-held-far-batch' || inputs.target == 'enumerate62-phase-consume' || inputs.target == 'enumerate62-fast-resume' || inputs.target == 'enumerate62-prefix-drain' || inputs.target == 'enumerate62-fast-held-discharge'
         run: |
           cp "$GITHUB_WORKSPACE/research/im-results/agent32-source-queue/Agent32Q0Partition.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent5-weighted-tnf-queue/Agent5ChunkCoverage.v" original/verify/
@@ -217,6 +217,13 @@ jobs:
           cp "$GITHUB_WORKSPACE/research/im-results/agent47-rooted-tnf/Agent47SourceTree.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent42-source-certificate-ingestion/Agent42HeldCheckpointMembership.v" original/verify/
            cp "$GITHUB_WORKSPACE/research/im-results/agent42-source-certificate-ingestion/Agent42Q2800BatchWitnesses.v" original/verify/
+          cp "$GITHUB_WORKSPACE/research/im-results/agent42-source-certificate-ingestion/Agent42Q2800BatchData.v" original/verify/
+          cp "$GITHUB_WORKSPACE/research/im-results/agent42-source-certificate-ingestion/Agent42Q2800BatchShard01.v" original/verify/
+          cp "$GITHUB_WORKSPACE/research/im-results/agent42-source-certificate-ingestion/Agent42Q2800BatchShard02.v" original/verify/
+          cp "$GITHUB_WORKSPACE/research/im-results/agent42-source-certificate-ingestion/Agent42Q2800BatchShard03.v" original/verify/
+          cp "$GITHUB_WORKSPACE/research/im-results/agent42-source-certificate-ingestion/Agent42Q2800BatchShard04.v" original/verify/
+          cp "$GITHUB_WORKSPACE/research/im-results/agent42-source-certificate-ingestion/Agent42Q2800BatchShard05.v" original/verify/
+          cp "$GITHUB_WORKSPACE/research/im-results/agent42-source-certificate-ingestion/Agent42Q2800GlobalUpper.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent14-b0-1lc-consumer/Agent14HeldQueueConsumption.v" original/verify/
 
       - name: Add source FAR batch consumer
@@ -271,7 +278,7 @@ jobs:
             enumerate62-prefix-drain) make -f Makefile.coq -j 2 Agent8WeightedSource.vo Agent8PackedRoot.vo ;;
             enumerate62-phase-mitm) make -f Makefile.coq -j 2 CTL62.vo ;;
             enumerate62-held-far-batch) make -f Makefile.coq -j 2 Agent5HeldFARBatch.vo ;;
-            enumerate62-held-farv3-pilot) make -f Makefile.coq -j 2 Agent13CrossRouteHeldLeaf.vo Agent42HeldCheckpointMembership.vo Agent42Q2800BatchWitnesses.vo ;;
+            enumerate62-held-farv3-pilot) make -f Makefile.coq -j 2 Agent13CrossRouteHeldLeaf.vo Agent42HeldCheckpointMembership.vo Agent42Q2800BatchWitnesses.vo Agent42Q2800GlobalUpper.vo ;;
             enumerate62-held-checkpoint-membership) make -f Makefile.coq -j 2 Agent42HeldCheckpointMembership.vo ;;
             enumerate62-held-checkpoint-consumption) make -f Makefile.coq -j 2 Agent14HeldQueueConsumption.vo ;;
             enumerate62-source-roster) make -f Makefile.coq -j 2 Agent47SourceSweep.vo && make -f Makefile.coq -j 2 Agent47SourceChunk2.vo Agent47SourceTree.vo Agent44Q32RemainderBranchProbe.vo && make -f Makefile.coq -j 2 Agent8Chunk2FirstHole.vo ;;
@@ -315,7 +322,7 @@ jobs:
         if: inputs.target == 'enumerate62-held-farv3-pilot'
         working-directory: original/verify
         run: |
-          printf '%s\n' 'From BusyCoq Require Import Agent13CrossRouteHeldLeaf Agent42HeldCheckpointMembership Agent42Q2800BatchWitnesses.' 'Print Assumptions recovered_held_2800_child_of_first_one_root.' 'Print Assumptions recovered_held_2800_safe_for_all_bounds.' 'Print Assumptions recovered_held_2800_checkpoint_exact.' 'Print Assumptions recovered_held_2800_checkpoint_member.' 'Print Assumptions recovered_held_2800_adaptive_obligation.' 'Print Assumptions q2800_trees_checked.' 'Print Assumptions q2800_tree_roster_safe.' 'Print Assumptions q2800_residual_count.' 'Print Assumptions q2800_adaptive_obligations_safe_iff_residual.' > Agent13CrossRouteHeldAudit.v
+          printf '%s\n' 'From BusyCoq Require Import Agent13CrossRouteHeldLeaf Agent42HeldCheckpointMembership Agent42Q2800BatchWitnesses Agent42Q2800GlobalUpper.' 'Print Assumptions recovered_held_2800_child_of_first_one_root.' 'Print Assumptions recovered_held_2800_safe_for_all_bounds.' 'Print Assumptions recovered_held_2800_checkpoint_exact.' 'Print Assumptions recovered_held_2800_checkpoint_member.' 'Print Assumptions recovered_held_2800_adaptive_obligation.' 'Print Assumptions q2800_trees_checked.' 'Print Assumptions q2800_tree_roster_safe.' 'Print Assumptions q2800_residual_count.' 'Print Assumptions q2800_adaptive_obligations_safe_iff_residual.' 'Print Assumptions actual_source_chunks_packed_global_upper_after_q2800_roster.' > Agent13CrossRouteHeldAudit.v
           coqc -Q . BusyCoq -native-compiler no Agent13CrossRouteHeldAudit.v
 
 
