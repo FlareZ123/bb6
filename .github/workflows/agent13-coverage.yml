@@ -5,7 +5,7 @@ on:
       target:
         description: 'Source closure to verify'
         type: choice
-        options: [weighted-tnf-raw118-long, weighted-tnf-raw118-bidfa, weighted-tnf-raw118-partial, legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole, weighted-tnf-four-hole, weighted-tnf-four-hole-sibling, weighted-tnf-r1-sweep, queue-orbit, weighted-tnf-roster-convergence, weighted-tnf-roster-agent47-graft, weighted-tnf-pure-residuals, weighted-tnf-raw99, weighted-tnf-raw113, weighted-tnf-raw124-rf, weighted-tnf-raw124-lc, weighted-tnf-raw124-1rf, weighted-tnf-raw124-0rb, weighted-tnf-raw124-bundle, weighted-tnf-raw124-1la, weighted-tnf-raw124-1la-sharded, weighted-tnf-raw103, weighted-tnf-raw104, weighted-tnf-agent8-five, weighted-tnf-agent8-six, weighted-tnf-agent8-raw117, weighted-tnf-agent8-raw112-macros, weighted-tnf-roster-composition, weighted-tnf-agent3-siblings, weighted-tnf-raw85-parent-check, weighted-tnf-raw91, weighted-tnf-raw87, weighted-tnf-raw83-pump, weighted-tnf-agent10-multi, weighted-tnf-agent10-five-new, weighted-tnf-agent10-five-roster, weighted-tnf-agent10-raw106, weighted-tnf-raw63-counter, weighted-tnf-raw61-witnesses, weighted-tnf-prefix-single, weighted-tnf-agent10-single, weighted-tnf-combined-109, weighted-tnf-root-zero-refinement, weighted-tnf-combined-106, weighted-tnf-canonical-78, weighted-tnf-canonical-78-exact, weighted-tnf-raw108-canonical, weighted-tnf-canonical-two-parent, weighted-tnf-raw10-box, weighted-tnf-raw10-box8-cycle, weighted-tnf-raw10-box0-halt, weighted-tnf-raw10-short-frontier, weighted-tnf-held-block-far, weighted-tnf-raw120-late, weighted-tnf-raw120-rf, weighted-tnf-raw120-rb, weighted-tnf-raw120-partition, weighted-tnf-raw120-la-carry, weighted-tnf-raw120-la, weighted-tnf-root-sibling-first-hole, weighted-tnf-canonical-frontier, weighted-tnf-raw114-cut, weighted-tnf-raw114-far, weighted-tnf-raw114-pumps, weighted-tnf-raw114-complete, weighted-tnf-raw107-witnesses, weighted-tnf-raw107-1la, weighted-tnf-raw60, weighted-tnf-raw60-conditional, weighted-tnf-raw60-next, weighted-tnf-raw60-la, weighted-tnf-raw60-assemble, weighted-tnf-raw60-progress, weighted-tnf-raw60-membership, weighted-tnf-raw60-discover, weighted-tnf-raw60-graft, weighted-tnf-ngram-pilot, weighted-tnf-champion-parent, weighted-tnf-held-leaf-109-membership, weighted-tnf-f412-partition, weighted-tnf-sidewitness-multiparent, weighted-tnf-sidewitness-multiparent-scan]
+        options: [weighted-tnf-raw118-long, weighted-tnf-raw118-bidfa, weighted-tnf-raw118-partial, legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole, weighted-tnf-four-hole, weighted-tnf-four-hole-sibling, weighted-tnf-r1-sweep, queue-orbit, weighted-tnf-roster-convergence, weighted-tnf-roster-agent47-graft, weighted-tnf-pure-residuals, weighted-tnf-raw99, weighted-tnf-raw113, weighted-tnf-raw124-rf, weighted-tnf-raw124-lc, weighted-tnf-raw124-1rf, weighted-tnf-raw124-0rb, weighted-tnf-raw124-bundle, weighted-tnf-raw124-1la, weighted-tnf-raw124-1la-sharded, weighted-tnf-raw124-0lb-longcycle100k, weighted-tnf-raw103, weighted-tnf-raw104, weighted-tnf-agent8-five, weighted-tnf-agent8-six, weighted-tnf-agent8-raw117, weighted-tnf-agent8-raw112-macros, weighted-tnf-roster-composition, weighted-tnf-agent3-siblings, weighted-tnf-raw85-parent-check, weighted-tnf-raw91, weighted-tnf-raw87, weighted-tnf-raw83-pump, weighted-tnf-agent10-multi, weighted-tnf-agent10-five-new, weighted-tnf-agent10-five-roster, weighted-tnf-agent10-raw106, weighted-tnf-raw63-counter, weighted-tnf-raw61-witnesses, weighted-tnf-prefix-single, weighted-tnf-agent10-single, weighted-tnf-combined-109, weighted-tnf-root-zero-refinement, weighted-tnf-combined-106, weighted-tnf-canonical-78, weighted-tnf-canonical-78-exact, weighted-tnf-raw108-canonical, weighted-tnf-canonical-two-parent, weighted-tnf-raw10-box, weighted-tnf-raw10-box8-cycle, weighted-tnf-raw10-box0-halt, weighted-tnf-raw10-short-frontier, weighted-tnf-held-block-far, weighted-tnf-raw120-late, weighted-tnf-raw120-rf, weighted-tnf-raw120-rb, weighted-tnf-raw120-partition, weighted-tnf-raw120-la-carry, weighted-tnf-raw120-la, weighted-tnf-root-sibling-first-hole, weighted-tnf-canonical-frontier, weighted-tnf-raw114-cut, weighted-tnf-raw114-far, weighted-tnf-raw114-pumps, weighted-tnf-raw114-complete, weighted-tnf-raw107-witnesses, weighted-tnf-raw107-1la, weighted-tnf-raw60, weighted-tnf-raw60-conditional, weighted-tnf-raw60-next, weighted-tnf-raw60-la, weighted-tnf-raw60-assemble, weighted-tnf-raw60-progress, weighted-tnf-raw60-membership, weighted-tnf-raw60-discover, weighted-tnf-raw60-graft, weighted-tnf-ngram-pilot, weighted-tnf-champion-parent, weighted-tnf-held-leaf-109-membership, weighted-tnf-f412-partition, weighted-tnf-sidewitness-multiparent, weighted-tnf-sidewitness-multiparent-scan]
         default: legacy
       raw_id:
         description: 'Single Agent 10 residual index (single target only)'
@@ -28,7 +28,7 @@ permissions:
   actions: read
 jobs:
   check:
-    if: inputs.target != 'weighted-tnf-agent8-raw117' && inputs.target != 'weighted-tnf-raw108-canonical' && inputs.target != 'weighted-tnf-raw113' && inputs.target != 'weighted-tnf-raw124-1la-sharded'
+    if: inputs.target != 'weighted-tnf-agent8-raw117' && inputs.target != 'weighted-tnf-raw108-canonical' && inputs.target != 'weighted-tnf-raw113' && inputs.target != 'weighted-tnf-raw124-1la-sharded' && inputs.target != 'weighted-tnf-raw124-0lb-longcycle100k'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -1760,4 +1760,50 @@ jobs:
             /tmp/a2-raw124-assemble.log
             /tmp/a2-raw124-1la/SOURCE_COMMIT
             /tmp/a2-raw124-1la/RAW124_SOURCE.sha256
+          if-no-files-found: error
+
+  raw124_0lb_longcycle:
+    if: inputs.target == 'weighted-tnf-raw124-0lb-longcycle100k'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Boost multiprecision headers
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libboost-dev
+      - name: Enumerate raw124 F1=0LB and search exact tape cycles to 100000 steps
+        run: |
+          set -euo pipefail
+          W=/tmp/raw124-0lb
+          mkdir -p "$W"
+          g++ -O3 -std=c++17 "$GITHUB_WORKSPACE/im-results/agent2-tnf-raw99/enumerate.cpp" -o /tmp/raw124-enumerate
+          cd "$W"
+          /tmp/raw124-enumerate "1RB---_1RC---_0RD---_1LD1RE_---1LF_---0LB"
+          test -s open.txt
+          test -s tree.json
+          echo "Raw open leaves: $(wc -l < open.txt)"
+          awk '$1==469 { print "LEAF469_TABLE", $2 }' open.txt
+          sha256sum open.txt tree.json
+          g++ -O3 -std=c++20 "$GITHUB_WORKSPACE/im-results/agent2-tnf-raw124/longcycle.cpp" -o /tmp/raw124-longcycle
+          /tmp/raw124-longcycle 100000 128 < open.txt > longcycle100k.out
+          python - <<'PY'
+          from pathlib import Path
+          rows = [line.split() for line in Path("longcycle100k.out").read_text().splitlines()]
+          opened = Path("open.txt").read_text().splitlines()
+          assert len(rows) == len(opened), (len(rows), len(opened))
+          ids = [int(row[0]) for row in rows]
+          assert len(set(ids)) == len(ids)
+          cycles = [row for row in rows if len(row) > 1 and row[1] == "cycle"]
+          holes = [row for row in rows if len(row) > 1 and row[1] == "hole"]
+          still_open = [row for row in rows if len(row) > 1 and row[1] == "open"]
+          print(f"Long-cycle census: {len(cycles)} exact cycles, {len(holes)} late holes, {len(still_open)} still open")
+          for row in rows:
+              if row[0] == "469":
+                  print("LEAF469_RESULT", *row)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw124-0lb-longcycle100k
+          path: /tmp/raw124-0lb
           if-no-files-found: error
