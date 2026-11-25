@@ -23,10 +23,11 @@ def machineFromRows (rows : List (Option Move)) : Machine :=
     six-state TNF leaf for every completion of its source partial table. -/
 def sourceSideLeafOfCheck (B : Nat) (m : Machine) (right : Bool)
     (entry period budget : Nat)
+    (hroot : sourcePartial m initialSlot = some (some ⟨true,true,1⟩))
     (hcheck : translatedCyclerCheck m right entry period budget = true) :
     WeightedTNFCertificate B (sourcePartial m) 6 :=
   sourceSideLeaf
-    (hroot := by decide)
+    (hroot := hroot)
     (hsupport := by
       intro s t _
       exact ⟨s.1.isLt, fun mv _ => mv.next.isLt⟩)
@@ -52,9 +53,9 @@ structure Q32SideData where
 
 structure Q32SideLeaf where
   data : Q32SideData
-  partial : PartialMachine
-  certificate : WeightedTNFCertificate 144 partial 6
-  encoding : encodeTable partial = data.table
+  cylinder : PartialMachine
+  certificate : WeightedTNFCertificate 144 cylinder 6
+  encoding : encodeTable cylinder = data.table
 
 /-- Exact 84-row source checkpoint export from Agent8PackedChunk2_32_32.v. -/
 def q32QueueData : List Q32QueueRecord :=
@@ -196,7 +197,7 @@ theorem q32SideData_sourceExact :
 
 def q32SideLeaf00 : Q32SideLeaf :=
   { data := ⟨0, "1RB1RD_1RC1LB_0LA0LE_1LA0LB_---1LA_------", 3, 5, false, 7, 6, 0⟩,
-    partial := samplePartial,
+    cylinder := samplePartial,
     certificate := sampleSourceLeaf 144,
     encoding := sampleSourceEncoding }
 
@@ -205,8 +206,8 @@ def q32SideMachine01 : Machine :=
 
 def q32SideLeaf01 : Q32SideLeaf :=
   { data := ⟨1, "1RB1RD_1RC1LB_0LA0LE_1LA0LB_---1RA_------", 3, 5, false, 7, 7, 0⟩,
-    partial := sourcePartial q32SideMachine01,
-    certificate := sourceSideLeafOfCheck 144 q32SideMachine01 false 7 7 0 (by decide),
+    cylinder := sourcePartial q32SideMachine01,
+    certificate := sourceSideLeafOfCheck 144 q32SideMachine01 false 7 7 0 (by decide) (by decide),
     encoding := by decide }
 
 def q32SideMachine02 : Machine :=
@@ -214,8 +215,8 @@ def q32SideMachine02 : Machine :=
 
 def q32SideLeaf02 : Q32SideLeaf :=
   { data := ⟨2, "1RB1RD_1RC1LB_0LA0LE_1LA0LB_---0LB_------", 3, 5, false, 8, 10, 0⟩,
-    partial := sourcePartial q32SideMachine02,
-    certificate := sourceSideLeafOfCheck 144 q32SideMachine02 false 8 10 0 (by decide),
+    cylinder := sourcePartial q32SideMachine02,
+    certificate := sourceSideLeafOfCheck 144 q32SideMachine02 false 8 10 0 (by decide) (by decide),
     encoding := by decide }
 
 def q32SideMachine03 : Machine :=
@@ -223,8 +224,8 @@ def q32SideMachine03 : Machine :=
 
 def q32SideLeaf03 : Q32SideLeaf :=
   { data := ⟨3, "1RB1RD_1RC1LB_0LA0LE_1LA0LB_---0RB_------", 3, 5, true, 12, 10, 0⟩,
-    partial := sourcePartial q32SideMachine03,
-    certificate := sourceSideLeafOfCheck 144 q32SideMachine03 true 12 10 0 (by decide),
+    cylinder := sourcePartial q32SideMachine03,
+    certificate := sourceSideLeafOfCheck 144 q32SideMachine03 true 12 10 0 (by decide) (by decide),
     encoding := by decide }
 
 def q32SideMachine04 : Machine :=
@@ -232,7 +233,7 @@ def q32SideMachine04 : Machine :=
 
 def q32SideLeaf04 : Q32SideLeaf :=
   { data := ⟨4, "1RB1RD_1RC1LB_0LA0LE_1LA0LB_---1LB_------", 3, 5, false, 9, 3, 1⟩,
-    partial := sourcePartial q32SideMachine04,
+    cylinder := sourcePartial q32SideMachine04,
     certificate := sourceSideLeafOfCheck 144 q32SideMachine04 false 9 3 1 (by decide),
     encoding := by decide }
 
@@ -241,7 +242,7 @@ def q32SideMachine05 : Machine :=
 
 def q32SideLeaf05 : Q32SideLeaf :=
   { data := ⟨6, "1RB1RD_1RC1LB_0LA0LE_1LA0LB_---0LC_------", 3, 5, false, 0, 13, 2⟩,
-    partial := sourcePartial q32SideMachine05,
+    cylinder := sourcePartial q32SideMachine05,
     certificate := sourceSideLeafOfCheck 144 q32SideMachine05 false 0 13 2 (by decide),
     encoding := by decide }
 
@@ -250,8 +251,8 @@ def q32SideMachine06 : Machine :=
 
 def q32SideLeaf06 : Q32SideLeaf :=
   { data := ⟨9, "1RB1RD_1RC1LB_0LA0LE_1LA0LB_---1RC_------", 3, 5, false, 8, 9, 0⟩,
-    partial := sourcePartial q32SideMachine06,
-    certificate := sourceSideLeafOfCheck 144 q32SideMachine06 false 8 9 0 (by decide),
+    cylinder := sourcePartial q32SideMachine06,
+    certificate := sourceSideLeafOfCheck 144 q32SideMachine06 false 8 9 0 (by decide) (by decide),
     encoding := by decide }
 
 def q32SideMachine07 : Machine :=
@@ -259,8 +260,8 @@ def q32SideMachine07 : Machine :=
 
 def q32SideLeaf07 : Q32SideLeaf :=
   { data := ⟨10, "1RB1RD_1RC1LB_0LA0LE_1LA0LB_---0LD_------", 3, 5, false, 7, 7, 0⟩,
-    partial := sourcePartial q32SideMachine07,
-    certificate := sourceSideLeafOfCheck 144 q32SideMachine07 false 7 7 0 (by decide),
+    cylinder := sourcePartial q32SideMachine07,
+    certificate := sourceSideLeafOfCheck 144 q32SideMachine07 false 7 7 0 (by decide) (by decide),
     encoding := by decide }
 
 def q32SideMachine08 : Machine :=
@@ -268,8 +269,8 @@ def q32SideMachine08 : Machine :=
 
 def q32SideLeaf08 : Q32SideLeaf :=
   { data := ⟨11, "1RB1RD_1RC1LB_0LA0LE_1LA0LB_---0RD_------", 3, 5, false, 7, 7, 0⟩,
-    partial := sourcePartial q32SideMachine08,
-    certificate := sourceSideLeafOfCheck 144 q32SideMachine08 false 7 7 0 (by decide),
+    cylinder := sourcePartial q32SideMachine08,
+    certificate := sourceSideLeafOfCheck 144 q32SideMachine08 false 7 7 0 (by decide) (by decide),
     encoding := by decide }
 
 def q32SideMachine09 : Machine :=
@@ -277,8 +278,8 @@ def q32SideMachine09 : Machine :=
 
 def q32SideLeaf09 : Q32SideLeaf :=
   { data := ⟨12, "1RB1RD_1RC1LB_0LA0LE_1LA0LB_---1LD_------", 3, 5, false, 7, 7, 0⟩,
-    partial := sourcePartial q32SideMachine09,
-    certificate := sourceSideLeafOfCheck 144 q32SideMachine09 false 7 7 0 (by decide),
+    cylinder := sourcePartial q32SideMachine09,
+    certificate := sourceSideLeafOfCheck 144 q32SideMachine09 false 7 7 0 (by decide) (by decide),
     encoding := by decide }
 
 def q32SideMachine10 : Machine :=
@@ -286,8 +287,8 @@ def q32SideMachine10 : Machine :=
 
 def q32SideLeaf10 : Q32SideLeaf :=
   { data := ⟨13, "1RB1RD_1RC1LB_0LA0LE_1LA0LB_---1RD_------", 3, 5, false, 8, 7, 0⟩,
-    partial := sourcePartial q32SideMachine10,
-    certificate := sourceSideLeafOfCheck 144 q32SideMachine10 false 8 7 0 (by decide),
+    cylinder := sourcePartial q32SideMachine10,
+    certificate := sourceSideLeafOfCheck 144 q32SideMachine10 false 8 7 0 (by decide) (by decide),
     encoding := by decide }
 
 def q32SideMachine11 : Machine :=
@@ -295,8 +296,8 @@ def q32SideMachine11 : Machine :=
 
 def q32SideLeaf11 : Q32SideLeaf :=
   { data := ⟨25, "1RB1RD_1RC1RB_0LA---_1LA0LB_------_------", 5, 4, true, 1, 7, 0⟩,
-    partial := sourcePartial q32SideMachine11,
-    certificate := sourceSideLeafOfCheck 144 q32SideMachine11 true 1 7 0 (by decide),
+    cylinder := sourcePartial q32SideMachine11,
+    certificate := sourceSideLeafOfCheck 144 q32SideMachine11 true 1 7 0 (by decide) (by decide),
     encoding := by decide }
 
 def q32SideMachine12 : Machine :=
@@ -304,8 +305,8 @@ def q32SideMachine12 : Machine :=
 
 def q32SideLeaf12 : Q32SideLeaf :=
   { data := ⟨27, "1RB1RD_1RC0RC_0LA---_1LA0LB_------_------", 5, 4, true, 0, 9, 0⟩,
-    partial := sourcePartial q32SideMachine12,
-    certificate := sourceSideLeafOfCheck 144 q32SideMachine12 true 0 9 0 (by decide),
+    cylinder := sourcePartial q32SideMachine12,
+    certificate := sourceSideLeafOfCheck 144 q32SideMachine12 true 0 9 0 (by decide) (by decide),
     encoding := by decide }
 
 def q32SideMachine13 : Machine :=
@@ -313,7 +314,7 @@ def q32SideMachine13 : Machine :=
 
 def q32SideLeaf13 : Q32SideLeaf :=
   { data := ⟨29, "1RB1RD_1RC1RC_0LA---_1LA0LB_------_------", 5, 4, true, 2, 6, 1⟩,
-    partial := sourcePartial q32SideMachine13,
+    cylinder := sourcePartial q32SideMachine13,
     certificate := sourceSideLeafOfCheck 144 q32SideMachine13 true 2 6 1 (by decide),
     encoding := by decide }
 
@@ -322,8 +323,8 @@ def q32SideMachine14 : Machine :=
 
 def q32SideLeaf14 : Q32SideLeaf :=
   { data := ⟨30, "1RB1RD_1RC0LD_0LA---_1LA0LB_------_------", 5, 4, false, 7, 11, 0⟩,
-    partial := sourcePartial q32SideMachine14,
-    certificate := sourceSideLeafOfCheck 144 q32SideMachine14 false 7 11 0 (by decide),
+    cylinder := sourcePartial q32SideMachine14,
+    certificate := sourceSideLeafOfCheck 144 q32SideMachine14 false 7 11 0 (by decide) (by decide),
     encoding := by decide }
 
 def q32SideMachine15 : Machine :=
@@ -331,8 +332,8 @@ def q32SideMachine15 : Machine :=
 
 def q32SideLeaf15 : Q32SideLeaf :=
   { data := ⟨31, "1RB1RD_1RC0RD_0LA---_1LA0LB_------_------", 5, 4, true, 7, 3, 0⟩,
-    partial := sourcePartial q32SideMachine15,
-    certificate := sourceSideLeafOfCheck 144 q32SideMachine15 true 7 3 0 (by decide),
+    cylinder := sourcePartial q32SideMachine15,
+    certificate := sourceSideLeafOfCheck 144 q32SideMachine15 true 7 3 0 (by decide) (by decide),
     encoding := by decide }
 
 def q32SideMachine16 : Machine :=
@@ -340,8 +341,8 @@ def q32SideMachine16 : Machine :=
 
 def q32SideLeaf16 : Q32SideLeaf :=
   { data := ⟨32, "1RB1RD_1RC1LD_0LA---_1LA0LB_------_------", 5, 4, false, 7, 11, 0⟩,
-    partial := sourcePartial q32SideMachine16,
-    certificate := sourceSideLeafOfCheck 144 q32SideMachine16 false 7 11 0 (by decide),
+    cylinder := sourcePartial q32SideMachine16,
+    certificate := sourceSideLeafOfCheck 144 q32SideMachine16 false 7 11 0 (by decide) (by decide),
     encoding := by decide }
 
 def q32SideMachine17 : Machine :=
@@ -349,7 +350,7 @@ def q32SideMachine17 : Machine :=
 
 def q32SideLeaf17 : Q32SideLeaf :=
   { data := ⟨33, "1RB1RD_1RC1RD_0LA---_1LA0LB_------_------", 5, 4, true, 4, 4, 1⟩,
-    partial := sourcePartial q32SideMachine17,
+    cylinder := sourcePartial q32SideMachine17,
     certificate := sourceSideLeafOfCheck 144 q32SideMachine17 true 4 4 1 (by decide),
     encoding := by decide }
 
@@ -358,8 +359,8 @@ def q32SideMachine18 : Machine :=
 
 def q32SideLeaf18 : Q32SideLeaf :=
   { data := ⟨38, "1RB1RD_1RC---_0LA---_1LA0RB_------_------", 6, 4, true, 1, 6, 0⟩,
-    partial := sourcePartial q32SideMachine18,
-    certificate := sourceSideLeafOfCheck 144 q32SideMachine18 true 1 6 0 (by decide),
+    cylinder := sourcePartial q32SideMachine18,
+    certificate := sourceSideLeafOfCheck 144 q32SideMachine18 true 1 6 0 (by decide) (by decide),
     encoding := by decide }
 
 def q32SideMachine19 : Machine :=
@@ -367,8 +368,8 @@ def q32SideMachine19 : Machine :=
 
 def q32SideLeaf19 : Q32SideLeaf :=
   { data := ⟨40, "1RB1RD_1RC---_0LA---_1LA1RB_------_------", 6, 4, true, 1, 6, 0⟩,
-    partial := sourcePartial q32SideMachine19,
-    certificate := sourceSideLeafOfCheck 144 q32SideMachine19 true 1 6 0 (by decide),
+    cylinder := sourcePartial q32SideMachine19,
+    certificate := sourceSideLeafOfCheck 144 q32SideMachine19 true 1 6 0 (by decide) (by decide),
     encoding := by decide }
 
 def q32SideMachine20 : Machine :=
@@ -376,8 +377,8 @@ def q32SideMachine20 : Machine :=
 
 def q32SideLeaf20 : Q32SideLeaf :=
   { data := ⟨42, "1RB1RD_1RC---_0LA---_1LA0RC_------_------", 6, 4, true, 0, 8, 0⟩,
-    partial := sourcePartial q32SideMachine20,
-    certificate := sourceSideLeafOfCheck 144 q32SideMachine20 true 0 8 0 (by decide),
+    cylinder := sourcePartial q32SideMachine20,
+    certificate := sourceSideLeafOfCheck 144 q32SideMachine20 true 0 8 0 (by decide) (by decide),
     encoding := by decide }
 
 def q32SideMachine21 : Machine :=
@@ -385,7 +386,7 @@ def q32SideMachine21 : Machine :=
 
 def q32SideLeaf21 : Q32SideLeaf :=
   { data := ⟨44, "1RB1RD_1RC---_0LA---_1LA1RC_------_------", 6, 4, true, 2, 5, 1⟩,
-    partial := sourcePartial q32SideMachine21,
+    cylinder := sourcePartial q32SideMachine21,
     certificate := sourceSideLeafOfCheck 144 q32SideMachine21 true 2 5 1 (by decide),
     encoding := by decide }
 
@@ -394,7 +395,7 @@ def q32SideMachine22 : Machine :=
 
 def q32SideLeaf22 : Q32SideLeaf :=
   { data := ⟨48, "1RB1RD_1RC---_0LA---_1LA1RD_------_------", 6, 4, true, 4, 3, 1⟩,
-    partial := sourcePartial q32SideMachine22,
+    cylinder := sourcePartial q32SideMachine22,
     certificate := sourceSideLeafOfCheck 144 q32SideMachine22 true 4 3 1 (by decide),
     encoding := by decide }
 
@@ -403,8 +404,8 @@ def q32SideMachine23 : Machine :=
 
 def q32SideLeaf23 : Q32SideLeaf :=
   { data := ⟨53, "1RB1RD_1RC---_0LA---_1RA---_------_------", 7, 4, true, 0, 5, 0⟩,
-    partial := sourcePartial q32SideMachine23,
-    certificate := sourceSideLeafOfCheck 144 q32SideMachine23 true 0 5 0 (by decide),
+    cylinder := sourcePartial q32SideMachine23,
+    certificate := sourceSideLeafOfCheck 144 q32SideMachine23 true 0 5 0 (by decide) (by decide),
     encoding := by decide }
 
 def q32SideMachine24 : Machine :=
@@ -412,8 +413,8 @@ def q32SideMachine24 : Machine :=
 
 def q32SideLeaf24 : Q32SideLeaf :=
   { data := ⟨55, "1RB1RD_1RC---_0LA---_0RB---_------_------", 7, 4, true, 1, 4, 0⟩,
-    partial := sourcePartial q32SideMachine24,
-    certificate := sourceSideLeafOfCheck 144 q32SideMachine24 true 1 4 0 (by decide),
+    cylinder := sourcePartial q32SideMachine24,
+    certificate := sourceSideLeafOfCheck 144 q32SideMachine24 true 1 4 0 (by decide) (by decide),
     encoding := by decide }
 
 def q32SideMachine25 : Machine :=
@@ -421,8 +422,8 @@ def q32SideMachine25 : Machine :=
 
 def q32SideLeaf25 : Q32SideLeaf :=
   { data := ⟨57, "1RB1RD_1RC---_0LA---_1RB---_------_------", 7, 4, true, 1, 4, 0⟩,
-    partial := sourcePartial q32SideMachine25,
-    certificate := sourceSideLeafOfCheck 144 q32SideMachine25 true 1 4 0 (by decide),
+    cylinder := sourcePartial q32SideMachine25,
+    certificate := sourceSideLeafOfCheck 144 q32SideMachine25 true 1 4 0 (by decide) (by decide),
     encoding := by decide }
 
 def q32SideMachine26 : Machine :=
@@ -430,8 +431,8 @@ def q32SideMachine26 : Machine :=
 
 def q32SideLeaf26 : Q32SideLeaf :=
   { data := ⟨59, "1RB1RD_1RC---_0LA---_0RC---_------_------", 7, 4, true, 0, 6, 0⟩,
-    partial := sourcePartial q32SideMachine26,
-    certificate := sourceSideLeafOfCheck 144 q32SideMachine26 true 0 6 0 (by decide),
+    cylinder := sourcePartial q32SideMachine26,
+    certificate := sourceSideLeafOfCheck 144 q32SideMachine26 true 0 6 0 (by decide) (by decide),
     encoding := by decide }
 
 def q32SideMachine27 : Machine :=
@@ -439,7 +440,7 @@ def q32SideMachine27 : Machine :=
 
 def q32SideLeaf27 : Q32SideLeaf :=
   { data := ⟨61, "1RB1RD_1RC---_0LA---_1RC---_------_------", 7, 4, true, 2, 3, 1⟩,
-    partial := sourcePartial q32SideMachine27,
+    cylinder := sourcePartial q32SideMachine27,
     certificate := sourceSideLeafOfCheck 144 q32SideMachine27 true 2 3 1 (by decide),
     encoding := by decide }
 
@@ -448,8 +449,8 @@ def q32SideMachine28 : Machine :=
 
 def q32SideLeaf28 : Q32SideLeaf :=
   { data := ⟨63, "1RB1RD_1RC---_0LA---_0RD---_------_------", 7, 4, true, 4, 1, 0⟩,
-    partial := sourcePartial q32SideMachine28,
-    certificate := sourceSideLeafOfCheck 144 q32SideMachine28 true 4 1 0 (by decide),
+    cylinder := sourcePartial q32SideMachine28,
+    certificate := sourceSideLeafOfCheck 144 q32SideMachine28 true 4 1 0 (by decide) (by decide),
     encoding := by decide }
 
 def q32SideMachine29 : Machine :=
@@ -457,8 +458,8 @@ def q32SideMachine29 : Machine :=
 
 def q32SideLeaf29 : Q32SideLeaf :=
   { data := ⟨65, "1RB1RD_1RC---_0LA---_1RD---_------_------", 7, 4, true, 4, 1, 0⟩,
-    partial := sourcePartial q32SideMachine29,
-    certificate := sourceSideLeafOfCheck 144 q32SideMachine29 true 4 1 0 (by decide),
+    cylinder := sourcePartial q32SideMachine29,
+    certificate := sourceSideLeafOfCheck 144 q32SideMachine29 true 4 1 0 (by decide) (by decide),
     encoding := by decide }
 
 def q32SideMachine30 : Machine :=
@@ -466,7 +467,7 @@ def q32SideMachine30 : Machine :=
 
 def q32SideLeaf30 : Q32SideLeaf :=
   { data := ⟨73, "1RB1LD_1RC---_0LA---_---1RA_------_------", 7, 4, true, 3, 2, 1⟩,
-    partial := sourcePartial q32SideMachine30,
+    cylinder := sourcePartial q32SideMachine30,
     certificate := sourceSideLeafOfCheck 144 q32SideMachine30 true 3 2 1 (by decide),
     encoding := by decide }
 
@@ -475,7 +476,7 @@ def q32SideMachine31 : Machine :=
 
 def q32SideLeaf31 : Q32SideLeaf :=
   { data := ⟨78, "1RB1LD_1RC---_0LA---_---0LC_------_------", 7, 4, false, 0, 6, 2⟩,
-    partial := sourcePartial q32SideMachine31,
+    cylinder := sourcePartial q32SideMachine31,
     certificate := sourceSideLeafOfCheck 144 q32SideMachine31 false 0 6 2 (by decide),
     encoding := by decide }
 
@@ -488,11 +489,11 @@ theorem q32SideLeaves_data_exact :
     q32SideLeaves.map Q32SideLeaf.data = q32SideData := by decide
 
 theorem q32SideLeaf_sound (leaf : Q32SideLeaf) (m : Machine)
-    (hm : compatible leaf.partial m) : WeightedBound 144 m :=
+    (hm : compatible leaf.cylinder m) : WeightedBound 144 m :=
   leaf.certificate.sound m hm
 
 theorem q32SideLeaves_sound :
-    ∀ leaf ∈ q32SideLeaves, ∀ m, compatible leaf.partial m → WeightedBound 144 m := by
+    ∀ leaf ∈ q32SideLeaves, ∀ m, compatible leaf.cylinder m → WeightedBound 144 m := by
   intro leaf hmem m hm
   exact q32SideLeaf_sound leaf m hm
 
