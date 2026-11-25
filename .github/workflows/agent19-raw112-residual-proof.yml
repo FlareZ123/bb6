@@ -23,7 +23,7 @@ jobs:
       - name: Reproduce recursive counter trace
         run: |
           set -euo pipefail
-          python -u im-results/agent19-raw112-residual/counter_trace.py --steps 1000000
+          python -u im-results/agent19-raw112-residual/counter_trace.py --steps 10000000
       - name: Search late boundary events for a residual pump
         run: |
           set -euo pipefail
