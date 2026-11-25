@@ -2350,3 +2350,21 @@ Claimed Agent48 at 2026-11-25T10:45:02.940Z (normal mode; actual RNG draw 7). Do
 2. Once the upstream exact-score wrapper compiles, add `ChampionF1RFIntegration.lean` and its exported theorem axiom checks to the existing `.github/workflows/agent6-champion-residual.yml` full-verify target (do not create a per-commit or duplicate workflow). It already compiles `ChampionF1SiblingIntegration.lean` and has the needed import overrides.
 3. Dispatch the integrated target once, inspect failed-job logs only if needed, and only then promote the 109-leaf reduction to accepted status. The 77 other canonical-78 residuals remain unresolved; BB(6) is not solved.
 4. Local shell/Lean reconstruction was attempted using the uploaded split archives, but the container tool returned ClientError before command execution. Use GitHub CI for source verification unless the shell becomes available.
+
+
+## 2026-11-25 11:11 UTC — integrated 109-leaf source audit dispatched
+
+The earlier 45577606094 failure was traced to exact-score wrapper errors before the frontier modules. The following source repairs and integration changes are now on main:
+
+- `Canonical78ExactComposition.lean`: `championScore` is a `def`, not a reducible `abbrev`; the 7014 margin is proved symbolically from `rootSteps_le_score` and `threeSectionMoves_root`, without evaluating the enormous score; `champion_not_weighted_7014` explicitly uses the lower-bound theorem.
+- `MixedBound109Composition.lean`: same symbolic score treatment and explicit bound, plus invalid `by decide [championTable]` corrected to `by decide`.
+- `ChampionResidualParentIntegration.lean`: invalid `decide [..]` table identity syntax corrected to `decide`.
+- `ChampionF1SiblingIntegration.lean`: both invalid `decide [..]` identity proofs corrected to `decide`; the finite 1LF cover now uses the explicit `49394 ≤ championScore` theorem instead of trying to infer the huge score by `omega`.
+- `ChampionF1RFIntegration.lean`: the 211 cover now uses `Nat.le_trans (by decide) champion_score_ge_49394`, not an implicit `omega) proof; its identity proof uses `decide`.
+- `.github/workflows/agent6-champion-residual.yml`: adds `ChampionF1RFIntegration.lean` to the existing full source closure; checks the new RF theorems and uses fully qualified axiom audit names for the repeated F0/F1/RF `refined_residual_cover` and canonical-score theorems. The audit parser was corrected for exact namespace matches. Removed the nonexistent RF `refined_residual_cover` audit entry.
+
+A first dispatch, run 45601313596, was cancelled during Lean installation before compile after a source review exposed the two implicit lower-bound proofs. No source conclusion was drawn from that cancelled run.
+
+The corrected full integration is now running as [45602044422](https://github.com/FlareZ123/bb6/actions/runs/45602044422), head `ab301ad9566978adc8a47dab1c472e2174d368c4`, job `verify`. At the last check it was still installing Lean 4.36.0-rc2; no compilation result yet. The F0-siblings-only job is skipped as intended.
+
+Next: monitor this one run. If it fails, retrieve only failed-job logs with a short tail and fix the actual diagnostic; do not rerun unchanged. If it passes, the conditional 109-leaf theorem becomes source-accepted, but 77 other canonical-78 obligations remain and BB(6) is still unsolved. Update the dossier/README and communicate the verified result only after the full theorem/axiom audit passes.
