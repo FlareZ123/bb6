@@ -1123,3 +1123,5 @@ The arithmetic identities, residue maps, and affine gate paths were checked with
 - Continue with other raw107 ordinary children, prioritizing source integration and complete certificates. Reuse long_epoch on late stable boundary patterns rather than broad expensive searches. The raw107 root has 11 immediate side-cycle children.
 
 - Candidate B1=0RC closed, weighted bound 200, 392 formerly open leaves (390 FAR + 2 pumps). Raw107RCCountdown.lean proves exact exponential binary countdown for leaf 100, locally compiled against copied primitives, entry 9, cost C(n)+6n+11, C(n+1)=2C(n)+10+6n. Leaf 102 entry 2 cost 17+20n. generate_rc.py assembles candidate tree; source closure uncompiled.
+
+- Candidate B1=0RE closed at weighted bound 201: 258 formerly open (251 FAR + seven pumps). Raw107RECounter.lean proves exact binary count-up (entry 19, F(n+1)=2F(n)+4n+4, epoch F(n)+4n+6) locally against copied primitives; six linear recurrences and full source audit pending. generate_re.py assembles the child. Three complete candidate child audits, none accepted yet.
