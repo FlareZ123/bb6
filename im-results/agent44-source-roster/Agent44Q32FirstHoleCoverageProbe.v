@@ -49,6 +49,17 @@ Time Eval vm_compute in
    q32_parent_children_coveredb,
    List.map (fun x => TM_to_str (tm x)) q32_parent_uncovered_children).
 
+Definition q32_parent_child_class (x : T) : nat :=
+  match decider (tm x) with
+  | TC62.TM.Halt _ => 0
+  | TC62.TM.NonHalt => 1
+  | TC62.TM.Unknown => 2
+  end.
+
+Time Eval vm_compute in
+  (map (fun x => (TM_to_str (tm x), q32_parent_child_class x))
+    q32_parent_children).
+
 Theorem q32_parent_children_covered :
   q32_parent_children_coveredb = true ->
   forall child, In child q32_parent_children ->
@@ -70,7 +81,7 @@ Qed.
 Theorem q32_parent_node_metadata :
   num_undef_trans q32_parent_node = 9 /\
   min_unused_state q32_parent_node = 3.
-Proof. vm_compute. exact (conj rfl rfl). Qed.
+Proof. vm_compute. split; reflexivity. Qed.
 
 Print Assumptions q32_parent_first_hole_is_A1.
 Print Assumptions q32_parent_children_covered.
