@@ -214,7 +214,7 @@ jobs:
           test -s /tmp/a47-canonical/Raw114CompleteData.olean
           test -s "$PWD/TM63RawUpperInterface.olean"
           test -s "$PWD/Raw107ParentClosure.olean"
-          sha_before=$(sha256sum CanonicalRaw114Accepted.olean | cut -d' ' -f1)
+          sha_before=$(sha256sum /tmp/a47-canonical/CanonicalRaw114Accepted.olean | cut -d' ' -f1)
           lean -o CanonicalRaw114Accepted.olean CanonicalRaw114Accepted.lean 2>&1 | tee /tmp/a31-raw114-adapter.log
           sha_after=$(sha256sum CanonicalRaw114Accepted.olean | cut -d' ' -f1)
           printf 'CanonicalRaw114Accepted.olean before=%s after=%s\n' "$sha_before" "$sha_after"
@@ -299,11 +299,18 @@ jobs:
               "shared_core_manifest_sha256": digest(pathlib.Path("manifest/shared-core-manifest.json")),
               "precompiled_reused_module_count": shared["precompiled_core"]["reused_module_count"],
               "precompiled_reused_modules": shared["precompiled_core"]["reused_modules"],
-              "modules": {
-                  name: {
-                      "olean_sha256": digest(pathlib.Path(name + ".olean"))
-                  } for name in modules
-              },
+              def module_olean(name):
+                  for candidate in (
+                      root / (name + ".olean"),
+                      pathlib.Path("/tmp/a47-canonical") / (name + ".olean"),
+                  ):
+                      if candidate.is_file():
+                          return candidate
+                  raise SystemExit("missing compiled module: " + name)
+              metadata["modules"] = {
+                  name: {"olean_sha256": digest(module_olean(name))}
+                  for name in modules
+              }
               "lean_binary_path": pathlib.Path("/tmp/a31/lean-binary-path.txt").read_text().strip(),
               "lean_binary_sha256": pathlib.Path("/tmp/a31/lean-binary.sha256").read_text().strip(),
           }
