@@ -86,9 +86,9 @@ Qed.
 
 Theorem q2800_held_leaf_checkpoint_and_agent5_roster :
   exists x,
-    In x (snd recovered_held_2800_checkpoint) /\\
-    is_child_of (tm x) recovered_held_2800 /\\
-    is_child_of recovered_held_2800 (tm x) /\\
+    In x (snd recovered_held_2800_checkpoint) /\
+    is_child_of (tm x) recovered_held_2800 /\
+    is_child_of recovered_held_2800 (tm x) /\
     In recovered_held_2800 held_certified_roster.
 Proof.
   destruct recovered_held_2800_checkpoint_leaf as [x [Hx [Hf Hb]]].
