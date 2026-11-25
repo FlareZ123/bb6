@@ -88,37 +88,71 @@ def compatible(parent: list[str], source: list[str]) -> bool:
     return all(p == "---" or p == s for p, s in zip(parent, source))
 
 
-def first_hole_route(parent: list[str], source: list[str]) -> dict:
-    """Follow ordinary source moves through first holes until halt or a singleton."""
-    work = list(parent)
-    path_moves: list[str] = []
-    while "---" in work:
-        i = work.index("---")
-        token = source[i]
-        if token == "---":
-            return {"match_type": "source_incomplete", "path_moves": path_moves, "halt_slot": i}
+def simulate_first_use(tokens: list[str], max_steps: int = 100_000) -> dict:
+    """Simulate from blank tape until all ordinary rows are first visited, halt, or cap."""
+    state = 0
+    head = 0
+    tape: dict[int, int] = {}
+    first_use: dict[int, int] = {}
+    ordinary = {i for i, token in enumerate(tokens) if token not in {"HHH", "---"}}
+    for step in range(max_steps):
+        bit = tape.get(head, 0)
+        slot = 2 * state + bit
+        token = tokens[slot]
         if token == "HHH":
-            trailing = [j for j in range(i + 1, 12) if work[j] == "---"]
-            if trailing:
-                return {
-                    "match_type": "halt_before_trailing_holes",
-                    "path_moves": path_moves,
-                    "halt_slot": i,
-                    "trailing_holes": trailing,
-                }
             return {
-                "match_type": "one_hole_leaf",
-                "path_moves": path_moves,
-                "halt_slot": i,
+                "status": "halted",
+                "first_use_order": [i for i, _ in sorted(first_use.items(), key=lambda item: item[1])],
+                "halt_steps": step,
+                "halt_slot": slot,
             }
-        work[i] = token
-        path_moves.append(token)
+        if token == "---":
+            return {
+                "status": "undefined",
+                "first_use_order": [i for i, _ in sorted(first_use.items(), key=lambda item: item[1])],
+                "halt_steps": None,
+                "undefined_slot": slot,
+            }
+        first_use.setdefault(slot, step)
+        tape[head] = int(token[0])
+        head += 1 if token[1] == "R" else -1
+        state = LETTERS.index(token[2])
+        if ordinary <= set(first_use):
+            return {
+                "status": "all_ordinary_visited",
+                "first_use_order": [i for i, _ in sorted(first_use.items(), key=lambda item: item[1])],
+                "halt_steps": None,
+                "halt_slot": None,
+            }
     return {
-        "match_type": "singleton_completion",
-        "path_moves": path_moves,
-        "halt_slot": next((i for i, t in enumerate(source) if t == "HHH"), None),
+        "status": "step_limit",
+        "first_use_order": [i for i, _ in sorted(first_use.items(), key=lambda item: item[1])],
+        "halt_steps": None,
+        "halt_slot": None,
     }
 
+
+def route_from_first_use(parent: list[str], source: list[str], schedule_slots: list[int]) -> dict | None:
+    """Use the machine's actual first-visit schedule, not lexicographic slot order."""
+    holes = [i for i, token in enumerate(parent) if token == "---"]
+    visited = set(schedule_slots)
+    unvisited = [i for i in holes if i not in visited]
+    path_moves = [source[i] for i in schedule_slots if i in set(holes)]
+    if len(unvisited) == 1 and source[unvisited[0]] == "HHH":
+        return {
+            "match_type": "one_hole_leaf",
+            "path_moves": path_moves,
+            "halt_slot": unvisited[0],
+            "unvisited_holes": unvisited,
+        }
+    if not unvisited:
+        return {
+            "match_type": "singleton_completion",
+            "path_moves": path_moves,
+            "halt_slot": None,
+            "unvisited_holes": [],
+        }
+    return None
 
 def slot_name(i: int | None) -> str | None:
     if i is None:
@@ -147,12 +181,16 @@ def collect_sources(root: pathlib.Path) -> list[dict]:
         )
         rel = path.relative_to(root)
         module = "BusyBeaver.BB6." + ".".join(rel.with_suffix("").parts)
+        simulation = simulate_first_use(tokens)
+        if kind == "NonHalt" and theorem_hint == "is_not_halt" and simulation["status"] == "halted":
+            raise ValueError(f"NonHalt theorem conflicts with simulated halt: {module}")
         sources.append({
             "module": module,
             "path": str(rel),
             "kind": kind,
             "tokens": tokens,
             "theorem_hint": theorem_hint,
+            "simulation": simulation,
             "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
         })
     return sources
@@ -180,8 +218,12 @@ def run(args: argparse.Namespace) -> dict:
                 renamed = rename_table(source["tokens"], perm)
                 if not compatible(parent["table"], renamed):
                     continue
-                route = first_hole_route(parent["table"], renamed)
-                if route["match_type"] in {"source_incomplete", "halt_before_trailing_holes"}:
+                schedule_slots = [
+                    2 * perm[slot // 2] + (slot % 2)
+                    for slot in source["simulation"]["first_use_order"]
+                ]
+                route = route_from_first_use(parent["table"], renamed, schedule_slots)
+                if route is None:
                     continue
                 path_moves = route["path_moves"]
                 leaf_address = parent["address"] + path_moves
@@ -201,6 +243,8 @@ def run(args: argparse.Namespace) -> dict:
                     "match_type": route["match_type"],
                     "leaf_address": leaf_address,
                     "halt_slot": slot_name(route.get("halt_slot")),
+                    "simulation_status": source["simulation"]["status"],
+                    "halt_steps": source["simulation"]["halt_steps"],
                     "permutations": [],
                 })
                 perm_text = "".join(LETTERS[perm[i]] for i in range(6))
@@ -212,7 +256,9 @@ def run(args: argparse.Namespace) -> dict:
         "BusyBeaver.BB6.NonHalt."
         "M_1RB0LE_1RC0RC_1LD0RB_1LA0LE_1LD1LF_1LDHHH"
     )
-    raw139_expected_address = ["1RC", "1LD", "0LE", "1LF"]
+    raw139_expected_address = [
+        "1RC", "1LD", "0LE", "1LF", "1LD", "1LA", "0RC", "0RB", "1LD", "0LE"
+    ]
     if not any(
         m["source_module"] == raw139_module
         and m["parent_kind"] == "REMAINING112"
@@ -260,6 +306,7 @@ def run(args: argparse.Namespace) -> dict:
         "source_modules": len(sources),
         "source_kind_counts": dict(counts),
         "source_theorem_hint_counts": dict(theorem_counts),
+        "source_simulation_status_counts": dict(collections.Counter(s["simulation"]["status"] for s in sources)),
         "root_fixing_permutations_checked": len(perms),
         "frontier_parent_records": len(parents),
         "frontier_record_counts": dict(collections.Counter(p["kind"] for p in parents)),
