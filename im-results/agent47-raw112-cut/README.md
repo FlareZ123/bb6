@@ -18,3 +18,13 @@ Use previous raw115 FAR and sweep generators with this open file and far-bank.tx
 Five explicit recursive carry proofs (IDs 27,101,102,107,108) are committed. ID27 exhausts lower pairs twice across a carry; the four related proofs exhaust pair words with exit state cycling A,C,B. A complete outer return adds six ones after two D-to-D returns.
 
 IDs32–35 share a polynomial counter: A(a,b,X) has state A, left word 00X and right (10)^a 0 (10)^b 11. A(a,b+1,X) -> A(a+1,b,X) costs 6+4a. Drain b by induction, remove delimiter, and final sweep gives D with left 001111(11)^(a+b+1)0X. IDs32/33 increase both paired runs in the outer D state; IDs34/35 increase the unary run by six. ID51 is a two-block affine return in B, left 0(00)^n 1 0^n, empty right, cost 11+10n, blank entry t=1. make_poly.py emits these five proof candidates. All ten pass local Lean on exact copied semantic definitions and assumed sweep/return interfaces; original-source acceptance is pending. 31 of 41 residuals remain.
+
+## Additional holdout closure candidates
+
+Extra FAR search through size six and seeded randomized DFA mutation (sizes seven through twelve) finds 19 additional certificates listed by hard-file index in `far-extra.txt`. This includes ID77, independently proved by a nested symbolic counter. Codes consist of a reflection flag followed by two destinations per state in hexadecimal; direct certificate reconstruction checks every result.
+
+For ID77, F(a,b) has left word 0(11)^(a+1)01·1^b and right 1^b. Transfer F(a+1,b) -> F(a,b+1) costs 9+4a, and reset F(0,n) -> F(n+1,0) costs 17+3n. Blank entry F(0,0) at t=10. Drain a by induction, then reset. `make_77.py` reconstructs the proof.
+
+For ID62, E with empty left and right (01)^(2+12n) returns to the next parameter in 228+288n steps. ID73 uses (01)^(2+8n), cost 130+128n. Both enter at t=11. ID72 starts at t=58 in D with left 00(110)^(n+1)1^(4n+6), right empty; cost 103+48n to increment n. ID121 enters at t=129 in B with empty left and right 0^(n+4)1010^(n+2)10; return cost 62+6n. `make_affine.py` reproduces the four proofs. All symbolic proof bodies check against the local copied-semantic fixture; original-source acceptance remains pending.
+
+Eight remaining candidates: 6,10,15,23,100,103,105,106.
