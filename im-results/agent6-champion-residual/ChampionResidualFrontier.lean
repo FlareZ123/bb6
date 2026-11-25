@@ -576,6 +576,8 @@ theorem exactBB6OfChampionResidualRoster
 #print axioms championP8Certificate
 #print axioms championResidualFrontierSound
 #print axioms championResidualRetainedTrue
+#print axioms championResidualResidualsCount
+#print axioms championResidualRefinedRosterCount
 #print axioms championResidualRefinedRosterSound
 #print axioms exactBB6OfChampionResidualRoster
 
