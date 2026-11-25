@@ -52,26 +52,30 @@ theorem residuals_buildFrontierB (B : Nat) :
       rcases hfields with ⟨hhole,hread,hslot,hmove,hweight,htail⟩
       have hr : knownRun p n = some (extractRunConfig hread).val :=
         (extractRunConfig hread).property
-      have hs : readSlot (extractRunConfig hread).val = s := by
-        have h' : (some (extractRunConfig hread).val).map readSlot = some s := by
+      have hs : BB6.Agent13BlankDelay.readSlot
+          (extractRunConfig hread).val = s := by
+        have h' : (some (extractRunConfig hread).val).map
+            BB6.Agent13BlankDelay.readSlot = some s := by
           simpa [hr] using hread
         simpa using h'
-      have hhole' : p (readSlot (extractRunConfig hread).val) = none := by
-        simpa [hs] using hhole
       have htail' : pathOKB B
-          (refine p (readSlot (extractRunConfig hread).val) (some mv))
+          (refine p (BB6.Agent13BlankDelay.readSlot
+            (extractRunConfig hread).val) (some mv))
           (advanceCut cut mv) xs = true := by
-        simpa [hs.symm] using htail
+        simpa [hs] using htail
       have cert' : WeightedTNFCertificate B
-          (pathEnd (refine p (readSlot (extractRunConfig hread).val) (some mv))
+          (pathEnd (refine p (BB6.Agent13BlankDelay.readSlot
+            (extractRunConfig hread).val) (some mv))
             (advanceCut cut mv) xs).1 6 := by
-        simpa [pathEnd, hs.symm] using cert
+        simpa [pathEnd, hs] using cert
       have ih' := ih
-        (refine p (readSlot (extractRunConfig hread).val) (some mv))
+        (refine p (BB6.Agent13BlankDelay.readSlot
+          (extractRunConfig hread).val) (some mv))
         (advanceCut cut mv)
-        (RawRootPath.step hp hr hhole') htail' cert'
+        (RawRootPath.step hp (extractRunConfig hread).property hhole)
+        htail' cert'
       simp [buildFrontierB, residuals, pureResiduals,
-        hr, hs, hhole', htail', cert', ih', residuals_cast]
+        hs, htail', cert', ih', residuals_cast]
 
 /-- Every path edge has 23 off-path ordinary children: the selected move
     is the unique one among the 24 ordinary moves that continues the path. -/
