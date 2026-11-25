@@ -121,19 +121,16 @@ theorem arbitrary_live_prefix (k : Nat) : ∃ t n v, k ≤ t ∧ run0 rf t ⟨0,
 theorem rf_never (m : Machine) (hm : compatible rf m) : NeverHalts m := by
   intro n
   obtain ⟨t,i,v,ht,hr⟩ := arbitrary_live_prefix n
-  have hp := run_project rf t start
-  change (Agent50Zipper.zrun rf t start).map project = run0 rf t ⟨0,[],[]⟩ at hp
-  rw [hr] at hp
-  cases hz : Agent50Zipper.zrun rf t start with
-  | none => simp [hz] at hp
-  | some z =>
-    have hrun := Agent50Zipper.zrun_sound rf m hm t start z hz
-    rw [start_embed] at hrun
-    cases h : run m n blank with
-    | none =>
-      have hnone := run_none_add m blank n (t-n) h
-      rw [show n+(t-n)=t by omega,hrun] at hnone
-      contradiction
+  have hz : (Agent50Zipper.zrun rf t start).map project = some (cfg i 0 i 0 v) :=
+    (run_project rf t start).trans hr
+  cases h : Agent50Zipper.zrun rf t start with
+  | none => simp [h] at hz
+  | some z' =>
+    have H := Agent50Zipper.zrun_sound rf m hm t start z' h
+    rw [start_embed] at H
+    rw [show t=n+(t-n) by omega,run_append] at H
+    cases he : run m n blank with
+    | none => simp [he] at H
     | some c => rfl
 
 theorem rf_cover : Cover NeverHalts rf := .leaf _ rf_never
