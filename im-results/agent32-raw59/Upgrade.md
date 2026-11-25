@@ -1,4 +1,10 @@
-# Raw59 candidate reduction, 2026-11-25
+# Raw59 candidate reduction and parent proof
+
+As of 2026-11-25 18:32 UTC, all previously identified open leaves have proposed certificates. The last outstanding computational leaf, 0LB/190, has a source-accepted finite trace: 4,136,170 executed transitions followed by its unassigned C/1 query. The 5,473-action packed certificate and original-source last-hole adapter passed [Late190 run 45675277810](https://github.com/FlareZ123/bb6/actions/runs/45675277810) at source 9ad2992f66eaf06e943d4c1b8f5dffec7060390e. The weighted leaf bound is 4,200,000.
+
+**Parent status:** the complete parent certificate is proposed, not yet source-accepted. The eight-group [UpgradeAll run 45675872170](https://github.com/FlareZ123/bb6/actions/runs/45675872170) compiles the seven upgraded children and the thirteen already closed ordinary children independently of the global canonical roster. It checks the empty residuals, named theorem axiom profiles, and strict same-revision source/import/object manifests before composing Raw59ParentCover.lean. Only a successful final composition establishes the parent bound. No decrease in the accepted canonical frontier is claimed yet.
+
+## Earlier reduction and certificate details
 
 Baseline: prior checked partial audits in run 45547813131, source c8aa2607ad4711501e18e0943eec70e9475fd834. Retrieved all seven exact residual artifacts and matched them against the SHA-pinned enumeration.
 
@@ -26,7 +32,7 @@ The four other exact retained indices are 189, 190, 191 and 194 (F/0 remains una
 
 Unreflected in both cases. The larger width-six witness for 190 also closed (cap 2, modulus 2, five runs), but width four has a smaller source proof. `generate_lb1_four.py` deterministically generates the finite checker witnesses, original coverage adapters and previous rungram certificates. The updated SHA-pinned audit generator binds all four exact tables to their leaf indices. [Source verification run 45657895022](https://github.com/FlareZ123/bb6/actions/runs/45657895022) targets the four leaves; full 1LB audit still required. These candidate results are not yet a closed source-checked parent.
 
-All candidate sets disjoint relative to the baseline. Counts are candidate reductions, not source-accepted coverage. The largest sparse candidate (0LF 1530, 92189 states) is deliberately retained until row sharding is available. Sweep reconstruction may also fail; if it does, the generator retains that leaf. No universal branch is claimed.
+All candidate sets disjoint relative to the baseline. Counts are candidate reductions, not source-accepted coverage. The historical largest sparse candidate (0LF 1530, 92189 states) required additional treatment; the current upgrade generator proposes a full cover. The exact source-checked residual files and final theorem, rather than historical counts, determine acceptance.
 
 The compact manifests are gzip/base64; python upgrade_data.py decodes the actual entries. IDs are bound by the original source enumerator's SHA checks. Sweep generator uses the existing exact arbitrary-tail sweep induction, including the blank-entry equality, and sparse certificates use the independent-width checker. The existing partial audit's typed .proven constructor consumes only original-source nonhalting theorems. The new --upgrade flag writes separate Upgrade source modules and preserves the previously accepted baseline. Target UpgradeAll, or Upgrade1LB etc in the existing manual workflow.
 
