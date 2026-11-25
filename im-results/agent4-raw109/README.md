@@ -1,4 +1,4 @@
-# Raw109: complete candidate parent bound, sharded source audit
+# Raw109: source-accepted complete parent bound 1703
 
 Raw109 is the six-hole parent
 `1RB---_1RC---_0RD---_1LD1RE_---1RB_------`
@@ -8,19 +8,17 @@ side-cycle certificates, the halt choice is bounded at the query, and
 all thirteen other moving choices have complete candidate trees with
 no unresolved exception hypotheses.
 
-**Current status:** the unconditional theorem
+**Current status: source-accepted.** The unconditional theorem
 `BB6.Agent4Raw109Closed.all_closed` in [Raw109Closed.lean](Raw109Closed.lean)
-would bound every compatible machine at weighted score 1703. The
-four-child audit 45551831758 and final two inductive leaf audit
-[45581032451](https://github.com/FlareZ123/bb6/actions/runs/45581032451)
-passed, but the full parent audits have not completed. The latest
-[45595224651](https://github.com/FlareZ123/bb6/actions/runs/45595224651)
-was cancelled during Raw109B1LFKid05 compilation, not at a mathematical
-counterexample or a reported Lean error. Earlier source fixes corrected
-Raw109LA454 witness order and Raw109LC354 rewrite direction. No canonical
-address is removed on the basis of this candidate alone.
+bounds every compatible machine at weighted score 1703. The seven-shard
+[CI audit 45633764095](https://github.com/FlareZ123/bb6/actions/runs/45633764095)
+completed successfully, including final exact-source assembly and standard-axiom audit.
+Artifact `raw109-parent-proof` (ID 15035255805, SHA256
+`f68d8324508ec0c7e50d60a23c05a2d793390b379a3edd5adc65c5a0cb788ae0`)
+contains the accepted closure, pinned to b4788a0c0b1cef8ff70ed79ddaf8c02e8de6ae43.
+The global canonical representative graft is a separate obligation.
 
-## Exhaustive candidate partition
+## Exhaustive source-accepted partition
 
 | B1 | Weighted bound | Initial open leaves | Split nodes |
 | --- | ---: | ---: | ---: |
@@ -90,8 +88,7 @@ preflight, not a guarantee that the actual distributed objects match.
 Local Git clone remains blocked by DNS resolution, so exact repository
 source compilation is delegated to this focused CI target.
 
-Once the final assembly is source-accepted, provide the full artifact
-and manifest to the canonical roster maintainer. Exact compatibility of
+The accepted artifact and exact theorem are available to the canonical roster maintainer. Exact compatibility of
 raw109 with a retained canonical representative must be separately
 checked at the common bound B. Until that graft succeeds, the global
 residual count and BB(6) status remain unchanged.

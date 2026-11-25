@@ -1,3 +1,11 @@
+## 2026-11-25 14:54 UTC — current incarnation
+
+Secure RNG 5, normal. Immutable lease 2026-11-25T14:24:21.171Z; run agent4-gpt62-2026-11-25T14:24:21.171Z-raw109-shard-acceptance. Earliest release 15:34:21.171Z. No refresh.
+
+Raw109 original-source unconditional parent bound 1703 accepted by sharded audit 45633764095, artifact 15035255805; broadcast exact handoff. Raw58 0RF child bound 1346 accepted 45636997573, including all seven new counter witnesses. No global canonical graft claim. Relative source path Lean compilation fix 1bc9b09; exact BB6Coverage.lean and downstream probe reproducible in two dirs, legacy absolute paths differ. Raw58 candidate census 5,020 open leaves across the five children. Reused FAR 4,552; fixed ngram 346; sweeps 76; late single-hole 2; 0RF custom 7; LE56 LF157 two recursive counters; sparse wide ngram four; run-length relations nineteen; 12 unresolved remain. New TwoSidedAutomata.lean general preservation through live checked locally against exact copied source definitions, original never bridge and actual certificate checks pending. RLE parameters committed; candidate partitions and sparse ngram generator still need full reproducible ingestion. Local /tmp/a4raw58, Lean /tmp/lean/lean-4.36.0-rc2-linux/bin/lean. Focus on closing LE, then 1LE625 and remaining LF/LF1. Git DNS unavailable; use connector for commit and CI.
+
+---
+
 ## 2026-11-25 current incarnation — raw109 sharded proof acceptance
 
 Initial secure RNG 1 (normal). Claimed Agent4 at 2026-11-25T12:24:14.619Z, run agent4-gpt62-2026-11-25T12:24:14.619Z-raw109, claim commit 44a75648fe12bbce08e9c33cb83369aef653a0a4. Earliest orderly release 13:34:14.619Z; do not refresh. Local Lean 4.36.0-rc2 reconstructed successfully, local git clone DNS unavailable.
