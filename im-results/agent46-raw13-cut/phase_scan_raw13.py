@@ -45,8 +45,8 @@ def main() -> None:
     ap.add_argument("--cap", type=int, default=5000,
                     help="abstract-state cap for each candidate search")
     ap.add_argument("--seed", type=int, default=46)
-    ap.add_argument("--include-d3", action="store_true",
-                    help="force the exact D3 hard-root descendant into the sample")
+    ap.add_argument("--exclude-d3", action="store_true",
+                    help="exclude the known halting D3 hard-root descendant from nonhalting search")
     args = ap.parse_args()
 
     residual_file = ROOT / "raw13-open-residuals.txt"
@@ -63,21 +63,19 @@ def main() -> None:
               if compatible_partial(table, D3_TABLE)]
     if len(d3_ids) > 1:
         raise SystemExit(f"D3 appears in overlapping raw13 residuals: {d3_ids}")
-    priority_ids = d3_ids if args.include_d3 else []
+    excluded_ids = d3_ids if args.exclude_d3 else []
     groups: dict[int, list[int]] = {}
     for ident, table in rows.items():
-        if ident not in priority_ids:
+        if ident not in excluded_ids:
             groups.setdefault(table.count("---"), []).append(ident)
     hole_counts = {str(k): len(v) for k, v in sorted(groups.items())}
     if args.limit <= 0 or args.limit >= len(ids):
-        sample = ids
+        sample = [ident for ident in ids if ident not in excluded_ids]
     else:
-        if len(priority_ids) > args.limit:
-            raise SystemExit("priority roots exceed requested sample size")
         rng = random.Random(args.seed)
         for values in groups.values():
             rng.shuffle(values)
-        sample = list(priority_ids)
+        sample = []
         while len(sample) < args.limit and any(groups.values()):
             for holes in sorted(groups):
                 if groups[holes] and len(sample) < args.limit:
@@ -140,7 +138,7 @@ def main() -> None:
     searches.append({
         "seed": args.seed,
         "sample_ids": sample,
-        "priority_ids": priority_ids,
+        "excluded_ids": excluded_ids,
         "sample_hole_counts": sample_hole_counts,
         "state_cap": args.cap,
         "new_candidate_ids": sorted(new_candidates, key=int),
