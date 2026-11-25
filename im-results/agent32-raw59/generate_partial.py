@@ -69,7 +69,7 @@ def late_hole(table, limit):
     return None
 
 def generate(raw,upgrade=False):
-    B=70000 if upgrade and raw=='0LA' else 7014
+    B=(4200000 if raw=='0LB' else 70000 if raw=='0LA' else 7014) if upgrade else 7014
     folder=ROOT/(('upgrade_' if upgrade else 'partial_')+raw);folder.mkdir(exist_ok=True)
     parent=f'1RB{raw}_1RC---_0RD---_1LD1RE_---1LA_------'
     subprocess.run(['g++','-std=c++17','-O3',str(ROOT.parent/'agent2-tnf-raw99/enumerate.cpp'),'-o',str(folder/'enumerate')],check=True)
@@ -182,12 +182,21 @@ def generate(raw,upgrade=False):
         subprocess.run([sys.executable,str(ng/'emit_ngram.py'),str(inputs),str(outputs),str(folder/(module+'.lean')),'--namespace',ns],check=True)
         imports.append(module)
     if upgrade:upgrade_data.add_ngrams(raw,folder,opens,certs,pumps,imports)
+    special=None
+    if upgrade and raw=='0LB':
+        from generate_late190 import TABLE, STEPS, BOUND, generate as generate_late
+        assert opens[190]==TABLE and B==BOUND
+        assert TABLE not in certs and TABLE not in pumps
+        generate_late()
+        imports.append('Raw590LB190Data')
+        late[TABLE]=(STEPS,5)
+        special=TABLE
     if upgrade:
         # Leave ample allowance for the weighted initial blank-delay cost.
         # The source checker still proves the exact weighted inequality.
         for rle in opens:
-            if rle in certs or rle in pumps: continue
-            hit=late_hole(rle,B-100)
+            if rle in certs or rle in pumps or rle in late: continue
+            hit=late_hole(rle,(70000 if raw=='0LA' else 7014)-100)
             if hit is not None: late[rle]=hit
         print(raw,'late final-hole witnesses',len(late),flush=True)
     unresolved=set(opens)-set(certs)-set(pumps)-set(late)
@@ -245,8 +254,22 @@ theorem split_checked (p : PartialMachine) (n : Nat) (s : Slot) (kids : Move →
             return f'.closed (.far {str(a[0]=="1").lower()} {d} ⟨0,{D},{L},{R},{z}⟩)'
         assert tag=='split';n,s,kids=v;assert len(kids)==24
         return f'.split {n} {slot(s)} (byPartialMove [\n'+',\n'.join(map(render,kids))+'])'
+    def contains_special(t):
+        return special is not None and (t[0]=='open' and t[1]==special or
+            t[0]=='split' and any(map(contains_special,t[3])))
     def compose(pname,name,t):
-        if count(t)<=CHUNK:
+        if t[0]=='open' and t[1]==special:
+            # Do not unfold four million primitive steps in partialCheck.
+            code=render(t)
+            return f'''def t_{name} : PartialAudit := {code}
+theorem c_{name} : partialCheck {B} {pname} t_{name} = true := by
+  change zipCheck {B} {pname} (.last 4136170 (2,true)) = true
+  have he : {pname} = BB6.Agent32Raw590LB190.table :=
+    tableOK_sound _ _ (by decide)
+  rw [he]
+  exact BB6.Agent32Raw590LB190.last_ok
+'''
+        if count(t)<=CHUNK and not contains_special(t):
             return f'def t_{name} : PartialAudit := {render(t)}\ntheorem c_{name} : partialCheck {B} {pname} t_{name} = true := by decide\n'
         assert t[0]=='split';_,n,s,kids=t
         out=[];names=[]
