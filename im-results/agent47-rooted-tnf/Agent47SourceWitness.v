@@ -33,7 +33,7 @@ Qed.
 (* The successful branch of cmultistep includes the original multistep proof.
    Test that the reached row really is undefined; never accept an early abort. *)
 Definition source_trace_haltb (p : TM) (n : nat) : bool :=
-  match Individual62.cmultistep p n Individual62.starting with
+  match Agent47TC.Flip.Compute.cmultistep p n Agent47TC.Flip.Compute.starting with
   | inleft (exist _ (q, (_, s, _)) _) =>
       match p (q,s) with None => true | Some _ => false end
   | inright _ => false
@@ -43,13 +43,13 @@ Lemma source_trace_haltb_sound p n :
   source_trace_haltb p n = true -> exists h, halts_at p c0 n h.
 Proof.
   unfold source_trace_haltb.
-  destruct (Individual62.cmultistep p n Individual62.starting)
+  destruct (Agent47TC.Flip.Compute.cmultistep p n Agent47TC.Flip.Compute.starting)
     as [[c Hrun]|Hearly].
   - destruct c as [q [[l s] r]].
     destruct (p (q,s)) as [mv|] eqn:E; [discriminate|].
     intros _. exists (q,s).
     eapply halts_at_intro.
-    + exact Hrun.
+    + rewrite Agent47TC.Flip.Compute.lift_starting in Hrun. exact Hrun.
     + exact E.
   - discriminate.
 Qed.
