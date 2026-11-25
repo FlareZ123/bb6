@@ -180,7 +180,7 @@ def generate():
             return far[i]
         assert tag=="split"
         n,s,kids=v
-        return f".split {n} {slot(s)} (byMove [\n"+",\n".join(map(build,kids))+"\n])"
+        return f".split {n} {slot(s)} (byMove [\n"+",\n".join(map(build,kids))+"])"
 
     emit("Raw39Base",["ZipThreeHoleAudit"]+chunks,r"""
 abbrev p39 : PartialMachine :=
