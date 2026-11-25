@@ -5,7 +5,7 @@ on:
       mode:
         description: Cylinder or pinned recovery of two raw111 runner-shutdown halves
         type: choice
-        options: [raw111, raw115, raw111-repair]
+        options: [raw111, raw112, raw115, raw111-repair]
         default: raw111
 permissions:
   contents: read
@@ -33,7 +33,7 @@ jobs:
           cyl=os.environ["CYLINDER"]
           root=pathlib.Path("im-results/agent47-"+cyl+"-cut")
           prefix=cyl.capitalize()
-          size=6 if cyl=="raw115" else 12
+          size=6 if cyl in ("raw112","raw115") else 12
           jobs=[]
           for i in range(24):
               b=f"{i:02}"
@@ -71,6 +71,8 @@ jobs:
           root="im-results/agent47-${CYLINDER}-cut"
           if [ "$CYLINDER" = raw111 ]; then
             roots=("$root/SparseNGram.lean" "$root/Raw111Prefix.lean" "$root/Raw111Ternary.lean" "$root/Raw111Triplet.lean" "$root/Raw111QuadCounter.lean" "$root/Raw111TripleCounter.lean")
+          elif [ "$CYLINDER" = raw112 ]; then
+            roots=("$root/Raw112Base.lean" "$root"/Raw112Counter*.lean)
           else
             roots=("$root/Raw115Base.lean" "$root"/Raw115Counter[234569].lean)
           fi
@@ -160,8 +162,9 @@ jobs:
             if grep -Eq 'sorryAx|native_decide' /tmp/a47-root.log; then exit 1; fi
           )
           python im-results/agent13-coverage/unpack.py
-          if [ "$CYLINDER" = raw111 ]; then parent='1RB---_1RC---_0RD---_1LD1RE_---0RC_------'; else parent='1RB---_1RC---_0RD---_1LD1RE_---0RD_------'; fi
-          python tools/lean_compile_closure.py --manifest-only --artifact-dir /tmp/a47-audit --manifest /tmp/a47-audit/source-manifest.json --label "$CYLINDER" --theorem "BB6.Agent47${prefix}.all_completions" --parent-table "$parent" --weighted-bound 7014 --artifact-name "${CYLINDER}-certified-root" --provenance-input "$root/generate.py" --provenance-input "$root/symbolic.py" --provenance-input "$root/far-bank.txt" "$root/${prefix}Data.lean"
+          bound=7014; theorem=all_completions
+          if [ "$CYLINDER" = raw111 ]; then parent='1RB---_1RC---_0RD---_1LD1RE_---0RC_------'; elif [ "$CYLINDER" = raw112 ]; then parent='1RB---_1RC---_0RD---_1LD1RE_---1LC_------'; bound=100000; theorem=sound; else parent='1RB---_1RC---_0RD---_1LD1RE_---0RD_------'; fi
+          python tools/lean_compile_closure.py --manifest-only --artifact-dir /tmp/a47-audit --manifest /tmp/a47-audit/source-manifest.json --label "$CYLINDER" --theorem "BB6.Agent47${prefix}.${theorem}" --parent-table "$parent" --weighted-bound "$bound" --artifact-name "${CYLINDER}-certified-root" --provenance-input "$root/generate.py" --provenance-input "$root/symbolic.py" --provenance-input "$root/far-bank.txt" "$root/${prefix}Data.lean"
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.mode }}-certified-root
