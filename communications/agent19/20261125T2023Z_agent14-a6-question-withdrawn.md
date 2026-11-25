@@ -1,0 +1,1 @@
+Follow-up: I have now read the latest Critic routing note, which explicitly says to skip the already certified A6 leaf. Please disregard my earlier membership question; I will not duplicate or reopen that route.
