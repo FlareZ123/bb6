@@ -1,13 +1,11 @@
 import WeightedTNFCertificate
 import SourceFiniteSemantics
-import SourceTableEncoding
 
 namespace BB6.Agent50TranslatedCycler
 
 open BB6Coverage
 open BB6.Agent13BlankDelay
 open BB6.Agent32FiniteSource
-open BB6.Agent32SourceEncoding
 
 /-- Equality of the first k cells on the left, with missing cells blank. -/
 def LeftEq (k : Nat) (xs ys : List Bool) : Prop :=
@@ -207,6 +205,29 @@ def boundedRun (m : Machine) : Nat → Nat → FiniteCfg →
   | n+1, k, c =>
       (boundedStep m k c).bind (fun (k',c') => boundedRun m n k' c')
 
+theorem boundedStep_sound {m : Machine} {k : Nat} {c : FiniteCfg}
+    {k' : Nat} {d : FiniteCfg}
+    (h : boundedStep m k c = some (k',d)) :
+    BStep m k c k' d := by
+  unfold boundedStep at h
+  cases hm : m (query c) with
+  | none => simp [hm] at h
+  | some mv =>
+      cases hv : mv.right with
+      | true =>
+          have hp : (k+1,move c mv) = (k',d) := by
+            simpa [hm,hv] using h
+          cases hp
+          exact BStep.right hm hv
+      | false =>
+          cases k with
+          | zero => simp [hm,hv] at h
+          | succ k =>
+              have hp : (k,move c mv) = (k',d) := by
+                simpa [hm,hv] using h
+              cases hp
+              exact BStep.left hm hv
+
 theorem boundedRun_sound {m : Machine} {n k : Nat} {c : FiniteCfg}
     {k' : Nat} {d : FiniteCfg}
     (h : boundedRun m n k c = some (k',d)) :
@@ -223,21 +244,7 @@ theorem boundedRun_sound {m : Machine} {n k : Nat} {c : FiniteCfg}
       | some z =>
           rcases z with ⟨k₁,c₁⟩
           simp [hs] at h
-          have hstep : BStep m k c k₁ c₁ := by
-            unfold boundedStep at hs
-            cases hm : m (query c) with
-            | none => simp [hm] at hs
-            | some mv =>
-                by_cases hr : mv.right
-                · simp [hm, hr] at hs
-                  cases hs
-                  exact BStep.right hm hr
-                · cases k with
-                  | zero => simp [hm, hr] at hs
-                  | succ k =>
-                      simp [hm, hr] at hs
-                      cases hs
-                      exact BStep.left hm hr
+          have hstep : BStep m k c k₁ c₁ := boundedStep_sound hs
           exact BRun.succ hstep (ih h)
 
 theorem finiteRun_append (m : Machine) (c : FiniteCfg) (a b : Nat) :
@@ -288,6 +295,7 @@ theorem TranslatedCycle.repeat {m : Machine} {period budget : Nat}
       simp [hrun,hperiod] at hcombined
       have hindex : period*r + period = period*(r+1) := by
         rw [Nat.mul_succ]
+      refine ⟨d₂, ?_, heq'⟩
       rw [← hindex]
       exact hcombined
 
@@ -298,7 +306,7 @@ theorem TranslatedCycle.neverFrom {m : Machine} {period budget : Nat}
   intro n
   obtain ⟨d,hrun,_⟩ := h.repeat n
   cases hn : finiteRun m n c with
-  | some d₀ => exact ⟨d₀,hn⟩
+  | some d₀ => exact ⟨d₀,rfl⟩
   | none =>
     have hp : 1 ≤ period := by omega
     have hmul := Nat.mul_le_mul_right n hp
@@ -321,7 +329,7 @@ theorem TranslatedCycle.neverBlank {m : Machine} {entry period budget : Nat}
       rw [finiteRun_append,hentry]
       exact hrun
     cases hn : finiteRun m n finiteBlank with
-    | some d₀ => exact ⟨d₀,hn⟩
+    | some d₀ => exact ⟨d₀,rfl⟩
     | none =>
       have hp : 1 ≤ period := by omega
       have hmul := Nat.mul_le_mul_right n hp
@@ -360,7 +368,7 @@ theorem leftEqB_sound {k : Nat} {xs ys : List Bool}
 
 theorem sideEqB_sound {xs ys : List Bool}
     (h : sideEqB xs ys = true) : SideEq xs ys := by
-  change ∀ i, xs[i]?.getD false = ys[i]?.getD false
+  change ∀ i : Nat, xs[i]?.getD false = ys[i]?.getD false
   intro i
   by_cases hi : i < max xs.length ys.length
   · have h' := allRange_sound h i hi
@@ -375,12 +383,16 @@ theorem sideEqB_sound {xs ys : List Bool}
     have hyl : ys.length ≤ i := Nat.le_of_not_lt hnoty
     simp [hxl,hyl]
 
+theorem and_true_parts {a b : Bool} (h : a && b = true) :
+    a = true ∧ b = true := by
+  cases a <;> cases b <;> simp_all
+
 theorem eqLimitB_sound {k : Nat} {c d : FiniteCfg}
     (h : eqLimitB k c d = true) : EqLimit k c d := by
   unfold eqLimitB at h
-  have h₁ := Bool.and_eq_true.mp h
-  have h₂ := Bool.and_eq_true.mp h₁.2
-  have h₃ := Bool.and_eq_true.mp h₂.2
+  have h₁ := and_true_parts h
+  have h₂ := and_true_parts h₁.2
+  have h₃ := and_true_parts h₂.2
   exact ⟨of_decide_eq_true h₁.1, leftEqB_sound h₂.1,
     of_decide_eq_true h₃.1, sideEqB_sound h₃.2⟩
 
@@ -441,8 +453,8 @@ theorem translatedCyclerCheckRight_sound {m : Machine}
               decide (0 < period) &&
                 (decide (budget ≤ endBudget) && eqLimitB budget c endConfig) = true := by
             simpa [hentry,hcycle] using hcheck
-          have h₁ := Bool.and_eq_true.mp hcheck'
-          have h₂ := Bool.and_eq_true.mp h₁.2
+          have h₁ := and_true_parts hcheck'
+          have h₂ := and_true_parts h₁.2
           have hp' : 0 < period := of_decide_eq_true h₁.1
           have hbudget' : budget ≤ endBudget := of_decide_eq_true h₂.1
           have heq' : EqLimit budget c endConfig := eqLimitB_sound h₂.2
@@ -501,16 +513,38 @@ def sourceSideLeaf {B : Nat} {p : PartialMachine} {cut : Nat}
     rw [← weightedTNFKnownRun_eq_defaultRun p n] at hn
     cases hr : knownRun p n with
     | none => simp [hr] at hn
-    | some c => exact ⟨c,hr⟩
+    | some c => exact ⟨c,rfl⟩
   exact WeightedTNFCertificate.nonhalt hroot hsupport hnohalt
     ((weightedTNFKnownRunForever_iff p).mp hknown)
 
-/-- A concrete BusyCoq SWside witness (L, entry 7, period 6, budget 0)
-rechecked by the Lean finite-tape checker. -/
-def sampleMachine : Machine :=
-  decodeTable ("1RB1RD_1RC1LB_0LA0LE_1LA0LB_---1LA_------".toList)
+/-- The concrete BusyCoq SWside table
+    1RB1RD_1RC1LB_0LA0LE_1LA0LB_---1LA_------. -/
+def sampleMachine : Machine := fun s =>
+  match s.1.val, s.2 with
+  | 0, false => some ⟨true,true,1⟩
+  | 0, true  => some ⟨true,true,3⟩
+  | 1, false => some ⟨true,true,2⟩
+  | 1, true  => some ⟨true,false,1⟩
+  | 2, false => some ⟨false,false,0⟩
+  | 2, true  => some ⟨false,false,4⟩
+  | 3, false => some ⟨true,false,0⟩
+  | 3, true  => some ⟨false,false,1⟩
+  | 4, false => none
+  | 4, true  => some ⟨true,false,0⟩
+  | 5, false => none
+  | 5, true  => none
 
 def samplePartial : PartialMachine := sourcePartial sampleMachine
+
+theorem sampleRoot :
+    samplePartial initialSlot = some (some ⟨true,true,1⟩) := by
+  rfl
+
+theorem sampleSupport : TNFSupport samplePartial 5 := by
+  intro s t hs
+  rcases s with ⟨q,b⟩
+  fin_cases q <;> cases b <;>
+    simp_all [samplePartial,sourcePartial,sampleMachine]
 
 theorem sampleCyclerCheck :
     translatedCyclerCheck sampleMachine false 7 6 0 = true := by
@@ -518,21 +552,14 @@ theorem sampleCyclerCheck :
 
 /-- The imported source-side witness is now a kernel-checked TNF leaf. -/
 def sampleSourceLeaf (B : Nat) :
-    WeightedTNFCertificate B samplePartial 5 := by
-  apply sourceSideLeaf
-  · decide
-  · decide
-  · exact sourcePartial_noAssignedHalt sampleMachine
-  · exact sampleMachine
-  · exact false
-  · exact 7
-  · exact 6
-  · exact 0
-  · rfl
-  · exact sampleCyclerCheck
+    WeightedTNFCertificate B samplePartial 5 :=
+  sourceSideLeaf
+    (hroot := sampleRoot)
+    (hsupport := sampleSupport)
+    (hnohalt := sourcePartial_noAssignedHalt sampleMachine)
+    sampleMachine false 7 6 0 rfl sampleCyclerCheck
 
 #print axioms translatedCyclerCheck_sound
 #print axioms sampleSourceLeaf
-
 
 end BB6.Agent50TranslatedCycler
