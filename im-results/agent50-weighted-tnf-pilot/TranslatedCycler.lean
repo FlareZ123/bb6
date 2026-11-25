@@ -132,11 +132,11 @@ theorem BStep_replay {m : Machine} {k k' : Nat}
         | mk l r cur st =>
           cases d with
           | mk l' r' cur' st' =>
-            simp [query, heq.state_eq, heq.current_eq]
+            exact ⟨heq.state_eq, heq.current_eq⟩
       have hm' : m (query d) = some mv := by
         simpa [← hquery] using hm
       refine ⟨move d mv, BStep.left hm' hr, ?_⟩
-      refine ⟨rfl, ?_, ?_, ?_⟩
+      refine ⟨by simp [move, hr], ?_, ?_, ?_⟩
       · simpa [move, hr] using LeftEq_tail heq.left_eq
       · simpa [move, hr] using LeftEq_head heq.left_eq
       · simpa [move, hr] using SideEq_cons rfl heq.right_eq
@@ -146,29 +146,28 @@ theorem BStep_replay {m : Machine} {k k' : Nat}
         | mk l r cur st =>
           cases d with
           | mk l' r' cur' st' =>
-            simp [query, heq.state_eq, heq.current_eq]
+            exact ⟨heq.state_eq, heq.current_eq⟩
       have hm' : m (query d) = some mv := by
         simpa [← hquery] using hm
       refine ⟨move d mv, BStep.right hm' hr, ?_⟩
-      refine ⟨rfl, ?_, ?_, ?_⟩
+      refine ⟨by simp [move, hr], ?_, ?_, ?_⟩
       · simpa [move, hr] using LeftEq_cons rfl heq.left_eq
       · simpa [move, hr] using SideEq_head heq.right_eq
       · simpa [move, hr] using SideEq_tail heq.right_eq
 
 /-- A finite sequence of bounded steps, with the same indexing convention
 as BusyCoq's lmultistep. -/
-inductive BRun (m : Machine) : Nat → Nat × FiniteCfg → Nat × FiniteCfg → Prop where
-  | zero (k : Nat) (c : FiniteCfg) : BRun m 0 (k,c) (k,c)
-  | succ {n k : Nat} {c : FiniteCfg} {k₁ k₂ : Nat}
-      {c₁ c₂ : FiniteCfg}
+inductive BRun (m : Machine) : Nat → Nat → FiniteCfg → Nat → FiniteCfg → Prop where
+  | zero (k : Nat) (c : FiniteCfg) : BRun m 0 k c k c
+  | succ {n k k₁ k₂ : Nat} {c c₁ c₂ : FiniteCfg}
       (hstep : BStep m k c k₁ c₁)
-      (hrest : BRun m n (k₁,c₁) (k₂,c₂)) :
-      BRun m (n+1) (k,c) (k₂,c₂)
+      (hrest : BRun m n k₁ c₁ k₂ c₂) :
+      BRun m (n+1) k c k₂ c₂
 
-theorem BRun_replay {m : Machine} {n k : Nat} {c : FiniteCfg}
-    {k' : Nat} {c' d : FiniteCfg}
-    (hRun : BRun m n (k,c) (k',c')) (heq : EqLimit k c d) :
-    ∃ k'' d', BRun m n (k,d) (k'',d') ∧ EqLimit k' c' d' := by
+theorem BRun_replay {m : Machine} {n k k' : Nat}
+    {c c' d : FiniteCfg}
+    (hRun : BRun m n k c k' c') (heq : EqLimit k c d) :
+    ∃ k'' d', BRun m n k d k'' d' ∧ EqLimit k' c' d' := by
   induction hRun generalizing d with
   | zero =>
       exact ⟨k,d,BRun.zero k d,heq⟩
@@ -177,9 +176,9 @@ theorem BRun_replay {m : Machine} {n k : Nat} {c : FiniteCfg}
       obtain ⟨k₂,d₂,hrest',heq₂⟩ := ih d₁ heq₁
       exact ⟨k₂,d₂,BRun.succ hstep' hrest',heq₂⟩
 
-theorem BRun_finiteRun {m : Machine} {n k : Nat} {c : FiniteCfg}
-    {k' : Nat} {d : FiniteCfg}
-    (h : BRun m n (k,c) (k',d)) :
+theorem BRun_finiteRun {m : Machine} {n k k' : Nat}
+    {c d : FiniteCfg}
+    (h : BRun m n k c k' d) :
     finiteRun m n c = some d := by
   induction h with
   | zero => rfl
@@ -228,14 +227,14 @@ theorem boundedStep_sound {m : Machine} {k : Nat} {c : FiniteCfg}
               cases hp
               exact BStep.left hm hv
 
-theorem boundedRun_sound {m : Machine} {n k : Nat} {c : FiniteCfg}
-    {k' : Nat} {d : FiniteCfg}
+theorem boundedRun_sound {m : Machine} {n k k' : Nat} {c d : FiniteCfg}
     (h : boundedRun m n k c = some (k',d)) :
-    BRun m n (k,c) (k',d) := by
+    BRun m n k c k' d := by
   induction n generalizing k c k' d with
   | zero =>
-      simp [boundedRun] at h
-      cases h
+      have hp : (k,c) = (k',d) := by
+        simpa [boundedRun] using h
+      cases hp
       exact BRun.zero k c
   | succ n ih =>
       simp only [boundedRun] at h
@@ -274,7 +273,7 @@ structure TranslatedCycle (m : Machine) (period budget : Nat)
     (c : FiniteCfg) : Type where
   endBudget : Nat
   endConfig : FiniteCfg
-  run : BRun m period (budget,c) (endBudget,endConfig)
+  run : BRun m period budget c endBudget endConfig
   budget_mono : budget ≤ endBudget
   tape_eq : EqLimit budget c endConfig
 
@@ -368,7 +367,7 @@ theorem leftEqB_sound {k : Nat} {xs ys : List Bool}
 
 theorem sideEqB_sound {xs ys : List Bool}
     (h : sideEqB xs ys = true) : SideEq xs ys := by
-  change ∀ i : Nat, xs[i]?.getD false = ys[i]?.getD false
+  unfold SideEq
   intro i
   by_cases hi : i < max xs.length ys.length
   · have h' := allRange_sound h i hi
@@ -533,6 +532,7 @@ def sampleMachine : Machine := fun s =>
   | 4, true  => some ⟨true,false,0⟩
   | 5, false => none
   | 5, true  => none
+  | _, _ => none
 
 def samplePartial : PartialMachine := sourcePartial sampleMachine
 
@@ -541,10 +541,7 @@ theorem sampleRoot :
   rfl
 
 theorem sampleSupport : TNFSupport samplePartial 5 := by
-  intro s t hs
-  rcases s with ⟨q,b⟩
-  fin_cases q <;> cases b <;>
-    simp_all [samplePartial,sourcePartial,sampleMachine]
+  decide
 
 theorem sampleCyclerCheck :
     translatedCyclerCheck sampleMachine false 7 6 0 = true := by
