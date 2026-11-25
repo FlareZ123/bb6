@@ -86,7 +86,7 @@ theorem b0_1lcSideWitnesses_safe :
   intro w hw m hm
   have hmem : w ∈ BB6.Agent47SevenSideWitnesses.witnesses :=
     (List.mem_filter.mp hw).1
-  have hcheck : w.check = true :=
+  have hcheck : BB6.Agent47SevenSideWitnesses.SideWitness.check w = true :=
     List.all_eq_true.mp BB6.Agent47SevenSideWitnesses.witnesses_checked w hmem
   exact w.sound hcheck m hm
 
