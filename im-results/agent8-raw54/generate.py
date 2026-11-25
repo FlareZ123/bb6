@@ -64,7 +64,7 @@ def main():
         assert hashlib.sha256(raw).hexdigest()=="e805fa023715eee0cda042eaf47d0fc56e7c2df9dc17045f642734e0c5648eaa"
         rows=raw.decode().splitlines()
         assert len(rows)==len(set(rows))==1146
-        out=subprocess.check_output([str(work/"bank"),str(work/"open.txt"),str(ROOT/"bank.txt")],text=True)
+        out=subprocess.check_output([str(work/"bank"),str(ROOT/"bank.txt"),str(work/"open.txt")],text=True)
         found=dict((int(i),v) for i,v in (line.split(":") for line in out.splitlines()))
         assert len(found)==1058
         misses=[r for j,r in enumerate(rows) if j not in found]
@@ -72,6 +72,21 @@ def main():
         far={rows[i]:v for i,v in found.items()}
         for i,code in [(10,"10123224132"),(12,"10123224132"),(13,"10123224132"),(14,"10123224132"),(15,"10123224132"),(57,"00102334101"),(68,"00102334101")]:
             far[misses[i]]=code
+        # Independently checked sparse n-gram and strong-induction witnesses.
+        sys.path.insert(0,str(ROOT.parent/"agent47-raw111-cut"))
+        from emit_sparse import emit as emit_ngram
+        subprocess.run(["g++","-O3","-std=c++17",str(ROOT.parent/"agent47-raw111-cut"/"ngram_sparse.cpp"),"-o",str(work/"ngram")],check=True)
+        for i,k,n,l,r in [[30,16,1537,75,232],[43,16,3217,355,214],[45,8,644,18,62],[46,8,693,18,62],[47,8,693,18,62],[54,8,199,19,30],[55,16,436,40,59],[58,8,406,41,25],[60,8,593,40,34],[78,8,117,20,13],[79,12,239,33,40]]:
+            result=subprocess.check_output([str(work/"ngram"),str(k)],input=f"{i} {misses[i]}\n",text=True).strip()
+            ident,data=result.split(maxsplit=1)
+            assert int(ident)==i
+            mod,ns=emit_ngram(ROOT,i,misses[i],data,width=k,module_name=f"Raw54Sparse{i}",expected=(n,l,r))
+            certs[misses[i]]=f".proven {ns}.table {ns}.never"
+            imports[misses[i]]=mod
+        for i in [38,39,40,42,56,61,67,69]:
+            ns=f"BB6.Agent8Raw54.Rec{i}"
+            certs[misses[i]]=f".proven {ns}.table {ns}.never"
+            imports[misses[i]]=f"Raw54Rec{i}"
     for row,code in far.items():
         d,D,L,R,z=masks(parse(row),int(code[0]),[int(c,36) for c in code[1:]])
         certs[row]=f".far {str(code[0]=='1').lower()} {d} ⟨0,{D},{L},{R},{z}⟩"
