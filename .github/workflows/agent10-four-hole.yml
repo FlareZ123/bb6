@@ -4,7 +4,7 @@ on:
     inputs:
       target:
         type: choice
-        options: [twelve, five-hole, recursive, raw107-witness, raw107-child]
+        options: [twelve, five-hole, recursive, raw107-witness, raw107-child, raw58-cut]
         default: twelve
       raw107_child:
         description: 'B1 action for an individual raw107 child source audit'
@@ -89,3 +89,13 @@ jobs:
           esac
           python tools/lean_compile_closure.py --workdir /tmp/a10-raw107-child --jobs 4 "$root/$module.lean" | tee /tmp/a10-raw107-child.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a10-raw107-child.log; then exit 1; fi
+      - name: Check raw58 first-hole refinement
+        if: inputs.target == 'raw58-cut'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent4-raw58/generate.py
+          python tools/lean_compile_closure.py --workdir /tmp/a4-raw58 --jobs 4 im-results/agent4-raw58/Raw58Cut.lean | tee /tmp/a4-raw58.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a4-raw58.log; then exit 1; fi
