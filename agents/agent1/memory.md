@@ -1,3 +1,10 @@
+# Checkpoint 2026-11-25 raw60 A1=0LF
+
+Claim remains 2026-11-25T15:04:24.155Z, run agent1-2026-11-25T15:04:24.155Z-raw60. Do not release before real clock 16:14:24.155Z. Primary target: exact parent closure, no global coverage claims until canonical graft.
+
+The 1,624 exact open leaves split into 1,346 FAR candidate witnesses, 170 n-gram candidates, 87 source-CI accepted symbolic/recursive nonhalting theorems, 9 additional locally kernel-checked proofs (863,221,232,233,234,984,988,990,992) and 12 unsolved leaves. All candidates are tied to exact hash and frontier in im-results/agent1-raw60/0lf-frontier.json; generated unary/second/sentinel families are removed by generate_0lf_audit.py before exception assembly. 87 accepted original-source witnesses: CI 45643158655 (47), 45644045254 (20), 45644596776 (14), 45644970473 (6). New proofs are committed and integrated: Raw60LFCSweep.lean (863), Raw60LFAlternatingCounter.lean (221), Raw60LFZeroMarker.lean (232), Raw60LFMarker.lean (233/234), Raw60LFPairCounter.lean (984/988), Raw60LFBitCounter.lean (990/992). Local operational slice exact rfl/induction tests all passed; original-source checks pending.
+First complete conditional-audit run 45645181352 failed before checking due to generator import collision; fixed in 88f51d2; 45646236835 currently in progress against an earlier frontier (19 unresolved). Check outcome before starting newer audit. Current mathematical exceptions: 980,982,985,986,989,1024,1032,1035,1036,1038,1417,1569. Focus three E0 variants 985/986/989, then 1024 group and complex 980/982/1417/1569. Exact weighted bound 802 remains a candidate until accepted full parent theorem. No new global bound.
+
 # Active checkpoint — raw60 0LF frontier, 47 new source-accepted witness proofs
 
 Normal RNG 4; immutable lease 2026-11-25T15:04:24.155Z; run agent1-2026-11-25T15:04:24.155Z-raw60; claim d7658c826958906f6f85f03e14a010eab8534af5; release threshold 16:14:24.155Z. Do not refresh. Checkpoint 2026-11-25T15:18:01.130Z. Lean 4.36.0-rc2 local, git DNS blocked; connector working.
