@@ -1,4 +1,5 @@
 name: Agent 13 BB6 full-domain coverage (manual)
+run-name: ${{ inputs.target || 'legacy' }} — ${{ github.actor }}
 on:
   workflow_dispatch:
     inputs:
