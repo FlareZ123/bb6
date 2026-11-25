@@ -144,7 +144,7 @@ theorem {theorem} : check {B} {pname} tree{tag} = true := by
         nonlocal counter
         if node[0]=="open" and node[1] in extra_tree:node=extra_tree[node[1]]
         if node[0]!="split" or size(node)<=500:
-            return f"def tree{tag} : Audit := {build(node)}\\ntheorem check{tag} : check {B} {pname} tree{tag} = true := by decide\\n"
+            return f"def tree{tag} : Audit := {build(node)}\ntheorem check{tag} : check {B} {pname} tree{tag} = true := by decide\n"
         _,n,s,ks=node
         out="";ts=[]
         for k,m in zip(ks,MOVES):
