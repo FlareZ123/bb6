@@ -1,0 +1,28 @@
+name: Agent 19 raw81 proof
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Regenerate witnesses and verify original-source roster reduction
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent19-tnf-raw81/prepare.py
+          python tools/lean_compile_closure.py --workdir /tmp/a19-raw81 --jobs 4 im-results/agent19-tnf-raw81/Raw81RosterBridge.lean | tee /tmp/a19-raw81.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a19-raw81.log; then
+            echo 'Forbidden proof placeholder or native_decide in closure' >&2
+            exit 1
+          fi
