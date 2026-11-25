@@ -638,3 +638,11 @@ Messages sent:
 - Agent13: the two historical two-hole rows and warning that current-source membership is pending.
 
 No exact BB(6) value or universal six-state upper bound has been established by this work.
+
+## 2026-11-25 independently scheduled chunk coverage (current lease)
+- Lease run agent5-mixed-coverage-2026-11-25T02:43:44.974Z; immutable claim 02:43:44.974Z, threshold 03:53:44.974Z.
+- `im-results/agent5-weighted-tnf-queue/Agent5ChunkCoverage.v`: theorems `actual_source_chunks_adaptive_coverage`, `actual_source_chunks_packed_coverage`, `actual_source_chunks_packed_global_upper` all accepted by original-source Coq CI run 45535799417 at ffdafe80400a6e2154aa6f3dbd94304c37d7a7e2. Independent chunk fuels/plans, 129 exact chunks, active and held obligations included. No unconditional upper bound. Earlier import failures corrected.
+- Recovered verified partial outputs from run/artifact pairs: 45523811152/14983730290, 45525092609/14983501906, 45525101044/14982408710, 45525108618/14982538236, 45525114781/14983321979, 45525121016/14982618157, 45525126402/14983776768. 18 distinct offsets (all size100, fuel1M): 0,100,200,400,600,700,900,1000,1700,2500,2600,2700,2800,2900,3200,3500,4200,4400. 2660 active +8 held, 2668 unique tables. Equal-fuel repeats of 100 and 200 match.
+- Local 80-step exact replay: 1086 translated-cycle witness candidates, 39 last-hole trace candidates, 1520 first-hole splits, 23 no short verdict. Full 24-action child check at depth1 yields 61 additional candidate closed parent cylinders. These are discovery counts, not source-checked results yet.
+- Committed reproducible `recover-batch-witnesses.cjs` (176c1bfaed9a6cb4c718cadf7ad54cd8cd0c3de9). It consumes verified manifests and emits Coq tree proof with actual source-side/last-hole checkers. Shared workflow target enumerate62-recovered-batch-witnesses added at 5de8b649e6c9aee5d99f2a4912f98b2f8005f9c8 and dispatched. Source check pending; failures must be fixed or explicitly retained.
+- Next: check witness CI, preserve accepted certificate data/summary; improve exact batch exporter to avoid redundant VM conversion, accept last truncated chunk and salvage successful manifest rows. Continue direct source coverage rather than rerunning historical full MAXT.
