@@ -165,6 +165,7 @@ jobs:
           test -n "${{ inputs.source_ref }}"
           expected="$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${ARTIFACT_RUN_ID}" --jq '.head_sha')"
           test "$expected" = "${{ inputs.source_ref }}"
+          git fetch --no-tags --depth=1 origin "${{ inputs.source_ref }}"
           git diff --exit-code "${{ inputs.source_ref }}" -- \
             im-results/agent43-raw122-cut/generate.py \
             im-results/agent43-raw122-cut/symbolic.py \
@@ -245,12 +246,6 @@ jobs:
           test -n "${{ inputs.source_ref }}" || { echo "source_ref must be the exact artifact head SHA"; exit 1; }
           expected="$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${ARTIFACT_RUN_ID}" --jq '.head_sha')"
           test "$expected" = "${{ inputs.source_ref }}"
-          git diff --exit-code "${{ inputs.source_ref }}" -- \
-            im-results/agent43-raw122-cut/generate.py \
-            im-results/agent43-raw122-cut/symbolic.py \
-            im-results/agent43-raw122-cut/long-plans.json \
-            im-results/agent43-raw122-cut/extra-bank.txt \
-            tools/lean_compile_closure.py
       - name: Install Lean
         run: |
           set -euo pipefail
