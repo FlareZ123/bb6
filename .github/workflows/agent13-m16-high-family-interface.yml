@@ -74,6 +74,7 @@ on:
           - sourceWordBlock
           - sourceWordRunner
           - sourceWeightedWord
+          - sourceDyadicAncestry
           - sourceBoundedShadow
           - sourceExactMemo
           - sourceLowQuarterTwoForced
@@ -283,6 +284,9 @@ jobs:
               ;;
             sourceHeightConeCriterion)
               target=im-results/agent42-modular-cone/HeightConeCriterion.lean
+              ;;
+            sourceDyadicAncestry)
+              target=im-results/agent12-c-high-shadow/DyadicAncestrySource.lean
               ;;
             sourceWeightedWord)
               target=im-results/agent12-c-high-shadow/WeightedWordSource.lean
