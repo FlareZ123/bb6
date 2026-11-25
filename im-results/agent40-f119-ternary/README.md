@@ -6,7 +6,7 @@ Machine: `1RB0RB_1LB0LC_1RD1LC_1RE0RA_0RF1RA_---1LB` (upstream #417 / suspect_15
 
 For the copied upstream three-counter recurrence, blank-root halting is equivalent to reaching a section `(3^k,1)` with `k mod 12 = 0 or 3`. The immediately preceding section, whenever such a power is reached from a nonterminal root path, must have tag 1 and ternary valuation 1; its first coordinate is (9·3^k−33)/10 when k mod 4 = 3 and (9·3^k−39)/10 when k mod 4 = 0.
 
-This eliminates all other terminal exponent classes. Neither surviving class has yet been proved unreachable, so this is not a nonhalting certificate.
+The first gate eliminates all other terminal exponent classes; the second gate below restricts them further to 0, 3, 39, 48 modulo 60 and is original-source accepted. None of these four classes has yet been proved unreachable. The new [modular obstruction](ModularObstruction.md) proves that every fixed-modulus generic tag-1 graph is strongly connected, excluding ultimately periodic section safety invariants (paper proof with a locally kernel-checked arithmetic core). The actual root decision remains open.
 
 ## Reduction
 
@@ -24,7 +24,7 @@ For a generic tag-1 predecessor of 3^k, put p=3^h and M=3p+1. Powers of three mo
 
 `F119.lean` is a pure Std proof, checked locally with Lean 4.36.0-rc2. Run `lean F119.lean`. Main declarations: `F119.root_halts_iff`, `F119.incoming_power`, `F119.root_halts_iff_restricted_power`. The printed axiom sets are subsets of propext, Classical.choice and Quot.sound; no sorry or native_decide.
 
-The proof currently uses a literal transcription of the arithmetic transition from Google DeepMind cryptids, Apache-2.0, commit 3647718b5df22e1a61462dec0376bd204526285a, [original module](https://github.com/google-deepmind/cryptids/blob/3647718b5df22e1a61462dec0376bd204526285a/BusyBeaver/BB6/M_1RB0RB_1LB0LC_1RD1LC_1RE0RA_0RF1RA_HHH1LB.lean). That module supplies the raw-machine acceleration theorem. Import-connected equivalence remains to be checked; this local result alone is not a source-connected raw-machine theorem.
+The proof currently uses a literal transcription of the arithmetic transition from Google DeepMind cryptids, Apache-2.0, commit 3647718b5df22e1a61462dec0376bd204526285a, [original module](https://github.com/google-deepmind/cryptids/blob/3647718b5df22e1a61462dec0376bd204526285a/BusyBeaver/BB6/M_1RB0RB_1LB0LC_1RD1LC_1RE0RA_0RF1RA_HHH1LB.lean). That module supplies the raw-machine acceleration theorem. The import-connected equivalence including the stronger second gate subsequently passed pinned original-source CI 45547394921; see source status below.
 
 ## Next obligation
 
@@ -53,7 +53,7 @@ All h≥6 are impossible: set p=3^h, M=3p+1. Powers of 3 modulo M lie in the sig
 
 For k<4 the residue restriction follows directly from the earlier mod-12 restriction. Thus the exact local root-halting equivalence can restrict k to these four classes.
 
-**Proof status:** [F119Inverse2.lean](F119Inverse2.lean) compiled with Lean 4.36.0-rc2, using only propext, Classical.choice and Quot.sound. [F119RootInverse2.lean](F119RootInverse2.lean) compiled locally against temporary exact-signature interfaces of the prior local recurrence; original dependency compilation is required before claiming full kernel closure. [F119SourceBridge.lean](F119SourceBridge.lean) transports every branch to the pinned original Cryptids acceleration and composes the four-class root equivalence. Its branch map and local stopping/iteration conversion were locally checked on literal definition mirrors; the original source import is pending a manual source audit. No mock interfaces are committed.
+**Proof status:** [F119Inverse2.lean](F119Inverse2.lean) compiled with Lean 4.36.0-rc2, using only propext, Classical.choice and Quot.sound. [F119RootInverse2.lean](F119RootInverse2.lean) compiled locally against temporary exact-signature interfaces of the prior local recurrence; original dependency compilation is required before claiming full kernel closure. [F119SourceBridge.lean](F119SourceBridge.lean) transports every branch to the pinned original Cryptids acceleration and composes the four-class root equivalence. Its branch map and local stopping/iteration conversion were locally checked on literal definition mirrors; the original source import subsequently passed the manual audit described below. No mock interfaces are committed.
 
 The next mathematical target is actual exclusion or attainment of the remaining four power families, preferably a root invariant or an unbounded inverse-tree argument rather than repeated finite-depth enumeration. The exact BB(6) champion bound remains unchanged.
 
