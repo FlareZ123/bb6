@@ -56,6 +56,20 @@ The residual rectangles are exact obligations: a machine in the parent that matc
 
 Raw9 is the best next complete box-consumer target (108 residual boxes and 33.002% of its parent already certified), followed by raw8 (208 boxes). Raw23's 12,584-box first-mismatch complement is too fragmented for a naive list consumer; it should use a reduced multi-valued decision diagram or a smaller selected certificate subset.
 
+## Reduced multi-valued decision diagrams
+
+The same unions also admit a much smaller reduced 25-way decision DAG. The committed node tables are in `bdds.json`; terminal ID 0 means open (not matched by any consumed certificate), terminal ID 1 means covered. Each internal node tests one still-unfixed transition slot and has 25 children, one for halt and each ordinary move. The generator chooses the most discriminating remaining slot, memoizes recursion states, and hash-conses identical nodes.
+
+| Parent | Memoized states | Reduced internal nodes | First-mismatch rectangles |
+|---:|---:|---:|---:|
+| raw8 | 23 | 19 | 208 |
+| raw9 | 45 | 37 | 108 |
+| raw10 (65 witnesses + held leaf) | 49 | 27 | 34 |
+| raw23 | 74 | 31 | 12,584 |
+
+In particular, raw23's 12,584 disjoint rectangles collapse to a 31-node DAG. This is an exact computational representation of the same union/complement, not yet a Lean kernel-checked theorem. It is a much better target for a compact formal checker than materializing every first-mismatch rectangle. The updated `scan.py` reconstructs each DAG and checks its complete node table against `bdds.json`.
+
+
 ## Roster status and proof boundary
 
 The manifest identifies raw8/raw9/raw23 as canonical indices 4/5/13. None is among the 18 exact cylinders removed by `Combined106Roster.covered` (raw66/70/80; raw86/87/88/91/92/93/97/98/100/101/102/104; raw68/72/82), and their addresses satisfy the first-one state-introduction rule. They are therefore expected to be retained canonical78 obligations. A Lean exact-membership theorem is still required before treating this as an accepted roster graft.
