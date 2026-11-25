@@ -66,5 +66,6 @@ jobs:
             exit 0
           fi
           git commit -m "Agent 8: preserve exact raw112 residual tables"
-          git pull --rebase origin main
+          git fetch origin main
+          git rebase origin/main
           git push origin HEAD:main
