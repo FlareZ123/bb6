@@ -25,6 +25,18 @@ for module in RelativeTape FrontierAudit FrontierMass FrontierClose \
   CryptidsTapeAdapter CryptidsF287; do
   cp "$repo_root/im-results/agent4-coverage-smoke/$module.lean" "$build_dir/"
 done
+
+# The source bridge intentionally nests BB6.F287 under BB6.ConjectureBridge.
+# Re-export only the exact table and theorem at the namespace expected by the
+# existing F287HaltFreedom adapter; the proof term is unchanged.
+cat >> "$build_dir/CryptidsF287.lean" <<'LEAN'
+namespace BB6.F287
+open BB6Coverage
+abbrev expectedRLE : Machine := BB6.ConjectureBridge.BB6.F287.expectedRLE
+theorem literal_never : NeverHalts expectedRLE :=
+  BB6.ConjectureBridge.BB6.F287.literal_never
+end BB6.F287
+LEAN
 for module in HaltSlotFreedom F287HaltFreedom; do
   cp "$repo_root/im-results/agent8-coverage-contract/$module.lean" "$build_dir/"
 done
