@@ -179,12 +179,6 @@ Proof.
   apply length_filter_partition.
 Qed.
 
-(* Emit the exact count from the pinned source checkpoint for the run log;
-   the proof above deliberately does not assume that duplicate occurrences
-   are absent. *)
-Eval vm_compute in length q0_2800_consumed_obligations.
-Eval vm_compute in length q0_2800_residual_obligations.
-
 (* Identify the exact packed chunk-28 residual with the original
    q_i(2800,100) checkpoint after 1,000,000 source updates. The continuation
    at that packed checkpoint is AP_stop; this is the exact source queue whose
