@@ -9,6 +9,7 @@ open BB6Coverage
 open BB6.Agent13BlankDelay
 open BB6.Agent31FourHoleFrontier
 open BB6.Agent50TNFPilot
+open BB6.Agent8TNFPath
 
 abbrev Entry := List Move × PartialMachine
 
@@ -52,30 +53,32 @@ theorem residuals_buildFrontierB (B : Nat) :
       rcases hfields with ⟨hhole,hread,hslot,hmove,hweight,htail⟩
       have hr : knownRun p n = some (extractRunConfig hread).val :=
         (extractRunConfig hread).property
-      have hs : BB6.Agent13BlankDelay.readSlot
+      have hs : BB6Coverage.readSlot
           (extractRunConfig hread).val = s := by
         have h' : (some (extractRunConfig hread).val).map
-            BB6.Agent13BlankDelay.readSlot = some s := by
+            BB6Coverage.readSlot = some s := by
           simpa [hr] using hread
         simpa using h'
+      have hhole' : p (BB6Coverage.readSlot (extractRunConfig hread).val) = none := by
+        simpa [hs] using hhole
       have htail' : pathOKB B
-          (refine p (BB6.Agent13BlankDelay.readSlot
+          (refine p (BB6Coverage.readSlot
             (extractRunConfig hread).val) (some mv))
           (advanceCut cut mv) xs = true := by
         simpa [hs] using htail
       have cert' : WeightedTNFCertificate B
-          (pathEnd (refine p (BB6.Agent13BlankDelay.readSlot
+          (pathEnd (refine p (BB6Coverage.readSlot
             (extractRunConfig hread).val) (some mv))
             (advanceCut cut mv) xs).1 6 := by
         simpa [pathEnd, hs] using cert
       have ih' := ih
-        (refine p (BB6.Agent13BlankDelay.readSlot
+        (refine p (BB6Coverage.readSlot
           (extractRunConfig hread).val) (some mv))
         (advanceCut cut mv)
-        (RawRootPath.step hp (extractRunConfig hread).property hhole)
+        (RawRootPath.step hp (extractRunConfig hread).property hhole')
         htail' cert'
       simp [buildFrontierB, residuals, pureResiduals,
-        hs, htail', cert', ih', residuals_cast]
+        hs, hhole', htail', cert', ih', residuals_cast]
 
 /-- Every path edge has 23 off-path ordinary children: the selected move
     is the unique one among the 24 ordinary moves that continues the path. -/
@@ -117,6 +120,7 @@ theorem flatMap_length_single_exception {α β : Type}
           exact hother y (by simp [hy]) hya
         have hlen := flatMap_length_all_one xs f hotherTail
         rw [List.flatMap_cons, List.length_append, hlen]
+        simp
         omega
       · have hmemTail : a ∈ xs := by
           rcases hmem with hhead | htail
@@ -132,6 +136,7 @@ theorem flatMap_length_single_exception {α β : Type}
           | nil => simp at hmemTail
           | cons y ys => simp
         rw [List.flatMap_cons, List.length_append, hx, ih']
+        simp
         omega
 
 /-- The pure residual projection has a path-length-only cardinality.
