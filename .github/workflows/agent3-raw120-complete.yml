@@ -1,0 +1,74 @@
+name: Raw120 complete source-linked parent proof
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  child:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        child: [0LA, 0LB, 0LF, 0RA, 0RB, 0RC, 0RF, 1LA, 1LB, 1LF, 1RA, 1RB, 1RC, 1RF, cycles]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Source-check child
+        env:
+          CHILD: ${{ matrix.child }}
+        run: |
+          set -euo pipefail
+          base=im-results/agent3-tnf-raw120
+          python im-results/agent13-coverage/unpack.py
+          if [ "$CHILD" = cycles ]; then
+            target="$base/Raw120EasyCycles.lean"
+          else
+            target=$(python "$base/generate_child.py" "$CHILD")
+          fi
+          mkdir -p /tmp/raw120-shard
+          python tools/lean_compile_closure.py --workdir /tmp/raw120-shard/objects --jobs 2 --manifest /tmp/raw120-shard/manifest.json "$target" | tee /tmp/raw120-check.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/raw120-check.log; then exit 1; fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw120-child-${{ matrix.child }}
+          path: /tmp/raw120-shard
+          if-no-files-found: error
+          retention-days: 14
+  parent:
+    needs: child
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw120-child-*
+          path: /tmp/raw120-shards
+      - name: Check complete parent against exact child closures
+        run: |
+          set -euo pipefail
+          base=im-results/agent3-tnf-raw120
+          python "$base/assemble_shards.py" /tmp/raw120-shards /tmp/raw120-merged
+          python tools/lean_compile_closure.py --workdir /tmp/raw120-parent --jobs 2 --precompiled-dir /tmp/raw120-merged --precompiled-manifest /tmp/raw120-merged/manifest.json --manifest /tmp/raw120-parent-manifest.json "$base/Raw120Complete.lean" | tee /tmp/raw120-parent.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/raw120-parent.log; then exit 1; fi
+          mkdir -p /tmp/raw120-result
+          cp /tmp/raw120-parent-manifest.json /tmp/raw120-result/manifest.json
+          cp /tmp/raw120-parent.log /tmp/raw120-result/check.log
+          cp -r /tmp/raw120-parent /tmp/raw120-result/objects
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw120-parent
+          path: /tmp/raw120-result
+          if-no-files-found: error
+          retention-days: 14
