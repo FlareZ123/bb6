@@ -32,6 +32,7 @@ def main(work: Path) -> None:
         "open_sha256": hashlib.sha256(raw).hexdigest(),
         "ngram_count": len(ng),
         "indices": indices,
+        "claims": [{"index": int(i), "namespace": str(ns)} for i, ns in claims],
         "modules": modules,
     }
     (HERE / "Raw118Sparse.json").write_text(json.dumps(manifest, indent=2) + "\n")
