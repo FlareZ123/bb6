@@ -754,7 +754,7 @@ jobs:
           if [ "$TARGET" = weighted-tnf-canonical-78 ] || [ "$TARGET" = weighted-tnf-canonical-78-exact ]; then target=im-results/agent47-rooted-tnf/Canonical78Roster.lean; fi
           if [ "$TARGET" = weighted-tnf-canonical-two-parent ]; then target=im-results/agent47-rooted-tnf/CanonicalTwoParentGraft.lean; fi
           if [ "$TARGET" = weighted-tnf-raw10-box ]; then target=im-results/agent49-box-complement/Raw10BoxBridge.lean; fi
-          if [ "$TARGET" = weighted-tnf-raw10-box8-cycle ]; then target=im-results/agent50-weighted-tnf-pilot/Raw10Box8Cycle.lean; fi
+          if [ "$TARGET" = weighted-tnf-raw10-box8-cycle ]; then target=im-results/agent50-weighted-tnf-pilot/Raw10Box8CycleConsumer.lean; fi
           if [ "$TARGET" = weighted-tnf-held-block-far ]; then
             python im-results/agent13-block-far/generate.py im-results/agent13-block-far
             target=im-results/agent13-block-far/HeldBlockConsumer.lean
