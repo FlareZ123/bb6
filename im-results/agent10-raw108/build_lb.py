@@ -48,6 +48,7 @@ def emit_ngram_group(spec, opens, target):
 
 def emit_block(mod, ns, table, params, active=False):
     width=params["width"]
+    active = active or width >= 8
     suffix="" if width==3 else str(width)
     if width!=3:
         subprocess.run([sys.executable,str(BLOCK/"specialize.py"),str(width)],check=True)
