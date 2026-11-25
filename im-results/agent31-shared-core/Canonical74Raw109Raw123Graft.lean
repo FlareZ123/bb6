@@ -2,7 +2,6 @@ import CanonicalTwoParentRosterOnly
 import Raw109Cut
 import Raw123Base
 import CanonicalRosterRefinement
-import GraftRosterCount
 
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
@@ -44,30 +43,12 @@ theorem p123_parent_count :
     (roster75.filter (fun e => sameTable e.2 p123)).length = 1 := by
   decide
 
-/-- Structural one-step accounting, not a native evaluation of the new roster. -/
+/-- Both exact cuts remove one distinct quotient representative. -/
 theorem count75 : roster75.length = 75 := by
-  have hcount :
-      BB6.Agent42FrontierCount.graftMatchCount p109 baseRoster = 1 := by
-    simpa [BB6.Agent42FrontierCount.graftMatchCount] using p109_parent_count
-  have hlen :
-      roster75.length + 1 = baseRoster.length := by
-    simpa [roster75] using
-      (BB6.Agent42FrontierCount.graftRoster_length_of_one
-        p109 [] baseRoster hcount)
-  have hbase : baseRoster.length = 76 := by decide
-  omega
+  decide
 
 theorem count74 : roster74.length = 74 := by
-  have hcount :
-      BB6.Agent42FrontierCount.graftMatchCount p123 roster75 = 1 := by
-    simpa [BB6.Agent42FrontierCount.graftMatchCount] using p123_parent_count
-  have hlen :
-      roster74.length + 1 = roster75.length := by
-    simpa [roster74] using
-      (BB6.Agent42FrontierCount.graftRoster_length_of_one
-        p123 [] roster75 hcount)
-  have h75 : roster75.length = 75 := count75
-  omega
+  decide
 
 /-- Lift the source-accepted canonical76 dichotomy to the champion score.
     This theorem does not alter or discard any of its 76 quotient obligations. -/
