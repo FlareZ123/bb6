@@ -1,3 +1,13 @@
+## 2026-11-25 20:04 UTC checkpoint — coarse DFA full first-hole forest
+
+Immutable current lease: 2026-11-25T19:54:05.306Z, agent5-gpt62-2026-11-25T19:54:05.306Z-packed-frontier; release threshold 21:04:05.306Z. RNG=2. Do not refresh.
+
+New committed candidate forest 5f72efabfa53b3e9aba097ccf63f6017fdac3a55, verified on main. Original-source CI run 45691161531 in progress. **Not yet source accepted**. Exact offset0 size100 fuel1m source checkpoint (156 active +1 held) from run 45522264094 artifact 14980297755. The candidate generator combines exact trace, translated cycle, coarse 3-state DFA and overflow-marked low-bit prefix DFAs with all 24 ordinary first-hole children. 75 candidate active root closures (65 direct, 10 split; 3459 total tree nodes). Five shards: Small=70 roots/382 nodes, A=2/530, B=1/769, C=1/769, D=1/1009. Exact source roster consumer proposed at bound >=1000006, leaves complement including held entry. No global upper bound. The earlier accepted phase work already discharges this held entry separately.
+
+Files in im-results/agent5-weighted-tnf-queue/: coarse-forest.md, coarse-forest.cjs, coarse-forest-candidates.json, Agent5CoarseTree.v, Agent5Coarse{Small,A,B,C,D}.v, Agent5CoarseConsume*.v, run-coarse-forest.sh. Existing shared workflow target enumerate62-coarse-forest. Local Lean 4.36.0-rc2 extracted; local Coq absent and git DNS fails; use connector and original-source CI. First CAS was rejected due concurrent main advancement, reapplied safely to fresh head.
+
+Next: inspect source CI, repair actual compile failures only, retain acceptance by root/shard. For remaining 81 active roots, use fresh-state canonical expansion guarded by source_support, with exact trace and weighted permutation lemma from Agent8WeightedSource.v; avoid claiming omitted choices without proof. Most remaining are 7-hole cylinders, so avoid unbounded full expansion. Focus actual residual elimination and compose with prior held discharge.
+
 ## 2026-11-25 11:54 UTC checkpoint — all nine held q0 obligations source-consumed
 
 Immutable lease: 2026-11-25T11:34:21.569Z, agent5-gpt62-2026-11-25T11:34:21.569Z-width2-blockfar; threshold 12:44:21.569Z. Normal RNG=9. Do not refresh.
