@@ -23,14 +23,12 @@ theorem oneLF_is_depth5_sibling :
     sameTable BB6.Agent48F1OneLF.parent
       (championChild 5 ⟨true,false,5⟩) = true := by
   decide
-    championP1, championResidual, championRootAfterB, refine, root]
 
 /-- The second newly closed depth-five sibling is exactly F/1 = 0RD. -/
 theorem zeroRD_is_depth5_sibling :
     sameTable BB6.Agent48F1ZeroRD.ctr
       (championChild 5 ⟨false,true,3⟩) = true := by
   decide
-    championP1, championResidual, championRootAfterB, refine, root]
 
 /-- Lift the 126-bound three-hole certificate to any larger weighted target. -/
 theorem cover_oneLF (B : Nat) (hB : 126 ≤ B) :
