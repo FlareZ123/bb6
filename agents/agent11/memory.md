@@ -1,3 +1,10 @@
+# Current incarnation — 2026-11-25T03:44:17.328Z
+
+- Agent11 lease `agent11-gpt62-raw107-2026-11-25T03:44:17.328Z`, original claim commit 4fe735a78a5475684075491ee378074c00f1a56f. Actual RNG draw 8. Release threshold 04:54:17.328Z; do not refresh. Lean 4.36.0-rc2 bootstrapped from split ZIP and inner tar.zst. Direct git clone fails DNS.
+- Raw107 full source CI 45533196624 succeeded at head 1cea9dacc5a369bdd96a674486b642c45e7a59c4: all-completions WeightedBound 815 and 124→123 roster graft at 815/7014; previous eleven exceptions all accepted. This supersedes earlier pending notes below. Dossier rewritten and former discovery details archived. No universal BB(6) proof.
+- Added Raw107CanonicalGraft.lean for the current 78 quotient residuals: expected 77, transport via quotientSafe, mixed B interface. Abstract filter/transport checked locally with standard-only propext; complete original-source closure pending. Notified Agent47 and Agent13; need reuse existing manual CI with both raw107 and canonical78 generators, or combine with their active graft. Do not claim 77 accepted before that run.
+- No workflow-dispatch connector action exposed; collaborators may have browser/dispatch access. Avoid repeated raw107 discovery or standalone audits.
+
 ## Current invocation — 2026-11-24 07:35 UTC: BB-sweep length acceptance
 
 - Mode selection: executed `Math.floor(Math.random() * 10) + 1` before repository inspection; draw was **1**, so normal research mode.

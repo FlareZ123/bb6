@@ -1,105 +1,43 @@
-# Raw107: ten candidate child audits; eleven outstanding leaf machines
+# Raw107: complete source-certified six-hole cylinder
 
-Parent: `1RB---_1RC---_0RD---_1LD1RE_---0RB_------`. This is canonical residual 107, with six holes. The first undefined row is B1 at time 7. This work closes a candidate **seven-child** audit, not the whole parent or the BB(6) upper bound.
+## Established result
 
-## B1=0RD child
+Every completion of the partial table `1RB---_1RC---_0RD---_1LD1RE_---0RB_------` satisfies `WeightedBound 815` in the original weighted first-one semantics. This closes raw107 (canonical-124 index 72), including its six unassigned rows. The theorem is [Raw107ParentClosure.all_completions](Raw107ParentClosure.lean), and the original 124-cylinder residual list loses exactly one member in [Raw107RosterBridge.lean](Raw107RosterBridge.lean).
 
-The child is `1RB---_1RC0RD_0RD---_1LD1RE_---0RB_------`. Its first query is E0 at time 15. Candidate weighted bound: **129**. The finite enumeration accounts for all 9,765,625 raw assignments (25^5): cycle mass 9,172,475; halt mass 559,887; total-defined nonhalt mass 32,088; previously open mass 1,175. The tree has 406 split, 7,955 cycle, 1,337 last-hole and 47 formerly open nodes. The largest finite score is 129 (ordinary time 126, delay 2): `1RB0RE_1RC0RD_0RDHHH_1LD1RE_0LF0RB_0LA1LE`.
+**Source acceptance:** [run 45533196624](https://github.com/FlareZ123/bb6/actions/runs/45533196624), head `1cea9dacc5a369bdd96a674486b642c45e7a59c4`, completed successfully at 03:21:28 UTC on 25 November 2026. The existing manual `raw107-parent` target executed the generator and complete import closure through Raw107RosterBridge under Lean 4.36.0-rc2; its `sorryAx|native_decide` log guard passed. The earlier [exception-witness run 45525124908](https://github.com/FlareZ123/bb6/actions/runs/45525124908) established the eleven special leaf nonhalting proofs. This is an original-source all-completions upper bound, not a proof that 815 is the least possible bound and not a universal BB(6) upper bound.
 
-All 47 previously open nodes now have candidate certificates: 40 one-state forward FAR witnesses, two three-state forward FAR witnesses, and five exact symbolic sweeps. The five entry and universally quantified growth theorems were compiled locally with Lean 4.36.0-rc2 using copied exact zipper/sweep primitives and proved lemmas. The original-source import closure, FAR checks, tree checks, and weighted certificate remain **pending**; no accepted roster reduction claimed.
+## Exhaustive first-hole split
 
-| Leaf | Entry time | Cost for n→n+1 |
+The first undefined transition is B1 at ordinary time 7. [Raw107RootCut.lean](Raw107RootCut.lean) handles the halt alternative and eleven immediate side cycles; the remaining thirteen ordinary transitions use the following certified child bounds.
+
+| B1 | Weighted bound | Original open leaves in discovery census |
 |---|---:|---:|
-| 0 | 2 | 50+20n |
-| 2 | 81 | 49+14n |
-| 3 | 1097 | 481+76n |
-| 30 | 15 | 51+48n |
-| 36 | 16 | 19+8n |
+| 0LE | 90 | 314 |
+| 0LF | 815 | 1418 |
+| 0RC | 200 | 392 |
+| 0RD | 129 | 47 |
+| 0RE | 201 | 258 |
+| 0RF | 536 | 687 |
+| 1LA | 282 | 1183 |
+| 1LB | 212 | 588 |
+| 1LC | 194 | 527 |
+| 1LE | 231 | 840 |
+| 1LF | 753 | 2497 |
+| 1RE | 158 | 421 |
+| 1RF | 160 | 569 |
 
-Leaf 3 is the long-epoch case: filter fresh-boundary observations to t≥1097, choose left boundary and state E (4), period 1. A length-eight periodic tape block is transferred through multiple sweep phases. The resulting unbounded recurrence is stronger than the finite discovery trace. Local entry axiom sets were [propext]; growth [propext, Quot.sound], no sorryAx/native_decide.
+Each five-hole child represents 25^5 raw row assignments under the discovery enumerator; the entire six-hole parent represents 25^6 = 244,140,625 assignments. These are raw assignment counts, not state-permutation quotient counts. The proof uses the actual compatibility predicate and exhaustive row split, rather than relying on counts.
 
-Run `python generate.py` to regenerate the candidate Lean modules using the existing repository tools. Open roster SHA256: 498535eee6ac4a86e2deaf8b0297db04339047757a1e3f99a31b7e5700bab61c. Compile Raw107RDData.lean and inspect its axiom profile with the established original-source workflow. Direct local git checkout failed DNS and the available connector exposes no workflow dispatch method; local copied primitive checks are not original-source CI.
+The final exceptional leaf witnesses use explicit universal recurrences or source-level nonhalting bridges. The seven 1LA leaves and 1LA/385 are composed in [Agent1's bridge](../agent1-raw107/Raw107LABridge.lean); 0LF/180 uses [Raw107LF180Bridge](Raw107LF180Bridge.lean), and the two 1LF exceptions use [Raw107LFBridge](Raw107LFBridge.lean). Earlier exponential countdown and count-up, multi-block sweep and long-epoch recurrence discoveries remain in the local Lean modules and [historical discovery dossier](candidate-discovery.md). The eleven exceptions are no longer open.
 
-## B1=0RC child
+## Consuming the accepted cylinder
 
-The child `1RB---_1RC0RC_0RD---_1LD1RE_---0RB_------` first queries C1 at time 16. Candidate weighted bound **200**. Counts: 1007 split, 19427 cycle, 3343 last-hole, 392 formerly open. Mass: 8,022,875 cycle; 694,518 halt; 80,232 total ordinary-only nonhalt; 968,000 open; total 9,765,625. Max finite score 200 at `1RB0LA_1RC0RC_0RD1LF_1LD1RE_1RA0RB_1LEHHH` (199 ordinary steps, zero delay).
+The accepted raw roster bridge establishes the 123-entry residual dichotomy at 815 and at 7014, starting from the original 124 list. Its result overlaps the separate Combined106 and Canonical78 frontiers; counts must not be added.
 
-All 392 open leaves have candidates: 390 FAR masks and two symbolic sweeps. Leaf 102 has entry 2 and cost 17+20n. Leaf 100 (E0 hole) is the exponential countdown `1RB0RF_1RC0RC_0RD0RA_1LD1RE_---0RB_0RC0LD`; its family is state D with zipper left 0^(3n+4)11 and empty right. Raw107RCCountdown.lean proves the binary decrement and clearing recursion with arbitrary uninspected suffix. C(0)=0, C(n+1)=2C(n)+10+6n; epoch cost C(n)+6n+11; entry 9. Entry and growth compiled locally against copied exact zipper/sweep primitives (propext, Quot.sound). The original-source never theorem and complete audit remain pending. Generate using `python generate_rc.py`, compile Raw107RCData.lean. Open roster SHA256: 9d6ea5784163259089bd5f03f627ffc8ecd8d5bfe361a07c7be7bdeefcd25551.
+[Raw107CanonicalGraft.lean](Raw107CanonicalGraft.lean) is a new direct source draft for the current 78-representative quotient frontier. It filters only the exact table of raw107, invokes `quotientSafe` with the source-accepted parent theorem, lifts 815 to 7014, and retains every other quotient-compatible entry. Its expected count is 77. The mixed-bound interface requires the remaining Covers at target B, with an independent attaining raw witness for exactness. The abstract filter/transport proof shape was compiled locally with Lean 4.36.0-rc2; the actual full source import closure and concrete count of 77 still require acceptance. Do not replace the accepted 78-count global interface before that check passes.
 
-## B1=0RE child
+## Reproduction
 
-The child `1RB---_1RC0RE_0RD---_1LD1RE_---0RB_------` first queries E0 at time 8. Candidate weighted bound **201**. Counts: 368 split, 6990 cycle, 1217 last, 258 open. Mass: cycle 8,685,150; halt 522,817; total-defined nonhalt 29,208; open 528,450; total 9,765,625. Max finite score 201 at `1RB0LA_1RC0RE_0RDHHH_1LD1RE_0LF0RB_1LA1RA` (200 ordinary steps, zero delay). The 258 open leaves are covered by 251 FAR candidates and seven symbolic recurrences.
+Reuse the existing manual workflow [agent10-four-hole.yml](../../.github/workflows/agent10-four-hole.yml), target `raw107-parent`. It regenerates the ten child modules plus the three formerly conditional children, chunks each certificate, compiles Raw107RosterBridge through its actual dependency graph, and checks exported axiom profiles. The generator scripts, bank, specs and hand-written recurrence proofs are in this directory. The original discovery notes include roster hashes, exact exceptional tables, growth formulas and finite census details; their pending-status language is historical and superseded by the accepted parent run.
 
-Leaf 7 is `1RB1LF_1RC0RE_0RD---_1LD1RE_0LF0RB_1LA0LB`. The family is A at the left blank boundary with right word (11)^n10110, entered at step 19. The proof Raw107RECounter.lean uses binary digits 00 and 10 in left zipper, carries through consecutive one digits, and fills lower zero digits by induction over arbitrary suffixes. F(0)=0, F(n+1)=2F(n)+4n+4, epoch cost F(n)+4n+6. Entry and growth compiled locally against copied exact zipper primitives (propext, Quot.sound only); full source closure pending. Six other leaves have linear pumps (index, entry, intercept, slope): (23,13,49,24), (41,8,69,60), (184,19,20,8), (190,8,17,4), (191,19,20,8), (199,8,17,4). Generate using `python generate_re.py`. Open roster SHA256: 775e6212f0fee97c622a3e7df398cb232b843a4e5b4a5a4e96e0158228b7222b.
-
-## Three further five-hole children
-
-All three formerly open rosters have been assigned explicit FAR or one-/two-block symbolic witnesses. Use `python generate_more.py 1RE 1LC 1LE` to regenerate the candidate source modules Raw107B1REData, Raw107B1LCData, Raw107B1LEData.
-
-| B1 | Bound | Split | Cycle | Last | FAR | Symbolic | First query |
-|---|---:|---:|---:|---:|---:|---:|---|
-| 1RE | 158 | 461 | 8449 | 1734 | 413 | 8 | E0, t=8 |
-| 1LC | 194 | 589 | 10270 | 2751 | 517 | 10 | E0, t=10 |
-| 1LE | 231 | 1155 | 20930 | 4796 | 828 | 12 | E0, t=8 |
-
-Each has total mass 9,765,625 raw assignments. Max finite witnesses: 1RE `1RBHHH_1RC1RE_0RD0LF_1LD1RE_1LC0RB_1LE0LA`, time 157; 1LC `1RBHHH_1RC1LC_0RD0LF_1LD1RE_1LC0RB_1LE0LA`, time 193; 1LE `1RB0LA_1RC1LE_0RD0RF_1LD1RE_1LA0RB_HHH0RD`, time 230. All zero delay. Three two-block exceptions have (index,entry,intercept,slope)=(146,1,25,12), (133,1,29,12), (110,11,29,10) respectively. The 30 generated growth theorems compiled locally with standard axioms only against copied primitives, as did all 14 earlier raw107 recurrences. Full source check still pending.
-
-Six nontrivial child audits now cover candidate mass 58,593,750 (24% of raw107). Eleven additional root children have immediate side cycles in the enumerator, but their original-source proofs have not been assembled here.
-
-## B1=1LB child
-
-Candidate weighted bound **212**; first query C1 at t=9. Counts: 708 split, 13203 cycles, 2494 last, 588 open (579 FAR + nine symbolic). Mass cycle 8,637,675, halt 602,194, total-defined nonhalt 59,856, open 465,900; total 9,765,625. Max finite witness `1RB0LB_1RC1LB_0RD1RF_1LD1RE_HHH0RB_0RC0LA`, time 211, delay zero. Roster hash in specs_more.json. Generate with `python generate_more.py 1LB`.
-
-Exceptional leaf 152 `1RB0LB_1RC1LB_0RD0RF_1LD1RE_---0RB_1LA1RF` has B at left boundary, right word 1^(2n+5), entered at t17. Raw107LBSweep.lean proves an inner transfer of one pair of ones from a shrinking run to two growing runs, cost 4k+5, then inductively iterates the inner transfer. Epoch cost 2n^2+14n+27 (equivalently innerCost(n+2)+3n+13, innerCost(k+1)=innerCost(k)+4k+5). All nine entry/growth proofs compiled locally with exact copied primitives. Original-source check pending. Seven nontrivial candidate children cover 68,359,375 raw assignments (28% of raw107), 53 symbolic recurrences locally compiled.
-
-## B1=0RF child
-
-Candidate weighted bound **536**; first query F0 at t=8. Counts: 1016 split, 19415 cycle, 3267 last, 687 open (678 FAR + 9 symbolic). Mass 8,852,375 cycle, 677,867 halt, 78,408 total-defined, 156,975 open. Max finite witness `1RB0LA_1RC0RF_0RD0RE_1LD1RE_HHH0RB_1LF0LA`, t535, delay zero. Roster hash in specs_more.json. Generate via `python generate_more.py 0RF`.
-
-Five exceptional leaves (126,127,134,281,317) share a parametric exponential countdown, proved in Raw107RFCountdown.lean. A configuration D on the left boundary has left word 0^(3n+5)11 (one extra zero for variant d) and empty right. The inner countdown operates on triples 111 and 011, with an arbitrary suffix. Its skip cost is 3 (variant c: 5), decrement cost 6+(skipCost+3)*n, and clearing cost C(n+1)=2C(n)+decrementCost(n). Variant d includes a single extra high digit and two passes through the clearing routine. Universal entry/growth checked locally for all five variants; four other leaves (123,179,202,611) also have locally checked growth proofs. Full source check pending. Eight nontrivial child candidates cover 78,125,000 raw assignments (32% of raw107), with 62 locally checked recurrence instances.
-
-## B1=1RF child
-
-Candidate bound **160**, first query F0 t=8. Counts: 1094 split, 20120 cycle, 4474 last, 569 open (559 FAR + 10 symbolic). Mass cycle 8,943,800, halt 665,424, total-defined 107,376, open 49,025. Max finite witness `1RB0LB_1RC1RF_0RD0RF_1LD1RE_HHH0RB_1LF0LA`, t159 delay zero. Roster hash in specs_more.json; generate with `python generate_more.py 1RF`.
-
-Exceptional leaf 512 `1RB0LC_1RC1RF_0RD1LF_1LD1RE_---0RB_1LC1RA` enters a right-boundary periodic growth family at t1169, epoch cost 338+60n. The extended epoch search uses state F, two right-boundary events per epoch. All ten entry/growth proofs compiled locally against copied primitives. Nine complete child candidates now cover 87,890,625 raw assignments (36% of raw107), with 72 recurrence instances. Full source closure pending.
-
-## B1=0LE child
-
-Candidate bound **90**, first query E0 t8. Counts: 708 split, 12897 cycle, 3074 last, 314 open (292 FAR +22 symbolic). Mass 9,020,625 cycle; 602,174 halt; 73,776 total-defined; 69,050 open. Max finite witness `1RB1RA_1RC0LE_0RDHHH_1LD1RE_1LF0RB_0RA1LE`, t88, delay1. Generate `python generate_more.py 0LE`.
-
-Leaf224 `1RB---_1RC0LE_0RD1RA_1LD1RE_1LF0RB_0RB0LF`: Raw107LECountdown.lean proves exact recursive macro D(n,R) -> A(n,R) for arbitrary right suffix R; D left word 00 1^(3n+1) 010, A left word 0 1^(3n+2) 010. C(0)=10, C(n+1)=2C(n)+6; the auxiliary advance consumes n zero triples with cost C(n)-3n-10. Entry D(1,[]) at t23; growth epoch C(n+1)+3. Three delayed linear-growth exceptions (266,288,272) have (entry,intercept,slope)=(50,27,8),(44,25,8),(20,36,20). All 22 entry/growth proofs compiled locally, source closure pending. Ten complete nontrivial child candidates now cover 97,656,250 raw assignments (40% of raw107) with 94 recurrence instances.
-
-## Conditional classification of the remaining three children
-
-The remaining large children have 5,098 open leaves in the baseline census. After FAR bank screening, a new exhaustive search of canonical FAR automata of sizes 1–5 (both orientations, 31 further witnesses across these children), and symbolic proof search, only **11** remain unclassified.
-
-| Child | Candidate weighted bound | Open | FAR | Symbolic | Unresolved |
-|---|---:|---:|---:|---:|---:|
-| 0LF | 815 | 1418 | 1342 | 75 | 1 |
-| 1LA | 282 | 1183 | 1126 | 49 | 8 |
-| 1LF | 753 | 2497 | 2425 | 70 | 2 |
-
-All 194 new symbolic recurrences have locally checked growth and entry equations in the copied exact zipper primitives. The entire raw107 has thus 288 locally checked recurrence instances; there are eleven immediate root side-cycle children and ten nontrivial candidate-complete children. For the other three, the candidate audit is explicitly conditional on the eleven nonhalting hypotheses. Run `python generate_partial.py 0LF 1LA 1LF`; the generator regenerates the census, asserts the roster hash, assigns FAR witnesses from bank.txt via bank.cpp, checks all remaining symbolic families, and emits an Audit with .proven leaves using the explicit Exceptions premise (no sorry or axioms). **The original-source conditional tree has not yet been compiled.** Its intended theorem is conditional on nonhalting of all listed partial tables, not evidence that those tables are nonhalting.
-
-1LA/483: the manual Raw107LACount.lean proof starts at step20 with a boundary B run of five ones, and maps count m to 3m+4. The exact epoch cost is 2+13m+10+transferCost(3,m)+(3+3m+2), where transferCost(k,0)=0 and transferCost(k,m+1)=2k+8+transferCost(k+3,m). The proof repeatedly transfers one unary digit into three zero digits and then rescans. All growth/entry theorems compiled locally; original-source never bridge pending.
-
-Remaining exact tables (row indexes are local to each roster; --- is the unassigned entry):
-- 0LF/180: `1RB1LA_1RC0LF_0RD---_1LD1RE_1RC0RB_1LA0LA`
-- 1LA/93: `1RB0LB_1RC1LA_0RD0LA_1LD1RE_0RF0RB_---0RC`
-- 1LA/94: `1RB0LB_1RC1LA_0RD0LC_1LD1RE_0RF0RB_---0RC`
-- 1LA/95: `1RB0LB_1RC1LA_0RD0RC_1LD1RE_0RF0RB_---0RC`
-- 1LA/96: `1RB0LB_1RC1LA_0RD0RF_1LD1RE_0RF0RB_---0RC`
-- 1LA/97: `1RB0LB_1RC1LA_0RD1LB_1LD1RE_0RF0RB_---0RC`
-- 1LA/98: `1RB0LB_1RC1LA_0RD1LD_1LD1RE_0RF0RB_---0RC`
-- 1LA/99: `1RB0LB_1RC1LA_0RD1LE_1LD1RE_0RF0RB_---0RC`
-- 1LA/385: `1RB0LB_1RC1LA_0RD0RC_1LD1RE_1RF0RB_---1LC`
-- 1LF/1424: `1RB0LA_1RC1LF_0RD0RD_1LD1RE_1RB0RB_1LA---`
-- 1LF/1655: `1RB0LB_1RC1LF_0RD1RA_1LD1RE_---0RB_1LB0RC`
-
-If all eleven exceptions are discharged and the original-source proof trees (including eleven immediate root side cycles and the weighted root halt case) are accepted, the candidate bound for raw107 is 815. No unconditional cylinder elimination is claimed yet.
-
-## Full raw107 census
-
-Finite enumeration accounts for all 244,140,625 assignments: cycle mass 221,509,400; halt mass 18,357,404; total-defined nonhalt mass 1,291,296; open mass 2,982,525. Tree counts: cycle 231224, last 53804, split 12816, open 9741. Max finite weighted score 815, not a global bound. Existing FAR candidate bank screening found 9411 hit leaves and 330 unresolved before the five child sweeps. These remain exploratory saturation outcomes, not formally certified coverage. The 0RD subtree is the first fully witnessed nontrivial child investigated here. Other child closures and source integration remain the next tasks.
-
+The remaining global objective is to consume this accepted certificate in the active quotient frontier, then resolve its retained residuals at the exact champion score.
