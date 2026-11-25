@@ -8,6 +8,7 @@ UPSTREAM_ROOT="${UPSTREAM_ROOT:?set UPSTREAM_ROOT to the pinned Cryptids checkou
 WORKDIR="${WORKDIR:-/tmp/agent50-canonical-r4}"
 JOBS="${JOBS:-4}"
 LEAN_BIN="${LEAN_BIN:-$HOME/.elan/bin/lean}"
+export UPSTREAM_ROOT LEAN_BIN
 
 test -s "$CANONICAL77_DIR/CanonicalRaw114Accepted.olean"
 test -s "$CANONICAL77_DIR/CanonicalTwoParentGraft.olean"
@@ -41,6 +42,37 @@ python3 "$ROOT/tools/lean_compile_closure.py" \
   --provenance-input "$WORKDIR/upstream-commit.txt" \
   --provenance-input "$CANONICAL77_MANIFEST" \
   --override RootFrontier=im-results/agent50-weighted-tnf-pilot/RootFrontier.lean \
+  --override TNFPilot=im-results/agent50-weighted-tnf-pilot/TNFPilot.lean \
+  --override SideCycle=im-results/agent50-weighted-tnf-pilot/SideCycle.lean \
+  --override SparseZipper=im-results/agent50-weighted-tnf-pilot/SparseZipper.lean \
+  --override AlternatingResidualSweep=im-results/agent50-weighted-tnf-pilot/AlternatingResidualSweep.lean \
+  --override AlternatingVariants=im-results/agent50-weighted-tnf-pilot/AlternatingVariants.lean \
+  --override C1Growth=im-results/agent50-weighted-tnf-pilot/C1Growth.lean \
+  --override BlockPump=im-results/agent50-weighted-tnf-pilot/BlockPump.lean \
+  --override R3Sweep=im-results/agent50-weighted-tnf-pilot/R3Sweep.lean \
+  --override R5Sweep=im-results/agent50-weighted-tnf-pilot/R5Sweep.lean \
+  --override R5ZeroSweep=im-results/agent50-weighted-tnf-pilot/R5ZeroSweep.lean \
+  --override CryptidSiblings=im-results/agent50-weighted-tnf-pilot/CryptidSiblings.lean \
+  --override CryptidGraft=im-results/agent50-weighted-tnf-pilot/CryptidGraft.lean \
+  --override RootShift=im-results/agent8-coverage-contract/RootShift.lean \
+  --override Prune=im-results/agent8-coverage-contract/Prune.lean \
+  --override OneHalt=im-results/agent8-coverage-contract/OneHalt.lean \
+  --override FirstStep=im-results/agent42-coverage-normal/FirstStep.lean \
+  --override TwoFirst=im-results/agent42-coverage-normal/TwoFirst.lean \
+  --override WriteOneDrift=im-results/agent4-coverage-smoke/WriteOneDrift.lean \
+  --override CrossCoverage=im-results/agent4-coverage-smoke/CrossCoverage.lean \
+  --override CrossUpper=im-results/agent4-coverage-smoke/CrossUpper.lean \
+  --override CrossFirstUpper=im-results/agent42-coverage-normal/CrossFirstUpper.lean \
+  --override TwoCylinder=im-results/agent42-coverage-normal/TwoCylinder.lean \
+  --override BB6Coverage=im-results/agent13-coverage/BB6Coverage.lean \
+  --override BlankDelayKernel=im-results/agent13-weighted-first-one/BlankDelayKernel.lean \
+  --override BlankDelaySource=im-results/agent13-weighted-first-one/BlankDelaySource.lean \
+  --override SparseBlankDelay=im-results/agent13-weighted-first-one/SparseBlankDelay.lean \
+  --override WeightedTNF=im-results/agent13-weighted-first-one/WeightedTNF.lean \
+  --override WeightedTNFCertificate=im-results/agent13-weighted-first-one/WeightedTNFCertificate.lean \
+  --override WeightedFirstOneCover=im-results/agent13-weighted-first-one/WeightedFirstOneCover.lean \
+  --override FirstHolePath=im-results/agent8-cryptids-tnf-paths/FirstHolePath.lean \
+  --override CryptidsFirstHolePaths=im-results/agent8-cryptids-tnf-paths/CryptidsFirstHolePaths.lean \
   --override RootFrontierR1R4=im-results/agent47-rooted-tnf/RootFrontierR1R4.lean \
   --override R1Graft=im-results/agent47-r1-sweep/R1Graft.lean \
   --override R1Parent=im-results/agent47-r1-sweep/R1Parent.lean \
@@ -72,7 +104,7 @@ log = pathlib.Path(sys.argv[1]).read_text()
 manifest = json.loads(pathlib.Path(sys.argv[2]).read_text())
 profiles = {
     name: {x.strip() for x in raw.split(",") if x.strip()}
-    for name, raw in re.findall(r"'([^']+)' depends on axioms: \\[([^\\]]*)\\]", log)
+    for name, raw in re.findall(r"'([^']+)' depends on axioms: \[([^\]]*)\]", log)
 }
 required = [
     "BB6.Agent50CanonicalR4Ingestion.residuals_closed_expanded",
