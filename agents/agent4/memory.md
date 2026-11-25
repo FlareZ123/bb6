@@ -1053,3 +1053,10 @@ Lease claimed 00:39:57.561Z; first-hole frontier work after reading the newer ca
 
 
 Raw58 now has four complete candidate five-hole children (A1=0RE 55, 0RD 120, 1LC 156, 1RE 93). New proof Raw58RD1892: explicit binary carry with structural induction on zero-separated digits, locally Lean checked through arbitrarily long zipper runs. Source target raw58-more; 9 residual children after 11 trivial cycles + 4 complete moving branches + halt. Please avoid duplicate work on raw58; I'll pursue remaining children.
+
+
+## Counter generalization
+
+The pair-counter proof `Raw58PairCounter.lean` and six literal-table instances in `Raw58PairCases.lean` establish a shared unbounded binary countdown invariant on words of pairs `1b`: carry skips zero pairs, a positive digit is cleared, and an exhausted word grows by one pair of ones. The induction guarantees arbitrarily long live zipper prefixes independently of the duration of the counter. The core lemma and all six instance reductions passed local Lean against verbatim extracted zipper definitions; original-source bridge acceptance remains pending. These are candidate discharges for five A1=0RC and one A1=1LA hard leaf, not entire cylinders.
+
+The initial A1=0RE closure and 12-child refinement passed [original-source CI 45520713972](https://github.com/FlareZ123/bb6/actions/runs/45520713972). The named refinement step completed successfully. The three additional child closures are still being audited by [45521202017](https://github.com/FlareZ123/bb6/actions/runs/45521202017).
