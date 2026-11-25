@@ -12,7 +12,7 @@ theorem p110_mem : ∃ e ∈ roster, e.2 = p110 := by
   obtain ⟨e,he,hcheck⟩ := List.any_eq_true.mp h
   exact ⟨e,he,tableOK_sound _ _ hcheck⟩
 
-/-- Replace exactly one canonical cylinder by its nine retained descendants.
+/-- Replace exactly one canonical cylinder by its eight retained descendants.
     The inherited quotient permutation is unchanged on the refined table. -/
 noncomputable def refinedRoster : List (List Move × PartialMachine) :=
   roster.flatMap fun e =>
@@ -20,7 +20,7 @@ noncomputable def refinedRoster : List (List Move × PartialMachine) :=
       residual110.map fun r => (e.1 ++ r.1,r.2)
     else [e]
 
-theorem refined_count : refinedRoster.length = 86 := by decide
+theorem refined_count : refinedRoster.length = 85 := by decide
 
 theorem refined_sound (m : Machine)
     (hm : compatible BB6.Agent50TNFPilot.root m) :
