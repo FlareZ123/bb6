@@ -57,7 +57,10 @@ def main(a):
     exceptions={int(i):t for i,t in spec["unresolved"].items()}
     assert all(opens[i]==t for i,t in exceptions.items())
     assert not (set(pumps)&set(exceptions))
-    far=[i for i in range(len(opens)) if i not in pumps and i not in exceptions]
+    late={int(i):(n,s) for i,(n,s,t) in spec.get("late",{}).items() if opens[int(i)]==t and t.count("---")==1}
+    assert len(late)==len(spec.get("late",{}))
+    assert not (set(late)&(set(pumps)|set(exceptions)))
+    far=[i for i in range(len(opens)) if i not in pumps and i not in exceptions and i not in late]
     subprocess.run(["g++","-std=c++20","-O3",str(ROOT.parent/"agent11-raw107/bank.cpp"),"-o",str(target/"bank")],check=True)
     inputs="".join(f"{i} {opens[i].replace('_','')}\n" for i in far)
     out=subprocess.run([str(target/"bank"),str(ROOT/"bank.txt")],input=inputs,text=True,capture_output=True,check=True)
@@ -99,6 +102,9 @@ open BB6.Agent50TNFPilot BB6.Agent31ThreeHole BB6.Agent10ZipAudit
             return f".last {nn} {slot(ss)}"
         if tag=="open":
             t=v[0];i=index[t]
+            if i in late:
+                nn,ss=late[i]
+                return f".last {nn} {slot(ss)}"
             if i in pumps:return f".proven {pumps[i]}.table {pumps[i]}.never"
             if i in exceptions:return f".proven (exceptionTable ⟨{exc_index[i]},by decide⟩) (h ⟨{exc_index[i]},by decide⟩)"
             c=dfa[i];rev=int(c[0]);d,D,L,R,z=masks(parse(t),rev,[int(ch,36) for ch in c[1:]])
