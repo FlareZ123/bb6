@@ -48,7 +48,7 @@ jobs:
       - name: Compile and audit the 71- and 70-entry Raw109+Raw123 grafts
         run: |
           set -euo pipefail
-          printf '%s\n' "$CANONICAL72_RUN_ID" > /tmp/a31-canonical72-run-id.txt
+          printf '%s\n' "${{ inputs.canonical72_run_id }}" > /tmp/a31-canonical72-run-id.txt
           python tools/lean_compile_closure.py \
             --workdir /tmp/a31-canonical70 \
             --jobs 8 \
