@@ -556,7 +556,7 @@ jobs:
         if: ${{ inputs.a6_run_id != '' && inputs.raw121_graft_run_id == '' }}
         run: |
           set -euo pipefail
-          grep -q '^def A6_frontier' im-results/agent48-raw139-hard-root/A6Ingestion.lean
+          grep -q '^noncomputable def A6_frontier' im-results/agent48-raw139-hard-root/A6Ingestion.lean
           export LEAN_PATH="/tmp/a47-canonical:/tmp/a6-a6-ingestion:/tmp/a6-champion-residual/build:$PWD/cryptids/.lake/build/lib${LEAN_PATH:+:$LEAN_PATH}"
           lean -o /tmp/a6-champion-residual/build/A6ChampionComposition.olean \
             im-results/agent6-champion-residual/A6ChampionComposition.lean | tee /tmp/a6-a6-composition.log
