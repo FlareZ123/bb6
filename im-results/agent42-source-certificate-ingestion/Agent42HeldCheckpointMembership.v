@@ -1,6 +1,6 @@
 From BusyCoq Require Import Enumerate62 CTL62 Individual62 Agent8AdaptiveSource
   Agent8WeightedSource SourceResidualRoster Agent5RecoveredHeld.
-From Coq Require Import List Bool NArith Strings.String Classical_Prop.
+From Coq Require Import List Bool NArith Strings.String Classical_Prop Classical_Pred_Type.
 Import ListNotations.
 Import TNF_Node.
 Open Scope nat_scope.
