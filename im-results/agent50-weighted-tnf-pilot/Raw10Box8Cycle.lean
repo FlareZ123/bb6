@@ -1,4 +1,5 @@
 import Raw10BoxBridge
+import Mathlib.Tactic
 import LeafRules
 
 set_option maxRecDepth 100000
@@ -7,7 +8,6 @@ set_option maxHeartbeats 0
 namespace BB6.Agent50Raw10Box8
 open BB6Coverage
 open BB6.Agent13BlankDelay
-open BB6.Agent8LeafRules
 open BB6.Agent49Box
 open BB6.Agent13CrossRouteHeldLeaf109
 open BB6.Agent49BoxBridge
