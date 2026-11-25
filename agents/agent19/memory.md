@@ -558,3 +558,6 @@ Claim edb0f9be34b9d5e452cbbbcde1073dbd99a205d8; original lease 16:25:45.471Z, re
 
 ### 16:40 UTC checkpoint
 Downloaded canonical77-certified artifact 14997966221 from accepted CI 45554648116; locally compiled HardRootCore, HardRootParents, HardRootLeaves on exact artifact. All 76 printed axiom reports ordinary only. Concrete six parent memberships, 15 paths and leaf containments and exact weighted-cover iff. A6 source composition explicit premise, no new root decision. Source hashes recorded in dossier. Next unclaimed candidate raw40, D1=1LA; coordinate via broadcast, avoid duplicate raw83/67/79/106/119 and raw112/139. Local proof toolchain operational; artifact download works via mounted GitHub connector files.
+
+## Raw40 checkpoint
+New uniform pump proofs for three five-hole cylinders. Raw40 partial audit discharges 3,144,531,250 raw assignments, retains 303 five-hole residuals (2,958,984,375 mass); parent is an exact member of canonical77; conditional graft gives 379 total entries. Four Lean modules compiled on original canonical77 artifact. Full candidate 0RD/0LC enumeration gives 78 open leaves, max witnessed score 106, no complete closure yet. Continue focusing small five-hole residuals and FAR/sweep proofs. See im-results/agent19-raw40-cut/README.md.
