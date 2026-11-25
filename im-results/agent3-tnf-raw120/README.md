@@ -1,10 +1,10 @@
 # Raw120 E0 sibling certificates
 
-Raw120 parent: `1RB---_1RC---_0RD---_1LD1RE_---1LE_------`. First undefined row E0 at ordinary time 9. This dossier contains original-source accepted certificates for 14 of the 25 children and explicit residual work. The parent is not yet closed.
+Raw120 parent: `1RB---_1RC---_0RD---_1LD1RE_---1LE_------`. First undefined row E0 at ordinary time 9. This dossier contains original-source accepted certificates for 15 of the 25 children and explicit residual work. The parent is not yet closed.
 
-## Current coverage (2026-11-25 17:00Z)
+## Current coverage (2026-11-25 21:13Z)
 
-Each E0 alternative has mass 25^5 = 9,765,625 raw completions. The ten immediate translated cycles, the RF/RB certificates, and the newly source-accepted 0RC and 1RB certificates cover 14 disjoint alternatives; the immediate-halt branch is also an explicit draft proof. No canonical roster entry has been removed.
+Each E0 alternative has mass 25^5 = 9,765,625 raw completions. The ten immediate translated cycles, the RF/RB certificates, and the newly source-accepted 0RC and 1RB certificates and the 1RA certificate cover 15 disjoint alternatives; the immediate-halt branch is also an explicit draft proof. No canonical roster entry has been removed.
 
 | E0 | Status | Weighted bound | Source |
 | --- | --- | ---: | --- |
@@ -19,8 +19,10 @@ Each E0 alternative has mass 25^5 = 9,765,625 raw completions. The ten immediate
 | 0LF | Candidate complete; custom leaves source-checked locally | 656 | [0LF dossier](0LF-dossier.md) |
 | 1LA | Candidate complete; whole-sibling check dispatched | 13113 | [1LA dossier](1LA-dossier.md) |
 | 1LB | Candidate complete; four hard nonhalters source-accepted, late leaf exact weighted bound locally kernel-checked; whole-sibling CI pending | 224707 | [1LB dossier](1LB-dossier.md) |
-| 1RA, 1RF | First-hole enumeration and FAR screening complete | — | 4374 / 6411 open leaves, 4286 / 6335 FAR hits |
-| 0LA, 0RA, 1RC | Candidate work in progress | — | see LA and other sibling research |
+| 1RA | Original-source accepted | 13317 | [run 45685953381](https://github.com/FlareZ123/bb6/actions/runs/45685953381) |
+| 1RF | Candidate complete; source CI in progress | pending | [run 45699530786](https://github.com/FlareZ123/bb6/actions/runs/45699530786) |
+| 0LA | All 4710 open leaves assigned; source CI in progress | 18859 | [dossier](0LA-dossier.md), [run 45701989276](https://github.com/FlareZ123/bb6/actions/runs/45701989276) |
+| 0RA, 1RC | Candidate generators include remaining custom witnesses | pending | generate_sibling.py |
 
 The 0RC enumeration pins 934 splits, 15226 cycles, 4043 last-hole leaves, and 2214 open leaves, SHA256 `01f82938bb361d4335146c22191f1fec517d993c76d71488fbc804910629e78f`. The open leaves are assigned 2195 FAR witnesses, 12 one-block and 3 multi-block pumps, and four new invariants. Raw120RCCounter.lean proves arbitrary-length counter growth for leaves 1370/1380 by strong induction on the counter, with untouched suffixes; rc_nested.py constructs invariants for 1633/1639 with variable alternating-block and unary-tail counts. All short-tail cases and arbitrary-tail transfers passed local Lean 4.36.0-rc2 preflight with copied source zipper/sweep definitions. Run 45584144941 completed successfully, regenerating the pinned RC tree and compiling the Raw120RCData.lean source dependency closure; the complete 0RC child is therefore original-source accepted at weighted bound 716.
 
@@ -83,7 +85,7 @@ The accepted `allRF` and `allRB` theorems cover their respective children; `Raw1
 - `rb-bank.txt`, `generate_rb.py`, and `Raw120RBCounter.lean`: regenerate the pinned E0=0RB tree and its FAR/sweep/counter witnesses; the generated `Raw120RBData.lean` target expresses `allRB`.
 - `Raw120RosterLink.lean`: draft formal link from canonical residual 84 to p120 in `Combined106Roster.reducedRoster`; pending inclusion in the Combined106 compile closure.
 - `Raw120SiblingAudit.lean`: draft two-child first-hole audit; pending a CI target that runs both RF and RB generators before compiling it.
-- `generate_la.py`: experimental proof-producing search for the next E0=0LA sibling; not yet run or source-accepted.
+- `generate_la.py`: proof-producing generator for all E0=0LA open leaves; source acceptance pending.
 
 ## Reproduce
 
