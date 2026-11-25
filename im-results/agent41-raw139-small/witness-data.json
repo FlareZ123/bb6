@@ -1814,7 +1814,11 @@
                             "262144"
                           ],
                           [
-                            "open"
+                            "cycle",
+                            76,
+                            175,
+                            true,
+                            -6
                           ],
                           [
                             "far",
@@ -2524,7 +2528,11 @@
                             -1
                           ],
                           [
-                            "open"
+                            "cycle",
+                            130,
+                            141,
+                            true,
+                            0
                           ],
                           [
                             "cycle",
@@ -3023,8 +3031,8 @@
     "prefix:open": 75,
     "prefix:cycle": 17,
     "e0:last": 116,
-    "e0:cycle": 161,
-    "e0:open": 8,
+    "e0:cycle": 163,
+    "e0:open": 6,
     "e0:far": 15
   },
   "residuals": [
@@ -3563,41 +3571,9 @@
         "0RC",
         "0RB",
         "1LD",
-        "1LC"
-      ],
-      "table": "1RB1LC_1RC0RC_1LD0RB_1LA0LE_1LD1LF_1LD---",
-      "holes": 1,
-      "observation": [
-        "timeout",
-        500
-      ]
-    },
-    {
-      "address": [
-        "1LD",
-        "1LA",
-        "0RC",
-        "0RB",
-        "1LD",
         "1RD"
       ],
       "table": "1RB1RD_1RC0RC_1LD0RB_1LA0LE_1LD1LF_1LD---",
-      "holes": 1,
-      "observation": [
-        "timeout",
-        500
-      ]
-    },
-    {
-      "address": [
-        "1LD",
-        "1LA",
-        "0RC",
-        "0RB",
-        "1RD",
-        "0LC"
-      ],
-      "table": "1RB0LC_1RC0RC_1LD0RB_1LA0LE_1RD1LF_1LD---",
       "holes": 1,
       "observation": [
         "timeout",
@@ -8304,7 +8280,11 @@
       ],
       "table": "1RB1LC_1RC0RC_1LD0RB_1LA0LE_1LD1LF_1LD---",
       "witness": [
-        "open"
+        "cycle",
+        76,
+        175,
+        true,
+        -6
       ]
     },
     {
@@ -9683,7 +9663,11 @@
       ],
       "table": "1RB0LC_1RC0RC_1LD0RB_1LA0LE_1RD1LF_1LD---",
       "witness": [
-        "open"
+        "cycle",
+        130,
+        141,
+        true,
+        0
       ]
     },
     {
@@ -11056,7 +11040,7 @@
     }
   ],
   "largestHalt": 321,
-  "remainingMass": "4793672075",
+  "remainingMass": "4793672025",
   "parent": "1RB---_1RC---_1LD---_---0LE_---1LF_------",
   "totalMass": "6103515625"
 }

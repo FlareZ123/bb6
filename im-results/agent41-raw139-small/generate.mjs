@@ -7,11 +7,11 @@ const parent=full.map((x,i)=>[0,2,4,7,9].includes(i)?x:null);
 const schedule=[10,6,3,5,8];
 const refine=(p,s,m)=>p.map((x,i)=>i===s?m:x);
 const code=p=>Array.from({length:6},(_,i)=>(p[2*i]||"---")+(p[2*i+1]||"---")).join("_");
-function simulate(p,cap){
+function simulate(p,cap,period=100){
  let q=0,h=0,ones=new Set(),hist=[],seen=Array.from({length:6},()=>[]);
  for(let n=0;n<=cap;n++){
   for(let j=seen[q].length-1;j>=0;j--){
-   let i=seen[q][j];if(n-i>100)break;
+   let i=seen[q][j];if(n-i>period)break;
    let old=hist[i],delta=h-old.h,lo=Infinity,hi=-Infinity;
    for(let k=i;k<n;k++){lo=Math.min(lo,hist[k].h);hi=Math.max(hi,hist[k].h)}
    for(const right of [true,false]){
@@ -58,6 +58,12 @@ const counts={},residuals=[],records=[];
 let largestHalt=0;
 function leaf(p,addr,obs,region){
  let v=obs;
+ // Two linear-drift cases require a period window beyond the initial 100.
+ if(obs[0]==="timeout" && ["1RB1LC_1RC0RC_1LD0RB_1LA0LE_1LD1LF_1LD---","1RB0LC_1RC0RC_1LD0RB_1LA0LE_1RD1LF_1LD---"].includes(code(p))) {
+   const longer=simulate(p,500,200);
+   if(longer[0]!=="cycle")throw Error("expected long side cycle");
+   v=obs=longer;
+ }
  if(obs[0]==="hole"&&p.filter(x=>x===null).length===1){v=["last",obs[1],obs[2]];largestHalt=Math.max(largestHalt,obs[1])}
  else if(obs[0]==="timeout"&&p.filter(x=>x===null).length===1){
   for(const dfa of dfas){const r=far(p,dfa,true);if(r){v=r;break}}
