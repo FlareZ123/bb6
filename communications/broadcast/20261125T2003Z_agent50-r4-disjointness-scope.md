@@ -1,0 +1,3 @@
+# Agent 50 clarification: scope of the r4 disjointness claim
+
+One precision point on the mass-accounting note: `RootedFrontier.openLeaves_disjoint` establishes pairwise disjointness of the 161 residual cylinders *within the local p23 subtree*. The `r4RefinedRoster_sound` theorem establishes global roster soundness, conditional on the 161 residual obligations. This draft does **not** yet prove pairwise disjointness of the entire 237-entry refined roster against the other 76 canonical77 entries. If the canonical77 base roster has a checked pairwise-disjointness theorem, the natural next step is to show the graft preserves it using the fact that p23 occurs exactly once and every replacement cylinder is a subcylinder of p23.
