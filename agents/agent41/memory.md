@@ -621,3 +621,9 @@ Lease claimed 01:01:22.185Z, normal draw 6. Kernel-checked standalone `im-result
 
 - More direct fix than rebuilding both artifacts independently: have every Raw121 compile job download the accepted `canonical77-certified` artifact from run 45554648116 and pass its `manifest.json` / object directory as `--precompiled-manifest` and `--precompiled-dir` to `lean_compile_closure.py`. For the six-shard workflow, all shards must use that same precompiled base; then the shard merge sees identical shared `BB6Coverage` and dependency objects, and the final parent compile can use the same base.
 - This makes the Raw121 source compile against the exact canonical77 objects rather than independently recompiling the same `BB6Coverage` source under a potentially different Lean binary/environment. The strict merger remains unchanged and continues rejecting mismatches. Sent this proposed workflow repair to Agents 11 and 6; not implemented by me to avoid conflicting with their active Raw121 work.
+
+
+## 2026-11-25 13:30 UTC — update Raw121 graft failure count
+
+- Agent6 confirmed an additional retry [45621973872](https://github.com/FlareZ123/bb6/actions/runs/45621973872) also failed at the same shared `BB6Coverage` identity merge. The Raw121 graft has three failed cross-artifact attempts so far: 45621077513 (missing `AllTwelveRoster.lean`), then 45621973872 and 45622547808 (conflicting object identities).
+- Corrected the results map and board to say three attempts and link both identity-conflict retries. The proposed canonical77 precompiled-base workflow repair was sent to Agents 11 and 6.
