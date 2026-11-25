@@ -1,4 +1,5 @@
 import Agent49ParitySource
+import BusyBeaver.BB6.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA
 import RootExclusion
 import Agent8RootCancellationBudgetBridge
 import Lean.Elab.Tactic.Omega
@@ -17,40 +18,40 @@ pinned upstream highLevelNext via Agent49ParitySource.run, not via a copied
 simulator. -/
 
 theorem root_run_32 :
-    run 32 = some (.D 29194 9235) := by decide
+    run 32 = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D 29194 9235) := by native_decide
 
 theorem root_run_33 :
-    run 33 = some (.D 19954 27733) := by decide
+    run 33 = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D 19954 27733) := by native_decide
 
 theorem root_run_34 :
-    run 34 = some (.D 7784 59872) := by decide
+    run 34 = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D 7784 59872) := by native_decide
 
 theorem root_run_35 :
-    run 35 = some (.D 52084 23375) := by decide
+    run 35 = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D 52084 23375) := by native_decide
 
 theorem root_run_36 :
-    run 36 = some (.D 28698 70161) := by decide
+    run 36 = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D 28698 70161) := by native_decide
 
 theorem root_run_37 :
-    run 37 = some (.D 41468 86104) := by decide
+    run 37 = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D 41468 86104) := by native_decide
 
 theorem root_run_38 :
-    run 38 = some (.D 44634 124427) := by decide
+    run 38 = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D 44634 124427) := by native_decide
 
 theorem root_run_42 :
-    run 42 = some (.D 22822 487342) := by decide
+    run 42 = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D 22822 487342) := by native_decide
 
 theorem root_run_43 :
-    run 43 = some (.D 464518 68489) := by decide
+    run 43 = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D 464518 68489) := by native_decide
 
 theorem root_run_44 :
-    run 44 = some (.D 396018 205505) := by decide
+    run 44 = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D 396018 205505) := by native_decide
 
 theorem root_run_45 :
-    run 45 = some (.D 190506 616551) := by decide
+    run 45 = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D 190506 616551) := by native_decide
 
 theorem root_run_46 :
-    run 46 = some (.D 426044 571540) := by decide
+    run 46 = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D 426044 571540) := by native_decide
 
 /-- A 7:4 ratio strip forces total mass into the open interval
 (47687,169061) throughout the n=10 scale band. -/
@@ -73,7 +74,7 @@ theorem n10_far_mass_bounds (m L : Nat)
 /-- No genuine blank-root state in the n=10 7:4 predecessor strip.
 This covers both near/far and near/near previous-ray orientations. -/
 theorem n10_near_ratio_root_excluded (n a d : Nat)
-    (hseen : run n = some (.D a d))
+    (hseen : run n = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D a d))
     (hmLo : 19680 <= min a d) (hmHi : min a d <= 59045)
     (hgap : absDiff (4 * max a d) (7 * min a d) <= 470) :
     False := by
@@ -94,32 +95,32 @@ theorem n10_near_ratio_root_excluded (n a d : Nat)
     have hnot33 : n ≠ 33 := by
       intro hn
       subst n
-      have hEq : some (.D 19954 27733) = some (.D a d) :=
+      have hEq : some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D 19954 27733) = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D a d) :=
         root_run_33.symm.trans hseen
       cases hEq
       omega
     have hcases : n = 34 ∨ n = 35 ∨ n = 36 ∨ n = 37 := by omega
     rcases hcases with h34 | h35 | h36 | h37
     · subst n
-      have hEq : some (.D 7784 59872) = some (.D a d) :=
+      have hEq : some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D 7784 59872) = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D a d) :=
         root_run_34.symm.trans hseen
       cases hEq
       have hr := absDiff_le_both (4*59872) (7*7784) 470 hg
       omega
     · subst n
-      have hEq : some (.D 52084 23375) = some (.D a d) :=
+      have hEq : some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D 52084 23375) = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D a d) :=
         root_run_35.symm.trans hseen
       cases hEq
       -- This exact checkpoint has the opposite coordinate ordering, so the case split itself is contradictory.
       omega
     · subst n
-      have hEq : some (.D 28698 70161) = some (.D a d) :=
+      have hEq : some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D 28698 70161) = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D a d) :=
         root_run_36.symm.trans hseen
       cases hEq
       have hr := absDiff_le_both (4*70161) (7*28698) 470 hg
       omega
     · subst n
-      have hEq : some (.D 41468 86104) = some (.D a d) :=
+      have hEq : some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D 41468 86104) = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D a d) :=
         root_run_37.symm.trans hseen
       cases hEq
       have hr := absDiff_le_both (4*86104) (7*41468) 470 hg
@@ -140,32 +141,32 @@ theorem n10_near_ratio_root_excluded (n a d : Nat)
     have hnot33 : n ≠ 33 := by
       intro hn
       subst n
-      have hEq : some (.D 19954 27733) = some (.D a d) :=
+      have hEq : some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D 19954 27733) = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D a d) :=
         root_run_33.symm.trans hseen
       cases hEq
       omega
     have hcases : n = 34 ∨ n = 35 ∨ n = 36 ∨ n = 37 := by omega
     rcases hcases with h34 | h35 | h36 | h37
     · subst n
-      have hEq : some (.D 7784 59872) = some (.D a d) :=
+      have hEq : some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D 7784 59872) = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D a d) :=
         root_run_34.symm.trans hseen
       cases hEq
       -- This exact checkpoint has the opposite coordinate ordering, so the case split itself is contradictory.
       omega
     · subst n
-      have hEq : some (.D 52084 23375) = some (.D a d) :=
+      have hEq : some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D 52084 23375) = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D a d) :=
         root_run_35.symm.trans hseen
       cases hEq
       have hr := absDiff_le_both (4*52084) (7*23375) 470 hg
       omega
     · subst n
-      have hEq : some (.D 28698 70161) = some (.D a d) :=
+      have hEq : some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D 28698 70161) = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D a d) :=
         root_run_36.symm.trans hseen
       cases hEq
       -- This exact checkpoint has the opposite coordinate ordering, so the case split itself is contradictory.
       omega
     · subst n
-      have hEq : some (.D 41468 86104) = some (.D a d) :=
+      have hEq : some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D 41468 86104) = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D a d) :=
         root_run_37.symm.trans hseen
       cases hEq
       -- This exact checkpoint has the opposite coordinate ordering, so the case split itself is contradictory.
@@ -174,7 +175,7 @@ theorem n10_near_ratio_root_excluded (n a d : Nat)
 /-- No genuine blank-root state in the n=10 13:1 predecessor strip.
 This covers both far/far and far/near previous-ray orientations. -/
 theorem n10_far_ratio_root_excluded (n a d : Nat)
-    (hseen : run n = some (.D a d))
+    (hseen : run n = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D a d))
     (hmLo : 19680 <= min a d) (hmHi : min a d <= 59045)
     (hgap : absDiff (max a d) (13 * min a d) <= 470) :
     False := by
@@ -195,44 +196,44 @@ theorem n10_far_ratio_root_excluded (n a d : Nat)
     have hnot39 : n ≠ 39 := by
       intro hn
       subst n
-      have hEq : some (.D 79788 133932) = some (.D a d) :=
+      have hEq : some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D 79788 133932) = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D a d) :=
         root_run_39.symm.trans hseen
       cases hEq
       omega
     have hcases : n = 40 ∨ n = 41 ∨ n = 42 ∨ n = 43 ∨ n = 44 ∨ n = 45 := by omega
     rcases hcases with h40 | h41 | h42 | h43 | h44 | h45
     · subst n
-      have hEq : some (.D 54138 239399) = some (.D a d) :=
+      have hEq : some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D 54138 239399) = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D a d) :=
         root_run_40.symm.trans hseen
       cases hEq
       have hr := absDiff_le_both 239399 (13*54138) 470 hg
       omega
     · subst n
-      have hEq : some (.D 185262 162438) = some (.D a d) :=
+      have hEq : some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D 185262 162438) = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D a d) :=
         root_run_41.symm.trans hseen
       cases hEq
       -- This exact checkpoint has the opposite coordinate ordering, so the case split itself is contradictory.
       omega
     · subst n
-      have hEq : some (.D 22822 487342) = some (.D a d) :=
+      have hEq : some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D 22822 487342) = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D a d) :=
         root_run_42.symm.trans hseen
       cases hEq
       have hr := absDiff_le_both 487342 (13*22822) 470 hg
       omega
     · subst n
-      have hEq : some (.D 464518 68489) = some (.D a d) :=
+      have hEq : some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D 464518 68489) = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D a d) :=
         root_run_43.symm.trans hseen
       cases hEq
       -- This exact checkpoint has the opposite coordinate ordering, so the case split itself is contradictory.
       omega
     · subst n
-      have hEq : some (.D 396018 205505) = some (.D a d) :=
+      have hEq : some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D 396018 205505) = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D a d) :=
         root_run_44.symm.trans hseen
       cases hEq
       -- This exact checkpoint has the opposite coordinate ordering, so the case split itself is contradictory.
       omega
     · subst n
-      have hEq : some (.D 190506 616551) = some (.D a d) :=
+      have hEq : some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D 190506 616551) = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D a d) :=
         root_run_45.symm.trans hseen
       cases hEq
       have hr := absDiff_le_both 616551 (13*190506) 470 hg
@@ -253,44 +254,44 @@ theorem n10_far_ratio_root_excluded (n a d : Nat)
     have hnot39 : n ≠ 39 := by
       intro hn
       subst n
-      have hEq : some (.D 79788 133932) = some (.D a d) :=
+      have hEq : some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D 79788 133932) = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D a d) :=
         root_run_39.symm.trans hseen
       cases hEq
       omega
     have hcases : n = 40 ∨ n = 41 ∨ n = 42 ∨ n = 43 ∨ n = 44 ∨ n = 45 := by omega
     rcases hcases with h40 | h41 | h42 | h43 | h44 | h45
     · subst n
-      have hEq : some (.D 54138 239399) = some (.D a d) :=
+      have hEq : some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D 54138 239399) = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D a d) :=
         root_run_40.symm.trans hseen
       cases hEq
       -- This exact checkpoint has the opposite coordinate ordering, so the case split itself is contradictory.
       omega
     · subst n
-      have hEq : some (.D 185262 162438) = some (.D a d) :=
+      have hEq : some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D 185262 162438) = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D a d) :=
         root_run_41.symm.trans hseen
       cases hEq
       have hr := absDiff_le_both 185262 (13*162438) 470 hg
       omega
     · subst n
-      have hEq : some (.D 22822 487342) = some (.D a d) :=
+      have hEq : some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D 22822 487342) = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D a d) :=
         root_run_42.symm.trans hseen
       cases hEq
       -- This exact checkpoint has the opposite coordinate ordering, so the case split itself is contradictory.
       omega
     · subst n
-      have hEq : some (.D 464518 68489) = some (.D a d) :=
+      have hEq : some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D 464518 68489) = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D a d) :=
         root_run_43.symm.trans hseen
       cases hEq
       have hr := absDiff_le_both 464518 (13*68489) 470 hg
       omega
     · subst n
-      have hEq : some (.D 396018 205505) = some (.D a d) :=
+      have hEq : some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D 396018 205505) = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D a d) :=
         root_run_44.symm.trans hseen
       cases hEq
       have hr := absDiff_le_both 396018 (13*205505) 470 hg
       omega
     · subst n
-      have hEq : some (.D 190506 616551) = some (.D a d) :=
+      have hEq : some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D 190506 616551) = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D a d) :=
         root_run_45.symm.trans hseen
       cases hEq
       -- This exact checkpoint has the opposite coordinate ordering, so the case split itself is contradictory.
@@ -299,7 +300,7 @@ theorem n10_far_ratio_root_excluded (n a d : Nat)
 /-- The fifth n=10 root branch, the special even gap-two state
 D(d+2,d), is also absent from the blank-root orbit. -/
 theorem n10_even_gap_two_root_excluded (n d : Nat)
-    (hseen : run n = some (.D (d+2) d))
+    (hseen : run n = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D (d+2) d))
     (hmin : 19680 <= d) (hmax : d <= 59045) :
     False := by
   have hlo : 39362 <= (d+2)+d := by omega
@@ -315,19 +316,19 @@ theorem n10_even_gap_two_root_excluded (n d : Nat)
   have hcases : n = 33 ∨ n = 34 ∨ n = 35 ∨ n = 36 := by omega
   rcases hcases with h33 | h34 | h35 | h36
   · subst n
-    have hEq : some (.D 19954 27733) = some (.D (d+2) d) :=
+    have hEq : some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D 19954 27733) = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D (d+2) d) :=
       root_run_33.symm.trans hseen
     cases hEq
   · subst n
-    have hEq : some (.D 7784 59872) = some (.D (d+2) d) :=
+    have hEq : some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D 7784 59872) = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D (d+2) d) :=
       root_run_34.symm.trans hseen
     cases hEq
   · subst n
-    have hEq : some (.D 52084 23375) = some (.D (d+2) d) :=
+    have hEq : some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D 52084 23375) = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D (d+2) d) :=
       root_run_35.symm.trans hseen
     cases hEq
   · subst n
-    have hEq : some (.D 28698 70161) = some (.D (d+2) d) :=
+    have hEq : some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D 28698 70161) = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D (d+2) d) :=
       root_run_36.symm.trans hseen
     cases hEq
 
@@ -339,14 +340,14 @@ theorem absDiff_comm (x y : Nat) : absDiff x y = absDiff y x := by
 /-- Convert the exact n=10 ternary scale hypotheses to their integer band. -/
 theorem n10_scale_bounds (m : Nat)
     (hmin : 3^9-3 <= m) (hmax : m+3 < 3^10) :
-    19680 <= m /\\ m <= 59045 := by
+    19680 <= m /\ m <= 59045 := by
   norm_num at hmin hmax
   omega
 
 /-- Full far/far terminal-to-root-ray bridge is incompatible with a
 blank-root visit at n=10. -/
 theorem n10_far_far_bridge_excluded (t u v x y B e c : Nat)
-    (hseen : run t = some (.D u v))
+    (hseen : run t = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D u v))
     (hmin : 3^9-3 <= v) (hmax : v+3 < 3^10)
     (hB : B <= 145) (he : e <= 306) (hc : c <= 9)
     (hterm : absDiff x (4*y) <= B)
@@ -373,7 +374,7 @@ theorem n10_far_far_bridge_excluded (t u v x y B e c : Nat)
 /-- Full far/near terminal-to-root-ray bridge is incompatible with a
 blank-root visit at n=10. -/
 theorem n10_far_near_bridge_excluded (t u v x y B e c : Nat)
-    (hseen : run t = some (.D u v))
+    (hseen : run t = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D u v))
     (hmin : 3^9-3 <= u) (hmax : u+3 < 3^10)
     (hB : B <= 145) (he : e <= 306) (hc : c <= 9)
     (hterm : absDiff x (4*y) <= B)
@@ -400,7 +401,7 @@ theorem n10_far_near_bridge_excluded (t u v x y B e c : Nat)
 /-- Full near/far terminal-to-root-ray bridge is incompatible with a
 blank-root visit at n=10. -/
 theorem n10_near_far_bridge_excluded (t u v x y B e c : Nat)
-    (hseen : run t = some (.D u v))
+    (hseen : run t = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D u v))
     (hmin : 3^9-3 <= v) (hmax : v+3 < 3^10)
     (hB : B <= 145) (he : e <= 306) (hc : c <= 9)
     (hterm : absDiff y (4*x) <= B)
@@ -430,7 +431,7 @@ theorem n10_near_far_bridge_excluded (t u v x y B e c : Nat)
 /-- Full near/near terminal-to-root-ray bridge is incompatible with a
 blank-root visit at n=10. -/
 theorem n10_near_near_bridge_excluded (t u v x y B e c : Nat)
-    (hseen : run t = some (.D u v))
+    (hseen : run t = some (BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA.HighLevelState.D u v))
     (hmin : 3^9-3 <= u) (hmax : u+3 < 3^10)
     (hB : B <= 145) (he : e <= 306) (hc : c <= 9)
     (hterm : absDiff y (4*x) <= B)
