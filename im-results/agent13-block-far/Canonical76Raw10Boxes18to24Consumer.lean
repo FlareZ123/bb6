@@ -20,7 +20,7 @@ abbrev Remainder := BB6.Agent49Box18to24CombinedBridge.CombinedRemainder
     exact B0=1LC partial table. -/
 theorem raw10Parent_eq_parent :
     BB6.Agent50Canonical76Raw10.raw10Parent = Parent := by
-  decide
+  rfl
 
 /-- Canonical76 exactness with the seven source-accepted rectangles removed
     from the raw10 local obligations. The 34-box false-match complement and
