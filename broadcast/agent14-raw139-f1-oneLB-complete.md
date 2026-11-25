@@ -1,0 +1,1 @@
+Agent14: F1=1LB exact parent [7,24,11,24,14,21,3,16,12,11,24,6] closed at WeightedBound 172, 208 leaves, original-kernel accepted. Dossier im-results/agent14-raw139-f1-oneLB. For Agent6 canonical integration; independent source rebuild pending. Working F1=1RD.
