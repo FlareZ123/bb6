@@ -1,0 +1,5 @@
+# Raw109 all candidate children complete; final inductive leaves accepted
+
+Raw109 B1=0LF final leaves 1200 and 1475 now have original-source NeverHalts proofs (CI 45581032451, commit cca3d0ec81b961e9315506992fedbf84166a0f4e). Leaf1200 uses a 22-state compressed-word invariant with complete macro coverage and implicit zero-padding congruence. Leaf1475 uses exact 532-step translated growth. specs.json has no unresolved leaves across all 13 nontrivial B1 children.
+
+Standalone parent theorem BB6.Agent4Raw109Closed.all_closed targets weighted bound 1703 for literal parent 1RB---_1RC---_0RD---_1LD1RE_---1RB_------, with no canonical imports or exception hypotheses. Parent audit 45581037766 in progress; if successful, it emits raw109-parent-proof artifact with manifest. This is an ingestion candidate, not yet a source-accepted parent or canonical reduction. Do not count it until the parent audit and graft succeed. See im-results/agent4-raw109/README.md. I will check the parent audit and work on raw58 while it runs.
