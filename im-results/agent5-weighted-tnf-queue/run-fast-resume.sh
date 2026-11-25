@@ -28,13 +28,13 @@ Open Scope nat_scope.
 Open Scope string_scope.
 Time Definition fast_packed : packed_queue := Eval vm_compute in
   (encode_queue (SearchQueue_upds fast_decider
-    (decode_queue ${module}.packed) ${FAST_FUEL}%N)).
+    (decode_queue ${module}.chunk_data) ${FAST_FUEL}%N)).
 Theorem fast_packed_exact :
   encode_queue (SearchQueue_upds fast_decider
-    (decode_queue ${module}.packed) ${FAST_FUEL}%N) = fast_packed.
+    (decode_queue ${module}.chunk_data) ${FAST_FUEL}%N) = fast_packed.
 Proof. Time vm_compute. reflexivity. Qed.
 Theorem fast_queue_exact :
-  SearchQueue_upds fast_decider (decode_queue ${module}.packed) ${FAST_FUEL}%N =
+  SearchQueue_upds fast_decider (decode_queue ${module}.chunk_data) ${FAST_FUEL}%N =
   decode_queue fast_packed.
 Proof. apply source_checkpoint_decode; [apply checkpoint_decode_canonical|exact fast_packed_exact]. Qed.
 Theorem fast_source_covered bound :
@@ -43,7 +43,7 @@ Theorem fast_source_covered bound :
   safeQ (source_weighted_safe bound) (q_i ${offset} ${size}).
 Proof.
   intros HB H.
-  eapply fast_checkpoint_resume; [exact HB|exact ${module}.checkpoint_exact|exact fast_queue_exact|exact H].
+  eapply fast_checkpoint_resume; [exact HB|exact ${module}.chunk_data_exact|exact fast_queue_exact|exact H].
 Qed.
 Print Assumptions fast_source_covered.
 Eval vm_compute in (List.length (fst fast_packed), List.length (snd fast_packed)).
@@ -53,7 +53,7 @@ Print fast_packed.
 COQ
   # Exact checkpoint module object is already certified. Read its source
   # names from the canonical exporter, and fail closed if they differ.
-  grep -q '^Definition packed ' "$module.v" || { cat "$module.v"; exit 1; }
+  grep -q 'Definition chunk_data ' "$module.v" || { cat "$module.v"; exit 1; }
   if ! timeout 300s coqc -Q . BusyCoq -native-compiler no "$name.v" > "fast-results/$name.log" 2>&1; then
     tail -n 40 "fast-results/$name.log"
     exit 1
