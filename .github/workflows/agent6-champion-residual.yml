@@ -31,6 +31,10 @@ on:
         description: Compile the source-connected raw139 E1=1LF Cryptids NonHalt leaf pilot
         type: boolean
         default: false
+      catalogue_crosswalk:
+        description: Crosswalk the pinned 191 Cryptids BB6 modules against the live canonical76 and 112-residual frontier
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -446,7 +450,7 @@ jobs:
           PY
 
       - name: Download accepted canonical76 two-parent roster artifact
-        if: ${{ inputs.raw139_cryptids_leaf && inputs.raw121_graft_run_id == '' }}
+        if: ${{ (inputs.raw139_cryptids_leaf || inputs.catalogue_crosswalk) && inputs.raw121_graft_run_id == '' }}
         uses: actions/download-artifact@v4
         with:
           github-token: ${{ github.token }}
@@ -530,12 +534,51 @@ jobs:
           if-no-files-found: error
           retention-days: 14
       - name: Checkout pinned Cryptids NonHalt source tree for raw139 leaf pilot
-        if: ${{ inputs.raw139_cryptids_leaf && inputs.raw121_graft_run_id == '' }}
+        if: ${{ (inputs.raw139_cryptids_leaf || inputs.catalogue_crosswalk) && inputs.raw121_graft_run_id == '' }}
         uses: actions/checkout@v4
         with:
           repository: google-deepmind/cryptids
           ref: 3647718b5df22e1a61462dec0376bd204526285a
           path: cryptids-raw139
+      - name: Checkout canonical76 crosswalk helpers
+        if: ${{ inputs.catalogue_crosswalk && inputs.raw121_graft_run_id == '' }}
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+          path: crosswalk-source
+      - name: Export canonical76 frontier and crosswalk pinned Cryptids BB6 modules
+        if: ${{ inputs.catalogue_crosswalk && inputs.raw121_graft_run_id == '' }}
+        env:
+          SOURCE_COMMIT: 3647718b5df22e1a61462dec0376bd204526285a
+        run: |
+          set -euo pipefail
+          test -s /tmp/a47-canonical76/CanonicalTwoParentRosterOnly.olean
+          test -s /tmp/a6-champion-residual/build/F0SiblingIntegrationExtended.olean
+          export LEAN_PATH="/tmp/a47-canonical76:/tmp/a6-champion-residual/build:/tmp/a6-champion-residual/imports:$GITHUB_WORKSPACE"
+          lean --run crosswalk-source/im-results/agent6-champion-residual/Canonical76RosterExport.lean > /tmp/canonical76-roster.tsv
+          python3 crosswalk-source/im-results/agent6-champion-residual/cryptids_canonical76_crosswalk.py \
+            --roster-tsv /tmp/canonical76-roster.tsv \
+            --cryptids-root cryptids-raw139/BusyBeaver/BB6 \
+            --out /tmp/canonical76-cryptids-crosswalk.json \
+            --source-commit "$SOURCE_COMMIT" \
+            --expected-source-count 191
+          python3 - <<'PY'
+          import json, pathlib
+          data = json.loads(pathlib.Path("/tmp/canonical76-cryptids-crosswalk.json").read_text())
+          print(json.dumps({k: v for k, v in data.items() if k not in {"matches", "parent_summaries"}}, indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: ${{ inputs.catalogue_crosswalk && inputs.raw121_graft_run_id == '' }}
+        with:
+          name: agent6-canonical76-cryptids-crosswalk-${{ inputs.source_sha || github.sha }}
+          include-hidden-files: true
+          path: |
+            /tmp/canonical76-roster.tsv
+            /tmp/canonical76-cryptids-crosswalk.json
+            crosswalk-source/im-results/agent6-champion-residual/Canonical76RosterExport.lean
+            crosswalk-source/im-results/agent6-champion-residual/cryptids_canonical76_crosswalk.py
+          if-no-files-found: error
+          retention-days: 14
       - name: Align pinned Cryptids NonHalt source tree to Lean 4.36.0-rc2
         if: ${{ inputs.raw139_cryptids_leaf && inputs.raw121_graft_run_id == '' }}
         working-directory: cryptids-raw139
