@@ -2,7 +2,7 @@
 
 Seven exact, pairwise-disjoint domain rectangles inside the `B0=1LC` first-one parent are covered by an exhaustive first-hole proof tree. Each rectangle has 7,500 completions (52,500 total). Their common weighted upper bound is **598**: the largest ordinary prefix is 592 transitions, with the final halt and at most five initial blank-delay steps included.
 
-This is a partial parent cut, not a determination of BB(6). The other raw10 remainder boxes, the separate held FARv3 leaf, and all other root-roster entries remain obligations.
+This is a partial parent cut, not a determination of BB(6). The other raw10 remainder boxes, the separate held FARv3 leaf, and all other root-roster entries remain obligations. The named C/D0/D2/r1 hard-root crosswalk is a separate interface; this dossier does not claim to close any of those named leaves.
 
 ## Exact domains and search certificate
 
