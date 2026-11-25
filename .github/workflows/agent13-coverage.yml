@@ -63,6 +63,8 @@ jobs:
       && inputs.target != 'weighted-tnf-raw124-0lf-simulation'
       && inputs.target != 'weighted-tnf-canonical76-raw10-membership'
       && inputs.target != 'weighted-tnf-raw10-box-ranked-search'
+      && inputs.target != 'weighted-tnf-raw10-box-source-bridge'
+      && inputs.target != 'weighted-tnf-raw10-domain-source-inspect'
       && inputs.target != 'weighted-tnf-raw10-box8-halt-slice'
       && inputs.target != 'weighted-tnf-held-leaf-109-membership'
       && inputs.target != 'weighted-tnf-raw10-box'
