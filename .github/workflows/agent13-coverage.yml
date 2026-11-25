@@ -2246,7 +2246,7 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           opened = Path("open.txt").read_text().splitlines()
-          Path("open-indexed.txt").write_text("".join(f"{i} {table}\n" for i, table in enumerate(opened)))
+          Path("open-indexed.txt").write_text("".join(f"{i} {table.replace('_', '')}\n" for i, table in enumerate(opened)))
           print(f"Indexed {len(opened)} exact raw leaves for the cycle checker.")
           PY
           /tmp/raw124-longcycle 100000 128 < open-indexed.txt > longcycle100k.out
@@ -2260,15 +2260,17 @@ jobs:
           assert set(ids) == set(range(len(opened))), (len(opened), len(ids), sorted(set(range(len(opened))) - set(ids))[:10])
           cycles = [row for row in rows if row[1] == "cycle"]
           holes = [row for row in rows if row[1] == "hole"]
+          single_holes = [row for row in holes if opened[int(row[0])].count("---") == 1]
+          multi_holes = [row for row in holes if opened[int(row[0])].count("---") > 1]
           unresolved = [row for row in rows if row[1] == "open"]
-          print(f"Long-cycle census: {len(cycles)} exact cycles, {len(holes)} late holes, {len(unresolved)} unresolved of {len(opened)} raw open leaves")
+          print(f"Long-cycle census: {len(cycles)} exact cycles, {len(single_holes)} single-hole terminals, {len(multi_holes)} multi-hole split candidates, {len(unresolved)} unresolved of {len(opened)} raw open leaves")
           if len(opened) > 469:
               print("OPEN_ROW_469", 469, opened[469])
               match = next(row for row in rows if int(row[0]) == 469)
               print("OPEN_ROW_469_RESULT", *match)
           for row in holes:
               if len(row) > 2 and int(row[2]) > 12000:
-                  print("LATE_HOLE", *row)
+                  print("LATE_QUERY", *row)
           PY
       - uses: actions/upload-artifact@v4
         with:
