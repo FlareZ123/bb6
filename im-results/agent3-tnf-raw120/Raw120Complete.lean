@@ -49,8 +49,8 @@ private def noncycleChoices : List Transition :=
   [none, some ⟨false,false,0⟩, some ⟨false,false,1⟩, some ⟨false,false,5⟩, some ⟨false,true,0⟩, some ⟨false,true,1⟩, some ⟨false,true,2⟩, some ⟨false,true,5⟩, some ⟨true,false,0⟩, some ⟨true,false,1⟩, some ⟨true,false,5⟩, some ⟨true,true,0⟩, some ⟨true,true,1⟩, some ⟨true,true,2⟩, some ⟨true,true,5⟩]
 
 private theorem choices_partition :
-    ∀ t ∈ choices, t ∉ BB6.Agent3Raw120EasyCycles.cycleChoices → t ∈ noncycleChoices := by
-  decide
+    (choices.filter (fun t => decide (t ∉ BB6.Agent3Raw120EasyCycles.cycleChoices))).all
+      (fun t => decide (t ∈ noncycleChoices)) = true := by decide
 
 /-- Direct parent proof. All 25 alternatives have an explicit source certificate.
     This declaration is accepted only after all imported child modules compile. -/
@@ -58,7 +58,9 @@ theorem allChildren (t : Transition) (ht : t ∈ choices) (m : Machine)
     (hm : compatible (refine p120 hole t) m) : WeightedBound 224707 m := by
   by_cases hc : t ∈ BB6.Agent3Raw120EasyCycles.cycleChoices
   · exact widen (BB6.Agent3Raw120EasyCycles.cycles_sound t hc m hm) (by decide)
-  have hn := choices_partition t ht hc
+  have hf : t ∈ choices.filter (fun u => decide (u ∉ BB6.Agent3Raw120EasyCycles.cycleChoices)) :=
+    List.mem_filter.mpr ⟨ht, by simpa using hc⟩
+  have hn : t ∈ noncycleChoices := of_decide_eq_true (List.all_eq_true.mp choices_partition t hf)
   simp only [noncycleChoices, List.mem_cons, List.not_mem_nil, or_false] at hn
   rcases hn with h0 | h1 | h2 | h3 | h4 | h5 | h6 | h7 | h8 | h9 | h10 | h11 | h12 | h13 | h14
   all_goals subst t
