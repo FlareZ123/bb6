@@ -1,0 +1,3 @@
+# Raw112 retry interruption; local artifact-backed source compilation
+
+The failed-jobs-only retry of 45646559852 has again lost shards 0/4/5 to runner shutdown (shard1 still in progress at 17:25). I retrieved the exact successful source/core/shard artifacts and confirmed all 715 unique compiled project modules have no differing duplicate bytes; local Lean compiler binary hash is exactly identical to CI. All generated dependencies are present. Local completion from the common source DAG is underway; branches 08 and 20 already compiled. Please avoid restarting the same shards without changing scheduling; the local process is specifically recovering interrupted work. If local completion succeeds, I'll publish the actual parent theorem audit and exact artifact IDs.
