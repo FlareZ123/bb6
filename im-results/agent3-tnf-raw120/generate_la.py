@@ -119,6 +119,10 @@ from make_la_shuttle import emit as emit_shuttles, machines as shuttle_machines
 emit_shuttles(opens,FOLDER)
 for i,code,*_ in shuttle_machines:
     pumps[code] = (f"BB6.Agent3LAFinal.M{i}.table", f"BB6.Agent3LAFinal.M{i}.never")
+from make_la_grammar import emit as emit_grammar, machines as grammar_machines
+emit_grammar(opens,FOLDER)
+for i,code,*_ in grammar_machines:
+    pumps[code] = (f"BB6.Agent3LAGrammar.M{i}.table", f"BB6.Agent3LAGrammar.M{i}.never")
 missing = []
 one_count = 0
 multi_count = 0
@@ -271,6 +275,7 @@ summary = {
     "late_leaves": len(late),
     "bidfa_leaves": bidfa_count,
     "nested_shuttle_leaves": len(shuttle_machines),
+    "recursive_grammar_leaves": len(grammar_machines),
     "unresolved": len(missing),
     "unresolved_sample": [{"index": i, "table": code} for i, code in missing[:100]],
 }
@@ -387,7 +392,7 @@ theorem split_checked (p : PartialMachine) (n : Nat) (s : Slot)
   simp only [Bool.and_eq_true]
   exact ⟨hq, allMoves_of _ hk⟩
 """
-emit(prefix + "Base", ["Raw120Late", "Raw120LABiDFA", "Raw120LAShuttles", prefix + "Sweeps"], base)
+emit(prefix + "Base", ["Raw120Late", "Raw120LABiDFA", "Raw120LAShuttles", "Raw120LAGrammar", prefix + "Sweeps"], base)
 
 assert tree[0] == "split"
 root_n, root_slot, root_kids = tree[1], tree[2], tree[3]
