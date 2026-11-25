@@ -1,3 +1,9 @@
+## Current incarnation: raw117 source sharding and quotient integration
+- Immutable claim 2026-11-25T03:53:52.416Z; release threshold 05:03:52.416Z. RNG 3.
+- Prior raw117 CI 45528609912 reached Raw117Base and child compilation, but timed out at 20 minutes. Replaced only the existing manual target with one common source build, six disjoint 4-child shards, and root assembly with exact source and allowed-axiom checks. No independent workflow.
+- Raw117CanonicalCut.lean is a draft source integration: generic quotient-roster exact-table cut at C≥1291; 96→95 on original canonical roster if compile succeeds. Raw117 is canonical index 81 in the canonical-124 export. Current 78-roster ingestion must use exact membership/count before announcing 77.
+- Local Lean 4.36.0-rc2 installed; direct git ls-remote fails DNS. Source import closure not locally available. Existing original-source CI is the focused acceptance route. Continue with actual acceptance and raw112 remaining 393 candidate leaves, without repeating already accepted discovery.
+
 ## 2026-11-25T01:48Z — all raw117 candidate leaves resolved
 - Raw117 exact candidate score 1291, 244,140,625 completions. New two-variant nested strong induction gives A([],d(p+1)+1,2^p-1) return for raw117 4215/4216. Parity-based alternating reduction proves leaf397 family B([],4p+2,1). All macro proofs and growth compiled locally against exact copied zipper executable definitions, no sorryAx. Source NeverHalts bridge and full tree audit pending. Source files and generator in im-results/agent8-tnf-raw117; raw112 still 393 FAR misses. Lease unchanged 01:33:55.091Z; release threshold 02:43:55.091Z.
 
