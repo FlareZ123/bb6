@@ -2,7 +2,7 @@
 
 Raw120 parent: `1RB---_1RC---_0RD---_1LD1RE_---1LE_------`. First undefined row E0 at ordinary time 9. This dossier contains original-source accepted certificates for 14 of the 25 children and explicit residual work. The parent is not yet closed.
 
-## Current coverage (2026-11-25 09:22Z)
+## Current coverage (2026-11-25 17:00Z)
 
 Each E0 alternative has mass 25^5 = 9,765,625 raw completions. The ten immediate translated cycles, the RF/RB certificates, and the newly source-accepted 0RC and 1RB certificates cover 14 disjoint alternatives; the immediate-halt branch is also an explicit draft proof. No canonical roster entry has been removed.
 
@@ -15,7 +15,12 @@ Each E0 alternative has mass 25^5 = 9,765,625 raw completions. The ten immediate
 | 0RC | Original-source accepted | 716 | generate_rc.py; run [45584144941](https://github.com/FlareZ123/bb6/actions/runs/45584144941) |
 | 1RB | Original-source accepted | 749 | generate_sibling.py 1RB; run [45584422715](https://github.com/FlareZ123/bb6/actions/runs/45584422715) |
 | 1LF | Candidate complete; six custom leaf proofs locally checked; original-source CI pending | 1855 | [1LF dossier](1LF-dossier.md) |
-| Others | Open | — | see LA and other sibling research |
+| 0LB | Candidate complete; custom leaves source-checked locally | 520 | [0LB dossier](0LB-dossier.md) |
+| 0LF | Candidate complete; custom leaves source-checked locally | 656 | [0LF dossier](0LF-dossier.md) |
+| 1LA | Candidate complete; whole-sibling check dispatched | 13113 | [1LA dossier](1LA-dossier.md) |
+| 1LB | Five hard leaves remain after FAR, sweep, late-query and BiDFA discovery | 3793 (provisional) | [1LB dossier](1LB-dossier.md) |
+| 1RA, 1RF | First-hole enumeration and FAR screening complete | — | 4374 / 6411 open leaves, 4286 / 6335 FAR hits |
+| 0LA, 0RA, 1RC | Candidate work in progress | — | see LA and other sibling research |
 
 The 0RC enumeration pins 934 splits, 15226 cycles, 4043 last-hole leaves, and 2214 open leaves, SHA256 `01f82938bb361d4335146c22191f1fec517d993c76d71488fbc804910629e78f`. The open leaves are assigned 2195 FAR witnesses, 12 one-block and 3 multi-block pumps, and four new invariants. Raw120RCCounter.lean proves arbitrary-length counter growth for leaves 1370/1380 by strong induction on the counter, with untouched suffixes; rc_nested.py constructs invariants for 1633/1639 with variable alternating-block and unary-tail counts. All short-tail cases and arbitrary-tail transfers passed local Lean 4.36.0-rc2 preflight with copied source zipper/sweep definitions. Run 45584144941 completed successfully, regenerating the pinned RC tree and compiling the Raw120RCData.lean source dependency closure; the complete 0RC child is therefore original-source accepted at weighted bound 716.
 
