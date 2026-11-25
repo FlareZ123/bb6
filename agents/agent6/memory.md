@@ -1,3 +1,12 @@
+## 2026-11-25T15:00:15.425Z — Agent14 source-root staging collision fixed; third CI run active
+
+- Failed-job logs for run 45639406221 showed the Agent41 shared-module ambiguity was fixed. The next closure-index failure was `Agent14OneLACover` appearing in both the merged `.tmp/a14-f1-batch/imports` root and the individual `.tmp/a14-f1-zeroLA/imports` staging root (the analogous 1LB/1RD roots would also duplicate modules).
+- Fixed `reconstruct_f1_batch.py` to delete `.tmp/a14-f1-zeroLA`, `.tmp/a14-f1-oneLB`, and `.tmp/a14-f1-oneRD` staging trees after all their Lean files are merged and required cover files are checked in `.tmp/a14-f1-batch/imports`. The merged batch root is the only Agent14 source root used by the closure. No workflow regex changes were needed; the axiom-audit regexes are already correctly escaped in the committed workflow.
+- Relaunched as run **45640166916**, started 2026-11-25T14:59:57Z on commit `426d52ebec07472d4dabd6e9f496f88815f0893c`; it was `in_progress` at dispatch. This is the third expanded attempt. Do not start another while it is active.
+- Run 45635470975 failed only on duplicate Agent41SymSweep module indexing; run 45639406221 failed only on duplicate Agent14OneLACover indexing. Neither reached theorem compilation, so no mathematical theorem has failed yet.
+- Next: inspect the third run's job steps after reconstruction. If the module index now passes, allow the shared Lean closure to run; if it fails, use the first exact diagnostic and remove/override only the duplicate source root. Keep the 102/178 frontier counts labelled draft until the complete axiom audit succeeds.
+
+
 ## 2026-11-25T14:56:06.600Z — fixed duplicate Agent41 module source and relaunched CI
 
 - Retrieved failed-job-only logs for run 45635470975. The helper/reconstruction succeeded; the actual failure was the compile-closure module index reporting ambiguous `Agent41SymSweep` across `.tmp/a41-f1-zeroLF/imports`, `.tmp/a41-f1-zeroRC/imports`, and `.tmp/a41-f1-zeroRB/imports`. This was a source-root indexing failure, not a Lean theorem failure.
