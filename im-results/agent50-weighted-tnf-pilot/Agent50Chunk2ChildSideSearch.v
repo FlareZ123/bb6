@@ -9,19 +9,11 @@ Open Scope nat_scope.
 
 (* Second-level source-side closure experiment. The first-hole theorem leaves
    1,200 ordinary children from the 50 q_i(2,32), fuel-32 residuals. Search
-   those children with the pinned BusyCoq translated-cycler verifier. This
-   first pass uses budget 0; any unmatched child remains explicit. *)
-
-Definition agent50_child_side_candidates_zero : list side_candidate :=
-  flat_map (fun d =>
-    flat_map (fun entry =>
-      map (fun period => (d,(entry,(period,0)))) (seq 1 13))
-      (seq 0 13))
-    [L;R].
+   their distinct canonical table strings against the complete existing
+   1,014-candidate translated-cycler grid. Any unmatched child remains open. *)
 
 Definition agent50_find_child_side_candidate (table_string : string) : option side_candidate :=
-  find (side_candidate_check (TM_from_str table_string))
-    agent50_child_side_candidates_zero.
+  find (side_candidate_check (TM_from_str table_string)) side_candidates.
 
 Lemma agent50_find_first_true {A : Type} (f : A -> bool) (xs : list A) (x : A) :
   find f xs = Some x -> f x = true.
@@ -154,8 +146,8 @@ Proof.
   apply agent50_child_side_frontier_sound. exact Hremaining.
 Qed.
 
-(* Reproducible finite output: number of children certified by this first
-   budget-zero pass, and number retained as open source obligations. *)
+(* Reproducible finite output: raw child count, distinct serialized tables,
+   source-side certificates found, and explicit unmatched child obligations. *)
 Time Eval vm_compute in
   (length chunk2_first_hole_children, length agent50_child_side_strings,
    length agent50_child_side_certificates, length agent50_child_side_remaining).
