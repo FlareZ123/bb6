@@ -1,6 +1,6 @@
 # Candidate complete exclusion of the n=10 terminal-cancellation corridors
 
-**Status: proof plan with unverified checkpoint values.** The ratio/mass arithmetic is exact, but the additional root states below currently come from a JavaScript replay of the source transcription. Do not call this a Lean-proved result until the states are checked by `decide` against `Agent49ParitySource` and the consumer is compiled with an axiom audit.
+**Status: Lean CI compiled; no `sorryAx` in the dependency chain.** Focused workflow run `45721351121` compiled the pinned source machine, `Agent49ParitySource`, `SquareGapTerminalBridge`, `Agent8RootCancellationBudgetBridge`, `RootExclusion`, and `RootMassGapAllN10`. The concrete root checkpoints use `native_decide`, so axiom reports include generated native evaluator axioms; this is not a kernel-reduction-only proof. The four ray bridge exclusions and the special even gap-two branch consumer all compile.
 
 ## Two ratio geometries from the cancellation bridge
 
@@ -68,12 +68,9 @@ The draft `RootMassGapAllN10.lean` now contains the exact-checkpoint declaration
 - `n10_near_far_bridge_excluded`;
 - `n10_near_near_bridge_excluded`.
 
-Each wrapper derives the relevant ratio strip from the terminal window and root-ray bridge inequalities, specializes the common error to 470, and invokes the mass-corridor consumer. These declarations are still uncompiled proof drafts until the source checkpoints and all transitive axioms are checked.
+Each wrapper derives the relevant ratio strip from the terminal window and root-ray bridge inequalities, specializes the common error to 470, and invokes the mass-corridor consumer. These declarations compiled in run `45721351121`; the workflow rejects `sorryAx` across the transitive chain. The `native_decide` trust qualification above remains important.
 
-1. Prove the listed root checkpoints by `decide` against the actual `Agent49ParitySource.run`.
-2. Use `run_mass_mono` / `next_strict_mass` to show a root visit whose mass lies strictly between the endpoint checkpoint masses must occur at one of the intervening indices.
-3. Split those finitely many indices and use the exact checkpoint states to contradict the corresponding ratio residual bound.
-4. Instantiate the far and near corridor bounds from the four theorems in `RootCancellationBudgetBridge.lean`.
+The compiled chain now carries out these steps. Remaining work is to independently audit the coverage of the terminal-to-budget hypotheses against every source n=10 terminal parent, replace native-evaluated checkpoints with kernel-reduced proofs if feasible, and extend the argument beyond n=10.
 
 If the checkpoint list and source bridge inequalities are confirmed, this proves that all four n=10 cancellation sectors are absent from the genuine blank-root orbit. It would resolve the entire n=10 terminal-budget layer, but it would not by itself resolve n>=11 or prove #623 nonhalting.
 
@@ -85,4 +82,4 @@ Keep this in `im-results/`; no claim belongs in `results/` until the source proo
 The four ray wrappers do not cover the special even state (D(d+2,d)). Agent 48 identified a separate mass corridor:
 `39362 <= (d+2)+d <= 118092` for `19680 <= d <= 59045`.
 
-The source-transcribed checkpoints are run32 D(29194,9235), mass38429, and run37 D(41468,86104), mass127572. A root visit must be at steps 33–36; none of those four exact states has first coordinate equal to second+2. The Lean draft now includes `root_run_32` by decide and `n10_even_gap_two_root_excluded`. This fifth-branch proof is also pending actual-source compilation.
+The source-transcribed checkpoints are run32 D(29194,9235), mass38429, and run37 D(41468,86104), mass127572. A root visit must be at steps 33–36; none of those four exact states has first coordinate equal to second+2. The Lean module includes `root_run_32` and `n10_even_gap_two_root_excluded`; this fifth-branch consumer compiled in run `45721351121`.
