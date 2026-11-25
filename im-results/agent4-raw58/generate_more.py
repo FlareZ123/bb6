@@ -12,6 +12,8 @@ sys.path.insert(0,str(ROOT.parent/"agent10-tnf-multipump"))
 import multi
 sys.path.insert(0,str(ROOT.parent/"agent1-ngram"))
 from emit_ngram import emit as emit_ngram
+sys.path.insert(0,str(ROOT.parent/"agent4-two-sided-automata"))
+from emit_automata import emit as emit_automata, run as run_automata
 MOVES=[w+d+q for w,d,q in product("01","LR","ABCDEF")]
 SPECS=json.loads((ROOT/"more.json").read_text())
 FAR_CODES=sorted({"000"} | {line.split()[0] for spec in SPECS.values() for line in spec.get("groups","").splitlines() if line.strip()}, key=lambda s:(len(s),s))
@@ -82,6 +84,16 @@ def build_child(key,spec):
         code,info=multi.generate(i,p,ans)
         pumpcode.append(code);pumps[i]=f"{pumpns}.M{i}"
         print(key,i,info)
+    for idx,seed in spec.get("multi_seeds",{}).items():
+        i=int(idx);t,q,l,r,tl,tr,a,b=seed
+        p=one.parse(opens[i])
+        pack=lambda xs:tuple(tuple(x) for x in xs)
+        st=multi.C(q,pack(l),pack(r));tg=multi.C(q,pack(tl),pack(tr))
+        ans=multi.pump(p,st,tg,3000)
+        assert ans is not None,(key,i,opens[i])
+        code,info=multi.generate(i,p,(t,st,tg,ans))
+        assert info==(t,a,b),(key,i,info)
+        pumpcode.append(code);pumps[i]=f"{pumpns}.M{i}"
     if "primitive" in spec:
         i=spec["primitive"];p=one.parse(opens[i])
         st=one.C(1,0,0,one.W(),one.W("011","01111","011"))
@@ -119,12 +131,26 @@ def build_child(key,spec):
             pumps[i]=f"{gn}.M{i}"
         code.append(f"end {gn}")
         (ROOT/(ngmod+".lean")).write_text("\n\n".join(code)+"\n")
+    autmod=prefix+"Automata"
+    autids=spec.get("automata",{})
+    if autids:
+        an=ns+"Automata"
+        code=["import TwoSidedAutomata","set_option maxRecDepth 100000","set_option maxHeartbeats 0",f"namespace {an}","open BB6Coverage"]
+        for idx,params in autids.items():
+            i=int(idx)
+            p=tuple(opens[i].replace("_","")[k:k+3] for k in range(0,36,3))
+            cert=run_automata(p,params,params)
+            assert cert[0],(key,i,params)
+            code.append(emit_automata(i,p,cert));pumps[i]=f"{an}.M{i}"
+        code.append(f"end {an}")
+        (ROOT/(autmod+".lean")).write_text("\n\n".join(code)+"\n")
     late={int(i):(n,s) for i,(n,s,t) in spec.get("late",{}).items() if opens[int(i)]==t and t.count("---")==1}
     assert len(late)==len(spec.get("late",{}))
     pumpcode.append(f"end {pumpns}")
     (ROOT/(prefix+"Pumps.lean")).write_text("\n\n".join(pumpcode)+"\n")
     imports=["ZipThreeHoleAudit",prefix+"Pumps"]+spec.get("imports",[])
     if ngids: imports.append(ngmod)
+    if autids: imports.append(autmod)
     for i,module in spec.get("custom",{}).items(): pumps[int(i)]=module
     if "counter" in spec:
         i=spec["counter"]

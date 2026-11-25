@@ -24,11 +24,13 @@ theorem all_completions :
     simp only [List.mem_cons] at hr
     rcases hr with h0 | h1 | h2 | h3 | h4 | hnil
     · subst mv
-      exact BB6.Agent4Raw58LE.all_completions m hc
+      intro k d hk hd
+      exact Nat.le_trans (BB6.Agent4Raw58LE.all_completions m hc k d hk hd) (by decide)
     · subst mv
       exact BB6.Agent4Raw58LF.all_completions m hc
     · subst mv
-      exact BB6.Agent4Raw58RF.all_completions m hc
+      intro k d hk hd
+      exact Nat.le_trans (BB6.Agent4Raw58RF.all_completions m hc k d hk hd) (by decide)
     · subst mv
       exact BB6.Agent4Raw58LE1.all_completions m hc
     · subst mv
