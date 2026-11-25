@@ -277,7 +277,7 @@ jobs:
           cp /tmp/a31-canonical-manifest.json manifest/canonical77-base-manifest.json
           cp /tmp/a31-shared-manifest.json manifest/raw107-shared-manifest.json
           cp .tmp/a31/raw107-source-provenance.json manifest/
-          cp .tmp/a31/raw107-generator-arguments.txt manifest/ 2>/dev/null || true
+          cp .tmp/a31/raw114-generator-arguments.txt manifest/
           cp .tmp/a31-shared/generator-arguments.txt manifest/
           cp /tmp/a31/lean-version.txt manifest/
           cp /tmp/a31/lean-binary-path.txt manifest/
