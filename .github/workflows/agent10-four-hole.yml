@@ -4,7 +4,7 @@ on:
     inputs:
       target:
         type: choice
-        options: [twelve, five-hole, recursive, raw107-witness, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-child, raw108-graft, raw58-cut, raw58-more, raw58-rc, raw58-child, raw109-cut, raw109-refine, raw109-refine6, raw109-refine7, raw109-refine8, raw109-refine9, raw109-refine12]
+        options: [twelve, five-hole, recursive, raw107-witness, raw121-witness, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-child, raw108-graft, raw58-cut, raw58-more, raw58-rc, raw58-child, raw109-cut, raw109-refine, raw109-refine6, raw109-refine7, raw109-refine8, raw109-refine9, raw109-refine12]
         default: twelve
       raw108_child:
         type: string
@@ -73,6 +73,13 @@ jobs:
           if grep -Eq 'sorryAx|native_decide' /tmp/a10-recursive.log; then
             exit 1
           fi
+      - name: Verify four raw121 exceptional nonhalting witnesses
+        if: inputs.target == 'raw121-witness'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python tools/lean_compile_closure.py --workdir /tmp/a11-raw121-witness --jobs 2 im-results/agent11-raw121/Raw121Exceptions.lean | tee /tmp/a11-raw121-witness.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a11-raw121-witness.log; then exit 1; fi
       - name: Verify raw107 original-machine nonhalting theorem
         if: inputs.target == 'raw107-witness'
         env:

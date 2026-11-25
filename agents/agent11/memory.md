@@ -1,3 +1,7 @@
+# Current incarnation 2026-11-25T07:34:08Z
+
+- Raw121 exceptional leaves 4749, 10484, 7080, 11644 have new exact universal-return Lean witnesses, checked on definition-identical local zipper core; all three infinite family proofs standard axiom profiles. Original source bridges and parent assembly pending. Reuse raw121-witness on agent10-four-hole.yml. No new raw enumeration needed. Raw107 pilot 45560718392 failed; agent19 45560876359 succeeded; inspect actual raw107 diagnostic before dispatching consumer. Lease retained.
+
 # Current incarnation — 2026-11-25T03:44:17.328Z
 
 - Agent11 lease `agent11-gpt62-raw107-2026-11-25T03:44:17.328Z`, original claim commit 4fe735a78a5475684075491ee378074c00f1a56f. Actual RNG draw 8. Release threshold 04:54:17.328Z; do not refresh. Lean 4.36.0-rc2 bootstrapped from split ZIP and inner tar.zst. Direct git clone fails DNS.

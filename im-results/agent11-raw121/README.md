@@ -1,10 +1,21 @@
 # Raw121: candidate proof dossier
 
-**Current status: 4 unresolved leaves, no accepted parent certificate.** This is the six-hole cylinder `1RB---_1RC---_0RD---_1LD1RE_---1RE_------` (E1=1RE, canonical index 85, raw index 121). The first free query is E0 at ordinary time 8. All numbers here are discovery results unless a source checker is explicitly identified.
+**Current status: all four exceptional leaves have locally checked symbolic return proofs; no accepted parent certificate.** This is the six-hole cylinder `1RB---_1RC---_0RD---_1LD1RE_---1RE_------` (E1=1RE, canonical index 85, raw index 121). The first free query is E0 at ordinary time 8. All numbers here are discovery results unless a source checker is explicitly identified.
 
 The deterministic 1,000-step candidate enumeration contains 8,892 split nodes, 150,577 side-cycle leaves, 39,663 last-hole leaves, and 14,277 open leaves; raw assignment mass 244,140,625 (25^6). Mass: cycle 224,584,825; immediate halt 16,215,963; total-defined 951,912; open 2,387,925. Open roster SHA256: `30a72b502df5ea47f06886d114fb9ab8af7f918bfd3a1066a73b16634e3e07c9`.
 
-Open-leaf partition: 14,156 FAR candidates (84 distinct reusable codes), 71 one-block sweeps, 12 two-block sweeps, 14 quadratic nested-sweep proofs, 6 recursive counter proofs, 4 additional quadratic proofs, 4 arbitrary-tail binary-fill proofs, 4 long affine candidates, 2 delayed first holes, 4 unresolved. Both delayed leaves have one free row F0 and reach it after 4062 and 2546 ordinary transitions respectively. Candidate halt scores must account for the final halt and blank delay; the initial 1001-step maximum is not a bound on this cylinder.
+Open-leaf partition: 14,156 FAR candidates (84 distinct reusable codes), 71 one-block sweeps, 12 two-block sweeps, 14 quadratic nested-sweep proofs, 6 recursive counter proofs, 4 additional quadratic proofs, 4 arbitrary-tail binary-fill proofs, 4 long affine candidates, 2 delayed first holes, and 4 exceptional symbolic return proofs. Both delayed leaves have one free row F0 and reach it after 4062 and 2546 ordinary transitions respectively. Candidate halt scores must account for the final halt and blank delay; the initial 1001-step maximum is not a bound on this cylinder.
+
+## Four exceptional leaf proofs
+
+The four previously unresolved leaf tables now have exact arbitrary-length positive-return witnesses. These are locally kernel-checked against definition-identical copied zipper and sweep definitions in Lean 4.36.0-rc2. The final original-source import/compatibility audit is pending; no parent certificate is accepted yet.
+
+- 4749 and 10484: [Raw121BinarySweep.lean](Raw121BinarySweep.lean), E-section left word `0 1^(j+4) (01)^n`, arbitrary right word R. Each positive return increases n by one, takes 4n+j+j'+16 moves, and transforms the right tape by taking the leading j' ones of `0^j 1 R` and dropping the next zero (implicit if empty). Blank entry is at 8.
+- 7080: [Raw121TripleSweep.lean](Raw121TripleSweep.lean), E-section left word `0 1^(j+4) (011)^n 01` with the same right-tail transformation. The cost is 8n+j+j'+24. Blank entry at 25 has n=j=0 and R=1.
+- 11644: [Raw121TripleCounter.lean](Raw121TripleCounter.lean), X-section left word `0 1^(3a+1)` with optional trailing zero and a right word in the grammar G = (1^(3b+2) 0)* 1^(3c); Y-section left word `0 1^(3b+2)` with optional trailing zero and empty right. Every X/Y section returns to X/Y after a positive, exact number of transitions; the five cases cover the whole grammar. Blank entry at 8 is X(1, empty).
+- [Raw121Exceptions.lean](Raw121Exceptions.lean) builds an infinite indexed live run by dependent choice from each closed invariant, then invokes the existing original-machine `never_of_growth` bridge. Local family theorems use only propext, Classical.choice, Quot.sound. Original-source bridge still needs compilation.
+
+The candidate partition now has no unclassified leaf, but the delayed first-hole certificates, all previously generated recurrence witnesses and all FAR certificates must be consumed by a complete original-source parent tree. The 4063 candidate weighted score is not yet a verified global bound for this parent.
 
 ## New exact quadratic recurrence
 
@@ -34,4 +45,4 @@ Delayed leaves 7825 and 10046 have exactly one hole and zero incoming blank dela
 
 Compile `fast_enum.cpp` with C++17 -O3; run with the parent string from an empty working directory. It is the earlier producer with head-relative polynomial fingerprints as a rejection-only filter before exact side-cycle tape comparison. On raw103 the generated tree/open files matched the previous producer byte for byte. Compile `bank.cpp` with C++20 -O3 and pass `bank.txt`; feed indexed ungrouped 36-character tables. The original Lean checker must accept any candidate. The `specs.json` pins exact leaf identities and indices. The 84-code bank is the union of actual selected witnesses, including 17 found after the initial reused bank scan. Use the existing one-/two-block proof generators with 6000-event step limit. No claim is made yet that all assignments satisfy a fixed score bound.
 
-The next work is to prove the remaining 4 explicit exceptions or classify them as delayed first holes, then generate a complete source-auditable tree and integrate it into the canonical roster. Do not repeat the raw121 initial enumeration or broad FAR search.
+The next work is to compile the four original-source exceptional bridges and generate a complete source-auditable tree, then integrate it into the canonical roster. Do not repeat the raw121 initial enumeration or broad FAR search.
