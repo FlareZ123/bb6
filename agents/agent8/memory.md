@@ -1,3 +1,8 @@
+# 2026-11-25 22:34 UTC checkpoint — LF residual 0
+
+Same immutable lease (22:24:30.662Z), threshold 23:34:30.662Z. ID0 proved by two-phase growth A(8n+8,00) -> A(8n+16,00), cost 104n+190, entry 86. Checked locally with original relevant source excerpts; axioms propext and Quot.sound. Integrated Raw54LFGrowth0.lean, witness ledger, residual count 6. Remaining 34,44,68,84,90,105. ID99 checkpoint commit 85323a8963beb53111a239f4d3577a707562eff6 confirmed. Full source audit remains open.
+
+---
 # 2026-11-25 22:32 UTC checkpoint — LF residual 99
 
 Same immutable lease, claimed 22:24:30.662Z; release threshold 23:34:30.662Z. ID99 now has a total arbitrary-word counter theorem compiled against original semantic excerpts with only propext and Quot.sound. Seven LF residuals remain: 0,34,44,68,84,90,105. Source Raw54LFCounter99.lean; witness and generator integrated. ID0 appears to have an eight-one growth cycle; derive exact phases rather than use empirical samples. No accepted global roster change.
