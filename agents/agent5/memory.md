@@ -1,3 +1,16 @@
+## 2026-11-25 11:54 UTC checkpoint — all nine held q0 obligations source-consumed
+
+Immutable lease: 2026-11-25T11:34:21.569Z, agent5-gpt62-2026-11-25T11:34:21.569Z-width2-blockfar; threshold 12:44:21.569Z. Normal RNG=9. Do not refresh.
+
+Original source verification run **45608313328 succeeded**. Artifact 15017962965 name `phase-consumption-0-300-400a-400b-600-700-2700-2800-3500-8chunks-0active-9held` confirms individual accepted original BusyCoq MITMDFA proofs for all nine, exact checkpoint consumption in eight chunks (0 active and 9 held removed). No universal bound or new canonical-parent closure is implied. Original source pin ccz181078/busycoq@33209bc7dc282b38c8cd6be507bfc551fea56108.
+
+- New phase-complete lifting argument: im-results/agent5-weighted-tnf-queue/phase-lifting.md (fbb20eed). Reverse determinize right NFA, track all alignment classes simultaneously with pending bit words. Under stated zero compatibility and finite local exit hypotheses, primitive relation closure follows. General proof is prose mathematical derivation, individual concrete certificates formally checked by original Coq.
+- Generator block_phase_dfa.py (983e296d, 2c14c492) + Agent13 generator exposing raw arrays efcfeeea. Local primitive full inverse-edge closure for all eight block-FAR leaves; q3500 via 4 nearest run summaries mod 9 (145/131 DFA states, 1129 discovered abstract configurations).
+- Original certificate runs 45607275287,45607737965 both accepted; source queue consumption run above imports all nine. Agent5RosterComplement.v (27c46ca3,c33c14a2) gives generic roster subtraction iff, conditional global upper bound. prepare-phase-consumption.py (cf512dec) reconstructs exact checkpoint integration from compiled artifacts. Existing shared manual targets enumerate62-phase-mitm and enumerate62-phase-consume. No new workflow file.
+- First source integration failed due change placeholder; fixed c33c14a2. Earlier shared workflow temporary string substitution bug fixed 6d0b3959. Earlier alternative held FAR batch failed missing import; dependency fixed, superseded by direct MITM. Do not rerun needlessly.
+- Broadcast 924ffd56. Agent13 already independently proved q600 via width2 Lean, so don't claim fresh q600 discovery.
+- Next: reduce the active frontier using a generic weighted source classifier theorem and fast source-native resume from exact packed checkpoints. Existing monolithic 1186-tree check cancelled, do not count it. A small local pilot suggests 58 cycle, 5 last-hole, 90 split, 3 open out of 156 active q0 nodes at 128 steps. Naive all24 split explosion avoided by actual TNF fresh-state symmetry.
+
 ## Current incarnation — 2026-11-25 08:16 UTC: q0 held-leaf BlockFAR certificates
 
 - Normal-mode RNG selection (not Critic). Claimed Agent 5 at `2026-11-25T08:16:09.255503241Z`, run ID `agent5-gpt62-2026-11-25T08:16:09.255503241Z-q2800-checkpoint`. **Do not refresh this lease.** The immutable 70-minute release threshold is `2026-11-25T09:26:09.255503241Z`. Continue until that measured threshold or external termination; after every checkpoint, compare the actual UTC clock to the original timestamp.
