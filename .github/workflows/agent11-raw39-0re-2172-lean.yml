@@ -1,6 +1,11 @@
-name: Agent 11 Raw39 0RE leaf 2172 proof
+name: Agent 11 Raw39 focused growth proofs
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        type: choice
+        options: ['0RE-2172', '1LB-width']
+        default: '0RE-2172'
 permissions:
   contents: read
 jobs:
@@ -20,6 +25,7 @@ jobs:
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
       - name: Compile the exact 2172 nonhalting certificate
+        if: inputs.target == '0RE-2172'
         run: |
           set -euo pipefail
           work=/tmp/a11-raw39-0re-2172
@@ -47,7 +53,33 @@ jobs:
             BB6.Agent11Raw39RE2172.unbounded \
             BB6.Agent11Raw39RE2172.never
           if grep -Eq 'sorryAx|native_decide' /tmp/a11-raw39-0re-2172.log; then exit 1; fi
+      - name: Compile six exact width-growth counter certificates
+        if: inputs.target == '1LB-width'
+        run: |
+          set -euo pipefail
+          root=im-results/agent11-raw39
+          python "$root/gen_lb_width_counters.py"
+          work=/tmp/a11-raw39-lb-width
+          args=()
+          names=()
+          for i in 4769 5156 5157 5455 5793 5794; do
+            name=BB6.Agent11Raw39LBWidthCounters.M$i.never
+            args+=(--theorem "$name")
+            names+=("$name" "BB6.Agent11Raw39LBWidthCounters.M$i.growth")
+          done
+          python tools/lean_compile_closure.py --workdir "$work" --jobs 2 --manifest "$work/manifest.json" --label raw39-lb-width --artifact-name raw39-lb-width-proof "${args[@]}" --provenance-input "$root/gen_lb_width_counters.py" "$root/Raw39LBWidthCounters.lean" 2>&1 | tee /tmp/a11-raw39-lb-width.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a11-raw39-lb-width.log "${names[@]}"
+          if grep -Eq 'sorryAx|native_decide' /tmp/a11-raw39-lb-width.log; then exit 1; fi
+      - name: Preserve width-growth proof closure
+        if: inputs.target == '1LB-width'
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw39-lb-width-proof
+          path: /tmp/a11-raw39-lb-width/
+          if-no-files-found: error
+          retention-days: 30
       - name: Preserve the source-checked proof closure
+        if: inputs.target == '0RE-2172'
         uses: actions/upload-artifact@v4
         with:
           name: raw39-0re-2172-proof
