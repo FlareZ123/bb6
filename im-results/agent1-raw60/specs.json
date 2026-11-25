@@ -414,11 +414,19 @@
       914,
       919
     ],
-    "unresolved": {
-      "1039": "1RB1LB_1RC1RD_0RD---_1LD1RE_1LF1RA_0RA0LF",
-      "1068": "1RB1LB_1RC1RF_0RD1LC_1LD1RE_---1RA_1RD0LC"
-    },
-    "manual": {}
+    "unresolved": {},
+    "manual": {
+      "1039": [
+        "Raw60BCBinary",
+        "BB6.Agent1Raw60BCBinary.M1039",
+        "1RB1LB_1RC1RD_0RD---_1LD1RE_1LF1RA_0RA0LF"
+      ],
+      "1068": [
+        "Raw60LBFour",
+        "BB6.Agent1Raw60LBFour",
+        "1RB1LB_1RC1RF_0RD1LC_1LD1RE_---1RA_1RD0LC"
+      ]
+    }
   },
   "1LC": {
     "bound": 253,
@@ -479,10 +487,15 @@
     ],
     "unresolved": {
       "83": "1RB1LC_1RC0LE_0RD0LF_1LD1RE_---1RA_1LB1LA",
-      "85": "1RB1LC_1RC1RB_0RD0LF_1LD1RE_---1RA_1LB1LA",
-      "580": "1RB1LC_1RC---_0RD1RD_1LD1RE_1LF1RA_0RA0LF"
+      "85": "1RB1LC_1RC1RB_0RD0LF_1LD1RE_---1RA_1LB1LA"
     },
-    "manual": {}
+    "manual": {
+      "580": [
+        "Raw60BCBinary",
+        "BB6.Agent1Raw60BCBinary.M580",
+        "1RB1LC_1RC---_0RD1RD_1LD1RE_1LF1RA_0RA0LF"
+      ]
+    }
   },
   "1RF": {
     "bound": 276,
