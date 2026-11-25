@@ -81,7 +81,7 @@ private theorem not_power_two_of_mod64_32
     32 mod 64 leaves only depths zero and two. -/
 private theorem depth_zero_or_two
     (x y a k n : Nat)
-    (hx : x%2=0) (hy : y%2=1)
+    (hx : x%2=0) (hy : y%2=1) (ha3 : 3≤a)
     (hmass : x+y+1=2^n*(2*(a-1)+8))
     (hcost : (2*k-a+3)+(2*(a-1)+8)+3*n=x+2*y+2)
     (hn : n%2=0)
@@ -118,6 +118,7 @@ private theorem high_D_parents_unreachable
     (hu : u%8192=3115 ∨ u%8192=7211)
     (hx : x%2=0) (hy : y%2=1) (hy5 : 5≤y)
     (hbig : 64≤x+y+1) (hmod : (x+y+1)%64=32)
+    (hxEq : 32*x=4781*u+497) (hyEq : 64*y=11603*u+1231)
     (hD : BB6.Agent3.CReach x y) :
     False := by
   have hnpow : ∀ t : Nat, x+y+1≠2^t :=
@@ -128,20 +129,21 @@ private theorem high_D_parents_unreachable
   obtain ⟨n,hn,ha3,har,hmass,hcost⟩ :=
     even_odd_nonpower_parent a k x y hx hy hy5 hbig hnpow hedge
   have hncase : n=0 ∨ n=2 :=
-    depth_zero_or_two x y a k n hx hy hmass hcost hn hmod
-  have haEq : 32*x=4781*u+497 := by omega
-  have hyEq : 64*y=11603*u+1231 := by omega
+    depth_zero_or_two x y a k n hx hy ha3 hmass hcost hn hmod
   rcases hncase with hn0 | hn2
   · subst n
     have hmass0 : x+y+1=2*(a+3) := by
-      simpa using hmass
+      rw [hmass]
+      simp only [Nat.pow_zero, one_mul]
+      omega
     have hcost0 : 2*k+a+9=x+2*y+2 := by omega
     have hbad : 5≤k ∧ k%2=1 ∧ (a+k)%4=2 := by omega
     exact BB6.Agent13TwoParent.odd_forbidden_image
       a k hbad.1 hbad.2.1 (Or.inr hbad.2.2) hpre
   · subst n
     have hmass2 : x+y+1=8*(a+3) := by
-      simpa using hmass
+      rw [hmass, show (2:Nat)^2=4 by decide]
+      omega
     have hcost2 : 2*k+a+15=x+2*y+2 := by omega
     have hgate : 6≤k ∧ k%2=0 ∧
         ((u%8192=3115 ∧ (a+k)%8=5) ∨
@@ -162,7 +164,7 @@ private theorem high_D_parents_unreachable
         omega
       have hG := (BB6.Agent3.oddodd_lowval_blank_reach_iff
         fx fy hFfacts.1 hFfacts.2.1 hFfacts.2.2.1
-        hFfacts.2.2.2.1 hFfacts.2.2.2.2 (by omega)).mp hF'
+        hFfacts.2.2.2.1 hFfacts.2.2.2.2.1 hFfacts.2.2.2.2.2).mp hF'
       let gx:=(fx+fy-4)/2
       let gy:=(fx+3*fy-10)/4
       have hG' : BB6.Agent3.CReach gx gy := by
@@ -235,9 +237,15 @@ theorem payload_unreachable (u : Nat)
       have hkEq : 16*k=3411*u+415 := by omega
       dsimp [x,y]
       omega
+    have hxEq : 32*x=4781*u+497 := by
+      dsimp [x]
+      omega
+    have hyEq : 64*y=11603*u+1231 := by
+      dsimp [y]
+      omega
     exact high_D_parents_unreachable u x y hu
       hDfacts.1 hDfacts.2.1 hDfacts.2.2.1
-      hDfacts.2.2.2.1 hDfacts.2.2.2.2 hD
+      hDfacts.2.2.2.1 hDfacts.2.2.2.2 hxEq hyEq hD
 
 /-- Exact arithmetic bridge from the stopping equation to the two
     8192-residue classes used by payload_unreachable. -/
@@ -300,6 +308,16 @@ theorem low_stop_m67_z846_mod2048_unreachable
   have hP := even_low_ray_reach_iff_unique_parent z u hu (by omega) hR
   exact payload_unreachable u hu8192 hP
 
+private theorem low_power_bound (m : Nat) :
+    3*m+4≤2^(2*m+3) := by
+  induction m with
+  | zero => decide
+  | succ m ih =>
+      have he : 2*(m+1)+3=(2*m+3)+2 := by omega
+      rw [he,Nat.pow_add]
+      simp only [show (2:Nat)^2=4 by decide]
+      omega
+
 /-- The 1583 low-stop criterion gains the disjoint exact cylinder
     m=433219 (mod 1048576), corresponding to z=846 (mod 2048). -/
 def lowAllowedSource1585 (m : Nat) : Prop :=
@@ -321,16 +339,7 @@ theorem blank_halts_iff_six_low1585 :
         (BB6.Agent11SixForced.sixForcedRootDecision_iff 1 k).mp hroot
       have hstop : k+3*m+4=2^(2*m+3) := by
         dsimp [k]
-        have hb := Nat.sub_add_cancel (by
-          have hh : 3*m+4≤2^(2*m+3) := by
-            induction m with
-            | zero => decide
-            | succ m ih =>
-              have he : 2*(m+1)+3=(2*m+3)+2 := by omega
-              rw [he,Nat.pow_add]
-              simp only [show (2:Nat)^2=4 by decide]
-              omega
-          exact hh)
+        have hb := Nat.sub_add_cancel (low_power_bound m)
         omega
       have hnon : m%1048576≠433219 := by
         intro hbad
