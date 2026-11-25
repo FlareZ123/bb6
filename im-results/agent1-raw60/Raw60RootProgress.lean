@@ -56,4 +56,31 @@ theorem scoreB_parent_reduced
 
 #print axioms parent_reduced
 #print axioms scoreB_parent_reduced
+
+def remaining4 : List Move := [⟨false,false,2⟩, ⟨false,false,5⟩, ⟨true,false,5⟩, ⟨true,true,4⟩]
+theorem remaining4_count : remaining4.length=4 := by decide
+
+theorem parent_reduced4
+    (h0RC : ∀ m, compatible (child ⟨false,true,2⟩) m → WeightedBound 376 m)
+    (h0RE : ∀ m, compatible (child ⟨false,true,4⟩) m → WeightedBound 719 m)
+    (h0LB : ∀ m, compatible (child ⟨false,false,1⟩) m → WeightedBound 258 m)
+    (h0RF : ∀ m, compatible (child ⟨false,true,5⟩) m → WeightedBound 1175 m)
+    (h1LA : ∀ m, compatible (child ⟨true,false,0⟩) m → WeightedBound 178 m)
+    (h1LB : ∀ m, compatible (child ⟨true,false,1⟩) m → WeightedBound 620 m)
+    (h1LC : ∀ m, compatible (child ⟨true,false,2⟩) m → WeightedBound 253 m)
+    (h1RF : ∀ m, compatible (child ⟨true,true,5⟩) m → WeightedBound 276 m)
+    (h0LD : ∀ m, compatible (child ⟨false,false,3⟩) m → WeightedBound 176 m)
+    (m : Machine) (hm : compatible parent m) :
+    WeightedBound 1175 m ∨ ∃ mv ∈ remaining4, compatible (child mv) m := by
+  rcases parent_reduced h0RC h0RE h0LB h0RF h1LA h1LB h1LC h1RF m hm with hb | ⟨mv,hr,hc⟩
+  · exact Or.inl hb
+  · simp only [remaining5,List.mem_cons,List.not_mem_nil,or_false] at hr
+    rcases hr with rfl|rfl|rfl|rfl|rfl
+    · exact Or.inr ⟨_, by decide,hc⟩
+    · exact Or.inl (lift (by decide : 176 ≤ 1175) (h0LD m hc))
+    · exact Or.inr ⟨_, by decide,hc⟩
+    · exact Or.inr ⟨_, by decide,hc⟩
+    · exact Or.inr ⟨_, by decide,hc⟩
+
+#print axioms parent_reduced4
 end BB6.Agent1Raw60Root

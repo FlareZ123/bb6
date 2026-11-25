@@ -1004,7 +1004,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        child: ${{ fromJSON(inputs.target == 'weighted-tnf-raw60' && '["0RC","0RE"]' || inputs.target == 'weighted-tnf-raw60-conditional' && '["0LD","0RF"]' || inputs.target == 'weighted-tnf-raw60-la' && '["1LA"]' || inputs.target == 'weighted-tnf-raw60-assemble' && '["0RC","0RE","0RF","0LB","1LA","1LB","1LC","1RF"]' || '["0RF","0LB","1LA","1LB","1LC","1RF"]') }}
+        child: ${{ fromJSON(inputs.target == 'weighted-tnf-raw60' && '["0RC","0RE"]' || inputs.target == 'weighted-tnf-raw60-conditional' && '["0LD","0RF"]' || inputs.target == 'weighted-tnf-raw60-la' && '["1LA"]' || inputs.target == 'weighted-tnf-raw60-assemble' && '["0RC","0RE","0LD","0RF","0LB","1LA","1LB","1LC","1RF"]' || '["0RF","0LB","1LA","1LB","1LC","1RF"]') }}
     steps:
       - uses: actions/checkout@v4
       - name: Install Lean 4.36.0-rc2
@@ -1051,7 +1051,7 @@ jobs:
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
-          python tools/lean_compile_closure.py --workdir /tmp/raw60-progress --jobs 2 im-results/agent1-raw60/{Raw60RootProgress,Raw60LABinary,Raw60LAAlternating,Raw60RFUnary,Raw60BCBinary,Raw60LBFour,Raw60LCGlider}.lean | tee /tmp/raw60-progress.log
+          python tools/lean_compile_closure.py --workdir /tmp/raw60-progress --jobs 2 im-results/agent1-raw60/{Raw60RootProgress,Raw60LABinary,Raw60LAAlternating,Raw60RFUnary,Raw60BCBinary,Raw60LBFour,Raw60LCGlider,Raw60LDBinaryCounters}.lean | tee /tmp/raw60-progress.log
           if grep -Eq 'sorryAx|native_decide' /tmp/raw60-progress.log; then exit 1; fi
 
   raw60_assemble:
@@ -1071,7 +1071,7 @@ jobs:
           pattern: raw60-child-*
           path: /tmp/raw60-assembled
           merge-multiple: true
-      - name: Consume the eight exact child certificates
+      - name: Consume the nine exact child certificates
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
