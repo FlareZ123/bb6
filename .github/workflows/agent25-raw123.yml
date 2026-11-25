@@ -1,38 +1,181 @@
 name: Agent25 raw123 source audit
+run-name: Agent25 raw123 ${{ inputs.target }}
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        description: 'Sharded unconditional parent, isolated final residuals, or legacy full exact/graft audit'
+        type: choice
+        options: [sharded, residuals, full]
+        default: sharded
+permissions:
+  contents: read
 jobs:
-  residuals:
+  prepare:
+    if: inputs.target == 'sharded'
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
     steps:
       - uses: actions/checkout@v4
-      - name: Install pinned Lean
-        run: |
-          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.36.0-rc2
-          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Check finite and recursive residuals
-        run: |
-          set -euo pipefail
-          python im-results/agent13-coverage/unpack.py
-          python im-results/agent25-raw123/audit_bidfa.py
-          python tools/lean_compile_closure.py --workdir /tmp/a25-small --jobs 4 im-results/agent25-raw123/Raw123BiDFAAudit.lean im-results/agent25-raw123/Raw1238146.lean im-results/agent25-raw123/Raw1238209.lean | tee /tmp/a25-small.log
-          if grep -Eq 'sorryAx|native_decide' /tmp/a25-small.log; then exit 1; fi
-  parent:
-    runs-on: ubuntu-latest
-    timeout-minutes: 75
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install pinned Lean
-        run: |
-          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.36.0-rc2
-          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Check parent
+      - name: Reconstruct once and resolve exact source closure
+        id: plan
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
           python im-results/agent25-raw123/generate.py
-          python tools/lean_compile_closure.py --workdir /tmp/a25-parent --jobs 4 im-results/agent25-raw123/Raw123Exact.lean | tee /tmp/a25-parent.log
-          if grep -Eq 'sorryAx|native_decide' /tmp/a25-parent.log; then exit 1; fi
+          python im-results/agent25-raw123/plan_shards.py prepare /tmp/raw123-sources.tar.gz
+          matrix=$(python im-results/agent25-raw123/plan_shards.py matrix)
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw123-sources
+          path: /tmp/raw123-sources.tar.gz
+          if-no-files-found: error
+          retention-days: 30
+
+  core:
+    if: inputs.target == 'sharded'
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw123-sources
+          path: /tmp/a25-input
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile shared dependency core
+        run: |
+          set -euo pipefail
+          tar -xzf /tmp/a25-input/raw123-sources.tar.gz
+          python im-results/agent25-raw123/plan_shards.py compile core /tmp/a25-core 2>&1 | tee /tmp/a25-core.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a25-core.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw123-core
+          path: /tmp/a25-core/
+          if-no-files-found: error
+          retention-days: 30
+
+  shards:
+    if: inputs.target == 'sharded'
+    needs: [prepare, core]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix: ${{ fromJSON(needs.prepare.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw123-sources
+          path: /tmp/a25-input
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw123-core
+          path: /tmp/a25-core
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile independent leaf modules using the exact shared core
+        env:
+          GROUP: ${{ matrix.group }}
+        run: |
+          set -euo pipefail
+          tar -xzf /tmp/a25-input/raw123-sources.tar.gz
+          python im-results/agent25-raw123/plan_shards.py compile "$GROUP" /tmp/a25-shard /tmp/a25-core 2>&1 | tee /tmp/a25-shard.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a25-shard.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw123-shard-${{ matrix.group }}
+          path: /tmp/a25-shard/
+          if-no-files-found: error
+          retention-days: 30
+
+  assemble:
+    if: inputs.target == 'sharded'
+    needs: shards
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw123-sources
+          path: /tmp/a25-input
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw123-shard-*
+          path: /tmp/a25-shards
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Validate source and object union, then compile unconditional parent
+        run: |
+          set -euo pipefail
+          tar -xzf /tmp/a25-input/raw123-sources.tar.gz
+          python im-results/agent4-raw109/merge_shards.py /tmp/a25-shards /tmp/a25-union im-results/agent25-raw123/generated/shard-plan.json
+          python im-results/agent25-raw123/plan_shards.py compile parent /tmp/a25-parent /tmp/a25-union 2>&1 | tee /tmp/a25-parent.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a25-parent.log BB6.Agent25Raw123.residuals123_eq_nil BB6.Agent25Raw123.residual_count123 BB6.Agent25Raw123.sound123 BB6.Agent25Raw123.all123
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw123-parent-proof
+          path: /tmp/a25-parent/
+          if-no-files-found: error
+          retention-days: 30
+
+  residuals:
+    if: inputs.target == 'residuals'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check final recursive residuals and five finite automata
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent25-raw123/audit_bidfa.py
+          python im-results/agent25-raw123/unpack5465.py
+          python tools/lean_compile_closure.py --workdir /tmp/a25-small --jobs 4 im-results/agent25-raw123/Raw123BiDFAAudit.lean im-results/agent25-raw123/Raw1235465.lean im-results/agent25-raw123/Raw1238146.lean im-results/agent25-raw123/Raw1238209.lean 2>&1 | tee /tmp/a25-small.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a25-small.log BB6.Agent25Raw123.R5465.never BB6.Agent25Raw123.R8146.never BB6.Agent25Raw123.R8209.never
+
+  full:
+    if: inputs.target == 'full'
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Legacy monolithic exact witness and generic graft audit
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent25-raw123/generate.py
+          python tools/lean_compile_closure.py --workdir /tmp/a25-full --jobs 4 im-results/agent25-raw123/Raw123Exact.lean 2>&1 | tee /tmp/a25-full.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a25-full.log BB6.Agent25Raw123.all123 BB6.Agent25Raw123.attained123 BB6.Agent25Raw123.lower123 BB6.Agent25Raw123.graft123_sound
