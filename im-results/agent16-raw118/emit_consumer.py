@@ -27,6 +27,12 @@ def main(work: Path) -> None:
     treebank_manifest = json.loads((HERE / "Raw118TreeBank.json").read_text())
     treebank = treebank_manifest["emitted"]
     treebank_ids = {int(x["index"]) for x in treebank}
+    sat_hits = json.loads((IM / "agent1-bidfa-sat" / "raw118-sat-hits.json").read_text())
+    sat_by_id = {int(x["index"]): x for x in sat_hits}
+    assert len(sat_by_id) == len(sat_hits)
+    for i, hit in sat_by_id.items():
+        assert 0 <= i < len(rows) and hit["table"] == rows[i], (i, hit["table"], rows[i])
+    sat_ids = set(sat_by_id)
     phase = {
         int(line.split()[0])
         for line in (AG40 / "phase_candidates.tsv").read_text().splitlines()
@@ -60,8 +66,14 @@ def main(work: Path) -> None:
     remaining_before_treebank = hard - hard_accepted
     assert treebank_ids <= remaining_before_treebank
     assert len(treebank_ids) == len(treebank)
-    remaining_hard = sorted(remaining_before_treebank - treebank_ids)
-    assert len(remaining_hard) == 87 - len(treebank_ids), len(remaining_hard)
+    assert sat_ids <= remaining_before_treebank
+    sat_new_ids = sat_ids - treebank_ids
+    assert not (sat_new_ids & hard_accepted)
+    assert not (sat_new_ids & treebank_ids)
+    assert len(sat_ids) == 11
+    assert sat_ids & treebank_ids == {2873}
+    remaining_hard = sorted(remaining_before_treebank - treebank_ids - sat_new_ids)
+    assert len(remaining_hard) == 87 - len(treebank_ids) - len(sat_new_ids), len(remaining_hard)
     assert all(rows[i].count("---") == 1 for i in remaining_hard)
 
     assert len(symbolic) == 105
@@ -99,6 +111,8 @@ def main(work: Path) -> None:
         add_nonhalt(claim["namespace"])
     for hit in sorted(treebank, key=lambda x: int(x["index"])):
         add_nonhalt(f"BB6Coverage.Agent16BiDFA.Raw118TreeBank.M{int(hit['index'])}")
+    for i in sorted(sat_new_ids):
+        add_nonhalt(f"BB6Coverage.Agent1BiDFASat.Raw118.M{i}")
     for leaf in sorted(late, key=lambda x: int(x["index"])):
         ns = f"BB6.Agent16Raw118Late.M{int(leaf['index'])}"
         entries.append(
@@ -118,6 +132,7 @@ def main(work: Path) -> None:
         "Raw118Tree",
         "Raw118Late",
         "Raw118TreeBank",
+        "Raw118SatHits",
     ]
     header = "\n".join(f"import {name}" for name in imports)
     entries_text = ",\n".join(entries)
@@ -136,7 +151,7 @@ def accepted : List (Accepted bound) := [
 
 def remaining := BB6.Agent16ResidualCover.remaining accepted residuals
 
-theorem accepted_count : accepted.length = {872 + len(treebank_ids)} := by rfl
+theorem accepted_count : accepted.length = {872 + len(treebank_ids) + len(sat_new_ids)} := by rfl
 
 /-- The Raw118 parent is covered at 756496 except for this exact finite
     complement of one-hole residual tables. -/
@@ -165,13 +180,17 @@ end BB6.Agent16Raw118Consumer
     manifest = {
         "open_rows": len(rows),
         "hard_rows": len(hard),
-        "hard_accepted": len(hard_accepted),
+        "hard_base_accepted": len(hard_accepted),
+        "hard_accepted": len(hard_accepted | treebank_ids | sat_new_ids),
         "hard_residuals": remaining_hard,
         "ngram_accepted": len(sparse_ids),
         "late_accepted": len(late_ids),
         "treebank_accepted": len(treebank_ids),
         "treebank_indices": sorted(treebank_ids),
-        "accepted_total": len(hard_accepted | sparse_ids | late_ids | treebank_ids),
+        "sat_accepted": len(sat_new_ids),
+        "sat_indices": sorted(sat_ids),
+        "sat_new_indices": sorted(sat_new_ids),
+        "accepted_total": len(hard_accepted | sparse_ids | late_ids | treebank_ids | sat_new_ids),
         "expected_parent_residuals": len(remaining_hard),
         "imports": imports,
     }

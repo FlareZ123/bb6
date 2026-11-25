@@ -219,6 +219,8 @@ jobs:
           path: |
             im-results/agent16-raw118/Raw118TreeBank.lean
             im-results/agent16-raw118/Raw118TreeBank.json
+            im-results/agent1-bidfa-sat/Raw118SatHits.lean
+            im-results/agent1-bidfa-sat/raw118-sat-hits.json
       - name: Synthesize new Raw118 BiDFA certificates by SAT
         if: inputs.target == 'weighted-tnf-raw118-sat'
         run: |
@@ -283,8 +285,9 @@ jobs:
           python im-results/agent16-raw118/tree_emit.py > im-results/agent16-raw118/Raw118Tree.lean
           python im-results/agent16-raw118/generate_late_traces.py /tmp/raw118-data
           python im-results/agent16-raw118/search_tree_bank.py /tmp/raw118-data
+          python im-results/agent1-bidfa-sat/emit_raw118.py > im-results/agent1-bidfa-sat/Raw118SatHits.lean
           python im-results/agent16-raw118/emit_consumer.py /tmp/raw118-data
-          python tools/lean_compile_closure.py --workdir /tmp/a16-raw118-consumer --jobs 4 im-results/agent16-raw118/Raw118Consumer.lean im-results/agent16-raw118/Raw118CanonicalMembership.lean | tee /tmp/a16-raw118-consumer.log
+          python tools/lean_compile_closure.py --workdir /tmp/a16-raw118-consumer --jobs 4 im-results/agent16-raw118/Raw118Consumer.lean im-results/agent16-raw118/Raw118CanonicalMembership.lean im-results/agent1-bidfa-sat/Raw118SatHits.lean | tee /tmp/a16-raw118-consumer.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a16-raw118-consumer.log; then exit 1; fi
       - name: Preserve generated Raw118 parent consumer
         if: inputs.target == 'weighted-tnf-raw118-consumer'
