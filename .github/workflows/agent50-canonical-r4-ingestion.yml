@@ -52,7 +52,7 @@ jobs:
           github-token: ${{ github.token }}
           run-id: ${{ inputs.canonical77_run_id }}
           name: canonical77-certified
-          path: .tmp/canonical77
+          path: /tmp/canonical77
 
       - name: Download the exact canonical77 dependency manifest
         uses: actions/download-artifact@v4
@@ -84,8 +84,8 @@ jobs:
         working-directory: upstream
         run: |
           set -euo pipefail
-          test -s "$GITHUB_WORKSPACE/.tmp/canonical77/CanonicalRaw114Accepted.olean"
-          test -s "$GITHUB_WORKSPACE/.tmp/canonical77/CanonicalTwoParentGraft.olean"
+          test -s "/tmp/canonical77/CanonicalRaw114Accepted.olean"
+          test -s "/tmp/canonical77/CanonicalTwoParentGraft.olean"
           test -s "/tmp/canonical77-manifest/manifest/canonical77-base-manifest.json"
           test "$(git rev-parse HEAD)" = "${{ inputs.upstream_sha }}"
           lake update
@@ -93,7 +93,7 @@ jobs:
 
       - name: Compile the canonical77 r4 graft with its complete source closure
         env:
-          CANONICAL77_DIR: ${{ github.workspace }}/.tmp/canonical77
+          CANONICAL77_DIR: /tmp/canonical77
           CANONICAL77_MANIFEST: /tmp/canonical77-manifest/manifest/canonical77-base-manifest.json
           UPSTREAM_ROOT: ${{ github.workspace }}/upstream
           WORKDIR: ${{ github.workspace }}/.tmp/agent50-canonical-r4
