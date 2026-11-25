@@ -64,6 +64,9 @@ jobs:
       - name: Compile current raw13 graft and D3 frontier
         run: |
           set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
           export LEAN_PATH="/tmp/a46-raw13:/tmp/a47-canonical"
           lean -o /tmp/a46-raw13/Agent46Raw13Ingest77.olean im-results/agent46-raw13-cut/Agent46Raw13Ingest77.lean 2>&1 | tee /tmp/a46-raw13-ingest77.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a46-raw13-ingest77.log; then
