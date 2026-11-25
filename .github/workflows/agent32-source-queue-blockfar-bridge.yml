@@ -1,0 +1,48 @@
+name: Agent 32 SourceQueue BlockFAR SourceSafe bridge
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Compile SourceQueue-to-BlockFAR bridge closure
+        run: |
+          set -euo pipefail
+          python tools/lean_compile_closure.py \
+            --workdir /tmp/a32-source-blockfar \
+            --jobs 4 \
+            --manifest /tmp/a32-source-blockfar/manifest.json \
+            --label "Agent32 SourceQueue BlockFAR SourceSafe bridge" \
+            --theorem BB6.Agent32SourceBlockFAR.sourceSafe_of_blockFAR \
+            im-results/agent32-source-queue/SourceQueueBlockFARBridge.lean \
+            2>&1 | tee /tmp/a32-source-blockfar.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a32-source-blockfar.log; then
+            echo "Forbidden proof placeholder or native_decide found" >&2
+            exit 1
+          fi
+          for theorem in partialTable_sourceTable sourcePartial_sourceTMOfBlockFAR sourceSafe_of_never sourceSafe_of_blockFAR_table sourceSafe_of_blockFAR_certificate sourceSafe_of_blockFAR_sourceTM sourceSafe_of_blockFAR; do
+            python im-results/agent32-raw59/check_axioms.py /tmp/a32-source-blockfar.log "BB6.Agent32SourceBlockFAR.$theorem"
+          done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: agent32-source-queue-blockfar-bridge
+          path: |
+            /tmp/a32-source-blockfar.log
+            /tmp/a32-source-blockfar/*.olean
+            /tmp/a32-source-blockfar/manifest.json
+          if-no-files-found: warn
+          retention-days: 30
