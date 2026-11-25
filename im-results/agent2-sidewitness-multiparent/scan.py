@@ -17,6 +17,7 @@ from pathlib import Path
 
 SOURCE = Path("im-results/agent47-rooted-tnf/SideWitnessCore.lean")
 MANIFEST = Path("im-results/agent13-roster-convergence/canonical-124.json")
+BDD_FILE = Path("im-results/agent2-sidewitness-multiparent/bdds.json")
 ROW_RE = re.compile(
     r"⟨\[([0-9,\s]+)\],\s*(\d+),\s*(\d+),\s*(true|false),\s*\((-?\d+)\)⟩"
 )
@@ -109,6 +110,73 @@ def count_union(cubes: list[tuple[int, ...]]) -> int:
     return visit(tuple(cubes), tuple(range(nvars)))
 
 
+def build_bdd(cubes: list[tuple[int, ...]],
+              free_slots: list[int]) -> dict:
+    """Build a reduced 25-way decision DAG; 0=open, 1=covered."""
+    memo = {}
+    unique_nodes = {}
+    nodes = []
+    next_id = 2
+
+    def visit(input_cubes: tuple[tuple[int, ...], ...],
+              variables: tuple[int, ...]) -> int:
+        nonlocal next_id
+        current = tuple(sorted(
+            simplify(input_cubes),
+            key=lambda cube: ",".join(map(str, cube))
+        ))
+        if any(all(value == 0 for value in cube) for cube in current):
+            return 1
+        if not current or not variables:
+            return 0
+
+        key = (variables, current)
+        if key in memo:
+            return memo[key]
+
+        def score(variable: int) -> tuple[int, int]:
+            fixed = [cube[variable] for cube in current if cube[variable] != 0]
+            return len(set(fixed)), len(fixed)
+
+        variable = max(variables, key=lambda v: (score(v)[0], score(v)[1], -v))
+        rest = tuple(v for v in variables if v != variable)
+        children = []
+        for value in range(25):
+            next_cubes = tuple(
+                tuple(0 if i == variable else x for i, x in enumerate(cube))
+                for cube in current
+                if cube[variable] == 0 or cube[variable] == value
+            )
+            children.append(visit(next_cubes, rest))
+
+        if all(child == children[0] for child in children):
+            memo[key] = children[0]
+            return children[0]
+
+        signature = (variable, tuple(children))
+        node_id = unique_nodes.get(signature)
+        if node_id is None:
+            node_id = next_id
+            next_id += 1
+            unique_nodes[signature] = node_id
+            nodes.append({
+                "id": node_id,
+                "slot": free_slots[variable],
+                "children": children,
+            })
+        memo[key] = node_id
+        return node_id
+
+    root = visit(tuple(cubes), tuple(range(len(free_slots))))
+    return {
+        "root": root,
+        "states": len(memo),
+        "node_count": len(nodes),
+        "free_slots": free_slots,
+        "nodes": nodes,
+    }
+
+
 def box_mass(box: tuple[frozenset[int], ...]) -> int:
     result = 1
     for domain in box:
@@ -162,6 +230,9 @@ def main() -> None:
     matched_parents = tuple(sorted(all_matches))
     assert matched_parents == PARENTS, matched_parents
 
+    bdd_manifest = json.loads(BDD_FILE.read_text(encoding="utf-8"))
+    assert bdd_manifest["schema"] == "bb6-mdd-v1"
+
     reports = {}
     aggregate_closed = 0
     aggregate_parent = 0
@@ -178,6 +249,16 @@ def main() -> None:
         union = count_union(cubes)
         parent_mass = 25 ** len(free_slots)
         assert union == EXPECTED_UNIONS[raw], (raw, union)
+
+        bdd_cubes = list(cubes)
+        if raw == 10:
+            bdd_cubes.append(tuple(HELD_QI2800[i] for i in free_slots))
+        bdd = build_bdd(bdd_cubes, free_slots)
+        expected_bdd = bdd_manifest["parents"][str(raw)]
+        for field in ("root", "states", "node_count", "free_slots", "nodes"):
+            assert bdd[field] == expected_bdd[field], (raw, field)
+        expected_covered = union + (25 if raw == 10 else 0)
+        assert expected_bdd["covered_completions"] == expected_covered
 
         full = []
         for row in selected:
@@ -220,6 +301,9 @@ def main() -> None:
             "side_witness_union": union,
             "parent_completions": parent_mass,
             "side_witness_percent": round(100 * union / parent_mass, 9),
+            "reduced_bdd_root": bdd["root"],
+            "reduced_bdd_states": bdd["states"],
+            "reduced_bdd_nodes": bdd["node_count"],
             "whole_child_branches": [
                 {"slot": SLOT_NAMES[slot], "move": code_to_move(code)}
                 for slot, code in full
