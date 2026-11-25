@@ -477,8 +477,9 @@ theorem sourceSideLeaf {B : Nat} {p : PartialMachine} {cut : Nat}
     (hroot : p initialSlot = some (some ⟨true,true,1⟩))
     (hsupport : TNFSupport p cut)
     (hnohalt : weightedTNFNoAssignedHalt p)
-    (m : Machine) (hpartial : sourcePartial m = p)
-    (hcheck : translatedCyclerCheck m true 0 0 0 = true) :
+    (m : Machine) (right : Bool) (entry period budget : Nat)
+    (hpartial : sourcePartial m = p)
+    (hcheck : translatedCyclerCheck m right entry period budget = true) :
     WeightedTNFCertificate B p cut := by
   have hdefault : weightedTNFDefaultCompletion p = m := by
     rw [← hpartial]
@@ -498,3 +499,33 @@ theorem sourceSideLeaf {B : Nat} {p : PartialMachine} {cut : Nat}
     ((weightedTNFKnownRunForever_iff p).mp hknown)
 
 end BB6.Agent50TranslatedCycler
+
+/-- A concrete BusyCoq SWside witness (L, entry 7, period 6, budget 0)
+rechecked by the Lean finite-tape checker. -/
+def sampleMachine : Machine :=
+  decodeTable ("1RB1RD_1RC1LB_0LA0LE_1LA0LB_---1LA_------".toList)
+
+def samplePartial : PartialMachine := sourcePartial sampleMachine
+
+theorem sampleCyclerCheck :
+    translatedCyclerCheck sampleMachine false 7 6 0 = true := by
+  decide
+
+/-- The imported source-side witness is now a kernel-checked TNF leaf. -/
+theorem sampleSourceLeaf (B : Nat) :
+    WeightedTNFCertificate B samplePartial 5 := by
+  apply sourceSideLeaf
+  · decide
+  · decide
+  · exact sourcePartial_noAssignedHalt sampleMachine
+  · exact sampleMachine
+  · exact false
+  · exact 7
+  · exact 6
+  · exact 0
+  · rfl
+  · exact sampleCyclerCheck
+
+#print axioms translatedCyclerCheck_sound
+#print axioms sampleSourceLeaf
+
