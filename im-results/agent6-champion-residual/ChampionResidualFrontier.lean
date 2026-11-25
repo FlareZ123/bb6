@@ -369,8 +369,9 @@ def championStep (i : Fin 8)
     have hd6 : d < 6 := by
       unfold possibleDelays at hd
       exact List.mem_range.mp (List.mem_filter.mp hd).1
+    have hScore : 7014 < championScore := champion_score_gt_7014
     have hroom : championRunLength i + 6 ≤ championScore := by
-      fin_cases i <;> decide
+      fin_cases i <;> omega
     omega
   have hnext :
       refine (championParent i) (readSlot c) (some (championNextMove i)) =
@@ -552,7 +553,7 @@ theorem championResidualRefinedRosterSound (m : Machine)
       rcases championResidualFrontierSound m hcomp' with hB' | ⟨residual, hresidual, hcompat⟩
       · exact Or.inl hB'
       · exact Or.inr ⟨residual,
-          List.mem_append_right _ (OpenLeaf.mem_residuals hresidual), hcompat⟩
+          List.mem_append_right _ hresidual, hcompat⟩
     · exact Or.inr ⟨e,
         List.mem_append_left _ (List.mem_filter.mpr ⟨he, by simp [hs]⟩),
         hcomp⟩
@@ -564,7 +565,8 @@ theorem exactBB6OfChampionResidualRoster
       Cover (WeightedBound championScore) e.2) :
     BB6.Coverage.ExactBB6 championScore :=
   BB6.Agent13RosterComposition.exact_from_roster_dichotomy_mixed
-    (by decide)
+    (Nat.le_trans (by decide : 6 ≤ 7015)
+      (Nat.le_of_lt champion_score_gt_7014))
     (Nat.le_of_lt champion_score_gt_7014)
     championResidualRefinedRosterSound
     hLeaves
