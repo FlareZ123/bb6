@@ -1676,7 +1676,7 @@ jobs:
           python "$root/generate_re.py"
           python "$root/generate_more.py" 1RE 1LC 1LE 1LB 0RF 1RF 0LE
           python "$root/generate_partial.py" 0LF 1LA 1LF
-          for prefix in Raw107RD Raw107RC Raw107RF Raw107RE Raw107RB Raw107LD Raw107LC Raw107LF Raw107LE Raw107LB; do
+          for prefix in Raw107RD Raw107RC Raw107RE Raw107B1RE Raw107B1LC Raw107B1LE Raw107B1LB Raw107B0RF Raw107B1RF Raw107B0LE Raw107B0LF Raw107B1LA Raw107B1LF; do
             python im-results/agent10-tnf-multipump/chunk_checks.py "$root" "$prefix" --limit 180
           done
           python im-results/agent13-block-far/generate.py im-results/agent13-block-far
