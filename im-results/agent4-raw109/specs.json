@@ -174,5 +174,63 @@
       ]
     },
     "unresolved": {}
+  },
+  "1RF": {
+    "bound": 268,
+    "query": [
+      8,
+      10
+    ],
+    "sha": "1c44820e1bec62cf2da6addbd29d6a970525fe1a0ae4dea7a666d1403e4c8fd0",
+    "stats": {
+      "cycle": 17999,
+      "last": 3659,
+      "open": 699,
+      "split": 972
+    },
+    "one": [
+      293,
+      362,
+      387,
+      599
+    ],
+    "multi": [],
+    "long": [
+      [
+        570,
+        0,
+        2500,
+        "R",
+        5,
+        4
+      ]
+    ],
+    "ngram": [
+      582
+    ],
+    "extra_far": {
+      "312": [
+        "1RB0LB_1RC1RF_0RD---_1LD1RE_---1RB_1LA1RD",
+        "00102340103"
+      ]
+    },
+    "manual": {
+      "3": [
+        "Raw109RF3",
+        "BB6Coverage.Agent4Raw109RF3",
+        "1RB0LC_1RC1RF_0RD1LC_1LD1RE_---1RB_0LA1RA"
+      ],
+      "506": [
+        "Raw109RF506",
+        "BB6Coverage.Agent4Raw109RF506a",
+        "1RB1RE_1RC1RF_0RD0LB_1LD1RE_---1RB_1LC1RA"
+      ],
+      "508": [
+        "Raw109RF506",
+        "BB6Coverage.Agent4Raw109RF508a",
+        "1RB---_1RC1RF_0RD0LB_1LD1RE_---1RB_1LC1RD"
+      ]
+    },
+    "unresolved": {}
   }
 }

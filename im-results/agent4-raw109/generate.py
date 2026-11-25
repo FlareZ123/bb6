@@ -82,12 +82,16 @@ def main(a):
     late={int(i):(n,s) for i,(n,s,t) in spec.get("late",{}).items() if opens[int(i)]==t and t.count("---")==1}
     assert len(late)==len(spec.get("late",{}))
     assert not (set(late)&(set(pumps)|set(exceptions)))
-    far=[i for i in range(len(opens)) if i not in pumps and i not in exceptions and i not in late]
+    extra={int(i):c for i,(t,c) in spec.get("extra_far",{}).items() if opens[int(i)]==t}
+    assert len(extra)==len(spec.get("extra_far",{}))
+    assert not (set(extra)&(set(pumps)|set(exceptions)|set(late)))
+    far=[i for i in range(len(opens)) if i not in pumps and i not in exceptions and i not in late and i not in extra]
     subprocess.run(["g++","-std=c++20","-O3",str(ROOT.parent/"agent11-raw107/bank.cpp"),"-o",str(target/"bank")],check=True)
     inputs="".join(f"{i} {opens[i].replace('_','')}\n" for i in far)
     out=subprocess.run([str(target/"bank"),str(ROOT.parent/"agent1-raw60/bank.txt")],input=inputs,text=True,capture_output=True,check=True)
     dfa={int(i):c for i,c in (l.split() for l in out.stdout.splitlines())}
     assert set(dfa)==set(far),out.stderr
+    dfa.update(extra)
     exc_names={i:f"exception{j}" for j,i in enumerate(exceptions)}
     exc_index={i:j for j,i in enumerate(exceptions)}
     exc_defs=[]

@@ -63,3 +63,30 @@ Together with the earlier four children, this leaves seven of the
 partition, and resolves 175,781,250 completions if accepted.
 Raw109Refinement6.lean gives the corresponding candidate 84-entry
 canonical-roster graft. No complete cylinder is claimed accepted yet.
+
+### Seventh candidate branch: 1RF
+
+All 699 initial open leaves now have concrete candidate certificates:
+689 pooled FAR, one additional exact five-state FAR (leaf 312, code
+00102340103), one n-gram (582), four one-block sweeps (293, 362, 387,
+599), one long-epoch sweep (570, period four, entry t=8), and three
+new hand-derived proofs. The additional DFA is recorded against its
+exact table in specs.json and goes through the same mask closure and
+kernel checker as pooled FAR certificates.
+
+- Raw109RF506.lean handles both 506 and 508 with a single Boolean
+  table parameter. At state F, left word 0 1^(4n+4) 0 L and empty
+  right zipper, one epoch increases n by one and prepends 1 to L.
+  Costs are 16n+25 and 16n+27; entries t=33 and 35.
+- Raw109RF3.lean uses a regular inductive code of triples b11 and
+  seven terminal words of length 2–4. A carry across b=0 advances
+  three cells, clearing b=1 returns to the sentinel, and the all-zero
+  terminal cases regenerate a unary F configuration. The Safe
+  invariant is inhabited at t=50 and has a positive live successor
+  at every element. This proves unbounded live prefixes without
+  enumerating the exponentially many counter values.
+
+Both arbitrary-prefix proofs checked locally in the same Lean 4.36.0-rc2
+zipper harness, with only propext and Quot.sound. The original-source
+NeverHalts bridges, combined tree, and global graft are still candidate
+integrations. The 1RF bound is 268.

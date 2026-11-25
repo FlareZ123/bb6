@@ -4,7 +4,7 @@ on:
     inputs:
       target:
         type: choice
-        options: [twelve, five-hole, recursive, raw107-witness, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-child, raw58-cut, raw58-more, raw58-rc, raw58-child, raw109-cut, raw109-refine, raw109-refine6]
+        options: [twelve, five-hole, recursive, raw107-witness, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-child, raw58-cut, raw58-more, raw58-rc, raw58-child, raw109-cut, raw109-refine, raw109-refine6, raw109-refine7]
         default: twelve
       raw108_child:
         type: string
@@ -223,7 +223,7 @@ jobs:
           if grep -Eq 'sorryAx|native_decide' /tmp/a4-raw109.log; then exit 1; fi
 
       - name: Check raw109 four-child partition and canonical78 consumer
-        if: inputs.target == 'raw109-refine' || inputs.target == 'raw109-refine6'
+        if: inputs.target == 'raw109-refine' || inputs.target == 'raw109-refine6' || inputs.target == 'raw109-refine7'
         env:
           TARGET: ${{ inputs.target }}
         run: |
@@ -240,6 +240,7 @@ jobs:
           children="0LD 0RE 0LC 1RE"
           module=Raw109Refinement
           if [ "$TARGET" = raw109-refine6 ]; then children="$children 1LB 0RF"; module=Raw109Refinement6; fi
+          if [ "$TARGET" = raw109-refine7 ]; then children="$children 1LB 0RF 1RF"; module=Raw109Refinement7; fi
           python "$root/generate.py" $children
           for child in $children; do
             python im-results/agent10-tnf-multipump/chunk_checks.py "$root" "Raw109B$child" --limit 180
