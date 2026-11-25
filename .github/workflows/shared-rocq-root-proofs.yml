@@ -180,6 +180,7 @@ jobs:
           cp "$GITHUB_WORKSPACE/research/im-results/agent50-weighted-tnf-pilot/SourceResidualRoster.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent47-rooted-tnf/Agent47SourceWitness.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent47-rooted-tnf/Agent47SourceTree.v" original/verify/
+          cp "$GITHUB_WORKSPACE/research/im-results/agent5-weighted-tnf-queue/Agent5RecoveredHeld.v" original/verify/
           node "$GITHUB_WORKSPACE/research/im-results/agent5-weighted-tnf-queue/recover-batch-witnesses.cjs" recovered-batches original/verify/Agent5RecoveredBatchWitnesses.v
       - name: Generate project dependencies with VM fallback
         working-directory: original/verify
@@ -207,7 +208,7 @@ jobs:
             enumerate62-q32-canonical-parent) make -f Makefile.coq -j 2 Agent5Enumerate62DeciderSound.vo Agent8PackedChunk2_32_32.vo Agent44Q32CanonicalParent.vo Agent44Q32FirstHoleCoverageProbe.vo ;;
             enumerate62-last20-witness) make -f Makefile.coq -j 2 Agent5Last20Witness.vo ;;
             enumerate62-resume-last20) make -f Makefile.coq -j 2 Agent5PackedChunk12800_20_1000000.vo ;;
-            enumerate62-recovered-batch-witnesses) make -f Makefile.coq -j 2 Agent5RecoveredBatchWitnesses.vo ;;
+            enumerate62-recovered-batch-witnesses) make -f Makefile.coq -j 2 Agent5RecoveredBatchWitnesses.vo Agent5RecoveredHeld.vo ;;
             enumerate62-source-roster) make -f Makefile.coq -j 2 Agent47SourceSweep.vo && make -f Makefile.coq -j 2 Agent47SourceChunk2.vo Agent47SourceTree.vo Agent44Q32RemainderBranchProbe.vo && make -f Makefile.coq -j 2 Agent8Chunk2FirstHole.vo ;;
             enumerate62-source-first-hole) make -f Makefile.coq -j 2 Agent47SourceSweep.vo && make -f Makefile.coq -j 2 Agent47SourceChunk2.vo Agent47SourceTree.vo Agent44Q32CanonicalParent.vo && make -f Makefile.coq -j 2 Agent8Chunk2FirstHole.vo Agent50Q32ParentTreeSearch.vo ;;
             enumerate62-source-first-hole-side) make -f Makefile.coq -j 2 Agent47SourceSweep.vo && make -f Makefile.coq -j 2 Agent47SourceChunk2.vo Agent47SourceTree.vo Agent44Q32CanonicalParent.vo && make -f Makefile.coq -j 2 Agent8Chunk2FirstHole.vo Agent44ChunkSideSearch.vo Agent44Chunk2FirstHoleSideSearch.vo ;;
@@ -221,6 +222,8 @@ jobs:
           path: |
             original/verify/Agent5RecoveredBatchWitnesses.v
             original/verify/Agent5RecoveredBatchWitnesses.vo
+            original/verify/Agent5RecoveredHeld.v
+            original/verify/Agent5RecoveredHeld.vo
           if-no-files-found: error
 
       - name: Print final original theorem assumptions
