@@ -48,9 +48,7 @@ theorem A6_refinedRoster76_sound :
       (root := BB6.Agent50TNFPilot.root)
       (p := BB6.Agent19HardRoot.p139)
       p139_rootRow
-      (BB6.Agent31CanonicalTwoParentRosterOnly.roster76_sound
-        BB6.Agent31CanonicalTwoParentRosterOnly.p107_bound
-        BB6.Agent31CanonicalTwoParentRosterOnly.p114_bound)
+      BB6.Agent31CanonicalTwoParentRosterOnly.roster76_sound
       BB6.Agent48A6Ingestion.A6_remaining_sound)
 
 #print axioms p139_rootRow
