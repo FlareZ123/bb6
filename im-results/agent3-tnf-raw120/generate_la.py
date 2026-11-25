@@ -18,6 +18,8 @@ ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT.parent / "agent31-three-hole-tnf"))
 from generate_four_hole import masks, slot, move, parse
 import generate_sweeps as one
+sys.path.insert(0, str(ROOT.parent / "agent10-tnf-multipump"))
+import multi
 
 MOVES = ["".join(x) for x in product("01", "LR", "ABCDEF")]
 PARENT = "1RB---_1RC---_0RD---_1LD1RE_0LA1LE_------"
@@ -74,22 +76,54 @@ pump_code = [
 ]
 pumps = {}
 missing = []
+one_count = 0
+multi_count = 0
 one.SIMP = one.SIMP if "List.append_nil" in one.SIMP else one.SIMP + ",List.append_nil"
+multi.SIMP = multi.SIMP if "List.append_nil" in multi.SIMP else multi.SIMP + ",List.append_nil"
 
-# Only unmatched leaves incur concrete event simulation. The finite trace is
-# a witness-discovery heuristic; one.generate emits the inductive Lean proof.
+# Only unmatched leaves incur concrete event simulation. Finite traces propose
+# witnesses; one.generate / multi.generate emit inductive Lean proofs.
 for i, code in enumerate(opens):
     if code in certs:
         continue
     p = one.parse(code)
-    ans = one.candidate(p, one.concrete_events(p, EVENT_LIMIT))
-    if ans is None:
-        missing.append((i, code))
+    events = one.concrete_events(p, EVENT_LIMIT)
+    ans = one.candidate(p, events)
+    if ans is not None:
+        generated, info = one.generate(i, p, ans)
+        pump_code.append(generated)
+        pumps[code] = (f"{pumpns}.M{i}.table", f"{pumpns}.M{i}.never")
+        one_count += 1
+        print("one-block", i, info)
         continue
-    generated, info = one.generate(i, p, ans)
-    pump_code.append(generated)
-    pumps[code] = (f"{pumpns}.M{i}.table", f"{pumpns}.M{i}.never")
-    print("one-block", i, info)
+    ans = multi.candidate(p, events)
+    if ans is not None:
+        generated, info = multi.generate(i, p, ans)
+        pump_code.append(generated)
+        pumps[code] = (f"{pumpns}.M{i}.table", f"{pumpns}.M{i}.never")
+        multi_count += 1
+        print("multi-block", i, info)
+        continue
+    found = False
+    for side in ("L", "R"):
+        for q in range(6):
+            for period in range(1, 13):
+                ans = multi.long_candidate(p, events, side, q, period)
+                if ans is None:
+                    continue
+                generated, info = multi.generate(i, p, ans)
+                pump_code.append(generated)
+                pumps[code] = (f"{pumpns}.M{i}.table", f"{pumpns}.M{i}.never")
+                multi_count += 1
+                print("long-multi-block", i, side, q, period, info)
+                found = True
+                break
+            if found:
+                break
+        if found:
+            break
+    if not found:
+        missing.append((i, code))
 
 tree = json.loads((FOLDER / "tree.json").read_text())
 stats = Counter()
@@ -117,7 +151,8 @@ summary = {
     "candidate_weighted_bound": B,
     "bank_hits": bank_counts,
     "far_union": len(certs),
-    "one_block_pumps": len(pumps),
+    "one_block_pumps": one_count,
+    "multi_block_pumps": multi_count,
     "unresolved": len(missing),
     "unresolved_sample": [{"index": i, "table": code} for i, code in missing[:100]],
 }
