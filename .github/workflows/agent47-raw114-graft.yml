@@ -929,7 +929,17 @@ jobs:
           test -s pinned/im-results/agent47-raw114-cut/Raw114CompleteData.lean
           test "$(find pinned/im-results/agent47-raw114-cut -maxdepth 1 -name 'Raw114Complete*Kid*.lean' | wc -l)" -eq 384
           mkdir -p /tmp/raw114-generated /tmp/raw114-provenance
-          cp -a pinned/im-results/agent47-raw114-cut/. /tmp/raw114-generated/
+          while IFS= read -r src; do
+            rel="${src#pinned/im-results/agent47-raw114-cut/}"
+            if ! git ls-files --error-unmatch "im-results/agent47-raw114-cut/${rel}" >/dev/null 2>&1; then
+              cp "${src}" "/tmp/raw114-generated/${rel}"
+            fi
+          done < <(find pinned/im-results/agent47-raw114-cut -maxdepth 1 -type f -name '*.lean' -print)
+          for src in pinned/im-results/agent47-raw114-cut/*; do
+            if [[ "${src}" != *.lean && -f "${src}" ]]; then
+              cp "${src}" /tmp/raw114-provenance/
+            fi
+          done
           cp pinned/im-results/agent31-three-hole-tnf/generate_sweeps.py /tmp/raw114-provenance/
           cp pinned/im-results/agent31-three-hole-tnf/generate_four_hole.py /tmp/raw114-provenance/
           cp pinned/im-results/agent1-ngram/emit_ngram.py /tmp/raw114-provenance/
@@ -1019,13 +1029,13 @@ jobs:
             --provenance-input im-results/agent10-tnf-raw91/Raw91Pump.lean \
             --provenance-input /tmp/a31-canonical73-generator-commands.txt \
             --provenance-input /tmp/a31-raw114-generator-commands.txt \
-            --provenance-input /tmp/raw114-generated/generate_complete.py \
-            --provenance-input /tmp/raw114-generated/paired_counter.py \
-            --provenance-input /tmp/raw114-generated/long_sweep.py \
-            --provenance-input /tmp/raw114-generated/multi_sweep.py \
-            --provenance-input /tmp/raw114-generated/raw114-hard-manifest.txt \
-            --provenance-input /tmp/raw114-generated/all-far-bank.txt \
-            --provenance-input /tmp/raw114-generated/seeded_far.cpp \
+            --provenance-input /tmp/raw114-provenance/generate_complete.py \
+            --provenance-input /tmp/raw114-provenance/paired_counter.py \
+            --provenance-input /tmp/raw114-provenance/long_sweep.py \
+            --provenance-input /tmp/raw114-provenance/multi_sweep.py \
+            --provenance-input /tmp/raw114-provenance/raw114-hard-manifest.txt \
+            --provenance-input /tmp/raw114-provenance/all-far-bank.txt \
+            --provenance-input /tmp/raw114-provenance/seeded_far.cpp \
             --provenance-input /tmp/raw114-provenance/generate_sweeps.py \
             --provenance-input /tmp/raw114-provenance/generate_four_hole.py \
             --provenance-input /tmp/raw114-provenance/emit_ngram.py \
