@@ -37,13 +37,18 @@ def is_standard(module: str) -> bool:
 
 def module_index(extra_roots: list[Path] | None = None) -> dict[str, list[Path]]:
     found: dict[str, list[Path]] = defaultdict(list)
+    seen: set[Path] = set()
     for search_root in [ROOT, *(extra_roots or [])]:
         if not search_root.is_dir():
             raise FileNotFoundError(f"Lean source root does not exist: {search_root}")
         for path in search_root.rglob("*.lean"):
             if any(part in {".git", ".lake", "build", "dist"} for part in path.parts):
                 continue
-            found[path.stem].append(path)
+            resolved = path.resolve()
+            if resolved in seen:
+                continue
+            seen.add(resolved)
+            found[resolved.stem].append(resolved)
     return found
 
 
