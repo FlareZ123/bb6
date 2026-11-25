@@ -121,31 +121,58 @@ A separate full-grid search over the unique serialized strings of all 1,200 firs
 No BB(6) upper bound or exact value follows until the source-tree target compiles and every remaining open leaf is closed. The source-tree data, checker, and conditional theorem are reproducible in the cited Coq module.
 
 
-## Lean-side translated-cycler bridge
+## Experimental translated-cycler bridge — not proof-accepted
 
-`TranslatedCycler.lean` is an independent Lean checker for the source
-`verify_tcycler_r` witness format. It uses the existing
-`SourceFiniteSemantics.lean` finite blank-padded tape model rather than
-trusting a Coq proof term.
+`TranslatedCycler.lean` is an unfinished attempt to replay the source
+`verify_tcycler_r` witness format using `SourceFiniteSemantics.lean`.
+It is **not currently a trusted dependency**. A CI compilation that pulled
+this module (run
+[45554609301](https://github.com/FlareZ123/bb6/actions/runs/45554609301))
+reported unresolved goals and invalid indexed-induction cases, and its
+`#print axioms` output included `sorryAx` for
+`translatedCyclerCheck_sound` and `sampleSourceLeaf`. Do not use any
+theorem from this file as a certified nonhalting result until the module
+compiles cleanly and the axiom audit contains no `sorryAx`.
 
-The intended proof chain is:
+The new raw10 lasso below deliberately avoids this module. It uses the
+already-existing `LeafRules` prefix-agreement and exact-cycle theorems
+directly.
 
-1. `boundedRun` replays the source left/right budget rule.
-2. `EqLimit` checks the first `k` left cells, the current cell, and the
-   complete blank-padded right side.
-3. `BRun_replay` mirrors a bounded period whenever the current finite tape
-   satisfies `EqLimit`.
-4. `TranslatedCycle.repeat` establishes arbitrarily long finite prefixes;
-   `finite_never_iff` transfers that result to `NeverHalts`.
-5. `sourceSideLeaf` converts a checked source-side witness into
-   `WeightedTNFCertificate.nonhalt` via the default completion.
+## 2026-11-25: raw10 B0=1LC two-hole lasso cylinder
 
-A concrete `SWside L 7 6 0` witness on
-`1RB1RD_1RC1LB_0LA0LE_1LA0LB_---1LA_------` is included as a kernel
-evaluation test. The implementation has been added to the existing
-`weighted-tnf-pilot` Lean CI closure; its first CI result is pending.
+`Raw10Box8Cycle.lean` defines the partial table with row
+`[8,14,11,0,17,4,9,2,23,15,10,0]` in
+`Raw10Encoded` slot order
+`A0,A1,B0,B1,C0,C1,D0,D1,E0,E1,F0,F1` (zero denotes an unassigned
+slot). It fixes ten transitions and leaves exactly B1 and F1 unassigned;
+`holes_exact` checks this in Lean.
 
-This is an intermediate proof bridge, not an exact BB(6) upper bound. The
-next integration step is to serialize the source-tree `SWside` and
-`SWlast` leaves into a Lean-readable tree and map its first-hole splits to
-`WeightedTNFCertificate.expand`.
+From blank tape, the default completion reaches state D at head zero after
+24 ordinary moves, with ones exactly at positions -3, -2, and 1. Fourteen
+more moves return to the identical state, absolute head, and full tape.
+The return period reads
+`D0,C0,E1,D1,A1,D0,C0,E0,F0,C1,A0,B0,C1,A1`; neither B1 nor F1 is
+consulted. `Raw10Box8Cycle.lean` uses
+`common_prefix_of_partial_table` to transfer the checked entry and period
+to every completion, then `eventually_cycle_never` and
+`WeightedTNFCertificate.nonhalt` to certify all 25^2 = 625 completions.
+
+`Raw10Box8CycleConsumer.lean` adds this cylinder to the existing 65
+side-witness tables and held table. It proves an exact characterization of
+the new remainder and pairwise disjointness of its boxes, and exposes a
+conditional score-B consumer. The condition still requires the held leaf,
+all remaining 40 rectangles, and all other canonical residuals; this is
+not an unconditional raw10 closure or a BB(6) upper bound.
+
+An exact JS replay of the existing `subtractMany` partition algorithm
+gives 40 residual rectangles and remaining mass 90,890,091,604,350 after
+adding the new cylinder, versus 34 rectangles and mass 90,890,091,604,975
+before it. The mass reduction is exactly 625. This count/mass calculation
+is a reproducible finite computation, not yet a Lean cardinality theorem.
+
+The dedicated manual CI target
+`weighted-tnf-raw10-box8-cycle` compiles the consumer and its dependency
+closure. Run
+[45556817579](https://github.com/FlareZ123/bb6/actions/runs/45556817579)
+was queued at commit `dfb0a16f8a8cff5cfcdb1a448e3f10421e6e2274`;
+kernel acceptance is pending at this checkpoint.
