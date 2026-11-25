@@ -1,8 +1,8 @@
 """Raw120/E0=0LA automatic sibling closure attempt.
 
 This is deterministic discovery plus original-source Lean proof generation.
-Finite event search only proposes one-block sweep witnesses; the emitted
-Lean module checks every proposed witness against SweepPumping and
+Finite event traces propose one-block and multi-block sweep witnesses; the
+emitted Lean module checks every proposed witness against SweepPumping and
 ZipThreeHoleAudit. If any open leaf remains unmatched, the script records
 the exact indices/tables and exits without emitting a claimed certificate.
 """
