@@ -79,8 +79,9 @@ Lemma q32_parent_child_nonhalt_sound (child : T) :
   q32_parent_child_class child = 1 ->
   ~ halts (tm child) c0.
 Proof.
-  unfold q32_parent_child_class.
-  destruct (decider (tm child)) as [h| |] eqn:Hdec; simpl; try discriminate.
+  intro Hclass.
+  unfold q32_parent_child_class in Hclass.
+  destruct (decider (tm child)) as [h| |] eqn:Hdec; simpl in Hclass; try discriminate.
   pose proof (agent32_decider_bounded_sound (tm child)) as Hsound.
   rewrite Hdec in Hsound.
   exact Hsound.
@@ -92,8 +93,9 @@ Lemma q32_parent_child_halt_sound (child : T) :
     halts_at (tm child) c0 n h /\
     (n <= N.to_nat 1000000)%nat.
 Proof.
-  unfold q32_parent_child_class.
-  destruct (decider (tm child)) as [h| |] eqn:Hdec; simpl; try discriminate.
+  intro Hclass.
+  unfold q32_parent_child_class in Hclass.
+  destruct (decider (tm child)) as [h| |] eqn:Hdec; simpl in Hclass; try discriminate.
   pose proof (agent32_decider_bounded_sound (tm child)) as Hsound.
   rewrite Hdec in Hsound.
   destruct Hsound as [n [Hhalt Hbound]].
