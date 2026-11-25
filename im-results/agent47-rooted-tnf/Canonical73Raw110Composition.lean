@@ -8,7 +8,7 @@ set_option maxHeartbeats 0
 namespace BB6.Agent47Canonical73Raw110
 
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent50TNFPilot
-open BB6.Agent47CanonicalRefinement
+open BB6.Agent47CanonicalFrontier BB6.Agent47CanonicalRefinement
 
 /-- Remove the raw110 parent using its complete original-source weighted
     cover. Its two late halting leaves require the stronger score 6,766,859. -/
