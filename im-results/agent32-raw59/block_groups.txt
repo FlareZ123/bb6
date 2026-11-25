@@ -1,5 +1,5 @@
 # raw59 branch block-FAR candidates. Each row:
-# branch width cap modulus runs : exact open.txt indices (SHA checked by generate_partial.py).
+# branch width cap modulus runs [initial offset] : exact open.txt indices (SHA checked by generate_partial.py).
 # All unreflected. This is witness generation data, not accepted coverage.
 0LE 2 1 3 2 : 453 483 484 493 575 1065 2639 2688
 0LE 2 2 3 3 : 487 490 578 1585
@@ -20,3 +20,6 @@
 0LF 2 3 2 3 : 35 43 121 172 329 460 571 578 603 866 929 1201 1453 1691 1693 1748 1884 2540 2544 2546 2548 2579 2719 3104
 0LF 3 2 2 5 : 4 22
 0LF 4 1 7 6 : 24 655 1530
+
+0LA 4 2 3 5 : 153
+0LA 4 2 2 5 1 : 144 187 215 540
