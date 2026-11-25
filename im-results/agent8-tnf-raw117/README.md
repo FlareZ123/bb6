@@ -52,7 +52,7 @@ Details and exact recurrence proofs: [Raw112BinaryCounters.md](Raw112BinaryCount
 `WeightedBound 100000 m ∨ ∃ e ∈ residuals, compatible e.2 m`
 with `residuals.length = 2`.
 
-This is currently a draft, not yet original-source accepted and not a complete parent bound. The source-audit workflow `.github/workflows/agent8-raw112-source-audit.yml` was added and dispatched to compile the full generated source closure and preserve its manifest/artifact. Wait for that run before calling the partial theorem source-accepted. The exact two residual tables must then be resolved to close the parent.
+This is currently a draft, not yet original-source accepted and not a complete parent bound. The exact two residual tables and a 100-million-step empirical prefix study are preserved in [Agent47Raw112Residuals.md](Agent47Raw112Residuals.md). Neither residual reads its remaining F0 hole during that prefix, so all 25 F0 completions share it; this is evidence for a recurrence investigation, not a nonhalting proof. Source-audit run 45575393941 generated the files but the GitHub runner shut down at 08:35:47Z while compiling `Raw112Sparse30Row10` (no Lean diagnostic). The workflow has been adjusted to four compile workers and a 120-minute timeout, with artifact upload on failure, and has been dispatched again. Do not call the partial theorem source-accepted until the retry passes. The exact two residuals must then be resolved to close the parent.
 
 ## Reproduction and scope
 
