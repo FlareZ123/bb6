@@ -121,3 +121,8 @@ To avoid losing the expensive frontier/F0/F1 dependency closure when a later con
 The first checkpoint attempt is run `45653181883`, pinned to source SHA `1529549cc3abcb838b9f14efe120ece26ee71abd`. At 16:27 UTC it had completed source reconstruction and was compiling the champion frontier. The artifact is not yet available. This is a persistence improvement only: no 103/102 consumer or exactness theorem is source-accepted until the later consumer and axiom-audit steps pass.
 
 Run `45640166916` is an additional infrastructure failure: the runner shut down with exit 143 while compiling generated Raw82 kid 17, with no Lean theorem diagnostic. The new checkpoint is intended to make a future successful base-compile pass reusable even if a later consumer stage fails.
+
+
+### Checkpoint serialization follow-up
+
+Commit `5e0f099a63def89cb6c6f2c311f6c6578fffe7c9` corrected the checkpoint JSON writer to emit a real newline and made the reuse reader tolerate the literal `\\n` suffix produced by the first workflow snapshot. Run `45653181883` was already running from source SHA `1529549cc3abcb838b9f14efe120ece26ee71abd` when this correction landed, so if its artifact is uploaded it may contain the legacy escaped suffix; the current reader strips it before parsing. Reuse that artifact only with the same `source_sha=1529549cc3abcb8389b9f14efe120ece26ee71abd` (exact checkout SHA) and let the hash/object checks run. At 16:34 UTC the first run was still compiling the champion frontier and had not uploaded the checkpoint.
