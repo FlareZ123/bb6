@@ -1,6 +1,6 @@
-From BusyCoq Require Import Enumerate62 Individual62 TC62 Agent32Q0Partition
+From BusyCoq Require Import Enumerate62 TC62 Agent32Q0Partition
   Agent32SourceBackwards Agent8AdaptiveSource Agent8QueueCheckpoint
-  Agent8WeightedSource Agent8GlobalSource.
+  Agent8WeightedSource Agent8GlobalSource Individual62.
 From Coq Require Import List NArith Lia.
 Import ListNotations.
 Import TNF_Node.
