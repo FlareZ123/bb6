@@ -1,0 +1,83 @@
+name: Agent 31 canonical71 Raw109 membership graft
+
+on:
+  workflow_dispatch:
+    inputs:
+      canonical72_run_id:
+        description: "Successful run containing canonical72-raw121-raw110-raw112-roster-only-certified"
+        required: true
+        default: "45680602708"
+
+jobs:
+  source-audit-canonical71:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lean --version
+
+      - name: Download the accepted canonical72 source and object closure
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CANONICAL72_RUN_ID: ${{ inputs.canonical72_run_id }}
+        run: |
+          set -euo pipefail
+          [[ "$CANONICAL72_RUN_ID" =~ ^[0-9]+$ ]]
+          gh run download "$CANONICAL72_RUN_ID" --repo FlareZ123/bb6 \
+            --name canonical72-raw121-raw110-raw112-roster-only-certified \
+            --dir /tmp/a31-canonical72
+          test -s /tmp/a31-canonical72/a31-canonical73-manifest.json
+          test -d /tmp/a31-canonical72/a31-canonical73
+
+      - name: Reconstruct BB6 coverage and Raw109 cut data
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent4-raw109/generate.py 0LD 0RE
+          test -s im-results/agent4-raw109/Raw109B0LDData.lean
+          test -s im-results/agent4-raw109/Raw109B0REData.lean
+
+      - name: Compile and audit the 71-entry Raw109 graft
+        run: |
+          set -euo pipefail
+          printf '%s\n' "${{ inputs.canonical72_run_id }}" > /tmp/a31-canonical72-run-id.txt
+          python tools/lean_compile_closure.py \
+            --workdir /tmp/a31-canonical71 \
+            --jobs 8 \
+            --precompiled-dir /tmp/a31-canonical72/a31-canonical73 \
+            --precompiled-manifest /tmp/a31-canonical72/a31-canonical73-manifest.json \
+            --theorem BB6.Agent31Canonical71Raw109.parent_present \
+            --theorem BB6.Agent31Canonical71Raw109.parent_root \
+            --theorem BB6.Agent31Canonical71Raw109.count \
+            --theorem BB6.Agent31Canonical71Raw109.sound \
+            --theorem BB6.Agent31Canonical71Raw109.exact_at_target \
+            --provenance-input /tmp/a31-canonical72-run-id.txt \
+            --provenance-input im-results/agent4-raw109/generate.py \
+            --provenance-input im-results/agent4-raw109/Raw109Cut.lean \
+            --provenance-input im-results/agent31-shared-core/Canonical71Raw109Graft.lean \
+            im-results/agent31-shared-core/Canonical71Raw109Graft.lean \
+            2>&1 | tee /tmp/a31-canonical71.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a31-canonical71.log; then
+            echo "Forbidden axiom or native_decide dependency detected" >&2
+            exit 1
+          fi
+          grep -E 'axioms|parent_present|parent_root|count|sound|exact_at_target' /tmp/a31-canonical71.log
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: agent31-canonical71-raw109-graft
+          path: |
+            /tmp/a31-canonical71
+            /tmp/a31-canonical71.log
+            /tmp/a31-canonical72-run-id.txt
+          if-no-files-found: warn
+          retention-days: 30
