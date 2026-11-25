@@ -83,12 +83,12 @@ theorem iwsum_congr (n : Nat) (f g : Nat→Int) (h : ∀j<n,f j=g j) : iwsum n f
 
 theorem iwsum_add (n : Nat) (f g : Nat→Int) : iwsum n (fun i=>f i+g i)=iwsum n f+iwsum n g := by
   induction n with
-  | zero => rfl
+  | zero => simp [iwsum]
   | succ n ih => simp only [iwsum,ih,Int.mul_add]; omega
 
 theorem iwsum_sub (n : Nat) (f g : Nat→Int) : iwsum n (fun i=>f i-g i)=iwsum n f-iwsum n g := by
   induction n with
-  | zero => rfl
+  | zero => simp [iwsum]
   | succ n ih => simp only [iwsum,ih,Int.mul_sub]; omega
 
 theorem iwsum_mul (n : Nat) (c : Int) (f : Nat→Int) : iwsum n (fun i=>c*f i)=c*iwsum n f := by
