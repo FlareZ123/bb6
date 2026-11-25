@@ -1,4 +1,4 @@
-name: Raw139 F1=0LF complete source audit (manual)
+name: Raw139 F1 sibling source audit (manual)
 on:
   workflow_dispatch:
     inputs:
@@ -6,6 +6,11 @@ on:
         description: Exact source commit SHA to compile
         required: true
         type: string
+      sibling:
+        description: Sibling to compile
+        type: choice
+        options: [zeroLF, zeroRC]
+        default: zeroLF
 permissions:
   contents: read
 jobs:
@@ -22,12 +27,16 @@ jobs:
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Reconstruct and compile complete original-source certificate
-        run: bash im-results/agent41-raw139-f1-zeroLF/reproduce.sh
+        run: |
+          case "${{ inputs.sibling }}" in
+            zeroLF) bash im-results/agent41-raw139-f1-zeroLF/reproduce.sh ;;
+            zeroRC) bash im-results/agent41-raw139-f1-zeroLF/reproduce-zeroRC.sh ;;
+          esac
       - uses: actions/upload-artifact@v4
         with:
-          name: raw139-f1-zeroLF-certified
+          name: raw139-f1-${{ inputs.sibling }}-certified
           include-hidden-files: true
           path: |
-            .tmp/a41-f1-zeroLF/manifest.json
-            .tmp/a41-f1-zeroLF/log
-            .tmp/a41-f1-zeroLF/build/*.olean
+            .tmp/a41-f1-${{ inputs.sibling }}/manifest.json
+            .tmp/a41-f1-${{ inputs.sibling }}/log
+            .tmp/a41-f1-${{ inputs.sibling }}/build/*.olean
