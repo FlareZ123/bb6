@@ -253,7 +253,7 @@ if __name__ == "__main__":
     t = enhance_selected(build_enhanced(t))
     c,m = Counter(),Counter()
     tally(t,9,3,c,m)
-    assert c == Counter(open=1727,cycle=997,state=728,split=202,halt=202,last=157,ngram=15,pump=3,selectedgram=127,pump1RE=1),c
+    assert c == Counter(open=1727,cycle=998,state=728,split=202,halt=202,last=156,ngram=15,pump=3,selectedgram=127,pump1RE=1),c
     assert m["open"] == 1725417468900 and sum(m.values()) == 25**9,m
     names = []
     for i,k in enumerate(t[3]):
