@@ -1,0 +1,26 @@
+name: Agent 6 raw57 partial frontier composition
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate and check complete source closure
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          export PATH="$HOME/.elan/bin:$PATH"
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent6-raw57-ra/generate.py
+          for child in 0RB 0RC 1RB 1RC 1RE 0RF 0RE; do
+            python im-results/agent6-raw57-ra/generate_sibling.py "$child"
+          done
+          python tools/lean_compile_closure.py --workdir /tmp/a6-raw57-cut --jobs 4 im-results/agent6-raw57-ra/Raw57Cut.lean | tee /tmp/raw57-cut.log
+          if grep -qE 'sorryAx|native_decide' /tmp/raw57-cut.log; then exit 1; fi
