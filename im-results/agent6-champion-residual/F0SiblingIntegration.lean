@@ -1,6 +1,8 @@
 import ChampionResidualParentIntegration
 import F0Counter0LE
 import F0SiblingLong
+import F0Counter1RD
+import F0SiblingA
 
 set_option maxRecDepth 1000000
 set_option maxHeartbeats 0
@@ -42,12 +44,12 @@ theorem champion_score_ge_49394 : 49394 ≤ championScore := by
 def closedMoves : List Move :=
   [⟨true,false,0⟩, ⟨true,false,4⟩, ⟨false,false,1⟩,
    ⟨true,false,2⟩, ⟨false,false,2⟩, ⟨true,true,2⟩,
-   ⟨false,false,4⟩]
+   ⟨false,false,4⟩, ⟨true,true,3⟩, ⟨true,false,3⟩]
 
 theorem cover_move (B : Nat) (hB : 49394 ≤ B) (f : Move)
     (hf : f ∈ closedMoves) : Cover (WeightedBound B) (BB6.Agent6F0.parent f) := by
   simp only [closedMoves,List.mem_cons,List.mem_singleton] at hf
-  rcases hf with h|h|h|h|h|h|h <;> subst f
+  rcases hf with h|h|h|h|h|h|h|h|h <;> subst f
   · exact BB6.Agent6F0.cover_oneLA B (by omega)
   · exact BB6.Agent6F0.cover_oneLE B (by omega)
   · exact BB6.Agent6F0.cover_zeroLB B
@@ -55,6 +57,8 @@ theorem cover_move (B : Nat) (hB : 49394 ≤ B) (f : Move)
   · exact BB6.Agent6F0.Counter0LC.cover_zeroLC B
   · exact BB6.Agent6F0.Long.cover_oneRC B hB
   · exact BB6.Agent6F0.Counter0LE.cover_zeroLE B
+  · exact BB6.Agent6F0.Counter1RD.cover_oneRD B
+  · exact BB6.Agent6F0.AFirst.cover_oneLD B (by omega)
 
 def closedF0 (p : PartialMachine) : Bool :=
   closedMoves.any fun f => sameTable p (BB6.Agent6F0.parent f)
@@ -71,9 +75,9 @@ noncomputable def remaining : List (List Move × PartialMachine) :=
   championResidualFrontierWithParentResiduals.filter fun e => !closedF0 e.2
 
 theorem removed_count :
-    (championResidualFrontierWithParentResiduals.filter fun e => closedF0 e.2).length = 7 := by decide
+    (championResidualFrontierWithParentResiduals.filter fun e => closedF0 e.2).length = 9 := by decide
 
-theorem remaining_count : remaining.length = 116 := by decide
+theorem remaining_count : remaining.length = 114 := by decide
 
 theorem residual_cover
     (hLeaves : ∀ e ∈ remaining, Cover (WeightedBound championScore) e.2) :
