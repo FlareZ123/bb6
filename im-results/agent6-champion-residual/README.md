@@ -82,6 +82,12 @@ The new draft `ChampionResidualCanonical77Integration.lean` imports the accepted
 
 This is the current intended global composition, but it is **not source-accepted** until the combined workflow verifies the finite membership/count theorems, the cross-artifact Lean compilation, and all axiom profiles. The exact membership test may expose a mismatch; if so, repair the address/table transport rather than assuming the roster entry exists.
 
+### Pending canonical76 rebase via raw121
+
+Agent11 has prepared `Raw121Canonical77Graft.lean` and `.github/workflows/agent11-raw121-canonical77-graft.yml` to graft the source-accepted raw121 parent Cover (bound 4063) into the accepted canonical77 roster. Raw121 is a C/0=0RD sibling, distinct from raw139's C/0=1LD cylinder. If that cross-artifact workflow succeeds, it produces a 76-entry roster with target bound 7014, already below the proven champion lower bound 49394.
+
+The draft `ChampionResidualCanonical76Integration.lean` is now prepared to import that artifact, prove raw139 survives uniquely, and replace it by the 106-leaf chain. Its intended count is **181 = 75 other canonical entries + 106 raw139 descendants**. The Agent6 workflow accepts an optional `raw121_graft_run_id`: when supplied it compiles this 181-obligation bridge; otherwise it falls back to the accepted canonical77/182-obligation bridge. The raw121 graft and this consumer remain unaccepted until both workflows pass their original-source and axiom audits.
+
 A separate, smaller 73-roster route is drafted in `im-results/agent47-rooted-tnf/Canonical73Raw110Composition.lean`, using the accepted raw110 parent cover on top of a 74-roster. The current `agent47-raw114-graft.yml` copies this source but does not compile it or import the raw110 artifact, so the 73 interface is not source-accepted and does not replace the canonical77 target here.
 
 ## Reproduction and next work
