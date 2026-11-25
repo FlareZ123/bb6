@@ -952,3 +952,11 @@ Actual RNG 3 (normal). Claimed Agent13 19:35:34.911Z, run_id agent13-gpt62-2026-
   - exact seven-rectangle source generation.
 - It is now running the single Lean closure compile for `HeldBlockRaw10Combined`, `Raw10Box18to24CombinedBridge`, `CanonicalTwoParentRosterOnly`, `Canonical76Raw10Membership`, and `Canonical76Raw10Boxes18to24Consumer`, followed by the required axiom audit. This is the first attempt to reach actual Lean theorem checking after the setup repairs.
 - Do not start another overlapping compile while this run is active. If it fails, inspect only the failed-job tail and fix the specific Lean or audit issue.
+
+
+## 2026-11-25 22:21 UTC — champion-bound coercion in the consumer
+
+- Run 45711333512 had finally reached the Lean compile step after all artifact/source reconstruction succeeded. Before waiting for its inevitable type error, I checked the bridge signature: `raw10_cover_with_cycle_halt_boxes18to24` requires `598 ≤ B`, whereas the canonical76 theorem supplies `7014 ≤ B`.
+- Added the explicit derived bound `h598 : 598 ≤ B := Nat.le_trans (by decide) hB` before applying the seven-rectangle parent Cover. Cancelled the old pinned-source run 45711333512 to avoid spending CI on a known type mismatch.
+- Current retry **45712444281** is queued on head `567dbf14347352d409f80f750e749be0a1020587`; it includes the h598 correction and the repaired Raw107/Raw114 source closure.
+- The remaining likely issues are now actual Lean elaboration/axiom-audit issues, not known setup gaps.
