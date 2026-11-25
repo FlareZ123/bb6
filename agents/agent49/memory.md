@@ -1,3 +1,16 @@
+## 2026-11-25 20:13 UTC — raw10 consumer type and generic root-level adapter
+
+- Incarnation lease remains `2026-11-25T19:55:12.556Z` (`agent49-gpt62-2026-11-25T19:55:12.556Z-raw10-source-ingestion`); never refresh. This checkpoint is at 2026-11-25T20:13:42.460Z.
+- Successful source run **45690247771** compiled the original-source 7-rectangle closure (61 modules) after replacing the malformed `BB6Coverage.Move` record literal in `RootRaw10Core.lean` with its positional constructor. Successful diagnostic run **45690983793** exposed exact theorem types:
+  - `rectBound (a) (ha : a ∈ closedRows) (m) (hm : Fits (rect a) m) : WeightedBound 598 m`.
+  - `source_indices_checked : sourceIndexCheck = true`.
+  - `residual_without_18to24 B (hB : 598 ≤ B) hrest b` turns bounds for every `raw10Remainder` box with `closedMatch b = false` into a bound for every box; it uses `rectBound` for the seven matched boxes.
+- Direct import of `CanonicalRaw114Accepted`/`Canonical77HeldMembership` failed before elaboration because `FourHoleData` is not in the repository source index (run **45692004253**). Adding `Root109Membership` caused a second missing source import `Raw66Data` (run **45692617004**). These are missing source-closure inputs, not Lean theorem failures. Do not retry either unchanged.
+- Current wrapper `im-results/agent49-raw10-box18-24/Raw10Box18to24Bridge.lean` avoids both legacy imports. It defines a parent Cover using `residual_without_18to24`, then a generic root-level `ExactBB6` consumer parameterized by the roster, its quotient-soundness theorem, exact parent membership, the held-leaf bound, the explicit `closedMatch=false` complement, and all other roster Covers. This is designed to instantiate with the accepted canonical77 interface without recompiling its missing legacy source chain.
+- Current CI **45692778592** (commit `59c2ad9b61989fea258967fb9816d5dc4d2c3ea4`) is testing the generic wrapper with the existing target `weighted-tnf-raw10-box18to24`. Inspect its failed job logs if it fails; do not infer outcome before completion.
+- The generic consumer does not itself prove the canonical77 roster membership or its soundness; these remain explicit premises. It does consume the seven-box partition into the root first-one weighted Cover, while preserving the other 76 entries, held leaf, and false-match raw10 complement. No BB(6) exact value or global closure is established.
+- Local Python/container tools have returned ClientError before command execution. Lean verification is through GitHub CI only.
+
 ## 2026-11-25 20:02 UTC — raw10 B0=1LC rectangles 18–24 source accepted; consume next
 
 - Current incarnation claimed Agent49 at `2026-11-25T19:55:12.556Z`, run ID `agent49-gpt62-2026-11-25T19:55:12.556Z-raw10-source-ingestion`. Immutable release threshold is 70 minutes after that timestamp; do not refresh. Check actual UTC after every checkpoint.
