@@ -53,11 +53,9 @@ The first new hole is F0 at move 9. In its 1RB child, the partition has 75 split
 | `1RB0RE_1RC1RA_0RD0RB_1LD1RE_---1LF_1RB0LF` | 91 | `0 (111011101110)^n 11101110111111` | 3 blocks of 1110 |
 | `1RB1RF_1RC1RA_0RD0RB_1LD1RE_---1LF_1RB0LF` | 155 | `010 (11101110)^n 11101110111111` | 2 blocks of 1110 |
 
-Both start in A with empty right list. `Raw124ZeroLFBlockGrowth.lean` proves universal nonhalting through the original `BlockPump.Certificate.never` adapter. CI run 45672467015, target `weighted-tnf-raw124-0lf-growth`, compiled the exact dependency closure (`BB6Coverage`, `SparseZipper`, `BlockPump`, and this adapter) under Lean 4.36.0-rc2. The exported `never1539` and `never1547` theorems have only `propext`, `Classical.choice`, and `Quot.sound` in their axiom profiles. Each partial table covers 25 completions, so these two source-accepted proofs cover 50 completions. The paired-word return proof below resolves one of the five other leaves at the local physical-semantics level. Four remaining hard leaves are:
+Both start in A with empty right list. `Raw124ZeroLFBlockGrowth.lean` proves universal nonhalting through the original `BlockPump.Certificate.never` adapter. CI run 45672467015, target `weighted-tnf-raw124-0lf-growth`, compiled the exact dependency closure (`BB6Coverage`, `SparseZipper`, `BlockPump`, and this adapter) under Lean 4.36.0-rc2. The exported `never1539` and `never1547` theorems have only `propext`, `Classical.choice`, and `Quot.sound` in their axiom profiles. Each partial table covers 25 completions, so these two source-accepted proofs cover 50 completions. The three new inductive proofs below resolve three of the five other leaves at the local physical-semantics level. Two remaining hard leaves are:
 ```
 1RB0LE_1RC1RA_0RD0RB_1LD1RE_---1LF_1RB0LF
-1RB---_1RC1RF_0RD0RB_1LD1RE_0RA1LF_1RB0LF
-1RB---_1RC1RF_0RD0RB_1LD1RE_1RA1LF_1RB0LF
 1RB---_1RC1RA_0RD0RE_1LD1RE_0RB1LF_1RB0LF
 ```
 No parent or canonical roster obligation has been discharged by this partial work.
@@ -67,3 +65,12 @@ The five exact residuals are the input to `search_0lf_hard_leaves.py`, which app
 ### Paired-word return invariant for hard4
 
 `1RB0RD_1RC---_0RD1LA_1LD1RE_1RB1LF_1RB0LF` has an unbounded inductive proof in [Raw124ZeroLFPairReturn.lean](Raw124ZeroLFPairReturn.lean), commit `001a72a0ebe58c3f5ff6be56390eca2299d28dca`. At step 42 it reaches F0 with blank left and right word 00000 followed by paired bits. A forward phase consumes encoded 1 or 01, accumulating stack prefixes 11 or 1101; a terminal 00 (including implicit blank) adds one leading 1. The resulting stack consists of odd runs of at least three ones separated by single zeros. Each backward macro consumes one run and restores pair alignment, until a fresh section with the same invariant is reached. Both phases terminate by structural induction, and each full return takes positive time. Induction yields arbitrarily long live blank runs. `neverHard4` transfers those runs through the physical zipper embedding, and `coverHard4` provides the exact unweighted leaf for every bound; all 25 B1 completions are excluded by the proof. Local Lean 4.36.0-rc2 compiled the proof with `Frontier.lean` byte-identical to Git blob `115438c4f244b5416a91be4dd7a3f12103d5448d` and extracted source declarations from RootShift, SparseZipper and BlockPump. All four theorem axiom reports were `[propext, Quot.sound]`. Full original dependency closure and the weighted audit integration are not yet checked. No parent or roster closure is claimed.
+
+### Growing-prefix counters for hard1 and hard2
+
+The two tables with B1=1RF and E0=0RA or 1RA respectively admit a common prefix invariant: F0 with blank left and right word 0^8 (1100)^n 1111 followed by an encoded finite word. Their distinct carry transformations are formalized independently.
+
+* [Raw124ZeroLFHard1.lean](Raw124ZeroLFHard1.lean), commit 8f7bd3f2ee50dfcd0935b639e6caf49c22faddb0: base-four digits (a,b) use twelve raw cells, including a lookahead flag h equal to the low bit of the next digit. The positive-time return increments the growing prefix exponent and performs base-four increment on the digit list. Blank entry at 54 moves.
+* [Raw124ZeroLFHard2.lean](Raw124ZeroLFHard2.lean), commit d66c2ddcdb9f78ef6094d19d414b468352efab5b: alternating phase z and binary counter (v,xs), with fourfold higher-bit encoding. Arbitrary finite runs of carry bits are handled by induction, including implicit blank overflow. Blank entry at 850 moves.
+
+The exported neverHard1/2 and coverHard1/2 are locally kernel-checked under Lean 4.36.0-rc2, using the same exact Frontier and extracted original zipper bridge declarations as hard4. Axiom reports [propext, Quot.sound]. Each table has only A1 unspecified, so the three new proofs exclude 75 further completions. Full dependency-closure check and weighted child audit integration remain outstanding. No change to the canonical open roster is claimed.
