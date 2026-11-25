@@ -179,8 +179,9 @@ theorem exact_at_target (B : Nat) (hB : 6766859 ≤ B)
     (h121 : Cover (WeightedBound 4063) p121)
     (h125 : Cover (WeightedBound 1290) p125)
     (hLeaves : ∀ e ∈ roster68, Cover (WeightedBound B) e.2)
-    (champ : ∃ m : RawMachine, HaltsAt (tickRaw m) B) :
-    ExactBB6 B :=
+    (champ : ∃ m : BB6.Coverage.RawMachine,
+      BB6.Coverage.HaltsAt (BB6.Coverage.tickRaw m) B) :
+    BB6.Coverage.ExactBB6 B :=
   exact_from_quotient_roster (by omega) hB
     (sound68 h109 h123 h60 h110 h111 h117 h121 h125)
     hLeaves champ
