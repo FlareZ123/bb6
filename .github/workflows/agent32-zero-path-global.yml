@@ -65,9 +65,9 @@ on:
         type: boolean
         default: false
       raw59_child:
-        description: Raw59 proof target (all or 0RB)
+        description: Raw59 proof target (all, 0RB, or 0LD)
         type: choice
-        options: [all, 0RB]
+        options: [all, 0RB, 0LD]
         default: all
 
       verify_f418_return:
@@ -499,7 +499,7 @@ jobs:
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
           case "$RAW59_CHILD" in
             all) python im-results/agent32-raw59/generate.py; target=im-results/agent32-raw59/Raw59Refinement.lean ;;
-            0RB) python im-results/agent32-raw59/generate.py 0RB; target=im-results/agent32-raw59/generated_0RB/Raw59A0RBData.lean ;;
+            0RB|0LD) python im-results/agent32-raw59/generate.py "$RAW59_CHILD"; target="im-results/agent32-raw59/generated_$RAW59_CHILD/Raw59A${RAW59_CHILD}Data.lean" ;;
             *) exit 2 ;;
           esac
           python tools/lean_compile_closure.py --workdir /tmp/a32-raw59 --jobs 4 "$target" | tee /tmp/a32-raw59.log
