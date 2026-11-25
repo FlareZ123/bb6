@@ -156,9 +156,9 @@ def concrete_events(p,limit=3000):
             break
     return ev
 
-def candidate(p,ev):
-    for i,(t,s,c) in enumerate(ev[:60]):
-        for j in range(i+1,min(i+12,len(ev))):
+def candidate(p,ev,max_events=60,lookahead=12):
+    for i,(t,s,c) in enumerate(ev[:max_events]):
+        for j in range(i+1,min(i+lookahead,len(ev))):
             _,s2,d=ev[j]
             if s!=s2 or c.q!=d.q:
                 continue
@@ -178,7 +178,7 @@ def candidate(p,ev):
                 block=b[k:k+diff]
                 pred=a[:k]+block*2+a[k:]
                 if not any(e[1]==s and e[2].q==c.q and e[2].h0==c.h0+2*delta
-                    and (e[2].r.pre if side=="R" else e[2].l.pre)==pred for e in ev[j+1:j+12]):
+                    and (e[2].r.pre if side=="R" else e[2].l.pre)==pred for e in ev[j+1:j+lookahead]):
                     continue
                 w,v=W(a[:k],block,a[k:]),W(a[:k]+block,block,a[k:])
                 start=C(c.q,0,0,W() if side=="R" else w,w if side=="R" else W())
