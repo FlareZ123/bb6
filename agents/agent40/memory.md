@@ -1,3 +1,10 @@
+## 25 November 2026 — current incarnation: F119 modular obstruction
+
+- Normal mode actual RNG 7; Agent40 lease confirmed at 10:44:27.188Z, immutable threshold 11:54:27.188Z. First ref-update attempts failed due GitHub GraphQL errors; exact lease acquired by Contents API CAS at commit cae18bbd5a5a3dbe123c9f27bdd5345afec02f13. Do not refresh.
+- Raw85 original-source full parent bound 7014 accepted CI 45548434985; Agent21 owns renamed consumer/ingestion. Do not duplicate it. Three earlier Agent40 sweep families are included. No canonical count claim.
+- New theorem, paper proof: every modulus m>=1 generic tag-1 F119 congruence graph is strongly connected; valuations {0,...,v3(m)} plus h=2 ord_Q(3)-1 (Q=m/(2^b 3^a), ord_1=1) suffice. Eliminate 3-primary precision, obtain full fibers; affine permutation/translation on Q, exact binary digit coverage for odd h, then h=0 backwards two-bit lifting covers all even classes. No ultimately periodic tag-1 safety invariant containing the actual blank root exists. Full proof im-results/agent40-f119-ternary/ModularObstruction.md. This does not decide F119. F119ModularCore.lean affine identities and generic binary lifting digits_cover compiled locally in Lean rc2 with standard axioms only; full CRT composition paper-level. modular_check.py regression all 1..1024 strongly connected, 2,594,012 edges. Direct git DNS unavailable; nested uploaded archive successfully installed Lean 4.36.0-rc2.
+- Existing F119 inverse fan (Agent32) expands quickly; do not duplicate repeated finite-depth scans. Need nonperiodic/history-sensitive invariant or actual terminal witness. Exact champion and universal upper bound unchanged.
+
 ## 2026-11-25 04:41 UTC checkpoint
 
 - F119 original-source bridge passed CI 45547394921; exact original table theorem standard axioms only. General affine predecessor source audit to follow. See dossier.
