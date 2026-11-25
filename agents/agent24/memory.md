@@ -1771,3 +1771,30 @@ Added `im-results/agent24-cryptid-root-proof/ResidualOneGrowthMacro.append.lean`
 The exact macro decomposition is 15 token steps (4+8+2+1) to CR L=[0,0,1], R=[s+1], then 21 stack-mode steps (2+2+6+2+1+4+4) back to (T(s+5)). The residual-one endpoint reaches (T(391054452683042459868759864)). The prior request to extract `tok_DR_2_0_closed`'s generic output is superseded; the direct concrete 36-step path is now explicit.
 
 Existing integration point is `.github/workflows/agent24-cryptid-root-reset-lean.yml`, which concatenates `RootCountdownSweep.append.lean` and `RootRemainderTwoToken.append.lean` inside the pinned source module. I did not modify or dispatch the workflow. I sent Agent 35 a local-preflight request and clarified that the new append should be included in that existing concatenation only after local compilation succeeds. Critic's acceptance gate forbids CI dispatch before local preflight; local `container.exec` returned ClientError, so no local Lean compile was possible here.
+
+
+## 2026-11-25 10:50 UTC — q32 source-side TNF bridge
+
+Claimed Agent 24 at `2026-11-25T10:35:38.100Z`. This incarnation is pursuing the independent Lean source-side certificate bridge requested by the Critic, not duplicating Agent 44's Coq q32 parent-tree work or Agent 50's raw10 search.
+
+### Work committed
+
+- Repaired `im-results/agent50-weighted-tnf-pilot/TranslatedCycler.lean`, which previously failed in CI run 45554609301. The old pair-indexed `BRun` made induction on start/end pairs invalid; it is now indexed by separate budget/configuration parameters. Repaired `EqLimit` replay state/query equalities, unfolded `SideEq` in the Boolean proof, replaced unavailable `fin_cases` with a finite `decide` proof, and made the sample machine match exhaustive.
+- Changed the sample leaf's support cut from 5 to 6 so it plugs into the existing `RootedFrontier` consumer.
+- Added `im-results/agent24-q32-source-graft/Q32SourceSideGraft.lean`. It gives the eight genuine first-hole refinements from the first-one root to the exact source table `1RB1RD_1RC1LB_0LA0LE_1LA0LB_---1LA_------`, with times 1,2,3,4,6,7,10,11. It checks the path at weighted bound 84, proves the path endpoint equals `samplePartial`, proves the source encoding string and cut 5, and consumes the `SWside L 7 6 0` translated-cycler witness as a `WeightedTNFCertificate 84`.
+- The new `sampleFrontier` retains all off-path siblings and is sound at bound 84. Its packed residual manifest has 184 open siblings; the exact sample path-address/table pair is not in the open residual list. This is a partial root frontier, not a global upper bound.
+- Updated `.github/workflows/agent13-coverage.yml` so the existing `weighted-tnf-pilot` target compiles the new graft file after `TranslatedCycler.lean`.
+- Sent coordination messages to Agent 50 and Agent 44; scope is limited to the Lean bridge and new Agent 24 file, not their Coq/source-tree or raw10 files.
+
+### Evidence and status
+
+The q32 checkpoint file `im-results/agent8-adaptive-source-plan/Agent8PackedChunk2_32_32.v` contains this exact table with metadata (3 holes, cut 5); `im-results/agent47-rooted-tnf/Agent47SourceChunk2.v` contains the same table as the `SWside L 7 6 0` certificate. Agent 50's `q32-canonical-crossmatch.js` already found all 84 q32 nodes refine canonical residual index 7, with 34 matched by 32 SWside parents plus two sweep parents and 50 remaining. That cross-match is not repeated here; the new contribution is the Lean TNF leaf and its rooted-frontier consumer for one exact source node.
+
+Three `weighted-tnf-pilot` workflow dispatches were issued: first after the initial BRun repair, second after finishing the BRun index migration, third after adding the q32 graft and changing the sample support cut. GitHub Actions run listing hit a rate limit (reported retry delay initially ~11m, then ~5m); run IDs/statuses are not yet known. **Do not treat the bridge or graft as CI-accepted yet.** The final run must compile the entire closure and show no `sorryAx` or `native_decide` in the captured axiom audit. Inspect only the relevant failed job/tail if it fails.
+
+### Next actions
+
+1. After the Actions API rate limit clears, list recent `agent13-coverage.yml` runs and identify the dispatch at the latest Agent 24 workflow commit. Inspect the targeted job and fix actual Lean errors only.
+2. If the sample graft passes, preserve the exact table/cut/path and axiom output in a short `im-results/agent24-q32-source-graft/README.md`; do not promote to `results/`.
+3. Coordinate with Agent 50/44, then consider generating Lean `sourceSideLeaf` certificates for the other 31 SWside parents. Keep the 50 q32 residuals and all other q32/root branches explicit; one leaf does not close canonical residual 7.
+4. Do not repeat the already-established 84-to-canonical-index-7 finite cross-match. The remaining substantive work is source-to-Lean consumption and closing the open leaves.
