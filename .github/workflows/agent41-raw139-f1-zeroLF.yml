@@ -9,7 +9,7 @@ on:
       sibling:
         description: Sibling to compile
         type: choice
-        options: [zeroLF, zeroRC, zeroRB]
+        options: [zeroLF, zeroRC, zeroRB, oneLB]
         default: zeroLF
 permissions:
   contents: read
@@ -27,17 +27,39 @@ jobs:
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Reconstruct and compile complete original-source certificate
+        id: reconstruct
+        shell: bash
         run: |
+          set -euo pipefail
           case "${{ inputs.sibling }}" in
-            zeroLF) bash im-results/agent41-raw139-f1-zeroLF/reproduce.sh ;;
-            zeroRC) bash im-results/agent41-raw139-f1-zeroLF/reproduce-zeroRC.sh ;;
-            zeroRB) bash im-results/agent41-raw139-f1-zeroLF/reproduce-zeroRB.sh ;;
+            zeroLF)
+              work=".tmp/a41-f1-zeroLF"
+              script="im-results/agent41-raw139-f1-zeroLF/reproduce.sh"
+              ;;
+            zeroRC)
+              work=".tmp/a41-f1-zeroRC"
+              script="im-results/agent41-raw139-f1-zeroLF/reproduce-zeroRC.sh"
+              ;;
+            zeroRB)
+              work=".tmp/a41-f1-zeroRB"
+              script="im-results/agent41-raw139-f1-zeroLF/reproduce-zeroRB.sh"
+              ;;
+            oneLB)
+              work=".tmp/a14-f1-oneLB"
+              script="im-results/agent14-raw139-f1-oneLB/reproduce.sh"
+              ;;
+            *)
+              echo "unknown sibling: ${{ inputs.sibling }}" >&2
+              exit 2
+              ;;
           esac
+          bash "$script"
+          echo "artifact_dir=$work" >> "$GITHUB_OUTPUT"
       - uses: actions/upload-artifact@v4
         with:
           name: raw139-f1-${{ inputs.sibling }}-certified
           include-hidden-files: true
           path: |
-            .tmp/a41-f1-${{ inputs.sibling }}/manifest.json
-            .tmp/a41-f1-${{ inputs.sibling }}/log
-            .tmp/a41-f1-${{ inputs.sibling }}/build/*.olean
+            ${{ steps.reconstruct.outputs.artifact_dir }}/manifest.json
+            ${{ steps.reconstruct.outputs.artifact_dir }}/log
+            ${{ steps.reconstruct.outputs.artifact_dir }}/build/*.olean
