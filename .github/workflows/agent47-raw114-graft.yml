@@ -9,6 +9,7 @@ on:
           - all
           - canonical72
           - canonical71
+          - canonical70
         default: all
         required: true
       canonical72_run_id:
@@ -20,7 +21,7 @@ permissions:
   actions: read
 jobs:
   exactness:
-    if: ${{ inputs.target != 'canonical71' }}
+    if: ${{ inputs.target != 'canonical71' && inputs.target != 'canonical70' }}
     runs-on: ubuntu-latest
     timeout-minutes: 75
     steps:
@@ -519,7 +520,7 @@ jobs:
   canonical71:
     name: Source-audit Raw121 extension to the 71-residual roster
     needs: [exactness, canonical72]
-    if: ${{ always() && ((inputs.target == 'all' && needs.canonical72.result == 'success') || inputs.target == 'canonical71') }}
+    if: ${{ always() && inputs.target == 'canonical71' }}
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
@@ -650,5 +651,170 @@ jobs:
             /tmp/a31-canonical71-manifest.json
             /tmp/a31-canonical71-summary.json
             /tmp/a31-canonical71.log
+          if-no-files-found: error
+          retention-days: 14
+
+  canonical70:
+    name: Source-audit Raw121 plus raw110 70-residual roster
+    needs: [exactness, canonical72]
+    if: ${{ always() && ((inputs.target == 'all' && needs.canonical72.result == 'success') || inputs.target == 'canonical70') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate the canonical72 base run ID
+        env:
+          CANONICAL72_RUN_ID: ${{ inputs.target == 'canonical70' && inputs.canonical72_run_id || github.run_id }}
+        run: |
+          set -euo pipefail
+          [[ "$CANONICAL72_RUN_ID" =~ ^[0-9]+$ ]]
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Download the accepted canonical72 source closure
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.target == 'canonical70' && inputs.canonical72_run_id || github.run_id }}
+          name: canonical72-roster-only-certified
+          path: /tmp/a72-base
+      - name: Download raw110 parent source artifact
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45593652030
+          name: raw110-parent-cut
+          path: /tmp/raw110-parent
+      - name: Restore raw110 Lean sources without reusing foreign oleans
+        run: |
+          set -euo pipefail
+          find /tmp/raw110-parent -type f -name '*.lean' -print0 |
+            while IFS= read -r -d '' src; do
+              dest="im-results/agent7-raw110/$(basename "$src")"
+              if [ ! -f "$dest" ]; then
+                cp "$src" "$dest"
+              fi
+            done
+      - name: Regenerate Raw121 and raw110 word-trace sources
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent11-raw121/prepare_raw121.py
+          python im-results/agent7-raw110/gen_late_trace.py /tmp/raw110-generated --compressed
+      - name: Compile the 70-residual roster against the canonical72 manifest
+        run: |
+          set -euo pipefail
+          test -s /tmp/a72-base/a31-canonical72-manifest.json
+          test -s /tmp/a72-base/a31-canonical72/BB6/Agent8Canonical72RosterOnly.olean
+          python tools/lean_compile_closure.py \\
+            im-results/agent8-tnf-raw117/Canonical70Raw121Raw110RosterOnly.lean \\
+            --workdir /tmp/a31-canonical70 \\
+            --manifest /tmp/a31-canonical70-manifest.json \\
+            --label canonical70-raw121-raw110-roster-only \\
+            --theorem BB6.Agent8Canonical70Raw121Raw110RosterOnly.exact_at_target \\
+            --weighted-bound 6766859 \\
+            --artifact-name canonical70-raw121-raw110-roster-only-certified \\
+            --jobs 8 \\
+            --source-root /tmp/raw110-generated \\
+            --precompiled-manifest /tmp/a72-base/a31-canonical72-manifest.json \\
+            --precompiled-dir /tmp/a72-base/a31-canonical72 \\
+            --provenance-input im-results/agent8-tnf-raw117/Canonical70Raw121Raw110RosterOnly.lean \\
+            --provenance-input im-results/agent8-tnf-raw117/Canonical71Raw121RosterOnly.lean \\
+            --provenance-input im-results/agent8-tnf-raw117/Canonical72RosterOnly.lean \\
+            --provenance-input im-results/agent11-raw121/prepare_raw121.py \\
+            --provenance-input im-results/agent11-raw121/specs.json \\
+            --provenance-input im-results/agent11-raw121/long.json \\
+            --provenance-input im-results/agent11-raw121/fast_enum.cpp \\
+            --provenance-input im-results/agent11-raw121/bank.cpp \\
+            --provenance-input im-results/agent7-raw110/gen_late_trace.py \\
+            --provenance-input im-results/agent7-raw110/Raw110ParentLateCover.lean \\
+            --provenance-input im-results/agent7-raw110/Raw110ParentResidualMatch.lean \\
+            --provenance-input im-results/agent7-raw110/Raw110LateCover.lean \\
+            2>&1 | tee /tmp/a31-canonical70.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a31-canonical70.log; then
+            echo "Forbidden proof placeholder or native_decide in canonical70 closure" >&2
+            exit 1
+          fi
+          python3 - /tmp/a31-canonical70.log <<'PY'
+          import pathlib, re, sys
+          log = pathlib.Path(sys.argv[1]).read_text()
+          allowed = {"propext", "Classical.choice", "Quot.sound"}
+          profiles = {}
+          for name, axioms in re.findall(r"'([^']+)' depends on axioms: \[([^\]]*)\]", log):
+              profiles[name] = {x.strip() for x in axioms.split(",") if x.strip()}
+          for name in re.findall(r"'([^']+)' does not depend on any axioms", log):
+              profiles[name] = set()
+          required = (
+              "BB6.Agent8Canonical71Raw121RosterOnly.parent_present",
+              "BB6.Agent8Canonical71Raw121RosterOnly.roster_count",
+              "BB6.Agent8Canonical71Raw121RosterOnly.sound",
+              "BB6.Agent8Canonical71Raw121RosterOnly.exact_at_target",
+              "BB6.Agent8Canonical70Raw121Raw110RosterOnly.raw110_parent_present",
+              "BB6.Agent8Canonical70Raw121Raw110RosterOnly.roster_count",
+              "BB6.Agent8Canonical70Raw121Raw110RosterOnly.sound",
+              "BB6.Agent8Canonical70Raw121Raw110RosterOnly.exact_at_target",
+          )
+          for name in required:
+              if name not in profiles:
+                  raise SystemExit("missing axiom profile: " + name)
+              bad = profiles[name] - allowed
+              if bad:
+                  raise SystemExit(f"{name}: unexpected axioms {sorted(bad)}")
+              print(f"{name}: {sorted(profiles[name])}")
+          PY
+      - name: Record the canonical70 source and object manifest
+        env:
+          CANONICAL72_RUN_ID: ${{ inputs.target == 'canonical70' && inputs.canonical72_run_id || github.run_id }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, json, os, pathlib, subprocess
+          work = pathlib.Path("/tmp/a31-canonical70")
+          source = pathlib.Path("im-results/agent8-tnf-raw117/Canonical70Raw121Raw110RosterOnly.lean")
+          manifest = pathlib.Path("/tmp/a31-canonical70-manifest.json")
+          olean = work / "BB6/Agent8Canonical70Raw121Raw110RosterOnly.olean"
+          def digest(path):
+              h = hashlib.sha256()
+              with path.open("rb") as stream:
+                  for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+                      h.update(chunk)
+              return h.hexdigest()
+          summary = {
+              "theorem": "BB6.Agent8Canonical70Raw121Raw110RosterOnly.exact_at_target",
+              "residual_count": 70,
+              "early_root_bound": 6766859,
+              "status": "conditional roster theorem; all 70 residual Covers remain explicit",
+              "source_audit_run_id": int(os.environ["GITHUB_RUN_ID"]),
+              "canonical72_base_run_id": int(os.environ["CANONICAL72_RUN_ID"]),
+              "raw121_parent_certificate_run_id": 45616647230,
+              "raw110_parent_certificate_run_id": 45597857116,
+              "raw110_parent_cut_artifact_run_id": 45593652030,
+              "source_revision": os.environ["GITHUB_SHA"],
+              "lean_version": subprocess.check_output(["lean", "--version"], text=True).strip(),
+              "lean_binary_sha256": digest(pathlib.Path(subprocess.check_output(["lean", "--print-prefix"], text=True).strip()) / "bin/lean"),
+              "source_sha256": digest(source),
+              "manifest_sha256": digest(manifest),
+              "olean_sha256": digest(olean),
+              "axiom_allowlist": ["propext", "Classical.choice", "Quot.sound"],
+          }
+          pathlib.Path("/tmp/a31-canonical70-summary.json").write_text(
+              json.dumps(summary, indent=2, sort_keys=True) + "\n"
+          )
+          print(json.dumps(summary, indent=2, sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: canonical70-raw121-raw110-roster-only-certified
+          path: |
+            /tmp/a31-canonical70
+            /tmp/a31-canonical70-manifest.json
+            /tmp/a31-canonical70-summary.json
+            /tmp/a31-canonical70.log
           if-no-files-found: error
           retention-days: 14
