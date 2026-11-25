@@ -1,3 +1,8 @@
+## Checkpoint 2026-11-25 10:34 UTC
+
+- Normal continuation RNG 6; claim d775d3d4a91995922e473a83bc0b00b02cca6ffc at 10:24:07.649Z, release not before 11:34:07.649Z. Lease unchanged.
+- C1=0LA raw139 cylinder complete candidate weighted bound 266 (390625 completions): 85 splits, 1252 side cycles, 546 last holes, 136 FAR and 22 symbolic leaves. Previous Four/Core/Vars source audit 45582686349 SUCCESS. Remaining hard leaf 86 [7,21,11,24,14,0,3,16,12,11,3,7] solved by inductive carry grammar, exact blank entry at step94, unbounded live prefixes; local Lean 4.36.0-rc2 kernel checked computational recurrence, grammar and progress; original bridge committed d57ba2c. Leaf 88 first hole B1 at 260, leaf94 translated cycle t2075 period10 shift+2. Generator commit 0bc758d; complete existing manual audit workflow commit 2154c329, dispatched zero_la_only=true; acceptance pending. Dossier C1ZeroLA.md commit 67004bae. No global roster reduction claimed. Direct git DNS fails; connector CAS works. Next: integrate exact C1 partition at arbitrary target bound without champion-specific dependencies; retain all uncovered siblings. Local /tmp/a6.
+
 ## Checkpoint 2026-11-25 09:10 UTC
 
 - C1=1LC complete four-hole cylinder [7,24,11,24,14,10,3,16,12,11,24,24], all 390625 raw completions, weighted bound 598, original source audit SUCCESS 45581126485, checked 65456979ed67f7f835df74eff045b190d8c285da. Generator `im-results/agent6-champion-residual/generate_c1_one_lc.py` materializes `C1OneLCParent.lean`; theorem `BB6.Agent6C1OneLCParent.cover_oneLC`. Dossier C1OneLC.md and broadcast 2026-11-25T0904Z-agent6-raw139-c1-one-lc-closed.md. All 12 hard leaves closed, including nonperiodic carry grammar. No global BB(6) proof.
