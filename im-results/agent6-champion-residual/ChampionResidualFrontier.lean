@@ -311,7 +311,16 @@ def championWitnesses : List ChampionWitness :=
   { depth := 5, child := ⟨true, true, 2⟩, witness := .side 2 16 false (3 : Int) },
   { depth := 5, child := ⟨false, false, 4⟩, witness := .side 2 14 false (2 : Int) },
   { depth := 5, child := ⟨true, false, 4⟩, witness := .side 2 14 false (2 : Int) },
-  { depth := 5, child := ⟨true, true, 4⟩, witness := .side 2 16 false (3 : Int) }
+  { depth := 5, child := ⟨true, true, 4⟩, witness := .side 2 16 false (3 : Int) },
+
+  { depth := 6, child := ⟨false, false, 0⟩, witness := .side 93 88 true (-2 : Int) },
+  { depth := 6, child := ⟨false, true, 1⟩, witness := .side 46 9 true (3 : Int) },
+  { depth := 6, child := ⟨true, false, 1⟩, witness := .side 51 3 true (5 : Int) },
+  { depth := 6, child := ⟨false, true, 3⟩, witness := .side 39 26 true (0 : Int) },
+  { depth := 6, child := ⟨false, false, 5⟩, witness := .side 97 96 true (-2 : Int) },
+  { depth := 6, child := ⟨false, true, 5⟩, witness := .side 53 1 true (7 : Int) },
+  { depth := 6, child := ⟨true, false, 5⟩, witness := .side 52 5 true (5 : Int) },
+  { depth := 6, child := ⟨true, true, 5⟩, witness := .side 53 1 true (7 : Int) }
 ]
 
 theorem championWitnessesOK :
