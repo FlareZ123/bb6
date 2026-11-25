@@ -40,7 +40,5 @@ jobs:
             im-results/agent14-raw139-f1-oneLB/reproduce.sh
             im-results/agent14-raw139-f1-oneLB/README.md
             im-results/agent14-raw139-f1-oneLB/source-delta.tar.xz.b64
-            im-results/agent14-raw139-f1-oneLB/source-delta.sha256
-            im-results/agent14-raw139-f1-oneLB/source-delta.manifest.json
+            .tmp/a14-f1-oneLB/log
             im-results/agent14-raw139-f1-oneRF/source.tar.xz.b64
-            im-results/agent14-raw139-f1-oneRF/source.sha256
