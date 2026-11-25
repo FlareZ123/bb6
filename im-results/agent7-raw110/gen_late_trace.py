@@ -3,6 +3,8 @@ Run with output directory as argument. All generated claims use rfl, not native_
 """
 from pathlib import Path
 import sys
+from itertools import groupby
+COMPRESSED = '--compressed' in sys.argv
 PAIR={'A':'10','B':'01','C':'00','D':'11'}
 REV={v:k for k,v in PAIR.items()}
 def pairs(r):return ''.join(REV[r[i:i+2].ljust(2,'0')] for i in range(0,len(r),2))
@@ -25,7 +27,12 @@ def bw(slow,l,w):
     j=len(l)-len(l.lstrip('1'));l=l[j:];r='10'*j+r;cost+=2*j+3
     return cost,('00'+l[1:] if l else '0',pairs(r))
 def state(s):
-    l,r=s;return '⟨['+','.join('true' if x=='1' else 'false' for x in l)+'],['+','.join('.'+x for x in r)+']⟩'
+    l,r=s
+    if COMPRESSED:
+        runs=[(k,len(list(g))) for k,g in groupby(l)]
+        a=len(r)-len(r.lstrip('A'))
+        return '⟨['+','.join(f'({str(k=="1").lower()},{n})' for k,n in runs)+f'],{a},['+','.join('.'+x for x in r[a:])+']⟩'
+    return '⟨['+','.join('true' if x=='1' else 'false' for x in l)+'],['+','.join('.'+x for x in r)+']⟩'
 def chunks(slow,chunk=64):
     s=('1','');i=0;total=0
     while True:
@@ -38,7 +45,7 @@ def chunks(slow,chunk=64):
         if s is None:
             assert i==19203 and total==[6659485,6766857][slow],(i,total)
             break
-HEADER='set_option maxHeartbeats 0\nset_option maxRecDepth 100000\nopen BB6Raw110Word BB6BlockFAR BB6Carry\n'
+HEADER='set_option maxHeartbeats 0\nset_option maxRecDepth 100000\nopen BB6BlockFAR BB6Carry\n' + ('open BB6Raw110Run\nopen BB6Raw110Word (Outcome prepend_sound)\n' if COMPRESSED else 'open BB6Raw110Word\n')
 def generate(out):
     out.mkdir(parents=True,exist_ok=True)
     imports=[]; assembly=[]
@@ -51,7 +58,7 @@ def generate(out):
             group=rows[start:start+40]
             mod=f'Raw110Word{variant}{part:02}'
             imports.append(mod)
-            lines=['import Raw110WordSweep',HEADER,f'namespace {mod}']
+            lines=['import '+('Raw110RunSweep' if COMPRESSED else 'Raw110WordSweep'),HEADER,f'namespace {mod}']
             lines.append(f'def s0 : State := {state(group[0][0])}')
             total=0
             for j,(a,z,n,c,t) in enumerate(group):
