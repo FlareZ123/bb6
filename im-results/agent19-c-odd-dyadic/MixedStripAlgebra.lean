@@ -238,7 +238,7 @@ private theorem half8_spec (L x : Int) (ho : L%2=1) : (8*half8 L x)%L=x%L := by
   have h3 := half_spec L x ho
   unfold half8
   rw [show 8*half L (half L (half L x))=4*(2*half L (half L (half L x))) by omega,h1,
-      show 4*half L (half L x)=2*(2*half L x) by omega,h2,h3]
+      show 4*half L (half L x)=2*(2*half L (half L x)) by omega,h2,h3]
 
 private theorem mod_same_diff (M x y a b : Int) (h : x%M=y%M) (he : a-b=x-y) : a%M=b%M := by
   apply (mod_sub M a b).mpr
