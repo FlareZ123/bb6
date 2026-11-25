@@ -21,6 +21,7 @@ import multi
 import emit_ngram
 import generate_asym
 import bidfa_emit
+from unpack5465 import unpack as unpack5465
 from generate_four_hole import masks, move, slot
 
 S = json.loads((ROOT/"spec.json").read_text())
@@ -48,6 +49,7 @@ def digest(data):
     return hashlib.sha256(data).hexdigest()
 
 def generate():
+    unpack5465(OUT)
     with tempfile.TemporaryDirectory() as tmp:
         work = Path(tmp)
         compile_cpp(IM/"agent2-tnf-raw99/enumerate.cpp",work/"enumerate")
