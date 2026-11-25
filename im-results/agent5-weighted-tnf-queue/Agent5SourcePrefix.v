@@ -65,7 +65,7 @@ Section Prefix.
           split; [constructor; assumption|assumption].
       + unfold cut_queue, safeQ.
         cbn [SearchQueue_upd fst snd].
-        rewrite cut_small by (cbn [length]; lia).
+        rewrite (cut_small k (x::xs)) by (cbn [length]; lia).
         destruct (f (tm x)) as [h| |] eqn:E; cbn [get_SQ fst snd].
         * intros [_ Hys]. split; [constructor|exact Hys].
         * intros [_ Hys]. split; [constructor|exact Hys].
