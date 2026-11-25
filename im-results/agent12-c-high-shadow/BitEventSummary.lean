@@ -93,7 +93,7 @@ theorem iwsum_sub (n : Nat) (f g : Nat→Int) : iwsum n (fun i=>f i-g i)=iwsum n
 
 theorem iwsum_mul (n : Nat) (c : Int) (f : Nat→Int) : iwsum n (fun i=>c*f i)=c*iwsum n f := by
   induction n with
-  | zero => rfl
+  | zero => simp [iwsum]
   | succ n ih => simp only [iwsum,ih,Int.mul_add]; rw [←Int.mul_assoc,Int.mul_comm ((2:Int)^n) c,Int.mul_assoc]
 
 theorem iwsum_cast (n : Nat) (f : Nat→Nat) : iwsum n (fun j=>(f j:Int))=(wsum n f:Int) := by
