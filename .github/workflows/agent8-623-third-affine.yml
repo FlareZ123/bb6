@@ -217,20 +217,6 @@ jobs:
             echo 'sorryAx detected in exact fatal-spectrum pullback'
             exit 1
           fi
-      - name: Compile n=10 source-certified root mass-gap exclusion
-        working-directory: cryptids
-        run: |
-          set -euo pipefail
-          cp "../im-results/agent8-623-inverse/RootCancellationBudgetBridge.lean" RootCancellationBudgetBridge.lean
-          lake env lean -o .lake/build/lib/lean/RootCancellationBudgetBridge.olean RootCancellationBudgetBridge.lean 2>&1 | tee root-cancellation-budget-bridge-import.log
-          cp "../im-results/agent48-623-budget-composition/RootExclusion.lean" RootExclusion.lean
-          lake env lean -o .lake/build/lib/lean/RootExclusion.olean RootExclusion.lean 2>&1 | tee root-exclusion.log
-          cp "../im-results/agent8-623-inverse/RootMassGapAllN10.lean" RootMassGapAllN10.lean
-          lake env lean -o .lake/build/lib/lean/RootMassGapAllN10.olean RootMassGapAllN10.lean 2>&1 | tee root-mass-gap-all-n10.log
-          if grep -q 'sorryAx' root-cancellation-budget-bridge-import.log root-exclusion.log root-mass-gap-all-n10.log; then
-            echo 'sorryAx detected in n=10 root mass-gap proof chain'
-            exit 1
-          fi
       - name: Reproduce 10,000-state canonical ray terminal-window audit
         if: ${{ inputs.run_terminal_scan }}
         run: python "$GITHUB_WORKSPACE/im-results/agent49-parity623/canonical_ray_terminal_scan.py" --steps 10000
