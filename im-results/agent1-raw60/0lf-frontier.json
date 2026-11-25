@@ -1160,6 +1160,10 @@
     "1417": [
       "Raw60LFParityCounter",
       "BB6.Agent1Raw60LFParityCounter"
+    ],
+    "1569": [
+      "Raw60LFRunGrammar",
+      "BB6.Agent1Raw60LFRunGrammar"
     ]
   },
   "unresolved": [
@@ -1202,7 +1206,6 @@
     1320,
     1338,
     1350,
-    1358,
-    1569
+    1358
   ]
 }
