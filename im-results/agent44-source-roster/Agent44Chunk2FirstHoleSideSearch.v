@@ -71,15 +71,15 @@ Qed.
 Definition chunk2_first_hole_side_remaining :=
   source_uncovered_tm chunk2_first_hole_side_roster chunk2_first_hole_children.
 
-Theorem chunk2_first_hole_side_search_checked :
-  forallb (certificate_check 395) chunk2_first_hole_side_certs = true.
+Theorem chunk2_first_hole_side_search_checked bound :
+  forallb (certificate_check bound) chunk2_first_hole_side_certs = true.
 Proof.
   unfold chunk2_first_hole_side_certs.
   apply search_side_roster_tm_checked.
 Qed.
 
-Theorem chunk2_first_hole_side_roster_safe :
-  Forall (source_table_safe 395) chunk2_first_hole_side_roster.
+Theorem chunk2_first_hole_side_roster_safe bound :
+  Forall (source_table_safe bound) chunk2_first_hole_side_roster.
 Proof.
   unfold chunk2_first_hole_side_roster.
   apply certificate_roster_safe.
