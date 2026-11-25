@@ -42,8 +42,6 @@ compile RelativeTape im-results/agent4-coverage-smoke/RelativeTape.lean
 compile CryptidsTapeAdapter im-results/agent4-coverage-smoke/CryptidsTapeAdapter.lean
 compile WeightedNonhaltLeafAdapter im-results/agent47-weighted-halt-branch/WeightedNonhaltLeafAdapter.lean
 compile HardRootCore im-results/agent19-hard-root-crosswalk/HardRootCore.lean
-compile HardRootParents im-results/agent19-hard-root-crosswalk/HardRootParents.lean
-compile HardRootLeaves im-results/agent19-hard-root-crosswalk/HardRootLeaves.lean
 compile ChampionParentCover im-results/agent48-champion-root/ChampionParentCover.lean
 compile ChampionLastHoleCover im-results/agent48-counted-inc0/ChampionLastHoleCover.lean
 compile ChampionParentExact im-results/agent48-counted-inc0/ChampionParentExact.lean
