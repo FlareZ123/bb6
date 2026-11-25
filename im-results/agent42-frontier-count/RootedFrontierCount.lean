@@ -59,26 +59,14 @@ theorem residuals_buildFrontierB (B : Nat) :
             BB6Coverage.readSlot = some s := by
           simpa [hr] using hread
         simpa using h'
-      have hhole' : p (BB6Coverage.readSlot (extractRunConfig hread).val) = none := by
-        simpa [hs] using hhole
-      have htail' : pathOKB B
-          (refine p (BB6Coverage.readSlot
-            (extractRunConfig hread).val) (some mv))
-          (advanceCut cut mv) xs = true := by
-        simpa [hs] using htail
-      have cert' : WeightedTNFCertificate B
-          (pathEnd (refine p (BB6Coverage.readSlot
-            (extractRunConfig hread).val) (some mv))
-            (advanceCut cut mv) xs).1 6 := by
-        simpa [pathEnd, hs] using cert
+      cases hs
       have ih' := ih
         (refine p (BB6Coverage.readSlot
           (extractRunConfig hread).val) (some mv))
         (advanceCut cut mv)
-        (RawRootPath.step hp (extractRunConfig hread).property hhole')
-        htail' cert'
-      simp [buildFrontierB, residuals, pureResiduals,
-        hs, hhole', htail', cert', ih', residuals_cast]
+        (RawRootPath.step hp (extractRunConfig hread).property hhole)
+        htail cert
+      simp [buildFrontierB, residuals, pureResiduals, pathEnd, ih']
 
 /-- Every path edge has 23 off-path ordinary children: the selected move
     is the unique one among the 24 ordinary moves that continues the path. -/
@@ -97,7 +85,7 @@ theorem flatMap_length_all_one {α β : Type} (xs : List α)
         intro y hy
         exact h y (by simp [hy])
       rw [List.flatMap_cons, List.length_append, hx, ih htail]
-      omega
+      simp [Nat.add_comm]
 
 theorem flatMap_length_single_exception {α β : Type}
     (xs : List α) (f : α → List β) (a : α)
@@ -120,8 +108,7 @@ theorem flatMap_length_single_exception {α β : Type}
           exact hother y (by simp [hy]) hya
         have hlen := flatMap_length_all_one xs f hotherTail
         rw [List.flatMap_cons, List.length_append, hlen]
-        simp
-        omega
+        simp [Nat.add_comm]
       · have hmemTail : a ∈ xs := by
           rcases hmem with hhead | htail
           · exact False.elim (hxa hhead.symm)
