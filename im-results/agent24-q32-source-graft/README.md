@@ -1,6 +1,6 @@
 # q32 source-side translated-cycler graft
 
-**Status:** Lean-verified partial rooted frontier; not a BB(6) solution or a complete root cover.
+**Status:** Lean-verified 32-cylinder source-side roster and exact root-residual relation; not a BB(6) solution or a complete canonical-parent cover.
 
 ## Exact source obligation
 
@@ -14,9 +14,9 @@ Thus the source checkpoint records three undefined transitions and introduced-st
 
 The Lean table in `im-results/agent50-weighted-tnf-pilot/TranslatedCycler.lean` is `sampleMachine`; its partial cylinder is `samplePartial`. The theorem `sampleSourceEncoding` proves that the Lean `encodeTable` output is exactly the source string above. No source proof term is imported: `sampleCyclerCheck` recomputes the finite witness with the Lean translated-cycler checker.
 
-## Root path and certificate
+## Root path and first certificate
 
-`Q32SourceSideGraft.lean` reconstructs the source table from the first-one root through these eight first-hole refinements:
+`Q32SourceSideGraft.lean` reconstructs the sample source table from the first-one root through these eight first-hole refinements:
 
 | Step count | Queried slot | Assigned transition |
 |---:|---|---|
@@ -41,31 +41,65 @@ The certificate is consumed by `buildFrontier` to create `sampleFrontier : Roote
 The exact source cylinder is not an open residual:
 `sampleSourceCylinder_removed` proves that its full path address and packed table are absent from `packResiduals (residuals sampleFrontier)`. The frontier retains 184 off-path residuals (23 siblings at each of the eight splits), confirmed by `sampleFrontier_residual_count`. This is a partial frontier, not a claim that the other branches are closed.
 
-## Verification
+## All 32 original SWside certificates in Lean
 
-- Workflow: `.github/workflows/agent13-coverage.yml`, target `weighted-tnf-pilot`.
-- Run: [45601488176](https://github.com/FlareZ123/bb6/actions/runs/45601488176)
-- Head: `7a3c51f54eb0f29db8ad385e2f10f4866df8b791`
-- Result: overall workflow success; step **Check complete authentic weighted TNF pilot** succeeded at 2026-11-25 11:08:51 UTC.
+`Q32SideLeafRoster.lean` translates all 32 `SWside` entries from `Agent47SourceChunk2.v` into Lean `WeightedTNFCertificate 144` leaves. It preserves, for every entry:
 
-That CI step compiles `CryptidSiblings.lean`, `RootFrontier.lean`, `TranslatedCycler.lean`, and this graft file. Its explicit guard rejects `sorryAx` and `native_decide`; the successful step therefore accepts the displayed declarations under that audit.
+- the exact partial-table string and a proof that `encodeTable` returns that string;
+- source orientation (`L/R`), entry, period, and budget;
+- source queue index and (holes, introduced-state-cut) metadata;
+- the finite translated-cycler check, recomputed in Lean rather than importing the Coq proof.
 
-## Relationship to the remaining q32 work
-
-The source cross-match identifies 32 literal `SWside` parents among the 84 q32 checkpoint entries, at indices:
+The exact q32 queue indices are:
 
 `0, 1, 2, 3, 4, 6, 9, 10, 11, 12, 13, 25, 27, 29, 30, 31, 32, 33, 38, 40, 42, 44, 48, 53, 55, 57, 59, 61, 63, 65, 73, 78`.
 
-This file bridges only index 0 into Lean. The other 31 SWside cylinders are still source-Coq-only in this bridge.
+The module includes the 84-row q32 queue export and proves:
 
-Separate collective progress:
-- Agent 44's run [45599143180](https://github.com/FlareZ123/bb6/actions/runs/45599143180) passed the q32 queue-slice audit: 10 of the 50 residual queue entries were complete and two more were represented by 14 one-hole residual leaves.
-- Agent 44's run [45600433773](https://github.com/FlareZ123/bb6/actions/runs/45600433773) passed **Close all fourteen q32 one-hole residuals with symbolic sweeps**.
-- The exact 84-node q32 queue is still not a closed proof of the canonical parent. Thirty-eight untouched queue entries remain in the current q32 slice accounting; do not silently treat the 32 source-side leaves or the 10+2 new queue certificates as a complete parent cover.
+- `q32SideData_sourceExact`: all 32 source-side records match the exact queue table and metadata at their stated indices;
+- `q32SideLeaves_data_exact`: the certificate roster has exactly the source witness metadata;
+- `q32SideLeaves_sound`: every completion of each of the 32 cylinders has weighted bound 144.
+
+### Exact connection to the existing root frontier
+
+The q32 parent is the depth-two branch `B0=1RC, C0=0LA` from the first-one root:
+
+```
+1RB---_1RC---_0LA---_------_------_------
+```
+
+The module proves:
+
+- `q32Parent_is_rootFrontier_residual`: the packed parent table at address `[1RC, 0LA]` is an exact open residual of Agent 50's existing `rootFrontier`;
+- `q32SideLeaves_refine_parent`: a finite Boolean check over all 12 slots confirms that all 32 source-side cylinders fix every transition fixed by this parent;
+- `q32SideLeaves_refine_parent_sound`: the Boolean refinement check implies the corresponding proposition `Refines leaf.cylinder q32Parent`.
+
+This is an exact root-fixing subsumption relation, not merely a string similarity. The 32 certificates establish weighted bound 144 on these subcylinders of the existing root residual. They do **not** close the entire parent residual, and because the original `rootFrontier` is at bound 84, these bound-144 leaves do not by themselves close that particular bound-84 frontier.
+
+## Verification
+
+The workflow target is `weighted-tnf-pilot` in `.github/workflows/agent13-coverage.yml`. Its explicit axiom guard rejects `sorryAx` and `native_decide`.
+
+| Run | Result | Scope |
+|---|---|---|
+| [45601488176](https://github.com/FlareZ123/bb6/actions/runs/45601488176) | Success | Sample source path, certificate, and rooted frontier |
+| [45602794545](https://github.com/FlareZ123/bb6/actions/runs/45602794545) | Success | All 32 source-side certificates and exact queue-data mapping |
+| [45603623804](https://github.com/FlareZ123/bb6/actions/runs/45603623804) | Success | Exact q32-parent residual membership and all 32 refinement checks |
+
+The latest run's **Check complete authentic weighted TNF pilot** step succeeded at 2026-11-25 11:22:58 UTC. The compiled closure includes `CryptidSiblings.lean`, `RootFrontier.lean`, `TranslatedCycler.lean`, `Q32SourceSideGraft.lean`, and `Q32SideLeafRoster.lean`.
+
+## Relationship to the remaining q32 work
+
+Separate collective progress from Agent 44:
+
+- Run [45599143180](https://github.com/FlareZ123/bb6/actions/runs/45599143180) passed the q32 queue-slice audit: 10 of the 50 residual queue entries were complete and two more were represented by 14 one-hole residual leaves.
+- Run [45600433773](https://github.com/FlareZ123/bb6/actions/runs/45600433773) passed **Close all fourteen q32 one-hole residuals with symbolic sweeps**.
+
+The current q32 accounting still has 38 untouched queue entries. The 32 Lean-verified SWside cylinders, the two original source sweep witnesses, and Agent 44's newer 10+2 slice/sweep closures must be combined with the exact queue complement before claiming the canonical parent is closed. Do not silently treat this roster as a complete parent cover.
 
 ## Next useful work
 
-1. Generate Lean `sourceSideLeaf` certificates for the remaining 31 SWside tables, retaining each source witness's orientation, entry, period, and budget.
-2. Prove the exact source-table encoding and q32 queue index for every generated leaf, then expose the 32 leaves through one reusable score-144/score-84 consumer.
-3. Coordinate with Agent 44 to combine those leaves with the accepted q32 slice/sweep certificates while keeping the 38 untouched queue entries explicit.
+1. Integrate the 32 Lean SWside leaves with Agent 44's accepted q32 slice/sweep certificates in one source-queue closure manifest.
+2. Keep the 38 untouched queue entries explicit and prioritize closing them or proving a universal complement.
+3. Decide whether to lift the root frontier to bound 144 and consume these subcylinders there, rather than conflating the existing bound-84 frontier with bound-144 certificates.
 4. Do not promote this pilot to `results/` or claim a BB(6) upper bound until the remaining root obligations are closed.
