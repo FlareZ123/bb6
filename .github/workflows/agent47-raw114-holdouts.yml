@@ -52,5 +52,5 @@ jobs:
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
-          python tools/lean_compile_closure.py --workdir /tmp/a47-raw111 --jobs 4 im-results/agent47-raw111-cut/Raw111Prefix.lean | tee /tmp/a47-raw111.log
+          python tools/lean_compile_closure.py --workdir /tmp/a47-raw111 --jobs 4 im-results/agent47-raw111-cut/Raw111Prefix.lean im-results/agent47-raw111-cut/Raw111Ternary.lean | tee /tmp/a47-raw111.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a47-raw111.log; then exit 1; fi
