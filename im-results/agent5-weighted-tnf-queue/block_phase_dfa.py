@@ -4,7 +4,7 @@
 The output is an untrusted witness for the original BusyCoq MITMDFA decider.
 Only an original-source Coq success establishes a source certificate.
 """
-from collections import deque
+from collections import defaultdict, deque
 from pathlib import Path
 from tempfile import TemporaryDirectory
 import argparse
@@ -126,7 +126,98 @@ def primitive_closure(table, left, right, limit=2000000):
     return len(seen)
 
 
+def discovered_closure(table, push, limit=2000000):
+    """The source CTL-style closure discovers only actually pushed edges."""
+    code = table.replace("_", "")
+    moves = [None if t == "---" else (int(t[0]), t[1] == "R", ord(t[2]) - 65)
+             for t in (code[i:i+3] for i in range(0, 36, 3))]
+    edges = [defaultdict(set), defaultdict(set)]
+    waiting = [defaultdict(list), defaultdict(list)]
+    seen = {(0, 0, 0, 0)}
+    pending = deque(seen)
+    for side in (0, 1):
+        assert push(side, 0, 0) == 0
+        edges[side][0].add((0, 0))
+
+    def add(st):
+        if st not in seen:
+            if len(seen) >= limit:
+                raise RuntimeError("discovered closure limit")
+            seen.add(st)
+            pending.append(st)
+
+    def pop(st, b, pred):
+        q, a, l, r = st
+        w, d, q2 = moves[2*q + a]
+        if d:
+            add((q2, b, push(0, l, w), pred))
+        else:
+            add((q2, b, pred, push(1, r, w)))
+
+    while pending:
+        st = pending.popleft()
+        q, a, l, r = st
+        mv = moves[2*q + a]
+        if mv is None:
+            raise RuntimeError("discovered abstract halt")
+        w, d, q2 = mv
+        side = int(d)
+        old = l if d else r
+        dest = push(1-side, old, w)
+        edge = w, old
+        if edge not in edges[1-side][dest]:
+            edges[1-side][dest].add(edge)
+            for waiter in waiting[1-side][dest]:
+                pop(waiter, *edge)
+        target = r if d else l
+        waiting[side][target].append(st)
+        for b, pred in edges[side][target]:
+            pop(st, b, pred)
+    return len(seen), edges
+
+
+def run_residue_3500():
+    table = "1RB0RC_1LC1RD_---1RB_0LD0RE_1LE0LF_1RA1LF"
+    # Four nearest runs, each length modulo 9. A zero-only stack is
+    # the empty summary. Retain the run even when its residue is zero.
+    states = [[()], [()]]
+    ids = [{(): 0}, {(): 0}]
+    delta = [{}, {}]
+
+    def push(side, q, b):
+        key = q, b
+        if key in delta[side]:
+            return delta[side][key]
+        st = states[side][q]
+        if not st and b == 0:
+            nxt = ()
+        elif st and st[0][0] == b:
+            nxt = ((b, (st[0][1] + 1) % 9),) + st[1:]
+        else:
+            nxt = ((b, 1),) + st[:3]
+        if nxt not in ids[side]:
+            ids[side][nxt] = len(states[side])
+            states[side].append(nxt)
+        dest = ids[side][nxt]
+        delta[side][key] = dest
+        return dest
+
+    count, _ = discovered_closure(table, push)
+    left, right = [
+        [[d.get((q, b), 0) for b in (0, 1)] for q in range(len(s))]
+        for d, s in zip(delta, states)
+    ]
+    # Recompute against the actual finite tables, independent of the
+    # interned run summaries. Unused push rows do not enter the invariant.
+    check_count, _ = discovered_closure(table, lambda side, q, b: (left, right)[side][q][b])
+    assert count == check_count
+    print(f"3500: binary DFAs {len(left)} x {len(right)}, closure {count}", flush=True)
+    return dict(label="3500", table=table, L=left, R=right, reachable=count)
+
+
 def synthesize(label):
+    if label == "3500":
+        return run_residue_3500()
     table, width, cap, mod, runs, flip = CASES[label]
     with TemporaryDirectory() as folder:
         cert = generate(table, Path(folder), width=width, cap=cap, mod=mod,
@@ -167,7 +258,7 @@ def emit_coq(rows, path):
 
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument("labels", nargs="+", choices=CASES)
+    p.add_argument("labels", nargs="+", choices=[*CASES, '3500'])
     p.add_argument("--output", required=True, type=Path)
     args = p.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
