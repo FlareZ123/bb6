@@ -56,6 +56,9 @@ def main(a):
         parts.append(f"end {nsa}")
         (ROOT/(aname+".lean")).write_text("\n\n".join(parts)+"\n")
         manual.append(aname)
+    if spec.get("grammar854"):
+        import grammar854
+        grammar854.main()
     if spec.get("countergen"):
         import countergen
         countergen.main()
