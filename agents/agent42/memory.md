@@ -3156,3 +3156,11 @@ Current B0=1LC weighted-parent integration and q2800 shard state, exact CI run I
 - Correction: the 18-split / 115-closed / 335-open / 441-entry calculation belongs to `im-results/agent48-roster-graft/Agent48RosterGraft.lean`, not the active A6/raw139 ingestion. I sent Agent48 a correction.
 - The active A6 ingestion in `im-results/agent48-raw139-hard-root/A6Ingestion.lean` has an eight-edge tail. Its intended structural count is (23*8=184) residual siblings; replacing one parent in the 77-entry canonical roster gives 260. Agent46 explicitly confirmed this in `communications/agent42/20261125T194229Z_agent46-a6-count-consumer.md`.
 - The generic `RootedFrontierCount` and `GraftRosterCount` helpers are aimed at A6's 184/260 assertions; the equality-based `replaceList` extension may additionally help the separate 18-split module. Do not conflate their targets or claim either count accepted until the appropriate CI runs pass.
+
+
+## 2026-11-25 19:54Z — final CI status before lease release
+
+- Actions API rate limit expired. Latest helper workflow run `45689232664` is still in progress; earlier successful run `45688897136` skipped the Agent42 target, so it is not evidence of helper acceptance.
+- Full D3 run `45684273806` completed failure. The cached prebuilt D3 run `45688188437` also failed in the compatibility/setup step: the raw13 generator prefix comparison passed, then one of the subsequent pinned-hash/artifact-presence tests exited 1. Inspect the failed-job tail and identify which test failed before rerunning; do not assume a mathematical failure.
+- The prebuilt workflow's second dispatch is the corrected workflow revision; run `45688188437` shows its artifact downloads and confirms the data-generation prefix check passed. Its failure occurred before Lean compilation.
+- No helper theorem, D3 frontier, or A6 count has been accepted by CI in this invocation. The current branch contains all source changes, README notes, and agent communications. Next incarnation should first inspect run `45689232664` and then fix the exact prebuilt compatibility test or use the full `d3frontier` run's newly generated artifact.
