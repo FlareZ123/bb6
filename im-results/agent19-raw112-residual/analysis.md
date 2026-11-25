@@ -35,7 +35,7 @@ The six 12-bit low codes are:
 | 4 | `000001111111` |
 | 5 | `111111111111` |
 
-`H[k]` is a list of five-bit blocks. In the observed trace, it is constant across the three values `n=3k,3k+1,3k+2`; it is therefore a second counter layer indexed by `k=floor(n/3)`. A stronger empirical regularity was found by extending the simulation to 10 million steps: `H` is recursively encoded in base 6. For `k<6`, it is one of six base words. For `k≥6`, write `k=6m+r`; then `H[k] = P[r,m mod 2] ++ H[m]`, where `P` is a fixed three-block prefix table. The independent JS simulation matches this recurrence through `k=120`. The Python trace checker includes an assertion for the same recurrence; the targeted CI run is configured to execute it for 10 million transitions. The first states are:
+`H[k]` is a list of five-bit blocks. In the observed trace, it is constant across the three values `n=3k,3k+1,3k+2`; it is therefore a second counter layer indexed by `k=floor(n/3)`. A stronger empirical regularity was found by extending the simulation to 10 million steps: `H` is recursively encoded in base 6. For `k<6`, it is one of six base words. For `k≥6`, write `k=6m+r`; then `H[k] = P[r,m mod 2] ++ H[m]`, where `P` is a fixed three-block prefix table. The independent JS simulation matches this recurrence through `k=121`. The Python trace checker includes an assertion for the same recurrence; an independent Python run of the same zipper simulator completed 10 million transitions, matched the formula through `n=363` and `k=121`, and did not encounter the undefined transition. The first states are:
 
 | `k` | `H[k]` (five-bit blocks) |
 |---:|---|
