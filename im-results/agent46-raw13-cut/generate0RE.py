@@ -16,6 +16,9 @@ SPEC = {
     "0RC": ("1RB1LC1RC0LD1LA0RB0RC---------------",4,5,10,7,7014,
             Counter(split=287,halt=287,cycle=4670,state=396,last=1340,ngram=191,pump0RC=1),
             ["Agent46Raw13Pump0RC"]),
+    "0LC": ("1RB1LC1RC0LD1LA0RB0LC---------------",4,5,10,7,7014,
+            Counter(split=261,halt=261,cycle=4118,state=336,last=1314,ngram=227,pump0LC=5),
+            ["Agent46Raw13Pump0LC"]),
     "0RD": ("1RB1LC1RC0LD1LA0RB0RD---------------",4,5,8,7,7014,
             Counter(split=158,halt=158,cycle=2800,state=176,last=630,ngram=20,pump0RD=5),
             ["Agent46Raw13Pump0RD"])

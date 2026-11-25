@@ -245,6 +245,9 @@ def emit(t):
     if tag == "pump1RE2":
         n = "BB6Coverage.Agent31Pump.Raw13Pump1RE2"
         return f".closed (.proven {n}.table {n}.never)"
+    if tag == "pump0LC":
+        n = "BB6Coverage.Agent31Pump.Raw13Pump0LC"
+        return f".closed (.proven ({n}.table {v[0]}) ({n}.never {v[0]} (by decide)))"
     if tag == "pump0RD":
         n = "BB6Coverage.Agent31Pump.Raw13Pump0RD"
         return f".closed (.proven ({n}.table {v[0]}) ({n}.never {v[0]} (by decide)))"

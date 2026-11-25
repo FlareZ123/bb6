@@ -80,6 +80,22 @@ The new [Agent46CarryPumping.lean](Agent46CarryPumping.lean) proves a generic ex
 
 For variants 3,4 the family is E,(01)^(n+1) 00 1^n,[]. The five exact unbounded recurrence proofs and the complete parent with empty complement at weighted bound 7014 passed the original-source [CI 45573192648](https://github.com/FlareZ123/bb6/actions/runs/45573192648) at pinned revision `fb886531bb3364f6cb6c3c0af5806be8dcdb0231`.
 
+## D0=0LC standalone five-hole parent (candidate)
+
+For `1RB1LC1RC0LD1LA0RB0LC---------------`, the first query is D1 at step 10. The candidate tree has 261 splits, 261 halt branches, 4118 translated cycles, 336 state closures, 1314 last-hole bounds, 227 n-gram certificates and five pumping leaves. The proposed weighted bound is 7014, with empty complement; original-source acceptance is pending. The parent covers 25^5 literal completions, or 3*25^5 in the raw13 mass accounting.
+
+The five difficult leaves have exact growth maps in [Agent46Raw13Pump0LC.lean](Agent46Raw13Pump0LC.lean). All families below have state A and empty left zipper, with the listed right word:
+
+| Variant | Right word | Parameter update | Primitive cost | Blank seed |
+| --- | --- | --- | --- | --- |
+| 0 | 1^(3(n+2))0 | n+1 | 24n+63 | n=2, t=166 |
+| 1 | 1^(2(n+2)) | n+2 | 18n+23 | n=2, t=41 |
+| 2 | 111(00111)^(2n+1) | n+1 | 56n+82 | n=0, t=26 |
+| 3 | 1^(2(n+2)) | n+2 | 4n+25 | n=1, t=20 |
+| 4 | 1^(6n+10) | n+1 | 72n+106 | n=0, t=66 |
+
+Variant 2 uses two exact phases: F(k)=111(00111)^k and G(k)=F(k)001001, with F(k) to G(k) in 14k+22 steps and G(k) to F(k+2) in 14k+32 steps, k>=1. This replaces the width-8 sparse n-gram candidate with an arbitrary-width sweep proof. All five growth identities and blank seeds were locally kernel-checked under Lean 4.36.0-rc2 against exact copied sweep semantics. The actual repository import closure and parent audit require the manual `zeroLC` target. The global graft remains unchanged pending acceptance.
+
 ## Exact complement and consuming theorem
 
 The updated candidate census has 353 split queries, 2708 cycles, 948 state masks, 999 last-hole leaves, 15 initial and 826 selected dense n-gram leaves, one sparse n-gram leaf, three original and six additional pumping leaves, and 1719 unresolved canonical leaves after replacing D1=0RE and D0=0RC,0RD by their standalone bounded parent certificates. The raw13 parent has 25^9=3814697265625 literal completions; the computed retained mass is 1725351562650. Before this incarnation's two new four-hole candidates the cut retained 1724 leaves and mass 1725417187650. The three four-hole and two five-hole closures now add an exact candidate mass removal of 3·6·25^4 + 2·3·25^5 relative to the preceding cut. The 0RE,0RC,0RD parent theorems are independently source-accepted; the new global graft requires its own source check. The global graft is 78−1+1719=1796 quotient obligations, including the exact surviving complement. The earlier D1=0LE-only revision was cancelled in [CI 45557634300](https://github.com/FlareZ123/bb6/actions/runs/45557634300).
