@@ -79,16 +79,24 @@ theorem fOneLarge (n : Nat) (R : List Bool) :
   rw [one_prefix n (false::R),one_prefix n (true::false::R)] at H
   exact H
 
+theorem zero_prefix (n : Nat) (R : List Bool) :
+    false::(rep Z n++R) = rep Z n++false::R := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+    simp only [rep,List.append_assoc,List.cons_append]
+    exact congrArg (fun w => false::false::false::w) ih
+
 theorem fStopEntry (n : Nat) :
     run0 table 3 (f false n [true]) =
       some ⟨3,rep Z n++(Z++Z++[true,true]),[]⟩ := by
-  have hz : Z++(rep Z n++(Z++[true,true])) =
-      rep Z n++(Z++(Z++[true,true])) := by
-    simpa only [List.append_assoc] using congrArg (· ++ (Z++[true,true])) (rep_snoc Z n).symm
   have h : run0 table 3 (f false n [true]) =
-      some ⟨3,Z++(rep Z n++(Z++[true,true])),[]⟩ := by rfl
+      some ⟨3,Z++(false::(rep Z n++S)),[]⟩ := by rfl
+  rw [zero_prefix n S] at h
+  have hz : Z++(rep Z n++false::S) = rep Z n++(Z++false::S) := by
+    simpa only [List.append_assoc] using congrArg (· ++ (false::S)) (rep_snoc Z n).symm
   rw [hz] at h
-  simpa only [List.append_assoc] using h
+  exact h
 theorem dStopExit (R : List Bool) :
     run0 table 9 ⟨3,Z++Z++[true,true],R⟩ = some (f true 0 (O++R)) := by rfl
 theorem fStop (n : Nat) :
