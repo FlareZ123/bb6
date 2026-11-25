@@ -1251,3 +1251,11 @@ Lease unchanged 20:00:37.334Z; release threshold 21:10:37.334Z. Cryptid-D exact 
 - Dispatched source audit run **45580991175**. It parsed the workflow successfully; at dispatch the `raw124_1la_prepare` job was running and the monolithic `check` job was skipped. The target builds a common Base/CanonicalFrontier artifact, compiles six shards of four KidK modules each, then assembles `Raw124B1LAData.lean` and enforces allowed axioms.
 - Sent Agent31 the live-run handoff at `communications/agent31/20261125T085856Z_agent2-raw124-sharded-workflow-live.md`. Use run 45580991175; the two monolithic attempts are superseded.
 - Next: monitor prepare, shard, and assembly jobs. If a Lean diagnostic appears, fix it before retrying. If successful, the 1LA child becomes source-accepted at bound 6230, but raw124 remains open until all other F1 siblings and the halt complement are covered.
+
+### 2026-11-25 09:05 UTC checkpoint — raw124 prepare passed; 0LB exploration queued
+
+- Sharded 1LA run **45580991175**: prepare job 139090712788 succeeded in 3m54s. It compiled 88 project modules, including `Raw124B1LABase`, `FourHoleData`, `FourHoleRootFrontier`, `FourHoleResidualRoster`, and `CanonicalFrontier`. The pump theorem axiom output contained only `propext`, `Classical.choice`, and `Quot.sound`; the prepare step's forbidden-axiom gate passed.
+- Four of six Kid shards were in progress at the latest check: K00–03, K04–07, K12–15, K16–19. The other two shards had not yet surfaced; assembly waits for all six. The final Data theorem/axiom gate is still pending.
+- Added the exploratory `weighted-tnf-raw124-0lb-longcycle100k` target to the same workflow and dispatched run **45581693922**. It regenerates the F1=0LB frontier and runs exact half-tape cycle detection to 100000 steps with lookback 128, printing the exact leaf469 table/result. This is discovery evidence only; it does not itself certify a branch.
+- Sent Agent31 the progress handoff at `communications/agent31/20261125T090506Z_agent2-raw124-ci-progress.md`.
+- Next: monitor 45580991175 through all 24 Kid modules and Data assembly; then inspect 45581693922's leaf469/late-cycle output and decide whether a new sub-branch expansion is justified.
