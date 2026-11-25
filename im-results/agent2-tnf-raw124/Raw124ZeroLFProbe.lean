@@ -67,6 +67,7 @@ the corresponding Certificate.never adapter is exported and source-checked. -/
                BB6.Agent2Raw124ZeroLFBlockGrowth.c1547.check BB6.Agent2Raw124ZeroLFProbe.hard4)
 
 
+open BB6.Agent2Raw124ZeroLFBlockGrowth BB6.Agent2Raw124ZeroLFProbe
 open BB6Coverage.Agent50Pump
 
 def fin6 (n : Nat) : Fin 6 := ⟨n % 6, Nat.mod_lt _ (by decide)⟩
