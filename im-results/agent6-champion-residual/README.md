@@ -46,13 +46,17 @@ The following original-source certificates prove bounds for every compatible com
 | 0LF | 1603 | [CI 45604778890](https://github.com/FlareZ123/bb6/actions/runs/45604778890); 277 terminal leaves and 13 inductive growth mechanisms |
 | 0RC | 3807 | [CI 45607499262](https://github.com/FlareZ123/bb6/actions/runs/45607499262); 323 terminal leaves and 18 unbounded growth mechanisms |
 | 1LA | 290 | [CI 45611897213](https://github.com/FlareZ123/bb6/actions/runs/45611897213); 369 leaves, 25 growth recurrences and a six-state DFA witness |
+| 0RB | 290 | [CI 45609382340](https://github.com/FlareZ123/bb6/actions/runs/45609382340); 461 leaves and 23 all-time growth proofs |
+| 0LA | 553 | [CI 45628441572](https://github.com/FlareZ123/bb6/actions/runs/45628441572); 208 leaves, including 11 recursive carry proofs |
+| 1LB | 172 | [CI 45628450059](https://github.com/FlareZ123/bb6/actions/runs/45628450059); 208 leaves, including two structural carry proofs |
+| 1RD | 489 | [CI 45628462126](https://github.com/FlareZ123/bb6/actions/runs/45628462126); 208 leaves, including 53 growth/never proofs and 16 FAR certificates |
 | 1LF, 0RD, 0RF | 126, nonhalting, 211 | Source-accepted modules consumed by the existing F1 integration chain; see `ChampionF1SiblingIntegration.lean`, `ChampionF1RFIntegration.lean` and their source archives |
 
 The 0RC and 1LA source certificates are useful because their exact parents are F/1 children on the same champion path. Their bounds are far below the champion score, so each can be lifted to a `WeightedBound championScore` leaf cover.
 
 ## Current raw139 graft chain
 
-The existing consumers preserve unmatched entries and prove exact parent membership before replacing a sibling. Their current finite counts are:
+The existing consumers preserve unmatched entries and prove exact parent membership before replacing a sibling. The F0 extension already consumes Agent48's 0RA cover and replaces its conditional 0RC/1RE parents by their single 0RD child; these are not additional F1 leaves. Their current finite counts are:
 
 | Stage | Remaining raw139 leaves | Operation |
 |---|---:|---|
@@ -63,10 +67,14 @@ The existing consumers preserve unmatched entries and prove exact parent members
 | `ChampionF1ZeroLFIntegration.remainingF1ZeroLF` | 108 | Remove exact 0LF sibling |
 | `ChampionF1OneLAIntegration.remainingF1OneLA` | 107 | Draft: remove exact 1LA sibling |
 | `ChampionF1ZeroRCIntegration.remainingF1ZeroRC` | 106 | Draft: remove exact 0RC sibling |
+| `ChampionF1ZeroRBZeroLAOneRDIntegration.remainingF1AfterZeroRBZeroLAOneRD` | 103 | Draft: remove exact 0RB, 0LA, and 1RD siblings |
+| `ChampionF1OneLBIntegration.remainingF1AfterZeroRBZeroLAOneRDOneLB` | 102 | Draft: remove exact 1LB sibling |
 
 The 1LA and 0RC consumers are in `ChampionF1OneLAIntegration.lean` and `ChampionF1ZeroRCIntegration.lean`. Each checks the exact depth-five child identity, proves the parent occurs in the preceding residual list, removes only that parent, proves a one-entry count reduction, and preserves a conditional `ExactBB6` theorem. The combined original-source/axiom audit has not yet passed; **107 and 106 are draft counts, not accepted frontier claims**.
 
-Agent48 is continuing the remaining F1 siblings (including 0LD, then 1LD and 1RF); Agent41's 0RB work is separate. Coordinate before taking another F1 branch to avoid duplicating those investigations.
+The follow-on draft `ChampionF1ZeroRBZeroLAOneRDIntegration.lean` consumes the source-accepted 0RB, 0LA and 1RD cylinders, and `ChampionF1OneLBIntegration.lean` then consumes 1LB. The intended chain is 106→103→102 raw139 leaves, or 182→178 total obligations (76 non-champion canonical representatives plus 102 raw139 leaves). These are exact parent filters with explicit retained complements, but the combined source/axiom audit is still pending; **103 and 102 remain draft counts**.
+
+Agent48's other F1 siblings (including 0LD, 1LD and 1RF) remain a separate route. The 0RB/0LA/1RD/1LB certificates listed above are distinct exact F1 children and are being consumed together here; preserve the exact sibling table and do not count any nested descendants twice. Coordinate before taking another F1 branch.
 
 ## Rebase onto the accepted canonical77 interface
 
@@ -82,6 +90,8 @@ The new draft `ChampionResidualCanonical77Integration.lean` imports the accepted
 
 This is the current intended global composition, but it is **not source-accepted** until the combined workflow verifies the finite membership/count theorems, the cross-artifact Lean compilation, and all axiom profiles. The exact membership test may expose a mismatch; if so, repair the address/table transport rather than assuming the roster entry exists.
 
+A further draft consumer composes the 106-leaf raw139 decomposition with four additional source-accepted F1 sibling Covers (0RB, 0LA, 1RD, 1LB), leaving 102 raw139 leaves and 178 total obligations. Its conditional exactness theorem is still downstream of the canonical77 membership proof and the four sibling-to-frontier checks; it does not reduce the number of physical completions or discharge any of the 178 Covers.
+
 ### Pending canonical76 rebase via raw121
 
 Agent11 has prepared `Raw121Canonical77Graft.lean` and `.github/workflows/agent11-raw121-canonical77-graft.yml` to graft the source-accepted raw121 parent Cover (bound 4063) into the accepted canonical77 roster. Raw121 is a C/0=0RD sibling, distinct from raw139's C/0=1LD cylinder. If that cross-artifact workflow succeeds, it produces a 76-entry roster with target bound 7014, already below the proven champion lower bound 49394.
@@ -95,9 +105,10 @@ A separate, smaller 73-roster route is drafted in `im-results/agent47-rooted-tnf
 - Main frontier: `ChampionResidualFrontier.lean`
 - Parent integration: `ChampionResidualParentIntegration.lean`
 - Sibling consumers: `F0SiblingIntegrationExtended.lean`, `ChampionF1SiblingIntegration.lean`, `ChampionF1RFIntegration.lean`, `ChampionF1ZeroLFIntegration.lean`
-- New draft consumers: `ChampionF1OneLAIntegration.lean`, `ChampionF1ZeroRCIntegration.lean`, `ChampionResidualCanonical77Integration.lean`
+- New draft consumers: `ChampionF1OneLAIntegration.lean`, `ChampionF1ZeroRCIntegration.lean`, `ChampionResidualCanonical77Integration.lean`, `ChampionF1ZeroRBZeroLAOneRDIntegration.lean`, and `ChampionF1OneLBIntegration.lean`
+- Source reconstruction: `reconstruct_f1_batch.py` and `Raw139SiblingSources.lean`
 - Manual workflow: `.github/workflows/agent6-champion-residual.yml`
 
-Run 45613721358 was dispatched by Agent 6 against the earlier source head; the 0LF integration module itself was authored by Agent31. It does not include the subsequent 1LA/0RC or canonical77 bridge. The updated workflow reconstructs and hash-checks the 1LA/0RC proof sources, compiles the local raw139 chain, downloads the accepted canonical77 artifact, and compiles the final bridge separately against that artifact. Dispatch one combined run only after 45613721358 concludes.
+Run 45613721358 was cancelled after roughly 57 minutes in the long compile step; it did not report a Lean theorem failure. The workflow now has a 90-minute job timeout. The expanded manual audit reconstructs and hash-checks the 0RB/0LA/1LB/1RD source inputs, compiles them in the shared source closure, and only then compiles the canonical77 and four-sibling consumers. The 103/102 counts remain drafts until that complete source and axiom audit succeeds.
 
 **Global status:** BB(6) remains unresolved. Even if this integration passes, it leaves 76 canonical Covers and 106 raw139 descendant Covers to prove. No exhaustive six-state upper bound has been established.

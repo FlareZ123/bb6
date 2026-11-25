@@ -85,6 +85,8 @@ jobs:
           base64 -d "$base/Agent41F1ZeroRCProofs.tar.xz.b64" > "$work/proofs.tar.xz"
           printf '%s  %s\n' e714f0772d6e7df0d64e3da63153c8450e39abead67caf8fb5b61d1241e5dbd8 "$work/proofs.tar.xz" | sha256sum -c -
           tar -xJf "$work/proofs.tar.xz" -C "$work/imports"
+      - name: Reconstruct additional source-accepted F1 sibling modules
+        run: python3 im-results/agent6-champion-residual/reconstruct_f1_batch.py
       - name: Compile the champion frontier and depth-five F1 sibling refinement
         run: |
           set -euo pipefail
@@ -99,9 +101,11 @@ jobs:
             im-results/agent48-champion-root/ChampionF1ZeroLFIntegration.lean \
             im-results/agent6-champion-residual/ChampionF1OneLAIntegration.lean \
             im-results/agent6-champion-residual/ChampionF1ZeroRCIntegration.lean \
+            im-results/agent6-champion-residual/Raw139SiblingSources.lean \
             --source-root "$PWD/.tmp/a41-f1-zeroLF/imports" \
             --source-root "$PWD/.tmp/a48-f1-oneLA/imports" \
             --source-root "$PWD/.tmp/a41-f1-zeroRC/imports" \
+            --source-root "$PWD/.tmp/a14-f1-batch/imports" \
             --precompiled-manifest "$PWD/.tmp/a41-f1-zeroLF/manifest.json" \
             --precompiled-dir "$PWD/.tmp/a41-f1-zeroLF/build" \
             --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean \
@@ -188,6 +192,14 @@ jobs:
               "BB6.Agent41SymSweep.run_sound",
               "BB6.Agent41F1ZeroRC.checked",
               "BB6.Agent41F1ZeroRC.all_completions_weighted",
+              "BB6.Agent41F1ZeroRB.checked",
+              "BB6.Agent41F1ZeroRB.all_completions_weighted",
+              "BB6.Agent14F1OneLA.checked",
+              "BB6.Agent14F1OneLA.all_completions_weighted",
+              "BB6.Agent14F1OneLB.checked",
+              "BB6.Agent14F1OneLB.all_completions_weighted",
+              "BB6.Agent14F1OneRD.checked",
+              "BB6.Agent14F1OneRD.all_completions_weighted",
               "BB6.Agent6F1ZeroRCIntegration.zeroRC_is_depth5_sibling",
               "BB6.Agent6F1ZeroRCIntegration.cover_zeroRC",
               "BB6.Agent6F1ZeroRCIntegration.zeroRC_parent_present",
@@ -306,6 +318,65 @@ jobs:
               if not used <= allowed:
                   raise SystemExit(f"nonstandard axioms: {name}: {used - allowed}")
               print(name, sorted(used))
+          PY
+
+      - name: Compile the 0RB/0LA/1RD and 1LB raw139 F1 consumers
+        if: ${{ inputs.raw121_graft_run_id == '' }}
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="/tmp/a47-canonical:/tmp/a6-champion-residual/build${LEAN_PATH:+:$LEAN_PATH}"
+          lean -o /tmp/a6-champion-residual/build/ChampionF1ZeroRBZeroLAOneRDIntegration.olean \
+            im-results/agent41-raw139-f1-zeroLF/ChampionF1ZeroRBZeroLAOneRDIntegration.lean | tee /tmp/a6-f1-three.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a6-f1-three.log; then exit 1; fi
+          lean -o /tmp/a6-champion-residual/build/ChampionF1OneLBIntegration.olean \
+            im-results/agent6-champion-residual/ChampionF1OneLBIntegration.lean | tee /tmp/a6-f1-oneLB.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a6-f1-oneLB.log; then exit 1; fi
+          python3 - /tmp/a6-f1-three.log /tmp/a6-f1-oneLB.log <<'PY'
+          import pathlib, re, sys
+          allowed = {"propext", "Classical.choice", "Quot.sound"}
+          groups = {
+              sys.argv[1]: (
+                  "BB6.Agent41F1ZeroRBZeroLAOneRDIntegration.zeroRB_is_depth5_sibling",
+                  "BB6.Agent41F1ZeroRBZeroLAOneRDIntegration.zeroLA_is_depth5_sibling",
+                  "BB6.Agent41F1ZeroRBZeroLAOneRDIntegration.oneRD_is_depth5_sibling",
+                  "BB6.Agent41F1ZeroRBZeroLAOneRDIntegration.cover_zeroRB",
+                  "BB6.Agent41F1ZeroRBZeroLAOneRDIntegration.cover_zeroLA",
+                  "BB6.Agent41F1ZeroRBZeroLAOneRDIntegration.cover_oneRD",
+                  "BB6.Agent41F1ZeroRBZeroLAOneRDIntegration.zeroRB_parent_present",
+                  "BB6.Agent41F1ZeroRBZeroLAOneRDIntegration.zeroLA_parent_present",
+                  "BB6.Agent41F1ZeroRBZeroLAOneRDIntegration.oneRD_parent_present",
+                  "BB6.Agent41F1ZeroRBZeroLAOneRDIntegration.remainingF1AfterZeroRBZeroLAOneRD_count",
+                  "BB6.Agent41F1ZeroRBZeroLAOneRDIntegration.removedThreeParents_count",
+                  "BB6.Agent41F1ZeroRBZeroLAOneRDIntegration.cover_remainingF1ZeroRC",
+                  "BB6.Agent41F1ZeroRBZeroLAOneRDIntegration.exact_from_canonical77_and_raw139_three_sibling_leaves",
+                  "BB6.Agent41F1ZeroRBZeroLAOneRDIntegration.refinedCanonical77RosterAfterZeroRBZeroLAOneRD_count",
+              ),
+              sys.argv[2]: (
+                  "BB6.Agent6F1OneLBIntegration.oneLB_is_depth5_sibling",
+                  "BB6.Agent6F1OneLBIntegration.cover_oneLB",
+                  "BB6.Agent6F1OneLBIntegration.oneLB_parent_present",
+                  "BB6.Agent6F1OneLBIntegration.remainingF1AfterZeroRBZeroLAOneRDOneLB_count",
+                  "BB6.Agent6F1OneLBIntegration.removedOneLB_count",
+                  "BB6.Agent6F1OneLBIntegration.cover_remainingF1AfterZeroRBZeroLAOneRD",
+                  "BB6.Agent6F1OneLBIntegration.exact_from_canonical77_and_raw139_four_sibling_leaves",
+                  "BB6.Agent6F1OneLBIntegration.refinedCanonical77RosterAfterZeroRBZeroLAOneRDOneLB_count",
+                  "BB6.Agent14F1OneLB.all_completions_weighted",
+              ),
+          }
+          for path, names in groups.items():
+              log = pathlib.Path(path).read_text()
+              for name in names:
+                  pattern = r"'" + re.escape(name) + r"' depends on axioms: \\[([^\\]]*)\\]"
+                  match = re.search(pattern, log)
+                  if match:
+                      used = {x.strip() for x in match.group(1).split(",") if x.strip()}
+                  elif "'" + name + "' does not depend on any axioms" in log:
+                      used = set()
+                  else:
+                      raise SystemExit("missing axiom audit: " + name)
+                  if not used <= allowed:
+                      raise SystemExit(f"nonstandard axioms for {name}: {used - allowed}")
+                  print(name, sorted(used))
           PY
 
   f0-siblings:
