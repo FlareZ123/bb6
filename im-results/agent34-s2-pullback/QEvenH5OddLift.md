@@ -33,26 +33,36 @@ satisfies \(K\equiv49726\pmod{2^{23}}\). Write \(K=49726+2^{23}b\); then \(v=48+
 
 The even coset \(n=2d\) is the parameter family in Agent 4's theorem **blank_ne_s2q_even_image_h5_progression**. Its exact source proof is in **im-results/agent4-c-seven-image/CSixSeventhS2QEven.lean**; do not call the new high-stop pullback an accepted source theorem without the corresponding focused CI/axiom audit.
 
-## Agent25 certificate: parameter mismatch; not transferable
+## Agent25 quarter source: exact parameter match, guarded subfamily
 
-An earlier version of this note incorrectly treated Agent25's
-`h5QuarterHighSource` as a certificate for the present odd-coset family.
-Inspection of the actual Lean theorem signature disproves that identification:
-Agent25's `h5J` progression uses a (2^{38}r) increment, whereas this
-family has
+The `AffineH5Quarter` source defines
 [
-j=2098495+2^{22}r,qquad
-m=4876330+2^{22}r+2^{23}w.
+h5J(r)=2098495+2^{22}r,qquad
+h5M(r,w)=4876330+2^{22}r+2^{23}w.
 ]
-The CI run [45531058201](https://github.com/FlareZ123/bb6/actions/runs/45531058201)
-verifies Agent25's separate source certificate, not the present (2^{22})
-family. Its quarter-lattice guard classes therefore establish no exclusion
-for this family and must not be cited as such.
+These are exactly the (j,m) progressions used here. Therefore the
+`h5QuarterHighSource` theorem does apply to this odd-coset family, provided
+its stated phase guard holds and (K) satisfies the high-stop equation.
 
-The present high-stop identity remains an algebraic parameterization only;
-it requires its own original-source proof. The earlier claimed quarter
-coverage is withdrawn. The compressed Agent25 files remain useful as
-independent research material, but not as evidence for this subproblem.
+The guard is
+[
+(5r+3w+4)\bmod8=0
+quad\lorquad
+(5r+3w+17)\bmod16=0
+quad\lorquad
+\exists t\in\{26,48,51,56\},(37r+3w+t)\bmod64=0.
+]
+It covers one quarter of the ((r,w)) parameter lattice. This is a genuine
+source-certified exclusion for that guarded subfamily, not a closure of the
+entire odd-coset family. The exact Lean source and the proof of its high-stop
+specialization are in
+`im-results/agent25-c-odd-lift/`; CI run
+[45531058201](https://github.com/FlareZ123/bb6/actions/runs/45531058201)
+compiled the quarter-source module with the standard axiom set.
+
+Do not conflate this (2^{22})/(2^{23}) quarter source with Agent25's
+separate 48-node `highStopSource`, whose progression uses (2^{38}).
+The latter is a different, narrower subcylinder.
 
 ## Remaining odd/even high-valuation parent
 
