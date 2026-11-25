@@ -29,12 +29,13 @@ jobs:
       - name: Discover and generate candidate counter proofs
         run: |
           set -euo pipefail
-          python im-results/agent47-raw112-cut/discover_multisweep.py --limit "${{ inputs.limit }}" | tee /tmp/raw112-multisweep-discovery.log
+          python im-results/agent47-raw112-cut/discover_multisweep.py --limit "${{ inputs.limit }}" --indices 23 10 15 | tee /tmp/raw112-multisweep-discovery.log
       - name: Compile every generated proof candidate
         run: |
           set -euo pipefail
-          for f in Raw112Hard23Family10 Raw112Hard23Family15 Raw112Multisweep10 Raw112Multisweep15; do
+          for f in Raw112Hard23Family23 Raw112Hard23Family10 Raw112Hard23Family15 Raw112Multisweep23 Raw112Multisweep10 Raw112Multisweep15; do
             case "$f" in
+              *23) idx=23 ;;
               *10) idx=10 ;;
               *15) idx=15 ;;
             esac
@@ -60,16 +61,22 @@ jobs:
         with:
           name: raw112-multisweep-candidates
           path: |
+            im-results/agent47-raw112-cut/Raw112Hard23Family23.lean
             im-results/agent47-raw112-cut/Raw112Hard23Family10.lean
             im-results/agent47-raw112-cut/Raw112Hard23Family15.lean
+            im-results/agent47-raw112-cut/Raw112Multisweep23.lean
             im-results/agent47-raw112-cut/Raw112Multisweep10.lean
             im-results/agent47-raw112-cut/Raw112Multisweep15.lean
             /tmp/raw112-multisweep-discovery.log
+            /tmp/Raw112Hard23Family23/
             /tmp/Raw112Hard23Family10/
             /tmp/Raw112Hard23Family15/
+            /tmp/Raw112Multisweep23/
             /tmp/Raw112Multisweep10/
             /tmp/Raw112Multisweep15/
+            /tmp/Raw112Hard23Family23.log
             /tmp/Raw112Hard23Family10.log
             /tmp/Raw112Hard23Family15.log
+            /tmp/Raw112Multisweep23.log
             /tmp/Raw112Multisweep10.log
             /tmp/Raw112Multisweep15.log
