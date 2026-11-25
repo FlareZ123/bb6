@@ -1080,6 +1080,10 @@
     "71": [
       "Raw60LFZeroCounter",
       "BB6.Agent1Raw60LFZeroCounter"
+    ],
+    "863": [
+      "Raw60LFCSweep",
+      "BB6.Agent1Raw60LFCSweep"
     ]
   },
   "unresolved": [
@@ -1087,7 +1091,6 @@
     232,
     233,
     234,
-    863,
     980,
     982,
     984,
