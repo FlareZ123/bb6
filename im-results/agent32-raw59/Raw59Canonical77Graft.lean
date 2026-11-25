@@ -53,11 +53,7 @@ theorem exact_at_target (B : Nat) (hB : 4200000 ≤ B)
   by_cases hs : sameTable e.2 BB6.Agent32Raw59.p59 = true
   · have hp : e.2 = BB6.Agent32Raw59.p59 := sameTable_sound hs
     rw [hp]
-    refine Cover.leaf _ ?_
-    intro m hm k d hk hd
-    exact Nat.le_trans
-      (BB6.Agent32Raw59UpgradeAll.bound m hm k d hk hd)
-      (by omega)
+    exact Cover.leaf _ (parent_bound_at B hB)
   · have hnot : !(sameTable e.2 BB6.Agent32Raw59.p59) = true := by
       cases h : sameTable e.2 BB6.Agent32Raw59.p59 <;> simp_all
     exact hLeaves e (List.mem_filter.mpr ⟨he, hnot⟩)
