@@ -229,6 +229,7 @@ jobs:
           log = pathlib.Path(sys.argv[1]).read_text()
           allowed = {"propext", "Classical.choice", "Quot.sound"}
           names = (
+              "BB6.Agent6Canonical77ChampionIntegration.raw114_parent_not_raw139",
               "BB6.Agent6Canonical77ChampionIntegration.championResidual_mem_canonical77",
               "BB6.Agent6Canonical77ChampionIntegration.championResidual_unique_canonical77",
               "BB6.Agent6Canonical77ChampionIntegration.championResidual_unique_by_table",
