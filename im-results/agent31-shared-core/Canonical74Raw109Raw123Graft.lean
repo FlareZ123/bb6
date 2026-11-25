@@ -14,7 +14,7 @@ open BB6.Agent47CanonicalFrontier BB6.Agent47CanonicalRefinement
 
 abbrev p109 : PartialMachine := BB6.Agent4Raw109Cut.parent
 abbrev p123 : PartialMachine := BB6.Agent7Raw123.p123
-abbrev baseRoster := BB6.Agent47CanonicalTwoParent.roster76
+noncomputable def baseRoster := BB6.Agent47CanonicalTwoParent.roster76
 
 /-- Remove the source-accepted Raw109 six-hole parent from the accepted
     canonical76 quotient roster. -/
@@ -100,8 +100,9 @@ theorem exact_at_target (B : Nat) (hB : 6766859 ≤ B)
     (h109 : ∀ m, compatible p109 m → WeightedBound 1703 m)
     (h123 : Cover (WeightedBound 10000) p123)
     (hLeaves : ∀ e ∈ roster74, Cover (WeightedBound B) e.2)
-    (champ : ∃ m : RawMachine, HaltsAt (tickRaw m) B) :
-    ExactBB6 B :=
+    (champ : ∃ m : BB6.Coverage.RawMachine,
+      BB6.Coverage.HaltsAt (BB6.Coverage.tickRaw m) B) :
+    BB6.Coverage.ExactBB6 B :=
   exact_from_quotient_roster (by omega) hB (sound h109 h123) hLeaves champ
 
 #print axioms p109_root
