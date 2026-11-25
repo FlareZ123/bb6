@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate exact source-audit candidates for Raw39 0RB and 1RC."""
+"""Generate exact source-audit candidates for Raw39 0RB, 1RC and 0RE."""
 import hashlib
 import json
 import sys
@@ -11,15 +11,16 @@ from gen_rc_counters import nextword
 
 ROOT=Path(__file__).resolve().parent
 BRANCH=sys.argv[1]
-assert BRANCH in ("0RB","1RC")
+assert BRANCH in ("0RB","1RC","0RE")
 PREFIX="Raw39B"+BRANCH
 NS="BB6.Agent11"+PREFIX
 BUILD=ROOT/("_build"+BRANCH)
-DATA=json.loads((ROOT/"rb-rc-witnesses.json").read_text())[BRANCH]
+DATA=(json.loads((ROOT/"re-witnesses.json").read_text()) if BRANCH=="0RE"
+      else json.loads((ROOT/"rb-rc-witnesses.json").read_text())[BRANCH])
 BOUND=DATA["bound"]
 CHILD="1RB"+BRANCH+"_1RC---_0RD---_1LD0RA_------_------"
-SLOT=3 if BRANCH=="0RB" else 5
-ROOTMOVE=7 if BRANCH=="0RB" else 20
+SLOT={"0RB":3,"1RC":5,"0RE":9}[BRANCH]
+ROOTMOVE={"0RB":7,"1RC":20,"0RE":10}[BRANCH]
 m=common.m
 parse=common.parse
 masks=common.masks
@@ -46,6 +47,18 @@ def generate():
     assert common.counts(tree)==DATA["stats"] and tree[:3]==["split",7,SLOT]
     index={s:i for i,s in enumerate(opens)}
     special,chunks=counter.generate(ROOT,opens,BRANCH,DATA["counters"])
+    if BRANCH=="0RE":
+        structural = {
+            468: ("1RB0RE1RC---0RD1LF1LD0RA1LB0RC0LA0LF", "Raw39Stack468", "BB6.Agent11Raw39Stack468"),
+            2172: ("1RB0RE1RC---0RD1LE1LD0RA1LE1LF1RA0LF", "Raw39RE2172", "BB6.Agent11Raw39RE2172"),
+        }
+        assert DATA["grammar"] == [468]
+        assert [v["index"] for v in DATA["macro_cycles"]] == [2172]
+        assert not DATA["unresolved"]
+        for i,(literal,module,ns) in structural.items():
+            assert i not in special and opens[i].replace("_","")==literal,(i,opens[i])
+            special[i]=(ns+".table",ns+".never")
+            chunks.append(module)
     for start in range(0,len(DATA["specs"]),10):
         name=f"{PREFIX}Pumps{start//10:02}"
         out=[PUMP_HEADER]
@@ -64,9 +77,10 @@ def generate():
         out.append("end "+NS+"Pumps")
         (ROOT/(name+".lean")).write_text("\n\n".join(out)+"\n")
         chunks.append(name)
-    assert len(special)==len(DATA["specs"])+len(DATA["counters"])
-    late={i:(n,s) for i,n,s in DATA["late"]}
-    assert not set(late)&set(special) and len(late)==len(DATA["late"])
+    assert len(special)==len(DATA["specs"])+len(DATA["counters"])+(2 if BRANCH=="0RE" else 0)
+    late={i:(n,s) for i,n,s in DATA.get("late",[])}
+    assert not set(late)&set(special) and len(late)==len(DATA.get("late",[]))
+    if BRANCH=="0RE": assert len(special)==75 and len(late)==0
     bank=DATA["bank"];assert len(bank)==len(set(bank))
     common.run("g++","-std=c++20","-O3",common.SOURCE/"bank.cpp","-o",BUILD/"bank")
     (BUILD/"bank.txt").write_text("\n".join(bank)+"\n")
@@ -87,6 +101,7 @@ def generate():
                 continue
         else:raise AssertionError((i,opens[i]))
     assert set(far)==todo
+    if BRANCH=="0RE": assert len(far)==2699
     def build(node):
         tag,*v=node
         if tag=="cycle":

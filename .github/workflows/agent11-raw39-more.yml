@@ -5,7 +5,7 @@ on:
       branch:
         description: 'Which exact A1 child to audit'
         type: choice
-        options: [0RB, 1RC]
+        options: [0RB, 1RC, 0RE]
         required: true
 permissions:
   contents: write
@@ -53,6 +53,9 @@ jobs:
             --provenance-input "$root/Raw39CounterCarry.lean" \
             --provenance-input "$root/gen_auto_counters.py" \
             --provenance-input "$root/rb-rc-witnesses.json" \
+            --provenance-input "$root/re-witnesses.json" \
+            --provenance-input "$root/Raw39Stack468.lean" \
+            --provenance-input "$root/Raw39RE2172.lean" \
             --provenance-input "$root/shards-${{ inputs.branch }}.json" \
             --provenance-input im-results/agent11-raw121/fast_enum.cpp \
             --provenance-input im-results/agent11-raw121/bank.cpp \
@@ -106,7 +109,7 @@ jobs:
         run: |
           set -euo pipefail
           work=/tmp/a11-raw39-parent
-          BOUND=$(python -c 'import json;print(json.load(open("im-results/agent11-raw39/rb-rc-witnesses.json"))["${{ inputs.branch }}"]["bound"])')
+          BOUND=$(python -c 'import json;print(json.load(open("im-results/agent11-raw39/manifest-${{ inputs.branch }}.json"))["bound"])')
           python tools/lean_compile_closure.py \
             --workdir "$work" --jobs 2 \
             --manifest "$work/manifest.json" \
