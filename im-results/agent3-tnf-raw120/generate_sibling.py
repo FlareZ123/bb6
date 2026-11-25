@@ -29,6 +29,8 @@ PARAMS = {
             dict(split=934, cycle=15226, last=4043, open=2214)),
     "1RB": ("OneRB", 3650, "156d9b5ff6210dfc4ba03a36e0b723a647a291d1eb91053d6df8eb2b4078b23e",
             dict(split=1099, cycle=17152, last=4476, open=3650)),
+    "1RC": ("OneRC", 3075, "70f36157cccdae65873bcab0a5b376826fc497f0832dadaf963b07bd5b30194b",
+            dict(split=986, cycle=15450, last=4154, open=3075)),
 }
 BRANCH = sys.argv[1]
 TAG, EXPECTED_OPEN, EXPECTED_SHA, EXPECTED_TREE = PARAMS[BRANCH]
@@ -107,6 +109,14 @@ if BRANCH == "0RC":
         opens[1380]: ("(BB6.Agent3Raw120RCCounter.table true)", "(BB6.Agent3Raw120RCCounter.never true)"),
     }
     for i in (1633, 1639):
+        pump_code.append(rc_nested.generate_nested(i, one.parse(opens[i])))
+        pumps[opens[i]] = (f"{pumpns}.M{i}.table", f"{pumpns}.M{i}.never")
+if BRANCH == "1RC":
+    assert opens[939] == "1RB1LA_1RC0LE_0RD0RF_1LD1RE_1RC1LE_---1RA"
+    assert opens[1928] == "1RB---_1RC0LF_0RD1RB_1LD1RE_1RC1LE_0LA1LB"
+    assert opens[1934] == "1RB---_1RC0LF_0RD1RB_1LD1RE_1RC1LE_1LA1LB"
+    pumps[opens[939]] = ("BB6.Agent3Raw120OneRCCounter.table", "BB6.Agent3Raw120OneRCCounter.never")
+    for i in (1928, 1934):
         pump_code.append(rc_nested.generate_nested(i, one.parse(opens[i])))
         pumps[opens[i]] = (f"{pumpns}.M{i}.table", f"{pumpns}.M{i}.never")
 late = {}
@@ -193,7 +203,7 @@ summary = {
     "one_block_pumps": one_count,
     "multi_block_pumps": multi_count,
     "late_leaves": len(late),
-    "custom_counter_and_nested_leaves": 4 if BRANCH == "0RC" else 0,
+    "custom_counter_and_nested_leaves": {"0RC": 4, "1RC": 3}.get(BRANCH, 0),
     "unresolved": len(missing),
     "unresolved_sample": [{"index": i, "table": code} for i, code in missing[:100]],
 }
@@ -308,7 +318,7 @@ theorem split_checked (p : PartialMachine) (n : Nat) (s : Slot)
   simp only [Bool.and_eq_true]
   exact ⟨hq, allMoves_of _ hk⟩
 """
-emit(prefix + "Base", ["Raw120Late"] + (["Raw120RCCounter"] if BRANCH == "0RC" else []) + [prefix + "Sweeps"], base)
+emit(prefix + "Base", ["Raw120Late"] + ({"0RC": ["Raw120RCCounter"], "1RC": ["Raw120OneRCCounter"]}.get(BRANCH, [])) + [prefix + "Sweeps"], base)
 
 assert tree[0] == "split"
 root_n, root_slot, root_kids = tree[1], tree[2], tree[3]
