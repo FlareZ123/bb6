@@ -149,27 +149,45 @@ jobs:
         run: |
           set -euo pipefail
           python3 im-results/agent13-coverage/unpack.py
-          python3 im-results/agent31-three-hole-tnf/generate_sweeps.py
           python3 -m py_compile im-results/agent13-roster-convergence/generate_raw85.py
           python3 im-results/agent13-roster-convergence/generate_raw85.py
-      - name: Compile FAR dependency closure
+      - name: Compile and audit uniquely named raw85 proof
         run: |
           set -euo pipefail
           python tools/lean_compile_closure.py --workdir /tmp/raw85-lean --jobs 4 \
-            im-results/agent7-far/WeightedTNFBridge.lean \
-            im-results/agent7-far/R4PairHits.lean \
-            im-results/agent13-roster-convergence/raw85/FourHoleSiblingData.lean
-      - name: Verify known FAR certificate and generated raw85 parent tree
-        run: |
-          set -euo pipefail
-          export LEAN_PATH=/tmp/raw85-lean
-          lean im-results/agent7-far/R4PairHits.lean | tee /tmp/raw85-known-good.log
-          if grep -qE 'sorryAx|native_decide' /tmp/raw85-known-good.log; then
-            echo 'Known FAR certificate used a forbidden axiom'
-            exit 1
-          fi
-          lean im-results/agent13-roster-convergence/raw85/FourHoleSiblingData.lean | tee /tmp/raw85-tree-proof.log
-          if grep -qE 'sorryAx|native_decide' /tmp/raw85-tree-proof.log; then
-            echo 'Raw85 sibling tree proof used a forbidden axiom'
-            exit 1
-          fi
+            --manifest /tmp/raw85-manifest.json \
+            --label raw85-bound \
+            --artifact-name raw85-bound-certified \
+            --theorem BB6.Agent21Raw85.all_completions \
+            --parent-table '1RB---_1RC1LF_0RD---_1LD1RE_---0LB_---1RA' \
+            --weighted-bound 7014 \
+            --provenance-input im-results/agent13-roster-convergence/generate_raw85.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_four_hole_sibling.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_sweeps.py \
+            --provenance-input im-results/agent31-three-hole-tnf/four_hole_dfas.txt \
+            --provenance-input im-results/agent21-raw85/dfa-candidates.txt \
+            --provenance-input im-results/agent21-raw85/smt-candidates.txt \
+            im-results/agent21-raw85/Raw85Bound.lean | tee /tmp/raw85-proof.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/raw85-proof.log; then exit 1; fi
+          python3 - <<'PY'
+          import re
+          from pathlib import Path
+          log = Path("/tmp/raw85-proof.log").read_text()
+          profiles = {n: {x.strip() for x in a.split(",") if x.strip()}
+                      for n, a in re.findall(r"'([^']+)' depends on axioms: \[([^\]]*)\]", log)}
+          allowed = {"propext", "Classical.choice", "Quot.sound"}
+          for name in ("BB6.Agent21Raw85.all_completions",
+                       "BB6.Agent21Raw85Sibling.wideParent_matches_sourceParent"):
+              if name not in profiles or profiles[name] - allowed:
+                  raise SystemExit(f"missing or unapproved axiom profile: {name}: {profiles.get(name)}")
+              print(name, sorted(profiles[name]))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw85-bound-certified
+          path: |
+            /tmp/raw85-lean/*.olean
+            /tmp/raw85-manifest.json
+            /tmp/raw85-proof.log
+            im-results/agent13-roster-convergence/raw85/Raw85*.lean
+          if-no-files-found: error

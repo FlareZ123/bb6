@@ -1,60 +1,26 @@
-# raw85/F1=1RA four-hole FAR frontier
+# Raw85: complete four-hole cylinder bound
 
-Status: **intermediate; not yet a Lean theorem for the complete parent tree.**
+## Established result
 
-## Target and tree
-
-Parent partial table:
-
+The partial table
 `1RB---_1RC1LF_0RD---_1LD1RE_---0LB_---1RA`
+has a complete original-source Lean weighted bound of **7014** for every compatible six-state machine. The full parent-tree audit passed in [run 45548434985](https://github.com/FlareZ123/bb6/actions/runs/45548434985), revision `aed5e0175fe32165f13d9b849c4a2d5cd3273dac`. The audited theorem is `BB6.Agent31FourHoleSibling.all_completions_weighted`; the workflow checks the actual generated path-end table against the literal twelve-slot parent and rejects `sorryAx` or `native_decide` in the final audit.
 
-The current dynamic-split sibling generator's blank-run classifier gives a first hole at the root, then a 24-way split. A JS reproduction of its classifier and dynamic split-slot recursion produced 5,881 unique partial tables: 3,774 cycle leaves, 1,761 last-hole leaves, 245 split nodes, and 101 open leaves.
+This is raw residual 85 (manifest entry 54), a four-hole parent in the 124-table first-one roster. Its complete certificate is stronger than any individual FAR hit or sweep witness. **It has not yet been ingested into the accepted canonical77 quotient roster.** No new global residual count is claimed.
 
-## FAR candidates
+## Certificate construction
 
-The existing 121-entry DFA bank finds 101 candidates under the Python mask routine. However, one bank DFA has `dfa[0]=1`; `FAR.Data.fastValid` requires `push start false = start`, so the Python mask routine is missing a necessary condition. Enforcing `dfa[0]=0` leaves 79 open leaves covered and 22 without a candidate in the existing bank.
+The deterministic dynamic first-hole tree has 24 ordinary children per split and charges the halt branch using the source weighted-query checker. Its nonhalting leaves use source-checked side cycles, destination-saturated FAR certificates, or exact parametric sweeps. Agent 40 supplied the three missing sweep families, with positive return costs 93+36n, 113+76n and 20+44n; see [the sweep derivation](../agent40-raw85-sweeps/README.md). Every proved sweep is matched against the actual twelve-slot table by the source audit, not by its search key.
 
-Canonical restricted-growth DFA enumeration matching `FAR.dfaList` through 5 states found candidate DFAs passing the Python search filters for 14 of those 22 leaves (sizes 4 or 5). Candidate lookup keys and DFAs are in `dfa-candidates.txt`. These are untrusted search outputs, not Lean-accepted certificates.
+The original finite search census was 3,774 cycle leaves, 1,761 last-hole leaves, 245 split nodes and 101 open leaves. The old DFA bank plus 14 canonical candidate strings and five exact-target SMT candidates supply the FAR candidates; [the SMT run provenance](smt-candidates-provenance.md) records five hits and three misses. Those three misses are now covered by the sweeps. The historical `Raw85FARCertificates.lean` scratch module failed CI 45503416279 and is excluded from the accepted proof. The candidate files are untrusted search data; the source `Audit.check` verifies all final leaves, including the start-zero condition.
 
-The eight remaining tables are listed in `smt-frontier.txt`. The eight run IDs previously listed below are now **superseded**: the first artifact's HIT table did not match the first current frontier entry, and at least one of the eight artifacts contained no HIT record. They must not be used as certificates for this frontier.
+## Shared-core ingestion
 
-The current exact-target solver runs are dispatched from `.github/workflows/agent7-far-hard-root.yml` with the full table code in the workflow run name (`Agent 7 FAR SMT: <code>`). Each target uses the composed encoding, DFA sizes 6–8, and a 120-second per-size/orientation timeout. The raw85 recovery workflow discovers completed successful runs by exact display title, downloads their shard-0 artifacts, checks that each HIT row matches its target code, and preserves the DFA/orientation records plus source-table provenance in `smt-candidates.txt` and `smt-candidates-provenance.md`.
+The raw85 wrapper now emits uniquely named `Raw85Sibling*.lean` and a separate `Raw85SweepData.lean` containing only the three new sweep proofs. This deliberately avoids changing the shared core's older `SweepData` module or colliding with the generic `FourHoleSiblingData` name used by other siblings. The pinned canonical core revision d4164a4457e62ba7ec8e3fba6e38b251d04ffc83 has only the original M0–M9 sweep list, whereas the successful raw85 run used M10–M12 as well.
 
-Superseded historical run IDs (retained only to explain the earlier mismatch):
+- `Raw85Bound.lean` exposes the literal-parent all-completions theorem after exact path-end equality.
+- `Raw85CanonicalCut.lean` defines a score-parametric exact-table graft, with a proposed check that the original 96 canonical representatives become 95. It has no champion imports.
+- Reproduce the generated source by running `python im-results/agent13-coverage/unpack.py` and `python im-results/agent13-roster-convergence/generate_raw85.py` from the repository root. The latter uses the existing sibling and sweep generator functions, with the explicit three raw85 sweep tables. A shared-core build can use this generator even with the older M0–M9 sweep list.
+- The existing manual raw85 workflow now checks the renamed parent source closure and publishes a manifest and compiled objects. The renamed modules and generic cut remain pending source acceptance; the prior successful original-name theorem is unaffected.
 
-- `45498610882`
-- `45498649689`
-- `45498658720`
-- `45498667128`
-- `45498673310`
-- `45498681222`
-- `45498691122`
-- `45498700780`
-
-The exact-target runs have now completed: five of the eight tables produced HIT records and three produced no hit at DFA sizes 6–8 with 120 seconds per size/orientation. The five actual DFA/orientation records and all eight run outcomes are preserved in smt-candidates.txt and smt-candidates-provenance.md. The three no-hit tables are:
-
-- `1RB0LE_1RC1LF_0RD1RF_1LD1RE_---0LB_0RC1RA`
-- `1RB0LE_1RC1LF_0RD---_1LD1RE_1RA0LB_0RF1RA`
-- `1RB0RD_1RC1LF_0RD1RF_1LD1RE_---0LB_1RC1RA`
-
-The first uncovered key reported by the initial generator attempt is `('1RF','0LE','---','0RC')`, exactly the first of these no-hit tables. The complete scan now being added will enumerate any further uncovered leaves across the whole 24-child tree.
-
-The 14 canonical candidate strings are mirrored by C00–C13 in Raw85FARCertificates.lean, but that file is an invalid scratch module: CI run 45503416279 found every Cxx.fastValid pxx proposition false. These strings remain untrusted candidate suggestions only; the generator recomputes masks for each actual destination table and Lean must validate the generated parent tree.
-
-## Next actions
-
-1. Use the all-leaf candidate scan to enumerate every raw85 open table not covered by the current global bank plus 14 canonical and five exact-target SMT candidate DFAs.
-2. Search the three no-hit frontier tables and any additional uncovered leaves with larger DFA sizes/timeouts or a different synthesis strategy.
-3. Re-run the destination-table generator after each useful candidate batch; all masks are recomputed and Lean remains the acceptance boundary.
-4. Compile the generated 24-child parent tree with Lean; any accepted `.far` leaf must pass the actual `Data.fastValid` check.
-5. Only after the full audit compiles, integrate the resulting theorem into the 124-table roster and update the human-readable research synthesis.
-
-Do not move this file into `results/` until the full source-checked parent-tree theorem exists.
-
-## Destination-table reuse and validation (24 November 2026)
-
-The four-token keys in dfa-candidates.txt are search metadata, not proof premises. A direct comparison shows that the 14 candidate DFA strings were copied into the dfa fields of C00–C13 in Raw85FARCertificates.lean, and their historical keys differ from the corresponding destination-table keys (p[5], p[1], p[8], p[10]). However, CI run 45503416279 found every Cxx.fastValid pxx proposition false: those copied Data objects are invalid. This comparison therefore establishes only the candidate/key relationship, not successful cross-key reuse. The old exact-key-only wrapper was removed; the current wrapper treats the 14 canonical and five exact-target SMT DFAs as untrusted candidates, recomputes masks for each actual destination table, and relies on the generated Lean Audit/Data.fastValid checks for acceptance.
-
-The shared start-zero filter correction is committed in the two four-hole generators and the three active FAR emitters. The raw85 validation workflow now discovers the eight exact-target solver runs by their run names and records five HIT/three NO HIT outcomes, downloads their shard-0 artifacts, checks each HIT table against smt-frontier.txt, extracts DFA/orientation records into smt-candidates.txt, preserves candidate and provenance files, runs the complete dynamic-split generator, and compiles the generated FourHoleSiblingData.lean. The known-invalid Raw85FARCertificates.lean scratch module is deliberately excluded from the proof workflow. The workflow is a 60-minute manual validation job because it includes the full 24-child parent-tree compilation.
-
-**Not yet claimed:** the full parent-tree theorem is not established until this updated workflow completes successfully. The 101-leaf census and the 79-old-bank + 14-Python-candidate + 5-targeted-SMT-HIT search partition remain intermediate search evidence; none of those counts is a count of Lean-accepted leaves until the generated tree compiles and is integrated into the 124-table roster.
+The integration owner should batch this cut with the other accepted parent proofs using the validated common Lean objects. Check the actual resulting roster length and transitive axiom profile. The remaining residual Covers and universal BB(6) upper bound remain open.
