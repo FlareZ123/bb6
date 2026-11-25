@@ -7,13 +7,13 @@ on:
         required: true
         type: string
       kind:
-        description: Branch depth (f1 or c1)
+        description: Branch depth or source-connected A6 root (f1, c1, a6)
         required: true
         type: choice
-        options: [f1, c1]
+        options: [f1, c1, a6]
         default: f1
       sibling:
-        description: Sibling proof spec name
+        description: Sibling proof spec name (unused for a6)
         required: true
         type: string
         default: ZeroLD
@@ -21,6 +21,7 @@ permissions:
   contents: read
 jobs:
   certify:
+    if: ${{ inputs.kind != 'a6' }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -51,3 +52,54 @@ jobs:
             .tmp/a48-${{ inputs.kind }}-${{ inputs.sibling }}/log
             .tmp/a48-${{ inputs.kind }}-${{ inputs.sibling }}/imports/*.lean
             .tmp/a48-${{ inputs.kind }}-${{ inputs.sibling }}/build/*.olean
+
+  a6-ingestion:
+    if: ${{ inputs.kind == 'a6' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 85
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - uses: actions/checkout@v4
+        with:
+          repository: google-deepmind/cryptids
+          ref: c86f15861709b76042998c5211c7b2f83991621b
+          path: cryptids
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Align pinned Cryptids dependencies with the canonical77 kernel
+        working-directory: cryptids
+        run: |
+          sed -i 's/v4.35.0-rc4/v4.36.0-rc2/g' lakefile.toml
+          printf 'leanprover/lean4:v4.36.0-rc2\n' > lean-toolchain
+          lake update
+          lake exe cache get
+          lake build BusyBeaver.BB6.M_1RB0LF_1RC0RA_1LD0RB_0LE0LC_0LA0LC_0LBHHH
+      - name: Download exact accepted canonical77 dependency artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: canonical77-certified
+          run-id: 45554648116
+          github-token: ${{ github.token }}
+          path: canonical77
+      - name: Compile source-connected A6 raw139 refinement
+        run: |
+          mkdir -p cryptids/BB6Agent48
+          set -o pipefail
+          bash im-results/agent48-raw139-hard-root/reproduce-a6.sh \
+            "$GITHUB_WORKSPACE/canonical77" "$GITHUB_WORKSPACE/cryptids" \
+            2>&1 | tee cryptids/BB6Agent48/reproduce.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw139-a6-source-connected-${{ inputs.source_sha }}
+          include-hidden-files: true
+          if-no-files-found: warn
+          path: cryptids/BB6Agent48
