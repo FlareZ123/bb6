@@ -904,6 +904,7 @@ jobs:
             --artifact-name canonical73-and72-raw121-raw110-raw112-roster-only-certified \
             --jobs 4 \
             --source-root /tmp/raw110-generated \
+            --override ThreeHoleAudit=im-results/agent31-three-hole-tnf/ThreeHoleAudit.lean \
             --precompiled-manifest /tmp/a31-base/manifest/raw107-shared-manifest.json \
             --precompiled-dir /tmp/a31-base \
             --provenance-input im-results/agent47-rooted-tnf/Canonical73Raw110Composition.lean \
@@ -948,6 +949,7 @@ jobs:
             --provenance-input im-results/agent13-coverage/unpack.py \
             --provenance-input im-results/agent31-three-hole-tnf/generate_sweeps.py \
             --provenance-input im-results/agent31-three-hole-tnf/generate_four_hole.py \
+            --provenance-input im-results/agent31-three-hole-tnf/ThreeHoleAudit.lean \
             --provenance-input tools/lean_compile_closure.py \
             --provenance-input /tmp/a31-base/manifest/raw107-shared-manifest.json \
             2>&1 | tee /tmp/a31-canonical73.log
