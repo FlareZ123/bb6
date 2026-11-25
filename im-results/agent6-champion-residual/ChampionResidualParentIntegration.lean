@@ -142,7 +142,7 @@ theorem exact_from_nonchampion_roster_covers_and_parent_frontier
       · exact hOther e he hEq)
     BB6Coverage.Agent48DirectRoot.champion_raw_witness
 
-theorem canonical78_other_count :
+theorem canonical78_other_address_count :
     (BB6.Agent47Canonical78.roster.filter
       (fun e => e.1 ≠ championResidualAddress)).length = 77 := by
   decide
@@ -158,7 +158,7 @@ theorem canonical78_refined_obligation_count :
 #print axioms cover_of_frontier_leaves
 #print axioms cover_of_championResidual_frontier
 #print axioms exact_from_nonchampion_roster_covers_and_parent_frontier
-#print axioms canonical78_other_count
+#print axioms canonical78_other_address_count
 #print axioms canonical78_refined_obligation_count
 
 end BB6.Agent31ChampionParentIntegration
