@@ -256,16 +256,14 @@ jobs:
           path: |
             im-results/agent1-bidfa-sat/targets.tsv
             im-results/agent1-bidfa-sat/generated/
-      - name: Search cross-products of SAT-derived Raw118 stack summaries
+      - name: Source-check retained Raw118 cross-bank certificates
         if: inputs.target == 'weighted-tnf-raw118-sat-crossbank'
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
-          python im-results/agent16-raw118/generate_partial.py /tmp/raw118-crossbank-data
-          python im-results/agent16-raw118/search_tree_bank.py /tmp/raw118-crossbank-data
-          python im-results/agent40-raw118-independent/search_sat_crossbank.py /tmp/raw118-crossbank-data
           python tools/lean_compile_closure.py --workdir /tmp/a40-raw118-crossbank --jobs 4 im-results/agent40-raw118-independent/Raw118SatCrossBank.lean | tee /tmp/a40-raw118-crossbank.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a40-raw118-crossbank.log; then exit 1; fi
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a40-raw118-crossbank.log BB6Coverage.Agent40Raw118CrossBank.M3970.never
       - name: Preserve Raw118 SAT cross-bank certificates
         if: always() && inputs.target == 'weighted-tnf-raw118-sat-crossbank'
         uses: actions/upload-artifact@v4
@@ -273,7 +271,6 @@ jobs:
           name: raw118-sat-crossbank-generated
           path: |
             im-results/agent40-raw118-independent/Raw118SatCrossBank.lean
-            im-results/agent40-raw118-independent/Raw118SatCrossBank.json
             /tmp/a40-raw118-crossbank.log
       - name: Source-check new Raw120 1LB factored SAT certificates
         if: inputs.target == 'weighted-tnf-raw120-1lb-sat-cert'
