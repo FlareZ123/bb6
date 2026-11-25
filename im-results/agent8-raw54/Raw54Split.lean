@@ -78,4 +78,73 @@ theorem e1_sound : ∀ m, compatible e1 m → WeightedBound 7014 m ∨
     ∃ e ∈ partialResiduals e1 e1Tree, compatible e.2 m :=
   partialSound 7014 e1 e1Tree e1_root e1_nohalt e1_checked
 #print axioms e1_sound
+
+def rawKids : Move → PartialAudit := byPartialMove [
+.unresolved,
+.unresolved,
+.closed (.cycle 8 1 false (0)),
+.closed (.cycle 7 1 false (-1)),
+e1Tree,
+.unresolved,
+.unresolved,
+.unresolved,
+.unresolved,
+.closed (.cycle 7 1 false (1)),
+.unresolved,
+.unresolved,
+.unresolved,
+.unresolved,
+.unresolved,
+.closed (.cycle 7 1 false (-1)),
+.unresolved,
+.unresolved,
+.unresolved,
+.unresolved,
+.unresolved,
+.unresolved,
+.unresolved,
+.unresolved]
+theorem rawKids_checked (mv : Move) :
+    partialCheck 7014 (refine raw54 (4,true) (some mv)) (rawKids mv) = true := by
+  rcases mv with ⟨w,r,q⟩
+  have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
+  rcases hq with rfl|rfl|rfl|rfl|rfl|rfl
+  all_goals cases w <;> cases r
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · exact e1_checked
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
+  · decide
+
+def rawTree : PartialAudit := .split 6 (4,true) rawKids
+theorem raw_checked : partialCheck 7014 raw54 rawTree = true := by
+  change (zipQueryOK 7014 raw54 6 (4,true) &&
+    BB6.Agent31ThreeHole.allMoves (fun mv => partialCheck 7014 (refine raw54 (4,true) (some mv)) (rawKids mv))) = true
+  simp only [Bool.and_eq_true]
+  exact ⟨raw54_query, allMoves_of _ rawKids_checked⟩
+
+theorem raw54_root : raw54 initialSlot = some (some ⟨true,true,1⟩) := by decide
+theorem raw54_sound : ∀ m, compatible raw54 m → WeightedBound 7014 m ∨
+    ∃ e ∈ partialResiduals raw54 rawTree, compatible e.2 m :=
+  partialSound 7014 raw54 rawTree raw54_root raw54_nohalt raw_checked
+#print axioms raw54_sound
 end BB6.Agent8Raw54
