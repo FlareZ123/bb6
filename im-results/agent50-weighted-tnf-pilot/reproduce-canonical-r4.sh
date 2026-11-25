@@ -50,6 +50,9 @@ python3 "$ROOT/tools/lean_compile_closure.py" \
   --override RootFrontierR1R4=im-results/agent47-rooted-tnf/RootFrontierR1R4.lean \
   --override R1Graft=im-results/agent47-r1-sweep/R1Graft.lean \
   --override R1Parent=im-results/agent47-r1-sweep/R1Parent.lean \
+  --override R1RB=im-results/agent47-r1-sweep/R1RB.lean \
+  --override R1Pumps=im-results/agent47-r1-sweep/R1Pumps.lean \
+  --override R1Sweep=im-results/agent47-r1-sweep/R1Sweep.lean \
   --override R1RF=im-results/agent47-r1-sweep/R1RF.lean \
   --override R1Certificate=im-results/agent47-r1-sweep/R1Certificate.lean \
   --override R4Graft=im-results/agent47-r4-counter/R4Graft.lean \
@@ -74,7 +77,6 @@ python3 "$ROOT/tools/lean_compile_closure.py" \
   --override RayTurnExample=im-results/agent8-coverage-contract/RayTurnExample.lean \
   --override RootShift=im-results/agent8-coverage-contract/RootShift.lean \
   --override Symmetry=im-results/agent8-coverage-contract/Symmetry.lean \
-  --override RootShift=im-results/agent8-coverage-contract/RootShift.lean \
   --override Prune=im-results/agent8-coverage-contract/Prune.lean \
   --override OneHalt=im-results/agent8-coverage-contract/OneHalt.lean \
   --override FirstStep=im-results/agent42-coverage-normal/FirstStep.lean \
