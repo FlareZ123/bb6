@@ -83,3 +83,8 @@ The four ray wrappers do not cover the special even state (D(d+2,d)). Agent 48 i
 `39362 <= (d+2)+d <= 118092` for `19680 <= d <= 59045`.
 
 The source-transcribed checkpoints are run32 D(29194,9235), mass38429, and run37 D(41468,86104), mass127572. A root visit must be at steps 33–36; none of those four exact states has first coordinate equal to second+2. The Lean module includes `root_run_32` and `n10_even_gap_two_root_excluded`; this fifth-branch consumer compiled in run `45721351121`.
+
+
+## Source-bridge composition still required
+
+The conditional hypotheses are not orphaned: the source ingredients appear in `im-results/agent49-parity623/TerminalRatio4Source.lean` (four sector-specific terminal ratio-four windows) and `im-results/agent49-parity623/DrainLinearTerminalSource.lean` (four sector-specific signed root-ray gap bounds). The remaining task is to compose the matching pair per sector into each n=10 consumer: derive `hterm` and `B≤145` from the terminal-ratio theorem; derive `hbridgeLo/hbridgeHi`, `e≤306`, and the appropriate `cR/cL≤9` from the drain-linear gap theorem; then apply the matching `n10_*_bridge_excluded`. Variable alignment between predecessor, terminal, and blank-root states is the main proof obligation. This composition has not yet been compiled as a single theorem.
