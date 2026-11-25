@@ -52,6 +52,8 @@ jobs:
           printf '%s  %s\n' 1bce2075fc4e0cd7d740fb71b3796088b190ddb6766e04640d992dadd1b650ff "$work/imports/TerminalLeft.lean" | sha256sum -c -
       - name: Generate Raw68/Raw72/Raw82 source modules
         run: python3 im-results/agent10-tnf-multipump/generate.py 68 72 82
+      - name: Reconstruct source-accepted F1=0LF proof modules
+        run: bash im-results/agent41-raw139-f1-zeroLF/reproduce.sh
       - name: Compile the champion frontier and depth-five F1 sibling refinement
         run: |
           set -euo pipefail
@@ -63,6 +65,10 @@ jobs:
             im-results/agent6-champion-residual/F0SiblingIntegrationExtended.lean \
             im-results/agent48-champion-root/ChampionF1SiblingIntegration.lean \
             im-results/agent48-champion-root/ChampionF1RFIntegration.lean \
+            im-results/agent48-champion-root/ChampionF1ZeroLFIntegration.lean \
+            --source-root "$PWD/.tmp/a41-f1-zeroLF/imports" \
+            --precompiled-manifest "$PWD/.tmp/a41-f1-zeroLF/manifest.json" \
+            --precompiled-dir "$PWD/.tmp/a41-f1-zeroLF/build" \
             --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean \
             --override OuterLCIncPrelude=im-results/agent8-counted-reset/OuterLCIncPrelude.lean \
             --override M0OddResidueSeven=im-results/agent41-m0-n16r7/M0OddResidueSeven.lean \
@@ -128,6 +134,13 @@ jobs:
               "BB6.Agent48F1RFIntegration.remainingF1RF_count",
               "BB6.Agent48F1RFIntegration.cover_remainingF1Extended",
               "BB6.Agent48F1RFIntegration.exact_from_remainingF1RF",
+              "BB6.Agent48F1ZeroLFIntegration.zeroLF_is_depth5_sibling",
+              "BB6.Agent48F1ZeroLFIntegration.cover_zeroLF",
+              "BB6.Agent48F1ZeroLFIntegration.zeroLF_parent_present",
+              "BB6.Agent48F1ZeroLFIntegration.remainingF1ZeroLF_count",
+              "BB6.Agent48F1ZeroLFIntegration.removedZeroLF_count",
+              "BB6.Agent48F1ZeroLFIntegration.cover_remainingF1RF",
+              "BB6.Agent48F1ZeroLFIntegration.exact_from_remainingF1ZeroLF",
           )
           for name in names:
               if name.startswith(("BB6.", "BB6Coverage.")):
