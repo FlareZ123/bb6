@@ -21,10 +21,13 @@ import generate_sweeps as one
 sys.path.insert(0, str(ROOT.parent / "agent10-tnf-multipump"))
 import multi
 import rc_nested
+import boundary_pump
 
 MOVES = ["".join(x) for x in product("01", "LR", "ABCDEF")]
 # The tag is part of the Lean namespace and module names.
 PARAMS = {
+    "1LA": ("OneLA", 4236, "90c10678c9a20c8583c13a390b319dc9aad3fa7f33730c3b019ec9fc9444929e",
+            dict(split=1661, cycle=24485, last=9483, open=4236)),
     "0LF": ("ZeroLF", 4752, "8a90985d99e358fc7c1c05a589d5f3f7546206cb5e9f5802c15dbedcc66a3013",
             dict(split=1932, cycle=28231, last=11454, open=4752)),
     "0LB": ("ZeroLB", 2391, "2d05e4ce3c4a8e9ad9baf8988d1c529531ec2a97d0e2e58cdd4b3e38e5561c21",
@@ -128,6 +131,13 @@ if BRANCH == "1RC":
         pump_code.append(rc_nested.generate_nested(i, one.parse(opens[i])))
         pumps[opens[i]] = (f"{pumpns}.M{i}.table", f"{pumpns}.M{i}.never")
 late = {}
+if BRANCH == "1LA":
+    assert opens[1794] == "1RB0LE_1RC0RF_0RD---_1LD1RE_1LA1LE_0RB1RA"
+    pumps[opens[1794]] = ("BB6.Agent3Raw120OneLABiDFA.table", "BB6.Agent3Raw120OneLABiDFA.never")
+    assert opens[1943] == "1RB1RA_1RC0RF_0RD0LA_1LD1RE_1LA1LE_---1RC"
+    assert opens[1981] == "1RB1RA_1RC0RF_0RD1RB_1LD1RE_1LA1LE_---1RC"
+    late[opens[1943]] = (13107, 10)
+    late[opens[1981]] = (12819, 10)
 if BRANCH == "0LF":
     manifest = ROOT / "0LF-recursive-holdouts.json"
     subprocess.run([sys.executable, str(ROOT / "recursive_shuttle.py"), BRANCH,
@@ -227,6 +237,15 @@ for i, code in enumerate(opens):
         continue
     p = one.parse(code)
     events = one.concrete_events(p, EVENT_LIMIT)
+    if BRANCH == "1LA":
+        ans = boundary_pump.candidate(p, events)
+        if ans is not None:
+            generated, info = multi.generate(i, p, ans)
+            pump_code.append(generated)
+            pumps[code] = (f"{pumpns}.M{i}.table", f"{pumpns}.M{i}.never")
+            multi_count += 1
+            print("grouped-boundary", i, info)
+            continue
     ans = one.candidate(p, events)
     if ans is None and BRANCH == "0RA" and i == 479:
         ans = extended_one_candidate(p, events)
@@ -299,7 +318,7 @@ summary = {
     "one_block_pumps": one_count,
     "multi_block_pumps": multi_count,
     "late_leaves": len(late),
-    "custom_counter_and_nested_leaves": {"0RC": 4, "1RC": 3, "0RA": 13, "1LF": 6, "0LB": 6, "0LF": 18}.get(BRANCH, 0),
+    "custom_counter_and_nested_leaves": {"1LA": 1, "0RC": 4, "1RC": 3, "0RA": 13, "1LF": 6, "0LB": 6, "0LF": 18}.get(BRANCH, 0),
     "unresolved": len(missing),
     "unresolved_sample": [{"index": i, "table": code} for i, code in missing[:100]],
 }
@@ -414,7 +433,7 @@ theorem split_checked (p : PartialMachine) (n : Nat) (s : Slot)
   simp only [Bool.and_eq_true]
   exact ⟨hq, allMoves_of _ hk⟩
 """
-emit(prefix + "Base", ["Raw120Late"] + ({"0RC": ["Raw120RCCounter"], "1RC": ["Raw120OneRCCounter"], "1LF": ["Raw120OneLFCounter", "Raw120OneLFTwo", "Raw120OneLFStack"], "0LB": ["Raw120ZeroLBMirror", "Raw120ZeroLBReset", "Raw120ZeroLBShuttle", "Raw120ZeroLBTriple"], "0LF": ["Raw120ZeroLFRecursive", "Raw120ZeroLFWord"], "0RA": ["Raw120RAPhases", "Raw120RABiDFA", "Raw120RA423BlockAdapter"]}.get(BRANCH, [])) + [prefix + "Sweeps"], base)
+emit(prefix + "Base", ["Raw120Late"] + ({"1LA": ["Raw120OneLABiDFA"], "0RC": ["Raw120RCCounter"], "1RC": ["Raw120OneRCCounter"], "1LF": ["Raw120OneLFCounter", "Raw120OneLFTwo", "Raw120OneLFStack"], "0LB": ["Raw120ZeroLBMirror", "Raw120ZeroLBReset", "Raw120ZeroLBShuttle", "Raw120ZeroLBTriple"], "0LF": ["Raw120ZeroLFRecursive", "Raw120ZeroLFWord"], "0RA": ["Raw120RAPhases", "Raw120RABiDFA", "Raw120RA423BlockAdapter"]}.get(BRANCH, [])) + [prefix + "Sweeps"], base)
 
 assert tree[0] == "split"
 root_n, root_slot, root_kids = tree[1], tree[2], tree[3]
