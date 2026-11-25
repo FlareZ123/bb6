@@ -47,7 +47,6 @@ theorem proposedChampionScore_ge_two_million :
     _ ≤ (sectionResult 7 2 6 63).cost := hfirst
     _ ≤ proposedTM63Moves+7 := by
       unfold proposedTM63Moves
-      dsimp only
       omega
 
 #print axioms proposedIncrementCost_ge_six_four
