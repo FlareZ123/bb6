@@ -1,6 +1,5 @@
 import Q32Slice26
 import RootFrontier
-import Raw10BoxCore
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 namespace BB6.Agent44Q32Row26
@@ -45,20 +44,29 @@ theorem row26_safe_at (B : Nat) (hB : 46 ≤ B) (m : Machine)
   intro k d hk hd
   exact Nat.le_trans (h k d hk hd) hB
 
-/-- Consume row26 alongside an arbitrary previously accepted roster while
-    preserving every box in the exact remaining parent complement. -/
+/-- Exact logical complement of the certified cylinders. This depends only on
+    original machine semantics. -/
+def remainder (prior : List PartialMachine) (m : Machine) : Prop :=
+  compatible parent m ∧ ∀ p ∈ p26 :: prior, ¬ compatible p m
+
 def cover_from_augmented_remainder (B : Nat) (hB : 46 ≤ B)
     (prior : List PartialMachine)
     (hPrior : ∀ p ∈ prior, ∀ m, compatible p m → WeightedBound B m)
-    (hOpen : ∀ box ∈ BB6.Agent49BoxBridge.remainder parent (p26 :: prior),
-      ∀ m, BB6.Agent49Box.Fits box m → WeightedBound B m) :
+    (hOpen : ∀ m, remainder prior m → WeightedBound B m) :
     Cover (WeightedBound B) parent :=
-  BB6.Agent49BoxBridge.coverFromRemainder B parent (p26 :: prior)
-    (fun p hp m hm => by
-      rcases List.mem_cons.mp hp with h | h
-      · subst p
-        exact row26_safe_at B hB m hm
-      · exact hPrior p h m hm) hOpen
+  Cover.leaf parent (fun m hm => by
+    classical
+    by_cases hc : compatible p26 m
+    · exact row26_safe_at B hB m hc
+    · by_cases hp : ∃ p ∈ prior, compatible p m
+      · obtain ⟨p, hmem, hfit⟩ := hp
+        exact hPrior p hmem m hfit
+      · apply hOpen m
+        refine ⟨hm, ?_⟩
+        intro p hmem hfit
+        rcases List.mem_cons.mp hmem with rfl | hmem
+        · exact hc hfit
+        · exact hp ⟨p, hmem, hfit⟩)
 
 #print axioms parent_encoding
 #print axioms row26_encoding

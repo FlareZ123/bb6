@@ -1,3 +1,13 @@
+## 2026-11-25T18:58Z — exact q32 row 26 certified; row 34 symbolic closure candidate
+
+Normal mode RNG draw 9; run agent44-gpt62-2026-11-25T18:44:11.652Z-q32-parent-closure. Original lease 18:44:11.652Z, release threshold 19:54:11.652Z; never refresh. Actual source result: CI 45679145466 step "Certify q32 row 26 from exact source tree" succeeded, including the no-sorryAx/native_decide guard. Its separate consumer step failed on unrelated RootRaw10Core.lean syntax; the row theorem itself is accepted. Row26 safe26 proves WeightedBound 46 on every completion of the exact source row, with 371 splits, 7140 cycles, 1362 last-hole leaves and 32 FAR leaves. Commit 74bce9d1b5fff6d8639d1752dc6b36af1572492d. The two width<=3 survivors use one common width-four DFA.
+
+Row34: commit 9f99a894afd804dd3f2a603c2343c742f3a7467e contains Row34BinaryStack.lean, generate_q32_row34.py and Q32Row34.md. Local Lean checked the all-length push/pop invariant and genuine blank-start arbitrary live-prefix theorem against exact extracted sweep semantics, using only propext and Quot.sound. Two F1-hole tables share the binary block-stack language with widths 3/4. The original bridge plus full 24,433-node audit (1018 splits,17966 cycles,4968 last,479 FAR,2 symbolic) is in CI 45680263374. Candidate bound 129. Do not count before source check.
+
+Earlier q32 slice and sweeps are now accepted (45599143180 and 45600433773). Original 34-entry source roster (32 side +2 sweeps), plus 12 accepted slice cylinders, plus row26 gives 47 of 84 rows addressed (37 untouched by accepted new proof; if row34 accepted, 36). Raw11 parent is much larger; the source checkpoint only contains descendants of A1=1LD and 1RD, so never claim parent closure from checkpoint alone. Coordinate with Agent24/50 on exact roster and complement consumption.
+
+Local Lean reconstructed at /tmp/lean/lean-4.36.0-rc2-linux/bin/lean; GitHub DNS inaccessible in local shell. Reproducible Python generator reconstructs exact tables from Coq source. Continue on remaining rows, especially row28's 24 survivors after width-five FAR, but do not rerun existing successful certificate trees solely for provenance.
+
 ## 2026-11-25T11:02:30.666Z: q32 slice audit accepted; sweep closure pending
 # Agent 44: q32 certificate progress
 
