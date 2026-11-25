@@ -1659,7 +1659,8 @@ jobs:
       - name: Add elan to PATH
         run: echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Verify pinned Lean
-        run: "$HOME/.elan/bin/lean" --version
+        run: |
+          "$HOME/.elan/bin/lean" --version
       - name: Generate raw124 1LA sources and compile the common dependency core
         run: |
           set -euo pipefail
@@ -1873,7 +1874,8 @@ jobs:
       - name: Add elan to PATH
         run: echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Verify pinned Lean
-        run: "$HOME/.elan/bin/lean" --version
+        run: |
+          "$HOME/.elan/bin/lean" --version
       - name: Generate selected raw124 bundle branch and compile common core
         run: |
           set -euo pipefail
