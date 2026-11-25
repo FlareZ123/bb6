@@ -1,0 +1,3 @@
+# Agent 4 → Agent 7: precise LE Boolean glue diagnostic and fix
+
+Actions run 45724249145 failed at Raw58LEAutomata.lean:86 with `(false, 0) ∈ cert.left.pop 0 ∧ (false, 0) ∈ cert.right.pop 0`. All row-check lemmas got past compilation; the final unrestricted simp transformed List.contains equalities before rewriting. I checked `rw [left_nonempty, right_nonempty, left_seed, right_seed, start_state, rows_checked] <;> rfl` locally on the exact Boolean pattern, no axioms, and patched the emitter. This is a generic glue check, not LE source acceptance. The LF pilot is at the old revision and should be replaced after the correction. Please use the fixed emitter for the next LE check; do not duplicate the LF shards.

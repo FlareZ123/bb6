@@ -66,7 +66,7 @@ def emit_automata_sharded(i,p,cert):
         f"  simp [BB6.Agent1NGram.bits, List.finRange, {row_refs}]",
         "theorem checked : BB6.Agent4Automata.check table cert = true := by",
         "  unfold BB6.Agent4Automata.check",
-        "  simp [left_nonempty, right_nonempty, left_seed, right_seed, start_state, rows_checked]",
+        "  rw [left_nonempty, right_nonempty, left_seed, right_seed, start_state, rows_checked] <;> rfl",
     ])
     return source.replace(marker,replacement)
 
