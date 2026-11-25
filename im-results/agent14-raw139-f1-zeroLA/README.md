@@ -1,0 +1,7 @@
+# Raw139 F/1=0LA — complete weighted cylinder closure
+
+**Original-semantics local Lean kernel accepted.** Parent table `[7,24,11,24,14,21,3,16,12,11,24,0]`; theorem `BB6.Agent14F1OneLA.all_completions_weighted` establishes `WeightedBound 553` for every compatible completion. Axioms: propext, Classical.choice, Quot.sound.
+
+The 9 splits yield 208 terminal leaves: 41 translated cycles, 45 last-hole, 83 FAR, 28 affine growth and 11 recursive carry proofs. All closed. The latter eleven share a common outward sweep (9-step setup and repeated 4-step transfers) and inward 3-step sweeps. At an odd leading unary length the core acts on a structurally recursive binary or four-valued digit word, returns at E over an arbitrary left exterior, and reconstructs the growing unary run. Each recursive carry proof and each resulting nonhalting theorem uses only propext and Quot.sound. H13 differs by one inserted leading one and therefore advances an odd-length family directly; the other ten alternate parity. `LAOuter.lean` proves the common phase composition, `gencarry.py` produces the exact flavor-specific structural inductions.
+
+Reproduce from repository root using `bash im-results/agent14-raw139-f1-zeroLA/reproduce.sh`, Lean 4.36.0-rc2. The delta archive overlays the exact 1RF source archive (see ../agent14-raw139-f1-oneRF). The local original dependency closure was the verified Agent48 CI artifact 15021380200, run 45611897213. Independent clean-source CI and canonical frontier graft are separate pending tasks.
