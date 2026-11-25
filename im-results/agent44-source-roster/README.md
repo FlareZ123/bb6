@@ -41,6 +41,21 @@ Crucially, `q32_parent_children_coveredb = false`: only two of the 16 children h
 
 The separate 50-node first-hole split in `Agent8Chunk2FirstHole.v` is a different decomposition: it produces 1,200 child obligations from the 50 unresolved post-certificate nodes. That module still awaits a successful source-roster CI run because of the Agent47 source-witness dependency. The new `Agent44Q32RemainderBranchProbe.v` is queued in the source-roster target to quantify the 50 unresolved nodes by A1 branch. 
 
+## Decider-first full-parent source tree (pending CI)
+
+The q32 parent is not safely closed by the 84-node checkpoint alone. A new generic alternative is in `Agent44Q32DeciderTree.v`:
+
+- A `NonHalt` verdict closes the current cylinder through `agent32_decider_bounded_sound` and `source_nonhalt_cylinder`.
+- A `Halt h` verdict with exactly one undefined transition closes through `source_last_hole_cylinder`.
+- Other `Halt h` verdicts split on every member of the complete `source_moves` list, using the actual bounded halt trace returned by the decider soundness theorem.
+- `Unknown` and depth-limited `Halt` nodes remain in an explicit open frontier.
+
+The generic soundness theorem is conditional on safety of that frontier and applies at any bound at least 1,000,006. The q32 instance computes a depth-2 frontier. This is a complete parent-cylinder decomposition at the source-tree level; it does not assume that the q32 queue slice covers the other first-hole branches. CI target `enumerate62-q32-decider-tree` is run **45538177877**, last observed in progress. No frontier count or safety closure is claimed until it completes successfully.
+
+A second integration audit is in `Agent44Q32ParentTreeIntegration.v`. It checks whether Agent50's parent-tree open leaves are covered by the original 34-node roster, the newer side-search roster, or the surviving q32 queue residuals, using the actual source-refinement relation rather than comparing list lengths. If the coverage boolean is true, a conditional parent-safety theorem follows from safety of the remaining queue nodes. CI target `enumerate62-source-first-hole` is run **45537676191**, last observed in progress; the coverage boolean has not yet been accepted.
+
+The deeper 1,200-child side-search attempt was cancelled and is not a result. Its optimized source module remains experimental. All of these source-tree theorems are Coq-side and still require a separate Lean bridge before they can discharge a Lean `Cover (WeightedBound B)` obligation. The existing `WeightedTNFCertificate` constructors suggest a route (nonhalt, last-hole, expand), but no Coq-to-Lean proof transfer has been established.
+
 ## Boundary
 
 No safety result for the 50 descendants is claimed. The global 124-residual upper-bound programme remains open. Keep all unfinished work in `im-results/`; promote nothing here to `results/` until the mathematical closure is complete and independently auditable.
