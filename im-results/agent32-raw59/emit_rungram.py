@@ -57,7 +57,7 @@ def emit(i,table,dl,dr,expected):
     for q,a,l,r in S:rs[q*2+a,l].add(r)
     for s in range(12):
         out.append(f'def row{s} : Array Trie := '+arr(trie(rs[s,l]) for l in range(len(dl)//2)))
-    out.append('def cert : Cert := ⟨leftGraph,rightGraph,'+arr(f'row{s}' for s in range(12))+'⟩')
+    out.append('def cert : BB6.Agent32FastBiDFA.Cert := ⟨leftGraph,rightGraph,'+arr(f'row{s}' for s in range(12))+'⟩')
     for s in range(12):
         out.append(f'theorem row_checked{s} : rowCheck table cert {s//2} {bs(s%2)} = true := by decide')
     out.extend(['theorem checked : check table cert = true := by',
