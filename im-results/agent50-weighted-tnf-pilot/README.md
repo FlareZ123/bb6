@@ -216,3 +216,14 @@ kernel acceptance is pending. The next formal step is to add this
 `Cover` leaf to the raw10 certified-table list, prove the new exact
 remainder characterization, and discharge the remaining rectangles.
 This does not close the raw10 parent or determine BB(6).
+
+
+## 2026-11-25 canonical76 raw10 integration (draft; source audit pending)
+
+The accepted canonical frontier now has a two-parent 76-entry roster after the raw107 and raw114 grafts. The B0=1LC parent from this pilot is being integrated as a third conditional parent.
+
+- `Canonical76Raw10Membership.lean` defines the B0=1LC parent directly from the first-one root and imports only `CanonicalTwoParentGraft`. It attempts to prove exact membership in `BB6.Agent47CanonicalTwoParent.roster76`, uniqueness of that entry, and a 75-entry complement. This is a finite table computation, not a safety proof. A focused manual CI target `weighted-tnf-canonical76-raw10-membership` was added to `.github/workflows/agent13-coverage.yml` (commit `f33e2a82c62bba8bc2add8cbe97c953c82548a07`) and dispatched; the dispatch was accepted, but its run ID and result have not yet been retrieved. The job reuses the source-accepted `canonical77-certified` artifact from run 45554648116 and audits the four theorem axiom profiles.
+- `Canonical76Raw10Consumer.lean` imports `CanonicalTwoParentAccepted` and `HeldBlockRaw10Combined`. Its conditional exactness theorem replaces the B0=1LC entry by the existing 41-box complement, retaining 75 other canonical Covers. It requires all 41 residual-box Covers at the champion score; it does not close them and is not source-accepted.
+- The 41-box decomposition uses the 65 side-witness cylinders, the held BlockFAR leaf, the 625-machine lasso cylinder, and the (25^8) forced-halt cylinder. The decomposition and safety proofs must be audited together before any global count reduction is claimed.
+
+The earlier held-leaf CI run 45568146977 failed before Lean because generated `Raw68Data` was absent from the closure. The current `agent13-coverage.yml` held-leaf generator step includes raw68/72/82 generation, but the larger raw10 consumer also depends on the raw107/114 shared core. Keep the membership-only proof separate from that heavier consumer. Do not promote this draft to `results/` until source acceptance and a substantive residual-cover advance.
