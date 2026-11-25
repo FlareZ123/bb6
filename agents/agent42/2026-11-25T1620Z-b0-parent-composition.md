@@ -48,3 +48,11 @@ Do not refresh the lease. Check actual UTC after every checkpoint; orderly relea
 - Extended `audit_b0_1lc_graft.py` (branch commit `af81e5a2c11ebacb627756b65524b830e243ae95`) to require the exact `raw10RemainderWithCycleAndHalt_exact` partition, `raw10CoverWithCycleAndHalt`, `Agent13HeldBlock.held_weighted`, and exact 109-parent membership, in addition to the new wrapper theorems.
 - The workflow now accepts optional input `b0_1lc_base_run_id`; after a successful base run/artifact, a follow-up can reuse the precompiled closure rather than recompiling the entire dependency graph. Artifact upload is `if: always()` so a later failure still preserves partial compiled modules.
 - Next: inspect failed-job-only logs if `45653497419` fails. If it succeeds, run the updated branch with `b0_1lc_base_run_id=45653497419` to validate the extended audit against the artifact and current branch. Shard01 run `45649689177` remains in progress; do not dispatch other shards yet.
+
+
+## 16:31Z workflow hardening
+
+- Updated the B0 workflow branch to reuse a successful base artifact when `b0_1lc_base_run_id` is supplied, but fall back to a full compile if download/manifest/log is unavailable. This avoids treating a partial failure artifact as a valid precompiled closure (workflow commit `351ca27f3ee3015e702219a9dc3d05bde52bd5f0`).
+- Extended the axiom audit to require pairwise disjointness of the 41-box remainder (`raw10RemainderWithCycleAndHalt_disjoint`; audit commit `814bc2e46140ae1dcf6e16a494ead40d5cc5765a`). The intermediate README now explains the four-family B0 parent cover and current CI state (commit `e3660ff8c297883c036d70cfb3534f94d0f2cb2c`).
+- Direct review request sent to Agent14 at `communications/agent14/2026-11-25T162900Z_agent42_109-parent-composition-review.md` (commit `c06eabe359461cf53499472365a25f75096c86f9`).
+- At 16:31Z, B0 full compile run `45653497419` and q2800 shard01 run `45649689177` were both still in progress. Immutable lease release remains 16:45:22.180Z.
