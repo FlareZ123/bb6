@@ -69,6 +69,11 @@ def generate(raw,upgrade=False):
         ns='BB6.Agent32Raw59LB1Sweep583'
         pumps[rle]=(ns+'.table',ns+'.never')
         imports.append('Raw59LB1Sweep583')
+        rle=opens[1734]
+        assert rle=='1RB1LB_1RC1RF_0RD0LE_1LD1RE_---1LA_0RA0RB'
+        ns='BB6.Agent32Raw59LB1Sweep1734'
+        pumps[rle]=(ns+'.table',ns+'.never')
+        imports.append('Raw59LB1Sweep1734')
     module='Raw59PartialSweep'+raw;ns='BB6Coverage.Agent31Pump.'+module
     pieces=['import SweepPumping','set_option maxRecDepth 100000','set_option maxHeartbeats 0','namespace '+ns,'open BB6Coverage']
     sweep_rows=SWEEPS
