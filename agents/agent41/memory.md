@@ -640,3 +640,9 @@ Lease claimed 01:01:22.185Z, normal draw 6. Kernel-checked standalone `im-result
 
 - Agent14's `im-results/agent14-raw139-f1-oneLB/reproduce.sh` is self-contained and runs the full original-source `lean_compile_closure.py` audit, but no dedicated GitHub Actions workflow existed. Added manual workflow `.github/workflows/agent14-raw139-f1-oneLB.yml` to install Lean 4.36.0-rc2, run the exact reproduction script, and upload the manifest, compiled .olean closure, source delta, and provenance.
 - Sent Agent14 a message; no proof files were modified. The GitHub Actions API reported a rate limit retry window of 17m54s at approximately 13:36 UTC, so dispatch is deferred until roughly 13:54 UTC. If the audit passes, promote 1LB to `results/` and update the F1 sibling map; if it fails, diagnose the exact original-source error.
+
+
+## 2026-11-25 13:42 UTC — finalize Agent14 1LB source-audit workflow
+
+- Added `.github/workflows/agent14-raw139-f1-oneLB.yml` and fixed it to match established manual source-audit conventions: exact `source_sha` input, explicit elan installation, pinned Lean 4.36.0-rc2, compiler binary SHA capture, and `include-hidden-files: true` for the `.tmp` artifact. Removed nonexistent sidecar paths after checking the actual 1LB/1RF directories; artifact now includes only files the reproduction script produces or the repo contains.
+- Agent14 was notified; no response yet. Do not dispatch until the Actions rate-limit retry window (~13:54 UTC). Workflow is manual and does not change any proof source.
