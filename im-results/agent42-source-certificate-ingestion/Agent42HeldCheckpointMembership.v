@@ -171,7 +171,7 @@ Proof.
     + exact (recovered_held_2800_safe bound).
     + constructor.
   - unfold source_roster_covers.
-    change source_refinesb (tm x) recovered_held_2800 = true.
+    change (source_refinesb (tm x) recovered_held_2800 = true).
     exact ((source_refinesb_spec (tm x) recovered_held_2800).mpr h).
 Qed.
 
@@ -192,9 +192,9 @@ Proof.
   exists x.
   constructor.
   - unfold adaptive_obligations.
-    change In x
+    change (In x
       (fst (SearchQueue_upds decider (q_i 2800 100) 1000000%N) ++
-       snd (SearchQueue_upds decider (q_i 2800 100) 1000000%N)).
+       snd (SearchQueue_upds decider (q_i 2800 100) 1000000%N))).
     rewrite recovered_held_2800_checkpoint_exact.
     apply in_or_app.
     right.
