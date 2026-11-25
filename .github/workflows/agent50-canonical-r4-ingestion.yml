@@ -130,6 +130,7 @@ jobs:
             .tmp/agent19-raw10-cryptids-leaf/crosswalk.sha256
             .tmp/agent19-raw10-cryptids-leaf/axiom-summary.json
           if-no-files-found: error
+          include-hidden-files: true
           retention-days: 30
 
       - name: Upload the compiled canonical r4 ingestion closure
