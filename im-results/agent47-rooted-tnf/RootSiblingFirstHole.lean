@@ -146,7 +146,7 @@ def rootSiblingAfterTwo (parent : Move) : Config :=
 theorem rootSiblingKnownRunTwo (parent : Move) :
     knownRun (rootSiblingParent parent) 2 = some (rootSiblingAfterTwo parent) := by
   simp [rootSiblingAfterTwo, knownRun, knownStep, rootSiblingParent,
-    refine, BB6.Agent50TNFPilot.root, CoverageAdapter.firstOneCylinder, emptyTable, blank, readSlot, applyMove]
+    refine, BB6.Agent50TNFPilot.root, CoverageAdapter.firstOneCylinder, emptyTable, blank, readSlot, applyMove, initialSlot]
 
 def rootSiblingChild (parent child : Move) : PartialMachine :=
   refine (rootSiblingParent parent) (readSlot (rootSiblingAfterTwo parent)) (some child)
