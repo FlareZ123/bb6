@@ -179,7 +179,7 @@ jobs:
             enumerate62-q32-canonical-parent) make -f Makefile.coq -j 2 Agent5Enumerate62DeciderSound.vo Agent8PackedChunk2_32_32.vo Agent44Q32CanonicalParent.vo Agent44Q32FirstHoleCoverageProbe.vo ;;
             enumerate62-last20-witness) make -f Makefile.coq -j 2 Agent5Last20Witness.vo ;;
             enumerate62-resume-last20) make -f Makefile.coq -j 2 Agent5PackedChunk12800_20_1000000.vo ;;
-            enumerate62-source-roster) make -f Makefile.coq -j 2 Agent47SourceSweep.vo && make -f Makefile.coq -j 2 Agent47SourceChunk2.vo Agent47SourceTree.vo Agent44ChunkSideSearch.vo Agent44Q32RemainderBranchProbe.vo && make -f Makefile.coq -j 2 Agent8Chunk2FirstHole.vo ;;
+            enumerate62-source-roster) make -f Makefile.coq -j 2 Agent47SourceSweep.vo && make -f Makefile.coq -j 2 Agent47SourceChunk2.vo Agent47SourceTree.vo Agent44Q32RemainderBranchProbe.vo && make -f Makefile.coq -j 2 Agent8Chunk2FirstHole.vo ;;
             enumerate62-source-first-hole) make -f Makefile.coq -j 2 Agent47SourceSweep.vo && make -f Makefile.coq -j 2 Agent47SourceChunk2.vo Agent47SourceTree.vo Agent44Q32CanonicalParent.vo && make -f Makefile.coq -j 2 Agent8Chunk2FirstHole.vo Agent50Q32ParentTreeSearch.vo ;;
           esac
       - name: Print final original theorem assumptions
