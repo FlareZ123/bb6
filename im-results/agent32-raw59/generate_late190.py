@@ -106,7 +106,7 @@ theorem read_eq : zipRead table {STEPS} = some (2,true) := by
       change ((project z).q,(project z).l.headD false) = _
       rw [h']
       rfl
-    simp [he,hslot]
+    exact congrArg some hslot
 
 theorem last_ok : zipCheck {BOUND} table (.last {STEPS} (2,true)) = true := by
   simp only [zipCheck,zipQueryOK,read_eq]
