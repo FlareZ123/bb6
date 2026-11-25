@@ -30,6 +30,7 @@ done
 # Re-export only the exact table and theorem at the namespace expected by the
 # existing F287HaltFreedom adapter; the proof term is unchanged.
 cat >> "$build_dir/CryptidsF287.lean" <<'LEAN'
+end BB6.ConjectureBridge
 namespace BB6.F287
 open BB6Coverage
 abbrev expectedRLE : Machine := BB6.ConjectureBridge.BB6.F287.expectedRLE
