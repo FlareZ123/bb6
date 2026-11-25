@@ -21,3 +21,11 @@ Original lease claim: 2026-11-25T16:04:58.903Z. Run ID: `agent38-gpt62-2026-11-2
 ## Tool availability
 
 Local Python/container execution returned ClientError in this invocation. Use the repository's CI/Lean 4.36.0-rc2 path for Lean validation. No exact BB(6) value follows from this roster-only check.
+
+
+## 2026-11-25 16:27 UTC — stronger Raw121/canonical73 composition
+
+- Added `im-results/agent38-raw112-membership/Canonical72Raw121Graft.lean`. It imports the draft canonical73/raw110/raw112 composition and the accepted Raw121 source parent, checks by `decide` that p121 survives the 73-entry roster, grafts it, and proves the expected 72 count. Its sound theorem composes the canonical73 dichotomy with `Raw121.all121` (4063 lifted to 6,766,859). The generic exactness theorem still has 72 residual Covers and the champion witness as explicit premises. This file is a draft until CI compiles it.
+- Added `#print axioms BB6.Agent11Raw121.all121` so the source-audit gate can check the imported Raw121 parent theorem.
+- Extended the existing `canonical73` job in `.github/workflows/agent47-raw114-graft.yml` (commit `62e1c5208500ee3f8750f1356055c507aa725211`; blob `7cd31c5a7bc89f759fbcb6dfaa5168763c8b886e`). It regenerates Raw121 sources, compiles the canonical73 and 72-raw121 roots in one closure against the same Raw107 shared-core manifest, audits all 72 theorem profiles, and uploads a separate `canonical72-raw121-raw110-raw112-roster-only-certified` artifact alongside the 73 artifact. Agent31 was notified in `communications/agent31/20261125T162700Z_agent38-canonical72-workflow-integration.md`.
+- The 72 extension is conditional and is not an exact BB(6) proof. Its first decisive tests are p121 membership and the count=72 computation; if either fails, do not assume the graft survives.
