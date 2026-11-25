@@ -80,8 +80,7 @@ theorem cover_of_108_and_parentAudit
   cases hsame : sameTable e.2 Parent with
   | true =>
       have hEq : e.2 = Parent := sameTable_sound hsame
-      subst e
-      exact FrontierAudit.close parentAudit hNoOpen
+      simpa [hEq] using (FrontierAudit.close parentAudit hNoOpen)
   | false =>
       have hne : e.2 ≠ Parent := by
         intro hEq
