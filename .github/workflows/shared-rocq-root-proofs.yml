@@ -300,7 +300,7 @@ jobs:
         run: |
           set -euo pipefail
           [[ "$OFFSET" =~ ^[0-9]+$ && "$SIZE" =~ ^[0-9]+$ && "$FUEL" =~ ^[0-9]+$ ]]
-          (( OFFSET < 12820 && SIZE >= 1 && SIZE <= 12820 - OFFSET && FUEL <= 1000000 ))
+          (( OFFSET < 12820 && SIZE >= 1 && SIZE <= 12820 - OFFSET && FUEL <= 5000000 ))
           cat > Agent8PackedChunk.v <<COQ
           From BusyCoq Require Import Enumerate62 Agent8QueueCheckpoint Agent8PackedRoot.
           From Coq Require Import List NArith Strings.String.
