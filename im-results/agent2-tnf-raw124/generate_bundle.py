@@ -148,7 +148,7 @@ theorem {theorem} : check {B} {pname} tree{tag} = true := by
         _,n,s,ks=node
         out="";ts=[]
         for k,m in zip(ks,MOVES):
-            counter+=1;t=str(counter);ts.append(t);pn="p"+t
+            counter+=1;t=str(counter);ts.append(t);pn="pNode124" if t=="124" else "p"+t
             out+=f"abbrev {pn} : PartialMachine := refine {pname} {slot(s)} (some {move(m)})\n"
             out+=recursive(k,pn,t)
         return out+assemble(n,s,pname,tag,ts)
