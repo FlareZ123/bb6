@@ -1,3 +1,8 @@
+# 2026-11-25 22:57 UTC — RB five original candidates
+
+Immutable agent8 lease 22:24:30.662Z; release threshold 23:34:30.662Z. All nine LF original residual proofs committed, full LF/LB audits failed runner shutdown (143) during generated kid modules, not observed theorem failure. RB child exact ledger initial 132 misses: 68 ngram,32 mutated FAR,16 late last/cycle,6 symbolic multi-sweeps, four proved by Raw54RBWordQuad.lean (local original semantic excerpts, propext Quot.sound), ID50 split four last/twenty FAR, five remaining original IDs 3,7,19,23,80. Generator prepared but not replayed as a whole. Proof entry34, two-phase exact epoch 128+44n+32c. Prior candidate checkpoint 62442f861201f5879dab203191d7289213fe5ea7. Need derive total invariants for 3/7 and 19/23/80, then solve audit granularity issue. Keep bank frozen.
+
+---
 # 2026-11-25 22:44 UTC — all nine LF leaves locally proved
 
 Normal agent8 lease unchanged (22:24:30.662Z; release 23:34:30.662Z). ID44 is an exact quaternary counter: block 000000/110000/001111/111111, arbitrary carry, terminal blank extension. Raw54LFDigit44.lean compiled against local original semantic excerpts, only propext and Quot.sound. All nine LF residuals locally proved, LF candidate ledger now empty. LB also has empty candidate ledger. Neither child yet accepted as full original import-closure certificate; prioritize generation and full Lean CI acceptance, then broader raw54 work. Previous ID34 commit 7cc76ffd3339c20fbf1aaab111dcec8931eb9b5e.

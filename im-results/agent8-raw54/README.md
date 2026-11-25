@@ -96,3 +96,9 @@ python tools/lean_compile_closure.py --workdir /tmp/a8-raw54-cut --jobs 4 im-res
 ```
 
 The manual Agent 13 coverage target `weighted-tnf-agent8-raw54` generates and checks `BB6.Agent8Raw54.cover`, and produces a source manifest on success. The full audit must be checked before using its residual roster. Raw54 has other children; closure of this child alone cannot close the raw54 parent. Raw55/56 are distinct canonical siblings; raw126–129 are excluded by state-introduction canonicality.
+
+### E0=1RB child (discovery and new proof)
+
+665 splits, 11658 cycles, 2985 last, 653 open; frozen bank hits 521, leaving 132. The rb witness ledger records 68 sparse n-gram, 32 new FAR, 15 extended last, one extended cycle, six symbolic single-period multi-sweep candidates. ID50 splits at 1967 on B1, four last children at 1968 and twenty FAR certificates with one-state DFA 000. All four ID10/11/13/14 machines share an exact two-phase recurrence in Raw54RBWordQuad.lean, locally checked with only propext and Quot.sound. E blank-left right zipper is 00000 (1100)^n 1111 enc(w_n), where enc uses 0000/1111 and w_0=[]; w_{n+1}=bump(w_n). Entry 34, exact return cost 128+44n+32c(w_n) where c counts leading true digits. The marker scan transfers 1100 to 0111 on the left, the digit scan consumes carried ones and the E stack unwind restores the marker and clears carried digits. Arbitrary-word induction includes implicit blank extension. Remaining original RB nodes: 3,7,19,23,80 (discovery-stage, not yet full source audit).
+
+LF/LB full source audits 45715947363 and 45715952521 reached generated kid modules but runner shutdown terminated them (exit 143), not an observed theorem rejection. All new LF modules had already reached the dependency compilation stage; full closure unaccepted. Next reduce certificate-check granularity and/or use local original source closure.

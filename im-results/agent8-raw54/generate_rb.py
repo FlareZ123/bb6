@@ -93,8 +93,20 @@ def main():
     for row,code in far.items():
         d,D,L,R,z=masks(parse(row),int(code[0]),[int(c,36) for c in code[1:]])
         certs[row]=f".far {str(code[0]=='1').lower()} {d} ⟨0,{D},{L},{R},{z}⟩"
+    row50=misses[50]
+    children=[]
+    for a in MOVES:
+        if a in ("0LA","0RA","1LA","1RA"):
+            children.append(".last 1968 (0,true)")
+        else:
+            raw50=row50.replace("_","")
+            full=raw50[:9]+a+raw50[12:]
+            child="_".join(full[i:i+6] for i in range(0,36,6))
+            d,D,L,R,z=masks(parse(child),0,[0,0])
+            children.append(f".far false {d} ⟨0,{D},{L},{R},{z}⟩")
+    certs[row50]=".split 1967 (1,true) (byMove [\n"+",\n".join(children)+"])"
     residual=[row for row in rows if row not in certs]
-    assert len(residual)==10
+    assert len(residual)==5
     (ROOT/"rb-unresolved.txt").write_text("".join(f"{misses.index(row)}:{row}\n" for row in residual))
     stats=Counter()
     def build(t):
