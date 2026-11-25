@@ -6,11 +6,15 @@ on:
         description: Audit only the new C1=1LC sweep certificates
         type: boolean
         default: false
+      zero_la_only:
+        description: Audit C1=0LA sweep certificates
+        type: boolean
+        default: false
 permissions:
   contents: read
 jobs:
   audit:
-    if: ${{ !inputs.one_lc_only }}
+    if: ${{ !inputs.one_lc_only && !inputs.zero_la_only }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -60,6 +64,35 @@ jobs:
           log = open('/tmp/a6-one-lc.log').read()
           for ns in ('C1OneLC','C1Pair','C1Triple','C1TwoBlocks','C1Alternating','C1Stack','C1Carry','C1OneLCParent'):
               for name in ({'C1Stack':('progress','entry','next_sound','never','cover'), 'C1Carry':('transform','advance','entry','next_sound','never','cover'), 'C1OneLCParent':('cover_oneLC',)}.get(ns,('cycle','entry','growth','never','cover'))):
+                  matches = re.findall(r"'BB6\.Agent6"+ns+r"\."+name+r"' depends on axioms: \[([^\]]*)\]",log)
+                  if len(matches) != 1:
+                      raise SystemExit('missing or duplicate audit: '+ns+'.'+name)
+                  used = {x.strip() for x in matches[0].split(',') if x.strip()}
+                  assert used <= {'propext','Classical.choice','Quot.sound'}, (ns,name,used)
+          PY
+
+  zero-la:
+    if: ${{ inputs.zero_la_only }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Unpack coverage source
+        run: python im-results/agent13-coverage/unpack.py
+      - name: Compile and audit exact C1=0LA source
+        run: |
+          set -euo pipefail
+          python tools/lean_compile_closure.py im-results/agent6-champion-residual/C1ZeroLAFour.lean im-results/agent6-champion-residual/C1ZeroLAVars.lean --workdir /tmp/a6-zero-la --jobs 4 | tee /tmp/a6-zero-la.log
+          python - <<'PY'
+          import re
+          log = open('/tmp/a6-zero-la.log').read()
+          for ns in ('C1ZeroLAFour','C1ZeroLAVars'):
+              for name in ('entry','growth','never','cover'):
                   matches = re.findall(r"'BB6\.Agent6"+ns+r"\."+name+r"' depends on axioms: \[([^\]]*)\]",log)
                   if len(matches) != 1:
                       raise SystemExit('missing or duplicate audit: '+ns+'.'+name)
