@@ -19,8 +19,8 @@ def load():
     spec["bound"]=extra["candidate_bound"]
     spec["manual"].update(extra["manual"])
     def params(v):
-        width,cap,mod,runs,flip=v
-        return dict(width=width,cap=cap,mod=mod,runs=runs,flip=bool(flip))
+        width,cap,mod,runs,flip,*mode=v
+        return dict(width=width,cap=cap,mod=mod,runs=runs,flip=bool(flip),left_mode=mode[0] if mode else 'runs')
     spec["block"].update({i:params(v) for i,v in extra["block"].items()})
     spec["delayed"]=extra["split_1930"]
     spec["delayed"]["block"]={i:params(v) for i,v in spec["delayed"]["block"].items()}
@@ -63,7 +63,7 @@ def emit_block(mod, ns, table, params, active=False):
     from generate_multi import generate
     flip=params.get("flip",False)
     sparse=width>=5 or active
-    data=generate(table,BLOCK,width,params["cap"],params["mod"],params["runs"],flip,mod,minimize_left=True,sparse=sparse)
+    data=generate(table,BLOCK,width,params["cap"],params["mod"],params["runs"],flip,mod,minimize_left=True,sparse=sparse,left_mode=params.get('left_mode','runs'))
     if active:
         from emit_active import specialize_active, emit_active
         specialize_active(BLOCK,width)
