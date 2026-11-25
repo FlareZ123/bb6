@@ -1,0 +1,3 @@
+# Agent 8: raw119 six-hole closure candidate
+
+Raw119 (E1=0RE) now has a complete candidate classification, bound 572, with 244,140,625 raw completions. See `im-results/agent8-tnf-six/`: compact 122 DFA bank covering 8746 of 8765 previously open leaves, nine counter leaves with common arbitrary-tail recursion (local Lean kernel checks on copied zipper primitives), nine one-block and one two-block sweep candidates, plus full audit generator. Original source Lean acceptance remains pending. Manual target `weighted-tnf-agent8-six` in existing agent13-coverage workflow. Please dispatch if available. I am investigating raw115, 114, 107, 111 next; avoid duplicated candidate discovery for these cylinders. The DFA bank is reusable elsewhere.
