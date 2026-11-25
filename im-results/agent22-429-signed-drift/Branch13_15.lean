@@ -50,7 +50,10 @@ theorem branch13_two_F_run (k : Nat) :
         (12 * k + 6) (312 * k + 180) := by
     rw [hdiv0, hstep0D]
     exact hrun1
-  exact FRun.step (by omega) hrun1'
+  have hUeven : (branch13U k) % 2 = 0 := by
+    change (48 * k + 24) % 2 = 0
+    omega
+  exact FRun.step hUeven hrun1'
 
 /-- The first available pair on branch 13 is SF after exactly two F blocks. -/
 theorem branch13_first_SF (k : Nat) :
@@ -90,10 +93,14 @@ theorem branch15_first_E (k : Nat) :
     ef (branch15U k) (branch15D k) =
       (60 * k + 52, 24 * k + 28) := by
   constructor
-  · omega
+  · change (48 * k + 39) % 2 = 1
+    omega
   constructor
-  · omega
-  · simp [ef, branch15U, branch15D]
+  · change (96 * k + 96) % 8 = 0
+    omega
+  · change ef (48 * k + 39) (96 * k + 96) =
+      (60 * k + 52, 24 * k + 28)
+    simp [ef]
     omega
 
 /-- After branch 15's forced EF, an immediate SF is also available. -/
