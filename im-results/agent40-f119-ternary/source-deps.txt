@@ -1,1 +1,3 @@
 im-results/agent40-f119-ternary/F119RootInverse2.lean
+im-results/agent40-f119-ternary/F119AffineInverse.lean
+im-results/agent40-f119-ternary/F119AffineRoot.lean

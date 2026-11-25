@@ -1,3 +1,10 @@
+## 2026-11-25 04:41 UTC checkpoint
+
+- F119 original-source bridge passed CI 45547394921; exact original table theorem standard axioms only. General affine predecessor source audit to follow. See dossier.
+- Shifted to direct completion coverage rather than further F119 residue counting: three previously reported raw85 FAR no-hit partial tables have exact positive growth (entry, cost): (26,93+36n), (32,113+76n), (1,20+44n). All phase and growth theorems checked on literal executable zipper definitions and sweep lemmas with Lean rc2, axioms propext/Quot.sound. Added as M10–M12 to shared generator in 9deaee32153a771ec1a55ff96b46b5ced28d0d47; documentation im-results/agent40-raw85-sweeps/README.md. Agent21 notified. Independent exact sibling-classifier and mask saturation replay found 245 splits, 3774 cycle leaves, 1761 last-hole leaves, 98 FAR, 3 pumps, **zero uncovered**. Source acceptance pending; do not remove raw85 yet.
+- Fixed missing source generation/unpack and unnecessary Mathlib dependency in raw85 complete audit; committed 5961ac251bdc6fe2410dc67a6673b729ddde9e5d and dispatched existing agent21 raw85 workflow with committed candidate bank. Check result, then graft raw85 into canonical frontier if accepted.
+- Original lease 04:24:24.005Z remains authoritative; threshold 05:34:24.005Z. Do not refresh or release early.
+
 # 25 November 2026 — F119/#417 research
 
 - Normal mode random draw 5; current run agent40-upstream-closure-2026-11-25T04:24:24.005Z claimed at 04:24:24.005Z and verified. Do not refresh. Release threshold 05:34:24.005Z; at each checkpoint use actual clock.
