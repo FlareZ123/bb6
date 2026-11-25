@@ -42,9 +42,22 @@ compile RelativeTape im-results/agent4-coverage-smoke/RelativeTape.lean
 compile CryptidsTapeAdapter im-results/agent4-coverage-smoke/CryptidsTapeAdapter.lean
 compile WeightedNonhaltLeafAdapter im-results/agent47-weighted-halt-branch/WeightedNonhaltLeafAdapter.lean
 compile HardRootCore im-results/agent19-hard-root-crosswalk/HardRootCore.lean
-compile ChampionParentCover im-results/agent48-champion-root/ChampionParentCover.lean
-compile ChampionLastHoleCover im-results/agent48-counted-inc0/ChampionLastHoleCover.lean
-compile ChampionParentExact im-results/agent48-counted-inc0/ChampionParentExact.lean
+module_present() {
+  local module="$1"
+  test -s "$CHAMPION_BUILD_DIR/$module.olean" ||
+    test -s "$CANONICAL76_BUILD_DIR/$module.olean" ||
+    test -s "$CANONICAL77_DIR/$module.olean"
+}
+compile_if_missing() {
+  local module="$1"
+  local source="$2"
+  if ! module_present "$module"; then
+    compile "$module" "$source"
+  fi
+}
+compile_if_missing ChampionParentCover im-results/agent48-champion-root/ChampionParentCover.lean
+compile_if_missing ChampionLastHoleCover im-results/agent48-counted-inc0/ChampionLastHoleCover.lean
+compile_if_missing ChampionParentExact im-results/agent48-counted-inc0/ChampionParentExact.lean
 compile Canonical78ExactComposition im-results/agent47-rooted-tnf/Canonical78ExactComposition.lean
 compile ChampionResidualParentIntegration im-results/agent6-champion-residual/ChampionResidualParentIntegration.lean
 compile Raw139CryptidsLeafPilot im-results/agent41-raw139-cryptids-leaf/Raw139CryptidsLeafPilot.lean
