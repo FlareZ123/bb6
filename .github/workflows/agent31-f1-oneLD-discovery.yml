@@ -1,0 +1,68 @@
+name: Raw139 F1=1LD discovery and source audit
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Discover cycle/FAR and pump covers for F1=1LD
+        run: python im-results/agent31-f1-cycle-siblings/discover_oneLD.py
+      - name: Package Lean source when every open leaf has a pump witness
+        working-directory: im-results/agent31-f1-cycle-siblings/out-oneLD
+        run: python ../package_oneLD.py
+      - name: Reconstruct shared coverage source
+        run: |
+          if [ -f im-results/agent31-f1-cycle-siblings/out-oneLD/ChampionF1OneLDCover.lean ]; then
+            python im-results/agent13-coverage/unpack.py
+          else
+            echo "No complete pump package; preserve discovery artifact only"
+          fi
+      - name: Compile the generated source certificate
+        run: |
+          if [ -f im-results/agent31-f1-cycle-siblings/out-oneLD/ChampionF1OneLDCover.lean ]; then
+            set -euo pipefail
+            python tools/lean_compile_closure.py \
+              im-results/agent31-f1-cycle-siblings/out-oneLD/ChampionF1OneLDCover.lean \
+              --workdir /tmp/a31-oneLD-build --jobs 4 \
+              --manifest /tmp/a31-oneLD-build/manifest.json | tee /tmp/a31-oneLD.log
+            python - <<'PY'
+            import pathlib,re
+            root=pathlib.Path("im-results/agent31-f1-cycle-siblings/out-oneLD")
+            log=pathlib.Path("/tmp/a31-oneLD.log").read_text()
+            allowed={"propext","Classical.choice","Quot.sound"}
+            names=["BB6.Agent31OneLD.checked","BB6.Agent31OneLD.all_completions_weighted"]
+            for p in root.glob("pump-*.json"):
+              i=p.stem.split("-")[1]
+              names.extend([f"BB6.Agent31OneLD.H{i}.growth",f"BB6.Agent31OneLD.H{i}.never"])
+            for name in names:
+              m=re.search(r"'" + re.escape(name) + r"' depends on axioms: \[([^\]]*)\]",log,re.S)
+              if not m:
+                if "'" + name + "' does not depend on any axioms" in log:
+                  used=set()
+                else:
+                  raise SystemExit("missing axiom audit: "+name)
+              else:
+                used={x.strip() for x in m.group(1).split(",") if x.strip()}
+              if not used<=allowed:
+                raise SystemExit(f"nonstandard axioms in {name}: {used-allowed}")
+            print("all source theorem axiom profiles are standard")
+            PY
+          else
+            echo "No complete pump package; Lean compile skipped"
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw139-f1-oneLD-discovery
+          path: |
+            im-results/agent31-f1-cycle-siblings/out-oneLD/
+            /tmp/a31-oneLD-build/manifest.json
+            /tmp/a31-oneLD.log
+          if-no-files-found: ignore
