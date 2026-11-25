@@ -80,7 +80,7 @@ jobs:
       - uses: actions/checkout@v4
         if: ${{ inputs.late_run != '' }}
         with:
-          ref: efb6d9d72b5bd7470357e60868f727447000d811
+          ref: 86655291fa8d603a16ff2c9ffa30ceab1b47845f
           path: late-source
       - name: Compose exact late covers with the parent cut
         if: ${{ inputs.late_run != '' }}
