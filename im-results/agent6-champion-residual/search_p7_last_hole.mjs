@@ -44,19 +44,34 @@ function run(table, start, count) {
   }
   return { kind: "ok", config: c, history };
 }
+function sameConfig(a, b) {
+  if (a.state !== b.state || a.head !== b.head || a.ones.size !== b.ones.size) return false;
+  for (const x of a.ones) if (!b.ones.has(x)) return false;
+  return true;
+}
 function classify(table, cap = 1_000_000) {
-  const c = { state: 0, head: 0, ones: new Set() };
-  const seen = new Map([[key(c), 0]]);
-  for (let n = 0; n < cap; n++) {
-    const z = step(table, c);
-    if (z.kind === "hole") return { kind: "hole", successfulMoves: n, slot: z.slot };
-    const k = key(c);
-    if (seen.has(k)) {
-      const entry = seen.get(k);
-      return { kind: "lasso", entry, period: n + 1 - entry };
+  // Brent cycle detection: constant auxiliary memory, unlike a million-entry
+  // map of full tape configurations.
+  const initial = { state: 0, head: 0, ones: new Set() };
+  const tortoise = clone(initial);
+  const hare = clone(initial);
+  const first = step(table, hare);
+  if (first.kind === "hole") return { kind: "hole", successfulMoves: 0, slot: first.slot };
+  let n = 1;
+  let power = 1;
+  let period = 1;
+  while (!sameConfig(tortoise, hare) && n < cap) {
+    if (power === period) {
+      Object.assign(tortoise, clone(hare));
+      power *= 2;
+      period = 0;
     }
-    seen.set(k, n + 1);
+    const z = step(table, hare);
+    if (z.kind === "hole") return { kind: "hole", successfulMoves: n, slot: z.slot };
+    n++;
+    period++;
   }
+  if (sameConfig(tortoise, hare)) return { kind: "lasso", lassoSteps: n, period };
   return { kind: "cap", cap };
 }
 function sideCycle(table, entryCap = 6, periodCap = 20, radiusCap = 10) {
