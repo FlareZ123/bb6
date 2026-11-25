@@ -10,6 +10,6 @@ theorem parent_root : parent initialSlot = some (some ⟨true,true,1⟩) := by d
 theorem parent_nohalt : weightedTNFNoAssignedHalt parent :=
   weightedTNFNoAssignedHalt_refine _ _ _ (pathEnd_nohalt root 2 (path.take 4) firstOneCylinder_no_assigned_halt)
 abbrev child (mv : Move) : PartialMachine := refine parent (2,true) (some mv)
-theorem root_query : zipQueryOK 100000 parent 7 (4,false) = true := by decide
+theorem root_query : zipQueryOK 100000 parent 7 (2,true) = true := by decide
 #print axioms root_query
 end BB6.Agent47Raw112
