@@ -72,6 +72,7 @@ on:
           - sourceTerminalCutoff
           - sourceClosedBounce
           - sourceWordBlock
+          - sourceWordRunner
           - sourceBoundedShadow
           - sourceExactMemo
           - sourceLowQuarterTwoForced
@@ -281,6 +282,9 @@ jobs:
               ;;
             sourceHeightConeCriterion)
               target=im-results/agent42-modular-cone/HeightConeCriterion.lean
+              ;;
+            sourceWordRunner)
+              target=im-results/agent12-c-high-shadow/WordRunnerSource.lean
               ;;
             sourceWordBlock)
               target=im-results/agent12-c-high-shadow/WordBlockSource.lean
