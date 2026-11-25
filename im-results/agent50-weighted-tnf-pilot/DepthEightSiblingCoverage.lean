@@ -18,16 +18,18 @@ def siblingData : List CheckedTree :=
 /-- Four exact one-hole residuals already have independently Lean-checked
     infinite-tape FAR proofs. They are consumed only by exact packed-table
     equality; the candidate generator and its search metadata are not trusted. -/
-def farLeaves : List PartialMachine := [p85_0, p85_1, p114_0, p116_0, p128_0]
+def farLeaves : List PartialMachine := [p85_0, p85_1, p85_2, p114_0, p116_0, p128_0]
 
 theorem farLeaves_never (p : PartialMachine) (m : Machine)
     (hp : p ∈ farLeaves) (hm : compatible p m) : NeverHalts m := by
   simp [farLeaves] at hp
-  rcases hp with h | h | h | h | h
+  rcases hp with h | h | h | h | h | h
   · subst p
     exact p85_0_neverHalts m hm
   · subst p
     exact p85_1_neverHalts m hm
+  · subst p
+    exact p85_2_neverHalts m hm
   · subst p
     exact p114_0_neverHalts m hm
   · subst p
@@ -109,11 +111,11 @@ theorem farLeaves_in_siblingOpenRawRoster :
 def siblingOpenRoster : List PackedTable :=
   siblingOpenRawRoster.filter (fun t => !farCovered t)
 
-theorem siblingOpenRoster_count : siblingOpenRoster.length = 102 := by decide
-theorem siblingOpenRoster_one_hole : siblingOpenRoster.countP (fun t => holeCount t == 1) = 96 := by decide
+theorem siblingOpenRoster_count : siblingOpenRoster.length = 101 := by decide
+theorem siblingOpenRoster_one_hole : siblingOpenRoster.countP (fun t => holeCount t == 1) = 95 := by decide
 theorem siblingOpenRoster_two_hole : siblingOpenRoster.countP (fun t => holeCount t == 2) = 6 := by decide
-theorem siblingOpenRoster_mass : rawMass siblingOpenRoster = 6150 := by decide
-theorem refinedRootRoster_count : refinedRootRoster.length = 226 := by decide
+theorem siblingOpenRoster_mass : rawMass siblingOpenRoster = 6125 := by decide
+theorem refinedRootRoster_count : refinedRootRoster.length = 225 := by decide
 
 #print axioms farLeaves_never
 #print axioms farCovered_never
@@ -167,9 +169,9 @@ theorem finalRootRoster_sound :
     | true => exact Or.inl (weighted_never 400 m (growthCovered_never q m hg hc))
     | false => exact Or.inr ⟨q,List.mem_filter.mpr ⟨hq,by simp [hg]⟩,hc⟩
 
-theorem siblingFinalRoster_count : siblingFinalRoster.length = 96 := by decide
-theorem siblingFinalRoster_mass : rawMass siblingFinalRoster = 2400 := by decide
-theorem finalRootRoster_count : finalRootRoster.length = 220 := by decide
+theorem siblingFinalRoster_count : siblingFinalRoster.length = 95 := by decide
+theorem siblingFinalRoster_mass : rawMass siblingFinalRoster = 2375 := by decide
+theorem finalRootRoster_count : finalRootRoster.length = 219 := by decide
 
 #print axioms growthCovered_never
 #print axioms finalRootRoster_sound
