@@ -10,9 +10,9 @@ import generate_0lf_pumps as pumps
 import generate_0lf_unary as unary
 import generate_0lf_second as second
 import generate_0lf_sentinel as sentinel
-import generate as audit
-
 ROOT=Path(__file__).resolve().parent
+sys.path.insert(0,str(ROOT))
+import generate as audit
 sys.path.insert(0,str(ROOT.parent/"agent47-raw111-cut"))
 from emit_sparse import emit as emit_sparse
 from emit_ngram import emit as emit_dense
