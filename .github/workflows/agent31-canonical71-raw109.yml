@@ -198,9 +198,10 @@ jobs:
           print("Verified the 76-residual theorem, canonical77 source/object closure, Lean version, and compiler binary.")
           PY
 
-      - name: Reconstruct the Raw109 source interface
+      - name: Reconstruct BB6 coverage and the Raw109 source interface
         run: |
           set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
           python im-results/agent4-raw109/generate.py 0LD 0RE
           test -s im-results/agent4-raw109/Raw109B0LDData.lean
           test -s im-results/agent4-raw109/Raw109B0REData.lean
