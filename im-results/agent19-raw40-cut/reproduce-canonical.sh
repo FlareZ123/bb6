@@ -6,6 +6,7 @@ g++ -O3 -std=c++20 farbank.cpp -o farbank
 export LEAN_PATH="$LEAN_PATH:$PWD"
 lean -o Raw40TwoSided.olean Raw40TwoSided.lean
 lean -o Raw40MoreTwoSided.olean Raw40MoreTwoSided.lean
+lean -o Raw40ThirdSweeps.olean Raw40ThirdSweeps.lean
 lean -o Raw40Batch.olean Raw40Batch.lean
 mkdir -p canon_batches
 awk '{print $1,$2}' canonical-accepted.txt > canon_batches/inputs.txt

@@ -573,3 +573,6 @@ New uniform pump proofs for three five-hole cylinders. Raw40 partial audit disch
 
 
 17:23 UTC: four exact canonical five-hole scores accepted (100,47,43,114). Raw40 batch filter leaves 184 representatives, global conditional roster 260. Four additional explicit sweep nonhalting proofs accepted, six such late one-hole leaves altogether. Reproduce with canonical-accepted.txt and reproduce-canonical.sh. Next: two pump-closed five-hole certificates (0RB_0RC,0RC_1LB) compiling, more candidate discovery running.
+
+
+17:26 UTC: resolved both outstanding 1LC_1RD leaves with exact recurrence proofs in Raw40ThirdSweeps.lean. One uses four sweeps, other two configuration phases (56n+76). Updated generator. Whole cylinder certificate pending. Two previous pump-closed candidates still compiling.

@@ -13,3 +13,6 @@ The four candidate modules and their attainment witnesses have been compiled, as
 Each upper bound covers all 25^5 completions. The accepted batch reduces the earlier 188 canonical raw40 residuals to **184**, and the global conditional roster from 264 to **260**. These are local exact weighted scores, not the exact global BB(6).
 
 Reproduce using canonical-accepted.txt and reproduce-canonical.sh after the RDLC setup in RDLC-README.md. This emits actual Lean proof files and checks them in the kernel; the candidate finder is not trusted. The aggregate prints axiom dependencies on the exact maximum and the frontier composition. Do not interpret representative-mass statistics from enumerate_canon as total raw completion mass.
+
+## Two further holdouts resolved
+Raw40ThirdSweeps.lean proves LC1RD (entry 39, cost 24n+60) and LC1RDAlt (entry 25, cost 56n+76, alternating extra/pure configurations). Both nonhalting theorems compiled with [propext, Quot.sound]. Together they resolve all missing FAR leaves in 1LC_1RD; its enclosing certificate still needs the full kernel check. Updated generator knows both leaves.
