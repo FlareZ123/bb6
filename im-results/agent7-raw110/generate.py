@@ -42,6 +42,8 @@ theorem p110_nohalt : weightedTNFNoAssignedHalt p110 :=
 abbrev child110 (mv : Move) := refine p110 (2,true) (some mv)
 theorem query110 : zipQueryOK 7014 p110 7 (2,true) = true := by decide
 """)
+if '--base-only' in sys.argv:
+    sys.exit(0)
 cycles={2:(10,1,False,0),4:(10,1,False,0),7:(1,9,True,1),9:(13,1,False,1),
         15:(11,1,False,-1),16:(10,1,False,0),19:(1,9,True,1),21:(4,4,True,1)}
 selected=set(map(int,spec))
