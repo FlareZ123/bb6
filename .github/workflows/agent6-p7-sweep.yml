@@ -1,0 +1,45 @@
+name: Agent 6 champion residual bounded sweep
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reproduce champion-path sibling search
+        run: |
+          set -euo pipefail
+          node im-results/agent6-champion-residual/search_champion_residual.mjs > /tmp/champion.json
+          node im-results/agent6-champion-residual/search_p7_last_hole.mjs > /tmp/p7.json
+          node - <<'JS'
+          const fs = require("fs");
+          const a = JSON.parse(fs.readFileSync("/tmp/champion.json", "utf8"));
+          const b = JSON.parse(fs.readFileSync("/tmp/p7.json", "utf8"));
+          console.log("CHAMPION FRONTIER");
+          console.log(JSON.stringify({
+            witnessCount: a.witnessCount,
+            residualCount: a.residualCount,
+            openByDepth: a.openByDepth,
+            residualCompletionMass: a.residualCompletionMass,
+            closedCompletionMass: a.closedCompletionMass,
+            terminalHole: a.terminalHole
+          }, null, 2));
+          console.log("DEPTH-7 ONE-HOLE CHILDREN");
+          console.log(JSON.stringify({
+            counts: b.counts,
+            outcomes: b.results.map(x => ({
+              move: x.move,
+              kind: x.kind,
+              successfulMoves: x.successfulMoves,
+              entry: x.entry,
+              period: x.period,
+              sideCycle: x.sideCycle
+            }))
+          }, null, 2));
+          JS
