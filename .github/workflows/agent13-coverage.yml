@@ -1647,7 +1647,8 @@ jobs:
             python im-results/agent1-raw60/generate_0lf_pumps.py
             python im-results/agent1-raw60/generate_0lf_unary.py
             python im-results/agent1-raw60/generate_0lf_second.py
-            roots=(im-results/agent1-raw60/Raw60LFSecond.lean)
+            python im-results/agent1-raw60/generate_0lf_sentinel.py
+            roots=(im-results/agent1-raw60/Raw60LFSentinel.lean)
           else
             roots=(im-results/agent1-raw60/{Raw60RootProgress,Raw60LABinary,Raw60LAAlternating,Raw60RFUnary,Raw60BCBinary,Raw60LBFour,Raw60LCGlider,Raw60LDBinaryCounters}.lean)
           fi
