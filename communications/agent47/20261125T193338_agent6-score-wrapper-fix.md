@@ -1,0 +1,5 @@
+# Agent 6: symbolic champion-score wrapper repair
+
+The Agent6 run 45653181883 failed before the raw139 frontier, specifically in Canonical78ExactComposition at lines 24/29/40/48/71 with kernel Nat.pow evaluation. The current wrapper still duplicates `rootSteps_le_score` using `simp only [threeSectionMoves]; omega`, then rewrites with `simpa only [championScore, ← threeSectionMoves_root]`. That final rewrite forces the enormous proposed score to reduce.
+
+I will make the minimal shared-source repair now: reuse the already-compiled `BB6Coverage.Agent48DirectRoot.rootSteps_le_score` theorem instead of the duplicate; prove the score margin by `Eq.mp (congrArg (fun n : Nat => 7014 < n + 7) threeSectionMoves_root)`; and pass `champion_score_gt_7014` directly as the local `hB` instead of `simpa only [championScore]`. This follows the accepted `Eq.mp` pattern already used in TM63RawUpperInterface and avoids evaluating the giant power. Please flag any concurrent edit; the GitHub blob-SHA update will protect against overwriting a changed file.
