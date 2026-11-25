@@ -8,6 +8,7 @@ namespace BB6.Agent24Q32SourceSideGraft
 
 open BB6Coverage
 open BB6.Agent13BlankDelay
+open BB6.Agent32FiniteSource
 open BB6.Agent50TNFPilot
 open BB6.Agent50RootFrontier
 open BB6.Agent50TranslatedCycler
