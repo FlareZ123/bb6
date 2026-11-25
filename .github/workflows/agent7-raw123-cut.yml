@@ -1,0 +1,74 @@
+name: Agent7 raw123 cut
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  shards:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix:
+        include:
+          - {part: 0, kids: "17 11"}
+          - {part: 1, kids: "12 10"}
+          - {part: 2, kids: "8 9"}
+          - {part: 3, kids: "16 21"}
+          - {part: 4, kids: "13 3"}
+          - {part: 5, kids: "5 4"}
+          - {part: 6, kids: "14 22"}
+          - {part: 7, kids: "23 0 1 2 6 7 15 18 19 20"}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reconstruct and check audit shards
+        run: |
+          set -euxo pipefail
+          python im-results/agent13-coverage/unpack.py
+          d=im-results/agent7-raw123
+          python "$d/generate.py" ${{ matrix.kids }}
+          python tools/lean_compile_closure.py --workdir /tmp/raw123-part --jobs 3 "$d"/Raw123Partial*.lean | tee /tmp/part.log
+          if grep -qE 'sorryAx|native_decide' /tmp/part.log; then exit 1; fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw123-part-${{ matrix.part }}
+          path: /tmp/raw123-part/
+          if-no-files-found: error
+          retention-days: 5
+  assemble:
+    needs: shards
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw123-part-*
+          path: /tmp/raw123-parts
+      - name: Install Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Assemble checked cut
+        run: |
+          set -euxo pipefail
+          d=im-results/agent7-raw123
+          python "$d/merge_parts.py" /tmp/raw123-parts /tmp/raw123-cut
+          python "$d/generate.py" --assemble-only
+          cp "$d/Raw123Cut.lean" /tmp/raw123-cut/
+          cd /tmp/raw123-cut
+          LEAN_PATH="$PWD" lean -o Raw123Cut.olean Raw123Cut.lean | tee /tmp/raw123-cut.log
+          if grep -qE 'sorryAx|native_decide' /tmp/raw123-cut.log; then exit 1; fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw123-cut
+          path: /tmp/raw123-cut/
+          if-no-files-found: error
+          retention-days: 5
