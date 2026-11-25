@@ -510,7 +510,6 @@ jobs:
             Upgrade0LA|Upgrade0LB|Upgrade0LE|Upgrade0LF|Upgrade1LB|Upgrade1LE|Upgrade1LF)
               python im-results/agent32-macro-far/unpack.py
               child="${RAW59_CHILD#Upgrade}"
-              if [[ "$child" == 1LB || "$child" == 0LB || "$child" == 1LE ]]; then python im-results/agent32-raw59/generate_lb1_four.py "$child"; fi
               python im-results/agent32-raw59/generate_partial.py --upgrade "$child"
               target="im-results/agent32-raw59/upgrade_$child/Raw59Upgrade${child}Data.lean" ;;
             Partial0LA|Partial0LB|Partial0LE|Partial0LF|Partial1LB|Partial1LE|Partial1LF)
