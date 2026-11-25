@@ -46,7 +46,7 @@ for name in names:
         start += len(prefix)
         end = log.find(']', start)
         if end < 0: raise SystemExit('unterminated axiom list: ' + name)
-        used = {x.strip() for x in log[start:end].replace('\\n', ' ').split(',') if x.strip()}
+        used = {x.strip() for x in log[start:end].replace('\n', ' ').split(',') if x.strip()}
     elif "'" + name + "' does not depend on any axioms" in log:
         used = set()
     else:
