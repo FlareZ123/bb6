@@ -64,6 +64,7 @@ def emit_one(index: int, table_string: str, expected_n: int, expected_slot: int)
     assert n == expected_n, (index, n, expected_n)
     assert slot == (expected_slot // 2, bool(expected_slot % 2)), (index, slot, expected_slot)
     q, bit = slot
+    bit = bool(bit)  # Lean slot symbol is Bool, not an integer literal.
 
     lines = [
         "import PackedSweep",
