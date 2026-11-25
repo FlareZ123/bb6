@@ -49,7 +49,7 @@ def main(a):
             i=int(i);assert i not in witnesses
             st=multi.C(q,cv(l),cv(r));tg=multi.C(q,cv(L),cv(R))
             p=multi.parse(opens[i])
-            ans=multi.pump(p,st,tg)
+            ans=multi.pump(p,st,tg,limit=spec.get("pump_limit",500))
             assert ans is not None,(a,i)
             code,info=multi.generate(i,p,(t,st,tg,ans))
             parts.append(code);witnesses[i]=("proven",f"{nsa}.M{i}")
@@ -63,6 +63,11 @@ def main(a):
     for i,cyc in spec.get("long_cycles",{}).items():
         i=int(i);assert i not in witnesses
         witnesses[i]=("cycle",cyc)
+    for i,(nn,ss) in spec.get("late",{}).items():
+        i=int(i);assert i not in witnesses
+        p=parse(opens[i])
+        assert sum(x=="---" for x in p)==1 and p[ss]=="---",(a,i,p,ss)
+        witnesses[i]=("late",(nn,ss))
     farcache={}
     for i,t in enumerate(opens):
         if i in witnesses:continue
@@ -93,6 +98,7 @@ open BB6.Agent50TNFPilot BB6.Agent31ThreeHole BB6.Agent10ZipAudit
             t=v[0];i=index[t];kind,val=witnesses[i]
             if kind=="proven":return f".proven {val}.table {val}.never"
             if kind=="cycle":return cycle(*val)
+            if kind=="late":return f".last {val[0]} {slot(val[1])}"
             c=val;rev=int(c[0]);d,D,L,R,z=farcache[i] if i in farcache else masks(parse(t),rev,[int(ch,36) for ch in c[1:]])
             return f".far {str(bool(rev)).lower()} {d} ⟨0,{D},{L},{R},{z}⟩"
         assert tag=="split"

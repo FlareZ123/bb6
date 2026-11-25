@@ -5813,6 +5813,7 @@
         "BB6.Agent10Raw108LF1182",
         "1RB0LB_1RC1LF_0RD1RA_1LD1RE_---1LB_1LB0RC"
       ]
-    }
+    },
+    "pump_limit": 3000
   }
 }
