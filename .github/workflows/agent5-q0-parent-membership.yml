@@ -22,6 +22,8 @@ jobs:
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py --out /tmp/q0-parent
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
           python tools/lean_compile_closure.py --workdir /tmp/q0-parent --jobs 4 im-results/agent5-q0-held-blockfar/ParentMembership.lean | tee /tmp/q0-parent.log
           if grep -Eq 'sorryAx|native_decide' /tmp/q0-parent.log; then
             echo "Forbidden proof placeholder or native_decide found" >&2
