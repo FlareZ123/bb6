@@ -2,7 +2,7 @@
 pass the original-source Lean checker. Absent candidates remain unresolved."""
 from pathlib import Path
 from functools import lru_cache
-import sys,subprocess
+import sys,subprocess,json
 ROOT=Path(__file__).resolve().parent
 sys.path.insert(0,str(ROOT.parent/"agent31-three-hole-tnf"))
 import generate_sweeps as pump
@@ -26,7 +26,27 @@ def generate(rows,work):
     dense=work/"ngram"; sparse=work/"ngram_sparse"
     for src,exe in [(ROOT.parent/"agent1-ngram"/"ngram.cpp",dense),(ROOT.parent/"agent47-raw111-cut"/"ngram_sparse.cpp",sparse)]:
         subprocess.run(["g++","-std=c++17","-O3",str(src),"-o",str(exe)],check=True)
+    plans={x["id"]:x for x in json.loads((ROOT/"long-plans.json").read_text())}
     for i,row in rows:
+        if i in plans:
+            plan=plans[i];assert plan["row"]==row
+            import multi_sweep as multi
+            W,R,C=multi.Word,multi.Rep,multi.Config
+            def word(parts):return W.of(*(x if isinstance(x,str) else R(x["rep"]) for x in parts))
+            st=C(plan["q"],word(plan["left"]),word(plan["right"]))
+            tg=C(st.q,st.l.inc(),st.r.inc())
+            p=pump.parse(row)
+            res=multi.execute(p,st,tg,3000)
+            assert res is not None
+            name=f"Raw122Plan{i}"
+            code,info=multi.generate(i,p,(plan["entry"],st,tg,res))
+            ns=f"BB6Coverage.Agent31Pump.{name}"
+            (ROOT/(name+".lean")).write_text("\n\n".join(["import SweepPumping","set_option maxRecDepth 100000",
+              "set_option maxHeartbeats 0","set_option linter.unusedVariables false",
+              f"namespace {ns}","open BB6Coverage",code,f"end {ns}"])+"\n")
+            certs[row]=f".proven {ns}.M{i}.table {ns}.M{i}.never"
+            imports[row]=name
+            continue
         if row=="1RB0RA_1RC1LF_0RD0RA_1LD1RE_---0LF_1LB0LB":
             ns="BB6Coverage.Agent31Pump.Raw122Counter3708"
             certs[row]=f".proven {ns}.table {ns}.never"
