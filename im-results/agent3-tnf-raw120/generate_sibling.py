@@ -26,6 +26,8 @@ import boundary_pump
 MOVES = ["".join(x) for x in product("01", "LR", "ABCDEF")]
 # The tag is part of the Lean namespace and module names.
 PARAMS = {
+    "1LB": ("OneLB", 4351, "1679cd38cd74165dc392e47f46bcf018ff35cf23decf44120241bb7fa30ade06",
+            dict(split=1599, cycle=24218, last=8209, open=4351)),
     "1RA": ("OneRA", 4374, "af3b4cfbb7f4d3dcde52253b7834602fe505fbdf0c3da9a49b29aaf5c075affe",
             dict(split=1329, cycle=19345, last=6849, open=4374)),
     "1LA": ("OneLA", 4236, "90c10678c9a20c8583c13a390b319dc9aad3fa7f33730c3b019ec9fc9444929e",
@@ -133,6 +135,35 @@ if BRANCH == "1RC":
         pump_code.append(rc_nested.generate_nested(i, one.parse(opens[i])))
         pumps[opens[i]] = (f"{pumpns}.M{i}.table", f"{pumpns}.M{i}.never")
 late = {}
+# A late, source-checked query must be consumed by theorem, not replayed
+# inside a large tree-wide decide reduction.
+accelerated_late = {}
+if BRANCH == "1LB":
+    sys.path.insert(0, str(ROOT.parent / "agent16-raw118"))
+    from tree_emit import emit as emit_tree
+    bns = "BB6.Agent3Raw120OneLBBiDFA"
+    bcode = ["import TreeBiDFA", "set_option maxRecDepth 100000", "set_option maxHeartbeats 0",
+             f"namespace {bns}", "open BB6Coverage BB6Coverage.Agent16BiDFA BB6Coverage.Agent16BiDFA.TreeCheck"]
+    for key, (table, dl, dr) in json.loads((ROOT / "1LB-bidfa.json").read_text()).items():
+        i = int(key)
+        assert opens[i] == table, (i, opens[i], table)
+        code, _, _ = emit_tree(i, table, dl, dr)
+        bcode.append(code)
+        pumps[table] = (f"{bns}.M{i}.table", f"{bns}.M{i}.never")
+    bcode.append(f"end {bns}")
+    (FOLDER / "Raw120OneLBBiDFA.lean").write_text("\n".join(bcode)+"\n")
+    sat_ns = "BB6Coverage.Agent1BiDFASat.Raw120LB"
+    for hit in json.loads((ROOT.parent / "agent1-bidfa-sat" / "raw120-1lb-hits.json").read_text()):
+        i, table = hit["index"], hit["table"]
+        assert opens[i] == table
+        pumps[table] = (f"{sat_ns}.M{i}.table", f"{sat_ns}.M{i}.never")
+    assert set((1265, 1947, 3656, 4072)) <= {h["index"] for h in json.loads((ROOT.parent / "agent1-bidfa-sat" / "raw120-1lb-hits.json").read_text())}
+    for i, n in ((3035, 3787), (3138, 3721)):
+        assert opens[i].replace("_", "")[30:33] == "---"
+        late[opens[i]] = (n, 10)
+    assert opens[1341] == "1RB---_1RC0LF_0RD0RF_1LD1RE_1LB1LE_0RA0LE"
+    accelerated_late[opens[1341]] = (224705, 1, "BB6.Agent13Raw120Late1341")
+    late[opens[1341]] = (224705, 1)
 if BRANCH == "1RA":
     sys.path.insert(0, str(ROOT.parent / "agent16-raw118"))
     from bidfa_emit import emit as emit_bidfa
@@ -343,7 +374,10 @@ def inspect(t):
 
 inspect(tree)
 assert stats == Counter(EXPECTED_TREE), stats
-B = max(max_query, max((n for n, _ in late.values()), default=0)) + 6  # weighted safe bound
+B = max(max_query, max((n for code, (n, _) in late.items() if code not in accelerated_late), default=0)) + 6
+if BRANCH == "1LB":
+    assert B <= 224707
+    B = 224707  # exact weighted maximum attained at index 1341
 summary = {
     "parent": PARENT,
     "expected_open_count": EXPECTED_OPEN,
@@ -406,8 +440,20 @@ def render(t):
     return ".split " + str(n) + " " + slot(s) + " (byMove [\n" + \
         ",\n".join(render(kid) for kid in kids) + "])"
 
+def has_accelerated_late(t):
+    if t[0] == "open":
+        return t[1] in accelerated_late
+    return t[0] == "split" and any(has_accelerated_late(kid) for kid in t[3])
+
 def compose(parent, name, t):
-    if size(t) <= CHUNK:
+    if t[0] == "open" and t[1] in accelerated_late:
+        n, s, ns0 = accelerated_late[t[1]]
+        return (f"def t_{name} : Audit := {render(t)}\n"
+                f"theorem c_{name} : zipCheck {B} {parent} t_{name} = true := by\n"
+                f"  have hp : {parent} = {ns0}.table := tableOK_sound _ _ (by decide)\n"
+                f"  rw [hp]\n"
+                f"  exact {ns0}.lateChecked {B} (by decide)\n")
+    if size(t) <= CHUNK and not has_accelerated_late(t):
         return (
             f"def t_{name} : Audit := {render(t)}\n"
             f"theorem c_{name} : zipCheck {B} {parent} t_{name} = true := by decide\n")
@@ -472,7 +518,7 @@ theorem split_checked (p : PartialMachine) (n : Nat) (s : Slot)
   simp only [Bool.and_eq_true]
   exact ⟨hq, allMoves_of _ hk⟩
 """
-emit(prefix + "Base", ["Raw120Late"] + ({"1RA": ["Raw120OneRABiDFA", "Raw120OneRAStack", "Raw120OneRAParity"], "1LA": ["Raw120OneLABiDFA"], "0RC": ["Raw120RCCounter"], "1RC": ["Raw120OneRCCounter"], "1LF": ["Raw120OneLFCounter", "Raw120OneLFTwo", "Raw120OneLFStack"], "0LB": ["Raw120ZeroLBMirror", "Raw120ZeroLBReset", "Raw120ZeroLBShuttle", "Raw120ZeroLBTriple"], "0LF": ["Raw120ZeroLFRecursive", "Raw120ZeroLFWord"], "0RA": ["Raw120RAPhases", "Raw120RABiDFA", "Raw120RA423BlockAdapter"]}.get(BRANCH, [])) + [prefix + "Sweeps"], base)
+emit(prefix + "Base", ["Raw120Late"] + ({"1LB": ["Raw120OneLBBiDFA", "Raw120LBSat", "Raw120Late1341"], "1RA": ["Raw120OneRABiDFA", "Raw120OneRAStack", "Raw120OneRAParity"], "1LA": ["Raw120OneLABiDFA"], "0RC": ["Raw120RCCounter"], "1RC": ["Raw120OneRCCounter"], "1LF": ["Raw120OneLFCounter", "Raw120OneLFTwo", "Raw120OneLFStack"], "0LB": ["Raw120ZeroLBMirror", "Raw120ZeroLBReset", "Raw120ZeroLBShuttle", "Raw120ZeroLBTriple"], "0LF": ["Raw120ZeroLFRecursive", "Raw120ZeroLFWord"], "0RA": ["Raw120RAPhases", "Raw120RABiDFA", "Raw120RA423BlockAdapter"]}.get(BRANCH, [])) + [prefix + "Sweeps"], base)
 
 assert tree[0] == "split"
 root_n, root_slot, root_kids = tree[1], tree[2], tree[3]
