@@ -2102,17 +2102,39 @@
   },
   "unresolved": {
     "573": "1RB1RC_1RC0LB_0RD---_1LD1RE_1LB0RF_1RA0LE",
-    "4247": "1RB1RD_1RC0LE_0RD---_1LD1RE_0RC0RF_0LF1LA",
-    "4357": "1RB1RE_1RC0LF_0RD0RE_1LD1RE_---0RF_0RC1LA",
     "5465": "1RB0RC_1RC0LB_0RD1LF_1LD1RE_---0RF_1RA1LB",
     "8146": "1RB0LF_1RC---_0RD0RE_1LD1RE_0RB0RF_0LA1LF",
     "8155": "1RB0LF_1RC---_0RD0RF_1LD1RE_0RA0RF_0LA1LF",
     "8156": "1RB0LF_1RC---_0RD0RF_1LD1RE_0RB0RF_0LA1LF",
     "8174": "1RB0LF_1RC---_0RD1LD_1LD1RE_0RA0RF_0LA1LF",
     "8175": "1RB0LF_1RC---_0RD1LD_1LD1RE_0RB0RF_0LA1LF",
-    "8209": "1RB0LF_1RC---_0RD1RE_1LD1RE_0RB0RF_0LA1LF",
-    "9109": "1RB1LE_1RC0RB_0RD---_1LD1RE_0LE0RF_1LA1LF",
-    "11095": "1RB0LA_1RC---_0RD1LC_1LD1RE_1RA0RF_1LA1RF",
-    "11096": "1RB0LA_1RC---_0RD1LC_1LD1RE_1RB0RF_1LA1RF"
+    "8209": "1RB0LF_1RC---_0RD1RE_1LD1RE_0RB0RF_0LA1LF"
+  },
+  "recursive": {
+    "4247": [
+      "Raw123RecursiveBatch",
+      "BB6.Agent25Raw123.R4247.table",
+      "BB6.Agent25Raw123.R4247.never"
+    ],
+    "4357": [
+      "Raw123RecursiveBatch",
+      "BB6.Agent25Raw123.R4357.table",
+      "BB6.Agent25Raw123.R4357.never"
+    ],
+    "9109": [
+      "Raw123RecursiveBatch",
+      "BB6.Agent25Raw123.R9109.table",
+      "BB6.Agent25Raw123.R9109.never"
+    ],
+    "11095": [
+      "Raw123RecursiveBatch",
+      "BB6.Agent25Raw123.BinaryF.table false",
+      "BB6.Agent25Raw123.BinaryF.never false"
+    ],
+    "11096": [
+      "Raw123RecursiveBatch",
+      "BB6.Agent25Raw123.BinaryF.table true",
+      "BB6.Agent25Raw123.BinaryF.never true"
+    ]
   }
 }
