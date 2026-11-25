@@ -1,0 +1,135 @@
+import SignedFRunParity
+
+namespace BB429SignedBranch13_15
+
+open BB429SignedFRunParity
+
+/-- The branch-13 family after its forced first signed F block. -/
+def branch13U (k : Nat) : Nat := 48 * k + 24
+def branch13D (k : Nat) : Nat := 96 * k + 66
+
+/-- The branch-15 family after its forced first signed F block. -/
+def branch15U (k : Nat) : Nat := 48 * k + 39
+def branch15D (k : Nat) : Nat := 96 * k + 96
+
+/-- Branch 13 has no paired block at the initial state or after one F. -/
+theorem branch13_no_pair_at_start (k : Nat) :
+    ¬ (((branch13U k) % 2 = 1 ∧ (branch13D k) % 8 = 0) ∨
+       ((branch13U k) % 2 = 0 ∧ (branch13D k) % 8 = 4)) := by
+  simp [branch13U, branch13D]
+  omega
+
+theorem branch13_no_pair_after_one_F (k : Nat) :
+    ¬ (((24 * k + 12) % 2 = 1 ∧ (240 * k + 141) % 8 = 0) ∨
+       ((24 * k + 12) % 2 = 0 ∧ (240 * k + 141) % 8 = 4)) := by
+  omega
+
+/-- The exact two-F prefix from branch 13, ending at the first SF guard. -/
+theorem branch13_two_F_run (k : Nat) :
+    FRun 2 (branch13U k) (branch13D k) (12 * k + 6) (312 * k + 180) := by
+  have hdiv1 : (24 * k + 12) / 2 = 12 * k + 6 := by omega
+  have hstepD : 240 * k + 141 + 3 * (24 * k + 12) + 3 =
+      312 * k + 180 := by omega
+  have hrun1 :
+      FRun 1 (24 * k + 12) (240 * k + 141)
+        (12 * k + 6) (312 * k + 180) := by
+    refine FRun.step ?_ ?_
+    · omega
+    · rw [hdiv1, hstepD]
+      exact FRun.zero _ _
+  have hdiv0 : branch13U k / 2 = 24 * k + 12 := by
+    simp [branch13U]
+    omega
+  have hstep0D :
+      branch13D k + 3 * branch13U k + 3 = 240 * k + 141 := by
+    simp [branch13U, branch13D]
+    omega
+  have hrun1' :
+      FRun 1 (branch13U k / 2)
+        (branch13D k + 3 * branch13U k + 3)
+        (12 * k + 6) (312 * k + 180) := by
+    rw [hdiv0, hstep0D]
+    exact hrun1
+  exact FRun.step (by simp [branch13U]) hrun1'
+
+/-- The first available pair on branch 13 is SF after exactly two F blocks. -/
+theorem branch13_first_SF (k : Nat) :
+    (12 * k + 6) % 2 = 0 ∧
+    (312 * k + 180) % 8 = 4 ∧
+    sf (12 * k + 6) (312 * k + 180) =
+      (51 * k + 31, 78 * k + 44) := by
+  constructor
+  · omega
+  constructor
+  · omega
+  · simp [sf]
+    omega
+
+/-- The next immediate branch choices after branch 13's first SF. -/
+theorem branch13_post_SF_guards (k : Nat) :
+    ((k % 4 = 0) →
+      (51 * k + 31) % 2 = 1 ∧ (78 * k + 44) % 8 = 4) ∧
+    ((k % 4 = 2) →
+      (51 * k + 31) % 2 = 1 ∧ (78 * k + 44) % 8 = 0) ∧
+    ((k % 2 = 1) →
+      (51 * k + 31) % 2 = 0 ∧
+        ((78 * k + 44) % 8 = 2 ∨ (78 * k + 44) % 8 = 6)) := by
+  constructor
+  · intro h
+    omega
+  constructor
+  · intro h
+    omega
+  · intro h
+    omega
+
+/-- Branch 15 begins with the forced EF block. -/
+theorem branch15_first_E (k : Nat) :
+    (branch15U k) % 2 = 1 ∧
+    (branch15D k) % 8 = 0 ∧
+    ef (branch15U k) (branch15D k) =
+      (60 * k + 52, 24 * k + 28) := by
+  constructor
+  · simp [branch15U]
+  constructor
+  · simp [branch15D]
+  · simp [ef, branch15U, branch15D]
+    omega
+
+/-- After branch 15's forced EF, an immediate SF is also available. -/
+theorem branch15_optional_SF (k : Nat) :
+    (60 * k + 52) % 2 = 0 ∧
+    (24 * k + 28) % 8 = 4 ∧
+    sf (60 * k + 52) (24 * k + 28) =
+      (63 * k + 58, 6 * k + 6) := by
+  constructor
+  · omega
+  constructor
+  · omega
+  · simp [sf]
+    omega
+
+/-- The next immediate branch choices after branch 15 takes EF then SF. -/
+theorem branch15_post_ES_guards (k : Nat) :
+    ((k % 4 = 1) →
+      (63 * k + 58) % 2 = 1 ∧ (6 * k + 6) % 8 = 4) ∧
+    ((k % 4 = 3) →
+      (63 * k + 58) % 2 = 1 ∧ (6 * k + 6) % 8 = 0) ∧
+    ((k % 2 = 0) →
+      (63 * k + 58) % 2 = 0 ∧
+        ((6 * k + 6) % 8 = 2 ∨ (6 * k + 6) % 8 = 6)) := by
+  constructor
+  · intro h
+    omega
+  constructor
+  · intro h
+    omega
+  · intro h
+    omega
+
+#print axioms branch13_two_F_run
+#print axioms branch13_first_SF
+#print axioms branch15_first_E
+#print axioms branch15_optional_SF
+
+end BB429SignedBranch13_15
