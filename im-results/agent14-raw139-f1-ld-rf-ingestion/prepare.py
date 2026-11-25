@@ -102,9 +102,13 @@ def main() -> None:
         "Agent14OneRFCover.lean": "b94cb7678d30cf3521b3e3eed19181019878101f50c901f675035d9031bf58a2",
     })
 
-    core_wordshift = ROOT / ".tmp/a14-f1-batch/imports/WordShift.lean"
-    if not core_wordshift.is_file():
-        raise SystemExit("missing canonical precompiled WordShift source in F1 batch")
+    wordshift_candidates = [
+        ROOT / ".tmp/a14-f1-batch/imports/WordShift.lean",
+        ROOT / ".tmp/a48-f1-oneLA/imports/WordShift.lean",
+    ]
+    core_wordshift = next((p for p in wordshift_candidates if p.is_file()), None)
+    if core_wordshift is None:
+        raise SystemExit("missing canonical precompiled WordShift source (Agent6 F1 batch or Agent48 artifact)")
     if digest(core_wordshift.read_bytes()) != "7f93ab9ad25543375c7c30e23b8fac780b77a716b00347f6c657719771f1cadf":
         raise SystemExit("core WordShift differs from the pinned 1RF WordShift")
     (rf_stage / "WordShift.lean").unlink()

@@ -25,3 +25,5 @@ The intended arithmetic is 102 raw139 leaves to 100, hence 178 canonical77 oblig
 The workflow must report the four source-level all-completion theorems and all 32 1LD growth/never pairs, as well as the parent membership, count, cover, and exactness theorems. Accepted axiom profiles are restricted to propext, Classical.choice, and Quot.sound; sorryAx and native_decide are forbidden.
 
 Even if the sibling graft succeeds, the remaining 176 obligations are not discharged here. The global BB(6) upper bound remains open.
+
+A source-only CI mode is also available in the existing Agent6 workflow: dispatch with agent14_source_only=true and source_sha set to this branch commit. It downloads the accepted Agent48 artifact from run 45611897213 and independently audits the 1LD/1RF source closures, without waiting for the Agent6 champion core build. The full parent graft still requires the Agent6 core artifact.

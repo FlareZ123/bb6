@@ -7,6 +7,10 @@ on:
         description: Audit isolated F0 sibling certificates
         type: boolean
         default: false
+      agent14_source_only:
+        description: Independently source-audit Agent14 raw139 1LD/1RF using the accepted Agent48 dependency artifact
+        type: boolean
+        default: false
       raw121_graft_run_id:
         description: Optional successful Agent11 run ID for raw121-canonical76-graft-proof
         type: string
@@ -34,7 +38,7 @@ permissions:
 
 jobs:
   verify:
-    if: ${{ !inputs.f0_siblings_only }}
+    if: ${{ !inputs.f0_siblings_only && !inputs.agent14_source_only }}
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
@@ -723,6 +727,91 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
+  agent14-source:
+    if: ${{ inputs.agent14_source_only }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha || github.sha }}
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Download accepted Agent48 F1=1LA dependency closure
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45611897213
+          name: raw139-f1-oneLA-certified
+          path: .tmp/a48-f1-oneLA
+      - name: Reconstruct and source-audit Agent14 1LD/1RF certificates
+        run: |
+          set -euo pipefail
+          work="$PWD/.tmp/a14-f1-ld-rf"
+          python3 im-results/agent14-raw139-f1-ld-rf-ingestion/prepare.py
+          python tools/lean_compile_closure.py \
+            im-results/agent14-raw139-f1-ld-rf-ingestion/Raw139OneLDOneRFSourceAudit.lean \
+            --source-root "$PWD/.tmp/a48-f1-oneLA/imports" \
+            --source-root "$work/imports" \
+            --workdir "$work/build" --manifest "$work/manifest.json" \
+            --precompiled-manifest "$PWD/.tmp/a48-f1-oneLA/manifest.json" \
+            --precompiled-dir "$PWD/.tmp/a48-f1-oneLA/build" \
+            --label raw139-f1-ld-rf-source-audit --jobs 4 \
+            --provenance-input im-results/agent14-raw139-f1-ld-rf-ingestion/prepare.py \
+            --provenance-input im-results/agent14-raw139-f1-oneLD/recipes.txt \
+            --provenance-input im-results/agent14-raw139-f1-oneLD/Agent14OneLDCarry.lean \
+            --provenance-input im-results/agent14-raw139-f1-oneLD/replay.py \
+            --provenance-input im-results/agent14-raw139-f1-oneLD/package.py \
+            --provenance-input im-results/agent14-raw139-f1-oneRF/source.tar.xz.b64 \
+            --provenance-input im-results/agent48-raw139-f1-oneLA/scan.py \
+            --provenance-input im-results/agent48-raw139-f1-oneLA/autopump.py \
+            --provenance-input im-results/agent48-raw139-f1-oneLA/emitproof.py \
+            | tee "$work/source.log"
+          if grep -Eq 'sorryAx|native_decide' "$work/source.log"; then
+            echo "Forbidden proof placeholder or native_decide in 1LD/1RF source closure" >&2
+            exit 1
+          fi
+          python3 - "$work/source.log" <<'PY'
+          import pathlib, re, sys
+          log = pathlib.Path(sys.argv[1]).read_text()
+          names = [
+              "BB6.Agent14F1OneLD.checked",
+              "BB6.Agent14F1OneLD.all_completions_weighted",
+              "BB6.Agent14OneLD.H25.carry",
+              "BB6.Agent14F1OneRF.checked",
+              "BB6.Agent14F1OneRF.all_completions_weighted",
+          ]
+          names += [f"BB6.Agent14OneLD.H{i}.{kind}"
+                    for i in range(32) for kind in ("growth", "never")]
+          allowed = {"propext", "Classical.choice", "Quot.sound"}
+          for name in names:
+              pattern = r"'" + re.escape(name) + r"' depends on axioms: \[([^\]]*)\]"
+              match = re.search(pattern, log)
+              if match:
+                  used = {x.strip() for x in match.group(1).split(",") if x.strip()}
+              elif "'" + name + "' does not depend on any axioms" in log:
+                  used = set()
+              else:
+                  raise SystemExit("missing axiom audit: " + name)
+              if not used <= allowed:
+                  raise SystemExit(f"nonstandard axioms for {name}: {used - allowed}")
+              print(name, sorted(used))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() }}
+        with:
+          name: raw139-f1-ld-rf-source-certified-${{ github.sha }}
+          include-hidden-files: true
+          if-no-files-found: warn
+          path: |
+            .tmp/a14-f1-ld-rf/manifest.json
+            .tmp/a14-f1-ld-rf/source.log
+            .tmp/a14-f1-ld-rf/imports/*.lean
+            .tmp/a14-f1-ld-rf/build/*.olean
   f0-siblings:
     if: ${{ inputs.f0_siblings_only }}
     runs-on: ubuntu-latest
