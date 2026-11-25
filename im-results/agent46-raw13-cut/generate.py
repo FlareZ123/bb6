@@ -245,6 +245,9 @@ def emit(t):
     if tag == "pump1RE2":
         n = "BB6Coverage.Agent31Pump.Raw13Pump1RE2"
         return f".closed (.proven {n}.table {n}.never)"
+    if tag == "pump0LB":
+        n = "BB6Coverage.Agent31Pump.Raw13Pump0LB"
+        return f".closed (.proven ({n}.table {v[0]}) ({n}.never {v[0]} (by decide)))"
     if tag == "pump0LC":
         n = "BB6Coverage.Agent31Pump.Raw13Pump0LC"
         return f".closed (.proven ({n}.table {v[0]}) ({n}.never {v[0]} (by decide)))"
@@ -260,7 +263,7 @@ def emit(t):
     if tag == "late0RE":
         n = "BB6Coverage.Agent31Pump.Raw13Late0RE"
         return f".bounded {n}.table 21269 {n}.bound"
-    if tag in ("zeroRCparent","zeroRDparent"):
+    if tag in ("zeroRCparent","zeroRDparent","zeroLCparent"):
         n = "BB6.Agent46Raw13Zero"+tag[4:6]
         return f".bounded {n}.parent 7014 {n}.bound"
     if tag == "zeroREparent":
@@ -302,11 +305,12 @@ if __name__ == "__main__":
     t = enhance_selected(build_enhanced(t))
     t = enhance(t,ROOT,{"1RB1LC1RC0LD1LA0RB1LB0RE------------":("zeroREparent",),
         "1RB1LC1RC0LD1LA0RB0RC---------------":("zeroRCparent",),
-        "1RB1LC1RC0LD1LA0RB0RD---------------":("zeroRDparent",)})
+        "1RB1LC1RC0LD1LA0RB0RD---------------":("zeroRDparent",),
+        "1RB1LC1RC0LD1LA0RB0LC---------------":("zeroLCparent",)})
     c,m = Counter(),Counter()
     tally(t,9,3,c,m)
-    assert c == Counter(open=1719,cycle=2708,state=948,split=353,halt=353,last=999,ngram=15,pump=3,selectedgram=826,pump1RE=1,sharedpump=3,pump0LE=1,pump1RE2=1,sparse1RE=1,zeroREparent=1,zeroRCparent=1,zeroRDparent=1),c
-    assert m["open"] == 1725351562650 and sum(m.values()) == 25**9,m
+    assert c == Counter(open=1718,cycle=2708,state=948,split=353,halt=353,last=999,ngram=15,pump=3,selectedgram=826,pump1RE=1,sharedpump=3,pump0LE=1,pump1RE2=1,sparse1RE=1,zeroREparent=1,zeroRCparent=1,zeroRDparent=1,zeroLCparent=1),c
+    assert m["open"] == 1725322265775 and sum(m.values()) == 25**9,m
     names = []
     for i,k in enumerate(t[3]):
         if k is None:
@@ -314,7 +318,7 @@ if __name__ == "__main__":
         name = f"Agent46Raw13Kid{i:02}"
         names.append(name)
         mv = move(MOVES[i])
-        write(name,["Agent46Raw13Base","Agent46Raw13NGram","Agent46Raw13Pumps","Agent46Raw13SelectedGram","Agent46Raw13Pump1RE","Agent46Raw13SharedPumps","Agent46Raw13Pump0LE","Agent46Raw13Pump1RE2","Agent46Raw13Sparse1RE","Agent46Raw13ZeroRE","Agent46Raw13ZeroRC","Agent46Raw13ZeroRD"],f"""
+        write(name,["Agent46Raw13Base","Agent46Raw13NGram","Agent46Raw13Pumps","Agent46Raw13SelectedGram","Agent46Raw13Pump1RE","Agent46Raw13SharedPumps","Agent46Raw13Pump0LE","Agent46Raw13Pump1RE2","Agent46Raw13Sparse1RE","Agent46Raw13ZeroRE","Agent46Raw13ZeroRC","Agent46Raw13ZeroRD","Agent46Raw13ZeroLC"],f"""
 def kid{i:02} : Cut := {emit(k)}
 theorem checked{i:02} :
     check 21269 (child {mv}) (nextCut 3 {mv}) kid{i:02} = true := by decide

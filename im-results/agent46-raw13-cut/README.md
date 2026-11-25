@@ -80,9 +80,9 @@ The new [Agent46CarryPumping.lean](Agent46CarryPumping.lean) proves a generic ex
 
 For variants 3,4 the family is E,(01)^(n+1) 00 1^n,[]. The five exact unbounded recurrence proofs and the complete parent with empty complement at weighted bound 7014 passed the original-source [CI 45573192648](https://github.com/FlareZ123/bb6/actions/runs/45573192648) at pinned revision `fb886531bb3364f6cb6c3c0af5806be8dcdb0231`.
 
-## D0=0LC standalone five-hole parent (candidate)
+## D0=0LC complete five-hole parent
 
-For `1RB1LC1RC0LD1LA0RB0LC---------------`, the first query is D1 at step 10. The candidate tree has 261 splits, 261 halt branches, 4118 translated cycles, 336 state closures, 1314 last-hole bounds, 227 n-gram certificates and five pumping leaves. The proposed weighted bound is 7014, with empty complement; original-source acceptance is pending. The parent covers 25^5 literal completions, or 3*25^5 in the raw13 mass accounting.
+For `1RB1LC1RC0LD1LA0RB0LC---------------`, the first query is D1 at step 10. The candidate tree has 261 splits, 261 halt branches, 4118 translated cycles, 336 state closures, 1314 last-hole bounds, 227 n-gram certificates and five pumping leaves. The weighted bound 7014 and empty complement passed original-source [CI 45589483594](https://github.com/FlareZ123/bb6/actions/runs/45589483594), pinned at `b6a0aefabdc340b1b0cfcb5f2b4ddccd77e60102`. The parent covers 25^5 literal completions, or 3*25^5 in the raw13 mass accounting.
 
 The five difficult leaves have exact growth maps in [Agent46Raw13Pump0LC.lean](Agent46Raw13Pump0LC.lean). All families below have state A and empty left zipper, with the listed right word:
 
@@ -94,10 +94,30 @@ The five difficult leaves have exact growth maps in [Agent46Raw13Pump0LC.lean](A
 | 3 | 1^(2(n+2)) | n+2 | 4n+25 | n=1, t=20 |
 | 4 | 1^(6n+10) | n+1 | 72n+106 | n=0, t=66 |
 
-Variant 2 uses two exact phases: F(k)=111(00111)^k and G(k)=F(k)001001, with F(k) to G(k) in 14k+22 steps and G(k) to F(k+2) in 14k+32 steps, k>=1. This replaces the width-8 sparse n-gram candidate with an arbitrary-width sweep proof. All five growth identities and blank seeds were locally kernel-checked under Lean 4.36.0-rc2 against exact copied sweep semantics. The actual repository import closure and parent audit require the manual `zeroLC` target. The global graft remains unchanged pending acceptance.
+Variant 2 uses two exact phases: F(k)=111(00111)^k and G(k)=F(k)001001, with F(k) to G(k) in 14k+22 steps and G(k) to F(k+2) in 14k+32 steps, k>=1. This replaces the width-8 sparse n-gram candidate with an arbitrary-width sweep proof. All five growth identities and blank seeds were locally kernel-checked under Lean 4.36.0-rc2 against exact copied sweep semantics. The manual `zeroLC` target now accepts the actual repository dependency closure and all five never-halting bridges. The global candidate incorporates this independently accepted parent.
+
+## D0=0LB five-hole parent (candidate)
+
+For `1RB1LC1RC0LD1LA0RB0LB---------------`, the first query is D1 at step 13. Candidate census: 244 split queries and halt branches, 3846 translated cycles, 356 state masks, 1352 last-hole bounds, 46 dense n-grams, and nine pumping leaves. Weighted bound 7014 and empty complement are pending original-source acceptance.
+
+[Agent46Raw13Pump0LB.lean](Agent46Raw13Pump0LB.lean) provides exact macro identities and authentic seeds. All states are A with empty left zipper:
+
+| Variant | Right word | Parameter update | Exact primitive cost | Seed time |
+| --- | --- | --- | --- | --- |
+| 0 | 111000100100(0100100)^(n+1) | n+1 | 108n+341 | 344 |
+| 1 | 1^(2n+3)01 | n+1 | 6n+21 | 11 |
+| 2 | 1^(2n+3)01 | n+1 | 10n+21 | 11 |
+| 3 | 1^(2n+3)01 | n+2 | 6n+27 | 11 |
+| 4 | 1^(2n+5)00000 | n+1 | 36·2^n−2 | 39 |
+| 5 | 1110101^(9n+5) | n+1 | 48n+167 | 42 |
+| 6 | 1^(8n+3)0101111111 | n+1 | 48n+118 | 66 |
+| 7 | 1110^(2n+1)1 | n+3 | 12n+46 | 11 |
+| 8 | 111(01)^(n+1) | n+3 | 12n+47 | 11 |
+
+All seeds use n=0. The local copied-source check accepts eight growth equations and variant 4's exact preparation/finish lemmas for the generic nested-carry theorem; original-source bridge and full parent audit pending `zeroLB`. Variant 0 transports 7-cell blocks right-to-left in 33 steps and left-to-right in 21 steps, with separate exact final-block boundary. Variant 5 has three phases (48n+52, 44, 71 steps); variant 6 has two (24n+62, 24n+56). No finite simulation horizon is used to justify a nonhalting claim.
 
 ## Exact complement and consuming theorem
 
-The updated candidate census has 353 split queries, 2708 cycles, 948 state masks, 999 last-hole leaves, 15 initial and 826 selected dense n-gram leaves, one sparse n-gram leaf, three original and six additional pumping leaves, and 1719 unresolved canonical leaves after replacing D1=0RE and D0=0RC,0RD by their standalone bounded parent certificates. The raw13 parent has 25^9=3814697265625 literal completions; the computed retained mass is 1725351562650. Before this incarnation's two new four-hole candidates the cut retained 1724 leaves and mass 1725417187650. The three four-hole and two five-hole closures now add an exact candidate mass removal of 3·6·25^4 + 2·3·25^5 relative to the preceding cut. The 0RE,0RC,0RD parent theorems are independently source-accepted; the new global graft requires its own source check. The global graft is 78−1+1719=1796 quotient obligations, including the exact surviving complement. The earlier D1=0LE-only revision was cancelled in [CI 45557634300](https://github.com/FlareZ123/bb6/actions/runs/45557634300).
+The updated candidate census has 353 split queries, 2708 cycles, 948 state masks, 999 last-hole leaves, 15 initial and 826 selected dense n-gram leaves, one sparse n-gram leaf, three original and six additional pumping leaves, and 1718 unresolved canonical leaves after replacing D1=0RE and D0=0RC,0RD,0LC by their standalone bounded parent certificates. The raw13 parent has 25^9=3814697265625 literal completions; the computed retained mass is 1725322265775. Before this incarnation's two new four-hole candidates the cut retained 1724 leaves and mass 1725417187650. The three four-hole and three five-hole closures now add an exact candidate mass removal of 3·6·25^4 + 3·3·25^5 relative to the preceding cut. The 0RE,0RC,0RD,0LC parent theorems are independently source-accepted; the new global graft requires its own source check. The global graft is 78−1+1718=1795 quotient obligations, including the exact surviving complement. The earlier D1=0LE-only revision was cancelled in [CI 45557634300](https://github.com/FlareZ123/bb6/actions/runs/45557634300); the 0RE-only ingest was also cancelled in [CI 45572030362](https://github.com/FlareZ123/bb6/actions/runs/45572030362). Neither cancellation establishes global acceptance.
 
 To reproduce, invoke the existing manual workflow `agent46-raw13-cut.yml` with target `ingest`. It generates the proof data, compiles the original-source import closure, and rejects sorryAx or native_decide in the printed profiles. A failed source check leaves the parent obligation intact. The canonical raw13 parent is still open, #754 remains open, and no BB(6) upper bound follows without the remaining covers at the exact attained score.
