@@ -29,8 +29,9 @@ The Python analysis in
 `im-results/agent13-cross-route-pilot/analyze_b0_1lc_sidewitness_cover.py`
 reports an exact finite-cylinder union count of 4,477,340,035,625 for the 65
 side witnesses. Treat this as reproducible computation, not yet as a Lean
-numeric theorem. The parent space is 95,367,431,640,625 completions. The
-remaining complement is therefore still substantial.
+numeric theorem. The parent space is 95,367,431,640,625 completions. The remaining complement is
+90,890,091,604,975 completions, about 95.305% of the parent space. The existing
+`heldleaf109` CI job succeeded in run [45603623804](https://github.com/FlareZ123/bb6/actions/runs/45603623804), executing the script's exact-count assertions. This is a reproducible finite computation, not a Lean proof that the complement is nonhalting.
 
 ## Coq: consume the exact held FARv3 source-queue node
 
