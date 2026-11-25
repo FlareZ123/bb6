@@ -1,12 +1,18 @@
-# Champion score lower bound (intermediate)
+# Proposed TM63 score lower bound (intermediate)
 
-This module derives a source-level lower bound on the attained TM63 champion score without evaluating the complete three-section expression.
+This module proves an arithmetic lower bound on the expression proposedTM63Moves + 7. It does **not** yet prove a lower bound on the actual runtime of the named machine.
 
-The exact score is proposedTM63Moves + 7, with
-proposedTM63Moves = threeSectionMoves 27959 3 7 6 63. The first source increment in the first section is
+The proposed score is defined by the three-section cost recurrence in CostRecurrence.lean. The first section's first candidate increment is
+
 proposedIncrementCost 2 7 6 63 = 6*4^63 + 42*2^63 + 15 + 8 + 72 + 12*v2(7) - 9*63,
-which exceeds 2^126. Since the full section and remaining stages add nonnegative costs, the champion score is at least 2^126.
 
-The theorem champion_score_ge_6766859 is a corollary. It is intended to lift the raw110 complete-parent certificate (bound 6,766,859) to the champion score in the canonical70 integration.
+which is greater than 2^126. That term is a summand of the proposed score, and all remaining terms are nonnegative. The Lean module proves:
 
-**Status:** source draft, not yet Lean-compiled. Keep in im-results/; this is a useful threshold bridge, not a standalone publishable BB(6) result.
+- proposed_score_ge_two_pow_126: 2^126 ≤ proposedTM63Moves + 7.
+- proposed_score_ge_6766859: 6,766,859 ≤ proposedTM63Moves + 7.
+
+The second inequality is intended to lift the raw110 parent certificate's weighted bound (6,766,859) to the proposed champion score in the canonical roster integration.
+
+**Critical evidence boundary:** CostRecurrence.lean explicitly labels proposedIncrementCost as an unproved candidate raw cost. Actual attainment of proposedTM63Moves + 7 depends on IncrementSource and ResetSource; the complete original-machine source closures for those premises have not yet passed. Therefore this module is only an arithmetic helper for a future source-accepted exactness consumer. It must not be described as establishing an actual BB(6) lower bound or an attained champion score.
+
+Status: source draft, not Lean-compiled. Keep in im-results/.
