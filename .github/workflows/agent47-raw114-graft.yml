@@ -1,0 +1,56 @@
+name: Agent 47 ingest accepted raw114 into canonical frontier
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  graft:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          ref: d4164a4457e62ba7ec8e3fba6e38b251d04ffc83
+          path: pinned
+      - name: Install Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45553564319
+          name: raw114-certified-root
+          path: /tmp/a47-raw114-certified
+      - name: Build canonical frontier from the same pinned source
+        run: |
+          set -euo pipefail
+          cp im-results/agent47-rooted-tnf/CanonicalTwoParentGraft.lean pinned/im-results/agent47-rooted-tnf/
+          cd pinned
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent10-tnf-raw87/generate.py
+          python im-results/agent10-tnf-raw91/generate.py
+          python im-results/agent10-tnf-multipump/generate.py 66 70 80
+          python im-results/agent10-tnf-multipump/generate.py 68 72 82
+          python im-results/agent10-tnf-multipump/generate.py 86 88 92 93 97 98 100 101 102 104
+          python tools/lean_compile_closure.py --workdir /tmp/a47-canonical --jobs 4 im-results/agent47-rooted-tnf/CanonicalTwoParentGraft.lean | tee /tmp/a47-canonical.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a47-canonical.log; then exit 1; fi
+      - name: Link the accepted cylinder theorem, check count and composition
+        run: |
+          set -euo pipefail
+          cp im-results/agent47-rooted-tnf/CanonicalRaw114Accepted.lean /tmp/a47-canonical/
+          cp -n /tmp/a47-raw114-certified/*.olean /tmp/a47-canonical/
+          cd /tmp/a47-canonical
+          export LEAN_PATH="$PWD"
+          lean -o CanonicalRaw114Accepted.olean CanonicalRaw114Accepted.lean | tee /tmp/a47-graft.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a47-graft.log; then exit 1; fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: canonical77-certified
+          path: /tmp/a47-canonical/*.olean
+          if-no-files-found: error
