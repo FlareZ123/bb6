@@ -1,4 +1,7 @@
-import ChampionF1OneLBIntegration
+import ChampionResidualParentIntegration
+import CanonicalTwoParentRosterOnly
+import CanonicalRosterRefinement
+import CanonicalFrontier
 import HardRootLeaves
 import CryptidsTapeAdapter
 import WeightedNonhaltLeafAdapter
@@ -18,7 +21,11 @@ open BB6.Agent6ChampionResidual
 open BB6.Agent31FourHoleFrontier
 open BB6.Agent31FourHoleRoster
 open BB6.Agent50TNFPilot
-open BB6.Agent6F1OneLBIntegration
+open BB6.Agent31ChampionParentIntegration
+open BB6.Agent47CanonicalRefinement
+open BB6.Agent47CanonicalFrontier
+open BB6.Agent47CanonicalTwoParent
+open BB6.Agent31CanonicalTwoParentRosterOnly
 
 /-- Exact pinned upstream Cryptids nonhalting machine. -/
 def source : ConjectureMachines.Machine 6 2 :=
@@ -75,7 +82,7 @@ def candidateSchedule : List (Nat × Slot) :=
 theorem candidate_first_hole_path : FirstHolePath candidateLeaf 6 :=
   checked_from_root _ candidateSchedule (by decide)
 
-/-- The first divergence from the champion is D1=0LE, E1=1LF. -/
+/-- The first divergence from the champion path is D1=0LE, E1=1LF. -/
 def candidateMove : Move := ⟨true,false,5⟩
 
 def candidateAddress : List Move :=
@@ -106,27 +113,28 @@ theorem candidateTail_cut :
   decide
 
 theorem candidateTail_pathOK :
-    pathOKB 7014 candidateParent 6 candidateTail = true := by
+    pathOKB championScore candidateParent 6 candidateTail = true := by
   decide
 
-/-- A source-certified 25-completion leaf, expanded with all off-path siblings retained. -/
+/-- The source theorem closes every completion of the one-row F1 leaf. -/
 def candidateWeightedLeaf (B : Nat) :
     WeightedTNFCertificate B candidateLeaf 6 := by
   apply forgetHaltRows_nonhaltCertificate
   · simp [candidate, BB6.Agent19HardRoot.literal, initialSlot]
   · exact candidate_never
 
+/-- Refine only the exact E1=1LF parent, keeping every off-path sibling open. -/
 noncomputable def candidateFrontier :
-    RootedFrontier 7014 candidateParent :=
-  buildFrontierB 7014 candidateParent 6 candidateParentPath
+    RootedFrontier championScore candidateParent :=
+  buildFrontierB championScore candidateParent 6 candidateParentPath
     candidateTail candidateTail_pathOK
     (by
       rw [candidateTail_endpoint]
-      exact candidateWeightedLeaf 7014)
+      exact candidateWeightedLeaf championScore)
 
 theorem candidateFrontier_sound :
     ∀ m, compatible candidateParent m →
-      WeightedBound 7014 m ∨
+      WeightedBound championScore m ∨
         ∃ address q, OpenLeaf candidateFrontier address q ∧ compatible q m :=
   RootedFrontier.sound candidateFrontier
 
@@ -138,6 +146,9 @@ theorem candidateOpenLeaf_mem_residuals {B : Nat} {p : PartialMachine}
   | here path =>
       simp [RootedFrontier.residuals]
   | @child p n c path hrun hhole hweight children mv address q hchild ih =>
+      change (mv :: address,q) ∈
+        RootedFrontier.residuals (.expand path hrun hhole hweight children)
+      simp only [RootedFrontier.residuals]
       apply List.mem_flatMap.mpr
       refine ⟨mv, allMoves_complete mv, ?_⟩
       apply List.mem_map.mpr
@@ -148,75 +159,118 @@ noncomputable def candidateRemaining : List (List Move × PartialMachine) :=
 
 theorem candidateRemaining_sound :
     ∀ m, compatible candidateParent m →
-      WeightedBound 7014 m ∨
+      WeightedBound championScore m ∨
         ∃ e ∈ candidateRemaining, compatible e.2 m := by
   intro m hm
   rcases candidateFrontier_sound m hm with hbound | ⟨address,q,hopen,hcompat⟩
   · exact Or.inl hbound
   · exact Or.inr ⟨(address,q), candidateOpenLeaf_mem_residuals hopen, hcompat⟩
 
-/-- The exact current 102-entry frontier contains this E1=1LF parent at address
-    [D1=0LE, E1=1LF]. This is a current residual, not merely raw139-parent compatibility. -/
+/-- The candidate parent is an exact open leaf of the current 123-leaf
+    champion-containing raw139 frontier, not merely a compatible ancestor. -/
 theorem candidateParent_current_entry :
-    ∃ e ∈ remainingF1AfterZeroRBZeroLAOneRDOneLB,
+    ∃ e ∈ championResidualFrontierWithParentResiduals,
       e.1 = candidateAddress ∧ sameTable e.2 candidateParent = true := by
   decide
 
-theorem candidateParent_current_unique :
-    (remainingF1AfterZeroRBZeroLAOneRDOneLB.filter
-      (fun e => sameTable e.2 candidateParent)).length = 1 := by
+theorem candidateParent_current_address_unique :
+    ∀ e ∈ championResidualFrontierWithParentResiduals,
+      sameTable e.2 candidateParent = true →
+      e.1 = candidateAddress ∧ e.2 = candidateParent := by
   decide
 
-/-- Replace only the exact current E1=1LF residual by its source-checked
-    first-hole descendants. Every other current residual is preserved. -/
-noncomputable def candidateRefinedCurrent :
+/-- Replace just that open leaf by its exact rooted descendants. The other
+    122 raw139 residuals are retained unchanged. -/
+noncomputable def raw139ResidualsWithCandidate :
     List (List Move × PartialMachine) :=
-  (remainingF1AfterZeroRBZeroLAOneRDOneLB.filter
+  (championResidualFrontierWithParentResiduals.filter
     (fun e => !(sameTable e.2 candidateParent))) ++
   (candidateRemaining.map fun (address,q) => (candidateAddress ++ address,q))
 
-theorem candidateParent_cover
-    (hOpen : ∀ e ∈ candidateRefinedCurrent,
-      Cover (WeightedBound championScore) e.2) :
-    Cover (WeightedBound championScore) candidateParent := by
-  refine Cover.leaf candidateParent ?_
-  intro m hm k d hk hd
-  rcases candidateRemaining_sound m hm with hbound | ⟨e, he, hcompat⟩
-  · exact Nat.le_trans (hbound k d hk hd)
-      (Nat.le_of_lt champion_score_gt_7014)
-  · have hmem : (candidateAddress ++ e.1,e.2) ∈ candidateRefinedCurrent := by
-      apply List.mem_append.mpr
-      right
-      apply List.mem_map.mpr
-      exact ⟨e, he, rfl⟩
-    exact hOpen (candidateAddress ++ e.1,e.2) hmem m hcompat k d hk hd
+/-- Stable local parent contract: the complete raw139 cylinder is either
+    already bounded or represented by the explicitly refined residuals. -/
+theorem raw139_parent_contract :
+    ∀ m, compatible championResidual m →
+      WeightedBound championScore m ∨
+        ∃ e ∈ raw139ResidualsWithCandidate, compatible e.2 m := by
+  intro m hm
+  rcases championResidualFrontierWithParentSound m hm with hbound | ⟨address,q,hopen,hcompat⟩
+  · exact Or.inl hbound
+  · by_cases hmatch : sameTable q candidateParent = true
+    · have hq : q = candidateParent := sameTable_sound hmatch
+      subst q
+      have haddr : address = candidateAddress :=
+        (candidateParent_current_address_unique
+          (address,candidateParent) (openLeaf_mem_residuals hopen) hmatch).1
+      subst address
+      rcases candidateRemaining_sound m hcompat with hbound | ⟨e,he,hc⟩
+      · exact Or.inl hbound
+      · exact Or.inr ⟨(candidateAddress ++ e.1,e.2), by
+          apply List.mem_append.mpr
+          right
+          apply List.mem_map.mpr
+          exact ⟨e,he,rfl⟩, hc⟩
+    · exact Or.inr ⟨(address,q), by
+        apply List.mem_append.mpr
+        left
+        apply List.mem_filter.mpr
+        exact ⟨openLeaf_mem_residuals hopen, by simp [hmatch]⟩, hcompat⟩
 
-theorem cover_current_after_candidate
-    (hOpen : ∀ e ∈ candidateRefinedCurrent,
-      Cover (WeightedBound championScore) e.2)
-    (e : List Move × PartialMachine)
-    (he : e ∈ remainingF1AfterZeroRBZeroLAOneRDOneLB) :
-    Cover (WeightedBound championScore) e.2 := by
-  by_cases h : sameTable e.2 candidateParent = true
-  · have heq : e.2 = candidateParent := sameTable_sound h
-    rw [heq]
-    exact candidateParent_cover hOpen
-  · apply hOpen e
-    apply List.mem_append.mpr
-    left
-    apply List.mem_filter.mpr
-    exact ⟨he, by simp [h]⟩
+/-- The raw139 representative survives the accepted two-parent 76-way roster. -/
+theorem championResidual_mem_roster76 :
+    ∃ e ∈ BB6.Agent47CanonicalTwoParent.roster76,
+      e.1 = championResidualAddress ∧ sameTable e.2 championResidual = true := by
+  decide
 
-/-- Conditional exact-BB6 consumer after replacing one live 102-frontier
-    parent by its exact source-certified complement. -/
-theorem exact_from_canonical77_and_raw139_candidate_leaf
-    (hOther : ∀ e ∈ BB6.Agent47CanonicalRaw114Accepted.roster,
-      e.2 ≠ championResidual → Cover (WeightedBound championScore) e.2)
-    (hOpen : ∀ e ∈ candidateRefinedCurrent,
+theorem canonical76_root_sound_at_champion :
+    ∀ m, compatible BB6.Agent50TNFPilot.root m →
+      WeightedBound championScore m ∨
+        ∃ e ∈ BB6.Agent47CanonicalTwoParent.roster76,
+          TNFQuotientCompatible e.2 m := by
+  intro m hm
+  rcases BB6.Agent31CanonicalTwoParentRosterOnly.roster76_sound m hm with hbound | hres
+  · exact Or.inl (by
+      intro k d hk hd
+      exact Nat.le_trans (hbound k d hk hd)
+        (Nat.le_of_lt BB6.Agent31Canonical78Exact.champion_score_gt_7014))
+  · exact Or.inr hres
+
+/-- Generic quotient-roster graft: replace raw139 by the refined local
+    residuals without creating a parallel count-specific roster system. -/
+noncomputable def canonical76WithRaw139Candidate :
+    List (List Move × PartialMachine) :=
+  BB6.Agent47CanonicalRefinement.graftRoster
+    championResidual raw139ResidualsWithCandidate
+    BB6.Agent47CanonicalTwoParent.roster76
+
+theorem canonical76WithRaw139Candidate_sound :
+    ∀ m, compatible BB6.Agent50TNFPilot.root m →
+      WeightedBound championScore m ∨
+        ∃ e ∈ canonical76WithRaw139Candidate,
+          TNFQuotientCompatible e.2 m :=
+  BB6.Agent47CanonicalRefinement.graftRoster_sound
+    (B := championScore)
+    (root := BB6.Agent50TNFPilot.root)
+    (p := championResidual)
+    (replacement := raw139ResidualsWithCandidate)
+    (roster := BB6.Agent47CanonicalTwoParent.roster76)
+    (by decide)
+    canonical76_root_sound_at_champion
+    raw139_parent_contract
+
+/-- Conditional exact-BB6 consumer through the accepted 76-way quotient
+    roster. The remaining obligations are exactly the covers of the grafted
+    roster entries. -/
+theorem exact_from_canonical76_and_raw139_candidate_leaf
+    (hLeaves : ∀ e ∈ canonical76WithRaw139Candidate,
       Cover (WeightedBound championScore) e.2) :
     BB6.Coverage.ExactBB6 championScore :=
-  exact_from_canonical77_and_raw139_four_sibling_leaves hOther
-    (fun e he => cover_current_after_candidate hOpen e he)
+  BB6.Agent47CanonicalFrontier.exact_from_quotient_roster
+    (C := championScore) (B := championScore)
+    (by decide) (Nat.le_refl _)
+    canonical76WithRaw139Candidate_sound
+    hLeaves
+    BB6Coverage.Agent48DirectRoot.champion_raw_witness
 
 #print axioms original_eq_candidate
 #print axioms original_never
@@ -228,7 +282,11 @@ theorem exact_from_canonical77_and_raw139_candidate_leaf
 #print axioms candidateFrontier_sound
 #print axioms candidateRemaining_sound
 #print axioms candidateParent_current_entry
-#print axioms candidateParent_current_unique
-#print axioms exact_from_canonical77_and_raw139_candidate_leaf
+#print axioms candidateParent_current_address_unique
+#print axioms raw139_parent_contract
+#print axioms championResidual_mem_roster76
+#print axioms canonical76_root_sound_at_champion
+#print axioms canonical76WithRaw139Candidate_sound
+#print axioms exact_from_canonical76_and_raw139_candidate_leaf
 
 end BB6.Agent41Raw139CryptidsLeaf
