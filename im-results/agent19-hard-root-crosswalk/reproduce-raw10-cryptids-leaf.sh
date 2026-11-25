@@ -21,6 +21,11 @@ python3 "$ROOT/tools/test_lean_compile_module_index.py"
 
 mkdir -p "$WORKDIR"
 printf '%s\n' "$PINNED" > "$WORKDIR/upstream-commit.txt"
+# Record the exact local dependency overlay and fully resolved Lake lock.
+cp "$UPSTREAM_ROOT/lakefile.toml" "$WORKDIR/upstream-lakefile.toml"
+cp "$UPSTREAM_ROOT/lake-manifest.json" "$WORKDIR/upstream-lake-manifest.json"
+sha256sum "$WORKDIR/upstream-lakefile.toml" "$WORKDIR/upstream-lake-manifest.json" \
+  > "$WORKDIR/upstream-dependencies.sha256"
 
 node "$ROOT/im-results/agent19-hard-root-crosswalk/raw10-cryptids-leaf-crosswalk.cjs" "$UPSTREAM_ROOT" \
   | tee "$WORKDIR/crosswalk.json"
@@ -49,6 +54,7 @@ python3 "$ROOT/tools/lean_compile_closure.py" \
   --label raw10-cryptids-last-hole-leaf \
   --provenance-input "$WORKDIR/upstream-commit.txt" \
   --provenance-input "$WORKDIR/crosswalk.sha256" \
+  --provenance-input "$WORKDIR/upstream-dependencies.sha256" \
   --override Frontier=im-results/agent8-coverage-contract/Frontier.lean \
   --override RootFrontier=im-results/agent50-weighted-tnf-pilot/RootFrontier.lean \
   --override TNFPilot=im-results/agent50-weighted-tnf-pilot/TNFPilot.lean \
