@@ -18,6 +18,40 @@ def load_hard_rows():
     with tarfile.open(ROOT / "inductive-generators.tar.xz", "r:xz") as archive:
         return archive.extractfile("hard.txt").read().decode().splitlines()
 
+def discover_extended(p, limit=100000, max_events=250, window=15, maxrep=4, maxlen=24):
+    """Broader multi-block search than multi_sweep.discover's default 60x9 window."""
+    from collections import defaultdict
+    events = pump.concrete_events(p, limit)
+    groups = defaultdict(list)
+    for t, side, config in events:
+        if (side == "L" and config.l.pre == "") or (side == "R" and config.r.pre == ""):
+            groups[(side, config.q)].append((t, config.r.pre if side == "L" else config.l.pre))
+    attempts = 0
+    for (side, q), group in groups.items():
+        for i, (t, a) in enumerate(group[:max_events]):
+            for j in range(i + 1, min(i + window, len(group))):
+                _, b = group[j]
+                diff = len(b) - len(a)
+                if not 1 <= diff <= maxlen:
+                    continue
+                for k in range(j + 1, min(j + window, len(group))):
+                    _, cword = group[k]
+                    if len(cword) - len(b) != diff:
+                        continue
+                    for w in ms.infer(a, b, cword, maxrep=maxrep, maxlen=maxlen):
+                        if sum(isinstance(x, ms.Rep) for x in w.parts) < 2:
+                            continue
+                        v = w.inc()
+                        start = ms.Config(q, ms.Word(), w) if side == "L" else ms.Config(q, w, ms.Word())
+                        target = ms.Config(q, ms.Word(), v) if side == "L" else ms.Config(q, v, ms.Word())
+                        attempts += 1
+                        result = ms.execute(p, start, target, limit=5000)
+                        if result:
+                            print(f"EXTENDED_ATTEMPTS={attempts}")
+                            return t, start, target, result
+    print(f"EXTENDED_ATTEMPTS={attempts}")
+    return None
+
 def try_hard23_family(i, p):
     # The solved hard[23] cylinder differs from hard[10]/hard[15] only at E0/F1.
     # Reuse its discovered family as an adversarial transfer test.
@@ -48,6 +82,9 @@ def main():
         p = pump.parse(rows[i])
         try_hard23_family(i, p)
         ans = ms.discover(p, limit=args.limit)
+        if ans is None:
+            print(f"DEFAULT_NO_FAMILY index={i} limit={args.limit}")
+            ans = discover_extended(p, limit=max(args.limit, 100000))
         if ans is None:
             print(f"NO_FAMILY index={i} limit={args.limit}")
             continue
