@@ -1539,15 +1539,6 @@ jobs:
           python im-results/agent10-tnf-multipump/generate.py 66 70 80
           python im-results/agent10-tnf-multipump/generate.py 68 72 82
           python im-results/agent10-tnf-multipump/generate.py 86 88 92 93 97 98 100 101 102 104
-          root=im-results/agent11-raw107
-          python "$root/generate.py"
-          python "$root/generate_rc.py"
-          python "$root/generate_re.py"
-          python "$root/generate_more.py" 1RE 1LC 1LE 1LB 0RF 1RF 0LE
-          python "$root/generate_partial.py" 0LF 1LA 1LF
-          for prefix in Raw107RD Raw107RC Raw107RF Raw107RE Raw107RB Raw107LD Raw107LC Raw107LF Raw107LE Raw107LB; do
-            python im-results/agent10-tnf-multipump/chunk_checks.py "$root" "$prefix" --limit 180
-          done
           python im-results/agent13-block-far/generate.py im-results/agent13-block-far
       - name: Count existing side-witness cylinders under B0=1LC
         run: |
@@ -1646,6 +1637,15 @@ jobs:
           python im-results/agent10-tnf-multipump/generate.py 66 70 80
           python im-results/agent10-tnf-multipump/generate.py 68 72 82
           python im-results/agent10-tnf-multipump/generate.py 86 88 92 93 97 98 100 101 102 104
+          root=im-results/agent11-raw107
+          python "$root/generate.py"
+          python "$root/generate_rc.py"
+          python "$root/generate_re.py"
+          python "$root/generate_more.py" 1RE 1LC 1LE 1LB 0RF 1RF 0LE
+          python "$root/generate_partial.py" 0LF 1LA 1LF
+          for prefix in Raw107RD Raw107RC Raw107RF Raw107RE Raw107RB Raw107LD Raw107LC Raw107LF Raw107LE Raw107LB; do
+            python im-results/agent10-tnf-multipump/chunk_checks.py "$root" "$prefix" --limit 180
+          done
           python im-results/agent13-block-far/generate.py im-results/agent13-block-far
           python im-results/agent13-cross-route-pilot/analyze_b0_1lc_sidewitness_cover.py
           mkdir -p .tmp/a13-heldleaf109/imports
