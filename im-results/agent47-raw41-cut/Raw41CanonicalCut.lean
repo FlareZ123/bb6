@@ -30,6 +30,7 @@ def canonicalRemaining := canonicalResiduals parent 4 tree
 theorem supported : TNFSupport parent 4 := supportOK_sound _ _ (by decide)
 theorem canonical_checked : canonicalCheck 16 parent 4 tree = true := canonical_of_partial _ _ _ _ checked
 theorem canonical_count : canonicalRemaining.length = 153 := by decide +kernel
+
 theorem canonical_sound : ∀ m, TNFQuotientCompatible parent m → WeightedBound 16 m ∨ ∃ e ∈ canonicalRemaining, TNFQuotientCompatible e.2 m :=
   canonicalSound _ _ _ _ (by decide) supported parent_root parent_nohalt canonical_checked
 
