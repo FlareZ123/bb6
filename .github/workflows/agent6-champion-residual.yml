@@ -453,6 +453,82 @@ jobs:
           run-id: 45647053824
           name: canonical73-raw110-raw112-roster-consumer-certified
           path: /tmp/a47-canonical76
+      - name: Compose the F0-refined champion parent with the accepted 76-roster interface
+        if: ${{ inputs.raw139_cryptids_leaf && inputs.raw121_graft_run_id == '' }}
+        env:
+          SOURCE_SHA: ${{ inputs.source_sha || github.sha }}
+        run: |
+          set -euo pipefail
+          for module in CanonicalTwoParentRosterOnly.olean CanonicalTwoParentGraft.olean Raw107ParentClosure.olean CanonicalRaw114Accepted.olean; do
+            test -s "/tmp/a47-canonical76/$module" || {
+              echo "missing accepted canonical76 module: $module" >&2
+              exit 1
+            }
+          done
+          for module in ChampionResidualParentIntegration.olean F0SiblingIntegrationExtended.olean; do
+            test -s "/tmp/a6-champion-residual/build/$module" || {
+              echo "missing champion core module: $module" >&2
+              exit 1
+            }
+          done
+          export LEAN_PATH="/tmp/a47-canonical76:/tmp/a6-champion-residual/build:/tmp/a6-champion-residual/imports:$GITHUB_WORKSPACE"
+          lean -o /tmp/a6-champion-residual/build/ChampionResidualCanonicalTwoParentComposition.olean \
+            im-results/agent6-champion-residual/ChampionResidualCanonicalTwoParentComposition.lean \
+            | tee /tmp/a6-canonical76-two-parent.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a6-canonical76-two-parent.log; then
+            echo "forbidden axiom or native_decide in canonical76 composition" >&2
+            exit 1
+          fi
+          python3 - /tmp/a6-canonical76-two-parent.log <<'PY'
+          import json, pathlib, re, sys, os
+          log = pathlib.Path(sys.argv[1]).read_text()
+          allowed = {"propext", "Classical.choice", "Quot.sound", "A6_frontier"}
+          names = (
+              "BB6.Agent6CanonicalTwoParentComposition.championResidual_mem_roster76",
+              "BB6.Agent6CanonicalTwoParentComposition.championResidual_unique_roster76",
+              "BB6.Agent6CanonicalTwoParentComposition.nonchampion_roster_count",
+              "BB6.Agent6CanonicalTwoParentComposition.total_remaining_obligations_count",
+              "BB6.Agent6CanonicalTwoParentComposition.exact_from_other_roster_covers_and_remaining_extended",
+          )
+          for name in names:
+              pattern = r"'" + re.escape(name) + r"' depends on axioms: \\[([^]]*)\\]"
+              match = re.search(pattern, log)
+              if match:
+                  used = {x.strip() for x in match.group(1).split(",") if x.strip()}
+              elif "'" + name + "' does not depend on any axioms" in log:
+                  used = set()
+              else:
+                  raise SystemExit("missing axiom audit: " + name)
+              if not used <= allowed:
+                  raise SystemExit(f"nonstandard axioms: {name}: {used - allowed}")
+              print(name, sorted(used))
+          summary = {
+              "status": "conditional_exactness_interface",
+              "base_roster": 76,
+              "champion_parent": "raw139",
+              "nonchampion_parent_obligations": 75,
+              "remaining_champion_frontier_obligations": 112,
+              "total_remaining_obligations": 187,
+              "theorem": names[-1],
+              "source_sha": os.environ.get("SOURCE_SHA"),
+              "canonical76_artifact_run_id": 45647053824,
+              "note": "All 187 Covers remain proof obligations; this is not an exact BB(6) proof."
+          }
+          pathlib.Path("/tmp/a6-canonical76-two-parent-summary.json").write_text(
+              json.dumps(summary, indent=2) + "\\n"
+          )
+          PY
+      - uses: actions/upload-artifact@v4
+        if: ${{ inputs.raw139_cryptids_leaf && inputs.raw121_graft_run_id == '' }}
+        with:
+          name: agent6-canonical76-187-obligation-composition-${{ inputs.source_sha || github.sha }}
+          include-hidden-files: true
+          path: |
+            /tmp/a6-canonical76-two-parent-summary.json
+            /tmp/a6-canonical76-two-parent.log
+            /tmp/a6-champion-residual/build/ChampionResidualCanonicalTwoParentComposition.olean
+          if-no-files-found: error
+          retention-days: 14
       - name: Checkout pinned Cryptids NonHalt source tree for raw139 leaf pilot
         if: ${{ inputs.raw139_cryptids_leaf && inputs.raw121_graft_run_id == '' }}
         uses: actions/checkout@v4
