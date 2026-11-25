@@ -2229,10 +2229,9 @@ jobs:
           test -s open.txt
           test -s tree.json
           echo "Raw open leaves: $(wc -l < open.txt)"
-          awk '$1==469 { print "LEAF469_TABLE", $2 }' open.txt
+          awk 'NR==470 { print "LEAF469_TABLE", $0 }' open.txt
           sha256sum open.txt tree.json
           g++ -O3 -std=c++20 "$GITHUB_WORKSPACE/im-results/agent2-tnf-raw124/longcycle.cpp" -o /tmp/raw124-longcycle
-          /tmp/raw124-longcycle 100000 128 < open.txt > longcycle100k.out
           python - <<'PY'
           from pathlib import Path
           opened = Path("open.txt").read_text().splitlines()
