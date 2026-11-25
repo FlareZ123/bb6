@@ -1,0 +1,1 @@
+F1=1RD exact parent [7,24,11,24,14,21,3,16,12,11,24,15] WeightedBound 489, 208 terminal leaves, original-kernel accepted. Dossier im-results/agent14-raw139-f1-oneRD. 1RA reserved, search underway. Five sibling cylinders complete; source rebuild/graft pending.
