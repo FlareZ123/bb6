@@ -520,14 +520,37 @@ theorem q32Parent_encoding :
 def Refines (child parent : PartialMachine) : Prop :=
   ∀ s t, parent s = some t → child s = some t
 
+def refinesCheck (child parent : PartialMachine) : Bool :=
+  (List.finRange 6).all fun q =>
+    [false,true].all fun b =>
+      match parent (q,b) with
+      | none => true
+      | some t => decide (child (q,b) = some t)
+
+theorem refinesCheck_sound (child parent : PartialMachine)
+    (h : refinesCheck child parent = true) : Refines child parent := by
+  intro s t hp
+  rcases s with ⟨q,b⟩
+  have hq := List.all_eq_true.mp h q (List.mem_finRange q)
+  have hb : b ∈ [false,true] := by cases b <;> simp
+  have hs := List.all_eq_true.mp hq b hb
+  rw [hp] at hs
+  exact of_decide_eq_true hs
+
 def q32SideLeafRefinesParent (leaf : Q32SideLeaf) : Bool :=
-  decide (Refines leaf.cylinder q32Parent)
+  refinesCheck leaf.cylinder q32Parent
 
 /-- All 32 Lean-checked SWside cylinders lie inside the same canonical
     q32 parent cylinder. -/
 theorem q32SideLeaves_refine_parent :
     q32SideLeaves.all q32SideLeafRefinesParent = true := by
   decide
+
+theorem q32SideLeaves_refine_parent_sound :
+    ∀ leaf, leaf ∈ q32SideLeaves → Refines leaf.cylinder q32Parent := by
+  intro leaf hmem
+  exact refinesCheck_sound leaf.cylinder q32Parent
+    (List.all_eq_true.mp q32SideLeaves_refine_parent leaf hmem)
 
 /-- The q32 parent itself is an exact packed open residual of the existing
     Agent 50 root frontier, at address [B0=1RC, C0=0LA]. -/
@@ -540,6 +563,7 @@ theorem q32Parent_is_rootFrontier_residual :
 #print axioms q32SideLeaves_data_exact
 #print axioms q32SideLeaves_sound
 #print axioms q32SideLeaves_refine_parent
+#print axioms q32SideLeaves_refine_parent_sound
 #print axioms q32Parent_is_rootFrontier_residual
 
 end BB6.Agent24Q32SideLeafRoster
