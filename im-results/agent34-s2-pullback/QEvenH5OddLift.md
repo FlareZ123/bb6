@@ -33,34 +33,26 @@ satisfies \(K\equiv49726\pmod{2^{23}}\). Write \(K=49726+2^{23}b\); then \(v=48+
 
 The even coset \(n=2d\) is the parameter family in Agent 4's theorem **blank_ne_s2q_even_image_h5_progression**. Its exact source proof is in **im-results/agent4-c-seven-image/CSixSeventhS2QEven.lean**; do not call the new high-stop pullback an accepted source theorem without the corresponding focused CI/axiom audit.
 
-## Source-certified odd-coset subcylinder
+## Agent25 certificate: parameter mismatch; not transferable
 
-For \(n=2r+1\),
-\[
-j=2098495+2^{22}r,\qquad
+An earlier version of this note incorrectly treated Agent25's
+`h5QuarterHighSource` as a certificate for the present odd-coset family.
+Inspection of the actual Lean theorem signature disproves that identification:
+Agent25's `h5J` progression uses a (2^{38}r) increment, whereas this
+family has
+[
+j=2098495+2^{22}r,qquad
 m=4876330+2^{22}r+2^{23}w.
-\]
-This is exactly Agent 25's high-stop specialization. The original high-stop identity gives
-\[
-(2j+3,K)=(4196993+2^{23}r,\ 49726+2^{23}b).
-\]
+]
+The CI run [45531058201](https://github.com/FlareZ123/bb6/actions/runs/45531058201)
+verifies Agent25's separate source certificate, not the present (2^{22})
+family. Its quarter-lattice guard classes therefore establish no exclusion
+for this family and must not be cited as such.
 
-Agent 25's theorem **h5QuarterHighSource**, checked against the original Machine C section source in [CI 45531058201](https://github.com/FlareZ123/bb6/actions/runs/45531058201), proves \(\neg CReach(2j+3,K)\) whenever at least one guard holds:
-\[
-\begin{aligned}
-5r+3w+4&\equiv0\pmod8,\\
-5r+3w+17&\equiv0\pmod{16},\\
-37r+3w+t&\equiv0\pmod{64}
-\quad\text{for some }t\in\{26,48,51,56\}.
-\end{aligned}
-\]
-The six disjoint classes occupy exactly \(16/64=1/4\) of the \((r,w)\)-parameter lattice. The CI dossier reports only [propext, Classical.choice, Quot.sound] for checkCertificate_sound, autoCheck_sound, quarterExcludes, h5QuarterHigh, and h5QuarterHighSource; no sorryAx is reported.
-
-The reusable certificate is stored in compressed source form:
-- im-results/agent25-c-odd-lift/QEvenH5OddCertificate.lean.xz.b64 (decoded SHA-256 d4d45b635a6736c7384164a24a619a339a7590c9ee379d9ec24161c007ab53b7);
-- im-results/agent25-c-odd-lift/AffineH5Quarter.lean.xz.b64 (decoded SHA-256 af25d65ff7dcd1b4fdde3cf3058388ddb3a24fa79b65189ad49da7defdecb740).
-
-The proof uses the complete original-source predecessor grammar, including the odd-bounce alternatives; it is not a direct-parent-only argument. This closes a genuine subset of the odd coset, not the full odd coset and not Machine C.
+The present high-stop identity remains an algebraic parameterization only;
+it requires its own original-source proof. The earlier claimed quarter
+coverage is withdrawn. The compressed Agent25 files remain useful as
+independent research material, but not as evidence for this subproblem.
 
 ## Remaining odd/even high-valuation parent
 
