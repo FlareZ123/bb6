@@ -6,7 +6,7 @@ Let
 
 `pE1 = 1RB---_1RC---_0RD---_1LD1RE_------_------`.
 
-This five-transition partial machine is the common parent of a family of six-hole residual cylinders. The canonical-124 manifest identifies 22 residual children with address prefix `[1RC, 0RD, 1LD, 1RE]`; after the already accepted raw107 (E1=0RB) and raw114 (E1=0LD) parent grafts, 20 of these siblings remain in the accepted canonical76 roster.
+This five-transition partial machine is the common parent of a family of six-hole residual cylinders. The canonical-124 manifest identifies 22 residual children with address prefix `[1RC, 0RD, 1LD, 1RE]`; after the already accepted raw107 (E1=0RB) and raw114 (E1=0LD) parent grafts, the manifest predicts 20 of these siblings in the canonical76 roster. Exact `sameTable` membership counts for the full sibling set remain to be proved in Lean.
 
 Seven of those 20 sibling cylinders now have complete original-source-accepted weighted Covers. Their exact E1 branches and bounds are:
 
