@@ -149,6 +149,16 @@ if BRANCH == "1RA":
         pumps[table] = (f"{bns}.M{i}.table", f"{bns}.M{i}.never")
     bcode.append(f"end {bns}")
     (FOLDER / "Raw120OneRABiDFA.lean").write_text("\n".join(bcode)+"\n")
+    for i, code, variant in (
+        (1602, "1RB0RF_1RC1LB_0RD0LE_1LD1RE_1RA1LE_---1RB", "false"),
+        (1606, "1RB0RF_1RC1LC_0RD0LE_1LD1RE_1RA1LE_---1RB", "true"),
+    ):
+        assert opens[i] == code
+        ns0 = "BB6.Agent3Raw120OneRAStack"
+        pumps[code] = (f"({ns0}.table {variant})", f"({ns0}.never {variant})")
+    assert opens[2309] == "1RB1LF_1RC1RF_0RD1RB_1LD1RE_1RA1LE_---0LA"
+    late[opens[2309]] = (13311, 10)
+
 if BRANCH == "1LA":
     assert opens[1794] == "1RB0LE_1RC0RF_0RD---_1LD1RE_1LA1LE_0RB1RA"
     pumps[opens[1794]] = ("BB6.Agent3Raw120OneLABiDFA.table", "BB6.Agent3Raw120OneLABiDFA.never")
@@ -264,7 +274,16 @@ for i, code in enumerate(opens):
             multi_count += 1
             print("grouped-boundary", i, info)
             continue
-    ans = one.candidate(p, events)
+    if BRANCH == "1RA" and i == 1332:
+        assert code == "1RB0RF_1RC1LB_0RD0LE_1LD1RE_1RA1LE_---0RC"
+        block = "1010010110101"
+        start = one.C(1, 0, 0, one.W("011010010010100", block, "1"), one.W())
+        target = one.C(1, 13, 0, one.W("011010010010100"+block, block, "1"), one.W())
+        res = one.pump(p, start, target, 2000)
+        assert res is not None
+        ans = (229, None, start, target, res)
+    else:
+        ans = one.candidate(p, events)
     if ans is None and ((BRANCH == "0RA" and i == 479) or BRANCH == "1RA"):
         ans = extended_one_candidate(p, events)
     if ans is not None:
@@ -336,7 +355,7 @@ summary = {
     "one_block_pumps": one_count,
     "multi_block_pumps": multi_count,
     "late_leaves": len(late),
-    "custom_counter_and_nested_leaves": {"1LA": 1, "0RC": 4, "1RC": 3, "0RA": 13, "1LF": 6, "0LB": 6, "0LF": 18}.get(BRANCH, 0),
+    "custom_counter_and_nested_leaves": {"1RA": 2, "1LA": 1, "0RC": 4, "1RC": 3, "0RA": 13, "1LF": 6, "0LB": 6, "0LF": 18}.get(BRANCH, 0),
     "unresolved": len(missing),
     "unresolved_sample": [{"index": i, "table": code} for i, code in missing[:100]],
 }
@@ -451,7 +470,7 @@ theorem split_checked (p : PartialMachine) (n : Nat) (s : Slot)
   simp only [Bool.and_eq_true]
   exact ⟨hq, allMoves_of _ hk⟩
 """
-emit(prefix + "Base", ["Raw120Late"] + ({"1RA": ["Raw120OneRABiDFA"], "1LA": ["Raw120OneLABiDFA"], "0RC": ["Raw120RCCounter"], "1RC": ["Raw120OneRCCounter"], "1LF": ["Raw120OneLFCounter", "Raw120OneLFTwo", "Raw120OneLFStack"], "0LB": ["Raw120ZeroLBMirror", "Raw120ZeroLBReset", "Raw120ZeroLBShuttle", "Raw120ZeroLBTriple"], "0LF": ["Raw120ZeroLFRecursive", "Raw120ZeroLFWord"], "0RA": ["Raw120RAPhases", "Raw120RABiDFA", "Raw120RA423BlockAdapter"]}.get(BRANCH, [])) + [prefix + "Sweeps"], base)
+emit(prefix + "Base", ["Raw120Late"] + ({"1RA": ["Raw120OneRABiDFA", "Raw120OneRAStack"], "1LA": ["Raw120OneLABiDFA"], "0RC": ["Raw120RCCounter"], "1RC": ["Raw120OneRCCounter"], "1LF": ["Raw120OneLFCounter", "Raw120OneLFTwo", "Raw120OneLFStack"], "0LB": ["Raw120ZeroLBMirror", "Raw120ZeroLBReset", "Raw120ZeroLBShuttle", "Raw120ZeroLBTriple"], "0LF": ["Raw120ZeroLFRecursive", "Raw120ZeroLFWord"], "0RA": ["Raw120RAPhases", "Raw120RABiDFA", "Raw120RA423BlockAdapter"]}.get(BRANCH, [])) + [prefix + "Sweeps"], base)
 
 assert tree[0] == "split"
 root_n, root_slot, root_kids = tree[1], tree[2], tree[3]
