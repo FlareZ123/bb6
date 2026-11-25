@@ -1340,3 +1340,8 @@ The first recursive helper escalated the global cap as soon as any table returne
 Run 45610980426's `raw124_bundle_prepare` job 139194114073 reached its original 30-minute job limit while still in `Generate selected raw124 bundle branch and compile common core`; the job was cancelled and the artifact-upload step skipped. Its logs endpoint returned 403 even after retry, so no pass-level counts are available. This run used the pre-optimization snapshot: serial `longcycle` batches, immediate global cap escalation, and the 30-minute timeout.
 
 The current generator now uses two independent C++ subprocesses per pending batch, defers open leaves until all current-cap descendants are processed, escalates only deferred leaves, and asserts the generated bound is at most 2,000,000. The workflow now gives bundle preparation/assembly 60 minutes and compiles Lean shard modules serially to reduce runner pressure. A fresh run is required; no 0LB classification or source theorem was produced by 45610980426.
+
+
+## 2026-11-25 12:40Z fresh 0LB bundle
+
+Dispatched run 45615959400 on main commit `9e36053ddde0f718574708b87ae92022f8f5b058`, using the two-process C++ batch runner, deferred-cap scheduler, 60-minute prepare/assemble timeout, and serial Lean shard compilation. Its `raw124_bundle_prepare` job is 139211302469 and was in progress at 12:40Z. This is the first run that contains all performance and timeout fixes; monitor this run rather than reviving the timed-out 45610980426.
