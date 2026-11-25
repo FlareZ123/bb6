@@ -752,10 +752,12 @@ jobs:
         run: |
           set -euo pipefail
           work="$PWD/.tmp/a14-f1-ld-rf"
+          python3 im-results/agent6-champion-residual/reconstruct_f1_batch.py
           python3 im-results/agent14-raw139-f1-ld-rf-ingestion/prepare.py
           python tools/lean_compile_closure.py \
             im-results/agent14-raw139-f1-ld-rf-ingestion/Raw139OneLDOneRFSourceAudit.lean \
             --source-root "$PWD/.tmp/a48-f1-oneLA/imports" \
+            --source-root "$PWD/.tmp/a14-f1-batch/imports" \
             --source-root "$work/imports" \
             --workdir "$work/build" --manifest "$work/manifest.json" \
             --precompiled-manifest "$PWD/.tmp/a48-f1-oneLA/manifest.json" \
