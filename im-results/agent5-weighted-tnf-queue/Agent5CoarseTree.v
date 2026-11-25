@@ -36,7 +36,7 @@ Proof.
  induction t as [|w|k|n h kids IH]; intros p H; cbn [coarse_check] in H.
  - discriminate.
  - eapply source_witness_check_sound; exact H.
- - apply source_nonhalt_cylinder. eapply agent5_decide_nonhalt_sound. exact H.
+ - apply source_nonhalt_cylinder. apply source_nonhalt_transfer. eapply agent5_decide_nonhalt_sound. exact H.
  - rewrite !andb_true_iff in H. destruct H as [Hbound [Htrace Hkids]].
    eapply source_first_hole_split.
    + apply source_hole_atb_sound. exact Htrace.
