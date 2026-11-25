@@ -1,0 +1,53 @@
+name: Agent41 raw139 width-two BlockFAR
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  certify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Generate and check the exact leaf
+        run: |
+          set -euo pipefail
+          cd im-results/agent13-block-far
+          python3 - <<'PY'
+          from generate_multi import generate
+          from pathlib import Path
+          generate('1RB1RD_1RC0RC_1LD0RB_1LA0LE_1LD1LF_1LD---', Path('.'), width=2, cap=1, mod=1, runs=2, name='Raw139OneRD', left_mode='suffix')
+          PY
+          cp ../agent8-coverage-contract/Frontier.lean .
+          export LEAN_PATH=.
+          for m in BlockMacro BlockFAR BlockMacro2 BlockFAR2 RangeCheck2 Frontier BlockFARBridge Raw139OneRDPacked Raw139OneRDProof; do
+            lean -o "$m.olean" "$m.lean"
+          done
+          cat > Raw139OneRDConsumer.lean <<'EOF'
+          import Raw139OneRDProof
+          import BlockFARBridge
+          namespace BB6.Agent41Raw139OneRD
+          def table := BB6BlockFAR.partialTable BB6BlockFAR2.Raw139OneRD.machine
+          theorem never (m : BB6Coverage.Machine) (hm : BB6Coverage.compatible table m) :
+              BB6Coverage.NeverHalts m :=
+            BB6BlockFAR.transfer_never BB6BlockFAR2.Raw139OneRD.machine m hm BB6BlockFAR2.Raw139OneRD.never
+          #print axioms never
+          end BB6.Agent41Raw139OneRD
+          EOF
+          lean -o Raw139OneRDConsumer.olean Raw139OneRDConsumer.lean | tee /tmp/raw139-block.log
+          grep -F "'BB6.Agent41Raw139OneRD.never' depends on axioms:" /tmp/raw139-block.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/raw139-block.log; then exit 1; fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw139-width-two-certificate
+          path: |
+            im-results/agent13-block-far/Raw139OneRD*.lean
+            im-results/agent13-block-far/Raw139OneRD*.olean
+            /tmp/raw139-block.log
+          retention-days: 14
