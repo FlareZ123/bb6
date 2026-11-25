@@ -165,6 +165,8 @@ theorem p23_parent_count :
 noncomputable def r4RefinedRoster : List (List Move × PartialMachine) :=
   graftRoster p23 r4Remaining BB6.Agent47CanonicalRaw114Accepted.roster
 
+theorem r4RefinedRoster_count : r4RefinedRoster.length = 237 := by decide
+
 /-- Canonical-77 soundness survives replacing precisely p23 by the r4
     first-hole frontier. The result is conditional only on the 161 residual
     Covers; the 625-completion r4 terminal cylinder is already discharged
@@ -185,10 +187,17 @@ theorem r4_terminal_hole_count :
 
 theorem r4_terminal_mass : 25 ^ 2 = 625 := by norm_num
 
+#print axioms r4AfterSecond_eq_p23
 #print axioms residuals_closed_expanded
 #print axioms r4Subtree
+#print axioms r4Subtree_expandedNodes
+#print axioms r4Subtree_closedLeaves
+#print axioms r4Remaining_count
 #print axioms r4Remaining_sound
+#print axioms p23_parent_count
+#print axioms r4RefinedRoster_count
 #print axioms r4RefinedRoster_sound
 #print axioms r4_terminal_hole_count
+#print axioms r4_terminal_mass
 
 end BB6.Agent50CanonicalR4Ingestion
