@@ -11,6 +11,7 @@ open BB6Coverage
 open BB6.Agent13BlankDelay
 open BB6.Agent32FiniteSource
 open BB6.Agent50RootFrontier
+open BB6.Agent50TNFPilot
 open BB6.Agent50TranslatedCycler
 open BB6.Agent24Q32SourceSideGraft
 
@@ -497,8 +498,48 @@ theorem q32SideLeaves_sound :
   intro leaf hmem m hm
   exact q32SideLeaf_sound leaf m hm
 
+/-- The canonical q32 parent is the B0=1RC, C0=0LA branch from the
+    first-one root. It is the depth-two sibling retained by Agent 50's
+    nine-edge root frontier. -/
+def q32ParentPath : List PathEntry :=
+  [(1, (1,false), ⟨true,true,2⟩),
+   (2, (2,false), ⟨false,false,0⟩)]
+
+def q32Parent : PartialMachine := (pathEnd root 2 q32ParentPath).1
+
+def q32ParentAddress : List Move :=
+  [⟨true,true,2⟩, ⟨false,false,0⟩]
+
+theorem q32Parent_encoding :
+    encodeTable q32Parent =
+      "1RB---_1RC---_0LA---_------_------_------" := by
+  decide
+
+/-- child refines parent when it fixes every transition already fixed by
+    parent. -/
+def Refines (child parent : PartialMachine) : Prop :=
+  ∀ s t, parent s = some t → child s = some t
+
+def q32SideLeafRefinesParent (leaf : Q32SideLeaf) : Bool :=
+  decide (Refines leaf.cylinder q32Parent)
+
+/-- All 32 Lean-checked SWside cylinders lie inside the same canonical
+    q32 parent cylinder. -/
+theorem q32SideLeaves_refine_parent :
+    q32SideLeaves.all q32SideLeafRefinesParent = true := by
+  decide
+
+/-- The q32 parent itself is an exact packed open residual of the existing
+    Agent 50 root frontier, at address [B0=1RC, C0=0LA]. -/
+theorem q32Parent_is_rootFrontier_residual :
+    (q32ParentAddress, packTable q32Parent) ∈
+      packResiduals (residuals rootFrontier) := by
+  decide
+
 #print axioms q32SideData_sourceExact
 #print axioms q32SideLeaves_data_exact
 #print axioms q32SideLeaves_sound
+#print axioms q32SideLeaves_refine_parent
+#print axioms q32Parent_is_rootFrontier_residual
 
 end BB6.Agent24Q32SideLeafRoster
