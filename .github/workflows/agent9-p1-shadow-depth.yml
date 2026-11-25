@@ -71,17 +71,20 @@ jobs:
         if: inputs.target == 'batch-carry'
         run: |
           set -euo pipefail
-          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-dyadic-width:im-results/agent50-p1-residue:im-results/agent9-p1-first-return"
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-dyadic-width:im-results/agent50-p1-residue:im-results/agent9-p1-first-return:im-results/agent28-p1-modular-screen:im-results/agent28-p1-delayed-carry"
           lean --version
           git rev-parse HEAD
-          python tools/lean_compile_deps.py im-results/agent9-p1-first-return/BatchCarrySource.lean | tee /tmp/batch-carry.log
+          python tools/lean_compile_deps.py im-results/agent9-p1-first-return/BatchCarryFinite.lean | tee /tmp/batch-carry.log
           if grep -E 'sorryAx|native_decide|error:' /tmp/batch-carry.log; then exit 1; fi
           python - <<'PY'
           import re
           from pathlib import Path
           log = Path('/tmp/batch-carry.log').read_text()
-          for name in ("walk_of_weight", "weight_of_walk", "edge_iff_parent", "mem_live", "mem_sweep", "mem_batch", "width_pos_iff_center", "critical_reset_no_reach_batch", "critical_reset_no_reach_interval"):
+          for name in ("walk_of_weight", "weight_of_walk", "edge_iff_parent", "mem_live", "mem_sweep", "mem_batch", "width_pos_iff_center", "critical_reset_no_reach_batch", "critical_reset_no_reach_interval", "bitBack_sound", "scan_sound", "check_absent", "checked_interval", "batch10002_15000", "critical_reset_no_reach_10002_15000"):
               m = re.search(r"'BB6\.Agent9BatchCarry\."+name+r"' depends on axioms:\s*\[([^\]]*)\]", log)
+              if not m and re.search(r"'BB6\.Agent9BatchCarry\."+name+r"' does not depend on any axioms", log):
+                  print(name, [])
+                  continue
               if not m:
                   raise SystemExit("Missing axiom profile: "+name)
               axioms = {a.strip() for a in m.group(1).split(",") if a.strip()}
