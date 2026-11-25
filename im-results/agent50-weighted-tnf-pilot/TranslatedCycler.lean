@@ -138,7 +138,7 @@ theorem BStep_replay {m : Machine} {k k' : Nat}
       have hm' : m (query d) = some mv := by
         simpa [← hquery] using hm
       refine ⟨move d mv, BStep.left hm' hr, ?_⟩
-      refine ⟨heq.state_eq, ?_, ?_, ?_⟩
+      refine ⟨rfl, ?_, ?_, ?_⟩
       · simpa [move, hr] using LeftEq_tail heq.left_eq
       · simpa [move, hr] using LeftEq_head heq.left_eq
       · simpa [move, hr] using SideEq_cons rfl heq.right_eq
@@ -152,8 +152,8 @@ theorem BStep_replay {m : Machine} {k k' : Nat}
       have hm' : m (query d) = some mv := by
         simpa [← hquery] using hm
       refine ⟨move d mv, BStep.right hm' hr, ?_⟩
-      refine ⟨heq.state_eq, ?_, ?_, ?_⟩
-      · simpa [move, hr] using LeftEq_cons heq.current_eq heq.left_eq
+      refine ⟨rfl, ?_, ?_, ?_⟩
+      · simpa [move, hr] using LeftEq_cons rfl heq.left_eq
       · simpa [move, hr] using SideEq_head heq.right_eq
       · simpa [move, hr] using SideEq_tail heq.right_eq
 
