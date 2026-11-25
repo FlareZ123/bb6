@@ -187,18 +187,18 @@ def build_child(key,spec):
                     fields=proc.stdout.strip().split(maxsplit=1)
                     if len(fields)!=2: raise ValueError("missing sparse certificate output")
                     data=fields[1]
-                    k,n,L,R,_=data.split()
+                    k,nstates,L,R,_=data.split()
                     def edge_count(raw):
                         return sum(int(v).bit_count() for item in raw.rstrip(",").split(",")
                                    if item for _,v in [item.split(":")])
-                    expected=(int(n),edge_count(L),edge_count(R))
+                    expected=(int(nstates),edge_count(L),edge_count(R))
                     module_name=(f"Raw58{key}Sparse{i}" if width==23
                                  else f"Raw58{key}Sparse{width}_{i}")
                     module,ns_sparse=emit_sparse(ROOT,i,opens[i],data,width=width,
                         module_name=module_name,expected=expected)
                     pumps[i]=ns_sparse
                     sparse_modules.append(module)
-                    print(key,"sparse width-"+str(width),i,"states",n,
+                    print(key,"sparse width-"+str(width),i,"states",nstates,
                           "edges",expected[1:],flush=True)
                 except (subprocess.CalledProcessError,subprocess.TimeoutExpired,ValueError):
                     remaining.append(i)
