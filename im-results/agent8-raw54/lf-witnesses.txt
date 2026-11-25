@@ -95,3 +95,13 @@
 52 Raw54LFCounterGeneral LFCounterGeneral .k52
 54 Raw54LFCounterGeneral LFCounterGeneral .k54
 83 Raw54LFCounterGeneral LFCounterGeneral .k83
+38 Raw54LFGrowth38 LFGrowth38
+61 Raw54LFGrowth61 LFGrowth61
+63 Raw54LFGrowth63 LFGrowth63
+65 Raw54LFGrowth65 LFGrowth65
+95 Raw54LFGrowth95 LFGrowth95
+91 Raw54LFDoubleGrowth LFDoubleGrowth false
+92 Raw54LFDoubleGrowth LFDoubleGrowth true
+94 Raw54LFGrowth94 LFGrowth94 .k94
+97 Raw54LFGrowth94 LFGrowth94 .k97
+98 Raw54LFGrowth94 LFGrowth94 .k98
