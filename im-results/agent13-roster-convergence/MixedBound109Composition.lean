@@ -5,8 +5,9 @@ namespace BB6.Agent13MixedBound109
 
 open BB6Coverage
 open BB6.Agent13BlankDelay
-open BB6.Agent48Champion
-open BB6.Agent48DirectRoot
+open BB6Coverage.Agent48Champion
+open BB6Coverage.Agent48DirectRoot
+open BB6ChampionArithmetic
 open BB6.Agent47Combined109
 
 /-- The exact published champion score. -/
