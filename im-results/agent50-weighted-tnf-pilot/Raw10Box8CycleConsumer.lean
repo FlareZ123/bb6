@@ -35,12 +35,12 @@ theorem raw10RemainderWithCycle_exact (m : Machine) :
   · rintro ⟨hp, hs, hh, ht⟩
     refine ⟨hp, ?_⟩
     intro q hq
-    rcases hq with hside | htail
-    · obtain ⟨w, hw, rfl⟩ := hside
-      exact hs w hw
-    · rcases htail with rfl | htail
+    rcases hq with hleft | htable
+    · rcases hleft with hside | hheld
+      · obtain ⟨w, hw, rfl⟩ := hside
+        exact hs w hw
       · exact hh
-      · cases htail
+    · exact ht
 
 theorem raw10RemainderWithCycle_disjoint :
     raw10RemainderWithCycle.Pairwise Disjoint :=
