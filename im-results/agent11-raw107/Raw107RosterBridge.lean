@@ -1,5 +1,6 @@
 import Raw107ParentClosure
 import FourHoleResidualRoster
+import ThreeHoleAudit
 
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
