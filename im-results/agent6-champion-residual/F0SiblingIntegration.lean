@@ -60,7 +60,7 @@ theorem cover_move (B : Nat) (hB : 49394 ≤ B) (f : Move)
   · exact BB6.Agent6F0.Counter0LE.cover_zeroLE B
   · exact BB6.Agent6F0.Counter1RD.cover_oneRD B
   · exact BB6.Agent6F0.AFirst.cover_oneLD B (by omega)
-  · exact BB6.Agent6F0.RB.cover_oneRB B (by omega)
+  · exact BB6.Agent6F0.Sibling1RB.cover_oneRB B (by omega)
 
 def closedF0 (p : PartialMachine) : Bool :=
   closedMoves.any fun f => sameTable p (BB6.Agent6F0.parent f)
