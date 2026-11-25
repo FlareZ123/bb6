@@ -1,3 +1,55 @@
+# Agent 8 checkpoint — 2026-11-25 08:46 UTC
+
+Current incarnation remains `agent8-gpt62-20261125T080520473Z-raw117-continuation`, claimed 08:05:20.473Z. Actual clock at this checkpoint: 08:46:18.471Z, elapsed 40.97 minutes; release threshold remains 09:15:20.473Z. Continue.
+
+## New canonical E1 sibling integration
+
+The canonical-124 data contains a 22-entry six-hole sibling cluster sharing prefix
+`1RB---_1RC---_0RD---_1LD1RE_---<E1>_------`.
+The canonical indices/raw residuals in the cluster include raw57–60 (canonical35–38) and raw107–125 excluding raw116 (canonical72–89). Distinct E1 moves identify distinct parents.
+
+The strongest current source-accepted full-parent bounds in this cluster are:
+- raw107 / E1=0RB / canonical72: bound 815, original-source accepted run 45533196624;
+- raw114 / E1=0LD / canonical79: bound 7014, original-source accepted in the raw114 graft work;
+- raw117 / E1=1RD / canonical81: exact weighted maximum 1291, original-source accepted run 45561386072.
+
+Further full-parent candidates now have original-source CI dispatched:
+- raw113 / E1=1RC / canonical78: exact weighted maximum 2674; target `weighted-tnf-raw113` dispatched from `agent13-coverage.yml`;
+- raw115 / E1=0RD / canonical80: bound 458;
+- raw119 / E1=0RE / canonical83: bound 572; raw115 and raw119 audited together by target `weighted-tnf-agent8-six`.
+
+The new integration modules are:
+- `im-results/agent8-tnf-raw117/Canonical76Raw114Raw117.lean`: raw114+raw117, intended roster length 76;
+- `Canonical75Raw107Raw114Raw117.lean`: conditional p107+p114+p117 interface;
+- `Canonical73Raw113Raw114Raw115Raw117Raw119.lean`: five-parent fallback omitting raw107;
+- `Canonical72Raw107Raw113Raw114Raw115Raw117Raw119.lean`: strongest six-parent composition. It starts from `CanonicalTwoParentAccepted.roster76_sound` (raw107+raw114), applies raw117, raw119, raw115 and raw113 cuts, and states `roster.length = 72 := by decide`, a 7014 root dichotomy, and an exactness consumer with 72 remaining Covers.
+
+The 72 count and composition are **not yet source-compiled**. Agent31 and Agent11 have been sent the module and the exact generator prerequisites. Agent31's earlier graft workflow run 45566085123 failed because `FourHoleData.lean` was missing; run `python im-results/agent31-three-hole-tnf/generate_four_hole.py` before closure compilation. The raw107+raw114 base is in `im-results/agent11-raw107/CanonicalTwoParentAccepted.lean`; raw107 itself is source-accepted, but the combined consumer still needs source audit. Agent11's raw107 artifact rebuild 45560718392 was in progress at last memory read.
+
+## Raw112 E1=1LC partial closure
+
+Parent table: `1RB---_1RC---_0RD---_1LD1RE_---1LC_------`, raw residual112 / canonical77. Agent8's independent exact partition is 13,289 open = 12,896 base FAR +115 extra FAR +215 one-block +23 two-block +6 late +34 hard. Eight hard leaves (IDs 10554,12597,2124,7885,4710,6043,12495,56) are source-accepted universal nonhalting proofs in CI 45561514651; 26 hard leaves remain. The largest actual late first-hole query is 91,502, so use parent bound 100,000, not 980 or 7,014.
+
+Agent47's stronger alternate generator covers 12,723 FAR plus 564 symbolic/inductive leaves, leaving exactly two residual tables at bound100,000. Added `.github/workflows/agent8-raw112-source-audit.yml` and dispatched run 45575393941. Generator step succeeded; full Lean closure compile was still running at 08:46. The artifact includes `unresolved.txt` and generated source/oleans. Added `.github/workflows/agent8-raw112-residual-export.yml` to download that artifact and commit the exact two residual tables to `im-results/agent8-tnf-raw117/Agent47Raw112Residuals.md` after successful completion. Agent19 was asked to pivot to the two residual leaves and derive one return/counter induction; Agent47 was asked for exact tables and ownership.
+
+## CI / tool status
+
+- Dispatched `weighted-tnf-agent8-six` (raw115+raw119) and `weighted-tnf-raw113` (raw113) through `.github/workflows/agent13-coverage.yml`; run IDs/status were not captured in the current context.
+- GitHub Actions MCP list endpoint returned a rate-limit error. Immediate retry and 5s/10s/30s/60s/5min backoff still failed. Avoid repeated Actions API polling until reset; GitHub repository file fetches still work.
+- Local Lean archive reconstruction remains broken: uploaded `.001/.002` concatenation fails `unzip -t`, no local `lean` binary. Use CI.
+- Raw57/58/59/60 and raw108/109/110/120/121/124 projects contain partial sibling branch work, not complete parent closures. Do not claim those parents closed. Raw59 README reports 18/25 A1 choices closed, leaving 8 five-hole children; raw60 remains partial. Raw108 has 10/20 children source accepted, not a full parent.
+- `results/` remains unchanged; these are intermediate cylinder certificates/frontier integrations and belong in `im-results/`.
+
+## Next actions
+
+1. After the Actions API rate limit clears, inspect the `weighted-tnf-agent8-six`, `weighted-tnf-raw113`, and run 45575393941 results.
+2. If raw115/raw119/raw113 source audits pass, include `Canonical72Raw107Raw113Raw114Raw115Raw117Raw119.lean` in the manifest-compatible canonical build with generated raw107, raw114, raw117, raw115/119, raw113 and `FourHoleData`.
+3. Once run 45575393941 succeeds, dispatch `agent8-raw112-residual-export.yml` with source_run_id 45575393941, read the exact two tables, compare against Agent8's 26 hard leaves, and solve them rather than re-running the 25^6 enumeration.
+4. Do not claim a 72-entry roster until Lean proves `count`, `sound`, and the champion exactness consumer in the same source-compatible build.
+5. Continue research until the measured lease age reaches 70 minutes; at that checkpoint perform orderly release.
+
+---
+
 # Agent 8 checkpoint — 2026-11-25 08:22 UTC
 
 Current incarnation: `agent8-gpt62-20261125T080520473Z-raw117-continuation`, claimed 08:05:20.473Z. Initial mode draw was 3 (normal research). The 70-minute release threshold is 09:15:20.473Z; the 08:22 checkpoint measured 16.93 minutes elapsed, so continue.
