@@ -4,6 +4,8 @@ can certify the output. No time limit is used as evidence of nonhalting."""
 from collections import Counter
 from itertools import product
 from pathlib import Path
+import subprocess
+import tempfile
 
 D = Path(__file__).resolve().parent
 MOVES = [w+d+q for w,d,q in product("01","LR","ABCDEF")]
@@ -103,6 +105,64 @@ def move(mv):
 def slot(s):
     return f"({s//2},{boolean(s%2)})"
 
+def timeout_tables(t,p):
+    if t[0] == "split":
+        _,_,s,kids = t
+        for mv,k in zip(MOVES,kids):
+            if k is not None:
+                c = p[:]
+                c[s] = mv
+                yield from timeout_tables(k,c)
+    elif t[0] == "open" and scan(p)[0] == "timeout":
+        yield "".join(v or "---" for v in p)
+
+def enhance(t,p,proven):
+    if t[0] == "split":
+        n,s,kids = t[1:]
+        children = []
+        for mv,k in zip(MOVES,kids):
+            if k is None:
+                children.append(None)
+            else:
+                c = p[:]
+                c[s] = mv
+                children.append(enhance(k,c,proven))
+        return ("split",n,s,children)
+    if t[0] == "open":
+        raw = "".join(v or "---" for v in p)
+        if raw in proven:
+            return proven[raw]
+        if raw == "1RB1LC1RC0LD1LA0RB1LB1LE1RF1LA---0RE":
+            return ("last",121,10)
+    return t
+
+def build_enhanced(t):
+    hard = list(timeout_tables(t,ROOT))
+    assert len(hard) == 20 and len(set(hard)) == 20
+    ng = D.parent/"agent1-ngram"
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp)
+        data = tmp/"tables.txt"
+        data.write_text("".join(f"{i} {raw}\n" for i,raw in enumerate(hard)))
+        binpath = tmp/"ngram"
+        subprocess.run(["g++","-std=c++17","-O3",str(ng/"ngram.cpp"),"-o",str(binpath)],check=True)
+        certs = tmp/"certs.txt"
+        with data.open("r") as inp, certs.open("w") as out:
+            subprocess.run([str(binpath),"6"],stdin=inp,stdout=out,check=True)
+        subprocess.run(["python",str(ng/"emit_ngram.py"),str(data),str(certs),
+            str(D/"Agent46Raw13NGram.lean"),"--namespace","BB6.Agent46Raw13NGram"],check=True)
+        ids = [int(line.split()[0]) for line in certs.read_text().splitlines()]
+    assert len(ids) == 15, ids
+    proven = {hard[i]:("ngram",i) for i in ids}
+    pumps = {
+        "1RB0LD1RC1RA1LA------1LA------------":0,
+        "1RB1LC1RC0LD1LA0RB1LB1LE1RF0RA---0RE":12,
+        "1RB1LC1RC0LD1LA0RB1LB1LE1RF0RD---0RE":14,
+    }
+    assert set(pumps) <= set(hard) and not (set(proven) & set(pumps))
+    proven.update({raw:("pump",i) for raw,i in pumps.items()})
+    return enhance(t,ROOT,proven)
+
 def emit(t):
     if t is None or t[0] == "open":
         return ".unresolved"
@@ -115,6 +175,12 @@ def emit(t):
     if tag == "last":
         n,s = v
         return f".closed (.last {n} {slot(s)})"
+    if tag == "ngram":
+        i = v[0]
+        return f".closed (.proven BB6.Agent46Raw13NGram.p{i} BB6.Agent46Raw13NGram.never{i})"
+    if tag == "pump":
+        n = f"BB6Coverage.Agent31Pump.Raw13Pump{v[0]}"
+        return f".closed (.proven {n}.table {n}.never)"
     assert tag == "split"
     n,s,kids = v
     return f".split {n} {slot(s)} (byCutMove [\n"+",\n".join(map(emit,kids))+"])"
@@ -131,10 +197,11 @@ def write(name,imports,body):
 if __name__ == "__main__":
     t = tree(ROOT,3,DEPTH,True)
     assert t[:3] == ("split",3,1)
+    t = build_enhanced(t)
     c,m = Counter(),Counter()
     tally(t,9,3,c,m)
-    assert c == Counter(open=1760,cycle=696,state=688,split=176,halt=176,last=13),c
-    assert m["open"] == 1733719053700 and sum(m.values()) == 25**9,m
+    assert c == Counter(open=1741,cycle=696,state=688,split=176,halt=176,last=14,ngram=15,pump=3),c
+    assert m["open"] == 1725417791400 and sum(m.values()) == 25**9,m
     names = []
     for i,k in enumerate(t[3]):
         if k is None:
@@ -142,7 +209,7 @@ if __name__ == "__main__":
         name = f"Agent46Raw13Kid{i:02}"
         names.append(name)
         mv = move(MOVES[i])
-        write(name,["Agent46Raw13Base"],f"""
+        write(name,["Agent46Raw13Base","Agent46Raw13NGram","Agent46Raw13Pumps"],f"""
 def kid{i:02} : Cut := {emit(k)}
 theorem checked{i:02} :
     check 7014 (child {mv}) (nextCut 3 {mv}) kid{i:02} = true := by decide
