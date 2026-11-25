@@ -22,7 +22,7 @@ jobs:
           python paired_counter.py
           python long_sweep.py
           cd ../..
-          roots=(im-results/agent47-raw114-cut/Raw114Binary.lean im-results/agent47-raw114-cut/Raw114Pair{0,1,2,3,4}.lean im-results/agent47-raw114-cut/Raw114LongSweep.lean)
+          roots=(im-results/agent47-raw114-cut/Raw114Binary.lean im-results/agent47-raw114-cut/Raw114Pair{0,1,2,3,4}.lean im-results/agent47-raw114-cut/Raw114LongSweep.lean im-results/agent47-raw114-cut/Raw114Triple.lean)
           python tools/lean_compile_closure.py --workdir /tmp/a47-raw114-holdouts --jobs 4 "${roots[@]}" | tee /tmp/a47-raw114-holdouts.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a47-raw114-holdouts.log; then exit 1; fi
       - uses: actions/upload-artifact@v4
