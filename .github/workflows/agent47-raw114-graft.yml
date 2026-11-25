@@ -1238,6 +1238,8 @@ jobs:
           assert manifest['residual_count'] == 76 and manifest['weighted_bound'] == 7014
           assert manifest['canonical77_artifact_id'] == 14997966221
           assert sha(base / 'CanonicalTwoParentRosterOnly.lean') == manifest['modules']['CanonicalTwoParentRosterOnly']['source_sha256']
+          current_source = pathlib.Path('im-results/agent31-shared-core/CanonicalTwoParentRosterOnly.lean')
+          assert sha(current_source) == manifest['modules']['CanonicalTwoParentRosterOnly']['source_sha256']
           assert sha(base / 'CanonicalTwoParentRosterOnly.olean') == manifest['modules']['CanonicalTwoParentRosterOnly']['olean_sha256']
           assert sha(base / 'CanonicalRaw114Accepted.olean') == manifest['modules']['CanonicalRaw114Accepted']['accepted_artifact_olean_sha256']
           assert sha(pathlib.Path('/tmp/a47-canonical77/CanonicalTwoParentGraft.olean')) == manifest['modules']['CanonicalTwoParentGraft']['olean_sha256']
@@ -1259,7 +1261,7 @@ jobs:
           log = pathlib.Path(sys.argv[1]).read_text()
           allowed = {'propext', 'Classical.choice', 'Quot.sound'}
           profiles = {}
-          for name, axioms in re.findall(r"'([^']+)' depends on axioms: \\[([^\\]]*)\\]", log):
+          for name, axioms in re.findall(r"'([^']+)' depends on axioms: \[([^\]]*)\]", log):
               profiles[name] = {x.strip() for x in axioms.split(',') if x.strip()}
           required = [
               'BB6.Agent4Raw58Canonical75.parent_count',
@@ -1273,7 +1275,7 @@ jobs:
               bad = profiles[name] - allowed
               if bad: raise SystemExit(f'{name}: unexpected axioms {sorted(bad)}')
               print(f'{name}: {sorted(profiles[name])}')
-          pathlib.Path('/tmp/canonical75-raw58-graft-axioms.json').write_text(json.dumps({k: sorted(profiles[k]) for k in required}, indent=2, sort_keys=True) + '\\n')
+          pathlib.Path('/tmp/canonical75-raw58-graft-axioms.json').write_text(json.dumps({k: sorted(profiles[k]) for k in required}, indent=2, sort_keys=True) + '\n')
           PY
           python3 - <<'PY'
           import hashlib, json, os, pathlib
@@ -1297,7 +1299,7 @@ jobs:
               'axiom_profiles': json.loads(pathlib.Path('/tmp/canonical75-raw58-graft-axioms.json').read_text()),
               'axiom_allowlist': ['propext', 'Classical.choice', 'Quot.sound'],
           }
-          pathlib.Path('/tmp/canonical75-raw58-graft-summary.json').write_text(json.dumps(summary, indent=2, sort_keys=True) + '\\n')
+          pathlib.Path('/tmp/canonical75-raw58-graft-summary.json').write_text(json.dumps(summary, indent=2, sort_keys=True) + '\n')
           print(json.dumps(summary, indent=2, sort_keys=True))
           PY
       - uses: actions/upload-artifact@v4
