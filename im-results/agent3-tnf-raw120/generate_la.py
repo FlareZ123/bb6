@@ -84,7 +84,20 @@ pump_code = [
     f"namespace {pumpns}",
     "open BB6Coverage BB6Coverage.Agent31Pump",
 ]
-pumps = {}
+pumps = {
+    opens[855]: ("BB6Coverage.Agent3Raw120LACarry.table", "BB6Coverage.Agent3Raw120LACarry.never"),
+}
+assert opens[855] == "1RB1LB_1RC0LF_0RD0RA_1LD1RE_0LA1LE_---1LD"
+late = {
+    opens[2311]: (1019, 10),
+    opens[2313]: (1001, 10),
+    opens[3898]: (13295, 10),
+    opens[3916]: (18853, 10),
+}
+assert opens[2311] == "1RB1RA_1RC0LD_0RD0RF_1LD1RE_0LA1LE_---1RC"
+assert opens[2313] == "1RB1RA_1RC0RE_0RD0RF_1LD1RE_0LA1LE_---1RC"
+assert opens[3898] == "1RB1LF_1RC1RF_0RD1RB_1LD1RE_0LA1LE_---0LA"
+assert opens[3916] == "1RB1LF_1RC1RF_0RD1RB_1LD1RE_0LA1LE_---0RE"
 missing = []
 one_count = 0
 multi_count = 0
@@ -94,7 +107,7 @@ multi.SIMP = multi.SIMP if "List.append_nil" in multi.SIMP else multi.SIMP + ",L
 # Only unmatched leaves incur concrete event simulation. Finite traces propose
 # witnesses; one.generate / multi.generate emit inductive Lean proofs.
 for i, code in enumerate(opens):
-    if code in certs:
+    if code in certs or code in pumps or code in late:
         continue
     p = one.parse(code)
     events = one.concrete_events(p, EVENT_LIMIT)
@@ -153,7 +166,7 @@ def inspect(t):
         max_last = max(max_last, v[0])
 
 inspect(tree)
-B = max_query + 6  # final query plus up to five zero-write prefix steps
+B = max(max_query, *(n for n, _ in late.values())) + 6  # weighted safe bound
 summary = {
     "parent": PARENT,
     "expected_open_count": EXPECTED_OPEN,
@@ -166,6 +179,8 @@ summary = {
     "far_union": len(certs),
     "one_block_pumps": one_count,
     "multi_block_pumps": multi_count,
+    "late_leaves": len(late),
+    "custom_carry_leaves": 1,
     "unresolved": len(missing),
     "unresolved_sample": [{"index": i, "table": code} for i, code in missing[:100]],
 }
@@ -199,6 +214,9 @@ def render(t):
         code = v[0]
         assert code not in used
         used.add(code)
+        if code in late:
+            n, s = late[code]
+            return f".last {n} {slot(s)}"
         if code in pumps:
             return ".proven " + " ".join(pumps[code])
         mask = certs[code]
@@ -279,7 +297,7 @@ theorem split_checked (p : PartialMachine) (n : Nat) (s : Slot)
   simp only [Bool.and_eq_true]
   exact ⟨hq, allMoves_of _ hk⟩
 """
-emit(prefix + "Base", ["Raw120Late", prefix + "Sweeps"], base)
+emit(prefix + "Base", ["Raw120Late", "Raw120LACarry", prefix + "Sweeps"], base)
 
 assert tree[0] == "split"
 root_n, root_slot, root_kids = tree[1], tree[2], tree[3]

@@ -5,7 +5,7 @@ on:
       target:
         description: 'Source closure to verify'
         type: choice
-        options: [legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole, weighted-tnf-four-hole, weighted-tnf-four-hole-sibling, weighted-tnf-r1-sweep, queue-orbit, weighted-tnf-roster-convergence, weighted-tnf-roster-agent47-graft, weighted-tnf-pure-residuals, weighted-tnf-raw99, weighted-tnf-raw124-rf, weighted-tnf-raw124-lc, weighted-tnf-raw124-1rf, weighted-tnf-raw124-0rb, weighted-tnf-raw124-bundle, weighted-tnf-raw103, weighted-tnf-raw104, weighted-tnf-agent8-five, weighted-tnf-agent8-six, weighted-tnf-agent8-raw117, weighted-tnf-roster-composition, weighted-tnf-agent3-siblings, weighted-tnf-raw85-parent-check, weighted-tnf-raw91, weighted-tnf-raw87, weighted-tnf-raw83-pump, weighted-tnf-agent10-multi, weighted-tnf-agent10-five-new, weighted-tnf-agent10-five-roster, weighted-tnf-agent10-raw106, weighted-tnf-raw63-counter, weighted-tnf-raw61-witnesses, weighted-tnf-prefix-single, weighted-tnf-agent10-single, weighted-tnf-combined-109, weighted-tnf-root-zero-refinement, weighted-tnf-combined-106, weighted-tnf-canonical-78, weighted-tnf-canonical-78-exact, weighted-tnf-canonical-two-parent, weighted-tnf-raw10-box, weighted-tnf-raw120-late, weighted-tnf-raw120-rf, weighted-tnf-raw120-rb, weighted-tnf-raw120-partition, weighted-tnf-raw120-la, weighted-tnf-root-sibling-first-hole, weighted-tnf-canonical-frontier, weighted-tnf-raw114-cut, weighted-tnf-raw114-far, weighted-tnf-raw114-pumps, weighted-tnf-raw114-complete, weighted-tnf-raw107-witnesses, weighted-tnf-raw107-1la, weighted-tnf-raw60, weighted-tnf-raw60-conditional, weighted-tnf-raw60-next, weighted-tnf-ngram-pilot, weighted-tnf-champion-parent, weighted-tnf-held-leaf-109-membership, weighted-tnf-f412-partition]
+        options: [legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole, weighted-tnf-four-hole, weighted-tnf-four-hole-sibling, weighted-tnf-r1-sweep, queue-orbit, weighted-tnf-roster-convergence, weighted-tnf-roster-agent47-graft, weighted-tnf-pure-residuals, weighted-tnf-raw99, weighted-tnf-raw124-rf, weighted-tnf-raw124-lc, weighted-tnf-raw124-1rf, weighted-tnf-raw124-0rb, weighted-tnf-raw124-bundle, weighted-tnf-raw103, weighted-tnf-raw104, weighted-tnf-agent8-five, weighted-tnf-agent8-six, weighted-tnf-agent8-raw117, weighted-tnf-roster-composition, weighted-tnf-agent3-siblings, weighted-tnf-raw85-parent-check, weighted-tnf-raw91, weighted-tnf-raw87, weighted-tnf-raw83-pump, weighted-tnf-agent10-multi, weighted-tnf-agent10-five-new, weighted-tnf-agent10-five-roster, weighted-tnf-agent10-raw106, weighted-tnf-raw63-counter, weighted-tnf-raw61-witnesses, weighted-tnf-prefix-single, weighted-tnf-agent10-single, weighted-tnf-combined-109, weighted-tnf-root-zero-refinement, weighted-tnf-combined-106, weighted-tnf-canonical-78, weighted-tnf-canonical-78-exact, weighted-tnf-canonical-two-parent, weighted-tnf-raw10-box, weighted-tnf-raw120-late, weighted-tnf-raw120-rf, weighted-tnf-raw120-rb, weighted-tnf-raw120-partition, weighted-tnf-raw120-la-carry, weighted-tnf-raw120-la, weighted-tnf-root-sibling-first-hole, weighted-tnf-canonical-frontier, weighted-tnf-raw114-cut, weighted-tnf-raw114-far, weighted-tnf-raw114-pumps, weighted-tnf-raw114-complete, weighted-tnf-raw107-witnesses, weighted-tnf-raw107-1la, weighted-tnf-raw60, weighted-tnf-raw60-conditional, weighted-tnf-raw60-next, weighted-tnf-ngram-pilot, weighted-tnf-champion-parent, weighted-tnf-held-leaf-109-membership, weighted-tnf-f412-partition]
         default: legacy
       raw_id:
         description: 'Single Agent 10 residual index (single target only)'
@@ -872,7 +872,7 @@ jobs:
           fi
 
   raw120:
-    if: inputs.target == 'weighted-tnf-raw120-late' || inputs.target == 'weighted-tnf-raw120-rf' || inputs.target == 'weighted-tnf-raw120-rb' || inputs.target == 'weighted-tnf-raw120-partition' || inputs.target == 'weighted-tnf-raw120-la'
+    if: inputs.target == 'weighted-tnf-raw120-late' || inputs.target == 'weighted-tnf-raw120-rf' || inputs.target == 'weighted-tnf-raw120-rb' || inputs.target == 'weighted-tnf-raw120-partition' || inputs.target == 'weighted-tnf-raw120-la-carry' || inputs.target == 'weighted-tnf-raw120-la'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -900,6 +900,8 @@ jobs:
             python im-results/agent3-tnf-raw120/generate.py
             python im-results/agent3-tnf-raw120/generate_rb.py
             target=im-results/agent3-tnf-raw120/Raw120CanonicalPartition.lean
+          elif [ "$TARGET" = weighted-tnf-raw120-la-carry ]; then
+            target=im-results/agent3-tnf-raw120/Raw120LACarry.lean
           elif [ "$TARGET" = weighted-tnf-raw120-la ]; then
             python im-results/agent3-tnf-raw120/generate_la.py
             target=im-results/agent3-tnf-raw120/la/Raw120LAData.lean
