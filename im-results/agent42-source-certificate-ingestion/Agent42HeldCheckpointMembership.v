@@ -172,6 +172,7 @@ Proof.
     + constructor.
   - unfold source_roster_covers.
     simpl.
+    rewrite orb_false_r.
     exact (proj2 (source_refinesb_spec (tm x) recovered_held_2800) h).
 Qed.
 
