@@ -928,6 +928,16 @@ jobs:
           bash /tmp/a31-raw114-generator-commands.txt
           test -s pinned/im-results/agent47-raw114-cut/Raw114CompleteData.lean
           test "$(find pinned/im-results/agent47-raw114-cut -maxdepth 1 -name 'Raw114Complete*Kid*.lean' | wc -l)" -eq 384
+          mkdir -p /tmp/raw114-generated /tmp/raw114-provenance
+          cp -a pinned/im-results/agent47-raw114-cut/. /tmp/raw114-generated/
+          cp pinned/im-results/agent31-three-hole-tnf/generate_sweeps.py /tmp/raw114-provenance/
+          cp pinned/im-results/agent31-three-hole-tnf/generate_four_hole.py /tmp/raw114-provenance/
+          cp pinned/im-results/agent1-ngram/emit_ngram.py /tmp/raw114-provenance/
+          cp pinned/im-results/agent1-ngram/ngram.cpp /tmp/raw114-provenance/
+          cp pinned/im-results/agent2-tnf-raw99/enumerate.cpp /tmp/raw114-provenance/
+          printf '%s\\n' d4164a4457e62ba7ec8e3fba6e38b251d04ffc83 > /tmp/raw114-provenance/pinned-revision.txt
+          find pinned -type f -name '*.lean' -delete
+          test -z "$(find pinned -type f -name '*.lean' -print -quit)"
       - name: Compile the complete canonical73 consumer against the shared core
         run: |
           set -euo pipefail
@@ -942,7 +952,7 @@ jobs:
             --jobs 4 \
             --source-root /tmp/raw110-generated \
             --source-root im-results/agent10-tnf-multipump \
-            --source-root pinned/im-results/agent47-raw114-cut \
+            --source-root /tmp/raw114-generated \
             --override ThreeHoleAudit=im-results/agent31-three-hole-tnf/ThreeHoleAudit.lean \
             --override TNFPilot=im-results/agent50-weighted-tnf-pilot/TNFPilot.lean \
             --precompiled-manifest /tmp/a31-base/manifest/raw107-shared-manifest.json \
@@ -1009,19 +1019,19 @@ jobs:
             --provenance-input im-results/agent10-tnf-raw91/Raw91Pump.lean \
             --provenance-input /tmp/a31-canonical73-generator-commands.txt \
             --provenance-input /tmp/a31-raw114-generator-commands.txt \
-            --provenance-input pinned/im-results/agent47-raw114-cut/generate_complete.py \
-            --provenance-input pinned/im-results/agent47-raw114-cut/paired_counter.py \
-            --provenance-input pinned/im-results/agent47-raw114-cut/long_sweep.py \
-            --provenance-input pinned/im-results/agent47-raw114-cut/multi_sweep.py \
-            --provenance-input pinned/im-results/agent47-raw114-cut/raw114-hard-manifest.txt \
-            --provenance-input pinned/im-results/agent47-raw114-cut/all-far-bank.txt \
-            --provenance-input pinned/im-results/agent47-raw114-cut/seeded_far.cpp \
-            --provenance-input pinned/im-results/agent31-three-hole-tnf/generate_sweeps.py \
-            --provenance-input pinned/im-results/agent31-three-hole-tnf/generate_four_hole.py \
-            --provenance-input pinned/im-results/agent1-ngram/emit_ngram.py \
-            --provenance-input pinned/im-results/agent1-ngram/ngram.cpp \
-            --provenance-input pinned/im-results/agent2-tnf-raw99/enumerate.cpp \
-            --provenance-input pinned/im-results/agent47-raw114-cut/Raw114CompleteData.lean \
+            --provenance-input /tmp/raw114-generated/generate_complete.py \
+            --provenance-input /tmp/raw114-generated/paired_counter.py \
+            --provenance-input /tmp/raw114-generated/long_sweep.py \
+            --provenance-input /tmp/raw114-generated/multi_sweep.py \
+            --provenance-input /tmp/raw114-generated/raw114-hard-manifest.txt \
+            --provenance-input /tmp/raw114-generated/all-far-bank.txt \
+            --provenance-input /tmp/raw114-generated/seeded_far.cpp \
+            --provenance-input /tmp/raw114-provenance/generate_sweeps.py \
+            --provenance-input /tmp/raw114-provenance/generate_four_hole.py \
+            --provenance-input /tmp/raw114-provenance/emit_ngram.py \
+            --provenance-input /tmp/raw114-provenance/ngram.cpp \
+            --provenance-input /tmp/raw114-provenance/enumerate.cpp \
+            --provenance-input /tmp/raw114-generated/Raw114CompleteData.lean \
             --provenance-input im-results/agent31-three-hole-tnf/ThreeHoleAudit.lean \
             --provenance-input tools/lean_compile_closure.py \
             --provenance-input /tmp/a31-base/manifest/raw107-shared-manifest.json \
