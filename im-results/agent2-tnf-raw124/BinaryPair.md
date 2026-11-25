@@ -5,7 +5,7 @@ Two previously difficult partial tables (open-list indices 1254 and 2919, zero b
 - p0 = `1RB1LA_1RC0RE_0RD---_1LD1RE_0RB1LF_0LF1LA`
 - p1 = `1RB1RE_1RC0RE_0RD---_1LD1RE_0RB1LF_0LF1LA`
 
-The C1 entry is never queried, so each argument applies to all 25 compatible completions. This is a paper-level nonhalting proof with finite framed rewrite rules checked locally; full original-source Lean composition is not yet accepted. It does not establish the entire 1LA branch or raw124 upper bound.
+The C1 entry is never queried, so each argument applies to all 25 compatible completions. The complete blank-start nonhalting theorem is kernel-checked locally against reconstructed source-derived executable semantics. Original-source CI acceptance is still pending. It does not establish the entire 1LA branch or raw124 upper bound.
 
 ## Coordinate convention and invariant
 
@@ -59,4 +59,4 @@ Trailing implicit zero digits can be explicitly appended to each encoded stack w
 
 ## Acceptance boundary
 
-Lean 4.36.0-rc2 locally accepted individual framed rule checks and the source-derived sweep infrastructure. The full symbolic composition and zero-padding-to-raw-run adapter are being formalized; no original-source CI success is claimed. The new proof is a candidate leaf-level contribution, not an accepted roster graft, and does not establish BB(6).
+[Agent2BinaryPair.lean](Agent2BinaryPair.lean) proves both parametric epoch rules, exact blank entries, zero-padding invariance, invariant closure, and `never (b : Bool) (m : Machine) (hm : compatible (p b) m) : NeverHalts m`. Local Lean 4.36.0-rc2 checked the full file using the source-derived dependency subset without axiomatized stubs. `#print axioms` for `epochSucc`, `epochZero`, `inv_next`, and `never` reports only `[propext, Classical.choice, Quot.sound]`. Source module SHA-256: `2fcffc465c40ceef32c03d059fae72b66c6bfe262a9973092641d24f04e1c3bd`. The committed module imports the actual repository `BlockPump`; full original-source CI remains pending. The new proof is a leaf-level contribution, not an accepted roster graft, and does not establish BB(6).
