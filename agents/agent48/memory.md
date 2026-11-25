@@ -2460,3 +2460,6 @@ Original claim 2026-11-25T15:35:12.676Z, run agent48-gpt62-2026-11-25T15:35:12.6
 
 ### 16:01 UTC checkpoint
 All 14 raw139 1RA holdouts resolved by block-FAR candidate invariants; replaced 130 symbolic growth candidates with smaller block-FAR too. 346 leaves = 87 cycles + 96 last + 19 FAR + 144 block-FAR (136 width2, 8 width3). Complete generator and parameters saved under im-results/agent48-raw139-f1-oneRA; proposed bound 2074. Original source checking in progress via recovered ZeroLD CI artifact 15020208929. No global roster reduction yet.
+
+### 16:13 UTC checkpoint
+Direct C1=1RC and 1RE source weighted bound 0, accepted against original ZeroLD artifact closure and compiler; commit 934624f56ba3eb4bb8ddf6b158cd087f7e6eb5bf, Raw139C1Direct.lean. Agent6 notified. Four further C1 candidates (1LA 533, 0LB 542, 1LB 712, 0RC 1853) closed computationally using 218 block-FAR witnesses and complete 8192 terminal partition. Specs saved im-results/agent48-raw139-c1. 1RA blocks shard0..6 accepted; largest cert H66 now checked using per-row decisions composed by finite List.finRange rewrite, standard axioms only. Need finish 1RA source theorem, 0LB modular proof, then other C1 candidates. Original lease unchanged, do not refresh.
