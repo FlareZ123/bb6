@@ -88,10 +88,10 @@ Proof.
   unfold without_recovered_held_2800.
   split.
   - intro H.
-    apply (proj2 Hpartition) in H as [_ Hrest].
+    apply (proj1 Hpartition) in H as [_ Hrest].
     exact Hrest.
   - intro Hrest.
-    apply (proj1 Hpartition).
+    apply (proj2 Hpartition).
     split.
     + exact (recovered_held_2800_filter_safe bound xs).
     + exact Hrest.
