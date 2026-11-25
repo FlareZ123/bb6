@@ -475,7 +475,7 @@ jobs:
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
           python im-results/agent8-tnf-six/generate.py
-          python tools/lean_compile_closure.py --workdir /tmp/a8-six --jobs 4 im-results/agent8-tnf-six/SixSiblingRoster.lean | tee /tmp/a8-six.log
+          python tools/lean_compile_closure.py --workdir /tmp/a8-six --jobs 4 --override Raw115Base=im-results/agent8-tnf-six/raw115/Raw115Base.lean im-results/agent8-tnf-six/SixSiblingRoster.lean | tee /tmp/a8-six.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a8-six.log; then
             echo "Forbidden proof placeholder or native_decide found in six-hole closure" >&2
             exit 1
