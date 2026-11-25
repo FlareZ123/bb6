@@ -1,88 +1,71 @@
-# Enumerate62 source expansion adapter
+# Enumerate62 q0 source-queue export and adaptive coverage
 
-## Status
+**Status (2026-11-25): intermediate computational work; no BB(6) upper bound has been proved here.**
 
-The Lean adapter in `Enumerate62Adapter.lean` passes the focused
-`source-queue-adapter` target in `.github/workflows/agent13-coverage.yml`
-(run **45399254432**, commit `c80dd8f5c7a0a9a75f7717707f312edcc1ce22fd`).
-The workflow rejects `sorryAx` and `native_decide`; that gate passed.
-Its printed axiom dependencies are inherited standard Lean axioms
-(`propext`, `Classical.choice`, `Quot.sound`), not proof placeholders.
+This directory tracks the bridge from the original Coq Enumerate62 source queue to the source-root coverage work in `im-results/agent32-source-queue/`. The immediate missing object is a reproducible export of the 129 q0 chunk checkpoints and the exact residual obligations they leave.
 
-The separate Coq theorem `Agent5Enumerate62DeciderSound.v` is still under
-focused CI validation. It is intended to package the soundness of the actual
-upstream `TNF_Node.decider`; it is not yet accepted.
+## Established components
 
-## Source correspondence
+- `Agent5Enumerate62DeciderSound.v` passed CI run `45414978702`. It proves soundness of the actual source `decider` branches against the original Coq machine semantics. This is a semantic adapter, not a complete classification of all residual machines.
+- `im-results/agent8-adaptive-source-plan/Agent8QueueCheckpoint.v` defines the packed queue encoding and the exact `source_checkpoint_decode` theorem.
+- `im-results/agent8-adaptive-source-plan/Agent8AdaptiveSource.v` provides finite-checkpoint and adaptive-plan soundness, including the active-plus-held residual interface. The relevant checkpoint modules were exercised in CI run `45463102601`.
+- `im-results/agent32-source-queue/` contains the q0 partition, source-drain, and source-coverage development. Its intended partition is the 129 slices `q_i (100*i) 100`, with the final slice naturally truncated to 20 input nodes.
 
-The reference is `ccz181078/busycoq`, pinned at
-`33209bc7dc282b38c8cd6be507bfc551fea56108`, file
-`verify/Enumerate62.v`.
+The critical semantic distinction is that a finite checkpoint may leave both an active queue and held nodes. Both are obligations. A nonempty active queue is not a drained queue.
 
-The Lean adapter uses the same finite table encoding:
+## Exact finite-checkpoint pilots
 
-- Coq states A..F correspond to `Fin 6` values 0..5.
-- S0/S1 correspond to `false/true`.
-- L/R correspond to `false/true`.
-- A table slot is `(state, symbol)`.
-- The root table is exactly
-  `TM_from_str "1RB---_------_------_------_------_------"`.
+### Final chunk
 
-Crucially, a source `None` is an *unexpanded transition slot*. The adapter
-maps it to outer `none` in `PartialMachine`; a known halting transition
-would instead be `some none`. An assigned ordinary move maps to
-`some (some move)`.
+`Agent5PackedChunk12800_20_1000000.v` records the existing final-20 checkpoint after 1,000,000 updates: 56 active, 0 held. `Agent5Last20Witness.v` provides short-run verdict proofs for those 56 active nodes. This is a finite checkpoint, not the terminal MAXT holdout list.
 
-## Proven adapter facts
+### First chunk
 
-- `sourceRoot_action` and `sourceRoot_wf`: the node0 root action and its
-  exact 11-slot hole list are represented correctly.
-- `sourceChild_partial`: assigning one source slot is exactly the local
-  `refine` operation.
-- `sourceChild_holes_length`: the source hole-list length decreases by one
-  when an undefined slot is assigned.
-- `sourceChild_support` and `sourceReachable_wf`: reachable source children
-  preserve the state-support invariant needed by the weighted TNF argument.
-- `sourceChoices_mem_iff` and `sourceExpand_child_iff`: the source expansion
-  enumerates all four write/direction choices for every destination
-  (q\leq cut). This is the union of the old labels (q<cut) and the one
-  least-fresh label (q=cut), when it exists.
-- `sourceExpand'_last_hole_empty`: the source `expand'` one-hole branch
-  returns no ordinary children.
-- `source_last_hole_cover`: the one-hole branch is semantically covered:
-  the exact hole list proves every other table slot is assigned, so
-  `last_hole_sound` applies once the first-hole blank run and weighted halt
-  delay bound are supplied.
-- `source_expand_cover`: for a non-last first hole, the local
-  `first_hole_tnf_cover` theorem applies to exactly the source expansion
-  children, with one obligation for each old-label branch and each
-  least-fresh-label branch.
+`q0-export/pilot-0-100-fuel-1000000.json` records the exact result for:
 
-The hole list is a ghost representation used to make the source's
-`num_undef_trans` count exact. It is maintained from the root by erasing the
-assigned slot. The adapter's `SourceWF` is deliberately not claimed to be the
-entire upstream Coq `TNF_Node.WF`: it captures exact holes, the fresh-label
-bound, and state support. The source's unused-state permutation condition is
-handled locally by the weighted TNF renaming argument, but a queue-wide
-compatibility quotient still needs to be connected explicitly.
+```
+SearchQueue_upds decider (q_i 0 100) 1000000
+```
 
-## Remaining proof boundary
+Source revision: `ccz181078/busycoq@33209bc7dc282b38c8cd6be507bfc551fea56108`.
 
-This is not a BB(6) upper-bound certificate and does not yet prove that the
-upstream queue's final active/holdout frontier covers every six-state machine.
-The non-last theorem is conditional on child weighted certificates; the
-last-hole theorem is conditional on the first-hole run and weighted delay
-bound. The separate Coq decider theorem is being checked to establish
-`Halt h -> halts_at ... h` and `NonHalt -> never halts` for the actual source
-classifier.
+CI run `45522264094`, job `138896824472`, produced the exact packed checkpoint:
+- 156 active, 1 held, 157 residuals total;
+- no duplicate packed nodes;
+- hole counts: 1→9, 2→3, 3→18, 4→23, 5→2, 6→5, 7→97;
+- fresh-state counts: 3→16, 4→66, 5→55, 6→20;
+- the single held node is one-hole;
+- no table string in this chunk's residuals occurs in the historical 663-row snapshot.
 
-The next high-value integration steps are:
+The VM computation itself took 64.821 seconds. This supports the existing batch export's 180-second per-chunk timeout for this chunk; other chunks still need empirical confirmation.
 
-1. Connect the Coq `decider` branch theorem to the Lean first-hole
-   `knownRun` semantics (including the stream-tape / integer-tape simulation).
-2. Instantiate the queue coverage contract with source children and a
-   compatibility relation that accounts for fresh-state renaming.
-3. Connect the actual `SearchQueue_upds` / `holdout_i` chunks and their
-   terminal certificates to that invariant.
+## Export tooling
 
-Do not report this adapter alone as a proof of the global upper bound.
+- `check-q0-export.cjs` parses packed queue values, checks the six-row table encoding, independently checks undefined-transition counts and fresh-state metadata, and writes a roster TSV plus JSON manifest. Its full mode expects exactly 129 chunks at offsets 0, 100, ..., 12800, requested size 100, and a consistent source/research revision.
+- `.github/workflows/shared-rocq-root-proofs.yml` now runs the parser self-test and emits per-chunk Coq logs for `enumerate62-packed-batch`, making the exact values machine-readable through the Actions logs.
+- Current batch run `45523811152` uses research revision `8350420137f3b1b45302be198e4cb2c9a2751d1a` and covers offsets 100 through 800 at fuel 1,000,000. It is the first eight-chunk batch and tests the workflow/parser integration.
+
+## Native-computation caveat
+
+The workflow target named `enumerate62-chunk-probe-native` is not currently native. The installed Debian Coq reports that native computation is disabled at configure time and falls back to `vm_compute`. The attempted MAXT probes for chunks 0–100 and 12800–12820 timed out under that fallback. These are not native-performance results. A genuinely native Coq build would require separate installation/configuration.
+
+## Historical holdout snapshot
+
+`resources/BB6_holdouts_663_2026-10-16.txt` contains 663 historical rows: 661 one-hole rows and two two-hole rows:
+
+```
+1RB1LA_1RC0RF_1RD---_0LE1RB_---0LA_1LD1RF
+1RB1LD_1RC0RB_1LA1RC_1LE0LA_1LF---_1LC---
+```
+
+These are not assumed to belong to the current source-generated roster. The first 0–100 checkpoint has zero overlap with the historical snapshot, but full membership comparison must wait for the complete 129-chunk export.
+
+## Next steps
+
+1. Complete and inspect batch run `45523811152`.
+2. If it passes, export the remaining 120 chunks in 15 eight-chunk batches at fuel 1,000,000, keeping a fixed research revision.
+3. Parse all 129 exact active/held checkpoint values into `q0-export/q0-checkpoint-roster.tsv` and `q0-export/q0-checkpoint-manifest.json`.
+4. Compare the complete roster with the historical 663 snapshot.
+5. Work with Agent32 to discharge the finite residual obligations through the adaptive-plan coverage theorem. If the 1m residual roster is too large to certify directly, deepen only the difficult chunks rather than attempting another VM MAXT drain.
+
+All computational exports and pilot data remain in `im-results/`; none is presented as an academically publishable result or as a solution to BB(6).
