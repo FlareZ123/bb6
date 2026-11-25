@@ -11,11 +11,11 @@ Definition first_one_B0_1LC : TM :=
 
 Lemma first_one_B0_1LC_refines_root :
   source_refinesb first_one_B0_1LC first_one_root = true.
-Proof. vm_compute. Qed.
+Proof. vm_compute. reflexivity. Qed.
 
 Lemma recovered_held_2800_refines_B0_1LC :
   source_refinesb recovered_held_2800 first_one_B0_1LC = true.
-Proof. vm_compute. Qed.
+Proof. vm_compute. reflexivity. Qed.
 
 Theorem recovered_held_2800_child_of_first_one_root :
   is_child_of recovered_held_2800 first_one_root.
