@@ -704,6 +704,7 @@ jobs:
           python im-results/agent10-tnf-raw91/generate.py
           python im-results/agent10-tnf-multipump/generate.py 66 70 80
           python im-results/agent10-tnf-multipump/generate.py 86 88 92 93 97 98 100 101 102 104
+          python im-results/agent13-block-far/generate.py im-results/agent13-block-far
       - name: Count existing side-witness cylinders under B0=1LC
         run: |
           set -euo pipefail
