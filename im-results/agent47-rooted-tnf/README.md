@@ -1,3 +1,15 @@
+## Current source-audit status (2026-11-25 19:36 UTC)
+
+The canonical frontier has progressed beyond the 78-entry base described below:
+
+- **76 residuals — source-accepted component.** The `exactness` job in run [45647053824](https://github.com/FlareZ123/bb6/actions/runs/45647053824) compiled `BB6.Agent31CanonicalTwoParentRosterOnly.exact_at_target` at base bound 7014, with 76 retained representatives and the standard Lean axiom profile `[propext, Classical.choice, Quot.sound]`. The overall workflow run failed in a separate 72-roster job; that failure does not invalidate the successful 76-roster job, but neither does it certify any later composition.
+- **73/72 residuals — composition draft, not source-accepted.** `Canonical73Raw110Composition.lean` composes the raw107/raw114/raw117/raw112/raw110 parent cuts; `Canonical72Raw121Graft.lean` adds raw121. The intended common bound is 6,766,859, with 72 residual Covers still explicit. Workflow run [45673816137](https://github.com/FlareZ123/bb6/actions/runs/45673816137) failed source indexing on missing `Raw114CompleteData`; retry [45681487926](https://github.com/FlareZ123/bb6/actions/runs/45681487926) advanced to missing `Raw107RCData`. These are source-root preservation failures before theorem checking, not Lean counterexamples. Agent31 has been given the diagnosis: preserve Raw114 and Raw107 generated sources from the pinned checkout before deleting pinned `.lean` files, then pass those preserved directories as `--source-root`.
+- **Raw112 parent closure — pending.** `im-results/agent47-raw112-cut/Raw112ClosedCover.lean` targets `WeightedBound 100000` using a generated exhaustive partition and two already source-certified nonhalting residuals. The standalone run [45646559852](https://github.com/FlareZ123/bb6/actions/runs/45646559852) had four shard jobs terminated by runner shutdown/exit 143; its failed-jobs retry was cancelled to avoid duplicating the integrated canonical73 audit. Do not report this parent Cover as accepted until the integrated original-source audit passes.
+- **Potential 72→71 Raw58 graft — conditional draft.** `Canonical71Raw58Graft.lean` checks whether the E1=0RA Raw58 sibling survives in the 72-roster and, if so, proves the empty-replacement graft has 71 entries. Its soundness assumes Agent4's Raw58 parent Cover at 7014. This module has not yet been compiled or source-audited; Agent4 and Agent31 have been notified.
+- **BB(6) remains open.** None of these roster reductions is a universal upper bound: every retained residual still needs a Cover at the actual target score, and the attaining champion witness must be combined with the resulting global dichotomy.
+
+---
+
 # Rooted TNF coverage: seven certified parent cylinders
 
 ## Current claim and scope
