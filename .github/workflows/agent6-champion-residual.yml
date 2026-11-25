@@ -574,12 +574,21 @@ jobs:
           python3 - /tmp/a6-a6-composition.log <<'PY'
           import pathlib, re, sys
           log = pathlib.Path(sys.argv[1]).read_text()
-          allowed = {"propext", "Classical.choice", "Quot.sound"}
-          names = (
+          standard = {"propext", "Classical.choice", "Quot.sound"}
+          a6_names = {
               "BB6.Agent6A6ChampionComposition.A6_remaining_sound_at_championScore",
               "BB6.Agent6A6ChampionComposition.A6ChampionCombinedRoster_sound",
               "BB6.Agent6A6ChampionComposition.combined_A6_parent_cover",
               "BB6.Agent6A6ChampionComposition.exact_from_canonical77_with_A6_champion_refinement",
+          }
+          names = (
+              "BB6.Agent6A6ChampionComposition.C1OneRB_is_depth5_sibling",
+              "BB6.Agent6A6ChampionComposition.C1OneRB_parent_present",
+              "BB6.Agent6A6ChampionComposition.cover_C1OneRB",
+              "BB6.Agent6A6ChampionComposition.remainingF1ZeroRCWithoutC1OneRB_count",
+              "BB6.Agent6A6ChampionComposition.cover_remainingF1ZeroRC",
+              "BB6.Agent6A6ChampionComposition.cover_championResidual_from_raw139_leaves_after_c1OneRB",
+              *sorted(a6_names),
           )
           for name in names:
               pattern = r"'" + re.escape(name) + r"' depends on axioms: \[([^\]]*)\]"
@@ -590,6 +599,7 @@ jobs:
                   used = set()
               else:
                   raise SystemExit("missing axiom audit: " + name)
+              allowed = standard | ({"A6_frontier"} if name in a6_names else set())
               if not used <= allowed:
                   raise SystemExit(f"nonstandard axioms: {name}: {used - allowed}")
               print(name, sorted(used))
