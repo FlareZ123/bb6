@@ -10,6 +10,12 @@ from generate import D, MOVES, tally, emit, move
 import sys
 
 SPEC = {
+    "1LA": ("1RB1LC1RC0LD1LA0RB1LA---------------",4,5,9,7,7014,
+            Counter(split=233,halt=233,cycle=3777,state=276,last=1108,ngram=185,oneLAHard=10),
+            ["Agent46Raw13OneLAPump","Agent46Raw13OneLAFAR"]),
+    "1RA": ("1RB1LC1RC0LD1LA0RB1RA---------------",4,5,9,7,7014,
+            Counter(split=374,halt=374,cycle=5988,state=676,last=1848,ngram=79,oneRAHard=8),
+            ["Agent46Raw13OneRAPumps","Agent46Raw13OneRAPump303","Agent46Raw13OneRAFAR"]),
     "0RA": ("1RB1LC1RC0LD1LA0RB0RA---------------",4,5,9,7,7014,
             Counter(split=147,halt=147,cycle=2671,state=136,last=495,ngram=67,zeroRAHard=9),
             ["Agent46Raw13ZeroRAPump","Agent46Raw13ZeroRAFAR"]),
@@ -73,6 +79,10 @@ def main():
             from generateZeroRAFAR import generate
             far = generate()
             assert len(set(grams) & far.keys()) == 60
+        if BRANCH in ("1LA","1RA"):
+            from generateOneFAR import generate
+            far = generate(BRANCH)
+            assert len(set(grams) & far.keys()) == {"1LA":179,"1RA":78}[BRANCH]
         ids={raw:i for i,raw in enumerate(grams) if raw not in far}
         data.write_text("".join(f"{i} {raw}\n" for raw,i in ids.items()))
         exe=temp/"ngram"
@@ -92,7 +102,7 @@ def main():
         def norm(t):
             if t is None: return None
             if t[0]=="ngram":
-                if t[1] in far: return ("zeroRAFar",far[t[1]])
+                if t[1] in far: return ({"0RA":"zeroRAFar","1LA":"oneLAFar","1RA":"oneRAFar"}[BRANCH],far[t[1]])
                 return ("selectedgram",ids[t[1]])
             if t[0]=="split": return ("split",t[1],t[2],[norm(ch) for ch in t[3]])
             return t
@@ -103,6 +113,16 @@ def main():
             kids.append(name)
             body=emit(norm(t)).replace("BB6.Agent46Raw13SelectedGram",GRAM)
             mv=move(MOVES[i])
+            if BRANCH == "1RA" and i in (4,16):
+                from shard_cut import checked_subtree
+                tag=f"{i:02}"
+                prefix=checked_subtree(t,tag,f"next {mv}",max(CUT,i%6+1),BOUND,
+                    lambda tree: emit(norm(tree)).replace("BB6.Agent46Raw13SelectedGram",GRAM))
+                output(name,[PREFIX+"Base"]+PROOFS+modules,prefix+f"""
+def kid{tag} : Cut := c{tag}
+theorem checked{tag} : check {BOUND} (next {mv}) (nextCut {CUT} {mv}) kid{tag} = true := ok{tag}
+""")
+                continue
             output(name,[PREFIX+"Base"]+PROOFS+modules,f"""
 def kid{i:02} : Cut := {body}
 theorem checked{i:02} : check {BOUND} (next {mv}) (nextCut {CUT} {mv}) kid{i:02} = true := by decide

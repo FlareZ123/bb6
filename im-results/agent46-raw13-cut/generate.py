@@ -279,6 +279,17 @@ def emit(t):
     if tag == "late0RE":
         n = "BB6Coverage.Agent31Pump.Raw13Late0RE"
         return f".bounded {n}.table 21269 {n}.bound"
+    if tag in ("oneLAHard","oneLAFar","oneRAHard","oneRAFar"):
+        n = "BB6.Agent46Raw13"+("OneLA" if tag.startswith("oneLA") else "OneRA")
+        i = v[0]
+        if tag == "oneLAHard" and i == 179:
+            return f".closed (.proven {n}.pumpTable {n}.pumpNever)"
+        if tag == "oneRAHard" and i in (301,303,304,305,306,307):
+            return f".closed (.proven {n}.p{i} {n}.never{i})"
+        return f".closed (.proven {n}.pF{i} {n}.neverF{i})"
+    if tag in ("oneLAparent","oneRAparent"):
+        n = "BB6.Agent46Raw13One"+tag[3:5]
+        return f".bounded {n}.parent 7014 {n}.bound"
     if tag in ("zeroRAHard","zeroRAFar"):
         n = "BB6.Agent46Raw13ZeroRA"
         i = v[0]
@@ -333,13 +344,15 @@ if __name__ == "__main__":
     t = enhance_selected(build_enhanced(t))
     t = enhance(t,ROOT,{"1RB1LC1RC0LD1LA0RB1LB0RE------------":("zeroREparent",),
         "1RB1LC1RC0LD1LA0RB0RA---------------":("zeroRAparent",),
+        "1RB1LC1RC0LD1LA0RB1LA---------------":("oneLAparent",),
+        "1RB1LC1RC0LD1LA0RB1RA---------------":("oneRAparent",),
         "1RB1LC1RC0LD1LA0RB0RC---------------":("zeroRCparent",),
         "1RB1LC1RC0LD1LA0RB0RD---------------":("zeroRDparent",),
         "1RB1LC1RC0LD1LA0RB0LC---------------":("zeroLCparent",),
         "1RB1LC1RC0LD1LA0RB0LB---------------":("zeroLBparent",),
         "1RB1LC1RC0LD1LA0RB1RD---------------":("oneRDparent",)})
     open_rows = list(collect_open_tables(t,ROOT))
-    assert len(open_rows) == 1715, len(open_rows)
+    assert len(open_rows) == 1713, len(open_rows)
     open_path = D/"raw13-open-residuals.txt"
     open_path.write_text(
         "".join(f"{i} {raw}\n" for i,raw in enumerate(open_rows)),
@@ -357,13 +370,13 @@ if __name__ == "__main__":
     bidfa_closed_count = sum(1 for raw in open_rows if raw in bidfa_proven)
     c,m = Counter(),Counter()
     tally(t,9,3,c,m)
-    expected = Counter(open=1715-bidfa_closed_count,bidfa=bidfa_closed_count,
+    expected = Counter(open=1713-bidfa_closed_count,bidfa=bidfa_closed_count,
         cycle=2708,state=948,split=353,halt=353,last=999,ngram=15,pump=3,
         selectedgram=826,pump1RE=1,sharedpump=3,pump0LE=1,pump1RE2=1,
         sparse1RE=1,zeroREparent=1,zeroRCparent=1,zeroRDparent=1,
-        zeroLCparent=1,zeroLBparent=1,zeroRAparent=1,oneRDparent=1)
+        zeroLCparent=1,zeroLBparent=1,zeroRAparent=1,oneLAparent=1,oneRAparent=1,oneRDparent=1)
     assert c == expected,c
-    assert m["open"] + m["bidfa"] == 1725234375150 and sum(m.values()) == 25**9,m
+    assert m["open"] + m["bidfa"] == 1725175781400 and sum(m.values()) == 25**9,m
     names = []
     for i,k in enumerate(t[3]):
         if k is None:
@@ -375,7 +388,8 @@ if __name__ == "__main__":
             "Agent46Raw13SelectedGram","Agent46Raw13Pump1RE","Agent46Raw13SharedPumps",
             "Agent46Raw13Pump0LE","Agent46Raw13Pump1RE2","Agent46Raw13Sparse1RE",
             "Agent46Raw13ZeroRE","Agent46Raw13ZeroRC","Agent46Raw13ZeroRD","Agent46Raw13ZeroRA",
-            "Agent46Raw13ZeroLC","Agent46Raw13ZeroLB","Agent46Raw13OneRD"]
+            "Agent46Raw13ZeroLC","Agent46Raw13ZeroLB","Agent46Raw13OneRD",
+            "Agent46Raw13OneLA","Agent46Raw13OneRA"]
         if bidfa_proven:
             kid_imports.append("Agent46Raw13BiDFAAudit")
         write(name,kid_imports,f"""
