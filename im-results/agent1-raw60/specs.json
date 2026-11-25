@@ -353,12 +353,24 @@
       811,
       1937
     ],
-    "unresolved": {
-      "1379": "1RB1LA_1RC1LF_0RD0RC_1LD1RE_---1RA_1LB0LB",
-      "1383": "1RB1LA_1RC1LF_0RD0LE_1LD1RE_---1RA_1RC0LB",
-      "1384": "1RB1LA_1RC1LF_0RD1RB_1LD1RE_---1RA_1RC0LB"
-    },
-    "manual": {}
+    "unresolved": {},
+    "manual": {
+      "1379": [
+        "Raw60LABinary",
+        "BB6.Agent1Raw60LABinary",
+        "1RB1LA_1RC1LF_0RD0RC_1LD1RE_---1RA_1LB0LB"
+      ],
+      "1383": [
+        "Raw60LAAlternating",
+        "BB6.Agent1Raw60LAAlternating.M1383",
+        "1RB1LA_1RC1LF_0RD0LE_1LD1RE_---1RA_1RC0LB"
+      ],
+      "1384": [
+        "Raw60LAAlternating",
+        "BB6.Agent1Raw60LAAlternating.M1384",
+        "1RB1LA_1RC1LF_0RD1RB_1LD1RE_---1RA_1RC0LB"
+      ]
+    }
   },
   "1LB": {
     "bound": 620,
