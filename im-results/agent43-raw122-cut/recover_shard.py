@@ -15,7 +15,9 @@ for p in prov: cmd += ["--provenance-input",p]
 cmd += [str(p.relative_to(root)) for p in common]
 subprocess.run(cmd,cwd=root,check=True)
 branch=os.environ["BRANCH"]; first=int(os.environ["FIRST"]); end=int(os.environ["END"])
-roots=[cut/f"Raw122Kid{branch}_{i:02}.lean" for i in range(first,end)]
+for p in SOURCE.glob("*.lean"): shutil.copy2(p,cut/p.name)
+roots=([cut/"Raw122Base.lean"] if branch=="base" else
+       [cut/f"Raw122Kid{branch}_{i:02}.lean" for i in range(first,end)])
 work.mkdir(parents=True,exist_ok=True)
 cmd=[sys.executable,"tools/lean_compile_closure.py","--workdir",str(work),"--jobs","4","--precompiled-dir",str(core),"--precompiled-manifest",str(core/"manifest.json"),"--manifest",str(work/"manifest.json"),"--label",f"raw122-recovery-{branch}-{first}","--artifact-name",f"raw122-recovery-{branch}-{first}","--parent-table","1RB---_1RC---_0RD---_1LD1RE_---0LF_------","--weighted-bound","7014"]
 for p in prov: cmd += ["--provenance-input",p]
