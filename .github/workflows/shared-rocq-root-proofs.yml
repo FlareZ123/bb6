@@ -22,6 +22,7 @@ on:
           - enumerate62-zero-delay
           - enumerate62-source-roster
           - enumerate62-source-first-hole
+          - enumerate62-source-first-hole-side
           - enumerate62-s4-gap-side-search
           - enumerate62-q32-canonical-parent
           - enumerate62-resume-chunk2
@@ -72,7 +73,7 @@ jobs:
           path: original
           persist-credentials: false
       - name: Checkout research repository proof artifact
-        if: inputs.target == 'enumerate62-decider-sound' || inputs.target == 'enumerate62-q0-partition' || inputs.target == 'enumerate62-adaptive-checkpoint' || inputs.target == 'enumerate62-adaptive-expansion' || inputs.target == 'enumerate62-packed-chunk' || inputs.target == 'enumerate62-packed-batch' || inputs.target == 'enumerate62-resume-chunk2' || inputs.target == 'enumerate62-resume-last20' || inputs.target == 'enumerate62-last20-witness' || inputs.target == 'enumerate62-weighted-source' || inputs.target == 'enumerate62-source-roster' || inputs.target == 'enumerate62-source-first-hole' || inputs.target == 'enumerate62-s4-gap-side-search' || inputs.target == 'enumerate62-q32-canonical-parent' || inputs.target == 'enumerate62-zero-delay'
+        if: inputs.target == 'enumerate62-decider-sound' || inputs.target == 'enumerate62-q0-partition' || inputs.target == 'enumerate62-adaptive-checkpoint' || inputs.target == 'enumerate62-adaptive-expansion' || inputs.target == 'enumerate62-packed-chunk' || inputs.target == 'enumerate62-packed-batch' || inputs.target == 'enumerate62-resume-chunk2' || inputs.target == 'enumerate62-resume-last20' || inputs.target == 'enumerate62-last20-witness' || inputs.target == 'enumerate62-weighted-source' || inputs.target == 'enumerate62-source-roster' || inputs.target == 'enumerate62-source-first-hole' || inputs.target == 'enumerate62-source-first-hole-side' || inputs.target == 'enumerate62-s4-gap-side-search' || inputs.target == 'enumerate62-q32-canonical-parent' || inputs.target == 'enumerate62-zero-delay'
         uses: actions/checkout@v4
         with:
           repository: FlareZ123/bb6
@@ -192,6 +193,7 @@ jobs:
             enumerate62-resume-last20) make -f Makefile.coq -j 2 Agent5PackedChunk12800_20_1000000.vo ;;
             enumerate62-source-roster) make -f Makefile.coq -j 2 Agent47SourceSweep.vo && make -f Makefile.coq -j 2 Agent47SourceChunk2.vo Agent47SourceTree.vo Agent44Q32RemainderBranchProbe.vo && make -f Makefile.coq -j 2 Agent8Chunk2FirstHole.vo ;;
             enumerate62-source-first-hole) make -f Makefile.coq -j 2 Agent47SourceSweep.vo && make -f Makefile.coq -j 2 Agent47SourceChunk2.vo Agent47SourceTree.vo Agent44Q32CanonicalParent.vo && make -f Makefile.coq -j 2 Agent8Chunk2FirstHole.vo Agent50Q32ParentTreeSearch.vo ;;
+            enumerate62-source-first-hole-side) make -f Makefile.coq -j 2 Agent47SourceSweep.vo && make -f Makefile.coq -j 2 Agent47SourceChunk2.vo Agent47SourceTree.vo Agent44Q32CanonicalParent.vo && make -f Makefile.coq -j 2 Agent8Chunk2FirstHole.vo Agent44ChunkSideSearch.vo Agent44Chunk2FirstHoleSideSearch.vo ;;
             enumerate62-s4-gap-side-search) make -f Makefile.coq -j 2 Agent47SourceWitness.vo Agent44S4GapSideSearch.vo ;;
           esac
       - name: Print final original theorem assumptions
