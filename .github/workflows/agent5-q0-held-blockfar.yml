@@ -107,13 +107,22 @@ jobs:
           lean -o BlockFAR.olean BlockFAR.lean
           lean -o RangeCheck.olean RangeCheck.lean
           lean -o "${MODULE_NAME}Packed.olean" "${MODULE_NAME}Packed.lean"
-          lean -o "${MODULE_NAME}Proof.olean" "${MODULE_NAME}Proof.lean" | tee /tmp/q0-blockfar/compile.log
+          lean -o "${MODULE_NAME}Proof.olean" "${MODULE_NAME}Proof.lean" 2>&1 | tee /tmp/q0-blockfar/compile.log
           cp "${MODULE_NAME}Packed.olean" "${MODULE_NAME}Proof.olean" /tmp/q0-blockfar/
           if [ "$MODULE_NAME" = "Q02700" ] && [ "$FLIP" = "false" ]; then
-            lean -o /tmp/q0-blockfar/Frontier.olean ../agent8-coverage-contract/Frontier.lean
-            lean -o BlockFARBridge.olean BlockFARBridge.lean
-            lean -o /tmp/q0-blockfar/Q02700Consumer.olean ../agent5-q0-held-blockfar/Q02700Consumer.lean | tee -a /tmp/q0-blockfar/compile.log
+            # Lean requires source inputs to be contained in its root directory.
+            cp ../agent8-coverage-contract/Frontier.lean .
+            lean -o /tmp/q0-blockfar/Frontier.olean Frontier.lean 2>&1 | tee -a /tmp/q0-blockfar/compile.log
+            lean -o BlockFARBridge.olean BlockFARBridge.lean 2>&1 | tee -a /tmp/q0-blockfar/compile.log
+            lean -o /tmp/q0-blockfar/Q02700Consumer.olean ../agent5-q0-held-blockfar/Q02700Consumer.lean 2>&1 | tee -a /tmp/q0-blockfar/compile.log
             cp BlockFARBridge.olean /tmp/q0-blockfar/
+
+            # Extend the accepted q2700 source cylinder into the exact raw10 encoding.
+            cp ../agent49-box-complement/BoxComplement.lean .
+            cp ../agent49-box-complement/Raw10Encoded.lean .
+            lean -o /tmp/q0-blockfar/BoxComplement.olean BoxComplement.lean 2>&1 | tee -a /tmp/q0-blockfar/compile.log
+            lean -o /tmp/q0-blockfar/Raw10Encoded.olean Raw10Encoded.lean 2>&1 | tee -a /tmp/q0-blockfar/compile.log
+            lean -o /tmp/q0-blockfar/Raw10Q2700EncodedConsumer.olean Raw10Q2700EncodedConsumer.lean 2>&1 | tee -a /tmp/q0-blockfar/compile.log
           fi
           if [ "$FLIP" = "true" ]; then
             cp ../agent5-q0-held-blockfar/MirrorTransport.lean .
@@ -149,6 +158,10 @@ jobs:
               "BB6.Agent5Q0HeldBlock.q0_2700_never",
               "BB6.Agent5Q0HeldBlock.q0_2700_parent_slots",
               "BB6.Agent5Q0HeldBlock.q0_2700_D0_is_the_only_hole",
+              "BB6.Agent13Raw10Q2700Encoded.q2700Row_exact",
+              "BB6.Agent13Raw10Q2700Encoded.q2700Cube_within_raw10_parent",
+              "BB6.Agent13Raw10Q2700Encoded.q2700_disjoint_from_66_rows",
+              "BB6.Agent13Raw10Q2700Encoded.q2700_remainder_exact",
           ]
           for name in required:
               no_axioms = f"'{name}' does not depend on any axioms"
