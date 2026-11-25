@@ -66,4 +66,14 @@ The parent residual `B0=1LC` is raw residual index 10 (canonical index 6) in `ca
 
 The 109 roster count remains 109 until the consumer replaces this parent by the certified leaf plus its explicit complement. The `held_leaf_partition` theorem supplies the complement-preservation argument, but `Combined109Roster.reducedRoster` itself is not modified here. Thus this is a genuine closure of one subcylinder inside one of the 109 obligations, not yet a reduction of the roster count or a complete safety proof for the parent.
 
+## Additional accepted side-witness coverage under the same parent
+
+A reproducible scan of Agent 47's `SideWitnessCore.lean` finds **65 of its 388 formally checked side-witness cylinders** that also refine this exact B0=1LC parent. The existing `witnesses_checked` theorem certifies every entry, and `SideWitness.sound` proves `WeightedBound 7014` for every completion of each matching cylinder.
+
+The 65 witnesses have hole-count distribution `{2: 7, 3: 12, 4: 15, 5: 4, 6: 14, 7: 8, 8: 4, 9: 1}`. Their exact union covers 4,477,340,035,625 of the parent’s 95,367,431,640,625 possible completions (4.694831%). More specifically, one witness closes the entire `C1=0LA` branch (25^9 completions); 64 further witnesses close 662,642,770,000 completions within the `C1=0LD` branch (17.370783% of that branch).
+
+The q_i 2800 FARv3 leaf is incompatible with all 388 side-witness cylinders, so it is disjoint from these 65 and adds exactly 25 further completions (its sole remaining F1 transition). Together the two routes cover 4,477,340,035,650 completions; 90,890,091,604,975 remain uncovered. This is a partial coverage map, **not** a proof that the 109 parent is closed.
+
+`analyze_b0_1lc_sidewitness_cover.py` performs the exact finite union count by a memoized decision-diagram recursion over the 25 possible values at each of the ten free slots. The `weighted-tnf-held-leaf-109-membership` CI target runs this counter and checks the reported counts. The new Lean module also proves the 65 matching side witnesses are refinements of the exact 109 parent, proves their count, and imports the checked `SideWitness.sound` theorem to retain their 7014-bound guarantee.
+
 No claim is made here about exhaustion of all 129 source chunks, closure of the 207 root-frontier residuals, or the exact value of BB(6).
