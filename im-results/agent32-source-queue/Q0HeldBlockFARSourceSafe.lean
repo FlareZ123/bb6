@@ -26,6 +26,10 @@ def q0400BNode : SourceNode :=
     holes := [((4 : Fin 6), false)]
     fresh := 6 }
 
+/-- These are exact table-specific SourceSafe witnesses. The separate
+    proof that a particular adaptive checkpoint's holdout list contains
+    these nodes is not asserted by this module. -/
+
 theorem q00300_sourceSafe (B : Nat) : SourceSafe B q00300Node := by
   apply sourceSafe_of_blockFAR_table B q00300Node BB6Generated.Q00300.literal
   · simpa [q00300Node] using
