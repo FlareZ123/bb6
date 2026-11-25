@@ -1,4 +1,4 @@
-From BusyCoq Require Import Agent42Q2800BatchWitnesses Agent5ChunkCoverage.
+From BusyCoq Require Import Enumerate62 Individual62 Agent8AdaptiveSource Agent8QueueCheckpoint Agent8WeightedSource Agent42Q2800BatchWitnesses Agent5ChunkCoverage.
 From Coq Require Import List NArith Lia.
 Import ListNotations.
 Import TNF_Node.
