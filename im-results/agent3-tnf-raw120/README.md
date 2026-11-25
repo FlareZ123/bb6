@@ -1,36 +1,42 @@
 # Raw120 E0 sibling certificates
 
-Raw120 parent: `1RB---_1RC---_0RD---_1LD1RE_---1LE_------`. First undefined row E0 at ordinary time 9. This dossier contains original-source accepted certificates for 15 of the 25 children and explicit residual work. The parent is not yet closed.
+Parent: `1RB---_1RC---_0RD---_1LD1RE_---1LE_------`. First undefined row E0 at ordinary time 9.
 
-## Current coverage (2026-11-25 21:13Z)
+## Accepted partial closure (2026-11-25)
 
-Each E0 alternative has mass 25^5 = 9,765,625 raw completions. The ten immediate translated cycles, the RF/RB certificates, and the newly source-accepted 0RC and 1RB certificates and the 1RA certificate cover 15 disjoint alternatives; the immediate-halt branch is also an explicit draft proof. No canonical roster entry has been removed.
+**22 of 25 disjoint E0 branches are covered; three remain: 1LB, 1RC, 1RF.** The original-source Lean composition [Raw120ThreeResidual.lean](Raw120ThreeResidual.lean) imports nine successful matrix child artifacts and uses two previously accepted child bounds as explicit premises. It also proves the immediate-halt branch and ten translated cycles. It compiles locally against the original Lean 4.36.0-rc2 artifacts, with only standard axioms. Every covered branch satisfies WeightedBound 18859. The partition leaves exactly 29,296,875 raw completions, versus 214,843,750 covered; each child has mass 25^5 = 9,765,625. These are cylinder counts, not distinct canonical machines.
 
-| E0 | Status | Weighted bound | Source |
-| --- | --- | ---: | --- |
-| 0LC, 0LD, 0LE, 0RD, 0RE, 1LC, 1LD, 1LE, 1RD, 1RE | Original-source accepted | 0 | Raw120EasyCycles.lean; run [45582268224](https://github.com/FlareZ123/bb6/actions/runs/45582268224) |
-| 0RF | Original-source accepted, exact | 14416 | run [45520792124](https://github.com/FlareZ123/bb6/actions/runs/45520792124) |
-| 0RB | Original-source accepted | 223 | run [45532860093](https://github.com/FlareZ123/bb6/actions/runs/45532860093) |
-| Halt | Draft direct proof | 15 | Raw120CanonicalPartition.lean |
-| 0RC | Original-source accepted | 716 | generate_rc.py; run [45584144941](https://github.com/FlareZ123/bb6/actions/runs/45584144941) |
-| 1RB | Original-source accepted | 749 | generate_sibling.py 1RB; run [45584422715](https://github.com/FlareZ123/bb6/actions/runs/45584422715) |
-| 1LF | Candidate complete; six custom leaf proofs locally checked; original-source CI pending | 1855 | [1LF dossier](1LF-dossier.md) |
-| 0LB | Candidate complete; custom leaves source-checked locally | 520 | [0LB dossier](0LB-dossier.md) |
-| 0LF | Candidate complete; custom leaves source-checked locally | 656 | [0LF dossier](0LF-dossier.md) |
-| 1LA | Candidate complete; whole-sibling check dispatched | 13113 | [1LA dossier](1LA-dossier.md) |
-| 1LB | Candidate complete; four hard nonhalters source-accepted, late leaf exact weighted bound locally kernel-checked; whole-sibling CI pending | 224707 | [1LB dossier](1LB-dossier.md) |
-| 1RA | Original-source accepted | 13317 | [run 45685953381](https://github.com/FlareZ123/bb6/actions/runs/45685953381) |
-| 1RF | Candidate complete; source CI in progress | pending | [run 45699530786](https://github.com/FlareZ123/bb6/actions/runs/45699530786) |
-| 0LA | All 4710 open leaves assigned; source CI in progress | 18859 | [dossier](0LA-dossier.md), [run 45701989276](https://github.com/FlareZ123/bb6/actions/runs/45701989276) |
-| 0RA, 1RC | Candidate generators include remaining custom witnesses | pending | generate_sibling.py |
+| E0 | Weighted bound | Evidence |
+| --- | ---: | --- |
+| 0LC, 0LD, 0LE, 0RD, 0RE, 1LC, 1LD, 1LE, 1RD, 1RE | 0 | Raw120EasyCycles.lean; [45582268224](https://github.com/FlareZ123/bb6/actions/runs/45582268224) |
+| Halt | 15 | Raw120ThreeResidual.lean, original-source local compile |
+| 0LA | 18859 | [matrix job 139516363530](https://github.com/FlareZ123/bb6/actions/runs/45702614303/job/139516363530); artifact 15067629775; [dossier](0LA-dossier.md) |
+| 0LB | 520 | [matrix job 139516363493](https://github.com/FlareZ123/bb6/actions/runs/45702614303/job/139516363493); artifact 15066016797; [dossier](0LB-dossier.md) |
+| 0LF | 656 | [matrix job 139516363472](https://github.com/FlareZ123/bb6/actions/runs/45702614303/job/139516363472); artifact 15071262082; [dossier](0LF-dossier.md) |
+| 0RA | 3320 | [matrix job 139516363514](https://github.com/FlareZ123/bb6/actions/runs/45702614303/job/139516363514); artifact 15064463097 |
+| 0RB | 223 | [45532860093](https://github.com/FlareZ123/bb6/actions/runs/45532860093); matrix artifact 15067335440 |
+| 0RC | 716 | [45584144941](https://github.com/FlareZ123/bb6/actions/runs/45584144941); matrix artifact 15066948489 |
+| 0RF | 14416 (exact) | [45520792124](https://github.com/FlareZ123/bb6/actions/runs/45520792124); matrix artifact 15067684633 |
+| 1LA | 13113 | [matrix job 139516363603](https://github.com/FlareZ123/bb6/actions/runs/45702614303/job/139516363603); artifact 15070047501; [dossier](1LA-dossier.md) |
+| 1LF | 1855 | [matrix job 139516363565](https://github.com/FlareZ123/bb6/actions/runs/45702614303/job/139516363565); artifact 15071453743; [dossier](1LF-dossier.md) |
+| 1RA | 13317 | [45685953381](https://github.com/FlareZ123/bb6/actions/runs/45685953381) |
+| 1RB | 749 | [45584422715](https://github.com/FlareZ123/bb6/actions/runs/45584422715) |
+| 1LB | candidate 224707 | [dossier](1LB-dossier.md); aggregate matrix check pending |
+| 1RC | pending | 3075 open leaves; 3048 FAR, 24 generic sweep, 3 custom witnesses (939, 1928, 1934) |
+| 1RF | pending | Six bespoke original-source never-halting proofs compile locally; aggregate check pending |
 
-The 0RC enumeration pins 934 splits, 15226 cycles, 4043 last-hole leaves, and 2214 open leaves, SHA256 `01f82938bb361d4335146c22191f1fec517d993c76d71488fbc804910629e78f`. The open leaves are assigned 2195 FAR witnesses, 12 one-block and 3 multi-block pumps, and four new invariants. Raw120RCCounter.lean proves arbitrary-length counter growth for leaves 1370/1380 by strong induction on the counter, with untouched suffixes; rc_nested.py constructs invariants for 1633/1639 with variable alternating-block and unary-tail counts. All short-tail cases and arbitrary-tail transfers passed local Lean 4.36.0-rc2 preflight with copied source zipper/sweep definitions. Run 45584144941 completed successfully, regenerating the pinned RC tree and compiling the Raw120RCData.lean source dependency closure; the complete 0RC child is therefore original-source accepted at weighted bound 716.
+The nine matrix artifacts above pin source revision `3a45edaf85bc519ee64e07f5b1379664b352a023`. The matrix run is [45702614303](https://github.com/FlareZ123/bb6/actions/runs/45702614303). Its generated modules and dependency identities support local composition without regenerating the enumerations. The earlier dedicated 1RF run [45699530786](https://github.com/FlareZ123/bb6/actions/runs/45699530786) failed; its job logs were unavailable (HTTP 404). Local generation and compilation of both Raw120OneRFCounter and Raw120OneRFRecursive against the original PhaseClosure artifact now succeeds for leaves 1658, 1676, 1677, 1678, 2120 and 2118. This is not yet aggregate sibling acceptance.
 
-The 1RB enumeration pins 1099 splits, 17152 cycles, 4476 last-hole leaves, and 3650 open leaves, SHA256 `156d9b5ff6210dfc4ba03a36e0b723a647a291d1eb91053d6df8eb2b4078b23e`. All 3650 have candidate witnesses (3624 FAR, 23 one-block, 3 multi-block). Reuse generate_sibling.py rather than duplicate the certificate checker. Run 45584422715 completed successfully, regenerating the 1RB tree and compiling the Raw120OneRBData.lean source dependency closure; the complete 1RB child is therefore original-source accepted at weighted bound 749.
+## Parent and canonical composition
 
-The 1RC sibling has 3075 open leaves, 3048 FAR hits and 24 generic sweep candidates. Its three remaining leaves are 939, 1928, and 1934; the latter two have the same nested-sweep structure as 0RC. Do not claim closure until source checks pass.
+- Raw120ThreeResidual.lean: pairwise disjoint remaining children, exact mass identities, parent_partition and cover_from_three. Its two explicit premises are the already accepted 1RA and 1RB bounds.
+- Raw120Complete.lean: complete candidate parent composition at bound 224707, awaiting all three remaining aggregate certificates.
+- Raw120ExactLower.lean: consumes the 1LB late leaf 1341, whose 224705 live transitions, halt tick and one incoming blank-prefix step give weighted threshold 224707. The exact parent lower bound still requires composition with the original-source late artifact.
+- Raw120Canonical76Graft.lean: corrected thin consumer of the **accepted raw107+raw114 canonical76 roster**, not the different raw114+raw121 roster that also has length 76. Lean locally checks parent_present, roster75_count, roster75_sound and exact_at_target against canonical artifact 14997966221. Conditional on a full raw120 bound, precisely this roster drops from 76 to 75. The theorem explicitly retains all 75 other Covers and the champion witness. **No global roster entry is removed yet.**
 
-## E0=0RF exact child result
+The 0RF child alone disproves a uniform 7014 bound for raw120. The final roster composition must lift this parent bound to the champion score rather than impose 7014.
+
+## Exact 0RF and 0RB certificates
 
 All 25^5 = 9,765,625 raw completions of that child are accounted for by the exact first-hole enumeration: 1563 splits, 26299 cycle leaves, 5858 last-hole leaves, 3793 initially open leaves. The open-list SHA256 is bda880d33c84532152766ab55afccf0744461e91eb337a3badecb8719f1a68dc. Of the 3793, 3761 have FAR witnesses (29 reusable DFAs), 27 have one-block growth proofs, one has a two-block growth proof, three have new parametric invariants, and one halts. The exact weighted threshold for this child is **14416**.
 
@@ -48,7 +54,7 @@ The generated final theorems are:
 The job printed the axiom profiles of `c_root`, `allRF`, and `exactRF`; each used only `propext`, `Classical.choice`, and `Quot.sound`. The workflow also rejects `sorryAx` and `native_decide`, and that guard passed. This is original-source Lean acceptance of the complete E0=0RF child certificate, not merely a local preflight.
 
 
-## E0=0RB exact child result
+### E0=0RB exact child result
 
 The E0=0RB child is
 `pRB := refine p120 (4,false) (some ⟨false,true,1⟩)`.
@@ -61,50 +67,9 @@ The generated theorem `allRB` proves that every machine compatible with this chi
 
 The E0=0RB manual target `weighted-tnf-raw120-rb` passed in [CI run 45532860093](https://github.com/FlareZ123/bb6/actions/runs/45532860093), completing at 2026-11-25T02:53:42Z. Its dedicated `raw120` job regenerated the pinned RB tree and compiled the generated `Raw120RBData.lean` dependency closure. The generated file checks `c_root` and `allRB`; the workflow's source guard (which rejects `sorryAx` and `native_decide`) passed. The RB child is therefore accepted by original-source Lean CI.
 
-## E0=0LA discovery and parent partition
 
-The deterministic first-hole search for E0=0LA reproduced 1,885 split nodes, 27,089 cycle leaves, 11,557 last-hole leaves and 4,710 open leaves, accounting for all 9,765,625 raw completions. The open list SHA256 is `0ee9b27fbb87a275e6b4626d91ec537aef9d72283e4deed09d1face988e1043c`. The latest finite query is at time 745; the enumerator's maximum weighted halt score is 747. The generator now budgets the final halt query and up to five additional blank-prefix steps (751), rather than using an unsafe unweighted 746 cutoff.
+## Reproduction
 
-Local candidate FAR screening with the two existing banks found 4,386 of 4,710 leaves. Three neighboring residual banks plus nine newly discovered DFA candidates raised the union to 4,468, leaving 242 before symbolic sweeps. These are candidate-checker results, not Lean acceptance. The reproducible generator additionally searches four neighboring banks and symbolic pumps; it refuses to emit a complete certificate when any open leaf is unmatched. The new candidate DFA bank is `la-discovery-bank.txt`.
+Use the manual workflow `.github/workflows/agent3-raw120-complete.yml` for the full child matrix, or existing targeted manual jobs. Do not regenerate accepted siblings merely to inspect the remaining ones. The child artifacts contain source/olean manifests; `assemble_shards.py` checks source revision, hashes and dependency identities before composition.
 
-The draft `Raw120CanonicalPartition.lean` replaces the unconsumed two-child audit with a direct weighted parent consumer: immediate halt at E0, the accepted 0RF and 0RB children, and a list of 22 unresolved ordinary transitions. It targets the exact canonical 78 roster address and proves a conditional exact-at-target statement from covers of every retained branch. Source acceptance of this module is pending; no roster count is reduced. The common parent bound is 14416.
-
-## Placement in the global residual frontier
-
-The parent `p120` is canonical residual **84** (raw residual index **120**) in `im-results/agent13-roster-convergence/canonical-124.json`. Its exact address is B0=1RC, C0=0RD, D0=1LD, D1=1RE, E1=1LE, leaving E0 as the first hole. It is not among the 18 residuals removed by the accepted FiveHoleRoster, AllTwelveRoster, and NewFiveRoster cuts, so it remains one of the **106** obligations in `Combined106Roster.reducedRoster`. The 106-way roster itself passed source-linked CI run 45518426903.
-
-The accepted `allRF` and `allRB` theorems cover their respective children; `Raw120EasyCycles` covers ten more, as recorded above. The draft `Raw120SiblingAudit.lean` records these two certificates in a 25-way first-hole audit at common threshold 14416; its intended report is `(2*25^5, 23*25^5)`, with two certified and 23 unresolved child cylinders. That audit module still requires its own CI compile. The parent `p120` is **not** closed; a complete sibling cover is still required before residual 120 can be removed from a current canonical maximality obligation.
-
-## Proof structure
-
-- `Raw120Late.lean`: exact source-linked late query, attaining completion and lower bound.
-- `Raw120Counter.lean`: leaf 1201, ternary counter with arbitrary right suffix, three-cell digit carry, positive growth recurrence for every length.
-- `macro.py`, `M2140Invariant.inc`, `M2146Invariant.inc`: two nested sweep leaves, complete remainder-case coverage on alternating blocks and unary tails. The invariant allows a variable number of alternating blocks rather than a fixed period.
-- `bank.txt`: compact reusable FAR candidate bank.
-- `generate.py`: regenerate the pinned RF tree, use exact FAR masks and symbolic witnesses, and generate chunked Lean certificates with the original source checker. Its `Raw120RFData.lean` target expresses `allRF` and `exactRF`.
-- `rb-bank.txt`, `generate_rb.py`, and `Raw120RBCounter.lean`: regenerate the pinned E0=0RB tree and its FAR/sweep/counter witnesses; the generated `Raw120RBData.lean` target expresses `allRB`.
-- `Raw120RosterLink.lean`: draft formal link from canonical residual 84 to p120 in `Combined106Roster.reducedRoster`; pending inclusion in the Combined106 compile closure.
-- `Raw120SiblingAudit.lean`: draft two-child first-hole audit; pending a CI target that runs both RF and RB generators before compiling it.
-- `generate_la.py`: proof-producing generator for all E0=0LA open leaves; source acceptance pending.
-
-## Reproduce
-
-From repository root: `python im-results/agent13-coverage/unpack.py`, then `python im-results/agent3-tnf-raw120/generate.py`, then `python tools/lean_compile_closure.py --workdir /tmp/a3-raw120 --jobs 4 im-results/agent3-tnf-raw120/rf/Raw120RFData.lean`.
-
-## Reproduce E0=0RB
-
-From repository root: `python im-results/agent13-coverage/unpack.py`, then `python im-results/agent3-tnf-raw120/generate_rb.py`, then `python tools/lean_compile_closure.py --workdir /tmp/a3-raw120 --jobs 4 im-results/agent3-tnf-raw120/rb/Raw120RBData.lean`. The manual workflow target `weighted-tnf-raw120-rb` performs this source-linked generation and compile.
-
-### LA late leaves and carry invariant (2026-11-25 04:44Z)
-
-A million-step replay of the 242 candidates left after the local FAR search found four actual first-hole queries, each with only F0 undefined: indices 2311/2313/3898/3916 at times 1019/1001/13295/18853. The previous provisional bound 751 is therefore invalid for the whole LA child. Their proposed weighted scores are 1021, 1003, 13297, 18855; the generator now emits exact late-leaf checks and uses the conservative bound 18859 (including at most five prefix steps).
-
-Leaf 855, `1RB1LB_1RC0LF_0RD0RA_1LD1RE_0LA1LE_---1LD`, resisted the standard fixed-block pumps. `Raw120LACarry.lean` gives a variable-length binary-carry invariant: a list of marked runs of length at least 3 or unmarked runs of length at least 4, with a terminal length-4 run. Rightward passage increases a run length; a marked run is unmarked and enlarged, and a left sweep resets preceding runs. If there is no marked run, the terminal run is extended and the whole preceding stack is reset. Induction on the remaining list proves a positive-length phase to a legal configuration, with no bound on list length. `advanceFrom` locally compiled using Lean 4.36.0-rc2, copied original zipper definitions and original sweep lemmas; its axiom profile is propext/Quot.sound. The local preflight used a stub for the external `never_of_growth` transfer only. Original-source `never` acceptance is pending. The LA generator references that theorem rather than assuming a nonhalting witness.
-
-### 2026-11-25 continuation: E0=1LF and E0=0LB
-
-Six new E0=1LF nonhalting leaf proofs compiled against exact original-source imports; all 4464 open leaves have candidate assignments, proposed weighted bound 1855. See [1LF-dossier.md](1LF-dossier.md). Six further E0=0LB nonhalting leaf proofs (four modules) also passed original-source Lean; all 2391 open leaves have candidate assignments, proposed weighted bound 520. See [0LB-dossier.md](0LB-dossier.md). These are not whole-sibling acceptance until generated `allOneLF` and `allZeroLB` check.
-
-### 2026-11-25 E0=0LF
-
-18 more hard leaves have original-source Lean nonhalting proofs (17 automated recursive unary shuttle instances and one arbitrary-word invariant). All 4752 open leaves have candidate assignments; proposed bound 656. See [0LF-dossier.md](0LF-dossier.md). Full sibling CI still pending; 0LB and 0LF now have targeted workflow entries.
+The generators are generate.py (0RF), generate_rb.py, generate_rc.py, generate_la.py and generate_sibling.py. The individual dossiers preserve discovery details and candidate witness indices. The matrix consumes generated Lean proofs; no native decision oracle or sorry is needed.
