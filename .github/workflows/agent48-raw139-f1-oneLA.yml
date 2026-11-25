@@ -1,0 +1,34 @@
+name: Raw139 F1=1LA source audit (manual)
+on:
+  workflow_dispatch:
+    inputs:
+      source_sha:
+        description: Exact source commit SHA to compile
+        required: true
+        type: string
+permissions:
+  contents: read
+jobs:
+  certify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reproduce and certify all 369 leaves
+        run: bash im-results/agent48-raw139-f1-oneLA/reproduce.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-f1-oneLA-certified
+          include-hidden-files: true
+          path: |
+            .tmp/a48-f1-oneLA/manifest.json
+            .tmp/a48-f1-oneLA/log
+            .tmp/a48-f1-oneLA/imports/*.lean
+            .tmp/a48-f1-oneLA/build/*.olean
