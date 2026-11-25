@@ -31,11 +31,11 @@ jobs:
       - name: Reconstruct champion proof source modules
         run: |
           set -euo pipefail
-          work=/tmp/a6-champion-residual
+          work="$PWD/.tmp/a6-champion-residual"
           mkdir -p "$work/imports"
           python3 - <<'PY'
           import base64, io, lzma, pathlib, tarfile
-          root = pathlib.Path("/tmp/a6-champion-residual/imports")
+          root = pathlib.Path(".tmp/a6-champion-residual/imports")
           p = pathlib.Path("im-results/agent42-champion-terminal")
           with tarfile.open(fileobj=io.BytesIO(base64.b64decode((p/"TerminalProofs.tar.xz.b64").read_text())), mode="r:xz") as a:
               member = next(m for m in a.getmembers() if pathlib.PurePosixPath(m.name).name == "TerminalFinish.lean")
@@ -50,7 +50,6 @@ jobs:
           work=/tmp/a6-champion-residual
           python tools/lean_compile_closure.py \
             im-results/agent6-champion-residual/ChampionResidualFrontier.lean \
-            --source-root "$work/imports" \
             --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean \
             --override OuterLCIncPrelude=im-results/agent8-counted-reset/OuterLCIncPrelude.lean \
             --override M0OddResidueSeven=im-results/agent41-m0-n16r7/M0OddResidueSeven.lean \
