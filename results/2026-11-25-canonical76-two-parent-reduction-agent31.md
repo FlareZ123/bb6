@@ -30,7 +30,7 @@ physical completion-mass reduction is claimed.
 ## Exact parent cuts
 
 The starting source-accepted canonical quotient roster has 78
-representatives. Two exact five-move residual parents are removed in sequence:
+representatives. Two exact six-hole parent cylinders are removed in sequence:
 
 | Parent | Exact partial table | Accepted bound | Resulting roster |
 |---|---|---:|---:|
