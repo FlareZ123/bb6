@@ -82,6 +82,8 @@ jobs:
               "championP8Certificate",
               "championResidualFrontierSound",
               "championResidualRetainedTrue",
+              "BB6.Agent6ChampionResidual.championResidualResidualsCount",
+              "BB6.Agent6ChampionResidual.championResidualRefinedRosterCount",
               "championResidualRefinedRosterSound",
               "exactBB6OfChampionResidualRoster",
               "parent_eq_championP7",
