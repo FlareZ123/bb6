@@ -1,0 +1,44 @@
+{
+  "artifact_prefix": "raw60-complete",
+  "groups": {
+    "0RC": [
+      "Raw60A0RCData"
+    ],
+    "0RE": [
+      "Raw60A0REData"
+    ],
+    "0LD": [
+      "Raw60A0LDData"
+    ],
+    "0RF": [
+      "Raw60A0RFData"
+    ],
+    "0LB": [
+      "Raw60A0LBData"
+    ],
+    "1LA": [
+      "Raw60A1LAData"
+    ],
+    "1LB": [
+      "Raw60A1LBData"
+    ],
+    "1LC": [
+      "Raw60A1LCData"
+    ],
+    "1RF": [
+      "Raw60A1RFData"
+    ],
+    "0LC": [
+      "Raw60A0LCData"
+    ],
+    "0LF": [
+      "Raw60A0LFData"
+    ],
+    "1LF": [
+      "Raw60A1LFData"
+    ],
+    "1RE": [
+      "Raw60A1REData"
+    ]
+  }
+}

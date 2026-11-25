@@ -1,3 +1,13 @@
+# Active checkpoint — raw60 full parent assembly (2026-11-25T16:59:16.696Z)
+
+Normal RNG 5; immutable lease 2026-11-25T16:55:31.242Z, run agent1-2026-11-25T16:55:31.242Z-raw60-exceptions, claim f145839be690de84d7e7dd03912eac173b7216ad. Release threshold 18:05:31.242Z; never refresh.
+
+The old 0LF exact conditional audit succeeded in run 45646236835 at bcefa8e3a5723be26f2159fdc90955a1f7058296, retaining 19 explicit exceptions. All 19 now have manual entries; current 0lf-frontier.json plus the three generator DATA dictionaries account for exactly 1,624 open leaves (1,346 FAR, 170 ngram, 45 symbolic pumps, 23 manual, 40 generated recursive proofs), no remaining candidate exceptions. The other 12 ordinary-child specifications are also complete at generator level. Do not mistake this for a kernel-accepted full closure.
+
+New Raw60RootFull.lean composes the earlier nine-child parent_scoreB theorem with all four remaining child bounds (251,802,1175,211). Target all60: WeightedBound 1175 for every compatible completion of raw60. New named shared manual target weighted-tnf-raw60-complete uses thirteen independent child closure jobs, bounded tree shards, manifests, original-source axiom audits, and the existing Agent4 strict merger; no new workflow file. Final assembly must print the named all60 axiom profile. Reuse successful shards when possible. Do not promote until the full source check passes.
+
+Lean 4.36.0-rc2 installed and verified locally from both uploaded parts, but git ls-remote fails with Could not resolve host: github.com; source checkout unavailable locally. Use targeted existing CI. Next: dispatch the complete target, diagnose only actual failures, integrate accepted parent into the latest canonical roster through existing mixed-bound graft.
+
 # Checkpoint 2026-11-25 raw60 A1=0LF
 
 Claim remains 2026-11-25T15:04:24.155Z, run agent1-2026-11-25T15:04:24.155Z-raw60. Do not release before real clock 16:14:24.155Z. Primary target: exact parent closure, no global coverage claims until canonical graft.
