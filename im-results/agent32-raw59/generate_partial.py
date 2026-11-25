@@ -74,6 +74,22 @@ def generate(raw,upgrade=False):
         ns='BB6.Agent32Raw59LB1Sweep1734'
         pumps[rle]=(ns+'.table',ns+'.never')
         imports.append('Raw59LB1Sweep1734')
+        rle=opens[189]
+        assert rle=="1RB1LB_1RC0LB_0RD0RF_1LD1RE_1LA1LA_---1RA"
+        pumps[rle]=("BB6.Agent32Raw59LB1RunGram.M189.table","BB6.Agent32Raw59LB1RunGram.M189.never")
+        if "Raw59LB1RunGram" not in imports: imports.append("Raw59LB1RunGram")
+        rle=opens[190]
+        assert rle=="1RB1LB_1RC0LB_0RD0RF_1LD1RE_1LC1LA_---1RA"
+        pumps[rle]=("BB6.Agent32Raw59LB1Block190.table","BB6.Agent32Raw59LB1Block190.never")
+        if "Raw59LB1Block190" not in imports: imports.append("Raw59LB1Block190")
+        rle=opens[191]
+        assert rle=="1RB1LB_1RC0LB_0RD0RF_1LD1RE_1LD1LA_---1RA"
+        pumps[rle]=("BB6.Agent32Raw59LB1RunGram.M191.table","BB6.Agent32Raw59LB1RunGram.M191.never")
+        if "Raw59LB1RunGram" not in imports: imports.append("Raw59LB1RunGram")
+        rle=opens[194]
+        assert rle=="1RB1LB_1RC0LB_0RD0RF_1LD1RE_1RD1LA_---1RA"
+        pumps[rle]=("BB6.Agent32Raw59LB1Block194.table","BB6.Agent32Raw59LB1Block194.never")
+        if "Raw59LB1Block194" not in imports: imports.append("Raw59LB1Block194")
     module='Raw59PartialSweep'+raw;ns='BB6Coverage.Agent31Pump.'+module
     pieces=['import SweepPumping','set_option maxRecDepth 100000','set_option maxHeartbeats 0','namespace '+ns,'open BB6Coverage']
     sweep_rows=SWEEPS
