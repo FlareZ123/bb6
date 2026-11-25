@@ -42,8 +42,8 @@ theorem firstOneB0_1LC_exact_member :
     into the standard Lean move record: 4*state + 2*write + direction. -/
 def decodeMove (mv : BB6CrossRouteHeldLeaf.Move) : BB6Coverage.Move := by
   have hlt : mv.val < 24 := mv.isLt
-  exact { write := decide ((mv.val / 2) % 2 = 1)
-    right := decide (mv.val % 2 = 1)
+  exact { write := decide ((mv.val / 2) % 2 = 1),
+    right := decide (mv.val % 2 = 1),
     next := ⟨mv.val / 4, by omega⟩ }
 
 /-- Translate the twelve-slot table used by the standalone partition proof
@@ -51,7 +51,9 @@ def decodeMove (mv : BB6CrossRouteHeldLeaf.Move) : BB6Coverage.Move := by
 def toPartialMachine (p : BB6CrossRouteHeldLeaf.PartialTable) :
     BB6Coverage.PartialMachine :=
   fun slot =>
-    match p ⟨2 * slot.1.val + (if slot.2 then 1 else 0), by omega⟩ with
+    match p ⟨2 * slot.1.val + (if slot.2 then 1 else 0), by
+      have hq := slot.1.isLt
+      cases slot.2 <;> simp <;> omega⟩ with
     | none => none
     | some none => some none
     | some (some mv) => some (some (decodeMove mv))
@@ -128,7 +130,7 @@ theorem c1_0la_parent_is_complete_side_witness :
     BB6.Agent31FourHoleRoster.sameTable_sound c1_0la_parent_matches
   have hm' : BB6Coverage.compatible
       (BB6.Agent50RootFrontier.unpackTable c1_0laPacked) m := by
-    rw [← hEq]
+    rw [hEq]
     exact hm
   exact BB6.Agent47SevenSideWitnesses.hasWitness_sound
     c1_0laPacked c1_0la_hasWitness m hm'
