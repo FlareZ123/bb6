@@ -4,7 +4,9 @@
 
 From BusyCoq Require Import Enumerate62 Individual62 Agent8AdaptiveSource
   Agent8QueueCheckpoint Agent8WeightedSource SourceResidualRoster
-  Agent47SourceTree Agent47SourceWitness Agent42HeldCheckpointMembership.
+  Agent42HeldCheckpointMembership Agent42Q2800BatchData
+  Agent42Q2800BatchShard01 Agent42Q2800BatchShard02
+  Agent42Q2800BatchShard03 Agent42Q2800BatchShard04 Agent42Q2800BatchShard05.
 From Coq Require Import List Bool Strings.String Lia NArith.
 Import ListNotations.
 Open Scope string_scope.
