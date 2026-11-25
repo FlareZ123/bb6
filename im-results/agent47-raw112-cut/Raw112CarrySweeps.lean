@@ -75,7 +75,7 @@ theorem pumpR (q : Fin 6) (lp rp I O : List Bool) (k : Nat)
       simpa only [rep,List.append_assoc] using h1
     have H := join0 h1' h2
     rw [Nat.mul_succ, Nat.add_comm (k*n) k]
-    simpa only [rep,List.append_assoc,← List.append_assoc (rep O n) O R,rep_snoc O n] using H
+    simpa only [rep,List.append_assoc,← List.append_assoc (rep O n) O L,rep_snoc O n] using H
 
 theorem pumpL (q : Fin 6) (lp rp I O : List Bool) (k : Nat)
     (one : ∀ L R, run0 table k (cfg q (lp++I++L) (rp++R)) =
