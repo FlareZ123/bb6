@@ -318,6 +318,7 @@ def championWitnesses : List ChampionWitness :=
   { depth := 6, child := ⟨true, false, 1⟩, witness := .side 51 3 true (5 : Int) },
   { depth := 6, child := ⟨false, false, 3⟩, witness := .side 148 23 true (10 : Int) },
   { depth := 6, child := ⟨false, true, 3⟩, witness := .side 39 26 true (0 : Int) },
+  { depth := 6, child := ⟨false, true, 4⟩, witness := .side 265 41 true (11 : Int) },
   { depth := 6, child := ⟨false, false, 5⟩, witness := .side 97 96 true (-2 : Int) },
   { depth := 6, child := ⟨false, true, 5⟩, witness := .side 53 1 true (7 : Int) },
   { depth := 6, child := ⟨true, false, 5⟩, witness := .side 52 5 true (5 : Int) },
