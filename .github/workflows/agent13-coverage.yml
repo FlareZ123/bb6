@@ -2971,8 +2971,8 @@ jobs:
           case "$CHILD" in
             0LC) python "$D/generate_0lc.py"; SPEC="$D/spec-0LC.json";;
             0LF) python "$D/generate_0lf_audit.py"; SPEC="$D/0lf-frontier.json";;
-            1LF) python "$D/generate_1lf.py"; SPEC="$D/spec-1LF.json";;
-            1RE) python "$D/generate_1re.py"; SPEC="$D/spec-1RE.json";;
+            1LF) python "$D/generate_compact.py" 1LF; SPEC="$D/spec-1LF.json";;
+            1RE) python "$D/generate_compact.py" 1RE; SPEC="$D/spec-1RE.json";;
             *) python "$D/generate.py" "$CHILD"; SPEC="$D/specs.json";;
           esac
           W=/tmp/raw60-complete
@@ -3011,6 +3011,13 @@ jobs:
           pattern: raw60-complete-*
           path: /tmp/raw60-downloads
           run-id: ${{ inputs.raw60_artifact_run_id }}
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        if: inputs.target == 'weighted-tnf-raw60-repair' && inputs.raw60_repair_artifact_run_id != ''
+        with:
+          name: raw60-complete-0LF
+          path: /tmp/raw60-downloads/raw60-complete-0LF
+          run-id: ${{ inputs.raw60_repair_artifact_run_id }}
           github-token: ${{ github.token }}
       - uses: actions/download-artifact@v4
         with:
