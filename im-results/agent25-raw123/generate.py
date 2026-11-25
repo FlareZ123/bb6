@@ -7,7 +7,7 @@ checked by the original Lean source semantics. No timeout is a verdict.
 from pathlib import Path
 from collections import Counter
 from itertools import product
-import hashlib, json, subprocess, sys, tempfile
+import hashlib, json, subprocess, sys, tempfile, base64, zlib
 
 ROOT = Path(__file__).resolve().parent
 IM = ROOT.parent
@@ -66,7 +66,7 @@ def generate():
         hit=subprocess.check_output([str(work/"bank"),str(work/"bank.txt"),str(work/"open.txt")],text=True)
         far={int(i):v for i,v in (s.split(":") for s in hit.splitlines())}
         assert len(far)==S["farCount"]
-        special=[set(map(int,S[key])) for key in ("single","multi","ngram","asym","late","unresolved")]
+        special=[set(map(int,S[key])) for key in ("single","multi","ngram","asym","late","recursive","unresolved")]
         assert len(far)+sum(map(len,special))==len(rows)
         assert set(far).union(*special)==set(range(len(rows)))
         assert all(rows[int(i)] == row for i,row in S["unresolved"].items())
@@ -114,6 +114,13 @@ def generate():
             generate_asym.emit(OUT,name,rows[i],data)
             ns=f"BB6.Agent32AsymNGram.{name}"
             cert[i]=f".proven {ns}.table {ns}.never";modules[i]=name
+        batch=zlib.decompress(base64.b64decode((ROOT/"Raw123RecursiveBatch.lean.zlib.b64").read_text()))
+        assert digest(batch)=="ee1b102ca8de7f12201cf4082f1100e968c7d15161c6dd632e38a07ad77e6112"
+        (OUT/"Raw123RecursiveBatch.lean").write_bytes(batch)
+        for key,(name,p,never) in S["recursive"].items():
+            i=int(key)
+            cert[i]=f".proven ({p}) ({never})"
+            modules[i]=name
         for key,(n,s) in S["late"].items():
             i=int(key);assert rows[i].count("---")==1
             cert[i]=f".last {n} {slot(s)}"
