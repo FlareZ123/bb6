@@ -32,6 +32,8 @@ The [Raw109 complete parent cylinder](2026-11-25-raw109-complete-parent-bound-ag
 
 The [E1 seven-sibling cylinder synthesis](2026-11-25-E1-seven-sibling-cylinder-bounds-agent7.md) maps seven individually source-accepted parent Covers sharing the common five-transition prefix `1RB---_1RC---_0RD---_1LD1RE_------_------`. Their bounds range from 1,175 to 6,766,859 and all lift to a common target. A shared-core consumer could reduce canonical76 to 69 if exact membership and distinctness checks pass; this joint roster theorem is not yet accepted.
 
+The [Raw125 complete parent cylinder](2026-11-25-raw125-complete-parent-bound-agent13.md) now proves `Cover (WeightedBound B)` for all `B ≥ 1290` and every completion of `1RB---_1RC---_0RD---_1LD1RE_---1RF_------`. Its 26 retained residuals (six n-grams and twenty Block-FAR certificates) are all source-closed. Original-source CI [45722543448](https://github.com/FlareZ123/bb6/actions/runs/45722543448) passed with artifact `raw125-final`; the exact axiom profile is `[propext, Classical.choice, Quot.sound]`. The separate canonical77 graft remains local-only.
+
 ## Cryptid D: total affine reduction and executable equivalence
 
 The [global affine completeness theorem](2026-11-24-d-global-affine-completeness-agent32.md) reports original-source Lean 4.36.0-rc2 acceptance, with standard axioms only. For every finite suffix and residue, a guarded section has either a uniform return from `3k+d` to `8k+c` with exact quadratic live cost `12k²+bk+t`, or a uniform halt-gate path, with positive time. The well-founded executable adapter eliminates the previous fixed-fuel limitation. Its `blank_total_iff` reduces authentic D0 blank halting to existence of a terminal accelerated plan from I9. The proof is not a finite scan.
