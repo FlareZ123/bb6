@@ -25,7 +25,7 @@ Proof.
   - destruct c as [q [[l s] r]].
     destruct (p (q,s)) as [v|] eqn:E; [discriminate|].
     destruct (BusyCoq.Eqb.eqb_spec (q,s) h) as [Heq|Hne]; [|discriminate].
-    intro _. subst h.
+    intros _. subst h.
     eapply halts_at_intro.
     + rewrite Agent47TC.Flip.Compute.lift_starting in Hrun.
       apply translated_multistep_transfer. exact Hrun.
