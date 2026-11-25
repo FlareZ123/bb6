@@ -179,6 +179,27 @@ theorem p85_1_weightedBound (B : Nat) (m : Machine) (hm : compatible p85_1 m) : 
 #print axioms p85_1_leaf
 #print axioms p85_1_weightedBound
 
+/-- Parent 85, A/1=`1RD` then E/0=`1RD`; exact one-hole table 1RB1RD_1RC1LF_0RD1LA_1LD1RE_1RD0LB_---0LA.
+    Five-state original-orientation SMT hit, Actions run 45525084160. -/
+def p85_2 : PartialMachine := fromCodes [7, 15, 11, 22, 13, 2, 14, 19, 15, 4, 24, 0]
+def c85_2 : Data 5 := ⟨0,[0, 1, 4, 2, 3, 1, 0, 1, 4, 4],
+  [128, 33554688, 8, 1551476488, 268444164, 1073741824, 269000708, 16384, 136347648, 1551476488, 2129920, 1073741824, 1048704, 1048832, 2129920, 2129920, 33280, 1073741824, 132, 67109120, 1048584, 2130944, 1481647616, 1073741826, 33562624, 67108864, 134250504, 1551476488, 134848512, 1073741834, 1073741824],
+  [1073742336, 1073741824, 1477477376, 1024, 204579848, 1064968, 32768, 33792, 1550951432, 65536, 1551476488, 1551476492, 1073906192, 1551476488, 33792, 1024, 2129920, 3178504, 134349316, 1476501512, 33792, 1024, 1211138312, 3162120, 134217730, 1551476488, 1551476488, 272703488, 1551476488, 1585030920, 1073741824],
+  2145336190⟩
+theorem p85_2_valid : c85_2.fastValid p85_2 = true := by decide
+theorem p85_2_root : p85_2 initialSlot = some (some ⟨true, true, 1⟩) := by decide
+theorem p85_2_support : TNFSupport p85_2 6 := support6 _
+theorem p85_2_noAssignedHalt : weightedTNFNoAssignedHalt p85_2 := fromCodes_noAssignedHalt _
+theorem p85_2_neverHalts (m : Machine) (hm : compatible p85_2 m) : NeverHalts m :=
+  c85_2.sound p85_2 (c85_2.fastValid_sound _ p85_2_valid) m hm
+def p85_2_leaf (B : Nat) : WeightedTNFCertificate B p85_2 6 :=
+  farDataNonhaltLeaf p85_2_root p85_2_support p85_2_noAssignedHalt c85_2 p85_2_valid
+theorem p85_2_weightedBound (B : Nat) (m : Machine) (hm : compatible p85_2 m) : WeightedBound B m :=
+  (p85_2_leaf B).sound m hm
+#print axioms p85_2_neverHalts
+#print axioms p85_2_leaf
+#print axioms p85_2_weightedBound
+
 /-- Parent 114, A/1 hole; table 1RB---_1RC1LF_0RD0RC_1LD1RE_0LB0LB_0RC0LA.
     One-state reflected hit, Actions run 45469722441. -/
 def p114_0 : PartialMachine := fromCodes [7,24,11,22,13,9,14,19,4,4,9,0]
