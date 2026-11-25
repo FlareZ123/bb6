@@ -208,7 +208,7 @@ jobs:
               ROOT="$D/Agent46Raw13Data.lean"
             fi
           fi
-          if [ "$TARGET" = ingest77 ] || [ "$TARGET" = phase ]; then
+          if [ "$TARGET" = ingest77 ] || [ "$TARGET" = d3frontier ] || [ "$TARGET" = phase ]; then
             python tools/lean_compile_closure.py --workdir /tmp/a46-raw13 --jobs 4 \
               --precompiled-manifest /tmp/a46-canonical-manifest.json \
               --precompiled-dir /tmp/a47-canonical "$ROOT" | tee /tmp/a46-raw13.log
