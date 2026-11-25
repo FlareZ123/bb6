@@ -41,6 +41,7 @@ python3 "$ROOT/tools/lean_compile_closure.py" \
   --label canonical-r4-ingestion \
   --provenance-input "$WORKDIR/upstream-commit.txt" \
   --provenance-input "$CANONICAL77_MANIFEST" \
+  --override Frontier=im-results/agent8-coverage-contract/Frontier.lean \
   --override RootFrontier=im-results/agent50-weighted-tnf-pilot/RootFrontier.lean \
   --override TNFPilot=im-results/agent50-weighted-tnf-pilot/TNFPilot.lean \
   --override SideCycle=im-results/agent50-weighted-tnf-pilot/SideCycle.lean \
