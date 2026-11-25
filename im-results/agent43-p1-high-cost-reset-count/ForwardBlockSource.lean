@@ -68,6 +68,8 @@ theorem small_is_boundary {q v : Nat} (he : Expanded q v) (hv : v≤2) :
     have hpos := Nat.two_pow_pos i
     have hm := Nat.mul_le_mul_right v (show 1≤2^i by omega)
     simp only [Nat.one_mul] at hm
+    change BB6P1Unit.run q v i ≤ 2 at hv
+    rw [hp] at hv
     omega
 
 theorem expanded_block {q v : Nat} (he : Expanded q v) (k : Nat)
