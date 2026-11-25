@@ -1,0 +1,133 @@
+name: Agent43 raw122 disjoint source audit
+on:
+  workflow_dispatch:
+    inputs:
+      source_ref:
+        description: Exact source revision
+        required: false
+        type: string
+      branches:
+        description: Space-separated F1 child codes
+        required: false
+        default: '0RB 0RC 0RD 1LD 1RB 1RD'
+        type: string
+permissions:
+  contents: read
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_ref || github.sha }}
+      - name: Generate selected disjoint candidate trees
+        env:
+          BRANCHES: ${{ inputs.branches }}
+        run: python im-results/agent43-raw122-cut/generate.py $BRANCHES
+      - name: Plan audit shards
+        id: plan
+        run: |
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import pathlib,json
+          root=pathlib.Path("im-results/agent43-raw122-cut")
+          jobs=[]
+          for i in range(24):
+              b=f"{i:02}"
+              if (root/f"Raw122Kid{b}_00.lean").exists():
+                  for start in range(0,24,6):
+                      jobs.append({"branch":b,"start":start,"end":start+6})
+          jobs.append({"branch":"base","start":-1,"end":-1})
+          print("matrix="+json.dumps({"include":jobs},separators=(",",":")))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw122-generated
+          path: im-results/agent43-raw122-cut/*.lean
+          if-no-files-found: error
+  branch:
+    needs: generate
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix: ${{ fromJSON(needs.generate.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_ref || github.sha }}
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw122-generated
+          path: im-results/agent43-raw122-cut
+      - name: Check disjoint audit shard
+        env:
+          BRANCH: ${{ matrix.branch }}
+          FIRST: ${{ matrix.start }}
+          END: ${{ matrix.end }}
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          root=im-results/agent43-raw122-cut
+          roots=()
+          if [ "$FIRST" = -1 ]; then
+            roots+=("$root/Raw122Base.lean")
+          else
+            for ((i=FIRST;i<END;i++)); do
+              printf -v name 'Raw122Kid%s_%02d.lean' "$BRANCH" "$i"
+              roots+=("$root/$name")
+            done
+          fi
+          python tools/lean_compile_closure.py --workdir /tmp/a43-audit --jobs 3 "${roots[@]}" | tee /tmp/a43-audit.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a43-audit.log; then exit 1; fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw122-audit-${{ matrix.branch }}-${{ matrix.start }}
+          path: /tmp/a43-audit/*.olean
+          if-no-files-found: error
+  assemble:
+    needs: [generate, branch]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_ref || github.sha }}
+      - name: Install Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw122-generated
+          path: /tmp/a43-source
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw122-audit-*
+          path: /tmp/a43-audit
+          merge-multiple: true
+      - name: Compose checked children and exact residual count
+        run: |
+          set -euo pipefail
+          cp /tmp/a43-source/*.lean /tmp/a43-audit/
+          cd /tmp/a43-audit
+          export LEAN_PATH="$PWD"
+          for i in $(seq -w 0 23); do
+            lean -o "Raw122Branch${i}.olean" "Raw122Branch${i}.lean"
+          done
+          lean -o Raw122Data.olean Raw122Data.lean | tee /tmp/a43-root.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a43-root.log; then exit 1; fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw122-certified-root
+          path: /tmp/a43-audit/*.olean
+          if-no-files-found: error
