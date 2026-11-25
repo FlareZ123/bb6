@@ -2,7 +2,7 @@
 
 ## Modular carry aperiodicity
 
-[CarryAperiodic.lean](CarryAperiodic.lean) is locally kernel-checked with Lean 4.36.0-rc2, ordinary axioms only. It treats precisely the strict interior used in Agent9's BatchCarry. If integer states satisfy
+[CarryAperiodic.lean](CarryAperiodic.lean) is kernel-checked with Lean 4.36.0-rc2, ordinary axioms only; [source CI 45590461666](https://github.com/FlareZ123/bb6/actions/runs/45590461666) at 1b698bbf5987f55331c091932514d285a815d4be. [CarryAperiodicSource.lean](CarryAperiodicSource.lean) directly connects the exact weighted-word equation from Agent9's unchanged BatchCarry to the finite-period obstruction. It treats precisely the strict interior used in Agent9's BatchCarry. If integer states satisfy
 
     1 <= c_j <= q+j-3, x_j in {0,1},
     2*c_(j+1) = c_j + (q+j)*x_j,
