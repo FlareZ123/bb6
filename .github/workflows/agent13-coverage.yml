@@ -2144,6 +2144,7 @@ jobs:
         run: |
           echo "ELAN_HOME=/tmp/a2-raw124-1la/.elan" >> "$GITHUB_ENV"
           echo "/tmp/a2-raw124-1la/.elan/bin" >> "$GITHUB_PATH"
+          find /tmp/a2-raw124-1la/.elan -type f -path '*/bin/*' -exec chmod u+x {} +
           /tmp/a2-raw124-1la/.elan/bin/lean --version
       - name: Compile disjoint raw124 1LA child modules
         env:
@@ -2179,6 +2180,7 @@ jobs:
         run: |
           echo "ELAN_HOME=/tmp/a2-raw124-1la/.elan" >> "$GITHUB_ENV"
           echo "/tmp/a2-raw124-1la/.elan/bin" >> "$GITHUB_PATH"
+          find /tmp/a2-raw124-1la/.elan -type f -path '*/bin/*' -exec chmod u+x {} +
           /tmp/a2-raw124-1la/.elan/bin/lean --version
       - uses: actions/download-artifact@v4
         with:
@@ -2347,6 +2349,7 @@ jobs:
         run: |
           echo "ELAN_HOME=/tmp/a2-raw124-bundle/.elan" >> "$GITHUB_ENV"
           echo "/tmp/a2-raw124-bundle/.elan/bin" >> "$GITHUB_PATH"
+          find /tmp/a2-raw124-bundle/.elan -type f -path '*/bin/*' -exec chmod u+x {} +
           /tmp/a2-raw124-bundle/.elan/bin/lean --version
       - name: Compile selected branch kid modules
         env:
@@ -2385,6 +2388,7 @@ jobs:
         run: |
           echo "ELAN_HOME=/tmp/a2-raw124-bundle/.elan" >> "$GITHUB_ENV"
           echo "/tmp/a2-raw124-bundle/.elan/bin" >> "$GITHUB_PATH"
+          find /tmp/a2-raw124-bundle/.elan -type f -path '*/bin/*' -exec chmod u+x {} +
           /tmp/a2-raw124-bundle/.elan/bin/lean --version
       - uses: actions/download-artifact@v4
         with:
