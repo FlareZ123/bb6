@@ -92,7 +92,7 @@ private theorem depth_zero_or_two
     calc
       x+y+1=2^n*(2*(a-1)+8) := hmass
       _=2^n*(2*(a+3)) := by congr 1 <;> omega
-      _=2^(n+1)*(a+3) := by rw [Nat.pow_succ]
+      _=2^(n+1)*(a+3) := by rw [Nat.pow_succ]; ring
   have haPlusEven : 2∣a+3 := by omega
   obtain ⟨c,hc⟩ := haPlusEven
   have hdiv : 2^(n+2)∣x+y+1 := by
@@ -104,7 +104,7 @@ private theorem depth_zero_or_two
     have hn4 : 4≤n := by omega
     have hp : (2:Nat)^6∣2^(n+2) :=
       Nat.pow_dvd_pow 2 (by omega)
-    have h64 : 64∣x+y+1 := dvd_trans hp hdiv
+    have h64 : 64∣x+y+1 := Nat.dvd_trans hp hdiv
     have hzero : (x+y+1)%64=0 :=
       Nat.mod_eq_zero_of_dvd h64
     omega
