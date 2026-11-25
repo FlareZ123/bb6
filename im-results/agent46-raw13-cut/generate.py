@@ -245,6 +245,15 @@ def emit(t):
     if tag == "pump1RE2":
         n = "BB6Coverage.Agent31Pump.Raw13Pump1RE2"
         return f".closed (.proven {n}.table {n}.never)"
+    if tag == "pump0RE":
+        n = "BB6Coverage.Agent31Pump.Raw13Pump0RE"
+        return f".closed (.proven ({n}.table {v[0]}) ({n}.never {v[0]} (by decide)))"
+    if tag == "late0RE":
+        n = "BB6Coverage.Agent31Pump.Raw13Late0RE"
+        return f".bounded {n}.table 21269 {n}.bound"
+    if tag == "zeroREparent":
+        n = "BB6.Agent46Raw13ZeroRE"
+        return f".bounded {n}.parent 21269 {n}.bound"
     if tag == "pump0LE":
         n = "BB6Coverage.Agent31Pump.Raw13Pump0LE"
         return f".closed (.proven {n}.table {n}.never)"
@@ -279,10 +288,11 @@ if __name__ == "__main__":
     t = tree(ROOT,3,DEPTH,True)
     assert t[:3] == ("split",3,1)
     t = enhance_selected(build_enhanced(t))
+    t = enhance(t,ROOT,{"1RB1LC1RC0LD1LA0RB1LB0RE------------":("zeroREparent",)})
     c,m = Counter(),Counter()
     tally(t,9,3,c,m)
-    assert c == Counter(open=1722,cycle=2708,state=948,split=353,halt=353,last=999,ngram=15,pump=3,selectedgram=826,pump1RE=1,sharedpump=3,pump0LE=1,pump1RE2=1,sparse1RE=1),c
-    assert m["open"] == 1725412500150 and sum(m.values()) == 25**9,m
+    assert c == Counter(open=1721,cycle=2708,state=948,split=353,halt=353,last=999,ngram=15,pump=3,selectedgram=826,pump1RE=1,sharedpump=3,pump0LE=1,pump1RE2=1,sparse1RE=1,zeroREparent=1),c
+    assert m["open"] == 1725410156400 and sum(m.values()) == 25**9,m
     names = []
     for i,k in enumerate(t[3]):
         if k is None:
@@ -290,17 +300,17 @@ if __name__ == "__main__":
         name = f"Agent46Raw13Kid{i:02}"
         names.append(name)
         mv = move(MOVES[i])
-        write(name,["Agent46Raw13Base","Agent46Raw13NGram","Agent46Raw13Pumps","Agent46Raw13SelectedGram","Agent46Raw13Pump1RE","Agent46Raw13SharedPumps","Agent46Raw13Pump0LE","Agent46Raw13Pump1RE2","Agent46Raw13Sparse1RE"],f"""
+        write(name,["Agent46Raw13Base","Agent46Raw13NGram","Agent46Raw13Pumps","Agent46Raw13SelectedGram","Agent46Raw13Pump1RE","Agent46Raw13SharedPumps","Agent46Raw13Pump0LE","Agent46Raw13Pump1RE2","Agent46Raw13Sparse1RE","Agent46Raw13ZeroRE"],f"""
 def kid{i:02} : Cut := {emit(k)}
 theorem checked{i:02} :
-    check 7014 (child {mv}) (nextCut 3 {mv}) kid{i:02} = true := by decide
+    check 21269 (child {mv}) (nextCut 3 {mv}) kid{i:02} = true := by decide
 """)
     terms = ",".join(f"kid{i:02}" if k is not None else ".unresolved" for i,k in enumerate(t[3]))
     cases = "\n".join(f"  · exact checked{12*w+6*r+q:02}" for q,w,r in product(range(4),range(2),range(2)))
     write("Agent46Raw13Data",names,f"""
 def kids : Move → Cut := byCutMove [{terms}]
 theorem kids_checked (mv : Move) (hv : mv.next.val ≤ 3) :
-    check 7014 (child mv) (nextCut 3 mv) (kids mv) = true := by
+    check 21269 (child mv) (nextCut 3 mv) (kids mv) = true := by
   rcases mv with ⟨w,r,q⟩
   change q.val ≤ 3 at hv
   have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 := by omega
@@ -310,10 +320,10 @@ theorem kids_checked (mv : Move) (hv : mv.next.val ≤ 3) :
 
 def raw13Cut : Cut := .split 3 (0,true) kids
 
-theorem cut_checked : check 7014 raw13 3 raw13Cut = true := by
-  change (BB6.Agent10ZipAudit.zipQueryOK 7014 raw13 3 (0,true) &&
+theorem cut_checked : check 21269 raw13 3 raw13Cut = true := by
+  change (BB6.Agent10ZipAudit.zipQueryOK 21269 raw13 3 (0,true) &&
     BB6.Agent31ThreeHole.allMoves (fun mv =>
-      if mv.next.val ≤ 3 then check 7014 (child mv) (nextCut 3 mv) (kids mv)
+      if mv.next.val ≤ 3 then check 21269 (child mv) (nextCut 3 mv) (kids mv)
       else true)) = true
   simp only [Bool.and_eq_true]
   refine ⟨by decide, BB6.Agent31ThreeHole.allMoves_of _ ?_⟩
@@ -329,9 +339,9 @@ theorem residual_count : raw13Residuals.length = {c["open"]} := by decide
 theorem residual_mass : openMass 9 3 raw13Cut = {m["open"]} := by decide
 
 theorem raw13_sound (m : Machine) (hm : TNFQuotientCompatible raw13 m) :
-    WeightedBound 7014 m ∨
+    WeightedBound 21269 m ∨
       ∃ e ∈ raw13Residuals, TNFQuotientCompatible e.2 m :=
-  sound 7014 raw13 3 raw13Cut (by decide) raw13_support raw13_root raw13_nohalt cut_checked m hm
+  sound 21269 raw13 3 raw13Cut (by decide) raw13_support raw13_root raw13_nohalt cut_checked m hm
 
 #print axioms cut_checked
 #print axioms residual_count

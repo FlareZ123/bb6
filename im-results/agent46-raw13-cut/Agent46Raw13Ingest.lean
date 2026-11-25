@@ -27,12 +27,13 @@ noncomputable def refinedRoster := graft BB6.Agent47Canonical78.roster
     Unlike a raw-table cut, the residual obligation remains quotient
     compatible after each least-fresh-label choice. -/
 theorem graft_sound {roster : List Entry}
+    {C : Nat} (hC : C ≤ 21269)
     (hroot : ∀ m, compatible BB6.Agent50TNFPilot.root m →
-      WeightedBound 7014 m ∨ ∃ e ∈ roster, TNFQuotientCompatible e.2 m)
+      WeightedBound C m ∨ ∃ e ∈ roster, TNFQuotientCompatible e.2 m)
     (m : Machine) (hm : compatible BB6.Agent50TNFPilot.root m) :
-    WeightedBound 7014 m ∨ ∃ e ∈ graft roster, TNFQuotientCompatible e.2 m := by
+    WeightedBound 21269 m ∨ ∃ e ∈ graft roster, TNFQuotientCompatible e.2 m := by
   rcases hroot m hm with hb | ⟨e,he,hq⟩
-  · exact Or.inl hb
+  · exact Or.inl (fun k d hk hd => Nat.le_trans (hb k d hk hd) hC)
   · by_cases hmatch : sameTable e.2 raw13 = true
     · have heq := sameTable_sound hmatch
       have hc : TNFQuotientCompatible raw13 m := heq ▸ hq
@@ -43,13 +44,13 @@ theorem graft_sound {roster : List Entry}
         exact List.mem_map.mpr ⟨r,hr,rfl⟩
     · exact Or.inr ⟨e,List.mem_flatMap.mpr ⟨e,he,by simp [graftEntry,hmatch]⟩,hq⟩
 
-theorem refined_count : refinedRoster.length = 1799 := by decide
+theorem refined_count : refinedRoster.length = 1798 := by decide
 
 theorem refined_sound (m : Machine) (hm : compatible BB6.Agent50TNFPilot.root m) :
-    WeightedBound 7014 m ∨ ∃ e ∈ refinedRoster, TNFQuotientCompatible e.2 m :=
-  graft_sound BB6.Agent47Canonical78.roster_sound m hm
+    WeightedBound 21269 m ∨ ∃ e ∈ refinedRoster, TNFQuotientCompatible e.2 m :=
+  graft_sound (by decide) BB6.Agent47Canonical78.roster_sound m hm
 
-theorem cover_at_target (B : Nat) (hB : 7014 ≤ B)
+theorem cover_at_target (B : Nat) (hB : 21269 ≤ B)
     (hLeaves : ∀ e ∈ refinedRoster, Cover (WeightedBound B) e.2) :
     Cover (WeightedBound B) BB6.CoverageAdapter.firstOneCylinder :=
   BB6.Agent47CanonicalFrontier.cover_of_quotient_roster hB refined_sound hLeaves

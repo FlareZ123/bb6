@@ -6,7 +6,7 @@ on:
       target:
         description: Proof target
         type: choice
-        options: [core, cut, corridor, ingest, pump0RE, late0RE]
+        options: [core, cut, corridor, ingest, pump0RE, late0RE, zeroRE]
         default: core
       source_ref:
         description: Exact source commit (optional)
@@ -38,9 +38,13 @@ jobs:
             ROOT="$D/Agent46Raw13Pump0RE.lean"
           elif [ "$TARGET" = late0RE ]; then
             ROOT="$D/Agent46Raw13Late0RE.lean"
+          elif [ "$TARGET" = zeroRE ]; then
+            python "$D/generate0RE.py"
+            ROOT="$D/Agent46Raw13ZeroRE.lean"
           elif [ "$TARGET" = core ]; then
             ROOT="$D/Agent46Raw13Base.lean"
           else
+            python "$D/generate0RE.py"
             python "$D/generate.py"
             ROOT="$D/Agent46Raw13Data.lean"
           fi
