@@ -4,7 +4,7 @@ on:
     inputs:
       target:
         type: choice
-        options: [twelve, five-hole, recursive, raw107-witness, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-child, raw58-cut, raw58-more, raw58-rc, raw58-child, raw109-cut, raw109-refine, raw109-refine6, raw109-refine7, raw109-refine8, raw109-refine9, raw109-refine12]
+        options: [twelve, five-hole, recursive, raw107-witness, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw107-parent-artifact, raw108-root-cut, raw108-witness, raw108-counter, raw108-child, raw58-cut, raw58-more, raw58-rc, raw58-child, raw109-cut, raw109-refine, raw109-refine6, raw109-refine7, raw109-refine8, raw109-refine9, raw109-refine12]
         default: twelve
       raw108_child:
         type: string
@@ -23,18 +23,31 @@ on:
         options: [0RD, 0RC, 0RE, 1RE, 1LC, 1LE, 1LB, 0RF, 1RF, 0LE, 0LF, 1LF]
         default: 0LF
 permissions:
-  contents: read
+  contents: write
+  actions: read
 jobs:
   check:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        if: inputs.target == 'raw107-parent-artifact'
+        with:
+          ref: proof-source/bb6-raw107-raw114-d416
+          path: pinned
       - name: Install Lean 4.36.0-rc2
         run: |
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        if: inputs.target == 'raw107-parent-artifact'
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45553564319
+          name: raw114-certified-root
+          path: /tmp/a47-raw114-certified
       - name: Generate and check exact original-source twelve-cylinder closure
         if: inputs.target == 'twelve'
         run: |
@@ -166,6 +179,152 @@ jobs:
           done
           python tools/lean_compile_closure.py --workdir /tmp/a10-raw107-parent --jobs 2 "$root/Raw107RosterBridge.lean" | tee /tmp/a10-raw107-parent.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a10-raw107-parent.log; then exit 1; fi
+      - name: Rebuild raw107 closure at pinned d416 and compare against raw114
+        if: inputs.target == 'raw107-parent-artifact'
+        run: |
+          set -euo pipefail
+          cp tools/lean_compile_closure.py pinned/tools/lean_compile_closure.py
+          cd pinned
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+
+          # Reconstruct the raw114 source graph at its actual proof-source revision.
+          cd im-results/agent47-raw114-cut
+          python paired_counter.py
+          python long_sweep.py
+          for branch in 0LA 0LB 0LC 0LF 0RA 0RB 0RC 0RF 1LA 1LB 1LC 1LF 1RA 1RB 1RC 1RF; do
+            python generate_complete.py "$branch"
+          done
+          python generate_complete.py --combine
+          cd ../..
+          python tools/lean_compile_closure.py \
+            --manifest-only --artifact-dir /tmp/a47-raw114-certified \
+            --manifest /tmp/a47-raw114-certified/manifest.json \
+            --label raw114-parent \
+            --theorem BB6.Agent47Raw114Complete.raw114_all \
+            --parent-table "1RB---_1RC---_0RD---_1LD1RE_---0LD_------" \
+            --weighted-bound 7014 --artifact-name raw114-certified-root \
+            --provenance-input im-results/agent13-coverage/unpack.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_sweeps.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_four_hole.py \
+            --provenance-input im-results/agent47-raw114-cut/paired_counter.py \
+            --provenance-input im-results/agent47-raw114-cut/long_sweep.py \
+            --provenance-input im-results/agent47-raw114-cut/multi_sweep.py \
+            --provenance-input im-results/agent47-raw114-cut/generate_complete.py \
+            --provenance-input im-results/agent47-raw114-cut/generate_far_cut.py \
+            --provenance-input im-results/agent47-raw114-cut/all-far-bank.txt \
+            --provenance-input im-results/agent47-raw114-cut/far-cut-bank.txt \
+            --provenance-input im-results/agent47-raw114-cut/pump-far-bank.txt \
+            --provenance-input im-results/agent47-raw114-cut/raw114-hard-manifest.txt \
+            --provenance-input im-results/agent47-raw114-cut/enumerate_cut.cpp \
+            --provenance-input im-results/agent47-raw114-cut/seeded_far.cpp \
+            im-results/agent47-raw114-cut/Raw114CompleteData.lean
+
+          # Reconstruct only the source modules required by the accepted raw107 parent.
+          root=im-results/agent11-raw107
+          python "$root/generate.py"
+          python "$root/generate_rc.py"
+          python "$root/generate_re.py"
+          python "$root/generate_more.py" 1RE 1LC 1LE 1LB 0RF 1RF 0LE
+          python "$root/generate_partial.py" 0LF 1LA 1LF
+          for prefix in Raw107RD Raw107RC Raw107RE Raw107B1RE Raw107B1LC Raw107B1LE Raw107B1LB Raw107B0RF Raw107B1RF Raw107B0LE Raw107B0LF Raw107B1LA Raw107B1LF; do
+            python im-results/agent10-tnf-multipump/chunk_checks.py "$root" "$prefix" --limit 180
+          done
+
+          python tools/lean_compile_closure.py \
+            --workdir /tmp/a10-raw107-parent-artifact --jobs 2 \
+            --manifest /tmp/a10-raw107-parent-artifact/manifest.json \
+            --label raw107-parent \
+            --theorem BB6.Agent11Raw107ParentClosure.all_completions \
+            --parent-table "1RB---_1RC---_0RD---_1LD1RE_---0RB_------" \
+            --weighted-bound 815 --artifact-name raw107-certified-root \
+            --provenance-input im-results/agent13-coverage/unpack.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_sweeps.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_four_hole.py \
+            --provenance-input im-results/agent10-tnf-multipump/chunk_checks.py \
+            --provenance-input im-results/agent11-raw107/generate.py \
+            --provenance-input im-results/agent11-raw107/generate_rc.py \
+            --provenance-input im-results/agent11-raw107/generate_re.py \
+            --provenance-input im-results/agent11-raw107/generate_more.py \
+            --provenance-input im-results/agent11-raw107/generate_partial.py \
+            --provenance-input im-results/agent11-raw107/specs_more.json \
+            --provenance-input im-results/agent11-raw107/specs_partial.json \
+            --provenance-input im-results/agent11-raw107/bank.txt \
+            --provenance-input im-results/agent11-raw107/bank.cpp \
+            --compare-manifest /tmp/a47-raw114-certified/manifest.json \
+            "$root/Raw107ParentClosure.lean" | tee /tmp/a10-raw107-parent-artifact.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a10-raw107-parent-artifact.log; then exit 1; fi
+      - name: Upload raw107 compiled source closure
+        id: upload_raw107
+        if: inputs.target == 'raw107-parent-artifact'
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw107-certified-root
+          path: /tmp/a10-raw107-parent-artifact
+          retention-days: 90
+          if-no-files-found: error
+      - name: Preserve both closure manifests and artifact metadata in Git
+        if: inputs.target == 'raw107-parent-artifact'
+        env:
+          GH_TOKEN: \${{ github.token }}
+          RAW107_ARTIFACT_ID: \${{ steps.upload_raw107.outputs.artifact-id }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import os
+          import urllib.request
+
+          repo = os.environ["GITHUB_REPOSITORY"]
+          token = os.environ["GH_TOKEN"]
+
+          def annotate(path, artifact_id):
+              request = urllib.request.Request(
+                  f"https://api.github.com/repos/{repo}/actions/artifacts/{artifact_id}",
+                  headers={
+                      "Accept": "application/vnd.github+json",
+                      "Authorization": f"Bearer {token}",
+                      "X-GitHub-Api-Version": "2022-11-28",
+                  },
+              )
+              with urllib.request.urlopen(request, timeout=30) as response:
+                  artifact = json.load(response)
+              workflow_run = artifact.get("workflow_run") or {}
+              with open(path, encoding="utf-8") as stream:
+                  manifest = json.load(stream)
+              manifest["artifact"] = {
+                  "id": artifact.get("id"),
+                  "name": artifact.get("name"),
+                  "size_in_bytes": artifact.get("size_in_bytes"),
+                  "created_at": artifact.get("created_at"),
+                  "expires_at": artifact.get("expires_at"),
+                  "retention_days": 90,
+                  "build_run_id": workflow_run.get("id"),
+                  "workflow_head_sha": workflow_run.get("head_sha"),
+                  "proof_source_revision": manifest.get("proof_source_revision"),
+              }
+              with open(path, "w", encoding="utf-8") as stream:
+                  json.dump(manifest, stream, indent=2, sort_keys=True)
+                  stream.write("\n")
+
+          annotate(
+              "/tmp/a10-raw107-parent-artifact/manifest.json",
+              os.environ["RAW107_ARTIFACT_ID"],
+          )
+          annotate(
+              "/tmp/a47-raw114-certified/manifest.json",
+              "14994284886",
+          )
+          PY
+          mkdir -p im-results/agent11-raw107/manifests
+          cp /tmp/a10-raw107-parent-artifact/manifest.json im-results/agent11-raw107/manifests/raw107-d416.json
+          cp /tmp/a47-raw114-certified/manifest.json im-results/agent11-raw107/manifests/raw114-d416.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add im-results/agent11-raw107/manifests/raw107-d416.json im-results/agent11-raw107/manifests/raw114-d416.json
+          git commit -m "Agent 11: preserve raw107 and raw114 closure manifests"
+          git push origin "HEAD:\${GITHUB_REF_NAME}"
       - name: Check raw58 0RC child closure and exact counter recurrences
         if: inputs.target == 'raw58-rc'
         run: |
