@@ -12,83 +12,6 @@ namespace BB6.Agent49Box18to24Bridge
 abbrev Parent := BB6.Agent13CrossRouteHeldLeaf109.firstOneB0_1LC
 abbrev ParentRemainder := BB6.Agent49BoxBridge.raw10Remainder
 
-/-- Literal machine layout shared with the hard-root crosswalk:
-    slot (q,b) is stored at index 2*q+b; none is a halt. -/
-def literalMachine (xs : List BB6Coverage.Transition) : BB6Coverage.Machine :=
-  fun s => xs[2*s.1.val + (if s.2 then 1 else 0)]?.getD none
-
-/-- The D0 seed from the raw10 hard-root crosswalk. Its only halt is F1. -/
-def D0 : BB6Coverage.Machine :=
-  literalMachine [
-    some ⟨true,true,1⟩, some ⟨false,true,4⟩,
-    some ⟨true,false,2⟩, some ⟨false,true,0⟩,
-    some ⟨true,false,0⟩, some ⟨true,false,3⟩,
-    some ⟨true,false,2⟩, some ⟨true,false,5⟩,
-    some ⟨false,false,2⟩, some ⟨false,false,1⟩,
-    some ⟨true,false,4⟩, none
-  ]
-
-/-- The D0 one-halt leaf: F1 is unassigned, all other rows remain fixed. -/
-def D0Leaf : BB6Coverage.PartialMachine :=
-  fun s => match D0 s with
-  | none => none
-  | some mv => some (some mv)
-
-theorem D0_halt_only : ∀ s, D0 s = none ↔ s = (5,true) := by decide
-
-theorem D0_parent : BB6Coverage.compatible Parent D0 := by decide
-
-theorem D0_fits_rect18 :
-    BB6.Agent49Box.Fits (BB6.Agent49Box18to24.rect 18) D0 := by decide
-
-theorem rect18_F1_unrestricted :
-    ∀ t : BB6Coverage.Transition,
-      t ∈ BB6.Agent49Box18to24.rect 18 (5,true) := by decide
-
-/-- Every completion of the D0 one-halt leaf lies in the A1=18
-    rectangle; the rectangle leaves F1 unrestricted. -/
-theorem D0Leaf_fits_rect18 (m : BB6Coverage.Machine)
-    (hm : BB6Coverage.compatible D0Leaf m) :
-    BB6.Agent49Box.Fits (BB6.Agent49Box18to24.rect 18) m := by
-  intro s
-  by_cases hs : s = (5,true)
-  · subst s
-    exact rect18_F1_unrestricted (m (5,true))
-  · have hnot : D0 s ≠ none := by
-      intro h
-      exact hs ((D0_halt_only s).mp h)
-    have hp : D0Leaf s = some (D0 s) := by
-      simp [D0Leaf, hnot]
-    have hms : m s = D0 s := hm s (D0 s) hp
-    simpa [hms] using D0_fits_rect18 s
-
-/-- Source-accepted bound for the entire D0 one-halt leaf, not just
-    its single halt-default completion. -/
-theorem D0_leaf_cover_598 :
-    BB6Coverage.Cover (BB6.Agent13BlankDelay.WeightedBound 598) D0Leaf := by
-  refine BB6Coverage.Cover.leaf _ ?_
-  intro m hm
-  exact BB6.Agent49Box18to24.rectBound 18 (by decide) m
-    (D0Leaf_fits_rect18 m hm)
-
-/-- The D0 leaf is genuinely inside the B0=1LC parent. -/
-theorem D0Leaf_parent :
-    ∀ m, BB6Coverage.compatible D0Leaf m →
-      BB6Coverage.compatible Parent m := by
-  intro m hm s t hp
-  have hD0 : D0 s = t := D0_parent s t hp
-  cases t with
-  | none =>
-      have hs : s = (5,true) := (D0_halt_only s).mp hD0
-      subst s
-      have hpar : Parent (5,true) = none := by decide
-      simp [hpar] at hp
-  | some mv =>
-      have hnot : D0 s ≠ none := by simp [hD0]
-      have hleaf : D0Leaf s = some (D0 s) := by simp [D0Leaf, hnot]
-      have hms : m s = D0 s := hm s (D0 s) hleaf
-      simpa [hD0] using hms
-
 /-- The seven source-checked rectangles are consumed inside the existing
     raw10 parent Cover. Every other raw10 remainder rectangle is retained
     explicitly through the `closedMatch = false` premise. -/
@@ -162,9 +85,6 @@ theorem exact_from_raw10_boxes18to24 (B : Nat) (hB : 7014 ≤ B)
     hRootCover champ
 
 #print axioms raw10_cover_after_boxes18to24
-#print axioms D0_parent
-#print axioms D0_leaf_cover_598
-#print axioms D0Leaf_parent
 #print axioms exact_from_raw10_boxes18to24
 
 end BB6.Agent49Box18to24Bridge
