@@ -27,32 +27,24 @@ def load():
     return spec
 
 def emit_ngram_group(spec, opens, target):
-    sys.path.insert(0,str(NG))
-    from emit_ngram import emit
-    exe=target/"ngram"
-    subprocess.run(["g++","-std=c++17","-O3",str(NG/"ngram.cpp"),"-o",str(exe)],check=True)
+    asym=ROOT.parent/"agent32-raw59"
+    sys.path.insert(0,str(asym))
+    from generate_asym import emit, BASE
+    exe=target/"ngram_asym"
+    subprocess.run(["g++","-std=c++17","-O3",str(asym/"ngram_asym.cpp"),"-o",str(exe)],check=True)
     ids=sorted(map(int,spec["ngram"]))
-    limit=max(max(spec["ngram"][str(i)][:2]) for i in ids)
-    inp="".join(f"{i} {opens[i]}\n" for i in ids)
-    out=subprocess.run([str(exe),str(limit)],input=inp,text=True,capture_output=True,check=True)
+    inp="".join(f"{i} {opens[i]} {spec['ngram'][str(i)][0]} {spec['ngram'][str(i)][1]}\n" for i in ids)
+    out=subprocess.run([str(exe)],input=inp,text=True,capture_output=True,check=True)
     certs=dict(l.split(maxsplit=1) for l in out.stdout.splitlines())
     assert set(map(int,certs))==set(ids),out.stderr
     for i in ids:
         mod=f"Raw108LBNGram{i}"
-        ns=f"BB6.Agent10{mod}"
-        body=emit(i,opens[i],certs[str(i)])
-        (ROOT/(mod+".lean")).write_text(f"""import NGramCertificate
-set_option maxRecDepth 100000
-set_option maxHeartbeats 0
-namespace {ns}
-open BB6Coverage BB6.Agent1NGram
-{body}
-abbrev table := p{i}
-theorem never (m : Machine) (hm : compatible table m) : NeverHalts m := never{i} m hm
-#print axioms never
-end {ns}
-""")
+        ns=f"{BASE}.{mod}"
+        data=certs[str(i)]
+        assert list(map(int,data.split()[:3]))==spec["ngram"][str(i)],(i,data.split()[:3],spec["ngram"][str(i)])
+        emit(ROOT,mod,opens[i],data)
         spec["manual"][str(i)]=[mod,ns,opens[i]]
+
 
 def emit_block(mod, ns, table, params):
     width=params["width"]
