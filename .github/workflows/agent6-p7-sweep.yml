@@ -39,6 +39,7 @@ jobs:
               successfulMoves: x.successfulMoves,
               entry: x.entry,
               period: x.period,
+              lassoSteps: x.lassoSteps,
               sideCycle: x.sideCycle
             }))
           }, null, 2));
