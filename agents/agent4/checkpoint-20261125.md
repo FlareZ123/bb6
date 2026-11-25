@@ -2,3 +2,6 @@
 
 ### 1LA and 0RC
 1LA candidate complete (bound 177): 1317 bank FAR, 41 ngrams, 18 single and 5 multi sweeps, two manual invariants 105 and 454. Both arbitrary-prefix theorems checked locally without sorry. Leaf 454 is a two-phase finite-word scan preserving (00|01)* at F-left boundary; scan stores 11/1110 blocks and return produces 00/0001. Leaf105 uses pair language and positive successor. Raw109Refinement10 retains 0LF,0RC,1LF under bound461. 0RC generated conditional bound1703 with only leaf172 unresolved; four late final-hole queries exact at 1479,1423,1560,1702. Source integration still pending.
+
+### 0RC and 1LF
+0RC candidate complete after long epoch 172 (start2050, four A-left boundary returns, central 1111 block grows, symbolic 486 steps independent of parameter), bound1703. 1LF candidate complete bound658: 2290 FAR,39 ngram,21 one sweeps,5 multi, one long epoch122, four manual leaves890/891/892/999 (locally Lean-checked two- and three-cell counter inductions). Only 0LF remains; conditional 24/25 branch coverage and replacement by one five-hole residual. New workflow raw109-refine12. Source integration still pending.
