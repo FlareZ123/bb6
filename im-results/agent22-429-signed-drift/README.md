@@ -84,3 +84,44 @@ termination theorem. In particular, the scan does not replace the
 formal `Closed` certificate needed by `branch29_lift`. The empirical
 logarithmic depth bound is a promising next proof target because the
 source-lift precision budget is linear in `k`.
+
+
+## Additional #429 branch families and mixed-path structure
+
+The manual signed-lift workflow now also compiles
+[Branch13_15.lean](Branch13_15.lean). It formalizes two exact first-pair
+reductions that are useful entry points for the branch-13 and branch-15
+families:
+
+- For U=24(2k+1), D=2U+18, there is no EF/SF guard at F-run lengths
+  0 or 1. After exactly two F blocks the endpoint is
+  (12k+6,312k+180), where SF is available, and SF outputs
+  (51k+31,78k+44). At that state k=0 mod 4 is terminal,
+  k=2 mod 4 admits immediate EF, and odd k admits only F.
+- For U=48k+39, D=2U+18, EF is immediately available and outputs
+  (60k+52,24k+28). SF is also available there; taking it gives
+  (63k+58,6k+6). At that state k=1 mod 4 is terminal,
+  k=3 mod 4 admits immediate EF, and even k admits only F.
+
+The same Lean file formalizes exact endpoint defect identities for a
+paired block followed by an m-block F-run. With q=2^m, pair input
+(v,d), and next pair input (w,e), the identities are:
+
+- EF: H_m(w,e)=2(w-v)+2+3m and H_m(v,d)=8q(w-v)-8.
+- SF: H_m(w,e)=2(w-v)-6+3m and H_m(v,d)=8q(w-v)-20.
+
+These are a compact arithmetic interface for mixed paths; see
+[ConstantRunObstruction.md](ConstantRunObstruction.md) for the resulting
+affine defect recurrence and its consequence: **no infinite signed path
+can have an eventually constant even F-run length**. The proof handles
+both eventually fixed pair type and eventually alternating pair type,
+including the exceptional m=0 boundary cases D=0 and D=4.
+
+This is stronger than the parity lemma but still not a mixed-path
+termination theorem. A hypothetical infinite path must keep changing
+its even F-run lengths infinitely often. The genuinely variable-run
+case remains open. The branch-13/15 first-pair specializations and defect
+identities are CI-checked in the manual workflow (run
+[45683408657](https://github.com/FlareZ123/bb6/actions/runs/45683408657),
+pinned Lean 4.36.0-rc2, success on 2026-11-25). The result remains
+intermediate and belongs in im-results, not results/.
