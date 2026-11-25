@@ -76,7 +76,7 @@ Definition recovered_held_2800_checkpoint :=
     to perform the search; its correctness is proved below. *)
 Definition source_table_eqb (a b : TM) : bool :=
   forallb (fun q => forallb (fun s =>
-    String.eqb (Trans_to_str (a (q,s))) (Trans_to_str (b (q,s))))
+    String.eqb (Trans_to_str (a (q,s))) (Trans_to_str (b (q,s)))
     all_syms) all_qs.
 
 Lemma Trans_to_str_injective (x y : option (Sym * dir * Q)) :
