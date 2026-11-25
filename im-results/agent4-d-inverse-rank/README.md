@@ -1,6 +1,6 @@
 # D machine: complete finite predecessor queries and strict E rank growth
 
-Agent 4, 24 November 2026. Kernel-checked original-source intermediate result, not a decision of a blank root.
+Agent 4, 24–25 November 2026. Kernel-checked original-source intermediate result, not a decision of a blank root.
 
 Literal machine: `1RB0RE_1LC0RA_1LA1LD_1LC1LF_0LC0LB_1LE---`.
 
@@ -41,6 +41,16 @@ The untrusted Python bounded_inverse.py implements the complete reverse of the s
 4. For fixed selected section target (N,s), enumerate k with 8k<=N. Write c=N-8k and e=e_type(s). B predecessors are n=3k+2, suffix 0 1^(c-9) s, when c>=9. A-close predecessors are n=3k+3, suffix 0 u 0 1^l s, where u is any concatenation of tokens 10 (weight 1) or 111 (weight 4), weight d, l=c-11-2d>=0. E predecessors are n=3k+4 and all E inverse suffixes when c equals their unique offset. A-to-E predecessors are n=3k+3, suffix 0 u 11 w_E, with d=(c-e-2)/2 a nonnegative integer. All strings are interpreted with implicit trailing zeros. The A token parse is unique by its prefix code. The symbolic families avoid materializing the exponentially many token strings. The exact number of strings of weight d obeys T(d)=T(d-1)+T(d-4), T(0)=1, T(negative)=0.
 
 This is a total finite mathematical inverse of any fixed selected section, using the previously certified forward recurrence and space bound. The Python graph implementation and the complete inverse composition have not been formalized in Lean. The code independently reproduced all 2,014 successful input words below 2^12 in 1,457 output fibers; 257 target sections were also checked against all bounded forward inputs (n=2..12, suffix <2^6), with all returned preimages checked forward. These finite tests are regressions, not the proof of the unbounded inverse algorithm.
+
+### Rank-bounded inverse grammar (25 November)
+
+The separate head-space estimate is unnecessary. The literal first-exit grammar has an immediate-left production and a right production with two children: Exit(r,w/2,s,z), Exit(s,2*z+b,r',y). The second child satisfies R(2*z+b)<=R(y)+4. Since pushing a bit onto nonzero z adds at least four rank units (and z=0 is trivial), R(z)<=R(y). Both child output ranks are therefore bounded by the parent output rank. Every answer has rank at most its own goal rank plus four.
+
+[InverseGrammar.lean](InverseGrammar.lean) imports the exact prior RankWidth module and proves inverse_child_rank, inverse_grammar_iff, inverse_finite_universe, and raw_inverse_iff. The latter includes a new primitive stack splicing proof and the reverse Exit-to-RawExit implication. For a fixed cap C the entire grammar contains at most 36*2^floor(C/4)*2^floor((C+4)/4) possible input/output facts. Least-fixed-point saturation therefore decides every inverse query without a duration or head-space cutoff. The equivalence is kernel checked for the literal RawExit model; the previous SourceAdapter transfers actual source exits into this model. A fresh converse transport from RawExit to Boundary.run is not asserted here.
+
+[inverse_grammar.py](inverse_grammar.py) implements demand-driven saturation rather than enumerating the entire rank ball. Immediate-left inverses seed each demanded goal; a newly discovered second-child answer generates a first-child demand and subscription, whose answers complete the right production. Deduplication and the rank theorem prove termination; induction over productions proves soundness and completeness. This implementation itself is not kernel verified. Differential regression checked all 3,602 successful output fibers from all six live states and input words below 1024, with equality to the older physical reverse graph and independent forward replay of all returned answers. The test did not establish a speed advantage.
+
+To reproduce the new theorem, unpack first-proof.tar.xz.b64 as in reproduce.sh, compile the existing dependency chain through RankWidth, copy InverseGrammar.lean into the build directory and run LEAN_PATH=. lean InverseGrammar.lean. All four printed theorems depend only on propext, Classical.choice, Quot.sound. For the Python test place inverse_grammar.py alongside the evaluator.py restored by the guard archive and run python3 inverse_grammar.py.
 
 ## Reproduction
 
