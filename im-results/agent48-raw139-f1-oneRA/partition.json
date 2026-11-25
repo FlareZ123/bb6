@@ -1,0 +1,385 @@
+{
+  "parent": [
+    7,
+    24,
+    11,
+    24,
+    14,
+    21,
+    3,
+    16,
+    12,
+    11,
+    24,
+    3
+  ],
+  "limit": 600,
+  "maxd": 3,
+  "counts": {
+    "maxquery": 536,
+    "split": 15,
+    "cycle": 87,
+    "open": 175,
+    "last": 84
+  },
+  "bound": 2074,
+  "recipes_sha256": "89a373807b419e332cf557857e8f375d016477a8f33cb7254940bfa433768b30",
+  "recipes_zlib_base64": "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",
+  "late": {
+    "13": [
+      667,
+      3
+    ],
+    "34": [
+      675,
+      10
+    ],
+    "35": [
+      2068,
+      10
+    ],
+    "39": [
+      1181,
+      10
+    ],
+    "42": [
+      1189,
+      10
+    ],
+    "45": [
+      605,
+      10
+    ],
+    "47": [
+      670,
+      3
+    ],
+    "52": [
+      662,
+      3
+    ],
+    "54": [
+      1070,
+      3
+    ],
+    "65": [
+      1395,
+      3
+    ],
+    "72": [
+      877,
+      3
+    ],
+    "80": [
+      1237,
+      10
+    ]
+  },
+  "far": {
+    "51": [
+      0,
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        1,
+        5,
+        4,
+        2,
+        5,
+        5,
+        5
+      ]
+    ],
+    "55": [
+      0,
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        1,
+        4,
+        5,
+        4,
+        4,
+        2,
+        4
+      ]
+    ],
+    "58": [
+      0,
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        1,
+        4,
+        1,
+        4,
+        4
+      ]
+    ],
+    "59": [
+      0,
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        1,
+        4,
+        1,
+        4,
+        4
+      ]
+    ],
+    "62": [
+      0,
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        1,
+        4,
+        1,
+        4,
+        4
+      ]
+    ],
+    "63": [
+      0,
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        1,
+        4,
+        1,
+        4,
+        4
+      ]
+    ],
+    "64": [
+      0,
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        1,
+        4,
+        1,
+        2,
+        5,
+        5,
+        5
+      ]
+    ],
+    "67": [
+      0,
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        1,
+        4,
+        1,
+        4,
+        4
+      ]
+    ],
+    "70": [
+      0,
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        1,
+        4,
+        1,
+        4,
+        4
+      ]
+    ],
+    "71": [
+      0,
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        1,
+        4,
+        1,
+        4,
+        4
+      ]
+    ],
+    "73": [
+      0,
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        1,
+        4,
+        1,
+        4,
+        4
+      ]
+    ],
+    "96": [
+      0,
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        1,
+        4,
+        1,
+        4,
+        4
+      ]
+    ],
+    "97": [
+      0,
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        1,
+        4,
+        1,
+        4,
+        4
+      ]
+    ],
+    "98": [
+      0,
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        1,
+        1,
+        1,
+        4,
+        4
+      ]
+    ],
+    "135": [
+      0,
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        1,
+        4,
+        1,
+        4,
+        4
+      ]
+    ],
+    "136": [
+      0,
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        1,
+        4,
+        1,
+        4,
+        4
+      ]
+    ],
+    "137": [
+      0,
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        1,
+        1,
+        1,
+        4,
+        4
+      ]
+    ],
+    "165": [
+      0,
+      [
+        0,
+        1,
+        2,
+        3,
+        2,
+        2,
+        0,
+        3
+      ]
+    ],
+    "168": [
+      0,
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        1,
+        4,
+        1,
+        4,
+        4
+      ]
+    ]
+  },
+  "remaining": [
+    46,
+    50,
+    61,
+    66,
+    68,
+    69,
+    74,
+    75,
+    82,
+    84,
+    85,
+    87,
+    95,
+    134
+  ]
+}
