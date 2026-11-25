@@ -1,6 +1,7 @@
 """Discover candidate specs for the four remaining raw60 children; no proof claims."""
 import hashlib
 import json
+from concurrent.futures import ProcessPoolExecutor
 import re
 import subprocess
 import sys
@@ -14,6 +15,24 @@ import multi
 
 def run(args, **kw):
     return subprocess.run(args, check=True, text=True, capture_output=True, **kw)
+
+def late_scan(item):
+    i, line = item
+    p = one.parse(line)
+    q = h = 0
+    tape = set()
+    for t in range(1000000):
+        state = 2*q + (h in tape)
+        move = p[state]
+        if move == "---":
+            return i, (t, state)
+        if move[0] == "1":
+            tape.add(h)
+        else:
+            tape.discard(h)
+        h += 1 if move[1] == "R" else -1
+        q = ord(move[2]) - 65
+    return i, None
 
 def main(a):
     target=ROOT/("discover_"+a)
@@ -55,22 +74,15 @@ def main(a):
     spec["ngram"]=[int(l.split()[0]) for l in ng.stdout.splitlines() if l.strip()]
     miss=[int(l.split()[0]) for l in ng.stderr.splitlines() if l.strip()]
     print("Ngram",len(spec["ngram"]),"remaining",len(miss),flush=True)
-    for i in miss:
-        p=one.parse(opens[i]); q=h=0;tape=set();hit=None
-        for t in range(1000000):
-            s=2*q+(h in tape);m=p[s]
-            if m=="---":
-                hit=(t,s)
-                break
-            if m[0]=="1":tape.add(h)
-            else:tape.discard(h)
-            h+=1 if m[1]=="R" else -1
-            q=ord(m[2])-65
-        if hit and opens[i].count("---")==1:
-            spec["late"][str(i)]=[*hit,opens[i]]
-            spec["bound"]=max(spec["bound"],hit[0]+6)
-        else:
-            spec["unresolved"][str(i)]=opens[i]
+    workers = min(2, __import__("os").cpu_count() or 1)
+    print("Late simulation workers",workers,flush=True)
+    with ProcessPoolExecutor(max_workers=workers) as pool:
+        for i, hit in pool.map(late_scan, [(i, opens[i]) for i in miss]):
+            if hit and opens[i].count("---")==1:
+                spec["late"][str(i)]=[*hit,opens[i]]
+                spec["bound"]=max(spec["bound"],hit[0]+6)
+            else:
+                spec["unresolved"][str(i)]=opens[i]
     print("RAW60SPEC "+a+" "+json.dumps(spec,separators=(",",":")),flush=True)
     (target/"spec.json").write_text(json.dumps(spec,indent=2)+"\n")
 
