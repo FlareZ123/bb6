@@ -25,3 +25,17 @@ The frame theorem and its exact-output corollary were tested locally with Lean 4
 - Shared canonical raw107/raw114/ champion audit: run 45591337117 was still compiling its shared closure at last check.
 
 Do not treat the pending runs or draft roster modules as source-accepted until their CI artifacts and theorem axiom profiles are available.
+
+
+## Canonical73 source-audit path (2026-11-25)
+
+The canonical74/73 draft now has a real consumer path in `.github/workflows/agent47-raw114-graft.yml`:
+
+- Dispatch with `target=canonical73` and `canonical76_run_id=<run containing raw107-canonical-shared-core>`.
+- The workflow downloads only the canonical77 + raw107 shared-core artifact, then regenerates Raw112, Raw117 and Raw110 source data and compiles `Canonical73Raw110Composition.lean` plus its complete dependency closure against that one core.
+- The job checks the exact 73-entry roster, raw112/raw110 parent membership, mixed-bound soundness, theorem axiom profiles (allowing only `propext`, `Classical.choice`, `Quot.sound`), and records source/compiler/object-manifest hashes.
+- It does not depend on the separate raw112 shard artifacts and does not rerun the expensive canonical76 base build. All 73 retained Covers remain explicit premises, so even a passing run is a conditional roster theorem, not an exact BB(6) result.
+
+Run `45653927442` is the first consumer attempt. It uses the early `raw107-canonical-shared-core` artifact from run `45632293194` (artifact `15033523473`, 190,965,153 bytes). Run 456322 failed later in its canonical76 consumer step, but the shared-core artifact had already been uploaded. At 16:27 UTC run 45653927442 was reconstructing Raw112/Raw117/Raw110 source data; no source-acceptance claim is made until its final Lean and axiom audit succeeds.
+
+The raw112 full parent audit run `45646559852` failed on runner shutdowns (exit 143) in several shards, without Lean theorem diagnostics. The canonical73 consumer deliberately regenerates and recompiles Raw112 from committed sources against the canonical shared core rather than reusing those failed shard artifacts. Raw110 parent source is restored from artifact run `45593652030`.
