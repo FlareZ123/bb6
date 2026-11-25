@@ -7,6 +7,11 @@ on:
         description: Audit isolated F0 sibling certificates
         type: boolean
         default: false
+      raw121_graft_run_id:
+        description: Optional successful Agent11 run ID for raw121-canonical76-graft-proof
+        type: string
+        required: false
+        default: ""
 
 permissions:
   contents: read
@@ -204,7 +209,57 @@ jobs:
                   raise SystemExit(f"nonstandard axioms: {name}: {used-allowed}")
               print(f"{name}: {sorted(used)}")
           PY
-      - name: Download accepted canonical77 proof artifact
+      - name: Download source-accepted Raw121 canonical76 graft artifact
+        if: ${{ inputs.raw121_graft_run_id != '' }}
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.raw121_graft_run_id }}
+          name: raw121-canonical76-graft-proof
+          path: /tmp/a11-canonical76
+      - name: Compile raw139 integration against canonical76 after Raw121 graft
+        if: ${{ inputs.raw121_graft_run_id != '' }}
+        run: |
+          set -euo pipefail
+          for required in Raw121Canonical77Graft.olean Raw121Data.olean CanonicalRaw114Accepted.olean CanonicalTwoParentGraft.olean Raw114CompleteData.olean; do
+            test -s "/tmp/a11-canonical76/$required"
+          done
+          export LEAN_PATH="/tmp/a11-canonical76:/tmp/a6-champion-residual/build${LEAN_PATH:+:$LEAN_PATH}"
+          lean -o /tmp/a6-champion-residual/build/ChampionResidualCanonical76Integration.olean \
+            im-results/agent6-champion-residual/ChampionResidualCanonical76Integration.lean | tee /tmp/a6-canonical76.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a6-canonical76.log; then
+            echo "Forbidden proof placeholder or native_decide found in canonical76/raw139 composition" >&2
+            exit 1
+          fi
+          python3 - /tmp/a6-canonical76.log <<'PY'
+          import pathlib, re, sys
+          log = pathlib.Path(sys.argv[1]).read_text()
+          allowed = {"propext", "Classical.choice", "Quot.sound"}
+          names = (
+              "BB6.Agent6Canonical76ChampionIntegration.raw121_parent_not_raw139",
+              "BB6.Agent6Canonical76ChampionIntegration.championResidual_mem_canonical76",
+              "BB6.Agent6Canonical76ChampionIntegration.championResidual_unique_canonical76",
+              "BB6.Agent6Canonical76ChampionIntegration.championResidual_unique_by_table",
+              "BB6.Agent6Canonical76ChampionIntegration.canonical76_other_address_count",
+              "BB6.Agent6Canonical76ChampionIntegration.cover_championResidual_from_raw139_leaves",
+              "BB6.Agent6Canonical76ChampionIntegration.refinedCanonical76Roster_count",
+              "BB6.Agent6Canonical76ChampionIntegration.exact_from_canonical76_and_raw139_leaves",
+          )
+          for name in names:
+              pattern = r"'" + re.escape(name) + r"' depends on axioms: \[([^\]]*)\]"
+              match = re.search(pattern, log)
+              if match:
+                  used = {x.strip() for x in match.group(1).split(",") if x.strip()}
+              elif "'" + name + "' does not depend on any axioms" in log:
+                  used = set()
+              else:
+                  raise SystemExit("missing axiom audit: " + name)
+              if not used <= allowed:
+                  raise SystemExit(f"nonstandard axioms: {name}: {used - allowed}")
+              print(name, sorted(used))
+          PY
+      - name: Download accepted canonical77 proof artifact (fallback)
+        if: ${{ inputs.raw121_graft_run_id == '' }}
         uses: actions/download-artifact@v4
         with:
           github-token: ${{ github.token }}
@@ -212,6 +267,7 @@ jobs:
           name: canonical77-certified
           path: /tmp/a47-canonical
       - name: Compile raw139 integration against the accepted canonical77 roster
+        if: ${{ inputs.raw121_graft_run_id == '' }}
         run: |
           set -euo pipefail
           for required in CanonicalTwoParentGraft.olean CanonicalRaw114Accepted.olean Raw114CompleteData.olean; do
