@@ -82,6 +82,8 @@ The new draft `ChampionResidualCanonical77Integration.lean` imports the accepted
 
 This is the current intended global composition, but it is **not source-accepted** until the combined workflow verifies the finite membership/count theorems, the cross-artifact Lean compilation, and all axiom profiles. The exact membership test may expose a mismatch; if so, repair the address/table transport rather than assuming the roster entry exists.
 
+A separate, smaller 73-roster route is drafted in `im-results/agent47-rooted-tnf/Canonical73Raw110Composition.lean`, using the accepted raw110 parent cover on top of a 74-roster. The current `agent47-raw114-graft.yml` copies this source but does not compile it or import the raw110 artifact, so the 73 interface is not source-accepted and does not replace the canonical77 target here.
+
 ## Reproduction and next work
 
 - Main frontier: `ChampionResidualFrontier.lean`
