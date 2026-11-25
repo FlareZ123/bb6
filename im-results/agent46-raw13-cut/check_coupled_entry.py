@@ -73,7 +73,7 @@ def jump(l,w):
     for j in range(hi): out[3*j:3*j+3]=[0,0,((v+d)>>j)&1]
     return enc(y)|(u<<(4*m)),tuple(out),d
 
-def guard(l,w): return l==1 and len(w)>=10 and w[:3]==(1,)*3 and w[-7:]==(0,)*6+(1,)
+def guard(l,w): return l==1 and len(w)>=13 and w[:3]==(1,)*3 and w[-10:]==(0,)*9+(1,)
 
 def certificate():
     l,w=1,()
