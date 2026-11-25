@@ -483,7 +483,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        child: ${{ fromJSON(inputs.raw59_child == 'CanonicalAll' && '["0RB","0LD","1RC","0RC","0RF","1LA","1RF","0RD","1LC","1RB","1RD","0LC","0RE","CanonicalBase"]' || (inputs.raw59_child == 'UpgradeAll' && '["Upgrade0LA","Upgrade0LB","Upgrade0LE","Upgrade0LF","Upgrade1LB","Upgrade1LE","Upgrade1LF"]' || inputs.raw59_child == 'AsymAll' && '["Asym0LB","Asym1LB","Asym1LE"]' || inputs.raw59_child == 'PartialAll' && '["Partial0LA","Partial0LB","Partial0LE","Partial0LF","Partial1LB","Partial1LE","Partial1LF"]' || format('["{0}"]', inputs.raw59_child))) }}
+        child: ${{ fromJSON(inputs.raw59_child == 'CanonicalAll' && '["0RB","0LD","1RC","0RC","0RF","1LA","1RF","0RD","1LC","1RB","1RD","0LC","0RE","CanonicalBase"]' || (inputs.raw59_child == 'UpgradeAll' && '["Upgrade0LA","Upgrade0LB","Upgrade0LE","Upgrade0LF","Upgrade1LB","Upgrade1LE","Upgrade1LF","ClosedBase"]' || inputs.raw59_child == 'AsymAll' && '["Asym0LB","Asym1LB","Asym1LE"]' || inputs.raw59_child == 'PartialAll' && '["Partial0LA","Partial0LB","Partial0LE","Partial0LF","Partial1LB","Partial1LE","Partial1LF"]' || format('["{0}"]', inputs.raw59_child))) }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -530,6 +530,9 @@ jobs:
               python im-results/agent32-macro-far/unpack.py
               python im-results/agent32-macro-far/emit_source.py im-results/agent32-macro-far/pilot.txt im-results/agent32-macro-far/MacroFARPilot.lean
               target=im-results/agent32-macro-far/MacroFARPilot.lean ;;
+            ClosedBase)
+              python im-results/agent32-raw59/generate.py 0RB 0LD 1RC 0RC 0RF 1LA 1RF 0RD 1LC 1RB 1RD 0LC 0RE
+              target=im-results/agent32-raw59/Raw59ClosedBranches.lean ;;
             CanonicalPilot|CanonicalBase)
               python im-results/agent10-tnf-raw87/generate.py
               python im-results/agent10-tnf-raw91/generate.py
@@ -556,8 +559,28 @@ jobs:
             0RB|0LD|0RC|1RC|0RF|1LA|1RF|0RD|1LC|1RB|1RD|0LC|0RE) python im-results/agent32-raw59/generate.py "$RAW59_CHILD"; target="im-results/agent32-raw59/generated_$RAW59_CHILD/Raw59A${RAW59_CHILD}Data.lean" ;;
             *) exit 2 ;;
           esac
-          python tools/lean_compile_closure.py --workdir /tmp/a32-raw59 --jobs 4 "$target" | tee /tmp/a32-raw59.log
+          extra=()
+          case "$RAW59_CHILD" in
+            Upgrade*)
+              child="${RAW59_CHILD#Upgrade}"
+              claim="BB6.Agent32Raw59Upgrade${child}.bound"
+              extra=(--manifest /tmp/a32-raw59/manifest.json --artifact-name "raw59-checked-$RAW59_CHILD" --theorem "$claim")
+              ;;
+            ClosedBase)
+              claim=BB6.Agent32Raw59CanonicalAll.closed_sound
+              extra=(--manifest /tmp/a32-raw59/manifest.json --artifact-name "raw59-checked-$RAW59_CHILD" --theorem "$claim")
+              ;;
+          esac
+          python tools/lean_compile_closure.py --workdir /tmp/a32-raw59 --jobs 4 "${extra[@]}" "$target" | tee /tmp/a32-raw59.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a32-raw59.log; then exit 1; fi
+          if [[ "${#extra[@]}" -gt 0 ]]; then
+            if [[ "$RAW59_CHILD" == Upgrade* ]]; then
+              residual="im-results/agent32-raw59/upgrade_$child/residual.txt"
+              test -f "$residual" && test ! -s "$residual"
+            fi
+            python im-results/agent32-raw59/check_axioms.py /tmp/a32-raw59.log "$claim"
+            cp /tmp/a32-raw59.log /tmp/a32-raw59/audit.log
+          fi
 
       - name: Preserve exact unresolved source tables
         if: ${{ startsWith(matrix.child, 'Partial') || startsWith(matrix.child, 'Upgrade') }}
@@ -567,6 +590,18 @@ jobs:
           path: |
             im-results/agent32-raw59/partial_*/residual.txt
             im-results/agent32-raw59/upgrade_*/residual.txt
+          if-no-files-found: error
+          retention-days: 7
+      - name: Preserve checked modules for parent composition
+        if: ${{ inputs.raw59_child == 'UpgradeAll' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw59-checked-${{ matrix.child }}
+          path: |
+            /tmp/a32-raw59/*.lean
+            /tmp/a32-raw59/*.olean
+            /tmp/a32-raw59/manifest.json
+            /tmp/a32-raw59/audit.log
           if-no-files-found: error
           retention-days: 7
       - name: Preserve checked modules for canonical composition
@@ -612,3 +647,42 @@ jobs:
           PY
           LEAN_PATH=/tmp/raw59-combined lean im-results/agent32-raw59/Raw59CanonicalAll.lean | tee /tmp/raw59-combined.log
           if grep -Eq 'sorryAx|native_decide' /tmp/raw59-combined.log; then exit 1; fi
+
+  raw59-parent-composition:
+    if: ${{ inputs.verify_raw59 && inputs.raw59_child == 'UpgradeAll' }}
+    needs: raw59-refinement
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw59-checked-*
+          path: /tmp/raw59-shards
+      - name: Validate shard closure and compose raw59 parent bound
+        run: |
+          set -euo pipefail
+          python im-results/agent4-raw109/merge_shards.py /tmp/raw59-shards /tmp/raw59-merged im-results/agent32-raw59/parent_shards.json
+          python tools/lean_compile_closure.py --workdir /tmp/raw59-final --jobs 4 \
+            --precompiled-manifest /tmp/raw59-merged/manifest.json --precompiled-dir /tmp/raw59-merged \
+            --manifest /tmp/raw59-final/manifest.json --artifact-name raw59-parent-certified \
+            --theorem BB6.Agent32Raw59UpgradeAll.bound --parent-table '1RB---_1RC---_0RD---_1LD1RE_---1LA_------' \
+            --weighted-bound 4200000 im-results/agent32-raw59/Raw59ParentCover.lean | tee /tmp/raw59-final.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/raw59-final.log; then exit 1; fi
+          python im-results/agent32-raw59/check_axioms.py /tmp/raw59-final.log BB6.Agent32Raw59UpgradeAll.bound
+          cp /tmp/raw59-final.log /tmp/raw59-final/audit.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw59-parent-certified
+          path: |
+            /tmp/raw59-final/*.lean
+            /tmp/raw59-final/*.olean
+            /tmp/raw59-final/manifest.json
+            /tmp/raw59-final/audit.log
+          if-no-files-found: error
+          retention-days: 30

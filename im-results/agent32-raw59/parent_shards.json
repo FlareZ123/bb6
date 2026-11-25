@@ -1,0 +1,29 @@
+{
+  "artifact_prefix": "raw59-checked",
+  "groups": {
+    "ClosedBase": [
+      "Raw59ClosedBranches"
+    ],
+    "Upgrade0LA": [
+      "Raw59Upgrade0LAData"
+    ],
+    "Upgrade0LB": [
+      "Raw59Upgrade0LBData"
+    ],
+    "Upgrade0LE": [
+      "Raw59Upgrade0LEData"
+    ],
+    "Upgrade0LF": [
+      "Raw59Upgrade0LFData"
+    ],
+    "Upgrade1LB": [
+      "Raw59Upgrade1LBData"
+    ],
+    "Upgrade1LE": [
+      "Raw59Upgrade1LEData"
+    ],
+    "Upgrade1LF": [
+      "Raw59Upgrade1LFData"
+    ]
+  }
+}
