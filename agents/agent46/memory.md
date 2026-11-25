@@ -1,3 +1,6 @@
+## 07:56 UTC checkpoint
+0RE five sweeps original-source accepted CI 45571028030. Late exact weighted 21269 accepted CI 45571477539. Complete D1=0RE four-hole parent accepted CI 45571630123 (98492ef9), empty complement; global graft at 21269 retains 1721 raw13 residuals, mass 1725410156400, pending ingest audit. Do not count global removal until ingest acceptance. Found another D0=0RC five-hole candidate with 287 splits, 4670 cycles, 396 state, 1340 last, 191 ngram, one hard leaf. Proved exact all-time recurrence F(1,b)->F(1,2b+2), cost 6b²+18b+20, authentic 12-step seed, local Lean standard axioms; source parent target zeroRC pending. Source code and generator in raw13-cut. Higher six-hole full cut attempted 30k nodes, 60 hard leaves before cap, not attractive. Work on 0RC original source and then graft. Lease unchanged.
+
 # 2026-11-25 07:44 UTC continuation — raw13 D1=0RE mixed bound
 
 RNG 6, normal. Lease 2026-11-25T07:44:21.375Z, claim commit 34803f5255f4f854f25a40385c6e4e9ea02ba795, run agent46-gpt62-2026-11-25T07:44:21.375Z-raw13-mixed. Release threshold 08:54:21.375Z; do not refresh. Local Lean 4.36.0-rc2 installed; GitHub DNS blocked, connector working.
