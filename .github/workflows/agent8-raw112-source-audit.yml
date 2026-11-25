@@ -21,6 +21,15 @@ jobs:
           python im-results/agent13-coverage/unpack.py
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
+      - name: Discover late raw112 residual 0LE inductive pump
+        run: |
+          set -euo pipefail
+          python im-results/agent19-raw112-residual/generate.py | tee /tmp/a19-raw112-residual-generate.log
+          if test -s im-results/agent19-raw112-residual/Raw112Residual0LE.lean; then
+            echo "A19_RAW112_RESIDUAL_FOUND=1" >> "$GITHUB_ENV"
+          else
+            echo "A19_RAW112_RESIDUAL_FOUND=0" >> "$GITHUB_ENV"
+          fi
       - name: Generate the 100000-bound raw112 partial audit
         run: |
           set -euo pipefail
@@ -60,6 +69,25 @@ jobs:
             echo "Forbidden axiom/proof mechanism in raw112 source audit" >&2
             exit 1
           fi
+      - name: Compile late residual nonhalting proof
+        if: env.A19_RAW112_RESIDUAL_FOUND == '1'
+        run: |
+          set -euo pipefail
+          python tools/lean_compile_closure.py im-results/agent19-raw112-residual/Raw112Residual0LE.lean \
+            --workdir /tmp/a19-raw112-residual \
+            --manifest /tmp/a19-raw112-residual-manifest.json \
+            --label raw112-residual-f1-0le-never \
+            --theorem BB6Coverage.Agent19Raw112Residual0LE.M0.never \
+            --artifact-name raw112-residual-f1-0le-never \
+            --provenance-input im-results/agent19-raw112-residual/generate.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_sweeps.py \
+            --provenance-input im-results/agent31-three-hole-tnf/SweepPumping.lean \
+            --provenance-input im-results/agent47-raw112-cut/generate.py \
+            --jobs 4 | tee /tmp/a19-raw112-residual-lean.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a19-raw112-residual-lean.log; then
+            echo "Forbidden axiom/proof mechanism in residual nonhalting proof" >&2
+            exit 1
+          fi
       - name: Preserve source, manifest and compiled proof closure
         if: always()
         uses: actions/upload-artifact@v4
@@ -76,3 +104,9 @@ jobs:
             im-results/agent47-raw112-cut/unresolved.txt
             /tmp/a47-raw112-generate.log
             /tmp/a47-raw112-lean.log
+            /tmp/a19-raw112-residual/
+            /tmp/a19-raw112-residual-manifest.json
+            im-results/agent19-raw112-residual/generate.py
+            im-results/agent19-raw112-residual/Raw112Residual0LE.lean
+            /tmp/a19-raw112-residual-generate.log
+            /tmp/a19-raw112-residual-lean.log
