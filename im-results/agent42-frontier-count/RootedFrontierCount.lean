@@ -91,13 +91,13 @@ theorem residuals_buildFrontierB (B : Nat) :
         (.expand hp hr hhole' hw (fun actual =>
           if heq : actual = mv then
             by
-              subst actual
               simpa [heq] using
                 (buildFrontierB B (refine p (readSlot c) (some mv))
-                  (advanceCut cut mv) (RawRootPath.step hp hr hhole')
+                  (advanceCut cut mv)
+                  (RawRootPath.step (mv := mv) hp hr hhole')
                   xs htail' cert')
           else
-            .residual (RawRootPath.step hp hr hhole'))) =
+            .residual (RawRootPath.step (mv := actual) hp hr hhole'))) =
         pureResiduals p ((n,s,mv) :: xs)
       simp only [residuals, pureResiduals]
       apply flatMap_congr
