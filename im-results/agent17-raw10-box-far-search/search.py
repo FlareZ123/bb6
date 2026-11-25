@@ -266,7 +266,7 @@ def main() -> None:
                     item["compile_error"] = f"{type(exc).__name__}: {exc}"
         results.append(item)
         reason = item.get("error", "")
-        generator_tail = item.get("generator_log", "").strip().replace("\\n", " | ")[-240:]
+        generator_tail = item.get("generator_log", "").strip().replace("\n", " | ")[-240:]
         print(
             f"box={i:02d} fixed={len(fixed_slots):2d} mass={mass} "
             f"generator={item['generator']} compiled={item['compiled']} table={table} "
