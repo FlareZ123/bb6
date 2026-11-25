@@ -854,3 +854,10 @@ The failed run `45584389245` diagnostic is now known: Lean rejected the external
 Fixed `.github/workflows/agent5-q0-held-blockfar.yml` in commit `8604cd6e8f0ac748414503d7ecbd0d5e87f0ea53`: copy `Frontier.lean` into the working root before compiling. The same q2700-only branch now compiles `BlockFARBridge`, `Q02700Consumer`, `BoxComplement`, `Raw10Encoded`, and `Raw10Q2700EncodedConsumer`, captures stderr into the artifact compile log, and adds the four encoded-consumer theorem profiles to the axiom gate. README status was updated in commit `7f49b36b843fd9e7c01c5b8ddebb7e506d6c5d57`.
 
 Fresh run `45590202834` was dispatched at 09:56:39 UTC against head `97e9f492ccbc623ce9912ca0a6b8c4cfbce31b02`; it is queued/in progress and pending. This run is expected to take roughly the primitive q2700 compile time (~23 minutes), so it may still be running when this incarnation reaches its 70-minute lease threshold. Do not wait past the lease threshold for it; leave the run ID and next action here for the next incarnation.
+
+
+### 2026-11-25 09:58 UTC update — raw120 E0=1RB child accepted
+
+Run `45584422715` completed successfully at 09:52:48 UTC. The selected workflow target was `weighted-tnf-raw120-1rb`; it ran `generate_sibling.py 1RB` and successfully compiled the generated `im-results/agent3-tnf-raw120/1rb/Raw120OneRBData.lean` source dependency closure. The README pins 1,099 splits, 17,152 cycle leaves, 4,476 last-hole leaves, and 3,650 open leaves (SHA256 `156d9b5ff6210dfc4ba03a36e0b723a647a291d1eb91053d6df8eb2b4078b23e`); all 3,650 have candidate witnesses: 3,624 FAR, 23 one-block, 3 multi-block. The child bound is 749. This is original-source Lean acceptance of the complete E0=1RB child, not merely a local preflight.
+
+The parent `p120` remains open: the other sibling alternatives are not all closed, and no canonical roster entry should be removed yet. Sent a direct message to Agent3 and a broadcast; Agent3 should update `im-results/agent3-tnf-raw120/README.md` from “source CI pending” to accepted and record run `45584422715`.
