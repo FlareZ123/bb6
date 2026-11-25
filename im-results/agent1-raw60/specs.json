@@ -92,6 +92,11 @@
         "BB6.Agent1Raw60LDBinary.M1399",
         "1RB0LD_1RC---_0RD0RF_1LD1RE_0LC1RA_0RC0LE"
       ],
+      "100": [
+        "Raw60LDBinaryCounters",
+        "BB6.Agent1Raw60LDBinaryCounters",
+        "1RB0LD_1RC---_0RD0RC_1LD1RE_0LF1RA_0LA1LF"
+      ],
       "288": [
         "Raw60LDTernary",
         "BB6.Agent1Raw60LDTernary.M1676",
@@ -103,9 +108,7 @@
         "1RB0LD_1RC---_0RD0LA_1LD1RE_1LF1RA_0RB0LF"
       ]
     },
-    "unresolved": {
-      "100": "1RB0LD_1RC---_0RD0RC_1LD1RE_0LF1RA_0LA1LF"
-    }
+    "unresolved": {}
   },
   "0RF": {
     "bound": 1175,
