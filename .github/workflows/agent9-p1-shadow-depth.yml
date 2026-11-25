@@ -4,7 +4,7 @@ on:
     inputs:
       target:
         type: choice
-        options: [shadow, first-return, batch-carry, batch-chunks, pair-carry, reverse-live, reverse-live-block, reverse-live-block-30, long-cone-lag, forward-block, carry-aperiodic]
+        options: [shadow, first-return, batch-carry, batch-chunks, pair-carry, reverse-live, reverse-live-block, reverse-live-block-30, reverse-block-digit-weight, long-cone-lag, forward-block, carry-aperiodic]
         default: shadow
       source_ref:
         description: Exact source commit (optional; defaults to dispatch SHA)
@@ -162,6 +162,33 @@ jobs:
           from pathlib import Path
           log = Path('/tmp/reverse-live-block.log').read_text()
           for name in ("extend_to_walk", "blockLookahead_sound", "covered_next_block", "cert_next_block"):
+              m = re.search(r"'BB6\.Agent45ReverseBlock\."+re.escape(name)+r"' depends on axioms:\s*\[([^\]]*)\]", log)
+              if not m and re.search(r"'BB6\.Agent45ReverseBlock\."+re.escape(name)+r"' does not depend on any axioms", log):
+                  print(name, [])
+                  continue
+              if not m:
+                  raise SystemExit("Missing axiom profile: "+name)
+              axioms = {a.strip() for a in m.group(1).split(",") if a.strip()}
+              if not axioms <= {"propext", "Classical.choice", "Quot.sound"}:
+                  raise SystemExit(f"Unexpected axioms in {name}: {axioms}")
+              print(name, sorted(axioms))
+          PY
+
+      - name: Check reverse-block digit-weight remainder identity
+        if: inputs.target == 'reverse-block-digit-weight'
+        run: |
+          set -euo pipefail
+          D="im-results/agent45-p1-delayed-carry"
+          export LEAN_PATH="$D:im-results/agent9-p1-first-return:im-results/agent28-p1-modular-screen:im-results/agent28-p1-delayed-carry"
+          lean --version
+          git rev-parse HEAD
+          python tools/lean_compile_deps.py "$D/ReverseBlockDigitWeight.lean" | tee /tmp/reverse-block-digit-weight.log
+          if grep -E 'sorryAx|native_decide|error:' /tmp/reverse-block-digit-weight.log; then exit 1; fi
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          log = Path('/tmp/reverse-block-digit-weight.log').read_text()
+          for name in ("corr_add_digitWeight", "candidate_remainder_eq"):
               m = re.search(r"'BB6\.Agent45ReverseBlock\."+re.escape(name)+r"' depends on axioms:\s*\[([^\]]*)\]", log)
               if not m and re.search(r"'BB6\.Agent45ReverseBlock\."+re.escape(name)+r"' does not depend on any axioms", log):
                   print(name, [])
