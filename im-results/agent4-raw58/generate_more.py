@@ -182,7 +182,7 @@ def build_child(key,spec):
             for i in unclassified:
                 try:
                     proc=subprocess.run([str(sparse_exe),str(width)],
-                        input=f"{i} {opens[i]}\\n",text=True,capture_output=True,
+                        input=f"{i} {opens[i]}\n",text=True,capture_output=True,
                         check=True,timeout=90)
                     fields=proc.stdout.strip().split(maxsplit=1)
                     if len(fields)!=2: raise ValueError("missing sparse certificate output")
