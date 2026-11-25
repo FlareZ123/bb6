@@ -83,8 +83,7 @@ theorem exact_at_target77 (B : Nat) (hB : 21269 ≤ B)
 /-- The 25² hard-root D3 cylinder is a refinement of exactly one
     open residual in the current raw13 cut. This identifies the descendant
     without claiming that the surrounding six-hole residual is closed. -/
-def d3Leaf : PartialMachine :=
-  BB6.Agent47WeightedHalt.forgetHaltRows BB6.Agent19HardRoot.D3
+def d3Leaf : PartialMachine := BB6.Agent46Raw13D3.d3Leaf
 
 def d3ResidualCandidates : List Entry :=
   raw13Residuals.filter (fun e => tableOK e.2 d3Leaf)
@@ -103,7 +102,7 @@ theorem d3ResidualEntry_refines_hardroot :
     are separately covered. -/
 theorem d3Leaf_weightedBound :
     Cover (BB6.Agent47WeightedHalt.WeightedBound 24) d3Leaf :=
-  BB6.Agent19HardRoot.D3_cover24
+  BB6.Agent46Raw13D3.D3_cover24
 
 #print axioms parent_count77
 #print axioms refined_count77
