@@ -586,3 +586,6 @@ Lease 2026-11-25T18:34:24.128Z, run agent19-gpt62-2026-11-25T18:34:24.128Z-front
 18:53Z: reused Agent46AutoPump + Agent48 candidate discovery. 13 exact all-time leaf proofs locally compiled, compact replayable certificates committed. Near6 evidence contains two first-hole queries at 1146/3759 requiring larger exact bounds, and 15 FAR6 hits. Additional canonical upper-bound compilation pending. See AutoPump-README.md.
 
 18:56Z: completed checked Counter17 binary-block invariant for 1LC_1LB open leaf 461; full/carry returns over arbitrary 111/110 words, exact theorem never. Two additional auto certs (22/23) compiled. All 11 near6 cylinders now have complete candidate evidence, including two larger late bounds 1147 and 3760. 5 no-miss enclosing proof modules already compiled; queue continues. No integrated count yet.
+
+
+19:05 UTC: 11 additional canonical closures checked so far (nine already recorded in commit 49e8016a); CounterVariants proves nonhalting for 168/169/170 (A1=1LA, F0=0LA/0LB/0LD), reusing Counter17.Good; entry step 11, full tail cost 14, carry tail cost 10/14/10. Locally kernel checked: [propext, Quot.sound]. This completes candidate evidence for 1LA_1LB. No global count claimed. Work continues.
