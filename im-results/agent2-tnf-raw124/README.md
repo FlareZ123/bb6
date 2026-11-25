@@ -46,7 +46,7 @@ Last attempt: run 45615959400 (`raw124_bundle_prepare` job 139211302469) ended c
 
 For `1RB---_1RC---_0RD---_1LD1RE_---1LF_---0LF`, a versioned-tape search at cap 3000 and 32 candidate predecessors found 30,026 exact translated side-cycle leaves, 13,104 last-hole leaves, 1,961 splits and 1,974 open leaves. The respective completion masses are 8,475,650 cycle, 1,048,625 bounded (including halt choices at splits), and 241,350 open, totaling 9,765,625. The maximum observed hole query was at 2,925 moves, giving a conservative candidate weighted bound of 2,931 for the bounded part. This partition is a discovery output, not yet a source-checked audit. The open complement must be retained.
 
-The first new hole is F0 at move 9. In its 1RB child, the partition has 75 splits, 1,379 cycle leaves, 287 last-hole leaves and 60 open leaves. Existing FAR search produces 53 candidate certificates among those 60. Two further one-hole leaves have parametric block-growth certificates in [Raw124ZeroLFBlockGrowth.lean](Raw124ZeroLFBlockGrowth.lean):
+The first new hole is F0 at move 9. In its 1RB child, the partition has 75 splits, 1,379 cycle leaves, 287 last-hole leaves and 60 open leaves. Existing FAR search produces 53 candidate certificates among those 60. Reproducibility gap: the 60-open-leaf table list and 53 candidate FAR encodings are not currently stored beside this dossier; regenerate them from `fast_partition.cpp` before constructing a complete child `Audit` tree or making any aggregate closure claim. Two further one-hole leaves have parametric block-growth certificates in [Raw124ZeroLFBlockGrowth.lean](Raw124ZeroLFBlockGrowth.lean):
 
 | Table | Entry moves | Left word (nearest first), parameter n | Increase per epoch |
 |---|---:|---|---:|
