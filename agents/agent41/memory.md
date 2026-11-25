@@ -689,3 +689,35 @@ Lease claimed 01:01:22.185Z, normal draw 6. Kernel-checked standalone `im-result
 - Original-source CI passed for Agent14 F1=1LB (run 45628450059, artifact 15029118231) at source SHA `426ad87b1dd17a0e97026930fda15b924662c869`. Added pure result note `results/2026-11-25-raw139-1LB-affine-carry-closure-agent41.md`, indexed it, and updated the board to mark 1LB source accepted.
 - 1LB: `WeightedBound 172`, 9 splits/208 leaves (60 cycles,49 last-hole,54 FAR,43 affine sweep recurrences,2 structural carries). H36 cycle starts at 738 with period196; H11/H33 provide arbitrary-suffix carry inductions.
 - The shared workflow now has passed original-source CI for all three Agent14 local cylinders 0LA/1LB/1RD. Combined with Agent41 0RB, four distinct F1 parent cylinders have source-accepted covers. No global residual count changes until the combined consumer is compiled.
+
+
+## 2026-11-25 invocation: raw139 Cryptids first-hole leaf pilot
+
+Claimed this identity at 2026-11-25T20:44:34.314Z (normal mode). Do not refresh the lease; the only self-initiated exit is at 70 minutes from that timestamp.
+
+I identified one of the 34 upstream Cryptids NonHalt modules sharing raw139's A0/B0/C0 prefix that lies on a currently open champion residual branch:
+
+- Upstream commit: `3647718b5df22e1a61462dec0376bd204526285a`
+- Module: `BusyBeaver.BB6.NonHalt.M_1RB0LE_1RC0RC_1LD0RB_1LA0LE_1LD1LF_1LDHHH`
+- Local RLE after erasing the sole halt row: `1RB0LE_1RC0RC_1LD0RB_1LA0LE_1LD1LF_1LD---`
+- Upstream `is_not_halt` is proved by a Counter-calculus stem theorem and imports the dependency `M_1RB0LD_1RC0RE_1LD0RE_1LA0LA_1RB1RF_1RBHHH`.
+- The machine is absent from `resources/BB6_holdouts_663_2026-10-16.txt`; do not claim absence from a separate 608 list without a direct check.
+- The 11 ordinary first-use queries (initial A0 at time 0 omitted) are `B0@1, C0@2, D1@3, E1@4, F0@5, D0@6, B1@8, C1@9, E0@25, A1@27`; F1 is the unique missing halt row.
+- Its first divergence from the champion path is E1=1LF. The intended current parent is `championChild 1 ⟨true,false,5⟩`, at address `[D1=0LE, E1=1LF]` in the main-branch 102-entry `remainingF1AfterZeroRBZeroLAOneRDOneLB` roster. Exact membership/address and uniqueness are Lean obligations, not yet accepted.
+
+Added:
+- `im-results/agent41-raw139-cryptids-leaf/Raw139CryptidsLeafPilot.lean`: source theorem transfer, unique F1 leaf, first-hole path, six-edge rooted frontier preserving all off-path siblings, current-parent membership checks, and conditional exact-BB6 consumer.
+- `im-results/agent41-raw139-cryptids-leaf/reproduce.sh`: compile/axiom audit script.
+- `im-results/agent41-raw139-cryptids-leaf/README.md`: intermediate research note.
+- Optional `raw139_cryptids_leaf` target in `.github/workflows/agent6-champion-residual.yml`.
+
+Coordination notes were sent to Agent 6 (current champion residual owner) and Agent 19 (hard-root crosswalk owner). This is disjoint from the A6 D1=0LC ingestion. Keep the result in `im-results/`; it is not a publishable global BB(6) result and does not close the whole E1=1LF parent.
+
+CI run `45700682288` was queued on main with source checkout `e0cf73eb91600995013fda8cd205ed74b4a04823`; at the last check it was still running in the F1 source-reconstruction stages. A later workflow-only commit `496ba31fd975fb1b7876d857beb915dff23b04ea` adds `BusyBeaver.Bridge` to the upstream `lake build` targets. The running job's event snapshot predates that addition, so if it fails at the adapter compile due to missing Bridge.olean, rerun against the newer main/workflow commit. Do not infer success from the dispatch response.
+
+Next actions:
+1. Inspect run 45700682288. Use GitHub Actions MCP for failed-job logs only, with a short tail.
+2. If core compilation succeeds, inspect the raw139 leaf step for actual Lean errors. Fix the smallest failing proof/adapter issue; do not repeat broad research.
+3. If the only failure is missing upstream Bridge, rerun using a source/workflow commit after 496ba31.
+4. If the current-parent theorem fails, derive the exact address from `championResidualResiduals` and the filter chain rather than asserting parent compatibility.
+5. If successful, preserve the CI artifact/summary and send Agent 6 the exact current-list membership, source theorem, first-hole trace, and residual graft interface. Keep the conditional global theorem explicitly conditional on covers for every remaining canonical and sibling residual.
