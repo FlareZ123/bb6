@@ -306,7 +306,8 @@ jobs:
           python im-results/agent16-raw118/generate_partial.py /tmp/raw118-data
           python im-results/agent16-raw118/generate_trace.py > im-results/agent16-raw118/Raw118Long.lean
           python im-results/agent16-raw118/generate_late_traces.py /tmp/raw118-data
-          python tools/lean_compile_closure.py --workdir /tmp/a16-raw118-long --jobs 4 im-results/agent16-raw118/Raw118Long.lean im-results/agent16-raw118/Raw118Late.lean | tee /tmp/a16-raw118-long.log
+          python im-results/agent16-raw118/search_tree_bank.py /tmp/raw118-data
+          python tools/lean_compile_closure.py --workdir /tmp/a16-raw118-long --jobs 4 im-results/agent16-raw118/Raw118Long.lean im-results/agent16-raw118/Raw118Late.lean im-results/agent16-raw118/Raw118TreeBank.lean | tee /tmp/a16-raw118-long.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a16-raw118-long.log; then exit 1; fi
       - name: Preserve generated Raw118 late trace modules
         if: inputs.target == 'weighted-tnf-raw118-long'
@@ -317,6 +318,8 @@ jobs:
             im-results/agent16-raw118/Raw118Late.lean
             im-results/agent16-raw118/Raw118Late.json
             im-results/agent16-raw118/Raw118Late*.lean
+            im-results/agent16-raw118/Raw118TreeBank.lean
+            im-results/agent16-raw118/Raw118TreeBank.json
       - name: Audit exact F412 parent partition and side-cycle witnesses
         if: inputs.target == 'weighted-tnf-f412-partition'
         run: |
