@@ -28,7 +28,7 @@ RAW85_SWEEPS = [
 sibling.PUMPS = {sweeps.parse(p): i for i, p in enumerate(RAW85_SWEEPS, 10)}
 parts = ["import SweepPumping", "set_option maxRecDepth 100000",
          "set_option maxHeartbeats 0", "set_option linter.unusedVariables false",
-         "namespace BB6Coverage.Agent21Raw85Pump", "open BB6Coverage"]
+         "namespace BB6Coverage.Agent21Raw85Pump", "open BB6Coverage BB6Coverage.Agent31Pump"]
 for i, table in enumerate(RAW85_SWEEPS, 10):
     p = sweeps.parse(table)
     ans = sweeps.candidate(p, sweeps.concrete_events(p))
