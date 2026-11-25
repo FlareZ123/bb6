@@ -18,6 +18,14 @@ import sys
 
 ROOT = Path(__file__).resolve().parent
 IM = ROOT.parent
+D3_TABLE = "1RB0LC1RC1RE1LA0LD0RB0RA1RB1RF1RD---"
+
+
+def compatible_partial(partial: str, full: str) -> bool:
+    return all(
+        partial[i:i + 3] == "---" or partial[i:i + 3] == full[i:i + 3]
+        for i in range(0, 36, 3)
+    )
 sys.path.insert(0, str(IM / "agent25-raw123"))
 from minimize_phase import minimize
 
@@ -37,6 +45,8 @@ def main() -> None:
     ap.add_argument("--cap", type=int, default=5000,
                     help="abstract-state cap for each candidate search")
     ap.add_argument("--seed", type=int, default=46)
+    ap.add_argument("--include-d3", action="store_true",
+                    help="force the exact D3 hard-root descendant into the sample")
     args = ap.parse_args()
 
     residual_file = ROOT / "raw13-open-residuals.txt"
@@ -49,17 +59,25 @@ def main() -> None:
         raise SystemExit("raw13 open residual file is empty; regenerate the cut first")
 
     ids = sorted(rows)
+    d3_ids = [ident for ident, table in rows.items()
+              if compatible_partial(table, D3_TABLE)]
+    if len(d3_ids) > 1:
+        raise SystemExit(f"D3 appears in overlapping raw13 residuals: {d3_ids}")
+    priority_ids = d3_ids if args.include_d3 else []
     groups: dict[int, list[int]] = {}
     for ident, table in rows.items():
-        groups.setdefault(table.count("---"), []).append(ident)
+        if ident not in priority_ids:
+            groups.setdefault(table.count("---"), []).append(ident)
     hole_counts = {str(k): len(v) for k, v in sorted(groups.items())}
     if args.limit <= 0 or args.limit >= len(ids):
         sample = ids
     else:
+        if len(priority_ids) > args.limit:
+            raise SystemExit("priority roots exceed requested sample size")
         rng = random.Random(args.seed)
         for values in groups.values():
             rng.shuffle(values)
-        sample = []
+        sample = list(priority_ids)
         while len(sample) < args.limit and any(groups.values()):
             for holes in sorted(groups):
                 if groups[holes] and len(sample) < args.limit:
@@ -122,6 +140,7 @@ def main() -> None:
     searches.append({
         "seed": args.seed,
         "sample_ids": sample,
+        "priority_ids": priority_ids,
         "sample_hole_counts": sample_hole_counts,
         "state_cap": args.cap,
         "new_candidate_ids": sorted(new_candidates, key=int),
