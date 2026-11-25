@@ -67,7 +67,7 @@ on:
       raw59_child:
         description: Raw59 proof target (all, 0RB, 0LD, 0RC, 1RC, 0RF, 1LA, RCShared, RFCount, or RFTriple)
         type: choice
-        options: [all, 0RB, 0LD, 0RC, 1RC, 0RF, 1LA, RCShared, RFCount, RFTriple]
+        options: [all, 0RB, 0LD, 0RC, 1RC, 0RF, 1LA, RCShared, RFCount, RFTriple, RFScan, 1RF]
         default: all
 
       verify_f418_return:
@@ -499,11 +499,12 @@ jobs:
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
           python im-results/agent32-raw59/unpack_rc.py
           case "$RAW59_CHILD" in
+            RFScan) target=im-results/agent32-raw59/Raw59RFScan.lean ;;
             RFTriple) target=im-results/agent32-raw59/Raw59RFTriple.lean ;;
             RFCount) target=im-results/agent32-raw59/Raw59RFCounters.lean ;;
             RCShared) target=im-results/agent32-raw59/Raw59RCBridge.lean ;;
             all) python im-results/agent32-raw59/generate.py; target=im-results/agent32-raw59/Raw59Refinement.lean ;;
-            0RB|0LD|0RC|1RC|0RF|1LA) python im-results/agent32-raw59/generate.py "$RAW59_CHILD"; target="im-results/agent32-raw59/generated_$RAW59_CHILD/Raw59A${RAW59_CHILD}Data.lean" ;;
+            0RB|0LD|0RC|1RC|0RF|1LA|1RF) python im-results/agent32-raw59/generate.py "$RAW59_CHILD"; target="im-results/agent32-raw59/generated_$RAW59_CHILD/Raw59A${RAW59_CHILD}Data.lean" ;;
             *) exit 2 ;;
           esac
           python tools/lean_compile_closure.py --workdir /tmp/a32-raw59 --jobs 4 "$target" | tee /tmp/a32-raw59.log
