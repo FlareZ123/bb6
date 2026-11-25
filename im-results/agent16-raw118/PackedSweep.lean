@@ -71,10 +71,10 @@ theorem prun_join {p : PartialMachine} {n k : Nat} {a b c : P}
     (h : prun p n a = some b) (g : prun p k b = some c) :
     prun p (n+k) a = some c := by rw [prun_add,h]; exact g
 def packedRead (p : PartialMachine) (n : Nat) : Option Slot :=
-  (prun p n (pack start)).map fun z => (z.q,z.l % 2 == 1)
+  (prun p n (pack BB6Coverage.Agent31Pump.start)).map fun z => (z.q,z.l % 2 == 1)
 theorem packedRead_eq (p : PartialMachine) (n : Nat) : packedRead p n = zipRead p n := by
   rw [packedRead, ← pack_run]
-  cases h : zrun p n start with
+  cases h : zrun p n BB6Coverage.Agent31Pump.start with
   | none => simp [zipRead,h]
   | some z => simp only [Option.map_some,zipRead,h,pack,← packWord_head]
 
