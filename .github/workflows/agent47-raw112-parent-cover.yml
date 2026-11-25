@@ -165,7 +165,7 @@ jobs:
           path: /tmp/a47-raw112-shards
       - name: Merge source-identical shard closures and compile the parent theorem
         env:
-          RAW112_MODE: \${{ inputs.mode }}
+          RAW112_MODE: ${{ inputs.mode }}
         run: |
           set -euo pipefail
           root=im-results/agent47-raw112-cut
@@ -229,7 +229,7 @@ jobs:
             --provenance-input "$root/shard-config.json" \
             2>&1 | tee /tmp/a47-raw112-final.log
           python im-results/agent4-raw109/audit_axioms.py \
-            /tmp/a47-raw112-final.log "\${required_axioms[@]}"
+            /tmp/a47-raw112-final.log "${required_axioms[@]}"
           python3 - "$work/manifest.json" "$module" <<'PY'
           import json, sys
           manifest = json.load(open(sys.argv[1]))
