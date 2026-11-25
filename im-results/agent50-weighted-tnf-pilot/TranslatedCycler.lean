@@ -182,7 +182,7 @@ theorem BRun_replay {m : Machine} {n k k' : Nat}
   revert k c k' c' d heq hRun
   induction n with
   | zero =>
-      intro k c k' c' d heq hRun
+      intro k c k' c' d hRun heq
       cases hRun with
       | zero k₀ c₀ =>
           exact ⟨k₀, d, BRun.zero (m := m) k₀ d, heq⟩
@@ -192,7 +192,7 @@ theorem BRun_replay {m : Machine} {n k k' : Nat}
       | succ hstep hrest =>
           obtain ⟨d₁, hstep', heq₁⟩ := BStep_replay hstep heq
           obtain ⟨k₂, d₂, hrest', heq₂⟩ :=
-            ih _ _ _ _ d₁ heq₁ hrest
+            ih _ _ _ _ d₁ hrest heq₁
           exact ⟨k₂, d₂, BRun.succ (m := m) hstep' hrest', heq₂⟩
 
 theorem BRun_finiteRun {m : Machine} {n k k' : Nat}
@@ -393,10 +393,10 @@ theorem sideEqB_sound {xs ys : List Bool}
     exact of_decide_eq_true h'
   · have hnotx : ¬ i < xs.length := by
       intro hx
-      exact hi (lt_of_lt_of_le hx (Nat.le_max_left _ _))
+      exact hi (Nat.lt_of_lt_of_le hx (Nat.le_max_left _ _))
     have hnoty : ¬ i < ys.length := by
       intro hy
-      exact hi (lt_of_lt_of_le hy (Nat.le_max_right _ _))
+      exact hi (Nat.lt_of_lt_of_le hy (Nat.le_max_right _ _))
     have hxl : xs.length ≤ i := Nat.le_of_not_lt hnotx
     have hyl : ys.length ≤ i := Nat.le_of_not_lt hnoty
     simp [hxl,hyl]
