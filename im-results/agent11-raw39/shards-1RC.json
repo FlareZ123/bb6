@@ -1,0 +1,43 @@
+{
+  "artifact_prefix": "raw39-1RC-shard",
+  "groups": {
+    "g0": [
+      "Raw39B1RCKid16"
+    ],
+    "g1": [
+      "Raw39B1RCKid17"
+    ],
+    "g2": [
+      "Raw39B1RCKid22",
+      "Raw39B1RCKid00",
+      "Raw39B1RCKid03",
+      "Raw39B1RCKid07",
+      "Raw39B1RCKid09",
+      "Raw39B1RCKid14",
+      "Raw39B1RCKid18",
+      "Raw39B1RCKid20"
+    ],
+    "g3": [
+      "Raw39B1RCKid23",
+      "Raw39B1RCKid02",
+      "Raw39B1RCKid06",
+      "Raw39B1RCKid08",
+      "Raw39B1RCKid12",
+      "Raw39B1RCKid15",
+      "Raw39B1RCKid19",
+      "Raw39B1RCKid21"
+    ],
+    "g4": [
+      "Raw39B1RCKid13",
+      "Raw39B1RCKid01"
+    ],
+    "g5": [
+      "Raw39B1RCKid04",
+      "Raw39B1RCKid10"
+    ],
+    "g6": [
+      "Raw39B1RCKid05",
+      "Raw39B1RCKid11"
+    ]
+  }
+}
