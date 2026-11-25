@@ -141,7 +141,7 @@ def main() -> None:
     parser.add_argument("--jobs", type=int, default=2)
     parser.add_argument("--compile-timeout", type=int, default=900)
     parser.add_argument("--output", type=Path,
-                        default=Path("/tmp/agent17-raw10-box-far"))
+                        default=ROOT / ".tmp/agent17-raw10-box-far")
     args = parser.parse_args()
     if args.compile:
         args.generate = True
