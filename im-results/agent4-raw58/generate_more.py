@@ -14,6 +14,8 @@ sys.path.insert(0,str(ROOT.parent/"agent1-ngram"))
 from emit_ngram import emit as emit_ngram
 sys.path.insert(0,str(ROOT.parent/"agent4-two-sided-automata"))
 from emit_automata import emit as emit_automata, run as run_automata
+sys.path.insert(0,str(ROOT.parent/"agent47-raw111-cut"))
+from emit_sparse import emit as emit_sparse
 MOVES=[w+d+q for w,d,q in product("01","LR","ABCDEF")]
 SPECS=json.loads((ROOT/"more.json").read_text())
 FAR_CODES=sorted({"000"} | {line.split()[0] for spec in SPECS.values() for line in spec.get("groups","").splitlines() if line.strip()}, key=lambda s:(len(s),s))
@@ -46,9 +48,15 @@ def build_child(key,spec):
     if spec.get("auto_classify"):
         pump_ids=set(spec.get("pumps",[])); multi_ids=set(spec.get("multi",[]))
         custom_ids={int(i) for i in spec.get("custom",{})}
+        automata_ids={int(i) for i in spec.get("automata",{})}
+        ngram_ids=set(spec.get("ngram",[]))
+        multi_seed_ids={int(i) for i in spec.get("multi_seeds",{})}
+        late_ids={int(i) for i in spec.get("late",{})}
+        special_ids={int(spec[k]) for k in ("primitive","multiseed","counter") if k in spec}
         unresolved=[]
         for i,p in enumerate(opens):
-            if i in assigned or i in pump_ids or i in multi_ids or i in custom_ids: continue
+            if i in (assigned | pump_ids | multi_ids | custom_ids | automata_ids |
+                     ngram_ids | multi_seed_ids | late_ids | special_ids): continue
             found=False
             for code in FAR_CODES:
                 try: masks(parse(p),int(code[0]),[int(ch,36) for ch in code[1:]])
@@ -63,10 +71,8 @@ def build_child(key,spec):
             if ans is not None:
                 spec.setdefault("multi",[]).append(i); auto_multi[i]=ans; continue
             unresolved.append((i,p))
-        print(key,"auto FAR",len(assigned),"auto one-block",len(auto_pumps),"auto multi",len(auto_multi),"unresolved",len(unresolved))
-        if unresolved:
-            print("UNRESOLVED",*["%d %s"%(i,p) for i,p in unresolved[:50]],sep="\n")
-            raise SystemExit(3)
+        print(key,"auto FAR",len(assigned),"auto one-block",len(auto_pumps),
+              "auto multi",len(auto_multi),"pre-sparse unresolved",len(unresolved))
     ns="BB6.Agent4Raw58"+key
     prefix="Raw58"+key
     pumpns="BB6Coverage.Agent4Raw58"+key+"Pumps"
@@ -157,6 +163,43 @@ def build_child(key,spec):
         assert opens[i]=="1RB0RD_1RC---_0RD0LC_1LD1RE_1RF0RA_1LC1RE"
         pumps[i]="BB6Coverage.Agent4Raw58RD1892"
         imports.append("Raw58RD1892")
+    # Search remaining unclassified leaves for exact sparse width-23 n-gram invariants.
+    sparse_modules=[]
+    unclassified=sorted(set(range(len(opens))) - assigned - set(pumps) - set(late))
+    if unclassified and len(unclassified) <= 64:
+        sparse_exe=ROOT/"ngram_sparse"
+        if not sparse_exe.exists():
+            subprocess.run(["g++","-O3","-std=c++17",
+                str(ROOT.parent/"agent47-raw111-cut/ngram_sparse.cpp"),
+                "-o",str(sparse_exe)],check=True)
+        remaining=[]
+        for i in unclassified:
+            try:
+                proc=subprocess.run([str(sparse_exe),"23"],
+                    input=f"{i} {opens[i]}\\n",text=True,capture_output=True,
+                    check=True,timeout=90)
+                fields=proc.stdout.strip().split(maxsplit=1)
+                if len(fields)!=2: raise ValueError("missing sparse certificate output")
+                data=fields[1]
+                k,n,L,R,_=data.split()
+                def edge_count(raw):
+                    return sum(int(v).bit_count() for item in raw.rstrip(",").split(",")
+                               if item for _,v in [item.split(":")])
+                expected=(int(n),edge_count(L),edge_count(R))
+                module,ns_sparse=emit_sparse(ROOT,i,opens[i],data,width=23,
+                    module_name=f"Raw58{key}Sparse{i}",expected=expected)
+                pumps[i]=ns_sparse
+                sparse_modules.append(module)
+                print(key,"sparse width-23",i,"states",n,"edges",expected[1:],flush=True)
+            except (subprocess.CalledProcessError,subprocess.TimeoutExpired,ValueError):
+                remaining.append(i)
+        unclassified=remaining
+    if sparse_modules:
+        imports.extend(sparse_modules)
+    print(key,"sparse certificates",len(sparse_modules),"remaining",len(unclassified))
+    if unclassified:
+        print(key,"UNRESOLVED",*[f"{i} {opens[i]}" for i in unclassified],sep="\\n")
+        raise SystemExit(3)
     def emit(name,imports,body):
         header=f"""set_option maxRecDepth 100000
 set_option maxHeartbeats 0
