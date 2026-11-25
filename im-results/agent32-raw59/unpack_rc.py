@@ -15,4 +15,5 @@ assert hashlib.sha256(data).hexdigest()=='7153412796e6a8fc41f95fdbb96b0684b44662
 
 data=lzma.decompress(base64.b64decode((root/'Raw59RFScan.lean.xz.b64').read_text()))
 assert hashlib.sha256(data).hexdigest()=='9420f855a4586e1fddfa830992d773eb4b5a654483eeefc71dc5bdc480b3232e'
-(root/'Raw59RFScan.lean').write_bytes(data)
+assert data.count(b'cases he : run m n blank with') == 1
+(root/'Raw59RFScan.lean').write_bytes(data.replace(b'cases he : run m n blank with', b'cases he : run m n BB6Coverage.blank with'))
