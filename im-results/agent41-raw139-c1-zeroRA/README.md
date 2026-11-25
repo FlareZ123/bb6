@@ -1,0 +1,9 @@
+# Raw139 C/1 = 0RA: one remaining one-hole leaf
+
+Parent `[7,24,11,24,14,1,3,16,12,11,24,24]` (depth four of the champion path, C1=0RA). Candidate early weighted bound 2676; **no parent Cover or Lean proof is claimed**. This investigation is distinct from the C1=0RB branch owned by Agent48.
+
+Using the existing Agent48 scan.py and blockcert.py at cutoff 600 / FAR depth 2, the exact ordinary first-hole tree has 87 internal 24-way splits and 2002 terminal cases: 867 translated cycles, 718 last-hole queries, 207 FAR, 210 initially open. The maximum query among the original cases is 593. Of the 210, 186 have block-FAR candidates (width 2 or 3), 11 have three-state FAR witnesses, and 12 are exact late last-hole queries (largest 2670; allowance of up to 5 blank-delay moves and one final query gives 2676). All 12 late cases have exactly one hole.
+
+The sole remaining leaf is index 78 in the deterministic initial open ordering, literal table `[7,17,11,23,14,1,3,16,12,11,24,3]` = `1RB0RE_1RC1RF_1LD0RA_1RA0LE_0LD1RC_---1RA`. Its only hole is F0; a direct two-million-step blank replay did not reach it. Exhaustive standard FAR search through DFA size four failed; the finite block search is incomplete. A nonhalt proof of this leaf, or a sufficiently small exact last-hole query, would complete the candidate partition. The completed leaves remain conditional on source acceptance.
+
+Reproduce from the repository root with `python im-results/agent41-raw139-c1-zeroRA/verify.py`. The recipe schema follows Agent48's `package4.py` (with an explicit unresolved entry, so do not call the full generator until it is resolved). Reuse the same proof emitter; no additional workflow is warranted. The Python block generator checks local saturation and minimized closure conditions, but these checks are not a Lean audit. Preserve the unmatched leaf and all ordinary choices.
