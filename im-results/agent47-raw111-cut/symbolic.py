@@ -38,7 +38,9 @@ def generate(rows,work):
         "1RB0LD_1RC1LE_0RD0RF_1LD1RE_---0RC_0RC0RA":
         ("Raw111Triplet","BB6Coverage.Agent31Pump.Raw111Triplet"),
         "1RB0LF_1RC---_0RD1LF_1LD1RE_0RB0RC_0LA0RF":
-        ("Raw111QuadCounter","BB6Coverage.Agent31Pump.Raw111QuadCounter")}
+        ("Raw111QuadCounter","BB6Coverage.Agent31Pump.Raw111QuadCounter"),
+        "1RB---_1RC1LF_0RD0RF_1LD1RE_1LA0RC_0RE0LD":
+        ("Raw111TripleCounter","BB6Coverage.Agent31Pump.Raw111TripleCounter")}
     certs={}
     imports={}
     single=[]
@@ -90,5 +92,5 @@ def generate(rows,work):
     assert len(single)==199,len(single)
     manifest="\n".join(sorted(single))+"\n"
     assert hashlib.sha256(manifest.encode()).hexdigest()=="aab7039ed0210df985e13993048903823052d7fa5e1d082dbd10c7462652c56d"
-    assert len(certs)==222,len(certs)
+    assert len(certs)==223,len(certs)
     return certs,imports
