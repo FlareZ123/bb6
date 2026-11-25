@@ -65,8 +65,8 @@ jobs:
             cp "$base/recipes.txt" .
             python3 "$base/replay.py"
             python3 "$base/package.py"
-            printf '%s  %s\\n' 0efe6d872460d07282eaa1cb63d878c211b426a2da8cb70a3bb1675d3e69a730 "$work/imports/ChampionF1OneLACover.lean" | sha256sum -c -
-            printf '%s  %s\\n' 4d4f583f5f3197d2d12bed38aeea081fc8f1f74c7f8af9856ffaded24e9e5dbf "$work/imports/ChampionF1OneLAHard.lean" | sha256sum -c -
+            printf '%s  %s\n' 0efe6d872460d07282eaa1cb63d878c211b426a2da8cb70a3bb1675d3e69a730 "$work/imports/ChampionF1OneLACover.lean" | sha256sum -c -
+            printf '%s  %s\n' 4d4f583f5f3197d2d12bed38aeea081fc8f1f74c7f8af9856ffaded24e9e5dbf "$work/imports/ChampionF1OneLAHard.lean" | sha256sum -c -
           )
       - name: Compile the champion frontier and depth-five F1 sibling refinement
         run: |
