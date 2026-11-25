@@ -130,6 +130,7 @@ jobs:
           known = {
               "1RB0LD_1RC1LF_0RD1LA_1LD1RE_1RD0LB_---0LA",
               "1RB1RD_1RC1LF_0RD1LA_1LD1RE_1RC0LB_---0LA",
+              "1RB1RD_1RC1LF_0RD1LA_1LD1RE_1RD0LB_---0LA",
               "1RB---_1RC1LF_0RD0RC_1LD1RE_0LB0LB_0RC0LA",
               "1RB1LA_1RC1LF_0RD1RC_1LD1RE_0LA0LB_---0LA",
               "1RB0LB_1RC1LF_0RD1RF_1LD1RE_---0LB_1RB0LA",
@@ -137,7 +138,7 @@ jobs:
           rows = data["oneHoleTables"]
           assert all(any(x["table"] == k for x in rows) for k in known)
           codes = [x["table"] for x in rows if x["table"] not in known]
-          assert len(codes) == 96 and len(set(codes)) == 96
+          assert len(codes) == 95 and len(set(codes)) == 95
           Path("/tmp/depth-eight-one-hole-roster.txt").write_text("\n".join(codes) + "\n")
           print(f"Prepared {len(codes)} unresolved one-hole tables from the checked tree roster.")
           PY
