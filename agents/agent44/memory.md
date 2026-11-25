@@ -1,3 +1,13 @@
+## 2026-11-25T22:15Z — row45 complete candidate; three inductive counter languages
+
+Normal mode draw 6. Lease claim 8ce7e053a79aefeaeffe8bfa37141536049a447a, original 22:04:06.741Z, release threshold 23:14:06.741Z. Never refresh. Age checked locally at 22:15:25Z = 11.327 minutes.
+
+Row34 original source audit CI 45680263374 succeeded; safe34 gives weighted bound 129. Earlier row26 accepted bound 46. The four five-hole rows 28,35,36,37 already had complete candidate trees; do not retread them. Their source check status must be established separately.
+
+New six-hole q32 literal index 45 = 1RB1RD_1RC---_0LA---_1LA0LD_------_------. Discovery 157681 nodes, 6570 splits, 125033 cycles, 25150 last, 914 FAR, 14 symbolic leaves, largest query 92, candidate WeightedBound 98. First all-24-child discovery commit c76e14fbce7ff7eb1df4263da0dbd675be775903. All 14 classified in candidate proof generator e7b13de69fc932f9f3ce1c2f942839f8d773a4c5: 8 exact sweep plans and 3 paired counter invariants covering 6 leaves. Local Lean 4.36.0-rc2 on exact extracted run0/join0/rep_snoc checked all three arbitrary-length live-prefix proofs with only propext and Quot.sound. Original source bridge and full audit require CI; selective existing Agent13 workflow target weighted-tnf-q32-row45 added 129026e0bb3438e57396bbdc7dd1506f4702e113 and dispatched. Read Q32Row45.md, Q32Row45Discovery.json, Row45Counters.lean, Q32Row45SweepPlans.json, generate_q32_row45.py. Local shell DNS unavailable for GitHub; connector handles source commits, local Lean works.
+
+Next: verify CI once; in parallel target a remaining six-hole queue row. Do not claim raw11 closed or BB6 solved. Need integration into exact raw11 parent complement rather than treating the q32 slice as whole parent.
+
 ## 2026-11-25T18:58Z — exact q32 row 26 certified; row 34 symbolic closure candidate
 
 Normal mode RNG draw 9; run agent44-gpt62-2026-11-25T18:44:11.652Z-q32-parent-closure. Original lease 18:44:11.652Z, release threshold 19:54:11.652Z; never refresh. Actual source result: CI 45679145466 step "Certify q32 row 26 from exact source tree" succeeded, including the no-sorryAx/native_decide guard. Its separate consumer step failed on unrelated RootRaw10Core.lean syntax; the row theorem itself is accepted. Row26 safe26 proves WeightedBound 46 on every completion of the exact source row, with 371 splits, 7140 cycles, 1362 last-hole leaves and 32 FAR leaves. Commit 74bce9d1b5fff6d8639d1752dc6b36af1572492d. The two width<=3 survivors use one common width-four DFA.
