@@ -7,7 +7,7 @@ Open Scope nat_scope.
 
 (* An exact source trace which reports its reached undefined row. *)
 Definition source_hole_atb (p : TM) (n : nat) (h : Q * Sym) : bool :=
-  match Individual62.cmultistep p n Individual62.starting with
+  match Agent47TC.Flip.Compute.cmultistep p n Agent47TC.Flip.Compute.starting with
   | inleft (exist _ (q, (_, s, _)) _) =>
       match p (q,s) with
       | None => BusyCoq.Eqb.eqb (q,s) h
@@ -20,13 +20,16 @@ Lemma source_hole_atb_sound p n h :
   source_hole_atb p n h = true -> halts_at p c0 n h.
 Proof.
   unfold source_hole_atb.
-  destruct (Individual62.cmultistep p n Individual62.starting)
+  destruct (Agent47TC.Flip.Compute.cmultistep p n Agent47TC.Flip.Compute.starting)
     as [[c Hrun]|Hearly].
   - destruct c as [q [[l s] r]].
     destruct (p (q,s)) as [v|] eqn:E; [discriminate|].
     destruct (BusyCoq.Eqb.eqb_spec (q,s) h) as [Heq|Hne]; [|discriminate].
     intro _. subst h.
-    eapply halts_at_intro; [exact Hrun|exact E].
+    eapply halts_at_intro.
+    + rewrite Agent47TC.Flip.Compute.lift_starting in Hrun.
+      apply translated_multistep_transfer. exact Hrun.
+    + exact E.
   - discriminate.
 Qed.
 
