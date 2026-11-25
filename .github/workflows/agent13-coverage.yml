@@ -3859,8 +3859,9 @@ jobs:
           json.dump({"artifact_prefix":"raw118","allow_mixed_revisions":True,"groups":groups},open("/tmp/raw118-merge-config.json","w"))
           PY
           python im-results/agent4-raw109/merge_shards.py /tmp/raw118-merge /tmp/raw118-consumer-union /tmp/raw118-merge-config.json
-          python tools/lean_compile_closure.py --workdir /tmp/a16-raw118-consumer --jobs 4 --source-root im-results/agent1-bidfa-sat/wide-generated --source-root im-results/agent40-raw118-independent/run-generated --precompiled-manifest /tmp/raw118-consumer-union/manifest.json --precompiled-dir /tmp/raw118-consumer-union --manifest /tmp/a16-raw118-consumer/manifest.json --artifact-name raw118-parent-proof --label raw118-conditional-parent --theorem BB6.Agent16Raw118Consumer.parent_cover_at_target --parent-table '1RB---_1RC---_0RD---_1LD1RE_---0LE_------' --weighted-bound 756496 im-results/agent16-raw118/Raw118Consumer.lean | tee /tmp/a16-raw118-consumer.log
-          python im-results/agent4-raw109/audit_axioms.py /tmp/a16-raw118-consumer.log BB6.Agent16Raw118Consumer.parent_cover_at_target
+          python tools/lean_compile_closure.py --workdir /tmp/a16-raw118-consumer --jobs 4 --source-root im-results/agent1-bidfa-sat/wide-generated --source-root im-results/agent40-raw118-independent/run-generated --precompiled-manifest /tmp/raw118-consumer-union/manifest.json --precompiled-dir /tmp/raw118-consumer-union --manifest /tmp/a16-raw118-consumer/manifest.json --artifact-name raw118-parent-proof --label raw118-complete-parent --theorem BB6.Agent1Raw118Complete.parent_cover --parent-table '1RB---_1RC---_0RD---_1LD1RE_---0LE_------' --weighted-bound 756496 im-results/agent16-raw118/Raw118Complete.lean | tee /tmp/a16-raw118-consumer.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a16-raw118-consumer.log BB6.Agent1Raw118Complete.parent_cover
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a16-raw118-consumer.log BB6.Agent1Raw118Complete.parent_exact
           cp /tmp/a16-raw118-consumer.log /tmp/a16-raw118-consumer/audit.log
       - name: Preserve generated Raw118 parent consumer
         if: inputs.target == 'weighted-tnf-raw118-consumer'
@@ -3869,6 +3870,7 @@ jobs:
           name: raw118-parent-consumer
           path: |
             im-results/agent16-raw118/Raw118Consumer.lean
+            im-results/agent16-raw118/Raw118Complete.lean
             im-results/agent16-raw118/Raw118Consumer.json
             im-results/agent16-raw118/Raw118AccountedPlan.json
             im-results/agent16-raw118/Raw118TreeBank.json
