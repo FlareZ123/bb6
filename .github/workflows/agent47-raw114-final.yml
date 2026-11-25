@@ -1,0 +1,82 @@
+name: Agent 47 raw114 full source audit
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  branch:
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix:
+        branch: [0LA, 0LB, 0LC, 0LF, 0RA, 0RB, 0RC, 0RF, 1LA, 1LB, 1LC, 1LF, 1RA, 1RB, 1RC, 1RF]
+        half: [0, 1]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Generate and check twelve disjoint subtrees
+        env:
+          BRANCH: ${{ matrix.branch }}
+          HALF: ${{ matrix.half }}
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          cd im-results/agent47-raw114-cut
+          python paired_counter.py
+          python long_sweep.py
+          python generate_complete.py "$BRANCH"
+          cd ../..
+          roots=()
+          for ((i=12*HALF;i<12*(HALF+1);i++)); do
+            printf -v name 'Raw114Complete%sKid%02d.lean' "$BRANCH" "$i"
+            roots+=("im-results/agent47-raw114-cut/$name")
+          done
+          python tools/lean_compile_closure.py --workdir /tmp/a47-final --jobs 4 "${roots[@]}" | tee /tmp/a47-final.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a47-final.log; then exit 1; fi
+          cp "im-results/agent47-raw114-cut/Raw114Complete${BRANCH}Data.lean" /tmp/a47-final/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw114-final-${{ matrix.branch }}-${{ matrix.half }}
+          path: |
+            /tmp/a47-final/*.olean
+            /tmp/a47-final/Raw114Complete*Data.lean
+          if-no-files-found: error
+  assemble:
+    needs: branch
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw114-final-*
+          path: /tmp/a47-final
+          merge-multiple: true
+      - name: Compose all source-checked subtrees
+        run: |
+          set -euo pipefail
+          python im-results/agent47-raw114-cut/generate_complete.py --combine
+          cp im-results/agent47-raw114-cut/Raw114CompleteData.lean /tmp/a47-final/
+          cd /tmp/a47-final
+          export LEAN_PATH="$PWD"
+          for branch in 0LA 0LB 0LC 0LF 0RA 0RB 0RC 0RF 1LA 1LB 1LC 1LF 1RA 1RB 1RC 1RF; do
+            lean -o "Raw114Complete${branch}Data.olean" "Raw114Complete${branch}Data.lean"
+          done
+          lean -o Raw114CompleteData.olean Raw114CompleteData.lean | tee /tmp/a47-final.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a47-final.log; then exit 1; fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw114-certified-root
+          path: /tmp/a47-final/*.olean
+          if-no-files-found: error

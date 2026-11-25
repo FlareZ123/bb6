@@ -35,6 +35,13 @@ for i,line in enumerate((ROOT/"raw114-hard-manifest.txt").read_text().splitlines
     assert row not in MANIFEST
     MANIFEST[row]=(kind,i,params)
 assert len(MANIFEST)==112
+HOLDOUTS={}
+for row, module, suffix in zip(
+    [row for row,(kind,_,_) in MANIFEST.items() if kind=="open"],
+    [*(f"Raw114Pair{i}" for i in range(5)), "Raw114LongSweep", "Raw114Triple", "Raw114Binary"],
+    [""]*5+[".M0","",""]):
+    HOLDOUTS[row]=(module,"BB6Coverage.Agent31Pump."+module+suffix)
+assert len(HOLDOUTS)==8
 import multi_sweep
 sys.path.insert(0,str(ROOT.parent/"agent1-ngram"))
 from emit_ngram import emit as emit_ngram
@@ -49,7 +56,7 @@ namespace BB6.Agent47Raw114Complete
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent8TNFPath
 open BB6.Agent50TNFPilot BB6.Agent31ThreeHole BB6.Agent10ZipAudit BB6.Agent47PartialAudit
 """+body+"\nend BB6.Agent47Raw114Complete\n")
-emit("Raw114CompleteBase",["PartialAudit"],"""
+emit("Raw114CompleteBase",["PartialAudit","ZipPrefixAudit"],"""
 abbrev raw114 : PartialMachine :=
   refine (pathEnd root 2 (path.take 4)).1 (4,true) (some ⟨false,false,3⟩)
 theorem raw114_root : raw114 initialSlot = some (some ⟨true,true,1⟩) := by decide
@@ -88,6 +95,7 @@ def generate(a,work):
     pumps=[]
     ngrams=[]
     kinds=Counter()
+    holdout_imports=[]
     for row in rows:
         if row not in MANIFEST: continue
         kind,i,params=MANIFEST[row]
@@ -116,9 +124,11 @@ def generate(a,work):
             ngrams.append(emit_ngram(str(i),row,data))
             certs[row]=f".proven {ns_ng}.p{i} {ns_ng}.never{i}"
         elif kind=="open":
-            certs[row]=None
+            module,ns_hold=HOLDOUTS[row]
+            holdout_imports.append(module)
+            certs[row]=f".proven {ns_hold}.table {ns_hold}.never"
         else: raise ValueError(kind)
-    imports=["Raw114CompleteBase"]
+    imports=["Raw114CompleteBase"]+sorted(set(holdout_imports))
     if pumps:
         name=f"Raw114Complete{a}Pumps"
         parts=["import SweepPumping","set_option maxRecDepth 100000","set_option maxHeartbeats 0","set_option linter.unusedVariables false",f"namespace {ns}","open BB6Coverage",*pumps,f"end {ns}"]
@@ -156,11 +166,17 @@ def generate(a,work):
     for i,kid in enumerate(tree[3]):
         name=f"Raw114Complete{a}Kid{i:02}"
         mods.append(name)
+        closed,code=build(kid)
+        assert closed,(a,i)
         emit(name,imports,f"""
-def kid{a}{i:02} : PartialAudit := {partial(build(kid))}
+def auditKid{a}{i:02} : Audit := {code}
+def kid{a}{i:02} : PartialAudit := .closed auditKid{a}{i:02}
 theorem check{a}{i:02} : partialCheck 7014
     (refine (raw114Child {move(a)}) {slot(s)} (some {move(MOVES[i])}))
-    kid{a}{i:02} = true := by decide
+    kid{a}{i:02} = true := by
+  change zipCheck 7014 _ auditKid{a}{i:02} = true
+  rw [← BB6.Agent48PrefixAudit.prefixCheck_eq]
+  decide
 """)
     stats["split"]+=1
     assert stats==Counter(split=sp,cycle=cy,last=la,open=op),(a,stats)
@@ -182,7 +198,7 @@ theorem tree{a}_checked : partialCheck 7014 (raw114Child {move(a)}) tree{a} = tr
   simp only [Bool.and_eq_true]
   exact ⟨by decide,allMoves_of _ kids{a}_checked⟩
 def residual{a} : List (List Move × PartialMachine) := partialResiduals (raw114Child {move(a)}) tree{a}
-theorem count{a} : residual{a}.length = {kinds["open"]} := by decide
+theorem count{a} : residual{a}.length = 0 := by decide
 #print axioms tree{a}_checked
 #print axioms count{a}
 """)
@@ -197,7 +213,7 @@ def combine():
     checks="\n".join("  · "+("decide" if b in cycles else "exact tree"+b+"_checked")
                      for q,w,r in product(range(6),range(2),range(2))
                      for b in [MOVES[12*w+6*r+q]])
-    count=sum(kind=="open" for kind,_,_ in MANIFEST.values())
+    count=0
     emit("Raw114CompleteData",[f"Raw114Complete{a}Data" for a in EXPECTED],f"""
 def rootKids : Move → PartialAudit := byPartialMove [{",".join(children)}]
 theorem rootKids_checked (mv : Move) : partialCheck 7014 (raw114Child mv) (rootKids mv) = true := by
@@ -221,6 +237,12 @@ theorem raw114_complete_sound :
     ∀ m, compatible raw114 m → WeightedBound 7014 m ∨
       ∃ e ∈ raw114Residuals, compatible e.2 m :=
   partialSound 7014 raw114 rootTree raw114_root raw114_nohalt checked
+theorem raw114_all (m : Machine) (hm : compatible raw114 m) : WeightedBound 7014 m := by
+  rcases raw114_complete_sound m hm with hb | ⟨e,he,_⟩
+  · exact hb
+  · have hnil : raw114Residuals = [] := by simpa using residual_count
+    simp [hnil] at he
+#print axioms raw114_all
 #print axioms raw114_complete_sound
 #print axioms residual_count
 #print axioms residual_one_hole
