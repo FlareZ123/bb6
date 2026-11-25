@@ -26,4 +26,6 @@ jobs:
           path: |
             im-results/agent47-raw112-cut/Raw112Multisweep10.lean
             im-results/agent47-raw112-cut/Raw112Multisweep15.lean
+            im-results/agent47-raw112-cut/Raw112Hard23Family10.lean
+            im-results/agent47-raw112-cut/Raw112Hard23Family15.lean
             /tmp/raw112-multisweep-discovery.log
