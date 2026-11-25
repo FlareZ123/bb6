@@ -1686,7 +1686,15 @@ jobs:
           for prefix in Raw107RD Raw107RC Raw107RE Raw107B1RE Raw107B1LC Raw107B1LE Raw107B1LB Raw107B0RF Raw107B1RF Raw107B0LE Raw107B0LF Raw107B1LA Raw107B1LF; do
             python im-results/agent10-tnf-multipump/chunk_checks.py "$root" "$prefix" --limit 180
           done
-          python im-results/agent47-raw114-cut/generate_complete.py --combine
+          (
+            cd im-results/agent47-raw114-cut
+            python paired_counter.py
+            python long_sweep.py
+            printf '%s\\n' 0LA 0LB 0LC 0LF 0RA 0RB 0RC 0RF 1LA 1LB 1LC 1LF 1RA 1RB 1RC 1RF | xargs -P 4 -I{} python generate_complete.py {}
+            python generate_complete.py --combine
+          )
+          test -s im-results/agent47-raw114-cut/Raw114CompleteData.lean
+          test "$(find im-results/agent47-raw114-cut -maxdepth 1 -name 'Raw114Complete*Kid*.lean' | wc -l)" -eq 384
           python im-results/agent13-block-far/generate.py im-results/agent13-block-far
           python im-results/agent13-cross-route-pilot/analyze_b0_1lc_sidewitness_cover.py
           mkdir -p .tmp/a13-heldleaf109/imports
@@ -1750,6 +1758,8 @@ jobs:
             --provenance-input im-results/agent50-weighted-tnf-pilot/Canonical76Raw10Membership.lean \
             --provenance-input im-results/agent31-shared-core/CanonicalTwoParentRosterOnly.lean \
             --provenance-input im-results/agent47-raw114-cut/generate_complete.py \
+            --provenance-input im-results/agent47-raw114-cut/paired_counter.py \
+            --provenance-input im-results/agent47-raw114-cut/long_sweep.py \
             --provenance-input /tmp/a31-base/manifest/canonical77-base-manifest.json \
             --provenance-input /tmp/a31-base/manifest/raw107-shared-manifest.json \
             --provenance-input /tmp/a31-base/manifest/combined-canonical77-raw107-manifest.json \
