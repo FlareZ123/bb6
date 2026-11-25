@@ -132,30 +132,28 @@ function validateNode(node, where) {
 }
 
 function validateAssumptions(log, moduleName) {
-  const starts = [...log.matchAll(/^Axioms:/gm)].map((m) => m.index);
-  if (!starts.length) {
+  const start = log.lastIndexOf("Axioms:");
+  if (start < 0) {
     if (log.includes("Closed under the global context")) return;
     throw new Error(moduleName + ": no closed-context or assumptions output found");
   }
+  const end = log.indexOf("chunk_data =", start);
+  const block = log.slice(start, end < 0 ? log.length : end);
   const allowed = (name) => name === "Nat.of_num_uint" ||
     name.startsWith("PrimInt63.") || name.startsWith("PArray.") || name.startsWith("Uint63.");
-  for (let i = 0; i < starts.length; i++) {
-    const stopCandidates = [log.indexOf("Axioms:", starts[i] + 7), log.indexOf("chunk_data =", starts[i])].filter((n) => n >= 0);
-    const stop = stopCandidates.length ? Math.min(...stopCandidates) : log.length;
-    const block = log.slice(starts[i], stop);
-    const names = [];
-    for (const line of block.split(/\r?\n/)) {
-      if (!line.trim() || line.trim() === "Axioms:" || /^\s/.test(line)) continue;
-      const name = line.trim().split(/[\s:]/)[0].replace(/\.$/, "");
-      if (!allowed(name)) throw new Error(moduleName + ": unexpected assumption " + name);
-      names.push(name);
-    }
-    if (!names.length) throw new Error(moduleName + ": empty or unreadable assumptions block");
+  const names = [];
+  for (const line of block.split(/\r?\n/)) {
+    if (!line.trim() || line.trim() === "Axioms:" || /^\s/.test(line)) continue;
+    const name = line.trim().split(/[\s:]/)[0].replace(/\.$/, "");
+    if (!allowed(name)) throw new Error(moduleName + ": unexpected assumption " + name);
+    names.push(name);
   }
-  const nonPrimitiveAxiom = log.split(/\r?\n/).map((line) => line.trim()).find((line) =>
-    /^(\S+)\s*\.\s*\[/.test(line) && !allowed(line.match(/^(\S+)/)[1].replace(/\.$/, ""))
-  );
-  if (nonPrimitiveAxiom) throw new Error(moduleName + ": unexpected standalone assumption " + nonPrimitiveAxiom);
+  if (!names.length) throw new Error(moduleName + ": empty or unreadable assumptions block");
+  const standalone = log.split(/\r?\n/).map((line) => line.trim()).filter((line) => /^(\S+)\s*\.\s*\[/.test(line));
+  for (const line of standalone) {
+    const name = line.match(/^(\S+)/)[1].replace(/\.$/, "");
+    if (!allowed(name)) throw new Error(moduleName + ": unexpected standalone assumption " + name);
+  }
 }
 function parseLog(log, moduleName) {
   const value = extractPair(log, "chunk_data =");
