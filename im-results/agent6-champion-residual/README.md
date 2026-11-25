@@ -63,7 +63,7 @@ The integration draft:
 - proves the raw139 address/table is exactly present in the canonical 78 roster;
 - provides a conditional `ExactBB6 championScore` theorem from Covers for every nonchampion roster entry plus the 133 raw139 frontier leaves; it also checks the address count 77 + 133 = 210.
 
-This is **not yet source-accepted**. The parent exact audit is running in [45539867315](https://github.com/FlareZ123/bb6/actions/runs/45539867315), and the canonical78 exact-witness audit is running in [45539884311](https://github.com/FlareZ123/bb6/actions/runs/45539884311). The Agent6 workflow has been extended to compile the integration draft; dispatch it after the parent exact audit passes. The earlier 109-roster accounting (108 untouched + 156 descendants = 264) is a separate raw-roster specialization and must not be conflated with the 78-way quotient accounting.
+The parent certificate dependency is now source-accepted in [45539867315](https://github.com/FlareZ123/bb6/actions/runs/45539867315), and the canonical78 exact-witness wrapper is being audited in [45539884311](https://github.com/FlareZ123/bb6/actions/runs/45539884311). The expanded Agent6 integration draft has not yet been source-accepted; the workflow includes it and should be dispatched after the canonical78 wrapper passes. The earlier 109-roster accounting (108 untouched + 156 descendants = 264) is a separate raw-roster specialization and must not be conflated with the 78-way quotient accounting.
 
 
 ## Source and verification
