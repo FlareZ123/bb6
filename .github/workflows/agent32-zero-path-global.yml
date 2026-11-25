@@ -686,3 +686,73 @@ jobs:
             /tmp/raw59-final/audit.log
           if-no-files-found: error
           retention-days: 30
+
+  raw59-canonical77-composition:
+    if: ${{ inputs.verify_raw59 && inputs.raw59_child == 'UpgradeAll' }}
+    needs: raw59-parent-composition
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw59-parent-certified
+          path: /tmp/raw59-parent
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45554648116
+          name: canonical77-certified
+          path: /tmp/canonical77-base
+      - name: Merge the two source-accepted Lean closures
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/raw59-canonical77
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib
+          roots = [Path('/tmp/raw59-parent'), Path('/tmp/canonical77-base')]
+          out = Path('/tmp/raw59-canonical77')
+          seen = {}
+          for root in roots:
+              assert root.is_dir(), root
+              for src in sorted(root.rglob('*.olean')):
+                  name = src.name
+                  digest = hashlib.sha256(src.read_bytes()).hexdigest()
+                  if name in seen:
+                      assert seen[name][0] == digest, f'incompatible shared module {name}: {seen[name][1]} vs {src}'
+                  else:
+                      (out / name).write_bytes(src.read_bytes())
+                      seen[name] = (digest, str(src))
+          required = [
+              'Raw59ParentCover.olean',
+              'Raw59ParentPartition.olean',
+              'Canonical78Roster.olean',
+              'CanonicalRaw114Accepted.olean',
+              'CanonicalTwoParentGraft.olean',
+          ]
+          for name in required:
+              assert (out / name).is_file(), f'missing merged module: {name}'
+          print(f'merged {len(seen)} unique Lean modules; shared objects byte-identical')
+          PY
+          export LEAN_PATH=/tmp/raw59-canonical77
+          lean -o /tmp/raw59-canonical77/Raw59CanonicalPartition.olean im-results/agent32-raw59/Raw59CanonicalPartition.lean 2>&1 | tee /tmp/raw59-canonical77-partition.log
+          lean -o /tmp/raw59-canonical77/Raw59Canonical77Graft.olean im-results/agent32-raw59/Raw59Canonical77Graft.lean 2>&1 | tee /tmp/raw59-canonical77.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/raw59-canonical77-partition.log /tmp/raw59-canonical77.log; then exit 1; fi
+          for theorem in parent_mem remaining_count parent_bound_at exact_at_target; do
+            python im-results/agent32-raw59/check_axioms.py /tmp/raw59-canonical77.log "BB6.Agent32Raw59Canonical77.$theorem"
+          done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw59-canonical77-graft-certified
+          path: |
+            /tmp/raw59-canonical77/*.olean
+            /tmp/raw59-canonical77.log
+            /tmp/raw59-canonical77-partition.log
+          if-no-files-found: error
+          retention-days: 30
