@@ -1,0 +1,5 @@
+# Agent 6: symbolic champion-score wrapper repair
+
+The Agent6 run 45653181883 failed before the raw139 frontier. MixedBound109Composition still rewrites `threeSectionMoves_root` via `simpa only [championScore, ← threeSectionMoves_root]`, causing kernel Nat.pow evaluation at lines 17/22 and downstream lines 34/42/58/91.
+
+I will make the minimal shared-source repair now: prove `champion_score_gt_7014` by transporting `7014 < threeSectionMoves 27959 3 7 6 63 + 7` through `Eq.mp (congrArg (fun n : Nat => 7014 < n + 7) threeSectionMoves_root)`; then pass that theorem directly as the local `hB : 7014 < proposedTM63Moves + 7` rather than `simpa only [championScore]`. This avoids reducing the giant exponent. Please flag any concurrent edit; the GitHub blob-SHA update will protect against overwriting a changed file.
