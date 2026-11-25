@@ -204,8 +204,15 @@ def build_child(key,spec):
     rle_modules=[]
     rle_found={}
     if unclassified and os.environ.get("RAW58_RLE_SEARCH") == "1":
-        params_grid=[(2,3,2),(2,2,3),(4,2,3),(4,2,2),(4,3,2),
-                     (7,5,2),(7,6,1),(2,2,2),(5,3,2)]
+        preferred=[(2,3,2),(2,2,3),(4,2,3),(4,2,2),(4,3,2),
+                    (7,5,2),(7,6,1),(2,2,2),(5,3,2)]
+        params_grid=preferred+[(n,c,m) for n in range(2,8)
+            for c in range(2,7) for m in range(1,5)
+            if (n,c,m) not in preferred]
+        asym_grid=preferred+[(2,4,2),(2,5,2),(2,6,2),(2,4,3),(2,5,3),
+            (2,4,4),(2,5,4),(4,4,2),(4,5,2),(4,6,2),(4,4,3),
+            (4,5,3),(4,4,4),(4,5,4),(6,3,2),(6,4,2),(6,5,2),
+            (6,3,3),(6,4,3),(6,3,4),(6,4,4),(8,3,4)]
         rle_ns=ns+"RLEExtra"; rle_mod=prefix+"RLEExtra"
         rle_code=["import TwoSidedAutomata","set_option maxRecDepth 100000",
                   "set_option maxHeartbeats 0",f"namespace {rle_ns}","open BB6Coverage"]
