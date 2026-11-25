@@ -28,7 +28,7 @@ python im-results/agent2-sidewitness-multiparent/scan.py
 
 The script exhausts all 124 manifest entries before reporting these four hits: the 388-row SideWitnessCore pool has no direct refinement of the other 120 canonical-124 parents in this orientation. This is a statement about this certificate pool and this exact orientation only; it does not rule out certificates from other libraries or symmetry-transformed witnesses. Raw10 is included as a control and reproduces the existing Agent13 scan. Its union includes the 65 SideWitness cylinders and the separate q_i(2800,100) held leaf, which adds 25 disjoint completions. The other three rows count only SideWitness cylinders.
 
-The four parent cylinders are pairwise disjoint first-one branches. Together their parent completion mass is 289,916,992,187,500; the combined checked-cylinder mass is 52,665,776,340,625 (18.166%). This aggregate is a bookkeeping sum over disjoint parents, not a claim that their complements are closed.
+The four parent cylinders are pairwise disjoint first-one branches. Together their parent completion mass is 289,916,992,187,500; the combined checked-cylinder mass is 52,665,776,340,650 (18.166%). This aggregate is a bookkeeping sum over disjoint parents, not a claim that their complements are closed.
 
 ## Whole child branches already closed by single witnesses
 
@@ -54,7 +54,7 @@ Using Agent49's generic first-mismatch subtraction from `im-results/agent49-box-
 
 The residual rectangles are exact obligations: a machine in the parent that matches none of the consumed certificates lies in exactly one rectangle. The generic Lean theorem `subtractMany_exact` proves the complement equivalence, and `subtractMany_disjoint` proves pairwise disjointness. The raw10 adapter demonstrates how to turn the residual boxes into a conditional `Cover` and feed it to the canonical78 consumer.
 
-Raw9 is the best next complete box-consumer target (108 residual boxes and 33.002% of its parent already certified), followed by raw8 (208 boxes). Raw23's 12,584-box first-mismatch complement is too fragmented for a naive list consumer; it should use a reduced multi-valued decision diagram or a smaller selected certificate subset.
+`MultiParentBoxBridge.lean` now defines conditional `Cover` consumers for raw8/raw9/raw23 using the exact disjoint remainders, and a four-parent canonical78 composition that reuses the existing raw10 bridge. Every open remainder box remains an explicit premise; this does not close any parent by itself. Raw9 (108 boxes) is the most tractable first open-residual proof target, followed by raw8 (208 boxes). Raw23's 12,584 boxes are unwieldy as a list but have a 31-node reduced MDD. The Lean consumer is pending run #264.
 
 ## Reduced multi-valued decision diagrams
 
@@ -69,9 +69,23 @@ The same unions also admit a much smaller reduced 25-way decision DAG. The commi
 
 In particular, raw23's 12,584 disjoint rectangles collapse to a 31-node DAG. This is an exact computational representation of the same union/complement, not yet a Lean kernel-checked theorem. It is a much better target for a compact formal checker than materializing every first-mismatch rectangle. The updated `scan.py` reconstructs each DAG and checks its complete node table against `bdds.json`. The scan-only target `weighted-tnf-sidewitness-multiparent-scan` passed GitHub Actions run #263 (2026-11-25), including the exhaustive 124-parent scan and all MDD node-table comparisons.
 
+### Largest open first-mismatch boxes
+
+The largest box in the source-order subtraction partition is itself a useful lead. These are order-dependent representatives of the exact complement (code 0 = halt; 1–24 = ordinary moves), not new coverage claims:
+
+| Parent | Largest open box | Mass | Parent fraction |
+|---:|---|---:|---:|
+| raw8 | C1 excludes codes {1, 2, 4, 8, 15} | 76,293,945,312,500 | 80.00% |
+| raw9 | B1 excludes {2, 4, 5, 6, 8, 10, 13, 17}; C0 excludes {1, 2, 4, 5, 6, 8, 10, 12} | 44,097,900,390,625 | 46.24% |
+| raw10 | A1 excludes {14}; C1 excludes {1, 13} | 84,228,515,625,000 | 88.32% |
+| raw23 | D1 excludes {2, 4, 6, 8, 12, 19} | 2,899,169,921,875 | 76.00% |
+
+These largest boxes depend on the original SideWitnessCore row order; the union and total remainder mass do not. The updated scanner asserts their exact domains and masses.
+
+
 
 ## Roster status and proof boundary
 
-The manifest identifies raw8/raw9/raw23 as canonical indices 4/5/13. None is among the 18 exact cylinders removed by `Combined106Roster.covered` (raw66/70/80; raw86/87/88/91/92/93/97/98/100/101/102/104; raw68/72/82), and their addresses satisfy the first-one state-introduction rule. They are therefore expected to be retained canonical78 obligations. A Lean exact-membership theorem is still required before treating this as an accepted roster graft.
+The manifest identifies raw8/raw9/raw23 as canonical indices 4/5/13. None is among the 18 exact cylinders removed by `Combined106Roster.covered` (raw66/70/80; raw86/87/88/91/92/93/97/98/100/101/102/104; raw68/72/82), and their addresses satisfy the first-one state-introduction rule. They are therefore expected to be retained canonical78 obligations. The draft `MultiParentBoxBridge.lean` now states exact `sameTable` membership theorems for raw8/raw9/raw23 in both the reduced 109 roster and canonical78 roster, plus non-coverage checks against the 109/106 cuts. These remain pending source-level CI run #264 and its transitive axiom audit; do not treat them as accepted until that run passes.
 
 No parent is closed by this scan. Every residual rectangle in the table above remains an obligation at the champion score. The safe result is only that each consumed side-witness cylinder has `WeightedBound 7014`, by the existing kernel-checked `SideWitness.sound`; this bound can be lifted monotonically to the champion score. The next proof-bearing step is a Lean module that proves exact canonical78 membership, derives the parent-specific witness lists and their safety, and consumes the disjoint complements without losing any open rectangle.

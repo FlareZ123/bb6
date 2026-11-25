@@ -30,6 +30,34 @@ EXPECTED_UNIONS = {
     23: 771_676_095_000,
 }
 EXPECTED_REMAINDER_BOXES = {8: 208, 9: 108, 10: 34, 23: 12_584}
+EXPECTED_LARGEST_REMAINDERS = {
+    8: {
+        "mass": 76_293_945_312_500,
+        "domains": {
+            "C1": [0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 24],
+        },
+    },
+    9: {
+        "mass": 44_097_900_390_625,
+        "domains": {
+            "B1": [0, 1, 3, 7, 9, 11, 12, 14, 15, 16, 18, 19, 20, 21, 22, 23, 24],
+            "C0": [0, 3, 7, 9, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
+        },
+    },
+    10: {
+        "mass": 84_228_515_625_000,
+        "domains": {
+            "A1": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
+            "C1": [0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
+        },
+    },
+    23: {
+        "mass": 2_899_169_921_875,
+        "domains": {
+            "D1": [0, 1, 3, 5, 7, 9, 10, 11, 13, 14, 15, 16, 17, 18, 20, 21, 22, 23, 24],
+        },
+    },
+}
 HELD_QI2800 = (8, 14, 11, 7, 17, 4, 9, 2, 23, 15, 16, 0)
 FULL_BRANCHES = {
     8: ((5, 1), (5, 2), (5, 4), (5, 8)),
@@ -202,6 +230,21 @@ def subtract_box(box: tuple[frozenset[int], ...],
     return out
 
 
+def largest_remainder_box(
+    boxes: list[tuple[frozenset[int], ...]],
+    free_slots: list[int],
+) -> dict:
+    largest = max(boxes, key=box_mass)
+    return {
+        "mass": box_mass(largest),
+        "domains": {
+            SLOT_NAMES[slot]: sorted(largest[slot])
+            for slot in free_slots
+            if len(largest[slot]) < 25
+        },
+    }
+
+
 def parent_box(table: list[str | None]) -> tuple[frozenset[int], ...]:
     return tuple(
         frozenset(range(25)) if move is None else frozenset((move_to_code(move),))
@@ -284,6 +327,8 @@ def main() -> None:
 
         residual_mass = sum(box_mass(box) for box in boxes)
         closed_mass = parent_mass - residual_mass
+        largest = largest_remainder_box(boxes, free_slots)
+        assert largest == EXPECTED_LARGEST_REMAINDERS[raw], (raw, largest)
         assert len(boxes) == EXPECTED_REMAINDER_BOXES[raw], (
             raw, len(boxes), EXPECTED_REMAINDER_BOXES[raw]
         )
@@ -311,6 +356,7 @@ def main() -> None:
             "subtraction_certificates": len(cert_rows),
             "disjoint_remainder_boxes": len(boxes),
             "remainder_completions": residual_mass,
+            "largest_first_mismatch_box": largest,
             "closed_completions_including_held_leaf": closed_mass,
         }
 
@@ -328,6 +374,7 @@ def main() -> None:
             "The union and rectangle counts are exact integer computations, not Lean kernel theorems.",
             "Raw10 includes the q_i(2800,100) held leaf in its subtraction count; raw8/raw9/raw23 do not.",
             "The residual boxes are obligations, not proofs that their completions are safe.",
+            "Largest first-mismatch boxes depend on source witness order; total complement and mass do not.",
         ],
     }, indent=2))
 

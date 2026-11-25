@@ -12,13 +12,14 @@
   - raw9, canonical index 5, B0=0RC: 108; 31,473,123,262,500 / 95,367,431,640,625 (33.002%).
   - raw10, canonical index 6, B0=1LC: 65; 4,477,340,035,625 / 95,367,431,640,625 (4.695%), plus the separate one-hole q_i(2800,100) held leaf (25 disjoint completions).
   - raw23, canonical index 13, B0=1RC and C0=0LD: 96; 771,676,095,000 / 3,814,697,265,625 (20.229%).
-- All four parent cylinders are pairwise disjoint. Aggregate parent mass 289,916,992,187,500; aggregate consumed mass including raw10 held leaf 52,665,776,340,625 (18.166%). This is not parent closure.
+- All four parent cylinders are pairwise disjoint. Aggregate parent mass 289,916,992,187,500; aggregate consumed mass including raw10 held leaf 52,665,776,340,650 (18.166%). This is not parent closure.
 - The raw8/raw9/raw23 parents are canonical addresses and not among the 18 exact Combined106 cuts. `MultiParentBoxBridge.lean` attempts exact membership proofs in both `Combined109Roster.reducedRoster` and `Canonical78Roster.roster`; do not claim these membership theorems until CI passes.
 
 ### Compact complement representations
 
 - Existing Agent49 first-mismatch subtraction yields exact disjoint residual rectangle counts: raw8 208, raw9 108, raw10 34 (65 witnesses + held leaf), raw23 12,584. Each rectangle remains an open obligation at the target bound.
 - Reduced 25-way MDDs in `bdds.json` use terminal 0=open, 1=covered; each internal node tests one free transition slot over halt plus 24 ordinary moves. Memoized states / hash-consed nodes: raw8 23/19, raw9 45/37, raw10 49/27 (with held leaf), raw23 74/31. The 12,584 raw23 rectangles compress to 31 internal nodes. This is an exact computational representation, not yet a Lean kernel theorem.
+- Largest source-order first-mismatch open boxes: raw8 has C1 in 20/25 values (80% of parent); raw9 has B1 and C0 each in 17/25 values (46.24%); raw10 has A1 in 24/25 and C1 in 23/25 values (88.32%); raw23 has D1 in 19/25 values (76%). These largest boxes are order-dependent; exact union and total remainder mass are not.
 - `scan.py` exhausts all 124 parents, reproduces union counts, first-mismatch counts, whole-child branches, and reconstructs the complete MDD node tables. **Scan-only GitHub Actions run #263 / run_id 45551125866 succeeded** at head `9495bce239b790a9e263f5afc4dad12f162c6219`; the scan job log confirmed the full JSON report and MDD comparisons.
 - Whole immediate child cylinders matched by a single SideWitness row: raw8 C1 = 0LA, 0RA, 1RA, 1RB (4); raw9 C0 = 0LA, 0RA, 1RA, 0LB, 0RB, 1RB, 0RC, 1RC (8); raw23 D1 = 0RA, 1RA, 0RB, 1RB, 1RC (5). `MultiParentBoxBridge.lean` attempts `hasWitness_sound` proofs for these 17 additional complete children.
 
