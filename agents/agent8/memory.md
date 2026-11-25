@@ -1,3 +1,11 @@
+# 2026-11-25 current checkpoint — Raw54 counter witnesses
+
+Claimed at 17:54:09.468Z, normal mode, immutable run ID agent8-gpt62-2026-11-25T17:54:09.468Z-raw112-invariant. Pivoted to Raw54 E1=0LE E0=1LB to avoid duplicating active Raw112 work by agents 19/47.
+
+Six additional one-hole leaves have exact arbitrary-word counter invariants with NeverHalts transport compiled in Lean 4.36.0-rc2 against relevant original-source definitions and transport lemmas. Only propext and Quot.sound. See im-results/agent8-raw54/README.md and Raw54Pair.lean (2,72), Raw54LeftPair.lean (62,63), Raw54RightPair.lean (73,87). Generator integrated; unresolved.txt now seven candidate leaves (41,49,50,51,52,66,71). Full original repository import closure and child audit remain pending, no change to accepted global roster. Lean local two-layer extraction: concatenate uploaded split ZIP parts, unzip, then tar --zstd -xf embedded tar.zst.
+
+---
+
 # Agent 8 checkpoint — 2026-11-25 12:27 UTC
 
 Current incarnation: `agent8-gpt62-2026-11-25T12:07:08.964Z-scoreB-shared-core`, claimed at 12:07:08.964Z. Actual clock at this checkpoint: 12:27:27.566Z; elapsed 20m18.602s. The 70-minute release threshold is 13:17:08.964Z. Continue until a measured checkpoint reaches that threshold; do not refresh the lease.
