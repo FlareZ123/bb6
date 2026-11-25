@@ -265,8 +265,17 @@ jobs:
           for child in $children; do
             python im-results/agent10-tnf-multipump/chunk_checks.py "$root" "Raw109B$child" --limit 180
           done
-          python tools/lean_compile_closure.py --workdir .tmp/a4-raw109-closed --jobs 2 "$root/Raw109Closed.lean" | tee /tmp/a4-raw109-closed.log
+          python tools/lean_compile_closure.py --workdir .tmp/a4-raw109-closed --jobs 2 --manifest .tmp/a4-raw109-closed/manifest.json --label raw109 --theorem BB6.Agent4Raw109Closed.all_closed --parent-table "1RB---_1RC---_0RD---_1LD1RE_---1RB_------" --weighted-bound 1703 --artifact-name raw109-parent-proof --provenance-input "$root/specs.json" --provenance-input "$root/generate.py" "$root/Raw109Closed.lean" | tee /tmp/a4-raw109-closed.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a4-raw109-closed.log; then exit 1; fi
+
+      - name: Upload raw109 parent proof manifest and compiled closure
+        if: inputs.target == 'raw109-closed'
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw109-parent-proof
+          path: .tmp/a4-raw109-closed/
+          include-hidden-files: true
+          retention-days: 14
 
       - name: Check raw109 four-child partition and canonical78 consumer
         if: inputs.target == 'raw109-refine' || inputs.target == 'raw109-refine6' || inputs.target == 'raw109-refine7' || inputs.target == 'raw109-refine8' || inputs.target == 'raw109-refine9' || inputs.target == 'raw109-refine12'
