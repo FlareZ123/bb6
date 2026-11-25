@@ -1,18 +1,37 @@
 From BusyCoq Require Import Enumerate62 Individual62 Agent8AdaptiveSource
   Agent8WeightedSource Agent47SourceWitness Agent47SourceChunk2 Agent47SourceTree
-  Agent8Chunk2FirstHole Agent44Q32CanonicalParent Agent44ChunkSideSearch
-  SourceResidualRoster.
+  Agent8Chunk2FirstHole Agent44Q32CanonicalParent SourceResidualRoster.
 From Coq Require Import List Bool Lia Arith Strings.String.
 Import ListNotations.
 Import TNF_Node.
 Open Scope string_scope.
 Open Scope nat_scope.
 
-(* Search the exact table supplied to the source-tree checker. This
-   deliberately avoids the string-roundtrip wrapper in Agent44's roster
-   search, so the certificate check and tree check see the identical TM. *)
-Definition agent50_find_side_candidate (p : TM) : option side_candidate :=
-  find (side_candidate_check p) side_candidates.
+(* The same complete 1,014-candidate grid used by the existing source-side
+   roster, defined locally so this parent-level target does not need to
+   compile the much larger 50-parent search module. *)
+Definition agent50_side_candidate := (dir * (nat * (nat * nat)))%type.
+
+Definition agent50_side_candidates : list agent50_side_candidate :=
+  flat_map (fun d =>
+    flat_map (fun entry =>
+      flat_map (fun period =>
+        map (fun budget => (d,(entry,(period,budget)))) (seq 0 3))
+        (seq 1 13))
+      (seq 0 13))
+    [L;R].
+
+Definition agent50_side_candidate_check
+    (p : TM) (c : agent50_side_candidate) : bool :=
+  let '(d,(entry,(period,budget))) := c in
+  source_side_check p d entry period budget.
+
+Definition agent50_candidate_witness (c : agent50_side_candidate) : source_witness :=
+  let '(d,(entry,(period,budget))) := c in
+  SWside d entry period budget.
+
+Definition agent50_find_side_candidate (p : TM) : option agent50_side_candidate :=
+  find (agent50_side_candidate_check p) agent50_side_candidates.
 
 (* A reusable bounded source-tree builder. At each node it prefers a
    checked translated-cycle certificate; otherwise it splits at the first
@@ -23,7 +42,7 @@ Fixpoint agent50_bounded_source_tree (depth : nat) (p : TM) : source_tree :=
   | 0 => STopen
   | S d =>
       match agent50_find_side_candidate p with
-      | Some c => STcert (candidate_witness c)
+      | Some c => STcert (agent50_candidate_witness c)
       | None =>
           match find_chunk2_hole p with
           | Some (n,h) =>
@@ -51,7 +70,7 @@ Qed.
 
 Lemma agent50_find_side_candidate_sound p c :
   agent50_find_side_candidate p = Some c ->
-  side_candidate_check p c = true.
+  agent50_side_candidate_check p c = true.
 Proof.
   unfold agent50_find_side_candidate.
   apply agent50_find_first_true.
@@ -108,8 +127,8 @@ Proof.
     + cbn [source_tree_check].
       pose proof (agent50_find_side_candidate_sound p c Hside) as Hcandidate.
       destruct c as [dir [entry [period budget]]].
-      cbn [candidate_witness source_witness_check].
-      unfold side_candidate_check in Hcandidate.
+      cbn [agent50_candidate_witness source_witness_check].
+      cbn [agent50_side_candidate_check] in Hcandidate.
       exact Hcandidate.
     + destruct (find_chunk2_hole p) as [[n h]|] eqn:Hhole.
       * cbn [source_tree_check].
@@ -150,16 +169,13 @@ Qed.
 
 (* Existing original-source certificates from the 34-node chunk roster and
    the newly searched 50-node side roster may cover some open leaves. *)
-Definition agent50_q32_existing_roster : list TM :=
-  chunk_roster ++ searched_chunk_roster.
+Definition agent50_q32_existing_roster : list TM := chunk_roster.
 
 Theorem agent50_q32_existing_roster_safe bound :
   Forall (source_table_safe bound) agent50_q32_existing_roster.
 Proof.
   unfold agent50_q32_existing_roster.
-  apply Forall_app. split.
-  - apply chunk_roster_safe.
-  - apply searched_chunk_roster_safe.
+  apply chunk_roster_safe.
 Qed.
 
 Definition agent50_q32_roster_covers_tm (roster : list TM) (child : TM) : bool :=
