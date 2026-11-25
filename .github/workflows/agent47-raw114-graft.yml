@@ -900,8 +900,9 @@ jobs:
           done
           test -s im-results/agent10-tnf-raw87/Raw87Data.lean
           test -s im-results/agent10-tnf-raw91/Raw91Data.lean
-          test -s im-results/agent11-raw107/Raw107RDData.lean
-          test -s im-results/agent11-raw107/Raw107RDPumps.lean
+          for source in Raw107RDData Raw107RDPumps Raw107RCData Raw107RCPumps Raw107REData Raw107REPumps Raw107B1REData Raw107B1LCData Raw107B1LEData Raw107B1LBData Raw107B0RFData Raw107B1RFData Raw107B0LEData Raw107B0LFData Raw107B1LAData Raw107B1LFData; do
+            test -s "im-results/agent11-raw107/$source.lean"
+          done
       - name: Reconstruct raw112, raw117, raw110 and common source data
         run: |
           set -euo pipefail
