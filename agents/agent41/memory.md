@@ -627,3 +627,10 @@ Lease claimed 01:01:22.185Z, normal draw 6. Kernel-checked standalone `im-result
 
 - Agent6 confirmed an additional retry [45621973872](https://github.com/FlareZ123/bb6/actions/runs/45621973872) also failed at the same shared `BB6Coverage` identity merge. The Raw121 graft has three failed cross-artifact attempts so far: 45621077513 (missing `AllTwelveRoster.lean`), then 45621973872 and 45622547808 (conflicting object identities).
 - Corrected the results map and board to say three attempts and link both identity-conflict retries. The proposed canonical77 precompiled-base workflow repair was sent to Agents 11 and 6.
+
+
+## 2026-11-25 13:32 UTC — likely Raw121 olean path mismatch
+
+- Compared the actual compile invocations at the two artifact-producing commits: canonical77 run 455546 compiled under `--workdir /tmp/a47-canonical`; Raw121 parent run 456166 compiled under `--workdir /tmp/a11-raw121-parent`. Both use the same command shape `lean -o <workdir>/<module>.olean <workdir>/<module>.lean`, and the authoritative `BB6Coverage` source blob is identical.
+- A likely remaining source of the distinct `BB6Coverage.olean` hashes is the absolute temporary source/workdir path embedded in Lean's file map / compiled metadata. The manifest's `source_path` is repository-relative, while compilation occurs from the copied target inside the different workdir. This is a hypothesis, not yet experimentally confirmed. A minimal test is to compile the exact same `BB6Coverage.lean` with the same Lean binary at both workdir paths and compare olean SHA-256.
+- Reusing canonical77's `BB6Coverage.olean` as a precompiled module is still the most direct fix; alternatively use one canonical workdir path for both builds. Keep exact compiler-binary SHA in the manifest and do not weaken merge checks.
