@@ -12,13 +12,13 @@ MOVES=[w+d+q for w,d,q in product("01","LR","ABCDEF")]
 SPECS=json.loads((ROOT/"more.json").read_text())
 
 def main():
-    for key in sys.argv[1:] or list(SPECS):
+    for key in sys.argv[1:] or ["RD","LC1","RE1"]:
         build_child(key,SPECS[key])
 
 def build_child(key,spec):
     target=ROOT/("generated_"+key); target.mkdir(exist_ok=True)
     parent="1RB"+spec["a1"]+"_1RC---_0RD---_1LD1RE_---0RA_------"
-    bound=spec["bound"]; n=spec["query"]; ss="(4,false)"
+    bound=spec["bound"]; n=spec["query"]; ss=slot(spec.get("slot",8))
     subprocess.run(["g++","-std=c++17","-O3",str(ROOT.parent/"agent2-tnf-raw99/enumerate.cpp"),"-o",str(target/"enumerate")],check=True)
     subprocess.run([str(target/"enumerate"),parent],cwd=target,check=True)
     data=(target/"open.txt").read_bytes()
@@ -43,7 +43,8 @@ def build_child(key,spec):
         print(key,i,info)
     pumpcode.append(f"end {pumpns}")
     (ROOT/(prefix+"Pumps.lean")).write_text("\n\n".join(pumpcode)+"\n")
-    imports=["ZipThreeHoleAudit",prefix+"Pumps"]
+    imports=["ZipThreeHoleAudit",prefix+"Pumps"]+spec.get("imports",[])
+    for i,module in spec.get("custom",{}).items(): pumps[int(i)]=module
     if "counter" in spec:
         i=spec["counter"]
         assert opens[i]=="1RB0RD_1RC---_0RD0LC_1LD1RE_1RF0RA_1LC1RE"
@@ -74,7 +75,7 @@ open BB6.Agent50TNFPilot BB6.Agent31ThreeHole BB6.Agent10ZipAudit
         assert tag=="split"
         m,s,kids=v;assert len(kids)==24
         return f".split {m} {slot(s)} (byMove [\n"+",\n".join(build(k) for k in kids)+"])"
-    assert tree[:3]==["split",n,8]
+    assert tree[:3]==["split",n,spec.get("slot",8)]
     bname=prefix+"Base"
     emit(bname,imports,f"""
 abbrev p58 : PartialMachine :=
