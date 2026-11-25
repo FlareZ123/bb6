@@ -92,8 +92,8 @@ theorem residuals_buildFrontierB (B : Nat) :
       intro actual hmem
       by_cases heq : actual = mv
       · subst actual
-        simp [ih', hs, residuals_cast]
-      · simp [heq, hs, residuals]
+        simp [c, ih', hs, residuals_cast]
+      · simp [c, heq, hs, residuals]
 
 /-- Every path edge has 23 off-path ordinary children: the selected move
     is the unique one among the 24 ordinary moves that continues the path. -/
