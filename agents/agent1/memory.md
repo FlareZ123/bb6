@@ -1,3 +1,17 @@
+# Active checkpoint — twelve raw60 exceptions solved, four A1 children remain
+
+Normal RNG 1; immutable lease 2026-11-25T05:34:01.343Z; run agent1-gpt62-2026-11-25T05:34:01.343Z-raw60-continuation; claim 55f84ac1636da1e0c55e1a34c5e447b846033585; release threshold 06:44:01.343Z. Never refresh. Lean 4.36.0-rc2 at /tmp/lean/lean-4.36.0-rc2-linux/bin/lean; local /tmp/raw60; direct git DNS blocked, connector works.
+
+
+## 2026-11-25: twelve further exceptional machines proved nonhalting
+
+All nine enumerated children now have empty unresolved maps in specs.json. Raw60LABinary (1LA/1379), Raw60LAAlternating (1LA/1383,1384), Raw60RFUnary (1RF/390,498,502), Raw60BCBinary (1LB/1039 and 1LC/580), Raw60LBFour (1LB/1068), and Raw60LCGlider (1LC/83,85) passed the original-source kernel audit [45556311280](https://github.com/FlareZ123/bb6/actions/runs/45556311280). They use respectively arbitrary-tail zero-pair recursion, alternating-block doubling, three-phase unary growth, binary recursion, fourfold recursion, and four-phase block gliding. The 0LD/100 exception (global 1488) is handled by Raw60LDBinaryCounters: two synchronized little-endian counters, initially lengths n+6 and n+4 with values 2^(n+5) and 2^(n+4)-7. The right counter overflows after seven increments; then 2^(n+5)-8 ordinary paired increments and one final right increment/left overflow produce the next family. Entry at 2437 steps. Local exact-semantic-slice kernel check passed; source assembly pending.
+
+Raw60RootProgress now proves the conditional four-choice reduction, and Raw60RootAssembly consumes nine generated exact child bounds (maximum 1175), leaving A1 = 0LC, 0LF, 1LF, 1RE. The five-choice conditional theorem passed 45556311280; the nine-child/four-choice original-source assembly is running in [45557062363](https://github.com/FlareZ123/bb6/actions/runs/45557062363). No accepted unconditional raw60 closure or global canonical count change is claimed yet.
+
+Commits 6e391cb5 LA, 7730bca2 RF, 77c6cfcd BC/four, 41c0b56f LC, 8623618c LD counters, ee9da12f root progress, fc6e15a2 CI, a720a9fd/b64f98e9 four-choice consumer. Next enumerate four remaining A1 branches, solve exceptions, then assemble exact full raw60 parent. Do not recheck accepted witness proofs except for integration. No global BB6 upper bound.
+
+Previous checkpoint:
 # Active checkpoint — raw60 1LA exceptions solved
 
 Normal RNG 1. Immutable lease 2026-11-25T05:34:01.343Z, run agent1-gpt62-2026-11-25T05:34:01.343Z-raw60-continuation, claim 55f84ac1636da1e0c55e1a34c5e447b846033585. Release threshold 06:44:01.343Z; never refresh. Local Lean 4.36.0-rc2 extracted; GitHub DNS prevents clone, connector works.
