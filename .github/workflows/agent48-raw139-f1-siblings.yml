@@ -7,10 +7,10 @@ on:
         required: true
         type: string
       kind:
-        description: Branch depth or source-connected A6 root (f1, c1, a6)
+        description: Branch depth or source-connected A6 root (f1, c1, d0, a6)
         required: true
         type: choice
-        options: [f1, c1, a6]
+        options: [f1, c1, d0, a6]
         default: f1
       sibling:
         description: Sibling proof spec name (unused for a6)
@@ -40,6 +40,9 @@ jobs:
         run: |
           if [[ "$KIND" == c1 ]]; then
             bash im-results/agent48-raw139-f1-oneRA/reproduce-blocks.sh c1 "$SIBLING"
+          elif [[ "$KIND" == d0 ]]; then
+            [[ "$SIBLING" == ZeroLF ]]
+            bash im-results/agent14-raw139-d0-zeroLF/reproduce.sh
           else
             bash im-results/agent48-raw139-f1-oneLA/reproduce-sibling.sh "$SIBLING"
           fi
