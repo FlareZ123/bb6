@@ -9,11 +9,11 @@ open BB6.Agent32FiniteSource
 
 /-- Equality of the first k cells on the left, with missing cells blank. -/
 def LeftEq (k : Nat) (xs ys : List Bool) : Prop :=
-  ∀ i, i < k → xs[i]?.getD false = ys[i]?.getD false
+  ∀ i : Nat, i < k → xs[i]?.getD false = ys[i]?.getD false
 
 /-- Equality of the entire right-hand blank-padded side. -/
 def SideEq (xs ys : List Bool) : Prop :=
-  ∀ i, xs[i]?.getD false = ys[i]?.getD false
+  ∀ i : Nat, xs[i]?.getD false = ys[i]?.getD false
 
 /-- Coq TranslatedCyclers.EqLimit, in the finite blank-padded tape model.
 The left side is compared only for k cells; the current cell and entire
@@ -39,15 +39,18 @@ theorem LeftEq_trans {k : Nat} {xs ys zs : List Bool}
   exact (h₁ i hi).trans (h₂ i hi)
 
 theorem SideEq_refl (xs : List Bool) : SideEq xs xs := by
+  unfold SideEq
   intro i
   rfl
 
 theorem SideEq_symm {xs ys : List Bool} (h : SideEq xs ys) : SideEq ys xs := by
+  unfold SideEq at h ⊢
   intro i
   exact (h i).symm
 
 theorem SideEq_trans {xs ys zs : List Bool}
     (h₁ : SideEq xs ys) (h₂ : SideEq ys zs) : SideEq xs zs := by
+  unfold SideEq at h₁ h₂ ⊢
   intro i
   exact (h₁ i).trans (h₂ i)
 
@@ -55,14 +58,16 @@ theorem LeftEq_head {k : Nat} {xs ys : List Bool}
     (h : LeftEq (k+1) xs ys) :
     xs.headD false = ys.headD false := by
   have h0 := h 0 (by omega)
-  simpa [get_head] using h0
+  rw [get_head, get_head]
+  exact h0
 
 theorem LeftEq_tail {k : Nat} {xs ys : List Bool}
     (h : LeftEq (k+1) xs ys) :
     LeftEq k xs.tail ys.tail := by
   intro i hi
   have h' := h (i+1) (by omega)
-  simpa [get_tail] using h'
+  rw [get_tail, get_tail]
+  exact h'
 
 theorem LeftEq_cons {k : Nat} {xs ys : List Bool} {a b : Bool}
     (hab : a = b) (h : LeftEq k xs ys) :
@@ -74,17 +79,23 @@ theorem LeftEq_cons {k : Nat} {xs ys : List Bool} {a b : Bool}
 
 theorem SideEq_head {xs ys : List Bool} (h : SideEq xs ys) :
     xs.headD false = ys.headD false := by
-  simpa [get_head] using h 0
+  unfold SideEq at h
+  have h0 := h 0
+  rw [get_head, get_head]
+  exact h0
 
 theorem SideEq_tail {xs ys : List Bool} (h : SideEq xs ys) :
     SideEq xs.tail ys.tail := by
+  unfold SideEq at h ⊢
   intro i
   have h' := h (i+1)
-  simpa [get_tail] using h'
+  rw [get_tail, get_tail]
+  exact h'
 
 theorem SideEq_cons {xs ys : List Bool} {a b : Bool}
     (hab : a = b) (h : SideEq xs ys) :
     SideEq (a::xs) (b::ys) := by
+  unfold SideEq at h ⊢
   intro i
   cases i with
   | zero => simp [hab]
@@ -132,7 +143,7 @@ theorem BStep_replay {m : Machine} {k k' : Nat}
         | mk l r cur st =>
           cases d with
           | mk l' r' cur' st' =>
-            exact ⟨heq.state_eq, heq.current_eq⟩
+            exact Prod.ext heq.state_eq heq.current_eq
       have hm' : m (query d) = some mv := by
         simpa [← hquery] using hm
       refine ⟨move d mv, BStep.left hm' hr, ?_⟩
@@ -146,7 +157,7 @@ theorem BStep_replay {m : Machine} {k k' : Nat}
         | mk l r cur st =>
           cases d with
           | mk l' r' cur' st' =>
-            exact ⟨heq.state_eq, heq.current_eq⟩
+            exact Prod.ext heq.state_eq heq.current_eq
       have hm' : m (query d) = some mv := by
         simpa [← hquery] using hm
       refine ⟨move d mv, BStep.right hm' hr, ?_⟩
@@ -168,13 +179,21 @@ theorem BRun_replay {m : Machine} {n k k' : Nat}
     {c c' d : FiniteCfg}
     (hRun : BRun m n k c k' c') (heq : EqLimit k c d) :
     ∃ k'' d', BRun m n k d k'' d' ∧ EqLimit k' c' d' := by
-  induction hRun generalizing d with
+  revert k c k' c' d heq hRun
+  induction n with
   | zero =>
-      exact ⟨k,d,BRun.zero k d,heq⟩
-  | succ hstep hrest ih =>
-      obtain ⟨d₁,hstep',heq₁⟩ := BStep_replay hstep heq
-      obtain ⟨k₂,d₂,hrest',heq₂⟩ := ih d₁ heq₁
-      exact ⟨k₂,d₂,BRun.succ hstep' hrest',heq₂⟩
+      intro k c k' c' d heq hRun
+      cases hRun with
+      | zero k₀ c₀ =>
+          exact ⟨k₀, d, BRun.zero (m := m) k₀ d, heq⟩
+  | succ n ih =>
+      intro k c k' c' d heq hRun
+      cases hRun with
+      | succ hstep hrest =>
+          obtain ⟨d₁, hstep', heq₁⟩ := BStep_replay hstep heq
+          obtain ⟨k₂, d₂, hrest', heq₂⟩ :=
+            ih _ _ _ _ d₁ heq₁ hrest
+          exact ⟨k₂, d₂, BRun.succ (m := m) hstep' hrest', heq₂⟩
 
 theorem BRun_finiteRun {m : Machine} {n k k' : Nat}
     {c d : FiniteCfg}
@@ -541,7 +560,8 @@ theorem sampleRoot :
   rfl
 
 theorem sampleSupport : TNFSupport samplePartial 6 := by
-  decide
+  intro s t _
+  exact ⟨s.1.isLt, fun mv _ => mv.next.isLt⟩
 
 theorem sampleCyclerCheck :
     translatedCyclerCheck sampleMachine false 7 6 0 = true := by
