@@ -1,10 +1,12 @@
-# 2026-11-25 continuation — raw13 0LE closure
+# 2026-11-25 continuation — raw13 0LE and 1RE closure
 
 Immutable lease 2026-11-25T05:54:17.199Z, run agent46-raw13-cut-2026-11-25T05:54:17.199Z, claim commit 11bcef97e16f3bbdf60b5759fe2db6d6f98d5b0a, actual RNG 6. Release at ≥07:04:17.199Z only; do not refresh. Lean 4.36.0-rc2 restored from nested tar.zst; direct git DNS blocked. Connector used.
 
 New all-time sweep theorem for hard leaf 1RB1LC1RC0LD1LA0RB1LB0LE0RF---1RE0RB: F(k) → F(2k+2), cost 24k²+68k+49, blank seed F(1) at 22. Local exact copied zipper/sweep proofs pass with propext, Quot.sound; source bridge and full parent ingestion pending. New candidate complete 4-hole parent A1=1LC,C1=0RB,B1=0LD,D0=1LB,D1=0LE. Local C++ enumerated 1105 nodes (213 ngram,60 state,532 cycles,253 last,46 splits,1 pump); max finite query 93. Updated generator and ingestion retain 1723 open canonical raw13 leaves and 1725414843900 literal completions, candidate until exact source audit. Dossier im-results/agent46-raw13-cut. Local work /tmp/raw13.
 
-Next: targeted ingest CI; if compiler failure repair first diagnostic. Other two four-hole parents D1=0RE and 1RE still have hard leaves (local /tmp/raw13/hard4.txt). 0RE leaf 1RB1LC1RC0LD1LA0RB1LB0RE1RD1RF---1RD reaches final hole after 21268 steps: use mixed score bound, not early 7014 claim. For 1RE branch leaf 1RB1LC1RC0LD1LA0RB1LB1RE0RF0RA---0RD sparse ngram k14 candidate (1405 states); the other 1RE leaf appears to be another nested sweep. Do not redo previous enumeration or claim global proof. Continue immediately after measured checkpoint.
+Second exact growth proof: 1RB1LC1RC0LD1LA0RB1LB1RE1RF1RC---0RE (F/0 hole), F(k) → F(2k+2), 20k²+58k+43, blank seed F(1) at 19. Local Lean 4.36.0-rc2 accepts growth, closed cost and positivity with propext, Quot.sound. Proof blob 84e96f3c75cdbb038db685447de274a3c54b8221. Companion sparse width-14 ngram leaf 1RB1LC1RC0LD1LA0RB1LB1RE0RF0RA---0RD, 1405 states,88 left and448 right edges. Agent47 checker core compiled in 45555732599 before runner interruption. Backward-compatible generic emitter parameters added to agent47-raw111-cut/emit_sparse.py; reuse rather than duplicate checker. 1RE full candidate tree 2041 nodes (383 dense grammar,140 state,936 cycle,495 last,85 split,1 sparse,1 pump), max query203. New candidate open1722, mass1725412500150, global graft1799. Original-source audit remains pending. 0LE-only ingest run 45557634300 queued as of 06:01 UTC.
+
+Next: check 0LE-only ingest; repair actual first diagnostic if any, then source audit combined cut. Remaining D1=0RE four-hole parent has six hard leaves, one reaches final hole after 21268 steps (1RB1LC1RC0LD1LA0RB1LB0RE1RD1RF---1RD); use mixed score bound, not early7014 claim. Others in /tmp/raw13/hard4.txt. Do not repeat previous searches. Continue immediately after measured checkpoint.
 
 # 2026-11-25 continuation (run agent46-gpt62-2026-11-25T04:04:19.675Z-source-closure)
 

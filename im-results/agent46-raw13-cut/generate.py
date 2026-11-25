@@ -7,6 +7,7 @@ from pathlib import Path
 import subprocess
 import tempfile
 import json
+import importlib.util
 
 D = Path(__file__).resolve().parent
 MOVES = [w+d+q for w,d,q in product("01","LR","ABCDEF")]
@@ -165,7 +166,7 @@ def build_enhanced(t):
     return enhance(t,ROOT,proven)
 
 def enhance_selected(t):
-    """Close 18 exact residual cylinders with exhaustive canonical subtrees."""
+    """Close 19 exact residual cylinders with exhaustive canonical subtrees."""
     ng = D.parent/"agent1-ngram"
     with tempfile.TemporaryDirectory() as tmp:
         tmp = Path(tmp)
@@ -175,7 +176,7 @@ def enhance_selected(t):
             proc = subprocess.run([str(binpath)],stdin=inp,text=True,capture_output=True)
         assert proc.returncode == 0, proc.stderr
         selected = {raw:json.loads(data) for raw,data in (line.split(" ",1) for line in proc.stdout.splitlines())}
-        assert len(selected)==18
+        assert len(selected)==19
         grams = []
         def collect(t):
             if t[0]=="ngram":
@@ -184,8 +185,8 @@ def enhance_selected(t):
                 for c in t[3]:
                     if c is not None: collect(c)
         for sub in selected.values(): collect(sub)
-        assert len(grams)==443
-        assert len(set(grams))==443
+        assert len(grams)==826
+        assert len(set(grams))==826
         data = tmp/"tables.txt"
         data.write_text("".join(f"{100+i} {raw}\n" for i,raw in enumerate(grams)))
         ngram = tmp/"ngram"
@@ -193,7 +194,7 @@ def enhance_selected(t):
         certs = tmp/"certs.txt"
         with data.open() as inp, certs.open("w") as out:
             subprocess.run([str(ngram),"7"],stdin=inp,stdout=out,check=True)
-        assert len(certs.read_text().splitlines())==443
+        assert len(certs.read_text().splitlines())==826
         all_lines = certs.read_text().splitlines()
         names = []
         for i in range(0,len(all_lines),16):
@@ -204,6 +205,18 @@ def enhance_selected(t):
             subprocess.run(["python",str(ng/"emit_ngram.py"),str(data),str(shard),
                 str(D/(name+".lean")),"--namespace","BB6.Agent46Raw13SelectedGram"],check=True)
         (D/"Agent46Raw13SelectedGram.lean").write_text("".join(f"import {n}\n" for n in names))
+        # Reuse Agent47's sparse kernel checker and trie emitter at width 14.
+        sparse_dir = D.parent/"agent47-raw111-cut"
+        sparse_exe = tmp/"ngram_sparse"
+        subprocess.run(["g++","-O3","-std=c++17",str(sparse_dir/"ngram_sparse.cpp"),"-o",str(sparse_exe)],check=True)
+        raw = "1RB1LC1RC0LD1LA0RB1LB1RE0RF0RA---0RD"
+        out = subprocess.check_output([str(sparse_exe),"14"],input=f"0 {raw}\n",text=True)
+        i,data = out.strip().split(maxsplit=1)
+        assert i=="0"
+        spec = importlib.util.spec_from_file_location("shared_sparse_emitter",sparse_dir/"emit_sparse.py")
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        module.emit(D,0,raw,data,width=14,module_name="Agent46Raw13Sparse1RE",expected=(1405,88,448))
         ids={raw:100+i for i,raw in enumerate(grams)}
         def norm(t):
             if t[0]=="ngram": return ("selectedgram",ids[t[1]])
@@ -226,6 +239,12 @@ def emit(t):
     if tag == "ngram":
         i = v[0]
         return f".closed (.proven BB6.Agent46Raw13NGram.p{i} BB6.Agent46Raw13NGram.never{i})"
+    if tag == "sparse1RE":
+        n = "BB6.Agent47SparseNGram.Agent46Raw13Sparse1RE"
+        return f".closed (.proven {n}.table {n}.never)"
+    if tag == "pump1RE2":
+        n = "BB6Coverage.Agent31Pump.Raw13Pump1RE2"
+        return f".closed (.proven {n}.table {n}.never)"
     if tag == "pump0LE":
         n = "BB6Coverage.Agent31Pump.Raw13Pump0LE"
         return f".closed (.proven {n}.table {n}.never)"
@@ -262,8 +281,8 @@ if __name__ == "__main__":
     t = enhance_selected(build_enhanced(t))
     c,m = Counter(),Counter()
     tally(t,9,3,c,m)
-    assert c == Counter(open=1723,cycle=1772,state=808,split=268,halt=268,last=504,ngram=15,pump=3,selectedgram=443,pump1RE=1,sharedpump=3,pump0LE=1),c
-    assert m["open"] == 1725414843900 and sum(m.values()) == 25**9,m
+    assert c == Counter(open=1722,cycle=2708,state=948,split=353,halt=353,last=999,ngram=15,pump=3,selectedgram=826,pump1RE=1,sharedpump=3,pump0LE=1,pump1RE2=1,sparse1RE=1),c
+    assert m["open"] == 1725412500150 and sum(m.values()) == 25**9,m
     names = []
     for i,k in enumerate(t[3]):
         if k is None:
@@ -271,7 +290,7 @@ if __name__ == "__main__":
         name = f"Agent46Raw13Kid{i:02}"
         names.append(name)
         mv = move(MOVES[i])
-        write(name,["Agent46Raw13Base","Agent46Raw13NGram","Agent46Raw13Pumps","Agent46Raw13SelectedGram","Agent46Raw13Pump1RE","Agent46Raw13SharedPumps","Agent46Raw13Pump0LE"],f"""
+        write(name,["Agent46Raw13Base","Agent46Raw13NGram","Agent46Raw13Pumps","Agent46Raw13SelectedGram","Agent46Raw13Pump1RE","Agent46Raw13SharedPumps","Agent46Raw13Pump0LE","Agent46Raw13Pump1RE2","Agent46Raw13Sparse1RE"],f"""
 def kid{i:02} : Cut := {emit(k)}
 theorem checked{i:02} :
     check 7014 (child {mv}) (nextCut 3 {mv}) kid{i:02} = true := by decide

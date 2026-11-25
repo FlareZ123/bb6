@@ -40,6 +40,8 @@ int complete(Table p,int cut,int holes){
  if(!a.typ){
     auto raw=show(p);
     if(extended && raw=="1RB1LC1RC0LD1LA0RB1LB0LE0RF---1RE0RB"){nodes[i].a={8,0,0,0,0,0,0};return i;}
+    if(extended && raw=="1RB1LC1RC0LD1LA0RB1LB1RE1RF1RC---0RE"){nodes[i].a={9,0,0,0,0,0,0};return i;}
+    if(extended && raw=="1RB1LC1RC0LD1LA0RB1LB1RE0RF0RA---0RD"){nodes[i].a={10,0,0,0,0,0,0};return i;}
     if(raw=="1RB1LC1RC0LD1LA0RB1LB1LE1RF0RC---1RE"){nodes[i].a={6,0,0,0,0,0,0};return i;}
     if(raw=="1RB1LC1RC0LD1LA0RB1LB1LE0RE1RF0RC---"||raw=="1RB1LC1RC0LD1LA0RB1LB1LE0RF---0RC1RF"||raw=="1RB1LC1RC0LD1LA0RB1LB1LE1LF---1RF0RC"){nodes[i].a={7,0,0,0,0,0,0};nodes[i].p=raw;return i;}
     bool shared=raw.substr(0,24)=="1RB1LC1RC0LD1LA0RB1LB1LE" && (raw.substr(24,3)=="0RE"||raw.substr(24,3)=="0RF"||raw.substr(24,3)=="1LF");
@@ -54,6 +56,8 @@ int complete(Table p,int cut,int holes){
  return i;
 }
 void emit(int i){auto n=nodes[i];auto a=n.a;
+ if(a.typ==10){cout<<"[\"sparse1RE\"]";return;}
+ if(a.typ==9){cout<<"[\"pump1RE2\"]";return;}
  if(a.typ==8){cout<<"[\"pump0LE\"]";return;}
  if(a.typ==6){cout<<"[\"pump1RE\"]";return;}
  if(a.typ==7){cout<<"[\"sharedpump\",\""<<n.p<<"\"]";return;}
@@ -64,4 +68,4 @@ void emit(int i){auto n=nodes[i];auto a=n.a;
  cout<<"[\"split\","<<a.n<<','<<a.s<<",[";
  for(int j=0;j<24;j++){if(j)cout<<',';if(n.child[j])emit(n.child[j]-1);else cout<<"null";}cout<<"]]";
 }
-int main(){string s;int cut,holes;while(cin>>s>>cut>>holes){extended=s=="1RB1LC1RC0LD1LA0RB1LB0LE------------";nodes.clear();int i=complete(parse(s),cut,holes);if(i<0){cerr<<"unresolved "<<s<<'\n';return 1;}cout<<s<<' ';emit(i);cout<<'\n';}}
+int main(){string s;int cut,holes;while(cin>>s>>cut>>holes){extended=s=="1RB1LC1RC0LD1LA0RB1LB0LE------------"||s=="1RB1LC1RC0LD1LA0RB1LB1RE------------";nodes.clear();int i=complete(parse(s),cut,holes);if(i<0){cerr<<"unresolved "<<s<<'\n';return 1;}cout<<s<<' ';emit(i);cout<<'\n';}}

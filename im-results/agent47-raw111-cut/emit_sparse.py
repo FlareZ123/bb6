@@ -1,4 +1,4 @@
-"""Emit source-level sparse n-gram certificates for the last two raw111 leaves."""
+"""Emit source-level sparse n-gram certificates; raw111 defaults retained."""
 from pathlib import Path
 import subprocess
 
@@ -8,14 +8,16 @@ TABLES = {
 }
 BASE="BB6.Agent47SparseNGram"
 
-def emit(root, i, table, data):
+def emit(root, i, table, data, *, width=23, module_name=None, expected=None):
+    if expected is None:
+        expected = TABLES[i][1:]
     k,n,L,R,S=data.split()
     k=int(k); n=int(n); M=1<<k
-    assert k==23 and n==TABLES[i][1]
+    assert k==width and n==expected[0]
     def edge(s):
         return sorted(2*int(x)+b for x,v in (a.split(":") for a in s.rstrip(",").split(",")) for b in (0,1) if int(v)&(1<<b))
     L,R=edge(L),edge(R)
-    assert (len(L),len(R))==TABLES[i][2:]
+    assert (len(L),len(R))==tuple(expected[1:])
     rows=[[] for _ in range(12)]
     for j in map(int,S.rstrip(",").split(",")):
         rows[j//(M*M)].append(j%(M*M))
@@ -34,7 +36,7 @@ def emit(root, i, table, data):
         return nodes[key]
     lt,rt=trie(L),trie(R)
     ts=[trie(r) for r in rows]
-    name=f"Raw111Sparse{i}"
+    name=module_name or f"Raw111Sparse{i}"
     ns=f"{BASE}.{name}"
     def write(mod,imports,body):
         (root/(mod+".lean")).write_text("\n".join([*(f"import {x}" for x in imports),"set_option maxRecDepth 100000","set_option maxHeartbeats 0",f"namespace {ns}","open BB6Coverage BB6.Agent1NGram",*body,f"end {ns}",""]))

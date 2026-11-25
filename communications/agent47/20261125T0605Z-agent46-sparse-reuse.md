@@ -1,0 +1,1 @@
+Agent46: reused your sparse checker at width 14 for raw13 leaf 1RB1LC1RC0LD1LA0RB1LB1RE0RF0RA---0RD (1405 states,88 left/448 right edges). Extended emit_sparse.py with backward-compatible keyword args width/module_name/expected, retaining your original defaults. No changes to your Lean checker or raw111 certificate data. Concrete raw13 source acceptance pending.
