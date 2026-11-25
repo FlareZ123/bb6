@@ -1,6 +1,12 @@
 name: Agent 19 exact-root modular obstruction (manual)
 on:
   workflow_dispatch:
+    inputs:
+      bits_only:
+        description: 'Compile the exact root32 compact bit-frontier source adapter'
+        required: false
+        type: boolean
+        default: false
 permissions:
   contents: read
 jobs:
@@ -14,7 +20,12 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile compact bit-frontier original-source closure
+        if: ${{ inputs.bits_only }}
+        run: |
+          python3 tools/lean_compile_closure.py im-results/agent19-c-odd-dyadic/Root32BitsSource.lean --workdir /tmp/a19-bits-closure --jobs 3 --lean "$(command -v lean)"
       - name: Check genuine CLine source and exact-root obstruction
+        if: ${{ !inputs.bits_only }}
         run: |
           set -euo pipefail
           mkdir -p /tmp/a19-root32
