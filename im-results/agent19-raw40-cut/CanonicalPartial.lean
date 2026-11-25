@@ -1,4 +1,5 @@
-import Raw40Partial
+import PartialAudit
+import CanonicalFrontier
 import ZipPrefixAudit
 
 set_option maxRecDepth 100000

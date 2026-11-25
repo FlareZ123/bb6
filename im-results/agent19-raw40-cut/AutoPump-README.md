@@ -1,0 +1,7 @@
+# Raw40 automatic pumping batch
+
+The compact certificates in autopump-certs.jsonl are discovered with Agent48's autopump.py and checked through the existing Agent46AutoPump proof kernel (im-results/agent46-raw13-cut/Agent46AutoPump.lean). Each is a genuinely unbounded blank-tape proof for every compatible completion. 13 certificates (IDs 6,9,14,18,19,20,24,25,26,27,29,30,31) compiled locally with Lean 4.36.0-rc2 against canonical77 artifact 14997966221; all never theorems report [propext, Quot.sound]. The period duration is a*n+b, and the exponent grows by one. The JSON stores entry, family, a, b and compressed primitive/pumping actions, not unchecked proof assertions.
+
+To reproduce: compile Agent46AutoPump.lean with the same artifact on LEAN_PATH; run `python3 emit_autopump.py autopump-certs.jsonl > Raw40AutoPump.lean`, then compile it. The canonical generator supports optional far_extra.txt (index and DFA), proven.txt (underscore-formatted table and qualified namespace with table/never), and late.txt (table, primitive query time, slot). RAW40_STANDALONE=1 imports CanonicalPartial directly. The CanonicalPartial import refactor removes the unnecessary dependency on the original Raw40Partial; its source soundness theorem is unchanged and compiled against the artifact.
+
+near6-evidence.txt identifies the actual indexed leaves of each candidate. The late entries are observed first-hole queries, not yet kernel-certified enclosing bounds. The enclosing five-hole certificates remain separate pending kernel checks. No combined roster count claimed.

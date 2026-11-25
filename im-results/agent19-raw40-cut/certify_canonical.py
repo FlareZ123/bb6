@@ -1,4 +1,4 @@
-import json,sys
+import json,sys,os
 from pathlib import Path
 
 # Reuse exact FAR saturation and move spelling from the raw sharded generator.
@@ -6,6 +6,10 @@ exec(Path(__file__).with_name('certify_shards.py').read_text().split('src=Path')
 src=Path(sys.argv[1]);output=Path(sys.argv[2]);output.mkdir(parents=True,exist_ok=True)
 parent=parse(sys.argv[3]);tree=json.loads((src/'tree.json').read_text());B=int(sys.argv[4]);mod=sys.argv[5]
 bank={int(i):c for i,c in (x.split() for x in (src/'far5.txt').read_text().splitlines())}
+if (src/'far_extra.txt').exists():
+    bank.update({int(i):c for i,c in (x.split() for x in (src/'far_extra.txt').read_text().splitlines())})
+proven=dict(x.split() for x in (src/'proven.txt').read_text().splitlines()) if (src/'proven.txt').exists() else {}
+late={code:(int(n),int(s)) for code,n,s in (x.split() for x in (src/'late.txt').read_text().splitlines())} if (src/'late.txt').exists() else {}
 opens=(src/'open.txt').read_text().splitlines();it=iter(enumerate(opens));threshold=int(sys.argv[6]) if len(sys.argv)>6 else 96
 
 def support(p):return max([2]+[max(i//2,ord(v[2])-65)+1 for i,v in enumerate(p) if v!='---'])
@@ -16,6 +20,12 @@ def ordinary(t,p):
     if t[0]=='last':return f'.last {t[1]} {slot(t[2])}'
     if t[0]=='open':
         i,code=next(it);assert t[1]==code==show(p)
+        if code in late:
+            n,s=late[code]
+            return f'.last {n} {slot(s)}'
+        if code in proven:
+            pr=proven[code]
+            return f'.proven {pr}.table {pr}.never'
         pumps={'1RB0RC_1RC1RE_0RD1LB_1LD1LA_1LF0RF_---0LB':'RC1LB','1RB0RB_1RC0RC_0RD0LE_1LD1LA_0LF---_1LC0RB':'RB0RC'}
         if code in pumps:return f'.proven BB6.Agent19Raw40.{pumps[code]}.table BB6.Agent19Raw40.{pumps[code]}.never'
         extra={'1RB0RB_1RC1RC_0RD0LE_1LD1LA_---1LF_1LC0RF':('RB1RC.table','RB1RC.never'),
@@ -43,7 +53,9 @@ open BB6Coverage BB6.Agent13BlankDelay BB6.Agent31ThreeHole BB6.Agent10ZipAudit 
 '''
 foot=f'\nend BB6.Agent19Raw40.{mod}\n'
 cut=support(parent)
-base='import Raw40CanonicalCut\nimport Raw40TwoSided\nimport Raw40MoreTwoSided\nimport Raw40ThirdSweeps\n'+head+f'-- {show(parent)}\ndef p : PartialMachine := fun s =>\n  match s.1.val,s.2 with\n'
+imports='import CanonicalPartial\n' if os.environ.get('RAW40_STANDALONE')=='1' else 'import Raw40CanonicalCut\nimport Raw40TwoSided\nimport Raw40MoreTwoSided\nimport Raw40ThirdSweeps\n'
+if proven:imports+='import Raw40AutoPump\n'
+base=imports+head+f'-- {show(parent)}\ndef p : PartialMachine := fun s =>\n  match s.1.val,s.2 with\n'
 for i,v in enumerate(parent):
     if v!='---':base+=f'  | {i//2},{str(bool(i%2)).lower()} => some (some ⟨{str(v[0]=="1").lower()},{str(v[1]=="R").lower()},{ord(v[2])-65}⟩)\n'
 base+='  | _,_ => none\n'
