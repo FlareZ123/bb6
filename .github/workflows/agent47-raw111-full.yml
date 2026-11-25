@@ -1,11 +1,20 @@
-name: Agent 47 raw111 complete cylinder
+name: Agent 47 full source cylinder audit
 on:
   workflow_dispatch:
+    inputs:
+      mode:
+        description: Cylinder or pinned recovery of two raw111 runner-shutdown halves
+        type: choice
+        options: [raw111, raw115, raw111-repair]
+        default: raw111
 permissions:
   contents: read
   actions: read
+env:
+  CYLINDER: ${{ inputs.mode }}
 jobs:
   generate:
+    if: ${{ inputs.mode != 'raw111-repair' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     outputs:
@@ -15,24 +24,30 @@ jobs:
       - name: Generate all deterministic candidate certificates
         run: |
           set -euo pipefail
-          python im-results/agent47-raw111-cut/generate.py
+          python "im-results/agent47-${CYLINDER}-cut/generate.py"
       - name: Plan disjoint audit shards
         id: plan
         run: |
           python - <<'PY' >> "$GITHUB_OUTPUT"
-          import pathlib,json
-          root=pathlib.Path("im-results/agent47-raw111-cut")
+          import os,pathlib,json
+          cyl=os.environ["CYLINDER"]
+          root=pathlib.Path("im-results/agent47-"+cyl+"-cut")
+          prefix=cyl.capitalize()
+          size=6 if cyl=="raw115" else 12
           jobs=[]
           for i in range(24):
               b=f"{i:02}"
-              for h in ([0,1] if (root/f"Raw111Kid{b}_00.lean").exists() else [-1]):
-                  jobs.append({"branch":b,"half":h})
+              if (root/f"{prefix}Kid{b}_00.lean").exists():
+                  for start in range(0,24,size):
+                      jobs.append({"branch":b,"start":start,"end":start+size})
+              else:
+                  jobs.append({"branch":b,"start":-1,"end":-1})
           print("matrix="+json.dumps({"include":jobs},separators=(",",":")))
           PY
       - uses: actions/upload-artifact@v4
         with:
-          name: raw111-generated-source
-          path: im-results/agent47-raw111-cut/*.lean
+          name: ${{ inputs.mode }}-generated-source
+          path: im-results/agent47-${{ inputs.mode }}-cut/*.lean
           if-no-files-found: error
   preflight:
     needs: generate
@@ -47,42 +62,20 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - uses: actions/download-artifact@v4
         with:
-          name: raw111-generated-source
-          path: im-results/agent47-raw111-cut
-      - name: Kernel-check general sparse semantics and all new carry invariants
+          name: ${{ inputs.mode }}-generated-source
+          path: im-results/agent47-${{ inputs.mode }}-cut
+      - name: Check invariant proofs and root interface on original source
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
-          root=im-results/agent47-raw111-cut
-          python tools/lean_compile_closure.py --workdir /tmp/a47-raw111-preflight --jobs 4 "$root/SparseNGram.lean" "$root/Raw111Prefix.lean" "$root/Raw111Ternary.lean" "$root/Raw111Triplet.lean" "$root/Raw111QuadCounter.lean" "$root/Raw111TripleCounter.lean" | tee /tmp/a47-raw111-preflight.log
-          if grep -Eq 'sorryAx|native_decide' /tmp/a47-raw111-preflight.log; then exit 1; fi
-  sparse:
-    needs: [generate, preflight]
-    strategy:
-      fail-fast: false
-      matrix:
-        id: [3,9]
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install Lean 4.36.0-rc2
-        run: |
-          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
-          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
-          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - uses: actions/download-artifact@v4
-        with:
-          name: raw111-generated-source
-          path: im-results/agent47-raw111-cut
-      - name: Check all 12 rows of one sparse certificate
-        env:
-          ID: ${{ matrix.id }}
-        run: |
-          set -euo pipefail
-          python im-results/agent13-coverage/unpack.py
-          python tools/lean_compile_closure.py --workdir /tmp/a47-sparse --jobs 4 "im-results/agent47-raw111-cut/Raw111Sparse${ID}.lean" | tee /tmp/a47-sparse.log
-          if grep -Eq 'sorryAx|native_decide' /tmp/a47-sparse.log; then exit 1; fi
+          root="im-results/agent47-${CYLINDER}-cut"
+          if [ "$CYLINDER" = raw111 ]; then
+            roots=("$root/SparseNGram.lean" "$root/Raw111Prefix.lean" "$root/Raw111Ternary.lean" "$root/Raw111Triplet.lean" "$root/Raw111QuadCounter.lean" "$root/Raw111TripleCounter.lean")
+          else
+            roots=("$root/Raw115Base.lean" "$root"/Raw115Counter[234569].lean)
+          fi
+          python tools/lean_compile_closure.py --workdir /tmp/a47-preflight --jobs 4 "${roots[@]}" | tee /tmp/a47-preflight.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a47-preflight.log; then exit 1; fi
   branch:
     needs: [generate, preflight]
     strategy:
@@ -100,34 +93,36 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - uses: actions/download-artifact@v4
         with:
-          name: raw111-generated-source
-          path: im-results/agent47-raw111-cut
-      - name: Check selected disjoint audit subtree
+          name: ${{ inputs.mode }}-generated-source
+          path: im-results/agent47-${{ inputs.mode }}-cut
+      - name: Check disjoint audit subtree
         env:
           BRANCH: ${{ matrix.branch }}
-          HALF: ${{ matrix.half }}
+          FIRST: ${{ matrix.start }}
+          END: ${{ matrix.end }}
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
-          root=im-results/agent47-raw111-cut
+          root="im-results/agent47-${CYLINDER}-cut"
+          prefix="${CYLINDER^}"
           roots=()
-          if [ "$HALF" = -1 ]; then
-            roots+=("$root/Raw111Branch${BRANCH}.lean")
+          if [ "$FIRST" = -1 ]; then
+            roots+=("$root/${prefix}Branch${BRANCH}.lean")
           else
-            for ((i=12*HALF;i<12*(HALF+1);i++)); do
-              printf -v name 'Raw111Kid%s_%02d.lean' "$BRANCH" "$i"
+            for ((i=FIRST;i<END;i++)); do
+              printf -v name '%sKid%s_%02d.lean' "$prefix" "$BRANCH" "$i"
               roots+=("$root/$name")
             done
           fi
-          python tools/lean_compile_closure.py --workdir /tmp/a47-raw111 --jobs 4 "${roots[@]}" | tee /tmp/a47-raw111.log
-          if grep -Eq 'sorryAx|native_decide' /tmp/a47-raw111.log; then exit 1; fi
+          python tools/lean_compile_closure.py --workdir /tmp/a47-audit --jobs 4 "${roots[@]}" | tee /tmp/a47-audit.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a47-audit.log; then exit 1; fi
       - uses: actions/upload-artifact@v4
         with:
-          name: raw111-audit-${{ matrix.branch }}-${{ matrix.half }}
-          path: /tmp/a47-raw111/*.olean
+          name: ${{ inputs.mode }}-audit-${{ matrix.branch }}-${{ matrix.start }}
+          path: /tmp/a47-audit/*.olean
           if-no-files-found: error
   assemble:
-    needs: [branch,sparse]
+    needs: [branch, generate]
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -139,21 +134,256 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - uses: actions/download-artifact@v4
         with:
-          name: raw111-generated-source
-          path: /tmp/a47-raw111
+          name: ${{ inputs.mode }}-generated-source
+          path: im-results/agent47-${{ inputs.mode }}-cut
       - uses: actions/download-artifact@v4
         with:
-          pattern: raw111-audit-*
-          path: /tmp/a47-raw111
+          pattern: ${{ inputs.mode }}-audit-*
+          path: /tmp/a47-audit
           merge-multiple: true
       - name: Compose kernel-checked branches and prove no residual
         run: |
           set -euo pipefail
-          cd /tmp/a47-raw111
+          root="im-results/agent47-${CYLINDER}-cut"
+          prefix="${CYLINDER^}"
+          cp "$root/"*.lean /tmp/a47-audit/
+          (
+            cd /tmp/a47-audit
+            export LEAN_PATH="$PWD"
+            for i in $(seq -w 0 23); do
+              if [ ! -f "${prefix}Branch${i}.olean" ]; then
+                for j in $(seq -w 0 23); do test -s "${prefix}Kid${i}_${j}.olean"; done
+                lean -o "${prefix}Branch${i}.olean" "${prefix}Branch${i}.lean"
+              fi
+            done
+            lean -o "${prefix}Data.olean" "${prefix}Data.lean" | tee /tmp/a47-root.log
+            if grep -Eq 'sorryAx|native_decide' /tmp/a47-root.log; then exit 1; fi
+          )
+          python im-results/agent13-coverage/unpack.py
+          if [ "$CYLINDER" = raw111 ]; then parent='1RB---_1RC---_0RD---_1LD1RE_---0RC_------'; else parent='1RB---_1RC---_0RD---_1LD1RE_---0RD_------'; fi
+          python tools/lean_compile_closure.py --manifest-only --artifact-dir /tmp/a47-audit --manifest /tmp/a47-audit/source-manifest.json --label "$CYLINDER" --theorem "BB6.Agent47${prefix}.all_completions" --parent-table "$parent" --weighted-bound 7014 --artifact-name "${CYLINDER}-certified-root" --provenance-input "$root/generate.py" --provenance-input "$root/symbolic.py" --provenance-input "$root/far-bank.txt" "$root/${prefix}Data.lean"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.mode }}-certified-root
+          path: |
+            /tmp/a47-audit/*.olean
+            /tmp/a47-audit/source-manifest.json
+          if-no-files-found: error
+
+  repair-sparse-rows:
+    if: ${{ inputs.mode == 'raw111-repair' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        first: [0,3,6,9]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: a6aa6ad912ea84e4990613b2c0916c9c93f4725b
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45555732599
+          name: raw111-generated-source
+          path: im-results/agent47-raw111-cut
+      - name: Check three sparse rows independently at original source revision
+        env:
+          FIRST: ${{ matrix.first }}
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          roots=()
+          for ((i=FIRST;i<FIRST+3;i++)); do
+            printf -v name 'Raw111Sparse3Row%02d.lean' "$i"
+            roots+=("im-results/agent47-raw111-cut/$name")
+          done
+          python tools/lean_compile_closure.py --workdir /tmp/a47-rows --jobs 3 "${roots[@]}" | tee /tmp/a47-rows.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a47-rows.log; then exit 1; fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw111-repair-rows-${{ matrix.first }}
+          path: /tmp/a47-rows/*.olean
+          if-no-files-found: error
+  repair-sparse:
+    needs: repair-sparse-rows
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: a6aa6ad912ea84e4990613b2c0916c9c93f4725b
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45555732599
+          name: raw111-generated-source
+          path: /tmp/a47-rows
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw111-repair-rows-*
+          path: /tmp/a47-rows
+          merge-multiple: true
+      - name: Assemble exact sparse certificate
+        run: |
+          set -euo pipefail
+          cd /tmp/a47-rows
+          export LEAN_PATH="$PWD"
+          for i in $(seq -w 0 11); do test -s "Raw111Sparse3Row${i}.olean"; done
+          lean -o Raw111Sparse3.olean Raw111Sparse3.lean | tee /tmp/a47-sparse.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a47-sparse.log; then exit 1; fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw111-repair-sparse3
+          path: /tmp/a47-rows/*.olean
+          if-no-files-found: error
+  repair-kids:
+    needs: repair-sparse
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix:
+        include:
+          - kid: '05_12'
+          - kid: '05_13'
+          - kid: '05_14'
+          - kid: '05_15'
+          - kid: '05_16'
+          - kid: '05_17'
+          - kid: '05_18'
+          - kid: '05_19'
+          - kid: '05_20'
+          - kid: '05_21'
+          - kid: '05_22'
+          - kid: '05_23'
+          - kid: '17_00'
+          - kid: '17_01'
+          - kid: '17_02'
+          - kid: '17_03'
+          - kid: '17_04'
+          - kid: '17_05'
+          - kid: '17_06'
+          - kid: '17_07'
+          - kid: '17_08'
+          - kid: '17_09'
+          - kid: '17_10'
+          - kid: '17_11'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: a6aa6ad912ea84e4990613b2c0916c9c93f4725b
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45555732599
+          name: raw111-generated-source
+          path: im-results/agent47-raw111-cut
+      - name: Identify direct imports
+        id: plan
+        env:
+          KID: ${{ matrix.kid }}
+        run: |
+          set -euo pipefail
+          path="im-results/agent47-raw111-cut/Raw111Kid${KID}.lean"
+          if grep -qx 'import Raw111Sparse3' "$path"; then echo 'sparse=true' >> "$GITHUB_OUTPUT"; else echo 'sparse=false' >> "$GITHUB_OUTPUT"; fi
+      - name: Check child or all nonsparse imports
+        env:
+          KID: ${{ matrix.kid }}
+          SPARSE: ${{ steps.plan.outputs.sparse }}
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          root=im-results/agent47-raw111-cut
+          path="$root/Raw111Kid${KID}.lean"
+          roots=("$path")
+          if [ "$SPARSE" = true ]; then
+            roots=()
+            while read -r mod; do
+              if [ "$mod" != Raw111Sparse3 ]; then roots+=("$root/$mod.lean"); fi
+            done < <(sed -n 's/^import //p' "$path")
+          fi
+          python tools/lean_compile_closure.py --workdir /tmp/a47-repair --jobs 3 "${roots[@]}" | tee /tmp/a47-repair.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a47-repair.log; then exit 1; fi
+      - uses: actions/download-artifact@v4
+        if: ${{ steps.plan.outputs.sparse == 'true' }}
+        with:
+          name: raw111-repair-sparse3
+          path: /tmp/a47-repair
+      - name: Check remaining child with exact compiled sparse module
+        if: ${{ steps.plan.outputs.sparse == 'true' }}
+        env:
+          KID: ${{ matrix.kid }}
+        run: |
+          set -euo pipefail
+          cp "im-results/agent47-raw111-cut/Raw111Kid${KID}.lean" /tmp/a47-repair/
+          cd /tmp/a47-repair
+          export LEAN_PATH="$PWD"
+          lean -o "Raw111Kid${KID}.olean" "Raw111Kid${KID}.lean" | tee /tmp/a47-kid.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a47-kid.log; then exit 1; fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw111-repair-kid-${{ matrix.kid }}
+          path: /tmp/a47-repair/*.olean
+          if-no-files-found: error
+  assemble-repair:
+    needs: repair-kids
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: a6aa6ad912ea84e4990613b2c0916c9c93f4725b
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45555732599
+          name: raw111-generated-source
+          path: im-results/agent47-raw111-cut
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45555732599
+          pattern: raw111-audit-*
+          path: /tmp/a47-repair
+          merge-multiple: true
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw111-repair-kid-*
+          path: /tmp/a47-repair
+          merge-multiple: true
+      - name: Compose all prior and repaired original-source-checked subtrees
+        run: |
+          set -euo pipefail
+          cp im-results/agent47-raw111-cut/*.lean /tmp/a47-repair/
+          cd /tmp/a47-repair
           export LEAN_PATH="$PWD"
           for i in $(seq -w 0 23); do
-            if [ ! -f Raw111Branch${i}.olean ]; then
-              lean -o Raw111Branch${i}.olean Raw111Branch${i}.lean
+            if [ ! -f "Raw111Branch${i}.olean" ]; then
+              for j in $(seq -w 0 23); do test -s "Raw111Kid${i}_${j}.olean"; done
+              lean -o "Raw111Branch${i}.olean" "Raw111Branch${i}.lean"
             fi
           done
           lean -o Raw111Data.olean Raw111Data.lean | tee /tmp/a47-raw111-root.log
@@ -161,5 +391,5 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: raw111-certified-root
-          path: /tmp/a47-raw111/*.olean
+          path: /tmp/a47-repair/*.olean
           if-no-files-found: error
