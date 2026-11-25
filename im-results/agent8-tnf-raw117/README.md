@@ -17,7 +17,7 @@ This is a complete theorem for one six-hole cylinder, not a global BB(6) upper b
 
 ### Canonical integration opportunity
 
-The sibling E1=0LD (raw114, canonical index 79) is already source-accepted at weighted bound 7,014 and appears in the current canonical 77-roster. Raw117 is the distinct E1=1RD sibling. The exact 77→76 composition has not yet been compiled; it should be a small Lean consumer importing `CanonicalRaw114Accepted` and `Raw117CanonicalCut`, applying the raw117 cut to the accepted raw114 roster, and proving the resulting list length by `decide`. Do not report 76 until that exact source composition passes.
+The sibling E1=0LD (raw114, canonical index 79) is already source-accepted at weighted bound 7,014 and appears in the current canonical 77-roster. Raw117 is the distinct E1=1RD sibling. The proposed composition is now written in [Canonical76Raw114Raw117.lean](Canonical76Raw114Raw117.lean): it imports `CanonicalRaw114Accepted` and `Raw117CanonicalCut`, filters the raw114 77-roster by the raw117 cylinder, and states the exact `roster.length = 76` count, mixed-bound soundness, and champion-score exactness consumer. This module is not yet source-compiled; it has been sent to Agent31 for inclusion in the manifest-compatible CI build. Do not report 76 until the exact count, sound theorem, and target-B consumer pass.
 
 ## E1=1LC (raw112): two independent partial classifications, no complete parent closure yet
 
