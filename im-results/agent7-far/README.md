@@ -38,7 +38,7 @@ hits on the historical 663 roster.
 
 ## Depth-eight FAR cross-check and the integrated 97-leaf frontier (24–25 Nov 2026)
 
-The exporter `extract_depth_eight_residuals.js` reconstructs the pre-FAR checked `Tree.residuals` from `root-frontier.json` and `DepthEightSiblingData1–4.lean`. It reproduces 107 unique raw open leaves: 101 one-hole and six two-hole. The six two-hole tables are the six existing growth-witness tables; they are already discharged by the growth layer and are not new FAR reductions. The six two-hole tables are exactly the six existing growth-witness tables, not six new frontier reductions:
+The exporter `extract_depth_eight_residuals.js` reconstructs the pre-FAR checked `Tree.residuals` from `root-frontier.json` and `DepthEightSiblingData1–4.lean`. It reproduces 107 unique raw open leaves: 101 one-hole and six two-hole. The six two-hole tables are exactly the six existing growth-witness tables; they are already discharged by the growth layer and are not new FAR reductions:
 
 | Parent/tree | A/1 child | DFA | FAR run |
 |---|---|---:|---|
@@ -49,7 +49,7 @@ The exporter `extract_depth_eight_residuals.js` reconstructs the pre-FAR checked
 | 112 / tree112 | `1LE` | 6 | [45466336469](https://github.com/FlareZ123/bb6/actions/runs/45466336469) |
 | 112 / tree112 | `1LF` | 4 | [45466346380](https://github.com/FlareZ123/bb6/actions/runs/45466346380) |
 
-The overlap is exact: the two `0LB/1LD` tables are `Agent50TripleSweep.table false/true`; the four `1LC/1RD/1LE/1LF` tables are `Agent50OnesSweep.table 0..3. `DepthEightFAR.lean` preserves independent FAR `Data` objects and `WeightedTNFCertificate B p 6` adapters for all six growth-covered tables; [regression run 45469255283](https://github.com/FlareZ123/bb6/actions/runs/45469255283) compiles the archived module and exporter successfully. These are alternate proofs, not a reason to change the existing tree.
+The overlap is exact: the two `0LB/1LD` tables are `Agent50TripleSweep.table false/true`; the four `1LC/1RD/1LE/1LF` tables are `Agent50OnesSweep.table 0..3`. `DepthEightFAR.lean` preserves independent FAR `Data` objects and `WeightedTNFCertificate B p 6` adapters for all six growth-covered tables; [regression run 45469255283](https://github.com/FlareZ123/bb6/actions/runs/45469255283) compiles the archived module and exporter successfully. These are alternate proofs, not a reason to change the existing tree.
 
 ### One-hole residuals
 
