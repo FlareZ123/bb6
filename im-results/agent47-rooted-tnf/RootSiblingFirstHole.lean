@@ -278,7 +278,7 @@ theorem rootSibling_mass_partition :
       rootLevelMoves.length * 25^9 =
       rootLevelMoves.length * 25^10 := by
   rw [rootSiblingResidualRoster_count, rootSiblingWitnesses_count, rootLevelMoves_count]
-  norm_num [pow_succ]
+  decide
 
 #print axioms rootSiblingWitnessesOK
 #print axioms rootSiblingIsClosed_sound
