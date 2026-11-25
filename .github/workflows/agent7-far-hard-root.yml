@@ -3,6 +3,10 @@ run-name: "Agent 7 FAR SMT: ${{ inputs.solver_code }}"
 on:
   workflow_dispatch:
     inputs:
+      raw110_partial_kid:
+        description: Independently check one raw110 partial child (0,5,12,13,17,18)
+        type: string
+        default: ''
       raw110_counter_only:
         description: Verify the raw110 recursive counter directly against SweepPumping
         type: boolean
@@ -70,11 +74,11 @@ jobs:
       fail-fast: false
       max-parallel: 8
       matrix:
-        shard: ${{ fromJSON((inputs.raw110_counter_only || inputs.raw110_only || inputs.batch_only || inputs.wide132_only || inputs.solver_code != '' || inputs.sibling_integration_only) && '[0]' || '[0,1,2,3,4,5,6,7]') }}
+        shard: ${{ fromJSON((inputs.raw110_partial_kid != '' || inputs.raw110_counter_only || inputs.raw110_only || inputs.batch_only || inputs.wide132_only || inputs.solver_code != '' || inputs.sibling_integration_only) && '[0]' || '[0,1,2,3,4,5,6,7]') }}
     steps:
       - uses: actions/checkout@v4
       - name: Enumerate FAR candidates or solve one target by SMT
-        if: ${{ !inputs.raw110_counter_only && !inputs.raw110_only && !inputs.batch_only && !inputs.wide132_only && !inputs.sibling_integration_only && !inputs.sibling_roster_smt }}
+        if: ${{ inputs.raw110_partial_kid == '' && !inputs.raw110_counter_only && !inputs.raw110_only && !inputs.batch_only && !inputs.wide132_only && !inputs.sibling_integration_only && !inputs.sibling_roster_smt }}
         env:
           SOLVER_CODE: ${{ inputs.solver_code }}
         run: |
@@ -125,7 +129,7 @@ jobs:
             /tmp/roster_far resources/BB6_holdouts_663_2026-10-16.txt ${{ matrix.shard }} 8 "$SAMPLES" "$MAX_DFA" | tee -a /tmp/hits.txt
           fi
       - name: SMT-scan remaining depth-eight one-hole residuals
-        if: ${{ !inputs.raw110_counter_only && !inputs.raw110_only && inputs.sibling_roster_smt }}
+        if: ${{ inputs.raw110_partial_kid == '' && !inputs.raw110_counter_only && !inputs.raw110_only && inputs.sibling_roster_smt }}
         run: |
           set -euo pipefail
           python3 -m pip install --user --quiet z3-solver
@@ -153,7 +157,7 @@ jobs:
           cat /tmp/far-smt.log
           cat /tmp/hits.txt
       - name: Install Lean if there is a candidate
-        if: ${{ !inputs.raw110_counter_only && !inputs.raw110_only && !inputs.batch_only && !inputs.wide132_only && !inputs.sibling_integration_only }}
+        if: ${{ inputs.raw110_partial_kid == '' && !inputs.raw110_counter_only && !inputs.raw110_only && !inputs.batch_only && !inputs.wide132_only && !inputs.sibling_integration_only }}
         run: |
           if [[ -s /tmp/hits.txt ]]; then
             curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
@@ -161,7 +165,7 @@ jobs:
             echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           fi
       - name: Independently check every hit against infinite-tape semantics
-        if: ${{ !inputs.raw110_counter_only && !inputs.raw110_only && !inputs.batch_only && !inputs.wide132_only && !inputs.sibling_integration_only }}
+        if: ${{ inputs.raw110_partial_kid == '' && !inputs.raw110_counter_only && !inputs.raw110_only && !inputs.batch_only && !inputs.wide132_only && !inputs.sibling_integration_only }}
         run: |
           set -euo pipefail
           if [[ ! -s /tmp/hits.txt ]]; then echo 'No candidate found in this shard'; exit 0; fi
@@ -202,7 +206,7 @@ jobs:
           if grep -qE 'sorryAx|native_decide' /tmp/hit-proof.log; then exit 1; fi
           cat /tmp/hits.txt >> "$GITHUB_STEP_SUMMARY"
       - name: Compile archived depth-eight batch
-        if: ${{ !inputs.raw110_counter_only && !inputs.raw110_only && inputs.batch_only && !inputs.wide132_only }}
+        if: ${{ inputs.raw110_partial_kid == '' && !inputs.raw110_counter_only && !inputs.raw110_only && inputs.batch_only && !inputs.wide132_only }}
         run: |
           set -euo pipefail
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
@@ -211,7 +215,7 @@ jobs:
           python tools/lean_compile_closure.py --workdir /tmp/a7-hard --jobs 4 im-results/agent7-far/DepthEightBatch.lean im-results/agent7-far/DepthEightLarge.lean im-results/agent7-far/DepthEightXL.lean | tee /tmp/batch-proof.log
           if grep -qE 'sorryAx|native_decide' /tmp/batch-proof.log; then exit 1; fi
       - name: Check complete four-hole F1=0LB cylinder
-        if: ${{ !inputs.raw110_counter_only && !inputs.raw110_only && inputs.wide132_only }}
+        if: ${{ inputs.raw110_partial_kid == '' && !inputs.raw110_counter_only && !inputs.raw110_only && inputs.wide132_only }}
         run: |
           set -euo pipefail
           d=im-results/agent7-far/wide132
@@ -227,7 +231,7 @@ jobs:
           python tools/lean_compile_closure.py --workdir /tmp/a7-wide --jobs 4 "$d/Wide132Data.lean" "$d/Wide132RosterBridge.lean" | tee /tmp/wide132-proof.log
           if grep -qE 'sorryAx|native_decide' /tmp/wide132-proof.log; then exit 1; fi
       - name: Compile exact FAR-to-weighted-TNF depth-eight sibling integration
-        if: ${{ !inputs.raw110_counter_only && !inputs.raw110_only && inputs.sibling_integration_only }}
+        if: ${{ inputs.raw110_partial_kid == '' && !inputs.raw110_counter_only && !inputs.raw110_only && inputs.sibling_integration_only }}
         run: |
           set -euo pipefail
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
@@ -240,6 +244,24 @@ jobs:
             echo 'Forbidden proof placeholder or native_decide found in sibling integration closure' >&2
             exit 1
           fi
+      - name: Verify one sharded raw110 partial child
+        if: ${{ inputs.raw110_partial_kid != '' }}
+        env:
+          PARTIAL_KID: ${{ inputs.raw110_partial_kid }}
+        run: |
+          set -euo pipefail
+          [[ "$PARTIAL_KID" =~ ^(0|5|12|13|17|18)$ ]]
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          export PATH="$HOME/.elan/bin:$PATH"
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent7-raw110/generate.py --base-only
+          python im-results/agent7-raw110/generate_partial.py "$PARTIAL_KID"
+          kid=$(printf '%02d' "$PARTIAL_KID")
+          python tools/lean_compile_closure.py --workdir /tmp/a7-partial --jobs 4 "im-results/agent7-raw110/Raw110Partial${kid}.lean" | tee /tmp/raw110-partial-proof.log
+          if grep -qE 'sorryAx|native_decide' /tmp/raw110-partial-proof.log; then exit 1; fi
       - name: Verify raw110 recursive counter
         if: ${{ inputs.raw110_counter_only }}
         run: |
@@ -272,6 +294,7 @@ jobs:
         with:
           name: far-hard-shard-${{ matrix.shard }}
           path: |
+            /tmp/raw110-partial-proof.log
             /tmp/raw110-counter-proof.log
             /tmp/raw110-proof.log
             /tmp/wide132-proof.log
