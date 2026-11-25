@@ -64,7 +64,7 @@ def resolve_source(module: str, index: dict[str, list[Path]]) -> Path:
             f"project import {module!r} has no .lean source in the repository"
         )
     if len(candidates) != 1:
-        rendered = "\n  ".join(str(p.relative_to(ROOT)) for p in candidates)
+        rendered = "\n  ".join(display_source(p) for p in candidates)
         raise RuntimeError(
             f"ambiguous module {module!r}; add an explicit OVERRIDES entry:\n  {rendered}"
         )
