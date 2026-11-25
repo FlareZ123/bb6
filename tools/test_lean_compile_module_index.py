@@ -31,8 +31,8 @@ def main():
         (nested / "Example.lean").write_text(
             "namespace BusyBeaver\nend BusyBeaver\n", encoding="utf-8"
         )
-        (source_root / "FlatProbe.lean").write_text(
-            "namespace FlatProbe\nend FlatProbe\n", encoding="utf-8"
+        (source_root / "BB6ModuleIndexFlatProbe.lean").write_text(
+            "namespace BB6ModuleIndexFlatProbe\nend BB6ModuleIndexFlatProbe\n", encoding="utf-8"
         )
 
         index = MODULE.module_index([source_root])
@@ -45,8 +45,8 @@ def main():
             assert MODULE.resolve_source(
                 "BusyBeaver.BB6.NonHalt.Example", index
             ) == (nested / "Example.lean").resolve()
-            assert MODULE.resolve_source("FlatProbe", index) == (
-                source_root / "FlatProbe.lean"
+            assert MODULE.resolve_source("BB6ModuleIndexFlatProbe", index) == (
+                source_root / "BB6ModuleIndexFlatProbe.lean"
             ).resolve()
         finally:
             MODULE.OVERRIDES.update(old_overrides)
