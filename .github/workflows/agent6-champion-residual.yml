@@ -32,7 +32,7 @@ on:
         type: boolean
         default: false
       catalogue_crosswalk:
-        description: Crosswalk the pinned 191 Cryptids BB6 modules against the live canonical76 and 112-residual frontier
+        description: Crosswalk pinned Cryptids BB6 modules and compile the 177-obligation canonical76 interface
         type: boolean
         default: false
 
