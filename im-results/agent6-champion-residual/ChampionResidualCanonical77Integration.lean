@@ -19,6 +19,12 @@ open BB6.Agent6F1OneLAIntegration
 open BB6.Agent6F1ZeroRCIntegration
 open BB6.Agent47CanonicalRefinement
 
+/-- The accepted raw114 parent differs at C/0 from the raw139 parent,
+    so its graft cannot remove the raw139 cylinder. -/
+theorem raw114_parent_not_raw139 :
+    sameTable BB6.Agent47CanonicalTwoParent.p114 championResidual = false := by
+  decide
+
 /-- The raw139 champion-containing entry survives the accepted raw114 graft:
     its exact address and partial table remain in the canonical77 roster. -/
 theorem championResidual_mem_canonical77 :
@@ -107,6 +113,7 @@ theorem exact_from_canonical77_and_raw139_leaves
         exact hOther e he hne)
     BB6Coverage.Agent48DirectRoot.champion_raw_witness
 
+#print axioms raw114_parent_not_raw139
 #print axioms championResidual_mem_canonical77
 #print axioms championResidual_unique_canonical77
 #print axioms championResidual_unique_by_table
