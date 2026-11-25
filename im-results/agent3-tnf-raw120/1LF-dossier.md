@@ -39,3 +39,7 @@ Existing manual workflow target `weighted-tnf-raw120-1lf`. Generated theorem `BB
 | 1RF | 2002 | 31424 | 8212 | 6411 | 6335 |
 
 Every row accounts for 25^5 completions. Candidate discovery used the union of existing ten bank files. No claim of complete symbolic assignment or source acceptance for these six branches.
+
+### Original-source leaf acceptance (2026-11-25 13:48 UTC)
+
+All three new modules were compiled locally with Lean 4.36.0-rc2 against exact repository imports Frontier, Symmetry, RootShift, SparseZipper, SweepPumping. Their Git blob identities were checked against the fetched originals. All six genuine raw-machine `never` theorems passed, with only propext/Quot.sound (plus Classical.choice for the arbitrary-stack theorem). This supersedes the earlier reconstructed-model-only status for the six hard leaf proofs; full sibling source checker still pending.
