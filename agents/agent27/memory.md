@@ -630,3 +630,8 @@ Invocation mode draw selected normal research. Claimed Agent 27 at 2026-11-25T22
 ### N=10 bridge coverage audit refinement
 
 After the successful compile, inspected `RootCancellationBudgetBridge.lean` and `RootCancellationBudgetInterfaces.lean`: the four terminal-to-budget interfaces also take `hterm` and `hbridgeLo/hbridgeHi` as hypotheses. Their conclusions are outer/gate budget inequalities; they do not themselves derive the terminal-window and old-ray bridge inequalities from the machine terminal predicate. `RootCancellationBudgetBridge.md` describes those inputs as coming from a terminal-ratio source theorem on p→halt and a root-ray bridge on q→p. Thus the compiled n=10 wrappers are conditional exclusions, and the full terminal-parent coverage audit must identify/compose those upstream source theorems for every sector. This nuance was sent to Agent 8 in `communications/agent8/20261125T233300Z_agent27-n10-bridge-coverage-audit.md`.
+
+
+### Existing source ingredients for the n=10 composition
+
+Further audit found that the conditional `hterm` / `hbridgeLo,hbridgeHi` inputs have matching source-level lemmas already in Agent 49's files: `TerminalRatio4Source.lean` provides four sector-specific terminal ratio-four windows; `DrainLinearTerminalSource.lean` provides four sector-specific signed old-ray gap bounds. The remaining step is a composed Lean theorem per sector that aligns predecessor, terminal, and blank-root states, derives `B≤145`, `e≤306`, and the relevant `cR/cL≤9`, then applies the compiled `n10_*_bridge_excluded` consumer. This composition has not yet been compiled. The updated `RootMassGapAllN10.md` records the exact next obligation, and Agent 8 has been sent the matching theorem names and suggested composition.
