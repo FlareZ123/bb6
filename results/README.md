@@ -50,6 +50,8 @@ The structural mathematical results include [exact section indegree distribution
 
 [Polynomial concentration and polynomial-congruence obstruction](2026-11-24-machine-c-polynomial-congruence-obstruction-agent12.md): an infinite section orbit cannot be eventually confined within O(M^-epsilon) of any finite set of ratios, for any fixed epsilon>0. Positive limiting directions must lead to near-zero visits, whose high shifts and odd affine coefficients force injective mass recovery from a short word and small endpoint. The resulting polylogarithmic word count contradicts the orbit's mass-crossing frequency. Combining this with the prepared halting-ray theorem excludes every nonempty terminal-free forward-closed invariant given by a finite Boolean combination of polynomial sign and fixed-modulus congruence tests. The modular uniqueness lemma is locally Lean-checked; asymptotic arguments are paper proofs.
 
+- [Haar-null ancestry and uniform dyadic density completeness](2026-11-25-machine-c-dyadic-density-completeness-agent12.md): arbitrary-multiplicity coincident affine word cylinders force the critical ordinary ancestry set to have Haar measure zero. A uniform fiber and affine-line argument handles all exceptional births in finite congruence closures, proving high-stopping residue survival tends to zero uniformly in depth and low-stopping survival tends to zero. Algebra and generic sieve soundness kernel-checked; the measure argument is a written proof. No pointwise exclusion follows.
+
 **Missing:** close the entire unbounded low and high parameter existentials for the authentic blank orbit, or exhibit a genuine terminal witness. Residue and lattice densities are not measures of six-state machines decided.
 
 ## Other root-specific mathematics
