@@ -1,10 +1,10 @@
 import OddEvenNonPowerParentFan
+import AffineH5Quarter
 import Lean.Elab.Tactic.Omega
 
 #check Nat.div_pos
 #check Nat.div_lt_iff_lt_mul
 #check Nat.mod_add_div
-#check Nat.div_eq_one_iff_lt_two_mul
 
 namespace BB6.Agent34H5OddBridge
 
@@ -179,7 +179,20 @@ theorem h5OddQ_not_pow (r w k : Nat) :
   have hsumLt : h5OddQ r w % p + h5OddC r w < 2*p := by omega
   have hple : p ≤ h5OddQ r w % p + h5OddC r w :=
     Nat.le_of_dvd hsumPos hsumdiv
-  have hsumEq : h5OddQ r w % p + h5OddC r w = p := by omega
+  have hquotpos : 0 <
+      (h5OddQ r w % p + h5OddC r w) / p :=
+    Nat.div_pos hple hp
+  have hquotlt :
+      (h5OddQ r w % p + h5OddC r w) / p < 2 :=
+    (Nat.div_lt_iff_lt_mul hp).2 hsumLt
+  have hquotEq :
+      (h5OddQ r w % p + h5OddC r w) / p = 1 := by omega
+  have hsumEq :
+      h5OddQ r w % p + h5OddC r w = p := by
+    have hdecomp := Nat.mod_add_div
+      (h5OddQ r w % p + h5OddC r w) p
+    rw [hmod0, hquotEq] at hdecomp
+    omega
   have hQmod : h5OddQ r w % p = p - h5OddC r w := by omega
   have hbig : 2^e < p - h5OddC r w := by omega
   by_cases hk : k ≤ e
@@ -244,5 +257,19 @@ theorem h5Odd_parent_fan (r w : Nat) :
     (by dsimp [h5OddEay]; omega)
     (by dsimp [h5OddEay]; omega)
     (h5OddMass_not_power r w)
+
+theorem h5OddQuarterSource (r w : Nat)
+    (hg : BB6.Agent25OddLift.h5PhaseGuard r w) :
+    ¬ BB6.Agent25OddLift.Reach secNext
+        (2*h5OddJ r+3) (h5OddK r w) := by
+  have hgate := h5OddK_gate r w
+  have hsrc :=
+    BB6.Agent25OddLift.h5QuarterHighSource r w (h5OddK r w) hg hgate
+  simpa [h5OddJ, h5OddM,
+    BB6.Agent25OddLift.h5J, BB6.Agent25OddLift.h5M] using hsrc
+
+#print BB6.Agent25OddLift.h5J
+#print BB6.Agent25OddLift.h5M
+#check BB6.Agent25OddLift.h5QuarterHighSource
 
 end BB6.Agent34H5OddBridge
