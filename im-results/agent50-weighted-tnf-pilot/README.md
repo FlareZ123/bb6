@@ -202,9 +202,11 @@ first residual rectangle after the 65 side witnesses, held table, and
 all 25 outcomes except 0LA and 0LD. Thus A1=halt and C1=halt are permitted
 choices in that rectangle. Adding the halting cylinder splits the
 40-rectangle remainder into 41 rectangles and reduces its mass from
-90,890,091,604,350 to 90,737,503,713,725, exactly 25^8. This residual-box
-membership, rectangle count, and mass are finite computational evidence;
-they are not yet a Lean theorem.
+90,890,091,604,350 to 90,737,503,713,725, exactly 25^8. The encoded data also shows a direct conflict with every prior
+certificate: all 65 side witnesses fix C1 to code 1 or 13, while the held
+and cycle tables fix A1 to code 14; the halt table fixes C1 and A1 to halt.
+This per-table conflict check, residual-box membership, rectangle count,
+and mass are finite computational evidence, not yet a Lean theorem.
 
 The dedicated CI target `weighted-tnf-raw10-box0-halt` compiles
 `Raw10Box0Halt.lean`. Run
