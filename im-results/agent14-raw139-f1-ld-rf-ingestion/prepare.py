@@ -81,7 +81,7 @@ def main() -> None:
     run([sys.executable, str(LD / "replay.py")], ld_stage)
     run([sys.executable, str(LD / "package.py")], ld_stage)
     verify(ld_stage, {
-        "Agent14OneLDCarry.lean": "3f6d680f5ea3cb2d21969eeb8e43715f34bd590f5b936d51f1a3a417323a4cb6",
+        "Agent14OneLDCarry.lean": "24d2b82d1c9a11c33b28ab9e7fb460ce2b9ea05db919dd6840d4ebceb76bf34a",
         "Agent14OneLDHard.lean": "b436a77405c29314f7f75e9d773326591f7eeb8ad7098b6b854b93afa83818d0",
         "Agent14OneLDCover.lean": "c1e905c2103d30b39bac253c5015f5a51da87aa57c6c5c9acd35e677e022f225",
     })
