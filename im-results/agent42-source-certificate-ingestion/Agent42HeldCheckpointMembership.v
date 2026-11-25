@@ -86,8 +86,10 @@ Proof.
   - intro H.
     destruct w; destruct w'; destruct d; destruct d'; destruct q; destruct q';
     simpl in H; try discriminate; reflexivity.
-  - intro H; discriminate H.
-  - intro H; discriminate H.
+  - intro H.
+    destruct w; destruct d; destruct q; simpl in H; discriminate.
+  - intro H.
+    destruct w'; destruct d'; destruct q'; simpl in H; discriminate.
   - intros _; reflexivity.
 Qed.
 
