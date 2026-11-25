@@ -1,10 +1,17 @@
 name: Agent 47 raw114 full source audit
 on:
   workflow_dispatch:
+    inputs:
+      resume:
+        description: Reuse pinned successful run 45544291656 artifacts and compile only missing 0LF half
+        type: boolean
+        default: false
 permissions:
   contents: read
+  actions: read
 jobs:
   preflight:
+    if: ${{ !inputs.resume }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -93,6 +100,91 @@ jobs:
           cd /tmp/a47-final
           export LEAN_PATH="$PWD"
           for branch in 0LA 0LB 0LC 0LF 0RA 0RB 0RC 0RF 1LA 1LB 1LC 1LF 1RA 1RB 1RC 1RF; do
+            lean -o "Raw114Complete${branch}Data.olean" "Raw114Complete${branch}Data.lean"
+          done
+          lean -o Raw114CompleteData.olean Raw114CompleteData.lean | tee /tmp/a47-final.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a47-final.log; then exit 1; fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw114-certified-root
+          path: /tmp/a47-final/*.olean
+          if-no-files-found: error
+
+  repair:
+    if: ${{ inputs.resume }}
+    strategy:
+      fail-fast: false
+      matrix:
+        kid: [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: d4164a4457e62ba7ec8e3fba6e38b251d04ffc83
+      - name: Install Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check one missing subtree against exactly the original revision
+        env:
+          KID: ${{ matrix.kid }}
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          cd im-results/agent47-raw114-cut
+          python paired_counter.py
+          python long_sweep.py
+          python generate_complete.py 0LF
+          cd ../..
+          python tools/lean_compile_closure.py --workdir /tmp/a47-final --jobs 2 "im-results/agent47-raw114-cut/Raw114Complete0LFKid${KID}.lean" | tee /tmp/a47-final.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a47-final.log; then exit 1; fi
+          cp im-results/agent47-raw114-cut/Raw114Complete0LFData.lean /tmp/a47-final/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw114-repair-${{ matrix.kid }}
+          path: |
+            /tmp/a47-final/*.olean
+            /tmp/a47-final/Raw114Complete0LFData.lean
+          if-no-files-found: error
+  assemble-resume:
+    if: ${{ inputs.resume }}
+    needs: repair
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: d4164a4457e62ba7ec8e3fba6e38b251d04ffc83
+      - name: Install Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45544291656
+          pattern: raw114-final-*
+          path: /tmp/a47-final
+          merge-multiple: true
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw114-repair-*
+          path: /tmp/a47-final
+          merge-multiple: true
+      - name: Compose all original-source-checked subtrees
+        run: |
+          set -euo pipefail
+          python im-results/agent47-raw114-cut/generate_complete.py --combine
+          cp im-results/agent47-raw114-cut/Raw114CompleteData.lean /tmp/a47-final/
+          cd /tmp/a47-final
+          export LEAN_PATH="$PWD"
+          for branch in 0LA 0LB 0LC 0LF 0RA 0RB 0RC 0RF 1LA 1LB 1LC 1LF 1RA 1RB 1RC 1RF; do
+            for i in $(seq -w 0 23); do
+              test -s "Raw114Complete${branch}Kid${i}.olean"
+            done
             lean -o "Raw114Complete${branch}Data.olean" "Raw114Complete${branch}Data.lean"
           done
           lean -o Raw114CompleteData.olean Raw114CompleteData.lean | tee /tmp/a47-final.log

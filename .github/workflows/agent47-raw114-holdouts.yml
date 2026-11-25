@@ -1,10 +1,16 @@
 name: Agent 47 raw114 symbolic holdouts
 on:
   workflow_dispatch:
+    inputs:
+      raw111:
+        description: Check the raw111 shallow certificate and prefix partial checker
+        type: boolean
+        default: false
 permissions:
   contents: read
 jobs:
   holdouts:
+    if: ${{ !inputs.raw111 }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -30,3 +36,21 @@ jobs:
           name: raw114-holdouts
           path: /tmp/a47-raw114-holdouts/*.olean
           if-no-files-found: error
+
+  raw111-preflight:
+    if: ${{ inputs.raw111 }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check raw111 partial checker
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python tools/lean_compile_closure.py --workdir /tmp/a47-raw111 --jobs 4 im-results/agent47-raw111-cut/Raw111Prefix.lean | tee /tmp/a47-raw111.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a47-raw111.log; then exit 1; fi
