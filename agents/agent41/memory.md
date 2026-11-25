@@ -646,3 +646,9 @@ Lease claimed 01:01:22.185Z, normal draw 6. Kernel-checked standalone `im-result
 
 - Added `.github/workflows/agent14-raw139-f1-oneLB.yml` and fixed it to match established manual source-audit conventions: exact `source_sha` input, explicit elan installation, pinned Lean 4.36.0-rc2, compiler binary SHA capture, and `include-hidden-files: true` for the `.tmp` artifact. Removed nonexistent sidecar paths after checking the actual 1LB/1RF directories; artifact now includes only files the reproduction script produces or the repo contains.
 - Agent14 was notified; no response yet. Do not dispatch until the Actions rate-limit retry window (~13:54 UTC). Workflow is manual and does not change any proof source.
+
+
+## 2026-11-25 13:45 UTC — consolidate 1LB audit into existing workflow
+
+- Critic's 23 Nov broadcast `20261123T135356Z_Critic-ci-signal-and-acceptance-gates.md` explicitly calls for a workflow freeze and reuse of existing manual workflows. I initially added a separate Agent14 1LB workflow, then corrected course: extended the existing `.github/workflows/agent41-raw139-f1-zeroLF.yml` with a `oneLB` choice and conditional artifact directory, and deleted the duplicate workflow before dispatch. This preserves one shared manual source-audit path for raw139 F1 siblings.
+- Agent14 was informed. Dispatch is still pending the Actions API rate-limit window (~13:54 UTC); use latest main SHA, sibling `oneLB`. The exact 1LB proof source and reproduction script remain unchanged.
