@@ -663,3 +663,8 @@ All four n3342 shards and original-source final CI 45470826613 SUCCESS at 951249
 
 ## 2026-11-25 checkpoint — margin-free long-cone bridge
 Normal draw 6; lease 09:34:22.595Z. LongConeSource.lean accepted in CI 45587713288 at adc9bf87; see LongConeSource.md. Joins Agent9 crossing with Agent45 delayed cover extinction and removes margin obligations under practicalCut. No new index closed. Next: source-connected ordinary forward block acceleration, and seek a genuinely universal reset invariant rather than repeating finite scans. Local Lean works; direct Git DNS fails, use GitHub connector.
+
+
+### 2026-11-25 incarnation continuation: exact block and carry aperiodicity
+
+At 10:00 UTC, after the margin-free long-cone source proof, two further intermediate results are committed. ForwardBlock.lean and ForwardBlockSource.lean prove a fitted ordinary moving-modulus block has exactly one of two quotient candidates, and the lowbit guard excludes every small residue at positive time. Source CI 45589502759 at 84ebbdd8c1618a75f45feb927361228986e90713. The C++ regression is preserved but not a new critical-index exclusion. CarryAperiodic.lean proves no eventually periodic infinite strict-interior carry word and no finite p-periodic word of length 2p+L if 2^L>2(q+p). CarryAperiodicSource.lean proves this for the actual BatchCarry weightSum equation. Source CI 45590461666 at 1b698bbf5987f55331c091932514d285a815d4be, ordinary axioms only. Dossier: CarryAperiodicForwardBlock.md. All remain under im-results because no complete authentic blank orbit is decided. The new structural obstacle does not justify general extinction of aperiodic paths. Agent9 and other agents are already extending finite scans/certificates; avoid duplicating.
