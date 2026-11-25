@@ -65,9 +65,9 @@ on:
         type: boolean
         default: false
       raw59_child:
-        description: Raw59 proof target (all, 0RB, 0LD, 0RC, 1RC, 0RF, 1LA, RCShared, RFCount, or RFTriple)
+        description: Raw59 proof target; UpgradeRemaining reuses the accepted 0LE and 1LF shards from run 45675872170
         type: choice
-        options: [UpgradeAll, Upgrade0LA, Upgrade0LB, Upgrade0LE, Upgrade0LF, Upgrade1LB, Upgrade1LE, Upgrade1LF, AsymAll, Asym0LB, Asym1LB, Asym1LE, all, 0RB, 0LD, 0RC, 1RC, 0RF, 1LA, RCShared, RFCount, RFTriple, RFScan, 1RF, CanonicalPilot, CanonicalAll, PartialAll, Partial0LB, Partial1LB, Partial1LE, MacroFARPilot, Return1582, ReturnFamily, Late190, OffsetPilot, Width2Pilot, LB1Four, LB1Sweep583, LB1Sweep1734, 0RD, 1LC, 1RB, 1RD, 0LC, 0RE]
+        options: [UpgradeAll, UpgradeRemaining, Upgrade0LA, Upgrade0LB, Upgrade0LE, Upgrade0LF, Upgrade1LB, Upgrade1LE, Upgrade1LF, AsymAll, Asym0LB, Asym1LB, Asym1LE, all, 0RB, 0LD, 0RC, 1RC, 0RF, 1LA, RCShared, RFCount, RFTriple, RFScan, 1RF, CanonicalPilot, CanonicalAll, PartialAll, Partial0LB, Partial1LB, Partial1LE, MacroFARPilot, Return1582, ReturnFamily, Late190, OffsetPilot, Width2Pilot, LB1Four, LB1Sweep583, LB1Sweep1734, 0RD, 1LC, 1RB, 1RD, 0LC, 0RE]
         default: all
 
       verify_f418_return:
@@ -484,7 +484,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        child: ${{ fromJSON(inputs.raw59_child == 'CanonicalAll' && '["0RB","0LD","1RC","0RC","0RF","1LA","1RF","0RD","1LC","1RB","1RD","0LC","0RE","CanonicalBase"]' || (inputs.raw59_child == 'UpgradeAll' && '["Upgrade0LA","Upgrade0LB","Upgrade0LE","Upgrade0LF","Upgrade1LB","Upgrade1LE","Upgrade1LF","ClosedBase"]' || inputs.raw59_child == 'AsymAll' && '["Asym0LB","Asym1LB","Asym1LE"]' || inputs.raw59_child == 'PartialAll' && '["Partial0LA","Partial0LB","Partial0LE","Partial0LF","Partial1LB","Partial1LE","Partial1LF"]' || format('["{0}"]', inputs.raw59_child))) }}
+        child: ${{ fromJSON(inputs.raw59_child == 'CanonicalAll' && '["0RB","0LD","1RC","0RC","0RF","1LA","1RF","0RD","1LC","1RB","1RD","0LC","0RE","CanonicalBase"]' || (inputs.raw59_child == 'UpgradeRemaining' && '["Upgrade0LA","Upgrade0LB","Upgrade0LF","Upgrade1LB","Upgrade1LE","ClosedBase"]' || inputs.raw59_child == 'UpgradeAll' && '["Upgrade0LA","Upgrade0LB","Upgrade0LE","Upgrade0LF","Upgrade1LB","Upgrade1LE","Upgrade1LF","ClosedBase"]' || inputs.raw59_child == 'AsymAll' && '["Asym0LB","Asym1LB","Asym1LE"]' || inputs.raw59_child == 'PartialAll' && '["Partial0LA","Partial0LB","Partial0LE","Partial0LF","Partial1LB","Partial1LE","Partial1LF"]' || format('["{0}"]', inputs.raw59_child))) }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -594,7 +594,7 @@ jobs:
           if-no-files-found: error
           retention-days: 7
       - name: Preserve checked modules for parent composition
-        if: ${{ inputs.raw59_child == 'UpgradeAll' }}
+        if: ${{ inputs.raw59_child == 'UpgradeAll' || inputs.raw59_child == 'UpgradeRemaining' }}
         uses: actions/upload-artifact@v4
         with:
           name: raw59-checked-${{ matrix.child }}
@@ -650,7 +650,7 @@ jobs:
           if grep -Eq 'sorryAx|native_decide' /tmp/raw59-combined.log; then exit 1; fi
 
   raw59-parent-composition:
-    if: ${{ inputs.verify_raw59 && inputs.raw59_child == 'UpgradeAll' }}
+    if: ${{ inputs.verify_raw59 && (inputs.raw59_child == 'UpgradeAll' || inputs.raw59_child == 'UpgradeRemaining') }}
     needs: raw59-refinement
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -665,6 +665,20 @@ jobs:
         with:
           pattern: raw59-checked-*
           path: /tmp/raw59-shards
+      - uses: actions/download-artifact@v4
+        if: ${{ inputs.raw59_child == 'UpgradeRemaining' }}
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45675872170
+          name: raw59-checked-Upgrade0LE
+          path: /tmp/raw59-shards/raw59-checked-Upgrade0LE
+      - uses: actions/download-artifact@v4
+        if: ${{ inputs.raw59_child == 'UpgradeRemaining' }}
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45675872170
+          name: raw59-checked-Upgrade1LF
+          path: /tmp/raw59-shards/raw59-checked-Upgrade1LF
       - name: Validate shard closure and compose raw59 parent bound
         run: |
           set -euo pipefail
@@ -683,13 +697,14 @@ jobs:
           path: |
             /tmp/raw59-final/*.lean
             /tmp/raw59-final/*.olean
+            /tmp/raw59-merged/*.olean
             /tmp/raw59-final/manifest.json
             /tmp/raw59-final/audit.log
           if-no-files-found: error
           retention-days: 30
 
   raw59-canonical77-composition:
-    if: ${{ inputs.verify_raw59 && inputs.raw59_child == 'UpgradeAll' }}
+    if: ${{ inputs.verify_raw59 && (inputs.raw59_child == 'UpgradeAll' || inputs.raw59_child == 'UpgradeRemaining') }}
     needs: raw59-parent-composition
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -706,10 +721,6 @@ jobs:
           path: /tmp/raw59-parent
       - uses: actions/download-artifact@v4
         with:
-          pattern: raw59-checked-*
-          path: /tmp/raw59-parent-shards
-      - uses: actions/download-artifact@v4
-        with:
           github-token: ${{ github.token }}
           run-id: 45554648116
           name: canonical77-certified
@@ -721,7 +732,7 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           import hashlib
-          roots = [Path('/tmp/raw59-parent'), Path('/tmp/raw59-parent-shards'), Path('/tmp/canonical77-base')]
+          roots = [Path('/tmp/raw59-parent'), Path('/tmp/canonical77-base')]
           out = Path('/tmp/raw59-canonical77')
           seen = {}
           for root in roots:
