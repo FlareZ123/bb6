@@ -1,18 +1,63 @@
-# Six-hole raw117 and raw112 candidate classification
+# Six-hole raw117 and raw112 siblings: source-checked progress
 
-Raw117 is the six-hole sibling E1=1RD, parent `1RB---_1RC---_0RD---_1LD1RE_---1RD_------`. Raw112 differs only at E1=1LC. Each has exactly 25^6 = 244,140,625 compatible full tables.
+Both parents extend the same first-one root path and differ only in the transition at E1=(4,true). Each has six holes and exactly 25^6 = 244,140,625 compatible full tables. Keep the labels explicit: **E1=1RD (raw117)** and **E1=1LC (raw112)**. Other projects also use the index “112” for unrelated residuals.
 
-| raw | splits | side cycles | last holes | open leaves | FAR | symbolic | late query | still open |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| 117 | 7903 | 143850 | 32350 | 5570 | 5530 | 39 | 1 | 0 |
-| 112 | 25004 | 446232 | 115572 | 13289 | 12896 | 0 | 0 | 393 |
+## E1=1RD (raw117): complete source-accepted cylinder
 
-Raw117 is now a complete **candidate** closure at weighted score 1291. The original discovery cutoff 1000 missed leaf 2707, whose sole unassigned F0 is queried at ordinary time 1290. All fixed zero-writing rows fail to enter A; weighted delay is zero. The initial score 235 is superseded. The exact open-list hash and leaf index set are pinned by discover.py. Raw112 candidate maximum 980 remains provisional.
+Parent table:
+`1RB---_1RC---_0RD---_1LD1RE_---1RD_------`
 
-The 39 symbolic candidates comprise 30 one-block, four two-block, two extended returns, and the three nested-growth leaves. [Raw117Nested.lean](Raw117Nested.lean) proves both 4215 (A1=1LE) and 4216 (A1=1LF). Writing A(L,m,k) for zipper left word L and right word 1^m 0001 0^k 1, d=3 or 2 respectively, m(p)=d(p+1)+1, the exact universal return changes a scanned zero into one, preserves its arbitrary left tail, leaves m(p) fixed and changes k to k+2^p. Strong induction with an inner finite stack traversal proves this for every p,k. After the 31/30-step blank entry, the family A([],m(p),2^p-1) returns to its p+1 member in strictly positive time. No sampled recurrence is assumed.
+- Exact weighted bound: **1,291**; an attaining completion halts at weighted score 1,291.
+- Original-source Lean audit: [CI 45561386072](https://github.com/FlareZ123/bb6/actions/runs/45561386072), head `988705d0e0d7de1b736777b1b66b324115d75fdb`.
+- All six disjoint child shards and the final assembly passed.
+- The assembly checked `all117`, `attained117`, `exact117`, `canonical_cut_count`, `cut_sound`, `canonical_cut_sound`, and `cover_at_target`. The axiom gate allowed only `propext`, `Classical.choice`, and `Quot.sound`; it rejected `sorryAx` and `native_decide`.
+- The exact parent matches raw residual index 117 / canonical index 81 in `canonical-124.json`. The Lean quotient theorem removes exactly one entry from the 96-entry canonical remaining roster (96→95).
 
-[Raw117Quadratic.lean](Raw117Quadratic.lean) proves leaf 397. B(l,m,k) has right word 1^m (01)^k 0. Its exact even/odd returns reduce the unary length by four per pair and increment the alternating count; the remaining alternating word is consumed and a final sweep yields B([],4(n+1)+2,1) from B([],4n+2,1). Blank entry is at step 13. The two hard proof modules' macro equations, universal inductions, growth and cost selections compiled locally in Lean 4.36.0-rc2 against exact copied executable Z0, move0, step0, run0 and join0 definitions; the growth theorem axioms are propext and Quot.sound. The first original-source build ([45528609912](https://github.com/FlareZ123/bb6/actions/runs/45528609912)) compiled the shared source closure through Raw117Base and began the child audits, but was cancelled at its 20-minute job limit before root assembly. The complete certificate is not yet accepted. The replacement manual target generates and compiles shared dependencies once, checks all 24 children in six disjoint shards, and assembles their exact source-linked proof with a standard-axiom gate.
+This is a complete theorem for one six-hole cylinder, not a global BB(6) upper bound.
 
-## Reproduction
+### Canonical integration opportunity
 
-`python im-results/agent8-tnf-raw117/discover.py 117 --sweeps` or `112` regenerates candidate data. `generate.py` emits the source-linked Raw117Data audit with exact attaining witness and theorem exact117. It reuses ZipThreeHoleAudit, checks every branch, and never treats the time cutoff as proof. [Raw117CanonicalCut.lean](Raw117CanonicalCut.lean) adds a generic exact-table ingestion theorem for any source-rooted quotient roster at threshold C≥1291; its proposed count is 95 of the original 96 canonical representatives. The existing 78-roster can use the same cut after source acceptance and a separate exact count, with no change to the champion bound. Source CI must pass before removing raw117 from the canonical roster or claiming its exact weighted maximum as a certified theorem. No BB(6) upper bound follows yet.
+The sibling E1=0LD (raw114, canonical index 79) is already source-accepted at weighted bound 7,014 and appears in the current canonical 77-roster. Raw117 is the distinct E1=1RD sibling. The exact 77→76 composition has not yet been compiled; it should be a small Lean consumer importing `CanonicalRaw114Accepted` and `Raw117CanonicalCut`, applying the raw117 cut to the accepted raw114 roster, and proving the resulting list length by `decide`. Do not report 76 until that exact source composition passes.
+
+## E1=1LC (raw112): two independent partial classifications, no complete parent closure yet
+
+Parent table:
+`1RB---_1RC---_0RD---_1LD1RE_---1LC_------`
+
+This is raw residual index 112 / canonical index 77 in `canonical-124.json`.
+
+### Agent 8 exact leaf classification
+
+The deterministic checkpoint is in `discover.py` and `raw112_checkpoint.py`. Its exact partition is:
+
+| Class | Count |
+|---|---:|
+| Open leaves | 13,289 |
+| FAR, original bank | 12,896 |
+| Additional FAR, extra bank | 115 |
+| One-block symbolic candidates | 215 |
+| Two-block symbolic candidates | 23 |
+| Late first-hole queries | 6 |
+| Remaining hard leaves before the eight inductions | 34 |
+
+Thus 13,011 leaves are FAR, with 215 one-block, 23 two-block, 6 late-query, and 34 hard leaves remaining. Eight of those 34 now have universal nonhalting inductions **accepted against the original source** in [CI 45561514651](https://github.com/FlareZ123/bb6/actions/runs/45561514651): IDs 10554, 12597, 2124, 7885, 4710, 6043, 12495, and 56. The source target compiled `Raw112Binary`, `Raw112Quinary`, `Raw112Alternating`, `Raw112Unary`, and all four generated `Raw112MultiSweep` modules, with no `sorryAx/native_decide`. **26 hard leaves remain.**
+
+The largest observed actual first-hole query is at ordinary time 91,502. Consequently, a 7,014 or 980 bound is false for this parent; the parent audit needs a bound at least 91,503. Use 100,000 as the current safe audit target.
+
+Details and exact recurrence proofs: [Raw112BinaryCounters.md](Raw112BinaryCounters.md), [Raw112Alternating.lean](Raw112Alternating.lean), [raw112_multisweep.py](raw112_multisweep.py), and [raw112_checkpoint.py](raw112_checkpoint.py).
+
+### Agent 47 partial-audit alternative
+
+`im-results/agent47-raw112-cut/generate.py` uses the same parent and the same open-list SHA, but a different FAR bank and symbolic/inductive certificate library. Its current generated draft covers 12,723 FAR leaves and 564 further symbolic/inductive leaves, leaving exactly **two residual leaves** in a `PartialAudit` at weighted bound 100,000. The generated theorem is intended to establish
+`WeightedBound 100000 m ∨ ∃ e ∈ residuals, compatible e.2 m`
+with `residuals.length = 2`.
+
+This is currently a draft, not yet original-source accepted and not a complete parent bound. The source-audit workflow `.github/workflows/agent8-raw112-source-audit.yml` was added and dispatched to compile the full generated source closure and preserve its manifest/artifact. Wait for that run before calling the partial theorem source-accepted. The exact two residual tables must then be resolved to close the parent.
+
+## Reproduction and scope
+
+- Raw117 discovery: `python im-results/agent8-tnf-raw117/discover.py 117 --sweeps`; source-accepted closure: CI 45561386072.
+- Agent8 raw112 leaf classification: `python im-results/agent8-tnf-raw117/discover.py 112`, then `python im-results/agent8-tnf-raw117/raw112_checkpoint.py`; source-accepted eight-leaf audit: CI 45561514651.
+- Agent47 raw112 partial audit generator: `python im-results/agent47-raw112-cut/generate.py`; original-source closure pending the new workflow.
+
+Neither sibling closes the whole canonical frontier. The global BB(6) upper bound and exact value remain open.
