@@ -1,0 +1,38 @@
+name: Agent25 raw123 source audit
+on:
+  workflow_dispatch:
+jobs:
+  residuals:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check finite and recursive residuals
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent25-raw123/audit_bidfa.py
+          python tools/lean_compile_closure.py --workdir /tmp/a25-small --jobs 4 im-results/agent25-raw123/Raw123BiDFAAudit.lean im-results/agent25-raw123/Raw1238146.lean im-results/agent25-raw123/Raw1238209.lean | tee /tmp/a25-small.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a25-small.log; then exit 1; fi
+  parent:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check parent
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent25-raw123/generate.py
+          python tools/lean_compile_closure.py --workdir /tmp/a25-parent --jobs 4 im-results/agent25-raw123/Raw123Exact.lean | tee /tmp/a25-parent.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a25-parent.log; then exit 1; fi
