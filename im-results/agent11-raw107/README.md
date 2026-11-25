@@ -64,6 +64,12 @@ Candidate bound **160**, first query F0 t=8. Counts: 1094 split, 20120 cycle, 44
 
 Exceptional leaf 512 `1RB0LC_1RC1RF_0RD1LF_1LD1RE_---0RB_1LC1RA` enters a right-boundary periodic growth family at t1169, epoch cost 338+60n. The extended epoch search uses state F, two right-boundary events per epoch. All ten entry/growth proofs compiled locally against copied primitives. Nine complete child candidates now cover 87,890,625 raw assignments (36% of raw107), with 72 recurrence instances. Full source closure pending.
 
+## B1=0LE child
+
+Candidate bound **90**, first query E0 t8. Counts: 708 split, 12897 cycle, 3074 last, 314 open (292 FAR +22 symbolic). Mass 9,020,625 cycle; 602,174 halt; 73,776 total-defined; 69,050 open. Max finite witness `1RB1RA_1RC0LE_0RDHHH_1LD1RE_1LF0RB_0RA1LE`, t88, delay1. Generate `python generate_more.py 0LE`.
+
+Leaf224 `1RB---_1RC0LE_0RD1RA_1LD1RE_1LF0RB_0RB0LF`: Raw107LECountdown.lean proves exact recursive macro D(n,R) -> A(n,R) for arbitrary right suffix R; D left word 00 1^(3n+1) 010, A left word 0 1^(3n+2) 010. C(0)=10, C(n+1)=2C(n)+6; the auxiliary advance consumes n zero triples with cost C(n)-3n-10. Entry D(1,[]) at t23; growth epoch C(n+1)+3. Three delayed linear-growth exceptions (266,288,272) have (entry,intercept,slope)=(50,27,8),(44,25,8),(20,36,20). All 22 entry/growth proofs compiled locally, source closure pending. Ten complete nontrivial child candidates now cover 97,656,250 raw assignments (40% of raw107) with 94 recurrence instances.
+
 ## Full raw107 census
 
 Finite enumeration accounts for all 244,140,625 assignments: cycle mass 221,509,400; halt mass 18,357,404; total-defined nonhalt mass 1,291,296; open mass 2,982,525. Tree counts: cycle 231224, last 53804, split 12816, open 9741. Max finite weighted score 815, not a global bound. Existing FAR candidate bank screening found 9411 hit leaves and 330 unresolved before the five child sweeps. These remain exploratory saturation outcomes, not formally certified coverage. The 0RD subtree is the first fully witnessed nontrivial child investigated here. Other child closures and source integration remain the next tasks.

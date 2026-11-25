@@ -1133,3 +1133,5 @@ The arithmetic identities, residue maps, and affine gate paths were checked with
 - 0RF complete candidate: bound536, 687 open=678 FAR+9 pumps; common parameterized five-variant exponential countdown Raw107RFCountdown.lean proved locally (entry/growth), four additional generated recurrences also checked. Eight complete children, 78,125,000 mass and 62 recurrence instances. Original-source audit pending. Next: 1RF exception 512, and 0LE/0LF/1LA/1LF holdouts.
 
 - 1RF complete candidate: bound160, 569 open=559 FAR+10 pumps. Leaf512 late boundary t1169, period2 on state F, growth cost338+60n; generated using long_epoch, all ten checked locally. Nine nontrivial child candidates, mass87,890,625, 72 recurrence instances. Remaining 0LE/0LF/1LA/1LF.
+
+- 0LE complete candidate: weighted bound90, 314 open=292 FAR+22 pumps. Leaf224 strong-induction recursive unary/zero-triple counter C(0)=10,C(n+1)=2C(n)+6; epoch C(n+1)+3. Three delayed linear proofs (266,288,272). All 22 compiled locally against exact copied core. Ten complete candidates, 40% raw107, 94 recurrence instances. Remaining 0LF,1LA,1LF.
