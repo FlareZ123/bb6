@@ -10,6 +10,7 @@ namespace BB6.Agent31ChampionParentIntegration
 open BB6.Agent13BlankDelay
 open BB6.Agent31FourHoleFrontier
 open BB6.Agent6ChampionResidual
+open BB6.Agent13MixedBound109
 
 /-- The Agent48 two-hole A/1–B/1 parent is the same partial table reached
     after Agent6's seven champion-path refinements. This is checked slot by
