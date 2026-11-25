@@ -500,6 +500,114 @@ jobs:
                   print(name, sorted(used))
           PY
 
+      - name: Reconstruct and certify Agent14 raw139 1LD/1RF siblings and exact parent grafts
+        if: ${{ inputs.raw121_graft_run_id == '' }}
+        run: |
+          set -euo pipefail
+          work="$PWD/.tmp/a14-f1-ld-rf"
+          python3 im-results/agent14-raw139-f1-ld-rf-ingestion/prepare.py
+          python tools/lean_compile_closure.py \
+            im-results/agent14-raw139-f1-ld-rf-ingestion/Raw139OneLDOneRFSourceAudit.lean \
+            --source-root "$PWD/.tmp/a14-f1-batch/imports" \
+            --source-root "$work/imports" \
+            --workdir "$work/build" --manifest "$work/manifest.json" \
+            --precompiled-manifest /tmp/a6-champion-residual/manifest.json \
+            --precompiled-dir /tmp/a6-champion-residual/build \
+            --label raw139-f1-ld-rf-source-audit --jobs 4 \
+            --provenance-input im-results/agent14-raw139-f1-ld-rf-ingestion/prepare.py \
+            --provenance-input im-results/agent14-raw139-f1-oneLD/recipes.txt \
+            --provenance-input im-results/agent14-raw139-f1-oneLD/Agent14OneLDCarry.lean \
+            --provenance-input im-results/agent14-raw139-f1-oneLD/replay.py \
+            --provenance-input im-results/agent14-raw139-f1-oneLD/package.py \
+            --provenance-input im-results/agent14-raw139-f1-oneRF/source.tar.xz.b64 \
+            --provenance-input im-results/agent48-raw139-f1-oneLA/scan.py \
+            --provenance-input im-results/agent48-raw139-f1-oneLA/autopump.py \
+            --provenance-input im-results/agent48-raw139-f1-oneLA/emitproof.py \
+            | tee "$work/source.log"
+          if grep -Eq 'sorryAx|native_decide' "$work/source.log"; then
+            echo "Forbidden proof placeholder or native_decide in 1LD/1RF source closure" >&2
+            exit 1
+          fi
+          export LEAN_PATH="/tmp/a47-canonical:$work/build:/tmp/a6-champion-residual/build${LEAN_PATH:+:$LEAN_PATH}"
+          lean -o /tmp/a6-champion-residual/build/ChampionF1OneLDIntegration.olean \
+            im-results/agent6-champion-residual/ChampionF1OneLDIntegration.lean | tee "$work/oneLD.log"
+          lean -o /tmp/a6-champion-residual/build/ChampionF1OneRFIntegration.olean \
+            im-results/agent6-champion-residual/ChampionF1OneRFIntegration.lean | tee "$work/oneRF.log"
+          if grep -Eq 'sorryAx|native_decide' "$work/oneLD.log" "$work/oneRF.log"; then
+            echo "Forbidden proof placeholder or native_decide in sibling grafts" >&2
+            exit 1
+          fi
+          python3 - "$work/source.log" "$work/oneLD.log" "$work/oneRF.log" <<'PY'
+          import pathlib, re, sys
+          allowed = {"propext", "Classical.choice", "Quot.sound"}
+          source_log, one_ld_log, one_rf_log = map(lambda p: pathlib.Path(p).read_text(), sys.argv[1:])
+          source_names = [
+              "BB6.Agent14F1OneLD.checked",
+              "BB6.Agent14F1OneLD.all_completions_weighted",
+              "BB6.Agent14OneLD.H25.carry",
+              "BB6.Agent14F1OneRF.checked",
+              "BB6.Agent14F1OneRF.all_completions_weighted",
+          ]
+          source_names += [
+              f"BB6.Agent14OneLD.H{i}.{kind}"
+              for i in range(32) for kind in ("growth", "never")
+          ]
+          integration_groups = {
+              one_ld_log: (
+                  "BB6.Agent14F1OneLDIntegration.oneLD_is_depth5_sibling",
+                  "BB6.Agent14F1OneLDIntegration.cover_oneLD",
+                  "BB6.Agent14F1OneLDIntegration.oneLD_parent_present",
+                  "BB6.Agent14F1OneLDIntegration.remainingF1AfterZeroRBZeroLAOneRDOneLBOneLD_count",
+                  "BB6.Agent14F1OneLDIntegration.removedOneLD_count",
+                  "BB6.Agent14F1OneLDIntegration.cover_remainingF1AfterZeroRBZeroLAOneRDOneLB",
+                  "BB6.Agent14F1OneLDIntegration.exact_from_canonical77_and_raw139_five_sibling_leaves",
+                  "BB6.Agent14F1OneLDIntegration.refinedCanonical77RosterAfterOneLD_count",
+                  "BB6.Agent14F1OneLD.all_completions_weighted",
+              ),
+              one_rf_log: (
+                  "BB6.Agent14F1OneRFIntegration.oneRF_is_depth5_sibling",
+                  "BB6.Agent14F1OneRFIntegration.cover_oneRF",
+                  "BB6.Agent14F1OneRFIntegration.oneRF_parent_present",
+                  "BB6.Agent14F1OneRFIntegration.remainingF1AfterZeroRBZeroLAOneRDOneLBOneLDOneRF_count",
+                  "BB6.Agent14F1OneRFIntegration.removedOneRF_count",
+                  "BB6.Agent14F1OneRFIntegration.cover_remainingF1AfterZeroRBZeroLAOneRDOneLBOneLD",
+                  "BB6.Agent14F1OneRFIntegration.exact_from_canonical77_and_raw139_six_sibling_leaves",
+                  "BB6.Agent14F1OneRFIntegration.refinedCanonical77RosterAfterOneLDOneRF_count",
+                  "BB6.Agent14F1OneRF.all_completions_weighted",
+              ),
+          }
+          def check(log, names):
+              for name in names:
+                  pattern = r"'" + re.escape(name) + r"' depends on axioms: \[([^\]]*)\]"
+                  match = re.search(pattern, log)
+                  if match:
+                      used = {x.strip() for x in match.group(1).split(",") if x.strip()}
+                  elif "'" + name + "' does not depend on any axioms" in log:
+                      used = set()
+                  else:
+                      raise SystemExit("missing axiom audit: " + name)
+                  if not used <= allowed:
+                      raise SystemExit(f"nonstandard axioms for {name}: {used - allowed}")
+                  print(name, sorted(used))
+          check(source_log, source_names)
+          for log, names in integration_groups.items():
+              check(log, names)
+          PY
+          cp /tmp/a6-champion-residual/build/ChampionF1OneLDIntegration.olean "$work/build/"
+          cp /tmp/a6-champion-residual/build/ChampionF1OneRFIntegration.olean "$work/build/"
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() && inputs.raw121_graft_run_id == '' }}
+        with:
+          name: raw139-f1-ld-rf-integrated-${{ github.sha }}
+          include-hidden-files: true
+          if-no-files-found: warn
+          path: |
+            .tmp/a14-f1-ld-rf/manifest.json
+            .tmp/a14-f1-ld-rf/source.log
+            .tmp/a14-f1-ld-rf/oneLD.log
+            .tmp/a14-f1-ld-rf/oneRF.log
+            .tmp/a14-f1-ld-rf/imports/*.lean
+            .tmp/a14-f1-ld-rf/build/*.olean
       - name: Checkout pinned Cryptids for A6 composition imports
         if: ${{ inputs.a6_run_id != '' && inputs.raw121_graft_run_id == '' }}
         uses: actions/checkout@v4
