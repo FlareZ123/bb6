@@ -6,12 +6,24 @@ import hashlib,json,subprocess,sys
 ROOT=Path(__file__).resolve().parent
 sys.path.insert(0,str(ROOT.parent/'agent31-three-hole-tnf'))
 from generate_four_hole import masks,slot,move,parse
+import generate_sweeps as sweeps
 MOVES=[w+d+q for w,d,q in product('01','LR','ABCDEF')]
 SPECS={
 '0RD':(157,12,8,85,632,11674,2778,'6145fc9050a5aeb9147edd345911ad9c81a8c3a0ec317bb01965fe2cf6bcbb75','000 00101 1012121 00102343444 1012101'),
 '1LC':(84,None,None,178,1066,18816,5525,'b4de3ebe4f0b496574e81eadb4976e8a4f1bd6050c90b1c0d178034fded46a85','101213333 10101 001230120 000 0010201 001213333 00101 00123242344 001232201 0012101 0010202 0012111 00123224101 0012322452221 10123222401 00123224022'),
 '1RB':(135,None,None,649,1398,25275,6231,'ac64fc94f0a887129e58a6d4e926f490d3d2428031f7853d63e902ae2c9583ab','000 00101 0010202 001020303 00102340101 001213121 00123014301 001232202 00123224101 00123224122 00123224221 0012341415555 0012344514401 0050104333132 005052224132422 1012101 10123212424 10123224322 10123440144 1012344555155 10214675441134344'),
 '1RD':(93,None,None,682,547,9528,2372,'3e7403f557e1ba547bef92685c5e61e2a24480806109c1dcad6e55bc0e369dac','000 00101 0010202 001020303 0010212 001212333 001213333 001230123 00123224101 00414570253666612 0050104333132 005052224132422 10101 101121313 1012101 1012121 10121340121 10123222423 10123224101 10623557155452376'),
+'0LC':(140,None,None,434,1478,25737,7824,'593b533deccd117e51edced82b9b658d50f564c2f2740fd6511d744c47fab032','000 00101 0010202 00102030401 001020333 001023101 001023202 00102324131 0010232450201 00102340101 00102340144 00112341244 0011234154434 00121232444 00121234444 00121314444 001213333 001232201 00123224122 00123224221 00123224223 0012322452220 0012341415555 003244416242354 10101 10121343321 104245333613533'),
+'0RE':(167,None,None,672,1650,29417,7862,'08f9ccd750f3e6469cf8b15c7254b192e469ed0e2c35ba2d221afeeb517b1a11','000 00101 0010202 001020303 001213111 001213121 001213333 001230123 00123012423 00123012424 00123014301 00123014401 0012341415555 0012344514401 1012101 10123212424 10123222401 1012341235101 10123440144 1012344555155 1012345444423 10214675441134344 1042222345134 10c494424429282a552191a6c3b'),
+}
+AUTO={
+'0LC':[
+ (177,'1RB0LC_1RC1RE_0RD1LE_1LD1RE_0RF1LA_---1RA',29,1,3,'0110','1110','1110'),
+ (229,'1RB0LC_1RC---_0RD1LF_1LD1RE_0RF1LA_1RD1RA',18,5,2,'0011','1111','11'),
+],
+'0RE':[
+ (55,'1RB0RE_1RC0LF_0RD1RE_1LD1RE_1LB1LA_---0LA',3,3,1,'001','11','1'),
+],
 }
 MANUAL={
 '1RB':(157,'1RB1RB_1RC0RF_0RD0RB_1LD1RE_---1LA_0RC0LD','Raw59RBCount','BB6.Agent32Raw59RB'),
@@ -31,6 +43,22 @@ def generate(raw):
         i,rle,module,ns=MANUAL[raw]
         assert opens[i]==rle
         pumps[rle]=(ns+'.table',ns+'.never');imports.append(module)
+    if raw in AUTO:
+        module='Raw59Auto'+raw;ns='BB6Coverage.Agent31Pump.'+module
+        pieces=['import SweepPumping','set_option maxRecDepth 100000','set_option maxHeartbeats 0','namespace '+ns,'open BB6Coverage']
+        for i,rle,t,q,delta,pre,block,suf in AUTO[raw]:
+            assert opens[i]==rle
+            p=sweeps.parse(rle)
+            st=sweeps.C(q,0,0,sweeps.W(pre,block,suf),sweeps.W())
+            target=sweeps.C(q,delta,0,sweeps.W(pre+block,block,suf),sweeps.W())
+            ans=sweeps.pump(p,st,target)
+            assert ans is not None
+            code,info=sweeps.generate(i,p,(t,None,st,target,ans))
+            pieces.append(code);print('pump',rle,info)
+            pumps[rle]=(ns+'.M'+str(i)+'.table',ns+'.M'+str(i)+'.never')
+        pieces.append('end '+ns)
+        (folder/(module+'.lean')).write_text('\n\n'.join(pieces)+'\n')
+        imports.append(module)
     for rle in opens:
         if rle in pumps:continue
         for a in bank.split():
