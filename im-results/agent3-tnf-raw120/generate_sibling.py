@@ -25,6 +25,8 @@ import rc_nested
 MOVES = ["".join(x) for x in product("01", "LR", "ABCDEF")]
 # The tag is part of the Lean namespace and module names.
 PARAMS = {
+    "1LF": ("OneLF", 4464, "b5ca9ab66092d18182df4d2c3bc13763c2a31dac5216705b23a6852373abf077",
+            dict(split=1763, cycle=26120, last=9966, open=4464)),
     "0RA": ("RA", 2545, "bbe7fb7373bd3569aee8bf26f2953e168fb965a192a39e78d49fa26d222970ca",
             dict(split=1171, cycle=18826, last=5563, open=2545)),
     "0RC": ("RC", 2214, "01f82938bb361d4335146c22191f1fec517d993c76d71488fbc804910629e78f",
@@ -122,6 +124,18 @@ if BRANCH == "1RC":
         pump_code.append(rc_nested.generate_nested(i, one.parse(opens[i])))
         pumps[opens[i]] = (f"{pumpns}.M{i}.table", f"{pumpns}.M{i}.never")
 late = {}
+if BRANCH == "1LF":
+    for i, a1, variant in ((2617, "0LD", "ld"), (2806, "0RD", "rd"),
+                           (2823, "0RE", "re"), (2945, "1LF", "lf")):
+        assert opens[i] == f"1RB{a1}_1RC0RF_0RD---_1LD1RE_1LF1LE_1RA0LF"
+        pumps[opens[i]] = (f"(BB6.Agent3Raw120OneLFCounter.table .{variant})",
+                           f"(BB6.Agent3Raw120OneLFCounter.never .{variant})")
+    assert opens[2549] == "1RB0LA_1RC---_0RD0RA_1LD1RE_1LF1LE_1RA0LF"
+    assert opens[2753] == "1RB0RC_1RC---_0RD0RE_1LD1RE_1LF1LE_1RA0LF"
+    pumps[opens[2549]] = ("BB6.Agent3Raw120OneLFTwo.table", "BB6.Agent3Raw120OneLFTwo.never")
+    pumps[opens[2753]] = ("BB6.Agent3Raw120OneLFStack.table", "BB6.Agent3Raw120OneLFStack.never")
+    assert opens[2558] == "1RB0LA_1RC1RA_0RD---_1LD1RE_1LF1LE_1RA0RB"
+    late[opens[2558]] = (1849, 5)
 if BRANCH == "0RA":
     from make_ra_phases import MACHINES
     from make_ra422 import TABLE as TABLE422
@@ -259,7 +273,7 @@ summary = {
     "one_block_pumps": one_count,
     "multi_block_pumps": multi_count,
     "late_leaves": len(late),
-    "custom_counter_and_nested_leaves": {"0RC": 4, "1RC": 3, "0RA": 13}.get(BRANCH, 0),
+    "custom_counter_and_nested_leaves": {"0RC": 4, "1RC": 3, "0RA": 13, "1LF": 6}.get(BRANCH, 0),
     "unresolved": len(missing),
     "unresolved_sample": [{"index": i, "table": code} for i, code in missing[:100]],
 }
@@ -374,7 +388,7 @@ theorem split_checked (p : PartialMachine) (n : Nat) (s : Slot)
   simp only [Bool.and_eq_true]
   exact ⟨hq, allMoves_of _ hk⟩
 """
-emit(prefix + "Base", ["Raw120Late"] + ({"0RC": ["Raw120RCCounter"], "1RC": ["Raw120OneRCCounter"], "0RA": ["Raw120RAPhases", "Raw120RABiDFA", "Raw120RA423BlockAdapter"]}.get(BRANCH, [])) + [prefix + "Sweeps"], base)
+emit(prefix + "Base", ["Raw120Late"] + ({"0RC": ["Raw120RCCounter"], "1RC": ["Raw120OneRCCounter"], "1LF": ["Raw120OneLFCounter", "Raw120OneLFTwo", "Raw120OneLFStack"], "0RA": ["Raw120RAPhases", "Raw120RABiDFA", "Raw120RA423BlockAdapter"]}.get(BRANCH, [])) + [prefix + "Sweeps"], base)
 
 assert tree[0] == "split"
 root_n, root_slot, root_kids = tree[1], tree[2], tree[3]
