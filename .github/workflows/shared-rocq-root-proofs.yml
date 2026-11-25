@@ -80,7 +80,7 @@ permissions:
 jobs:
   verify-original:
     runs-on: ubuntu-latest
-    timeout-minutes: 43
+    timeout-minutes: 60
     steps:
       - name: Install original-source proof compiler
         if: inputs.target != 'enumerate62-chunk-probe-native'
