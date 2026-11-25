@@ -46,7 +46,7 @@ time zero omitted from the list, is:
 `B0@1, C0@2, D1@3, E1@4, F0@5, D0@6, B1@8, C1@9, E0@25, A1@27`.
 
 Thus the unique unqueried transition is F1. The source `IsNotHalt` theorem
-implies that every one of the 25 ordinary completions of this one-row leaf
+implies that every one of the 25 possible completions of this one-row leaf
 is nonhalting, once the local table and tape-semantics transfer are checked.
 
 The first divergence from the champion's path occurs at E1 = 1LF. The exact
