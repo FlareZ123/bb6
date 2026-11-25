@@ -112,7 +112,7 @@ jobs:
             --provenance-input im-results/agent47-raw114-cut/long_sweep.py \
             --provenance-input im-results/agent47-raw114-cut/raw114-hard-manifest.txt \
             --provenance-input im-results/agent47-raw114-cut/all-far-bank.txt \
-            --provenance-input im-results/agent10-tnf-multipump/multi_sweep.py \
+            --provenance-input im-results/agent10-tnf-multipump/multi.py \
             --provenance-input im-results/agent1-ngram/emit_ngram.py \
             --provenance-input .tmp/a31/raw114-generator-arguments.txt \
             --provenance-input .tmp/a31/canonical-generator-arguments.txt \
