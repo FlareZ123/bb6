@@ -207,6 +207,8 @@ jobs:
           cp "$GITHUB_WORKSPACE/research/im-results/agent50-weighted-tnf-pilot/SourceResidualRoster.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent5-weighted-tnf-queue/Agent5RecoveredHeld.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent13-cross-route-pilot/Agent13CrossRouteHeldLeaf.v" original/verify/
+          cp "$GITHUB_WORKSPACE/research/im-results/agent47-rooted-tnf/Agent47SourceWitness.v" original/verify/
+          cp "$GITHUB_WORKSPACE/research/im-results/agent47-rooted-tnf/Agent47SourceTree.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent42-source-certificate-ingestion/Agent42HeldCheckpointMembership.v" original/verify/
            cp "$GITHUB_WORKSPACE/research/im-results/agent42-source-certificate-ingestion/Agent42Q2800BatchWitnesses.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent14-b0-1lc-consumer/Agent14HeldQueueConsumption.v" original/verify/
