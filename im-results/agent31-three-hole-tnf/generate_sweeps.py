@@ -23,6 +23,8 @@ TABLES = [
     "1RB0LB_1RC1LF_0RD0LA_1LD1RE_---0LB_0RC0RA",
     # F1=0RA sibling C1-open leaf with A1=0LB, E0=1RF, F0=0LB.
     "1RB0LB_1RC1LF_0RD---_1LD1RE_1RF0LB_0LB0RA",
+    # F1=0RA sibling E0-open leaf with C1=1RC and F0=1RC.
+    "1RB0LB_1RC1LF_0RD1RC_1LD1RE_---0LB_1RC0RA",
 ]
 
 def parse(s):
