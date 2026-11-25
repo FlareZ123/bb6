@@ -10,6 +10,9 @@ from generate import D, MOVES, tally, emit, move
 import sys
 
 SPEC = {
+    "1LE": ("1RB1LC1RC0LD1LA0RB1LE---------------",5,5,7,8,7014,
+            Counter(split=2378,halt=2378,cycle=33518,state=2420,last=15843,ngram=2831,oneLEHard=83),
+            ["Agent46Raw13Auto1LE","Agent46Raw13Double1LE"]),
     "0RE5": ("1RB1LC1RC0LD1LA0RB0RE---------------",5,5,7,8,7014,
             Counter(split=1572,halt=1572,cycle=26512,state=1160,last=7042,ngram=1368,zeroRE5Hard=75),
             ["Agent46Raw13Auto0RE5","Agent46Raw13ZeroRECounter"]),
@@ -91,10 +94,10 @@ def main():
         data=temp/"tables.txt"
         far = {}
         far_modules=[]
-        if BRANCH in ("0RB","1LC","1RE","1RC","0RE5"):
+        if BRANCH in ("0RB","1LC","1RE","1RC","0RE5","1LE"):
             from generatePackedFAR import generate
             far,far_modules=generate(BRANCH,grams)
-            assert len(set(grams) & far.keys()) == {"0RB":1313,"1LC":124,"1RE":1424,"1RC":173,"0RE5":1359}[BRANCH]
+            assert len(set(grams) & far.keys()) == {"0RB":1313,"1LC":124,"1RE":1424,"1RC":173,"0RE5":1359,"1LE":2822}[BRANCH]
         if BRANCH == "0RA":
             from generateZeroRAFAR import generate
             far = generate()
@@ -109,7 +112,7 @@ def main():
         subprocess.run(["g++","-std=c++17","-O3",str(ng/"ngram.cpp"),"-o",str(exe)],check=True)
         certs=temp/"certs.txt"
         with data.open() as inp,certs.open("w") as out:
-            subprocess.run([str(exe),"7"],stdin=inp,stdout=out,check=True)
+            subprocess.run([str(exe),"9" if BRANCH == "1LE" else "7"],stdin=inp,stdout=out,check=True)
         lines=certs.read_text().splitlines()
         assert len(lines)==len(ids)
         modules=[]
@@ -122,7 +125,7 @@ def main():
         def norm(t):
             if t is None: return None
             if t[0]=="ngram":
-                if t[1] in far: return ({"0RA":"zeroRAFar","1LA":"oneLAFar","1RA":"oneRAFar","0RB":"zeroRBFar","1LC":"oneLCFar","1RE":"oneREFar","1RC":"oneRCFar","0RE5":"zeroRE5Far"}[BRANCH],far[t[1]])
+                if t[1] in far: return ({"0RA":"zeroRAFar","1LA":"oneLAFar","1RA":"oneRAFar","0RB":"zeroRBFar","1LC":"oneLCFar","1RE":"oneREFar","1RC":"oneRCFar","0RE5":"zeroRE5Far","1LE":"oneLEFar"}[BRANCH],far[t[1]])
                 return ("selectedgram",ids[t[1]])
             if t[0]=="split": return ("split",t[1],t[2],[norm(ch) for ch in t[3]])
             return t
@@ -133,7 +136,7 @@ def main():
             kids.append(name)
             body=emit(norm(t)).replace("BB6.Agent46Raw13SelectedGram",GRAM)
             mv=move(MOVES[i])
-            if BRANCH in ("0RB","1LC","1RE","1RC","0RE5") or (BRANCH == "1RA" and i in (4,16)):
+            if BRANCH in ("0RB","1LC","1RE","1RC","0RE5","1LE") or (BRANCH == "1RA" and i in (4,16)):
                 from shard_cut import checked_subtree
                 tag=f"{i:02}"
                 prefix=checked_subtree(t,tag,f"next {mv}",max(CUT,i%6+1),BOUND,
