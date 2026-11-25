@@ -89,8 +89,12 @@ Proof.
     simpl in H.
     destruct w; destruct w'; destruct d; destruct d'; destruct q; destruct q';
     simpl in H; try discriminate; reflexivity.
-  - intros _; congruence.
-  - intros _; congruence.
+  - intro H.
+    destruct tx as [[w d] q].
+    destruct w; destruct d; destruct q; simpl in H; discriminate.
+  - intro H.
+    destruct ty as [[w d] q].
+    destruct w; destruct d; destruct q; simpl in H; discriminate.
   - intros _; reflexivity.
 Qed.
 
