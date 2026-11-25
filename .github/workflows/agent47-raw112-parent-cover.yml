@@ -1,19 +1,54 @@
-name: Agent 47 raw112 parent-cover composition audit
+name: Agent 47 raw112 sharded parent-cover source audit
 on:
   workflow_dispatch:
     inputs:
       mode:
         type: choice
         options: [parent, carry, closed]
-        default: parent
+        default: closed
 permissions:
   contents: read
   actions: read
 jobs:
-  parent_cover:
+  generate_raw112:
     if: inputs.mode == 'parent' || inputs.mode == 'closed'
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate exact raw112 source partition
+        run: |
+          set -euo pipefail
+          python im-results/agent47-raw112-cut/generate.py | tee /tmp/a47-raw112-generate.log
+          test -s im-results/agent47-raw112-cut/Raw112Data.lean
+          test -s im-results/agent47-raw112-cut/unresolved.txt
+          test -s im-results/agent47-raw112-cut/Raw112ParentCoverComposition.lean
+          test "$(find im-results/agent47-raw112-cut -maxdepth 1 -name 'Raw112Branch*.lean' | wc -l)" -eq 24
+          echo "=== Exact residual leaves ==="
+          cat im-results/agent47-raw112-cut/unresolved.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw112-generated-sources
+          path: |
+            im-results/agent47-raw112-cut/Raw112Data.lean
+            im-results/agent47-raw112-cut/Raw112Branch*.lean
+            im-results/agent47-raw112-cut/Raw112Kid*.lean
+            im-results/agent47-raw112-cut/Raw112Symbol*.lean
+            im-results/agent47-raw112-cut/Raw112Sparse*.lean
+            im-results/agent47-raw112-cut/unresolved.txt
+            /tmp/a47-raw112-generate.log
+          if-no-files-found: error
+
+  compile_shard:
+    if: inputs.mode == 'parent' || inputs.mode == 'closed'
+    needs: generate_raw112
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8]
     steps:
       - uses: actions/checkout@v4
       - name: Install Lean 4.36.0-rc2
@@ -22,74 +57,199 @@ jobs:
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           "$HOME/.elan/bin/lean" --version
-      - name: Reconstruct exact generated source dependencies
+      - name: Reconstruct common generated source dependencies
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
-      - name: Generate the exact raw112 partial audit
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw112-generated-sources
+          path: im-results/agent47-raw112-cut
+      - name: Compile disjoint raw112 branch/support closure shard
+        env:
+          SHARD: ${{ matrix.shard }}
         run: |
           set -euo pipefail
-          python im-results/agent47-raw112-cut/generate.py | tee /tmp/a47-raw112-generate.log
-          test -s im-results/agent47-raw112-cut/Raw112Data.lean
-          test -s im-results/agent47-raw112-cut/unresolved.txt
-          test -s im-results/agent47-raw112-cut/Raw112ParentCoverComposition.lean
-          echo "=== Exact residual leaves ==="
-          cat im-results/agent47-raw112-cut/unresolved.txt
-      - name: Compile the parent-cover composition theorem and full import closure
-        run: |
-          set -euo pipefail
-          root=im-results/agent47-raw112-cut/Raw112ParentCoverComposition.lean
-          theorem=BB6.Agent47Raw112.parent_cover_of_residual_covers
-          label=raw112-parent-cover-mixed-bound-composition
-          artifact=raw112-parent-cover-mixed-bound-composition
-          parent_table='1RB---_1RC---_0RD---_1LD1RE_---1LC_------'
-          weighted_bound=100000
-          if [ "${{ inputs.mode }}" = closed ]; then
-            root=im-results/agent47-raw112-cut/Raw112ClosedCover.lean
-            theorem=BB6.Agent47Raw112.parent_cover
-            label=raw112-closed-parent-cover
-            artifact=raw112-closed-parent-cover
+          mapfile -t branches < <(find im-results/agent47-raw112-cut -maxdepth 1 -type f -name 'Raw112Branch*.lean' | sort)
+          test "${#branches[@]}" -eq 24
+          roots=()
+          if [ "$SHARD" -lt 8 ]; then
+            for i in "${!branches[@]}"; do
+              if [ $((i % 8)) -eq "$SHARD" ]; then
+                roots+=("${branches[$i]}")
+              fi
+            done
+          else
+            roots+=(
+              im-results/agent47-raw112-cut/Raw112SiblingNever.lean
+              im-results/agent16-raw118/ResidualCover.lean
+            )
           fi
-          python tools/lean_compile_closure.py "$root" \
-            --workdir /tmp/a47-raw112-parent-cover \
-            --manifest /tmp/a47-raw112-parent-cover-manifest.json \
-            --label "$label" \
-            --theorem "$theorem" \
-            --parent-table "$parent_table" \
-            --weighted-bound "$weighted_bound" \
-            --artifact-name "$artifact" \
-            --provenance-input im-results/agent47-raw112-cut/generate.py \
-            --provenance-input im-results/agent47-raw112-cut/symbolic.py \
-            --provenance-input im-results/agent47-raw112-cut/inductive-generators.tar.xz \
-            --provenance-input im-results/agent47-raw112-cut/Raw112ParentCoverComposition.lean \
-            --provenance-input im-results/agent47-raw112-cut/Raw112ClosedCover.lean \
-            --provenance-input im-results/agent47-raw115-cut/counter.py \
-            --provenance-input im-results/agent31-three-hole-tnf/generate_sweeps.py \
-            --provenance-input im-results/agent31-three-hole-tnf/generate_four_hole.py \
-            --jobs 4 | tee /tmp/a47-raw112-parent-cover-lean.log
-          if grep -Eq 'sorryAx|native_decide' /tmp/a47-raw112-parent-cover-lean.log; then
-            echo "Forbidden axiom/proof mechanism in raw112 parent-cover composition" >&2
+          if [ "${#roots[@]}" -eq 0 ]; then
+            echo "No roots assigned to shard $SHARD" >&2
             exit 1
           fi
-      - name: Preserve exact source, manifest and compiled proof closure
+          python tools/lean_compile_closure.py "${roots[@]}" \
+            --workdir "/tmp/a47-raw112-shard-$SHARD" \
+            --manifest "/tmp/a47-raw112-shard-$SHARD-manifest.json" \
+            --label "raw112-source-shard-$SHARD" \
+            --jobs 4 \
+            --artifact-name "raw112-shard-$SHARD" \
+            --provenance-input im-results/agent47-raw112-cut/generate.py \
+            --provenance-input im-results/agent47-raw112-cut/symbolic.py \
+            --provenance-input im-results/agent47-raw112-cut/Raw112Data.lean \
+            --provenance-input im-results/agent47-raw112-cut/unresolved.txt \
+            | tee "/tmp/a47-raw112-shard-$SHARD.log"
+          if grep -Eq 'sorryAx|native_decide' "/tmp/a47-raw112-shard-$SHARD.log"; then
+            echo "Forbidden axiom/proof mechanism in raw112 shard $SHARD" >&2
+            exit 1
+          fi
+      - uses: actions/upload-artifact@v4
         if: always()
-        uses: actions/upload-artifact@v4
+        with:
+          name: raw112-shard-${{ matrix.shard }}
+          path: |
+            /tmp/a47-raw112-shard-${{ matrix.shard }}/
+            /tmp/a47-raw112-shard-${{ matrix.shard }}-manifest.json
+            /tmp/a47-raw112-shard-${{ matrix.shard }}.log
+          if-no-files-found: warn
+
+  assemble:
+    if: inputs.mode == 'parent' || inputs.mode == 'closed'
+    needs: [generate_raw112, compile_shard]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Reconstruct common generated source dependencies
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw112-generated-sources
+          path: im-results/agent47-raw112-cut
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw112-shard-*
+          merge-multiple: true
+          path: /tmp/a47-raw112-shards
+      - name: Assemble branch shards and source-check the parent theorem
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/a47-raw112-assembled
+          python3 - <<'PY'
+          from pathlib import Path
+          root = Path("/tmp/a47-raw112-shards")
+          dirs = []
+          for d in [root, *[p for p in root.rglob("*") if p.is_dir()]]:
+              if any(d.glob("Raw112Branch*.olean")) or (d / "Raw112SiblingNever.olean").is_file() or (d / "ResidualCover.olean").is_file():
+                  dirs.append(d)
+          if not dirs:
+              raise SystemExit("no compiled raw112 shard roots were downloaded")
+          Path("/tmp/a47-raw112-lean-path").write_text(":".join(map(str, dirs)) + ":.\n")
+          print("LEAN_PATH roots:", dirs)
+          PY
+          export LEAN_PATH="$(cat /tmp/a47-raw112-lean-path)"
+          lean -o /tmp/a47-raw112-assembled/Raw112Data.olean im-results/agent47-raw112-cut/Raw112Data.lean \
+            | tee /tmp/a47-raw112-final.log
+          if [ "${{ inputs.mode }}" = closed ]; then
+            lean -o /tmp/a47-raw112-assembled/Raw112ClosedCover.olean im-results/agent47-raw112-cut/Raw112ClosedCover.lean \
+              | tee -a /tmp/a47-raw112-final.log
+            theorem=BB6.Agent47Raw112.parent_cover
+            root=Raw112ClosedCover
+          else
+            lean -o /tmp/a47-raw112-assembled/Raw112ParentCoverComposition.olean im-results/agent47-raw112-cut/Raw112ParentCoverComposition.lean \
+              | tee -a /tmp/a47-raw112-final.log
+            theorem=BB6.Agent47Raw112.parent_cover_of_residual_covers
+            root=Raw112ParentCoverComposition
+          fi
+          if grep -Eq 'sorryAx|native_decide' /tmp/a47-raw112-final.log; then
+            echo "Forbidden axiom/proof mechanism in assembled raw112 parent proof" >&2
+            exit 1
+          fi
+          python3 - /tmp/a47-raw112-final.log "${{ inputs.mode }}" <<'PY'
+          import pathlib, re, sys
+          log = pathlib.Path(sys.argv[1]).read_text()
+          mode = sys.argv[2]
+          allowed = {"propext", "Classical.choice", "Quot.sound"}
+          required = ["BB6.Agent47Raw112.sound", "BB6.Agent47Raw112.residual_count"]
+          if mode == "closed":
+              required += ["BB6.Agent47Raw112.residuals_covered", "BB6.Agent47Raw112.parent_cover"]
+          else:
+              required += ["BB6.Agent47Raw112.parent_cover_of_residual_covers"]
+          profiles = {}
+          for name, axioms in re.findall(r"'([^']+)' depends on axioms: \[([^\]]*)\]", log):
+              profiles[name] = {x.strip() for x in axioms.split(",") if x.strip()}
+          for name in required:
+              if name not in profiles:
+                  raise SystemExit("missing axiom profile: " + name)
+              bad = profiles[name] - allowed
+              if bad:
+                  raise SystemExit(f"{name}: unexpected axioms {sorted(bad)}")
+              print(f"{name}: {sorted(profiles[name])}")
+          PY
+          python3 - <<'PY'
+          import hashlib, json, os, pathlib, subprocess
+          roots = [pathlib.Path("/tmp/a47-raw112-shards"), pathlib.Path("/tmp/a47-raw112-assembled")]
+          def digest(path):
+              h = hashlib.sha256()
+              with path.open("rb") as stream:
+                  for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+                      h.update(chunk)
+              return h.hexdigest()
+          files = [p for root in roots for p in root.rglob("*") if p.is_file()]
+          tree = "".join(f"{digest(p)}  {p.relative_to('/tmp').as_posix()}\n" for p in sorted(files))
+          mode = os.environ.get("RAW112_MODE", "closed")
+          manifest = {
+              "mode": mode,
+              "root_module": "Raw112ClosedCover" if mode == "closed" else "Raw112ParentCoverComposition",
+              "theorem": "BB6.Agent47Raw112.parent_cover" if mode == "closed" else "BB6.Agent47Raw112.parent_cover_of_residual_covers",
+              "parent_table": "1RB---_1RC---_0RD---_1LD1RE_---1LC_------",
+              "weighted_bound": 100000,
+              "branch_count": 24,
+              "branch_shard_count": 8,
+              "support_shard": 8,
+              "run_id": os.environ.get("GITHUB_RUN_ID"),
+              "source_revision": os.environ.get("GITHUB_SHA"),
+              "lean_version": subprocess.check_output(["lean", "--version"], text=True).strip(),
+              "module_count": sum(1 for p in files if p.suffix == ".olean"),
+              "artifact_tree_sha256": hashlib.sha256(tree.encode()).hexdigest(),
+              "unresolved_rows": pathlib.Path("im-results/agent47-raw112-cut/unresolved.txt").read_text().splitlines(),
+          }
+          pathlib.Path("/tmp/a47-raw112-final-manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
+          print(json.dumps(manifest, indent=2))
+          PY
+        env:
+          RAW112_MODE: ${{ inputs.mode }}
+      - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: ${{ inputs.mode == 'closed' && 'raw112-closed-parent-cover' || 'raw112-parent-cover-mixed-bound-composition' }}
           path: |
-            /tmp/a47-raw112-parent-cover/
-            /tmp/a47-raw112-parent-cover-manifest.json
+            /tmp/a47-raw112-shards/
+            /tmp/a47-raw112-assembled/
+            /tmp/a47-raw112-final-manifest.json
+            /tmp/a47-raw112-final.log
             im-results/agent47-raw112-cut/Raw112Data.lean
             im-results/agent47-raw112-cut/Raw112ParentCoverComposition.lean
+            im-results/agent47-raw112-cut/Raw112ClosedCover.lean
             im-results/agent47-raw112-cut/Raw112Branch*.lean
             im-results/agent47-raw112-cut/Raw112Kid*.lean
             im-results/agent47-raw112-cut/Raw112Symbol*.lean
             im-results/agent47-raw112-cut/Raw112Sparse*.lean
             im-results/agent47-raw112-cut/unresolved.txt
-            /tmp/a47-raw112-generate.log
-            /tmp/a47-raw112-parent-cover-lean.log
+          if-no-files-found: warn
 
   carry:
     if: inputs.mode == 'carry'
