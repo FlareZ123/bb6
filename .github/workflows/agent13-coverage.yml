@@ -5,12 +5,16 @@ on:
       target:
         description: 'Source closure to verify'
         type: choice
-        options: [weighted-tnf-raw118-long, weighted-tnf-raw118-bidfa, weighted-tnf-raw118-partial, legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole, weighted-tnf-four-hole, weighted-tnf-four-hole-sibling, weighted-tnf-r1-sweep, queue-orbit, weighted-tnf-roster-convergence, weighted-tnf-roster-agent47-graft, weighted-tnf-pure-residuals, weighted-tnf-raw99, weighted-tnf-raw113, weighted-tnf-raw124-rf, weighted-tnf-raw124-lc, weighted-tnf-raw124-1rf, weighted-tnf-raw124-0rb, weighted-tnf-raw124-bundle, weighted-tnf-raw124-1la, weighted-tnf-raw124-1la-sharded, weighted-tnf-raw124-0lb-longcycle100k, weighted-tnf-raw103, weighted-tnf-raw104, weighted-tnf-agent8-five, weighted-tnf-agent8-six, weighted-tnf-agent8-raw117, weighted-tnf-agent8-raw112-macros, weighted-tnf-roster-composition, weighted-tnf-agent3-siblings, weighted-tnf-raw85-parent-check, weighted-tnf-raw91, weighted-tnf-raw87, weighted-tnf-raw83-pump, weighted-tnf-agent10-multi, weighted-tnf-agent10-five-new, weighted-tnf-agent10-five-roster, weighted-tnf-agent10-raw106, weighted-tnf-raw63-counter, weighted-tnf-raw61-witnesses, weighted-tnf-prefix-single, weighted-tnf-agent10-single, weighted-tnf-combined-109, weighted-tnf-root-zero-refinement, weighted-tnf-combined-106, weighted-tnf-canonical-78, weighted-tnf-canonical-78-exact, weighted-tnf-raw108-canonical, weighted-tnf-canonical-two-parent, weighted-tnf-raw10-box, weighted-tnf-raw10-box8-cycle, weighted-tnf-raw10-box0-halt, weighted-tnf-raw10-short-frontier, weighted-tnf-held-block-far, weighted-tnf-raw120-late, weighted-tnf-raw120-cycles, weighted-tnf-raw120-rf, weighted-tnf-raw120-rb, weighted-tnf-raw120-partition, weighted-tnf-raw120-la-carry, weighted-tnf-raw120-la, weighted-tnf-root-sibling-first-hole, weighted-tnf-canonical-frontier, weighted-tnf-raw114-cut, weighted-tnf-raw114-far, weighted-tnf-raw114-pumps, weighted-tnf-raw114-complete, weighted-tnf-raw107-witnesses, weighted-tnf-raw107-1la, weighted-tnf-raw60, weighted-tnf-raw60-conditional, weighted-tnf-raw60-next, weighted-tnf-raw60-la, weighted-tnf-raw60-assemble, weighted-tnf-raw60-progress, weighted-tnf-raw60-membership, weighted-tnf-raw60-discover, weighted-tnf-raw60-graft, weighted-tnf-ngram-pilot, weighted-tnf-champion-parent, weighted-tnf-held-leaf-109-membership, weighted-tnf-f412-partition, weighted-tnf-sidewitness-multiparent, weighted-tnf-sidewitness-multiparent-scan]
+        options: [weighted-tnf-raw118-long, weighted-tnf-raw118-bidfa, weighted-tnf-raw118-partial, legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole, weighted-tnf-four-hole, weighted-tnf-four-hole-sibling, weighted-tnf-r1-sweep, queue-orbit, weighted-tnf-roster-convergence, weighted-tnf-roster-agent47-graft, weighted-tnf-pure-residuals, weighted-tnf-raw99, weighted-tnf-raw113, weighted-tnf-raw124-rf, weighted-tnf-raw124-lc, weighted-tnf-raw124-1rf, weighted-tnf-raw124-0rb, weighted-tnf-raw124-bundle, weighted-tnf-raw124-1la, weighted-tnf-raw124-1la-sharded, weighted-tnf-raw124-0lb-longcycle100k, weighted-tnf-raw124-bundle-sharded, weighted-tnf-raw103, weighted-tnf-raw104, weighted-tnf-agent8-five, weighted-tnf-agent8-six, weighted-tnf-agent8-raw117, weighted-tnf-agent8-raw112-macros, weighted-tnf-roster-composition, weighted-tnf-agent3-siblings, weighted-tnf-raw85-parent-check, weighted-tnf-raw91, weighted-tnf-raw87, weighted-tnf-raw83-pump, weighted-tnf-agent10-multi, weighted-tnf-agent10-five-new, weighted-tnf-agent10-five-roster, weighted-tnf-agent10-raw106, weighted-tnf-raw63-counter, weighted-tnf-raw61-witnesses, weighted-tnf-prefix-single, weighted-tnf-agent10-single, weighted-tnf-combined-109, weighted-tnf-root-zero-refinement, weighted-tnf-combined-106, weighted-tnf-canonical-78, weighted-tnf-canonical-78-exact, weighted-tnf-raw108-canonical, weighted-tnf-canonical-two-parent, weighted-tnf-raw10-box, weighted-tnf-raw10-box8-cycle, weighted-tnf-raw10-box0-halt, weighted-tnf-raw10-short-frontier, weighted-tnf-held-block-far, weighted-tnf-raw120-late, weighted-tnf-raw120-cycles, weighted-tnf-raw120-rf, weighted-tnf-raw120-rb, weighted-tnf-raw120-partition, weighted-tnf-raw120-la-carry, weighted-tnf-raw120-la, weighted-tnf-root-sibling-first-hole, weighted-tnf-canonical-frontier, weighted-tnf-raw114-cut, weighted-tnf-raw114-far, weighted-tnf-raw114-pumps, weighted-tnf-raw114-complete, weighted-tnf-raw107-witnesses, weighted-tnf-raw107-1la, weighted-tnf-raw60, weighted-tnf-raw60-conditional, weighted-tnf-raw60-next, weighted-tnf-raw60-la, weighted-tnf-raw60-assemble, weighted-tnf-raw60-progress, weighted-tnf-raw60-membership, weighted-tnf-raw60-discover, weighted-tnf-raw60-graft, weighted-tnf-ngram-pilot, weighted-tnf-champion-parent, weighted-tnf-held-leaf-109-membership, weighted-tnf-f412-partition, weighted-tnf-sidewitness-multiparent, weighted-tnf-sidewitness-multiparent-scan]
         default: legacy
       raw_id:
         description: 'Single Agent 10 residual index (single target only)'
         type: string
         default: '68'
+      raw124_branch:
+        description: 'Bundle-backed raw124 F1 branch to audit (e.g. 0RA, 0LD, 1RA, 1LA)'
+        type: string
+        default: '0RA'
       raw60_artifact_run_id:
         description: 'Prior workflow run containing reusable raw60 child artifacts'
         type: string
@@ -28,7 +32,7 @@ permissions:
   actions: read
 jobs:
   check:
-    if: inputs.target != 'weighted-tnf-agent8-raw117' && inputs.target != 'weighted-tnf-raw108-canonical' && inputs.target != 'weighted-tnf-raw113' && inputs.target != 'weighted-tnf-raw124-1la-sharded' && inputs.target != 'weighted-tnf-raw124-0lb-longcycle100k'
+    if: inputs.target != 'weighted-tnf-agent8-raw117' && inputs.target != 'weighted-tnf-raw108-canonical' && inputs.target != 'weighted-tnf-raw113' && inputs.target != 'weighted-tnf-raw124-1la-sharded' && inputs.target != 'weighted-tnf-raw124-0lb-longcycle100k' && inputs.target != 'weighted-tnf-raw124-bundle-sharded'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -1808,4 +1812,145 @@ jobs:
         with:
           name: raw124-0lb-longcycle100k
           path: /tmp/raw124-0lb
+          if-no-files-found: error
+
+  raw124_bundle_prepare:
+    if: inputs.target == 'weighted-tnf-raw124-bundle-sharded'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      RAW124_BRANCH: ${{ inputs.raw124_branch }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Generate selected raw124 bundle branch and compile common core
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent2-tnf-raw124/generate_bundle.py "$RAW124_BRANCH"
+          D=im-results/agent2-tnf-raw124
+          W=/tmp/a2-raw124-bundle
+          STEM="Raw124B${RAW124_BRANCH}"
+          python tools/lean_compile_closure.py --workdir "$W" --jobs 4 "$D/${STEM}Base.lean" im-results/agent47-rooted-tnf/CanonicalFrontier.lean | tee /tmp/a2-raw124-bundle-prepare.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a2-raw124-bundle-prepare.log; then exit 1; fi
+          cp "$D/${STEM}Pumps.lean" "$D/${STEM}Base.lean" "$D/${STEM}KidK"*.lean "$D/${STEM}Data.lean" "$W/"
+          cd "$W"
+          git -C "$GITHUB_WORKSPACE" rev-parse HEAD > SOURCE_COMMIT
+          sha256sum "${STEM}"*.lean > RAW124_SOURCE.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw124-${{ inputs.raw124_branch }}-common
+          path: /tmp/a2-raw124-bundle
+          if-no-files-found: error
+
+  raw124_bundle_shards:
+    if: inputs.target == 'weighted-tnf-raw124-bundle-sharded'
+    needs: raw124_bundle_prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      RAW124_BRANCH: ${{ inputs.raw124_branch }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { shard: 0, kids: 'K00 K01 K02 K03' }
+          - { shard: 1, kids: 'K04 K05 K06 K07' }
+          - { shard: 2, kids: 'K08 K09 K10 K11' }
+          - { shard: 3, kids: 'K12 K13 K14 K15' }
+          - { shard: 4, kids: 'K16 K17 K18 K19' }
+          - { shard: 5, kids: 'K20 K21 K22 K23' }
+    steps:
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw124-${{ inputs.raw124_branch }}-common
+          path: /tmp/a2-raw124-bundle
+      - name: Compile selected branch kid modules
+        env:
+          KIDS: ${{ matrix.kids }}
+        run: |
+          set -euo pipefail
+          cd /tmp/a2-raw124-bundle
+          export LEAN_PATH="$PWD"
+          test "$(cat SOURCE_COMMIT)" = "$GITHUB_SHA"
+          sha256sum -c RAW124_SOURCE.sha256
+          STEM="Raw124B${RAW124_BRANCH}"
+          mkdir -p /tmp/a2-raw124-bundle-kids
+          for k in $KIDS; do printf '%sKid%s\n' "$STEM" "$k"; done |
+            xargs -P 2 -I '{}' bash -c 'set -e; lean -o "$1.olean" "$1.lean"; cp "$1.olean" /tmp/a2-raw124-bundle-kids/' _ '{}' |
+            tee /tmp/a2-raw124-bundle-shard.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a2-raw124-bundle-shard.log; then exit 1; fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw124-${{ inputs.raw124_branch }}-kids-${{ matrix.shard }}
+          path: /tmp/a2-raw124-bundle-kids
+          if-no-files-found: error
+
+  raw124_bundle_assemble:
+    if: inputs.target == 'weighted-tnf-raw124-bundle-sharded'
+    needs: raw124_bundle_shards
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      RAW124_BRANCH: ${{ inputs.raw124_branch }}
+    steps:
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw124-${{ inputs.raw124_branch }}-common
+          path: /tmp/a2-raw124-bundle
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw124-${{ inputs.raw124_branch }}-kids-*
+          path: /tmp/a2-raw124-bundle
+          merge-multiple: true
+      - name: Assemble and axiom-check selected raw124 branch
+        run: |
+          set -euo pipefail
+          cd /tmp/a2-raw124-bundle
+          export LEAN_PATH="$PWD"
+          test "$(cat SOURCE_COMMIT)" = "$GITHUB_SHA"
+          sha256sum -c RAW124_SOURCE.sha256
+          STEM="Raw124B${RAW124_BRANCH}"
+          for k in $(seq -w 0 23); do test -s "${STEM}KidK$k.olean"; done
+          lean -o "${STEM}Data.olean" "${STEM}Data.lean" 2>&1 | tee /tmp/a2-raw124-bundle-assemble.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a2-raw124-bundle-assemble.log; then exit 1; fi
+          python - <<'PY'
+          import pathlib, re
+          log = pathlib.Path('/tmp/a2-raw124-bundle-assemble.log').read_text()
+          allowed = {'propext', 'Classical.choice', 'Quot.sound'}
+          seen = set()
+          for name, axioms in re.findall(r"'([^']+)' depends on axioms: \[([^\]]*)\]", log):
+              actual = {a.strip() for a in axioms.split(',') if a.strip()}
+              assert actual <= allowed, (name, actual - allowed)
+              seen.add(name.rsplit('.', 1)[-1])
+          for name in re.findall(r"'([^']+)' does not depend on any axioms", log):
+              seen.add(name.rsplit('.', 1)[-1])
+          assert {'checkRoot', 'bound_all'} <= seen, seen
+          print(f'Raw124 {RAW124_BRANCH} branch source and allowed-axiom gate passed.')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw124-${{ inputs.raw124_branch }}-source-accepted
+          path: |
+            /tmp/a2-raw124-bundle/*.olean
+            /tmp/a2-raw124-bundle-assemble.log
+            /tmp/a2-raw124-bundle/SOURCE_COMMIT
+            /tmp/a2-raw124-bundle/RAW124_SOURCE.sha256
           if-no-files-found: error
