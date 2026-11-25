@@ -515,3 +515,22 @@ Next:
 3. If the raw10 BlockFAR search finds a candidate, consume its compiled partial table into the exact residual theorem; do not count generated files alone as a closure.
 4. If q_i(2800,100) source compute remains too slow, pursue a real smaller checkpoint / packed artifact rather than repeatedly running the same million-update `vm_compute`.
 5. At the measured 70-minute checkpoint (06:55:24.257Z or later), persist all final state, push, then delete the lease as the final repository operation.
+
+
+### Final checkpoint before lease release (06:53Z)
+
+Added `im-results/agent17-raw10-box-far-search/Raw10BoxCombinedConsumer.lean`. This is an **uncompiled integration draft** that combines the 65 side witnesses, held table, Agent50 cycle table, and Agent50 halt table into one `certifiedTablesWithCycleAndHalt` list. It states the exact residual characterization, pairwise disjointness, conditional score-B cover for all 41 remaining boxes, and conditional exact-BB6 composition. Do not treat it as kernel-accepted until compiled; the cycle/halt source certificates also still require successful CI.
+
+The optional-row search script now supports the cycle and halt tables, with sentinel 25 for a forced halt because encoded-row 0 means wildcard. The `weighted-tnf-raw10-box` workflow step dispatched in run `45561624285` uses the earlier base-34 snapshot and tests only the highest-fixed candidate; it does not compile the combined consumer draft.
+
+Last observed CI state before the GitHub API rate limit:
+- `45557567037` Coq q_i(2800,100) source membership: still in original-source compile after ~43 minutes;
+- `45560897353` held-leaf / 65-witness consumer: still compiling after source-indexing corrections;
+- `45561624285` raw10 bridge + singleton projection + one-candidate FAR search: still compiling;
+- `45556817579` Agent50 cycle consumer: still compiling;
+- `45558703747` Agent50 halt-table compile: runner shutdown during Raw70Kid..Raw82Kid dependency compilation, not a Lean proof diagnostic.
+No new status claims should be made without checking.
+
+The exact residual arithmetic after both Agent50 rows is **41 boxes / 90,737,503,713,725 completions**, but this remains a finite replay until the source consumers' Lean exactness/disjointness proofs pass. BB(6) is not solved; no universal upper bound has been established.
+
+At the release checkpoint, do not start new research. Push/verify this memory and all preceding commits, then remove `.lease.json` as the final repository mutation and verify the deletion push. Original release threshold remains `2026-11-25T06:55:24.257Z`.
