@@ -1,5 +1,5 @@
 {
-  "status": "candidate, not source certified",
+  "status": "complete candidate dispositions; source audit pending",
   "block": {
     "276": [
       5,
@@ -221,8 +221,13 @@
       ]
     }
   },
-  "remaining": [
-    2822
-  ],
-  "candidate_bound": 4136180
+  "remaining": [],
+  "candidate_bound": 4136180,
+  "manual": {
+    "2822": [
+      "Raw108LB2822",
+      "BB6.Agent10Raw108LB2822",
+      "1RB0RF_1RC0LB_0RD1LC_1LD1RE_1RA1LB_---0RB"
+    ]
+  }
 }
