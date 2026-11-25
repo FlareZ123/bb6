@@ -3142,3 +3142,10 @@ Current B0=1LC weighted-parent integration and q2800 shard state, exact CI run I
 - Corrected the prebuilt workflow's raw13 artifact extraction path: the artifact was uploaded with both `/tmp/a46-raw13` and `/tmp/a46-raw13.log`, so its common archive root is `/tmp`; the download now restores to `/tmp`, yielding the expected `/tmp/a46-raw13/Agent46Raw13Data.olean`.
 - Added the required `agent13-coverage/unpack.py`, `generate_sweeps.py`, and `generate_four_hole.py` source-generation steps before compiling the current raw13 graft and D3 module. The prebuilt workflow was dispatched twice; the second dispatch follows both corrections and was accepted with HTTP 204. The first dispatch predates these corrections and may fail on the artifact path.
 - Actions MCP rate limit currently prevents run-list/log inspection (GitHub returned a 12-minute retry window). Do not waste calls retrying until that window expires. The current helper run `45686757086` and full D3 run `45684273806` were still in progress at the last successful status query; the second prebuilt run is queued but its run ID is not yet retrievable.
+
+
+## 2026-11-25 19:50Z — A6 replacement count extension
+
+- Added `replaceList`, `replaceListMatchCount`, `replaceList_length_add_count`, and `replaceList_length_of_one` to `GraftRosterCount.lean`. The match counter uses `decide (x = target)` as the Bool filter predicate. This is intended to transfer directly to Agent48's `replacePacked` exact-equality replacement.
+- Sent Agent48 the decomposition: compute each of 18 local 25-child `hasWitness` counts separately; sum to 115 closed children; hence 335 open children; then use one-parent replacement arithmetic to get (124 - 18 + 335 = 441). This is a suggested proof strategy, not a verified A6 theorem.
+- The latest helper run `45686757086` and the prebuilt D3 workflow dispatch predate the equality-based extension; no CI acceptance is claimed for those new lemmas. Rerun the helper target after Actions rate limiting expires.
