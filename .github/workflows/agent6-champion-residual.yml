@@ -10,6 +10,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 jobs:
   verify:
@@ -202,6 +203,51 @@ jobs:
               if not used <= allowed:
                   raise SystemExit(f"nonstandard axioms: {name}: {used-allowed}")
               print(f"{name}: {sorted(used)}")
+          PY
+      - name: Download accepted canonical77 proof artifact
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45554648116
+          name: canonical77-certified
+          path: /tmp/a47-canonical
+      - name: Compile raw139 integration against the accepted canonical77 roster
+        run: |
+          set -euo pipefail
+          for required in CanonicalTwoParentGraft.olean CanonicalRaw114Accepted.olean Raw114CompleteData.olean; do
+            test -s "/tmp/a47-canonical/$required"
+          done
+          export LEAN_PATH="/tmp/a47-canonical:/tmp/a6-champion-residual/build${LEAN_PATH:+:$LEAN_PATH}"
+          lean -o /tmp/a6-champion-residual/build/ChampionResidualCanonical77Integration.olean \
+            im-results/agent6-champion-residual/ChampionResidualCanonical77Integration.lean | tee /tmp/a6-canonical77.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a6-canonical77.log; then
+            echo "Forbidden proof placeholder or native_decide found in canonical77/raw139 composition" >&2
+            exit 1
+          fi
+          python3 - /tmp/a6-canonical77.log <<'PY'
+          import pathlib, re, sys
+          log = pathlib.Path(sys.argv[1]).read_text()
+          allowed = {"propext", "Classical.choice", "Quot.sound"}
+          names = (
+              "BB6.Agent6Canonical77ChampionIntegration.championResidual_mem_canonical77",
+              "BB6.Agent6Canonical77ChampionIntegration.championResidual_unique_canonical77",
+              "BB6.Agent6Canonical77ChampionIntegration.canonical77_other_address_count",
+              "BB6.Agent6Canonical77ChampionIntegration.cover_championResidual_from_raw139_leaves",
+              "BB6.Agent6Canonical77ChampionIntegration.refinedCanonical77Roster_count",
+              "BB6.Agent6Canonical77ChampionIntegration.exact_from_canonical77_and_raw139_leaves",
+          )
+          for name in names:
+              pattern = r"'" + re.escape(name) + r"' depends on axioms: \\[([^\\]]*)\\]"
+              match = re.search(pattern, log)
+              if match:
+                  used = {x.strip() for x in match.group(1).split(",") if x.strip()}
+              elif "'" + name + "' does not depend on any axioms" in log:
+                  used = set()
+              else:
+                  raise SystemExit("missing axiom audit: " + name)
+              if not used <= allowed:
+                  raise SystemExit(f"nonstandard axioms: {name}: {used - allowed}")
+              print(name, sorted(used))
           PY
 
   f0-siblings:
