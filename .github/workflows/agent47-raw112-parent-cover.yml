@@ -4,13 +4,13 @@ on:
     inputs:
       mode:
         type: choice
-        options: [parent, carry, closed]
+        options: [parent, carry, closed, integrated]
         default: parent
 permissions:
   contents: read
 jobs:
   parent_cover:
-    if: inputs.mode == 'parent' || inputs.mode == 'closed'
+    if: inputs.mode == 'parent' || inputs.mode == 'closed' || inputs.mode == 'integrated'
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
@@ -39,24 +39,37 @@ jobs:
       - name: Compile the parent-cover composition theorem and full import closure
         run: |
           set -euo pipefail
-          target=Raw112ParentCoverComposition
+          root=im-results/agent47-raw112-cut/Raw112ParentCoverComposition.lean
           theorem=BB6.Agent47Raw112.parent_cover_of_residual_covers
+          label=raw112-parent-cover-mixed-bound-composition
+          artifact=raw112-parent-cover-mixed-bound-composition
           if [ "${{ inputs.mode }}" = closed ]; then
-            target=Raw112ClosedCover
+            root=im-results/agent47-raw112-cut/Raw112ClosedCover.lean
             theorem=BB6.Agent47Raw112.parent_cover
+            label=raw112-closed-parent-cover
+            artifact=raw112-closed-parent-cover
           fi
-          python tools/lean_compile_closure.py "im-results/agent47-raw112-cut/$target.lean" \
+          if [ "${{ inputs.mode }}" = integrated ]; then
+            root=im-results/agent31-shared-core/Canonical74Raw107Raw114Raw117Raw112RosterOnly.lean
+            theorem=BB6.Agent31Canonical74RosterOnly.exact_at_target
+            label=canonical74-raw112-mixed-bound-roster-composition
+            artifact=canonical74-raw112-mixed-bound-roster-composition
+          fi
+          python tools/lean_compile_closure.py "$root" \
             --workdir /tmp/a47-raw112-parent-cover \
             --manifest /tmp/a47-raw112-parent-cover-manifest.json \
-            --label raw112-parent-cover-mixed-bound-composition \
+            --label "$label" \
             --theorem "$theorem" \
             --parent-table '1RB---_1RC---_0RD---_1LD1RE_---1LC_------' \
             --weighted-bound 100000 \
-            --artifact-name raw112-parent-cover-mixed-bound-composition \
+            --artifact-name "$artifact" \
             --provenance-input im-results/agent47-raw112-cut/generate.py \
             --provenance-input im-results/agent47-raw112-cut/symbolic.py \
             --provenance-input im-results/agent47-raw112-cut/inductive-generators.tar.xz \
             --provenance-input im-results/agent47-raw112-cut/Raw112ParentCoverComposition.lean \
+            --provenance-input im-results/agent31-shared-core/Canonical74Raw107Raw114Raw117Raw112RosterOnly.lean \
+            --provenance-input im-results/agent31-shared-core/Canonical75RosterOnly.lean \
+            --provenance-input im-results/agent31-shared-core/CanonicalTwoParentRosterOnly.lean \
             --provenance-input im-results/agent47-raw115-cut/counter.py \
             --provenance-input im-results/agent31-three-hole-tnf/generate_sweeps.py \
             --provenance-input im-results/agent31-three-hole-tnf/generate_four_hole.py \
