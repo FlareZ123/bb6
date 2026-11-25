@@ -1,4 +1,4 @@
-"""Produce complete source-audit candidates for raw58 children 0RD, 1LC, 1RE."""
+"""Generate source-audited raw58 child certificates; optionally discover FAR and pump covers."""
 from pathlib import Path
 from collections import Counter
 from itertools import product
@@ -12,6 +12,7 @@ sys.path.insert(0,str(ROOT.parent/"agent10-tnf-multipump"))
 import multi
 MOVES=[w+d+q for w,d,q in product("01","LR","ABCDEF")]
 SPECS=json.loads((ROOT/"more.json").read_text())
+FAR_CODES=sorted({"000"} | {line.split()[0] for spec in SPECS.values() for line in spec.get("groups","").splitlines() if line.strip()}, key=lambda s:(len(s),s))
 
 def main():
     for key in sys.argv[1:] or ["RD","LC1","RE1"]:
@@ -24,27 +25,57 @@ def build_child(key,spec):
     subprocess.run(["g++","-std=c++17","-O3",str(ROOT.parent/"agent2-tnf-raw99/enumerate.cpp"),"-o",str(target/"enumerate")],check=True)
     subprocess.run([str(target/"enumerate"),parent],cwd=target,check=True)
     data=(target/"open.txt").read_bytes()
-    assert hashlib.sha256(data).hexdigest()==spec["hash"]
+    digest=hashlib.sha256(data).hexdigest()
+    if "hash" in spec: assert digest==spec["hash"],(key,digest)
+    else: print(key,"open_sha256",digest)
     opens=data.decode().splitlines()
-    assert len(opens)==spec["stats"]["open"]==len(set(opens))
+    assert len(opens)==len(set(opens))
+    if "stats" in spec: assert len(opens)==spec["stats"]["open"],(key,len(opens),spec["stats"]["open"])
     index={s:i for i,s in enumerate(opens)}
     dfa=["000"]*len(opens)
-    for line in spec["groups"].splitlines():
+    assigned=set()
+    for line in spec.get("groups","").splitlines():
+        if not line.strip(): continue
         code,ids=line.split()
-        for i in map(int,ids.split(",")): dfa[i]=code
+        for i in map(int,ids.split(",")): dfa[i]=code; assigned.add(i)
+    auto_pumps={}; auto_multi={}
+    if spec.get("auto_classify"):
+        pump_ids=set(spec.get("pumps",[])); multi_ids=set(spec.get("multi",[]))
+        custom_ids={int(i) for i in spec.get("custom",{})}
+        unresolved=[]
+        for i,p in enumerate(opens):
+            if i in assigned or i in pump_ids or i in multi_ids or i in custom_ids: continue
+            found=False
+            for code in FAR_CODES:
+                try: masks(parse(p),int(code[0]),[int(ch,36) for ch in code[1:]])
+                except (AssertionError,ValueError,IndexError): continue
+                dfa[i]=code; assigned.add(i); found=True; break
+            if found: continue
+            pp=one.parse(p); events=one.concrete_events(pp,10000)
+            ans=one.candidate(pp,events)
+            if ans is not None:
+                spec.setdefault("pumps",[]).append(i); auto_pumps[i]=ans; continue
+            ans=multi.candidate(pp,events)
+            if ans is not None:
+                spec.setdefault("multi",[]).append(i); auto_multi[i]=ans; continue
+            unresolved.append((i,p))
+        print(key,"auto FAR",len(assigned),"auto one-block",len(auto_pumps),"auto multi",len(auto_multi),"unresolved",len(unresolved))
+        if unresolved:
+            print("UNRESOLVED",*["%d %s"%(i,p) for i,p in unresolved[:50]],sep="\n")
+            raise SystemExit(3)
     ns="BB6.Agent4Raw58"+key
     prefix="Raw58"+key
     pumpns="BB6Coverage.Agent4Raw58"+key+"Pumps"
     pumpcode=["import SweepPumping","set_option maxRecDepth 100000","set_option maxHeartbeats 0","set_option linter.unusedVariables false",f"namespace {pumpns}","open BB6Coverage BB6Coverage.Agent31Pump"]
     pumps={}
-    for i in spec["pumps"]:
-        p=one.parse(opens[i]); ans=one.candidate(p,one.concrete_events(p,10000))
+    for i in spec.get("pumps",[]):
+        p=one.parse(opens[i]); ans=auto_pumps[i] if i in auto_pumps else one.candidate(p,one.concrete_events(p,10000))
         assert ans is not None,(key,i,opens[i])
         code,info=one.generate(i,p,ans)
         pumpcode.append(code);pumps[i]=f"{pumpns}.M{i}"
         print(key,i,info)
     for i in spec.get("multi",[]):
-        p=one.parse(opens[i]); ans=multi.candidate(p,one.concrete_events(p,10000))
+        p=one.parse(opens[i]); ans=auto_multi[i] if i in auto_multi else multi.candidate(p,one.concrete_events(p,10000))
         assert ans is not None,(key,i,opens[i])
         code,info=multi.generate(i,p,ans)
         pumpcode.append(code);pumps[i]=f"{pumpns}.M{i}"
@@ -123,7 +154,8 @@ theorem query : zipQueryOK {bound} parent {n} {ss} = true := by decide
 def kid{i:02} : Audit := {build(kid)}
 theorem check{i:02} : zipCheck {bound} (child {move(MOVES[i])}) kid{i:02} = true := by decide
 """)
-    assert stats==Counter(spec["stats"]),stats
+    if "stats" in spec: assert stats==Counter(spec["stats"]),(key,stats,spec["stats"])
+    else: print(key,"tree_stats",dict(stats))
     cases="\n".join(f"  · exact check{12*w+6*r+q:02}" for q,w,r in product(range(6),range(2),range(2)))
     body=f"""
 def kids : Move → Audit := byMove [{",".join(f"kid{i:02}" for i in range(24))}]
