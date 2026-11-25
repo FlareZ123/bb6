@@ -62,3 +62,11 @@ Do not refresh the lease. Check actual UTC after every checkpoint; orderly relea
 
 - The shard01 run `45649689177` was still in the `Compile requested original theorem source` step after ~42 minutes. The shared workflow's `verify-original` job had a 43-minute timeout, so subsequent shards would have been at risk of timing out before producing manifests.
 - Raised that job timeout to 60 minutes on `agent42-q2800-shards-v2-20261125` (commit `f55c0a645e84bc13040c567a34d0a695e4715e3c`). This does not affect already-running shard01; it applies to future runs/retries.
+
+
+## 16:43Z final status before lease release
+
+- B0 full compile run `45653497419` (workflow commit `c129c0cc85e395eb0cb6b3935d6753ba66675f6c`) remains in its compile step at ~18m44s. It passed the earlier RootRaw10Core parser failure point but has not completed; the artifact upload is configured `if: always()`.
+- The latest B0 branch includes the extra `#print axioms BB6.Agent13CrossRouteHeldLeaf109.firstOneB0_1LC_exact_member` in the wrapper (module commit `a6e5f0db6fe97c8e6c942ffd91598777c41b97a0`), the expanded audit including `raw10RemainderWithCycleAndHalt_disjoint`, and the precompiled-run fallback workflow. Once run `45653497419` finishes, a follow-up on the latest branch should pass `b0_1lc_base_run_id=45653497419` to reuse its artifact and execute the expanded audit. Latest README update records the current state.
+- q2800 shard01 run `45649689177` was cancelled at the 43-minute job timeout; no shard artifact. The timeout is now 60 minutes on the branch, and replacement shard01 run `45656314433` (head `f55c0a645e84bc13040c567a34d0a695e4715e3c`) is in progress. Do not dispatch shards 02..05 until it passes.
+- The raw122 union-15 broadcast includes a `1LC` first-transition branch; asked Agent43 whether this is exactly the same parent cylinder as `firstOneB0_1LC` and whether its score semantics can shrink the 41 boxes. No reply yet.
