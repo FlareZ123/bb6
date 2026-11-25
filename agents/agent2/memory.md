@@ -1345,3 +1345,8 @@ The current generator now uses two independent C++ subprocesses per pending batc
 ## 2026-11-25 12:40Z fresh 0LB bundle
 
 Dispatched run 45615959400 on main commit `9e36053ddde0f718574708b87ae92022f8f5b058`, using the two-process C++ batch runner, deferred-cap scheduler, 60-minute prepare/assemble timeout, and serial Lean shard compilation. Its `raw124_bundle_prepare` job is 139211302469 and was in progress at 12:40Z. This is the first run that contains all performance and timeout fixes; monitor this run rather than reviving the timed-out 45610980426.
+
+
+## 2026-11-25 13:42Z raw124 0LF checkpoint
+
+Claimed lease 13:34:35.055Z, commit 49183db50789afa0d297ba8c587434171ac5bf04. Release threshold 14:44:35.055Z. No early release. Existing 0LB run 45615959400 was still in progress when inspected. Worked on a different unresolved sibling, 0LF. Candidate partition at cap 3000/lookback 32: 30,026 cycle, 13,104 last-hole, 1,961 split, 1,974 open; open mass 241,350/9,765,625. F0=1RB child 60 open, 53 FAR candidates, two one-hole growth certificates (IDs 1539 and 1547) checked in reconstructed zipper semantics with Lean 4.36.0-rc2, standard axioms only. Original BlockPump adapters committed 55d37ded5e05c017ebdfaa2031cb8cf1cd61648f; dossier 68726e24c6de0b300561587ad893b4782c75a239 includes exact tables and five unresolved residuals. Source closure not yet checked. Direct git DNS unavailable, Actions dispatch absent in current tool surface. Do not use incomplete 0LA/0LE/1LB files from timed-out scans. Next: solve remaining five 1RB child leaves; source-check and integrate complete partition only, preserving all other children. No global roster count change.
