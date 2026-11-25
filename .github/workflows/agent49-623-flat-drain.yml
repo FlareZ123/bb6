@@ -59,7 +59,11 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent41-623-3euclidean/DrainImageAP.lean" DrainImageAP.lean
           lake env lean -o .lake/build/lib/lean/DrainImageAP.olean DrainImageAP.lean
           cp "$GITHUB_WORKSPACE/im-results/agent41-623-3euclidean/FatalBandSource.lean" FatalBandSource.lean
-          lake env lean FatalBandSource.lean
+          lake env lean -o .lake/build/lib/lean/FatalBandSource.olean FatalBandSource.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent41-623-3euclidean/DrainImageDensity.lean" DrainImageDensity.lean
+          lake env lean -o .lake/build/lib/lean/DrainImageDensity.olean DrainImageDensity.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent41-623-3euclidean/FatalDensitySource.lean" FatalDensitySource.lean
+          lake env lean FatalDensitySource.lean
       - name: Check remaining source families
         if: inputs.check != 'decoder'
         working-directory: /tmp/cryptids
