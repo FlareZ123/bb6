@@ -92,7 +92,8 @@ def count_covered(cubes: list[tuple[int, ...]]) -> int:
         return total
 
     initial = tuple(tuple(cube) for cube in cubes)
-    return visit(initial, tuple(range(len(FREE_SLOTS))))
+    nvars = len(initial[0]) if initial else len(FREE_SLOTS)
+    return visit(initial, tuple(range(nvars)))
 
 
 def main() -> None:
@@ -105,6 +106,13 @@ def main() -> None:
     parent_space = 25 ** len(FREE_SLOTS)
     side_union = count_covered(cubes)
     combined_union = count_covered(cubes + [held])
+    c1_variable = FREE_SLOTS.index(5)
+    c1_0la = [cube[:c1_variable] + cube[c1_variable + 1:]
+              for row, cube in zip(selected, cubes) if row[5] == 1]
+    c1_0ld = [cube[:c1_variable] + cube[c1_variable + 1:]
+              for row, cube in zip(selected, cubes) if row[5] == 13]
+    c1_0la_union = count_covered(c1_0la)
+    c1_0ld_union = count_covered(c1_0ld)
     holes = {}
     for row in selected:
         n = row.count(0)
@@ -121,8 +129,12 @@ def main() -> None:
         2: 7, 3: 12, 4: 15, 5: 4, 6: 14, 7: 8, 8: 4, 9: 1
     }
     assert compatible_count == 0
+    assert len(c1_0la) == 1
+    assert len(c1_0ld) == 64
+    assert c1_0la_union == 3814697265625
+    assert c1_0ld_union == 662642770000
     assert parent_space == 95367431640625
-    assert side_union == 4477340035625
+    assert side_union == c1_0la_union + c1_0ld_union == 4477340035625
     assert added == 25
     assert combined_union == 4477340035650
 
@@ -132,6 +144,11 @@ def main() -> None:
     print(f"parent_completions={parent_space}")
     print(f"side_witness_union={side_union}")
     print(f"side_witness_union_percent={100 * side_union / parent_space:.9f}")
+    print(f"c1_0la_witnesses={len(c1_0la)}")
+    print(f"c1_0la_union={c1_0la_union}")
+    print(f"c1_0ld_witnesses={len(c1_0ld)}")
+    print(f"c1_0ld_union={c1_0ld_union}")
+    print(f"c1_0ld_percent_of_branch={100 * c1_0ld_union / (25 ** 9):.9f}")
     print(f"q_i_2800_compatible_side_witnesses={compatible_count}")
     print(f"side_witness_plus_q_i_2800_union={combined_union}")
     print(f"additional_completions_from_q_i_2800={added}")
