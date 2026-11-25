@@ -11,6 +11,10 @@ on:
         description: Verify the archived depth-eight batch without new search
         type: boolean
         default: false
+      sibling_integration_only:
+        description: Compile the exact FAR-to-weighted-TNF depth-eight sibling integration
+        type: boolean
+        default: false
       samples:
         description: Guided mutation trials per DFA size and orientation
         type: number
@@ -54,11 +58,11 @@ jobs:
       fail-fast: false
       max-parallel: 8
       matrix:
-        shard: ${{ fromJSON((inputs.batch_only || inputs.wide132_only || inputs.solver_code != '') && '[0]' || '[0,1,2,3,4,5,6,7]') }}
+        shard: ${{ fromJSON((inputs.batch_only || inputs.wide132_only || inputs.solver_code != '' || inputs.sibling_integration_only) && '[0]' || '[0,1,2,3,4,5,6,7]') }}
     steps:
       - uses: actions/checkout@v4
       - name: Enumerate FAR candidates or solve one target by SMT
-        if: ${{ !inputs.batch_only && !inputs.wide132_only }}
+        if: ${{ !inputs.batch_only && !inputs.wide132_only && !inputs.sibling_integration_only }}
         env:
           SOLVER_CODE: ${{ inputs.solver_code }}
         run: |
@@ -182,6 +186,16 @@ jobs:
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
           python tools/lean_compile_closure.py --workdir /tmp/a7-wide --jobs 4 "$d/Wide132Data.lean" "$d/Wide132RosterBridge.lean" | tee /tmp/wide132-proof.log
           if grep -qE 'sorryAx|native_decide' /tmp/wide132-proof.log; then exit 1; fi
+      - name: Compile exact FAR-to-weighted-TNF depth-eight sibling integration
+        if: ${{ inputs.sibling_integration_only }}
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python tools/lean_compile_closure.py --workdir /tmp/a7-sibling --jobs 8 im-results/agent50-weighted-tnf-pilot/DepthEightSiblingCoverage.lean | tee /tmp/a7-sibling-proof.log
+          if grep -qE 'sorryAx|native_decide' /tmp/a7-sibling-proof.log; then
+            echo 'Forbidden proof placeholder or native_decide found in sibling integration closure' >&2
+            exit 1
+          fi
       - uses: actions/upload-artifact@v4
         if: always()
         with:
