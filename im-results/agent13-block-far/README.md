@@ -19,3 +19,45 @@ The two remaining leaves 5/161 and 5/790 are 1RB---_1RC0RA_0RD0LF_1LD1RE_0RB0LC_
 ### 05:52 checkpoint: all 16 raw110 candidates kernel verified locally
 
 12/21 now has a minimized 168-state left DFA (previously 429), 339 right nodes, 441 edges, two accepting zero states and 465 active row checks. SparseBlockFAR.lean uses ordinary finite lookup functions instead of huge packed vectors; its soundness and the concrete certificate were kernel-checked locally. The other 15 retain the previous generator. CarryEquivalence.lean proves that the remaining pair is forever-defined iff its common deterministic macro orbit is forever-defined. This is not a safety proof. Original source integration remains separate.
+
+
+## q2700 source-semantic extension and raw10 encoded subtraction (25 Nov 2026)
+
+The primitive BlockFAR certificate for the offset-2700 one-hole table
+`1RB0LD_1LC1RA_1LE1LA_---0RB_1RE0RF_1RF0LC` (width 3, cap 2, modulus 4,
+runs 5, no reflection) is already accepted in Agent5 run `45580679383`.
+
+A source-semantics consumer has been added at
+`im-results/agent5-q0-held-blockfar/Q02700Consumer.lean`. It fixes the exact
+12-slot table, constructs its `BB6Coverage.PartialMachine` through
+`BlockFARBridge.partialTable`, and applies `BlockFARBridge.transfer_never`
+to every compatible original machine. It also checks the parent slots
+A0=1RB and B0=1LC and the unique D0 hole. The combined source-consumer run
+`45584389245` generated the primitive certificate successfully but failed in
+the compile/kernel-check step. Artifact `15009551945` was uploaded; the first
+Lean diagnostic is still pending. Do not treat original-semantics transfer as
+accepted until a fresh CI run passes.
+
+The encoded raw10 refinement is drafted in
+`Raw10Q2700EncodedConsumer.lean`. It derives the row
+`[8,13,11,4,19,3,0,6,20,22,24,9]` from the source table, checks parent
+inclusion and disjointness from all 66 existing encoded cylinders (65 side
+witnesses plus q2800), and states the exact subtraction theorem using
+`subtractMany_exact`. This module is committed but not yet compiled.
+
+Independent first-mismatch replay finds q2700 disjoint from the existing 68
+raw10 cylinders when the cycle and forced-halt rows are included. The current
+41-box residual of mass 90,737,503,713,725 becomes 49 boxes of mass
+90,737,503,713,700: exactly 25 completions removed. The box-count and mass
+figures are computational diagnostics, not kernel-decided cardinality
+theorems; adding q2700 increases the number of residual boxes, so it is only a
+small optional refinement, not a reduction of the open-box burden.
+
+A mirrored width-3 attempt for the q0_3500 table
+`1RB0RC_1LC1RD_---1RB_0LD0RE_1LE0LF_1RA1LF` failed before certificate
+generation in run `45585726536`: no finite exit for abstract row
+`('c', 20, 4, 1)`, block input `a=3`. This is a parameter-specific negative
+result only; q0_3500 remains uncertified.
+
+All of this remains intermediate research. No BB(6) exact value or global
+upper bound follows from these local cylinders.
