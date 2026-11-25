@@ -13,12 +13,12 @@ on:
         required: false
         default: ""
       source_sha:
-        description: Optional exact commit to check out; pass the same SHA used by core_run_id
+        description: Exact commit to check out; compatible core artifacts are checked by source hashes
         type: string
         required: false
         default: ""
       core_run_id:
-        description: Optional run ID containing agent6-champion-residual-core
+        description: Optional run ID containing a source-compatible agent6-champion-residual-core artifact
         type: string
         required: false
         default: ""
@@ -112,7 +112,7 @@ jobs:
           run-id: ${{ inputs.core_run_id }}
           name: agent6-champion-residual-core
           path: /tmp/a6-champion-residual
-      - name: Verify source-matched champion residual core checkpoint
+      - name: Verify content-matched champion residual core checkpoint
         if: ${{ inputs.core_run_id != '' }}
         run: |
           set -euo pipefail
@@ -121,8 +121,6 @@ jobs:
           root = pathlib.Path('/tmp/a6-champion-residual')
           summary = json.loads((root / 'core.json').read_text().rstrip("\\n"))
           source_sha = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
-          if summary['source_sha'] != source_sha:
-              raise SystemExit(f"core source SHA {summary['source_sha']} != checkout {source_sha}")
           lean_version = subprocess.check_output(['lean', '--version'], text=True).strip()
           if summary['lean_version'] != lean_version:
               raise SystemExit(f"Lean version mismatch: {summary['lean_version']} != {lean_version}")
@@ -130,14 +128,39 @@ jobs:
           binary_hash = hashlib.sha256((prefix / 'bin/lean').read_bytes()).hexdigest()
           if summary['lean_binary_sha256'] != binary_hash:
               raise SystemExit('Lean binary hash mismatch')
-          manifest_hash = hashlib.sha256((root / 'manifest.json').read_bytes()).hexdigest()
+          manifest_path = root / 'manifest.json'
+          manifest_hash = hashlib.sha256(manifest_path.read_bytes()).hexdigest()
           if summary['manifest_sha256'] != manifest_hash:
               raise SystemExit('core manifest hash mismatch')
+          manifest = json.loads(manifest_path.read_text())
+          def path_in_checkout(value):
+              p = pathlib.Path(value)
+              return p if p.is_absolute() else pathlib.Path.cwd() / p
+          def check_source(path_value, expected_hash, label):
+              path = path_in_checkout(path_value)
+              if not path.is_file():
+                  raise SystemExit(f"core source missing in checkout: {label}: {path}")
+              actual = hashlib.sha256(path.read_bytes()).hexdigest()
+              if actual != expected_hash:
+                  raise SystemExit(f"core source changed: {label}: {actual} != {expected_hash}")
+          for item in manifest.get('modules', []):
+              check_source(item['source_path'], item['source_sha256'], item['module'])
+              olean = root / 'build' / item['olean_path']
+              if not olean.is_file():
+                  raise SystemExit(f"core object missing: {item['module']}: {olean}")
+              actual = hashlib.sha256(olean.read_bytes()).hexdigest()
+              if actual != item['olean_sha256']:
+                  raise SystemExit(f"core object hash mismatch: {item['module']}")
+          for item in manifest.get('roots', []):
+              check_source(item['source_path'], item['source_sha256'], item['module'])
+          for item in manifest.get('provenance_inputs', []):
+              check_source(item['path'], item['sha256'], item['path'])
           build = root / 'build'
           count = len(list(build.rglob('*.olean')))
           if count != summary['build_olean_count'] or count == 0:
               raise SystemExit(f"core object count mismatch: {count} != {summary['build_olean_count']}")
-          print(f"reusing {count} Lean objects from source-matched run {summary['source_run_id']}")
+          print(f"reusing {count} Lean objects from run {summary['source_run_id']}: "
+                f"artifact source {summary['source_sha']}, compatible checkout {source_sha}")
           PY
       - name: Compile the champion frontier and depth-five F1 sibling refinement
         if: ${{ inputs.core_run_id == '' }}
