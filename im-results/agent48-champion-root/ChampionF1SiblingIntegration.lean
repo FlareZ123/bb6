@@ -84,7 +84,7 @@ theorem cover_remainingExtended
   by_cases hLF : parentOneLF e.2 = true
   · have heq : e.2 = BB6.Agent48F1OneLF.parent := sameTable_sound hLF
     rw [heq]
-    exact cover_oneLF championScore (by omega)
+    exact cover_oneLF championScore (Nat.le_trans (by decide) champion_score_ge_49394)
   · by_cases hRD : parentZeroRD e.2 = true
     · have heq : e.2 = BB6.Agent48F1ZeroRD.ctr := sameTable_sound hRD
       rw [heq]
