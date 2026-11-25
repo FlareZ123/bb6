@@ -301,7 +301,7 @@ jobs:
           python tools/lean_compile_closure.py --workdir "$PWD/.tmp/a7-raw110/build" --jobs 4 im-results/agent7-raw110/Raw110Consumer.lean | tee /tmp/raw110-proof.log
           block=()
           if [[ "${{ inputs.raw110_block_far }}" == true ]]; then
-            python im-results/agent13-block-far/build_raw110.py 0 5 13 18
+            python im-results/agent13-block-far/build_raw110.py 0 5 12 13 18
             block+=(--block-far)
           fi
           python im-results/agent7-raw110/generate_partial.py "${block[@]}"

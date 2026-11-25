@@ -11,9 +11,6 @@ def partial_spec(block_far=False):
         manifest=json.loads((ROOT.parent/"agent13-block-far/Raw110Candidates.json").read_text())
         for e in manifest:
             kid,j=e["kid"],e["j"]
-            # The reflected candidate exceeded the local Lean memory cap;
-            # retain it until its source certificate has independently passed.
-            if (kid,j)==(12,21): continue
             s=spec[str(kid)]
             assert j in s["miss"], (kid,j,"candidate not in baseline cut")
             name=f"Raw110B{kid:02d}L{j:03d}"
