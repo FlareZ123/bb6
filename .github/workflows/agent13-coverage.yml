@@ -1388,6 +1388,10 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           export PATH="$HOME/.elan/bin:$PATH"
           lean --version | tee /tmp/a17-lean-version.txt
+      - name: Unpack the pinned BB6 and weighted-TNF source modules
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
       - name: Kernel-check the generic singleton-projection box theorem
         run: |
           set -euo pipefail
