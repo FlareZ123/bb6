@@ -1,6 +1,6 @@
 name: Agent 50 canonical r4 ingestion
 
-run-name: Agent 50 ${{ inputs.compile_raw10_cryptids_leaf && 'raw10 Cryptids leaf' || 'canonical r4 ingestion' }}
+run-name: Agent 50 ${{ inputs.compile_raw10_ctl_footprint && 'raw10 CTL footprint' || inputs.compile_raw10_cryptids_leaf && 'raw10 Cryptids leaf' || 'canonical r4 ingestion' }}
 
 on:
   workflow_dispatch:
@@ -22,6 +22,11 @@ on:
         type: string
       compile_raw10_cryptids_leaf:
         description: "Compile the source-pinned raw10 last-hole leaf adapter instead of the canonical r4 ingestion"
+        required: false
+        default: false
+        type: boolean
+      compile_raw10_ctl_footprint:
+        description: "Compile the minimal source-pinned four-transition CTL footprint theorem"
         required: false
         default: false
         type: boolean
@@ -54,6 +59,7 @@ jobs:
           "$HOME/.elan/bin/lean" --version
 
       - name: Download the accepted canonical77 object artifact
+        if: ${{ !inputs.compile_raw10_ctl_footprint }}
         uses: actions/download-artifact@v4
         with:
           github-token: ${{ github.token }}
@@ -62,6 +68,7 @@ jobs:
           path: /tmp/canonical77
 
       - name: Download the exact canonical77 dependency manifest
+        if: ${{ !inputs.compile_raw10_ctl_footprint }}
         uses: actions/download-artifact@v4
         with:
           github-token: ${{ github.token }}
@@ -70,6 +77,7 @@ jobs:
           path: /tmp/canonical77-manifest
 
       - name: Recreate the canonical77 source closure inputs
+        if: ${{ !inputs.compile_raw10_ctl_footprint }}
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
@@ -91,9 +99,11 @@ jobs:
         working-directory: upstream
         run: |
           set -euo pipefail
-          test -s "/tmp/canonical77/CanonicalRaw114Accepted.olean"
-          test -s "/tmp/canonical77/CanonicalTwoParentGraft.olean"
-          test -s "/tmp/canonical77-manifest/manifest/canonical77-base-manifest.json"
+          if [[ "${{ inputs.compile_raw10_ctl_footprint }}" != "true" ]]; then
+            test -s "/tmp/canonical77/CanonicalRaw114Accepted.olean"
+            test -s "/tmp/canonical77/CanonicalTwoParentGraft.olean"
+            test -s "/tmp/canonical77-manifest/manifest/canonical77-base-manifest.json"
+          fi
           test "$(git rev-parse HEAD)" = "${{ inputs.upstream_sha }}"
           # Preserve the exact Cryptids source commit, but align its pinned
           # Mathlib/Verso dependency graph with the consumer's Lean 4.36.0-rc2.
@@ -126,7 +136,7 @@ jobs:
           cp lakefile.toml "$GITHUB_WORKSPACE/.tmp/agent19-raw10-cryptids-leaf/upstream-lakefile.toml"
           cp lake-manifest.json "$GITHUB_WORKSPACE/.tmp/agent19-raw10-cryptids-leaf/upstream-lake-manifest.json"
           sha256sum "$GITHUB_WORKSPACE/.tmp/agent19-raw10-cryptids-leaf/upstream-lakefile.toml" "$GITHUB_WORKSPACE/.tmp/agent19-raw10-cryptids-leaf/upstream-lake-manifest.json" > "$GITHUB_WORKSPACE/.tmp/agent19-raw10-cryptids-leaf/upstream-dependencies.sha256"
-          lake build BusyBeaver.Basic BusyBeaver.Bridge Cryptids.Machines
+          lake build BusyBeaver.Basic BusyBeaver.Bridge Cryptids.Machines BusyBeaver.Calculi.CtlCertificate BusyBeaver.BB6.NonHalt.M_1RB0RC_1LC1RD_1RA1LE_1LA0RD_0LE1RF_1LBHHH
           test -s .lake/build/lib/lean/BusyBeaver/Basic.olean
           test -s .lake/build/lib/lean/Cryptids/Machines.olean
 
@@ -143,7 +153,7 @@ jobs:
           bash im-results/agent50-weighted-tnf-pilot/reproduce-canonical-r4.sh
 
       - name: Compile source-backed raw10 last-hole leaf
-        if: ${{ inputs.compile_raw10_cryptids_leaf }}
+        if: ${{ inputs.compile_raw10_cryptids_leaf && !inputs.compile_raw10_ctl_footprint }}
         env:
           CANONICAL77_DIR: /tmp/canonical77
           CANONICAL77_MANIFEST: /tmp/canonical77-manifest/manifest/canonical77-base-manifest.json
@@ -153,7 +163,7 @@ jobs:
         run: bash im-results/agent19-hard-root-crosswalk/reproduce-raw10-cryptids-leaf.sh
 
       - name: Upload source-backed raw10 last-hole leaf closure
-        if: ${{ inputs.compile_raw10_cryptids_leaf }}
+        if: ${{ inputs.compile_raw10_cryptids_leaf && !inputs.compile_raw10_ctl_footprint }}
         uses: actions/upload-artifact@v4
         with:
           name: raw10-cryptids-leaf-certified
@@ -170,6 +180,28 @@ jobs:
           include-hidden-files: true
           retention-days: 30
 
+      - name: Compile minimal source-backed Raw10 CTL footprint
+        if: ${{ inputs.compile_raw10_ctl_footprint }}
+        env:
+          UPSTREAM_ROOT: ${{ github.workspace }}/upstream
+          WORKDIR: ${{ github.workspace }}/.tmp/agent50-raw10-ctl-footprint
+          JOBS: "4"
+        run: bash im-results/agent50-weighted-tnf-pilot/reproduce-raw10-ctl-footprint.sh
+
+      - name: Upload minimal source-backed Raw10 CTL footprint closure
+        if: ${{ inputs.compile_raw10_ctl_footprint }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw10-ctl-footprint-certified
+          path: |
+            .tmp/agent50-raw10-ctl-footprint/build/
+            .tmp/agent50-raw10-ctl-footprint/compile.log
+            .tmp/agent50-raw10-ctl-footprint/axiom-summary.json
+            .tmp/agent50-raw10-ctl-footprint/upstream-commit.txt
+            .tmp/agent50-raw10-ctl-footprint/upstream-dependencies.sha256
+          if-no-files-found: error
+          include-hidden-files: true
+          retention-days: 30
       - name: Upload the compiled canonical r4 ingestion closure
         if: ${{ !inputs.compile_raw10_cryptids_leaf }}
         uses: actions/upload-artifact@v4
