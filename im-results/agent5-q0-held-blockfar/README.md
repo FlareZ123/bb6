@@ -54,3 +54,18 @@ The following direct-certificate runs were still compiling at the last status ch
 - Offset 700: run `45580752871`.
 
 The canonical-parent membership audit is run `45583404503` and was still in progress. Earlier audit attempts failed on workflow setup only; the current run uses the corrected unpack output path and Lean executable path. No parent membership should be assumed until this audit returns its computed matches.
+
+
+## Direct canonical-124 parent mapping
+
+A slot-by-slot comparison against `im-results/agent13-roster-convergence/canonical-124.json` places all nine q0 held tables under five canonical-124 parents, without state renaming:
+
+| q0 offsets | canonical index | raw residual index | additional parent address |
+|---|---:|---:|---|
+| 2700, 2800, 3500 | 6 | 10 | B0=1LC |
+| 0 | 7 | 11 | B0=1RC, C0=0LA |
+| 300 | 8 | 13 | B0=1RC, C0=1LA |
+| 400a, 400b | 9 | 15 | B0=1RC, C0=0LB |
+| 600, 700 | 10 | 17 | B0=1RC, C0=1LB |
+
+The common firstOneCylinder parent also fixes A0=1RB. This is exact direct extension against the canonical-124 JSON tables. It does **not** establish that these five entries survive the canonical78 `covered` filter, nor that a single q0 child closes an entire 9-/10-hole parent. The canonical78 membership audit is still pending; see `ParentMembership.lean` and `.github/workflows/agent5-q0-parent-membership.yml`.
