@@ -279,7 +279,13 @@ def emit(t):
     if tag == "late0RE":
         n = "BB6Coverage.Agent31Pump.Raw13Late0RE"
         return f".bounded {n}.table 21269 {n}.bound"
-    if tag in ("zeroRCparent","zeroRDparent","zeroLCparent","zeroLBparent"):
+    if tag in ("zeroRAHard","zeroRAFar"):
+        n = "BB6.Agent46Raw13ZeroRA"
+        i = v[0]
+        if tag == "zeroRAHard" and i == 76:
+            return f".closed (.proven {n}.pumpTable {n}.pumpNever)"
+        return f".closed (.proven {n}.pF{i} {n}.neverF{i})"
+    if tag in ("zeroRAparent","zeroRCparent","zeroRDparent","zeroLCparent","zeroLBparent"):
         n = "BB6.Agent46Raw13Zero"+tag[4:6]
         return f".bounded {n}.parent 7014 {n}.bound"
     if tag == "oneRDparent":
@@ -326,13 +332,14 @@ if __name__ == "__main__":
     assert t[:3] == ("split",3,1)
     t = enhance_selected(build_enhanced(t))
     t = enhance(t,ROOT,{"1RB1LC1RC0LD1LA0RB1LB0RE------------":("zeroREparent",),
+        "1RB1LC1RC0LD1LA0RB0RA---------------":("zeroRAparent",),
         "1RB1LC1RC0LD1LA0RB0RC---------------":("zeroRCparent",),
         "1RB1LC1RC0LD1LA0RB0RD---------------":("zeroRDparent",),
         "1RB1LC1RC0LD1LA0RB0LC---------------":("zeroLCparent",),
         "1RB1LC1RC0LD1LA0RB0LB---------------":("zeroLBparent",),
         "1RB1LC1RC0LD1LA0RB1RD---------------":("oneRDparent",)})
     open_rows = list(collect_open_tables(t,ROOT))
-    assert len(open_rows) == 1716, len(open_rows)
+    assert len(open_rows) == 1715, len(open_rows)
     open_path = D/"raw13-open-residuals.txt"
     open_path.write_text(
         "".join(f"{i} {raw}\n" for i,raw in enumerate(open_rows)),
@@ -350,13 +357,13 @@ if __name__ == "__main__":
     bidfa_closed_count = sum(1 for raw in open_rows if raw in bidfa_proven)
     c,m = Counter(),Counter()
     tally(t,9,3,c,m)
-    expected = Counter(open=1716-bidfa_closed_count,bidfa=bidfa_closed_count,
+    expected = Counter(open=1715-bidfa_closed_count,bidfa=bidfa_closed_count,
         cycle=2708,state=948,split=353,halt=353,last=999,ngram=15,pump=3,
         selectedgram=826,pump1RE=1,sharedpump=3,pump0LE=1,pump1RE2=1,
         sparse1RE=1,zeroREparent=1,zeroRCparent=1,zeroRDparent=1,
-        zeroLCparent=1,zeroLBparent=1,oneRDparent=1)
+        zeroLCparent=1,zeroLBparent=1,zeroRAparent=1,oneRDparent=1)
     assert c == expected,c
-    assert m["open"] + m["bidfa"] == 1725263672025 and sum(m.values()) == 25**9,m
+    assert m["open"] + m["bidfa"] == 1725234375150 and sum(m.values()) == 25**9,m
     names = []
     for i,k in enumerate(t[3]):
         if k is None:
@@ -367,7 +374,7 @@ if __name__ == "__main__":
         kid_imports = ["Agent46Raw13Base","Agent46Raw13NGram","Agent46Raw13Pumps",
             "Agent46Raw13SelectedGram","Agent46Raw13Pump1RE","Agent46Raw13SharedPumps",
             "Agent46Raw13Pump0LE","Agent46Raw13Pump1RE2","Agent46Raw13Sparse1RE",
-            "Agent46Raw13ZeroRE","Agent46Raw13ZeroRC","Agent46Raw13ZeroRD",
+            "Agent46Raw13ZeroRE","Agent46Raw13ZeroRC","Agent46Raw13ZeroRD","Agent46Raw13ZeroRA",
             "Agent46Raw13ZeroLC","Agent46Raw13ZeroLB","Agent46Raw13OneRD"]
         if bidfa_proven:
             kid_imports.append("Agent46Raw13BiDFAAudit")

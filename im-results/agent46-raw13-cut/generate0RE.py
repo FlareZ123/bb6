@@ -10,6 +10,9 @@ from generate import D, MOVES, tally, emit, move
 import sys
 
 SPEC = {
+    "0RA": ("1RB1LC1RC0LD1LA0RB0RA---------------",4,5,9,7,7014,
+            Counter(split=147,halt=147,cycle=2671,state=136,last=495,ngram=67,zeroRAHard=9),
+            ["Agent46Raw13ZeroRAPump","Agent46Raw13ZeroRAFAR"]),
     "1RD": ("1RB1LC1RC0LD1LA0RB1RD---------------",4,5,8,7,7014,
             Counter(split=392,halt=392,cycle=6027,state=716,last=2183,ngram=72,auto1RD=15),
             ["Agent46Raw13Auto1RD"]),
@@ -65,7 +68,12 @@ def main():
         collect(tree)
         assert len(set(grams))==len(grams)==CENSUS['ngram']
         data=temp/"tables.txt"
-        ids={raw:i for i,raw in enumerate(grams)}
+        far = {}
+        if BRANCH == "0RA":
+            from generateZeroRAFAR import generate
+            far = generate()
+            assert len(set(grams) & far.keys()) == 60
+        ids={raw:i for i,raw in enumerate(grams) if raw not in far}
         data.write_text("".join(f"{i} {raw}\n" for raw,i in ids.items()))
         exe=temp/"ngram"
         subprocess.run(["g++","-std=c++17","-O3",str(ng/"ngram.cpp"),"-o",str(exe)],check=True)
@@ -73,7 +81,7 @@ def main():
         with data.open() as inp,certs.open("w") as out:
             subprocess.run([str(exe),"7"],stdin=inp,stdout=out,check=True)
         lines=certs.read_text().splitlines()
-        assert len(lines)==CENSUS['ngram']
+        assert len(lines)==len(ids)
         modules=[]
         for i in range(0,len(lines),16):
             name=f"{PREFIX}Gram{i//16}"
@@ -83,7 +91,9 @@ def main():
             subprocess.run(["python",str(ng/"emit_ngram.py"),str(data),str(shard),str(D/(name+".lean")),"--namespace",GRAM],check=True)
         def norm(t):
             if t is None: return None
-            if t[0]=="ngram": return ("selectedgram",ids[t[1]])
+            if t[0]=="ngram":
+                if t[1] in far: return ("zeroRAFar",far[t[1]])
+                return ("selectedgram",ids[t[1]])
             if t[0]=="split": return ("split",t[1],t[2],[norm(ch) for ch in t[3]])
             return t
         kids=[]

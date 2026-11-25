@@ -45,8 +45,8 @@ def main() -> None:
     for line in raw_bytes.decode().splitlines():
         ident, table = line.split()
         rows[int(ident)] = table
-    if len(rows) != 1716:
-        raise SystemExit(f"expected 1716 raw13 open residuals, found {len(rows)}")
+    if len(rows) != 1715:
+        raise SystemExit(f"expected 1715 raw13 open residuals, found {len(rows)}")
 
     ids = sorted(rows)
     groups: dict[int, list[int]] = {}
@@ -127,7 +127,7 @@ def main() -> None:
         "new_candidate_ids": sorted(new_candidates, key=int),
     })
     spec = {
-        "parent": "1RB1LC1RC0LD1LA0RB1LB1LE1RF0LA---0RE",
+        "parent": "1RB---1RC---1LA---------------------",
         "open_sha256": open_sha,
         "source_count": len(rows),
         "hole_counts": hole_counts,

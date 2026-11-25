@@ -72,7 +72,7 @@ theorem cover_at_target77 (B : Nat) (hB : 21269 ≤ B)
   cover_of_quotient_roster hB refined_sound77 hLeaves
 
 /-- Conditional exactness after both raw114 and raw13 are ingested.
-    No claim is made until every one of the 1792 retained Covers is proved. -/
+    No claim is made until every one of the retained Covers is proved. -/
 theorem exact_at_target77 (B : Nat) (hB : 21269 ≤ B)
     (hLeaves : ∀ e ∈ refinedRoster77, Cover (WeightedBound B) e.2)
     (champ : ∃ m : BB6.Coverage.RawMachine,
