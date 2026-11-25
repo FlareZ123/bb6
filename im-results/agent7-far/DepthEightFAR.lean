@@ -158,6 +158,27 @@ theorem p85_0_weightedBound (B : Nat) (m : Machine) (hm : compatible p85_0 m) : 
 #print axioms p85_0_leaf
 #print axioms p85_0_weightedBound
 
+/-- Parent 85, A/1=`1RD` then E/0=`1RC`; exact one-hole table 1RB1RD_1RC1LF_0RD1LA_1LD1RE_1RC0LB_---0LA.
+    Five-state original-orientation SMT hit, Actions run 45524530843. -/
+def p85_1 : PartialMachine := fromCodes [7, 15, 11, 22, 13, 2, 14, 19, 11, 4, 24, 0]
+def c85_1 : Data 5 := ⟨0,[0, 1, 2, 3, 2, 2, 4, 1, 2, 1],
+  [136, 256, 134218889, 0, 272630146, 1074790528, 268967937, 1048716, 1073774592, 2068959135, 1048576, 1073742336, 86581248, 1064968, 553746452, 2068959135, 536986387, 1207992336, 2097289, 256, 134217732, 1048716, 33554692, 1107296256, 140, 1614810380, 69256712, 16778377, 16826640, 1073742352, 1073741824],
+  [1644233236, 1095795721, 16778249, 16778240, 1610645504, 3145868, 2097152, 16778249, 2068959135, 541065216, 2068959135, 2068959135, 32768, 2068959135, 2068959135, 268500996, 2068959135, 2138165151, 136315392, 2068959135, 16778249, 16778249, 1048716, 3145868, 1346372096, 2017476636, 2064715549, 306185744, 1750171665, 1048716, 1073741824],
+  1993079666⟩
+theorem p85_1_valid : c85_1.fastValid p85_1 = true := by decide
+theorem p85_1_root : p85_1 initialSlot = some (some ⟨true, true, 1⟩) := by decide
+theorem p85_1_support : TNFSupport p85_1 6 := support6 _
+theorem p85_1_noAssignedHalt : weightedTNFNoAssignedHalt p85_1 := fromCodes_noAssignedHalt _
+theorem p85_1_neverHalts (m : Machine) (hm : compatible p85_1 m) : NeverHalts m :=
+  c85_1.sound p85_1 (c85_1.fastValid_sound _ p85_1_valid) m hm
+def p85_1_leaf (B : Nat) : WeightedTNFCertificate B p85_1 6 :=
+  farDataNonhaltLeaf p85_1_root p85_1_support p85_1_noAssignedHalt c85_1 p85_1_valid
+theorem p85_1_weightedBound (B : Nat) (m : Machine) (hm : compatible p85_1 m) : WeightedBound B m :=
+  (p85_1_leaf B).sound m hm
+#print axioms p85_1_neverHalts
+#print axioms p85_1_leaf
+#print axioms p85_1_weightedBound
+
 /-- Parent 114, A/1 hole; table 1RB---_1RC1LF_0RD0RC_1LD1RE_0LB0LB_0RC0LA.
     One-state reflected hit, Actions run 45469722441. -/
 def p114_0 : PartialMachine := fromCodes [7,24,11,22,13,9,14,19,4,4,9,0]
