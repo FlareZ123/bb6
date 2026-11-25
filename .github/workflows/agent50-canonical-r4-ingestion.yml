@@ -1,0 +1,97 @@
+name: Agent 50 canonical r4 ingestion
+
+on:
+  workflow_dispatch:
+    inputs:
+      canonical77_run_id:
+        description: "Run containing the accepted canonical77-certified artifact"
+        required: true
+        default: "45554648116"
+        type: string
+      canonical77_manifest_run_id:
+        description: "Run containing the canonical77 base dependency manifest"
+        required: true
+        default: "45647053824"
+        type: string
+      upstream_sha:
+        description: "Exact Cryptids source commit used by the accepted r4 source proof"
+        required: true
+        default: "3647718b5df22e1a61462dec0376bd204526285a"
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  canonical-r4-ingestion:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check out the pinned original Cryptids source
+        uses: actions/checkout@v4
+        with:
+          repository: google-deepmind/cryptids
+          ref: ${{ inputs.upstream_sha }}
+          path: upstream
+          persist-credentials: false
+
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+
+      - name: Download the accepted canonical77 object artifact
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.canonical77_run_id }}
+          name: canonical77-certified
+          path: .tmp/canonical77
+
+      - name: Download the exact canonical77 dependency manifest
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.canonical77_manifest_run_id }}
+          name: raw107-canonical-shared-core
+          path: .tmp/canonical77-manifest
+
+      - name: Validate the base artifacts and prepare upstream dependencies
+        working-directory: upstream
+        run: |
+          set -euo pipefail
+          test -s "$GITHUB_WORKSPACE/.tmp/canonical77/CanonicalRaw114Accepted.olean"
+          test -s "$GITHUB_WORKSPACE/.tmp/canonical77/CanonicalTwoParentGraft.olean"
+          test -s "$GITHUB_WORKSPACE/.tmp/canonical77-manifest/manifest/canonical77-base-manifest.json"
+          test "$(git rev-parse HEAD)" = "${{ inputs.upstream_sha }}"
+          lake update
+          lake build BusyBeaver.Bridge Cryptids.Machines
+
+      - name: Compile the canonical77 r4 graft with its complete source closure
+        env:
+          CANONICAL77_DIR: ${{ github.workspace }}/.tmp/canonical77
+          CANONICAL77_MANIFEST: ${{ github.workspace }}/.tmp/canonical77-manifest/manifest/canonical77-base-manifest.json
+          UPSTREAM_ROOT: ${{ github.workspace }}/upstream
+          LEAN_BIN: ${{ github.home }}/.elan/bin/lean
+          WORKDIR: ${{ github.workspace }}/.tmp/agent50-canonical-r4
+          JOBS: "4"
+        run: |
+          set -euo pipefail
+          bash im-results/agent50-weighted-tnf-pilot/reproduce-canonical-r4.sh
+
+      - name: Upload the compiled canonical r4 ingestion closure
+        uses: actions/upload-artifact@v4
+        with:
+          name: canonical-r4-ingestion-certified
+          path: |
+            .tmp/agent50-canonical-r4/build/
+            .tmp/agent50-canonical-r4/compile.log
+            .tmp/agent50-canonical-r4/upstream-commit.txt
+          if-no-files-found: error
+          retention-days: 30
