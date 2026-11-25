@@ -4,7 +4,7 @@ import Lean.Elab.Tactic.Omega
 namespace BB6.Agent48TerminalBudgetCounterexample
 
 open BB6.Agent49ParitySource
-open BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA
+open BusyBeaver.BB6.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA
 
 set_option maxRecDepth 1000000
 set_option maxHeartbeats 0
@@ -51,7 +51,7 @@ theorem run_mass_mono (m : Nat) :
         have hstep : highLevelNext (.D b c) = some (.D aa dd) := by
           simpa [run, hp] using hn
         have hprev := ih a d b c hmn' hm hp
-        have hgain := next_strict_mass hstep
+        have hgain := next_strict_mass b c aa dd hstep
         omega
 
 theorem root_run_41 :
