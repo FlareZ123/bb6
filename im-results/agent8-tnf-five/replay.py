@@ -8,7 +8,7 @@ import hashlib
 import json
 
 import sys
-from generate import SPECS
+from generate import SPECS, PROVEN
 raw_index=int(sys.argv[1])
 divergence,B,steps,delay,first,nopen,nsplit,ncycle,nlast,sha,WITNESS,assignments=SPECS[raw_index]
 ROOT = Path(__file__).resolve().parent / f'raw{raw_index}'
@@ -119,7 +119,7 @@ for row in (ROOT/'dfa.txt').read_text().split():
     for i in indices.split(','):
         dfas[int(i)]=a
 certs={parse(p):a for p,a in zip(opens,dfas)}
-used=set(); counts=Counter(); maximum=0
+used=set(); counts=Counter(); maximum=0; symbolic=set()
 
 def verify(p,t):
     global maximum
@@ -130,7 +130,11 @@ def verify(p,t):
         return 25**holes
     if kind=='open':
         assert parse(v[0])==p and p not in used
-        far(p,certs[p]);used.add(p)
+        if v[0]==PROVEN.get(raw_index):
+            symbolic.add(v[0]) # Exact source theorem is checked by the Lean audit.
+        else:
+            far(p,certs[p])
+        used.add(p)
         return 25**holes
     assert kind in ('last','split')
     n,s=v[:2];score=query(p,n,s);maximum=max(maximum,score)
@@ -147,6 +151,7 @@ def verify(p,t):
 
 mass=verify(parse(PARENT),json.loads((ROOT/'tree.json').read_text()))
 assert mass==25**5 and used==set(certs) and maximum==B
+assert symbolic==({PROVEN[raw_index]} if raw_index in PROVEN else set())
 assert counts==Counter(split=nsplit,last=nlast,cycle=ncycle,open=nopen)
 p=parse(PARENT);m=parse(WITNESS)
 assert all(a=='---' or a==b for a,b in zip(p,m))
@@ -162,4 +167,5 @@ def follow(q,d):
     return q
 assert zero_next(0) is None and any(follow(q,delay)==0 for q in range(6))
 assert steps+1+delay==B
-print('Exact replay passed:',dict(counts),'mass',mass,'weighted maximum',maximum,'attaining ordinary steps',steps)
+print('Finite checks passed; symbolic obligations for Lean:',symbolic)
+print('Partition replay passed:',dict(counts),'mass',mass,'weighted maximum',maximum,'attaining ordinary steps',steps)

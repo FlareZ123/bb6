@@ -10,9 +10,12 @@ sys.path.insert(0,str(ROOT.parent/'agent31-three-hole-tnf'))
 from generate_four_hole import masks, slot, move, parse
 MOVES=[''.join(x) for x in product('01','LR','ABCDEF')]
 SPECS={
+  69: ('0LC',88,87,0,8,287,712,14203,1887,'dbaa9b7d9fea274f154a6d44468ab52a020d2b876458645b314fd7898d4d2707','1RBHHH_1RC0LC_0RD0LE_1LD1RE_0LF0LB_1RF0RA',[(5,'0LE'),(8,'0LF'),(10,'1RF'),(11,'0RA'),(1,'HHH')]),
+  78: ('0RE',183,181,1,8,403,860,16423,2955,'68c4a7b369fa24e63e8a119a27470c75746d4f0f489ca35d9faeddac75364890','1RB0RE_1RC0RE_0RD1RA_1LD1RE_1LF0LB_0LAHHH',[(8,'1LF'),(10,'0LA'),(1,'0RE'),(5,'1RA'),(11,'HHH')]),
   73: ('0LD',367,366,0,9,225,599,11624,1929,'55ba96537acce2e6b0bd2fea4ac9bb6768f7ced7cc30db3756f2857e4a5a54c9','1RB0LA_1RC0LD_0RD1RF_1LD1RE_1LA0LB_0RBHHH',[(8,'1LA'),(1,'0LA'),(5,'1RF'),(10,'0RB'),(11,'HHH')]),
   80: ('1RE',164,161,2,8,395,916,17511,3163,'6acaa10cd8d1191ade9661b63a3b3c8f53a67f64990a6587a0596d1dc39eed56','1RB1LA_1RC1RE_0RDHHH_1LD1RE_0RF0LB_0LA0LF',[(8,'0RF'),(11,'0LF'),(10,'0LA'),(1,'1LA'),(5,'HHH')]),
 }
+PROVEN={69:'1RB---_1RC0LC_0RD0LF_1LD1RE_0RA0LB_1LB1RA',78:'1RB1LB_1RC0RE_0RD1RA_1LD1RE_1LF0LB_0LA---'}
 CHUNK=120
 
 def generate(raw):
@@ -28,7 +31,7 @@ def generate(raw):
         a,indices=row.split(':')
         for i in indices.split(','):dfa[int(i)]=a
     certs=dict(zip(opens,dfa)); used=set()
-    tree=json.loads((folder/'tree.json').read_text());assert tree[:3]==['split',first,8]
+    tree=json.loads((folder/'tree.json').read_text());assert tree[:3]==['split',first,5 if raw==69 else 8]; root_slot=tree[2]
     prefix=f'Raw{raw}'; ns=f'BB6.Agent8{prefix}'
     header=f'''set_option maxRecDepth 100000
 set_option maxHeartbeats 0
@@ -54,7 +57,7 @@ theorem split_checked (p : PartialMachine) (n : Nat) (s : Slot) (kids : Move →
   simp only [Bool.and_eq_true]
   exact ⟨hq, allMoves_of _ hk⟩
 '''
-    emit(prefix+'Base',['ThreeHoleAudit'],base)
+    emit(prefix+'Base',['ThreeHoleAudit']+([prefix+'Never'] if raw in PROVEN else []),base)
     stats=Counter()
     def size(t):
         stats[t[0]]+=1
@@ -70,6 +73,7 @@ theorem split_checked (p : PartialMachine) (n : Nat) (s : Slot) (kids : Move →
             n,s=v;return f'.last {n} {slot(s)}'
         if tag=='open':
             code=v[0];assert code not in used;used.add(code);a=certs[code]
+            if code==PROVEN.get(raw):return f'.proven BB6.Agent8Raw{raw}Growth.table BB6.Agent8Raw{raw}Growth.never'
             d,D,L,R,z=masks(parse(code),int(a[0]),[int(x,36) for x in a[1:]])
             return f'.far {str(a[0]=="1").lower()} {d} ⟨0,{D},{L},{R},{z}⟩'
         assert tag=='split';n,s,kids=v;assert len(kids)==24
@@ -103,8 +107,8 @@ theorem c_{name} : check {B} {pname} t_{name} = true :=
     mods=[];names=[]
     for i,kid in enumerate(tree[3]):
         a=f'kid{i:02}';names.append(a);name=f'{prefix}Kid{i:02}';mods.append(name)
-        emit(name,[prefix+'Base'],f'abbrev p_{a} := refine {p} (4,false) (some {move(MOVES[i])})\n'+compose(f'p_{a}',a,kid))
-    body=combine(p,'root',first,8,names)
+        emit(name,[prefix+'Base'],f'abbrev p_{a} := refine {p} {slot(root_slot)} (some {move(MOVES[i])})\n'+compose(f'p_{a}',a,kid))
+    body=combine(p,'root',first,root_slot,names)
     body+=f'''
 noncomputable def certificate{raw} : WeightedTNFCertificate {B} {p} 6 :=
   certified {B} {p} t_root {p}_root {p}_nohalt c_root
@@ -151,7 +155,7 @@ theorem exact{raw} (T : Nat) :
 '''
     assert used==set(certs)
     emit(prefix+'Data',mods,body)
-    print(raw,stats,'all FAR witnesses emitted; chunk limit',CHUNK)
+    print(raw,stats,'all FAR and symbolic witnesses emitted; chunk limit',CHUNK)
 
 if __name__=='__main__':
     for raw in map(int,sys.argv[1:] or SPECS):generate(raw)
