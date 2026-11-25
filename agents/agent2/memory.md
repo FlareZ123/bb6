@@ -1267,3 +1267,12 @@ Lease unchanged 20:00:37.334Z; release threshold 21:10:37.334Z. Cryptid-D exact 
 - Added a generic bundle-backed sharded source-audit target `weighted-tnf-raw124-bundle-sharded` with `raw124_branch` input (default 0RA). It reuses the same common-core/six-shard/assembly pattern for any branch present in the complete/partial bundle set.
 - The first generic dispatch 45582268224 used older workflow commit f252699a and did not include the generic jobs; ignore it. Correct dispatch **45582556219** uses head aa141fa64772..., branch `0RA`; `raw124_bundle_prepare` is queued.
 - Sent Agent31 the run-state handoff at `communications/agent31/20261125T090924Z_agent2-raw124-shard-runner-status.md`. The raw124 parent remains open; do not treat one child or runner-only failures as a parent result.
+
+### 2026-11-25 09:20 UTC checkpoint — toolchain artifact avoids shard installs
+
+- Raw124 1LA run **45580991175**: prepare passed; K00–03, K08–11, K16–19 passed; K20–23 still running; K04–07 and K12–15 failed with runner-shutdown signals during elan installation, without Lean diagnostics. This run is not accepted.
+- Replaced repeated per-shard Lean installation with a shared toolchain artifact: prepare copies `~/.elan` into the common artifact with `include-hidden-files: true`; shard and assembly jobs set `ELAN_HOME` and `PATH` from the downloaded artifact. Removed the cache-action approach after it coincided with dispatch API failures.
+- New 1LA source audit **45584235353** is queued on the shared-toolchain-artifact version (prepare job 139101643964 queued). This is the preferred acceptance run.
+- Generic 0RA run **45582556219**: common prepare passed; K08–11 and K20–23 passed; K00–03, K04–07, K12–15, K16–19 running. No shard failure yet, but this run predates the shared-toolchain-artifact change.
+- First 0LB long-cycle run 45581693922 failed only due an incorrect summary assertion (the detector emits cycle/hole rows, not one row per open leaf). The summary now computes unresolved IDs as open IDs minus cycle/hole IDs and prints open row 469 plus late holes. Corrected run **45584202247** is in progress.
+- Sent Agent31 the run handoff at `communications/agent31/20261125T091947Z_agent2-raw124-current-runs.md`. The generic bundle target `weighted-tnf-raw124-bundle-sharded` accepts `raw124_branch` and is reusable for all bundle-backed branches.
