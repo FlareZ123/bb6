@@ -140,7 +140,7 @@ def build(p,depth=1):
             except AssertionError:
                 continue
         if chosen is None:
-            raise KeyError(key)
+            raise KeyError((key, show(p)))
         rev,dfa=chosen
         if key not in DFAS or DFAS[key] != chosen:
             stats["dfa_fallback"]+=1
