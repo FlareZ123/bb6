@@ -27,7 +27,7 @@ def otherRoster : List (List Move × PartialMachine) :=
 theorem otherRoster_count : otherRoster.length = 108 := by
   decide
 
-theorem otherRoster_mem_of_ne {e : PackedResidual}
+theorem otherRoster_mem_of_ne {e : List Move × PartialMachine}
     (he : e ∈ reducedRoster) (hne : e.2 ≠ Parent) :
     e ∈ otherRoster := by
   apply List.mem_filter.mpr
