@@ -49,3 +49,10 @@ Run `45656015033` reached the Lean source-closure helper but failed before elabo
 Agent38 verified that run `45632293194`'s `raw107-canonical-shared-core` artifact (artifact `15033523473`) is valid and was uploaded before that run's stale canonical72 consumer failed. The separate build `45647053824` continues independently but is not required for the current attempt. The Raw110 parent theorem itself is source-certified at bound 6,766,859 in run `45597857116`; the current job recompiles it from source as part of the larger closure.
 
 Even if both new roots pass, the result remains conditional: all 73 Covers for the first roster, or all 72 Covers for the Raw121-grafted roster, and an attaining champion witness remain explicit premises. This is not an exact BB(6) result.
+
+
+### Raw66Data source-generation follow-up (2026-11-25 16:50 UTC)
+
+Run `45657450584` confirmed that the Raw110 parent artifact does not provide a `.lean` source for `Raw66Data`; it therefore failed before Lean elaboration even after the basename-guarded restore. Commit `1bd17c7d69f5466ed234c4b8d344a467fa7a2247` adds the established Agent13 generator step `python im-results/agent10-tnf-multipump/generate.py 66 70 80`, adds `im-results/agent10-tnf-multipump` as a source root, and records the generator/spec/multi/long-epoch/enumerator/FiveHoleRoster inputs. This regenerates Raw66Data/Raw70Data/Raw80Data from their committed sources rather than relying on a copied artifact snapshot.
+
+A fresh `target=canonical73` workflow dispatch against shared-core run `45632293194` returned HTTP 204 at 16:50 UTC. The Actions API rate limit temporarily prevents retrieving its run ID; no source-acceptance claim is made until the new run compiles both roster roots and passes the axiom gate.
