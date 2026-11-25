@@ -119,7 +119,7 @@ for (const f0Move of moves.filter(m => m !== championF0Move)) {
 
   if (first.kind !== "hole") {
     const deep = first.kind === "cap" ? classify(parent, deepCap) : first;
-    const cycle = deep.kind === "cap" ? sideCycle(parent, 50, 100, 100) : null;
+    const cycle = deep.kind === "cap" ? sideCycle(parent, 100, 200, 200) : null;
     outcomes.push({
       f0Move, first, deep,
       sideCycle: cycle,
@@ -170,6 +170,6 @@ const summary = {
 console.log(JSON.stringify({
   sourceModel: "raw139 champion path after first six refinements; F/0 is the next hole",
   cap, deepCap,
-  deepSideCycleBounds: { entry: 50, period: 100, radius: 100 },
+  deepSideCycleBounds: { entry: 100, period: 200, radius: 200 },
   summary, outcomes
 }, null, 2));
