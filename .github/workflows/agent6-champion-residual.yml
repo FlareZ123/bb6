@@ -22,6 +22,11 @@ on:
         type: string
         required: false
         default: ""
+      a6_run_id:
+        description: Optional successful Agent48 A6 ingestion run ID at the same source SHA
+        type: string
+        required: false
+        default: ""
 
 permissions:
   contents: read
@@ -469,6 +474,103 @@ jobs:
                       raise SystemExit(f"nonstandard axioms for {name}: {used - allowed}")
                   print(name, sorted(used))
           PY
+
+      - name: Checkout pinned Cryptids for A6 composition imports
+        if: ${{ inputs.a6_run_id != '' && inputs.raw121_graft_run_id == '' }}
+        uses: actions/checkout@v4
+        with:
+          repository: google-deepmind/cryptids
+          ref: c86f15861709b76042998c5211c7b2f83991621b
+          path: cryptids
+      - name: Align pinned Cryptids dependencies for A6 composition
+        if: ${{ inputs.a6_run_id != '' && inputs.raw121_graft_run_id == '' }}
+        working-directory: cryptids
+        run: |
+          set -euo pipefail
+          sed -i 's/v4.35.0-rc4/v4.36.0-rc2/g' lakefile.toml
+          printf 'leanprover/lean4:v4.36.0-rc2\\n' > lean-toolchain
+          lake update
+          lake exe cache get
+          lake build BusyBeaver.BB6.M_1RB0LF_1RC0RA_1LD0RB_0LE0LC_0LA0LC_0LBHHH
+      - name: Download source-connected A6 ingestion artifact
+        if: ${{ inputs.a6_run_id != '' && inputs.raw121_graft_run_id == '' }}
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.a6_run_id }}
+          name: raw139-a6-source-connected-${{ inputs.source_sha || github.sha }}
+          path: /tmp/a6-a6-ingestion
+      - name: Verify A6 source run and compiled objects
+        if: ${{ inputs.a6_run_id != '' && inputs.raw121_graft_run_id == '' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          A6_RUN_ID: ${{ inputs.a6_run_id }}
+          EXPECTED_SHA: ${{ inputs.source_sha || github.sha }}
+        run: |
+          set -euo pipefail
+          curl -fsSL \\
+            -H "Authorization: Bearer $GH_TOKEN" \\
+            -H "Accept: application/vnd.github+json" \\
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/runs/$A6_RUN_ID" \\
+            -o /tmp/a6-run.json
+          python3 - <<'PY'
+          import json, os, pathlib
+          run = json.loads(pathlib.Path('/tmp/a6-run.json').read_text())
+          if run.get('conclusion') != 'success':
+              raise SystemExit(f"A6 run conclusion is {run.get('conclusion')!r}, not success")
+          if run.get('head_sha') != os.environ['EXPECTED_SHA']:
+              raise SystemExit(f"A6 source SHA {run.get('head_sha')} != {os.environ['EXPECTED_SHA']}")
+          build = pathlib.Path('/tmp/a6-a6-ingestion')
+          required = ('A6Ingestion.olean', 'HardRootLeaves.olean', 'F287HaltFreedom.olean')
+          missing = [name for name in required if not (build/name).is_file()]
+          if missing:
+              raise SystemExit(f"A6 artifact missing required Lean objects: {missing}")
+          print(f"accepted A6 source artifact from {run['head_sha']}")
+          PY
+      - name: Compile combined A6 and champion raw139 composition
+        if: ${{ inputs.a6_run_id != '' && inputs.raw121_graft_run_id == '' }}
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="/tmp/a47-canonical:/tmp/a6-a6-ingestion:/tmp/a6-champion-residual/build:$PWD/cryptids/.lake/build/lib${LEAN_PATH:+:$LEAN_PATH}"
+          lean -o /tmp/a6-champion-residual/build/A6ChampionComposition.olean \\
+            im-results/agent6-champion-residual/A6ChampionComposition.lean | tee /tmp/a6-a6-composition.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a6-a6-composition.log; then
+            echo "Forbidden proof placeholder or native_decide found in combined A6/champion composition" >&2
+            exit 1
+          fi
+          python3 - /tmp/a6-a6-composition.log <<'PY'
+          import pathlib, re, sys
+          log = pathlib.Path(sys.argv[1]).read_text()
+          allowed = {"propext", "Classical.choice", "Quot.sound"}
+          names = (
+              "BB6.Agent6A6ChampionComposition.A6_remaining_sound_at_championScore",
+              "BB6.Agent6A6ChampionComposition.A6ChampionCombinedRoster_sound",
+              "BB6.Agent6A6ChampionComposition.combined_A6_parent_cover",
+              "BB6.Agent6A6ChampionComposition.exact_from_canonical77_with_A6_champion_refinement",
+          )
+          for name in names:
+              pattern = r"'" + re.escape(name) + r"' depends on axioms: \\[([^\\]]*)\\]"
+              match = re.search(pattern, log)
+              if match:
+                  used = {x.strip() for x in match.group(1).split(",") if x.strip()}
+              elif "'" + name + "' does not depend on any axioms" in log:
+                  used = set()
+              else:
+                  raise SystemExit("missing axiom audit: " + name)
+              if not used <= allowed:
+                  raise SystemExit(f"nonstandard axioms: {name}: {used - allowed}")
+              print(name, sorted(used))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: ${{ inputs.a6_run_id != '' && inputs.raw121_graft_run_id == '' }}
+        with:
+          name: agent6-a6-champion-composition-${{ inputs.a6_run_id }}
+          include-hidden-files: true
+          path: |
+            /tmp/a6-champion-residual/build/A6ChampionComposition.olean
+            /tmp/a6-a6-composition.log
+          if-no-files-found: error
+          retention-days: 14
 
   f0-siblings:
     if: ${{ inputs.f0_siblings_only }}
