@@ -1105,6 +1105,10 @@
       "Raw60LFPairCounter",
       "BB6.Agent1Raw60LFPairCounter.Leaf984"
     ],
+    "985": [
+      "Raw60LFBlockCounter",
+      "BB6.Agent1Raw60LFBlockCounter"
+    ],
     "988": [
       "Raw60LFPairCounter",
       "BB6.Agent1Raw60LFPairCounter.Leaf988"
@@ -1121,7 +1125,6 @@
   "unresolved": [
     980,
     982,
-    985,
     986,
     989,
     1024,
