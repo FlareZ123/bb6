@@ -20,7 +20,8 @@ theorem parent_eq_championP7 :
   funext s
   rcases s with ⟨q,b⟩
   fin_cases q <;> cases b <;>
-    simp [BB6.Agent48Parent.a1, BB6.Agent47WeightedHalt.forgetHaltRows,
+    simp [BB6.Agent48Parent.parent, BB6.Agent48Parent.parentM,
+      BB6.Agent48Parent.a1, BB6.Agent47WeightedHalt.forgetHaltRows,
       BB6.Agent6ChampionResidual.championP7,
       BB6.Agent6ChampionResidual.championP6,
       BB6.Agent6ChampionResidual.championP5,
