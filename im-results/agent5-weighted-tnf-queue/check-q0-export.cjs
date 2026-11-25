@@ -132,23 +132,31 @@ function validateNode(node, where) {
 }
 
 function validateAssumptions(log, moduleName) {
-  if (log.includes("Closed under the global context")) return;
-  const start = log.lastIndexOf("Axioms:");
-  if (start < 0) throw new Error(moduleName + ": no Print Assumptions output found");
-  const end = log.indexOf("chunk_data =", start);
-  const block = log.slice(start, end < 0 ? log.length : end);
+  const starts = [...log.matchAll(/^Axioms:/gm)].map((m) => m.index);
+  if (!starts.length) {
+    if (log.includes("Closed under the global context")) return;
+    throw new Error(moduleName + ": no closed-context or assumptions output found");
+  }
   const allowed = (name) => name === "Nat.of_num_uint" ||
     name.startsWith("PrimInt63.") || name.startsWith("PArray.") || name.startsWith("Uint63.");
-  const names = [];
-  for (const line of block.split(/\r?\n/)) {
-    if (!line.trim() || line.trim() === "Axioms:" || /^\s/.test(line)) continue;
-    const name = line.trim().split(/[\s:]/)[0].replace(/\.$/, "");
-    if (!allowed(name)) throw new Error(moduleName + ": unexpected assumption " + name);
-    names.push(name);
+  for (let i = 0; i < starts.length; i++) {
+    const stopCandidates = [log.indexOf("Axioms:", starts[i] + 7), log.indexOf("chunk_data =", starts[i])].filter((n) => n >= 0);
+    const stop = stopCandidates.length ? Math.min(...stopCandidates) : log.length;
+    const block = log.slice(starts[i], stop);
+    const names = [];
+    for (const line of block.split(/\r?\n/)) {
+      if (!line.trim() || line.trim() === "Axioms:" || /^\s/.test(line)) continue;
+      const name = line.trim().split(/[\s:]/)[0].replace(/\.$/, "");
+      if (!allowed(name)) throw new Error(moduleName + ": unexpected assumption " + name);
+      names.push(name);
+    }
+    if (!names.length) throw new Error(moduleName + ": empty or unreadable assumptions block");
   }
-  if (!names.length) throw new Error(moduleName + ": empty or unreadable assumptions block");
+  const nonPrimitiveAxiom = log.split(/\r?\n/).map((line) => line.trim()).find((line) =>
+    /^(\S+)\s*\.\s*\[/.test(line) && !allowed(line.match(/^(\S+)/)[1].replace(/\.$/, ""))
+  );
+  if (nonPrimitiveAxiom) throw new Error(moduleName + ": unexpected standalone assumption " + nonPrimitiveAxiom);
 }
-
 function parseLog(log, moduleName) {
   const value = extractPair(log, "chunk_data =");
   const pair = splitTopLevelPair(value);
@@ -189,7 +197,7 @@ function selfTest(repoRoot) {
   if (active.length !== 56 || held.length !== 0) {
     throw new Error("self-test expected (56,0), got (" + active.length + "," + held.length + ")");
   }
-  const syntheticLog = "Axioms:\\nPrimInt63.sub : primitive\\nPArray.set : primitive\\nchunk_data = " + value;
+  const syntheticLog = "Closed under the global context\\nNat.of_num_uint. [abstract-large-number,numbers,default]\\nAxioms:\\nPrimInt63.sub : primitive\\nPArray.set : primitive\\nchunk_data = " + value;
   const parsed = parseLog(syntheticLog, "self-test");
   if (parsed.active.length !== 56 || parsed.held.length !== 0) {
     throw new Error("self-test log parser returned the wrong queue lengths");
