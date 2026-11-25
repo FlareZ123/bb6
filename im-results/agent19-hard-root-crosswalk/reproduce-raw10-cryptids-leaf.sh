@@ -17,6 +17,8 @@ test -s "$CANONICAL77_MANIFEST"
 test -d "$UPSTREAM_ROOT"
 test "$(git -C "$UPSTREAM_ROOT" rev-parse HEAD)" = "$PINNED"
 
+python3 "$ROOT/tools/test_lean_compile_module_index.py"
+
 mkdir -p "$WORKDIR"
 printf '%s\n' "$PINNED" > "$WORKDIR/upstream-commit.txt"
 
@@ -85,7 +87,6 @@ python3 "$ROOT/tools/lean_compile_closure.py" \
   --override ZipAuditCore=im-results/agent10-tnf-multipump/ZipAuditCore.lean \
   --override ThreeHoleAudit=im-results/agent31-three-hole-tnf/ThreeHoleAudit.lean \
   --override SweepPumping=im-results/agent31-three-hole-tnf/SweepPumping.lean \
-  --override FastFAR=im-results/agent31-three-hole-tnf/FastFAR.lean \
   --override Raw114CompleteData=im-results/agent47-raw114-cut/Raw114CompleteData.lean \
   --override FourHoleResidualRoster=im-results/agent31-three-hole-tnf/FourHoleResidualRoster.lean \
   --override FourHoleRootFrontier=im-results/agent31-three-hole-tnf/FourHoleRootFrontier.lean \
