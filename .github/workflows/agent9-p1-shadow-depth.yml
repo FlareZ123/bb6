@@ -4,7 +4,7 @@ on:
     inputs:
       target:
         type: choice
-        options: [shadow, first-return, batch-carry]
+        options: [shadow, first-return, batch-carry, batch-chunks]
         default: shadow
       source_ref:
         description: Exact source commit (optional; defaults to dispatch SHA)
@@ -15,7 +15,7 @@ permissions:
 jobs:
   source:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
@@ -81,6 +81,33 @@ jobs:
           from pathlib import Path
           log = Path('/tmp/batch-carry.log').read_text()
           for name in ("walk_of_weight", "weight_of_walk", "edge_iff_parent", "mem_live", "mem_sweep", "mem_batch", "width_pos_iff_center", "critical_reset_no_reach_batch", "critical_reset_no_reach_interval", "bitBack_sound", "scan_sound", "check_absent", "checked_interval", "batch10002_15000", "critical_reset_no_reach_10002_15000"):
+              m = re.search(r"'BB6\.Agent9BatchCarry\."+name+r"' depends on axioms:\s*\[([^\]]*)\]", log)
+              if not m and re.search(r"'BB6\.Agent9BatchCarry\."+name+r"' does not depend on any axioms", log):
+                  print(name, [])
+                  continue
+              if not m:
+                  raise SystemExit("Missing axiom profile: "+name)
+              axioms = {a.strip() for a in m.group(1).split(",") if a.strip()}
+              if not axioms <= {"propext", "Classical.choice", "Quot.sound"}:
+                  raise SystemExit(f"Unexpected axioms in {name}: {axioms}")
+              print(name, sorted(axioms))
+          PY
+      - name: Check composable sparse interval certificate
+        if: inputs.target == 'batch-chunks'
+        run: |
+          set -euo pipefail
+          D="im-results/agent9-p1-first-return"
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-dyadic-width:im-results/agent50-p1-residue:$D:im-results/agent28-p1-delayed-carry"
+          lean --version
+          git rev-parse HEAD
+          python "$D/gen_chunk.py" 15002 22500 --output "$D/ChunkFinite.lean"
+          python tools/lean_compile_deps.py "$D/ChunkFinite.lean" | tee /tmp/batch-chunks.log
+          if grep -E 'sorryAx|native_decide|error:' /tmp/batch-chunks.log; then exit 1; fi
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          log = Path('/tmp/batch-chunks.log').read_text()
+          for name in ("bitRewind_sound", "listScan_sound", "packList_sound", "packed_start", "extend_block", "verified_interval", "critical_reset_no_reach_15002_22500"):
               m = re.search(r"'BB6\.Agent9BatchCarry\."+name+r"' depends on axioms:\s*\[([^\]]*)\]", log)
               if not m and re.search(r"'BB6\.Agent9BatchCarry\."+name+r"' does not depend on any axioms", log):
                   print(name, [])
