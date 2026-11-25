@@ -56,3 +56,25 @@ Even if both new roots pass, the result remains conditional: all 73 Covers for t
 Run `45657450584` confirmed that the Raw110 parent artifact does not provide a `.lean` source for `Raw66Data`; it therefore failed before Lean elaboration even after the basename-guarded restore. Commit `1bd17c7d69f5466ed234c4b8d344a467fa7a2247` adds the established Agent13 generator step `python im-results/agent10-tnf-multipump/generate.py 66 70 80`, adds `im-results/agent10-tnf-multipump` as a source root, and records the generator/spec/multi/long-epoch/enumerator/FiveHoleRoster inputs. This regenerates Raw66Data/Raw70Data/Raw80Data from their committed sources rather than relying on a copied artifact snapshot.
 
 A fresh `target=canonical73` workflow dispatch against shared-core run `45632293194` returned HTTP 204 at 16:50 UTC. The Actions API rate limit temporarily prevents retrieving its run ID; no source-acceptance claim is made until the new run compiles both roster roots and passes the axiom gate.
+
+
+## Current frontier update (2026-11-25, Agent 31)
+
+**Artifact-label correction.** Run `45647053824` did produce a valid `raw107-canonical-shared-core` artifact, but its other artifact name `canonical73-raw110-raw112-roster-consumer-certified` is misleading: Agent47's audit established that the successful exactness job compiled only the 76-entry two-parent roster, not `Canonical73Raw110Composition` or the 72-entry Raw121 graft. Do not cite that artifact as source acceptance of the 73/72 consumer.
+
+The actual source audit is being performed by `.github/workflows/agent47-raw114-graft.yml`, target `canonical73`, using the valid raw107 shared core from run `45647053824`. Run `45680246076` stopped because the canonical73 generator command omitted `im-results/agent11-raw107/generate.py`, leaving `Raw107RDData` unavailable. The current workflow revision adds that generator to the canonical73 command file and its provenance inputs; run `45680602708` is the retry. Its Raw114 restore now copies only generated Lean files absent from canonical repository paths, avoiding duplicate module discovery. **The 73/72 consumer remains pending until this run compiles and passes the axiom audit.**
+
+### Depth-eight sibling frontier
+
+- Run `45676854690` passed `batch_only=true`: Lean 4.36.0-rc2 compiled `DepthEightBatch.lean`, `DepthEightLarge.lean`, and `DepthEightXL.lean`; the workflow rejected `sorryAx` and `native_decide`.
+- `DepthEightLarge` contributes 42 large-DFA leaves and `DepthEightXL` contributes 9 XL leaves. Agent 31's `DepthEightSiblingCoveragePlus.lean` adds those 51 leaves plus Agent6's source-accepted tree126 recurrence, then checks exact membership in the existing sibling raw roster and the resulting roster counts by kernel reduction.
+- The intended result is to eliminate the 17-entry sibling remainder (the six two-hole leaves are already covered by the existing growth witnesses), reducing the global residual count from 141 to 124. This is a target, not yet an accepted result.
+- Dedicated source-audit workflow `.github/workflows/agent31-depth-eight-sibling-closure.yml` is run `45679936950`; its Lean compilation is in progress.
+
+### Raw109 continuation
+
+- Agent21 reports the Raw109 parent cover source-accepted at bound 1703 in run `45633764095` (artifact `raw109-parent-proof`).
+- Agent 31's `Canonical71Raw109Graft.lean` checks whether the Raw109 parent is represented in Agent38's 72-entry Raw121-grafted roster and, if so, constructs a 71-entry roster. Its soundness/exactness interface takes the independently accepted Raw109 parent bound as an explicit premise, avoiding a duplicate 13-child closure.
+- Workflow `.github/workflows/agent31-canonical71-raw109.yml` is prepared to reuse the successful canonical72 artifact and generate only Raw109's B0LD/B0RE cut data. Dispatch it only after the actual 72-entry artifact is available.
+
+These are intermediate conditional frontier results, not an exact BB(6) value. Keep them in `im-results/` until the full proof obligations are discharged.
