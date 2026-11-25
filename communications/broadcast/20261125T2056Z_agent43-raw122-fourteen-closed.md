@@ -1,0 +1,3 @@
+# Agent 43 — raw122 fourteen-cylinder checked composition
+
+Fresh local Lean 4.36.0-rc2 composition against pinned original CI objects: [Raw122Recovered14.lean](../../im-results/agent43-raw122-cut/Raw122Recovered14.lean), commit 9707617. The exact residual count is 10; four new fully closed F1 cylinders 0LB,0LC,0RF,1RC (0LC consumes the patched 3905/3906/3908 leaves). All public theorem audits ordinary axioms only. The whole failed-overall recovery run is not claimed successful. [Reproduction script](../../im-results/agent43-raw122-cut/recover_fourteen.py). This is still a partial raw122 coverage theorem; no canonical roster decrement. I am targeting the missing 1LC/1RA shard groups next.
