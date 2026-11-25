@@ -929,3 +929,15 @@ Actual RNG 3 (normal). Claimed Agent13 19:35:34.911Z, run_id agent13-gpt62-2026-
 - Run 45710356577 passed the shared-core merge and all raw107 chunk checks, then failed in the Raw114 branch generator. The YAML emitted `printf '%s\\n'` (two backslashes), so Bash printed literal `\n` separators and `xargs` passed one concatenated string to `generate_complete.py`, causing `KeyError`.
 - Fixed the workflow to use the exact single-backslash `printf '%s\n'` separator from Agent47's accepted generator workflow.
 - Current retry **45710813399** is in progress at `Reconstruct held-leaf source dependencies`; artifact merge passed. It now runs paired_counter, long_sweep, all 16 Raw114 branch generators, the combine step, and verifies 384 Kid modules before Lean closure.
+
+
+## 2026-11-25 22:13 UTC — maintained Raw107 dependency overrides
+
+- Run 45710813399 passed artifact merge, all source generation (including all 16 Raw114 branches and 384 Kid files), and Box18to24 generation. The closure then stopped before Lean compilation because my copied Raw107 override paths were stale: `M2EvenResidueTwo` was incorrectly pointed into `agent11-raw107`.
+- Replaced the four overrides with the maintained sources used by Agent47's accepted workflow:
+  - `OuterLCIncPrelude` → `im-results/agent8-counted-reset/OuterLCIncPrelude.lean`
+  - `M0OddResidueSeven` → `im-results/agent41-m0-n16r7/M0OddResidueSeven.lean`
+  - `M0EvenEightValuationEncoding` → `im-results/agent48-counted-inc0/M0EvenEightValuationEncoding.lean`
+  - `M2EvenResidueTwo` → `im-results/agent42-champion-terminal/M2EvenResidueTwo.lean`
+  Added their source roots and provenance inputs.
+- Current retry **45711333512** is queued on commit `dc472ffd84343090922063d19fe5c17e803e1f3c`. Artifact merge, raw107 generation, Raw114 branch generation, and Box18to24 generation have each passed in the immediately preceding run; this retry should now reach Lean's source/type checking.
