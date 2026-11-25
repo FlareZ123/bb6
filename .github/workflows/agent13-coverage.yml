@@ -411,7 +411,8 @@ jobs:
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
           D=im-results/agent8-tnf-raw117
-          python tools/lean_compile_closure.py --workdir /tmp/a8-raw112-macros --jobs 4 "$D/Raw112Binary.lean" "$D/Raw112Quinary.lean" "$D/Raw112Alternating.lean" | tee /tmp/a8-raw112-macros.log
+          python "$D/raw112_multisweep.py"
+          python tools/lean_compile_closure.py --workdir /tmp/a8-raw112-macros --jobs 4 "$D/Raw112Binary.lean" "$D/Raw112Quinary.lean" "$D/Raw112Alternating.lean" "$D/Raw112Unary.lean" "$D"/raw112/Raw112MultiSweep*.lean | tee /tmp/a8-raw112-macros.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a8-raw112-macros.log; then exit 1; fi
       - name: Check Agent 8 raw119 six-hole sibling audit
         if: inputs.target == 'weighted-tnf-agent8-six'

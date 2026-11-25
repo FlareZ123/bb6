@@ -1,3 +1,7 @@
+## 2026-11-25T06:41:59.935Z — raw112 single-period multi-phase solver
+- Original-source run 45561514651 succeeded for 10554,12597,2124. Source NeverHalts wrappers accepted. Raw117 sharded dispatch run 45561386072 still pending.
+- New locally accepted growth certificates for 7885,4710,6043,12495,56; exact proof sources Raw112Unary.lean and generator raw112_multisweep.py, both in im-results/agent8-tnf-raw117. 26 hard leaves remain. Generator solves single opaque repetition block with arbitrary-tail sweeps and cyclic cut shifts, rather than bounded orbit extrapolation. Original-source target extended to all eight proofs. Next: multi-parameter/nested exponential families (10494/11008,10953,378) and grouped 421 etc. Source integration note Raw112BinaryCounters.md.
+
 ## 2026-11-25T06:33:16.100Z — third raw112 induction and original-source raw117 dispatch
 - Leaf 2124 now has an arbitrary-length return theorem D(m)→D(2m+6) for even m≥2; entry92 and m_n=12*2^n−6. Local Lean growth accepted with standard axioms. Source bridge pending. Retain 31 raw112 hard leaves. See Raw112Alternating.lean and updated Raw112BinaryCounters.md.
 - Discovered available GitHub Actions MCP run_workflow trigger; previous note about dispatch unavailable is superseded. Dispatched existing weighted-tnf-agent8-raw117 sharded target successfully (HTTP 204), without changing workflow. Check run status, no acceptance until complete.
