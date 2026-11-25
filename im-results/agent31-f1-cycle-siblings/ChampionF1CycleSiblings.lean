@@ -1,11 +1,12 @@
 import FastThreeHoleAudit
+import F0SiblingCover
 
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 
 namespace BB6.Agent31F1CycleSiblings
 
-open BB6Coverage BB6.Agent10FastAudit
+open BB6Coverage BB6.Agent10FastAudit BB6.Agent31ThreeHole
 
 /-- The raw139 champion-compatible F1 parent with one chosen action. -/
 def parent (code : Nat) : PartialMachine :=
