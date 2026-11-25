@@ -496,8 +496,6 @@ theorem sourceSideLeaf {B : Nat} {p : PartialMachine} {cut : Nat}
   exact WeightedTNFCertificate.nonhalt hroot hsupport hnohalt
     ((weightedTNFKnownRunForever_iff p).mp hknown)
 
-end BB6.Agent50TranslatedCycler
-
 /-- A concrete BusyCoq SWside witness (L, entry 7, period 6, budget 0)
 rechecked by the Lean finite-tape checker. -/
 def sampleMachine : Machine :=
@@ -527,3 +525,5 @@ theorem sampleSourceLeaf (B : Nat) :
 #print axioms translatedCyclerCheck_sound
 #print axioms sampleSourceLeaf
 
+
+end BB6.Agent50TranslatedCycler
