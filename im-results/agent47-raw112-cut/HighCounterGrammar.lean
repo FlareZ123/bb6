@@ -56,6 +56,12 @@ def highBlocksDigits : List Nat → List Block
 
 def highBlocks (n : Nat) : List Block := highBlocksDigits (digits6 n)
 
+/-- Expand a five-bit block value to its tape-bit representation. -/
+def bits5 (x : Nat) : List Nat :=
+  [x / 16 % 2, x / 8 % 2, x / 4 % 2, x / 2 % 2, x % 2]
+
+def highBits (k : Nat) : List Nat := (highBlocks k).flatMap bits5
+
 theorem highBlocksDigits_step (d nextDigit : Nat) (rest : List Nat) :
     highBlocksDigits (d :: nextDigit :: rest) =
       digitPrefix d nextDigit ++ highBlocksDigits (nextDigit :: rest) := rfl
@@ -120,6 +126,37 @@ theorem highBlocks_length_six (m r : Nat) (hm : 1 ≤ m) (hr : r < 6) :
     (highBlocks (6 * m + r)).length = 3 + (highBlocks m).length := by
   rw [highBlocks_six m r hm hr]
   simp [digitPrefix_length r (m % 6) hr]
+
+/-- The six-state low counter selected by n modulo six. -/
+def lowCode (n : Nat) : List Nat :=
+  match n % 6 with
+  | 0 => [1,1,0,0,0,0,0,0,0,0,0,0]
+  | 1 => [0,0,0,0,0,0,1,1,1,1,1,1]
+  | 2 => [1,1,1,1,1,0,1,1,1,1,1,1]
+  | 3 => [1,1,0,0,1,1,0,0,0,0,0,1]
+  | 4 => [0,0,0,0,0,1,1,1,1,1,1,1]
+  | _ => [1,1,1,1,1,1,1,1,1,1,1,1]
+
+def pumpBlock : List Nat := [1,1,0,0,0,0]
+
+/-- Right-hand tape at the observed state-C boundary, parameterized by n. -/
+def boundaryRight (n : Nat) : List Nat :=
+  [0,0] ++ (List.replicate n pumpBlock).flatten ++
+  [0,0,1,1,1,1] ++ lowCode n ++ highBits (n / 3)
+
+theorem lowCode_mod (n : Nat) : lowCode n = lowCode (n % 6) := by
+  simp [lowCode]
+
+theorem highIndex_three_phase_1 (k : Nat) : (3 * k + 1) / 3 = k := by omega
+
+theorem highIndex_three_phase_2 (k : Nat) : (3 * k + 2) / 3 = k := by omega
+
+theorem highIndex_three_phase_3 (k : Nat) : (3 * k + 3) / 3 = k + 1 := by omega
+
+/-- The first observed state-C boundary is exactly the n=1 instance. -/
+theorem boundaryRight_one :
+    boundaryRight 1 =
+      [0,0,1,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1] := by decide
 
 /-- Exact high-block rows 0..37 copied from the Agent 19 counter trace. -/
 def observed : List (List Block) :=
