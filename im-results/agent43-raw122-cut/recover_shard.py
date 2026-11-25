@@ -42,9 +42,20 @@ prov=[
 "im-results/agent13-coverage/unpack.py",
 "tools/lean_compile_closure.py"]
 source_ref=os.environ["SOURCE_REF"]
-checkout_paths=[p for p in prov if p!="tools/lean_compile_closure.py"]
 subprocess.run(["git","fetch","--no-tags","--depth=1","origin",source_ref],cwd=root,check=True)
-subprocess.run(["git","checkout",source_ref,"--",*checkout_paths],cwd=root,check=True)
+checkout_paths=[]
+filtered=[]
+for p in prov:
+    if p=="tools/lean_compile_closure.py":
+        filtered.append(p)
+        continue
+    exists=subprocess.run(["git","cat-file","-e",f"{source_ref}:{p}"],cwd=root,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+    if exists.returncode==0:
+        filtered.append(p)
+        checkout_paths.append(p)
+prov=filtered
+if checkout_paths:
+    subprocess.run(["git","checkout",source_ref,"--",*checkout_paths],cwd=root,check=True)
 for p in prov:
     if not (root/p).is_file(): raise FileNotFoundError(p)
 common=[cut/f"Raw122Kid03_{i:02}.lean" for i in range(6)]
