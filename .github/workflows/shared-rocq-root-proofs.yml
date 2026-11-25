@@ -139,6 +139,7 @@ jobs:
           cp "$GITHUB_WORKSPACE/research/im-results/agent47-rooted-tnf/Agent47SourceChunk2.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent47-rooted-tnf/Agent47SourceTree.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent44-source-roster/Agent44Q32CanonicalParent.v" original/verify/
+          cp "$GITHUB_WORKSPACE/research/im-results/agent44-source-roster/Agent44Q32RemainderBranchProbe.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent44-source-roster/Agent44ChunkSideSearch.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent8-adaptive-source-plan/Agent8Chunk2FirstHole.v" original/verify/
       - name: Add source first-hole frontier proof
