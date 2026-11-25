@@ -49,6 +49,7 @@ jobs:
       && inputs.target != 'weighted-tnf-raw10-box8-cycle'
       && inputs.target != 'weighted-tnf-raw10-box0-halt'
       && inputs.target != 'weighted-tnf-raw10-short-frontier'
+      && inputs.target != 'weighted-tnf-raw120-ra-phases'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -1296,7 +1297,10 @@ jobs:
             target=im-results/agent3-tnf-raw120/Raw120LACarry.lean
           elif [ "$TARGET" = weighted-tnf-raw120-ra-phases ]; then
             python im-results/agent3-tnf-raw120/make_ra_phases.py im-results/agent3-tnf-raw120/Raw120RAPhases.lean
+            python im-results/agent3-tnf-raw120/make_ra_bidfa.py
             target=im-results/agent3-tnf-raw120/Raw120RAPhases.lean
+            python tools/lean_compile_closure.py --workdir /tmp/a3-raw120-bidfa --jobs 4 im-results/agent3-tnf-raw120/Raw120RABiDFA.lean | tee /tmp/a3-raw120-bidfa.log
+            if grep -Eq 'sorryAx|native_decide' /tmp/a3-raw120-bidfa.log; then exit 1; fi
           elif [ "$TARGET" = weighted-tnf-raw120-la ]; then
             python im-results/agent3-tnf-raw120/generate_la.py
             target=im-results/agent3-tnf-raw120/la/Raw120LAData.lean
