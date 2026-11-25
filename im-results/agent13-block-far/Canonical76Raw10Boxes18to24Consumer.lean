@@ -46,12 +46,11 @@ theorem exact_at_champion_score
     · have heq : e.2 = BB6.Agent50Canonical76Raw10.raw10Parent :=
         sameTable_sound hs
       rw [heq, raw10Parent_eq_parent]
-      have h598 : 598 ≤ B := Nat.le_trans (by decide) hB
       exact BB6.Agent49Box18to24CombinedBridge.raw10_cover_with_cycle_halt_boxes18to24
-        B h598 hOpen
+        B hB hOpen
     · have hmem : e ∈ BB6.Agent50Canonical76Raw10.otherRoster := by
         apply List.mem_filter.mpr
-        exact ⟨he, by simp [BB6.Agent50Canonical76Raw10.otherRoster, hs]⟩
+        exact ⟨he, by simp [hs]⟩
       exact hOther e hmem
   exact BB6.Agent31CanonicalTwoParentRosterOnly.exact_at_target B hB hLeaves
     BB6.Agent48DirectRoot.champion_raw_witness
