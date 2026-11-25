@@ -1735,14 +1735,18 @@ jobs:
             --source-root im-results/agent10-tnf-multipump \
             --source-root im-results/agent47-raw114-cut \
             --source-root im-results/agent47-rooted-tnf \
+            --source-root im-results/agent8-counted-reset \
+            --source-root im-results/agent41-m0-n16r7 \
+            --source-root im-results/agent48-counted-inc0 \
+            --source-root im-results/agent42-champion-terminal \
             --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean \
             --override Frontier=im-results/agent8-coverage-contract/Frontier.lean \
             --override Symmetry=im-results/agent8-coverage-contract/Symmetry.lean \
             --override RootShift=im-results/agent8-coverage-contract/RootShift.lean \
-            --override OuterLCIncPrelude=im-results/agent11-raw107/OuterLCIncPrelude.lean \
-            --override M0OddResidueSeven=im-results/agent11-raw107/M0OddResidueSeven.lean \
-            --override M0EvenEightValuationEncoding=im-results/agent11-raw107/M0EvenEightValuationEncoding.lean \
-            --override M2EvenResidueTwo=im-results/agent11-raw107/M2EvenResidueTwo.lean \
+            --override OuterLCIncPrelude=im-results/agent8-counted-reset/OuterLCIncPrelude.lean \
+            --override M0OddResidueSeven=im-results/agent41-m0-n16r7/M0OddResidueSeven.lean \
+            --override M0EvenEightValuationEncoding=im-results/agent48-counted-inc0/M0EvenEightValuationEncoding.lean \
+            --override M2EvenResidueTwo=im-results/agent42-champion-terminal/M2EvenResidueTwo.lean \
             --override Raw114CompleteData=im-results/agent47-raw114-cut/Raw114CompleteData.lean \
             --precompiled-manifest /tmp/a31-base/manifest/combined-canonical77-raw107-manifest.json \
             --precompiled-dir /tmp/a31-base \
@@ -1760,6 +1764,10 @@ jobs:
             --provenance-input im-results/agent47-raw114-cut/generate_complete.py \
             --provenance-input im-results/agent47-raw114-cut/paired_counter.py \
             --provenance-input im-results/agent47-raw114-cut/long_sweep.py \
+            --provenance-input im-results/agent8-counted-reset/OuterLCIncPrelude.lean \
+            --provenance-input im-results/agent41-m0-n16r7/M0OddResidueSeven.lean \
+            --provenance-input im-results/agent48-counted-inc0/M0EvenEightValuationEncoding.lean \
+            --provenance-input im-results/agent42-champion-terminal/M2EvenResidueTwo.lean \
             --provenance-input /tmp/a31-base/manifest/canonical77-base-manifest.json \
             --provenance-input /tmp/a31-base/manifest/raw107-shared-manifest.json \
             --provenance-input /tmp/a31-base/manifest/combined-canonical77-raw107-manifest.json \
