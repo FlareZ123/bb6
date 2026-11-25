@@ -63,6 +63,12 @@ def generate(raw,upgrade=False):
             try: masks(parse(rle),int(a[0]),[int(x,36) for x in a[1:]])
             except AssertionError: continue
             certs[rle]=a;break
+    if upgrade and raw=='1LB':
+        rle=opens[583]
+        assert rle=='1RB1LB_1RC0RE_0RD0LC_1LD1RE_1RF1LA_0RB---'
+        ns='BB6.Agent32Raw59LB1Sweep583'
+        pumps[rle]=(ns+'.table',ns+'.never')
+        imports.append('Raw59LB1Sweep583')
     module='Raw59PartialSweep'+raw;ns='BB6Coverage.Agent31Pump.'+module
     pieces=['import SweepPumping','set_option maxRecDepth 100000','set_option maxHeartbeats 0','namespace '+ns,'open BB6Coverage']
     sweep_rows=SWEEPS
