@@ -10,7 +10,7 @@ open BB6.Agent50Raw10Box8
 open BB6.Agent47Canonical78
 
 /-- The exact certified set now includes the 65 side witnesses, the original
-    held leaf, and the disjoint 625-completion F0=0RC lasso cylinder. -/
+    held leaf, and an additional 625-completion F0=0RC lasso cylinder. -/
 def certifiedTables : List PartialMachine :=
   sideTables ++ [held, table]
 
