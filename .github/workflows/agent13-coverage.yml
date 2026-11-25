@@ -157,7 +157,7 @@ jobs:
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
           python im-results/agent16-raw118/generate_partial.py /tmp/raw118-data
-          python tools/lean_compile_closure.py --workdir /tmp/a16-raw118-partial --jobs 4 im-results/agent16-raw118/Raw118Partial.lean | tee /tmp/a16-raw118-partial.log
+          python tools/lean_compile_closure.py --workdir /tmp/a16-raw118-partial --jobs 4 im-results/agent16-raw118/Raw118Partial.lean im-results/agent16-raw118/Raw118CanonicalMembership.lean | tee /tmp/a16-raw118-partial.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a16-raw118-partial.log; then exit 1; fi
       - name: Check two-sided finite stack invariants
         if: inputs.target == 'weighted-tnf-raw118-bidfa'
