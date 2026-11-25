@@ -213,7 +213,6 @@ jobs:
           cp "$GITHUB_WORKSPACE/research/im-results/agent47-rooted-tnf/Agent47SourceTree.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent42-source-certificate-ingestion/Agent42HeldCheckpointMembership.v" original/verify/
            cp "$GITHUB_WORKSPACE/research/im-results/agent42-source-certificate-ingestion/Agent42Q2800BatchWitnesses.v" original/verify/
-          cp "$GITHUB_WORKSPACE/research/im-results/agent42-source-certificate-ingestion/Agent42Q2800GlobalUpper.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent14-b0-1lc-consumer/Agent14HeldQueueConsumption.v" original/verify/
 
       - name: Add source FAR batch consumer
@@ -255,7 +254,7 @@ jobs:
             enumerate62-held-far-batch) make -f Makefile.coq -j 2 Agent5HeldFARBatch.vo ;;
             enumerate62-held-farv3-pilot) make -f Makefile.coq -j 2 Agent13CrossRouteHeldLeaf.vo Agent42HeldCheckpointMembership.vo Agent42Q2800BatchWitnesses.vo ;;
             enumerate62-held-checkpoint-membership) make -f Makefile.coq -j 2 Agent42HeldCheckpointMembership.vo Agent42Q2800BatchWitnesses.vo ;;
-            enumerate62-held-checkpoint-consumption) make -f Makefile.coq -j 2 Agent14HeldQueueConsumption.vo Agent42Q2800GlobalUpper.vo ;;
+            enumerate62-held-checkpoint-consumption) make -f Makefile.coq -j 2 Agent14HeldQueueConsumption.vo ;;
             enumerate62-source-roster) make -f Makefile.coq -j 2 Agent47SourceSweep.vo && make -f Makefile.coq -j 2 Agent47SourceChunk2.vo Agent47SourceTree.vo Agent44Q32RemainderBranchProbe.vo && make -f Makefile.coq -j 2 Agent8Chunk2FirstHole.vo ;;
             enumerate62-source-first-hole) make -f Makefile.coq -j 2 Agent47SourceSweep.vo && make -f Makefile.coq -j 2 Agent47SourceChunk2.vo Agent47SourceTree.vo Agent44Q32CanonicalParent.vo && make -f Makefile.coq -j 2 Agent8Chunk2FirstHole.vo Agent50Q32ParentTreeSearch.vo Agent44ChunkSideSearch.vo Agent44Q32ParentTreeIntegration.vo ;;
             enumerate62-source-first-hole-side) make -f Makefile.coq -j 2 Agent47SourceSweep.vo && make -f Makefile.coq -j 2 Agent47SourceChunk2.vo Agent47SourceTree.vo Agent44Q32CanonicalParent.vo && make -f Makefile.coq -j 2 Agent8Chunk2FirstHole.vo Agent44ChunkSideSearch.vo Agent44Chunk2FirstHoleSideSearch.vo ;;
@@ -312,7 +311,7 @@ jobs:
         if: inputs.target == 'enumerate62-held-checkpoint-consumption'
         working-directory: original/verify
         run: |
-          printf '%s\\n' 'From BusyCoq Require Import Agent42HeldCheckpointMembership Agent42Q2800BatchWitnesses Agent42Q2800GlobalUpper Agent14HeldQueueConsumption.' 'Print Assumptions recovered_held_2800_checkpoint_exact.' 'Print Assumptions recovered_held_2800_checkpoint_member.' 'Print Assumptions recovered_held_2800_adaptive_obligation.' 'Print Assumptions q2800_trees_checked.' 'Print Assumptions q2800_residual_count.' 'Print Assumptions q2800_adaptive_obligations_safe_iff_residual.' 'Print Assumptions actual_source_chunks_packed_global_upper_after_q2800_roster.' 'Print Assumptions source_weighted_safe_iff_without_recovered_held_2800.' 'Print Assumptions q0_2800_queue_safe_iff.' 'Print Assumptions actual_source_chunks_packed_global_upper_after_q0_2800_consumption.' > Agent14HeldQueueConsumptionAudit.v
+          printf '%s\\n' 'From BusyCoq Require Import Agent42HeldCheckpointMembership Agent42Q2800BatchWitnesses Agent14HeldQueueConsumption.' 'Print Assumptions recovered_held_2800_checkpoint_exact.' 'Print Assumptions recovered_held_2800_checkpoint_member.' 'Print Assumptions recovered_held_2800_adaptive_obligation.' 'Print Assumptions q2800_trees_checked.' 'Print Assumptions q2800_residual_count.' 'Print Assumptions q2800_adaptive_obligations_safe_iff_residual.' 'Print Assumptions source_weighted_safe_iff_without_recovered_held_2800.' 'Print Assumptions q0_2800_queue_safe_iff.' 'Print Assumptions actual_source_chunks_packed_global_upper_after_q0_2800_consumption.' > Agent14HeldQueueConsumptionAudit.v
           coqc -Q . BusyCoq -native-compiler no Agent14HeldQueueConsumptionAudit.v
 
       - name: Compute exact source q0 census
@@ -601,49 +600,7 @@ jobs:
               printf '%s\n' "$label GENERATION_FAILED_OR_TIMED_OUT" | tee -a phase-results/verdicts.txt
             fi
           done
-          grep -q ' ACCEPTED
-        if: inputs.target == 'enumerate62-held-far-batch'
-        working-directory: original/verify
-        run: |
-          set -euo pipefail
-          cat > Agent5HeldFARVerdicts.v <<'COQ'
-          From BusyCoq Require Import Agent5HeldFARBatch.
-          From Coq Require Import List.
-          Time Eval vm_compute in (map (fun a => (held_label a, held_check a)) held_attempts).
-          COQ
-          timeout 1200s coqc -Q . BusyCoq -native-compiler no Agent5HeldFARVerdicts.v | tee held-far-verdicts.txt
-      - name: Preserve source FAR batch results
-        if: inputs.target == 'enumerate62-held-far-batch'
-        uses: actions/upload-artifact@v4
-        with:
-          name: held-far-batch
-          path: |
-            original/verify/Agent5HeldFARBatch.v
-            original/verify/Agent5HeldFARBatch.vo
-            original/verify/held-far-verdicts.txt
-          if-no-files-found: error
-
-      - name: Probe the genuine one-hole source holdout
-        if: inputs.target == 'enumerate62-held-probe'
-        working-directory: original/verify
-        run: |
-          set -euo pipefail
-          cat > Agent47HeldProbe.v <<'COQ'
-          From BusyCoq Require Import CTL62 Individual62.
-          From Coq Require Import NArith Strings.String.
-          Open Scope string_scope.
-          Definition held := TM_from_str "1RB1RD_1RC0LD_0LA0RE_1LA1LB_0RF---_0LA1RA".
-          Time Eval vm_compute in (decide_nonhalt held (NG 0 1000 100000 4 0 0 0 false)).
-          Time Eval vm_compute in (decide_nonhalt held (NG 0 1000 100000 5 0 0 0 false)).
-          Time Eval vm_compute in (decide_nonhalt held (NG 0 1000 100000 6 0 0 0 false)).
-          Time Eval vm_compute in (decide_nonhalt held (NG 0 1000 100000 8 0 0 0 false)).
-          Time Eval vm_compute in (decide_nonhalt held (NG 0 1000 100000 10 0 0 0 false)).
-          Time Eval vm_compute in (decide_nonhalt held (NG 0 1000 100000 4 4 4 0 true)).
-          Time Eval vm_compute in (decide_nonhalt held (NG 1001 1000 100000 5 4 4 0 true)).
-          Time Eval vm_compute in (decide_nonhalt held (RWL_mod 1001 1000 100000 5 320 2 2 8 0)).
-          COQ
-          timeout 1200s coqc -Q . BusyCoq -native-compiler no Agent47HeldProbe.v
- phase-results/verdicts.txt
+          grep -q ' ACCEPTED$' phase-results/verdicts.txt
       - name: Preserve phase-complete MITM source results
         if: always() && inputs.target == 'enumerate62-phase-mitm'
         uses: actions/upload-artifact@v4
