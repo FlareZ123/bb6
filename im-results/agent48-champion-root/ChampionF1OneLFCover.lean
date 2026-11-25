@@ -287,6 +287,8 @@ noncomputable def certificate : WeightedTNFCertificate 126 parent 6 :=
 
 theorem all_completions_weighted : ∀ m, compatible parent m → WeightedBound 126 m := certificate.sound
 
+#print axioms root
+#print axioms nohalt
 #print axioms checked
 #print axioms all_completions_weighted
 end BB6.Agent48F1OneLF
