@@ -225,6 +225,13 @@ def compare_manifests(primary_path: Path, other_paths: list[Path]) -> None:
         common = sorted(primary_modules.keys() & other_modules.keys())
         mismatches: list[str] = []
 
+        if primary["proof_source_revision"] != other["proof_source_revision"]:
+            mismatches.append(
+                "proof-source revision differs: "
+                f"{primary['proof_source_revision']!r} != "
+                f"{other['proof_source_revision']!r}"
+            )
+
         if primary["lean_version"] != other["lean_version"]:
             mismatches.append(
                 "Lean version differs: "
