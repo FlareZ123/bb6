@@ -9,7 +9,7 @@ source=Path("/tmp/a43-source")
 out=Path("/tmp/a43-audit")
 out.mkdir(parents=True,exist_ok=True)
 seen={}
-for base in (Path("/tmp/a43-old-shards"),Path("/tmp/a43-new-shards")):
+for base in (Path("/tmp/a43-new-shards"),):
     if not base.is_dir(): raise FileNotFoundError(base)
     for shard in sorted(p for p in base.iterdir() if p.is_dir()):
         for src in shard.rglob("*.olean"):
