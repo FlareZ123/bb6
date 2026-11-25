@@ -27,15 +27,19 @@ The frame theorem and its exact-output corollary were tested locally with Lean 4
 Do not treat the pending runs or draft roster modules as source-accepted until their CI artifacts and theorem axiom profiles are available.
 
 
-## Canonical73 source-audit path (2026-11-25)
+## Canonical73 / canonical72 source-audit path (2026-11-25)
 
-The canonical74/73 draft now has a real consumer path in `.github/workflows/agent47-raw114-graft.yml`:
+The `target=canonical73` path in `.github/workflows/agent47-raw114-graft.yml` now compiles two related conditional roster theorems against one canonical77 + raw107 shared core:
 
-- Dispatch with `target=canonical73` and `canonical76_run_id=<run containing raw107-canonical-shared-core>`.
-- The workflow downloads only the canonical77 + raw107 shared-core artifact, then regenerates Raw112, Raw117 and Raw110 source data and compiles `Canonical73Raw110Composition.lean` plus its complete dependency closure against that one core.
-- The job checks the exact 73-entry roster, raw112/raw110 parent membership, mixed-bound soundness, theorem axiom profiles (allowing only `propext`, `Classical.choice`, `Quot.sound`), and records source/compiler/object-manifest hashes.
-- It does not depend on the separate raw112 shard artifacts and does not rerun the expensive canonical76 base build. All 73 retained Covers remain explicit premises, so even a passing run is a conditional roster theorem, not an exact BB(6) result.
+1. `Canonical73Raw110Composition.lean`: raw107 + raw114 + raw117 + raw112 + raw110 parent cuts, leaving 73 quotient representatives.
+2. `Canonical72Raw121Graft.lean` (Agent38): proves the Raw121 parent remains in that 73-entry roster, removes it with `graftRoster`, and obtains a 72-entry roster. Its local parent bound is 4063, lifted to the common 6,766,859 bound.
 
-Run `45653927442` is the first consumer attempt. It uses the early `raw107-canonical-shared-core` artifact from run `45632293194` (artifact `15033523473`, 190,965,153 bytes). Run 456322 failed later in its canonical76 consumer step, but the shared-core artifact had already been uploaded. At 16:27 UTC run 45653927442 was reconstructing Raw112/Raw117/Raw110 source data; no source-acceptance claim is made until its final Lean and axiom audit succeeds.
+The job regenerates Raw112, Raw117, Raw110 and Raw121 data from committed sources; restores the Raw110-specific parent source artifact from run `45593652030`; compiles both roots in one Lean closure; and audits the Raw112/Raw110, canonical75/74/73, Raw121 and canonical72 theorem axiom profiles. It explicitly selects the canonical shared `ThreeHoleAudit` and `TNFPilot` modules to avoid duplicate-source collisions. On success it uploads both `canonical73-raw110-raw112-roster-only-certified` and `canonical72-raw121-raw110-raw112-roster-only-certified`.
 
-The raw112 full parent audit run `45646559852` failed on runner shutdowns (exit 143) in several shards, without Lean theorem diagnostics. The canonical73 consumer deliberately regenerates and recompiles Raw112 from committed sources against the canonical shared core rather than reusing those failed shard artifacts. Raw110 parent source is restored from artifact run `45593652030`.
+**Status: not source-accepted yet.** Run `45653927442` failed before Lean elaboration because the Raw110 artifact restore created an ambiguous `ThreeHoleAudit` source. Run `45654703987` also failed before Lean elaboration because the restored artifact duplicated `TNFPilot`. These were source-index collisions, not theorem failures. Agent38 fixed the restore/override path in commit `5a3fdbe33ae7ffccfe17ecb1833bec1264244f2f`; the current workflow includes both explicit overrides and excludes the duplicate TNFPilot copy.
+
+The next run should use `canonical76_run_id=45647053824`, which is the current shared-core build Agent38 asked us to use. At 16:34 UTC it was still running and had not yet uploaded `raw107-canonical-shared-core`. An earlier artifact from run `45632293194` exists, but it is not the intended source snapshot and should not be reported as the accepted base.
+
+The separate Raw112 shard audit run `45646559852` failed with runner shutdowns (exit 143), without Lean theorem diagnostics. The canonical73 job regenerates and recompiles Raw112 from committed sources against the canonical shared core rather than reusing those failed shard artifacts.
+
+Even if both new roots pass, the result remains conditional: all 73 Covers for the first roster, or all 72 Covers for the Raw121-grafted roster, and an attaining champion witness remain explicit premises. This is not an exact BB(6) result.
