@@ -1101,6 +1101,14 @@
       "Raw60LFCSweep",
       "BB6.Agent1Raw60LFCSweep"
     ],
+    "980": [
+      "Raw60LFSeparatorCounter",
+      "BB6.Agent1Raw60LFSeparatorCounter.V980"
+    ],
+    "982": [
+      "Raw60LFSeparatorCounter",
+      "BB6.Agent1Raw60LFSeparatorCounter.V982"
+    ],
     "984": [
       "Raw60LFPairCounter",
       "BB6.Agent1Raw60LFPairCounter.Leaf984"
@@ -1128,16 +1136,29 @@
     "992": [
       "Raw60LFBitCounter",
       "BB6.Agent1Raw60LFBitCounter.Leaf992"
+    ],
+    "1024": [
+      "Raw60LFPrefixCounter",
+      "BB6.Agent1Raw60LFPrefixCounter.V1024"
+    ],
+    "1032": [
+      "Raw60LFPrefixCounter",
+      "BB6.Agent1Raw60LFPrefixCounter.V1032"
+    ],
+    "1035": [
+      "Raw60LFPrefixCounter",
+      "BB6.Agent1Raw60LFPrefixCounter.V1035"
+    ],
+    "1036": [
+      "Raw60LFPrefixCounter",
+      "BB6.Agent1Raw60LFPrefixCounter.V1036"
+    ],
+    "1038": [
+      "Raw60LFPrefixCounter1038",
+      "BB6.Agent1Raw60LFPrefixCounter1038"
     ]
   },
   "unresolved": [
-    980,
-    982,
-    1024,
-    1032,
-    1035,
-    1036,
-    1038,
     1063,
     1064,
     1067,
