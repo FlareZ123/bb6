@@ -1,5 +1,6 @@
 import HeldBlockConsumer
 import CanonicalRaw114Accepted
+import Canonical78ExactComposition
 import Canonical77HeldMembership
 
 set_option maxRecDepth 100000
@@ -44,19 +45,25 @@ theorem otherRoster_count : otherRoster.length = 76 := by
     the explicit complement rectangles remain as separate obligations.
     The 77-way canonical roster therefore reduces to 76 other residuals
     plus the raw10 complement, conditional on those Covers. -/
-theorem exact_from_raw10_remainder_77 (B : Nat) (hB : 7014 ≤ B)
+theorem exact_from_raw10_remainder_77
     (hOpen : ∀ r ∈ BB6.Agent49BoxBridge.raw10Remainder,
-      ∀ m, BB6.Agent49Box.Fits r m → WeightedBound B m)
+      ∀ m, BB6.Agent49Box.Fits r m →
+        WeightedBound BB6.Agent31Canonical78Exact.championScore m)
     (hOther : ∀ e ∈ BB6.Agent47CanonicalRaw114Accepted.roster,
-      e.2 ≠ Parent → Cover (WeightedBound B) e.2)
-    (champ : ∃ m : BB6.Coverage.RawMachine,
-      BB6.Coverage.HaltsAt (BB6.Coverage.tickRaw m) B) :
-    BB6.Coverage.ExactBB6 B := by
-  apply BB6.Agent47CanonicalRaw114Accepted.exact_at_target B hB ?_ champ
+      e.2 ≠ Parent →
+        Cover (WeightedBound BB6.Agent31Canonical78Exact.championScore) e.2) :
+    BB6.Coverage.ExactBB6 BB6.Agent31Canonical78Exact.championScore := by
+  apply BB6.Agent47CanonicalRaw114Accepted.exact_at_target
+    BB6.Agent31Canonical78Exact.championScore
+    (Nat.le_of_lt BB6.Agent31Canonical78Exact.champion_score_gt_7014) ?_
+    BB6Coverage.Agent48DirectRoot.champion_raw_witness
   intro e he
   by_cases h : e.2 = Parent
   · rw [h]
-    exact BB6.Agent13HeldBlock.raw10_cover_with_held B hB hOpen
+    exact BB6.Agent13HeldBlock.raw10_cover_with_held
+      BB6.Agent31Canonical78Exact.championScore
+      (Nat.le_of_lt BB6.Agent31Canonical78Exact.champion_score_gt_7014)
+      hOpen
   · exact hOther e he h
 
 #print axioms parent_in_roster
