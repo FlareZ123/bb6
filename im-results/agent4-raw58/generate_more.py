@@ -287,7 +287,7 @@ def build_child(key,spec):
                 remaining.append(i)
             else:
                 rle_found[i]={"left":list(found[0]),"right":list(found[1])}
-                rle_code.append(emit_automata(i,p,cert))
+                rle_code.append(emit_automata_sharded(i,p,cert))
                 pumps[i]=f"{rle_ns}.M{i}"
                 print(key,"RLE_FOUND",i,found[0],found[1],"states",cert[1],flush=True)
         if rle_found:
