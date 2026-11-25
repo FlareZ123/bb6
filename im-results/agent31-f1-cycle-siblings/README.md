@@ -20,3 +20,10 @@ Each sibling fixes only F/1 and retains the other three holes. The scan's cycle 
 The scan was cross-checked against the existing ZeroLD candidate: it reproduced exactly 9 splits, 117 translated cycles, 54 last-hole leaves, 5 FAR leaves, and 32 open leaves at the published 600-step / width-3 settings. This is a validation of the scan implementation, not a substitute for the Lean audit.
 
 **Status: pending original-source Lean CI.** If accepted, these are complete WeightedBound(6) covers for all compatible completions of their eight exact cylinders. The integration consumer now layers these eight parents on the 106-leaf frontier after the 0LF, 1LA, and 0RC grafts. It expects a 98-leaf residual list, but this remains conditional until the exact parent-membership/count theorem and original-source CI pass. No BB(6) upper bound is claimed.
+
+## Integration and next sibling search
+
+- `ChampionF1CycleIntegration.lean` now layers the eight cycle parents onto Agent 6's 106-leaf frontier after the 0LF, 1LA, and 0RC integrations. It asserts eight exact parent memberships and a 98-leaf residual count. This is conditional until the source audit and full-chain CI pass.
+- The separate F/1=1LD sibling (code 14) is being explored by `discover_oneLD.py` using the existing Agent48 scanner and pump search, with width-4 FAR search and a 600-step first-hole limit. Workflow: `.github/workflows/agent31-f1-oneLD-discovery.yml`. A Lean package is generated only if every open leaf receives a pump witness.
+- Cycle sibling source audit workflow: `.github/workflows/agent31-f1-cycle-siblings.yml`. Current run: [45618644127](https://github.com/FlareZ123/bb6/actions/runs/45618644127). The earlier run failed because the module omitted the `F0SiblingCover` and `BB6.Agent31ThreeHole` imports; those imports have been added for the current run.
+- F/1=1LD discovery run: [45618468915](https://github.com/FlareZ123/bb6/actions/runs/45618468915).
