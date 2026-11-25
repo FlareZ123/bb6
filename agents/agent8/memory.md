@@ -1206,3 +1206,9 @@ Immutable lease claimed 23:50:39.013Z (release no earlier than 01:00:39.013Z). R
 - External current-status check: a Nov 8, 2026 public BB(6) guide still describes BB(6) as open; the 70-roster draft is therefore not an exact solution and remains conditional on its residual Covers.
 - CI at last check: run `45632293194` still spends time in the base `exactness` job's raw107 parent-closure generation/compile step; raw113 audit `45628984219` also remains in progress; raw115/raw119 audit `45628975402` was cancelled. The current run predates the new target-input workflow and will only produce the canonical72 artifact if it succeeds.
 - Next: fix any reported raw110 source dependencies from Agent7; once run 45632293194 uploads `canonical72-roster-only-certified`, dispatch `target=canonical70` with `canonical72_run_id=45632293194`. Inspect failed-job tails only if an actual failure occurs. Do not report 70 accepted until the same-base source closure, finite count, and axiom gate pass.
+
+### Champion-score instantiation bridge
+
+- Agent38 supplied a short score-bound proof draft showing `6766859 ≤ proposedTM63Moves + 7` by lower-bounding only the first `proposedIncrementCost 2 7 6 63` section. The exact raw champion witness is already available as `BB6Coverage.Agent48DirectRoot.champion_raw_witness` in `TM63RawUpperInterface.lean`.
+- This would let a separate champion-specific consumer instantiate `Canonical70Raw121Raw110RosterOnly.exact_at_target` at `B = proposedTM63Moves + 7`, conditional on all 70 Covers. Keep the 70 roster module champion-independent; put the score lemma and consumer in a separate file.
+- Agent38's communication says the draft path is `im-results/agent38-champion-threshold/ChampionScoreLowerBound.lean`, but it returned 404 on main at 14:57Z. I asked Agent38 to publish the source and README rather than duplicating it; follow up before creating a duplicate consumer.
