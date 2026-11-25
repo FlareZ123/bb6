@@ -1,5 +1,6 @@
 import ChampionResidualFrontier
 import ChampionParentExact
+import Canonical78ExactComposition
 
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
@@ -75,5 +76,88 @@ theorem championResidualFrontierWithParentCount :
 #print axioms parent_certificate_on_championP7
 #print axioms championResidualFrontierWithParentSound
 #print axioms championResidualFrontierWithParentCount
+
+/-- The canonical manifest's raw139 address: B0=1RC, then C0=1LD. -/
+def championResidualAddress : List Move :=
+  [⟨true, true, (2 : Fin 6)⟩, ⟨true, false, (3 : Fin 6)⟩]
+
+/-- Raw139 is exactly present as the champion-containing representative in
+    the accepted 78-way quotient roster, not merely quotient-compatible. -/
+theorem championResidual_mem_canonical78 :
+    (championResidualAddress, championResidual) ∈
+      BB6.Agent47Canonical78.roster := by
+  decide
+
+/-- Every open leaf of a rooted frontier occurs in its explicit residual list. -/
+theorem openLeaf_mem_residuals {B : Nat} {p : PartialMachine}
+    {f : RootedFrontier B p} {address : List Move} {q : PartialMachine}
+    (h : OpenLeaf f address q) :
+    (address, q) ∈ RootedFrontier.residuals f := by
+  induction h with
+  | here path =>
+      simp [RootedFrontier.residuals]
+  | @child p n c path hrun hhole hweight children mv address q hchild ih =>
+      change (mv :: address, q) ∈
+        RootedFrontier.residuals (.expand path hrun hhole hweight children)
+      simp only [RootedFrontier.residuals]
+      apply List.mem_flatMap.mpr
+      refine ⟨mv, allMoves_complete mv, ?_⟩
+      apply List.mem_map.mpr
+      exact ⟨(address, q), ih, rfl⟩
+
+/-- A frontier whose explicit residual leaves are all covered is itself a
+    weighted cover of its root cylinder. -/
+theorem cover_of_frontier_leaves {B : Nat} {p : PartialMachine}
+    (f : RootedFrontier B p)
+    (hLeaves : ∀ e ∈ RootedFrontier.residuals f,
+      Cover (WeightedBound B) e.2) :
+    Cover (WeightedBound B) p := by
+  refine Cover.leaf _ ?_
+  intro m hm
+  rcases RootedFrontier.sound f m hm with hB | ⟨address, q, hopen, hq⟩
+  · exact hB
+  · exact (hLeaves (address, q) (openLeaf_mem_residuals hopen)).sound _ hq
+
+theorem cover_of_championResidual_frontier
+    (hLeaves : ∀ e ∈ championResidualFrontierWithParentResiduals,
+      Cover (WeightedBound championScore) e.2) :
+    Cover (WeightedBound championScore) championResidual :=
+  cover_of_frontier_leaves championFrontierWithParent hLeaves
+
+/-- The exact global composition now needs Covers for the 77 other canonical
+    representatives and for the 133 open leaves refining raw139. -/
+theorem exact_from_nonchampion_roster_covers_and_parent_frontier
+    (hOther : ∀ e ∈ BB6.Agent47Canonical78.roster,
+      e.2 ≠ championResidual → Cover (WeightedBound championScore) e.2)
+    (hLeaves : ∀ e ∈ championResidualFrontierWithParentResiduals,
+      Cover (WeightedBound championScore) e.2) :
+    BB6.Coverage.ExactBB6 championScore :=
+  BB6.Agent47Canonical78.exact_at_target championScore
+    (Nat.le_of_lt BB6.Agent31Canonical78Exact.champion_score_gt_7014)
+    (by
+      intro e he
+      by_cases hEq : e.2 = championResidual
+      · simpa [hEq] using cover_of_championResidual_frontier hLeaves
+      · exact hOther e he hEq)
+    BB6Coverage.Agent48DirectRoot.champion_raw_witness
+
+theorem canonical78_other_count :
+    (BB6.Agent47Canonical78.roster.filter
+      (fun e => e.1 ≠ championResidualAddress)).length = 77 := by
+  decide
+
+theorem canonical78_refined_obligation_count :
+    (BB6.Agent47Canonical78.roster.filter
+      (fun e => e.1 ≠ championResidualAddress)).length +
+      championResidualFrontierWithParentResiduals.length = 210 := by
+  decide
+
+#print axioms championResidual_mem_canonical78
+#print axioms openLeaf_mem_residuals
+#print axioms cover_of_frontier_leaves
+#print axioms cover_of_championResidual_frontier
+#print axioms exact_from_nonchampion_roster_covers_and_parent_frontier
+#print axioms canonical78_other_count
+#print axioms canonical78_refined_obligation_count
 
 end BB6.Agent31ChampionParentIntegration
