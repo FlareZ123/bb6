@@ -149,9 +149,7 @@
     1606,
     2087
   ],
-  "unresolved": {
-    "1596": "1RB1LF_1RC0LB_0RD0RD_1LD1RE_0RA1RA_---1LB"
-  },
+  "unresolved": {},
   "late": {},
   "manual": {
     "495": [
@@ -188,6 +186,11 @@
       "Raw60LFPeriodic",
       "BB6.Agent1Raw60LFPeriodic.M1592",
       "1RB1LF_1RC0LB_0RD0RA_1LD1RE_---1RA_0RE1LB"
+    ],
+    "1596": [
+      "Raw60LFSparse",
+      "BB6.Agent47SparseNGram.Raw60LFSparse",
+      "1RB1LF_1RC0LB_0RD0RD_1LD1RE_0RA1RA_---1LB"
     ],
     "1603": [
       "Raw60LFPeriodic",
