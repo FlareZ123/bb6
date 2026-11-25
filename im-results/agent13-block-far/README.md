@@ -33,10 +33,14 @@ A source-semantics consumer has been added at
 `BlockFARBridge.partialTable`, and applies `BlockFARBridge.transfer_never`
 to every compatible original machine. It also checks the parent slots
 A0=1RB and B0=1LC and the unique D0 hole. The combined source-consumer run
-`45584389245` generated the primitive certificate successfully but failed in
-the compile/kernel-check step. Artifact `15009551945` was uploaded; the first
-Lean diagnostic is still pending. Do not treat original-semantics transfer as
-accepted until a fresh CI run passes.
+`45584389245` generated the primitive certificate successfully but failed
+because Lean rejected compiling `../agent8-coverage-contract/Frontier.lean`
+from outside the configured root directory. This is a workflow source-path
+restriction, not a mathematical counterexample or a failed primitive proof.
+The workflow now copies `Frontier.lean` into its working root before
+compilation. Fresh run `45590202834` includes the corrected source consumer
+and the encoded raw10 residual consumer below; its kernel result is pending.
+Do not treat original-semantics transfer as accepted until that run passes.
 
 The encoded raw10 refinement is drafted in
 `Raw10Q2700EncodedConsumer.lean`. It derives the row
