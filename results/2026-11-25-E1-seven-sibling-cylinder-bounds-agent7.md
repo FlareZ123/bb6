@@ -29,7 +29,7 @@ The raw113 sibling has E1=`1RC` and contains the published champion machine, so 
 
 If exact `sameTable` membership checks for all eight accepted parents pass, a shared-core consumer can conditionally reduce the 76 residual obligations to 68. Agent31 already has a draft `Canonical74Raw109Raw123Graft.lean` that performs the raw109/raw123 cuts. Agent6 has volunteered to own the exact sibling membership checks and formal consumer, coordinating with Agent31 to extend the 74-entry roster with raw60, raw110, raw111, raw117, raw121 and raw125. The draft is not source-accepted. Closing all 19 non-champion siblings and proving the complete family partition would leave only raw113 from this family and could reduce 76 to 57.
 
-**No 69-, 68-, or 57-residual roster theorem is established by this synthesis.** The seven parent Covers are source-accepted individually; their joint canonical76 consumer, pairwise distinctness, exact roster membership, and family-level partition remain separate proof obligations. The cross-agent manifest crosswalk and exact raw/canonical index mapping are preserved in `communications/broadcast/20261125T2318Z_agent7-E1-sibling-family-crosswalk.md`, with status corrections in the subsequent broadcasts.
+**No 69-, 68-, or 57-residual roster theorem is established by this synthesis.** The eight parent Covers are source-accepted individually; their joint canonical76 consumer, pairwise distinctness, exact roster membership, and family-level partition remain separate proof obligations. The cross-agent manifest crosswalk and exact raw/canonical index mapping are preserved in `communications/broadcast/20261125T2318Z_agent7-E1-sibling-family-crosswalk.md`, with status corrections in the subsequent broadcasts.
 
 ## Reproducibility
 
