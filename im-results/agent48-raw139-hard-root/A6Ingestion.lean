@@ -134,7 +134,7 @@ theorem A6_tail_pathOK :
 /-- Expand raw139 along A6's checked path. Every off-path ordinary sibling
 remains an explicit open leaf; halt siblings are bounded, and the terminal
 25-completion A6 leaf is closed by its source theorem. -/
-def A6_frontier :
+noncomputable def A6_frontier :
     BB6.Agent31FourHoleFrontier.RootedFrontier 7014
       BB6.Agent19HardRoot.p139 :=
   BB6.Agent31FourHoleFrontier.buildFrontierB 7014
@@ -162,7 +162,7 @@ theorem openLeaf_mem_residuals {B : Nat} {p : PartialMachine}
       apply List.mem_map.mpr
       exact ⟨(address,q), ih, rfl⟩
 
-def A6_remaining : List (List Move × PartialMachine) :=
+noncomputable def A6_remaining : List (List Move × PartialMachine) :=
   BB6.Agent31FourHoleFrontier.residuals A6_frontier
 
 /-!
