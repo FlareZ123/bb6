@@ -1,0 +1,70 @@
+name: Agent41 raw139 upstream leaf transfer
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  certify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: google-deepmind/cryptids
+          ref: 3647718b5df22e1a61462dec0376bd204526285a
+          path: cryptids-raw139
+      - name: Install Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Build pinned upstream proof
+        working-directory: cryptids-raw139
+        run: |
+          set -euo pipefail
+          sed -i 's/v4.35.0-rc4/v4.36.0-rc2/g' lakefile.toml
+          printf 'leanprover/lean4:v4.36.0-rc2\n' > lean-toolchain
+          lake update
+          lake exe cache get
+          lake build Cryptids.Machines BusyBeaver.Bridge BusyBeaver.BB6.NonHalt.M_1RB0LE_1RC0RC_1LD0RB_1LA0LE_1LD1LF_1LDHHH
+          lake env printenv LEAN_PATH > /tmp/a41-upstream-path
+      - name: Rebuild local proof
+        run: |
+          set -euo pipefail
+          python3 im-results/agent13-coverage/unpack.py
+          python3 tools/lean_compile_closure.py --workdir /tmp/a41-upstream-local --jobs 8 --theorem BB6.Agent41Raw139SmallPlus.parent_contract_plus im-results/agent41-raw139-small/Raw139SmallPlus.lean
+      - name: Source-connected transfer
+        run: |
+          set -euo pipefail
+          upstream="$(python3 - <<'PY'
+          from pathlib import Path
+          root = Path('cryptids-raw139').resolve()
+          print(':'.join(str((root / p).resolve()) for p in Path('/tmp/a41-upstream-path').read_text().strip().split(':') if p))
+          PY
+          )"
+          export LEAN_PATH="/tmp/a41-upstream-local:$upstream"
+          lean -o /tmp/a41-upstream-local/RelativeTape.olean im-results/agent4-coverage-smoke/RelativeTape.lean
+          lean -o /tmp/a41-upstream-local/CryptidsTapeAdapter.olean im-results/agent4-coverage-smoke/CryptidsTapeAdapter.lean
+          lean -o /tmp/a41-upstream-local/WeightedNonhaltLeafAdapter.olean im-results/agent47-weighted-halt-branch/WeightedNonhaltLeafAdapter.lean
+          lean -o /tmp/a41-upstream-local/Raw139E0Upstream.olean im-results/agent41-raw139-small/Raw139E0Upstream.lean | tee /tmp/a41-upstream.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a41-upstream.log; then exit 1; fi
+          python3 - <<'PY'
+          import re
+          from pathlib import Path
+          log = Path('/tmp/a41-upstream.log').read_text()
+          for name in ('original_never','upstreamTable_never','e0_count','e0_mass','parent_count','parent_mass','e0_contract_final','parent_contract_final'):
+              m = re.search(r"'BB6.Agent41Raw139E0Upstream\." + name + r"' depends on axioms: \[([^\]]*)\]", log)
+              if not m:
+                  raise SystemExit('missing axiom audit: ' + name)
+              if set(m.group(1).split(', ')) - {'propext','Classical.choice','Quot.sound'}:
+                  raise SystemExit('unexpected axiom: '+m.group(0))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw139-upstream-source-audit
+          path: |
+            /tmp/a41-upstream-local
+            /tmp/a41-upstream.log
+          retention-days: 14
