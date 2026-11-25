@@ -12,7 +12,7 @@ open BB6Coverage
 open BB6.Agent50TNFPilot
 open BB6.Agent47CanonicalFrontier
 open BB6.Agent47CanonicalRefinement
-open BB6.Coverage.Agent48DirectRoot
+open BB6Coverage.Agent48DirectRoot
 
 /-- Graft the source-audited Raw121 parent into the accepted 77-entry
     quotient roster obtained after the Raw114 cut. -/
