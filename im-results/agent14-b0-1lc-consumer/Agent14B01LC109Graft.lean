@@ -21,7 +21,7 @@ def parentAudit : FrontierAudit (WeightedBound B) Parent :=
 
 /-- The 109-entry residual roster with exactly the B0=1LC parent removed.
     That parent is replaced by the proof-carrying 65-witness audit. -/
-def otherRoster : List PackedResidual :=
+def otherRoster : List (List Move × PartialMachine) :=
   reducedRoster.filter fun e => !(sameTable e.2 Parent)
 
 theorem otherRoster_count : otherRoster.length = 108 := by
