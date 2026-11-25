@@ -74,7 +74,14 @@ def merge(repo, downloads, output, groups=None, artifact_prefix='raw109-shard', 
             require(item['olean_path'] == relative + '.olean', f'{group}: {name} has unexpected object path')
             source = inside(shard, relative + '.lean')
             obj = inside(shard, item['olean_path'])
-            require(digest(source) == item['source_sha256'], f'{group}: {name} source hash mismatch')
+            if source.is_file():
+                require(digest(source) == item['source_sha256'], f'{group}: {name} source hash mismatch')
+            else:
+                checkout_source = inside(repo, item['source_path'])
+                require(
+                    checkout_source.is_file() and digest(checkout_source) == item['source_sha256'],
+                    f'{group}: {name} source is absent from artifact and checkout'
+                )
             require(digest(obj) == item['olean_sha256'], f'{group}: {name} object hash mismatch')
             src = inside(repo, item['source_path'])
             if src.exists() or item['source_path'] in tracked:
