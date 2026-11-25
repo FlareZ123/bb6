@@ -18,7 +18,7 @@ whole box safe. This is a sufficient condition only; a failed generator run
 does not imply that the box contains a halting machine.
 
 The projection uses the existing stable `Fin 25` encoding:
-- `0`: wildcard/halt, left undefined in the projection;
+- `0` in an encoded cylinder row: wildcard; the domain value `0` itself is halt and is left undefined in the projection when singleton;
 - `1..24`: ordinary moves in state-major order, matching
   `BB6.Agent31ThreeHole.allMoves` and the standard table strings.
 
