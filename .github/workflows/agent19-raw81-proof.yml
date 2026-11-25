@@ -5,7 +5,7 @@ on:
       target:
         description: Proof target
         type: choice
-        options: [raw81, canonical-three-parent]
+        options: [raw81, canonical-three-parent, raw38-cut]
         default: raw81
 permissions:
   contents: read
@@ -81,3 +81,23 @@ jobs:
             /tmp/a19-canonical/*.olean
             /tmp/a19-canonical/manifest.json
           if-no-files-found: error
+
+  raw38-cut:
+    if: inputs.target == 'raw38-cut'
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Verify original-source raw38 partial cut and roster consumer
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python tools/lean_compile_closure.py --workdir /tmp/a19-raw38 --jobs 4 im-results/agent19-raw38-cut/Raw38Roster.lean | tee /tmp/a19-raw38.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a19-raw38.log; then exit 1; fi
