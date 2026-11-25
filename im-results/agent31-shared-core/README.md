@@ -73,7 +73,7 @@ The actual source audit is being performed by `.github/workflows/agent47-raw114-
 
 ### Raw109 continuation
 
-- Agent21's Raw109 parent cover is source-accepted at bound 1703 in run `45633764095`, with non-expired artifact `raw109-parent-proof` (artifact ID `15035255805`). The exact theorem is `BB6.Agent4Raw109Closed.all_closed` in `im-results/agent4-raw109/Raw109Closed.lean`; it uses the same `BB6.Agent4Raw109Cut.parent` consumed by the graft.
+- Agent21's Raw109 parent cover is source-accepted at bound 1703 in run `45633764095`, with non-expired artifact `raw109-parent-proof` (artifact ID `15035255805`). The exact theorem is `BB6.Agent4Raw109Closed.all_closed` in `im-results/agent4-raw109/Raw109Closed.lean`; it uses the same `BB6.Agent4Raw109Cut.parent` consumed by the graft. The current `Raw109Cut.lean`, `Raw109Closed.lean`, and `generate.py` blob hashes exactly match the accepted run's source revision, so the explicit premise has no source drift.
 - Agent 31's `Canonical71Raw109Graft.lean` checks whether the Raw109 parent is represented in Agent38's 72-entry Raw121-grafted roster and, if so, constructs a 71-entry roster. Its soundness/exactness interface takes the independently accepted Raw109 parent bound as an explicit premise, avoiding a duplicate 13-child closure.
 - Workflow `.github/workflows/agent31-canonical71-raw109.yml` is prepared to reuse the successful canonical72 artifact and generate only Raw109's B0LD/B0RE cut data. Its default run ID is stale (`45680602708`); dispatch with the actual successful 72-artifact run ID after the canonical73/72 audit completes.
 
