@@ -163,7 +163,7 @@ theorem carry (v : Bool) (bs rs : List Bool) (k : Nat) :
   | nil => exact ⟨2+(2*k+1),by omega,join0 (carryEmpty v k rs) (restore v k [] rs)⟩
   | cons b bs ih =>
     cases b
-    · exact ⟨2+(2*k+1),by omega,join0 (carryZero v k bs rs) (restore v k [] rs)⟩
+    · exact ⟨2+(2*k+1),by omega,join0 (carryZero v k bs rs) (restore v k bs rs)⟩
     · obtain ⟨t,ht,hr⟩ := ih (k+1)
       refine ⟨2+t,by omega,?_⟩
       have H := join0 (carryOne v k bs rs) hr
