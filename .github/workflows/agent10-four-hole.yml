@@ -4,7 +4,7 @@ on:
     inputs:
       target:
         type: choice
-        options: [twelve, five-hole, recursive, raw107-witness, raw107-child, raw58-cut, raw58-more]
+        options: [twelve, five-hole, recursive, raw107-witness, raw107-child, raw107-root-cut, raw58-cut, raw58-more]
         default: twelve
       raw107_witness:
         type: choice
@@ -118,3 +118,10 @@ jobs:
           python im-results/agent4-raw58/generate_more.py
           python tools/lean_compile_closure.py --workdir /tmp/a4-raw58-more --jobs 4 im-results/agent4-raw58/Raw58MoreCut.lean | tee /tmp/a4-raw58-more.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a4-raw58-more.log; then exit 1; fi
+      - name: Check the raw107 root split and eleven immediate side cycles
+        if: inputs.target == 'raw107-root-cut'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python tools/lean_compile_closure.py --workdir /tmp/a10-raw107-root --jobs 4 im-results/agent11-raw107/Raw107RootCut.lean | tee /tmp/a10-raw107-root.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a10-raw107-root.log; then exit 1; fi
