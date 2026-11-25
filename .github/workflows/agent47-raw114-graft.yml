@@ -361,8 +361,7 @@ jobs:
             --provenance-input im-results/agent8-tnf-raw117/generate.py \
             --provenance-input im-results/agent8-tnf-raw117/Raw117CanonicalCut.lean \
             --provenance-input im-results/agent31-shared-core/CanonicalTwoParentRosterOnly.lean \
-            --provenance-input /tmp/a31-shared-manifest.json \
-            --jobs 4 | tee /tmp/a31-raw117.log
+            --provenance-input /tmp/a31-shared-manifest.json | tee /tmp/a31-raw117.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a31-raw117.log; then
             echo "Forbidden axiom/proof mechanism in raw117 cut" >&2
             exit 1
@@ -403,7 +402,7 @@ jobs:
               "BB6.Agent47Canonical73Raw110.exact_at_target",
           )
           profiles = {}
-          for name, axioms in re.findall(r"'([^']+)' depends on axioms: \\[([^\\]]*)\\]", logs):
+          for name, axioms in re.findall(r"'([^']+)' depends on axioms: \[([^\]]*)\]", logs):
               profiles[name] = {x.strip() for x in axioms.split(",") if x.strip()}
           for name in required:
               if name not in profiles:
@@ -443,7 +442,7 @@ jobs:
               "lean_binary_sha256": pathlib.Path("/tmp/a31/lean-binary.sha256").read_text().split()[0],
               "module_olean_sha256": {
                   p.stem: digest(p)
-                  for p in sorted(root.parent.glob("*.olean"))
+                  for p in sorted(root.glob("*.olean"))
               },
           }
           (root / "manifest/roster-consumer.json").write_text(
