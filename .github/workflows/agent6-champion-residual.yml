@@ -69,7 +69,16 @@ jobs:
             printf '%s  %s\n' 4d4f583f5f3197d2d12bed38aeea081fc8f1f74c7f8af9856ffaded24e9e5dbf "$work/imports/ChampionF1OneLAHard.lean" | sha256sum -c -
           )
       - name: Reconstruct source-accepted F1=0RC proof modules
-        run: bash im-results/agent41-raw139-f1-zeroLF/reproduce-zeroRC.sh
+        run: |
+          set -euo pipefail
+          base="im-results/agent41-raw139-f1-zeroLF"
+          work="$PWD/.tmp/a41-f1-zeroRC"
+          mkdir -p "$work/imports"
+          base64 -d "$base/Agent41F1ZeroLFProofs.tar.xz.b64" > "$work/prior.tar.xz"
+          tar -xJf "$work/prior.tar.xz" -C "$work/imports" Agent41SymSweep.lean
+          base64 -d "$base/Agent41F1ZeroRCProofs.tar.xz.b64" > "$work/proofs.tar.xz"
+          printf '%s  %s\\n' e714f0772d6e7df0d64e3da63153c8450e39abead67caf8fb5b61d1241e5dbd8 "$work/proofs.tar.xz" | sha256sum -c -
+          tar -xJf "$work/proofs.tar.xz" -C "$work/imports"
       - name: Compile the champion frontier and depth-five F1 sibling refinement
         run: |
           set -euo pipefail
