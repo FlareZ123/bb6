@@ -87,7 +87,7 @@ Qed.
 
 Definition q0_2800_adaptive_obligations : list T :=
   adaptive_obligations decider
-    (AP_advance 1000000 AP_stop) (q_i 2800 100).
+    (AP_advance 1000000%N AP_stop) (q_i 2800 100).
 
 Definition q0_2800_consumed_obligations : list T :=
   with_recovered_held_2800 q0_2800_adaptive_obligations.
