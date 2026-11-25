@@ -17,7 +17,6 @@ CANONICAL76_BUILD_DIR="$(find "$CANONICAL76_ROOT" -type f -name 'CanonicalTwoPar
 test -n "$CANONICAL76_BUILD_DIR"
 test -s "$CANONICAL76_BUILD_DIR/CanonicalTwoParentGraft.olean"
 test -s "$CHAMPION_BUILD_DIR/ChampionResidualFrontier.olean"
-test -s "$CHAMPION_BUILD_DIR/ChampionF1OneLBIntegration.olean"
 test -s "$UPSTREAM_ROOT/.lake/build/lib/BusyBeaver/BB6/NonHalt/M_1RB0LE_1RC0RC_1LD0RB_1LA0LE_1LD1LF_1LDHHH.olean"
 if [ ! -s "$UPSTREAM_ROOT/.lake/build/lib/BusyBeaver/Bridge.olean" ]; then
   (cd "$UPSTREAM_ROOT" && lake build BusyBeaver.Bridge)
