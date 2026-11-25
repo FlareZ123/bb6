@@ -110,6 +110,7 @@ theorem positive (n : Nat) : 0 < cost n := by
     omega
   · omega
 
-theorem never : NeverHalts table := never_of_growth table family 26 cost entry positive growth
+theorem never (m : Machine) (hm : compatible table m) : NeverHalts m :=
+  never_of_growth table family 26 cost entry positive growth m hm
 #print axioms never
 end BB6.Agent1Raw60LBQuadratic
