@@ -228,6 +228,7 @@ jobs:
         env:
           CHILD: ${{ inputs.raw58_child }}
           RAW58_DIAG: "1"
+          RAW58_RLE_SEARCH: "1"
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
