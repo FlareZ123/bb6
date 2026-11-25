@@ -1,0 +1,77 @@
+name: Agent 32 q0 held SourceSafe BlockFAR integration
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45701885451
+          name: agent32-source-queue-blockfar-bridge
+          path: /tmp/source-bridge
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45580723979
+          name: q0-held-blockfar-Q00300-runs-7
+          path: /tmp/q00300
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45581935636
+          name: q0-held-blockfar-Q0400B-runs-2
+          path: /tmp/q0400b
+      - name: Merge source-accepted Lean closures
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/a32-q0-held-sourcesafe
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib
+          roots = [Path('/tmp/source-bridge'), Path('/tmp/q00300'), Path('/tmp/q0400b')]
+          out = Path('/tmp/a32-q0-held-sourcesafe')
+          seen = {}
+          for root in roots:
+              assert root.is_dir(), root
+              for src in sorted(root.rglob('*.olean')):
+                  name = src.name
+                  digest = hashlib.sha256(src.read_bytes()).hexdigest()
+                  if name in seen:
+                      assert seen[name][0] == digest, f'incompatible shared module {name}: {seen[name][1]} vs {src}'
+                  else:
+                      (out / name).write_bytes(src.read_bytes())
+                      seen[name] = (digest, str(src))
+          for name in ['SourceQueueBlockFARBridge.olean', 'Q00300SourceConsumer.olean', 'Q0400BSourceConsumer.olean']:
+              assert (out / name).is_file(), f'missing required module: {name}'
+          print(f'merged {len(seen)} unique Lean modules; shared objects byte-identical')
+          PY
+          export LEAN_PATH=/tmp/a32-q0-held-sourcesafe
+          lean -o /tmp/a32-q0-held-sourcesafe/Q0HeldBlockFARSourceSafe.olean im-results/agent32-source-queue/Q0HeldBlockFARSourceSafe.lean 2>&1 | tee /tmp/a32-q0-held-sourcesafe.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a32-q0-held-sourcesafe.log; then exit 1; fi
+          for theorem in q00300_sourceSafe q0400B_sourceSafe; do
+            python im-results/agent32-raw59/check_axioms.py /tmp/a32-q0-held-sourcesafe.log "BB6.Agent32Q0HeldSourceSafe.$theorem"
+          done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: agent32-q0-held-sourcesafe
+          path: |
+            /tmp/a32-q0-held-sourcesafe/*.olean
+            /tmp/a32-q0-held-sourcesafe.log
+          if-no-files-found: warn
+          retention-days: 30
