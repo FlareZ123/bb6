@@ -81,6 +81,8 @@ def main(a):
             phase_chain.emit(desc,mod,nspace)
     if a=="0LB":
         build_lb.prepare(spec,opens,target,witnesses,manual,slot)
+        import generate_long_trace
+        generate_long_trace.generate(ROOT)
     if spec.get("block"):
         import block_witness
         for i,params in spec["block"].items():
@@ -114,7 +116,7 @@ def main(a):
 set_option maxHeartbeats 0
 namespace {ns}
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent8TNFPath
-open BB6.Agent50TNFPilot BB6.Agent31ThreeHole BB6.Agent10ZipAudit
+open BB6.Agent50TNFPilot BB6.Agent31ThreeHole {'BB6.Agent10Raw108FastAudit' if a=='0LB' else 'BB6.Agent10ZipAudit'}
 """
         (ROOT/(name+".lean")).write_text("".join("import "+i+"\n" for i in imports)+header+body+f"\nend {ns}\n")
     tree=json.loads((target/"tree.json").read_text());stats=Counter()
@@ -138,7 +140,7 @@ open BB6.Agent50TNFPilot BB6.Agent31ThreeHole BB6.Agent10ZipAudit
         return f".split {nn} {slot(ss)} (byMove [\n"+",\n".join(build(k) for k in kids)+"])"
     assert tree[:3]==["split",n,s]
     bname=pre+"Base"
-    emit(bname,["ZipThreeHoleAudit"]+manual,f"""
+    emit(bname,["Raw108LongAudit" if a=="0LB" else "ZipThreeHoleAudit"]+manual,f"""
 abbrev p108 : PartialMachine :=
   refine (pathEnd root 2 (path.take 4)).1 (4,true) (some ⟨true,false,1⟩)
 abbrev parent : PartialMachine := refine p108 (1,true) (some {move(a)})
