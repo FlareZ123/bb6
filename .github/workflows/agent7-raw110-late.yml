@@ -28,7 +28,7 @@ jobs:
           lean --version
           python im-results/agent13-coverage/unpack.py
           python im-results/agent7-raw110/gen_late_trace.py /tmp/raw110-generated --compressed
-          python tools/lean_compile_closure.py --workdir /tmp/raw110-late --jobs 3 --extra-source-root /tmp/raw110-generated im-results/agent7-raw110/Raw110LateCover.lean | tee /tmp/raw110-late.log
+          python tools/lean_compile_closure.py --workdir /tmp/raw110-late --jobs 3 --source-root /tmp/raw110-generated im-results/agent7-raw110/Raw110LateCover.lean | tee /tmp/raw110-late.log
           if grep -qE 'sorryAx|native_decide' /tmp/raw110-late.log; then exit 1; fi
           python im-results/agent7-raw110/merge_late_proofs.py /tmp/raw110-parent /tmp/raw110-late "$PWD"
           cp im-results/agent7-raw110/Raw110ParentLateCover.lean /tmp/raw110-parent/
