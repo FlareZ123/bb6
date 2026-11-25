@@ -136,7 +136,6 @@ jobs:
             --provenance-input im-results/agent47-raw112-cut/symbolic.py \
             --provenance-input im-results/agent47-raw112-cut/inductive-generators.tar.xz \
             --provenance-input im-results/agent47-rooted-tnf/Canonical73Raw110Composition.lean \
-            --provenance-input im-results/agent7-raw110/Raw110ParentLateCover.lean \
             --provenance-input im-results/agent47-raw115-cut/counter.py \
             --provenance-input im-results/agent31-three-hole-tnf/generate_sweeps.py \
             --provenance-input im-results/agent31-three-hole-tnf/generate_four_hole.py \
