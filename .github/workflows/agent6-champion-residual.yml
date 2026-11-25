@@ -552,12 +552,19 @@ jobs:
               raise SystemExit(f"A6 artifact missing required Lean objects: {missing}")
           print(f"accepted A6 source artifact from {run['head_sha']}")
           PY
+      - name: Rebuild source-certified C/1=1RB champion sibling
+        if: ${{ inputs.a6_run_id != '' && inputs.raw121_graft_run_id == '' }}
+        run: |
+          set -euo pipefail
+          bash im-results/agent48-raw139-f1-oneRA/reproduce-blocks.sh c1 OneRB
+          test -s .tmp/a48-c1-OneRB/build/Raw139C1OneRBCover.olean
       - name: Compile combined A6 and champion raw139 composition
         if: ${{ inputs.a6_run_id != '' && inputs.raw121_graft_run_id == '' }}
         run: |
           set -euo pipefail
           grep -q '^noncomputable def A6_frontier' im-results/agent48-raw139-hard-root/A6Ingestion.lean
-          export LEAN_PATH="/tmp/a47-canonical:/tmp/a6-a6-ingestion:/tmp/a6-champion-residual/build:$PWD/cryptids/.lake/build/lib${LEAN_PATH:+:$LEAN_PATH}"
+          test -s .tmp/a48-c1-OneRB/build/Raw139C1OneRBCover.olean
+          export LEAN_PATH="/tmp/a47-canonical:/tmp/a6-a6-ingestion:/tmp/a6-champion-residual/build:$PWD/.tmp/a48-c1-OneRB/build:$PWD/cryptids/.lake/build/lib${LEAN_PATH:+:$LEAN_PATH}"
           lean -o /tmp/a6-champion-residual/build/A6ChampionComposition.olean \
             im-results/agent6-champion-residual/A6ChampionComposition.lean | tee /tmp/a6-a6-composition.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a6-a6-composition.log; then
