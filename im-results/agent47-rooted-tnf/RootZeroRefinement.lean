@@ -21,7 +21,7 @@ def raw0Entry : Config := (knownRun BB6.Agent50TNFPilot.root 1).getD blank
 theorem root_knownRun_one :
     knownRun BB6.Agent50TNFPilot.root 1 = some raw0Entry := by
   simp [raw0Entry, knownRun, knownStep, BB6.Agent50TNFPilot.root,
-    blank, readSlot, applyMove]
+    CoverageAdapter.firstOneCylinder, emptyTable, blank, readSlot, applyMove]
 
 theorem root_first_hole :
     BB6.Agent50TNFPilot.root (readSlot raw0Entry) = none := by
