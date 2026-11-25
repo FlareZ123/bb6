@@ -265,13 +265,13 @@ def run(args: argparse.Namespace) -> dict:
     ]
     if not any(
         m["source_module"] == raw139_module
-        and m["parent_kind"] == "REMAINING112"
+        and m["parent_kind"] in {"BASE76", "REMAINING112"}
         and m["match_type"] == "one_hole_leaf"
         and m["leaf_address"] == raw139_expected_address
         and m["theorem_hint"] == "is_not_halt"
         for m in matches
     ):
-        raise ValueError("known raw139 E1=1LF leaf did not crosswalk into REMAINING112")
+        raise ValueError("known raw139 E1=1LF leaf did not crosswalk into the canonical76/F0 frontier")
 
     leaf_by_parent: dict[str, dict[str, set[str]]] = {}
     for m in matches:
