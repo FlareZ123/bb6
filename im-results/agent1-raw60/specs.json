@@ -530,11 +530,23 @@
       653,
       765
     ],
-    "unresolved": {
-      "390": "1RB1RF_1RC0LA_0RD1RD_1LD1RE_---1RA_1LB1RC",
-      "498": "1RB1RF_1RC1LB_0RD1RD_1LD1RE_---1RA_1LB0RB",
-      "502": "1RB1RF_1RC1LB_0RD1RD_1LD1RE_---1RA_1LB1RC"
-    },
-    "manual": {}
+    "unresolved": {},
+    "manual": {
+      "390": [
+        "Raw60RFUnary",
+        "BB6.Agent1Raw60RFUnary.M390",
+        "1RB1RF_1RC0LA_0RD1RD_1LD1RE_---1RA_1LB1RC"
+      ],
+      "498": [
+        "Raw60RFUnary",
+        "BB6.Agent1Raw60RFUnary.M498",
+        "1RB1RF_1RC1LB_0RD1RD_1LD1RE_---1RA_1LB0RB"
+      ],
+      "502": [
+        "Raw60RFUnary",
+        "BB6.Agent1Raw60RFUnary.M502",
+        "1RB1RF_1RC1LB_0RD1RD_1LD1RE_---1RA_1LB1RC"
+      ]
+    }
   }
 }

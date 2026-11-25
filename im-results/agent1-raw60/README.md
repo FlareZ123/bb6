@@ -24,7 +24,7 @@ These are disjoint cylinders, each of mass 25^5=9,765,625. The raw60 certificate
 
 These conditionals do not establish an unconditional bound for either child. The previously late unassigned transition of 4338 is closed by a last-hole witness at step 1169. All four recursive proofs below are now source-accepted. The parent itself remains open.
 
-## New exact 1LA exceptional proofs
+## New exact 1LA and 1RF exceptional proofs
 
 All three remaining 1LA exceptional partial machines are covered by inductive nonhalting proofs for every compatible completion, with their precise tables in specs.json:
 
@@ -32,6 +32,8 @@ All three remaining 1LA exceptional partial machines are covered by inductive no
 - Per-child indices 1383 and 1384: Raw60LAAlternating.lean. Alternating-block conversion and two sweeps give the unary epoch m -> 2m+5, from blank time 11 with m=4, for C1=0LE and 1RB respectively.
 
 Both modules passed Lean 4.36.0-rc2 against a verbatim operational-semantics dependency slice (propext and Quot.sound only). Their source blobs are 65990a19c53c7d4c8f34be32e2a3b162fb92510b and f95806a2d774f17e2211c6fd0e3147f8db041a7d, verified in commit 6e391cb56beca518b64c1f9b47dd8c61e31e2f4d. The generator now has no 1LA exceptions and targets weighted bound 178; the full original-source audit is required before calling this child closed. The 0RF and 0LB specs likewise now contain manual proofs for all exceptions; their unconditional source-audit status must be checked separately.
+
+The remaining three 1RF exceptions (per-child indices 390, 498, 502) share Raw60RFUnary.lean. The exact F(0 1^m,[]) epoch, for m=5n+r+off and r in {0,2,3}, changes m by 7,4,2 respectively. The three phases add 15 ones; blank entry times are 25,35,44 with initial m=6,10,10. The left and right sweeps and terminal rules are proved for arbitrary untouched tails. The module passes Lean 4.36.0-rc2 against the operational-semantics slice with only propext and Quot.sound (blob 52556cbef54bdb7701a4ebf7ebed659a957d6637). The 1RF generator specs now have no exceptions; original-source child audit is still required.
 
 ## Further mathematical reductions
 
