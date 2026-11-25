@@ -1313,3 +1313,13 @@ Corrected source attempts dispatched on the current main commit `135be011e186c11
 - 0LB recursive bundle: run 45609751189 (created 12:01:05Z);
 - 1LA sharded source audit: run 45609758977 (created 12:01:08Z).
 Retrieve their outcomes before asserting any source-level result. Until then, the only valid statement is that the prior discovery and source runs exposed two implementation defects; there is no accepted 0LB coverage theorem yet.
+
+
+## 2026-11-25 12:09Z CI follow-up
+
+The first executable-bit repair was incomplete. Run 45609758977 logs show that `chmod` succeeded, but the smoke-test command still failed with “no default toolchain configured”: writing `ELAN_HOME` to `GITHUB_ENV` only affects later steps, while `lean --version` ran in the same step. Added explicit `export ELAN_HOME=...` and `export PATH=...` before the smoke test in all four 1LA/bundle artifact-consumer steps.
+
+Fresh runs on main head `975d14492563321b5b637d60a529ddf9474187ba`:
+- 0LB recursive source bundle: run 45610980426, prepare job 139194114073.
+- 1LA sharded source audit: run 45610989110, prepare job 139194141785.
+Both were in progress at 12:09Z. Retrieve outcomes; the prior runs 45609751189 (cancelled) and 45609758977 (failed on ELAN_HOME) are obsolete.
