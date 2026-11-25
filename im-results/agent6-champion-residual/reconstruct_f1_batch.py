@@ -99,7 +99,25 @@ def main() -> None:
     extract_archive(zero_rb, zero_rb_work)
     if not (zero_rb_work / "Agent41F1ZeroRBCover.lean").is_file():
         raise SystemExit("0RB archive did not reconstruct Agent41F1ZeroRBCover.lean")
-    merge_lean_sources(zero_rb_work, TMP / "a41-f1-zeroLF/imports")
+    zero_lf_root = TMP / "a41-f1-zeroLF/imports"
+    merge_lean_sources(zero_rb_work, zero_lf_root)
+    if not (zero_lf_root / "Agent41F1ZeroRBCover.lean").is_file():
+        raise SystemExit("0RB cover was not merged into the shared Agent41 source root")
+
+    # 0LF, 0RC and 0RB all reuse Agent41SymSweep from the exact same 0LF
+    # archive. Keep one canonical copy so lean_compile_closure's module index
+    # does not see the same module in three temporary source roots.
+    zero_rc_sweep = TMP / "a41-f1-zeroRC/imports/Agent41SymSweep.lean"
+    zero_lf_sweep = zero_lf_root / "Agent41SymSweep.lean"
+    if zero_rc_sweep.exists():
+        if not zero_lf_sweep.is_file():
+            raise SystemExit("missing canonical Agent41SymSweep source in 0LF root")
+        if hashlib.sha256(zero_rc_sweep.read_bytes()).digest() != hashlib.sha256(zero_lf_sweep.read_bytes()).digest():
+            raise SystemExit("0RC and 0LF Agent41SymSweep sources differ; do not deduplicate")
+        zero_rc_sweep.unlink()
+    # The 0RB modules have been merged into the 0LF root; remove the staging
+    # tree so it cannot be auto-discovered as a second source root.
+    shutil.rmtree(zero_rb_work.parent)
 
     # Generate each Agent14 sibling in isolation, then merge the Lean sources
     # into one source root so the shared WordShift module has one identity.
