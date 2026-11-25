@@ -16,7 +16,7 @@ from bidfa_emit import EXAMPLES as BIDFA_EXAMPLES
 from tree_emit import EXAMPLES as TREE_EXAMPLES
 
 
-def main(work: Path) -> None:
+def main(work: Path, accounted: bool = False) -> None:
     rows = (work / "open.txt").read_text().splitlines()
     candidates = json.loads((work / "candidates.json").read_text())
     hard = {int(i) for i in candidates["hard"]}
@@ -261,11 +261,16 @@ end BB6.Agent16Raw118Consumer
         "expected_parent_residuals":len(remaining_hard),
         "imports":imports,
     }
+    if accounted:
+        from emit_accounted import emit
+        plan = emit(HERE, work, rows, entries, table_key, literal_table, emit_tree)
+        manifest["proof_mode"] = plan["mode"]
+        manifest["local_audit_shards"] = len(plan["leaf_shards"])
     (HERE / "Raw118Consumer.json").write_text(json.dumps(manifest,indent=2)+"\n")
     print("Raw118 parent consumer:",manifest)
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        raise SystemExit("usage: emit_consumer.py WORKDIR")
-    main(Path(sys.argv[1]))
+    if len(sys.argv) not in (2, 3) or (len(sys.argv) == 3 and sys.argv[2] != "--accounted"):
+        raise SystemExit("usage: emit_consumer.py WORKDIR [--accounted]")
+    main(Path(sys.argv[1]), accounted=len(sys.argv) == 3)

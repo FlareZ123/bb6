@@ -44,6 +44,10 @@ on:
         description: 'Optional repair run containing the remaining Raw118 wide-window artifacts'
         type: string
         default: ''
+      raw118_sparse_run_id:
+        description: 'Optional run containing the complete checked Raw118 sparse source and proof artifacts'
+        type: string
+        default: ''
 permissions:
   contents: read
   actions: read
@@ -3594,7 +3598,7 @@ jobs:
           path: /tmp/raw60-parent/
           if-no-files-found: error
   raw118_sparse_prepare:
-    if: inputs.target == 'weighted-tnf-raw118-sparse' || inputs.target == 'weighted-tnf-raw118-consumer'
+    if: inputs.target == 'weighted-tnf-raw118-sparse' || (inputs.target == 'weighted-tnf-raw118-consumer' && inputs.raw118_sparse_run_id == '')
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -3615,7 +3619,7 @@ jobs:
           if-no-files-found: error
 
   raw118_sparse_shards:
-    if: inputs.target == 'weighted-tnf-raw118-sparse' || inputs.target == 'weighted-tnf-raw118-consumer'
+    if: inputs.target == 'weighted-tnf-raw118-sparse' || (inputs.target == 'weighted-tnf-raw118-consumer' && inputs.raw118_sparse_run_id == '')
     needs: raw118_sparse_prepare
     strategy:
       fail-fast: false
@@ -3660,7 +3664,7 @@ jobs:
           if-no-files-found: error
 
   raw118_sparse_join:
-    if: inputs.target == 'weighted-tnf-raw118-sparse' || inputs.target == 'weighted-tnf-raw118-consumer'
+    if: inputs.target == 'weighted-tnf-raw118-sparse' || (inputs.target == 'weighted-tnf-raw118-consumer' && inputs.raw118_sparse_run_id == '')
     needs: raw118_sparse_shards
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -3705,7 +3709,7 @@ jobs:
           if-no-files-found: error
 
   raw118_parent_assembly:
-    if: inputs.target == 'weighted-tnf-raw118-consumer'
+    if: ${{ always() && !cancelled() && inputs.target == 'weighted-tnf-raw118-consumer' && (needs.raw118_sparse_join.result == 'success' || inputs.raw118_sparse_run_id != '') }}
     needs: raw118_sparse_join
     runs-on: ubuntu-latest
     timeout-minutes: 60
@@ -3715,10 +3719,14 @@ jobs:
         with:
           name: raw118-sparse-source
           path: im-results/agent16-raw118
+          run-id: ${{ inputs.raw118_sparse_run_id || github.run_id }}
+          github-token: ${{ github.token }}
       - uses: actions/download-artifact@v4
         with:
           name: raw118-sparse-complete
           path: /tmp/raw118-merge/raw118-sparse-complete
+          run-id: ${{ inputs.raw118_sparse_run_id || github.run_id }}
+          github-token: ${{ github.token }}
       - name: Install Lean 4.36.0-rc2
         run: |
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
@@ -3766,7 +3774,7 @@ jobs:
           python im-results/agent40-raw118-independent/merge_wide_artifacts.py /tmp/raw118-wide-artifacts /tmp/raw118-merge/raw118-wide-merged im-results/agent1-bidfa-sat/wide-generated
           python im-results/agent1-bidfa-sat/emit_raw118.py > im-results/agent1-bidfa-sat/Raw118SatHits.lean
           python "$D/run_summary.py" 430 437 440 456 1181 3908 1120 1127 1174 1326 1390 1391 1392 1816 2867 3921 4093 4125 4342 4443
-          python im-results/agent16-raw118/emit_consumer.py /tmp/raw118-data
+          python im-results/agent16-raw118/emit_consumer.py /tmp/raw118-data --accounted
           python - <<'PY'
           import json
           widths=json.load(open("im-results/agent1-bidfa-sat/raw118-wide-widths.json"))
@@ -3785,6 +3793,7 @@ jobs:
           path: |
             im-results/agent16-raw118/Raw118Consumer.lean
             im-results/agent16-raw118/Raw118Consumer.json
+            im-results/agent16-raw118/Raw118AccountedPlan.json
             im-results/agent16-raw118/Raw118TreeBank.json
             im-results/agent16-raw118/Raw118Symbolic.json
             im-results/agent16-raw118/Raw118Sparse.json
