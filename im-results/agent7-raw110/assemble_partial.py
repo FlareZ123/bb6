@@ -42,7 +42,7 @@ cases = """  rcases mv with ⟨w,r,q⟩
   rcases hq with rfl|rfl|rfl|rfl|rfl|rfl
   all_goals cases w <;> cases r
 """
-body = "".join(f"import {m}\n" for m in ["Raw110Consumer", *imports])
+body = "".join(f"import {m}\n" for m in ["Raw110ParentConsumer", *imports])
 body += """set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 namespace BB6.Agent7Raw110
@@ -76,6 +76,21 @@ theorem assembledParentCover (B : Nat) (hB : 7014 ≤ B)
     Cover (WeightedBound B) p110 :=
   cover_of_deepCut assembledKids assembledKids_checked B hB hLeaves
 
+#print axioms assembledKids_checked
+#print axioms assembledResidual_count
+#print axioms assembledParentCover
+end BB6.Agent7Raw110
+"""
+(ROOT / "Raw110DeepParent.lean").write_text(body)
+if "--parent-only" not in sys.argv:
+    graft = f"""import Raw110DeepParent
+import Raw110Consumer
+
+set_option maxRecDepth 100000
+set_option maxHeartbeats 0
+namespace BB6.Agent7Raw110
+open BB6Coverage BB6.Agent13BlankDelay
+
 theorem assembledExact (B : Nat) (hB : 7014 ≤ B)
     (hOther : ∀ e ∈ otherRoster, Cover (WeightedBound B) e.2)
     (hLeaves : ∀ e ∈ deepResiduals assembledKids, Cover (WeightedBound B) e.2)
@@ -88,12 +103,9 @@ theorem assembled_obligation_count :
     otherRoster.length + (deepResiduals assembledKids).length = {77+sum(counts)} := by
   rw [otherRoster_count, assembledResidual_count]
 
-#print axioms assembledKids_checked
-#print axioms assembledResidual_count
-#print axioms assembledParentCover
 #print axioms assembledExact
 #print axioms assembled_obligation_count
 end BB6.Agent7Raw110
 """
-(ROOT / "Raw110DeepRoster.lean").write_text(body)
+    (ROOT / "Raw110DeepRoster.lean").write_text(graft)
 print("Retained descendants:", sum(counts), "from checked child count obligations")
