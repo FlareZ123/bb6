@@ -39,6 +39,36 @@ def generate(rows,work):
             certs[row]=f".proven {ns}.table {ns}.never"
             imports[row]="Raw122Phases27510"
             continue
+        if i in (13479,25730,27624):
+            sys.path.insert(0,str(ROOT.parent/"agent47-raw114-cut"))
+            import multi_sweep as multi
+            W,R,C=multi.Word,multi.Rep,multi.Config
+            if i==13479:
+                assert row=="1RB---_1RC0RA_0RD0LE_1LD1RE_0RB0LF_0LB1LC"
+                t=34;st=C(2,W.of("01010",R("1010"),"010",R("10"),R("10")),W())
+                tg=C(2,st.l.inc(),W())
+            elif i==25730:
+                assert row=="1RB0LD_1RC1LB_0RD1RF_1LD1RE_0RA0LF_---1RA"
+                t=40;st=C(1,W(),W.of("1111111",R("1111"),R("1111"),R("1111")))
+                tg=C(1,W(),st.r.inc())
+            else:
+                assert row=="1RB0LE_1RC0LA_0RD1RB_1LD1RE_1LB0LF_---1RE"
+                t=1;st=C(1,W.of("01",R("111111"),R("111111")),W())
+                tg=C(1,st.l.inc(),W())
+            p=pump.parse(row)
+            res=multi.execute(p,st,tg,3000)
+            assert res is not None
+            name=f"Raw122Long{i}"
+            code,info=multi.generate(i,p,(t,st,tg,res))
+            ns=f"BB6Coverage.Agent31Pump.{name}"
+            source="\n\n".join(["import SweepPumping","set_option maxRecDepth 100000",
+              "set_option maxHeartbeats 0","set_option linter.unusedVariables false",
+              f"namespace {ns}","open BB6Coverage",code,f"end {ns}"])
+            (ROOT/(name+".lean")).write_text(source+"\n")
+            certs[row]=f".proven {ns}.M{i}.table {ns}.M{i}.never"
+            imports[row]=name
+            print(i,"long sweep",info,flush=True)
+            continue
         p=pump.parse(row)
         h=late_hole(p,7014)
         if h is not None:
