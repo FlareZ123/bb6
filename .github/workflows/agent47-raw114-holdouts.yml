@@ -1,0 +1,32 @@
+name: Agent 47 raw114 symbolic holdouts
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  holdouts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Source-check binary, paired-word and long-sweep residual proofs
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          cd im-results/agent47-raw114-cut
+          python paired_counter.py
+          python long_sweep.py
+          cd ../..
+          roots=(im-results/agent47-raw114-cut/Raw114Binary.lean im-results/agent47-raw114-cut/Raw114Pair{0,1,2,3,4}.lean im-results/agent47-raw114-cut/Raw114LongSweep.lean)
+          python tools/lean_compile_closure.py --workdir /tmp/a47-raw114-holdouts --jobs 4 "${roots[@]}" | tee /tmp/a47-raw114-holdouts.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a47-raw114-holdouts.log; then exit 1; fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw114-holdouts
+          path: /tmp/a47-raw114-holdouts/*.olean
+          if-no-files-found: error
