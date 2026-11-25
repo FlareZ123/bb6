@@ -54,6 +54,20 @@ jobs:
         run: python3 im-results/agent10-tnf-multipump/generate.py 68 72 82
       - name: Reconstruct source-accepted F1=0LF proof modules
         run: bash im-results/agent41-raw139-f1-zeroLF/reproduce.sh
+      - name: Reconstruct source-accepted F1=1LA proof modules
+        run: |
+          set -euo pipefail
+          base="$PWD/im-results/agent48-raw139-f1-oneLA"
+          work="$PWD/.tmp/a48-f1-oneLA"
+          mkdir -p "$work/imports"
+          (
+            cd "$work/imports"
+            cp "$base/recipes.txt" .
+            python3 "$base/replay.py"
+            python3 "$base/package.py"
+            printf '%s  %s\\n' 0efe6d872460d07282eaa1cb63d878c211b426a2da8cb70a3bb1675d3e69a730 "$work/imports/ChampionF1OneLACover.lean" | sha256sum -c -
+            printf '%s  %s\\n' 4d4f583f5f3197d2d12bed38aeea081fc8f1f74c7f8af9856ffaded24e9e5dbf "$work/imports/ChampionF1OneLAHard.lean" | sha256sum -c -
+          )
       - name: Compile the champion frontier and depth-five F1 sibling refinement
         run: |
           set -euo pipefail
@@ -66,7 +80,9 @@ jobs:
             im-results/agent48-champion-root/ChampionF1SiblingIntegration.lean \
             im-results/agent48-champion-root/ChampionF1RFIntegration.lean \
             im-results/agent48-champion-root/ChampionF1ZeroLFIntegration.lean \
+            im-results/agent6-champion-residual/ChampionF1OneLAIntegration.lean \
             --source-root "$PWD/.tmp/a41-f1-zeroLF/imports" \
+            --source-root "$PWD/.tmp/a48-f1-oneLA/imports" \
             --precompiled-manifest "$PWD/.tmp/a41-f1-zeroLF/manifest.json" \
             --precompiled-dir "$PWD/.tmp/a41-f1-zeroLF/build" \
             --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean \
@@ -141,6 +157,15 @@ jobs:
               "BB6.Agent48F1ZeroLFIntegration.removedZeroLF_count",
               "BB6.Agent48F1ZeroLFIntegration.cover_remainingF1RF",
               "BB6.Agent48F1ZeroLFIntegration.exact_from_remainingF1ZeroLF",
+              "BB6.Agent48F1OneLA.checked",
+              "BB6.Agent48F1OneLA.all_completions_weighted",
+              "BB6.Agent6F1OneLAIntegration.oneLA_is_depth5_sibling",
+              "BB6.Agent6F1OneLAIntegration.cover_oneLA",
+              "BB6.Agent6F1OneLAIntegration.oneLA_parent_present",
+              "BB6.Agent6F1OneLAIntegration.remainingF1OneLA_count",
+              "BB6.Agent6F1OneLAIntegration.removedOneLA_count",
+              "BB6.Agent6F1OneLAIntegration.cover_remainingF1ZeroLF",
+              "BB6.Agent6F1OneLAIntegration.exact_from_remainingF1OneLA",
           )
           for name in names:
               if name.startswith(("BB6.", "BB6Coverage.")):
