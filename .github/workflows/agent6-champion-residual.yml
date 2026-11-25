@@ -488,7 +488,7 @@ jobs:
         run: |
           set -euo pipefail
           sed -i 's/v4.35.0-rc4/v4.36.0-rc2/g' lakefile.toml
-          printf 'leanprover/lean4:v4.36.0-rc2\\n' > lean-toolchain
+          printf 'leanprover/lean4:v4.36.0-rc2\n' > lean-toolchain
           lake update
           lake exe cache get
           lake build BusyBeaver.BB6.M_1RB0LF_1RC0RA_1LD0RB_0LE0LC_0LA0LC_0LBHHH
@@ -508,10 +508,10 @@ jobs:
           EXPECTED_SHA: ${{ inputs.source_sha || github.sha }}
         run: |
           set -euo pipefail
-          curl -fsSL \\
-            -H "Authorization: Bearer $GH_TOKEN" \\
-            -H "Accept: application/vnd.github+json" \\
-            "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/runs/$A6_RUN_ID" \\
+          curl -fsSL \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/runs/$A6_RUN_ID" \
             -o /tmp/a6-run.json
           python3 - <<'PY'
           import json, os, pathlib
@@ -532,7 +532,7 @@ jobs:
         run: |
           set -euo pipefail
           export LEAN_PATH="/tmp/a47-canonical:/tmp/a6-a6-ingestion:/tmp/a6-champion-residual/build:$PWD/cryptids/.lake/build/lib${LEAN_PATH:+:$LEAN_PATH}"
-          lean -o /tmp/a6-champion-residual/build/A6ChampionComposition.olean \\
+          lean -o /tmp/a6-champion-residual/build/A6ChampionComposition.olean \
             im-results/agent6-champion-residual/A6ChampionComposition.lean | tee /tmp/a6-a6-composition.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a6-a6-composition.log; then
             echo "Forbidden proof placeholder or native_decide found in combined A6/champion composition" >&2
@@ -549,7 +549,7 @@ jobs:
               "BB6.Agent6A6ChampionComposition.exact_from_canonical77_with_A6_champion_refinement",
           )
           for name in names:
-              pattern = r"'" + re.escape(name) + r"' depends on axioms: \\[([^\\]]*)\\]"
+              pattern = r"'" + re.escape(name) + r"' depends on axioms: \[([^\]]*)\]"
               match = re.search(pattern, log)
               if match:
                   used = {x.strip() for x in match.group(1).split(",") if x.strip()}
