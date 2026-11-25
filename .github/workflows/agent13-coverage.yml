@@ -1377,21 +1377,47 @@ jobs:
   raw10rankedsearch:
     if: inputs.target == 'weighted-tnf-raw10-box-ranked-search'
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
-      - name: Generate ranked BlockFAR candidates for the strongest raw10 residual boxes
+      - name: Install Lean 4.36.0-rc2
         run: |
           set -euo pipefail
-          python im-results/agent17-raw10-box-far-search/search.py --generate --min-fixed 8 --max-boxes 3 --rank-promising --jobs 4 --output .tmp/agent50-raw10-ranked | tee /tmp/a50-raw10-ranked.log
-          test -s .tmp/agent50-raw10-ranked/summary.json
-          cat .tmp/agent50-raw10-ranked/summary.json
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lean --version | tee /tmp/a17-lean-version.txt
+      - name: Kernel-check the generic singleton-projection box theorem
+        run: |
+          set -euo pipefail
+          python tools/lean_compile_closure.py --workdir /tmp/a17-raw10-box-singleton --jobs 4 im-results/agent17-raw10-box-far-search/BoxSingletonProjection.lean | tee /tmp/a17-raw10-box-singleton.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a17-raw10-box-singleton.log; then
+            echo "Forbidden proof placeholder or native_decide found in singleton-projection theorem" >&2
+            exit 1
+          fi
+      - name: Search and compile singleton BlockFAR projections for all 34 raw10 boxes
+        timeout-minutes: 50
+        run: |
+          set -euo pipefail
+          python im-results/agent17-raw10-box-far-search/search.py --generate --compile --min-fixed 2 --max-boxes 34 --rank-promising --compile-timeout 180 --jobs 4 --output .tmp/agent17-raw10-box-far | tee /tmp/a17-raw10-box-far.log
+          python - <<'PY'
+          import json, pathlib
+          p = pathlib.Path(".tmp/agent17-raw10-box-far/summary.json")
+          d = json.loads(p.read_text())
+          assert d["box_count"] == 34 and d["tested_boxes"] == 34
+          for x in sorted(d["results"], key=lambda z: z["box"]):
+              print(f"box={x['box']:02d} fixed={x['fixed_count']:2d} mass={x['mass']} generator={x['generator']} compiled={x['compiled']} table={x['table']}")
+          print(f"TOTAL boxes={d['box_count']} mass={d['total_box_mass']} generated={d['generated']} compiled={d['compiled']}")
+          PY
       - uses: actions/upload-artifact@v4
         with:
-          name: raw10-ranked-blockfar-candidates
+          name: raw10-singleton-projection-full34
           path: |
-            .tmp/agent50-raw10-ranked/
-            /tmp/a50-raw10-ranked.log
+            .tmp/agent17-raw10-box-far/
+            /tmp/a17-lean-version.txt
+            /tmp/a17-raw10-box-singleton.log
+            /tmp/a17-raw10-box-far.log
           if-no-files-found: error
 
   raw10canonical76:
