@@ -58,7 +58,7 @@ required = (
 )
 profiles = {
     name: {x.strip() for x in raw.split(",") if x.strip()}
-    for name, raw in re.findall(r"'([^']+)' depends on axioms: \\[([^\\]]*)\\]", log)
+    for name, raw in re.findall(r"'([^']+)' depends on axioms: \[([^\]]*)\]", log)
 }
 missing = [name for name in required if name not in profiles]
 if missing:
