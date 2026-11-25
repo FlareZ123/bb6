@@ -24,6 +24,9 @@ def main(work: Path) -> None:
     symbolic = json.loads((HERE / "Raw118Symbolic.json").read_text())["claims"]
     sparse = json.loads((HERE / "Raw118Sparse.json").read_text())["claims"]
     late = json.loads((HERE / "Raw118Late.json").read_text())["leaves"]
+    treebank_manifest = json.loads((HERE / "Raw118TreeBank.json").read_text())
+    treebank = treebank_manifest["emitted"]
+    treebank_ids = {int(x["index"]) for x in treebank}
     phase = {
         int(line.split()[0])
         for line in (AG40 / "phase_candidates.tsv").read_text().splitlines()
@@ -54,8 +57,11 @@ def main(work: Path) -> None:
     assert len(hard) == 274
     assert len(hard_accepted) == 187, len(hard_accepted)
     assert hard_accepted <= hard
-    remaining_hard = sorted(hard - hard_accepted)
-    assert len(remaining_hard) == 87, len(remaining_hard)
+    remaining_before_treebank = hard - hard_accepted
+    assert treebank_ids <= remaining_before_treebank
+    assert len(treebank_ids) == len(treebank)
+    remaining_hard = sorted(remaining_before_treebank - treebank_ids)
+    assert len(remaining_hard) == 87 - len(treebank_ids), len(remaining_hard)
     assert all(rows[i].count("---") == 1 for i in remaining_hard)
 
     assert len(symbolic) == 105
@@ -66,7 +72,7 @@ def main(work: Path) -> None:
     assert not (late_ids & (sparse_ids | hard))
     assert len(rows) == 6085
     assert len(sparse_ids | hard | late_ids) == 959
-    assert len(hard_accepted | sparse_ids | late_ids) == 872
+    assert len(hard_accepted | sparse_ids | late_ids | treebank_ids) == 872 + len(treebank_ids)
 
     entries = []
     def add_nonhalt(ns: str):
@@ -91,6 +97,8 @@ def main(work: Path) -> None:
         add_nonhalt(claim["namespace"])
     for claim in sorted(sparse, key=lambda x: int(x["index"])):
         add_nonhalt(claim["namespace"])
+    for hit in sorted(treebank, key=lambda x: int(x["index"])):
+        add_nonhalt(f"BB6Coverage.Agent16BiDFA.Raw118TreeBank.M{int(hit['index'])}")
     for leaf in sorted(late, key=lambda x: int(x["index"])):
         ns = f"BB6.Agent16Raw118Late.M{int(leaf['index'])}"
         entries.append(
@@ -109,6 +117,7 @@ def main(work: Path) -> None:
         "Raw118BiDFA",
         "Raw118Tree",
         "Raw118Late",
+        "Raw118TreeBank",
     ]
     header = "\n".join(f"import {name}" for name in imports)
     source = f'''{header}
@@ -126,7 +135,7 @@ def accepted : List (Accepted bound) := [
 
 def remaining := BB6.Agent16ResidualCover.remaining accepted residuals
 
-theorem accepted_count : accepted.length = 872 := by rfl
+theorem accepted_count : accepted.length = {872 + len(treebank_ids)} := by rfl
 
 /-- The Raw118 parent is covered at 756496 except for this exact finite
     complement of one-hole residual tables. -/
@@ -135,7 +144,7 @@ theorem sound_after :
       ∃ e ∈ remaining, compatible e.2 m :=
   BB6.Agent16ResidualCover.consume accepted sound
 
-theorem remaining_count : remaining.length = 87 := by decide
+theorem remaining_count : remaining.length = {len(remaining_hard)} := by decide
 
 def holeCount (p : PartialMachine) : Nat :=
   (List.finRange 6).foldl (fun n q =>
@@ -159,7 +168,9 @@ end BB6.Agent16Raw118Consumer
         "hard_residuals": remaining_hard,
         "ngram_accepted": len(sparse_ids),
         "late_accepted": len(late_ids),
-        "accepted_total": len(hard_accepted | sparse_ids | late_ids),
+        "treebank_accepted": len(treebank_ids),
+        "treebank_indices": sorted(treebank_ids),
+        "accepted_total": len(hard_accepted | sparse_ids | late_ids | treebank_ids),
         "expected_parent_residuals": len(remaining_hard),
         "imports": imports,
     }
