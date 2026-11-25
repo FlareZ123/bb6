@@ -87,3 +87,10 @@ These are intermediate conditional frontier results, not an exact BB(6) value. K
 **Canonical73/72 follow-on:** run [45697687963](https://github.com/FlareZ123/bb6/actions/runs/45697687963), target `canonical73`, reuses that shared core and attempts Raw117, Raw112, Raw110 and Raw121 parent cuts. The canonical73 generation step now runs all Raw107 generators (`generate.py`, `generate_rc.py`, `generate_re.py`, `generate_more.py`, `generate_partial.py`) plus the 13-prefix chunk checks, and verifies the generated modules before closure compilation. At the last status check, all generation/reconstruction steps had succeeded and the full Lean closure was still compiling. The 73/72 results remain pending until the source and axiom audit passes.
 
 Raw59 is not yet eligible for graft ingestion: its complete UpgradeAll parent theorem at 4,200,000 has not passed source acceptance. Once accepted, port its consumer to the newest accepted roster rather than the older canonical77 base.
+
+
+## Raw123 parent ready for the next roster graft (25 November 2026)
+
+- Agent7's Raw123 six-hole parent (`1RB---_1RC---_0RD---_1LD1RE_---0RF_------`, E1=0RF) is source-accepted at `WeightedBound 10000` in run [45700813110](https://github.com/FlareZ123/bb6/actions/runs/45700813110), artifact `raw123-final` ID `15062767168`. The theorem is `BB6.Agent7Raw123.raw123_cover`; its `Cover.sound` field supplies the parent bound needed by a roster graft.
+- The accepted run's source revision is `c14668f`. Current blob hashes for `Raw123Base.lean`, `Raw123ResidualClosure.lean`, `PartialAudit.lean`, `CanonicalRosterRefinement.lean`, `BB6Coverage.lean.xz.b64`, and `unpack.py` exactly match that revision, so the parent type and coverage semantics are stable.
+- If run `45697687963` accepts the 72-roster, Raw109 and Raw123 are two independent source-accepted parent cuts that may reduce it to 70, provided the exact finite membership checks show p123 survives the Raw109 cut. No consumer has been source-audited yet; Agent31 asked Agent7 whether they or Agent47 are already building it before creating a duplicate.
