@@ -160,6 +160,12 @@ with tempfile.TemporaryDirectory() as d:
         for j in s["counter"]:
             assert opens[j]=="1RB0LA_1RC1RF_0RD1LF_1LD1RE_---0LC_1LA0RF"
             proofs[j]=("BB6.Agent7Raw110UnaryCounter.table","BB6.Agent7Raw110UnaryCounter.never")
+        extra_modules=[]
+        for j,e in s.get("extra",{}).items():
+            j=int(j)
+            assert opens[j]==e["table"]
+            extra_modules.append(e["module"])
+            proofs[j]=(e["namespace"]+".table",e["namespace"]+".never")
         stats=Counter(); remaining=[]
         bank=[(int(a[0]),[int(c,36) for c in a[1:]]) for a in s["bank"]]
         def build(node):
@@ -200,8 +206,12 @@ with tempfile.TemporaryDirectory() as d:
         assert tree.open_count==len(s["miss"])==len(remaining)
         pexpr=f"(child110 {move(MOVES[i])})"
         name=f"partialKid{i:02}"
-        mod=build_module(tree,pexpr,name,["Raw110Base",pumpname,ngname,"Raw110UnaryCounter"])
-        emit(f"Raw110Partial{i:02}",[mod],[f"theorem countPartial{i:02} : (partialResiduals {pexpr} {name}).length = {tree.open_count} := by decide",
+        auditname=name if tree.open_count else f"auditKid{i:02}"
+        mod=build_module(tree,pexpr,auditname,["Raw110Base",pumpname,ngname,"Raw110UnaryCounter",*extra_modules])
+        wrapper=[] if tree.open_count else [
+            f"def {name} : PartialAudit := .closed {auditname}",
+            f"theorem {name}_checked : partialCheck {B} {pexpr} {name} = true := {auditname}_checked"]
+        emit(f"Raw110Partial{i:02}",[mod],[*wrapper,f"theorem countPartial{i:02} : (partialResiduals {pexpr} {name}).length = {tree.open_count} := by decide",
              f"#print axioms {name}_checked",f"#print axioms countPartial{i:02}"])
         (ROOT/f"remaining{i:02}.txt").write_text("\n".join(remaining)+"\n")
         print(i,stats,"retained",tree.open_count,"nodes",tree.size,flush=True)

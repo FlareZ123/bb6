@@ -59,8 +59,7 @@
       "198": 8
     },
     "miss": [
-      152,
-      752
+      152
     ],
     "one": [
       3,
@@ -177,7 +176,14 @@
       923
     ],
     "counter": [],
-    "len": 959
+    "len": 959,
+    "extra": {
+      "752": {
+        "module": "Raw110BinaryCounter",
+        "namespace": "BB6.Agent7Raw110BinaryCounter",
+        "table": "1RB1LF_1RC0RB_0RD0LA_1LD1RE_0LE0LC_1LA---"
+      }
+    }
   },
   "5": {
     "sha256": "b77968367816150c6585f1bd982455b079396f83a816e7a167e43cf5b71d5a16",
@@ -569,9 +575,7 @@
     "ng": {
       "552": 5
     },
-    "miss": [
-      332
-    ],
+    "miss": [],
     "one": [
       5,
       6,
@@ -663,7 +667,14 @@
     "counter": [
       416
     ],
-    "len": 1115
+    "len": 1115,
+    "extra": {
+      "332": {
+        "module": "Raw110UnarySweep",
+        "namespace": "BB6.Agent7Raw110UnarySweep",
+        "table": "1RB1RF_1RC0LB_0RD1LF_1LD1RE_---0LC_1RA0RB"
+      }
+    }
   },
   "18": {
     "sha256": "54fc4652465f2f41dfcece01a3aba62d1b7e090ea84c05f057d988936f21a189",
