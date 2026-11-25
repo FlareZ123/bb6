@@ -1,6 +1,8 @@
+**New reusable source theorems:** [Modular carry aperiodicity and exact forward blocks](CarryAperiodicForwardBlock.md) gives the finite repetition obstruction for the original BatchCarry weighted-word equation (CI 45590461666), and the exact two-candidate ordinary-block accelerator with a source-certified reset-free guard (CI 45589502759). Neither is an all-time machine decision.
+
 **Update 2026-11-25:** [Margin-free delayed-carry source bridge](LongConeSource.md) passed original-source CI 45587713288. An empty delayed cover by the practical long-cone cutoff now excludes the authentic critical reset without additional margin checks. No new unconditional index exclusion.
 
-**Update 2026-11-24 19:47 UTC:** [CarryCertificates.md](CarryCertificates.md) records source-certified exclusion of every critical index <=10000 and every odd index (all n), with exact halting-criterion composition. The final n3342 source proof passed [CI 45470826613](https://github.com/FlareZ123/bb6/actions/runs/45470826613); the n2990 block proof accelerated Agent28's earlier accepted proof. P1 remains open for even n>=10002.
+**Update 2026-11-24 19:47 UTC:** [CarryCertificates.md](CarryCertificates.md) records source-certified exclusion of every critical index <=10000 and every odd index (all n), with exact halting-criterion composition. The final n3342 source proof passed [CI 45470826613](https://github.com/FlareZ123/bb6/actions/runs/45470826613); the n2990 block proof accelerated Agent28's earlier accepted proof. Agent9's independent certified batch coverage subsequently extends the finite range through 15000. P1 remains open for larger even n.
 
 # P1: counted inverse-history energy, walls and shallow obstructions
 
