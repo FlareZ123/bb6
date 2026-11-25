@@ -121,19 +121,19 @@ jobs:
               "BB6Coverage.Agent48DirectRoot.champion_raw_witness",
               "BB6.Agent31Canonical78Exact.cover_at_champion_score",
               "BB6.Agent31Canonical78Exact.exact_from_canonical78_at_champion_score",
-               "BB6.Agent48F1RFIntegration.zeroRF_is_depth5_sibling",
-               "BB6.Agent48F1RFIntegration.cover_zeroRF",
-               "BB6.Agent48F1RFIntegration.remainingF1RF_count",
-               "BB6.Agent48F1RFIntegration.cover_remainingF1Extended",
-               "BB6.Agent48F1RFIntegration.refined_residual_cover",
-               "BB6.Agent48F1RFIntegration.exact_from_remainingF1RF",
+              "BB6.Agent48F1RFIntegration.zeroRF_is_depth5_sibling",
+              "BB6.Agent48F1RFIntegration.cover_zeroRF",
+              "BB6.Agent48F1RFIntegration.remainingF1RF_count",
+              "BB6.Agent48F1RFIntegration.cover_remainingF1Extended",
+              "BB6.Agent48F1RFIntegration.refined_residual_cover",
+              "BB6.Agent48F1RFIntegration.exact_from_remainingF1RF",
           )
           for name in names:
-               if name.startswith(("BB6.", "BB6Coverage.")):
-                   pattern = r"'" + re.escape(name) + r"' depends on axioms: \\[([^\\]]*)\\]"
-               else:
-                   pattern = r"'[^']*\\." + re.escape(name) + r"' depends on axioms: \\[([^\\]]*)\\]"
-               m = re.search(pattern, log)
+              if name.startswith(("BB6.", "BB6Coverage.")):
+                  pattern = r"'" + re.escape(name) + r"' depends on axioms: \[([^\]]*)\]"
+              else:
+                  pattern = r"'[^']*\." + re.escape(name) + r"' depends on axioms: \[([^\]]*)\]"
+              m = re.search(pattern, log)
               if not m:
                   raise SystemExit("missing axiom audit: "+name)
               used = {x.strip() for x in m.group(1).split(",") if x.strip()}
@@ -164,11 +164,11 @@ jobs:
           import re
           log = open('/tmp/a6-f0.log').read()
           for name in ('cover_oneLA','cover_oneLE','cover_zeroLB','cover_oneLC','cover_zeroLC','cover_oneRC','cover_zeroLE','cover_oneRD','cover_oneLD_zeroLD','cover_oneLD','cover_oneRB_zeroRD','cover_oneRB'):
-               if name.startswith(("BB6.", "BB6Coverage.")):
-                   pattern = r"'" + re.escape(name) + r"' depends on axioms: \\[([^\\]]*)\\]"
-               else:
-                   pattern = r"'[^']*\\." + re.escape(name) + r"' depends on axioms: \\[([^\\]]*)\\]"
-               m = re.search(pattern, log)
+              if name.startswith(("BB6.", "BB6Coverage.")):
+                  pattern = r"'" + re.escape(name) + r"' depends on axioms: \[([^\]]*)\]"
+              else:
+                  pattern = r"'[^']*\." + re.escape(name) + r"' depends on axioms: \[([^\]]*)\]"
+              m = re.search(pattern, log)
               if not m: raise SystemExit('missing axiom audit: '+name)
               used = {x.strip() for x in m.group(1).split(',') if x.strip()}
               assert used <= {'propext','Classical.choice','Quot.sound'}, (name,used)
