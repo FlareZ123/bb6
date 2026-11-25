@@ -230,7 +230,7 @@ jobs:
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
-          python tools/lean_compile_closure.py --workdir /tmp/a50-tnf-pilot --jobs 8 im-results/agent50-weighted-tnf-pilot/CryptidSiblings.lean im-results/agent50-weighted-tnf-pilot/RootFrontier.lean im-results/agent50-weighted-tnf-pilot/TranslatedCycler.lean | tee /tmp/a50-tnf-pilot.log
+          python tools/lean_compile_closure.py --workdir /tmp/a50-tnf-pilot --jobs 8 im-results/agent50-weighted-tnf-pilot/CryptidSiblings.lean im-results/agent50-weighted-tnf-pilot/RootFrontier.lean im-results/agent50-weighted-tnf-pilot/TranslatedCycler.lean im-results/agent24-q32-source-graft/Q32SourceSideGraft.lean | tee /tmp/a50-tnf-pilot.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a50-tnf-pilot.log; then
             echo "Forbidden proof placeholder or native_decide found in pilot closure" >&2
             exit 1
