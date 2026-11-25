@@ -1128,8 +1128,12 @@
     "groups": "",
     "pumps": [],
     "multi": [],
-    "custom": {},
-    "imports": [],
+    "custom": {
+      "157": "BB6Coverage.Agent4LF157"
+    },
+    "imports": [
+      "Raw58LF157"
+    ],
     "auto_classify": true
   },
   "RF": {
