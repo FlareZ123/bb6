@@ -1,10 +1,10 @@
-# Raw109 first-hole refinement and score-B consumer
+# Raw109 complete candidate parent closure
 
-Parent raw109, `1RB---_1RC---_0RD---_1LD1RE_---1RB_------`, is a retained canonical residual (six holes, 25^6 = 244,140,625 compatible completions). The first unassigned query is B1 at ordinary step 7. **The complete parent remains open.**
+Parent raw109, `1RB---_1RC---_0RD---_1LD1RE_---1RB_------`, is a retained canonical residual (six holes, 25^6 = 244,140,625 compatible completions). The first unassigned query is B1 at ordinary step 7. **Every branch now has a candidate certificate; the full original-source parent audit is still pending.**
 
 ## Current candidate partition
 
-Eleven ordinary B1 alternatives have immediate side-cycle certificates; the halt alternative is bounded by the root query. Twelve of the thirteen remaining alternatives have complete candidate trees in [specs.json](specs.json), with a common proposed bound 1703, consumed by [Raw109Refinement12.lean](Raw109Refinement12.lean). The last alternative is B1=0LF.
+Eleven ordinary B1 alternatives have immediate side-cycle certificates; the halt alternative is bounded by the root query. All thirteen remaining alternatives have complete candidate trees in [specs.json](specs.json), with a common proposed bound 1703. [Raw109Closed.lean](Raw109Closed.lean) composes the thirteen independent child bounds and eleven immediate cycles plus the halt alternative, without pulling in the canonical roster or asking for any exception hypotheses.
 
 | B1=0LF candidate tree | Count |
 | --- | ---: |
@@ -16,14 +16,27 @@ Eleven ordinary B1 alternatives have immediate side-cycle certificates; the halt
 | N-gram candidates (width ≤12) | 104 |
 | Single-block sweeps | 46 |
 | Long-epoch sweeps | 5 |
-| New explicit FAR witnesses (5–15 states) | 32 |
-| Unresolved leaves | 2 |
+| Explicit extra FAR witnesses (5–15 states) | 32 |
+| New inductive leaf proofs | 2 |
+| Unresolved leaves | 0 |
 
-The exact enumeration was reproduced with the existing C++ generator algorithm and an independent JS implementation: open-list SHA256 `413916c71af62ae660bf5feb4939bf663d7e0706a0c7e0b210d341f00c79455a`; maximum weighted query bound 904, first query (8,F1). The two remaining one-hole tables are indices 1200 (`1RB0RA_1RC0LF_0RD1RA_1LD1RE_---1RB_0LB1LF`) and 1475 (`1RB0RB_1RC0LF_0RD0RA_1LD1RE_---1RB_1LB1LF`). All 19 newly found larger FAR witnesses pass a separate exact Python integer-bitset saturation checker. Three of the 19 (1192,1214,1216) have two holes; the witnesses exclude reaching either. Candidate 1200 exhibits nested left growth and 1475 bidirectional growth. Neither is decided.
+The exact enumeration was reproduced with the existing C++ generator algorithm and an independent JS implementation: open-list SHA256 `413916c71af62ae660bf5feb4939bf663d7e0706a0c7e0b210d341f00c79455a`; maximum weighted query bound 904, first query (8,F1). The previously remaining tables are now in the manual certificate map; the exception map is empty.
 
-**Proof status:** all 0LF additions are candidate-generation results. FAR and n-gram fixed points were computed; the existing symbolic sweep algorithm found the 51 sweep witnesses. The full original-source Lean compilation, local exception proofs, and source-accepted parent closure are not established. The existing generator will preserve all 21 unresolved leaves as explicit hypotheses. No roster entry may be deleted on the strength of this census.
+### Leaf 1475: translated growth
 
-The following sections preserve the earlier mathematical constructions and candidate partitions; their intermediate remaining-branch counts are superseded by the current candidate partition above.
+Table `1RB0RB_1RC0LF_0RD0RA_1LD1RE_---1RB_1LB1LF`. At time 643, the zipper in state B is (P I, 0), where the head-inclusive left word has P=00011011101100 and I=10011111111111. The exact 532-step arbitrary-tail recurrence (P L,0) -> (P I L,0) proves nonhalting for all completions of the unassigned E0 transition. See [Raw109LF1475.lean](Raw109LF1475.lean); both exact identities checked locally.
+
+### Leaf 1200: inductive compressed-language proof
+
+Table `1RB0RA_1RC0LF_0RD1RA_1LD1RE_---1RB_0LB1LF`. Set Y=1101, V=0110, Z=1011. The section in B is the zipper with left word consisting of the head of W followed by Y^k and right word the tail of W (implicit zero blank padding). Blank reaches the section with k=2 and W=00 at time 40.
+
+Five base terminal prefixes and six deep terminal prefixes define exact arbitrary-tail positive-time macro steps: each return increases k by two. Deep macros scan V blocks, transfer Z blocks and reset using two Y/V sweeps. A 22-state DFA on W supplies an inductive invariant: finite transition-relation checks prove suffix-language inclusion for every macro; a depth-10 prefix checker proves coverage for all accepted words, recursively consuming V blocks; a zero-padding equivalence theorem transports every macro to the exact zipper semantics. These are all-time quantified statements, not a finite orbit extrapolation. The complete theorem `arbitrary` establishes live prefixes beyond every n; the `never` wrapper uses the original `Agent4Live.never_of_live` bridge. See [Raw109LF1200.lean](Raw109LF1200.lean).
+
+Local Lean 4.36.0-rc2 checked every macro, closure, prefix parser, padding congruence and the final arbitrary-live-prefix theorem with axioms [propext, Classical.choice, Quot.sound], using verbatim local copies of the zipper and sweep definitions/proofs. No sorryAx or native_decide was used. The exact-source integration audit is separate.
+
+**Proof status:** the two new local proofs and the complete census establish a candidate parent closure with no remaining mathematical exceptions in the generator. Original-source leaf audit [45581032451](https://github.com/FlareZ123/bb6/actions/runs/45581032451) and standalone parent audit [45581037766](https://github.com/FlareZ123/bb6/actions/runs/45581037766) were dispatched at commit cca3d0ec81b961e9315506992fedbf84166a0f4e. The parent target emits a manifest and compiled proof artifact if successful. No canonical residual may be deleted until source-accepted parent closure and exact compatible graft.
+
+The following sections preserve earlier mathematical constructions and candidate partitions. Their intermediate remaining-branch counts are superseded by the current complete candidate above. The four-child original-source audit 45551831758 succeeded; subsequent children and full-parent composition still await the above audit.
 
 ## Complete candidate children
 
