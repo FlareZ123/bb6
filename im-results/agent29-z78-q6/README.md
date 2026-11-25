@@ -72,7 +72,7 @@ m\not\equiv433219\pmod{1048576}
 \]
 to the accepted 1583-class low-stop criterion. Its theorem blank_halts_iff_six_low1585 preserves the previous high-stop branch and removes exactly this additional low-stop cylinder.
 
-The new residue is disjoint from the existing \(m\equiv7235\pmod{65536}\) exclusion: \(433219\equiv40003\pmod{65536}\). In the z-parameter it contributes two classes modulo 4096, so the low-stop sieve count rises from 1583 to 1585 if CI accepts the proof.
+The new residue is disjoint from the explicitly listed modular exclusions in the 1583-class chain (for example, it has \(m\equiv40003\pmod{65536}\), not \(7235\)). It contributes two z-classes modulo 4096. One nonredundancy check remains: the old predicate also contains the sixForcedExcluded normalizer. The new class increases the effective count to 1585 only if that normalizer is shown to stop at P rather than already excluding this class; the fixed gate residues strongly indicate that it does stop there, but this is not yet a formal lemma in this file.
 
 ## Source and verification
 
