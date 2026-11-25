@@ -3,83 +3,46 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+  actions: read
 jobs:
-  shards:
+  complete:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      max-parallel: 4
-      matrix:
-        variant: [Fast, Slow]
-        part: ['00','01','02','03','04','05','06','07']
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw110-parent-cut
+          run-id: 45593652030
+          github-token: ${{ github.token }}
+          path: /tmp/raw110-parent
       - name: Install pinned Lean
         run: |
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Generate and check trace shard
+      - name: Check traces and finish the parent
         shell: bash
         run: |
           set -euxo pipefail
-          elan run leanprover/lean4:v4.36.0-rc2 lean --version
-          elan override set leanprover/lean4:v4.36.0-rc2
-          python im-results/agent7-raw110/gen_late_trace.py /tmp/raw110-generated --compressed
-          python tools/lean_compile_closure.py --workdir /tmp/raw110-check --jobs 2 /tmp/raw110-generated/Raw110Word${{ matrix.variant }}${{ matrix.part }}.lean | tee /tmp/trace-shard.log
-          if grep -qE 'sorryAx|native_decide' /tmp/trace-shard.log; then exit 1; fi
-      - uses: actions/upload-artifact@v4
-        with:
-          name: raw110-word-${{ matrix.variant }}-${{ matrix.part }}
-          path: /tmp/raw110-check/*.olean
-          if-no-files-found: error
-  source:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install pinned Lean
-        run: |
-          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
-          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
-          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Check original source bridge
-        run: |
-          set -euxo pipefail
-          elan override set leanprover/lean4:v4.36.0-rc2
+          lean --version
           python im-results/agent13-coverage/unpack.py
-          python tools/lean_compile_closure.py --workdir /tmp/raw110-source --jobs 2 im-results/agent7-raw110/Raw110WordSource.lean
-      - uses: actions/upload-artifact@v4
-        with:
-          name: raw110-word-source
-          path: /tmp/raw110-source/*.olean
-          if-no-files-found: error
-  assemble:
-    needs: [shards, source]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install pinned Lean
-        run: |
-          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
-          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
-          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - uses: actions/download-artifact@v4
-        with:
-          pattern: raw110-word-*
-          path: /tmp/raw110-assembled
-          merge-multiple: true
-      - name: Assemble trace and weighted covers
-        run: |
-          set -euxo pipefail
-          elan override set leanprover/lean4:v4.36.0-rc2
           python im-results/agent7-raw110/gen_late_trace.py /tmp/raw110-generated --compressed
-          cd /tmp/raw110-generated
-          export LEAN_PATH=/tmp/raw110-assembled
-          lean -o /tmp/raw110-assembled/Raw110WordTrace.olean Raw110WordTrace.lean
-          cp "$GITHUB_WORKSPACE/im-results/agent7-raw110/Raw110LateCover.lean" .
-          lean -o /tmp/raw110-assembled/Raw110LateCover.olean Raw110LateCover.lean
+          python tools/lean_compile_closure.py --workdir /tmp/raw110-late --jobs 3 --extra-source-root /tmp/raw110-generated im-results/agent7-raw110/Raw110LateCover.lean | tee /tmp/raw110-late.log
+          if grep -qE 'sorryAx|native_decide' /tmp/raw110-late.log; then exit 1; fi
+          python im-results/agent7-raw110/merge_late_proofs.py /tmp/raw110-parent /tmp/raw110-late "$PWD"
+          cp im-results/agent7-raw110/Raw110ParentLateCover.lean /tmp/raw110-parent/
+          cd /tmp/raw110-parent
+          LEAN_PATH="$PWD" lean -o Raw110ParentLateCover.olean Raw110ParentLateCover.lean | tee /tmp/raw110-complete.log
+          if grep -qE 'sorryAx|native_decide' /tmp/raw110-complete.log; then exit 1; fi
       - uses: actions/upload-artifact@v4
         with:
           name: raw110-word-final
-          path: /tmp/raw110-assembled/*.olean
+          path: /tmp/raw110-late/*.olean
           if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw110-complete-parent
+          path: /tmp/raw110-parent/
+          if-no-files-found: error
+          retention-days: 5
