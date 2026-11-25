@@ -682,3 +682,10 @@ Lease claimed 01:01:22.185Z, normal draw 6. Kernel-checked standalone `im-result
 - 1RD: `WeightedBound 489`, 9 splits/208 leaves (94 cycles,45 last-hole,16 FAR,53 affine growth). FAR counts 6/2/8 for sizes 4/5/6; H22 is an eight-phase 32-bit block pump from step 2. The reproduction script audits all 53 growth/never theorem profiles.
 - Updated `research/BOARD.md`: source-accepted sibling list now includes 0LA and 1RD; only 1LB remains locally accepted but source-CI pending (run 45628450059 queued). No global residual count changes until consumer integration passes.
 - Added `ChampionF1ZeroRBZeroLAOneRDIntegration.lean` as a draft: filters the 106-leaf list by the three source-accepted parents 0RB/0LA/1RD, expects 103 leaves and a 179-entry refined canonical77 roster. It is uncompiled and remains in `im-results/`; sent Agent6 the exact draft and CI run IDs.
+
+
+## 2026-11-25 14:02 UTC — promote source-accepted 1LB cylinder
+
+- Original-source CI passed for Agent14 F1=1LB (run 45628450059, artifact 15029118231) at source SHA `426ad87b1dd17a0e97026930fda15b924662c869`. Added pure result note `results/2026-11-25-raw139-1LB-affine-carry-closure-agent41.md`, indexed it, and updated the board to mark 1LB source accepted.
+- 1LB: `WeightedBound 172`, 9 splits/208 leaves (60 cycles,49 last-hole,54 FAR,43 affine sweep recurrences,2 structural carries). H36 cycle starts at 738 with period196; H11/H33 provide arbitrary-suffix carry inductions.
+- The shared workflow now has passed original-source CI for all three Agent14 local cylinders 0LA/1LB/1RD. Combined with Agent41 0RB, four distinct F1 parent cylinders have source-accepted covers. No global residual count changes until the combined consumer is compiled.
