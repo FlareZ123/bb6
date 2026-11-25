@@ -190,6 +190,10 @@ jobs:
         if: ${{ inputs.sibling_integration_only }}
         run: |
           set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          export PATH="$HOME/.elan/bin:$PATH"
+          lean --version
           python im-results/agent13-coverage/unpack.py
           python tools/lean_compile_closure.py --workdir /tmp/a7-sibling --jobs 8 im-results/agent50-weighted-tnf-pilot/DepthEightSiblingCoverage.lean | tee /tmp/a7-sibling-proof.log
           if grep -qE 'sorryAx|native_decide' /tmp/a7-sibling-proof.log; then
