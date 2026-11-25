@@ -150,8 +150,15 @@ theorem residual_count : residuals.length = {len(residual)} := by decide
 theorem sound : ∀ m, compatible parent m → WeightedBound {BOUND} m ∨
     ∃ e ∈ residuals, compatible e.2 m :=
   partialSound {BOUND} parent tree parent_root parent_nohalt checked
+theorem cover : ∀ m, compatible parent m → WeightedBound {BOUND} m := by
+  intro m hm
+  rcases sound m hm with h | ⟨e,he,_⟩
+  · exact h
+  · have hn : residuals = [] := List.length_eq_zero_iff.mp residual_count
+    simp [hn] at he
 #print axioms sound
 #print axioms residual_count
+#print axioms cover
 """)
     assert stats==Counter(split=1926,cycle=28735,last=14366,open=1198),stats
     print(stats,"FAR",len(far),"other witnesses",len(imports),"unresolved",len(residual))
