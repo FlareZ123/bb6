@@ -138,7 +138,7 @@ theorem growth (n : Nat) : run0 ctr (cost n) (family n) = some (family (n+1)) :=
   exact h
 theorem never (m : Machine) (hm : compatible ctr m) : NeverHalts m :=
   never_of_growth ctr family 73 cost entry (fun k => by unfold cost; omega) growth m hm
+#print axioms never
 #print axioms carry
 #print axioms growth
-#print axioms never
 end BB6.Agent14OneLD.H25
