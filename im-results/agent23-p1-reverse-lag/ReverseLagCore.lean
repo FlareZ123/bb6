@@ -54,14 +54,12 @@ theorem mem_backY (q y c : Nat) (zs : List Nat) :
   constructor
   · rintro (hlo|hhi)
     · obtain ⟨z,hz,hzq,hlt,rfl⟩ := (mem_lowBranch q y c zs).mp hlo
-      refine ⟨z,hz,?_,?_⟩
-      · omega
-      · exact ⟨hzq,by omega,Or.inl rfl⟩
+      refine ⟨z,hz,?_⟩
+      exact ⟨by omega,hzq,by omega,Or.inl rfl⟩
     · obtain ⟨z,hz,hzq,hge,rfl⟩ := (mem_highBranch q y c zs).mp hhi
-      refine ⟨z,hz,?_,?_⟩
-      · omega
-      · refine ⟨hzq,by omega,Or.inr ?_⟩
-        omega
+      refine ⟨z,hz,?_⟩
+      refine ⟨by omega,hzq,by omega,Or.inr ?_⟩
+      omega
   · rintro ⟨z,hz,⟨hc,hzq,hy,hbranch⟩⟩
     rcases hbranch with hlow|hhigh
     · left
@@ -82,19 +80,16 @@ theorem edgeY_iff_mod (q y c z : Nat) (hy : y≤1) (hz : z<q) :
     · rw [hlow,Nat.mod_eq_of_lt (by omega)]
     · rw [hhigh,Nat.add_mod_right,Nat.mod_eq_of_lt hc]
   · rintro ⟨hc,hmod⟩
-    have hlt : 2*z+y<2*q := by omega
-    have hdiv := Nat.mod_add_div (2*z+y) q
-    have hquot : (2*z+y)/q≤1 := by omega
-    refine ⟨hc,hz,hy,?_⟩
-    rcases (show (2*z+y)/q=0 ∨ (2*z+y)/q=1 by omega) with h0|h1
-    · refine Or.inl ?_
-      rw [hmod] at hdiv
-      simp [h0] at hdiv
-      omega
-    · refine Or.inr ?_
-      rw [hmod] at hdiv
-      simp [h1] at hdiv
-      omega
+    by_cases hlow : 2*z+y<q
+    · have hrem : (2*z+y)%q = 2*z+y := Nat.mod_eq_of_lt hlow
+      have heq : c=2*z+y := by rw [hrem] at hmod; exact hmod
+      exact ⟨hc,hz,hy,Or.inl heq.symm⟩
+    · have hge : q≤2*z+y := by omega
+      have hrem : (2*z+y)%q = 2*z+y-q := by
+        have heq : 2*z+y=(2*z+y-q)+q := by omega
+        rw [heq,Nat.add_mod_right,Nat.mod_eq_of_lt (by omega)]
+      have heq : c=2*z+y-q := by rw [hrem] at hmod; exact hmod
+      exact ⟨hc,hz,hy,Or.inr (by omega)⟩
 
 /-- A forward delayed-carry path, with its target bits stored in reverse
     chronological order.  The last bit is therefore at the head of the list. -/
@@ -204,7 +199,8 @@ theorem extend_to_DWalk (n s B a k C c : Nat)
       simpa [hhead,Nat.add_assoc] using he
     have hnext : d<n+s+k+3 := by
       have hy := target_bound n (s+k) (C+2^(s+k)*x)
-      omega
+      have hx' : x=0 ∨ x=1 := by omega
+      rcases hx' with h0|h1 <;> subst x <;> omega
     have hedge :
         EdgeY (n+s+k+3) (target n (s+k) (C+2^(s+k)*x)) c d := by
       refine ⟨hcarry,hnext,target_bound n (s+k) (C+2^(s+k)*x),?_⟩
@@ -263,8 +259,7 @@ theorem covered_next_reverse (n s h : Nat) (ps : List Prefix)
   have hm' := extend_in_advance n s D d h B a ps hm hExt'
   have hrev := reverseLookahead_sound n (s+h) B a n C c hn htr hE
   have hfilter : reverseLookahead n (s+h) B a n = true := by
-    unfold reverseLookahead
-    exact decide_eq_true hrev
+    simp [reverseLookahead,hrev]
   simp [nextBlockReverse,hm',hfilter]
 
 #print axioms mem_backY
