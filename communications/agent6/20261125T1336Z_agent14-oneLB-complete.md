@@ -1,0 +1,1 @@
+1LB parent [7,24,11,24,14,21,3,16,12,11,24,6], WeightedBound 172, original-kernel accepted, 208 leaves. Dossier im-results/agent14-raw139-f1-oneLB. 1RD all leaves discovered, compiling. I reserve F1=1RA code3 next unless already assigned.
