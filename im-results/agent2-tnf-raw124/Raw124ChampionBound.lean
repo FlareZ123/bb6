@@ -46,7 +46,17 @@ theorem proposedChampionScore_ge_two_million :
     2_000_000 ≤ 6*4^63 := hpow
     _ ≤ (sectionResult 7 2 6 63).cost := hfirst
     _ ≤ proposedTM63Moves+7 := by
-      unfold proposedTM63Moves
+      let first := sectionResult 7 2 6 63
+      let length1 := 3 + first.exponent + 2
+      let index1 := resetIndex 3 first.exponent
+      let middle := sectionResult index1 2 first.right (nextRight first.right)
+      let length2 := length1 + middle.exponent + 2
+      let index2 := resetIndex length1 middle.exponent
+      let last := sectionResult index2 2 middle.right (nextRight middle.right)
+      change first.cost ≤
+        27959 + first.cost + resetCost 3 first.exponent first.right
+          + middle.cost + resetCost length1 middle.exponent middle.right
+          + last.cost + terminalCost length2 last.exponent + 7
       omega
 
 #print axioms proposedIncrementCost_ge_six_four
