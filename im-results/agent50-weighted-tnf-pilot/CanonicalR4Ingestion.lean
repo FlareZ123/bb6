@@ -128,7 +128,7 @@ theorem residuals_closed_expanded {B : Nat} {p : PartialMachine}
           rw [allMoves_length]
           omega
 
-def r4Remaining : List (List Move × PartialMachine) := residuals r4Subtree
+noncomputable def r4Remaining : List (List Move × PartialMachine) := residuals r4Subtree
 
 theorem r4Subtree_expandedNodes : expandedNodes r4Subtree = 7 := by
   decide
