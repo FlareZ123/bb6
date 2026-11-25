@@ -42,7 +42,7 @@ A bounded simulator sweep over raw residual indices 0, 2, 4, 6, 8, 9, 10, and 14
 - `root-sibling-first-hole-sweep.json`
 - `root-sibling-first-hole-sweep.mjs`
 
-The formal draft `RootSiblingFirstHole.lean` replays all 92 candidates through `residualWitnessOK`, proves the first-hole halt-delay conditions for the 19 parents, and aims to establish the 364-entry local residual roster and its exact mass identity. Target `weighted-tnf-root-sibling-first-hole` has been dispatched; run ID/status is pending retrieval. **All 92 candidates remain heuristic until this Lean target passes.**
+The formal draft `RootSiblingFirstHole.lean` replays all 92 candidates through `residualWitnessOK`, proves the first-hole halt-delay conditions for the 19 parents, and aims to establish the 364-entry local residual roster and its exact mass identity. Updated target run [45522135654](https://github.com/FlareZ123/bb6/actions/runs/45522135654) is compiling after replacing an unavailable `norm_num` tactic with kernel computation. Earlier run [45521979334](https://github.com/FlareZ123/bb6/actions/runs/45521979334) was dispatched before that correction and is superseded. **All 92 candidates remain heuristic until the updated Lean target passes.**
 
 Conditional on the proposed 106-roster composition, the 19 ten-hole siblings account for 96.4443% of its completion mass. If all 92 witnesses and 19 halt branches validate, their expansion would reduce the proposed global unresolved mass by 22.5375%. These are exact arithmetic calculations over the canonical roster, not yet a formal global-roster replacement theorem.
 
