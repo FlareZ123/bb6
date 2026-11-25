@@ -1816,7 +1816,7 @@
       "side_witnesses": 65,
       "extra_held_leaf": true,
       "parent_completions": 95367431640625,
-      "covered_completions": 4477340035675,
+      "covered_completions": 4477340035650,
       "root": 28,
       "states": 49,
       "node_count": 27,
