@@ -4,6 +4,7 @@ set -euo pipefail
 repo_root="$(cd "$(dirname "$0")/../.." && pwd)"
 if [[ $# -ge 1 ]]; then canonical77_dir="$1"; else canonical77_dir="$repo_root/canonical77"; fi
 if [[ $# -ge 2 ]]; then cryptids_dir="$2"; else cryptids_dir="$repo_root/cryptids"; fi
+if [[ $# -ge 3 ]]; then canonical76_dir="$3"; else canonical76_dir="$repo_root/canonical76"; fi
 build_dir="$cryptids_dir/BB6Agent48"
 mkdir -p "$build_dir"
 
@@ -20,6 +21,11 @@ for module in Frontier.olean FirstHolePath.olean CanonicalRaw114Accepted.olean \
     exit 2
   }
 done
+if [[ ! -f "$canonical76_dir/CanonicalTwoParentRosterOnly.olean" ]]; then
+  found="$(find "$canonical76_dir" -name CanonicalTwoParentRosterOnly.olean -print -quit)"
+  [[ -n "$found" ]] || { echo "CanonicalTwoParentRosterOnly.olean missing from accepted canonical76 artifact" >&2; exit 2; }
+  canonical76_dir="$(dirname "$found")"
+fi
 
 for module in RelativeTape FrontierAudit FrontierMass FrontierClose \
   CryptidsTapeAdapter CryptidsF287; do
@@ -45,9 +51,10 @@ for module in HardRootCore HardRootParents HardRootLeaves; do
   cp "$repo_root/im-results/agent19-hard-root-crosswalk/$module.lean" "$build_dir/"
 done
 cp "$repo_root/im-results/agent48-raw139-hard-root/A6Ingestion.lean" "$build_dir/"
+cp "$repo_root/im-results/agent48-raw139-hard-root/A6Canonical76Ingestion.lean" "$build_dir/"
 
 cd "$cryptids_dir"
-export LEAN_PATH="$build_dir:$canonical77_dir"
+export LEAN_PATH="$build_dir:$canonical77_dir:$canonical76_dir"
 
 compile() {
   local module="$1"
@@ -67,7 +74,7 @@ for module in RelativeTape FrontierAudit FrontierMass FrontierClose \
   compile "$module"
 done
 
-for module in HardRootCore HardRootParents HardRootLeaves A6Ingestion; do
+for module in HardRootCore HardRootParents HardRootLeaves A6Ingestion A6Canonical76Ingestion; do
   compile "$module"
 done
 

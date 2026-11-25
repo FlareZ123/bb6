@@ -89,12 +89,25 @@ jobs:
           run-id: 45554648116
           github-token: ${{ github.token }}
           path: canonical77
-      - name: Compile source-connected A6 raw139 refinement
+      # The artifact label is stale; exactness job 139320746934 in run 45647053824
+      # source-audited CanonicalTwoParentRosterOnly.exact_at_target with 76 residuals.
+      - name: Download exact accepted canonical76 dependency artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: canonical73-raw110-raw112-roster-consumer-certified
+          run-id: 45647053824
+          github-token: ${{ github.token }}
+          path: canonical76
+      - name: Verify canonical76 theorem object is present
+        run: |
+          test -n "$(find canonical76 -name CanonicalTwoParentRosterOnly.olean -print -quit)"
+      - name: Compile source-connected A6 refinement against canonical76
         run: |
           mkdir -p cryptids/BB6Agent48
           set -o pipefail
           bash im-results/agent48-raw139-hard-root/reproduce-a6.sh \
             "$GITHUB_WORKSPACE/canonical77" "$GITHUB_WORKSPACE/cryptids" \
+            "$GITHUB_WORKSPACE/canonical76" \
             2>&1 | tee cryptids/BB6Agent48/reproduce.log
       - uses: actions/upload-artifact@v4
         if: always()
