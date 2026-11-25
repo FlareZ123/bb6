@@ -5,7 +5,7 @@ on:
       target:
         description: 'Source closure to verify'
         type: choice
-        options: [weighted-tnf-q2800-raw10-certificate, weighted-tnf-raw10-box18to24, weighted-tnf-raw10-box6, weighted-tnf-canonical-partial-audit, weighted-tnf-q32-slice-closed, weighted-tnf-q32-queue-slice, weighted-tnf-raw10-domain-box7, weighted-tnf-raw118-long, weighted-tnf-raw118-bidfa, weighted-tnf-raw118-independent, weighted-tnf-raw118-phasegraph, weighted-tnf-raw118-recursive, weighted-tnf-raw118-partial, weighted-tnf-raw118-symbolic, weighted-tnf-raw118-sparse, weighted-tnf-raw118-treebank, weighted-tnf-raw118-sat, weighted-tnf-raw118-wide-cert, weighted-tnf-raw120-1lb-sat-cert, weighted-tnf-raw118-consumer, weighted-tnf-raw118-canonical76-membership, weighted-tnf-raw118-sat-crossbank, weighted-tnf-raw118-wide-repair, legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole, weighted-tnf-four-hole, weighted-tnf-four-hole-sibling, weighted-tnf-r1-sweep, queue-orbit, weighted-tnf-roster-convergence, weighted-tnf-roster-agent47-graft, weighted-tnf-pure-residuals, weighted-tnf-raw99, weighted-tnf-raw113, weighted-tnf-raw123, weighted-tnf-raw123-recursive, weighted-tnf-raw123-bidfa, weighted-tnf-raw124-rf, weighted-tnf-raw124-lc, weighted-tnf-raw124-1rf, weighted-tnf-raw124-0rb, weighted-tnf-raw124-bundle, weighted-tnf-raw124-0lf-hard-search, weighted-tnf-raw124-1la, weighted-tnf-raw124-1la-sharded, weighted-tnf-raw124-0lb-longcycle100k, weighted-tnf-raw124-bundle-sharded, weighted-tnf-raw124-0lf-growth, weighted-tnf-raw124-champion-bound, weighted-tnf-raw103, weighted-tnf-raw104, weighted-tnf-agent8-five, weighted-tnf-agent8-six, weighted-tnf-agent8-raw117, weighted-tnf-agent8-raw112-macros, weighted-tnf-agent8-raw54, weighted-tnf-roster-composition, weighted-tnf-agent3-siblings, weighted-tnf-raw85-parent-check, weighted-tnf-raw91, weighted-tnf-raw87, weighted-tnf-raw83-pump, weighted-tnf-agent10-multi, weighted-tnf-agent10-five-new, weighted-tnf-agent10-five-roster, weighted-tnf-agent10-raw106, weighted-tnf-raw63-counter, weighted-tnf-raw61-witnesses, weighted-tnf-prefix-single, weighted-tnf-agent10-single, weighted-tnf-combined-109, weighted-tnf-root-zero-refinement, weighted-tnf-combined-106, weighted-tnf-canonical-78, weighted-tnf-canonical-78-exact, weighted-tnf-raw108-canonical, weighted-tnf-canonical-two-parent, weighted-tnf-raw10-box, weighted-tnf-raw10-box8-cycle, weighted-tnf-raw10-box0-halt, weighted-tnf-raw10-short-frontier, weighted-tnf-held-block-far, weighted-tnf-raw120-late, weighted-tnf-raw120-1341, weighted-tnf-raw120-cycles, weighted-tnf-raw120-rf, weighted-tnf-raw120-rb, weighted-tnf-raw120-rc, weighted-tnf-raw120-1rb, weighted-tnf-raw120-1rc, weighted-tnf-raw120-1lb-search, weighted-tnf-raw120-1la, weighted-tnf-raw120-1lf, weighted-tnf-raw120-0lb, weighted-tnf-raw120-0lf, weighted-tnf-raw120-partition, weighted-tnf-raw120-la-carry, weighted-tnf-raw120-la, weighted-tnf-raw120-ra-phases, weighted-tnf-raw120-0ra, weighted-tnf-root-sibling-first-hole, weighted-tnf-canonical-frontier, weighted-tnf-raw114-cut, weighted-tnf-raw114-far, weighted-tnf-raw114-pumps, weighted-tnf-raw114-complete, weighted-tnf-raw107-witnesses, weighted-tnf-raw107-1la, weighted-tnf-raw60, weighted-tnf-raw60-conditional, weighted-tnf-raw60-next, weighted-tnf-raw60-la, weighted-tnf-raw60-assemble, weighted-tnf-raw60-progress, weighted-tnf-raw60-0lf-witnesses, weighted-tnf-raw60-complete, weighted-tnf-raw60-repair, weighted-tnf-raw60-sparse-shards, weighted-tnf-raw60-membership, weighted-tnf-raw60-discover, weighted-tnf-raw60-1lf, weighted-tnf-raw60-1re, weighted-tnf-raw60-graft, weighted-tnf-ngram-pilot, weighted-tnf-champion-parent, weighted-tnf-held-leaf-109-membership, weighted-tnf-canonical76-raw10-membership, weighted-tnf-raw10-box-ranked-search, weighted-tnf-raw10-box8-halt-slice, weighted-tnf-raw10-box8-cert-compile, weighted-tnf-f412-partition, weighted-tnf-sidewitness-multiparent, weighted-tnf-sidewitness-multiparent-scan, weighted-tnf-raw10-hardroot-r1-adapter]
+        options: [weighted-tnf-q2800-raw10-certificate, weighted-tnf-raw10-box18to24, weighted-tnf-raw10-box6, weighted-tnf-canonical-partial-audit, weighted-tnf-q32-slice-closed, weighted-tnf-q32-queue-slice, weighted-tnf-raw10-domain-box7, weighted-tnf-raw118-long, weighted-tnf-raw118-bidfa, weighted-tnf-raw118-independent, weighted-tnf-raw118-phasegraph, weighted-tnf-raw118-recursive, weighted-tnf-raw118-partial, weighted-tnf-raw118-symbolic, weighted-tnf-raw118-sparse, weighted-tnf-raw118-treebank, weighted-tnf-raw118-sat, weighted-tnf-raw118-wide-cert, weighted-tnf-raw120-1lb-sat-cert, weighted-tnf-raw118-consumer, weighted-tnf-raw118-canonical76-membership, weighted-tnf-raw118-sat-crossbank, weighted-tnf-raw118-run-summary, weighted-tnf-raw118-wide-repair, legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole, weighted-tnf-four-hole, weighted-tnf-four-hole-sibling, weighted-tnf-r1-sweep, queue-orbit, weighted-tnf-roster-convergence, weighted-tnf-roster-agent47-graft, weighted-tnf-pure-residuals, weighted-tnf-raw99, weighted-tnf-raw113, weighted-tnf-raw123, weighted-tnf-raw123-recursive, weighted-tnf-raw123-bidfa, weighted-tnf-raw124-rf, weighted-tnf-raw124-lc, weighted-tnf-raw124-1rf, weighted-tnf-raw124-0rb, weighted-tnf-raw124-bundle, weighted-tnf-raw124-0lf-hard-search, weighted-tnf-raw124-1la, weighted-tnf-raw124-1la-sharded, weighted-tnf-raw124-0lb-longcycle100k, weighted-tnf-raw124-bundle-sharded, weighted-tnf-raw124-0lf-growth, weighted-tnf-raw124-champion-bound, weighted-tnf-raw103, weighted-tnf-raw104, weighted-tnf-agent8-five, weighted-tnf-agent8-six, weighted-tnf-agent8-raw117, weighted-tnf-agent8-raw112-macros, weighted-tnf-agent8-raw54, weighted-tnf-roster-composition, weighted-tnf-agent3-siblings, weighted-tnf-raw85-parent-check, weighted-tnf-raw91, weighted-tnf-raw87, weighted-tnf-raw83-pump, weighted-tnf-agent10-multi, weighted-tnf-agent10-five-new, weighted-tnf-agent10-five-roster, weighted-tnf-agent10-raw106, weighted-tnf-raw63-counter, weighted-tnf-raw61-witnesses, weighted-tnf-prefix-single, weighted-tnf-agent10-single, weighted-tnf-combined-109, weighted-tnf-root-zero-refinement, weighted-tnf-combined-106, weighted-tnf-canonical-78, weighted-tnf-canonical-78-exact, weighted-tnf-raw108-canonical, weighted-tnf-canonical-two-parent, weighted-tnf-raw10-box, weighted-tnf-raw10-box8-cycle, weighted-tnf-raw10-box0-halt, weighted-tnf-raw10-short-frontier, weighted-tnf-held-block-far, weighted-tnf-raw120-late, weighted-tnf-raw120-1341, weighted-tnf-raw120-cycles, weighted-tnf-raw120-rf, weighted-tnf-raw120-rb, weighted-tnf-raw120-rc, weighted-tnf-raw120-1rb, weighted-tnf-raw120-1rc, weighted-tnf-raw120-1lb-search, weighted-tnf-raw120-1la, weighted-tnf-raw120-1lf, weighted-tnf-raw120-0lb, weighted-tnf-raw120-0lf, weighted-tnf-raw120-partition, weighted-tnf-raw120-la-carry, weighted-tnf-raw120-la, weighted-tnf-raw120-ra-phases, weighted-tnf-raw120-0ra, weighted-tnf-root-sibling-first-hole, weighted-tnf-canonical-frontier, weighted-tnf-raw114-cut, weighted-tnf-raw114-far, weighted-tnf-raw114-pumps, weighted-tnf-raw114-complete, weighted-tnf-raw107-witnesses, weighted-tnf-raw107-1la, weighted-tnf-raw60, weighted-tnf-raw60-conditional, weighted-tnf-raw60-next, weighted-tnf-raw60-la, weighted-tnf-raw60-assemble, weighted-tnf-raw60-progress, weighted-tnf-raw60-0lf-witnesses, weighted-tnf-raw60-complete, weighted-tnf-raw60-repair, weighted-tnf-raw60-sparse-shards, weighted-tnf-raw60-membership, weighted-tnf-raw60-discover, weighted-tnf-raw60-1lf, weighted-tnf-raw60-1re, weighted-tnf-raw60-graft, weighted-tnf-ngram-pilot, weighted-tnf-champion-parent, weighted-tnf-held-leaf-109-membership, weighted-tnf-canonical76-raw10-membership, weighted-tnf-raw10-box-ranked-search, weighted-tnf-raw10-box8-halt-slice, weighted-tnf-raw10-box8-cert-compile, weighted-tnf-f412-partition, weighted-tnf-sidewitness-multiparent, weighted-tnf-sidewitness-multiparent-scan, weighted-tnf-raw10-hardroot-r1-adapter]
         default: legacy
       raw_id:
         description: 'Single Agent 10 residual index (single target only)'
@@ -272,6 +272,3126 @@ jobs:
           path: |
             im-results/agent40-raw118-independent/Raw118SatCrossBank.lean
             /tmp/a40-raw118-crossbank.log
+      - name: Source-check run-aware Raw118 residual certificates
+        if: inputs.target == 'weighted-tnf-raw118-run-summary'
+        run: |
+          set -euo pipefail
+          D=im-results/agent40-raw118-independent
+          python im-results/agent13-coverage/unpack.py
+          python "$D/run_summary.py"
+          mapfile -t targets < <(find "$D/run-generated" -maxdepth 1 -name 'Raw118Run*.lean' | grep -E 'Raw118Run[0-9]+\.lean
+        if: inputs.target == 'weighted-tnf-raw120-1lb-sat-cert'
+        run: |
+          set -euo pipefail
+          D=im-results/agent1-bidfa-sat
+          python im-results/agent13-coverage/unpack.py
+          python "$D/emit_raw120.py" > "$D/Raw120LBSat.lean"
+          python "$D/emit_raw118.py" > "$D/Raw118SatHits.lean"
+          python tools/lean_compile_closure.py --workdir /tmp/bidfa-sat-hits-proof --jobs 4 "$D/Raw120LBSat.lean" "$D/Raw118SatHits.lean" | tee /tmp/bidfa-sat-hits.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/bidfa-sat-hits.log; then exit 1; fi
+          for i in 1265 1947 3656 4072; do
+            python im-results/agent4-raw109/audit_axioms.py /tmp/bidfa-sat-hits.log "BB6Coverage.Agent1BiDFASat.Raw120LB.M$i.never"
+          done
+          for i in 1125 2873 3900 3909 4098 4222 4223 4224 4343 5491 5495; do
+            python im-results/agent4-raw109/audit_axioms.py /tmp/bidfa-sat-hits.log "BB6Coverage.Agent1BiDFASat.Raw118.M$i.never"
+          done
+      - name: Download source-checked Raw118 wide-window artifacts
+        if: inputs.target == 'weighted-tnf-raw118-consumer'
+        uses: actions/download-artifact@v4
+        with:
+          pattern: raw118-wide-*
+          run-id: ${{ inputs.raw118_wide_run_id }}
+          github-token: ${{ github.token }}
+          path: .tmp/raw118-wide-artifacts
+      - name: Download repaired Raw118 wide-window artifacts
+        if: inputs.target == 'weighted-tnf-raw118-consumer' && inputs.raw118_wide_repair_run_id != ''
+        uses: actions/download-artifact@v4
+        with:
+          pattern: raw118-wide-*
+          run-id: ${{ inputs.raw118_wide_repair_run_id }}
+          github-token: ${{ github.token }}
+          path: .tmp/raw118-wide-artifacts
+      - name: Compose and source-check the complete Raw118 parent residual cover
+        if: inputs.target == 'weighted-tnf-raw118-consumer'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent10-tnf-raw87/generate.py
+          python im-results/agent10-tnf-raw91/generate.py
+          python im-results/agent10-tnf-multipump/generate.py 66 70 80
+          python im-results/agent10-tnf-multipump/generate.py 68 72 82
+          python im-results/agent10-tnf-multipump/generate.py 86 88 92 93 97 98 100 101 102 104
+          python im-results/agent16-raw118/generate_partial.py /tmp/raw118-data
+          python im-results/agent16-raw118/emit_symbolic.py /tmp/raw118-data
+          python im-results/agent16-raw118/emit_sparse.py /tmp/raw118-data
+          D=im-results/agent40-raw118-independent
+          python "$D/generate_independent.py" > "$D/Raw118Independent.lean"
+          python "$D/generate_phasegraph.py" --modules
+          python "$D/generate_recursive_counter.py" > "$D/Raw118Recursive.lean"
+          python "$D/generate_recursive_more.py" > "$D/Raw118RecursiveMore.lean"
+          python im-results/agent16-raw118/bidfa_emit.py > im-results/agent16-raw118/Raw118BiDFA.lean
+          python im-results/agent16-raw118/tree_emit.py > im-results/agent16-raw118/Raw118Tree.lean
+          python im-results/agent16-raw118/generate_late_traces.py /tmp/raw118-data
+          python im-results/agent16-raw118/search_tree_bank.py /tmp/raw118-data
+          python im-results/agent40-raw118-independent/merge_wide_artifacts.py .tmp/raw118-wide-artifacts .tmp/raw118-wide-precompiled im-results/agent1-bidfa-sat/wide-generated
+          python im-results/agent1-bidfa-sat/emit_raw118.py > im-results/agent1-bidfa-sat/Raw118SatHits.lean
+          python im-results/agent16-raw118/emit_consumer.py /tmp/raw118-data
+          python tools/lean_compile_closure.py --workdir /tmp/a16-raw118-consumer --jobs 4 --source-root im-results/agent1-bidfa-sat/wide-generated --precompiled-manifest .tmp/raw118-wide-precompiled/manifest.json --precompiled-dir .tmp/raw118-wide-precompiled im-results/agent16-raw118/Raw118Consumer.lean im-results/agent16-raw118/Raw118CanonicalMembership.lean im-results/agent1-bidfa-sat/Raw118SatHits.lean | tee /tmp/a16-raw118-consumer.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a16-raw118-consumer.log; then exit 1; fi
+      - name: Preserve generated Raw118 parent consumer
+        if: inputs.target == 'weighted-tnf-raw118-consumer'
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw118-parent-consumer
+          path: |
+            im-results/agent16-raw118/Raw118Consumer.lean
+            im-results/agent16-raw118/Raw118Consumer.json
+            im-results/agent16-raw118/Raw118TreeBank.json
+            im-results/agent16-raw118/Raw118Symbolic.json
+            im-results/agent16-raw118/Raw118Sparse.json
+            im-results/agent16-raw118/Raw118Late.json
+      - name: Check independent-counter raw118 sweep invariants
+        if: inputs.target == 'weighted-tnf-raw118-independent'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          D=im-results/agent40-raw118-independent
+          python "$D/generate_independent.py" > "$D/Raw118Independent.lean"
+          python tools/lean_compile_closure.py --workdir /tmp/a40-raw118-independent --jobs 4 "$D/Raw118Independent.lean" | tee /tmp/a40-raw118-independent.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a40-raw118-independent.log; then exit 1; fi
+      - name: Check finite phase-graph raw118 sweep invariants
+        if: inputs.target == 'weighted-tnf-raw118-phasegraph'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          D=im-results/agent40-raw118-independent
+          python "$D/generate_phasegraph.py" --modules
+          python tools/lean_compile_closure.py --workdir /tmp/a40-raw118-phasegraph --jobs 4 "$D/Raw118PhaseGraph.lean" | tee /tmp/a40-raw118-phasegraph.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a40-raw118-phasegraph.log; then exit 1; fi
+      - name: Check all fourteen nested recursive counter restorations
+        if: inputs.target == 'weighted-tnf-raw118-recursive'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          D=im-results/agent40-raw118-independent
+          python "$D/generate_recursive_counter.py" > "$D/Raw118Recursive.lean"
+          python "$D/generate_recursive_more.py" > "$D/Raw118RecursiveMore.lean"
+          python tools/lean_compile_closure.py --workdir /tmp/a40-raw118-recursive --jobs 4 "$D/Raw118Recursive.lean" "$D/Raw118RecursiveMore.lean" | tee /tmp/a40-raw118-recursive.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a40-raw118-recursive.log; then exit 1; fi
+      - name: Source-check all 105 Raw118 symbolic pump certificates
+        if: inputs.target == 'weighted-tnf-raw118-symbolic'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent16-raw118/generate_partial.py /tmp/raw118-data
+          python im-results/agent16-raw118/emit_symbolic.py /tmp/raw118-data
+          python tools/lean_compile_closure.py --workdir /tmp/a16-raw118-symbolic --jobs 4 im-results/agent16-raw118/Raw118Symbolic.lean | tee /tmp/a16-raw118-symbolic.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a16-raw118-symbolic.log; then exit 1; fi
+      - name: Preserve generated Raw118 symbolic modules
+        if: inputs.target == 'weighted-tnf-raw118-symbolic'
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw118-symbolic-generated
+          path: |
+            im-results/agent16-raw118/Raw118Symbolic.lean
+            im-results/agent16-raw118/Raw118Symbolic.json
+            im-results/agent16-raw118/Raw118Single*.lean
+            im-results/agent16-raw118/Raw118Multi*.lean
+      - name: Source-check all 679 Raw118 sparse n-gram certificates
+        if: inputs.target == 'weighted-tnf-raw118-sparse'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent16-raw118/generate_partial.py /tmp/raw118-data
+          python im-results/agent16-raw118/emit_sparse.py /tmp/raw118-data
+          python tools/lean_compile_closure.py --workdir /tmp/a16-raw118-sparse --jobs 4 im-results/agent16-raw118/Raw118Sparse.lean | tee /tmp/a16-raw118-sparse.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a16-raw118-sparse.log; then exit 1; fi
+      - name: Preserve generated Raw118 sparse modules
+        if: inputs.target == 'weighted-tnf-raw118-sparse'
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw118-sparse-generated
+          path: |
+            im-results/agent16-raw118/Raw118Sparse.lean
+            im-results/agent16-raw118/Raw118Sparse.json
+            im-results/agent16-raw118/Raw118Sparse*.lean
+      - name: Verify all packed long first-hole traces
+        if: inputs.target == 'weighted-tnf-raw118-long'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent16-raw118/generate_partial.py /tmp/raw118-data
+          python im-results/agent16-raw118/generate_trace.py > im-results/agent16-raw118/Raw118Long.lean
+          python im-results/agent16-raw118/generate_late_traces.py /tmp/raw118-data
+          python im-results/agent16-raw118/search_tree_bank.py /tmp/raw118-data
+          python tools/lean_compile_closure.py --workdir /tmp/a16-raw118-long --jobs 4 im-results/agent16-raw118/Raw118Long.lean im-results/agent16-raw118/Raw118Late.lean im-results/agent16-raw118/Raw118TreeBank.lean | tee /tmp/a16-raw118-long.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a16-raw118-long.log; then exit 1; fi
+      - name: Preserve generated Raw118 late trace modules
+        if: inputs.target == 'weighted-tnf-raw118-long'
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw118-late-generated
+          path: |
+            im-results/agent16-raw118/Raw118Late.lean
+            im-results/agent16-raw118/Raw118Late.json
+            im-results/agent16-raw118/Raw118Late*.lean
+            im-results/agent16-raw118/Raw118TreeBank.lean
+            im-results/agent16-raw118/Raw118TreeBank.json
+      - name: Audit exact F412 parent partition and side-cycle witnesses
+        if: inputs.target == 'weighted-tnf-f412-partition'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python tools/lean_compile_closure.py --workdir /tmp/a26-f412-partition --jobs 4 im-results/agent26-proof-witness/F412Partition.lean | tee /tmp/a26-f412-partition.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a26-f412-partition.log; then exit 1; fi
+      - name: Unpack, integrity check and compile complete source chain
+        if: inputs.target == 'legacy'
+        run: |
+          set -e
+          cd im-results/agent13-coverage
+          python unpack.py
+          export LEAN_PATH=.
+          lean -o BB6Coverage.olean BB6Coverage.lean
+          lean -o SparseCoverage.olean SparseCoverage.lean
+          lean -o LassoCoverage.olean LassoCoverage.lean
+          lean -o ShiftCoverage.olean ShiftCoverage.lean
+          lean -o StateClosed.olean StateClosed.lean
+          lean -o InvariantCoverage.olean InvariantCoverage.lean
+          lean -o TreeCoverage.olean TreeCoverage.lean
+          lean -o FiniteTapeCoverage.olean FiniteTapeCoverage.lean
+          lean -o FiniteTapeShift.olean FiniteTapeShift.lean
+          lean -o FiniteLeafChecks.olean FiniteLeafChecks.lean
+          lean LeafDemo.lean
+      - name: Verify weighted first-write normalization against original source
+        if: inputs.target == 'weighted-first-one' || inputs.target == 'weighted-halt-branch' || inputs.target == 'source-queue-adapter' || inputs.target == 'queue-orbit'
+        run: |
+          set -eu
+          python im-results/agent13-coverage/unpack.py
+          export LEAN_PATH=im-results/agent8-coverage-contract:im-results/agent4-coverage-smoke:im-results/agent42-coverage-normal:im-results/agent13-coverage:im-results/agent13-weighted-first-one:im-results/agent6-fresh-glider:im-results/agent7-far
+          lean -o im-results/agent8-coverage-contract/Frontier.olean im-results/agent8-coverage-contract/Frontier.lean
+          lean -o im-results/agent8-coverage-contract/Symmetry.olean im-results/agent8-coverage-contract/Symmetry.lean
+          lean -o im-results/agent8-coverage-contract/RootShift.olean im-results/agent8-coverage-contract/RootShift.lean
+          lean -o im-results/agent42-coverage-normal/FirstStep.olean im-results/agent42-coverage-normal/FirstStep.lean
+          lean -o im-results/agent4-coverage-smoke/WriteOneDrift.olean im-results/agent4-coverage-smoke/WriteOneDrift.lean
+          lean -o im-results/agent8-coverage-contract/Prune.olean im-results/agent8-coverage-contract/Prune.lean
+          lean -o im-results/agent42-coverage-normal/TwoFirst.olean im-results/agent42-coverage-normal/TwoFirst.lean
+          lean -o im-results/agent13-coverage/BB6Coverage.olean im-results/agent13-coverage/BB6Coverage.lean
+          lean -o im-results/agent8-coverage-contract/OneHalt.olean im-results/agent8-coverage-contract/OneHalt.lean
+          lean -o im-results/agent4-coverage-smoke/CrossCoverage.olean im-results/agent4-coverage-smoke/CrossCoverage.lean
+          lean -o im-results/agent4-coverage-smoke/CrossUpper.olean im-results/agent4-coverage-smoke/CrossUpper.lean
+          lean -o im-results/agent42-coverage-normal/CrossFirstUpper.olean im-results/agent42-coverage-normal/CrossFirstUpper.lean
+          lean -o im-results/agent42-coverage-normal/TwoCylinder.olean im-results/agent42-coverage-normal/TwoCylinder.lean
+          lean -o im-results/agent13-weighted-first-one/BlankDelayKernel.olean im-results/agent13-weighted-first-one/BlankDelayKernel.lean
+          lean -o im-results/agent13-weighted-first-one/BlankDelaySource.olean im-results/agent13-weighted-first-one/BlankDelaySource.lean
+          lean -o im-results/agent13-weighted-first-one/SparseBlankDelay.olean im-results/agent13-weighted-first-one/SparseBlankDelay.lean
+          lean -o im-results/agent13-weighted-first-one/WeightedTNF.olean im-results/agent13-weighted-first-one/WeightedTNF.lean
+          lean -o im-results/agent13-weighted-first-one/WeightedTNFCertificate.olean im-results/agent13-weighted-first-one/WeightedTNFCertificate.lean
+          lean -o im-results/agent7-far/FAR.olean im-results/agent7-far/FAR.lean
+          lean -o im-results/agent7-far/FARCheck.olean im-results/agent7-far/FARCheck.lean
+          lean -o im-results/agent7-far/FARSearch.olean im-results/agent7-far/FARSearch.lean
+          lean -o im-results/agent7-far/FARBi.olean im-results/agent7-far/FARBi.lean
+          lean -o im-results/agent7-far/FastFAR.olean im-results/agent7-far/FastFAR.lean
+          lean -o im-results/agent7-far/WeightedTNFBridge.olean im-results/agent7-far/WeightedTNFBridge.lean
+          lean -o im-results/agent6-fresh-glider/FreshRayGlider.olean im-results/agent6-fresh-glider/FreshRayGlider.lean
+          lean -o im-results/agent7-far/FARWeightedTNFExample.olean im-results/agent7-far/FARWeightedTNFExample.lean
+      - name: Verify canonical-audit to weighted-TNF bridge
+        if: inputs.target == 'weighted-first-one'
+        run: |
+          set -euo pipefail
+          export LEAN_PATH=im-results/agent8-coverage-contract:im-results/agent4-coverage-smoke:im-results/agent42-coverage-normal:im-results/agent13-coverage:im-results/agent13-weighted-first-one:im-results/agent6-fresh-glider:im-results/agent7-far
+          python tools/lean_compile_closure.py --workdir /tmp/a7-canonical-tnf --jobs 8 im-results/agent7-far/CanonicalTNFBridge.lean im-results/agent7-far/CanonicalTNFExample.lean | tee /tmp/a7-canonical-tnf.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a7-canonical-tnf.log; then
+            echo "Forbidden proof placeholder or native_decide found in canonical-TNF closure" >&2
+            exit 1
+          fi
+          lean -o im-results/agent13-weighted-first-one/WeightedTNFExamples.olean im-results/agent13-weighted-first-one/WeightedTNFExamples.lean
+          lean im-results/agent13-weighted-first-one/WeightedFirstOneCover.lean
+
+      - name: Verify source Enumerate62 TNF expansion adapter
+        if: inputs.target == 'source-queue-adapter'
+        run: |
+          set -eu
+          export LEAN_PATH=im-results/agent8-coverage-contract:im-results/agent4-coverage-smoke:im-results/agent42-coverage-normal:im-results/agent13-coverage:im-results/agent13-weighted-first-one:im-results/agent6-fresh-glider:im-results/agent7-far
+          set -o pipefail
+          export LEAN_PATH="$LEAN_PATH:im-results/agent5-weighted-tnf-queue:im-results/agent32-source-queue"
+          lean -o im-results/agent5-weighted-tnf-queue/Enumerate62Adapter.olean im-results/agent5-weighted-tnf-queue/Enumerate62Adapter.lean | tee /tmp/enumerate62-weighted-tnf-adapter.log
+          lean -o im-results/agent13-weighted-first-one/QueueCoverageContract.olean im-results/agent13-weighted-first-one/QueueCoverageContract.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
+          lean -o im-results/agent5-weighted-tnf-queue/AdaptiveQueueCoverage.olean im-results/agent5-weighted-tnf-queue/AdaptiveQueueCoverage.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
+          lean -o im-results/agent32-source-queue/QueueImplication.olean im-results/agent32-source-queue/QueueImplication.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
+          export LEAN_PATH="$LEAN_PATH:im-results/agent48-counted-inc0"
+          lean -o im-results/agent32-source-queue/SourceQueueImplication.olean im-results/agent32-source-queue/SourceQueueImplication.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
+          lean -o im-results/agent48-counted-inc0/Enumerate62Potential.olean im-results/agent48-counted-inc0/Enumerate62Potential.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
+          lean -o im-results/agent11-tnf-cut-potential/CutSensitivePotential.olean im-results/agent11-tnf-cut-potential/CutSensitivePotential.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
+          export LEAN_PATH="$LEAN_PATH:im-results/agent11-tnf-cut-potential"
+          lean -o im-results/agent11-tnf-cut-potential/SourceNodeCutAdapter.olean im-results/agent11-tnf-cut-potential/SourceNodeCutAdapter.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
+          lean -o im-results/agent32-source-queue/SourceQueueDrain.olean im-results/agent32-source-queue/SourceQueueDrain.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
+          lean -o im-results/agent13-weighted-first-one/WeightedFirstOneCover.olean im-results/agent13-weighted-first-one/WeightedFirstOneCover.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
+          lean -o im-results/agent32-source-queue/SourceFiniteSemantics.olean im-results/agent32-source-queue/SourceFiniteSemantics.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
+          lean im-results/agent32-source-queue/SourceQueueExact.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
+          lean -o im-results/agent32-source-queue/SourceTableEncoding.olean im-results/agent32-source-queue/SourceTableEncoding.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
+          lean im-results/agent8-adaptive-source-plan/SourceNodeCodec.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
+          export LEAN_PATH="$LEAN_PATH:im-results/agent32-f418-shift-overflow"
+          lean -o im-results/agent32-f418-shift-overflow/F418Rules.olean im-results/agent32-f418-shift-overflow/F418Rules.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
+          lean im-results/agent32-f418-shift-overflow/F418Seed.lean | tee -a /tmp/enumerate62-weighted-tnf-adapter.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/enumerate62-weighted-tnf-adapter.log; then
+            echo "Forbidden proof placeholder or native_decide found in source TNF adapter closure" >&2
+            exit 1
+          fi
+
+      - name: Verify corrected read-one weighted halt branch
+        if: inputs.target == 'weighted-halt-branch'
+        run: |
+          set -eu
+          export LEAN_PATH=im-results/agent8-coverage-contract:im-results/agent4-coverage-smoke:im-results/agent42-coverage-normal:im-results/agent13-coverage:im-results/agent13-weighted-first-one:im-results/agent6-fresh-glider:im-results/agent7-far
+          lean im-results/agent47-weighted-halt-branch/WeightedReadOneHalt.lean
+          lean im-results/agent47-weighted-halt-branch/WeightedNonhaltLeafAdapter.lean
+
+      - name: Verify generic two-list queue coverage contract
+        if: inputs.target == 'queue-coverage'
+        run: |
+          set -eu
+          lean im-results/agent13-weighted-first-one/QueueCoverageContract.lean | tee /tmp/queue-coverage-contract.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/queue-coverage-contract.log; then
+            echo "Forbidden proof placeholder or native_decide found in queue-coverage contract" >&2
+            exit 1
+          fi
+
+      - name: Verify fresh-state quotient branch frontier
+        if: inputs.target == 'queue-orbit'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          export LEAN_PATH=im-results/agent8-coverage-contract:im-results/agent4-coverage-smoke:im-results/agent42-coverage-normal:im-results/agent13-coverage:im-results/agent13-weighted-first-one:im-results/agent6-fresh-glider:im-results/agent7-far
+          lean -o im-results/agent13-weighted-first-one/WeightedTNFQueueOrbit.olean im-results/agent13-weighted-first-one/WeightedTNFQueueOrbit.lean | tee /tmp/weighted-tnf-queue-orbit.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/weighted-tnf-queue-orbit.log; then
+            echo "Forbidden proof placeholder or native_decide found in TNF quotient closure" >&2
+            exit 1
+          fi
+
+      - name: Check complete authentic weighted TNF pilot
+        if: inputs.target == 'weighted-tnf-pilot'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python tools/lean_compile_closure.py --workdir /tmp/a50-tnf-pilot --jobs 8 im-results/agent50-weighted-tnf-pilot/CryptidSiblings.lean im-results/agent50-weighted-tnf-pilot/RootFrontier.lean im-results/agent50-weighted-tnf-pilot/TranslatedCycler.lean im-results/agent24-q32-source-graft/Q32SourceSideGraft.lean im-results/agent24-q32-source-graft/Q32SideLeafRoster.lean im-results/agent24-q32-source-graft/Q32SourceSweepRoster.lean | tee /tmp/a50-tnf-pilot.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a50-tnf-pilot.log; then
+            echo "Forbidden proof placeholder or native_decide found in pilot closure" >&2
+            exit 1
+          fi
+
+      - name: Check complete three-hole weighted TNF subtree
+        if: inputs.target == 'weighted-tnf-three-hole'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python tools/lean_compile_closure.py --workdir /tmp/a31-tnf --jobs 8 im-results/agent31-three-hole-tnf/ThreeHoleData.lean | tee /tmp/a31-tnf.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a31-tnf.log; then
+            echo "Forbidden proof placeholder or native_decide found in three-hole closure" >&2
+            exit 1
+          fi
+
+      - name: Check full four-hole weighted TNF subtree
+        if: inputs.target == 'weighted-tnf-four-hole'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python tools/lean_compile_closure.py --workdir /tmp/a31-four --jobs 4 im-results/agent31-three-hole-tnf/FourHoleData.lean im-results/agent31-three-hole-tnf/FourHoleRootFrontier.lean im-results/agent31-three-hole-tnf/FourHoleResidualRoster.lean | tee /tmp/a31-four.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a31-four.log; then
+            echo "Forbidden proof placeholder or native_decide found in four-hole closure" >&2
+            exit 1
+          fi
+
+      - name: Check sibling four-hole parent with reused DFA/pump catalogue
+        if: inputs.target == 'weighted-tnf-four-hole-sibling'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole_sibling.py
+          python tools/lean_compile_closure.py --workdir /tmp/a31-four-sib --jobs 4 im-results/agent31-three-hole-tnf/FourHoleSiblingData.lean im-results/agent11-tnf-cut-potential/FourHoleSiblingRosterBridge.lean | tee /tmp/a31-four-sib.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a31-four-sib.log; then
+            echo "Forbidden proof placeholder or native_decide found in sibling four-hole closure" >&2
+            exit 1
+          fi
+
+      - name: Check authentic r1 sibling sweep
+        if: inputs.target == 'weighted-tnf-r1-sweep'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python tools/lean_compile_closure.py --workdir /tmp/a47-r1-sweep --jobs 4 im-results/agent47-r4-counter/R4Parent.lean | tee /tmp/a47-r1-sweep.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a47-r1-sweep.log; then
+            echo "Forbidden proof placeholder or native_decide found in r1 sweep closure" >&2
+            exit 1
+          fi
+
+      - name: Experimental compile of pure four-hole residual projection
+        if: inputs.target == 'weighted-tnf-pure-residuals'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          export LEAN_PATH=im-results/agent8-coverage-contract:im-results/agent4-coverage-smoke:im-results/agent42-coverage-normal:im-results/agent13-coverage:im-results/agent13-weighted-first-one:im-results/agent6-fresh-glider:im-results/agent7-far:im-results/agent31-three-hole-tnf:im-results/agent50-weighted-tnf-pilot:im-results/agent13-roster-convergence:im-results/agent44-source-roster
+          python tools/lean_compile_closure.py --workdir /tmp/a44-pure-residuals --jobs 4 im-results/agent44-source-roster/PureFourHoleResiduals.lean | tee /tmp/a44-pure-residuals.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a44-pure-residuals.log; then
+            echo "Forbidden proof placeholder or native_decide found in pure residual projection" >&2
+            exit 1
+          fi
+
+      - name: Verify exact convergence of the 124-table first-one residual frontier
+        if: inputs.target == 'weighted-tnf-roster-convergence'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          export LEAN_PATH=im-results/agent8-coverage-contract:im-results/agent4-coverage-smoke:im-results/agent42-coverage-normal:im-results/agent13-coverage:im-results/agent13-weighted-first-one:im-results/agent6-fresh-glider:im-results/agent7-far:im-results/agent31-three-hole-tnf:im-results/agent50-weighted-tnf-pilot:im-results/agent13-roster-convergence:im-results/agent44-source-roster
+          python tools/lean_compile_closure.py --workdir /tmp/a13-roster-convergence --jobs 4 im-results/agent13-roster-convergence/RosterConvergence.lean im-results/agent44-source-roster/SourceRosterEncoding.lean | tee /tmp/a13-roster-convergence.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a13-roster-convergence.log; then
+            echo "Forbidden proof placeholder or native_decide found in 124-roster convergence closure" >&2
+            exit 1
+          fi
+
+      - name: Verify Agent48 adaptive side-cycle graft and TNF composition
+        if: inputs.target == 'weighted-tnf-roster-agent47-graft'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          export LEAN_PATH=im-results/agent8-coverage-contract:im-results/agent4-coverage-smoke:im-results/agent42-coverage-normal:im-results/agent13-coverage:im-results/agent13-weighted-first-one:im-results/agent6-fresh-glider:im-results/agent7-far:im-results/agent31-three-hole-tnf:im-results/agent50-weighted-tnf-pilot:im-results/agent13-roster-convergence:im-results/agent44-source-roster:im-results/agent47-rooted-tnf:im-results/agent47-r1-sweep:im-results/agent47-r4-counter:im-results/agent48-roster-graft
+          python tools/lean_compile_closure.py --workdir /tmp/a48-roster-graft --jobs 4 im-results/agent48-roster-graft/Agent48RosterGraftComposition.lean | tee /tmp/a48-roster-graft.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a48-roster-graft.log; then
+            echo "Forbidden proof placeholder or native_decide found in Agent48 roster graft closure" >&2
+            exit 1
+          fi
+
+      - name: Check raw residual 99 and its exact roster graft
+        if: inputs.target == 'weighted-tnf-raw99'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent2-tnf-raw99/generate.py
+          python tools/lean_compile_closure.py --workdir /tmp/a2-raw99 --jobs 4 im-results/agent2-tnf-raw99/Raw99RosterBridge.lean | tee /tmp/a2-raw99.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a2-raw99.log; then
+            echo "Forbidden proof placeholder or native_decide found in raw99 closure" >&2
+            exit 1
+          fi
+
+      - name: Check raw residual 124 rf subcylinder
+        if: inputs.target == 'weighted-tnf-raw124-rf'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent2-tnf-raw124/generate_rf.py
+          python tools/lean_compile_closure.py --workdir /tmp/a2-raw124-rf --jobs 4 im-results/agent2-tnf-raw124/Raw124RFData.lean | tee /tmp/a2-raw124-rf.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a2-raw124-rf.log; then
+            echo "Forbidden proof placeholder or native_decide found in raw124 closure" >&2
+            exit 1
+          fi
+
+      - name: Check raw residual 124 lc subcylinder
+        if: inputs.target == 'weighted-tnf-raw124-lc'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent2-tnf-raw124/generate_lc.py
+          python tools/lean_compile_closure.py --workdir /tmp/a2-raw124-lc --jobs 4 im-results/agent2-tnf-raw124/Raw124LCData.lean | tee /tmp/a2-raw124-lc.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a2-raw124-lc.log; then
+            echo "Forbidden proof placeholder or native_decide found in raw124 closure" >&2
+            exit 1
+          fi
+
+      - name: Check raw residual 124 1rf subcylinder
+        if: inputs.target == 'weighted-tnf-raw124-1rf'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent2-tnf-raw124/generate_1rf.py
+          python tools/lean_compile_closure.py --workdir /tmp/a2-raw124-1rf --jobs 4 im-results/agent2-tnf-raw124/Raw1241RFData.lean | tee /tmp/a2-raw124-1rf.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a2-raw124-1rf.log; then
+            echo "Forbidden proof placeholder or native_decide found in raw124 closure" >&2
+            exit 1
+          fi
+
+      - name: Check raw residual 124 0RB subcylinder
+        if: inputs.target == 'weighted-tnf-raw124-0rb'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent2-tnf-raw124/generate_0rb.py
+          python tools/lean_compile_closure.py --workdir /tmp/a2-raw124-0rb --jobs 4 im-results/agent2-tnf-raw124/Raw1240RBData.lean | tee /tmp/a2-raw124-0rb.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a2-raw124-0rb.log; then
+            echo "Forbidden proof placeholder or native_decide found in raw124 closure" >&2
+            exit 1
+          fi
+
+      - name: Check archived raw124 branch bundles
+        if: inputs.target == 'weighted-tnf-raw124-bundle'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent2-tnf-raw124/generate_bundle.py
+          python tools/lean_compile_closure.py --workdir /tmp/a2-raw124-bundle --jobs 4 im-results/agent2-tnf-raw124/Raw124B*Data.lean | tee /tmp/a2-raw124-bundle.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a2-raw124-bundle.log; then
+            echo "Forbidden proof placeholder or native_decide found in raw124 closure" >&2
+            exit 1
+          fi
+
+      - name: Check complete raw124 F1=1LA branch
+        if: inputs.target == 'weighted-tnf-raw124-1la'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent2-tnf-raw124/generate_bundle.py 1LA
+          python tools/lean_compile_closure.py --workdir /tmp/a2-raw124-1la --jobs 4 im-results/agent2-tnf-raw124/Raw124B1LAData.lean | tee /tmp/a2-raw124-1la.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a2-raw124-1la.log; then
+            echo "Forbidden proof placeholder or native_decide found in raw124 1LA closure" >&2
+            exit 1
+          fi
+
+      - name: Compose the accepted 124-cylinder root dichotomy with residual safety leaves
+        if: inputs.target == 'weighted-tnf-roster-composition'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          export LEAN_PATH=im-results/agent8-coverage-contract:im-results/agent4-coverage-smoke:im-results/agent42-coverage-normal:im-results/agent13-coverage:im-results/agent13-weighted-first-one:im-results/agent6-fresh-glider:im-results/agent7-far:im-results/agent31-three-hole-tnf:im-results/agent50-weighted-tnf-pilot
+          python tools/lean_compile_closure.py --workdir /tmp/a13-roster-composition --jobs 4 im-results/agent13-roster-convergence/RosterCoverComposition.lean | tee /tmp/a13-roster-composition.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a13-roster-composition.log; then
+            echo "Forbidden proof placeholder or native_decide found in 124-roster composition closure" >&2
+            exit 1
+          fi
+
+      - name: Check raw residual 103 and its exact roster graft
+        if: inputs.target == 'weighted-tnf-raw103'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent3-tnf-raw103/generate.py
+          python tools/lean_compile_closure.py --workdir /tmp/a3-raw103 --jobs 4 im-results/agent3-tnf-raw103/Raw103RosterBridge.lean | tee /tmp/a3-raw103.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a3-raw103.log; then
+            echo "Forbidden proof placeholder or native_decide found in raw103 closure" >&2
+            exit 1
+          fi
+
+      - name: Check raw residual 104 and its exact roster graft
+        if: inputs.target == 'weighted-tnf-raw104'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent8-tnf-raw104/generate.py
+          python im-results/agent8-tnf-raw104/replay.py
+          python tools/lean_compile_closure.py --workdir /tmp/a8-raw104 --jobs 4 im-results/agent8-tnf-raw104/Raw104RosterBridge.lean im-results/agent8-tnf-raw104/MixedBoundRosterComposition.lean | tee /tmp/a8-raw104.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a8-raw104.log; then
+            echo "Forbidden proof placeholder or native_decide found in raw104 closure" >&2
+            exit 1
+          fi
+
+      - name: Check four Agent 8 five-hole sibling audits
+        if: inputs.target == 'weighted-tnf-agent8-five'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent8-tnf-five/generate.py 69 73 78 80
+          python im-results/agent8-tnf-five/replay.py 69
+          python im-results/agent8-tnf-five/replay.py 78
+          python im-results/agent8-tnf-five/replay.py 73
+          python im-results/agent8-tnf-five/replay.py 80
+          python tools/lean_compile_closure.py --workdir /tmp/a8-five --jobs 4 im-results/agent8-tnf-five/FiveSiblingRoster.lean | tee /tmp/a8-five.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a8-five.log; then
+            echo "Forbidden proof placeholder or native_decide found in five-hole closure" >&2
+            exit 1
+          fi
+
+
+      - name: Close Raw54 E1=0LE E0=1LB five-hole child
+        if: inputs.target == 'weighted-tnf-agent8-raw54'
+        run: |
+          set -euo pipefail
+          D=im-results/agent8-raw54
+          W=/tmp/a8-raw54
+          python im-results/agent13-coverage/unpack.py
+          python "$D/generate.py"
+          python tools/lean_compile_closure.py --workdir "$W" --jobs 4 --manifest "$W/source-manifest.json" --label raw54-E1-0LE-E0-1LB --theorem BB6.Agent8Raw54.cover --parent-table '1RB---_1RC---_0RD---_1LD0LE_1LB0LE_------' --weighted-bound 7014 --artifact-name raw54-E1-0LE-E0-1LB-certified --provenance-input "$D/generate.py" --provenance-input "$D/bank.txt" --provenance-input "$D/sweeps.txt" "$D/Raw54Cut.lean" | tee /tmp/a8-raw54.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a8-raw54.log; then exit 1; fi
+      - name: Preserve certified Raw54 child and source manifest
+        if: inputs.target == 'weighted-tnf-agent8-raw54'
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw54-E1-0LE-E0-1LB-certified
+          path: |
+            /tmp/a8-raw54/*.olean
+            /tmp/a8-raw54/source-manifest.json
+            /tmp/a8-raw54.log
+          if-no-files-found: error
+
+      - name: Check raw112 universal growth proofs against source
+        if: inputs.target == 'weighted-tnf-agent8-raw112-macros'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          D=im-results/agent8-tnf-raw117
+          python "$D/raw112_multisweep.py"
+          python tools/lean_compile_closure.py --workdir /tmp/a8-raw112-macros --jobs 4 "$D/Raw112Binary.lean" "$D/Raw112Quinary.lean" "$D/Raw112Alternating.lean" "$D/Raw112Unary.lean" "$D"/raw112/Raw112MultiSweep*.lean | tee /tmp/a8-raw112-macros.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a8-raw112-macros.log; then exit 1; fi
+      - name: Check Agent 8 raw119 six-hole sibling audit
+        if: inputs.target == 'weighted-tnf-agent8-six'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent8-tnf-six/generate.py
+          python tools/lean_compile_closure.py --workdir /tmp/a8-six --jobs 4 --override Raw115Base=im-results/agent8-tnf-six/raw115/Raw115Base.lean im-results/agent8-tnf-six/SixSiblingRoster.lean | tee /tmp/a8-six.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a8-six.log; then
+            echo "Forbidden proof placeholder or native_decide found in six-hole closure" >&2
+            exit 1
+          fi
+
+      - name: Check complete raw95 and raw105 with universal sweep leaves
+        if: inputs.target == 'weighted-tnf-agent3-siblings'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent3-tnf-raw95/generate.py
+          python im-results/agent3-tnf-raw105/generate.py
+          python tools/lean_compile_closure.py --workdir /tmp/a3-siblings --jobs 4 im-results/agent3-tnf-raw95/RawSiblingRosterBridge.lean | tee /tmp/a3-siblings.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a3-siblings.log; then
+            echo "Forbidden proof placeholder or native_decide found in sibling closure" >&2
+            exit 1
+          fi
+
+      - name: Strict raw85 exact-key gate and path-parent equality diagnostic
+        if: inputs.target == 'weighted-tnf-raw85-parent-check'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent13-roster-convergence/generate_raw85.py
+          export LEAN_PATH=im-results/agent13-roster-convergence/raw85:im-results/agent8-coverage-contract:im-results/agent4-coverage-smoke:im-results/agent42-coverage-normal:im-results/agent13-coverage:im-results/agent13-weighted-first-one:im-results/agent6-fresh-glider:im-results/agent7-far:im-results/agent31-three-hole-tnf:im-results/agent50-weighted-tnf-pilot
+          python tools/lean_compile_closure.py --workdir /tmp/a13-raw85-parent --jobs 4 im-results/agent13-roster-convergence/raw85/FourHoleSiblingBase.lean | tee /tmp/a13-raw85-parent.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a13-raw85-parent.log; then
+            echo "Forbidden proof placeholder or native_decide found in raw85 parent diagnostic" >&2
+            exit 1
+          fi
+
+      - name: Verify raw83 one-hole two-sided growth pump
+        if: inputs.target == 'weighted-tnf-raw83-pump'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          export LEAN_PATH=im-results/agent8-coverage-contract:im-results/agent4-coverage-smoke:im-results/agent42-coverage-normal:im-results/agent13-coverage:im-results/agent13-weighted-first-one:im-results/agent6-fresh-glider:im-results/agent7-far:im-results/agent31-three-hole-tnf:im-results/agent50-weighted-tnf-pilot:im-results/agent47-rooted-tnf
+          python tools/lean_compile_closure.py --workdir /tmp/a47-raw83-pump --jobs 4 im-results/agent47-rooted-tnf/Raw83Pump.lean | tee /tmp/a47-raw83-pump.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a47-raw83-pump.log; then
+            echo "Forbidden proof placeholder or native_decide found in raw83 pump closure" >&2
+            exit 1
+          fi
+
+      - name: Check raw residual 91 and its exact roster graft
+        if: inputs.target == 'weighted-tnf-raw91'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent10-tnf-raw91/generate.py
+          python tools/lean_compile_closure.py --workdir /tmp/a10-raw91 --jobs 4 im-results/agent10-tnf-raw91/Raw91RosterBridge.lean | tee /tmp/a10-raw91.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a10-raw91.log; then
+            echo "Forbidden proof placeholder or native_decide found in raw91 closure" >&2
+            exit 1
+          fi
+
+      - name: Check raw residual 87 and its exact roster graft
+        if: inputs.target == 'weighted-tnf-raw87'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent10-tnf-raw87/generate.py
+          python tools/lean_compile_closure.py --workdir /tmp/a10-raw87 --jobs 4 im-results/agent10-tnf-raw87/Raw87RosterBridge.lean | tee /tmp/a10-raw87.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a10-raw87.log; then
+            echo "Forbidden proof placeholder or native_decide found in raw87 closure" >&2
+            exit 1
+          fi
+
+      - name: Check raw92/raw100/raw101 and two-block sweep certificates
+        if: inputs.target == 'weighted-tnf-agent10-multi'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent10-tnf-multipump/generate.py
+          python tools/lean_compile_closure.py --workdir /tmp/a10-multi --jobs 4 im-results/agent10-tnf-multipump/MultiRoster.lean | tee /tmp/a10-multi.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a10-multi.log; then
+            echo "Forbidden proof placeholder or native_decide found in multi-block closure" >&2
+            exit 1
+          fi
+
+      - name: Check raw68/raw72/raw82 five-hole certificates
+        if: inputs.target == 'weighted-tnf-agent10-five-new'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent10-tnf-multipump/generate.py 68 72 82
+          python tools/lean_compile_closure.py --workdir /tmp/a10-five-new --jobs 4 im-results/agent10-tnf-multipump/NewFiveRoster.lean | tee /tmp/a10-five-new.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a10-five-new.log; then
+            echo "Forbidden proof placeholder or native_decide found in five-hole closure" >&2
+            exit 1
+          fi
+
+      - name: Check raw106 recursive sweep and complete five-hole audit
+        if: inputs.target == 'weighted-tnf-agent10-raw106'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent10-tnf-multipump/generate.py 106
+          python tools/lean_compile_closure.py --workdir /tmp/a10-raw106 --jobs 4 im-results/agent10-tnf-multipump/Raw106Roster.lean | tee /tmp/a10-raw106.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a10-raw106.log; then
+            echo "Forbidden proof placeholder or native_decide found in raw106 closure" >&2
+            exit 1
+          fi
+
+      - name: Check raw63 five-hole counter closure and exact roster bridge
+        if: inputs.target == 'weighted-tnf-raw63-counter'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent48-raw63-counter/emit_counter.py
+          python im-results/agent10-tnf-multipump/generate.py 63
+          python tools/lean_compile_closure.py --workdir /tmp/a48-raw63 --jobs 4 im-results/agent48-raw63-counter/Raw63RosterBridge.lean | tee /tmp/a48-raw63.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a48-raw63.log; then
+            echo "Forbidden proof placeholder or native_decide found in raw63 closure" >&2
+            exit 1
+          fi
+
+      - name: Check one cylinder with the prefix-sharing checker
+        if: inputs.target == 'weighted-tnf-prefix-single'
+        env:
+          RAW_ID: ${{ inputs.raw_id }}
+        run: |
+          set -euo pipefail
+          case "$RAW_ID" in 61|63) ;; *) exit 2 ;; esac
+          python im-results/agent13-coverage/unpack.py
+          if [[ "$RAW_ID" == 61 ]]; then
+            for emitter in tripling recursive_unary residue_unary multiphase d120 language353 a244; do
+              python im-results/agent48-raw61/emit_${emitter}.py
+            done
+          else
+            python im-results/agent48-raw63-counter/emit_counter.py
+          fi
+          python im-results/agent10-tnf-multipump/generate.py "$RAW_ID"
+          python im-results/agent48-prefix-audit/switch_generated_checks.py "$RAW_ID"
+          python tools/lean_compile_closure.py --workdir /tmp/a48-prefix --jobs 4 "im-results/agent10-tnf-multipump/Raw${RAW_ID}Data.lean" | tee /tmp/a48-prefix.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a48-prefix.log; then exit 1; fi
+
+      - name: Check raw61 nonhalting source witnesses and candidate generation
+        if: inputs.target == 'weighted-tnf-raw61-witnesses'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          for emitter in tripling recursive_unary residue_unary multiphase d120 language353 a244; do
+            python im-results/agent48-raw61/emit_${emitter}.py
+          done
+          python im-results/agent10-tnf-multipump/generate.py 61
+          python tools/lean_compile_closure.py --workdir /tmp/a48-raw61 --jobs 3 im-results/agent10-tnf-multipump/Raw61Base.lean | tee /tmp/a48-raw61.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a48-raw61.log; then exit 1; fi
+
+      - name: Check raw66/raw70/raw80 and compose the 121-residual cut
+        if: inputs.target == 'weighted-tnf-agent10-five-roster'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent10-tnf-multipump/generate.py 66 70 80
+          export LEAN_PATH=im-results/agent8-coverage-contract:im-results/agent4-coverage-smoke:im-results/agent42-coverage-normal:im-results/agent13-coverage:im-results/agent13-weighted-first-one:im-results/agent6-fresh-glider:im-results/agent7-far:im-results/agent31-three-hole-tnf:im-results/agent50-weighted-tnf-pilot:im-results/agent10-tnf-multipump:im-results/agent13-roster-convergence
+          python tools/lean_compile_closure.py --workdir /tmp/a10-fivehole-roster --jobs 4 im-results/agent13-roster-convergence/FiveHoleRosterComposition.lean | tee /tmp/a10-fivehole-roster.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a10-fivehole-roster.log; then
+            echo "Forbidden proof placeholder or native_decide found in 121-residual composition closure" >&2
+            exit 1
+          fi
+
+      - name: Check one complete candidate cylinder with the zipper checker
+        if: inputs.target == 'weighted-tnf-agent10-single'
+        env:
+          RAW_ID: ${{ inputs.raw_id }}
+        run: |
+          set -euo pipefail
+          case "$RAW_ID" in
+            63|66|67|68|69|70|71|72|73|77|78|79|80|81|82|86|88|92|93|97|98|100|101|102|104|106) ;;
+            *) echo "Unknown residual index"; exit 2 ;;
+          esac
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          if [[ "$RAW_ID" == 63 ]]; then python im-results/agent48-raw63-counter/emit_counter.py; fi
+          python im-results/agent10-tnf-multipump/generate.py "$RAW_ID"
+          python tools/lean_compile_closure.py --workdir /tmp/a10-single --jobs 4 "im-results/agent10-tnf-multipump/Raw${RAW_ID}Data.lean" | tee /tmp/a10-single.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a10-single.log; then
+            echo "Forbidden proof placeholder or native_decide" >&2
+            exit 1
+          fi
+
+      - name: Check source-linked raw107 exceptional growth witnesses
+        if: inputs.target == 'weighted-tnf-raw107-witnesses'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python tools/lean_compile_closure.py --workdir /tmp/raw107-witnesses --jobs 4 im-results/agent1-raw107/Raw107LAUnary.lean im-results/agent11-raw107/Raw107LAPairCounter.lean im-results/agent11-raw107/Raw107LA385.lean im-results/agent11-raw107/Raw107LF180.lean im-results/agent11-raw107/Raw107LF1424.lean im-results/agent11-raw107/Raw107LF1655.lean | tee /tmp/raw107-witnesses.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/raw107-witnesses.log; then exit 1; fi
+
+  combined109:
+    if: inputs.target == 'weighted-tnf-combined-109'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Generate the exact source dependencies for both accepted groups
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent10-tnf-raw87/generate.py
+          python im-results/agent10-tnf-raw91/generate.py
+          python im-results/agent10-tnf-multipump/generate.py 66 70 80
+          python im-results/agent10-tnf-multipump/generate.py 68 72 82
+          python im-results/agent10-tnf-multipump/generate.py 86 88 92 93 97 98 100 101 102 104
+      - name: Reproduce exact multi-parent side-witness scan
+        if: inputs.target == 'weighted-tnf-sidewitness-multiparent'
+        run: |
+          set -euo pipefail
+          python im-results/agent2-sidewitness-multiparent/scan.py | tee /tmp/agent2-sidewitness-multiparent.json
+      - name: Check the disjoint 15-cylinder union and 109-residual composition
+        run: |
+          set -euo pipefail
+          python tools/lean_compile_closure.py --workdir /tmp/a47-combined109 --jobs 4 im-results/agent47-rooted-tnf/Combined109Roster.lean | tee /tmp/a47-combined109.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a47-combined109.log; then
+            echo "Forbidden proof placeholder or native_decide found in combined 109-residual closure" >&2
+            exit 1
+          fi
+  raw10box8haltslice:
+    if: inputs.target == 'weighted-tnf-raw10-box8-halt-slice'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Enumerate and classify the 24 F1-halt completions of raw10 box 8
+        run: |
+          set -euo pipefail
+          python im-results/agent50-weighted-tnf-pilot/search_box8_halt_slice.py --output .tmp/agent50-box8-halt-slice | tee /tmp/a50-box8-halt-slice.log
+          test -s .tmp/agent50-box8-halt-slice/summary.json
+          cat .tmp/agent50-box8-halt-slice/summary.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw10-box8-halt-slice
+          path: |
+            .tmp/agent50-box8-halt-slice/
+            /tmp/a50-box8-halt-slice.log
+          if-no-files-found: error
+
+  raw10box8certcompile:
+    if: inputs.target == 'weighted-tnf-raw10-box8-cert-compile'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Download the 20 generated complete-table certificates
+        uses: actions/download-artifact@v4
+        with:
+          name: raw10-box8-halt-slice
+          run-id: 45593139942
+          github-token: ${{ github.token }}
+          path: .tmp/box8-artifact
+      - name: Flatten generated Lean modules and compile all 20 proof roots
+        run: |
+          set -euo pipefail
+          mkdir -p .tmp/box8src .tmp/box8work
+          find .tmp/box8-artifact -name 'Box8F0*Packed.lean' -o -name 'Box8F0*Proof.lean' | while read -r f; do cp "$f" .tmp/box8src/; done
+          mapfile -t roots < <(find .tmp/box8src -name 'Box8F0*Proof.lean' -print | sort)
+          test "${#roots[@]}" -eq 20
+          python tools/lean_compile_closure.py "${roots[@]}" --workdir .tmp/box8work --source-root .tmp/box8src --jobs 4 --manifest .tmp/box8work/manifest.json 2>&1 | tee /tmp/a50-box8-compile.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a50-box8-compile.log; then
+            echo 'Forbidden axiom/proof primitive in generated BlockFAR certificates' >&2
+            exit 1
+          fi
+          python3 - <<'PY'
+          import json, re, pathlib
+          log = pathlib.Path("/tmp/a50-box8-compile.log").read_text()
+          profiles = {}
+          for name, raw in re.findall(r"'([^']+)' depends on axioms: \[([^\]]*)\]", log):
+              profiles[name] = {x.strip() for x in raw.split(",") if x.strip()}
+          codes = [1,2,3,4,5,6,7,8,9,11,13,14,15,16,17,18,19,20,21,23]
+          required = [f"BB6BlockFAR.Box8F0{code:02d}.never" for code in codes]
+          missing = [name for name in required if name not in profiles]
+          if missing:
+              raise SystemExit("missing axiom profiles: " + ", ".join(missing))
+          allowed = {"propext", "Classical.choice", "Quot.sound"}
+          bad = {name: sorted(profiles[name] - allowed) for name in required if profiles[name] - allowed}
+          if bad:
+              raise SystemExit("unexpected theorem axioms: " + json.dumps(bad, sort_keys=True))
+          pathlib.Path(".tmp/box8work/axiom-profiles.json").write_text(
+              json.dumps({name: sorted(profiles[name]) for name in required}, indent=2, sort_keys=True) + "\n"
+          )
+          print(json.dumps({"compiled_nonhalting_certificates": len(required), "axiom_profiles": len(required), "bad_profiles": bad}))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw10-box8-certified-20-leaves
+          path: |
+            .tmp/box8src/
+            .tmp/box8work/
+            /tmp/a50-box8-compile.log
+            .tmp/box8-artifact/home/runner/work/bb6/bb6/.tmp/agent50-box8-halt-slice/summary.json
+          if-no-files-found: error
+
+  raw10rankedsearch:
+    if: inputs.target == 'weighted-tnf-raw10-box-ranked-search'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate ranked BlockFAR candidates for the strongest raw10 residual boxes
+        run: |
+          set -euo pipefail
+          python im-results/agent17-raw10-box-far-search/search.py --generate --min-fixed 8 --max-boxes 3 --rank-promising --jobs 4 --output .tmp/agent50-raw10-ranked | tee /tmp/a50-raw10-ranked.log
+          test -s .tmp/agent50-raw10-ranked/summary.json
+          cat .tmp/agent50-raw10-ranked/summary.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw10-ranked-blockfar-candidates
+          path: |
+            .tmp/agent50-raw10-ranked/
+            /tmp/a50-raw10-ranked.log
+          if-no-files-found: error
+
+  raw10canonical76:
+    if: inputs.target == 'weighted-tnf-canonical76-raw10-membership'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lean --version | tee /tmp/a50-lean-version.txt
+      - name: Download the source-accepted canonical77 base
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45554648116
+          name: canonical77-certified
+          path: /tmp/a50-canonical
+      - name: Compile and audit exact B0=1LC membership in canonical76
+        run: |
+          set -euo pipefail
+          cp im-results/agent50-weighted-tnf-pilot/Canonical76Raw10Membership.lean /tmp/a50-canonical/
+          cd /tmp/a50-canonical
+          export LEAN_PATH="$PWD"
+          test -s CanonicalTwoParentGraft.olean
+          sha256sum CanonicalTwoParentGraft.olean > /tmp/a50-canonical-core.sha256
+          lean -o Canonical76Raw10Membership.olean Canonical76Raw10Membership.lean 2>&1 | tee /tmp/a50-raw10-membership.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a50-raw10-membership.log; then
+            echo "Forbidden proof placeholder or native_decide found in canonical76 raw10 membership" >&2
+            exit 1
+          fi
+          python3 - <<'PY'
+          import hashlib, json, os, pathlib, re
+          log = pathlib.Path("/tmp/a50-raw10-membership.log").read_text()
+          required = (
+              "BB6.Agent50Canonical76Raw10.raw10Parent_in_roster76",
+              "BB6.Agent50Canonical76Raw10.raw10Parent_exact_member",
+              "BB6.Agent50Canonical76Raw10.parentEntries_count",
+              "BB6.Agent50Canonical76Raw10.otherRoster_count",
+          )
+          allowed = {"propext", "Classical.choice", "Quot.sound"}
+          profiles = {
+              name: {x.strip() for x in axioms.split(",") if x.strip()}
+              for name, axioms in re.findall(r"'([^']+)' depends on axioms: \[([^\]]*)\]", log)
+          }
+          for name in required:
+              if name not in profiles:
+                  raise SystemExit("missing axiom profile: " + name)
+              bad = profiles[name] - allowed
+              if bad:
+                  raise SystemExit(f"{name}: unexpected axioms {sorted(bad)}")
+              print(f"{name}: {sorted(profiles[name])}")
+          def digest(path):
+              h = hashlib.sha256()
+              with pathlib.Path(path).open("rb") as f:
+                  for chunk in iter(lambda: f.read(1024 * 1024), b""):
+                      h.update(chunk)
+              return h.hexdigest()
+          manifest = {
+              "claim": "B0=1LC is exactly one of the 76 canonical quotient representatives after raw107 and raw114 grafts; the other list has 75 entries. This is membership only, not a safety cover.",
+              "source_revision": os.environ.get("GITHUB_SHA"),
+              "canonical77_artifact_run_id": 45554648116,
+              "canonical77_artifact_name": "canonical77-certified",
+              "lean_version": pathlib.Path("/tmp/a50-lean-version.txt").read_text().strip(),
+              "canonical_two_parent_graft_olean_sha256": pathlib.Path("/tmp/a50-canonical-core.sha256").read_text().split()[0],
+              "membership_source_sha256": digest("Canonical76Raw10Membership.lean"),
+              "membership_olean_sha256": digest("Canonical76Raw10Membership.olean"),
+              "residual_count_before_isolation": 76,
+              "isolated_parent_count": 1,
+              "other_residual_count": 75,
+              "theorem_axioms": {name: sorted(profiles[name]) for name in required},
+          }
+          pathlib.Path("Canonical76Raw10Membership.json").write_text(
+              json.dumps(manifest, indent=2, sort_keys=True) + "\n"
+          )
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: canonical76-raw10-membership
+          path: |
+            /tmp/a50-canonical/Canonical76Raw10Membership.lean
+            /tmp/a50-canonical/Canonical76Raw10Membership.olean
+            /tmp/a50-canonical/Canonical76Raw10Membership.json
+            /tmp/a50-lean-version.txt
+            /tmp/a50-canonical-core.sha256
+          if-no-files-found: error
+
+  heldleaf109:
+    if: inputs.target == 'weighted-tnf-held-leaf-109-membership'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Generate the exact 109-roster source dependencies
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent10-tnf-raw87/generate.py
+          python im-results/agent10-tnf-raw91/generate.py
+          python im-results/agent10-tnf-multipump/generate.py 66 70 80
+          python im-results/agent10-tnf-multipump/generate.py 68 72 82
+          python im-results/agent10-tnf-multipump/generate.py 86 88 92 93 97 98 100 101 102 104
+          python im-results/agent13-block-far/generate.py im-results/agent13-block-far
+      - name: Count existing side-witness cylinders under B0=1LC
+        run: |
+          set -euo pipefail
+          python im-results/agent13-cross-route-pilot/analyze_b0_1lc_sidewitness_cover.py
+
+      - name: Reconstruct exact terminal source imports for the held-leaf bridge
+        run: |
+          set -euo pipefail
+          mkdir -p .tmp/a13-heldleaf109/imports
+          python3 -c "import base64,io,pathlib,tarfile; p=pathlib.Path('im-results/agent42-champion-terminal/TerminalProofs.tar.xz.b64'); d=base64.b64decode(p.read_text()); tarfile.open(fileobj=io.BytesIO(d),mode='r:xz').extractall('.tmp/a13-heldleaf109/imports',filter='data')"
+          python3 -c "import base64,lzma,pathlib; p=pathlib.Path('im-results/agent42-champion-terminal/TerminalLeftExact.lean.xz.b64'); pathlib.Path('.tmp/a13-heldleaf109/imports/TerminalLeft.lean').write_bytes(lzma.decompress(base64.b64decode(p.read_text())))"
+          echo "12329036c66c3846f9261167b8f9aebd1778d9b6ea6044309956c2fa0b3e49b7  .tmp/a13-heldleaf109/imports/TerminalFinish.lean" | sha256sum -c -
+          echo "1bce2075fc4e0cd7d740fb71b3796088b190ddb6766e04640d992dadd1b650ff  .tmp/a13-heldleaf109/imports/TerminalLeft.lean" | sha256sum -c -
+      - name: Compile held BlockFAR, cycle/halt cylinders, and canonical77 membership
+        run: |
+          set -euo pipefail
+          python tools/lean_compile_closure.py --workdir /tmp/a13-heldleaf109 --jobs 4 --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean --override Frontier=im-results/agent8-coverage-contract/Frontier.lean --override Symmetry=im-results/agent8-coverage-contract/Symmetry.lean --override RootShift=im-results/agent8-coverage-contract/RootShift.lean im-results/agent13-cross-route-pilot/Root109Membership.lean im-results/agent13-block-far/HeldBlockConsumer.lean im-results/agent17-raw10-box-far-search/Raw10BoxCombinedConsumer.lean im-results/agent13-cross-route-pilot/Canonical77HeldMembership.lean im-results/agent13-block-far/HeldBlockRaw10Combined.lean | tee /tmp/a13-heldleaf109.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a13-heldleaf109.log; then
+            echo "Forbidden proof placeholder or native_decide found in B0=1LC membership/consumer proof" >&2
+            exit 1
+          fi
+
+  rootzero:
+    if: inputs.target == 'weighted-tnf-root-zero-refinement'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Generate the rooted first-one frontier dependencies
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+      - name: Check the raw0 B0=0LA first-hole refinement
+        run: |
+          set -euo pipefail
+          python tools/lean_compile_closure.py --workdir /tmp/a47-rootzero --jobs 4 im-results/agent47-rooted-tnf/RootZeroRefinement.lean | tee /tmp/a47-rootzero.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a47-rootzero.log; then
+            echo "Forbidden proof placeholder or native_decide found in raw0 refinement closure" >&2
+            exit 1
+          fi
+
+
+  combined106:
+    if: inputs.target == 'weighted-tnf-combined-106' || inputs.target == 'weighted-tnf-canonical-78' || inputs.target == 'weighted-tnf-canonical-78-exact' || inputs.target == 'weighted-tnf-raw108-canonical' || inputs.target == 'weighted-tnf-canonical-two-parent' || inputs.target == 'weighted-tnf-raw10-box' || inputs.target == 'weighted-tnf-raw10-box8-cycle' || inputs.target == 'weighted-tnf-raw10-box0-halt' || inputs.target == 'weighted-tnf-raw10-short-frontier' || inputs.target == 'weighted-tnf-held-block-far' || inputs.target == 'weighted-tnf-raw120-partition' || inputs.target == 'weighted-tnf-sidewitness-multiparent' || inputs.target == 'weighted-tnf-raw60-membership' || inputs.target == 'weighted-tnf-raw118-canonical76-membership'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Generate the exact source dependencies for all three accepted groups
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent10-tnf-raw87/generate.py
+          python im-results/agent10-tnf-raw91/generate.py
+          python im-results/agent10-tnf-multipump/generate.py 66 70 80
+          python im-results/agent10-tnf-multipump/generate.py 68 72 82
+          python im-results/agent10-tnf-multipump/generate.py 86 88 92 93 97 98 100 101 102 104
+      - name: Check the selected residual composition
+        if: inputs.target != 'weighted-tnf-canonical-78-exact'
+        env:
+          TARGET: ${{ inputs.target }}
+        run: |
+          set -euo pipefail
+          target=im-results/agent47-rooted-tnf/Combined106Roster.lean
+          if [ "$TARGET" = weighted-tnf-canonical-78 ] || [ "$TARGET" = weighted-tnf-canonical-78-exact ]; then target=im-results/agent47-rooted-tnf/Canonical78Roster.lean; fi
+          if [ "$TARGET" = weighted-tnf-canonical-two-parent ]; then target=im-results/agent47-rooted-tnf/CanonicalTwoParentGraft.lean; fi
+          if [ "$TARGET" = weighted-tnf-raw118-canonical76-membership ]; then target=im-results/agent40-raw118-independent/Raw118Canonical76Membership.lean; fi
+          if [ "$TARGET" = weighted-tnf-raw60-membership ]; then target=im-results/agent1-raw60/Raw60CanonicalMembership.lean; fi
+          if [ "$TARGET" = weighted-tnf-raw108-canonical ]; then target=im-results/agent10-raw108/Raw108Canonical78Bridge.lean; fi
+          if [ "$TARGET" = weighted-tnf-raw10-box ]; then target=im-results/agent49-box-complement/Raw10BoxBridge.lean; fi
+          if [ "$TARGET" = weighted-tnf-raw10-box8-cycle ]; then target=im-results/agent50-weighted-tnf-pilot/Raw10Box8CycleConsumer.lean; fi
+          if [ "$TARGET" = weighted-tnf-raw10-box0-halt ]; then target=im-results/agent50-weighted-tnf-pilot/Raw10Box0Halt.lean; fi
+          if [ "$TARGET" = weighted-tnf-raw10-short-frontier ]; then target=im-results/agent49-raw10-short-frontier/Raw10ShortBridge.lean; fi
+          if [ "$TARGET" = weighted-tnf-held-block-far ]; then
+            python im-results/agent13-block-far/generate.py im-results/agent13-block-far
+            target=im-results/agent13-block-far/HeldBlockConsumer.lean
+          fi
+          if [ "$TARGET" = weighted-tnf-sidewitness-multiparent ]; then target=im-results/agent2-sidewitness-multiparent/MultiParentBoxBridge.lean; fi
+          if [ "$TARGET" = weighted-tnf-raw120-partition ]; then
+            python im-results/agent3-tnf-raw120/generate.py
+            python im-results/agent3-tnf-raw120/generate_rb.py
+            target=im-results/agent3-tnf-raw120/Raw120FourHoleFrontierIngestion.lean
+          fi
+          python tools/lean_compile_closure.py --workdir /tmp/a47-combined106 --jobs 4 "$target" | tee /tmp/a47-combined106.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a47-combined106.log; then
+            echo "Forbidden proof placeholder or native_decide found in combined 106-residual closure" >&2
+            exit 1
+          fi
+      - name: Kernel-check singleton-projection soundness for raw10 boxes
+        if: inputs.target == 'weighted-tnf-raw10-box'
+        run: |
+          set -euo pipefail
+          python tools/lean_compile_closure.py --workdir /tmp/a17-raw10-box-singleton --jobs 4 im-results/agent17-raw10-box-far-search/BoxSingletonProjection.lean | tee /tmp/a17-raw10-box-singleton.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a17-raw10-box-singleton.log; then
+            echo "Forbidden proof placeholder or native_decide found in singleton-projection box proof" >&2
+            exit 1
+          fi
+
+      - name: Search highest-specificity raw10 singleton projection with BlockFAR
+        if: inputs.target == 'weighted-tnf-raw10-box'
+        timeout-minutes: 20
+        run: |
+          set -euo pipefail
+          python im-results/agent17-raw10-box-far-search/search.py --generate --compile --min-fixed 10 --compile-timeout 600 --jobs 4 --output .tmp/agent17-raw10-box-far | tee /tmp/a17-raw10-box-far.log
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          summary = json.loads(Path(".tmp/agent17-raw10-box-far/summary.json").read_text())
+          print(f"singleton-projection FAR: generated={summary['generated']} compiled={summary['compiled']}")
+          if summary["generated"] != summary["compiled"]:
+              raise SystemExit("a generated singleton-projection certificate failed Lean compilation")
+          PY
+
+      - name: Ingest exact champion witness into canonical 78 mixed-bound roster
+        if: inputs.target == 'weighted-tnf-canonical-78-exact'
+        run: |
+          set -euo pipefail
+          work="$PWD/.tmp/a13-canonical78-exact"
+          mkdir -p "$work/imports"
+          python3 - <<'PY'
+          import base64, io, lzma, pathlib, tarfile
+          root = pathlib.Path(".tmp/a13-canonical78-exact/imports")
+          p = pathlib.Path("im-results/agent42-champion-terminal")
+          with tarfile.open(fileobj=io.BytesIO(base64.b64decode((p/"TerminalProofs.tar.xz.b64").read_text())), mode="r:xz") as a:
+              member = next(m for m in a.getmembers() if pathlib.PurePosixPath(m.name).name == "TerminalFinish.lean")
+              (root/"TerminalFinish.lean").write_bytes(a.extractfile(member).read())
+          (root/"TerminalLeft.lean").write_bytes(lzma.decompress(base64.b64decode((p/"TerminalLeftExact.lean.xz.b64").read_text())))
+          PY
+          printf '%s  %s\n' 12329036c66c3846f9261167b8f9aebd1778d9b6ea6044309956c2fa0b3e49b7 "$work/imports/TerminalFinish.lean" | sha256sum -c -
+          printf '%s  %s\n' 1bce2075fc4e0cd7d740fb71b3796088b190ddb6766e04640d992dadd1b650ff "$work/imports/TerminalLeft.lean" | sha256sum -c -
+          python tools/lean_compile_closure.py \
+            im-results/agent47-rooted-tnf/Canonical78ExactComposition.lean \
+            --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean \
+            --override OuterLCIncPrelude=im-results/agent8-counted-reset/OuterLCIncPrelude.lean \
+            --override M0OddResidueSeven=im-results/agent41-m0-n16r7/M0OddResidueSeven.lean \
+            --override M0EvenEightValuationEncoding=im-results/agent48-counted-inc0/M0EvenEightValuationEncoding.lean \
+            --override M2EvenResidueTwo=im-results/agent42-champion-terminal/M2EvenResidueTwo.lean \
+            --workdir "$work/build" --jobs 8 | tee "$work/compile.log"
+          python3 - "$work/compile.log" <<'PY'
+          import pathlib, re, sys
+          log = pathlib.Path(sys.argv[1]).read_text()
+          allowed = {"propext", "Classical.choice", "Quot.sound"}
+          names = (
+              "champion_score_gt_7014",
+              "champion_compatible_root",
+              "champion_not_weighted_7014",
+              "champion_in_canonical_roster",
+              "champion_raw_witness",
+              "cover_at_champion_score",
+              "exact_from_canonical78_at_champion_score",
+          )
+          for name in names:
+              m = re.search(r"'[^']*\."+name+r"' depends on axioms: \[([^\]]*)\]", log)
+              if not m:
+                  raise SystemExit("missing axiom audit: "+name)
+              used = {x.strip() for x in m.group(1).split(",") if x.strip()}
+              if not used <= allowed:
+                  raise SystemExit(f"nonstandard axioms: {name}: {used-allowed}")
+              print(f"{name}: {sorted(used)}")
+          PY
+
+  rootsibling:
+    if: inputs.target == 'weighted-tnf-root-sibling-first-hole' || inputs.target == 'weighted-tnf-canonical-frontier' || inputs.target == 'weighted-tnf-raw114-cut'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Generate selected source dependencies
+        env:
+          TARGET: ${{ inputs.target }}
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          if [ "$TARGET" = weighted-tnf-raw114-cut ]; then
+            python im-results/agent47-raw114-cut/generate.py
+          else
+            python im-results/agent31-three-hole-tnf/generate_sweeps.py
+            python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          fi
+      - name: Kernel-check selected rooted frontier refinement
+        env:
+          TARGET: ${{ inputs.target }}
+        run: |
+          set -euo pipefail
+          target=im-results/agent47-rooted-tnf/RootSiblingFirstHole.lean
+          if [ "$TARGET" = weighted-tnf-canonical-frontier ]; then
+            target=im-results/agent47-rooted-tnf/CanonicalFrontier.lean
+          elif [ "$TARGET" = weighted-tnf-raw114-cut ]; then
+            target=im-results/agent47-raw114-cut/Raw114CutData.lean
+          fi
+          python tools/lean_compile_closure.py --workdir /tmp/a47-rootsibling --jobs 4 "$target" | tee /tmp/a47-rootsibling.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a47-rootsibling.log; then
+            echo "Forbidden proof placeholder or native_decide found in root-sibling witness closure" >&2
+            exit 1
+          fi
+
+  raw114far:
+    if: inputs.target == 'weighted-tnf-raw114-far' || inputs.target == 'weighted-tnf-raw114-pumps'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        branch: ${{ fromJSON(inputs.target == 'weighted-tnf-raw114-pumps' && '["0RB","1RC"]' || '["0LB","0LC","0RC","1LC"]') }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Generate and source-check the complete E0 branch and local cut
+        env:
+          E0: ${{ matrix.branch }}
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent47-raw114-cut/generate_far_cut.py "$E0"
+          python tools/lean_compile_closure.py --workdir /tmp/a47-raw114-far --jobs 4 "im-results/agent47-raw114-cut/Raw114Far${E0}Cut.lean" | tee /tmp/a47-raw114-far.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a47-raw114-far.log; then
+            echo "Forbidden proof placeholder or native_decide" >&2
+            exit 1
+          fi
+
+  raw120-bidfa-search:
+    if: inputs.target == 'weighted-tnf-raw120-1lb-search'
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - name: Synthesize finite stack invariants for five hard leaves
+        run: |
+          python -m pip install z3-solver
+          python -u im-results/agent3-tnf-raw120/bidfa_sat.py im-results/agent3-tnf-raw120/1LB-hard.json 15
+
+  raw120:
+    if: inputs.target == 'weighted-tnf-raw120-late' || inputs.target == 'weighted-tnf-raw120-1341' || inputs.target == 'weighted-tnf-raw120-cycles' || inputs.target == 'weighted-tnf-raw120-rf' || inputs.target == 'weighted-tnf-raw120-rb' || inputs.target == 'weighted-tnf-raw120-rc' || inputs.target == 'weighted-tnf-raw120-1rb' || inputs.target == 'weighted-tnf-raw120-1rc' || inputs.target == 'weighted-tnf-raw120-1la' || inputs.target == 'weighted-tnf-raw120-1lf' || inputs.target == 'weighted-tnf-raw120-0lb' || inputs.target == 'weighted-tnf-raw120-0lf' || inputs.target == 'weighted-tnf-raw120-la-carry' || inputs.target == 'weighted-tnf-raw120-la' || inputs.target == 'weighted-tnf-raw120-ra-phases' || inputs.target == 'weighted-tnf-raw120-0ra'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Unpack and check the selected raw120 certificate
+        env:
+          TARGET: ${{ inputs.target }}
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          target=im-results/agent3-tnf-raw120/Raw120Late.lean
+          if [ "$TARGET" = weighted-tnf-raw120-1341 ]; then
+            python im-results/agent13-raw120-late1341/generate.py
+            python im-results/agent13-raw120-late1341/generate_fast.py
+            target=im-results/agent13-raw120-late1341/Raw120Late1341.lean
+          elif [ "$TARGET" = weighted-tnf-raw120-cycles ]; then
+            target=im-results/agent3-tnf-raw120/Raw120EasyCycles.lean
+          elif [ "$TARGET" = weighted-tnf-raw120-rf ]; then
+            python im-results/agent3-tnf-raw120/generate.py
+            target=im-results/agent3-tnf-raw120/rf/Raw120RFData.lean
+          elif [ "$TARGET" = weighted-tnf-raw120-rb ]; then
+            python im-results/agent3-tnf-raw120/generate_rb.py
+            target=im-results/agent3-tnf-raw120/rb/Raw120RBData.lean
+          elif [ "$TARGET" = weighted-tnf-raw120-rc ]; then
+            python im-results/agent3-tnf-raw120/generate_rc.py
+            target=im-results/agent3-tnf-raw120/rc/Raw120RCData.lean
+          elif [ "$TARGET" = weighted-tnf-raw120-1rb ]; then
+            python im-results/agent3-tnf-raw120/generate_sibling.py 1RB
+            target=im-results/agent3-tnf-raw120/1rb/Raw120OneRBData.lean
+          elif [ "$TARGET" = weighted-tnf-raw120-1rc ]; then
+            python im-results/agent3-tnf-raw120/generate_sibling.py 1RC
+            target=im-results/agent3-tnf-raw120/1rc/Raw120OneRCData.lean
+          elif [ "$TARGET" = weighted-tnf-raw120-1la ]; then
+            python im-results/agent3-tnf-raw120/generate_sibling.py 1LA
+            target=im-results/agent3-tnf-raw120/1la/Raw120OneLAData.lean
+          elif [ "$TARGET" = weighted-tnf-raw120-1lf ]; then
+            python im-results/agent3-tnf-raw120/generate_sibling.py 1LF
+            target=im-results/agent3-tnf-raw120/1lf/Raw120OneLFData.lean
+          elif [ "$TARGET" = weighted-tnf-raw120-0lb ]; then
+            python im-results/agent3-tnf-raw120/generate_sibling.py 0LB
+            target=im-results/agent3-tnf-raw120/0lb/Raw120ZeroLBData.lean
+          elif [ "$TARGET" = weighted-tnf-raw120-0lf ]; then
+            python im-results/agent3-tnf-raw120/generate_sibling.py 0LF
+            target=im-results/agent3-tnf-raw120/0lf/Raw120ZeroLFData.lean
+          elif [ "$TARGET" = weighted-tnf-raw120-la-carry ]; then
+            target=im-results/agent3-tnf-raw120/Raw120LACarry.lean
+          elif [ "$TARGET" = weighted-tnf-raw120-0ra ]; then
+            python im-results/agent3-tnf-raw120/make_ra_phases.py im-results/agent3-tnf-raw120/Raw120RAPhases.lean
+            python im-results/agent3-tnf-raw120/make_ra_bidfa.py
+            python im-results/agent3-tnf-raw120/make_ra423_block.py
+            python im-results/agent3-tnf-raw120/generate_sibling.py 0RA
+            target=im-results/agent3-tnf-raw120/0ra/Raw120RAData.lean
+          elif [ "$TARGET" = weighted-tnf-raw120-ra-phases ]; then
+            python im-results/agent3-tnf-raw120/make_ra_phases.py im-results/agent3-tnf-raw120/Raw120RAPhases.lean
+            python im-results/agent3-tnf-raw120/make_ra_bidfa.py
+            target=im-results/agent3-tnf-raw120/Raw120RAPhases.lean
+            python tools/lean_compile_closure.py --workdir /tmp/a3-raw120-bidfa --jobs 4 im-results/agent3-tnf-raw120/Raw120RABiDFA.lean | tee /tmp/a3-raw120-bidfa.log
+            if grep -Eq 'sorryAx|native_decide' /tmp/a3-raw120-bidfa.log; then exit 1; fi
+          elif [ "$TARGET" = weighted-tnf-raw120-la ]; then
+            python im-results/agent3-tnf-raw120/generate_la.py
+            target=im-results/agent3-tnf-raw120/la/Raw120LAData.lean
+          fi
+          python tools/lean_compile_closure.py --workdir /tmp/a3-raw120 --jobs 4 "$target" | tee /tmp/a3-raw120.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a3-raw120.log; then
+            echo "Forbidden proof placeholder or native_decide" >&2
+            exit 1
+          fi
+
+  raw107_1la:
+    if: inputs.target == 'weighted-tnf-raw107-1la'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Generate and check disjoint 1LA audit shard
+        env:
+          SHARD: ${{ matrix.shard }}
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent11-raw107/generate_partial.py 1LA
+          roots=()
+          for ((i=4*SHARD;i<4*SHARD+4;i++)); do
+            printf -v nn '%02d' "$i"
+            roots+=("im-results/agent11-raw107/Raw107B1LAKid${nn}.lean")
+          done
+          python tools/lean_compile_closure.py --workdir /tmp/raw107-1la --jobs 4 "${roots[@]}" | tee /tmp/raw107-1la.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/raw107-1la.log; then exit 1; fi
+          mkdir -p /tmp/raw107-shard
+          if [ "$SHARD" = 0 ]; then
+            find /tmp/raw107-1la -name '*.olean' -exec cp {} /tmp/raw107-shard/ \;
+          else
+            cp /tmp/raw107-1la/Raw107B1LAKid*.olean /tmp/raw107-shard/
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw107-1la-${{ matrix.shard }}
+          path: /tmp/raw107-shard
+          if-no-files-found: error
+
+  raw107_1la_assemble:
+    if: inputs.target == 'weighted-tnf-raw107-1la'
+    needs: raw107_1la
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw107-1la-*
+          path: /tmp/raw107-1la
+          merge-multiple: true
+      - name: Kernel-check the exact unconditional 1LA graft
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent11-raw107/generate_partial.py 1LA
+          python tools/lean_compile_closure.py --workdir /tmp/raw107-witnesses --jobs 4 im-results/agent1-raw107/Raw107LAUnary.lean im-results/agent11-raw107/Raw107LAPairCounter.lean im-results/agent11-raw107/Raw107LA385.lean | tee /tmp/raw107-witnesses.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/raw107-witnesses.log; then exit 1; fi
+          cp /tmp/raw107-witnesses/Raw107LAUnary.olean /tmp/raw107-witnesses/Raw107LAPairCounter.olean /tmp/raw107-witnesses/Raw107LA385.olean /tmp/raw107-1la/
+          cp im-results/agent11-raw107/Raw107B1LAData.lean im-results/agent1-raw107/Raw107LABridge.lean /tmp/raw107-1la/
+          cd /tmp/raw107-1la
+          export LEAN_PATH="$PWD"
+          for i in $(seq -w 0 23); do test -f "Raw107B1LAKid${i}.olean"; done
+          { lean -o Raw107B1LAData.olean Raw107B1LAData.lean && lean -o Raw107LABridge.olean Raw107LABridge.lean; } | tee /tmp/raw107-assemble.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/raw107-assemble.log; then exit 1; fi
+
+  raw60:
+    if: inputs.target == 'weighted-tnf-raw60' || inputs.target == 'weighted-tnf-raw60-conditional' || inputs.target == 'weighted-tnf-raw60-next' || inputs.target == 'weighted-tnf-raw60-la' || inputs.target == 'weighted-tnf-raw60-assemble'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        child: ${{ fromJSON(inputs.target == 'weighted-tnf-raw60' && '["0RC","0RE"]' || inputs.target == 'weighted-tnf-raw60-conditional' && '["0LD","0RF"]' || inputs.target == 'weighted-tnf-raw60-la' && '["1LA"]' || inputs.target == 'weighted-tnf-raw60-assemble' && '["0RC","0RE","0LD","0RF","0LB","1LA","1LB","1LC","1RF"]' || '["0RF","0LB","1LA","1LB","1LC","1RF"]') }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Generate and kernel-check raw60 child
+        env:
+          CHILD: ${{ matrix.child }}
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent1-raw60/generate.py "$CHILD"
+          roots=("im-results/agent1-raw60/Raw60A${CHILD}Data.lean")
+          if [ "$CHILD" = 0LD ]; then roots+=(im-results/agent1-raw60/Raw60RootCut.lean); fi
+          python tools/lean_compile_closure.py --workdir /tmp/raw60 --jobs 4 "${roots[@]}" | tee /tmp/raw60.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/raw60.log; then exit 1; fi
+
+      - name: Stage exact child proof objects
+        if: inputs.target == 'weighted-tnf-raw60-assemble'
+        run: |
+          mkdir -p /tmp/raw60-artifact
+          cp /tmp/raw60/*.olean /tmp/raw60-artifact/
+      - uses: actions/upload-artifact@v4
+        if: inputs.target == 'weighted-tnf-raw60-assemble'
+        with:
+          name: raw60-child-${{ matrix.child }}
+          path: /tmp/raw60-artifact
+          if-no-files-found: error
+
+  raw60_progress:
+    if: inputs.target == 'weighted-tnf-raw60-progress' || inputs.target == 'weighted-tnf-raw60-0lf-witnesses'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check exact root reduction and all new exception proofs
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          if [ "${{ inputs.target }}" = weighted-tnf-raw60-0lf-witnesses ]; then
+            python im-results/agent1-raw60/generate_0lf_pumps.py
+            python im-results/agent1-raw60/generate_0lf_unary.py
+            python im-results/agent1-raw60/generate_0lf_second.py
+            python im-results/agent1-raw60/generate_0lf_sentinel.py
+            roots=(im-results/agent1-raw60/Raw60LFSentinel.lean)
+          else
+            roots=(im-results/agent1-raw60/{Raw60RootProgress,Raw60LABinary,Raw60LAAlternating,Raw60RFUnary,Raw60BCBinary,Raw60LBFour,Raw60LCGlider,Raw60LDBinaryCounters}.lean)
+          fi
+          python tools/lean_compile_closure.py --workdir /tmp/raw60-progress --jobs 4 "${roots[@]}" | tee /tmp/raw60-progress.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/raw60-progress.log; then exit 1; fi
+
+  raw60_assemble:
+    if: inputs.target == 'weighted-tnf-raw60-assemble'
+    needs: raw60
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw60-child-*
+          path: /tmp/raw60-assembled
+          merge-multiple: true
+      - name: Consume the nine exact child certificates
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python tools/lean_compile_closure.py --workdir /tmp/raw60-root --jobs 4 im-results/agent1-raw60/Raw60RootProgress.lean | tee /tmp/raw60-root.log
+          cp /tmp/raw60-root/*.olean /tmp/raw60-assembled/
+          cp im-results/agent1-raw60/Raw60RootAssembly.lean /tmp/raw60-assembled/
+          cd /tmp/raw60-assembled
+          export LEAN_PATH="$PWD"
+          lean -o Raw60RootAssembly.olean Raw60RootAssembly.lean | tee /tmp/raw60-assembly.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/raw60-{root,assembly}.log; then exit 1; fi
+
+  ngram_pilot:
+    if: inputs.target == 'weighted-tnf-ngram-pilot'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Generate and verify local-window pilot
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          cd im-results/agent1-ngram
+          g++ -std=c++17 -O3 ngram.cpp -o /tmp/ngram
+          /tmp/ngram 10 < pilot.txt > /tmp/ngram-pilot.txt
+          test "$(wc -l </tmp/ngram-pilot.txt)" -eq 4
+          python emit_ngram.py pilot.txt /tmp/ngram-pilot.txt NGramPilot.lean
+          cd ../..
+          python tools/lean_compile_closure.py --workdir /tmp/ngram-pilot --jobs 2 im-results/agent1-ngram/NGramPilot.lean | tee /tmp/ngram-pilot.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/ngram-pilot.log; then exit 1; fi
+
+  champion_parent:
+    if: inputs.target == 'weighted-tnf-champion-parent'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Compile original-source champion parent and exact-score certificate
+        run: |
+          set -euo pipefail
+          bash im-results/agent48-champion-root/reproduce-parent.sh
+
+  raw114_complete:
+    if: inputs.target == 'weighted-tnf-raw114-complete'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { shard: 0, branches: '0LA 0LB 0LC 0LF' }
+          - { shard: 1, branches: '0RA 0RB 0RC 0RF' }
+          - { shard: 2, branches: '1LA 1LB 1LC 1LF' }
+          - { shard: 3, branches: '1RA 1RB 1RC 1RF' }
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Generate and kernel-check four E0 branches
+        env:
+          BRANCHES: ${{ matrix.branches }}
+          SHARD: ${{ matrix.shard }}
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent47-raw114-cut/generate_complete.py $BRANCHES
+          roots=()
+          for b in $BRANCHES; do roots+=("im-results/agent47-raw114-cut/Raw114Complete${b}Data.lean"); done
+          python tools/lean_compile_closure.py --workdir /tmp/a47-raw114-complete --jobs 4 "${roots[@]}" | tee /tmp/a47-raw114-complete.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a47-raw114-complete.log; then exit 1; fi
+          mkdir -p /tmp/a47-raw114-shard
+          cp /tmp/a47-raw114-complete/*.olean /tmp/a47-raw114-shard/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw114-complete-${{ matrix.shard }}
+          path: /tmp/a47-raw114-shard
+          if-no-files-found: error
+
+  raw114_complete_assemble:
+    if: inputs.target == 'weighted-tnf-raw114-complete'
+    needs: raw114_complete
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw114-complete-*
+          path: /tmp/a47-raw114-complete
+          merge-multiple: true
+      - name: Check assembled root and exact residual count
+        run: |
+          set -euo pipefail
+          python im-results/agent47-raw114-cut/generate_complete.py --combine
+          cp im-results/agent47-raw114-cut/Raw114CompleteData.lean /tmp/a47-raw114-complete/
+          cd /tmp/a47-raw114-complete
+          export LEAN_PATH="$PWD"
+          lean -o Raw114CompleteData.olean Raw114CompleteData.lean | tee /tmp/a47-raw114-assemble.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a47-raw114-assemble.log; then exit 1; fi
+
+  raw117_prepare:
+    if: inputs.target == 'weighted-tnf-agent8-raw117'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Generate once and check shared source dependencies
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent8-tnf-raw117/generate.py
+          D=im-results/agent8-tnf-raw117
+          W=/tmp/a8-raw117
+          python tools/lean_compile_closure.py --workdir "$W" --jobs 4 "$D/raw117/Raw117Base.lean" im-results/agent47-rooted-tnf/CanonicalFrontier.lean | tee /tmp/a8-raw117-prepare.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a8-raw117-prepare.log; then exit 1; fi
+          cp "$D"/raw117/Raw117Kid*.lean "$D/raw117/Raw117Data.lean" "$D/Raw117Roster.lean" "$D/Raw117CanonicalCut.lean" "$W/"
+          cd "$W"
+          git -C "$GITHUB_WORKSPACE" rev-parse HEAD > SOURCE_COMMIT
+          sha256sum Raw117*.lean > RAW117_SOURCE.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw117-common
+          path: /tmp/a8-raw117
+          if-no-files-found: error
+
+  raw117_shards:
+    if: inputs.target == 'weighted-tnf-agent8-raw117'
+    needs: raw117_prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { shard: 0, kids: '00 01 02 03' }
+          - { shard: 1, kids: '04 05 06 07' }
+          - { shard: 2, kids: '08 09 10 11' }
+          - { shard: 3, kids: '12 13 14 15' }
+          - { shard: 4, kids: '16 17 18 19' }
+          - { shard: 5, kids: '20 21 22 23' }
+    steps:
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw117-common
+          path: /tmp/a8-raw117
+      - name: Compile disjoint root children
+        env:
+          KIDS: ${{ matrix.kids }}
+        run: |
+          set -euo pipefail
+          cd /tmp/a8-raw117
+          export LEAN_PATH="$PWD"
+          test "$(cat SOURCE_COMMIT)" = "$GITHUB_SHA"
+          sha256sum -c RAW117_SOURCE.sha256
+          mkdir -p /tmp/a8-raw117-kids
+          for k in $KIDS; do printf 'Raw117Kid%s\n' "$k"; done |
+            xargs -P 2 -I '{}' bash -c 'set -e; lean -o "$1.olean" "$1.lean"; cp "$1.olean" /tmp/a8-raw117-kids/' _ '{}' |
+            tee /tmp/a8-raw117-shard.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a8-raw117-shard.log; then exit 1; fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw117-kids-${{ matrix.shard }}
+          path: /tmp/a8-raw117-kids
+          if-no-files-found: error
+
+  raw117_assemble:
+    if: inputs.target == 'weighted-tnf-agent8-raw117'
+    needs: raw117_shards
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw117-common
+          path: /tmp/a8-raw117
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw117-kids-*
+          path: /tmp/a8-raw117
+          merge-multiple: true
+      - name: Assemble exact weighted score and quotient-roster cut
+        run: |
+          set -euo pipefail
+          cd /tmp/a8-raw117
+          export LEAN_PATH="$PWD"
+          test "$(cat SOURCE_COMMIT)" = "$GITHUB_SHA"
+          sha256sum -c RAW117_SOURCE.sha256
+          for k in $(seq -w 0 23); do test -s "Raw117Kid$k.olean"; done
+          {
+            lean -o Raw117Data.olean Raw117Data.lean
+            lean -o Raw117Roster.olean Raw117Roster.lean
+            lean -o Raw117CanonicalCut.olean Raw117CanonicalCut.lean
+          } 2>&1 | tee /tmp/a8-raw117-assemble.log
+          python - <<'PY'
+          import pathlib, re
+          log = pathlib.Path('/tmp/a8-raw117-assemble.log').read_text()
+          allowed = {'propext', 'Classical.choice', 'Quot.sound'}
+          seen = set()
+          for name, axioms in re.findall(r"'([^']+)' depends on axioms: \[([^\]]*)\]", log):
+              actual = {a.strip() for a in axioms.split(',') if a.strip()}
+              assert actual <= allowed, (name, actual - allowed)
+              seen.add(name.rsplit('.', 1)[-1])
+          for name in re.findall(r"'([^']+)' does not depend on any axioms", log):
+              seen.add(name.rsplit('.', 1)[-1])
+          assert {'all117', 'attained117', 'exact117', 'canonical_cut_count', 'cut_sound', 'canonical_cut_sound', 'cover_at_target'} <= seen, seen
+          print('Exact raw117 and quotient-cut axiom gate passed.')
+          PY
+
+  sidewitness_multiparent_scan:
+    if: inputs.target == 'weighted-tnf-sidewitness-multiparent-scan'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reproduce exact multi-parent side-witness and MDD scan
+        run: |
+          set -euo pipefail
+          python3 im-results/agent2-sidewitness-multiparent/scan.py
+
+  raw60_discover:
+    if: inputs.target == 'weighted-tnf-raw60-discover'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        child: ["0LC", "0LF", "1RE"]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Discover remaining raw60 child witnesses
+        env:
+          CHILD: ${{ matrix.child }}
+        run: python im-results/agent1-raw60/discover.py "$CHILD"
+      - name: Preserve raw60 discovery outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw60-discovery-${{ matrix.child }}
+          path: im-results/agent1-raw60/discover_${{ matrix.child }}/*.json
+          if-no-files-found: warn
+
+
+
+  raw60_1re:
+    if: inputs.target == 'weighted-tnf-raw60-1re'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Generate and audit exact 1RE branch
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          D=im-results/agent1-raw60
+          W=/tmp/raw60-1re-core
+          python "$D/generate_1re.py"
+          python tools/lean_compile_closure.py --workdir "$W" --jobs 4 --manifest "$W/core.json" "$D/Raw60A1REData.lean" | tee /tmp/raw60-1re.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/raw60-1re.log; then exit 1; fi
+          grep -F 'BB6.Agent1Raw60A1RE.all_closed' /tmp/raw60-1re.log
+          cd "$W"
+          printf '%s\n' "$GITHUB_SHA" > SOURCE_COMMIT
+          sha256sum *.lean *.olean core.json SOURCE_COMMIT > SHA256SUMS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw60-1re-certified
+          path: /tmp/raw60-1re-core/
+          if-no-files-found: error
+
+  raw60_1lf_prepare:
+    if: inputs.target == 'weighted-tnf-raw60-1lf'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Generate complete 1LF audit and compile shared proof core once
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          D=im-results/agent1-raw60
+          W=/tmp/raw60-1lf-core
+          python "$D/generate_1lf.py"
+          python tools/lean_compile_closure.py --workdir "$W" --jobs 4 --manifest "$W/core.json" "$D/Raw60A1LFBase.lean" | tee /tmp/raw60-1lf-core.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/raw60-1lf-core.log; then exit 1; fi
+          cp "$D"/Raw60A1LFKid*.lean "$D"/Raw60A1LFData.lean "$W/"
+          cd "$W"
+          printf '%s\n' "$GITHUB_SHA" > SOURCE_COMMIT
+          sha256sum *.lean *.olean core.json SOURCE_COMMIT > SHA256SUMS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw60-1lf-core
+          path: /tmp/raw60-1lf-core/
+          if-no-files-found: error
+
+  raw60_1lf_kids:
+    if: inputs.target == 'weighted-tnf-raw60-1lf'
+    needs: raw60_1lf_prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5]
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw60-1lf-core
+          path: /tmp/raw60-1lf-core
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Check four child subtrees against identical core
+        env:
+          SHARD: ${{ matrix.shard }}
+        run: |
+          set -euo pipefail
+          cd /tmp/raw60-1lf-core
+          test "$(cat SOURCE_COMMIT)" = "$GITHUB_SHA"
+          sha256sum -c SHA256SUMS >/dev/null
+          export LEAN_PATH="$PWD"
+          mkdir /tmp/raw60-1lf-kids
+          for i in $(seq $((4*SHARD)) $((4*SHARD+3))); do
+            printf -v kid 'Raw60A1LFKid%02d' "$i"
+            lean -o "$kid.olean" "$kid.lean" | tee -a /tmp/raw60-1lf-kids.log
+            cp "$kid.olean" /tmp/raw60-1lf-kids/
+          done
+          if grep -Eq 'sorryAx|native_decide' /tmp/raw60-1lf-kids.log; then exit 1; fi
+          sha256sum SHA256SUMS > /tmp/raw60-1lf-kids/core-${SHARD}.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw60-1lf-kids-${{ matrix.shard }}
+          path: /tmp/raw60-1lf-kids/
+          if-no-files-found: error
+
+  raw60_1lf_assemble:
+    if: inputs.target == 'weighted-tnf-raw60-1lf'
+    needs: raw60_1lf_kids
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw60-1lf-core
+          path: /tmp/raw60-1lf-core
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw60-1lf-kids-*
+          path: /tmp/raw60-1lf-core
+          merge-multiple: true
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Assemble exact complete 1LF child bound
+        run: |
+          set -euo pipefail
+          cd /tmp/raw60-1lf-core
+          test "$(cat SOURCE_COMMIT)" = "$GITHUB_SHA"
+          sha256sum -c SHA256SUMS >/dev/null
+          for i in $(seq 0 5); do sha256sum -c "core-$i.sha256"; done
+          for i in $(seq -w 0 23); do test -s "Raw60A1LFKid$i.olean"; done
+          export LEAN_PATH="$PWD"
+          lean -o Raw60A1LFData.olean Raw60A1LFData.lean | tee /tmp/raw60-1lf-assembly.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/raw60-1lf-assembly.log; then exit 1; fi
+          grep -F 'BB6.Agent1Raw60A1LF.all_closed' /tmp/raw60-1lf-assembly.log
+          sha256sum *.olean > ALL_OBJECTS.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw60-1lf-certified
+          path: |
+            /tmp/raw60-1lf-core/
+            /tmp/raw60-1lf-assembly.log
+          if-no-files-found: error
+
+  raw60_shards:
+    if: inputs.target == 'weighted-tnf-raw60-graft'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix:
+        child: ${{ fromJSON(inputs.raw60_shard_children) }}
+        shard: [0, 1, 2, 3, 4, 5]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Compile four raw60 kid modules
+        env:
+          CHILD: ${{ matrix.child }}
+          SHARD: ${{ matrix.shard }}
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent1-raw60/generate.py "$CHILD"
+          start=$((SHARD * 4))
+          roots=( "im-results/agent1-raw60/Raw60A${CHILD}Base.lean" )
+          for i in $(seq "$start" "$((start + 3))"); do
+            printf -v kid "%02d" "$i"
+            roots+=( "im-results/agent1-raw60/Raw60A${CHILD}Kid${kid}.lean" )
+          done
+          python tools/lean_compile_closure.py --workdir /tmp/raw60-shard --jobs 4 "${roots[@]}" | tee /tmp/raw60-shard.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/raw60-shard.log; then exit 1; fi
+          {
+            echo "child=$CHILD shard=$SHARD"
+            sha256sum im-results/agent1-raw60/specs.json im-results/agent1-raw60/generate.py im-results/agent1-raw60/Raw60RootCut.lean
+          } > /tmp/raw60-shard/manifest.txt
+      - name: Upload raw60 kid shard
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw60-shard-${{ matrix.child }}-${{ matrix.shard }}
+          path: /tmp/raw60-shard/*
+          if-no-files-found: error
+
+  raw60_graft:
+    if: inputs.target == 'weighted-tnf-raw60-graft'
+    needs: raw60_shards
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Validate reusable artifact run input
+        env:
+          ARTIFACT_RUN_ID: ${{ inputs.raw60_artifact_run_id }}
+        run: |
+          test -n "$ARTIFACT_RUN_ID" || { echo "raw60_artifact_run_id is required"; exit 1; }
+      - name: Download reusable child artifacts
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.raw60_artifact_run_id }}
+          pattern: raw60-child-*
+          path: /tmp/raw60-assembled
+          merge-multiple: true
+      - name: Download newly compiled kid shards
+        uses: actions/download-artifact@v4
+        with:
+          pattern: raw60-shard-*
+          path: /tmp/raw60-assembled
+          merge-multiple: true
+      - name: Verify source compatibility and assemble the raw60 canonical graft
+        env:
+          ARTIFACT_SHA: ${{ inputs.raw60_artifact_sha }}
+          ARTIFACT_RUN_ID: ${{ inputs.raw60_artifact_run_id }}
+          RAW60_SHARD_CHILDREN: ${{ inputs.raw60_shard_children }}
+        run: |
+          set -euo pipefail
+          if [[ -z "$ARTIFACT_RUN_ID" ]]; then
+            echo "raw60_artifact_run_id is required for this target"
+            exit 1
+          fi
+          git fetch --no-tags origin "$ARTIFACT_SHA"
+          for f in \
+            im-results/agent1-raw60/specs.json \
+            im-results/agent1-raw60/generate.py \
+            im-results/agent1-raw60/Raw60RootCut.lean \
+            im-results/agent13-coverage/unpack.py \
+            im-results/agent31-three-hole-tnf/generate_sweeps.py \
+            im-results/agent31-three-hole-tnf/generate_four_hole.py \
+            im-results/agent10-tnf-multipump/ZipThreeHoleAudit.lean \
+            im-results/agent10-tnf-multipump/ZipAuditCore.lean \
+            im-results/agent31-three-hole-tnf/ThreeHoleAudit.lean; do
+            old_sha="$(git rev-parse "$ARTIFACT_SHA:$f")"
+            new_sha="$(git rev-parse "HEAD:$f")"
+            if [[ "$old_sha" != "$new_sha" ]]; then
+              echo "Artifact source mismatch: $f"
+              exit 1
+            fi
+          done
+          children="$(python -c 'import json,os; print(" ".join(json.loads(os.environ["RAW60_SHARD_CHILDREN"])))')"
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          for child in $children; do
+            python im-results/agent1-raw60/generate.py "$child"
+          done
+          python tools/lean_compile_closure.py --workdir /tmp/raw60-root --jobs 4 im-results/agent1-raw60/Raw60RootProgress.lean
+          cp /tmp/raw60-root/*.olean /tmp/raw60-assembled/
+          for child in $children; do
+            cp "im-results/agent1-raw60/Raw60A${child}Data.lean" /tmp/raw60-assembled/
+          done
+          cp im-results/agent1-raw60/Raw60RootAssembly.lean /tmp/raw60-assembled/
+          cd /tmp/raw60-assembled
+          export LEAN_PATH="$PWD"
+          for child in $children; do
+            lean -o "Raw60A${child}Data.olean" "Raw60A${child}Data.lean"
+          done
+          for child in 0RC 0RE 0LD 0RF 0LB 1LA 1LB 1LC 1RF; do
+            test -f "Raw60A${child}Data.olean" || { echo "missing Raw60A${child}Data.olean"; exit 1; }
+          done
+          lean -o Raw60RootAssembly.olean Raw60RootAssembly.lean
+          cd "$GITHUB_WORKSPACE"
+          python im-results/agent10-tnf-raw87/generate.py
+          python im-results/agent10-tnf-raw91/generate.py
+          python im-results/agent10-tnf-multipump/generate.py 66 70 80
+          python im-results/agent10-tnf-multipump/generate.py 68 72 82
+          python im-results/agent10-tnf-multipump/generate.py 86 88 92 93 97 98 100 101 102 104
+          python tools/lean_compile_closure.py --workdir /tmp/raw60-canonical --jobs 4 im-results/agent1-raw60/Raw60CanonicalMembership.lean
+          cp /tmp/raw60-canonical/*.olean /tmp/raw60-assembled/
+          cp im-results/agent1-raw60/Raw60CanonicalGraft.lean /tmp/raw60-assembled/
+          cd /tmp/raw60-assembled
+          export LEAN_PATH="$PWD"
+          lean -o Raw60CanonicalGraft.olean Raw60CanonicalGraft.lean | tee /tmp/raw60-canonical-graft.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/raw60-canonical-graft.log; then exit 1; fi
+      - name: Upload source-checked raw60 canonical graft
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw60-canonical-graft
+          path: |
+            /tmp/raw60-assembled/*.olean
+            /tmp/raw60-canonical-graft.log
+          if-no-files-found: error
+
+  raw113:
+    if: inputs.target == 'weighted-tnf-raw113'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Regenerate and kernel-check raw113 exact weighted maximum and quotient graft
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent25-raw113/generate.py
+          python tools/lean_compile_closure.py --workdir /tmp/a25-raw113 --jobs 4 im-results/agent25-raw113/Raw113Exact.lean | tee /tmp/a25-raw113.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a25-raw113.log; then exit 1; fi
+
+  raw124_1la_prepare:
+    if: inputs.target == 'weighted-tnf-raw124-1la-sharded'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Generate raw124 1LA sources and compile the common dependency core
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent2-tnf-raw124/generate_bundle.py 1LA
+          D=im-results/agent2-tnf-raw124
+          W=/tmp/a2-raw124-1la
+          python tools/lean_compile_closure.py --workdir "$W" --jobs 4 "$D/Raw124B1LABase.lean" im-results/agent47-rooted-tnf/CanonicalFrontier.lean | tee /tmp/a2-raw124-prepare.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a2-raw124-prepare.log; then exit 1; fi
+          cp "$D"/Raw124B1LAPumps.lean "$D"/Raw124B1LABase.lean "$D"/Raw124B1LAKidK*.lean "$D"/Raw124B1LAData.lean "$W/"
+          cd "$W"
+          git -C "$GITHUB_WORKSPACE" rev-parse HEAD > SOURCE_COMMIT
+          sha256sum Raw124B1LA*.lean > RAW124_SOURCE.sha256
+          cp -a "$HOME/.elan" "$W/.elan"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw124-1la-common
+          path: /tmp/a2-raw124-1la
+          include-hidden-files: true
+          if-no-files-found: error
+
+  raw124_1la_shards:
+    if: inputs.target == 'weighted-tnf-raw124-1la-sharded'
+    needs: raw124_1la_prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { shard: 0, kids: 'K00 K01 K02 K03' }
+          - { shard: 1, kids: 'K04 K05 K06 K07' }
+          - { shard: 2, kids: 'K08 K09 K10 K11' }
+          - { shard: 3, kids: 'K12 K13 K14 K15' }
+          - { shard: 4, kids: 'K16 K17 K18 K19' }
+          - { shard: 5, kids: 'K20 K21 K22 K23' }
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw124-1la-common
+          path: /tmp/a2-raw124-1la
+      - name: Use pinned Lean toolchain from common artifact
+        run: |
+          echo "ELAN_HOME=/tmp/a2-raw124-1la/.elan" >> "$GITHUB_ENV"
+          echo "/tmp/a2-raw124-1la/.elan/bin" >> "$GITHUB_PATH"
+          find /tmp/a2-raw124-1la/.elan -type f -path '*/bin/*' -exec chmod u+x {} +
+          export ELAN_HOME=/tmp/a2-raw124-1la/.elan
+          export PATH=/tmp/a2-raw124-1la/.elan/bin:$PATH
+          /tmp/a2-raw124-1la/.elan/bin/lean --version
+      - name: Compile disjoint raw124 1LA child modules
+        env:
+          KIDS: ${{ matrix.kids }}
+        run: |
+          set -euo pipefail
+          cd /tmp/a2-raw124-1la
+          export LEAN_PATH="$PWD"
+          test "$(cat SOURCE_COMMIT)" = "$GITHUB_SHA"
+          sha256sum -c RAW124_SOURCE.sha256
+          mkdir -p /tmp/a2-raw124-kids
+          for k in $KIDS; do printf 'Raw124B1LAKid%s\n' "$k"; done |
+            xargs -P 1 -I '{}' bash -c 'set -e; lean -o "$1.olean" "$1.lean"; cp "$1.olean" /tmp/a2-raw124-kids/' _ '{}' |
+            tee /tmp/a2-raw124-shard.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a2-raw124-shard.log; then exit 1; fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw124-1la-kids-${{ matrix.shard }}
+          path: /tmp/a2-raw124-kids
+          if-no-files-found: error
+
+  raw124_1la_assemble:
+    if: inputs.target == 'weighted-tnf-raw124-1la-sharded'
+    needs: raw124_1la_shards
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw124-1la-common
+          path: /tmp/a2-raw124-1la
+      - name: Use pinned Lean toolchain from common artifact
+        run: |
+          echo "ELAN_HOME=/tmp/a2-raw124-1la/.elan" >> "$GITHUB_ENV"
+          echo "/tmp/a2-raw124-1la/.elan/bin" >> "$GITHUB_PATH"
+          find /tmp/a2-raw124-1la/.elan -type f -path '*/bin/*' -exec chmod u+x {} +
+          export ELAN_HOME=/tmp/a2-raw124-1la/.elan
+          export PATH=/tmp/a2-raw124-1la/.elan/bin:$PATH
+          /tmp/a2-raw124-1la/.elan/bin/lean --version
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw124-1la-kids-*
+          path: /tmp/a2-raw124-1la
+          merge-multiple: true
+      - name: Assemble and axiom-check the exact 1LA branch
+        run: |
+          set -euo pipefail
+          cd /tmp/a2-raw124-1la
+          export LEAN_PATH="$PWD"
+          test "$(cat SOURCE_COMMIT)" = "$GITHUB_SHA"
+          sha256sum -c RAW124_SOURCE.sha256
+          for k in $(seq -w 0 23); do test -s "Raw124B1LAKidK$k.olean"; done
+          lean -o Raw124B1LAData.olean Raw124B1LAData.lean 2>&1 | tee /tmp/a2-raw124-assemble.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a2-raw124-assemble.log; then exit 1; fi
+          python - <<'PY'
+          import pathlib, re
+          log = pathlib.Path('/tmp/a2-raw124-assemble.log').read_text()
+          allowed = {'propext', 'Classical.choice', 'Quot.sound'}
+          seen = set()
+          for name, axioms in re.findall(r"'([^']+)' depends on axioms: \[([^\]]*)\]", log):
+              actual = {a.strip() for a in axioms.split(',') if a.strip()}
+              assert actual <= allowed, (name, actual - allowed)
+              seen.add(name.rsplit('.', 1)[-1])
+          for name in re.findall(r"'([^']+)' does not depend on any axioms", log):
+              seen.add(name.rsplit('.', 1)[-1])
+          assert {'checkRoot', 'bound_all'} <= seen, seen
+          print('Raw124 1LA exact branch source and allowed-axiom gate passed.')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw124-1la-source-accepted
+          path: |
+            /tmp/a2-raw124-1la/*.olean
+            /tmp/a2-raw124-assemble.log
+            /tmp/a2-raw124-1la/SOURCE_COMMIT
+            /tmp/a2-raw124-1la/RAW124_SOURCE.sha256
+          if-no-files-found: error
+
+  raw124_0lb_longcycle:
+    if: inputs.target == 'weighted-tnf-raw124-0lb-longcycle100k'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Boost multiprecision headers
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libboost-dev
+      - name: Enumerate raw124 F1=0LB and search exact tape cycles to 100000 steps
+        run: |
+          set -euo pipefail
+          W=/tmp/raw124-0lb
+          mkdir -p "$W"
+          g++ -O3 -std=c++17 "$GITHUB_WORKSPACE/im-results/agent2-tnf-raw99/enumerate.cpp" -o /tmp/raw124-enumerate
+          cd "$W"
+          /tmp/raw124-enumerate "1RB---_1RC---_0RD---_1LD1RE_---1LF_---0LB"
+          test -s open.txt
+          test -s tree.json
+          echo "Raw open leaves: $(wc -l < open.txt)"
+          awk 'NR==470 { print "LEAF469_TABLE", $0 }' open.txt
+          sha256sum open.txt tree.json
+          g++ -O3 -std=c++20 "$GITHUB_WORKSPACE/im-results/agent2-tnf-raw124/longcycle.cpp" -o /tmp/raw124-longcycle
+          python - <<'PY'
+          from pathlib import Path
+          opened = Path("open.txt").read_text().splitlines()
+          Path("open-indexed.txt").write_text("".join(f"{i} {table.replace('_', '')}\n" for i, table in enumerate(opened)))
+          print(f"Indexed {len(opened)} exact raw leaves for the cycle checker.")
+          PY
+          /tmp/raw124-longcycle 100000 128 < open-indexed.txt > longcycle100k.out
+          python - <<'PY'
+          from pathlib import Path
+          opened = Path("open.txt").read_text().splitlines()
+          rows = [line.split() for line in Path("longcycle100k.out").read_text().splitlines()]
+          assert all(len(row) >= 2 and row[1] in {"cycle", "hole", "open"} for row in rows)
+          ids = [int(row[0]) for row in rows]
+          assert len(set(ids)) == len(ids)
+          assert set(ids) == set(range(len(opened))), (len(opened), len(ids), sorted(set(range(len(opened))) - set(ids))[:10])
+          cycles = [row for row in rows if row[1] == "cycle"]
+          holes = [row for row in rows if row[1] == "hole"]
+          single_holes = [row for row in holes if opened[int(row[0])].count("---") == 1]
+          multi_holes = [row for row in holes if opened[int(row[0])].count("---") > 1]
+          unresolved = [row for row in rows if row[1] == "open"]
+          print(f"Long-cycle census: {len(cycles)} exact cycles, {len(single_holes)} single-hole terminals, {len(multi_holes)} multi-hole split candidates, {len(unresolved)} unresolved of {len(opened)} raw open leaves")
+          if len(opened) > 469:
+              print("OPEN_ROW_469", 469, opened[469])
+              match = next(row for row in rows if int(row[0]) == 469)
+              print("OPEN_ROW_469_RESULT", *match)
+          for row in holes:
+              if len(row) > 2 and int(row[2]) > 12000:
+                  print("LATE_QUERY", *row)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw124-0lb-longcycle100k
+          path: /tmp/raw124-0lb
+          if-no-files-found: error
+
+  raw124_bundle_prepare:
+    if: inputs.target == 'weighted-tnf-raw124-bundle-sharded'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      RAW124_BRANCH: ${{ inputs.raw124_branch }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Install Boost multiprecision headers
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libboost-dev
+      - name: Generate selected raw124 bundle branch and compile common core
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent2-tnf-raw124/generate_bundle.py "$RAW124_BRANCH"
+          D=im-results/agent2-tnf-raw124
+          W=/tmp/a2-raw124-bundle
+          STEM="Raw124B${RAW124_BRANCH}"
+          python tools/lean_compile_closure.py --workdir "$W" --jobs 4 "$D/${STEM}Base.lean" im-results/agent47-rooted-tnf/CanonicalFrontier.lean | tee /tmp/a2-raw124-bundle-prepare.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a2-raw124-bundle-prepare.log; then exit 1; fi
+          cp "$D/${STEM}Pumps.lean" "$D/${STEM}Base.lean" "$D/${STEM}KidK"*.lean "$D/${STEM}Data.lean" "$W/"
+          cd "$W"
+          git -C "$GITHUB_WORKSPACE" rev-parse HEAD > SOURCE_COMMIT
+          sha256sum "${STEM}"*.lean > RAW124_SOURCE.sha256
+          cp -a "$HOME/.elan" "$W/.elan"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw124-${{ inputs.raw124_branch }}-common
+          path: /tmp/a2-raw124-bundle
+          include-hidden-files: true
+          if-no-files-found: error
+
+  raw124_bundle_shards:
+    if: inputs.target == 'weighted-tnf-raw124-bundle-sharded'
+    needs: raw124_bundle_prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      RAW124_BRANCH: ${{ inputs.raw124_branch }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { shard: 0, kids: 'K00 K01 K02 K03' }
+          - { shard: 1, kids: 'K04 K05 K06 K07' }
+          - { shard: 2, kids: 'K08 K09 K10 K11' }
+          - { shard: 3, kids: 'K12 K13 K14 K15' }
+          - { shard: 4, kids: 'K16 K17 K18 K19' }
+          - { shard: 5, kids: 'K20 K21 K22 K23' }
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw124-${{ inputs.raw124_branch }}-common
+          path: /tmp/a2-raw124-bundle
+      - name: Use pinned Lean toolchain from common artifact
+        run: |
+          echo "ELAN_HOME=/tmp/a2-raw124-bundle/.elan" >> "$GITHUB_ENV"
+          echo "/tmp/a2-raw124-bundle/.elan/bin" >> "$GITHUB_PATH"
+          find /tmp/a2-raw124-bundle/.elan -type f -path '*/bin/*' -exec chmod u+x {} +
+          export ELAN_HOME=/tmp/a2-raw124-bundle/.elan
+          export PATH=/tmp/a2-raw124-bundle/.elan/bin:$PATH
+          /tmp/a2-raw124-bundle/.elan/bin/lean --version
+      - name: Compile selected branch kid modules
+        env:
+          KIDS: ${{ matrix.kids }}
+        run: |
+          set -euo pipefail
+          cd /tmp/a2-raw124-bundle
+          export LEAN_PATH="$PWD"
+          test "$(cat SOURCE_COMMIT)" = "$GITHUB_SHA"
+          sha256sum -c RAW124_SOURCE.sha256
+          STEM="Raw124B${RAW124_BRANCH}"
+          mkdir -p /tmp/a2-raw124-bundle-kids
+          for k in $KIDS; do printf '%sKid%s\n' "$STEM" "$k"; done |
+            xargs -P 1 -I '{}' bash -c 'set -e; lean -o "$1.olean" "$1.lean"; cp "$1.olean" /tmp/a2-raw124-bundle-kids/' _ '{}' |
+            tee /tmp/a2-raw124-bundle-shard.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a2-raw124-bundle-shard.log; then exit 1; fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw124-${{ inputs.raw124_branch }}-kids-${{ matrix.shard }}
+          path: /tmp/a2-raw124-bundle-kids
+          if-no-files-found: error
+
+  raw124_bundle_assemble:
+    if: inputs.target == 'weighted-tnf-raw124-bundle-sharded'
+    needs: raw124_bundle_shards
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      RAW124_BRANCH: ${{ inputs.raw124_branch }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw124-${{ inputs.raw124_branch }}-common
+          path: /tmp/a2-raw124-bundle
+      - name: Use pinned Lean toolchain from common artifact
+        run: |
+          echo "ELAN_HOME=/tmp/a2-raw124-bundle/.elan" >> "$GITHUB_ENV"
+          echo "/tmp/a2-raw124-bundle/.elan/bin" >> "$GITHUB_PATH"
+          find /tmp/a2-raw124-bundle/.elan -type f -path '*/bin/*' -exec chmod u+x {} +
+          export ELAN_HOME=/tmp/a2-raw124-bundle/.elan
+          export PATH=/tmp/a2-raw124-bundle/.elan/bin:$PATH
+          /tmp/a2-raw124-bundle/.elan/bin/lean --version
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw124-${{ inputs.raw124_branch }}-kids-*
+          path: /tmp/a2-raw124-bundle
+          merge-multiple: true
+      - name: Assemble and axiom-check selected raw124 branch
+        run: |
+          set -euo pipefail
+          cd /tmp/a2-raw124-bundle
+          export LEAN_PATH="$PWD"
+          test "$(cat SOURCE_COMMIT)" = "$GITHUB_SHA"
+          sha256sum -c RAW124_SOURCE.sha256
+          STEM="Raw124B${RAW124_BRANCH}"
+          for k in $(seq -w 0 23); do test -s "${STEM}KidK$k.olean"; done
+          lean -o "${STEM}Data.olean" "${STEM}Data.lean" 2>&1 | tee /tmp/a2-raw124-bundle-assemble.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a2-raw124-bundle-assemble.log; then exit 1; fi
+          python - <<'PY'
+          import pathlib, re
+          log = pathlib.Path('/tmp/a2-raw124-bundle-assemble.log').read_text()
+          allowed = {'propext', 'Classical.choice', 'Quot.sound'}
+          seen = set()
+          for name, axioms in re.findall(r"'([^']+)' depends on axioms: \[([^\]]*)\]", log):
+              actual = {a.strip() for a in axioms.split(',') if a.strip()}
+              assert actual <= allowed, (name, actual - allowed)
+              seen.add(name.rsplit('.', 1)[-1])
+          for name in re.findall(r"'([^']+)' does not depend on any axioms", log):
+              seen.add(name.rsplit('.', 1)[-1])
+          assert {'checkRoot', 'bound_all'} <= seen, seen
+          import os
+          print(f'Raw124 {os.environ["RAW124_BRANCH"]} branch source and allowed-axiom gate passed.')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw124-${{ inputs.raw124_branch }}-source-accepted
+          path: |
+            /tmp/a2-raw124-bundle/*.olean
+            /tmp/a2-raw124-bundle-assemble.log
+            /tmp/a2-raw124-bundle/SOURCE_COMMIT
+            /tmp/a2-raw124-bundle/RAW124_SOURCE.sha256
+          if-no-files-found: error
+
+  raw123:
+    if: inputs.target == 'weighted-tnf-raw123'
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Regenerate and kernel-check raw123 partial weighted partition and quotient graft
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent25-raw123/generate.py
+          python tools/lean_compile_closure.py --workdir /tmp/a25-raw123 --jobs 4 im-results/agent25-raw123/Raw123Exact.lean | tee /tmp/a25-raw123.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a25-raw123.log; then exit 1; fi
+
+  raw123_recursive:
+    if: inputs.target == 'weighted-tnf-raw123-recursive'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Kernel-check new recursive return certificates
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python - <<'PY'
+          import base64, zlib, hashlib
+          from pathlib import Path
+          p = Path("im-results/agent25-raw123")
+          b = zlib.decompress(base64.b64decode((p/"Raw123RecursiveBatch.lean.zlib.b64").read_text()))
+          assert hashlib.sha256(b).hexdigest() == "ee1b102ca8de7f12201cf4082f1100e968c7d15161c6dd632e38a07ad77e6112"
+          (p/"Raw123RecursiveBatch.lean").write_bytes(b)
+          PY
+          python tools/lean_compile_closure.py --workdir /tmp/a25-raw123-rec --jobs 4 im-results/agent25-raw123/Raw123RecursiveBatch.lean | tee /tmp/a25-raw123-rec.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a25-raw123-rec.log; then exit 1; fi
+
+  raw123_bidfa:
+    if: inputs.target == 'weighted-tnf-raw123-bidfa'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Kernel-check finite phase-aware invariants
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent25-raw123/audit_bidfa.py
+          python tools/lean_compile_closure.py --workdir /tmp/a25-raw123-bi --jobs 4 im-results/agent25-raw123/Raw123BiDFAAudit.lean | tee /tmp/a25-raw123-bi.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a25-raw123-bi.log; then exit 1; fi
+
+  raw60_complete_children:
+    if: inputs.target == 'weighted-tnf-raw60-complete' || inputs.target == 'weighted-tnf-raw60-repair'
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix:
+        child: ${{ fromJSON(inputs.target == 'weighted-tnf-raw60-repair' && inputs.raw60_shard_children || '["0RC","0RE","0LD","0RF","0LB","1LA","1LB","1LC","1RF","0LC","0LF","1LF","1RE"]') }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Generate and source-check exact child with bounded tree shards
+        env:
+          CHILD: ${{ matrix.child }}
+          BB6_SHARD_AUDIT: '1'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          D=im-results/agent1-raw60
+          case "$CHILD" in
+            0RC) BOUND=376;; 0RE) BOUND=719;; 0LD) BOUND=176;;
+            0RF) BOUND=1175;; 0LB) BOUND=258;; 1LA) BOUND=178;;
+            1LB) BOUND=620;; 1LC) BOUND=253;; 1RF) BOUND=276;;
+            0LC) BOUND=251;; 0LF) BOUND=802;; 1LF) BOUND=1175;;
+            1RE) BOUND=211;; *) exit 2;;
+          esac
+          case "$CHILD" in
+            0LC) python "$D/generate_0lc.py"; SPEC="$D/spec-0LC.json";;
+            0LF) python "$D/generate_0lf_audit.py"; SPEC="$D/0lf-frontier.json";;
+            1LF) python "$D/generate_1lf.py"; SPEC="$D/spec-1LF.json";;
+            1RE) python "$D/generate_1re.py"; SPEC="$D/spec-1RE.json";;
+            *) python "$D/generate.py" "$CHILD"; SPEC="$D/specs.json";;
+          esac
+          W=/tmp/raw60-complete
+          ROOT="$D/Raw60A${CHILD}Data.lean"
+          THEOREM="BB6.Agent1Raw60A${CHILD}.all_closed"
+          grep -F "theorem all_closed" "$ROOT"
+          python tools/lean_compile_closure.py --workdir "$W" --jobs 4 \
+            --manifest "$W/manifest.json" --label "raw60-complete-$CHILD" \
+            --artifact-name "raw60-complete-$CHILD" --theorem "$THEOREM" \
+            --parent-table "1RB${CHILD}_1RC---_0RD---_1LD1RE_---1RA_------" \
+            --weighted-bound "$BOUND" --provenance-input "$SPEC" \
+            "$ROOT" | tee /tmp/raw60-complete.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/raw60-complete.log "$THEOREM"
+          cp /tmp/raw60-complete.log "$W/audit.log"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw60-complete-${{ matrix.child }}
+          path: /tmp/raw60-complete/
+          if-no-files-found: error
+
+  raw60_complete_parent:
+    if: inputs.target == 'weighted-tnf-raw60-complete' || inputs.target == 'weighted-tnf-raw60-repair'
+    needs: raw60_complete_children
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        if: inputs.target == 'weighted-tnf-raw60-repair'
+        with:
+          pattern: raw60-complete-*
+          path: /tmp/raw60-downloads
+          run-id: ${{ inputs.raw60_artifact_run_id }}
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw60-complete-*
+          path: /tmp/raw60-current
+      - name: Overlay freshly checked children
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/raw60-downloads
+          for d in /tmp/raw60-current/raw60-complete-*; do
+            test -d "$d"
+            dest="/tmp/raw60-downloads/${d##*/}"
+            rm -rf "$dest"
+            mv "$d" "$dest"
+          done
+      - name: Strictly merge all thirteen checked child closures and prove parent
+        run: |
+          set -euo pipefail
+          D=im-results/agent1-raw60
+          U=/tmp/raw60-union
+          W=/tmp/raw60-parent
+          python im-results/agent4-raw109/merge_shards.py /tmp/raw60-downloads "$U" "$D/raw60_complete.json"
+          python tools/lean_compile_closure.py --workdir "$W" --jobs 4 \
+            --precompiled-manifest "$U/manifest.json" --precompiled-dir "$U" \
+            --manifest "$W/manifest.json" --label raw60-parent \
+            --artifact-name raw60-parent-proof --theorem BB6.Agent1Raw60Root.all60 \
+            --parent-table '1RB---_1RC---_0RD---_1LD1RE_---1RA_------' \
+            --weighted-bound 1175 "$D/Raw60RootFull.lean" | tee /tmp/raw60-parent.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/raw60-parent.log BB6.Agent1Raw60Root.all60
+          cp /tmp/raw60-parent.log "$W/audit.log"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw60-parent-proof
+          path: /tmp/raw60-parent/
+          if-no-files-found: error
+
+  raw60_sparse_prepare:
+    if: inputs.target == 'weighted-tnf-raw60-sparse-shards'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate exact sparse tries and bounded subtree proof groups
+        id: plan
+        run: |
+          set -euo pipefail
+          D=im-results/agent1-raw60
+          python "$D/split_sparse_rows.py"
+          echo "matrix=$(python -c 'import json,sys; print(json.dumps({"include":json.load(open(sys.argv[1]))},separators=(",",":")))' "$D/raw60_sparse_plan.json")" >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw60-sparse-source
+          path: |
+            im-results/agent1-raw60/Raw60LFSparse*.lean
+            im-results/agent1-raw60/Raw60RESparse*.lean
+            im-results/agent1-raw60/raw60_sparse_plan.json
+          if-no-files-found: error
+
+  raw60_sparse_shards:
+    if: inputs.target == 'weighted-tnf-raw60-sparse-shards'
+    needs: raw60_sparse_prepare
+    strategy:
+      fail-fast: false
+      max-parallel: 12
+      matrix: ${{ fromJSON(needs.raw60_sparse_prepare.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw60-sparse-source
+          path: im-results/agent1-raw60
+      - name: Install Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Source-check bounded subtree proof group
+        env:
+          GROUP: ${{ matrix.group }}
+          MODULE: ${{ matrix.module }}
+        run: |
+          set -euo pipefail
+          D=im-results/agent1-raw60
+          W=/tmp/raw60-sparse-shard
+          python im-results/agent13-coverage/unpack.py
+          python tools/lean_compile_closure.py --workdir "$W" --jobs 2 \
+            --manifest "$W/manifest.json" --label "raw60-sparse-$GROUP" \
+            --artifact-name "raw60-sparse-$GROUP" \
+            --provenance-input "$D/raw60_sparse_plan.json" \
+            "$D/$MODULE.lean" | tee /tmp/raw60-sparse.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/raw60-sparse.log; then exit 1; fi
+          cp /tmp/raw60-sparse.log "$W/audit.log"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw60-sparse-${{ matrix.group }}
+          path: /tmp/raw60-sparse-shard/
+          if-no-files-found: error
+
+  raw60_sparse_children:
+    if: inputs.target == 'weighted-tnf-raw60-sparse-shards'
+    needs: raw60_sparse_shards
+    strategy:
+      fail-fast: false
+      matrix:
+        child: ['1LF','1RE']
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Generate original exact child audit
+        env:
+          CHILD: ${{ matrix.child }}
+          BB6_SHARD_AUDIT: '1'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          D=im-results/agent1-raw60
+          case "$CHILD" in
+            1LF) python "$D/generate_1lf.py";;
+            1RE) python "$D/generate_1re.py";;
+          esac
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw60-sparse-source
+          path: im-results/agent1-raw60
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw60-sparse-${{ matrix.child }}-*
+          path: /tmp/raw60-sparse-downloads
+      - name: Compose checked sparse groups and prove child
+        env:
+          CHILD: ${{ matrix.child }}
+        run: |
+          set -euo pipefail
+          D=im-results/agent1-raw60
+          U=/tmp/raw60-sparse-union
+          W=/tmp/raw60-complete
+          python - "$D/raw60_sparse_plan.json" "$CHILD" <<'PY'
+          import json,sys
+          plan=json.load(open(sys.argv[1]))
+          groups={p["group"]:[p["module"]] for p in plan if p["child"]==sys.argv[2]}
+          assert groups
+          json.dump({"artifact_prefix":"raw60-sparse","groups":groups},open("/tmp/sparse-config.json","w"))
+          PY
+          python im-results/agent4-raw109/merge_shards.py /tmp/raw60-sparse-downloads "$U" /tmp/sparse-config.json
+          case "$CHILD" in 1LF) BOUND=1175;; 1RE) BOUND=211;; esac
+          THEOREM="BB6.Agent1Raw60A${CHILD}.all_closed"
+          python tools/lean_compile_closure.py --workdir "$W" --jobs 4 \
+            --precompiled-manifest "$U/manifest.json" --precompiled-dir "$U" \
+            --manifest "$W/manifest.json" --label "raw60-complete-$CHILD" \
+            --artifact-name "raw60-complete-$CHILD" --theorem "$THEOREM" \
+            --parent-table "1RB${CHILD}_1RC---_0RD---_1LD1RE_---1RA_------" \
+            --weighted-bound "$BOUND" --provenance-input "$D/spec-$CHILD.json" \
+            "$D/Raw60A${CHILD}Data.lean" | tee /tmp/raw60-complete.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/raw60-complete.log "$THEOREM"
+          cp /tmp/raw60-complete.log "$W/audit.log"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw60-complete-${{ matrix.child }}
+          path: /tmp/raw60-complete/
+          if-no-files-found: error
+
+  raw60_sparse_parent:
+    if: inputs.target == 'weighted-tnf-raw60-sparse-shards'
+    needs: raw60_sparse_children
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw60-complete-*
+          path: /tmp/raw60-downloads
+          run-id: ${{ inputs.raw60_artifact_run_id }}
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw60-complete-0LF
+          path: /tmp/raw60-downloads/raw60-complete-0LF
+          run-id: ${{ inputs.raw60_repair_artifact_run_id }}
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw60-complete-*
+          path: /tmp/raw60-downloads
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw60-sparse-source
+          path: im-results/agent1-raw60
+      - name: Strictly assemble all thirteen accepted children
+        run: |
+          set -euo pipefail
+          D=im-results/agent1-raw60
+          U=/tmp/raw60-union
+          W=/tmp/raw60-parent
+          python im-results/agent4-raw109/merge_shards.py /tmp/raw60-downloads "$U" "$D/raw60_complete.json"
+          python tools/lean_compile_closure.py --workdir "$W" --jobs 4 \
+            --precompiled-manifest "$U/manifest.json" --precompiled-dir "$U" \
+            --manifest "$W/manifest.json" --label raw60-parent \
+            --artifact-name raw60-parent-proof --theorem BB6.Agent1Raw60Root.all60 \
+            --parent-table '1RB---_1RC---_0RD---_1LD1RE_---1RA_------' \
+            --weighted-bound 1175 "$D/Raw60RootFull.lean" | tee /tmp/raw60-parent.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/raw60-parent.log BB6.Agent1Raw60Root.all60
+          cp /tmp/raw60-parent.log "$W/audit.log"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw60-parent-proof
+          path: /tmp/raw60-parent/
+          if-no-files-found: error
+  raw118_wide_cert:
+    if: inputs.target == 'weighted-tnf-raw118-wide-cert'
+    strategy:
+      fail-fast: false
+      max-parallel: 10
+      matrix:
+        leaf: [183, 304, 306, 373, 720, 1624, 1770, 1883, 2427, 2440, 2488, 2902, 3168, 3538, 3542, 3543, 3762, 3763, 3764, 3772, 3773, 3774, 3833, 3986, 4453, 4567, 5170, 5180, 5186, 5187, 5188, 5194, 5228, 5231, 5243, 5256, 5277, 5298, 5319, 5359, 5368, 5370, 5391, 5395, 5434, 5482, 5492]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Regenerate and check one exact compressed wide-window invariant
+        env:
+          LEAF: ${{ matrix.leaf }}
+        run: |
+          set -euo pipefail
+          D=im-results/agent1-bidfa-sat
+          W=/tmp/raw118-wide-proof
+          python im-results/agent13-coverage/unpack.py
+          python "$D/wide_cert.py" "$LEAF"
+          THEOREM="BB6Coverage.Agent1BiDFAWide.M$LEAF.never"
+          python tools/lean_compile_closure.py --workdir "$W" --jobs 4 \
+            --manifest "$W/manifest.json" --label "raw118-wide-$LEAF" \
+            --artifact-name "raw118-wide-$LEAF" --theorem "$THEOREM" \
+            --provenance-input "$D/raw118-hard87.tsv" \
+            --provenance-input "$D/raw118-wide-widths.json" \
+            "$D/wide-generated/Raw118Wide$LEAF.lean" | tee /tmp/raw118-wide.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/raw118-wide.log "$THEOREM"
+          cp /tmp/raw118-wide.log "$W/audit.log"
+          cp "$D/wide-generated/Raw118Wide$LEAF.json" "$W/witness.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw118-wide-${{ matrix.leaf }}
+          path: /tmp/raw118-wide-proof/
+          if-no-files-found: error
+
+  raw118_wide_repair:
+    if: inputs.target == 'weighted-tnf-raw118-wide-repair'
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        leaf: [5180, 5187, 5368]
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Regenerate and source-check one repaired wide-window invariant
+        env:
+          LEAF: ${{ matrix.leaf }}
+        run: |
+          set -euo pipefail
+          D=im-results/agent1-bidfa-sat
+          W=/tmp/raw118-wide-proof
+          python im-results/agent13-coverage/unpack.py
+          python "$D/wide_cert.py" "$LEAF"
+          THEOREM="BB6Coverage.Agent1BiDFAWide.M$LEAF.never"
+          python tools/lean_compile_closure.py --workdir "$W" --jobs 4 \
+            --manifest "$W/manifest.json" --label "raw118-wide-$LEAF" \
+            --artifact-name "raw118-wide-$LEAF" --theorem "$THEOREM" \
+            --provenance-input "$D/raw118-hard87.tsv" \
+            --provenance-input "$D/raw118-wide-widths.json" \
+            "$D/wide-generated/Raw118Wide$LEAF.lean" | tee /tmp/raw118-wide.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/raw118-wide.log "$THEOREM"
+          cp /tmp/raw118-wide.log "$W/audit.log"
+          cp "$D/wide-generated/Raw118Wide$LEAF.json" "$W/witness.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw118-wide-${{ matrix.leaf }}
+          path: /tmp/raw118-wide-proof/
+          if-no-files-found: error
+
+  raw10hardrootr1:
+    if: inputs.target == 'weighted-tnf-raw10-hardroot-r1-adapter'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lean --version
+      - name: Download the 20 generated raw10 cycle certificates
+        uses: actions/download-artifact@v4
+        with:
+          name: raw10-box8-halt-slice
+          run-id: 45593139942
+          github-token: ${{ github.token }}
+          path: .tmp/r1-artifact
+      - name: Compile raw10 combined consumer and r1 leaf adapter
+        run: |
+          set -euo pipefail
+          mkdir -p .tmp/r1src .tmp/r1work
+          find .tmp/r1-artifact -name 'Box8F0*Packed.lean' -o -name 'Box8F0*Proof.lean' | while read -r f; do cp "$f" .tmp/r1src/; done
+          mapfile -t roots < <(find .tmp/r1src -name 'Box8F0*Proof.lean' -print | sort)
+          test "${#roots[@]}" -eq 20
+          python tools/lean_compile_closure.py "${roots[@]}" \
+            im-results/agent17-raw10-box-far-search/Raw10BoxCombinedConsumer.lean \
+            im-results/agent50-weighted-tnf-pilot/Raw10HardRootR1Adapter.lean \
+            --workdir .tmp/r1work --source-root .tmp/r1src --jobs 4 \
+            --manifest .tmp/r1work/manifest.json 2>&1 | tee /tmp/raw10-r1-adapter.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/raw10-r1-adapter.log; then
+            echo "Forbidden proof placeholder or native_decide in raw10 r1 adapter" >&2
+            exit 1
+          fi
+          python3 - <<'PY'
+          import json, pathlib, re
+          log = pathlib.Path("/tmp/raw10-r1-adapter.log").read_text()
+          required = [
+            "BB6.Agent50Raw10HardRootR1Adapter.oneHaltLeafCover",
+            "BB6.Agent50Raw10HardRootR1Adapter.r1LeafCoverOfNever",
+            "BB6.Agent50Raw10HardRootR1Adapter.r1Leaf_box24_contains",
+            "BB6.Agent50Raw10HardRootR1Adapter.r1Leaf_fits_box24",
+            "BB6.Agent50Raw10HardRootR1Adapter.r1Leaf_parent",
+            "BB6.Agent50Raw10HardRootR1Adapter.raw10CoverWithR1",
+          ]
+          profiles = {
+            name: {x.strip() for x in axioms.split(",") if x.strip()}
+            for name, axioms in re.findall(r"'([^']+)' depends on axioms: \[([^\]]*)\]", log)
+          }
+          allowed = {"propext", "Classical.choice", "Quot.sound"}
+          for name in required:
+            if name not in profiles:
+              raise SystemExit("missing axiom profile: " + name)
+            bad = profiles[name] - allowed
+            if bad:
+              raise SystemExit(name + ": unexpected axioms " + json.dumps(sorted(bad)))
+          print(json.dumps({name: sorted(profiles[name]) for name in required}, indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw10-hardroot-r1-adapter
+          path: |
+            .tmp/r1work/
+            /tmp/raw10-r1-adapter.log
+          if-no-files-found: error
+
+  raw124_0lf_hard_search:
+    if: inputs.target == 'weighted-tnf-raw124-0lf-hard-search'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Search the five unresolved raw124 0LF one-hole leaves
+        run: |
+          set -euo pipefail
+          python im-results/agent2-tnf-raw124/search_0lf_hard_leaves.py 9
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw124-0lf-hard-search
+          path: |
+            im-results/agent2-tnf-raw124/0lf-hard-search-input.txt
+            im-results/agent2-tnf-raw124/0lf-hard-search-results.txt
+            im-results/agent2-tnf-raw124/0lf-hard-search-stats.txt
+          if-no-files-found: warn
+
+  raw124_0lf_growth_probe:
+    if: inputs.target == 'weighted-tnf-raw124-0lf-growth'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Reconstruct original source and compile raw124 block-growth probes
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python tools/lean_compile_closure.py --workdir /tmp/a2-raw124-0lf-growth --jobs 4 im-results/agent2-tnf-raw124/Raw124ZeroLFProbe.lean | tee /tmp/a2-raw124-0lf-growth.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a2-raw124-0lf-growth.log; then
+            echo "Forbidden proof placeholder or native_decide in raw124 block-growth closure" >&2
+            exit 1
+          fi
+          python3 - <<'PY'
+          import pathlib, re
+          log = pathlib.Path("/tmp/a2-raw124-0lf-growth.log").read_text()
+          profiles = {
+              name.rsplit(".", 1)[-1]: {x.strip() for x in axioms.split(",") if x.strip()}
+              for name, axioms in re.findall(r"'([^']+)' depends on axioms: \[([^\]]*)\]", log)
+          }
+          for name in re.findall(r"'([^']+)' does not depend on any axioms", log):
+              profiles[name.rsplit(".", 1)[-1]] = set()
+          allowed = {"propext", "Classical.choice", "Quot.sound"}
+          required = ("never1539", "never1547", "control1539", "control1547",
+                      "noTransferHard0", "noTransferHard1", "noTransferHard2",
+                      "noTransferHard3", "noTransferHard4")
+          for name in required:
+              if name not in profiles:
+                  raise SystemExit("missing axiom profile: " + name)
+              bad = profiles[name] - allowed
+              if bad:
+                  raise SystemExit(name + ": unexpected axioms " + repr(sorted(bad)))
+          print({name: sorted(profiles[name]) for name in ("never1539", "never1547")})
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw124-0lf-growth-source-check
+          path: /tmp/a2-raw124-0lf-growth.log
+          if-no-files-found: warn
+ | sort)
+          test "${#targets[@]}" -eq 14
+          python tools/lean_compile_closure.py --workdir /tmp/a40-raw118-runs --jobs 4 --source-root "$D/run-generated" "${targets[@]}" | tee /tmp/a40-raw118-runs.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a40-raw118-runs.log; then exit 1; fi
+          for i in 1120 1127 1174 1326 1390 1391 1392 1816 2867 3921 4093 4125 4342 4443; do
+            python im-results/agent4-raw109/audit_axioms.py /tmp/a40-raw118-runs.log "BB6Coverage.Agent40Raw118Run.M$i.never"
+          done
+      - name: Preserve generated run-aware Raw118 certificates
+        if: always() && inputs.target == 'weighted-tnf-raw118-run-summary'
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw118-run-summary-generated
+          path: |
+            im-results/agent40-raw118-independent/run-generated/
+            /tmp/a40-raw118-runs.log
       - name: Source-check new Raw120 1LB factored SAT certificates
         if: inputs.target == 'weighted-tnf-raw120-1lb-sat-cert'
         run: |
