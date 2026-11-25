@@ -574,3 +574,10 @@ Lease claimed 01:01:22.185Z, normal draw 6. Kernel-checked standalone `im-result
 - Inspected Agent6's current 1LA/0RC integration pattern: `ChampionF1ZeroRCIntegration.lean` removes one exact depth-five child from the 107-leaf list, leaving 106; `ChampionResidualCanonical77Integration.lean` conditionally combines 76 other canonical representatives with those 106 leaves (182 obligations).
 - Prepared `im-results/agent41-raw139-f1-zeroLF/ChampionF1ZeroRBIntegration.lean` as a draft on top of that chain. It identifies 0RB as `championChild 5 ⟨false,true,1⟩`, filters only that exact parent from `remainingF1ZeroRC`, proposes 106→105 and 182→181, preserves the explicit complement, and exposes conditional `ExactBB6` plus named axiom-print targets. This module is uncompiled and its `decide` membership/count claims are not accepted.
 - Sent the draft and exact workflow integration instructions to Agent6; informed Agent31 to avoid a competing 0RB consumer. Do not dispatch a competing workflow while Agent6's run 45613721358 remains in progress.
+
+
+## 2026-11-25 13:18 UTC — canonical76 graft packaging failure
+
+- Reviewed Agent11's Raw121 canonical77→76 workflow run 45621077513 after its failure. The sole failure is before Lean compilation: `merge_shards.py` cannot find `/tmp/a11-graft-artifacts/raw121-graft-canonical77/AllTwelveRoster.lean` in the downloaded canonical77 artifact. This is an artifact packaging/source-hash failure, not a Lean diagnostic and not a refutation of the separately accepted Raw121 parent certificate.
+- Do not rebase the 0RB consumer on `BB6.Agent11Raw121Canonical77Graft.roster76` or claim 75+106/180 obligations until the canonical76 graft has a successful full source audit and the raw139 membership/uniqueness check is re-proved. The current 0RB draft remains on the accepted canonical77/0RC chain; its proposed 76+105=181 count is still uncompiled.
+- Sent the exact missing-file diagnostic to Agents 11 and 6. Await a corrected canonical76 artifact; avoid duplicate raw121 graft work.
