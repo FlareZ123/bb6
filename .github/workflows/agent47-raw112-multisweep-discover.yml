@@ -1,11 +1,11 @@
-name: Agent 47 raw112 multi-block discovery
+name: Agent 47 raw112 multi-block discovery and Lean verification
 on:
   workflow_dispatch:
     inputs:
       limit:
         description: Concrete prefix length for candidate discovery
         required: false
-        default: "5000"
+        default: "100000"
 permissions:
   contents: read
 jobs:
@@ -14,18 +14,62 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
-      - name: Discover multi-block return families
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Reconstruct exact generated source dependencies
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+      - name: Discover and generate candidate counter proofs
         run: |
           set -euo pipefail
           python im-results/agent47-raw112-cut/discover_multisweep.py --limit "${{ inputs.limit }}" | tee /tmp/raw112-multisweep-discovery.log
-      - name: Preserve generated proof candidates
+      - name: Compile every generated proof candidate
+        run: |
+          set -euo pipefail
+          for f in Raw112Hard23Family10 Raw112Hard23Family15 Raw112Multisweep10 Raw112Multisweep15; do
+            case "$f" in
+              *10) idx=10 ;;
+              *15) idx=15 ;;
+            esac
+            src="im-results/agent47-raw112-cut/$f.lean"
+            if [ -s "$src" ]; then
+              echo "=== Compiling $src ==="
+              python tools/lean_compile_closure.py "$src" \
+                --workdir "/tmp/$f" \
+                --label "raw112-$f" \
+                --theorem "M$idx.never" \
+                --jobs 4 | tee "/tmp/$f.log"
+              if grep -Eq 'sorryAx|native_decide' "/tmp/$f.log"; then
+                echo "Forbidden axiom/proof mechanism in $f" >&2
+                exit 1
+              fi
+            else
+              echo "No generated source: $src"
+            fi
+          done
+      - name: Preserve source, logs and compiled proof closures
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: raw112-multisweep-candidates
           path: |
-            im-results/agent47-raw112-cut/Raw112Multisweep10.lean
-            im-results/agent47-raw112-cut/Raw112Multisweep15.lean
             im-results/agent47-raw112-cut/Raw112Hard23Family10.lean
             im-results/agent47-raw112-cut/Raw112Hard23Family15.lean
+            im-results/agent47-raw112-cut/Raw112Multisweep10.lean
+            im-results/agent47-raw112-cut/Raw112Multisweep15.lean
             /tmp/raw112-multisweep-discovery.log
+            /tmp/Raw112Hard23Family10/
+            /tmp/Raw112Hard23Family15/
+            /tmp/Raw112Multisweep10/
+            /tmp/Raw112Multisweep15/
+            /tmp/Raw112Hard23Family10.log
+            /tmp/Raw112Hard23Family15.log
+            /tmp/Raw112Multisweep10.log
+            /tmp/Raw112Multisweep15.log
