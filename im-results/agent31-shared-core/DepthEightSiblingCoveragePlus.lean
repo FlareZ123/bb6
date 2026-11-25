@@ -9,6 +9,7 @@ set_option maxHeartbeats 0
 namespace BB6.Agent31DepthEightSiblingClosure
 
 open BB6Coverage
+open BB6.Agent13BlankDelay
 open BB6.Agent50RecursiveResidual
 open BB6.Agent50RootFrontier
 open BB6.Agent50TNFPilot
