@@ -39,11 +39,19 @@ def generate(rows,work):
             certs[row]=f".proven {ns}.table {ns}.never"
             imports[row]="Raw122Phases27510"
             continue
-        if i in (13479,25730,27624):
+        if i in (3905,3906,3908,13479,25730,27624):
             sys.path.insert(0,str(ROOT.parent/"agent47-raw114-cut"))
             import multi_sweep as multi
             W,R,C=multi.Word,multi.Rep,multi.Config
-            if i==13479:
+            if i in (3905,3906,3908):
+                expected={3905:"1RB0RB_1RC---_0RD0LE_1LD1RE_1RA0LF_1RB0LC",
+                          3906:"1RB0RC_1RC---_0RD0LE_1LD1RE_1RA0LF_1RB0LC",
+                          3908:"1RB1LD_1RC---_0RD0LE_1LD1RE_1RA0LF_1RB0LC"}
+                assert row==expected[i]
+                t=158 if i==3905 else 34
+                st=C(5,W(),W.of("00001000010000100001",R("01000010010000101"))) if i==3905 else C(5,W(),W.of("0000100001",R("0000101000100")))
+                tg=C(5,W(),st.r.inc())
+            elif i==13479:
                 assert row=="1RB---_1RC0RA_0RD0LE_1LD1RE_0RB0LF_0LB1LC"
                 t=34;st=C(2,W.of("01010",R("1010"),"010",R("10"),R("10")),W())
                 tg=C(2,st.l.inc(),W())
