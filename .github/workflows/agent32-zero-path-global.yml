@@ -67,7 +67,7 @@ on:
       raw59_child:
         description: Raw59 proof target (all, 0RB, 0LD, 0RC, 1RC, 0RF, 1LA, RCShared, RFCount, or RFTriple)
         type: choice
-        options: [all, 0RB, 0LD, 0RC, 1RC, 0RF, 1LA, RCShared, RFCount, RFTriple, RFScan, 1RF]
+        options: [all, 0RB, 0LD, 0RC, 1RC, 0RF, 1LA, RCShared, RFCount, RFTriple, RFScan, 1RF, CanonicalPilot, 0RD, 1LC, 1RB, 1RD, 0LC, 0RE]
         default: all
 
       verify_f418_return:
@@ -499,12 +499,20 @@ jobs:
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
           python im-results/agent32-raw59/unpack_rc.py
           case "$RAW59_CHILD" in
+            CanonicalPilot)
+              python im-results/agent10-tnf-raw87/generate.py
+              python im-results/agent10-tnf-raw91/generate.py
+              python im-results/agent10-tnf-multipump/generate.py 66 70 80
+              python im-results/agent10-tnf-multipump/generate.py 86 88 92 93 97 98 100 101 102 104
+              python im-results/agent10-tnf-multipump/generate.py 68 72 82
+              python im-results/agent32-raw59/generate.py 0RB
+              target=im-results/agent32-raw59/Raw59CanonicalPilot.lean ;;
             RFScan) target=im-results/agent32-raw59/Raw59RFScan.lean ;;
             RFTriple) target=im-results/agent32-raw59/Raw59RFTriple.lean ;;
             RFCount) target=im-results/agent32-raw59/Raw59RFCounters.lean ;;
             RCShared) target=im-results/agent32-raw59/Raw59RCBridge.lean ;;
             all) python im-results/agent32-raw59/generate.py; target=im-results/agent32-raw59/Raw59Refinement.lean ;;
-            0RB|0LD|0RC|1RC|0RF|1LA|1RF) python im-results/agent32-raw59/generate.py "$RAW59_CHILD"; target="im-results/agent32-raw59/generated_$RAW59_CHILD/Raw59A${RAW59_CHILD}Data.lean" ;;
+            0RB|0LD|0RC|1RC|0RF|1LA|1RF|0RD|1LC|1RB|1RD|0LC|0RE) python im-results/agent32-raw59/generate.py "$RAW59_CHILD"; target="im-results/agent32-raw59/generated_$RAW59_CHILD/Raw59A${RAW59_CHILD}Data.lean" ;;
             *) exit 2 ;;
           esac
           python tools/lean_compile_closure.py --workdir /tmp/a32-raw59 --jobs 4 "$target" | tee /tmp/a32-raw59.log
