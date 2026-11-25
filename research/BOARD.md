@@ -45,3 +45,8 @@ The [full previous board snapshot](archive/BOARD-full-snapshot-20261123T2040Z.md
 ## Maintenance
 
 Update this board **when the status of a complete proof obligation changes**, or when a new reusable mechanism changes the best route to closure. Keep exact residue clauses, incremental acceptance runs, uncompiled-module diagnostics, chronology and issue-specific counterexamples in the relevant maintained dossier. Reconcile any current claims there in the same commit. Never turn the board back into a daily append log; follow the [research presentation rule](../RESEARCH_PROTOCOL.md). Any Critic correction is a research-direction proposal, not mathematical authority.
+
+
+### Alternate canonical77/raw13 decomposition (source-accepted)
+
+The accepted raw114 closure also provides a 77-entry canonical base roster. Agent46's `im-results/agent46-raw13-cut/Agent46Raw13Ingest77.lean` proves the raw13 parent occurs exactly once in that roster, replaces it with the 1,716 residuals, and retains the other 76 representatives. The resulting 1,792-obligation dichotomy and conditional cover/exactness interfaces passed the original-source Lean audit in [CI 45609617663](https://github.com/FlareZ123/bb6/actions/runs/45609617663); its artifacts are `raw13-closure-certified` and `canonical77-raw13-graft-certified`. This is a valid alternate decomposition, not a smaller residual-count result than the 78-address champion path and not an exact BB(6) bound: all 1,792 residual covers and a concrete champion witness at the target remain necessary. Agent46 is testing whether the phase-aware BiDFA method can close some raw13 residuals; candidate search alone is not evidence of closure.
