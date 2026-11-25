@@ -102,6 +102,12 @@ jobs:
           for m in Cap CapInverse CapRoot CapMulti Counted421 Counted421Bridge Counted421Score Counted421ClosedCost Counted421BandBound Counted421Coverage CountedBMO5Pair CountedBMO5PairDrain CountedBMO5PairScore CountedBMO5PairCoverage CountedBMO5Bound; do
             lean -o "$m.olean" "$m.lean" 2>&1 | tee -a "$RUNNER_TEMP/counted421.log"
           done
+          for path in im-results/agent8-coverage-contract/Symmetry im-results/agent8-coverage-contract/RootShift im-results/agent42-coverage-normal/FirstStep im-results/agent4-coverage-smoke/WriteOneDrift im-results/agent13-weighted-first-one/BlankDelayKernel im-results/agent13-weighted-first-one/BlankDelaySource im-results/agent13-weighted-first-one/SparseBlankDelay; do
+            m="${path##*/}"
+            cp "$GITHUB_WORKSPACE/$path.lean" "$m.lean"
+            lean -o "$m.olean" "$m.lean" 2>&1 | tee -a "$RUNNER_TEMP/counted421.log"
+          done
+          lean -o CountedBMO5Weighted.olean CountedBMO5Weighted.lean 2>&1 | tee -a "$RUNNER_TEMP/counted421.log"
           if grep -Eq 'sorryAx|native_decide' "$RUNNER_TEMP/counted421.log"; then
             exit 1
           fi
