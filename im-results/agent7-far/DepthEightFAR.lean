@@ -482,10 +482,9 @@ def cRoster21 : Data 1 := ⟨0,[0, 0],
   [1, 32, 8, 8, 2, 8, 64],
   [64, 32, 8, 32, 2, 1, 64],
   64⟩
-theorem pRoster21_valid : cRoster21.fastValid (reflect pRoster21) = true := by decide
+theorem pRoster21_valid : cRoster21.fastValid (reflectPartial pRoster21) = true := by decide
 theorem pRoster21_neverHalts (m : Machine) (hm : compatible pRoster21 m) : NeverHalts m :=
-  cRoster21.sound (reflect pRoster21) (cRoster21.fastValid_sound _ pRoster21_valid) m
-    (by simpa only [reflect_compatible] using hm)
+  reflectNever m (cRoster21.sound (reflectPartial pRoster21) (cRoster21.fastValid_sound _ pRoster21_valid) (reflectTable m) (reflectCompatible pRoster21 m hm))
 #print axioms pRoster21_neverHalts
 
 
@@ -507,10 +506,9 @@ def cRoster23 : Data 1 := ⟨0,[0, 0],
   [47, 60, 8, 8, 4, 8, 64],
   [64, 40, 8, 44, 6, 1, 64],
   64⟩
-theorem pRoster23_valid : cRoster23.fastValid (reflect pRoster23) = true := by decide
+theorem pRoster23_valid : cRoster23.fastValid (reflectPartial pRoster23) = true := by decide
 theorem pRoster23_neverHalts (m : Machine) (hm : compatible pRoster23 m) : NeverHalts m :=
-  cRoster23.sound (reflect pRoster23) (cRoster23.fastValid_sound _ pRoster23_valid) m
-    (by simpa only [reflect_compatible] using hm)
+  reflectNever m (cRoster23.sound (reflectPartial pRoster23) (cRoster23.fastValid_sound _ pRoster23_valid) (reflectTable m) (reflectCompatible pRoster23 m hm))
 #print axioms pRoster23_neverHalts
 
 
@@ -520,10 +518,9 @@ def cRoster24 : Data 1 := ⟨0,[0, 0],
   [41, 40, 8, 8, 4, 8, 64],
   [64, 32, 8, 40, 2, 1, 64],
   64⟩
-theorem pRoster24_valid : cRoster24.fastValid (reflect pRoster24) = true := by decide
+theorem pRoster24_valid : cRoster24.fastValid (reflectPartial pRoster24) = true := by decide
 theorem pRoster24_neverHalts (m : Machine) (hm : compatible pRoster24 m) : NeverHalts m :=
-  cRoster24.sound (reflect pRoster24) (cRoster24.fastValid_sound _ pRoster24_valid) m
-    (by simpa only [reflect_compatible] using hm)
+  reflectNever m (cRoster24.sound (reflectPartial pRoster24) (cRoster24.fastValid_sound _ pRoster24_valid) (reflectTable m) (reflectCompatible pRoster24 m hm))
 #print axioms pRoster24_neverHalts
 
 
@@ -533,10 +530,9 @@ def cRoster25 : Data 1 := ⟨0,[0, 0],
   [63, 44, 8, 8, 8, 8, 64],
   [64, 32, 12, 44, 14, 17, 64],
   64⟩
-theorem pRoster25_valid : cRoster25.fastValid (reflect pRoster25) = true := by decide
+theorem pRoster25_valid : cRoster25.fastValid (reflectPartial pRoster25) = true := by decide
 theorem pRoster25_neverHalts (m : Machine) (hm : compatible pRoster25 m) : NeverHalts m :=
-  cRoster25.sound (reflect pRoster25) (cRoster25.fastValid_sound _ pRoster25_valid) m
-    (by simpa only [reflect_compatible] using hm)
+  reflectNever m (cRoster25.sound (reflectPartial pRoster25) (cRoster25.fastValid_sound _ pRoster25_valid) (reflectTable m) (reflectCompatible pRoster25 m hm))
 #print axioms pRoster25_neverHalts
 
 
@@ -546,10 +542,9 @@ def cRoster26 : Data 1 := ⟨0,[0, 0],
   [17, 32, 8, 8, 8, 8, 64],
   [64, 32, 8, 32, 2, 1, 64],
   64⟩
-theorem pRoster26_valid : cRoster26.fastValid (reflect pRoster26) = true := by decide
+theorem pRoster26_valid : cRoster26.fastValid (reflectPartial pRoster26) = true := by decide
 theorem pRoster26_neverHalts (m : Machine) (hm : compatible pRoster26 m) : NeverHalts m :=
-  cRoster26.sound (reflect pRoster26) (cRoster26.fastValid_sound _ pRoster26_valid) m
-    (by simpa only [reflect_compatible] using hm)
+  reflectNever m (cRoster26.sound (reflectPartial pRoster26) (cRoster26.fastValid_sound _ pRoster26_valid) (reflectTable m) (reflectCompatible pRoster26 m hm))
 #print axioms pRoster26_neverHalts
 
 
@@ -559,10 +554,9 @@ def cRoster27 : Data 1 := ⟨0,[0, 0],
   [33, 34, 24, 8, 8, 16, 64],
   [64, 32, 8, 32, 2, 1, 64],
   64⟩
-theorem pRoster27_valid : cRoster27.fastValid (reflect pRoster27) = true := by decide
+theorem pRoster27_valid : cRoster27.fastValid (reflectPartial pRoster27) = true := by decide
 theorem pRoster27_neverHalts (m : Machine) (hm : compatible pRoster27 m) : NeverHalts m :=
-  cRoster27.sound (reflect pRoster27) (cRoster27.fastValid_sound _ pRoster27_valid) m
-    (by simpa only [reflect_compatible] using hm)
+  reflectNever m (cRoster27.sound (reflectPartial pRoster27) (cRoster27.fastValid_sound _ pRoster27_valid) (reflectTable m) (reflectCompatible pRoster27 m hm))
 #print axioms pRoster27_neverHalts
 
 
@@ -572,10 +566,9 @@ def cRoster28 : Data 1 := ⟨0,[0, 0],
   [33, 34, 24, 8, 8, 16, 64],
   [64, 32, 8, 32, 2, 1, 64],
   64⟩
-theorem pRoster28_valid : cRoster28.fastValid (reflect pRoster28) = true := by decide
+theorem pRoster28_valid : cRoster28.fastValid (reflectPartial pRoster28) = true := by decide
 theorem pRoster28_neverHalts (m : Machine) (hm : compatible pRoster28 m) : NeverHalts m :=
-  cRoster28.sound (reflect pRoster28) (cRoster28.fastValid_sound _ pRoster28_valid) m
-    (by simpa only [reflect_compatible] using hm)
+  reflectNever m (cRoster28.sound (reflectPartial pRoster28) (cRoster28.fastValid_sound _ pRoster28_valid) (reflectTable m) (reflectCompatible pRoster28 m hm))
 #print axioms pRoster28_neverHalts
 
 
@@ -585,10 +578,9 @@ def cRoster29 : Data 1 := ⟨0,[0, 0],
   [41, 40, 8, 8, 4, 8, 64],
   [64, 32, 8, 40, 2, 1, 64],
   64⟩
-theorem pRoster29_valid : cRoster29.fastValid (reflect pRoster29) = true := by decide
+theorem pRoster29_valid : cRoster29.fastValid (reflectPartial pRoster29) = true := by decide
 theorem pRoster29_neverHalts (m : Machine) (hm : compatible pRoster29 m) : NeverHalts m :=
-  cRoster29.sound (reflect pRoster29) (cRoster29.fastValid_sound _ pRoster29_valid) m
-    (by simpa only [reflect_compatible] using hm)
+  reflectNever m (cRoster29.sound (reflectPartial pRoster29) (cRoster29.fastValid_sound _ pRoster29_valid) (reflectTable m) (reflectCompatible pRoster29 m hm))
 #print axioms pRoster29_neverHalts
 
 
@@ -598,10 +590,9 @@ def cRoster30 : Data 1 := ⟨0,[0, 0],
   [41, 40, 8, 8, 4, 8, 64],
   [64, 32, 8, 40, 2, 1, 64],
   64⟩
-theorem pRoster30_valid : cRoster30.fastValid (reflect pRoster30) = true := by decide
+theorem pRoster30_valid : cRoster30.fastValid (reflectPartial pRoster30) = true := by decide
 theorem pRoster30_neverHalts (m : Machine) (hm : compatible pRoster30 m) : NeverHalts m :=
-  cRoster30.sound (reflect pRoster30) (cRoster30.fastValid_sound _ pRoster30_valid) m
-    (by simpa only [reflect_compatible] using hm)
+  reflectNever m (cRoster30.sound (reflectPartial pRoster30) (cRoster30.fastValid_sound _ pRoster30_valid) (reflectTable m) (reflectCompatible pRoster30 m hm))
 #print axioms pRoster30_neverHalts
 
 
@@ -611,10 +602,9 @@ def cRoster31 : Data 1 := ⟨0,[0, 0],
   [1, 32, 8, 8, 8, 8, 64],
   [64, 32, 8, 32, 2, 1, 64],
   64⟩
-theorem pRoster31_valid : cRoster31.fastValid (reflect pRoster31) = true := by decide
+theorem pRoster31_valid : cRoster31.fastValid (reflectPartial pRoster31) = true := by decide
 theorem pRoster31_neverHalts (m : Machine) (hm : compatible pRoster31 m) : NeverHalts m :=
-  cRoster31.sound (reflect pRoster31) (cRoster31.fastValid_sound _ pRoster31_valid) m
-    (by simpa only [reflect_compatible] using hm)
+  reflectNever m (cRoster31.sound (reflectPartial pRoster31) (cRoster31.fastValid_sound _ pRoster31_valid) (reflectTable m) (reflectCompatible pRoster31 m hm))
 #print axioms pRoster31_neverHalts
 
 
@@ -624,10 +614,9 @@ def cRoster32 : Data 3 := ⟨0,[0, 1, 2, 1, 0, 1],
   [262143, 59658, 41476, 516, 60164, 139634, 228347, 256, 8964, 512, 58118, 8452, 260, 51460, 8960, 516, 60174, 44742, 262144],
   [458223, 2048, 16640, 56200, 2, 217107, 262176, 215328, 256, 2048, 8704, 20864, 458222, 2048, 256, 51456, 514, 20689, 262144],
   262144⟩
-theorem pRoster32_valid : cRoster32.fastValid (reflect pRoster32) = true := by decide
+theorem pRoster32_valid : cRoster32.fastValid (reflectPartial pRoster32) = true := by decide
 theorem pRoster32_neverHalts (m : Machine) (hm : compatible pRoster32 m) : NeverHalts m :=
-  cRoster32.sound (reflect pRoster32) (cRoster32.fastValid_sound _ pRoster32_valid) m
-    (by simpa only [reflect_compatible] using hm)
+  reflectNever m (cRoster32.sound (reflectPartial pRoster32) (cRoster32.fastValid_sound _ pRoster32_valid) (reflectTable m) (reflectCompatible pRoster32 m hm))
 #print axioms pRoster32_neverHalts
 
 
@@ -637,10 +626,9 @@ def cRoster33 : Data 1 := ⟨0,[0, 0],
   [63, 62, 10, 8, 10, 2, 64],
   [64, 32, 20, 52, 14, 1, 64],
   64⟩
-theorem pRoster33_valid : cRoster33.fastValid (reflect pRoster33) = true := by decide
+theorem pRoster33_valid : cRoster33.fastValid (reflectPartial pRoster33) = true := by decide
 theorem pRoster33_neverHalts (m : Machine) (hm : compatible pRoster33 m) : NeverHalts m :=
-  cRoster33.sound (reflect pRoster33) (cRoster33.fastValid_sound _ pRoster33_valid) m
-    (by simpa only [reflect_compatible] using hm)
+  reflectNever m (cRoster33.sound (reflectPartial pRoster33) (cRoster33.fastValid_sound _ pRoster33_valid) (reflectTable m) (reflectCompatible pRoster33 m hm))
 #print axioms pRoster33_neverHalts
 
 
@@ -710,10 +698,9 @@ def cRoster47 : Data 1 := ⟨0,[0, 0],
   [1, 32, 10, 8, 2, 2, 64],
   [64, 32, 8, 32, 2, 1, 64],
   64⟩
-theorem pRoster47_valid : cRoster47.fastValid (reflect pRoster47) = true := by decide
+theorem pRoster47_valid : cRoster47.fastValid (reflectPartial pRoster47) = true := by decide
 theorem pRoster47_neverHalts (m : Machine) (hm : compatible pRoster47 m) : NeverHalts m :=
-  cRoster47.sound (reflect pRoster47) (cRoster47.fastValid_sound _ pRoster47_valid) m
-    (by simpa only [reflect_compatible] using hm)
+  reflectNever m (cRoster47.sound (reflectPartial pRoster47) (cRoster47.fastValid_sound _ pRoster47_valid) (reflectTable m) (reflectCompatible pRoster47 m hm))
 #print axioms pRoster47_neverHalts
 
 
@@ -723,10 +710,9 @@ def cRoster48 : Data 1 := ⟨0,[0, 0],
   [1, 32, 8, 8, 8, 8, 64],
   [64, 32, 8, 32, 2, 1, 64],
   64⟩
-theorem pRoster48_valid : cRoster48.fastValid (reflect pRoster48) = true := by decide
+theorem pRoster48_valid : cRoster48.fastValid (reflectPartial pRoster48) = true := by decide
 theorem pRoster48_neverHalts (m : Machine) (hm : compatible pRoster48 m) : NeverHalts m :=
-  cRoster48.sound (reflect pRoster48) (cRoster48.fastValid_sound _ pRoster48_valid) m
-    (by simpa only [reflect_compatible] using hm)
+  reflectNever m (cRoster48.sound (reflectPartial pRoster48) (cRoster48.fastValid_sound _ pRoster48_valid) (reflectTable m) (reflectCompatible pRoster48 m hm))
 #print axioms pRoster48_neverHalts
 
 
@@ -748,10 +734,9 @@ def cRoster50 : Data 6 := ⟨0,[0, 1, 2, 4, 3, 1, 5, 5, 5, 5, 5, 5],
   [8590201345, 2048, 134217728, 512, 4096, 71177880096, 38514143776, 3072, 4096, 134217728, 4096, 136616816611, 8724526081, 1024, 115964087137, 512, 12288, 103079215616, 8592335617, 133143969761, 51684593825, 8589934592, 17793431584, 85899350017, 133143969761, 17733649408, 137438953443, 8592064512, 1090912256, 73014444032, 133143986145, 133009752033, 137438953443, 8724152320, 133009752033, 68719476736, 68719476736],
   [3072, 2048, 8, 1024, 546, 2151677953, 269025312, 545390592, 16809984, 38217583585, 8192, 4096, 1024, 2048, 2097152, 1024, 51540131840, 262144, 17179869248, 38217583585, 9663676416, 3072, 19369830400, 1073741824, 17196646400, 35441999872, 9663676416, 2048, 2148007936, 1074003968, 17448304640, 34896609280, 8589934592, 133009752033, 2147483776, 1140850720, 68719476736],
   128712329442⟩
-theorem pRoster50_valid : cRoster50.fastValid (reflect pRoster50) = true := by decide
+theorem pRoster50_valid : cRoster50.fastValid (reflectPartial pRoster50) = true := by decide
 theorem pRoster50_neverHalts (m : Machine) (hm : compatible pRoster50 m) : NeverHalts m :=
-  cRoster50.sound (reflect pRoster50) (cRoster50.fastValid_sound _ pRoster50_valid) m
-    (by simpa only [reflect_compatible] using hm)
+  reflectNever m (cRoster50.sound (reflectPartial pRoster50) (cRoster50.fastValid_sound _ pRoster50_valid) (reflectTable m) (reflectCompatible pRoster50 m hm))
 #print axioms pRoster50_neverHalts
 
 
@@ -773,10 +758,9 @@ def cRoster52 : Data 1 := ⟨0,[0, 0],
   [1, 32, 8, 8, 8, 8, 64],
   [64, 32, 8, 32, 2, 1, 64],
   64⟩
-theorem pRoster52_valid : cRoster52.fastValid (reflect pRoster52) = true := by decide
+theorem pRoster52_valid : cRoster52.fastValid (reflectPartial pRoster52) = true := by decide
 theorem pRoster52_neverHalts (m : Machine) (hm : compatible pRoster52 m) : NeverHalts m :=
-  cRoster52.sound (reflect pRoster52) (cRoster52.fastValid_sound _ pRoster52_valid) m
-    (by simpa only [reflect_compatible] using hm)
+  reflectNever m (cRoster52.sound (reflectPartial pRoster52) (cRoster52.fastValid_sound _ pRoster52_valid) (reflectTable m) (reflectCompatible pRoster52 m hm))
 #print axioms pRoster52_neverHalts
 
 
@@ -786,10 +770,9 @@ def cRoster53 : Data 1 := ⟨0,[0, 0],
   [33, 34, 10, 8, 10, 2, 64],
   [64, 32, 16, 32, 2, 1, 64],
   64⟩
-theorem pRoster53_valid : cRoster53.fastValid (reflect pRoster53) = true := by decide
+theorem pRoster53_valid : cRoster53.fastValid (reflectPartial pRoster53) = true := by decide
 theorem pRoster53_neverHalts (m : Machine) (hm : compatible pRoster53 m) : NeverHalts m :=
-  cRoster53.sound (reflect pRoster53) (cRoster53.fastValid_sound _ pRoster53_valid) m
-    (by simpa only [reflect_compatible] using hm)
+  reflectNever m (cRoster53.sound (reflectPartial pRoster53) (cRoster53.fastValid_sound _ pRoster53_valid) (reflectTable m) (reflectCompatible pRoster53 m hm))
 #print axioms pRoster53_neverHalts
 
 
@@ -823,10 +806,9 @@ def cRoster56 : Data 5 := ⟨0,[0, 1, 3, 2, 4, 4, 4, 1, 4, 4],
   [262145, 2048, 557056, 512, 1, 1076887600, 1023408729, 3072, 2375680, 32768, 262144, 1745626576, 1538742208, 2147483615, 2147483647, 1060384848, 564139138, 1379220609, 786433, 134743057, 1061042007, 2097733, 151261184, 1075882117, 2147483615, 2147483615, 2147483647, 134217744, 598016192, 1411924744, 1073741824],
   [1024, 2048, 2883587, 1024, 8389126, 169375873, 65664, 131145, 2147483615, 2147483615, 524288, 262145, 277348616, 1610624133, 134743057, 2048, 444698762, 18223232, 1024, 2048, 819211, 1024, 1251127170, 293771409, 335613192, 545953936, 2147483615, 1070309343, 33624066, 151032064, 1073741824],
   2012478446⟩
-theorem pRoster56_valid : cRoster56.fastValid (reflect pRoster56) = true := by decide
+theorem pRoster56_valid : cRoster56.fastValid (reflectPartial pRoster56) = true := by decide
 theorem pRoster56_neverHalts (m : Machine) (hm : compatible pRoster56 m) : NeverHalts m :=
-  cRoster56.sound (reflect pRoster56) (cRoster56.fastValid_sound _ pRoster56_valid) m
-    (by simpa only [reflect_compatible] using hm)
+  reflectNever m (cRoster56.sound (reflectPartial pRoster56) (cRoster56.fastValid_sound _ pRoster56_valid) (reflectTable m) (reflectCompatible pRoster56 m hm))
 #print axioms pRoster56_neverHalts
 
 
@@ -860,10 +842,9 @@ def cRoster60 : Data 4 := ⟨0,[0, 1, 0, 2, 3, 2, 1, 1],
   [14340023, 1083652, 32768, 1050116, 33280, 1081348, 23060479, 1084420, 1081348, 32768, 32768, 1048580, 33554431, 23056255, 1048580, 32768, 1081604, 1048580, 31457279, 9473028, 32768, 1050116, 33282, 1048836, 16777216],
   [25480816, 2048, 1081348, 149504, 650, 1950577, 25954715, 147456, 1085220, 149504, 32770, 4342581, 25991331, 24309721, 9473796, 2048, 524290, 31210194, 25783432, 2048, 1081348, 1101604, 138, 17631579, 16777216],
   17051712⟩
-theorem pRoster60_valid : cRoster60.fastValid (reflect pRoster60) = true := by decide
+theorem pRoster60_valid : cRoster60.fastValid (reflectPartial pRoster60) = true := by decide
 theorem pRoster60_neverHalts (m : Machine) (hm : compatible pRoster60 m) : NeverHalts m :=
-  cRoster60.sound (reflect pRoster60) (cRoster60.fastValid_sound _ pRoster60_valid) m
-    (by simpa only [reflect_compatible] using hm)
+  reflectNever m (cRoster60.sound (reflectPartial pRoster60) (cRoster60.fastValid_sound _ pRoster60_valid) (reflectTable m) (reflectCompatible pRoster60 m hm))
 #print axioms pRoster60_neverHalts
 
 
@@ -909,10 +890,9 @@ def cRoster64 : Data 1 := ⟨0,[0, 0],
   [33, 34, 10, 8, 10, 2, 64],
   [64, 32, 16, 32, 2, 1, 64],
   64⟩
-theorem pRoster64_valid : cRoster64.fastValid (reflect pRoster64) = true := by decide
+theorem pRoster64_valid : cRoster64.fastValid (reflectPartial pRoster64) = true := by decide
 theorem pRoster64_neverHalts (m : Machine) (hm : compatible pRoster64 m) : NeverHalts m :=
-  cRoster64.sound (reflect pRoster64) (cRoster64.fastValid_sound _ pRoster64_valid) m
-    (by simpa only [reflect_compatible] using hm)
+  reflectNever m (cRoster64.sound (reflectPartial pRoster64) (cRoster64.fastValid_sound _ pRoster64_valid) (reflectTable m) (reflectCompatible pRoster64 m hm))
 #print axioms pRoster64_neverHalts
 
 
@@ -922,10 +902,9 @@ def cRoster65 : Data 2 := ⟨0,[0, 1, 0, 1],
   [3077, 2342, 514, 3984, 514, 2054, 7167, 514, 514, 512, 514, 2, 4096],
   [4096, 2048, 1024, 2180, 2, 3073, 7167, 6874, 1024, 2052, 2, 1, 4096],
   4160⟩
-theorem pRoster65_valid : cRoster65.fastValid (reflect pRoster65) = true := by decide
+theorem pRoster65_valid : cRoster65.fastValid (reflectPartial pRoster65) = true := by decide
 theorem pRoster65_neverHalts (m : Machine) (hm : compatible pRoster65 m) : NeverHalts m :=
-  cRoster65.sound (reflect pRoster65) (cRoster65.fastValid_sound _ pRoster65_valid) m
-    (by simpa only [reflect_compatible] using hm)
+  reflectNever m (cRoster65.sound (reflectPartial pRoster65) (cRoster65.fastValid_sound _ pRoster65_valid) (reflectTable m) (reflectCompatible pRoster65 m hm))
 #print axioms pRoster65_neverHalts
 
 
@@ -1151,10 +1130,9 @@ def cRoster87 : Data 4 := ⟨0,[0, 1, 0, 2, 3, 2, 3, 1],
   [625181, 4819470, 4227072, 512, 4, 2129928, 15961455, 4753964, 3244548, 32768, 12, 3179008, 14671675, 21596687, 3770914, 32768, 3179008, 3179020, 17402383, 4753945, 33280, 512, 3145728, 3179012, 16777216],
   [16777216, 2048, 33280, 98816, 32770, 557585, 22844809, 2820104, 21597727, 35336, 2, 32769, 30429324, 10684986, 19499551, 2048, 524288, 1344032, 17138949, 2048, 4227584, 4229640, 557572, 1311233, 16777216],
   17051648⟩
-theorem pRoster87_valid : cRoster87.fastValid (reflect pRoster87) = true := by decide
+theorem pRoster87_valid : cRoster87.fastValid (reflectPartial pRoster87) = true := by decide
 theorem pRoster87_neverHalts (m : Machine) (hm : compatible pRoster87 m) : NeverHalts m :=
-  cRoster87.sound (reflect pRoster87) (cRoster87.fastValid_sound _ pRoster87_valid) m
-    (by simpa only [reflect_compatible] using hm)
+  reflectNever m (cRoster87.sound (reflectPartial pRoster87) (cRoster87.fastValid_sound _ pRoster87_valid) (reflectTable m) (reflectCompatible pRoster87 m hm))
 #print axioms pRoster87_neverHalts
 
 
