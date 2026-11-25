@@ -130,6 +130,20 @@ theorem residuals_closed_expanded {B : Nat} {p : PartialMachine}
 
 noncomputable def r4Remaining : List (List Move × PartialMachine) := residuals r4Subtree
 
+private def holeCount (p : PartialMachine) : Nat :=
+  (slots.filter (fun s => p s = none)).length
+
+theorem p23_hole_count : holeCount p23 = 9 := by decide
+
+/-- Exact mass partition of the p23 cylinder. The seven expansion nodes
+    discharge halt branches of masses 25^8 through 25^2, and the explicit
+    terminal r4 certificate discharges one additional 25^2 cylinder. -/
+theorem r4Remaining_mass :
+    (r4Remaining.map (fun e => 25 ^ holeCount e.2)).sum +
+      (25^8 + 25^7 + 25^6 + 25^5 + 25^4 + 25^3 + 2 * 25^2) =
+      25^9 := by
+  decide
+
 theorem r4Subtree_expandedNodes : expandedNodes r4Subtree = 7 := by
   decide
 
@@ -196,6 +210,8 @@ theorem r4_terminal_mass : 25 ^ 2 = 625 := by norm_num
 #print axioms r4Subtree_expandedNodes
 #print axioms r4Subtree_closedLeaves
 #print axioms r4Remaining_count
+#print axioms p23_hole_count
+#print axioms r4Remaining_mass
 #print axioms r4Remaining_sound
 #print axioms p23_parent_count
 #print axioms r4RefinedRoster_count
