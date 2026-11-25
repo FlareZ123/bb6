@@ -67,7 +67,7 @@ on:
       raw59_child:
         description: Raw59 proof target (all, 0RB, 0LD, 0RC, 1RC, 0RF, 1LA, RCShared, RFCount, or RFTriple)
         type: choice
-        options: [all, 0RB, 0LD, 0RC, 1RC, 0RF, 1LA, RCShared, RFCount, RFTriple, RFScan, 1RF, CanonicalPilot, 0RD, 1LC, 1RB, 1RD, 0LC, 0RE]
+        options: [all, 0RB, 0LD, 0RC, 1RC, 0RF, 1LA, RCShared, RFCount, RFTriple, RFScan, 1RF, CanonicalPilot, MacroFARPilot, 0RD, 1LC, 1RB, 1RD, 0LC, 0RE]
         default: all
 
       verify_f418_return:
@@ -499,6 +499,10 @@ jobs:
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
           python im-results/agent32-raw59/unpack_rc.py
           case "$RAW59_CHILD" in
+            MacroFARPilot)
+              python im-results/agent32-macro-far/unpack.py
+              python im-results/agent32-macro-far/emit_source.py im-results/agent32-macro-far/pilot.txt im-results/agent32-macro-far/MacroFARPilot.lean
+              target=im-results/agent32-macro-far/MacroFARPilot.lean ;;
             CanonicalPilot)
               python im-results/agent10-tnf-raw87/generate.py
               python im-results/agent10-tnf-raw91/generate.py
