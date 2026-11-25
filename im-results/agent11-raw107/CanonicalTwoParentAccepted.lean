@@ -1,5 +1,6 @@
 import CanonicalRaw114Accepted
 import Raw107ParentClosure
+import Canonical77ExactComposition
 
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
@@ -47,10 +48,33 @@ theorem exact_at_target (B : Nat) (hB : 7014 ≤ B)
   BB6.Agent47CanonicalTwoParent.exact_at_target
     B hB p107_bound p114_bound hLeaves champ
 
+/-- The exact BB(6) value now reduces to 76 residual Covers at the attained
+    champion score.  This is a conditional consumer, not a completed upper
+    bound until every residual Cover is supplied. -/
+theorem exact_from_canonical76_at_champion_score
+    (hLeaves : ∀ e ∈ BB6.Agent47CanonicalTwoParent.roster76,
+      Cover (WeightedBound BB6.Agent31Canonical77Exact.championScore) e.2) :
+    BB6.Coverage.ExactBB6 BB6.Agent31Canonical77Exact.championScore :=
+  exact_at_target
+    BB6.Agent31Canonical77Exact.championScore
+    (Nat.le_of_lt BB6.Agent31Canonical77Exact.champion_score_gt_7014)
+    hLeaves
+    BB6Coverage.Agent48DirectRoot.champion_raw_witness
+
+#print axioms BB6.Agent47CanonicalTwoParent.count76
+#print axioms BB6.Agent47CanonicalTwoParent.roster76_sound
+#print axioms BB6.Agent47CanonicalRaw114Accepted.count
+#print axioms BB6.Agent47CanonicalRaw114Accepted.parent_bound
+#print axioms BB6.Agent47CanonicalRaw114Accepted.sound
+#print axioms BB6.Agent11Raw107ParentClosure.all_completions
+#print axioms BB6Coverage.Agent48DirectRoot.champion_raw_witness
+#print axioms BB6.Agent31Canonical77Exact.champion_score_gt_7014
+#print axioms BB6.Agent31Canonical77Exact.exact_from_canonical77_at_champion_score
 #print axioms p107_matches_raw107
 #print axioms p107_bound
 #print axioms p114_bound
 #print axioms roster76_sound
 #print axioms exact_at_target
+#print axioms exact_from_canonical76_at_champion_score
 
 end BB6.Agent11Raw107TwoParent

@@ -145,19 +145,32 @@ def build_manifest(
     parent_table: str | None,
     weighted_bound: int | None,
     artifact_name: str | None,
+    precompiled_metadata: dict | None = None,
 ) -> dict:
     if not artifact_dir.is_dir():
         raise FileNotFoundError(f"compiled artifact directory does not exist: {artifact_dir}")
 
     revision = git_revision(ROOT)
     tracked = tracked_source_paths(ROOT)
-    version = subprocess.run(
+    version_result = subprocess.run(
         [lean, "--version"],
         text=True,
         stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
+        stderr=subprocess.PIPE,
         check=True,
-    ).stdout.strip()
+    )
+    version = version_result.stdout.strip()
+    if version_result.stderr.strip():
+        print("[lean-closure] lean --version stderr: " +
+              version_result.stderr.strip(), file=sys.stderr, flush=True)
+    prefix_result = subprocess.run(
+        [lean, "--print-prefix"], text=True,
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True,
+    )
+    compiler_binary = Path(prefix_result.stdout.strip()) / "bin" / "lean"
+    if not compiler_binary.is_file():
+        raise FileNotFoundError(f"Lean compiler binary not found: {compiler_binary}")
+    compiler_binary_sha256 = sha256_file(compiler_binary)
 
     modules = []
     for module in sorted(sources):
@@ -176,6 +189,41 @@ def build_manifest(
             "olean_path": module.replace(".", "/") + ".olean",
             "olean_sha256": sha256_file(olean),
         })
+
+    module_map = {item["module"]: item for item in modules}
+    identities: dict[str, str] = {}
+
+    def module_identity(module: str) -> str:
+        if module in identities:
+            return identities[module]
+        dependencies = []
+        for dep in sorted(graph[module]):
+            dep_identity = (
+                f"standard:{version}:{dep}" if is_standard(dep)
+                else module_identity(dep)
+            )
+            dependencies.append({"module": dep, "identity": dep_identity})
+        import_hash = hashlib.sha256(
+            json.dumps(dependencies, sort_keys=True, separators=(",", ":")).encode()
+        ).hexdigest()
+        item = module_map[module]
+        item["import_closure_sha256"] = import_hash
+        payload = {
+            "module": module,
+            "source_sha256": item["source_sha256"],
+            "project_imports": item["project_imports"],
+            "olean_sha256": item["olean_sha256"],
+            "import_closure_sha256": import_hash,
+        }
+        identity = hashlib.sha256(
+            json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
+        ).hexdigest()
+        item["module_identity_sha256"] = identity
+        identities[module] = identity
+        return identity
+
+    for module in sorted(sources):
+        module_identity(module)
 
     root_entries = []
     for root in roots:
@@ -198,6 +246,7 @@ def build_manifest(
         "schema_version": 1,
         "label": label,
         "proof_source_revision": revision,
+        "source_revisions": [revision],
         "workflow": {
             "name": os.environ.get("GITHUB_WORKFLOW"),
             "run_id": os.environ.get("GITHUB_RUN_ID"),
@@ -205,6 +254,10 @@ def build_manifest(
             "workflow_head_sha": os.environ.get("GITHUB_SHA"),
         },
         "lean_version": version,
+        "lean_binary": {
+            "path": str(compiler_binary.resolve()),
+            "sha256": compiler_binary_sha256,
+        },
         "claim": {
             "theorem": theorem,
             "parent_table": parent_table,
@@ -215,6 +268,7 @@ def build_manifest(
         "module_count": len(modules),
         "modules": modules,
         "provenance_inputs": input_entries,
+        "precompiled_core": precompiled_metadata,
     }
 
 
@@ -229,34 +283,45 @@ def compare_manifests(primary_path: Path, other_paths: list[Path]) -> None:
         other_inputs = {item["path"]: item["sha256"] for item in other["provenance_inputs"]}
         common = sorted(primary_modules.keys() & other_modules.keys())
         mismatches: list[str] = []
+        provenance_differences: list[str] = []
 
-        if primary["proof_source_revision"] != other["proof_source_revision"]:
-            mismatches.append(
-                "proof-source revision differs: "
-                f"{primary['proof_source_revision']!r} != "
-                f"{other['proof_source_revision']!r}"
-            )
+        revision_relation = (
+            "same" if primary["proof_source_revision"] == other["proof_source_revision"]
+            else "different (provenance only)"
+        )
 
         if primary["lean_version"] != other["lean_version"]:
             mismatches.append(
                 "Lean version differs: "
                 f"{primary['lean_version']!r} != {other['lean_version']!r}"
             )
+        if primary.get("lean_binary", {}).get("sha256") != other.get("lean_binary", {}).get("sha256"):
+            mismatches.append("Lean compiler binary SHA-256 differs")
 
         for module in common:
             left = primary_modules[module]
             right = other_modules[module]
-            for field in ("source_sha256", "project_imports", "olean_sha256"):
-                if left[field] != right[field]:
+            for field in (
+                "source_sha256", "project_imports", "olean_sha256",
+                "import_closure_sha256", "module_identity_sha256",
+            ):
+                if field not in left or field not in right:
+                    mismatches.append(f"{module}: missing identity field {field}")
+                elif left[field] != right[field]:
                     mismatches.append(
                         f"{module}: {field} differs "
                         f"({left[field]!r} != {right[field]!r})"
                     )
+            for dep in left["project_imports"]:
+                if dep not in primary_modules or dep not in other_modules:
+                    mismatches.append(
+                        f"{module}: dependency {dep} is not present in both closures"
+                    )
 
         for path in sorted(primary_inputs.keys() & other_inputs.keys()):
             if primary_inputs[path] != other_inputs[path]:
-                mismatches.append(
-                    f"provenance input {path}: SHA-256 differs "
+                provenance_differences.append(
+                    f"{path}: SHA-256 differs "
                     f"({primary_inputs[path]} != {other_inputs[path]})"
                 )
 
@@ -265,10 +330,14 @@ def compare_manifests(primary_path: Path, other_paths: list[Path]) -> None:
             f"{primary.get('label') or primary_path.name} vs "
             f"{other.get('label') or other_path.name}: "
             f"{len(common)} shared module(s), "
-            f"{len(mismatches)} mismatch(es); proof revisions "
-            f"{primary['proof_source_revision']} / {other['proof_source_revision']}",
+            f"{len(mismatches)} identity mismatch(es), "
+            f"{len(provenance_differences)} provenance difference(s); proof revisions "
+            f"{primary['proof_source_revision']} / {other['proof_source_revision']} "
+            f"({revision_relation})",
             flush=True,
         )
+        for difference in provenance_differences:
+            print(f"[lean-closure] provenance difference (non-gating): {difference}", file=sys.stderr)
         if mismatches:
             for mismatch in mismatches:
                 print(f"[lean-closure] MANIFEST MISMATCH: {mismatch}", file=sys.stderr)
@@ -293,12 +362,15 @@ def compile_closure(
     parent_table: str | None = None,
     weighted_bound: int | None = None,
     artifact_name: str | None = None,
+    precompiled_manifest_path: Path | None = None,
+    precompiled_dir: Path | None = None,
 ) -> None:
     index = module_index(extra_source_roots)
     sources: dict[str, Path] = {}
     graph: dict[str, list[str]] = {}
     visiting: list[str] = []
     visited: set[str] = set()
+    topological: list[str] = []
 
     def visit(module: str, explicit: Path | None = None) -> None:
         if module in visited:
@@ -317,9 +389,115 @@ def compile_closure(
             visit(dep)
         visiting.pop()
         visited.add(module)
+        topological.append(module)
 
     for root in roots:
         visit(root.stem, root)
+
+    precompiled: set[str] = set()
+    precompiled_metadata: dict | None = None
+    if precompiled_manifest_path is not None:
+        if precompiled_dir is None:
+            raise ValueError("--precompiled-manifest requires --precompiled-dir")
+        if manifest_only:
+            raise ValueError("--manifest-only cannot consume a precompiled manifest")
+        if not precompiled_dir.is_dir():
+            raise FileNotFoundError(f"precompiled artifact directory not found: {precompiled_dir}")
+        base_manifest = json.loads(precompiled_manifest_path.read_text(encoding="utf-8"))
+        if base_manifest.get("schema_version") != 1:
+            raise ValueError("unsupported precompiled manifest schema")
+        version_result = subprocess.run(
+            [lean, "--version"], text=True,
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True,
+        )
+        current_version = version_result.stdout.strip()
+        if base_manifest.get("lean_version") != current_version:
+            raise RuntimeError(
+                "precompiled Lean version differs: "
+                f"{base_manifest.get('lean_version')!r} != {current_version!r}"
+            )
+        prefix_result = subprocess.run(
+            [lean, "--print-prefix"], text=True,
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True,
+        )
+        current_compiler = Path(prefix_result.stdout.strip()) / "bin" / "lean"
+        current_compiler_sha256 = sha256_file(current_compiler)
+        if base_manifest.get("lean_binary", {}).get("sha256") != current_compiler_sha256:
+            raise RuntimeError("precompiled Lean compiler binary SHA-256 differs")
+        entries: dict[str, dict] = {}
+        precompiled_identities: dict[str, str] = {}
+        for entry in base_manifest.get("modules", []):
+            module = entry.get("module")
+            if not module or module in entries:
+                raise ValueError(f"invalid or duplicate precompiled module entry: {module!r}")
+            entries[module] = entry
+        workdir.mkdir(parents=True, exist_ok=True)
+        for module in topological:
+            entry = entries.get(module)
+            if entry is None:
+                continue
+            if entry.get("source_sha256") != sha256_file(sources[module]):
+                continue
+            if entry.get("project_imports") != graph[module]:
+                continue
+            relative = Path(entry.get("olean_path", ""))
+            if relative.is_absolute() or ".." in relative.parts:
+                raise ValueError(f"unsafe precompiled object path for {module}: {relative}")
+            source_olean = precompiled_dir / relative
+            if not source_olean.is_file():
+                continue
+            if sha256_file(source_olean) != entry.get("olean_sha256"):
+                continue
+            if not all(dep in precompiled or is_standard(dep) for dep in graph[module]):
+                continue
+            dependencies = []
+            for dep in sorted(graph[module]):
+                dep_identity = (
+                    f"standard:{current_version}:{dep}" if is_standard(dep)
+                    else precompiled_identities[dep]
+                )
+                dependencies.append({"module": dep, "identity": dep_identity})
+            expected_import_hash = hashlib.sha256(
+                json.dumps(dependencies, sort_keys=True, separators=(",", ":")).encode()
+            ).hexdigest()
+            if entry.get("import_closure_sha256") != expected_import_hash:
+                continue
+            identity_payload = {
+                "module": module,
+                "source_sha256": entry["source_sha256"],
+                "project_imports": entry["project_imports"],
+                "olean_sha256": entry["olean_sha256"],
+                "import_closure_sha256": expected_import_hash,
+            }
+            expected_identity = hashlib.sha256(
+                json.dumps(identity_payload, sort_keys=True, separators=(",", ":")).encode()
+            ).hexdigest()
+            if entry.get("module_identity_sha256") != expected_identity:
+                continue
+            target_olean = workdir / relative
+            target_olean.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(source_olean, target_olean)
+            if sha256_file(target_olean) != entry["olean_sha256"]:
+                raise RuntimeError(f"precompiled object copy hash mismatch: {module}")
+            precompiled.add(module)
+            precompiled_identities[module] = expected_identity
+        precompiled_metadata = {
+            "proof_source_revision": base_manifest.get("proof_source_revision"),
+            "source_revisions": base_manifest.get(
+                "source_revisions", [base_manifest.get("proof_source_revision")]
+            ),
+            "lean_binary_sha256": current_compiler_sha256,
+            "manifest_sha256": sha256_file(precompiled_manifest_path),
+            "reused_module_count": len(precompiled),
+            "reused_modules": sorted(precompiled),
+        }
+        print(
+            f"[lean-closure] reused {len(precompiled)} dependency-closed module(s) "
+            f"from source revisions {precompiled_metadata['source_revisions']}",
+            flush=True,
+        )
+    elif precompiled_dir is not None:
+        raise ValueError("--precompiled-dir requires --precompiled-manifest")
 
     compiled_dir = artifact_dir or workdir
     if not manifest_only:
@@ -331,8 +509,8 @@ def compile_closure(
 
         env = os.environ.copy()
         env["LEAN_PATH"] = str(workdir)
-        remaining = set(sources)
-        compiled: set[str] = set()
+        remaining = set(sources) - precompiled
+        compiled: set[str] = set(precompiled)
         level_no = 0
 
         def compile_one(module: str) -> tuple[str, int]:
@@ -407,6 +585,7 @@ def compile_closure(
             parent_table,
             weighted_bound,
             artifact_name,
+            precompiled_metadata,
         )
         manifest_path.parent.mkdir(parents=True, exist_ok=True)
         manifest_path.write_text(
@@ -447,6 +626,14 @@ def main() -> int:
     parser.add_argument("--weighted-bound", type=int, help="weighted first-one bound certified for the parent")
     parser.add_argument("--artifact-name", help="expected GitHub Actions artifact name")
     parser.add_argument(
+        "--precompiled-manifest",
+        help="manifest describing dependency-closed compiled modules available for reuse",
+    )
+    parser.add_argument(
+        "--precompiled-dir",
+        help="artifact directory containing the objects named by --precompiled-manifest",
+    )
+    parser.add_argument(
         "--provenance-input",
         action="append",
         default=[],
@@ -474,6 +661,10 @@ def main() -> int:
         parser.error("--compare-manifest requires --manifest")
     if args.manifest_only and not args.artifact_dir:
         parser.error("--manifest-only requires --artifact-dir")
+    if bool(args.precompiled_manifest) != bool(args.precompiled_dir):
+        parser.error("--precompiled-manifest and --precompiled-dir must be supplied together")
+    if args.manifest_only and args.precompiled_manifest:
+        parser.error("--manifest-only cannot consume a precompiled manifest")
     for entry in args.override:
         if "=" not in entry:
             parser.error(f"invalid --override {entry!r}; expected MODULE=PATH")
@@ -511,6 +702,8 @@ def main() -> int:
             args.parent_table,
             args.weighted_bound,
             args.artifact_name,
+            Path(args.precompiled_manifest).resolve() if args.precompiled_manifest else None,
+            Path(args.precompiled_dir).resolve() if args.precompiled_dir else None,
         )
     except Exception as exc:
         print(f"[lean-closure] ERROR: {exc}", file=sys.stderr, flush=True)
