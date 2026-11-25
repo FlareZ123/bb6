@@ -73,7 +73,7 @@ theorem entry : ∃ t z, run0 table t ⟨0,[],[]⟩ = some z ∧ Inv z :=
     pr+='\n  omega';ls.append(pr)
     ls.append('''theorem unbounded : ∀ n, ∃ t z, n ≤ t ∧ run0 table t ⟨0,[],[]⟩ = some z ∧ Inv z :=
   closed_arbitrary table Inv entry closed
-theorem never (m : Machine) (hm : compatible m table) : NeverHalts m :=
+theorem never (m : Machine) (hm : compatible table m) : NeverHalts m :=
   never_of_closed table Inv entry closed m hm
 #print axioms never''');ls.append(f'end M{i}');return '\n\n'.join(ls)
 
