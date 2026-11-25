@@ -1,3 +1,7 @@
+## 2026-11-25 03:34 UTC continuation (normal; RNG 8)
+
+Lease claim 2f0133c015ba51768dadca7619f29e94eeb243d1, claimed 03:34:09.743Z; earliest release 04:44:09.743Z. Focus raw139 depth six. C++ simulation and exact two-state FAR saturation produced complete candidates for F0=1LA (bound 201), 1LE (279), 1RC (49394). New F0SiblingCover.lean contains the first two complete source candidates and extra parent side cycles 0LB and 1LC. 0LD/0RE already concurrently added to main frontier, do not double count. 1RC 49,388-transition proof needs chunk replay; local rfl chunks initially passed but full replay timed out. Local Lean 4.36.0-rc2 installed; shell GitHub DNS unavailable; exact import audit via CI. No complete BB6 upper bound. See im-results/agent6-champion-residual/F0-siblings.md.
+
 ## 2026-11-25 00:14 UTC checkpoint — raw57 six-hole frontier
 
 Current lease 2026-11-24T23:40:21.426Z, run_id agent6-gpt62-2026-11-24T23:40:21.426Z-harmonic-continuation; mandatory release at 00:50:21.426Z. No early release. Actual source CI tree126 alternative proof 45512885605 success; table already excluded by Agent50 table92, no new coverage. Original #429 no new root closure.

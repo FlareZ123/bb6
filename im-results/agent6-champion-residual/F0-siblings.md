@@ -1,0 +1,5 @@
+# Raw139: depth-six F/0 sibling certificates
+
+The fixed nine-row prefix is `1RB---_1RC---_1LD0RF_1RA0LE_0LD1RC_---0RE`. Each ordinary F/0 choice leaves two holes, A/1 and B/1. F/0=1LA and 1LE first query B/1 at 55 and 97 successful transitions. All 24 ordinary B/1 children are classified by a finite last-hole run, explicit two-state FAR certificate, or a side-cycle witness; the B/1 halt child is included separately. The upper bounds including the possible first-one delay and final halt query are 201 and 279 respectively. Each theorem covers all 625 completions of its parent, not only the simulated completion. F/0=0LB and 1LC also have whole-cylinder side-cycle witnesses (409,65,right,11) and (385,61,right,11).
+
+`F0SiblingCover.lean` is a source-level proof candidate awaiting exact dependency/kernel audit. F/0=1RC has complete candidate witness data but its longest run (49388) needs chunked replay; it is not yet certified. None of these local claims proves BB(6) or closes the entire raw139 cylinder.
