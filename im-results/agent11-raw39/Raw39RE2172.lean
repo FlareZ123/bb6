@@ -31,21 +31,21 @@ def suffix : List Bool := [true,true,true,true,true,true,false,true,true,true]
 /-- Four phase-boundary configurations. The repeated block is an unbounded
     stack tail; every phase leaves its arbitrary continuation untouched. -/
 def A (n : Nat) (Y : List Bool) : Z0 :=
-  ⟨0,[true,true,true],
-    [false,false,false,true] ++ O 2 ++ Z 16 ++ rep block n ++ suffix ++ Y⟩
+  ⟨0,false::[true,true,true],
+    [false,false,true] ++ O 2 ++ Z 16 ++ rep block n ++ suffix ++ Y⟩
 
 def B (n : Nat) (Y : List Bool) : Z0 :=
-  ⟨0,[true,true,true],
-    [false,false,false,true] ++ O 6 ++ Z 14 ++ rep block n ++ suffix ++ Y⟩
+  ⟨0,false::[true,true,true],
+    [false,false,true] ++ O 6 ++ Z 14 ++ rep block n ++ suffix ++ Y⟩
 
 def C (n : Nat) (Y : List Bool) : Z0 :=
-  ⟨0,[true,true,true],
-    [false,false,false,true] ++ O 2 ++ Z 2 ++ O 3 ++ [false] ++ O 4 ++ Z 10 ++
+  ⟨0,false::[true,true,true],
+    [false,false,true] ++ O 2 ++ Z 2 ++ O 3 ++ [false] ++ O 4 ++ Z 10 ++
       rep block n ++ suffix ++ Y⟩
 
 def D (n : Nat) (Y : List Bool) : Z0 :=
-  ⟨0,[true,true,true],
-    [false,false,false,true] ++ O 9 ++ [false] ++ O 4 ++ Z 10 ++
+  ⟨0,false::[true,true,true],
+    [false,false,true] ++ O 9 ++ [false] ++ O 4 ++ Z 10 ++
       rep block n ++ suffix ++ Y⟩
 
 /-- The four exact macro phases. -/
