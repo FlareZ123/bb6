@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Try BlockFAR on singleton projections of the 34 exact raw10 complement boxes.
+"""Try BlockFAR on singleton projections of exact raw10 complement boxes.
 
 Run from repository root:
   python im-results/agent17-raw10-box-far-search/search.py
@@ -154,7 +154,7 @@ def main() -> None:
                         help="subtract Agent50's 25^8 halt table (use only after CI acceptance)")
     parser.add_argument("--min-fixed", type=int, default=2,
                         help="skip boxes with fewer singleton ordinary moves")
-    parser.add_argument("--max-boxes", type=int, default=EXPECTED_BOXES,
+    parser.add_argument("--max-boxes", type=int, default=41,
                         help="limit the number of boxes for a quick pilot")
     parser.add_argument("--jobs", type=int, default=2)
     parser.add_argument("--compile-timeout", type=int, default=900)
