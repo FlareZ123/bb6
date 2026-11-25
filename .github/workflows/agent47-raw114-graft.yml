@@ -59,7 +59,7 @@ jobs:
           for name in ("champion_score_gt_7014", "champion_raw_witness",
                        "BB6.Agent47CanonicalRaw114Accepted.exact_at_target",
                        "exact_from_canonical77_at_champion_score"):
-              m = re.search(r"'[^']*\\."+re.escape(name)+r"' depends on axioms: \\[([^\\]]*)\\]", log)
+              m = re.search(r"'[^']*"+re.escape(name)+r"' depends on axioms: \[([^\]]*)\]", log)
               if not m:
                   raise SystemExit("missing axiom audit: "+name)
               used = {x.strip() for x in m.group(1).split(",") if x.strip()}
