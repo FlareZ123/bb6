@@ -31,6 +31,7 @@ log = pathlib.Path(sys.argv[1]).read_text()
 allowed = {'propext', 'Classical.choice', 'Quot.sound'}
 names = (
     'BB6.Agent48F1OneLF.checked',
+    'BB6.Agent48F1OneLF.root',
     'BB6.Agent48F1OneLF.nohalt',
     'BB6.Agent48F1OneLF.all_completions_weighted',
     'BB6.Agent48F1OneLFHard.stage',
