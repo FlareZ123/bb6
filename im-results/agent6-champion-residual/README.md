@@ -166,7 +166,7 @@ The workflow has a `catalogue_crosswalk` mode that can reuse a previously built 
 
 - `Canonical76RosterExport.lean` exports the 76 canonical parents and the 112 F0-refined raw139 residual tables.
 - `cryptids_canonical76_crosswalk.py` parses the pinned Cryptids six-group machine RLE, checks all 24 state permutations fixing A and B, and simulates each source machine's first-use schedule. It deliberately does not assume lexicographic slot order.
-- The script is designed to audit the pinned 191-module catalogue (159 NonHalt and 32 Halt) and includes a regression for the source-connected raw139 E1=1LF leaf.
+- The script is designed to audit the pinned 191-module catalogue (159 NonHalt and 32 Halt), preserves each candidate's first-use `(time, slot, move)` path schedule for later Lean adapters, and includes a regression for the source-connected raw139 E1=1LF leaf.
 - A NonHalt source match at a single unvisited HHH row is a candidate one-hole cylinder cover. A Halt source match is recorded only as an individual halting-machine candidate; it is not treated as a cover of the other 24 completions.
 
 The crosswalk is not a proof. Each candidate still needs its source theorem imported, the state permutation/table and first-use address proved, and a kernel-checked `Cover` adapter. Halt candidates additionally need an explicit primitive-step bound.
