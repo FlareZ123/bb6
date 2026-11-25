@@ -695,7 +695,7 @@ jobs:
       - name: Restore raw110 Lean sources without reusing foreign oleans
         run: |
           set -euo pipefail
-          find /tmp/raw110-parent -type f -name '*.lean' -print0 |
+          find /tmp/raw110-parent -type f -name '*.lean' ! -name 'TNFPilot.lean' -print0 |
             while IFS= read -r -d '' src; do
               dest="im-results/agent7-raw110/$(basename "$src")"
               if [ ! -f "$dest" ]; then
@@ -726,6 +726,8 @@ jobs:
             --artifact-name canonical70-raw121-raw110-roster-only-certified \\
             --jobs 8 \\
             --source-root /tmp/raw110-generated \\
+            --override TNFPilot=im-results/agent50-weighted-tnf-pilot/TNFPilot.lean \\
+            --override ThreeHoleAudit=im-results/agent31-three-hole-tnf/ThreeHoleAudit.lean \\
             --precompiled-manifest /tmp/a72-base/a31-canonical72-manifest.json \\
             --precompiled-dir /tmp/a72-base/a31-canonical72 \\
             --provenance-input im-results/agent8-tnf-raw117/Canonical70Raw121Raw110RosterOnly.lean \\
@@ -878,7 +880,7 @@ jobs:
           python im-results/agent8-tnf-raw117/generate.py
           python im-results/agent11-raw121/prepare_raw121.py
           python im-results/agent47-raw112-cut/generate.py | tee /tmp/a31-raw112-generation.log
-          find /tmp/raw110-parent -type f -name '*.lean' -print0 |
+          find /tmp/raw110-parent -type f -name '*.lean' ! -name 'TNFPilot.lean' -print0 |
             while IFS= read -r -d '' src; do
               dest="im-results/agent7-raw110/$(basename "$src")"
               if [ ! -f "$dest" ]; then cp "$src" "$dest"; fi
@@ -905,6 +907,7 @@ jobs:
             --jobs 4 \
             --source-root /tmp/raw110-generated \
             --override ThreeHoleAudit=im-results/agent31-three-hole-tnf/ThreeHoleAudit.lean \
+            --override TNFPilot=im-results/agent50-weighted-tnf-pilot/TNFPilot.lean \
             --precompiled-manifest /tmp/a31-base/manifest/raw107-shared-manifest.json \
             --precompiled-dir /tmp/a31-base \
             --provenance-input im-results/agent47-rooted-tnf/Canonical73Raw110Composition.lean \
