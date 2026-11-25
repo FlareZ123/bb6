@@ -92,3 +92,9 @@ The next integration should compile `CanonicalTwoParentRosterOnly` first, then `
 This is not yet source-accepted. Agent11's `Raw121Canonical77Graft` already proves the analogous 77-to-76 membership/count, but earlier cross-artifact attempts failed on incompatible `BB6Coverage` identities and object hashes. The intended audit compiles Raw121 from its original sources against the canonical72 artifact's own precompiled manifest, avoiding that cross-artifact mismatch. Raw121's independent parent certificate is accepted in [CI 45616647230](https://github.com/FlareZ123/bb6/actions/runs/45616647230).
 
 If the 72-to-71 finite membership and source/axiom checks pass, this cut can be composed with Agent47's raw112/raw110 cuts; the resulting candidate would have 69 residual Covers, not 70. That is a proposed next composition, not an accepted result.
+
+### Raw121 + raw110 extension: 70-roster draft
+
+`Canonical70Raw121Raw110RosterOnly.lean` adds the source-audited raw110 parent `p110` to the 71-roster draft. The raw121 parent bound 4063 is lifted to the common root bound 6,766,859; the raw110 parent is covered directly at 6,766,859. The finite membership/count checks assert that raw110 remains as one representative and that the resulting roster has 70 entries. The exactness consumer is generic in the target (B\ge 6{,}766{,}859), but still requires 70 residual Covers and an attaining witness.
+
+This route deliberately avoids depending on the still-developing raw112 parent Cover. Its parent certificates were independently source-audited in [Raw121 run 45616647230](https://github.com/FlareZ123/bb6/actions/runs/45616647230) and [raw110 run 45597857116](https://github.com/FlareZ123/bb6/actions/runs/45597857116). The combined 70-roster module is only a draft until Raw121 and Raw110 are recompiled from source against the canonical72 artifact's precompiled manifest and the finite count plus axiom gate pass.
