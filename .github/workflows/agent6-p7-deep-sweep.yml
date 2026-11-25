@@ -1,0 +1,28 @@
+name: Agent 6 depth-seven unresolved deep sweep
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Search unresolved depth-seven siblings
+        run: |
+          set -euo pipefail
+          node im-results/agent6-champion-residual/search_p7_unresolved_deeper.mjs > /tmp/p7-deeper.json
+          node - <<'JS'
+          const fs = require("fs");
+          const r = JSON.parse(fs.readFileSync("/tmp/p7-deeper.json", "utf8"));
+          console.log(JSON.stringify({
+            cap: r.cap,
+            sideCycleBounds: r.sideCycleBounds,
+            counts: r.counts,
+            results: r.results
+          }, null, 2));
+          JS
