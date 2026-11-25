@@ -145,7 +145,11 @@ def build_child(key,spec):
         for idx,params in autids.items():
             i=int(idx)
             p=tuple(opens[i].replace("_","")[k:k+3] for k in range(0,36,3))
-            cert=run_automata(p,params,params)
+            if isinstance(params,dict):
+                paramsL=tuple(params["left"]); paramsR=tuple(params["right"])
+            else:
+                paramsL=paramsR=params
+            cert=run_automata(p,paramsL,paramsR)
             assert cert[0],(key,i,params)
             code.append(emit_automata(i,p,cert));pumps[i]=f"{an}.M{i}"
         code.append(f"end {an}")
@@ -230,7 +234,7 @@ def build_child(key,spec):
                 print(key,"RLE_FOUND",i,found[0],found[1],"states",cert[1],flush=True)
         if rle_found:
             rle_code.append(f"end {rle_ns}")
-            (ROOT/(rle_mod+".lean")).write_text("\\n\\n".join(rle_code)+"\\n")
+            (ROOT/(rle_mod+".lean")).write_text("\n\n".join(rle_code)+"\n")
             imports.append(rle_mod)
         unclassified=remaining
         if rle_found:
@@ -261,7 +265,7 @@ def build_child(key,spec):
                     print(key,"DIAG",i,"no-hole-through",limit,
                           "state",c.q,"head",c.h0,"left",brief(c.l),
                           "right",brief(c.r),"events-tail",events,flush=True)
-        print(key,"UNRESOLVED",*[f"{i} {opens[i]}" for i in unclassified],sep="\\n")
+        print(key,"UNRESOLVED",*[f"{i} {opens[i]}" for i in unclassified],sep="\n")
         raise SystemExit(3)
     def emit(name,imports,body):
         header=f"""set_option maxRecDepth 100000
