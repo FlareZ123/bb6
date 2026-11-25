@@ -99,7 +99,7 @@ jobs:
           export LEAN_PATH="$PWD"
           cp "$GITHUB_WORKSPACE/im-results/agent8-coverage-contract/Frontier.lean" Frontier.lean
           lean -o Frontier.olean Frontier.lean 2>&1 | tee "$RUNNER_TEMP/counted421.log"
-          for m in Cap CapInverse CapRoot CapMulti Counted421 Counted421Bridge Counted421Score Counted421ClosedCost Counted421BandBound Counted421Coverage CountedBMO5Pair CountedBMO5PairDrain CountedBMO5PairScore CountedBMO5PairCoverage; do
+          for m in Cap CapInverse CapRoot CapMulti Counted421 Counted421Bridge Counted421Score Counted421ClosedCost Counted421BandBound Counted421Coverage CountedBMO5Pair CountedBMO5PairDrain CountedBMO5PairScore CountedBMO5PairCoverage CountedBMO5Bound; do
             lean -o "$m.olean" "$m.lean" 2>&1 | tee -a "$RUNNER_TEMP/counted421.log"
           done
           if grep -Eq 'sorryAx|native_decide' "$RUNNER_TEMP/counted421.log"; then
