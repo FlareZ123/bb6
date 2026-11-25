@@ -169,6 +169,7 @@ jobs:
           cp "$GITHUB_WORKSPACE/research/im-results/agent8-adaptive-source-plan/Agent8Chunk2FirstHole.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent50-weighted-tnf-pilot/Agent50Q32ParentTreeSearch.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent44-source-roster/Agent44Q32ParentTreeIntegration.v" original/verify/
+          cp "$GITHUB_WORKSPACE/research/im-results/agent44-source-roster/Agent44Q32DeciderTree.v" original/verify/
       - name: Recover and generate source-checkable batch witnesses
         if: inputs.target == 'enumerate62-recovered-batch-witnesses'
         env:
@@ -214,7 +215,7 @@ jobs:
             enumerate62-resume-last20) make -f Makefile.coq -j 2 Agent5PackedChunk12800_20_1000000.vo ;;
             enumerate62-recovered-batch-witnesses) make -f Makefile.coq -j 2 Agent5RecoveredBatchWitnesses.vo Agent5RecoveredHeld.vo ;;
             enumerate62-source-roster) make -f Makefile.coq -j 2 Agent47SourceSweep.vo && make -f Makefile.coq -j 2 Agent47SourceChunk2.vo Agent47SourceTree.vo Agent44Q32RemainderBranchProbe.vo && make -f Makefile.coq -j 2 Agent8Chunk2FirstHole.vo ;;
-            enumerate62-source-first-hole) make -f Makefile.coq -j 2 Agent47SourceSweep.vo && make -f Makefile.coq -j 2 Agent47SourceChunk2.vo Agent47SourceTree.vo Agent44Q32CanonicalParent.vo && make -f Makefile.coq -j 2 Agent8Chunk2FirstHole.vo Agent50Q32ParentTreeSearch.vo Agent44ChunkSideSearch.vo Agent44Q32ParentTreeIntegration.vo ;;
+            enumerate62-source-first-hole) make -f Makefile.coq -j 2 Agent47SourceSweep.vo && make -f Makefile.coq -j 2 Agent47SourceChunk2.vo Agent47SourceTree.vo Agent44Q32CanonicalParent.vo && make -f Makefile.coq -j 2 Agent8Chunk2FirstHole.vo Agent50Q32ParentTreeSearch.vo Agent44ChunkSideSearch.vo Agent44Q32ParentTreeIntegration.vo Agent44Q32DeciderTree.vo ;;
             enumerate62-source-first-hole-side) make -f Makefile.coq -j 2 Agent47SourceSweep.vo && make -f Makefile.coq -j 2 Agent47SourceChunk2.vo Agent47SourceTree.vo Agent44Q32CanonicalParent.vo && make -f Makefile.coq -j 2 Agent8Chunk2FirstHole.vo Agent44ChunkSideSearch.vo Agent44Chunk2FirstHoleSideSearch.vo ;;
             enumerate62-s4-gap-side-search) make -f Makefile.coq -j 2 Agent47SourceWitness.vo Agent44S4GapSideSearch.vo ;;
           esac
