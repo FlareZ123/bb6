@@ -187,12 +187,12 @@ namespace BB6BlockFAR.Held
 theorem base_ok : cert.baseCheck = true := by decide +kernel
 '''
     for kind,f in [('pred','(fun l => symbols.all (cert.predCheckAt l))'),('rows','(cert.rowsAt machine)')]:
-        for i in range(0,D,1 if width>=5 else 10):
-            s += f'theorem {kind}_{i} : rangeCheck {D-1} {f} {i} {min(1 if width>=5 else 10,D-i)} = true := by decide +kernel\n'
+        for i in range(0,D,1 if width>=5 or D>200 else 10):
+            s += f'theorem {kind}_{i} : rangeCheck {D-1} {f} {i} {min(1 if width>=5 or D>200 else 10,D-i)} = true := by decide +kernel\n'
         s += f'theorem {kind}_full : rangeCheck {D-1} {f} 0 {D} = true := by\n'
         expr = f'{kind}_0'
-        for i in range(1 if width>=5 else 10,D,1 if width>=5 else 10):
-            expr = f'(rangeCheck_join {D-1} {f} 0 {i} {min(1 if width>=5 else 10,D-i)} {expr} {kind}_{i})'
+        for i in range(1 if width>=5 or D>200 else 10,D,1 if width>=5 or D>200 else 10):
+            expr = f'(rangeCheck_join {D-1} {f} 0 {i} {min(1 if width>=5 or D>200 else 10,D-i)} {expr} {kind}_{i})'
         s += '  exact '+expr+'\n'
     s += '''theorem pred_ok : cert.predCheck = true := rangeCheck_full _ _ pred_full
 theorem rows_ok : cert.rowsCheck machine = true := rangeCheck_full _ _ rows_full
