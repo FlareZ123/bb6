@@ -84,3 +84,11 @@ This is still an intermediate draft. The required dependencies are not yet joint
 - the champion-independent raw107+raw114 roster base and the new 72-roster consumer still require a joint Lean source/axiom audit.
 
 The next integration should compile `CanonicalTwoParentRosterOnly` first, then `Canonical72RosterOnly` against the accepted raw117, raw113, raw115 and raw119 source closures. The exactness theorem remains conditional: even after the roster proof is accepted, BB(6) is not determined until all 72 retained Covers are established at the champion score. Do not report 72 as an accepted global frontier or as an upper bound.
+
+### Raw121 extension: 71-roster draft
+
+`Canonical71Raw121RosterOnly.lean` grafts Agent11's source-accepted Raw121 parent `p121` (E1=1RE, `WeightedBound 4063`) onto the 72-entry roster. It asserts by finite Lean computation that `p121` remains present after the six earlier cuts and removes exactly one more representative, giving a candidate 71-entry roster at the same 7014 root bound. Its `sound` theorem uses `graftRoster_sound` and lifts the 4063 parent bound monotonically; its generic `exact_at_target` still requires all 71 residual Covers and an attaining witness.
+
+This is not yet source-accepted. Agent11's `Raw121Canonical77Graft` already proves the analogous 77-to-76 membership/count, but earlier cross-artifact attempts failed on incompatible `BB6Coverage` identities and object hashes. The intended audit compiles Raw121 from its original sources against the canonical72 artifact's own precompiled manifest, avoiding that cross-artifact mismatch. Raw121's independent parent certificate is accepted in [CI 45616647230](https://github.com/FlareZ123/bb6/actions/runs/45616647230).
+
+If the 72-to-71 finite membership and source/axiom checks pass, this cut can be composed with Agent47's raw112/raw110 cuts; the resulting candidate would have 69 residual Covers, not 70. That is a proposed next composition, not an accepted result.
