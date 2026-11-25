@@ -12,10 +12,11 @@ import generate_sweeps as one
 sys.path.insert(0,str(ROOT.parent/'agent10-tnf-multipump'))
 import multi
 MOVES=[''.join(x) for x in product('01','LR','ABCDEF')]
-SPECS={119: ('0RE',572,571,0,8,8765,6651,112287,31922,'102df4cbc607678e502f404889cf0f0982d2ccd6c20c19d16642635a095036a6','1RB0LF_1RC1RE_0RDHHH_1LD1RE_1LF0RE_1LA0LA',[(8,'1LF'),(10,'1LA'),(3,'1RE'),(1,'0LF'),(11,'0LA'),(5,'HHH')])}
-COUNTERS={119:[5619,5750,5751,5752,5753,5754,5755,5756,5757]}
-ONE={119:[461,462,509,510,2010,2284,5152,6530,7958]}
-TWO={119:[4028]}
+SPECS={115: ('0RD',458,457,0,8,7609,6706,117987,28643,'473e54afdb33cc1d8e1cca38c9b8a2dcdedd7fe8c9ad2898847b515c11c36b7e','1RB1LA_1RC0LB_0RDHHH_1LD1RE_0RF0RD_1LF1RA',[(8,'0RF'),(10,'1LF'),(3,'0LB'),(1,'1LA'),(11,'1RA'),(5,'HHH')]),119: ('0RE',572,571,0,8,8765,6651,112287,31922,'102df4cbc607678e502f404889cf0f0982d2ccd6c20c19d16642635a095036a6','1RB0LF_1RC1RE_0RDHHH_1LD1RE_1LF0RE_1LA0LA',[(8,'1LF'),(10,'1LA'),(3,'1RE'),(1,'0LF'),(11,'0LA'),(5,'HHH')])}
+COUNTERS={115:[],119:[5619,5750,5751,5752,5753,5754,5755,5756,5757]}
+ONE={115:[540,2519,2599,2605,5711,6007,7400,7535],119:[461,462,509,510,2010,2284,5152,6530,7958]}
+TWO={115:[2600,5646],119:[4028]}
+DOUBLE={115:[2824],119:[]}
 CHUNK=240
 
 def generate(raw):
@@ -31,9 +32,11 @@ def generate(raw):
     certs={}
     for row in hits.splitlines():
         i,a=row.split(':');certs[opens[int(i)]]=a
-    symbolic=set(COUNTERS[raw]+ONE[raw]+TWO[raw])
+    symbolic=set(COUNTERS[raw]+ONE[raw]+TWO[raw]+DOUBLE[raw])
     assert set(certs)==set(opens)-{opens[i] for i in symbolic}
     pumps={opens[i]:(f'BB6.Agent8Raw{raw}Counter.M{i}.pt',f'BB6.Agent8Raw{raw}Counter.M{i}.never') for i in COUNTERS[raw]}
+    for i in DOUBLE[raw]:
+        pumps[opens[i]]=(f'BB6.Agent8Raw{raw}Double.p',f'BB6.Agent8Raw{raw}Double.never')
     pumpns=f'BB6.Agent8Raw{raw}Sweeps'
     pc=['import SweepPumping','set_option maxRecDepth 100000','set_option maxHeartbeats 0',f'namespace {pumpns}','open BB6Coverage BB6Coverage.Agent31Pump']
     for i in ONE[raw]:
@@ -42,12 +45,24 @@ def generate(raw):
         pumps[opens[i]]=(f'{pumpns}.M{i}.table',f'{pumpns}.M{i}.never')
         print(i,'one',info)
     for i in TWO[raw]:
-        assert raw==119 and i==4028
         p=one.parse(opens[i])
-        st=multi.C(4,multi.lit('0000')+multi.rep('0')+multi.lit('10100')+multi.rep('100'),())
-        tg=multi.C(4,multi.lit('00000')+multi.rep('0')+multi.lit('10100100')+multi.rep('100'),())
-        ans=multi.pump(p,st,tg);assert ans is not None
-        code,info=multi.generate(i,p,(56,st,tg,ans));assert info==(56,66,8),info
+        if raw==119 and i==4028:
+            st=multi.C(4,multi.lit('0000')+multi.rep('0')+multi.lit('10100')+multi.rep('100'),())
+            tg=multi.C(4,multi.lit('00000')+multi.rep('0')+multi.lit('10100100')+multi.rep('100'),())
+            t0=56
+        elif raw==115 and i==2600:
+            st=multi.C(2,multi.lit('01111')+multi.rep('11')+multi.lit('001')+multi.rep('1'),())
+            tg=multi.C(2,multi.lit('0111111')+multi.rep('11')+multi.lit('0011')+multi.rep('1'),())
+            t0=29
+        elif raw==115 and i==5646:
+            st=multi.C(0,multi.lit('0')+multi.rep('10')+multi.lit('101011111010111111'),multi.lit('010')+multi.rep('11')+multi.lit('1111011000100011'))
+            tg=multi.C(0,multi.lit('010')+multi.rep('10')+multi.lit('101011111010111111'),multi.lit('01011')+multi.rep('11')+multi.lit('1111011000100011'))
+            t0=875
+        else:
+            raise ValueError((raw,i))
+        ans=multi.pump(p,st,tg,3000);assert ans is not None
+        code,info=multi.generate(i,p,(t0,st,tg,ans))
+        print(i,'two',info)
         pc.append(code);pumps[opens[i]]=(f'{pumpns}.M{i}.table',f'{pumpns}.M{i}.never')
     pc.append(f'end {pumpns}')
     (folder/f'Raw{raw}Sweeps.lean').write_text('\n\n'.join(pc)+'\n')
@@ -79,7 +94,7 @@ theorem split_checked (p : PartialMachine) (n : Nat) (s : Slot) (kids : Move →
   simp only [Bool.and_eq_true]
   exact ⟨hq, allMoves_of _ hk⟩
 '''
-    emit(prefix+'Base',['ZipThreeHoleAudit',prefix+'CounterEntries',prefix+'Sweeps'],base)
+    emit(prefix+'Base',['ZipThreeHoleAudit',prefix+'Sweeps']+([prefix+'CounterEntries'] if COUNTERS[raw] else [])+([prefix+'Double'] if DOUBLE[raw] else []),base)
     stats=Counter()
     def size(t):
         stats[t[0]]+=1
