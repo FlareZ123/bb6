@@ -70,7 +70,7 @@ theorem scanF (alt : Bool) (n : Nat) (R : List Bool) :
     rw [Nat.add_comm 1 n] at H
     have he : O (n+1) ++ R = O n ++ true::R := by
       simp only [O,List.replicate_succ',List.append_assoc,List.singleton_append]
-    rw [he] at H
+    rw [← he] at H
     exact H
 
 theorem clear (alt : Bool) (k : Nat) (R : List Bool) :
