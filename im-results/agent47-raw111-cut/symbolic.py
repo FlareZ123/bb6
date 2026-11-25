@@ -34,7 +34,9 @@ def generate(rows,work):
     ng=dict(line.split() for line in (ROOT/"ngram-manifest.txt").read_text().splitlines())
     mu=dict(line.split() for line in (ROOT/"multi-manifest.txt").read_text().splitlines())
     known={"1RB---_1RC1RA_0RD0LE_1LD1RE_1LF0RC_0RA0LF":
-        ("Raw111Ternary","BB6Coverage.Agent31Pump.Raw111Ternary")}
+        ("Raw111Ternary","BB6Coverage.Agent31Pump.Raw111Ternary"),
+        "1RB0LD_1RC1LE_0RD0RF_1LD1RE_---0RC_0RC0RA":
+        ("Raw111Triplet","BB6Coverage.Agent31Pump.Raw111Triplet")}
     certs={}
     imports={}
     single=[]
@@ -78,5 +80,5 @@ def generate(rows,work):
     assert len(single)==199,len(single)
     manifest="\n".join(sorted(single))+"\n"
     assert hashlib.sha256(manifest.encode()).hexdigest()=="aab7039ed0210df985e13993048903823052d7fa5e1d082dbd10c7462652c56d"
-    assert len(certs)==219,len(certs)
+    assert len(certs)==220,len(certs)
     return certs,imports
