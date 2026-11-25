@@ -26,9 +26,9 @@ The theorem closes one whole held-node cylinder in the finite checkpoint's adapt
 
 ## Root-frontier complement
 
-Agent 13's `Agent13CrossRouteHeldLeaf.v` connects the same FARv3 residual to the authentic first-one root through the depth-one parent at address `B0=1LC`. `CrossRouteHeldLeaf.lean` proves that every completion of that parent either extends the certified leaf or disagrees at one of its nine newly fixed slots. Thus the complement is retained rather than silently dropped.
+Agent 13's `Agent13CrossRouteHeldLeaf.v` connects the same FARv3 residual to the authentic first-one root through the depth-one parent at address `B0=1LC`; `Root109Membership.lean` proves that parent is an exact member of the 109 reduced roster. `CrossRouteHeldLeaf.lean` proves that every completion of that parent either extends the certified leaf or disagrees at one of its nine newly fixed slots. Thus the complement is retained rather than silently dropped.
 
-This branch is distinct from the `B0=1RC` path used by the 109 mixed-bound champion-score composition. It does not reduce those 109 obligations.
+Agent 13's `Root109Membership.lean` independently proves that this exact B0=1LC parent is canonical index 6 in `Combined109Roster.reducedRoster` and survives the 15 accepted whole-cylinder cuts. The FARv3 certificate therefore closes a strict subcylinder inside one of the 109 retained champion-score obligations. The count remains 109 until the consuming frontier replaces that parent by the certified leaf plus an explicit retained complement.
 
 ## Verification and next step
 
