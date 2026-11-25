@@ -453,7 +453,7 @@ jobs:
           python im-results/agent13-coverage/unpack.py
           id="${{ inputs.raw_id }}"
           if [[ "$id" == 68 ]]; then id=655; fi
-          case "$id" in 10|655|657) ;; *) echo "unsupported Raw118 nested proof index: $id"; exit 2;; esac
+          case "$id" in 10|434|655|657) ;; *) echo "unsupported Raw118 nested proof index: $id"; exit 2;; esac
           python tools/lean_compile_closure.py --workdir /tmp/a16-raw118-nested --jobs 2 "im-results/agent16-raw118/Raw118Nested$id.lean" | tee /tmp/a16-raw118-nested.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a16-raw118-nested.log; then exit 1; fi
       - name: Check Raw118 alternating-word nested restoration
