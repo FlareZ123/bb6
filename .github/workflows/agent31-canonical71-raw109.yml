@@ -213,6 +213,7 @@ jobs:
           python tools/lean_compile_closure.py \
             im-results/agent4-raw109/Raw109Cut.lean \
             im-results/agent7-raw123/Raw123Base.lean \
+            im-results/agent42-frontier-count/GraftRosterCount.lean \
             --workdir /tmp/a31-parent-interfaces \
             --manifest /tmp/a31-parent-interfaces-manifest.json \
             --label canonical76-raw109-raw123-parent-interfaces \
@@ -221,10 +222,12 @@ jobs:
             --precompiled-manifest "$base/manifest/canonical77-base-manifest.json" \
             --theorem BB6.Agent4Raw109Cut.parent_dichotomy \
             --theorem BB6.Agent7Raw123.p123_root \
+            --theorem BB6.Agent42FrontierCount.graftRoster_length_of_one \
             --provenance-input im-results/agent4-raw109/generate.py \
             --provenance-input im-results/agent4-raw109/specs.json \
             --provenance-input im-results/agent4-raw109/Raw109Cut.lean \
             --provenance-input im-results/agent7-raw123/Raw123Base.lean \
+            --provenance-input im-results/agent42-frontier-count/GraftRosterCount.lean \
             --provenance-input im-results/agent13-coverage/BB6Coverage.lean.xz.b64 \
             --provenance-input im-results/agent13-coverage/unpack.py \
             2>&1 | tee /tmp/a31-parent-interfaces.log

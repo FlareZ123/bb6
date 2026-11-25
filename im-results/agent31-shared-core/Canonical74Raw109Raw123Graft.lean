@@ -2,22 +2,25 @@ import CanonicalTwoParentRosterOnly
 import Raw109Cut
 import Raw123Base
 import CanonicalRosterRefinement
+import GraftRosterCount
 
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 
 namespace BB6.Agent31Canonical74Raw109Raw123
 
-open BB6Coverage BB6.Agent50TNFPilot
+open BB6Coverage BB6.Agent13BlankDelay BB6.Agent50TNFPilot
+open BB6.Agent31FourHoleFrontier BB6.Agent31FourHoleRoster
 open BB6.Agent47CanonicalFrontier BB6.Agent47CanonicalRefinement
 
 abbrev p109 : PartialMachine := BB6.Agent4Raw109Cut.parent
 abbrev p123 : PartialMachine := BB6.Agent7Raw123.p123
+abbrev baseRoster := BB6.Agent47CanonicalTwoParent.roster76
 
 /-- Remove the source-accepted Raw109 six-hole parent from the accepted
     canonical76 quotient roster. -/
 noncomputable def roster75 :=
-  graftRoster p109 [] BB6.Agent47CanonicalTwoParent.roster76
+  graftRoster p109 [] baseRoster
 
 /-- Independently remove the source-accepted Raw123 parent from the result.
     This composes two cuts against the same stable canonical76 base. -/
@@ -34,27 +37,44 @@ theorem p123_root :
 
 /-- The exact parent tables occur once; the sibling obligations are retained. -/
 theorem p109_parent_count :
-    (BB6.Agent47CanonicalTwoParent.roster76.filter
-      (fun e => sameTable e.2 p109)).length = 1 := by
+    (baseRoster.filter (fun e => sameTable e.2 p109)).length = 1 := by
   decide
 
 theorem p123_parent_count :
     (roster75.filter (fun e => sameTable e.2 p123)).length = 1 := by
   decide
 
+/-- Structural one-step accounting, not a native evaluation of the new roster. -/
 theorem count75 : roster75.length = 75 := by
-  decide
+  have hcount :
+      BB6.Agent42FrontierCount.graftMatchCount p109 baseRoster = 1 := by
+    simpa [BB6.Agent42FrontierCount.graftMatchCount] using p109_parent_count
+  have hlen :
+      roster75.length + 1 = baseRoster.length := by
+    simpa [roster75] using
+      (BB6.Agent42FrontierCount.graftRoster_length_of_one
+        p109 [] baseRoster hcount)
+  have hbase : baseRoster.length = 76 := by decide
+  omega
 
 theorem count74 : roster74.length = 74 := by
-  decide
+  have hcount :
+      BB6.Agent42FrontierCount.graftMatchCount p123 roster75 = 1 := by
+    simpa [BB6.Agent42FrontierCount.graftMatchCount] using p123_parent_count
+  have hlen :
+      roster74.length + 1 = roster75.length := by
+    simpa [roster74] using
+      (BB6.Agent42FrontierCount.graftRoster_length_of_one
+        p123 [] roster75 hcount)
+  have h75 : roster75.length = 75 := count75
+  omega
 
 /-- Lift the source-accepted canonical76 dichotomy to the champion score.
     This theorem does not alter or discard any of its 76 quotient obligations. -/
 theorem base_sound_at_target :
     ∀ m, compatible BB6.Agent50TNFPilot.root m →
       WeightedBound 6766859 m ∨
-        ∃ e ∈ BB6.Agent47CanonicalTwoParent.roster76,
-          TNFQuotientCompatible e.2 m := by
+        ∃ e ∈ baseRoster, TNFQuotientCompatible e.2 m := by
   intro m hm
   rcases BB6.Agent31CanonicalTwoParentRosterOnly.roster76_sound m hm with hb | hr
   · exact Or.inl (fun k d hk hd => Nat.le_trans (hb k d hk hd) (by decide))
@@ -70,7 +90,7 @@ theorem raw109_sound
   apply graftRoster_sound
     (p := p109)
     (replacement := [])
-    (roster := BB6.Agent47CanonicalTwoParent.roster76)
+    (roster := baseRoster)
     p109_root
     base_sound_at_target
   intro m hm
