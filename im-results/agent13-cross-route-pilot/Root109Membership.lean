@@ -98,6 +98,40 @@ def compatibleMachineB (p q : BB6Coverage.PartialMachine) : Bool :=
       decide (p (state, symbol) = none ∨ q (state, symbol) = none ∨
         p (state, symbol) = q (state, symbol))
 
+/-- Packed side-witness table for the complete C1=0LA branch below
+    the raw10 B0=1LC parent. Codes are the 1-based allMoves indices. -/
+def c1_0laPacked :=
+  BB6.Agent47SevenSideWitnesses.decodeRows
+    [8, 0, 11, 0, 0, 1, 0, 0, 0, 0, 0, 0]
+
+theorem c1_0la_hasWitness :
+    BB6.Agent47SevenSideWitnesses.hasWitness c1_0laPacked = true := by decide
+
+def c1_0laParent : BB6Coverage.PartialMachine :=
+  BB6Coverage.refine firstOneB0_1LC
+    (⟨2, by decide⟩, true)
+    (some ⟨false, false, ⟨0, by decide⟩⟩)
+
+theorem c1_0la_parent_matches :
+    BB6.Agent31FourHoleRoster.sameTable
+      (BB6Coverage.unpackTable c1_0laPacked) c1_0laParent = true := by decide
+
+/-- The entire C1=0LA child of raw10 is closed by one existing SideWitness
+    cylinder, with no restriction on its remaining nine slots. -/
+theorem c1_0la_parent_is_complete_side_witness :
+    ∀ m, BB6Coverage.compatible c1_0laParent m →
+      BB6Coverage.WeightedBound 7014 m := by
+  intro m hm
+  have hEq :
+      BB6Coverage.unpackTable c1_0laPacked = c1_0laParent :=
+    BB6.Agent31FourHoleRoster.sameTable_sound c1_0la_parent_matches
+  have hm' : BB6Coverage.compatible
+      (BB6Coverage.unpackTable c1_0laPacked) m := by
+    rw [← hEq]
+    exact hm
+  exact BB6.Agent47SevenSideWitnesses.hasWitness_sound
+    c1_0laPacked c1_0la_hasWitness m hm'
+
 /-- The FARv3 held leaf is disjoint from every one of the 388 side-witness
     cylinders, so its 25 completions are genuinely additional. -/
 theorem heldLeaf_disjoint_from_all_sideWitnesses :
@@ -144,5 +178,7 @@ theorem sourceHeldParent_is_exact_109_member :
 #print axioms b0_1lcSideWitnesses_count
 #print axioms b0_1lcSideWitnesses_safe
 #print axioms heldLeaf_disjoint_from_all_sideWitnesses
+#print axioms c1_0la_hasWitness
+#print axioms c1_0la_parent_is_complete_side_witness
 
 end BB6.Agent13CrossRouteHeldLeaf109
