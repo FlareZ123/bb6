@@ -106,6 +106,11 @@ theorem refinedCanonical76Roster_count :
     refinedCanonical76Roster.length = 177 := by
   decide
 
+/-- The 177 obligation addresses are pairwise distinct. -/
+theorem refinedCanonical76Roster_addresses_nodup :
+    (refinedCanonical76Roster.map Prod.fst).Nodup := by
+  decide
+
 /-- Conditional exactness at the attained champion score: 75 untouched
     canonical Covers plus 102 raw139 descendant Covers suffice. -/
 theorem exact_from_canonical76_and_102_raw139_leaves
@@ -134,6 +139,7 @@ theorem exact_from_canonical76_and_102_raw139_leaves
 #print axioms cover_championResidual_from_102_leaves
 #print axioms total_remaining_obligations_count
 #print axioms refinedCanonical76Roster_count
+#print axioms refinedCanonical76Roster_addresses_nodup
 #print axioms exact_from_canonical76_and_102_raw139_leaves
 
 end BB6.Agent6CanonicalTwoParentComposition
