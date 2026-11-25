@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 name="$1"
+if [[ "$name" == OneRA ]]; then
+  exec bash im-results/agent48-raw139-f1-oneRA/reproduce-blocks.sh f1 OneRA
+fi
 [[ "$name" =~ ^(Zero|One)[LR][A-F]$ ]]
 base="$PWD/im-results/agent48-raw139-f1-oneLA"
 spec="$base/spec-$name.json"
