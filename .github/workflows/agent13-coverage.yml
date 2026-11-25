@@ -132,6 +132,7 @@ jobs:
           mkdir -p "$W"
           tar -xzf "$D/source.tar.gz" -C "$W"
           tar -xJf "$D/proof-source.tar.xz" -C "$W"
+          python "$D/fix_emitter.py" "$W/emit_box6.py"
           (cd "$W"; python3 search.py; python3 ngram.py; python3 emit_box6.py . "$root/im-results/agent13-block-far/generate.py")
           python tools/lean_compile_closure.py --workdir /tmp/a49-box6-proof --jobs 2 "$W/Box6SourceConsumer.lean" | tee /tmp/a49-box6-proof.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a49-box6-proof.log; then exit 1; fi
