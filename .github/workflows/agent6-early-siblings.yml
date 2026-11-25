@@ -1,10 +1,16 @@
 name: Agent 6 raw139 early sibling source audit
 on:
   workflow_dispatch:
+    inputs:
+      one_lc_only:
+        description: Audit only the new C1=1LC sweep certificates
+        type: boolean
+        default: false
 permissions:
   contents: read
 jobs:
   audit:
+    if: ${{ !inputs.one_lc_only }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -29,4 +35,32 @@ jobs:
                   raise SystemExit('missing or duplicate audit: '+name)
               used = {x.strip() for x in matches[0].split(',') if x.strip()}
               assert used <= {'propext','Classical.choice','Quot.sound'}, (name,used)
+          PY
+  one-lc:
+    if: ${{ inputs.one_lc_only }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Unpack coverage source
+        run: python im-results/agent13-coverage/unpack.py
+      - name: Compile and audit exact C1=1LC source
+        run: |
+          set -euo pipefail
+          python tools/lean_compile_closure.py im-results/agent6-champion-residual/C1OneLCSweep.lean im-results/agent6-champion-residual/C1OneLCPair.lean --workdir /tmp/a6-one-lc --jobs 4 | tee /tmp/a6-one-lc.log
+          python - <<'PY'
+          import re
+          log = open('/tmp/a6-one-lc.log').read()
+          for ns in ('C1OneLC','C1Pair'):
+              for name in ('cycle','entry','growth','never','cover'):
+                  matches = re.findall(r"'BB6\.Agent6"+ns+r"\."+name+r"' depends on axioms: \[([^\]]*)\]",log)
+                  if len(matches) != 1:
+                      raise SystemExit('missing or duplicate audit: '+ns+'.'+name)
+                  used = {x.strip() for x in matches[0].split(',') if x.strip()}
+                  assert used <= {'propext','Classical.choice','Quot.sound'}, (ns,name,used)
           PY
