@@ -1,4 +1,4 @@
-import ChampionF1ZeroLFIntegration
+import ChampionF1ZeroRCIntegration
 import ChampionF1CycleSiblings
 
 set_option maxRecDepth 1000000
@@ -7,7 +7,7 @@ set_option maxHeartbeats 0
 namespace BB6.Agent31F1CycleIntegration
 
 open BB6Coverage BB6.Agent6ChampionResidual BB6.Agent47Canonical78 BB6.Agent10FastAudit
-open BB6.Agent31F1CycleSiblings BB6.Agent48F1ZeroLFIntegration
+open BB6.Agent31F1CycleSiblings BB6.Agent6F1ZeroRCIntegration
 open BB6.Agent31ChampionParentIntegration BB6.Agent31FourHoleRoster
 
 /-- Lift any source-checked F1 cycle sibling from six steps to B. -/
@@ -30,11 +30,11 @@ def closedF1Cycles (p : PartialMachine) : Bool :=
   sameTable p (parent 16) ||
   sameTable p (parent 18)
 
-/-- The 108-leaf raw139 frontier after 0LF, with eight exact cycle siblings
+/-- The 106-leaf raw139 frontier after 0LF, with eight exact cycle siblings
     removed and every other leaf retained. -/
 noncomputable def remainingF1Cycles :
     List (List Move × PartialMachine) :=
-  remainingF1ZeroLF.filter (fun e => !closedF1Cycles e.2)
+  remainingF1ZeroRC.filter (fun e => !closedF1Cycles e.2)
 
 theorem sameTable_false_of_not_true (p q : PartialMachine)
     (h : sameTable p q ≠ true) : sameTable p q = false := by
@@ -43,33 +43,33 @@ theorem sameTable_false_of_not_true (p q : PartialMachine)
   | true => exact False.elim (h hst)
 
 theorem parent0RA_present :
-    ∃ e ∈ remainingF1ZeroLF, sameTable e.2 (parent 1) = true := by decide
+    ∃ e ∈ remainingF1ZeroRC, sameTable e.2 (parent 1) = true := by decide
 theorem parent0LB_present :
-    ∃ e ∈ remainingF1ZeroLF, sameTable e.2 (parent 4) = true := by decide
+    ∃ e ∈ remainingF1ZeroRC, sameTable e.2 (parent 4) = true := by decide
 theorem parent1RB_present :
-    ∃ e ∈ remainingF1ZeroLF, sameTable e.2 (parent 7) = true := by decide
+    ∃ e ∈ remainingF1ZeroRC, sameTable e.2 (parent 7) = true := by decide
 theorem parent0LC_present :
-    ∃ e ∈ remainingF1ZeroLF, sameTable e.2 (parent 8) = true := by decide
+    ∃ e ∈ remainingF1ZeroRC, sameTable e.2 (parent 8) = true := by decide
 theorem parent1LC_present :
-    ∃ e ∈ remainingF1ZeroLF, sameTable e.2 (parent 10) = true := by decide
+    ∃ e ∈ remainingF1ZeroRC, sameTable e.2 (parent 10) = true := by decide
 theorem parent1RC_present :
-    ∃ e ∈ remainingF1ZeroLF, sameTable e.2 (parent 11) = true := by decide
+    ∃ e ∈ remainingF1ZeroRC, sameTable e.2 (parent 11) = true := by decide
 theorem parent0LE_present :
-    ∃ e ∈ remainingF1ZeroLF, sameTable e.2 (parent 16) = true := by decide
+    ∃ e ∈ remainingF1ZeroRC, sameTable e.2 (parent 16) = true := by decide
 theorem parent1LE_present :
-    ∃ e ∈ remainingF1ZeroLF, sameTable e.2 (parent 18) = true := by decide
+    ∃ e ∈ remainingF1ZeroRC, sameTable e.2 (parent 18) = true := by decide
 
-theorem remainingF1Cycles_count : remainingF1Cycles.length = 100 := by decide
+theorem remainingF1Cycles_count : remainingF1Cycles.length = 98 := by decide
 theorem removedF1Cycle_count :
-    remainingF1ZeroLF.length - remainingF1Cycles.length = 8 := by decide
+    remainingF1ZeroRC.length - remainingF1Cycles.length = 8 := by decide
 
 /-- Each old leaf is either one of the eight checked cycle parents or remains
-    in the 100-leaf residual list. -/
-theorem cover_remainingF1ZeroLF
+    in the 98-leaf residual list. -/
+theorem cover_remainingF1ZeroRC
     (hLeaves : ∀ e ∈ remainingF1Cycles,
       Cover (WeightedBound championScore) e.2)
     (e : List Move × PartialMachine)
-    (he : e ∈ remainingF1ZeroLF) :
+    (he : e ∈ remainingF1ZeroRC) :
     Cover (WeightedBound championScore) e.2 := by
   by_cases h0RA : sameTable e.2 (parent 1) = true
   · have heq : e.2 = parent 1 := sameTable_sound h0RA
@@ -134,8 +134,8 @@ theorem exact_from_remainingF1Cycles
     (hLeaves : ∀ e ∈ remainingF1Cycles,
       Cover (WeightedBound championScore) e.2) :
     BB6.Coverage.ExactBB6 championScore :=
-  exact_from_remainingF1ZeroLF hOther
-    (fun e he => cover_remainingF1ZeroLF hLeaves e he)
+  exact_from_remainingF1ZeroRC hOther
+    (fun e he => cover_remainingF1ZeroRC hLeaves e he)
 
 #print axioms cover_cycle_parent
 #print axioms parent0RA_present
@@ -147,7 +147,7 @@ theorem exact_from_remainingF1Cycles
 #print axioms parent0LE_present
 #print axioms parent1LE_present
 #print axioms remainingF1Cycles_count
-#print axioms cover_remainingF1ZeroLF
+#print axioms cover_remainingF1ZeroRC
 #print axioms exact_from_remainingF1Cycles
 
 end BB6.Agent31F1CycleIntegration
