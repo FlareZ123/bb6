@@ -171,6 +171,12 @@ theorem run_refine (a1 : Option (Option Move)) (n : Nat) (z c : Z0)
       simp [hs] at h
       simpa [step_refine a1 z d hs] using ih d h
 
+theorem joinN {p : PartialMachine} {n k t : Nat} {a b c : Z0}
+    (ht : n+k=t) (h : run0 p n a = some b) (g : run0 p k b = some c) :
+    run0 p t a = some c := by
+  subst t
+  exact join0 h g
+
 #print axioms fastRun_sound
 #print axioms run_refine
 end BB6.Agent10Raw108Long
