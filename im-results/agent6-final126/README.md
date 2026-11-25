@@ -15,3 +15,5 @@ After original-source acceptance, graft this leaf at the specified tree126 addre
 ## Roster overlap correction
 
 Exact slot-by-slot cross-match against all four BlockPumpData files found this table already present as [Agent50 table92 / cert92](../agent50-weighted-tnf-pilot/BlockPumpData4.lean). The independent direct recurrence above provides a shorter mathematical description and alternative proof, **not a new unique residual closure** relative to the canonical 124 roster. The original Agent7 dossier tracked FAR search coverage rather than the union of all proof methods. Do not decrement the canonical frontier count for this result. Any accepted alternative can be used to replace the existing certificate if useful, but do not duplicate integration work.
+
+Full original-source Lean verification succeeded in [CI 45512885605](https://github.com/FlareZ123/bb6/actions/runs/45512885605). As corrected above, this is an alternative proof, not a new unique frontier closure.
