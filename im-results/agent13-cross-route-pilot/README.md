@@ -62,7 +62,7 @@ Local Lean 4.36.0-rc2 compilation succeeded. Its axiom reports are limited to st
 
 The parent residual `B0=1LC` is raw residual index 10 (canonical index 6) in `canonical-121.json`. It survives the 15 whole-cylinder exclusions used by `Combined109Roster.lean`: the three `FiveHoleRoster` entries raw66/70/80 and the twelve `AllTwelveRoster` entries raw86/87/88/91/92/93/97/98/100/101/102/104. It is therefore one of the **109 retained obligations**, not an unrelated branch.
 
-`Root109Membership.lean` formalizes that fact against the actual `BB6.Agent47Combined109.reducedRoster`: it proves the B0=1LC parent is not among the fifteen covered tables and is an exact member of the 109-entry list. The q_i 2800 held node is a strict subcylinder of this outstanding 109 obligation.
+`Root109Membership.lean` formalizes that fact against the actual `BB6.Agent47Combined109.reducedRoster`: it proves the B0=1LC parent is not among the fifteen covered tables and is an exact member of the 109-entry list. It also translates the standalone twelve-slot table encoding into the roster's `BB6Coverage.PartialMachine` representation, proves the parent tables are identical, and proves the q_i 2800 held table is a strict refinement of that exact 109 parent.
 
 The 109 roster count remains 109 until the consumer replaces this parent by the certified leaf plus its explicit complement. The `held_leaf_partition` theorem supplies the complement-preservation argument, but `Combined109Roster.reducedRoster` itself is not modified here. Thus this is a genuine closure of one subcylinder inside one of the 109 obligations, not yet a reduction of the roster count or a complete safety proof for the parent.
 
