@@ -67,7 +67,7 @@ on:
       raw59_child:
         description: Raw59 proof target (all, 0RB, 0LD, 0RC, 1RC, 0RF, 1LA, RCShared, RFCount, or RFTriple)
         type: choice
-        options: [all, 0RB, 0LD, 0RC, 1RC, 0RF, 1LA, RCShared, RFCount, RFTriple, RFScan, 1RF, CanonicalPilot, CanonicalAll, MacroFARPilot, 0RD, 1LC, 1RB, 1RD, 0LC, 0RE]
+        options: [all, 0RB, 0LD, 0RC, 1RC, 0RF, 1LA, RCShared, RFCount, RFTriple, RFScan, 1RF, CanonicalPilot, CanonicalAll, PartialAll, Partial0LB, Partial1LB, Partial1LE, MacroFARPilot, 0RD, 1LC, 1RB, 1RD, 0LC, 0RE]
         default: all
 
       verify_f418_return:
@@ -483,7 +483,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        child: ${{ fromJSON(inputs.raw59_child == 'CanonicalAll' && '["0RB","0LD","1RC","0RC","0RF","1LA","1RF","0RD","1LC","1RB","1RD","0LC","0RE","CanonicalBase"]' || format('["{0}"]', inputs.raw59_child)) }}
+        child: ${{ fromJSON(inputs.raw59_child == 'CanonicalAll' && '["0RB","0LD","1RC","0RC","0RF","1LA","1RF","0RD","1LC","1RB","1RD","0LC","0RE","CanonicalBase"]' || (inputs.raw59_child == 'PartialAll' && '["Partial0LA","Partial0LB","Partial0LE","Partial0LF","Partial1LB","Partial1LE","Partial1LF"]' || format('["{0}"]', inputs.raw59_child))) }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -503,6 +503,11 @@ jobs:
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
           python im-results/agent32-raw59/unpack_rc.py
           case "$RAW59_CHILD" in
+            Partial0LA|Partial0LB|Partial0LE|Partial0LF|Partial1LB|Partial1LE|Partial1LF)
+              python im-results/agent32-macro-far/unpack.py
+              child="${RAW59_CHILD#Partial}"
+              python im-results/agent32-raw59/generate_partial.py "$child"
+              target="im-results/agent32-raw59/partial_$child/Raw59Partial${child}Data.lean" ;;
             MacroFARPilot)
               python im-results/agent32-macro-far/unpack.py
               python im-results/agent32-macro-far/emit_source.py im-results/agent32-macro-far/pilot.txt im-results/agent32-macro-far/MacroFARPilot.lean
@@ -530,6 +535,14 @@ jobs:
           python tools/lean_compile_closure.py --workdir /tmp/a32-raw59 --jobs 4 "$target" | tee /tmp/a32-raw59.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a32-raw59.log; then exit 1; fi
 
+      - name: Preserve exact unresolved source tables
+        if: ${{ startsWith(matrix.child, 'Partial') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw59-residual-${{ matrix.child }}
+          path: im-results/agent32-raw59/partial_*/residual.txt
+          if-no-files-found: error
+          retention-days: 7
       - name: Preserve checked modules for canonical composition
         if: ${{ inputs.raw59_child == 'CanonicalAll' }}
         uses: actions/upload-artifact@v4
