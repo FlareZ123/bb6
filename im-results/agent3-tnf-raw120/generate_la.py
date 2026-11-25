@@ -84,9 +84,26 @@ pump_code = [
     f"namespace {pumpns}",
     "open BB6Coverage BB6Coverage.Agent31Pump",
 ]
-pumps = {
-    opens[855]: ("BB6Coverage.Agent3Raw120LACarry.table", "BB6Coverage.Agent3Raw120LACarry.never"),
-}
+# The fixed-point checker reconstructs every manifest certificate.
+# This also replaces the former custom carry proof for open leaf 855.
+sys.path.insert(0, str(ROOT.parent / "agent16-raw118"))
+from bidfa_emit import emit as emit_bidfa
+bns = "BB6.Agent3Raw120LABiDFA"
+bcode = ["import BiDFA", "set_option maxRecDepth 100000", "set_option maxHeartbeats 0",
+         f"namespace {bns}", "open BB6Coverage BB6Coverage.Agent16BiDFA"]
+pumps = {}
+for row in (ROOT / "0LA-bidfa.txt").read_text().splitlines():
+    idx, dl, dr, count, edges = row.split()
+    i = int(idx)
+    table = opens[i]
+    code, n, e = emit_bidfa(i, table, [int(x,36) for x in dl], [int(x,36) for x in dr])
+    assert (n,e) == (int(count),int(edges))
+    bcode.append(code)
+    pumps[table] = (f"{bns}.M{i}.table", f"{bns}.M{i}.never")
+assert len(pumps) == 97
+bcode.append(f"end {bns}")
+(FOLDER / "Raw120LABiDFA.lean").write_text("\n".join(bcode)+"\n")
+bidfa_count = len(pumps)
 assert opens[855] == "1RB1LB_1RC0LF_0RD0RA_1LD1RE_0LA1LE_---1LD"
 late = {
     opens[2311]: (1019, 10),
@@ -104,6 +121,42 @@ multi_count = 0
 one.SIMP = one.SIMP if "List.append_nil" in one.SIMP else one.SIMP + ",List.append_nil"
 multi.SIMP = multi.SIMP if "List.append_nil" in multi.SIMP else multi.SIMP + ",List.append_nil"
 
+def extended_one_candidate(p, ev):
+    # Same opaque-word simulation as generate_sweeps.candidate, with a longer
+    # event separation. The emitted proof is still checked by Lean.
+    for i, (t, s, c) in enumerate(ev[:60]):
+        for j in range(i+1, min(i+48, len(ev))):
+            _, s2, d = ev[j]
+            if s != s2 or c.q != d.q:
+                continue
+            delta = d.h0-c.h0
+            if s == "L" and c.l.pre == d.l.pre == "":
+                a, b, side = c.r.pre, d.r.pre, "R"
+            elif s == "R" and c.r.pre == d.r.pre == "":
+                a, b, side = c.l.pre, d.l.pre, "L"
+            else:
+                continue
+            diff = len(b)-len(a)
+            if not 1 <= diff <= 16:
+                continue
+            for k in range(len(a)+1):
+                if b[:k] != a[:k] or b[k+diff:] != a[k:]:
+                    continue
+                block = b[k:k+diff]
+                pred = a[:k]+block*2+a[k:]
+                if not any(e[1] == s and e[2].q == c.q and e[2].h0 == c.h0+2*delta
+                           and (e[2].r.pre if side == "R" else e[2].l.pre) == pred
+                           for e in ev[j+1:j+48]):
+                    continue
+                w = one.W(a[:k], block, a[k:])
+                v = one.W(a[:k]+block, block, a[k:])
+                start = one.C(c.q, 0, 0, one.W() if side == "R" else w, w if side == "R" else one.W())
+                target = one.C(c.q, delta, 0, one.W() if side == "R" else v, v if side == "R" else one.W())
+                res = one.pump(p, start, target)
+                if res:
+                    return t, c, start, target, res
+    return None
+
 # Only unmatched leaves incur concrete event simulation. Finite traces propose
 # witnesses; one.generate / multi.generate emit inductive Lean proofs.
 for i, code in enumerate(opens):
@@ -111,7 +164,7 @@ for i, code in enumerate(opens):
         continue
     p = one.parse(code)
     events = one.concrete_events(p, EVENT_LIMIT)
-    ans = one.candidate(p, events)
+    ans = extended_one_candidate(p, events)
     if ans is not None:
         generated, info = one.generate(i, p, ans)
         pump_code.append(generated)
@@ -128,6 +181,18 @@ for i, code in enumerate(opens):
         print("multi-block", i, info)
         continue
     found = False
+    # Three known long grouped-boundary candidates avoid a slow blind scan.
+    preferred = {1651: ("L", 0, 12), 1652: ("L", 0, 4), 1660: ("L", 0, 5)}
+    if i in preferred:
+        side, q, period = preferred[i]
+        ans = multi.long_candidate(p, events, side, q, period)
+        if ans is not None:
+            generated, info = multi.generate(i, p, ans)
+            pump_code.append(generated)
+            pumps[code] = (f"{pumpns}.M{i}.table", f"{pumpns}.M{i}.never")
+            multi_count += 1
+            print("long-multi-block", i, side, q, period, info)
+            continue
     for side in ("L", "R"):
         for q in range(6):
             for period in range(1, 13):
@@ -180,7 +245,7 @@ summary = {
     "one_block_pumps": one_count,
     "multi_block_pumps": multi_count,
     "late_leaves": len(late),
-    "custom_carry_leaves": 1,
+    "bidfa_leaves": bidfa_count,
     "unresolved": len(missing),
     "unresolved_sample": [{"index": i, "table": code} for i, code in missing[:100]],
 }
@@ -297,7 +362,7 @@ theorem split_checked (p : PartialMachine) (n : Nat) (s : Slot)
   simp only [Bool.and_eq_true]
   exact ⟨hq, allMoves_of _ hk⟩
 """
-emit(prefix + "Base", ["Raw120Late", "Raw120LACarry", prefix + "Sweeps"], base)
+emit(prefix + "Base", ["Raw120Late", "Raw120LABiDFA", prefix + "Sweeps"], base)
 
 assert tree[0] == "split"
 root_n, root_slot, root_kids = tree[1], tree[2], tree[3]
