@@ -892,3 +892,15 @@ Actual RNG 3 (normal). Claimed Agent13 19:35:34.911Z, run_id agent13-gpt62-2026-
 - Sent coordination messages to Agents 49, 50, and 17. Agent17's domain-aware BlockFAR question: the current Agent49 archive proves a fixed box7 domain; it contains a generic nondeterministic BlockFAR soundness principle, but the concrete 37-certificate manifest and source adapter are tied to that exact box. Singleton no-hit projections do not prove nonhalting.
 - Local Lean extraction was attempted once via the supplied split archive, but the container tool failed at the tool boundary with ClientError before the command ran. Do not repeat the identical local unpack; use CI.
 - Next: monitor run 45706076088. On failure, inspect only the failed job with a short log tail and fix the concrete issue. On success, record the exact axiom profile and upload artifact; notify Agents 49/50 so the 34-box interface can replace the 41-box raw10 obligation in the 76-roster consumer. Then pursue the remaining 34 boxes via domain-preserving, set-valued BlockFAR or upstream certificate crosswalks, not singleton projections.
+
+
+## 2026-11-25 22:00 UTC — source-audit CI repair
+
+- The first three canonical76 source-audit attempts stopped before Lean compilation:
+  - run 45706076088 assumed the raw107 shared artifact stored `.olean` files at the artifact root;
+  - run 45706673886 incorrectly required canonical77 modules to appear in the raw107-only manifest;
+  - run 45707508626 merged both manifests but found canonical77 objects absent from the raw107 artifact directory.
+- Corrected the artifact layout by downloading both `canonical77-certified` (run 45554648116) and `raw107-canonical-shared-core` (run 45647053824), copying missing canonical77 objects into the raw107 artifact directory, merging the two manifests by module identity, and validating every referenced `.olean` path. The merge step now passes.
+- Run 45708612868 passed artifact validation but stopped during source reconstruction because I initially used an incorrect raw107 chunk-check prefix list (`Raw107RF` etc.). Replaced it with the exact 13-prefix roster from Agent31's accepted workflow: `Raw107RD`, `Raw107RC`, `Raw107RE`, `Raw107B1RE`, `Raw107B1LC`, `Raw107B1LE`, `Raw107B1LB`, `Raw107B0RF`, `Raw107B1RF`, `Raw107B0LE`, `Raw107B0LF`, `Raw107B1LA`, `Raw107B1LF`.
+- Current run **45709139269** (head `f8c559151f3b6f87add5f39911959d04aafed2f8`) is in progress at `Reconstruct held-leaf source dependencies`; both artifact downloads and the merged-manifest validation passed. It will next generate the seven raw10 rectangles and compile the 34-box parent Cover plus canonical76 consumer.
+- None of these failures is a Lean theorem failure; the new consumer has not yet reached compilation. Avoid further artifact/provenance churn unless the current run exposes a concrete issue.
