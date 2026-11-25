@@ -1293,3 +1293,23 @@ Fixed CI setup: `raw124_1la_prepare` and `raw124_bundle_prepare` now install pin
 Champion score is `proposedTM63Moves+7` (exact attainment dossier `results/2026-11-24-champion-exact-attainment.md`; definition in `im-results/agent24-champion-time/CostRecurrence.lean`). The first section cost includes at least `6*4^63), so any ~million-scale branch bound can be lifted to the champion score by monotonicity. Use the Critic's mixed-bound composition rather than the obsolete early cutoff 7014.
 
 Next: retrieve 0LB bundle CI and 1LA source CI; record B, theorem, axiom profile, run/artifact IDs; then send the accepted 0LB branch theorem to Agent8/canonical72 integrators. Do not repeat the 0LB scan. Prior raw124 open siblings were 0LA, 0LE, 0LF, and 1LB.
+
+
+## 2026-11-25 12:02Z correction — retract the first 0LB census
+
+The 3,691-cycle / 508-hole census from run 45606429785 is **invalid and must not be reused**. `enumerate.cpp` writes underscore-separated display strings (six 6-character state groups); `longcycle.cpp` indexes a compact 36-character table. The earlier corrected-ID workflow still passed the display underscores through unchanged. Thus its C++ results were not results about the intended tables. The same encoding defect was present in the first `longcycle_bundle` helper.
+
+A second defect was exposed by source generation: many first-hole hits occur in tables with multiple undefined transitions. Such a leaf cannot be discharged by `Audit.last`, which requires exactly one hole. The correct response is an `Audit.split` on the reached slot, branching over all 24 ordinary moves, and recursively classifying each refined table until it is a translated cycle or a true one-hole last witness.
+
+Both defects are now corrected in the current source:
+- `generate_bundle.py` feeds `table.replace('_','')` to the C++ checker;
+- it recursively splits multi-hole tables using the existing `MOVES` order and builds nested `Audit.split` trees, with a bound covering the maximum query time plus 1,000,000;
+- the standalone `raw124_0lb_longcycle` workflow also strips underscores and reports single-hole terminals separately from multi-hole split candidates.
+The earlier source attempt 45607308440 failed at the one-hole assertion, as expected; it is not evidence of coverage.
+
+A separate CI issue: the 1LA sharded run 45606607236 downloaded the shared `.elan` artifact but ZIP extraction removed executable bits. Its shard jobs failed with `Permission denied` on `.elan/bin/lean`. Added `find ... -path '*/bin/*' -exec chmod u+x {} +` to all 1LA and bundle shard/assembly toolchain-consumption steps. The old run 45609515534 was cancelled before wasting compute.
+
+Corrected source attempts dispatched on the current main commit `135be011e186c11bce251323e00b24773475864f`:
+- 0LB recursive bundle: run 45609751189 (created 12:01:05Z);
+- 1LA sharded source audit: run 45609758977 (created 12:01:08Z).
+Retrieve their outcomes before asserting any source-level result. Until then, the only valid statement is that the prior discovery and source runs exposed two implementation defects; there is no accepted 0LB coverage theorem yet.
