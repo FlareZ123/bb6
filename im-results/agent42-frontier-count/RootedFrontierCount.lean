@@ -97,7 +97,7 @@ theorem flatMap_length_all_one {α β : Type} (xs : List α)
         intro y hy
         exact h y (by simp [hy])
       rw [List.flatMap_cons, List.length_append, hx, ih htail]
-      simp
+      omega
 
 theorem flatMap_length_single_exception {α β : Type}
     (xs : List α) (f : α → List β) (a : α)
