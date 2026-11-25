@@ -169,7 +169,22 @@ source-audit-canonical74:
           assert sha(base / "CanonicalTwoParentRosterOnly.lean") == sha(source)
           assert sha(base / "CanonicalTwoParentRosterOnly.olean") == summary["modules"]["CanonicalTwoParentRosterOnly"]["olean_sha256"]
           for name in ("CanonicalTwoParentGraft", "CanonicalRaw114Accepted", "Raw114CompleteData"):
-              assert sha(base / (name + ".olean")) == summary["modules"][name]["olean_sha256"]
+              base_obj = base / (name + ".olean")
+              canonical77_obj = canonical77 / (name + ".olean")
+              assert sha(base_obj) == summary["modules"][name]["olean_sha256"]
+              assert sha(base_obj) == sha(canonical77_obj), f"base/canonical77 object mismatch: {name}"
+          shared_manifest = json.loads((base / "manifest/raw107-shared-manifest.json").read_text())
+          shared_by = {entry["module"]: entry for entry in shared_manifest["modules"]}
+          canonical77_by = {entry["module"]: entry for entry in manifest["modules"]}
+          common = sorted(set(shared_by) & set(canonical77_by))
+          assert common, "no common modules available for cross-artifact identity checking"
+          identity_fields = ("source_sha256", "project_imports", "olean_sha256", "import_closure_sha256", "module_identity_sha256")
+          for name in common:
+              for field in identity_fields:
+                  assert shared_by[name][field] == canonical77_by[name][field], f"{name}: {field} differs across accepted manifests"
+              for directory, entry in ((base, shared_by[name]), (canonical77, canonical77_by[name])):
+                  obj = directory / entry["olean_path"]
+                  assert obj.is_file() and sha(obj) == entry["olean_sha256"], f"{name}: object mismatch in {directory}"
           for entry in manifest["modules"]:
               obj = canonical77 / entry["olean_path"]
               assert obj.is_file(), f"missing canonical77 object: {entry['module']}"
@@ -233,7 +248,7 @@ source-audit-canonical74:
           log = pathlib.Path(sys.argv[1]).read_text()
           allowed = {"propext", "Classical.choice", "Quot.sound"}
           profiles = {}
-          for name, axioms in re.findall(r"'([^']+)' depends on axioms: \\[([^\\]]*)\\]", log):
+          for name, axioms in re.findall(r"'([^']+)' depends on axioms: \[([^\]]*)\]", log):
               profiles[name] = {x.strip() for x in axioms.split(",") if x.strip()}
           for name in re.findall(r"'([^']+)' does not depend on any axioms", log):
               profiles[name] = set()
@@ -257,7 +272,7 @@ source-audit-canonical74:
                   raise SystemExit(f"{name}: unexpected axioms {sorted(bad)}")
               print(f"{name}: {sorted(profiles[name])}")
           pathlib.Path("/tmp/a31-canonical74-axioms.json").write_text(
-              json.dumps({name: sorted(profiles[name]) for name in required}, indent=2, sort_keys=True) + "\\n"
+              json.dumps({name: sorted(profiles[name]) for name in required}, indent=2, sort_keys=True) + "\n"
           )
           PY
 
@@ -306,7 +321,7 @@ source-audit-canonical74:
               "axiom_profiles": json.loads(pathlib.Path("/tmp/a31-canonical74-axioms.json").read_text()),
               "axiom_allowlist": ["propext", "Classical.choice", "Quot.sound"],
           }
-          pathlib.Path("/tmp/a31-canonical74-summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True) + "\\n")
+          pathlib.Path("/tmp/a31-canonical74-summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n")
           print(json.dumps(summary, indent=2, sort_keys=True))
           PY
 
