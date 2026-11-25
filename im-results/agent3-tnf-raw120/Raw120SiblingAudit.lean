@@ -1,4 +1,4 @@
-import FrontierAudit
+import FrontierMass
 import Raw120RFData
 import Raw120RBData
 import TM63RawUpperInterface
@@ -76,12 +76,14 @@ theorem p120_audit_report :
 theorem p120_audit_mass_conservation :
     (FrontierAudit.report p120Audit).1 +
       (FrontierAudit.report p120Audit).2 = 25^6 := by
-  rw [p120_audit_report]
-  norm_num
+  calc
+    _ = cylinderMass p120 := p120Audit.report_conserves
+    _ = 25^6 := by decide
 
 #print axioms pRF_weighted_championScore
 #print axioms pRB_weighted_championScore
 #print axioms p120_audit_exhaustive
 #print axioms p120_audit_report
+#print axioms p120_audit_mass_conservation
 
 end BB6.Agent3Raw120SiblingAudit
