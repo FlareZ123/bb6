@@ -668,6 +668,10 @@ jobs:
           python im-results/agent10-tnf-raw91/generate.py
           python im-results/agent10-tnf-multipump/generate.py 66 70 80
           python im-results/agent10-tnf-multipump/generate.py 86 88 92 93 97 98 100 101 102 104
+      - name: Count existing side-witness cylinders under B0=1LC
+        run: |
+          set -euo pipefail
+          python im-results/agent13-cross-route-pilot/analyze_b0_1lc_sidewitness_cover.py
       - name: Prove B0=1LC is an exact member of the 109 retained obligations
         run: |
           set -euo pipefail
