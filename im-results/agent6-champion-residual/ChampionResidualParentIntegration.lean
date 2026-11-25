@@ -69,7 +69,8 @@ def championResidualFrontierWithParentResiduals :
 /-- The final A/1 step contributes 23 unresolved ordinary children in the
     old frontier; the parent certificate closes them, and ten checked
     depth-six F/0 side-cycle witnesses close ten more, leaving 123 open
-    sibling cylinders. -/
+    residual cylinders (including 13 unresolved F/0 siblings and earlier-depth
+    branches). -/
 theorem championResidualFrontierWithParentCount :
     championResidualFrontierWithParentResiduals.length = 123 := by
   decide
