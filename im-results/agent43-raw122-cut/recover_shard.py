@@ -9,6 +9,10 @@ for p in OLD_SOURCE.glob("*.lean"): shutil.copy2(p,cut/p.name)
 core=Path("/tmp/a43-core")
 work=Path("/tmp/a43-recovery")
 prov=["im-results/agent43-raw122-cut/generate.py","im-results/agent43-raw122-cut/symbolic.py","im-results/agent43-raw122-cut/long-plans.json","im-results/agent43-raw122-cut/extra-bank.txt","tools/lean_compile_closure.py"]
+source_ref=os.environ["SOURCE_REF"]
+checkout_paths=[p for p in prov if p!="tools/lean_compile_closure.py"]
+subprocess.run(["git","fetch","--no-tags","--depth=1","origin",source_ref],cwd=root,check=True)
+subprocess.run(["git","checkout",source_ref,"--",*checkout_paths],cwd=root,check=True)
 for p in prov:
     if not (root/p).is_file(): raise FileNotFoundError(p)
 common=[cut/f"Raw122Kid03_{i:02}.lean" for i in range(6)]
