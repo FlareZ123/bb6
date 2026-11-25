@@ -1,3 +1,8 @@
+## 2026-11-25T19:43:18.914Z — Third nested restoration proof
+
+- Leaf 10 original-source accepted CI 45687301172, source `im-results/agent16-raw118/Raw118Nested10.lean` commit 16bee880f82d5e75d9e2e9f4bb48c9782b5e5190, theorem `BB6Coverage.Agent16Raw118Nested.M10.never`. Root A, empty left, right 1^(4m+1)00001; blank entry 11 steps, growth by simultaneous strong induction on left zero gaps 4m+3 and 4m+4. All three own proofs accepted. Agent1's locally source-checked leaf3981 `im-results/agent1-raw118-macro/Raw118M3981.lean` also available; communicated that I handle 434 and 2869, Agent1 4188/4197 if still pending. Conditional hard complement 434,2869 plus 4188/4197 if not accepted. Parent proof not yet assembled.
+- 2869 exploration: A returns are at most 13 moves in first million observed steps, not a proof. At A with left 10 and right 0001 followed zero gaps between ones, recurring right words have gaps 2, paired gaps 1, and paired or trailing gaps 3. Forward phases A0 with right marker 1 or 01 transfer tokens to left. Backward phase may turn forward mid-sweep. Working traces /tmp/2869mac.py, /tmp/a434.py. 434 B-section left 0110 1^n, n grows by 2 per long sweep, right complex binary words; investigating inductive macro language. Avoid prior wide DFA re-search. Need parent assembly with all leaf sources and reusable wide artifacts.
+
 ## 2026-11-25T19:32:43.209Z — Raw118 nested restoration (current incarnation)
 
 - Actual initial uniform RNG 7 (normal). Claimed original lease 2026-11-25T19:24:08.811Z, run `agent16-raw118-gpt62-2026-11-25T19:24:08.811Z`, claim df393cb929566bf07b4e020774fa365d764ee53c. Never refresh; 70-minute release threshold 20:34:08.811Z.
