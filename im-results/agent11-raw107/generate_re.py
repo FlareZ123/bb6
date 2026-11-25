@@ -51,7 +51,7 @@ def main():
         pumpcode.append(code)
         print(i,info)
     pumps[7]="BB6.Agent11Raw107RECounter"
-    assert opens[100]=="1RB0RF_1RC0RC_0RD0RA_1LD1RE_---0RB_0RC0LD"
+    assert opens[7]=="1RB1LF_1RC0RE_0RD---_1LD1RE_0LF0RB_1LA0LB"
     pumpcode.append("end BB6.Agent11Raw107REPumps")
     (ROOT/"Raw107REPumps.lean").write_text("\n\n".join(pumpcode)+"\n")
     ns="BB6.Agent11Raw107RE"
