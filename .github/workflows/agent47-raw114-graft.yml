@@ -871,8 +871,22 @@ jobs:
           run-id: 45593652030
           name: raw110-parent-cut
           path: /tmp/raw110-parent
-      - name: Generate source-audited Raw66/Raw70/Raw80 FiveHoleRoster dependencies
-        run: python im-results/agent10-tnf-multipump/generate.py 66 70 80
+      - name: Generate every source dependency of the combined106 canonical base
+        run: |
+          set -euo pipefail
+          cat > /tmp/a31-canonical73-generator-commands.txt <<'EOF'
+          python im-results/agent10-tnf-raw87/generate.py
+          python im-results/agent10-tnf-raw91/generate.py
+          python im-results/agent10-tnf-multipump/generate.py 66 70 80
+          python im-results/agent10-tnf-multipump/generate.py 68 72 82
+          python im-results/agent10-tnf-multipump/generate.py 86 88 92 93 97 98 100 101 102 104
+          EOF
+          bash /tmp/a31-canonical73-generator-commands.txt
+          for raw in 66 70 80 68 72 82 86 88 92 93 97 98 100 101 102 104; do
+            test -s "im-results/agent10-tnf-multipump/Raw${raw}Data.lean"
+          done
+          test -s im-results/agent10-tnf-raw87/Raw87Data.lean
+          test -s im-results/agent10-tnf-raw91/Raw91Data.lean
       - name: Reconstruct raw112, raw117, raw110 and common source data
         run: |
           set -euo pipefail
@@ -963,6 +977,19 @@ jobs:
             --provenance-input im-results/agent10-tnf-multipump/long_epoch.py \
             --provenance-input im-results/agent2-tnf-raw99/enumerate.cpp \
             --provenance-input im-results/agent10-tnf-multipump/FiveHoleRoster.lean \
+            --provenance-input im-results/agent10-tnf-multipump/AllTwelveRoster.lean \
+            --provenance-input im-results/agent10-tnf-multipump/NewFiveRoster.lean \
+            --provenance-input im-results/agent10-tnf-raw87/generate.py \
+            --provenance-input im-results/agent10-tnf-raw87/open.txt \
+            --provenance-input im-results/agent10-tnf-raw87/tree.json \
+            --provenance-input im-results/agent10-tnf-raw87/dfa.txt \
+            --provenance-input im-results/agent10-tnf-raw87/Raw87Pump.lean \
+            --provenance-input im-results/agent10-tnf-raw91/generate.py \
+            --provenance-input im-results/agent10-tnf-raw91/open.txt \
+            --provenance-input im-results/agent10-tnf-raw91/tree.json \
+            --provenance-input im-results/agent10-tnf-raw91/dfa.txt \
+            --provenance-input im-results/agent10-tnf-raw91/Raw91Pump.lean \
+            --provenance-input /tmp/a31-canonical73-generator-commands.txt \
             --provenance-input im-results/agent31-three-hole-tnf/ThreeHoleAudit.lean \
             --provenance-input tools/lean_compile_closure.py \
             --provenance-input /tmp/a31-base/manifest/raw107-shared-manifest.json \
