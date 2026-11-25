@@ -106,7 +106,7 @@ jobs:
           retention-days: 30
 
   source-audit-canonical74:
-    name: Source-audit the 74-residual canonical76/Raw109/Raw123 consumer
+    name: Source-audit the canonical74 and canonical68 E1 parent consumers
     if: ${{ inputs.target == 'canonical74' }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
@@ -279,6 +279,102 @@ jobs:
           )
           PY
 
+      - name: Compile and audit the conditional 68-residual E1 consumer
+        env:
+          CANONICAL76_RUN_ID: \${{ inputs.canonical76_run_id }}
+        run: |
+          set -euo pipefail
+          base=/tmp/a31-accepted76/a31-shared
+          export LEAN_PATH="/tmp/a31-canonical74:/tmp/a31-parent-interfaces:$base:/tmp/a47-canonical77"
+          lean -o /tmp/a31-canonical74/Canonical68E1ParentGraft.olean \
+            im-results/agent6-e1-parent-consumer/Canonical68E1ParentGraft.lean \
+            2>&1 | tee /tmp/a31-canonical68.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a31-canonical68.log; then
+            echo "Forbidden proof placeholder or native_decide in canonical68 consumer" >&2
+            exit 1
+          fi
+          python3 - /tmp/a31-canonical68.log <<'PY'
+          import json, pathlib, re, sys
+          log = pathlib.Path(sys.argv[1]).read_text()
+          allowed = {"propext", "Classical.choice", "Quot.sound"}
+          profiles = {}
+          for name, axioms in re.findall(r"'([^']+)' depends on axioms: \[([^\]]*)\]", log):
+              profiles[name] = {x.strip() for x in axioms.split(",") if x.strip()}
+          for name in re.findall(r"'([^']+)' does not depend on any axioms", log):
+              profiles[name] = set()
+          required = (
+              "BB6.Agent6Canonical68E1ParentGraft.p60_parent_count",
+              "BB6.Agent6Canonical68E1ParentGraft.p110_parent_count",
+              "BB6.Agent6Canonical68E1ParentGraft.p111_parent_count",
+              "BB6.Agent6Canonical68E1ParentGraft.p117_parent_count",
+              "BB6.Agent6Canonical68E1ParentGraft.p121_parent_count",
+              "BB6.Agent6Canonical68E1ParentGraft.p125_parent_count",
+              "BB6.Agent6Canonical68E1ParentGraft.count73",
+              "BB6.Agent6Canonical68E1ParentGraft.count72",
+              "BB6.Agent6Canonical68E1ParentGraft.count71",
+              "BB6.Agent6Canonical68E1ParentGraft.count70",
+              "BB6.Agent6Canonical68E1ParentGraft.count69",
+              "BB6.Agent6Canonical68E1ParentGraft.count68",
+              "BB6.Agent6Canonical68E1ParentGraft.sound68",
+              "BB6.Agent6Canonical68E1ParentGraft.exact_at_target",
+          )
+          for name in required:
+              if name not in profiles:
+                  raise SystemExit("missing axiom profile: " + name)
+              bad = profiles[name] - allowed
+              if bad:
+                  raise SystemExit(f"{name}: unexpected axioms {sorted(bad)}")
+              print(f"{name}: {sorted(profiles[name])}")
+          pathlib.Path("/tmp/a31-canonical68-axioms.json").write_text(
+              json.dumps({name: sorted(profiles[name]) for name in required}, indent=2, sort_keys=True) + "\n"
+          )
+          PY
+          python3 - <<'PY'
+          import hashlib, json, os, pathlib, subprocess
+          def sha(path):
+              h = hashlib.sha256()
+              with path.open("rb") as stream:
+                  for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+                      h.update(chunk)
+              return h.hexdigest()
+          source = pathlib.Path("im-results/agent6-e1-parent-consumer/Canonical68E1ParentGraft.lean")
+          parent_manifest = pathlib.Path("/tmp/a31-parent-interfaces-manifest.json")
+          summary = {
+              "theorem": "BB6.Agent6Canonical68E1ParentGraft.exact_at_target",
+              "status": "conditional 68-residual quotient theorem; eight E1 parent Covers and all 68 retained Covers remain explicit",
+              "base_theorem": "BB6.Agent31CanonicalTwoParentRosterOnly.exact_at_target",
+              "base_residual_count": 76,
+              "after_raw109_raw123_residual_count": 74,
+              "after_six_additional_e1_parent_cuts": 68,
+              "common_weighted_bound_floor": 6766859,
+              "canonical76_run_id": int(os.environ["CANONICAL76_RUN_ID"]),
+              "canonical76_artifact_id": 15043876968,
+              "canonical77_run_id": 45554648116,
+              "canonical77_artifact_id": 14997966221,
+              "parent_contracts": [
+                  {"parent": "Raw60", "e1_move": "1RA", "bound": 1175},
+                  {"parent": "Raw109", "e1_move": "1RB", "bound": 1703},
+                  {"parent": "Raw110", "e1_move": "0LC", "bound": 6766859},
+                  {"parent": "Raw111", "e1_move": "0RC", "bound": 7014},
+                  {"parent": "Raw117", "e1_move": "1RD", "bound": 1291},
+                  {"parent": "Raw121", "e1_move": "1RE", "bound": 4063},
+                  {"parent": "Raw123", "e1_move": "0RF", "bound": 10000},
+                  {"parent": "Raw125", "e1_move": "1RF", "bound": 1290}
+              ],
+              "source_revision": os.environ["GITHUB_SHA"],
+              "lean_version": subprocess.check_output(["lean", "--version"], text=True).strip(),
+              "source_sha256": sha(source),
+              "olean_sha256": sha(pathlib.Path("/tmp/a31-canonical74/Canonical68E1ParentGraft.olean")),
+              "canonical74_olean_sha256": sha(pathlib.Path("/tmp/a31-canonical74/Canonical74Raw109Raw123Graft.olean")),
+              "parent_interface_manifest_sha256": sha(parent_manifest),
+              "parent_interface_module_count": json.loads(parent_manifest.read_text())["module_count"],
+              "axiom_profiles": json.loads(pathlib.Path("/tmp/a31-canonical68-axioms.json").read_text()),
+              "axiom_allowlist": ["propext", "Classical.choice", "Quot.sound"]
+          }
+          pathlib.Path("/tmp/a31-canonical68-summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n")
+          print(json.dumps(summary, indent=2, sort_keys=True))
+          PY
+
       - name: Record the 74-residual source and object manifest
         env:
           CANONICAL76_RUN_ID: ${{ inputs.canonical76_run_id }}
@@ -340,5 +436,18 @@ jobs:
             /tmp/a31-parent-interfaces.log
             /tmp/a31-parent-interfaces-manifest.json
             im-results/agent31-shared-core/Canonical74Raw109Raw123Graft.lean
+          if-no-files-found: error
+          retention-days: 14
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: agent6-canonical68-e1-parent-consumer
+          path: |
+            /tmp/a31-canonical74/Canonical68E1ParentGraft.olean
+            /tmp/a31-canonical68.log
+            /tmp/a31-canonical68-axioms.json
+            /tmp/a31-canonical68-summary.json
+            im-results/agent6-e1-parent-consumer/Canonical68E1ParentGraft.lean
+            im-results/agent6-e1-parent-consumer/README.md
           if-no-files-found: error
           retention-days: 14
