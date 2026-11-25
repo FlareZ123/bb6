@@ -50,6 +50,24 @@ MACROS="""0LB 693 001213333 6
 CHUNK=240
 B=7014
 
+def late_hole(table, limit):
+    """Untrusted simulation; the generated .last witness is checked by zipCheck."""
+    raw=table.replace('_','')
+    moves=[None if raw[i:i+3]=='---' else
+           (int(raw[i]), raw[i+1]=='R', ord(raw[i+2])-65)
+           for i in range(0,36,3)]
+    if moves.count(None)!=1: return None
+    q=a=l=r=0
+    for n in range(limit):
+        m=moves[2*q+a]
+        if m is None: return n,2*q+a
+        w,right,q=m
+        if right:
+            l=(l<<1)|w; a=r&1; r>>=1
+        else:
+            r=(r<<1)|w; a=l&1; l>>=1
+    return None
+
 def generate(raw,upgrade=False):
     folder=ROOT/(('upgrade_' if upgrade else 'partial_')+raw);folder.mkdir(exist_ok=True)
     parent=f'1RB{raw}_1RC---_0RD---_1LD1RE_---1LA_------'
@@ -98,22 +116,6 @@ def generate(raw,upgrade=False):
             ns='BB6.Agent32'+module
             pumps[table]=(ns+'.table',ns+'.never')
             imports.append(module)
-        late_cases={
-            '0LB':[
-                (129,5847,10,'1RB0LB_1RC0LB_0RD0RF_1LD1RE_0RA1LA_---1RC'),
-                (192,1402,5,'1RB0LB_1RC0LB_0RD---_1LD1RE_0RF1LA_1RA1LC'),
-                (193,1312,5,'1RB0LB_1RC0LB_0RD---_1LD1RE_0RF1LA_1RA1RE'),
-                (347,1063,5,'1RB0LB_1RC0LF_0RD---_1LD1RE_1RF1LA_1RC0LE'),
-                (770,4157,10,'1RB0LB_1RC1LB_0RD0RD_1LD1RE_1LF1LA_---1LE'),
-            ],
-            '1LE':[
-                (168,1731,5,'1RB1LE_1RC0LB_0RD---_1LD1RE_0RF1LA_0RA0LB'),
-                (473,3038,5,'1RB1LE_1RC0LF_0RD---_1LD1RE_0RF1LA_0RA0LB'),
-            ],
-        }
-        for i,n,s,table in late_cases[raw]:
-            assert opens[i]==table and table.count('---')==1
-            late[table]=(n,s)
     module='Raw59PartialSweep'+raw;ns='BB6Coverage.Agent31Pump.'+module
     pieces=['import SweepPumping','set_option maxRecDepth 100000','set_option maxHeartbeats 0','namespace '+ns,'open BB6Coverage']
     sweep_rows=SWEEPS
@@ -177,6 +179,14 @@ def generate(raw,upgrade=False):
         subprocess.run([sys.executable,str(ng/'emit_ngram.py'),str(inputs),str(outputs),str(folder/(module+'.lean')),'--namespace',ns],check=True)
         imports.append(module)
     if upgrade:upgrade_data.add_ngrams(raw,folder,opens,certs,pumps,imports)
+    if upgrade:
+        # Leave ample allowance for the weighted initial blank-delay cost.
+        # The source checker still proves the exact weighted inequality.
+        for rle in opens:
+            if rle in certs or rle in pumps: continue
+            hit=late_hole(rle,B-100)
+            if hit is not None: late[rle]=hit
+        print(raw,'late final-hole witnesses',len(late),flush=True)
     unresolved=set(opens)-set(certs)-set(pumps)-set(late)
     (folder/'residual.txt').write_text(''.join(f'{i} {rle}\n' for i,rle in enumerate(opens) if rle in unresolved))
     print(raw,'FAR',len(certs),'semantic',len(pumps),'retained',len(unresolved),flush=True)
