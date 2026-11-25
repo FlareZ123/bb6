@@ -10,6 +10,8 @@ from generate_four_hole import masks,slot,move,parse
 import generate_sweeps as one
 sys.path.insert(0,str(ROOT.parent/"agent10-tnf-multipump"))
 import multi
+sys.path.insert(0,str(ROOT.parent/"agent1-ngram"))
+from emit_ngram import emit as emit_ngram
 MOVES=[w+d+q for w,d,q in product("01","LR","ABCDEF")]
 SPECS=json.loads((ROOT/"more.json").read_text())
 FAR_CODES=sorted({"000"} | {line.split()[0] for spec in SPECS.values() for line in spec.get("groups","").splitlines() if line.strip()}, key=lambda s:(len(s),s))
@@ -99,9 +101,30 @@ def build_child(key,spec):
         assert ans is not None,(key,i,opens[i])
         code,info=multi.generate(i,p,(228,st,tg,ans))
         pumpcode.append(code);pumps[i]=f"{pumpns}.M{i}"
+    ngids=spec.get("ngram",[])
+    ngmod=prefix+"NGram"
+    if ngids:
+        subprocess.run(["g++","-std=c++17","-O3",str(ROOT.parent/"agent1-ngram/ngram.cpp"),"-o",str(target/"ngram")],check=True)
+        inp="".join(f"{i} {opens[i]}\n" for i in ngids)
+        out=subprocess.run([str(target/"ngram"),"12"],input=inp,text=True,capture_output=True,check=True)
+        certs=dict(l.split(maxsplit=1) for l in out.stdout.splitlines())
+        assert set(map(int,certs))==set(ngids),out.stderr
+        gn=ns+"NGram"
+        code=["import NGramCertificate","set_option maxRecDepth 100000","set_option maxHeartbeats 0",f"namespace {gn}","open BB6Coverage BB6.Agent1NGram"]
+        for i in ngids:
+            code.extend([f"namespace M{i}",emit_ngram(i,opens[i],certs[str(i)]),
+                         f"abbrev table := p{i}",
+                         f"theorem never (m : Machine) (hm : compatible table m) : NeverHalts m := never{i} m hm",
+                         f"end M{i}"])
+            pumps[i]=f"{gn}.M{i}"
+        code.append(f"end {gn}")
+        (ROOT/(ngmod+".lean")).write_text("\n\n".join(code)+"\n")
+    late={int(i):(n,s) for i,(n,s,t) in spec.get("late",{}).items() if opens[int(i)]==t and t.count("---")==1}
+    assert len(late)==len(spec.get("late",{}))
     pumpcode.append(f"end {pumpns}")
     (ROOT/(prefix+"Pumps.lean")).write_text("\n\n".join(pumpcode)+"\n")
     imports=["ZipThreeHoleAudit",prefix+"Pumps"]+spec.get("imports",[])
+    if ngids: imports.append(ngmod)
     for i,module in spec.get("custom",{}).items(): pumps[int(i)]=module
     if "counter" in spec:
         i=spec["counter"]
@@ -116,6 +139,9 @@ open BB6Coverage BB6.Agent13BlankDelay BB6.Agent8TNFPath
 open BB6.Agent50TNFPilot BB6.Agent31ThreeHole BB6.Agent10ZipAudit
 """
         (ROOT/(name+".lean")).write_text("".join("import "+i+"\n" for i in imports)+header+body+f"\nend {ns}\n")
+    if spec.get("explicit_partition"):
+        assert not (assigned & set(pumps) or assigned & set(late) or set(pumps) & set(late))
+        assert assigned | set(pumps) | set(late) == set(range(len(opens)))
     tree=json.loads((target/"tree.json").read_text());stats=Counter()
     def build(node):
         tag,*v=node;stats[tag]+=1
@@ -127,6 +153,9 @@ open BB6.Agent50TNFPilot BB6.Agent31ThreeHole BB6.Agent10ZipAudit
             return f".last {m} {slot(s)}"
         if tag=="open":
             code=v[0];i=index[code]
+            if i in late:
+                nn,ss=late[i]
+                return f".last {nn} {slot(ss)}"
             if i in pumps:return f".proven {pumps[i]}.table {pumps[i]}.never"
             a=dfa[i];rev=int(a[0]);d,D,L,R,z=masks(parse(code),rev,[int(ch,36) for ch in a[1:]])
             return f".far {str(bool(rev)).lower()} {d} ⟨0,{D},{L},{R},{z}⟩"
@@ -178,5 +207,5 @@ theorem all_completions : ∀ m, compatible parent m → WeightedBound {bound} m
 #print axioms all_completions
 """
     emit(prefix+"Data",mods,body)
-    print(key,stats,"FAR",len(opens)-len(pumps),"proof leaves",len(pumps))
+    print(key,stats,"FAR",len(opens)-len(pumps)-len(late),"proof leaves",len(pumps),"late",len(late))
 if __name__=="__main__": main()
