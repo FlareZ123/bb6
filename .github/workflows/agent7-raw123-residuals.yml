@@ -1,6 +1,12 @@
-name: Agent7 raw123 residual certificates
+name: Six-hole residual certificates
 on:
   workflow_dispatch:
+    inputs:
+      parent:
+        description: Six-hole parent to check
+        type: choice
+        options: ['123', '125']
+        default: '123'
 permissions:
   contents: read
 jobs:
@@ -11,13 +17,7 @@ jobs:
       fail-fast: false
       max-parallel: 6
       matrix:
-        include:
-          - {part: 0, kind: ngrams, modules: "0 1 2 3 4 5 6 7 8 9 12 13 17 18", glob: "Raw123NGram*.lean"}
-          - {part: 1, kind: ngrams, modules: "10 11 14 15 16", glob: "Raw123NGram*.lean"}
-          - {part: 2, kind: blocks, modules: "0 1 2 3 4 6 8 9 10 11", glob: "Raw123Block[0-9][0-9].lean"}
-          - {part: 3, kind: blocks, modules: "12 13 14 15 16 17 18 19", glob: "Raw123Block[0-9][0-9].lean"}
-          - {part: 4, kind: blocks, modules: "5 7", glob: "Raw123Block[0-9][0-9].lean"}
-          - {part: 5, kind: blocks, modules: "20", glob: "Raw123Block[0-9][0-9].lean"}
+        include: ${{ fromJSON(inputs.parent == '125' && '[{"part":0,"kind":"ngrams","modules":"0 1 2 3 4 5","glob":"Raw125NGram*.lean"},{"part":1,"kind":"blocks","modules":"0 1 4 5 6 7 8 9 10","glob":"Raw125Block[0-9][0-9].lean"},{"part":2,"kind":"blocks","modules":"11 12 13 14 15 17 18 19","glob":"Raw125Block[0-9][0-9].lean"},{"part":3,"kind":"blocks","modules":"2 3 16","glob":"Raw125Block[0-9][0-9].lean"}]' || '[{"part":0,"kind":"ngrams","modules":"0 1 2 3 4 5 6 7 8 9 12 13 17 18","glob":"Raw123NGram*.lean"},{"part":1,"kind":"ngrams","modules":"10 11 14 15 16","glob":"Raw123NGram*.lean"},{"part":2,"kind":"blocks","modules":"0 1 2 3 4 6 8 9 10 11","glob":"Raw123Block[0-9][0-9].lean"},{"part":3,"kind":"blocks","modules":"12 13 14 15 16 17 18 19","glob":"Raw123Block[0-9][0-9].lean"},{"part":4,"kind":"blocks","modules":"5 7","glob":"Raw123Block[0-9][0-9].lean"},{"part":5,"kind":"blocks","modules":"20","glob":"Raw123Block[0-9][0-9].lean"}]') }}
     steps:
       - uses: actions/checkout@v4
       - name: Install Lean
@@ -30,12 +30,13 @@ jobs:
           set -euxo pipefail
           python im-results/agent13-coverage/unpack.py
           d=im-results/agent7-raw123
+          if [ "${{ inputs.parent }}" = 125 ]; then d=im-results/agent13-raw125; fi
           python "$d/build_${{ matrix.kind }}.py" ${{ matrix.modules }}
-          python tools/lean_compile_closure.py --workdir /tmp/raw123-residual --jobs 2 "$d"/${{ matrix.glob }} | tee /tmp/residual.log
+          python tools/lean_compile_closure.py --workdir /tmp/raw${{ inputs.parent }}-residual --jobs 2 "$d"/${{ matrix.glob }} | tee /tmp/residual.log
           if grep -qE 'sorryAx|native_decide' /tmp/residual.log; then exit 1; fi
       - uses: actions/upload-artifact@v4
         with:
-          name: raw123-residual-${{ matrix.part }}
-          path: /tmp/raw123-residual/
+          name: raw${{ inputs.parent }}-residual-${{ matrix.part }}
+          path: /tmp/raw${{ inputs.parent }}-residual/
           if-no-files-found: error
           retention-days: 5
