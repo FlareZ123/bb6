@@ -62,3 +62,5 @@ Both start in A with empty right list. The finite symbolic sweep operations and 
 1RB0RD_1RC---_0RD1LA_1LD1RE_1RB1LF_1RB0LF
 ```
 No parent or canonical roster obligation has been discharged by this partial work.
+
+The five exact residuals are the input to `search_0lf_hard_leaves.py`, which applies `cefar.cpp`'s counterexample-equivalence filter and canonical DFA enumeration through nine states. This is candidate discovery only: any hit must be emitted as a valid FAR certificate, kernel-checked, and connected to the original `NeverHalts` semantics before it can close the child.
