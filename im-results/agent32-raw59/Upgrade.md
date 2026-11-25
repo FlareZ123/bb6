@@ -4,6 +4,8 @@ As of 2026-11-25 18:32 UTC, all previously identified open leaves have proposed 
 
 **Parent status:** the complete parent certificate is proposed, not yet source-accepted. The eight-group [UpgradeAll run 45675872170](https://github.com/FlareZ123/bb6/actions/runs/45675872170) compiles the seven upgraded children and the thirteen already closed ordinary children independently of the global canonical roster. It checks the empty residuals, named theorem axiom profiles, and strict same-revision source/import/object manifests before composing Raw59ParentCover.lean. Only a successful final composition establishes the parent bound. No decrease in the accepted canonical frontier is claimed yet.
 
+A downstream consumer draft now exists at [Raw59Canonical77Graft.lean](Raw59Canonical77Graft.lean). It composes the proposed 4,200,000 parent bound with the already accepted Raw114-cut canonical roster, proves that the Raw59 table survives the Raw114 cut, and filters it to a 76-entry remaining roster. Its `exact_at_target` theorem is conditional on Covers for those 76 entries and the champion witness. This is not yet a source-accepted reduction: it depends on the pending Raw59 parent composition and a separate shared-object Lean check against the accepted canonical77 artifact.
+
 ## Earlier reduction and certificate details
 
 Baseline: prior checked partial audits in run 45547813131, source c8aa2607ad4711501e18e0943eec70e9475fd834. Retrieved all seven exact residual artifacts and matched them against the SHA-pinned enumeration.
