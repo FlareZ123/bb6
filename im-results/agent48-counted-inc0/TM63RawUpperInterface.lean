@@ -34,7 +34,7 @@ theorem champion_raw_witness : ∃ m : BB6.Coverage.RawMachine,
     BB6.Coverage.HaltsAt (BB6.Coverage.tickRaw m) (proposedTM63Moves+7) :=
   ⟨toAgent13Raw championTable, champion_raw_halts_exact⟩
 
-private theorem rootSteps_le_score (rootSteps L n a b : Nat) :
+theorem rootSteps_le_score (rootSteps L n a b : Nat) :
     rootSteps ≤ threeSectionMoves rootSteps L n a b + 7 := by
   simp only [threeSectionMoves]
   omega
