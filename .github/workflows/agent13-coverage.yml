@@ -1608,9 +1608,17 @@ jobs:
           run-id: 45647053824
           name: raw107-canonical-shared-core
           path: /tmp/a31-base
+      - name: Download the canonical77 certified object files
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45554648116
+          name: canonical77-certified
+          path: /tmp/a47-canonical
       - name: Merge and validate canonical77 and raw107 precompiled manifests
         run: |
           set -euo pipefail
+          cp -an /tmp/a47-canonical/. /tmp/a31-base/
           python3 - <<'PY'
           import hashlib, json, pathlib
           root = pathlib.Path("/tmp/a31-base")
