@@ -661,3 +661,7 @@ Next actions:
 
 
 - Follow-up finite disjointness structure for `haltTable`: all 65 side-witness rows fix C1 to code 1 once or code 13 sixty-four times; the held table and the cycle table both fix A1=14; `haltTable` fixes A1=halt and C1=halt. Hence it conflicts with every prior certified table. This is currently checked from encoded data, not yet formalized in Lean. A direct proof can use `∀ w ∈ b0_1lcSideWitnesses, ∃ mv, unpackTable w.table (2,true) = some (some mv)` plus the two A1 conflict lemmas. Messages sent to Agent49 and Agent13.
+
+
+- At the latest checkpoint (06:20Z), CI runs 45556817579 (cycle consumer) and 45558703747 (two-step halt leaf) were both still `in_progress` in the `combined106` compile step; neither had reported kernel acceptance. The local container-shell attempt returned ClientError, so CI is the available Lean validation route in this invocation.
+- The raw10 parent has 25^10 = 95,367,431,640,625 completions. The JS partition replay after side witnesses, held table, cycle table, and halt table leaves 90,737,503,713,725, hence computed covered mass 4,629,927,926,900 (about 4.8548%). This is a finite computation; the halt-table disjointness pattern is clear from encoded rows but not yet formalized as a Lean theorem.
