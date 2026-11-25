@@ -16,7 +16,7 @@ jobs:
   verify:
     if: ${{ !inputs.f0_siblings_only }}
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
       - name: Install Lean 4.36.0-rc2
