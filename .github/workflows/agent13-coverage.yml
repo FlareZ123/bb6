@@ -218,12 +218,7 @@ jobs:
           mkdir -p "$W"
           tar -xJf "$D/source.tar.xz" -C "$W"
           (cd "$W"; python3 generate.py)
-          cat >> "$W/Box18to24Source.lean" <<'LEAN'
-          #check BB6.Agent49Box18to24.rectBound
-          #check BB6.Agent49Box18to24.residual_without_18to24
-          #check BB6.Agent49Box18to24.source_indices_checked
-          LEAN
-          python tools/lean_compile_closure.py --workdir /tmp/a49-box18to24 --jobs 2 "$W/Box18to24Source.lean" | tee /tmp/a49-box18to24.log
+          python tools/lean_compile_closure.py --workdir /tmp/a49-box18to24 --jobs 2 --source-root "$W" "$W/Box18to24Source.lean" im-results/agent49-raw10-box18-24/Raw10Box18to24Bridge.lean | tee /tmp/a49-box18to24.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a49-box18to24.log; then exit 1; fi
       - name: Check exact raw10 rectangle 6 sparse-tree coverage
         if: inputs.target == 'weighted-tnf-raw10-box6'
