@@ -444,6 +444,7 @@ jobs:
           name: agent6-canonical68-e1-parent-consumer
           path: |
             /tmp/a31-canonical74/Canonical68E1ParentGraft.olean
+            /tmp/a31-canonical74/Canonical74Raw109Raw123Graft.olean
             /tmp/a31-canonical68.log
             /tmp/a31-canonical68-axioms.json
             /tmp/a31-canonical68-summary.json
