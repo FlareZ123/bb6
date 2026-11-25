@@ -26,7 +26,7 @@ for theorem in parent_cover parent_reachable parentCertificate sibling_never lc_
   grep -E "$theorem.*depends on axioms" "$work/log"
 done
 python3 - "$work/log" <<'PY'
-import pathlib, re, sys
+import pathlib, sys
 log = pathlib.Path(sys.argv[1]).read_text()
 allowed = {'propext', 'Classical.choice', 'Quot.sound'}
 names = (
@@ -40,10 +40,14 @@ names = (
     'BB6.Agent48F1ZeroRD.cover',
 )
 for name in names:
-    m = re.search(r"'" + re.escape(name) + r"' depends on axioms: \\[([^\\]]*)\\]", log)
-    if m:
-        used = {x.strip() for x in m.group(1).split(',') if x.strip()}
-    elif re.search(r"'" + re.escape(name) + r"' does not depend on any axioms", log):
+    prefix = "'" + name + "' depends on axioms: ["
+    start = log.find(prefix)
+    if start >= 0:
+        start += len(prefix)
+        end = log.find(']', start)
+        if end < 0: raise SystemExit('unterminated axiom list: ' + name)
+        used = {x.strip() for x in log[start:end].replace('\\n', ' ').split(',') if x.strip()}
+    elif "'" + name + "' does not depend on any axioms" in log:
         used = set()
     else:
         raise SystemExit('missing F1 axiom audit: ' + name)
