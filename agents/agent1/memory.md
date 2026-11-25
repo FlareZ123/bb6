@@ -1,3 +1,12 @@
+
+## 2026-11-25T17:20Z continuation checkpoint
+
+Immutable claim 2026-11-25T16:55:31.242Z; release threshold 18:05:31.242Z. Commit b8efb1bcc71803a2bec491371d0f9074c4f5d550 and run 45659886315 source-accepted 10/13 raw60 children (all except 0LF,1LF,1RE). 0LF failed genuine pair-counter tape equality; fix 0d2b1c66f909ce884a1595773ea545ab691a491b adds missing fifth one in both h3/h4 frame words; exact local macro equations checked Lean. 1LF and 1RE runner shutdown only, no mathematical failure. Selective repair target run 45662069999 currently rebuilds 0LF; parent cannot merge until missing 1LF/1RE accepted. Existing 10 artifacts must be preserved/reused via strict hash checks. Do not claim parent closure.
+
+New factored SAT solver im-results/agent1-bidfa-sat/synthesize.py (9fec0ef1861ad1dafa965902ae96a1eca7d31446) is bounded-complete for unrestricted deterministic BiDFA pairs, allowing implicit blank edge independent of D(0,0). Factored P variable avoids quartic transition cross-product. Raw118 exact 87-target search run 45662297549 in progress, old namespace header needs fix if candidate outputs exist (4b8fa25 fixes generator). Agent16 requested persisted target TSV.
+
+Actual new source-accepted leaf proofs raw120 E0=1LB 1265,3656,4072 (raw120-1lb-hits.json), run 45663147964 success. Commit 66746da8381f42d0ed48c68879e55561a9be7aba supplies exact witnesses and emitter; fixed namespace 4b8fa25. Agent3/13 notified. Only 1341,1947 remain of prior five; large SAT attempts timed out, not verdicts. 1947 (F0 hole) recurrent B-left section appears right grammar 11 followed by positive zero gaps and one runs >=3 after initial 110011 exception; 500 random section inputs returned within grammar, but NOT proof. Investigate exact macro grammar or improved synthesis; don't repeat existing bank. Agent3 already has independent SAT solver; new factored solver generalizes its fixed D(0,0)=0 restriction and asymptotic closure clause count.
+
 # Active checkpoint — raw60 full parent assembly (2026-11-25T16:59:16.696Z)
 
 Normal RNG 5; immutable lease 2026-11-25T16:55:31.242Z, run agent1-2026-11-25T16:55:31.242Z-raw60-exceptions, claim f145839be690de84d7e7dd03912eac173b7216ad. Release threshold 18:05:31.242Z; never refresh.
