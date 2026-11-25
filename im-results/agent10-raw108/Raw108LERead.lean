@@ -3,7 +3,7 @@ import Raw108LEFastB
 import ZipAuditCore
 set_option maxRecDepth 100000
 namespace BB6.Agent10Raw108LEFast
-open BB6Coverage BB6Coverage.Agent13PackedZipper BB6Coverage.Agent10ZipAudit
+open BB6Coverage BB6Coverage.Agent13PackedZipper BB6Coverage.Agent10ZipAudit BB6.Agent31ThreeHole
 
 theorem readA : zipRead (table false) 192167 = some (5,true) := by
   rw [← readRunP_eq]
