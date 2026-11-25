@@ -2,6 +2,10 @@ name: Agent43 raw122 disjoint source audit
 on:
   workflow_dispatch:
     inputs:
+      targeted_recovery:
+        description: Check only missing shards and patched 0LC
+        type: boolean
+        default: false
       source_ref:
         description: Exact source revision
         required: false
@@ -25,6 +29,7 @@ permissions:
   actions: read
 jobs:
   generate:
+    if: inputs.targeted_recovery != true
     runs-on: ubuntu-latest
     timeout-minutes: 15
     outputs:
@@ -246,4 +251,51 @@ jobs:
         with:
           name: raw122-certified-root
           path: /tmp/a43-audit/
+          retention-days: 30
+
+  targeted-recovery:
+    if: inputs.targeted_recovery == true
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix:
+        include:
+          - {branch: 1, first: 12, end: 18}
+          - {branch: 11, first: 12, end: 18}
+          - {branch: 14, first: 0, end: 6}
+          - {branch: 14, first: 12, end: 18}
+          - {branch: 14, first: 18, end: 24}
+          - {branch: 18, first: 12, end: 18}
+          - {branch: 20, first: 12, end: 18}
+          - {branch: 2, first: 0, end: 6}
+          - {branch: 2, first: 6, end: 12}
+          - {branch: 2, first: 12, end: 18}
+          - {branch: 2, first: 18, end: 24}
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw122-generated
+          run-id: 45655656030
+          github-token: ${{ github.token }}
+          path: /tmp/a43-source
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw122-audit-01-18
+          run-id: 45595285735
+          github-token: ${{ github.token }}
+          path: /tmp/a43-core
+      - name: Check missing modules against retained core
+        run: python im-results/agent43-raw122-cut/targeted_recover.py ${{ matrix.branch }} ${{ matrix.first }} ${{ matrix.end }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw122-target-${{ matrix.branch }}-${{ matrix.first }}
+          path: /tmp/a43-target-out/
           retention-days: 30
