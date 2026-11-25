@@ -236,6 +236,25 @@ theorem raw10RemainderWithCtl2_count :
     raw10RemainderWithCtl2.length = 47 := by
   decide
 
+def allSlots : List Slot :=
+  (List.finRange 6).flatMap fun q => [(q, false), (q, true)]
+
+def boxMass (b : Box Slot Transition) : Nat :=
+  (allSlots.map fun s => (b s).length).prod
+
+theorem ctlLeaf2_assignedCount :
+    (allSlots.filter fun s => (ctlLeaf2 s).isSome).length = 4 := by
+  decide
+
+theorem ctlLeaf2_completionCount :
+    25 ^ 8 = 152_587_890_625 := by
+  norm_num
+
+theorem raw10RemainderWithCtl2_mass :
+    (raw10RemainderWithCtl2.map boxMass).sum =
+      90_584_915_823_100 := by
+  decide
+
 /-- Conditional score-B consumer after removing the 25^8 CTL cylinder. -/
 def raw10CoverWithCtl2 (B : Nat) (hB : 7014 ≤ B)
     (hHeld : ∀ m, compatible held m → WeightedBound B m)
