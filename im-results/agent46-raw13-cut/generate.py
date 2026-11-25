@@ -279,6 +279,18 @@ def emit(t):
     if tag == "late0RE":
         n = "BB6Coverage.Agent31Pump.Raw13Late0RE"
         return f".bounded {n}.table 21269 {n}.bound"
+    if tag in ("zeroRE5Hard","zeroRE5Far"):
+        i=v[0]
+        auto={1010067:0,1010072:1,1010074:2}
+        if tag=="zeroRE5Hard" and i in auto:
+            n="BB6Coverage.Agent31Pump.Auto.Raw13Auto0RE5"
+            return f".closed (.proven {n}.p{auto[i]} {n}.never{auto[i]})"
+        if tag=="zeroRE5Hard" and i in (1010068,1010069):
+            n="BB6.Agent46Raw13ZeroRE.CounterGrammar"
+            flag="false" if i==1010068 else "true"
+            return f".closed (.proven ({n}.table {flag}) ({n}.never {flag}))"
+        n="BB6.Agent46Raw13ZeroRE5"
+        return f".closed (.proven {n}.pF{i} {n}.neverF{i})"
     if tag in ("oneRCHard","oneRCFar"):
         i=v[0]
         auto={1006008:0,1006030:1,1006031:2,1006032:3,1006033:4,1006034:5,1006035:6,1006036:7,1006037:8,1006038:9,1006041:10,1006042:11,1006043:12,1006044:13,1006045:14,1006046:15,1006047:16}
