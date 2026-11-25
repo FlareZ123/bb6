@@ -42,3 +42,5 @@ def main : IO Unit := do
       (BB6.Agent31ChampionParentIntegration.championResidualAddress ++ e.1) e.2
 
 end BB6.Agent6Canonical76Export
+
+def main : IO Unit := BB6.Agent6Canonical76Export.main
