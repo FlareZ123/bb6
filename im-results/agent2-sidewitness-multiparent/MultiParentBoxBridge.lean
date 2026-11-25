@@ -115,15 +115,15 @@ def refinesB (child parent : PartialMachine) : Bool :=
 
 def raw8SideWitnesses : List SideWitness :=
   witnesses.filter fun w =>
-    refinesB (BB6Coverage.unpackTable w.table) raw8Parent
+    refinesB (BB6.Agent50RootFrontier.unpackTable w.table) raw8Parent
 
 def raw9SideWitnesses : List SideWitness :=
   witnesses.filter fun w =>
-    refinesB (BB6Coverage.unpackTable w.table) raw9Parent
+    refinesB (BB6.Agent50RootFrontier.unpackTable w.table) raw9Parent
 
 def raw23SideWitnesses : List SideWitness :=
   witnesses.filter fun w =>
-    refinesB (BB6Coverage.unpackTable w.table) raw23Parent
+    refinesB (BB6.Agent50RootFrontier.unpackTable w.table) raw23Parent
 
 theorem raw8SideWitnesses_count : raw8SideWitnesses.length = 68 := by decide
 theorem raw9SideWitnesses_count : raw9SideWitnesses.length = 108 := by decide
@@ -131,15 +131,15 @@ theorem raw23SideWitnesses_count : raw23SideWitnesses.length = 96 := by decide
 
 theorem sideWitnesses_safe (ws : List SideWitness)
     (h : ∀ w ∈ ws, ∀ m,
-      BB6Coverage.compatible (BB6Coverage.unpackTable w.table) m →
+      BB6Coverage.compatible (BB6.Agent50RootFrontier.unpackTable w.table) m →
       WeightedBound 7014 m) :
     ∀ w ∈ ws, ∀ m,
-      BB6Coverage.compatible (BB6Coverage.unpackTable w.table) m →
+      BB6Coverage.compatible (BB6.Agent50RootFrontier.unpackTable w.table) m →
       WeightedBound 7014 m := h
 
 theorem raw8SideWitnesses_safe :
     ∀ w ∈ raw8SideWitnesses, ∀ m,
-      BB6Coverage.compatible (BB6Coverage.unpackTable w.table) m →
+      BB6Coverage.compatible (BB6.Agent50RootFrontier.unpackTable w.table) m →
       WeightedBound 7014 m := by
   intro w hw m hm
   have hmem : w ∈ witnesses := (List.mem_filter.mp hw).1
@@ -149,7 +149,7 @@ theorem raw8SideWitnesses_safe :
 
 theorem raw9SideWitnesses_safe :
     ∀ w ∈ raw9SideWitnesses, ∀ m,
-      BB6Coverage.compatible (BB6Coverage.unpackTable w.table) m →
+      BB6Coverage.compatible (BB6.Agent50RootFrontier.unpackTable w.table) m →
       WeightedBound 7014 m := by
   intro w hw m hm
   have hmem : w ∈ witnesses := (List.mem_filter.mp hw).1
@@ -159,7 +159,7 @@ theorem raw9SideWitnesses_safe :
 
 theorem raw23SideWitnesses_safe :
     ∀ w ∈ raw23SideWitnesses, ∀ m,
-      BB6Coverage.compatible (BB6Coverage.unpackTable w.table) m →
+      BB6Coverage.compatible (BB6.Agent50RootFrontier.unpackTable w.table) m →
       WeightedBound 7014 m := by
   intro w hw m hm
   have hmem : w ∈ witnesses := (List.mem_filter.mp hw).1
@@ -168,13 +168,13 @@ theorem raw23SideWitnesses_safe :
   exact w.sound hcheck m hm
 
 def raw8Tables : List PartialMachine :=
-  raw8SideWitnesses.map fun w => BB6Coverage.unpackTable w.table
+  raw8SideWitnesses.map fun w => BB6.Agent50RootFrontier.unpackTable w.table
 
 def raw9Tables : List PartialMachine :=
-  raw9SideWitnesses.map fun w => BB6Coverage.unpackTable w.table
+  raw9SideWitnesses.map fun w => BB6.Agent50RootFrontier.unpackTable w.table
 
 def raw23Tables : List PartialMachine :=
-  raw23SideWitnesses.map fun w => BB6Coverage.unpackTable w.table
+  raw23SideWitnesses.map fun w => BB6.Agent50RootFrontier.unpackTable w.table
 
 /-- Exact first-mismatch residual boxes after consuming the checked cylinders. -/
 def raw8Remainder : List (BB6.Agent49Box.Box Slot Transition) :=
@@ -190,7 +190,7 @@ theorem raw8_remainder_exact (m : BB6.Agent49Box.Machine) :
     (∃ r ∈ raw8Remainder, BB6.Agent49Box.Fits r m) ↔
       BB6Coverage.compatible raw8Parent m ∧
         ∀ w ∈ raw8SideWitnesses,
-          ¬ BB6Coverage.compatible (BB6Coverage.unpackTable w.table) m := by
+          ¬ BB6Coverage.compatible (BB6.Agent50RootFrontier.unpackTable w.table) m := by
   rw [raw8Remainder, BB6.Agent49BoxBridge.remainder_exact]
   constructor
   · rintro ⟨hp, hn⟩
@@ -207,7 +207,7 @@ theorem raw9_remainder_exact (m : BB6.Agent49Box.Machine) :
     (∃ r ∈ raw9Remainder, BB6.Agent49Box.Fits r m) ↔
       BB6Coverage.compatible raw9Parent m ∧
         ∀ w ∈ raw9SideWitnesses,
-          ¬ BB6Coverage.compatible (BB6Coverage.unpackTable w.table) m := by
+          ¬ BB6Coverage.compatible (BB6.Agent50RootFrontier.unpackTable w.table) m := by
   rw [raw9Remainder, BB6.Agent49BoxBridge.remainder_exact]
   constructor
   · rintro ⟨hp, hn⟩
@@ -224,7 +224,7 @@ theorem raw23_remainder_exact (m : BB6.Agent49Box.Machine) :
     (∃ r ∈ raw23Remainder, BB6.Agent49Box.Fits r m) ↔
       BB6Coverage.compatible raw23Parent m ∧
         ∀ w ∈ raw23SideWitnesses,
-          ¬ BB6Coverage.compatible (BB6Coverage.unpackTable w.table) m := by
+          ¬ BB6Coverage.compatible (BB6.Agent50RootFrontier.unpackTable w.table) m := by
   rw [raw23Remainder, BB6.Agent49BoxBridge.remainder_exact]
   constructor
   · rintro ⟨hp, hn⟩
@@ -260,18 +260,18 @@ theorem weightedBound_mono {b B : Nat} (hB : b ≤ B) {m : BB6.Agent49Box.Machin
 theorem cover_of_sideWitnesses
     (p : PartialMachine) (ws : List SideWitness)
     (hSafe : ∀ w ∈ ws, ∀ m,
-      BB6Coverage.compatible (BB6Coverage.unpackTable w.table) m →
+      BB6Coverage.compatible (BB6.Agent50RootFrontier.unpackTable w.table) m →
       WeightedBound 7014 m)
     (B : Nat) (hB : 7014 ≤ B)
     (remainder : List (BB6.Agent49Box.Box Slot Transition))
     (hRem : remainder =
       BB6.Agent49BoxBridge.remainder p
-        (ws.map fun w => BB6Coverage.unpackTable w.table))
+        (ws.map fun w => BB6.Agent50RootFrontier.unpackTable w.table))
     (hOpen : ∀ r ∈ remainder, ∀ m, BB6.Agent49Box.Fits r m → WeightedBound B m) :
     Cover (WeightedBound B) p := by
   subst remainder
   apply BB6.Agent49BoxBridge.coverFromRemainder B p
-    (ws.map fun w => BB6Coverage.unpackTable w.table)
+    (ws.map fun w => BB6.Agent50RootFrontier.unpackTable w.table)
   · intro q hq m hm
     obtain ⟨w, hw, rfl⟩ := List.mem_map.mp hq
     exact weightedBound_mono hB (hSafe w hw m hm)
@@ -387,11 +387,11 @@ def raw23BranchPacked (mv : Move) : PackedTable :=
 theorem cover_of_packedWitness (t : PackedTable) (p : PartialMachine)
     (hWitness : hasWitness t = true)
     (hTable : BB6.Agent31FourHoleRoster.sameTable
-      (BB6Coverage.unpackTable t) p = true) :
+      (BB6.Agent50RootFrontier.unpackTable t) p = true) :
     Cover (WeightedBound 7014) p := by
   apply Cover.leaf p
   intro m hm
-  have hEq : BB6Coverage.unpackTable t = p :=
+  have hEq : BB6.Agent50RootFrontier.unpackTable t = p :=
     BB6.Agent31FourHoleRoster.sameTable_sound hTable
   rw [← hEq] at hm
   exact hasWitness_sound t hWitness m hm
@@ -413,21 +413,21 @@ theorem raw23_branch_hasWitness (mv : Move) (h : mv ∈ raw23BranchMoves) :
 
 theorem raw8_branch_sameTable (mv : Move) (h : mv ∈ raw8BranchMoves) :
     BB6.Agent31FourHoleRoster.sameTable
-      (BB6Coverage.unpackTable (raw8BranchPacked mv))
+      (BB6.Agent50RootFrontier.unpackTable (raw8BranchPacked mv))
       (BB6Coverage.refine raw8Parent raw8BranchSlot (some mv)) = true := by
   simp [raw8BranchMoves] at h
   rcases h with rfl | rfl | rfl | rfl <;> decide
 
 theorem raw9_branch_sameTable (mv : Move) (h : mv ∈ raw9BranchMoves) :
     BB6.Agent31FourHoleRoster.sameTable
-      (BB6Coverage.unpackTable (raw9BranchPacked mv))
+      (BB6.Agent50RootFrontier.unpackTable (raw9BranchPacked mv))
       (BB6Coverage.refine raw9Parent raw9BranchSlot (some mv)) = true := by
   simp [raw9BranchMoves] at h
   rcases h with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl <;> decide
 
 theorem raw23_branch_sameTable (mv : Move) (h : mv ∈ raw23BranchMoves) :
     BB6.Agent31FourHoleRoster.sameTable
-      (BB6Coverage.unpackTable (raw23BranchPacked mv))
+      (BB6.Agent50RootFrontier.unpackTable (raw23BranchPacked mv))
       (BB6Coverage.refine raw23Parent raw23BranchSlot (some mv)) = true := by
   simp [raw23BranchMoves] at h
   rcases h with rfl | rfl | rfl | rfl | rfl <;> decide
