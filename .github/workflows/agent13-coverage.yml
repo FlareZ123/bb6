@@ -771,6 +771,16 @@ jobs:
             echo "Forbidden proof placeholder or native_decide found in combined 106-residual closure" >&2
             exit 1
           fi
+      - name: Kernel-check singleton-projection soundness for raw10 boxes
+        if: inputs.target == 'weighted-tnf-raw10-box'
+        run: |
+          set -euo pipefail
+          python tools/lean_compile_closure.py --workdir /tmp/a17-raw10-box-singleton --jobs 4 im-results/agent17-raw10-box-far-search/BoxSingletonProjection.lean | tee /tmp/a17-raw10-box-singleton.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a17-raw10-box-singleton.log; then
+            echo "Forbidden proof placeholder or native_decide found in singleton-projection box proof" >&2
+            exit 1
+          fi
+
       - name: Ingest exact champion witness into canonical 78 mixed-bound roster
         if: inputs.target == 'weighted-tnf-canonical-78-exact'
         run: |
