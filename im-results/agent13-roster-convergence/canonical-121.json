@@ -1,0 +1,5645 @@
+{
+  "schema": "bb6.partial-transition-roster.v2",
+  "source": "canonical-124.json filtered by exact BB6.Agent10FiveHoleRoster.covered predicate",
+  "parent": "BB6.Agent50TNFPilot.firstOneCylinder",
+  "path_slots": [
+    "B0",
+    "C0",
+    "D0",
+    "D1",
+    "E1",
+    "B1",
+    "F1"
+  ],
+  "path_moves": [
+    "1RC",
+    "0RD",
+    "1LD",
+    "1RE",
+    "0LB",
+    "1LF",
+    "0LA"
+  ],
+  "raw_residual_count": 161,
+  "excluded_witness_count": 37,
+  "canonical_residual_count": 121,
+  "removed_raw_residual_indices": [
+    66,
+    70,
+    80
+  ],
+  "removed_entries": [
+    {
+      "canonical_index": 39,
+      "raw_residual_index": 66,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "0RB"
+        }
+      ],
+      "holes": 5,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        "0RB",
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0LB",
+        null,
+        null
+      ]
+    },
+    {
+      "canonical_index": 43,
+      "raw_residual_index": 70,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "0RC"
+        }
+      ],
+      "holes": 5,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        "0RC",
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0LB",
+        null,
+        null
+      ]
+    },
+    {
+      "canonical_index": 50,
+      "raw_residual_index": 80,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1RE"
+        }
+      ],
+      "holes": 5,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        "1RE",
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0LB",
+        null,
+        null
+      ]
+    }
+  ],
+  "weighted_bound": 395,
+  "hole_histogram": {
+    "4": 18,
+    "5": 14,
+    "6": 22,
+    "7": 19,
+    "8": 12,
+    "9": 17,
+    "10": 19
+  },
+  "raw_mass": "1878783591015625",
+  "entries": [
+    {
+      "canonical_index": 0,
+      "raw_residual_index": 0,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "0LA"
+        }
+      ],
+      "depth": 1,
+      "main_path_prefix_length": 0,
+      "divergence": {
+        "slot": "B0",
+        "move": "0LA"
+      },
+      "holes": 10,
+      "table": [
+        "1RB",
+        null,
+        "0LA",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 0,
+      "reduced_index": 0
+    },
+    {
+      "canonical_index": 1,
+      "raw_residual_index": 2,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1LA"
+        }
+      ],
+      "depth": 1,
+      "main_path_prefix_length": 0,
+      "divergence": {
+        "slot": "B0",
+        "move": "1LA"
+      },
+      "holes": 10,
+      "table": [
+        "1RB",
+        null,
+        "1LA",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 1,
+      "reduced_index": 1
+    },
+    {
+      "canonical_index": 2,
+      "raw_residual_index": 4,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "0LB"
+        }
+      ],
+      "depth": 1,
+      "main_path_prefix_length": 0,
+      "divergence": {
+        "slot": "B0",
+        "move": "0LB"
+      },
+      "holes": 10,
+      "table": [
+        "1RB",
+        null,
+        "0LB",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 2,
+      "reduced_index": 2
+    },
+    {
+      "canonical_index": 3,
+      "raw_residual_index": 6,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1LB"
+        }
+      ],
+      "depth": 1,
+      "main_path_prefix_length": 0,
+      "divergence": {
+        "slot": "B0",
+        "move": "1LB"
+      },
+      "holes": 10,
+      "table": [
+        "1RB",
+        null,
+        "1LB",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 3,
+      "reduced_index": 3
+    },
+    {
+      "canonical_index": 4,
+      "raw_residual_index": 8,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "0LC"
+        }
+      ],
+      "depth": 1,
+      "main_path_prefix_length": 0,
+      "divergence": {
+        "slot": "B0",
+        "move": "0LC"
+      },
+      "holes": 10,
+      "table": [
+        "1RB",
+        null,
+        "0LC",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 4,
+      "reduced_index": 4
+    },
+    {
+      "canonical_index": 5,
+      "raw_residual_index": 9,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "0RC"
+        }
+      ],
+      "depth": 1,
+      "main_path_prefix_length": 0,
+      "divergence": {
+        "slot": "B0",
+        "move": "0RC"
+      },
+      "holes": 10,
+      "table": [
+        "1RB",
+        null,
+        "0RC",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 5,
+      "reduced_index": 5
+    },
+    {
+      "canonical_index": 6,
+      "raw_residual_index": 10,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1LC"
+        }
+      ],
+      "depth": 1,
+      "main_path_prefix_length": 0,
+      "divergence": {
+        "slot": "B0",
+        "move": "1LC"
+      },
+      "holes": 10,
+      "table": [
+        "1RB",
+        null,
+        "1LC",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 6,
+      "reduced_index": 6
+    },
+    {
+      "canonical_index": 7,
+      "raw_residual_index": 11,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0LA"
+        }
+      ],
+      "depth": 2,
+      "main_path_prefix_length": 1,
+      "divergence": {
+        "slot": "C0",
+        "move": "0LA"
+      },
+      "holes": 9,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0LA",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 7,
+      "reduced_index": 7
+    },
+    {
+      "canonical_index": 8,
+      "raw_residual_index": 13,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "1LA"
+        }
+      ],
+      "depth": 2,
+      "main_path_prefix_length": 1,
+      "divergence": {
+        "slot": "C0",
+        "move": "1LA"
+      },
+      "holes": 9,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "1LA",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 8,
+      "reduced_index": 8
+    },
+    {
+      "canonical_index": 9,
+      "raw_residual_index": 15,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0LB"
+        }
+      ],
+      "depth": 2,
+      "main_path_prefix_length": 1,
+      "divergence": {
+        "slot": "C0",
+        "move": "0LB"
+      },
+      "holes": 9,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0LB",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 9,
+      "reduced_index": 9
+    },
+    {
+      "canonical_index": 10,
+      "raw_residual_index": 17,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "1LB"
+        }
+      ],
+      "depth": 2,
+      "main_path_prefix_length": 1,
+      "divergence": {
+        "slot": "C0",
+        "move": "1LB"
+      },
+      "holes": 9,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "1LB",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 10,
+      "reduced_index": 10
+    },
+    {
+      "canonical_index": 11,
+      "raw_residual_index": 19,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0LC"
+        }
+      ],
+      "depth": 2,
+      "main_path_prefix_length": 1,
+      "divergence": {
+        "slot": "C0",
+        "move": "0LC"
+      },
+      "holes": 9,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0LC",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 11,
+      "reduced_index": 11
+    },
+    {
+      "canonical_index": 12,
+      "raw_residual_index": 21,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "1LC"
+        }
+      ],
+      "depth": 2,
+      "main_path_prefix_length": 1,
+      "divergence": {
+        "slot": "C0",
+        "move": "1LC"
+      },
+      "holes": 9,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "1LC",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 12,
+      "reduced_index": 12
+    },
+    {
+      "canonical_index": 13,
+      "raw_residual_index": 23,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0LD"
+        }
+      ],
+      "depth": 2,
+      "main_path_prefix_length": 1,
+      "divergence": {
+        "slot": "C0",
+        "move": "0LD"
+      },
+      "holes": 9,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0LD",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 13,
+      "reduced_index": 13
+    },
+    {
+      "canonical_index": 14,
+      "raw_residual_index": 26,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LA"
+        }
+      ],
+      "depth": 3,
+      "main_path_prefix_length": 2,
+      "divergence": {
+        "slot": "D0",
+        "move": "1LA"
+      },
+      "holes": 8,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LA",
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 14,
+      "reduced_index": 14
+    },
+    {
+      "canonical_index": 15,
+      "raw_residual_index": 30,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LB"
+        }
+      ],
+      "depth": 3,
+      "main_path_prefix_length": 2,
+      "divergence": {
+        "slot": "D0",
+        "move": "1LB"
+      },
+      "holes": 8,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LB",
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 15,
+      "reduced_index": 15
+    },
+    {
+      "canonical_index": 16,
+      "raw_residual_index": 34,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LC"
+        }
+      ],
+      "depth": 3,
+      "main_path_prefix_length": 2,
+      "divergence": {
+        "slot": "D0",
+        "move": "1LC"
+      },
+      "holes": 8,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LC",
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 16,
+      "reduced_index": 16
+    },
+    {
+      "canonical_index": 17,
+      "raw_residual_index": 36,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "0LD"
+        }
+      ],
+      "depth": 3,
+      "main_path_prefix_length": 2,
+      "divergence": {
+        "slot": "D0",
+        "move": "0LD"
+      },
+      "holes": 8,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "0LD",
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 17,
+      "reduced_index": 17
+    },
+    {
+      "canonical_index": 18,
+      "raw_residual_index": 38,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "0LA"
+        }
+      ],
+      "depth": 4,
+      "main_path_prefix_length": 3,
+      "divergence": {
+        "slot": "D1",
+        "move": "0LA"
+      },
+      "holes": 7,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LD",
+        "0LA",
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 18,
+      "reduced_index": 18
+    },
+    {
+      "canonical_index": 19,
+      "raw_residual_index": 39,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "0RA"
+        }
+      ],
+      "depth": 4,
+      "main_path_prefix_length": 3,
+      "divergence": {
+        "slot": "D1",
+        "move": "0RA"
+      },
+      "holes": 7,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LD",
+        "0RA",
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 19,
+      "reduced_index": 19
+    },
+    {
+      "canonical_index": 20,
+      "raw_residual_index": 40,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1LA"
+        }
+      ],
+      "depth": 4,
+      "main_path_prefix_length": 3,
+      "divergence": {
+        "slot": "D1",
+        "move": "1LA"
+      },
+      "holes": 7,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LD",
+        "1LA",
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 20,
+      "reduced_index": 20
+    },
+    {
+      "canonical_index": 21,
+      "raw_residual_index": 41,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RA"
+        }
+      ],
+      "depth": 4,
+      "main_path_prefix_length": 3,
+      "divergence": {
+        "slot": "D1",
+        "move": "1RA"
+      },
+      "holes": 7,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LD",
+        "1RA",
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 21,
+      "reduced_index": 21
+    },
+    {
+      "canonical_index": 22,
+      "raw_residual_index": 42,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "0LB"
+        }
+      ],
+      "depth": 4,
+      "main_path_prefix_length": 3,
+      "divergence": {
+        "slot": "D1",
+        "move": "0LB"
+      },
+      "holes": 7,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LD",
+        "0LB",
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 22,
+      "reduced_index": 22
+    },
+    {
+      "canonical_index": 23,
+      "raw_residual_index": 43,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "0RB"
+        }
+      ],
+      "depth": 4,
+      "main_path_prefix_length": 3,
+      "divergence": {
+        "slot": "D1",
+        "move": "0RB"
+      },
+      "holes": 7,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LD",
+        "0RB",
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 23,
+      "reduced_index": 23
+    },
+    {
+      "canonical_index": 24,
+      "raw_residual_index": 44,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1LB"
+        }
+      ],
+      "depth": 4,
+      "main_path_prefix_length": 3,
+      "divergence": {
+        "slot": "D1",
+        "move": "1LB"
+      },
+      "holes": 7,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LD",
+        "1LB",
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 24,
+      "reduced_index": 24
+    },
+    {
+      "canonical_index": 25,
+      "raw_residual_index": 45,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RB"
+        }
+      ],
+      "depth": 4,
+      "main_path_prefix_length": 3,
+      "divergence": {
+        "slot": "D1",
+        "move": "1RB"
+      },
+      "holes": 7,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LD",
+        "1RB",
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 25,
+      "reduced_index": 25
+    },
+    {
+      "canonical_index": 26,
+      "raw_residual_index": 46,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "0LC"
+        }
+      ],
+      "depth": 4,
+      "main_path_prefix_length": 3,
+      "divergence": {
+        "slot": "D1",
+        "move": "0LC"
+      },
+      "holes": 7,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LD",
+        "0LC",
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 26,
+      "reduced_index": 26
+    },
+    {
+      "canonical_index": 27,
+      "raw_residual_index": 47,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "0RC"
+        }
+      ],
+      "depth": 4,
+      "main_path_prefix_length": 3,
+      "divergence": {
+        "slot": "D1",
+        "move": "0RC"
+      },
+      "holes": 7,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LD",
+        "0RC",
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 27,
+      "reduced_index": 27
+    },
+    {
+      "canonical_index": 28,
+      "raw_residual_index": 48,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1LC"
+        }
+      ],
+      "depth": 4,
+      "main_path_prefix_length": 3,
+      "divergence": {
+        "slot": "D1",
+        "move": "1LC"
+      },
+      "holes": 7,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LD",
+        "1LC",
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 28,
+      "reduced_index": 28
+    },
+    {
+      "canonical_index": 29,
+      "raw_residual_index": 49,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RC"
+        }
+      ],
+      "depth": 4,
+      "main_path_prefix_length": 3,
+      "divergence": {
+        "slot": "D1",
+        "move": "1RC"
+      },
+      "holes": 7,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LD",
+        "1RC",
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 29,
+      "reduced_index": 29
+    },
+    {
+      "canonical_index": 30,
+      "raw_residual_index": 54,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "0LE"
+        }
+      ],
+      "depth": 4,
+      "main_path_prefix_length": 3,
+      "divergence": {
+        "slot": "D1",
+        "move": "0LE"
+      },
+      "holes": 7,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LD",
+        "0LE",
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 30,
+      "reduced_index": 30
+    },
+    {
+      "canonical_index": 31,
+      "raw_residual_index": 55,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "0RE"
+        }
+      ],
+      "depth": 4,
+      "main_path_prefix_length": 3,
+      "divergence": {
+        "slot": "D1",
+        "move": "0RE"
+      },
+      "holes": 7,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LD",
+        "0RE",
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 31,
+      "reduced_index": 31
+    },
+    {
+      "canonical_index": 32,
+      "raw_residual_index": 56,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1LE"
+        }
+      ],
+      "depth": 4,
+      "main_path_prefix_length": 3,
+      "divergence": {
+        "slot": "D1",
+        "move": "1LE"
+      },
+      "holes": 7,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LD",
+        "1LE",
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 32,
+      "reduced_index": 32
+    },
+    {
+      "canonical_index": 33,
+      "raw_residual_index": 57,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LA"
+        }
+      ],
+      "depth": 5,
+      "main_path_prefix_length": 4,
+      "divergence": {
+        "slot": "E1",
+        "move": "0LA"
+      },
+      "holes": 6,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0LA",
+        null,
+        null
+      ],
+      "source_canonical_index": 33,
+      "reduced_index": 33
+    },
+    {
+      "canonical_index": 34,
+      "raw_residual_index": 58,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0RA"
+        }
+      ],
+      "depth": 5,
+      "main_path_prefix_length": 4,
+      "divergence": {
+        "slot": "E1",
+        "move": "0RA"
+      },
+      "holes": 6,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0RA",
+        null,
+        null
+      ],
+      "source_canonical_index": 34,
+      "reduced_index": 34
+    },
+    {
+      "canonical_index": 35,
+      "raw_residual_index": 59,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "1LA"
+        }
+      ],
+      "depth": 5,
+      "main_path_prefix_length": 4,
+      "divergence": {
+        "slot": "E1",
+        "move": "1LA"
+      },
+      "holes": 6,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "1LA",
+        null,
+        null
+      ],
+      "source_canonical_index": 35,
+      "reduced_index": 35
+    },
+    {
+      "canonical_index": 36,
+      "raw_residual_index": 60,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "1RA"
+        }
+      ],
+      "depth": 5,
+      "main_path_prefix_length": 4,
+      "divergence": {
+        "slot": "E1",
+        "move": "1RA"
+      },
+      "holes": 6,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "1RA",
+        null,
+        null
+      ],
+      "source_canonical_index": 36,
+      "reduced_index": 36
+    },
+    {
+      "canonical_index": 37,
+      "raw_residual_index": 61,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "0LA"
+        }
+      ],
+      "depth": 6,
+      "main_path_prefix_length": 5,
+      "divergence": {
+        "slot": "B1",
+        "move": "0LA"
+      },
+      "holes": 5,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        "0LA",
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0LB",
+        null,
+        null
+      ],
+      "source_canonical_index": 37,
+      "reduced_index": 37
+    },
+    {
+      "canonical_index": 38,
+      "raw_residual_index": 63,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LA"
+        }
+      ],
+      "depth": 6,
+      "main_path_prefix_length": 5,
+      "divergence": {
+        "slot": "B1",
+        "move": "1LA"
+      },
+      "holes": 5,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        "1LA",
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0LB",
+        null,
+        null
+      ],
+      "source_canonical_index": 38,
+      "reduced_index": 38
+    },
+    {
+      "canonical_index": 39,
+      "raw_residual_index": 67,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LB"
+        }
+      ],
+      "depth": 6,
+      "main_path_prefix_length": 5,
+      "divergence": {
+        "slot": "B1",
+        "move": "1LB"
+      },
+      "holes": 5,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        "1LB",
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0LB",
+        null,
+        null
+      ],
+      "source_canonical_index": 40,
+      "reduced_index": 39
+    },
+    {
+      "canonical_index": 40,
+      "raw_residual_index": 68,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1RB"
+        }
+      ],
+      "depth": 6,
+      "main_path_prefix_length": 5,
+      "divergence": {
+        "slot": "B1",
+        "move": "1RB"
+      },
+      "holes": 5,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        "1RB",
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0LB",
+        null,
+        null
+      ],
+      "source_canonical_index": 41,
+      "reduced_index": 40
+    },
+    {
+      "canonical_index": 41,
+      "raw_residual_index": 69,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "0LC"
+        }
+      ],
+      "depth": 6,
+      "main_path_prefix_length": 5,
+      "divergence": {
+        "slot": "B1",
+        "move": "0LC"
+      },
+      "holes": 5,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        "0LC",
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0LB",
+        null,
+        null
+      ],
+      "source_canonical_index": 42,
+      "reduced_index": 41
+    },
+    {
+      "canonical_index": 42,
+      "raw_residual_index": 71,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LC"
+        }
+      ],
+      "depth": 6,
+      "main_path_prefix_length": 5,
+      "divergence": {
+        "slot": "B1",
+        "move": "1LC"
+      },
+      "holes": 5,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        "1LC",
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0LB",
+        null,
+        null
+      ],
+      "source_canonical_index": 44,
+      "reduced_index": 42
+    },
+    {
+      "canonical_index": 43,
+      "raw_residual_index": 72,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1RC"
+        }
+      ],
+      "depth": 6,
+      "main_path_prefix_length": 5,
+      "divergence": {
+        "slot": "B1",
+        "move": "1RC"
+      },
+      "holes": 5,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        "1RC",
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0LB",
+        null,
+        null
+      ],
+      "source_canonical_index": 45,
+      "reduced_index": 43
+    },
+    {
+      "canonical_index": 44,
+      "raw_residual_index": 73,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "0LD"
+        }
+      ],
+      "depth": 6,
+      "main_path_prefix_length": 5,
+      "divergence": {
+        "slot": "B1",
+        "move": "0LD"
+      },
+      "holes": 5,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        "0LD",
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0LB",
+        null,
+        null
+      ],
+      "source_canonical_index": 46,
+      "reduced_index": 44
+    },
+    {
+      "canonical_index": 45,
+      "raw_residual_index": 77,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "0LE"
+        }
+      ],
+      "depth": 6,
+      "main_path_prefix_length": 5,
+      "divergence": {
+        "slot": "B1",
+        "move": "0LE"
+      },
+      "holes": 5,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        "0LE",
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0LB",
+        null,
+        null
+      ],
+      "source_canonical_index": 47,
+      "reduced_index": 45
+    },
+    {
+      "canonical_index": 46,
+      "raw_residual_index": 78,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "0RE"
+        }
+      ],
+      "depth": 6,
+      "main_path_prefix_length": 5,
+      "divergence": {
+        "slot": "B1",
+        "move": "0RE"
+      },
+      "holes": 5,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        "0RE",
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0LB",
+        null,
+        null
+      ],
+      "source_canonical_index": 48,
+      "reduced_index": 46
+    },
+    {
+      "canonical_index": 47,
+      "raw_residual_index": 79,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LE"
+        }
+      ],
+      "depth": 6,
+      "main_path_prefix_length": 5,
+      "divergence": {
+        "slot": "B1",
+        "move": "1LE"
+      },
+      "holes": 5,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        "1LE",
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0LB",
+        null,
+        null
+      ],
+      "source_canonical_index": 49,
+      "reduced_index": 47
+    },
+    {
+      "canonical_index": 48,
+      "raw_residual_index": 81,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "0LF"
+        }
+      ],
+      "depth": 6,
+      "main_path_prefix_length": 5,
+      "divergence": {
+        "slot": "B1",
+        "move": "0LF"
+      },
+      "holes": 5,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        "0LF",
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0LB",
+        null,
+        null
+      ],
+      "source_canonical_index": 51,
+      "reduced_index": 48
+    },
+    {
+      "canonical_index": 49,
+      "raw_residual_index": 82,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "0RF"
+        }
+      ],
+      "depth": 6,
+      "main_path_prefix_length": 5,
+      "divergence": {
+        "slot": "B1",
+        "move": "0RF"
+      },
+      "holes": 5,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        "0RF",
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0LB",
+        null,
+        null
+      ],
+      "source_canonical_index": 52,
+      "reduced_index": 49
+    },
+    {
+      "canonical_index": 50,
+      "raw_residual_index": 83,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LF"
+        },
+        {
+          "slot": "F1",
+          "move": "0RA"
+        }
+      ],
+      "depth": 7,
+      "main_path_prefix_length": 6,
+      "divergence": {
+        "slot": "F1",
+        "move": "0RA"
+      },
+      "holes": 4,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        "1LF",
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0LB",
+        null,
+        "0RA"
+      ],
+      "source_canonical_index": 53,
+      "reduced_index": 50
+    },
+    {
+      "canonical_index": 51,
+      "raw_residual_index": 85,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LF"
+        },
+        {
+          "slot": "F1",
+          "move": "1RA"
+        }
+      ],
+      "depth": 7,
+      "main_path_prefix_length": 6,
+      "divergence": {
+        "slot": "F1",
+        "move": "1RA"
+      },
+      "holes": 4,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        "1LF",
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0LB",
+        null,
+        "1RA"
+      ],
+      "source_canonical_index": 54,
+      "reduced_index": 51
+    },
+    {
+      "canonical_index": 52,
+      "raw_residual_index": 86,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LF"
+        },
+        {
+          "slot": "F1",
+          "move": "0LB"
+        }
+      ],
+      "depth": 7,
+      "main_path_prefix_length": 6,
+      "divergence": {
+        "slot": "F1",
+        "move": "0LB"
+      },
+      "holes": 4,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        "1LF",
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0LB",
+        null,
+        "0LB"
+      ],
+      "source_canonical_index": 55,
+      "reduced_index": 52
+    },
+    {
+      "canonical_index": 53,
+      "raw_residual_index": 87,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LF"
+        },
+        {
+          "slot": "F1",
+          "move": "0RB"
+        }
+      ],
+      "depth": 7,
+      "main_path_prefix_length": 6,
+      "divergence": {
+        "slot": "F1",
+        "move": "0RB"
+      },
+      "holes": 4,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        "1LF",
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0LB",
+        null,
+        "0RB"
+      ],
+      "source_canonical_index": 56,
+      "reduced_index": 53
+    },
+    {
+      "canonical_index": 54,
+      "raw_residual_index": 88,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LF"
+        },
+        {
+          "slot": "F1",
+          "move": "1LB"
+        }
+      ],
+      "depth": 7,
+      "main_path_prefix_length": 6,
+      "divergence": {
+        "slot": "F1",
+        "move": "1LB"
+      },
+      "holes": 4,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        "1LF",
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0LB",
+        null,
+        "1LB"
+      ],
+      "source_canonical_index": 57,
+      "reduced_index": 54
+    },
+    {
+      "canonical_index": 55,
+      "raw_residual_index": 91,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LF"
+        },
+        {
+          "slot": "F1",
+          "move": "0RC"
+        }
+      ],
+      "depth": 7,
+      "main_path_prefix_length": 6,
+      "divergence": {
+        "slot": "F1",
+        "move": "0RC"
+      },
+      "holes": 4,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        "1LF",
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0LB",
+        null,
+        "0RC"
+      ],
+      "source_canonical_index": 58,
+      "reduced_index": 55
+    },
+    {
+      "canonical_index": 56,
+      "raw_residual_index": 92,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LF"
+        },
+        {
+          "slot": "F1",
+          "move": "1LC"
+        }
+      ],
+      "depth": 7,
+      "main_path_prefix_length": 6,
+      "divergence": {
+        "slot": "F1",
+        "move": "1LC"
+      },
+      "holes": 4,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        "1LF",
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0LB",
+        null,
+        "1LC"
+      ],
+      "source_canonical_index": 59,
+      "reduced_index": 56
+    },
+    {
+      "canonical_index": 57,
+      "raw_residual_index": 93,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LF"
+        },
+        {
+          "slot": "F1",
+          "move": "1RC"
+        }
+      ],
+      "depth": 7,
+      "main_path_prefix_length": 6,
+      "divergence": {
+        "slot": "F1",
+        "move": "1RC"
+      },
+      "holes": 4,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        "1LF",
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0LB",
+        null,
+        "1RC"
+      ],
+      "source_canonical_index": 60,
+      "reduced_index": 57
+    },
+    {
+      "canonical_index": 58,
+      "raw_residual_index": 95,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LF"
+        },
+        {
+          "slot": "F1",
+          "move": "0RD"
+        }
+      ],
+      "depth": 7,
+      "main_path_prefix_length": 6,
+      "divergence": {
+        "slot": "F1",
+        "move": "0RD"
+      },
+      "holes": 4,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        "1LF",
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0LB",
+        null,
+        "0RD"
+      ],
+      "source_canonical_index": 61,
+      "reduced_index": 58
+    },
+    {
+      "canonical_index": 59,
+      "raw_residual_index": 97,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LF"
+        },
+        {
+          "slot": "F1",
+          "move": "1RD"
+        }
+      ],
+      "depth": 7,
+      "main_path_prefix_length": 6,
+      "divergence": {
+        "slot": "F1",
+        "move": "1RD"
+      },
+      "holes": 4,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        "1LF",
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0LB",
+        null,
+        "1RD"
+      ],
+      "source_canonical_index": 62,
+      "reduced_index": 59
+    },
+    {
+      "canonical_index": 60,
+      "raw_residual_index": 98,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LF"
+        },
+        {
+          "slot": "F1",
+          "move": "0LE"
+        }
+      ],
+      "depth": 7,
+      "main_path_prefix_length": 6,
+      "divergence": {
+        "slot": "F1",
+        "move": "0LE"
+      },
+      "holes": 4,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        "1LF",
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0LB",
+        null,
+        "0LE"
+      ],
+      "source_canonical_index": 63,
+      "reduced_index": 60
+    },
+    {
+      "canonical_index": 61,
+      "raw_residual_index": 99,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LF"
+        },
+        {
+          "slot": "F1",
+          "move": "0RE"
+        }
+      ],
+      "depth": 7,
+      "main_path_prefix_length": 6,
+      "divergence": {
+        "slot": "F1",
+        "move": "0RE"
+      },
+      "holes": 4,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        "1LF",
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0LB",
+        null,
+        "0RE"
+      ],
+      "source_canonical_index": 64,
+      "reduced_index": 61
+    },
+    {
+      "canonical_index": 62,
+      "raw_residual_index": 100,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LF"
+        },
+        {
+          "slot": "F1",
+          "move": "1LE"
+        }
+      ],
+      "depth": 7,
+      "main_path_prefix_length": 6,
+      "divergence": {
+        "slot": "F1",
+        "move": "1LE"
+      },
+      "holes": 4,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        "1LF",
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0LB",
+        null,
+        "1LE"
+      ],
+      "source_canonical_index": 65,
+      "reduced_index": 62
+    },
+    {
+      "canonical_index": 63,
+      "raw_residual_index": 101,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LF"
+        },
+        {
+          "slot": "F1",
+          "move": "1RE"
+        }
+      ],
+      "depth": 7,
+      "main_path_prefix_length": 6,
+      "divergence": {
+        "slot": "F1",
+        "move": "1RE"
+      },
+      "holes": 4,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        "1LF",
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0LB",
+        null,
+        "1RE"
+      ],
+      "source_canonical_index": 66,
+      "reduced_index": 63
+    },
+    {
+      "canonical_index": 64,
+      "raw_residual_index": 102,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LF"
+        },
+        {
+          "slot": "F1",
+          "move": "0LF"
+        }
+      ],
+      "depth": 7,
+      "main_path_prefix_length": 6,
+      "divergence": {
+        "slot": "F1",
+        "move": "0LF"
+      },
+      "holes": 4,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        "1LF",
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0LB",
+        null,
+        "0LF"
+      ],
+      "source_canonical_index": 67,
+      "reduced_index": 64
+    },
+    {
+      "canonical_index": 65,
+      "raw_residual_index": 103,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LF"
+        },
+        {
+          "slot": "F1",
+          "move": "0RF"
+        }
+      ],
+      "depth": 7,
+      "main_path_prefix_length": 6,
+      "divergence": {
+        "slot": "F1",
+        "move": "0RF"
+      },
+      "holes": 4,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        "1LF",
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0LB",
+        null,
+        "0RF"
+      ],
+      "source_canonical_index": 68,
+      "reduced_index": 65
+    },
+    {
+      "canonical_index": 66,
+      "raw_residual_index": 104,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LF"
+        },
+        {
+          "slot": "F1",
+          "move": "1LF"
+        }
+      ],
+      "depth": 7,
+      "main_path_prefix_length": 6,
+      "divergence": {
+        "slot": "F1",
+        "move": "1LF"
+      },
+      "holes": 4,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        "1LF",
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0LB",
+        null,
+        "1LF"
+      ],
+      "source_canonical_index": 69,
+      "reduced_index": 66
+    },
+    {
+      "canonical_index": 67,
+      "raw_residual_index": 105,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1LF"
+        },
+        {
+          "slot": "F1",
+          "move": "1RF"
+        }
+      ],
+      "depth": 7,
+      "main_path_prefix_length": 6,
+      "divergence": {
+        "slot": "F1",
+        "move": "1RF"
+      },
+      "holes": 4,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        "1LF",
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0LB",
+        null,
+        "1RF"
+      ],
+      "source_canonical_index": 70,
+      "reduced_index": 67
+    },
+    {
+      "canonical_index": 68,
+      "raw_residual_index": 106,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LB"
+        },
+        {
+          "slot": "B1",
+          "move": "1RF"
+        }
+      ],
+      "depth": 6,
+      "main_path_prefix_length": 5,
+      "divergence": {
+        "slot": "B1",
+        "move": "1RF"
+      },
+      "holes": 5,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        "1RF",
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0LB",
+        null,
+        null
+      ],
+      "source_canonical_index": 71,
+      "reduced_index": 68
+    },
+    {
+      "canonical_index": 69,
+      "raw_residual_index": 107,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0RB"
+        }
+      ],
+      "depth": 5,
+      "main_path_prefix_length": 4,
+      "divergence": {
+        "slot": "E1",
+        "move": "0RB"
+      },
+      "holes": 6,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0RB",
+        null,
+        null
+      ],
+      "source_canonical_index": 72,
+      "reduced_index": 69
+    },
+    {
+      "canonical_index": 70,
+      "raw_residual_index": 108,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "1LB"
+        }
+      ],
+      "depth": 5,
+      "main_path_prefix_length": 4,
+      "divergence": {
+        "slot": "E1",
+        "move": "1LB"
+      },
+      "holes": 6,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "1LB",
+        null,
+        null
+      ],
+      "source_canonical_index": 73,
+      "reduced_index": 70
+    },
+    {
+      "canonical_index": 71,
+      "raw_residual_index": 109,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "1RB"
+        }
+      ],
+      "depth": 5,
+      "main_path_prefix_length": 4,
+      "divergence": {
+        "slot": "E1",
+        "move": "1RB"
+      },
+      "holes": 6,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "1RB",
+        null,
+        null
+      ],
+      "source_canonical_index": 74,
+      "reduced_index": 71
+    },
+    {
+      "canonical_index": 72,
+      "raw_residual_index": 110,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LC"
+        }
+      ],
+      "depth": 5,
+      "main_path_prefix_length": 4,
+      "divergence": {
+        "slot": "E1",
+        "move": "0LC"
+      },
+      "holes": 6,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0LC",
+        null,
+        null
+      ],
+      "source_canonical_index": 75,
+      "reduced_index": 72
+    },
+    {
+      "canonical_index": 73,
+      "raw_residual_index": 111,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0RC"
+        }
+      ],
+      "depth": 5,
+      "main_path_prefix_length": 4,
+      "divergence": {
+        "slot": "E1",
+        "move": "0RC"
+      },
+      "holes": 6,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0RC",
+        null,
+        null
+      ],
+      "source_canonical_index": 76,
+      "reduced_index": 73
+    },
+    {
+      "canonical_index": 74,
+      "raw_residual_index": 112,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "1LC"
+        }
+      ],
+      "depth": 5,
+      "main_path_prefix_length": 4,
+      "divergence": {
+        "slot": "E1",
+        "move": "1LC"
+      },
+      "holes": 6,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "1LC",
+        null,
+        null
+      ],
+      "source_canonical_index": 77,
+      "reduced_index": 74
+    },
+    {
+      "canonical_index": 75,
+      "raw_residual_index": 113,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "1RC"
+        }
+      ],
+      "depth": 5,
+      "main_path_prefix_length": 4,
+      "divergence": {
+        "slot": "E1",
+        "move": "1RC"
+      },
+      "holes": 6,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "1RC",
+        null,
+        null
+      ],
+      "source_canonical_index": 78,
+      "reduced_index": 75
+    },
+    {
+      "canonical_index": 76,
+      "raw_residual_index": 114,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LD"
+        }
+      ],
+      "depth": 5,
+      "main_path_prefix_length": 4,
+      "divergence": {
+        "slot": "E1",
+        "move": "0LD"
+      },
+      "holes": 6,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0LD",
+        null,
+        null
+      ],
+      "source_canonical_index": 79,
+      "reduced_index": 76
+    },
+    {
+      "canonical_index": 77,
+      "raw_residual_index": 115,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0RD"
+        }
+      ],
+      "depth": 5,
+      "main_path_prefix_length": 4,
+      "divergence": {
+        "slot": "E1",
+        "move": "0RD"
+      },
+      "holes": 6,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0RD",
+        null,
+        null
+      ],
+      "source_canonical_index": 80,
+      "reduced_index": 77
+    },
+    {
+      "canonical_index": 78,
+      "raw_residual_index": 117,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "1RD"
+        }
+      ],
+      "depth": 5,
+      "main_path_prefix_length": 4,
+      "divergence": {
+        "slot": "E1",
+        "move": "1RD"
+      },
+      "holes": 6,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "1RD",
+        null,
+        null
+      ],
+      "source_canonical_index": 81,
+      "reduced_index": 78
+    },
+    {
+      "canonical_index": 79,
+      "raw_residual_index": 118,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LE"
+        }
+      ],
+      "depth": 5,
+      "main_path_prefix_length": 4,
+      "divergence": {
+        "slot": "E1",
+        "move": "0LE"
+      },
+      "holes": 6,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0LE",
+        null,
+        null
+      ],
+      "source_canonical_index": 82,
+      "reduced_index": 79
+    },
+    {
+      "canonical_index": 80,
+      "raw_residual_index": 119,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0RE"
+        }
+      ],
+      "depth": 5,
+      "main_path_prefix_length": 4,
+      "divergence": {
+        "slot": "E1",
+        "move": "0RE"
+      },
+      "holes": 6,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0RE",
+        null,
+        null
+      ],
+      "source_canonical_index": 83,
+      "reduced_index": 80
+    },
+    {
+      "canonical_index": 81,
+      "raw_residual_index": 120,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "1LE"
+        }
+      ],
+      "depth": 5,
+      "main_path_prefix_length": 4,
+      "divergence": {
+        "slot": "E1",
+        "move": "1LE"
+      },
+      "holes": 6,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "1LE",
+        null,
+        null
+      ],
+      "source_canonical_index": 84,
+      "reduced_index": 81
+    },
+    {
+      "canonical_index": 82,
+      "raw_residual_index": 121,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "1RE"
+        }
+      ],
+      "depth": 5,
+      "main_path_prefix_length": 4,
+      "divergence": {
+        "slot": "E1",
+        "move": "1RE"
+      },
+      "holes": 6,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "1RE",
+        null,
+        null
+      ],
+      "source_canonical_index": 85,
+      "reduced_index": 82
+    },
+    {
+      "canonical_index": 83,
+      "raw_residual_index": 122,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0LF"
+        }
+      ],
+      "depth": 5,
+      "main_path_prefix_length": 4,
+      "divergence": {
+        "slot": "E1",
+        "move": "0LF"
+      },
+      "holes": 6,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0LF",
+        null,
+        null
+      ],
+      "source_canonical_index": 86,
+      "reduced_index": 83
+    },
+    {
+      "canonical_index": 84,
+      "raw_residual_index": 123,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "0RF"
+        }
+      ],
+      "depth": 5,
+      "main_path_prefix_length": 4,
+      "divergence": {
+        "slot": "E1",
+        "move": "0RF"
+      },
+      "holes": 6,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "0RF",
+        null,
+        null
+      ],
+      "source_canonical_index": 87,
+      "reduced_index": 84
+    },
+    {
+      "canonical_index": 85,
+      "raw_residual_index": 124,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "1LF"
+        }
+      ],
+      "depth": 5,
+      "main_path_prefix_length": 4,
+      "divergence": {
+        "slot": "E1",
+        "move": "1LF"
+      },
+      "holes": 6,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "1LF",
+        null,
+        null
+      ],
+      "source_canonical_index": 88,
+      "reduced_index": 85
+    },
+    {
+      "canonical_index": 86,
+      "raw_residual_index": 125,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RE"
+        },
+        {
+          "slot": "E1",
+          "move": "1RF"
+        }
+      ],
+      "depth": 5,
+      "main_path_prefix_length": 4,
+      "divergence": {
+        "slot": "E1",
+        "move": "1RF"
+      },
+      "holes": 6,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LD",
+        "1RE",
+        null,
+        "1RF",
+        null,
+        null
+      ],
+      "source_canonical_index": 89,
+      "reduced_index": 86
+    },
+    {
+      "canonical_index": 87,
+      "raw_residual_index": 126,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "0LF"
+        }
+      ],
+      "depth": 4,
+      "main_path_prefix_length": 3,
+      "divergence": {
+        "slot": "D1",
+        "move": "0LF"
+      },
+      "holes": 7,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LD",
+        "0LF",
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 90,
+      "reduced_index": 87
+    },
+    {
+      "canonical_index": 88,
+      "raw_residual_index": 127,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "0RF"
+        }
+      ],
+      "depth": 4,
+      "main_path_prefix_length": 3,
+      "divergence": {
+        "slot": "D1",
+        "move": "0RF"
+      },
+      "holes": 7,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LD",
+        "0RF",
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 91,
+      "reduced_index": 88
+    },
+    {
+      "canonical_index": 89,
+      "raw_residual_index": 128,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1LF"
+        }
+      ],
+      "depth": 4,
+      "main_path_prefix_length": 3,
+      "divergence": {
+        "slot": "D1",
+        "move": "1LF"
+      },
+      "holes": 7,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LD",
+        "1LF",
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 92,
+      "reduced_index": 89
+    },
+    {
+      "canonical_index": 90,
+      "raw_residual_index": 129,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RF"
+        }
+      ],
+      "depth": 4,
+      "main_path_prefix_length": 3,
+      "divergence": {
+        "slot": "D1",
+        "move": "1RF"
+      },
+      "holes": 7,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LD",
+        "1RF",
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 93,
+      "reduced_index": 90
+    },
+    {
+      "canonical_index": 91,
+      "raw_residual_index": 131,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "0LE"
+        }
+      ],
+      "depth": 3,
+      "main_path_prefix_length": 2,
+      "divergence": {
+        "slot": "D0",
+        "move": "0LE"
+      },
+      "holes": 8,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "0LE",
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 94,
+      "reduced_index": 91
+    },
+    {
+      "canonical_index": 92,
+      "raw_residual_index": 132,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "0RE"
+        }
+      ],
+      "depth": 3,
+      "main_path_prefix_length": 2,
+      "divergence": {
+        "slot": "D0",
+        "move": "0RE"
+      },
+      "holes": 8,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "0RE",
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 95,
+      "reduced_index": 92
+    },
+    {
+      "canonical_index": 93,
+      "raw_residual_index": 133,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LE"
+        }
+      ],
+      "depth": 3,
+      "main_path_prefix_length": 2,
+      "divergence": {
+        "slot": "D0",
+        "move": "1LE"
+      },
+      "holes": 8,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LE",
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 96,
+      "reduced_index": 93
+    },
+    {
+      "canonical_index": 94,
+      "raw_residual_index": 134,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1RE"
+        }
+      ],
+      "depth": 3,
+      "main_path_prefix_length": 2,
+      "divergence": {
+        "slot": "D0",
+        "move": "1RE"
+      },
+      "holes": 8,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1RE",
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 97,
+      "reduced_index": 94
+    },
+    {
+      "canonical_index": 95,
+      "raw_residual_index": 135,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "0LF"
+        }
+      ],
+      "depth": 3,
+      "main_path_prefix_length": 2,
+      "divergence": {
+        "slot": "D0",
+        "move": "0LF"
+      },
+      "holes": 8,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "0LF",
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 98,
+      "reduced_index": 95
+    },
+    {
+      "canonical_index": 96,
+      "raw_residual_index": 136,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "0RF"
+        }
+      ],
+      "depth": 3,
+      "main_path_prefix_length": 2,
+      "divergence": {
+        "slot": "D0",
+        "move": "0RF"
+      },
+      "holes": 8,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "0RF",
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 99,
+      "reduced_index": 96
+    },
+    {
+      "canonical_index": 97,
+      "raw_residual_index": 137,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LF"
+        }
+      ],
+      "depth": 3,
+      "main_path_prefix_length": 2,
+      "divergence": {
+        "slot": "D0",
+        "move": "1LF"
+      },
+      "holes": 8,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1LF",
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 100,
+      "reduced_index": 97
+    },
+    {
+      "canonical_index": 98,
+      "raw_residual_index": 138,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1RF"
+        }
+      ],
+      "depth": 3,
+      "main_path_prefix_length": 2,
+      "divergence": {
+        "slot": "D0",
+        "move": "1RF"
+      },
+      "holes": 8,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RD",
+        null,
+        "1RF",
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 101,
+      "reduced_index": 98
+    },
+    {
+      "canonical_index": 99,
+      "raw_residual_index": 139,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "1LD"
+        }
+      ],
+      "depth": 2,
+      "main_path_prefix_length": 1,
+      "divergence": {
+        "slot": "C0",
+        "move": "1LD"
+      },
+      "holes": 9,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "1LD",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 102,
+      "reduced_index": 99
+    },
+    {
+      "canonical_index": 100,
+      "raw_residual_index": 140,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "1RD"
+        }
+      ],
+      "depth": 2,
+      "main_path_prefix_length": 1,
+      "divergence": {
+        "slot": "C0",
+        "move": "1RD"
+      },
+      "holes": 9,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "1RD",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 103,
+      "reduced_index": 100
+    },
+    {
+      "canonical_index": 101,
+      "raw_residual_index": 141,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0LE"
+        }
+      ],
+      "depth": 2,
+      "main_path_prefix_length": 1,
+      "divergence": {
+        "slot": "C0",
+        "move": "0LE"
+      },
+      "holes": 9,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0LE",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 104,
+      "reduced_index": 101
+    },
+    {
+      "canonical_index": 102,
+      "raw_residual_index": 142,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RE"
+        }
+      ],
+      "depth": 2,
+      "main_path_prefix_length": 1,
+      "divergence": {
+        "slot": "C0",
+        "move": "0RE"
+      },
+      "holes": 9,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RE",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 105,
+      "reduced_index": 102
+    },
+    {
+      "canonical_index": 103,
+      "raw_residual_index": 143,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "1LE"
+        }
+      ],
+      "depth": 2,
+      "main_path_prefix_length": 1,
+      "divergence": {
+        "slot": "C0",
+        "move": "1LE"
+      },
+      "holes": 9,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "1LE",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 106,
+      "reduced_index": 103
+    },
+    {
+      "canonical_index": 104,
+      "raw_residual_index": 144,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "1RE"
+        }
+      ],
+      "depth": 2,
+      "main_path_prefix_length": 1,
+      "divergence": {
+        "slot": "C0",
+        "move": "1RE"
+      },
+      "holes": 9,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "1RE",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 107,
+      "reduced_index": 104
+    },
+    {
+      "canonical_index": 105,
+      "raw_residual_index": 145,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0LF"
+        }
+      ],
+      "depth": 2,
+      "main_path_prefix_length": 1,
+      "divergence": {
+        "slot": "C0",
+        "move": "0LF"
+      },
+      "holes": 9,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0LF",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 108,
+      "reduced_index": 105
+    },
+    {
+      "canonical_index": 106,
+      "raw_residual_index": 146,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RF"
+        }
+      ],
+      "depth": 2,
+      "main_path_prefix_length": 1,
+      "divergence": {
+        "slot": "C0",
+        "move": "0RF"
+      },
+      "holes": 9,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "0RF",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 109,
+      "reduced_index": 106
+    },
+    {
+      "canonical_index": 107,
+      "raw_residual_index": 147,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "1LF"
+        }
+      ],
+      "depth": 2,
+      "main_path_prefix_length": 1,
+      "divergence": {
+        "slot": "C0",
+        "move": "1LF"
+      },
+      "holes": 9,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "1LF",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 110,
+      "reduced_index": 107
+    },
+    {
+      "canonical_index": 108,
+      "raw_residual_index": 148,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "1RF"
+        }
+      ],
+      "depth": 2,
+      "main_path_prefix_length": 1,
+      "divergence": {
+        "slot": "C0",
+        "move": "1RF"
+      },
+      "holes": 9,
+      "table": [
+        "1RB",
+        null,
+        "1RC",
+        null,
+        "1RF",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 111,
+      "reduced_index": 108
+    },
+    {
+      "canonical_index": 109,
+      "raw_residual_index": 149,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "0LD"
+        }
+      ],
+      "depth": 1,
+      "main_path_prefix_length": 0,
+      "divergence": {
+        "slot": "B0",
+        "move": "0LD"
+      },
+      "holes": 10,
+      "table": [
+        "1RB",
+        null,
+        "0LD",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 112,
+      "reduced_index": 109
+    },
+    {
+      "canonical_index": 110,
+      "raw_residual_index": 150,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "0RD"
+        }
+      ],
+      "depth": 1,
+      "main_path_prefix_length": 0,
+      "divergence": {
+        "slot": "B0",
+        "move": "0RD"
+      },
+      "holes": 10,
+      "table": [
+        "1RB",
+        null,
+        "0RD",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 113,
+      "reduced_index": 110
+    },
+    {
+      "canonical_index": 111,
+      "raw_residual_index": 151,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1LD"
+        }
+      ],
+      "depth": 1,
+      "main_path_prefix_length": 0,
+      "divergence": {
+        "slot": "B0",
+        "move": "1LD"
+      },
+      "holes": 10,
+      "table": [
+        "1RB",
+        null,
+        "1LD",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 114,
+      "reduced_index": 111
+    },
+    {
+      "canonical_index": 112,
+      "raw_residual_index": 152,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RD"
+        }
+      ],
+      "depth": 1,
+      "main_path_prefix_length": 0,
+      "divergence": {
+        "slot": "B0",
+        "move": "1RD"
+      },
+      "holes": 10,
+      "table": [
+        "1RB",
+        null,
+        "1RD",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 115,
+      "reduced_index": 112
+    },
+    {
+      "canonical_index": 113,
+      "raw_residual_index": 153,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "0LE"
+        }
+      ],
+      "depth": 1,
+      "main_path_prefix_length": 0,
+      "divergence": {
+        "slot": "B0",
+        "move": "0LE"
+      },
+      "holes": 10,
+      "table": [
+        "1RB",
+        null,
+        "0LE",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 116,
+      "reduced_index": 113
+    },
+    {
+      "canonical_index": 114,
+      "raw_residual_index": 154,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "0RE"
+        }
+      ],
+      "depth": 1,
+      "main_path_prefix_length": 0,
+      "divergence": {
+        "slot": "B0",
+        "move": "0RE"
+      },
+      "holes": 10,
+      "table": [
+        "1RB",
+        null,
+        "0RE",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 117,
+      "reduced_index": 114
+    },
+    {
+      "canonical_index": 115,
+      "raw_residual_index": 155,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1LE"
+        }
+      ],
+      "depth": 1,
+      "main_path_prefix_length": 0,
+      "divergence": {
+        "slot": "B0",
+        "move": "1LE"
+      },
+      "holes": 10,
+      "table": [
+        "1RB",
+        null,
+        "1LE",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 118,
+      "reduced_index": 115
+    },
+    {
+      "canonical_index": 116,
+      "raw_residual_index": 156,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RE"
+        }
+      ],
+      "depth": 1,
+      "main_path_prefix_length": 0,
+      "divergence": {
+        "slot": "B0",
+        "move": "1RE"
+      },
+      "holes": 10,
+      "table": [
+        "1RB",
+        null,
+        "1RE",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 119,
+      "reduced_index": 116
+    },
+    {
+      "canonical_index": 117,
+      "raw_residual_index": 157,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "0LF"
+        }
+      ],
+      "depth": 1,
+      "main_path_prefix_length": 0,
+      "divergence": {
+        "slot": "B0",
+        "move": "0LF"
+      },
+      "holes": 10,
+      "table": [
+        "1RB",
+        null,
+        "0LF",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 120,
+      "reduced_index": 117
+    },
+    {
+      "canonical_index": 118,
+      "raw_residual_index": 158,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "0RF"
+        }
+      ],
+      "depth": 1,
+      "main_path_prefix_length": 0,
+      "divergence": {
+        "slot": "B0",
+        "move": "0RF"
+      },
+      "holes": 10,
+      "table": [
+        "1RB",
+        null,
+        "0RF",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 121,
+      "reduced_index": 118
+    },
+    {
+      "canonical_index": 119,
+      "raw_residual_index": 159,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1LF"
+        }
+      ],
+      "depth": 1,
+      "main_path_prefix_length": 0,
+      "divergence": {
+        "slot": "B0",
+        "move": "1LF"
+      },
+      "holes": 10,
+      "table": [
+        "1RB",
+        null,
+        "1LF",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 122,
+      "reduced_index": 119
+    },
+    {
+      "canonical_index": 120,
+      "raw_residual_index": 160,
+      "address": [
+        {
+          "slot": "B0",
+          "move": "1RF"
+        }
+      ],
+      "depth": 1,
+      "main_path_prefix_length": 0,
+      "divergence": {
+        "slot": "B0",
+        "move": "1RF"
+      },
+      "holes": 10,
+      "table": [
+        "1RB",
+        null,
+        "1RF",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "source_canonical_index": 123,
+      "reduced_index": 120
+    }
+  ],
+  "slot_order": [
+    "A0",
+    "A1",
+    "B0",
+    "B1",
+    "C0",
+    "C1",
+    "D0",
+    "D1",
+    "E0",
+    "E1",
+    "F0",
+    "F1"
+  ],
+  "transition_encoding": "Each assigned ordinary transition is a three-character string: write bit (0/1), direction (L/R), target state (A-F); null denotes an unassigned slot. The roster contains no assigned-halt slot."
+}
