@@ -2,12 +2,18 @@ name: Agent 6 champion-residual frontier
 
 on:
   workflow_dispatch:
+    inputs:
+      f0_siblings_only:
+        description: Audit isolated F0 sibling certificates
+        type: boolean
+        default: false
 
 permissions:
   contents: read
 
 jobs:
   verify:
+    if: ${{ !inputs.f0_siblings_only }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -94,4 +100,32 @@ jobs:
               if not used <= allowed:
                   raise SystemExit(f"nonstandard axioms: {name}: {used-allowed}")
               print(f"{name}: {sorted(used)}")
+          PY
+
+  f0-siblings:
+    if: ${{ inputs.f0_siblings_only }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Unpack coverage source
+        run: python im-results/agent13-coverage/unpack.py
+      - name: Audit complete F0 sibling covers
+        run: |
+          set -euo pipefail
+          python tools/lean_compile_closure.py im-results/agent6-champion-residual/F0SiblingCover.lean --workdir /tmp/a6-f0 --jobs 4 | tee /tmp/a6-f0.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a6-f0.log; then exit 1; fi
+          python - <<'PY'
+          import re
+          log = open('/tmp/a6-f0.log').read()
+          for name in ('cover_oneLA','cover_oneLE','cover_zeroLB','cover_oneLC'):
+              m = re.search(r"'[^']*\."+name+r"' depends on axioms: \[([^\]]*)\]",log)
+              if not m: raise SystemExit('missing axiom audit: '+name)
+              used = {x.strip() for x in m.group(1).split(',') if x.strip()}
+              assert used <= {'propext','Classical.choice','Quot.sound'}, (name,used)
           PY
