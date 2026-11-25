@@ -2,6 +2,7 @@ import DepthEightSiblingData1
 import DepthEightSiblingData2
 import DepthEightSiblingData3
 import DepthEightSiblingData4
+import DepthEightFAR
 import C1Growth
 
 set_option maxRecDepth 24000
@@ -9,14 +10,41 @@ set_option maxHeartbeats 0
 
 namespace BB6.Agent50RecursiveResidual
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent50TNFPilot BB6.Agent50RootFrontier
+open BB6.Agent7FAR.DepthEight
 
 def siblingData : List CheckedTree :=
   siblingData1 ++ siblingData2 ++ siblingData3 ++ siblingData4
 
+/-- Four exact one-hole residuals already have independently Lean-checked
+    infinite-tape FAR proofs. They are consumed only by exact packed-table
+    equality; the candidate generator and its search metadata are not trusted. -/
+def farLeaves : List PartialMachine := [p85_0, p114_0, p116_0, p128_0]
+
+theorem farLeaves_never (p : PartialMachine) (m : Machine)
+    (hp : p ∈ farLeaves) (hm : compatible p m) : NeverHalts m := by
+  simp only [farLeaves, List.mem_cons, List.mem_singleton] at hp
+  rcases hp with h | h | h | h
+  · exact p85_0_neverHalts m (by simpa [h] using hm)
+  · exact p114_0_neverHalts m (by simpa [h] using hm)
+  · exact p116_0_neverHalts m (by simpa [h] using hm)
+  · exact p128_0_neverHalts m (by simpa [h] using hm)
+
+def farCovered (t : PackedTable) : Bool :=
+  farLeaves.any (fun p => decide (packTable p = t))
+
+theorem farCovered_never (t : PackedTable) (m : Machine)
+    (h : farCovered t = true) (hm : compatible (unpackTable t) m) :
+    NeverHalts m := by
+  obtain ⟨p,hp,he⟩ := List.any_eq_true.mp h
+  have ht : packTable p = t := of_decide_eq_true he
+  exact farLeaves_never p m hp
+    (by simpa only [← ht, unpack_packTable] using hm)
+
 def replaceResidual (t : PackedTable) : List PackedTable :=
   match siblingData.find? (fun e => decide (e.table = t)) with
   | none => [t]
-  | some e => e.tree.packedResiduals (unpackTable t)
+  | some e =>
+      (e.tree.packedResiduals (unpackTable t)).filter (fun q => !farCovered q)
 
 /-- Exact equality binds each untrusted generated tree to the live frontier.
     A missing matching certificate retains the original cylinder. -/
@@ -32,7 +60,17 @@ theorem replaceResidual_sound (t : PackedTable) (m : Machine)
     have htable : e.table = t := of_decide_eq_true hp
     have hcheck : e.tree.check 400 (unpackTable t) = true := by
       simpa only [htable] using e.checked
-    simpa only [replaceResidual,he] using e.tree.packed_sound 400 (unpackTable t) hcheck m hm
+    rcases e.tree.packed_sound 400 (unpackTable t) hcheck m hm with hb | ⟨q,hq,hqc⟩
+    · exact Or.inl hb
+    · cases hf : farCovered q with
+      | true =>
+          exact Or.inl (weighted_never 400 m (farCovered_never q m hf hqc))
+      | false =>
+          have hq' : q ∈ replaceResidual t := by
+            simpa [replaceResidual, he] using
+              (List.mem_filter.mpr ⟨hq, by simp [hf]⟩ : q ∈
+                (e.tree.packedResiduals (unpackTable t)).filter (fun q => !farCovered q))
+          exact Or.inr ⟨q,hq',hqc⟩
 
 def refinedRootRoster : List PackedTable :=
   reducedRootRoster.flatMap fun e => replaceResidual e.2
@@ -54,17 +92,28 @@ def holeCount (t : PackedTable) : Nat := t.countP (·.isNone)
 def rawMass (xs : List PackedTable) : Nat :=
   (xs.map (fun t => 25 ^ holeCount t)).sum
 
-def siblingOpenRoster : List PackedTable :=
+def siblingOpenRawRoster : List PackedTable :=
   siblingData.flatMap fun e => e.tree.packedResiduals (unpackTable e.table)
 
-theorem siblingOpenRoster_count : siblingOpenRoster.length = 107 := by decide
-theorem siblingOpenRoster_one_hole : siblingOpenRoster.countP (fun t => holeCount t == 1) = 101 := by decide
-theorem siblingOpenRoster_two_hole : siblingOpenRoster.countP (fun t => holeCount t == 2) = 6 := by decide
-theorem siblingOpenRoster_mass : rawMass siblingOpenRoster = 6275 := by decide
-theorem refinedRootRoster_count : refinedRootRoster.length = 231 := by decide
+/-- Every imported FAR table is an actual open leaf of the checked depth-eight
+    sibling trees, not merely a table found in an external candidate roster. -/
+theorem farLeaves_in_siblingOpenRawRoster :
+    ∀ p ∈ farLeaves, packTable p ∈ siblingOpenRawRoster := by decide
 
+def siblingOpenRoster : List PackedTable :=
+  siblingOpenRawRoster.filter (fun t => !farCovered t)
+
+theorem siblingOpenRoster_count : siblingOpenRoster.length = 103 := by decide
+theorem siblingOpenRoster_one_hole : siblingOpenRoster.countP (fun t => holeCount t == 1) = 97 := by decide
+theorem siblingOpenRoster_two_hole : siblingOpenRoster.countP (fun t => holeCount t == 2) = 6 := by decide
+theorem siblingOpenRoster_mass : rawMass siblingOpenRoster = 6175 := by decide
+theorem refinedRootRoster_count : refinedRootRoster.length = 227 := by decide
+
+#print axioms farLeaves_never
+#print axioms farCovered_never
 #print axioms replaceResidual_sound
 #print axioms refinedRootRoster_sound
+#print axioms farLeaves_in_siblingOpenRawRoster
 #print axioms siblingOpenRoster_count
 #print axioms siblingOpenRoster_mass
 #print axioms refinedRootRoster_count
@@ -112,9 +161,9 @@ theorem finalRootRoster_sound :
     | true => exact Or.inl (weighted_never 400 m (growthCovered_never q m hg hc))
     | false => exact Or.inr ⟨q,List.mem_filter.mpr ⟨hq,by simp [hg]⟩,hc⟩
 
-theorem siblingFinalRoster_count : siblingFinalRoster.length = 101 := by decide
-theorem siblingFinalRoster_mass : rawMass siblingFinalRoster = 2525 := by decide
-theorem finalRootRoster_count : finalRootRoster.length = 225 := by decide
+theorem siblingFinalRoster_count : siblingFinalRoster.length = 97 := by decide
+theorem siblingFinalRoster_mass : rawMass siblingFinalRoster = 2425 := by decide
+theorem finalRootRoster_count : finalRootRoster.length = 221 := by decide
 
 #print axioms growthCovered_never
 #print axioms finalRootRoster_sound
