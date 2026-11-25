@@ -386,3 +386,5 @@ Normal RNG 2. Immutable lease 2026-11-25T23:44:42.124Z, run agent14-gpt62-2026-1
 
 ## Checkpoint — D0=0LF candidate (2026-11-25)
 Complete partition with 457 splits and 10,512 leaves; candidate weighted bound 352. 643 initial open leaves resolved (570 ordinary FAR, 71 block-FAR, two late translated cycles). Source archived in im-results/agent14-raw139-d0-zeroLF; local kernel compilation in progress, no accepted parent claim yet. Reproduction uses existing Agent48 workflow with kind=d0 sibling=ZeroLF. Local first-hole D0=1LB search is separate and incomplete.
+
+F1 oneRF source audit 45723873034 passed, artifact 15072628795. F1 oneLD source audit 45723867847 failed before Lean on stale Carry SHA. Actual remote blob 4da39b806777df295f7575abc70816c20bfddfae independently copied byte-identically and Lean-checked: carry, growth and never depend only on propext and Quot.sound. Updated checksum for exact committed bytes and will rerun the audit once.
