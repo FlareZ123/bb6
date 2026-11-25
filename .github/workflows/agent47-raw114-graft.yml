@@ -44,12 +44,12 @@ jobs:
         run: |
           set -euo pipefail
           cp im-results/agent47-rooted-tnf/CanonicalRaw114Accepted.lean /tmp/a47-canonical/
+          cp im-results/agent47-rooted-tnf/Canonical77ExactComposition.lean /tmp/a47-canonical/
           cp -n /tmp/a47-raw114-certified/*.olean /tmp/a47-canonical/
           cd /tmp/a47-canonical
           export LEAN_PATH="$PWD"
           lean -o CanonicalRaw114Accepted.olean CanonicalRaw114Accepted.lean | tee /tmp/a47-graft.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a47-graft.log; then exit 1; fi
-          cp im-results/agent47-rooted-tnf/Canonical77ExactComposition.lean .
           lean -o Canonical77ExactComposition.olean Canonical77ExactComposition.lean | tee /tmp/a47-exact77.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a47-exact77.log; then exit 1; fi
           python3 - /tmp/a47-exact77.log <<'PY'
