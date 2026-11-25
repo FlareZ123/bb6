@@ -29,8 +29,8 @@ This work is a separate first-one residual-roster line. It should not be conflat
 
 Three component groups now have successful Lean source-closure audits:
 
-- `FiveHoleRoster`: raw66/70/80, weighted bound 395 (liftable to 7014); source audit run [455137](https://github.com/FlareZ123/bb6/actions/runs/455137).
-- `AllTwelveRoster`: raw86/87/88/91/92/93/97/98/100/101/102/104, weighted bound 7014; source audit run [454903](https://github.com/FlareZ123/bb6/actions/runs/454903).
+- `FiveHoleRoster`: raw66/70/80, weighted bound 395 (liftable to 7014); source audit run [455137](https://github.com/FlareZ123/bb6/actions/runs/45513767248).
+- `AllTwelveRoster`: raw86/87/88/91/92/93/97/98/100/101/102/104, weighted bound 7014; source audit run [454903](https://github.com/FlareZ123/bb6/actions/runs/45490350737).
 - `NewFiveRoster`: raw68/72/82, weighted bound 7014; source audit run [45515691855](https://github.com/FlareZ123/bb6/actions/runs/45515691855).
 
 The three groups are proposed as a disjoint 18-cylinder cut from the 124-entry `remainingRootRoster`. The composition module `Combined106Roster.lean` asks Lean to prove pairwise disjointness, the 18-entry union, and the 106-entry remainder, and exposes conditional cover/TNF/ExactBB6 interfaces. Its audit is [45518426903](https://github.com/FlareZ123/bb6/actions/runs/45518426903); do not treat the 106 count as source-accepted until that run succeeds. The two-group 109-entry intermediate is [45515820680](https://github.com/FlareZ123/bb6/actions/runs/45515820680), also pending at last observation.
