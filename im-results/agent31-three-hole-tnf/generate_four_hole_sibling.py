@@ -24,6 +24,13 @@ def synthesize_pump(p):
     """Try a universally quantified block-growth proof when the DFA bank has no witness."""
     ans = sweep_candidate(p, concrete_events(p))
     if ans is None:
+        # Some residual counters need a longer event prefix before the
+        # repeated-block pattern becomes visible. Keep the ordinary fast path
+        # unchanged and deepen only this exceptional fallback.
+        ans = sweep_candidate(
+            p, concrete_events(p, limit=100000), max_events=200, lookahead=40
+        )
+    if ans is None:
         return None
     idx = max(PUMPS.values(), default=-1) + 1
     code, info = generate_sweep(idx, p, ans)
