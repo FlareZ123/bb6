@@ -31,14 +31,20 @@ template<int L,int W,int MAXPER> Res classify(Table const&p){
  return {0,0,0,0,0,0,0};
 }
 struct Node{Res a;int child[24]{};string p;};vector<Node> nodes;
-bool extended=false, zeroRE=false, zeroRC=false, zeroRD=false, zeroLC=false, zeroLB=false, oneRD=false, zeroRA=false, oneLA=false, oneRA=false, zeroRB=false, oneLC=false;
+bool extended=false, zeroRE=false, zeroRC=false, zeroRD=false, zeroLC=false, zeroLB=false, oneRD=false, zeroRA=false, oneLA=false, oneRA=false, zeroRB=false, oneLC=false, oneRE=false;
 int complete(Table p,int cut,int holes){
- if(nodes.size()>=15000)return -1;
+ if(nodes.size()>=(oneRE?100000:15000))return -1;
  int i=nodes.size();nodes.push_back({});int m=mask(p);if(m){nodes[i].a={3,m,0,0,0,0,0};return i;}
  auto a=classify<120,256,120>(p);
  if(extended && !a.typ)a=classify<1000,2048,256>(p);
  if(!a.typ){
     auto raw=show(p);
+    if(oneRE){
+      static const array<string,35> ps={"---0LF0RE1LF1LD","0LF0LF1RD---1LD","1RD0RF1RB---1LC","---1LF0RE1LF1LD","0RD1RF0LC---1LE","1RD1RF0LC---1LE","0LA1RF0LC---1LE","1RA1RF0LC---1LE","1LB1RF---0LD1RE","0RF1RF---0LC0RD","---0RE1LF0LF0LD","0LF0RE1LF0LD---","0LF0RE1LC0LD---","0LF1LE1RD---1LD","0LD1RE1RF1LD---","0LD1RE1RF1LB---","0LB1RE1RF1LB---","1LF0LD0RE1LD---","1LF1RD---0LD0LF","0RD0LC1RF---0RE","0RD0LC1RF---1RE","1RD0LC0RF---1LA","1RD0LC1RF---0RE","1RD0LC1RF---1RE","1RD0LC1RF---0LD","1LF0RA0RE1LD---","0RD0RA1RF---1RB","1RD0RA0RF---0LE","1RD0RA0RF---1RB","1RD0RA1RF---1RB","1RD0RA1RF---0LA","1LF1LA0RE1LD---","0RD1LA1RF---1RB","1RD1LA0RF---1RB","1RD1LA1RF---1RB"};
+      for(int v=0;v<35;v++)if(raw=="1RB1LC1RC0LD1LA0RB1RE"+ps[v]){
+        nodes[i].a={23,1007000+v,0,0,0,0,0};return i;
+      }
+    }
     if(zeroRB){
       static const array<string,18> ps={"0RE0RF1RD---0RE","0RE0RF1RD---1RE","0RE1RF1RD---0RE","0RE1RF1RD---1LE","0RE1RF1RD---1RE","0RE1RD1RF---1RB","1LE1RF0RA---0RE","1RE0RF1RD---0RE","1RE0RF1RD---1RE","1RE0RF1RF---1RD","1RE1RF1RD---0RE","1RE1RF1RD---1LE","1RE1RF1RD---1RE","1RE1LE1RF---1RD","1RE1RD0RF---0RA","1RE1RD0RF---1LA","1RE1RD1RF---0LD","1RE1RD1RF---1RD"};
       for(int v=0;v<18;v++)if(raw=="1RB1LC1RC0LD1LA0RB0RB"+ps[v]){
@@ -139,7 +145,7 @@ int complete(Table p,int cut,int holes){
     if(raw=="1RB1LC1RC0LD1LA0RB1LB1LE1RF0RC---1RE"){nodes[i].a={6,0,0,0,0,0,0};return i;}
     if(raw=="1RB1LC1RC0LD1LA0RB1LB1LE0RE1RF0RC---"||raw=="1RB1LC1RC0LD1LA0RB1LB1LE0RF---0RC1RF"||raw=="1RB1LC1RC0LD1LA0RB1LB1LE1LF---1RF0RC"){nodes[i].a={7,0,0,0,0,0,0};nodes[i].p=raw;return i;}
     bool shared=raw.substr(0,24)=="1RB1LC1RC0LD1LA0RB1LB1LE" && (raw.substr(24,3)=="0RE"||raw.substr(24,3)=="0RF"||raw.substr(24,3)=="1LF");
-    for(int k=1;k<=((zeroRE||zeroRC||zeroRD||zeroLC||zeroLB||oneRD||zeroRA||oneLA||oneRA||zeroRB||oneLC)?7:extended?6:shared?7:(raw=="1RB1LC1RC0LD1LA0RB1LB1LE1RF1RC---1RE"?5:4));k++){NGram ng(raw,k);if(ng.check()){nodes[i].a={5,k,0,0,0,0,0};nodes[i].p=raw;return i;}}
+    for(int k=1;k<=((zeroRE||zeroRC||zeroRD||zeroLC||zeroLB||oneRD||zeroRA||oneLA||oneRA||zeroRB||oneLC||oneRE)?7:extended?6:shared?7:(raw=="1RB1LC1RC0LD1LA0RB1LB1LE1RF1RC---1RE"?5:4));k++){NGram ng(raw,k);if(ng.check()){nodes[i].a={5,k,0,0,0,0,0};nodes[i].p=raw;return i;}}
     if(!extended)a=classify<1000,2048,256>(p);if(!a.typ)return -1;
  }
  nodes[i].a=a;if(a.typ==2||holes==1)return i;
@@ -150,6 +156,7 @@ int complete(Table p,int cut,int holes){
  return i;
 }
 void emit(int i){auto n=nodes[i];auto a=n.a;
+ if(a.typ==23){cout<<"[\"oneREHard\","<<a.n<<']';return;}
  if(a.typ==21){cout<<"[\"zeroRBHard\","<<a.n<<']';return;}
  if(a.typ==22){cout<<"[\"oneLCHard\","<<a.n<<']';return;}
  if(a.typ==19){cout<<"[\"oneLAHard\","<<a.n<<']';return;}
@@ -174,4 +181,4 @@ void emit(int i){auto n=nodes[i];auto a=n.a;
  cout<<"[\"split\","<<a.n<<','<<a.s<<",[";
  for(int j=0;j<24;j++){if(j)cout<<',';if(n.child[j])emit(n.child[j]-1);else cout<<"null";}cout<<"]]";
 }
-int main(){string s;int cut,holes;while(cin>>s>>cut>>holes){zeroRE=s=="1RB1LC1RC0LD1LA0RB1LB0RE------------";zeroRC=s=="1RB1LC1RC0LD1LA0RB0RC---------------";zeroRD=s=="1RB1LC1RC0LD1LA0RB0RD---------------";zeroLC=s=="1RB1LC1RC0LD1LA0RB0LC---------------";zeroLB=s=="1RB1LC1RC0LD1LA0RB0LB---------------";oneRD=s=="1RB1LC1RC0LD1LA0RB1RD---------------";zeroRA=s=="1RB1LC1RC0LD1LA0RB0RA---------------";oneLA=s=="1RB1LC1RC0LD1LA0RB1LA---------------";oneRA=s=="1RB1LC1RC0LD1LA0RB1RA---------------";zeroRB=s=="1RB1LC1RC0LD1LA0RB0RB---------------";oneLC=s=="1RB1LC1RC0LD1LA0RB1LC---------------";extended=zeroRB||oneLC||oneLA||oneRA||zeroRA||oneRD||zeroRE||zeroRC||zeroRD||zeroLC||zeroLB||s=="1RB1LC1RC0LD1LA0RB1LB0LE------------"||s=="1RB1LC1RC0LD1LA0RB1LB1RE------------";nodes.clear();int i=complete(parse(s),cut,holes);if(i<0){cerr<<"unresolved "<<s<<'\n';return 1;}cout<<s<<' ';emit(i);cout<<'\n';}}
+int main(){string s;int cut,holes;while(cin>>s>>cut>>holes){zeroRE=s=="1RB1LC1RC0LD1LA0RB1LB0RE------------";zeroRC=s=="1RB1LC1RC0LD1LA0RB0RC---------------";zeroRD=s=="1RB1LC1RC0LD1LA0RB0RD---------------";zeroLC=s=="1RB1LC1RC0LD1LA0RB0LC---------------";zeroLB=s=="1RB1LC1RC0LD1LA0RB0LB---------------";oneRD=s=="1RB1LC1RC0LD1LA0RB1RD---------------";zeroRA=s=="1RB1LC1RC0LD1LA0RB0RA---------------";oneLA=s=="1RB1LC1RC0LD1LA0RB1LA---------------";oneRA=s=="1RB1LC1RC0LD1LA0RB1RA---------------";zeroRB=s=="1RB1LC1RC0LD1LA0RB0RB---------------";oneLC=s=="1RB1LC1RC0LD1LA0RB1LC---------------";oneRE=s=="1RB1LC1RC0LD1LA0RB1RE---------------";extended=oneRE||zeroRB||oneLC||oneLA||oneRA||zeroRA||oneRD||zeroRE||zeroRC||zeroRD||zeroLC||zeroLB||s=="1RB1LC1RC0LD1LA0RB1LB0LE------------"||s=="1RB1LC1RC0LD1LA0RB1LB1RE------------";nodes.clear();int i=complete(parse(s),cut,holes);if(i<0){cerr<<"unresolved "<<s<<'\n';return 1;}cout<<s<<' ';emit(i);cout<<'\n';}}
