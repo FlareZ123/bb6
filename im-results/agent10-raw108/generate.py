@@ -77,6 +77,12 @@ def main(a):
             mod,nspace,table=spec["manual"][i]
             assert desc["table"]==table
             phase_chain.emit(desc,mod,nspace)
+    if spec.get("block"):
+        import block_witness
+        for i,params in spec["block"].items():
+            mod,nspace,table=spec["manual"][i]
+            assert opens[int(i)]==table
+            block_witness.emit(mod,nspace,table,params)
     for i,(mod,nspace,table) in spec.get("manual",{}).items():
         i=int(i);assert opens[i]==table and i not in witnesses
         witnesses[i]=("proven",nspace)
