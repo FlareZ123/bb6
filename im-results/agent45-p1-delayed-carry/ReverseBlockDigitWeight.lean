@@ -1,59 +1,34 @@
 import ReverseBlock
+import WeightedDigitGap
 
 namespace BB6.Agent45ReverseBlock
 
-/-- Weighted binary digit sum: for B<2^k this is
-    Σ_{i<k} i·2^i·bit_i(B), matching the little-endian C++ digitWeight. -/
-def digitWeight : Nat → Nat → Nat
-  | 0, _ => 0
-  | k+1, B => 2*(digitWeight k (B/2) + B/2)
+open BB6.Agent45WeightedDigitGap (digitWeight corr_le_mul)
 
-/-- The correction term and the weighted digit sum partition k·B. -/
-theorem corr_add_digitWeight (k B : Nat) (hB : B<2^k) :
-    corr k B + digitWeight k B = k*B := by
-  induction k generalizing B with
-  | zero =>
-    have hB0 : B=0 := by omega
-    subst B
-    simp [corr,digitWeight]
-  | succ k ih =>
-    have hBdiv : B/2<2^k := by
-      have hp : B<2^k*2 := by
-        simpa [pow_succ,Nat.mul_comm] using hB
-      omega
-    have hmod : B=2*(B/2)+B%2 := by omega
-    have hrec := ih (B/2) hBdiv
-    simp only [corr,digitWeight]
-    calc
-      2*corr k (B/2) + (k+1)*(B%2) +
-          2*(digitWeight k (B/2) + B/2)
-        = 2*(corr k (B/2) + digitWeight k (B/2)) +
-            2*(B/2) + (k+1)*(B%2) := by omega
-      _ = 2*(k*(B/2)) + 2*(B/2) + (k+1)*(B%2) := by rw [hrec]
-      _ = (k+1)*(2*(B/2)) + (k+1)*(B%2) := by
-        have hq : (k+1)*(B/2)=k*(B/2)+B/2 := by
-          rw [Nat.add_mul]
-          simp
-        calc
-          2*(k*(B/2)) + 2*(B/2) + (k+1)*(B%2)
-            = 2*(k*(B/2)+B/2) + (k+1)*(B%2) := by rw [Nat.mul_add]
-          _ = 2*((k+1)*(B/2)) + (k+1)*(B%2) := by rw [← hq]
-          _ = (k+1)*(2*(B/2)) + (k+1)*(B%2) := by
-            simp [Nat.mul_comm,Nat.mul_left_comm,Nat.mul_assoc]
-      _ = (k+1)*(2*(B/2)+B%2) := by rw [Nat.mul_add]
-      _ = (k+1)*B := by rw [hmod]
+/-- Under the wider fit bound, every legal block parent lies in the
+    two-element quotient window floor(X/(q+k)), floor(X/(q+k))+1. -/
+theorem candidate_window (q k X B r : Nat)
+    (hfit : 2^(k+1)≤q+k) (hr : r<q)
+    (he : X+corr k B=(q+k)*B+r) :
+    X/(q+k)≤B ∧ B≤X/(q+k)+1 := by
+  apply word_near (q+k) k X B r
+  · omega
+  · exact hfit
+  · omega
+  · exact he
 
-/-- The block remainder X+corr−(q+k)B is exactly the
-    C++-style remainder X−qB−digitWeight(k,B). -/
+/-- The reverse-block remainder is exactly the little-endian
+    C++ remainder X-q*B-digitWeight(k,B). -/
 theorem candidate_remainder_eq (q k X B : Nat)
     (hB : B<2^k)
     (hvalid : (q+k)*B ≤ X+corr k B) :
     X+corr k B-(q+k)*B = X-q*B-digitWeight k B := by
-  have hsum := corr_add_digitWeight k B hB
+  have hc := corr_le_mul k B hB
   have hprod : (q+k)*B=q*B+k*B := Nat.add_mul q k B
+  unfold digitWeight
   omega
 
-#print axioms corr_add_digitWeight
+#print axioms candidate_window
 #print axioms candidate_remainder_eq
 
 end BB6.Agent45ReverseBlock
