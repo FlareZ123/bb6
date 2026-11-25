@@ -1,4 +1,6 @@
-From BusyCoq Require Import Enumerate62 Agent42HeldCheckpointMembership Agent5ChunkCoverage.
+From BusyCoq Require Import Enumerate62 CTL62 Individual62 Agent8AdaptiveSource
+  Agent8QueueCheckpoint Agent8WeightedSource SourceResidualRoster Agent5RecoveredHeld
+  Agent42HeldCheckpointMembership Agent5ChunkCoverage.
 From Coq Require Import List Bool Arith NArith Lia.
 Import ListNotations.
 Import TNF_Node.
