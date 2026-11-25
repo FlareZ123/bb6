@@ -171,7 +171,8 @@ Proof.
     + exact (recovered_held_2800_safe bound).
     + constructor.
   - unfold source_roster_covers.
-    change (source_refinesb (tm x) recovered_held_2800 = true).
+    change (source_refinesb (tm x) recovered_held_2800 || false = true).
+    rewrite orb_false_r.
     exact (proj2 (source_refinesb_spec (tm x) recovered_held_2800) h).
 Qed.
 
