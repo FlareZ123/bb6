@@ -46,7 +46,7 @@ python im-results/agent17-raw10-box-far-search/search.py --generate --compile --
 
 The search calls the existing `im-results/agent13-block-far/generate.py`
 without modifying it. Successful candidates are generated in the output
-directory (default `/tmp/agent17-raw10-box-far`). With `--compile`, each
+directory (default `.tmp/agent17-raw10-box-far` (inside the checkout, so the Lean closure scanner can see generated modules)). With `--compile`, each
 candidate is checked by `tools/lean_compile_closure.py` in an isolated
 work directory. Only a successfully compiled certificate may be consumed by
 a future `Raw10BoxBridge` refinement.
