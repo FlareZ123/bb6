@@ -96,6 +96,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 jobs:
   source-proof:
