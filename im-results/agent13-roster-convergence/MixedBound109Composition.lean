@@ -11,17 +11,15 @@ open BB6ChampionArithmetic
 open BB6.Agent47Combined109
 
 /-- The exact published champion score. -/
-def championScore : Nat := proposedTM63Moves + 7
+abbrev championScore : Nat := proposedTM63Moves + 7
 
 /-- The champion has no incoming zero-writing delay at its A/0 root. -/
 theorem champion_score_gt_7014 : 7014 < championScore := by
   have hroot : 27959 ≤ threeSectionMoves 27959 3 7 6 63 + 7 :=
     BB6Coverage.Agent48DirectRoot.rootSteps_le_score 27959 3 7 6 63
-  have hscore : 7014 < threeSectionMoves 27959 3 7 6 63 + 7 :=
-    Nat.lt_of_lt_of_le (by decide) hroot
   change 7014 < proposedTM63Moves + 7
-  exact Eq.mp
-    (congrArg (fun n : Nat => 7014 < n + 7) threeSectionMoves_root) hscore
+  rw [← threeSectionMoves_root]
+  omega
 
 /-- The champion is compatible with the authentic first-one root. -/
 theorem champion_compatible_root :
