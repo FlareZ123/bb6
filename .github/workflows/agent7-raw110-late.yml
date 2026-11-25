@@ -8,6 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
+      max-parallel: 4
       matrix:
         variant: [Fast, Slow]
         part: ['00','01','02','03','04','05','06','07']
@@ -24,8 +25,9 @@ jobs:
           set -euxo pipefail
           elan run leanprover/lean4:v4.36.0-rc2 lean --version
           elan override set leanprover/lean4:v4.36.0-rc2
-          python im-results/agent7-raw110/gen_late_trace.py /tmp/raw110-generated
-          python tools/lean_compile_closure.py --workdir /tmp/raw110-check --jobs 2 /tmp/raw110-generated/Raw110Word${{ matrix.variant }}${{ matrix.part }}.lean
+          python im-results/agent7-raw110/gen_late_trace.py /tmp/raw110-generated --compressed
+          python tools/lean_compile_closure.py --workdir /tmp/raw110-check --jobs 2 /tmp/raw110-generated/Raw110Word${{ matrix.variant }}${{ matrix.part }}.lean | tee /tmp/trace-shard.log
+          if grep -qE 'sorryAx|native_decide' /tmp/trace-shard.log; then exit 1; fi
       - uses: actions/upload-artifact@v4
         with:
           name: raw110-word-${{ matrix.variant }}-${{ matrix.part }}
@@ -70,7 +72,7 @@ jobs:
         run: |
           set -euxo pipefail
           elan override set leanprover/lean4:v4.36.0-rc2
-          python im-results/agent7-raw110/gen_late_trace.py /tmp/raw110-generated
+          python im-results/agent7-raw110/gen_late_trace.py /tmp/raw110-generated --compressed
           cd /tmp/raw110-generated
           export LEAN_PATH=/tmp/raw110-assembled
           lean -o /tmp/raw110-assembled/Raw110WordTrace.olean Raw110WordTrace.lean
