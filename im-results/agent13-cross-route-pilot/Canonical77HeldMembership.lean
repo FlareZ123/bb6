@@ -28,7 +28,7 @@ theorem parent_disjoint_from_raw114_parent :
 /-- The post-raw114 77 roster is exactly the raw114 graft of the accepted
     78 roster with an empty replacement, as in CanonicalRaw114Accepted.lean.
     This local definition avoids importing the large raw114 proof artifact. -/
-def canonical77Roster : List (List BB6Coverage.Move × BB6Coverage.PartialMachine) :=
+noncomputable def canonical77Roster : List (List BB6Coverage.Move × BB6Coverage.PartialMachine) :=
   BB6.Agent47CanonicalRefinement.graftRoster
     BB6.Agent47CanonicalTwoParent.p114 [] BB6.Agent47Canonical78.roster
 
@@ -37,18 +37,7 @@ def canonical77Roster : List (List BB6Coverage.Move × BB6Coverage.PartialMachin
 theorem parent_in_canonical77 :
     ∃ e ∈ canonical77Roster,
       BB6.Agent31FourHoleRoster.sameTable e.2 firstOneB0_1LC = true := by
-  obtain ⟨e, he, hsame⟩ := parent_in_canonical78
-  have hnot : BB6.Agent31FourHoleRoster.sameTable e.2
-      BB6.Agent47CanonicalTwoParent.p114 = false := by
-    intro h
-    have heq : e.2 = firstOneB0_1LC :=
-      BB6.Agent31FourHoleRoster.sameTable_sound hsame
-    rw [heq] at h
-    rw [parent_disjoint_from_raw114_parent] at h
-    cases h
-  refine ⟨e, List.mem_flatMap.mpr ⟨e, he, ?_⟩, hsame⟩
-  simp [canonical77Roster, BB6.Agent47CanonicalRefinement.graftRoster,
-    BB6.Agent47CanonicalRefinement.graftEntry, hnot]
+  decide
 
 #print axioms parent_in_canonical78
 #print axioms parent_disjoint_from_raw114_parent
