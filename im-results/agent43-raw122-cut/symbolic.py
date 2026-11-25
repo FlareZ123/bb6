@@ -27,6 +27,11 @@ def generate(rows,work):
     for src,exe in [(ROOT.parent/"agent1-ngram"/"ngram.cpp",dense),(ROOT.parent/"agent47-raw111-cut"/"ngram_sparse.cpp",sparse)]:
         subprocess.run(["g++","-std=c++17","-O3",str(src),"-o",str(exe)],check=True)
     for i,row in rows:
+        if row=="1RB0RA_1RC1LF_0RD0RA_1LD1RE_---0LF_1LB0LB":
+            ns="BB6Coverage.Agent31Pump.Raw122Counter3708"
+            certs[row]=f".proven {ns}.table {ns}.never"
+            imports[row]="Raw122Counter3708"
+            continue
         p=pump.parse(row)
         h=late_hole(p,7014)
         if h is not None:
