@@ -11,7 +11,7 @@ m >= 19, m = 366503159850 + 2^38*r (mod 2^39), is unreachable. This is a suffici
 The inverse tree has 48 nodes, maximum 17 edges, and includes all admissible predecessors (direct, both bounce parities, and exceptional cases). The key correction to the earlier direct-parent-only argument is that the odd/even intermediate state really can have an odd-bounce predecessor. Both branches are closed by recursively applying the full grammar, with exact 2-adic valuation bounds at each node. The terminal nodes violate the odd-right residue condition. No numerical bound on root-orbit time or bounce depth is assumed.
 
 ## Verification
-The generic Lean theorem and grammar adapter compiled locally in Lean 4.36.0-rc2 with only standard axioms. That check used the verbatim arithmetic grammar definition and section iteration definition, rather than the complete original import closure. The source specialization invokes the existing section_preimage_all_iff theorem directly. A targeted original-source workflow has been dispatched; its acceptance remains to be established.
+The full original-source closure passed [CI run 45529922289](https://github.com/FlareZ123/bb6/actions/runs/45529922289), compiling 21 project modules. Both `oddLiftSource` and `highStopSource` report exactly `[propext, Classical.choice, Quot.sound]`. The source specialization invokes `section_preimage_all_iff` directly; the earlier copied-definition local check is superseded by this acceptance.
 
 Reconstruct the checked artifact and source adapter:
 ```sh
