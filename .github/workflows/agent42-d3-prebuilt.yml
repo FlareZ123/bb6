@@ -1,0 +1,88 @@
+name: Agent 42 D3 raw13 frontier (reused certified closure)
+run-name: Agent 42 D3 frontier prebuilt source closure
+on:
+  workflow_dispatch:
+permissions:
+  actions: read
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Download accepted canonical77 artifact
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: 45554648116
+          name: canonical77-certified
+          path: /tmp/a47-canonical
+      - name: Download certified raw13 closure
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: 45639704742
+          name: raw13-closure-certified
+          path: /tmp/a46-raw13
+      - name: Download canonical77 dependency manifest
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: 45639704742
+          name: canonical77-raw13-graft-certified
+          path: /tmp/a46-canonical-meta
+      - name: Verify source compatibility of reused raw13 data
+        run: |
+          set -euo pipefail
+          git show 9660f8b8ec15e351f43ce2a408cc554c9d94ccde:im-results/agent46-raw13-cut/generate.py > /tmp/generate-old.py
+          python - <<'PY'
+          from pathlib import Path
+          old = Path("/tmp/generate-old.py").read_text().splitlines()
+          new = Path("im-results/agent46-raw13-cut/generate.py").read_text().splitlines()
+          assert old[:281] == new[:281], "raw13 data-generation prefix changed; do not reuse old closure"
+          print("raw13 data-generation prefix is byte-identical; only later proof-selection mapping differs")
+          PY
+          test "$(git rev-parse HEAD:im-results/agent47-rooted-tnf/CanonicalRaw114Accepted.lean)" = "d198f4eb8d3c2ca4b7ed5a2c57298cb6364537f4"
+          MANIFEST="$(find /tmp/a46-canonical-meta -name a46-canonical-manifest.json -print -quit)"
+          test -n "$MANIFEST"
+          cp "$MANIFEST" /tmp/a46-canonical-manifest.json
+          test -s /tmp/a46-raw13/Agent46Raw13Data.olean
+          test -s /tmp/a47-canonical/CanonicalRaw114Accepted.olean
+          test -s /tmp/a47-canonical/CanonicalTwoParentGraft.olean
+          test -s /tmp/a47-canonical/Raw114CompleteData.olean
+      - name: Compile current raw13 graft and D3 frontier
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="/tmp/a46-raw13:/tmp/a47-canonical"
+          lean -o /tmp/a46-raw13/Agent46Raw13Ingest77.olean im-results/agent46-raw13-cut/Agent46Raw13Ingest77.lean 2>&1 | tee /tmp/a46-raw13-ingest77.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a46-raw13-ingest77.log; then
+            echo "Forbidden proof placeholder or native_decide in current raw13 graft" >&2
+            exit 1
+          fi
+          export LEAN_PATH="/tmp/a46-raw13:/tmp/a47-canonical:im-results/agent8-coverage-contract:im-results/agent4-coverage-smoke:im-results/agent42-coverage-normal:im-results/agent13-coverage:im-results/agent13-weighted-first-one:im-results/agent6-fresh-glider:im-results/agent7-far:im-results/agent31-three-hole-tnf:im-results/agent50-weighted-tnf-pilot:im-results/agent13-roster-convergence:im-results/agent44-source-roster:im-results/agent47-rooted-tnf:im-results/agent47-r1-sweep:im-results/agent47-r4-counter:im-results/agent48-roster-graft:im-results/agent42-frontier-count:im-results/agent46-raw13-cut:im-results/agent19-hard-root-crosswalk:im-results/agent47-weighted-halt-branch:im-results/agent8-cryptids-tnf-paths:im-results/agent47-raw114-cut"
+          python tools/lean_compile_closure.py --workdir /tmp/a42-d3-frontier --jobs 4 --precompiled-manifest /tmp/a46-canonical-manifest.json --precompiled-dir /tmp/a47-canonical im-results/agent42-d3-raw13-frontier/D3Ingestion.lean | tee /tmp/a42-d3-frontier.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a42-d3-frontier.log; then
+            echo "Forbidden proof placeholder or native_decide in D3 frontier closure" >&2
+            exit 1
+          fi
+      - name: Preserve D3 frontier certificate
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent42-d3-frontier-certified
+          path: |
+            /tmp/a42-d3-frontier
+            /tmp/a42-d3-frontier.log
+            /tmp/a46-raw13-ingest77.log
+          retention-days: 30
