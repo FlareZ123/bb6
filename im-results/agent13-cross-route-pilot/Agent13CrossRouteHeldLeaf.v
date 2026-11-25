@@ -20,12 +20,11 @@ Proof. vm_compute. reflexivity. Qed.
 Theorem recovered_held_2800_child_of_first_one_root :
   is_child_of recovered_held_2800 first_one_root.
 Proof.
-  apply source_refinesb_spec.
   eapply child_trans.
-  - apply source_refinesb_spec.
-    exact recovered_held_2800_refines_B0_1LC.
-  - apply source_refinesb_spec.
-    exact first_one_B0_1LC_refines_root.
+  - exact (proj1 (source_refinesb_spec recovered_held_2800 first_one_B0_1LC)
+      recovered_held_2800_refines_B0_1LC).
+  - exact (proj1 (source_refinesb_spec first_one_B0_1LC first_one_root)
+      first_one_B0_1LC_refines_root).
 Qed.
 
 Theorem recovered_held_2800_safe_for_all_bounds :
