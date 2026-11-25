@@ -139,7 +139,7 @@ theorem positive (j : Nat) (bs : List Bool) : 0 < cost j bs := by
   | cons b bs => cases b <;> simp [cost] <;> omega
 
 theorem never (m : Machine) (hm : compatible table m) : NeverHalts m :=
-  never_of_growth table family 30 (fun k => cost 0 (digits k)) entry
+  never_of_growth table family 50 (fun k => cost 0 (digits k)) entry
     (fun k => positive 0 (digits k)) growth m hm
 #print axioms carryAll
 #print axioms growth
