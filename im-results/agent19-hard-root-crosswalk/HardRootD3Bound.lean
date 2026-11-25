@@ -38,16 +38,25 @@ def D3_schedule : List (Nat × Slot) :=
 theorem D3_path : FirstHolePath d3Leaf 6 :=
   checked_from_root _ D3_schedule (by decide)
 
+def oneHaltCheck (m : Machine) (s : Slot) : Bool :=
+  allSlots.all fun t => decide (m t = none) == decide (t=s)
+
+theorem oneHaltCheck_sound (m : Machine) (s : Slot)
+    (h : oneHaltCheck m s = true) :
+    m s = none ∧ ∀ t, t ≠ s → ∃ mv, m t = some mv := by
+  constructor
+  · have hs := List.all_eq_true.mp h s (allSlots_complete s)
+    simpa using hs
+  · intro t ht
+    have hs := List.all_eq_true.mp h t (allSlots_complete t)
+    cases hm : m t with
+    | none => simp [hm,ht] at hs
+    | some mv => exact ⟨mv,rfl⟩
+
 theorem D3_cover_iff (B : Nat) :
     Cover (WeightedBound B) d3Leaf ↔
       ∀ k, HaltsAfter D3 k → k+1+0 ≤ B := by
-  have hh : D3 (5,true) = none := by decide
-  have ho : ∀ t, t ≠ (5,true) → ∃ mv, D3 t = some mv := by
-    intro t ht
-    have h : D3 t ≠ none := by decide
-    cases hD : D3 t with
-    | none => exact False.elim (h hD)
-    | some mv => exact ⟨mv,hD⟩
+  have ⟨hh,ho⟩ := oneHaltCheck_sound D3 (5,true) (by decide)
   have hD : 0 ∈ delays (zeroNext D3) 0 := by decide
   have hmax : ∀ d ∈ delays (zeroNext D3) 0, d ≤ 0 := by decide
   exact oneHalt_cover_iff_max B D3 (5,true) 0 hh ho hD hmax
