@@ -1,35 +1,26 @@
-# Raw110: complete-parent certificate ingestion
+# Raw110: two late-halting leaves and complete-parent proof
 
-**Status: source-check pending for the assembled parent.** The exact raw110 table is `1RB---_1RC---_0RD---_1LD1RE_---0LC_------`. It has six holes, and its authentic blank run first queries C1 after seven defined moves. The current untrusted certificate bank retains 18 one-hole descendants. No global roster reduction is asserted until the full consuming theorem is accepted.
+**Status (2026-11-25 10:35 UTC): exact parent partition source-accepted; final late-trace composition pending.** The six-hole canonical raw110 table is `1RB---_1RC---_0RD---_1LD1RE_---0LC_------`. Its authentic blank run first queries C1 after seven defined moves. All 24 ordinary C1 children are represented; the early halt child is included in the weighted cutoff 7014. The source-checked partition has exactly two retained one-hole leaves.
 
-## Parent partition and exact target
+## Final two leaves: computational resolution
 
-`Raw110Consumer.lean` uses the established `PartialAudit` checker and `partialSound`. All 24 ordinary C1 choices are mandatory; the checked first-hole query covers the C1 halt. Eight ordinary children have immediate cycle certificates. The other sixteen are generated and independently checkable by `generate_partial.py`; ten have complete candidate audits, six were further refined (child17 has no remaining leaf). The current unresolved indices are:
+| Child/open index | Exact partial table | Defined moves before A1 | Halt score |
+|---|---|---:|---:|
+| 5/161 | `1RB---_1RC0RA_0RD0LF_1LD1RE_0RB0LC_1LC0LF` | 6659486 | 6659487 |
+| 5/790 | `1RB---_1RC0RA_0RD0LF_1LD1RE_0RB0LC_1LC1RD` | 6766858 | 6766859 |
 
-| Child (generator index) | Retained open indices |
-| --- | --- |
-| 0 | 152 |
-| 5 | 161, 243, 244, 515, 790 |
-| 12 | 21 |
-| 13 | 0 |
-| 18 | 42, 43, 45, 46, 47, 51, 52, 55, 57, 58 |
+Each has only A1 unassigned. Its 24 ordinary completions are total and never halt. The halting completion has the displayed score; there is no incoming zero delay because A0=1RB. The primitive simulator and independently derived exact paired sweep recurrence agree on 19203 sweeps and the two step counts. These concrete counts remain computational pending final source replay acceptance.
 
-The five remaining-child rows total 18. `assemble_partial.py` emits `Raw110DeepRoster.lean` with all 24 explicit checked children, a count theorem composed from each child count, and the actual parent cover theorem. The generated `assembledExact` consumes all retained leaves at the exact target B and all 77 other canonical78 representatives at B, with only the checked early 7014 bound lifted to B. Its source audit also requires an exact 12-slot membership witness for raw110 and the exact other-roster length. The proposed obligation count is 95 (77+18); representative count is not completion mass. No unconditional maximality claim follows.
+## Proof architecture and current evidence
 
-## Evidence and remaining work
+- The seven accepted partition artifacts from [45557356900](https://github.com/FlareZ123/bb6/actions/runs/45557356900) contain all sixteen nontrivial ordinary children. The eight remaining children have immediate translated-cycle certificates. The global consumer in that run failed due to runner shutdown while compiling unrelated dependencies; it is not acceptance of the complete parent.
+- [45593652030](https://github.com/FlareZ123/bb6/actions/runs/45593652030) **passed** the exact parent cut, including `Raw110ParentResidualMatch` matching the two leaves to the exact partial tables. Artifact `raw110-parent-cut`.
+- `Raw110WordSweep.lean` derives the exact B-return evaluator from Agent13's block/carry macros. `Raw110WordSource.lean` transfers these finite runs to original `BB6Coverage` semantics and supplies weighted coverage of all compatible completions. The original-source bridge job passed in [45592977146](https://github.com/FlareZ123/bb6/actions/runs/45592977146); several uncompressed trace jobs were terminated by runner shutdown, and that workflow was superseded.
+- `Raw110RunSweep.lean` compresses the right word's repeated A-pair and the left word's bit runs. Its exact cost-preserving replay equivalence was kernel-checked locally using Lean 4.36.0-rc2 and the actual relevant macro definitions. `gen_late_trace.py --compressed` generates compact trace shards. [45595393696](https://github.com/FlareZ123/bb6/actions/runs/45595393696) checks their concrete claims and source bridge.
+- `Raw110ParentLateCover.lean` composes the accepted partition and late covers into `raw110_cover B` for B≥6766859. The end-to-end theorem is **not yet source-accepted**. After the compressed late workflow succeeds, dispatch `agent7-raw110-parent.yml` with parent_run=45593652030, late_run=45595393696. The final artifact is `raw110-complete-parent`.
 
-The unchanged raw99 finite classifier predicts 334068 cycle leaves, 86523 last-hole leaves, 7647 open leaves and 18619 splits for raw110; the largest proposed weighted halt score is 966. The SHA-256-pinned candidate rosters in `spec.json` and `partial_spec.json` are generated by that classifier. FAR, n-gram and analytic witnesses are accepted only through the Lean checkers. Candidate remaining raw physical mass is 18×25 = 450 out of 25^6 = 244140625, conditional on the whole source check.
+This bound is far below the established champion. Once the final source proof is accepted, graft the full parent Cover into the actual canonical quotient roster using a mixed-bound consumer. No unconditional BB(6) maximality claim follows.
 
-Separate source audits for child13 ([45542169260](https://github.com/FlareZ123/bb6/actions/runs/45542169260)) and the child12/17 runs ([45542985553](https://github.com/FlareZ123/bb6/actions/runs/45542985553), [45542981452](https://github.com/FlareZ123/bb6/actions/runs/45542981452)) completed successfully at their respective pinned revisions. The earlier monolithic eight-child run [45540857205](https://github.com/FlareZ123/bb6/actions/runs/45540857205) was cancelled and is not acceptance. The new full assembly uses the existing manual `agent7-far-hard-root.yml` input `raw110_only=true`, compiling the consumer first and then the sixteen independently generated child modules. No new workflow.
+## Reproduction
 
-Agent13's [block-FAR candidate manifest](../agent13-block-far/Raw110Candidates.json) covers 16 of the 18 indices computationally, pending source-accepted theorem objects. When accepted, put their exact table/module/namespace triples in the relevant `partial_spec.json` extra map and remove exactly those indices from miss. The same assembly regenerates the residual count automatically. Only 5/161 and 5/790 lack current block candidates; Agent13 is targeting them. Do not repeat that search. The full raw110 proof and global BB(6) upper bound remain open.
-
-Local Lean 4.36.0-rc2 was successfully reconstructed; direct GitHub checkout failed with DNS resolution unavailable. Local full dependency compilation is therefore unavailable; the existing source CI is the exact closure route.
-
-### Fifteen locally accepted candidates staged
-
-Agent13 reports local kernel success for 15/16 candidate wrappers (0/152; 5/243,244,515; 13/0; and all ten child18 leaves). The `--block-far` optional overlay consumes these exact table/module/namespace triples, never removing an unmatched leaf. It keeps 12/21 (reflected candidate OOM under local 4 GiB limit) and 5/161,790 (equivalent pair, no nonhalting certificate yet). The proposed overlay residual count is three one-hole leaves, 75 physical completions. The original baseline spec is unchanged. The full baseline integration run is [45553675811](https://github.com/FlareZ123/bb6/actions/runs/45553675811). Source assembly at the overlay revision is still required.
-
-### All sixteen block-FAR candidates
-
-Agent13 reported all sixteen locally kernel-accepted at 05:52, including reflected 12/21 sparse 168-state certificate. The overlay now includes 12/21; candidate complement exactly 5/161 and 5/790 (50 physical completions). Source integration at child0 [45555483558](https://github.com/FlareZ123/bb6/actions/runs/45555483558), child5 [45555488625](https://github.com/FlareZ123/bb6/actions/runs/45555488625), child13 [45555493483](https://github.com/FlareZ123/bb6/actions/runs/45555493483) passed, including actual original-source PairBridge. Child18 needed two old-bank repairs (85 and 398), committed eb8d120; rerun 45556250033 pending. Child12 sparse integration remains to run. Full parent composition still needs source acceptance.
+`generate_partial.py --block-far` generates each nontrivial ordinary child from the shared raw99 classifier and deterministic SHA-pinned candidate bank. Every candidate is checked by the established Lean audit; no search verdict is trusted. `assemble_partial.py --block-far --parent-only` composes the 24 children. The 16 previously remaining nonhalters use Agent13's exact table-matched block-FAR wrappers; their inclusion is covered by the accepted partition. The two remaining leaves cannot be proved nonhalting and must not be passed to FAR search again.
