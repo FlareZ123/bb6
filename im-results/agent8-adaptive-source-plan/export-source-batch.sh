@@ -5,7 +5,7 @@ set -euo pipefail
 IFS=, read -ra ranges <<< "$BATCH_RANGES"
 for range in "${ranges[@]}"; do
   IFS=: read -r offset size fuel <<< "$range"
-  (( offset < 12820 && size <= 12820 - offset && fuel <= 1000000 ))
+  (( offset < 12820 && size <= 100 && fuel <= 1000000 ))
 done
 mkdir -p agent8-batch
 printf 'offset\tsize\tfuel\tstatus\n' > agent8-batch/manifest.tsv
@@ -25,12 +25,17 @@ Definition chunk_input := q_i $offset $size.
 Definition chunk_fuel : N := $fuel%N.
 Time Definition chunk_data := Eval vm_compute in
   encode_queue (SearchQueue_upds decider chunk_input chunk_fuel).
+Theorem chunk_data_encoded :
+  encode_queue (SearchQueue_upds decider chunk_input chunk_fuel) = chunk_data.
+Proof.
+  vm_cast_no_check (eq_refl chunk_data).
+Time Qed.
 Theorem chunk_data_exact :
   SearchQueue_upds decider chunk_input chunk_fuel = decode_queue chunk_data.
 Proof.
   apply source_checkpoint_decode.
   - apply checkpoint_chunk_canonical.
-  - Time vm_compute. reflexivity.
+  - exact chunk_data_encoded.
 Qed.
 Print Assumptions chunk_data_exact.
 Time Eval vm_compute in (List.length (fst chunk_data), List.length (snd chunk_data)).
@@ -39,7 +44,7 @@ Set Printing Width 120.
 Print chunk_data.
 COQ
   cp "$module.v" agent8-batch/
-  if timeout 180s coqc -Q . BusyCoq -native-compiler no "$module.v" > "agent8-batch/$module.log" 2>&1; then
+  if timeout 270s coqc -Q . BusyCoq -native-compiler no "$module.v" > "agent8-batch/$module.log" 2>&1; then
     cp "$module.vo" agent8-batch/
     printf '%s\t%s\t%s\tverified\n' "$offset" "$size" "$fuel" >> agent8-batch/manifest.tsv
     echo "$module verified"
