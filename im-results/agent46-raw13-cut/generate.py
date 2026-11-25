@@ -6,6 +6,7 @@ from itertools import product
 from pathlib import Path
 import subprocess
 import tempfile
+import json
 
 D = Path(__file__).resolve().parent
 MOVES = [w+d+q for w,d,q in product("01","LR","ABCDEF")]
@@ -163,6 +164,52 @@ def build_enhanced(t):
     proven.update({raw:("pump",i) for raw,i in pumps.items()})
     return enhance(t,ROOT,proven)
 
+def enhance_selected(t):
+    """Close 13 exact residual cylinders with exhaustive canonical subtrees."""
+    ng = D.parent/"agent1-ngram"
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp)
+        binpath = tmp/"selected"
+        subprocess.run(["g++","-std=c++17","-O3",str(D/"select_complete.cpp"),"-o",str(binpath)],check=True)
+        with (D/"selected.txt").open() as inp:
+            proc = subprocess.run([str(binpath)],stdin=inp,text=True,capture_output=True,check=True)
+        selected = {raw:json.loads(data) for raw,data in (line.split(" ",1) for line in proc.stdout.splitlines())}
+        assert len(selected)==13
+        grams = []
+        def collect(t):
+            if t[0]=="ngram":
+                grams.append(t[1])
+            elif t[0]=="split":
+                for c in t[3]:
+                    if c is not None: collect(c)
+        for sub in selected.values(): collect(sub)
+        assert len(grams)==124
+        assert len(set(grams))==124
+        data = tmp/"tables.txt"
+        data.write_text("".join(f"{100+i} {raw}\n" for i,raw in enumerate(grams)))
+        ngram = tmp/"ngram"
+        subprocess.run(["g++","-std=c++17","-O3",str(ng/"ngram.cpp"),"-o",str(ngram)],check=True)
+        certs = tmp/"certs.txt"
+        with data.open() as inp, certs.open("w") as out:
+            subprocess.run([str(ngram),"4"],stdin=inp,stdout=out,check=True)
+        assert len(certs.read_text().splitlines())==124
+        all_lines = certs.read_text().splitlines()
+        names = []
+        for i in range(0,len(all_lines),16):
+            name=f"Agent46Raw13SelectedGram{i//16}"
+            names.append(name)
+            shard = tmp/"shard.txt"
+            shard.write_text("\n".join(all_lines[i:i+16])+"\n")
+            subprocess.run(["python",str(ng/"emit_ngram.py"),str(data),str(shard),
+                str(D/(name+".lean")),"--namespace","BB6.Agent46Raw13SelectedGram"],check=True)
+        (D/"Agent46Raw13SelectedGram.lean").write_text("".join(f"import {n}\n" for n in names))
+        ids={raw:100+i for i,raw in enumerate(grams)}
+        def norm(t):
+            if t[0]=="ngram": return ("selectedgram",ids[t[1]])
+            if t[0]=="split": return ("split",t[1],t[2],[norm(c) if c is not None else None for c in t[3]])
+            return tuple(t)
+        return enhance(t,ROOT,{raw:norm(sub) for raw,sub in selected.items()})
+
 def emit(t):
     if t is None or t[0] == "open":
         return ".unresolved"
@@ -178,6 +225,9 @@ def emit(t):
     if tag == "ngram":
         i = v[0]
         return f".closed (.proven BB6.Agent46Raw13NGram.p{i} BB6.Agent46Raw13NGram.never{i})"
+    if tag == "selectedgram":
+        i=v[0]
+        return f".closed (.proven BB6.Agent46Raw13SelectedGram.p{i} BB6.Agent46Raw13SelectedGram.never{i})"
     if tag == "pump":
         n = f"BB6Coverage.Agent31Pump.Raw13Pump{v[0]}"
         return f".closed (.proven {n}.table {n}.never)"
@@ -197,11 +247,11 @@ def write(name,imports,body):
 if __name__ == "__main__":
     t = tree(ROOT,3,DEPTH,True)
     assert t[:3] == ("split",3,1)
-    t = build_enhanced(t)
+    t = enhance_selected(build_enhanced(t))
     c,m = Counter(),Counter()
     tally(t,9,3,c,m)
-    assert c == Counter(open=1741,cycle=696,state=688,split=176,halt=176,last=14,ngram=15,pump=3),c
-    assert m["open"] == 1725417791400 and sum(m.values()) == 25**9,m
+    assert c == Counter(open=1728,cycle=989,state=728,split=201,halt=201,last=145,ngram=15,pump=3,selectedgram=124),c
+    assert m["open"] == 1725417472650 and sum(m.values()) == 25**9,m
     names = []
     for i,k in enumerate(t[3]):
         if k is None:
@@ -209,7 +259,7 @@ if __name__ == "__main__":
         name = f"Agent46Raw13Kid{i:02}"
         names.append(name)
         mv = move(MOVES[i])
-        write(name,["Agent46Raw13Base","Agent46Raw13NGram","Agent46Raw13Pumps"],f"""
+        write(name,["Agent46Raw13Base","Agent46Raw13NGram","Agent46Raw13Pumps","Agent46Raw13SelectedGram"],f"""
 def kid{i:02} : Cut := {emit(k)}
 theorem checked{i:02} :
     check 7014 (child {mv}) (nextCut 3 {mv}) kid{i:02} = true := by decide
