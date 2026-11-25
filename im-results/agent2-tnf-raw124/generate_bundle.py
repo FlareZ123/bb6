@@ -214,19 +214,27 @@ def longcycle_bundle(branch):
             continue
 
         rounds += 1
-        indexed = "".join(f"{i} {table.replace('_', '')}\n" for i, table in enumerate(pending))
-        result = subprocess.run(
-            [str(ROOT/"longcycle"), str(cap), str(lookback)],
-            cwd=ROOT, input=indexed, text=True, stdout=subprocess.PIPE, check=True,
-        )
-        rows = [line.split() for line in result.stdout.splitlines()]
-        assert len(rows) == len(pending), (len(pending), len(rows), rounds)
-        ids = [int(row[0]) for row in rows]
-        assert len(set(ids)) == len(ids) and set(ids) == set(range(len(pending)))
-        by_id = {int(row[0]): row for row in rows}
+        from concurrent.futures import ThreadPoolExecutor
+        workers = min(2, len(pending))
+        chunks = [pending[i::workers] for i in range(workers)]
+
+        def run_chunk(chunk):
+            indexed = "".join(f"{i} {table.replace('_', '')}\n" for i, table in enumerate(chunk))
+            result = subprocess.run(
+                [str(ROOT/"longcycle"), str(cap), str(lookback)],
+                cwd=ROOT, input=indexed, text=True, stdout=subprocess.PIPE, check=True,
+            )
+            rows = [line.split() for line in result.stdout.splitlines()]
+            assert len(rows) == len(chunk), (len(chunk), len(rows), rounds)
+            ids = [int(row[0]) for row in rows]
+            assert len(set(ids)) == len(ids) and set(ids) == set(range(len(chunk)))
+            by_id = {int(row[0]): row for row in rows}
+            return [(table, by_id[i]) for i, table in enumerate(chunk)]
+
+        with ThreadPoolExecutor(max_workers=workers) as pool:
+            classified = [item for part in pool.map(run_chunk, chunks) for item in part]
         next_pending = []
-        for i, table in enumerate(pending):
-            row = by_id[i]
+        for table, row in classified:
             if row[1] == "cycle":
                 assert len(row) == 6, row
                 terminal[table] = ["cycle", int(row[2]), int(row[3]), int(row[4]), int(row[5])]
