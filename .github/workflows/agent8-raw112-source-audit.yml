@@ -1,0 +1,78 @@
+name: Agent 8 raw112 E1=1LC partial source audit
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  raw112_partial:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Reconstruct exact generated source dependencies
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+      - name: Generate the 100000-bound raw112 partial audit
+        run: |
+          set -euo pipefail
+          python im-results/agent47-raw112-cut/generate.py | tee /tmp/a47-raw112-generate.log
+          test -s im-results/agent47-raw112-cut/Raw112Data.lean
+          test -s im-results/agent47-raw112-cut/unresolved.txt
+          echo "=== Exact residual leaves ==="
+          cat im-results/agent47-raw112-cut/unresolved.txt
+          echo "=== Generated audit source size ==="
+          wc -l im-results/agent47-raw112-cut/Raw112Data.lean im-results/agent47-raw112-cut/Raw112Branch*.lean im-results/agent47-raw112-cut/Raw112Kid*.lean
+      - name: Compile complete original-source import closure
+        run: |
+          set -euo pipefail
+          python tools/lean_compile_closure.py im-results/agent47-raw112-cut/Raw112Data.lean \
+            --workdir /tmp/a47-raw112 \
+            --manifest /tmp/a47-raw112-manifest.json \
+            --label raw112-e1-1lc-partial-bound-100000 \
+            --theorem BB6.Agent47Raw112.sound \
+            --parent-table '1RB---_1RC---_0RD---_1LD1RE_---1LC_------' \
+            --weighted-bound 100000 \
+            --artifact-name raw112-e1-1lc-partial-bound-100000 \
+            --provenance-input im-results/agent47-raw112-cut/generate.py \
+            --provenance-input im-results/agent47-raw112-cut/symbolic.py \
+            --provenance-input im-results/agent47-raw112-cut/inductive-generators.tar.xz \
+            --provenance-input im-results/agent47-raw112-cut/enumerate_fast.cpp \
+            --provenance-input im-results/agent47-raw112-cut/far-bank.txt \
+            --provenance-input im-results/agent47-raw112-cut/far-extra.txt \
+            --provenance-input im-results/agent47-raw112-cut/ngram.txt \
+            --provenance-input im-results/agent47-raw112-cut/late.txt \
+            --provenance-input im-results/agent47-raw115-cut/counter.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_sweeps.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_four_hole.py \
+            --provenance-input im-results/agent47-raw111-cut/emit_sparse.py \
+            --provenance-input im-results/agent47-raw111-cut/ngram_sparse.cpp \
+            --jobs 8 | tee /tmp/a47-raw112-lean.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a47-raw112-lean.log; then
+            echo "Forbidden axiom/proof mechanism in raw112 source audit" >&2
+            exit 1
+          fi
+      - name: Preserve source, manifest and compiled proof closure
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw112-e1-1lc-partial-bound-100000
+          path: |
+            /tmp/a47-raw112/
+            /tmp/a47-raw112-manifest.json
+            im-results/agent47-raw112-cut/Raw112Data.lean
+            im-results/agent47-raw112-cut/Raw112Branch*.lean
+            im-results/agent47-raw112-cut/Raw112Kid*.lean
+            im-results/agent47-raw112-cut/Raw112Symbol*.lean
+            im-results/agent47-raw112-cut/Raw112Sparse*.lean
+            im-results/agent47-raw112-cut/unresolved.txt
+            /tmp/a47-raw112-generate.log
+            /tmp/a47-raw112-lean.log
