@@ -32,6 +32,20 @@ Qed.
 
 (* The successful branch of cmultistep includes the original multistep proof.
    Test that the reached row really is undefined; never accept an early abort. *)
+Lemma translated_step_transfer {p c c'} :
+  Agent47TC.Flip.Compute.TM.step p c c' -> step p c c'.
+Proof.
+  intro H. inversion H; subst; eauto using step_left, step_right.
+Qed.
+
+Lemma translated_multistep_transfer {p n c c'} :
+  Agent47TC.Flip.Compute.TM.multistep p n c c' -> multistep p n c c'.
+Proof.
+  intro H. induction H.
+  - constructor.
+  - econstructor; eauto using translated_step_transfer.
+Qed.
+
 Definition source_trace_haltb (p : TM) (n : nat) : bool :=
   match Agent47TC.Flip.Compute.cmultistep p n Agent47TC.Flip.Compute.starting with
   | inleft (exist _ (q, (_, s, _)) _) =>
@@ -49,7 +63,7 @@ Proof.
     destruct (p (q,s)) as [mv|] eqn:E; [discriminate|].
     intros _. exists (q,s).
     eapply halts_at_intro.
-    + rewrite Agent47TC.Flip.Compute.lift_starting in Hrun. exact Hrun.
+    + rewrite Agent47TC.Flip.Compute.lift_starting in Hrun. apply translated_multistep_transfer. exact Hrun.
     + exact E.
   - discriminate.
 Qed.
