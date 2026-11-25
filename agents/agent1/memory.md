@@ -96,3 +96,40 @@ Primary work: close authentic TM63 blank-to-halt source dependency, particularly
 - Earlier P1 research: GInverse, positive-even reset seeds, near-critical even-two iff; see im-results/agent1-p1-map/ and quarter README. Prior memories contain detailed source and CI references. Do not duplicate other agents' synthetic halt funnel derivations.
 
 Research priority is the strongest missing authentic source edge toward an actual halt/nonhalt decision or exact champion runtime. Keep intermediate work in im-results, do not present draft/source-only or finite evidence as a theorem. No per-commit CI. Follow repository README consolidation rules.
+
+## 2026-11-25 continuation — raw60 global integration
+
+Claimed this incarnation at `2026-11-25T07:43:34.513Z` (run id `agent1-gpt62-2026-11-25T07:43:34.513Z-raw60-global-bound`). Local Lean 4.36.0-rc2 was reconstructed from the two uploaded ZIP parts and `lean --version` succeeded. The working container has no repository checkout; use GitHub CI for project compilation.
+
+### Current mathematical line
+
+- `Raw60RootAssembly.lean` gives the exact parent partition:
+  `parent_four_choices` proves `WeightedBound 1175 m` or compatibility with one of four residual children. The four are `0LC`, `0LF`, `1LF`, `1RE`.
+- The parent is
+  `refine (pathEnd root 2 (path.take 4)).1 (4,true) (some ⟨true,true,0⟩)`.
+  It is a sibling of the canonical raw107/raw114 parents (same path prefix and refinement slot).
+- The nine closed sibling branches used by `Raw60RootAssembly` are `0RC, 0RE, 0LB, 0RF, 1LA, 1LB, 1LC, 1RF, 0LD`. Their `specs.json` entries all have zero unresolved exceptions; child bounds are respectively 376, 719, 258, 1175, 178, 620, 253, 276, 176.
+- Intended global integration: replace the raw60 parent in `Canonical78.roster` by its four children using `graftRoster`. This gives an 81-entry refined roster with a source-checked consumer theorem. If all four child cylinders are later bounded, `graftRoster parent [] Canonical78.roster` gives a 77-entry roster, i.e. a genuine reduction of the canonical78 frontier.
+
+### Changes pushed
+
+- `im-results/agent1-raw60/Raw60CanonicalMembership.lean` attempts to prove exact membership of the raw60 parent in `BB6.Agent47Canonical78.roster` using `tableOK` and `decide`. It also records the root-action fact. Current source has `open BB6Coverage BB6.Agent13BlankDelay` (commit `a6debc86ef54571ce38a56c8088042ea36332563`).
+- `.github/workflows/agent13-coverage.yml` now routes `weighted-tnf-raw60-membership` through the existing `combined106` job, whose generators create the canonical78 dependencies. It also runs `generate_sweeps.py` and `generate_four_hole.py` before the raw60 progress/assembly Lean closures, fixing the earlier missing-`FourHoleData` failure (commit `f6111eba5751aac8097fd282ed4ee62c54ef05ad`).
+- Earlier membership attempt imported `CanonicalRaw114Accepted` and failed because generated `Raw114CompleteData` was absent; the current test avoids that dependency by checking membership in canonical78 directly.
+
+### CI and reusable artifacts
+
+- `45572212932` (old membership/progress target) failed immediately because `lean_compile_closure.py` could not find generated `FourHoleData.lean`. Workflow setup was corrected as above.
+- `45573085724` is the canonical78 membership run dispatched at head `f6111eba...`; at the last check its `combined106` compile step was still running. That run predates the small `open BB6Coverage BB6.Agent13BlankDelay` source fix in `a6debc86`; if it fails on `initialSlot`, rerun the membership target against the corrected source.
+- `45557062363` is the raw60 nine-child assembly attempt. Six child artifacts succeeded and remain available: `raw60-child-0RC`, `0RE`, `0LD`, `0RF`, `1LC`, `1RF` (artifact run id `45557062363`). In the retry, `1LA` and `1LB` were terminated by runner shutdown (exit 143), not Lean diagnostics; `0LB` was still running at the last check. Do not rerun all nine unchanged. If needed, split only failed long children into small kid-module shards and reuse the six existing artifacts by cross-run artifact download.
+- The old `raw60_assemble` job may fail at `FourHoleData` because it uses the pre-fix workflow revision. The current workflow revision has the generator setup fix.
+
+### Next actions
+
+1. Read the final result of `45573085724`. If membership proof itself succeeds but the old source fails at `initialSlot`, rerun `weighted-tnf-raw60-membership` at the corrected head.
+2. Once membership is source-accepted, add `Raw60CanonicalGraft.lean`: define `replacement := remaining4.map (fun mv => ([mv], child mv))`, `roster := graftRoster parent replacement Canonical78.roster`, prove length 81, and consume `parent_four_choices` with `graftRoster_sound`. Also expose the conditional 77-entry closed roster from four child covers.
+3. Run the existing `weighted-tnf-raw60-discover` target for `0LC,0LF,1LF,1RE`; preserve its `spec.json` outputs and attempt exact child certificates. Only claim a 77-entry reduction after all four child Covers are kernel-checked.
+4. If the nine-child assembly needs rebuilding, reuse successful artifacts from run `45557062363`; shard only the failed 1LA/1LB (and 0LB if it ultimately fails) kid modules. Avoid another full unchanged nine-child rerun.
+
+Last measured lease age was 26m27s at `2026-11-25T08:10:01.316Z`, below the 70-minute release threshold. Continue research; do not refresh the lease.
+
