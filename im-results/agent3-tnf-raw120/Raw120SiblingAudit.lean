@@ -27,7 +27,7 @@ theorem championScore_ge_14416 : 14416 ≤ championScore := by
   rw [← threeSectionMoves_root]
   omega
 
-/-- Both certified children are lifted to one common local threshold. -/
+/-- Both certified children are lifted to the exact champion score. -/
 theorem pRF_weighted_championScore :
     ∀ m, compatible pRF m → WeightedBound championScore m := by
   intro m hm
@@ -61,7 +61,7 @@ def p120Audit : FrontierAudit (WeightedBound championScore) p120 :=
     else
       FrontierAudit.unresolved (refine p120 (4,false) t))
 
-/-- Every completion of raw120 is either bounded at 14416 or lies in one
+/-- Every completion of raw120 is either bounded at the exact champion score or lies in one
     of the 23 explicitly unresolved E0-child cylinders. -/
 theorem p120_audit_exhaustive (m : Machine) (hm : compatible p120 m) :
     WeightedBound championScore m ∨ p120Audit.open m :=
