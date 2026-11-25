@@ -22,7 +22,7 @@ open BB6Coverage.FAR
 theorem oneLF_is_depth5_sibling :
     sameTable BB6.Agent48F1OneLF.parent
       (championChild 5 ⟨true,false,5⟩) = true := by
-  decide [BB6.Agent48F1OneLF.parent, championChild, championParent,
+  decide
     championHole, championP5, championP4, championP3, championP2,
     championP1, championResidual, championRootAfterB, refine, root]
 
@@ -30,7 +30,7 @@ theorem oneLF_is_depth5_sibling :
 theorem zeroRD_is_depth5_sibling :
     sameTable BB6.Agent48F1ZeroRD.ctr
       (championChild 5 ⟨false,true,3⟩) = true := by
-  decide [BB6.Agent48F1ZeroRD.ctr, championChild, championParent,
+  decide
     championHole, championP5, championP4, championP3, championP2,
     championP1, championResidual, championRootAfterB, refine, root]
 
