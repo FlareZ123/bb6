@@ -7,6 +7,7 @@ import sys
 import subprocess
 import tempfile
 import hashlib
+import emit_sparse
 
 ROOT=Path(__file__).resolve().parent
 sys.path.insert(0,str(ROOT.parent/"agent31-three-hole-tnf"))
@@ -41,6 +42,7 @@ def generate(rows,work):
         ("Raw111QuadCounter","BB6Coverage.Agent31Pump.Raw111QuadCounter"),
         "1RB---_1RC1LF_0RD0RF_1LD1RE_1LA0RC_0RE0LD":
         ("Raw111TripleCounter","BB6Coverage.Agent31Pump.Raw111TripleCounter")}
+    known.update(emit_sparse.generate(ROOT,work))
     certs={}
     imports={}
     single=[]
@@ -92,5 +94,5 @@ def generate(rows,work):
     assert len(single)==199,len(single)
     manifest="\n".join(sorted(single))+"\n"
     assert hashlib.sha256(manifest.encode()).hexdigest()=="aab7039ed0210df985e13993048903823052d7fa5e1d082dbd10c7462652c56d"
-    assert len(certs)==223,len(certs)
+    assert len(certs)==225,len(certs)
     return certs,imports

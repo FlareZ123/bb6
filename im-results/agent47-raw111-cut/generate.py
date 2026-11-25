@@ -85,7 +85,7 @@ def main():
         more, imports = symbolic.generate(unresolved, Path(tmp))
     certs.update(more)
     unresolved = [row for row in unresolved if row not in more]
-    assert len(unresolved) == 2 and all(row.count("---")==1 for row in unresolved)
+    assert not unresolved
     (ROOT/"unresolved.txt").write_text("\n".join(unresolved)+"\n")
     if "--symbolic-only" in sys.argv:
         print("Symbolic candidates", len(more), "unresolved", unresolved)
@@ -172,11 +172,17 @@ theorem checked : partialCheck 7014 parent tree = true := by
   simp only [Bool.and_eq_true]
   exact ⟨by decide, allMoves_of _ rootKids_checked⟩
 def residuals := partialResiduals parent tree
-theorem residual_count : residuals.length = 2 := by decide
+theorem residual_count : residuals.length = 0 := by decide
 theorem sound :
     ∀ m, compatible parent m → WeightedBound 7014 m ∨
       ∃ e ∈ residuals, compatible e.2 m :=
   partialSound 7014 parent tree parent_root parent_nohalt checked
+theorem all_completions (m : Machine) (hm : compatible parent m) : WeightedBound 7014 m := by
+  rcases sound m hm with hb | ⟨e,he,_⟩
+  · exact hb
+  · have hnil : residuals = [] := by simpa using residual_count
+    simp [hnil] at he
+#print axioms all_completions
 #print axioms sound
 #print axioms residual_count
 """)
