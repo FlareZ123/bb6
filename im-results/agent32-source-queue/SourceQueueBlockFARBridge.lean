@@ -24,18 +24,35 @@ theorem partialTable_sourceTable (tm : SourceTM) :
   rcases s with ⟨q,b⟩
   cases h : tm (q,b) <;> rfl
 
+/-- A nonhalting proof for every compatible completion is already
+    exactly the semantic content needed by SourceSafe. -/
+theorem sourceSafe_of_never (B : Nat) (x : SourceNode)
+    (hNever : ∀ m, BB6Coverage.compatible (sourcePartial x.tm) m →
+      BB6Coverage.NeverHalts m) : SourceSafe B x := by
+  intro _ m hm
+  exact BB6.Agent13BlankDelay.weighted_of_never B m (hNever m hm)
+
+/-- Transport a BlockFAR completion theorem to the exact SourceTM node
+    whenever the two partial-machine representations agree. -/
+theorem sourceSafe_of_blockFAR_table (B : Nat) (x : SourceNode)
+    (M : BB6BlockFAR.Table)
+    (hEq : BB6BlockFAR.partialTable M = sourcePartial x.tm)
+    (hNever : ∀ m, BB6Coverage.compatible (BB6BlockFAR.partialTable M) m →
+      BB6Coverage.NeverHalts m) : SourceSafe B x := by
+  apply sourceSafe_of_never B x
+  intro m hm
+  exact hNever m (by simpa [hEq] using hm)
+
 /-- Any valid BlockFAR certificate for a source node immediately discharges
     its SourceSafe obligation for every compatible total completion. -/
 theorem sourceSafe_of_blockFAR {d n} (B : Nat) (x : SourceNode)
     (C : BB6BlockFAR.Data d n)
     (hC : C.Valid (sourceTable x.tm)) :
     SourceSafe B x := by
-  intro _ m hm
-  have hm' : BB6Coverage.compatible
-      (BB6BlockFAR.partialTable (sourceTable x.tm)) m := by
-    simpa [partialTable_sourceTable] using hm
-  exact BB6.Agent13BlankDelay.weighted_of_never B m
-    (BB6BlockFAR.Data.source_never C (sourceTable x.tm) hC m hm')
+  apply sourceSafe_of_blockFAR_table B x (sourceTable x.tm)
+    (partialTable_sourceTable x.tm)
+  intro m hm
+  exact BB6BlockFAR.Data.source_never C (sourceTable x.tm) hC m hm
 
 #print axioms partialTable_sourceTable
 #print axioms sourceSafe_of_blockFAR
