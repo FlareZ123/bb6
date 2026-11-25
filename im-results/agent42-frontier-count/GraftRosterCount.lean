@@ -46,7 +46,7 @@ def replaceList {α : Type} [DecidableEq α] (target : α)
 /-- Number of exact target occurrences consumed by replaceList. -/
 def replaceListMatchCount {α : Type} [DecidableEq α]
     (target : α) (roster : List α) : Nat :=
-  (roster.filter fun x => x = target).length
+  (roster.filter fun x => decide (x = target)).length
 
 /-- Additive length identity for equality-based replacement. -/
 theorem replaceList_length_add_count {α : Type} [DecidableEq α]
