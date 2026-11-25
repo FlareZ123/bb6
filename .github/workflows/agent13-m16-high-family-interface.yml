@@ -50,6 +50,7 @@ on:
           - sourceLowSecondFanReach
           - sourceLow1583
           - sourceLowSpecialized
+          - sourceLowZ78Q6
           - sourceLowAffine
           - sourceLowAffineAll
           - sourceNegativeShadow
@@ -249,6 +250,9 @@ jobs:
               ;;
             sourceLowSpecialized)
               target=im-results/agent13-residual-frontier/EvenOddLowStopSecondFanSpecialized.lean
+              ;;
+            sourceLowZ78Q6)
+              target=im-results/agent29-z78-q6/Z78Q6Source.lean
               ;;
             sourceLowAffine)
               target=im-results/agent13-residual-frontier/AffineConeLowStop.lean
