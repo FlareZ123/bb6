@@ -1,10 +1,10 @@
 # Raw120 E0 sibling certificates
 
-Raw120 parent: `1RB---_1RC---_0RD---_1LD1RE_---1LE_------`. First undefined row E0 at ordinary time 9. This dossier contains source-checked certificates for 12 of the 25 children, candidate-complete certificates for two additional children, and explicit residual work. The parent is not yet closed.
+Raw120 parent: `1RB---_1RC---_0RD---_1LD1RE_---1LE_------`. First undefined row E0 at ordinary time 9. This dossier contains original-source accepted certificates for 14 of the 25 children and explicit residual work. The parent is not yet closed.
 
 ## Current coverage (2026-11-25 09:22Z)
 
-Each E0 alternative has mass 25^5 = 9,765,625 raw completions. The ten immediate translated cycles and the two previously accepted RF/RB certificates cover 12 disjoint alternatives; the immediate-halt branch is also an explicit draft proof. No canonical roster entry has been removed.
+Each E0 alternative has mass 25^5 = 9,765,625 raw completions. The ten immediate translated cycles, the RF/RB certificates, and the newly source-accepted 0RC and 1RB certificates cover 14 disjoint alternatives; the immediate-halt branch is also an explicit draft proof. No canonical roster entry has been removed.
 
 | E0 | Status | Weighted bound | Source |
 | --- | --- | ---: | --- |
@@ -12,13 +12,13 @@ Each E0 alternative has mass 25^5 = 9,765,625 raw completions. The ten immediate
 | 0RF | Original-source accepted, exact | 14416 | run [45520792124](https://github.com/FlareZ123/bb6/actions/runs/45520792124) |
 | 0RB | Original-source accepted | 223 | run [45532860093](https://github.com/FlareZ123/bb6/actions/runs/45532860093) |
 | Halt | Draft direct proof | 15 | Raw120CanonicalPartition.lean |
-| 0RC | Candidate complete; source CI pending | 716 | generate_rc.py; run [45584144941](https://github.com/FlareZ123/bb6/actions/runs/45584144941) |
-| 1RB | Candidate complete; source CI pending | 749 | generate_sibling.py 1RB; run [45584422715](https://github.com/FlareZ123/bb6/actions/runs/45584422715) |
+| 0RC | Original-source accepted | 716 | generate_rc.py; run [45584144941](https://github.com/FlareZ123/bb6/actions/runs/45584144941) |
+| 1RB | Original-source accepted | 749 | generate_sibling.py 1RB; run [45584422715](https://github.com/FlareZ123/bb6/actions/runs/45584422715) |
 | Others | Open | — | see LA and other sibling research |
 
-The 0RC enumeration pins 934 splits, 15226 cycles, 4043 last-hole leaves, and 2214 open leaves, SHA256 `01f82938bb361d4335146c22191f1fec517d993c76d71488fbc804910629e78f`. The open leaves are assigned 2195 FAR witnesses, 12 one-block and 3 multi-block pumps, and four new invariants. Raw120RCCounter.lean proves arbitrary-length counter growth for leaves 1370/1380 by strong induction on the counter, with untouched suffixes; rc_nested.py constructs invariants for 1633/1639 with variable alternating-block and unary-tail counts. All short-tail cases and arbitrary-tail transfers passed local Lean 4.36.0-rc2 preflight with copied source zipper/sweep definitions. The repository source-transfer and complete coverage are pending the source CI run.
+The 0RC enumeration pins 934 splits, 15226 cycles, 4043 last-hole leaves, and 2214 open leaves, SHA256 `01f82938bb361d4335146c22191f1fec517d993c76d71488fbc804910629e78f`. The open leaves are assigned 2195 FAR witnesses, 12 one-block and 3 multi-block pumps, and four new invariants. Raw120RCCounter.lean proves arbitrary-length counter growth for leaves 1370/1380 by strong induction on the counter, with untouched suffixes; rc_nested.py constructs invariants for 1633/1639 with variable alternating-block and unary-tail counts. All short-tail cases and arbitrary-tail transfers passed local Lean 4.36.0-rc2 preflight with copied source zipper/sweep definitions. Run 45584144941 completed successfully, regenerating the pinned RC tree and compiling the Raw120RCData.lean source dependency closure; the complete 0RC child is therefore original-source accepted at weighted bound 716.
 
-The 1RB enumeration pins 1099 splits, 17152 cycles, 4476 last-hole leaves, and 3650 open leaves, SHA256 `156d9b5ff6210dfc4ba03a36e0b723a647a291d1eb91053d6df8eb2b4078b23e`. All 3650 have candidate witnesses (3624 FAR, 23 one-block, 3 multi-block). Reuse generate_sibling.py rather than duplicate the certificate checker.
+The 1RB enumeration pins 1099 splits, 17152 cycles, 4476 last-hole leaves, and 3650 open leaves, SHA256 `156d9b5ff6210dfc4ba03a36e0b723a647a291d1eb91053d6df8eb2b4078b23e`. All 3650 have candidate witnesses (3624 FAR, 23 one-block, 3 multi-block). Reuse generate_sibling.py rather than duplicate the certificate checker. Run 45584422715 completed successfully, regenerating the 1RB tree and compiling the Raw120OneRBData.lean source dependency closure; the complete 1RB child is therefore original-source accepted at weighted bound 749.
 
 The 1RC sibling has 3075 open leaves, 3048 FAR hits and 24 generic sweep candidates. Its three remaining leaves are 939, 1928, and 1934; the latter two have the same nested-sweep structure as 0RC. Do not claim closure until source checks pass.
 
