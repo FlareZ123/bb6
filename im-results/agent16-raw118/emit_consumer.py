@@ -33,6 +33,8 @@ def main(work: Path) -> None:
     for i, hit in sat_by_id.items():
         assert 0 <= i < len(rows) and hit["table"] == rows[i], (i, hit["table"], rows[i])
     sat_ids = set(sat_by_id)
+    wide_widths = json.loads((IM / "agent1-bidfa-sat" / "raw118-wide-widths.json").read_text())
+    wide_ids = {int(i) for i in wide_widths}
     phase = {
         int(line.split()[0])
         for line in (AG40 / "phase_candidates.tsv").read_text().splitlines()
@@ -72,8 +74,13 @@ def main(work: Path) -> None:
     assert not (sat_new_ids & treebank_ids)
     assert len(sat_ids) == 11
     assert sat_ids & treebank_ids == {2873}
-    remaining_hard = sorted(remaining_before_treebank - treebank_ids - sat_new_ids)
-    assert len(remaining_hard) == 87 - len(treebank_ids) - len(sat_new_ids), len(remaining_hard)
+    assert len(wide_ids) == 47
+    assert wide_ids <= remaining_before_treebank
+    assert not (wide_ids & sat_ids)
+    assert not (wide_ids & treebank_ids)
+    assert not (wide_ids & hard_accepted)
+    remaining_hard = sorted(remaining_before_treebank - treebank_ids - sat_new_ids - wide_ids)
+    assert len(remaining_hard) == 87 - len(treebank_ids) - len(sat_new_ids) - len(wide_ids), len(remaining_hard)
     assert all(rows[i].count("---") == 1 for i in remaining_hard)
 
     assert len(symbolic) == 105
@@ -113,6 +120,8 @@ def main(work: Path) -> None:
         add_nonhalt(f"BB6Coverage.Agent16BiDFA.Raw118TreeBank.M{int(hit['index'])}")
     for i in sorted(sat_new_ids):
         add_nonhalt(f"BB6Coverage.Agent1BiDFASat.Raw118.M{i}")
+    for i in sorted(wide_ids):
+        add_nonhalt(f"BB6Coverage.Agent1BiDFAWide.M{i}")
     for leaf in sorted(late, key=lambda x: int(x["index"])):
         ns = f"BB6.Agent16Raw118Late.M{int(leaf['index'])}"
         entries.append(
@@ -134,6 +143,7 @@ def main(work: Path) -> None:
         "Raw118TreeBank",
         "Raw118SatHits",
     ]
+    imports.extend(f"Raw118Wide{i}" for i in sorted(wide_ids))
     header = "\n".join(f"import {name}" for name in imports)
     entries_text = ",\n".join(entries)
     source = f'''{header}
@@ -151,7 +161,7 @@ def accepted : List (Accepted bound) := [
 
 def remaining := BB6.Agent16ResidualCover.remaining accepted residuals
 
-theorem accepted_count : accepted.length = {872 + len(treebank_ids) + len(sat_new_ids)} := by rfl
+theorem accepted_count : accepted.length = {872 + len(treebank_ids) + len(sat_new_ids) + len(wide_ids)} := by rfl
 
 /-- The Raw118 parent is covered at 756496 except for this exact finite
     complement of one-hole residual tables. -/
@@ -181,7 +191,7 @@ end BB6.Agent16Raw118Consumer
         "open_rows": len(rows),
         "hard_rows": len(hard),
         "hard_base_accepted": len(hard_accepted),
-        "hard_accepted": len(hard_accepted | treebank_ids | sat_new_ids),
+        "hard_accepted": len(hard_accepted | treebank_ids | sat_new_ids | wide_ids),
         "hard_residuals": remaining_hard,
         "ngram_accepted": len(sparse_ids),
         "late_accepted": len(late_ids),
@@ -190,7 +200,9 @@ end BB6.Agent16Raw118Consumer
         "sat_accepted": len(sat_new_ids),
         "sat_indices": sorted(sat_ids),
         "sat_new_indices": sorted(sat_new_ids),
-        "accepted_total": len(hard_accepted | sparse_ids | late_ids | treebank_ids | sat_new_ids),
+        "wide_accepted": len(wide_ids),
+        "wide_indices": sorted(wide_ids),
+        "accepted_total": len(hard_accepted | sparse_ids | late_ids | treebank_ids | sat_new_ids | wide_ids),
         "expected_parent_residuals": len(remaining_hard),
         "imports": imports,
     }
