@@ -18,6 +18,9 @@ from tree_emit import EXAMPLES as TREE_EXAMPLES, emit
 from independent import ROWS as INDEPENDENT_ROWS
 from generate_recursive_counter import CASES as RECURSIVE_CASES
 from generate_recursive_more import CASES as RECURSIVE_MORE_CASES
+sys.path.insert(0, str(IM / "agent31-three-hole-tnf"))
+sys.path.insert(0, str(IM / "agent47-raw114-cut"))
+import generate_symbolic as symbolic
 
 SHA = "00b82e8ded916fb719ebfd627d29da4bbf86659039b3b7889ff60a3f9ae396f9"
 MAX_STATES = 1800
@@ -39,13 +42,26 @@ def main(work: Path) -> None:
         if line.strip()
     }
     recursive_ids = {int(x[0]) for x in RECURSIVE_CASES + RECURSIVE_MORE_CASES}
-    known = (
-        set(INDEPENDENT_ROWS)
-        | phase_ids
-        | recursive_ids
-        | {int(x[0]) for x in OLD_EXAMPLES}
-        | {int(x[0]) for x in TREE_EXAMPLES}
-    )
+    symbolic_ids = set(symbolic.SINGLE) | set(symbolic.MULTI)
+    groups = {
+        "symbolic": symbolic_ids,
+        "independent": set(INDEPENDENT_ROWS),
+        "phasegraph": phase_ids,
+        "recursive": recursive_ids,
+        "bidfa": {int(x[0]) for x in OLD_EXAMPLES},
+        "tree": {int(x[0]) for x in TREE_EXAMPLES},
+    }
+    names = list(groups)
+    for i, left_name in enumerate(names):
+        for right_name in names[i + 1:]:
+            overlap = groups[left_name] & groups[right_name]
+            assert not overlap, (left_name, right_name, sorted(overlap))
+    known = set().union(*groups.values())
+    assert len(known) == 187, len(known)
+    assert known <= set(hard), sorted(known - set(hard))
+    targets = [i for i in hard if i not in known]
+    assert len(targets) == 87, len(targets)
+    assert all(rows[i].count("---") == 1 for i in targets)
 
     pairs = []
     seen_pairs = set()
@@ -70,7 +86,6 @@ def main(work: Path) -> None:
                 seen_pairs.add(key)
                 pairs.append((f"L{li}-R{ri}", dl, dr))
 
-    targets = [i for i in hard if i not in known]
     print(f"Raw118 tree-bank search: hard={len(hard)} known={len(known)} "
           f"targets={len(targets)} automata_pairs={len(pairs)}")
 
@@ -132,6 +147,7 @@ def main(work: Path) -> None:
         "hard_count": len(hard),
         "known_index_count": len(known),
         "target_count": len(targets),
+        "target_indices": targets,
         "automata_pair_count": len(pairs),
         "found_count": len(hits),
         "emitted_count": len(emitted),
