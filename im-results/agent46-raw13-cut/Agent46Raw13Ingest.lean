@@ -44,7 +44,7 @@ theorem graft_sound {roster : List Entry}
         exact List.mem_map.mpr ⟨r,hr,rfl⟩
     · exact Or.inr ⟨e,List.mem_flatMap.mpr ⟨e,he,by simp [graftEntry,hmatch]⟩,hq⟩
 
-theorem refined_count : refinedRoster.length = 1794 := by decide
+theorem refined_count : refinedRoster.length = 1793 := by decide
 
 theorem refined_sound (m : Machine) (hm : compatible BB6.Agent50TNFPilot.root m) :
     WeightedBound 21269 m ∨ ∃ e ∈ refinedRoster, TNFQuotientCompatible e.2 m :=
