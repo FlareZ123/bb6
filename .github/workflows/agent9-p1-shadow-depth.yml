@@ -179,7 +179,7 @@ jobs:
         run: |
           set -euo pipefail
           D="im-results/agent45-p1-delayed-carry"
-          export LEAN_PATH="$D:im-results/agent28-p1-full-prefix:im-results/agent43-p1-high-cost-reset-count:im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-dyadic-width:im-results/agent50-p1-residue:im-results/agent9-p1-first-return:im-results/agent28-p1-modular-screen"
+          export LEAN_PATH="$D:im-results/agent28-p1-full-prefix:im-results/agent28-p1-word-automaton:im-results/agent43-p1-high-cost-reset-count:im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-dyadic-width:im-results/agent50-p1-residue:im-results/agent9-p1-first-return:im-results/agent28-p1-modular-screen"
           lean --version
           git rev-parse HEAD
           python tools/lean_compile_deps.py "$D/ReverseLagBlocks30.lean" | tee /tmp/reverse-live-block-30.log
