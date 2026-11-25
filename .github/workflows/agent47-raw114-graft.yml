@@ -283,7 +283,7 @@ jobs:
               "BB6.Agent31CanonicalTwoParentRosterOnly.exact_at_target",
           )
           profiles = {}
-          for name, axioms in re.findall(r"'([^']+)' depends on axioms: \[([^\]]*)\]", logs):
+          for name, axioms in re.findall(r"'([^']+)' depends on axioms: \[([^\]]*)\]", log):
               profiles[name] = {x.strip() for x in axioms.split(",") if x.strip()}
           for name in required:
               if name not in profiles:
@@ -862,6 +862,8 @@ jobs:
               if [ ! -f "$dest" ]; then cp "$src" "$dest"; fi
             done
           test -s im-results/agent47-raw112-cut/Raw112Data.lean
+          test -s im-results/agent47-raw112-cut/Raw112Counter72.lean
+          test -s im-results/agent47-raw112-cut/unresolved.txt
           test "$(find im-results/agent47-raw112-cut -maxdepth 1 -name 'Raw112Branch*.lean' | wc -l)" -eq 24
           test -s im-results/agent7-raw110/Raw110DeepParent.lean
           test -s im-results/agent7-raw110/Raw110PairMacro.lean
@@ -919,7 +921,7 @@ jobs:
           log = pathlib.Path(sys.argv[1]).read_text()
           allowed = {"propext", "Classical.choice", "Quot.sound"}
           profiles = {}
-          for name, axioms in re.findall(r"'([^']+)' depends on axioms: \\[([^\\]]*)\\]", log):
+          for name, axioms in re.findall(r"'([^']+)' depends on axioms: \[([^\]]*)\]", log):
               profiles[name] = {x.strip() for x in axioms.split(",") if x.strip()}
           for name in re.findall(r"'([^']+)' does not depend on any axioms", log):
               profiles[name] = set()
@@ -990,7 +992,7 @@ jobs:
               "raw110_trace_sha256": digest(raw110),
               "axiom_allowlist": ["propext", "Classical.choice", "Quot.sound"],
           }
-          pathlib.Path("/tmp/a31-canonical73-summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True) + "\\n")
+          pathlib.Path("/tmp/a31-canonical73-summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n")
           print(json.dumps(summary, indent=2, sort_keys=True))
           PY
       - uses: actions/upload-artifact@v4
