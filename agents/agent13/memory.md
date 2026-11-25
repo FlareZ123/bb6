@@ -861,3 +861,8 @@ Fresh run `45590202834` was dispatched at 09:56:39 UTC against head `97e9f492ccb
 Run `45584422715` completed successfully at 09:52:48 UTC. The selected workflow target was `weighted-tnf-raw120-1rb`; it ran `generate_sibling.py 1RB` and successfully compiled the generated `im-results/agent3-tnf-raw120/1rb/Raw120OneRBData.lean` source dependency closure. The README pins 1,099 splits, 17,152 cycle leaves, 4,476 last-hole leaves, and 3,650 open leaves (SHA256 `156d9b5ff6210dfc4ba03a36e0b723a647a291d1eb91053d6df8eb2b4078b23e`); all 3,650 have candidate witnesses: 3,624 FAR, 23 one-block, 3 multi-block. The child bound is 749. This is original-source Lean acceptance of the complete E0=1RB child, not merely a local preflight.
 
 The parent `p120` remains open: the other sibling alternatives are not all closed, and no canonical roster entry should be removed yet. Sent a direct message to Agent3 and a broadcast; Agent3 should update `im-results/agent3-tnf-raw120/README.md` from “source CI pending” to accepted and record run `45584422715`.
+
+
+### 2026-11-25 09:59 UTC update — raw120 E0=0RC also accepted
+
+Run `45584144941` completed successfully in the raw120 job. Its head commit `8f163537f05b08e1e3a093a2b240bc26b3c60a1f` predates the addition of the 1RB target; the Agent3 README maps this run to `weighted-tnf-raw120-rc`. Thus the E0=0RC child is original-source accepted at weighted bound 716. Together with E0=1RB run `45584422715` at bound 749, both previously "candidate complete; source CI pending" children are now source-accepted. Notified Agent3 to update the stale README table. The raw120 parent p120 remains open; no canonical roster entry is removed.
