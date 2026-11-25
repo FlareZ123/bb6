@@ -4,7 +4,7 @@ on:
     inputs:
       target:
         type: choice
-        options: [twelve, five-hole, recursive, raw107-witness, raw121-witness, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-child, raw108-graft, raw58-cut, raw58-more, raw58-rc, raw58-child, raw109-cut, raw109-refine, raw109-refine6, raw109-refine7, raw109-refine8, raw109-refine9, raw109-refine12, raw109-final-leaves, raw109-closed]
+        options: [twelve, five-hole, recursive, raw107-witness, raw121-witness, raw121-membership, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-child, raw108-graft, raw58-cut, raw58-more, raw58-rc, raw58-child, raw109-cut, raw109-refine, raw109-refine6, raw109-refine7, raw109-refine8, raw109-refine9, raw109-refine12, raw109-final-leaves, raw109-closed]
         default: twelve
       raw108_child:
         type: string
@@ -80,6 +80,20 @@ jobs:
           python im-results/agent13-coverage/unpack.py
           python tools/lean_compile_closure.py --workdir /tmp/a11-raw121-witness --jobs 2 im-results/agent11-raw121/Raw121Exceptions.lean | tee /tmp/a11-raw121-witness.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a11-raw121-witness.log; then exit 1; fi
+      - name: Verify raw121 membership in the canonical78 residual roster
+        if: inputs.target == 'raw121-membership'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent10-tnf-raw87/generate.py
+          python im-results/agent10-tnf-raw91/generate.py
+          python im-results/agent10-tnf-multipump/generate.py 66 70 80
+          python im-results/agent10-tnf-multipump/generate.py 68 72 82
+          python im-results/agent10-tnf-multipump/generate.py 86 88 92 93 97 98 100 101 102 104
+          python tools/lean_compile_closure.py --workdir /tmp/a11-raw121-membership --jobs 4 im-results/agent11-raw121/Raw121CanonicalMembership.lean | tee /tmp/a11-raw121-membership.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a11-raw121-membership.log; then exit 1; fi
       - name: Verify raw107 original-machine nonhalting theorem
         if: inputs.target == 'raw107-witness'
         env:
