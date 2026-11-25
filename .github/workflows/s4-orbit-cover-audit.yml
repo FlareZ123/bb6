@@ -14,5 +14,5 @@ jobs:
         uses: actions/checkout@v4
       - name: Audit all S4 images against refinement representatives
         run: |
-          python3 research/im-results/agent44-source-roster/orbit_cover_audit.py \
-            research/im-results/agent13-roster-convergence/canonical-124.json
+          python3 im-results/agent44-source-roster/orbit_cover_audit.py \
+            im-results/agent13-roster-convergence/canonical-124.json
