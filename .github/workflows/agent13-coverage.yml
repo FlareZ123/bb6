@@ -3279,8 +3279,13 @@ jobs:
               name.rsplit(".", 1)[-1]: {x.strip() for x in axioms.split(",") if x.strip()}
               for name, axioms in re.findall(r"'([^']+)' depends on axioms: \[([^\]]*)\]", log)
           }
+          for name in re.findall(r"'([^']+)' does not depend on any axioms", log):
+              profiles[name.rsplit(".", 1)[-1]] = set()
           allowed = {"propext", "Classical.choice", "Quot.sound"}
-          for name in ("never1539", "never1547"):
+          required = ("never1539", "never1547", "control1539", "control1547",
+                      "noTransferHard0", "noTransferHard1", "noTransferHard2",
+                      "noTransferHard3", "noTransferHard4")
+          for name in required:
               if name not in profiles:
                   raise SystemExit("missing axiom profile: " + name)
               bad = profiles[name] - allowed
