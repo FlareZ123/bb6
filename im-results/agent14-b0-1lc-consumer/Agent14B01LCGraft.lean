@@ -133,7 +133,7 @@ theorem witnessAudit_closes_sideWitness {B : Nat} (hB : 7014 ≤ B)
 
 /-- The exact B0=1LC parent has ten free transitions. -/
 theorem parent_freeSlotCount : freeSlotCount Parent = 10 := by
-  decide [Parent, firstOneB0_1LC, BB6.Agent50TNFPilot.root, refine, emptyTable]
+  decide
 
 theorem parent_cylinderMass : cylinderMass Parent = 25 ^ 10 := by
   unfold cylinderMass
@@ -170,5 +170,6 @@ theorem parent_is_exact_109_member :
 #print axioms witnessAudit_mass_conserves
 #print axioms sideWitness_refines_parent
 #print axioms parent_is_exact_109_member
+#print axioms parent_freeSlotCount
 
 end BB6.Agent14B01LCGraft
