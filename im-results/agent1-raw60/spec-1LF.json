@@ -150,9 +150,7 @@
     2087
   ],
   "unresolved": {
-    "1327": "1RB1LF_1RC0RB_0RD0LA_1LD1RE_---1RA_1RC1LA",
-    "1596": "1RB1LF_1RC0LB_0RD0RD_1LD1RE_0RA1RA_---1LB",
-    "1605": "1RB1LF_1RC0LB_0RD0RF_1LD1RE_---1RA_0RC1LB"
+    "1596": "1RB1LF_1RC0LB_0RD0RD_1LD1RE_0RA1RA_---1LB"
   },
   "late": {},
   "manual": {
@@ -181,6 +179,11 @@
       "BB6.Agent1Raw60LFPeriodic.M939",
       "1RB1LF_1RC0LB_0RD0RE_1LD1RE_---1RA_1LB0RA"
     ],
+    "1327": [
+      "Raw60LFLong",
+      "BB6.Agent1Raw60LFLong.M1327",
+      "1RB1LF_1RC0RB_0RD0LA_1LD1RE_---1RA_1RC1LA"
+    ],
     "1592": [
       "Raw60LFPeriodic",
       "BB6.Agent1Raw60LFPeriodic.M1592",
@@ -190,6 +193,11 @@
       "Raw60LFPeriodic",
       "BB6.Agent1Raw60LFPeriodic.M1603",
       "1RB1LF_1RC0LB_0RD0RE_1LD1RE_---1RA_---1LB"
+    ],
+    "1605": [
+      "Raw60LFLong",
+      "BB6.Agent1Raw60LFLong.M1605",
+      "1RB1LF_1RC0LB_0RD0RF_1LD1RE_---1RA_0RC1LB"
     ],
     "1758": [
       "Raw60LFDoubleSweep",
