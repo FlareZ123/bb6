@@ -146,7 +146,7 @@ def rootSiblingAfterTwo (parent : Move) : Config :=
 theorem rootSiblingKnownRunTwo (parent : Move) :
     knownRun (rootSiblingParent parent) 2 = some (rootSiblingAfterTwo parent) := by
   simp [rootSiblingAfterTwo, knownRun, knownStep, rootSiblingParent,
-    refine, BB6.Agent50TNFPilot.root, blank, readSlot, applyMove]
+    refine, BB6.Agent50TNFPilot.root, CoverageAdapter.firstOneCylinder, emptyTable, blank, readSlot, applyMove]
 
 def rootSiblingChild (parent child : Move) : PartialMachine :=
   refine (rootSiblingParent parent) (readSlot (rootSiblingAfterTwo parent)) (some child)
@@ -214,7 +214,7 @@ theorem rootSiblingHaltWeight (parent : Move) (hp : parent ∈ rootLevelMoves) :
 
 theorem rootSiblingParent_root (parent : Move) :
     rootSiblingParent parent initialSlot = some (some ⟨true, true, 1⟩) := by
-  simp [rootSiblingParent, refine, BB6.Agent50TNFPilot.root, initialSlot]
+  simp [rootSiblingParent, refine, BB6.Agent50TNFPilot.root, CoverageAdapter.firstOneCylinder, emptyTable, initialSlot]
 
 /-- Exact first-hole dichotomy for each of the 19 ten-hole root siblings. -/
 theorem rootSiblingParent_sound (parent : Move) (hp : parent ∈ rootLevelMoves)
