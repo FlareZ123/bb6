@@ -25,6 +25,12 @@ required = {
     "BB6.Agent14B01LC109Graft.refinedRootDichotomy",
     "BB6.Agent14B01LC109Graft.cover_of_108_and_parentAudit",
     "BB6.Agent14B01LC109Graft.exact_from_108_and_parentAudit",
+    "BB6.Agent42B01LC109SourceConsumer.q2800_held_leaf_weighted_at_champion_score",
+    "BB6.Agent42B01LC109SourceConsumer.b0_1lc_parent_cover_from_41_boxes",
+    "BB6.Agent42B01LC109SourceConsumer.cover_reduced_roster_from_108_and_41_boxes",
+    "BB6.Agent42B01LC109SourceConsumer.exact_from_108_and_41_boxes",
+    "BB6.Agent42B01LC109SourceConsumer.refined_obligation_count",
+    "BB6.Agent42B01LC109SourceConsumer.b0_1lc_mass_conservation",
 }
 missing = sorted(required - profiles.keys())
 if missing:
