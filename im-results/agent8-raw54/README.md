@@ -55,9 +55,9 @@ They use the same total four-bit digit recurrence as IDs 2 and 72. Their left an
 
 All thirteen new `never` theorems were checked locally in Lean 4.36.0-rc2 using the relevant original repository source definitions and transport proof excerpts, with only propext and Quot.sound. All source files and the generator integration are committed.
 
-## E0=1LF child: eight unresolved candidate leaves
+## E0=1LF child: seven unresolved candidate leaves
 
-The distinct child `1RB---_1RC---_0RD---_1LD0LE_1LF0LE_------` has 1,926 splits, 28,735 cycles, 14,366 last-hole and 1,198 open nodes. The frozen FAR bank matches 1,085 of the open nodes. The [LF generator](generate_lf.py) and [witness ledger](lf-witnesses.txt) encode the partial audit at weighted bound 7014; [the eight residual tables](lf-unresolved.txt) are the remaining candidate holes, not a source-accepted residual theorem. The earlier nine residual IDs were reproduced by an independent exact first-hole/side-cycle enumerator and FAR saturation with the same ordering and counts.
+The distinct child `1RB---_1RC---_0RD---_1LD0LE_1LF0LE_------` has 1,926 splits, 28,735 cycles, 14,366 last-hole and 1,198 open nodes. The frozen FAR bank matches 1,085 of the open nodes. The [LF generator](generate_lf.py) and [witness ledger](lf-witnesses.txt) encode the partial audit at weighted bound 7014; [the seven residual tables](lf-unresolved.txt) are the remaining candidate holes, not a source-accepted residual theorem. The earlier nine residual IDs were reproduced by an independent exact first-hole/side-cycle enumerator and FAR saturation with the same ordering and counts.
 
 ID 64 (`1RB---_1RC1LB_0RD0RF_1LD0LE_1LF0LE_1LA0RC`) has a total three-phase return proof in [Raw54LFGrowth64.lean](Raw54LFGrowth64.lean). Write D(p,n) for state D, left zipper (00)^n p and empty right zipper. The anchor words p0=11, p1=1011, p2=101011 give exact transitions:
 - D(p0,k+2) -> D(p2,k+3), 4k+56 moves;
@@ -65,6 +65,8 @@ ID 64 (`1RB---_1RC1LB_0RD0RF_1LD0LE_1LF0LE_1LA0RC`) has a total three-phase retu
 - D(p1,n) -> D(p0,n+2), 4n+12 moves.
 
 The D sweep transfers zero pairs to one pairs, a fixed 48- or 10-step local computation changes the anchor, and F/C drain one pairs into zero pairs. At time 103 the blank orbit is D(p0,6). The three phases compose D(p0,5n+6) -> D(p0,5(n+1)+6) in 60n+160 moves, never reading the sole hole A1. Lean 4.36.0-rc2 checked the complete new `never` theorem against locally reconstructed relevant Frontier, RootShift, SparseZipper and SweepPumping source excerpts; its only axioms are propext and Quot.sound. The full repository closure and generated child audit remain pending. This proves a specific cylinder nonhalting, not the entire Raw54 parent or BB(6) maximality.
+
+ID 99 (`1RB0RC_1RC---_0RD0RA_1LD0LE_1LF0LE_1RC1LE`) has a total arbitrary-word return in [Raw54LFCounter99.lean](Raw54LFCounter99.lean). At A the left zipper is `00` followed by the little-endian digit encoding b0, terminated by a single 1; the right zipper is 0 followed by n+1 one-pairs. The blank run enters n=0, empty word after 10 moves. The epoch maps (n,w) to (n+1,bump(w)) in 4n+14+4c(w) moves, where c counts leading one digits, plus one for reaching the empty word. The carry and restoration are proved for arbitrary words including the implicit blank case. Every B1 completion is nonhalting. Lean 4.36.0-rc2 checks the original-semantics theorem against the same relevant source excerpts, using only propext and Quot.sound; full original import closure and child audit are pending.
 
 ## Reproduction
 

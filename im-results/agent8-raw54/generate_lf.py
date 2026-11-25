@@ -90,7 +90,7 @@ def main():
         d,D,L,R,z=masks(parse(row),int(code[0]),[int(c,36) for c in code[1:]])
         certs[row]=f".far {str(code[0]=='1').lower()} {d} ⟨0,{D},{L},{R},{z}⟩"
     residual=[row for row in rows if row not in certs]
-    assert len(residual)==8
+    assert len(residual)==7
     assert all(row.count("---")==1 for row in residual)
     (ROOT/"lf-unresolved.txt").write_text("".join(f"{misses.index(row)}:{row}\n" for row in residual))
     stats=Counter()
