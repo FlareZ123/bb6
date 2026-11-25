@@ -221,7 +221,7 @@ jobs:
             else
               cp -p "$src" "$dst"
             fi
-          done < <(find pinned/im-results/agent47-raw114-cut -maxdepth 1 -type f -name '*.lean' -print0)
+          done < <(find im-results/agent47-raw114-cut -maxdepth 1 -type f -name '*.lean' -print0)
 
           cp pinned/im-results/agent11-raw107/CanonicalTwoParentAccepted.lean /tmp/a47-canonical77/
           cd /tmp/a47-canonical77
@@ -260,9 +260,9 @@ jobs:
             im-results/agent11-raw107/CanonicalTwoParentAccepted.lean
 
           mkdir -p /tmp/canonical76-certified
-          cp CanonicalTwoParentAccepted.olean /tmp/canonical76-certified/
-          cp CanonicalTwoParentAccepted.lean /tmp/canonical76-certified/
-          cp manifest-canonical76.json /tmp/canonical76-certified/manifest.json
+          cp /tmp/a47-canonical77/CanonicalTwoParentAccepted.olean /tmp/canonical76-certified/
+          cp /tmp/a47-canonical77/CanonicalTwoParentAccepted.lean /tmp/canonical76-certified/
+          cp /tmp/a47-canonical77/manifest-canonical76.json /tmp/canonical76-certified/manifest.json
       - name: Upload canonical76 conditional proof module
         id: upload_canonical76
         uses: actions/upload-artifact@v4
