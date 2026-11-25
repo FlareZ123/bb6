@@ -170,7 +170,7 @@ jobs:
             /tmp/a46-raw13.log
             /tmp/a46-canonical-manifest.json
       - name: Preserve compiled raw13 source closure
-        if: inputs.target == 'ingest77'
+        if: inputs.target == 'ingest77' || inputs.target == 'phase'
         uses: actions/upload-artifact@v4
         with:
           name: raw13-closure-certified
@@ -178,7 +178,7 @@ jobs:
           if-no-files-found: error
           retention-days: 30
       - name: Compile raw13 graft against the accepted canonical77 artifact
-        if: inputs.target == 'ingest77'
+        if: inputs.target == 'ingest77' || inputs.target == 'phase'
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD:im-results/agent47-rooted-tnf/CanonicalRaw114Accepted.lean)" = "d198f4eb8d3c2ca4b7ed5a2c57298cb6364537f4"
@@ -213,7 +213,7 @@ jobs:
               print(f"{name}: {sorted(profiles[name])}")
           PY
       - name: Preserve raw13 canonical77 proof artifact
-        if: inputs.target == 'ingest77'
+        if: inputs.target == 'ingest77' || inputs.target == 'phase'
         uses: actions/upload-artifact@v4
         with:
           name: canonical77-raw13-graft-certified
