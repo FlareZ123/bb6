@@ -1236,22 +1236,7 @@ jobs:
             --override MixedBound109Composition=im-results/agent13-roster-convergence/MixedBound109Composition.lean
             --override IncrementalAudit=im-results/agent8-coverage-contract/IncrementalAudit.lean
           )
-          mkdir -p /tmp/a13-base
-          if [ -n "$B0_1LC_BASE_RUN_ID" ]; then
-            gh run download "$B0_1LC_BASE_RUN_ID" --repo FlareZ123/bb6 \
-              --name b0-1lc-weighted-109-graft --dir /tmp/a13-base
-            BASE_MANIFEST="$(find /tmp/a13-base -type f -name manifest.json -print -quit)"
-            BASE_DIR="$(dirname "$BASE_MANIFEST")"
-            BASE_LOG="$(find /tmp/a13-base -type f -name a13-heldleaf109.log -print -quit)"
-            test -n "$BASE_MANIFEST"
-            test -n "$BASE_LOG"
-            python tools/lean_compile_closure.py --workdir /tmp/a13-heldleaf109 --jobs 4 \
-              --precompiled-manifest "$BASE_MANIFEST" --precompiled-dir "$BASE_DIR" \
-              --manifest /tmp/a13-heldleaf109/manifest.json "${OVERRIDES[@]}" \
-              im-results/agent42-source-certificate-ingestion/Agent42B01LC109SourceConsumer.lean \
-              | tee /tmp/a13-heldleaf109.log
-            cat "$BASE_LOG" /tmp/a13-heldleaf109.log > /tmp/a13-heldleaf109-combined.log
-          else
+          compile_full() {
             python tools/lean_compile_closure.py --workdir /tmp/a13-heldleaf109 --jobs 4 \
               --manifest /tmp/a13-heldleaf109/manifest.json "${OVERRIDES[@]}" \
               im-results/agent13-cross-route-pilot/Root109Membership.lean \
@@ -1263,7 +1248,30 @@ jobs:
               im-results/agent42-source-certificate-ingestion/Agent42B01LC109SourceConsumer.lean \
               | tee /tmp/a13-heldleaf109.log
             cp /tmp/a13-heldleaf109.log /tmp/a13-heldleaf109-combined.log
-            printf 'No precompiled base artifact used.\n' > /tmp/a13-base/BASE_NOT_USED.txt
+          }
+          mkdir -p /tmp/a13-base
+          if [ -n "$B0_1LC_BASE_RUN_ID" ] && gh run download "$B0_1LC_BASE_RUN_ID" \
+              --repo FlareZ123/bb6 --name b0-1lc-weighted-109-graft --dir /tmp/a13-base; then
+            BASE_MANIFEST="$(find /tmp/a13-base -type f -name manifest.json -print -quit)"
+            BASE_DIR="$(dirname "$BASE_MANIFEST")"
+            BASE_LOG="$(find /tmp/a13-base -type f -name a13-heldleaf109.log -print -quit)"
+            if [ -n "$BASE_MANIFEST" ] && [ -n "$BASE_LOG" ]; then
+              python tools/lean_compile_closure.py --workdir /tmp/a13-heldleaf109 --jobs 4 \
+                --precompiled-manifest "$BASE_MANIFEST" --precompiled-dir "$BASE_DIR" \
+                --manifest /tmp/a13-heldleaf109/manifest.json "${OVERRIDES[@]}" \
+                im-results/agent42-source-certificate-ingestion/Agent42B01LC109SourceConsumer.lean \
+                | tee /tmp/a13-heldleaf109.log
+              cat "$BASE_LOG" /tmp/a13-heldleaf109.log > /tmp/a13-heldleaf109-combined.log
+            else
+              echo "Base artifact lacks a complete manifest/log; falling back to a full compile."
+              compile_full
+            fi
+          else
+            if [ -n "$B0_1LC_BASE_RUN_ID" ]; then
+              echo "Base artifact unavailable; falling back to a full compile."
+            fi
+            compile_full
+            printf 'No usable precompiled base artifact.\n' > /tmp/a13-base/BASE_NOT_USED.txt
           fi
           if grep -Eq 'sorryAx|native_decide' /tmp/a13-heldleaf109-combined.log; then
             echo "Forbidden proof placeholder or native_decide found in B0=1LC weighted parent consumer" >&2
