@@ -75,15 +75,18 @@ def merge(artifacts_root: Path, precompiled_dir: Path, source_root: Path) -> Non
     merged_roots = {}
     merged_inputs = {}
     source_revisions = set()
+    proof_revisions = set()
+    workflow_runs = {}
     first = manifests[0][1]
 
     for artifact_dir, manifest in manifests:
         assert manifest["schema_version"] == first["schema_version"] == 1
         assert manifest["lean_version"] == first["lean_version"]
         assert manifest["lean_binary"]["sha256"] == first["lean_binary"]["sha256"]
-        assert manifest["proof_source_revision"] == first["proof_source_revision"]
-        assert manifest["workflow"]["run_id"] == first["workflow"]["run_id"]
         source_revisions.update(manifest.get("source_revisions", []))
+        proof_revisions.add(manifest["proof_source_revision"])
+        workflow = manifest.get("workflow", {})
+        workflow_runs[str(workflow.get("run_id"))] = workflow
 
         for root in manifest["roots"]:
             key = root["module"]
@@ -133,6 +136,8 @@ def merge(artifacts_root: Path, precompiled_dir: Path, source_root: Path) -> Non
         "weighted_bound": None,
     }
     merged["source_revisions"] = sorted(source_revisions)
+    merged["proof_source_revisions"] = sorted(proof_revisions)
+    merged["workflow_runs"] = [workflow_runs[k] for k in sorted(workflow_runs)]
     merged["roots"] = [merged_roots[k] for k in sorted(merged_roots)]
     merged["provenance_inputs"] = [
         {"path": k, "sha256": merged_inputs[k]} for k in sorted(merged_inputs)
