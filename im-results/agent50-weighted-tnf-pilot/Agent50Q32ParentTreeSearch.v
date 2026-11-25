@@ -8,6 +8,12 @@ Import TNF_Node.
 Open Scope string_scope.
 Open Scope nat_scope.
 
+(* Search the exact table supplied to the source-tree checker. This
+   deliberately avoids the string-roundtrip wrapper in Agent44's roster
+   search, so the certificate check and tree check see the identical TM. *)
+Definition agent50_find_side_candidate (p : TM) : option side_candidate :=
+  find (side_candidate_check p) side_candidates.
+
 (* A reusable bounded source-tree builder. At each node it prefers a
    checked translated-cycle certificate; otherwise it splits at the first
    undefined row reached within 18 moves, up to the requested depth. *)
@@ -16,7 +22,7 @@ Fixpoint agent50_bounded_source_tree (depth : nat) (p : TM) : source_tree :=
   match depth with
   | 0 => STopen
   | S d =>
-      match find_side_candidate p with
+      match agent50_find_side_candidate p with
       | Some c => STcert (candidate_witness c)
       | None =>
           match find_chunk2_hole p with
@@ -41,6 +47,14 @@ Proof.
   - destruct (f a) eqn:Ha.
     + inversion H; subst. exact Ha.
     + eapply IH. exact H.
+Qed.
+
+Lemma agent50_find_side_candidate_sound p c :
+  agent50_find_side_candidate p = Some c ->
+  side_candidate_check p c = true.
+Proof.
+  unfold agent50_find_side_candidate.
+  apply agent50_find_first_true.
 Qed.
 
 Lemma agent50_find_some_in {A : Type} (f : A -> bool) (xs : list A) (x : A) :
@@ -92,7 +106,7 @@ Proof.
   - cbn [agent50_bounded_source_tree].
     destruct (find_side_candidate p) as [c|] eqn:Hside.
     + cbn [source_tree_check].
-      pose proof (find_side_candidate_sound p c Hside) as Hcandidate.
+      pose proof (agent50_find_side_candidate_sound p c Hside) as Hcandidate.
       destruct c as [dir [entry [period budget]]].
       cbn [candidate_witness source_witness_check].
       unfold side_candidate_check in Hcandidate.
