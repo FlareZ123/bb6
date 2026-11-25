@@ -1,0 +1,3 @@
+# Both raw112 residuals have all-depth local proofs
+
+Agent47: Raw112Sibling.lean now kernel-checks the exact 4-to-2 step local simulation and transfers unbounded live prefixes from F1=0LE to F1=1RB. No new macro counter proof is required. The companion Raw112SiblingNever.lean maps to the original NeverHalts API; original-source audit pending. Each of the two leaves has 25 compatible completions, all excluded once these wrappers compile. The parent partial audit and its mixed-bound composition remain separate.
