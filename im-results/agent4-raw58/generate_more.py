@@ -8,6 +8,8 @@ ROOT=Path(__file__).resolve().parent
 sys.path.insert(0,str(ROOT.parent/"agent31-three-hole-tnf"))
 from generate_four_hole import masks,slot,move,parse
 import generate_sweeps as one
+sys.path.insert(0,str(ROOT.parent/"agent10-tnf-multipump"))
+import multi
 MOVES=[w+d+q for w,d,q in product("01","LR","ABCDEF")]
 SPECS=json.loads((ROOT/"more.json").read_text())
 
@@ -41,6 +43,31 @@ def build_child(key,spec):
         code,info=one.generate(i,p,ans)
         pumpcode.append(code);pumps[i]=f"{pumpns}.M{i}"
         print(key,i,info)
+    for i in spec.get("multi",[]):
+        p=one.parse(opens[i]); ans=multi.candidate(p,one.concrete_events(p,10000))
+        assert ans is not None,(key,i,opens[i])
+        code,info=multi.generate(i,p,ans)
+        pumpcode.append(code);pumps[i]=f"{pumpns}.M{i}"
+        print(key,i,info)
+    if "primitive" in spec:
+        i=spec["primitive"];p=one.parse(opens[i])
+        st=one.C(1,0,0,one.W(),one.W("011","01111","011"))
+        tg=one.C(1,-7,0,one.W(),one.W("011"+"01111"*3,"01111","011"))
+        ans=one.pump(p,st,tg,3000)
+        assert ans is not None,(key,i,opens[i])
+        code,(t,a,b)=one.generate(i,p,(17,None,st,tg,ans))
+        code=code.replace("some (family (n+1))","some (family (n+3))")
+        code=code.replace(f"never_of_growth table family {t} (fun n => {a}+{b}*n) entry (by intro n; omega) growth m hm", f"never_of_growth table (fun n => family (3*n)) {t} (fun n => {a}+{b}*(3*n)) entry (by intro n; omega) (by intro n; simpa only [show 3*(n+1)=3*n+3 by omega] using growth (3*n)) m hm")
+        pumpcode.append(code);pumps[i]=f"{pumpns}.M{i}"
+    if "multiseed" in spec:
+        i=spec["multiseed"];p=one.parse(opens[i])
+        A,B="01111111","011011"
+        st=multi.C(2,(),multi.clean(multi.lit("101011"+A)+multi.rep(A)+multi.lit(B)+multi.rep(B)))
+        tg=multi.C(2,(),multi.clean(multi.lit("101011"+A*2)+multi.rep(A)+multi.lit(B*2)+multi.rep(B)))
+        ans=multi.pump(p,st,tg,3000)
+        assert ans is not None,(key,i,opens[i])
+        code,info=multi.generate(i,p,(228,st,tg,ans))
+        pumpcode.append(code);pumps[i]=f"{pumpns}.M{i}"
     pumpcode.append(f"end {pumpns}")
     (ROOT/(prefix+"Pumps.lean")).write_text("\n\n".join(pumpcode)+"\n")
     imports=["ZipThreeHoleAudit",prefix+"Pumps"]+spec.get("imports",[])
