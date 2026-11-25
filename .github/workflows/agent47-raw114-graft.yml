@@ -38,7 +38,7 @@ jobs:
           python im-results/agent10-tnf-multipump/generate.py 66 70 80
           python im-results/agent10-tnf-multipump/generate.py 68 72 82
           python im-results/agent10-tnf-multipump/generate.py 86 88 92 93 97 98 100 101 102 104
-          python tools/lean_compile_closure.py --workdir /tmp/a47-canonical --jobs 4 im-results/agent47-rooted-tnf/CanonicalTwoParentGraft.lean | tee /tmp/a47-canonical.log
+          python tools/lean_compile_closure.py --workdir /tmp/a47-canonical --jobs 4 im-results/agent47-rooted-tnf/CanonicalTwoParentGraft.lean im-results/agent48-counted-inc0/TM63RawUpperInterface.lean | tee /tmp/a47-canonical.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a47-canonical.log; then exit 1; fi
       - name: Link the accepted cylinder theorem, check count and composition
         run: |
@@ -49,6 +49,24 @@ jobs:
           export LEAN_PATH="$PWD"
           lean -o CanonicalRaw114Accepted.olean CanonicalRaw114Accepted.lean | tee /tmp/a47-graft.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a47-graft.log; then exit 1; fi
+          cp im-results/agent47-rooted-tnf/Canonical77ExactComposition.lean .
+          lean -o Canonical77ExactComposition.olean Canonical77ExactComposition.lean | tee /tmp/a47-exact77.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a47-exact77.log; then exit 1; fi
+          python3 - /tmp/a47-exact77.log <<'PY'
+          import pathlib, re, sys
+          log = pathlib.Path(sys.argv[1]).read_text()
+          allowed = {"propext", "Classical.choice", "Quot.sound"}
+          for name in ("champion_score_gt_7014", "champion_raw_witness",
+                       "BB6.Agent47CanonicalRaw114Accepted.exact_at_target",
+                       "exact_from_canonical77_at_champion_score"):
+              m = re.search(r"'[^']*\\."+re.escape(name)+r"' depends on axioms: \\[([^\\]]*)\\]", log)
+              if not m:
+                  raise SystemExit("missing axiom audit: "+name)
+              used = {x.strip() for x in m.group(1).split(",") if x.strip()}
+              if not used <= allowed:
+                  raise SystemExit(f"nonstandard axioms in {name}: {used-allowed}")
+              print(f"{name}: {sorted(used)}")
+          PY
       - uses: actions/upload-artifact@v4
         with:
           name: canonical77-certified
