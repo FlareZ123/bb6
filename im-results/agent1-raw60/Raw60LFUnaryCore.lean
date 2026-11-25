@@ -6,7 +6,7 @@ abbrev Q (q : Fin 6) (L R : List Bool) : Z0 := ⟨q,L,R⟩
 abbrev F := Q 5
 abbrev Reach (p : PartialMachine) (a b : Z0) := ∃ t : Nat, run0 p t a = some b
 
-theorem trans {p : PartialMachine} {a b c : Z0} (h : Reach p a b) (g : Reach p b c) : Reach p a c := by
+theorem reachTrans {p : PartialMachine} {a b c : Z0} (h : Reach p a b) (g : Reach p b c) : Reach p a c := by
   obtain ⟨t,ht⟩ := h
   obtain ⟨u,hu⟩ := g
   exact ⟨t+u,join0 ht hu⟩
@@ -32,7 +32,7 @@ theorem direct {p : PartialMachine} {k : Nat} {q z : Fin 6}
   have h2 : run0 p 1 (Q q (true::(U k++false::L)) (b::R)) = some (Q z (b::(U (k+1)++false::L)) R) := by simp [run0,step0,move0,hr,List.replicate_succ]
   have he : U k++true::b::R = U (k+1)++b::R := by unfold U; rw [List.replicate_succ']; simp [List.append_assoc]
   rw [he] at h1
-  exact trans h1 ⟨1,h2⟩
+  exact reachTrans h1 ⟨1,h2⟩
 
 theorem reset {p : PartialMachine} {k : Nat} {q z : Fin 6}
     (h : Fill p k q) (hf : p (5,true) = some (some ⟨true,false,5⟩))
@@ -46,6 +46,17 @@ theorem reset {p : PartialMachine} {k : Nat} {q z : Fin 6}
   have he : run0 p 1 (Q q (false::(U k++false::L)) (b::R)) = some (Q z (b::(U (k+1)++false::L)) R) := by simp [run0,step0,move0,h0,List.replicate_succ]
   have hh : U k++true::b::R = U (k+1)++b::R := by unfold U; rw [List.replicate_succ']; simp [List.append_assoc]
   rw [hh] at ha
-  exact trans ha (trans ⟨1,hb⟩ (trans ⟨k,hc⟩ (trans hd ⟨1,he⟩)))
+  exact reachTrans ha (reachTrans ⟨1,hb⟩ (reachTrans ⟨k,hc⟩ (reachTrans hd ⟨1,he⟩)))
+
+/-- Abstract restoration interface for a nontrivial phase change. -/
+theorem extend {p : PartialMachine} {k : Nat} {q z : Fin 6}
+    (h : Fill p k q)
+    (hm : ∀ (b : Bool) (L R : List Bool), Reach p
+      (Q q (true::(U k++false::L)) (b::R)) (Q z (b::(U (k+1)++false::L)) R)) : Fill p (k+1) z := by
+  intro b L R
+  have ha := h true L (b::R)
+  have he : U k++true::b::R = U (k+1)++b::R := by unfold U; rw [List.replicate_succ']; simp [List.append_assoc]
+  rw [he] at ha
+  exact reachTrans ha (hm b L R)
 
 end BB6.Agent1Raw60LFUnaryCore
