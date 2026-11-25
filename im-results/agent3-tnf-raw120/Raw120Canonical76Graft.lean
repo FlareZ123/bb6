@@ -7,6 +7,7 @@ namespace BB6.Agent3Raw120Canonical76Graft
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent50TNFPilot BB6.Agent8TNFPath
 open BB6.Agent47CanonicalFrontier BB6.Agent47CanonicalRefinement
 open BB6.Agent47CanonicalTwoParent
+open BB6.Agent31FourHoleRoster
 
 /-- Exact raw120 table, independent of the expensive sibling proof closures. -/
 abbrev parent : PartialMachine :=
