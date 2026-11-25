@@ -31,6 +31,14 @@ theorem raw10RemainderWithCycleAndHalt_mass :
     raw10RemainderMass = 90737503713725 := by
   decide
 
+/-- The parent has ten independent 25-way holes. -/
+theorem parent_completion_mass : 25 ^ 10 = 95367431640625 := by
+  decide
+
+/-- Exact number of completions removed by the four certified cylinder families. -/
+theorem certified_union_mass : 25 ^ 10 - raw10RemainderMass = 4629927926900 := by
+  decide
+
 /-- The current four-certificate raw10 cover: side witnesses, held BlockFAR,
     cycle return, and forced-halt leaf. The 41 exact complement boxes remain
     explicit and must still be covered. -/
@@ -50,6 +58,8 @@ theorem parent_in_canonical77 :
 
 #print axioms raw10RemainderWithCycleAndHalt_count
 #print axioms raw10RemainderWithCycleAndHalt_mass
+#print axioms parent_completion_mass
+#print axioms certified_union_mass
 #print axioms raw10_cover_with_cycle_and_halt
 #print axioms parent_in_canonical77
 
