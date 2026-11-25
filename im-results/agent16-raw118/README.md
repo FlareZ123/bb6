@@ -28,6 +28,21 @@ TreeBiDFA.lean refines the existing BiDFA checker: successful lookup in a binary
 Discovery: asymmetric stack DFA summaries with suffix bits, phase modulo m, reset on a two-/three-bit marker, modular counts of patterns (including three-bit words), optional initial prefix. 1648/2202 use (left k=4, m=2, reset on 110, right k=5 plain); 2874 uses (left k=4 m=2 reset on 100, right k=5 m=2 count 111); 5666 uses (left k=2, m=2, initial prefix length 2, right k=3 m=2). Search details and residual roster will be preserved separately. This is not yet a raw118 parent proof.
 
 
+## Two original-source accepted nested-restoration leaves (25 November 2026)
+
+Leaves 655 and 657 of the fixed open.txt roster have distinct one-hole tables and admit universal nonhalting proofs by nested strong induction:
+
+| Leaf | Exact partial table | Right word of growing F-section | Original-source CI |
+|---|---|---|---|
+| 655 | `1RB1LA_1RC1RB_0RD0LA_1LD1RE_0RF0LE_0RB---` | `0 1^(n+1)` | [45685852382](https://github.com/FlareZ123/bb6/actions/runs/45685852382) |
+| 657 | `1RB1LA_1RC1RB_0RD1LA_1LD1RE_0RF0LE_0RB---` | `(01)^(n+1)` | [45686057730](https://github.com/FlareZ123/bb6/actions/runs/45686057730) |
+
+Both have left zipper `0^(n+2) S`, where the left zipper includes the head, and enter the n=0 family after 24 ordinary transitions with fixed suffix S=010100. Define a section F(n,S,R) by appending arbitrary right tail R to the indicated right word. Leaf 655 has a positive run F(n,S,00R) → F(n+1,S,R); leaf 657 has F(n,S,000R) → F(n+1,S,R). The reset erases a run of 2n+3 or 3n+4 zeros respectively, leaving a marker 1; a 9-step seed and successive smaller nested restoration calls establish the general rule by strong induction on n. The empty-right boundary has a separate exact proof F(n,S,[]) → F(n+1,S,[]), giving indefinitely many positive-cost returns.
+
+The exact source modules [Raw118Nested655.lean](Raw118Nested655.lean) and [Raw118Nested657.lean](Raw118Nested657.lean) export `BB6Coverage.Agent16Raw118Nested.M655.never` and `BB6Coverage.Agent16Raw118Nested.M657.never`, each for every compatible total machine. Both original-source CI steps succeeded on Lean 4.36.0-rc2 with the no-sorry/no-native_decide guard. The local copied-model entry, closure and restoration lemmas also checked. These distinct leaves each represent 25 completions, i.e. 50 total conditional on the exact parent partition. No finite simulation cutoff is used in the proofs.
+
+They are part of the remaining hard-set complement after the SAT, wide-window and run-aware candidate passes described in the [Agent40 dossier](../agent40-raw118-independent/README.md). The parent consumer must still explicitly incorporate these two certificates along with the other accepted leaves; this is not a complete parent cover.
+
 ## Source-closure status and exact residual accounting (25 November 2026)
 
 The 274-row hard set after the extended FAR5 pass has a reproducible, pairwise-disjoint certificate partition:
