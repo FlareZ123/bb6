@@ -1,4 +1,4 @@
-# Seven source-accepted sibling-cylinder bounds under a common E1 prefix
+# Eight source-accepted sibling-cylinder bounds under a common E1 prefix
 
 ## Statement and scope
 
