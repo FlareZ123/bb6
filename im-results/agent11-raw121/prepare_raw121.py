@@ -89,7 +89,9 @@ def enumerate_parent():
     assert len(special) == 121, len(special)
     assert not unmatched, (len(unmatched), sorted(unmatched.items())[:20])
     assert set(dfa) == set(range(len(opens)))
-    assert len(dfa) == len(opens) and len(set(dfa.values())) == 84
+    bank_codes = (ROOT / "bank.txt").read_text().splitlines()
+    assert len(bank_codes) == len(set(bank_codes)) == 84
+    assert len(dfa) == len(opens) and len(set(dfa.values())) <= 84
 
     # The explicit symbolic tables are pinned to their open-list indices.
     for category in ("quad", "counter", "long", "quadExtra", "binaryA", "unresolved"):
@@ -111,7 +113,8 @@ def enumerate_parent():
         "open_leaves": len(opens),
         "bank_matched_open_leaves": len(dfa),
         "far_leaves_used_in_audit": len(dfa) - len(special),
-        "far_codes_used": len(set(dfa.values())),
+        "bank_codes_in_file": len(bank_codes),
+        "bank_codes_used": len(set(dfa.values())),
         "symbolic_or_delayed_leaves": len(special),
         "enumerator_stdout": res.stdout.strip(),
     }
