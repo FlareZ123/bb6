@@ -62,9 +62,8 @@ theorem exact_at_target (B : Nat) (hB : 6766859 ≤ B)
     (raw109 : ∀ m, compatible BB6.Agent4Raw109Cut.parent m →
       WeightedBound 1703 m)
     (hLeaves : ∀ e ∈ roster, Cover (WeightedBound B) e.2)
-    (champ : ∃ m : BB6.Coverage.RawMachine,
-      BB6.Coverage.HaltsAt (BB6.Coverage.tickRaw m) B) :
-    BB6.Coverage.ExactBB6 B :=
+    (champ : ∃ m : RawMachine, HaltsAt (tickRaw m) B) :
+    ExactBB6 B :=
   exact_from_quotient_roster (by omega) hB (sound raw109) hLeaves champ
 
 #print axioms parent_present
