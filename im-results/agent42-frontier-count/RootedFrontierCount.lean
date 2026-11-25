@@ -33,6 +33,19 @@ def pureResiduals (p : PartialMachine) :
   cases h
   rfl
 
+theorem flatMap_congr {α β : Type} (xs : List α)
+    (f g : α → List β)
+    (h : ∀ x, x ∈ xs → f x = g x) :
+    xs.flatMap f = xs.flatMap g := by
+  induction xs with
+  | nil => rfl
+  | cons x xs ih =>
+      have hx := h x (by simp)
+      have htail : ∀ y, y ∈ xs → f y = g y := by
+        intro y hy
+        exact h y (by simp [hy])
+      simp [hx, ih htail]
+
 /-- Reconstruct the exact residual list from buildFrontierB without
     reducing its dependent proof-carrying frontier. -/
 theorem residuals_buildFrontierB (B : Nat) :
@@ -51,22 +64,48 @@ theorem residuals_buildFrontierB (B : Nat) :
       intro h cert
       have hfields := pathOKB_cons h
       rcases hfields with ⟨hhole,hread,hslot,hmove,hweight,htail⟩
-      have hr : knownRun p n = some (extractRunConfig hread).val :=
+      let c := (extractRunConfig hread).val
+      have hr : knownRun p n = some c :=
         (extractRunConfig hread).property
-      have hs : BB6Coverage.readSlot
-          (extractRunConfig hread).val = s := by
-        have h' : (some (extractRunConfig hread).val).map
-            BB6Coverage.readSlot = some s := by
+      have hs : readSlot c = s := by
+        have h' : (some c).map readSlot = some s := by
           simpa [hr] using hread
         simpa using h'
-      cases hs
+      have hhole' : p (readSlot c) = none := by
+        simpa [hs] using hhole
+      have hw : ∀ d ∈ possibleDelays (refine p (readSlot c) none) 0,
+          d + n + 1 ≤ B := by
+        simpa [hs.symm] using (weightOK_sound p s n B hweight)
+      have htail' : pathOKB B (refine p (readSlot c) (some mv))
+          (advanceCut cut mv) xs = true := by
+        simpa [hs.symm] using htail
+      have cert' : WeightedTNFCertificate B
+          (pathEnd (refine p (readSlot c) (some mv))
+            (advanceCut cut mv) xs).1 6 := by
+        simpa [pathEnd, hs.symm] using cert
       have ih' := ih
-        (refine p (BB6Coverage.readSlot
-          (extractRunConfig hread).val) (some mv))
+        (refine p (readSlot c) (some mv))
         (advanceCut cut mv)
-        (RawRootPath.step hp (extractRunConfig hread).property hhole)
-        htail cert
-      simp [buildFrontierB, residuals, pureResiduals, pathEnd, ih']
+        (RawRootPath.step hp hr hhole') htail' cert'
+      change residuals
+        (.expand hp hr hhole' hw (fun actual =>
+          if heq : actual = mv then
+            by
+              subst actual
+              simpa [heq] using
+                (buildFrontierB B (refine p (readSlot c) (some mv))
+                  (advanceCut cut mv) (RawRootPath.step hp hr hhole')
+                  xs htail' cert')
+          else
+            .residual (RawRootPath.step hp hr hhole'))) =
+        pureResiduals p ((n,s,mv) :: xs)
+      simp only [residuals, pureResiduals]
+      apply flatMap_congr
+      intro actual hmem
+      by_cases heq : actual = mv
+      · subst actual
+        simp [ih', hs, residuals_cast]
+      · simp [heq, hs, residuals]
 
 /-- Every path edge has 23 off-path ordinary children: the selected move
     is the unique one among the 24 ordinary moves that continues the path. -/
