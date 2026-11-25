@@ -586,7 +586,7 @@ jobs:
           IFS=, read -r -a labels <<< "$PHASE_LABELS"
           mkdir -p phase-results
           for label in "${labels[@]}"; do
-            case "$label" in 0|300|400a|400b|600|700|2700|2800) ;; *) echo "Invalid phase label: $label"; exit 2;; esac
+            case "$label" in 0|300|400a|400b|600|700|2700|2800|3500) ;; *) echo "Invalid phase label: $label"; exit 2;; esac
             mkdir -p "phase-results/$label"
             if timeout 180s python3 "$GITHUB_WORKSPACE/research/im-results/agent5-weighted-tnf-queue/block_phase_dfa.py" "$label" --output "phase-results/$label" | tee "phase-results/$label/generator.log"; then
               cp "phase-results/$label/Agent5PhaseMITM.v" "Agent5PhaseMITM_$label.v"
