@@ -19,12 +19,8 @@ theorem D3_haltsAfter23 : HaltsAfter D3 23 := by
   cases hc : knownRun (forgetHaltRows D3) 23 with
   | none => exact False.elim (hrun hc)
   | some c =>
-      refine ⟨c, hc, ?_⟩
-      have hhole :
-          (forgetHaltRows D3)
-            (readSlot ((knownRun (forgetHaltRows D3) 23).getD default)) = none := by
-        decide
-      simpa [hc] using hhole
+      refine ⟨c, rfl, ?_⟩
+      decide
 
 /-- Determinism makes 23 the only possible first-halting index. -/
 theorem D3_halt_bound24 :
