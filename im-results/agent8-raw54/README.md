@@ -4,7 +4,7 @@ Canonical raw54: `1RB---_1RC---_0RD---_1LD0LE_------_------`.
 The current child is `1RB---_1RC---_0RD---_1LD0LE_1LB0LE_------`.
 First-hole enumeration gives 1,515 split, 25,133 cycle, 8,567 last-hole and 1,146 open nodes (25^5 raw completions); observed maximum weighted halt 451. **The full child audit has not passed original-source Lean.** No global roster cut follows.
 
-Of 1,146 open nodes, 1,065 have FAR candidates (1,058 frozen-bank hits, seven additional hits), 49 have affine sweep proofs, eight have arbitrary-tail strong-induction proofs, eleven have sparse n-gram certificates, and four have new paired counter proofs. The last 9 candidate-unresolved one-hole tables are listed in [unresolved.txt](unresolved.txt). The 49 affine, eight strong-induction and eleven n-gram witnesses were previously compiled against original sources from raw117 artifact 14997867504, source revision 988705d0e0d7de1b736777b1b66b324115d75fdb. All four new nonhalting statements compile locally using the relevant original source definitions and transport lemmas extracted from Frontier, RootShift, SparseZipper, SweepPumping and Raw54Return. The full repository import closure and child audit remain pending.
+Of 1,146 open nodes, 1,065 have FAR candidates (1,058 frozen-bank hits, seven additional hits), 49 have affine sweep proofs, eight have arbitrary-tail strong-induction proofs, eleven have sparse n-gram certificates, and six have new paired counter proofs. The last 7 candidate-unresolved one-hole tables are listed in [unresolved.txt](unresolved.txt). The 49 affine, eight strong-induction and eleven n-gram witnesses were previously compiled against original sources from raw117 artifact 14997867504, source revision 988705d0e0d7de1b736777b1b66b324115d75fdb. All six new nonhalting statements compile locally using the relevant original source definitions and transport lemmas extracted from Frontier, RootShift, SparseZipper, SweepPumping and Raw54Return. The full repository import closure and child audit remain pending.
 
 ## Two-leaf counter invariant
 
@@ -29,6 +29,14 @@ Here 0^k denotes k zero block digits. The reset uses a six-step prefix, a left s
 
 Both enter A after 11 steps with left zipper 0101 (nearest first, including scanned cell), right zipper 11. A general return configuration has left zipper 01 followed by little-endian digits encoded as 00 or 01; right zipper 11. The next return increments the finite binary word (empty word increments to [1], 0::w to 1::w, 1::w to 0::inc(w)). The five-step entry into B prepares a leftward carry, each 1 digit costs two steps and moves a pair of ones onto the right tape, and the first 0 or blank takes one step into C. If k ones were carried, both variants return to A in 2k+2 steps by restoring k zero digits. The exact return cost is 8+4k. The transport uses C/F alternating steps for ID 62 and an F-only sweep after the first C step for ID 63. Structural induction on the unprocessed digit list establishes a total positive-cost increment; the source-excerpt Lean build checks `never` with axioms propext and Quot.sound. Every A1 completion is nonhalting.
 
+## Further right-tape counter variants (IDs 73 and 87)
+
+[Raw54RightPair.lean](Raw54RightPair.lean) handles the two additional tables:
+- 73: `1RB---_1RC0RB_0RD1RF_1LD0LE_1LB0LE_0LB1RA`;
+- 87: `1RB---_1RC0RC_0RD1RF_1LD0LE_1LB0LE_1RC1RA`.
+
+They use the same total four-bit digit recurrence as IDs 2 and 72. Their left anchors are 111000001 and 111111010 respectively; the blank entries are 33 and 49 steps. Each one-digit advance costs 4. Reset costs are 26+4k and 64+4k, consisting of the same six-step prefix and E1 block sweep, followed by a 20- or 58-step fixed suffix preserving the right tape. Both arbitrary-word recurrence and original-semantics nonhalting theorem compile locally using the relevant source excerpts, with only propext and Quot.sound. Every A1 completion is nonhalting.
+
 ## Reproduction
 
 The columns of sweeps.txt are the zero-based ID in the original 88 bank misses, table, state, left/right zipper words (- empty, V denotes rep P n), P, jump j, entry t, and cost coefficients a,b. Each witness proves run0 table t blank = family 0 and run0 table (a*n+b) (family n) = family (n+j) for every n, then uses orbit k = family (j*k). Example ID 3: E, empty left, right (001)^n 0011, entry 7, epoch cost 20n+52, jump 2.
@@ -36,7 +44,7 @@ The columns of sweeps.txt are the zero-based ID in the original 88 bank misses, 
 ```sh
 python im-results/agent13-coverage/unpack.py
 python im-results/agent8-raw54/generate.py --sweeps-only
-python tools/lean_compile_closure.py --workdir /tmp/a8-raw54-pair --jobs 4 im-results/agent8-raw54/Raw54Pair.lean im-results/agent8-raw54/Raw54LeftPair.lean
+python tools/lean_compile_closure.py --workdir /tmp/a8-raw54-pair --jobs 4 im-results/agent8-raw54/Raw54Pair.lean im-results/agent8-raw54/Raw54LeftPair.lean im-results/agent8-raw54/Raw54RightPair.lean
 python im-results/agent8-raw54/generate.py
 python tools/lean_compile_closure.py --workdir /tmp/a8-raw54-cut --jobs 4 im-results/agent8-raw54/Raw54Cut.lean
 ```
