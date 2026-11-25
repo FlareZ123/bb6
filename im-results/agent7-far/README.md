@@ -36,9 +36,9 @@ the remaining hard-root roster is decided; small DFA sizes 1–4 gave no
 hits on the historical 663 roster.
 
 
-## Depth-eight FAR cross-check and the actual 101-leaf frontier (24 Nov 2026)
+## Depth-eight FAR cross-check and the integrated 97-leaf frontier (24–25 Nov 2026)
 
-The exporter `extract_depth_eight_residuals.js` reconstructs the checked `Tree.residuals` from `root-frontier.json` and `DepthEightSiblingData1–4.lean`. It reproduces 107 unique open leaves: 101 one-hole and six two-hole. The six two-hole tables are exactly the six existing growth-witness tables, not six new frontier reductions:
+The exporter `extract_depth_eight_residuals.js` reconstructs the pre-FAR checked `Tree.residuals` from `root-frontier.json` and `DepthEightSiblingData1–4.lean`. It reproduces 107 unique raw open leaves: 101 one-hole and six two-hole. The six two-hole tables are the six existing growth-witness tables; they are already discharged by the growth layer and are not new FAR reductions. The six two-hole tables are exactly the six existing growth-witness tables, not six new frontier reductions:
 
 | Parent/tree | A/1 child | DFA | FAR run |
 |---|---|---:|---|
@@ -49,11 +49,11 @@ The exporter `extract_depth_eight_residuals.js` reconstructs the checked `Tree.r
 | 112 / tree112 | `1LE` | 6 | [45466336469](https://github.com/FlareZ123/bb6/actions/runs/45466336469) |
 | 112 / tree112 | `1LF` | 4 | [45466346380](https://github.com/FlareZ123/bb6/actions/runs/45466346380) |
 
-The overlap is exact: the two `0LB/1LD` tables are `Agent50TripleSweep.table false/true`; the four `1LC/1RD/1LE/1LF` tables are `Agent50OnesSweep.table 0..3`. Thus `siblingFinalRoster_count = 101` remains the actual unresolved frontier. `DepthEightFAR.lean` preserves independent FAR `Data` objects and `WeightedTNFCertificate B p 6` adapters for all six growth-covered tables; [regression run 45469255283](https://github.com/FlareZ123/bb6/actions/runs/45469255283) compiles the archived module and exporter successfully. These are alternate proofs, not a reason to change the existing tree.
+The overlap is exact: the two `0LB/1LD` tables are `Agent50TripleSweep.table false/true`; the four `1LC/1RD/1LE/1LF` tables are `Agent50OnesSweep.table 0..3. `DepthEightFAR.lean` preserves independent FAR `Data` objects and `WeightedTNFCertificate B p 6` adapters for all six growth-covered tables; [regression run 45469255283](https://github.com/FlareZ123/bb6/actions/runs/45469255283) compiles the archived module and exporter successfully. These are alternate proofs, not a reason to change the existing tree.
 
 ### One-hole residuals
 
-The 101 genuinely unresolved tables have their unique hole at F/0 (50), E/0 (24), or A/1 (27). A bounded blank-tape simulation of each table for 1,000,000 steps found:
+The 101 pre-FAR genuine one-hole tables have their unique hole at F/0 (50), E/0 (24), or A/1 (27). A bounded blank-tape simulation of each table for 1,000,000 steps found:
 - 101/101 reached the step cap without querying the missing row;
 - 0 reached an assigned halt;
 - maximum absolute head displacement: 1,485;
@@ -76,13 +76,13 @@ Four representative one-hole targets have now produced universal FAR nonhalting 
 
 The corresponding weighted TNF leaves are `p85_0_leaf`, `p114_0_leaf`, `p116_0_leaf`, and `p128_0_leaf` in `DepthEightFAR.lean`. [Regression run 45470400658](https://github.com/FlareZ123/bb6/actions/runs/45470400658) compiles these four plus the six growth-covered alternatives and the residual exporter, rejecting `sorryAx` and `native_decide`.
 
-Exact paths to the open leaves, using `moveIndex = 4*next + 2*write + right`, are:
+Exact paths to the four grafted leaves, using `moveIndex = 4*next + 2*write + right`, are:
 - `DepthEightSiblingData1.lean`, `tree85`: A/1=`0LD` (12), then E/0=`1RD` (15).
 - `DepthEightSiblingData1.lean`, `tree114`: E/0=`0LB` (4), then F/0=`0RC` (9).
 - `DepthEightSiblingData2.lean`, `tree116`: E/0=`0LA` (0), then A/1=`1LA` (2).
 - `DepthEightSiblingData4.lean`, `tree128`: F/0=`1RB` (7), then A/1=`0LB` (4).
 
-These four are genuine members of the 101-entry `siblingFinalRoster`, unlike the six growth-covered two-hole tables. The proof objects therefore close four of the 101 unresolved leaves; the shared `siblingFinalRoster_count` remains 101 until Agent 50 integrates these paths into the tree. After that integration, 97 one-hole leaves will remain.
+These four are genuine members of the pre-FAR 101-entry `siblingFinalRoster`, unlike the six growth-covered two-hole tables. `DepthEightSiblingCoverage.lean` now imports their four independently Lean-checked nonhalting theorems, proves exact membership of all four packed tables in the raw sibling residual roster, and filters only exact packed-table matches. The checked post-FAR roster has 103 open leaves (97 one-hole and six two-hole), with raw mass 6,175; after the existing growth witnesses remove the six two-hole leaves, `siblingFinalRoster_count = 97` and its mass is 2,425. At the root, `refinedRootRoster_count` falls from 231 to 227 and `finalRootRoster_count` from 225 to 221. The soundness and count closure passed original-source Lean 4.36.0-rc2 CI in [run 45523629756](https://github.com/FlareZ123/bb6/actions/runs/45523629756); the exported declarations depend only on `[propext, Classical.choice, Quot.sound]`, and the workflow rejects `sorryAx` and `native_decide`. The 97 one-hole leaves remain open, and this local subtree is not yet a closure of the global 121-residual root frontier.
 
 ## Canonical-search to weighted-TNF bridge
 
