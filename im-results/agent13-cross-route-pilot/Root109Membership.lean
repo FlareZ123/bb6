@@ -1,5 +1,6 @@
 import Combined109Roster
 import CrossRouteHeldLeaf
+import SideWitnessCore
 
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
@@ -70,6 +71,40 @@ theorem refinesMachineB_sound {child parent : BB6Coverage.PartialMachine}
   have hb : b ∈ [false, true] := by cases b <;> simp
   exact of_decide_eq_true (List.all_eq_true.mp hq b hb)
 
+/-- Existing Agent 47 side-cycle certificates that refine this same 109
+    parent. Each is a complete cylinder proof at weighted bound 7014. -/
+def b0_1lcSideWitnesses : List BB6.Agent47SevenSideWitnesses.SideWitness :=
+  BB6.Agent47SevenSideWitnesses.witnesses.filter fun w =>
+    refinesMachineB (BB6Coverage.unpackTable w.table) firstOneB0_1LC
+
+theorem b0_1lcSideWitnesses_count : b0_1lcSideWitnesses.length = 65 := by decide
+
+theorem b0_1lcSideWitnesses_safe :
+    ∀ w ∈ b0_1lcSideWitnesses, ∀ m,
+      BB6Coverage.compatible (BB6Coverage.unpackTable w.table) m →
+      BB6Coverage.WeightedBound 7014 m := by
+  intro w hw m hm
+  have hmem : w ∈ BB6.Agent47SevenSideWitnesses.witnesses :=
+    (List.mem_filter.mp hw).1
+  have hcheck : w.check = true :=
+    List.all_eq_true.mp BB6.Agent47SevenSideWitnesses.witnesses_checked w hmem
+  exact w.sound hcheck m hm
+
+/-- Compatibility of two partial machines means their fixed transitions
+    never disagree; an unassigned slot on either side is a wildcard. -/
+def compatibleMachineB (p q : BB6Coverage.PartialMachine) : Bool :=
+  (List.finRange 6).all fun state =>
+    [false, true].all fun symbol =>
+      decide (p (state, symbol) = none ∨ q (state, symbol) = none ∨
+        p (state, symbol) = q (state, symbol))
+
+/-- The FARv3 held leaf is disjoint from every one of the 388 side-witness
+    cylinders, so its 25 completions are genuinely additional. -/
+theorem heldLeaf_disjoint_from_all_sideWitnesses :
+    (BB6.Agent47SevenSideWitnesses.witnesses.all fun w =>
+      !(compatibleMachineB (BB6Coverage.unpackTable w.table)
+        (toPartialMachine BB6CrossRouteHeldLeaf.heldTable))) = true := by decide
+
 /-- The parent table in the 109 roster is exactly the parent used by the
     source-held leaf's finite-slot partition proof. -/
 theorem rootResidual_matches_109_parent :
@@ -106,5 +141,8 @@ theorem sourceHeldParent_is_exact_109_member :
 #print axioms rootResidual_matches_109_parent
 #print axioms heldTable_refines_109_parent
 #print axioms sourceHeldParent_is_exact_109_member
+#print axioms b0_1lcSideWitnesses_count
+#print axioms b0_1lcSideWitnesses_safe
+#print axioms heldLeaf_disjoint_from_all_sideWitnesses
 
 end BB6.Agent13CrossRouteHeldLeaf109
