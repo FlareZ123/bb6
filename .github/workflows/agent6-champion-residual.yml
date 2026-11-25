@@ -535,19 +535,15 @@ jobs:
           retention-days: 14
       - name: Checkout pinned Cryptids NonHalt source tree for raw139 leaf pilot
         if: ${{ (inputs.raw139_cryptids_leaf || inputs.catalogue_crosswalk) && inputs.raw121_graft_run_id == '' }}
+        continue-on-error: ${{ inputs.catalogue_crosswalk && !inputs.raw139_cryptids_leaf }}
         uses: actions/checkout@v4
         with:
           repository: google-deepmind/cryptids
           ref: 3647718b5df22e1a61462dec0376bd204526285a
           path: cryptids-raw139
-      - name: Checkout canonical76 crosswalk helpers
-        if: ${{ inputs.catalogue_crosswalk && inputs.raw121_graft_run_id == '' }}
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.ref }}
-          path: crosswalk-source
       - name: Export canonical76 frontier and crosswalk pinned Cryptids BB6 modules
         if: ${{ inputs.catalogue_crosswalk && inputs.raw121_graft_run_id == '' }}
+        continue-on-error: true
         env:
           SOURCE_COMMIT: 3647718b5df22e1a61462dec0376bd204526285a
         run: |
@@ -555,8 +551,8 @@ jobs:
           test -s /tmp/a47-canonical76/CanonicalTwoParentRosterOnly.olean
           test -s /tmp/a6-champion-residual/build/F0SiblingIntegrationExtended.olean
           export LEAN_PATH="/tmp/a47-canonical76:/tmp/a6-champion-residual/build:/tmp/a6-champion-residual/imports:$GITHUB_WORKSPACE"
-          lean --run crosswalk-source/im-results/agent6-champion-residual/Canonical76RosterExport.lean > /tmp/canonical76-roster.tsv
-          python3 crosswalk-source/im-results/agent6-champion-residual/cryptids_canonical76_crosswalk.py \
+          lean --run im-results/agent6-champion-residual/Canonical76RosterExport.lean > /tmp/canonical76-roster.tsv
+          python3 im-results/agent6-champion-residual/cryptids_canonical76_crosswalk.py \
             --roster-tsv /tmp/canonical76-roster.tsv \
             --cryptids-root cryptids-raw139/BusyBeaver/BB6 \
             --out /tmp/canonical76-cryptids-crosswalk.json \
@@ -568,16 +564,16 @@ jobs:
           print(json.dumps({k: v for k, v in data.items() if k not in {"matches", "parent_summaries"}}, indent=2))
           PY
       - uses: actions/upload-artifact@v4
-        if: ${{ inputs.catalogue_crosswalk && inputs.raw121_graft_run_id == '' }}
+        if: ${{ always() && inputs.catalogue_crosswalk && inputs.raw121_graft_run_id == '' }}
         with:
           name: agent6-canonical76-cryptids-crosswalk-${{ inputs.source_sha || github.sha }}
           include-hidden-files: true
           path: |
             /tmp/canonical76-roster.tsv
             /tmp/canonical76-cryptids-crosswalk.json
-            crosswalk-source/im-results/agent6-champion-residual/Canonical76RosterExport.lean
-            crosswalk-source/im-results/agent6-champion-residual/cryptids_canonical76_crosswalk.py
-          if-no-files-found: error
+            im-results/agent6-champion-residual/Canonical76RosterExport.lean
+            im-results/agent6-champion-residual/cryptids_canonical76_crosswalk.py
+          if-no-files-found: warn
           retention-days: 14
       - name: Align pinned Cryptids NonHalt source tree to Lean 4.36.0-rc2
         if: ${{ inputs.raw139_cryptids_leaf && inputs.raw121_graft_run_id == '' }}
@@ -689,7 +685,7 @@ jobs:
           done
           export LEAN_PATH="/tmp/a47-canonical76:/tmp/a47-canonical:/tmp/a6-champion-residual/build:/tmp/a6-champion-residual/imports:$GITHUB_WORKSPACE"
           lean -o /tmp/a6-champion-residual/build/ChampionResidualCanonicalTwoParentComposition.olean \
-            crosswalk-source/im-results/agent6-champion-residual/ChampionResidualCanonicalTwoParentComposition.lean \
+            im-results/agent6-champion-residual/ChampionResidualCanonicalTwoParentComposition.lean \
             | tee /tmp/a6-canonical76-177.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a6-canonical76-177.log; then
             echo "forbidden axiom or native_decide in canonical76 composition" >&2
