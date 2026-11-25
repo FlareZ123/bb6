@@ -61,3 +61,16 @@ This is currently a draft, not yet original-source accepted and not a complete p
 - Agent47 raw112 partial audit generator: `python im-results/agent47-raw112-cut/generate.py`; original-source closure pending the new workflow.
 
 Neither sibling closes the whole canonical frontier. The global BB(6) upper bound and exact value remain open.
+
+
+## Additional E1 siblings now queued for source audit
+
+The same 22-entry E1 sibling cluster contains further independently generated parent certificates. Three are especially promising and have original-source CI dispatched:
+
+- **raw113 / E1=1RC / canonical index 78**: `Raw113Exact` gives exact weighted maximum 2,674; target `weighted-tnf-raw113` is running.
+- **raw115 / E1=0RD / canonical index 80**: generated `all115` parent bound 458.
+- **raw119 / E1=0RE / canonical index 83**: generated `all119` parent bound 572; the candidate certificate is complete locally.
+
+Raw115 and raw119 are audited together by target `weighted-tnf-agent8-six`. If all three source audits pass, the five-parent composition in [Canonical73Raw113Raw114Raw115Raw117Raw119.lean](Canonical73Raw113Raw114Raw115Raw117Raw119.lean) should reduce the 78-entry canonical roster to 73 while retaining the 7,014 root dichotomy. This composition is still pending source compilation; the count and soundness theorem must be checked by Lean before it is treated as accepted.
+
+A further conditional three-parent interface using raw107, raw114 and raw117 is in [Canonical75Raw107Raw114Raw117.lean](Canonical75Raw107Raw114Raw117.lean). It requires the raw107 bound 815 and is not yet source-compiled.
