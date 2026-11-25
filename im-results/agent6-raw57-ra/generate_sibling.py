@@ -106,7 +106,7 @@ theorem kids_checked (mv : Move) : zipCheck {BOUND} (child mv) (kids mv) = true 
 {cases}
 def tree : Audit := .split {n} {ss} kids
 theorem tree_checked : zipCheck {BOUND} p57ra tree = true := by
-  change (zipQueryOK 273 p57ra 9 (1,true) && allMoves (fun mv => zipCheck {BOUND} (child mv) (kids mv))) = true
+  change (zipQueryOK {BOUND} p57ra {n} {ss} && allMoves (fun mv => zipCheck {BOUND} (child mv) (kids mv))) = true
   simp only [Bool.and_eq_true]
   exact ⟨query, allMoves_of _ kids_checked⟩
 noncomputable def certificate : WeightedTNFCertificate {BOUND} p57ra 6 :=
