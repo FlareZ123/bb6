@@ -38,6 +38,8 @@ theorem champion_not_weighted_7014 :
     rw [champion_delays_exact]
     simp
   have hscore := h (proposedTM63Moves + 6) 0 champion_halts_exact hd
+  have hB : 7014 < proposedTM63Moves + 7 := by
+    simpa [championScore] using champion_score_gt_7014
   omega
 
 /-- Therefore the accepted 109-way dichotomy places the actual champion in
@@ -72,7 +74,7 @@ theorem cover_of_reduced_roster_at_champion_score
       Cover (WeightedBound championScore) e.2) :
     Cover (WeightedBound championScore) BB6.Agent50TNFPilot.root :=
   BB6.Agent13RosterComposition.cover_of_roster_dichotomy_mixed
-    (by omega) reduced_sound hLeaves
+    (Nat.le_of_lt champion_score_gt_7014) reduced_sound hLeaves
 
 /-- The corresponding normalized certificate at the exact champion score. -/
 noncomputable def tnf_certificate_of_reduced_roster_at_champion_score
@@ -91,7 +93,7 @@ theorem exact_from_reduced_roster_at_champion_score
       Cover (WeightedBound championScore) e.2) :
     BB6.Coverage.ExactBB6 championScore :=
   BB6.Agent13RosterComposition.exact_from_roster_dichotomy_mixed
-    (by decide) (by omega) reduced_sound hLeaves champion_raw_witness
+    (by decide) (Nat.le_of_lt champion_score_gt_7014) reduced_sound hLeaves champion_raw_witness
 
 #print axioms champion_score_gt_7014
 #print axioms champion_compatible_root
