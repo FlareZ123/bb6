@@ -173,7 +173,7 @@ def search(target_file,workers,out):
     out.mkdir(parents=True,exist_ok=True)
     hits=[]; attempts=[]
     header=("import TreeBiDFA\nset_option maxRecDepth 100000\nset_option maxHeartbeats 0\n"
-      "namespace BB6Coverage.Agent1BiDFASat.Raw118\nopen BB6Coverage Agent16BiDFA.TreeCheck\n")
+      "namespace BB6Coverage.Agent1BiDFASat.Raw118\nopen BB6Coverage Agent16BiDFA Agent16BiDFA.TreeCheck\n")
     with ProcessPoolExecutor(max_workers=workers) as pool:
         for result in pool.map(solve_row,targets):
             attempts.append(result)
