@@ -1,6 +1,6 @@
 # Machine C low-stop exclusion: z = 846 (mod 2048)
 
-**Status:** Lean source proof drafted; CI run 45686539507 is compiling the full original-source dependency closure. Do not count this as an accepted result until the run succeeds.
+**Status:** Lean source proof drafted. Run 45686539507 ended with runner shutdown (exit 143) during target compilation, without a Lean diagnostic. Rerun 45690298092 is still in the kernel-verification step. Do not count this as accepted until a run succeeds.
 
 ## Result being proved
 
@@ -78,5 +78,5 @@ The new residue is disjoint from the explicitly listed modular exclusions in the
 
 - Lean module: Z78Q6Source.lean
 - CI target: sourceLowZ78Q6 in .github/workflows/agent13-m16-high-family-interface.yml
-- Current CI run: [45686539507](https://github.com/FlareZ123/bb6/actions/runs/45686539507)
+- Current CI run: [45690298092](https://github.com/FlareZ123/bb6/actions/runs/45690298092) (rerun after infrastructure shutdown in [45686539507](https://github.com/FlareZ123/bb6/actions/runs/45686539507))
 - The proof imports the exact section-inverse, even-right, odd/odd low-value, and all-depth even/odd parent theorems. No native_decide, simulator trust, or finite bounce-depth bound is used.
