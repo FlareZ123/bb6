@@ -24,6 +24,52 @@ def main():
     for key in sys.argv[1:] or ["RD","LC1","RE1"]:
         build_child(key,SPECS[key])
 
+
+def emit_automata_sharded(i,p,cert):
+    """Emit one checked theorem per (state, scanned-symbol) row.
+
+    The original single decide proof checks all 12 rows at once. Raw58 LE's
+    single two-sided automaton made that kernel reduction a runner bottleneck.
+    Splitting the finite check preserves the same certificate and theorem while
+    bounding each individual reduction.
+    """
+    source = emit_automata(i,p,cert)
+    marker = "theorem checked : BB6.Agent4Automata.check table cert = true := by decide"
+    if marker not in source:
+        raise ValueError("unexpected two-sided automata emitter output")
+    row_names = []
+    row_proofs = []
+    for q in range(6):
+        for a in range(2):
+            b = "true" if a else "false"
+            name = f"checked_row_{q}_{a}"
+            row_names.append(name)
+            row_proofs.append(
+                f"""theorem {name} :
+  (BB6.Agent4Automata.row cert ({q} : Fin 6) {b}).all
+    (fun i => BB6.Agent4Automata.stateStepOK table cert ({q} : Fin 6) {b}
+      (i / cert.right.edges.size) (i % cert.right.edges.size)) = true := by decide"""
+            )
+    row_refs = ", ".join(row_names)
+    replacement = "\\n".join([
+        "theorem left_nonempty : decide (0 < cert.left.edges.size) = true := by decide",
+        "theorem right_nonempty : decide (0 < cert.right.edges.size) = true := by decide",
+        "theorem left_seed : (cert.left.pop 0).contains (false,0) = true := by decide",
+        "theorem right_seed : (cert.right.pop 0).contains (false,0) = true := by decide",
+        "theorem start_state : BB6.Agent4Automata.stateOK cert 0 false 0 0 = true := by decide",
+        *row_proofs,
+        """theorem rows_checked :
+  (List.finRange 6).all (fun q => BB6.Agent1NGram.bits.all (fun a =>
+    (BB6.Agent4Automata.row cert q a).all
+      (fun i => BB6.Agent4Automata.stateStepOK table cert q a
+        (i / cert.right.edges.size) (i % cert.right.edges.size)))) = true := by""",
+        f"  simp [BB6.Agent1NGram.bits, List.finRange, {row_refs}]",
+        "theorem checked : BB6.Agent4Automata.check table cert = true := by",
+        "  unfold BB6.Agent4Automata.check",
+        "  simp [left_nonempty, right_nonempty, left_seed, right_seed, start_state, rows_checked]",
+    ])
+    return source.replace(marker,replacement)
+
 def build_child(key,spec):
     target=ROOT/("generated_"+key); target.mkdir(exist_ok=True)
     parent="1RB"+spec["a1"]+"_1RC---_0RD---_1LD1RE_---0RA_------"
@@ -151,7 +197,7 @@ def build_child(key,spec):
                 paramsL=paramsR=params
             cert=run_automata(p,paramsL,paramsR)
             assert cert[0],(key,i,params)
-            code.append(emit_automata(i,p,cert));pumps[i]=f"{an}.M{i}"
+            code.append(emit_automata_sharded(i,p,cert));pumps[i]=f"{an}.M{i}"
         code.append(f"end {an}")
         (ROOT/(autmod+".lean")).write_text("\n\n".join(code)+"\n")
     late={int(i):(n,s) for i,(n,s,t) in spec.get("late",{}).items() if opens[int(i)]==t and t.count("---")==1}
