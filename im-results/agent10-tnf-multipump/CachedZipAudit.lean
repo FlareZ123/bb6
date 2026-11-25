@@ -5,7 +5,7 @@ set_option maxHeartbeats 0
 namespace BB6.Agent10CachedAudit
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent8TNFPath
 open BB6.Agent50TNFPilot BB6.Agent31ThreeHole
-open BB6Coverage.Agent50Zipper BB6Coverage.Agent10ZipAudit
+open BB6Coverage.Agent50Zipper BB6Coverage.Agent10ZipAudit BB6Coverage.Agent31Pump
 open BB6.Agent10ZipAudit BB6.Agent10ExactAuditWeight
 
 /-- A successful run cannot have queried an unspecified transition.  Thus
@@ -15,7 +15,8 @@ theorem step_refine_hole {p : PartialMachine} {s : Slot} (hhole : p s = none)
     step (refine p s tr) a = some b := by
   have hn : (a.q,a.l.headD false) ≠ s := by
     intro he
-    simp [step,he,hhole] at h
+    rw [step,he,hhole] at h
+    contradiction
   simpa only [step,refine,if_neg hn] using h
 
 theorem run_refine_hole {p : PartialMachine} {s : Slot} (hhole : p s = none)
@@ -58,7 +59,7 @@ def queryAt (B : Nat) (p : PartialMachine) (n : Nat) (s : Slot) (z : Z) : Bool :
   decide ((z.q,z.l.headD false) = s) && (decide (p s = none) && fastWeight B p n s)
 
 theorem queryAt_eq (B : Nat) (p : PartialMachine) (n : Nat) (s : Slot) (z : Z)
-    (hz : zrun p n start = some z) : queryAt B p n s = zipQueryOK B p n s := by
+    (hz : zrun p n start = some z) : queryAt B p n s z = zipQueryOK B p n s := by
   simp [queryAt,zipQueryOK,zipRead,hz,fastWeight_eq]
 
 def cycleAt (p : PartialMachine) (c : Cursor) (entry period : Nat) (right : Bool) (boundary : Int) : Bool :=
