@@ -99,7 +99,7 @@ jobs:
       - name: Compile recursive carry nonhalting theorem
         run: |
           set -euo pipefail
-          python tools/lean_compile_closure.py im-results/agent47-raw112-cut/Raw112SiblingNever.lean --workdir /tmp/a47-carry --jobs 4 | tee /tmp/a47-carry.log
+          python tools/lean_compile_closure.py im-results/agent47-raw112-cut/Raw112SiblingNever.lean im-results/agent31-three-hole-tnf/RightFrame.lean --workdir /tmp/a47-carry --jobs 4 | tee /tmp/a47-carry.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a47-carry.log; then
             exit 1
           fi
