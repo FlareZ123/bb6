@@ -1,10 +1,63 @@
 name: Agent 8 raw112 E1=1LC partial source audit
 on:
   workflow_dispatch:
+    inputs:
+      trace_only:
+        description: "Reproduce and compare the two raw112 F1 sibling counter traces without compiling the parent audit"
+        type: boolean
+        required: false
+        default: false
 permissions:
   contents: read
 jobs:
+  raw112_trace:
+    if: ${{ inputs.trace_only }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reproduce both independent ten-million-step zipper traces
+        run: |
+          set -euo pipefail
+          python im-results/agent19-raw112-residual/counter_trace.py --steps 10000000 --out /tmp/raw112-0le.csv --high-out /tmp/raw112-0le-high.csv | tee /tmp/raw112-0le.log
+          python im-results/agent8-tnf-raw117/Raw112F1OneHoleTrace.py --steps 10000000 --out /tmp/raw112-1rb.csv --high-out /tmp/raw112-1rb-high.csv | tee /tmp/raw112-1rb.log
+          grep -F 'undefined_transition=None' /tmp/raw112-0le.log
+          grep -F 'undefined_transition=None' /tmp/raw112-1rb.log
+          grep -F 'A1_with_zero_right=0' /tmp/raw112-1rb.log
+      - name: Compare canonical suffixes bit-for-bit
+        run: |
+          python - <<'PY'
+          import csv
+          from pathlib import Path
+          def read(path):
+              with Path(path).open(newline='') as f:
+                  return {int(row['n']): row for row in csv.DictReader(f)}
+          a = read('/tmp/raw112-0le.csv')
+          b = read('/tmp/raw112-1rb.csv')
+          assert len(a) == 363 and max(a) == 363, (len(a), max(a))
+          assert len(b) == 371 and max(b) == 371, (len(b), max(b))
+          for n in range(1, 364):
+              assert a[n]['suffix'] == b[n]['suffix'], (n, a[n], b[n])
+              assert a[n]['low_code'] == b[n]['low_code']
+              assert a[n]['high_blocks'] == b[n]['high_blocks']
+          print('PASS: canonical suffixes, low codes, and high stacks agree for n=1..363')
+          print('F1=0LE reaches n=363; F1=1RB reaches n=371 within 10,000,000 transitions')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw112-shared-counter-traces
+          path: |
+            /tmp/raw112-0le.csv
+            /tmp/raw112-0le-high.csv
+            /tmp/raw112-0le.log
+            /tmp/raw112-1rb.csv
+            /tmp/raw112-1rb-high.csv
+            /tmp/raw112-1rb.log
+          if-no-files-found: warn
+
   raw112_partial:
+    if: ${{ !inputs.trace_only }}
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
