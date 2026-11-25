@@ -68,8 +68,10 @@ jobs:
           python im-results/agent13-coverage/unpack.py
           python im-results/agent44-source-roster/generate_q32_slice.py
           python im-results/agent44-source-roster/generate_q32_sweeps.py
-          python tools/lean_compile_closure.py --workdir /tmp/a44-q32-closed --jobs 4 im-results/agent44-source-roster/Q32SliceClosed.lean | tee /tmp/a44-q32-closed.log
+          python tools/lean_compile_closure.py --workdir /tmp/a44-q32-closed --jobs 4 --manifest /tmp/a44-q32-closed/manifest.json im-results/agent44-source-roster/Q32SliceClosed.lean | tee /tmp/a44-q32-closed.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a44-q32-closed.log; then exit 1; fi
+          python tools/lean_compile_closure.py --workdir /tmp/a50-q32-canonical76 --jobs 4 --precompiled-manifest /tmp/a44-q32-closed/manifest.json --precompiled-dir /tmp/a44-q32-closed im-results/agent50-weighted-tnf-pilot/Q32Canonical76Consumer.lean | tee /tmp/a50-q32-canonical76.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a50-q32-canonical76.log; then exit 1; fi
       - name: Audit q32 source-queue slice with exact residual complement
         if: inputs.target == 'weighted-tnf-q32-queue-slice'
         run: |
