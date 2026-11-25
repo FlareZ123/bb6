@@ -207,7 +207,7 @@ jobs:
           python im-results/agent16-raw118/emit_sparse.py /tmp/raw118-data
           D=im-results/agent40-raw118-independent
           python "$D/generate_independent.py" > "$D/Raw118Independent.lean"
-          python "$D/generate_phasegraph.py" > "$D/Raw118PhaseGraph.lean"
+          python "$D/generate_phasegraph.py" --modules
           python "$D/generate_recursive_counter.py" > "$D/Raw118Recursive.lean"
           python "$D/generate_recursive_more.py" > "$D/Raw118RecursiveMore.lean"
           python im-results/agent16-raw118/bidfa_emit.py > im-results/agent16-raw118/Raw118BiDFA.lean
