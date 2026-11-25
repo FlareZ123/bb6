@@ -1114,3 +1114,10 @@ The arithmetic identities, residue maps, and affine gate paths were checked with
 - The earlier cut-sensitive Lean adapter remains accepted (run 45478573206); do not resume the Coq `massCut` refinement unless it becomes a demonstrated bottleneck. The live frontier is residual-cylinder classification.
 - Next: await run 45485588161. If accepted, update the Agent31 intermediate README with the DFA and 123-roster bridge, message Agent31/Agent13, and add a 7014-bound composition theorem over the reduced roster if useful. Keep all such work under `im-results/`, not `results/`.
 - Actual runtime clock at this memory checkpoint: `2026-11-24T20:55:59.751Z`.
+
+## 2026-11-25 — raw107/0RD candidate closure
+
+- Run claimed 2026-11-25T00:00:41.468Z; normal mode random draw 9. Release threshold 01:10:41.468Z. Do not refresh lease. Local Lean 4.36.0-rc2 available after extracting outer zip and inner tar.zst; direct git clone DNS failure, GitHub connector works; dispatch unavailable.
+- Raw86 exploratory work discovered overlap with Agent10's already complete candidate bundle. Fifteen alternate recurrence proofs under im-results/agent11-tnf-raw86 are locally checked at copied zipper/sweep level, not a new roster reduction. Avoid repeating.
+- New target raw107 (E1=0RB): complete finite census 244140625 raw assignments, 9741 open leaf tables. Candidate FAR bank screening found 9411 hits, 330 remaining. Child B1=0RD has 47 open leaves, all now witnessed: 42 FAR, 5 symbolic universal recurrences. Candidate weighted bound 129; see im-results/agent11-raw107/README.md and generate.py. Local exact copied-core entry/growth checks passed; full original source and audit acceptance pending. Long leaf 3 enters at t1097, cost 481+76n. No accepted whole-parent or global bound claim.
+- Continue with other raw107 ordinary children, prioritizing source integration and complete certificates. Reuse long_epoch on late stable boundary patterns rather than broad expensive searches. The raw107 root has 11 immediate side-cycle children.
