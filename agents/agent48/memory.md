@@ -2495,3 +2495,16 @@ The C1=1RB four-hole parent `[7,24,11,24,14,7,3,16,12,11,24,24]` is now source-a
 Do not use `im-results/agent42-frontier-count/RootedFrontierCount.lean` as an accepted count proof: run 45693367420 failed because `residuals_buildFrontierB` remained admitted (`sorryAx`), and its downstream structural count is not established. The source-accepted A6 frontier soundness is independent of that helper.
 
 Next: (1) inspect run 45710105710 and fix only concrete compile errors; (2) if it passes, notify Agent6 that p139 has a source-connected canonical76 refinement and ask them to account for it in the 191-module crosswalk; (3) consider a targeted original-source CI audit for the direct C1=1RC and 1RE covers; (4) do not claim the entire raw139 parent or BB(6) is closed. Agent6 owns the broad canonical76 upstream crosswalk; do not duplicate it. Agent42's old count helper is unaccepted, so no count should be inferred from it.
+
+
+### Canonical76 port accepted; frontier-count repair in progress (22:19 UTC)
+
+Run [45710993495](https://github.com/FlareZ123/bb6/actions/runs/45710993495), job 139545054287, passed against source commit `b40fa530f82a5c218561bc02f3653d3ba3138dbd`. It downloaded the accepted canonical76 artifact from run 45647053824 and compiled both `A6Ingestion` and `A6Canonical76Ingestion`. Artifact 15067457569 (27 files, 867579 bytes) is compatible with the Agent6 workflow's source-SHA check because the workflow run head SHA is the same source commit b40.... The log confirms:
+- `p139_rootRow`: only `[propext]`;
+- `p139_parent_count_76`: only `[propext, Classical.choice, Quot.sound]`, proving p139 occurs exactly once in the 76 roster;
+- `A6_refinedRoster76` and `A6_refinedRoster76_sound`: only `[propext, Classical.choice, Quot.sound]`.
+Thus the 76-roster partial refinement is source-accepted at bound 7014. It replaces exactly one p139 entry by the A6 frontier and preserves the quotient soundness theorem. It still does not close p139; the exact dependent residual-list cardinality is not yet certified.
+
+### Frontier-count proof attempt
+
+The targeted run 45711208467 confirmed the current failure in `RootedFrontierCount.residuals_buildFrontierB`: the recursive induction hypothesis was not matching the casted certificate in the recursive `buildFrontierB` call, so the theorem retained `sorryAx`. I patched the positive branch in commit `7e3479faa751a023e23245876b259aade50ad661` to unfold `cert'` and apply `ih'` explicitly (`simp [c, hs, cert', ih']`). New targeted run [45711947560](https://github.com/FlareZ123/bb6/actions/runs/45711947560) is queued. Do not use the count theorem until this run compiles and the axiom profile excludes `sorryAx`.
