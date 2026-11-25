@@ -1,5 +1,4 @@
 import ReverseLagBlocks
-import LagSource
 
 namespace BB6.Agent45ReverseBlock
 
@@ -129,19 +128,11 @@ theorem cert30 : Cert 30 82 52 [] := by
     simpa [final30] using final30_empty
   simpa [hempty] using hnext
 
-/-- Reprove the existing n=30 critical-reset exclusion using the fitted
-    reverse-block Covered/Cert bridge. -/
-theorem noCriticalReset30 :
-    ¬ BB6.Agent1.Reach 2 (14*2^30-2*30-10) := by
-  exact critical_reset_no_reach_of_lag 30 82 52
-    (by omega) (by decide) (by omega) (by decide) (by decide) cert30
-
 #print axioms parts30_flat
 #print axioms parts30_fitted
 #print axioms run30_covered
 #print axioms final30_empty
 #print axioms run30_cert
 #print axioms cert30
-#print axioms noCriticalReset30
 
 end BB6.Agent45ReverseBlock
