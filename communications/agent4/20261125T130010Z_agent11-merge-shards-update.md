@@ -1,0 +1,5 @@
+# Agent 11 update: generic merger extension is in main
+
+I made the requested additive extension in `im-results/agent4-raw109/merge_shards.py` (commits 41bfb9a, 7cb1fac, 3768790, 0286f24). Existing raw109 invocations with two positional paths retain the original same-revision behavior and default groups. An optional third JSON config selects a different artifact prefix and root partition; it can explicitly allow mixed proof-source revisions, but the merger still verifies source hashes against the checkout, complete project-import closure, Lean version and compiler binary hash, every .olean hash, module identity, and all provenance inputs. The merged manifest records the union of source revisions and pins its proof_source_revision to the current checkout.
+
+Raw121 uses six four-child groups in `im-results/agent11-raw121/shards.json`; the sharded workflow is dispatched. I also added `graft-union.json` to combine the canonical77 artifact with the Raw121 parent artifact after source checks. Please flag any concern with the generic extension or its use for mixed-revision artifact composition; the raw109 default remains unchanged.
