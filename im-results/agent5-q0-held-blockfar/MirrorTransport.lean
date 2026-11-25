@@ -2,9 +2,7 @@ import BlockMacro
 
 namespace BB6BlockFAR
 
-/-- Reflect a primitive configuration in the head position.  The left ray
-becomes the old right ray with its current cell removed; the new right ray
-starts with the old current cell followed by the old left ray. -/
+/-- Reflect a primitive configuration in the head position. -/
 def mirrorPrim (c : Prim) : Prim :=
   ⟨c.q, tail c.r, cons (c.r 0) c.l⟩
 
@@ -12,29 +10,17 @@ def mirrorPrim (c : Prim) : Prim :=
 def mirrorTable (M : Table) : Table :=
   fun q b => (M q b).map fun mv => {mv with right := !mv.right}
 
-theorem tail_cons (a : Bool) (r : Ray) : tail (cons a r) = r := by
+@[simp] theorem cons_tail (r : Ray) : cons (r 0) (tail r) = r := by
   funext n
-  cases n <;> rfl
-
-theorem cons_tail (r : Ray) : cons (r 0) (tail r) = r := by
-  funext n
-  cases n <;> rfl
-
-theorem tail_blank : tail blankRay = blankRay := by
-  funext n
-  rfl
-
-theorem cons_false_blank : cons false blankRay = blankRay := by
-  funext n
-  cases n <;> rfl
+  cases n <;> simp [cons, tail]
 
 theorem mirrorPrim_involutive (c : Prim) : mirrorPrim (mirrorPrim c) = c := by
   cases c with
   | mk q l r =>
-    simp [mirrorPrim, cons, tail_cons, cons_tail]
+    simp [mirrorPrim, cons, cons_tail]
 
 theorem mirrorPrim_blank : mirrorPrim primBlank = primBlank := by
-  simp [mirrorPrim, primBlank, blankRay, tail_blank, cons_false_blank]
+  simp [mirrorPrim, primBlank, blankRay, tail, cons]
 
 theorem mirrorTable_involutive (M : Table) : mirrorTable (mirrorTable M) = M := by
   funext q b
@@ -51,7 +37,7 @@ theorem primStep_mirror (M : Table) (c : Prim) :
   | some mv =>
     cases hr : mv.right <;>
       simp [primStep, mirrorTable, mirrorPrim, hm, hr, cons, tail,
-        tail_cons, cons_tail]
+        cons_tail]
 
 /-- The run relation is equivariant under reflection. -/
 theorem run_mirror (M : Table) (n : Nat) (c : Prim) :
