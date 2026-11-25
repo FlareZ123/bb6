@@ -46,7 +46,7 @@ theorem otherRoster_count : otherRoster.length = 76 := by
     plus the raw10 complement, conditional on those Covers. -/
 theorem exact_from_raw10_remainder_77 (B : Nat) (hB : 7014 ≤ B)
     (hOpen : ∀ r ∈ BB6.Agent49BoxBridge.raw10Remainder,
-      ∀ m, BB6.Agent49BoxBridge.Fits r m → WeightedBound B m)
+      ∀ m, BB6.Agent49Box.Fits r m → WeightedBound B m)
     (hOther : ∀ e ∈ BB6.Agent47CanonicalRaw114Accepted.roster,
       e.2 ≠ Parent → Cover (WeightedBound B) e.2)
     (champ : ∃ m : BB6.Coverage.RawMachine,
