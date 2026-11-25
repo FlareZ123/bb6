@@ -977,9 +977,18 @@
         "00123224501060741"
       ]
     },
-    "unresolved": {
-      "1200": "1RB0RA_1RC0LF_0RD1RA_1LD1RE_---1RB_0LB1LF",
-      "1475": "1RB0RB_1RC0LF_0RD0RA_1LD1RE_---1RB_1LB1LF"
+    "unresolved": {},
+    "manual": {
+      "1200": [
+        "Raw109LF1200",
+        "BB6Coverage.Agent4Raw109LF1200",
+        "1RB0RA_1RC0LF_0RD1RA_1LD1RE_---1RB_0LB1LF"
+      ],
+      "1475": [
+        "Raw109LF1475",
+        "BB6Coverage.Agent4Raw109LF1475",
+        "1RB0RB_1RC0LF_0RD0RA_1LD1RE_---1RB_1LB1LF"
+      ]
     }
   }
 }
