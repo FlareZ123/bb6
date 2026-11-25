@@ -404,7 +404,7 @@ jobs:
           name: canonical77-certified
           path: /tmp/a47-canonical
       - name: Compile raw139 integration against the accepted canonical77 roster
-        if: ${{ inputs.raw121_graft_run_id == '' }}
+        if: ${{ inputs.raw121_graft_run_id == '' && !inputs.raw139_cryptids_leaf }}
         run: |
           set -euo pipefail
           for required in CanonicalTwoParentGraft.olean CanonicalRaw114Accepted.olean Raw114CompleteData.olean; do
