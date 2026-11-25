@@ -124,7 +124,10 @@ theorem cert30 : Cert 30 82 52 [] := by
     exact parts30_fitted _ _
   have hnext := cert_next_block 30 82 49 3 (run30 12)
     (fun B => parts30 52 B) (by omega) hprev hgood hflat hfit
-  simpa [final30] using hnext
+  have hempty : nextBlockByFold 30 49 3
+      (fun B => parts30 52 B) (run30 12) = [] := by
+    simpa [final30] using final30_empty
+  simpa [hempty] using hnext
 
 /-- Reprove the existing n=30 critical-reset exclusion using the fitted
     reverse-block Covered/Cert bridge. -/
