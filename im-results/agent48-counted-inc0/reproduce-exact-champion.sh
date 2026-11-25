@@ -5,7 +5,7 @@ ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 cd "$ROOT"
 work="$ROOT/.tmp/a48-exact-champion"
 trap 'rm -rf "$work"' EXIT
-mkdir "$work/imports"
+mkdir -p "$work/imports"
 export BB6_CHAMPION_WORK="$work"
 python3 - <<'PY'
 import base64, io, lzma, os, pathlib, tarfile
