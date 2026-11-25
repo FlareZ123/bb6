@@ -15,9 +15,11 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
-      - uses: leanprover/lean-action@v1
-        with:
-          lean-version: leanprover/lean4:v4.36.0-rc2
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
       - name: Reconstruct BB6 coverage module
         run: python im-results/agent13-coverage/unpack.py
       - name: Compile theorem closure
