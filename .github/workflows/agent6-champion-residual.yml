@@ -60,6 +60,7 @@ jobs:
             im-results/agent6-champion-residual/ChampionResidualFrontier.lean \
             im-results/agent6-champion-residual/ChampionResidualParentIntegration.lean \
             im-results/agent6-champion-residual/F0SiblingIntegration.lean \
+            im-results/agent6-champion-residual/F0SiblingIntegrationExtended.lean \
             --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean \
             --override OuterLCIncPrelude=im-results/agent8-counted-reset/OuterLCIncPrelude.lean \
             --override M0OddResidueSeven=im-results/agent41-m0-n16r7/M0OddResidueSeven.lean \
@@ -99,6 +100,9 @@ jobs:
               "removed_count",
               "remaining_count",
               "exact_from_remaining",
+              "remainingExtended_count",
+              "refined_residual_cover",
+              "exact_from_remainingExtended",
           )
           for name in names:
               m = re.search(r"'[^']*\."+name+r"' depends on axioms: \[([^\]]*)\]", log)
