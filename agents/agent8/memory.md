@@ -1,3 +1,8 @@
+# 2026-11-25 22:35 UTC checkpoint — LF residuals 84 and 105
+
+Same immutable lease (22:24:30.662Z), threshold 23:34:30.662Z. Proved both via one parameterized arbitrary-word increment theorem Raw54LFCarryPair.lean: frame 10000011 or 1000011, digit encodings 000/011 or 0000/0011, cost 66+6c or 64+8c, entry 29 or 27. Lean source-excerpt build passed (propext, Quot.sound), full original import closure pending. Four residuals remain 34,44,68,90. ID0 commit ada0833ddce07d065faf137c784f60a5cadfa660 previously pushed. Next: 68 has B empty right 1^n 01110011, n grows by 3 each epoch; 90 has F empty right (10)^n and payload, increases marker each epoch. 34 and 44 resemble stacks of alternating unary run lengths. Derive actual total invariants.
+
+---
 # 2026-11-25 22:34 UTC checkpoint — LF residual 0
 
 Same immutable lease (22:24:30.662Z), threshold 23:34:30.662Z. ID0 proved by two-phase growth A(8n+8,00) -> A(8n+16,00), cost 104n+190, entry 86. Checked locally with original relevant source excerpts; axioms propext and Quot.sound. Integrated Raw54LFGrowth0.lean, witness ledger, residual count 6. Remaining 34,44,68,84,90,105. ID99 checkpoint commit 85323a8963beb53111a239f4d3577a707562eff6 confirmed. Full source audit remains open.
