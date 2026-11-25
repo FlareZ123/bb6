@@ -343,7 +343,7 @@ jobs:
         run: |
           set -euo pipefail
           for f in agent8-batch/*.log; do
-            printf '\\n===== %s =====\\n' "${f##*/}"
+            printf '\n===== %s =====\n' "${f##*/}"
             cat "$f"
           done
       - name: Preserve batch proof artifacts including partial failures
