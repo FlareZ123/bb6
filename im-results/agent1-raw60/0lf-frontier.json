@@ -1085,6 +1085,14 @@
       "Raw60LFAlternatingCounter",
       "BB6.Agent1Raw60LFAlternatingCounter"
     ],
+    "233": [
+      "Raw60LFMarker",
+      "BB6.Agent1Raw60LFMarker.Leaf233"
+    ],
+    "234": [
+      "Raw60LFMarker",
+      "BB6.Agent1Raw60LFMarker.Leaf234"
+    ],
     "863": [
       "Raw60LFCSweep",
       "BB6.Agent1Raw60LFCSweep"
@@ -1092,8 +1100,6 @@
   },
   "unresolved": [
     232,
-    233,
-    234,
     980,
     982,
     984,
