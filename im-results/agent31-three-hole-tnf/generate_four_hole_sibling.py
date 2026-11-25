@@ -113,6 +113,7 @@ def move(a):
     return "⟨"+",".join([str(a[0]=="1").lower(),str(a[1]=="R").lower(),str(ord(a[2])-65)])+"⟩"
 
 stats=Counter()
+missing=[]
 def build(p,depth=1):
     res=classify(p)
     typ=res[0]
@@ -140,7 +141,11 @@ def build(p,depth=1):
             except AssertionError:
                 continue
         if chosen is None:
-            raise KeyError((key, show(p)))
+            missing.append((key, show(p)))
+            stats["missing"]+=1
+            # Placeholder used only to finish collecting all missing leaves.
+            # main() refuses to emit/compile any tree while missing is nonempty.
+            return ".last 0 (0,false)"
         rev,dfa=chosen
         if key not in DFAS or DFAS[key] != chosen:
             stats["dfa_fallback"]+=1
@@ -185,10 +190,18 @@ theorem wideQuery : queryOK 7014 wideParent {n} {slot_expr} = true := by decide
 """)
     stats["split"]+=1
     mods=[]
+    audits=[]
     for i,a in enumerate(MOVES):
         name=f"FourHoleSiblingKid{i:02}"
         mods.append(name)
         audit=build(refine(p,s,a))
+        audits.append((name,i,audit,a))
+    if missing:
+        print("UNRESOLVED_LEAVES:")
+        for key0,table0 in missing:
+            print(key0, table0)
+        raise RuntimeError(f"{len(missing)} unresolved sibling leaves; no audit modules emitted")
+    for name,i,audit,a in audits:
         emit(name,["FourHoleSiblingBase"],f"""
 def kid{i:02} : Audit := {audit}
 theorem check{i:02} : check 7014 (wideChild {move(a)}) kid{i:02} = true := by decide
