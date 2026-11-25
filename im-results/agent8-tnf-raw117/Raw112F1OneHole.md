@@ -50,7 +50,7 @@ First canonical step counts:
 
 ## Safety observations
 
-A separate five-million-step run recorded 103,411 visits to F, all reading 1. It also found no A-state visit reading 1 with a 0 immediately to the right. Since A/1 is the only transition entering F, this is the immediate local condition relevant to F/0 reachability. Both statements are finite computational evidence only.
+A separate five-million-step run recorded 103,411 visits to F, all reading 1. The reproducibility workflow [CI 45592021140](https://github.com/FlareZ123/bb6/actions/runs/45592021140) then reran both sibling simulators for 10,000,000 transitions: this residual recorded 207,216 F visits, no undefined transition, and zero A/1 visits with a 0 immediately to the right. Since A/1 is the only transition entering F, that is the immediate local condition relevant to F/0 reachability. The same workflow compared the two CSV traces and verified bit-for-bit equality of the canonical suffix, low code, and high stack for every n=1..363; the F1=1RB run reached n=371 while F1=0LE reached n=363. These are reproducible finite observations, not an infinite-time proof.
 
 ## Reproduction
 
