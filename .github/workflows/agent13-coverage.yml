@@ -83,6 +83,7 @@ jobs:
       && inputs.target != 'weighted-tnf-raw60-complete'
       && inputs.target != 'weighted-tnf-raw60-repair'
       && inputs.target != 'weighted-tnf-raw118-wide-cert'
+      && inputs.target != 'weighted-tnf-agent8-raw54-lf'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -1214,6 +1215,46 @@ jobs:
           python im-results/agent13-coverage/unpack.py
           python tools/lean_compile_closure.py --workdir /tmp/raw107-witnesses --jobs 4 im-results/agent1-raw107/Raw107LAUnary.lean im-results/agent11-raw107/Raw107LAPairCounter.lean im-results/agent11-raw107/Raw107LA385.lean im-results/agent11-raw107/Raw107LF180.lean im-results/agent11-raw107/Raw107LF1424.lean im-results/agent11-raw107/Raw107LF1655.lean | tee /tmp/raw107-witnesses.log
           if grep -Eq 'sorryAx|native_decide' /tmp/raw107-witnesses.log; then exit 1; fi
+
+  raw54_lf:
+    if: inputs.target == 'weighted-tnf-agent8-raw54-lf'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Generate Raw54 E0=1LF frontier and residual ledger
+        run: |
+          set -euo pipefail
+          D=im-results/agent8-raw54
+          mkdir -p /tmp/a8-raw54-lf
+          python im-results/agent13-coverage/unpack.py
+          python "$D/generate_lf.py" 2>&1 | tee /tmp/a8-raw54-lf-generate.log
+          cat "$D/lf-unresolved.txt" | tee -a /tmp/a8-raw54-lf-generate.log
+      - name: Compile Raw54 E0=1LF partial cover against exact source
+        run: |
+          set -euo pipefail
+          D=im-results/agent8-raw54
+          W=/tmp/a8-raw54-lf
+          python tools/lean_compile_closure.py --workdir "$W" --jobs 4 --manifest "$W/source-manifest.json" --label raw54-E1-0LE-E0-1LF --theorem BB6.Agent8Raw54.LF.sound --parent-table '1RB---_1RC---_0RD---_1LD0LE_1LF0LE_------' --weighted-bound 7014 --artifact-name raw54-E1-0LE-E0-1LF-partial-certified --provenance-input "$D/generate_lf.py" --provenance-input "$D/lf-witnesses.txt" "$D/Raw54LFCut.lean" | tee /tmp/a8-raw54-lf.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a8-raw54-lf.log; then exit 1; fi
+      - name: Preserve Raw54 LF audit diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw54-E1-0LE-E0-1LF-audit-diagnostics
+          path: |
+            /tmp/a8-raw54-lf-generate.log
+            /tmp/a8-raw54-lf.log
+            /tmp/a8-raw54-lf/source-manifest.json
+            im-results/agent8-raw54/lf-unresolved.txt
+            im-results/agent8-raw54/Raw54LF*.lean
+          if-no-files-found: warn
 
   combined109:
     if: inputs.target == 'weighted-tnf-combined-109'
