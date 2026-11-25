@@ -4,7 +4,7 @@ on:
     inputs:
       target:
         type: choice
-        options: [shadow, first-return]
+        options: [shadow, first-return, batch-carry]
         default: shadow
       source_ref:
         description: Exact source commit (optional; defaults to dispatch SHA)
@@ -60,6 +60,28 @@ jobs:
               if not m and re.search(r"'BB6\."+namespace+r"\."+name+r"' does not depend on any axioms", log):
                   print(name, [])
                   continue
+              if not m:
+                  raise SystemExit("Missing axiom profile: "+name)
+              axioms = {a.strip() for a in m.group(1).split(",") if a.strip()}
+              if not axioms <= {"propext", "Classical.choice", "Quot.sound"}:
+                  raise SystemExit(f"Unexpected axioms in {name}: {axioms}")
+              print(name, sorted(axioms))
+          PY
+      - name: Check common-clock batch carry against original source
+        if: inputs.target == 'batch-carry'
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-dyadic-width:im-results/agent50-p1-residue:im-results/agent9-p1-first-return"
+          lean --version
+          git rev-parse HEAD
+          python tools/lean_compile_deps.py im-results/agent9-p1-first-return/BatchCarrySource.lean | tee /tmp/batch-carry.log
+          if grep -E 'sorryAx|native_decide|error:' /tmp/batch-carry.log; then exit 1; fi
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          log = Path('/tmp/batch-carry.log').read_text()
+          for name in ("walk_of_weight", "weight_of_walk", "edge_iff_parent", "mem_live", "mem_sweep", "mem_batch", "width_pos_iff_center", "critical_reset_no_reach_batch", "critical_reset_no_reach_interval"):
+              m = re.search(r"'BB6\.Agent9BatchCarry\."+name+r"' depends on axioms:\s*\[([^\]]*)\]", log)
               if not m:
                   raise SystemExit("Missing axiom profile: "+name)
               axioms = {a.strip() for a in m.group(1).split(",") if a.strip()}
