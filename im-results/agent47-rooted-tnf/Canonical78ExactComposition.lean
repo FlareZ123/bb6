@@ -16,9 +16,14 @@ open BB6.Agent47CanonicalFrontier
 /-- The attained champion score in the original raw semantics. -/
 abbrev championScore : Nat := proposedTM63Moves + 7
 
+private theorem exact_rootSteps_le_score (rootSteps L n a b : Nat) :
+    rootSteps ≤ threeSectionMoves rootSteps L n a b + 7 := by
+  simp only [threeSectionMoves]
+  omega
+
 theorem champion_score_gt_7014 : 7014 < championScore := by
   have hroot : 27959 ≤ threeSectionMoves 27959 3 7 6 63 + 7 :=
-    BB6Coverage.Agent48DirectRoot.rootSteps_le_score 27959 3 7 6 63
+    exact_rootSteps_le_score 27959 3 7 6 63
   change 7014 < proposedTM63Moves + 7
   rw [← threeSectionMoves_root]
   omega
@@ -29,7 +34,7 @@ theorem champion_compatible_root :
   change compatible BB6.CoverageAdapter.firstOneCylinder championTable
   exact (compatible_refine_iff emptyTable championTable initialSlot rfl
     (some ⟨true,true,(1 : Fin 6)⟩)).mpr
-      ⟨empty_compatible championTable, by decide [championTable]⟩
+      ⟨empty_compatible championTable, by decide⟩
 
 /-- The champion's exact halt at B rules out the early 7014 bound. -/
 theorem champion_not_weighted_7014 :
@@ -38,7 +43,7 @@ theorem champion_not_weighted_7014 :
   have hzero : 0 ∈ delays (zeroNext championTable) 0 := by
     rw [champion_delays_exact]
     simp
-  have hsmall := h (proposedTM63Moves + 6) 0 hzero
+  have hsmall := h (proposedTM63Moves + 6) 0 champion_halts_exact hzero
   omega
 
 /-- Consequently the canonical 78-way dichotomy places the champion in a
