@@ -26,6 +26,12 @@ jobs:
           test "$(find im-results/agent47-raw112-cut -maxdepth 1 -name 'Raw112Branch*.lean' | wc -l)" -eq 24
           echo "=== Exact residual leaves ==="
           cat im-results/agent47-raw112-cut/unresolved.txt
+      - name: Place generation log beside generated sources
+        if: always()
+        run: |
+          if [ -f /tmp/a47-raw112-generate.log ]; then
+            cp /tmp/a47-raw112-generate.log im-results/agent47-raw112-cut/generation.log
+          fi
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -37,7 +43,7 @@ jobs:
             im-results/agent47-raw112-cut/Raw112Symbol*.lean
             im-results/agent47-raw112-cut/Raw112Sparse*.lean
             im-results/agent47-raw112-cut/unresolved.txt
-            /tmp/a47-raw112-generate.log
+            im-results/agent47-raw112-cut/generation.log
           if-no-files-found: error
 
   compile_shard:
@@ -93,6 +99,7 @@ jobs:
             exit 1
           fi
           work="/tmp/a47-raw112-shard-$SHARD"
+          mkdir -p "$work"
           for input in \
             im-results/agent47-raw112-cut/Raw112Data.lean \
             im-results/agent47-raw112-cut/unresolved.txt \
@@ -147,6 +154,8 @@ jobs:
           echo "lean_compile_closure exit status: $status"
           cat "$stdout"
           cat "$stderr" >&2
+          cp "$stdout" "$work/stdout.log"
+          cp "$stderr" "$work/stderr.log"
           if [ "$status" -ne 0 ]; then exit "$status"; fi
           if grep -Eq 'sorryAx|native_decide' "$stdout" "$stderr"; then
             echo "Forbidden axiom/proof mechanism in raw112 shard $SHARD" >&2
@@ -157,10 +166,7 @@ jobs:
         if: always()
         with:
           name: raw112-shard-${{ matrix.shard }}
-          path: |
-            /tmp/a47-raw112-shard-${{ matrix.shard }}/
-            /tmp/a47-raw112-shard-${{ matrix.shard }}.stdout
-            /tmp/a47-raw112-shard-${{ matrix.shard }}.stderr
+          path: /tmp/a47-raw112-shard-${{ matrix.shard }}/
           if-no-files-found: warn
           retention-days: 30
 
