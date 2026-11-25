@@ -86,6 +86,8 @@ jobs:
       && inputs.target != 'weighted-tnf-raw60-complete'
       && inputs.target != 'weighted-tnf-raw60-repair'
       && inputs.target != 'weighted-tnf-raw118-wide-cert'
+      && inputs.target != 'weighted-tnf-raw118-sparse'
+      && inputs.target != 'weighted-tnf-raw118-consumer'
       && inputs.target != 'weighted-tnf-agent8-raw54-lf'
       && inputs.target != 'weighted-tnf-raw10-box18to24-canonical76'
     runs-on: ubuntu-latest
@@ -376,64 +378,6 @@ jobs:
           for i in 1125 2873 3900 3909 4098 4222 4223 4224 4343 5491 5495; do
             python im-results/agent4-raw109/audit_axioms.py /tmp/bidfa-sat-hits.log "BB6Coverage.Agent1BiDFASat.Raw118.M$i.never"
           done
-      - name: Download source-checked Raw118 wide-window artifacts
-        if: inputs.target == 'weighted-tnf-raw118-consumer'
-        uses: actions/download-artifact@v4
-        with:
-          pattern: raw118-wide-*
-          run-id: ${{ inputs.raw118_wide_run_id }}
-          github-token: ${{ github.token }}
-          path: /tmp/raw118-wide-artifacts
-      - name: Download repaired Raw118 wide-window artifacts
-        if: inputs.target == 'weighted-tnf-raw118-consumer' && inputs.raw118_wide_repair_run_id != ''
-        uses: actions/download-artifact@v4
-        with:
-          pattern: raw118-wide-*
-          run-id: ${{ inputs.raw118_wide_repair_run_id }}
-          github-token: ${{ github.token }}
-          path: /tmp/raw118-wide-artifacts
-      - name: Compose and source-check the complete Raw118 parent residual cover
-        if: inputs.target == 'weighted-tnf-raw118-consumer'
-        run: |
-          set -euo pipefail
-          python im-results/agent13-coverage/unpack.py
-          python im-results/agent31-three-hole-tnf/generate_sweeps.py
-          python im-results/agent31-three-hole-tnf/generate_four_hole.py
-          python im-results/agent10-tnf-raw87/generate.py
-          python im-results/agent10-tnf-raw91/generate.py
-          python im-results/agent10-tnf-multipump/generate.py 66 70 80
-          python im-results/agent10-tnf-multipump/generate.py 68 72 82
-          python im-results/agent10-tnf-multipump/generate.py 86 88 92 93 97 98 100 101 102 104
-          python im-results/agent16-raw118/generate_partial.py /tmp/raw118-data
-          python im-results/agent16-raw118/emit_symbolic.py /tmp/raw118-data
-          python im-results/agent16-raw118/emit_sparse.py /tmp/raw118-data
-          D=im-results/agent40-raw118-independent
-          python "$D/generate_independent.py" > "$D/Raw118Independent.lean"
-          python "$D/generate_phasegraph.py" --modules
-          python "$D/generate_recursive_counter.py" > "$D/Raw118Recursive.lean"
-          python "$D/generate_recursive_more.py" > "$D/Raw118RecursiveMore.lean"
-          python im-results/agent16-raw118/bidfa_emit.py > im-results/agent16-raw118/Raw118BiDFA.lean
-          python im-results/agent16-raw118/tree_emit.py > im-results/agent16-raw118/Raw118Tree.lean
-          python im-results/agent16-raw118/generate_late_traces.py /tmp/raw118-data
-          python im-results/agent16-raw118/search_tree_bank.py /tmp/raw118-data
-          python im-results/agent40-raw118-independent/merge_wide_artifacts.py /tmp/raw118-wide-artifacts /tmp/raw118-wide-precompiled im-results/agent1-bidfa-sat/wide-generated
-          python im-results/agent1-bidfa-sat/emit_raw118.py > im-results/agent1-bidfa-sat/Raw118SatHits.lean
-          python "$D/run_summary.py" 430 437 440 456 1181 3908 1120 1127 1174 1326 1390 1391 1392 1816 2867 3921 4093 4125 4342 4443
-          python im-results/agent16-raw118/emit_consumer.py /tmp/raw118-data
-          python tools/lean_compile_closure.py --workdir /tmp/a16-raw118-consumer --jobs 4 --source-root im-results/agent1-bidfa-sat/wide-generated --source-root im-results/agent40-raw118-independent/run-generated --precompiled-manifest /tmp/raw118-wide-precompiled/manifest.json --precompiled-dir /tmp/raw118-wide-precompiled im-results/agent16-raw118/Raw118Consumer.lean | tee /tmp/a16-raw118-consumer.log
-          if grep -Eq 'sorryAx|native_decide' /tmp/a16-raw118-consumer.log; then exit 1; fi
-      - name: Preserve generated Raw118 parent consumer
-        if: inputs.target == 'weighted-tnf-raw118-consumer'
-        uses: actions/upload-artifact@v4
-        with:
-          name: raw118-parent-consumer
-          path: |
-            im-results/agent16-raw118/Raw118Consumer.lean
-            im-results/agent16-raw118/Raw118Consumer.json
-            im-results/agent16-raw118/Raw118TreeBank.json
-            im-results/agent16-raw118/Raw118Symbolic.json
-            im-results/agent16-raw118/Raw118Sparse.json
-            im-results/agent16-raw118/Raw118Late.json
       - name: Check independent-counter raw118 sweep invariants
         if: inputs.target == 'weighted-tnf-raw118-independent'
         run: |
@@ -500,26 +444,6 @@ jobs:
             im-results/agent16-raw118/Raw118Symbolic.json
             im-results/agent16-raw118/Raw118Single*.lean
             im-results/agent16-raw118/Raw118Multi*.lean
-      - name: Source-check all 679 Raw118 sparse n-gram certificates
-        if: inputs.target == 'weighted-tnf-raw118-sparse'
-        run: |
-          set -euo pipefail
-          python im-results/agent13-coverage/unpack.py
-          python im-results/agent31-three-hole-tnf/generate_sweeps.py
-          python im-results/agent31-three-hole-tnf/generate_four_hole.py
-          python im-results/agent16-raw118/generate_partial.py /tmp/raw118-data
-          python im-results/agent16-raw118/emit_sparse.py /tmp/raw118-data
-          python tools/lean_compile_closure.py --workdir /tmp/a16-raw118-sparse --jobs 4 im-results/agent16-raw118/Raw118Sparse.lean | tee /tmp/a16-raw118-sparse.log
-          if grep -Eq 'sorryAx|native_decide' /tmp/a16-raw118-sparse.log; then exit 1; fi
-      - name: Preserve generated Raw118 sparse modules
-        if: inputs.target == 'weighted-tnf-raw118-sparse'
-        uses: actions/upload-artifact@v4
-        with:
-          name: raw118-sparse-generated
-          path: |
-            im-results/agent16-raw118/Raw118Sparse.lean
-            im-results/agent16-raw118/Raw118Sparse.json
-            im-results/agent16-raw118/Raw118Sparse*.lean
       - name: Verify all packed long first-hole traces
         if: inputs.target == 'weighted-tnf-raw118-long'
         run: |
@@ -3622,6 +3546,208 @@ jobs:
           name: raw60-parent-proof
           path: /tmp/raw60-parent/
           if-no-files-found: error
+  raw118_sparse_prepare:
+    if: inputs.target == 'weighted-tnf-raw118-sparse' || inputs.target == 'weighted-tnf-raw118-consumer'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate exact sparse sources and weighted shard partition
+        run: |
+          set -euo pipefail
+          D=im-results/agent16-raw118
+          python "$D/generate_partial.py" /tmp/raw118-data
+          python "$D/emit_sparse.py" /tmp/raw118-data
+          python "$D/plan_sparse.py" /tmp/raw118-data
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw118-sparse-source
+          path: |
+            im-results/agent16-raw118/Raw118Sparse*.lean
+            im-results/agent16-raw118/Raw118Sparse*.json
+          if-no-files-found: error
+
+  raw118_sparse_shards:
+    if: inputs.target == 'weighted-tnf-raw118-sparse' || inputs.target == 'weighted-tnf-raw118-consumer'
+    needs: raw118_sparse_prepare
+    strategy:
+      fail-fast: false
+      max-parallel: 12
+      matrix:
+        group: ['00','01','02','03','04','05','06','07','08','09','10','11']
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw118-sparse-source
+          path: im-results/agent16-raw118
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Kernel-check one disjoint sparse source shard
+        env:
+          GROUP: ${{ matrix.group }}
+        run: |
+          set -euo pipefail
+          D=im-results/agent16-raw118
+          W=/tmp/raw118-sparse-proof
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python tools/lean_compile_closure.py --workdir "$W" --jobs 4 \
+            --manifest "$W/manifest.json" --label "raw118-sparse-shard-$GROUP" \
+            --artifact-name "raw118-sparse-shard-$GROUP" \
+            --provenance-input "$D/Raw118SparsePlan.json" \
+            --provenance-input "$D/Raw118Sparse.json" \
+            "$D/Raw118SparseShard$GROUP.lean" | tee /tmp/raw118-sparse.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/raw118-sparse.log; then exit 1; fi
+          cp /tmp/raw118-sparse.log "$W/audit.log"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw118-sparse-shard-${{ matrix.group }}
+          path: /tmp/raw118-sparse-proof/
+          if-no-files-found: error
+
+  raw118_sparse_join:
+    if: inputs.target == 'weighted-tnf-raw118-sparse' || inputs.target == 'weighted-tnf-raw118-consumer'
+    needs: raw118_sparse_shards
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw118-sparse-source
+          path: im-results/agent16-raw118
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw118-sparse-shard-*
+          path: /tmp/raw118-sparse-downloads
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Assemble all 679 checked sparse leaves
+        run: |
+          set -euo pipefail
+          D=im-results/agent16-raw118
+          U=/tmp/raw118-sparse-union
+          W=/tmp/raw118-sparse-complete
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent4-raw109/merge_shards.py /tmp/raw118-sparse-downloads "$U" "$D/Raw118SparsePlan.json"
+          python tools/lean_compile_closure.py --workdir "$W" --jobs 4 \
+            --precompiled-manifest "$U/manifest.json" --precompiled-dir "$U" \
+            --manifest "$W/manifest.json" --label raw118-sparse-complete \
+            --artifact-name raw118-sparse-complete \
+            --provenance-input "$D/Raw118SparsePlan.json" \
+            --provenance-input "$D/Raw118Sparse.json" \
+            "$D/Raw118Sparse.lean" | tee /tmp/raw118-sparse-join.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/raw118-sparse-join.log; then exit 1; fi
+          cp /tmp/raw118-sparse-join.log "$W/audit.log"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw118-sparse-complete
+          path: /tmp/raw118-sparse-complete/
+          if-no-files-found: error
+
+  raw118_parent_assembly:
+    if: inputs.target == 'weighted-tnf-raw118-consumer'
+    needs: raw118_sparse_join
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw118-sparse-source
+          path: im-results/agent16-raw118
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw118-sparse-complete
+          path: /tmp/raw118-merge/raw118-sparse-complete
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Download source-checked Raw118 wide-window artifacts
+        if: inputs.target == 'weighted-tnf-raw118-consumer'
+        uses: actions/download-artifact@v4
+        with:
+          pattern: raw118-wide-*
+          run-id: ${{ inputs.raw118_wide_run_id }}
+          github-token: ${{ github.token }}
+          path: /tmp/raw118-wide-artifacts
+      - name: Download repaired Raw118 wide-window artifacts
+        if: inputs.target == 'weighted-tnf-raw118-consumer' && inputs.raw118_wide_repair_run_id != ''
+        uses: actions/download-artifact@v4
+        with:
+          pattern: raw118-wide-*
+          run-id: ${{ inputs.raw118_wide_repair_run_id }}
+          github-token: ${{ github.token }}
+          path: /tmp/raw118-wide-artifacts
+      - name: Compose and source-check the complete Raw118 parent residual cover
+        if: inputs.target == 'weighted-tnf-raw118-consumer'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent10-tnf-raw87/generate.py
+          python im-results/agent10-tnf-raw91/generate.py
+          python im-results/agent10-tnf-multipump/generate.py 66 70 80
+          python im-results/agent10-tnf-multipump/generate.py 68 72 82
+          python im-results/agent10-tnf-multipump/generate.py 86 88 92 93 97 98 100 101 102 104
+          python im-results/agent16-raw118/generate_partial.py /tmp/raw118-data
+          python im-results/agent16-raw118/emit_symbolic.py /tmp/raw118-data
+          D=im-results/agent40-raw118-independent
+          python "$D/generate_independent.py" > "$D/Raw118Independent.lean"
+          python "$D/generate_phasegraph.py" --modules
+          python "$D/generate_recursive_counter.py" > "$D/Raw118Recursive.lean"
+          python "$D/generate_recursive_more.py" > "$D/Raw118RecursiveMore.lean"
+          python im-results/agent16-raw118/bidfa_emit.py > im-results/agent16-raw118/Raw118BiDFA.lean
+          python im-results/agent16-raw118/tree_emit.py > im-results/agent16-raw118/Raw118Tree.lean
+          python im-results/agent16-raw118/generate_late_traces.py /tmp/raw118-data
+          python im-results/agent16-raw118/search_tree_bank.py /tmp/raw118-data
+          python im-results/agent40-raw118-independent/merge_wide_artifacts.py /tmp/raw118-wide-artifacts /tmp/raw118-merge/raw118-wide-merged im-results/agent1-bidfa-sat/wide-generated
+          python im-results/agent1-bidfa-sat/emit_raw118.py > im-results/agent1-bidfa-sat/Raw118SatHits.lean
+          python "$D/run_summary.py" 430 437 440 456 1181 3908 1120 1127 1174 1326 1390 1391 1392 1816 2867 3921 4093 4125 4342 4443
+          python im-results/agent16-raw118/emit_consumer.py /tmp/raw118-data
+          python - <<'PY'
+          import json
+          widths=json.load(open("im-results/agent1-bidfa-sat/raw118-wide-widths.json"))
+          groups={"wide-merged":[f"Raw118Wide{i}" for i in widths], "sparse-complete":["Raw118Sparse"]}
+          json.dump({"artifact_prefix":"raw118","allow_mixed_revisions":True,"groups":groups},open("/tmp/raw118-merge-config.json","w"))
+          PY
+          python im-results/agent4-raw109/merge_shards.py /tmp/raw118-merge /tmp/raw118-consumer-union /tmp/raw118-merge-config.json
+          python tools/lean_compile_closure.py --workdir /tmp/a16-raw118-consumer --jobs 4 --source-root im-results/agent1-bidfa-sat/wide-generated --source-root im-results/agent40-raw118-independent/run-generated --precompiled-manifest /tmp/raw118-consumer-union/manifest.json --precompiled-dir /tmp/raw118-consumer-union --manifest /tmp/a16-raw118-consumer/manifest.json --artifact-name raw118-parent-proof --label raw118-conditional-parent --theorem BB6.Agent16Raw118Consumer.parent_cover_at_target --parent-table '1RB---_1RC---_0RD---_1LD1RE_---0LE_------' --weighted-bound 756496 im-results/agent16-raw118/Raw118Consumer.lean | tee /tmp/a16-raw118-consumer.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a16-raw118-consumer.log BB6.Agent16Raw118Consumer.parent_cover_at_target
+          cp /tmp/a16-raw118-consumer.log /tmp/a16-raw118-consumer/audit.log
+      - name: Preserve generated Raw118 parent consumer
+        if: inputs.target == 'weighted-tnf-raw118-consumer'
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw118-parent-consumer
+          path: |
+            im-results/agent16-raw118/Raw118Consumer.lean
+            im-results/agent16-raw118/Raw118Consumer.json
+            im-results/agent16-raw118/Raw118TreeBank.json
+            im-results/agent16-raw118/Raw118Symbolic.json
+            im-results/agent16-raw118/Raw118Sparse.json
+            im-results/agent16-raw118/Raw118Late.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw118-parent-proof
+          path: /tmp/a16-raw118-consumer/
+          if-no-files-found: error
+
   raw118_wide_cert:
     if: inputs.target == 'weighted-tnf-raw118-wide-cert'
     strategy:
