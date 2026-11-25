@@ -22,11 +22,6 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ inputs.source_ref || github.sha }}
-      - uses: actions/checkout@v4
-        if: inputs.target == 'ingest77'
-        with:
-          ref: d4164a4457e62ba7ec8e3fba6e38b251d04ffc83
-          path: pinned
       - name: Install pinned Lean
         run: |
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
@@ -44,9 +39,6 @@ jobs:
         if: inputs.target == 'ingest77'
         run: |
           set -euo pipefail
-          cp im-results/agent47-rooted-tnf/CanonicalTwoParentGraft.lean pinned/im-results/agent47-rooted-tnf/
-          cp tools/lean_compile_closure.py pinned/tools/lean_compile_closure.py
-          cd pinned
           python im-results/agent13-coverage/unpack.py
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
@@ -69,6 +61,7 @@ jobs:
           for required in CanonicalTwoParentGraft.olean CanonicalRaw114Accepted.olean Raw114CompleteData.olean; do
             test -s "/tmp/a47-canonical/$required"
           done
+          test "$(git rev-parse HEAD:im-results/agent47-rooted-tnf/CanonicalRaw114Accepted.lean)" = "d198f4eb8d3c2ca4b7ed5a2c57298cb6364537f4"
           python tools/lean_compile_closure.py im-results/agent47-rooted-tnf/CanonicalTwoParentGraft.lean \
             --workdir /tmp/a46-canonical-manifest-work \
             --manifest /tmp/a46-canonical-manifest.json \
