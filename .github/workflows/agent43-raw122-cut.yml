@@ -6,6 +6,10 @@ on:
         description: Exact source revision
         required: false
         type: string
+      artifact_run_id:
+        description: Reuse generated and audited artifacts from an earlier run; requires source_ref to match that run's head SHA
+        required: false
+        type: string
       branches:
         description: Space-separated F1 child codes
         required: false
@@ -13,8 +17,10 @@ on:
         type: string
 permissions:
   contents: read
+  actions: read
 jobs:
   generate:
+    if: inputs.artifact_run_id == ''
     runs-on: ubuntu-latest
     timeout-minutes: 15
     outputs:
@@ -48,6 +54,7 @@ jobs:
           path: im-results/agent43-raw122-cut/*.lean
           if-no-files-found: error
   branch:
+    if: inputs.artifact_run_id == ''
     needs: generate
     strategy:
       fail-fast: false
@@ -94,6 +101,7 @@ jobs:
           path: /tmp/a43-audit/*.olean
           if-no-files-found: error
   assemble:
+    if: inputs.artifact_run_id == ''
     needs: [generate, branch]
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -131,3 +139,67 @@ jobs:
           name: raw122-certified-root
           path: /tmp/a43-audit/*.olean
           if-no-files-found: error
+
+  # A failed matrix shard can be rerun independently. GitHub leaves the
+  # dependent assemble job skipped after a failed-only rerun, so expose an
+  # assembly-only path that consumes the already uploaded artifacts.
+  assemble-existing:
+    if: inputs.artifact_run_id != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_ref || github.sha }}
+      - name: Verify the artifact run and checked-out source are identical
+        env:
+          ARTIFACT_RUN_ID: ${{ inputs.artifact_run_id }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          test -n "${{ inputs.source_ref }}" || { echo "source_ref must be the exact artifact head SHA"; exit 1; }
+          expected="$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${ARTIFACT_RUN_ID}" --jq '.head_sha')"
+          actual="$(git rev-parse HEAD)"
+          test "$expected" = "$actual" || {
+            echo "artifact source mismatch: run=$expected checkout=$actual"
+            exit 1
+          }
+      - name: Install Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw122-generated
+          run-id: ${{ inputs.artifact_run_id }}
+          github-token: ${{ github.token }}
+          path: /tmp/a43-source
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw122-audit-*
+          run-id: ${{ inputs.artifact_run_id }}
+          github-token: ${{ github.token }}
+          path: /tmp/a43-audit
+          merge-multiple: true
+      - name: Assemble exact parent partial audit from retained shards
+        run: |
+          set -euo pipefail
+          test -f /tmp/a43-source/Raw122Data.lean
+          test -f /tmp/a43-audit/Raw122Base.olean
+          cp /tmp/a43-source/*.lean /tmp/a43-audit/
+          cd /tmp/a43-audit
+          export LEAN_PATH="$PWD"
+          for i in $(seq -w 0 23); do
+            lean -o "Raw122Branch${i}.olean" "Raw122Branch${i}.lean"
+          done
+          lean -o Raw122Data.olean Raw122Data.lean | tee /tmp/a43-root.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a43-root.log; then exit 1; fi
+          grep -E 'theorem (residual_count|sound)' Raw122Data.lean
+          cp /tmp/a43-root.log ./audit.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw122-certified-root
+          path: /tmp/a43-audit/
+          retention-days: 30
