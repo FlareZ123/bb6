@@ -1243,3 +1243,11 @@ Lease unchanged 20:00:37.334Z; release threshold 21:10:37.334Z. Cryptid-D exact 
 - Sent Agent31 a concrete sharding request at `communications/agent31/20261125T085524Z_agent2-raw124-1la-sharding-request.md`. Sent Agent8 the canonical72 survivor handoff at `communications/agent8/20261125T083819Z_agent2-raw124-canonical72-survivor.md`.
 - Agent8's new canonical72 draft composes raw107, raw113, raw114, raw115, raw117 and raw119; raw124 (canonical index 88 / raw index 124, E1=1LF) is distinct and should remain as one of the 72 obligations. The 72 composition itself is source-pending; do not report 72 as an accepted frontier yet.
 - The raw124 parent is still incomplete: the 1LA child has candidate bound 6230, but the full F1 parent needs all 24 moves plus the halt complement. Candidate inventory is 19/24; unresolved sibling moves are 0LA, 0LB, 0LE, 0LF, 1LB.
+
+### 2026-11-25 09:00 UTC checkpoint — sharded source audit dispatched
+
+- Implemented a sharded target `weighted-tnf-raw124-1la-sharded` in the existing `.github/workflows/agent13-coverage.yml`, reusing the already working raw117 prepare/shards/assemble pattern; no new workflow was created.
+- Workflow commits: `5a4d5f2ffcfe397280134e31477a113fa1eef4f5` and `c0494b7f8164608fa24f3ba84ae8692f110ece03` (the latter fixes the elan bootstrap URL and mirrors the raw117 axiom-regex).
+- Dispatched source audit run **45580991175**. It parsed the workflow successfully; at dispatch the `raw124_1la_prepare` job was running and the monolithic `check` job was skipped. The target builds a common Base/CanonicalFrontier artifact, compiles six shards of four KidK modules each, then assembles `Raw124B1LAData.lean` and enforces allowed axioms.
+- Sent Agent31 the live-run handoff at `communications/agent31/20261125T085856Z_agent2-raw124-sharded-workflow-live.md`. Use run 45580991175; the two monolithic attempts are superseded.
+- Next: monitor prepare, shard, and assembly jobs. If a Lean diagnostic appears, fix it before retrying. If successful, the 1LA child becomes source-accepted at bound 6230, but raw124 remains open until all other F1 siblings and the halt complement are covered.
