@@ -11,15 +11,15 @@ open BB6ChampionArithmetic
 open BB6.Agent47Combined109
 
 /-- The exact published champion score. -/
-abbrev championScore : Nat := proposedTM63Moves + 7
+def championScore : Nat := proposedTM63Moves + 7
 
 /-- The champion has no incoming zero-writing delay at its A/0 root. -/
 theorem champion_score_gt_7014 : 7014 < championScore := by
   have hroot : 27959 ≤ threeSectionMoves 27959 3 7 6 63 + 7 :=
     BB6Coverage.Agent48DirectRoot.rootSteps_le_score 27959 3 7 6 63
-  change 7014 < proposedTM63Moves + 7
-  rw [← threeSectionMoves_root]
-  omega
+  have hscore : 7014 < threeSectionMoves 27959 3 7 6 63 + 7 :=
+    Nat.lt_of_lt_of_le (by decide) hroot
+  simpa only [championScore, ← threeSectionMoves_root] using hscore
 
 /-- The champion is compatible with the authentic first-one root. -/
 theorem champion_compatible_root :
@@ -27,7 +27,7 @@ theorem champion_compatible_root :
   change compatible BB6.CoverageAdapter.firstOneCylinder championTable
   exact (compatible_refine_iff emptyTable championTable initialSlot rfl
     (some ⟨true,true,(1 : Fin 6)⟩)).mpr
-      ⟨empty_compatible championTable, by decide [championTable]⟩
+      ⟨empty_compatible championTable, by decide⟩
 
 /-- The exact source halting run and its exact delay list show that the
     champion cannot belong to the early 7014-bounded branch. -/
@@ -39,7 +39,7 @@ theorem champion_not_weighted_7014 :
     simp
   have hscore := h (proposedTM63Moves + 6) 0 champion_halts_exact hd
   have hB : 7014 < proposedTM63Moves + 7 := by
-    simpa [championScore] using champion_score_gt_7014
+    simpa only [championScore] using champion_score_gt_7014
   omega
 
 /-- Therefore the accepted 109-way dichotomy places the actual champion in
