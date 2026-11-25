@@ -1,0 +1,41 @@
+{
+  "artifact_prefix": "raw121-shard",
+  "groups": {
+    "00-03": [
+      "Raw121Kid00",
+      "Raw121Kid01",
+      "Raw121Kid02",
+      "Raw121Kid03"
+    ],
+    "04-07": [
+      "Raw121Kid04",
+      "Raw121Kid05",
+      "Raw121Kid06",
+      "Raw121Kid07"
+    ],
+    "08-11": [
+      "Raw121Kid08",
+      "Raw121Kid09",
+      "Raw121Kid10",
+      "Raw121Kid11"
+    ],
+    "12-15": [
+      "Raw121Kid12",
+      "Raw121Kid13",
+      "Raw121Kid14",
+      "Raw121Kid15"
+    ],
+    "16-19": [
+      "Raw121Kid16",
+      "Raw121Kid17",
+      "Raw121Kid18",
+      "Raw121Kid19"
+    ],
+    "20-23": [
+      "Raw121Kid20",
+      "Raw121Kid21",
+      "Raw121Kid22",
+      "Raw121Kid23"
+    ]
+  }
+}
