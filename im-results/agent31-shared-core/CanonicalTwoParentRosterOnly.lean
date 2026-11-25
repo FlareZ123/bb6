@@ -12,7 +12,7 @@ open BB6Coverage BB6.Agent13BlankDelay BB6.Agent50TNFPilot
 /-- The first parent is exactly the source-certified raw107 table. -/
 theorem p107_matches_raw107 :
     BB6.Agent47CanonicalTwoParent.p107 = BB6.Agent10Raw107Root.parent := by
-  decide
+  rfl
 
 /-- Instantiate the raw107 parent bound without importing the champion. -/
 theorem p107_bound :
