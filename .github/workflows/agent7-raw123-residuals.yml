@@ -5,7 +5,7 @@ on:
       parent:
         description: Six-hole parent to check
         type: choice
-        options: ['123', '125']
+        options: ['123', '125', '38']
         default: '123'
       cut_run:
         description: Successful cut run ID (assembly only)
@@ -29,7 +29,7 @@ jobs:
       fail-fast: false
       max-parallel: 6
       matrix:
-        include: ${{ fromJSON(inputs.parent == '125' && '[{"part":0,"kind":"ngrams","modules":"0 1 2 3 4 5","glob":"Raw125NGram*.lean"},{"part":1,"kind":"blocks","modules":"0 1 4 5 6 7 8 9 10","glob":"Raw125Block[0-9][0-9].lean"},{"part":2,"kind":"blocks","modules":"11 12 13 14 15 17 18 19","glob":"Raw125Block[0-9][0-9].lean"},{"part":3,"kind":"blocks","modules":"2 3 16","glob":"Raw125Block[0-9][0-9].lean"}]' || '[{"part":0,"kind":"ngrams","modules":"0 1 2 3 4 5 6 7 8 9 12 13 17 18","glob":"Raw123NGram*.lean"},{"part":1,"kind":"ngrams","modules":"10 11 14 15 16","glob":"Raw123NGram*.lean"},{"part":2,"kind":"blocks","modules":"0 1 2 3 4 6 8 9 10 11","glob":"Raw123Block[0-9][0-9].lean"},{"part":3,"kind":"blocks","modules":"12 13 14 15 16 17 18 19","glob":"Raw123Block[0-9][0-9].lean"},{"part":4,"kind":"blocks","modules":"5 7","glob":"Raw123Block[0-9][0-9].lean"},{"part":5,"kind":"blocks","modules":"20","glob":"Raw123Block[0-9][0-9].lean"}]') }}
+        include: ${{ fromJSON(inputs.parent == '38' && '[{"part":0,"kind":"ngrams","modules":"0 1","glob":"Raw38NGram*.lean"},{"part":1,"kind":"blocks","modules":"0 1 2 3 4 5 6 7 10 11","glob":"Raw38Block[0-9][0-9].lean"},{"part":2,"kind":"blocks","modules":"8 9 12 13 14 15 16 17 18 19","glob":"Raw38Block[0-9][0-9].lean"},{"part":3,"kind":"blocks","modules":"20 21 22 23 24 25 26 27 28 29 30","glob":"Raw38Block[0-9][0-9].lean"}]' || inputs.parent == '125' && '[{"part":0,"kind":"ngrams","modules":"0 1 2 3 4 5","glob":"Raw125NGram*.lean"},{"part":1,"kind":"blocks","modules":"0 1 4 5 6 7 8 9 10","glob":"Raw125Block[0-9][0-9].lean"},{"part":2,"kind":"blocks","modules":"11 12 13 14 15 17 18 19","glob":"Raw125Block[0-9][0-9].lean"},{"part":3,"kind":"blocks","modules":"2 3 16","glob":"Raw125Block[0-9][0-9].lean"}]' || '[{"part":0,"kind":"ngrams","modules":"0 1 2 3 4 5 6 7 8 9 12 13 17 18","glob":"Raw123NGram*.lean"},{"part":1,"kind":"ngrams","modules":"10 11 14 15 16","glob":"Raw123NGram*.lean"},{"part":2,"kind":"blocks","modules":"0 1 2 3 4 6 8 9 10 11","glob":"Raw123Block[0-9][0-9].lean"},{"part":3,"kind":"blocks","modules":"12 13 14 15 16 17 18 19","glob":"Raw123Block[0-9][0-9].lean"},{"part":4,"kind":"blocks","modules":"5 7","glob":"Raw123Block[0-9][0-9].lean"},{"part":5,"kind":"blocks","modules":"20","glob":"Raw123Block[0-9][0-9].lean"}]') }}
     steps:
       - uses: actions/checkout@v4
       - name: Install Lean
@@ -43,6 +43,7 @@ jobs:
           python im-results/agent13-coverage/unpack.py
           d=im-results/agent7-raw123
           if [ "${{ inputs.parent }}" = 125 ]; then d=im-results/agent13-raw125; fi
+          if [ "${{ inputs.parent }}" = 38 ]; then d=im-results/agent13-raw38; fi
           python "$d/build_${{ matrix.kind }}.py" ${{ matrix.modules }}
           python tools/lean_compile_closure.py --workdir /tmp/raw${{ inputs.parent }}-residual --jobs 2 "$d"/${{ matrix.glob }} | tee /tmp/residual.log
           if grep -qE 'sorryAx|native_decide' /tmp/residual.log; then exit 1; fi
@@ -53,7 +54,7 @@ jobs:
           if-no-files-found: error
           retention-days: 5
   assemble:
-    if: inputs.cut_run != '' && inputs.residual_run != '' && inputs.parent == '125'
+    if: inputs.cut_run != '' && inputs.residual_run != '' && (inputs.parent == '125' || inputs.parent == '38')
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -73,16 +74,16 @@ jobs:
           done
       - uses: actions/download-artifact@v4
         with:
-          name: raw125-cut
+          name: raw${{ inputs.parent }}-cut
           run-id: ${{ inputs.cut_run }}
           github-token: ${{ github.token }}
-          path: /tmp/raw125-assembly/cut
+          path: /tmp/raw${{ inputs.parent }}-assembly/cut
       - uses: actions/download-artifact@v4
         with:
-          pattern: raw125-residual-*
+          pattern: raw${{ inputs.parent }}-residual-*
           run-id: ${{ inputs.residual_run }}
           github-token: ${{ github.token }}
-          path: /tmp/raw125-assembly/residuals
+          path: /tmp/raw${{ inputs.parent }}-assembly/residuals
       - name: Install Lean
         run: |
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
@@ -91,14 +92,15 @@ jobs:
       - name: Check exact parent cover
         run: |
           set -euxo pipefail
-          python im-results/agent13-raw125/merge_final.py /tmp/raw125-assembly /tmp/raw125-final
-          cp im-results/agent13-raw125/Raw125ResidualClosure.lean /tmp/raw125-final/
-          cd /tmp/raw125-final
-          LEAN_PATH="$PWD" lean -o Raw125ResidualClosure.olean Raw125ResidualClosure.lean | tee /tmp/raw125-final.log
-          if grep -qE 'sorryAx|native_decide' /tmp/raw125-final.log; then exit 1; fi
+          d=im-results/agent13-raw${{ inputs.parent }}
+          python "$d/merge_final.py" /tmp/raw${{ inputs.parent }}-assembly /tmp/raw${{ inputs.parent }}-final
+          cp "$d/Raw${{ inputs.parent }}ResidualClosure.lean" /tmp/raw${{ inputs.parent }}-final/
+          cd /tmp/raw${{ inputs.parent }}-final
+          LEAN_PATH="$PWD" lean -o Raw${{ inputs.parent }}ResidualClosure.olean Raw${{ inputs.parent }}ResidualClosure.lean | tee /tmp/raw${{ inputs.parent }}-final.log
+          if grep -qE 'sorryAx|native_decide' /tmp/raw${{ inputs.parent }}-final.log; then exit 1; fi
       - uses: actions/upload-artifact@v4
         with:
-          name: raw125-final
-          path: /tmp/raw125-final/
+          name: raw${{ inputs.parent }}-final
+          path: /tmp/raw${{ inputs.parent }}-final/
           if-no-files-found: error
           retention-days: 5
