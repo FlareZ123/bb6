@@ -37,7 +37,7 @@ theorem cover_remainingF1Extended
   by_cases h : parentZeroRF e.2 = true
   · have heq : e.2 = BB6.Agent48F1ZeroRF.parent := sameTable_sound h
     rw [heq]
-    exact cover_zeroRF championScore (by omega)
+    exact cover_zeroRF championScore (Nat.le_trans (by decide) champion_score_ge_49394)
   · apply hLeaves e
     apply List.mem_filter.mpr
     exact ⟨he, by simp [h]⟩
