@@ -1,0 +1,231 @@
+name: Agent 11 Raw121 canonical77 graft
+
+on:
+  workflow_dispatch:
+    inputs:
+      raw121_run_id:
+        description: 'Successful Agent 11 run ID that uploaded raw121-parent-proof'
+        type: string
+        required: true
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  graft:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/checkout@v4
+        with:
+          ref: d4164a4457e62ba7ec8e3fba6e38b251d04ffc83
+          path: pinned
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45554648116
+          name: canonical77-certified
+          path: /tmp/a47-canonical
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.raw121_run_id }}
+          name: raw121-parent-proof
+          path: /tmp/a11-raw121-parent-proof
+      - name: Validate the source-audited Raw121 parent artifact
+        id: parent
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          p = "/tmp/a11-raw121-parent-proof/manifest.json"
+          m = json.load(open(p))
+          claim = m.get("claim") or {}
+          assert m.get("artifact_name") == "raw121-parent-proof", m.get("artifact_name")
+          assert claim.get("theorem") == "BB6.Agent11Raw121.all121", claim
+          assert claim.get("parent_table") == "1RB---_1RC---_0RD---_1LD1RE_---1RE_------", claim
+          assert int(claim.get("weighted_bound", -1)) == 4063, claim
+          revision = m.get("proof_source_revision")
+          assert isinstance(revision, str) and len(revision) == 40, revision
+          print("Validated Raw121 parent proof at", revision)
+          with open("/tmp/a11-parent-revision.txt", "w") as f:
+              f.write(revision + "\n")
+          PY
+          echo "PARENT_REV=$(cat /tmp/a11-parent-revision.txt)" >> "$GITHUB_ENV"
+      - name: Copy source-pinned Raw121 inputs into the canonical workspace
+        run: |
+          set -euo pipefail
+          mkdir -p pinned/im-results pinned/tools pinned/.github/workflows
+          rm -rf pinned/im-results/agent11-raw121
+          cp -a im-results/agent11-raw121 pinned/im-results/
+          cp tools/lean_compile_closure.py pinned/tools/lean_compile_closure.py
+          mkdir -p pinned/im-results/agent4-raw109
+          cp im-results/agent4-raw109/audit_axioms.py pinned/im-results/agent4-raw109/
+          cp im-results/agent31-three-hole-tnf/generate_sweeps.py pinned/im-results/agent31-three-hole-tnf/
+          cp im-results/agent31-three-hole-tnf/generate_four_hole.py pinned/im-results/agent31-three-hole-tnf/
+          cp im-results/agent10-tnf-multipump/multi.py pinned/im-results/agent10-tnf-multipump/
+          cp im-results/agent10-tnf-multipump/chunk_checks.py pinned/im-results/agent10-tnf-multipump/
+          cp im-results/agent13-coverage/unpack.py pinned/im-results/agent13-coverage/
+          cp im-results/agent13-coverage/BB6Coverage.lean.xz.b64 pinned/im-results/agent13-coverage/
+          mkdir -p pinned/im-results/agent48-counted-inc0 pinned/im-results/agent48-champion-root pinned/im-results/agent13-weighted-first-one
+          rm -rf pinned/im-results/agent48-counted-inc0 pinned/im-results/agent48-champion-root pinned/im-results/agent13-weighted-first-one
+          cp -a im-results/agent48-counted-inc0 pinned/im-results/
+          cp -a im-results/agent48-champion-root pinned/im-results/
+          cp -a im-results/agent13-weighted-first-one pinned/im-results/
+          PARENT_REV="$(cat /tmp/a11-parent-revision.txt)"
+          git show "$PARENT_REV:.github/workflows/agent11-raw121-parent.yml" > pinned/.github/workflows/agent11-raw121-parent.yml
+          git show "$PARENT_REV:im-results/agent4-raw109/merge_shards.py" > pinned/im-results/agent4-raw109/merge_shards.py
+      - name: Reconstruct the accepted canonical77 source closure
+        run: |
+          set -euo pipefail
+          cd pinned
+          mkdir -p /tmp/a31 .tmp/a31
+          lean --version | tee /tmp/a31/lean-version.txt
+          LEAN_BIN="$(command -v lean)"
+          sha256sum "$LEAN_BIN" | tee /tmp/a31/lean-binary.sha256
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent10-tnf-raw87/generate.py
+          python im-results/agent10-tnf-raw91/generate.py
+          python im-results/agent10-tnf-multipump/generate.py 66 70 80
+          python im-results/agent10-tnf-multipump/generate.py 68 72 82
+          python im-results/agent10-tnf-multipump/generate.py 86 88 92 93 97 98 100 101 102 104
+          cd im-results/agent47-raw114-cut
+          python paired_counter.py
+          python long_sweep.py
+          printf '%s\n' 0LA 0LB 0LC 0LF 0RA 0RB 0RC 0RF 1LA 1LB 1LC 1LF 1RA 1RB 1RC 1RF | xargs -P 4 -I{} python generate_complete.py {}
+          python generate_complete.py --combine
+          cd ../..
+          cat > .tmp/a31/raw114-generator-arguments.txt <<'EOF'
+          python im-results/agent13-coverage/unpack.py
+          cd im-results/agent47-raw114-cut
+          python paired_counter.py
+          python long_sweep.py
+          printf '%s\\n' 0LA 0LB 0LC 0LF 0RA 0RB 0RC 0RF 1LA 1LB 1LC 1LF 1RA 1RB 1RC 1RF | xargs -P 4 -I{} python generate_complete.py {}
+          python generate_complete.py --combine
+          EOF
+          cat > .tmp/a31/canonical-generator-arguments.txt <<'EOF'
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent10-tnf-raw87/generate.py
+          python im-results/agent10-tnf-raw91/generate.py
+          python im-results/agent10-tnf-multipump/generate.py 66 70 80
+          python im-results/agent10-tnf-multipump/generate.py 68 72 82
+          python im-results/agent10-tnf-multipump/generate.py 86 88 92 93 97 98 100 101 102 104
+          EOF
+          for required in CanonicalTwoParentGraft.olean CanonicalRaw114Accepted.olean Raw114CompleteData.olean; do
+            test -s "/tmp/a47-canonical/$required"
+          done
+          python tools/lean_compile_closure.py \
+            im-results/agent47-rooted-tnf/CanonicalTwoParentGraft.lean \
+            im-results/agent47-rooted-tnf/CanonicalRaw114Accepted.lean \
+            --workdir /tmp/a31-canonical-manifest-work --jobs 8 \
+            --manifest /tmp/a31-canonical-manifest.json --manifest-only \
+            --artifact-dir /tmp/a47-canonical \
+            --label raw121-graft-canonical77 \
+            --artifact-name raw121-graft-canonical77 \
+            --provenance-input im-results/agent47-rooted-tnf/CanonicalTwoParentGraft.lean \
+            --provenance-input im-results/agent47-rooted-tnf/CanonicalRaw114Accepted.lean \
+            --provenance-input im-results/agent47-rooted-tnf/CanonicalRosterRefinement.lean \
+            --provenance-input im-results/agent47-raw114-cut/paired_counter.py \
+            --provenance-input im-results/agent47-raw114-cut/long_sweep.py \
+            --provenance-input im-results/agent47-raw114-cut/generate_complete.py \
+            --provenance-input im-results/agent47-raw114-cut/Raw114CompleteData.lean \
+            --provenance-input im-results/agent13-coverage/unpack.py \
+            --provenance-input im-results/agent13-coverage/BB6Coverage.lean.xz.b64 \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_sweeps.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_four_hole.py \
+            --provenance-input im-results/agent10-tnf-raw87/generate.py \
+            --provenance-input im-results/agent10-tnf-raw91/generate.py \
+            --provenance-input im-results/agent10-tnf-multipump/generate.py \
+            --provenance-input .tmp/a31/raw114-generator-arguments.txt \
+            --provenance-input .tmp/a31/canonical-generator-arguments.txt \
+            --provenance-input /tmp/a31/lean-version.txt \
+            --provenance-input /tmp/a31/lean-binary.sha256 \
+            --provenance-input tools/lean_compile_closure.py
+      - name: Normalize canonical manifest provenance paths and prepare artifact union
+        run: |
+          set -euo pipefail
+          mkdir -p pinned/.tmp/a31
+          cp /tmp/a31/lean-version.txt pinned/.tmp/a31/lean-version.txt
+          cp /tmp/a31/lean-binary.sha256 pinned/.tmp/a31/lean-binary.sha256
+          python - <<'PY'
+          import json
+          p = "/tmp/a31-canonical-manifest.json"
+          m = json.load(open(p))
+          for item in m.get("provenance_inputs", []):
+              if item["path"] == "/tmp/a31/lean-version.txt":
+                  item["path"] = ".tmp/a31/lean-version.txt"
+              elif item["path"] == "/tmp/a31/lean-binary.sha256":
+                  item["path"] = ".tmp/a31/lean-binary.sha256"
+          json.dump(m, open(p, "w"), indent=2, sort_keys=True)
+          with open(p, "a") as f:
+              f.write("\n")
+          PY
+          mkdir -p /tmp/a11-graft-artifacts/raw121-graft-canonical77 /tmp/a11-graft-artifacts/raw121-graft-parent
+          cp -a /tmp/a47-canonical/. /tmp/a11-graft-artifacts/raw121-graft-canonical77/
+          cp /tmp/a31-canonical-manifest.json /tmp/a11-graft-artifacts/raw121-graft-canonical77/manifest.json
+          cp -a /tmp/a11-raw121-parent-proof/. /tmp/a11-graft-artifacts/raw121-graft-parent/
+          python - <<'PY'
+          import json
+          p = "/tmp/a11-graft-artifacts/raw121-graft-parent/manifest.json"
+          m = json.load(open(p))
+          assert m.get("artifact_name") == "raw121-parent-proof", m.get("artifact_name")
+          m["artifact_name"] = "raw121-graft-parent"
+          json.dump(m, open(p, "w"), indent=2, sort_keys=True)
+          with open(p, "a") as f:
+              f.write("\n")
+          PY
+      - name: Merge canonical77 and Raw121 objects with source and identity checks
+        run: |
+          set -euo pipefail
+          cd pinned
+          python ../im-results/agent4-raw109/merge_shards.py \
+            /tmp/a11-graft-artifacts /tmp/a11-graft-union \
+            im-results/agent11-raw121/graft-union.json
+      - name: Compile the 76-residual Raw121 conditional exactness interface
+        run: |
+          set -euo pipefail
+          cd pinned
+          python tools/lean_compile_closure.py \
+            im-results/agent11-raw121/Raw121Canonical77Graft.lean \
+            --workdir /tmp/a11-raw121-graft --jobs 4 \
+            --manifest /tmp/a11-raw121-graft/manifest.json \
+            --label raw121-canonical76-graft \
+            --theorem BB6.Agent11Raw121Canonical77Graft.exact_from_canonical76_at_champion_score \
+            --artifact-name raw121-canonical76-graft-proof \
+            --precompiled-manifest /tmp/a11-graft-union/manifest.json \
+            --precompiled-dir /tmp/a11-graft-union \
+            --provenance-input im-results/agent11-raw121/Raw121Canonical77Graft.lean \
+            --provenance-input im-results/agent11-raw121/graft-union.json \
+            --provenance-input tools/lean_compile_closure.py \
+            2>&1 | tee /tmp/a11-raw121-graft.log
+          python im-results/agent4-raw109/audit_axioms.py \
+            /tmp/a11-raw121-graft.log \
+            BB6.Agent11Raw121Canonical77Graft.champion_score_gt_7014 \
+            BB6.Agent11Raw121Canonical77Graft.parent_present \
+            BB6.Agent11Raw121Canonical77Graft.roster76_count \
+            BB6.Agent11Raw121Canonical77Graft.roster76_sound \
+            BB6.Agent11Raw121Canonical77Graft.exact_from_canonical76_at_champion_score
+          if grep -Eq 'sorryAx|native_decide' /tmp/a11-raw121-graft.log; then
+            exit 1
+          fi
+      - name: Upload source-accepted canonical76 graft artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw121-canonical76-graft-proof
+          path: /tmp/a11-raw121-graft/
+          if-no-files-found: error
+          retention-days: 30
