@@ -7,7 +7,9 @@ means every assignment in parent is identically present in child.
 """
 import itertools
 import json
+import re
 import sys
+from pathlib import Path
 from collections import defaultdict, Counter
 
 REMOVED_RAW = {66, 70, 80}
@@ -53,6 +55,37 @@ def load_entries(path):
             raise ValueError(f"unexpected table shape for raw={raw}: {t!r}")
         out.append({"raw": raw, "canonical": e.get("canonical_index"), "table": tuple(t)})
     return out
+
+
+def parse_table_string(encoded):
+    groups = encoded.split("_")
+    if len(groups) != 6 or any(len(group) != 6 for group in groups):
+        raise ValueError(f"bad six-row table encoding: {encoded}")
+    table = []
+    for group in groups:
+        for j in (0, 3):
+            token = group[j:j+3]
+            table.append(None if token == "---" else token)
+    return tuple(table)
+
+
+def load_extra_witnesses(root):
+    """Load the 32 source-side certificates and two nonhalting sweep cylinders."""
+    chunk2 = (root / "im-results/agent47-rooted-tnf/Agent47SourceChunk2.v").read_text(encoding="utf-8")
+    encoded = re.findall(r'\("([^"]+)",\s*SWside', chunk2)
+    if len(encoded) != 32:
+        raise ValueError(f"expected 32 SWside table certificates, found {len(encoded)}")
+    witnesses = [
+        {"raw": f"chunk2-side-{i}", "canonical": None, "table": parse_table_string(t)}
+        for i, t in enumerate(encoded)
+    ]
+    # Exact partial tables from Agent47SourceSweep.v: E0,F0,F1 are open.
+    fixed = ["1RB", "1RD", "1RC", "1LB", "0LA", "0LE", "1LA", "0LB", None]
+    witnesses.append({"raw": "sweep-true", "canonical": None,
+                      "table": tuple(fixed + ["1RB", None, None])})
+    witnesses.append({"raw": "sweep-false", "canonical": None,
+                      "table": tuple(fixed + ["0RC", None, None])})
+    return witnesses
 
 
 def union_cover(q, candidate_ids, entries, memo):
@@ -105,7 +138,11 @@ def union_cover(q, candidate_ids, entries, memo):
 def main(path):
     all_entries = load_entries(path)
     unresolved = [e for e in all_entries if e["raw"] not in REMOVED_RAW]
+    root = Path(__file__).resolve().parents[2]
+    extra_witnesses = load_extra_witnesses(root)
+    candidates = all_entries + extra_witnesses
     print(f"roster_entries={len(all_entries)} unresolved={len(unresolved)} "
+          f"extra_witnesses={len(extra_witnesses)} candidates={len(candidates)} "
           f"permutations={len(PERMS)} images={len(unresolved)*len(PERMS)}")
 
     # Exact orbits among all 124 entries, including the three later witness-covered entries.
@@ -123,15 +160,15 @@ def main(path):
         for pi, p in enumerate(PERMS):
             images.append((e, pi, rename_table(e["table"], p)))
 
-    def cover_report(candidates, label):
+    def cover_report(candidates0, label):
         uncovered = []
         cover_hist = Counter()
         for e, pi, img in images:
-            matches = [r for r in candidates if refines(img, r["table"])]
+            matches = [r for r in candidates0 if refines(img, r["table"])]
             cover_hist[len(matches)] += 1
             if not matches:
                 uncovered.append((e, pi, img))
-        print(f"{label}: candidates={len(candidates)} single-parent-covered={len(images)-len(uncovered)}/{len(images)} "
+        print(f"{label}: candidates={len(candidates0)} single-parent-covered={len(images)-len(uncovered)}/{len(images)} "
               f"cover-count-hist={dict(sorted(cover_hist.items()))}")
         for e, pi, img in uncovered:
             print("  UNCOVERED", {"raw": e["raw"], "canonical": e["canonical"],
@@ -139,7 +176,7 @@ def main(path):
         return uncovered
 
     cover_report(exact_reps, "exact-orbit representatives")
-    uncovered = cover_report(all_entries, "all 124 entries")
+    uncovered = cover_report(candidates, "roster plus source witnesses")
 
     # A broader finite union-cover check for images not covered by one roster cylinder.
     unique_uncovered = {}
@@ -148,7 +185,7 @@ def main(path):
     memo = {}
     union_ok = 0
     for img, origins in unique_uncovered.items():
-        ok, witness = union_cover(img, tuple(range(len(all_entries))), all_entries, memo)
+        ok, witness = union_cover(img, tuple(range(len(candidates))), candidates, memo)
         union_ok += int(ok)
         if not ok:
             print("  UNION-COVER-FAIL", {"origins": origins[:6], "image": img, "witness": witness})
@@ -161,7 +198,7 @@ def main(path):
         print("q32 images:")
         for pi, p in enumerate(PERMS):
             img = rename_table(q32["table"], p)
-            parents = [r["raw"] for r in all_entries if refines(img, r["table"])]
+            parents = [r["raw"] for r in candidates if refines(img, r["table"])]
             print(f"  {PERM_NAMES[pi]} -> parents {parents[:8]}{'...' if len(parents)>8 else ''}")
 
 
