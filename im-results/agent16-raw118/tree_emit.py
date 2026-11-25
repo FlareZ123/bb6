@@ -40,7 +40,7 @@ def emit(i,table,dl,dr):
         return thm
     checked=blocks(0,len(states))
     out.extend([f'theorem checked : cert.states.all (stepOK table cert) = true := {checked}',
-      'theorem never (m : Machine) (hm : compatible table m) : NeverHalts m := TreeCheck.never table cert (by decide) (by decide) (by decide) checked m hm',
+      'theorem never (m : Machine) (hm : compatible table m) : NeverHalts m := BB6Coverage.Agent16BiDFA.TreeCheck.never table cert (by decide) (by decide) (by decide) checked m hm',
       '#print axioms never',f'end M{i}'])
     return '\n'.join(out),len(states),sum(map(len,es))
 
