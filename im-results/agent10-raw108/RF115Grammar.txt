@@ -1,0 +1,93 @@
+abbrev P := [false,false,false,true,false,false,true,false,true]
+abbrev Q := [false,false,false,false,true,false,false,false,true]
+abbrev M1 := [false,false,false,true,false,false,true,true,false,false,false,true]
+abbrev M2 := [false,false,false,false,false,true]
+abbrev End := [false,false,false,true]
+abbrev Last := [false,false,true]
+
+inductive Section
+  | a : Nat → Nat → Section
+  | b : Nat → Nat → Section
+  | c : Nat → Nat → Section
+  | d : Nat → Section
+def sectionCfg : Section → Z0
+  | .a n j => ⟨4,[],rep P n++M1++rep Q j++End⟩
+  | .b n j => ⟨4,[],rep P n++M2++rep Q j++End⟩
+  | .c n j => ⟨4,[],rep P n++rep Q j++End⟩
+  | .d n => ⟨4,[],rep P (n+1)++Last⟩
+
+def next : Section → Section
+  | .a n j => .b (n+1) j
+  | .b n j => .c (n+1) j
+  | .c n (j+1) => .a n j
+  | .c n 0 => .d n
+  | .d n => .a 0 n
+def cost : Section → Nat
+  | .a n _ => 43+40*n
+  | .b n _ => 23+40*n
+  | .c n (_+1) => 23+40*n
+  | .c n 0 => 49+40*n
+  | .d n => 56+26*n
+
+theorem a0 (R : List Bool) : run0 table 43 ⟨4,[],M1++R⟩ = some ⟨4,[],P++M2++R⟩ := by rfl
+theorem b0 (R : List Bool) : run0 table 23 ⟨4,[],M2++R⟩ = some ⟨4,[],P++R⟩ := by rfl
+theorem c0 (R : List Bool) : run0 table 23 ⟨4,[],Q++R⟩ = some ⟨4,[],M1++R⟩ := by rfl
+theorem end0 : run0 table 49 ⟨4,[],End⟩ = some ⟨4,[],P++Last⟩ := by rfl
+
+theorem advance (s : Section) : run0 table (cost s) (sectionCfg s) = some (sectionCfg (next s)) := by
+  cases s with
+  | a n j =>
+    cases n with
+    | zero => simpa only [cost,sectionCfg,next,rep,List.nil_append,List.append_nil,List.append_assoc] using a0 (rep Q j++End)
+    | succ n =>
+      have H := phaseA n (rep Q j++End)
+      rw [show 83+40*n=43+40*(n+1) by omega] at H
+      change run0 table _ ⟨4,[],P++rep P n++M1++(rep Q j++End)⟩ = some ⟨4,[],P++rep P n++(P++M2)++(rep Q j++End)⟩ at H
+      simp only [← List.append_assoc, List.append_assoc P (rep P n) P, rep_snoc P n] at H
+      simpa only [cost,sectionCfg,next,rep,List.append_assoc] using H
+  | b n j =>
+    cases n with
+    | zero => simpa only [cost,sectionCfg,next,rep,List.nil_append,List.append_nil,List.append_assoc] using b0 (rep Q j++End)
+    | succ n =>
+      have H := phaseB n (rep Q j++End)
+      rw [show 63+40*n=23+40*(n+1) by omega] at H
+      simpa only [cost,sectionCfg,next,rep,List.nil_append,List.append_nil,List.append_assoc,← List.append_assoc (rep P n) P,rep_snoc P n,P,M2,List.cons_append] using H
+  | c n j =>
+    cases j with
+    | zero =>
+      cases n with
+      | zero => exact end0
+      | succ n =>
+        have H := phaseEnd n []
+        rw [show 89+40*n=49+40*(n+1) by omega] at H
+        change run0 table _ ⟨4,[],P++rep P n++End⟩ = some ⟨4,[],P++rep P n++(P++Last)⟩ at H
+        simp only [← List.append_assoc, List.append_assoc P (rep P n) P, rep_snoc P n] at H
+        simpa only [cost,sectionCfg,next,rep,List.append_assoc,List.nil_append,List.append_nil] using H
+    | succ j =>
+      cases n with
+      | zero => simpa only [cost,sectionCfg,next,rep,List.nil_append,List.append_nil,List.append_assoc] using c0 (rep Q j++End)
+      | succ n =>
+        have H := phaseC n (rep Q j++End)
+        rw [show 63+40*n=23+40*(n+1) by omega] at H
+        simpa only [cost,sectionCfg,next,rep,List.nil_append,List.append_nil,List.append_assoc,P,Q,M1,List.cons_append] using H
+  | d n =>
+    simpa only [cost,sectionCfg,next,rep,List.nil_append,List.append_nil,List.append_assoc,P,Q,M1,End,Last,List.cons_append] using phaseReset n []
+
+theorem positive (s : Section) : 0 < cost s := by
+  cases s with
+  | a n j => simp [cost]; omega
+  | b n j => simp [cost]; omega
+  | c n j => cases j <;> simp [cost] <;> omega
+  | d n => simp [cost]; omega
+
+def orbit : Nat → Section
+  | 0 => .a 0 1
+  | n+1 => next (orbit n)
+def family (n : Nat) := sectionCfg (orbit n)
+theorem entry : run0 table 266 ⟨0,[],[]⟩ = some (family 0) := by rfl
+theorem growth (n : Nat) : run0 table (cost (orbit n)) (family n) = some (family (n+1)) := advance (orbit n)
+theorem never (m : Machine) (hm : compatible table m) : NeverHalts m :=
+  never_of_growth table family 266 (fun n => cost (orbit n)) entry (fun n => positive (orbit n)) growth m hm
+#print axioms growth
+#print axioms never
+end BB6.Agent10Raw108RF115
