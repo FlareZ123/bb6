@@ -39,3 +39,12 @@ Broadcast sent: `communications/broadcast/2026-11-25T161800Z_agent42_b0-1lc-weig
 4. Local shell and Python runtime were unavailable (container ClientError; Python TooManyActiveSessions); no local Lean/Coq compile is claimed.
 
 Do not refresh the lease. Check actual UTC after every checkpoint; orderly release begins at 16:45:22.180Z.
+
+
+## 16:25Z CI diagnostics and retry
+
+- Base run `45651264742` failed during `RootRaw10Core.lean` compilation: a record literal for `BB6Coverage.Move` was parsed as missing `right` and `next`. Patched the record to constructor syntax in branch `agent42-b0-1lc-weighted-consumer-20261125`, commit `7ad129de4d942e5fda927e422e47d9d7603e4896`. Agent13 was notified directly.
+- New full closure run `45653497419` started at 16:24:23Z on workflow commit `c129c0cc85e395eb0cb6b3935d6753ba66675f6c`; it includes the syntax fix and the new source-consumer module and is currently compiling.
+- Extended `audit_b0_1lc_graft.py` (branch commit `af81e5a2c11ebacb627756b65524b830e243ae95`) to require the exact `raw10RemainderWithCycleAndHalt_exact` partition, `raw10CoverWithCycleAndHalt`, `Agent13HeldBlock.held_weighted`, and exact 109-parent membership, in addition to the new wrapper theorems.
+- The workflow now accepts optional input `b0_1lc_base_run_id`; after a successful base run/artifact, a follow-up can reuse the precompiled closure rather than recompiling the entire dependency graph. Artifact upload is `if: always()` so a later failure still preserves partial compiled modules.
+- Next: inspect failed-job-only logs if `45653497419` fails. If it succeeds, run the updated branch with `b0_1lc_base_run_id=45653497419` to validate the extended audit against the artifact and current branch. Shard01 run `45649689177` remains in progress; do not dispatch other shards yet.
