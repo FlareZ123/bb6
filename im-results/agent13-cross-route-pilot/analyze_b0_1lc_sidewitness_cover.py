@@ -115,6 +115,17 @@ def main() -> None:
     )
     added = combined_union - side_union
 
+    assert len(rows) == 388
+    assert len(selected) == 65
+    assert dict(sorted(holes.items())) == {
+        2: 7, 3: 12, 4: 15, 5: 4, 6: 14, 7: 8, 8: 4, 9: 1
+    }
+    assert compatible_count == 0
+    assert parent_space == 95367431640625
+    assert side_union == 4477340035625
+    assert added == 25
+    assert combined_union == 4477340035650
+
     print(f"parsed_side_witnesses={len(rows)}")
     print(f"b0_1lc_side_witnesses={len(selected)}")
     print(f"holes_distribution={dict(sorted(holes.items()))}")
