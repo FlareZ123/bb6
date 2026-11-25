@@ -283,7 +283,7 @@ theorem dWalk_to_extend (n s B a k c : Nat) (hk : k≤n)
     change DWalk (n+s+3) a
       (target n (s+k) B :: targetsRev n s B k) c at hwalk
     cases hwalk with
-    | snoc ys z y hprev hedge =>
+    | @snoc q' c' ys z y w hprev hedge =>
       have hprev' : DWalk (n+s+3) a (targetsRev n s B k) z := by
         simpa using hprev
       obtain ⟨C,hExt⟩ := ih z (by omega) hprev'
@@ -292,16 +292,16 @@ theorem dWalk_to_extend (n s B a k c : Nat) (hk : k≤n)
         rw [hR]
         exact target_prefix n s (s+k) B R (by omega)
       have hedge' :
-          EdgeY (n+s+k+3) (target n (s+k) B) z c := by
+          EdgeY (n+s+k+3) (target n (s+k) B) z w := by
         simpa [targetsRev_length,Nat.add_assoc,Nat.add_comm,Nat.add_left_comm] using hedge
       rcases hedge' with ⟨hz,hc,hy,hbranch⟩
       rcases hbranch with h0|h1
       · refine ⟨C+2^(s+k)*0,?_⟩
-        apply Extend.step k C z 0 c hExt (by omega)
+        apply Extend.step k C z 0 w hExt (by omega)
         rw [htarget]
         simpa [Nat.add_assoc] using h0
       · refine ⟨C+2^(s+k)*1,?_⟩
-        apply Extend.step k C z 1 c hExt (by omega)
+        apply Extend.step k C z 1 w hExt (by omega)
         rw [htarget]
         simpa [Nat.add_assoc] using h1
 
