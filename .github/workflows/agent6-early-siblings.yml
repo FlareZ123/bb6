@@ -49,15 +49,17 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Unpack coverage source
         run: python im-results/agent13-coverage/unpack.py
+      - name: Generate exhaustive C1=1LC cover
+        run: python im-results/agent6-champion-residual/generate_c1_one_lc.py
       - name: Compile and audit exact C1=1LC source
         run: |
           set -euo pipefail
-          python tools/lean_compile_closure.py im-results/agent6-champion-residual/C1OneLCSweep.lean im-results/agent6-champion-residual/C1OneLCPair.lean im-results/agent6-champion-residual/C1OneLCTriple.lean im-results/agent6-champion-residual/C1OneLCTwoBlocks.lean im-results/agent6-champion-residual/C1OneLCAlternating.lean im-results/agent6-champion-residual/C1OneLCStack.lean --workdir /tmp/a6-one-lc --jobs 4 | tee /tmp/a6-one-lc.log
+          python tools/lean_compile_closure.py im-results/agent6-champion-residual/C1OneLCSweep.lean im-results/agent6-champion-residual/C1OneLCPair.lean im-results/agent6-champion-residual/C1OneLCTriple.lean im-results/agent6-champion-residual/C1OneLCTwoBlocks.lean im-results/agent6-champion-residual/C1OneLCAlternating.lean im-results/agent6-champion-residual/C1OneLCStack.lean im-results/agent6-champion-residual/C1OneLCCarry.lean im-results/agent6-champion-residual/C1OneLCParent.lean --workdir /tmp/a6-one-lc --jobs 4 | tee /tmp/a6-one-lc.log
           python - <<'PY'
           import re
           log = open('/tmp/a6-one-lc.log').read()
-          for ns in ('C1OneLC','C1Pair','C1Triple','C1TwoBlocks','C1Alternating','C1Stack'):
-              for name in (('progress','entry','next_sound','never','cover') if ns == 'C1Stack' else ('cycle','entry','growth','never','cover')):
+          for ns in ('C1OneLC','C1Pair','C1Triple','C1TwoBlocks','C1Alternating','C1Stack','C1Carry','C1OneLCParent'):
+              for name in ({'C1Stack':('progress','entry','next_sound','never','cover'), 'C1Carry':('transform','advance','entry','next_sound','never','cover'), 'C1OneLCParent':('cover_oneLC',)}.get(ns,('cycle','entry','growth','never','cover'))):
                   matches = re.findall(r"'BB6\.Agent6"+ns+r"\."+name+r"' depends on axioms: \[([^\]]*)\]",log)
                   if len(matches) != 1:
                       raise SystemExit('missing or duplicate audit: '+ns+'.'+name)
