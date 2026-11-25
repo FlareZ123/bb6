@@ -1,0 +1,7 @@
+# Two-sided DFA certificate transition footprints
+
+For a checked FastBiDFA certificate, restrict the partial transition table to precisely the state-symbol rows represented by at least one abstract configuration. The same certificate remains valid, so **every** completion of the restricted table is nonhalting. This is useful when importing certificates obtained from fully assigned tables into a partial-machine frontier; the certificate may cover an entire larger cylinder.
+
+[FastBiDFAFootprint.lean](FastBiDFAFootprint.lean) proves trie traversal completeness, row-check transport, full-check transport, restriction, and the original-semantics nonhalting corollary. It was compiled locally on Lean 4.36.0-rc2, importing FastBiDFA reconstructed byte-for-byte (Git blob 6d31e7e2f081eac524a9c7bb8bd33e55bc1dfd7f) and the dependency closure from the accepted 0LE artifact (run 45675872170, artifact 15054146521). All four printed axiom sets are [propext, Classical.choice, Quot.sound].
+
+For Raw59/1LB/189 and 191, the existing finite saturation witnesses respectively have 873 and 888 configurations, with 117 edges each. Both use slots 0,1,2,3,4,5,6,7,8,9,11 in state-major order. Therefore restriction does not enlarge either of those already partial cylinders. In general a first-hole prefix that has already queried every fixed slot precludes dropping any of those queried slots using an invariant containing the true blank execution. This is a certificate reuse tool, not an additional Raw59 leaf closure or a BB(6) frontier reduction.
