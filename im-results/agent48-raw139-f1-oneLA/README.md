@@ -1,11 +1,11 @@
-# Raw139 F1 = 1LA (code 2): complete proposed weighted closure
+# Raw139 F1 = 1LA (code 2): complete source-accepted weighted closure
 
 Exact parent: `[7,24,11,24,14,21,3,16,12,11,24,2]`.
-Proposed original-source theorem: `BB6.Agent48F1OneLA.all_completions_weighted`, all compatible completions have WeightedBound 290.
+Accepted original-source theorem: `BB6.Agent48F1OneLA.all_completions_weighted`, all compatible completions have WeightedBound 290.
 
 ## Complete finite partition
 
-16 ordinary 24-way split nodes give 369 terminal nodes: 176 translated cycles, 119 last-hole leaves (maximum query index 284), 49 FAR certificates (one uses six DFA states), and 25 inductive growth certificates. All 25 growth recurrences were accepted by local Lean 4.36.0-rc2 against a copied exact zipper model; these are not yet accepted original-source theorems. No open candidate leaf remains. The original-source audit is dispatched at commit c512623e68b633e28fc140370abee778cfaf0939; do not consume the closure until the audit succeeds.
+16 ordinary 24-way split nodes give 369 terminal nodes: 176 translated cycles, 119 last-hole leaves (maximum query index 284), 49 FAR certificates (one uses six DFA states), and 25 inductive growth certificates. The complete original-source audit [45611897213](https://github.com/FlareZ123/bb6/actions/runs/45611897213) succeeded at pinned commit c512623e68b633e28fc140370abee778cfaf0939, accepting all 25 growth/nonhalting theorems, the complete checker equality and the weighted-cover theorem with standard axioms only. No open leaf remains within this cylinder.
 
 The last hard leaf H25 has table [7,24,11,19,14,21,3,16,12,11,3,2]. Starting after 64 steps it reaches state E with left zipper 1 and right zipper 0 1^(4+3n) (00111)^(n+1). The complete two-phase recurrence increases n by one in 160*n+138 steps. H7 was resolved by a six-state FAR DFA, [0,1,2,3,4,1,5,3,4,4,0,1] in reverse orientation.
 
