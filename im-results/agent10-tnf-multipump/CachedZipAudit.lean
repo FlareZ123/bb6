@@ -72,7 +72,7 @@ def cycleAt (p : PartialMachine) (c : Cursor) (entry period : Nat) (right : Bool
 theorem cycleAt_eq (p : PartialMachine) (c : Cursor) (e k : Nat) (r : Bool) (b : Int)
     (hc : c.Valid p) : cycleAt p c e k r b = zipCycle p e k r b := by
   unfold cycleAt zipCycle
-  rw [runAt_eq _ _ _ hc]
+  rw [runAt_eq _ _ _ hc] <;> rfl
 
 /-- Every ordinary child inherits the concrete configuration immediately
 before its parent's first missing instruction. Prefix work is shared rather
@@ -100,7 +100,9 @@ theorem cachedCheck_eq (B : Nat) (p : PartialMachine) (c : Cursor) (t : Audit)
     simp only [cachedCheck,zipCheck,runAt_eq _ _ _ hc]
     cases hz : zrun p n start with
     | none => simp [zipQueryOK,zipRead,hz]
-    | some z => rw [queryAt_eq _ _ _ _ _ hz]
+    | some z =>
+      change (queryAt B p n s z && restOK p s) = (zipQueryOK B p n s && restOK p s)
+      rw [queryAt_eq _ _ _ _ _ hz]
   | cycle e k r b =>
     simp only [cachedCheck,zipCheck,cycleAt_eq _ _ _ _ _ _ hc]
   | far rev d cert => rfl
@@ -110,6 +112,8 @@ theorem cachedCheck_eq (B : Nat) (p : PartialMachine) (c : Cursor) (t : Audit)
     cases hz : zrun p n start with
     | none => simp [zipQueryOK,zipRead,hz]
     | some z =>
+      change (queryAt B p n s z && allMoves (fun mv => cachedCheck B (refine p s (some mv)) ⟨n,z⟩ (kids mv))) =
+        (zipQueryOK B p n s && allMoves (fun mv => zipCheck B (refine p s (some mv)) (kids mv)))
       rw [queryAt_eq _ _ _ _ _ hz]
       cases hq : zipQueryOK B p n s with
       | false => simp
