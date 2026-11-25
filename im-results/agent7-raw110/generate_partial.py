@@ -18,7 +18,10 @@ from generate_four_hole import masks, move, slot
 import multi
 import emit_ngram
 
-spec=json.loads((ROOT/"partial_spec.json").read_text())
+from block_overlay import partial_spec
+block_far="--block-far" in sys.argv
+if block_far: sys.argv.remove("--block-far")
+spec=partial_spec(block_far)
 for k,v in json.loads((ROOT/"spec.json").read_text()).items():
     assert k not in spec
     spec[k]=dict(sha256=v["sha256"],len=len(v["index"]),bank=v["bank"],

@@ -3,6 +3,10 @@ run-name: "Agent 7 FAR: code=${{ inputs.solver_code }} line=${{ inputs.solver_li
 on:
   workflow_dispatch:
     inputs:
+      raw110_block_far:
+        description: Candidate overlay using independently generated source-level block-FAR proofs (requires a raw110 mode)
+        type: boolean
+        default: false
       raw110_partial_kid:
         description: Independently check one raw110 partial child (0,5,12,13,17,18)
         type: string
@@ -258,7 +262,12 @@ jobs:
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
           python im-results/agent7-raw110/generate.py --base-only
-          python im-results/agent7-raw110/generate_partial.py "$PARTIAL_KID"
+          block=()
+          if [[ "${{ inputs.raw110_block_far }}" == true ]]; then
+            python im-results/agent13-block-far/build_raw110.py "$PARTIAL_KID"
+            block+=(--block-far)
+          fi
+          python im-results/agent7-raw110/generate_partial.py "${block[@]}" "$PARTIAL_KID"
           kid=$(printf '%02d' "$PARTIAL_KID")
           python tools/lean_compile_closure.py --workdir /tmp/a7-partial --jobs 4 "im-results/agent7-raw110/Raw110Partial${kid}.lean" | tee /tmp/raw110-partial-proof.log
           if grep -qE 'sorryAx|native_decide' /tmp/raw110-partial-proof.log; then exit 1; fi
@@ -270,7 +279,7 @@ jobs:
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           export PATH="$HOME/.elan/bin:$PATH"
           python im-results/agent13-coverage/unpack.py
-          python tools/lean_compile_closure.py --workdir /tmp/a7-counter --jobs 4 im-results/agent7-raw110/Raw110UnaryCounter.lean im-results/agent7-raw110/Raw110UnarySweep.lean im-results/agent7-raw110/Raw110BinaryCounter.lean | tee /tmp/raw110-counter-proof.log
+          python tools/lean_compile_closure.py --workdir /tmp/a7-counter --jobs 4 im-results/agent7-raw110/Raw110UnaryCounter.lean im-results/agent7-raw110/Raw110UnarySweep.lean im-results/agent7-raw110/Raw110BinaryCounter.lean im-results/agent7-raw110/Raw110PairBridge.lean | tee /tmp/raw110-counter-proof.log
           if grep -qE 'sorryAx|native_decide' /tmp/raw110-counter-proof.log; then exit 1; fi
       - name: Verify raw110 subtree and canonical roster replacement
         if: ${{ inputs.raw110_only }}
@@ -288,8 +297,13 @@ jobs:
           python im-results/agent10-tnf-multipump/generate.py 66 70 80 68 72 82 86 88 92 93 97 98 100 101 102 104
           python im-results/agent7-raw110/generate.py --base-only
           python tools/lean_compile_closure.py --workdir "$PWD/.tmp/a7-raw110/build" --jobs 4 im-results/agent7-raw110/Raw110Consumer.lean | tee /tmp/raw110-proof.log
-          python im-results/agent7-raw110/generate_partial.py
-          python im-results/agent7-raw110/assemble_partial.py
+          block=()
+          if [[ "${{ inputs.raw110_block_far }}" == true ]]; then
+            python im-results/agent13-block-far/build_raw110.py
+            block+=(--block-far)
+          fi
+          python im-results/agent7-raw110/generate_partial.py "${block[@]}"
+          python im-results/agent7-raw110/assemble_partial.py "${block[@]}"
           python tools/lean_compile_closure.py --workdir "$PWD/.tmp/a7-raw110/build" --jobs 4 im-results/agent7-raw110/Raw110DeepRoster.lean | tee -a /tmp/raw110-proof.log
           if grep -qE 'sorryAx|native_decide' /tmp/raw110-proof.log; then exit 1; fi
       - uses: actions/upload-artifact@v4

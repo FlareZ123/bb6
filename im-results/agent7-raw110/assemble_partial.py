@@ -5,12 +5,13 @@ This script emits only Lean expressions and proof terms. It does not
 trust the candidate roster, count, classifier or witness generator.
 """
 from pathlib import Path
-import json
+import json, sys
+from block_overlay import partial_spec
 from itertools import product
 
 ROOT = Path(__file__).resolve().parent
 full = json.loads((ROOT / "spec.json").read_text())
-partial = json.loads((ROOT / "partial_spec.json").read_text())
+partial = partial_spec("--block-far" in sys.argv)
 assert not set(full) & set(partial)
 cycles = {2:(10,1,False,0),4:(10,1,False,0),7:(1,9,True,1),9:(13,1,False,1),
           15:(11,1,False,-1),16:(10,1,False,0),19:(1,9,True,1),21:(4,4,True,1)}
