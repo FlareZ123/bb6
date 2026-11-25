@@ -59,4 +59,4 @@ coqc -Q . BusyCoq -native-compiler no Agent5FastHeldDischarge.v 2>&1 | tee run-r
 cp Agent5RunMITM.vo Agent5FastHeldDischarge.v Agent5FastHeldDischarge.vo run-results/
 cp "$old_dir/"*.v "$old_dir/"*.vo run-results/
 cp Agent5PhaseMITM_0.vo run-results/
-echo "all-held-discharged" >> "$GITHUB_OUTPUT"
+echo "summary=all-held-discharged" >> "$GITHUB_OUTPUT"
