@@ -73,6 +73,74 @@ theorem exact_from_roster_dichotomy {C B : Nat}
   exact_from_tnf_certificate B (by omega)
     (tnf_certificate_of_roster_dichotomy hCB hRoot hLeaves) champ
 
+/-- Mixed-threshold root composition.
+
+    The early root dichotomy may discharge some completions at C, but a
+    retained residual need only be safe at the final target B. This is the
+    maximality interface needed when a retained cylinder contains the
+    champion itself. -/
+theorem cover_of_roster_dichotomy_mixed {C B : Nat} (hCB : C ≤ B)
+    {roster : List (List Move × PartialMachine)}
+    (hRoot : ∀ m, compatible BB6.Agent50TNFPilot.root m →
+      WeightedBound C m ∨ ∃ e ∈ roster, compatible e.2 m)
+    (hLeaves : ∀ e ∈ roster, Cover (WeightedBound B) e.2) :
+    Cover (WeightedBound B) BB6.Agent50TNFPilot.root := by
+  refine Cover.leaf _ ?_
+  intro m hm
+  rcases hRoot m hm with hBound | ⟨e, he, hcompat⟩
+  · exact weightedBound_mono_local hCB hBound
+  · exact (hLeaves e he).sound m hcompat
+
+/-- Transport the mixed-threshold root cover to the exact first-one cylinder
+    consumed by the weighted normalization theorem. -/
+theorem firstOne_cover_of_roster_dichotomy_mixed {C B : Nat}
+    (hCB : C ≤ B)
+    {roster : List (List Move × PartialMachine)}
+    (hRoot : ∀ m, compatible BB6.Agent50TNFPilot.root m →
+      WeightedBound C m ∨ ∃ e ∈ roster, compatible e.2 m)
+    (hLeaves : ∀ e ∈ roster, Cover (WeightedBound B) e.2) :
+    Cover (WeightedBound B) BB6.CoverageAdapter.firstOneCylinder := by
+  refine Cover.leaf _ ?_
+  intro m hm
+  have hmRoot : compatible BB6.Agent50TNFPilot.root m := by
+    simpa [BB6.Agent50TNFPilot.root] using hm
+  exact (cover_of_roster_dichotomy_mixed hCB hRoot hLeaves).sound m hmRoot
+
+/-- Convert a mixed-threshold dichotomy and B-safe residual leaves into the
+    normalized certificate consumed by the universal raw-machine bound. -/
+noncomputable def tnf_certificate_of_roster_dichotomy_mixed {C B : Nat}
+    (hCB : C ≤ B)
+    {roster : List (List Move × PartialMachine)}
+    (hRoot : ∀ m, compatible BB6.Agent50TNFPilot.root m →
+      WeightedBound C m ∨ ∃ e ∈ roster, compatible e.2 m)
+    (hLeaves : ∀ e ∈ roster, Cover (WeightedBound B) e.2) :
+    WeightedTNFCertificate B BB6.CoverageAdapter.firstOneCylinder 2 :=
+  WeightedTNFCertificate.ofWeightedCover
+    firstOneCylinder_tnf_root.1
+    firstOneCylinder_tnf_root.2.1
+    firstOneCylinder_tnf_root.2.2
+    (firstOne_cover_of_roster_dichotomy_mixed hCB hRoot hLeaves)
+
+/-- Exact-BB(6) composition with the correct mixed threshold: early bounded
+    branches lift monotonically, while retained leaves are checked directly
+    at the attained target B. -/
+theorem exact_from_roster_dichotomy_mixed {C B : Nat}
+    (hC : 6 ≤ C) (hCB : C ≤ B)
+    {roster : List (List Move × PartialMachine)}
+    (hRoot : ∀ m, compatible BB6.Agent50TNFPilot.root m →
+      WeightedBound C m ∨ ∃ e ∈ roster, compatible e.2 m)
+    (hLeaves : ∀ e ∈ roster, Cover (WeightedBound B) e.2)
+    (champ : ∃ m : BB6.Coverage.RawMachine,
+      BB6.Coverage.HaltsAt (BB6.Coverage.tickRaw m) B) :
+    BB6.Coverage.ExactBB6 B :=
+  exact_from_tnf_certificate B (by omega)
+    (tnf_certificate_of_roster_dichotomy_mixed hCB hRoot hLeaves) champ
+
+#print axioms cover_of_roster_dichotomy_mixed
+#print axioms firstOne_cover_of_roster_dichotomy_mixed
+#print axioms tnf_certificate_of_roster_dichotomy_mixed
+#print axioms exact_from_roster_dichotomy_mixed
+
 /-- Specialization to Agent31's accepted 124-cylinder, 395-bound dichotomy. -/
 theorem cover_of_remaining_roster
     (hLeaves : ∀ e ∈ remainingRootRoster,
