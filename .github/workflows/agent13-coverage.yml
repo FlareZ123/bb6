@@ -27,6 +27,10 @@ on:
         description: 'JSON array of raw60 child IDs to compile in small kid shards'
         type: string
         default: '["1LA","1LB"]'
+      b0_1lc_base_run_id:
+        description: 'Successful base run whose b0-1lc-weighted-109-graft artifact contains the reusable Lean closure'
+        type: string
+        default: ''
 permissions:
   contents: read
   actions: read
@@ -1214,21 +1218,67 @@ jobs:
           echo "12329036c66c3846f9261167b8f9aebd1778d9b6ea6044309956c2fa0b3e49b7  .tmp/a13-heldleaf109/imports/TerminalFinish.lean" | sha256sum -c -
           echo "1bce2075fc4e0cd7d740fb71b3796088b190ddb6766e04640d992dadd1b650ff  .tmp/a13-heldleaf109/imports/TerminalLeft.lean" | sha256sum -c -
       - name: Compile held-leaf membership and weighted B0=1LC parent consumer
+        env:
+          GH_TOKEN: ${{ github.token }}
+          B0_1LC_BASE_RUN_ID: ${{ inputs.b0_1lc_base_run_id }}
         run: |
           set -euo pipefail
-          python tools/lean_compile_closure.py --workdir /tmp/a13-heldleaf109 --jobs 4 --manifest /tmp/a13-heldleaf109/manifest.json --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean --override Frontier=im-results/agent8-coverage-contract/Frontier.lean --override Symmetry=im-results/agent8-coverage-contract/Symmetry.lean --override RootShift=im-results/agent8-coverage-contract/RootShift.lean --override OuterLCIncPrelude=im-results/agent8-counted-reset/OuterLCIncPrelude.lean --override M0OddResidueSeven=im-results/agent41-m0-n16r7/M0OddResidueSeven.lean --override M0EvenEightValuationEncoding=im-results/agent48-counted-inc0/M0EvenEightValuationEncoding.lean --override M2EvenResidueTwo=im-results/agent42-champion-terminal/M2EvenResidueTwo.lean --override TM63RawUpperInterface=im-results/agent48-counted-inc0/TM63RawUpperInterface.lean --override MixedBound109Composition=im-results/agent13-roster-convergence/MixedBound109Composition.lean --override IncrementalAudit=im-results/agent8-coverage-contract/IncrementalAudit.lean im-results/agent13-cross-route-pilot/Root109Membership.lean im-results/agent13-block-far/HeldBlockConsumer.lean im-results/agent17-raw10-box-far-search/Raw10BoxCombinedConsumer.lean im-results/agent13-cross-route-pilot/Canonical77HeldMembership.lean im-results/agent13-block-far/HeldBlockRaw10Combined.lean im-results/agent14-b0-1lc-consumer/Agent14B01LC109Graft.lean im-results/agent42-source-certificate-ingestion/Agent42B01LC109SourceConsumer.lean | tee /tmp/a13-heldleaf109.log
-          if grep -Eq 'sorryAx|native_decide' /tmp/a13-heldleaf109.log; then
+          OVERRIDES=(
+            --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean
+            --override Frontier=im-results/agent8-coverage-contract/Frontier.lean
+            --override Symmetry=im-results/agent8-coverage-contract/Symmetry.lean
+            --override RootShift=im-results/agent8-coverage-contract/RootShift.lean
+            --override OuterLCIncPrelude=im-results/agent8-counted-reset/OuterLCIncPrelude.lean
+            --override M0OddResidueSeven=im-results/agent41-m0-n16r7/M0OddResidueSeven.lean
+            --override M0EvenEightValuationEncoding=im-results/agent48-counted-inc0/M0EvenEightValuationEncoding.lean
+            --override M2EvenResidueTwo=im-results/agent42-champion-terminal/M2EvenResidueTwo.lean
+            --override TM63RawUpperInterface=im-results/agent48-counted-inc0/TM63RawUpperInterface.lean
+            --override MixedBound109Composition=im-results/agent13-roster-convergence/MixedBound109Composition.lean
+            --override IncrementalAudit=im-results/agent8-coverage-contract/IncrementalAudit.lean
+          )
+          mkdir -p /tmp/a13-base
+          if [ -n "$B0_1LC_BASE_RUN_ID" ]; then
+            gh run download "$B0_1LC_BASE_RUN_ID" --repo FlareZ123/bb6 \
+              --name b0-1lc-weighted-109-graft --dir /tmp/a13-base
+            BASE_MANIFEST="$(find /tmp/a13-base -type f -name manifest.json -print -quit)"
+            BASE_DIR="$(dirname "$BASE_MANIFEST")"
+            BASE_LOG="$(find /tmp/a13-base -type f -name a13-heldleaf109.log -print -quit)"
+            test -n "$BASE_MANIFEST"
+            test -n "$BASE_LOG"
+            python tools/lean_compile_closure.py --workdir /tmp/a13-heldleaf109 --jobs 4 \
+              --precompiled-manifest "$BASE_MANIFEST" --precompiled-dir "$BASE_DIR" \
+              --manifest /tmp/a13-heldleaf109/manifest.json "${OVERRIDES[@]}" \
+              im-results/agent42-source-certificate-ingestion/Agent42B01LC109SourceConsumer.lean \
+              | tee /tmp/a13-heldleaf109.log
+            cat "$BASE_LOG" /tmp/a13-heldleaf109.log > /tmp/a13-heldleaf109-combined.log
+          else
+            python tools/lean_compile_closure.py --workdir /tmp/a13-heldleaf109 --jobs 4 \
+              --manifest /tmp/a13-heldleaf109/manifest.json "${OVERRIDES[@]}" \
+              im-results/agent13-cross-route-pilot/Root109Membership.lean \
+              im-results/agent13-block-far/HeldBlockConsumer.lean \
+              im-results/agent17-raw10-box-far-search/Raw10BoxCombinedConsumer.lean \
+              im-results/agent13-cross-route-pilot/Canonical77HeldMembership.lean \
+              im-results/agent13-block-far/HeldBlockRaw10Combined.lean \
+              im-results/agent14-b0-1lc-consumer/Agent14B01LC109Graft.lean \
+              im-results/agent42-source-certificate-ingestion/Agent42B01LC109SourceConsumer.lean \
+              | tee /tmp/a13-heldleaf109.log
+            cp /tmp/a13-heldleaf109.log /tmp/a13-heldleaf109-combined.log
+            printf 'No precompiled base artifact used.\n' > /tmp/a13-base/BASE_NOT_USED.txt
+          fi
+          if grep -Eq 'sorryAx|native_decide' /tmp/a13-heldleaf109-combined.log; then
             echo "Forbidden proof placeholder or native_decide found in B0=1LC weighted parent consumer" >&2
             exit 1
           fi
       - name: Audit B0=1LC weighted parent theorem profiles
-        run: python3 im-results/agent42-source-certificate-ingestion/audit_b0_1lc_graft.py /tmp/a13-heldleaf109.log
+        run: python3 im-results/agent42-source-certificate-ingestion/audit_b0_1lc_graft.py /tmp/a13-heldleaf109-combined.log
       - uses: actions/upload-artifact@v4
         with:
           name: b0-1lc-weighted-109-graft
           path: |
             /tmp/a13-heldleaf109/
             /tmp/a13-heldleaf109.log
+            /tmp/a13-heldleaf109-combined.log
+            /tmp/a13-base/
           if-no-files-found: error
           retention-days: 90
 
