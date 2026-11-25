@@ -43,5 +43,17 @@ def generate(child):
             (ROOT/f.name.replace(old,module)).write_text(source)
         print(child, "raw", original, "quotient", actual)
 
+def full_child(child):
+    if child == "1LF":
+        import generate_1lf
+        generate_1lf.generate_1lf_sparse.main = lambda: generate(child)
+        generate_1lf.main()
+    elif child == "1RE":
+        import generate_1re
+        generate_1re.emit = lambda *args, **kwargs: generate(child)
+        generate_1re.main()
+    else:
+        raise ValueError(child)
+
 if __name__ == "__main__":
-    generate(sys.argv[1])
+    full_child(sys.argv[1])
