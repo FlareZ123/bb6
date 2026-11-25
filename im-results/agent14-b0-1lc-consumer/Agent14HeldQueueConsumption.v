@@ -70,7 +70,7 @@ Proof.
   unfold with_recovered_held_2800 in Hx.
   apply filter_In in Hx as [_ Hmatch].
   apply recovered_held_2800_checkpoint_leaf_safe with (x := x).
-  exact (proj1 (source_table_eqb_spec (tm x) recovered_held_2800) Hmatch).
+  exact (proj1 (source_table_eqb_spec (tm x) recovered_held_2800 Hmatch)).
 Qed.
 
 (* Consuming every exact copy of the held table is logically equivalent to
