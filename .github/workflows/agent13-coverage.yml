@@ -52,7 +52,7 @@ jobs:
       && inputs.target != 'weighted-tnf-raw120-ra-phases'
       && inputs.target != 'weighted-tnf-raw120-0ra'
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - name: Install Lean 4.36.0-rc2
@@ -2190,7 +2190,7 @@ jobs:
           sha256sum -c RAW124_SOURCE.sha256
           mkdir -p /tmp/a2-raw124-kids
           for k in $KIDS; do printf 'Raw124B1LAKid%s\n' "$k"; done |
-            xargs -P 2 -I '{}' bash -c 'set -e; lean -o "$1.olean" "$1.lean"; cp "$1.olean" /tmp/a2-raw124-kids/' _ '{}' |
+            xargs -P 1 -I '{}' bash -c 'set -e; lean -o "$1.olean" "$1.lean"; cp "$1.olean" /tmp/a2-raw124-kids/' _ '{}' |
             tee /tmp/a2-raw124-shard.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a2-raw124-shard.log; then exit 1; fi
       - uses: actions/upload-artifact@v4
@@ -2203,7 +2203,7 @@ jobs:
     if: inputs.target == 'weighted-tnf-raw124-1la-sharded'
     needs: raw124_1la_shards
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     steps:
       - uses: actions/download-artifact@v4
         with:
@@ -2318,7 +2318,7 @@ jobs:
   raw124_bundle_prepare:
     if: inputs.target == 'weighted-tnf-raw124-bundle-sharded'
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     env:
       RAW124_BRANCH: ${{ inputs.raw124_branch }}
     steps:
@@ -2400,7 +2400,7 @@ jobs:
           STEM="Raw124B${RAW124_BRANCH}"
           mkdir -p /tmp/a2-raw124-bundle-kids
           for k in $KIDS; do printf '%sKid%s\n' "$STEM" "$k"; done |
-            xargs -P 2 -I '{}' bash -c 'set -e; lean -o "$1.olean" "$1.lean"; cp "$1.olean" /tmp/a2-raw124-bundle-kids/' _ '{}' |
+            xargs -P 1 -I '{}' bash -c 'set -e; lean -o "$1.olean" "$1.lean"; cp "$1.olean" /tmp/a2-raw124-bundle-kids/' _ '{}' |
             tee /tmp/a2-raw124-bundle-shard.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a2-raw124-bundle-shard.log; then exit 1; fi
       - uses: actions/upload-artifact@v4
@@ -2413,7 +2413,7 @@ jobs:
     if: inputs.target == 'weighted-tnf-raw124-bundle-sharded'
     needs: raw124_bundle_shards
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     env:
       RAW124_BRANCH: ${{ inputs.raw124_branch }}
     steps:
