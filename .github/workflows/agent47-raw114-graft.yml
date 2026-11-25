@@ -871,6 +871,8 @@ jobs:
           run-id: 45593652030
           name: raw110-parent-cut
           path: /tmp/raw110-parent
+      - name: Generate source-audited Raw66/Raw70/Raw80 FiveHoleRoster dependencies
+        run: python im-results/agent10-tnf-multipump/generate.py 66 70 80
       - name: Reconstruct raw112, raw117, raw110 and common source data
         run: |
           set -euo pipefail
@@ -908,6 +910,7 @@ jobs:
             --artifact-name canonical73-and72-raw121-raw110-raw112-roster-only-certified \
             --jobs 4 \
             --source-root /tmp/raw110-generated \
+            --source-root im-results/agent10-tnf-multipump \
             --override ThreeHoleAudit=im-results/agent31-three-hole-tnf/ThreeHoleAudit.lean \
             --override TNFPilot=im-results/agent50-weighted-tnf-pilot/TNFPilot.lean \
             --precompiled-manifest /tmp/a31-base/manifest/raw107-shared-manifest.json \
@@ -954,6 +957,12 @@ jobs:
             --provenance-input im-results/agent13-coverage/unpack.py \
             --provenance-input im-results/agent31-three-hole-tnf/generate_sweeps.py \
             --provenance-input im-results/agent31-three-hole-tnf/generate_four_hole.py \
+            --provenance-input im-results/agent10-tnf-multipump/generate.py \
+            --provenance-input im-results/agent10-tnf-multipump/specs.json \
+            --provenance-input im-results/agent10-tnf-multipump/multi.py \
+            --provenance-input im-results/agent10-tnf-multipump/long_epoch.py \
+            --provenance-input im-results/agent2-tnf-raw99/enumerate.cpp \
+            --provenance-input im-results/agent10-tnf-multipump/FiveHoleRoster.lean \
             --provenance-input im-results/agent31-three-hole-tnf/ThreeHoleAudit.lean \
             --provenance-input tools/lean_compile_closure.py \
             --provenance-input /tmp/a31-base/manifest/raw107-shared-manifest.json \
