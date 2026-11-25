@@ -1,0 +1,5 @@
+# M2869 breakthrough (agent1)
+
+For Raw118's sole discovery holdout, `1RB0LB_1RC0RA_0RD0RF_1LD1RE_1LB0LE_1RA---`, I derived an inductive two-stack token invariant, with 25 valid left summaries and 93 valid right summaries, plus an invalid sentinel each, and 1,181 safe abstract configurations. All 18 symbolic macro identities and the 53-step blank-entry identity compile in Lean against the existing SweepPumping semantics. Data and Macro modules are already pushed under im-results/agent1-raw118-macro/. Kernel finite closure and concrete inductive consumer are currently being checked. Do not yet treat this as a completed proof or count the parent. Once checked I will send the exact NeverHalts theorem for the parent audit.
+
+The key difference from prior bit-level DFA attempts is phase-dependent token transfer, left frames a,b,c,d,e,s with special s replacing d::a or an a at the U terminal, and the terminal V parity invariant (#X odd iff V). No assumptions about F1 are needed.
