@@ -4,7 +4,7 @@ on:
     inputs:
       target:
         type: choice
-        options: [twelve, five-hole, recursive, raw107-witness, raw121-witness, raw121-membership, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-gap, raw108-long, raw108-le-trace, raw108-block10-core, raw108-block895, raw108-lb0, raw108-weight-core, raw108-sharded, raw108-resume, raw108-child, raw108-graft, raw58-cut, raw58-more, raw58-more2, raw58-more3, raw58-rc, raw58-child, raw109-cut, raw109-refine, raw109-refine6, raw109-refine7, raw109-refine8, raw109-refine9, raw109-refine12, raw109-final-leaves, raw109-closed, raw109-sharded]
+        options: [twelve, five-hole, recursive, raw107-witness, raw121-witness, raw121-membership, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-gap, raw108-long, raw108-le-trace, raw108-block10-core, raw108-block895, raw108-lb0, raw108-weight-core, cached-audit-core, raw108-sharded, raw108-resume, raw108-child, raw108-graft, raw58-cut, raw58-more, raw58-more2, raw58-more3, raw58-rc, raw58-child, raw109-cut, raw109-refine, raw109-refine6, raw109-refine7, raw109-refine8, raw109-refine9, raw109-refine12, raw109-final-leaves, raw109-closed, raw109-sharded]
         default: twelve
       raw108_child:
         type: string
@@ -66,6 +66,13 @@ jobs:
           name: raw108-block895
           path: /tmp/a10-block895/
           retention-days: 30
+      - name: Check exact prefix-sharing audit evaluator
+        if: inputs.target == 'cached-audit-core'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python tools/lean_compile_closure.py --workdir /tmp/a10-cached-audit --jobs 2 im-results/agent10-tnf-multipump/CachedZipAudit.lean | tee /tmp/a10-cached-audit.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a10-cached-audit.log BB6.Agent10CachedAudit.root_check_eq
       - name: Check sparse weight-only cutoff acceleration
         if: inputs.target == 'raw108-weight-core'
         run: |
