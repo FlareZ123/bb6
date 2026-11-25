@@ -661,11 +661,11 @@ jobs:
       - name: Verify mixed-bound maximality contract and exact champion leaf
         run: |
           set -euo pipefail
-          work=/tmp/a13-mixed-bound
+          work="$PWD/.tmp/a13-mixed-bound"
           mkdir -p "$work/imports"
           python3 - <<'PY'
           import base64, io, lzma, pathlib, tarfile
-          root = pathlib.Path("/tmp/a13-mixed-bound/imports")
+          root = pathlib.Path(".tmp/a13-mixed-bound/imports")
           p = pathlib.Path("im-results/agent42-champion-terminal")
           with tarfile.open(fileobj=io.BytesIO(base64.b64decode((p/"TerminalProofs.tar.xz.b64").read_text())), mode="r:xz") as a:
               member = next(m for m in a.getmembers() if pathlib.PurePosixPath(m.name).name == "TerminalFinish.lean")
@@ -679,7 +679,6 @@ jobs:
           printf '%s  %s\n' 1bce2075fc4e0cd7d740fb71b3796088b190ddb6766e04640d992dadd1b650ff "$work/imports/TerminalLeft.lean" | sha256sum -c -
           python tools/lean_compile_closure.py \
             im-results/agent13-roster-convergence/MixedBound109Composition.lean \
-            --source-root "$work/imports" \
             --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean \
             --override OuterLCIncPrelude=im-results/agent8-counted-reset/OuterLCIncPrelude.lean \
             --override M0OddResidueSeven=im-results/agent41-m0-n16r7/M0OddResidueSeven.lean \
