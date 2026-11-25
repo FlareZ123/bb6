@@ -135,7 +135,7 @@ def collect_sources(root: pathlib.Path) -> list[dict]:
             else "unlocated"
         )
         rel = path.relative_to(root)
-        module = ".".join(rel.with_suffix("").parts)
+        module = "BusyBeaver.BB6." + ".".join(rel.with_suffix("").parts)
         sources.append({
             "module": module,
             "path": str(rel),
@@ -198,6 +198,10 @@ def run(args: argparse.Namespace) -> dict:
     for m in matches:
         if m["match_type"] != "one_hole_leaf":
             continue
+        if m["source_kind"] == "NonHalt" and m["theorem_hint"] != "is_not_halt":
+            continue
+        if m["source_kind"] == "Halt" and m["theorem_hint"] != "is_halt":
+            continue
         pid = f"{m['parent_kind']}:{','.join(m['parent_address']) or '-'}"
         leaf_by_parent.setdefault(pid, {"NonHalt": set(), "Halt": set()})[m["source_kind"]].add(
             ",".join(m["leaf_address"])
@@ -216,8 +220,8 @@ def run(args: argparse.Namespace) -> dict:
             "expected_one_hole_leaves_if_all_ordinary_prefixes_are_split": expected,
             "distinct_nonhalt_one_hole_leaves": nonhalt_count,
             "distinct_halt_one_hole_candidates": halt_count,
-            "closed_by_nonhalt_catalogue_alone": bool(parent["holes"] == 1 and nonhalt_count >= 1),
-            "full_nonhalt_leaf_coverage": bool(parent["holes"] > 0 and nonhalt_count >= expected),
+            "one_hole_parent_has_nonhalt_candidate": bool(parent["holes"] == 1 and nonhalt_count >= 1),
+            "full_nonhalt_leaf_match_coverage": bool(parent["holes"] > 0 and nonhalt_count >= expected),
         })
 
     summary = {
@@ -229,13 +233,14 @@ def run(args: argparse.Namespace) -> dict:
         "root_fixing_permutations_checked": len(perms),
         "frontier_parent_records": len(parents),
         "frontier_record_counts": dict(collections.Counter(p["kind"] for p in parents)),
-        "compatible_source_parent_permutation_matches": len(matches),
+        "distinct_source_parent_route_candidates": len(matches),
+        "source_parent_permutation_hits": sum(len(m["permutations"]) for m in matches),
         "one_hole_leaf_matches": sum(m["match_type"] == "one_hole_leaf" for m in matches),
         "singleton_completion_matches": sum(m["match_type"] == "singleton_completion" for m in matches),
-        "nonhalt_one_hole_leaf_matches": sum(m["match_type"] == "one_hole_leaf" and m["source_kind"] == "NonHalt" for m in matches),
-        "halt_one_hole_candidates": sum(m["match_type"] == "one_hole_leaf" and m["source_kind"] == "Halt" for m in matches),
-        "parents_closed_by_nonhalt_catalogue_alone": sum(p["closed_by_nonhalt_catalogue_alone"] for p in parent_summaries),
-        "parents_with_full_nonhalt_leaf_coverage": sum(p["full_nonhalt_leaf_coverage"] for p in parent_summaries),
+        "nonhalt_one_hole_leaf_matches": sum(m["match_type"] == "one_hole_leaf" and m["source_kind"] == "NonHalt" and m["theorem_hint"] == "is_not_halt" for m in matches),
+        "halt_one_hole_candidates": sum(m["match_type"] == "one_hole_leaf" and m["source_kind"] == "Halt" and m["theorem_hint"] == "is_halt" for m in matches),
+        "parents_with_one_hole_nonhalt_candidates": sum(p["one_hole_parent_has_nonhalt_candidate"] for p in parent_summaries),
+        "parents_with_full_nonhalt_leaf_match_coverage": sum(p["full_nonhalt_leaf_match_coverage"] for p in parent_summaries),
         "parent_summaries": parent_summaries,
         "matches": matches,
         "caveat": (
