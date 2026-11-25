@@ -99,10 +99,8 @@ Proof.
     assert (Hs : In s all_syms) by apply all_syms_spec.
     apply forallb_forall with (x:=q) in H; [|exact Hq].
     apply forallb_forall with (x:=s) in H; [|exact Hs].
-    destruct (String.eqb_spec (Trans_to_str (a (q,s)))
-      (Trans_to_str (b (q,s)))) as [Heq|Hneq].
-    - exact Heq.
-    - discriminate.
+    apply String.eqb_eq in H.
+    exact H.
   }
   split; intros [q s]; right.
   - apply Trans_to_str_injective.
