@@ -1,13 +1,6 @@
 name: Agent 19 raw98 proof
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - '.github/workflows/agent19-raw98-proof.yml'
-      - 'im-results/agent19-tnf-raw98/Raw98Pump.lean'
-      - 'im-results/agent19-tnf-raw98/Raw98RosterBridge.lean'
-      - 'im-results/agent19-tnf-raw98/generate.py'
-      - 'im-results/agent19-tnf-raw98/dfa.txt'
 permissions:
   contents: read
 jobs:
@@ -25,6 +18,8 @@ jobs:
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
           python im-results/agent19-tnf-raw98/generate.py
           python tools/lean_compile_closure.py --workdir /tmp/a19-raw98 --jobs 4 im-results/agent19-tnf-raw98/Raw98RosterBridge.lean | tee /tmp/a19-raw98.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a19-raw98.log; then
