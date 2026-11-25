@@ -8,20 +8,29 @@ Import TNF_Node.
 Open Scope string_scope.
 Open Scope nat_scope.
 
-(* A direct source-tree closure attempt for canonical residual 7 (the q32
-   parent). Its first undefined row is A1 after three moves. For each of the
-   24 ordinary completions, prefer a checked translated-cycle certificate;
-   otherwise split at the first undefined row reached within 18 moves. *)
+(* A reusable bounded source-tree builder. At each node it prefers a
+   checked translated-cycle certificate; otherwise it splits at the first
+   undefined row reached within 18 moves, up to the requested depth. *)
 
-Definition agent50_q32_child_tree (p : TM) : source_tree :=
-  match find_side_candidate p with
-  | Some c => STcert (candidate_witness c)
-  | None => chunk2_first_hole_tree p
+Fixpoint agent50_bounded_source_tree (depth : nat) (p : TM) : source_tree :=
+  match depth with
+  | 0 => STopen
+  | S d =>
+      match find_side_candidate p with
+      | Some c => STcert (candidate_witness c)
+      | None =>
+          match find_chunk2_hole p with
+          | Some (n,h) =>
+              STsplit n h
+                (fun v => agent50_bounded_source_tree d (tm_upd p h v))
+          | None => STopen
+          end
+      end
   end.
 
 Definition agent50_q32_parent_tree : source_tree :=
   STsplit 3 (A,S1)
-    (fun v => agent50_q32_child_tree
+    (fun v => agent50_bounded_source_tree 1
       (tm_upd q32_canonical_residual_7 (A,S1) v)).
 
 Lemma agent50_find_some_in {A : Type} (f : A -> bool) (xs : list A) (x : A) :
@@ -56,25 +65,39 @@ Proof.
   eapply agent50_find_some_in. exact Hfind.
 Qed.
 
-Lemma agent50_q32_child_tree_check bound p :
-  24 <= bound ->
-  source_tree_check bound p (agent50_q32_child_tree p) = true.
+Lemma agent50_find_chunk2_hole_sound p n h :
+  find_chunk2_hole p = Some (n,h) -> source_hole_atb p n h = true.
 Proof.
-  intro Hbound.
-  unfold agent50_q32_child_tree.
-  destruct (find_side_candidate p) as [c|] eqn:Hside.
-  - cbn [source_tree_check].
-    pose proof (find_side_candidate_sound p c Hside) as Hcandidate.
-    destruct c as [d [entry [period budget]]].
-    cbn [candidate_witness source_witness_check].
-    unfold side_candidate_check in Hcandidate.
-    exact Hcandidate.
-  - unfold chunk2_first_hole_tree.
-    destruct (find_chunk2_hole p) as [[n h]|] eqn:Hhole.
-    + apply chunk2_first_hole_tree_check_of_find; [exact Hhole|].
-      pose proof (agent50_find_chunk2_hole_time_le18 p n h Hhole).
-      lia.
-    + reflexivity.
+  unfold find_chunk2_hole.
+  apply agent50_find_first_true.
+Qed.
+
+Theorem agent50_bounded_source_tree_checked bound depth p :
+  24 <= bound ->
+  source_tree_check bound p (agent50_bounded_source_tree depth p) = true.
+Proof.
+  revert p.
+  induction depth as [|d IH]; intros p Hbound.
+  - reflexivity.
+  - cbn [agent50_bounded_source_tree].
+    destruct (find_side_candidate p) as [c|] eqn:Hside.
+    + cbn [source_tree_check].
+      pose proof (find_side_candidate_sound p c Hside) as Hcandidate.
+      destruct c as [dir [entry [period budget]]].
+      cbn [candidate_witness source_witness_check].
+      unfold side_candidate_check in Hcandidate.
+      exact Hcandidate.
+    + destruct (find_chunk2_hole p) as [[n h]|] eqn:Hhole.
+      * cbn [source_tree_check].
+        apply andb_true_iff. split.
+        -- apply Nat.leb_le.
+           pose proof (agent50_find_chunk2_hole_time_le18 p n h Hhole).
+           lia.
+        -- apply andb_true_iff. split.
+           ++ apply agent50_find_chunk2_hole_sound. exact Hhole.
+           ++ apply forallb_forall. intros v Hv.
+              apply IH. exact Hbound.
+      * reflexivity.
 Qed.
 
 Definition agent50_q32_parent_open : list TM :=
@@ -90,7 +113,7 @@ Proof.
      forallb (fun v =>
        source_tree_check 7014
          (tm_upd q32_canonical_residual_7 (A,S1) v)
-         (agent50_q32_child_tree
+         (agent50_bounded_source_tree 1
            (tm_upd q32_canonical_residual_7 (A,S1) v)))
        source_moves)) = true.
   apply andb_true_iff. split.
@@ -98,7 +121,7 @@ Proof.
   - apply andb_true_iff. split.
     + vm_compute. reflexivity.
     + apply forallb_forall. intros v Hv.
-      apply agent50_q32_child_tree_check. lia.
+      apply agent50_bounded_source_tree_checked. lia.
 Qed.
 
 (* Existing original-source certificates from the 34-node chunk roster and
