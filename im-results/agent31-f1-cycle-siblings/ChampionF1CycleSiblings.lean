@@ -1,3 +1,5 @@
+import FARCheck
+import ThreeHoleAudit
 import FastThreeHoleAudit
 import WeightedTNFCertificate
 
