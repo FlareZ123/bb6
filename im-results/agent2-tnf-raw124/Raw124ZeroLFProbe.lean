@@ -51,12 +51,17 @@ def hard4 : PartialMachine := fromRows [
   some (some ⟨true,true,1⟩), some (some ⟨false,false,5⟩)
 ]
 
+end BB6.Agent2Raw124ZeroLFProbe
+
 /-- Diagnostic only: a true Boolean is a candidate transfer, not a theorem until
 the corresponding Certificate.never adapter is exported and source-checked. -/
-#eval ("hard0", c1539.check hard0, c1547.check hard0)
-#eval ("hard1", c1539.check hard1, c1547.check hard1)
-#eval ("hard2", c1539.check hard2, c1547.check hard2)
-#eval ("hard3", c1539.check hard3, c1547.check hard3)
-#eval ("hard4", c1539.check hard4, c1547.check hard4)
-
-end BB6.Agent2Raw124ZeroLFProbe
+#eval ("hard0", BB6.Agent2Raw124ZeroLFBlockGrowth.c1539.check BB6.Agent2Raw124ZeroLFProbe.hard0,
+               BB6.Agent2Raw124ZeroLFBlockGrowth.c1547.check BB6.Agent2Raw124ZeroLFProbe.hard0)
+#eval ("hard1", BB6.Agent2Raw124ZeroLFBlockGrowth.c1539.check BB6.Agent2Raw124ZeroLFProbe.hard1,
+               BB6.Agent2Raw124ZeroLFBlockGrowth.c1547.check BB6.Agent2Raw124ZeroLFProbe.hard1)
+#eval ("hard2", BB6.Agent2Raw124ZeroLFBlockGrowth.c1539.check BB6.Agent2Raw124ZeroLFProbe.hard2,
+               BB6.Agent2Raw124ZeroLFBlockGrowth.c1547.check BB6.Agent2Raw124ZeroLFProbe.hard2)
+#eval ("hard3", BB6.Agent2Raw124ZeroLFBlockGrowth.c1539.check BB6.Agent2Raw124ZeroLFProbe.hard3,
+               BB6.Agent2Raw124ZeroLFBlockGrowth.c1547.check BB6.Agent2Raw124ZeroLFProbe.hard3)
+#eval ("hard4", BB6.Agent2Raw124ZeroLFBlockGrowth.c1539.check BB6.Agent2Raw124ZeroLFProbe.hard4,
+               BB6.Agent2Raw124ZeroLFBlockGrowth.c1547.check BB6.Agent2Raw124ZeroLFProbe.hard4)
