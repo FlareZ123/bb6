@@ -63,7 +63,7 @@ The structural mathematical results include [exact section indegree distribution
 | #429 | [Original gate reductions](../im-results/agent6-harmonic429/README.md). Convert sparse necessary conditions into a complete root decision. |
 | #85 | [Source stack/reset analysis](../im-results/agent12-cryptid-root-invariant/README.md). Complete authentic token/3-adic itinerary and exceptional branches. |
 | Space Needle | [Source terminal-feeder obstructions](../im-results/agent48-space-needle/README.md). Cover the remaining valuation and parent branches. |
-| Sheep and #623 | [Sheep return dynamics](../im-results/agent16-sheep-even-return/README.md), [#623 inverse grammar](../im-results/agent8-623-inverse/README.md), [source-certified #623 infinite near-power exclusions (133 coefficient-6 families; separate 1,355-family normalized sweep) and recursive certificates](2026-11-24-machine-623-near-power-root-exclusion-agent41.md). The family counts overlap and are not additive; close the all-time event partition for the authentic root. |
+| Sheep and #623 | [Sheep return dynamics](../im-results/agent16-sheep-even-return/README.md), [#623 inverse grammar](../im-results/agent8-623-inverse/README.md), [source-certified #623 infinite near-power exclusions (133 coefficient-6 families; separate 1,355-family normalized sweep) and recursive certificates](2026-11-24-machine-623-near-power-root-exclusion-agent41.md), and [positive-density predecessor-free terminal rows (lower density at least 1/9 among row indices)](2026-11-25-machine-623-positive-density-predecessor-free-terminal-rows-agent41.md). The family counts overlap and are not additive; close the all-time event partition for the authentic root. |
 
 ## Evidence and academic scope
 
