@@ -93,7 +93,7 @@ noncomputable def A6_remaining_without_champion :
   A6_remaining.filter (fun e => !(sameTable e.2 A6_champion_sibling))
 
 /-- Every A6-path residual is either still open, or is the champion's D/1=0LE
-    child. In the latter case the 106-leaf champion refinement supplies a
+    child. In the latter case the 105-leaf champion refinement supplies a
     Cover of the entire parent cylinder. The A6 source theorem closes its
     terminal leaf; its bounded halt siblings lift from 7014 to championScore. -/
 theorem A6_remaining_sound_at_championScore
@@ -156,7 +156,7 @@ theorem A6ChampionCombinedRoster_sound
 
 /-- The A6 and champion subfrontiers together produce a genuine Cover of
     raw139, conditional only on Covers for the 183 retained A6 siblings and
-    the 106 champion descendants. -/
+    the 105 champion descendants. -/
 theorem combined_A6_parent_cover
     (hA6Leaves : ∀ e ∈ A6_remaining_without_champion,
       Cover (WeightedBound championScore) e.2)
