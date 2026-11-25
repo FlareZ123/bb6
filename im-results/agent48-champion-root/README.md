@@ -49,3 +49,21 @@ Even such a lower-bound witness would not supply the missing **global upper-boun
 - Recover a machine-specific exact primitive-step witness (not merely existence) from a pinned formally verified source, and establish the source semantics/step convention.
 - Independently close a **currently unsolved rooted case** or a nontrivial subset of one of the two universal machine cylinders.
 - Audit the current external champion-family history before calling this bridge a new research finding; the wiki had already noted post-prefix equivalence of TM1 and TM2.
+
+## Raw139 depth-five F/1 sibling closures (2026-11-25)
+
+The table order is `[A0,A1,B0,B1,C0,C1,D0,D1,E0,E1,F0,F1]`; code `24` means unassigned. Immediately before the F/1 split on the source-replayed `championP5` path, the parent is:
+
+```text
+[7,24,11,24,14,21,3,16,12,11,24,24]
+```
+
+Two previously open depth-five children now have complete mathematical closures:
+
+1. **F/1 = 1LF (code 22).** The child table is `[7,24,11,24,14,21,3,16,12,11,24,22]`, leaving A/1, B/1, and F/0 unassigned. `ChampionF1OneLFCover.lean` constructs a complete three-hole `Audit` tree and proves `WeightedBound 126` for every compatible completion.
+2. **F/1 = 0RD (code 13).** The child table is `[7,24,11,24,14,21,3,16,12,11,24,13]`, with the same three holes. `ChampionF1ZeroRD.lean` proves every compatible completion nonhalting, using a 66-step entry and an exact stage-growth recurrence.
+
+`ChampionF1SiblingIntegration.lean` checks each child table against the exact `championChild 5` construction, lifts both covers to `championScore`, and filters them from Agent41's `remainingExtended` raw139 frontier. Its conditional exactness theorem uses the remaining **110** raw139 leaves, together with the **77** nonchampion canonical-78 representatives. This is a two-leaf reduction of the previous 112-leaf raw139 frontier, not an exact BB(6) proof.
+
+**Source-validation status:** the standalone source-audit run 45576520749 and full integration run 45570544320 were still in progress at the time of this update. Do not treat the integration theorem as source-accepted until the full integration run succeeds. The previous standalone run 45574821626 compiled 155 project modules from four roots but failed in the post-compile Python axiom-log parser; that parser has been corrected and rerun.
+
