@@ -44,3 +44,8 @@ Twelve exceptional cylinders admit exact affine-cost recurrence families. For H9
 - 0RB: `bash im-results/agent41-raw139-f1-zeroLF/reproduce-zeroRB.sh`; archive SHA-256 `dedb53f31b5493b240d1b1d89fa1c409f0ced92ef1d6486c5415e6d98fe75aba`.
 
 The manual workflow `agent41-raw139-f1-zeroLF.yml` accepts the sibling selector and pins the exact source revision. All three source audits are independent of the still-missing raw139/global roster consumer. Do not promote the sibling count to a global result without that consumer.
+
+
+## Draft 0RB roster consumer
+
+`ChampionF1ZeroRBIntegration.lean` is an uncompiled draft. It imports the existing canonical77/0RC chain and accepted 0RB certificate, checks the exact depth-five child `championChild 5 ⟨false,true,1⟩`, and removes only that parent from the 106-leaf F1 residual list. Proposed counts are 105 retained raw139 leaves and 181 total obligations (76 non-champion canonical entries + 105 raw139 leaves). The draft preserves the complement and exposes conditional exactness. These counts are not accepted until the existing manual source workflow compiles the complete closure and named axiom profiles.
