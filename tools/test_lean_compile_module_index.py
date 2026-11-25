@@ -36,6 +36,16 @@ def main():
         )
 
         index = MODULE.module_index([source_root])
+        import_probe = source_root / "ImportModifiers.lean"
+        import_probe.write_text(
+            "public import Cryptids.Machines\n"
+            "meta import BusyBeaver.Basic\n"
+            "import Foo Bar\n",
+            encoding="utf-8",
+        )
+        assert MODULE.parse_imports(import_probe) == [
+            "Cryptids.Machines", "BusyBeaver.Basic", "Foo", "Bar"
+        ]
         old_overrides = MODULE.OVERRIDES.copy()
         MODULE.OVERRIDES.clear()
         try:
