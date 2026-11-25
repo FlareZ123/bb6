@@ -52,3 +52,16 @@ work directory. Only a successfully compiled certificate may be consumed by
 a future `Raw10BoxBridge` refinement.
 
 No box is counted as closed merely because the generator produced a file.
+
+Optional `--include-cycle` and `--include-halt` flags subtract Agent50's
+`Raw10Box8Cycle` and `Raw10Box0Halt` tables before generating projections.
+Use them only after the corresponding source certificates have passed kernel
+CI. In these auxiliary rows, `25` is a sentinel for a forced halt, while
+`0` continues to mean wildcard. The expected replay checks are:
+- base: 34 boxes, mass 90,890,091,604,975;
+- cycle: 40 boxes, mass 90,890,091,604,350;
+- halt: 35 boxes, mass 90,737,503,714,350;
+- cycle + halt: 41 boxes, mass 90,737,503,713,725.
+
+These are finite replay checks; formal exactness comes from the corresponding
+`remainder_exact` and disjointness theorems in the source consumers.
