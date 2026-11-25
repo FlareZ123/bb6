@@ -32,13 +32,13 @@ theorem parts30_flat (s B : Nat) :
     (parts30 s B).flatten = targetWord 30 s B 30 := by
   unfold parts30
   simp only [List.flatten_cons,List.flatten_nil]
-  rw [← targetWord_add 30 s B 28 2,
-      ← targetWord_add 30 s B 24 4,
-      ← targetWord_add 30 s B 20 4,
-      ← targetWord_add 30 s B 16 4,
-      ← targetWord_add 30 s B 12 4,
-      ← targetWord_add 30 s B 8 4,
-      ← targetWord_add 30 s B 4 4]
+  rw [targetWord_add 30 s B 28 2,
+      targetWord_add 30 s B 24 4,
+      targetWord_add 30 s B 20 4,
+      targetWord_add 30 s B 16 4,
+      targetWord_add 30 s B 12 4,
+      targetWord_add 30 s B 8 4,
+      targetWord_add 30 s B 4 4]
   simp [List.append_assoc]
 
 theorem parts30_fitted (s B : Nat) :
@@ -70,9 +70,7 @@ theorem run30_covered (k : Nat) :
       exact parts30_fitted _ _
     have hnext := covered_next_block 30 (1+4*k) 4 (run30 k)
       (fun B => parts30 (1+4*k+4) B) (by omega) ih hflat hfit
-    have hsEq : 1+4*k+4=1+4*(k+1) := by omega
-    rw [hsEq] at hnext
-    simpa [run30] using hnext
+    simpa [run30,Nat.mul_succ,Nat.add_assoc] using hnext
 
 theorem final30_covered : Covered 30 29 (run30 7) := by
   simpa using run30_covered 7
@@ -99,9 +97,7 @@ theorem run30_cert (k : Nat) :
       exact parts30_fitted _ _
     have hnext := cert_next_block 30 59 (1+4*k) 4 (run30 k)
       (fun B => parts30 (1+4*k+4) B) (by omega) ih hgood hflat hfit
-    have hsEq : 1+4*k+4=1+4*(k+1) := by omega
-    rw [hsEq] at hnext
-    simpa [run30] using hnext
+    simpa [run30,Nat.mul_succ,Nat.add_assoc] using hnext
 
 theorem cert30 : Cert 30 59 29 [] := by
   have hcert := run30_cert 7
@@ -113,6 +109,8 @@ theorem noCriticalReset30 :
     ¬ BB6.Agent1.Reach 2 (14*2^30-2*30-10) := by
   exact critical_reset_no_reach_of_lag 30 59 29
     (by omega) (by decide) (by omega) (by decide) (by decide) cert30
+
+#eval run30 7
 
 #print axioms parts30_flat
 #print axioms parts30_fitted
