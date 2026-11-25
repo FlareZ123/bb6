@@ -29,8 +29,8 @@ jobs:
   check:
     if: inputs.target != 'raw109-sharded' && inputs.target != 'raw108-sharded' && inputs.target != 'raw108-resume' && inputs.target != 'raw108-lb0'
     runs-on: ubuntu-latest
-    # Raw58 child source closures can exceed 60m (e.g. 1LF run 45700751534); keep other targets at 60m.
-    timeout-minutes: ${{ inputs.target == 'raw58-child' && 120 || 60 }}
+    # Raw58 child and parent closures can exceed 60m; keep unrelated targets at 60m.
+    timeout-minutes: ${{ (inputs.target == 'raw58-child' || inputs.target == 'raw58-more3') && 120 || 60 }}
     steps:
       - uses: actions/checkout@v4
       - name: Install Lean 4.36.0-rc2
