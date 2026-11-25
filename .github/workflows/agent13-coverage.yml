@@ -2235,24 +2235,27 @@ jobs:
           /tmp/raw124-longcycle 100000 128 < open.txt > longcycle100k.out
           python - <<'PY'
           from pathlib import Path
-          rows = [line.split() for line in Path("longcycle100k.out").read_text().splitlines()]
           opened = Path("open.txt").read_text().splitlines()
-          open_ids = {int(line.split()[0]) for line in opened}
+          Path("open-indexed.txt").write_text("".join(f"{i} {table}\n" for i, table in enumerate(opened)))
+          print(f"Indexed {len(opened)} exact raw leaves for the cycle checker.")
+          PY
+          /tmp/raw124-longcycle 100000 128 < open-indexed.txt > longcycle100k.out
+          python - <<'PY'
+          from pathlib import Path
+          opened = Path("open.txt").read_text().splitlines()
+          rows = [line.split() for line in Path("longcycle100k.out").read_text().splitlines()]
+          assert all(len(row) >= 2 and row[1] in {"cycle", "hole", "open"} for row in rows)
           ids = [int(row[0]) for row in rows]
           assert len(set(ids)) == len(ids)
-          cycles = [row for row in rows if len(row) > 1 and row[1] == "cycle"]
-          holes = [row for row in rows if len(row) > 1 and row[1] == "hole"]
-          solved_ids = {int(row[0]) for row in cycles + holes}
-          print(f"Long-cycle census: {len(cycles)} exact cycles, {len(holes)} late holes, {len(open_ids - solved_ids)} unresolved of {len(open_ids)} raw open leaves")
-          if len(opened) >= 469:
-              row469 = opened[468].split()
-              print("OPEN_ROW_469", *row469)
-              for row in rows:
-                  if row[0] == row469[0]:
-                      print("OPEN_ROW_469_RESULT", *row)
-          for row in rows:
-              if row[0] == "469":
-                  print("LEAF469_ID469_RESULT", *row)
+          assert set(ids) == set(range(len(opened))), (len(opened), len(ids), sorted(set(range(len(opened))) - set(ids))[:10])
+          cycles = [row for row in rows if row[1] == "cycle"]
+          holes = [row for row in rows if row[1] == "hole"]
+          unresolved = [row for row in rows if row[1] == "open"]
+          print(f"Long-cycle census: {len(cycles)} exact cycles, {len(holes)} late holes, {len(unresolved)} unresolved of {len(opened)} raw open leaves")
+          if len(opened) > 469:
+              print("OPEN_ROW_469", 469, opened[469])
+              match = next(row for row in rows if int(row[0]) == 469)
+              print("OPEN_ROW_469_RESULT", *match)
           for row in holes:
               if len(row) > 2 and int(row[2]) > 12000:
                   print("LATE_HOLE", *row)
