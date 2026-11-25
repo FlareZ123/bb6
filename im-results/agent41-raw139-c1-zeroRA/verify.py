@@ -26,6 +26,13 @@ for i, args in s['late'].items():
     assert scan(opens[i], args[0]) == ('hole', *args), i
     assert args[0] + 6 <= s['bound']
     seen.add(i)
+from trace78 import replay
+for i, data in s['long'].items():
+    i = int(i); p = data['table']
+    assert i not in seen and opens[i] == p and p.count(24) == 1
+    assert replay(p, data['ordinary'])[:3] == (data['ordinary'],data['slot'],data['head'])
+    assert data['ordinary'] + 6 <= s['bound']
+    seen.add(i)
 for i, p in s['open'].items():
     i = int(i); assert i not in seen and opens[i] == p and p.count(24) == 1
     seen.add(i)
