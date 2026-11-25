@@ -13,3 +13,9 @@ Five formerly unresolved tables (4247, 4357, 9109, 11095, 11096) have new induct
 ### Phase-aware two-sided finite automata
 
 Four additional residuals have finite BiDFA certificates: 8155 (480 abstract states), 8156 (90), 8174 (506), 8175 (92). Stack summaries combine bounded near-head suffix and length modulo an integer measured since the first 1 from the blank end. Discovered push/pop edges are saturated under the exact Agent16 BiDFA algorithm, independently reproduced with the supplied DFA arrays. Four candidate residuals remain: 573,5465,8146,8209 (100 full tables). Original-source audit is still required. The first CI (45598191639) was interrupted by runner shutdown; completed n-gram modules passed their axiom checks. Isolated new recursive batch audit dispatched at 10:58 UTC.
+
+### Accepted recursive proof and minimized phase certificates
+
+The isolated original-source recursive audit passed: [run 45599941700](https://github.com/FlareZ123/bb6/actions/runs/45599941700), commit 6e10c0c6d8ad916ff6c787e197ac1eebd4e79e12. Thus the five recursive nonhalting theorems above are kernel checked against the repository semantics. No full parent audit has passed yet.
+
+Candidate 573 also closes with a phase counter reset on 001. Greedy congruence minimization leaves DFA sizes and invariant configurations: 573 (9x18,177), 8155 (14x16,113), 8156 (8x9,55), 8174 (14x16,119), 8175 (8x9,57). The exact finite arrays are in spec.json; phase.cpp and minimize_phase.py are untrusted discovery tools. Three explicit one-hole residuals remain: 5465,8146,8209 (75 full completions).
