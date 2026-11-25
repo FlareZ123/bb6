@@ -676,3 +676,7 @@ Shifted to exact canonical-124 raw122/canonical86 E1=0LF parent, after communica
 
 ## 2026-11-25 18:15 UTC — recovered ten-child composition
 Current lease run p1-root-20261125-077a620529, claimed 18:03:59.933Z. Normal draw 2. Local Lean 4.36.0-rc2 successfully compiled Raw122RecoveredTen.lean against byte-identical overlapping original CI objects. Ten F1 cylinders now closed; 14 remain. See im-results/agent43-raw122-cut/README.md and recover_ten.py. Second run 45595285735 was cancelled overall; reuse successful shards instead of repeating. Generator-only 45655656030 contains 120 proposed unresolved leaves; not an audited partition. Next recover five incomplete prior shard groups, and target genuine residuals. No full raw122 or BB6 result. Lease must not be released before 19:13:59.933Z.
+
+
+## 2026-11-25 18:25 UTC — nine fixed-cost recurrence certificates
+New M15, M33, M90, M104 and independent M37/M48 direct proofs all pass locally, standard axioms. M28/M29/M32 checked earlier. Entry traces up to 18760, growth costs up to 5672. Key performance gain: explicit @join0 arguments avoid expensive definitional unification of long run0 prefixes; 256-step rfl blocks in five-proof modules. direct_cert.py and direct_certificates.json reproduce; symbolic.py consumes by literal table. Still need audited raw122 branch integration. Remaining 14 F1 cylinders in checked ten-child composition. Do not repeat old expensive full generation. Lease release threshold unchanged.

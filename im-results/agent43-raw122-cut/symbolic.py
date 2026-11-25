@@ -27,7 +27,21 @@ def generate(rows,work):
     for src,exe in [(ROOT.parent/"agent1-ngram"/"ngram.cpp",dense),(ROOT.parent/"agent47-raw111-cut"/"ngram_sparse.cpp",sparse)]:
         subprocess.run(["g++","-std=c++17","-O3",str(src),"-o",str(exe)],check=True)
     plans={x["id"]:x for x in json.loads((ROOT/"long-plans.json").read_text())}
+    direct_plans={x["table"]:x for x in json.loads((ROOT/"direct_certificates.json").read_text())}
     for i,row in rows:
+        if row in direct_plans:
+            plan=direct_plans[row]
+            j=plan["id"]
+            if j in (28,29,32):
+                name="Raw122DirectSmall"
+            else:
+                import direct_cert
+                direct_cert.generate(plan,ROOT)
+                name=f"Raw122Direct{j}"
+            ns=f"BB6Coverage.Agent31Pump.Raw122DirectGrowth.M{j}"
+            certs[row]=f".proven {ns}.table {ns}.never"
+            imports[row]=name
+            continue
         if i in plans:
             plan=plans[i];assert plan["row"]==row
             import multi_sweep as multi
