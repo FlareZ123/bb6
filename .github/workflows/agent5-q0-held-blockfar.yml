@@ -1,0 +1,118 @@
+name: Agent 5 q0 held BlockFAR certificate verification
+
+on:
+  workflow_dispatch:
+    inputs:
+      table:
+        description: "Six-state partial table in repository notation"
+        type: string
+        required: true
+        default: "1RB0LD_1LC1RA_1LE1LA_---0RB_1RE0RF_1RF0LC"
+      name:
+        description: "Lean module basename (letters/digits/underscores)"
+        type: string
+        required: true
+        default: "Q02700"
+      width:
+        description: "Block width"
+        type: number
+        required: true
+        default: 3
+      cap:
+        description: "Left-run length cap"
+        type: number
+        required: true
+        default: 2
+      modulus:
+        description: "Left-run residue modulus"
+        type: number
+        required: true
+        default: 4
+      runs:
+        description: "Number of left runs retained"
+        type: number
+        required: true
+        default: 5
+      flip:
+        description: "Reverse direction convention"
+        type: boolean
+        required: true
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Generate finite BlockFAR certificate
+        env:
+          TABLE: ${{ inputs.table }}
+          MODULE_NAME: ${{ inputs.name }}
+          WIDTH: ${{ inputs.width }}
+          CAP: ${{ inputs.cap }}
+          MODULUS: ${{ inputs.modulus }}
+          RUNS: ${{ inputs.runs }}
+          FLIP: ${{ inputs.flip }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import importlib.util, os
+          from pathlib import Path
+          source = Path("im-results/agent13-block-far/generate_multi.py")
+          spec = importlib.util.spec_from_file_location("generate_multi", source)
+          module = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(module)
+          out = Path("/tmp/q0-blockfar")
+          module.generate(
+              os.environ["TABLE"], out,
+              width=int(os.environ["WIDTH"]),
+              cap=int(os.environ["CAP"]),
+              mod=int(os.environ["MODULUS"]),
+              runs=int(os.environ["RUNS"]),
+              flip=os.environ["FLIP"].lower() == "true",
+              name=os.environ["MODULE_NAME"],
+          )
+          (out / "manifest.txt").write_text(
+              "table=" + os.environ["TABLE"] + "\n" +
+              "module=" + os.environ["MODULE_NAME"] + "\n" +
+              "width=" + os.environ["WIDTH"] + "\n" +
+              "cap=" + os.environ["CAP"] + "\n" +
+              "modulus=" + os.environ["MODULUS"] + "\n" +
+              "runs=" + os.environ["RUNS"] + "\n" +
+              "flip=" + os.environ["FLIP"] + "\n",
+              encoding="utf-8",
+          )
+          PY
+      - name: Compile and kernel-check generated proof
+        env:
+          MODULE_NAME: ${{ inputs.name }}
+        run: |
+          set -euo pipefail
+          cd im-results/agent13-block-far
+          export LEAN_PATH=".:/tmp/q0-blockfar"
+          lean -o BlockMacro.olean BlockMacro.lean
+          lean -o BlockFAR.olean BlockFAR.lean
+          lean -o RangeCheck.olean RangeCheck.lean
+          lean -o "/tmp/q0-blockfar/${MODULE_NAME}Packed.olean" "/tmp/q0-blockfar/${MODULE_NAME}Packed.lean"
+          lean -o "/tmp/q0-blockfar/${MODULE_NAME}Proof.olean" "/tmp/q0-blockfar/${MODULE_NAME}Proof.lean" | tee /tmp/q0-blockfar/compile.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/q0-blockfar/compile.log; then
+            echo "Forbidden proof placeholder or native_decide found" >&2
+            exit 1
+          fi
+      - name: Upload generated certificate and kernel log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: q0-held-blockfar-${{ inputs.name }}-runs-${{ inputs.runs }}
+          path: /tmp/q0-blockfar/
+          if-no-files-found: warn
