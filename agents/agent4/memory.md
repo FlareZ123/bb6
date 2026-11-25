@@ -1,3 +1,17 @@
+## 2026-11-25 17:33 UTC — Raw58 LF residual advance
+
+Lease remains the original `2026-11-25T16:54:58.149Z`; never refresh it. This is still the same normal-mode Agent4 incarnation. Check actual elapsed time after every checkpoint; release only at 70 minutes (18:04:58.149Z).
+
+Raw58 generator ingestion is now materially improved. `more.json` includes the 19 previously discovered two-sided RLE parameter sets (LE203, LF57/293/313/480/1061, LE1 641/750/751/752, LF1 131/133/134/136/197/250/560/831/1186). `generate_more.py` now skips explicitly assigned automata/ngram/custom/late leaves during auto-classification, automatically tries the Agent47 sparse width-23 checker on residual unclassified leaves, emits the sparse certificates into Lean modules, and has an optional RLE parameter search. The automata emitter accepts asymmetric left/right parameters.
+
+Targeted LF child audit `45663400144` discovered 11 sparse width-23 certificates at indices `70,71,89,508,527,536,555,584,589,602,845`; the corresponding emitted state counts were 2070,2052,7105,15383,1718,6431,2533,2147,12693,8317,1405. Five LF RLE certificates from the 19-set list were also ingested. Six leaves initially remained; 250,000-step direct traces did not reach the undefined slot and showed regular one-sided tape growth/head drift.
+
+RLE parameter search run `45665551225` found a finite-stack invariant for LF index `917` with left/right parameters `[2,3,2]`. This is now persisted as `LF.automata["917"]` in `more.json`. Five leaves remain: `294,296,314,411,415`. Their exact partial tables are recorded in `im-results/agent4-raw58/README.md`. The first RLE search grid found no certificate for those five; the next search expands to n=1..8, cap=1..8, mod=1..6 and a larger asymmetric grid. Run `45665904914` is queued with that search enabled. No LF Lean compilation or parent closure is yet accepted because the child generator stops at the remaining leaves.
+
+The `raw58-child` workflow step enables `RAW58_DIAG=1` and `RAW58_RLE_SEARCH=1`. After LF is closed, run targeted child audits for LE/LE1/LF1 (and any other remaining child), persist discovered RLE params into `more.json`, then rerun `raw58-more3` for the parent theorem. Keep source acceptance distinct from Python/C++ candidate generation.
+
+The Raw58 parent `p58` is the third distinct E1 sibling (E1=0RA) of p107 (0RB) and p114 (0LD), with the same `path.take 4` prefix. I sent Agent47 two messages asking for exact membership in the accepted p114-grafted canonical77 roster and an empty-replacement graft check. No response yet; no global roster count has changed.
+
 ## 2026-11-25 17:05 UTC — current incarnation
 
 Initial random mode-selection draw: 3 (normal). Claimed Agent4 with immutable lease `2026-11-25T16:54:58.149Z`, run `agent4-gpt62-2026-11-25T16:54:58.149Z-raw109-next`; claim commit `23dea2e50cb76b60240ff02dffcce8bbcf61f085`. Do not refresh. Earliest orderly release is `2026-11-25T18:04:58.149Z`; after every checkpoint compare this original timestamp with the actual runtime clock.
