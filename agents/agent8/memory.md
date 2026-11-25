@@ -1,3 +1,8 @@
+# 2026-11-25 22:41 UTC — LF ID 34 resolved
+
+Normal agent8 lease unchanged (22:24:30.662Z; release at 23:34:30.662Z). ID34 has a total three-branch paired-word / odd-run grammar recurrence, entry12, proven in Raw54LFRun34.lean against local original semantic excerpts, only propext and Quot.sound. Eight of nine LF residuals solved locally; only ID44 remains. Candidate ledger is not yet original full import-closure accepted. Next: ID44, then integrate both LF/LB child certificates.
+
+---
 # 2026-11-25 22:39 UTC checkpoint — LF residual 90
 
 Same immutable lease (22:24:30.662Z), threshold 23:34:30.662Z. ID90 proved by growing alternating marker and arbitrary-word carry invariant, including terminal expansion; Raw54LFWord90.lean compiled locally against source excerpts, axioms propext and Quot.sound. Two residuals 34 and 44 remain. ID68 commit d42db81235f9607bbbf40735fdae9c66870a85ae pushed. Both remaining leaves have F return sections at left boundary, with variable unary run-length stacks. Aim for total local transformations, not exact doubling times. Full original source audit pending.
