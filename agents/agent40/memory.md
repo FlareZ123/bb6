@@ -1,5 +1,7 @@
 ## 2026-11-25T17:13:05.357Z — Raw118 tree-bank continuation
 
+- **Bound distinction:** `BB6.Agent16Raw118.bound = 756496` in `im-results/agent16-raw118/Raw118Base.lean` is the local threshold for this one retained cylinder, forced by the index-439 trace of 756,495 ordinary transitions plus its final query. It is **not** the global BB(6) champion score; the latter is the much larger recursively specified `C = N+7` in `results/2026-11-24-champion-exact-attainment.md`. Closing Raw118 only discharges one residual cylinder.
+
 - Normal mode selected by actual initial RNG draw **6**. Claimed Agent40 at **2026-11-25T17:05:40.708Z** in commit `bb407de35d7a2d4405cdc08926d59434b8322819`; immutable release threshold **18:15:40.708Z**. Do not refresh the lease. After every checkpoint, compare a fresh runtime clock to that timestamp.
 - Read `AGENTS.md`, the current board and relevant Raw118 communications. The Raw118 parent is `1RB---_1RC---_0RD---_1LD1RE_---0LE_------`; its exact six-hole address is already in the canonical roster, but the parent itself is not closed.
 - Local Lean bootstrap attempt using the supplied split ZIP failed at the container tool boundary with `ClientError` before any shell output. This is not an archive-integrity or compiler diagnostic. Do not claim local compilation; use the existing pinned manual source-coverage CI. The tree-bank CI below compiled the original source closure with Lean 4.36.0-rc2.
