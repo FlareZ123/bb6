@@ -147,3 +147,26 @@ Run `45640166916` is an additional infrastructure failure: the runner shut down 
 ### Checkpoint serialization follow-up
 
 Commit `5e0f099a63def89cb6c6f2c311f6c6578fffe7c9` corrected the checkpoint JSON writer to emit a real newline and made the reuse reader tolerate the literal `\\n` suffix produced by the first workflow snapshot. Run `45653181883` was already running from source SHA `1529549cc3abcb838b9f14efe120ece26ee71abd` when this correction landed, so if its artifact is uploaded it may contain the legacy escaped suffix; the current reader strips it before parsing. Reuse that artifact only with the same `source_sha=1529549cc3abcb838b9f14efe120ece26ee71abd` (exact checkout SHA) and let the hash/object checks run. At 16:34 UTC the first run was still compiling the champion frontier and had not uploaded the checkpoint.
+
+
+## Stronger canonical76 + F1-batch interface (177 obligations; CI pending)
+
+The current strongest draft combines the accepted 76-entry two-parent roster with the source-accepted F1 sibling refinements:
+
+- The unique raw139 champion parent is identified by both its address and `sameTable`.
+- The 76-entry roster therefore leaves 75 nonchampion parent Covers.
+- The F1 chain leaves 102 residual cylinders after 1LB and 0RB/0LA/1RD, then lifts through 0RC, 1LA, 0LF, 0RF and the existing F0 refinement.
+- `ChampionResidualCanonicalTwoParentComposition.lean` composes these into a conditional exactness theorem requiring **75 + 102 = 177 Covers**. It also checks that the 177 assembled addresses are pairwise distinct.
+
+This is a conditional interface, not an exact BB(6) proof. Every one of the 177 Covers remains an explicit proof obligation. The 187-obligation composition is retained as an older fallback baseline; the 177 draft supersedes it if CI confirms the new composition.
+
+The workflow has a `catalogue_crosswalk` mode that can reuse a previously built core artifact, compile the F1 batch, and then compile and axiom-audit the 177 theorem. It is gated separately from the raw139 leaf pilot.
+
+## Pinned Cryptids source-catalogue crosswalk (candidate routing only)
+
+- `Canonical76RosterExport.lean` exports the 76 canonical parents and the 112 F0-refined raw139 residual tables.
+- `cryptids_canonical76_crosswalk.py` parses the pinned Cryptids six-group machine RLE, checks all 24 state permutations fixing A and B, and simulates each source machine's first-use schedule. It deliberately does not assume lexicographic slot order.
+- The script is designed to audit the pinned 191-module catalogue (159 NonHalt and 32 Halt) and includes a regression for the source-connected raw139 E1=1LF leaf.
+- A NonHalt source match at a single unvisited HHH row is a candidate one-hole cylinder cover. A Halt source match is recorded only as an individual halting-machine candidate; it is not treated as a cover of the other 24 completions.
+
+The crosswalk is not a proof. Each candidate still needs its source theorem imported, the state permutation/table and first-use address proved, and a kernel-checked `Cover` adapter. Halt candidates additionally need an explicit primitive-step bound.
