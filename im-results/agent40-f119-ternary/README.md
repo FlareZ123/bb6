@@ -29,3 +29,30 @@ The proof currently uses a literal transcription of the arithmetic transition fr
 ## Next obligation
 
 Decide reachability from (4,1) of the two remaining power classes. A useful inverse formulation for tag-1 generic sources is y=(3p+1)t+pr+h+3+δ, where r∈{1,2}, p=3^h, δ=1 exactly for r=2. The inverse is finite for a given target, but a uniform proof over unbounded exponents needs stronger arithmetic structure.
+
+
+## Second inverse gate (25 November 2026)
+
+The restricted terminal powers have at most four remaining exponent classes modulo 60:
+`k ≡ 0, 3, 39, 48 (mod 60)`. This eliminates six of the ten classes allowed by the first inverse gate. It does not assert that any remaining power is reachable.
+
+For k ≥ 4, every first-parent target has the form 10y+C=3^(k+2), with C=39 when k≡0 (mod 12), C=33 when k≡3 (mod 12). Its predecessor cannot be a tag-2 exception or a pure-power return. Indeed 2·3^(k−1)<y<3^k; either exceptional source arises from 3^a with a≤k−1 and gives y≤(4·3^a+7a+18)/3 <2·3^(k−1). The root (4,1) is also outside this window.
+
+For a generic tag-1 predecessor x=3^h(3t+r), r∈{1,2}, the target equation is
+
+    3^(k+2) = 10[(3·3^h+1)t + 3^h r + h+3 + [r=2]] + C.
+
+All h≥6 are impossible: set p=3^h, M=3p+1. Powers of 3 modulo M lie in the signed list ±3^j for 0≤j≤h. Since 2(39+10(h+4))<p, the required residue for r=1 is strictly between p and 2p+1, and for r=2 strictly between 2p+1 and 3p+1−p/3. Neither interval contains a signed power. For h<6 a full 120-exponent period modulo 10M suffices. A kernel-decided enumeration leaves exactly h=1, and the following necessary possibilities:
+
+| k mod 60 | C | r | Second predecessor x |
+| ---: | ---: | ---: | --- |
+| 0 | 39 | 1 | (3^(k+4)−681)/100 |
+| 3 | 33 | 2 | (3^(k+4)−687)/100 |
+| 39 | 33 | 1 | (3^(k+4)−627)/100 |
+| 48 | 39 | 2 | (3^(k+4)−741)/100 |
+
+For k<4 the residue restriction follows directly from the earlier mod-12 restriction. Thus the exact local root-halting equivalence can restrict k to these four classes.
+
+**Proof status:** [F119Inverse2.lean](F119Inverse2.lean) compiled with Lean 4.36.0-rc2, using only propext, Classical.choice and Quot.sound. [F119RootInverse2.lean](F119RootInverse2.lean) compiled locally against temporary exact-signature interfaces of the prior local recurrence; original dependency compilation is required before claiming full kernel closure. [F119SourceBridge.lean](F119SourceBridge.lean) transports every branch to the pinned original Cryptids acceleration and composes the four-class root equivalence. Its branch map and local stopping/iteration conversion were locally checked on literal definition mirrors; the original source import is pending a manual source audit. No mock interfaces are committed.
+
+The next mathematical target is actual exclusion or attainment of the remaining four power families, preferably a root invariant or an unbounded inverse-tree argument rather than repeated finite-depth enumeration. The exact BB(6) champion bound remains unchanged.
