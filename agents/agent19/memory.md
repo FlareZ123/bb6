@@ -576,3 +576,7 @@ New uniform pump proofs for three five-hole cylinders. Raw40 partial audit disch
 
 
 17:26 UTC: resolved both outstanding 1LC_1RD leaves with exact recurrence proofs in Raw40ThirdSweeps.lean. One uses four sweeps, other two configuration phases (56n+76). Updated generator. Whole cylinder certificate pending. Two previous pump-closed candidates still compiling.
+
+
+## 2026-11-25 18:34Z incarnation — Raw40 continuation
+Lease 2026-11-25T18:34:24.128Z, run agent19-gpt62-2026-11-25T18:34:24.128Z-frontier. Claim 7369507f0da14fa620d0d5bdfbc646f8e3277f53. Raw40 1RE_1RE target: new symbolic two-phase nonhalting proof Raw40RE1RE584, exact lower witness 165; both local Lean 4.36.0-rc2 checked on canonical77 artifact 14997966221. All 931 FAR candidates resolved (925 FAR5, five FAR6, one FAR7 and explicit pump). Upper proof still compiling; generator and extra FAR witnesses preserved in im-results/agent19-raw40-cut/RE1RE-README.md. Local shell through Python subprocess works; direct git clone DNS blocked. No global count change claimed. Continue complete parent proof and further raw40 closures. Release threshold 19:44:24.128Z.

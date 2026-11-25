@@ -37,16 +37,21 @@ def far(code,p):
 
 src=Path(sys.argv[1]);output=Path(sys.argv[2]);output.mkdir(exist_ok=True);parent=parse(sys.argv[3]);tree=json.loads((src/'tree.json').read_text());bank={int(i):c for i,c in (x.split() for x in (src/'far5.txt').read_text().splitlines())};opens=(src/'open.txt').read_text().splitlines();it=iter(enumerate(opens));B=int(sys.argv[4]);mod=sys.argv[5]
 
+if (src/'far_extra.txt').exists():
+    bank.update({int(i):c for i,c in (x.split() for x in (src/'far_extra.txt').read_text().splitlines())})
+
 def gen(t,p):
     if t[0]=='cycle':return f'.cycle {t[1]} {t[2]} {str(t[3]).lower()} ({t[4]})'
     if t[0]=='last':return f'.last {t[1]} {slot(t[2])}'
     if t[0]=='open':
-        i,code=next(it);assert t[1]==code==show(p);return far(bank[i],p)
+        i,code=next(it);assert t[1]==code==show(p)
+        if mod=='Raw40RE1RE' and code=='1RB1RE_1RC0RF_0RD1RB_1LD1LA_1LF1RE_---0LA':
+            return '.proven BB6.Agent19Raw40.RE1RE584.table BB6.Agent19Raw40.RE1RE584.never'
+        return far(bank[i],p)
     assert t[0]=='split';n,s,children=t[1:];assert p[s]=='---' and len(children)==24
     return f'.split {n} {slot(s)} (byMove [\n'+',\n'.join(gen(k,p[:s]+[move(i)]+p[s+1:]) for i,k in enumerate(children))+'])'
 
-base=f'''import Raw40Partial
-import ZipPrefixAudit
+base=('import Raw40RE1RE584\n' if mod=='Raw40RE1RE' else '')+f'''import ZipPrefixAudit
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 namespace BB6.Agent19Raw40.{mod}
@@ -71,7 +76,7 @@ def size(t):return 1+sum(map(size,t[3])) if t[0]=='split' else 1
 
 def gen_sharded(t,p,name,expr,lines):
     lines.append(f'abbrev p{name} := {expr}')
-    if size(t)<=180:
+    if size(t)<=(120 if mod=='Raw40RE1RE' else 180):
         lines.append(f'def t{name} : Audit := {gen(t,p)}')
         lines.append(f'theorem c{name} : zipCheck {B} p{name} t{name} = true := by\n  rw [← prefixCheck_eq]\n  decide')
         return
