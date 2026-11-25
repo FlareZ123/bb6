@@ -93,8 +93,8 @@ def phases(hist,s,r,lp,fillname='fillRun'):
     out.append('  have H := '+join)
     return out,costs
 
-def emit(idx,code,lp0,s,r,base,t,st,tg):
-    p=parse(code);lp=word(lp0);q0=5;oq=0
+def emit(idx,code,lp0,s,r,base,t,st,tg,oq=0,q0=5):
+    p=parse(code);lp=word(lp0)
     src=C(q0,(*lp,*f.L),norm(((1,s,r+s),*f.B,*f.R)))
     dst=C(oq,norm((*f.B,(1,s,r+s),*lp,*f.L)),f.R)
     hist=f.path(p,src,dst,q0,s,r,lp,oq);assert hist,idx
@@ -106,13 +106,13 @@ def emit(idx,code,lp0,s,r,base,t,st,tg):
     assert N>0
     lpL=W((*lp,*f.L));targetL=W((*f.B,(1,s,r),*lp,*f.L))
     startR=W(((1,s,r),*f.B,*f.R))
-    statement=f'∀ (b : Bool) (L R : List Bool), run0 table (T n) (Q {q0} {lpL} {startR}) = some (A {targetL} R)'
+    statement=f'∀ (b : Bool) (L R : List Bool), run0 table (T n) (Q {q0} {lpL} {startR}) = some (Q {oq} {targetL} R)'
     out=[f'namespace M{idx}',f'-- {code}',table(p),
          f'def T : Nat → Nat | 0 => {base} | n+1 => {N}*T n+{a}*n+{b}',
          f'def Fill (n : Nat) : Prop := {statement}',
          'theorem fillStep (n : Nat) (ih : Fill n) : Fill (n+1) := by',
          '  intro b L R','  unfold Fill at ih',
-         '  change run0 table (T (n+1)) (Q 5 '+lpL+' '+startR.replace(f'({s}*n+{r})',f'({s}*(n+1)+{r})')+') = some (A '+targetL.replace(f'({s}*n+{r})',f'({s}*(n+1)+{r})')+' R)',
+         f'  change run0 table (T (n+1)) (Q {q0} '+lpL+' '+startR.replace(f'({s}*n+{r})',f'({s}*(n+1)+{r})')+f') = some (Q {oq} '+targetL.replace(f'({s}*n+{r})',f'({s}*(n+1)+{r})')+' R)',
          f'  rw [show {s}*(n+1)+{r}={s}*n+{r+s} by omega]']
     lines,costs=phases(hist,s,r,lp);out+=lines
     out += [f"  rw [show {'+'.join('('+x+')' for x in costs)}=T (n+1) by simp only [T]; omega] at H",
@@ -120,7 +120,7 @@ def emit(idx,code,lp0,s,r,base,t,st,tg):
             '  induction n with','  | zero => intro b L R; rfl','  | succ n ih => exact fillStep n ih',
             f'def family (n : Nat) : Z0 := {cfg(st)}',
             f'theorem entry : run0 table {t} ⟨0,[],[]⟩ = some (family 0) := by rfl',
-            f'theorem fillRun (n : Nat) (b : Bool) (L R : List Bool) : run0 table (T n) (Q 5 {lpL} {startR}) = some (A {targetL} R) := fill n b L R']
+            f'theorem fillRun (n : Nat) (b : Bool) (L R : List Bool) : run0 table (T n) (Q {q0} {lpL} {startR}) = some (Q {oq} {targetL} R) := fill n b L R']
     glines,gcost=phases(g,s,r,lp)
     out.append('def cost (n : Nat) : Nat := '+' + '.join('('+c+')' for c in gcost))
     out.append('theorem growth (n : Nat) : run0 table (cost n) (family n) = some (family (n+1)) := by')
@@ -136,13 +136,15 @@ def emit(idx,code,lp0,s,r,base,t,st,tg):
 
 def main():
     mods=[]
-    for idx,code,lp,s,r,base,t,q,L,R in json.loads((ROOT/'flex-families.json').read_text()):
+    for row in json.loads((ROOT/'flex-families.json').read_text()):
+        idx,code,lp,s,r,base,t,q,L,R,*states=row
+        oq,q0=states or [0,5]
         st=C(q,tuple(map(tuple,L)),tuple(map(tuple,R)))
         def grow(w):return tuple((x,a,b+a) for x,a,b in w)
         tg=C(q,grow(st.l),grow(st.r))
         mod=f'Raw60LFFlex{idx}';ns='BB6.Agent1Raw60LFFlex'
         head=f'import RecursiveFill\nset_option maxRecDepth 100000\nset_option maxHeartbeats 0\nset_option linter.unusedSimpArgs false\nset_option linter.unusedVariables false\nnamespace {ns}\nopen BB6Coverage BB6Coverage.Agent31Pump BB6.Agent1RecursiveFill\n'
-        (ROOT/(mod+'.lean')).write_text(head+emit(idx,code,lp,s,r,base,t,st,tg)+f'\nend {ns}\n')
+        (ROOT/(mod+'.lean')).write_text(head+emit(idx,code,lp,s,r,base,t,st,tg,oq,q0)+f'\nend {ns}\n')
         mods.append(mod)
     (ROOT/'Raw60LFFlex.lean').write_text(''.join(f'import {m}\n' for m in mods))
     print(len(mods),'recursive transfer certificates')
