@@ -78,7 +78,7 @@ theorem exact_at_target77 (B : Nat) (hB : 21269 ≤ B)
     (champ : ∃ m : BB6.Coverage.RawMachine,
       BB6.Coverage.HaltsAt (BB6.Coverage.tickRaw m) B) :
     BB6.Coverage.ExactBB6 B :=
-  exact_from_quotient_roster (by decide) hB refined_sound77 hLeaves champ
+  exact_from_quotient_roster (by omega) hB refined_sound77 hLeaves champ
 
 #print axioms parent_count77
 #print axioms refined_count77
