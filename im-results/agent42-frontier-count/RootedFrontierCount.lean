@@ -1,5 +1,4 @@
 import FourHoleRootFrontier
-import CanonicalRosterRefinement
 
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
@@ -10,8 +9,6 @@ open BB6Coverage
 open BB6.Agent13BlankDelay
 open BB6.Agent31FourHoleFrontier
 open BB6.Agent50TNFPilot
-open BB6.Agent31FourHoleRoster
-open BB6.Agent47CanonicalRefinement
 
 abbrev Entry := List Move × PartialMachine
 
@@ -163,42 +160,61 @@ theorem pureResiduals_length (p : PartialMachine) :
 theorem residuals_length_buildFrontierB (B : Nat)
     (p : PartialMachine) (cut : Nat) (hp : RawRootPath p)
     (xs : List PathEntry)
-    (h : pathOKB B p cut = true)
+    (h : pathOKB B p cut xs = true)
     (cert : WeightedTNFCertificate B (pathEnd p cut xs).1 6) :
     (residuals (buildFrontierB B p cut hp xs h cert)).length =
       23 * xs.length := by
   rw [residuals_buildFrontierB B p cut hp xs h cert]
   exact pureResiduals_length p xs
 
-/-- Exact list-length accounting for a roster graft. Each matched parent is
-    replaced by the supplied child list; every nonmatched entry remains one. -/
-theorem graftRoster_length (p : PartialMachine) (replacement roster : List Entry) :
-    (graftRoster p replacement roster).length =
-      roster.length -
-        (roster.filter (fun e => sameTable e.2 p)).length +
-        (roster.filter (fun e => sameTable e.2 p)).length *
-          replacement.length := by
-  induction roster with
-  | nil => simp [graftRoster]
-  | cons e es ih =>
-      by_cases h : sameTable e.2 p = true
-      · simp [graftRoster,graftEntry,h,ih]
-        omega
-      · simp [graftRoster,graftEntry,h,ih]
-        omega
+/-- Every semantic open leaf is present in the exact executable residual
+    projection, for any bound and any rooted frontier. -/
+theorem OpenLeaf_mem_residuals {B : Nat} {p : PartialMachine}
+    {f : RootedFrontier B p} {address : List Move} {q : PartialMachine}
+    (h : OpenLeaf f address q) :
+    (address,q) ∈ residuals f := by
+  induction h with
+  | here path =>
+      simp [residuals]
+  | @child p n c path hrun hhole hweight children mv address q hchild ih =>
+      apply List.mem_flatMap.mpr
+      refine ⟨mv, allMoves_complete mv, ?_⟩
+      apply List.mem_map.mpr
+      exact ⟨(address,q), ih, rfl⟩
 
-theorem graftRoster_length_of_one (p : PartialMachine)
-    (replacement roster : List Entry)
-    (hcount : (roster.filter (fun e => sameTable e.2 p)).length = 1) :
-    (graftRoster p replacement roster).length =
-      roster.length - 1 + replacement.length := by
-  rw [graftRoster_length, hcount]
-  omega
+/-- Convert a checked TNF path into the ancestry witness required by the
+    sibling-preserving frontier builder. -/
+theorem rawRootPath_of_pathOK
+    (p : PartialMachine) (cut : Nat) (xs : List PathEntry)
+    (hp : RawRootPath p)
+    (h : BB6.Agent50TNFPilot.pathOK p cut xs = true) :
+    RawRootPath (BB6.Agent50TNFPilot.pathEnd p cut xs).1 := by
+  induction xs generalizing p cut with
+  | nil =>
+      simpa [BB6.Agent50TNFPilot.pathEnd] using hp
+  | cons entry xs ih =>
+      rcases entry with ⟨n,s,mv⟩
+      simp only [BB6.Agent50TNFPilot.pathOK, Bool.and_eq_true,
+        decide_eq_true_eq] at h
+      rcases h with ⟨hhole,hrest⟩
+      rcases hrest with ⟨hread,hrest⟩
+      rcases hrest with ⟨_hslot,hrest⟩
+      rcases hrest with ⟨_hmove,htail⟩
+      cases hr : knownRun p n with
+      | none => simp [hr] at hread
+      | some c =>
+          have hs : readSlot c = s := by simpa [hr] using hread
+          subst s
+          have hpath : RawRootPath (refine p (readSlot c) (some mv)) :=
+            RawRootPath.step hp hr hhole
+          simpa [BB6.Agent50TNFPilot.pathEnd] using
+            ih (refine p (readSlot c) (some mv))
+              (BB6.Agent8TNFPath.advanceCut cut mv) hpath htail
 
 #print axioms residuals_buildFrontierB
 #print axioms pureResiduals_length
 #print axioms residuals_length_buildFrontierB
-#print axioms graftRoster_length
-#print axioms graftRoster_length_of_one
+#print axioms OpenLeaf_mem_residuals
+#print axioms rawRootPath_of_pathOK
 
 end BB6.Agent42FrontierCount
