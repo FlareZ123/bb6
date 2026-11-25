@@ -1,10 +1,17 @@
 name: Agent 19 raw81 proof
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        description: Proof target
+        type: choice
+        options: [raw81, canonical-three-parent]
+        default: raw81
 permissions:
   contents: read
 jobs:
   proof:
+    if: inputs.target == 'raw81'
     runs-on: ubuntu-latest
     timeout-minutes: 35
     steps:
@@ -26,3 +33,51 @@ jobs:
             echo 'Forbidden proof placeholder or native_decide in closure' >&2
             exit 1
           fi
+
+  canonical-three-parent:
+    if: inputs.target == 'canonical-three-parent'
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Regenerate original certificates and compose three additional parents
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent10-tnf-raw87/generate.py
+          python im-results/agent10-tnf-raw91/generate.py
+          python im-results/agent10-tnf-multipump/generate.py 66 70 80
+          python im-results/agent10-tnf-multipump/generate.py 68 72 82
+          python im-results/agent10-tnf-multipump/generate.py 86 88 92 93 97 98 100 101 102 104
+          for raw in 71 77 81; do
+            python "im-results/agent19-tnf-raw${raw}/prepare.py"
+          done
+          inputs=()
+          for raw in 71 77 81; do
+            for file in prepare.py dfa-bank.txt dfa-index.txt specs.json; do
+              inputs+=(--provenance-input "im-results/agent19-tnf-raw${raw}/${file}")
+            done
+          done
+          python tools/lean_compile_closure.py --workdir /tmp/a19-canonical --jobs 4 \
+            --manifest /tmp/a19-canonical/manifest.json \
+            --label canonical-three-parent --theorem BB6.Agent19CanonicalThreeParent.roster75_sound \
+            --weighted-bound 7014 --artifact-name canonical-three-parent-certified \
+            "${inputs[@]}" \
+            im-results/agent19-tnf-raw81/CanonicalThreeParent.lean | tee /tmp/a19-canonical.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a19-canonical.log; then exit 1; fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: canonical-three-parent-certified
+          path: |
+            /tmp/a19-canonical/*.olean
+            /tmp/a19-canonical/manifest.json
+          if-no-files-found: error
