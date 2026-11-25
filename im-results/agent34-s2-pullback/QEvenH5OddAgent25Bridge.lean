@@ -272,4 +272,10 @@ theorem h5OddQuarterSource (r w : Nat)
 #print BB6.Agent25OddLift.h5M
 #check BB6.Agent25OddLift.h5QuarterHighSource
 
+
+#print axioms BB6.Agent34H5OddBridge.h5OddQ_not_pow
+#print axioms BB6.Agent34H5OddBridge.h5OddMass_not_power
+#print axioms BB6.Agent34H5OddBridge.h5Odd_parent_fan
+#print axioms BB6.Agent34H5OddBridge.h5OddQuarterSource
+
 end BB6.Agent34H5OddBridge
