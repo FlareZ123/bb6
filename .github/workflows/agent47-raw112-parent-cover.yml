@@ -100,6 +100,8 @@ jobs:
           theorem=BB6.Agent47Raw112.parent_cover_of_residual_covers
           label=raw112-parent-cover-mixed-bound-composition
           artifact=raw112-parent-cover-mixed-bound-composition
+          parent_table='1RB---_1RC---_0RD---_1LD1RE_---1LC_------'
+          weighted_bound=100000
           if [ "${{ inputs.mode }}" = closed ]; then
             root=im-results/agent47-raw112-cut/Raw112ClosedCover.lean
             theorem=BB6.Agent47Raw112.parent_cover
@@ -111,6 +113,8 @@ jobs:
             theorem=BB6.Agent47Canonical73Raw110.exact_at_target
             label=canonical73-raw110-raw112-mixed-bound-roster-composition
             artifact=canonical73-raw110-raw112-mixed-bound-roster-composition
+            parent_table='1RB---_1RC---_0RD---_1LD1RE_---0LC_------'
+            weighted_bound=6766859
           fi
           precompiled_args=()
           provenance_args=()
@@ -125,8 +129,8 @@ jobs:
             --manifest /tmp/a47-raw112-parent-cover-manifest.json \
             --label "$label" \
             --theorem "$theorem" \
-            --parent-table '1RB---_1RC---_0RD---_1LD1RE_---0LC_------' \
-            --weighted-bound 6766859 \
+            --parent-table "$parent_table" \
+            --weighted-bound "$weighted_bound" \
             --artifact-name "$artifact" \
             --provenance-input im-results/agent47-raw112-cut/generate.py \
             --provenance-input im-results/agent47-raw112-cut/symbolic.py \
