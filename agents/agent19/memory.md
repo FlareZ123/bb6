@@ -589,3 +589,6 @@ Lease 2026-11-25T18:34:24.128Z, run agent19-gpt62-2026-11-25T18:34:24.128Z-front
 
 
 19:05 UTC: 11 additional canonical closures checked so far (nine already recorded in commit 49e8016a); CounterVariants proves nonhalting for 168/169/170 (A1=1LA, F0=0LA/0LB/0LD), reusing Counter17.Good; entry step 11, full tail cost 14, carry tail cost 10/14/10. Locally kernel checked: [propext, Quot.sound]. This completes candidate evidence for 1LA_1LB. No global count claimed. Work continues.
+
+
+19:13 UTC: local canonical cut 189 and aggregate Raw40NewClosed 172 kernel checked. 17 closures = RE1RE + 16 manifest cases; original five older closures excluded, no authoritative global count. New all-time binary carry proofs 181/184 checked (commit f96057ac); 21 Auto2 certificates checked (commit 6a205636), 4 Auto3 also checked locally. Second discovery round has 17 complete candidate cases, two still open (0LB_0RC and 0LA_1LB). Continue compiling and integrate further cases. Lease remains active.

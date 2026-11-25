@@ -1,0 +1,7 @@
+# Raw40 new canonical cut
+
+The sixteen listed canonical cylinders and RE1RE exact-score cylinder have locally kernel-checked complete proofs under Lean 4.36.0-rc2 and artifact 14997966221. Raw40NewClosed proves the original 189-entry canonical cut reduces to 172 entries, with a universal quotient-compatible weighted bound of 7014 or membership in the residual list. Standard axiom sets: local_sound [propext, Classical.choice, Quot.sound]; count [propext, Quot.sound].
+
+Raw40LocalCut removes the unnecessary import of global accepted roster from Raw40Partial's existing tree definitions and rechecks canonicalSound against that tree. It is an independent local cut module; do not import it together with Raw40Partial/Raw40CanonicalCut, which use the same namespace and names. The prior five closed cylinders are not included in this count. Global authoritative roster not updated.
+
+Reproduce: use the accepted artifact and earlier Raw40Pump/Raw40MorePumps modules, compile CanonicalPartial then Raw40LocalCut. Use certify_canonical.py on the listed manifest with RAW40_STANDALONE=1, generate all leaves and compile Base/Kid/All for each listed cylinder. near6-evidence.txt adds the missing evidence for 1RC_1RB; use apply_evidence.py to install it. Compile Raw40RE1REExact and its raw certificate separately as described in RE1RE-README.md, then Raw40NewClosed with all generated proof paths on LEAN_PATH.
