@@ -164,7 +164,7 @@ if (tokens[0] !== "1RB" || tokens.filter(x => x === "HHH").length !== 1)
 
 const holdouts = new Set(local("resources/BB6_holdouts_663_2026-10-16.txt")
   .split(/\r?\n/).map(x => x.trim().replaceAll("_","")).filter(Boolean));
-const accepted608 = [
+const integratedSixRoots = [
   "1RB0LC_1LC0RB_0LE0LD_1LC---_0RA1LF_1LA1LF",
   "1RB0RA_0RC0LD_1LA1RF_1LE1LD_1LB1RE_---1RA",
   "1RB0RA_0RC0LE_1LD1RF_1LB1RD_1LD1LE_---1RA",
@@ -190,7 +190,7 @@ if (compatible.some(x => x.leafBoxes.length !== 1 || x.leafBoxes[0] !== 0))
   throw new Error("Not every raw10 alias has its full leaf in residual box 0");
 if (compatible.some(x => holdouts.has(x.rle.replaceAll("_",""))))
   throw new Error("Candidate unexpectedly overlaps the historical 663 list");
-if (compatible.some(x => accepted608.includes(x.rle.replaceAll("_",""))))
+if (compatible.some(x => integratedSixRoots.includes(x.rle.replaceAll("_",""))))
   throw new Error("Candidate duplicates an already accepted six-root graft");
 
 const table = encode(tokens);
@@ -227,8 +227,8 @@ console.log(JSON.stringify({
   haltSlot:"F0",
   raw10ParentAliases:compatible.length,
   allAliasesOutside663:true,
-  allAliasesOutside608:true,
-  allAliasesAlreadyIntegrated:false,
+  outside663AndThereforeOutside608:true,
+  duplicatesIntegratedSixRoots:false,
   preLeaf:{boxes:boxes.length,mass:baseMass},
   containingResidualBox:0,
   leafCompletions:25,
