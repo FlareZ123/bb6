@@ -1114,7 +1114,7 @@ jobs:
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
-          python tools/lean_compile_closure.py --workdir /tmp/raw60-progress --jobs 2 im-results/agent1-raw60/{Raw60RootProgress,Raw60LABinary,Raw60LAAlternating,Raw60RFUnary,Raw60BCBinary,Raw60LBFour,Raw60LCGlider,Raw60LDBinaryCounters}.lean | tee /tmp/raw60-progress.log
+          python tools/lean_compile_closure.py --workdir /tmp/raw60-progress --jobs 2 im-results/agent1-raw60/{Raw60RootProgress,Raw60LABinary,Raw60LAAlternating,Raw60RFUnary,Raw60BCBinary,Raw60LBFour,Raw60LCGlider,Raw60LDBinaryCounters,Raw60CanonicalMembership}.lean | tee /tmp/raw60-progress.log
           if grep -Eq 'sorryAx|native_decide' /tmp/raw60-progress.log; then exit 1; fi
 
   raw60_assemble:
