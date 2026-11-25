@@ -67,7 +67,7 @@ on:
       raw59_child:
         description: Raw59 proof target (all, 0RB, 0LD, 0RC, 1RC, 0RF, 1LA, RCShared, RFCount, or RFTriple)
         type: choice
-        options: [all, 0RB, 0LD, 0RC, 1RC, 0RF, 1LA, RCShared, RFCount, RFTriple, RFScan, 1RF, CanonicalPilot, CanonicalAll, PartialAll, Partial0LB, Partial1LB, Partial1LE, MacroFARPilot, Return1582, 0RD, 1LC, 1RB, 1RD, 0LC, 0RE]
+        options: [all, 0RB, 0LD, 0RC, 1RC, 0RF, 1LA, RCShared, RFCount, RFTriple, RFScan, 1RF, CanonicalPilot, CanonicalAll, PartialAll, Partial0LB, Partial1LB, Partial1LE, MacroFARPilot, Return1582, ReturnFamily, 0RD, 1LC, 1RB, 1RD, 0LC, 0RE]
         default: all
 
       verify_f418_return:
@@ -508,6 +508,11 @@ jobs:
               child="${RAW59_CHILD#Partial}"
               python im-results/agent32-raw59/generate_partial.py "$child"
               target="im-results/agent32-raw59/partial_$child/Raw59Partial${child}Data.lean" ;;
+            ReturnFamily)
+              python im-results/agent32-macro-far/unpack.py
+              python im-results/agent32-macro-far/unpack_return.py
+              python im-results/agent32-macro-far/unpack_family.py
+              target=im-results/agent32-macro-far/Raw59ReturnFamily.lean ;;
             Return1582)
               python im-results/agent32-macro-far/unpack.py
               python im-results/agent32-macro-far/unpack_return.py
