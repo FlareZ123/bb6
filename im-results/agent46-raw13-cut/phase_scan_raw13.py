@@ -74,7 +74,18 @@ def main() -> None:
     (ROOT / "raw13-phase-search.stdout.txt").write_text(result.stdout)
     (ROOT / "raw13-phase-search.stderr.txt").write_text(result.stderr)
 
+    open_sha = hashlib.sha256(raw_bytes).hexdigest()
+    out = ROOT / "raw13-bidfa-spec.json"
     bidfa: dict[str, list[object]] = {}
+    searches = []
+    if out.exists():
+        prior = json.loads(out.read_text())
+        if prior.get("source_count") != len(rows) or prior.get("open_sha256") != open_sha:
+            raise SystemExit("existing raw13 BiDFA spec belongs to a different residual source")
+        bidfa.update(prior.get("bidfa", {}))
+        searches.extend(prior.get("searches", []))
+
+    new_candidates = {}
     for line in result.stdout.splitlines():
         parts = line.split()
         if len(parts) != 14:
@@ -84,25 +95,32 @@ def main() -> None:
             raise SystemExit(f"phase.cpp returned unrequested residual {ident}")
         left = parse_dfa(parts[12])
         right = parse_dfa(parts[13])
-        minimized = minimize(rows[ident], left, right)
-        dl, dr, states, edges = minimized
-        bidfa[str(ident)] = [dl, dr, states, edges]
+        dl, dr, states, edges = minimize(rows[ident], left, right)
+        candidate = [dl, dr, states, edges]
+        key = str(ident)
+        old = bidfa.get(key)
+        if old is None or (states, edges) < (old[2], old[3]):
+            bidfa[key] = candidate
+        new_candidates[key] = candidate
 
-    spec = {
-        "parent": "1RB1LC1RC0LD1LA0RB1LB1LE1RF0LA---0RE",
-        "open_sha256": hashlib.sha256(raw_bytes).hexdigest(),
-        "source_count": len(rows),
-        "sample_seed": args.seed,
-        "sample_limit": len(sample),
+    searches.append({
+        "seed": args.seed,
         "sample_ids": sample,
         "state_cap": args.cap,
+        "new_candidate_ids": sorted(new_candidates, key=int),
+    })
+    spec = {
+        "parent": "1RB1LC1RC0LD1LA0RB1LB1LE1RF0LA---0RE",
+        "open_sha256": open_sha,
+        "source_count": len(rows),
+        "searches": searches,
         "bidfa": bidfa,
     }
-    out = ROOT / "raw13-bidfa-spec.json"
     out.write_text(json.dumps(spec, separators=(",", ":")) + "\n")
-    print(f"searched={len(sample)} candidates={len(bidfa)}")
+    print(f"searched={len(sample)} new_candidates={len(new_candidates)} total_candidates={len(bidfa)}")
     print(f"open_sha256={spec['open_sha256']}")
     print(f"candidate_ids={','.join(sorted(bidfa, key=int))}")
+
 
 
 if __name__ == "__main__":
