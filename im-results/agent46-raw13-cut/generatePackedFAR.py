@@ -5,6 +5,7 @@ Every reconstructed FAR witness is checked by the ordinary Lean kernel.
 """
 from pathlib import Path
 import hashlib
+import json
 import string
 from generateOneFAR import codes, fmt, saturate
 D=Path(__file__).resolve().parent
@@ -36,7 +37,7 @@ DATA={
 }
 
 def generate(branch,grams):
-    a=DATA[branch]
+    a=json.loads((D/"oneRC-far.json").read_text()) if branch=="1RC" else DATA[branch]
     assert len(grams)==len(a["grams"])
     assert hashlib.sha256("\n".join(grams).encode()).hexdigest()==a["sha"]
     assert len(set(grams))==len(grams)
@@ -71,5 +72,5 @@ def generate(branch,grams):
             proven[raw]=i
         body.append("end "+ns)
         (D/(name+".lean")).write_text("\n".join(body)+"\n")
-    assert len(proven)=={"0RB":1325,"1LC":137,"1RE":1452}[branch]
+    assert len(proven)=={"0RB":1325,"1LC":137,"1RE":1452,"1RC":204}[branch]
     return proven,modules

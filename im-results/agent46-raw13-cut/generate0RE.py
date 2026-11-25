@@ -10,6 +10,9 @@ from generate import D, MOVES, tally, emit, move
 import sys
 
 SPEC = {
+    "1RC": ("1RB1LC1RC0LD1LA0RB1RC---------------",4,5,12,7,7014,
+            Counter(split=225,halt=225,cycle=3426,state=336,last=1189,ngram=173,oneRCHard=48),
+            ["Agent46Raw13Auto1RC"]),
     "1RE": ("1RB1LC1RC0LD1LA0RB1RE---------------",5,5,7,8,7014,
             Counter(split=1900,halt=1900,cycle=30642,state=1320,last=10274,ngram=1430,oneREHard=35),
             ["Agent46Raw13OneREPumps","Agent46Raw13OneREBinary"]),
@@ -85,10 +88,10 @@ def main():
         data=temp/"tables.txt"
         far = {}
         far_modules=[]
-        if BRANCH in ("0RB","1LC","1RE"):
+        if BRANCH in ("0RB","1LC","1RE","1RC"):
             from generatePackedFAR import generate
             far,far_modules=generate(BRANCH,grams)
-            assert len(set(grams) & far.keys()) == {"0RB":1313,"1LC":124,"1RE":1424}[BRANCH]
+            assert len(set(grams) & far.keys()) == {"0RB":1313,"1LC":124,"1RE":1424,"1RC":173}[BRANCH]
         if BRANCH == "0RA":
             from generateZeroRAFAR import generate
             far = generate()
@@ -116,7 +119,7 @@ def main():
         def norm(t):
             if t is None: return None
             if t[0]=="ngram":
-                if t[1] in far: return ({"0RA":"zeroRAFar","1LA":"oneLAFar","1RA":"oneRAFar","0RB":"zeroRBFar","1LC":"oneLCFar","1RE":"oneREFar"}[BRANCH],far[t[1]])
+                if t[1] in far: return ({"0RA":"zeroRAFar","1LA":"oneLAFar","1RA":"oneRAFar","0RB":"zeroRBFar","1LC":"oneLCFar","1RE":"oneREFar","1RC":"oneRCFar"}[BRANCH],far[t[1]])
                 return ("selectedgram",ids[t[1]])
             if t[0]=="split": return ("split",t[1],t[2],[norm(ch) for ch in t[3]])
             return t
@@ -127,7 +130,7 @@ def main():
             kids.append(name)
             body=emit(norm(t)).replace("BB6.Agent46Raw13SelectedGram",GRAM)
             mv=move(MOVES[i])
-            if BRANCH in ("0RB","1LC","1RE") or (BRANCH == "1RA" and i in (4,16)):
+            if BRANCH in ("0RB","1LC","1RE","1RC") or (BRANCH == "1RA" and i in (4,16)):
                 from shard_cut import checked_subtree
                 tag=f"{i:02}"
                 prefix=checked_subtree(t,tag,f"next {mv}",max(CUT,i%6+1),BOUND,

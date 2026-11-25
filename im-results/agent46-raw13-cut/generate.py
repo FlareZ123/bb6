@@ -279,6 +279,14 @@ def emit(t):
     if tag == "late0RE":
         n = "BB6Coverage.Agent31Pump.Raw13Late0RE"
         return f".bounded {n}.table 21269 {n}.bound"
+    if tag in ("oneRCHard","oneRCFar"):
+        i=v[0]
+        auto={1006008:0,1006030:1,1006031:2,1006032:3,1006033:4,1006034:5,1006035:6,1006036:7,1006037:8,1006038:9,1006041:10,1006042:11,1006043:12,1006044:13,1006045:14,1006046:15,1006047:16}
+        if tag=="oneRCHard" and i in auto:
+            n="BB6Coverage.Agent31Pump.Auto.Raw13Auto1RC"
+            return f".closed (.proven {n}.p{auto[i]} {n}.never{auto[i]})"
+        n="BB6.Agent46Raw13OneRC"
+        return f".closed (.proven {n}.pF{i} {n}.neverF{i})"
     if tag in ("oneREHard","oneREFar"):
         n="BB6.Agent46Raw13OneRE"
         i=v[0]
