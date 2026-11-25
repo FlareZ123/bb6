@@ -167,8 +167,9 @@ Proof.
       apply agent50_bounded_source_tree_checked. lia.
 Qed.
 
-(* Existing original-source certificates from the 34-node chunk roster and
-   the newly searched 50-node side roster may cover some open leaves. *)
+(* The already checked 34-node chunk roster may cover some open leaves.
+   The larger 50-node side-search roster is deliberately excluded here to
+   keep this parent-level target independent of that expensive search. *)
 Definition agent50_q32_existing_roster : list TM := chunk_roster.
 
 Theorem agent50_q32_existing_roster_safe bound :
