@@ -17,7 +17,7 @@ open BB6.Agent10Raw108Root
     original-source Lean audits: 0RD, 0LC, 1RC, 1RD, and 0RE. -/
 def certifiedChildren : List Move :=
   [⟨false,true,3⟩, ⟨false,false,2⟩, ⟨true,true,2⟩,
-   ⟨true,false,3⟩, ⟨false,true,4⟩]
+   ⟨true,true,3⟩, ⟨false,true,4⟩]
 
 /-- The exact remaining child partition after consuming those five proofs. -/
 def residual : List Move :=
