@@ -18,7 +18,7 @@ test -d "$UPSTREAM_ROOT"
 test "$(git -C "$UPSTREAM_ROOT" rev-parse HEAD)" = "$PINNED"
 
 mkdir -p "$WORKDIR"
-printf '%s\\n' "$PINNED" > "$WORKDIR/upstream-commit.txt"
+printf '%s\n' "$PINNED" > "$WORKDIR/upstream-commit.txt"
 
 node "$ROOT/im-results/agent19-hard-root-crosswalk/raw10-cryptids-leaf-crosswalk.cjs" "$UPSTREAM_ROOT" \
   | tee "$WORKDIR/crosswalk.json"
@@ -140,7 +140,7 @@ log = pathlib.Path(sys.argv[1]).read_text()
 manifest = json.loads(pathlib.Path(sys.argv[2]).read_text())
 profiles = {
     name: {x.strip() for x in raw.split(",") if x.strip()}
-    for name, raw in re.findall(r"'([^']+)' depends on axioms: \\[([^\\]]*)\\]", log)
+    for name, raw in re.findall(r"'([^']+)' depends on axioms: \[([^\]]*)\]", log)
 }
 required = [
     "BB6.Agent19Raw10CryptidsLeaf.original_eq_candidate",
@@ -178,6 +178,6 @@ summary = {
     "reused_precompiled_modules": manifest.get("precompiled_core", {}).get("reused_module_count", 0),
     "theorem_axioms": {name: sorted(profiles[name]) for name in required},
 }
-pathlib.Path(sys.argv[3]).write_text(json.dumps(summary, indent=2, sort_keys=True) + "\\n")
+pathlib.Path(sys.argv[3]).write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n")
 print(json.dumps(summary, indent=2, sort_keys=True))
 PY
