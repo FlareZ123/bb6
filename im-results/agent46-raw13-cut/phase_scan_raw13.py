@@ -49,10 +49,26 @@ def main() -> None:
         raise SystemExit(f"expected 1716 raw13 open residuals, found {len(rows)}")
 
     ids = sorted(rows)
+    groups: dict[int, list[int]] = {}
+    for ident, table in rows.items():
+        groups.setdefault(table.count("---"), []).append(ident)
+    hole_counts = {str(k): len(v) for k, v in sorted(groups.items())}
     if args.limit <= 0 or args.limit >= len(ids):
         sample = ids
     else:
-        sample = sorted(random.Random(args.seed).sample(ids, args.limit))
+        rng = random.Random(args.seed)
+        for values in groups.values():
+            rng.shuffle(values)
+        sample = []
+        while len(sample) < args.limit and any(groups.values()):
+            for holes in sorted(groups):
+                if groups[holes] and len(sample) < args.limit:
+                    sample.append(groups[holes].pop())
+        sample.sort()
+    sample_hole_counts = {}
+    for ident in sample:
+        key = str(rows[ident].count("---"))
+        sample_hole_counts[key] = sample_hole_counts.get(key, 0) + 1
 
     cpp = IM / "agent25-raw123" / "phase.cpp"
     with tempfile.TemporaryDirectory(prefix="raw13-phase-") as tmp:
@@ -106,6 +122,7 @@ def main() -> None:
     searches.append({
         "seed": args.seed,
         "sample_ids": sample,
+        "sample_hole_counts": sample_hole_counts,
         "state_cap": args.cap,
         "new_candidate_ids": sorted(new_candidates, key=int),
     })
@@ -113,6 +130,7 @@ def main() -> None:
         "parent": "1RB1LC1RC0LD1LA0RB1LB1LE1RF0LA---0RE",
         "open_sha256": open_sha,
         "source_count": len(rows),
+        "hole_counts": hole_counts,
         "searches": searches,
         "bidfa": bidfa,
     }
