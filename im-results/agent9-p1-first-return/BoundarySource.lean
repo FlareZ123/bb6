@@ -90,7 +90,7 @@ theorem short_reachable_child (h n b d m : Nat) (hn : reachableThreshold h≤n)
   have hb : b%2=0 := by omega
   have hdodd : d%2=1 := by omega
   have hb4 : b%4=0 := by
-    rcases BB6.Agent1.reachable_even_mod4 b d hr hb hdodd with he|he
+    rcases BB6.Agent1.reachable_even_mod4 b d hr (by omega) hb with he|he
     · omega
     · exact he
   have hno : ∀ k, ¬GAncestor b d k 1 := by

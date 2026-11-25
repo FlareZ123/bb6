@@ -64,15 +64,81 @@ theorem exp_dom (e d n : Nat) (hn : expThreshold e d≤n) : 2^e*n^d<2^n := by
   have hstrict := Nat.pow_lt_pow_right (show 1<2 by decide) hexp
   exact Nat.lt_of_le_of_lt hm hstrict
 
-def coefficientThreshold (A d : Nat) := expThreshold (A.log2+1) d
+/-- Polynomial growth per unit step is at most a factor of two once
+n≥2d. The denominator-free Bernoulli inequality is proved by induction. -/
+theorem bernoulli_ratio (n d : Nat) (hd : d≤n) : (n-d)*(n+1)^d≤n*n^d := by
+  induction d with
+  | zero => simp
+  | succ d ih =>
+    have hh := ih (by omega)
+    have he : (n-(d+1))*(n+1)≤(n-d)*n := by
+      have h1 : n-d=(n-(d+1))+1 := by omega
+      rw [h1,Nat.add_mul,Nat.mul_add]
+      omega
+    have hm := Nat.mul_le_mul_right ((n+1)^d) he
+    have hm' := Nat.mul_le_mul_left n hh
+    rw [Nat.pow_succ,Nat.pow_succ]
+    calc
+      _ = ((n-(d+1))*(n+1))*(n+1)^d := by ac_rfl
+      _ ≤ ((n-d)*n)*(n+1)^d := hm
+      _ = n*((n-d)*(n+1)^d) := by ac_rfl
+      _ ≤ n*(n*n^d) := hm'
+      _ = n*(n^d*n) := by ac_rfl
+
+theorem poly_step (n d : Nat) (hn : 1≤n) (hd : 2*d≤n) : (n+1)^d≤2*n^d := by
+  have h := bernoulli_ratio n d (by omega)
+  have hh := Nat.mul_le_mul_left 2 h
+  have hm := Nat.mul_le_mul_right ((n+1)^d) (show n≤2*(n-d) by omega)
+  have he : 2*((n-d)*(n+1)^d)=(2*(n-d))*(n+1)^d := by ac_rfl
+  rw [he] at hh
+  have hh' : n*(n+1)^d≤n*(2*n^d) := by
+    calc
+      _ ≤ (2*(n-d))*(n+1)^d := hm
+      _ ≤ 2*(n*n^d) := by rw [←he]; exact Nat.mul_le_mul_left 2 h
+      _ = _ := by ac_rfl
+  exact Nat.le_of_mul_le_mul_left hh' (by omega)
+
+theorem coefficient_monotone (A d n0 n : Nat) (hn0 : 1≤n0) (hd : 2*d≤n0)
+    (hbase : A*n0^d<2^n0) (hn : n0≤n) : A*n^d<2^n := by
+  have h : ∀ j, A*(n0+j)^d<2^(n0+j) := by
+    intro j
+    induction j with
+    | zero => simpa using hbase
+    | succ j ih =>
+      rw [show n0+(j+1)=n0+j+1 by omega,Nat.pow_succ]
+      have hh := Nat.mul_le_mul_left A (poly_step (n0+j) d (by omega) (by omega))
+      have hlt := Nat.mul_lt_mul_of_pos_right ih (by decide : 0<2)
+      rw [show A*(2*(n0+j)^d)=A*(n0+j)^d*2 by ac_rfl] at hh
+      exact Nat.lt_of_le_of_lt hh hlt
+  have hh := h (n-n0)
+  rwa [show n0+(n-n0)=n by omega] at hh
+
+/-- Cheap trial threshold using bit lengths; a successful trial is a
+certificate, and the old coarse threshold is a total fallback. -/
+def coefficientTrial (A d : Nat) : Nat :=
+  let e := A.log2+1
+  max (max 1 (2*d)) (e+d*((e+d+1).log2+2)+1)
+
+def coefficientThreshold (A d : Nat) : Nat :=
+  let t := coefficientTrial A d
+  if A*t^d<2^t then t else expThreshold (A.log2+1) d
 
 theorem coefficient_dom (A d n : Nat) (hn : coefficientThreshold A d≤n) : A*n^d<2^n := by
-  have hA : A≤2^(A.log2+1) := by
-    by_cases h0 : A=0
-    · simp [h0]
-    · exact Nat.le_of_lt (log_window A (by omega)).1
-  exact Nat.lt_of_le_of_lt (Nat.mul_le_mul_right (n^d) hA) (exp_dom (A.log2+1) d n hn)
+  let t := coefficientTrial A d
+  by_cases h : A*t^d<2^t
+  · have ht : t≤n := by simpa [coefficientThreshold,t,h] using hn
+    have ht1 : 1≤t := Nat.le_trans (Nat.le_max_left _ _) (Nat.le_max_left _ _)
+    have ht2 : 2*d≤t := Nat.le_trans (Nat.le_max_right _ _) (Nat.le_max_left _ _)
+    exact coefficient_monotone A d t n ht1 ht2 h ht
+  · have he : expThreshold (A.log2+1) d≤n := by simpa [coefficientThreshold,t,h] using hn
+    have hA : A≤2^(A.log2+1) := by
+      by_cases h0 : A=0
+      · simp [h0]
+      · exact Nat.le_of_lt (log_window A (by omega)).1
+    exact Nat.lt_of_le_of_lt (Nat.mul_le_mul_right (n^d) hA) (exp_dom (A.log2+1) d n he)
 
+#print axioms bernoulli_ratio
+#print axioms coefficient_monotone
 #print axioms exp_dom
 #print axioms coefficient_dom
 /-- Coefficient update for the polynomial error envelope. -/
