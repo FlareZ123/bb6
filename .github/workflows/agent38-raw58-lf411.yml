@@ -1,12 +1,7 @@
 name: Agent 38 Raw58 LF411 sweep certificate
 
 on:
-  push:
-    paths:
-      - 'im-results/agent38-raw58-triangular-sweep/**'
-      - 'im-results/agent4-raw58/Raw58Live.lean'
-      - 'im-results/agent31-three-hole-tnf/SweepPumping.lean'
-      - '.github/workflows/agent38-raw58-lf411.yml'
+  # Keep this proof audit manual while the source theorem is still under repair.
   workflow_dispatch:
 
 jobs:
