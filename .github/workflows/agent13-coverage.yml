@@ -771,7 +771,7 @@ jobs:
           allowed = {"propext", "Classical.choice", "Quot.sound"}
           profiles = {
               name: {x.strip() for x in axioms.split(",") if x.strip()}
-              for name, axioms in re.findall(r"'([^']+)' depends on axioms: \\[([^\\]]*)\\]", log)
+              for name, axioms in re.findall(r"'([^']+)' depends on axioms: \[([^\]]*)\]", log)
           }
           for name in required:
               if name not in profiles:
@@ -801,7 +801,7 @@ jobs:
               "theorem_axioms": {name: sorted(profiles[name]) for name in required},
           }
           pathlib.Path("Canonical76Raw10Membership.json").write_text(
-              json.dumps(manifest, indent=2, sort_keys=True) + "\\n"
+              json.dumps(manifest, indent=2, sort_keys=True) + "\n"
           )
           PY
       - uses: actions/upload-artifact@v4
