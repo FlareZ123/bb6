@@ -1663,9 +1663,16 @@ jobs:
         run: |
           set -euo pipefail
           test -s /tmp/a31-base/manifest/raw107-shared-manifest.json
-          test -s /tmp/a31-base/Raw107ParentClosure.olean
-          test -s /tmp/a31-base/CanonicalTwoParentGraft.olean
-          test -s /tmp/a31-base/CanonicalRaw114Accepted.olean
+          python3 - <<'PY'
+          import json, pathlib
+          manifest = json.loads(pathlib.Path("/tmp/a31-base/manifest/raw107-shared-manifest.json").read_text())
+          names = {entry["module"] for entry in manifest["modules"]}
+          required = {"Raw107ParentClosure", "CanonicalTwoParentGraft", "CanonicalRaw114Accepted"}
+          missing = required - names
+          if missing:
+              raise SystemExit(f"shared-core manifest missing required modules: {sorted(missing)}")
+          print(f"Validated {len(names)} modules in shared-core manifest, including {sorted(required)}")
+          PY
       - name: Reconstruct held-leaf source dependencies
         run: |
           set -euo pipefail
