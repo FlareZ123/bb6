@@ -58,6 +58,12 @@ Candidate weighted bound **536**; first query F0 at t=8. Counts: 1016 split, 194
 
 Five exceptional leaves (126,127,134,281,317) share a parametric exponential countdown, proved in Raw107RFCountdown.lean. A configuration D on the left boundary has left word 0^(3n+5)11 (one extra zero for variant d) and empty right. The inner countdown operates on triples 111 and 011, with an arbitrary suffix. Its skip cost is 3 (variant c: 5), decrement cost 6+(skipCost+3)*n, and clearing cost C(n+1)=2C(n)+decrementCost(n). Variant d includes a single extra high digit and two passes through the clearing routine. Universal entry/growth checked locally for all five variants; four other leaves (123,179,202,611) also have locally checked growth proofs. Full source check pending. Eight nontrivial child candidates cover 78,125,000 raw assignments (32% of raw107), with 62 locally checked recurrence instances.
 
+## B1=1RF child
+
+Candidate bound **160**, first query F0 t=8. Counts: 1094 split, 20120 cycle, 4474 last, 569 open (559 FAR + 10 symbolic). Mass cycle 8,943,800, halt 665,424, total-defined 107,376, open 49,025. Max finite witness `1RB0LB_1RC1RF_0RD0RF_1LD1RE_HHH0RB_1LF0LA`, t159 delay zero. Roster hash in specs_more.json; generate with `python generate_more.py 1RF`.
+
+Exceptional leaf 512 `1RB0LC_1RC1RF_0RD1LF_1LD1RE_---0RB_1LC1RA` enters a right-boundary periodic growth family at t1169, epoch cost 338+60n. The extended epoch search uses state F, two right-boundary events per epoch. All ten entry/growth proofs compiled locally against copied primitives. Nine complete child candidates now cover 87,890,625 raw assignments (36% of raw107), with 72 recurrence instances. Full source closure pending.
+
 ## Full raw107 census
 
 Finite enumeration accounts for all 244,140,625 assignments: cycle mass 221,509,400; halt mass 18,357,404; total-defined nonhalt mass 1,291,296; open mass 2,982,525. Tree counts: cycle 231224, last 53804, split 12816, open 9741. Max finite weighted score 815, not a global bound. Existing FAR candidate bank screening found 9411 hit leaves and 330 unresolved before the five child sweeps. These remain exploratory saturation outcomes, not formally certified coverage. The 0RD subtree is the first fully witnessed nontrivial child investigated here. Other child closures and source integration remain the next tasks.

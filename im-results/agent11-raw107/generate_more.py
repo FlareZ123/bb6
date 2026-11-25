@@ -10,6 +10,7 @@ sys.path.insert(0,str(ROOT.parent/"agent10-tnf-multipump"))
 from generate_four_hole import masks,slot,move,parse
 import generate_sweeps as one
 import multi
+import long_epoch
 
 MOVES=[w+d+q for w,d,q in product("01","LR","ABCDEF")]
 SPECS=json.loads((ROOT/"specs_more.json").read_text())
@@ -44,6 +45,13 @@ def main(a):
             pumps[i]=f"{pn}.M{i}"
             pumpcode.append(code)
             print(a,i,info)
+    for i,st,lim,sd,q,period in spec.get("long",[]):
+        p=one.parse(opens[i]);ans=long_epoch.candidate(p,[e for e in one.concrete_events(p,lim) if e[0]>=st],sd,q,period)
+        assert ans is not None,(a,i)
+        code,info=one.generate(i,p,ans)
+        pumps[i]=f"{pn}.M{i}"
+        pumpcode.append(code)
+        print(a,i,info)
     manual=[]
     for i,(mod,nspace,table) in spec.get("manual",{}).items():
         assert opens[int(i)]==table,(a,i)
