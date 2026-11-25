@@ -240,3 +240,18 @@ complete 25-completion leaves for C/D0/D2 in residual box 0 and r1 in box 24.
 The r1 root already has a source-accepted nonhalting theorem; adding its leaf
 would remove 25 machines while splitting the remainder into 43 boxes. This is
 an intermediate crosswalk only, not a Lean integration or raw10 parent closure.
+
+## Canonical p23 / r4 frontier consumer (draft; CI pending)
+
+`CanonicalR4Ingestion.lean` is a cross-route consumer draft. It takes the r4 branch already present in `RootFrontierR1R4`, re-roots the tail after the first two first-hole moves at the actual canonical77 parent `HardRootParents.p23`, and applies `graftRoster_sound` to replace that one roster entry by the branch's explicit residual cylinders.
+
+The intended local certificate is precise:
+
+- the tail from p23 has 7 further first-hole expansions;
+- its terminal `R4Parent.r4.parent` has 2 undefined slots, hence 625 completions, covered by the existing 42-bound r4 certificate and lifted to 7014;
+- 1 terminal leaf is closed and 161 off-path sibling cylinders remain;
+- the resulting roster soundness theorem is conditional on Covers for those 161 residuals. It is not a BB(6) upper bound and does not claim the 161 obligations are solved.
+
+Source dependency status: run [45514421095](https://github.com/FlareZ123/bb6/actions/runs/45514421095) compiled `R4Counter`, `R4Parent`, `R4Graft`, and `RootFrontierR1R4`; the overall workflow later failed in the unrelated `ExceptionalPumps` module. The printed `rootFrontierR1R4_sound`, disjointness, 24-expanded-node, 3-closed-leaf, and 550-residual theorems had only the standard `[propext, Classical.choice, Quot.sound]` axiom profile.
+
+Still required: compile `CanonicalR4Ingestion.lean` against both the accepted canonical77 artifact from run 45554648116 and the above source closure, then audit the module's complete axiom profile. Do not count this draft as a roster reduction until that joint compile succeeds.
