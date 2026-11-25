@@ -1,0 +1,34 @@
+name: Agent 1 exact raw60 0LF conditional audit
+on:
+  workflow_dispatch:
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Generate and check every exact branch
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          D=im-results/agent1-raw60
+          W=/tmp/raw60-0lf
+          python "$D/generate_0lf_audit.py"
+          python tools/lean_compile_closure.py --workdir "$W" --jobs 4 --manifest "$W/core.json" "$D/Raw60A0LFData.lean" | tee /tmp/raw60-0lf.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/raw60-0lf.log; then exit 1; fi
+          grep -F 'BB6.Agent1Raw60A0LF.all_completions' /tmp/raw60-0lf.log
+          cd "$W"
+          printf '%s\n' "$GITHUB_SHA" > SOURCE_COMMIT
+          sha256sum *.lean *.olean core.json SOURCE_COMMIT > SHA256SUMS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw60-0lf-conditional
+          path: /tmp/raw60-0lf/
+          if-no-files-found: error
