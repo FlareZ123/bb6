@@ -7,6 +7,7 @@ set_option maxHeartbeats 0
 namespace BB6.Agent50Raw10Box8
 open BB6Coverage
 open BB6.Agent13BlankDelay
+open BB6.Agent8LeafRules
 open BB6.Agent49Box
 open BB6.Agent13CrossRouteHeldLeaf109
 open BB6.Agent49BoxBridge
@@ -94,6 +95,10 @@ theorem never (m : Machine) (hm : compatible table m) : NeverHalts m := by
       compatible_witness hm known_cycle]
     exact cycle_run
   exact eventually_cycle_never m entry 24 14 (by decide) hentry hcycle
+
+theorem holes_exact :
+    ∀ s, table s = none ↔ s = (1,true) ∨ s = (5,true) := by
+  decide
 
 theorem root : table initialSlot = some (some ⟨true,true,1⟩) := by
   decide
