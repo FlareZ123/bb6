@@ -1,37 +1,55 @@
 # FARv3 held-node ingestion into the source checkpoint interface
 
-**Status:** intermediate proof bridge; the new exact-checkpoint membership module is awaiting original-source Coq CI. No BB(6) upper bound is claimed.
+**Status:** intermediate source-queue integration; the held-node cylinder is certified, and its exact finite source checkpoint is independently reproducible. The complete root Cover and BB(6) upper bound remain open.
 
-## The certificate being ingested
+## The certified cylinder
 
-Agent 5's `Agent5RecoveredHeld.v` rechecks the existing FARv3 `nonhalt208` certificate after the source left/right flip and identity-state transport. For
+The source table
 
 ```
 1RB0RD_1LC1LB_0LE1RA_0LC0RA_1LF1LD_1RD---
 ```
 
-it proves `recovered_held_2800_nonhalt`, then `recovered_held_2800_safe bound` for every bound. The latter is a complete residual-cylinder statement: every completion of the one-hole partial table is safe, not just the displayed trajectory. The inherited Coq assumption `FunctionalExtensionality.functional_extensionality_dep` is disclosed in Agent 5's dossier.
+is the one-hole held node at `q_i(2800,100)`. Agent 5's `Agent5RecoveredHeld.v` reflects it to the existing FARv3 `nonhalt208` certificate and proves `recovered_held_2800_safe bound` for every bound. This is a whole-cylinder nonhalting result, not merely a trajectory replay. The inherited Coq primitive/functional-extensionality assumptions are disclosed in Agent 5's source dossier.
 
-## Exact source-checkpoint membership
+## Exact source checkpoint
 
-`Agent42HeldCheckpointMembership.v` adds the missing source edge:
+The original-source batch run [45525114781](https://github.com/FlareZ123/bb6/actions/runs/45525114781), pinned to BusyCoq revision `33209bc7dc282b38c8cd6be507bfc551fea56108`, computed `SearchQueue_upds decider (q_i 2800 100) 1000000` and emitted the packed module `Agent8Batch_2800_100_1000000`.
 
-1. Define the actual pinned-source checkpoint `SearchQueue_upds decider (q_i 2800 100) 1000000`.
-2. Run a VM-checked Boolean membership test over its held list, using `source_refinesb` rather than table counts or an external string match.
-3. Convert the positive test to `is_child_of (tm x) recovered_held_2800`.
-4. Apply the existing `source_roster_safe` consumer to obtain `source_weighted_safe bound x`.
-5. Exhibit that exact node in `adaptive_obligations decider (AP_advance 1000000 AP_stop) (q_i 2800 100)`, the interface consumed by `actual_source_chunks_packed_global_upper`.
+Its exact result has **184 active nodes and one held node**. The held node is exactly the FARv3 table above. The generated `chunk_data_exact` theorem proves equality of the original source queue with the decoded packed checkpoint; the queue computation completed in about 46 seconds. The proof depends only on the original source's disclosed `PrimInt63`/`PArray` computational primitives and their correctness assumptions.
 
-The theorem closes one whole held-node cylinder in the finite checkpoint's adaptive obligations. It does not certify the other active or held nodes, nor the other 128 source chunks. Those remain explicit obligations. The same Coq module also proves `recovered_held_2800_parent_leaf_partition` directly in the original source `is_child_of` relation: any completion of the B0=1LC parent either extends the FARv3 leaf or disagrees at a slot left open by the parent and fixed by the leaf. This source-side complement statement is independent of the Lean table model.
+The current integration avoids repeating that computation inside a nested membership test. The existing manual workflow first generates and compiles the packed checkpoint once, then `Agent42HeldCheckpointMembership.v` imports its proof-carrying `.vo` and checks the decoded held list. The theorem `recovered_held_2800_checkpoint_exact` transports that membership back to the actual original-source queue. The membership predicate is exact transition-table equality, not a count or string-only match.
 
-## Root-frontier complement
+## Parent and complement
 
-Agent 13's `Agent13CrossRouteHeldLeaf.v` connects the same FARv3 residual to the authentic first-one root through the depth-one parent at address `B0=1LC`; `Root109Membership.lean` proves that parent is an exact member of the 109 reduced roster. `CrossRouteHeldLeaf.lean` proves that every completion of that parent either extends the certified leaf or disagrees at one of its nine newly fixed slots. Thus the complement is retained rather than silently dropped.
+The exact B0=1LC parent is
 
-Agent 13's `Root109Membership.lean` independently proves that this exact B0=1LC parent is canonical index 6 in `Combined109Roster.reducedRoster` and survives the 15 accepted whole-cylinder cuts. The FARv3 certificate therefore closes a strict subcylinder inside one of the 109 retained champion-score obligations. The count remains 109 until the consuming frontier replaces that parent by the certified leaf plus an explicit retained complement.
+```
+1RB---_1LC---_------_------_------_------
+```
 
-## Verification and next step
+It is a retained member of the 109-entry weighted first-one roster (canonical index 6). The source theorem `recovered_held_2800_parent_leaf_partition` proves that every completion of this parent either extends the FARv3-certified leaf or disagrees at a slot fixed by the leaf and left open by the parent. The complement is therefore explicit and retained.
 
-The existing manual workflow target `enumerate62-held-farv3-pilot` has been extended to compile both the root-frontier bridge and the exact checkpoint-membership module, then print their assumptions. A narrower `enumerate62-held-checkpoint-membership` target isolates the new source checkpoint, source-side complement, and adaptive-consumer proofs from the separate root-bridge module. The module has not yet received a successful CI result; treat its theorem statements as a proof draft until that run passes.
+Agent 14 separately grafts 65 accepted side-witness cylinders into this same parent and retains their open complement. The FARv3 held leaf and those 65 cylinders are not silently combined: a consuming audit must preserve all remaining parent completions.
 
-After acceptance, the useful scale-up is to feed additional already-accepted whole-cylinder certificates into the same source-roster/adaptive-obligation consumer, retaining every uncovered active/held node. Do not infer global coverage from one matched leaf.
+## Source consumer and scope
+
+`Agent14HeldQueueConsumption.v` filters only exact copies of the FARv3 table from the adaptive obligation list. A generic `Forall` partition theorem proves that the original list is safe exactly when the filtered residual list is safe, since every removed occurrence is covered by the whole-cylinder certificate. The packed global-upper consumer then leaves all other 128 source chunks unchanged.
+
+The resulting theorem remains conditional on:
+- exact packed checkpoint equations for all 129 source chunks;
+- weighted safety of every remaining active/held node after the one exact-table filter;
+- the global source-queue coverage and normalization hypotheses.
+
+Thus this pilot discharges one held table's safety obligation but does **not** close the B0=1LC parent, reduce the 109 count by itself, or prove a universal BB(6) upper bound.
+
+## Reproduction and acceptance
+
+Use the existing manual workflow `.github/workflows/shared-rocq-root-proofs.yml`:
+- `enumerate62-held-farv3-pilot`: original-root bridge plus packed-checkpoint membership;
+- `enumerate62-held-checkpoint-membership`: isolated membership/source checkpoint proof;
+- `enumerate62-held-checkpoint-consumption`: exact-table filter and conditional global consumer.
+
+The packed checkpoint is generated with the existing `export-source-batch.sh` at range `2800:100:1000000`; its exact `.vo` is consumed within the same run. The end-to-end membership/consumer audit is pending on the current revision. The earlier direct-membership run 45557567037 was cancelled during compilation without a proof diagnostic; it is superseded by this shared-checkpoint path.
+
+Keep this material in `im-results/`: it is useful proof integration, not an unconditional mathematical result.
