@@ -148,9 +148,9 @@ Proof.
   apply filter_In.
   split.
   - unfold adaptive_obligations.
-    change In x
+    change (In x
       (fst (SearchQueue_upds decider (q_i 2800 100) 1000000%N) ++
-       snd (SearchQueue_upds decider (q_i 2800 100) 1000000%N)).
+       snd (SearchQueue_upds decider (q_i 2800 100) 1000000%N))).
     rewrite recovered_held_2800_checkpoint_exact.
     apply in_or_app.
     right.
