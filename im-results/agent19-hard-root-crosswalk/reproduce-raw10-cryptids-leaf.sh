@@ -53,6 +53,7 @@ chmod +x "$WORKDIR/lean-with-upstream"
 
 python3 "$ROOT/tools/lean_compile_closure.py" \
   "$ROOT/im-results/agent19-hard-root-crosswalk/Raw10CryptidsLeaf.lean" \
+  "$ROOT/im-results/agent50-weighted-tnf-pilot/Raw10CtlPartialLeaf.lean" \
   --workdir "$WORKDIR/build" \
   --source-root "$UPSTREAM_ROOT" \
   --jobs "$JOBS" \
@@ -60,9 +61,10 @@ python3 "$ROOT/tools/lean_compile_closure.py" \
   --precompiled-manifest "$CANONICAL77_MANIFEST" \
   --precompiled-dir "$CANONICAL77_DIR" \
   --manifest "$WORKDIR/build/manifest.json" \
-  --label raw10-cryptids-last-hole-leaf \
+  --label raw10-cryptids-and-ctl-partial-leaves \
   --provenance-input "$WORKDIR/upstream-commit.txt" \
   --provenance-input "$WORKDIR/crosswalk.sha256" \
+  --provenance-input "$ROOT/im-results/agent50-weighted-tnf-pilot/Raw10CtlPartialLeaf.lean" \
   --provenance-input "$WORKDIR/upstream-dependencies.sha256" \
   --override Frontier=im-results/agent8-coverage-contract/Frontier.lean \
   --override RootFrontier=im-results/agent50-weighted-tnf-pilot/RootFrontier.lean \
@@ -172,6 +174,18 @@ required = [
     "BB6.Agent19Raw10CryptidsLeaf.raw10RemainderWithCandidate_mass",
     "BB6.Agent19Raw10CryptidsLeaf.raw10CoverWithCandidate",
     "BB6.Agent19Raw10CryptidsLeaf.exact_from_raw10_remainder_with_candidate",
+    "BB6.Agent50Raw10CtlPartial.toAgent8_ofAgent8",
+    "BB6.Agent50Raw10CtlPartial.ofAgent8_candidate2",
+    "BB6.Agent50Raw10CtlPartial.ctlCheck_congr",
+    "BB6.Agent50Raw10CtlPartial.ctlLeaf2_neverHalts",
+    "BB6.Agent50Raw10CtlPartial.ctlLeaf2Certificate",
+    "BB6.Agent50Raw10CtlPartial.raw10RemainderWithCtl2_exact",
+    "BB6.Agent50Raw10CtlPartial.raw10RemainderWithCtl2_disjoint",
+    "BB6.Agent50Raw10CtlPartial.raw10RemainderWithCtl2_count",
+    "BB6.Agent50Raw10CtlPartial.ctlLeaf2_assignedCount",
+    "BB6.Agent50Raw10CtlPartial.ctlLeaf2_completionCount",
+    "BB6.Agent50Raw10CtlPartial.raw10RemainderWithCtl2_mass",
+    "BB6.Agent50Raw10CtlPartial.raw10CoverWithCtl2",
 ]
 allowed = {"propext", "Classical.choice", "Quot.sound"}
 missing = [name for name in required if name not in profiles]
@@ -183,13 +197,17 @@ if bad:
 if "sorryAx" in log or "native_decide" in log:
     raise SystemExit("forbidden sorryAx/native_decide marker in compilation log")
 summary = {
-    "claim": "one pinned Cryptids NonHalt root is a genuine raw10 last-hole leaf; the exact 41-box complement becomes 49 residual boxes",
-    "source_module": "BusyBeaver.BB6.NonHalt.M_1RB0LC_1LC0RE_1LA1LD_1LA1LB_0RF1RA_HHH0RE",
+    "claim": "one pinned Cryptids one-hole leaf plus a four-transition CTL certificate leaf; the latter is a 25^8 nonhalting cylinder",
+    "source_module_one_hole": "BusyBeaver.BB6.NonHalt.M_1RB0LC_1LC0RE_1LA1LD_1LA1LB_0RF1RA_HHH0RE",
+    "source_module_ctl": "BusyBeaver.BB6.NonHalt.M_1RB0RC_1LC1RD_1RA1LE_1LA0RD_0LE1RF_1LBHHH",
     "upstream_commit": "3647718b5df22e1a61462dec0376bd204526285a",
-    "leaf_completions": 25,
-    "pre_leaf": {"boxes": 41, "mass": 90737503713725},
-    "post_leaf": {"boxes": 49, "mass": 90737503713700},
-    "mass_removed": 25,
+    "one_hole_leaf_completions": 25,
+    "ctl_leaf_fixed_slots": 4,
+    "ctl_leaf_holes": 8,
+    "ctl_leaf_completions": 152587890625,
+    "ctl_leaf_pre_remainder": {"boxes": 41, "mass": 90737503713725},
+    "ctl_leaf_post_remainder": {"boxes": 47, "mass": 90584915823100},
+    "ctl_leaf_mass_removed": 152587890625,
     "module_count": manifest["module_count"],
     "reused_precompiled_modules": manifest.get("precompiled_core", {}).get("reused_module_count", 0),
     "theorem_axioms": {name: sorted(profiles[name]) for name in required},
