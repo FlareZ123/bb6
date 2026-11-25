@@ -135,7 +135,7 @@ theorem cut110_checked : partialCheck 7014 p110 cut110 = true := by
   simp only [Bool.and_eq_true]
   exact ⟨query110, allMoves_of _ kids110_checked⟩
 def residual110 := partialResiduals p110 cut110
-theorem residual110_count : residual110.length = 8 := by decide
+theorem residual110_count : residual110.length = 6 := by decide
 theorem raw110_sound :
     ∀ m, compatible p110 m → WeightedBound 7014 m ∨
       ∃ e ∈ residual110, compatible e.2 m :=
