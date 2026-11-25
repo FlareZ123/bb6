@@ -43,7 +43,7 @@ Theorem q32_parent_combined_roster_safe bound :
   Forall (source_table_safe bound) q32_parent_combined_roster.
 Proof.
   unfold q32_parent_combined_roster.
-  apply Forall_app. split.
+  rewrite Forall_app. split.
   - apply chunk_roster_safe.
   - apply searched_chunk_roster_safe.
 Qed.
@@ -109,7 +109,8 @@ Proof.
   intros Hbound Hcover Hremaining.
   eapply source_tree_sound.
   - apply q32_parent_tree_checked_for_bound. exact Hbound.
-  - apply q32_parent_open_covered_by_searched_chunk_sound; assumption.
+  - apply agent50_q32_parent_open_uncovered_sound.
+    apply q32_parent_open_covered_by_searched_chunk_sound; assumption.
 Qed.
 
 Print Assumptions q32_parent_combined_roster_safe.
