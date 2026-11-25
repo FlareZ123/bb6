@@ -44,6 +44,7 @@ Lemma agent50_source_certificate_check_of_candidate bound p c :
   side_candidate_check (TM_from_str (TM_to_str p)) c = true ->
   certificate_check bound (TM_to_str p, candidate_witness c) = true.
 Proof.
+  intro H.
   destruct c as [d [entry [period budget]]].
   unfold candidate_witness, certificate_check, certificate_tm,
     source_witness_check, side_candidate_check.
