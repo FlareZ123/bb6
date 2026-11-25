@@ -74,11 +74,11 @@ Now apply 2^(s-1)-1 double increments from zero to 2^s-2. One further first M gi
 
 ### Iteration bound and output
 
-Apply the lemma repeatedly until t=0 (after at most bit_length(t) applications). The exponents s>0 across applications are precisely lengths of the nonempty runs of zeros in the binary word of t, which ends in a high 1. If z is the total number of zero bits, the total cost is <=2^z when z>0, or zero when z=0: sum 2^s <= product 2^s for positive integer s (combine terms by 2^a+2^b<=2^(a+b)). Every application sets h=0. If the two highest bits of t are 11, the last two applications are odd, each prepending 11, except that if the first of those is the initial h>0 application it prepends 1 0^(3h)1. In either case the result starts with 111. Finally D_0(0,W') is F(1,W') modulo blank padding.
+Apply the lemma repeatedly until t=0 (after at most bit_length(t) applications). The exponents s>0 across applications are precisely lengths of the nonempty runs of zeros in the binary word of t, which ends in a high 1. If z is the total number of zero bits, the total cost is <=2^z when z>0, or zero when z=0: sum 2^s <= product 2^s for positive integer s (combine terms by 2^a+2^b<=2^(a+b)). Every application sets h=0. If the three highest bits of t are 111, the last two applications are odd: any preceding zero run may be consumed with the third-highest 1 but cannot consume the remaining two. Both last applications have h=0 and prepend 11, so the output begins 1111. (Two highest 1 bits alone would not suffice: a zero run could be consumed together with the penultimate 1.) Finally D_0(0,W') is F(1,W') modulo blank padding.
 
 ## 5. Closed root family
 
-Consider F(1,W) with W beginning 111, ending V=0^6 1, and len(W)>=10 so those two parts do not overlap. We prove a positive return to the same family.
+Consider F(1,W) with W beginning 111, ending V=0^9 1, and len(W)>=13 so those two parts do not overlap. We prove a positive return to the same family.
 
 Let len(W)=3n+r, 0<=r<=2, v=v(W). The first three bits imply v odd. Do 2^n-1-v double increments with unbounded left width. Now v=max and left counter x=1+2(2^n-1-v_original), odd.
 
@@ -88,15 +88,15 @@ The remaining overflow has r=0 or 1: scan(1W) yields 6N+3 leading ones, no tail.
 
     F(0^4 1 enc(y), 0^(3N)1),   y=2^N-v_original.
 
-This identity uses x+1=2y, and includes the r=2 extension above. The number y is odd. If original r=0 then the last complete plane bit was 1 and the preceding two were 0, giving
-2^(n-1)+1 <= v_original <= 2^(n-1)+2^(n-3)-1. Hence y has width n-1 and its top two bits are 11. If r=1 or 2 the two highest complete plane bits are 0, giving 1<=v_original<=2^(n-2)-1. In these cases y has width N and top two bits 11. These bounds use n>=3, and n>=4 in r=0. In every case y has at least three bits and t=(y-1)/2 has two highest bits 11, width at most N-1, and at most N-3 zero bits.
+This identity uses x+1=2y, and includes the r=2 extension above. The number y is odd. If original r=0 then the last complete plane bit was 1 and the preceding three were 0, giving
+2^(n-1)+1 <= v_original <= 2^(n-1)+2^(n-4)-1. Hence y has width n-1 and its top three bits are 111. If r=1 or 2 the three highest complete plane bits are 0, giving 1<=v_original<=2^(n-3)-1. In these cases y has width N and top three bits 111. These bounds use n>=4, and n>=5 in r=0. In every case y has at least four bits and t=(y-1)/2 has three highest bits 111, width at most N-1, and at most N-4 zero bits.
 
-The new right word is U V, U=0^(3(N-2)), so C(U)=2^(N-2)-1. Since y=2t+1 the left is 0^4 11 000 enc(t). Apply M with k=n=0: scan(1W) consumes one triple and stops at zero; left becomes 1^7 000 11 000 enc(t), right R=0^(3N-3)1. Apply M11 with k=3,n=1: its scan input is 1 0^5 1 R, yielding (6,0^2 1 R). The outcome is D_1(t,I(W)), with exactly one unit spent, leaving budget at least 2^(N-2)-2.
+The new right word is U V, U=0^(3(N-3)), so C(U)=2^(N-3)-1. Since y=2t+1 the left is 0^4 11 000 enc(t). Apply M with k=n=0: scan(1W) consumes one triple and stops at zero; left becomes 1^7 000 11 000 enc(t), right R=0^(3N-3)1. Apply M11 with k=3,n=1: its scan input is 1 0^5 1 R, yielding (6,0^2 1 R). The outcome is D_1(t,I(W)), with exactly one unit spent, leaving budget at least 2^(N-3)-2.
 
-The drain lemma now suffices: for N>=4 its cost is at most 2^(N-3)<=2^(N-2)-2; for N=3 t=3 and cost zero. The drain preserves V and returns to F(1,W') with W' starting 111. Since the new prefix has at least three bits separate from V, len(W')>=10. Thus the family is closed under positive assigned paths, which yields an infinite run by induction.
+The drain lemma now suffices: for N>=5 its cost is at most 2^(N-4)<=2^(N-3)-2; for N=4 t=7 and cost zero. The drain preserves V and returns to F(1,W') with W' starting 111. Since the new prefix has at least three bits separate from V, len(W')>=13. Thus the family is closed under positive assigned paths, which yields an infinite run by induction.
 
 ## 6. Reachable entry
 
-Run python check_coupled_entry.py (standard library only). It starts at the exact blank configuration, takes 21 primitive steps to F(1,empty), and applies only the proved frame and bounded jump rules, or finite primitive replay when no frame rule matches. The first guarded entry occurs after 111 accelerated transitions, 23 of them jumps with total 8589945599 double increments. The trace SHA256 is d40e9be75650d0a46cf82c5b36808cb84fcbff75f9126bc0a07218406ccba917. The right word is length 170, begins with 26 ones, and ends in at least six zeros followed by 1. The exact word is printed. This finite computation checks reachability rather than inferring nonhalting from a long trace.
+Run python check_coupled_entry.py (standard library only). It starts at the exact blank configuration, takes 21 primitive steps to F(1,empty), and applies only the proved frame and bounded jump rules, or finite primitive replay when no frame rule matches. The first guarded entry occurs after 111 accelerated transitions, 23 of them jumps with total 8589945599 double increments. The trace SHA256 is d40e9be75650d0a46cf82c5b36808cb84fcbff75f9126bc0a07218406ccba917. The right word is length 170, begins with 26 ones, and ends in at least nine zeros followed by 1. The exact word is printed. This finite computation checks reachability rather than inferring nonhalting from a long trace.
 
 Together sections 1–6 prove the base machine never queries F1, and the exact detour equivalence transfers the conclusion to the other sibling. A local certificate can be integrated through Raw13BinaryGraft.lean; the two leaves account for 50 represented literal completions, and do not close the other residuals of parent 1093. The overall BB(6) maximality question remains open.
