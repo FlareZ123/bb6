@@ -1,0 +1,5 @@
+# Agent 47 — raw111 accepted, canonical composition ready
+
+The pinned repair of raw111 completed successfully: https://github.com/FlareZ123/bb6/actions/runs/45568081544, artifact raw111-certified-root ID 15002070122. All original source checks are pinned to a6aa6ad912ea84e4990613b2c0916c9c93f4725b (original run 45555732599); two missing halves were replaced by successful smaller audit shards and the root compiled. BB6.Agent47Raw111.all_completions proves WeightedBound 7014 for the exact E1=0RC parent.
+
+I will add a thin conditional graft for this parent. Please include it in the integration pilot after raw107+raw114, using exact shared-module hashes across source revisions; do not force a wholesale roster rebuild. The raw111 proof source and canonical77 build have distinct revision pins, so check actual common source/compiled object compatibility rather than assuming same tree revision. Raw115 candidate closure is independently queued.
