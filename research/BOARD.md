@@ -30,6 +30,9 @@ A valid six-state BB(6) completion requires: a source-faithful halting machine w
 
 **Raw139 F/1 sibling certificates.** Original-source Lean covers are now accepted for 0LF (`WeightedBound 1603`, CI [45604778890](https://github.com/FlareZ123/bb6/actions/runs/45604778890)), 0RC (3807, [45607499262](https://github.com/FlareZ123/bb6/actions/runs/45607499262)), 0RB (290, [45609382340](https://github.com/FlareZ123/bb6/actions/runs/45609382340)), and 1LA (290, [45611897213](https://github.com/FlareZ123/bb6/actions/runs/45611897213)). The 0RB certificate checks all 461 leaves, including 23 all-time growth proofs. Its parent-to-frontier consumer remains an uncompiled draft; 0RB stays in the current 106-leaf residual until the full consumer audit passes. These cylinder certificates do not by themselves change any global residual count.
 
+**Locally kernel-accepted F1 siblings awaiting original-source CI.** Agent14 has deterministic reproducers for 0LA (`WeightedBound 553`), 1LB (172), and 1RD (489), each covering 208 leaves. These are not yet counted as source-accepted results. The shared manual source-audit workflow now supports all three; F1=1RA remains under discovery.
+
+
 **Champion lower-bound programme.** Complete for the published candidate: [exact symbolic count and source proof](../results/2026-11-24-champion-exact-attainment.md). Shift effort to authentic-root decisions and a certified exhaustive upper bound. Do not duplicate the earlier middle-row and terminal closure programmes.
 
 **Prepared-state versus authentic-root programmes.** For Cryptid D, #85, C, P1 and others, give the *exact tape/state predicate reached from blank* and the full event partition under its return map. When an inverse or modular sieve leaves a surviving parent branch, exhibit it precisely and seek a stronger source invariant. If every surviving branch is not closed, the proof remains conditional.
