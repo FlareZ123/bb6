@@ -1453,7 +1453,7 @@ jobs:
           log = pathlib.Path('/tmp/raw39-combined-closure.log').read_text() + pathlib.Path('/tmp/canonical86-raw39-graft.log').read_text()
           allowed = {'propext', 'Classical.choice', 'Quot.sound'}
           profiles = {}
-          for name, axioms in re.findall(r"'([^']+)' depends on axioms: \\[([^\\]]*)\\]", log):
+          for name, axioms in re.findall(r"'([^']+)' depends on axioms: \[([^\]]*)\]", log):
               profiles[name] = {x.strip() for x in axioms.split(',') if x.strip()}
           for name in re.findall(r"'([^']+)' does not depend on any axioms", log):
               profiles[name] = set()
@@ -1474,7 +1474,7 @@ jobs:
                   raise SystemExit(f'{name}: unexpected axioms {sorted(bad)}')
               print(f'{name}: {sorted(profiles[name])}')
           pathlib.Path('/tmp/canonical86-raw39-graft-axioms.json').write_text(
-              json.dumps({k: sorted(profiles[k]) for k in required}, indent=2, sort_keys=True) + '\\n'
+              json.dumps({k: sorted(profiles[k]) for k in required}, indent=2, sort_keys=True) + '\n'
           )
           PY
           python3 - <<'PY'
@@ -1505,7 +1505,7 @@ jobs:
               'axiom_profiles': json.loads(pathlib.Path('/tmp/canonical86-raw39-graft-axioms.json').read_text()),
               'axiom_allowlist': ['propext', 'Classical.choice', 'Quot.sound'],
           }
-          pathlib.Path('/tmp/canonical86-raw39-graft-summary.json').write_text(json.dumps(summary, indent=2, sort_keys=True) + '\\n')
+          pathlib.Path('/tmp/canonical86-raw39-graft-summary.json').write_text(json.dumps(summary, indent=2, sort_keys=True) + '\n')
           print(json.dumps(summary, indent=2, sort_keys=True))
           PY
       - uses: actions/upload-artifact@v4
