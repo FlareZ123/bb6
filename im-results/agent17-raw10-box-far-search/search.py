@@ -147,6 +147,14 @@ def main() -> None:
         args.generate = True
 
     rows = parse_rows()
+    held_table = "_".join(
+        code_to_move(rows[-1][2 * q]) + code_to_move(rows[-1][2 * q + 1])
+        for q in range(6)
+    )
+    expected_held = "1RB0RD_1LC1LB_0LE1RA_0LC0RA_1LF1LD_1RD---"
+    if held_table != expected_held:
+        raise RuntimeError(f"Fin 25 move-code mapping mismatch: {held_table}")
+
     boxes = reconstruct_boxes(rows)
     if len(boxes) != EXPECTED_BOXES:
         raise RuntimeError(f"expected {EXPECTED_BOXES} boxes, found {len(boxes)}")
@@ -178,20 +186,28 @@ def main() -> None:
                     generator.generate(table, outdir)
                 item["generator"] = "success"
                 item["generator_log"] = log.getvalue()
-                if args.compile:
-                    proof = outdir / "HeldBlockProof.lean"
-                    workdir = Path("/tmp") / f"agent17-raw10-box-{i:02d}"
-                    env = os.environ.copy()
-                    search = str(ROOT / "im-results/agent13-block-far")
-                    env["LEAN_PATH"] = os.pathsep.join(
-                        p for p in (search, env.get("LEAN_PATH", "")) if p
-                    )
-                    command = [
-                        sys.executable, str(COMPILER),
-                        "--workdir", str(workdir),
-                        "--jobs", str(args.jobs),
-                        str(proof),
-                    ]
+            except (Exception, SystemExit) as exc:
+                item["generator"] = "no-certificate"
+                item["error"] = f"{type(exc).__name__}: {exc}"
+                item["generator_log"] = log.getvalue()[-6000:]
+
+            if args.compile and item["generator"] == "success":
+                proof = outdir / "HeldBlockProof.lean"
+                workdir = Path("/tmp") / f"agent17-raw10-box-{i:02d}"
+                env = os.environ.copy()
+                search_paths = [
+                    str(outdir),
+                    str(ROOT / "im-results/agent13-block-far"),
+                    env.get("LEAN_PATH", ""),
+                ]
+                env["LEAN_PATH"] = os.pathsep.join(p for p in search_paths if p)
+                command = [
+                    sys.executable, str(COMPILER),
+                    "--workdir", str(workdir),
+                    "--jobs", str(args.jobs),
+                    str(proof),
+                ]
+                try:
                     run = subprocess.run(
                         command, cwd=ROOT, env=env, text=True,
                         stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
@@ -203,10 +219,12 @@ def main() -> None:
                         run.returncode == 0
                         and not re.search(r"sorryAx|native_decide", run.stdout)
                     )
-            except Exception as exc:  # a failed projection is an open box, not a crash
-                item["generator"] = "no-certificate"
-                item["error"] = f"{type(exc).__name__}: {exc}"
-                item["generator_log"] = log.getvalue()[-6000:]
+                except subprocess.TimeoutExpired as exc:
+                    item["compiled"] = False
+                    item["compile_error"] = f"timeout after {args.compile_timeout}s"
+                except Exception as exc:
+                    item["compiled"] = False
+                    item["compile_error"] = f"{type(exc).__name__}: {exc}"
         results.append(item)
         print(
             f"box={i:02d} fixed={len(fixed_slots):2d} mass={mass} "
