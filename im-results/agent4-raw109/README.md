@@ -16,10 +16,10 @@ Eleven ordinary B1 alternatives have immediate side-cycle certificates; the halt
 | N-gram candidates (width ≤12) | 104 |
 | Single-block sweeps | 46 |
 | Long-epoch sweeps | 5 |
-| New explicit FAR witnesses (5–6 states) | 13 |
-| Unresolved leaves | 21 |
+| New explicit FAR witnesses (5–15 states) | 32 |
+| Unresolved leaves | 2 |
 
-The exact enumeration was reproduced with the existing C++ generator algorithm and an independent JS implementation: open-list SHA256 `413916c71af62ae660bf5feb4939bf663d7e0706a0c7e0b210d341f00c79455a`; maximum weighted query bound 904, first query (8,F1). All 21 remaining leaf tables and the candidate indices/codes are recorded in the 0LF spec. Each is a one-hole table. The 17 with F0=0LB exhibit nested left growth, three others (1334,1404,1452) exhibit unary right-boundary expansion with internal counter phases, and 1475 exhibits a different bidirectional growth pattern. These are observations, not decisions.
+The exact enumeration was reproduced with the existing C++ generator algorithm and an independent JS implementation: open-list SHA256 `413916c71af62ae660bf5feb4939bf663d7e0706a0c7e0b210d341f00c79455a`; maximum weighted query bound 904, first query (8,F1). The two remaining one-hole tables are indices 1200 (`1RB0RA_1RC0LF_0RD1RA_1LD1RE_---1RB_0LB1LF`) and 1475 (`1RB0RB_1RC0LF_0RD0RA_1LD1RE_---1RB_1LB1LF`). All 19 newly found larger FAR witnesses pass a separate exact Python integer-bitset saturation checker. Three of the 19 (1192,1214,1216) have two holes; the witnesses exclude reaching either. Candidate 1200 exhibits nested left growth and 1475 bidirectional growth. Neither is decided.
 
 **Proof status:** all 0LF additions are candidate-generation results. FAR and n-gram fixed points were computed; the existing symbolic sweep algorithm found the 51 sweep witnesses. The full original-source Lean compilation, local exception proofs, and source-accepted parent closure are not established. The existing generator will preserve all 21 unresolved leaves as explicit hypotheses. No roster entry may be deleted on the strength of this census.
 
