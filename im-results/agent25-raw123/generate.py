@@ -15,11 +15,12 @@ OUT = ROOT / "generated"
 OUT.mkdir(exist_ok=True)
 sys.path[:0] = [str(IM/x) for x in (
     "agent31-three-hole-tnf", "agent10-tnf-multipump", "agent1-ngram",
-    "agent32-raw59")]
+    "agent32-raw59", "agent16-raw118")]
 import generate_sweeps as one
 import multi
 import emit_ngram
 import generate_asym
+import bidfa_emit
 from generate_four_hole import masks, move, slot
 
 S = json.loads((ROOT/"spec.json").read_text())
@@ -66,7 +67,7 @@ def generate():
         hit=subprocess.check_output([str(work/"bank"),str(work/"bank.txt"),str(work/"open.txt")],text=True)
         far={int(i):v for i,v in (s.split(":") for s in hit.splitlines())}
         assert len(far)==S["farCount"]
-        special=[set(map(int,S[key])) for key in ("single","multi","ngram","asym","late","recursive","unresolved")]
+        special=[set(map(int,S[key])) for key in ("single","multi","ngram","asym","late","recursive","bidfa","unresolved")]
         assert len(far)+sum(map(len,special))==len(rows)
         assert set(far).union(*special)==set(range(len(rows)))
         assert all(rows[int(i)] == row for i,row in S["unresolved"].items())
@@ -120,6 +121,14 @@ def generate():
         for key,(name,p,never) in S["recursive"].items():
             i=int(key)
             cert[i]=f".proven ({p}) ({never})"
+            modules[i]=name
+        for key,(dl,dr,n,e) in S["bidfa"].items():
+            i=int(key)
+            code,nn,ee=bidfa_emit.emit(i,rows[i],dl,dr)
+            assert (nn,ee)==(n,e)
+            name=f"Raw123BiDFA{i}";ns=f"{NS}.BiDFA{i}"
+            emit(name,["BiDFA"],code,ns,"BB6Coverage BB6Coverage.Agent16BiDFA")
+            cert[i]=f".proven {ns}.M{i}.table {ns}.M{i}.never"
             modules[i]=name
         for key,(n,s) in S["late"].items():
             i=int(key);assert rows[i].count("---")==1
