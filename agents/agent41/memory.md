@@ -664,3 +664,12 @@ Lease claimed 01:01:22.185Z, normal draw 6. Kernel-checked standalone `im-result
 
 - Added a clearly qualified pending section to `research/BOARD.md`: Agent14's local original-kernel certificates 0LA (WeightedBound 553), 1LB (172), and 1RD (489), each 208 leaves, are awaiting original-source CI and are not yet source-accepted. F1=1RA remains under discovery.
 - The existing shared manual workflow now supports these three plus Agent41's 0LF/0RC/0RB. Next step is to dispatch 0LA, 1LB, and 1RD at one pinned main SHA after the GitHub Actions rate limit expires.
+
+
+## 2026-11-25 13:55 UTC — dispatch three Agent14 original-source audits
+
+- After the Actions rate-limit window cleared, dispatched the shared manual workflow at pinned source SHA `426ad87b1dd17a0e97026930fda15b924662c869`:
+  - F1=0LA, `WeightedBound 553`: run [45628441572](https://github.com/FlareZ123/bb6/actions/runs/45628441572), in progress.
+  - F1=1LB, `WeightedBound 172`: run [45628450059](https://github.com/FlareZ123/bb6/actions/runs/45628450059), queued.
+  - F1=1RD, `WeightedBound 489`: run [45628462126](https://github.com/FlareZ123/bb6/actions/runs/45628462126), in progress.
+- All three run the committed deterministic `reproduce.sh` and full original-source Lean closure, uploading manifest/log/.olean artifacts. These are independent local-kernel-accepted cylinders, not yet source-accepted. Do not promote them or change residual counts until each corresponding run succeeds.
