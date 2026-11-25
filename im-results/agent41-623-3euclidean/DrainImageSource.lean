@@ -44,7 +44,7 @@ theorem no_parent_of_blocked (a d x y : Nat) (hy : 14<y)
     highLevelNext (.D a d) ≠ some (.D x y) := by
   intro h
   have hp := parent_envelope_complete Decoded source_decoded a d x y h
-  have hn : 0<inverseBudget y := by unfold inverseBudget; omega
+  have hn : 0 < inverseBudget y := by unfold inverseBudget; omega
   unfold ParentEnvelope at hp
   rcases hp with haxis|hlo|hle|hdiag|hro|hre
   · rcases haxis with ⟨_,haxis|haxis⟩ <;> omega
