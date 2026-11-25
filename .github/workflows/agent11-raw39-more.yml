@@ -5,12 +5,13 @@ on:
       branch:
         description: 'Which exact A1 child to audit'
         type: choice
-        options: [0RB, 1RC, 0RE]
+        options: [0RB, 1RC, 0RE, 0RC]
         required: true
 permissions:
   contents: write
 jobs:
   shards:
+    if: ${{ inputs.branch != '0RC' }}
     strategy:
       fail-fast: false
       max-parallel: 3
@@ -79,6 +80,7 @@ jobs:
           retention-days: 30
 
   assemble:
+    if: ${{ inputs.branch != '0RC' }}
     needs: shards
     runs-on: ubuntu-latest
     timeout-minutes: 25
@@ -142,6 +144,165 @@ jobs:
           git add im-results/agent11-raw39/Raw39B${{ inputs.branch }}*.lean im-results/agent11-raw39/manifest-${{ inputs.branch }}.json
           if ! git diff --cached --quiet; then
             git commit -m "Agent 11: publish source-checked Raw39 ${{ inputs.branch }} and partial root audit"
+            for attempt in 1 2 3 4 5 6; do
+              git fetch origin main
+              git rebase origin/main
+              if git push origin HEAD:main; then exit 0; fi
+              sleep $((attempt * 2))
+            done
+            exit 1
+          fi
+
+
+  rc_shards:
+    if: ${{ inputs.branch == '0RC' }}
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        group: [g0, g1, g2, g3, g4, g5, g6]
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Generate exact Raw39 A1=0RC source candidate
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent11-raw39/prepare_raw39rc.py
+      - name: Check one independent 0RC source shard
+        env:
+          GROUP: ${{ matrix.group }}
+        run: |
+          set -euo pipefail
+          root=im-results/agent11-raw39
+          mapfile -t modules < <(python -c 'import json,os; print("\\n".join(json.load(open("im-results/agent11-raw39/shards-rc.json"))["groups"][os.environ["GROUP"]]))')
+          test "${#modules[@]}" -gt 0
+          roots=()
+          for module in "${modules[@]}"; do roots+=("$root/$module.lean"); done
+          work=/tmp/a11-raw39rc-shard
+          python tools/lean_compile_closure.py \
+            --workdir "$work" --jobs 2 \
+            --manifest "$work/manifest.json" \
+            --label "raw39rc-shard-$GROUP" \
+            --artifact-name "raw39rc-shard-$GROUP" \
+            --provenance-input "$root/prepare_raw39rc.py" \
+            --provenance-input "$root/prepare_raw39.py" \
+            --provenance-input "$root/gen_rc_counters.py" \
+            --provenance-input "$root/Raw39CounterCarry.lean" \
+            --provenance-input "$root/rc-witnesses.json" \
+            --provenance-input "$root/Raw39Hard56.lean" \
+            --provenance-input "$root/manifest-rc.json" \
+            --provenance-input "$root/shards-rc.json" \
+            --provenance-input im-results/agent11-raw121/fast_enum.cpp \
+            --provenance-input im-results/agent11-raw121/bank.cpp \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_sweeps.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_four_hole.py \
+            --provenance-input im-results/agent10-tnf-multipump/multi.py \
+            --provenance-input im-results/agent10-tnf-multipump/chunk_checks.py \
+            --provenance-input im-results/agent13-coverage/unpack.py \
+            --provenance-input im-results/agent13-coverage/BB6Coverage.lean.xz.b64 \
+            --provenance-input im-results/agent4-raw109/merge_shards.py \
+            --provenance-input tools/lean_compile_closure.py \
+            --provenance-input .github/workflows/agent11-raw39-more.yml \
+            "${roots[@]}" 2>&1 | tee /tmp/a11-raw39rc-shard.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a11-raw39rc-shard.log; then exit 1; fi
+      - name: Preserve source-checked 0RC shard
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw39rc-shard-${{ matrix.group }}
+          path: /tmp/a11-raw39rc-shard/
+          if-no-files-found: error
+          retention-days: 30
+
+  rc_assemble:
+    if: ${{ inputs.branch == '0RC' }}
+    needs: rc_shards
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reconstruct exact generated 0RC source
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent11-raw39/prepare_raw39rc.py
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw39rc-shard-*
+          path: /tmp/a11-raw39rc-shards
+      - name: Strictly merge the seven dependency-closed 0RC shards
+        run: |
+          set -euo pipefail
+          python im-results/agent4-raw109/merge_shards.py \
+            /tmp/a11-raw39rc-shards /tmp/a11-raw39rc-union \
+            im-results/agent11-raw39/shards-rc.json
+      - name: Prove the 0RC child and retain its exact 14-child parent complement
+        run: |
+          set -euo pipefail
+          work=/tmp/a11-raw39rc-parent
+          python tools/lean_compile_closure.py \
+            --workdir "$work" --jobs 2 \
+            --manifest "$work/manifest.json" \
+            --label raw39-0RC-partial-parent \
+            --theorem BB6.Agent11Raw39RC.cut_sound \
+            --parent-table '1RB---_1RC---_0RD---_1LD0RA_------_------' \
+            --weighted-bound 2354 \
+            --artifact-name raw39-0RC-partial-parent-proof \
+            --precompiled-manifest /tmp/a11-raw39rc-union/manifest.json \
+            --precompiled-dir /tmp/a11-raw39rc-union \
+            --provenance-input im-results/agent11-raw39/prepare_raw39rc.py \
+            --provenance-input im-results/agent11-raw39/prepare_raw39.py \
+            --provenance-input im-results/agent11-raw39/gen_rc_counters.py \
+            --provenance-input im-results/agent11-raw39/Raw39CounterCarry.lean \
+            --provenance-input im-results/agent11-raw39/rc-witnesses.json \
+            --provenance-input im-results/agent11-raw39/Raw39Hard56.lean \
+            --provenance-input im-results/agent11-raw39/manifest-rc.json \
+            --provenance-input im-results/agent11-raw39/shards-rc.json \
+            --provenance-input im-results/agent11-raw121/fast_enum.cpp \
+            --provenance-input im-results/agent11-raw121/bank.cpp \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_four_hole.py \
+            --provenance-input im-results/agent10-tnf-multipump/multi.py \
+            --provenance-input im-results/agent10-tnf-multipump/chunk_checks.py \
+            --provenance-input im-results/agent13-coverage/unpack.py \
+            --provenance-input im-results/agent13-coverage/BB6Coverage.lean.xz.b64 \
+            --provenance-input im-results/agent4-raw109/merge_shards.py \
+            --provenance-input tools/lean_compile_closure.py \
+            --provenance-input .github/workflows/agent11-raw39-more.yml \
+            im-results/agent11-raw39/Raw39RCPartial.lean 2>&1 | tee /tmp/a11-raw39rc-parent.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a11-raw39rc-parent.log \
+            BB6.Agent11Raw39RC.tree0RC_checked \
+            BB6.Agent11Raw39RC.all0RC \
+            BB6.Agent11Raw39RC.cut_sound \
+            BB6.Agent11Raw39RC.residual_count
+          if grep -Eq 'sorryAx|native_decide' /tmp/a11-raw39rc-parent.log; then exit 1; fi
+      - name: Preserve source-checked 0RC partial parent proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw39-0RC-partial-parent-proof
+          path: /tmp/a11-raw39rc-parent/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Publish generated 0RC source after acceptance
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add im-results/agent11-raw39/Raw39RC*.lean im-results/agent11-raw39/Raw39Hard194.lean im-results/agent11-raw39/manifest-rc.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Agent 11: publish source-checked Raw39 0RC and partial root audit"
             for attempt in 1 2 3 4 5 6; do
               git fetch origin main
               git rebase origin/main
