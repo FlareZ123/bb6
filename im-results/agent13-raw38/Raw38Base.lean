@@ -11,7 +11,7 @@ abbrev p38 : PartialMachine :=
 theorem p38_root : p38 initialSlot = some (some ⟨true,true,1⟩) := by decide
 theorem p38_nohalt : weightedTNFNoAssignedHalt p38 :=
   weightedTNFNoAssignedHalt_refine _ _ _
-    (pathEnd_nohalt root 2 (path.take 4) firstOneCylinder_no_assigned_halt)
+    (pathEnd_nohalt root 2 (path.take 3) firstOneCylinder_no_assigned_halt)
 abbrev child38 (mv : Move) := refine p38 (0,true) (some mv)
 theorem query38 : zipQueryOK 1000 p38 6 (0,true) = true := by decide
 
