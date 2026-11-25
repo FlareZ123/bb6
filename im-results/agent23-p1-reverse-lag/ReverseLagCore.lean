@@ -113,8 +113,10 @@ theorem mem_reverseFold (q c : Nat) (ys acc : List Nat)
     (hys : ∀ y∈ys, y≤1) :
     c ∈ reverseFold q ys acc ↔
       ∃ z, DWalk q c ys z ∧ z∈acc := by
-  induction ys generalizing c acc with
+  revert c acc hys
+  induction ys with
   | nil =>
+    intro c acc hys
     simp [reverseFold]
     constructor
     · intro hc
@@ -123,12 +125,13 @@ theorem mem_reverseFold (q c : Nat) (ys acc : List Nat)
       cases hwalk
       exact hz
   | cons y ys ih =>
+    intro c acc hys
     have hy : y≤1 := hys y (by simp)
     have hys' : ∀ z∈ys, z≤1 := by
       intro z hz
       exact hys z (by simp [hz])
     simp only [reverseFold]
-    rw [ih hys']
+    rw [ih c (backY (q+ys.length) y acc) hys']
     constructor
     · rintro ⟨z,hwalk,hback⟩
       obtain ⟨w,hw,hedge⟩ := (mem_backY (q+ys.length) y z acc hy).mp hback
@@ -197,10 +200,13 @@ theorem extend_to_DWalk (n s B a k C c : Nat)
     (hn : 0<n) (hTrace : Trace n s B a)
     (hExt : Extend n s B a k C c) :
     DWalk (n+s+3) a (targetsRev n s C k) c := by
-  induction hExt generalizing hTrace with
+  revert hTrace
+  induction hExt with
   | nil =>
+    intro hTrace
     exact DWalk.nil (n+s+3) a
   | @step k C c x d h hx he ih =>
+    intro hTrace
     have hTracePrev := extend_trace n s B a k C c hTrace h
     have hcarry : c<n+s+k+3 := by
       have hb := (trace_bounds n (s+k) C c hTracePrev).2.2.2
