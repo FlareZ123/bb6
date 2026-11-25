@@ -137,20 +137,21 @@ theorem branch15_post_ES_guards (k : Nat) :
 /-- The power of two consumed by an F-run, viewed in the integer ring. -/
 def pow2I (m : Nat) : Int := (2 : Int) ^ m
 
-/-- The slope of the stable defect coordinate for an F-run of length m. -/
-def defectSlope (m : Nat) : Int := 8 * (pow2I m - 1)
+/-- Defect coordinate D - 8(2^m u - u), written without distributive rewriting. -/
+def defect (m : Nat) (d u : Int) : Int :=
+  d - (8 * (pow2I m * u) - 8 * u)
 
 /--
 The exact endpoint defect identities for EF followed by an F-run.
 Writing q=2^m, the endpoint defect is 2(w-v)+2+3m, while the
-input defect is 8q(w-v)-8.
+input defect is 8(qw-qv)-8.
 -/
 theorem ef_macro_defect_components {m v d um dm : Nat}
     (h8 : d % 8 = 0)
     (hrun : FRun m (ef v d).1 (ef v d).2 um dm) :
-    ((dm : Int) - defectSlope m * (um : Int) =
+    (defect m (dm : Int) (um : Int) =
         2 * ((um : Int) - (v : Int)) + 2 + 3 * (m : Int)) ∧
-    ((d : Int) - defectSlope m * (v : Int) =
+    (defect m (d : Int) (v : Int) =
         8 * (pow2I m * (um : Int)) -
           8 * (pow2I m * (v : Int)) - 8) := by
   have hsumN := fRun_rank hrun
@@ -165,6 +166,7 @@ theorem ef_macro_defect_components {m v d um dm : Nat}
     exact_mod_cast hsumN
   have hpowI :
       (ef v d).1 = pow2I m * (um : Int) := by
+    change (ef v d).1 = (2 : Int) ^ m * (um : Int)
     exact_mod_cast hpowN
   have hrelI :
       (ef v d).2 + 2 * (v : Int) =
@@ -187,32 +189,33 @@ theorem ef_macro_defect_components {m v d um dm : Nat}
         8 * (pow2I m * (um : Int)) + 2 + 3 * (m : Int) := by
     rw [hpowI] at hsumPair
     exact hsumPair
-  have hSlopeUm :
-      defectSlope m * (um : Int) =
-        8 * (pow2I m * (um : Int)) - 8 * (um : Int) := by
-    simp [defectSlope, sub_mul, mul_sub, mul_assoc]
-  have hSlopeV :
-      defectSlope m * (v : Int) =
-        8 * (pow2I m * (v : Int)) - 8 * (v : Int) := by
-    simp [defectSlope, sub_mul, mul_sub, mul_assoc]
+  have hcoordI' :
+      (d : Int) =
+        8 * (pow2I m * (um : Int)) - 8 * (v : Int) - 8 := by
+    rw [hpowI] at hcoordI
+    exact hcoordI
   constructor
-  · rw [hSlopeUm]
+  · change (dm : Int) -
+      (8 * (pow2I m * (um : Int)) - 8 * (um : Int)) =
+        2 * ((um : Int) - (v : Int)) + 2 + 3 * (m : Int)
     omega
-  · rw [hcoordI, hpowI, hSlopeV]
-    simp [mul_sub]
+  · change (d : Int) -
+      (8 * (pow2I m * (v : Int)) - 8 * (v : Int)) =
+        8 * (pow2I m * (um : Int)) -
+          8 * (pow2I m * (v : Int)) - 8
+    rw [hcoordI']
     omega
 
 /--
 The exact endpoint defect identities for SF followed by an F-run.
-The input and endpoint constants differ from EF, but the same slope
-8(2^m-1) applies.
+The pair type changes the affine constants but not the defect slope.
 -/
 theorem sf_macro_defect_components {m v d um dm : Nat}
     (h8 : d % 8 = 4)
     (hrun : FRun m (sf v d).1 (sf v d).2 um dm) :
-    ((dm : Int) - defectSlope m * (um : Int) =
+    (defect m (dm : Int) (um : Int) =
         2 * ((um : Int) - (v : Int)) - 6 + 3 * (m : Int)) ∧
-    ((d : Int) - defectSlope m * (v : Int) =
+    (defect m (d : Int) (v : Int) =
         8 * (pow2I m * (um : Int)) -
           8 * (pow2I m * (v : Int)) - 20) := by
   have hsumN := fRun_rank hrun
@@ -227,6 +230,7 @@ theorem sf_macro_defect_components {m v d um dm : Nat}
     exact_mod_cast hsumN
   have hpowI :
       (sf v d).1 = pow2I m * (um : Int) := by
+    change (sf v d).1 = (2 : Int) ^ m * (um : Int)
     exact_mod_cast hpowN
   have hrelI :
       (sf v d).2 + 2 * (v : Int) + 6 =
@@ -249,19 +253,21 @@ theorem sf_macro_defect_components {m v d um dm : Nat}
         8 * (pow2I m * (um : Int)) + 3 * (m : Int) := by
     rw [hpowI] at hsumPair
     exact hsumPair
-  have hSlopeUm :
-      defectSlope m * (um : Int) =
-        8 * (pow2I m * (um : Int)) - 8 * (um : Int) := by
-    simp [defectSlope, sub_mul, mul_sub, mul_assoc]
-  have hSlopeV :
-      defectSlope m * (v : Int) =
-        8 * (pow2I m * (v : Int)) - 8 * (v : Int) := by
-    simp [defectSlope, sub_mul, mul_sub, mul_assoc]
+  have hcoordI' :
+      (d : Int) =
+        8 * (pow2I m * (um : Int)) - 8 * (v : Int) - 20 := by
+    rw [hpowI] at hcoordI
+    exact hcoordI
   constructor
-  · rw [hSlopeUm]
+  · change (dm : Int) -
+      (8 * (pow2I m * (um : Int)) - 8 * (um : Int)) =
+        2 * ((um : Int) - (v : Int)) - 6 + 3 * (m : Int)
     omega
-  · rw [hcoordI, hpowI, hSlopeV]
-    simp [mul_sub]
+  · change (d : Int) -
+      (8 * (pow2I m * (v : Int)) - 8 * (v : Int)) =
+        8 * (pow2I m * (um : Int)) -
+          8 * (pow2I m * (v : Int)) - 20
+    rw [hcoordI']
     omega
 
 #print axioms branch13_two_F_run
