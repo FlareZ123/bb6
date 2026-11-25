@@ -103,7 +103,7 @@ theorem arbitrary (n : Nat) :
     | succ k ih =>
       obtain ⟨t,ht,R,hr,hs⟩ := ih
       obtain ⟨u,W,hu,hw,hW⟩ := progress R hr
-      exact ⟨t+u,W,by omega,hW,join0 hs hw⟩
+      exact ⟨t+u,by omega,W,hW,join0 hs hw⟩
   obtain ⟨t,ht,R,_,hr⟩ := h n
   exact ⟨t,ht,F [] R,hr⟩
 #print axioms arbitrary
