@@ -1,5 +1,12 @@
 """Regenerate five fixed two-block growth witnesses and the final sparse invariant."""
 import json
+import importlib.util
+
+def load_audit():
+    spec = importlib.util.spec_from_file_location("raw60_audit_generator", Path(__file__).with_name("generate.py"))
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 import sys
 import tempfile
 import subprocess
@@ -65,7 +72,7 @@ def main():
     spec = json.loads((ROOT / "spec-1RE.json").read_text())
     parts = ["import SweepPumping", "set_option maxRecDepth 100000",
              "set_option maxHeartbeats 0", "set_option linter.unusedVariables false",
-             "namespace BB6.Agent1Raw60REMulti", "open BB6Coverage BB6.Agent31Pump"]
+             "namespace BB6.Agent1Raw60REMulti", "open BB6Coverage BB6Coverage.Agent31Pump"]
     for i,t,pre,I,mid,J,suf in CASES:
         p = one.parse(spec["manual"][str(i)][2])
         w = multi.clean(multi.lit(pre)+multi.rep(I)+multi.lit(mid)+multi.rep(J)+multi.lit(suf))
@@ -87,7 +94,7 @@ def main():
         ident,data=output.strip().split(maxsplit=1)
         assert ident=="495"
         emit(ROOT,495,table,data,width=25,module_name="Raw60RESparse",expected=(93002,102,13901))
-    import generate
+    generate = load_audit()
     generate.SPECS["1RE"]=spec
     generate.main("1RE")
 
