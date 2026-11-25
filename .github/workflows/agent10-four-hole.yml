@@ -6,6 +6,10 @@ on:
         type: choice
         options: [twelve, five-hole, recursive, raw107-witness, raw107-child, raw58-cut]
         default: twelve
+      raw107_witness:
+        type: choice
+        options: ['180', '1655']
+        default: '180'
       raw107_child:
         description: 'B1 action for an individual raw107 child source audit'
         type: choice
@@ -62,12 +66,15 @@ jobs:
           if grep -Eq 'sorryAx|native_decide' /tmp/a10-recursive.log; then
             exit 1
           fi
-      - name: Verify raw107 0LF/180 original-machine nonhalting theorem
+      - name: Verify raw107 original-machine nonhalting theorem
         if: inputs.target == 'raw107-witness'
+        env:
+          WITNESS: ${{ inputs.raw107_witness }}
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
-          python tools/lean_compile_closure.py --workdir /tmp/a10-raw107-witness --jobs 4 im-results/agent11-raw107/Raw107LF180.lean | tee /tmp/a10-raw107-witness.log
+          case "$WITNESS" in 180|1655) ;; *) exit 2 ;; esac
+          python tools/lean_compile_closure.py --workdir /tmp/a10-raw107-witness --jobs 4 "im-results/agent11-raw107/Raw107LF${WITNESS}.lean" | tee /tmp/a10-raw107-witness.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a10-raw107-witness.log; then exit 1; fi
       - name: Verify one complete raw107 child against original source
         if: inputs.target == 'raw107-child'
