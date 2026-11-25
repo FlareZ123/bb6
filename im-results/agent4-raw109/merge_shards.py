@@ -76,20 +76,28 @@ def merge(repo, downloads, output, groups=None, artifact_prefix='raw109-shard', 
             obj = inside(shard, item['olean_path'])
             require(digest(source) == item['source_sha256'], f'{group}: {name} source hash mismatch')
             require(digest(obj) == item['olean_sha256'], f'{group}: {name} object hash mismatch')
+            src = inside(repo, item['source_path'])
+            if src.exists() or item['source_path'] in tracked:
+                require(src.is_file() and digest(src) == item['source_sha256'], f'{group}: checkout source mismatch for {name}')
+            else:
+                require(item['source_kind'] == 'generated-or-untracked', f'{group}: cannot restore {name}')
+                src.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(source, src)
             if name in entries:
-                require(entries[name] == item, f'{group}: conflicting shared module {name}')
+                identity_fields = (
+                    'module', 'source_sha256', 'project_imports', 'olean_path',
+                    'olean_sha256', 'import_closure_sha256', 'module_identity_sha256'
+                )
+                require(
+                    {key: entries[name].get(key) for key in identity_fields} ==
+                    {key: item.get(key) for key in identity_fields},
+                    f'{group}: conflicting shared module identity {name}'
+                )
             else:
                 entries[name] = item
                 dest = inside(output, item['olean_path'])
                 dest.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(obj, dest)
-                src = inside(repo, item['source_path'])
-                if src.exists() or item['source_path'] in tracked:
-                    require(src.is_file() and digest(src) == item['source_sha256'], f'{group}: checkout source mismatch for {name}')
-                else:
-                    require(item['source_kind'] == 'generated-or-untracked', f'{group}: cannot restore {name}')
-                    src.parent.mkdir(parents=True, exist_ok=True)
-                    shutil.copy2(source, src)
         for item in manifest['provenance_inputs']:
             path = item['path']
             require(digest(inside(repo, path)) == item['sha256'], f'{group}: input mismatch {path}')
