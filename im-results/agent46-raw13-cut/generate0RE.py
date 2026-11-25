@@ -10,6 +10,9 @@ from generate import D, MOVES, tally, emit, move
 import sys
 
 SPEC = {
+    "1RD": ("1RB1LC1RC0LD1LA0RB1RD---------------",4,5,8,7,7014,
+            Counter(split=392,halt=392,cycle=6027,state=716,last=2183,ngram=72,auto1RD=15),
+            ["Agent46Raw13Auto1RD"]),
     "0RE": ("1RB1LC1RC0LD1LA0RB1LB0RE------------",5,4,22,8,21269,
             Counter(split=60,halt=60,cycle=609,state=80,last=339,ngram=347,pump0RE=5,late0RE=1),
             ["Agent46Raw13Pump0RE","Agent46Raw13Late0RE"]),
@@ -28,7 +31,7 @@ SPEC = {
 }
 BRANCH = sys.argv[1] if len(sys.argv)>1 else "0RE"
 RAW,CUT,HOLES,QUERY,QSLOT,BOUND,CENSUS,PROOFS=SPEC[BRANCH]
-PREFIX="Agent46Raw13Zero"+BRANCH[1:]
+PREFIX="Agent46Raw13"+("One" if BRANCH[0]=="1" else "Zero")+BRANCH[1:]
 NS="BB6."+PREFIX
 GRAM=NS+"Gram"
 HEADER = f"""set_option maxRecDepth 100000

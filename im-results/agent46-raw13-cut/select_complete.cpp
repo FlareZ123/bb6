@@ -31,7 +31,7 @@ template<int L,int W,int MAXPER> Res classify(Table const&p){
  return {0,0,0,0,0,0,0};
 }
 struct Node{Res a;int child[24]{};string p;};vector<Node> nodes;
-bool extended=false, zeroRE=false, zeroRC=false, zeroRD=false, zeroLC=false, zeroLB=false;
+bool extended=false, zeroRE=false, zeroRC=false, zeroRD=false, zeroLC=false, zeroLB=false, oneRD=false;
 int complete(Table p,int cut,int holes){
  if(nodes.size()>=15000)return -1;
  int i=nodes.size();nodes.push_back({});int m=mask(p);if(m){nodes[i].a={3,m,0,0,0,0,0};return i;}
@@ -39,6 +39,25 @@ int complete(Table p,int cut,int holes){
  if(extended && !a.typ)a=classify<1000,2048,256>(p);
  if(!a.typ){
     auto raw=show(p);
+    if(oneRD){
+      static const array<string,15> ps={
+        "1RB1LC1RC0LD1LA0RB1RD0RE1RC0RF---1LD",
+        "1RB1LC1RC0LD1LA0RB1RD0RE1RC1RF---0RE",
+        "1RB1LC1RC0LD1LA0RB1RD1LE0LD0LF---0LE",
+        "1RB1LC1RC0LD1LA0RB1RD1LE1LD0RF---1RE",
+        "1RB1LC1RC0LD1LA0RB1RD1LE1RC1RF---0RE",
+        "1RB1LC1RC0LD1LA0RB1RD1RE1LF---0LD0LF",
+        "1RB1LC1RC0LD1LA0RB1RD1RE1LF---0RD0LF",
+        "1RB1LC1RC0LD1LA0RB1RD1RE1LF---1RD0LF",
+        "1RB1LC1RC0LD1LA0RB1RD1RE0RB0RF---1RE",
+        "1RB1LC1RC0LD1LA0RB1RD1RE1LB0RF---1LD",
+        "1RB1LC1RC0LD1LA0RB1RD1RE1LB0RF---0LB",
+        "1RB1LC1RC0LD1LA0RB1RD1RE1LB0RF---0LA",
+        "1RB1LC1RC0LD1LA0RB1RD1RE1LB1RF---1RE",
+        "1RB1LC1RC0LD1LA0RB1RD1RE1LB1RF---1RC",
+        "1RB1LC1RC0LD1LA0RB1RD1RE1LB1RF---1LA"};
+      for(int v=0;v<15;v++)if(raw==ps[v]){nodes[i].a={17,v,0,0,0,0,0};return i;}
+    }
     if(zeroLB){
       static const array<string,9> ps={
         "1RB1LC1RC0LD1LA0RB0LB0RE0RF---1RD1RF",
@@ -87,7 +106,7 @@ int complete(Table p,int cut,int holes){
     if(raw=="1RB1LC1RC0LD1LA0RB1LB1LE1RF0RC---1RE"){nodes[i].a={6,0,0,0,0,0,0};return i;}
     if(raw=="1RB1LC1RC0LD1LA0RB1LB1LE0RE1RF0RC---"||raw=="1RB1LC1RC0LD1LA0RB1LB1LE0RF---0RC1RF"||raw=="1RB1LC1RC0LD1LA0RB1LB1LE1LF---1RF0RC"){nodes[i].a={7,0,0,0,0,0,0};nodes[i].p=raw;return i;}
     bool shared=raw.substr(0,24)=="1RB1LC1RC0LD1LA0RB1LB1LE" && (raw.substr(24,3)=="0RE"||raw.substr(24,3)=="0RF"||raw.substr(24,3)=="1LF");
-    for(int k=1;k<=((zeroRE||zeroRC||zeroRD||zeroLC||zeroLB)?7:extended?6:shared?7:(raw=="1RB1LC1RC0LD1LA0RB1LB1LE1RF1RC---1RE"?5:4));k++){NGram ng(raw,k);if(ng.check()){nodes[i].a={5,k,0,0,0,0,0};nodes[i].p=raw;return i;}}
+    for(int k=1;k<=((zeroRE||zeroRC||zeroRD||zeroLC||zeroLB||oneRD)?7:extended?6:shared?7:(raw=="1RB1LC1RC0LD1LA0RB1LB1LE1RF1RC---1RE"?5:4));k++){NGram ng(raw,k);if(ng.check()){nodes[i].a={5,k,0,0,0,0,0};nodes[i].p=raw;return i;}}
     if(!extended)a=classify<1000,2048,256>(p);if(!a.typ)return -1;
  }
  nodes[i].a=a;if(a.typ==2||holes==1)return i;
@@ -98,6 +117,7 @@ int complete(Table p,int cut,int holes){
  return i;
 }
 void emit(int i){auto n=nodes[i];auto a=n.a;
+ if(a.typ==17){cout<<"[\"auto1RD\","<<a.n<<']';return;}
  if(a.typ==16){cout<<"[\"pump0LB\","<<a.n<<']';return;}
  if(a.typ==15){cout<<"[\"pump0LC\","<<a.n<<']';return;}
  if(a.typ==14){cout<<"[\"pump0RD\","<<a.n<<']';return;}
@@ -116,4 +136,4 @@ void emit(int i){auto n=nodes[i];auto a=n.a;
  cout<<"[\"split\","<<a.n<<','<<a.s<<",[";
  for(int j=0;j<24;j++){if(j)cout<<',';if(n.child[j])emit(n.child[j]-1);else cout<<"null";}cout<<"]]";
 }
-int main(){string s;int cut,holes;while(cin>>s>>cut>>holes){zeroRE=s=="1RB1LC1RC0LD1LA0RB1LB0RE------------";zeroRC=s=="1RB1LC1RC0LD1LA0RB0RC---------------";zeroRD=s=="1RB1LC1RC0LD1LA0RB0RD---------------";zeroLC=s=="1RB1LC1RC0LD1LA0RB0LC---------------";zeroLB=s=="1RB1LC1RC0LD1LA0RB0LB---------------";extended=zeroRE||zeroRC||zeroRD||zeroLC||zeroLB||s=="1RB1LC1RC0LD1LA0RB1LB0LE------------"||s=="1RB1LC1RC0LD1LA0RB1LB1RE------------";nodes.clear();int i=complete(parse(s),cut,holes);if(i<0){cerr<<"unresolved "<<s<<'\n';return 1;}cout<<s<<' ';emit(i);cout<<'\n';}}
+int main(){string s;int cut,holes;while(cin>>s>>cut>>holes){zeroRE=s=="1RB1LC1RC0LD1LA0RB1LB0RE------------";zeroRC=s=="1RB1LC1RC0LD1LA0RB0RC---------------";zeroRD=s=="1RB1LC1RC0LD1LA0RB0RD---------------";zeroLC=s=="1RB1LC1RC0LD1LA0RB0LC---------------";zeroLB=s=="1RB1LC1RC0LD1LA0RB0LB---------------";oneRD=s=="1RB1LC1RC0LD1LA0RB1RD---------------";extended=oneRD||zeroRE||zeroRC||zeroRD||zeroLC||zeroLB||s=="1RB1LC1RC0LD1LA0RB1LB0LE------------"||s=="1RB1LC1RC0LD1LA0RB1LB1RE------------";nodes.clear();int i=complete(parse(s),cut,holes);if(i<0){cerr<<"unresolved "<<s<<'\n';return 1;}cout<<s<<' ';emit(i);cout<<'\n';}}
