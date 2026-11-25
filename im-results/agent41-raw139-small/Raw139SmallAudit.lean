@@ -1,5 +1,4 @@
 import ThreeHoleAudit
-import FourHoleRootFrontier
 
 set_option maxRecDepth 1000000
 set_option maxHeartbeats 0
@@ -21,11 +20,23 @@ def validate (B : Nat) (p : PartialMachine) : PartialAudit → Bool
       BB6.Agent31ThreeHole.allMoves (fun mv => validate B (refine p s (some mv)) (kids mv))
 termination_by structural t => t
 
+def ordinaryMoves : List Move :=
+  (List.finRange 6).flatMap fun q =>
+    [false,true].flatMap fun w => [false,true].map fun r => ⟨w,r,q⟩
+
+theorem ordinaryMoves_complete (mv : Move) : mv ∈ ordinaryMoves := by
+  rcases mv with ⟨w,r,q⟩
+  apply List.mem_flatMap.mpr
+  refine ⟨q,List.mem_finRange q,?_⟩
+  apply List.mem_flatMap.mpr
+  refine ⟨w,by cases w <;> simp,?_⟩
+  exact List.mem_map.mpr ⟨r,by cases r <;> simp,rfl⟩
+
 def remaining (p : PartialMachine) : PartialAudit → List (List Move × PartialMachine)
   | .unresolved => [([],p)]
   | .closed _ => []
   | .split _ s kids =>
-      BB6.Agent31FourHoleFrontier.allMoves.flatMap fun mv =>
+      ordinaryMoves.flatMap fun mv =>
         (remaining (refine p s (some mv)) (kids mv)).map fun e => (mv :: e.1,e.2)
 termination_by structural t => t
 
@@ -81,7 +92,7 @@ theorem sound (B : Nat) (p : PartialMachine) (t : PartialAudit)
         · exact Or.inr ⟨(mv :: e.1,e.2), by
             simp only [remaining]
             apply List.mem_flatMap.mpr
-            refine ⟨mv, BB6.Agent31FourHoleFrontier.allMoves_complete mv, ?_⟩
+            refine ⟨mv, ordinaryMoves_complete mv, ?_⟩
             exact List.mem_map.mpr ⟨e,he,rfl⟩, hcompat⟩
 
 def pick (xs : List PartialAudit) (mv : Move) : PartialAudit :=
