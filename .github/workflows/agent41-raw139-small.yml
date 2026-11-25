@@ -26,7 +26,11 @@ jobs:
             --theorem BB6.Agent41Raw139Small.parent_contract \
             --theorem BB6.Agent41Raw139Small.residual_count \
             --theorem BB6.Agent41Raw139Small.validated \
-            im-results/agent41-raw139-small/Raw139SmallAudit.lean \
+            --theorem BB6Coverage.Agent41Raw139E0OneLA.never \
+            --theorem BB6.Agent41Raw139SmallPlus.e0_contract_plus \
+            --theorem BB6.Agent41Raw139SmallPlus.parent_contract_plus \
+            --theorem BB6.Agent41Raw139SmallPlus.e0_count_plus \
+            im-results/agent41-raw139-small/Raw139SmallPlus.lean \
             2>&1 | tee /tmp/a41-small.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a41-small.log; then
             exit 1
