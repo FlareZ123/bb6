@@ -30,6 +30,53 @@ theorem zero_chunk (g k : Nat) (hg : 0 < g) (R : List Bool) :
 
 /-- Nested counter restoration: the n-th restore calls only restores at
     strictly smaller counter indices. All tail words are arbitrary. -/
+theorem restore_from (p : PartialMachine) (g : Nat) (hg : 0 < g) (start : List Bool → Z0)
+    (reset : ∀ n R, PositiveRun p (D g false n R) (start (Z (g*n+3) ++ true::R)))
+    (seed : ∀ R, PositiveRun p (start (Z 3 ++ true::R)) (D g true 0 R))
+    (pref : ∀ R, PositiveRun p (start (Z 4 ++ R)) (D g true 0 R))
+    (advance : ∀ b n R, PositiveRun p (D g true n (Z (g-1) ++ b::R)) (D g b (n+1) R)) :
+    ∀ n R, PositiveRun p (D g false n R) (D g true n R) := by
+  intro n
+  induction n using Nat.strongRecOn with
+  | ind n ih =>
+    intro R
+    cases n with
+    | zero => exact (reset 0 R).trans (seed R)
+    | succ n =>
+      have walk : ∀ k j, j+k=n → ∀ T,
+          PositiveRun p (D g true j (Z (g*k+(g-1)) ++ true::T)) (D g true (n+1) T) := by
+        intro k
+        induction k with
+        | zero =>
+          intro j hj T
+          have h : j=n := by omega
+          subst j
+          simpa using advance true n T
+        | succ k ihk =>
+          intro j hj T
+          let tail := Z (g*k+(g-1)) ++ true::T
+          have ha := advance false j tail
+          have hb := ih (j+1) (by omega) tail
+          have hc := ihk (j+1) (by omega) T
+          have eq := zero_chunk g k hg T
+          rw [← eq] at ha
+          exact ha.trans (hb.trans hc)
+      have hsplit : g*(n+1)+3 = 4 + (g*n+(g-1)) := by rw [Nat.mul_succ]; omega
+      have h0 := reset (n+1) R
+      rw [hsplit,Z_add,List.append_assoc] at h0
+      exact h0.trans ((pref (Z (g*n+(g-1)) ++ true::R)).trans (walk n 0 (by omega) R))
+
+theorem growing_from (p : PartialMachine) (g : Nat) (hg : 0 < g) (start : List Bool → Z0)
+    (reset : ∀ n R, PositiveRun p (D g false n R) (start (Z (g*n+3) ++ true::R)))
+    (seed : ∀ R, PositiveRun p (start (Z 3 ++ true::R)) (D g true 0 R))
+    (pref : ∀ R, PositiveRun p (start (Z 4 ++ R)) (D g true 0 R))
+    (advance : ∀ b n R, PositiveRun p (D g true n (Z (g-1) ++ b::R)) (D g b (n+1) R))
+    (blank : ∀ n, PositiveRun p (D g true n []) (D g false (n+1) [])) :
+    ∀ n, PositiveRun p (D g false n []) (D g false (n+1) []) := by
+  intro n
+  exact (restore_from p g hg start reset seed pref advance n []).trans (blank n)
+/-- Nested counter restoration: the n-th restore calls only restores at
+    strictly smaller counter indices. All tail words are arbitrary. -/
 theorem restore (p : PartialMachine) (g : Nat) (hg : 0 < g)
     (reset : ∀ n R, PositiveRun p (D g false n R) (A (Z (g*n+3) ++ true::R)))
     (seed : ∀ R, PositiveRun p (A (Z 3 ++ true::R)) (D g true 0 R))
