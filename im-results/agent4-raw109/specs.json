@@ -273,5 +273,96 @@
       ]
     },
     "unresolved": {}
+  },
+  "0LA": {
+    "bound": 168,
+    "query": [
+      8,
+      1
+    ],
+    "sha": "af6f2063a3f1dd0bc35718844065e74d63b0944d75302753501ed213b895a7b7",
+    "stats": {
+      "cycle": 18466,
+      "last": 5615,
+      "open": 691,
+      "split": 1077
+    },
+    "one": [
+      144,
+      413,
+      414,
+      485
+    ],
+    "multi": [
+      337
+    ],
+    "ngram": [
+      16,
+      25,
+      27,
+      54,
+      55,
+      57,
+      65,
+      66,
+      69,
+      70,
+      75,
+      80,
+      81,
+      83,
+      85,
+      86,
+      88,
+      89,
+      182,
+      241,
+      324,
+      372,
+      381,
+      416,
+      417,
+      418,
+      419,
+      422,
+      423,
+      424,
+      425,
+      458,
+      483,
+      484,
+      486,
+      536,
+      541,
+      554
+    ],
+    "manual": {
+      "142": [
+        "Raw109LA142",
+        "BB6Coverage.Agent4Raw109LA142",
+        "1RB0RF_1RC0LA_0RD0RA_1LD1RE_---1RB_0RC0LD"
+      ],
+      "472": [
+        "Raw109LA472",
+        "BB6Coverage.Agent4Raw109LA472",
+        "1RB1LF_1RC0LA_0RD1RD_1LD1RE_---1RB_0RE1LA"
+      ],
+      "515": [
+        "Raw109LA515",
+        "BB6Coverage.Agent4Raw109LA515",
+        "1RB1LF_1RC0LA_0RD0RB_1LD1RE_---1RB_0LA1LF"
+      ],
+      "524": [
+        "Raw109LA524",
+        "BB6Coverage.Agent4Raw109LA524a",
+        "1RB1LF_1RC0LA_0RD1RD_1LD1RE_---1RB_0RC1LF"
+      ],
+      "529": [
+        "Raw109LA524",
+        "BB6Coverage.Agent4Raw109LA529a",
+        "1RB1LF_1RC0LA_0RD1RD_1LD1RE_---1RB_0RD1LF"
+      ]
+    },
+    "unresolved": {}
   }
 }

@@ -94,3 +94,7 @@ integrations. The 1RF bound is 268.
 ### 1LC candidate
 
 All 430 residual leaves accounted for by 420 bank FAR, 4 n-gram, 2 single sweeps, 2 multi sweeps, and the paired 354/356 inductive certificate in Raw109LC354.lean. The arbitrary-prefix theorem checked locally with only propext and Quot.sound. The proposed bound is 162. The 82-cylinder refinement retains five B1 choices: 0LA, 0LF, 0RC, 1LA, 1LF. Original-source audit pending.
+
+### 0LA candidate
+
+691 residual leaves: 643 bank FAR, 38 n-gram, 4 single sweeps, 1 multi sweep, and five manual digit-grammar certificates (142,472,515,524,529). All four handwritten arbitrary-prefix theorems passed Lean 4.36.0-rc2 locally, with propext and Quot.sound only; the original-source bridge and full tree still require CI. The leaf 515 construction proves a sweepable-word reverse relation and a unary prefix increment of two per epoch. Proposed bound 168. Refinement9 retains only 0LF, 0RC, 1LA, 1LF, giving a conditional 81-cylinder global roster.
