@@ -48,7 +48,9 @@ Proof.
   intros Hroster Hpacked.
   change (Forall (source_weighted_safe bound)
       (fst (SearchQueue_upds decider (q_i offset size) fuel) ++
-       snd (SearchQueue_upds decider (q_i offset size) fuel)) <-> _).
+       snd (SearchQueue_upds decider (q_i offset size) fuel)) <->
+    Forall (source_weighted_safe bound)
+      (roster_remaining roster (fst (decode_queue packed) ++ snd (decode_queue packed)))).
   rewrite Hpacked. apply roster_remaining_safe_iff. exact Hroster.
 Qed.
 
