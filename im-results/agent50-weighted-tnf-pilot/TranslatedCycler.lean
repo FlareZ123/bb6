@@ -179,21 +179,13 @@ theorem BRun_replay {m : Machine} {n k k' : Nat}
     {c c' d : FiniteCfg}
     (hRun : BRun m n k c k' c') (heq : EqLimit k c d) :
     ∃ k'' d', BRun m n k d k'' d' ∧ EqLimit k' c' d' := by
-  revert k c k' c' d heq hRun
-  induction n with
-  | zero =>
-      intro k c k' c' d hRun heq
-      cases hRun with
-      | zero k₀ c₀ =>
-          exact ⟨k₀, d, BRun.zero (m := m) k₀ d, heq⟩
-  | succ n ih =>
-      intro k c k' c' d hRun heq
-      cases hRun with
-      | succ hstep hrest =>
-          obtain ⟨d₁, hstep', heq₁⟩ := BStep_replay hstep heq
-          obtain ⟨k₂, d₂, hrest', heq₂⟩ :=
-            ih _ _ _ _ d₁ hrest heq₁
-          exact ⟨k₂, d₂, BRun.succ (m := m) hstep' hrest', heq₂⟩
+  induction hRun generalizing d with
+  | zero k₀ c₀ =>
+      exact ⟨k₀, d, BRun.zero (m := m) k₀ d, heq⟩
+  | succ hstep hrest ih =>
+      obtain ⟨d₁, hstep', heq₁⟩ := BStep_replay hstep heq
+      obtain ⟨k₂, d₂, hrest', heq₂⟩ := ih heq₁
+      exact ⟨k₂, d₂, BRun.succ (m := m) hstep' hrest', heq₂⟩
 
 theorem BRun_finiteRun {m : Machine} {n k k' : Nat}
     {c d : FiniteCfg}
