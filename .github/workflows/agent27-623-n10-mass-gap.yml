@@ -6,7 +6,7 @@ on:
       target:
         description: Proof target
         type: choice
-        options: [n10, gap-two-three-step]
+        options: [n10, gap-two-three-step, low-scale]
         default: n10
 
 permissions:
@@ -62,7 +62,7 @@ jobs:
           fi
 
       - name: Compile all-scale gap-two elimination against original source
-        if: inputs.target == 'gap-two-three-step'
+        if: inputs.target == 'gap-two-three-step' || inputs.target == 'low-scale'
         working-directory: cryptids
         run: |
           set -euo pipefail
@@ -87,3 +87,20 @@ jobs:
           compile Agent27GapTwoArithmetic agent27-623-gap-two-three-step/Agent27GapTwoArithmetic
           compile GapTwoThreeStepSource agent27-623-gap-two-three-step/GapTwoThreeStepSource
           if grep -q 'sorryAx' gap-two-axioms.log; then exit 1; fi
+
+      - name: Compile universal successor and low-scale exclusion
+        if: inputs.target == 'low-scale'
+        working-directory: cryptids
+        run: |
+          set -euo pipefail
+          : > low-scale-axioms.log
+          compile() {
+            cp "../im-results/$2.lean" "$1.lean"
+            lake env lean -o ".lake/build/lib/lean/$1.olean" "$1.lean" 2>&1 | tee -a low-scale-axioms.log
+          }
+          compile Agent8LogConeSource agent8-623-inverse/LogConeSource
+          compile Agent8LogRightSource agent8-623-inverse/LogRightSource
+          compile Agent8DrainQuadraticLogSource agent8-623-inverse/DrainQuadraticLogSource
+          compile Agent49DrainLinearLogSource agent49-parity623/DrainLinearLogSource
+          compile AllScaleSuccessorBoundSource agent27-623-gap-two-three-step/AllScaleSuccessorBoundSource
+          if grep -q 'sorryAx' low-scale-axioms.log; then exit 1; fi
