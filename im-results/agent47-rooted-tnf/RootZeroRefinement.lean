@@ -38,7 +38,7 @@ def raw0AfterTwo : Config := (knownRun raw0 2).getD blank
 
 theorem raw0_knownRun_two : knownRun raw0 2 = some raw0AfterTwo := by
   simp [raw0AfterTwo, knownRun, knownStep, raw0, raw0Move,
-    raw0Entry, BB6.Agent50TNFPilot.root, refine, blank, readSlot, applyMove]
+    raw0Entry, BB6.Agent50TNFPilot.root, CoverageAdapter.firstOneCylinder, emptyTable, refine, blank, readSlot]
 
 theorem raw0_second_hole : raw0 (readSlot raw0AfterTwo) = none := by
   decide
@@ -60,8 +60,8 @@ theorem raw0Child_path (mv : Move) : RawRootPath (raw0Child mv) := by
 theorem raw0Child_root (mv : Move) :
     raw0Child mv initialSlot = some (some ⟨true, true, 1⟩) := by
   simp [raw0Child, raw0, raw0Entry, raw0AfterTwo, refine,
-    knownRun, knownStep, BB6.Agent50TNFPilot.root, blank, readSlot, applyMove,
-    initialSlot]
+    knownRun, knownStep, BB6.Agent50TNFPilot.root, CoverageAdapter.firstOneCylinder,
+    emptyTable, blank, readSlot, initialSlot]
 
 theorem raw0Child_noAssignedHalt (mv : Move) :
     weightedTNFNoAssignedHalt (raw0Child mv) := by
@@ -123,7 +123,7 @@ def raw0Frontier : RootedFrontier 7014 raw0 :=
         RootedFrontier.residual (raw0Child_path mv))
 
 def raw0Residuals : List (List Move × PartialMachine) :=
-  RootedFrontier.residuals raw0Frontier
+  residuals raw0Frontier
 
 theorem raw0ClosedMoves_count : raw0ClosedMoves.length = 7 := by
   decide
@@ -137,7 +137,7 @@ theorem raw0_mass_partition :
     raw0Residuals.length * 25^9 +
       raw0ClosedMoves.length * 25^9 + 25^9 = 25^10 := by
   rw [raw0Residuals_count, raw0ClosedMoves_count]
-  norm_num [pow_succ]
+  decide
 
 /-- Every completion of raw0 is bounded by 7014 or lies in one of the
     seventeen explicit nine-hole residual cylinders. -/
