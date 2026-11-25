@@ -3,7 +3,7 @@
 This directory contains an intermediate investigation of the partial machine
 `1RB0RF_1RC0LB_0RD0LB_1LD1RE_0RA1LC_---0LE`.
 
-- [analysis.md](analysis.md) describes the observed two-level counter structure
+- [analysis.md](analysis.md) describes the observed two-level counter structure and the explicit recursive base-6 encoding of its high suffix
   in the canonical `C)-state configurations and the remaining proof problem.
 - [counter_trace.py](counter_trace.py) independently simulates the machine and
   emits reproducible CSV traces for the `110000) block count and the five-bit
