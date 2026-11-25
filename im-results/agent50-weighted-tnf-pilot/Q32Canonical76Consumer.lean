@@ -1,4 +1,4 @@
-import CanonicalTwoParentAccepted
+import CanonicalTwoParentGraft
 import Q32SliceClosed
 import Raw10BoxCore
 
@@ -95,29 +95,32 @@ theorem q32_cover_from_remainder (B : Nat) (h144 : 144 ≤ B)
 
 /-- Conditional exactness consumer: one of the 76 canonical Covers is
     replaced by the twelve accepted q32 cylinders plus their exact box
-    complement. The other 75 canonical Covers are unchanged. -/
-theorem exact_from_q32_remainder_at_champion_score
+    complement. The two existing parent certificates and other 75 Covers
+    remain explicit premises, so this module does not import or duplicate
+    their separate data-generation pipelines. -/
+theorem exact_from_q32_remainder_at_target
+    (B : Nat) (hB : 7014 ≤ B)
+    (h107 : ∀ m, compatible BB6.Agent47CanonicalTwoParent.p107 m →
+      WeightedBound 815 m)
+    (h114 : ∀ m, compatible BB6.Agent47CanonicalTwoParent.p114 m →
+      WeightedBound 7014 m)
     (hOpen : ∀ r ∈ q32Remainder, ∀ m, BB6.Agent49Box.Fits r m →
-      WeightedBound BB6.Agent31Canonical77Exact.championScore m)
-    (hOther : ∀ e ∈ otherRoster,
-      Cover (WeightedBound BB6.Agent31Canonical77Exact.championScore) e.2) :
-    BB6.Coverage.ExactBB6 BB6.Agent31Canonical77Exact.championScore := by
-  have hB : 7014 ≤ BB6.Agent31Canonical77Exact.championScore :=
-    Nat.le_of_lt BB6.Agent31Canonical77Exact.champion_score_gt_7014
-  have h144 : 144 ≤ BB6.Agent31Canonical77Exact.championScore := by omega
-  apply BB6.Agent11Raw107TwoParent.exact_at_target
-    BB6.Agent31Canonical77Exact.championScore hB
-    (by
-      intro e he
-      by_cases hs : sameTable e.2 q32Parent = true
-      · have heq : e.2 = q32Parent := sameTable_sound hs
-        rw [heq]
-        exact q32_cover_from_remainder
-          BB6.Agent31Canonical77Exact.championScore h144 hOpen
-      · have hmem : e ∈ otherRoster :=
-          List.mem_filter.mpr ⟨he, by simp [otherRoster, hs]⟩
-        exact hOther e hmem)
-    BB6Coverage.Agent48DirectRoot.champion_raw_witness
+      WeightedBound B m)
+    (hOther : ∀ e ∈ otherRoster, Cover (WeightedBound B) e.2)
+    (champ : ∃ m : BB6.Coverage.RawMachine,
+      BB6.Coverage.HaltsAt (BB6.Coverage.tickRaw m) B) :
+    BB6.Coverage.ExactBB6 B := by
+  have h144 : 144 ≤ B := by omega
+  apply BB6.Agent47CanonicalTwoParent.exact_at_target B hB h107 h114
+  · intro e he
+    by_cases hs : sameTable e.2 q32Parent = true
+    · have heq : e.2 = q32Parent := sameTable_sound hs
+      rw [heq]
+      exact q32_cover_from_remainder B h144 hOpen
+    · have hmem : e ∈ otherRoster :=
+        List.mem_filter.mpr ⟨he, by simp [otherRoster, hs]⟩
+      exact hOther e hmem
+  · exact champ
 
 #eval q32Remainder.length
 
