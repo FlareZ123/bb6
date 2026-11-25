@@ -10,13 +10,17 @@ open BB6.Agent13BlankDelay
 open BB6.Agent49BoxBridge
 open BB6.Agent50TranslatedCycler
 
-/-- The final held-leaf mismatch rectangle has F0 free except code 16.
-    This exact subcylinder fixes F0=code 10 (0RC), retaining F1 as a hole. -/
+/-- A root-refining two-hole cylinder in the raw10 parent. It fixes exactly
+    the ten slots visited by the lasso (including F0=code 10, or 0RC), and
+    leaves B1 and F1 unassigned. -/
 def table : PartialMachine :=
-  fun s => if s = (5,false) then some (some ⟨false,true,2⟩) else held s
+  fun s =>
+    if s = (1,true) then none
+    else if s = (5,false) then some (some ⟨false,true,2⟩)
+    else held s
 
-/-- The default completion halts at the still-unknown F1 row. The checked
-    24+14-step trace never reads that row. -/
+/-- The default completion halts at the two still-unknown B1 and F1 rows.
+    The checked 24+14-step trace never reads either row. -/
 def default : Machine := weightedTNFDefaultCompletion table
 
 theorem cycle_check : translatedCyclerCheckRight default 24 14 7 = true := by
@@ -50,7 +54,7 @@ theorem support : TNFSupport table 6 := by
 theorem no_assigned_halt : weightedTNFNoAssignedHalt table := by
   decide
 
-/-- A proof-carrying score-B TNF leaf for all 25 F1 completions. -/
+/-- A proof-carrying score-B TNF leaf for all 625 B1/F1 completions. -/
 def certificate (B : Nat) : WeightedTNFCertificate B table 6 :=
   .nonhalt root support no_assigned_halt never
 
