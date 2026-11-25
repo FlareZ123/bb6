@@ -6,8 +6,6 @@ open BB6Coverage BB6Coverage.Agent31Pump BB6.Agent1NGram
 
 /-- Sparse variant of Agent1's kernel checker: edge membership uses the same
     certified finite low-bit trie as state membership, avoiding a 2^k bitset. -/
-/-- Window width is n+1. The two edge bitsets record allowed (window,
-    extension-bit) pairs. Each state trie records pairs of left/right windows. -/
 structure Cert where
   n : Nat
   left : Trie
