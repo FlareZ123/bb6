@@ -27,14 +27,14 @@ The left list is nearest-first, as in Agent31Pump.Z0. -/
 def C (j t : Nat) : Z0 :=
   ⟨2, [false,true] ++ rep [false,true] (2*t) ++ [true] ++ rep [false,true] j, []⟩
 
-lemma rep_add (w : List Bool) (m n : Nat) :
+theorem rep_add (w : List Bool) (m n : Nat) :
     rep w (m+n) = rep w m ++ rep w n := by
   induction m with
   | zero => simp [rep]
   | succ m ih =>
       simp [rep, ih, Nat.succ_add, List.append_assoc]
 
-lemma alt_even (n : Nat) :
+theorem alt_even (n : Nat) :
     [false,true] ++ rep [false,true] (2*n) ++ [true] =
       [false] ++ rep [true,false] (2*n) ++ [true,true] := by
   induction n with
@@ -50,7 +50,7 @@ lemma alt_even (n : Nat) :
         _ = [false] ++ rep [true,false] (2*(n+1)) ++ [true,true] := by
                   simp [rep, Nat.mul_succ, List.append_assoc]
 
-lemma rep10_of_rep01 (n : Nat) :
+theorem rep10_of_rep01 (n : Nat) :
     [true] ++ rep [false,true] n ++ [false] = rep [true,false] (n+1) := by
   induction n with
   | zero => rfl
@@ -65,28 +65,28 @@ lemma rep10_of_rep01 (n : Nat) :
 
 /-! The four two-step sweeps used by both macros. -/
 
-lemma sweep_A_left (L R : List Bool) :
+theorem sweep_A_left (L R : List Bool) :
     run0 raw58LF411 2 ⟨0, [true,false] ++ L, R⟩ =
       some ⟨0, L, [true,false] ++ R⟩ := by
   rfl
 
-lemma sweep_F_left (L R : List Bool) :
+theorem sweep_F_left (L R : List Bool) :
     run0 raw58LF411 2 ⟨5, [false,true] ++ L, R⟩ =
       some ⟨5, L, [false,true] ++ R⟩ := by
   rfl
 
-lemma sweep_B_right (L R : List Bool) :
+theorem sweep_B_right (L R : List Bool) :
     run0 raw58LF411 2 ⟨1, [false] ++ L, [true,false] ++ R⟩ =
       some ⟨1, [false] ++ [false,true] ++ L, R⟩ := by
   rfl
 
-lemma sweep_A_right (L R : List Bool) :
+theorem sweep_A_right (L R : List Bool) :
     run0 raw58LF411 2 ⟨0, [false] ++ L, [true,false] ++ R⟩ =
       some ⟨0, [false] ++ [false,true] ++ L, R⟩ := by
   rfl
 
 /-- Fourteen-step entry into the F-left sweep, valid once t≥2. -/
-lemma inner_pre (j t : Nat) (ht : 2 ≤ t) :
+theorem inner_pre (j t : Nat) (ht : 2 ≤ t) :
     run0 raw58LF411 14 (C (j+1) t) =
       some ⟨5,
         rep [false,true] (2*t-3) ++ [true,false,true] ++ rep [false,true] j,
@@ -104,11 +104,11 @@ lemma inner_pre (j t : Nat) (ht : 2 ≤ t) :
   rw [C, hsplit]
   rfl
 
-lemma inner_zero (j : Nat) :
+theorem inner_zero (j : Nat) :
     run0 raw58LF411 14 (C (j+1) 0) = some (C j 1) := by
   rfl
 
-lemma inner_one (j : Nat) :
+theorem inner_one (j : Nat) :
     run0 raw58LF411 22 (C (j+1) 1) = some (C j 2) := by
   rfl
 
@@ -158,7 +158,7 @@ theorem inner (j t : Nat) :
   simpa [htime] using hcomp
 
 /-- The five-step reset prelude at C(0,k). -/
-lemma reset_pre (k : Nat) :
+theorem reset_pre (k : Nat) :
     run0 raw58LF411 5 (C 0 k) =
       some ⟨0, rep [true,false] (2*k+1) ++ [true,true], []⟩ := by
   rw [C, alt_even]
@@ -218,7 +218,7 @@ theorem drain (j t : Nat) :
       have hfirst := inner j t
       have htail := ih (t+1)
       have hcomp := join0 hfirst htail
-      have hindex : t + (1+j) = t + (j+1) := by omega
+      have hindex : t+1+j = t+(j+1) := by omega
       rw [hindex]
       simpa [drainTime, Nat.add_assoc] using hcomp
 
@@ -228,8 +228,10 @@ def cycleTime (k : Nat) : Nat := drainTime k 0 + (16*k+37)
 theorem grow (k : Nat) :
     run0 raw58LF411 (cycleTime k) (C k 0) =
       some (C (2*k+4) 0) := by
-  have hcomp := join0 (drain k 0) (reset k)
-  simpa [cycleTime, Nat.zero_add] using hcomp
+  have hdrain : run0 raw58LF411 (drainTime k 0) (C k 0) = some (C 0 k) := by
+    simpa [Nat.zero_add] using drain k 0
+  have hcomp := join0 hdrain (reset k)
+  simpa [cycleTime] using hcomp
 
 def index : Nat → Nat
   | 0 => 4
