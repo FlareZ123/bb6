@@ -1,7 +1,6 @@
 import CanonicalRaw114Accepted
 import Raw121Data
 import CanonicalRosterRefinement
-import TM63RawUpperInterface
 
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
@@ -12,19 +11,6 @@ open BB6Coverage
 open BB6.Agent50TNFPilot
 open BB6.Agent47CanonicalFrontier
 open BB6.Agent47CanonicalRefinement
-open BB6Coverage.Agent48Champion
-open BB6ChampionArithmetic
-open BB6Coverage.Agent48DirectRoot
-
-/-- Keep the champion score opaque until the symbolic root identity is used. -/
-def championScore : Nat := proposedTM63Moves + 7
-
-theorem champion_score_gt_7014 : 7014 < championScore := by
-  have hroot : 27959 ≤ threeSectionMoves 27959 3 7 6 63 + 7 :=
-    rootSteps_le_score 27959 3 7 6 63
-  have hscore : 7014 < threeSectionMoves 27959 3 7 6 63 + 7 := by
-    omega
-  simpa only [championScore, ← threeSectionMoves_root] using hscore
 
 /-- Graft the source-audited Raw121 parent into the accepted 77-entry
     quotient roster obtained after the Raw114 cut. -/
@@ -57,22 +43,17 @@ theorem roster76_sound :
         (by decide)))
 
 /-- Conditional exactness after the Raw121 graft. Only the 76 retained
-    quotient representatives still require Covers at the attained score. -/
-theorem exact_from_canonical76_at_champion_score
-    (hLeaves : ∀ e ∈ roster76,
-      Cover (WeightedBound championScore) e.2) :
-    BB6.Coverage.ExactBB6 championScore :=
-  exact_from_quotient_roster
-    (by omega)
-    (Nat.le_of_lt champion_score_gt_7014)
-    roster76_sound
-    hLeaves
-    champion_raw_witness
+    quotient representatives still require Covers at the target score. -/
+theorem exact_at_target (B : Nat) (hB : 7014 ≤ B)
+    (hLeaves : ∀ e ∈ roster76, Cover (WeightedBound B) e.2)
+    (champ : ∃ m : BB6.Coverage.RawMachine,
+      BB6.Coverage.HaltsAt (BB6.Coverage.tickRaw m) B) :
+    BB6.Coverage.ExactBB6 B :=
+  exact_from_quotient_roster (by omega) hB roster76_sound hLeaves champ
 
-#print axioms champion_score_gt_7014
 #print axioms parent_present
 #print axioms roster76_count
 #print axioms roster76_sound
-#print axioms exact_from_canonical76_at_champion_score
+#print axioms exact_at_target
 
 end BB6.Agent11Raw121Canonical77Graft
