@@ -1,4 +1,5 @@
-import Raw59UpgradeAll
+import Raw59ParentCover
+import Raw59CanonicalPartition
 import CanonicalRaw114Accepted
 
 set_option maxRecDepth 100000
