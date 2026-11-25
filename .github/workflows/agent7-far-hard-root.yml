@@ -264,14 +264,12 @@ jobs:
           python im-results/agent7-raw110/generate.py --base-only
           block=()
           if [[ "${{ inputs.raw110_block_far }}" == true ]]; then
-            if [[ "$PARTIAL_KID" != 12 ]]; then
-              python im-results/agent13-block-far/build_raw110.py "$PARTIAL_KID"
-            fi
+            python im-results/agent13-block-far/build_raw110.py "$PARTIAL_KID"
             block+=(--block-far)
           fi
           python im-results/agent7-raw110/generate_partial.py "${block[@]}" "$PARTIAL_KID"
           kid=$(printf '%02d' "$PARTIAL_KID")
-          python tools/lean_compile_closure.py --workdir /tmp/a7-partial --jobs 4 "im-results/agent7-raw110/Raw110Partial${kid}.lean" im-results/agent7-raw110/Raw110PairBridge.lean | tee /tmp/raw110-partial-proof.log
+          python tools/lean_compile_closure.py --workdir /tmp/a7-partial --jobs 4 "im-results/agent7-raw110/Raw110Partial${kid}.lean" im-results/agent7-raw110/Raw110PairBridge.lean im-results/agent7-raw110/CarrySweep.lean | tee /tmp/raw110-partial-proof.log
           if grep -qE 'sorryAx|native_decide' /tmp/raw110-partial-proof.log; then exit 1; fi
       - name: Verify raw110 recursive counter
         if: ${{ inputs.raw110_counter_only }}
