@@ -1,11 +1,11 @@
-import ThreeHoleAudit
+import ZipThreeHoleAudit
 import FourHoleResidualRoster
 
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 
 namespace BB6.Agent47PartialAudit
-open BB6Coverage BB6.Agent13BlankDelay BB6.Agent31ThreeHole BB6.Agent50TNFPilot BB6.Agent8TNFPath
+open BB6Coverage BB6.Agent13BlankDelay BB6.Agent31ThreeHole BB6.Agent50TNFPilot BB6.Agent8TNFPath BB6.Agent10ZipAudit
 
 /-- Partial coverage trees preserve unresolved leaves explicitly. A closed
     subtree must pass the existing complete Audit checker. -/
@@ -16,8 +16,8 @@ inductive PartialAudit where
 
 def partialCheck (B : Nat) (p : PartialMachine) : PartialAudit → Bool
   | .unresolved => true
-  | .closed t => check B p t
-  | .split n s kids => queryOK B p n s &&
+  | .closed t => zipCheck B p t
+  | .split n s kids => zipQueryOK B p n s &&
       BB6.Agent31ThreeHole.allMoves (fun mv => partialCheck B (refine p s (some mv)) (kids mv))
 termination_by structural t => t
 
@@ -39,12 +39,12 @@ theorem partialSound (B : Nat) (p : PartialMachine) (t : PartialAudit)
     exact Or.inr ⟨([],p), by simp [partialResiduals], hm⟩
   | closed t =>
     intro m hm
-    exact Or.inl ((certified B p t hf hno h).sound m hm)
+    exact Or.inl ((certifiedZip B p t hf hno h).sound m hm)
   | split n s kids ih =>
-    have hv : queryOK B p n s = true ∧ BB6.Agent31ThreeHole.allMoves
+    have hv : zipQueryOK B p n s = true ∧ BB6.Agent31ThreeHole.allMoves
         (fun mv => partialCheck B (refine p s (some mv)) (kids mv)) = true := by
       simpa only [partialCheck, Bool.and_eq_true] using h
-    obtain ⟨hread,hhole,hw⟩ := queryOK_sound hv.1
+    obtain ⟨hread,hhole,hw⟩ := zipQueryOK_sound hv.1
     intro m hm
     cases ht : m s with
     | none =>
