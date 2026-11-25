@@ -73,7 +73,7 @@ def main():
     remaining=set(range(nopen))-covered
     if raw==117:
         assert remaining==set(ONE)|set(TWO)|set(HARD)|{LATE}
-        remaining-=set(ONE)|set(TWO)|{LATE}
+        remaining-=set(ONE)|set(TWO)|set(HARD)|{LATE}
         if a.sweeps:sweeps(opens,folder)
     for i in sorted(remaining):print(i,opens[i])
     print('candidate FAR',len(covered),'remaining',len(remaining))
