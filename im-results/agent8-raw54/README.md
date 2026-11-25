@@ -55,9 +55,9 @@ They use the same total four-bit digit recurrence as IDs 2 and 72. Their left an
 
 All thirteen new `never` theorems were checked locally in Lean 4.36.0-rc2 using the relevant original repository source definitions and transport proof excerpts, with only propext and Quot.sound. All source files and the generator integration are committed.
 
-## E0=1LF child: one unresolved candidate leaf
+## E0=1LF child: zero unresolved candidate leaves
 
-The distinct child `1RB---_1RC---_0RD---_1LD0LE_1LF0LE_------` has 1,926 splits, 28,735 cycles, 14,366 last-hole and 1,198 open nodes. The frozen FAR bank matches 1,085 of the open nodes. The [LF generator](generate_lf.py) and [witness ledger](lf-witnesses.txt) encode the partial audit at weighted bound 7014; [the one residual table](lf-unresolved.txt) are the remaining candidate holes, not a source-accepted residual theorem. The earlier nine residual IDs were reproduced by an independent exact first-hole/side-cycle enumerator and FAR saturation with the same ordering and counts.
+The distinct child `1RB---_1RC---_0RD---_1LD0LE_1LF0LE_------` has 1,926 splits, 28,735 cycles, 14,366 last-hole and 1,198 open nodes. The frozen FAR bank matches 1,085 of the open nodes. The [LF generator](generate_lf.py) and [witness ledger](lf-witnesses.txt) encode the partial audit at weighted bound 7014; [the empty residual list](lf-unresolved.txt) are the remaining candidate holes, not a source-accepted residual theorem. The earlier nine residual IDs were reproduced by an independent exact first-hole/side-cycle enumerator and FAR saturation with the same ordering and counts.
 
 ID 64 (`1RB---_1RC1LB_0RD0RF_1LD0LE_1LF0LE_1LA0RC`) has a total three-phase return proof in [Raw54LFGrowth64.lean](Raw54LFGrowth64.lean). Write D(p,n) for state D, left zipper (00)^n p and empty right zipper. The anchor words p0=11, p1=1011, p2=101011 give exact transitions:
 - D(p0,k+2) -> D(p2,k+3), 4k+56 moves;
@@ -79,6 +79,10 @@ ID 90 (`1RB---_1RC0RA_0RD0RE_1LD0LE_1LF0LE_1RB0LE`) has a growing marker plus ar
 ### LF ID 34: paired-word / odd-run grammar
 
 At A, the left zipper is a zero followed by an arbitrary word of doubled bits. The right zipper is a zero followed by a grammar of odd positive one-runs separated by odd positive zero-runs, ending in an even positive one-run. Encode a terminal run by `last n`, and a nonterminal run by `more m g w`, with lengths 2n+2, or 2m+1 and 2g+1. `strip` removes initial true bits from the paired word and one false if present; let a be its count. Terminal runs reset to `more 0 a (last (n+1))` in 4n+16+2a steps; a minimal gap transfers m zero pairs and a true pair to the left and removes the first run in 2m+10 steps; a longer gap resets to `more 0 a (more (m+1) g w)` in 4m+14+2a steps. Entry 12. `Raw54LFRun34.lean` proves every branch for arbitrary words and derives `never` (axioms propext, Quot.sound) with the local semantic excerpt closure. Full integration remains pending.
+
+### LF ID 44: quaternary counter
+
+The six-cell digits 0,1,2,3 are encoded respectively as `000000`, `110000`, `001111`, `111111` (least significant digit first). The final digit 1 is truncated to `11` to model the exact sparse zipper at the blank boundary. At A, left is `000`, right is `0` followed by the nonempty digit word. The blank entry is 10 steps, digit 1. A carried digit 3 transfers six ones to the left in 10 steps; the terminating digit 0 or 2 is incremented and returns in 10+n steps where n counts transferred ones; digit 1 returns in 26+n steps. A carried final digit 3 extends the word onto blank cells, returning in 26+n steps. Thus the macro implements total base-4 increment with 16 extra steps per carried nonterminal digit. `Raw54LFDigit44.lean` proves the recurrence for arbitrary words including all terminal cases, then `never` with only propext and Quot.sound in the local original-semantic excerpt closure. This is the last LF candidate. Both LB/LF candidate ledgers are empty; the two child coverage certificates still require full original import-closure acceptance.
 
 ## Reproduction
 
