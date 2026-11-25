@@ -1,4 +1,8 @@
-# Raw107/1LA: three unary-tail exceptions
+# Raw107/1LA: complete source-accepted bound
+
+The entire 1LA child has weighted bound **282** for every compatible completion. The `Raw107LABridge.lean` theorem is the exact graft of the eight nonhalting exceptions into the generated first-hole tree. All six disjoint certificate shards and final assembly passed [run 45527192650](https://github.com/FlareZ123/bb6/actions/runs/45527192650), pinned 1322639d1894ac7ba84ecd279b5c0a22ef1b547a. The first monolithic audit 45525325241 ended from runner shutdown, not a reported theorem error. The partitioned audit is the accepted replacement. This is a child closure, not a bound for all of raw107.
+
+## Three unary-tail exceptions
 
 Exact tables (source open-list indices): 
 - 95: `1RB0LB_1RC1LA_0RD0RC_1LD1RE_0RF0RB_---0RC`
@@ -19,4 +23,4 @@ The number of alternating pairs strictly increases by two; the unary count stays
 
 `Raw107LAUnary.lean`: all operational recurrence, entry and positivity lemmas passed local Lean 4.36.0-rc2 against exact copied zipper definitions and checked sweep lemmas (axioms propext, Quot.sound, Classical.choice for positive-cost witness). The committed source imports the original SweepPumping and uses never_of_growth; full source closure and axiom audit **passed** at [run 45525124908](https://github.com/FlareZ123/bb6/actions/runs/45525124908) on 0162dfb0190ca8434d71557317b3b21fdc80348d. Job 138906451980, step 43 `Check source-linked raw107 exceptional growth witnesses`, executed successfully and the forbidden-axiom output guard passed. All six exceptional proof modules, covering eleven leaf tables, were included. Exported interfaces: BB6.Agent1Raw107LAUnary.M95/M96/M99.table and .never.
 
-Agent11/10 have separately produced candidate proofs of the other eight exceptions. A complete raw107 cylinder safety theorem additionally requires original-source acceptance of every child audit and the parent first-hole split. Do not count this as a source-accepted parent deletion or a global BB(6) upper bound yet.
+Agent11/10 supplied the other five 1LA exceptions and three exceptions in other raw107 children. The complete raw107 parent requires the other child bounds and the parent first-hole split; the 1LA bound can now be used without premises.
