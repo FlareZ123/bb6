@@ -88,7 +88,7 @@ theorem fRunKnown (i : Fin 9) :
     knownRun (fParent i) (fRunLength i) = some (fConfig i) := by
   have hsome :
       (knownRun (fParent i) (fRunLength i)).isSome = true := by
-    fin_cases i <;> decide
+    revert i; decide
   unfold fConfig
   cases h : knownRun (fParent i) (fRunLength i) with
   | none => simp [h] at hsome
@@ -96,11 +96,11 @@ theorem fRunKnown (i : Fin 9) :
 
 theorem fReadSlot (i : Fin 9) :
     readSlot (fConfig i) = fHole i := by
-  fin_cases i <;> decide
+  revert i; decide
 
 theorem fHoleProof (i : Fin 9) :
     fParent i (fHole i) = none := by
-  fin_cases i <;> decide
+  revert i; decide
 
 
 /-- The full literal table; E1 is the only absent transition. -/
@@ -110,15 +110,21 @@ def fMoves : Nat := 9217091204829760959746640857348768637582782
 
 theorem fFinalNoAssignedHalt : weightedTNFNoAssignedHalt fP9 := by
   intro s
-  fin_cases s.1 <;> cases s.2 <;> decide
+  rcases s with ⟨q,b⟩
+  have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
+  rcases hq with rfl | rfl | rfl | rfl | rfl | rfl <;> cases b <;> decide
 
 theorem fFinalUniqueHole {s : Slot} (h : fP9 s = none) : s = (4, true) := by
-  fin_cases s.1 <;> cases s.2 <;>
+  rcases s with ⟨q,b⟩
+  have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
+  rcases hq with rfl | rfl | rfl | rfl | rfl | rfl <;> cases b <;>
     simp [fP9,fP8,fP7,fP6,fP5,fP4,fP3,fP2,fP1,fResidual,fRoot,refine,emptyTable] at h ⊢
 
 theorem fFinalOtherSlots (s : Slot) (h : s ≠ (4,true)) :
     ∃ mv, fP9 s = some (some mv) := by
-  fin_cases s.1 <;> cases s.2 <;>
+  rcases s with ⟨q,b⟩
+  have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
+  rcases hq with rfl | rfl | rfl | rfl | rfl | rfl <;> cases b <;>
     simp [fP9,fP8,fP7,fP6,fP5,fP4,fP3,fP2,fP1,fResidual,fRoot,refine,emptyTable] at h ⊢
 
 theorem fFinalDelays : possibleDelays (refine fP9 (4,true) none) 0 = [0] := by decide
@@ -231,7 +237,7 @@ theorem fClosed_sound (i : Fin 9) (mv : Move) (h : fClosed i mv = true) :
   have hOK := (List.all_eq_true.mp fWitnessesOK) w hw
   have hpair' : w.depth = i ∧ w.child = mv := of_decide_eq_true hpair
   rcases hpair' with ⟨rfl,rfl⟩
-  have hh := Bool.and_eq_true.mp hOK
+  have hh := Bool.and_eq_true_iff.mp hOK
   exact finiteSideCycleCheck_sound (fChild i mv) w.entry w.period w.right w.boundary
     (of_decide_eq_true hh.1) hh.2
 
@@ -262,7 +268,7 @@ theorem fStep (B : Nat) (hB : 20 ≤ B) (i : Fin 9)
     rw [fReadSlot i]
     exact fHoleProof i
   have hf : fParent i initialSlot = some (some ⟨true,true,1⟩) := by
-    fin_cases i <;> decide
+    revert i; decide
   have href := compatible_refine (fParent i) m (fHole i) hm
   cases ht : m (fHole i) with
   | none =>
@@ -273,7 +279,7 @@ theorem fStep (B : Nat) (hB : 20 ≤ B) (i : Fin 9)
       have hd6 : d < 6 := by
         unfold possibleDelays at hd
         exact List.mem_range.mp (List.mem_filter.mp hd).1
-      have hn : fRunLength i ≤ 14 := by fin_cases i <;> decide
+      have hn : fRunLength i ≤ 14 := by revert i; decide
       omega
     · rw [fReadSlot i]
       simpa [ht] using href
@@ -283,7 +289,8 @@ theorem fStep (B : Nat) (hB : 20 ≤ B) (i : Fin 9)
     by_cases hn : mv = fNextMove i
     · subst mv
       have he : fChild i (fNextMove i) = fNextParent i := by
-        fin_cases i <;> rfl
+        have hi : i = 0 ∨ i = 1 ∨ i = 2 ∨ i = 3 ∨ i = 4 ∨ i = 5 ∨ i = 6 ∨ i = 7 ∨ i = 8 := by omega
+      rcases hi with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl <;> rfl
       exact hnext m (he ▸ hc)
     · by_cases hs : fClosed i mv = true
       · exact Or.inl (weighted_never B m (fClosed_sound i mv hs m hc))
