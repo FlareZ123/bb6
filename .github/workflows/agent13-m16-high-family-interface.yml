@@ -73,6 +73,7 @@ on:
           - sourceClosedBounce
           - sourceWordBlock
           - sourceWordRunner
+          - sourcePackedStreak
           - sourceWeightedWord
           - sourceDyadicAncestry
           - sourceBoundedShadow
@@ -290,6 +291,9 @@ jobs:
               ;;
             sourceWeightedWord)
               target=im-results/agent12-c-high-shadow/WeightedWordSource.lean
+              ;;
+            sourcePackedStreak)
+              target=im-results/agent12-c-high-shadow/PackedStreakTest.lean
               ;;
             sourceWordRunner)
               target=im-results/agent12-c-high-shadow/WordRunnerSource.lean
