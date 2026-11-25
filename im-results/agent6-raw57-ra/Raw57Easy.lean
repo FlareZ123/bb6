@@ -20,6 +20,12 @@ noncomputable def rd : WeightedTNFCertificate 273 (child ⟨false,true,3⟩) 6 :
   certifiedZip 273 _ (.cycle 13 1 false 1) (child_root _) (child_nohalt _) (by decide)
 noncomputable def le : WeightedTNFCertificate 273 (child ⟨false,false,4⟩) 6 :=
   certifiedZip 273 _ (.cycle 0 9 false 3) (child_root _) (child_nohalt _) (by decide)
+noncomputable def ld1 : WeightedTNFCertificate 273 (child ⟨true,false,3⟩) 6 :=
+  certifiedZip 273 _ (.cycle 11 1 false (-1)) (child_root _) (child_nohalt _) (by decide)
+noncomputable def rd1 : WeightedTNFCertificate 273 (child ⟨true,true,3⟩) 6 :=
+  certifiedZip 273 _ (.cycle 4 4 true 1) (child_root _) (child_nohalt _) (by decide)
+#print axioms ld1
+#print axioms rd1
 #print axioms la
 #print axioms rd
 #print axioms le

@@ -4,8 +4,7 @@ on:
     inputs:
       child:
         description: A1 transition
-        type: choice
-        options: [0RB, 0RC, easy]
+        type: string
         default: 0RB
 permissions:
   contents: read

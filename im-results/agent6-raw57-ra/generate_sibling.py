@@ -19,7 +19,7 @@ ID="Raw57"+A[1:]+A[0]
 PARENT=f"1RB{A}_1RC---_0RD---_1LD1RE_---0LA_------"
 BOUND=SPEC["bound"]
 MOVES=[w+d+q for w,d,q in product("01","LR","ABCDEF")]
-OVERRIDES=SPEC["dfa"]
+OVERRIDES=SPEC.get("dfa","")
 def main():
     target=ROOT/("generated-"+A); target.mkdir(exist_ok=True)
     subprocess.run(["g++","-std=c++17","-O3",str(ROOT.parent/"agent2-tnf-raw99/enumerate.cpp"),"-o",str(target/"enumerate")],check=True)
@@ -29,7 +29,7 @@ def main():
     opens=data.decode().splitlines()
     assert len(opens)==SPEC["stats"]["open"]==len(set(opens))
     index={s:i for i,s in enumerate(opens)}
-    dfa=[SPEC["default"]]*len(opens)
+    dfa=[SPEC.get("default","")]*len(opens)
     for row in OVERRIDES.split():
         i,a=row.split(":");dfa[int(i)]=a
     pumpns=f"BB6.Agent6{ID}Pumps"
@@ -43,6 +43,9 @@ def main():
             pumps[i]=f"{pumpns}.M{i}"
             pumpcode.append(code)
             print(A,i,info)
+    for i,module in SPEC.get("extra",{}).items():
+        pumps[int(i)]=f"{pumpns}.M{i}"
+        pumpcode.insert(0,"import "+module)
     pumpcode.append(f"end {pumpns}")
     (ROOT/(ID+"Pumps.lean")).write_text("\n\n".join(pumpcode)+"\n")
     ns=f"BB6.Agent6{ID}"
@@ -66,7 +69,15 @@ open BB6.Agent50TNFPilot BB6.Agent31ThreeHole BB6.Agent10ZipAudit
         if tag=="open":
             code=v[0];i=index[code]
             if i in pumps:return f".proven {pumps[i]}.table {pumps[i]}.never"
-            a=dfa[i];rev=int(a[0]);d,D,L,R,z=masks(parse(code),rev,[int(ch,36) for ch in a[1:]])
+            candidates=SPEC["bank"].split() if "bank" in SPEC else [dfa[i]]
+            for a in candidates:
+                rev=int(a[0])
+                try:
+                    d,D,L,R,z=masks(parse(code),rev,[int(ch,36) for ch in a[1:]])
+                except AssertionError:
+                    continue
+                break
+            else: raise AssertionError((A,i,code,"no FAR witness"))
             return f".far {str(bool(rev)).lower()} {d} ⟨0,{D},{L},{R},{z}⟩"
         assert tag=="split"
         n,s,kids=v;assert len(kids)==24
