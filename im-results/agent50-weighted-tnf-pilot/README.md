@@ -176,3 +176,41 @@ closure. Run
 [45556817579](https://github.com/FlareZ123/bb6/actions/runs/45556817579)
 was queued at commit `dfb0a16f8a8cff5cfcdb1a448e3f10421e6e2274`;
 kernel acceptance is pending at this checkpoint.
+
+
+## 2026-11-25: two-step 25^8 halting cylinder
+
+`Raw10Box0Halt.lean` defines a four-slot partial machine:
+A0=1RB, A1=halt, B0=1LC, C1=halt. Its other eight transition
+slots are unassigned, so it has 25^8 = 152,587,890,625 compatible
+completions. Every completion executes A0 and B0, writes 1 at cells 0
+and 1, reaches C scanning 1 at cell 0, and halts on C1 after exactly
+two ordinary moves (Busy Beaver score 3).
+
+The proof uses the original `common_prefix_of_partial_table` theorem to
+transfer the two-move prefix and terminal query from the default completion
+to every compatible machine. The existing
+`WeightedFirstOneCover.weighted_halt_leaf` then gives
+`Cover (WeightedBound 7014) haltTable`. The file also proves that the
+table refines the B0=1LC raw10 parent and has exactly four assigned slots.
+It is an ordinary `Cover` leaf, not a `WeightedTNFCertificate`, because
+the two assigned halt transitions are intentional.
+
+A finite replay of the exact `subtractMany` algorithm reports that the
+first residual rectangle after the 65 side witnesses, held table, and
+625-machine lasso has domains A1 = all 25 outcomes except 0RD and C1 =
+all 25 outcomes except 0LA and 0LD. Thus A1=halt and C1=halt are permitted
+choices in that rectangle. Adding the halting cylinder splits the
+40-rectangle remainder into 41 rectangles and reduces its mass from
+90,890,091,604,350 to 90,737,503,713,725, exactly 25^8. This residual-box
+membership, rectangle count, and mass are finite computational evidence;
+they are not yet a Lean theorem.
+
+The dedicated CI target `weighted-tnf-raw10-box0-halt` compiles
+`Raw10Box0Halt.lean`. Run
+[45558703747](https://github.com/FlareZ123/bb6/actions/runs/45558703747)
+was queued at commit `451fbac99b40cecf707394b5c28d208d553ec059`;
+kernel acceptance is pending. The next formal step is to add this
+`Cover` leaf to the raw10 certified-table list, prove the new exact
+remainder characterization, and discharge the remaining rectangles.
+This does not close the raw10 parent or determine BB(6).
