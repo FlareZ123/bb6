@@ -9,7 +9,7 @@ namespace BB6.Agent24Q32SourceSweeps
 open BB6Coverage
 open BB6.Agent13BlankDelay
 open BB6.Agent24Q32SideLeafRoster
-open BB6.Agent31Pump
+open BB6Coverage.Agent31Pump
 open BB6.Agent50TNFPilot
 open BB6.Agent50TranslatedCycler
 
