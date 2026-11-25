@@ -36,10 +36,10 @@ Qed.
     left open by the parent and fixed by the leaf. *)
 Theorem recovered_held_2800_parent_leaf_partition (m : TM)
     (hm : is_child_of m recovered_held_2800_parent) :
-    is_child_of m recovered_held_2800 \\/
+    is_child_of m recovered_held_2800 \/
       exists h,
-        recovered_held_2800_parent h = None /\\
-        recovered_held_2800 h <> None /\\
+        recovered_held_2800_parent h = None /\
+        recovered_held_2800 h <> None /\
         m h <> recovered_held_2800 h.
 Proof.
   destruct (classic (is_child_of m recovered_held_2800)) as [Hleaf|Hnot].
@@ -89,7 +89,7 @@ Qed.
 
 Theorem source_table_eqb_spec (a b : TM) :
     source_table_eqb a b = true ->
-    is_child_of a b /\\ is_child_of b a.
+    is_child_of a b /\ is_child_of b a.
 Proof.
   unfold source_table_eqb.
   intro H.
@@ -127,7 +127,7 @@ Qed.
 Theorem recovered_held_2800_checkpoint_leaf :
     exists x,
       In x (snd recovered_held_2800_checkpoint) /\
-      is_child_of (tm x) recovered_held_2800 /\\
+      is_child_of (tm x) recovered_held_2800 /\
       is_child_of recovered_held_2800 (tm x).
 Proof.
   pose proof recovered_held_2800_checkpoint_member as H.
