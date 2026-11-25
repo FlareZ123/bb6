@@ -1,4 +1,4 @@
-# Canonical raw107: five-hole B1=0RD child candidate and six-hole census
+# Raw107: ten candidate child audits; eleven outstanding leaf machines
 
 Parent: `1RB---_1RC---_0RD---_1LD1RE_---0RB_------`. This is canonical residual 107, with six holes. The first undefined row is B1 at time 7. This work closes a candidate **seven-child** audit, not the whole parent or the BB(6) upper bound.
 
@@ -69,6 +69,35 @@ Exceptional leaf 512 `1RB0LC_1RC1RF_0RD1LF_1LD1RE_---0RB_1LC1RA` enters a right-
 Candidate bound **90**, first query E0 t8. Counts: 708 split, 12897 cycle, 3074 last, 314 open (292 FAR +22 symbolic). Mass 9,020,625 cycle; 602,174 halt; 73,776 total-defined; 69,050 open. Max finite witness `1RB1RA_1RC0LE_0RDHHH_1LD1RE_1LF0RB_0RA1LE`, t88, delay1. Generate `python generate_more.py 0LE`.
 
 Leaf224 `1RB---_1RC0LE_0RD1RA_1LD1RE_1LF0RB_0RB0LF`: Raw107LECountdown.lean proves exact recursive macro D(n,R) -> A(n,R) for arbitrary right suffix R; D left word 00 1^(3n+1) 010, A left word 0 1^(3n+2) 010. C(0)=10, C(n+1)=2C(n)+6; the auxiliary advance consumes n zero triples with cost C(n)-3n-10. Entry D(1,[]) at t23; growth epoch C(n+1)+3. Three delayed linear-growth exceptions (266,288,272) have (entry,intercept,slope)=(50,27,8),(44,25,8),(20,36,20). All 22 entry/growth proofs compiled locally, source closure pending. Ten complete nontrivial child candidates now cover 97,656,250 raw assignments (40% of raw107) with 94 recurrence instances.
+
+## Conditional classification of the remaining three children
+
+The remaining large children have 5,098 open leaves in the baseline census. After FAR bank screening, a new exhaustive search of canonical FAR automata of sizes 1–5 (both orientations, 31 further witnesses across these children), and symbolic proof search, only **11** remain unclassified.
+
+| Child | Candidate weighted bound | Open | FAR | Symbolic | Unresolved |
+|---|---:|---:|---:|---:|---:|
+| 0LF | 815 | 1418 | 1342 | 75 | 1 |
+| 1LA | 282 | 1183 | 1126 | 49 | 8 |
+| 1LF | 753 | 2497 | 2425 | 70 | 2 |
+
+All 194 new symbolic recurrences have locally checked growth and entry equations in the copied exact zipper primitives. The entire raw107 has thus 288 locally checked recurrence instances; there are eleven immediate root side-cycle children and ten nontrivial candidate-complete children. For the other three, the candidate audit is explicitly conditional on the eleven nonhalting hypotheses. Run `python generate_partial.py 0LF 1LA 1LF`; the generator regenerates the census, asserts the roster hash, assigns FAR witnesses from bank.txt via bank.cpp, checks all remaining symbolic families, and emits an Audit with .proven leaves using the explicit Exceptions premise (no sorry or axioms). **The original-source conditional tree has not yet been compiled.** Its intended theorem is conditional on nonhalting of all listed partial tables, not evidence that those tables are nonhalting.
+
+1LA/483: the manual Raw107LACount.lean proof starts at step20 with a boundary B run of five ones, and maps count m to 3m+4. The exact epoch cost is 2+13m+10+transferCost(3,m)+(3+3m+2), where transferCost(k,0)=0 and transferCost(k,m+1)=2k+8+transferCost(k+3,m). The proof repeatedly transfers one unary digit into three zero digits and then rescans. All growth/entry theorems compiled locally; original-source never bridge pending.
+
+Remaining exact tables (row indexes are local to each roster; --- is the unassigned entry):
+- 0LF/180: `1RB1LA_1RC0LF_0RD---_1LD1RE_1RC0RB_1LA0LA`
+- 1LA/93: `1RB0LB_1RC1LA_0RD0LA_1LD1RE_0RF0RB_---0RC`
+- 1LA/94: `1RB0LB_1RC1LA_0RD0LC_1LD1RE_0RF0RB_---0RC`
+- 1LA/95: `1RB0LB_1RC1LA_0RD0RC_1LD1RE_0RF0RB_---0RC`
+- 1LA/96: `1RB0LB_1RC1LA_0RD0RF_1LD1RE_0RF0RB_---0RC`
+- 1LA/97: `1RB0LB_1RC1LA_0RD1LB_1LD1RE_0RF0RB_---0RC`
+- 1LA/98: `1RB0LB_1RC1LA_0RD1LD_1LD1RE_0RF0RB_---0RC`
+- 1LA/99: `1RB0LB_1RC1LA_0RD1LE_1LD1RE_0RF0RB_---0RC`
+- 1LA/385: `1RB0LB_1RC1LA_0RD0RC_1LD1RE_1RF0RB_---1LC`
+- 1LF/1424: `1RB0LA_1RC1LF_0RD0RD_1LD1RE_1RB0RB_1LA---`
+- 1LF/1655: `1RB0LB_1RC1LF_0RD1RA_1LD1RE_---0RB_1LB0RC`
+
+If all eleven exceptions are discharged and the original-source proof trees (including eleven immediate root side cycles and the weighted root halt case) are accepted, the candidate bound for raw107 is 815. No unconditional cylinder elimination is claimed yet.
 
 ## Full raw107 census
 
