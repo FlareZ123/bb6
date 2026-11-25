@@ -1645,19 +1645,6 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
-      - name: Restore Lean toolchain cache
-        id: lean-cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.elan
-          key: lean-4.36.0-rc2-${{ runner.os }}-${{ runner.arch }}
-      - name: Install pinned Lean on cache miss
-        if: steps.lean-cache.outputs.cache-hit != 'true'
-        run: |
-          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
-          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
-      - name: Add elan to PATH
-        run: echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Verify pinned Lean
         run: |
           "$HOME/.elan/bin/lean" --version
@@ -1676,10 +1663,12 @@ jobs:
           cd "$W"
           git -C "$GITHUB_WORKSPACE" rev-parse HEAD > SOURCE_COMMIT
           sha256sum Raw124B1LA*.lean > RAW124_SOURCE.sha256
+          cp -a "$HOME/.elan" "$W/.elan"
       - uses: actions/upload-artifact@v4
         with:
           name: raw124-1la-common
           path: /tmp/a2-raw124-1la
+          include-hidden-files: true
           if-no-files-found: error
 
   raw124_1la_shards:
@@ -1698,23 +1687,15 @@ jobs:
           - { shard: 4, kids: 'K16 K17 K18 K19' }
           - { shard: 5, kids: 'K20 K21 K22 K23' }
     steps:
-      - name: Restore Lean toolchain cache
-        id: lean-cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.elan
-          key: lean-4.36.0-rc2-${{ runner.os }}-${{ runner.arch }}
-      - name: Install pinned Lean on cache miss
-        if: steps.lean-cache.outputs.cache-hit != 'true'
-        run: |
-          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
-          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
-      - name: Add elan to PATH
-        run: echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - uses: actions/download-artifact@v4
         with:
           name: raw124-1la-common
           path: /tmp/a2-raw124-1la
+      - name: Use pinned Lean toolchain from common artifact
+        run: |
+          echo "ELAN_HOME=/tmp/a2-raw124-1la/.elan" >> "$GITHUB_ENV"
+          echo "/tmp/a2-raw124-1la/.elan/bin" >> "$GITHUB_PATH"
+          /tmp/a2-raw124-1la/.elan/bin/lean --version
       - name: Compile disjoint raw124 1LA child modules
         env:
           KIDS: ${{ matrix.kids }}
@@ -1741,23 +1722,15 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - name: Restore Lean toolchain cache
-        id: lean-cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.elan
-          key: lean-4.36.0-rc2-${{ runner.os }}-${{ runner.arch }}
-      - name: Install pinned Lean on cache miss
-        if: steps.lean-cache.outputs.cache-hit != 'true'
-        run: |
-          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
-          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
-      - name: Add elan to PATH
-        run: echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - uses: actions/download-artifact@v4
         with:
           name: raw124-1la-common
           path: /tmp/a2-raw124-1la
+      - name: Use pinned Lean toolchain from common artifact
+        run: |
+          echo "ELAN_HOME=/tmp/a2-raw124-1la/.elan" >> "$GITHUB_ENV"
+          echo "/tmp/a2-raw124-1la/.elan/bin" >> "$GITHUB_PATH"
+          /tmp/a2-raw124-1la/.elan/bin/lean --version
       - uses: actions/download-artifact@v4
         with:
           pattern: raw124-1la-kids-*
@@ -1860,19 +1833,6 @@ jobs:
       RAW124_BRANCH: ${{ inputs.raw124_branch }}
     steps:
       - uses: actions/checkout@v4
-      - name: Restore Lean toolchain cache
-        id: lean-cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.elan
-          key: lean-4.36.0-rc2-${{ runner.os }}-${{ runner.arch }}
-      - name: Install pinned Lean on cache miss
-        if: steps.lean-cache.outputs.cache-hit != 'true'
-        run: |
-          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
-          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
-      - name: Add elan to PATH
-        run: echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Verify pinned Lean
         run: |
           "$HOME/.elan/bin/lean" --version
@@ -1892,10 +1852,12 @@ jobs:
           cd "$W"
           git -C "$GITHUB_WORKSPACE" rev-parse HEAD > SOURCE_COMMIT
           sha256sum "${STEM}"*.lean > RAW124_SOURCE.sha256
+          cp -a "$HOME/.elan" "$W/.elan"
       - uses: actions/upload-artifact@v4
         with:
           name: raw124-${{ inputs.raw124_branch }}-common
           path: /tmp/a2-raw124-bundle
+          include-hidden-files: true
           if-no-files-found: error
 
   raw124_bundle_shards:
@@ -1916,23 +1878,15 @@ jobs:
           - { shard: 4, kids: 'K16 K17 K18 K19' }
           - { shard: 5, kids: 'K20 K21 K22 K23' }
     steps:
-      - name: Restore Lean toolchain cache
-        id: lean-cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.elan
-          key: lean-4.36.0-rc2-${{ runner.os }}-${{ runner.arch }}
-      - name: Install pinned Lean on cache miss
-        if: steps.lean-cache.outputs.cache-hit != 'true'
-        run: |
-          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
-          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
-      - name: Add elan to PATH
-        run: echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - uses: actions/download-artifact@v4
         with:
           name: raw124-${{ inputs.raw124_branch }}-common
           path: /tmp/a2-raw124-bundle
+      - name: Use pinned Lean toolchain from common artifact
+        run: |
+          echo "ELAN_HOME=/tmp/a2-raw124-bundle/.elan" >> "$GITHUB_ENV"
+          echo "/tmp/a2-raw124-bundle/.elan/bin" >> "$GITHUB_PATH"
+          /tmp/a2-raw124-bundle/.elan/bin/lean --version
       - name: Compile selected branch kid modules
         env:
           KIDS: ${{ matrix.kids }}
@@ -1962,23 +1916,15 @@ jobs:
     env:
       RAW124_BRANCH: ${{ inputs.raw124_branch }}
     steps:
-      - name: Restore Lean toolchain cache
-        id: lean-cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.elan
-          key: lean-4.36.0-rc2-${{ runner.os }}-${{ runner.arch }}
-      - name: Install pinned Lean on cache miss
-        if: steps.lean-cache.outputs.cache-hit != 'true'
-        run: |
-          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
-          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
-      - name: Add elan to PATH
-        run: echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - uses: actions/download-artifact@v4
         with:
           name: raw124-${{ inputs.raw124_branch }}-common
           path: /tmp/a2-raw124-bundle
+      - name: Use pinned Lean toolchain from common artifact
+        run: |
+          echo "ELAN_HOME=/tmp/a2-raw124-bundle/.elan" >> "$GITHUB_ENV"
+          echo "/tmp/a2-raw124-bundle/.elan/bin" >> "$GITHUB_PATH"
+          /tmp/a2-raw124-bundle/.elan/bin/lean --version
       - uses: actions/download-artifact@v4
         with:
           pattern: raw124-${{ inputs.raw124_branch }}-kids-*
@@ -2007,7 +1953,8 @@ jobs:
           for name in re.findall(r"'([^']+)' does not depend on any axioms", log):
               seen.add(name.rsplit('.', 1)[-1])
           assert {'checkRoot', 'bound_all'} <= seen, seen
-          print(f'Raw124 {RAW124_BRANCH} branch source and allowed-axiom gate passed.')
+          import os
+          print(f'Raw124 {os.environ["RAW124_BRANCH"]} branch source and allowed-axiom gate passed.')
           PY
       - uses: actions/upload-artifact@v4
         with:
