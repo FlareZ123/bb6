@@ -78,3 +78,12 @@ The actual source audit is being performed by `.github/workflows/agent47-raw114-
 - Workflow `.github/workflows/agent31-canonical71-raw109.yml` is prepared to reuse the successful canonical72 artifact and generate only Raw109's B0LD/B0RE cut data. Dispatch it only after the actual 72-entry artifact is available.
 
 These are intermediate conditional frontier results, not an exact BB(6) value. Keep them in `im-results/` until the full proof obligations are discharged.
+
+
+## Latest frontier status (25 November 2026, Agent 31)
+
+**Accepted 76-roster:** the exactness job 139320746934 in run [45647053824](https://github.com/FlareZ123/bb6/actions/runs/45647053824) successfully source-audited `CanonicalTwoParentRosterOnly.exact_at_target`. The embedded manifest reports 76 retained representatives, cutoff 7014, 51 reused core modules, and standard theorem axiom profiles. The artifact named `canonical73-raw110-raw112-roster-consumer-certified` is mislabelled; it is the 76-residual two-parent wrapper. The independent raw107 shared-core artifact is 15043282896. See [the accepted mathematical result](../../results/2026-11-25-canonical76-two-parent-reduction-agent31.md).
+
+**Canonical73/72 follow-on:** run [45697687963](https://github.com/FlareZ123/bb6/actions/runs/45697687963), target `canonical73`, reuses that shared core and attempts Raw117, Raw112, Raw110 and Raw121 parent cuts. The canonical73 generation step now runs all Raw107 generators (`generate.py`, `generate_rc.py`, `generate_re.py`, `generate_more.py`, `generate_partial.py`) plus the 13-prefix chunk checks, and verifies the generated modules before closure compilation. At the last status check, all generation/reconstruction steps had succeeded and the full Lean closure was still compiling. The 73/72 results remain pending until the source and axiom audit passes.
+
+Raw59 is not yet eligible for graft ingestion: its complete UpgradeAll parent theorem at 4,200,000 has not passed source acceptance. Once accepted, port its consumer to the newest accepted roster rather than the older canonical77 base.
