@@ -155,8 +155,7 @@
     "1592": "1RB1LF_1RC0LB_0RD0RA_1LD1RE_---1RA_0RE1LB",
     "1596": "1RB1LF_1RC0LB_0RD0RD_1LD1RE_0RA1RA_---1LB",
     "1603": "1RB1LF_1RC0LB_0RD0RE_1LD1RE_---1RA_---1LB",
-    "1605": "1RB1LF_1RC0LB_0RD0RF_1LD1RE_---1RA_0RC1LB",
-    "1758": "1RB1LF_1RC0RB_0RD0LA_1LD1RE_---1RA_1RE1LC"
+    "1605": "1RB1LF_1RC0LB_0RD0RF_1LD1RE_---1RA_0RC1LB"
   },
   "late": {},
   "manual": {
@@ -179,6 +178,11 @@
       "Raw60LFTriple",
       "BB6.Agent1Raw60LFTriple.M784",
       "1RB1LF_1RC---_0RD0LD_1LD1RE_0LC1RA_0RB0LF"
+    ],
+    "1758": [
+      "Raw60LFDoubleSweep",
+      "BB6.Agent1Raw60LFDoubleSweep",
+      "1RB1LF_1RC0RB_0RD0LA_1LD1RE_---1RA_1RE1LC"
     ]
   }
 }
