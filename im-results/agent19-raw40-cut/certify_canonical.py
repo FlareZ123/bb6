@@ -18,6 +18,12 @@ def ordinary(t,p):
         i,code=next(it);assert t[1]==code==show(p)
         pumps={'1RB0RC_1RC1RE_0RD1LB_1LD1LA_1LF0RF_---0LB':'RC1LB','1RB0RB_1RC0RC_0RD0LE_1LD1LA_0LF---_1LC0RB':'RB0RC'}
         if code in pumps:return f'.proven BB6.Agent19Raw40.{pumps[code]}.table BB6.Agent19Raw40.{pumps[code]}.never'
+        extra={'1RB0RB_1RC1RC_0RD0LE_1LD1LA_---1LF_1LC0RF':('RB1RC.table','RB1RC.never'),
+               '1RB1RB_1RC0RC_0RD0LE_1LD1LA_1RB1LF_---1LC':('A10RC.table A10RC.rb','A10RC.neverRB'),
+               '1RB0RD_1RC0RC_0RD0LE_1LD1LA_1RB1LF_---1LC':('A10RC.table A10RC.rd','A10RC.neverRD'),
+               '1RB1RC_1RC1RE_0RD1LB_1LD1LA_1LF0RF_---0LB':('OneRC1LB.table','OneRC1LB.never')}
+        if code in extra:
+            table,proof=extra[code];return f'.proven ({table}) ({proof})'
         return far(bank[i],p)
     assert t[0]=='split';n,s,children=t[1:];assert p[s]=='---' and len(children)==24
     return f'.split {n} {slot(s)} (byMove [\n'+',\n'.join(ordinary(k,p[:s]+[move(i)]+p[s+1:]) for i,k in enumerate(children))+'])'
@@ -35,7 +41,7 @@ open BB6Coverage BB6.Agent13BlankDelay BB6.Agent31ThreeHole BB6.Agent10ZipAudit 
 '''
 foot=f'\nend BB6.Agent19Raw40.{mod}\n'
 cut=support(parent)
-base='import Raw40CanonicalCut\nimport Raw40TwoSided\n'+head+f'-- {show(parent)}\ndef p : PartialMachine := fun s =>\n  match s.1.val,s.2 with\n'
+base='import Raw40CanonicalCut\nimport Raw40TwoSided\nimport Raw40MoreTwoSided\n'+head+f'-- {show(parent)}\ndef p : PartialMachine := fun s =>\n  match s.1.val,s.2 with\n'
 for i,v in enumerate(parent):
     if v!='---':base+=f'  | {i//2},{str(bool(i%2)).lower()} => some (some ⟨{str(v[0]=="1").lower()},{str(v[1]=="R").lower()},{ord(v[2])-65}⟩)\n'
 base+='  | _,_ => none\n'

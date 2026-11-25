@@ -42,7 +42,7 @@ theorem {m}_exact_weighted : (∀ m, compatible {m}.p m → WeightedBound {B} m)
 print('def closedBatch : List PartialMachine := ['+','.join(m+'.p' for m,*_ in info)+']')
 print('''theorem closedBatch_sound : ∀ p ∈ closedBatch, ∀ m, TNFQuotientCompatible p m → WeightedBound 7014 m := by
   intro p hp
-  simp only [closedBatch,List.mem_cons,List.mem_singleton] at hp''')
+  simp only [closedBatch,List.mem_cons,List.not_mem_nil,or_false] at hp''')
 print('  '+('rcases hp with '+'|'.join(['rfl']*len(info)) if len(info)>1 else 'subst p'))
 for m,*_ in info: print(f'  · intro m hm k d hk hd\n    exact Nat.le_trans ({m}.all_quotient m hm k d hk hd) (by decide)')
 print(f'''
