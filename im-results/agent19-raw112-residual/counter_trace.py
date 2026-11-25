@@ -94,9 +94,25 @@ def main():
     parser.add_argument("--steps", type=int, default=1_000_000)
     parser.add_argument("--out", type=Path,
                         default=Path(__file__).with_name("counter-trace.csv"))
+    parser.add_argument("--high-out", type=Path,
+                        default=Path(__file__).with_name("high-counter.csv"))
     args = parser.parse_args()
 
     records, halted = trace(args.steps)
+    low_by_residue = {}
+    high_by_quotient = {}
+    for row in records:
+        residue = row["n"] % 6
+        quotient = row["n"] // 3
+        low = row["low_code"]
+        high = row["high_blocks"]
+        if residue in low_by_residue and low_by_residue[residue] != low:
+            raise AssertionError(f"low code depends on more than n mod 6: n={row['n']}")
+        if quotient in high_by_quotient and high_by_quotient[quotient] != high:
+            raise AssertionError(f"high code depends on more than floor(n/3): n={row['n']}")
+        low_by_residue[residue] = low
+        high_by_quotient[quotient] = high
+
     args.out.parent.mkdir(parents=True, exist_ok=True)
     fields = [
         "n", "step", "state", "left", "right_prefix", "suffix",
@@ -107,9 +123,33 @@ def main():
         writer.writeheader()
         writer.writerows(records)
 
+    high_rows = []
+    by_n = {row["n"]: row for row in records}
+    for quotient, blocks in sorted(high_by_quotient.items()):
+        n = 3 * quotient + 1
+        row = by_n.get(n)
+        if row is None:
+            row = next(x for x in records if x["n"] // 3 == quotient)
+        high_rows.append({
+            "quotient": quotient,
+            "representative_n": row["n"],
+            "step": row["step"],
+            "blocks": blocks,
+            "block_count": 0 if not blocks else len(blocks.split()),
+        })
+    with args.high_out.open("w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=[
+            "quotient", "representative_n", "step", "blocks", "block_count"
+        ])
+        writer.writeheader()
+        writer.writerows(high_rows)
+
     print(f"steps={args.steps} canonical_configs={len(records)} "
           f"max_n={max((r['n'] for r in records), default=0)}")
+    print(f"low_code_residues={len(low_by_residue)} "
+          f"high_counter_states={len(high_by_quotient)}")
     print(f"csv={args.out}")
+    print(f"high_csv={args.high_out}")
     print(f"undefined_transition={halted}")
 
 
