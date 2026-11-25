@@ -1,6 +1,12 @@
 name: Exact TM63 champion attainment (manual)
 on:
   workflow_dispatch:
+    inputs:
+      audit:
+        description: Source audit to run
+        type: choice
+        options: [champion, parent]
+        default: champion
 permissions:
   contents: read
 jobs:
@@ -15,4 +21,8 @@ jobs:
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Compile exact source import closure and audit final theorems
+        if: inputs.audit == 'champion'
         run: bash im-results/agent48-counted-inc0/reproduce-exact-champion.sh
+      - name: Compile champion parent cover and audit sibling proofs
+        if: inputs.audit == 'parent'
+        run: bash im-results/agent48-champion-root/reproduce-parent.sh
