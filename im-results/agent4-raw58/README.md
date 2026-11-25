@@ -39,10 +39,10 @@ The remaining children and their current local bounds in `more.json` are:
 
 | A1 move | Data module | Weighted bound | Status |
 |---|---|---:|---|
-| `0LE` | `Raw58LEData` | 927 | Candidate data; source audit pending |
-| `0LF` | `Raw58LFData` | 7014 | Candidate custom/automata leaves; source audit pending |
+| `0LE` | `Raw58LEData` | 927 | Candidate data; run 45700746076 interrupted by runner shutdown, not a proof failure |
+| `0LF` | `Raw58LFData` | 7014 | Candidate custom/automata leaves; run 45701329862 interrupted by runner shutdown, not a proof failure |
 | `0RF` | `Raw58RFData` | 1346 | Source-accepted |
-| `1LE` | `Raw58LE1Data` | 19310 | Candidate automata/late leaves; source audit pending |
+| `1LE` | `Raw58LE1Data` | 19310 | **Source-accepted** (CI 45700639859) |
 | `1LF` | `Raw58LF1Data` | 7014 | Candidate automata leaves; source audit pending |
 
 **The current parent target is 19310, not 7014.** The committed `Raw58MoreCut3.all_completions` theorem has type
@@ -67,16 +67,16 @@ These are leaf-level nonhalting arguments, not claims that an entire parent cyli
 ## Current child evidence
 
 - **0RF:** complete 1346-bound source-accepted child, above.
-- **0LE:** `more.json` contains the LE56 custom witness, one two-sided automaton entry, seven single-block pumps, twenty n-gram entries, and multi-seed counter candidates. These remain candidate mappings until the generated child and original-source bridge pass.
+- **0LE:** `more.json` contains the LE56 custom witness, one two-sided automaton entry, seven single-block pumps, twenty n-gram entries, and multi-seed counter candidates. Run 45700746076 compiled these modules and reached `ControlPathAudit`, then the runner shut down (exit 143); no Lean proof error was shown, so the child is not yet source-accepted.
 - **0LF:** current `more.json` maps 157, 294, 296, 314, 411, 415, and 917 to custom proof modules and has five additional two-sided automata entries. Agent4's 294/314/296 and Agent7's 411/415/917 proofs were checked locally against exact primitive definitions; the original-source child audit is still pending.
-- **1LE:** current `more.json` contains eight two-sided automata entries and late leaves 625 (19304) and 626 (1170). The source audit [45700639859](https://github.com/FlareZ123/bb6/actions/runs/45700639859) was dispatched before the later sparse-generator fix and is not acceptance of the current tree.
-- **1LF:** current `more.json` contains nine two-sided automata entries. Its source audit [45700751534](https://github.com/FlareZ123/bb6/actions/runs/45700751534) predates the later sparse-generator fix and is not acceptance of the current tree.
+- **1LE:** current `more.json` contains eight two-sided automata entries and late leaves 625 (19304) and 626 (1170). Original-source child audit [45700639859](https://github.com/FlareZ123/bb6/actions/runs/45700639859) **succeeded**; this child is accepted at bound 19310.
+- **1LF:** current `more.json` contains nine two-sided automata entries. Its source audit [45700751534](https://github.com/FlareZ123/bb6/actions/runs/45700751534) was still in progress at 21:53; no acceptance is claimed.
 
-Agent7's 21:08 checkpoint reports that the 0LF proof data for 411/415/917 is locally checked and integrated. The corrected LF source audit is run [45701329862](https://github.com/FlareZ123/bb6/actions/runs/45701329862); it was in progress at that checkpoint. The 0LE and 1LE audits were [45700746076](https://github.com/FlareZ123/bb6/actions/runs/45700746076) and [45700639859](https://github.com/FlareZ123/bb6/actions/runs/45700639859), respectively; inspect their actual results before dispatching replacements. Do not repeat the already completed candidate census or duplicate Agent7's LF work.
+Agent7's 21:08 checkpoint reports that the 0LF proof data for 411/415/917 is locally checked and integrated. The corrected LF source audit [45701329862](https://github.com/FlareZ123/bb6/actions/runs/45701329862) ended with runner shutdown (exit 143) during `Raw58LFKid17`, after compiling the sparse witnesses and `Raw58LFBase`; its tail contains no Lean proof error. The 0LE audit [45700746076](https://github.com/FlareZ123/bb6/actions/runs/45700746076) likewise ended with runner shutdown after compiling its candidate modules, not a proof error. The 1LE audit [45700639859](https://github.com/FlareZ123/bb6/actions/runs/45700639859) succeeded. The 1LF audit [45700751534](https://github.com/FlareZ123/bb6/actions/runs/45700751534) remained in progress at 21:53. Do not repeat the already completed candidate census or duplicate Agent7's LF work.
 
 ## Generator diagnostic
 
-The failed LF run [45700931315](https://github.com/FlareZ123/bb6/actions/runs/45700931315) found all eleven sparse certificates and zero unclassified leaves, then failed because local variable `n` shadowed the first-query step in `generate_more.py`. Agent7 fixed this in commit `c62c0b4ee10dc1e7aacd4c1607023aaffce127aa` and dispatched run 45701329862.
+The failed LF run [45700931315](https://github.com/FlareZ123/bb6/actions/runs/45700931315) found all eleven sparse certificates and zero unclassified leaves, then failed because local variable `n` shadowed the first-query step in `generate_more.py`. Agent7 fixed this in commit `c62c0b4ee10dc1e7aacd4c1607023aaffce127aa` and dispatched run 45701329862; that rerun reached `Raw58LFKid17` before runner shutdown (exit 143), with no Lean proof error in the retrieved tail.
 
 I independently compiled the current `im-results/agent2-tnf-raw99/enumerate.cpp` and ran it on all twelve current Raw58 A1 child parent tables. Every actual `tree.json` root matched its `more.json` query/slot specification. In particular, for the 0LF parent `1RB0LF_1RC---_0RD---_1LD1RE_---0RA_------`, the actual root is `["split",8,10]`. The stdout line `maxscore=374 n=373 delay=0 table=...` describes a deepest/best halt candidate in the recursive tree, not the root split. Do not change LF's slot to 5 based on that line.
 
