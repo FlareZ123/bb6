@@ -91,5 +91,7 @@ def generate(p,name,st,result):
   costs.append(f'{k}*{v}')
  a=sum(x[3] for x in seg if x[0]=='fixed'); coeff={v:sum(x[3] for x in seg if x[0]=='loop' and x[-1]==v) for v in vs};cost='+'.join([str(a)]+[f'{k}*{v}' for v,k in coeff.items() if k]);join=f'(phase0 {args})'
  for j in range(1,len(seg)):join=f'(join0 {join} (phase{j} {args}))'
- ls.append(f'theorem equation{binders} : run0 table ({cost}) {cfg(st)} = some {cfg(tg)} := by\n  have H := {join}\n  rw [show {"+".join(costs)}={cost} by omega] at H\n  exact H');ls.append(f'end {name}')
+ eq=f'theorem equation{binders} : run0 table ({cost}) {cfg(st)} = some {cfg(tg)} := by\n  have H := {join}\n'
+ if "+".join(costs)!=cost:eq+=f'  rw [show {"+".join(costs)}={cost} by omega] at H\n'
+ ls.append(eq+"  exact H");ls.append(f'end {name}')
  return '\n\n'.join(ls),cost
