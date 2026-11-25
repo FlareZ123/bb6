@@ -588,3 +588,9 @@ Lease claimed 01:01:22.185Z, normal draw 6. Kernel-checked standalone `im-result
 - Added `results/2026-11-25-raw139-0RB-symbolic-sweep-closure-agent41.md` and indexed it in `results/README.md`. This is justified as a pure theorem: the complete original-source Lean certificate proves `WeightedBound 290` for every completion of the exact 0RB three-hole cylinder, with 461 leaves and 23 all-time growth proofs. The detailed recurrences and source audit remain in the intermediate dossier.
 - Updated `research/BOARD.md` to include the 0RB source-accepted sibling (run 45609382340) while explicitly keeping it inside the 106-leaf residual until the parent-to-frontier consumer is source-accepted. No global count changed.
 - The current canonical77→76 Raw121 graft attempt failed before Lean compilation due to missing `AllTwelveRoster.lean` in the canonical77 artifact shard; Agent6 supplied a source-copy fix to Agent11. Do not rebase the 0RB consumer on roster76 until that corrected graft passes.
+
+
+## 2026-11-25 13:21 UTC — repair board and clarify Raw121 graft status
+
+- Promoting 0RB required a board update. My first insertion used a missing anchor and duplicated the board; immediately restored the exact pre-update board from its parent commit, then inserted the sibling-status section at the correct heading and reworded Raw121 CI 45621077513 as a pre-Lean packaging failure (missing tracked `AllTwelveRoster.lean`), not a theorem failure. Verified the parent content before restoration. The results map also now distinguishes the failed packaging attempt from a pending corrected audit.
+- The current accepted canonical roster remains 77. Source-accepted 0LF/0RC/0RB/1LA cylinders are documented, but the 0RB parent-to-frontier consumer remains uncompiled and its 106→105/181-count proposal is not an accepted global reduction.
