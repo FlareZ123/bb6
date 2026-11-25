@@ -7,6 +7,7 @@ set_option maxHeartbeats 0
 namespace BB6.Agent3Raw120RosterLink
 
 open BB6Coverage
+open BB6.Agent13BlankDelay
 open BB6.Agent31FourHoleRoster
 open BB6.Agent47Combined109
 open BB6.Agent3Raw120
