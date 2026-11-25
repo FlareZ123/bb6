@@ -50,27 +50,28 @@ theorem residuals_buildFrontierB (B : Nat) :
       intro h cert
       have hfields := pathOKB_cons h
       rcases hfields with ⟨hhole,hread,hslot,hmove,hweight,htail⟩
-      let c := (extractRunConfig hread).val
-      have hr : knownRun p n = some c :=
+      have hr : knownRun p n = some (extractRunConfig hread).val :=
         (extractRunConfig hread).property
-      have hs : readSlot c = s := by
-        have h' : (some c).map readSlot = some s := by
+      have hs : readSlot (extractRunConfig hread).val = s := by
+        have h' : (some (extractRunConfig hread).val).map readSlot = some s := by
           simpa [hr] using hread
         simpa using h'
-      have hhole' : p (readSlot c) = none := by
+      have hhole' : p (readSlot (extractRunConfig hread).val) = none := by
         simpa [hs] using hhole
-      have htail' : pathOKB B (refine p (readSlot c) (some mv))
+      have htail' : pathOKB B
+          (refine p (readSlot (extractRunConfig hread).val) (some mv))
           (advanceCut cut mv) xs = true := by
         simpa [hs.symm] using htail
       have cert' : WeightedTNFCertificate B
-          (pathEnd (refine p (readSlot c) (some mv)) (advanceCut cut mv) xs).1 6 := by
+          (pathEnd (refine p (readSlot (extractRunConfig hread).val) (some mv))
+            (advanceCut cut mv) xs).1 6 := by
         simpa [pathEnd, hs.symm] using cert
       have ih' := ih
-        (refine p (readSlot c) (some mv))
+        (refine p (readSlot (extractRunConfig hread).val) (some mv))
         (advanceCut cut mv)
         (RawRootPath.step hp hr hhole') htail' cert'
       simp [buildFrontierB, residuals, pureResiduals,
-        c, hr, hs, hhole', htail', cert', ih', residuals_cast]
+        hr, hs, hhole', htail', cert', ih', residuals_cast]
 
 /-- Every path edge has 23 off-path ordinary children: the selected move
     is the unique one among the 24 ordinary moves that continues the path. -/
@@ -88,7 +89,8 @@ theorem flatMap_length_all_one {α β : Type} (xs : List α)
       have htail : ∀ y, y ∈ xs → (f y).length = 1 := by
         intro y hy
         exact h y (by simp [hy])
-      simp [List.flatMap, hx, ih htail]
+      rw [List.flatMap_cons, List.length_append, hx, ih htail]
+      simp
 
 theorem flatMap_length_single_exception {α β : Type}
     (xs : List α) (f : α → List β) (a : α)
@@ -110,7 +112,7 @@ theorem flatMap_length_single_exception {α β : Type}
             exact hnot hy
           exact hother y (by simp [hy]) hya
         have hlen := flatMap_length_all_one xs f hotherTail
-        simp [List.flatMap, hlen]
+        rw [List.flatMap_cons, List.length_append, hlen]
         omega
       · have hmemTail : a ∈ xs := by
           rcases hmem with hhead | htail
@@ -125,7 +127,7 @@ theorem flatMap_length_single_exception {α β : Type}
           cases xs with
           | nil => simp at hmemTail
           | cons y ys => simp
-        simp [List.flatMap, hx, ih']
+        rw [List.flatMap_cons, List.length_append, hx, ih']
         omega
 
 /-- The pure residual projection has a path-length-only cardinality.
@@ -152,7 +154,8 @@ theorem pureResiduals_length (p : PartialMachine) :
           (f mv).length =
             (pureResiduals (refine p s (some mv)) xs).length := by
         simp [f]
-      rw [pureResiduals, hlen, allMoves_length, hspecial,
+      change (allMoves.flatMap f).length = 23 * (xs.length + 1)
+      rw [hlen, allMoves_length, hspecial,
         ih (refine p s (some mv))]
       omega
 
