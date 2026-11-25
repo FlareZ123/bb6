@@ -5,19 +5,19 @@ on:
       parent:
         description: Six-hole parent to check
         type: choice
-        options: ['123', '125']
+        options: ['123', '125', '38']
         default: '123'
 permissions:
   contents: read
 jobs:
   shards:
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 50
     strategy:
       fail-fast: false
       max-parallel: 8
       matrix:
-        include: ${{ fromJSON(inputs.parent == '125' && '[{"kids":"12","part":0},{"kids":"13 6 7 9 16 18 19 20","part":1},{"kids":"14 15","part":2},{"kids":"0 21","part":3},{"kids":"1 10","part":4},{"kids":"2 3 5","part":5},{"kids":"17 22 11","part":6},{"kids":"4 8 23","part":7}]' || '[{"part":0,"kids":"17 11"},{"part":1,"kids":"12 10"},{"part":2,"kids":"8 9"},{"part":3,"kids":"16 21"},{"part":4,"kids":"13 3"},{"part":5,"kids":"5 4"},{"part":6,"kids":"14 22"},{"part":7,"kids":"23 0 1 2 6 7 15 18 19 20"}]') }}
+        include: ${{ fromJSON(inputs.parent == '38' && '[{"kids":"7 2","part":0},{"kids":"8 3","part":1},{"kids":"19 9","part":2},{"kids":"20 15","part":3}]' || inputs.parent == '125' && '[{"kids":"12","part":0},{"kids":"13 6 7 9 16 18 19 20","part":1},{"kids":"14 15","part":2},{"kids":"0 21","part":3},{"kids":"1 10","part":4},{"kids":"2 3 5","part":5},{"kids":"17 22 11","part":6},{"kids":"4 8 23","part":7}]' || '[{"part":0,"kids":"17 11"},{"part":1,"kids":"12 10"},{"part":2,"kids":"8 9"},{"part":3,"kids":"16 21"},{"part":4,"kids":"13 3"},{"part":5,"kids":"5 4"},{"part":6,"kids":"14 22"},{"part":7,"kids":"23 0 1 2 6 7 15 18 19 20"}]') }}
     steps:
       - uses: actions/checkout@v4
       - name: Install Lean
@@ -31,6 +31,7 @@ jobs:
           python im-results/agent13-coverage/unpack.py
           d=im-results/agent7-raw123
           if [ "${{ inputs.parent }}" = 125 ]; then d=im-results/agent13-raw125; fi
+          if [ "${{ inputs.parent }}" = 38 ]; then d=im-results/agent13-raw38; fi
           python "$d/generate.py" ${{ matrix.kids }}
           python tools/lean_compile_closure.py --workdir /tmp/raw${{ inputs.parent }}-part --jobs 3 "$d"/Raw${{ inputs.parent }}Partial*.lean | tee /tmp/part.log
           if grep -qE 'sorryAx|native_decide' /tmp/part.log; then exit 1; fi
@@ -60,6 +61,7 @@ jobs:
           set -euxo pipefail
           d=im-results/agent7-raw123
           if [ "${{ inputs.parent }}" = 125 ]; then d=im-results/agent13-raw125; fi
+          if [ "${{ inputs.parent }}" = 38 ]; then d=im-results/agent13-raw38; fi
           python "$d/merge_parts.py" /tmp/raw${{ inputs.parent }}-parts /tmp/raw${{ inputs.parent }}-cut
           python "$d/generate.py" --assemble-only
           cp "$d/Raw${{ inputs.parent }}Cut.lean" /tmp/raw${{ inputs.parent }}-cut/
