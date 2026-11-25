@@ -2,15 +2,33 @@
 
 Raw124 = `1RB---_1RC---_0RD---_1LD1RE_---1LF_------`. First new query F1 at 7 moves. Each fixed ordinary F1 row has 25^5 = 9,765,625 raw completions; the weighted checker handles early halts and initial blank delay.
 
-| F1 | Proposed weighted bound | Cycle leaves | Last-hole leaves | FAR leaves | Inductive leaves | Outstanding |
+## Completed candidate branches
+
+| F1 | Proposed weighted bound | Previously open leaves | FAR | Inductive | Late halts | Outstanding |
 |---|---:|---:|---:|---:|---:|---:|
-| 0RF | 71 | 6979 | 1260 | 42 | 0 | 0 |
-| 0LC | 145 | 26097 | 5270 | 280 | 2 | 0 |
-| 1RF | 140 | 12897 | 2608 | 1160 | 11 | 0 |
-| 0RB | 272 | 32488 | 7216 | 559 | 10 | 1 |
+| 0RF | 71 | 42 | 42 | 0 | 0 | 0 |
+| 0LC | 145 | 282 | 280 | 2 | 0 | 0 |
+| 1RF | 140 | 1171 | 1160 | 11 | 0 | 0 |
+| 0RB | 272 | 570 | 560 | 10 | 0 | 0 |
+| 0RD | 267 | 143 | 141 | 2 | 0 | 0 |
+| 1LC | 102 | 243 | 242 | 1 | 0 | 0 |
+| 1RD | 80 | 861 | 859 | 2 | 0 | 0 |
+| 0RC | 2759 | 374 | 362 | 11 | 1 | 0 |
+| 1RC | 688 | 799 | 794 | 5 | 0 | 0 |
+| 1LD | 7 | 0 | 0 | 0 | 0 | 0 |
+| 1RE | 7 | 0 | 0 | 0 | 0 | 0 |
+| 0RA | 283 | 656 | 633 | 23 | 0 | 0 |
 
-Counts are candidate enumeration results, not accepted source-level certificates yet. All complete branches have generators: generate_rf.py, generate_lc.py, generate_1rf.py. These emit explicit Lean Audit trees and require checked concrete leaves; simulation cutoff is never a proof. Run manual agent13-coverage target weighted-tnf-raw124-rf/lc/1rf. No dispatch capability in this session. Direct git clone DNS unavailable.
+These are exhaustive candidate audits, not accepted source-level proofs. Together they represent 117,187,500 raw completions. The 0RC delayed last-hole encounter at step 2753 required increasing the proposed bound from 240 to 2759; the 1000-step exploration cutoff is never itself proof of divergence.
 
-Agent2MultiPump.lean extends Agent50's open-tail transfer lemmas to any finite number of repeated blocks, each with an independently quantified repetition count. A finite operation list proves an existential exact runtime and positive lower bound for every parameter environment. Its ordinary growth certificate uses all repetition counts n simultaneously. Local Lean 4.36.0-rc2 checked the general operational theorem and the four concrete multiblock certificates in multi-witnesses.txt against a reconstruction of the source executable tape semantics. Agent2Nested.lean uses three independently quantified variables to certify nested counter loops for 1RF leaves 341 and 923, with local kernel validation of every transition and the arbitrary-runtime theorem. Integration adapters to NeverHalts and the full source-level tree remain pending CI. No sorry or native_decide.
+## Reproduction
 
-0RB unresolved index 238 (zero-based in deterministic open.txt): `1RB0LF_1RC1LA_0RD0RF_1LD1RE_---1LF_0LA0RB`. At A with blank current and empty left, it repeatedly rewrites runs 0^a 1^b (b=3 or 6); may admit an inductive prefix-transducer invariant. Other 0RB witnesses in single-witnesses.txt, multi-witnesses.txt. Open.txt hash ec5a42680c391cef5c2184ec403c1fa92310b8d1dec3f3bdf2384164274997ae. Enumeration and FAR search reused raw99/enumerate.cpp and agent11-tnf-raw86/search.cpp. Do not treat the unresolved branch or the full raw124 parent as closed.
+Original four branches: generate_rf.py, generate_lc.py, generate_1rf.py, generate_0rb.py. Other eight: generate_bundle.py and compressed JSON witness bundles complete-bundle*.json.zlib.b64, including hashes of deterministic open leaf lists and trees, FAR automata, and symbolic operations. The generators produce source Lean Audit trees with explicit finite proof checks, partitioned to bound reduction cost. Run manual agent13-coverage target weighted-tnf-raw124-rf/lc/1rf/0rb/bundle. No dispatch capability in this session. Direct git clone DNS unavailable.
+
+Agent2MultiPump.lean extends Agent50's open-tail transfer lemmas to arbitrary finitely many repeated blocks, each with an independently quantified repetition count. A finite operation list proves an existential exact runtime and positive lower bound for every parameter environment. Its ordinary growth certificate uses all repetition counts n simultaneously. Agent2Nested.lean uses three independently quantified variables to certify nested counter loops for 1RF leaves 341 and 923. Local Lean 4.36.0-rc2 checked the general operational theorem, the eight initially collected multiblock certificates, both nested counter proofs, and all 21 single/multi witnesses in the seven-branch bundle against a reconstruction of the source executable tape semantics. Source integration adapters to NeverHalts and full source-level tree acceptance remain pending CI. No sorry or native_decide in the committed proof sources.
+
+## Discovery improvements
+
+0RB index 238 (zero-based in deterministic open.txt), `1RB0LF_1RC1LA_0RD0RF_1LD1RE_---1LF_0LA0RB`, had resisted exhaustive six-state DFA enumeration. A 32-state last-five-bit suffix DFA certified it, and congruence quotienting reduced it to nine states. It is now included in generate_0rb.py. Pooling successful DFAs across sibling branches yielded over a thousand new certificates. Enumeration and FAR search reused raw99/enumerate.cpp and agent11-tnf-raw86/search.cpp.
+
+Automatic multiblock candidate inference uses four tape snapshots with constant growth increments, dynamic programming to segment into constant and repeated words, and finite symbolic search for exact sweep/rewrite operations. Proof checks do not trust the search. A complete proof of raw124 is not yet claimed.
