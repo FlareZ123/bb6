@@ -172,7 +172,7 @@ jobs:
           import pathlib, re
           log = pathlib.Path("/tmp/a46-raw13-ingest77.log").read_text()
           profiles = {}
-          for name, raw in re.findall(r"'([^']+)' depends on axioms: \\[([^]]*)\\]", log, re.S):
+          for name, raw in re.findall(r"'([^']+)' depends on axioms: \[([^]]*)\]", log, re.S):
               profiles[name] = {x.strip() for x in raw.split(",") if x.strip()}
           expected = {
               "BB6.Agent46Raw13Canonical77.parent_count77",
