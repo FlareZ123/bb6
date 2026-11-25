@@ -85,7 +85,7 @@ def merge(repo, downloads, output, groups=None, artifact_prefix='raw109-shard', 
                 shutil.copy2(source, src)
             if name in entries:
                 identity_fields = (
-                    'module', 'source_sha256', 'project_imports', 'olean_path',
+                    'module', 'source_path', 'source_sha256', 'project_imports', 'olean_path',
                     'olean_sha256', 'import_closure_sha256', 'module_identity_sha256'
                 )
                 require(
