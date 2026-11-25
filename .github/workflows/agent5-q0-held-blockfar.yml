@@ -152,7 +152,7 @@ jobs:
           ]
           for name in required:
               no_axioms = f"'{name}' does not depend on any axioms"
-              match = re.search(rf"'{re.escape(name)}' depends on axioms: \\[(.*?)\\]", log)
+              match = re.search(rf"'{re.escape(name)}' depends on axioms: \[(.*?)\]", log)
               if match:
                   actual = {x.strip() for x in match.group(1).split(",") if x.strip()}
               elif no_axioms in log:
