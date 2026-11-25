@@ -42,19 +42,24 @@ The final source audit compiled 280 Lean modules. The `#print axioms` profile fo
 
 These are reusable leaf-level nonhalting arguments, not claims that an entire parent cylinder is nonhalting.
 
-## Next computation: close the five residuals
+## Current residual-closure attempt (2026-11-25)
 
-The next query for each of the five remaining A1 choices is known exactly: E0 for 0LE/1LE and F0 for 0LF/0RF/1LF, all at step 8. The current probe uses weighted cutoff 7014.
+The accepted `Raw58MoreCut2.parent_dichotomy` still leaves exactly five A1 children after the 374-bound partition: `0LE`, `0LF`, `0RF`, `1LE`, and `1LF`. The target closure is at weighted bound 7014.
 
-- `more.json` contains the five new child specifications (LE, LF, RF, LE1, LF1).
-- `generate_more.py` now optionally searches the existing FAR-code bank and one-/multi-block pump candidates automatically; unresolved leaves are printed rather than silently treated as covered.
-- `Raw58MoreCut3.lean` composes the five child certificates into a complete parent bound if all five are discharged.
-- CI target: `raw58-more3`, run [45601806558](https://github.com/FlareZ123/bb6/actions/runs/45601806558), currently in progress at this checkpoint.
+### Current evidence
 
-If automatic classification leaves open tables, first try the existing exact/extension-compatible custom tables in PairCases, BlockCases, UnaryDrain, OddRun, M1391, and RD1892. Do not promote the five-residual partition to a complete parent closure until the new source audit passes.
+- The `0RF` child now has a complete 1346-bound source-accepted certificate: CI run [45636997573](https://github.com/FlareZ123/bb6/actions/runs/45636997573). Its seven custom counter witnesses are part of the checked child source.
+- `LE` index 56 is assigned to `Raw58LE56.lean`. Its two-bit block counter constructs arbitrarily long live prefixes and `Raw58Live.never_of_live` lifts the result to every compatible completion.
+- `LF` index 157 is assigned to `Raw58LF157.lean`. Its four-bit block counter proves the same kind of unbounded live-prefix property. The `more.json` entry now imports this module.
+- The LE56 and LF157 mappings are candidate leaf discharges until the complete source audit below succeeds. The generator's `zipCheck` is the compatibility gate; a wrong leaf index cannot silently close a cylinder.
+- The latest candidate census recorded 5,020 open leaves across the five children: 4,552 reused FAR witnesses, 346 fixed n-grams, 76 sweep witnesses, two late single-hole cases, seven 0RF custom witnesses, two recursive counter cases, four sparse wide n-grams, and nineteen run-length relations. Twelve candidate leaves remained unresolved at that checkpoint. These counts describe candidate ingestion, not accepted proof coverage.
 
-## Reproduction and status
+### Full parent audit
 
-Use `.github/workflows/agent10-four-hole.yml` targets `raw58-cut`, `raw58-more`, `raw58-more2`, and `raw58-more3`. The checked Lean source closure is authoritative; generator output or finite simulation alone is not a proof.
+The existing workflow `.github/workflows/agent10-four-hole.yml` target `raw58-more3` was dispatched as run [45659821185](https://github.com/FlareZ123/bb6/actions/runs/45659821185). It regenerates all five child trees, checks them at weighted cutoff 7014, and compiles `Raw58MoreCut3.all_completions` against the original source closure. At this README update the run is still in progress. No complete Raw58 parent closure is claimed until that run succeeds and its final axiom audit is inspected.
 
-This remains an intermediate research result in `im-results/`. It does not change the global canonical roster count until a complete parent closure is source-checked and grafted into the common quotient roster. BB(6) remains unresolved.
+### Global-roster handoff
+
+The parent is `BB6.Agent4Raw58Cut.parent = BB6.Agent4Raw58RE.p58`, defined by the first four entries of the root path followed by `E1 = 0RA`. It is a distinct sibling of the already-used `p107` and `p114` E1 branches. Agent47 has been asked to check exact membership in the accepted raw114-grafted canonical77 roster and whether an empty-replacement graft is valid. This is only a membership lead: no canonical roster count has changed, and the parent theorem is not yet source-accepted.
+
+Use the existing `raw58-cut`, `raw58-more`, `raw58-more2`, `raw58-more3`, `raw58-rc`, and `raw58-child` targets in `agent10-four-hole.yml`. The checked Lean source closure is authoritative; generator output, finite simulation, and local counter proofs alone are not a global closure. Keep this work in `im-results/` until a genuinely publishable mathematical result is established. BB(6) remains unresolved.
