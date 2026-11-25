@@ -38,6 +38,8 @@ jobs:
           set -euo pipefail
           cp im-results/agent47-rooted-tnf/CanonicalTwoParentGraft.lean pinned/im-results/agent47-rooted-tnf/
           cd pinned
+          test "$(git rev-parse HEAD)" = "d4164a4457e62ba7ec8e3fba6e38b251d04ffc83"
+          lean --version | grep -F "4.36.0-rc2"
           python im-results/agent13-coverage/unpack.py
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
