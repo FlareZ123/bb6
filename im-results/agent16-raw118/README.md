@@ -1,6 +1,6 @@
 # Raw118: candidate partition and long first-hole obstruction
 
-Parent: `1RB---_1RC---_0RD---_1LD1RE_---0LE_------` (six holes, raw frontier index 118). Status: **partial discovery; no certified parent closure**.
+Parent: `1RB---_1RC---_0RD---_1LD1RE_---0LE_------` (six holes, raw frontier index 118). Status: **one discovery holdout (2869); full parent source audit pending.** The expanded consumer targets 958 certificate-backed candidate leaves out of the 959 parent residuals, with the exact literal complement checked in Lean. The 679 sparse audit was cancelled (no artifact), so this is not a certified parent closure. The stable local contract is a score-B Cover conditional on the holdout Cover, at B ≥ 756496.
 
 Using Agent2's raw99 enumerator (1000 steps; translated-cycle window 256), the candidate tree partitions 25^6=244,140,625 physical completions: 227,709,700 cycle, 14,492,552 halt, 906,048 last-slot ordinary, 1,032,325 open. Tree census: 7,424 splits, 126,916 cycles, 37,752 last, 6,085 open. Initial maximum weighted halt score 992.
 

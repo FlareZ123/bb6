@@ -93,121 +93,176 @@ def main(work: Path) -> None:
     assert len(sparse_ids | hard | late_ids) == 959
     assert len(hard_accepted | sparse_ids | late_ids | treebank_ids) == 872 + len(treebank_ids)
 
-    entries = []
-    def add_nonhalt(ns: str):
-        entries.append(
-            "  BB6.Agent16ResidualCover.nonhalt bound "
-            f"{ns}.table (fun m hm => {ns}.never m hm)"
-        )
+    # Prefer the compact macro proofs for 4188/4197 to their much larger
+    # second-order run-summary certificates. The other 20 run-summary rows
+    # have successful focused source audits.
+    run_ids = {430,437,440,456,1181,3908,1120,1127,1174,1326,1390,1391,
+               1392,1816,2867,3921,4093,4125,4342,4443}
+    run_manifest = json.loads((AG40 / "run-generated" / "manifest.json").read_text())
+    assert {int(x["index"]) for x in run_manifest} == run_ids
+    assert all(rows[int(x["index"])] == x["table"] for x in run_manifest)
+    nested_ids = {10,434,655,657}
+    extra_groups = [run_ids, nested_ids, {3970}, {3981,4188,4197}]
+    extra_ids = set().union(*extra_groups)
+    assert sum(map(len, extra_groups)) == len(extra_ids) == 28
+    assert extra_ids <= set(remaining_hard)
+    remaining_hard = sorted(set(remaining_hard) - extra_ids)
+    assert remaining_hard == [2869], remaining_hard
+    assert rows[2869] == "1RB0LB_1RC0RA_0RD0RF_1LD1RE_1LB0LE_1RA---"
+
+    entries = {}
+    def add(i, proof):
+        assert i not in entries, i
+        entries[i] = proof
+
+    def add_nonhalt(i, ns, args=""):
+        add(i, "BB6.Agent16ResidualCover.nonhalt bound "
+            f"({ns}.table{args}) (fun m hm => {ns}.never{args} m hm)")
 
     for i in sorted(independent):
-        add_nonhalt(f"BB6Coverage.Agent40Independent.Raw118.M{i}")
+        add_nonhalt(i, f"BB6Coverage.Agent40Independent.Raw118.M{i}")
     for i in sorted(phase):
-        add_nonhalt(f"BB6Coverage.Agent40PhaseGraph.Raw118.M{i}")
+        add_nonhalt(i, f"BB6Coverage.Agent40PhaseGraph.Raw118.M{i}")
     for i in sorted(int(x[0]) for x in RECURSIVE_CASES):
-        add_nonhalt(f"BB6Coverage.Agent40Recursive.Raw118.M{i}")
+        add_nonhalt(i, f"BB6Coverage.Agent40Recursive.Raw118.M{i}")
     for i in sorted(int(x[0]) for x in RECURSIVE_MORE_CASES):
-        add_nonhalt(f"BB6Coverage.Agent40Recursive.Raw118More.M{i}")
+        add_nonhalt(i, f"BB6Coverage.Agent40Recursive.Raw118More.M{i}")
     for i in sorted(bidfa):
-        add_nonhalt(f"BB6Coverage.Agent16BiDFA.Raw118.M{i}")
+        add_nonhalt(i, f"BB6Coverage.Agent16BiDFA.Raw118.M{i}")
     for i in sorted(tree):
-        add_nonhalt(f"BB6Coverage.Agent16BiDFA.Raw118Tree.M{i}")
-    for claim in sorted(symbolic, key=lambda x: int(x["index"])):
-        add_nonhalt(claim["namespace"])
-    for claim in sorted(sparse, key=lambda x: int(x["index"])):
-        add_nonhalt(claim["namespace"])
-    for hit in sorted(treebank, key=lambda x: int(x["index"])):
-        add_nonhalt(f"BB6Coverage.Agent16BiDFA.Raw118TreeBank.M{int(hit['index'])}")
+        add_nonhalt(i, f"BB6Coverage.Agent16BiDFA.Raw118Tree.M{i}")
+    for claim in symbolic + sparse:
+        add_nonhalt(int(claim["index"]), claim["namespace"])
+    for hit in treebank:
+        i = int(hit["index"])
+        add_nonhalt(i, f"BB6Coverage.Agent16BiDFA.Raw118TreeBank.M{i}")
     for i in sorted(sat_new_ids):
-        add_nonhalt(f"BB6Coverage.Agent1BiDFASat.Raw118.M{i}")
+        add_nonhalt(i, f"BB6Coverage.Agent1BiDFASat.Raw118.M{i}")
     for i in sorted(wide_ids):
-        add_nonhalt(f"BB6Coverage.Agent1BiDFAWide.M{i}")
-    for leaf in sorted(late, key=lambda x: int(x["index"])):
-        ns = f"BB6.Agent16Raw118Late.M{int(leaf['index'])}"
-        entries.append(
-            f"  ⟨{ns}.table, {ns}.longCertificate.sound⟩"
-        )
+        add_nonhalt(i, f"BB6Coverage.Agent1BiDFAWide.M{i}")
+    for leaf in late:
+        i = int(leaf["index"])
+        ns = f"BB6.Agent16Raw118Late.M{i}"
+        add(i, f"⟨{ns}.table, {ns}.longCertificate.sound⟩")
+    for i in sorted(run_ids):
+        add_nonhalt(i, f"BB6Coverage.Agent40Raw118Run.M{i}")
+    for i in sorted(nested_ids):
+        add_nonhalt(i, f"BB6Coverage.Agent16Raw118Nested.M{i}")
+    add_nonhalt(3970, "BB6Coverage.Agent40Raw118CrossBank.M3970")
+    add_nonhalt(3981, "BB6Coverage.Agent1Raw118M3981")
+    add_nonhalt(4188, "BB6Coverage.Agent1Raw118Radix4", " false")
+    add_nonhalt(4197, "BB6Coverage.Agent1Raw118Radix4", " true")
+
+    assert set(entries) == (sparse_ids | hard | late_ids) - {2869}
+    assert len(entries) == 958
+
+    def table_key(row):
+        raw = row.replace("_", "")
+        assert len(raw) == 36
+        key = 0
+        for j in range(0,36,3):
+            mv = raw[j:j+3]
+            digit = 0 if mv == "---" else 2 + 12*int(mv[0]) + 6*(mv[1]=="R") + ord(mv[2])-65
+            key = key*26 + digit
+        return key
+
+    def literal_table(row):
+        raw = row.replace("_","")
+        lines = ["fun s => match s.1.val, s.2 with"]
+        for j in range(12):
+            mv = raw[3*j:3*j+3]
+            if mv != "---":
+                lines.append(f"  | {j//2}, {str(bool(j%2)).lower()} => some (some ⟨{str(mv[0]=='1').lower()}, {str(mv[1]=='R').lower()}, {ord(mv[2])-65}⟩)")
+        lines.append("  | _, _ => none")
+        return "\n".join(lines)
+
+    keyed = sorted((table_key(rows[i]), proof) for i,proof in entries.items())
+    assert len({key for key,_ in keyed}) == len(keyed)
+
+    def emit_tree(items):
+        if not items:
+            return ".empty"
+        mid = len(items)//2
+        key, proof = items[mid]
+        return f"(.node {key} ({proof}) {emit_tree(items[:mid])} {emit_tree(items[mid+1:])})"
 
     imports = [
-        "Raw118Partial",
-        "ResidualCover",
-        "Raw118Symbolic",
-        "Raw118Sparse",
-        "Raw118Independent",
-        "Raw118PhaseGraph",
-        "Raw118Recursive",
-        "Raw118RecursiveMore",
-        "Raw118BiDFA",
-        "Raw118Tree",
-        "Raw118Late",
-        "Raw118TreeBank",
-        "Raw118SatHits",
+        "Raw118Partial", "ResidualKeyed", "Raw118Symbolic", "Raw118Sparse",
+        "Raw118Independent", "Raw118PhaseGraph", "Raw118Recursive",
+        "Raw118RecursiveMore", "Raw118BiDFA", "Raw118Tree", "Raw118Late",
+        "Raw118TreeBank", "Raw118SatHits", "Raw118SatCrossBank",
+        "Raw118M3981", "Raw118Radix4",
     ]
     imports.extend(f"Raw118Wide{i}" for i in sorted(wide_ids))
+    imports.extend(f"Raw118Run{i}" for i in sorted(run_ids))
+    imports.extend(f"Raw118Nested{i}" for i in sorted(nested_ids))
     header = "\n".join(f"import {name}" for name in imports)
-    entries_text = ",\n".join(entries)
+    entries_text = emit_tree(keyed)
+    holdout_text = literal_table(rows[2869])
     source = f'''{header}
 
 set_option maxRecDepth 1000000
 set_option maxHeartbeats 0
 
 namespace BB6.Agent16Raw118Consumer
+open BB6Coverage BB6.Agent13BlankDelay BB6.Agent16Raw118 BB6.Agent16ResidualCover
 
-open BB6Coverage BB6.Agent16Raw118 BB6.Agent16ResidualCover
+def accepted : AcceptedTree bound := {entries_text}
+def remaining := remainingTree accepted residuals
+def holdout : PartialMachine := {holdout_text}
 
-def accepted : List (Accepted bound) := [
-{entries_text}
-]
+theorem accepted_count : accepted.size = {len(entries)} := by rfl
 
-def remaining := BB6.Agent16ResidualCover.remaining accepted residuals
-
-theorem accepted_count : accepted.length = {872 + len(treebank_ids) + len(sat_new_ids) + len(wide_ids)} := by rfl
-
-/-- The Raw118 parent is covered at 756496 except for this exact finite
-    complement of one-hole residual tables. -/
+/-- Exact source-cover dichotomy; no finite simulation assumption. -/
 theorem sound_after :
     ∀ m, compatible parent m → WeightedBound bound m ∨
       ∃ e ∈ remaining, compatible e.2 m :=
-  BB6.Agent16ResidualCover.consume accepted sound
+  consumeTree accepted sound
 
-theorem remaining_count : remaining.length = {len(remaining_hard)} := by decide
+theorem remaining_count : remaining.length = 1 := by decide
 
-def holeCount (p : PartialMachine) : Nat :=
-  (List.finRange 6).foldl (fun n q =>
-    n + (if p (q,false) = none then 1 else 0) +
-        (if p (q,true) = none then 1 else 0)) 0
+/-- The table, not just the number of residuals, must match the holdout. -/
+theorem remaining_exact :
+    remaining.all (fun e => sameTable e.2 holdout) = true := by decide
 
-theorem remaining_one_hole :
-    remaining.all (fun e => decide (holeCount e.2 = 1)) = true := by decide
+/-- Stable score-parametric local contract. The only remaining cylinder is
+    an explicit premise; this does not presume a verdict for row 2869. -/
+theorem parent_cover_at_target {{B : Nat}} (hB : bound ≤ B)
+    (h : Cover (WeightedBound B) holdout) : Cover (WeightedBound B) parent := by
+  refine Cover.leaf _ ?_
+  intro m hm
+  rcases sound_after m hm with hb | ⟨e,he,hc⟩
+  · intro k d hk hd
+    exact Nat.le_trans (hb k d hk hd) hB
+  · have heq := sameTable_sound (List.all_eq_true.mp remaining_exact e he)
+    exact h.sound m (heq ▸ hc)
 
 #print axioms sound_after
 #print axioms remaining_count
-#print axioms remaining_one_hole
+#print axioms remaining_exact
+#print axioms parent_cover_at_target
 
 end BB6.Agent16Raw118Consumer
 '''
     (HERE / "Raw118Consumer.lean").write_text(source)
     manifest = {
-        "open_rows": len(rows),
-        "hard_rows": len(hard),
-        "hard_base_accepted": len(hard_accepted),
-        "hard_accepted": len(hard_accepted | treebank_ids | sat_new_ids | wide_ids),
-        "hard_residuals": remaining_hard,
-        "ngram_accepted": len(sparse_ids),
-        "late_accepted": len(late_ids),
-        "treebank_accepted": len(treebank_ids),
-        "treebank_indices": sorted(treebank_ids),
-        "sat_accepted": len(sat_new_ids),
-        "sat_indices": sorted(sat_ids),
-        "sat_new_indices": sorted(sat_new_ids),
-        "wide_accepted": len(wide_ids),
-        "wide_indices": sorted(wide_ids),
-        "accepted_total": len(hard_accepted | sparse_ids | late_ids | treebank_ids | sat_new_ids | wide_ids),
-        "expected_parent_residuals": len(remaining_hard),
-        "imports": imports,
+        "open_rows":len(rows), "hard_rows":len(hard),
+        "hard_base_accepted":len(hard_accepted),
+        "hard_candidate_covered":len(hard)-1,
+        "hard_residuals":remaining_hard,
+        "holdout_table":rows[2869],
+        "ngram_candidate_count":len(sparse_ids),
+        "late_candidate_count":len(late_ids),
+        "treebank_indices":sorted(treebank_ids),
+        "sat_new_indices":sorted(sat_new_ids),
+        "wide_indices":sorted(wide_ids),
+        "extra_indices":sorted(extra_ids),
+        "candidate_total":len(entries),
+        "expected_parent_residuals":len(remaining_hard),
+        "imports":imports,
     }
-    (HERE / "Raw118Consumer.json").write_text(json.dumps(manifest, indent=2) + "\n")
-    print("Raw118 parent consumer:", manifest)
+    (HERE / "Raw118Consumer.json").write_text(json.dumps(manifest,indent=2)+"\n")
+    print("Raw118 parent consumer:",manifest)
 
 
 if __name__ == "__main__":
