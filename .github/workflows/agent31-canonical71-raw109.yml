@@ -198,11 +198,15 @@ jobs:
           print("Verified the 76-residual theorem, canonical77 source/object closure, Lean version, and compiler binary.")
           PY
 
-      - name: Reconstruct BB6 coverage and the Raw109 source interface
+      - name: Reconstruct coverage, sweep, four-hole, and Raw109 sources
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
           python im-results/agent4-raw109/generate.py 0LD 0RE
+          test -s im-results/agent31-three-hole-tnf/SweepData.lean
+          test -s im-results/agent31-three-hole-tnf/FourHoleData.lean
           test -s im-results/agent4-raw109/Raw109B0LDData.lean
           test -s im-results/agent4-raw109/Raw109B0REData.lean
 
@@ -228,6 +232,13 @@ jobs:
             --provenance-input im-results/agent4-raw109/Raw109Cut.lean \
             --provenance-input im-results/agent7-raw123/Raw123Base.lean \
             --provenance-input im-results/agent42-frontier-count/GraftRosterCount.lean \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_sweeps.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_four_hole.py \
+            --provenance-input im-results/agent31-three-hole-tnf/four_hole_dfas.txt \
+            --provenance-input im-results/agent31-three-hole-tnf/SweepPumping.lean \
+            --provenance-input im-results/agent31-three-hole-tnf/ThreeHoleAudit.lean \
+            --provenance-input im-results/agent31-three-hole-tnf/ThreeHoleData.lean \
+            --provenance-input im-results/agent31-three-hole-tnf/RightFrame.lean \
             --provenance-input im-results/agent13-coverage/BB6Coverage.lean.xz.b64 \
             --provenance-input im-results/agent13-coverage/unpack.py \
             2>&1 | tee /tmp/a31-parent-interfaces.log
