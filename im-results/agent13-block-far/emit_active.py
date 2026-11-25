@@ -16,10 +16,21 @@ def specialize_active(block, width):
     s = s.replace("import SparseBlockFAR", f"import SparseBlockFAR{width}")
     s = s.replace("namespace BB6BlockFAR", f"namespace BB6BlockFAR{width}").replace(
         "end BB6BlockFAR", f"end BB6BlockFAR{width}")
-    fields = [f"x{i}" for i in range(width)]
-    s = s.replace("⟨a,b,c⟩", "⟨" + ",".join(fields) + "⟩")
-    s = s.replace("cases a <;> cases b <;> cases c <;> decide",
-                  " <;> ".join("cases " + v for v in fields) + " <;> decide")
+    if width >= 8:
+        # The specialized BlockMacro already proves the code bijection
+        # symbolically. Reuse it rather than splitting 2**width cases.
+        s = re.sub(r"private theorem code_lt \(a : Sym\) : a.code < \d+ := by\n.*?\n\n",
+                   f"private theorem active_code_lt (a : Sym) : a.code < {2**width} := code_lt a\n\n",
+                   s, flags=re.S)
+        s = re.sub(r"private theorem code_roundtrip \(a : Sym\) : Sym.ofCode a.code = a := by\n.*?\n\n",
+                   "private theorem code_roundtrip (a : Sym) : Sym.ofCode a.code = a := ofCode_code a\n\n",
+                   s, flags=re.S)
+        s = s.replace("have h := code_lt a", "have h := active_code_lt a")
+    else:
+        fields = [f"x{i}" for i in range(width)]
+        s = s.replace("⟨a,b,c⟩", "⟨" + ",".join(fields) + "⟩")
+        s = s.replace("cases a <;> cases b <;> cases c <;> decide",
+                      " <;> ".join("cases " + v for v in fields) + " <;> decide")
     (block / f"ActiveSparseFAR{width}.lean").write_text(s)
 
 def pack(xs, bits):
