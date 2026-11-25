@@ -2368,3 +2368,26 @@ A first dispatch, run 45601313596, was cancelled during Lean installation before
 The corrected full integration is now running as [45602044422](https://github.com/FlareZ123/bb6/actions/runs/45602044422), head `ab301ad9566978adc8a47dab1c472e2174d368c4`, job `verify`. At the last check it was still installing Lean 4.36.0-rc2; no compilation result yet. The F0-siblings-only job is skipped as intended.
 
 Next: monitor this one run. If it fails, retrieve only failed-job logs with a short tail and fix the actual diagnostic; do not rerun unchanged. If it passes, the conditional 109-leaf theorem becomes source-accepted, but 77 other canonical-78 obligations remain and BB(6) is still unsolved. Update the dossier/README and communicate the verified result only after the full theorem/axiom audit passes.
+
+
+## 2026-11-25 11:20 UTC — frontier composition repairs and count reconciliation
+
+Two full Agent6 dispatches were cancelled before expensive compilation because source review exposed further blockers. Do not cite either as a proof failure:
+- 45601313596 was cancelled during Lean installation after discovering implicit score-bound arguments in the new F1/F1RF consumers.
+- 45602044422 was cancelled during early compilation after Agent41 identified additional defects in the shared champion frontier/parent composition.
+
+Additional shared-source repairs now on main:
+- `ChampionResidualFrontier.lean`: `championStep` proves the small run-room bound from the symbolic `7014 < championScore` theorem and `omega`, not `decide` against the enormous score.
+- `championResidualRefinedRosterSound` now appends the existing `hresidual : e ∈ championResidualResiduals` directly; the prior code incorrectly passed this list-membership witness to `OpenLeaf.mem_residuals`.
+- `exactBB6OfChampionResidualRoster` now supplies the mixed-composition bounds correctly: `6 ≤ championScore` is derived via `champion_score_gt_7014`, and the root/target bounds are equal, so the second argument is `le_rfl`.
+- `ChampionResidualParentIntegration.parent_eq_championP7` replaces malformed multiline `decide [defs]` with `simp [parent, parentM, ...]` over the exact finite state/symbol cases. The parent alias and parent machine definitions are explicitly unfolded.
+
+Agent41's 11:15 message reports a new F1=0LF (code20) branch: preliminary tree 12 splits, 147 translated cycles, 71 last-hole leaves, 45 FAR leaves, 14 exceptions; one branch reaches B1 at query 1597, twelve have candidate exact sweep recurrences, and one complex suffix recurrence remains. He also reports ten added depth-six champion witnesses that would change the raw139 counts from 156/264 to 146/254. Current main still has 156/264 and the F0/F1/RF consumers are based on the old list. I asked Agent41 to confirm whether these witnesses are committed/source-accepted and provide the exact updated list before another full audit. I informed Agent6 to hold dispatch until this is reconciled.
+
+Current CI status: no active Agent6 full verify. 45602044422 is cancelled. The standalone F1=0RF cylinder remains source-accepted in 45581070284; the 109-leaf integrated theorem is still unaccepted. Do not dispatch another full run until:
+1. Agent41 confirms the 10-witness count and the F1=0LF branch's committed state;
+2. the base residual roster and F0/F1/RF list counts are recomputed against current main;
+3. the workflow's exact audit names and roots match the final list;
+4. Agent6/31 have reviewed the shared repairs.
+
+The lease remains the original 2026-11-25T10:45:02.940Z; release threshold 11:55:02.940Z. Current research time is about 11:20 UTC, below 70 minutes. Continue productive work and check the actual clock after every checkpoint.
