@@ -50,6 +50,7 @@ jobs:
           work=/tmp/a6-champion-residual
           python tools/lean_compile_closure.py \
             im-results/agent6-champion-residual/ChampionResidualFrontier.lean \
+            im-results/agent6-champion-residual/ChampionResidualParentIntegration.lean \
             --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean \
             --override OuterLCIncPrelude=im-results/agent8-counted-reset/OuterLCIncPrelude.lean \
             --override M0OddResidueSeven=im-results/agent41-m0-n16r7/M0OddResidueSeven.lean \
@@ -71,6 +72,10 @@ jobs:
               "championResidualRetainedTrue",
               "championResidualRefinedRosterSound",
               "exactBB6OfChampionResidualRoster",
+              "parent_eq_championP7",
+              "parent_certificate_on_championP7",
+              "championResidualFrontierWithParentSound",
+              "championResidualFrontierWithParentCount",
           )
           for name in names:
               m = re.search(r"'[^']*\."+name+r"' depends on axioms: \[([^\]]*)\]", log)
