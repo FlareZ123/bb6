@@ -1,0 +1,63 @@
+name: Agent 19 raw112 residual 0LE proof search
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  residual:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Reconstruct proof dependencies
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+      - name: Search late boundary events for a residual pump
+        run: |
+          set -euo pipefail
+          python -u im-results/agent19-raw112-residual/generate.py | tee /tmp/a19-raw112-residual-generate.log
+          if test -s im-results/agent19-raw112-residual/Raw112Residual0LE.lean; then
+            echo "A19_RAW112_RESIDUAL_FOUND=1" >> "$GITHUB_ENV"
+          else
+            echo "A19_RAW112_RESIDUAL_FOUND=0" >> "$GITHUB_ENV"
+          fi
+      - name: Compile residual nonhalting theorem
+        if: env.A19_RAW112_RESIDUAL_FOUND == '1'
+        run: |
+          set -euo pipefail
+          python tools/lean_compile_closure.py im-results/agent19-raw112-residual/Raw112Residual0LE.lean \
+            --workdir /tmp/a19-raw112-residual \
+            --manifest /tmp/a19-raw112-residual-manifest.json \
+            --label raw112-residual-f1-0le-never \
+            --theorem BB6Coverage.Agent19Raw112Residual0LE.M0.never \
+            --artifact-name raw112-residual-f1-0le-never \
+            --provenance-input im-results/agent19-raw112-residual/generate.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_sweeps.py \
+            --provenance-input im-results/agent31-three-hole-tnf/SweepPumping.lean \
+            --provenance-input im-results/agent13-coverage/unpack.py \
+            --jobs 4 | tee /tmp/a19-raw112-residual-lean.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a19-raw112-residual-lean.log; then
+            echo "Forbidden axiom/proof mechanism in residual nonhalting proof" >&2
+            exit 1
+          fi
+      - name: Preserve discovery and proof artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw112-residual-f1-0le-proof-search
+          if-no-files-found: warn
+          path: |
+            im-results/agent19-raw112-residual/generate.py
+            im-results/agent19-raw112-residual/Raw112Residual0LE.lean
+            /tmp/a19-raw112-residual/
+            /tmp/a19-raw112-residual-manifest.json
+            /tmp/a19-raw112-residual-generate.log
+            /tmp/a19-raw112-residual-lean.log
