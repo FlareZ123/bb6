@@ -30,3 +30,10 @@ For ID62, E with empty left and right (01)^(2+12n) returns to the next parameter
 **Both final candidate leaves (10 and 15) are source-certified nonhalting.** See [CarryProof.md](CarryProof.md) and [CI run 45595822219](https://github.com/FlareZ123/bb6/actions/runs/45595822219). ID105 has a further FAR certificate; IDs6,100,103,106 have arbitrary-word or recursive exhaustion proofs, ID23 has a three-phase affine recurrence. Local fixture checks passed; original-source acceptance pending.
 
 The archive `inductive-generators.tar.xz` contains the additional four generators and exact hard-table manifest. Run `python generate.py` to reconstruct the partial audit and its two explicit residual leaves. The source-audit workflow accepts mode raw112. The bound is 100000; `Raw112ClosedCover.lean` combines the two certified leaves with the generated parent audit. Full parent source acceptance remains pending.
+
+
+## Interruption-safe parent source audit
+
+The existing manual workflow `.github/workflows/agent47-raw112-parent-cover.yml` compiles the 24 first-query branches in eight disjoint shards plus one support shard. Each shard carries a source/import/object manifest produced by `tools/lean_compile_closure.py`. The assembly stage reuses the shared strict merger `im-results/agent4-raw109/merge_shards.py` with [shard-config.json](shard-config.json): it checks exact root sets, source hashes, import closures, object hashes, compiler identity, source revision, and provenance inputs before composing the union. The final `Raw112Data` and parent consumer are compiled against that verified union, and the final manifest must show every non-root dependency reused rather than silently rebuilt.
+
+This is a proof-build reliability improvement, not a new mathematical closure. The 100,000-step parent theorem remains **pending original-source acceptance** until the `mode=closed` run passes the named axiom audit and full dependency-reuse check. The two residual nonhalting theorems are already source-accepted; the remaining obligation is the complete parent partition and its two residual Covers.

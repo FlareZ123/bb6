@@ -1,0 +1,50 @@
+{
+  "artifact_prefix": "raw112-shard",
+  "allow_mixed_revisions": false,
+  "groups": {
+    "0": [
+      "Raw112Branch00",
+      "Raw112Branch08",
+      "Raw112Branch16"
+    ],
+    "1": [
+      "Raw112Branch01",
+      "Raw112Branch09",
+      "Raw112Branch17"
+    ],
+    "2": [
+      "Raw112Branch02",
+      "Raw112Branch10",
+      "Raw112Branch18"
+    ],
+    "3": [
+      "Raw112Branch03",
+      "Raw112Branch11",
+      "Raw112Branch19"
+    ],
+    "4": [
+      "Raw112Branch04",
+      "Raw112Branch12",
+      "Raw112Branch20"
+    ],
+    "5": [
+      "Raw112Branch05",
+      "Raw112Branch13",
+      "Raw112Branch21"
+    ],
+    "6": [
+      "Raw112Branch06",
+      "Raw112Branch14",
+      "Raw112Branch22"
+    ],
+    "7": [
+      "Raw112Branch07",
+      "Raw112Branch15",
+      "Raw112Branch23"
+    ],
+    "8": [
+      "Raw112SiblingNever",
+      "ResidualCover"
+    ]
+  }
+}

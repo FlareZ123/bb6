@@ -44,9 +44,10 @@ jobs:
     if: inputs.mode == 'parent' || inputs.mode == 'closed'
     needs: generate_raw112
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 60
     strategy:
       fail-fast: false
+      max-parallel: 4
       matrix:
         shard: [0, 1, 2, 3, 4, 5, 6, 7, 8]
     steps:
@@ -91,30 +92,49 @@ jobs:
             echo "No roots assigned to shard $SHARD" >&2
             exit 1
           fi
+          work="/tmp/a47-raw112-shard-$SHARD"
           python tools/lean_compile_closure.py "${roots[@]}" \
-            --workdir "/tmp/a47-raw112-shard-$SHARD" \
-            --manifest "/tmp/a47-raw112-shard-$SHARD-manifest.json" \
-            --label "raw112-source-shard-$SHARD" \
+            --workdir "$work" \
+            --manifest "$work/manifest.json" \
+            --label "raw112-shard-$SHARD" \
             --jobs 4 \
             --artifact-name "raw112-shard-$SHARD" \
             --provenance-input im-results/agent47-raw112-cut/generate.py \
             --provenance-input im-results/agent47-raw112-cut/symbolic.py \
+            --provenance-input im-results/agent47-raw112-cut/enumerate_fast.cpp \
+            --provenance-input im-results/agent47-raw112-cut/far-bank.txt \
+            --provenance-input im-results/agent47-raw112-cut/far-extra.txt \
+            --provenance-input im-results/agent47-raw112-cut/late.txt \
+            --provenance-input im-results/agent47-raw112-cut/ngram.txt \
+            --provenance-input im-results/agent47-raw112-cut/inductive-generators.tar.xz \
             --provenance-input im-results/agent47-raw112-cut/Raw112Data.lean \
             --provenance-input im-results/agent47-raw112-cut/unresolved.txt \
+            --provenance-input im-results/agent47-raw114-cut/seeded_far.cpp \
+            --provenance-input im-results/agent47-raw114-cut/counter.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_sweeps.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_four_hole.py \
+            --provenance-input im-results/agent47-raw111-cut/ngram_sparse.cpp \
+            --provenance-input im-results/agent47-raw111-cut/emit_sparse.py \
+            --provenance-input im-results/agent13-coverage/BB6Coverage.lean.xz.b64 \
+            --provenance-input im-results/agent13-coverage/unpack.py \
+            --provenance-input im-results/agent16-raw118/ResidualCover.lean \
+            --provenance-input tools/lean_compile_closure.py \
+            --provenance-input im-results/agent4-raw109/merge_shards.py \
+            --provenance-input im-results/agent4-raw109/audit_axioms.py \
+            --provenance-input im-results/agent47-raw112-cut/shard-config.json \
             | tee "/tmp/a47-raw112-shard-$SHARD.log"
           if grep -Eq 'sorryAx|native_decide' "/tmp/a47-raw112-shard-$SHARD.log"; then
             echo "Forbidden axiom/proof mechanism in raw112 shard $SHARD" >&2
             exit 1
           fi
+          cp "/tmp/a47-raw112-shard-$SHARD.log" "$work/audit.log"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: raw112-shard-${{ matrix.shard }}
-          path: |
-            /tmp/a47-raw112-shard-${{ matrix.shard }}/
-            /tmp/a47-raw112-shard-${{ matrix.shard }}-manifest.json
-            /tmp/a47-raw112-shard-${{ matrix.shard }}.log
+          path: /tmp/a47-raw112-shard-${{ matrix.shard }}/
           if-no-files-found: warn
+          retention-days: 30
 
   assemble:
     if: inputs.mode == 'parent' || inputs.mode == 'closed'
@@ -142,104 +162,106 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           pattern: raw112-shard-*
-          merge-multiple: true
           path: /tmp/a47-raw112-shards
-      - name: Assemble branch shards and source-check the parent theorem
+      - name: Merge source-identical shard closures and compile the parent theorem
+        env:
+          RAW112_MODE: \${{ inputs.mode }}
         run: |
           set -euo pipefail
-          mkdir -p /tmp/a47-raw112-assembled
-          python3 - <<'PY'
-          from pathlib import Path
-          root = Path("/tmp/a47-raw112-shards")
-          dirs = []
-          for d in [root, *[p for p in root.rglob("*") if p.is_dir()]]:
-              if any(d.glob("Raw112Branch*.olean")) or (d / "Raw112SiblingNever.olean").is_file() or (d / "ResidualCover.olean").is_file():
-                  dirs.append(d)
-          if not dirs:
-              raise SystemExit("no compiled raw112 shard roots were downloaded")
-          Path("/tmp/a47-raw112-lean-path").write_text(":".join(map(str, dirs)) + ":.\n")
-          print("LEAN_PATH roots:", dirs)
-          PY
-          export LEAN_PATH="$(cat /tmp/a47-raw112-lean-path)"
-          lean -o /tmp/a47-raw112-assembled/Raw112Data.olean im-results/agent47-raw112-cut/Raw112Data.lean \
-            | tee /tmp/a47-raw112-final.log
-          if [ "${{ inputs.mode }}" = closed ]; then
-            lean -o /tmp/a47-raw112-assembled/Raw112ClosedCover.olean im-results/agent47-raw112-cut/Raw112ClosedCover.lean \
-              | tee -a /tmp/a47-raw112-final.log
+          root=im-results/agent47-raw112-cut
+          union=/tmp/a47-raw112-union
+          work=/tmp/a47-raw112-assembled
+          python im-results/agent4-raw109/merge_shards.py \
+            /tmp/a47-raw112-shards "$union" "$root/shard-config.json"
+          if [ "$RAW112_MODE" = closed ]; then
+            module=Raw112ClosedCover
             theorem=BB6.Agent47Raw112.parent_cover
-            root=Raw112ClosedCover
+            artifact=raw112-closed-parent-cover
+            required_axioms=(
+              BB6.Agent47Raw112.sound
+              BB6.Agent47Raw112.residual_count
+              BB6.Agent47Raw112.residuals_covered
+              BB6.Agent47Raw112.parent_cover
+            )
           else
-            lean -o /tmp/a47-raw112-assembled/Raw112ParentCoverComposition.olean im-results/agent47-raw112-cut/Raw112ParentCoverComposition.lean \
-              | tee -a /tmp/a47-raw112-final.log
+            module=Raw112ParentCoverComposition
             theorem=BB6.Agent47Raw112.parent_cover_of_residual_covers
-            root=Raw112ParentCoverComposition
+            artifact=raw112-parent-cover-mixed-bound-composition
+            required_axioms=(
+              BB6.Agent47Raw112.sound
+              BB6.Agent47Raw112.residual_count
+              BB6.Agent47Raw112.parent_cover_of_residual_covers
+            )
           fi
-          if grep -Eq 'sorryAx|native_decide' /tmp/a47-raw112-final.log; then
-            echo "Forbidden axiom/proof mechanism in assembled raw112 parent proof" >&2
-            exit 1
-          fi
-          python3 - /tmp/a47-raw112-final.log "${{ inputs.mode }}" <<'PY'
-          import pathlib, re, sys
-          log = pathlib.Path(sys.argv[1]).read_text()
-          mode = sys.argv[2]
-          allowed = {"propext", "Classical.choice", "Quot.sound"}
-          required = ["BB6.Agent47Raw112.sound", "BB6.Agent47Raw112.residual_count"]
-          if mode == "closed":
-              required += ["BB6.Agent47Raw112.residuals_covered", "BB6.Agent47Raw112.parent_cover"]
-          else:
-              required += ["BB6.Agent47Raw112.parent_cover_of_residual_covers"]
-          profiles = {}
-          for name, axioms in re.findall(r"'([^']+)' depends on axioms: \[([^\]]*)\]", log):
-              profiles[name] = {x.strip() for x in axioms.split(",") if x.strip()}
-          for name in required:
-              if name not in profiles:
-                  raise SystemExit("missing axiom profile: " + name)
-              bad = profiles[name] - allowed
-              if bad:
-                  raise SystemExit(f"{name}: unexpected axioms {sorted(bad)}")
-              print(f"{name}: {sorted(profiles[name])}")
+          python tools/lean_compile_closure.py "$root/$module.lean" \
+            --workdir "$work" \
+            --jobs 4 \
+            --precompiled-dir "$union" \
+            --precompiled-manifest "$union/manifest.json" \
+            --manifest "$work/manifest.json" \
+            --label "raw112-$RAW112_MODE" \
+            --theorem "$theorem" \
+            --parent-table "1RB---_1RC---_0RD---_1LD1RE_---1LC_------" \
+            --weighted-bound 100000 \
+            --artifact-name "$artifact" \
+            --provenance-input "$root/generate.py" \
+            --provenance-input "$root/symbolic.py" \
+            --provenance-input "$root/enumerate_fast.cpp" \
+            --provenance-input "$root/far-bank.txt" \
+            --provenance-input "$root/far-extra.txt" \
+            --provenance-input "$root/late.txt" \
+            --provenance-input "$root/ngram.txt" \
+            --provenance-input "$root/inductive-generators.tar.xz" \
+            --provenance-input "$root/Raw112Data.lean" \
+            --provenance-input "$root/unresolved.txt" \
+            --provenance-input im-results/agent47-raw114-cut/seeded_far.cpp \
+            --provenance-input im-results/agent47-raw114-cut/counter.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_sweeps.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_four_hole.py \
+            --provenance-input im-results/agent47-raw111-cut/ngram_sparse.cpp \
+            --provenance-input im-results/agent47-raw111-cut/emit_sparse.py \
+            --provenance-input im-results/agent13-coverage/BB6Coverage.lean.xz.b64 \
+            --provenance-input im-results/agent13-coverage/unpack.py \
+            --provenance-input im-results/agent16-raw118/ResidualCover.lean \
+            --provenance-input tools/lean_compile_closure.py \
+            --provenance-input im-results/agent4-raw109/merge_shards.py \
+            --provenance-input im-results/agent4-raw109/audit_axioms.py \
+            --provenance-input "$root/shard-config.json" \
+            2>&1 | tee /tmp/a47-raw112-final.log
+          python im-results/agent4-raw109/audit_axioms.py \
+            /tmp/a47-raw112-final.log "\${required_axioms[@]}"
+          python3 - "$work/manifest.json" "$module" <<'PY'
+          import json, sys
+          manifest = json.load(open(sys.argv[1]))
+          root = sys.argv[2]
+          modules = {item["module"] for item in manifest["modules"]}
+          required_compiled = {root, "Raw112Data"}
+          if not required_compiled <= modules:
+              raise SystemExit(f"missing final modules: {sorted(required_compiled - modules)}")
+          expected_reused = modules - required_compiled
+          core = manifest.get("precompiled_core") or {}
+          reused = set(core.get("reused_modules", []))
+          if reused != expected_reused:
+              raise SystemExit(
+                  f"unexpected rebuilt dependencies: missing={sorted(expected_reused - reused)}, "
+                  f"extra={sorted(reused - expected_reused)}"
+              )
+          if core.get("proof_source_revision") != manifest["proof_source_revision"]:
+              raise SystemExit("precompiled shard revision differs from final source revision")
+          if core.get("lean_binary_sha256") != manifest["lean_binary"]["sha256"]:
+              raise SystemExit("precompiled shard compiler differs from final compiler")
+          print(f"Reused all {len(expected_reused)} source-identical parent dependencies")
           PY
-          python3 - <<'PY'
-          import hashlib, json, os, pathlib, subprocess
-          roots = [pathlib.Path("/tmp/a47-raw112-shards"), pathlib.Path("/tmp/a47-raw112-assembled")]
-          def digest(path):
-              h = hashlib.sha256()
-              with path.open("rb") as stream:
-                  for chunk in iter(lambda: stream.read(1024 * 1024), b""):
-                      h.update(chunk)
-              return h.hexdigest()
-          files = [p for root in roots for p in root.rglob("*") if p.is_file()]
-          tree = "".join(f"{digest(p)}  {p.relative_to('/tmp').as_posix()}\n" for p in sorted(files))
-          mode = os.environ.get("RAW112_MODE", "closed")
-          manifest = {
-              "mode": mode,
-              "root_module": "Raw112ClosedCover" if mode == "closed" else "Raw112ParentCoverComposition",
-              "theorem": "BB6.Agent47Raw112.parent_cover" if mode == "closed" else "BB6.Agent47Raw112.parent_cover_of_residual_covers",
-              "parent_table": "1RB---_1RC---_0RD---_1LD1RE_---1LC_------",
-              "weighted_bound": 100000,
-              "branch_count": 24,
-              "branch_shard_count": 8,
-              "support_shard": 8,
-              "run_id": os.environ.get("GITHUB_RUN_ID"),
-              "source_revision": os.environ.get("GITHUB_SHA"),
-              "lean_version": subprocess.check_output(["lean", "--version"], text=True).strip(),
-              "module_count": sum(1 for p in files if p.suffix == ".olean"),
-              "artifact_tree_sha256": hashlib.sha256(tree.encode()).hexdigest(),
-              "unresolved_rows": pathlib.Path("im-results/agent47-raw112-cut/unresolved.txt").read_text().splitlines(),
-          }
-          pathlib.Path("/tmp/a47-raw112-final-manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
-          print(json.dumps(manifest, indent=2))
-          PY
-        env:
-          RAW112_MODE: ${{ inputs.mode }}
+          cp /tmp/a47-raw112-final.log "$work/audit.log"
+          cp "$union/manifest.json" "$work/shard-union.json"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ inputs.mode == 'closed' && 'raw112-closed-parent-cover' || 'raw112-parent-cover-mixed-bound-composition' }}
           path: |
             /tmp/a47-raw112-shards/
+            /tmp/a47-raw112-union/
             /tmp/a47-raw112-assembled/
-            /tmp/a47-raw112-final-manifest.json
             /tmp/a47-raw112-final.log
             im-results/agent47-raw112-cut/Raw112Data.lean
             im-results/agent47-raw112-cut/Raw112ParentCoverComposition.lean
