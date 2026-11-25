@@ -72,6 +72,7 @@ theorem b0_1lc_mass_conservation :
   rw [BB6.Agent13HeldBlockRaw10Combined.raw10RemainderWithCycleAndHalt_mass]
   decide
 
+#print axioms BB6.Agent13CrossRouteHeldLeaf109.firstOneB0_1LC_exact_member
 #print axioms q2800_held_leaf_weighted_at_champion_score
 #print axioms b0_1lc_parent_cover_from_41_boxes
 #print axioms cover_reduced_roster_from_108_and_41_boxes
