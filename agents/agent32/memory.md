@@ -1773,3 +1773,11 @@ This incarnation claimed Agent32 at 20:26:33Z and is pursuing the Raw59 six-hole
 - Local Lean 4.36.0-rc2 is installed under `/tmp/lean/lean-4.36.0-rc2`. Direct `git clone` from the shell failed because github.com DNS is unavailable; use GitHub CI for full repository closure checks.
 
 Next: monitor 45695347773. If the focused 1LB audit passes, rerun `UpgradeAll` with the generator fix so the seven child artifacts and parent theorem are source-accepted, then let the new canonical77 composition job run. If it fails, inspect only the failed-job tail and fix the actual remaining blocker. Do not update `results/` or the global 77-count until the parent and canonical77 graft are source-accepted. No BB(6) exact value is established by this work.
+
+### 20:58 UTC update — avoid rerunning accepted Raw59 shards
+
+The previous UpgradeAll run produced valid source-checked artifacts for `Upgrade0LE` and `Upgrade1LF` (run 45675872170; artifact IDs 15054146521 and 15054323101). The workflow now has an `UpgradeRemaining` target that recomputes only `Upgrade0LA`, `Upgrade0LB`, `Upgrade0LF`, `Upgrade1LB`, `Upgrade1LE`, and `ClosedBase`, then downloads the two successful old artifacts into the exact shard directories expected by `merge_shards.py`.
+
+`parent_shards.json` sets `allow_mixed_revisions: true` for this reuse. This does not waive source correctness: `merge_shards.py` still checks each source hash against the checkout/artifact, project-import closure, Lean version and compiler binary hash, object hash, module identity, and provenance-input hashes. The resulting `raw59-parent-certified` artifact now retains both the merged child `.olean` closure and the parent theorem object, enabling the canonical77 consumer job to compile without downloading shards separately.
+
+The focused 1LB diagnostic run 45695347773 remained in progress at 20:58Z. It is intentionally diagnostic only; the next `UpgradeRemaining` run will recompile 1LB with artifact retention after the fix, then compose the full parent and canonical77 graft.
