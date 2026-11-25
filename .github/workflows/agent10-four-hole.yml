@@ -33,7 +33,7 @@ jobs:
   check:
     if: inputs.target != 'raw109-sharded' && inputs.target != 'raw108-sharded' && inputs.target != 'raw108-resume' && inputs.target != 'raw108-lb0' && inputs.target != 'raw108-lb0-reuse' && inputs.target != 'raw108-compose'
     runs-on: ubuntu-latest
-    # Raw58 child and parent closures can exceed 60m; keep unrelated targets at 60m.
+    # Raw58 child and parent closures can exceed 60m; use 2 Lean workers for child audits to reduce runner pressure.
     timeout-minutes: ${{ (inputs.target == 'raw58-child' || inputs.target == 'raw58-more3') && 120 || 60 }}
     steps:
       - uses: actions/checkout@v4
@@ -317,7 +317,7 @@ jobs:
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
           root=im-results/agent4-raw58
           python "$root/generate_more.py" "$CHILD"
-          python tools/lean_compile_closure.py --workdir /tmp/a4-raw58-child --jobs 4 "$root/Raw58${CHILD}Data.lean" | tee /tmp/a4-raw58-child.log
+          python tools/lean_compile_closure.py --workdir /tmp/a4-raw58-child --jobs 2 "$root/Raw58${CHILD}Data.lean" | tee /tmp/a4-raw58-child.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a4-raw58-child.log; then exit 1; fi
       - name: Check raw108 root first-hole split
         if: inputs.target == 'raw108-root-cut'
