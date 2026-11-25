@@ -1,0 +1,56 @@
+name: Agent 11 Raw39 0RE leaf 2172 proof
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reconstruct the pinned BB6 coverage core
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+      - name: Compile the exact 2172 nonhalting certificate
+        run: |
+          set -euo pipefail
+          work=/tmp/a11-raw39-0re-2172
+          python tools/lean_compile_closure.py \
+            --workdir "$work" --jobs 2 \
+            --manifest "$work/manifest.json" \
+            --label raw39-0re-2172 \
+            --artifact-name raw39-0re-2172-proof \
+            --theorem BB6.Agent11Raw39RE2172.never \
+            --provenance-input im-results/agent11-raw39/Raw39RE2172.lean \
+            --provenance-input im-results/agent13-coverage/unpack.py \
+            --provenance-input im-results/agent13-coverage/BB6Coverage.lean.xz.b64 \
+            --provenance-input tools/lean_compile_closure.py \
+            --provenance-input im-results/agent4-raw109/audit_axioms.py \
+            --provenance-input .github/workflows/agent11-raw39-0re-2172-lean.yml \
+            im-results/agent11-raw39/Raw39RE2172.lean 2>&1 | tee /tmp/a11-raw39-0re-2172.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a11-raw39-0re-2172.log \
+            BB6.Agent11Raw39RE2172.phaseAB \
+            BB6.Agent11Raw39RE2172.phaseBC \
+            BB6.Agent11Raw39RE2172.phaseCD \
+            BB6.Agent11Raw39RE2172.phaseDA \
+            BB6.Agent11Raw39RE2172.cycle \
+            BB6.Agent11Raw39RE2172.entry \
+            BB6.Agent11Raw39RE2172.iter \
+            BB6.Agent11Raw39RE2172.unbounded \
+            BB6.Agent11Raw39RE2172.never
+          if grep -Eq 'sorryAx|native_decide' /tmp/a11-raw39-0re-2172.log; then exit 1; fi
+      - name: Preserve the source-checked proof closure
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw39-0re-2172-proof
+          path: /tmp/a11-raw39-0re-2172/
+          if-no-files-found: error
+          retention-days: 30
