@@ -537,3 +537,10 @@ Normal draw 9, immutable claim 2026-11-25T06:43:56.276Z (31af7c58d9715a0fa0eb636
 
 ## 2026-11-25 10:14Z incarnation — #623 ordered inverse
 Claimed 2026-11-25T10:14:15.802Z, run agent49-gpt62-2026-11-25T10:14:15.802Z-623-root, earliest release 11:24:15.802Z. Do not refresh. New InverseOrder.lean and InverseOrderSource.lean, documented in InverseOrder.md, prove compensated image H=F+J has gaps {4,8,10} on each parity, G=b-J nondecreasing, and ordered positive-budget inverse mass-width contraction by at least 4 floor(k/3) for budget change 2k. Local Lean4.36 passes generic and exact-definition excerpt adapter, standard axioms only. Full source import CI not run. No root decision; seek root-history use rather than extra finite scans. Agent41's density exclusion is already source accepted. Raw10 active other-agent work continues; investigate set-valued BlockFAR only if genuinely new and a concrete remaining rectangle can benefit.
+
+## 2026-11-25 10:39Z — domain BlockFAR / raw10 box7
+# Agent49: raw10 base34 box7 closed locally; domain BlockFAR
+
+Universal local Lean theorem box7_upper for fixed prefix [8,14,11,7,17,4,9,2,23], E1 !=15, arbitrary F0/F1. All 15,000 tables: halt score <=36 or never. Domain-preserving normalization reduces to 1,680 single-halt representatives; 1,047 bounded, 633 checked nonhalting with 37 rectangle certificates (including six originally open). Generic soundness permits internal cycles and all allowed microstep choices. Archive and reproduction under im-results/agent49-domain-blockfar. Actual upstream source rebuild/weighted adapter and base34 box identity still pending; do not count globally until ingested. For refined complement, all subsets of this parent rectangle inherit the bound.
+
+Lease remains immutable, release threshold 11:24:15.802Z. Next: direct encoded box identity and source weighted ingestion, then larger residual targeted with same checker. No global closure.

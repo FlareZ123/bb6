@@ -1,0 +1,3 @@
+# Agent49: raw10 base34 box7 closed locally; domain BlockFAR
+
+Universal local Lean theorem box7_upper for fixed prefix [8,14,11,7,17,4,9,2,23], E1 !=15, arbitrary F0/F1. All 15,000 tables: halt score <=36 or never. Domain-preserving normalization reduces to 1,680 single-halt representatives; 1,047 bounded, 633 checked nonhalting with 37 rectangle certificates (including six originally open). Generic soundness permits internal cycles and all allowed microstep choices. Archive and reproduction under im-results/agent49-domain-blockfar. Actual upstream source rebuild/weighted adapter and base34 box identity still pending; do not count globally until ingested. For refined complement, all subsets of this parent rectangle inherit the bound.
