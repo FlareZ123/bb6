@@ -143,7 +143,7 @@ function validateAssumptions(log, moduleName) {
     name.startsWith("PrimInt63.") || name.startsWith("PArray.") || name.startsWith("Uint63.");
   const names = [];
   for (const line of block.split(/\r?\n/)) {
-    if (!line.trim() || line.trim() === "Axioms:" || /^\s/.test(line)) continue;
+    if (!line.trim() || line.trim() === "Axioms:" || /^\s/.test(line) || /^Finished transaction in /.test(line)) continue;
     const name = line.trim().split(/[\s:]/)[0].replace(/\.$/, "");
     if (!allowed(name)) throw new Error(moduleName + ": unexpected assumption " + name);
     names.push(name);
@@ -195,7 +195,7 @@ function selfTest(repoRoot) {
   if (active.length !== 56 || held.length !== 0) {
     throw new Error("self-test expected (56,0), got (" + active.length + "," + held.length + ")");
   }
-  const syntheticLog = "Closed under the global context\\nNat.of_num_uint. [abstract-large-number,numbers,default]\\nAxioms:\\nPrimInt63.sub : primitive\\nPArray.set : primitive\\nchunk_data = " + value;
+  const syntheticLog = "Closed under the global context\nNat.of_num_uint. [abstract-large-number,numbers,default]\nAxioms:\nPrimInt63.sub : primitive\nPArray.set : primitive\n     = (56, 0)\n     : nat * nat\nFinished transaction in 0. secs (successful)\nchunk_data = " + value;
   const parsed = parseLog(syntheticLog, "self-test");
   if (parsed.active.length !== 56 || parsed.held.length !== 0) {
     throw new Error("self-test log parser returned the wrong queue lengths");
@@ -205,6 +205,8 @@ function selfTest(repoRoot) {
 
 function main() {
   const args = process.argv.slice(2);
+  const partial = args.includes("--partial");
+  if (partial) args.splice(args.indexOf("--partial"), 1);
   if (args[0] === "--self-test") {
     selfTest(path.resolve(args[1] || process.cwd()));
     return;
@@ -215,6 +217,7 @@ function main() {
   if (!manifests.length) die("no manifest.tsv files under " + inputRoot);
 
   const chunks = [];
+  const failures = [];
   const revisions = new Set();
   for (const manifestFile of manifests) {
     const dir = path.dirname(manifestFile);
@@ -225,18 +228,18 @@ function main() {
       throw new Error(manifestFile + ": source revision " + originalRevision + " differs from pinned " + PINNED_SOURCE);
     }
     for (const row of parseManifest(manifestFile)) {
-      if (row.status !== "verified") throw new Error(manifestFile + ": chunk " + row.offset + " status " + row.status);
+      if (row.status !== "verified") { failures.push({ ...row, researchRevision }); continue; }
       const moduleName = "Agent8Batch_" + row.offset + "_" + row.size + "_" + row.fuel;
       const logFile = path.join(dir, moduleName + ".log");
       const sourceFile = path.join(dir, moduleName + ".v");
-      if (!fs.existsSync(logFile) || !fs.existsSync(sourceFile)) {
+      if (!fs.existsSync(logFile) || !fs.existsSync(sourceFile) || !fs.existsSync(path.join(dir, moduleName + ".vo"))) {
         throw new Error(manifestFile + ": missing source/log for " + moduleName);
       }
       const source = fs.readFileSync(sourceFile, "utf8");
       if (!source.includes("Theorem chunk_data_exact") || !source.includes("source_checkpoint_decode")) {
         throw new Error(moduleName + ": missing source checkpoint exactness theorem");
       }
-      if (/^\\s*(Admitted|Axiom)\\b/m.test(source)) {
+      if (/^\s*(Admitted|Axiom)\b/m.test(source)) {
         throw new Error(moduleName + ": source contains an admission or explicit axiom");
       }
       const log = fs.readFileSync(logFile, "utf8");
@@ -257,15 +260,27 @@ function main() {
     }
   }
 
-  chunks.sort((a, b) => a.offset - b.offset);
-  if (chunks.length !== 129) throw new Error("expected 129 chunks, found " + chunks.length);
-  for (let i = 0; i < 129; i++) {
-    const c = chunks[i];
-    if (c.offset !== 100 * i || c.size !== 100) {
-      throw new Error("chunk " + i + ": expected offset=" + (100 * i) + ", size=100; got offset=" + c.offset + ", size=" + c.size);
+  // Multiple verified retries can coexist. Prefer the greatest update fuel.
+  // Never merge different outputs for the same exact slice and fuel.
+  const chosen = new Map();
+  for (const c of chunks) {
+    if (!Number.isInteger(c.offset) || c.offset % 100 !== 0 || c.offset < 0 || c.offset >= 12820 ||
+        (c.size !== 100 && !(c.offset === 12800 && c.size === 20)) ||
+        !Number.isInteger(c.fuel) || c.fuel < 0 || c.fuel > 1000000) {
+      throw new Error("not a canonical q0 chunk: " + c.module);
     }
+    const prev = chosen.get(c.offset);
+    if (prev && prev.fuel === c.fuel &&
+        JSON.stringify([prev.active, prev.held]) !== JSON.stringify([c.active, c.held])) {
+      throw new Error("conflicting verified outputs at offset " + c.offset);
+    }
+    if (!prev || c.fuel > prev.fuel) chosen.set(c.offset, c);
   }
-  if (revisions.size !== 1) throw new Error("mixed source/research revisions across batches: " + [...revisions].join(", "));
+  chunks.length = 0;
+  chunks.push(...[...chosen.values()].sort((a, b) => a.offset - b.offset));
+  const missingOffsets = Array.from({length: 129}, (_, i) => i * 100).filter(i => !chosen.has(i));
+  if (!partial && missingOffsets.length) throw new Error("missing verified offsets: " + missingOffsets.join(","));
+  if (!chunks.length) throw new Error("no verified checkpoints");
 
   const roster = [];
   const seen = new Map();
@@ -279,7 +294,7 @@ function main() {
       nodes.forEach((node, ordinal) => {
         const key = node.table + "\t" + node.holes + "\t" + node.fresh;
         seen.set(key, (seen.get(key) || 0) + 1);
-        roster.push([i, c.offset, c.size, c.fuel, side, ordinal, node.holes, node.fresh, node.table].join("\t"));
+        roster.push([c.offset / 100, c.offset, c.size, c.fuel, side, ordinal, node.holes, node.fresh, node.table].join("\t"));
       });
     }
   }
@@ -289,7 +304,10 @@ function main() {
   fs.writeFileSync(path.join(outputRoot, "q0-checkpoint-roster.tsv"), [header, ...roster].join("\n") + "\n");
   const summary = {
     sourceRevision: PINNED_SOURCE,
-    researchRevision: chunks[0].researchRevision,
+    researchRevisions: [...new Set(chunks.map(c => c.researchRevision))],
+    complete: missingOffsets.length === 0,
+    missingOffsets,
+    failures,
     chunkCount: chunks.length,
     requestedChunkSize: 100,
     q0Length: 12820,
