@@ -20,6 +20,7 @@ python3 tools/lean_compile_closure.py \
   im-results/agent48-counted-inc0/ChampionParentExact.lean \
   im-results/agent48-champion-root/ChampionF1OneLFCover.lean \
   im-results/agent48-champion-root/ChampionF1ZeroRD.lean \
+  im-results/agent48-champion-root/ChampionF1ZeroRFCover.lean \
   --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean \
   --workdir "$work/build" --jobs 4 | tee "$work/log"
 for theorem in parent_cover parent_reachable parentCertificate sibling_never lc_never re_never champion_score_ge_3512 champion_parent_exact_cover championParentExactCertificate; do
@@ -39,6 +40,13 @@ names = (
     'BB6.Agent48F1ZeroRD.stage',
     'BB6.Agent48F1ZeroRD.never',
     'BB6.Agent48F1ZeroRD.cover',
+    'BB6.Agent48F1ZeroRFHard.entry',
+    'BB6.Agent48F1ZeroRFHard.stage',
+    'BB6.Agent48F1ZeroRFHard.never',
+    'BB6.Agent48F1ZeroRF.root',
+    'BB6.Agent48F1ZeroRF.nohalt',
+    'BB6.Agent48F1ZeroRF.checked',
+    'BB6.Agent48F1ZeroRF.all_completions_weighted',
 )
 for name in names:
     prefix = "'" + name + "' depends on axioms: ["

@@ -1,0 +1,13 @@
+# Raw139 F/1 = 0RF: complete candidate cylinder certificate
+
+**Scope.** Exact depth-five champion-path sibling table [7,24,11,24,14,21,3,16,12,11,24,21], order A0,A1,...,F1; 24 denotes an unassigned transition. A/1, B/1, F/0 remain unassigned. This is a strict descendant of raw139, not a complete canonical representative. The intended theorem is WeightedBound 211 for every compatible completion, including the blank-delay/final-query convention. Original-source CI is pending.
+
+## Mathematical closure
+
+The first-hole audit tree has 7 split nodes, 117 translated side-cycle leaves, 30 last-hole leaves, 14 FAR leaves (DFA sizes one or two), and one explicit growing-tape leaf. Largest reached first-hole index is 205, hence the proposed bound 211. The generator is `generate-f1-zeroRF.cjs`; `node generate-f1-zeroRF.cjs > ChampionF1ZeroRFCover.lean` regenerates the full tree. The Lean checker is the existing FastThreeHoleAudit.fastCheck, not the generator.
+
+The sole non-FAR growth leaf has table [7,13,11,24,14,21,3,16,12,11,14,21], with B/1 unassigned. Write zipper words nearest-head first, left word including the scanned cell. Define F=10111, P=000011, W=010111, D=111, S=01, Q0=00111111, Q1=0000001111, Q2=101111, Q3=11110111. The blank entry after 192 transitions is state F with left F, right P Q0 S. Each stage n has right P^n Q0 S^n. The right sweep transfers each P to a W on the left in 8 transitions; the left sweep restores each W to a P in 10. Four exact central turns (12,18,22,58 transitions) change Q0 to Q1, Q1 to P Q2, Q2 to Q3, and Q3 to Q0 S, respectively. The two latter phases have n+1 blocks. Each left sweep ends with a 12-transition return. Thus the stage recurrence is exactly 72n+194 transitions, with n increasing by 1 and B/1 never consulted. The core parametric rfl lemmas, sweeps, and stage theorem were kernel checked locally in Lean 4.36.0-rc2 against reconstructed zipper definitions; the stage axiom profile was [propext, Quot.sound]. The original-source adapter and audit tree await repository CI.
+
+## Source consuming contract
+
+`ChampionF1ZeroRFHard.lean` uses SweepPumping.never_of_growth for the all-time original-machine statement. `ChampionF1ZeroRFCover.lean` assembles the complete audit. `ChampionF1RFIntegration.lean` checks the exact championChild 5 0RF table and removes only that table from the previous 110-leaf complement. Its proposed conditional exactness theorem retains every other entry (109 raw139 leaves) and all 77 nonchampion canonical-78 representatives. The 109 count is a draft until original-source integration compiles. The prior 110-leaf integration itself was still pending at this checkpoint. No global upper bound, new canonical-roster count, or BB(6) equality is claimed.
