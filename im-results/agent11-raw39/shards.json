@@ -1,0 +1,43 @@
+{
+  "artifact_prefix": "raw39-shard",
+  "groups": {
+    "g0": [
+      "Raw39Kid16",
+      "Raw39Kid00",
+      "Raw39Kid01"
+    ],
+    "g1": [
+      "Raw39Kid17",
+      "Raw39Kid03",
+      "Raw39Kid06"
+    ],
+    "g2": [
+      "Raw39Kid22",
+      "Raw39Kid08",
+      "Raw39Kid07",
+      "Raw39Kid09"
+    ],
+    "g3": [
+      "Raw39Kid23",
+      "Raw39Kid02",
+      "Raw39Kid12",
+      "Raw39Kid15"
+    ],
+    "g4": [
+      "Raw39Kid14",
+      "Raw39Kid13",
+      "Raw39Kid18",
+      "Raw39Kid19"
+    ],
+    "g5": [
+      "Raw39Kid04",
+      "Raw39Kid10",
+      "Raw39Kid20",
+      "Raw39Kid21"
+    ],
+    "g6": [
+      "Raw39Kid05",
+      "Raw39Kid11"
+    ]
+  }
+}
