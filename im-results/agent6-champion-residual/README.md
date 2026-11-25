@@ -1,20 +1,16 @@
-# Champion-containing residual frontier
+# Champion-containing raw139 residual: parent integration and sibling closures
 
-## Target cylinder
+## Scope and target cylinder
 
-This investigation isolates the retained 9-hole residual
+This programme isolates the retained nine-hole residual
 
 `1RB---_1RC---_1LD---_------_------_------`
 
-which is raw residual index 139. It is canonical index 99 in the older 121-entry roster and canonical index 102 in the newer 124-entry manifest used by Agent 47's 78-way quotient frontier. It is compatible with the published six-state champion, retained in the 109-entry roster, and not among the 28 symmetry-discarded indices or 18 early-bound cuts in the 78-way roster. It is outside the 19-parent first-hole sweep currently recorded in `im-results/agent47-rooted-tnf/RootSiblingFirstHole.lean`.
+(raw residual index 139; canonical address B/0 = 1RC, C/0 = 1LD). The table is compatible with the published six-state champion and occurs as canonical index 102 in the older 78-way quotient roster. The current accepted root interface is the **77-way roster after the raw114 parent graft**; exact membership of raw139 in that post-graft roster is now tested by the draft consumer described below.
 
-The Lean source constructs the cylinder directly from the first-one root by fixing B/0 = 1RC and C/0 = 1LD. The initial undefined transition is D/1.
+The initial undefined transition is D/1. The eight successive first-hole refinements along the champion-compatible path are:
 
-## Champion path and terminal leaf
-
-The successive first-hole queries along the champion-compatible path are:
-
-| Parent depth | First hole | Champion move | Known successful moves |
+| Depth | First hole | Champion move | Known successful moves |
 |---:|---|---|---:|
 | 0 | D/1 | 0LE | 3 |
 | 1 | E/1 | 1RC | 4 |
@@ -25,62 +21,75 @@ The successive first-hole queries along the champion-compatible path are:
 | 6 | F/0 | 1RA | 53 |
 | 7 | A/1 | 1RA | 213 |
 
-After these eight ordinary refinements, the only missing transition is B/1. The default completion of that partial table is exactly the published champion table. The proof transports the exact theorem `champion_halts_exact` through `weightedTNF_halt_iff_firstHole`, then closes the one-hole cylinder with `WeightedTNFCertificate.lastHole` at
+After these refinements the only missing transition is B/1. The default completion is the published champion table. The exact champion primitive-step count is `proposedTM63Moves + 7`, including the final halting query; this is a certified attainable lower bound, not a universal upper bound.
 
-`championScore = proposedTM63Moves + 7`.
+## Proof-bearing frontier
 
-This is stronger than a singleton leaf: every ordinary completion at B/1 is a total machine with no halting transition, while the halt completion is bounded at the champion score.
+`ChampionResidualFrontier.lean` defines the champion-compatible path and replays every side-cycle/lasso witness in Lean using `residualWitnessOK`. The current list has **38** checked witnesses, with counts by depth
 
-## Sibling closures
+`0, 1, 3, 8, 7, 9, 10, 0`
 
-A bounded search produced 28 candidate side-cycle/lasso witnesses across the eight earlier splits. Their counts by depth are:
+for depths 0 through 7. The source theorem `championWitnessesOK` is the proof-bearing check; search output alone is not trusted. The original frontier therefore has **146** explicit open residual cylinders.
 
-`0, 1, 3, 8, 7, 9, 0, 0`.
+`ChampionResidualParentIntegration.lean` proves slot-by-slot that Agent48's source-accepted two-hole A/1–B/1 parent is exactly `championP7`, transports its weighted TNF certificate, and replaces the final A/1 split. Together with the ten depth-six F/0 side-cycle witnesses, this yields
 
-The Lean theorem `championWitnessesOK` replays every witness against the corresponding partial child using `residualWitnessOK`; the frontier does not trust the search output without this check.
+`championResidualFrontierWithParentResiduals.length = 123`.
 
-The resulting `RootedFrontier` leaves **156 open residual cylinders**. The 28 side-cycle/lasso children, the eight immediate halt branches, and the final one-hole champion cylinder are closed. The residual frontier is a valid partial upper-bound decomposition at the champion score, not a complete upper-bound proof.
+This 123-leaf frontier is a conditional cover decomposition, not a complete upper bound. The parent certificate closes the final 23-child branch; it does not discharge the earlier residuals.
 
-## Integration with the 109-roster
+## Source-accepted sibling cylinders
 
-The source proves that the target cylinder is exactly one of the 109 retained residuals. Replacing that one entry with the 156 open descendants yields a 264-entry roster:
+The following original-source certificates prove bounds for every compatible completion of their exact literal parent tables. They are independent local results; their global grafts are separate proof obligations.
 
-- 108 untouched residual obligations;
-- 156 descendants of the champion-containing cylinder.
+| F/1 sibling | Weighted bound | Source-acceptance evidence |
+|---|---:|---|
+| 0LF | 1603 | [CI 45604778890](https://github.com/FlareZ123/bb6/actions/runs/45604778890); 277 terminal leaves and 13 inductive growth mechanisms |
+| 0RC | 3807 | [CI 45607499262](https://github.com/FlareZ123/bb6/actions/runs/45607499262); 323 terminal leaves and 18 unbounded growth mechanisms |
+| 1LA | 290 | [CI 45611897213](https://github.com/FlareZ123/bb6/actions/runs/45611897213); 369 leaves, 25 growth recurrences and a six-state DFA witness |
+| 1LF, 0RD, 0RF | 126, nonhalting, 211 | Source-accepted modules consumed by the existing F1 integration chain; see `ChampionF1SiblingIntegration.lean`, `ChampionF1RFIntegration.lean` and their source archives |
 
-`championResidualRefinedRosterSound` gives the mixed-bound dichotomy at the champion score. Consequently, `exactBB6OfChampionResidualRoster` reduces exact BB(6) to supplying a `Cover (WeightedBound championScore)` for each of those 264 residuals.
+The 0RC and 1LA source certificates are useful because their exact parents are F/1 children on the same champion path. Their bounds are far below the champion score, so each can be lifted to a `WeightedBound championScore` leaf cover.
 
-## Canonical 78 and parent-certificate integration (draft)
+## Current raw139 graft chain
 
-The newer quotient route reduces the 124 raw residuals to 96 canonical addresses and then to 78 retained quotient-compatible representatives. The manifest identifies this champion cylinder as canonical index 102 / raw index 139, address B0=1RC, C0=1LD. The exact Lean pair-membership check is included in `ChampionResidualParentIntegration.lean`.
+The existing consumers preserve unmatched entries and prove exact parent membership before replacing a sibling. Their current finite counts are:
 
-Agent 48's two-hole A/1–B/1 parent certificate is intended to replace only the final `championStep 7` of this frontier. That step has 23 ordinary non-champion children and no depth-7 side-witness entries. The earlier seven splits contribute the other 133 open leaves. If the parent certificate is proved equal to `championP7`, the integrated frontier should therefore have **133** residual leaves, not zero.
+| Stage | Remaining raw139 leaves | Operation |
+|---|---:|---|
+| Parent-integrated frontier | 123 | A/1–B/1 parent certificate and ten F/0 side-cycle witnesses |
+| `F0SiblingIntegrationExtended.remainingExtended` | 112 | Existing F/0 sibling refinement |
+| `ChampionF1SiblingIntegration.remainingF1Extended` | 110 | Remove exact 1LF and 0RD siblings |
+| `ChampionF1RFIntegration.remainingF1RF` | 109 | Remove exact 0RF sibling |
+| `ChampionF1ZeroLFIntegration.remainingF1ZeroLF` | 108 | Remove exact 0LF sibling |
+| `ChampionF1OneLAIntegration.remainingF1OneLA` | 107 | Draft: remove exact 1LA sibling |
+| `ChampionF1ZeroRCIntegration.remainingF1ZeroRC` | 106 | Draft: remove exact 0RC sibling |
 
-The integration draft:
-- proves `BB6.Agent48Parent.parent = BB6.Agent6ChampionResidual.championP7` slot by slot;
-- transports the parent certificate to `championP7` and replaces the final A/1 split by a closed frontier node;
-- proves every open frontier leaf occurs in the explicit residual list and derives a root `Cover` from Covers for all 133 leaves;
-- proves the raw139 address/table is exactly present in the canonical 78 roster;
-- provides a conditional `ExactBB6 championScore` theorem from Covers for every nonchampion roster entry plus the 133 raw139 frontier leaves; it also checks the address count 77 + 133 = 210.
+The 1LA and 0RC consumers are in `ChampionF1OneLAIntegration.lean` and `ChampionF1ZeroRCIntegration.lean`. Each checks the exact depth-five child identity, proves the parent occurs in the preceding residual list, removes only that parent, proves a one-entry count reduction, and preserves a conditional `ExactBB6` theorem. The combined original-source/axiom audit has not yet passed; **107 and 106 are draft counts, not accepted frontier claims**.
 
-The parent certificate dependency is now source-accepted in [45539867315](https://github.com/FlareZ123/bb6/actions/runs/45539867315), and the canonical78 exact-witness wrapper is being audited in [45539884311](https://github.com/FlareZ123/bb6/actions/runs/45539884311). The expanded Agent6 integration draft has not yet been source-accepted; the workflow includes it and should be dispatched after the canonical78 wrapper passes. The earlier 109-roster accounting (108 untouched + 156 descendants = 264) is a separate raw-roster specialization and must not be conflated with the 78-way quotient accounting.
+Agent48 is continuing the remaining F1 siblings (including 0LD, then 1LD and 1RF); Agent41's 0RB work is separate. Coordinate before taking another F1 branch to avoid duplicating those investigations.
 
+## Rebase onto the accepted canonical77 interface
 
-## Source and verification
+The raw114 parent certificate is source-accepted and ingested in `CanonicalRaw114Accepted.lean` (run [45554648116](https://github.com/FlareZ123/bb6/actions/runs/45554648116), artifact `canonical77-certified`, ID `14997966221`). It reduces the canonical78 roster to 77 retained representatives. The raw139 entry must be checked against this **post-raw114** list; the older canonical78 calculation (77 other addresses plus 123 raw139 leaves) is no longer the right global interface.
 
-- Lean source: `ChampionResidualFrontier.lean`
-- CI workflow: `.github/workflows/agent6-champion-residual.yml`
-- Key theorems: `championP8Certificate`, `championResidualFrontierSound`, `championResidualRefinedRosterSound`, `exactBB6OfChampionResidualRoster`
+The new draft `ChampionResidualCanonical77Integration.lean` imports the accepted canonical77 artifact and attempts to prove:
 
-The finite witness search is heuristic; the Lean replay theorem is the proof-bearing check. The exact champion halt theorem is imported from Agent 48's counted-inc0 source closure. This directory is intermediate research and therefore belongs in `im-results/`, not `results/`.
+1. `(championResidualAddress, championResidual)` remains in the post-raw114 roster;
+2. it is unique by address and by exact table;
+3. the 106 raw139 descendants cover the original raw139 cylinder by composing the existing F0/F1 refinement theorems;
+4. replacing that one entry yields a refined list of **182** obligations: 76 other canonical77 entries plus 106 raw139 descendants;
+5. Covers for those 76 + 106 obligations, together with the exact champion witness, imply `ExactBB6 championScore`.
 
-## Follow-on depth-7 scan
+This is the current intended global composition, but it is **not source-accepted** until the combined workflow verifies the finite membership/count theorems, the cross-artifact Lean compilation, and all axiom profiles. The exact membership test may expose a mismatch; if so, repair the address/table transport rather than assuming the roster entry exists.
 
-A separate bounded scan of the 23 ordinary A/1 siblings at depth 7 found that 15 reach the remaining B/1 hole after 214–3506 successful moves. These are strong candidates for one-hole `lastHole` certificates at the champion score; they are not yet incorporated into the 156-leaf Lean frontier. The other eight (`0LA, 0LC, 1LC, 1LD, 1RD, 0LE, 1RE, 1LF`) neither reached B/1 within one million moves nor yielded a side-cycle witness under the scan's small bounds; a deeper five-million-step run with entry ≤ 20, period ≤ 50, and boundary radius ≤ 50 also left all eight unresolved. They remain unresolved, not proven nonhalting. See [p7-last-hole-scan.md](p7-last-hole-scan.md).
+## Reproduction and next work
 
-The current frontier's completion-mass accounting is:
-- original 9-hole cylinder: `25^9 = 3,814,697,265,625`;
-- 156 open residuals: `3,648,834,608,700`;
-- closed mass: `165,862,656,925` (about 4.35%).
+- Main frontier: `ChampionResidualFrontier.lean`
+- Parent integration: `ChampionResidualParentIntegration.lean`
+- Sibling consumers: `F0SiblingIntegrationExtended.lean`, `ChampionF1SiblingIntegration.lean`, `ChampionF1RFIntegration.lean`, `ChampionF1ZeroLFIntegration.lean`
+- New draft consumers: `ChampionF1OneLAIntegration.lean`, `ChampionF1ZeroRCIntegration.lean`, `ChampionResidualCanonical77Integration.lean`
+- Manual workflow: `.github/workflows/agent6-champion-residual.yml`
 
-Thus the frontier is a valid champion-score decomposition but closes only about 4.35% of the cylinder's raw completion mass. The depth-7 scan is a useful next refinement, not a resolution of the remaining mass.
+Run 45613721358 was dispatched by Agent31 against the earlier source head to test the 0LF consumer; it does not include the subsequent 1LA/0RC or canonical77 bridge. The updated workflow reconstructs and hash-checks the 1LA/0RC proof sources, compiles the local raw139 chain, downloads the accepted canonical77 artifact, and compiles the final bridge separately against that artifact. Dispatch one combined run only after 45613721358 concludes.
+
+**Global status:** BB(6) remains unresolved. Even if this integration passes, it leaves 76 canonical Covers and 106 raw139 descendant Covers to prove. No exhaustive six-state upper bound has been established.
