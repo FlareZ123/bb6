@@ -876,6 +876,7 @@ jobs:
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
           python im-results/agent8-tnf-raw117/generate.py
+          python im-results/agent11-raw121/prepare_raw121.py
           python im-results/agent47-raw112-cut/generate.py | tee /tmp/a31-raw112-generation.log
           find /tmp/raw110-parent -type f -name '*.lean' -print0 |
             while IFS= read -r -d '' src; do
@@ -894,17 +895,34 @@ jobs:
         run: |
           set -euo pipefail
           python tools/lean_compile_closure.py im-results/agent47-rooted-tnf/Canonical73Raw110Composition.lean \
+            im-results/agent38-raw112-membership/Canonical72Raw121Graft.lean \
             --workdir /tmp/a31-canonical73 \
             --manifest /tmp/a31-canonical73-manifest.json \
-            --label canonical73-raw107-raw114-raw117-raw112-raw110 \
-            --theorem BB6.Agent47Canonical73Raw110.exact_at_target \
+            --label canonical73-plus-raw121-canonical72-raw107-raw114-raw117-raw112-raw110 \
+            --theorem BB6.Agent38Canonical72Raw121.exact_at_target \
             --weighted-bound 6766859 \
-            --artifact-name canonical73-raw110-raw112-roster-only-certified \
+            --artifact-name canonical73-and72-raw121-raw110-raw112-roster-only-certified \
             --jobs 4 \
             --source-root /tmp/raw110-generated \
             --precompiled-manifest /tmp/a31-base/manifest/raw107-shared-manifest.json \
             --precompiled-dir /tmp/a31-base \
             --provenance-input im-results/agent47-rooted-tnf/Canonical73Raw110Composition.lean \
+            --provenance-input im-results/agent38-raw112-membership/Canonical72Raw121Graft.lean \
+            --provenance-input im-results/agent11-raw121/prepare_raw121.py \
+            --provenance-input im-results/agent11-raw121/specs.json \
+            --provenance-input im-results/agent11-raw121/fast_enum.cpp \
+            --provenance-input im-results/agent11-raw121/bank.cpp \
+            --provenance-input im-results/agent11-raw121/bank.txt \
+            --provenance-input im-results/agent11-raw121/counter.py \
+            --provenance-input im-results/agent11-raw121/counter_codegen.py \
+            --provenance-input im-results/agent11-raw121/long.json \
+            --provenance-input im-results/agent11-raw121/quad.py \
+            --provenance-input im-results/agent11-raw121/quad_codegen.py \
+            --provenance-input im-results/agent11-raw121/quad_extra_codegen.py \
+            --provenance-input im-results/agent11-raw121/shards.json \
+            --provenance-input im-results/agent11-raw121/Raw121Data.lean \
+            --provenance-input im-results/agent11-raw121/Raw121Base.lean \
+            --provenance-input im-results/agent11-raw121/parent-manifest.json \
             --provenance-input im-results/agent31-shared-core/Canonical74Raw107Raw114Raw117Raw112RosterOnly.lean \
             --provenance-input im-results/agent31-shared-core/Canonical75RosterOnly.lean \
             --provenance-input im-results/agent31-shared-core/CanonicalTwoParentRosterOnly.lean \
@@ -966,6 +984,11 @@ jobs:
               "BB6.Agent47Canonical73Raw110.count",
               "BB6.Agent47Canonical73Raw110.sound",
               "BB6.Agent47Canonical73Raw110.exact_at_target",
+              "BB6.Agent11Raw121.all121",
+              "BB6.Agent38Canonical72Raw121.parent_present",
+              "BB6.Agent38Canonical72Raw121.count",
+              "BB6.Agent38Canonical72Raw121.sound",
+              "BB6.Agent38Canonical72Raw121.exact_at_target",
           )
           for name in required:
               if name not in profiles:
@@ -1003,10 +1026,21 @@ jobs:
               "raw117_source_acceptance_run_id": 45561386072,
               "raw110_parent_certificate_run_id": 45597857116,
               "raw110_parent_cut_artifact_run_id": 45593652030,
+              "raw121_parent_certificate_run_id": 45616647230,
+              "raw121_extension": {
+                  "theorem": "BB6.Agent38Canonical72Raw121.exact_at_target",
+                  "residual_count": 72,
+                  "status": "conditional roster theorem; all 72 retained quotient Covers remain explicit",
+                  "parent_present_theorem": "BB6.Agent38Canonical72Raw121.parent_present",
+                  "count_theorem": "BB6.Agent38Canonical72Raw121.count",
+                  "parent_weighted_bound": 4063,
+              },
               "raw112_parent_cover": "rebuilt from committed sources in this run against the canonical shared core",
               "lean_version": subprocess.check_output(["lean", "--version"], text=True).strip(),
               "lean_binary_sha256": digest(pathlib.Path(subprocess.check_output(["lean", "--print-prefix"], text=True).strip()) / "bin/lean"),
               "source_sha256": digest(source),
+              "raw121_extension_source_sha256": digest(pathlib.Path("im-results/agent38-raw112-membership/Canonical72Raw121Graft.lean")),
+              "raw121_data_source_sha256": digest(pathlib.Path("im-results/agent11-raw121/Raw121Data.lean")),
               "manifest_sha256": digest(manifest),
               "raw112_generated_data_sha256": digest(raw112),
               "raw112_branch_count": len(list(raw112.parent.glob("Raw112Branch*.lean"))),
@@ -1019,6 +1053,16 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: canonical73-raw110-raw112-roster-only-certified
+          path: |
+            /tmp/a31-canonical73
+            /tmp/a31-canonical73-manifest.json
+            /tmp/a31-canonical73.log
+            /tmp/a31-canonical73-summary.json
+          if-no-files-found: error
+          retention-days: 14
+      - uses: actions/upload-artifact@v4
+        with:
+          name: canonical72-raw121-raw110-raw112-roster-only-certified
           path: |
             /tmp/a31-canonical73
             /tmp/a31-canonical73-manifest.json
