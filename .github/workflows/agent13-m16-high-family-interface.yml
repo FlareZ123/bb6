@@ -77,6 +77,7 @@ on:
           - sourceBitEventCutoff
           - sourceWeightedWord
           - sourceDyadicAncestry
+          - sourceHighSigned
           - sourceBoundedShadow
           - sourceExactMemo
           - sourceLowQuarterTwoForced
@@ -290,6 +291,9 @@ jobs:
               ;;
             sourceDyadicAncestry)
               target=im-results/agent12-c-high-shadow/DyadicAncestrySource.lean
+              ;;
+            sourceHighSigned)
+              target=im-results/agent12-c-high-shadow/HighSignedSource.lean
               ;;
             sourceWeightedWord)
               target=im-results/agent12-c-high-shadow/WeightedWordSource.lean
