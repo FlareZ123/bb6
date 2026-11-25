@@ -19,6 +19,8 @@ TABLES = [
     "1RB1LF_1RC1LF_0RD1RC_1LD1RE_1LF0LB_---0LA",
     "1RB1RD_1RC1LF_0RD1RC_1LD1RE_1LF0LB_---0LA",
     "1RB1LA_1RC1LF_0RD1RC_1LD1RE_1RB0LB_---0LA",
+    # F1=0RA sibling E0-open leaf: candidate for a symbolic counter/sweep proof.
+    "1RB0LB_1RC1LF_0RD0LA_1LD1RE_---0LB_0RC0RA",
 ]
 
 def parse(s):
