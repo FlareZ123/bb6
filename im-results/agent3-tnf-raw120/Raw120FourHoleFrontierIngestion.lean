@@ -12,9 +12,50 @@ open BB6.Agent31FourHoleFrontier
 open BB6.Agent3Raw120
 open BB6.Agent3Raw120Partition
 
+/-- Lossless finite encoding of a partial six-state table. None is an
+    unassigned row; some none is an assigned halt. -/
+abbrev PackedTable := List (Option (Option Move))
+
+def packTable (p : PartialMachine) : PackedTable :=
+  [p (0,false), p (0,true), p (1,false), p (1,true),
+   p (2,false), p (2,true), p (3,false), p (3,true),
+   p (4,false), p (4,true), p (5,false), p (5,true)]
+
+def unpackTable (rows : PackedTable) : PartialMachine := fun s =>
+  (rows[2*s.1.val + (if s.2 then 1 else 0)]?).getD none
+
+theorem unpack_packTable (p : PartialMachine) : unpackTable (packTable p) = p := by
+  funext s
+  rcases s with ⟨⟨n, hn⟩, b⟩
+  have h : n = 0 ∨ n = 1 ∨ n = 2 ∨ n = 3 ∨ n = 4 ∨ n = 5 := by omega
+  rcases h with h | h | h | h | h | h <;> subst n <;> cases b <;> rfl
+
+theorem packTable_injective {p q : PartialMachine}
+    (h : packTable p = packTable q) : p = q := by
+  have he := congrArg unpackTable h
+  simpa only [unpack_packTable] using he
+
+abbrev PackedResidual := List Move × PackedTable
+
+def packResiduals (xs : List (List Move × PartialMachine)) : List PackedResidual :=
+  xs.map fun (a,p) => (a,packTable p)
+
+theorem mem_packResiduals_iff (xs : List (List Move × PartialMachine))
+    (a : List Move) (p : PartialMachine) :
+    (a,packTable p) ∈ packResiduals xs ↔ (a,p) ∈ xs := by
+  constructor
+  · intro h
+    rcases List.mem_map.mp h with ⟨⟨a',p'⟩,hm,he⟩
+    have ha : a' = a := congrArg Prod.fst he
+    have hp : p' = p := packTable_injective (congrArg Prod.snd he)
+    subst a'
+    subst p'
+    exact hm
+  · intro h
+    exact List.mem_map.mpr ⟨(a,p),h,rfl⟩
+
 /-- The residual-list view of a rooted frontier is exactly its OpenLeaf
-    relation. This lets the raw120 table be identified in the independently
-    checked four-hole rooted frontier without comparing informal JSON. -/
+    relation. -/
 theorem mem_residuals_iff {B : Nat} {p : PartialMachine}
     (f : RootedFrontier B p) (address : List Move) (q : PartialMachine) :
     (address, q) ∈ residuals f ↔ OpenLeaf f address q := by
@@ -37,17 +78,23 @@ theorem mem_residuals_iff {B : Nat} {p : PartialMachine}
             exact ⟨mv, allMoves_complete mv, (address, q), (ih mv).mpr hchild, rfl⟩
 
 /-- The exact p120 partial machine is an off-path residual of the
-    seven-edge first-one frontier, at address 1RC/0RD/1LD/1RE/1LE. -/
-theorem p120_mem_rootFrontier :
-    (raw120Address, p120) ∈ residuals rootFrontier := by
+    independently source-checked seven-edge first-one frontier, at address
+    1RC/0RD/1LD/1RE/1LE. -/
+theorem p120_mem_packedResiduals :
+    (raw120Address, packTable p120) ∈ packResiduals (residuals rootFrontier) := by
   decide
+
+theorem p120_mem_rootFrontier :
+    (raw120Address, p120) ∈ residuals rootFrontier :=
+  (mem_packResiduals_iff (residuals rootFrontier) raw120Address p120).mp
+    p120_mem_packedResiduals
 
 theorem p120_open_leaf :
     OpenLeaf rootFrontier raw120Address p120 :=
   (mem_residuals_iff rootFrontier raw120Address p120).mp p120_mem_rootFrontier
 
-/-- The residual is unique at this address: two distinct open leaves cannot
-    both admit the same concrete completion. -/
+/-- Distinct open leaves cannot share a completion. Since the late machine
+    is a concrete completion of p120, its source-frontier address is unique. -/
 theorem p120_leaf_unique_address {address : List Move}
     (h : OpenLeaf rootFrontier address p120) :
     address = raw120Address := by
@@ -90,8 +137,14 @@ theorem rootFrontier_raw120_ingestion (m : Machine)
 theorem retained_child_count : remaining.length = 22 :=
   remaining_count
 
-theorem retained_child_mass : remaining_mass = 22 * 25^5 :=
+theorem retained_child_mass :
+    remaining.length * 25^5 = 22 * 25^5 :=
   remaining_mass
+
+theorem p120_cross_route_anchor :
+    (raw120Address, p120) ∈ BB6.Agent47Canonical78.roster ∧
+    (raw120Address, p120) ∈ residuals rootFrontier :=
+  ⟨raw120_mem_canonical78, p120_mem_rootFrontier⟩
 
 theorem p120_first_hole_mass :
     25^6 = 3 * 25^5 + 22 * 25^5 := by
@@ -100,5 +153,6 @@ theorem p120_first_hole_mass :
 #print axioms p120_open_leaf
 #print axioms p120_leaf_unique_address
 #print axioms rootFrontier_raw120_ingestion
+#print axioms p120_cross_route_anchor
 
 end BB6.Agent3Raw120FourHoleIngestion
