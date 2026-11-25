@@ -19,6 +19,12 @@ import multi
 import emit_ngram
 
 spec=json.loads((ROOT/"partial_spec.json").read_text())
+for k,v in json.loads((ROOT/"spec.json").read_text()).items():
+    assert k not in spec
+    spec[k]=dict(sha256=v["sha256"],len=len(v["index"]),bank=v["bank"],
+                 one=[j for j,x in enumerate(v["index"]) if x=="X"],
+                 two=[j for j,x in enumerate(v["index"]) if x=="Y"],
+                 ng={},counter=[],late={},miss=[],extra={},index=v["index"])
 PARENT=one.parse("1RB---_1RC---_0RD---_1LD1RE_---0LC_------")
 MOVES=[w+d+q for w,d,q in product("01","LR","ABCDEF")]
 B=7014
@@ -189,7 +195,8 @@ with tempfile.TemporaryDirectory() as d:
                 if str(j) in s["late"]:
                     n,s0=s["late"][str(j)]
                     return Node(f".last {n} {slot(s0)}")
-                for rev,dfa in bank:
+                choices=[bank[int(s["index"][j],36)]] if "index" in s else bank
+                for rev,dfa in choices:
                     try:
                         n,D,L,R,z=masks(one.parse(v[0]),rev,dfa)
                     except AssertionError:
