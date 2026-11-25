@@ -7,6 +7,10 @@ on:
         type: choice
         options: ['123', '125', '38']
         default: '123'
+      raw123_part20_only:
+        description: Check only the outstanding raw123 block20 certificate
+        type: boolean
+        default: false
       cut_run:
         description: Successful cut run ID (assembly only)
         required: false
@@ -29,7 +33,7 @@ jobs:
       fail-fast: false
       max-parallel: 6
       matrix:
-        include: ${{ fromJSON(inputs.parent == '38' && '[{"part":0,"kind":"ngrams","modules":"0 1","glob":"Raw38NGram*.lean"},{"part":1,"kind":"blocks","modules":"0 1 2 3 4 5 6 7 10 11","glob":"Raw38Block[0-9][0-9].lean"},{"part":2,"kind":"blocks","modules":"8 9 12 13 14 15 16 17 18 19","glob":"Raw38Block[0-9][0-9].lean"},{"part":3,"kind":"blocks","modules":"20 21 22 23 24 25 26 27 28 29 30","glob":"Raw38Block[0-9][0-9].lean"}]' || inputs.parent == '125' && '[{"part":0,"kind":"ngrams","modules":"0 1 2 3 4 5","glob":"Raw125NGram*.lean"},{"part":1,"kind":"blocks","modules":"0 1 4 5 6 7 8 9 10","glob":"Raw125Block[0-9][0-9].lean"},{"part":2,"kind":"blocks","modules":"11 12 13 14 15 17 18 19","glob":"Raw125Block[0-9][0-9].lean"},{"part":3,"kind":"blocks","modules":"2 3 16","glob":"Raw125Block[0-9][0-9].lean"}]' || '[{"part":0,"kind":"ngrams","modules":"0 1 2 3 4 5 6 7 8 9 12 13 17 18","glob":"Raw123NGram*.lean"},{"part":1,"kind":"ngrams","modules":"10 11 14 15 16","glob":"Raw123NGram*.lean"},{"part":2,"kind":"blocks","modules":"0 1 2 3 4 6 8 9 10 11","glob":"Raw123Block[0-9][0-9].lean"},{"part":3,"kind":"blocks","modules":"12 13 14 15 16 17 18 19","glob":"Raw123Block[0-9][0-9].lean"},{"part":4,"kind":"blocks","modules":"5 7","glob":"Raw123Block[0-9][0-9].lean"},{"part":5,"kind":"blocks","modules":"20","glob":"Raw123Block[0-9][0-9].lean"}]') }}
+        include: ${{ fromJSON(inputs.parent == '123' && inputs.raw123_part20_only && '[{"part":5,"kind":"blocks","modules":"20","glob":"Raw123Block20.lean"}]' || inputs.parent == '38' && '[{"part":0,"kind":"ngrams","modules":"0 1","glob":"Raw38NGram*.lean"},{"part":1,"kind":"blocks","modules":"0 1 2 3 4 5 6 7 10 11","glob":"Raw38Block[0-9][0-9].lean"},{"part":2,"kind":"blocks","modules":"8 9 12 13 14 15 16 17 18 19","glob":"Raw38Block[0-9][0-9].lean"},{"part":3,"kind":"blocks","modules":"20 21 22 23 24 25 26 27 28 29 30","glob":"Raw38Block[0-9][0-9].lean"}]' || inputs.parent == '125' && '[{"part":0,"kind":"ngrams","modules":"0 1 2 3 4 5","glob":"Raw125NGram*.lean"},{"part":1,"kind":"blocks","modules":"0 1 4 5 6 7 8 9 10","glob":"Raw125Block[0-9][0-9].lean"},{"part":2,"kind":"blocks","modules":"11 12 13 14 15 17 18 19","glob":"Raw125Block[0-9][0-9].lean"},{"part":3,"kind":"blocks","modules":"2 3 16","glob":"Raw125Block[0-9][0-9].lean"}]' || '[{"part":0,"kind":"ngrams","modules":"0 1 2 3 4 5 6 7 8 9 12 13 17 18","glob":"Raw123NGram*.lean"},{"part":1,"kind":"ngrams","modules":"10 11 14 15 16","glob":"Raw123NGram*.lean"},{"part":2,"kind":"blocks","modules":"0 1 2 3 4 6 8 9 10 11","glob":"Raw123Block[0-9][0-9].lean"},{"part":3,"kind":"blocks","modules":"12 13 14 15 16 17 18 19","glob":"Raw123Block[0-9][0-9].lean"},{"part":4,"kind":"blocks","modules":"5 7","glob":"Raw123Block[0-9][0-9].lean"},{"part":5,"kind":"blocks","modules":"20","glob":"Raw123Block[0-9][0-9].lean"}]') }}
     steps:
       - uses: actions/checkout@v4
       - name: Install Lean
