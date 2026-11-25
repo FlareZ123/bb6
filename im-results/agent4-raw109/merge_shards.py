@@ -95,10 +95,16 @@ def merge(repo, downloads, output, groups=None, artifact_prefix='raw109-shard', 
                     'module', 'source_path', 'source_sha256', 'project_imports', 'olean_path',
                     'olean_sha256', 'import_closure_sha256', 'module_identity_sha256'
                 )
+                existing_identity = {key: entries[name].get(key) for key in identity_fields}
+                incoming_identity = {key: item.get(key) for key in identity_fields}
+                differences = {
+                    key: (existing_identity[key], incoming_identity[key])
+                    for key in identity_fields
+                    if existing_identity[key] != incoming_identity[key]
+                }
                 require(
-                    {key: entries[name].get(key) for key in identity_fields} ==
-                    {key: item.get(key) for key in identity_fields},
-                    f'{group}: conflicting shared module identity {name}'
+                    not differences,
+                    f'{group}: conflicting shared module identity {name}: {differences}'
                 )
             else:
                 entries[name] = item
