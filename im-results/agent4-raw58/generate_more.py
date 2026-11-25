@@ -2,7 +2,7 @@
 from pathlib import Path
 from collections import Counter
 from itertools import product
-import sys, subprocess, json, hashlib
+import sys, subprocess, json, hashlib, os
 
 ROOT=Path(__file__).resolve().parent
 sys.path.insert(0,str(ROOT.parent/"agent31-three-hole-tnf"))
@@ -198,7 +198,32 @@ def build_child(key,spec):
         imports.extend(sparse_modules)
     print(key,"sparse certificates",len(sparse_modules),"remaining",len(unclassified))
     if unclassified:
-        print(key,"UNRESOLVED",*[f"{i} {opens[i]}" for i in unclassified],sep="\n")
+        if os.environ.get("RAW58_DIAG") == "1":
+            def brief(w):
+                return (len(w.pre),w.pre[:12],w.pre[-12:],len(w.block),
+                        w.block[:12],len(w.suf),w.suf[:12],w.suf[-12:])
+            for i in unclassified:
+                p=one.parse(opens[i]); c=one.C(0,0,0,one.W(),one.W())
+                lo=hi=0; events=[]; limit=250000
+                for t in range(limit):
+                    if c.h0<lo or c.h0>hi:
+                        side="L" if c.h0<lo else "R"
+                        lo,hi=min(lo,c.h0),max(hi,c.h0)
+                        events.append((t,side,c.q,c.h0,brief(c.l),brief(c.r)))
+                        if len(events)>8: events.pop(0)
+                    try:
+                        c=one.step(p,c)
+                    except ValueError:
+                        print(key,"DIAG",i,"first-hole-step",t,
+                              "slot",slot(2*c.q+int(c.l.head())),
+                              "state",c.q,"head",c.h0,"left",brief(c.l),
+                              "right",brief(c.r),"events-tail",events,flush=True)
+                        break
+                else:
+                    print(key,"DIAG",i,"no-hole-through",limit,
+                          "state",c.q,"head",c.h0,"left",brief(c.l),
+                          "right",brief(c.r),"events-tail",events,flush=True)
+        print(key,"UNRESOLVED",*[f"{i} {opens[i]}" for i in unclassified],sep="\\n")
         raise SystemExit(3)
     def emit(name,imports,body):
         header=f"""set_option maxRecDepth 100000
