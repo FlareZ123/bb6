@@ -185,8 +185,7 @@ def machine : Table := fun q b =>
 
 '''
     if sparse:
-        assert width == 3
-        s = s.replace("import BlockFAR", "import SparseBlockFAR")
+        s = s.replace("import BlockFAR", "import SparseBlockFAR"+suffix)
         for field,key in [('pushCodes','push'),('controlCodes','ctrl'),('auxiliaryCodes','aux'),('zeroNextCodes','zeroNext')]:
             s += f'def {field} : Nat → Nat := '+tree(data[key],0 if key=='push' else dead)+'\n\n'
         s += 'def predecessorCodes : Nat → List Nat := '+tree(data['pred'],[])+'\n\n'
