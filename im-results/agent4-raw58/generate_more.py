@@ -197,6 +197,44 @@ def build_child(key,spec):
     if sparse_modules:
         imports.extend(sparse_modules)
     print(key,"sparse certificates",len(sparse_modules),"remaining",len(unclassified))
+    rle_modules=[]
+    rle_found={}
+    if unclassified and os.environ.get("RAW58_RLE_SEARCH") == "1":
+        params_grid=[(2,3,2),(2,2,3),(4,2,3),(4,2,2),(4,3,2),
+                     (7,5,2),(7,6,1),(2,2,2),(5,3,2)]
+        rle_ns=ns+"RLEExtra"; rle_mod=prefix+"RLEExtra"
+        rle_code=["import TwoSidedAutomata","set_option maxRecDepth 100000",
+                  "set_option maxHeartbeats 0",f"namespace {rle_ns}","open BB6Coverage"]
+        remaining=[]
+        for i in unclassified:
+            p=tuple(opens[i].replace("_","")[k:k+3] for k in range(0,36,3))
+            found=None; cert=None
+            for params in params_grid:
+                candidate=run_automata(p,params,params,limit=30000)
+                if candidate[0]:
+                    found=(params,params); cert=candidate; break
+            if found is None:
+                for paramsL in params_grid:
+                    for paramsR in params_grid:
+                        if paramsL==paramsR: continue
+                        candidate=run_automata(p,paramsL,paramsR,limit=12000)
+                        if candidate[0]:
+                            found=(paramsL,paramsR); cert=candidate; break
+                    if found is not None: break
+            if found is None:
+                remaining.append(i)
+            else:
+                rle_found[i]={"left":list(found[0]),"right":list(found[1])}
+                rle_code.append(emit_automata(i,p,cert))
+                pumps[i]=f"{rle_ns}.M{i}"
+                print(key,"RLE_FOUND",i,found[0],found[1],"states",cert[1],flush=True)
+        if rle_found:
+            rle_code.append(f"end {rle_ns}")
+            (ROOT/(rle_mod+".lean")).write_text("\\n\\n".join(rle_code)+"\\n")
+            imports.append(rle_mod)
+        unclassified=remaining
+        if rle_found:
+            print(key,"RLE_DISCOVERED",json.dumps(rle_found,sort_keys=True),flush=True)
     if unclassified:
         if os.environ.get("RAW58_DIAG") == "1":
             def brief(w):
