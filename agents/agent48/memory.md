@@ -2470,3 +2470,28 @@ Current lease 2026-11-25T19:44:32.218Z (run agent48-gpt62-2026-11-25T19:44:32.21
 19:52 UTC: isolated Branch23 and root completed locally. Exact theorem BB6.Agent48Raw139C1OneRB.all_completions_weighted, WeightedBound 317, both root and check standard axioms. Candidate spec committed 62d85173ebce5a67571eeaa9e67e17a193c5f935. No global graft. Existing C1 workflow dispatch requested next; Agent6 notified. Continue closing more C1 siblings using the same exact source closure.
 
 19:54 UTC: new complete computational candidate partitions for C1=1RA (725, 2209 leaves), 0LF (683, 3957), 1LF (232, 3819), 1RF (2242, 4739). All 4 original branch specs committed, no open candidate leaves. OneRA hardest case 77 solved width2 phase-aware modulus7 runs4. OneRF eight final holdouts all solved by width2/3 extended abstraction. No reflection, width4, or unresolved split. Source replay pending. Together with older 0LA/0RA/0LC/1LC by other agents, prior direct and candidate C1 specs, this covers all nonchampion C1 children at candidate level. Need full source proof and exact ingestion, not claim frontier closure.
+
+
+## 2026-11-25 22:05 UTC — A6 source audit and canonical76 port
+
+This incarnation claimed Agent48 at 2026-11-25T21:55:34.345Z (run_id `agent48-gpt62-2026-11-25T21:55:34.345Z-raw139-c1-source-closure`, commit recorded in the lease). Random draw was 1 (normal mode). Do not refresh the lease; orderly release threshold is 23:05:34.345Z. The split Lean archive was reconstructed locally from `/mnt/data/lean-4.36.0-rc2-linux.zip.{001,002}`; `lean --version` reports Lean 4.36.0-rc2. Local `git clone` failed because GitHub DNS was unavailable, so there is no local repository checkout; use the GitHub connector and CI for source validation.
+
+### A6 source bridge — accepted
+
+The earlier A6 workflow failure was a declaration-kind error: `A6_weighted_certificate` returned a `WeightedTNFCertificate` structure (a Type), but was declared with `theorem`. Changed it to `noncomputable def` and added explicit axiom output for `A6_frontier` in commit `66a0073a83a641a280a02f88f32bc8db90344ca4`.
+
+Run [45709235547](https://github.com/FlareZ123/bb6/actions/runs/45709235547), job 139539065413, passed at pinned Cryptids commit `c86f15861709b76042998c5211c7b2f83991621b` and the accepted canonical77 dependency artifact from run 45554648116. Artifact 15067102165. The audited declarations `A6_eq_expectedRLE`, `A6_never`, `A6_weighted_certificate`, `A6_frontier`, `A6_frontier_sound`, `A6_remaining_sound`, and `A6_refinedRoster_sound` all report only `[propext, Classical.choice, Quot.sound]`; no `sorryAx` appears. This is a genuine source-connected partial frontier: the literal A6 machine equals the pinned Cryptids F287 table, the upstream nonhalting theorem is imported into the same Lean kernel, and the weighted frontier retains every off-path ordinary sibling while closing the A6 leaf at bound 7014. It does not close the entire p139 parent.
+
+### Canonical76 integration — pending CI
+
+Commit `ac554414311b13474eb55234047c5182a32d200b` adds `A6Canonical76Ingestion.lean`, extends `reproduce-a6.sh`, and extends the existing manual A6 workflow (no new workflow). It downloads the accepted 76-roster artifact from run 45647053824; the artifact name is stale/misleading, but exactness job 139320746934 source-audited `CanonicalTwoParentRosterOnly.exact_at_target` with 76 residuals. The new module proves the p139 table appears exactly once in `roster76`, then uses `graftRoster_sound` and `A6_remaining_sound` to establish a source-connected refined-roster soundness theorem at the same 7014 bound. Run [45710105710](https://github.com/FlareZ123/bb6/actions/runs/45710105710) was queued against source commit ac554... and is pending. Check it before making any source-acceptance claim. The exact cardinality of the dependent A6 residual list is not yet kernel-certified.
+
+### Additional source-accepted C1 result
+
+The C1=1RB four-hole parent `[7,24,11,24,14,7,3,16,12,11,24,24]` is now source-accepted at weighted bound 317. Run [45689490709](https://github.com/FlareZ123/bb6/actions/runs/45689490709), job 139470850210, compiled 74 project modules from the exact root at source commit `04fec001d605129ad4b8fda81937041205cd508c`; theorem `BB6.Agent48Raw139C1OneRB.all_completions_weighted` has only `[propext, Classical.choice, Quot.sound]`. Artifact 15057921816. The C1 README was corrected; the exact parent-to-global-list graft is still pending. The direct C1=1RC/1RE theorems remain local source/artifact-backed, not yet separately CI-audited.
+
+### Known unaccepted helper / next actions
+
+Do not use `im-results/agent42-frontier-count/RootedFrontierCount.lean` as an accepted count proof: run 45693367420 failed because `residuals_buildFrontierB` remained admitted (`sorryAx`), and its downstream structural count is not established. The source-accepted A6 frontier soundness is independent of that helper.
+
+Next: (1) inspect run 45710105710 and fix only concrete compile errors; (2) if it passes, notify Agent6 that p139 has a source-connected canonical76 refinement and ask them to account for it in the 191-module crosswalk; (3) consider a targeted original-source CI audit for the direct C1=1RC and 1RE covers; (4) do not claim the entire raw139 parent or BB(6) is closed. Agent6 owns the broad canonical76 upstream crosswalk; do not duplicate it. Agent42's old count helper is unaccepted, so no count should be inferred from it.

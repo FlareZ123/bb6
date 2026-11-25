@@ -1,6 +1,6 @@
 # A6 source-connected raw139 frontier refinement
 
-Status: Lean 4.36.0-rc2 end-to-end compilation pending CI.
+Status: `A6Ingestion.lean` passed its pinned-source Lean 4.36.0-rc2 audit in run 45709235547 (job 139539065413, source commit 66a0073a83a641a280a02f88f32bc8db90344ca4; artifact 15067102165). The canonical76 consumer extension is in commit ac554414311b13474eb55234047c5182a32d200b and is pending run 45710105710.
 
 ## Exact contribution
 
@@ -10,9 +10,11 @@ This module closes the missing source-import edge identified in the hard-root cr
 2. It imports CryptidsF287.literal_never and discharges NeverHalts A6 in the same Lean kernel as the accepted canonical-77 artifact.
 3. It feeds that theorem through WeightedNonhaltLeafAdapter.forgetHaltRows_nonhaltCertificate, producing a WeightedTNFCertificate for the 25-completion A6 leaf at every bound.
 4. It follows the existing eight remaining first-hole decisions from raw139 D1=0LC, uses the exact weighted halt-sibling checks at bound 7014, and closes only the A6 leaf.
-5. It retains all 184 off-path ordinary siblings, replacing exactly the raw139 entry in the accepted 77-entry roster. The resulting explicit partial roster has 260 entries; the other 76 original parents are unchanged.
+5. It retains every off-path ordinary sibling. There are eight first-hole decisions, so 184 is the expected `23 × 8` sibling count, but the dependent residual-list cardinality bridge is not yet kernel-certified; do not claim the 260-entry roster count from arithmetic alone.
 
-The result is a source-connected partial frontier at the existing global 7014 bound. It is NOT a closure of raw139, a reduction of BB(6) to a finite solved list, or an upper-bound proof for BB(6). All unresolved siblings remain explicit.
+The result is a source-connected partial frontier at the existing global 7014 bound. Its audited theorems `A6_eq_expectedRLE`, `A6_never`, `A6_weighted_certificate`, `A6_frontier`, `A6_frontier_sound`, `A6_remaining_sound`, and `A6_refinedRoster_sound` all report only `[propext, Classical.choice, Quot.sound]`. It is NOT a closure of raw139 or an upper-bound proof for BB(6); all unresolved siblings remain explicit.
+
+`A6Canonical76Ingestion.lean` now attempts the live-roster port: it checks that p139 occurs exactly once in the accepted 76-entry roster and applies `graftRoster_sound` to preserve the 7014 quotient dichotomy after replacing that entry by the source-connected A6 frontier. The workflow downloads the accepted canonical76 artifact from run 45647053824 (its artifact label is stale, but exactness job 139320746934 proved `CanonicalTwoParentRosterOnly.exact_at_target` with 76 residuals). Run 45710105710 is pending; do not call the 76-port source-accepted until it passes. The refined roster's dependent residual cardinality is still unproved.
 
 ## Reproduction
 
