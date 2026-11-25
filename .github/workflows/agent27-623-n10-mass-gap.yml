@@ -1,0 +1,55 @@
+name: Agent 27 #623 n=10 root mass-gap source proof
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  n10-source-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: google-deepmind/cryptids
+          ref: c86f15861709b76042998c5211c7b2f83991621b
+          path: cryptids
+      - name: Install pinned source Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.35.0-rc4
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Verify upstream revision and compile authentic source machine
+        working-directory: cryptids
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "c86f15861709b76042998c5211c7b2f83991621b"
+          lake update
+          lake exe cache get
+          lake build BusyBeaver.BB6.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA
+      - name: Compile the exact n=10 mass-gap proof chain
+        working-directory: cryptids
+        run: |
+          set -euo pipefail
+          cp "../im-results/agent49-parity623/Parity623Source.lean" Agent49ParitySource.lean
+          lake env lean -o .lake/build/lib/lean/Agent49ParitySource.olean Agent49ParitySource.lean 2>&1 | tee agent49-parity-source.log
+
+          cp "../im-results/agent8-623-inverse/SquareGapTerminalBridge.lean" SquareGapTerminalBridge.lean
+          lake env lean -o .lake/build/lib/lean/SquareGapTerminalBridge.olean SquareGapTerminalBridge.lean 2>&1 | tee square-gap-terminal-bridge.log
+
+          cp "../im-results/agent8-623-inverse/RootCancellationBudgetBridge.lean" RootCancellationBudgetBridge.lean
+          lake env lean -o .lake/build/lib/lean/RootCancellationBudgetBridge.olean RootCancellationBudgetBridge.lean 2>&1 | tee root-cancellation-budget-bridge.log
+
+          cp "../im-results/agent48-623-budget-composition/RootExclusion.lean" RootExclusion.lean
+          lake env lean -o .lake/build/lib/lean/RootExclusion.olean RootExclusion.lean 2>&1 | tee root-exclusion.log
+
+          cp "../im-results/agent8-623-inverse/RootMassGapAllN10.lean" RootMassGapAllN10.lean
+          lake env lean -o .lake/build/lib/lean/RootMassGapAllN10.olean RootMassGapAllN10.lean 2>&1 | tee root-mass-gap-all-n10.log
+
+          if grep -q 'sorryAx' agent49-parity-source.log square-gap-terminal-bridge.log root-cancellation-budget-bridge.log root-exclusion.log root-mass-gap-all-n10.log; then
+            echo 'sorryAx detected in the n=10 source proof dependency chain'
+            exit 1
+          fi
