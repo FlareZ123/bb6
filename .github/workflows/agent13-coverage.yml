@@ -5,14 +5,27 @@ on:
       target:
         description: 'Source closure to verify'
         type: choice
-        options: [weighted-tnf-raw118-long, legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole, weighted-tnf-four-hole, weighted-tnf-four-hole-sibling, weighted-tnf-r1-sweep, queue-orbit, weighted-tnf-roster-convergence, weighted-tnf-roster-agent47-graft, weighted-tnf-pure-residuals, weighted-tnf-raw99, weighted-tnf-raw113, weighted-tnf-raw124-rf, weighted-tnf-raw124-lc, weighted-tnf-raw124-1rf, weighted-tnf-raw124-0rb, weighted-tnf-raw124-bundle, weighted-tnf-raw124-1la, weighted-tnf-raw103, weighted-tnf-raw104, weighted-tnf-agent8-five, weighted-tnf-agent8-six, weighted-tnf-agent8-raw117, weighted-tnf-agent8-raw112-macros, weighted-tnf-roster-composition, weighted-tnf-agent3-siblings, weighted-tnf-raw85-parent-check, weighted-tnf-raw91, weighted-tnf-raw87, weighted-tnf-raw83-pump, weighted-tnf-agent10-multi, weighted-tnf-agent10-five-new, weighted-tnf-agent10-five-roster, weighted-tnf-agent10-raw106, weighted-tnf-raw63-counter, weighted-tnf-raw61-witnesses, weighted-tnf-prefix-single, weighted-tnf-agent10-single, weighted-tnf-combined-109, weighted-tnf-root-zero-refinement, weighted-tnf-combined-106, weighted-tnf-canonical-78, weighted-tnf-canonical-78-exact, weighted-tnf-raw108-canonical, weighted-tnf-canonical-two-parent, weighted-tnf-raw10-box, weighted-tnf-raw10-box8-cycle, weighted-tnf-raw10-box0-halt, weighted-tnf-raw10-short-frontier, weighted-tnf-held-block-far, weighted-tnf-raw120-late, weighted-tnf-raw120-rf, weighted-tnf-raw120-rb, weighted-tnf-raw120-partition, weighted-tnf-raw120-la-carry, weighted-tnf-raw120-la, weighted-tnf-root-sibling-first-hole, weighted-tnf-canonical-frontier, weighted-tnf-raw114-cut, weighted-tnf-raw114-far, weighted-tnf-raw114-pumps, weighted-tnf-raw114-complete, weighted-tnf-raw107-witnesses, weighted-tnf-raw107-1la, weighted-tnf-raw60, weighted-tnf-raw60-conditional, weighted-tnf-raw60-next, weighted-tnf-raw60-la, weighted-tnf-raw60-assemble, weighted-tnf-raw60-progress, weighted-tnf-raw60-membership, weighted-tnf-raw60-discover, weighted-tnf-ngram-pilot, weighted-tnf-champion-parent, weighted-tnf-held-leaf-109-membership, weighted-tnf-f412-partition, weighted-tnf-sidewitness-multiparent, weighted-tnf-sidewitness-multiparent-scan]
+        options: [weighted-tnf-raw118-long, legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole, weighted-tnf-four-hole, weighted-tnf-four-hole-sibling, weighted-tnf-r1-sweep, queue-orbit, weighted-tnf-roster-convergence, weighted-tnf-roster-agent47-graft, weighted-tnf-pure-residuals, weighted-tnf-raw99, weighted-tnf-raw113, weighted-tnf-raw124-rf, weighted-tnf-raw124-lc, weighted-tnf-raw124-1rf, weighted-tnf-raw124-0rb, weighted-tnf-raw124-bundle, weighted-tnf-raw124-1la, weighted-tnf-raw103, weighted-tnf-raw104, weighted-tnf-agent8-five, weighted-tnf-agent8-six, weighted-tnf-agent8-raw117, weighted-tnf-agent8-raw112-macros, weighted-tnf-roster-composition, weighted-tnf-agent3-siblings, weighted-tnf-raw85-parent-check, weighted-tnf-raw91, weighted-tnf-raw87, weighted-tnf-raw83-pump, weighted-tnf-agent10-multi, weighted-tnf-agent10-five-new, weighted-tnf-agent10-five-roster, weighted-tnf-agent10-raw106, weighted-tnf-raw63-counter, weighted-tnf-raw61-witnesses, weighted-tnf-prefix-single, weighted-tnf-agent10-single, weighted-tnf-combined-109, weighted-tnf-root-zero-refinement, weighted-tnf-combined-106, weighted-tnf-canonical-78, weighted-tnf-canonical-78-exact, weighted-tnf-raw108-canonical, weighted-tnf-canonical-two-parent, weighted-tnf-raw10-box, weighted-tnf-raw10-box8-cycle, weighted-tnf-raw10-box0-halt, weighted-tnf-raw10-short-frontier, weighted-tnf-held-block-far, weighted-tnf-raw120-late, weighted-tnf-raw120-rf, weighted-tnf-raw120-rb, weighted-tnf-raw120-partition, weighted-tnf-raw120-la-carry, weighted-tnf-raw120-la, weighted-tnf-root-sibling-first-hole, weighted-tnf-canonical-frontier, weighted-tnf-raw114-cut, weighted-tnf-raw114-far, weighted-tnf-raw114-pumps, weighted-tnf-raw114-complete, weighted-tnf-raw107-witnesses, weighted-tnf-raw107-1la, weighted-tnf-raw60, weighted-tnf-raw60-conditional, weighted-tnf-raw60-next, weighted-tnf-raw60-la, weighted-tnf-raw60-assemble, weighted-tnf-raw60-progress, weighted-tnf-raw60-membership, weighted-tnf-raw60-discover, weighted-tnf-raw60-graft, weighted-tnf-ngram-pilot, weighted-tnf-champion-parent, weighted-tnf-held-leaf-109-membership, weighted-tnf-f412-partition, weighted-tnf-sidewitness-multiparent, weighted-tnf-sidewitness-multiparent-scan]
         default: legacy
       raw_id:
         description: 'Single Agent 10 residual index (single target only)'
         type: string
         default: '68'
+      raw60_artifact_run_id:
+        description: 'Prior workflow run containing reusable raw60 child artifacts'
+        type: string
+        default: ''
+      raw60_artifact_sha:
+        description: 'Source commit used to build the reusable raw60 child artifacts'
+        type: string
+        default: 'b64f98e90febcd10bdfc60e7ff0c66615d2f2e7f'
+      raw60_shard_children:
+        description: 'JSON array of raw60 child IDs to compile in small kid shards'
+        type: string
+        default: '["1LA","1LB"]'
 permissions:
   contents: read
+  actions: read
 jobs:
   check:
     if: inputs.target != 'weighted-tnf-agent8-raw117' && inputs.target != 'weighted-tnf-raw108-canonical' && inputs.target != 'weighted-tnf-raw113'
@@ -1423,6 +1436,153 @@ jobs:
           name: raw60-discovery-${{ matrix.child }}
           path: im-results/agent1-raw60/discover_${{ matrix.child }}/*.json
           if-no-files-found: warn
+
+
+  raw60_shards:
+    if: inputs.target == 'weighted-tnf-raw60-graft'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix:
+        child: ${{ fromJSON(inputs.raw60_shard_children) }}
+        shard: [0, 1, 2, 3, 4, 5]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Compile four raw60 kid modules
+        env:
+          CHILD: ${{ matrix.child }}
+          SHARD: ${{ matrix.shard }}
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent1-raw60/generate.py "$CHILD"
+          start=$((SHARD * 4))
+          roots=( "im-results/agent1-raw60/Raw60A${CHILD}Base.lean" )
+          for i in $(seq "$start" "$((start + 3))"); do
+            printf -v kid "%02d" "$i"
+            roots+=( "im-results/agent1-raw60/Raw60A${CHILD}Kid${kid}.lean" )
+          done
+          python tools/lean_compile_closure.py --workdir /tmp/raw60-shard --jobs 4 "${roots[@]}" | tee /tmp/raw60-shard.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/raw60-shard.log; then exit 1; fi
+          {
+            echo "child=$CHILD shard=$SHARD"
+            sha256sum im-results/agent1-raw60/specs.json im-results/agent1-raw60/generate.py im-results/agent1-raw60/Raw60RootCut.lean
+          } > /tmp/raw60-shard/manifest.txt
+      - name: Upload raw60 kid shard
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw60-shard-${{ matrix.child }}-${{ matrix.shard }}
+          path: /tmp/raw60-shard/*
+          if-no-files-found: error
+
+  raw60_graft:
+    if: inputs.target == 'weighted-tnf-raw60-graft'
+    needs: raw60_shards
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Download reusable child artifacts
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.raw60_artifact_run_id }}
+          pattern: raw60-child-*
+          path: /tmp/raw60-assembled
+          merge-multiple: true
+      - name: Download newly compiled kid shards
+        uses: actions/download-artifact@v4
+        with:
+          pattern: raw60-shard-*
+          path: /tmp/raw60-assembled
+          merge-multiple: true
+      - name: Verify source compatibility and assemble the raw60 canonical graft
+        env:
+          ARTIFACT_SHA: ${{ inputs.raw60_artifact_sha }}
+          ARTIFACT_RUN_ID: ${{ inputs.raw60_artifact_run_id }}
+          RAW60_SHARD_CHILDREN: ${{ inputs.raw60_shard_children }}
+        run: |
+          set -euo pipefail
+          if [[ -z "$ARTIFACT_RUN_ID" ]]; then
+            echo "raw60_artifact_run_id is required for this target"
+            exit 1
+          fi
+          git fetch --no-tags origin "$ARTIFACT_SHA"
+          for f in \
+            im-results/agent1-raw60/specs.json \
+            im-results/agent1-raw60/generate.py \
+            im-results/agent1-raw60/Raw60RootCut.lean \
+            im-results/agent13-coverage/unpack.py \
+            im-results/agent31-three-hole-tnf/generate_sweeps.py \
+            im-results/agent31-three-hole-tnf/generate_four_hole.py \
+            im-results/agent31-three-hole-tnf/ZipThreeHoleAudit.lean \
+            im-results/agent31-three-hole-tnf/ThreeHoleAudit.lean; do
+            old_sha="$(git rev-parse "$ARTIFACT_SHA:$f")"
+            new_sha="$(git rev-parse "HEAD:$f")"
+            if [[ "$old_sha" != "$new_sha" ]]; then
+              echo "Artifact source mismatch: $f"
+              exit 1
+            fi
+          done
+          children="$(python -c 'import json,os; print(" ".join(json.loads(os.environ["RAW60_SHARD_CHILDREN"])))')"
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          for child in $children; do
+            python im-results/agent1-raw60/generate.py "$child"
+          done
+          python tools/lean_compile_closure.py --workdir /tmp/raw60-root --jobs 4 im-results/agent1-raw60/Raw60RootProgress.lean
+          cp /tmp/raw60-root/*.olean /tmp/raw60-assembled/
+          for child in $children; do
+            cp "im-results/agent1-raw60/Raw60A${child}Data.lean" /tmp/raw60-assembled/
+          done
+          cp im-results/agent1-raw60/Raw60RootAssembly.lean /tmp/raw60-assembled/
+          cd /tmp/raw60-assembled
+          export LEAN_PATH="$PWD"
+          for child in $children; do
+            lean -o "Raw60A${child}Data.olean" "Raw60A${child}Data.lean"
+          done
+          for child in 0RC 0RE 0LD 0RF 0LB 1LA 1LB 1LC 1RF; do
+            test -f "Raw60A${child}Data.olean" || { echo "missing Raw60A${child}Data.olean"; exit 1; }
+          done
+          lean -o Raw60RootAssembly.olean Raw60RootAssembly.lean
+          cd "$GITHUB_WORKSPACE"
+          python im-results/agent10-tnf-raw87/generate.py
+          python im-results/agent10-tnf-raw91/generate.py
+          python im-results/agent10-tnf-multipump/generate.py 66 70 80
+          python im-results/agent10-tnf-multipump/generate.py 68 72 82
+          python im-results/agent10-tnf-multipump/generate.py 86 88 92 93 97 98 100 101 102 104
+          python tools/lean_compile_closure.py --workdir /tmp/raw60-canonical --jobs 4 im-results/agent1-raw60/Raw60CanonicalMembership.lean
+          cp /tmp/raw60-canonical/*.olean /tmp/raw60-assembled/
+          cp im-results/agent1-raw60/Raw60CanonicalGraft.lean /tmp/raw60-assembled/
+          cd /tmp/raw60-assembled
+          export LEAN_PATH="$PWD"
+          lean -o Raw60CanonicalGraft.olean Raw60CanonicalGraft.lean | tee /tmp/raw60-canonical-graft.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/raw60-canonical-graft.log; then exit 1; fi
+      - name: Upload source-checked raw60 canonical graft
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw60-canonical-graft
+          path: |
+            /tmp/raw60-assembled/*.olean
+            /tmp/raw60-canonical-graft.log
+          if-no-files-found: error
 
   raw113:
     if: inputs.target == 'weighted-tnf-raw113'
