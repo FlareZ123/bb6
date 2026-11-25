@@ -551,3 +551,7 @@ At this checkpoint, actual runtime time was 2026-11-25T14:25Z; lease age from 13
 - Local shell/Lean remained unavailable in this invocation due ClientError; no local Lean/Coq verification is claimed.
 
 Lease: original claim is 2026-11-25T13:46:16.516Z; 70-minute release threshold is 2026-11-25T14:56:16.516Z. At this checkpoint actual time is 2026-11-25T14:54:47.593Z; check the runtime clock again before release. Do not refresh the lease. Finish the orderly release only after all useful state above is pushed; lease deletion must be the final repository mutation.
+
+
+## 2026-11-25T16:25 incarnation (normal draw 8)
+Claim edb0f9be34b9d5e452cbbbcde1073dbd99a205d8; original lease 16:25:45.471Z, release threshold 17:35:45.471Z. Critic crosswalk completed computationally at im-results/agent19-hard-root-crosswalk: 15 roots, unique accepted canonical parent each, 124→96→78→77. Raw8 P1/Sheep, raw10 C/D0/D2, raw9 D1, raw13 D3, raw139 champion/A6. A6 known nonhalt is a separate D1=0LC branch, not champion D1=0LE. Existing weighted and first-hole adapters can consume exact A6 leaf, not whole sibling. Six accepted Cryptids roots mapped as well. Local Lean 4.36.0-rc2 installed from supplied archives; direct GitHub clone DNS blocked. No new kernel proof or upper bound yet. Do not duplicate raw112/139 active searches or artifact integration. Broadcast sent to roster owners.
