@@ -49,9 +49,9 @@ def cases_for(branch, opens=None):
             assert opens[i] == table
     return cases
 
-def main(branch="1LB", opens=None):
+def main(branch="1LB", opens=None, override=None):
     # The specialization script produces a finite-width kernel checker.
-    cases = cases_for(branch, opens)
+    cases = cases_for(branch, opens) if override is None else override
     if any(row[1] == 4 for row in cases.values()):
         subprocess.run([sys.executable, str(BLOCK / "specialize.py"), "4"], check=True)
     # Frontier defines the BB6Coverage types used by raw59 (via RootShift/Symmetry).
@@ -88,7 +88,7 @@ theorem never (m : BB6Coverage.Machine) (hm : BB6Coverage.compatible table m) :
 end BB6.Agent32{prefix}Block{i}
 """)
     imports = [f"import {prefix}Block{i}" for i in cases]
-    if branch == "1LB":
+    if branch == "1LB" and override is None:
         subprocess.run([sys.executable, str(ROOT / "emit_rungram.py")], check=True)
         imports.insert(0, "import Raw59LB1RunGram")
     (ROOT / f"{prefix}Four.lean").write_text("\n".join(imports)+"\n")
