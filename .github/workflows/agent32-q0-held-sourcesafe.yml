@@ -21,7 +21,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           github-token: ${{ github.token }}
-          run-id: 45701885451
+          run-id: 45703120233
           name: agent32-source-queue-blockfar-bridge
           path: /tmp/source-bridge
       - uses: actions/download-artifact@v4
@@ -63,7 +63,7 @@ jobs:
           export LEAN_PATH=/tmp/a32-q0-held-sourcesafe
           lean -o /tmp/a32-q0-held-sourcesafe/Q0HeldBlockFARSourceSafe.olean im-results/agent32-source-queue/Q0HeldBlockFARSourceSafe.lean 2>&1 | tee /tmp/a32-q0-held-sourcesafe.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a32-q0-held-sourcesafe.log; then exit 1; fi
-          for theorem in q00300_sourceSafe q0400B_sourceSafe; do
+          for theorem in q00300_only_hole q0400B_only_hole q00300_sourceSafe q0400B_sourceSafe; do
             python im-results/agent32-raw59/check_axioms.py /tmp/a32-q0-held-sourcesafe.log "BB6.Agent32Q0HeldSourceSafe.$theorem"
           done
       - uses: actions/upload-artifact@v4
