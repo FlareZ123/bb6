@@ -16,6 +16,7 @@ import tempfile
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT.parent / "agent31-three-hole-tnf"))
 from generate_four_hole import parse, masks
+import symbolic
 
 PARENT = "1RB---_1RC---_0RD---_1LD1RE_---0RC_------"
 MOVES = [w + d + q for w, d, q in product("01", "LR", "ABCDEF")]
@@ -80,7 +81,15 @@ def main():
     assert len(unresolved) == 225
     assert hashlib.sha256(("\n".join(unresolved)+"\n").encode()).hexdigest() == "ff89a913989ef6bf47d8eac232c16660b2ed9cf9e4fa0010e181b9c53e48a588"
     assert Counter(row.count("---") for row in unresolved) == {1:220,2:5}
+    with tempfile.TemporaryDirectory() as tmp:
+        more, imports = symbolic.generate(unresolved, Path(tmp))
+    certs.update(more)
+    unresolved = [row for row in unresolved if row not in more]
+    assert len(unresolved) == 6 and all(row.count("---")==1 for row in unresolved)
     (ROOT/"unresolved.txt").write_text("\n".join(unresolved)+"\n")
+    if "--symbolic-only" in sys.argv:
+        print("Symbolic candidates", len(more), "unresolved", unresolved)
+        return
     stats=Counter()
 
     def build(node):
@@ -104,6 +113,13 @@ def main():
             return True,f".split {n} {slot(s)} (byMove [\n"+",\n".join(x[1] for x in children)+"])"
         return False,f".split {n} {slot(s)} (byPartialMove [\n"+",\n".join(map(wrap,children))+"])"
 
+    def deps(node):
+        if node[0]=="open":
+            return {imports[node[1]]} if node[1] in imports else set()
+        if node[0]=="split":
+            return set().union(*(deps(k) for k in node[3]))
+        return set()
+
     def checked(name, p, audit):
         return f"""
 def {name} : PartialAudit := {wrap(audit)}
@@ -119,7 +135,7 @@ theorem {name}_checked : partialCheck 7014 ({p}) {name} = true := by
         p=f"child {move(MOVES[i])}"
         name=f"branch{i:02}"
         if node[0]!="split":
-            emit(branch,["Raw111Prefix"],checked(name,p,build(node)))
+            emit(branch,["Raw111Prefix"]+sorted(deps(node)),checked(name,p,build(node)))
             continue
         _,n,s,kids=node
         stats["split"]+=1
@@ -129,7 +145,7 @@ theorem {name}_checked : partialCheck 7014 ({p}) {name} = true := by
             module=f"Raw111Kid{i:02}_{j:02}"
             parts.append(module)
             child=f"refine ({p}) {slot(s)} (some {move(MOVES[j])})"
-            emit(module,["Raw111Prefix"],checked(kn(j),child,build(kid)))
+            emit(module,["Raw111Prefix"]+sorted(deps(kid)),checked(kn(j),child,build(kid)))
         emit(branch,parts,f"""
 def kids{i:02} : Move → PartialAudit := byPartialMove [{','.join(kn(j) for j in range(24))}]
 theorem kids{i:02}_checked (mv : Move) :
@@ -156,7 +172,7 @@ theorem checked : partialCheck 7014 parent tree = true := by
   simp only [Bool.and_eq_true]
   exact ⟨by decide, allMoves_of _ rootKids_checked⟩
 def residuals := partialResiduals parent tree
-theorem residual_count : residuals.length = 225 := by decide
+theorem residual_count : residuals.length = 6 := by decide
 theorem sound :
     ∀ m, compatible parent m → WeightedBound 7014 m ∨
       ∃ e ∈ residuals, compatible e.2 m :=
