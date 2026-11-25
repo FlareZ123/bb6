@@ -3,6 +3,11 @@ name: Agent 5 q0 held BlockFAR certificate verification
 on:
   workflow_dispatch:
     inputs:
+      proof_mode:
+        description: "Generated BlockFAR or symbolic q3500 sweep"
+        type: choice
+        options: [generated, symbolic-q3500]
+        default: generated
       table:
         description: "Six-state partial table in repository notation"
         type: string
@@ -55,6 +60,7 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           "$HOME/.elan/bin/lean" --version
       - name: Generate finite BlockFAR certificate
+        if: inputs.proof_mode == 'generated'
         env:
           TABLE: ${{ inputs.table }}
           MODULE_NAME: ${{ inputs.name }}
@@ -94,6 +100,7 @@ jobs:
           )
           PY
       - name: Compile and kernel-check generated proof
+        if: inputs.proof_mode == 'generated'
         env:
           MODULE_NAME: ${{ inputs.name }}
           FLIP: ${{ inputs.flip }}
@@ -114,7 +121,8 @@ jobs:
             cp ../agent8-coverage-contract/Frontier.lean .
             lean -o /tmp/q0-blockfar/Frontier.olean Frontier.lean 2>&1 | tee -a /tmp/q0-blockfar/compile.log
             lean -o BlockFARBridge.olean BlockFARBridge.lean 2>&1 | tee -a /tmp/q0-blockfar/compile.log
-            lean -o /tmp/q0-blockfar/Q02700Consumer.olean ../agent5-q0-held-blockfar/Q02700Consumer.lean 2>&1 | tee -a /tmp/q0-blockfar/compile.log
+            cp ../agent5-q0-held-blockfar/Q02700Consumer.lean .
+            lean -o /tmp/q0-blockfar/Q02700Consumer.olean Q02700Consumer.lean 2>&1 | tee -a /tmp/q0-blockfar/compile.log
             cp BlockFARBridge.olean /tmp/q0-blockfar/
 
             # Extend the accepted q2700 source cylinder into the exact raw10 encoding.
@@ -178,6 +186,24 @@ jobs:
           print("Q02700 source transfer axiom profiles accepted")
           PY
           fi
+      - name: Kernel-check symbolic q3500 sweep and original coverage
+        if: inputs.proof_mode == 'symbolic-q3500'
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/q0-blockfar
+          cd im-results/agent13-block-far
+          export LEAN_PATH=.
+          cp ../agent8-coverage-contract/Frontier.lean .
+          for m in BlockMacro BlockFAR Frontier BlockFARBridge Q03500Sweep Q03500Consumer; do
+            lean -o "$m.olean" "$m.lean" 2>&1 | tee -a /tmp/q0-blockfar/compile.log
+          done
+          for theorem in solid_grows never source_never cover; do
+            grep -F "'BB6Q03500.$theorem' depends on axioms:" /tmp/q0-blockfar/compile.log
+          done
+          if grep -Eq 'sorryAx|native_decide' /tmp/q0-blockfar/compile.log; then
+            exit 1
+          fi
+          cp Q03500Sweep.lean Q03500Consumer.lean Q03500Sweep.olean Q03500Consumer.olean /tmp/q0-blockfar/
       - name: Upload generated certificate and kernel log
         if: always()
         uses: actions/upload-artifact@v4
