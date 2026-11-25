@@ -1,0 +1,33 @@
+name: Agent 47 raw112 two-residual extraction
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reconstruct exact source-data dependencies
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+      - name: Regenerate only the two residual rows
+        run: |
+          set -euo pipefail
+          python im-results/agent47-raw112-cut/generate.py --symbolic-only | tee /tmp/raw112-residual-extract.log
+          test -s im-results/agent47-raw112-cut/unresolved.txt
+          test "$(wc -l < im-results/agent47-raw112-cut/unresolved.txt)" -eq 2
+          sha256sum im-results/agent47-raw112-cut/unresolved.txt
+          cat im-results/agent47-raw112-cut/unresolved.txt
+      - name: Preserve residual rows and generator transcript
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw112-two-residuals
+          path: |
+            im-results/agent47-raw112-cut/unresolved.txt
+            /tmp/raw112-residual-extract.log
