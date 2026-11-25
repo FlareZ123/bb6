@@ -93,7 +93,7 @@ def merge(repo, downloads, output, groups=None, artifact_prefix='raw109-shard', 
             require(path not in inputs or inputs[path] == item, f'{group}: conflicting input {path}')
             inputs[path] = item
         manifests.append(manifest)
-    source_revisions = sorted({rev for m in manifests for rev in m.get('source_revisions', [m['proof_source_revision'])} | {revision})
+    source_revisions = sorted({rev for m in manifests for rev in m.get('source_revisions', [m['proof_source_revision']])} | {revision})
     merged = dict(template, proof_source_revision=revision, source_revisions=source_revisions,
                   label=f'{artifact_prefix}-union', artifact_name=f'{artifact_prefix}-union',
                   roots=[item for m in manifests for item in m['roots']],
