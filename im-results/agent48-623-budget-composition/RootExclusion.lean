@@ -4,6 +4,7 @@ import Lean.Elab.Tactic.Omega
 namespace BB6.Agent48TerminalBudgetCounterexample
 
 open BB6.Agent49ParitySource
+open BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA
 
 set_option maxRecDepth 1000000
 set_option maxHeartbeats 0
@@ -12,11 +13,11 @@ set_option maxHeartbeats 0
 predecessor's mass. -/
 theorem root_run_39 :
     run 39 = some (.D 79788 133932) := by
-  decide
+  native_decide
 
 theorem root_run_40 :
     run 40 = some (.D 54138 239399) := by
-  decide
+  native_decide
 
 /-- Mass is strictly increasing along any two surviving blank-root visits.
 This iterates the source-level next_strict_mass inequality over the actual
@@ -55,7 +56,7 @@ theorem run_mass_mono (m : Nat) :
 
 theorem root_run_41 :
     run 41 = some (.D 185262 162438) := by
-  decide
+  native_decide
 
 /-- Every surviving blank-root state is either before step 40, exactly the
 step-40 state, or at/after step 41. The source mass jumps are large enough
