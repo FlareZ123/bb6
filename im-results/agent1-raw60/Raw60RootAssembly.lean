@@ -28,12 +28,12 @@ theorem parent_four_choices (m : Machine) (hm : compatible parent m) :
     BB6.Agent1Raw60A0LD.all_closed m hm
 
 theorem parent_scoreB (B : Nat) (hB : 1175 ≤ B)
-    (tail : ∀ mv ∈ remaining5, ∀ m, compatible (child mv) m → WeightedBound B m)
+    (tail : ∀ mv ∈ remaining4, ∀ m, compatible (child mv) m → WeightedBound B m)
     (m : Machine) (hm : compatible parent m) : WeightedBound B m := by
-  rcases parent_five_choices m hm with hb | ⟨mv,hr,hc⟩
+  rcases parent_four_choices m hm with hb | ⟨mv,hr,hc⟩
   · exact lift hB hb
   · exact tail mv hr m hc
 
-#print axioms parent_five_choices
+#print axioms parent_four_choices
 #print axioms parent_scoreB
 end BB6.Agent1Raw60Root
