@@ -9,6 +9,7 @@ import sys
 import tarfile
 
 ROOT = Path(__file__).resolve().parent
+sys.path.insert(0, str(ROOT.parent / "agent31-three-hole-tnf"))
 sys.path.insert(0, str(ROOT.parent / "agent47-raw114-cut"))
 import multi_sweep as ms
 import generate_sweeps as pump
