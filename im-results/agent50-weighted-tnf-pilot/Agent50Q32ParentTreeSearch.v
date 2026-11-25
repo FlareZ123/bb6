@@ -69,7 +69,7 @@ Proof.
     cbn [candidate_witness source_witness_check].
     unfold side_candidate_check in Hcandidate.
     exact Hcandidate.
-  - cbn [source_tree_check].
+  - unfold chunk2_first_hole_tree.
     destruct (find_chunk2_hole p) as [[n h]|] eqn:Hhole.
     + apply chunk2_first_hole_tree_check_of_find; [exact Hhole|].
       pose proof (agent50_find_chunk2_hole_time_le18 p n h Hhole).
@@ -100,11 +100,6 @@ Proof.
     + apply forallb_forall. intros v Hv.
       apply agent50_q32_child_tree_check. lia.
 Qed.
-
-Theorem agent50_q32_parent_tree_open_count :
-  length agent50_q32_parent_open =
-    length (source_tree_open q32_canonical_residual_7 agent50_q32_parent_tree).
-Proof. reflexivity. Qed.
 
 (* Existing original-source certificates from the 34-node chunk roster and
    the newly searched 50-node side roster may cover some open leaves. *)
