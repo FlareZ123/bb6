@@ -221,6 +221,7 @@ def kids : Move → Cut := byCutMove [{terms}]
 theorem kids_checked (mv : Move) (hv : mv.next.val ≤ 3) :
     check 7014 (child mv) (nextCut 3 mv) (kids mv) = true := by
   rcases mv with ⟨w,r,q⟩
+  change q.val ≤ 3 at hv
   have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 := by omega
   rcases hq with rfl|rfl|rfl|rfl
   all_goals cases w <;> cases r
