@@ -276,7 +276,7 @@ jobs:
 
 
       - name: Print exact held checkpoint membership assumptions
-        if: inputs.target == 'enumerate62-held-checkpoint-membership'
+        if: inputs.target == 'enumerate62-held-checkpoint-membership' || inputs.target == 'enumerate62-held-checkpoint-consumption'
         working-directory: original/verify
         run: |
           printf '%s\n' 'From BusyCoq Require Import Agent42HeldCheckpointMembership.' 'Print Assumptions recovered_held_2800_parent_leaf_partition.' 'Print Assumptions recovered_held_2800_checkpoint_member.' 'Print Assumptions recovered_held_2800_adaptive_obligation.' > Agent42HeldCheckpointAudit.v
@@ -286,7 +286,7 @@ jobs:
         if: inputs.target == 'enumerate62-held-checkpoint-consumption'
         working-directory: original/verify
         run: |
-          printf '%s\\n' 'From BusyCoq Require Import Agent14HeldQueueConsumption.' 'Print Assumptions source_weighted_safe_iff_without_recovered_held_2800.' 'Print Assumptions q0_2800_queue_safe_iff.' 'Print Assumptions actual_source_chunks_packed_global_upper_after_q0_2800_consumption.' > Agent14HeldQueueConsumptionAudit.v
+          printf '%s\\n' 'From BusyCoq Require Import Agent42HeldCheckpointMembership Agent14HeldQueueConsumption.' 'Print Assumptions recovered_held_2800_checkpoint_member.' 'Print Assumptions recovered_held_2800_adaptive_obligation.' 'Print Assumptions source_weighted_safe_iff_without_recovered_held_2800.' 'Print Assumptions q0_2800_queue_safe_iff.' 'Print Assumptions actual_source_chunks_packed_global_upper_after_q0_2800_consumption.' > Agent14HeldQueueConsumptionAudit.v
           coqc -Q . BusyCoq -native-compiler no Agent14HeldQueueConsumptionAudit.v
 
       - name: Compute exact source q0 census
