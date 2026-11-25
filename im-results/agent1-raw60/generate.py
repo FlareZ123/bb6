@@ -2,7 +2,8 @@
 from pathlib import Path
 from collections import Counter
 from itertools import product
-import sys, subprocess, json, hashlib
+import sys, subprocess, json, hashlib, os
+from shard_audit import emit_shards
 
 ROOT=Path(__file__).resolve().parent
 sys.path.insert(0,str(ROOT.parent/"agent31-three-hole-tnf"))
@@ -153,7 +154,11 @@ theorem query : zipQueryOK {B} parent {n} {slot(s)} = true := by decide
     mods=[];stats["split"]+=1
     for i,kid in enumerate(tree[3]):
         name=f"{pre}Kid{i:02}";mods.append(name)
-        emit(name,[bname],f"""
+        if os.environ.get("BB6_SHARD_AUDIT") == "1":
+            emit_shards(kid, f"child {move(MOVES[i])}", f"kid{i:02}", f"check{i:02}", name,
+                        B=B, bname=bname, build=build, emit=emit, stats=stats, slot=slot, move=move, moves=MOVES)
+        else:
+            emit(name,[bname],f"""
 def kid{i:02} (h : Exceptions) : Audit := {build(kid)}
 theorem check{i:02} (h : Exceptions) : zipCheck {B} (child {move(MOVES[i])}) (kid{i:02} h) = true := by rfl
 """)
