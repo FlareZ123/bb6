@@ -6,7 +6,7 @@ on:
       target:
         description: Proof target
         type: choice
-        options: [core, cut, corridor, ingest, pump0RE, late0RE, zeroRE, zeroRC, zeroRD, zeroLC, zeroLB, oneRD, pump0LE5]
+        options: [core, cut, corridor, ingest, ingest77, pump0RE, late0RE, zeroRE, zeroRC, zeroRD, zeroLC, zeroLB, oneRD, pump0LE5]
         default: core
       source_ref:
         description: Exact source commit (optional)
@@ -17,16 +17,75 @@ permissions:
 jobs:
   check:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ inputs.source_ref || github.sha }}
+      - uses: actions/checkout@v4
+        if: inputs.target == 'ingest77'
+        with:
+          ref: d4164a4457e62ba7ec8e3fba6e38b251d04ffc83
+          path: pinned
       - name: Install pinned Lean
         run: |
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Download accepted canonical77 artifact for raw13 graft
+        if: inputs.target == 'ingest77'
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45554648116
+          name: canonical77-certified
+          path: /tmp/a47-canonical
+      - name: Build checked canonical77 dependency manifest
+        if: inputs.target == 'ingest77'
+        run: |
+          set -euo pipefail
+          cp im-results/agent47-rooted-tnf/CanonicalTwoParentGraft.lean pinned/im-results/agent47-rooted-tnf/
+          cp tools/lean_compile_closure.py pinned/tools/lean_compile_closure.py
+          cd pinned
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent10-tnf-raw87/generate.py
+          python im-results/agent10-tnf-raw91/generate.py
+          python im-results/agent10-tnf-multipump/generate.py 66 70 80
+          python im-results/agent10-tnf-multipump/generate.py 68 72 82
+          python im-results/agent10-tnf-multipump/generate.py 86 88 92 93 97 98 100 101 102 104
+          mkdir -p .tmp/a46
+          cat > .tmp/a46/canonical-generator-arguments.txt <<'EOF'
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent10-tnf-raw87/generate.py
+          python im-results/agent10-tnf-raw91/generate.py
+          python im-results/agent10-tnf-multipump/generate.py 66 70 80
+          python im-results/agent10-tnf-multipump/generate.py 68 72 82
+          python im-results/agent10-tnf-multipump/generate.py 86 88 92 93 97 98 100 101 102 104
+          EOF
+          for required in CanonicalTwoParentGraft.olean CanonicalRaw114Accepted.olean Raw114CompleteData.olean; do
+            test -s "/tmp/a47-canonical/$required"
+          done
+          python tools/lean_compile_closure.py im-results/agent47-rooted-tnf/CanonicalTwoParentGraft.lean \
+            --workdir /tmp/a46-canonical-manifest-work \
+            --manifest /tmp/a46-canonical-manifest.json \
+            --manifest-only \
+            --artifact-dir /tmp/a47-canonical \
+            --label canonical77-certified \
+            --artifact-name canonical77-certified \
+            --jobs 8 \
+            --provenance-input im-results/agent47-rooted-tnf/CanonicalTwoParentGraft.lean \
+            --provenance-input im-results/agent13-coverage/BB6Coverage.lean.xz.b64 \
+            --provenance-input im-results/agent13-coverage/unpack.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_sweeps.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_four_hole.py \
+            --provenance-input im-results/agent10-tnf-raw87/generate.py \
+            --provenance-input im-results/agent10-tnf-raw91/generate.py \
+            --provenance-input im-results/agent10-tnf-multipump/generate.py \
+            --provenance-input .tmp/a46/canonical-generator-arguments.txt
       - name: Verify actual dependency closure
         env:
           TARGET: ${{ inputs.target }}
@@ -75,7 +134,7 @@ jobs:
           if [ "$TARGET" = corridor ]; then
             ROOT="$D/Agent46Raw13Corridor.lean"
           fi
-          if [ "$TARGET" = ingest ]; then
+          if [ "$TARGET" = ingest ] || [ "$TARGET" = ingest77 ]; then
             python im-results/agent31-three-hole-tnf/generate_sweeps.py
             python im-results/agent31-three-hole-tnf/generate_four_hole.py
             python im-results/agent10-tnf-raw87/generate.py
@@ -83,7 +142,62 @@ jobs:
             python im-results/agent10-tnf-multipump/generate.py 66 70 80
             python im-results/agent10-tnf-multipump/generate.py 68 72 82
             python im-results/agent10-tnf-multipump/generate.py 86 88 92 93 97 98 100 101 102 104
-            ROOT="$D/Agent46Raw13Ingest.lean"
+            if [ "$TARGET" = ingest ]; then
+              ROOT="$D/Agent46Raw13Ingest.lean"
+            else
+              ROOT="$D/Agent46Raw13Data.lean"
+            fi
           fi
-          python tools/lean_compile_closure.py --workdir /tmp/a46-raw13 --jobs 4 "$ROOT" | tee /tmp/a46-raw13.log
+          if [ "$TARGET" = ingest77 ]; then
+            python tools/lean_compile_closure.py --workdir /tmp/a46-raw13 --jobs 4 \
+              --precompiled-manifest /tmp/a46-canonical-manifest.json \
+              --precompiled-dir /tmp/a47-canonical "$ROOT" | tee /tmp/a46-raw13.log
+          else
+            python tools/lean_compile_closure.py --workdir /tmp/a46-raw13 --jobs 4 "$ROOT" | tee /tmp/a46-raw13.log
+          fi
           if grep -Eq 'sorryAx|native_decide' /tmp/a46-raw13.log; then exit 1; fi
+      - name: Compile raw13 graft against the accepted canonical77 artifact
+        if: inputs.target == 'ingest77'
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD:im-results/agent47-rooted-tnf/CanonicalRaw114Accepted.lean)" = "d198f4eb8d3c2ca4b7ed5a2c57298cb6364537f4"
+          test -s /tmp/a47-canonical/CanonicalRaw114Accepted.olean
+          test -s /tmp/a47-canonical/CanonicalTwoParentGraft.olean
+          test -s /tmp/a47-canonical/Raw114CompleteData.olean
+          export LEAN_PATH="/tmp/a46-raw13:/tmp/a47-canonical"
+          lean -o /tmp/a46-raw13/Agent46Raw13Ingest77.olean \
+            im-results/agent46-raw13-cut/Agent46Raw13Ingest77.lean 2>&1 | tee /tmp/a46-raw13-ingest77.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a46-raw13-ingest77.log; then exit 1; fi
+          python3 - <<'PY'
+          import pathlib, re
+          log = pathlib.Path("/tmp/a46-raw13-ingest77.log").read_text()
+          profiles = {}
+          for name, raw in re.findall(r"'([^']+)' depends on axioms: \\[([^]]*)\\]", log, re.S):
+              profiles[name] = {x.strip() for x in raw.split(",") if x.strip()}
+          expected = {
+              "BB6.Agent46Raw13Canonical77.parent_count77",
+              "BB6.Agent46Raw13Canonical77.refined_count77",
+              "BB6.Agent46Raw13Canonical77.refined_sound77",
+              "BB6.Agent46Raw13Canonical77.cover_at_target77",
+              "BB6.Agent46Raw13Canonical77.exact_at_target77",
+          }
+          missing = expected - profiles.keys()
+          if missing:
+              raise SystemExit("missing axiom profiles: " + ", ".join(sorted(missing)))
+          allowed = {"propext", "Classical.choice", "Quot.sound"}
+          for name in sorted(expected):
+              bad = profiles[name] - allowed
+              if bad:
+                  raise SystemExit(f"{name}: unexpected axioms {sorted(bad)}")
+              print(f"{name}: {sorted(profiles[name])}")
+          PY
+      - name: Preserve raw13 canonical77 proof artifact
+        if: inputs.target == 'ingest77'
+        uses: actions/upload-artifact@v4
+        with:
+          name: canonical77-raw13-graft-certified
+          path: |
+            /tmp/a46-raw13/Agent46Raw13Ingest77.olean
+            /tmp/a46-raw13.log
+            /tmp/a46-raw13-ingest77.log
+            /tmp/a46-canonical-manifest.json
