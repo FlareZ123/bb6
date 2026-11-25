@@ -19,7 +19,7 @@ jobs:
       - name: Compile and audit exact source
         run: |
           set -euo pipefail
-          python tools/lean_compile_closure.py im-results/agent6-champion-residual/EarlySiblingCover.lean im-results/agent6-champion-residual/C1Sweep.lean --workdir /tmp/a6-early --jobs 4 | tee /tmp/a6-early.log
+          python tools/lean_compile_closure.py im-results/agent6-champion-residual/EarlySiblingCover.lean im-results/agent6-champion-residual/C1Sweep.lean im-results/agent6-champion-residual/C1ZeroLCCover.lean --workdir /tmp/a6-early --jobs 4 | tee /tmp/a6-early.log
           python - <<'PY'
           import re
           log = open('/tmp/a6-early.log').read()
