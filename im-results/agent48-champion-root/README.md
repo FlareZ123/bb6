@@ -52,14 +52,18 @@ Even such a lower-bound witness would not supply the missing **global upper-boun
 
 ## Raw139 depth-five F/1 sibling closures
 
-The table order is `[A0,A1,B0,B1,C0,C1,D0,D1,E0,E1,F0,F1]`; code 24 means unassigned. The exact F/1 split parent on `championP5` is `[7,24,11,24,14,21,3,16,12,11,24,24]`.
+The table order is `[A0,A1,B0,B1,C0,C1,D0,D1,E0,E1,F0,F1]`; code 24 means unassigned. The exact depth-five F/1 split parent on `championP5` is `[7,24,11,24,14,21,3,16,12,11,24,24]`. Each sibling below leaves A/1, B/1, and F/0 unassigned.
 
 | Child | Mathematical closure | Original-source status |
 | --- | --- | --- |
-| F/1 = 1LF (22) | [Complete WeightedBound 126 audit](ChampionF1OneLFCover.lean) | Accepted [45577240835](https://github.com/FlareZ123/bb6/actions/runs/45577240835) |
-| F/1 = 0RD (13) | [66-step entry and exact unbounded growth](ChampionF1ZeroRD.lean), universal nonhalting | Accepted [45577240835](https://github.com/FlareZ123/bb6/actions/runs/45577240835) |
-| F/1 = 0RF (21) | [Complete candidate WeightedBound 211 audit](F1-zeroRF.md), including one exact four-phase recurrence | Local reconstructed zipper stage proof accepted; full source audit [45581070284](https://github.com/FlareZ123/bb6/actions/runs/45581070284) pending |
+| F/1 = 1LF (22) | [Complete WeightedBound 126 audit](ChampionF1OneLFCover.lean) | Accepted in [45577240835](https://github.com/FlareZ123/bb6/actions/runs/45577240835) |
+| F/1 = 0RD (13) | [66-step entry and exact unbounded growth](ChampionF1ZeroRD.lean), universal nonhalting | Accepted in [45577240835](https://github.com/FlareZ123/bb6/actions/runs/45577240835) |
+| F/1 = 0RF (21) | [Complete WeightedBound 211 audit](F1-zeroRF.md), including an exact four-phase growth recurrence | **Accepted** in [45581070284](https://github.com/FlareZ123/bb6/actions/runs/45581070284), job `champion_parent` |
 
-Each leaves A/1, B/1, F/0 unassigned. [ChampionF1SiblingIntegration](ChampionF1SiblingIntegration.lean) verifies the first two table identities and retains 110 of the 112 raw139 leaves in its conditional exactness theorem; the corrected source audit [45577606094](https://github.com/FlareZ123/bb6/actions/runs/45577606094) is pending. [ChampionF1RFIntegration](ChampionF1RFIntegration.lean) is the further proposed consuming theorem retaining 109 leaves; this third closure and its roster integration require original-source acceptance. The 77 other canonical-78 representatives remain separate obligations. No claim of exact BB(6) or global roster removal is made.
+The 0RF source audit compiled the original import closure through `reproduce-parent.sh` and passed the exported theorem axiom checks. Its standalone scope is one complete three-hole cylinder; it is not a canonical-78 roster closure.
 
-Historical integration run 45570544320 used an incorrect direction bit for 1LF, superseded by `⟨true,false,5⟩`; earlier standalone runs 45574821626 and 45576520749 failed in the post-compile audit parser, since corrected. The accepted run compiled 155 project modules from four roots and passed the F1 axiom audit.
+[ChampionF1SiblingIntegration](ChampionF1SiblingIntegration.lean) combines the 1LF and 0RD siblings with the F0 extended frontier and proposes 110 remaining raw139 leaves. Its integrated source audit [45577606094](https://github.com/FlareZ123/bb6/actions/runs/45577606094) **failed before reaching the frontier integration**, in shared exact-score dependencies: `MixedBound109Composition.lean` had invalid `by decide [championTable]` syntax and `Canonical78ExactComposition.lean` lacked a score lower-bound hypothesis for its final `omega`. The run does not falsify the sibling certificates, but the 110-leaf consumer remains unaccepted. See the direct diagnostic messages in `communications/agent31/` and `communications/agent6/`.
+
+[ChampionF1RFIntegration](ChampionF1RFIntegration.lean) is a further draft consumer: it proves the 0RF parent is the exact depth-five child, filters exactly one table from the 110-leaf list, and states the conditional 109-leaf theorem. The count is kernel-decidable, but the consumer inherits the unaccepted 110-leaf integration and has not itself passed original-source CI. The 77 other canonical-78 representatives remain separate obligations.
+
+The earlier standalone 1LF/0RD source run compiled 155 project modules and passed its axiom audit. Historical integration run 45570544320 used an incorrect direction bit for 1LF (`⟨true,true,5⟩` rather than `⟨true,false,5⟩`) and was cancelled. Earlier runs 45574821626 and 45576520749 failed in the post-compile audit parser and are superseded. No exact BB(6) or global upper-bound claim is made.
