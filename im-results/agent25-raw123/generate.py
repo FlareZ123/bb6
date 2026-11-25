@@ -26,6 +26,7 @@ from generate_four_hole import masks, move, slot
 
 S = json.loads((ROOT/"spec.json").read_text())
 B = S["weightedTarget"]
+COMPLETE = not S["unresolved"]
 MOVES = [w+d+q for w,d,q in product("01","LR","ABCDEF")]
 NS = "BB6.Agent25Raw123"
 CHUNK = 240
@@ -178,10 +179,15 @@ theorem split_checked (p : PartialMachine) (n : Nat) (s : Slot) (kids : Move →
   change (zipQueryOK {B} p n s && allMoves (fun mv => partialCheck {B} (refine p s (some mv)) (kids mv))) = true
   simp only [Bool.and_eq_true]
   exact ⟨hq, allMoves_of _ hk⟩
+
+theorem split_empty (p : PartialMachine) (n : Nat) (s : Slot) (kids : Move → PartialAudit)
+    (hk : ∀ mv, partialResiduals (refine p s (some mv)) (kids mv) = []) :
+    partialResiduals p (.split n s kids) = [] := by
+  simp [partialResiduals, hk]
 """)
-        def combine(p,name,n,s,names):
+        def combine(p,name,n,s,names,empty=False):
             cases="\n".join(f"  · exact c_{names[12*w+6*r+q]}" for q,w,r in product(range(6),range(2),range(2)))
-            return f"""
+            out = f"""
 def k_{name} : Move → PartialAudit := byPartialMove [{','.join('t_'+x for x in names)}]
 def t_{name} : PartialAudit := .split {n} {slot(s)} k_{name}
 theorem q_{name} : zipQueryOK {B} {p} {n} {slot(s)} = true := by decide
@@ -194,6 +200,20 @@ theorem kcheck_{name} (mv : Move) : partialCheck {B} (refine {p} {slot(s)} (some
 theorem c_{name} : partialCheck {B} {p} t_{name} = true :=
   split_checked {p} {n} {slot(s)} k_{name} q_{name} kcheck_{name}
 """
+            if empty and COMPLETE:
+                ecases=cases.replace("exact c_","exact e_")
+                out += f"""
+theorem echeck_{name} (mv : Move) :
+    partialResiduals (refine {p} {slot(s)} (some mv)) (k_{name} mv) = [] := by
+  rcases mv with ⟨w,r,q⟩
+  have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
+  rcases hq with rfl|rfl|rfl|rfl|rfl|rfl
+  all_goals cases w <;> cases r
+{ecases}
+theorem e_{name} : partialResiduals {p} t_{name} = [] :=
+  split_empty {p} {n} {slot(s)} k_{name} echeck_{name}
+"""
+            return out
         def local(t,p,name):
             if sizes[id(t)]<=CHUNK:
                 return f"""def t_{name} : PartialAudit := {render(t)}
@@ -212,27 +232,43 @@ theorem c_{name} : partialCheck {B} {p} t_{name} = true := by
         def shard(t,p,name):
             mod=f"A25Raw123Shard_{name}"
             if sizes[id(t)]<=SHARD:
-                emit(mod,["A25Raw123Base",*sorted(deps(t))],
-                     f"abbrev p_{name} := {p}\n"+local(t,f"p_{name}",name))
+                body=f"abbrev p_{name} := {p}\n"+local(t,f"p_{name}",name)
+                if COMPLETE:
+                    body += f"\ntheorem e_{name} : partialResiduals p_{name} t_{name} = [] := by rfl\n"
+                emit(mod,["A25Raw123Base",*sorted(deps(t))],body)
                 return mod
             assert t[0]=="split"
             _,n,s,kids=t;names=[];imports=[]
             for i,k in enumerate(kids):
                 a=f"{name}_{i:02}";names.append(a)
                 imports.append(shard(k,f"(refine {p} {slot(s)} (some {move(MOVES[i])}))",a))
-            emit(mod,imports,f"abbrev p_{name} := {p}\n"+combine(f"p_{name}",name,n,s,names))
+            emit(mod,imports,f"abbrev p_{name} := {p}\n"+combine(f"p_{name}",name,n,s,names,empty=True))
             return mod
         mod=shard(tree,"p123","root")
         assert used==set(range(len(rows)))
-        emit("A25Raw123Data",[mod],f"""
+        body=f"""
 def residuals123 := partialResiduals p123 t_root
 theorem sound123 : ∀ m, compatible p123 m →
     WeightedBound {B} m ∨ ∃ e ∈ residuals123, compatible e.2 m :=
   partialSound {B} p123 t_root p123_root p123_nohalt c_root
-theorem residual_count123 : residuals123.length = {len(S["unresolved"])} := by decide
 #print axioms sound123
-#print axioms residual_count123
-""")
+"""
+        if COMPLETE:
+            body += f"""
+theorem residuals123_eq_nil : residuals123 = [] := e_root
+theorem residual_count123 : residuals123.length = 0 :=
+  congrArg List.length residuals123_eq_nil
+theorem all123 (m : Machine) (hm : compatible p123 m) : WeightedBound {B} m := by
+  rcases sound123 m hm with hb | ⟨e,he,_⟩
+  · exact hb
+  · simp [residuals123_eq_nil] at he
+#print axioms residuals123_eq_nil
+#print axioms all123
+"""
+        else:
+            body += f"theorem residual_count123 : residuals123.length = {len(S['unresolved'])} := by decide\n"
+        body += "#print axioms residual_count123\n"
+        emit("A25Raw123Data",[mod],body)
         print("raw123:",stats,"partial candidate audit; bound",B,flush=True)
 
 if __name__=="__main__":
