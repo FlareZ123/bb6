@@ -2,6 +2,12 @@ name: Agent 27 #623 n=10 root mass-gap source proof
 
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        description: Proof target
+        type: choice
+        options: [n10, gap-two-three-step]
+        default: n10
 
 permissions:
   contents: read
@@ -31,6 +37,7 @@ jobs:
           lake exe cache get
           lake build BusyBeaver.BB6.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA
       - name: Compile the exact n=10 mass-gap proof chain
+        if: inputs.target == 'n10'
         working-directory: cryptids
         run: |
           set -euo pipefail
@@ -53,3 +60,30 @@ jobs:
             echo 'sorryAx detected in the n=10 source proof dependency chain'
             exit 1
           fi
+
+      - name: Compile all-scale gap-two elimination against original source
+        if: inputs.target == 'gap-two-three-step'
+        working-directory: cryptids
+        run: |
+          set -euo pipefail
+          : > gap-two-axioms.log
+          compile() {
+            cp "../im-results/$2.lean" "$1.lean"
+            lake env lean -o ".lake/build/lib/lean/$1.olean" "$1.lean" 2>&1 | tee -a gap-two-axioms.log
+          }
+          compile Agent49ParitySource agent49-parity623/Parity623Source
+          compile Agent8ThirdCounterAffineSource agent8-623-inverse/ThirdCounterAffineSource
+          compile Agent8DrainLogDepthSource agent8-623-inverse/DrainLogDepthSource
+          compile Agent8BudgetSource agent8-623-inverse/TernaryBudgetSource
+          compile Agent8GateRepulsionSource agent8-623-inverse/GateRepulsionSource
+          compile Agent8DrainSectorSource agent8-623-inverse/DrainSectorSource
+          compile Agent8DrainSevenSource agent8-623-inverse/DrainSevenSource
+          compile Agent8DrainFirstSharpSource agent8-623-inverse/DrainFirstSharpSource
+          compile Agent8FarSectorSource agent8-623-inverse/FarSectorSource
+          compile Agent8GateCompleteSource agent8-623-inverse/GateCompleteSource
+          compile Agent8ParentCorridorSource agent8-623-inverse/ParentCorridorSource
+          compile Agent8ZeroTailSource agent8-623-inverse/ZeroTailSource
+          compile Agent8RootCorridorSource agent8-623-inverse/RootCorridorSource
+          compile Agent27GapTwoArithmetic agent27-623-gap-two-three-step/Agent27GapTwoArithmetic
+          compile GapTwoThreeStepSource agent27-623-gap-two-three-step/GapTwoThreeStepSource
+          if grep -q 'sorryAx' gap-two-axioms.log; then exit 1; fi
