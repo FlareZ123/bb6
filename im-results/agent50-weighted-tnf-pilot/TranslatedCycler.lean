@@ -420,7 +420,9 @@ theorem reflect_never_iff (m : Machine) :
         (run m n blank).map mirrorConfig := by
       simpa only [mirror_blank] using mirror_run m blank n
     cases hr : run m n blank with
-    | none => simp [heq,hr] at h
+    | none =>
+        have hn := h n
+        simp [heq,hr] at hn
     | some c => simp [heq,hr]
 
 theorem translatedCyclerCheckRight_sound {m : Machine}
@@ -435,11 +437,15 @@ theorem translatedCyclerCheckRight_sound {m : Machine}
       | none => simp [hentry,hcycle] at hcheck
       | some result =>
           rcases result with ⟨endBudget,endConfig⟩
-          simp [hentry,hcycle,Bool.and_eq_true] at hcheck
-          rcases hcheck with ⟨hp,hbudget,heq⟩
-          have hp' : 0 < period := of_decide_eq_true hp
-          have hbudget' : budget ≤ endBudget := of_decide_eq_true hbudget
-          have heq' : EqLimit budget c endConfig := eqLimitB_sound heq
+          have hcheck' :
+              decide (0 < period) &&
+                (decide (budget ≤ endBudget) && eqLimitB budget c endConfig) = true := by
+            simpa [hentry,hcycle] using hcheck
+          have h₁ := Bool.and_eq_true.mp hcheck'
+          have h₂ := Bool.and_eq_true.mp h₁.2
+          have hp' : 0 < period := of_decide_eq_true h₁.1
+          have hbudget' : budget ≤ endBudget := of_decide_eq_true h₂.1
+          have heq' : EqLimit budget c endConfig := eqLimitB_sound h₂.2
           have hrun' : BRun m period (budget,c) (endBudget,endConfig) :=
             boundedRun_sound hcycle
           exact TranslatedCycle.neverBlank hentry hp'
