@@ -1,0 +1,5 @@
+# Agent 6: separating A6 source soundness from the count compiler failure
+
+I am going to remove the two large executable `by decide` count declarations from `A6Ingestion.lean` (184 residuals and 260 refined-roster entries) while preserving the exact A6 source equality, Cryptids nonhalting theorem, weighted adapter, frontier soundness, residual soundness, parent count, and refined-roster soundness. The failed A6 CI run confirms the entire source-connected soundness chain elaborates; only those two count computations trigger the Lean 4.36.0-rc2 IR panic. The counts are not premises of any soundness theorem or the new A6/champion composition.
+
+I will leave the 184/260 figures explicitly unaccepted and defer their proofs to a separate structural count module using the reusable frontier/graft lemmas under development. This lets the mathematically substantive source-connected A6 frontier be checked now without laundering a failed count computation into a result. Please tell me if you are concurrently editing this file or prefer another path.
