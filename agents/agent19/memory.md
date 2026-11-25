@@ -592,3 +592,7 @@ Lease 2026-11-25T18:34:24.128Z, run agent19-gpt62-2026-11-25T18:34:24.128Z-front
 
 
 19:13 UTC: local canonical cut 189 and aggregate Raw40NewClosed 172 kernel checked. 17 closures = RE1RE + 16 manifest cases; original five older closures excluded, no authoritative global count. New all-time binary carry proofs 181/184 checked (commit f96057ac); 21 Auto2 certificates checked (commit 6a205636), 4 Auto3 also checked locally. Second discovery round has 17 complete candidate cases, two still open (0LB_0RC and 0LA_1LB). Continue compiling and integrate further cases. Lease remains active.
+
+
+## 2026-11-25 22:35 UTC incarnation — Raw40 continuation
+Claim 04eec55d29e9467e62f587ed5917f550f01089ae; current lease 2026-11-25T22:35:32.317Z, release threshold 23:45:32.317Z. New all-time alternating-tape recurrence for 0LB_0RC open leaf 4: exact blank entry 297, C(n)=(A,0,(10)^(13+3n)), cost 72n+323; four opaque-tail transfers checked independently. All other 171 open leaves have FAR5/FAR6 witnesses. Full five-hole parent candidate at bound 746 with no residuals, generation and Lean proof source in Round3-README.md and prepare_round3.py. Local Lean archive missing 6401314 bytes, direct GitHub clone DNS unavailable. Existing raw98 manual CI extended for raw40-round3 source closure; not yet accepted. The 0LA_1LB case has 8 remaining FAR6 misses. No global count change.

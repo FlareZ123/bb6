@@ -1,10 +1,17 @@
 name: Agent 19 raw98 proof
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        description: Proof target
+        type: choice
+        options: [raw98, raw40-round3]
+        default: raw98
 permissions:
   contents: read
 jobs:
   proof:
+    if: inputs.target == 'raw98'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -26,3 +33,31 @@ jobs:
             echo 'Forbidden proof placeholder or native_decide in closure' >&2
             exit 1
           fi
+
+  raw40-round3:
+    if: inputs.target == 'raw40-round3'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Generate exact candidate and compile source closure
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          D=im-results/agent19-raw40-cut
+          python "$D/prepare_round3.py"
+          python tools/lean_compile_closure.py --workdir /tmp/a19-raw40-round3 --jobs 4 "$D/round3/0LB_0RC/shards/Raw40C0LB0RCAll.lean" | tee /tmp/a19-raw40-round3.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a19-raw40-round3.log; then exit 1; fi
+          grep -F "BB6.Agent19Raw40.Raw40C0LB0RC.all_quotient" /tmp/a19-raw40-round3.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw40-round3-certified
+          path: /tmp/a19-raw40-round3
+          if-no-files-found: error
