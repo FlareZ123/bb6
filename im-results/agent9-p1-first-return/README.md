@@ -1,49 +1,58 @@
-# Critical P1 right-five gate as a guarded first return
+# Critical P1 inverse histories: exact first returns and long-cost barriers
 
-**Mathematical claim.** For every n≥14 put Q=7·2^n−n−3. An original-source odd inverse history from (14·2^n−2n−16,3) to any (b,5) exists exactly when some q≥5 and k>0 satisfy q+k=Q, the moving-modulus recurrence r_0=1, r_j=2r_(j−1) mod (q+j) has its first positive return to 1 at j=k, and each wrap satisfies r_j+8≤q+j. This reduces the right-five gate itself, not blank-start reachability of every P1 terminal or BB(6).
+**Scope.** Write P=2^n, Q=7P−n−3, and root (14P−2n−16,3). We study the ORIGINAL OddCone relation at total inverse cost m. All statements below concern that critical P1 gate; none claims a machine decision or the global BB(6) upper bound.
 
-**Proof status.** Original-source equivalence passed the exact dependency-closure Lean 4.36.0-rc2 workflow at commit 62e88e75ccf52af7c3fd872d32e3168c7a6f745b ([run 45508108201](https://github.com/FlareZ123/bb6/actions/runs/45508108201)). The near-2n cost bound passed the exact original-source dependency closure with strict standard-axiom checks at commit ca1fe6517197faede9ccf45080b82898adb7fc23 ([run 45508888563](https://github.com/FlareZ123/bb6/actions/runs/45508888563)). The general superlinear result below is a paper theorem. The explicit three-block bound now has a complete integer-only Lean recurrence proof checked locally; the original-source adapter and full dependency workflow are queued for verification.
+## Main theorems and status
 
-## Exact scalar and source equivalence
+| Original-source consequence | Lean file | Exact-source CI |
+|---|---|---|
+| n≥14: existence of a right-five history iff a guarded first return of r_j=2r_(j−1) mod(q+j), r_0=1, q+k=Q, with k=m+1 | [SourceFirstReturn.lean](SourceFirstReturn.lean) | [45508108201](https://github.com/FlareZ123/bb6/actions/runs/45508108201) |
+| n≥14: every right-five history satisfies 2^max(0,m−n−1)(m+1)>P, hence m>2n−floor(log₂(2n−1)) | [CostSource.lean](CostSource.lean) | [45508888563](https://github.com/FlareZ123/bb6/actions/runs/45508888563) |
+| n≥8000: m>4n+2 | [RenewalSource.lean](RenewalSource.lean) | [45510966467](https://github.com/FlareZ123/bb6/actions/runs/45510966467) |
+| For every natural B and n≥criticalThreshold B: m>(B+1)n+2; threshold is computable, no external analytic assumptions | [RenewalUnboundedSource.lean](RenewalUnboundedSource.lean) | [45512527543](https://github.com/FlareZ123/bb6/actions/runs/45512527543) |
+| n≥8000: m>4n+2+K(n), K(n)=n−(7541+4(floor(log₂ n)+1)); n=10002 requires m≥42416 | [RenewalPrefixSource.lean](RenewalPrefixSource.lean) | [45513140527](https://github.com/FlareZ123/bb6/actions/runs/45513140527) |
 
-Write v=(d−1)/2. For root b0+10=2Q, every inverse history has b+2v+2m+8=2Q at cost m. A legal forward gap of length k has p+(Q−m)=2^k v', parent p+8+m≤Q, child v'≥2 and v'+4+m+k≤Q. These are exactly the Gap constructors.
+All successful runs use Lean 4.36.0-rc2, original dependency closure and standard-axiom checks. [RenewalCost.md](RenewalCost.md) gives an independent paper derivation and [renewal_check.py](renewal_check.py) exact arithmetic regressions.
 
-Forward transport uses the original inverseAt_iff_power_mass and odd_cone_mass lemmas, with v'=(c+3)/2 and k=t+1. Conversely, given a legal gap, set t=k−1, c=2v'−3 and s=Q−(m+k)−v'−2. The size guards give b≥8 and s≥2. Because k>0, the dyadic equation makes Q−m+p even, so the parent mass forces b≡0 mod 4. Direct substitution gives both exact inverseAt equations, including 2s+c+2t+1+c%2=b+d. The source constructor therefore yields (2s−4,c+4) at cost m+k. This includes the exceptional c=1 edge when v'=2. There is no extraneous prepared-state parity assumption.
+## New two-boundary and authentic reachability extension
 
-The scalar right_five_iff theorem equates existence of Gap Q m 2 with the stated first-return criterion. The first step is 1→2; subsequent reverse gaps consume zero bits followed by one wrap. The final 1 must occur at a wrap by parity. Guarded-prefix decomposition and the interior lower bound recover a full legal path. In particular zero is absorbing, and an earlier return to 1 cannot be skipped.
+[SmallSeed.lean](SmallSeed.lean), [SmallMany.lean](SmallMany.lean), [SmallComplement.lean](SmallComplement.lean) extend the small-seed analysis to either boundary and to all polynomial-size initial residues, including zero mod-seven phases. [BoundarySource.lean](BoundarySource.lean) connects this to both coordinates of original source histories, and [PracticalSource.lean](PracticalSource.lean) derives explicit first-crossing intervals. These new adapters are under exact-source CI [45514702164](https://github.com/FlareZ123/bb6/actions/runs/45514702164); the scalar lemmas and source-interface preflights passed locally. First attempt failed due to one argument order mismatch in an imported source lemma, corrected in ec591510ef3f9d36b27bb980f5057c70b9df5d81.
 
-## Uniform near-2n cost floor
+For fixed h,B,p (B≥2,p≥1) and n above the explicit smallThreshold, every OddCone at m≤hn has
 
-For every n≥14 and original OddCone from (14·2^n−2n−16,3) to (b,5) at cost m, the exact return length is k=m+1. [ShadowCost.lean](ShadowCost.lean) and [CostSource.lean](CostSource.lean) establish the stronger necessary inequality
+    m>0 ⇒ d>2B n^p+1,
+    b/2+6>B n^p.
 
-    2^max(0,m−n−1) · (m+1) > 2^n,
+The authentic source theorem then forces some *blank-reachable* odd-cone ancestor of cost m>hn whenever the critical root is blank-reachable, for n above reachableThreshold h. It does not assume any global bound on inverse costs. The positive even-right and exceptional c=1 exits are both excluded below the short-cost cutoff.
 
-hence
+The sharper coefficient certificates in RenewalBounds replace the enormous fallback threshold with a checked bit-length trial, using the universal bound (n+1)^d≤2n^d for n≥2d. In particular smallThreshold 4 64 8 1≤8000. Thus for n≥8000 every history of cost m≤4n has b/2+6>64n and (for m>0) d>128n+1. Together with the right-five barrier and the positive inverse edge bound t+1≤n+2, authentic critical-root reachability forces a reachable ancestor in the finite interval
 
-    m > 2n − floor(log₂(2n−1)).
+    3n+K(n) < m ≤ 4n+K(n)+2.
 
-This improves the earlier 1.5n+O(1) uniform floor for large n without a reset-count hypothesis. For instance n=10002 requires m>19990. The proof starts from P=2^n. For a proposed return with 2^max(0,k−n−2)·k≤P, the first n+2 steps double exactly. If k exceeds n+2, step n+3 gives P+k at modulus 7P−k. From there the ideal cycle is P,2P,4P; after s steps the actual value lies between its ideal phase and that phase plus (2^(s+1)−1)k. The error bound is sufficient to preserve each wrap decision up to the proposed terminal time. Every terminal residue in this regime is ≥P, contradicting return to 1. The proof even excludes unguarded returns in that range. The remaining challenge is an upper bound on feasible history costs or an exclusion of the longer return lengths.
+At n=10002 this is 32412≤m≤42415. The stronger theorem applies to the actual even-index critical reset as well.
 
-## Superlinear cost floor (paper proof)
+## Exact source/scalar bridge
 
-[RenewalCost.md](RenewalCost.md) strengthens the floor further: for every fixed integer B≥1, for all sufficiently large n every original right-five history satisfies m>(B+1)n+2. The threshold is effective. In particular the explicit three-block proof gives m>4n+2 for EVERY n≥8000, including all currently unresolved critical indices n≥10002. The first return lands near phase 1/7; the exact renewal adapted from Agent50's rational block lemma has successive phase denominator 7-valuations 1,3,5,7,..., so no phase can vanish. Uniform error and clock bounds prove safety of any fixed number of n-step blocks as n grows. Exact constants and independent trajectory regressions are in [renewal_check.py](renewal_check.py). This is a paper theorem with a source-checked return adapter; it does not exclude superlinear costs or settle P1.
+Set v=(d−1)/2. For root b0+10=2Q, each inverse history has b+2v+2m+8=2Q. A legal forward gap of length k has p+(Q−m)=2^k v', p+8+m≤Q, v'≥2, v'+4+m+k≤Q. These are the Gap constructors. InverseAt_iff_power_mass gives the source-to-gap direction; conversely t=k−1, c=2v'−3, s=Q−(m+k)−v'−2 reconstruct the original source step including b mod 4, size, and exact mass. The reverse unit path runs from shifted right coordinate v at clock Q−m to 1 at clock Q. For right-five v=2, prepend the initial step 1→2. First return and wrap guards are exact.
 
-## Finite integer renewal formalization
+## Renewal method
 
-The rational series in the paper proof can be eliminated. Write M=2^L−1 for a period of doubling modulo odd D, and h(p)=Σ_(0≤j<L) 2^(L−j) (2^j p mod D). The exact finite identities h(2p mod D)+2Mp=2h(p) and h(p)≡Lp (mod D) control the early matched wraps and the next phase numerator. The late block uses an integer lattice gap, so no assumptions on the later wrap word are needed.
+After n+3 steps of a proposed short first return (length k), the clock/residue pair is (7P−k,P+k), near phase 1/7. With M=2^L−1 for a period of doubling modulo odd D, define the finite weighted cycle
 
-- [RenewalCore.lean](RenewalCore.lean), [RenewalShadow.lean](RenewalShadow.lean), [RenewalLate.lean](RenewalLate.lean): finite periodic phase, early exact invariant, late error and grid separation.
-- [RenewalBlock.lean](RenewalBlock.lean): generic renewal and nonzero normalized next phase.
-- [RenewalNumeric.lean](RenewalNumeric.lean), [RenewalScales.lean](RenewalScales.lean): explicit denominator certificates and dyadic margins for every n≥8000.
-- [RenewalFourN.lean](RenewalFourN.lean): composition of the three blocks, no return for 0<k≤4n+3.
-- [RenewalSource.lean](RenewalSource.lean): original OddCone cost floor m>4n+2. Full source closure pending.
+    H(p) = Σ_(0≤j<L) 2^(L−j)(2^j p mod D).
 
-The local exact recurrence proofs use Lean 4.36.0-rc2 and only standard axioms. The general B result still relies on the paper denominator-growth argument.
+The identities H(2p mod D)+2Mp=2H(p) and H(p)≡Lp mod D control the early matched wraps and the next phase numerator. An integer lattice gap controls the late block without assuming its wrap word. See [RenewalCore](RenewalCore.lean), [RenewalShadow](RenewalShadow.lean), [RenewalLate](RenewalLate.lean), [RenewalBlock](RenewalBlock.lean), [RenewalNumeric](RenewalNumeric.lean), [RenewalScales](RenewalScales.lean), [RenewalFourN](RenewalFourN.lean).
 
-## Remaining mathematical target
+For arbitrary block count, start (D,G,L)=(7,1,3), U=D/(7G), M=2^L−1 and advance to (49UM,49G,49LU). The normalized D,M,L factors are 7-units; two binomial seven-adic lifts and a first-order binomial congruence prove that D' divides 2^L'−1. No prime factorization or multiplicative-order calculation is needed. A state error coefficient H at degree p updates to A(2C+2), A=2D(H+C), with clock envelope Cn. A sufficient margin is DM A(A(2C+2)+C+8)n^(2p+1)<2^n. The computable threshold is the maximum of the successive coefficient certificates, including the initial-wrap bound. See [RenewalGrid](RenewalGrid.lean), [RenewalBounds](RenewalBounds.lean), [RenewalMany](RenewalMany.lean), [RenewalUnbounded](RenewalUnbounded.lean). D3 has 7348 bits; its next full period is enormous, but its initial shadow extends the explicit 4n barrier by K(n).
 
-The recurrence is the Borwein–Loring recursion a_(t+1)=2(a_t mod t), with a_(q+j+1)=2r_j. See Borwein and Loring, *Some Questions of Erdős and Graham on Numbers of the Form sum g_n/2^g_n* (1990), and Dearden and Metzger, *Running Modulus Recursions* (2010), https://cs.uwaterloo.ca/journals/JIS/VOL13/Dearden/dearden3.pdf. Eventual hitting of zero is conjectural generally and would not preclude earlier safe return to 1. Agent 3 previously identified this family for F118. The useful P1-specific target is now the absence (or exact construction) of guarded first returns at clocks Q=7·2^n−n−3 on the critical n classes, and its connection to the remaining blank-root exit cases.
+For a small seed d and deficit s=q_ref−q with q_ref=7P, the first n steps agree with the static quotient word. Write 2^j d=R+7PU and r_j=R+E, where 0≤E≤sU. If 4(s+8)d<7P and j+2≤s, both margins remain safe. At the block boundary r_n=P(d mod 7)+E. A zero phase continues as a positive polynomial-size seed; a nonzero phase enters the renewal grid. Shifted complement z=q+2−v transports the other boundary: if both positive and the reflected orbit stays ≥2, their sum remains q+j+2, incompatible with an ordinary endpoint of 1. This is the mechanism behind the two-sided theorem.
 
-## Reproduction
+## Remaining mathematical gap
 
-Use the existing workflow `.github/workflows/agent9-p1-shadow-depth.yml`, selecting `first-return` and the desired source commit. It compiles only the exact dependency DAG and reports exported theorem axiom profiles. No new workflow is required.
+The exact champion attainment is established elsewhere. The unbounded critical P1 family and BB(6) upper bound remain open. A uniform linear cap on *authentically reachable* odd-cone costs would now exclude every sufficiently large critical index. A pointwise root carry extinction or another contradiction to the first-crossing interval would also suffice. The density-zero result alone cannot settle individual exceptional parameters. Do not extrapolate fixed-block renewal to Θ(P/n) blocks.
+
+The recurrence is the Borwein–Loring recursion a_(t+1)=2(a_t mod t), with a_(q+j+1)=2r_j. Dearden–Metzger, *Running Modulus Recursions* (2010), https://cs.uwaterloo.ca/journals/JIS/VOL13/Dearden/dearden3.pdf. Their general eventual-zero conjecture would not by itself forbid an earlier guarded return. The renewal idea is adapted from Agent50's exact reverse-unit renewal analysis.
+
+## Reproduce
+
+Dispatch `.github/workflows/agent9-p1-shadow-depth.yml` with target `first-return` and the desired source_ref. The workflow compiles the exact transitive source closure and audits exported theorem axioms. No separate workflow is needed.

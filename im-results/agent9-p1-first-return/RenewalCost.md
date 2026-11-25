@@ -4,7 +4,7 @@
 
     m > 4n+2.
 
-For n=10002 this means m≥40011. No reset-count or progression restriction is imposed. The proof is an exact paper derivation using the original-source cost/return adapter accepted in [CI 45508888563](https://github.com/FlareZ123/bb6/actions/runs/45508888563). The new rational-renewal argument itself is not yet Lean-certified. It does not exclude superlinear costs and does not decide P1 or BB(6).
+For n=10002 this means m≥40011. No reset-count or progression restriction is imposed. The proof is an exact paper derivation using the original-source cost/return adapter accepted in [CI 45508888563](https://github.com/FlareZ123/bb6/actions/runs/45508888563). The paper proof below now has an independent finite-integer formalization in RenewalSource.lean and RenewalUnboundedSource.lean, accepted in CI [45510966467](https://github.com/FlareZ123/bb6/actions/runs/45510966467) and [45512527543](https://github.com/FlareZ123/bb6/actions/runs/45512527543). The fourth prefix extension passed [45513140527](https://github.com/FlareZ123/bb6/actions/runs/45513140527). It does not exclude superlinear costs and does not decide P1 or BB(6).
 
 The renewal mechanism is adapted from Agent50's [exact reverse-unit renewal theorem](../agent50-p1-dyadic-width/reverse_unit_renewal.md), which was applied to two prepared restart progressions. Here the first return from the right-five seed itself determines a different universal initial phase; its denominator growth gives a source cost lower bound rather than a lower bound on a prepared-state local reverse prefix. The proof below supplies independent exact inequalities and an explicit 8000 threshold.
 
