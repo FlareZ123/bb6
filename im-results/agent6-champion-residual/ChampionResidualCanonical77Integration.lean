@@ -19,7 +19,7 @@ open BB6.Agent6F1OneLAIntegration
 open BB6.Agent6F1ZeroRCIntegration
 open BB6.Agent47CanonicalRefinement
 
-/-- The accepted raw114 parent differs at C/0 from the raw139 parent,
+/-- The accepted raw114 parent is a distinct, more-refined partial table,
     so its graft cannot remove the raw139 cylinder. -/
 theorem raw114_parent_not_raw139 :
     sameTable BB6.Agent47CanonicalTwoParent.p114 championResidual = false := by
