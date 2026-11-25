@@ -75,9 +75,20 @@ prov=[
 "im-results/agent1-ngram/emit_ngram.py",
 "im-results/agent13-coverage/unpack.py",
 "tools/lean_compile_closure.py"]
-checkout=[p for p in prov if p!="tools/lean_compile_closure.py"]
 subprocess.run(["git","fetch","--no-tags","--depth=1","origin",source_ref],cwd=root,check=True)
-subprocess.run(["git","checkout",source_ref,"--",*checkout],cwd=root,check=True)
+checkout=[]
+filtered=[]
+for p in prov:
+    if p=="tools/lean_compile_closure.py":
+        filtered.append(p)
+        continue
+    exists=subprocess.run(["git","cat-file","-e",f"{source_ref}:{p}"],cwd=root,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+    if exists.returncode==0:
+        filtered.append(p)
+        checkout.append(p)
+prov=filtered
+if checkout:
+    subprocess.run(["git","checkout",source_ref,"--",*checkout],cwd=root,check=True)
 cmd=[sys.executable,"tools/lean_compile_closure.py","--workdir",str(out),"--manifest",str(out/"manifest.json"),"--manifest-only","--artifact-dir",str(out),"--label","raw122-partial-audit","--theorem","BB6.Agent43Raw122.sound","--parent-table","1RB---_1RC---_0RD---_1LD1RE_---0LF_------","--weighted-bound","7014","--artifact-name","raw122-certified-root"]
 for p in prov: cmd += ["--provenance-input",p]
 cmd += [str((cut/"Raw122Data.lean").relative_to(root))]
