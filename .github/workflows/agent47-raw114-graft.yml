@@ -365,7 +365,12 @@ jobs:
               + " compiled the raw107+raw114 wrapper at Lean 4.36.0-rc2. "
               "The 76-residual dichotomy is accepted; conditional exactness "
               "still requires Covers for all 76 residuals and the attaining champion witness. "
-              "The compact wrapper artifact and full closure manifest are recorded below."
+              "The compact wrapper artifact and full closure manifest are recorded below.\n\n"
+              "Manifests: [raw107](manifests/raw107-d416.json), "
+              "[raw114](manifests/raw114-d416.json), "
+              "[canonical77](manifests/canonical77-d416.json), "
+              "[canonical76](manifests/canonical76-d416.json). "
+              "Artifact IDs, build runs, SHA-256 hashes, and expiry timestamps are recorded in the JSON."
           )
           if old not in text:
               raise SystemExit("expected draft status sentence missing from raw107 README")
