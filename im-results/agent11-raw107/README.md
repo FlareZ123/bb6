@@ -34,7 +34,18 @@ The final exceptional leaf witnesses use explicit universal recurrences or sourc
 
 The accepted raw roster bridge establishes the 123-entry residual dichotomy at 815 and at 7014, starting from the original 124 list. Its result overlaps the separate Combined106 and Canonical78 frontiers; counts must not be added.
 
-[Raw107CanonicalGraft.lean](Raw107CanonicalGraft.lean) is a new direct source draft for the current 78-representative quotient frontier. It filters only the exact table of raw107, invokes `quotientSafe` with the source-accepted parent theorem, lifts 815 to 7014, and retains every other quotient-compatible entry. Its expected count is 77. The mixed-bound interface requires the remaining Covers at target B, with an independent attaining raw witness for exactness. The abstract filter/transport proof shape was compiled locally with Lean 4.36.0-rc2; the actual full source import closure and concrete count of 77 still require acceptance. Do not replace the accepted 78-count global interface before that check passes.
+The canonical 78 roster contains raw107 and raw114 as distinct representatives. Both now have complete original-source parent bounds:
+
+- **raw107:** `Raw107ParentClosure.all_completions` proves `WeightedBound 815` for every completion of `1RB---_1RC---_0RD---_1LD1RE_---0RB_------`; source audit [45533196624](https://github.com/FlareZ123/bb6/actions/runs/45533196624) passed at proof-source head `1cea9dacc5a369bdd96a674486b642c45e7a59c4).
+- **raw114:** `BB6.Agent47Raw114Complete.raw114_all` proves `WeightedBound 7014` for every completion of `1RB---_1RC---_0RD---_1LD1RE_---0LD_------`; full source audit [45553564319](https://github.com/FlareZ123/bb6/actions/runs/45553564319) passed at pinned proof-source revision `d4164a4457e62ba7ec8e3fba6e38b251d04ffc83`.
+
+These are overlapping views of the same global frontier, not additive completion counts. The accepted raw roster bridge removes raw107 from the 124-entry list (123 remain); the canonical quotient interface is a separate 78-entry list.
+
+Agent47's [CanonicalTwoParentGraft.lean](../agent47-rooted-tnf/CanonicalTwoParentGraft.lean) defines the exact canonical parents `p107` and `p114`, proves the generic 78→77→76 roster counts, and supplies `roster76_sound` and `exact_at_target` conditional on both parent bounds and Covers for every one of the 76 retained representatives. The current [CanonicalRaw114Accepted.lean](../agent47-rooted-tnf/CanonicalRaw114Accepted.lean) wrapper instantiates raw114 alone; its graft workflow run [45554648116](https://github.com/FlareZ123/bb6/actions/runs/45554648116) does not by itself instantiate raw107.
+
+The new [CanonicalTwoParentAccepted.lean](CanonicalTwoParentAccepted.lean) instantiates raw107 by proving the finite table equality `p107 = BB6.Agent10Raw107Root.parent`, then combines the accepted raw107 bound with the raw114 wrapper. It exposes the 76-residual dichotomy and conditional exactness while retaining all 76 Covers. **This is a source-audit draft, not yet an accepted two-parent theorem.** The earlier [Raw107CanonicalGraft.lean](Raw107CanonicalGraft.lean) is retained as the historical one-parent draft and is superseded by the shared two-parent construction.
+
+There is currently no downloadable `.olean` artifact for raw107 (run 45533196624 uploaded none). The raw114 certified-root artifact is available from run 45553564319. For a reproducible combined audit, compile raw107 at the same pinned d416 source revision, compare complete shared-module source/import/compiled hashes, and reject unexplained collisions. The extended [Lean closure helper](../../tools/lean_compile_closure.py) now supports source/import/olean manifests and compatibility comparisons; its integration into the graft workflow remains pending.
 
 ## Reproduction
 
