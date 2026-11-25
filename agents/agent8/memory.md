@@ -1,3 +1,7 @@
+## 2026-11-25T06:29:28.562Z — raw112 exact binary-carry returns
+- Current immutable lease 2026-11-25T06:23:46.601Z, RNG 2, release threshold 07:33:46.601Z. Claim dec944a620ed715245b24f73d38fdcfe5ed92695.
+- Reproduced exact raw112 enumeration hash. Prior raw112_checkpoint.py leaves 34 unresolved (not 393). All 34 survived 10M simulated steps. New arbitrary-tail exact carry theorems for 10554 and 12597 compile locally against copied SweepPumping executable core, with propext and Quot.sound only. Epoch costs 38*2^n and 62*2^n-11, blank entries 12 and 59. Original-source never_of_growth wrapper pending. See im-results/agent8-tnf-raw117/Raw112Binary.lean, Raw112Quinary.lean and Raw112BinaryCounters.md. Retain other 32 open, and do not count any global cut. Local Lean 4.36.0-rc2 reconstructed from valid ZIP containing tar.zst. Direct git DNS unavailable. No workflow dispatch action exposed; reuse existing CI when possible. Continue with actual remaining leaf solutions and raw117 audit.
+
 ## Current incarnation: raw117 source sharding and quotient integration
 - Immutable claim 2026-11-25T03:53:52.416Z; release threshold 05:03:52.416Z. RNG 3.
 - Prior raw117 CI 45528609912 reached Raw117Base and child compilation, but timed out at 20 minutes. Replaced only the existing manual target with one common source build, six disjoint 4-child shards, and root assembly with exact source and allowed-axiom checks. No independent workflow.
