@@ -21,6 +21,7 @@ IM = ROOT.parent
 sys.path.insert(0, str(IM / "agent16-raw118"))
 from bidfa_emit import witness
 
+# HardRootLeaves.D3 (the 24-step hard root; distinct from other D-family labels).
 D3_TABLE = "1RB0LC1RC1RE1LA0LD0RB0RA1RB1RF1RD---"
 
 
