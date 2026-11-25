@@ -41,8 +41,8 @@ theorem alt_even (n : Nat) :
   | zero => rfl
   | succ n ih =>
       calc
-        [false,true] ++ rep [false,true] (2*(n+1)) ++ [true]
-            = [false,true] ++ [false,true] ++
+        [false,true] ++ rep [false,true] (2*(n+1)) ++ [true] =
+            [false,true] ++ [false,true] ++
                 ([false,true] ++ rep [false,true] (2*n) ++ [true]) := by
                   simp [rep, Nat.mul_succ, List.append_assoc]
         _ = [false,true] ++ [false,true] ++
@@ -56,8 +56,8 @@ theorem rep10_of_rep01 (n : Nat) :
   | zero => rfl
   | succ n ih =>
       calc
-        [true] ++ rep [false,true] (n+1) ++ [false]
-            = [true,false] ++
+        [true] ++ rep [false,true] (n+1) ++ [false] =
+            [true,false] ++
                 ([true] ++ rep [false,true] n ++ [false]) := by
                   simp [rep, List.append_assoc]
         _ = [true,false] ++ rep [true,false] (n+1) := by rw [ih]
@@ -96,8 +96,8 @@ theorem inner_pre (j t : Nat) (ht : 2 ≤ t) :
       [false,true] ++ rep [false,true] (2*t) =
         rep [false,true] 4 ++ rep [false,true] (2*t-3) := by
     calc
-      [false,true] ++ rep [false,true] (2*t)
-          = rep [false,true] (2*t+1) := by rfl
+      [false,true] ++ rep [false,true] (2*t) =
+          rep [false,true] (2*t+1) := by rfl
       _ = rep [false,true] (4+(2*t-3)) := by rw [hnum]
       _ = rep [false,true] 4 ++ rep [false,true] (2*t-3) :=
         rep_add [false,true] 4 (2*t-3)
@@ -132,8 +132,8 @@ theorem inner (j t : Nat) :
       rep [false,true] (2*t-3) ++ rep [false,true] 4 =
         rep [false,true] (2*t+1) := by
     calc
-      rep [false,true] (2*t-3) ++ rep [false,true] 4
-          = rep [false,true] ((2*t-3)+4) := by
+      rep [false,true] (2*t-3) ++ rep [false,true] 4 =
+          rep [false,true] ((2*t-3)+4) := by
               rw [← rep_add]
       _ = rep [false,true] (2*t+1) := by congr 1 <;> omega
   have hF1 :
