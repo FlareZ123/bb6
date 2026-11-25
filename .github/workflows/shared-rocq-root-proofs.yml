@@ -31,6 +31,12 @@ on:
           - enumerate62-held-farv3-pilot
           - enumerate62-held-checkpoint-membership
           - enumerate62-held-checkpoint-consumption
+          - enumerate62-q2800-shard01
+          - enumerate62-q2800-shard02
+          - enumerate62-q2800-shard03
+          - enumerate62-q2800-shard04
+          - enumerate62-q2800-shard05
+          - enumerate62-q2800-assemble
           - enumerate62-source-first-hole
           - enumerate62-q32-decider-tree
           - enumerate62-source-first-hole-side
@@ -63,6 +69,11 @@ on:
         required: false
         type: string
         default: '34:16:64,4096:16:64,8192:16:64,12000:16:64'
+      q2800_shard_runs:
+        description: 'Five q2800 shard workflow run IDs, comma-separated in shard order 01..05'
+        required: false
+        type: string
+        default: ''
 permissions:
   contents: read
   actions: read
@@ -86,7 +97,7 @@ jobs:
           path: original
           persist-credentials: false
       - name: Checkout research repository proof artifact
-        if: inputs.target == 'enumerate62-decider-sound' || inputs.target == 'enumerate62-q0-partition' || inputs.target == 'enumerate62-adaptive-checkpoint' || inputs.target == 'enumerate62-adaptive-expansion' || inputs.target == 'enumerate62-packed-chunk' || inputs.target == 'enumerate62-packed-batch' || inputs.target == 'enumerate62-resume-chunk2' || inputs.target == 'enumerate62-resume-last20' || inputs.target == 'enumerate62-last20-witness' || inputs.target == 'enumerate62-weighted-source' || inputs.target == 'enumerate62-source-roster' || inputs.target == 'enumerate62-source-first-hole' || inputs.target == 'enumerate62-source-first-hole-side' || inputs.target == 'enumerate62-q32-decider-tree' || inputs.target == 'enumerate62-s4-gap-side-search' || inputs.target == 'enumerate62-q32-canonical-parent' || inputs.target == 'enumerate62-zero-delay' || inputs.target == 'enumerate62-recovered-batch-witnesses' || inputs.target == 'enumerate62-held-farv3-pilot' || inputs.target == 'enumerate62-held-checkpoint-membership' || inputs.target == 'enumerate62-held-checkpoint-consumption' || inputs.target == 'enumerate62-held-far-batch' || inputs.target == 'enumerate62-phase-mitm' || inputs.target == 'enumerate62-phase-consume' || inputs.target == 'enumerate62-fast-resume' || inputs.target == 'enumerate62-prefix-drain' || inputs.target == 'enumerate62-fast-held-discharge'
+        if: inputs.target == 'enumerate62-decider-sound' || inputs.target == 'enumerate62-q0-partition' || inputs.target == 'enumerate62-adaptive-checkpoint' || inputs.target == 'enumerate62-adaptive-expansion' || inputs.target == 'enumerate62-packed-chunk' || inputs.target == 'enumerate62-packed-batch' || inputs.target == 'enumerate62-resume-chunk2' || inputs.target == 'enumerate62-resume-last20' || inputs.target == 'enumerate62-last20-witness' || inputs.target == 'enumerate62-weighted-source' || inputs.target == 'enumerate62-source-roster' || inputs.target == 'enumerate62-source-first-hole' || inputs.target == 'enumerate62-source-first-hole-side' || inputs.target == 'enumerate62-q32-decider-tree' || inputs.target == 'enumerate62-s4-gap-side-search' || inputs.target == 'enumerate62-q32-canonical-parent' || inputs.target == 'enumerate62-zero-delay' || inputs.target == 'enumerate62-recovered-batch-witnesses' || inputs.target == 'enumerate62-held-farv3-pilot' || inputs.target == 'enumerate62-held-checkpoint-membership' || inputs.target == 'enumerate62-held-checkpoint-consumption' || inputs.target == 'enumerate62-held-far-batch' || inputs.target == 'enumerate62-phase-mitm' || inputs.target == 'enumerate62-phase-consume' || inputs.target == 'enumerate62-fast-resume' || inputs.target == 'enumerate62-prefix-drain' || inputs.target == 'enumerate62-fast-held-discharge' || inputs.target == 'enumerate62-q2800-shard01' || inputs.target == 'enumerate62-q2800-shard02' || inputs.target == 'enumerate62-q2800-shard03' || inputs.target == 'enumerate62-q2800-shard04' || inputs.target == 'enumerate62-q2800-shard05' || inputs.target == 'enumerate62-q2800-assemble'
         uses: actions/checkout@v4
         with:
           repository: FlareZ123/bb6
@@ -98,7 +109,7 @@ jobs:
         run: |
           cp "$GITHUB_WORKSPACE/research/im-results/agent5-weighted-tnf-queue/Agent5Enumerate62DeciderSound.v" original/verify/
       - name: Add source q0 partition theorem
-        if: inputs.target == 'enumerate62-q0-partition' || inputs.target == 'enumerate62-held-farv3-pilot' || inputs.target == 'enumerate62-held-checkpoint-consumption' || inputs.target == 'enumerate62-held-far-batch' || inputs.target == 'enumerate62-phase-consume' || inputs.target == 'enumerate62-fast-resume' || inputs.target == 'enumerate62-prefix-drain' || inputs.target == 'enumerate62-fast-held-discharge'
+        if: inputs.target == 'enumerate62-q0-partition' || inputs.target == 'enumerate62-held-farv3-pilot' || inputs.target == 'enumerate62-held-checkpoint-consumption' || inputs.target == 'enumerate62-held-far-batch' || inputs.target == 'enumerate62-phase-consume' || inputs.target == 'enumerate62-fast-resume' || inputs.target == 'enumerate62-prefix-drain' || inputs.target == 'enumerate62-fast-held-discharge' || inputs.target == 'enumerate62-q2800-shard01' || inputs.target == 'enumerate62-q2800-shard02' || inputs.target == 'enumerate62-q2800-shard03' || inputs.target == 'enumerate62-q2800-shard04' || inputs.target == 'enumerate62-q2800-shard05' || inputs.target == 'enumerate62-q2800-assemble'
         run: |
           cp "$GITHUB_WORKSPACE/research/im-results/agent32-source-queue/Agent32Q0Partition.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent32-source-queue/Agent32SourceDrain.v" original/verify/
@@ -107,7 +118,7 @@ jobs:
           cp "$GITHUB_WORKSPACE/research/im-results/agent32-source-queue/Agent32SourceEncoding.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent8-adaptive-source-plan/Agent8AdaptiveSource.v" original/verify/
       - name: Add independent adaptive checkpoint proof and pilot
-        if: inputs.target == 'enumerate62-adaptive-checkpoint' || inputs.target == 'enumerate62-adaptive-expansion' || inputs.target == 'enumerate62-packed-chunk' || inputs.target == 'enumerate62-packed-batch' || inputs.target == 'enumerate62-resume-chunk2' || inputs.target == 'enumerate62-resume-last20' || inputs.target == 'enumerate62-last20-witness' || inputs.target == 'enumerate62-weighted-source' || inputs.target == 'enumerate62-source-roster' || inputs.target == 'enumerate62-source-first-hole' || inputs.target == 'enumerate62-source-first-hole-side' || inputs.target == 'enumerate62-q32-decider-tree' || inputs.target == 'enumerate62-s4-gap-side-search' || inputs.target == 'enumerate62-q32-canonical-parent' || inputs.target == 'enumerate62-recovered-batch-witnesses' || inputs.target == 'enumerate62-held-farv3-pilot' || inputs.target == 'enumerate62-held-checkpoint-membership' || inputs.target == 'enumerate62-held-checkpoint-consumption' || inputs.target == 'enumerate62-held-far-batch' || inputs.target == 'enumerate62-phase-consume' || inputs.target == 'enumerate62-fast-resume' || inputs.target == 'enumerate62-prefix-drain' || inputs.target == 'enumerate62-fast-held-discharge'
+        if: inputs.target == 'enumerate62-adaptive-checkpoint' || inputs.target == 'enumerate62-adaptive-expansion' || inputs.target == 'enumerate62-packed-chunk' || inputs.target == 'enumerate62-packed-batch' || inputs.target == 'enumerate62-resume-chunk2' || inputs.target == 'enumerate62-resume-last20' || inputs.target == 'enumerate62-last20-witness' || inputs.target == 'enumerate62-weighted-source' || inputs.target == 'enumerate62-source-roster' || inputs.target == 'enumerate62-source-first-hole' || inputs.target == 'enumerate62-source-first-hole-side' || inputs.target == 'enumerate62-q32-decider-tree' || inputs.target == 'enumerate62-s4-gap-side-search' || inputs.target == 'enumerate62-q32-canonical-parent' || inputs.target == 'enumerate62-recovered-batch-witnesses' || inputs.target == 'enumerate62-held-farv3-pilot' || inputs.target == 'enumerate62-held-checkpoint-membership' || inputs.target == 'enumerate62-held-checkpoint-consumption' || inputs.target == 'enumerate62-held-far-batch' || inputs.target == 'enumerate62-phase-consume' || inputs.target == 'enumerate62-fast-resume' || inputs.target == 'enumerate62-prefix-drain' || inputs.target == 'enumerate62-fast-held-discharge' || inputs.target == 'enumerate62-q2800-assemble'
         run: |
           cp "$GITHUB_WORKSPACE/research/im-results/agent32-source-queue/Agent32SourceBackwards.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent32-source-queue/Agent32SourceEncoding.v" original/verify/
@@ -134,19 +145,32 @@ jobs:
         run: |
           cp "$GITHUB_WORKSPACE/research/im-results/agent5-weighted-tnf-queue/Agent5Last20Witness.v" original/verify/
       - name: Add exact source zero-delay checker
-        if: inputs.target == 'enumerate62-zero-delay' || inputs.target == 'enumerate62-weighted-source' || inputs.target == 'enumerate62-source-roster' || inputs.target == 'enumerate62-source-first-hole' || inputs.target == 'enumerate62-source-first-hole-side' || inputs.target == 'enumerate62-q32-decider-tree' || inputs.target == 'enumerate62-s4-gap-side-search' || inputs.target == 'enumerate62-recovered-batch-witnesses' || inputs.target == 'enumerate62-held-farv3-pilot' || inputs.target == 'enumerate62-held-checkpoint-membership' || inputs.target == 'enumerate62-held-checkpoint-consumption' || inputs.target == 'enumerate62-held-far-batch' || inputs.target == 'enumerate62-phase-consume' || inputs.target == 'enumerate62-fast-resume' || inputs.target == 'enumerate62-prefix-drain' || inputs.target == 'enumerate62-fast-held-discharge'
+        if: inputs.target == 'enumerate62-zero-delay' || inputs.target == 'enumerate62-weighted-source' || inputs.target == 'enumerate62-source-roster' || inputs.target == 'enumerate62-source-first-hole' || inputs.target == 'enumerate62-source-first-hole-side' || inputs.target == 'enumerate62-q32-decider-tree' || inputs.target == 'enumerate62-s4-gap-side-search' || inputs.target == 'enumerate62-recovered-batch-witnesses' || inputs.target == 'enumerate62-held-farv3-pilot' || inputs.target == 'enumerate62-held-checkpoint-membership' || inputs.target == 'enumerate62-held-checkpoint-consumption' || inputs.target == 'enumerate62-held-far-batch' || inputs.target == 'enumerate62-phase-consume' || inputs.target == 'enumerate62-fast-resume' || inputs.target == 'enumerate62-prefix-drain' || inputs.target == 'enumerate62-fast-held-discharge' || inputs.target == 'enumerate62-q2800-shard01' || inputs.target == 'enumerate62-q2800-shard02' || inputs.target == 'enumerate62-q2800-shard03' || inputs.target == 'enumerate62-q2800-shard04' || inputs.target == 'enumerate62-q2800-shard05' || inputs.target == 'enumerate62-q2800-assemble'
         run: |
           cp "$GITHUB_WORKSPACE/research/im-results/agent8-adaptive-source-plan/Agent8ZeroDelay.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent8-adaptive-source-plan/Agent8ExactLeaf.v" original/verify/
       - name: Add direct weighted source proof
-        if: inputs.target == 'enumerate62-weighted-source' || inputs.target == 'enumerate62-source-roster' || inputs.target == 'enumerate62-source-first-hole' || inputs.target == 'enumerate62-source-first-hole-side' || inputs.target == 'enumerate62-q32-decider-tree' || inputs.target == 'enumerate62-s4-gap-side-search' || inputs.target == 'enumerate62-recovered-batch-witnesses' || inputs.target == 'enumerate62-held-farv3-pilot' || inputs.target == 'enumerate62-held-checkpoint-membership' || inputs.target == 'enumerate62-held-checkpoint-consumption' || inputs.target == 'enumerate62-held-far-batch' || inputs.target == 'enumerate62-phase-consume' || inputs.target == 'enumerate62-fast-resume' || inputs.target == 'enumerate62-prefix-drain' || inputs.target == 'enumerate62-fast-held-discharge'
+        if: inputs.target == 'enumerate62-weighted-source' || inputs.target == 'enumerate62-source-roster' || inputs.target == 'enumerate62-source-first-hole' || inputs.target == 'enumerate62-source-first-hole-side' || inputs.target == 'enumerate62-q32-decider-tree' || inputs.target == 'enumerate62-s4-gap-side-search' || inputs.target == 'enumerate62-recovered-batch-witnesses' || inputs.target == 'enumerate62-held-farv3-pilot' || inputs.target == 'enumerate62-held-checkpoint-membership' || inputs.target == 'enumerate62-held-checkpoint-consumption' || inputs.target == 'enumerate62-held-far-batch' || inputs.target == 'enumerate62-phase-consume' || inputs.target == 'enumerate62-fast-resume' || inputs.target == 'enumerate62-prefix-drain' || inputs.target == 'enumerate62-fast-held-discharge' || inputs.target == 'enumerate62-q2800-shard01' || inputs.target == 'enumerate62-q2800-shard02' || inputs.target == 'enumerate62-q2800-shard03' || inputs.target == 'enumerate62-q2800-shard04' || inputs.target == 'enumerate62-q2800-shard05' || inputs.target == 'enumerate62-q2800-assemble'
         run: |
           cp "$GITHUB_WORKSPACE/research/im-results/agent8-adaptive-source-plan/Agent8SourceWF.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent8-adaptive-source-plan/Agent8WeightedSource.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent8-adaptive-source-plan/Agent8GlobalSource.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent5-weighted-tnf-queue/Agent5Enumerate62DeciderSound.v" original/verify/
+      - name: Add q2800 source-tree shard modules
+        if: startsWith(inputs.target, 'enumerate62-q2800-shard')
+        run: |
+          cp "$GITHUB_WORKSPACE/research/im-results/agent50-weighted-tnf-pilot/SourceResidualRoster.v" original/verify/
+          cp "$GITHUB_WORKSPACE/research/im-results/agent47-rooted-tnf/Agent47SourceWitness.v" original/verify/
+          cp "$GITHUB_WORKSPACE/research/im-results/agent47-rooted-tnf/Agent47SourceTree.v" original/verify/
+          cp "$GITHUB_WORKSPACE/research/im-results/agent42-source-certificate-ingestion/Agent42Q2800BatchData.v" original/verify/
+          cp "$GITHUB_WORKSPACE/research/im-results/agent42-source-certificate-ingestion/Agent42Q2800BatchShard01.v" original/verify/
+          cp "$GITHUB_WORKSPACE/research/im-results/agent42-source-certificate-ingestion/Agent42Q2800BatchShard02.v" original/verify/
+          cp "$GITHUB_WORKSPACE/research/im-results/agent42-source-certificate-ingestion/Agent42Q2800BatchShard03.v" original/verify/
+          cp "$GITHUB_WORKSPACE/research/im-results/agent42-source-certificate-ingestion/Agent42Q2800BatchShard04.v" original/verify/
+          cp "$GITHUB_WORKSPACE/research/im-results/agent42-source-certificate-ingestion/Agent42Q2800BatchShard05.v" original/verify/
+
       - name: Generate exact q_i(2800,100) packed source checkpoint
-        if: inputs.target == 'enumerate62-held-farv3-pilot' || inputs.target == 'enumerate62-held-checkpoint-membership' || inputs.target == 'enumerate62-held-checkpoint-consumption'
+        if: inputs.target == 'enumerate62-held-farv3-pilot' || inputs.target == 'enumerate62-held-checkpoint-membership' || inputs.target == 'enumerate62-held-checkpoint-consumption' || inputs.target == 'enumerate62-q2800-assemble'
         working-directory: original/verify
         env:
           BATCH_RANGES: 2800:100:1000000
@@ -158,7 +182,7 @@ jobs:
           test -s Agent8Batch_2800_100_1000000.vo
 
       - name: Add independently scheduled source chunk coverage
-        if: inputs.target == 'enumerate62-held-farv3-pilot' || inputs.target == 'enumerate62-weighted-source' || inputs.target == 'enumerate62-held-checkpoint-consumption' || inputs.target == 'enumerate62-held-far-batch' || inputs.target == 'enumerate62-phase-consume' || inputs.target == 'enumerate62-fast-resume' || inputs.target == 'enumerate62-prefix-drain' || inputs.target == 'enumerate62-fast-held-discharge'
+        if: inputs.target == 'enumerate62-held-farv3-pilot' || inputs.target == 'enumerate62-weighted-source' || inputs.target == 'enumerate62-held-checkpoint-consumption' || inputs.target == 'enumerate62-held-far-batch' || inputs.target == 'enumerate62-phase-consume' || inputs.target == 'enumerate62-fast-resume' || inputs.target == 'enumerate62-prefix-drain' || inputs.target == 'enumerate62-fast-held-discharge' || inputs.target == 'enumerate62-q2800-assemble'
         run: |
           cp "$GITHUB_WORKSPACE/research/im-results/agent32-source-queue/Agent32Q0Partition.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent5-weighted-tnf-queue/Agent5ChunkCoverage.v" original/verify/
@@ -208,7 +232,7 @@ jobs:
           cp "$GITHUB_WORKSPACE/research/im-results/agent5-weighted-tnf-queue/Agent5RecoveredHeld.v" original/verify/
           node "$GITHUB_WORKSPACE/research/im-results/agent5-weighted-tnf-queue/recover-batch-witnesses.cjs" recovered-batches original/verify/Agent5RecoveredBatchWitnesses.v
       - name: Add isolated FARv3 held-leaf cross-route proof
-        if: inputs.target == 'enumerate62-held-farv3-pilot' || inputs.target == 'enumerate62-held-checkpoint-membership' || inputs.target == 'enumerate62-held-checkpoint-consumption'
+        if: inputs.target == 'enumerate62-held-farv3-pilot' || inputs.target == 'enumerate62-held-checkpoint-membership' || inputs.target == 'enumerate62-held-checkpoint-consumption' || inputs.target == 'enumerate62-q2800-assemble'
         run: |
           cp "$GITHUB_WORKSPACE/research/im-results/agent50-weighted-tnf-pilot/SourceResidualRoster.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent5-weighted-tnf-queue/Agent5RecoveredHeld.v" original/verify/
@@ -250,6 +274,45 @@ jobs:
         working-directory: original/verify
         run: |
           coq_makefile -Q . BusyCoq -native-compiler no -o Makefile.coq *.v
+      - name: Rebuild common q2800 shard dependency closure
+        if: inputs.target == 'enumerate62-q2800-assemble'
+        working-directory: original/verify
+        run: |
+          set -euo pipefail
+          make -f Makefile.coq -j 2 Agent42Q2800BatchData.vo
+
+      - name: Download and identity-check q2800 shard proofs
+        if: inputs.target == 'enumerate62-q2800-assemble'
+        working-directory: original/verify
+        env:
+          GH_TOKEN: ${{ github.token }}
+          Q2800_SHARD_RUNS: ${{ inputs.q2800_shard_runs }}
+        run: |
+          set -euo pipefail
+          IFS=, read -r -a runs <<< "$Q2800_SHARD_RUNS"
+          if [ "${#runs[@]}" -ne 5 ]; then
+            echo "q2800_shard_runs must list exactly five run IDs in shard order 01..05" >&2
+            exit 2
+          fi
+          mkdir -p "$GITHUB_WORKSPACE/q2800-shard-artifacts"
+          for index in 1 2 3 4 5; do
+            shard=$(printf '%02d' "$index")
+            run_id="${runs[$((index-1))]}"
+            [[ "$run_id" =~ ^[0-9]+$ ]]
+            gh run download "$run_id" --repo FlareZ123/bb6 \
+              --name "q2800-shard-$shard" \
+              --dir "$GITHUB_WORKSPACE/q2800-shard-artifacts/$shard"
+          done
+          COQC_VERSION="$(coqc --version | head -n 1)"
+          COQC_BINARY_SHA256="$(sha256sum "$(command -v coqc)" | cut -d' ' -f1)"
+          python3 "$GITHUB_WORKSPACE/research/im-results/agent42-source-certificate-ingestion/q2800_shards.py" merge \
+            --verify-dir "$GITHUB_WORKSPACE/original/verify" \
+            --artifacts-root "$GITHUB_WORKSPACE/q2800-shard-artifacts" \
+            --expected-runs "$Q2800_SHARD_RUNS" \
+            --source-commit "$GITHUB_SHA" \
+            --coqc-version "$COQC_VERSION" \
+            --coqc-binary-sha256 "$COQC_BINARY_SHA256"
+
       - name: Compile requested original theorem source
         if: inputs.target != 'enumerate62-chunk-probe-native'
         working-directory: original/verify
@@ -280,6 +343,12 @@ jobs:
             enumerate62-prefix-drain) make -f Makefile.coq -j 2 Agent8WeightedSource.vo Agent8PackedRoot.vo ;;
             enumerate62-phase-mitm) make -f Makefile.coq -j 2 CTL62.vo ;;
             enumerate62-held-far-batch) make -f Makefile.coq -j 2 Agent5HeldFARBatch.vo ;;
+            enumerate62-q2800-shard01) make -f Makefile.coq -j 2 Agent42Q2800BatchShard01.vo ;;
+            enumerate62-q2800-shard02) make -f Makefile.coq -j 2 Agent42Q2800BatchShard02.vo ;;
+            enumerate62-q2800-shard03) make -f Makefile.coq -j 2 Agent42Q2800BatchShard03.vo ;;
+            enumerate62-q2800-shard04) make -f Makefile.coq -j 2 Agent42Q2800BatchShard04.vo ;;
+            enumerate62-q2800-shard05) make -f Makefile.coq -j 2 Agent42Q2800BatchShard05.vo ;;
+            enumerate62-q2800-assemble) make -f Makefile.coq -j 2 Agent13CrossRouteHeldLeaf.vo Agent42HeldCheckpointMembership.vo Agent42Q2800BatchWitnesses.vo Agent42Q2800GlobalUpper.vo ;;
             enumerate62-held-farv3-pilot) make -f Makefile.coq -j 2 Agent13CrossRouteHeldLeaf.vo Agent42HeldCheckpointMembership.vo Agent42Q2800BatchWitnesses.vo Agent42Q2800GlobalUpper.vo ;;
             enumerate62-held-checkpoint-membership) make -f Makefile.coq -j 2 Agent42HeldCheckpointMembership.vo ;;
             enumerate62-held-checkpoint-consumption) make -f Makefile.coq -j 2 Agent14HeldQueueConsumption.vo ;;
@@ -289,6 +358,44 @@ jobs:
             enumerate62-q32-decider-tree) make -f Makefile.coq -j 2 Agent47SourceSweep.vo && make -f Makefile.coq -j 2 Agent47SourceChunk2.vo Agent47SourceTree.vo Agent44Q32CanonicalParent.vo && make -f Makefile.coq -j 2 Agent44Q32DeciderTree.vo ;;
             enumerate62-s4-gap-side-search) make -f Makefile.coq -j 2 Agent47SourceWitness.vo Agent44S4GapSideSearch.vo ;;
           esac
+      - name: Package q2800 shard with dependency manifest
+        id: q2800_shard
+        if: startsWith(inputs.target, 'enumerate62-q2800-shard')
+        working-directory: original/verify
+        env:
+          PROOF_TARGET: ${{ inputs.target }}
+        run: |
+          set -euo pipefail
+          case "$PROOF_TARGET" in
+            enumerate62-q2800-shard01) SHARD=01 ;;
+            enumerate62-q2800-shard02) SHARD=02 ;;
+            enumerate62-q2800-shard03) SHARD=03 ;;
+            enumerate62-q2800-shard04) SHARD=04 ;;
+            enumerate62-q2800-shard05) SHARD=05 ;;
+            *) echo "invalid q2800 shard target" >&2; exit 2 ;;
+          esac
+          COQC_VERSION="$(coqc --version | head -n 1)"
+          COQC_BINARY_SHA256="$(sha256sum "$(command -v coqc)" | cut -d' ' -f1)"
+          python3 "$GITHUB_WORKSPACE/research/im-results/agent42-source-certificate-ingestion/q2800_shards.py" pack \
+            --verify-dir "$GITHUB_WORKSPACE/original/verify" \
+            --out-dir "$GITHUB_WORKSPACE/q2800-shard-artifact" \
+            --shard "$SHARD" \
+            --source-commit "$GITHUB_SHA" \
+            --upstream-revision 33209bc7dc282b38c8cd6be507bfc551fea56108 \
+            --coqc-version "$COQC_VERSION" \
+            --coqc-binary-sha256 "$COQC_BINARY_SHA256" \
+            --run-id "$GITHUB_RUN_ID"
+          echo "shard=$SHARD" >> "$GITHUB_OUTPUT"
+
+      - name: Preserve q2800 shard proof artifact
+        if: startsWith(inputs.target, 'enumerate62-q2800-shard')
+        uses: actions/upload-artifact@v4
+        with:
+          name: q2800-shard-${{ steps.q2800_shard.outputs.shard }}
+          path: q2800-shard-artifact/
+          if-no-files-found: error
+          retention-days: 90
+
       - name: Preserve recovered source witness proof
         if: inputs.target == 'enumerate62-recovered-batch-witnesses'
         uses: actions/upload-artifact@v4
@@ -321,7 +428,7 @@ jobs:
           fi
 
       - name: Print isolated held-leaf assumptions
-        if: inputs.target == 'enumerate62-held-farv3-pilot'
+        if: inputs.target == 'enumerate62-held-farv3-pilot' || inputs.target == 'enumerate62-q2800-assemble'
         working-directory: original/verify
         run: |
           printf '%s\n' 'From BusyCoq Require Import Agent13CrossRouteHeldLeaf Agent42HeldCheckpointMembership Agent42Q2800BatchWitnesses Agent42Q2800GlobalUpper.' 'Print Assumptions recovered_held_2800_child_of_first_one_root.' 'Print Assumptions recovered_held_2800_safe_for_all_bounds.' 'Print Assumptions recovered_held_2800_checkpoint_exact.' 'Print Assumptions recovered_held_2800_checkpoint_member.' 'Print Assumptions recovered_held_2800_adaptive_obligation.' 'Print Assumptions q2800_trees_checked.' 'Print Assumptions q2800_tree_roster_safe.' 'Print Assumptions q2800_residual_count.' 'Print Assumptions q2800_adaptive_obligations_safe_iff_residual.' 'Print Assumptions actual_source_chunks_packed_global_upper_after_q2800_roster.' 'Print Assumptions q2800_held_attempt_passes.' 'Print Assumptions recovered_held_2800_in_held_certified_roster.' 'Print Assumptions q2800_held_leaf_checkpoint_and_agent5_roster.' 'Print Assumptions q2800_augmented_roster_safe.' 'Print Assumptions actual_source_chunks_packed_global_upper_after_q2800_augmented_roster.' > Agent13CrossRouteHeldAudit.v
@@ -329,7 +436,7 @@ jobs:
 
 
       - name: Print exact held checkpoint membership assumptions
-        if: inputs.target == 'enumerate62-held-checkpoint-membership' || inputs.target == 'enumerate62-held-checkpoint-consumption'
+        if: inputs.target == 'enumerate62-held-checkpoint-membership' || inputs.target == 'enumerate62-held-checkpoint-consumption' || inputs.target == 'enumerate62-q2800-assemble'
         working-directory: original/verify
         run: |
           printf '%s\n' 'From BusyCoq Require Import Agent42HeldCheckpointMembership.' 'Print Assumptions recovered_held_2800_refines_parent.' 'Print Assumptions recovered_held_2800_parent_leaf_partition.' 'Print Assumptions recovered_held_2800_checkpoint_exact.' 'Print Assumptions recovered_held_2800_checkpoint_member.' 'Print Assumptions recovered_held_2800_checkpoint_leaf.' 'Print Assumptions recovered_held_2800_checkpoint_leaf_safe.' 'Print Assumptions recovered_held_2800_adaptive_obligation.' > Agent42HeldCheckpointAudit.v
@@ -779,3 +886,20 @@ jobs:
           Time Eval vm_compute in (decide_nonhalt held (RWL_mod 1001 1000 100000 5 320 2 2 8 0)).
           COQ
           timeout 1200s coqc -Q . BusyCoq -native-compiler no Agent47HeldProbe.v
+      - name: Preserve assembled q2800 source-queue proof
+        if: inputs.target == 'enumerate62-q2800-assemble'
+        uses: actions/upload-artifact@v4
+        with:
+          name: q2800-assembled-proof
+          path: |
+            original/verify/q2800-shard-merged-manifest.json
+            original/verify/Agent13CrossRouteHeldLeaf.v
+            original/verify/Agent13CrossRouteHeldLeaf.vo
+            original/verify/Agent42HeldCheckpointMembership.v
+            original/verify/Agent42HeldCheckpointMembership.vo
+            original/verify/Agent42Q2800BatchWitnesses.v
+            original/verify/Agent42Q2800BatchWitnesses.vo
+            original/verify/Agent42Q2800GlobalUpper.v
+            original/verify/Agent42Q2800GlobalUpper.vo
+          if-no-files-found: error
+          retention-days: 90
