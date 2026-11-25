@@ -1,4 +1,5 @@
 import CryptidsTapeAdapter
+import Mathlib.Tactic
 import BusyBeaver.Bridge
 import BusyBeaver.Calculi.CtlCertificate
 import BusyBeaver.BB6.NonHalt.M_1RB0RC_1LC1RD_1RA1LE_1LA0RD_0LE1RF_1LBHHH
