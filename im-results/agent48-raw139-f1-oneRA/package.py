@@ -12,12 +12,20 @@ def rows(xs,b):
     return f'⟨{vec([pack([v+1 for v in x],b) for x in xs],b*k,8)},{b},{k}⟩'
 def bl(x): return str(bool(x)).lower()
 def slot(s): return f'({s//2},{bl(s%2)})'
+def split_valid_source(s,d,ns):
+    if d<10:return s.replace('by decide','by decide +kernel')
+    old='theorem valid : cert.Valid machine := ⟨by decide,by decide,by decide⟩'
+    rows='\n'.join(f'theorem row_{l} : cert.rowsAt machine ({l} : Fin {d}) = true := by decide +kernel' for l in range(d))
+    proof=rows+f'\ntheorem rows_valid : cert.rowsCheck machine = true := by\n  unfold {ns}.Data.rowsCheck\n  rw [show List.finRange {d} = ({list(range(d))} : List (Fin {d})) by decide]\n  simp ['+', '.join(f'row_{l}' for l in range(d))+']\n'
+    proof+='theorem valid : cert.Valid machine := ⟨by decide +kernel,by decide +kernel,rows_valid⟩'
+    return s.replace(old,proof).replace('(by decide)','(by decide +kernel)')
+
 def block_source(i,t,c):
     ns='BB6BlockFAR2' if c['width']==2 else 'BB6BlockFAR'
     d,n=c['left_states'],c['right_nodes']; b=max(d,n).bit_length()
     pb=(2**c['width']*d).bit_length()
     moves=', '.join('none' if m is None else f'some ⟨{bl(m[0])},{bl(m[1])},{m[2]}⟩' for m in c['moves'])
-    return f"""namespace BB6.Agent48F1OneRABlocks.H{i}
+    source=f"""namespace BB6.Agent48F1OneRABlocks.H{i}
 def machine : BB6BlockFAR.Table := fun q b => ([{moves}] : List (Option BB6BlockFAR.Move))[2*q.val+b.toNat]?.getD none
 def cert : {ns}.Data {d-1} {n-1} := {{
   start := 0
@@ -40,6 +48,7 @@ theorem never (m : BB6Coverage.Machine) (hm : BB6Coverage.compatible ctr m) : BB
 #print axioms never
 end BB6.Agent48F1OneRABlocks.H{i}
 """
+    return split_valid_source(source,d,ns)
 def make(spec,out,partition=None,blocks=None):
     counts=Counter();opens=[]
     if partition is None:
@@ -91,7 +100,7 @@ namespace BB6.Agent48F1OneRA
 open BB6Coverage BB6Coverage.FAR BB6.Agent13BlankDelay BB6.Agent50TNFPilot BB6.Agent31ThreeHole BB6.Agent10FastAudit
 def parent : PartialMachine := fromCodes {parent}
 def tree : Audit := {node(tr)}
-theorem checked : fastCheck {b} parent tree = true := by decide
+theorem checked : fastCheck {b} parent tree = true := by decide +kernel
 theorem root : parent initialSlot = some (some ⟨true,true,1⟩) := by decide
 theorem nohalt : weightedTNFNoAssignedHalt parent := by
   intro s
