@@ -60,15 +60,15 @@ def certificates : List {p : PartialMachine // ∀ m, compatible p m → NeverHa
   ⟨BB6.Agent13Raw125Block19.table, BB6.Agent13Raw125Block19.never⟩
 ]
 
-def matches (p : PartialMachine) : Bool :=
+def certificateMatches (p : PartialMachine) : Bool :=
   certificates.any fun e => tableOK p e.val
 
-theorem match_never (p : PartialMachine) (h : matches p = true)
+theorem match_never (p : PartialMachine) (h : certificateMatches p = true)
     (m : Machine) (hm : compatible p m) : NeverHalts m := by
   obtain ⟨e, he, hh⟩ := List.any_eq_true.mp h
   exact e.property m (tableOK_sound _ _ hh ▸ hm)
 
-theorem all_residuals_matched : residual125.all (fun e => matches e.2) = true := by decide
+theorem all_residuals_matched : residual125.all (fun e => certificateMatches e.2) = true := by decide
 
 theorem residual_cover (B : Nat) (e : List Move × PartialMachine) (he : e ∈ residual125) :
     Cover (WeightedBound B) e.2 := by
