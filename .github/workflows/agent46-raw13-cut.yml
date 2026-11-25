@@ -6,7 +6,7 @@ on:
       target:
         description: Proof target
         type: choice
-        options: [core, cut, corridor, ingest, ingest77, phase, pump0RE, late0RE, zeroRE, zeroRC, zeroRD, zeroLC, zeroLB, zeroRA, oneLA, oneRA, zeroRB, oneLC, oneRE, oneRC, zeroRE5, oneLE, oneRD, pump0LE5]
+        options: [core, cut, corridor, ingest, ingest77, d3frontier, phase, pump0RE, late0RE, zeroRE, zeroRC, zeroRD, zeroLC, zeroLB, zeroRA, oneLA, oneRA, zeroRB, oneLC, oneRE, oneRC, zeroRE5, oneLE, oneRD, pump0LE5]
         default: core
       source_ref:
         description: Exact source commit (optional)
@@ -29,7 +29,7 @@ jobs:
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Download accepted canonical77 artifact for raw13 graft
-        if: inputs.target == 'ingest77' || inputs.target == 'phase'
+        if: inputs.target == 'ingest77' || inputs.target == 'd3frontier' || inputs.target == 'phase'
         uses: actions/download-artifact@v4
         with:
           github-token: ${{ github.token }}
@@ -37,7 +37,7 @@ jobs:
           name: canonical77-certified
           path: /tmp/a47-canonical
       - name: Build checked canonical77 dependency manifest
-        if: inputs.target == 'ingest77' || inputs.target == 'phase'
+        if: inputs.target == 'ingest77' || inputs.target == 'd3frontier' || inputs.target == 'phase'
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
@@ -52,7 +52,7 @@ jobs:
           cd im-results/agent47-raw114-cut
           python paired_counter.py
           python long_sweep.py
-          printf '%s\n' {a..p} | xargs -P 4 -I{} python generate_complete.py {}
+          printf '%s\n' 0LA 0LB 0LC 0LF 0RA 0RB 0RC 0RF 1LA 1LB 1LC 1LF 1RA 1RB 1RC 1RF | xargs -P 4 -I{} python generate_complete.py {}
           python generate_complete.py --combine
           cd ../..
           mkdir -p .tmp/a46
@@ -194,7 +194,7 @@ jobs:
           if [ "$TARGET" = corridor ]; then
             ROOT="$D/Agent46Raw13Corridor.lean"
           fi
-          if [ "$TARGET" = ingest ] || [ "$TARGET" = ingest77 ] || [ "$TARGET" = phase ]; then
+          if [ "$TARGET" = ingest ] || [ "$TARGET" = ingest77 ] || [ "$TARGET" = d3frontier ] || [ "$TARGET" = phase ]; then
             python im-results/agent31-three-hole-tnf/generate_sweeps.py
             python im-results/agent31-three-hole-tnf/generate_four_hole.py
             python im-results/agent10-tnf-raw87/generate.py
@@ -231,7 +231,7 @@ jobs:
             /tmp/a46-raw13.log
             /tmp/a46-canonical-manifest.json
       - name: Preserve compiled raw13 source closure
-        if: inputs.target == 'ingest77' || inputs.target == 'phase'
+        if: inputs.target == 'ingest77' || inputs.target == 'd3frontier' || inputs.target == 'phase'
         uses: actions/upload-artifact@v4
         with:
           name: raw13-closure-certified
@@ -239,7 +239,7 @@ jobs:
           if-no-files-found: error
           retention-days: 30
       - name: Compile raw13 graft against the accepted canonical77 artifact
-        if: inputs.target == 'ingest77' || inputs.target == 'phase'
+        if: inputs.target == 'ingest77' || inputs.target == 'd3frontier' || inputs.target == 'phase'
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD:im-results/agent47-rooted-tnf/CanonicalRaw114Accepted.lean)" = "d198f4eb8d3c2ca4b7ed5a2c57298cb6364537f4"
@@ -273,8 +273,18 @@ jobs:
                   raise SystemExit(f"{name}: unexpected axioms {sorted(bad)}")
               print(f"{name}: {sorted(profiles[name])}")
           PY
+      - name: Compile D3 hard-root frontier graft into canonical77
+        if: inputs.target == 'd3frontier'
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="/tmp/a46-raw13:/tmp/a47-canonical:im-results/agent8-coverage-contract:im-results/agent4-coverage-smoke:im-results/agent42-coverage-normal:im-results/agent13-coverage:im-results/agent13-weighted-first-one:im-results/agent6-fresh-glider:im-results/agent7-far:im-results/agent31-three-hole-tnf:im-results/agent50-weighted-tnf-pilot:im-results/agent13-roster-convergence:im-results/agent44-source-roster:im-results/agent47-rooted-tnf:im-results/agent47-r1-sweep:im-results/agent47-r4-counter:im-results/agent48-roster-graft:im-results/agent42-frontier-count:im-results/agent46-raw13-cut:im-results/agent19-hard-root-crosswalk:im-results/agent47-weighted-halt-branch:im-results/agent8-cryptids-tnf-paths:im-results/agent47-raw114-cut"
+          python tools/lean_compile_closure.py --workdir /tmp/a46-d3-frontier --jobs 4 --precompiled-manifest /tmp/a46-canonical-manifest.json --precompiled-dir /tmp/a47-canonical im-results/agent42-d3-raw13-frontier/D3Ingestion.lean | tee /tmp/a46-d3-frontier.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a46-d3-frontier.log; then
+            echo "Forbidden proof placeholder or native_decide found in D3 frontier closure" >&2
+            exit 1
+          fi
       - name: Preserve raw13 canonical77 proof artifact
-        if: inputs.target == 'ingest77' || inputs.target == 'phase'
+        if: inputs.target == 'ingest77' || inputs.target == 'd3frontier' || inputs.target == 'phase'
         uses: actions/upload-artifact@v4
         with:
           name: canonical77-raw13-graft-certified
@@ -283,6 +293,15 @@ jobs:
             /tmp/a46-raw13.log
             /tmp/a46-raw13-ingest77.log
             /tmp/a46-canonical-manifest.json
+      - name: Preserve D3 raw13 frontier proof artifact
+        if: success() && inputs.target == 'd3frontier'
+        uses: actions/upload-artifact@v4
+        with:
+          name: d3-raw13-frontier-certified
+          path: |
+            /tmp/a46-d3-frontier
+            /tmp/a46-d3-frontier.log
+          retention-days: 30
       - name: Persist Lean-accepted raw13 BiDFA spec
         if: success() && inputs.target == 'phase' && inputs.source_ref == ''
         continue-on-error: true
