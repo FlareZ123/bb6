@@ -55,6 +55,8 @@ theorem sourceSafe_of_blockFAR {d n} (B : Nat) (x : SourceNode)
   exact BB6BlockFAR.Data.source_never C (sourceTable x.tm) hC m hm
 
 #print axioms partialTable_sourceTable
+#print axioms sourceSafe_of_never
+#print axioms sourceSafe_of_blockFAR_table
 #print axioms sourceSafe_of_blockFAR
 
 end BB6.Agent32SourceBlockFAR
