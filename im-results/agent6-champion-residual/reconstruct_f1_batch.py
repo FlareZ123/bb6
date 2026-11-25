@@ -179,6 +179,11 @@ def main() -> None:
     for required in ("Agent14OneLACover.lean", "Agent14OneLBCover.lean", "Agent14OneRDCover.lean"):
         if not (batch_root / required).is_file():
             raise SystemExit(f"missing merged source {required}")
+    # The individual work roots are staging areas only. Remove them after the
+    # merge; otherwise the compiler's recursive module index sees duplicate
+    # Agent14One* modules beside the canonical batch root.
+    for work in (work_zero_la, work_one_lb, work_one_rd):
+        shutil.rmtree(work.parent)
     print(f"reconstructed Agent41 0RB and Agent14 0LA/1LB/1RD; merged {total} Lean sources")
 
 
