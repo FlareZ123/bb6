@@ -85,7 +85,9 @@ def resolve_source(module: str, index: dict[str, list[Path]]) -> Path:
 def parse_imports(path: Path) -> list[str]:
     imports: list[str] = []
     for line in path.read_text(encoding="utf-8").splitlines():
-        match = re.match(r"^\s*import\s+(.+?)\s*$", line)
+        # Lean supports qualified imports such as `public import` and
+        # `meta import`; they participate in the same module dependency graph.
+        match = re.match(r"^\s*(?:(?:public|meta)\s+)*import\s+(.+?)\s*$", line)
         if not match:
             continue
         for module in match.group(1).split():
