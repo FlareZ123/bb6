@@ -37,12 +37,12 @@ DATA={
 }
 
 def generate(branch,grams):
-    a=json.loads((D/"oneRC-far.json").read_text()) if branch=="1RC" else DATA[branch]
+    a=json.loads((D/"oneRC-far.json").read_text()) if branch=="1RC" else json.loads((D/"zeroRE5-far.json").read_text()) if branch=="0RE5" else DATA[branch]
     if a.get("sorted"): grams=sorted(grams)
     assert len(grams)==len(a["grams"])
     assert hashlib.sha256("\n".join(grams).encode()).hexdigest()==a["sha"]
     assert len(set(grams))==len(grams)
-    prefix="1RB1LC1RC0LD1LA0RB"+branch
+    prefix="1RB1LC1RC0LD1LA0RB"+branch[:3]
     root="Agent46Raw13"+("Zero" if branch[0]=="0" else "One")+branch[1:]
     ns="BB6."+root
     alphabet=string.digits+string.ascii_letters
@@ -73,5 +73,5 @@ def generate(branch,grams):
             proven[raw]=i
         body.append("end "+ns)
         (D/(name+".lean")).write_text("\n".join(body)+"\n")
-    assert len(proven)=={"0RB":1325,"1LC":137,"1RE":1452,"1RC":204}[branch]
+    assert len(proven)=={"0RB":1325,"1LC":137,"1RE":1452,"1RC":204,"0RE5":1429}[branch]
     return proven,modules
