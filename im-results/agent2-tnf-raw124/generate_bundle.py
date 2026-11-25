@@ -267,7 +267,9 @@ def longcycle_bundle(branch):
     extra_tree = {table: build_tree(table) for table in opens}
     cycles = sum(v[0] == "cycle" for v in terminal.values())
     last = sum(v[0] == "last" for v in terminal.values())
+    assert max_query <= 1_000_000
     bound = max(1_000_000, max_query + 1_000_000)
+    assert bound <= 2_000_000
     print(
         f"0LB recursive partition: initial={len(opens)} cycles={cycles} "
         f"last={last} splits={len(splits)} unique={len(terminal)+len(splits)} "
