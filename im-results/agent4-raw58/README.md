@@ -1,33 +1,60 @@
-# Raw58 first-hole refinement
+# Raw58 E1=0RA parent: five-residual frontier
 
-Parent `1RB---_1RC---_0RD---_1LD1RE_---0RA_------` has six holes (244,140,625 completions). The first query is A1 at step 7. Candidate source audit reduces this parent to 12 five-hole children: 11 moving branches have short translating cycles, the halt branch is bounded, and the A1=0RE branch has a complete certificate candidate with bound 55.
+## Parent and current theorem
 
-For A1=0RE, exact first-hole enumeration yields 488 split nodes, 2,259 last-hole leaves, 8,715 short translating cycles and 251 remaining leaves. Of these, 250 admit FAR certificates; the final machine `1RB0RE_1RC---_0RD0LF_1LD1RE_1LC0RA_1LB1LE` admits the rightward cycle (entry 39, period 278, lower boundary -3). This was missed by the earlier 256-period search window. The maximum enumerated weighted score is 55. No finite simulation cutoff is used as a verdict.
+The parent cylinder is the six-hole partial machine
 
-Reproduce with `python im-results/agent4-raw58/generate.py` then compile Raw58Cut.lean and its original-source dependency closure (manual target raw58-cut in agent10-four-hole.yml). The generated source checks every cycle, FAR and weighted query; the checked result, not the generator, is authoritative. Status: candidate only until the source Lean job passes. The original local Git clone was unavailable (DNS); the Lean toolchain itself was successfully reconstructed.
+`1RB---_1RC---_0RD---_1LD1RE_---0RA_------`
 
-If accepted, 13 of 25 first-hole cylinders (126,953,125 completions) are bounded by 55; 117,187,500 completions remain in the 12 listed children. This is a disjoint refinement of raw58, not a complete raw58 decision.
+with (25^6=244,140,625) compatible completions. Its first undefined transition is A1, queried after seven transitions.
 
-## Three more complete candidate children
+The source-verified composition in `Raw58MoreCut2.lean` proves:
 
-| A1 | Candidate weighted bound | First-hole splits | Last-hole leaves | Short cycles | FAR | Sweep proof | Other |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| 0RD | 120 | 495 | 2095 | 9254 | 33 | 3 | 1 binary-counter proof |
-| 1LC | 156 | 589 | 3146 | 10265 | 132 | 5 | 0 |
-| 1RE | 93 | 506 | 2264 | 9271 | 97 | 7 | 0 |
+`∀ m, compatible parent m → WeightedBound 374 m ∨ residual(m)`
 
-Every child contains 25^5 completions. The binary counter (global discovery index 1892, local 0RD open index 32) is the machine `1RB0RD_1RC---_0RD0LC_1LD1RE_1RF0RA_1LC1RE`. At E with a fixed left sentinel, the right list is a little-endian digit sequence with zeros separating successive bits. A true digit extends the carry by two steps; a zero or implicit blank switches it to true, clears the carried prefix with a two-cell sweep, and returns E in 8 further reset steps. The formal `Code` induction proves a positive return from every valid sequence and carry depth. Blank reaches E after 15 steps, so arbitrarily long live runs follow. The complete arithmetic/zipper proof through `arbitrary` compiled locally on Lean 4.36.0-rc2 against verbatim original run0 and sweepL definitions (standard axioms only); the raw-machine soundness bridge awaits original-source CI. Source file Raw58RD1892.lean.
+where `residual(m)` means compatibility with exactly one of the following five A1-child cylinders:
 
-New generator generate_more.py plus more.json emits three complete candidate proof trees. Raw58MoreCut.lean combines them with the previous cut, leaving nine five-hole children (87,890,625 completions) at bound 156. Run target raw58-more. All new full-cylinder claims remain candidate until source acceptance.
+| A1 move | Next undefined query after executing A1 |
+|---|---|
+| `0LE` | E0, at step 8 (slot 8) |
+| `0LF` | F0, at step 8 (slot 10) |
+| `0RF` | F0, at step 8 (slot 10) |
+| `1LE` | E0, at step 8 (slot 8) |
+| `1LF` | F0, at step 8 (slot 10) |
 
-## Counter generalization
+This is a complete, disjoint five-residual partition at weighted bound 374; it is **not** yet a complete closure of the parent.
 
-The pair-counter proof `Raw58PairCounter.lean` and six literal-table instances in `Raw58PairCases.lean` establish a shared unbounded binary countdown invariant on words of pairs `1b`: carry skips zero pairs, a positive digit is cleared, and an exhausted word grows by one pair of ones. The induction guarantees arbitrarily long live zipper prefixes independently of the duration of the counter. The core lemma and all six instance reductions passed local Lean against verbatim extracted zipper definitions; original-source bridge acceptance remains pending. These are candidate discharges for five A1=0RC and one A1=1LA hard leaf, not entire cylinders.
+## Source-accepted layers
 
-The initial A1=0RE closure and 12-child refinement passed [original-source CI 45520713972](https://github.com/FlareZ123/bb6/actions/runs/45520713972). The named refinement step completed successfully. The three additional child closures are still being audited by [45521202017](https://github.com/FlareZ123/bb6/actions/runs/45521202017).
+1. `Raw58Cut.lean` (CI run [45520713972](https://github.com/FlareZ123/bb6/actions/runs/45520713972)): the initial A1 partition bounds 13 of 25 first-hole cylinders at 55, leaving 12 five-hole children.
+2. `Raw58MoreCut.lean` (CI run [45521202017](https://github.com/FlareZ123/bb6/actions/runs/45521202017)): adds complete child bounds for A1=0RD (120), 1LC (156), and 1RE (93), reducing the residual frontier to nine.
+3. `Raw58MoreCut2.lean` (CI run [45596841950](https://github.com/FlareZ123/bb6/actions/runs/45596841950)): adds A1=0RC (167), 1LA (284), 1LB (223), and 1RF (374), reducing the frontier from nine to five.
 
-## A1=0RC candidate closure
+The final source audit compiled 280 Lean modules. The `#print axioms` profile for `parent_dichotomy` contains only Lean's standard `propext`, `Classical.choice`, and `Quot.sound`; the workflow also rejects `sorryAx` and `native_decide`.
 
-The earlier four-child refinement passed [original-source CI 45521202017](https://github.com/FlareZ123/bb6/actions/runs/45521202017), so nine moving first-hole children remain. The next A1=0RC child has a complete candidate proof at weighted bound 167: 21,887 short cycles, 5,283 last-hole leaves, 1,202 split nodes, and 477 open leaves (465 FAR, 3 one-block sweep proofs, 9 explicit induction proofs). The generator uses C1 (slot 5) as its first query at step 16. It is not yet source-certified; run `agent10-four-hole.yml` target `raw58-rc`.
+## Reusable counter certificates
 
-New mathematical work: three width-3/4 binary countdown invariants are in Raw58BlockCases.lean (1481, 1511, 1512). Raw58M1391.lean proves the non-linear unary return through alternating C/E sweeps: C(blank left, 1^(4k+4)) -> C(blank left, 1^(4k+10)) -> C(blank left, 1^(12k+44)); hence k -> 3k+10. At the odd phase, the auxiliary alternating left block decreases by one pair per phase, and induction on its even pair count discharges the finite nested return. Entry is exactly 66 steps to 12 ones. All four arbitrary-live-prefix proofs compiled locally using verbatim zipper/sweep definitions; Raw58Live.lean bridges arbitrary endpoints to original machine semantics. Await full-source CI before counting the cylinder discharged.
+- `Raw58PairCounter.lean` and `Raw58PairCases.lean`: paired-digit binary countdown; carry skips zero pairs, clears positive digits, and grows the word by one pair at overflow.
+- `Raw58BlockCases.lean`: width-3/4 countdown instances.
+- `Raw58UnaryDrain.lean`: affine unary-drain returns.
+- `Raw58M1391.lean`: alternating C/E sweeps with return recurrence (k\mapsto 3k+10).
+- `Raw58OddRun.lean` and `Raw58RD1892.lean`: additional literal-table counter certificates.
+
+These are reusable leaf-level nonhalting arguments, not claims that an entire parent cylinder is nonhalting.
+
+## Next computation: close the five residuals
+
+The next query for each of the five remaining A1 choices is known exactly: E0 for 0LE/1LE and F0 for 0LF/0RF/1LF, all at step 8. The current probe uses weighted cutoff 7014.
+
+- `more.json` contains the five new child specifications (LE, LF, RF, LE1, LF1).
+- `generate_more.py` now optionally searches the existing FAR-code bank and one-/multi-block pump candidates automatically; unresolved leaves are printed rather than silently treated as covered.
+- `Raw58MoreCut3.lean` composes the five child certificates into a complete parent bound if all five are discharged.
+- CI target: `raw58-more3`, run [45601806558](https://github.com/FlareZ123/bb6/actions/runs/45601806558), currently in progress at this checkpoint.
+
+If automatic classification leaves open tables, first try the existing exact/extension-compatible custom tables in PairCases, BlockCases, UnaryDrain, OddRun, M1391, and RD1892. Do not promote the five-residual partition to a complete parent closure until the new source audit passes.
+
+## Reproduction and status
+
+Use `.github/workflows/agent10-four-hole.yml` targets `raw58-cut`, `raw58-more`, `raw58-more2`, and `raw58-more3`. The checked Lean source closure is authoritative; generator output or finite simulation alone is not a proof.
+
+This remains an intermediate research result in `im-results/`. It does not change the global canonical roster count until a complete parent closure is source-checked and grafted into the common quotient roster. BB(6) remains unresolved.
