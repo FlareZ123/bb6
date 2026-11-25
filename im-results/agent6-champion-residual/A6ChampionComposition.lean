@@ -1,5 +1,6 @@
 import A6Ingestion
 import ChampionResidualCanonical77Integration
+import Raw139C1OneRBCover
 
 set_option maxRecDepth 1000000
 set_option maxHeartbeats 0
@@ -17,6 +18,68 @@ open BB6.Agent48A6Ingestion
 open BB6.Agent6ChampionResidual
 open BB6.Agent6F1ZeroRCIntegration
 open BB6.Agent6Canonical77ChampionIntegration
+open BB6.Agent48Raw139C1OneRB
+
+/-- The source-certified C/1=1RB sibling is the fifth split's non-path
+    child in the champion frontier. Its complete weighted bound is 317. -/
+theorem C1OneRB_is_depth5_sibling :
+    sameTable BB6.Agent48Raw139C1OneRB.parent
+      (championChild 4 ⟨true, true, 1⟩) = true := by
+  decide
+
+theorem C1OneRB_parent_present :
+    ∃ e ∈ remainingF1ZeroRC,
+      sameTable e.2 BB6.Agent48Raw139C1OneRB.parent = true := by
+  decide
+
+theorem cover_C1OneRB (B : Nat) (hB : 317 ≤ B) :
+    Cover (WeightedBound B) BB6.Agent48Raw139C1OneRB.parent := by
+  refine Cover.leaf _ ?_
+  intro m hm k d hk hd
+  exact Nat.le_trans
+    (BB6.Agent48Raw139C1OneRB.all_completions_weighted m hm k d hk hd) hB
+
+def parentC1OneRB (p : PartialMachine) : Bool :=
+  sameTable p BB6.Agent48Raw139C1OneRB.parent
+
+/-- Remove the exact source-certified C/1=1RB sibling from the 106-leaf
+    champion residual family. -/
+noncomputable def remainingF1ZeroRCWithoutC1OneRB :
+    List (List Move × PartialMachine) :=
+  remainingF1ZeroRC.filter (fun e => !parentC1OneRB e.2)
+
+theorem remainingF1ZeroRCWithoutC1OneRB_count :
+    remainingF1ZeroRCWithoutC1OneRB.length = 105 := by
+  decide
+
+theorem cover_remainingF1ZeroRC
+    (hLeaves : ∀ e ∈ remainingF1ZeroRCWithoutC1OneRB,
+      Cover (WeightedBound championScore) e.2)
+    (e : List Move × PartialMachine)
+    (he : e ∈ remainingF1ZeroRC) :
+    Cover (WeightedBound championScore) e.2 := by
+  by_cases h : parentC1OneRB e.2 = true
+  · have heq : e.2 = BB6.Agent48Raw139C1OneRB.parent := sameTable_sound h
+    rw [heq]
+    exact cover_C1OneRB championScore
+      (Nat.le_trans (by decide : 317 ≤ 49394) champion_score_ge_49394)
+  · apply hLeaves e
+    apply List.mem_filter.mpr
+    exact ⟨he, by simp [h]⟩
+
+theorem cover_championResidual_from_raw139_leaves_after_c1OneRB
+    (hLeaves : ∀ e ∈ remainingF1ZeroRCWithoutC1OneRB,
+      Cover (WeightedBound championScore) e.2) :
+    Cover (WeightedBound championScore) championResidual :=
+  cover_championResidual_from_raw139_leaves
+    (fun e he => cover_remainingF1ZeroRC hLeaves e he)
+
+#print axioms C1OneRB_is_depth5_sibling
+#print axioms C1OneRB_parent_present
+#print axioms cover_C1OneRB
+#print axioms remainingF1ZeroRCWithoutC1OneRB_count
+#print axioms cover_remainingF1ZeroRC
+#print axioms cover_championResidual_from_raw139_leaves_after_c1OneRB
 
 /-- The champion's first ordinary refinement of raw139, D/1 = 0LE.
     It is an off-path sibling of the A6 path, whose D/1 move is 0LC. -/
@@ -34,7 +97,7 @@ noncomputable def A6_remaining_without_champion :
     Cover of the entire parent cylinder. The A6 source theorem closes its
     terminal leaf; its bounded halt siblings lift from 7014 to championScore. -/
 theorem A6_remaining_sound_at_championScore
-    (hChampionLeaves : ∀ e ∈ remainingF1ZeroRC,
+    (hChampionLeaves : ∀ e ∈ remainingF1ZeroRCWithoutC1OneRB,
       Cover (WeightedBound championScore) e.2) :
     ∀ m, compatible BB6.Agent19HardRoot.p139 m →
       WeightedBound championScore m ∨
@@ -56,7 +119,7 @@ theorem A6_remaining_sound_at_championScore
         (compatible_refine_iff championResidual m (3, true) (by decide)
           (some ⟨false, false, 4⟩)).mp hChild
       exact Or.inl
-        ((cover_championResidual_from_raw139_leaves hChampionLeaves).sound
+        ((cover_championResidual_from_raw139_leaves_after_c1OneRB hChampionLeaves).sound
           m hParentPair.1)
     · exact Or.inr ⟨(address, q),
         List.mem_filter.mpr ⟨he, by simp [hSame]⟩, hcomp⟩
@@ -71,7 +134,7 @@ noncomputable def A6ChampionCombinedRoster :
 /-- The 77-entry accepted canonical root dichotomy, lifted to the attained
     champion score, then grafted with the combined raw139 residual family. -/
 theorem A6ChampionCombinedRoster_sound
-    (hChampionLeaves : ∀ e ∈ remainingF1ZeroRC,
+    (hChampionLeaves : ∀ e ∈ remainingF1ZeroRCWithoutC1OneRB,
       Cover (WeightedBound championScore) e.2) :
     ∀ m, compatible BB6.Agent50TNFPilot.root m →
       WeightedBound championScore m ∨
@@ -97,7 +160,7 @@ theorem A6ChampionCombinedRoster_sound
 theorem combined_A6_parent_cover
     (hA6Leaves : ∀ e ∈ A6_remaining_without_champion,
       Cover (WeightedBound championScore) e.2)
-    (hChampionLeaves : ∀ e ∈ remainingF1ZeroRC,
+    (hChampionLeaves : ∀ e ∈ remainingF1ZeroRCWithoutC1OneRB,
       Cover (WeightedBound championScore) e.2) :
     Cover (WeightedBound championScore) BB6.Agent19HardRoot.p139 := by
   refine Cover.leaf _ ?_
@@ -117,7 +180,7 @@ theorem exact_from_canonical77_with_A6_champion_refinement
         Cover (WeightedBound championScore) e.2)
     (hA6Leaves : ∀ e ∈ A6_remaining_without_champion,
       Cover (WeightedBound championScore) e.2)
-    (hChampionLeaves : ∀ e ∈ remainingF1ZeroRC,
+    (hChampionLeaves : ∀ e ∈ remainingF1ZeroRCWithoutC1OneRB,
       Cover (WeightedBound championScore) e.2) :
     BB6.Coverage.ExactBB6 championScore := by
   have hParentCover :=
