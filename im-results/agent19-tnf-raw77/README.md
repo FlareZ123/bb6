@@ -1,0 +1,3 @@
+# Raw77 candidate complete coverage
+
+Exact raw77 B1=0LE normalized cylinder; 25^5 = 9,765,625 raw completions. Candidate tree 633 splits, 11,169 cycles, 2,396 last-hole leaves, 995 open leaves: 804 FAR, 141 one-block, 30 two-block, 13 long one-block, 3 long two-block, 4 late last-hole witnesses. Late step counts 1041,1599,1596,1556; conservative proposed weighted bound 7014. All claims pending original-source Lean CI. 45 DFA bank entries; two-character base36 index selects witness; zy one, zx two, zw long one, zv long two, zu late halt. Exact open-list digest pins indexing. Shared proof generator uses all 25 transitions at splits and exact table checks for symbolic leaves. Candidate discovery does not constitute a proof.
