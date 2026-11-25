@@ -36,13 +36,17 @@ theorem extend_to_walk (n s B a k C c : Nat)
       rw [hR] at he
       rw [htarget] at he
       simpa [Nat.add_assoc] using he
+    have hclock : n+s+3+(k+1)-(0+1)=n+s+k+3 := by omega
     have hsingle :
         Walk (n+s+3+(k+1)) d [target n (s+k) B] c := by
       refine Walk.step [] d (target n (s+k) B) x c
         (Walk.nil (by omega)) (target_bound n (s+k) B) hx
-        (by omega) (by omega) ?_
-      omega
-    have hcomp := walk_append hsingle ih
+        ?_ ?_ ?_
+      · simpa [List.length_nil,hclock] using hd
+      · simpa [List.length_nil,hclock] using hc
+      · simpa [List.length_nil,hclock,Nat.mul_comm] using heB
+    have hih := ih (by omega)
+    have hcomp := walk_append hsingle hih
     simpa [targetWord,Nat.add_assoc] using hcomp
 
 /-- Exact Boolean lookahead computed by a fitted reverse-block partition. -/
