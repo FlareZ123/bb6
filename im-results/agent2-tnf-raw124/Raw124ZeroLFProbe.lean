@@ -65,3 +65,173 @@ the corresponding Certificate.never adapter is exported and source-checked. -/
                BB6.Agent2Raw124ZeroLFBlockGrowth.c1547.check BB6.Agent2Raw124ZeroLFProbe.hard3)
 #eval ("hard4", BB6.Agent2Raw124ZeroLFBlockGrowth.c1539.check BB6.Agent2Raw124ZeroLFProbe.hard4,
                BB6.Agent2Raw124ZeroLFBlockGrowth.c1547.check BB6.Agent2Raw124ZeroLFProbe.hard4)
+
+
+open BB6Coverage.Agent50Pump
+
+def fin6 (n : Nat) : Fin 6 := ⟨n % 6, Nat.mod_lt _ (by decide)⟩
+
+def renameShape (p : List Nat) (s : Shape) : Shape :=
+  { s with q := fin6 (p.getD s.q.val s.q.val) }
+
+def renameOp (p : List Nat) : Op → Op
+  | .step => .step
+  | .rewrite s => .rewrite (renameShape p s)
+  | .right k c v => .right k c v
+  | .left k c v => .left k c v
+
+def renameCert (p : List Nat) (c : Certificate) : Certificate :=
+  { c with shape := renameShape p c.shape, ops := c.ops.map (renameOp p) }
+
+def reflectShape (s : Shape) : Shape := ⟨s.q, s.r, s.l⟩
+
+def reflectOp : Op → Op
+  | .step => .step
+  | .rewrite s => .rewrite (reflectShape s)
+  | .right k c v => .left k c v
+  | .left k c v => .right k c v
+
+def transformCert (p : List Nat) (mirror : Bool) (c : Certificate) : Certificate :=
+  let c' := renameCert p c
+  if mirror then
+    { c' with shape := reflectShape c'.shape, ops := c'.ops.map reflectOp }
+  else c'
+
+def statePerms : List (List Nat) := [
+  [0, 1, 2, 3, 4, 5],
+  [0, 1, 2, 3, 5, 4],
+  [0, 1, 2, 4, 3, 5],
+  [0, 1, 2, 4, 5, 3],
+  [0, 1, 2, 5, 3, 4],
+  [0, 1, 2, 5, 4, 3],
+  [0, 1, 3, 2, 4, 5],
+  [0, 1, 3, 2, 5, 4],
+  [0, 1, 3, 4, 2, 5],
+  [0, 1, 3, 4, 5, 2],
+  [0, 1, 3, 5, 2, 4],
+  [0, 1, 3, 5, 4, 2],
+  [0, 1, 4, 2, 3, 5],
+  [0, 1, 4, 2, 5, 3],
+  [0, 1, 4, 3, 2, 5],
+  [0, 1, 4, 3, 5, 2],
+  [0, 1, 4, 5, 2, 3],
+  [0, 1, 4, 5, 3, 2],
+  [0, 1, 5, 2, 3, 4],
+  [0, 1, 5, 2, 4, 3],
+  [0, 1, 5, 3, 2, 4],
+  [0, 1, 5, 3, 4, 2],
+  [0, 1, 5, 4, 2, 3],
+  [0, 1, 5, 4, 3, 2],
+  [0, 2, 1, 3, 4, 5],
+  [0, 2, 1, 3, 5, 4],
+  [0, 2, 1, 4, 3, 5],
+  [0, 2, 1, 4, 5, 3],
+  [0, 2, 1, 5, 3, 4],
+  [0, 2, 1, 5, 4, 3],
+  [0, 2, 3, 1, 4, 5],
+  [0, 2, 3, 1, 5, 4],
+  [0, 2, 3, 4, 1, 5],
+  [0, 2, 3, 4, 5, 1],
+  [0, 2, 3, 5, 1, 4],
+  [0, 2, 3, 5, 4, 1],
+  [0, 2, 4, 1, 3, 5],
+  [0, 2, 4, 1, 5, 3],
+  [0, 2, 4, 3, 1, 5],
+  [0, 2, 4, 3, 5, 1],
+  [0, 2, 4, 5, 1, 3],
+  [0, 2, 4, 5, 3, 1],
+  [0, 2, 5, 1, 3, 4],
+  [0, 2, 5, 1, 4, 3],
+  [0, 2, 5, 3, 1, 4],
+  [0, 2, 5, 3, 4, 1],
+  [0, 2, 5, 4, 1, 3],
+  [0, 2, 5, 4, 3, 1],
+  [0, 3, 1, 2, 4, 5],
+  [0, 3, 1, 2, 5, 4],
+  [0, 3, 1, 4, 2, 5],
+  [0, 3, 1, 4, 5, 2],
+  [0, 3, 1, 5, 2, 4],
+  [0, 3, 1, 5, 4, 2],
+  [0, 3, 2, 1, 4, 5],
+  [0, 3, 2, 1, 5, 4],
+  [0, 3, 2, 4, 1, 5],
+  [0, 3, 2, 4, 5, 1],
+  [0, 3, 2, 5, 1, 4],
+  [0, 3, 2, 5, 4, 1],
+  [0, 3, 4, 1, 2, 5],
+  [0, 3, 4, 1, 5, 2],
+  [0, 3, 4, 2, 1, 5],
+  [0, 3, 4, 2, 5, 1],
+  [0, 3, 4, 5, 1, 2],
+  [0, 3, 4, 5, 2, 1],
+  [0, 3, 5, 1, 2, 4],
+  [0, 3, 5, 1, 4, 2],
+  [0, 3, 5, 2, 1, 4],
+  [0, 3, 5, 2, 4, 1],
+  [0, 3, 5, 4, 1, 2],
+  [0, 3, 5, 4, 2, 1],
+  [0, 4, 1, 2, 3, 5],
+  [0, 4, 1, 2, 5, 3],
+  [0, 4, 1, 3, 2, 5],
+  [0, 4, 1, 3, 5, 2],
+  [0, 4, 1, 5, 2, 3],
+  [0, 4, 1, 5, 3, 2],
+  [0, 4, 2, 1, 3, 5],
+  [0, 4, 2, 1, 5, 3],
+  [0, 4, 2, 3, 1, 5],
+  [0, 4, 2, 3, 5, 1],
+  [0, 4, 2, 5, 1, 3],
+  [0, 4, 2, 5, 3, 1],
+  [0, 4, 3, 1, 2, 5],
+  [0, 4, 3, 1, 5, 2],
+  [0, 4, 3, 2, 1, 5],
+  [0, 4, 3, 2, 5, 1],
+  [0, 4, 3, 5, 1, 2],
+  [0, 4, 3, 5, 2, 1],
+  [0, 4, 5, 1, 2, 3],
+  [0, 4, 5, 1, 3, 2],
+  [0, 4, 5, 2, 1, 3],
+  [0, 4, 5, 2, 3, 1],
+  [0, 4, 5, 3, 1, 2],
+  [0, 4, 5, 3, 2, 1],
+  [0, 5, 1, 2, 3, 4],
+  [0, 5, 1, 2, 4, 3],
+  [0, 5, 1, 3, 2, 4],
+  [0, 5, 1, 3, 4, 2],
+  [0, 5, 1, 4, 2, 3],
+  [0, 5, 1, 4, 3, 2],
+  [0, 5, 2, 1, 3, 4],
+  [0, 5, 2, 1, 4, 3],
+  [0, 5, 2, 3, 1, 4],
+  [0, 5, 2, 3, 4, 1],
+  [0, 5, 2, 4, 1, 3],
+  [0, 5, 2, 4, 3, 1],
+  [0, 5, 3, 1, 2, 4],
+  [0, 5, 3, 1, 4, 2],
+  [0, 5, 3, 2, 1, 4],
+  [0, 5, 3, 2, 4, 1],
+  [0, 5, 3, 4, 1, 2],
+  [0, 5, 3, 4, 2, 1],
+  [0, 5, 4, 1, 2, 3],
+  [0, 5, 4, 1, 3, 2],
+  [0, 5, 4, 2, 1, 3],
+  [0, 5, 4, 2, 3, 1],
+  [0, 5, 4, 3, 1, 2],
+  [0, 5, 4, 3, 2, 1]
+]
+
+def matches (p : PartialMachine) (c : Certificate) (mirror : Bool) : List (List Nat) :=
+  statePerms.filter (fun sigma => (transformCert sigma mirror c).check p)
+
+#eval ("control1539", (matches p1539 c1539 false).head?, (matches p1539 c1539 true).head?)
+#eval ("control1547", (matches p1547 c1547 false).head?, (matches p1547 c1547 true).head?)
+#eval ("hard0", (matches hard0 c1539 false).head?, (matches hard0 c1539 true).head?,
+                 (matches hard0 c1547 false).head?, (matches hard0 c1547 true).head?)
+#eval ("hard1", (matches hard1 c1539 false).head?, (matches hard1 c1539 true).head?,
+                 (matches hard1 c1547 false).head?, (matches hard1 c1547 true).head?)
+#eval ("hard2", (matches hard2 c1539 false).head?, (matches hard2 c1539 true).head?,
+                 (matches hard2 c1547 false).head?, (matches hard2 c1547 true).head?)
+#eval ("hard3", (matches hard3 c1539 false).head?, (matches hard3 c1539 true).head?,
+                 (matches hard3 c1547 false).head?, (matches hard3 c1547 true).head?)
+#eval ("hard4", (matches hard4 c1539 false).head?, (matches hard4 c1539 true).head?,
+                 (matches hard4 c1547 false).head?, (matches hard4 c1547 true).head?)
