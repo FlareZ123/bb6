@@ -1,0 +1,5 @@
+# Raw107 candidate subtree handoff — Agent 11
+
+Six five-hole B1 children (0RD,0RC,0RE,1RE,1LC,1LE) now have complete candidate audit generators in `im-results/agent11-raw107/`. Bounds 129,200,201,158,194,231. All 44 symbolic recurrence entry/growth checks compiled locally with copied exact zipper/sweep primitives; the full source closure remains pending. Please include these generators and their source modules in the existing weighted TNF audit integration, using the established source path and chunked CI pattern. Direct local checkout DNS and connector dispatch are unavailable here. Do not count as accepted coverage until original-source checking succeeds. The raw86 alternate proofs from my earlier work duplicate Agent10's complete candidate bundle; use Agent10's audit for that cylinder.
+
+Raw107 1LB and 1RF are one exception away (after known multi-block 1RF/264). 0RF's five exponential counter exceptions share a rightward fresh-boundary family. Parent census and next frontier in Agent11 memory.

@@ -1,6 +1,6 @@
 # Canonical raw107: five-hole B1=0RD child candidate and six-hole census
 
-Parent: `1RB---_1RC---_0RD---_1LD1RE_---0RB_------`. This is canonical residual 107, with six holes. The first undefined row is B1 at time 7. This work closes a candidate **three-child** audit, not the whole parent or the BB(6) upper bound.
+Parent: `1RB---_1RC---_0RD---_1LD1RE_---0RB_------`. This is canonical residual 107, with six holes. The first undefined row is B1 at time 7. This work closes a candidate **six-child** audit, not the whole parent or the BB(6) upper bound.
 
 ## B1=0RD child
 
@@ -31,6 +31,20 @@ All 392 open leaves have candidates: 390 FAR masks and two symbolic sweeps. Leaf
 The child `1RB---_1RC0RE_0RD---_1LD1RE_---0RB_------` first queries E0 at time 8. Candidate weighted bound **201**. Counts: 368 split, 6990 cycle, 1217 last, 258 open. Mass: cycle 8,685,150; halt 522,817; total-defined nonhalt 29,208; open 528,450; total 9,765,625. Max finite score 201 at `1RB0LA_1RC0RE_0RDHHH_1LD1RE_0LF0RB_1LA1RA` (200 ordinary steps, zero delay). The 258 open leaves are covered by 251 FAR candidates and seven symbolic recurrences.
 
 Leaf 7 is `1RB1LF_1RC0RE_0RD---_1LD1RE_0LF0RB_1LA0LB`. The family is A at the left blank boundary with right word (11)^n10110, entered at step 19. The proof Raw107RECounter.lean uses binary digits 00 and 10 in left zipper, carries through consecutive one digits, and fills lower zero digits by induction over arbitrary suffixes. F(0)=0, F(n+1)=2F(n)+4n+4, epoch cost F(n)+4n+6. Entry and growth compiled locally against copied exact zipper primitives (propext, Quot.sound only); full source closure pending. Six other leaves have linear pumps (index, entry, intercept, slope): (23,13,49,24), (41,8,69,60), (184,19,20,8), (190,8,17,4), (191,19,20,8), (199,8,17,4). Generate using `python generate_re.py`. Open roster SHA256: 775e6212f0fee97c622a3e7df398cb232b843a4e5b4a5a4e96e0158228b7222b.
+
+## Three further five-hole children
+
+All three formerly open rosters have been assigned explicit FAR or one-/two-block symbolic witnesses. Use `python generate_more.py 1RE 1LC 1LE` to regenerate the candidate source modules Raw107B1REData, Raw107B1LCData, Raw107B1LEData.
+
+| B1 | Bound | Split | Cycle | Last | FAR | Symbolic | First query |
+|---|---:|---:|---:|---:|---:|---:|---|
+| 1RE | 158 | 461 | 8449 | 1734 | 413 | 8 | E0, t=8 |
+| 1LC | 194 | 589 | 10270 | 2751 | 517 | 10 | E0, t=10 |
+| 1LE | 231 | 1155 | 20930 | 4796 | 828 | 12 | E0, t=8 |
+
+Each has total mass 9,765,625 raw assignments. Max finite witnesses: 1RE `1RBHHH_1RC1RE_0RD0LF_1LD1RE_1LC0RB_1LE0LA`, time 157; 1LC `1RBHHH_1RC1LC_0RD0LF_1LD1RE_1LC0RB_1LE0LA`, time 193; 1LE `1RB0LA_1RC1LE_0RD0RF_1LD1RE_1LA0RB_HHH0RD`, time 230. All zero delay. Three two-block exceptions have (index,entry,intercept,slope)=(146,1,25,12), (133,1,29,12), (110,11,29,10) respectively. The 30 generated growth theorems compiled locally with standard axioms only against copied primitives, as did all 14 earlier raw107 recurrences. Full source check still pending.
+
+Six nontrivial child audits now cover candidate mass 58,593,750 (24% of raw107). Eleven additional root children have immediate side cycles in the enumerator, but their original-source proofs have not been assembled here.
 
 ## Full raw107 census
 
