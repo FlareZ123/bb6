@@ -35,6 +35,11 @@ def main(work: Path) -> None:
     candidates = json.loads((work / "candidates.json").read_text())
     hard = [int(i) for i in candidates["hard"]]
     assert len(hard) == 274, len(hard)
+    late_long = [
+        {"index": int(i), "steps": int(v[0]), "slot": int(v[1])}
+        for i, v in candidates["late"].items() if int(v[0]) > 10000
+    ]
+    print("late-long leaves:", late_long)
 
     phase_ids = {
         int(line.split()[0])
@@ -148,6 +153,7 @@ def main(work: Path) -> None:
         "known_index_count": len(known),
         "target_count": len(targets),
         "target_indices": targets,
+        "late_long": late_long,
         "automata_pair_count": len(pairs),
         "found_count": len(hits),
         "emitted_count": len(emitted),
