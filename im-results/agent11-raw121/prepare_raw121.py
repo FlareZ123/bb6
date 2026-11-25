@@ -275,10 +275,8 @@ def generate_tree():
     assert set(dfa) == set(range(len(opens))) - special
     assert len(proofs) == 119 and len(late) == 2 and len(dfa) == 14156
 
-    stats = Counter()
     def build(node):
         tag, *values = node
-        stats[tag] += 1
         if tag == "cycle":
             e, k, right, boundary = values
             return f".cycle {e} {k} {str(bool(right)).lower()} ({boundary})"
@@ -303,8 +301,9 @@ def generate_tree():
         assert len(kids) == 24
         return f".split {n} {slot(s)} (byMove [\n" + ",\n".join(build(k) for k in kids) + "])"
 
-    audit = build(tree)
-    assert dict(stats) == EXPECTED_STATS, (stats, EXPECTED_STATS)
+    counts = Counter()
+    count_tree(tree, counts)
+    assert dict(counts) == EXPECTED_STATS, (counts, EXPECTED_STATS)
     base_imports = [
         "ZipThreeHoleAudit",
         "Raw121Pumps",
