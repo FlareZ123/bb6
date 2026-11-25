@@ -10,7 +10,8 @@ import sys
 
 DEFAULT_TABLE = '1RB0RD_1LC1LB_0LE1RA_0LC0RA_1LF1LD_1RD---'
 
-def generate(table, out, width=3, cap=2, mod=4, runs=2, flip=False, name="HeldBlock", minimize_left=False, sparse=False, offset=0):
+def generate(table, out, width=3, cap=2, mod=4, runs=2, flip=False, name="HeldBlock", minimize_left=False, sparse=False, offset=0, left_mode='runs'):
+    assert left_mode in ('runs','suffix')
     assert 0 <= offset < width
     assert offset == 0 or (width == 4 and not sparse and not flip), "offset proof backend currently supports unreflected width four"
     alphabet=2**width
@@ -59,6 +60,7 @@ def generate(table, out, width=3, cap=2, mod=4, runs=2, flip=False, name="HeldBl
         if key in delta: return delta[key]
         xs = left[l]
         if not xs and a == 0: ys = ()
+        elif left_mode == 'suffix': ys = (a,)+xs[:runs-1]
         elif xs and xs[0][0] == a:
             s,n,m = xs[0]; ys = ((s,min(cap,n+1),(m+1)%mod),)+xs[1:]
         else: ys = ((a,1,1%mod),)+xs[:runs-1]
