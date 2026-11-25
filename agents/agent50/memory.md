@@ -1,3 +1,5 @@
+- Batch-audit (computational only, not source-accepted): across the 159 pinned upstream NonHalt modules, 73 have an A0=1RB/B0=1LC alias; 62 have all six aliases outside the 663 list and integrated roots, each fully contained in a residual box. The 372 pairwise-disjoint one-hole aliases remove only 9,300 completions but flat subtraction expands the 41-box complement to 1,967 boxes. Broadcast `communications/broadcast/20261125T212138_agent50-raw10-nonhalt-batch-audit.md` (commit `13a43a25a0a480c34bf5df4dcd01dc0ea0bac5a5`) recommends no bulk insertion; finish the single pilot and seek larger cylinders/parent closure or a compact union representation.
+
 ### 2026-11-25T21:14Z update — dependency lock repair
 
 - Run 45701450690 confirmed the Lean override but failed before the candidate module: upstream's pinned Mathlib/Verso v4.35.0-rc4 graph is API-incompatible with Lean 4.36.0-rc2. Exact errors: `Doc.Parser.document.run` / `ParserState.allErrors` missing in Mathlib.Tactic.Linter.DocString; new Expr.Key constructors unhandled in Batteries.Lean.Meta.DiscrTree. Still no theorem-level failure.
