@@ -485,7 +485,7 @@ jobs:
               "axiom_allowlist": ["propext", "Classical.choice", "Quot.sound"],
           }
           pathlib.Path("/tmp/a31-canonical72-summary.json").write_text(
-              json.dumps(summary, indent=2, sort_keys=True) + "\\n"
+              json.dumps(summary, indent=2, sort_keys=True) + "\n"
           )
           print(json.dumps(summary, indent=2, sort_keys=True))
           PY
