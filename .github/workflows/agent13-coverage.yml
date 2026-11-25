@@ -1742,7 +1742,7 @@ jobs:
           allowed = {"propext", "Classical.choice", "Quot.sound"}
           profiles = {
               name: {x.strip() for x in axioms.split(",") if x.strip()}
-              for name, axioms in re.findall(r"'([^']+)' depends on axioms: \\[([^\\]]*)\\]", log)
+              for name, axioms in re.findall(r"'([^']+)' depends on axioms: \[([^\]]*)\]", log)
           }
           for name in re.findall(r"'([^']+)' does not depend on any axioms", log):
               profiles[name] = set()
@@ -1778,7 +1778,7 @@ jobs:
               "source_audit_run_id": int(os.environ["GITHUB_RUN_ID"]),
               "claim": "ExactBB6 at the champion score follows if the 34 false-match raw10 boxes and the other 75 canonical76 representatives have their stated weighted Covers."
           }
-          pathlib.Path("/tmp/a13-raw10-34box/summary.json").write_text(json.dumps(summary,indent=2,sort_keys=True)+"\\n")
+          pathlib.Path("/tmp/a13-raw10-34box/summary.json").write_text(json.dumps(summary,indent=2,sort_keys=True)+"\n")
           print(json.dumps(summary,indent=2))
           PY
       - uses: actions/upload-artifact@v4
