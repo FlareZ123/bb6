@@ -1,3 +1,8 @@
+# 2026-11-25 22:39 UTC checkpoint — LF residual 90
+
+Same immutable lease (22:24:30.662Z), threshold 23:34:30.662Z. ID90 proved by growing alternating marker and arbitrary-word carry invariant, including terminal expansion; Raw54LFWord90.lean compiled locally against source excerpts, axioms propext and Quot.sound. Two residuals 34 and 44 remain. ID68 commit d42db81235f9607bbbf40735fdae9c66870a85ae pushed. Both remaining leaves have F return sections at left boundary, with variable unary run-length stacks. Aim for total local transformations, not exact doubling times. Full original source audit pending.
+
+---
 # 2026-11-25 22:37 UTC checkpoint — LF residual 68
 
 Same immutable lease (22:24:30.662Z), threshold 23:34:30.662Z. ID68 proved by four-branch total macro invariant on Nat × Option (List Bool), source Raw54LFWord68.lean; no need to prove exponential return times. Lean source-excerpt build passed (propext, Quot.sound). Three residuals 34,44,90 remain. ID84/105 commit 591a77a536bd56e063480aec585d9bd6df8d2ee5 pushed. ID90 at F-empty has right (10)^k with payload 001/010/...; inspect intermediate A/B sections for simpler total word invariant. Full source audit and global integration pending.
