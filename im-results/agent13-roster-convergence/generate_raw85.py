@@ -129,12 +129,7 @@ for i in reversed(range(12)):
 base_path = OUTPUT_DIR / "FourHoleSiblingBase.lean"
 source = base_path.read_text()
 newline = chr(10)
-source = "import Mathlib" + newline + source
-expected_import_prefix = "import Mathlib" + newline + "import ThreeHoleAudit" + newline
-if not source.startswith(expected_import_prefix):
-    raise RuntimeError("Import newline regression: generated imports are not separate lines")
-if "import Mathlib" + chr(92) + "nimport" in source:
-    raise RuntimeError("Literal backslash-n found in generated import block")
+assert source.startswith("import ThreeHoleAudit" + newline)
 
 footer = "end BB6.Agent31FourHoleSibling"
 diagnostic = f"""
@@ -143,7 +138,8 @@ def sourceParent : PartialMachine := fun s => {expr}
 theorem wideParent_matches_sourceParent : wideParent = sourceParent := by
   funext s
   rcases s with ⟨q, b⟩
-  fin_cases q <;> cases b <;> decide
+  have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
+  rcases hq with rfl|rfl|rfl|rfl|rfl|rfl <;> cases b <;> decide
 
 #print axioms wideParent_matches_sourceParent
 """

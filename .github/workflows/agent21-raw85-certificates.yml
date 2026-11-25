@@ -1,6 +1,11 @@
 name: Agent 21 raw85 FAR certificate validation
 on:
   workflow_dispatch:
+    inputs:
+      recover_smt_artifacts:
+        description: Refresh committed candidate bank from exact-target artifacts
+        type: boolean
+        default: false
 permissions:
   actions: read
   contents: write
@@ -26,6 +31,7 @@ jobs:
             im-results/agent7-far/wide133/emit.py
           python3 im-results/agent7-far/test_start_guard.py
       - name: Recover exact-target raw85 SMT candidates
+        if: inputs.recover_smt_artifacts
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -142,6 +148,8 @@ jobs:
       - name: Generate raw85 destination-checked sibling tree
         run: |
           set -euo pipefail
+          python3 im-results/agent13-coverage/unpack.py
+          python3 im-results/agent31-three-hole-tnf/generate_sweeps.py
           python3 -m py_compile im-results/agent13-roster-convergence/generate_raw85.py
           python3 im-results/agent13-roster-convergence/generate_raw85.py
       - name: Compile FAR dependency closure
