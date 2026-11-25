@@ -35,9 +35,9 @@ The E0=0RB manual target `weighted-tnf-raw120-rb` passed in [CI run 45532860093]
 
 ## Placement in the global residual frontier
 
-The parent `p120` is canonical residual **84** (raw residual index **120**) in `im-results/agent13-roster-convergence/canonical-124.json`. Its exact address is B0=1RC, C0=0RD, D0=1LD, D1=1RE, E1=1LE, leaving E0 as the first hole. It is not among the 15 residuals removed by the accepted FiveHoleRoster and AllTwelveRoster cuts, so it remains one of the 109 obligations in `Combined109Roster.reducedRoster`.
+The parent `p120` is canonical residual **84** (raw residual index **120**) in `im-results/agent13-roster-convergence/canonical-124.json`. Its exact address is B0=1RC, C0=0RD, D0=1LD, D1=1RE, E1=1LE, leaving E0 as the first hole. It is not among the 18 residuals removed by the accepted FiveHoleRoster, AllTwelveRoster, and NewFiveRoster cuts, so it remains one of the **106** obligations in `Combined106Roster.reducedRoster`. The 106-way roster itself passed source-linked CI run 45518426903.
 
-The accepted `allRF` and `allRB` theorems cover only the E0=0RF and E0=0RB children of this residual. The draft `Raw120SiblingAudit.lean` records these two certificates in a 25-way first-hole audit at common threshold 14416; its intended report is `(2*25^5, 23*25^5)`, with two certified and 23 unresolved child cylinders. That audit module still requires its own CI compile. The parent `p120` is **not** closed; the other E0 alternatives still require a complete sibling cover before residual 120 can be removed from the 109-way maximality obligation.
+The accepted `allRF` and `allRB` theorems cover only the E0=0RF and E0=0RB children of this residual. The draft `Raw120SiblingAudit.lean` records these two certificates in a 25-way first-hole audit at common threshold 14416; its intended report is `(2*25^5, 23*25^5)`, with two certified and 23 unresolved child cylinders. That audit module still requires its own CI compile. The parent `p120` is **not** closed; the other E0 alternatives still require a complete sibling cover before residual 120 can be removed from the current 106-way maximality obligation.
 
 ## Proof structure
 
@@ -47,7 +47,7 @@ The accepted `allRF` and `allRB` theorems cover only the E0=0RF and E0=0RB child
 - `bank.txt`: compact reusable FAR candidate bank.
 - `generate.py`: regenerate the pinned RF tree, use exact FAR masks and symbolic witnesses, and generate chunked Lean certificates with the original source checker. Its `Raw120RFData.lean` target expresses `allRF` and `exactRF`.
 - `rb-bank.txt`, `generate_rb.py`, and `Raw120RBCounter.lean`: regenerate the pinned E0=0RB tree and its FAR/sweep/counter witnesses; the generated `Raw120RBData.lean` target expresses `allRB`.
-- `Raw120RosterLink.lean`: draft formal link from canonical residual 84 to p120 in `Combined109Roster.reducedRoster`; pending inclusion in the Combined109 compile closure.
+- `Raw120RosterLink.lean`: draft formal link from canonical residual 84 to p120 in `Combined106Roster.reducedRoster`; pending inclusion in the Combined106 compile closure.
 - `Raw120SiblingAudit.lean`: draft two-child first-hole audit; pending a CI target that runs both RF and RB generators before compiling it.
 - `generate_la.py`: experimental proof-producing search for the next E0=0LA sibling; not yet run or source-accepted.
 
