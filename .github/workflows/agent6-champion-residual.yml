@@ -445,8 +445,58 @@ jobs:
               print(name, sorted(used))
           PY
 
+      - name: Download accepted canonical76 two-parent roster artifact
+        if: ${{ inputs.raw139_cryptids_leaf && inputs.raw121_graft_run_id == '' }}
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45647053824
+          name: canonical73-raw110-raw112-roster-consumer-certified
+          path: /tmp/a47-canonical76
+      - name: Checkout pinned Cryptids NonHalt source tree for raw139 leaf pilot
+        if: ${{ inputs.raw139_cryptids_leaf && inputs.raw121_graft_run_id == '' }}
+        uses: actions/checkout@v4
+        with:
+          repository: google-deepmind/cryptids
+          ref: 3647718b5df22e1a61462dec0376bd204526285a
+          path: cryptids-raw139
+      - name: Align pinned Cryptids NonHalt source tree to Lean 4.36.0-rc2
+        if: ${{ inputs.raw139_cryptids_leaf && inputs.raw121_graft_run_id == '' }}
+        working-directory: cryptids-raw139
+        run: |
+          set -euo pipefail
+          sed -i 's/v4.35.0-rc4/v4.36.0-rc2/g' lakefile.toml
+          printf 'leanprover/lean4:v4.36.0-rc2\n' > lean-toolchain
+          lake update
+          lake exe cache get
+          lake build Cryptids.Machines BusyBeaver.Bridge BusyBeaver.BB6.NonHalt.M_1RB0LE_1RC0RC_1LD0RB_1LA0LE_1LD1LF_1LDHHH
+      - name: Compile source-connected raw139 E1=1LF leaf and canonical76 parent contract
+        if: ${{ inputs.raw139_cryptids_leaf && inputs.raw121_graft_run_id == '' }}
+        env:
+          UPSTREAM_ROOT: ${{ github.workspace }}/cryptids-raw139
+          CANONICAL77_DIR: /tmp/a47-canonical
+          CANONICAL76_ROOT: /tmp/a47-canonical76
+          CHAMPION_BUILD_DIR: /tmp/a6-champion-residual/build
+          WORKDIR: /tmp/a41-raw139-cryptids-leaf
+        run: |
+          set -euo pipefail
+          bash im-results/agent41-raw139-cryptids-leaf/reproduce.sh
+      - uses: actions/upload-artifact@v4
+        if: ${{ inputs.raw139_cryptids_leaf && inputs.raw121_graft_run_id == '' }}
+        with:
+          name: agent41-raw139-cryptids-leaf-${{ inputs.source_sha || github.sha }}
+          include-hidden-files: true
+          path: |
+            /tmp/a41-raw139-cryptids-leaf/summary.json
+            /tmp/a41-raw139-cryptids-leaf/compile.log
+            /tmp/a41-raw139-cryptids-leaf/compile.log.sha256
+            /tmp/a41-raw139-cryptids-leaf/canonical76-build-dir.txt
+            /tmp/a41-raw139-cryptids-leaf/upstream-commit.txt
+            /tmp/a6-champion-residual/build/Raw139CryptidsLeafPilot.olean
+          if-no-files-found: error
+          retention-days: 14
       - name: Compile the 0RB/0LA/1RD and 1LB raw139 F1 consumers
-        if: ${{ inputs.raw121_graft_run_id == '' }}
+        if: ${{ inputs.raw121_graft_run_id == '' && !inputs.raw139_cryptids_leaf }}
         run: |
           set -euo pipefail
           export LEAN_PATH="/tmp/a47-canonical:/tmp/a6-champion-residual/build${LEAN_PATH:+:$LEAN_PATH}"
@@ -504,45 +554,6 @@ jobs:
                   print(name, sorted(used))
           PY
 
-      - name: Checkout pinned Cryptids NonHalt source tree for raw139 leaf pilot
-        if: ${{ inputs.raw139_cryptids_leaf && inputs.raw121_graft_run_id == '' }}
-        uses: actions/checkout@v4
-        with:
-          repository: google-deepmind/cryptids
-          ref: 3647718b5df22e1a61462dec0376bd204526285a
-          path: cryptids-raw139
-      - name: Align pinned Cryptids NonHalt source tree to Lean 4.36.0-rc2
-        if: ${{ inputs.raw139_cryptids_leaf && inputs.raw121_graft_run_id == '' }}
-        working-directory: cryptids-raw139
-        run: |
-          set -euo pipefail
-          sed -i 's/v4.35.0-rc4/v4.36.0-rc2/g' lakefile.toml
-          printf 'leanprover/lean4:v4.36.0-rc2\n' > lean-toolchain
-          lake update
-          lake exe cache get
-          lake build Cryptids.Machines BusyBeaver.Bridge BusyBeaver.BB6.NonHalt.M_1RB0LE_1RC0RC_1LD0RB_1LA0LE_1LD1LF_1LDHHH
-      - name: Compile source-connected raw139 E1=1LF leaf and current-frontier graft
-        if: ${{ inputs.raw139_cryptids_leaf && inputs.raw121_graft_run_id == '' }}
-        env:
-          UPSTREAM_ROOT: ${{ github.workspace }}/cryptids-raw139
-          CANONICAL77_DIR: /tmp/a47-canonical
-          CHAMPION_BUILD_DIR: /tmp/a6-champion-residual/build
-          WORKDIR: /tmp/a41-raw139-cryptids-leaf
-        run: |
-          set -euo pipefail
-          bash im-results/agent41-raw139-cryptids-leaf/reproduce.sh
-      - uses: actions/upload-artifact@v4
-        if: ${{ inputs.raw139_cryptids_leaf && inputs.raw121_graft_run_id == '' }}
-        with:
-          name: agent41-raw139-cryptids-leaf-${{ inputs.source_sha || github.sha }}
-          include-hidden-files: true
-          path: |
-            /tmp/a41-raw139-cryptids-leaf/summary.json
-            /tmp/a41-raw139-cryptids-leaf/compile.log
-            /tmp/a41-raw139-cryptids-leaf/compile.log.sha256
-            /tmp/a6-champion-residual/build/Raw139CryptidsLeafPilot.olean
-          if-no-files-found: error
-          retention-days: 14
       - name: Checkout pinned Cryptids for A6 composition imports
         if: ${{ inputs.a6_run_id != '' && inputs.raw121_graft_run_id == '' }}
         uses: actions/checkout@v4
