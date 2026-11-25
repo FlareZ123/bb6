@@ -237,7 +237,7 @@ jobs:
               "BB6.Agent6Canonical77ChampionIntegration.exact_from_canonical77_and_raw139_leaves",
           )
           for name in names:
-              pattern = r"'" + re.escape(name) + r"' depends on axioms: \\[([^\\]]*)\\]"
+              pattern = r"'" + re.escape(name) + r"' depends on axioms: \[([^\]]*)\]"
               match = re.search(pattern, log)
               if match:
                   used = {x.strip() for x in match.group(1).split(",") if x.strip()}
