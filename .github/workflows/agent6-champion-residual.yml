@@ -520,7 +520,7 @@ jobs:
           printf 'leanprover/lean4:v4.36.0-rc2\n' > lean-toolchain
           lake update
           lake exe cache get
-          lake build Cryptids.Machines BusyBeaver.BB6.NonHalt.M_1RB0LE_1RC0RC_1LD0RB_1LA0LE_1LD1LF_1LDHHH
+          lake build Cryptids.Machines BusyBeaver.Bridge BusyBeaver.BB6.NonHalt.M_1RB0LE_1RC0RC_1LD0RB_1LA0LE_1LD1LF_1LDHHH
       - name: Compile source-connected raw139 E1=1LF leaf and current-frontier graft
         if: ${{ inputs.raw139_cryptids_leaf && inputs.raw121_graft_run_id == '' }}
         env:
