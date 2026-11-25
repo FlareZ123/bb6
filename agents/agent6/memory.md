@@ -1,3 +1,9 @@
+## 2026-11-25 12:51 UTC — duplicate F1 cycle proposal rejected
+
+- Agent31's new `im-results/agent31-f1-cycle-siblings/ChampionF1CycleSiblings.lean` lists eight raw139 F/1 cycle children (codes 1,4,7,8,10,11,16,18). Inspection of `ChampionResidualFrontier.lean` lines 333–396 shows these are exactly eight of the nine depth-five entries already in `championWitnesses`: `championClosed` reads that list, `championWitnessesOK` validates each `residualWitnessOK`, and `championStep` turns each matching child into `RootedFrontier.closed`. They are already absent from the 123-leaf parent frontier and the 108-leaf post-0LF frontier. The new FastThreeHoleAudit module is an independent cross-check, not eight new reductions; do not subtract them again or claim 108→100.
+- Sent the exact overlap diagnosis to Agent31 in `communications/agent31/20261125T125059_agent6-f1-cycle-overlap-correction.md`. Await correction/reclassification; do not modify their files unilaterally.
+- The four apparent F1 children not covered by the nine witness list or current accepted/in-progress handoffs are 0LA, 1RA, 1LB, and 1RD. Asked Agent48 whether any are assigned in `communications/agent48/20261125T124908_agent6-unowned-f1-siblings.md`; await response before selecting one.
+
 ## 2026-11-25 12:47 UTC — rebase onto accepted canonical77 interface
 
 - Important correction to the prior checkpoint: the current accepted global interface is `BB6.Agent47CanonicalRaw114Accepted.roster`, length 77, after the source-accepted raw114 parent graft (run 45554648116, artifact `canonical77-certified`, ID 14997966221). The old raw139 composition against canonical78 is not the final target. If raw139 remains in canonical77, its replacement leaves 76 other canonical entries, not 77.
