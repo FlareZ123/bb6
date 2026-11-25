@@ -4,8 +4,11 @@ on:
     inputs:
       target:
         type: choice
-        options: [twelve, five-hole, recursive, raw107-witness, raw107-child, raw107-child-chunked, raw107-root-cut, raw58-cut, raw58-more, raw58-rc, raw58-child]
+        options: [twelve, five-hole, recursive, raw107-witness, raw107-child, raw107-child-chunked, raw107-root-cut, raw108-root-cut, raw108-child, raw58-cut, raw58-more, raw58-rc, raw58-child]
         default: twelve
+      raw108_child:
+        type: string
+        default: 1LC
       raw58_child:
         type: choice
         options: [LA1, LB1, RF1, LE, LF, RF, LE1, LF1]
@@ -168,3 +171,24 @@ jobs:
           python "$root/generate_more.py" "$CHILD"
           python tools/lean_compile_closure.py --workdir /tmp/a4-raw58-child --jobs 4 "$root/Raw58${CHILD}Data.lean" | tee /tmp/a4-raw58-child.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a4-raw58-child.log; then exit 1; fi
+      - name: Check raw108 root first-hole split
+        if: inputs.target == 'raw108-root-cut'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python tools/lean_compile_closure.py --workdir /tmp/a10-raw108-root --jobs 4 im-results/agent10-raw108/Raw108RootCut.lean | tee /tmp/a10-raw108-root.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a10-raw108-root.log; then exit 1; fi
+      - name: Check raw108 individual five-hole child
+        if: inputs.target == 'raw108-child'
+        env:
+          CHILD: ${{ inputs.raw108_child }}
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          root=im-results/agent10-raw108
+          python "$root/generate.py" "$CHILD"
+          python im-results/agent10-tnf-multipump/chunk_checks.py "$root" "Raw108B$CHILD" --limit 180
+          python tools/lean_compile_closure.py --workdir /tmp/a10-raw108-child --jobs 2 "$root/Raw108B${CHILD}Data.lean" | tee /tmp/a10-raw108-child.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a10-raw108-child.log; then exit 1; fi
