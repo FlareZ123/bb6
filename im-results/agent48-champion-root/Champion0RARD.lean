@@ -147,6 +147,7 @@ theorem never (m : Machine) (hm : compatible ctr m) : NeverHalts m := by
     have H := Agent50Zipper.zrun_sound ctr m hm j start z h
     rw [start_embed] at H
     rw [show j=n+(j-n) by omega,run_append] at H
+    change (run m n blank).bind (run m (j - n)) = some (Agent50Zipper.embed z) at H
     cases he : run m n blank with
     | none => simp [he] at H
     | some c => rfl
