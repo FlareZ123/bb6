@@ -1,4 +1,4 @@
-import Canonical71Raw121RosterOnly
+import Canonical70Raw121Raw110RosterOnly
 import Raw109Cut
 import CanonicalRosterRefinement
 
@@ -10,20 +10,20 @@ namespace BB6.Agent38Raw109Membership
 open BB6.Agent47CanonicalRefinement
 
 /-- The Raw109 parent is a retained representative after the six canonical72
-    cuts and the additional Raw121 cut. This exact membership check is the
-    prerequisite for using its parent certificate as another roster graft. -/
+    cuts and the additional Raw121 and raw110 cuts. This exact membership
+    check is the prerequisite for a further roster graft. -/
 theorem parent_present :
-    ∃ e ∈ BB6.Agent8Canonical71Raw121RosterOnly.roster,
+    ∃ e ∈ BB6.Agent8Canonical70Raw121Raw110RosterOnly.roster,
       sameTable e.2 BB6.Agent4Raw109Cut.parent = true := by
   decide
 
-/-- Filter the Raw109 parent cylinder from the canonical71 list. -/
+/-- Filter the Raw109 parent cylinder from the canonical70 list. -/
 noncomputable def roster :=
   graftRoster BB6.Agent4Raw109Cut.parent []
-    BB6.Agent8Canonical71Raw121RosterOnly.roster
+    BB6.Agent8Canonical70Raw121Raw110RosterOnly.roster
 
 /-- Expected count after the additional Raw109 cut. -/
-theorem count : roster.length = 70 := by
+theorem count : roster.length = 69 := by
   decide
 
 #print axioms parent_present
