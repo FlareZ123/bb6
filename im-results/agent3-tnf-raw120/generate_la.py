@@ -176,7 +176,7 @@ for i, code in enumerate(opens):
         if i == 3911:
             assert code == "1RB0LF_1RC1RF_0RD1RB_1LD1RE_0LA1LE_---0RC"
             st = multi.C(4,(),multi.clean(multi.lit("1")+multi.rep("1"*18)+multi.lit("111")))
-            target = multi.C(4,(),multi.clean(multi.rep("1"*18)+multi.lit("1"*22)))
+            target = multi.C(4,(),multi.clean(multi.lit("1"*19)+multi.rep("1"*18)+multi.lit("111")))
             entry = 9
         else:
             assert code == "1RB1LF_1RC1RB_0RD1RF_1LD1RE_0LA1LE_---0RB"
