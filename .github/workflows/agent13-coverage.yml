@@ -165,7 +165,8 @@ jobs:
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
           python im-results/agent16-raw118/bidfa_emit.py > im-results/agent16-raw118/Raw118BiDFA.lean
-          python tools/lean_compile_closure.py --workdir /tmp/a16-raw118-bidfa --jobs 4 im-results/agent16-raw118/Raw118BiDFA.lean | tee /tmp/a16-raw118-bidfa.log
+          python im-results/agent16-raw118/tree_emit.py > im-results/agent16-raw118/Raw118Tree.lean
+          python tools/lean_compile_closure.py --workdir /tmp/a16-raw118-bidfa --jobs 4 im-results/agent16-raw118/Raw118BiDFA.lean im-results/agent16-raw118/Raw118Tree.lean | tee /tmp/a16-raw118-bidfa.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a16-raw118-bidfa.log; then exit 1; fi
       - name: Check independent-counter raw118 sweep invariants
         if: inputs.target == 'weighted-tnf-raw118-independent'
