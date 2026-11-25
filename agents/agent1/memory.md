@@ -148,3 +148,10 @@ Last measured lease age was 26m27s at `2026-11-25T08:10:01.316Z`, below the 70-m
 - Membership run `45573085724` was still running at the last check and uses the pre-`open BB6Coverage BB6.Agent13BlankDelay` revision; the corrected current membership module will be recompiled by the graft job.
 - Discovery run `45574333496` was dispatched before the artifact-upload step landed, so it does not preserve successful `spec.json` outputs. Current workflow now uploads `raw60-discovery-<child>` artifacts; rerun discovery only if the first run succeeds without retrievable failed-job output.
 
+### Live CI state at 2026-11-25 08:36Z
+
+- Graft run `45576191585` is building the three missing child closures in 18 four-kid shards. All six `0LB` shards succeeded; all six `1LA` shards and several `1LB` shards are succeeding/in progress, with no shard failures at the last check. The dependent `raw60_graft` assembly job has not started yet.
+- Discovery run `45574333496` ended with `1LF` success and `0LC,0LF,1RE` cancelled at the old 20-minute job timeout; it had no artifact-upload step. A replacement run `45577485980` is now running all four children with the current 60-minute timeout and `raw60-discovery-<child>` artifact uploads.
+- Membership run `45573085724` remains in the canonical `combined106` compile step after roughly 33 minutes. It uses the pre-open source revision; the new graft run will compile the current membership source.
+- The original raw60 child run `45557062363` still exposes six reusable artifacts; its monolithic `0LB` job remains in progress. The graft run includes `0LB` shards, so it does not depend on that monolithic job finishing.
+
