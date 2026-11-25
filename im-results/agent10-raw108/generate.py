@@ -14,6 +14,8 @@ from generate_four_hole import masks,slot,move,parse
 
 MOVES=[w+d+q for w,d,q in product("01","LR","ABCDEF")]
 SPECS=json.loads((ROOT/"specs.json").read_text())
+import build_lb
+SPECS["0LB"]=build_lb.load()
 
 def main(a):
     spec=SPECS[a]
@@ -77,6 +79,8 @@ def main(a):
             mod,nspace,table=spec["manual"][i]
             assert desc["table"]==table
             phase_chain.emit(desc,mod,nspace)
+    if a=="0LB":
+        build_lb.prepare(spec,opens,target,witnesses,manual,slot)
     if spec.get("block"):
         import block_witness
         for i,params in spec["block"].items():
@@ -123,6 +127,7 @@ open BB6.Agent50TNFPilot BB6.Agent31ThreeHole BB6.Agent10ZipAudit
             nn,ss=v;return f".last {nn} {slot(ss)}"
         if tag=="open":
             t=v[0];i=index[t];kind,val=witnesses[i]
+            if kind=="subtree":return val
             if kind=="proven":return f".proven {val}.table {val}.never"
             if kind=="cycle":return cycle(*val)
             if kind=="late":return f".last {val[0]} {slot(val[1])}"
