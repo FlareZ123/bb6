@@ -39,7 +39,7 @@ jobs:
             "BB6.Agent31F1CycleSiblings.all_completions_weighted1LE",
           )
           for name in names:
-            m=re.search(r"'"+re.escape(name)+r"' depends on axioms: \\[([^\\]]*)\\]",log,re.S)
+            m=re.search(r"'" + re.escape(name) + r"' depends on axioms: \[([^\]]*)\]",log,re.S)
             if not m:
               if "'"+name+"' does not depend on any axioms" in log:
                 used=set()
