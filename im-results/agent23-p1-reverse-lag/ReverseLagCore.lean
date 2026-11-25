@@ -257,10 +257,14 @@ theorem extend_to_DWalk (n s B a k C c : Nat)
         (targetsRev n s (C+2^(s+k)*x) k) c := by
       rw [htail]
       exact ih hTrace
-    simpa [targetsRev,targetsRev_length,Nat.add_assoc] using
+    have hedge' :
+        EdgeY (n+s+3+(targetsRev n s (C+2^(s+k)*x) k).length)
+          (target n (s+k) (C+2^(s+k)*x)) c d := by
+      simpa [targetsRev_length,Nat.add_assoc,Nat.add_comm,Nat.add_left_comm] using hedge
+    simpa [targetsRev] using
       DWalk.snoc (n+s+3) a
         (targetsRev n s (C+2^(s+k)*x) k) c
-        (target n (s+k) (C+2^(s+k)*x)) d hwalk hedge
+        (target n (s+k) (C+2^(s+k)*x)) d hwalk hedge'
 
 /-- The reverse-live set is a sound, exact Boolean lookahead for any
     delayed-carry extension of length k. -/
