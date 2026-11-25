@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 from pathlib import Path
 import re
+import sys
 
-root = Path(__file__).resolve().parent / "out-oneLD"
-log = Path("/tmp/a31-oneLD.log").read_text()
+root = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(__file__).resolve().parent / "out-oneLD"
+log_path = Path(sys.argv[2]) if len(sys.argv) > 2 else Path("/tmp/a31-oneLD.log")
+log = log_path.read_text()
 allowed = {"propext", "Classical.choice", "Quot.sound"}
 names = ["BB6.Agent31OneLD.checked", "BB6.Agent31OneLD.all_completions_weighted"]
 for p in root.glob("pump-*.json"):
