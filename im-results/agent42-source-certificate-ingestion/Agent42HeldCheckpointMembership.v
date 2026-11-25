@@ -84,8 +84,8 @@ Lemma Trans_to_str_injective (x y : option (Sym * dir * Q)) :
 Proof.
   destruct x as [tx|]; destruct y as [ty|]; simpl.
   - intro H.
-    destruct tx as [[w d] q].
-    destruct ty as [[w' d'] q'].
+    destruct tx as [w [d q]].
+    destruct ty as [w' [d' q']].
     simpl in H.
     destruct w; destruct w'; destruct d; destruct d'; destruct q; destruct q';
     simpl in H; try discriminate; reflexivity.
