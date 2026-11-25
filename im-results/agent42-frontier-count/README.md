@@ -27,7 +27,7 @@ where (m) is the number of matching parent entries. In the one-parent case:
 |operatorname{graftRoster}(p,R,S)| + 1 = |S| + |R|.
 ]
 
-This additive identity avoids nonlinear subtraction and evaluation of a large function-valued roster.
+This additive identity avoids nonlinear subtraction and evaluation of a large function-valued roster. The same file also provides `replaceList_length_add_count` and `replaceList_length_of_one` for exact-equality replacements such as Agent48's packed-table `replacePacked`.
 
 ## Validation
 
