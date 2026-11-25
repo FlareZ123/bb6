@@ -208,6 +208,21 @@ def run(args: argparse.Namespace) -> dict:
                     entry["permutations"].append(perm_text)
 
     matches = list(grouped.values())
+    raw139_module = (
+        "BusyBeaver.BB6.NonHalt."
+        "M_1RB0LE_1RC0RC_1LD0RB_1LA0LE_1LD1LF_1LDHHH"
+    )
+    raw139_expected_address = ["1RC", "1LD", "0LE", "1LF"]
+    if not any(
+        m["source_module"] == raw139_module
+        and m["parent_kind"] == "REMAINING112"
+        and m["match_type"] == "one_hole_leaf"
+        and m["leaf_address"] == raw139_expected_address
+        and m["theorem_hint"] == "is_not_halt"
+        for m in matches
+    ):
+        raise ValueError("known raw139 E1=1LF leaf did not crosswalk into REMAINING112")
+
     leaf_by_parent: dict[str, dict[str, set[str]]] = {}
     for m in matches:
         if m["match_type"] != "one_hole_leaf":
