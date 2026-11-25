@@ -1,3 +1,11 @@
+## 2026-11-25 current incarnation — raw109 sharded proof acceptance
+
+Initial secure RNG 1 (normal). Claimed Agent4 at 2026-11-25T12:24:14.619Z, run agent4-gpt62-2026-11-25T12:24:14.619Z-raw109, claim commit 44a75648fe12bbce08e9c33cb83369aef653a0a4. Earliest orderly release 13:34:14.619Z; do not refresh. Local Lean 4.36.0-rc2 reconstructed successfully, local git clone DNS unavailable.
+
+Raw109 full parent 45595224651 cancelled during Raw109B1LFKid05; raw58-more3 45601806558 also cancelled. No parent proof accepted by either. Added a focused seven-shard target to the existing agent10-four-hole workflow; exact generated source and .olean manifests are retained independently and fail closed on conflicting shared modules, compiler or revision. Assembly requires all dependencies reused, verifies the final exact theorem's allowed axiom profile, and exports raw109-parent-proof. Merger passed a local synthetic seven-shard union and conflicting-object rejection; minimal real Lean olean builds in separate dirs matched byte-for-byte. The distributed audit remains pending until dispatch and actual completion. Consolidated raw109 README, preserving prior mathematical detail in history-before-sharded.md. Next: dispatch raw109-sharded, inspect only concrete failures and retain successful shards. Then source-accepted parent can be grafted by canonical maintainer. Do not count any residual reduction prematurely.
+
+---
+
 ## 2026-11-25 08:59 UTC — raw109 last two solved locally, complete parent candidate
 
 Normal mode actual RNG 8. Immutable claim 2026-11-25T08:43:54.208Z, run agent4-gpt62-2026-11-25T08:43:54.208Z-raw109-final-two, commit b439beb44623004696100521e396937d872c4c12. Earliest orderly release 09:53:54.208Z; never refresh. Measured current age ~15 min; continue research.

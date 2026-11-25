@@ -1,136 +1,97 @@
-# Raw109 complete candidate parent closure
+# Raw109: complete candidate parent bound, sharded source audit
 
-Parent raw109, `1RB---_1RC---_0RD---_1LD1RE_---1RB_------`, is a retained canonical residual (six holes, 25^6 = 244,140,625 compatible completions). The first unassigned query is B1 at ordinary step 7. **Every branch now has a candidate certificate; the full original-source parent audit is still pending.**
+Raw109 is the six-hole parent
+`1RB---_1RC---_0RD---_1LD1RE_---1RB_------`
+with 25^6 = 244,140,625 compatible completions. The first unassigned
+query is B1 at primitive step 7. Eleven moving choices have immediate
+side-cycle certificates, the halt choice is bounded at the query, and
+all thirteen other moving choices have complete candidate trees with
+no unresolved exception hypotheses.
 
-## Current candidate partition
+**Current status:** the unconditional theorem
+`BB6.Agent4Raw109Closed.all_closed` in [Raw109Closed.lean](Raw109Closed.lean)
+would bound every compatible machine at weighted score 1703. The
+four-child audit 45551831758 and final two inductive leaf audit
+[45581032451](https://github.com/FlareZ123/bb6/actions/runs/45581032451)
+passed, but the full parent audits have not completed. The latest
+[45595224651](https://github.com/FlareZ123/bb6/actions/runs/45595224651)
+was cancelled during Raw109B1LFKid05 compilation, not at a mathematical
+counterexample or a reported Lean error. Earlier source fixes corrected
+Raw109LA454 witness order and Raw109LC354 rewrite direction. No canonical
+address is removed on the basis of this candidate alone.
 
-Eleven ordinary B1 alternatives have immediate side-cycle certificates; the halt alternative is bounded by the root query. All thirteen remaining alternatives have complete candidate trees in [specs.json](specs.json), with a common proposed bound 1703. [Raw109Closed.lean](Raw109Closed.lean) composes the thirteen independent child bounds and eleven immediate cycles plus the halt alternative, without pulling in the canonical roster or asking for any exception hypotheses.
+## Exhaustive candidate partition
 
-| B1=0LF candidate tree | Count |
-| --- | ---: |
-| Split nodes | 1,314 |
-| Side-cycle leaves | 23,675 |
-| Last-hole leaves | 4,931 |
-| Initial open leaves | 1,617 |
-| Pooled FAR witnesses | 1,428 |
-| N-gram candidates (width ≤12) | 104 |
-| Single-block sweeps | 46 |
-| Long-epoch sweeps | 5 |
-| Explicit extra FAR witnesses (5–15 states) | 32 |
-| New inductive leaf proofs | 2 |
-| Unresolved leaves | 0 |
+| B1 | Weighted bound | Initial open leaves | Split nodes |
+| --- | ---: | ---: | ---: |
+| 0LD | 324 | 320 | 595 |
+| 0RE | 353 | 110 | 392 |
+| 0LC | 240 | 171 | 738 |
+| 1RE | 119 | 670 | 445 |
+| 1LB | 127 | 2132 | 766 |
+| 0RF | 461 | 498 | 908 |
+| 1RF | 268 | 699 | 972 |
+| 1LC | 162 | 430 | 1115 |
+| 0LA | 168 | 691 | 1077 |
+| 1LA | 177 | 1383 | 1415 |
+| 0RC | 1703 | 224 | 594 |
+| 1LF | 658 | 2360 | 2112 |
+| 0LF | 904 | 1617 | 1314 |
 
-The exact enumeration was reproduced with the existing C++ generator algorithm and an independent JS implementation: open-list SHA256 `413916c71af62ae660bf5feb4939bf663d7e0706a0c7e0b210d341f00c79455a`; maximum weighted query bound 904, first query (8,F1). The previously remaining tables are now in the manual certificate map; the exception map is empty.
+[specs.json](specs.json) specifies each open-list hash, exact first
+query, and complete assignment of nonhalting/finite certificates. The
+parent composition imports the initial 0LD/0RE root cut and eleven
+remaining child closures.
 
-### Leaf 1475: translated growth
+## Hardest final leaves
 
-Table `1RB0RB_1RC0LF_0RD0RA_1LD1RE_---1RB_1LB1LF`. At time 643, the zipper in state B is (P I, 0), where the head-inclusive left word has P=00011011101100 and I=10011111111111. The exact 532-step arbitrary-tail recurrence (P L,0) -> (P I L,0) proves nonhalting for all completions of the unassigned E0 transition. See [Raw109LF1475.lean](Raw109LF1475.lean); both exact identities checked locally.
+For B1=0LF the 1617 open leaves consist of 1428 pooled FAR certificates,
+32 extra FAR certificates, 104 n-gram certificates, 46 single-block
+sweeps, 5 long-epoch sweeps, and two handwritten inductive certificates.
+The independently reproduced open-list SHA-256 is
+`413916c71af62ae660bf5feb4939bf663d7e0706a0c7e0b210d341f00c79455a`.
 
-### Leaf 1200: inductive compressed-language proof
+- [Leaf 1475](Raw109LF1475.lean), table
+  `1RB0RB_1RC0LF_0RD0RA_1LD1RE_---1RB_1LB1LF`:
+  B zipper return (P L,0) -> (P I L,0) in 532 steps, with
+  P=00011011101100 and I=10011111111111, and blank entry at 643.
+- [Leaf 1200](Raw109LF1200.lean), table
+  `1RB0RA_1RC0LF_0RD1RA_1LD1RE_---1RB_0LB1LF`:
+  use Y=1101, V=0110, Z=1011 and a B section with left Y^k
+  behind the scanned head and right word W including that head.
+  Blank enters at t=40, k=2, W=00. Exact arbitrary-tail base and deep
+  macros increase k by two; a 22-state DFA proves closure and complete
+  prefix coverage, including recursively consumed V blocks. Padding
+  congruence and arbitrary live prefixes lift to original-machine
+  nonhalting. Both original-source wrappers passed run 45581032451.
 
-Table `1RB0RA_1RC0LF_0RD1RA_1LD1RE_---1RB_0LB1LF`. Set Y=1101, V=0110, Z=1011. The section in B is the zipper with left word consisting of the head of W followed by Y^k and right word the tail of W (implicit zero blank padding). Blank reaches the section with k=2 and W=00 at time 40.
+Earlier reusable counter arguments and finite child certificates remain
+in the [historical detailed dossier](history-before-sharded.md) and
+the individual Lean files.
 
-Five base terminal prefixes and six deep terminal prefixes define exact arbitrary-tail positive-time macro steps: each return increases k by two. Deep macros scan V blocks, transfer Z blocks and reset using two Y/V sweeps. A 22-state DFA on W supplies an inductive invariant: finite transition-relation checks prove suffix-language inclusion for every macro; a depth-10 prefix checker proves coverage for all accepted words, recursively consuming V blocks; a zero-padding equivalence theorem transports every macro to the exact zipper semantics. These are all-time quantified statements, not a finite orbit extrapolation. The complete theorem `arbitrary` establishes live prefixes beyond every n; the `never` wrapper uses the original `Agent4Live.never_of_live` bridge. See [Raw109LF1200.lean](Raw109LF1200.lean).
+## Reproducible, interruption-tolerant parent acceptance
 
-Local Lean 4.36.0-rc2 checked every macro, closure, prefix parser, padding congruence and the final arbitrary-live-prefix theorem with axioms [propext, Classical.choice, Quot.sound], using verbatim local copies of the zipper and sweep definitions/proofs. No sorryAx or native_decide was used. The exact-source leaf audit 45581032451 completed successfully, compiling both original-machine NeverHalts wrappers and rejecting sorryAx/native_decide.
+Use the existing manual `agent10-four-hole.yml` target
+`raw109-sharded`. Seven jobs check all thirteen child trees
+independently, retaining exact source/object manifests and logs, with
+fail-fast disabled. The final job uses [merge_shards.py](merge_shards.py)
+to reject source, compiler, revision, generated-input or object
+disagreements; it restores generated sources into the original paths
+without overwriting changed tracked files. The strict shared compiler
+then rechecks dependency identities and compiles only Raw109Closed.
+The final artifact is accepted only if every dependency is reused and
+the exact exported parent axiom profile contains solely standard Lean
+axioms. No monolithic rerun is needed after a successful shard.
 
-**Proof status:** the two new local proofs and the complete census establish a candidate parent closure with no remaining mathematical exceptions in the generator. Original-source leaf audit [45581032451](https://github.com/FlareZ123/bb6/actions/runs/45581032451) passed the named check step at commit cca3d0ec81b961e9315506992fedbf84166a0f4e. The standalone parent audit [45581037766](https://github.com/FlareZ123/bb6/actions/runs/45581037766) at the same commit remains in progress. The parent target emits a manifest and compiled proof artifact if successful. No canonical residual may be deleted until source-accepted parent closure and exact compatible graft.
+The merger passed a local seven-shard positive fixture and a conflicting
+shared-object rejection fixture. A minimal Lean 4.36.0-rc2 object compiled
+in two distinct local directories had identical hashes; this is a
+preflight, not a guarantee that the actual distributed objects match.
+Local Git clone remains blocked by DNS resolution, so exact repository
+source compilation is delegated to this focused CI target.
 
-The following sections preserve earlier mathematical constructions and candidate partitions. Their intermediate remaining-branch counts are superseded by the current complete candidate above. The four-child original-source audit 45551831758 succeeded; subsequent children and full-parent composition still await the above audit.
-
-## Complete candidate children
-
-| B1 | Weighted bound | Splits | Side cycles | Last-hole leaves | FAR | N-gram | Inductive |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| 0LD | 324 | 595 | 11,100 | 2,266 | 316 | 0 | 4 |
-| 0RE | 353 | 392 | 7,433 | 1,474 | 108 | 0 | 2 |
-| 0LC | 240 | 738 | 14,373 | 2,431 | 159 | 12 | 0 |
-| 1RE | 119 | 445 | 7,997 | 1,569 | 667 | 2 | 1 |
-
-The four finite first-hole trees use the existing zip checker, including exact weighted query and halt rules. All candidate open leaves are covered by explicit FAR, local-window, or inductive certificates rather than a finite simulation cutoff. The 0LC n-gram candidate widths are at most 11; the largest has 6,359 abstract quadruples. The two 1RE local-window certificates have widths 4 and 5. Generation pins each open-list SHA256, count, and exact first-query index in [specs.json](specs.json).
-
-**Proof status:** prior 0LD and 0RE cut plus the new 0LC and 1RE full candidate trees still require the original-source Lean audit. [Raw109Refinement.lean](Raw109Refinement.lean) is the consuming draft: it retains exactly nine B1 alternatives and grafts their physical partition into the canonical78 quotient interface. It claims no accepted global reduction until the full import closure and transitive axiom audit succeed. The source target is the existing manual `agent10-four-hole.yml` target `raw109-refine`.
-
-## Unbounded binary counter in B1=1RE leaf 238
-
-Table `1RB1LC_1RC1RE_0RD1RF_1LD1RE_1LA1RB_---0LA` has one hole F0. The exact zipper entry is at primitive time 30, state A with head-inclusive left word 101110 and right word 1. Represent the little-endian digits by b000 blocks (possibly ending in one bit). A three-step entry into E initiates a carry; each leading one digit transfers four ones to the left in eight steps. At the first zero or implicit blank, E0 writes a one and returns A. A twelve-step left transfer converts each carried group of four ones into four zeros on the right, returning to the fixed left sentinel. Thus a carry through k leading ones takes exactly 20k+4 steps from A to A and implements binary increment, including overflow into implicit blank.
-
-[Raw109RE238.lean](Raw109RE238.lean) proves the arbitrary-tail carry, four-cell sweep, all-word return, and unbounded live-prefix theorem. The entire recurrence through `arbitrary` compiled locally on Lean 4.36.0-rc2 using verbatim `run0`, `join0`, and `sweepL` definitions/proofs, with axioms [propext, Quot.sound]. The final original-source `never_of_live` wrapper and full child tree are awaiting the source audit; the local check does not establish the transitive original-source status.
-
-The older six one-block sweep candidates use entry 2 and family C with left zipper 01(1111)^n1 for the four 0LD leaves (costs 29+24n, 25+20n, 25+16n, 21+12n). The two 0RE leaves use E with 0011(1001)^n1 (29+14n) and D with 001(1011)^n1 (22+12n).
-
-## Exact retained complement
-
-[Raw109Cut.lean](Raw109Cut.lean) contains eleven immediate side cycles and the halt branch, in addition to the first two candidate children. If the four children and the partition are accepted, the parent has a score-353 bound or lies in one of these nine disjoint five-hole cylinders:
-
-`0LA, 0LF, 0RC, 0RF, 1LA, 1LB, 1LC, 1LF, 1RF`.
-
-The explicit retained mass is 9*25^5=87,890,625, while 156,250,000 completions belong to the closed alternatives. The quotient consumer replaces one of the 78 addresses by nine, producing 86 obligations, without dropping any unmatched representative. It accepts remaining covers at arbitrary target B≥7014. These are proposed counts, pending the source-check of the exact table matching and the graft.
-
-## Reproduction
-
-Run `python im-results/agent4-raw109/generate.py 0LD 0RE 0LC 1RE` after the standard source unpack and sweep preparation; then use the shared chunk checker and strict closure compiler as in the manual workflow. The local direct Git clone failed DNS resolution; the toolchain reconstructed successfully, and the exact-source closure is delegated to the existing pinned CI target. No full raw109 decision or BB(6) upper bound is claimed.
-
-### Additional candidate closures: 1LB and 0RF
-
-The pooled FAR bank and n-gram search leave three 1LB leaves (23, 240,
-1926) and five 0RF leaves (52, 389, 391, 396, 410). Existing sweep
-generation covers 1LB/23,240 and 0RF/52,391,396,410. The period-two
-left-boundary sweep for 1LB/1926 starts at t=34, grows by 12 ones per
-return, and is emitted by the long-epoch generator. 1LB/25 has a
-width-12 n-gram certificate.
-
-For 0RF/389, the new Raw109RF389.lean proves an exact nested unary
-growth recurrence. Write A(N) for state A, empty left zipper, right
-0 followed by N ones. From blank, A(4) is reached at t=17.
-For even N>=2, entry goes to C with N+1 zeroes and two ones.
-Every inner C phase trades one zero for three ones at cost 2k+10,
-and the final left sweep transfers two ones per six steps. Consequently
-A(N) reaches A(3N+4) in positive finite time. Lean 4.36.0-rc2 checked
-all recurrence and induction theorems against a verbatim local copy
-of the original zipper semantics and composition lemma; only
-propext and Quot.sound occur in the arbitrary-prefix theorem.
-The complete original-source bridge remains subject to CI.
-
-New candidate upper bounds: 1LB 127 (2123 FAR, 6 n-gram, 3 sweeps);
-0RF 461 (487 FAR, 6 n-gram, 4 sweeps, 1 nested-growth proof).
-Together with the earlier four children, this leaves seven of the
-25 B1 choices (68,359,375 completions) under the proposed bound-461
-partition, and resolves 175,781,250 completions if accepted.
-Raw109Refinement6.lean gives the corresponding candidate 84-entry
-canonical-roster graft. No complete cylinder is claimed accepted yet.
-
-### Seventh candidate branch: 1RF
-
-All 699 initial open leaves now have concrete candidate certificates:
-689 pooled FAR, one additional exact five-state FAR (leaf 312, code
-00102340103), one n-gram (582), four one-block sweeps (293, 362, 387,
-599), one long-epoch sweep (570, period four, entry t=8), and three
-new hand-derived proofs. The additional DFA is recorded against its
-exact table in specs.json and goes through the same mask closure and
-kernel checker as pooled FAR certificates.
-
-- Raw109RF506.lean handles both 506 and 508 with a single Boolean
-  table parameter. At state F, left word 0 1^(4n+4) 0 L and empty
-  right zipper, one epoch increases n by one and prepends 1 to L.
-  Costs are 16n+25 and 16n+27; entries t=33 and 35.
-- Raw109RF3.lean uses a regular inductive code of triples b11 and
-  seven terminal words of length 2–4. A carry across b=0 advances
-  three cells, clearing b=1 returns to the sentinel, and the all-zero
-  terminal cases regenerate a unary F configuration. The Safe
-  invariant is inhabited at t=50 and has a positive live successor
-  at every element. This proves unbounded live prefixes without
-  enumerating the exponentially many counter values.
-
-Both arbitrary-prefix proofs checked locally in the same Lean 4.36.0-rc2
-zipper harness, with only propext and Quot.sound. The original-source
-NeverHalts bridges, combined tree, and global graft are still candidate
-integrations. The 1RF bound is 268.
-
-### 1LC candidate
-
-All 430 residual leaves accounted for by 420 bank FAR, 4 n-gram, 2 single sweeps, 2 multi sweeps, and the paired 354/356 inductive certificate in Raw109LC354.lean. The arbitrary-prefix theorem checked locally with only propext and Quot.sound. The proposed bound is 162. The 82-cylinder refinement retains five B1 choices: 0LA, 0LF, 0RC, 1LA, 1LF. Original-source audit pending.
-
-### 0LA candidate
-
-691 residual leaves: 643 bank FAR, 38 n-gram, 4 single sweeps, 1 multi sweep, and five manual digit-grammar certificates (142,472,515,524,529). All four handwritten arbitrary-prefix theorems passed Lean 4.36.0-rc2 locally, with propext and Quot.sound only; the original-source bridge and full tree still require CI. The leaf 515 construction proves a sweepable-word reverse relation and a unary prefix increment of two per epoch. Proposed bound 168. Refinement9 retains only 0LF, 0RC, 1LA, 1LF, giving a conditional 81-cylinder global roster.
+Once the final assembly is source-accepted, provide the full artifact
+and manifest to the canonical roster maintainer. Exact compatibility of
+raw109 with a retained canonical representative must be separately
+checked at the common bound B. Until that graft succeeds, the global
+residual count and BB(6) status remain unchanged.

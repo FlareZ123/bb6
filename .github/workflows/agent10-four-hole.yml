@@ -4,7 +4,7 @@ on:
     inputs:
       target:
         type: choice
-        options: [twelve, five-hole, recursive, raw107-witness, raw121-witness, raw121-membership, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-child, raw108-graft, raw58-cut, raw58-more, raw58-more2, raw58-more3, raw58-rc, raw58-child, raw109-cut, raw109-refine, raw109-refine6, raw109-refine7, raw109-refine8, raw109-refine9, raw109-refine12, raw109-final-leaves, raw109-closed]
+        options: [twelve, five-hole, recursive, raw107-witness, raw121-witness, raw121-membership, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-child, raw108-graft, raw58-cut, raw58-more, raw58-more2, raw58-more3, raw58-rc, raw58-child, raw109-cut, raw109-refine, raw109-refine6, raw109-refine7, raw109-refine8, raw109-refine9, raw109-refine12, raw109-final-leaves, raw109-closed, raw109-sharded]
         default: twelve
       raw108_child:
         type: string
@@ -26,6 +26,7 @@ permissions:
   contents: read
 jobs:
   check:
+    if: inputs.target != 'raw109-sharded'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -361,3 +362,123 @@ jobs:
           python im-results/agent10-raw108/countergen.py
           python tools/lean_compile_closure.py --workdir .tmp/a10-raw108-counter --jobs 2 im-results/agent10-raw108/Raw108LE1279.lean im-results/agent10-raw108/Raw108LE1280.lean | tee /tmp/a10-raw108-counter.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a10-raw108-counter.log; then exit 1; fi
+
+  raw109-shards:
+    if: inputs.target == 'raw109-sharded'
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        group: [cut, lc-re-lb, rf, lc-la, la-rc, lf1, lf0]
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Generate and independently certify one shard
+        env:
+          GROUP: ${{ matrix.group }}
+        run: |
+          set -euo pipefail
+          root=im-results/agent4-raw109
+          case "$GROUP" in
+            cut) children="0LD 0RE" ;;
+            lc-re-lb) children="0LC 1RE 1LB" ;;
+            rf) children="0RF 1RF" ;;
+            lc-la) children="1LC 0LA" ;;
+            la-rc) children="1LA 0RC" ;;
+            lf1) children="1LF" ;;
+            lf0) children="0LF" ;;
+            *) exit 2 ;;
+          esac
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python "$root/generate.py" $children
+          roots=()
+          theorems=()
+          for child in $children; do
+            python im-results/agent10-tnf-multipump/chunk_checks.py "$root" "Raw109B$child" --limit 180
+            roots+=("$root/Raw109B${child}Data.lean")
+            theorems+=("BB6.Agent4Raw109B$child.all_closed")
+          done
+          if [ "$GROUP" = cut ]; then
+            roots=("$root/Raw109Cut.lean")
+            theorems+=("BB6.Agent4Raw109Cut.parent_dichotomy")
+          fi
+          work=/tmp/a4-raw109-shard
+          python tools/lean_compile_closure.py --workdir "$work" --jobs 4 \
+            --manifest "$work/manifest.json" --label "raw109-shard-$GROUP" \
+            --artifact-name "raw109-shard-$GROUP" \
+            --provenance-input "$root/specs.json" --provenance-input "$root/generate.py" \
+            --provenance-input im-results/agent10-tnf-multipump/chunk_checks.py \
+            --provenance-input im-results/agent13-coverage/unpack.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_sweeps.py \
+            --provenance-input im-results/agent2-tnf-raw99/enumerate.cpp \
+            --provenance-input im-results/agent11-raw107/bank.cpp \
+            --provenance-input im-results/agent1-raw60/bank.txt \
+            "${roots[@]}" 2>&1 | tee /tmp/a4-raw109-shard.log
+          python "$root/audit_axioms.py" /tmp/a4-raw109-shard.log "${theorems[@]}"
+          cp /tmp/a4-raw109-shard.log "$work/audit.log"
+      - name: Retain validated child objects and source manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw109-shard-${{ matrix.group }}
+          path: /tmp/a4-raw109-shard/
+          retention-days: 30
+
+  raw109-assemble:
+    if: inputs.target == 'raw109-sharded'
+    needs: raw109-shards
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw109-shard-*
+          path: /tmp/a4-raw109-shards
+      - name: Compose only source-identical audited child closures
+        run: |
+          set -euo pipefail
+          root=im-results/agent4-raw109
+          union=/tmp/a4-raw109-union
+          work=/tmp/a4-raw109-parent
+          python "$root/merge_shards.py" /tmp/a4-raw109-shards "$union"
+          python tools/lean_compile_closure.py --workdir "$work" --jobs 2 \
+            --precompiled-dir "$union" --precompiled-manifest "$union/manifest.json" \
+            --manifest "$work/manifest.json" --label raw109 \
+            --theorem BB6.Agent4Raw109Closed.all_closed \
+            --parent-table "1RB---_1RC---_0RD---_1LD1RE_---1RB_------" \
+            --weighted-bound 1703 --artifact-name raw109-parent-proof \
+            --provenance-input "$root/specs.json" --provenance-input "$root/generate.py" \
+            --provenance-input "$root/merge_shards.py" --provenance-input "$union/manifest.json" \
+            "$root/Raw109Closed.lean" 2>&1 | tee /tmp/a4-raw109-parent.log
+          python "$root/audit_axioms.py" /tmp/a4-raw109-parent.log BB6.Agent4Raw109Closed.all_closed
+          python - "$work/manifest.json" <<'PY'
+          import json, sys
+          manifest = json.load(open(sys.argv[1]))
+          reused = manifest["precompiled_core"]["reused_modules"]
+          expected = {item["module"] for item in manifest["modules"]} - {"Raw109Closed"}
+          if set(reused) != expected:
+              raise SystemExit(f"Unexpected rebuilt dependencies: {sorted(expected - set(reused))}")
+          print(f"Reused all {len(expected)} audited dependencies")
+          PY
+          cp /tmp/a4-raw109-parent.log "$work/audit.log"
+          cp "$union/manifest.json" "$work/shard-union.json"
+      - name: Upload complete raw109 proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw109-parent-proof
+          path: /tmp/a4-raw109-parent/
+          retention-days: 30
