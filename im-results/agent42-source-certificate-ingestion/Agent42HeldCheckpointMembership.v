@@ -57,8 +57,7 @@ Proof.
     + constructor.
   - unfold source_roster_covers.
     simpl.
-    apply source_refinesb_spec.
-    exact h.
+    exact ((source_refinesb_spec (tm x) recovered_held_2800).mpr h).
 Qed.
 
 (* One exact held node of the finite q_i(2800,100) checkpoint is now
