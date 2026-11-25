@@ -83,6 +83,13 @@ jobs:
           python generate_complete.py --combine
           cd ../..
           mkdir -p .tmp/a31
+          cat > .tmp/a31/raw114-generator-arguments.txt <<'EOF'
+          cd im-results/agent47-raw114-cut
+          python paired_counter.py
+          python long_sweep.py
+          printf '%s\\n' 0LA 0LB 0LC 0LF 0RA 0RB 0RC 0RF 1LA 1LB 1LC 1LF 1RA 1RB 1RC 1RF | xargs -P 4 -I{} python generate_complete.py {}
+          python generate_complete.py --combine
+          EOF
           cat > .tmp/a31/canonical-generator-arguments.txt <<'EOF'
           python im-results/agent13-coverage/unpack.py
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
@@ -342,7 +349,7 @@ jobs:
                   },
               },
           }
-          (root / "manifest/roster-consumer.json").write_text(
+          (root / "manifest/canonical76-base.json").write_text(
               json.dumps(metadata, indent=2, sort_keys=True) + "\n"
           )
           entries = []
@@ -351,7 +358,7 @@ jobs:
                   continue
               entries.append(f"{digest(path)}  {path.relative_to(root).as_posix()}\n")
           tree_digest = hashlib.sha256("".join(entries).encode()).hexdigest()
-          (root / "manifest/artifact-tree.sha256").write_text(tree_digest + "\n")
+          (root / "manifest/canonical76-base-tree.sha256").write_text(tree_digest + "\n")
           print(json.dumps({
               "residual_count": 76,
               "precompiled_reused_module_count": metadata["precompiled_reused_module_count"],
