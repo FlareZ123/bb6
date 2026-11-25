@@ -60,7 +60,7 @@ The finite witness search is heuristic; the Lean replay theorem is the proof-bea
 
 ## Follow-on depth-7 scan
 
-A separate bounded scan of the 23 ordinary A/1 siblings at depth 7 found that 15 reach the remaining B/1 hole after 214–3506 successful moves. These are strong candidates for one-hole `lastHole` certificates at the champion score; they are not yet incorporated into the 156-leaf Lean frontier. The other eight (`0LA, 0LC, 1LC, 1LD, 1RD, 0LE, 1RE, 1LF`) neither reached B/1 within one million moves nor yielded a side-cycle witness under the scan's small bounds. They remain unresolved, not proven nonhalting. See [p7-last-hole-scan.md](p7-last-hole-scan.md).
+A separate bounded scan of the 23 ordinary A/1 siblings at depth 7 found that 15 reach the remaining B/1 hole after 214–3506 successful moves. These are strong candidates for one-hole `lastHole` certificates at the champion score; they are not yet incorporated into the 156-leaf Lean frontier. The other eight (`0LA, 0LC, 1LC, 1LD, 1RD, 0LE, 1RE, 1LF`) neither reached B/1 within one million moves nor yielded a side-cycle witness under the scan's small bounds; a deeper five-million-step run with entry ≤ 20, period ≤ 50, and boundary radius ≤ 50 also left all eight unresolved. They remain unresolved, not proven nonhalting. See [p7-last-hole-scan.md](p7-last-hole-scan.md).
 
 The current frontier's completion-mass accounting is:
 - original 9-hole cylinder: `25^9 = 3,814,697,265,625`;
