@@ -1485,15 +1485,20 @@ jobs:
                   args=", ".join(a.arg for a in getattr(n,"args",ast.arguments([],[],None,[],[],None,[])).args)
                   print(f"{n.lineno}-{n.end_lineno}: {type(n).__name__} {n.name}({args})")
           PY
-          echo "=== BUILD SCRIPT (first 320 lines) ==="
-          nl -ba "$WORK/build_box7.py" | sed -n '1,320p'
-          echo "=== LEAN MODULE DECLARATIONS ==="
-          for f in DomainBlockFAR.lean DomainBlockFARBridge.lean BoxOneHalt.lean BoxCodes.lean Box7Base.lean Box7AllData.lean Box7AllProof.lean Box7Cover.lean; do
-            if [ -f "$WORK/$f" ]; then
-              echo "--- $f ($(wc -l < "$WORK/$f") lines) ---"
-              grep -nE '^(import |namespace |def |theorem |structure |inductive |abbrev |class )' "$WORK/$f" || true
-            fi
+          echo "=== GENERIC DOMAIN GENERATOR ==="
+          nl -ba "$WORK/generate_domain.py" | sed -n '1,420p'
+          echo "=== BOX7 SEARCH AND GROUPING DRIVERS ==="
+          for f in box7.py group_box7.py; do
+            echo "--- $f ($(wc -l < "$WORK/$f") lines) ---"
+            nl -ba "$WORK/$f"
           done
+          echo "=== DOMAIN PROOF AND ONE-HALT NORMALIZATION ==="
+          for f in DomainBlockFAR.lean DomainBlockFARBridge.lean BoxOneHalt.lean BoxCodes.lean Box7Base.lean; do
+            echo "--- $f ($(wc -l < "$WORK/$f") lines) ---"
+            nl -ba "$WORK/$f"
+          done
+          echo "=== BOX7 COVER THEOREMS ==="
+          nl -ba "$WORK/Box7Cover.lean" | sed -n '1,220p'
 
   raw10canonical76:
     if: inputs.target == 'weighted-tnf-canonical76-raw10-membership'
