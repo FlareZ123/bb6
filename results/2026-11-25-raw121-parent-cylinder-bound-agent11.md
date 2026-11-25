@@ -24,4 +24,4 @@ Lean 4.36.0-rc2 CI run [45616647230](https://github.com/FlareZ123/bb6/actions/ru
 
 ## Scope
 
-This is a universal bound for one literal six-hole cylinder, not a bound for all six-state machines and not a determination of BB(6). The separate finite graft into the accepted canonical77 quotient roster is being checked in [workflow run 45621077513](https://github.com/FlareZ123/bb6/actions/runs/45621077513). Until that graft audit passes, this theorem must not be counted as a reduction of the accepted 77-residual roster.
+This is a universal bound for one literal six-hole cylinder, not a bound for all six-state machines and not a determination of BB(6). The separate finite graft into the accepted canonical77 quotient roster was attempted in [workflow run 45621077513](https://github.com/FlareZ123/bb6/actions/runs/45621077513) and failed. This parent theorem is source-accepted, but no canonical roster reduction is accepted; a new shared-core consumer against the current canonical76 base must prove exact membership and pass source CI.
