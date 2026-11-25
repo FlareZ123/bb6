@@ -14,11 +14,11 @@ theorem oddcone_cost_lt_of_empty_lag (n s b d m : Nat)
     (hn : 14 ≤ n) (he : n % 2 = 0) (hs : 1 ≤ s)
     (hz : Covered n s []) (hc : OddCone (criticalLeft n) 3 b d m) :
     m < n+s := by
-  by_contra h
-  have hm : n+s ≤ m := by omega
-  have hM := source_to_micro n b d m hn hc
-  obtain ⟨B,a,ht,_,_⟩ := micro_trace n m _ _ hn he hM (by omega)
-  exact no_trace_of_empty n s hs hz m B a hm ht
+  by_cases hm : n+s ≤ m
+  · have hM := source_to_micro n b d m hn hc
+    obtain ⟨B,a,ht,_,_⟩ := micro_trace n m _ _ hn he hM (by omega)
+    exact False.elim (no_trace_of_empty n s hs hz m B a hm ht)
+  · omega
 
 /-- Source extinction alone suffices up to the practical long-cone cutoff.
     The previous margin-based gate remains useful for later extinctions. -/
