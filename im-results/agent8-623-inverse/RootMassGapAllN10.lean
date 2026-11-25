@@ -17,40 +17,40 @@ pinned upstream highLevelNext via Agent49ParitySource.run, not via a copied
 simulator. -/
 
 theorem root_run_32 :
-    run 32 = some (.D 29194 9235) := by decide
+    run 32 = some (.D 29194 9235) := by native_decide
 
 theorem root_run_33 :
-    run 33 = some (.D 19954 27733) := by decide
+    run 33 = some (.D 19954 27733) := by native_decide
 
 theorem root_run_34 :
-    run 34 = some (.D 7784 59872) := by decide
+    run 34 = some (.D 7784 59872) := by native_decide
 
 theorem root_run_35 :
-    run 35 = some (.D 52084 23375) := by decide
+    run 35 = some (.D 52084 23375) := by native_decide
 
 theorem root_run_36 :
-    run 36 = some (.D 28698 70161) := by decide
+    run 36 = some (.D 28698 70161) := by native_decide
 
 theorem root_run_37 :
-    run 37 = some (.D 41468 86104) := by decide
+    run 37 = some (.D 41468 86104) := by native_decide
 
 theorem root_run_38 :
-    run 38 = some (.D 44634 124427) := by decide
+    run 38 = some (.D 44634 124427) := by native_decide
 
 theorem root_run_42 :
-    run 42 = some (.D 22822 487342) := by decide
+    run 42 = some (.D 22822 487342) := by native_decide
 
 theorem root_run_43 :
-    run 43 = some (.D 464518 68489) := by decide
+    run 43 = some (.D 464518 68489) := by native_decide
 
 theorem root_run_44 :
-    run 44 = some (.D 396018 205505) := by decide
+    run 44 = some (.D 396018 205505) := by native_decide
 
 theorem root_run_45 :
-    run 45 = some (.D 190506 616551) := by decide
+    run 45 = some (.D 190506 616551) := by native_decide
 
 theorem root_run_46 :
-    run 46 = some (.D 426044 571540) := by decide
+    run 46 = some (.D 426044 571540) := by native_decide
 
 /-- A 7:4 ratio strip forces total mass into the open interval
 (47687,169061) throughout the n=10 scale band. -/
