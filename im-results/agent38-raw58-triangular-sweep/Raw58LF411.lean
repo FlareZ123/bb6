@@ -101,7 +101,12 @@ theorem inner_pre (j t : Nat) (ht : 2 ≤ t) :
       _ = rep [false,true] (4+(2*t-3)) := by rw [hnum]
       _ = rep [false,true] 4 ++ rep [false,true] (2*t-3) :=
         rep_add [false,true] 4 (2*t-3)
-  rw [C, hsplit]
+  have hnum2 : 2*t-3 = (2*t-4)+1 := by omega
+  have hsplit2 : rep [false,true] (2*t-3) =
+      [false,true] ++ rep [false,true] (2*t-4) := by
+    rw [hnum2]
+    rfl
+  rw [C, hsplit, hsplit2]
   rfl
 
 theorem inner_zero (j : Nat) :
@@ -148,12 +153,17 @@ theorem inner (j t : Nat) :
   have hB := sweepR raw58LF411 1 [false] [] [true,false] [false,true] 2
     (by intro L R; exact sweep_B_right L R) (2*t+2)
     ([true] ++ rep [false,true] j) []
+  have hB' :
+      run0 raw58LF411 (2*(2*t+2))
+        ⟨1, [false,true] ++ rep [false,true] j, rep [true,false] (2*t+2)⟩ =
+        some ⟨1, [false] ++ rep [false,true] (2*t+2) ++ [true] ++ rep [false,true] j, []⟩ := by
+    simpa [List.append_assoc] using hB
   have hB0 :
       run0 raw58LF411 1
         ⟨1, [false] ++ rep [false,true] (2*t+2) ++ [true] ++ rep [false,true] j, []⟩ =
         some (C j (t+1)) := by
     rfl
-  have hcomp := join0 (join0 (join0 (join0 hpre hF) hF1) hB) hB0
+  have hcomp := join0 (join0 (join0 (join0 hpre hF) hF1) hB') hB0
   have htime : 14 + 2*(2*t-3) + 1 + 2*(2*t+2) + 1 = 8*t+14 := by omega
   simpa [htime] using hcomp
 
@@ -162,7 +172,7 @@ theorem reset_pre (k : Nat) :
     run0 raw58LF411 5 (C 0 k) =
       some ⟨0, rep [true,false] (2*k+1) ++ [true,true], []⟩ := by
   rw [C, alt_even]
-  rfl
+  cases k <;> rfl
 
 /-- Reset the inner sweep counter: C(0,k) grows to C(2k+4,0). -/
 theorem reset (k : Nat) :
@@ -181,9 +191,14 @@ theorem reset (k : Nat) :
       run0 raw58LF411 6
         ⟨1, [false] ++ rep [false,true] (2*k+2), []⟩ =
         some ⟨0, rep [true,false] (2*k+3) ++ [true], []⟩ := by
-    rfl
+    cases k <;> rfl
   have hA2s := sweepL raw58LF411 0 [] [] [true,false] [true,false] 2
     (by intro L R; exact sweep_A_left L R) (2*k+3) [true] []
+  have hA2s' :
+      run0 raw58LF411 (2*(2*k+3))
+        ⟨0, rep [true,false] (2*k+3) ++ [true], []⟩ =
+        some ⟨0, [true], rep [true,false] (2*k+3)⟩ := by
+    simpa using hA2s
   have hA2tail :
       run0 raw58LF411 2
         ⟨0, [true], rep [true,false] (2*k+3)⟩ =
@@ -196,7 +211,7 @@ theorem reset (k : Nat) :
         ⟨0, [false] ++ rep [false,true] (2*k+4), []⟩ =
         some (C (2*k+4) 0) := by
     rfl
-  have hcomp := join0 (join0 (join0 (join0 (join0 (join0 (join0 hpre hA) hA2) hB) hB6) hA2s) hA2tail) hAr
+  have hcomp := join0 (join0 (join0 (join0 (join0 (join0 (join0 hpre hA) hA2) hB) hB6) hA2s') hA2tail) hAr
   have hcomp' := join0 hcomp hAfinal
   have htime :
       5 + 2*(2*k+1) + 2 + 2*(2*k+2) + 6 +
@@ -219,7 +234,7 @@ theorem drain (j t : Nat) :
       have htail := ih (t+1)
       have hcomp := join0 hfirst htail
       have hindex : t+1+j = t+(j+1) := by omega
-      rw [hindex]
+      rw [hindex] at hcomp
       simpa [drainTime, Nat.add_assoc] using hcomp
 
 /-- A complete growth cycle C(k,0) -> C(2k+4,0). -/
