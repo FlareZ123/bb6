@@ -1,14 +1,32 @@
-# Raw139 F/1 = 0LF: complete source-certified three-hole closure
+# Raw139 F/1 sibling source certificates
 
-**Status: SOURCE-ACCEPTED.** Original-source Lean 4.36.0-rc2 compiled the full certificate and passed the standard-axiom audit in [run 45604778890](https://github.com/FlareZ123/bb6/actions/runs/45604778890), pinned commit `4d2664e4caf8b2c0dbb41d0d842f8f4bae9b5488`. Manifest and compiled artifact ID `15018045298` (`raw139-f1-zeroLF-certified`). Global roster integration is a separate obligation.
+Three exact F1 sibling cylinders of the raw139 partial table now have complete original-source Lean 4.36.0-rc2 audits. They share the first eleven transitions `[7,24,11,24,14,21,3,16,12,11,24]` and differ only in the F1 transition:
 
-The exact parent table, in order A0,A1,...,F1, is `[7,24,11,24,14,21,3,16,12,11,24,20]` (code = 4*destination + 2*write + right, 24 = unassigned). Its F1 action is 0LF, distinct from the previously closed 0RF, 0RD and 1LF siblings. The certified theorem is `BB6.Agent41F1ZeroLF.all_completions_weighted : ∀ m, compatible parent m → WeightedBound 1603 m`.
+| F1 action | Exact parent table | Weighted bound | Terminal leaves | Original-source audit |
+|---|---|---:|---:|---|
+| 0LF | `[7,24,11,24,14,21,3,16,12,11,24,20]` | 1603 | 277 | [45604778890](https://github.com/FlareZ123/bb6/actions/runs/45604778890), artifact `15018045298` |
+| 0RC | `[7,24,11,24,14,21,3,16,12,11,24,9]` | 3807 | 323 | [45607499262](https://github.com/FlareZ123/bb6/actions/runs/45607499262), artifact `15018441852` |
+| 0RB | `[7,24,11,24,14,21,3,16,12,11,24,5]` | 290 | 461 | [45609382340](https://github.com/FlareZ123/bb6/actions/runs/45609382340), artifact `15018818460` |
 
-The 12 internal first-hole splits generate 277 terminal leaves: 147 translated cycles, 72 last-hole queries, 45 FAR certificates, and 13 infinite growth proofs. The longest remaining last-hole query is at 1597 moves, leaving the standard six-step weighted allowance. The certificate uses the existing `FastThreeHoleAudit` with exact literal table matching.
+Each accepted theorem bounds every compatible completion of its literal partial table. The three cylinders are pairwise disjoint because their F1 actions differ, but they cover only three F1 choices. They do **not** close the raw139 parent, prove the exact champion-score Cover, or change any global residual count by themselves. A count may be reduced only after a source-accepted consumer proves the exact parent inclusion, the certified children, and the explicit retained complement.
 
-## New unbounded mechanisms
+## Shared symbolic-gap mechanism
 
-A symbolic zipper interpreter (`Agent41SymSweep.lean`) treats arbitrary finite tape segments as opaque gap variables. It refuses a computation that attempts to read a gap. Its soundness theorem `run_sound` transports each successful finite symbolic trace to every assignment of those segments. This gives checked sweep premises for arbitrary repetitions, not extrapolation from a sampled sequence.
+The symbolic zipper interpreter `Agent41SymSweep.lean` treats arbitrary finite tape segments as opaque gap variables and rejects any computation that tries to read into a gap. Its soundness theorem `run_sound` transports successful symbolic traces to every assignment of the unexamined segments. This supports quantified sweep recurrences rather than extrapolation from sampled executions.
+
+The 0LF closure has 12 internal first-hole splits and 277 terminal leaves: 147 translated cycles, 72 last-hole queries, 45 FAR certificates, and 13 infinite-growth proofs. Its H9 suffix uses a recursively nested carry counter with six constructors; structural induction proves the core costs and the outer stage advances by two. See the individual 0LF dossier below.
+
+## Individual sibling dossiers
+
+- [0LF](ZeroLF.md): bound 1603; complete 277-leaf source certificate.
+- [0RC](ZeroRC.md): bound 3807; complete 323-leaf source certificate, including four-phase nested carry, binary counter, and eight-period suffix mechanisms.
+- [0RB](ZeroRB.md): bound 290; complete 461-leaf source certificate, including the H19 unary-drain and H20 binary-increment recurrences.
+
+## 0LF details
+
+The exact 0LF theorem is `BB6.Agent41F1ZeroLF.all_completions_weighted : ∀ m, compatible parent m → WeightedBound 1603 m`. Its parent table is `[7,24,11,24,14,21,3,16,12,11,24,20]`; the F1 action is 0LF, distinct from the sibling actions listed above.
+
+The longest remaining last-hole query is at 1597 moves, leaving the standard six-step weighted allowance. The certificate uses the existing `FastThreeHoleAudit` with exact literal table matching.
 
 Twelve exceptional cylinders admit exact affine-cost recurrence families. For H9 the suffix is instead a recursively nested carry counter:
 
@@ -21,4 +39,8 @@ Twelve exceptional cylinders admit exact affine-cost recurrence families. For H9
 
 ## Reproduction
 
-The four original-source Lean modules are contained in [Agent41F1ZeroLFProofs.tar.xz.b64](Agent41F1ZeroLFProofs.tar.xz.b64), archive SHA-256 `15b951ad6c8c9b988e2a2f44a39671a938b4c2b0fbc264c72a4afe1a972b62bb`. Run `bash im-results/agent41-raw139-f1-zeroLF/reproduce.sh` at the repository root with Lean 4.36.0-rc2. The manual workflow `agent41-raw139-f1-zeroLF.yml` pins the source SHA and audits the theorem axiom sets. The remaining global obligation is to integrate this exact literal parent into the raw139 residual frontier at champion score, then close all other retained representatives. No BB(6) exactness claim follows from this sibling alone.
+- 0LF: `bash im-results/agent41-raw139-f1-zeroLF/reproduce.sh`; archive SHA-256 `15b951ad6c8c9b988e2a2f44a39671a938b4c2b0fbc264c72a4afe1a972b62bb`.
+- 0RC: `bash im-results/agent41-raw139-f1-zeroLF/reproduce-zeroRC.sh`; archive SHA-256 `e714f0772d6e7df0d64e3da63153c8450e39abead67caf8fb5b61d1241e5dbd8`.
+- 0RB: `bash im-results/agent41-raw139-f1-zeroLF/reproduce-zeroRB.sh`; archive SHA-256 `dedb53f31b5493b240d1b1d89fa1c409f0ced92ef1d6486c5415e6d98fe75aba`.
+
+The manual workflow `agent41-raw139-f1-zeroLF.yml` accepts the sibling selector and pins the exact source revision. All three source audits are independent of the still-missing raw139/global roster consumer. Do not promote the sibling count to a global result without that consumer.
