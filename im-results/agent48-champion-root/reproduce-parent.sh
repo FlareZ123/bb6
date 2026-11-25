@@ -18,9 +18,37 @@ PY
 python3 tools/lean_compile_closure.py \
   im-results/agent48-champion-root/ChampionParentCover.lean \
   im-results/agent48-counted-inc0/ChampionParentExact.lean \
+  im-results/agent48-champion-root/ChampionF1OneLFCover.lean \
+  im-results/agent48-champion-root/ChampionF1ZeroRD.lean \
   --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean \
   --workdir "$work/build" --jobs 4 | tee "$work/log"
 for theorem in parent_cover parent_reachable parentCertificate sibling_never lc_never re_never champion_score_ge_3512 champion_parent_exact_cover championParentExactCertificate; do
   grep -E "$theorem.*depends on axioms" "$work/log"
 done
+python3 - "$work/log" <<'PY'
+import pathlib, re, sys
+log = pathlib.Path(sys.argv[1]).read_text()
+allowed = {'propext', 'Classical.choice', 'Quot.sound'}
+names = (
+    'BB6.Agent48F1OneLF.checked',
+    'BB6.Agent48F1OneLF.nohalt',
+    'BB6.Agent48F1OneLF.all_completions_weighted',
+    'BB6.Agent48F1OneLFHard.stage',
+    'BB6.Agent48F1OneLFHard.never',
+    'BB6.Agent48F1ZeroRD.stage',
+    'BB6.Agent48F1ZeroRD.never',
+    'BB6.Agent48F1ZeroRD.cover',
+)
+for name in names:
+    m = re.search(r"'" + re.escape(name) + r"' depends on axioms: \\[([^\\]]*)\\]", log)
+    if m:
+        used = {x.strip() for x in m.group(1).split(',') if x.strip()}
+    elif re.search(r"'" + re.escape(name) + r"' does not depend on any axioms", log):
+        used = set()
+    else:
+        raise SystemExit('missing F1 axiom audit: ' + name)
+    if not used <= allowed:
+        raise SystemExit(f'nonstandard axioms for {name}: {used - allowed}')
+    print(f'{name}: {sorted(used)}')
+PY
 if grep -E 'depends on axioms.*(sorryAx|native_decide)' "$work/log"; then exit 1; fi
