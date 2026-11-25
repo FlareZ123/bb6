@@ -1,4 +1,5 @@
 import Raw10BoxBridge
+import Mathlib.Tactic
 import WeightedFirstOneCover
 import LeafRules
 
@@ -8,8 +9,6 @@ set_option maxHeartbeats 0
 namespace BB6.Agent50Raw10Box0Halt
 open BB6Coverage
 open BB6.Agent13BlankDelay
-open BB6.Agent13WeightedFirstOneCover
-open BB6.Agent8LeafRules
 open BB6.Agent49Box
 open BB6.Agent13CrossRouteHeldLeaf109
 
