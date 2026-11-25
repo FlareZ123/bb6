@@ -59,6 +59,7 @@ Proof.
       pose proof (recovered_held_2800_child_of_parent h) as Hc.
       destruct Hm as [Hnone|Hsame]; [congruence|].
       destruct Hc as [Hnone|HsameLeaf]; [congruence|].
+      exfalso.
       apply Hmismatch.
       rewrite HsameLeaf.
       exact Hsame.
