@@ -1,87 +1,206 @@
-name: Agent 47 ingest accepted raw114 into canonical frontier
+name: Agent31 thin canonical77 exactness consumer source audit
 on:
   workflow_dispatch:
 permissions:
   contents: read
   actions: read
 jobs:
-  graft:
+  exactness:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: actions/checkout@v4
         with:
           ref: d4164a4457e62ba7ec8e3fba6e38b251d04ffc83
           path: pinned
-      - name: Install Lean
+      - name: Install Lean 4.36.0-rc2
         run: |
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - uses: actions/download-artifact@v4
+      - name: Download accepted canonical77 artifact
+        uses: actions/download-artifact@v4
         with:
           github-token: ${{ github.token }}
-          run-id: 45553564319
-          name: raw114-certified-root
-          path: /tmp/a47-raw114-certified
-      - name: Build canonical frontier from the same pinned source
+          run-id: 45554648116
+          name: canonical77-certified
+          path: /tmp/a47-canonical
+      - name: Rebuild champion closure and compare against accepted canonical artifact
         run: |
           set -euo pipefail
           cp im-results/agent47-rooted-tnf/CanonicalTwoParentGraft.lean pinned/im-results/agent47-rooted-tnf/
+          cp tools/lean_compile_closure.py pinned/tools/lean_compile_closure.py
           cd pinned
           python im-results/agent13-coverage/unpack.py
-          python im-results/agent31-three-hole-tnf/generate_sweeps.py
-          python im-results/agent31-three-hole-tnf/generate_four_hole.py
-          python im-results/agent10-tnf-raw87/generate.py
-          python im-results/agent10-tnf-raw91/generate.py
-          python im-results/agent10-tnf-multipump/generate.py 66 70 80
-          python im-results/agent10-tnf-multipump/generate.py 68 72 82
-          python im-results/agent10-tnf-multipump/generate.py 86 88 92 93 97 98 100 101 102 104
-          work="$PWD/.tmp/a47-canonical"
-          mkdir -p "$work/imports"
+          work="$PWD/.tmp/a47-tm63"
+          mkdir -p "$work/imports" /tmp/a47-tm63
           python3 - <<'PY'
           import base64, io, lzma, pathlib, tarfile
-          root = pathlib.Path(".tmp/a47-canonical/imports")
+          root = pathlib.Path(".tmp/a47-tm63/imports")
           p = pathlib.Path("im-results/agent42-champion-terminal")
-          with tarfile.open(fileobj=io.BytesIO(base64.b64decode((p/"TerminalProofs.tar.xz.b64").read_text())), mode="r:xz") as a:
-              member = next(m for m in a.getmembers() if pathlib.PurePosixPath(m.name).name == "TerminalFinish.lean")
-              (root/"TerminalFinish.lean").write_bytes(a.extractfile(member).read())
+          with tarfile.open(fileobj=io.BytesIO(base64.b64decode((p/"TerminalProofs.tar.xz.b64").read_text())), mode="r:xz") as archive:
+              member = next(m for m in archive.getmembers() if pathlib.PurePosixPath(m.name).name == "TerminalFinish.lean")
+              (root/"TerminalFinish.lean").write_bytes(archive.extractfile(member).read())
           (root/"TerminalLeft.lean").write_bytes(lzma.decompress(base64.b64decode((p/"TerminalLeftExact.lean.xz.b64").read_text())))
           PY
           printf '%s  %s\n' 12329036c66c3846f9261167b8f9aebd1778d9b6ea6044309956c2fa0b3e49b7 "$work/imports/TerminalFinish.lean" | sha256sum -c -
           printf '%s  %s\n' 1bce2075fc4e0cd7d740fb71b3796088b190ddb6766e04640d992dadd1b650ff "$work/imports/TerminalLeft.lean" | sha256sum -c -
-          python tools/lean_compile_closure.py --workdir /tmp/a47-canonical --jobs 4 im-results/agent47-rooted-tnf/CanonicalTwoParentGraft.lean im-results/agent48-counted-inc0/TM63RawUpperInterface.lean --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean --override OuterLCIncPrelude=im-results/agent8-counted-reset/OuterLCIncPrelude.lean --override M0OddResidueSeven=im-results/agent41-m0-n16r7/M0OddResidueSeven.lean --override M0EvenEightValuationEncoding=im-results/agent48-counted-inc0/M0EvenEightValuationEncoding.lean --override M2EvenResidueTwo=im-results/agent42-champion-terminal/M2EvenResidueTwo.lean | tee /tmp/a47-canonical.log
-          if grep -Eq 'sorryAx|native_decide' /tmp/a47-canonical.log; then exit 1; fi
-      - name: Link the accepted cylinder theorem, check count and composition
+          python tools/lean_compile_closure.py im-results/agent47-rooted-tnf/CanonicalTwoParentGraft.lean \
+            --workdir /tmp/a47-canonical-manifest-work \
+            --manifest /tmp/a47-canonical-manifest.json \
+            --manifest-only \
+            --artifact-dir /tmp/a47-canonical \
+            --label canonical77-certified \
+            --artifact-name canonical77-certified \
+            --jobs 8
+          python tools/lean_compile_closure.py im-results/agent48-counted-inc0/TM63RawUpperInterface.lean \
+            --workdir /tmp/a47-tm63 \
+            --manifest /tmp/a47-tm63-manifest.json \
+            --label tm63-raw-upper-interface \
+            --theorem BB6Coverage.Agent48DirectRoot.champion_raw_witness \
+            --jobs 8 \
+            --compare-manifest /tmp/a47-canonical-manifest.json \
+            --provenance-input im-results/agent42-champion-terminal/TerminalProofs.tar.xz.b64 \
+            --provenance-input im-results/agent42-champion-terminal/TerminalLeftExact.lean.xz.b64 \
+            --provenance-input im-results/agent13-coverage/BB6Coverage.lean.xz.b64 \
+            --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean \
+            --override OuterLCIncPrelude=im-results/agent8-counted-reset/OuterLCIncPrelude.lean \
+            --override M0OddResidueSeven=im-results/agent41-m0-n16r7/M0OddResidueSeven.lean \
+            --override M0EvenEightValuationEncoding=im-results/agent48-counted-inc0/M0EvenEightValuationEncoding.lean \
+            --override M2EvenResidueTwo=im-results/agent42-champion-terminal/M2EvenResidueTwo.lean \
+            | tee /tmp/a47-tm63.log
+          if grep -q 'sorryAx' /tmp/a47-tm63.log; then exit 1; fi
+          python3 - /tmp/a47-canonical-manifest.json /tmp/a47-tm63-manifest.json /tmp/a47-canonical /tmp/a47-tm63 <<'PY'
+          import hashlib, json, pathlib, shutil, sys
+          canonical_manifest_path, tm63_manifest_path, canonical_dir, tm63_dir = map(pathlib.Path, sys.argv[1:])
+          canonical = json.loads(canonical_manifest_path.read_text())
+          tm63 = json.loads(tm63_manifest_path.read_text())
+          if canonical["proof_source_revision"] != tm63["proof_source_revision"]:
+              raise SystemExit("proof-source revisions differ")
+          if canonical["lean_version"] != tm63["lean_version"]:
+              raise SystemExit("Lean versions differ")
+          canonical_modules = {x["module"]: x for x in canonical["modules"]}
+          tm63_modules = {x["module"]: x for x in tm63["modules"]}
+          common = canonical_modules.keys() & tm63_modules.keys()
+          for module in sorted(common):
+              for field in ("source_sha256", "project_imports", "olean_sha256"):
+                  if canonical_modules[module][field] != tm63_modules[module][field]:
+                      raise SystemExit(f"{module}: {field} mismatch")
+          def digest(path):
+              h = hashlib.sha256()
+              with path.open("rb") as stream:
+                  for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+                      h.update(chunk)
+              return h.hexdigest()
+          copied = 0
+          reused = 0
+          for module, entry in tm63_modules.items():
+              rel = pathlib.Path(entry["olean_path"])
+              source = tm63_dir / rel
+              target = canonical_dir / rel
+              if not source.is_file() or digest(source) != entry["olean_sha256"]:
+                  raise SystemExit(f"missing or hash-mismatched TM63 object: {module}")
+              if target.exists():
+                  if digest(target) != digest(source):
+                      raise SystemExit(f"compiled-object collision for {module}")
+                  reused += 1
+              else:
+                  target.parent.mkdir(parents=True, exist_ok=True)
+                  shutil.copy2(source, target)
+                  if digest(target) != entry["olean_sha256"]:
+                      raise SystemExit(f"copy hash mismatch for {module}")
+                  copied += 1
+          for required in ("CanonicalTwoParentGraft.olean", "CanonicalRaw114Accepted.olean", "Raw114CompleteData.olean", "TM63RawUpperInterface.olean"):
+              if not (canonical_dir / required).is_file():
+                  raise SystemExit(f"accepted artifact is missing {required}")
+          manifest_dir = canonical_dir / "manifest"
+          manifest_dir.mkdir(exist_ok=True)
+          shutil.copy2(canonical_manifest_path, manifest_dir / "canonical77-source-manifest.json")
+          shutil.copy2(tm63_manifest_path, manifest_dir / "tm63-source-manifest.json")
+          summary = {
+              "canonical77_manifest_modules": len(canonical_modules),
+              "tm63_manifest_modules": len(tm63_modules),
+              "shared_modules": len(common),
+              "copied_tm63_modules": copied,
+              "reused_identical_modules": reused,
+              "proof_source_revision": canonical["proof_source_revision"],
+              "lean_version": canonical["lean_version"],
+              "canonical77_artifact_run_id": 45554648116,
+              "canonical77_artifact_id": 14997966221,
+              "raw114_parent_artifact_run_id": 45553564319
+          }
+          (manifest_dir / "module-merge-summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n")
+          print(json.dumps(summary, indent=2, sort_keys=True))
+          PY
+      - name: Compile raw114 adapter and thin exactness consumer
         run: |
           set -euo pipefail
           cp im-results/agent47-rooted-tnf/CanonicalRaw114Accepted.lean /tmp/a47-canonical/
           cp im-results/agent47-rooted-tnf/Canonical77ExactComposition.lean /tmp/a47-canonical/
-          cp -n /tmp/a47-raw114-certified/*.olean /tmp/a47-canonical/
           cd /tmp/a47-canonical
           export LEAN_PATH="$PWD"
-          lean -o CanonicalRaw114Accepted.olean CanonicalRaw114Accepted.lean | tee /tmp/a47-graft.log
-          if grep -Eq 'sorryAx|native_decide' /tmp/a47-graft.log; then exit 1; fi
-          lean -o Canonical77ExactComposition.olean Canonical77ExactComposition.lean | tee /tmp/a47-exact77.log
-          if grep -Eq 'sorryAx|native_decide' /tmp/a47-exact77.log; then exit 1; fi
-          python3 - /tmp/a47-exact77.log <<'PY'
-          import pathlib, re, sys
-          log = pathlib.Path(sys.argv[1]).read_text()
+          sha_before=$(sha256sum CanonicalRaw114Accepted.olean | cut -d' ' -f1)
+          lean -o CanonicalRaw114Accepted.olean CanonicalRaw114Accepted.lean 2>&1 | tee /tmp/a47-graft.log
+          sha_after=$(sha256sum CanonicalRaw114Accepted.olean | cut -d' ' -f1)
+          printf 'CanonicalRaw114Accepted.olean before=%s after=%s\n' "$sha_before" "$sha_after"
+          lean -o Canonical77ExactComposition.olean Canonical77ExactComposition.lean 2>&1 | tee /tmp/a47-exact77.log
+          if grep -q 'sorryAx' /tmp/a47-graft.log /tmp/a47-exact77.log; then exit 1; fi
+          python3 - /tmp/a47-tm63.log /tmp/a47-graft.log /tmp/a47-exact77.log "$GITHUB_WORKSPACE" <<'PY'
+          import hashlib, json, pathlib, re, sys
+          logs = "\n".join(pathlib.Path(p).read_text() for p in sys.argv[1:4])
+          repo = pathlib.Path(sys.argv[4])
+          root = pathlib.Path("/tmp/a47-canonical")
           allowed = {"propext", "Classical.choice", "Quot.sound"}
-          for name in ("champion_score_gt_7014", "champion_raw_witness",
-                       "BB6.Agent47CanonicalRaw114Accepted.exact_at_target",
-                       "exact_from_canonical77_at_champion_score"):
-              m = re.search(r"'[^']*"+re.escape(name)+r"' depends on axioms: \[([^\]]*)\]", log)
-              if not m:
-                  raise SystemExit("missing axiom audit: "+name)
-              used = {x.strip() for x in m.group(1).split(",") if x.strip()}
+          names = (
+              "champion_raw_halts_exact", "champion_weighted_bound",
+              "exact_BB6_from_tnf_certificate", "parent_bound", "count",
+              "sound", "exact_at_target", "two_parent_sound",
+              "champion_raw_witness", "champion_score_gt_7014",
+              "exact_from_canonical77_at_champion_score"
+          )
+          for name in names:
+              match = re.search(r"'[^']*" + re.escape(name) + r"' depends on axioms: \[([^\]]*)\]", logs)
+              if not match:
+                  raise SystemExit("missing axiom audit: " + name)
+              used = {x.strip() for x in match.group(1).split(",") if x.strip()}
               if not used <= allowed:
                   raise SystemExit(f"nonstandard axioms in {name}: {used-allowed}")
               print(f"{name}: {sorted(used)}")
+          def digest(path):
+              h = hashlib.sha256()
+              with path.open("rb") as stream:
+                  for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+                      h.update(chunk)
+              return h.hexdigest()
+          metadata = {
+              "canonical77_artifact_run_id": 45554648116,
+              "canonical77_artifact_id": 14997966221,
+              "canonical77_artifact_head_sha": "1217c6166525b6297191a35f2627eeea5691f17f",
+              "raw114_parent_artifact_run_id": 45553564319,
+              "raw114_parent_artifact_name": "raw114-certified-root",
+              "modules": {
+                  "CanonicalRaw114Accepted": {
+                      "source_path": "im-results/agent47-rooted-tnf/CanonicalRaw114Accepted.lean",
+                      "source_sha256": digest(repo / "im-results/agent47-rooted-tnf/CanonicalRaw114Accepted.lean"),
+                      "olean_sha256": digest(root / "CanonicalRaw114Accepted.olean")
+                  },
+                  "Raw114CompleteData": {
+                      "source": "generated parent-certificate data from raw114-certified-root",
+                      "olean_sha256": digest(root / "Raw114CompleteData.olean")
+                  },
+                  "Canonical77ExactComposition": {
+                      "source_path": "im-results/agent47-rooted-tnf/Canonical77ExactComposition.lean",
+                      "source_sha256": digest(repo / "im-results/agent47-rooted-tnf/Canonical77ExactComposition.lean"),
+                      "olean_sha256": digest(root / "Canonical77ExactComposition.olean")
+                  }
+              }
+          }
+          manifest_dir = root / "manifest"
+          (manifest_dir / "adapter-and-consumer.json").write_text(json.dumps(metadata, indent=2, sort_keys=True) + "\n")
           PY
       - uses: actions/upload-artifact@v4
         with:
-          name: canonical77-certified
-          path: /tmp/a47-canonical/*.olean
+          name: canonical77-exact-certified
+          path: /tmp/a47-canonical
           if-no-files-found: error
