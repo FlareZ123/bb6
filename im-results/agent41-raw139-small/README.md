@@ -28,3 +28,10 @@ Remaining E0 base tables are listed in witness-data.json. One of the remaining f
 - .github/workflows/agent41-raw139-small.yml: manual source-closure compile and axiom audit.
 
 Earlier failed run 45721906157 exposed the reserved Lean identifier `prefix` in the concrete instantiation; the generic soundness proof had already compiled. The successful base run supersedes that failure.
+
+
+## Source-accepted three-sweep reduction
+
+Original-source run [45723800576](https://github.com/FlareZ123/bb6/actions/runs/45723800576), source dbc3c9bf2719757019145cc46e123186a9eb1023, succeeded. This supersedes the provisional status of the A1=0LC,E0=1LA proof above. The two additional A1=0LE/0RD, E0=0LB machines are proved together by Raw139E0ZeroLB.lean: D-state peak with current-first left word 10010101 W^n and right 1, seed at step 24 head 4. For A1=0LE, W=1000010101, growth cost 76n+96 and head drift +6; for A1=0RD, W=10101000010101, growth cost 150n+159 and drift +9. Both reach the next peak with n+1 blocks, without reading F1. Raw139SmallPair.lean removes the three exact tables and proves e0_contract_pair and parent_contract_pair at weighted bound 512. E0 has three open cylinders (75 of 15625 raw completions), and the seven-hole parent retains 78 cylinders (mass 4793671950).
+
+Remaining E0 tables: A1=0LC/0LE/1RD with E0=1LD. The 0LE case has a pinned external proof; its isolated original-source transfer is in progress. The 1RD case has a successful finite width-two BlockFAR saturation with 17 left states, 193 unquotiented right nodes and 722 edge events using suffix depth 2; independent certificate generation/check in agent41-raw139-block.yml is pending. The 0LC case is F421 in the held-out ledger. No closure claimed for F421.
