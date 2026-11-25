@@ -13,9 +13,7 @@ def h5OddExp (r w : Nat) : Nat := 9752639 + 8388608*r + 16777216*w
 def h5OddD (r w : Nat) : Nat := 2 + 2*r + 3*w
 def h5OddT (r w : Nat) : Nat := 2^(h5OddExp r w) * (h5OddJ r + 3)
 def h5OddB (r w : Nat) : Nat := h5OddT r w - h5OddD r w
-def h5OddK (r w : Nat) : Nat :=
-  2^(2*h5OddM r w + 2) * (h5OddJ r + 3) -
-    (h5OddJ r + 3*h5OddM r w + 5)
+def h5OddK (r w : Nat) : Nat := 49726 + 2^23*h5OddB r w
 
 def h5OddC (r w : Nat) : Nat :=
   2567283 + 2208205*r + 4416411*w
@@ -28,17 +26,15 @@ def h5OddEax (r w : Nat) : Nat :=
 def h5OddEay (r w : Nat) : Nat :=
   1280448 + 2500056*r + 5000120*h5OddB r w
 
-lemma nat_succ_le_two_pow : ∀ n : Nat, n+1 ≤ 2^n
-  | 0 => by decide
-  | n+1 => by
-      have ih := nat_succ_le_two_pow n
+theorem nat_succ_le_two_pow (n : Nat) : n+1 ≤ 2^n := by
+  induction n with
+  | zero => decide
+  | succ n ih =>
       have hp : 0 < 2^n := Nat.pow_pos (by decide)
-      calc
-        n+1+1 ≤ 2^n+1 := by omega
-        _ ≤ 2^n+2^n := by omega
-        _ = 2^(n+1) := by
-          rw [Nat.pow_succ]
-          omega
+      have hpow : 2^(n+1) = 2^n + 2^n := by
+        rw [Nat.pow_succ]
+        omega
+      omega
 
 lemma pow_two_mono {a b : Nat} (h : a ≤ b) : 2^a ≤ 2^b := by
   induction b with
@@ -52,7 +48,7 @@ lemma pow_two_mono {a b : Nat} (h : a ≤ b) : 2^a ≤ 2^b := by
         have hstep : 2^b ≤ 2^(b+1) := by
           rw [Nat.pow_succ]
           omega
-        exact le_trans hle hstep
+        omega
       · have ha : a=b+1 := by omega
         simp [ha]
 
@@ -70,8 +66,9 @@ theorem h5OddB_add_D (r w : Nat) :
       2^(h5OddExp r w) * (h5OddJ r + 3) := by
     have h := Nat.mul_le_mul_left (2^(h5OddExp r w)) hj
     simpa using h
-  have hdle : h5OddD r w ≤ h5OddT r w :=
-    le_trans (Nat.le_of_lt (lt_of_lt_of_le hlin hpow)) hmul
+  have hdle : h5OddD r w ≤ h5OddT r w := by
+    dsimp [h5OddT]
+    omega
   dsimp [h5OddB]
   exact Nat.sub_add_cancel hdle
 
@@ -88,50 +85,43 @@ theorem h5OddB_ge_35r (r w : Nat) : 35*r ≤ h5OddB r w := by
       2^(h5OddExp r w) * (h5OddJ r + 3) := by
     have h := Nat.mul_le_mul_left (2^(h5OddExp r w)) hj
     simpa using h
-  have hT : 35*r + h5OddD r w ≤ h5OddT r w :=
-    le_trans (Nat.le_of_lt (lt_of_lt_of_le hlin hpow)) hmul
+  have hT : 35*r + h5OddD r w ≤ h5OddT r w := by
+    dsimp [h5OddT]
+    omega
   dsimp [h5OddB]
   omega
 
-theorem h5OddK_eq (r w : Nat) :
-    h5OddK r w = 49726 + 2^23*h5OddB r w := by
+theorem h5OddK_gate (r w : Nat) :
+    h5OddK r w + h5OddJ r + 3*h5OddM r w + 5 =
+      2^(2*h5OddM r w+2)*(h5OddJ r+3) := by
   have hexp : h5OddExp r w + 23 = 2*h5OddM r w + 2 := by
     dsimp [h5OddExp, h5OddM]
     omega
-  have hj3 : h5OddJ r + 3 =
-      2*(1049249 + 2097152*r) := by
-    dsimp [h5OddJ]
-    omega
-  have hpow :
-      2^(2*h5OddM r w+2)*(h5OddJ r+3) =
-        2^23*h5OddT r w := by
-    calc
-      2^(2*h5OddM r w+2)*(h5OddJ r+3)
-          = 2^(h5OddExp r w+23)*(h5OddJ r+3) := by rw [← hexp]
-      _ = (2^(h5OddExp r w)*2^23)*(h5OddJ r+3) := by
-            rw [Nat.pow_add]
-      _ = 2^23*h5OddT r w := by
-            dsimp [h5OddT]
-            ring
   have hlinear :
       h5OddJ r + 3*h5OddM r w + 5 + 49726 =
         2^23*h5OddD r w := by
     dsimp [h5OddJ, h5OddM, h5OddD]
-    ring
-  have hD : 49726 ≤ 2^23*h5OddD r w := by
-    have hd : 2 ≤ h5OddD r w := by
-      dsimp [h5OddD]
-      omega
-    have hmul := Nat.mul_le_mul_left (2^23) hd
-    norm_num at hmul
     omega
-  have hlinear' :
-      h5OddJ r + 3*h5OddM r w + 5 =
-        2^23*h5OddD r w - 49726 := by
-    omega
-  rw [hpow, hlinear']
-  rw [← h5OddB_add_D r w]
-  omega
+  have hpow :
+      2^(2*h5OddM r w+2)*(h5OddJ r+3) =
+        2^23*h5OddT r w := by
+    rw [← hexp, Nat.pow_add]
+    dsimp [h5OddT]
+    simp [Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm]
+  calc
+    h5OddK r w + h5OddJ r + 3*h5OddM r w + 5
+        = 2^23*h5OddB r w +
+          (h5OddJ r + 3*h5OddM r w + 5 + 49726) := by
+            dsimp [h5OddK]
+            omega
+    _ = 2^23*h5OddB r w + 2^23*h5OddD r w := by
+          rw [hlinear]
+    _ = 2^23*(h5OddB r w + h5OddD r w) := by
+          rw [Nat.mul_add]
+    _ = 2^23*h5OddT r w := by
+          rw [h5OddB_add_D]
+    _ = 2^(2*h5OddM r w+2)*(h5OddJ r+3) := by
+          rw [hpow]
 
 theorem h5OddQ_add_C_eq_A (r w : Nat) :
     h5OddQ r w + h5OddC r w = h5OddA r w := by
@@ -145,29 +135,32 @@ theorem h5OddQ_add_C_eq_A (r w : Nat) :
           dsimp [h5OddA]
           rw [hbd]
 
-theorem h5OddA_divisible (r w : Nat) :
-    2^(h5OddExp r w+1) ∣ h5OddA r w := by
+theorem h5OddT_eq_pow (r w : Nat) :
+    h5OddT r w =
+      2^(h5OddExp r w+1)*(1049249+2097152*r) := by
   have hj3 : h5OddJ r + 3 =
       2*(1049249 + 2097152*r) := by
     dsimp [h5OddJ]
     omega
-  have hT :
-      h5OddT r w =
-        2^(h5OddExp r w+1)*(1049249+2097152*r) := by
-    dsimp [h5OddT]
-    rw [hj3, Nat.pow_succ]
-    ring
+  dsimp [h5OddT]
+  rw [hj3, Nat.pow_succ]
+  simp [Nat.mul_assoc]
+
+theorem h5OddA_divisible (r w : Nat) :
+    2^(h5OddExp r w+1) ∣ h5OddA r w := by
+  have hT := h5OddT_eq_pow r w
   refine ⟨1472137*(1049249+2097152*r), ?_⟩
   dsimp [h5OddA]
   rw [hT]
-  ring
+  simp [Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm]
 
 theorem h5OddC_lt_pow (r w : Nat) :
     h5OddC r w < 2^(h5OddExp r w) := by
   have hlin : h5OddC r w < h5OddExp r w + 1 := by
     dsimp [h5OddC, h5OddExp]
     omega
-  exact lt_of_lt_of_le hlin (nat_succ_le_two_pow (h5OddExp r w))
+  have hpow := nat_succ_le_two_pow (h5OddExp r w)
+  omega
 
 theorem h5OddQ_not_pow (r w k : Nat) :
     h5OddQ r w ≠ 2^k := by
@@ -182,7 +175,9 @@ theorem h5OddQ_not_pow (r w k : Nat) :
     omega
   have hCsmall : h5OddC r w < 2^e := by
     simpa [e] using h5OddC_lt_pow r w
-  have hp : 0 < p := by positivity
+  have hp : 0 < p := by
+    dsimp [p]
+    exact Nat.pow_pos (by decide)
   have hpEq : p = 2^e + 2^e := by
     dsimp [p]
     rw [Nat.pow_succ]
@@ -204,7 +199,7 @@ theorem h5OddQ_not_pow (r w k : Nat) :
   have hbig : 2^e < p - h5OddC r w := by omega
   by_cases hk : k ≤ e
   · have hpowle : 2^k ≤ 2^e := pow_two_mono hk
-    have hpowlt : 2^k < p := lt_of_le_of_lt hpowle (by omega)
+    have hpowlt : 2^k < p := by omega
     have hpowmod : (2^k) % p = 2^k := Nat.mod_eq_of_lt hpowlt
     rw [hQ, hpowmod] at hQmod
     omega
@@ -219,7 +214,7 @@ theorem h5OddQ_not_pow (r w k : Nat) :
 theorem h5OddMass_eq (r w : Nat) :
     h5OddEax r w + h5OddEay r w + 1 = 8*h5OddQ r w := by
   dsimp [h5OddEax, h5OddEay, h5OddQ]
-  ring
+  omega
 
 theorem h5OddMass_not_power (r w : Nat) :
     ∀ n : Nat, h5OddEax r w + h5OddEay r w + 1 ≠ 2^n := by
@@ -242,7 +237,7 @@ theorem h5OddMass_not_power (r w : Nat) :
       calc
         2^n = 2^(k+3) := by rw [hk]
         _ = 2^k*2^3 := by rw [Nat.pow_add]
-        _ = 8*2^k := by norm_num
+        _ = 8*2^k := by simp [Nat.mul_comm]
     rw [hmass, hpow'] at hpow
     have hq : h5OddQ r w = 2^k := by omega
     exact h5OddQ_not_pow r w k hq
@@ -264,6 +259,14 @@ theorem h5Odd_parent_fan (r w : Nat) :
     (by dsimp [h5OddEay]; omega)
     (by dsimp [h5OddEay]; omega)
     (h5OddMass_not_power r w)
+
+theorem h5OddQuarterHighSource (r w : Nat)
+    (hg : BB6.Agent25OddLift.h5PhaseGuard r w) :
+    ¬ BB6.Agent25OddLift.Reach secNext
+        (2*h5OddJ r+3) (h5OddK r w) := by
+  have hgate := h5OddK_gate r w
+  simpa [h5OddJ, h5OddM] using
+    (BB6.Agent25OddLift.h5QuarterHighSource r w (h5OddK r w) hg hgate)
 
 #check BB6.Agent25OddLift.h5QuarterHighSource
 #check BB6.Agent25OddLift.highStopSource
