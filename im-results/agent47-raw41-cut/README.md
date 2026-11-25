@@ -2,7 +2,7 @@
 
 Parent: `1RB---_1RC---_0RD---_1LD1RA_------_------` (seven holes); first query A1 at step 6. The original two-query partition proves a weighted bound of 16 or an explicit residual. Its six first-level cycle leaves, 19 halt branches, 166 second-level cycle leaves and five FAR leaves cover 3,554,687,500 of 6,103,515,625 physical completions (58.24%). These are disjoint branch cardinalities, not a count of arbitrary symmetry classes. There are 261 physical five-hole residuals and 153 canonical representatives.
 
-**Current checked descendant closures:** LC0LB (bound 229) and LC0RA (bound 117). Each is a five-hole cylinder containing 25^5 physical completions. The new LC0RA result includes two new all-time proofs, one previously derived sweep, 23 finite-automaton certificates and an exhaustive canonical first-hole tree. No actual root remains open inside that child. The remainder of Raw41 is still open; these are alternative refinements of the accepted 77-entry parent roster, not a global BB(6) upper bound.
+**Current checked descendant closures:** LC0RA (117), LB0LC (109), LD0LC (82), LB0RB (156), LC1LB (92), and earlier LC0LB (229). Each is a five-hole cylinder containing 25^5 physical completions. The new LC0RA result includes two new all-time proofs, one previously derived sweep, 23 finite-automaton certificates and an exhaustive canonical first-hole tree. No actual root remains open inside that child. The remainder of Raw41 is still open; these are alternative refinements of the accepted 77-entry parent roster, not a global BB(6) upper bound.
 
 ## LC0RA: complete child closure
 
@@ -40,4 +40,22 @@ The original five second-level FAR leaves are A1/B1=0LB/0LA (0012101), A1/C1=0RC
 
 ## Next obligation
 
-Close the other canonical Raw41 children; do not repeat discharged LC0RA/LC0LB subtrees. The existing LB0LC candidate bank and three dedicated sweep/counter sources are the next near-complete child, pending actual integration. The universal maximality proof still requires every other retained representative at the exact champion score. 
+Close the other canonical Raw41 children; do not repeat discharged LC0RA/LC0LB subtrees. Use the existing sweep checker and the small residual survey to select near-complete children. The universal maximality proof still requires every other retained representative at the exact champion score. 
+
+## 2026-11-25 21:04 UTC — joint closure of five descendants
+
+The following exhaustive child trees have now been compiled with Lean 4.36.0-rc2 on the accepted canonical77 artifact closure. Each checked residual list is empty.
+
+| Child | Literal partial table | Weighted upper bound | Initially open leaf certificates |
+|---|---|---:|---|
+| LC0RA | `1RB0LC_1RC---_0RD0RA_1LD1RA_------_------` | 117 | 23 FAR + 3 exact nonhalting |
+| LB0LC | `1RB0LB_1RC0LC_0RD---_1LD1RA_------_------` | 109 | 56 FAR + 3 exact nonhalting |
+| LD0LC | `1RB0LD_1RC0LC_0RD---_1LD1RA_------_------` | 82 | 54 FAR (survey/019/far.txt) |
+| LB0RB | `1RB0LB_1RC0RB_0RD---_1LD1RA_------_------` | 156 | 64 FAR (survey/003/far.txt) |
+| LC1LB | `1RB0LC_1RC---_0RD1LB_1LD1RA_------_------` | 92 | 60 FAR + 3 exact nonhalting (survey/014/far.txt) |
+
+LC1LB's previously open indices 1 and 2 share the proof in Raw41LC1LBSweepPair: in state A with empty left zipper and right word (0010)^(n+1)1, the return adds one block in 8n+25 transitions. The F1 transition varies between 0RB and 0RE. Index 7 is proved in Raw41LC1LBSweep7, with right word (00101)^(n+1) and cost 18n+28. These are genuine original-semantics universal nonhalting theorems, not empirical periodicity.
+
+Raw41LB0LCGraft and Raw41BatchGraft compile. The latter's removeTargets_sound proves simultaneous removal of a finite list of individually certified quotient cylinders. Its afterBatch_sound and afterBatch_count give **224 retained entries** from the 229-entry refinement, with weighted bound 7014 on the closed complement. afterSix_count is 223; afterSix_sound additionally takes the earlier LC0LB bound 229 as an explicit premise. exact_at_target_after_Batch is the mixed-bound consumer. All printed axiom profiles are [propext, Classical.choice, Quot.sound].
+
+For the three survey children use the enumerator and gen_children.py as above, with the corresponding survey folder, module name (Raw41LD0LC, Raw41LB0RB, Raw41LC1LB), bound and literal table. Compile their generated Base, all 24 BranchNN modules and Closed, then the graft. The 153-child survey is a candidate-discovery tool only; no uncompiled survey evidence is credited as closure.
