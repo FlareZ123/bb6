@@ -7,3 +7,5 @@ BlockMacro.lean proves exact primitive execution of every successful 3-cell macr
 A concrete candidate exists locally: 220 left states, 470 defined push edges, 142 right nodes including dead, 317 right edges, 15 accepting zero states. Python checked all constraints and Lean #eval returned true for all three check fields. Concrete kernel checking and original BB6Coverage semantics bridge still pending. Do not count this leaf as Lean-closed until these are complete. No new upper bound on BB(6).
 
 Next checkpoint will include deterministic synthesis and concrete verification. The existing raw10 complement consumer in agent49-box-complement is the intended integration target.
+### Concrete held verification and next target (05:22Z)
+Local Lean 4.36.0-rc2 compiled HeldBlockProof.lean; `BB6BlockFAR.Held.never` depends only on `[propext, Classical.choice, Quot.sound]`. Source bridge tested locally against exact relevant Frontier definitions; full dependency CI dispatched. `Raw110Candidates.json` records 16 further candidate certificates for Agent7's 18 raw110 one-hole leaves, not yet kernel-checked. Two misses: 5/161 and 5/790.
