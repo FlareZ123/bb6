@@ -68,22 +68,15 @@ def main(work: Path) -> None:
     assert len(targets) == 87, len(targets)
     assert all(rows[i].count("---") == 1 for i in targets)
 
+    # Cross every previously successful left and right summary (six original
+    # BiDFA pairs plus four phase-aware TreeBiDFA pairs). The checker, not the
+    # heuristic origin of a summary, decides whether a pair is valid here.
+    lefts = {int(i): tuple(int(c, 36) for c in left)
+             for i, _t, left, _right, *_ in OLD_EXAMPLES + TREE_EXAMPLES}
+    rights = {int(i): tuple(int(c, 36) for c in right)
+              for i, _t, _left, right, *_ in OLD_EXAMPLES + TREE_EXAMPLES}
     pairs = []
     seen_pairs = set()
-    for i, _table, left, right, *_ in OLD_EXAMPLES + TREE_EXAMPLES:
-        dl = tuple(int(c, 36) for c in left)
-        dr = tuple(int(c, 36) for c in right)
-        key = (dl, dr)
-        if key not in seen_pairs:
-            seen_pairs.add(key)
-            pairs.append((f"pair-{i}", dl, dr))
-
-    # The four phase-aware witnesses contributed genuinely different left and
-    # right summaries. Cross their summaries to test a small product bank.
-    lefts = {int(i): tuple(int(c, 36) for c in left)
-             for i, _t, left, _right, *_ in TREE_EXAMPLES}
-    rights = {int(i): tuple(int(c, 36) for c in right)
-              for i, _t, _left, right, *_ in TREE_EXAMPLES}
     for li, dl in lefts.items():
         for ri, dr in rights.items():
             key = (dl, dr)
