@@ -1,0 +1,830 @@
+{
+  "source_repository": "ccz181078/busycoq",
+  "source_revision": "33209bc7dc282b38c8cd6be507bfc551fea56108",
+  "research_repository": "FlareZ123/bb6",
+  "research_revision": "26780ef750cc01f27df52164ef2e5eb5bd9b66eb",
+  "workflow": "shared-rocq-root-proofs.yml",
+  "workflow_run_id": 45522264094,
+  "job_id": 138896824472,
+  "artifact_id": 14980297755,
+  "artifact_sha256": "5bf488dfb5a849ad8a8f98a3e8346c6bb1e11d96e6a53666e66bea17d71d3342",
+  "checkpoint": {
+    "chunk_index": 0,
+    "offset": 0,
+    "requested_size": 100,
+    "fuel": 1000000,
+    "computation": "vm_compute",
+    "active_count": 156,
+    "held_count": 1,
+    "residual_count": 157
+  },
+  "summary": {
+    "unique_residuals": 157,
+    "duplicates": 0,
+    "hole_counts": {
+      "1": 9,
+      "2": 3,
+      "3": 18,
+      "4": 23,
+      "5": 2,
+      "6": 5,
+      "7": 97
+    },
+    "fresh_state_counts": {
+      "3": 16,
+      "4": 66,
+      "5": 55,
+      "6": 20
+    },
+    "historical_663_intersection": 0
+  },
+  "active": [
+    {
+      "table": "1RB1RD_1RC0RE_0LA0RB_1LA1LD_0LF0LA_0LE---",
+      "holes": 1,
+      "fresh": 6
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA0RB_1LA1LD_0LF0LA_0RE---",
+      "holes": 1,
+      "fresh": 6
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA0RB_1LA1LD_0LF0LA_1LE---",
+      "holes": 1,
+      "fresh": 6
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA0RB_1LA1LD_0LF0LA_1RE---",
+      "holes": 1,
+      "fresh": 6
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA0RB_1LA1LD_0LF0LA_0LF---",
+      "holes": 1,
+      "fresh": 6
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA0RB_1LA1LD_0LF0LA_0RF---",
+      "holes": 1,
+      "fresh": 6
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA0RB_1LA1LD_0LF0LA_1LF---",
+      "holes": 1,
+      "fresh": 6
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA0RB_1LA1LD_0LF0LA_1RF---",
+      "holes": 1,
+      "fresh": 6
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA0RB_1LA1LD_0RF0LA_------",
+      "holes": 2,
+      "fresh": 6
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA0RB_1LA1LD_1LF0LA_------",
+      "holes": 2,
+      "fresh": 6
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA0RB_1LA1LD_1RF0LA_------",
+      "holes": 2,
+      "fresh": 6
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA1LB_1LA1LD_---0LA_------",
+      "holes": 3,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA1RB_1LA1LD_---0LA_------",
+      "holes": 3,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA0LC_1LA1LD_---0LA_------",
+      "holes": 3,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA0RC_1LA1LD_---0LA_------",
+      "holes": 3,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA1LC_1LA1LD_---0LA_------",
+      "holes": 3,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA1RC_1LA1LD_---0LA_------",
+      "holes": 3,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA0LD_1LA1LD_---0LA_------",
+      "holes": 3,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA0RD_1LA1LD_---0LA_------",
+      "holes": 3,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA1LD_1LA1LD_---0LA_------",
+      "holes": 3,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA1RD_1LA1LD_---0LA_------",
+      "holes": 3,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA0LE_1LA1LD_---0LA_------",
+      "holes": 3,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA0RE_1LA1LD_---0LA_------",
+      "holes": 3,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA1LE_1LA1LD_---0LA_------",
+      "holes": 3,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA1RE_1LA1LD_---0LA_------",
+      "holes": 3,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA0LF_1LA1LD_---0LA_------",
+      "holes": 3,
+      "fresh": 6
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA0RF_1LA1LD_---0LA_------",
+      "holes": 3,
+      "fresh": 6
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA1LF_1LA1LD_---0LA_------",
+      "holes": 3,
+      "fresh": 6
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA1RF_1LA1LD_---0LA_------",
+      "holes": 3,
+      "fresh": 6
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA---_1LA1LD_---0RA_------",
+      "holes": 4,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA---_1LA1LD_---1LA_------",
+      "holes": 4,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA---_1LA1LD_---1RA_------",
+      "holes": 4,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA---_1LA1LD_---0LB_------",
+      "holes": 4,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA---_1LA1LD_---0RB_------",
+      "holes": 4,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA---_1LA1LD_---1LB_------",
+      "holes": 4,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA---_1LA1LD_---1RB_------",
+      "holes": 4,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA---_1LA1LD_---0LC_------",
+      "holes": 4,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA---_1LA1LD_---0RC_------",
+      "holes": 4,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA---_1LA1LD_---1LC_------",
+      "holes": 4,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA---_1LA1LD_---1RC_------",
+      "holes": 4,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA---_1LA1LD_---0LD_------",
+      "holes": 4,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA---_1LA1LD_---0RD_------",
+      "holes": 4,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA---_1LA1LD_---1LD_------",
+      "holes": 4,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA---_1LA1LD_---1RD_------",
+      "holes": 4,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA---_1LA1LD_---0LE_------",
+      "holes": 4,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA---_1LA1LD_---0RE_------",
+      "holes": 4,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA---_1LA1LD_---1LE_------",
+      "holes": 4,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA---_1LA1LD_---1RE_------",
+      "holes": 4,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA---_1LA1LD_---0LF_------",
+      "holes": 4,
+      "fresh": 6
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA---_1LA1LD_---0RF_------",
+      "holes": 4,
+      "fresh": 6
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA---_1LA1LD_---1LF_------",
+      "holes": 4,
+      "fresh": 6
+    },
+    {
+      "table": "1RB1RD_1RC0RE_0LA---_1LA1LD_---1RF_------",
+      "holes": 4,
+      "fresh": 6
+    },
+    {
+      "table": "1RB1RD_1RC1LE_0LA---_1LA1LD_------_------",
+      "holes": 5,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1RD_1RC1RE_0LA---_1LA1LD_------_------",
+      "holes": 5,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1RD_1RC---_0LA---_1LA1RD_------_------",
+      "holes": 6,
+      "fresh": 4
+    },
+    {
+      "table": "1RB1RD_1RC---_0LA---_1LA0LE_------_------",
+      "holes": 6,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1RD_1RC---_0LA---_1LA0RE_------_------",
+      "holes": 6,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1RD_1RC---_0LA---_1LA1LE_------_------",
+      "holes": 6,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1RD_1RC---_0LA---_1LA1RE_------_------",
+      "holes": 6,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1RD_1RC---_0LA---_1RA---_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB1RD_1RC---_0LA---_0LB---_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB1RD_1RC---_0LA---_0RB---_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB1RD_1RC---_0LA---_1LB---_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB1RD_1RC---_0LA---_1RB---_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB1RD_1RC---_0LA---_0LC---_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB1RD_1RC---_0LA---_0RC---_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB1RD_1RC---_0LA---_1LC---_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB1RD_1RC---_0LA---_1RC---_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB1RD_1RC---_0LA---_0LD---_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB1RD_1RC---_0LA---_0RD---_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB1RD_1RC---_0LA---_1LD---_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB1RD_1RC---_0LA---_1RD---_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB1RD_1RC---_0LA---_0LE---_------_------",
+      "holes": 7,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1RD_1RC---_0LA---_0RE---_------_------",
+      "holes": 7,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1RD_1RC---_0LA---_1LE---_------_------",
+      "holes": 7,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1RD_1RC---_0LA---_1RE---_------_------",
+      "holes": 7,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1LD_1RC---_0LA---_---0LA_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB1LD_1RC---_0LA---_---0RA_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB1LD_1RC---_0LA---_---1LA_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB1LD_1RC---_0LA---_---1RA_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB1LD_1RC---_0LA---_---0LB_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB1LD_1RC---_0LA---_---0RB_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB1LD_1RC---_0LA---_---1LB_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB1LD_1RC---_0LA---_---1RB_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB1LD_1RC---_0LA---_---0LC_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB1LD_1RC---_0LA---_---0RC_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB1LD_1RC---_0LA---_---1LC_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB1LD_1RC---_0LA---_---1RC_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB1LD_1RC---_0LA---_---0LD_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB1LD_1RC---_0LA---_---0RD_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB1LD_1RC---_0LA---_---1LD_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB1LD_1RC---_0LA---_---1RD_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB1LD_1RC---_0LA---_---0LE_------_------",
+      "holes": 7,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1LD_1RC---_0LA---_---0RE_------_------",
+      "holes": 7,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1LD_1RC---_0LA---_---1LE_------_------",
+      "holes": 7,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1LD_1RC---_0LA---_---1RE_------_------",
+      "holes": 7,
+      "fresh": 5
+    },
+    {
+      "table": "1RB0RD_1RC---_0LA---_0LA---_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB0RD_1RC---_0LA---_0RA---_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB0RD_1RC---_0LA---_1LA---_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB0RD_1RC---_0LA---_1RA---_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB0RD_1RC---_0LA---_0LB---_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB0RD_1RC---_0LA---_0RB---_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB0RD_1RC---_0LA---_1LB---_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB0RD_1RC---_0LA---_1RB---_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB0RD_1RC---_0LA---_0LC---_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB0RD_1RC---_0LA---_0RC---_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB0RD_1RC---_0LA---_1LC---_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB0RD_1RC---_0LA---_1RC---_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB0RD_1RC---_0LA---_0LD---_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB0RD_1RC---_0LA---_0RD---_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB0RD_1RC---_0LA---_1LD---_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB0RD_1RC---_0LA---_1RD---_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB0RD_1RC---_0LA---_0LE---_------_------",
+      "holes": 7,
+      "fresh": 5
+    },
+    {
+      "table": "1RB0RD_1RC---_0LA---_0RE---_------_------",
+      "holes": 7,
+      "fresh": 5
+    },
+    {
+      "table": "1RB0RD_1RC---_0LA---_1LE---_------_------",
+      "holes": 7,
+      "fresh": 5
+    },
+    {
+      "table": "1RB0RD_1RC---_0LA---_1RE---_------_------",
+      "holes": 7,
+      "fresh": 5
+    },
+    {
+      "table": "1RB0LD_1RC---_0LA---_---0LA_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB0LD_1RC---_0LA---_---0RA_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB0LD_1RC---_0LA---_---1LA_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB0LD_1RC---_0LA---_---1RA_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB0LD_1RC---_0LA---_---0LB_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB0LD_1RC---_0LA---_---0RB_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB0LD_1RC---_0LA---_---1LB_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB0LD_1RC---_0LA---_---1RB_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB0LD_1RC---_0LA---_---0LC_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB0LD_1RC---_0LA---_---0RC_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB0LD_1RC---_0LA---_---1LC_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB0LD_1RC---_0LA---_---1RC_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB0LD_1RC---_0LA---_---0LD_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB0LD_1RC---_0LA---_---0RD_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB0LD_1RC---_0LA---_---1LD_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB0LD_1RC---_0LA---_---1RD_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB0LD_1RC---_0LA---_---0LE_------_------",
+      "holes": 7,
+      "fresh": 5
+    },
+    {
+      "table": "1RB0LD_1RC---_0LA---_---0RE_------_------",
+      "holes": 7,
+      "fresh": 5
+    },
+    {
+      "table": "1RB0LD_1RC---_0LA---_---1LE_------_------",
+      "holes": 7,
+      "fresh": 5
+    },
+    {
+      "table": "1RB0LD_1RC---_0LA---_---1RE_------_------",
+      "holes": 7,
+      "fresh": 5
+    },
+    {
+      "table": "1RB1LC_1RC---_0LA0LA_------_------_------",
+      "holes": 7,
+      "fresh": 3
+    },
+    {
+      "table": "1RB1LC_1RC---_0LA0RA_------_------_------",
+      "holes": 7,
+      "fresh": 3
+    },
+    {
+      "table": "1RB1LC_1RC---_0LA1LA_------_------_------",
+      "holes": 7,
+      "fresh": 3
+    },
+    {
+      "table": "1RB1LC_1RC---_0LA1RA_------_------_------",
+      "holes": 7,
+      "fresh": 3
+    },
+    {
+      "table": "1RB1LC_1RC---_0LA0LB_------_------_------",
+      "holes": 7,
+      "fresh": 3
+    },
+    {
+      "table": "1RB1LC_1RC---_0LA0RB_------_------_------",
+      "holes": 7,
+      "fresh": 3
+    },
+    {
+      "table": "1RB1LC_1RC---_0LA1LB_------_------_------",
+      "holes": 7,
+      "fresh": 3
+    },
+    {
+      "table": "1RB1LC_1RC---_0LA1RB_------_------_------",
+      "holes": 7,
+      "fresh": 3
+    },
+    {
+      "table": "1RB1LC_1RC---_0LA0LC_------_------_------",
+      "holes": 7,
+      "fresh": 3
+    },
+    {
+      "table": "1RB1LC_1RC---_0LA0RC_------_------_------",
+      "holes": 7,
+      "fresh": 3
+    },
+    {
+      "table": "1RB1LC_1RC---_0LA1LC_------_------_------",
+      "holes": 7,
+      "fresh": 3
+    },
+    {
+      "table": "1RB1LC_1RC---_0LA1RC_------_------_------",
+      "holes": 7,
+      "fresh": 3
+    },
+    {
+      "table": "1RB1LC_1RC---_0LA0LD_------_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB1LC_1RC---_0LA0RD_------_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB1LC_1RC---_0LA1LD_------_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB1LC_1RC---_0LA1RD_------_------_------",
+      "holes": 7,
+      "fresh": 4
+    },
+    {
+      "table": "1RB0LC_1RC---_0LA0LA_------_------_------",
+      "holes": 7,
+      "fresh": 3
+    },
+    {
+      "table": "1RB0LC_1RC---_0LA0RA_------_------_------",
+      "holes": 7,
+      "fresh": 3
+    },
+    {
+      "table": "1RB0LC_1RC---_0LA1LA_------_------_------",
+      "holes": 7,
+      "fresh": 3
+    },
+    {
+      "table": "1RB0LC_1RC---_0LA1RA_------_------_------",
+      "holes": 7,
+      "fresh": 3
+    }
+  ],
+  "held": [
+    {
+      "table": "1RB1RD_1RC0LD_0LA0RE_1LA1LB_0RF---_0LA1RA",
+      "holes": 1,
+      "fresh": 6
+    }
+  ]
+}
