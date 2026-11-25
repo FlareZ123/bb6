@@ -1,4 +1,5 @@
 name: Agent 46 canonical raw13 source cut
+run-name: Agent 46 raw13 ${{ inputs.target }}
 on:
   workflow_dispatch:
     inputs:
