@@ -103,6 +103,13 @@ jobs:
               "remainingExtended_count",
               "refined_residual_cover",
               "exact_from_remainingExtended",
+              "champion_score_gt_7014",
+              "champion_compatible_root",
+              "champion_not_weighted_7014",
+              "champion_in_canonical_roster",
+              "champion_raw_witness",
+              "cover_at_champion_score",
+              "exact_from_canonical78_at_champion_score",
           )
           for name in names:
               m = re.search(r"'[^']*\."+name+r"' depends on axioms: \[([^\]]*)\]", log)
