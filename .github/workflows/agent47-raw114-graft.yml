@@ -525,9 +525,10 @@ jobs:
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
-      - name: Validate the canonical72 base run ID
+      - name: Validate the standalone canonical72 base run ID
+        if: ${{ inputs.target == 'canonical71' }}
         env:
-          CANONICAL72_RUN_ID: ${{ inputs.target == 'canonical71' && inputs.canonical72_run_id || github.run_id }}
+          CANONICAL72_RUN_ID: ${{ inputs.canonical72_run_id }}
         run: |
           set -euo pipefail
           [[ "$CANONICAL72_RUN_ID" =~ ^[0-9]+$ ]]
@@ -662,9 +663,10 @@ jobs:
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
-      - name: Validate the canonical72 base run ID
+      - name: Validate the standalone canonical72 base run ID
+        if: ${{ inputs.target == 'canonical70' }}
         env:
-          CANONICAL72_RUN_ID: ${{ inputs.target == 'canonical70' && inputs.canonical72_run_id || github.run_id }}
+          CANONICAL72_RUN_ID: ${{ inputs.canonical72_run_id }}
         run: |
           set -euo pipefail
           [[ "$CANONICAL72_RUN_ID" =~ ^[0-9]+$ ]]
