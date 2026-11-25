@@ -1,10 +1,15 @@
 import Raw112Data
-import RosterCoverComposition
 
 namespace BB6.Agent47Raw112
 
 open BB6Coverage
 open BB6.Agent13BlankDelay
+
+/-- Weighted first-one bounds are monotone in their numeric threshold. -/
+theorem weightedBound_mono_local {A B : Nat} (hAB : A ≤ B)
+    {m : Machine} (h : WeightedBound A m) : WeightedBound B m := by
+  intro k d hk hd
+  exact Nat.le_trans (h k d hk hd) hAB
 
 /-- The raw112 partial audit is at 100,000. If each of its two residual
     cylinders is covered at a target B, its parent is covered at B as well.
@@ -17,7 +22,7 @@ theorem parent_cover_of_residual_covers {B : Nat}
   refine Cover.leaf _ ?_
   intro m hm
   rcases sound m hm with hBound | ⟨e, he, hcompat⟩
-  · exact BB6.Agent13RosterComposition.weightedBound_mono_local hB hBound
+  · exact weightedBound_mono_local hB hBound
   · exact (hLeaves e he).sound m hcompat
 
 #print axioms parent_cover_of_residual_covers
