@@ -57,24 +57,24 @@ theorem sourceElemM412_exact (s : MState) :
   | BB =>
     cases L with
     | nil =>
-      simpa [costElemM412, stepElemM, strictMList_eq, evalM] using
+      simpa [ReachesIn, costElemM412, stepElemM, strictMList_eq, evalM] using
         step_BB_nil_exact R
     | cons t L1 =>
       cases t with
       | zero =>
-        simpa [costElemM412, stepElemM, strictMList_eq, evalM] using
+        simpa [ReachesIn, costElemM412, stepElemM, strictMList_eq, evalM] using
           step_BB_zero_exact L1 R
       | run d =>
         rcases d with _ | _ | _ | _ | d
-        · simpa [costElemM412, stepElemM, strictMList_eq, strictNat_eq, evalM] using
+        · simpa [ReachesIn, costElemM412, stepElemM, strictMList_eq, SymRunEngine.strictNat_eq, evalM] using
             step_BB_run0_exact L1 R
-        · simpa [costElemM412, stepElemM, strictMList_eq, strictNat_eq, evalM] using
+        · simpa [ReachesIn, costElemM412, stepElemM, strictMList_eq, SymRunEngine.strictNat_eq, evalM] using
             step_BB_run1_exact L1 R
-        · simpa [costElemM412, stepElemM, strictMList_eq, strictNat_eq, evalM] using
+        · simpa [ReachesIn, costElemM412, stepElemM, strictMList_eq, SymRunEngine.strictNat_eq, evalM] using
             step_BB_run2_exact L1 R
-        · simpa [costElemM412, stepElemM, strictMList_eq, strictNat_eq, evalM] using
+        · simpa [ReachesIn, costElemM412, stepElemM, strictMList_eq, SymRunEngine.strictNat_eq, evalM] using
             step_BB_run3_exact L1 R
-        · simpa [costElemM412, stepElemM, strictMList_eq, strictNat_eq, evalM] using
+        · simpa [ReachesIn, costElemM412, stepElemM, strictMList_eq, SymRunEngine.strictNat_eq, evalM] using
             step_BB_run_ge4_exact d L1 R
   | DL =>
     cases L with
@@ -84,9 +84,9 @@ theorem sourceElemM412_exact (s : MState) :
       | zero => rfl
       | run d =>
         rcases d with _ | _ | _ | d
-        · simpa [costElemM412, stepElemM, strictMList_eq, strictNat_eq, evalM] using
+        · simpa [ReachesIn, costElemM412, stepElemM, strictMList_eq, SymRunEngine.strictNat_eq, evalM] using
             step_DL_run0_exact L1 R
-        · simpa [costElemM412, stepElemM, strictMList_eq, strictNat_eq, evalM] using
+        · simpa [ReachesIn, costElemM412, stepElemM, strictMList_eq, SymRunEngine.strictNat_eq, evalM] using
             step_DL_run1_exact L1 R
         · cases R with
           | nil => rfl
@@ -94,43 +94,43 @@ theorem sourceElemM412_exact (s : MState) :
             cases rt with
             | zero => rfl
             | run d0 =>
-              simpa [costElemM412, stepElemM, strictMList_eq, strictNat_eq,
+              simpa [ReachesIn, costElemM412, stepElemM, strictMList_eq, SymRunEngine.strictNat_eq,
                 prependZeroM_eq, evalM] using
                 step_DL_run2_exact d0 L1 R1
         · rfl
   | CB =>
     cases R with
     | nil =>
-      simpa [costElemM412, stepElemM, strictMList_eq, evalM] using
+      simpa [ReachesIn, costElemM412, stepElemM, strictMList_eq, evalM] using
         step_CB_nil_exact L
     | cons t R1 =>
       cases t with
       | zero =>
-        simpa [costElemM412, stepElemM, strictMList_eq, evalM] using
+        simpa [ReachesIn, costElemM412, stepElemM, strictMList_eq, evalM] using
           step_CB_zero_exact L R1
       | run d =>
         rcases d with _ | _ | _ | d
         · cases R1 with
           | nil =>
-            simpa [costElemM412, stepElemM, strictMList_eq, evalM] using
+            simpa [ReachesIn, costElemM412, stepElemM, strictMList_eq, evalM] using
               step_CB_run0_nil_exact L
           | cons t2 R2 =>
             cases t2 with
             | zero =>
-              simpa [costElemM412, stepElemM, strictMList_eq, evalM] using
+              simpa [ReachesIn, costElemM412, stepElemM, strictMList_eq, evalM] using
                 step_CB_run0_zero_exact L R2
             | run d2 =>
               rcases d2 with _ | d2
-              · simpa [costElemM412, stepElemM, strictMList_eq, evalM] using
+              · simpa [ReachesIn, costElemM412, stepElemM, strictMList_eq, evalM] using
                   step_CB_run0_run0_exact L R2
-              · simpa [costElemM412, stepElemM, strictMList_eq, strictNat_eq,
+              · simpa [ReachesIn, costElemM412, stepElemM, strictMList_eq, SymRunEngine.strictNat_eq,
                   prependZeroM_eq, evalM] using
                   step_CB_run0_run_pos_exact d2 L R2
-        · simpa [costElemM412, stepElemM, strictMList_eq, strictNat_eq, evalM] using
+        · simpa [ReachesIn, costElemM412, stepElemM, strictMList_eq, SymRunEngine.strictNat_eq, evalM] using
             step_CB_run1_exact L R1
-        · simpa [costElemM412, stepElemM, strictMList_eq, strictNat_eq, evalM] using
+        · simpa [ReachesIn, costElemM412, stepElemM, strictMList_eq, SymRunEngine.strictNat_eq, evalM] using
             step_CB_run2_exact L R1
-        · simpa [costElemM412, stepElemM, strictMList_eq, strictNat_eq, evalM] using
+        · simpa [ReachesIn, costElemM412, stepElemM, strictMList_eq, SymRunEngine.strictNat_eq, evalM] using
             step_CB_run_ge3_exact d L R1
   | HALT => rfl
 

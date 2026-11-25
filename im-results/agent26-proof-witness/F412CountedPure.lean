@@ -542,14 +542,14 @@ theorem sourceElemCB_exact (L R : List SymTok) :
   cases R with
   | nil =>
     simpa only [ReachesIn, Nat.zero_add, Nat.reduceAdd, List.cons_append, List.nil_append, costElemCB, stepElemCB, strictList_eq, evalSym, evalM,
-      encSymL_bumpSymL] using step_CB_nil_exact (encSymL L)
+      encSymL_bumpSymL, encSymR] using step_CB_nil_exact (encSymL L)
   | cons t R1 =>
     cases t with
     | item x =>
       cases x with
       | zero =>
         simpa only [ReachesIn, Nat.zero_add, Nat.reduceAdd, List.cons_append, List.nil_append, costElemCB, stepElemCB, strictList_eq, evalSym, evalM,
-          encSymL_bumpSymL, encSymR_bumpSymR] using
+          encSymL_bumpSymL, encSymR_bumpSymR, encSymR] using
             step_CB_zero_exact (encSymL L) (encSymR R1)
       | run d =>
         rcases d with _ | _ | _ | d
@@ -584,8 +584,8 @@ theorem sourcePureCB_exact (L R : List SymTok) :
         · simpa only [ReachesIn, Nat.zero_add, Nat.reduceAdd, List.cons_append, List.nil_append, costPureCB, stepPureCB] using sourceElemCBRun0_exact L R1
         · simpa only [ReachesIn, Nat.zero_add, Nat.reduceAdd, List.cons_append, List.nil_append, costPureCB, stepPureCB] using sourceElemCB_exact L (.item (.run 1) :: R1)
         · simpa only [ReachesIn, Nat.zero_add, Nat.reduceAdd, List.cons_append, List.nil_append, costPureCB, stepPureCB] using sourceElemCB_exact L (.item (.run 2) :: R1)
-        · simpa only [ReachesIn, Nat.zero_add, Nat.reduceAdd, List.cons_append, List.nil_append, costPureCB, stepPureCB, evalSym, evalM, encSymL_bumpSymL] using
-            step_CB_run_ge3_exact d (encSymL L) (encSymR R1)
+        · simpa only [ReachesIn, Nat.zero_add, Nat.reduceAdd, List.cons_append, List.nil_append, costPureCB, stepPureCB] using
+            sourceElemCB_exact L (.item (.run (d+3)) :: R1)
     | repB1 k =>
       simp only [costPureCB, stepPureCB]
       cases hs2 : stripPrefixSym [.item (.run 0), .item (.run 0), .item (.run 1)] L with

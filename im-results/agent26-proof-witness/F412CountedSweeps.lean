@@ -53,7 +53,7 @@ theorem sweepBB_exact (L R : List SymTok) :
             simp only [evalSym, evalM, encSymL, encSymR, encSymR_bumpSymR]
             exact step_BB_run1_exact (encSymL L1) (encSymR R)
           exact reachesIn_trans h1 (ih (.item (.run 0) :: bumpSymR R))
-        · simpa only [sweepBB,costSweepBB,strictNat_eq] using
+        · simpa only [ReachesIn,sweepBB,costSweepBB,SymRunEngine.strictNat_eq] using
             sourceElemBB_exact (.item (.run (d+2)) :: L1) R
     | repB1 k =>
       simp only [sweepBB, costSweepBB, strictList_eq]

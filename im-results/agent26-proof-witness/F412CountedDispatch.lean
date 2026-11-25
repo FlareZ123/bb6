@@ -48,7 +48,7 @@ theorem tryRuleA_exact (L : List SymTok) (d : Nat) (R_tail : List SymTok) :
     cases hm : matchEndB1 rest with
     | none => dsimp only; exact elemThenBB_exact .CB L (.item (.run d) :: R_tail)
     | some k =>
-      simp only [strictNat_eq]
+      simp only [SymRunEngine.strictNat_eq]
       cases hcond : (Nat.ble 2 (d / 6) && Nat.ble (d / 6) k)
       · exact elemThenBB_exact .CB L (.item (.run d) :: R_tail)
       · have hrest := matchEndB1_some rest k hm
@@ -139,7 +139,7 @@ theorem tryRuleB_exact (L : List SymTok) (d2 : Nat) (R_tail : List SymTok) :
               dsimp only
               cases hcond : (Nat.ble 2 (splitB2 0 restL).1 && Nat.ble 2 m12 && Nat.ble m12 k1)
               · exact elemThenBB_exact .CB L (.item .zero :: .item (.run d2) :: R_tail)
-              · simp only [strictNat_eq]
+              · simp only [SymRunEngine.strictNat_eq]
                 have hL := stripPrefixSym_some _ L restL hsL
                 have hspec := splitB2Aux_spec 32 0 restL
                 simp only [repBlock, List.nil_append] at hspec
@@ -215,7 +215,7 @@ theorem tryRuleBC_exact (L : List SymTok) (d2 : Nat) (R_tail : List SymTok) :
           dsimp only
           cases hcond : (Nat.ble 3 p && Nat.ble 1 k1)
           · exact tryRuleB_exact L d2 R_tail
-          · simp only [strictNat_eq]
+          · simp only [SymRunEngine.strictNat_eq]
             have hL1 := stripPrefixSym_some _ L rest1 hs1
             have hL2 := popRep2_some rest1 p restC hp2
             have hL3 := stripPrefixSym_some _ restC rest2 hs2
