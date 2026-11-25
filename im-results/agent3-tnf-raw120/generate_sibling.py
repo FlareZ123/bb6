@@ -26,6 +26,8 @@ import boundary_pump
 MOVES = ["".join(x) for x in product("01", "LR", "ABCDEF")]
 # The tag is part of the Lean namespace and module names.
 PARAMS = {
+    "1RA": ("OneRA", 4374, "af3b4cfbb7f4d3dcde52253b7834602fe505fbdf0c3da9a49b29aaf5c075affe",
+            dict(split=1329, cycle=19345, last=6849, open=4374)),
     "1LA": ("OneLA", 4236, "90c10678c9a20c8583c13a390b319dc9aad3fa7f33730c3b019ec9fc9444929e",
             dict(split=1661, cycle=24485, last=9483, open=4236)),
     "0LF": ("ZeroLF", 4752, "8a90985d99e358fc7c1c05a589d5f3f7546206cb5e9f5802c15dbedcc66a3013",
@@ -131,6 +133,22 @@ if BRANCH == "1RC":
         pump_code.append(rc_nested.generate_nested(i, one.parse(opens[i])))
         pumps[opens[i]] = (f"{pumpns}.M{i}.table", f"{pumpns}.M{i}.never")
 late = {}
+if BRANCH == "1RA":
+    sys.path.insert(0, str(ROOT.parent / "agent16-raw118"))
+    from bidfa_emit import emit as emit_bidfa
+    bns = "BB6.Agent3Raw120OneRABiDFA"
+    bcode = ["import BiDFA", "set_option maxRecDepth 100000", "set_option maxHeartbeats 0",
+             f"namespace {bns}", "open BB6Coverage BB6Coverage.Agent16BiDFA"]
+    for row in (ROOT / "1RA-bidfa.txt").read_text().splitlines():
+        idx, dl, dr, count, edges = row.split()
+        i = int(idx)
+        table = opens[i]  # Exact open-list SHA was asserted above.
+        code, n, e = emit_bidfa(i, table, [int(x,36) for x in dl], [int(x,36) for x in dr])
+        assert (n,e) == (int(count),int(edges))
+        bcode.append(code)
+        pumps[table] = (f"{bns}.M{i}.table", f"{bns}.M{i}.never")
+    bcode.append(f"end {bns}")
+    (FOLDER / "Raw120OneRABiDFA.lean").write_text("\n".join(bcode)+"\n")
 if BRANCH == "1LA":
     assert opens[1794] == "1RB0LE_1RC0RF_0RD---_1LD1RE_1LA1LE_0RB1RA"
     pumps[opens[1794]] = ("BB6.Agent3Raw120OneLABiDFA.table", "BB6.Agent3Raw120OneLABiDFA.never")
@@ -247,7 +265,7 @@ for i, code in enumerate(opens):
             print("grouped-boundary", i, info)
             continue
     ans = one.candidate(p, events)
-    if ans is None and BRANCH == "0RA" and i == 479:
+    if ans is None and ((BRANCH == "0RA" and i == 479) or BRANCH == "1RA"):
         ans = extended_one_candidate(p, events)
     if ans is not None:
         generated, info = one.generate(i, p, ans)
@@ -433,7 +451,7 @@ theorem split_checked (p : PartialMachine) (n : Nat) (s : Slot)
   simp only [Bool.and_eq_true]
   exact ⟨hq, allMoves_of _ hk⟩
 """
-emit(prefix + "Base", ["Raw120Late"] + ({"1LA": ["Raw120OneLABiDFA"], "0RC": ["Raw120RCCounter"], "1RC": ["Raw120OneRCCounter"], "1LF": ["Raw120OneLFCounter", "Raw120OneLFTwo", "Raw120OneLFStack"], "0LB": ["Raw120ZeroLBMirror", "Raw120ZeroLBReset", "Raw120ZeroLBShuttle", "Raw120ZeroLBTriple"], "0LF": ["Raw120ZeroLFRecursive", "Raw120ZeroLFWord"], "0RA": ["Raw120RAPhases", "Raw120RABiDFA", "Raw120RA423BlockAdapter"]}.get(BRANCH, [])) + [prefix + "Sweeps"], base)
+emit(prefix + "Base", ["Raw120Late"] + ({"1RA": ["Raw120OneRABiDFA"], "1LA": ["Raw120OneLABiDFA"], "0RC": ["Raw120RCCounter"], "1RC": ["Raw120OneRCCounter"], "1LF": ["Raw120OneLFCounter", "Raw120OneLFTwo", "Raw120OneLFStack"], "0LB": ["Raw120ZeroLBMirror", "Raw120ZeroLBReset", "Raw120ZeroLBShuttle", "Raw120ZeroLBTriple"], "0LF": ["Raw120ZeroLFRecursive", "Raw120ZeroLFWord"], "0RA": ["Raw120RAPhases", "Raw120RABiDFA", "Raw120RA423BlockAdapter"]}.get(BRANCH, [])) + [prefix + "Sweeps"], base)
 
 assert tree[0] == "split"
 root_n, root_slot, root_kids = tree[1], tree[2], tree[3]

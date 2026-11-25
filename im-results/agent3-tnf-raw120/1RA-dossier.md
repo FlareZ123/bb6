@@ -1,0 +1,7 @@
+# Raw120 E0=1RA: asymmetric finite-automata candidates
+
+Parent `1RB---_1RC---_0RD---_1LD1RE_1RA1LE_------`. The deterministic first-hole census has 1329 splits, 19345 translated-cycle leaves, 6849 last leaves and 4374 open leaves, with open-list SHA256 `af3b4cfbb7f4d3dcde52253b7834602fe505fbdf0c3da9a49b29aaf5c075affe`. The existing ten FAR banks cover 4286 of the open leaves.
+
+**New candidate assignments:** 52 of the remaining 88 leaves have finite two-sided stack-summary automata. The manifest [1RA-bidfa.txt](1RA-bidfa.txt) records exact leaf index (the open-list hash is pinned), left and right DFA transition tables in base 36 (no orientation prefix), and the independently replayed fixed-point state and inverse-edge counts. The local C++ search tested identical pairs first and then ordered asymmetric pairs over 458 distinct DFA tables in the existing banks. A separate replay of the repository's `bidfa_emit.witness` algorithm reproduced all 52 state/edge counts and avoided each unassigned row. The generator pins the census and emits original-source `BiDFA.never` certificates; these have **not yet been compiled against the source**.
+
+The remaining 36 leaves require sweep/growth certificates, late-query checks, or new automata. Some already have local symbolic candidates; no complete 1RA bound or canonical77 reduction is claimed. Reproduce with `python im-results/agent3-tnf-raw120/generate_sibling.py 1RA` after unpacking the coverage source. The generator deliberately fails if any witness is missing. Agent13 is independently integrating 1LB.
