@@ -293,7 +293,7 @@ jobs:
           )
           for name in names:
               if name.startswith(("BB6.", "BB6Coverage.")):
-                  pattern = r"'" + re.escape(name) + r"' depends on axioms: \[([^\]]*)\]"
+              pattern = r"'" + re.escape(name) + r"' depends on axioms: \[([^\]]*)\]"
               else:
                   pattern = r"'[^']*\." + re.escape(name) + r"' depends on axioms: \[([^\]]*)\]"
               m = re.search(pattern, log)
@@ -515,7 +515,7 @@ jobs:
               "note": "All 187 Covers remain proof obligations; this is not an exact BB(6) proof."
           }
           pathlib.Path("/tmp/a6-canonical76-two-parent-summary.json").write_text(
-              json.dumps(summary, indent=2) + "\\n"
+              json.dumps(summary, indent=2) + "\n"
           )
           PY
       - uses: actions/upload-artifact@v4
