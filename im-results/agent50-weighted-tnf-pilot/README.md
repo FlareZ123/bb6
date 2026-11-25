@@ -229,3 +229,14 @@ The accepted canonical frontier now has a two-parent 76-entry roster after the r
 A completion-level analysis of the highest-ranked base34 residual box is recorded in [box8-halt-slice.md](box8-halt-slice.md), with reproducible generator/simulation driver [search_box8_halt_slice.py](search_box8_halt_slice.py). Box 8 has ten fixed transitions and F0/F1 domains of sizes 24 and 25 (mass 600). Of its 600 completions, 576 have all transitions defined and are therefore nonhalting; among the 24 with F1=halt, three halt in 11, 11 and 32 steps, and F0=0RC is covered by the existing 625-completion lasso cylinder. The remaining 20 F0 choices survived 1,000,000 simulated steps without halt or exact cycle, but are not yet proved nonhalting. The partial-box ranked BlockFAR pilot (run 45591752103) generated no certificate because the generator reaches unresolved F0/F1 holes; the new completion-level generator target `weighted-tnf-raw10-box8-halt-slice` was queued as run 45593139942.
 
 The held-leaf source audit has had three distinct outcomes: run 45568146977 failed before Lean because `Raw68Data` was absent; run 45568482709 was interrupted by runner shutdown during Raw82 generation (no Lean proof failure); run 45587631979 failed immediately because the workflow pointed at the wrong `Canonical77HeldMembership.lean` path, which is now corrected. The corrected retry, run 45590352101, is currently in progress at Raw82 source generation. Do not treat any of these as source acceptance until the corrected run completes successfully. Keep the membership-only proof separate from that heavier consumer. Do not promote this draft to `results/` until source acceptance and a substantive residual-cover advance.
+
+
+## 2026-11-25 hard-root residual-box crosswalk
+
+Added [Raw10HardRootBoxCrosswalk.md](Raw10HardRootBoxCrosswalk.md) and the reproducible
+[raw10-hardroot-crosswalk.js](raw10-hardroot-crosswalk.js). The exact 68-cylinder
+replay reproduces the 41-box, 90,737,503,713,725-mass complement and places the
+complete 25-completion leaves for C/D0/D2 in residual box 0 and r1 in box 24.
+The r1 root already has a source-accepted nonhalting theorem; adding its leaf
+would remove 25 machines while splitting the remainder into 43 boxes. This is
+an intermediate crosswalk only, not a Lean integration or raw10 parent closure.
