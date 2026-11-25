@@ -23,12 +23,23 @@ MOVE_RE = re.compile(r"^[01][LR][A-F]$")
 def parse_rle(stem: str) -> list[str] | None:
     if not stem.startswith("M_"):
         return None
-    tokens = stem[2:].split("_")
-    if len(tokens) != 12:
+    # Cryptids encodes the two read-symbol moves for each state as one
+    # six-character group: M_<A0><A1>_<B0><B1>_..._<F0><F1>.
+    groups = stem[2:].split("_")
+    if len(groups) != 6 or any(len(g) != 6 for g in groups):
         return None
+    tokens = [groups[q][i:i + 3] for q in range(6) for i in (0, 3)]
     if any(t not in {"HHH", "---"} and not MOVE_RE.fullmatch(t) for t in tokens):
         return None
     return tokens
+
+
+# Regression guard for the pinned raw139 source module used by the pilot.
+_RAW139_REGRESSION = parse_rle(
+    "M_1RB0LE_1RC0RC_1LD0RB_1LA0LE_1LD1LF_1LDHHH"
+)
+if _RAW139_REGRESSION is None or len(_RAW139_REGRESSION) != 12 or _RAW139_REGRESSION[-1] != "HHH":
+    raise RuntimeError("Cryptids six-group RLE parser regression")
 
 
 def parse_export(path: pathlib.Path) -> list[dict]:
