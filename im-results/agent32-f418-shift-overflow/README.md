@@ -159,4 +159,8 @@ The closed return formulas were compared with the existing event equations on ev
 
 The current debt envelope is independent of the largest p ever seen. Set z=max(0,-x-7). For p=0, z'<=floor(z/2); for p>0, z'<=floor(z/2^L)+C. Given z<2^B, the next envelope is B-1 (natural subtraction) for p=0 and max(B-L,7p+2)+1 otherwise. If B>=3, a gate has no even source at index i>=B+3. This gives a contracting high-source exclusion across normal segments, including those after recoveries; the reset supplies its own explicit debt. The complete event and queue compositions passed Lean 4.36.0-rc2 using the actual repository dependencies and standard-axiom audit in [return CI](https://github.com/FlareZ123/bb6/actions/runs/45503994584) and [queue CI](https://github.com/FlareZ123/bb6/actions/runs/45504677179). Reproduce through the existing agent32-zero-path-global workflow with verify_f418_return=true.
 
+## Absolute-coordinate history and obstruction to repeating normal words
+
+[AbsoluteHistory.md](AbsoluteHistory.md) derives an exact signed history formula and a repeat-block integer defect that contracts by the consumed power of two. [F418AbsoluteHistory.lean](F418AbsoluteHistory.lean) kernel-checks the generic algebra and the impossibility of repeating any single complete normal prefix forever, for all parameters and starting widths. A further paper argument excludes infinite repetition of a complete word whose projected p-word is primitive. The proof restricts periodic certificates; it does not establish a root outcome.
+
 The remaining problem is to exclude or reach the fatal gate on the actual seed orbit. No halting/nonhalting verdict or frontier graft is claimed.
