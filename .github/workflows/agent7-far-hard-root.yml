@@ -1,5 +1,5 @@
 name: Agent 7 hard-root FAR search
-run-name: "Agent 7 FAR SMT: ${{ inputs.solver_code }}"
+run-name: "Agent 7 FAR: code=${{ inputs.solver_code }} line=${{ inputs.solver_line }} raw110=${{ inputs.raw110_only }} kid=${{ inputs.raw110_partial_kid }}"
 on:
   workflow_dispatch:
     inputs:
@@ -286,8 +286,11 @@ jobs:
           python im-results/agent10-tnf-raw91/generate.py
           python im-results/agent10-tnf-raw87/generate.py
           python im-results/agent10-tnf-multipump/generate.py 66 70 80 68 72 82 86 88 92 93 97 98 100 101 102 104
-          python im-results/agent7-raw110/generate.py
-          python tools/lean_compile_closure.py --workdir "$PWD/.tmp/a7-raw110/build" --jobs 4 im-results/agent7-raw110/Raw110RosterBridge.lean | tee /tmp/raw110-proof.log
+          python im-results/agent7-raw110/generate.py --base-only
+          python tools/lean_compile_closure.py --workdir "$PWD/.tmp/a7-raw110/build" --jobs 4 im-results/agent7-raw110/Raw110Consumer.lean | tee /tmp/raw110-proof.log
+          python im-results/agent7-raw110/generate_partial.py
+          python im-results/agent7-raw110/assemble_partial.py
+          python tools/lean_compile_closure.py --workdir "$PWD/.tmp/a7-raw110/build" --jobs 4 im-results/agent7-raw110/Raw110DeepRoster.lean | tee -a /tmp/raw110-proof.log
           if grep -qE 'sorryAx|native_decide' /tmp/raw110-proof.log; then exit 1; fi
       - uses: actions/upload-artifact@v4
         if: always()
