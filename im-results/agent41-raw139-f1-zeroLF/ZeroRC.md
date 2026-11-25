@@ -1,6 +1,6 @@
-# Raw139 F/1 = 0RC — complete candidate closure
+# Raw139 F/1 = 0RC — source-certified exhaustive closure
 
-Literal partial table `[7,24,11,24,14,21,3,16,12,11,24,9]`. Proposed theorem `BB6.Agent41F1ZeroRC.all_completions_weighted : ∀ m, compatible parent m → WeightedBound 3807 m`. All eighteen exceptional growth recurrences passed local Lean 4.36.0-rc2 against the copied zipper semantics; complete original-source audit pending.
+Literal partial table `[7,24,11,24,14,21,3,16,12,11,24,9]`. Certified theorem `BB6.Agent41F1ZeroRC.all_completions_weighted : ∀ m, compatible parent m → WeightedBound 3807 m`. Original-source Lean 4.36.0-rc2 certification passed with standard axioms only in [run 45607499262](https://github.com/FlareZ123/bb6/actions/runs/45607499262), pinned revision `6d8a67d372e3ce0a01802e3c7eb8b04e01e838f9`, compiled artifact `15018441852`.
 
 Partition: 14 internal splits, 323 terminal leaves, 202 translated cycles, 91 last-hole queries (including 3801 and 1881), 12 FAR, 18 growth proofs.
 
