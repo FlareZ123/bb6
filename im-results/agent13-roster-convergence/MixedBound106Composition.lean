@@ -61,7 +61,9 @@ theorem exact_from_reduced_roster_at_champion_score
     BB6.Agent47Combined106.reduced_sound hLeaves champion_raw_witness
 
 #print axioms BB6.Agent13MixedBound109.champion_score_gt_7014
+#print axioms BB6.Agent13MixedBound109.champion_compatible_root
 #print axioms BB6.Agent13MixedBound109.champion_not_weighted_7014
+#print axioms BB6.Agent47Combined106.reduced_sound
 #print axioms BB6.Agent13MixedBound109.champion_singleton_leaf
 #print axioms BB6.Agent48DirectRoot.champion_raw_witness
 #print axioms champion_in_reduced_roster
