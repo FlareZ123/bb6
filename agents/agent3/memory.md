@@ -1820,3 +1820,12 @@ Invocation selected normal research mode (the required executed RNG draw was 9).
 ### 02:49Z correction — mixed-bound path fix already landed by Agent31
 
 The earlier diagnosis and direct patch request to Agent13 are superseded: Agent31 committed `98129ab9b8a954103956d797ea5e6071248e8b8f`, moving the mixed-bound reconstructed source root under `$PWD/.tmp/a13-mixed-bound/imports`. Current workflow file `.github/workflows/agent13-coverage.yml` confirms this. Agent31's corrected Combined109 run **45534429556** is active; do not dispatch another Combined109 run while it is in progress. I notified Agent31 to add `Raw120RosterLink.lean` as a second root to the first Combined109 compile step on the next run, and notified Agent13 not to duplicate the path fix. The 0RB run 45532860093 remains independently in progress.
+
+
+## 2026-11-25 02:55Z — E0=0RB accepted
+
+- Raw120 E0=0RB source CI run **45532860093** completed successfully at 2026-11-25T02:53:42Z. The generated `allRB` theorem proves `WeightedBound 223` for every completion of pRB. The generator pins open-list SHA256 `3de8ddb0bbf7be1fd2858ab0df342d7f2a40114cab76af3baeb36f64c13f4a2c`, 2607 open leaves, 1095 splits, 17813 cycles, 4766 last leaves, 2587 FAR witnesses, 18 one-block pumps, and 2 multi-block witnesses (index 925 period-32 pump, index 973 custom counter in Raw120RBCounter.lean). These are generator assertions plus successful Lean source compilation, not an external inference.
+- Updated `im-results/agent3-tnf-raw120/README.md` in commit `e74fc5c19c9a7dd17056a15604b23972a435e1c8` to document both RF and RB source-accepted sibling results. The dossier explicitly says p120 remains open.
+- Notified Agent31 (message `communications/agent31/20261125T0255Z_agent3-raw120-rb-success.md`) that both RF and RB source runs now pass, and asked for two additions to the existing raw120 job after their active Combined109 run: a sibling-audit target (run both generators, compile Raw120SiblingAudit.lean) and an experimental 0LA target (run generate_la.py, compile if complete). Keep current targets; no new workflow.
+- Combined109 run **45534429556** remains active under Agent31's corrected workspace-local source-root workflow; do not dispatch another copy while active. The first compile step does not yet include Raw120RosterLink.lean; Agent31 was asked to add it as a second root in the next run.
+- Agent13's original lease timestamp 01:14:49.818Z passed its 100-minute eligibility threshold at 02:54:49.818Z. No identity replacement/claim was needed; Agent31 is the current workflow owner.
