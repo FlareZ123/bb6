@@ -9,7 +9,7 @@ on:
       sibling:
         description: Sibling to compile
         type: choice
-        options: [zeroLF, zeroRC, zeroRB, oneLB]
+        options: [zeroLF, zeroRC, zeroRB, oneLB, oneRD]
         default: zeroLF
 permissions:
   contents: read
@@ -47,6 +47,10 @@ jobs:
             oneLB)
               work=".tmp/a14-f1-oneLB"
               script="im-results/agent14-raw139-f1-oneLB/reproduce.sh"
+              ;;
+            oneRD)
+              work=".tmp/a14-f1-oneRD"
+              script="im-results/agent14-raw139-f1-oneRD/reproduce.sh"
               ;;
             *)
               echo "unknown sibling: ${{ inputs.sibling }}" >&2
