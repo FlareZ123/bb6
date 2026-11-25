@@ -708,6 +708,7 @@ jobs:
               "BB6.Agent6CanonicalTwoParentComposition.cover_championResidual_from_102_leaves",
               "BB6.Agent6CanonicalTwoParentComposition.total_remaining_obligations_count",
               "BB6.Agent6CanonicalTwoParentComposition.refinedCanonical76Roster_count",
+              "BB6.Agent6CanonicalTwoParentComposition.refinedCanonical76Roster_addresses_nodup",
               "BB6.Agent6CanonicalTwoParentComposition.exact_from_canonical76_and_102_raw139_leaves",
           )
           for name in names:
@@ -728,6 +729,7 @@ jobs:
               "nonchampion_parent_obligations": 75,
               "remaining_raw139_f1_leaves": 102,
               "total_remaining_obligations": 177,
+              "distinct_addresses_theorem": names[-2],
               "theorem": names[-1],
               "source_sha": os.environ.get("SOURCE_SHA"),
               "core_run_id": os.environ.get("CORE_RUN_ID"),
