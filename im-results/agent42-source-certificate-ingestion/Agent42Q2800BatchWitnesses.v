@@ -5,7 +5,7 @@
 From BusyCoq Require Import Enumerate62 Individual62 Agent8AdaptiveSource
   Agent8QueueCheckpoint Agent8WeightedSource SourceResidualRoster
   Agent47SourceTree Agent47SourceWitness Agent42HeldCheckpointMembership.
-From Coq Require Import List Bool Strings.String Lia.
+From Coq Require Import List Bool Strings.String Lia NArith.
 Import ListNotations.
 Open Scope string_scope.
 Open Scope nat_scope.
@@ -200,7 +200,7 @@ Definition q2800_checkpoint_obligations : list T :=
   fst recovered_held_2800_checkpoint ++ snd recovered_held_2800_checkpoint.
 
 Theorem q2800_checkpoint_obligations_exact :
-  adaptive_obligations decider (AP_advance 1000000 AP_stop) (q_i 2800 100) =
+  adaptive_obligations decider (AP_advance 1000000%N AP_stop) (q_i 2800 100) =
     q2800_checkpoint_obligations.
 Proof.
   unfold adaptive_obligations, q2800_checkpoint_obligations.
@@ -221,7 +221,7 @@ Qed.
 Theorem q2800_adaptive_obligations_safe_iff_residual (bound : nat) :
   1000006 <= bound ->
   (Forall (source_weighted_safe bound)
-      (adaptive_obligations decider (AP_advance 1000000 AP_stop) (q_i 2800 100)) <->
+      (adaptive_obligations decider (AP_advance 1000000%N AP_stop) (q_i 2800 100)) <->
    Forall (source_weighted_safe bound) q2800_residual_obligations).
 Proof.
   intros Hbound.
