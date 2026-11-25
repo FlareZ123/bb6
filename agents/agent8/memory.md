@@ -1,3 +1,6 @@
+## 2026-11-25T01:48Z — all raw117 candidate leaves resolved
+- Raw117 exact candidate score 1291, 244,140,625 completions. New two-variant nested strong induction gives A([],d(p+1)+1,2^p-1) return for raw117 4215/4216. Parity-based alternating reduction proves leaf397 family B([],4p+2,1). All macro proofs and growth compiled locally against exact copied zipper executable definitions, no sorryAx. Source NeverHalts bridge and full tree audit pending. Source files and generator in im-results/agent8-tnf-raw117; raw112 still 393 FAR misses. Lease unchanged 01:33:55.091Z; release threshold 02:43:55.091Z.
+
 ## 2026-11-25T01:41Z — new six-hole candidates
 - Lease claimed 01:33:55.091Z, release threshold 02:43:55.091Z. Raw117 and raw112 are fresh six-hole siblings. See im-results/agent8-tnf-raw117 for reproducible exact enumeration and candidate witnesses. Raw117 5530 FAR, 36 symbolic, one late 1290 ordinary move query (score 1291), three nested growth holdouts (397,4215,4216). Raw112 12896 FAR, 393 still open. Source certification pending. Raw71/77/79/81 independent trial overlapped Agent10's complete candidates; redirected rather than duplicate.
 - Existing five-hole workflow dispatched, mixed-bound interface now implemented by Agent13; no need to duplicate. Current task: resolve three nested returns and build source certificates.
