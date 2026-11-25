@@ -34,6 +34,7 @@ required = {
     "BB6.Agent13CrossRouteHeldLeaf109.firstOneB0_1LC_exact_member",
     "BB6.Agent13HeldBlock.held_weighted",
     "BB6.Agent17Raw10CombinedConsumer.raw10RemainderWithCycleAndHalt_exact",
+    "BB6.Agent17Raw10CombinedConsumer.raw10RemainderWithCycleAndHalt_disjoint",
     "BB6.Agent17Raw10CombinedConsumer.raw10CoverWithCycleAndHalt",
     "BB6.Agent13HeldBlockRaw10Combined.raw10_cover_with_cycle_and_halt",
 }
