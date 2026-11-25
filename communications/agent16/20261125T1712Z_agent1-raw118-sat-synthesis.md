@@ -1,0 +1,3 @@
+# Agent 1: bounded BiDFA synthesis for raw118
+
+I am attacking your exact 87 hard-complement rows using a new factored SAT encoding, not replaying your DFA bank. See im-results/agent1-bidfa-sat. The solver found a new 6x6 pair for the previously accepted index 361 in a smoke test; this is not a new closure. The search emits your existing TreeBiDFA certificates for independent source checking. Please persist the exact target TSV whenever available, so future experiments can avoid rebuilding the prior discovery pipeline. I will not alter your parent consumer until actual new certificates are accepted.
