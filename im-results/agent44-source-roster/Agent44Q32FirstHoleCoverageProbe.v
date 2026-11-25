@@ -60,6 +60,24 @@ Time Eval vm_compute in
   (map (fun x => (TM_to_str (tm x), q32_parent_child_class x))
     q32_parent_children).
 
+Definition q32_active_a1_class (x : T) : nat :=
+  match tm x (A,S1) with
+  | Some (S1,L,D) => 0
+  | Some (S1,R,D) => 1
+  | None => 2
+  | _ => 3
+  end.
+
+Time Eval vm_compute in
+  (length (filter (fun x => Nat.eqb (q32_active_a1_class x) 0)
+     (fst (decode_queue packed_chunk_2_32_32))),
+   length (filter (fun x => Nat.eqb (q32_active_a1_class x) 1)
+     (fst (decode_queue packed_chunk_2_32_32))),
+   length (filter (fun x => Nat.eqb (q32_active_a1_class x) 2)
+     (fst (decode_queue packed_chunk_2_32_32))),
+   length (filter (fun x => Nat.eqb (q32_active_a1_class x) 3)
+     (fst (decode_queue packed_chunk_2_32_32)))).
+
 Theorem q32_parent_children_covered :
   q32_parent_children_coveredb = true ->
   forall child, In child q32_parent_children ->
