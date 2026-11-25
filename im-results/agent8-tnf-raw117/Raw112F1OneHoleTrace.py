@@ -237,6 +237,7 @@ def main() -> None:
     fields = [
         "n", "step", "state", "left", "right_prefix", "suffix",
         "low_code", "high_blocks", "high_block_count", "suffix_length",
+        "observed_macro_cost", "predicted_macro_cost",
     ]
     with args.out.open("w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=fields)
