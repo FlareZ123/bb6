@@ -121,10 +121,10 @@ jobs:
             python "$D/generate0RE.py" 0LB
             python "$D/emitauto.py" "$D/auto1RD.json" "$D/Agent46Raw13Auto1RD.lean" Raw13Auto1RD
             python "$D/generate0RE.py" 1RD
+            python "$D/generate.py"
             if [ -f "$D/raw13-bidfa-spec.json" ]; then
               python "$D/audit_bidfa_raw13.py"
             fi
-            python "$D/generate.py"
             ROOT="$D/Agent46Raw13Data.lean"
           fi
           if [ "$TARGET" = phase ]; then
