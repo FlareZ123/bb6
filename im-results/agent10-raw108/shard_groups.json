@@ -1,0 +1,46 @@
+{
+  "artifact_prefix": "raw108-shard",
+  "groups": {
+    "cut": [
+      "Raw108RootCut"
+    ],
+    "small": [
+      "Raw108B1LCData",
+      "Raw108B0RDData",
+      "Raw108B0LCData",
+      "Raw108B1RCData",
+      "Raw108B1RDData",
+      "Raw108B0REData"
+    ],
+    "medium1": [
+      "Raw108B0LDData",
+      "Raw108B1LAData",
+      "Raw108B0RCData",
+      "Raw108B0RAData",
+      "Raw108B1RAData"
+    ],
+    "medium2": [
+      "Raw108B1RFData",
+      "Raw108B1LBData",
+      "Raw108B0RFData"
+    ],
+    "lf1": [
+      "Raw108B1LFData"
+    ],
+    "le1": [
+      "Raw108B1LEData"
+    ],
+    "le0": [
+      "Raw108B0LEData"
+    ],
+    "lf0": [
+      "Raw108B0LFData"
+    ],
+    "la0": [
+      "Raw108B0LAData"
+    ],
+    "lb0": [
+      "Raw108B0LBData"
+    ]
+  }
+}
