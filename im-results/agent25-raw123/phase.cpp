@@ -9,7 +9,7 @@ struct DFA {int k,m,p,mode,mm; U mask; vector<array<int,2>> d; unordered_map<U,i
 };
 struct S {int q,a,l,r;};
 struct Run {DFA d[2]; vector<vector<pair<int,int>>> edges[2]; vector<vector<int>> waiting[2]; vector<S> todo;unordered_set<U> seen;int tr[12],cap;bool fail=false,lim=false;
- Run(string s,int kl,int kr,int ml,int mr,int pl,int pr,int sl,int sr,int ml2,int mr2,int c):d{DFA(kl,ml,pl,sl,ml2),DFA(kr,mr,pr,sr,mr2)},cap(c){for(int i=0;i<12;i++){auto x=s.substr(3*i,3);tr[i]=x=="---"?-1:12*(x[0]-'0')+6*(x[1]=='R')+x[2]-'A';}ensure(0,0);ensure(1,0);edges[0][0].push_back({0,0});edges[1][0].push_back({0,0});add(0,0,0,0);}
+ Run(string s,int kl,int kr,int ml,int mr,int pl,int pr,int sl,int sr,int ml2,int mr2,int c):d{DFA(kl,ml,pl,sl,ml2),DFA(kr,mr,pr,sr,mr2)},cap(c){for(int i=0;i<12;i++){auto x=s.substr(3*i,3);tr[i]=x=="---"||x[2]<'A'||x[2]>'F'?-1:12*(x[0]-'0')+6*(x[1]=='R')+x[2]-'A';}ensure(0,0);ensure(1,0);edges[0][0].push_back({0,0});edges[1][0].push_back({0,0});add(0,0,0,0);}
  void ensure(int side,int i){if((int)edges[side].size()<=i){edges[side].resize(i+1);waiting[side].resize(i+1);}}
  void add(int q,int a,int l,int r){U key=(((U(q*2+a)<<28)|l)<<28)|r;if(!seen.insert(key).second)return;todo.push_back({q,a,l,r});if(tr[q*2+a]<0)fail=true;if((int)todo.size()>cap)lim=true;}
  void pop(S s,int b,int src){int m=tr[s.q*2+s.a],q=m%6,w=m/12;bool R=m%12>=6;if(R)add(q,b,d[0].push(s.l,w),src);else add(q,b,src,d[1].push(s.r,w));}
