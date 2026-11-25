@@ -1636,7 +1636,8 @@ jobs:
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
           if [ "${{ inputs.target }}" = weighted-tnf-raw60-0lf-witnesses ]; then
             python im-results/agent1-raw60/generate_0lf_pumps.py
-            roots=(im-results/agent1-raw60/{Raw60LFZeroCounter,Raw60LFOneCounter,Raw60LFPumps}.lean)
+            python im-results/agent1-raw60/generate_0lf_unary.py
+            roots=(im-results/agent1-raw60/Raw60LFUnary.lean)
           else
             roots=(im-results/agent1-raw60/{Raw60RootProgress,Raw60LABinary,Raw60LAAlternating,Raw60RFUnary,Raw60BCBinary,Raw60LBFour,Raw60LCGlider,Raw60LDBinaryCounters}.lean)
           fi
