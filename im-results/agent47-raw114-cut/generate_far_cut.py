@@ -107,6 +107,38 @@ theorem all{a} : ∀ m, compatible (raw114Child {move(a)}) m → WeightedBound 7
   (certifiedZip 7014 _ _ (child_root _) (child_nohalt _) tree{a}_checked).sound
 #print axioms all{a}
 """)
+    closed_cycles={"0LD":".cycle 7 2 true 1","0LE":".cycle 13 1 false (-1)",
+                   "0RD":".cycle 3 8 true 1","0RE":".cycle 14 1 true 2",
+                   "1LD":".cycle 5 4 true 1","1LE":".cycle 13 1 false (-1)",
+                   "1RD":".cycle 9 5 true 3","1RE":".cycle 11 1 true 3"}
+    children=[".closed ("+closed_cycles[b]+")" if b in closed_cycles else
+              ".closed tree"+a if a==b else ".unresolved" for b in MOVES]
+    checks="\n".join("  · "+("exact tree"+a+"_checked" if MOVES[12*w+6*r+q]==a else "decide")
+                     for q,w,r in product(range(6),range(2),range(2)))
+    emit(f"Raw114Far{a}Cut",["PartialAudit",f"Raw114Far{a}Data"],f"""
+open BB6.Agent47PartialAudit
+def cutKids{a} : Move → PartialAudit := byPartialMove [{",".join(children)}]
+theorem cutKids{a}_checked (mv : Move) : partialCheck 7014 (raw114Child mv) (cutKids{a} mv) = true := by
+  rcases mv with ⟨w,r,q⟩
+  have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
+  rcases hq with rfl|rfl|rfl|rfl|rfl|rfl
+  all_goals cases w <;> cases r
+{checks}
+def cut{a} : PartialAudit := .split 8 (4,false) cutKids{a}
+theorem cut{a}_checked : partialCheck 7014 raw114 cut{a} = true := by
+  change (zipQueryOK 7014 raw114 8 (4,false) &&
+    BB6.Agent31ThreeHole.allMoves (fun mv => partialCheck 7014 (raw114Child mv) (cutKids{a} mv))) = true
+  simp only [Bool.and_eq_true]
+  exact ⟨by decide, allMoves_of _ cutKids{a}_checked⟩
+def residual{a} : List (List Move × PartialMachine) := partialResiduals raw114 cut{a}
+theorem residual{a}_count : residual{a}.length = 15 := by decide
+theorem cut{a}_sound :
+    ∀ m, compatible raw114 m → WeightedBound 7014 m ∨
+      ∃ e ∈ residual{a}, compatible e.2 m :=
+  partialSound 7014 raw114 cut{a} raw114_root raw114_nohalt cut{a}_checked
+#print axioms cut{a}_sound
+#print axioms residual{a}_count
+""")
     print(a,stats)
 with tempfile.TemporaryDirectory() as d:
     work=Path(d)
