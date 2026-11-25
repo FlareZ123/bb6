@@ -81,7 +81,9 @@ Lemma q32_parent_child_nonhalt_sound (child : T) :
 Proof.
   unfold q32_parent_child_class.
   destruct (decider (tm child)) as [h| |] eqn:Hdec; simpl; try discriminate.
-  exact (agent32_decider_bounded_sound (tm child)).
+  pose proof (agent32_decider_bounded_sound (tm child)) as Hsound.
+  rewrite Hdec in Hsound.
+  exact Hsound.
 Qed.
 
 Lemma q32_parent_child_halt_sound (child : T) :
@@ -92,7 +94,9 @@ Lemma q32_parent_child_halt_sound (child : T) :
 Proof.
   unfold q32_parent_child_class.
   destruct (decider (tm child)) as [h| |] eqn:Hdec; simpl; try discriminate.
-  destruct (agent32_decider_bounded_sound (tm child)) as [n [Hhalt Hbound]].
+  pose proof (agent32_decider_bounded_sound (tm child)) as Hsound.
+  rewrite Hdec in Hsound.
+  destruct Hsound as [n [Hhalt Hbound]].
   exists h,n. auto.
 Qed.
 
