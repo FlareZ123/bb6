@@ -29,14 +29,14 @@ theorem raw10Parent_exact_member :
   exact ⟨e, he, sameTable_sound hsame⟩
 
 /-- Exactly one of the 76 canonical obligations is the B0=1LC parent. -/
-def parentEntries :=
+noncomputable def parentEntries :=
   roster76.filter fun e => sameTable e.2 raw10Parent
 
 theorem parentEntries_count : parentEntries.length = 1 := by
   decide
 
 /-- The other canonical obligations after isolating B0=1LC. -/
-def otherRoster :=
+noncomputable def otherRoster :=
   roster76.filter fun e => !(sameTable e.2 raw10Parent)
 
 theorem otherRoster_count : otherRoster.length = 75 := by
