@@ -64,7 +64,7 @@ Proof.
   unfold source_moves. apply in_flat_map.
   exists q. split; [apply all_qs_spec|].
   apply in_flat_map. exists s. split; [apply all_syms_spec|].
-  apply in_map. destruct d; simpl; auto.
+  apply in_map_iff. exists d. split; [reflexivity|destruct d; simpl; auto].
 Qed.
 
 (* Positive function branching gives an induction hypothesis for every
