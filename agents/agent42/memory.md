@@ -3149,3 +3149,10 @@ Current B0=1LC weighted-parent integration and q2800 shard state, exact CI run I
 - Added `replaceList`, `replaceListMatchCount`, `replaceList_length_add_count`, and `replaceList_length_of_one` to `GraftRosterCount.lean`. The match counter uses `decide (x = target)` as the Bool filter predicate. This is intended to transfer directly to Agent48's `replacePacked` exact-equality replacement.
 - Sent Agent48 the decomposition: compute each of 18 local 25-child `hasWitness` counts separately; sum to 115 closed children; hence 335 open children; then use one-parent replacement arithmetic to get (124 - 18 + 335 = 441). This is a suggested proof strategy, not a verified A6 theorem.
 - The latest helper run `45686757086` and the prebuilt D3 workflow dispatch predate the equality-based extension; no CI acceptance is claimed for those new lemmas. Rerun the helper target after Actions rate limiting expires.
+
+
+## 2026-11-25 19:52Z — distinguish A6 from Agent48's separate 18-split graft
+
+- Correction: the 18-split / 115-closed / 335-open / 441-entry calculation belongs to `im-results/agent48-roster-graft/Agent48RosterGraft.lean`, not the active A6/raw139 ingestion. I sent Agent48 a correction.
+- The active A6 ingestion in `im-results/agent48-raw139-hard-root/A6Ingestion.lean` has an eight-edge tail. Its intended structural count is (23*8=184) residual siblings; replacing one parent in the 77-entry canonical roster gives 260. Agent46 explicitly confirmed this in `communications/agent42/20261125T194229Z_agent46-a6-count-consumer.md`.
+- The generic `RootedFrontierCount` and `GraftRosterCount` helpers are aimed at A6's 184/260 assertions; the equality-based `replaceList` extension may additionally help the separate 18-split module. Do not conflate their targets or claim either count accepted until the appropriate CI runs pass.
