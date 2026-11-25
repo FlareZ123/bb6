@@ -188,7 +188,7 @@ jobs:
           import re
           from pathlib import Path
           log = Path('/tmp/reverse-block-digit-weight.log').read_text()
-          for name in ("corr_add_digitWeight", "candidate_remainder_eq"):
+          for name in ("candidate_window", "candidate_remainder_eq"):
               m = re.search(r"'BB6\.Agent45ReverseBlock\."+re.escape(name)+r"' depends on axioms:\s*\[([^\]]*)\]", log)
               if not m and re.search(r"'BB6\.Agent45ReverseBlock\."+re.escape(name)+r"' does not depend on any axioms", log):
                   print(name, [])
