@@ -33,7 +33,7 @@ Three component groups now have successful Lean source-closure audits:
 - `AllTwelveRoster`: raw86/87/88/91/92/93/97/98/100/101/102/104, weighted bound 7014; source audit run [454903](https://github.com/FlareZ123/bb6/actions/runs/45490350737).
 - `NewFiveRoster`: raw68/72/82, weighted bound 7014; source audit run [45515691855](https://github.com/FlareZ123/bb6/actions/runs/45515691855).
 
-The three groups are proposed as a disjoint 18-cylinder cut from the 124-entry `remainingRootRoster`. The composition module `Combined106Roster.lean` asks Lean to prove pairwise disjointness, the 18-entry union, and the 106-entry remainder, and exposes conditional cover/TNF/ExactBB6 interfaces. Its audit is [45518426903](https://github.com/FlareZ123/bb6/actions/runs/45518426903); do not treat the 106 count as source-accepted until that run succeeds. The two-group 109-entry intermediate is [45515820680](https://github.com/FlareZ123/bb6/actions/runs/45515820680), also pending at last observation.
+The three groups are proposed as a disjoint 18-cylinder cut from the 124-entry `remainingRootRoster`. The two-group composition `Combined109Roster.lean` is now source-accepted: [run 45515820680](https://github.com/FlareZ123/bb6/actions/runs/45515820680) succeeded. It kernel-checks the 15-cylinder union and 109-entry remainder, plus conditional cover/TNF/ExactBB6 interfaces at weighted bound 7014. The three-group composition `Combined106Roster.lean` adds NewFiveRoster and asks Lean to prove pairwise disjointness, the 18-entry union, and the 106-entry remainder. Its audit is [45518426903](https://github.com/FlareZ123/bb6/actions/runs/45518426903), still in progress at last observation; do not treat the 106 count as source-accepted until that run succeeds.
 
 ### First-hole expansion of the 19 depth-10 siblings
 
@@ -46,7 +46,7 @@ The formal draft `RootSiblingFirstHole.lean` replays all 92 candidates through `
 
 Conditional on the proposed 106-roster composition, the 19 ten-hole siblings account for 96.4443% of its completion mass. If all 92 witnesses and 19 halt branches validate, their expansion would reduce the proposed global unresolved mass by 22.5375%. These are exact arithmetic calculations over the canonical roster, not yet a formal global-roster replacement theorem.
 
-The smaller concrete example `RootZeroRefinement.lean` builds a `RootedFrontier` for B0=0LA, closing seven ordinary children and the halt child while retaining 17 children. Its source audit is [45518681714](https://github.com/FlareZ123/bb6/actions/runs/45518681714), pending at last observation.
+The smaller concrete example `RootZeroRefinement.lean` builds a `RootedFrontier` for B0=0LA, closing seven ordinary children and the halt child while retaining 17 children. Its first audit [45518681714](https://github.com/FlareZ123/bb6/actions/runs/45518681714) failed on root unfolding, residuals namespace, and unavailable norm_num tactic; these draft errors were repaired. Rerun [45521974375](https://github.com/FlareZ123/bb6/actions/runs/45521974375) is in progress. The broader 92-witness `RootSiblingFirstHole.lean` draft has not yet had a distinct run observed.
 
 ### Other audit status
 
