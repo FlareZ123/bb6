@@ -18,7 +18,7 @@ on:
         type: string
         required: false
       canonical76_run_id:
-        description: "Successful run ID containing raw107-canonical-shared-core (required for target=canonical73)"
+        description: "Run ID containing raw107-canonical-shared-core; may have failed after its early artifact upload (required for target=canonical73)"
         type: string
         required: false
 permissions:
