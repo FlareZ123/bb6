@@ -74,7 +74,7 @@ jobs:
   zero-la:
     if: ${{ inputs.zero_la_only }}
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
       - name: Install Lean 4.36.0-rc2
@@ -84,16 +84,27 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Unpack coverage source
         run: python im-results/agent13-coverage/unpack.py
+      - name: Generate exhaustive C1=0LA cover
+        run: python im-results/agent6-champion-residual/generate_c1_zero_la.py
       - name: Compile and audit exact C1=0LA source
         run: |
           set -euo pipefail
-          python tools/lean_compile_closure.py im-results/agent6-champion-residual/C1ZeroLAFour.lean im-results/agent6-champion-residual/C1ZeroLAVars.lean --workdir /tmp/a6-zero-la --jobs 4 | tee /tmp/a6-zero-la.log
+          python tools/lean_compile_closure.py im-results/agent6-champion-residual/C1ZeroLAParent.lean --workdir /tmp/a6-zero-la --jobs 4 | tee /tmp/a6-zero-la.log
           python - <<'PY'
           import re
           log = open('/tmp/a6-zero-la.log').read()
-          for ns in ('C1ZeroLAFour','C1ZeroLAVars'):
-              for name in ('entry','growth','never','cover'):
-                  matches = re.findall(r"'BB6\.Agent6"+ns+r"\."+name+r"' depends on axioms: \[([^\]]*)\]",log)
+          checks = {
+              'C1ZeroLAFour': ('entry','growth','never','cover'),
+              'C1ZeroLAVars': ('entry','growth','never','cover'),
+              'C1ZeroLACarry86': ('transform','advance','entry','next_sound','never','cover'),
+              'C1ZeroLAParent': ('cover_zeroLA',),
+          }
+          checks.update({'C1ZeroLASweeps.'+ns: ('entry','growth','never','cover')
+                         for ns in ('Pair96','GroupD','Single137','Single139','Single140')})
+          for ns,names in checks.items():
+              for name in names:
+                  pat = r"'" + re.escape("BB6.Agent6"+ns+"."+name) + r"' depends on axioms: \[([^\]]*)\]"
+                  matches = re.findall(pat,log)
                   if len(matches) != 1:
                       raise SystemExit('missing or duplicate audit: '+ns+'.'+name)
                   used = {x.strip() for x in matches[0].split(',') if x.strip()}
