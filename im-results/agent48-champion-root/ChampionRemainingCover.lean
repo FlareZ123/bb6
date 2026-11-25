@@ -1,5 +1,5 @@
 import F0SiblingA
-import F0SiblingLong
+import ChampionREReplay
 import Champion0RCTriple
 import ChampionThreeFAR
 
@@ -72,16 +72,16 @@ theorem ordinary_oneRE (B : Nat) (hB : 12488 ≤ B)
     have := q.isLt
     omega
   rcases hq with h|h|h|h|h|h <;> subst q <;> cases w <;> cases r
-  · exact short_child B _ _ 6225 (by omega) (by decide)
-  · exact short_child B _ _ 6225 (by omega) (by decide)
-  · exact short_child B _ _ 6225 (by omega) (by decide)
-  · exact short_child B _ _ 6225 (by omega) (by decide)
+  · exact short_child B _ _ 6225 (by omega) BB6.Agent48REReplay.r0.checked
+  · exact short_child B _ _ 6225 (by omega) BB6.Agent48REReplay.r1.checked
+  · exact short_child B _ _ 6225 (by omega) BB6.Agent48REReplay.r2.checked
+  · exact short_child B _ _ 6225 (by omega) BB6.Agent48REReplay.r3.checked
   · exact liftRE B 4 _ (by decide) BB6.Agent48Three.far_19_24_4
   · exact liftRE B 5 _ (by decide) BB6.Agent48Three.far_19_24_5
   · exact liftRE B 6 _ (by decide) BB6.Agent48Three.far_19_24_6
   · exact liftRE B 7 _ (by decide) BB6.Agent48Three.far_19_24_7
   · exact liftRE B 8 _ (by decide) BB6.Agent48Three.far_19_24_8
-  · exact long_child B _ _ 12482 (by omega) (by decide)
+  · exact short_child B _ _ 12482 (by omega) BB6.Agent48REReplay.r9.checked
   · exact liftRE B 10 _ (by decide) BB6.Agent48Three.far_19_24_10
   · exact liftRE B 11 _ (by decide) BB6.Agent48Three.far_19_24_11
   · exact liftRE B 12 _ (by decide) BB6.Agent48Three.far_19_24_12
@@ -100,7 +100,7 @@ theorem ordinary_oneRE (B : Nat) (hB : 12488 ≤ B)
 theorem cover_oneRE_of_RD (B : Nat) (hB : 12488 ≤ B)
     (hRD : Cover (WeightedBound B) (child ⟨true,true,4⟩ ⟨false,true,3⟩)) :
     Cover (WeightedBound B) (parent ⟨true,true,4⟩) :=
-  all_children B _ 6224 (by omega) (by decide) (ordinary_oneRE B hB hRD)
+  all_children B _ 6224 (by omega) BB6.Agent48REReplay.parent.checked (ordinary_oneRE B hB hRD)
 
 #print axioms cover_zeroRC_of_RD
 #print axioms cover_oneRE_of_RD
