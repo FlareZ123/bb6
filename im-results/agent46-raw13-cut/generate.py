@@ -118,6 +118,18 @@ def timeout_tables(t,p):
     elif t[0] == "open" and scan(p)[0] == "timeout":
         yield "".join(v or "---" for v in p)
 
+def collect_open_tables(t,p):
+    """Export the exact partial tables represented by open cut leaves."""
+    if t[0] == "split":
+        _,_,slot,kids = t
+        for mv,k in zip(MOVES,kids):
+            if k is not None:
+                child = p[:]
+                child[slot] = mv
+                yield from collect_open_tables(k,child)
+    elif t[0] == "open":
+        yield "".join(v or "---" for v in p)
+
 def enhance(t,p,proven):
     if t[0] == "split":
         n,s,kids = t[1:]
@@ -315,6 +327,11 @@ if __name__ == "__main__":
         "1RB1LC1RC0LD1LA0RB0LC---------------":("zeroLCparent",),
         "1RB1LC1RC0LD1LA0RB0LB---------------":("zeroLBparent",),
         "1RB1LC1RC0LD1LA0RB1RD---------------":("oneRDparent",)})
+    open_rows = list(collect_open_tables(t,ROOT))
+    assert len(open_rows) == 1716, len(open_rows)
+    (D/"raw13-open-residuals.txt").write_text(
+        "".join(f"{i} {raw}\\n" for i,raw in enumerate(open_rows)),
+        encoding="utf-8")
     c,m = Counter(),Counter()
     tally(t,9,3,c,m)
     assert c == Counter(open=1716,cycle=2708,state=948,split=353,halt=353,last=999,ngram=15,pump=3,selectedgram=826,pump1RE=1,sharedpump=3,pump0LE=1,pump1RE2=1,sparse1RE=1,zeroREparent=1,zeroRCparent=1,zeroRDparent=1,zeroLCparent=1,zeroLBparent=1,oneRDparent=1),c
