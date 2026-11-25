@@ -47,7 +47,7 @@ theorem mem_highBranch (q y c : Nat) (zs : List Nat) :
 
 /-- The sorted-merge implementation has the exact predecessor relation.
     No assumption on list order is needed for membership soundness. -/
-theorem mem_backY (q y c : Nat) (zs : List Nat) :
+theorem mem_backY (q y c : Nat) (zs : List Nat) (hy : y≤1) :
     c ∈ backY q y zs ↔ ∃ z∈zs, EdgeY q y c z := by
   unfold backY
   rw [BB6.Agent9BatchCarry.mem_join]
@@ -55,10 +55,10 @@ theorem mem_backY (q y c : Nat) (zs : List Nat) :
   · rintro (hlo|hhi)
     · obtain ⟨z,hz,hzq,hlt,rfl⟩ := (mem_lowBranch q y c zs).mp hlo
       refine ⟨z,hz,?_⟩
-      exact ⟨by omega,hzq,by omega,Or.inl rfl⟩
+      exact ⟨by omega,hzq,hy,Or.inl rfl⟩
     · obtain ⟨z,hz,hzq,hge,rfl⟩ := (mem_highBranch q y c zs).mp hhi
       refine ⟨z,hz,?_⟩
-      refine ⟨by omega,hzq,by omega,Or.inr ?_⟩
+      refine ⟨by omega,hzq,hy,Or.inr ?_⟩
       omega
   · rintro ⟨z,hz,⟨hc,hzq,hy,hbranch⟩⟩
     rcases hbranch with hlow|hhigh
@@ -109,7 +109,8 @@ def reverseFold (q : Nat) : List Nat → List Nat → List Nat
 def reverseLive (q : Nat) (ys : List Nat) : List Nat :=
   reverseFold q ys (List.range (q+ys.length))
 
-theorem mem_reverseFold (q c : Nat) (ys acc : List Nat) :
+theorem mem_reverseFold (q c : Nat) (ys acc : List Nat)
+    (hys : ∀ y∈ys, y≤1) :
     c ∈ reverseFold q ys acc ↔
       ∃ z, DWalk q c ys z ∧ z∈acc := by
   induction ys generalizing c acc with
@@ -122,22 +123,27 @@ theorem mem_reverseFold (q c : Nat) (ys acc : List Nat) :
       cases hwalk
       exact hz
   | cons y ys ih =>
+    have hy : y≤1 := hys y (by simp)
+    have hys' : ∀ z∈ys, z≤1 := by
+      intro z hz
+      exact hys z (by simp [hz])
     simp only [reverseFold]
-    rw [ih]
+    rw [ih hys']
     constructor
     · rintro ⟨z,hwalk,hback⟩
-      obtain ⟨w,hw,hedge⟩ := (mem_backY (q+ys.length) y z acc).mp hback
+      obtain ⟨w,hw,hedge⟩ := (mem_backY (q+ys.length) y z acc hy).mp hback
       exact ⟨w,DWalk.snoc q c ys z y w hwalk hedge,hw⟩
     · rintro ⟨w,hwalk,hw⟩
       cases hwalk with
       | snoc q c ys z y w hprev hedge =>
-        exact ⟨z,hprev,(mem_backY (q+ys.length) y z acc).mpr ⟨w,hw,hedge⟩⟩
+        exact ⟨z,hprev,(mem_backY (q+ys.length) y z acc hy).mpr ⟨w,hw,hedge⟩⟩
 
-theorem mem_reverseLive (q c : Nat) (ys : List Nat) :
+theorem mem_reverseLive (q c : Nat) (ys : List Nat)
+    (hys : ∀ y∈ys, y≤1) :
     c ∈ reverseLive q ys ↔
       ∃ z, DWalk q c ys z ∧ z<q+ys.length := by
   unfold reverseLive
-  rw [mem_reverseFold]
+  rw [mem_reverseFold q c ys (List.range (q+ys.length)) hys]
   constructor
   · rintro ⟨z,hwalk,hz⟩
     have hz' : z∈List.range (q+ys.length) := hz
@@ -155,6 +161,18 @@ def targetsRev (n s B : Nat) : Nat → List Nat
   induction k with
   | zero => rfl
   | succ k ih => simp [targetsRev,ih]
+
+
+theorem targetsRev_bits (n s B k : Nat) :
+    ∀ y∈targetsRev n s B k, y≤1 := by
+  induction k with
+  | zero => simp [targetsRev]
+  | succ k ih =>
+    intro y hy
+    simp [targetsRev] at hy
+    rcases hy with rfl|hy
+    · exact target_bound n (s+k) B
+    · exact ih y hy
 
 /-- Future high bits do not alter target bits already fixed by the prefix. -/
 theorem targetsRev_stable_of (n s B S R : Nat) (hn : 0<n) :
@@ -226,7 +244,8 @@ theorem reverseLookahead_sound (n s B a k C c : Nat)
     (hn : 0<n) (hTrace : Trace n s B a)
     (hExt : Extend n s B a k C c) :
     a ∈ reverseLive (n+s+3) (targetsRev n s C k) := by
-  rw [mem_reverseLive]
+  have hys := targetsRev_bits n s C k
+  rw [mem_reverseLive (n+s+3) a (targetsRev n s C k) hys]
   refine ⟨c,extend_to_DWalk n s B a k C c hn hTrace hExt,?_⟩
   have htr := extend_trace n s B a k C c hTrace hExt
   have hb := (trace_bounds n (s+k) C c htr).2.2.2
