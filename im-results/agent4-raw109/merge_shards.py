@@ -38,7 +38,7 @@ def inside(root, relative):
     return path
 
 
-def merge(repo, downloads, output, groups=None, artifact_prefix='raw109-shard'):
+def merge(repo, downloads, output, groups=None, artifact_prefix='raw109-shard', allow_mixed_revisions=False):
     groups = GROUPS if groups is None else groups
     revision = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=repo, text=True).strip()
     tracked = set(subprocess.check_output(['git', 'ls-files', '-z'], cwd=repo).decode().split('\0'))
@@ -52,7 +52,10 @@ def merge(repo, downloads, output, groups=None, artifact_prefix='raw109-shard'):
         shard = downloads / artifact_name
         manifest = json.loads((shard / 'manifest.json').read_text())
         require(manifest['schema_version'] == 1, f'{group}: bad schema')
-        require(manifest['proof_source_revision'] == revision, f'{group}: revision mismatch')
+        if not allow_mixed_revisions:
+            require(manifest['proof_source_revision'] == revision, f'{group}: revision mismatch')
+        require(manifest.get('proof_source_revision') in manifest.get('source_revisions', [manifest.get('proof_source_revision')]),
+                f'{group}: source revision provenance is inconsistent')
         require(manifest['artifact_name'] == artifact_name, f'{group}: wrong artifact name')
         require({item['module'] for item in manifest['roots']} == roots, f'{group}: unexpected roots')
         if template is None:
@@ -90,7 +93,9 @@ def merge(repo, downloads, output, groups=None, artifact_prefix='raw109-shard'):
             require(path not in inputs or inputs[path] == item, f'{group}: conflicting input {path}')
             inputs[path] = item
         manifests.append(manifest)
-    merged = dict(template, label=f'{artifact_prefix}-union', artifact_name=f'{artifact_prefix}-union',
+    source_revisions = sorted({rev for m in manifests for rev in m.get('source_revisions', [m['proof_source_revision'])} | {revision})
+    merged = dict(template, proof_source_revision=revision, source_revisions=source_revisions,
+                  label=f'{artifact_prefix}-union', artifact_name=f'{artifact_prefix}-union',
                   roots=[item for m in manifests for item in m['roots']],
                   modules=[entries[k] for k in sorted(entries)], module_count=len(entries),
                   provenance_inputs=[inputs[k] for k in sorted(inputs)],
@@ -104,14 +109,17 @@ if __name__ == '__main__':
         raise SystemExit('usage: merge_shards.py DOWNLOADS OUTPUT [CONFIG.json]')
     groups = GROUPS
     artifact_prefix = 'raw109-shard'
+    allow_mixed_revisions = False
     if len(sys.argv) == 4:
         config = json.loads(Path(sys.argv[3]).read_text())
         artifact_prefix = config['artifact_prefix']
         groups = {name: set(modules) for name, modules in config['groups'].items()}
+        allow_mixed_revisions = bool(config.get('allow_mixed_revisions', False))
     merge(
         Path.cwd().resolve(),
         Path(sys.argv[1]).resolve(),
         Path(sys.argv[2]).resolve(),
         groups,
         artifact_prefix,
+        allow_mixed_revisions,
     )
