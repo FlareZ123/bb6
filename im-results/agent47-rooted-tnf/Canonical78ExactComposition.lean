@@ -14,7 +14,7 @@ open BB6Coverage.Agent48DirectRoot
 open BB6.Agent47CanonicalFrontier
 
 /-- The attained champion score in the original raw semantics. -/
-abbrev championScore : Nat := proposedTM63Moves + 7
+def championScore : Nat := proposedTM63Moves + 7
 
 private theorem exact_rootSteps_le_score (rootSteps L n a b : Nat) :
     rootSteps ≤ threeSectionMoves rootSteps L n a b + 7 := by
@@ -24,9 +24,9 @@ private theorem exact_rootSteps_le_score (rootSteps L n a b : Nat) :
 theorem champion_score_gt_7014 : 7014 < championScore := by
   have hroot : 27959 ≤ threeSectionMoves 27959 3 7 6 63 + 7 :=
     exact_rootSteps_le_score 27959 3 7 6 63
-  change 7014 < proposedTM63Moves + 7
-  rw [← threeSectionMoves_root]
-  omega
+  have hscore : 7014 < threeSectionMoves 27959 3 7 6 63 + 7 :=
+    Nat.lt_of_lt_of_le (by decide) hroot
+  simpa only [championScore, ← threeSectionMoves_root] using hscore
 
 /-- The literal champion extends the authentic first-one root. -/
 theorem champion_compatible_root :
@@ -44,6 +44,8 @@ theorem champion_not_weighted_7014 :
     rw [champion_delays_exact]
     simp
   have hsmall := h (proposedTM63Moves + 6) 0 champion_halts_exact hzero
+  have hB : 7014 < proposedTM63Moves + 7 := by
+    simpa only [championScore] using champion_score_gt_7014
   omega
 
 /-- Consequently the canonical 78-way dichotomy places the champion in a
