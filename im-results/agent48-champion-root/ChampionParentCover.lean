@@ -45,7 +45,7 @@ theorem champion_child : child ⟨true,true,0⟩ = forgetHaltRows championTable 
   funext s
   by_cases h : s=a1
   · subst s; rfl
-  · simp [child,childM,h]
+  · simp [child,childM,forgetHaltRows,h]
 
 def slot0 (z : Z0) : Slot := (z.q,z.l.headD false)
 def check (p : PartialMachine) (n : Nat) (s : Slot) : Bool :=
