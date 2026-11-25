@@ -4,13 +4,13 @@ on:
     inputs:
       mode:
         type: choice
-        options: [parent, carry]
+        options: [parent, carry, closed]
         default: parent
 permissions:
   contents: read
 jobs:
   parent_cover:
-    if: inputs.mode == 'parent'
+    if: inputs.mode == 'parent' || inputs.mode == 'closed'
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
@@ -39,11 +39,17 @@ jobs:
       - name: Compile the parent-cover composition theorem and full import closure
         run: |
           set -euo pipefail
-          python tools/lean_compile_closure.py im-results/agent47-raw112-cut/Raw112ParentCoverComposition.lean \
+          target=Raw112ParentCoverComposition
+          theorem=BB6.Agent47Raw112.parent_cover_of_residual_covers
+          if [ "${{ inputs.mode }}" = closed ]; then
+            target=Raw112ClosedCover
+            theorem=BB6.Agent47Raw112.parent_cover
+          fi
+          python tools/lean_compile_closure.py "im-results/agent47-raw112-cut/$target.lean" \
             --workdir /tmp/a47-raw112-parent-cover \
             --manifest /tmp/a47-raw112-parent-cover-manifest.json \
             --label raw112-parent-cover-mixed-bound-composition \
-            --theorem BB6.Agent47Raw112.parent_cover_of_residual_covers \
+            --theorem "$theorem" \
             --parent-table '1RB---_1RC---_0RD---_1LD1RE_---1LC_------' \
             --weighted-bound 100000 \
             --artifact-name raw112-parent-cover-mixed-bound-composition \
@@ -93,7 +99,7 @@ jobs:
       - name: Compile recursive carry nonhalting theorem
         run: |
           set -euo pipefail
-          python tools/lean_compile_closure.py im-results/agent47-raw112-cut/Raw112CarryNever.lean --workdir /tmp/a47-carry --jobs 4 | tee /tmp/a47-carry.log
+          python tools/lean_compile_closure.py im-results/agent47-raw112-cut/Raw112SiblingNever.lean --workdir /tmp/a47-carry --jobs 4 | tee /tmp/a47-carry.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a47-carry.log; then
             exit 1
           fi
