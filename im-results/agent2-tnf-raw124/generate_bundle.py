@@ -169,6 +169,17 @@ def main():
     data={}
     for p in files:
         for v in json.loads(zlib.decompress(base64.b64decode(p.read_text()))):data[v["branch"]]=v
+    # The previously partial 1LA bundle is now closed by three parametric
+    # nonhalting proofs, whose sparse tables are checked by the Audit kernel.
+    path=ROOT/"partial-bundle-1LA.json.zlib.b64"
+    for v in json.loads(zlib.decompress(base64.b64decode(path.read_text()))):
+        assert v["branch"]=="1LA"
+        n=v.setdefault("nested",{})
+        assert all(str(i) not in n and v["far"][i]<0 for i in (235,1254,2919))
+        n["235"]=["Agent2UnaryStack","BB6.Agent2UnaryStack.p","BB6.Agent2UnaryStack.never"]
+        n["1254"]=["Agent2BinaryPair","BB6.Agent2BinaryPair.p false","BB6.Agent2BinaryPair.never false"]
+        n["2919"]=["Agent2BinaryPair","BB6.Agent2BinaryPair.p true","BB6.Agent2BinaryPair.never true"]
+        data[v["branch"]]=v
     requested=sys.argv[1:] or sorted(data)
     subprocess.run(["g++","-std=c++17","-O3",str(ROOT.parent/"agent2-tnf-raw99"/"enumerate.cpp"),"-o",str(ROOT/"enumerate")],check=True)
     for b in requested:generate(data[b])
