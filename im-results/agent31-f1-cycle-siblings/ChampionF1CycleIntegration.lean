@@ -6,7 +6,7 @@ set_option maxHeartbeats 0
 
 namespace BB6.Agent31F1CycleIntegration
 
-open BB6Coverage BB6.Agent6ChampionResidual BB6.Agent47Canonical78
+open BB6Coverage BB6.Agent6ChampionResidual BB6.Agent47Canonical78 BB6.Agent10FastAudit
 open BB6.Agent31F1CycleSiblings BB6.Agent48F1ZeroLFIntegration
 open BB6.Agent31ChampionParentIntegration BB6.Agent31FourHoleRoster
 
