@@ -158,7 +158,7 @@ jobs:
           fi
           if grep -Eq 'sorryAx|native_decide' /tmp/a46-raw13.log; then exit 1; fi
       - name: Preserve raw13 phase-BiDFA sample and proof sources
-        if: inputs.target == 'phase'
+        if: always() && inputs.target == 'phase'
         uses: actions/upload-artifact@v4
         with:
           name: raw13-phase-bidfa-sample
