@@ -120,7 +120,7 @@ int main() {
 
     for (U F : {U(4000000), U(68000000)}) {
         int oldK = 0, wideCappedK = 0, wideTheoreticalK = 0;
-        for (int k = 1; k < 64; ++k) {
+        for (int k = 1; k < 63; ++k) {
             if (U(k) * (U(1) << k) <= F - U(k)) oldK = k;
             if (k < 25 && (U(1) << (k + 1)) <= F) wideCappedK = k;
             if ((U(1) << (k + 1)) <= F) wideTheoreticalK = k;
