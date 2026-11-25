@@ -17,12 +17,16 @@ on:
         description: "Successful run ID containing canonical72-roster-only-certified (required for target=canonical71 or canonical70)"
         type: string
         required: false
+      canonical76_run_id:
+        description: "Successful run ID containing raw107-canonical-shared-core (required for target=canonical73)"
+        type: string
+        required: false
 permissions:
   contents: read
   actions: read
 jobs:
   exactness:
-    if: ${{ inputs.target != 'canonical71' && inputs.target != 'canonical70' }}
+    if: ${{ inputs.target != 'canonical71' && inputs.target != 'canonical70' && inputs.target != 'canonical73' }}
     runs-on: ubuntu-latest
     timeout-minutes: 75
     steps:
@@ -820,12 +824,17 @@ jobs:
 
   canonical73:
     name: Source-audit the 73-residual raw107/raw114/raw117/raw112/raw110 roster
-    needs: exactness
     if: ${{ inputs.target == 'canonical73' }}
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
+      - name: Validate the canonical76 shared-core run ID
+        env:
+          CANONICAL76_RUN_ID: ${{ inputs.canonical76_run_id }}
+        run: |
+          set -euo pipefail
+          [[ "$CANONICAL76_RUN_ID" =~ ^[0-9]+$ ]]
       - name: Install Lean 4.36.0-rc2
         run: |
           set -euo pipefail
@@ -837,7 +846,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           github-token: ${{ github.token }}
-          run-id: ${{ github.run_id }}
+          run-id: ${{ inputs.canonical76_run_id }}
           name: raw107-canonical-shared-core
           path: /tmp/a31-base
       - name: Restore the accepted raw110 parent source closure
