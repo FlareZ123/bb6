@@ -149,8 +149,9 @@ Proof.
   split.
   - unfold adaptive_obligations.
     change In x
-      (fst recovered_held_2800_checkpoint ++
-       snd recovered_held_2800_checkpoint).
+      (fst (SearchQueue_upds decider (q_i 2800 100) 1000000%N) ++
+       snd (SearchQueue_upds decider (q_i 2800 100) 1000000%N)).
+    rewrite recovered_held_2800_checkpoint_exact.
     apply in_or_app.
     right.
     exact Hx.
