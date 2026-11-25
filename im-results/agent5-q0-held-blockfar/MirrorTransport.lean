@@ -14,13 +14,17 @@ def mirrorTable (M : Table) : Table :=
   funext n
   cases n <;> simp [cons, tail]
 
+@[simp] theorem tail_blank : tail blankRay = blankRay := by
+  funext n
+  rfl
+
 theorem mirrorPrim_involutive (c : Prim) : mirrorPrim (mirrorPrim c) = c := by
   cases c with
   | mk q l r =>
     simp [mirrorPrim, cons, cons_tail]
 
 theorem mirrorPrim_blank : mirrorPrim primBlank = primBlank := by
-  simp [mirrorPrim, primBlank, blankRay, tail, cons]
+  simp [mirrorPrim, primBlank, tail_blank]
 
 theorem mirrorTable_involutive (M : Table) : mirrorTable (mirrorTable M) = M := by
   funext q b
