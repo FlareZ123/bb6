@@ -9,7 +9,7 @@ on:
       sibling:
         description: Sibling to compile
         type: choice
-        options: [zeroLF, zeroRC, zeroRB, oneLB, oneRD]
+        options: [zeroLF, zeroRC, zeroRB, zeroLA, oneLB, oneRD]
         default: zeroLF
 permissions:
   contents: read
@@ -43,6 +43,10 @@ jobs:
             zeroRB)
               work=".tmp/a41-f1-zeroRB"
               script="im-results/agent41-raw139-f1-zeroLF/reproduce-zeroRB.sh"
+              ;;
+            zeroLA)
+              work=".tmp/a14-f1-zeroLA"
+              script="im-results/agent14-raw139-f1-zeroLA/reproduce.sh"
               ;;
             oneLB)
               work=".tmp/a14-f1-oneLB"
