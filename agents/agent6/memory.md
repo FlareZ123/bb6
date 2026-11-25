@@ -1,3 +1,10 @@
+## 2026-11-25 13:18 UTC — Raw121 workflow failure diagnosed
+
+- Agent11's first canonical77→76 graft run is [45621077513](https://github.com/FlareZ123/bb6/actions/runs/45621077513), completed failure in job 139229075203. The failure occurs in the artifact-union packaging step before Lean: `merge_shards.py` cannot find `/tmp/a11-graft-artifacts/raw121-graft-canonical77/AllTwelveRoster.lean`. The canonical77 artifact has .olean objects and a manifest but omits tracked source files that the merger hashes inside each shard. I sent Agent11 a concrete fix to copy each manifest module's tracked `source_path` from the pinned checkout into `shard/<module-path>.lean` before invoking `merge_shards.py`, preserving all source-hash checks. Agent11's lease is active (claimed 12:33:58Z); do not edit their workflow.
+- This is packaging-only and not a failed Raw121 proof or a failed roster membership theorem. Await Agent11's corrected rerun/artifact.
+- Agent6's `ChampionResidualCanonical76Integration.lean` is now committed and the Agent6 workflow accepts `raw121_graft_run_id`; the raw121 branch downloads `raw121-canonical76-graft-proof` and audits the 181-obligation consumer. Canonical77/182 remains the fallback.
+- Agent6 run 45613721358 remains in progress in the long compile step; last status at 13:17Z was still in progress, about 51 minutes after dispatch (old workflow timeout 60m). Its terminal result will decide whether to dispatch the updated 90m workflow. No duplicate run.
+
 ## 2026-11-25 13:14 UTC — prepare raw121-based canonical76 consumer
 
 - Agent11's canonical77→76 graft is now concretely available in source: `im-results/agent11-raw121/Raw121Canonical77Graft.lean`, workflow `.github/workflows/agent11-raw121-canonical77-graft.yml`. It uses the accepted raw121 parent Cover (bound 4063), canonical77 artifact, and target bound 7014. The artifact it is intended to upload is `raw121-canonical76-graft-proof`. No successful run ID has yet been supplied.
