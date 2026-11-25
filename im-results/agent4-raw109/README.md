@@ -90,3 +90,7 @@ Both arbitrary-prefix proofs checked locally in the same Lean 4.36.0-rc2
 zipper harness, with only propext and Quot.sound. The original-source
 NeverHalts bridges, combined tree, and global graft are still candidate
 integrations. The 1RF bound is 268.
+
+### 1LC candidate
+
+All 430 residual leaves accounted for by 420 bank FAR, 4 n-gram, 2 single sweeps, 2 multi sweeps, and the paired 354/356 inductive certificate in Raw109LC354.lean. The arbitrary-prefix theorem checked locally with only propext and Quot.sound. The proposed bound is 162. The 82-cylinder refinement retains five B1 choices: 0LA, 0LF, 0RC, 1LA, 1LF. Original-source audit pending.

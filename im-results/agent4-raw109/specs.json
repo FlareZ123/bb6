@@ -232,5 +232,46 @@
       ]
     },
     "unresolved": {}
+  },
+  "1LC": {
+    "bound": 162,
+    "query": [
+      8,
+      5
+    ],
+    "sha": "c88c48b50461a971d539076205e5698987856267d08cd740db571b0d331bfb90",
+    "stats": {
+      "cycle": 21252,
+      "last": 3964,
+      "open": 430,
+      "split": 1115
+    },
+    "one": [
+      0,
+      1
+    ],
+    "multi": [
+      5,
+      107
+    ],
+    "ngram": [
+      110,
+      113,
+      151,
+      159
+    ],
+    "manual": {
+      "354": [
+        "Raw109LC354",
+        "BB6Coverage.Agent4Raw109LC354a",
+        "1RB0LF_1RC1LC_0RD1RA_1LD1RE_---1RB_0RB1LF"
+      ],
+      "356": [
+        "Raw109LC354",
+        "BB6Coverage.Agent4Raw109LC356a",
+        "1RB0LF_1RC1LC_0RD1RA_1LD1RE_---1RB_0RD1LF"
+      ]
+    },
+    "unresolved": {}
   }
 }
