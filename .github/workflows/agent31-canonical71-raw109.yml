@@ -1,4 +1,4 @@
-name: Agent 31 canonical71 Raw109 membership graft
+name: Agent 31 canonical70 Raw109+Raw123 membership graft
 
 on:
   workflow_dispatch:
@@ -9,7 +9,7 @@ on:
         default: "45680602708"
 
 jobs:
-  source-audit-canonical71:
+  source-audit-canonical70:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -45,12 +45,12 @@ jobs:
           test -s im-results/agent4-raw109/Raw109B0LDData.lean
           test -s im-results/agent4-raw109/Raw109B0REData.lean
 
-      - name: Compile and audit the 71-entry Raw109 graft
+      - name: Compile and audit the 71- and 70-entry Raw109+Raw123 grafts
         run: |
           set -euo pipefail
-          printf '%s\n' "${{ inputs.canonical72_run_id }}" > /tmp/a31-canonical72-run-id.txt
+          printf '%s\n' "$CANONICAL72_RUN_ID" > /tmp/a31-canonical72-run-id.txt
           python tools/lean_compile_closure.py \
-            --workdir /tmp/a31-canonical71 \
+            --workdir /tmp/a31-canonical70 \
             --jobs 8 \
             --precompiled-dir /tmp/a31-canonical72/a31-canonical73 \
             --precompiled-manifest /tmp/a31-canonical72/a31-canonical73-manifest.json \
@@ -59,25 +59,33 @@ jobs:
             --theorem BB6.Agent31Canonical71Raw109.count \
             --theorem BB6.Agent31Canonical71Raw109.sound \
             --theorem BB6.Agent31Canonical71Raw109.exact_at_target \
+            --theorem BB6.Agent31Canonical70Raw109Raw123.parent_present \
+            --theorem BB6.Agent31Canonical70Raw109Raw123.parent_root \
+            --theorem BB6.Agent31Canonical70Raw109Raw123.count \
+            --theorem BB6.Agent31Canonical70Raw109Raw123.sound \
+            --theorem BB6.Agent31Canonical70Raw109Raw123.exact_at_target \
             --provenance-input /tmp/a31-canonical72-run-id.txt \
             --provenance-input im-results/agent4-raw109/generate.py \
             --provenance-input im-results/agent4-raw109/Raw109Cut.lean \
+            --provenance-input im-results/agent7-raw123/Raw123Base.lean \
             --provenance-input im-results/agent31-shared-core/Canonical71Raw109Graft.lean \
+            --provenance-input im-results/agent31-shared-core/Canonical70Raw109Raw123Graft.lean \
             im-results/agent31-shared-core/Canonical71Raw109Graft.lean \
-            2>&1 | tee /tmp/a31-canonical71.log
-          if grep -Eq 'sorryAx|native_decide' /tmp/a31-canonical71.log; then
+            im-results/agent31-shared-core/Canonical70Raw109Raw123Graft.lean \
+            2>&1 | tee /tmp/a31-canonical70.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a31-canonical70.log; then
             echo "Forbidden axiom or native_decide dependency detected" >&2
             exit 1
           fi
-          grep -E 'axioms|parent_present|parent_root|count|sound|exact_at_target' /tmp/a31-canonical71.log
+          grep -E 'axioms|parent_present|parent_root|count|sound|exact_at_target' /tmp/a31-canonical70.log
 
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: agent31-canonical71-raw109-graft
+          name: agent31-canonical70-raw109-raw123-graft
           path: |
-            /tmp/a31-canonical71
-            /tmp/a31-canonical71.log
+            /tmp/a31-canonical70
+            /tmp/a31-canonical70.log
             /tmp/a31-canonical72-run-id.txt
           if-no-files-found: warn
           retention-days: 30
