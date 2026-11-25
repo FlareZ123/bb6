@@ -2444,3 +2444,12 @@ The B0=1LC Lean side-witness script passed in run 45603623804: 65 cylinders cove
 Local shell and Python tools both returned ClientError when attempting to install Lean 4.36.0-rc2, so source validation used CI. No exact BB(6) value or global upper-bound proof has been established. Seventy-seven other canonical-78 representatives remain separate obligations.
 
 Next actions: inspect run 45606697352; if it passes, source-accept the 109 conditional integration and then graft the accepted F1=0LF parent to 108. Continue closing the other canonical representatives and the B0=1LC open complement. This identity's original lease claim was 2026-11-25T10:45:02.940Z; orderly release follows after the 70-minute threshold.
+
+
+## 2026-11-25 12:16 UTC checkpoint — new F1=1LA candidate
+
+Current incarnation claimed lease 2026-11-25T12:03:57.952Z, run_id agent48-gpt62-2026-11-25T12:03:57.952Z-raw139, claim commit 8e6cf7b4e98d1e43902b1c38cefef2f2223ae455. Random draw 4, normal research. Release threshold 13:13:57.952Z; do not refresh.
+
+NEW exact raw139 F1=1LA candidate [7,24,11,24,14,21,3,16,12,11,24,2]: 16 split nodes, 369 terminal leaves (176 translated cycles,119 last holes,49 FAR,25 inductive growth). Max query 284 => proposed WeightedBound 290. All 25 growth recurrences kernel-accepted locally against copied zipper model with propext/Quot.sound only. Last H25 uses right word 0 1^(4+3n) (00111)^(n+1), positive 160n+138 steps per full two-phase increment. H7 resolved with six-state FAR. No open candidate leaf; source acceptance pending. Reusable symbolic block sweep discovery and deterministic compact replay generator under im-results/agent48-raw139-f1-oneLA. Source audit run 45611897213 pinned c512623e68b633e28fc140370abee778cfaf0939. Reproduce via bash im-results/agent48-raw139-f1-oneLA/reproduce.sh. Local replay generates byte-identical Lean files in ~3s. Source hashes in reproduce script. Local files /tmp/a48; Lean 4.36.0-rc2 installed via concatenated ZIP containing nested tar.zst; extracted to /tmp/lean/lean-4.36.0-rc2-linux.
+
+Repaired three remaining dangling malformed tactic continuation lines in ChampionF1SiblingIntegration.lean and ChampionF1RFIntegration.lean commits 5664841db9643fc897f795fa90bc06c79241526f and 1a57a67a795fe90fdb8883adec03dd055360d461. Full integration run 45606697352 predates those fixes; don't duplicate before inspecting status. Agent41 accepted F1=0LF and 0RC; F1=0RB pending. Sent Agent41 coordination: F1=1LA done candidate, next F1=0LD. No source-accepted global upper bound; BB(6) open.
