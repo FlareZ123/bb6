@@ -1,15 +1,30 @@
-name: Agent 31 canonical70 Raw109+Raw123 membership graft
+name: Agent 31 canonical74 Raw109+Raw123 independent graft
 
 on:
   workflow_dispatch:
     inputs:
-      canonical72_run_id:
-        description: "Successful run containing canonical72-raw121-raw110-raw112-roster-only-certified"
+      target:
+        description: "Choose the stable canonical base for the independent parent graft"
+        type: choice
+        options:
+          - canonical74
+          - canonical70
+        default: canonical74
         required: true
-        default: "45680602708"
+      canonical72_run_id:
+        description: "Successful canonical72 run ID (required only for target=canonical70)"
+        type: string
+        required: false
+        default: ""
+      canonical76_run_id:
+        description: "Accepted canonical76 run ID containing canonical73-raw110-raw112-roster-consumer-certified"
+        type: string
+        required: false
+        default: "45647053824"
 
 jobs:
   source-audit-canonical70:
+    if: ${{ inputs.target == 'canonical70' }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -89,3 +104,223 @@ jobs:
             /tmp/a31-canonical72-run-id.txt
           if-no-files-found: warn
           retention-days: 30
+
+source-audit-canonical74:
+    name: Source-audit the 74-residual canonical76/Raw109/Raw123 consumer
+    if: ${{ inputs.target == 'canonical74' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate the canonical76 run ID
+        env:
+          CANONICAL76_RUN_ID: ${{ inputs.canonical76_run_id }}
+        run: |
+          set -euo pipefail
+          [[ "$CANONICAL76_RUN_ID" =~ ^[0-9]+$ ]]
+
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lean --version
+
+      - name: Download the accepted canonical76 and canonical77 proof cores
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.canonical76_run_id }}
+          name: canonical73-raw110-raw112-roster-consumer-certified
+          path: /tmp/a31-accepted76
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45554648116
+          name: canonical77-certified
+          path: /tmp/a47-canonical77
+
+      - name: Verify the canonical76 base and every reused canonical77 object
+        env:
+          CANONICAL76_RUN_ID: ${{ inputs.canonical76_run_id }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, json, os, pathlib, subprocess
+          base = pathlib.Path("/tmp/a31-accepted76/a31-shared")
+          canonical77 = pathlib.Path("/tmp/a47-canonical77")
+          summary = json.loads((base / "manifest/canonical76-base.json").read_text())
+          manifest = json.loads((base / "manifest/canonical77-base-manifest.json").read_text())
+          def sha(path):
+              h = hashlib.sha256()
+              with path.open("rb") as stream:
+                  for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+                      h.update(chunk)
+              return h.hexdigest()
+          assert summary["theorem"] == "BB6.Agent31CanonicalTwoParentRosterOnly.exact_at_target"
+          assert summary["residual_count"] == 76 and summary["weighted_bound"] == 7014
+          assert summary["canonical77_artifact_id"] == 14997966221
+          assert int(os.environ["CANONICAL76_RUN_ID"]) == 45647053824
+          source = pathlib.Path("im-results/agent31-shared-core/CanonicalTwoParentRosterOnly.lean")
+          assert sha(source) == summary["modules"]["CanonicalTwoParentRosterOnly"]["source_sha256"]
+          assert sha(base / "CanonicalTwoParentRosterOnly.lean") == sha(source)
+          assert sha(base / "CanonicalTwoParentRosterOnly.olean") == summary["modules"]["CanonicalTwoParentRosterOnly"]["olean_sha256"]
+          for name in ("CanonicalTwoParentGraft", "CanonicalRaw114Accepted", "Raw114CompleteData"):
+              assert sha(base / (name + ".olean")) == summary["modules"][name]["olean_sha256"]
+          for entry in manifest["modules"]:
+              obj = canonical77 / entry["olean_path"]
+              assert obj.is_file(), f"missing canonical77 object: {entry['module']}"
+              assert sha(obj) == entry["olean_sha256"], f"canonical77 object mismatch: {entry['module']}"
+          version = subprocess.check_output(["lean", "--version"], text=True).strip()
+          assert version == manifest["lean_version"]
+          compiler = pathlib.Path(subprocess.check_output(["lean", "--print-prefix"], text=True).strip()) / "bin/lean"
+          assert sha(compiler) == manifest["lean_binary"]["sha256"]
+          print("Verified the 76-residual theorem, canonical77 source/object closure, Lean version, and compiler binary.")
+          PY
+
+      - name: Reconstruct the Raw109 source interface
+        run: |
+          set -euo pipefail
+          python im-results/agent4-raw109/generate.py 0LD 0RE
+          test -s im-results/agent4-raw109/Raw109B0LDData.lean
+          test -s im-results/agent4-raw109/Raw109B0REData.lean
+
+      - name: Compile the parent interfaces against the accepted canonical77 core
+        run: |
+          set -euo pipefail
+          base=/tmp/a31-accepted76/a31-shared
+          python tools/lean_compile_closure.py \
+            im-results/agent4-raw109/Raw109Cut.lean \
+            im-results/agent7-raw123/Raw123Base.lean \
+            --workdir /tmp/a31-parent-interfaces \
+            --manifest /tmp/a31-parent-interfaces-manifest.json \
+            --label canonical76-raw109-raw123-parent-interfaces \
+            --jobs 8 \
+            --precompiled-dir /tmp/a47-canonical77 \
+            --precompiled-manifest "$base/manifest/canonical77-base-manifest.json" \
+            --theorem BB6.Agent4Raw109Cut.parent_dichotomy \
+            --theorem BB6.Agent7Raw123.p123_root \
+            --provenance-input im-results/agent4-raw109/generate.py \
+            --provenance-input im-results/agent4-raw109/specs.json \
+            --provenance-input im-results/agent4-raw109/Raw109Cut.lean \
+            --provenance-input im-results/agent7-raw123/Raw123Base.lean \
+            --provenance-input im-results/agent13-coverage/BB6Coverage.lean.xz.b64 \
+            --provenance-input im-results/agent13-coverage/unpack.py \
+            2>&1 | tee /tmp/a31-parent-interfaces.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a31-parent-interfaces.log; then
+            echo "Forbidden axiom or native_decide in parent interfaces" >&2
+            exit 1
+          fi
+
+      - name: Compile the independent 74-residual consumer and audit its axioms
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/a31-canonical74
+          base=/tmp/a31-accepted76/a31-shared
+          export LEAN_PATH="/tmp/a31-parent-interfaces:$base:/tmp/a47-canonical77"
+          lean -o /tmp/a31-canonical74/Canonical74Raw109Raw123Graft.olean \
+            im-results/agent31-shared-core/Canonical74Raw109Raw123Graft.lean \
+            2>&1 | tee /tmp/a31-canonical74.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a31-canonical74.log; then
+            echo "Forbidden proof placeholder or native_decide in canonical74 consumer" >&2
+            exit 1
+          fi
+          python3 - /tmp/a31-canonical74.log <<'PY'
+          import json, pathlib, re, sys
+          log = pathlib.Path(sys.argv[1]).read_text()
+          allowed = {"propext", "Classical.choice", "Quot.sound"}
+          profiles = {}
+          for name, axioms in re.findall(r"'([^']+)' depends on axioms: \\[([^\\]]*)\\]", log):
+              profiles[name] = {x.strip() for x in axioms.split(",") if x.strip()}
+          for name in re.findall(r"'([^']+)' does not depend on any axioms", log):
+              profiles[name] = set()
+          required = (
+              "BB6.Agent31Canonical74Raw109Raw123.p109_root",
+              "BB6.Agent31Canonical74Raw109Raw123.p123_root",
+              "BB6.Agent31Canonical74Raw109Raw123.p109_parent_count",
+              "BB6.Agent31Canonical74Raw109Raw123.p123_parent_count",
+              "BB6.Agent31Canonical74Raw109Raw123.count75",
+              "BB6.Agent31Canonical74Raw109Raw123.count74",
+              "BB6.Agent31Canonical74Raw109Raw123.base_sound_at_target",
+              "BB6.Agent31Canonical74Raw109Raw123.raw109_sound",
+              "BB6.Agent31Canonical74Raw109Raw123.sound",
+              "BB6.Agent31Canonical74Raw109Raw123.exact_at_target",
+          )
+          for name in required:
+              if name not in profiles:
+                  raise SystemExit("missing axiom profile: " + name)
+              bad = profiles[name] - allowed
+              if bad:
+                  raise SystemExit(f"{name}: unexpected axioms {sorted(bad)}")
+              print(f"{name}: {sorted(profiles[name])}")
+          pathlib.Path("/tmp/a31-canonical74-axioms.json").write_text(
+              json.dumps({name: sorted(profiles[name]) for name in required}, indent=2, sort_keys=True) + "\\n"
+          )
+          PY
+
+      - name: Record the 74-residual source and object manifest
+        env:
+          CANONICAL76_RUN_ID: ${{ inputs.canonical76_run_id }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, json, os, pathlib, subprocess
+          def sha(path):
+              h = hashlib.sha256()
+              with path.open("rb") as stream:
+                  for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+                      h.update(chunk)
+              return h.hexdigest()
+          source = pathlib.Path("im-results/agent31-shared-core/Canonical74Raw109Raw123Graft.lean")
+          parent_manifest = pathlib.Path("/tmp/a31-parent-interfaces-manifest.json")
+          summary = {
+              "theorem": "BB6.Agent31Canonical74Raw109Raw123.exact_at_target",
+              "status": "conditional 74-residual quotient theorem; both accepted parent contracts and all 74 retained Covers remain explicit",
+              "base_theorem": "BB6.Agent31CanonicalTwoParentRosterOnly.exact_at_target",
+              "base_residual_count": 76,
+              "after_raw109_residual_count": 75,
+              "after_raw123_residual_count": 74,
+              "weighted_bound": 6766859,
+              "canonical76_run_id": int(os.environ["CANONICAL76_RUN_ID"]),
+              "canonical76_artifact_id": 15043876968,
+              "canonical77_run_id": 45554648116,
+              "canonical77_artifact_id": 14997966221,
+              "raw109_parent_theorem": "BB6.Agent4Raw109Closed.all_closed",
+              "raw109_parent_bound": 1703,
+              "raw109_source_acceptance_run_id": 45633764095,
+              "raw109_parent_artifact_id": 15035255805,
+              "raw123_parent_theorem": "BB6.Agent7Raw123.raw123_cover",
+              "raw123_parent_bound": 10000,
+              "raw123_source_acceptance_run_id": 45700813110,
+              "raw123_parent_artifact_id": 15062767168,
+              "source_revision": os.environ["GITHUB_SHA"],
+              "lean_version": subprocess.check_output(["lean", "--version"], text=True).strip(),
+              "lean_binary_sha256": sha(pathlib.Path(subprocess.check_output(["lean", "--print-prefix"], text=True).strip()) / "bin/lean"),
+              "source_sha256": sha(source),
+              "olean_sha256": sha(pathlib.Path("/tmp/a31-canonical74/Canonical74Raw109Raw123Graft.olean")),
+              "parent_interface_manifest_sha256": sha(parent_manifest),
+              "parent_interface_module_count": json.loads(parent_manifest.read_text())["module_count"],
+              "axiom_profiles": json.loads(pathlib.Path("/tmp/a31-canonical74-axioms.json").read_text()),
+              "axiom_allowlist": ["propext", "Classical.choice", "Quot.sound"],
+          }
+          pathlib.Path("/tmp/a31-canonical74-summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True) + "\\n")
+          print(json.dumps(summary, indent=2, sort_keys=True))
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: agent31-canonical74-raw109-raw123-graft
+          path: |
+            /tmp/a31-canonical74
+            /tmp/a31-canonical74.log
+            /tmp/a31-canonical74-axioms.json
+            /tmp/a31-canonical74-summary.json
+            /tmp/a31-parent-interfaces
+            /tmp/a31-parent-interfaces.log
+            /tmp/a31-parent-interfaces-manifest.json
+            im-results/agent31-shared-core/Canonical74Raw109Raw123Graft.lean
+          if-no-files-found: error
+          retention-days: 14
