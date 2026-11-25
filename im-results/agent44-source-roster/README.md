@@ -26,7 +26,20 @@ An existing finite cross-match reports 34 source certificates (32 side-cycle cer
 
 The literal parent itself has a three-transition blank-tape prefix: A0=1RB, B0=1RC, C0=0LA, after which the head is at A1, an undefined slot. Thus the parent is a halting partial machine, not a nonhalting cylinder; an SWside witness on the parent is the wrong closure method. `Agent44ChunkSideSearch.v` guards its parent-side search with the source decider and skips it when the parent is classified Halt. It then searches the 50 remaining descendants with the existing bounded grid (directions L/R, entry 0–12, period 1–13, budget 0–2).
 
-`Agent44Q32FirstHoleCoverageProbe.v` computes the exact first-hole split at A1 and checks whether the 84-node checkpoint covers every ordinary child. This is the more relevant parent-closure interface: the A1=halt branch is the exact three-step halt, while the ordinary children must be certified. Its Coq result is pending CI. `Agent44Q32ParentSideProbe.v` is a superseded, compute-only experiment and is no longer in the workflow.
+`Agent44Q32FirstHoleCoverageProbe.v` now compiles in the original BusyCoq Coq environment (CI run 45517921880). The parent decider returns `Halt (A,1)` after the three-transition prefix A0=1RB, B0=1RC, C0=0LA. Its normalized first-hole expansion has 16 children.
+
+The exact ordered child-decider vector is:
+
+```
+[NonHalt, NonHalt, Halt, NonHalt, Halt, NonHalt, Halt, NonHalt,
+ Halt, NonHalt, Halt, NonHalt, Halt, Halt, Halt, Halt]
+```
+
+There are 7 `NonHalt` and 9 `Halt` partial-machine branches. The probe proves the corresponding child classification and uses the existing `agent32_decider_bounded_sound` theorem for the soundness adapters. `Print Assumptions` exposes that theorem's existing profile, including Coq primitive-integer/array constants and `inj_pair2`; this is not an assumption-free academic result.
+
+Crucially, `q32_parent_children_coveredb = false`: only two of the 16 children have descendants in this particular q32 active slice, namely A1=1LD and A1=1RD. The 84 active nodes split exactly into 14 descendants under A1=1LD and 70 under A1=1RD; no active node leaves A1 undefined or uses another transition. Thus this checkpoint is a local slice, not a complete cover of the parent cylinder. Of the 14 absent children, 7 are the decider's `NonHalt` cases; the other 7 are `Halt` partial branches whose descendants must be accounted for in other global queue slices.
+
+The separate 50-node first-hole split in `Agent8Chunk2FirstHole.v` is a different decomposition: it produces 1,200 child obligations from the 50 unresolved post-certificate nodes. That module still awaits a successful source-roster CI run because of the Agent47 source-witness dependency. The new `Agent44Q32RemainderBranchProbe.v` is queued in the source-roster target to quantify the 50 unresolved nodes by A1 branch. 
 
 ## Boundary
 
