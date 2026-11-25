@@ -26,6 +26,8 @@ import boundary_pump
 MOVES = ["".join(x) for x in product("01", "LR", "ABCDEF")]
 # The tag is part of the Lean namespace and module names.
 PARAMS = {
+    "1RF": ("OneRF", 6411, "8e37dd64d69380fe45c60a0865748102de256fb22a10d948539ec085673aac94",
+            dict(split=2002, cycle=31424, last=8212, open=6411)),
     "1LB": ("OneLB", 4351, "1679cd38cd74165dc392e47f46bcf018ff35cf23decf44120241bb7fa30ade06",
             dict(split=1599, cycle=24218, last=8209, open=4351)),
     "1RA": ("OneRA", 4374, "af3b4cfbb7f4d3dcde52253b7834602fe505fbdf0c3da9a49b29aaf5c075affe",
@@ -164,13 +166,13 @@ if BRANCH == "1LB":
     assert opens[1341] == "1RB---_1RC0LF_0RD0RF_1LD1RE_1LB1LE_0RA0LE"
     accelerated_late[opens[1341]] = (224705, 1, "BB6.Agent13Raw120Late1341")
     late[opens[1341]] = (224705, 1)
-if BRANCH == "1RA":
+if BRANCH in ("1RA", "1RF"):
     sys.path.insert(0, str(ROOT.parent / "agent16-raw118"))
     from bidfa_emit import emit as emit_bidfa
-    bns = "BB6.Agent3Raw120OneRABiDFA"
+    bns = ns + "BiDFA"
     bcode = ["import BiDFA", "set_option maxRecDepth 100000", "set_option maxHeartbeats 0",
              f"namespace {bns}", "open BB6Coverage BB6Coverage.Agent16BiDFA"]
-    for row in (ROOT / "1RA-bidfa.txt").read_text().splitlines():
+    for row in (ROOT / (BRANCH + "-bidfa.txt")).read_text().splitlines():
         idx, dl, dr, count, edges = row.split()
         i = int(idx)
         table = opens[i]  # Exact open-list SHA was asserted above.
@@ -179,7 +181,8 @@ if BRANCH == "1RA":
         bcode.append(code)
         pumps[table] = (f"{bns}.M{i}.table", f"{bns}.M{i}.never")
     bcode.append(f"end {bns}")
-    (FOLDER / "Raw120OneRABiDFA.lean").write_text("\n".join(bcode)+"\n")
+    (FOLDER / (prefix + "BiDFA.lean")).write_text("\n".join(bcode)+"\n")
+if BRANCH == "1RA":
     for i, code, variant in (
         (1602, "1RB0RF_1RC1LB_0RD0LE_1LD1RE_1RA1LE_---1RB", "false"),
         (1606, "1RB0RF_1RC1LC_0RD0LE_1LD1RE_1RA1LE_---1RB", "true"),
@@ -191,6 +194,16 @@ if BRANCH == "1RA":
     late[opens[2309]] = (13311, 10)
     assert opens[437] == "1RB0LF_1RC0RE_0RD---_1LD1RE_1RA1LE_1LE1LA"
     pumps[opens[437]] = ("BB6.Agent3Raw120OneRAParity.table", "BB6.Agent3Raw120OneRAParity.never")
+
+if BRANCH == "1RF":
+    import make_rf_counter
+    import make_rf_recursive
+    make_rf_counter.emit(opens, FOLDER)
+    make_rf_recursive.emit(opens, FOLDER)
+    for i, table in {**make_rf_counter.TABLES, **make_rf_recursive.TABLES}.items():
+        assert opens[i] == table
+        ns0 = f"{ns}.M{i}"
+        pumps[table] = (f"{ns0}.table", f"{ns0}.never")
 
 if BRANCH == "1LA":
     assert opens[1794] == "1RB0LE_1RC0RF_0RD---_1LD1RE_1LA1LE_0RB1RA"
@@ -317,7 +330,7 @@ for i, code in enumerate(opens):
         ans = (229, None, start, target, res)
     else:
         ans = one.candidate(p, events)
-    if ans is None and ((BRANCH == "0RA" and i == 479) or BRANCH == "1RA"):
+    if ans is None and ((BRANCH == "0RA" and i == 479) or BRANCH in ("1RA", "1RF")):
         ans = extended_one_candidate(p, events)
     if ans is not None:
         generated, info = one.generate(i, p, ans)
@@ -391,7 +404,7 @@ summary = {
     "one_block_pumps": one_count,
     "multi_block_pumps": multi_count,
     "late_leaves": len(late),
-    "custom_counter_and_nested_leaves": {"1RA": 3, "1LA": 1, "0RC": 4, "1RC": 3, "0RA": 13, "1LF": 6, "0LB": 6, "0LF": 18}.get(BRANCH, 0),
+    "custom_counter_and_nested_leaves": {"1RF": 6, "1RA": 3, "1LA": 1, "0RC": 4, "1RC": 3, "0RA": 13, "1LF": 6, "0LB": 6, "0LF": 18}.get(BRANCH, 0),
     "unresolved": len(missing),
     "unresolved_sample": [{"index": i, "table": code} for i, code in missing[:100]],
 }
@@ -518,7 +531,7 @@ theorem split_checked (p : PartialMachine) (n : Nat) (s : Slot)
   simp only [Bool.and_eq_true]
   exact ⟨hq, allMoves_of _ hk⟩
 """
-emit(prefix + "Base", ["Raw120Late"] + ({"1LB": ["Raw120OneLBBiDFA", "Raw120LBSat", "Raw120Late1341"], "1RA": ["Raw120OneRABiDFA", "Raw120OneRAStack", "Raw120OneRAParity"], "1LA": ["Raw120OneLABiDFA"], "0RC": ["Raw120RCCounter"], "1RC": ["Raw120OneRCCounter"], "1LF": ["Raw120OneLFCounter", "Raw120OneLFTwo", "Raw120OneLFStack"], "0LB": ["Raw120ZeroLBMirror", "Raw120ZeroLBReset", "Raw120ZeroLBShuttle", "Raw120ZeroLBTriple"], "0LF": ["Raw120ZeroLFRecursive", "Raw120ZeroLFWord"], "0RA": ["Raw120RAPhases", "Raw120RABiDFA", "Raw120RA423BlockAdapter"]}.get(BRANCH, [])) + [prefix + "Sweeps"], base)
+emit(prefix + "Base", ["Raw120Late"] + ({"1RF": ["Raw120OneRFBiDFA", "Raw120OneRFCounter", "Raw120OneRFRecursive"], "1LB": ["Raw120OneLBBiDFA", "Raw120LBSat", "Raw120Late1341"], "1RA": ["Raw120OneRABiDFA", "Raw120OneRAStack", "Raw120OneRAParity"], "1LA": ["Raw120OneLABiDFA"], "0RC": ["Raw120RCCounter"], "1RC": ["Raw120OneRCCounter"], "1LF": ["Raw120OneLFCounter", "Raw120OneLFTwo", "Raw120OneLFStack"], "0LB": ["Raw120ZeroLBMirror", "Raw120ZeroLBReset", "Raw120ZeroLBShuttle", "Raw120ZeroLBTriple"], "0LF": ["Raw120ZeroLFRecursive", "Raw120ZeroLFWord"], "0RA": ["Raw120RAPhases", "Raw120RABiDFA", "Raw120RA423BlockAdapter"]}.get(BRANCH, [])) + [prefix + "Sweeps"], base)
 
 assert tree[0] == "split"
 root_n, root_slot, root_kids = tree[1], tree[2], tree[3]
