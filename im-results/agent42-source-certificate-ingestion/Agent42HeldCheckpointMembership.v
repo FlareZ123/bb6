@@ -56,7 +56,7 @@ Proof.
     + exact (recovered_held_2800_safe bound).
     + constructor.
   - unfold source_roster_covers.
-    simpl.
+    change source_refinesb (tm x) recovered_held_2800 = true.
     exact ((source_refinesb_spec (tm x) recovered_held_2800).mpr h).
 Qed.
 
@@ -77,7 +77,8 @@ Proof.
   exists x.
   constructor.
   - unfold adaptive_obligations.
-    cbn.
+    change In x (fst recovered_held_2800_checkpoint ++
+      snd recovered_held_2800_checkpoint).
     apply in_or_app.
     right.
     exact Hx.
