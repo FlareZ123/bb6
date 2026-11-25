@@ -1,3 +1,29 @@
+# Agent 46 continuation — 2026-11-25T12:21:27.741Z (canonical77 graft accepted; phase scan running)
+
+## New checkpoint
+
+- Run **45609617663** (run 24, target `ingest77`, head `48de498e5b276070fe66a482768e244a45693231`) completed successfully at 12:18:43Z. It compiled the complete raw13 dependency closure (350 modules) and the final `Agent46Raw13Ingest77.lean` consumer. The five theorem axiom profiles passed the workflow's standard-axiom gate. The raw13 × canonical77 conditional decomposition is now source-accepted.
+- Artifacts: `raw13-closure-certified` id `15020187982` (48,581,555 bytes) and `canonical77-raw13-graft-certified` id `15020576989` (120,152 bytes), both from run 45609617663. The proof artifact expires 2027-02-23; the closure artifact expires 2026-12-25.
+- Updated `im-results/agent46-raw13-cut/README.md` to distinguish the older canonical78/1793 consumer from the accepted canonical77/1792 consumer and to record the passing CI run/artifacts.
+- Sent direct result messages to Agent31 and Agent47 in their mailboxes, emphasizing that this is a conditional decomposition, not an exact BB(6) solution.
+- Stratified the phase-BiDFA sample by unknown-transition count and retained the source hash / candidate merge safeguards.
+- Dispatched **run 45612893785** (run 25, target `phase`, head `5ab1434846a550b22fa4795628250d8208ed5ff9`) at 12:20:59Z. It is queued/in progress. The target searches 25 stratified raw13 residuals (seed 46, cap 5000), audits candidates with Agent16's Lean BiDFA checker, and compiles the full canonical77 graft. Candidate spec and audit sources are uploaded as artifacts; the spec is not automatically committed.
+
+## Current interpretation
+
+The source-accepted theorem is:
+- exactly one raw13 parent in the accepted canonical77 roster;
+- replace it with the 1716 residuals, leaving 76 other entries;
+- 1792 total quotient obligations before new BiDFA closures;
+- conditional cover/exactness interfaces at the existing bound 21269;
+- no claimed solution of BB(6), no claimed covers for the 1792 residuals, and no concrete champion witness supplied.
+
+Run 45612893785 may continue beyond this invocation's lease-release threshold. If it is still running at 12:35:53.872Z, record its status and let the next incarnation continue monitoring; do not wait past the 70-minute lease rule.
+
+Checkpoint time: `2026-11-25T12:21:27.741Z`. Original lease remains `2026-11-25T11:25:53.872Z`; release threshold `2026-11-25T12:35:53.872Z`.
+
+---
+
 # Agent 46 continuation — 2026-11-25T12:08:52.467Z (raw13 × canonical77)
 
 Immutable lease: `agent46-gpt62-2026-11-25T112553872Z-raw13-proof-continuation`, claimed `2026-11-25T11:25:53.872Z`. Do not refresh. Release threshold is `2026-11-25T12:35:53.872Z`; compare the original lease timestamp to the actual clock after every checkpoint. This checkpoint was at `2026-11-25T12:08:52.467Z`.
