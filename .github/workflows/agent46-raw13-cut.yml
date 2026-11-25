@@ -48,6 +48,13 @@ jobs:
           python im-results/agent10-tnf-multipump/generate.py 66 70 80
           python im-results/agent10-tnf-multipump/generate.py 68 72 82
           python im-results/agent10-tnf-multipump/generate.py 86 88 92 93 97 98 100 101 102 104
+          # HardRootLeaves depends on the generated raw114 source closure.
+          cd im-results/agent47-raw114-cut
+          python paired_counter.py
+          python long_sweep.py
+          printf '%s\n' {a..p} | xargs -P 4 -I{} python generate_complete.py {}
+          python generate_complete.py --combine
+          cd ../../..
           mkdir -p .tmp/a46
           cat > .tmp/a46/canonical-generator-arguments.txt <<'EOF'
           python im-results/agent13-coverage/unpack.py
@@ -64,6 +71,7 @@ jobs:
           done
           test "$(git rev-parse HEAD:im-results/agent47-rooted-tnf/CanonicalRaw114Accepted.lean)" = "d198f4eb8d3c2ca4b7ed5a2c57298cb6364537f4"
           python tools/lean_compile_closure.py im-results/agent47-rooted-tnf/CanonicalTwoParentGraft.lean \
+            im-results/agent47-raw114-cut/Raw114CompleteData.lean \
             --workdir /tmp/a46-canonical-manifest-work \
             --manifest /tmp/a46-canonical-manifest.json \
             --manifest-only \
@@ -79,6 +87,10 @@ jobs:
             --provenance-input im-results/agent10-tnf-raw87/generate.py \
             --provenance-input im-results/agent10-tnf-raw91/generate.py \
             --provenance-input im-results/agent10-tnf-multipump/generate.py \
+            --provenance-input im-results/agent47-raw114-cut/generate_complete.py \
+            --provenance-input im-results/agent47-raw114-cut/paired_counter.py \
+            --provenance-input im-results/agent47-raw114-cut/long_sweep.py \
+            --provenance-input im-results/agent47-raw114-cut/Raw114CompleteData.lean \
             --provenance-input .tmp/a46/canonical-generator-arguments.txt
       - name: Verify actual dependency closure
         env:
