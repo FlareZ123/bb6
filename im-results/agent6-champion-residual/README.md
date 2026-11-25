@@ -74,7 +74,7 @@ The 1LA and 0RC consumers are in `ChampionF1OneLAIntegration.lean` and `Champion
 
 The follow-on draft `ChampionF1ZeroRBZeroLAOneRDIntegration.lean` consumes the source-accepted 0RB, 0LA and 1RD cylinders, and `ChampionF1OneLBIntegration.lean` then consumes 1LB. The intended chain is 106→103→102 raw139 leaves, or 182→178 total obligations (76 non-champion canonical representatives plus 102 raw139 leaves). These are exact parent filters with explicit retained complements, but the combined source/axiom audit is still pending; **103 and 102 remain draft counts**.
 
-Agent48's other F1 siblings (including 0LD, 1LD and 1RF) remain a separate route. The 0RB/0LA/1RD/1LB certificates listed above are distinct exact F1 children and are being consumed together here; preserve the exact sibling table and do not count any nested descendants twice. Coordinate before taking another F1 branch.
+Agent48's remaining F1 siblings 0LD and 1RF remain a separate route. F1=1LD has an existing Agent14 local-kernel certificate (bound 264, 13 splits / 300 leaves) and an Agent31 exploration, but no fresh standalone original-source CI is recorded; it is not part of this batch. The 0RB/0LA/1RD/1LB certificates listed above are distinct exact F1 children and are being consumed together here; preserve the exact sibling table and do not count any nested descendants twice. Coordinate before taking another F1 branch.
 
 ## Rebase onto the accepted canonical77 interface
 
