@@ -798,6 +798,21 @@ jobs:
             exit 1
           fi
 
+      - name: Search highest-specificity raw10 singleton projection with BlockFAR
+        if: inputs.target == 'weighted-tnf-raw10-box'
+        timeout-minutes: 20
+        run: |
+          set -euo pipefail
+          python im-results/agent17-raw10-box-far-search/search.py --generate --compile --min-fixed 10 --compile-timeout 600 --jobs 4 --output .tmp/agent17-raw10-box-far | tee /tmp/a17-raw10-box-far.log
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          summary = json.loads(Path(".tmp/agent17-raw10-box-far/summary.json").read_text())
+          print(f"singleton-projection FAR: generated={summary['generated']} compiled={summary['compiled']}")
+          if summary["generated"] != summary["compiled"]:
+              raise SystemExit("a generated singleton-projection certificate failed Lean compilation")
+          PY
+
       - name: Ingest exact champion witness into canonical 78 mixed-bound roster
         if: inputs.target == 'weighted-tnf-canonical-78-exact'
         run: |
