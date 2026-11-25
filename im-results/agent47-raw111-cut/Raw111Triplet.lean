@@ -37,7 +37,7 @@ theorem onesPrefix (n : Nat) (R : List Bool) (h : Good R) :
     Good (rep O n ++ R) := by
   induction n with
   | zero => exact h
-  | succ n ih => simpa only [rep,List.append_assoc] using Good.more true ih
+  | succ n ih => simpa only [rep,O,List.cons_append,List.nil_append,List.append_assoc] using Good.more true ih
 
 theorem shiftOne (n : Nat) (R : List Bool) :
     true::(rep O n ++ R) = rep O n ++ true::R := by
@@ -74,7 +74,10 @@ theorem fReturn (n : Nat) :
     simpa only [List.append_assoc, hz] using fEntry n
   have h2 := sweepL table 3 [false,false] [] Z O 3 dSweepFramed n (Z++S) []
   simp only [List.nil_append,List.append_nil,List.append_assoc] at h2
-  have H := join0 (join0 h1 h2) (fExit (rep O n))
+  simp only [List.append_assoc] at h1
+  have h3 := fExit (rep O n)
+  simp only [List.append_assoc] at h3
+  have H := join0 (join0 h1 h2) h3
   rw [show true::rep O n = rep O n ++ [true] by
     simpa only [List.append_nil] using shiftOne n []] at H
   exact H
@@ -102,7 +105,10 @@ theorem aOneLarge (n : Nat) (R : List Bool) :
       aOneEntry (Z++Z++rep Z n++S) R
   have h2 := sweepL table 3 [] [] Z O 3 dSweep n (Z++Z++S) (false::R)
   simp only [List.nil_append,List.append_assoc] at h2
-  have H := join0 (join0 h1 h2) (aOneExit (rep O n ++ false::R))
+  simp only [List.append_assoc] at h1
+  have h3 := aOneExit (rep O n ++ false::R)
+  simp only [List.append_assoc] at h3
+  have H := join0 (join0 h1 h2) h3
   rw [shiftTwo n (false::R)] at H
   exact H
 
