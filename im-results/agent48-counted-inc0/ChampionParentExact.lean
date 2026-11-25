@@ -1,5 +1,6 @@
 import ChampionParentCover
 import ChampionLastHoleCover
+import TM63RawUpperInterface
 
 namespace BB6.Agent48ChampionCylinder
 open BB6Coverage BB6Coverage.Agent48Champion BB6ChampionArithmetic BB6.Agent13BlankDelay
