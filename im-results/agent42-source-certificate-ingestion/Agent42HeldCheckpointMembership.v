@@ -171,7 +171,7 @@ Proof.
     + exact (recovered_held_2800_safe bound).
     + constructor.
   - unfold source_roster_covers.
-    change (source_refinesb (tm x) recovered_held_2800 = true).
+    simpl.
     exact ((source_refinesb_spec (tm x) recovered_held_2800).mpr h).
 Qed.
 
