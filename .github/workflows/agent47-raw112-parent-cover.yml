@@ -57,7 +57,7 @@ jobs:
           set -euo pipefail
           python - <<'PY'
           from pathlib import Path
-          import hashlib, json, shutil
+          import shutil
           raw110 = Path("/tmp/raw110-artifact")
           raw112 = Path("/tmp/raw112-artifact")
           sources = sorted(raw110.rglob("*.lean"))
@@ -69,10 +69,19 @@ jobs:
               if old is not None and old.read_bytes() != source.read_bytes():
                   raise SystemExit(f"conflicting raw110 source copies for {source.stem}")
               by_module[source.stem] = source
+          repo_files = {}
+          for source in Path(".").rglob("*.lean"):
+              if any(part in {".git", ".lake", "build", "dist"} for part in source.parts):
+                  continue
+              repo_files.setdefault(source.stem, []).append(source.resolve())
           override_lines = []
           for module, source in sorted(by_module.items()):
-              override_lines.extend(["--override", f"{module}={source.resolve()}"])
-          Path("/tmp/raw110-overrides.txt").write_text("\n".join(override_lines) + "\n")
+              candidates = repo_files.get(module, [])
+              if len(candidates) == 0:
+                  override_lines.extend(["--override", f"{module}={source.resolve()}"])
+              elif len(candidates) > 1:
+                  override_lines.extend(["--override", f"{module}={source.resolve()}"])
+          Path("/tmp/raw110-overrides.txt").write_text("\n".join(override_lines) + ("\n" if override_lines else ""))
           manifests = list(raw112.rglob("a47-raw112-parent-cover-manifest.json"))
           if len(manifests) != 1:
               raise SystemExit(f"expected one raw112 manifest, found {len(manifests)}")
@@ -91,6 +100,7 @@ jobs:
               "manifest and compiled import closure are preserved from that run\n"
           )
           print(f"raw110 source modules: {len(by_module)}")
+          print(f"raw110 explicit overrides: {len(override_lines)//2}")
           print(f"raw112 precompiled objects: {len(list(precompiled.rglob('*.olean')))}")
           PY
       - name: Compile the parent-cover composition theorem and full import closure
