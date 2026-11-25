@@ -345,11 +345,12 @@ jobs:
         if: inputs.target == 'enumerate62-packed-batch'
         run: node "$GITHUB_WORKSPACE/research/im-results/agent5-weighted-tnf-queue/check-q0-export.cjs" --self-test "$GITHUB_WORKSPACE/research"
       - name: Emit packed batch logs for exact roster extraction
-        if: inputs.target == 'enumerate62-packed-batch'
+        if: always() && inputs.target == 'enumerate62-packed-batch'
         working-directory: original/verify
         run: |
           set -euo pipefail
           for f in agent8-batch/*.log; do
+            [ -e "$f" ] || continue
             printf '\n===== %s =====\n' "${f##*/}"
             cat "$f"
           done
