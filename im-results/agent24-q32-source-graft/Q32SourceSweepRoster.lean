@@ -37,7 +37,7 @@ def q32SweepPartial (v : Bool) : PartialMachine :=
 
 def q32SweepOnes (n : Nat) : List Bool := rep [true] n
 
-@[simp] theorem q32SweepOnes_succ (n : Nat) :
+theorem q32SweepOnes_succ (n : Nat) :
     q32SweepOnes (n+1) = true :: q32SweepOnes n := by
   simp [q32SweepOnes, rep]
 
@@ -58,9 +58,7 @@ def q32SweepCost (v : Bool) (n : Nat) : Nat :=
 theorem q32SweepOpen (v : Bool) (n : Nat) :
     run0 (q32SweepPartial v) 5 (q32SweepEnd n) =
       some ⟨1, q32SweepOnes (n+1), [false]⟩ := by
-  cases v <;>
-    simp [run0, step0, move0, q32SweepPartial, sourcePartial,
-      q32SweepMachine, q32SweepEnd, q32SweepOnes, rep]
+  cases v <;> rfl
 
 theorem q32SweepLeft (v : Bool) (n : Nat) :
     run0 (q32SweepPartial v) (n+1)
@@ -70,16 +68,14 @@ theorem q32SweepLeft (v : Bool) (n : Nat) :
     (sweepL (q32SweepPartial v) 1 [] [] [true] [true] 1
       (by
         intro L R
-        simp [run0, step0, move0, q32SweepPartial, sourcePartial,
-          q32SweepMachine])
+        rfl)
       (n+1) [] [false])
 
 theorem q32SweepStepToC (v : Bool) (n : Nat) :
     run0 (q32SweepPartial v) 1
       ⟨1, [], q32SweepOnes (n+1) ++ [false]⟩ =
     some ⟨2, [true,true], q32SweepOnes n ++ [false]⟩ := by
-  simp [run0, step0, move0, q32SweepPartial, sourcePartial,
-    q32SweepMachine, q32SweepOnes_succ]
+  cases v <;> rfl
 
 /-- A rightward sweep consumes one 1 in three steps for E1=1RB and
     five steps for E1=0RC. -/
@@ -87,9 +83,7 @@ theorem q32SweepCrossOne (v : Bool) (L R : List Bool) :
     run0 (q32SweepPartial v) (if v then 3 else 5)
       ⟨2, [true,true] ++ L, [true] ++ R⟩ =
     some ⟨2, [true,true,true] ++ L, R⟩ := by
-  cases v <;>
-    simp [run0, step0, move0, q32SweepPartial, sourcePartial,
-      q32SweepMachine]
+  cases v <;> rfl
 
 /-- The final crossing consumes the first blank and restores the C0
     configuration with a zero at the head. -/
@@ -97,9 +91,7 @@ theorem q32SweepCrossBlank (v : Bool) (L R : List Bool) :
     run0 (q32SweepPartial v) (if v then 3 else 5)
       ⟨2, [true,true] ++ L, [false] ++ R⟩ =
     some ⟨2, [false,true,true] ++ L, R⟩ := by
-  cases v <;>
-    simp [run0, step0, move0, q32SweepPartial, sourcePartial,
-      q32SweepMachine]
+  cases v <;> rfl
 
 theorem q32SweepRight (v : Bool) (n : Nat) :
     run0 (q32SweepPartial v) ((if v then 3 else 5)*n)
@@ -125,8 +117,11 @@ theorem q32SweepFinish (v : Bool) (n : Nat) :
     run0 (q32SweepPartial v) (if v then 3 else 5)
       ⟨2, [true,true] ++ q32SweepOnes n, [false]⟩ =
     some ⟨2, false :: true :: true :: q32SweepOnes n, []⟩ := by
-  cases v <;>
-    simpa [List.append_assoc] using q32SweepCrossBlank v (q32SweepOnes n) []
+  cases v with
+  | true =>
+      simpa [List.append_assoc] using q32SweepCrossBlank true (q32SweepOnes n) []
+  | false =>
+      simpa [List.append_assoc] using q32SweepCrossBlank false (q32SweepOnes n) []
 
 theorem q32SweepGrowth (v : Bool) (n : Nat) :
     run0 (q32SweepPartial v) (q32SweepCost v n) (q32SweepFamily n) =
@@ -142,14 +137,15 @@ theorem q32SweepGrowth (v : Bool) (n : Nat) :
         (if v then 3 else 5) = q32SweepCost v n := by
     cases v <;> simp [q32SweepCost] <;> omega
   rw [htime] at H
-  simpa [q32SweepFamily, q32SweepEnd, q32SweepOnes_two_more] using H
+  rw [← q32SweepOnes_succ (n+1), ← q32SweepOnes_succ (n+2)] at H
+  change run0 (q32SweepPartial v) (q32SweepCost v n) (q32SweepEnd (n+1)) =
+    some (q32SweepEnd (n+2))
+  exact H
 
 theorem q32SweepEntry (v : Bool) :
     run0 (q32SweepPartial v) 2 ⟨0, [], []⟩ =
       some (q32SweepFamily 0) := by
-  cases v <;>
-    simp [run0, step0, move0, q32SweepPartial, sourcePartial,
-      q32SweepMachine, q32SweepFamily, q32SweepEnd, q32SweepOnes, rep]
+  cases v <;> rfl
 
 theorem q32SweepCostPositive (v : Bool) (n : Nat) :
     0 < q32SweepCost v n := by
@@ -162,7 +158,7 @@ theorem q32SweepNever (v : Bool) (m : Machine)
 
 theorem q32SweepRoot (v : Bool) :
     q32SweepPartial v initialSlot = some (some ⟨true,true,1⟩) := by
-  decide
+  cases v <;> rfl
 
 theorem q32SweepSupport (v : Bool) : TNFSupport (q32SweepPartial v) 6 := by
   intro s t _
