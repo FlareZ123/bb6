@@ -60,6 +60,14 @@ def generate(rows,work):
                 certs[row]=f".proven {ns}.p{i} {ns}.never{i}"
                 imports[row]=name
                 continue
+            elif row == '1RB1LE_1RC---_0RD0RF_1LD1RE_1LB0RC_1LF0LA':
+                w=multi.Word.of('0',multi.Rep('1'*12),'1'*8)
+                st=multi.Config(0,multi.Word(),w)
+                ta=multi.Config(0,multi.Word(),w.inc())
+                res=multi.execute(p,st,ta,2000)
+                assert res is not None
+                code,info=multi.generate(i,p,(51,st,ta,res))
+                assert info==(51,256,208),info
             elif row in mu:
                 params=tuple(map(int,mu[row].split(",")))
                 code,info=multi.generate(i,p,targeted(p,params[0]))
@@ -80,5 +88,5 @@ def generate(rows,work):
     assert len(single)==199,len(single)
     manifest="\n".join(sorted(single))+"\n"
     assert hashlib.sha256(manifest.encode()).hexdigest()=="aab7039ed0210df985e13993048903823052d7fa5e1d082dbd10c7462652c56d"
-    assert len(certs)==220,len(certs)
+    assert len(certs)==221,len(certs)
     return certs,imports
