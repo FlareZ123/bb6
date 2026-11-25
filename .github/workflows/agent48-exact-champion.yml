@@ -5,7 +5,7 @@ on:
       audit:
         description: Source audit to run
         type: choice
-        options: [champion, parent, rc-triple]
+        options: [champion, parent, rc-triple, ra-rd]
         default: champion
 permissions:
   contents: read
@@ -37,6 +37,21 @@ jobs:
           log = open('/tmp/a48-rc-triple.log').read()
           for name in ('aCarry','aOverflow','bCarry','bOverflow','entry','arbitrary_live_prefix','never','cover_zeroRC'):
               m = re.search(r"'BB6.Agent48CounterRC\."+name+r"' depends on axioms: \[([^\]]*)\]", log)
+              if not m: raise SystemExit('missing axiom audit: '+name)
+              used = {x.strip() for x in m.group(1).split(',') if x.strip()}
+              assert used <= {'propext','Classical.choice','Quot.sound'}, (name,used)
+          PY
+      - name: Audit raw139 0RA/0RD macro invariant
+        if: inputs.audit == 'ra-rd'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python tools/lean_compile_closure.py im-results/agent48-champion-root/Champion0RARD.lean --workdir /tmp/a48-ra-rd --jobs 4 | tee /tmp/a48-ra-rd.log
+          python - <<'PY'
+          import re
+          log = open('/tmp/a48-ra-rd.log').read()
+          for name in ('progress','entry','unbounded','never','cover_zeroRA_zeroRD'):
+              m = re.search(r"'BB6.Agent48RA_RD\."+name+r"' depends on axioms: \[([^\]]*)\]", log)
               if not m: raise SystemExit('missing axiom audit: '+name)
               used = {x.strip() for x in m.group(1).split(',') if x.strip()}
               assert used <= {'propext','Classical.choice','Quot.sound'}, (name,used)
