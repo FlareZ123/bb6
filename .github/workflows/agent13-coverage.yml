@@ -798,7 +798,7 @@ jobs:
           if [ "$TARGET" = weighted-tnf-raw120-partition ]; then
             python im-results/agent3-tnf-raw120/generate.py
             python im-results/agent3-tnf-raw120/generate_rb.py
-            target=im-results/agent3-tnf-raw120/Raw120CanonicalPartition.lean
+            target=im-results/agent3-tnf-raw120/Raw120FourHoleFrontierIngestion.lean
           fi
           python tools/lean_compile_closure.py --workdir /tmp/a47-combined106 --jobs 4 "$target" | tee /tmp/a47-combined106.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a47-combined106.log; then
