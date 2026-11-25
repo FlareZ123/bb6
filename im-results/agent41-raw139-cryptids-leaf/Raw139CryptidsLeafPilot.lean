@@ -33,8 +33,8 @@ def source : ConjectureMachines.Machine 6 2 :=
 /-- Local literal table in A0,A1,...,F1 order. -/
 def candidate : Machine := BB6.Agent19HardRoot.literal [
   some ⟨true,true,1⟩,  some ⟨false,false,4⟩,
-  some ⟨true,true,2⟩,  some ⟨false,false,2⟩,
-  some ⟨true,true,3⟩,  some ⟨false,true,1⟩,
+  some ⟨true,true,2⟩,  some ⟨false,true,2⟩,
+  some ⟨true,false,3⟩, some ⟨false,true,1⟩,
   some ⟨true,false,0⟩, some ⟨false,false,4⟩,
   some ⟨true,false,3⟩, some ⟨true,false,5⟩,
   some ⟨true,false,3⟩, none
@@ -111,9 +111,34 @@ theorem candidateTail_cut :
     (pathEnd candidateParent 6 candidateTail).2 = 6 := by
   decide
 
+private theorem weightOK_mono_local {B C : Nat} (hBC : B ≤ C)
+    (p : PartialMachine) (s : Slot) (n : Nat) (h : weightOK p s n B = true) :
+    weightOK p s n C = true := by
+  unfold weightOK
+  apply List.all_eq_true.mpr
+  intro d hd
+  exact decide_eq_true (Nat.le_trans (weightOK_sound p s n B h d hd) hBC)
+
+private theorem pathOKB_mono_local {B C : Nat} (hBC : B ≤ C)
+    (p : PartialMachine) (cut : Nat) (xs : List PathEntry)
+    (h : pathOKB B p cut xs = true) : pathOKB C p cut xs = true := by
+  induction xs generalizing p cut with
+  | nil => rfl
+  | cons e xs ih =>
+    rcases e with ⟨n,s,mv⟩
+    obtain ⟨hh,hr,hs,hm,hw,ht⟩ := pathOKB_cons h
+    simp only [pathOKB, Bool.and_eq_true, decide_eq_true_eq, and_assoc]
+    exact ⟨hh,hr,hs,hm,weightOK_mono_local hBC p s n hw,ih _ _ ht⟩
+
+theorem candidateTail_pathOK_small :
+    pathOKB 64 candidateParent 6 candidateTail = true := by decide
+
 theorem candidateTail_pathOK :
-    pathOKB championScore candidateParent 6 candidateTail = true := by
-  decide
+    pathOKB championScore candidateParent 6 candidateTail = true :=
+  pathOKB_mono_local
+    (Nat.le_trans (by decide : 64 ≤ 7014)
+      (Nat.le_of_lt BB6.Agent31Canonical78Exact.champion_score_gt_7014))
+    candidateParent 6 candidateTail candidateTail_pathOK_small
 
 /-- The source theorem closes every completion of the one-row F1 leaf. -/
 def candidateWeightedLeaf (B : Nat) :
@@ -266,7 +291,8 @@ theorem exact_from_canonical76_and_raw139_candidate_leaf
     BB6.Coverage.ExactBB6 championScore :=
   BB6.Agent47CanonicalFrontier.exact_from_quotient_roster
     (C := championScore) (B := championScore)
-    (by decide) (Nat.le_refl _)
+    (Nat.le_trans (by decide : 6 ≤ 7014)
+      (Nat.le_of_lt BB6.Agent31Canonical78Exact.champion_score_gt_7014)) (Nat.le_refl _)
     canonical76WithRaw139Candidate_sound
     hLeaves
     BB6Coverage.Agent48DirectRoot.champion_raw_witness
