@@ -7,6 +7,7 @@ from pathlib import Path
 import subprocess
 import tempfile
 import json
+import hashlib
 import importlib.util
 
 D = Path(__file__).resolve().parent
@@ -304,6 +305,9 @@ def emit(t):
     if tag == "pump":
         n = f"BB6Coverage.Agent31Pump.Raw13Pump{v[0]}"
         return f".closed (.proven {n}.table {n}.never)"
+    if tag == "bidfa":
+        n = "BB6.Agent46Raw13BiDFAAudit"
+        return f".closed (.proven {n}.M{v[0]}.table {n}.M{v[0]}.never)"
     assert tag == "split"
     n,s,kids = v
     return f".split {n} {slot(s)} (byCutMove [\n"+",\n".join(map(emit,kids))+"])"
@@ -329,13 +333,30 @@ if __name__ == "__main__":
         "1RB1LC1RC0LD1LA0RB1RD---------------":("oneRDparent",)})
     open_rows = list(collect_open_tables(t,ROOT))
     assert len(open_rows) == 1716, len(open_rows)
-    (D/"raw13-open-residuals.txt").write_text(
-        "".join(f"{i} {raw}\\n" for i,raw in enumerate(open_rows)),
+    open_path = D/"raw13-open-residuals.txt"
+    open_path.write_text(
+        "".join(f"{i} {raw}\n" for i,raw in enumerate(open_rows)),
         encoding="utf-8")
+    bidfa_proven = {}
+    bidfa_path = D/"raw13-bidfa-spec.json"
+    if bidfa_path.exists():
+        bidfa_spec = json.loads(bidfa_path.read_text())
+        assert bidfa_spec["source_count"] == len(open_rows)
+        assert bidfa_spec["open_sha256"] == hashlib.sha256(open_path.read_bytes()).hexdigest()
+        for key in bidfa_spec["bidfa"]:
+            ident = int(key)
+            bidfa_proven[open_rows[ident]] = ("bidfa",ident)
+        t = enhance(t,ROOT,bidfa_proven)
+    bidfa_closed_count = sum(1 for raw in open_rows if raw in bidfa_proven)
     c,m = Counter(),Counter()
     tally(t,9,3,c,m)
-    assert c == Counter(open=1716,cycle=2708,state=948,split=353,halt=353,last=999,ngram=15,pump=3,selectedgram=826,pump1RE=1,sharedpump=3,pump0LE=1,pump1RE2=1,sparse1RE=1,zeroREparent=1,zeroRCparent=1,zeroRDparent=1,zeroLCparent=1,zeroLBparent=1,oneRDparent=1),c
-    assert m["open"] == 1725263672025 and sum(m.values()) == 25**9,m
+    expected = Counter(open=1716-bidfa_closed_count,bidfa=bidfa_closed_count,
+        cycle=2708,state=948,split=353,halt=353,last=999,ngram=15,pump=3,
+        selectedgram=826,pump1RE=1,sharedpump=3,pump0LE=1,pump1RE2=1,
+        sparse1RE=1,zeroREparent=1,zeroRCparent=1,zeroRDparent=1,
+        zeroLCparent=1,zeroLBparent=1,oneRDparent=1)
+    assert c == expected,c
+    assert m["open"] + m["bidfa"] == 1725263672025 and sum(m.values()) == 25**9,m
     names = []
     for i,k in enumerate(t[3]):
         if k is None:
@@ -343,7 +364,14 @@ if __name__ == "__main__":
         name = f"Agent46Raw13Kid{i:02}"
         names.append(name)
         mv = move(MOVES[i])
-        write(name,["Agent46Raw13Base","Agent46Raw13NGram","Agent46Raw13Pumps","Agent46Raw13SelectedGram","Agent46Raw13Pump1RE","Agent46Raw13SharedPumps","Agent46Raw13Pump0LE","Agent46Raw13Pump1RE2","Agent46Raw13Sparse1RE","Agent46Raw13ZeroRE","Agent46Raw13ZeroRC","Agent46Raw13ZeroRD","Agent46Raw13ZeroLC","Agent46Raw13ZeroLB","Agent46Raw13OneRD"],f"""
+        kid_imports = ["Agent46Raw13Base","Agent46Raw13NGram","Agent46Raw13Pumps",
+            "Agent46Raw13SelectedGram","Agent46Raw13Pump1RE","Agent46Raw13SharedPumps",
+            "Agent46Raw13Pump0LE","Agent46Raw13Pump1RE2","Agent46Raw13Sparse1RE",
+            "Agent46Raw13ZeroRE","Agent46Raw13ZeroRC","Agent46Raw13ZeroRD",
+            "Agent46Raw13ZeroLC","Agent46Raw13ZeroLB","Agent46Raw13OneRD"]
+        if bidfa_proven:
+            kid_imports.append("Agent46Raw13BiDFAAudit")
+        write(name,kid_imports,f"""
 def kid{i:02} : Cut := {emit(k)}
 theorem checked{i:02} :
     check 21269 (child {mv}) (nextCut 3 {mv}) kid{i:02} = true := by decide
