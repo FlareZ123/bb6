@@ -23,6 +23,7 @@ on:
           - enumerate62-source-roster
           - enumerate62-recovered-batch-witnesses
           - enumerate62-source-first-hole
+          - enumerate62-q32-decider-tree
           - enumerate62-source-first-hole-side
           - enumerate62-s4-gap-side-search
           - enumerate62-q32-canonical-parent
@@ -76,7 +77,7 @@ jobs:
           path: original
           persist-credentials: false
       - name: Checkout research repository proof artifact
-        if: inputs.target == 'enumerate62-decider-sound' || inputs.target == 'enumerate62-q0-partition' || inputs.target == 'enumerate62-adaptive-checkpoint' || inputs.target == 'enumerate62-adaptive-expansion' || inputs.target == 'enumerate62-packed-chunk' || inputs.target == 'enumerate62-packed-batch' || inputs.target == 'enumerate62-resume-chunk2' || inputs.target == 'enumerate62-resume-last20' || inputs.target == 'enumerate62-last20-witness' || inputs.target == 'enumerate62-weighted-source' || inputs.target == 'enumerate62-source-roster' || inputs.target == 'enumerate62-source-first-hole' || inputs.target == 'enumerate62-source-first-hole-side' || inputs.target == 'enumerate62-s4-gap-side-search' || inputs.target == 'enumerate62-q32-canonical-parent' || inputs.target == 'enumerate62-zero-delay' || inputs.target == 'enumerate62-recovered-batch-witnesses'
+        if: inputs.target == 'enumerate62-decider-sound' || inputs.target == 'enumerate62-q0-partition' || inputs.target == 'enumerate62-adaptive-checkpoint' || inputs.target == 'enumerate62-adaptive-expansion' || inputs.target == 'enumerate62-packed-chunk' || inputs.target == 'enumerate62-packed-batch' || inputs.target == 'enumerate62-resume-chunk2' || inputs.target == 'enumerate62-resume-last20' || inputs.target == 'enumerate62-last20-witness' || inputs.target == 'enumerate62-weighted-source' || inputs.target == 'enumerate62-source-roster' || inputs.target == 'enumerate62-source-first-hole' || inputs.target == 'enumerate62-source-first-hole-side' || inputs.target == 'enumerate62-q32-decider-tree' || inputs.target == 'enumerate62-s4-gap-side-search' || inputs.target == 'enumerate62-q32-canonical-parent' || inputs.target == 'enumerate62-zero-delay' || inputs.target == 'enumerate62-recovered-batch-witnesses'
         uses: actions/checkout@v4
         with:
           repository: FlareZ123/bb6
@@ -97,7 +98,7 @@ jobs:
           cp "$GITHUB_WORKSPACE/research/im-results/agent32-source-queue/Agent32SourceEncoding.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent8-adaptive-source-plan/Agent8AdaptiveSource.v" original/verify/
       - name: Add independent adaptive checkpoint proof and pilot
-        if: inputs.target == 'enumerate62-adaptive-checkpoint' || inputs.target == 'enumerate62-adaptive-expansion' || inputs.target == 'enumerate62-packed-chunk' || inputs.target == 'enumerate62-packed-batch' || inputs.target == 'enumerate62-resume-chunk2' || inputs.target == 'enumerate62-resume-last20' || inputs.target == 'enumerate62-last20-witness' || inputs.target == 'enumerate62-weighted-source' || inputs.target == 'enumerate62-source-roster' || inputs.target == 'enumerate62-source-first-hole' || inputs.target == 'enumerate62-source-first-hole-side' || inputs.target == 'enumerate62-s4-gap-side-search' || inputs.target == 'enumerate62-q32-canonical-parent' || inputs.target == 'enumerate62-recovered-batch-witnesses'
+        if: inputs.target == 'enumerate62-adaptive-checkpoint' || inputs.target == 'enumerate62-adaptive-expansion' || inputs.target == 'enumerate62-packed-chunk' || inputs.target == 'enumerate62-packed-batch' || inputs.target == 'enumerate62-resume-chunk2' || inputs.target == 'enumerate62-resume-last20' || inputs.target == 'enumerate62-last20-witness' || inputs.target == 'enumerate62-weighted-source' || inputs.target == 'enumerate62-source-roster' || inputs.target == 'enumerate62-source-first-hole' || inputs.target == 'enumerate62-source-first-hole-side' || inputs.target == 'enumerate62-q32-decider-tree' || inputs.target == 'enumerate62-s4-gap-side-search' || inputs.target == 'enumerate62-q32-canonical-parent' || inputs.target == 'enumerate62-recovered-batch-witnesses'
         run: |
           cp "$GITHUB_WORKSPACE/research/im-results/agent32-source-queue/Agent32SourceBackwards.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent32-source-queue/Agent32SourceEncoding.v" original/verify/
@@ -124,12 +125,12 @@ jobs:
         run: |
           cp "$GITHUB_WORKSPACE/research/im-results/agent5-weighted-tnf-queue/Agent5Last20Witness.v" original/verify/
       - name: Add exact source zero-delay checker
-        if: inputs.target == 'enumerate62-zero-delay' || inputs.target == 'enumerate62-weighted-source' || inputs.target == 'enumerate62-source-roster' || inputs.target == 'enumerate62-source-first-hole' || inputs.target == 'enumerate62-source-first-hole-side' || inputs.target == 'enumerate62-s4-gap-side-search' || inputs.target == 'enumerate62-recovered-batch-witnesses'
+        if: inputs.target == 'enumerate62-zero-delay' || inputs.target == 'enumerate62-weighted-source' || inputs.target == 'enumerate62-source-roster' || inputs.target == 'enumerate62-source-first-hole' || inputs.target == 'enumerate62-source-first-hole-side' || inputs.target == 'enumerate62-q32-decider-tree' || inputs.target == 'enumerate62-s4-gap-side-search' || inputs.target == 'enumerate62-recovered-batch-witnesses'
         run: |
           cp "$GITHUB_WORKSPACE/research/im-results/agent8-adaptive-source-plan/Agent8ZeroDelay.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent8-adaptive-source-plan/Agent8ExactLeaf.v" original/verify/
       - name: Add direct weighted source proof
-        if: inputs.target == 'enumerate62-weighted-source' || inputs.target == 'enumerate62-source-roster' || inputs.target == 'enumerate62-source-first-hole' || inputs.target == 'enumerate62-source-first-hole-side' || inputs.target == 'enumerate62-s4-gap-side-search' || inputs.target == 'enumerate62-recovered-batch-witnesses'
+        if: inputs.target == 'enumerate62-weighted-source' || inputs.target == 'enumerate62-source-roster' || inputs.target == 'enumerate62-source-first-hole' || inputs.target == 'enumerate62-source-first-hole-side' || inputs.target == 'enumerate62-q32-decider-tree' || inputs.target == 'enumerate62-s4-gap-side-search' || inputs.target == 'enumerate62-recovered-batch-witnesses'
         run: |
           cp "$GITHUB_WORKSPACE/research/im-results/agent8-adaptive-source-plan/Agent8SourceWF.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent8-adaptive-source-plan/Agent8WeightedSource.v" original/verify/
@@ -157,7 +158,7 @@ jobs:
           cp "$GITHUB_WORKSPACE/research/im-results/agent44-source-roster/Agent44Q32RemainderBranchProbe.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent8-adaptive-source-plan/Agent8Chunk2FirstHole.v" original/verify/
       - name: Add source first-hole frontier proof
-        if: inputs.target == 'enumerate62-source-first-hole' || inputs.target == 'enumerate62-source-first-hole-side'
+        if: inputs.target == 'enumerate62-source-first-hole' || inputs.target == 'enumerate62-source-first-hole-side' || inputs.target == 'enumerate62-q32-decider-tree'
         run: |
           cp "$GITHUB_WORKSPACE/research/im-results/agent50-weighted-tnf-pilot/SourceResidualRoster.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent47-rooted-tnf/Agent47SourceWitness.v" original/verify/
@@ -217,6 +218,7 @@ jobs:
             enumerate62-source-roster) make -f Makefile.coq -j 2 Agent47SourceSweep.vo && make -f Makefile.coq -j 2 Agent47SourceChunk2.vo Agent47SourceTree.vo Agent44Q32RemainderBranchProbe.vo && make -f Makefile.coq -j 2 Agent8Chunk2FirstHole.vo ;;
             enumerate62-source-first-hole) make -f Makefile.coq -j 2 Agent47SourceSweep.vo && make -f Makefile.coq -j 2 Agent47SourceChunk2.vo Agent47SourceTree.vo Agent44Q32CanonicalParent.vo && make -f Makefile.coq -j 2 Agent8Chunk2FirstHole.vo Agent50Q32ParentTreeSearch.vo Agent44ChunkSideSearch.vo Agent44Q32ParentTreeIntegration.vo Agent44Q32DeciderTree.vo ;;
             enumerate62-source-first-hole-side) make -f Makefile.coq -j 2 Agent47SourceSweep.vo && make -f Makefile.coq -j 2 Agent47SourceChunk2.vo Agent47SourceTree.vo Agent44Q32CanonicalParent.vo && make -f Makefile.coq -j 2 Agent8Chunk2FirstHole.vo Agent44ChunkSideSearch.vo Agent44Chunk2FirstHoleSideSearch.vo ;;
+            enumerate62-q32-decider-tree) make -f Makefile.coq -j 2 Agent47SourceSweep.vo && make -f Makefile.coq -j 2 Agent47SourceChunk2.vo Agent47SourceTree.vo Agent44Q32CanonicalParent.vo && make -f Makefile.coq -j 2 Agent44Q32DeciderTree.vo ;;
             enumerate62-s4-gap-side-search) make -f Makefile.coq -j 2 Agent47SourceWitness.vo Agent44S4GapSideSearch.vo ;;
           esac
       - name: Preserve recovered source witness proof
