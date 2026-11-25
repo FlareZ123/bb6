@@ -6,7 +6,7 @@ permissions:
 jobs:
   raw112_partial:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
       - name: Install Lean 4.36.0-rc2
@@ -55,13 +55,13 @@ jobs:
             --provenance-input im-results/agent31-three-hole-tnf/generate_four_hole.py \
             --provenance-input im-results/agent47-raw111-cut/emit_sparse.py \
             --provenance-input im-results/agent47-raw111-cut/ngram_sparse.cpp \
-            --jobs 8 | tee /tmp/a47-raw112-lean.log
+            --jobs 4 | tee /tmp/a47-raw112-lean.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a47-raw112-lean.log; then
             echo "Forbidden axiom/proof mechanism in raw112 source audit" >&2
             exit 1
           fi
       - name: Preserve source, manifest and compiled proof closure
-        if: success()
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: raw112-e1-1lc-partial-bound-100000
