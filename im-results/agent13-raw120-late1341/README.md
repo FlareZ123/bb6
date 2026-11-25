@@ -1,10 +1,10 @@
 # Raw120 E0=1LB index 1341: exact late halt
 
-**Status: computational classification and complete copied-interface Lean trace proof; original-source semantic audit pending.** Two independent primitive simulators and the packed-stack generator agree that the partial table
+**Status: exact weighted threshold kernel-checked locally using original-source coverage artifacts; fresh repository-source CI in progress.** Two independent primitive simulators and the packed-stack generator agree that the partial table
 
 `1RB---_1RC0LF_0RD0RF_1LD1RE_1LB1LE_0RA0LE`
 
-(the exact index 1341 of the pinned 4351-leaf 1LB roster) first queries A1 after **224705** live steps. Head = 147; visited interval [-382,151]; 521 ones. The sole halt completion thus has 224706 primitive steps from canonical blank A. F0=0RA adds exactly one possible zero-write initial step; the complete incoming-delay list is [0,1]. The proposed exact weighted threshold for the entire 25-completion cylinder is **224707**. The other 24 completions have no halt transitions at all.
+(the exact index 1341 of the pinned 4351-leaf 1LB roster) first queries A1 after **224705** live steps. Head = 147; visited interval [-382,151]; 521 ones. The sole halt completion thus has 224706 primitive steps from canonical blank A. F0=0RA adds exactly one possible zero-write initial step; the complete incoming-delay list is [0,1]. The exact weighted threshold for the entire 25-completion cylinder is **224707**. The other 24 completions have no halt transitions at all.
 
 This supersedes the provisional 3793 sibling bound and removes the need for a nonhalting certificate for index 1341. It does not by itself close the whole 1LB sibling, raw120, or BB(6).
 
@@ -19,9 +19,9 @@ Here L and R are arbitrary natural-number tails. With W(b,n,x) = b^n (x+1) - 1, 
 The E1 leftward sweep independently gives
 `runP table n ⟨4,W(2,n,L),R⟩ = some ⟨4,L,W(2,n,R)⟩`.
 
-Late1341Macro.lean, Late1341Repeat.lean and Late1341Action.lean prove these equations and the cost-preserving action-list checker. generate_fast.py emits 116 independently checked shards. The exact trace consists of 1,050 repeated 18-step actions (174,960 primitive transitions), 1,253 E1 actions (22,280 transitions), and 2,304 ordinary runs (27,465 transitions). All 116 shards and the final joined `fastQuery` compiled locally in Lean 4.36.0-rc2 against the copied exact computational interface, with the standard axioms [propext, Classical.choice, Quot.sound]. This is not yet a full original-source proof of the weighted consumer.
+Late1341Macro.lean, Late1341Repeat.lean and Late1341Action.lean prove these equations and the cost-preserving action-list checker. generate_fast.py emits 116 independently checked shards. The exact trace consists of 1,050 repeated 18-step actions (174,960 primitive transitions), 1,253 E1 actions (22,280 transitions), and 2,304 ordinary runs (27,465 transitions). All 116 shards and the final joined `fastQuery` compiled locally in Lean 4.36.0-rc2 against the copied exact computational interface, with the standard axioms [propext, Classical.choice, Quot.sound]. A subsequent local run used the original-source compiled coverage/zipper dependencies from successful raw60 artifact 14996790073. PackedZipper, equivalent local macro/base sources, the repeat and action modules, all 116 shards, the joined trace and Raw120Late1341 compiled. The final `lateChecked`, `exact_halt`, `bound`, and `exact_weighted` all have only [propext, Classical.choice, Quot.sound]. The local macro proof and minimal generated base were mathematically equivalent variants, so fresh exact repository-source CI remains necessary for repository acceptance.
 
-The primitive generate.py path remains a fallback. It emits the same exact table and a 225-segment replay. Raw120Late1341.lean consumes the `query` theorem through the existing ZipThreeHoleAudit and proposes `lateChecked B hB`, `exact_halt` and `exact_weighted`. The accelerated generator preserves the same interface; no trusted Python arithmetic is needed for any accepted theorem.
+The primitive generate.py path remains a fallback. It emits the same exact table and a 225-segment replay. Raw120Late1341.lean consumes the `query` theorem through the existing ZipThreeHoleAudit and proves `lateChecked B hB`, `exact_halt`, `bound` and `exact_weighted`. The accelerated generator preserves the same interface; no trusted Python arithmetic is needed for any accepted theorem.
 
 Reproduce from the repository root:
 ```sh
@@ -32,3 +32,5 @@ python tools/lean_compile_closure.py --workdir /tmp/a13-late1341 --jobs 3 im-res
 ```
 
 For ingestion, render the exact leaf as `.last 224705 (0,true)` and use `lateChecked B hB` instead of reducing the entire primitive trace a second time. If nested inside a checked subtree, expose it as its own child and compose with the split checker. Preserve all other sibling obligations. No change to the accepted canonical roster is claimed.
+
+The complete 1LB ingestion is implemented in `../agent3-tnf-raw120/generate_sibling.py` at commit 14d793565f2add1afbad5c0c68b22cf2d10a5a36. Manual source run [45687881460](https://github.com/FlareZ123/bb6/actions/runs/45687881460) checks both the exact repository trace and the generated sibling tree; pending, not a claimed sibling cover.

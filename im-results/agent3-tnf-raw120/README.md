@@ -18,7 +18,7 @@ Each E0 alternative has mass 25^5 = 9,765,625 raw completions. The ten immediate
 | 0LB | Candidate complete; custom leaves source-checked locally | 520 | [0LB dossier](0LB-dossier.md) |
 | 0LF | Candidate complete; custom leaves source-checked locally | 656 | [0LF dossier](0LF-dossier.md) |
 | 1LA | Candidate complete; whole-sibling check dispatched | 13113 | [1LA dossier](1LA-dossier.md) |
-| 1LB | Five hard leaves remain after FAR, sweep, late-query and BiDFA discovery | 3793 (provisional) | [1LB dossier](1LB-dossier.md) |
+| 1LB | Candidate complete; four hard nonhalters source-accepted, late leaf exact weighted bound locally kernel-checked; whole-sibling CI pending | 224707 | [1LB dossier](1LB-dossier.md) |
 | 1RA, 1RF | First-hole enumeration and FAR screening complete | — | 4374 / 6411 open leaves, 4286 / 6335 FAR hits |
 | 0LA, 0RA, 1RC | Candidate work in progress | — | see LA and other sibling research |
 
