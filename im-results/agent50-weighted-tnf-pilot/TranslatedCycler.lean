@@ -457,7 +457,7 @@ theorem translatedCyclerCheckRight_sound {m : Machine}
           have hp' : 0 < period := of_decide_eq_true h₁.1
           have hbudget' : budget ≤ endBudget := of_decide_eq_true h₂.1
           have heq' : EqLimit budget c endConfig := eqLimitB_sound h₂.2
-          have hrun' : BRun m period (budget,c) (endBudget,endConfig) :=
+          have hrun' : BRun m period budget c endBudget endConfig :=
             boundedRun_sound hcycle
           exact TranslatedCycle.neverBlank hentry hp'
             ⟨endBudget,endConfig,hrun',hbudget',heq'⟩
