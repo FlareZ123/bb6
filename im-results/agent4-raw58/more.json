@@ -1131,11 +1131,13 @@
     "custom": {
       "157": "BB6Coverage.Agent4LF157",
       "294": "BB6Coverage.Agent4LF294",
+      "296": "BB6Coverage.Agent4LF296",
       "314": "BB6Coverage.Agent4LF314"
     },
     "imports": [
       "Raw58LF157",
-      "Raw58LFPair"
+      "Raw58LFPair",
+      "Raw58LF296"
     ],
     "auto_classify": true,
     "automata": {
