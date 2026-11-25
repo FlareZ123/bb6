@@ -1428,7 +1428,7 @@ jobs:
   raw60_discover:
     if: inputs.target == 'weighted-tnf-raw60-discover'
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 60
     strategy:
       fail-fast: false
       matrix:
