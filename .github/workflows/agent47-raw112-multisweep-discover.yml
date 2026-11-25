@@ -1,0 +1,29 @@
+name: Agent 47 raw112 multi-block discovery
+on:
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: Concrete prefix length for candidate discovery
+        required: false
+        default: "5000"
+permissions:
+  contents: read
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Discover multi-block return families
+        run: |
+          set -euo pipefail
+          python im-results/agent47-raw112-cut/discover_multisweep.py --limit "${{ inputs.limit }}" | tee /tmp/raw112-multisweep-discovery.log
+      - name: Preserve generated proof candidates
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw112-multisweep-candidates
+          path: |
+            im-results/agent47-raw112-cut/Raw112Multisweep10.lean
+            im-results/agent47-raw112-cut/Raw112Multisweep15.lean
+            /tmp/raw112-multisweep-discovery.log
