@@ -69,3 +69,8 @@ A slot-by-slot comparison against `im-results/agent13-roster-convergence/canonic
 | 600, 700 | 10 | 17 | B0=1RC, C0=1LB |
 
 The common firstOneCylinder parent also fixes A0=1RB. This is exact direct extension against the canonical-124 JSON tables. It does **not** establish that these five entries survive the canonical78 `covered` filter, nor that a single q0 child closes an entire 9-/10-hole parent. The canonical78 membership audit is still pending; see `ParentMembership.lean` and `.github/workflows/agent5-q0-parent-membership.yml`.
+
+- Offset 2700: workflow run [45580679383](https://github.com/FlareZ123/bb6/actions/runs/45580679383), artifact `q0-held-blockfar-Q02700-runs-5` (ID `15007881761`, 1,173,866 bytes). Direct certificate; kernel check passed.
+- Offset 400a: workflow run [45580736857](https://github.com/FlareZ123/bb6/actions/runs/45580736857), artifact `q0-held-blockfar-Q00400A-runs-8` (ID `15008740084`, 1,221,367 bytes). Direct certificate; kernel check passed.
+
+Thus offsets 300, 400a, 400b, and 2700 are now verified. Offset 700 (run `45580752871`) was still compiling at the latest check.
