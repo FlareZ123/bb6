@@ -170,3 +170,10 @@ The workflow has a `catalogue_crosswalk` mode that can reuse a previously built 
 - A NonHalt source match at a single unvisited HHH row is a candidate one-hole cylinder cover. A Halt source match is recorded only as an individual halting-machine candidate; it is not treated as a cover of the other 24 completions.
 
 The crosswalk is not a proof. Each candidate still needs its source theorem imported, the state permutation/table and first-use address proved, and a kernel-checked `Cover` adapter. Halt candidates additionally need an explicit primitive-step bound.
+
+
+## Parallel A6 canonical76 bridge (accepted source ingestion; count pending)
+
+Agent48's `A6Canonical76Ingestion.lean` has an accepted source-connected bridge (run 45710993495, artifact 15067457569). It proves that `BB6.Agent19HardRoot.p139` occurs exactly once in the accepted 76-roster and that grafting the A6 rooted frontier preserves the weighted-7014 quotient dichotomy. It does **not** close that parent: the dependent `A6_remaining` residual-list cardinality is still pending, and its residual Covers remain open.
+
+Do not assume this A6 `p139` table is identical to the `championResidual` parent used by the 177 composition; establish exact table identity before combining them. The A6 bridge is a potentially useful refinement of another canonical76 obligation, not a reduction of the 177 count until its residual count and Covers are certified.
