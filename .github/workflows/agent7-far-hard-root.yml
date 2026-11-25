@@ -121,7 +121,7 @@ jobs:
             echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           fi
       - name: Independently check every hit against infinite-tape semantics
-        if: ${{ !inputs.batch_only && !inputs.wide132_only }}
+        if: ${{ !inputs.batch_only && !inputs.wide132_only && !inputs.sibling_integration_only }}
         run: |
           set -euo pipefail
           if [[ ! -s /tmp/hits.txt ]]; then echo 'No candidate found in this shard'; exit 0; fi
@@ -212,4 +212,5 @@ jobs:
             /tmp/hit-proof.log
             /tmp/far-smt.out
             /tmp/far-smt.log
+            /tmp/a7-sibling-proof.log
           if-no-files-found: warn
