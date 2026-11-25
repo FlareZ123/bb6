@@ -14,17 +14,20 @@ Open Scope string_scope.
 Definition recovered_held_2800_parent : TM :=
   TM_from_str "1RB---_1LC---_------_------_------_------".
 
-Lemma recovered_held_2800_refines_parent :
-    source_refinesb recovered_held_2800 recovered_held_2800_parent = true.
-Proof.
-  vm_compute.
-Qed.
-
 Lemma recovered_held_2800_child_of_parent :
     is_child_of recovered_held_2800 recovered_held_2800_parent.
 Proof.
-  exact ((source_refinesb_spec recovered_held_2800
-    recovered_held_2800_parent).mp recovered_held_2800_refines_parent).
+  unfold is_child_of.
+  intros [q s].
+  destruct q; destruct s; vm_compute;
+    all: first [left; reflexivity | right; reflexivity].
+Qed.
+
+Lemma recovered_held_2800_refines_parent :
+    source_refinesb recovered_held_2800 recovered_held_2800_parent = true.
+Proof.
+  apply (proj2 (source_refinesb_spec _ _)).
+  exact recovered_held_2800_child_of_parent.
 Qed.
 
 (* Source-side complement preservation: every completion of the parent
@@ -66,14 +69,54 @@ Qed.
 Definition recovered_held_2800_checkpoint :=
   SearchQueue_upds decider (q_i 2800 100) 1000000%N.
 
-(* Test the actual held checkpoint, not a copied table string or a count:
-    some held node is a source refinement of the independently certified
-    FARv3 residual. *)
+(* Exact pointwise table equality, computed from the source transition
+    serializer. This avoids relying on the source roster's boolean checker
+    to perform the search; its correctness is proved below. *)
+Definition source_table_eqb (a b : TM) : bool :=
+  forallb (fun q => forallb (fun s =>
+    String.eqb (Trans_to_str (a (q,s))) (Trans_to_str (b (q,s))))
+    all_syms) all_qs.
+
+Lemma Trans_to_str_injective (x y : option (Sym * dir * Q)) :
+    Trans_to_str x = Trans_to_str y -> x = y.
+Proof.
+  destruct x as [[w [d q]]|]; destruct y as [[w' [d' q']]|];
+    simpl; try discriminate.
+  intro H.
+  destruct w, w', d, d', q, q'; simpl in H; try discriminate; reflexivity.
+Qed.
+
+Theorem source_table_eqb_spec (a b : TM) :
+    source_table_eqb a b = true ->
+    is_child_of a b /\\ is_child_of b a.
+Proof.
+  unfold source_table_eqb.
+  intro H.
+  assert (Hstr : forall q s,
+      Trans_to_str (a (q,s)) = Trans_to_str (b (q,s))).
+  { intros q s.
+    assert (Hq : In q all_qs) by apply all_qs_spec.
+    assert (Hs : In s all_syms) by apply all_syms_spec.
+    apply forallb_forall with (x:=q) in H; [|exact Hq].
+    apply forallb_forall with (x:=s) in H; [|exact Hs].
+    destruct (String.eqb_spec (Trans_to_str (a (q,s)))
+      (Trans_to_str (b (q,s)))) as [Heq|Hneq].
+    - exact Heq.
+    - discriminate.
+  }
+  split; intros [q s]; right.
+  - apply Trans_to_str_injective.
+    exact (Hstr q s).
+  - apply Trans_to_str_injective.
+    symmetry.
+    exact (Hstr q s).
+Qed.
+
+(* Test the actual held checkpoint using exact source-table equality, not a
+    copied JSON string or a count. *)
 Definition recovered_held_2800_checkpoint_memberb : bool :=
   existsb
-    (fun x =>
-      source_refinesb (tm x) recovered_held_2800 &&
-      source_refinesb recovered_held_2800 (tm x))
+    (fun x => source_table_eqb (tm x) recovered_held_2800)
     (snd recovered_held_2800_checkpoint).
 
 Theorem recovered_held_2800_checkpoint_member :
@@ -93,13 +136,10 @@ Proof.
     recovered_held_2800_checkpoint in H.
   apply existsb_exists in H.
   destruct H as [x [Hx Href]].
-  apply andb_true_iff in Href.
+  apply source_table_eqb_spec in Href.
   destruct Href as [Hforward Hbackward].
   exists x.
-  repeat split.
-  - exact Hx.
-  - exact ((source_refinesb_spec (tm x) recovered_held_2800).mp Hforward).
-  - exact ((source_refinesb_spec recovered_held_2800 (tm x)).mp Hbackward).
+  repeat split; assumption.
 Qed.
 
 (* The source-roster consumer converts the FARv3 cylinder theorem into the
