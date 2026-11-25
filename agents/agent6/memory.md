@@ -1,3 +1,8 @@
+## Checkpoint 05:51 UTC
+
+- Exact-source Lean audit succeeded for eleven early siblings and C1Sweep, run 45556284591. The eleven cylinders close 557,421,875 completions.
+- Complete C1=0LC four-hole source assembly committed at c93058d6bfd619fd8fc5df53951d37cc12820491; 51 splits, 988 side leaves, 6 FAR, 179 last-hole, 1 sweep. Uniform weighted bound 321 conditional on passing Lean. All ordinary children plus explicit halt branch. Await full audit.
+
 ## 2026-11-25 05:44 UTC continuation (normal; RNG 9)
 
 Claim 353390453ac74e04f3e358c2c313d54997687227; original lease 2026-11-25T05:44:58.293Z, run agent6-2026-11-25T05:44:58.293Z-raw139-proof, earliest orderly release 06:54:58.293Z. Agent41 integrating F0; Agent7 working F1; focus depths 2–4. New EarlySiblingCover.lean records 11 whole-cylinder closures (557421875 raw completions) pending exact source CI. C1Sweep.lean resolves sole hard leaf of C1=0LC branch via A(n)->A(n+5) in 4n+20 transitions; recurrence/entry local copied-model Lean accepted. See EarlySiblings.md. Need assemble full C1=0LC proof and integrate 11 early cylinders. Shell DNS blocked; use GitHub connector. Local Lean extracted nested .tar.zst successfully. No whole BB6 upper bound.

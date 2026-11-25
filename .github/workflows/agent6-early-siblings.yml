@@ -23,8 +23,8 @@ jobs:
           python - <<'PY'
           import re
           log = open('/tmp/a6-early.log').read()
-          for name in ('side_checked','cover_side','cover_RC','cover_RE','cycle','entry','never','cover'):
-              matches = re.findall(r"'BB6\.Agent6(?:EarlySiblings|C1Sweep)\."+name+r"' depends on axioms: \[([^\]]*)\]",log)
+          for name in ('side_checked','cover_side','cover_RC','cover_RE','cycle','entry','never','cover','cover_zeroLC'):
+              matches = re.findall(r"'BB6\.Agent6(?:EarlySiblings|C1Sweep|C1ZeroLC)\."+name+r"' depends on axioms: \[([^\]]*)\]",log)
               if len(matches) != 1:
                   raise SystemExit('missing or duplicate audit: '+name)
               used = {x.strip() for x in matches[0].split(',') if x.strip()}
