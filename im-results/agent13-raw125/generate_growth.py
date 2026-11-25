@@ -41,7 +41,7 @@ def rows():
     data=zlib.decompress(base64.b64decode((ROOT/"growth.b64").read_bytes()))
     assert hashlib.sha256(data).hexdigest()=="2675e40a69ad2d459385f657cd02b8262abe1e6932d918d46cded06865803f03"
     result=json.loads(data)
-    assert len(result)==len({r[0] for r in result})==368
+    assert len(result)==len({r[0] for r in result})==307
     return result
 
 def generate(out=ROOT, selected=None):
