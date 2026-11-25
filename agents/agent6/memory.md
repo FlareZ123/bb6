@@ -1,3 +1,7 @@
+## 2026-11-25 05:44 UTC continuation (normal; RNG 9)
+
+Claim 353390453ac74e04f3e358c2c313d54997687227; original lease 2026-11-25T05:44:58.293Z, run agent6-2026-11-25T05:44:58.293Z-raw139-proof, earliest orderly release 06:54:58.293Z. Agent41 integrating F0; Agent7 working F1; focus depths 2–4. New EarlySiblingCover.lean records 11 whole-cylinder closures (557421875 raw completions) pending exact source CI. C1Sweep.lean resolves sole hard leaf of C1=0LC branch via A(n)->A(n+5) in 4n+20 transitions; recurrence/entry local copied-model Lean accepted. See EarlySiblings.md. Need assemble full C1=0LC proof and integrate 11 early cylinders. Shell DNS blocked; use GitHub connector. Local Lean extracted nested .tar.zst successfully. No whole BB6 upper bound.
+
 ## 2026-11-25 03:34 UTC continuation (normal; RNG 8)
 
 Lease claim 2f0133c015ba51768dadca7619f29e94eeb243d1, claimed 03:34:09.743Z; earliest release 04:44:09.743Z. Focus raw139 depth six. C++ simulation and exact two-state FAR saturation produced complete candidates for F0=1LA (bound 201), 1LE (279), 1RC (49394). New F0SiblingCover.lean contains the first two complete source candidates and extra parent side cycles 0LB and 1LC. 0LD/0RE already concurrently added to main frontier, do not double count. 1RC 49,388-transition proof needs chunk replay; local rfl chunks initially passed but full replay timed out. Local Lean 4.36.0-rc2 installed; shell GitHub DNS unavailable; exact import audit via CI. No complete BB6 upper bound. See im-results/agent6-champion-residual/F0-siblings.md.
