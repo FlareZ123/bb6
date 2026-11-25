@@ -18,6 +18,11 @@ on:
         required: true
         default: "3647718b5df22e1a61462dec0376bd204526285a"
         type: string
+      compile_raw10_cryptids_leaf:
+        description: "Compile the source-pinned raw10 last-hole leaf adapter instead of the canonical r4 ingestion"
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -92,6 +97,7 @@ jobs:
           lake build BusyBeaver.Bridge Cryptids.Machines
 
       - name: Compile the canonical77 r4 graft with its complete source closure
+        if: ${{ !inputs.compile_raw10_cryptids_leaf }}
         env:
           CANONICAL77_DIR: /tmp/canonical77
           CANONICAL77_MANIFEST: /tmp/canonical77-manifest/manifest/canonical77-base-manifest.json
@@ -102,7 +108,32 @@ jobs:
           set -euo pipefail
           bash im-results/agent50-weighted-tnf-pilot/reproduce-canonical-r4.sh
 
+      - name: Compile source-backed raw10 last-hole leaf
+        if: ${{ inputs.compile_raw10_cryptids_leaf }}
+        env:
+          CANONICAL77_DIR: /tmp/canonical77
+          CANONICAL77_MANIFEST: /tmp/canonical77-manifest/manifest/canonical77-base-manifest.json
+          UPSTREAM_ROOT: ${{ github.workspace }}/upstream
+          WORKDIR: ${{ github.workspace }}/.tmp/agent19-raw10-cryptids-leaf
+          JOBS: "4"
+        run: bash im-results/agent19-hard-root-crosswalk/reproduce-raw10-cryptids-leaf.sh
+
+      - name: Upload source-backed raw10 last-hole leaf closure
+        if: ${{ inputs.compile_raw10_cryptids_leaf }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw10-cryptids-leaf-certified
+          path: |
+            .tmp/agent19-raw10-cryptids-leaf/build/
+            .tmp/agent19-raw10-cryptids-leaf/compile.log
+            .tmp/agent19-raw10-cryptids-leaf/crosswalk.json
+            .tmp/agent19-raw10-cryptids-leaf/crosswalk.sha256
+            .tmp/agent19-raw10-cryptids-leaf/axiom-summary.json
+          if-no-files-found: error
+          retention-days: 30
+
       - name: Upload the compiled canonical r4 ingestion closure
+        if: ${{ !inputs.compile_raw10_cryptids_leaf }}
         uses: actions/upload-artifact@v4
         with:
           name: canonical-r4-ingestion-certified
