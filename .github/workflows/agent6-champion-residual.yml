@@ -673,6 +673,84 @@ jobs:
                   print(name, sorted(used))
           PY
 
+      - name: Compile 177-obligation canonical76 composition after F1 batch
+        if: ${{ inputs.catalogue_crosswalk && !inputs.raw139_cryptids_leaf && inputs.raw121_graft_run_id == '' }}
+        env:
+          SOURCE_SHA: ${{ inputs.source_sha || github.sha }}
+          CORE_RUN_ID: ${{ inputs.core_run_id }}
+        run: |
+          set -euo pipefail
+          test -s /tmp/a47-canonical76/CanonicalTwoParentRosterOnly.olean
+          for module in F0SiblingIntegrationExtended.olean ChampionF1ZeroRCIntegration.olean ChampionF1OneLAIntegration.olean ChampionF1ZeroRBZeroLAOneRDIntegration.olean ChampionF1OneLBIntegration.olean; do
+            test -s "/tmp/a6-champion-residual/build/$module" || {
+              echo "missing core/F1 module: $module" >&2
+              exit 1
+            }
+          done
+          export LEAN_PATH="/tmp/a47-canonical76:/tmp/a47-canonical:/tmp/a6-champion-residual/build:/tmp/a6-champion-residual/imports:$GITHUB_WORKSPACE"
+          lean -o /tmp/a6-champion-residual/build/ChampionResidualCanonicalTwoParentComposition.olean \
+            crosswalk-source/im-results/agent6-champion-residual/ChampionResidualCanonicalTwoParentComposition.lean \
+            | tee /tmp/a6-canonical76-177.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a6-canonical76-177.log; then
+            echo "forbidden axiom or native_decide in canonical76 composition" >&2
+            exit 1
+          fi
+          python3 - /tmp/a6-canonical76-177.log <<'PY'
+          import json, pathlib, re, sys, os
+          log = pathlib.Path(sys.argv[1]).read_text()
+          allowed = {"propext", "Classical.choice", "Quot.sound", "A6_frontier"}
+          names = (
+              "BB6.Agent6CanonicalTwoParentComposition.championResidual_mem_roster76",
+              "BB6.Agent6CanonicalTwoParentComposition.championResidual_unique_roster76",
+              "BB6.Agent6CanonicalTwoParentComposition.championResidual_unique_by_table",
+              "BB6.Agent6CanonicalTwoParentComposition.canonical76_other_address_count",
+              "BB6.Agent6CanonicalTwoParentComposition.canonical76_other_table_count",
+              "BB6.Agent6CanonicalTwoParentComposition.cover_championResidual_from_102_leaves",
+              "BB6.Agent6CanonicalTwoParentComposition.total_remaining_obligations_count",
+              "BB6.Agent6CanonicalTwoParentComposition.refinedCanonical76Roster_count",
+              "BB6.Agent6CanonicalTwoParentComposition.exact_from_canonical76_and_102_raw139_leaves",
+          )
+          for name in names:
+              pattern = r"'" + re.escape(name) + r"' depends on axioms: \[([^\]]*)\]"
+              match = re.search(pattern, log)
+              if match:
+                  used = {x.strip() for x in match.group(1).split(",") if x.strip()}
+              elif "'" + name + "' does not depend on any axioms" in log:
+                  used = set()
+              else:
+                  raise SystemExit("missing axiom audit: " + name)
+              if not used <= allowed:
+                  raise SystemExit(f"nonstandard axioms: {name}: {used - allowed}")
+              print(name, sorted(used))
+          summary = {
+              "status": "conditional_exactness_interface",
+              "base_roster": 76,
+              "nonchampion_parent_obligations": 75,
+              "remaining_raw139_f1_leaves": 102,
+              "total_remaining_obligations": 177,
+              "theorem": names[-1],
+              "source_sha": os.environ.get("SOURCE_SHA"),
+              "core_run_id": os.environ.get("CORE_RUN_ID"),
+              "canonical76_artifact_run_id": 45647053824,
+              "canonical77_artifact_run_id": 45554648116,
+              "note": "All 177 Covers remain proof obligations; this is not an exact BB(6) proof."
+          }
+          pathlib.Path("/tmp/a6-canonical76-177-summary.json").write_text(
+              json.dumps(summary, indent=2) + "\n"
+          )
+          PY
+      - uses: actions/upload-artifact@v4
+        if: ${{ inputs.catalogue_crosswalk && !inputs.raw139_cryptids_leaf && inputs.raw121_graft_run_id == '' }}
+        with:
+          name: agent6-canonical76-177-obligation-composition-${{ inputs.source_sha || github.sha }}
+          include-hidden-files: true
+          path: |
+            /tmp/a6-canonical76-177-summary.json
+            /tmp/a6-canonical76-177.log
+            /tmp/a6-champion-residual/build/ChampionResidualCanonicalTwoParentComposition.olean
+          if-no-files-found: error
+          retention-days: 14
+
       - name: Checkout pinned Cryptids for A6 composition imports
         if: ${{ inputs.a6_run_id != '' && inputs.raw121_graft_run_id == '' }}
         uses: actions/checkout@v4
