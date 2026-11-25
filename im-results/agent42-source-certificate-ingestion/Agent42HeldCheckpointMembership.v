@@ -1,6 +1,6 @@
 From BusyCoq Require Import Enumerate62 CTL62 Individual62 Agent8AdaptiveSource
   Agent8WeightedSource SourceResidualRoster Agent5RecoveredHeld.
-From Coq Require Import List NArith Strings.String Classical_Prop.
+From Coq Require Import List Bool NArith Strings.String Classical_Prop.
 Import ListNotations.
 Import TNF_Node.
 Open Scope nat_scope.
@@ -71,7 +71,9 @@ Definition recovered_held_2800_checkpoint :=
     FARv3 residual. *)
 Definition recovered_held_2800_checkpoint_memberb : bool :=
   existsb
-    (fun x => source_refinesb (tm x) recovered_held_2800)
+    (fun x =>
+      source_refinesb (tm x) recovered_held_2800 &&
+      source_refinesb recovered_held_2800 (tm x))
     (snd recovered_held_2800_checkpoint).
 
 Theorem recovered_held_2800_checkpoint_member :
@@ -83,17 +85,21 @@ Qed.
 Theorem recovered_held_2800_checkpoint_leaf :
     exists x,
       In x (snd recovered_held_2800_checkpoint) /\
-      is_child_of (tm x) recovered_held_2800.
+      is_child_of (tm x) recovered_held_2800 /\\
+      is_child_of recovered_held_2800 (tm x).
 Proof.
   pose proof recovered_held_2800_checkpoint_member as H.
   unfold recovered_held_2800_checkpoint_memberb,
     recovered_held_2800_checkpoint in H.
   apply existsb_exists in H.
   destruct H as [x [Hx Href]].
+  apply andb_true_iff in Href.
+  destruct Href as [Hforward Hbackward].
   exists x.
-  split.
+  repeat split.
   - exact Hx.
-  - exact ((source_refinesb_spec (tm x) recovered_held_2800).mp Href).
+  - exact ((source_refinesb_spec (tm x) recovered_held_2800).mp Hforward).
+  - exact ((source_refinesb_spec recovered_held_2800 (tm x)).mp Hbackward).
 Qed.
 
 (* The source-roster consumer converts the FARv3 cylinder theorem into the
@@ -127,7 +133,7 @@ Theorem recovered_held_2800_adaptive_obligation
           (q_i 2800 100)) /\
       source_weighted_safe bound x.
 Proof.
-  destruct recovered_held_2800_checkpoint_leaf as [x [Hx Href]].
+  destruct recovered_held_2800_checkpoint_leaf as [x [Hx [Href Hback]]].
   exists x.
   constructor.
   - unfold adaptive_obligations.
