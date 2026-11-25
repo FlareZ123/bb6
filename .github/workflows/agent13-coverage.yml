@@ -3174,7 +3174,7 @@ jobs:
           ]
           profiles = {
             name: {x.strip() for x in axioms.split(",") if x.strip()}
-            for name, axioms in re.findall(r"'([^']+)' depends on axioms: \\[([^\\]]*)\\]", log)
+            for name, axioms in re.findall(r"'([^']+)' depends on axioms: \[([^\]]*)\]", log)
           }
           allowed = {"propext", "Classical.choice", "Quot.sound"}
           for name in required:
