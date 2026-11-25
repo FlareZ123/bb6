@@ -24,6 +24,15 @@ These are disjoint cylinders, each of mass 25^5=9,765,625. The raw60 certificate
 
 These conditionals do not establish an unconditional bound for either child. The previously late unassigned transition of 4338 is closed by a last-hole witness at step 1169. All four recursive proofs below are now source-accepted. The parent itself remains open.
 
+## New exact 1LA exceptional proofs
+
+All three remaining 1LA exceptional partial machines are covered by inductive nonhalting proofs for every compatible completion, with their precise tables in specs.json:
+
+- Per-child index 1379: Raw60LABinary.lean. Arbitrary-tail zero-pair traversal has T(0)=0 and T(n+1)=2T(n)+2n+12. At blank time 14, B([],1^(2n) 0 1111) starts at n=0 and grows indefinitely by two ones.
+- Per-child indices 1383 and 1384: Raw60LAAlternating.lean. Alternating-block conversion and two sweeps give the unary epoch m -> 2m+5, from blank time 11 with m=4, for C1=0LE and 1RB respectively.
+
+Both modules passed Lean 4.36.0-rc2 against a verbatim operational-semantics dependency slice (propext and Quot.sound only). Their source blobs are 65990a19c53c7d4c8f34be32e2a3b162fb92510b and f95806a2d774f17e2211c6fd0e3147f8db041a7d, verified in commit 6e391cb56beca518b64c1f9b47dd8c61e31e2f4d. The generator now has no 1LA exceptions and targets weighted bound 178; the full original-source audit is required before calling this child closed. The 0RF and 0LB specs likewise now contain manual proofs for all exceptions; their unconditional source-audit status must be checked separately.
+
 ## Further mathematical reductions
 
 For global open-list entries 1398/1399, the shared binary-block proof `Raw60LDBinary.lean` proves for arbitrary untouched tails L,R that D((00)^(n+1)11L,R) reaches F with identical tapes. Cost T(0)=8; T(n+1)=2T(n)+8 or +10 according to F1=0LD/0LE. From blank time 2 the C-family grows two zeros per epoch.

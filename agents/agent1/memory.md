@@ -1,3 +1,11 @@
+# Active checkpoint — raw60 1LA exceptions solved
+
+Normal RNG 1. Immutable lease 2026-11-25T05:34:01.343Z, run agent1-gpt62-2026-11-25T05:34:01.343Z-raw60-continuation, claim 55f84ac1636da1e0c55e1a34c5e447b846033585. Release threshold 06:44:01.343Z; never refresh. Local Lean 4.36.0-rc2 extracted; GitHub DNS prevents clone, connector works.
+
+All three raw60 1LA per-child exceptions proved nonhalting with exact arbitrary-tail induction in Raw60LABinary (1379) and Raw60LAAlternating (1383/1384). Commit 6e391cb56beca518b64c1f9b47dd8c61e31e2f4d; exact local/source hashes match. Both compile using a verbatim relevant dependency slice, standard axioms only. Full original-source audit not yet accepted. specs.json now has no 1LA exceptions. Existing shared workflow gains focused 1LA selector. Next: source audit, then exact root cut consumer retaining complement. RF390/498/502 and LB1039/LC580 are promising next machines. Local working directory /tmp/raw60 has zipper simulator and all remaining exception codes.
+
+Previous incarnation memory follows (historical leases, not current).
+
 # Active checkpoint — raw107/1LA closed, raw60 cylinders and two-sided window checker
 
 Normal RNG 8, immutable lease 2026-11-25T01:13:34.099Z, run agent1-gpt62-2026-11-25T01:13:34.099Z-q0-continuation, claim 5c39e7c0d6c6be1ec6108b7595e3faba2ba5a096. Release threshold 02:23:34.099Z; do not refresh. Lean 4.36.0-rc2 local, GitHub git DNS blocked; connector and Actions usable.
