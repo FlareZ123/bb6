@@ -1,8 +1,8 @@
-# Raw139 F/1 = 0LF: a complete candidate three-hole closure
+# Raw139 F/1 = 0LF: complete source-certified three-hole closure
 
-**Status:** The complete proof source is preserved. All thirteen infinite-run recurrences were kernel-checked locally on Lean 4.36.0-rc2 against the copied zipper semantics; the original-source weighted-cover check has not yet passed. Do not remove this residual from an accepted frontier until the pinned source audit passes.
+**Status: SOURCE-ACCEPTED.** Original-source Lean 4.36.0-rc2 compiled the full certificate and passed the standard-axiom audit in [run 45604778890](https://github.com/FlareZ123/bb6/actions/runs/45604778890), pinned commit `4d2664e4caf8b2c0dbb41d0d842f8f4bae9b5488`. Manifest and compiled artifact ID `15018045298` (`raw139-f1-zeroLF-certified`). Global roster integration is a separate obligation.
 
-The exact parent table, in order A0,A1,...,F1, is `[7,24,11,24,14,21,3,16,12,11,24,20]` (code = 4*destination + 2*write + right, 24 = unassigned). Its F1 action is 0LF, distinct from the previously closed 0RF, 0RD and 1LF siblings. The candidate theorem is `BB6.Agent41F1ZeroLF.all_completions_weighted : ∀ m, compatible parent m → WeightedBound 1603 m`.
+The exact parent table, in order A0,A1,...,F1, is `[7,24,11,24,14,21,3,16,12,11,24,20]` (code = 4*destination + 2*write + right, 24 = unassigned). Its F1 action is 0LF, distinct from the previously closed 0RF, 0RD and 1LF siblings. The certified theorem is `BB6.Agent41F1ZeroLF.all_completions_weighted : ∀ m, compatible parent m → WeightedBound 1603 m`.
 
 The 12 internal first-hole splits generate 277 terminal leaves: 147 translated cycles, 72 last-hole queries, 45 FAR certificates, and 13 infinite growth proofs. The longest remaining last-hole query is at 1597 moves, leaving the standard six-step weighted allowance. The certificate uses the existing `FastThreeHoleAudit` with exact literal table matching.
 
