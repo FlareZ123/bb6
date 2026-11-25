@@ -1,0 +1,36 @@
+{
+  "code": 12,
+  "name": "ZeroLD",
+  "limit": 600,
+  "maxd": 3,
+  "counts": {
+    "maxquery": 118,
+    "split": 9,
+    "cycle": 117,
+    "last": 54,
+    "open": 32,
+    "far": 5
+  },
+  "far_overrides": {
+    "21": [
+      0,
+      [
+        0,
+        1,
+        2,
+        3,
+        2,
+        2,
+        4,
+        5,
+        2,
+        2,
+        0,
+        5
+      ]
+    ]
+  },
+  "bound": 124,
+  "cover_sha": "761bce83cf0670a53b52a42b48bc493ebda35d581505c400e6a55a39b2157ac4",
+  "hard_sha": "9b0c00f0e79c4af404c978bc8af69655c9f9c042f186ecfdbc3861fa213aa752"
+}
