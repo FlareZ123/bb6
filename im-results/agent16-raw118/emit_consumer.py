@@ -120,6 +120,7 @@ def main(work: Path) -> None:
         "Raw118TreeBank",
     ]
     header = "\n".join(f"import {name}" for name in imports)
+    entries_text = ",\n".join(entries)
     source = f'''{header}
 
 set_option maxRecDepth 1000000
@@ -130,7 +131,7 @@ namespace BB6.Agent16Raw118Consumer
 open BB6Coverage BB6.Agent16Raw118 BB6.Agent16ResidualCover
 
 def accepted : List (Accepted bound) := [
-{",\n".join(entries)}
+{entries_text}
 ]
 
 def remaining := BB6.Agent16ResidualCover.remaining accepted residuals
