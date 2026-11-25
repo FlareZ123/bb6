@@ -37,7 +37,7 @@ theorem A6_never : NeverHalts BB6.Agent19HardRoot.A6 := by
 
 /-- The exact A6 one-hole cylinder is closed by the existing weighted
 nonhalt adapter, for every score bound. -/
-theorem A6_weighted_certificate (B : Nat) :
+noncomputable def A6_weighted_certificate (B : Nat) :
     WeightedTNFCertificate B
       (BB6.Agent47WeightedHalt.forgetHaltRows BB6.Agent19HardRoot.A6) 6 :=
   BB6.Agent47WeightedHalt.forgetHaltRows_nonhaltCertificate
@@ -216,6 +216,7 @@ theorem A6_refinedRoster_sound :
 #print axioms A6_eq_expectedRLE
 #print axioms A6_never
 #print axioms A6_weighted_certificate
+#print axioms A6_frontier
 #print axioms A6_frontier_sound
 #print axioms A6_remaining_sound
 #print axioms A6_refinedRoster_sound
