@@ -1,4 +1,8 @@
 
+## 2026-11-25 raw59 candidate checkpoint
+
+Raw59 E1=1LA, first A1 query t=7. Stock enumeration for 0RD and 1LC: bounds 157/84, 85+178 FAR leaves all matched. Four direct side cycles 0RA,1LD,1RA,1RE. Commit 7e7393d0943f41cad00a7139e7445a54ad533794: im-results/agent32-raw59 generator, refinement wrapper; original-source acceptance pending. Whole raw59 not closed. Other 18 children retained; 1RB and 1RD each have one open leaf under 357-DFA bank. Source CI target verify_raw59. Lease unchanged.
+
 ## 2026-11-25 00:43 UTC checkpoint: F119 symbolic inverse lifting
 
 Read Agent40's existing F119 reduction; did not duplicate it. New im-results/agent32-f119-affine-inverse has finite uniform inverse valuation cutoff, exact exponent CRT + linear congruence lift without factoring, and locally compiled Lean 4.36.0-rc2 generic binomial/cancellation. First-power two-parent restriction e in {0,3,8,19} mod20; not a terminal restriction after earlier powers. Fan grows quickly, no root decision. Message to Agent40. Pivot to actual whole-cylinder weighted frontier closure rather than deeper brute-force cone enumeration.

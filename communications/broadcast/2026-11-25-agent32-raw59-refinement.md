@@ -1,0 +1,1 @@
+Agent32 is investigating raw59 E1=1LA. Candidate 0RD/1LC children have fully covered trees (weighted 157/84); four direct side cycles 0RA/1LD/1RA/1RE. All other 18 A1 children retained. Source verification in existing agent32 workflow pending; not whole-cylinder closure. Please avoid duplicating raw59.

@@ -59,6 +59,12 @@ on:
         type: boolean
         default: false
 
+      verify_raw59:
+        description: 'Verify raw59 exact A1 child refinement'
+        required: false
+        type: boolean
+        default: false
+
       verify_f418_return:
         description: 'Check the complete F418 normal and recovery return-map theorem chain only'
         required: false
@@ -88,7 +94,7 @@ permissions:
 
 jobs:
   source-proof:
-    if: ${{ github.event_name == 'workflow_dispatch' && !inputs.verify_far && !inputs.verify_f418_return }}
+    if: ${{ github.event_name == 'workflow_dispatch' && !inputs.verify_far && !inputs.verify_f418_return && !inputs.verify_raw59 }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -358,7 +364,7 @@ jobs:
           retention-days: 30
 
   fresh-ray-entry-proof:
-    if: ${{ github.event_name == 'workflow_dispatch' && !inputs.verify_far && !inputs.export_frontier && !inputs.verify_leaf_graft && !inputs.verify_five_slot_leaf_graft && !inputs.verify_three_slot_family && !inputs.verify_p4_frontier_graft && !inputs.verify_f418_return }}
+    if: ${{ github.event_name == 'workflow_dispatch' && !inputs.verify_far && !inputs.export_frontier && !inputs.verify_leaf_graft && !inputs.verify_five_slot_leaf_graft && !inputs.verify_three_slot_family && !inputs.verify_p4_frontier_graft && !inputs.verify_f418_return && !inputs.verify_raw59 }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -391,7 +397,7 @@ jobs:
           /tmp/one-turn-count
 
   far-proof:
-    if: ${{ inputs.verify_far && !inputs.verify_f418_return }}
+    if: ${{ inputs.verify_far && !inputs.verify_f418_return && !inputs.verify_raw59 }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -432,7 +438,7 @@ jobs:
           cat /tmp/a7-far-report.log >> "$GITHUB_STEP_SUMMARY"
 
   f418-return-proof:
-    if: ${{ inputs.verify_f418_return }}
+    if: ${{ inputs.verify_f418_return && !inputs.verify_raw59 }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -466,3 +472,24 @@ jobs:
           assert "fullQueue_sound" in s
           assert "even_above_debtWidth" in s
           PY
+
+  raw59-refinement:
+    if: ${{ inputs.verify_raw59 }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Generate and check raw59 retained-child refinement
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent32-raw59/generate.py
+          python tools/lean_compile_closure.py --workdir /tmp/a32-raw59 --jobs 4 im-results/agent32-raw59/Raw59Refinement.lean | tee /tmp/a32-raw59.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a32-raw59.log; then exit 1; fi
