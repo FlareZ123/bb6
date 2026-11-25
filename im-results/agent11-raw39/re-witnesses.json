@@ -895,11 +895,26 @@
   "grammar": [
     468
   ],
-  "unresolved": [
-    [
-      2172,
-      "1RB0RE1RC---0RD1LE1LD0RA1LE1LF1RA0LF"
-    ]
+  "macro_cycles": [
+    {
+      "index": 2172,
+      "table": "1RB0RE1RC---0RD1LE1LD0RA1LE1LF1RA0LF",
+      "module": "Raw39RE2172.lean",
+      "theorem": "BB6.Agent11Raw39RE2172.never",
+      "entry_steps": 1703,
+      "phase_steps": [
+        92,
+        180,
+        92,
+        364
+      ],
+      "cycle_steps": 728,
+      "block": "11100000",
+      "arbitrary_tail": true,
+      "workflow_run_id": "45657974851",
+      "axiom_audit": "passed"
+    }
   ],
-  "status": "candidate; counter specs not yet Lean checked, stack proof locally checked, original-source audit pending"
+  "unresolved": [],
+  "status": "candidate; leaf 2172 closed by source-checked Lean macro-cycle; 64 counter specs not yet Lean checked and full original-source audit pending; stats.open remains the raw enumeration frontier"
 }
