@@ -1,6 +1,6 @@
 # Raw110: two late-halting leaves and complete-parent proof
 
-**Status (2026-11-25 10:35 UTC): exact parent partition source-accepted; final late-trace composition pending.** The six-hole canonical raw110 table is `1RB---_1RC---_0RD---_1LD1RE_---0LC_------`. Its authentic blank run first queries C1 after seven defined moves. All 24 ordinary C1 children are represented; the early halt child is included in the weighted cutoff 7014. The source-checked partition has exactly two retained one-hole leaves.
+**Status: complete source-accepted raw110 parent closure, run 45597857116.** The six-hole canonical raw110 table is `1RB---_1RC---_0RD---_1LD1RE_---0LC_------`. Its authentic blank run first queries C1 after seven defined moves. All 24 ordinary C1 children are represented; the early halt child is included in the weighted cutoff 7014. The source-checked partition has exactly two retained one-hole leaves.
 
 ## Final two leaves: computational resolution
 
@@ -9,7 +9,7 @@
 | 5/161 | `1RB---_1RC0RA_0RD0LF_1LD1RE_0RB0LC_1LC0LF` | 6659486 | 6659487 |
 | 5/790 | `1RB---_1RC0RA_0RD0LF_1LD1RE_0RB0LC_1LC1RD` | 6766858 | 6766859 |
 
-Each has only A1 unassigned. Its 24 ordinary completions are total and never halt. The halting completion has the displayed score; there is no incoming zero delay because A0=1RB. The primitive simulator and independently derived exact paired sweep recurrence agree on 19203 sweeps and the two step counts. These concrete counts remain computational pending final source replay acceptance.
+Each has only A1 unassigned. Its 24 ordinary completions are total and never halt. The halting completion has the displayed score; the explicit table's blank-delay computation is zero. The primitive simulator and independently derived exact paired sweep recurrence agree on 19203 sweeps and the two step counts. Both concrete counts are now kernel-checked with the original source bridge.
 
 ## Proof architecture and current evidence
 
@@ -17,9 +17,9 @@ Each has only A1 unassigned. Its 24 ordinary completions are total and never hal
 - [45593652030](https://github.com/FlareZ123/bb6/actions/runs/45593652030) **passed** the exact parent cut, including `Raw110ParentResidualMatch` matching the two leaves to the exact partial tables. Artifact `raw110-parent-cut`.
 - `Raw110WordSweep.lean` derives the exact B-return evaluator from Agent13's block/carry macros. `Raw110WordSource.lean` transfers these finite runs to original `BB6Coverage` semantics and supplies weighted coverage of all compatible completions. The original-source bridge job passed in [45592977146](https://github.com/FlareZ123/bb6/actions/runs/45592977146); several uncompressed trace jobs were terminated by runner shutdown, and that workflow was superseded.
 - `Raw110RunSweep.lean` compresses the right word's repeated A-pair and the left word's bit runs. Its exact cost-preserving replay equivalence was kernel-checked locally using Lean 4.36.0-rc2 and the actual relevant macro definitions. `gen_late_trace.py --compressed` generates compact trace shards. [45595393696](https://github.com/FlareZ123/bb6/actions/runs/45595393696) checks their concrete claims and source bridge.
-- `Raw110ParentLateCover.lean` composes the accepted partition and late covers into `raw110_cover B` for B≥6766859. The end-to-end theorem is **not yet source-accepted**. After the compressed late workflow succeeds, dispatch `agent7-raw110-parent.yml` with parent_run=45593652030, late_run=45595393696. The final artifact is `raw110-complete-parent`.
+- `Raw110ParentLateCover.lean` composes the accepted partition and late covers into `BB6.Agent7Raw110.raw110_cover B` for B≥6766859. **Full source verification passed** in [45597857116](https://github.com/FlareZ123/bb6/actions/runs/45597857116), artifact `raw110-complete-parent`. The compressed trace and parent merge are checked in a single runner.
 
-This bound is far below the established champion. Once the final source proof is accepted, graft the full parent Cover into the actual canonical quotient roster using a mixed-bound consumer. No unconditional BB(6) maximality claim follows.
+This bound is far below the established champion. The next integration is to graft the full parent Cover into the actual canonical quotient roster using a mixed-bound consumer. No unconditional BB(6) maximality claim follows.
 
 ## Reproduction
 
