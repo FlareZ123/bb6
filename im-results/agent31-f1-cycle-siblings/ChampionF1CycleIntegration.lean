@@ -24,12 +24,12 @@ def closedF1Cycles (p : PartialMachine) : Bool :=
   sameTable p (parent0LB) ||
   sameTable p (parent1RB) ||
   sameTable p (parent0LC) ||
-  sameTable p (parent0RA0) ||
-  sameTable p (parent0RA1) ||
-  sameTable p (parent0RA6) ||
-  sameTable p (parent0RA8)
+  sameTable p (parent1LC) ||
+  sameTable p (parent1RC) ||
+  sameTable p (parent0LE) ||
+  sameTable p (parent1LE)
 
-/-- The 106-leaf raw139 frontier after 0LF, with eight exact cycle siblings
+/-- The 106-leaf raw139 frontier after 0LF, 1LA, and 0RC, with eight exact cycle siblings
     removed and every other leaf retained. -/
 noncomputable def remainingF1Cycles :
     List (List Move × PartialMachine) :=
@@ -50,13 +50,13 @@ theorem parent1RB_present :
 theorem parent0LC_present :
     ∃ e ∈ remainingF1ZeroRC, sameTable e.2 (parent0LC) = true := by decide
 theorem parent1LC_present :
-    ∃ e ∈ remainingF1ZeroRC, sameTable e.2 (parent0RA0) = true := by decide
+    ∃ e ∈ remainingF1ZeroRC, sameTable e.2 (parent1LC) = true := by decide
 theorem parent1RC_present :
-    ∃ e ∈ remainingF1ZeroRC, sameTable e.2 (parent0RA1) = true := by decide
+    ∃ e ∈ remainingF1ZeroRC, sameTable e.2 (parent1RC) = true := by decide
 theorem parent0LE_present :
-    ∃ e ∈ remainingF1ZeroRC, sameTable e.2 (parent0RA6) = true := by decide
+    ∃ e ∈ remainingF1ZeroRC, sameTable e.2 (parent0LE) = true := by decide
 theorem parent1LE_present :
-    ∃ e ∈ remainingF1ZeroRC, sameTable e.2 (parent0RA8) = true := by decide
+    ∃ e ∈ remainingF1ZeroRC, sameTable e.2 (parent1LE) = true := by decide
 
 theorem remainingF1Cycles_count : remainingF1Cycles.length = 98 := by decide
 theorem removedF1Cycle_count :
@@ -90,23 +90,23 @@ theorem cover_remainingF1ZeroRC
           rw [heq]
           exact cover_of_weighted all_completions_weighted0LC championScore
             (Nat.le_trans (by decide) champion_score_ge_49394)
-        · by_cases h1LC : sameTable e.2 (parent0RA0) = true
-          · have heq : e.2 = parent0RA0 := sameTable_sound h1LC
+        · by_cases h1LC : sameTable e.2 (parent1LC) = true
+          · have heq : e.2 = parent1LC := sameTable_sound h1LC
             rw [heq]
             exact cover_of_weighted all_completions_weighted1LC championScore
               (Nat.le_trans (by decide) champion_score_ge_49394)
-          · by_cases h1RC : sameTable e.2 (parent0RA1) = true
-            · have heq : e.2 = parent0RA1 := sameTable_sound h1RC
+          · by_cases h1RC : sameTable e.2 (parent1RC) = true
+            · have heq : e.2 = parent1RC := sameTable_sound h1RC
               rw [heq]
               exact cover_of_weighted all_completions_weighted1RC championScore
                 (Nat.le_trans (by decide) champion_score_ge_49394)
-            · by_cases h0LE : sameTable e.2 (parent0RA6) = true
-              · have heq : e.2 = parent0RA6 := sameTable_sound h0LE
+            · by_cases h0LE : sameTable e.2 (parent0LE) = true
+              · have heq : e.2 = parent0LE := sameTable_sound h0LE
                 rw [heq]
                 exact cover_of_weighted all_completions_weighted0LE championScore
                   (Nat.le_trans (by decide) champion_score_ge_49394)
-              · by_cases h1LE : sameTable e.2 (parent0RA8) = true
-                · have heq : e.2 = parent0RA8 := sameTable_sound h1LE
+              · by_cases h1LE : sameTable e.2 (parent1LE) = true
+                · have heq : e.2 = parent1LE := sameTable_sound h1LE
                   rw [heq]
                   exact cover_of_weighted all_completions_weighted1LE championScore
                     (Nat.le_trans (by decide) champion_score_ge_49394)
@@ -136,7 +136,7 @@ theorem exact_from_remainingF1Cycles
   exact_from_remainingF1ZeroRC hOther
     (fun e he => cover_remainingF1ZeroRC hLeaves e he)
 
-#print axioms cover_cycle_parent
+#print axioms cover_of_weighted
 #print axioms parent0RA_present
 #print axioms parent0LB_present
 #print axioms parent1RB_present
