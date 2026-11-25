@@ -1,13 +1,12 @@
-From BusyCoq Require Import Agent8Chunk2FirstHole Agent44ChunkSideSearch.
-From BusyCoq Require Import SourceResidualRoster.
+From BusyCoq Require Import Agent8Chunk2FirstHole Agent44ChunkSideSearch
+  SourceResidualRoster.
 From Coq Require Import List Bool Arith.
 Import ListNotations.
 Import TNF_Node.
 
-(* The 1,200 grandchildren are a list of source TM tables, not TNF_Node
-   queue records.  Keep the source-side certificate search and refinement
-   relation at that exact type; do not pass them through the list-T adapter
-   used by the earlier 50-node queue. *)
+(* The source queue's first side-search pass has already certified some of
+   the 50 residuals. Refine only its genuinely uncovered nodes, rather than
+   redundantly expanding all 50 into 1,200 children. *)
 
 Fixpoint search_side_roster_tm (xs : list TM) : list source_certificate :=
   match xs with
@@ -34,11 +33,64 @@ Proof.
     + exact IH.
 Qed.
 
-Definition chunk2_first_hole_side_certs :=
-  search_side_roster_tm chunk2_first_hole_children.
+Lemma searched_chunk_remaining_subset x :
+  In x searched_chunk_remaining -> In x chunk_remaining.
+Proof.
+  unfold searched_chunk_remaining, source_uncovered.
+  intro H.
+  apply filter_In in H.
+  exact (proj1 H).
+Qed.
 
-Definition chunk2_first_hole_side_roster :=
-  certificate_roster chunk2_first_hole_side_certs.
+Definition searched_chunk_first_hole_children : list TM :=
+  flat_map
+    (fun x => source_tree_open (tm x) (chunk2_first_hole_tree (tm x)))
+    searched_chunk_remaining.
+
+Theorem searched_chunk_first_hole_tree_checks bound :
+  24 <= bound ->
+  forallb
+    (fun x => source_tree_check bound (tm x) (chunk2_first_hole_tree (tm x)))
+    searched_chunk_remaining = true.
+Proof.
+  intros Hbound.
+  apply forallb_forall. intros x Hx.
+  destruct (chunk2_first_hole_bound x
+    (searched_chunk_remaining_subset x Hx)) as [n [h [Hfind Hn]]].
+  eapply chunk2_first_hole_tree_check_of_find.
+  - exact Hfind.
+  - lia.
+Qed.
+
+Theorem searched_chunk_first_hole_frontier_sound bound :
+  24 <= bound ->
+  Forall (source_table_safe bound) searched_chunk_first_hole_children ->
+  Forall (source_table_safe bound) searched_chunk_remaining.
+Proof.
+  intros Hbound Hchildren.
+  apply Forall_forall. intros x Hx.
+  assert (Hcheck :
+    source_tree_check bound (tm x) (chunk2_first_hole_tree (tm x)) = true).
+  { apply forallb_forall with (x := x) in
+      (searched_chunk_first_hole_tree_checks bound Hbound).
+    - exact (searched_chunk_first_hole_tree_checks bound Hbound x Hx).
+    - exact Hx. }
+  assert (Hopen :
+    Forall (source_table_safe bound)
+      (source_tree_open (tm x) (chunk2_first_hole_tree (tm x)))).
+  { apply Forall_forall. intros p Hp.
+    apply Forall_forall with (x := p) in Hchildren.
+    - exact Hchildren.
+    - unfold searched_chunk_first_hole_children.
+      apply in_flat_map. exists x. split; assumption. }
+  eapply source_tree_sound; eassumption.
+Qed.
+
+Definition searched_chunk_first_hole_side_certs :=
+  search_side_roster_tm searched_chunk_first_hole_children.
+
+Definition searched_chunk_first_hole_side_roster :=
+  certificate_roster searched_chunk_first_hole_side_certs.
 
 Definition source_roster_covers_tm (roster : list TM) (p : TM) : bool :=
   existsb (fun parent => source_refinesb p parent) roster.
@@ -68,52 +120,71 @@ Proof.
     unfold negb. now rewrite Hcover.
 Qed.
 
-Definition chunk2_first_hole_side_remaining :=
-  source_uncovered_tm chunk2_first_hole_side_roster chunk2_first_hole_children.
+Definition searched_chunk_first_hole_side_remaining :=
+  source_uncovered_tm searched_chunk_first_hole_side_roster
+    searched_chunk_first_hole_children.
 
-Theorem chunk2_first_hole_side_search_checked bound :
-  forallb (certificate_check bound) chunk2_first_hole_side_certs = true.
+Theorem searched_chunk_first_hole_side_search_checked bound :
+  forallb (certificate_check bound) searched_chunk_first_hole_side_certs = true.
 Proof.
-  unfold chunk2_first_hole_side_certs.
+  unfold searched_chunk_first_hole_side_certs.
   apply search_side_roster_tm_checked.
 Qed.
 
-Theorem chunk2_first_hole_side_roster_safe bound :
-  Forall (source_table_safe bound) chunk2_first_hole_side_roster.
+Theorem searched_chunk_first_hole_side_roster_safe bound :
+  Forall (source_table_safe bound) searched_chunk_first_hole_side_roster.
 Proof.
-  unfold chunk2_first_hole_side_roster.
+  unfold searched_chunk_first_hole_side_roster.
   apply certificate_roster_safe.
-  apply chunk2_first_hole_side_search_checked.
+  apply searched_chunk_first_hole_side_search_checked.
 Qed.
 
-Theorem chunk2_first_hole_children_safe bound :
-  Forall (source_table_safe bound) chunk2_first_hole_side_remaining ->
-  Forall (source_table_safe bound) chunk2_first_hole_children.
+Theorem searched_chunk_first_hole_children_safe bound :
+  Forall (source_table_safe bound) searched_chunk_first_hole_side_remaining ->
+  Forall (source_table_safe bound) searched_chunk_first_hole_children.
 Proof.
   intro Hremaining.
   eapply source_uncovered_tm_sound.
-  - apply chunk2_first_hole_side_roster_safe.
+  - apply searched_chunk_first_hole_side_roster_safe.
   - exact Hremaining.
 Qed.
 
-Theorem chunk2_first_hole_initial_safe_from_side_search bound :
+Theorem searched_chunk_first_hole_remaining_safe bound :
+  24 <= bound ->
+  Forall (source_table_safe bound) searched_chunk_first_hole_side_remaining ->
+  Forall (source_table_safe bound) searched_chunk_remaining.
+Proof.
+  intros Hbound Hremaining.
+  apply searched_chunk_first_hole_frontier_sound.
+  - exact Hbound.
+  - apply searched_chunk_first_hole_children_safe. exact Hremaining.
+Qed.
+
+Theorem q32_queue_safe_from_first_hole_side_search bound :
   (N.to_nat 1000000 + 6 <= bound)%nat ->
-  Forall (source_table_safe bound) chunk2_first_hole_side_remaining ->
+  Forall (source_table_safe bound) searched_chunk_first_hole_side_remaining ->
   safeQ (source_weighted_safe bound) (q_i 2 32).
 Proof.
   intros Hbound Hremaining.
-  apply chunk2_first_hole_initial_safe.
+  apply chunk_initial_safe_of_search.
   - exact Hbound.
-  - apply chunk2_first_hole_children_safe. exact Hremaining.
+  - apply Forall_forall. intros x Hx.
+    apply chunk2_source_table_safe_to_weighted.
+    apply Forall_forall with (x := x) in
+      (searched_chunk_first_hole_remaining_safe bound (by lia) Hremaining).
+    + exact (searched_chunk_first_hole_remaining_safe bound (by lia) Hremaining x Hx).
+    + exact Hx.
 Qed.
 
 Time Eval vm_compute in
-  (length chunk2_first_hole_children,
-   length chunk2_first_hole_side_certs,
-   length chunk2_first_hole_side_remaining).
-Time Eval vm_compute in (map fst chunk2_first_hole_side_certs).
+  (length searched_chunk_remaining,
+   length searched_chunk_first_hole_children,
+   length searched_chunk_first_hole_side_certs,
+   length searched_chunk_first_hole_side_remaining).
+Time Eval vm_compute in (map fst searched_chunk_first_hole_side_certs).
 
-Print Assumptions chunk2_first_hole_side_search_checked.
-Print Assumptions chunk2_first_hole_side_roster_safe.
-Print Assumptions chunk2_first_hole_children_safe.
-Print Assumptions chunk2_first_hole_initial_safe_from_side_search.
+Print Assumptions searched_chunk_first_hole_side_search_checked.
+Print Assumptions searched_chunk_first_hole_side_roster_safe.
+Print Assumptions searched_chunk_first_hole_children_safe.
+Print Assumptions searched_chunk_first_hole_remaining_safe.
+Print Assumptions q32_queue_safe_from_first_hole_side_search.
