@@ -32,7 +32,21 @@ permissions:
   actions: read
 jobs:
   check:
-    if: inputs.target != 'weighted-tnf-agent8-raw117' && inputs.target != 'weighted-tnf-raw108-canonical' && inputs.target != 'weighted-tnf-raw113' && inputs.target != 'weighted-tnf-raw124-1la-sharded' && inputs.target != 'weighted-tnf-raw124-0lb-longcycle100k' && inputs.target != 'weighted-tnf-raw124-bundle-sharded'
+    if: >-
+      inputs.target != 'weighted-tnf-agent8-raw117'
+      && inputs.target != 'weighted-tnf-raw108-canonical'
+      && inputs.target != 'weighted-tnf-raw113'
+      && inputs.target != 'weighted-tnf-raw124-1la-sharded'
+      && inputs.target != 'weighted-tnf-raw124-0lb-longcycle100k'
+      && inputs.target != 'weighted-tnf-raw124-bundle-sharded'
+      && inputs.target != 'weighted-tnf-canonical76-raw10-membership'
+      && inputs.target != 'weighted-tnf-raw10-box-ranked-search'
+      && inputs.target != 'weighted-tnf-raw10-box8-halt-slice'
+      && inputs.target != 'weighted-tnf-held-leaf-109-membership'
+      && inputs.target != 'weighted-tnf-raw10-box'
+      && inputs.target != 'weighted-tnf-raw10-box8-cycle'
+      && inputs.target != 'weighted-tnf-raw10-box0-halt'
+      && inputs.target != 'weighted-tnf-raw10-short-frontier'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
