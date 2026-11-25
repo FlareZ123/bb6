@@ -86,8 +86,8 @@ theorem edgeY_iff_mod (q y c z : Nat) (hy : y≤1) (hz : z<q) :
       exact ⟨hc,hz,hy,Or.inl heq.symm⟩
     · have hge : q≤2*z+y := by omega
       have hrem : (2*z+y)%q = 2*z+y-q := by
-        have heq : 2*z+y=(2*z+y-q)+q := by omega
-        rw [heq,Nat.add_mod_right,Nat.mod_eq_of_lt (by omega)]
+        rw [Nat.mod_eq_sub_mod hge]
+        exact Nat.mod_eq_of_lt (by omega)
       have heq : c=2*z+y-q := by rw [hrem] at hmod; exact hmod
       exact ⟨hc,hz,hy,Or.inr (by omega)⟩
 
@@ -95,7 +95,7 @@ theorem edgeY_iff_mod (q y c z : Nat) (hy : y≤1) (hz : z<q) :
     chronological order.  The last bit is therefore at the head of the list. -/
 inductive DWalk : Nat → Nat → List Nat → Nat → Prop
   | nil (q c : Nat) : DWalk q c [] c
-  | snoc (q c ys z y w : Nat)
+  | snoc (q c : Nat) (ys : List Nat) (z y w : Nat)
       (h : DWalk q c ys z)
       (he : EdgeY (q+ys.length) y z w) :
       DWalk q c (y::ys) w
@@ -138,7 +138,7 @@ theorem mem_reverseFold (q c : Nat) (ys acc : List Nat)
       exact ⟨w,DWalk.snoc q c ys z y w hwalk hedge,hw⟩
     · rintro ⟨w,hwalk,hw⟩
       cases hwalk with
-      | snoc q c ys z y w hprev hedge =>
+      | snoc ys z y w hprev hedge =>
         exact ⟨z,hprev,(mem_backY (q+ys.length) y z acc hy).mpr ⟨w,hw,hedge⟩⟩
 
 theorem mem_reverseLive (q c : Nat) (ys : List Nat)
@@ -176,6 +176,24 @@ theorem targetsRev_bits (n s B k : Nat) :
     rcases hy with rfl|hy
     · exact target_bound n (s+k) B
     · exact ih y hy
+
+
+/-- The first n delayed target bits depend only on the current low prefix. -/
+theorem targetsRev_prefix_stable (n s B R : Nat) :
+    ∀ k, k≤n →
+      targetsRev n s (B+2^s*R) k = targetsRev n s B k := by
+  intro k
+  induction k with
+  | zero =>
+    intro hk
+    rfl
+  | succ k ih =>
+    intro hk
+    simp only [targetsRev]
+    have hhead : target n (s+k) (B+2^s*R) = target n (s+k) B :=
+      target_prefix n s (s+k) B R (by omega)
+    have htail := ih (by omega)
+    rw [hhead,htail]
 
 /-- Future high bits do not alter target bits already fixed by the prefix. -/
 theorem targetsRev_stable_of (n s B S R : Nat) (hn : 0<n) :
@@ -282,7 +300,13 @@ theorem covered_next_reverse (n s h : Nat) (ps : List Prefix)
     extend_prefix n s D d (h+n) C c n hfull (by omega)
   have hm := hcover D d F f hpre hshort
   have hm' := extend_in_advance n s D d h B a ps hm hExt'
+  obtain ⟨R,hR⟩ := extend_mod n (s+h) B a n C c hE
+  have htargets :
+      targetsRev n (s+h) C n = targetsRev n (s+h) B n := by
+    rw [hR]
+    exact targetsRev_prefix_stable n (s+h) B R n (by omega)
   have hrev := reverseLookahead_sound n (s+h) B a n C c hn htr hE
+  rw [htargets] at hrev
   have hfilter : reverseLookahead n (s+h) B a n = true := by
     simp [reverseLookahead,hrev]
   simp [nextBlockReverse,hm',hfilter]
