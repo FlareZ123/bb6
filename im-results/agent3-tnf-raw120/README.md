@@ -97,3 +97,7 @@ Leaf 855, `1RB1LB_1RC0LF_0RD0RA_1LD1RE_0LA1LE_---1LD`, resisted the standard fix
 ### 2026-11-25 continuation: E0=1LF and E0=0LB
 
 Six new E0=1LF nonhalting leaf proofs compiled against exact original-source imports; all 4464 open leaves have candidate assignments, proposed weighted bound 1855. See [1LF-dossier.md](1LF-dossier.md). Six further E0=0LB nonhalting leaf proofs (four modules) also passed original-source Lean; all 2391 open leaves have candidate assignments, proposed weighted bound 520. See [0LB-dossier.md](0LB-dossier.md). These are not whole-sibling acceptance until generated `allOneLF` and `allZeroLB` check.
+
+### 2026-11-25 E0=0LF
+
+18 more hard leaves have original-source Lean nonhalting proofs (17 automated recursive unary shuttle instances and one arbitrary-word invariant). All 4752 open leaves have candidate assignments; proposed bound 656. See [0LF-dossier.md](0LF-dossier.md). Full sibling CI still pending; 0LB and 0LF now have targeted workflow entries.

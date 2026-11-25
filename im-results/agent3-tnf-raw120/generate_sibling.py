@@ -25,6 +25,8 @@ import rc_nested
 MOVES = ["".join(x) for x in product("01", "LR", "ABCDEF")]
 # The tag is part of the Lean namespace and module names.
 PARAMS = {
+    "0LF": ("ZeroLF", 4752, "8a90985d99e358fc7c1c05a589d5f3f7546206cb5e9f5802c15dbedcc66a3013",
+            dict(split=1932, cycle=28231, last=11454, open=4752)),
     "0LB": ("ZeroLB", 2391, "2d05e4ce3c4a8e9ad9baf8988d1c529531ec2a97d0e2e58cdd4b3e38e5561c21",
             dict(split=934, cycle=14635, last=4457, open=2391)),
     "1LF": ("OneLF", 4464, "b5ca9ab66092d18182df4d2c3bc13763c2a31dac5216705b23a6852373abf077",
@@ -126,6 +128,16 @@ if BRANCH == "1RC":
         pump_code.append(rc_nested.generate_nested(i, one.parse(opens[i])))
         pumps[opens[i]] = (f"{pumpns}.M{i}.table", f"{pumpns}.M{i}.never")
 late = {}
+if BRANCH == "0LF":
+    manifest = ROOT / "0LF-recursive-holdouts.json"
+    subprocess.run([sys.executable, str(ROOT / "recursive_shuttle.py"), BRANCH,
+                    str(manifest), str(FOLDER / "Raw120ZeroLFRecursive.lean")], check=True)
+    for i, table in json.loads(manifest.read_text()):
+        assert opens[i] == table, (i, opens[i], table)
+        ns0 = f"BB6.Agent3Raw120Auto0LF.M{i}"
+        pumps[table] = (f"{ns0}.table", f"{ns0}.never")
+    assert opens[3663] == "1RB0RF_1RC---_0RD1RA_1LD1RE_0LF1LE_1RB0LE"
+    pumps[opens[3663]] = ("BB6.Agent3Raw120ZeroLFWord.table", "BB6.Agent3Raw120ZeroLFWord.never")
 if BRANCH == "0LB":
     for i, table, mod, variant in (
         (38, "1RB1RA_1RC0LA_0RD0LF_1LD1RE_0LB1LE_---1LC", "Reset", ""),
@@ -287,7 +299,7 @@ summary = {
     "one_block_pumps": one_count,
     "multi_block_pumps": multi_count,
     "late_leaves": len(late),
-    "custom_counter_and_nested_leaves": {"0RC": 4, "1RC": 3, "0RA": 13, "1LF": 6, "0LB": 6}.get(BRANCH, 0),
+    "custom_counter_and_nested_leaves": {"0RC": 4, "1RC": 3, "0RA": 13, "1LF": 6, "0LB": 6, "0LF": 18}.get(BRANCH, 0),
     "unresolved": len(missing),
     "unresolved_sample": [{"index": i, "table": code} for i, code in missing[:100]],
 }
@@ -402,7 +414,7 @@ theorem split_checked (p : PartialMachine) (n : Nat) (s : Slot)
   simp only [Bool.and_eq_true]
   exact ⟨hq, allMoves_of _ hk⟩
 """
-emit(prefix + "Base", ["Raw120Late"] + ({"0RC": ["Raw120RCCounter"], "1RC": ["Raw120OneRCCounter"], "1LF": ["Raw120OneLFCounter", "Raw120OneLFTwo", "Raw120OneLFStack"], "0LB": ["Raw120ZeroLBMirror", "Raw120ZeroLBReset", "Raw120ZeroLBShuttle", "Raw120ZeroLBTriple"], "0RA": ["Raw120RAPhases", "Raw120RABiDFA", "Raw120RA423BlockAdapter"]}.get(BRANCH, [])) + [prefix + "Sweeps"], base)
+emit(prefix + "Base", ["Raw120Late"] + ({"0RC": ["Raw120RCCounter"], "1RC": ["Raw120OneRCCounter"], "1LF": ["Raw120OneLFCounter", "Raw120OneLFTwo", "Raw120OneLFStack"], "0LB": ["Raw120ZeroLBMirror", "Raw120ZeroLBReset", "Raw120ZeroLBShuttle", "Raw120ZeroLBTriple"], "0LF": ["Raw120ZeroLFRecursive", "Raw120ZeroLFWord"], "0RA": ["Raw120RAPhases", "Raw120RABiDFA", "Raw120RA423BlockAdapter"]}.get(BRANCH, [])) + [prefix + "Sweeps"], base)
 
 assert tree[0] == "split"
 root_n, root_slot, root_kids = tree[1], tree[2], tree[3]

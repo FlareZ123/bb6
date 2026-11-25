@@ -1858,3 +1858,7 @@ Lease run_id agent3-gpt62-2026-11-25T13:25:55.067Z-d-global-root, claimed 13:25:
 ### 13:54 UTC checkpoint
 
 1LF six custom leaf never theorems now locally compiled using exact original repository Frontier/Symmetry/RootShift/SparseZipper/SweepPumping imports (no stub). 0LB: all six hard leaves solved by recursive shuttle or alternating reset, four modules compile original source, candidate-complete 2391 open leaves with proposed bound 520. See im-results/agent3-tnf-raw120/0LB-dossier.md. Need full generated sibling audit and canonical ingestion before claiming parent closure. Six remaining sibling search outputs in /tmp/a3-raw120/search_all.jsonl (ephemeral), hard cases include related exponential shuttles; prioritize shared general proof.
+
+### 2026-11-25 14:07 UTC checkpoint
+
+Continuing raw120 E0 partition. 0LF: 18 hard leaves proved with original SweepPumping, including 17 by new reusable recursive_shuttle.py and one arbitrary-word invariant (Raw120ZeroLFWord). Candidate all 4752, proposed 656. 0LB and 0LF CI targets wired; no dispatch capability in this session. See im-results/agent3-tnf-raw120/0LF-dossier.md. 30 new source-checked leaf proofs total this incarnation. Whole-sibling audits pending. Next: remaining 1LA/1LB/1RA/1RF hard machines, coordinate Agent13.
