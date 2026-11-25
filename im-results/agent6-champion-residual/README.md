@@ -109,6 +109,6 @@ A separate, smaller 73-roster route is drafted in `im-results/agent47-rooted-tnf
 - Source reconstruction: `reconstruct_f1_batch.py` and `Raw139SiblingSources.lean`
 - Manual workflow: `.github/workflows/agent6-champion-residual.yml`
 
-Run 45613721358 was cancelled after roughly 57 minutes in the long compile step; it did not report a Lean theorem failure. The workflow now has a 90-minute job timeout. The expanded manual audit reconstructs and hash-checks the 0RB/0LA/1LB/1RD source inputs, compiles them in the shared source closure, and only then compiles the canonical77 and four-sibling consumers. The 103/102 counts remain drafts until that complete source and axiom audit succeeds.
+Run 45613721358 was cancelled after roughly 57 minutes in the long compile step; it did not report a Lean theorem failure. Expanded run 45635470975 passed source reconstruction but stopped at the closure index because Agent41SymSweep appeared in the 0LF, 0RC and 0RB temporary roots. All three use the same 0LF base archive; the helper now verifies the 0RC copy is byte-identical, removes that duplicate, merges 0RB into the 0LF root, and deletes its staging root before compilation. The workflow has a 90-minute job timeout. The 103/102 counts remain drafts until the next complete source and axiom audit succeeds.
 
 **Global status:** BB(6) remains unresolved. Even if this integration passes, it leaves 76 canonical Covers and 106 raw139 descendant Covers to prove. No exhaustive six-state upper bound has been established.
