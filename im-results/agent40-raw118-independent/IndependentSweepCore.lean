@@ -47,4 +47,10 @@ theorem never_of_closed (p : PartialMachine) (I : Z0 → Prop)
 #print axioms rep_uniform
 #print axioms closed_arbitrary
 #print axioms never_of_closed
+theorem rep_add (P : List Bool) (n k : Nat) :
+    rep P (n+k) = rep P n ++ rep P k := by
+  induction n with
+  | zero => simp [rep]
+  | succ n ih => rw [Nat.succ_add, rep, ih, rep]; simp only [List.append_assoc]
+
 end BB6Coverage.Agent40Independent
