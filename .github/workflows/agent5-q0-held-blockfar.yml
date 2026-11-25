@@ -101,14 +101,18 @@ jobs:
           set -euo pipefail
           cd im-results/agent13-block-far
           export LEAN_PATH=".:/tmp/q0-blockfar:../agent5-q0-held-blockfar"
+          cp "/tmp/q0-blockfar/${MODULE_NAME}Packed.lean" .
+          cp "/tmp/q0-blockfar/${MODULE_NAME}Proof.lean" .
           lean -o BlockMacro.olean BlockMacro.lean
           lean -o BlockFAR.olean BlockFAR.lean
           lean -o RangeCheck.olean RangeCheck.lean
-          lean -o "/tmp/q0-blockfar/${MODULE_NAME}Packed.olean" "/tmp/q0-blockfar/${MODULE_NAME}Packed.lean"
-          lean -o "/tmp/q0-blockfar/${MODULE_NAME}Proof.olean" "/tmp/q0-blockfar/${MODULE_NAME}Proof.lean" | tee /tmp/q0-blockfar/compile.log
+          lean -o "${MODULE_NAME}Packed.olean" "${MODULE_NAME}Packed.lean"
+          lean -o "${MODULE_NAME}Proof.olean" "${MODULE_NAME}Proof.lean" | tee /tmp/q0-blockfar/compile.log
+          cp "${MODULE_NAME}Packed.olean" "${MODULE_NAME}Proof.olean" /tmp/q0-blockfar/
           if [ "$FLIP" = "true" ]; then
-            lean -o ../agent5-q0-held-blockfar/MirrorTransport.olean ../agent5-q0-held-blockfar/MirrorTransport.lean
-            cat > "/tmp/q0-blockfar/${MODULE_NAME}MirrorConsumer.lean" <<EOF
+            cp ../agent5-q0-held-blockfar/MirrorTransport.lean .
+            lean -o MirrorTransport.olean MirrorTransport.lean
+            cat > "${MODULE_NAME}MirrorConsumer.lean" <<EOF
           import ${MODULE_NAME}Proof
           import MirrorTransport
           namespace BB6BlockFAR.${MODULE_NAME}MirrorConsumer
@@ -121,7 +125,8 @@ jobs:
           #print axioms never_original
           end BB6BlockFAR.${MODULE_NAME}MirrorConsumer
           EOF
-            lean -o "/tmp/q0-blockfar/${MODULE_NAME}MirrorConsumer.olean" "/tmp/q0-blockfar/${MODULE_NAME}MirrorConsumer.lean" | tee -a /tmp/q0-blockfar/compile.log
+            lean -o "${MODULE_NAME}MirrorConsumer.olean" "${MODULE_NAME}MirrorConsumer.lean" | tee -a /tmp/q0-blockfar/compile.log
+            cp MirrorTransport.lean MirrorTransport.olean "${MODULE_NAME}MirrorConsumer.lean" "${MODULE_NAME}MirrorConsumer.olean" /tmp/q0-blockfar/
           fi
           if grep -Eq 'sorryAx|native_decide' /tmp/q0-blockfar/compile.log; then
             echo "Forbidden proof placeholder or native_decide found" >&2
