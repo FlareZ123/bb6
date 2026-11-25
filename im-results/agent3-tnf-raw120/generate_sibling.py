@@ -25,6 +25,8 @@ import rc_nested
 MOVES = ["".join(x) for x in product("01", "LR", "ABCDEF")]
 # The tag is part of the Lean namespace and module names.
 PARAMS = {
+    "0RA": ("RA", 2545, "bbe7fb7373bd3569aee8bf26f2953e168fb965a192a39e78d49fa26d222970ca",
+            dict(split=1171, cycle=18826, last=5563, open=2545)),
     "0RC": ("RC", 2214, "01f82938bb361d4335146c22191f1fec517d993c76d71488fbc804910629e78f",
             dict(split=934, cycle=15226, last=4043, open=2214)),
     "1RB": ("OneRB", 3650, "156d9b5ff6210dfc4ba03a36e0b723a647a291d1eb91053d6df8eb2b4078b23e",
@@ -120,6 +122,58 @@ if BRANCH == "1RC":
         pump_code.append(rc_nested.generate_nested(i, one.parse(opens[i])))
         pumps[opens[i]] = (f"{pumpns}.M{i}.table", f"{pumpns}.M{i}.never")
 late = {}
+if BRANCH == "0RA":
+    from make_ra_phases import MACHINES
+    from make_ra422 import TABLE as TABLE422
+    from make_ra423_block import TABLE as TABLE423
+    for i, table in {**MACHINES, 422: TABLE422}.items():
+        assert opens[i] == table, (i, opens[i], table)
+        pumps[table] = (f"BB6Coverage.Agent3RA.M{i}.table", f"BB6Coverage.Agent3RA.M{i}.never")
+    for key, entry in json.loads((ROOT / "ra-bidfa.json").read_text()).items():
+        i = int(key)
+        table = entry["table"]
+        assert opens[i] == table, (i, opens[i], table)
+        pumps[table] = (f"BB6Coverage.Agent3RABiDFA.M{i}.table", f"BB6Coverage.Agent3RABiDFA.M{i}.never")
+    assert opens[423] == TABLE423
+    pumps[TABLE423] = ("BB6Coverage.Agent3RA423Block.table", "BB6Coverage.Agent3RA423Block.never")
+    late[opens[433]] = (3314, 5)
+
+def extended_one_candidate(p, ev):
+    # Same opaque-word simulation as generate_sweeps.candidate, with a longer
+    # event separation. The emitted proof is still checked by Lean.
+    for i, (t, s, c) in enumerate(ev[:60]):
+        for j in range(i+1, min(i+48, len(ev))):
+            _, s2, d = ev[j]
+            if s != s2 or c.q != d.q:
+                continue
+            delta = d.h0-c.h0
+            if s == "L" and c.l.pre == d.l.pre == "":
+                a, b, side = c.r.pre, d.r.pre, "R"
+            elif s == "R" and c.r.pre == d.r.pre == "":
+                a, b, side = c.l.pre, d.l.pre, "L"
+            else:
+                continue
+            diff = len(b)-len(a)
+            if not 1 <= diff <= 16:
+                continue
+            for k in range(len(a)+1):
+                if b[:k] != a[:k] or b[k+diff:] != a[k:]:
+                    continue
+                block = b[k:k+diff]
+                pred = a[:k]+block*2+a[k:]
+                if not any(e[1] == s and e[2].q == c.q and e[2].h0 == c.h0+2*delta
+                           and (e[2].r.pre if side == "R" else e[2].l.pre) == pred
+                           for e in ev[j+1:j+48]):
+                    continue
+                w = one.W(a[:k], block, a[k:])
+                v = one.W(a[:k]+block, block, a[k:])
+                start = one.C(c.q, 0, 0, one.W() if side == "R" else w, w if side == "R" else one.W())
+                target = one.C(c.q, delta, 0, one.W() if side == "R" else v, v if side == "R" else one.W())
+                res = one.pump(p, start, target)
+                if res:
+                    return t, c, start, target, res
+    return None
+
 missing = []
 one_count = 0
 multi_count = 0
@@ -134,6 +188,8 @@ for i, code in enumerate(opens):
     p = one.parse(code)
     events = one.concrete_events(p, EVENT_LIMIT)
     ans = one.candidate(p, events)
+    if ans is None and BRANCH == "0RA" and i == 479:
+        ans = extended_one_candidate(p, events)
     if ans is not None:
         generated, info = one.generate(i, p, ans)
         pump_code.append(generated)
@@ -189,7 +245,7 @@ def inspect(t):
 
 inspect(tree)
 assert stats == Counter(EXPECTED_TREE), stats
-B = max_query + 6  # weighted safe bound
+B = max(max_query, max((n for n, _ in late.values()), default=0)) + 6  # weighted safe bound
 summary = {
     "parent": PARENT,
     "expected_open_count": EXPECTED_OPEN,
@@ -203,7 +259,7 @@ summary = {
     "one_block_pumps": one_count,
     "multi_block_pumps": multi_count,
     "late_leaves": len(late),
-    "custom_counter_and_nested_leaves": {"0RC": 4, "1RC": 3}.get(BRANCH, 0),
+    "custom_counter_and_nested_leaves": {"0RC": 4, "1RC": 3, "0RA": 13}.get(BRANCH, 0),
     "unresolved": len(missing),
     "unresolved_sample": [{"index": i, "table": code} for i, code in missing[:100]],
 }
@@ -318,7 +374,7 @@ theorem split_checked (p : PartialMachine) (n : Nat) (s : Slot)
   simp only [Bool.and_eq_true]
   exact ⟨hq, allMoves_of _ hk⟩
 """
-emit(prefix + "Base", ["Raw120Late"] + ({"0RC": ["Raw120RCCounter"], "1RC": ["Raw120OneRCCounter"]}.get(BRANCH, [])) + [prefix + "Sweeps"], base)
+emit(prefix + "Base", ["Raw120Late"] + ({"0RC": ["Raw120RCCounter"], "1RC": ["Raw120OneRCCounter"], "0RA": ["Raw120RAPhases", "Raw120RABiDFA", "Raw120RA423BlockAdapter"]}.get(BRANCH, [])) + [prefix + "Sweeps"], base)
 
 assert tree[0] == "split"
 root_n, root_slot, root_kids = tree[1], tree[2], tree[3]
