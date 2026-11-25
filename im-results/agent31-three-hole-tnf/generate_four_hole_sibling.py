@@ -29,11 +29,11 @@ def synthesize_pump(p):
     code, info = generate_sweep(idx, p, ans)
     path = ROOT / "SweepData.lean"
     source = path.read_text(encoding="utf-8")
-    marker = "\\nend BB6Coverage.Agent31Pump"
+    marker = "\nend BB6Coverage.Agent31Pump"
     pos = source.rfind(marker)
     if pos < 0:
         raise RuntimeError("SweepData.lean is missing its Agent31Pump namespace terminator")
-    source = source[:pos] + "\\n\\n" + code + source[pos:]
+    source = source[:pos] + "\n\n" + code + source[pos:]
     path.write_text(source, encoding="utf-8")
     PUMPS[p] = idx
     print("AUTO_PUMP", idx, show(p), "entry/intercept/slope =", info)
