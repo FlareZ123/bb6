@@ -24,7 +24,7 @@ theorem mirrorPrim_involutive (c : Prim) : mirrorPrim (mirrorPrim c) = c := by
     simp [mirrorPrim, cons, cons_tail]
 
 theorem mirrorPrim_blank : mirrorPrim primBlank = primBlank := by
-  simp [mirrorPrim, primBlank, tail_blank]
+  simp [mirrorPrim, primBlank, blankRay, tail_blank]
 
 theorem mirrorTable_involutive (M : Table) : mirrorTable (mirrorTable M) = M := by
   funext q b
