@@ -131,7 +131,7 @@ if BRANCH == "0RA":
         pumps[table] = (f"BB6Coverage.Agent3RA.M{i}.table", f"BB6Coverage.Agent3RA.M{i}.never")
     for key, entry in json.loads((ROOT / "ra-bidfa.json").read_text()).items():
         i = int(key)
-        table = entry["table"]
+        table = entry[0]
         assert opens[i] == table, (i, opens[i], table)
         pumps[table] = (f"BB6Coverage.Agent3RABiDFA.M{i}.table", f"BB6Coverage.Agent3RABiDFA.M{i}.never")
     assert opens[423] == TABLE423
