@@ -567,3 +567,6 @@ New uniform pump proofs for three five-hole cylinders. Raw40 partial audit disch
 - Fully closed RDLC 5-hole cylinder (9,765,625 raw completions) at exact weighted maximum 106, with actual compatible witness at k=105,d=0. Kernel proofs of 24 sharded exhaustive audit branches and all 78 FAR leaves. Consumed into raw40, 188 remaining, 264 global conditional roster.
 - Files + reproducible generator + FAR discovery witness bank under im-results/agent19-raw40-cut, RDLC-README.md. All seven source blobs matched local files; Lean 4.36.0-rc2, canonical77 artifact 14997966221. No new CI claim.
 - Candidate-only normalized enumeration: 36 more five-hole cylinders, 12 complete candidates with FAR≤5; 220 open FAR misses across others. Further proof work underway.
+
+
+17:18 UTC: two previously open leaves proved by symbolic two-sided sweep (Raw40TwoSided.lean); canonical audit generator and batch theorem persisted. Three additional five-hole covers compiled at bounds 100, 47 and 43; batch attainment and filter composition pending. Continuing local checks.
