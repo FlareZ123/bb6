@@ -57,3 +57,14 @@ The source proves that the target cylinder is exactly one of the 109 retained re
 - Key theorems: `championP8Certificate`, `championResidualFrontierSound`, `championResidualRefinedRosterSound`, `exactBB6OfChampionResidualRoster`
 
 The finite witness search is heuristic; the Lean replay theorem is the proof-bearing check. The exact champion halt theorem is imported from Agent 48's counted-inc0 source closure. This directory is intermediate research and therefore belongs in `im-results/`, not `results/`.
+
+## Follow-on depth-7 scan
+
+A separate bounded scan of the 23 ordinary A/1 siblings at depth 7 found that 15 reach the remaining B/1 hole after 214–3506 successful moves. These are strong candidates for one-hole `lastHole` certificates at the champion score; they are not yet incorporated into the 156-leaf Lean frontier. The other eight (`0LA, 0LC, 1LC, 1LD, 1RD, 0LE, 1RE, 1LF`) neither reached B/1 within one million moves nor yielded a side-cycle witness under the scan's small bounds. They remain unresolved, not proven nonhalting. See [p7-last-hole-scan.md](p7-last-hole-scan.md).
+
+The current frontier's completion-mass accounting is:
+- original 9-hole cylinder: `25^9 = 3,814,697,265,625`;
+- 156 open residuals: `3,648,834,608,700`;
+- closed mass: `165,862,656,925` (about 4.35%).
+
+Thus the frontier is a valid champion-score decomposition but closes only about 4.35% of the cylinder's raw completion mass. The depth-7 scan is a useful next refinement, not a resolution of the remaining mass.
