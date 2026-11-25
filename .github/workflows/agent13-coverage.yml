@@ -5,7 +5,7 @@ on:
       target:
         description: 'Source closure to verify'
         type: choice
-        options: [legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole, weighted-tnf-four-hole, weighted-tnf-four-hole-sibling, weighted-tnf-r1-sweep, queue-orbit, weighted-tnf-roster-convergence, weighted-tnf-roster-agent47-graft, weighted-tnf-pure-residuals, weighted-tnf-raw99, weighted-tnf-raw124-rf, weighted-tnf-raw124-lc, weighted-tnf-raw124-1rf, weighted-tnf-raw124-0rb, weighted-tnf-raw103, weighted-tnf-raw104, weighted-tnf-agent8-five, weighted-tnf-agent8-six, weighted-tnf-roster-composition, weighted-tnf-agent3-siblings, weighted-tnf-raw85-parent-check, weighted-tnf-raw91, weighted-tnf-raw87, weighted-tnf-raw83-pump, weighted-tnf-agent10-multi, weighted-tnf-agent10-five-new, weighted-tnf-agent10-five-roster, weighted-tnf-agent10-raw106, weighted-tnf-raw63-counter, weighted-tnf-raw61-witnesses, weighted-tnf-prefix-single, weighted-tnf-agent10-single, weighted-tnf-combined-109, weighted-tnf-root-zero-refinement, weighted-tnf-combined-106, weighted-tnf-raw120-late]
+        options: [legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole, weighted-tnf-four-hole, weighted-tnf-four-hole-sibling, weighted-tnf-r1-sweep, queue-orbit, weighted-tnf-roster-convergence, weighted-tnf-roster-agent47-graft, weighted-tnf-pure-residuals, weighted-tnf-raw99, weighted-tnf-raw124-rf, weighted-tnf-raw124-lc, weighted-tnf-raw124-1rf, weighted-tnf-raw124-0rb, weighted-tnf-raw103, weighted-tnf-raw104, weighted-tnf-agent8-five, weighted-tnf-agent8-six, weighted-tnf-roster-composition, weighted-tnf-agent3-siblings, weighted-tnf-raw85-parent-check, weighted-tnf-raw91, weighted-tnf-raw87, weighted-tnf-raw83-pump, weighted-tnf-agent10-multi, weighted-tnf-agent10-five-new, weighted-tnf-agent10-five-roster, weighted-tnf-agent10-raw106, weighted-tnf-raw63-counter, weighted-tnf-raw61-witnesses, weighted-tnf-prefix-single, weighted-tnf-agent10-single, weighted-tnf-combined-109, weighted-tnf-root-zero-refinement, weighted-tnf-combined-106, weighted-tnf-raw120-late, weighted-tnf-root-sibling-first-hole]
         default: legacy
       raw_id:
         description: 'Single Agent 10 residual index (single target only)'
@@ -689,5 +689,32 @@ jobs:
           python tools/lean_compile_closure.py --workdir /tmp/a47-combined106 --jobs 4 im-results/agent47-rooted-tnf/Combined106Roster.lean | tee /tmp/a47-combined106.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a47-combined106.log; then
             echo "Forbidden proof placeholder or native_decide found in combined 106-residual closure" >&2
+            exit 1
+          fi
+
+  rootsibling:
+    if: inputs.target == 'weighted-tnf-root-sibling-first-hole'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Generate rooted first-one frontier dependencies
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+      - name: Kernel-check the 92 root-sibling lasso and side-cycle candidates
+        run: |
+          set -euo pipefail
+          python tools/lean_compile_closure.py --workdir /tmp/a47-rootsibling --jobs 4 im-results/agent47-rooted-tnf/RootSiblingFirstHole.lean | tee /tmp/a47-rootsibling.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a47-rootsibling.log; then
+            echo "Forbidden proof placeholder or native_decide found in root-sibling witness closure" >&2
             exit 1
           fi
