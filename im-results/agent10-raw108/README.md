@@ -42,8 +42,12 @@ The entry occurs at step 2862. All 14 automatic entry/growth proofs, including #
 
 The ordered census of 1,956 open leaves is pinned by its SHA-256 digest in [specs.json](specs.json). The final specification uses a 76-code FAR bank, 128 symbolic positive-return witnesses, ten translated-cycle witnesses, four delayed first-hole queries, three prior manual counter proofs, and a width-six block-FAR witness for #114. The last candidate block saturation has 122 left states, 479 right nodes and 857 edges before minimization. Leaf #1099 has a 13-state ordinary FAR witness. Leaf #14 reaches its sole hole E0 after 26,334 transitions, so the candidate bound is raised to 26,340. Leaf #69 returns in 1026+756n steps, adding three copies of 00111011 to its retained list. These are candidate-level results until the original-source checker accepts the generated `all_completions` theorem.
 
+## 0LB: all but one original leaf has candidate coverage
+
+The 3890-leaf roster has SHA-256 560bb574bb444f71d13cd205a95bd74f8879b36a0501a54a00a95241497b7508. The compressed base descriptor plus [extra overlay](0LB-extra.json) account for 3889 leaves, including all 24 ordinary continuations of delayed split #1930 (time 91502, A1). Its longest observed continuation reaches the last hole at 4136174 ordinary steps. Candidate bound 4136180. The last leaf #2822 is reduced to the [gap macro problem](Gap2822.md). None of these new 0LB dispositions has been source-certified here.
+
 ## Remaining obligations
 
-The remaining missing child specification is 0LB. For each completed child, the original-source `all_completions` theorem must be accepted. Integrate those weighted bounds with the root cut and the mixed-score canonical quotient; lift the small-cutoff branches to the maximum actual certified child bound (at least 192168 from current candidates) or the attained champion score B.
+The remaining missing child specification is 0LB. For each completed child, the original-source `all_completions` theorem must be accepted. Integrate those weighted bounds with the root cut and the mixed-score canonical quotient; lift the small-cutoff branches to the maximum actual certified child bound (at least 4136180 from current candidates) or the attained champion score B.
 
 Reproduce with `python generate.py <B1>` and manual `agent10-four-hole.yml` target `raw108-child`. The checker reconstructs the exact ordered census, replays each sweep, and checks the FAR masks and all leaf certificates. Candidate source, not an accepted full proof, is preserved in this dossier. 
