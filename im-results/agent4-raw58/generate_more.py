@@ -176,28 +176,33 @@ def build_child(key,spec):
             subprocess.run(["g++","-O3","-std=c++17",
                 str(ROOT.parent/"agent47-raw111-cut/ngram_sparse.cpp"),
                 "-o",str(sparse_exe)],check=True)
-        remaining=[]
-        for i in unclassified:
-            try:
-                proc=subprocess.run([str(sparse_exe),"23"],
-                    input=f"{i} {opens[i]}\n",text=True,capture_output=True,
-                    check=True,timeout=90)
-                fields=proc.stdout.strip().split(maxsplit=1)
-                if len(fields)!=2: raise ValueError("missing sparse certificate output")
-                data=fields[1]
-                k,n,L,R,_=data.split()
-                def edge_count(raw):
-                    return sum(int(v).bit_count() for item in raw.rstrip(",").split(",")
-                               if item for _,v in [item.split(":")])
-                expected=(int(n),edge_count(L),edge_count(R))
-                module,ns_sparse=emit_sparse(ROOT,i,opens[i],data,width=23,
-                    module_name=f"Raw58{key}Sparse{i}",expected=expected)
-                pumps[i]=ns_sparse
-                sparse_modules.append(module)
-                print(key,"sparse width-23",i,"states",n,"edges",expected[1:],flush=True)
-            except (subprocess.CalledProcessError,subprocess.TimeoutExpired,ValueError):
-                remaining.append(i)
-        unclassified=remaining
+        for width in (23,25,27,29):
+            if not unclassified: break
+            remaining=[]
+            for i in unclassified:
+                try:
+                    proc=subprocess.run([str(sparse_exe),str(width)],
+                        input=f"{i} {opens[i]}\\n",text=True,capture_output=True,
+                        check=True,timeout=90)
+                    fields=proc.stdout.strip().split(maxsplit=1)
+                    if len(fields)!=2: raise ValueError("missing sparse certificate output")
+                    data=fields[1]
+                    k,n,L,R,_=data.split()
+                    def edge_count(raw):
+                        return sum(int(v).bit_count() for item in raw.rstrip(",").split(",")
+                                   if item for _,v in [item.split(":")])
+                    expected=(int(n),edge_count(L),edge_count(R))
+                    module_name=(f"Raw58{key}Sparse{i}" if width==23
+                                 else f"Raw58{key}Sparse{width}_{i}")
+                    module,ns_sparse=emit_sparse(ROOT,i,opens[i],data,width=width,
+                        module_name=module_name,expected=expected)
+                    pumps[i]=ns_sparse
+                    sparse_modules.append(module)
+                    print(key,"sparse width-"+str(width),i,"states",n,
+                          "edges",expected[1:],flush=True)
+                except (subprocess.CalledProcessError,subprocess.TimeoutExpired,ValueError):
+                    remaining.append(i)
+            unclassified=remaining
     if sparse_modules:
         imports.extend(sparse_modules)
     print(key,"sparse certificates",len(sparse_modules),"remaining",len(unclassified))
