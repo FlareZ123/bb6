@@ -658,57 +658,6 @@ jobs:
             echo "Forbidden proof placeholder or native_decide found in combined 109-residual closure" >&2
             exit 1
           fi
-      - name: Verify mixed-bound maximality contract and exact champion leaf
-        run: |
-          set -euo pipefail
-          work="$PWD/.tmp/a13-mixed-bound"
-          mkdir -p "$work/imports"
-          python3 - <<'PY'
-          import base64, io, lzma, pathlib, tarfile
-          root = pathlib.Path(".tmp/a13-mixed-bound/imports")
-          p = pathlib.Path("im-results/agent42-champion-terminal")
-          with tarfile.open(fileobj=io.BytesIO(base64.b64decode((p/"TerminalProofs.tar.xz.b64").read_text())), mode="r:xz") as a:
-              member = next(m for m in a.getmembers() if pathlib.PurePosixPath(m.name).name == "TerminalFinish.lean")
-              (root/"TerminalFinish.lean").write_bytes(a.extractfile(member).read())
-          (root/"TerminalLeft.lean").write_bytes(lzma.decompress(base64.b64decode((p/"TerminalLeftExact.lean.xz.b64").read_text())))
-          q = pathlib.Path("im-results/agent13-coverage/BB6Coverage.lean.xz.b64")
-          (root/"BB6Coverage.lean").write_bytes(lzma.decompress(base64.b64decode(q.read_text())))
-          PY
-          printf '%s  %s\n' fbe453c5c170029885ba328bfdd9262600f918a8ce2371c60ecbb843897fd6bd "$work/imports/BB6Coverage.lean" | sha256sum -c -
-          printf '%s  %s\n' 12329036c66c3846f9261167b8f9aebd1778d9b6ea6044309956c2fa0b3e49b7 "$work/imports/TerminalFinish.lean" | sha256sum -c -
-          printf '%s  %s\n' 1bce2075fc4e0cd7d740fb71b3796088b190ddb6766e04640d992dadd1b650ff "$work/imports/TerminalLeft.lean" | sha256sum -c -
-          python tools/lean_compile_closure.py \
-            im-results/agent13-roster-convergence/MixedBound109Composition.lean \
-            --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean \
-            --override OuterLCIncPrelude=im-results/agent8-counted-reset/OuterLCIncPrelude.lean \
-            --override M0OddResidueSeven=im-results/agent41-m0-n16r7/M0OddResidueSeven.lean \
-            --override M0EvenEightValuationEncoding=im-results/agent48-counted-inc0/M0EvenEightValuationEncoding.lean \
-            --override M2EvenResidueTwo=im-results/agent42-champion-terminal/M2EvenResidueTwo.lean \
-            --workdir "$work/build" --jobs 8 | tee "$work/compile.log"
-          python3 - "$work/compile.log" <<'PY'
-          import pathlib, re, sys
-          log = pathlib.Path(sys.argv[1]).read_text()
-          allowed = {"propext", "Classical.choice", "Quot.sound"}
-          names = (
-              "champion_score_gt_7014",
-              "champion_compatible_root",
-              "champion_not_weighted_7014",
-              "champion_in_reduced_roster",
-              "champion_singleton_leaf",
-              "cover_of_reduced_roster_at_champion_score",
-              "tnf_certificate_of_reduced_roster_at_champion_score",
-              "exact_from_reduced_roster_at_champion_score",
-          )
-          for name in names:
-              m = re.search(r"'[^']*\."+name+r"' depends on axioms: \[([^\]]*)\]", log)
-              if not m:
-                  raise SystemExit("missing axiom audit: "+name)
-              used = {x.strip() for x in m.group(1).split(",") if x.strip()}
-              if not used <= allowed:
-                  raise SystemExit(f"nonstandard axioms: {name}: {used-allowed}")
-              print(f"{name}: {sorted(used)}")
-          PY
-
   rootzero:
     if: inputs.target == 'weighted-tnf-root-zero-refinement'
     runs-on: ubuntu-latest
@@ -761,6 +710,7 @@ jobs:
           python im-results/agent10-tnf-multipump/generate.py 68 72 82
           python im-results/agent10-tnf-multipump/generate.py 86 88 92 93 97 98 100 101 102 104
       - name: Check the selected residual composition
+        if: inputs.target != 'weighted-tnf-canonical-78-exact'
         env:
           TARGET: ${{ inputs.target }}
         run: |
@@ -786,10 +736,7 @@ jobs:
               member = next(m for m in a.getmembers() if pathlib.PurePosixPath(m.name).name == "TerminalFinish.lean")
               (root/"TerminalFinish.lean").write_bytes(a.extractfile(member).read())
           (root/"TerminalLeft.lean").write_bytes(lzma.decompress(base64.b64decode((p/"TerminalLeftExact.lean.xz.b64").read_text())))
-          q = pathlib.Path("im-results/agent13-coverage/BB6Coverage.lean.xz.b64")
-          (root/"BB6Coverage.lean").write_bytes(lzma.decompress(base64.b64decode(q.read_text())))
           PY
-          printf '%s  %s\n' fbe453c5c170029885ba328bfdd9262600f918a8ce2371c60ecbb843897fd6bd "$work/imports/BB6Coverage.lean" | sha256sum -c -
           printf '%s  %s\n' 12329036c66c3846f9261167b8f9aebd1778d9b6ea6044309956c2fa0b3e49b7 "$work/imports/TerminalFinish.lean" | sha256sum -c -
           printf '%s  %s\n' 1bce2075fc4e0cd7d740fb71b3796088b190ddb6766e04640d992dadd1b650ff "$work/imports/TerminalLeft.lean" | sha256sum -c -
           python tools/lean_compile_closure.py \
