@@ -67,7 +67,7 @@ on:
       raw59_child:
         description: Raw59 proof target; UpgradeRemaining reuses the accepted 0LE and 1LF shards from run 45675872170
         type: choice
-        options: [UpgradeAll, UpgradeRemaining, Upgrade0LA, Upgrade0LB, Upgrade0LE, Upgrade0LF, Upgrade1LB, Upgrade1LE, Upgrade1LF, AsymAll, Asym0LB, Asym1LB, Asym1LE, all, 0RB, 0LD, 0RC, 1RC, 0RF, 1LA, RCShared, RFCount, RFTriple, RFScan, 1RF, CanonicalPilot, CanonicalAll, PartialAll, Partial0LB, Partial1LB, Partial1LE, MacroFARPilot, Return1582, ReturnFamily, Late190, OffsetPilot, Width2Pilot, LB1Four, LB1Sweep583, LB1Sweep1734, 0RD, 1LC, 1RB, 1RD, 0LC, 0RE]
+        options: [UpgradeAll, UpgradeRemaining, Upgrade0LA, Upgrade0LB, Upgrade0LE, Upgrade0LF, Upgrade1LB, Upgrade1LE, Upgrade1LF, ClosedBase, AsymAll, Asym0LB, Asym1LB, Asym1LE, all, 0RB, 0LD, 0RC, 1RC, 0RF, 1LA, RCShared, RFCount, RFTriple, RFScan, 1RF, CanonicalPilot, CanonicalAll, PartialAll, Partial0LB, Partial1LB, Partial1LE, MacroFARPilot, Return1582, ReturnFamily, Late190, OffsetPilot, Width2Pilot, LB1Four, LB1Sweep583, LB1Sweep1734, 0RD, 1LC, 1RB, 1RD, 0LC, 0RE]
         default: all
 
       verify_f418_return:
@@ -494,6 +494,14 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Restore checked shared proof dependencies
+        if: ${{ (startsWith(matrix.child, 'Upgrade') && matrix.child != 'Upgrade0LE' && matrix.child != 'Upgrade1LF') || matrix.child == 'ClosedBase' }}
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45675872170
+          name: raw59-checked-Upgrade0LE
+          path: /tmp/raw59-core-cache
       - name: Generate and check raw59 retained-child refinement
         env:
           RAW59_CHILD: ${{ matrix.child }}
@@ -572,6 +580,9 @@ jobs:
               extra=(--manifest /tmp/a32-raw59/manifest.json --artifact-name "raw59-checked-$RAW59_CHILD" --theorem "$claim")
               ;;
           esac
+          if [[ -f /tmp/raw59-core-cache/manifest.json ]]; then
+            extra+=(--precompiled-manifest /tmp/raw59-core-cache/manifest.json --precompiled-dir /tmp/raw59-core-cache)
+          fi
           python tools/lean_compile_closure.py --workdir /tmp/a32-raw59 --jobs 4 "${extra[@]}" "$target" | tee /tmp/a32-raw59.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a32-raw59.log; then exit 1; fi
           if [[ "${#extra[@]}" -gt 0 ]]; then
@@ -594,7 +605,7 @@ jobs:
           if-no-files-found: error
           retention-days: 7
       - name: Preserve checked modules for parent composition
-        if: ${{ inputs.raw59_child == 'UpgradeAll' || inputs.raw59_child == 'UpgradeRemaining' }}
+        if: ${{ startsWith(matrix.child, 'Upgrade') || matrix.child == 'ClosedBase' }}
         uses: actions/upload-artifact@v4
         with:
           name: raw59-checked-${{ matrix.child }}

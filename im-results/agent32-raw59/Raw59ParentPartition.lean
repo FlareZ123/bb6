@@ -32,9 +32,9 @@ theorem compatible_child {m : Machine} (hm : compatible p59 m) (v : Transition)
   · exact hm s t (by simpa [refine,he] using ht)
 
 theorem partition (closed : Move → Bool)
-    (hs : ∀ mv, closed mv = true → ∀ m, compatible (child mv) m → WeightedBound 395 m)
+    (hs : ∀ mv, closed mv = true → ∀ m, compatible (BB6.Agent32Raw59.child mv) m → WeightedBound 395 m)
     (m : Machine) (hm : compatible p59 m) :
-    WeightedBound 395 m ∨ ∃ mv ∈ retained closed, compatible (child mv) m := by
+    WeightedBound 395 m ∨ ∃ mv ∈ retained closed, compatible (BB6.Agent32Raw59.child mv) m := by
   cases h : m (0,true) with
   | none => exact Or.inl (halt_branch m (compatible_child hm none h))
   | some mv =>
@@ -45,8 +45,8 @@ theorem partition (closed : Move → Bool)
       exact Or.inr ⟨mv,List.mem_filter.mpr ⟨moves_complete mv,by simp [hd]⟩,hc⟩
 
 theorem cover_raw59 (B : Nat) (hB : 395 ≤ B) (closed : Move → Bool)
-    (hs : ∀ mv, closed mv = true → ∀ m, compatible (child mv) m → WeightedBound 395 m)
-    (hr : ∀ mv ∈ retained closed, Cover (WeightedBound B) (child mv)) :
+    (hs : ∀ mv, closed mv = true → ∀ m, compatible (BB6.Agent32Raw59.child mv) m → WeightedBound 395 m)
+    (hr : ∀ mv ∈ retained closed, Cover (WeightedBound B) (BB6.Agent32Raw59.child mv)) :
     Cover (WeightedBound B) p59 := by
   refine Cover.leaf p59 ?_
   intro m hm
