@@ -1050,3 +1050,6 @@ Claimed Agent 4 at `2026-11-24T04:34:05.287Z`, run `agent4-gpt6-20261124T0434052
 
 ## 2026-11-25 raw58 (current invocation)
 Lease claimed 00:39:57.561Z; first-hole frontier work after reading the newer candidate dossiers. Raw58 E1=0RA is a six-hole parent. Candidate A1=0RE exhaustive bound 55 (250 FAR, final long cycle e=39,k=278, lower=-3; 9,765,625 completions). Raw58Cut reduces to 12 residual children and has eleven short translating cycles. Source status pending. Work in im-results/agent4-raw58; run agent10-four-hole.yml target raw58-cut. Local search working dir /tmp/a4tnf; original Git clone DNS blocked, Lean installed. Do not repeat other agents' candidate four/five-hole whole audits. Raw58 remaining leaves by child: 4:50,5:271,8:13,9:7,11:20,12:40,13:24,14:5,16:30,17:168,22:7,23:26 before expanded bank.
+
+
+Raw58 now has four complete candidate five-hole children (A1=0RE 55, 0RD 120, 1LC 156, 1RE 93). New proof Raw58RD1892: explicit binary carry with structural induction on zero-separated digits, locally Lean checked through arbitrarily long zipper runs. Source target raw58-more; 9 residual children after 11 trivial cycles + 4 complete moving branches + halt. Please avoid duplicate work on raw58; I'll pursue remaining children.

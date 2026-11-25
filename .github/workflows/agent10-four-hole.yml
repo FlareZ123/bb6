@@ -4,7 +4,7 @@ on:
     inputs:
       target:
         type: choice
-        options: [twelve, five-hole, recursive, raw107-witness, raw107-child, raw58-cut]
+        options: [twelve, five-hole, recursive, raw107-witness, raw107-child, raw58-cut, raw58-more]
         default: twelve
       raw107_witness:
         type: choice
@@ -106,3 +106,14 @@ jobs:
           python im-results/agent4-raw58/generate.py
           python tools/lean_compile_closure.py --workdir /tmp/a4-raw58 --jobs 4 im-results/agent4-raw58/Raw58Cut.lean | tee /tmp/a4-raw58.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a4-raw58.log; then exit 1; fi
+      - name: Check raw58 three additional child closures
+        if: inputs.target == 'raw58-more'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent4-raw58/generate.py
+          python im-results/agent4-raw58/generate_more.py
+          python tools/lean_compile_closure.py --workdir /tmp/a4-raw58-more --jobs 4 im-results/agent4-raw58/Raw58MoreCut.lean | tee /tmp/a4-raw58-more.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a4-raw58-more.log; then exit 1; fi

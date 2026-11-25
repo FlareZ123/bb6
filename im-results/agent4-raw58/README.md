@@ -7,3 +7,15 @@ For A1=0RE, exact first-hole enumeration yields 488 split nodes, 2,259 last-hole
 Reproduce with `python im-results/agent4-raw58/generate.py` then compile Raw58Cut.lean and its original-source dependency closure (manual target raw58-cut in agent10-four-hole.yml). The generated source checks every cycle, FAR and weighted query; the checked result, not the generator, is authoritative. Status: candidate only until the source Lean job passes. The original local Git clone was unavailable (DNS); the Lean toolchain itself was successfully reconstructed.
 
 If accepted, 13 of 25 first-hole cylinders (126,953,125 completions) are bounded by 55; 117,187,500 completions remain in the 12 listed children. This is a disjoint refinement of raw58, not a complete raw58 decision.
+
+## Three more complete candidate children
+
+| A1 | Candidate weighted bound | First-hole splits | Last-hole leaves | Short cycles | FAR | Sweep proof | Other |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| 0RD | 120 | 495 | 2095 | 9254 | 33 | 3 | 1 binary-counter proof |
+| 1LC | 156 | 589 | 3146 | 10265 | 132 | 5 | 0 |
+| 1RE | 93 | 506 | 2264 | 9271 | 97 | 7 | 0 |
+
+Every child contains 25^5 completions. The binary counter (global discovery index 1892, local 0RD open index 32) is the machine `1RB0RD_1RC---_0RD0LC_1LD1RE_1RF0RA_1LC1RE`. At E with a fixed left sentinel, the right list is a little-endian digit sequence with zeros separating successive bits. A true digit extends the carry by two steps; a zero or implicit blank switches it to true, clears the carried prefix with a two-cell sweep, and returns E in 8 further reset steps. The formal `Code` induction proves a positive return from every valid sequence and carry depth. Blank reaches E after 15 steps, so arbitrarily long live runs follow. The complete arithmetic/zipper proof through `arbitrary` compiled locally on Lean 4.36.0-rc2 against verbatim original run0 and sweepL definitions (standard axioms only); the raw-machine soundness bridge awaits original-source CI. Source file Raw58RD1892.lean.
+
+New generator generate_more.py plus more.json emits three complete candidate proof trees. Raw58MoreCut.lean combines them with the previous cut, leaving nine five-hole children (87,890,625 completions) at bound 156. Run target raw58-more. All new full-cylinder claims remain candidate until source acceptance.
