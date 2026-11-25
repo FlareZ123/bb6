@@ -87,13 +87,6 @@ jobs:
           python im-results/agent10-tnf-raw87/generate.py
           python im-results/agent10-tnf-raw91/generate.py
           python im-results/agent11-raw107/generate.py
-          python im-results/agent11-raw107/generate_rc.py
-          python im-results/agent11-raw107/generate_re.py
-          python im-results/agent11-raw107/generate_more.py 1RE 1LC 1LE 1LB 0RF 1RF 0LE
-          python im-results/agent11-raw107/generate_partial.py 0LF 1LA 1LF
-          for prefix in Raw107RD Raw107RC Raw107RE Raw107B1RE Raw107B1LC Raw107B1LE Raw107B1LB Raw107B0RF Raw107B1RF Raw107B0LE Raw107B0LF Raw107B1LA Raw107B1LF; do
-            python im-results/agent10-tnf-multipump/chunk_checks.py im-results/agent11-raw107 "$prefix" --limit 180
-          done
           python im-results/agent10-tnf-multipump/generate.py 66 70 80
           python im-results/agent10-tnf-multipump/generate.py 68 72 82
           python im-results/agent10-tnf-multipump/generate.py 86 88 92 93 97 98 100 101 102 104
@@ -890,6 +883,13 @@ jobs:
           python im-results/agent10-tnf-raw87/generate.py
           python im-results/agent10-tnf-raw91/generate.py
           python im-results/agent11-raw107/generate.py
+          python im-results/agent11-raw107/generate_rc.py
+          python im-results/agent11-raw107/generate_re.py
+          python im-results/agent11-raw107/generate_more.py 1RE 1LC 1LE 1LB 0RF 1RF 0LE
+          python im-results/agent11-raw107/generate_partial.py 0LF 1LA 1LF
+          for prefix in Raw107RD Raw107RC Raw107RE Raw107B1RE Raw107B1LC Raw107B1LE Raw107B1LB Raw107B0RF Raw107B1RF Raw107B0LE Raw107B0LF Raw107B1LA Raw107B1LF; do
+            python im-results/agent10-tnf-multipump/chunk_checks.py im-results/agent11-raw107 "$prefix" --limit 180
+          done
           python im-results/agent10-tnf-multipump/generate.py 66 70 80
           python im-results/agent10-tnf-multipump/generate.py 68 72 82
           python im-results/agent10-tnf-multipump/generate.py 86 88 92 93 97 98 100 101 102 104
