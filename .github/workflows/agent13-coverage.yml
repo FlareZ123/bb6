@@ -65,8 +65,33 @@ jobs:
         if: inputs.target == 'weighted-tnf-raw124-champion-bound'
         run: |
           set -euo pipefail
-          python tools/lean_compile_closure.py --workdir /tmp/a2-raw124-champion-bound --jobs 4 im-results/agent2-tnf-raw124/Raw124ChampionBound.lean | tee /tmp/a2-raw124-champion-bound.log
-          if grep -Eq 'sorryAx|native_decide' /tmp/a2-raw124-champion-bound.log; then exit 1; fi
+          work="$PWD/.tmp/a2-raw124-champion-bound"
+          mkdir -p "$work/imports"
+          export BB6_CHAMPION_WORK="$work"
+          python3 - <<'PY'
+          import base64, io, lzma, os, pathlib, tarfile
+          root = pathlib.Path(os.environ["BB6_CHAMPION_WORK"]) / "imports"
+          p = pathlib.Path("im-results/agent42-champion-terminal")
+          with tarfile.open(fileobj=io.BytesIO(base64.b64decode((p/"TerminalProofs.tar.xz.b64").read_text())), mode="r:xz") as archive:
+              member = next(m for m in archive.getmembers() if pathlib.PurePosixPath(m.name).name == "TerminalFinish.lean")
+              (root/"TerminalFinish.lean").write_bytes(archive.extractfile(member).read())
+          (root/"TerminalLeft.lean").write_bytes(lzma.decompress(base64.b64decode((p/"TerminalLeftExact.lean.xz.b64").read_text())))
+          q = pathlib.Path("im-results/agent13-coverage/BB6Coverage.lean.xz.b64")
+          (root/"BB6Coverage.lean").write_bytes(lzma.decompress(base64.b64decode(q.read_text())))
+          PY
+          printf '%s  %s\n' fbe453c5c170029885ba328bfdd9262600f918a8ce2371c60ecbb843897fd6bd "$work/imports/BB6Coverage.lean" | sha256sum -c -
+          printf '%s  %s\n' 12329036c66c3846f9261167b8f9aebd1778d9b6ea6044309956c2fa0b3e49b7 "$work/imports/TerminalFinish.lean" | sha256sum -c -
+          printf '%s  %s\n' 1bce2075fc4e0cd7d740fb71b3796088b190ddb6766e04640d992dadd1b650ff "$work/imports/TerminalLeft.lean" | sha256sum -c -
+          python tools/lean_compile_closure.py \
+            im-results/agent2-tnf-raw124/Raw124ChampionBound.lean \
+            --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean \
+            --override OuterLCIncPrelude=im-results/agent8-counted-reset/OuterLCIncPrelude.lean \
+            --override M0OddResidueSeven=im-results/agent41-m0-n16r7/M0OddResidueSeven.lean \
+            --override M0EvenEightValuationEncoding=im-results/agent48-counted-inc0/M0EvenEightValuationEncoding.lean \
+            --override M2EvenResidueTwo=im-results/agent42-champion-terminal/M2EvenResidueTwo.lean \
+            --workdir "$work/build" --jobs 4 | tee "$work/compile.log"
+          if grep -Eq 'sorryAx|native_decide' "$work/compile.log"; then exit 1; fi
+
       - name: Check canonical partial audit soundness
         if: inputs.target == 'weighted-tnf-canonical-partial-audit'
         run: |
