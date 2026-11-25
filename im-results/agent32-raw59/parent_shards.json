@@ -25,5 +25,6 @@
     "Upgrade1LF": [
       "Raw59Upgrade1LFData"
     ]
-  }
+  },
+  "allow_mixed_revisions": true
 }
