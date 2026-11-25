@@ -1,0 +1,1 @@
+im-results/agent4-coverage-smoke/CryptidsTapeAdapter.lean
