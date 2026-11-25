@@ -202,6 +202,7 @@ jobs:
 
   assemble-existing:
     if: inputs.artifact_run_id != ''
+    needs: recover
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -238,23 +239,15 @@ jobs:
           pattern: raw122-audit-*
           run-id: ${{ inputs.artifact_run_id }}
           github-token: ${{ github.token }}
-          path: /tmp/a43-audit
-          merge-multiple: true
+          path: /tmp/a43-old-shards
+          merge-multiple: false
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw122-recovery-*
+          path: /tmp/a43-new-shards
+          merge-multiple: false
       - name: Assemble exact parent partial audit from retained shards
-        run: |
-          set -euo pipefail
-          test -f /tmp/a43-source/Raw122Data.lean
-          test -f /tmp/a43-audit/Raw122Base.olean
-          cp /tmp/a43-source/*.lean /tmp/a43-audit/
-          cd /tmp/a43-audit
-          export LEAN_PATH="$PWD"
-          for i in $(seq -w 0 23); do
-            lean -o "Raw122Branch${i}.olean" "Raw122Branch${i}.lean"
-          done
-          lean -o Raw122Data.olean Raw122Data.lean | tee /tmp/a43-root.log
-          if grep -Eq 'sorryAx|native_decide' /tmp/a43-root.log; then exit 1; fi
-          grep -E 'theorem (residual_count|sound)' Raw122Data.lean
-          cp /tmp/a43-root.log ./audit.log
+        run: python im-results/agent43-raw122-cut/assemble_recovered.py
       - uses: actions/upload-artifact@v4
         with:
           name: raw122-certified-root
