@@ -18,7 +18,7 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 
 namespace BB6.Agent3Raw120Complete
-open BB6Coverage BB6.Agent13BlankDelay BB6.Agent3Raw120
+open BB6Coverage BB6.Agent13BlankDelay BB6.Agent3Raw120 BB6.Agent50TNFPilot
 open BB6.Agent10ZipAudit BB6.Agent31ThreeHole
 
 abbrev hole : Slot := (4,false)
