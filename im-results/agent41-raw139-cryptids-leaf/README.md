@@ -70,23 +70,32 @@ in one Lean 4.36.0-rc2 compilation:
 5. a six-edge `RootedFrontier` from the exact E1=1LF parent, with every
    off-path ordinary sibling retained and halt siblings charged by
    `pathOKB`;
-6. exact membership and uniqueness of the E1=1LF parent in the current
-   102-entry raw139 residual list;
-7. a conditional exact-BB6 consumer replacing only that parent by its
-   explicit descendants.
+6. exact membership and uniqueness of the E1=1LF parent in the 123-leaf
+   parent-integrated raw139 frontier;
+7. a stable local contract replacing only that parent by its explicit
+   descendants, while preserving the other 122 residuals;
+8. a generic `graftRoster_sound` lift into the accepted 76-way
+   raw107+raw114 canonical quotient roster, followed by
+   `CanonicalFrontier.exact_from_quotient_roster`.
 
 This does **not** prove the whole E1=1LF parent nonhalting, nor does it close
 the other canonical parents or the new sibling residuals. The global theorem
-remains conditional on covers for all those remaining obligations.
+remains conditional on Covers for every entry in the grafted canonical76
+roster. The module deliberately uses the generic parent-refinement and
+quotient-roster interfaces rather than creating another count-specific
+roster module.
 
 ## Reproduction
 
 The existing manual workflow
 `.github/workflows/agent6-champion-residual.yml` has an optional
-`raw139_cryptids_leaf` target. It checks out the exact Cryptids commit,
-aligns its Lake project to Lean 4.36.0-rc2, builds the source theorem, and
-runs `reproduce.sh` against the canonical77 and champion-residual build
-artifacts. The script records the Lean output and theorem axiom profiles.
+`raw139_cryptids_leaf` target. It downloads the accepted canonical76
+two-parent roster artifact (run `45647053824`), checks out the exact
+Cryptids commit, aligns its Lake project to Lean 4.36.0-rc2, builds the
+source theorem, and runs `reproduce.sh` against the canonical77,
+canonical76, and champion-residual build artifacts. The optional target
+skips the older 102-list F1 consumer because this proof uses the stable
+123-leaf parent contract and generic canonical76 graft instead. The script records the Lean output and theorem axiom profiles.
 
 Acceptance is pending until that workflow succeeds and the artifact confirms
 the current-list membership/address checks. A failed or unrun CI result must
