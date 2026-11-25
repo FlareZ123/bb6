@@ -4,7 +4,7 @@ open BB6Coverage BB6.Agent13BlankDelay BB6.Agent49BoxBridge BB6.Agent49Box
 open BB6.Agent13CrossRouteHeldLeaf109
 
 def newTables : List PartialMachine := leaves.map (fun l => table l.1)
-def combinedTables : List PartialMachine := sideTables ++ [held] ++ newTables
+def combinedTables : List PartialMachine := (sideTables ++ [held]) ++ newTables
 def remaining := remainder firstOneB0_1LC combinedTables
 
 theorem newTables_sound (p : PartialMachine) (hp : p ∈ newTables) :
