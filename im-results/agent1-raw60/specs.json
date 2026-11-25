@@ -243,16 +243,27 @@
       631,
       636
     ],
-    "unresolved": {
-      "24": "1RB0LB_1RC0LF_0RD1RD_1LD1RE_---1RA_0RB1LB",
-      "28": "1RB0LB_1RC0LF_0RD1RD_1LD1RE_---1RA_0RF1LB",
-      "423": "1RB0LB_1RC1LB_0RD0RF_1LD1RE_---1RA_1LA1RF"
-    },
+    "unresolved": {},
     "manual": {
+      "24": [
+        "Raw60LBBinary",
+        "BB6.Agent1Raw60LBBinary.M24",
+        "1RB0LB_1RC0LF_0RD1RD_1LD1RE_---1RA_0RB1LB"
+      ],
+      "28": [
+        "Raw60LBBinary",
+        "BB6.Agent1Raw60LBBinary.M28",
+        "1RB0LB_1RC0LF_0RD1RD_1LD1RE_---1RA_0RF1LB"
+      ],
       "90": [
         "Raw60LBCounter",
         "BB6.Agent1Raw60LBCounter",
         "1RB0LB_1RC0RF_0RD0RB_1LD1RE_---1RA_0RC0LD"
+      ],
+      "423": [
+        "Raw60LBQuadratic",
+        "BB6.Agent1Raw60LBQuadratic",
+        "1RB0LB_1RC1LB_0RD0RF_1LD1RE_---1RA_1LA1RF"
       ]
     }
   },
