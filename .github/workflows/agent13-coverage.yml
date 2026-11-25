@@ -5,7 +5,7 @@ on:
       target:
         description: 'Source closure to verify'
         type: choice
-        options: [legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole, weighted-tnf-four-hole, weighted-tnf-four-hole-sibling, weighted-tnf-r1-sweep, queue-orbit, weighted-tnf-roster-convergence, weighted-tnf-roster-agent47-graft, weighted-tnf-pure-residuals, weighted-tnf-raw99, weighted-tnf-raw124-rf, weighted-tnf-raw124-lc, weighted-tnf-raw124-1rf, weighted-tnf-raw124-0rb, weighted-tnf-raw124-bundle, weighted-tnf-raw103, weighted-tnf-raw104, weighted-tnf-agent8-five, weighted-tnf-agent8-six, weighted-tnf-agent8-raw117, weighted-tnf-roster-composition, weighted-tnf-agent3-siblings, weighted-tnf-raw85-parent-check, weighted-tnf-raw91, weighted-tnf-raw87, weighted-tnf-raw83-pump, weighted-tnf-agent10-multi, weighted-tnf-agent10-five-new, weighted-tnf-agent10-five-roster, weighted-tnf-agent10-raw106, weighted-tnf-raw63-counter, weighted-tnf-raw61-witnesses, weighted-tnf-prefix-single, weighted-tnf-agent10-single, weighted-tnf-combined-109, weighted-tnf-root-zero-refinement, weighted-tnf-combined-106, weighted-tnf-canonical-78, weighted-tnf-canonical-78-exact, weighted-tnf-canonical-two-parent, weighted-tnf-raw10-box, weighted-tnf-raw10-box8-cycle, weighted-tnf-held-block-far, weighted-tnf-raw120-late, weighted-tnf-raw120-rf, weighted-tnf-raw120-rb, weighted-tnf-raw120-partition, weighted-tnf-raw120-la-carry, weighted-tnf-raw120-la, weighted-tnf-root-sibling-first-hole, weighted-tnf-canonical-frontier, weighted-tnf-raw114-cut, weighted-tnf-raw114-far, weighted-tnf-raw114-pumps, weighted-tnf-raw114-complete, weighted-tnf-raw107-witnesses, weighted-tnf-raw107-1la, weighted-tnf-raw60, weighted-tnf-raw60-conditional, weighted-tnf-raw60-next, weighted-tnf-raw60-la, weighted-tnf-ngram-pilot, weighted-tnf-champion-parent, weighted-tnf-held-leaf-109-membership, weighted-tnf-f412-partition, weighted-tnf-sidewitness-multiparent, weighted-tnf-sidewitness-multiparent-scan]
+        options: [legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole, weighted-tnf-four-hole, weighted-tnf-four-hole-sibling, weighted-tnf-r1-sweep, queue-orbit, weighted-tnf-roster-convergence, weighted-tnf-roster-agent47-graft, weighted-tnf-pure-residuals, weighted-tnf-raw99, weighted-tnf-raw124-rf, weighted-tnf-raw124-lc, weighted-tnf-raw124-1rf, weighted-tnf-raw124-0rb, weighted-tnf-raw124-bundle, weighted-tnf-raw103, weighted-tnf-raw104, weighted-tnf-agent8-five, weighted-tnf-agent8-six, weighted-tnf-agent8-raw117, weighted-tnf-roster-composition, weighted-tnf-agent3-siblings, weighted-tnf-raw85-parent-check, weighted-tnf-raw91, weighted-tnf-raw87, weighted-tnf-raw83-pump, weighted-tnf-agent10-multi, weighted-tnf-agent10-five-new, weighted-tnf-agent10-five-roster, weighted-tnf-agent10-raw106, weighted-tnf-raw63-counter, weighted-tnf-raw61-witnesses, weighted-tnf-prefix-single, weighted-tnf-agent10-single, weighted-tnf-combined-109, weighted-tnf-root-zero-refinement, weighted-tnf-combined-106, weighted-tnf-canonical-78, weighted-tnf-canonical-78-exact, weighted-tnf-canonical-two-parent, weighted-tnf-raw10-box, weighted-tnf-raw10-box8-cycle, weighted-tnf-held-block-far, weighted-tnf-raw120-late, weighted-tnf-raw120-rf, weighted-tnf-raw120-rb, weighted-tnf-raw120-partition, weighted-tnf-raw120-la-carry, weighted-tnf-raw120-la, weighted-tnf-root-sibling-first-hole, weighted-tnf-canonical-frontier, weighted-tnf-raw114-cut, weighted-tnf-raw114-far, weighted-tnf-raw114-pumps, weighted-tnf-raw114-complete, weighted-tnf-raw107-witnesses, weighted-tnf-raw107-1la, weighted-tnf-raw60, weighted-tnf-raw60-conditional, weighted-tnf-raw60-next, weighted-tnf-raw60-la, weighted-tnf-raw60-assemble, weighted-tnf-raw60-progress, weighted-tnf-ngram-pilot, weighted-tnf-champion-parent, weighted-tnf-held-leaf-109-membership, weighted-tnf-f412-partition, weighted-tnf-sidewitness-multiparent, weighted-tnf-sidewitness-multiparent-scan]
         default: legacy
       raw_id:
         description: 'Single Agent 10 residual index (single target only)'
@@ -998,13 +998,13 @@ jobs:
           if grep -Eq 'sorryAx|native_decide' /tmp/raw107-assemble.log; then exit 1; fi
 
   raw60:
-    if: inputs.target == 'weighted-tnf-raw60' || inputs.target == 'weighted-tnf-raw60-conditional' || inputs.target == 'weighted-tnf-raw60-next' || inputs.target == 'weighted-tnf-raw60-la'
+    if: inputs.target == 'weighted-tnf-raw60' || inputs.target == 'weighted-tnf-raw60-conditional' || inputs.target == 'weighted-tnf-raw60-next' || inputs.target == 'weighted-tnf-raw60-la' || inputs.target == 'weighted-tnf-raw60-assemble'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     strategy:
       fail-fast: false
       matrix:
-        child: ${{ fromJSON(inputs.target == 'weighted-tnf-raw60' && '["0RC","0RE"]' || inputs.target == 'weighted-tnf-raw60-conditional' && '["0LD","0RF"]' || inputs.target == 'weighted-tnf-raw60-la' && '["1LA"]' || '["0RF","0LB","1LA","1LB","1LC","1RF"]') }}
+        child: ${{ fromJSON(inputs.target == 'weighted-tnf-raw60' && '["0RC","0RE"]' || inputs.target == 'weighted-tnf-raw60-conditional' && '["0LD","0RF"]' || inputs.target == 'weighted-tnf-raw60-la' && '["1LA"]' || inputs.target == 'weighted-tnf-raw60-assemble' && '["0RC","0RE","0RF","0LB","1LA","1LB","1LC","1RF"]' || '["0RF","0LB","1LA","1LB","1LC","1RF"]') }}
     steps:
       - uses: actions/checkout@v4
       - name: Install Lean 4.36.0-rc2
@@ -1023,6 +1023,65 @@ jobs:
           if [ "$CHILD" = 0LD ]; then roots+=(im-results/agent1-raw60/Raw60RootCut.lean); fi
           python tools/lean_compile_closure.py --workdir /tmp/raw60 --jobs 4 "${roots[@]}" | tee /tmp/raw60.log
           if grep -Eq 'sorryAx|native_decide' /tmp/raw60.log; then exit 1; fi
+
+      - name: Stage exact child proof objects
+        if: inputs.target == 'weighted-tnf-raw60-assemble'
+        run: |
+          mkdir -p /tmp/raw60-artifact
+          cp /tmp/raw60/*.olean /tmp/raw60-artifact/
+      - uses: actions/upload-artifact@v4
+        if: inputs.target == 'weighted-tnf-raw60-assemble'
+        with:
+          name: raw60-child-${{ matrix.child }}
+          path: /tmp/raw60-artifact
+          if-no-files-found: error
+
+  raw60_progress:
+    if: inputs.target == 'weighted-tnf-raw60-progress'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check exact root reduction and all new exception proofs
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python tools/lean_compile_closure.py --workdir /tmp/raw60-progress --jobs 2 im-results/agent1-raw60/{Raw60RootProgress,Raw60LABinary,Raw60LAAlternating,Raw60RFUnary,Raw60BCBinary,Raw60LBFour,Raw60LCGlider}.lean | tee /tmp/raw60-progress.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/raw60-progress.log; then exit 1; fi
+
+  raw60_assemble:
+    if: inputs.target == 'weighted-tnf-raw60-assemble'
+    needs: raw60
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw60-child-*
+          path: /tmp/raw60-assembled
+          merge-multiple: true
+      - name: Consume the eight exact child certificates
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python tools/lean_compile_closure.py --workdir /tmp/raw60-root --jobs 2 im-results/agent1-raw60/Raw60RootProgress.lean | tee /tmp/raw60-root.log
+          cp /tmp/raw60-root/*.olean /tmp/raw60-assembled/
+          cp im-results/agent1-raw60/Raw60RootAssembly.lean /tmp/raw60-assembled/
+          cd /tmp/raw60-assembled
+          export LEAN_PATH="$PWD"
+          lean -o Raw60RootAssembly.olean Raw60RootAssembly.lean | tee /tmp/raw60-assembly.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/raw60-{root,assembly}.log; then exit 1; fi
 
   ngram_pilot:
     if: inputs.target == 'weighted-tnf-ngram-pilot'
