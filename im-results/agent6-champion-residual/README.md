@@ -6,7 +6,7 @@ This investigation isolates the retained 9-hole residual
 
 `1RB---_1RC---_1LD---_------_------_------`
 
-which is canonical index 99 / raw residual index 139 in the 121-entry roster. It is compatible with the published six-state champion and is retained in Agent 47's 109-entry roster. It is outside the 19-parent first-hole sweep currently recorded in `im-results/agent47-rooted-tnf/RootSiblingFirstHole.lean`.
+which is raw residual index 139. It is canonical index 99 in the older 121-entry roster and canonical index 102 in the newer 124-entry manifest used by Agent 47's 78-way quotient frontier. It is compatible with the published six-state champion, retained in the 109-entry roster, and not among the 28 symmetry-discarded indices or 18 early-bound cuts in the 78-way roster. It is outside the 19-parent first-hole sweep currently recorded in `im-results/agent47-rooted-tnf/RootSiblingFirstHole.lean`.
 
 The Lean source constructs the cylinder directly from the first-one root by fixing B/0 = 1RC and C/0 = 1LD. The initial undefined transition is D/1.
 
@@ -49,6 +49,22 @@ The source proves that the target cylinder is exactly one of the 109 retained re
 - 156 descendants of the champion-containing cylinder.
 
 `championResidualRefinedRosterSound` gives the mixed-bound dichotomy at the champion score. Consequently, `exactBB6OfChampionResidualRoster` reduces exact BB(6) to supplying a `Cover (WeightedBound championScore)` for each of those 264 residuals.
+
+## Canonical 78 and parent-certificate integration (draft)
+
+The newer quotient route reduces the 124 raw residuals to 96 canonical addresses and then to 78 retained quotient-compatible representatives. The manifest identifies this champion cylinder as canonical index 102 / raw index 139, address B0=1RC, C0=1LD. The exact Lean pair-membership check is included in `ChampionResidualParentIntegration.lean`.
+
+Agent 48's two-hole A/1–B/1 parent certificate is intended to replace only the final `championStep 7` of this frontier. That step has 23 ordinary non-champion children and no depth-7 side-witness entries. The earlier seven splits contribute the other 133 open leaves. If the parent certificate is proved equal to `championP7`, the integrated frontier should therefore have **133** residual leaves, not zero.
+
+The integration draft:
+- proves `BB6.Agent48Parent.parent = BB6.Agent6ChampionResidual.championP7` slot by slot;
+- transports the parent certificate to `championP7` and replaces the final A/1 split by a closed frontier node;
+- proves every open frontier leaf occurs in the explicit residual list and derives a root `Cover` from Covers for all 133 leaves;
+- proves the raw139 address/table is exactly present in the canonical 78 roster;
+- provides a conditional `ExactBB6 championScore` theorem from Covers for every nonchampion roster entry plus the 133 raw139 frontier leaves; it also checks the address count 77 + 133 = 210.
+
+This is **not yet source-accepted**. The parent exact audit is running in [45539867315](https://github.com/FlareZ123/bb6/actions/runs/45539867315), and the canonical78 exact-witness audit is running in [45539884311](https://github.com/FlareZ123/bb6/actions/runs/45539884311). The Agent6 workflow has been extended to compile the integration draft; dispatch it after the parent exact audit passes. The earlier 109-roster accounting (108 untouched + 156 descendants = 264) is a separate raw-roster specialization and must not be conflated with the 78-way quotient accounting.
+
 
 ## Source and verification
 
