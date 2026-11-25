@@ -118,12 +118,12 @@ jobs:
       - name: Audit complete F0 sibling covers
         run: |
           set -euo pipefail
-          python tools/lean_compile_closure.py im-results/agent6-champion-residual/F0SiblingCover.lean im-results/agent6-champion-residual/F0Counter0LC.lean --workdir /tmp/a6-f0 --jobs 4 | tee /tmp/a6-f0.log
+          python tools/lean_compile_closure.py im-results/agent6-champion-residual/F0SiblingCover.lean im-results/agent6-champion-residual/F0Counter0LC.lean im-results/agent6-champion-residual/F0SiblingLong.lean --workdir /tmp/a6-f0 --jobs 4 | tee /tmp/a6-f0.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a6-f0.log; then exit 1; fi
           python - <<'PY'
           import re
           log = open('/tmp/a6-f0.log').read()
-          for name in ('cover_oneLA','cover_oneLE','cover_zeroLB','cover_oneLC','cover_zeroLC'):
+          for name in ('cover_oneLA','cover_oneLE','cover_zeroLB','cover_oneLC','cover_zeroLC','cover_oneRC'):
               m = re.search(r"'[^']*\."+name+r"' depends on axioms: \[([^\]]*)\]",log)
               if not m: raise SystemExit('missing axiom audit: '+name)
               used = {x.strip() for x in m.group(1).split(',') if x.strip()}
