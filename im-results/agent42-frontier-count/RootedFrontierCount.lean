@@ -79,7 +79,7 @@ theorem residuals_buildFrontierB (B : Nat) :
       have htail' : pathOKB B (refine p (readSlot c) (some mv))
           (advanceCut cut mv) xs = true := by
         simpa [hs.symm] using htail
-      have cert' : WeightedTNFCertificate B
+      let cert' : WeightedTNFCertificate B
           (pathEnd (refine p (readSlot c) (some mv))
             (advanceCut cut mv) xs).1 6 := by
         simpa [pathEnd, hs.symm] using cert
