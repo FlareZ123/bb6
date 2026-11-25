@@ -46,7 +46,7 @@ def generate():
     assert opens[56].replace("_","")=="1RB0RC1RC---0RD0LE1LD0RA1LE1RF1RA0LF"
     assert counter.swap(opens[56])==opens[194].replace("_","")
     mirror=gram.replace("Agent11Raw39Hard56","Agent11Raw39Hard194")
-    mirror=mirror.replace("⟨5,","⟨4,").replace("sweepL table 5 ","sweepL table 4 ")
+    mirror=mirror.replace("⟨5,","⟨4,").replace("sweepL table 5 ","sweepL table 4 ").replace("⟨4,_,by decide,a0_case1","⟨5,_,by decide,a0_case1")
     mirror=re.sub(r"def table : PartialMachine :=.*?(?=\nabbrev O)",lambda _:m.tab(parse(opens[194]))+"\n",mirror,flags=re.S)
     (ROOT/"Raw39Hard194.lean").write_text(mirror)
     for i in [56,194]:
