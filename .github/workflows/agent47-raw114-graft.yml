@@ -717,6 +717,7 @@ jobs:
           test -s /tmp/a72-base/a31-canonical72/BB6/Agent8Canonical72RosterOnly.olean
           python tools/lean_compile_closure.py \\
             im-results/agent8-tnf-raw117/Canonical70Raw121Raw110RosterOnly.lean \\
+            im-results/agent38-raw112-membership/Canonical69Raw112Membership.lean \\
             --workdir /tmp/a31-canonical70 \\
             --manifest /tmp/a31-canonical70-manifest.json \\
             --label canonical70-raw121-raw110-roster-only \\
@@ -728,6 +729,8 @@ jobs:
             --precompiled-manifest /tmp/a72-base/a31-canonical72-manifest.json \\
             --precompiled-dir /tmp/a72-base/a31-canonical72 \\
             --provenance-input im-results/agent8-tnf-raw117/Canonical70Raw121Raw110RosterOnly.lean \\
+            --provenance-input im-results/agent38-raw112-membership/Canonical69Raw112Membership.lean \\
+            --provenance-input im-results/agent47-raw112-cut/Raw112Base.lean \\
             --provenance-input im-results/agent8-tnf-raw117/Canonical71Raw121RosterOnly.lean \\
             --provenance-input im-results/agent8-tnf-raw117/Canonical72RosterOnly.lean \\
             --provenance-input im-results/agent11-raw121/prepare_raw121.py \\
@@ -762,6 +765,8 @@ jobs:
               "BB6.Agent8Canonical70Raw121Raw110RosterOnly.roster_count",
               "BB6.Agent8Canonical70Raw121Raw110RosterOnly.sound",
               "BB6.Agent8Canonical70Raw121Raw110RosterOnly.exact_at_target",
+              "BB6.Agent38Raw112Membership.parent_present",
+              "BB6.Agent38Raw112Membership.count",
           )
           for name in required:
               if name not in profiles:
@@ -798,10 +803,17 @@ jobs:
               "raw121_parent_certificate_run_id": 45616647230,
               "raw110_parent_certificate_run_id": 45597857116,
               "raw110_parent_cut_artifact_run_id": 45593652030,
+              "raw112_membership": {
+                  "parent_present_theorem": "BB6.Agent38Raw112Membership.parent_present",
+                  "post_cut_roster_count": 69,
+                  "status": "finite membership/count only; Raw112 parent Cover is not imported or claimed",
+              },
               "source_revision": os.environ["GITHUB_SHA"],
               "lean_version": subprocess.check_output(["lean", "--version"], text=True).strip(),
               "lean_binary_sha256": digest(pathlib.Path(subprocess.check_output(["lean", "--print-prefix"], text=True).strip()) / "bin/lean"),
               "source_sha256": digest(source),
+              "raw112_membership_source_sha256": digest(pathlib.Path("im-results/agent38-raw112-membership/Canonical69Raw112Membership.lean")),
+              "raw112_base_source_sha256": digest(pathlib.Path("im-results/agent47-raw112-cut/Raw112Base.lean")),
               "manifest_sha256": digest(manifest),
               "olean_sha256": digest(olean),
               "axiom_allowlist": ["propext", "Classical.choice", "Quot.sound"],
