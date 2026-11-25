@@ -67,7 +67,7 @@ The same unions also admit a much smaller reduced 25-way decision DAG. The commi
 | raw10 (65 witnesses + held leaf) | 49 | 27 | 34 |
 | raw23 | 74 | 31 | 12,584 |
 
-In particular, raw23's 12,584 disjoint rectangles collapse to a 31-node DAG. This is an exact computational representation of the same union/complement, not yet a Lean kernel-checked theorem. It is a much better target for a compact formal checker than materializing every first-mismatch rectangle. The updated `scan.py` reconstructs each DAG and checks its complete node table against `bdds.json`.
+In particular, raw23's 12,584 disjoint rectangles collapse to a 31-node DAG. This is an exact computational representation of the same union/complement, not yet a Lean kernel-checked theorem. It is a much better target for a compact formal checker than materializing every first-mismatch rectangle. The updated `scan.py` reconstructs each DAG and checks its complete node table against `bdds.json`. The scan-only target `weighted-tnf-sidewitness-multiparent-scan` passed GitHub Actions run #263 (2026-11-25), including the exhaustive 124-parent scan and all MDD node-table comparisons.
 
 
 ## Roster status and proof boundary
