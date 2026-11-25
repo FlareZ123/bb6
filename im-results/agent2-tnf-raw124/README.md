@@ -32,3 +32,12 @@ Agent2MultiPump.lean extends Agent50's open-tail transfer lemmas to arbitrary fi
 0RB index 238 (zero-based in deterministic open.txt), `1RB0LF_1RC1LA_0RD0RF_1LD1RE_---1LF_0LA0RB`, had resisted exhaustive six-state DFA enumeration. A 32-state last-five-bit suffix DFA certified it, and congruence quotienting reduced it to nine states. It is now included in generate_0rb.py. Pooling successful DFAs across sibling branches yielded over a thousand new certificates. Enumeration and FAR search reused raw99/enumerate.cpp and agent11-tnf-raw86/search.cpp.
 
 Automatic multiblock candidate inference uses four tape snapshots with constant growth increments, dynamic programming to segment into constant and repeated words, and finite symbolic search for exact sweep/rewrite operations. Proof checks do not trust the search. A complete proof of raw124 is not yet claimed.
+
+
+## F1=0LB — recursive source audit in progress
+
+The first 3,691-cycle / 508-hole scan was retracted: `enumerate.cpp` emits underscore-separated display tables, whereas `longcycle.cpp` indexes compact 36-character transition strings. The earlier scan passed display underscores through unchanged and its counts/certificates are invalid.
+
+The corrected `generate_bundle.py` strips underscores before every C++ query and recursively resolves multi-hole hits: each such leaf becomes a 24-way `Audit.split`; translated cycles become `Audit.cycle`, and only genuine one-hole leaves become `Audit.last`. Open leaves are deferred until all descendants at the current cap are processed, then retried at a larger cap. Independent C++ batches now run in two processes.
+
+Current CI run: 45615959400 (`raw124_bundle_prepare` job 139211302469), dispatched with a 60-minute prepare timeout and serial Lean shard compilation. The generated bound is asserted to be at most 2,000,000. No 0LB classification or source-level `bound_all` theorem has yet been accepted. Once available, `Raw124ChampionBound.branch_bound_le_champion` provides the numeric lift to the champion score, followed by `weightedBound_mono_local` for roster integration.
