@@ -54,7 +54,7 @@ jobs:
           python long_sweep.py
           printf '%s\n' {a..p} | xargs -P 4 -I{} python generate_complete.py {}
           python generate_complete.py --combine
-          cd ../../..
+          cd ../..
           mkdir -p .tmp/a46
           cat > .tmp/a46/canonical-generator-arguments.txt <<'EOF'
           python im-results/agent13-coverage/unpack.py
