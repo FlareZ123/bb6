@@ -164,6 +164,58 @@ theorem bound_all : ∀ m, compatible pBranch m → WeightedBound {B} m := certi
 """
     emit(stem+"Data",mods,body)
     print(b,B,len(opens),len(single),len(multi),len(long),len(far),flush=True)
+def longcycle_bundle(branch):
+    """Build an exact, source-checkable 0LB leaf partition from half-tape witnesses."""
+    assert branch == "0LB"
+    parent = "1RB---_1RC---_0RD---_1LD1RE_---1LF_---0LB"
+    subprocess.run([str(ROOT/"enumerate"), parent], cwd=ROOT, check=True)
+    raw = (ROOT/"open.txt").read_bytes()
+    rawtree = (ROOT/"tree.json").read_bytes()
+    opens = raw.decode().splitlines()
+    assert opens
+    indexed = "".join(f"{i} {table}\\n" for i, table in enumerate(opens))
+    subprocess.run(
+        ["g++", "-std=c++20", "-O3", str(ROOT/"longcycle.cpp"), "-o", str(ROOT/"longcycle")],
+        check=True,
+    )
+    result = subprocess.run(
+        [str(ROOT/"longcycle"), "100000", "128"],
+        cwd=ROOT, input=indexed, text=True, stdout=subprocess.PIPE, check=True,
+    )
+    rows = [line.split() for line in result.stdout.splitlines()]
+    assert len(rows) == len(opens), (len(opens), len(rows))
+    ids = [int(row[0]) for row in rows]
+    assert len(set(ids)) == len(ids) and set(ids) == set(range(len(opens)))
+    long = {}
+    for row in rows:
+        i = int(row[0])
+        if row[1] == "cycle":
+            assert len(row) == 6, row
+            long[str(i)] = ["cycle", int(row[2]), int(row[3]), int(row[4]), int(row[5])]
+        elif row[1] == "hole":
+            assert len(row) == 4, row
+            assert opens[i].count("---") == 1, (i, opens[i])
+            long[str(i)] = ["hole", int(row[2]), int(row[3])]
+        else:
+            raise AssertionError(("unresolved raw124 0LB leaf", row))
+    cycles = sum(v[0] == "cycle" for v in long.values())
+    holes = [v for v in long.values() if v[0] == "hole"]
+    max_hole = max((v[1] for v in holes), default=0)
+    bound = max(1_000_000, max_hole + 1_000_000)
+    print(f"0LB exact leaf partition: {len(opens)} leaves, {cycles} cycles, {len(holes)} holes, max hole step {max_hole}, bound {bound}", flush=True)
+    return {
+        "branch": branch,
+        "bound": bound,
+        "hash": hashlib.sha256(raw).hexdigest(),
+        "tree_hash": hashlib.sha256(rawtree).hexdigest(),
+        "far": [-1] * len(opens),
+        "pool": [],
+        "single": {},
+        "multi": {},
+        "long": long,
+    }
+
+
 def main():
     files=sorted(ROOT.glob("complete-bundle*.json.zlib.b64"))
     data={}
@@ -182,5 +234,7 @@ def main():
         data[v["branch"]]=v
     requested=sys.argv[1:] or sorted(data)
     subprocess.run(["g++","-std=c++17","-O3",str(ROOT.parent/"agent2-tnf-raw99"/"enumerate.cpp"),"-o",str(ROOT/"enumerate")],check=True)
-    for b in requested:generate(data[b])
+    for b in requested:
+        bundle = longcycle_bundle(b) if b == "0LB" else data[b]
+        generate(bundle)
 if __name__=="__main__":main()
