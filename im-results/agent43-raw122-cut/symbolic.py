@@ -32,6 +32,13 @@ def generate(rows,work):
             certs[row]=f".proven {ns}.table {ns}.never"
             imports[row]="Raw122Counter3708"
             continue
+        if row=="1RB0LA_1RC---_0RD0RF_1LD1RE_1LA0LF_1RA1RE":
+            import phase27510
+            phase27510.generate()
+            ns="BB6Coverage.Agent31Pump.Raw122Phases27510"
+            certs[row]=f".proven {ns}.table {ns}.never"
+            imports[row]="Raw122Phases27510"
+            continue
         p=pump.parse(row)
         h=late_hole(p,7014)
         if h is not None:
