@@ -41,7 +41,7 @@ jobs:
           lake env lean -o .lake/build/lib/lean/SquareGapTerminalBridge.olean SquareGapTerminalBridge.lean 2>&1 | tee square-gap-terminal-bridge.log
 
           cp "../im-results/agent8-623-inverse/RootCancellationBudgetBridge.lean" Agent8RootCancellationBudgetBridge.lean
-          lake env lean -o .lake/build/lib/lean/Agent8RootCancellationBudgetBridge.olean Agent8RootCancellationBudgetBridge.lean 2>&1 | tee agent8-agent8-root-cancellation-budget-bridge.log
+          lake env lean -o .lake/build/lib/lean/Agent8RootCancellationBudgetBridge.olean Agent8RootCancellationBudgetBridge.lean 2>&1 | tee agent8-root-cancellation-budget-bridge.log
 
           cp "../im-results/agent48-623-budget-composition/RootExclusion.lean" RootExclusion.lean
           lake env lean -o .lake/build/lib/lean/RootExclusion.olean RootExclusion.lean 2>&1 | tee root-exclusion.log
@@ -49,7 +49,7 @@ jobs:
           cp "../im-results/agent8-623-inverse/RootMassGapAllN10.lean" RootMassGapAllN10.lean
           lake env lean -o .lake/build/lib/lean/RootMassGapAllN10.olean RootMassGapAllN10.lean 2>&1 | tee root-mass-gap-all-n10.log
 
-          if grep -q 'sorryAx' agent49-parity-source.log square-gap-terminal-bridge.log root-cancellation-budget-bridge.log root-exclusion.log root-mass-gap-all-n10.log; then
+          if grep -q 'sorryAx' agent49-parity-source.log square-gap-terminal-bridge.log agent8-root-cancellation-budget-bridge.log root-exclusion.log root-mass-gap-all-n10.log; then
             echo 'sorryAx detected in the n=10 source proof dependency chain'
             exit 1
           fi
