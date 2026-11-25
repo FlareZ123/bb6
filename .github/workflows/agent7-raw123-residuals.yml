@@ -16,6 +16,11 @@ on:
         required: false
         type: string
         default: ''
+      supplement_run:
+        description: Successful raw123 part20 run (raw123 assembly only)
+        required: false
+        type: string
+        default: ''
       residual_run:
         description: Successful residual run ID (assembly only)
         required: false
@@ -58,7 +63,7 @@ jobs:
           if-no-files-found: error
           retention-days: 5
   assemble:
-    if: inputs.cut_run != '' && inputs.residual_run != '' && (inputs.parent == '125' || inputs.parent == '38')
+    if: inputs.cut_run != '' && inputs.residual_run != '' && (inputs.parent != '123' || inputs.supplement_run != '')
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -68,14 +73,24 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           CUT_RUN: ${{ inputs.cut_run }}
           RES_RUN: ${{ inputs.residual_run }}
+          SUP_RUN: ${{ inputs.supplement_run }}
+          PARENT: ${{ inputs.parent }}
         run: |
           set -euo pipefail
-          for spec in "$CUT_RUN:agent7-raw123-cut.yml" "$RES_RUN:agent7-raw123-residuals.yml"; do
-            id=${spec%%:*}
-            file=${spec#*:}
-            [[ "$id" =~ ^[0-9]+$ ]]
-            gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id" | jq -e --arg file "$file" '.conclusion == "success" and .path == (".github/workflows/" + $file)'
-          done
+          [[ "$CUT_RUN" =~ ^[0-9]+$ && "$RES_RUN" =~ ^[0-9]+$ ]]
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$CUT_RUN" | jq -e '.conclusion == "success" and .path == ".github/workflows/agent7-raw123-cut.yml"'
+          if [ "$PARENT" = 123 ]; then
+            [[ "$SUP_RUN" =~ ^[0-9]+$ ]]
+            gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RES_RUN" | jq -e '.status == "completed" and .path == ".github/workflows/agent7-raw123-residuals.yml"'
+            gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RES_RUN/jobs?per_page=100" > /tmp/res-jobs.json
+            for p in 0 1 2 3 4; do
+              jq -e --arg prefix "residuals ($p," '.jobs | any(.conclusion == "success" and (.name | startswith($prefix)))' /tmp/res-jobs.json
+            done
+            gh api "repos/$GITHUB_REPOSITORY/actions/runs/$SUP_RUN" | jq -e '.conclusion == "success" and .path == ".github/workflows/agent7-raw123-residuals.yml"'
+            gh api "repos/$GITHUB_REPOSITORY/actions/runs/$SUP_RUN/jobs?per_page=100" | jq -e '.jobs | any(.conclusion == "success" and (.name | startswith("residuals (5,")))'
+          else
+            gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RES_RUN" | jq -e '.conclusion == "success" and .path == ".github/workflows/agent7-raw123-residuals.yml"'
+          fi
       - uses: actions/download-artifact@v4
         with:
           name: raw${{ inputs.parent }}-cut
@@ -83,11 +98,26 @@ jobs:
           github-token: ${{ github.token }}
           path: /tmp/raw${{ inputs.parent }}-assembly/cut
       - uses: actions/download-artifact@v4
+        if: inputs.parent != '123'
         with:
           pattern: raw${{ inputs.parent }}-residual-*
           run-id: ${{ inputs.residual_run }}
           github-token: ${{ github.token }}
           path: /tmp/raw${{ inputs.parent }}-assembly/residuals
+      - uses: actions/download-artifact@v4
+        if: inputs.parent == '123'
+        with:
+          pattern: raw123-residual-[0-4]
+          run-id: ${{ inputs.residual_run }}
+          github-token: ${{ github.token }}
+          path: /tmp/raw123-assembly/residuals
+      - uses: actions/download-artifact@v4
+        if: inputs.parent == '123'
+        with:
+          name: raw123-residual-5
+          run-id: ${{ inputs.supplement_run }}
+          github-token: ${{ github.token }}
+          path: /tmp/raw123-assembly/residuals/raw123-residual-5
       - name: Install Lean
         run: |
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
@@ -97,6 +127,7 @@ jobs:
         run: |
           set -euxo pipefail
           d=im-results/agent13-raw${{ inputs.parent }}
+          if [ "${{ inputs.parent }}" = 123 ]; then d=im-results/agent7-raw123; fi
           python "$d/merge_final.py" /tmp/raw${{ inputs.parent }}-assembly /tmp/raw${{ inputs.parent }}-final
           cp "$d/Raw${{ inputs.parent }}ResidualClosure.lean" /tmp/raw${{ inputs.parent }}-final/
           cd /tmp/raw${{ inputs.parent }}-final
