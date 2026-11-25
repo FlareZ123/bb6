@@ -67,11 +67,11 @@ def championResidualFrontierWithParentResiduals :
   RootedFrontier.residuals championFrontierWithParent
 
 /-- The final A/1 step contributes 23 unresolved ordinary children in the
-    old frontier; the parent certificate closes them, and eight checked
-    depth-six F/0 side-cycle witnesses close eight more, leaving 125 open
+    old frontier; the parent certificate closes them, and nine checked
+    depth-six F/0 side-cycle witnesses close nine more, leaving 124 open
     sibling cylinders. -/
 theorem championResidualFrontierWithParentCount :
-    championResidualFrontierWithParentResiduals.length = 125 := by
+    championResidualFrontierWithParentResiduals.length = 124 := by
   decide
 
 #print axioms parent_eq_championP7
@@ -127,7 +127,7 @@ theorem cover_of_championResidual_frontier
   cover_of_frontier_leaves championFrontierWithParent hLeaves
 
 /-- The exact global composition now needs Covers for the 77 other canonical
-    representatives and for the 125 open leaves refining raw139. -/
+    representatives and for the 124 open leaves refining raw139. -/
 theorem exact_from_nonchampion_roster_covers_and_parent_frontier
     (hOther : ∀ e ∈ BB6.Agent47Canonical78.roster,
       e.2 ≠ championResidual → Cover (WeightedBound championScore) e.2)
@@ -151,7 +151,7 @@ theorem canonical78_other_address_count :
 theorem canonical78_refined_obligation_count :
     (BB6.Agent47Canonical78.roster.filter
       (fun e => e.1 ≠ championResidualAddress)).length +
-      championResidualFrontierWithParentResiduals.length = 202 := by
+      championResidualFrontierWithParentResiduals.length = 201 := by
   decide
 
 #print axioms championResidual_mem_canonical78
