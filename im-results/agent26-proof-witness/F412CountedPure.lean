@@ -120,7 +120,7 @@ theorem step_BB_r0_r1_exact (L R : List MItem) :
       (cfgBB target_tm L (.run 0 :: .run 1 :: R)) := by
   have h1 := step_BB_run0_exact (.run 1 :: L) R
   have h2 := step_BB_run1_exact L (.run 0 :: R)
-  simpa [bumpM] using reachesIn_trans h1 h2
+  simpa [ReachesIn, bumpM, SymRunEngine.strictNat_eq] using reachesIn_trans h1 h2
 
 
 theorem step_BB_r1_r0_r1_comm_exact (L R : List MItem) :
@@ -134,7 +134,7 @@ theorem step_BB_r1_r0_r1_comm_exact (L R : List MItem) :
         (cfgBB target_tm (.run 1 :: .run 0 :: .run 1 :: L) (.run 0 :: .run 1 :: R))
         (cfgBB target_tm (.run 0 :: .run 1 :: L)
           (.run 0 :: .run 1 :: .run 1 :: R)) := by
-    simpa [bumpM] using h1
+    simpa [ReachesIn, bumpM, SymRunEngine.strictNat_eq] using h1
   have h2 := step_BB_run0_exact (.run 1 :: L) (.run 0 :: .run 1 :: .run 1 :: R)
   have h3 := step_BB_run1_exact L (.run 0 :: .run 0 :: .run 1 :: .run 1 :: R)
   have h3' :
@@ -142,8 +142,8 @@ theorem step_BB_r1_r0_r1_comm_exact (L R : List MItem) :
         (cfgBB target_tm (.run 1 :: L) (.run 0 :: .run 0 :: .run 1 :: .run 1 :: R))
         (cfgBB target_tm L
           (.run 0 :: .run 1 :: .run 0 :: .run 1 :: .run 1 :: R)) := by
-    simpa [bumpM] using h3
-  simpa using reachesIn_trans (reachesIn_trans h1' h2) h3'
+    simpa [ReachesIn, bumpM, SymRunEngine.strictNat_eq] using h3
+  simpa [ReachesIn] using reachesIn_trans (reachesIn_trans h1' h2) h3'
 
 
 theorem sweep_BB_B1_exact (k : Nat) (L R : List MItem) :
@@ -153,7 +153,6 @@ theorem sweep_BB_B1_exact (k : Nat) (L R : List MItem) :
   induction k generalizing R with
   | zero =>
       change multiStep target_tm _ 0 = some _
-      simp only [multiStep_zero]
       rfl
   | succ k ih =>
     have h_eq : repBlock [.run 0, .run 1] (k + 1) ++ R =
@@ -177,7 +176,6 @@ theorem sweep_BB_C2_exact (p : Nat) (L R : List MItem) :
   induction p generalizing R with
   | zero =>
       change multiStep target_tm _ 0 = some _
-      simp only [multiStep_zero]
       rfl
   | succ p ih =>
     have h_eq :
@@ -204,7 +202,6 @@ theorem sweep_BB_C12_exact (m : Nat) (L R : List MItem) :
   induction m generalizing R with
   | zero =>
       change multiStep target_tm _ 0 = some _
-      simp only [multiStep_zero]
       rfl
   | succ m ih =>
     have h_eq :
@@ -236,7 +233,6 @@ theorem sweep_CB_B1_exact (k : Nat) (L R : List MItem) :
   induction k generalizing L with
   | zero =>
       change multiStep target_tm _ 0 = some _
-      simp only [multiStep_zero]
       rfl
   | succ k ih =>
     have h_eq :
@@ -249,7 +245,7 @@ theorem sweep_CB_B1_exact (k : Nat) (L R : List MItem) :
           (.run 0 :: .run 1 :: repBlock [.run 0, .run 1] k ++ R))
         (cfgCB target_tm (.run 0 :: .run 0 :: .run 1 :: L)
           (repBlock [.run 0, .run 1] k ++ R)) := by
-      simpa [bumpM] using
+      simpa [ReachesIn, bumpM, SymRunEngine.strictNat_eq] using
         step_CB_run0_run_pos_exact 0 (.run 0 :: L)
           (repBlock [.run 0, .run 1] k ++ R)
     have h2 := ih (.run 0 :: .run 1 :: L)
@@ -267,7 +263,6 @@ theorem sweep_CB_B2_exact (p : Nat) (L R : List MItem) :
   induction p generalizing L with
   | zero =>
       change multiStep target_tm _ 0 = some _
-      simp only [multiStep_zero]
       rfl
   | succ p ih =>
     have h_eq :
@@ -283,7 +278,7 @@ theorem sweep_CB_B2_exact (p : Nat) (L R : List MItem) :
               (repBlock [.run 0, .run 1, .run 1] p ++ R)))
           (cfgCB target_tm (.run 0 :: .run 0 :: .run 1 :: L)
             (.run 1 :: (repBlock [.run 0, .run 1, .run 1] p ++ R))) := by
-      simpa [bumpM] using
+      simpa [ReachesIn, bumpM, SymRunEngine.strictNat_eq] using
         step_CB_run0_run_pos_exact 0 (.run 0 :: L)
           (.run 1 :: (repBlock [.run 0, .run 1, .run 1] p ++ R))
     have h2 :
@@ -292,7 +287,7 @@ theorem sweep_CB_B2_exact (p : Nat) (L R : List MItem) :
             (.run 1 :: (repBlock [.run 0, .run 1, .run 1] p ++ R)))
           (cfgCB target_tm (.run 0 :: .run 1 :: .run 0 :: .run 1 :: L)
             (repBlock [.run 0, .run 1, .run 1] p ++ R)) := by
-      simpa [bumpM] using
+      simpa [ReachesIn, bumpM, SymRunEngine.strictNat_eq] using
         step_CB_run1_exact (.run 0 :: .run 0 :: .run 1 :: L)
           (repBlock [.run 0, .run 1, .run 1] p ++ R)
     have h3 := ih (.run 1 :: .run 0 :: .run 1 :: L)
@@ -311,7 +306,6 @@ theorem sweep_CB_B12R_exact (m : Nat) (L R : List MItem) :
   induction m generalizing L with
   | zero =>
       change multiStep target_tm _ 0 = some _
-      simp only [multiStep_zero]
       rfl
   | succ m ih =>
     have h_eq :
@@ -328,7 +322,7 @@ theorem sweep_CB_B12R_exact (m : Nat) (L R : List MItem) :
           (cfgCB target_tm (.run 0 :: .run 0 :: .run 1 :: L)
             (.run 0 :: .run 1 :: .run 1 ::
               (repBlock [.run 0, .run 1, .run 0, .run 1, .run 1] m ++ R))) := by
-      simpa [bumpM] using
+      simpa [ReachesIn, bumpM, SymRunEngine.strictNat_eq] using
         step_CB_run0_run_pos_exact 0 (.run 0 :: L)
           (.run 0 :: .run 1 :: .run 1 ::
             (repBlock [.run 0, .run 1, .run 0, .run 1, .run 1] m ++ R))
@@ -340,7 +334,7 @@ theorem sweep_CB_B12R_exact (m : Nat) (L R : List MItem) :
           (cfgCB target_tm (.run 0 :: .run 0 :: .run 1 :: .run 0 :: .run 1 :: L)
             (.run 1 ::
               (repBlock [.run 0, .run 1, .run 0, .run 1, .run 1] m ++ R))) := by
-      simpa [bumpM] using
+      simpa [ReachesIn, bumpM, SymRunEngine.strictNat_eq] using
         step_CB_run0_run_pos_exact 0 (.run 0 :: .run 0 :: .run 1 :: L)
           (.run 1 ::
             (repBlock [.run 0, .run 1, .run 0, .run 1, .run 1] m ++ R))
@@ -353,7 +347,7 @@ theorem sweep_CB_B12R_exact (m : Nat) (L R : List MItem) :
           (cfgCB target_tm
             (.run 0 :: .run 1 :: .run 0 :: .run 1 :: .run 0 :: .run 1 :: L)
             (repBlock [.run 0, .run 1, .run 0, .run 1, .run 1] m ++ R)) := by
-      simpa [bumpM] using
+      simpa [ReachesIn, bumpM, SymRunEngine.strictNat_eq] using
         step_CB_run1_exact
           (.run 0 :: .run 0 :: .run 1 :: .run 0 :: .run 1 :: L)
           (repBlock [.run 0, .run 1, .run 0, .run 1, .run 1] m ++ R)
@@ -371,30 +365,30 @@ theorem sourceElemBB_exact (L R : List SymTok) :
       ((evalSym target_tm) (stepElemBB L R)) := by
   cases L with
   | nil =>
-    simpa only [costElemBB, stepElemBB, strictList_eq, evalSym, evalM, encSymL,
+    simpa only [ReachesIn, Nat.zero_add, Nat.reduceAdd, List.cons_append, List.nil_append, costElemBB, stepElemBB, strictList_eq, evalSym, evalM, encSymL,
       encSymR_bumpSymR] using step_BB_nil_exact (encSymR R)
   | cons t L1 =>
     cases t with
     | item x =>
       cases x with
       | zero =>
-        simpa only [costElemBB, stepElemBB, strictList_eq, evalSym, evalM, encSymL,
+        simpa only [ReachesIn, Nat.zero_add, Nat.reduceAdd, List.cons_append, List.nil_append, costElemBB, stepElemBB, strictList_eq, evalSym, evalM, encSymL,
           encSymR_bumpSymR] using step_BB_zero_exact (encSymL L1) (encSymR R)
       | run d =>
         rcases d with _ | _ | _ | _ | d
-        · simpa only [costElemBB, fcost, Bool.false_eq_true, ite_false, stepElemBB, strictList_eq,
-            strictNat_eq, evalSym, evalM, encSymL, encSymR,
+        · simpa only [ReachesIn, Nat.zero_add, Nat.reduceAdd, List.cons_append, List.nil_append, costElemBB, fcost, Bool.false_eq_true, ite_false, stepElemBB, strictList_eq,
+            SymRunEngine.strictNat_eq, evalSym, evalM, encSymL, encSymR,
             encSymR_bumpSymR] using step_BB_run0_exact (encSymL L1) (encSymR R)
-        · simpa only [costElemBB, stepElemBB, strictList_eq, strictNat_eq,
+        · simpa only [ReachesIn, Nat.zero_add, Nat.reduceAdd, List.cons_append, List.nil_append, costElemBB, stepElemBB, strictList_eq, SymRunEngine.strictNat_eq,
             evalSym, evalM, encSymL, encSymR, encSymR_bumpSymR]
             using step_BB_run1_exact (encSymL L1) (encSymR R)
-        · simpa only [costElemBB, stepElemBB, strictList_eq, strictNat_eq,
+        · simpa only [ReachesIn, Nat.zero_add, Nat.reduceAdd, List.cons_append, List.nil_append, costElemBB, stepElemBB, strictList_eq, SymRunEngine.strictNat_eq,
             evalSym, evalM, encSymL, encSymR, encSymR_bumpSymR]
             using step_BB_run2_exact (encSymL L1) (encSymR R)
-        · simpa only [costElemBB, stepElemBB, strictList_eq, strictNat_eq,
+        · simpa only [ReachesIn, Nat.zero_add, Nat.reduceAdd, List.cons_append, List.nil_append, costElemBB, stepElemBB, strictList_eq, SymRunEngine.strictNat_eq,
             evalSym, evalM, encSymL, encSymR, encSymR_bumpSymR]
             using step_BB_run3_exact (encSymL L1) (encSymR R)
-        · simpa only [costElemBB, stepElemBB, strictList_eq, strictNat_eq,
+        · simpa only [ReachesIn, Nat.zero_add, Nat.reduceAdd, List.cons_append, List.nil_append, costElemBB, stepElemBB, strictList_eq, SymRunEngine.strictNat_eq,
             evalSym, evalM, encSymL, encSymR, encSymR_bumpSymR]
             using step_BB_run_ge4_exact d (encSymL L1) (encSymR R)
     | repB1 _ => rfl
@@ -409,14 +403,14 @@ theorem sourcePureBB_exact (L R : List SymTok) :
       ((evalSym target_tm) (stepPureBB L R)) := by
   cases L with
   | nil =>
-    simpa only [costPureBB, stepPureBB] using sourceElemBB_exact [] R
+    simpa only [ReachesIn, Nat.zero_add, Nat.reduceAdd, List.cons_append, List.nil_append, costPureBB, stepPureBB] using sourceElemBB_exact [] R
   | cons t L1 =>
     cases t with
     | item x =>
-      simpa only [costPureBB, stepPureBB] using sourceElemBB_exact (.item x :: L1) R
+      simpa only [ReachesIn, Nat.zero_add, Nat.reduceAdd, List.cons_append, List.nil_append, costPureBB, stepPureBB] using sourceElemBB_exact (.item x :: L1) R
     | repB1 k =>
-      simpa only [costPureBB, stepPureBB, fcost, Bool.false_eq_true, ite_false, evalSym, evalM,
-        encSymL, encSymR, List.cons_append, List.nil_append]
+      simpa only [ReachesIn, Nat.zero_add, Nat.reduceAdd, List.cons_append, List.nil_append, costPureBB, stepPureBB, fcost, Bool.false_eq_true, ite_false, evalSym, evalM,
+        encSymL, encSymR]
         using sweep_BB_B1_exact k (encSymL L1) (encSymR R)
     | rep2 p =>
       simp only [costPureBB, stepPureBB]
@@ -466,10 +460,10 @@ theorem sourceElemDL_exact (L R : List SymTok) :
       | zero => rfl
       | run d =>
         rcases d with _ | _ | _ | d
-        · simpa only [costElemDL, stepElemDL, strictList_eq,
+        · simpa only [ReachesIn, Nat.zero_add, Nat.reduceAdd, List.cons_append, List.nil_append, costElemDL, stepElemDL, strictList_eq,
             evalSym, evalM, encSymL, encSymR_bumpSymR] using
               step_DL_run0_exact (encSymL L1) (encSymR R)
-        · simpa only [costElemDL, stepElemDL, strictList_eq,
+        · simpa only [ReachesIn, Nat.zero_add, Nat.reduceAdd, List.cons_append, List.nil_append, costElemDL, stepElemDL, strictList_eq,
             evalSym, evalM, encSymL, encSymR, encSymR_bumpSymR] using
               step_DL_run1_exact (encSymL L1) (encSymR R)
         · cases R with
@@ -480,7 +474,7 @@ theorem sourceElemDL_exact (L R : List SymTok) :
               cases it with
               | zero => rfl
               | run d0 =>
-                simpa only [costElemDL, stepElemDL, fcost, Bool.false_eq_true, ite_false,
+                simpa only [ReachesIn, Nat.zero_add, Nat.reduceAdd, List.cons_append, List.nil_append, costElemDL, stepElemDL, fcost, Bool.false_eq_true, ite_false,
                   strictList_eq, evalSym, evalM, encSymL, encSymR,
                   encSymL_prependZeroSym] using
                     step_DL_run2_exact d0 (encSymL L1) (encSymR R1)
@@ -503,7 +497,7 @@ theorem sourcePureDL_exact (L R : List SymTok) :
         (evalSym target_tm) (.DL, peelPureTok t L1, R) := by
       simp only [evalSym, encSymL_peelPureTok]
     rw [heq]
-    simpa only [costPureDL, stepPureDL] using
+    simpa only [ReachesIn, Nat.zero_add, Nat.reduceAdd, List.cons_append, List.nil_append, costPureDL, stepPureDL] using
       sourceElemDL_exact (peelPureTok t L1) R
 
 #print axioms sourceElemDL_exact
@@ -516,7 +510,7 @@ theorem sourceElemCBRun0_exact (L R1 : List SymTok) :
       ((evalSym target_tm) (stepElemCB_run0 L R1)) := by
   cases R1 with
   | nil =>
-    simpa only [costElemCBRun0, stepElemCB_run0, strictList_eq,
+    simpa only [ReachesIn, Nat.zero_add, Nat.reduceAdd, List.cons_append, List.nil_append, costElemCBRun0, stepElemCB_run0, strictList_eq,
       evalSym, evalM, encSymL, encSymR, encSymL_bumpSymL] using
       step_CB_run0_nil_exact (encSymL L)
   | cons t R2 =>
@@ -524,16 +518,16 @@ theorem sourceElemCBRun0_exact (L R1 : List SymTok) :
     | item x =>
       cases x with
       | zero =>
-        simpa only [costElemCBRun0, stepElemCB_run0, strictList_eq,
+        simpa only [ReachesIn, Nat.zero_add, Nat.reduceAdd, List.cons_append, List.nil_append, costElemCBRun0, stepElemCB_run0, strictList_eq,
           evalSym, evalM, encSymL, encSymR, encSymL_bumpSymL] using
           step_CB_run0_zero_exact (encSymL L) (encSymR R2)
       | run d =>
         rcases d with _ | d
-        · simpa only [costElemCBRun0, stepElemCB_run0, strictList_eq,
+        · simpa only [ReachesIn, Nat.zero_add, Nat.reduceAdd, List.cons_append, List.nil_append, costElemCBRun0, stepElemCB_run0, strictList_eq,
             evalSym, evalM, encSymL, encSymR, encSymL_bumpSymL,
             encSymL_prependZeroSym] using
             step_CB_run0_run0_exact (encSymL L) (encSymR R2)
-        · simpa only [costElemCBRun0, fcost, Bool.false_eq_true, ite_false, stepElemCB_run0,
+        · simpa only [ReachesIn, Nat.zero_add, Nat.reduceAdd, List.cons_append, List.nil_append, costElemCBRun0, fcost, Bool.false_eq_true, ite_false, stepElemCB_run0,
             strictList_eq, evalSym, evalM, encSymL, encSymR,
             encSymL_bumpSymL, encSymL_prependZeroSym] using
             step_CB_run0_run_pos_exact d (encSymL L) (encSymR R2)
@@ -547,26 +541,26 @@ theorem sourceElemCB_exact (L R : List SymTok) :
       ((evalSym target_tm) (stepElemCB L R)) := by
   cases R with
   | nil =>
-    simpa only [costElemCB, stepElemCB, strictList_eq, evalSym, evalM,
+    simpa only [ReachesIn, Nat.zero_add, Nat.reduceAdd, List.cons_append, List.nil_append, costElemCB, stepElemCB, strictList_eq, evalSym, evalM,
       encSymL_bumpSymL] using step_CB_nil_exact (encSymL L)
   | cons t R1 =>
     cases t with
     | item x =>
       cases x with
       | zero =>
-        simpa only [costElemCB, stepElemCB, strictList_eq, evalSym, evalM,
+        simpa only [ReachesIn, Nat.zero_add, Nat.reduceAdd, List.cons_append, List.nil_append, costElemCB, stepElemCB, strictList_eq, evalSym, evalM,
           encSymL_bumpSymL, encSymR_bumpSymR] using
             step_CB_zero_exact (encSymL L) (encSymR R1)
       | run d =>
         rcases d with _ | _ | _ | d
-        · simpa only [costElemCB, stepElemCB] using sourceElemCBRun0_exact L R1
-        · simpa only [costElemCB, stepElemCB, strictList_eq, evalSym, evalM,
+        · simpa only [ReachesIn, Nat.zero_add, Nat.reduceAdd, List.cons_append, List.nil_append, costElemCB, stepElemCB] using sourceElemCBRun0_exact L R1
+        · simpa only [ReachesIn, Nat.zero_add, Nat.reduceAdd, List.cons_append, List.nil_append, costElemCB, stepElemCB, strictList_eq, evalSym, evalM,
             encSymL, encSymR, encSymL_bumpSymL] using
               step_CB_run1_exact (encSymL L) (encSymR R1)
-        · simpa only [costElemCB, stepElemCB, strictList_eq, evalSym, evalM,
+        · simpa only [ReachesIn, Nat.zero_add, Nat.reduceAdd, List.cons_append, List.nil_append, costElemCB, stepElemCB, strictList_eq, evalSym, evalM,
             encSymL, encSymR, encSymL_bumpSymL] using
               step_CB_run2_exact (encSymL L) (encSymR R1)
-        · simpa only [costElemCB, stepElemCB, strictList_eq, strictNat_eq,
+        · simpa only [ReachesIn, Nat.zero_add, Nat.reduceAdd, List.cons_append, List.nil_append, costElemCB, stepElemCB, strictList_eq, SymRunEngine.strictNat_eq,
             evalSym, evalM, encSymL, encSymR, encSymL_bumpSymL] using
               step_CB_run_ge3_exact d (encSymL L) (encSymR R1)
     | repB1 _ => rfl
@@ -579,25 +573,27 @@ theorem sourcePureCB_exact (L R : List SymTok) :
       ((evalSym target_tm) (stepPureCB L R)) := by
   cases R with
   | nil =>
-    simpa only [costPureCB, stepPureCB] using sourceElemCB_exact L []
+    simpa only [ReachesIn, Nat.zero_add, Nat.reduceAdd, List.cons_append, List.nil_append, costPureCB, stepPureCB] using sourceElemCB_exact L []
   | cons t R1 =>
     cases t with
     | item x =>
       cases x with
-      | zero => simpa only [costPureCB, stepPureCB] using sourceElemCB_exact L (.item .zero :: R1)
+      | zero => simpa only [ReachesIn, Nat.zero_add, Nat.reduceAdd, List.cons_append, List.nil_append, costPureCB, stepPureCB] using sourceElemCB_exact L (.item .zero :: R1)
       | run d =>
         rcases d with _ | _ | _ | d
-        · simpa only [costPureCB, stepPureCB] using sourceElemCBRun0_exact L R1
-        · simpa only [costPureCB, stepPureCB] using sourceElemCB_exact L (.item (.run 1) :: R1)
-        · simpa only [costPureCB, stepPureCB] using sourceElemCB_exact L (.item (.run 2) :: R1)
-        · simpa only [costPureCB, stepPureCB, evalSym, evalM, encSymL_bumpSymL] using
+        · simpa only [ReachesIn, Nat.zero_add, Nat.reduceAdd, List.cons_append, List.nil_append, costPureCB, stepPureCB] using sourceElemCBRun0_exact L R1
+        · simpa only [ReachesIn, Nat.zero_add, Nat.reduceAdd, List.cons_append, List.nil_append, costPureCB, stepPureCB] using sourceElemCB_exact L (.item (.run 1) :: R1)
+        · simpa only [ReachesIn, Nat.zero_add, Nat.reduceAdd, List.cons_append, List.nil_append, costPureCB, stepPureCB] using sourceElemCB_exact L (.item (.run 2) :: R1)
+        · simpa only [ReachesIn, Nat.zero_add, Nat.reduceAdd, List.cons_append, List.nil_append, costPureCB, stepPureCB, evalSym, evalM, encSymL_bumpSymL] using
             step_CB_run_ge3_exact d (encSymL L) (encSymR R1)
     | repB1 k =>
+      simp only [costPureCB, stepPureCB]
       cases hs2 : stripPrefixSym [.item (.run 0), .item (.run 0), .item (.run 1)] L with
       | some L2 =>
         have hL := stripPrefixSym_some _ L L2 hs2
         rw [hL]
-        simpa [costPureCB, stepPureCB, fcost, evalSym, evalM,
+        simpa only [ReachesIn, Option.isSome_some, Option.isSome_none, Bool.true_or, Bool.false_or,
+           Bool.false_eq_true, ite_false, ite_true, eq_self, fcost, evalSym, evalM,
           encSymL, encSymR, List.cons_append, List.nil_append,
           repBlock_succ_right, List.append_assoc] using
           sweep_CB_B1_exact k (.run 0 :: .run 1 :: encSymL L2) (encSymR R1)
@@ -606,18 +602,21 @@ theorem sourcePureCB_exact (L R : List SymTok) :
         | some L1 =>
           have hL := stripPrefixSym_some _ L L1 hs1
           rw [hL]
-          simpa [costPureCB, stepPureCB, fcost, evalSym, evalM,
+          simpa only [ReachesIn, Option.isSome_some, Option.isSome_none, Bool.true_or, Bool.false_or,
+           Bool.false_eq_true, ite_false, ite_true, eq_self, fcost, evalSym, evalM,
             encSymL, encSymR, List.cons_append, List.nil_append,
           repBlock_succ_right, List.append_assoc] using
             sweep_CB_B1_exact k (encSymL L1) (encSymR R1)
         | none =>
-          simp [costPureCB, stepPureCB, hs2, hs1]
+          simp only [Option.isSome_none, Bool.false_or, Bool.false_eq_true, ite_false] <;> rfl
     | rep2 p =>
+      simp only [costPureCB, stepPureCB]
       cases hs2 : stripPrefixSym [.item (.run 0), .item (.run 1), .item (.run 0), .item (.run 1)] L with
       | some L2 =>
         have hL := stripPrefixSym_some _ L L2 hs2
         rw [hL]
-        simpa [costPureCB, stepPureCB, fcost, evalSym, evalM,
+        simpa only [ReachesIn, Option.isSome_some, Option.isSome_none, Bool.true_or, Bool.false_or,
+           Bool.false_eq_true, ite_false, ite_true, eq_self, fcost, evalSym, evalM,
           encSymL, encSymR, List.cons_append, List.nil_append,
           repBlock_succ_right, List.append_assoc] using
           sweep_CB_B2_exact p (.run 1 :: .run 0 :: .run 1 :: encSymL L2) (encSymR R1)
@@ -626,23 +625,26 @@ theorem sourcePureCB_exact (L R : List SymTok) :
         | some L1 =>
           have hL := stripPrefixSym_some _ L L1 hs1
           rw [hL]
-          simpa [costPureCB, stepPureCB, fcost, evalSym, evalM,
+          simpa only [ReachesIn, Option.isSome_some, Option.isSome_none, Bool.true_or, Bool.false_or,
+           Bool.false_eq_true, ite_false, ite_true, eq_self, fcost, evalSym, evalM,
             encSymL, encSymR, List.cons_append, List.nil_append,
           repBlock_succ_right, List.append_assoc] using
             sweep_CB_B2_exact p (encSymL L1) (encSymR R1)
         | none =>
-          simp [costPureCB, stepPureCB, hs2, hs1]
+          simp only [Option.isSome_none, Bool.false_or, Bool.false_eq_true, ite_false] <;> rfl
     | rep12 m =>
+      simp only [costPureCB, stepPureCB]
       cases hs1 : stripPrefixSym [.item (.run 0)] L with
       | some L1 =>
         have hL := stripPrefixSym_some _ L L1 hs1
         rw [hL]
-        simpa [costPureCB, stepPureCB, fcost, evalSym, evalM,
+        simpa only [ReachesIn, Option.isSome_some, Option.isSome_none, Bool.true_or, Bool.false_or,
+           Bool.false_eq_true, ite_false, ite_true, eq_self, fcost, evalSym, evalM,
           encSymL, encSymR, List.cons_append, List.nil_append,
           repBlock_succ_right, List.append_assoc] using
           sweep_CB_B12R_exact m (encSymL L1) (encSymR R1)
       | none =>
-        simp [costPureCB, stepPureCB, hs1]
+        simp only [Option.isSome_none, Bool.false_eq_true, ite_false] <;> rfl
 
 #print axioms sourceElemCBRun0_exact
 #print axioms sourceElemCB_exact
