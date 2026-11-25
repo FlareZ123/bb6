@@ -121,7 +121,7 @@ theorem replaceList_length_add_count {α : Type} [DecidableEq α]
           _ = (xs.length + replaceListMatchCount target xs * replacement.length) +
               (1 + replacement.length) := by rw [ih]
           _ = xs.length + 1 + (1 + replaceListMatchCount target xs) * replacement.length := by
-              simp [Nat.succ_mul, Nat.add_assoc, Nat.add_left_comm, Nat.add_comm]
+              simp [Nat.add_mul, Nat.add_assoc, Nat.add_left_comm, Nat.add_comm]
       · have hlen :
             (replaceList target replacement (x :: xs)).length =
               1 + (replaceList target replacement xs).length := by
@@ -146,8 +146,9 @@ theorem replaceList_length_of_one {α : Type} [DecidableEq α]
     (hcount : replaceListMatchCount target roster = 1) :
     (replaceList target replacement roster).length + 1 =
       roster.length + replacement.length := by
-  simpa [replaceListMatchCount, hcount] using
-    (replaceList_length_add_count target replacement roster)
+  have h := replaceList_length_add_count target replacement roster
+  rw [hcount] at h
+  simpa using h
 
 #print axioms graftRoster_length_add_count
 #print axioms graftRoster_length_of_one
