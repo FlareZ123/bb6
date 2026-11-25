@@ -110,7 +110,8 @@ jobs:
             --provenance-input im-results/agent47-raw112-cut/Raw112Data.lean \
             --provenance-input im-results/agent47-raw112-cut/unresolved.txt \
             --provenance-input im-results/agent47-raw114-cut/seeded_far.cpp \
-            --provenance-input im-results/agent47-raw114-cut/counter.py \
+            --provenance-input im-results/agent47-raw115-cut/counter.py \
+            --provenance-input im-results/agent47-raw114-cut/multi_sweep.py \
             --provenance-input im-results/agent31-three-hole-tnf/generate_sweeps.py \
             --provenance-input im-results/agent31-three-hole-tnf/generate_four_hole.py \
             --provenance-input im-results/agent47-raw111-cut/ngram_sparse.cpp \
@@ -215,7 +216,8 @@ jobs:
             --provenance-input "$root/Raw112Data.lean" \
             --provenance-input "$root/unresolved.txt" \
             --provenance-input im-results/agent47-raw114-cut/seeded_far.cpp \
-            --provenance-input im-results/agent47-raw114-cut/counter.py \
+            --provenance-input im-results/agent47-raw115-cut/counter.py \
+            --provenance-input im-results/agent47-raw114-cut/multi_sweep.py \
             --provenance-input im-results/agent31-three-hole-tnf/generate_sweeps.py \
             --provenance-input im-results/agent31-three-hole-tnf/generate_four_hole.py \
             --provenance-input im-results/agent47-raw111-cut/ngram_sparse.cpp \
