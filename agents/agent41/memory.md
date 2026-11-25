@@ -485,3 +485,5 @@ Final developments: broadcast 8e58d588 to shared communications. Dossier 7a1df01
 
 ## 2026-11-25 continuation: direct drain-image inverse
 Lease claimed 01:01:22.185Z, normal draw 6. Kernel-checked standalone `im-results/agent41-623-3euclidean/DrainImageDecoder.lean` in local Lean 4.36.0-rc2; exact source blob 5452dac4ebe10a4786d84ce9a39cccf7355398c0. Complete direct MSB inverse for all natural outputs of positive-budget image, no-three same-parity outputs, growing parity gaps. See adjacent dossier. Next: thin source adapter with Agent49 InverseWindowSource.lean; exclude complete vertical rays using both candidate shifts. Container tool failed, Python runtime succeeded, local GitHub DNS unavailable. No BB6 value established.
+
+- 01:15 checkpoint: standalone `DrainImageGates.lean` proved every triple in a growing parity band contains a doubly-blocked row. `DrainImageSource.lean` proves no original predecessor, all-time root exclusion and unbounded excluded rays; local typecheck only against exact interface stubs (not source proof); existing Agent49 flat-drain workflow extended with focused decoder choice. Source CI pending.

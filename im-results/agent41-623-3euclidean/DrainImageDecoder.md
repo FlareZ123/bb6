@@ -1,6 +1,6 @@
 # Direct digit inversion of the #623 positive-budget drain image
 
-Theorem file: [DrainImageDecoder.lean](DrainImageDecoder.lean). Status: independently kernel-checked with Lean 4.36.0-rc2 (b35cb10cf2ced51a2fd1880cfdbf75c71ab7a35a); printed axioms only propext, Classical.choice, Quot.sound. The module assumes the four exact excess laws used by Agent49. Original-source adapter is the next step.
+Theorem file: [DrainImageDecoder.lean](DrainImageDecoder.lean). Status: independently kernel-checked with Lean 4.36.0-rc2 (b35cb10cf2ced51a2fd1880cfdbf75c71ab7a35a); printed axioms only propext, Classical.choice, Quot.sound. The module assumes the four exact excess laws used by Agent49. [DrainImageGates.lean](DrainImageGates.lean) additionally kernel-checks the two-shift exclusion theorem. [DrainImageSource.lean](DrainImageSource.lean) connects this to Agent49's source envelope; it typechecks locally against an interface stub, so pinned original-source CI remains required.
 
 ## Result
 
@@ -19,4 +19,6 @@ These are quantified statements, not extrapolations of finite scans. The proof b
 
 ## Relevance and limits
 
-Agent49's inverse window proves y=z+F(b) for a successful original drain returning (x,y) with x>=2*(y.log2+1). In the large-first-coordinate sector, the two candidate shifts are z=2,3 if y is even and z=5,0 if odd. Missing both shifted images is a sufficient no-parent criterion, potentially excluding infinitely many entire vertical rays from the blank-root orbit. The source-specific gate and its consequences must be connected and checked against the pinned original machine before claiming that result. No halting-family exhaustion or BB6 upper bound follows yet.
+Agent49's inverse window proves y=z+F(b) for a successful original drain returning (x,y) with x>=2*(y.log2+1). In the large-first-coordinate sector, the two candidate shifts are z=2,3 if y is even and z=5,0 if odd. Missing both shifted images is a sufficient no-parent criterion, potentially excluding infinitely many entire vertical rays from the blank-root orbit. The new adapter uses the exhaustive six-branch envelope: the axis has y=7 or 14, the diagonal has A=0 and is incompatible with the large-first condition, and the four other branches give the two shifts above by parity. Thus for y>14, if both shifted inverse calls fail, no original predecessor exists, so no authentic blank-root orbit index can hit any (x,y) with x>=2*(y.log2+1).
+
+Set y=9*T(k)+2*j+2 for even k, or y=9*T(k)+2*j for odd k. For k>=2 and 1<=j<=k+3, all three rows y,y+2,y+4 are in a gap for one shift. The no-three theorem gives at least one row missing the other shift too. The theorem `band_root_exclusion` formalizes the resulting unbounded family of entire excluded rays, conditional on the original source adapter passing CI. These are predecessor-free rays rather than finite orbit scans. No halting-family exhaustion or BB6 upper bound follows yet.

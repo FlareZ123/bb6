@@ -1,6 +1,12 @@
 name: Agent 49 #623 exact flat ternary drain (manual)
 on:
   workflow_dispatch:
+    inputs:
+      check:
+        description: Proof group
+        type: choice
+        options: [all, decoder]
+        default: all
 permissions:
   contents: read
 jobs:
@@ -39,6 +45,19 @@ jobs:
           lake env lean -o .lake/build/lib/lean/Agent49DrainCorrectionGrowth.olean Agent49DrainCorrectionGrowth.lean
           cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/InverseWindowSource.lean" Agent49InverseWindowSource.lean
           lake env lean -o .lake/build/lib/lean/Agent49InverseWindowSource.olean Agent49InverseWindowSource.lean
+      - name: Check direct image decoder and authentic excluded rows
+        working-directory: /tmp/cryptids
+        run: |
+          cp "$GITHUB_WORKSPACE/im-results/agent41-623-3euclidean/DrainImageDecoder.lean" DrainImageDecoder.lean
+          lake env lean -o .lake/build/lib/lean/DrainImageDecoder.olean DrainImageDecoder.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent41-623-3euclidean/DrainImageGates.lean" DrainImageGates.lean
+          lake env lean -o .lake/build/lib/lean/DrainImageGates.olean DrainImageGates.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent41-623-3euclidean/DrainImageSource.lean" DrainImageSource.lean
+          lake env lean DrainImageSource.lean
+      - name: Check remaining source families
+        if: inputs.check != 'decoder'
+        working-directory: /tmp/cryptids
+        run: |
           cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/MassBandArithmetic.lean" Agent49MassBandArithmetic.lean
           lake env lean -o .lake/build/lib/lean/Agent49MassBandArithmetic.olean Agent49MassBandArithmetic.lean
           cp "$GITHUB_WORKSPACE/im-results/agent49-parity623/MassBandSource.lean" Agent49MassBandSource.lean

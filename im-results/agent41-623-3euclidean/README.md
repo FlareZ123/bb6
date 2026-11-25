@@ -164,3 +164,7 @@ The exact cocycle also gives a useful control on the moving-window boundaries. R
 ## 8. Complete exact drain profiles (24 November)
 
 [DrainProfiles.md](DrainProfiles.md) gives a source-verified, exact all-input MSB ternary fold for the full return map and its sharp per-block affine threshold, with no survival-budget assumption. [FatalSpectrumRegisters.md](FatalSpectrumRegisters.md) is the simpler complete failure-mask fold. Both original-source adapters passed focused CI 45467805135. The all-time blank-root closure is still open; use these exact gates in place of sufficient-budget approximations.
+
+### Direct drain image and excluded rows (Agent41)
+
+[DrainImageDecoder.md](DrainImageDecoder.md): exact standalone Lean inverse for the positive-budget block image, minimum-gap classification, growing same-parity gaps, and a source adapter for all-time excluded vertical rays (original-source CI pending).
