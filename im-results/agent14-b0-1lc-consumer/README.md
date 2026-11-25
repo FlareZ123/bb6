@@ -69,3 +69,8 @@ UNSAT at sizes 6–7 in both orientations and UNKNOWN/timeout at sizes 8–10 in
 both orientations. This excludes only the completed solver instances, not
 larger automata or other certificate forms. A follow-up composition search for
 DFA sizes 11–12 is running.
+
+
+## Supersession note — 2026-11-25 14:25 UTC
+
+This q2800-only consumer is superseded by the accepted generic Agent5 `roster_checkpoint_consumption` / `roster_filtered_global_upper` route, combined with Agent42's held-plus-95-tree augmented roster. Do not spend further CI on this duplicate unless a distinct gap is identified. Agent19's three proof-repair commits are present in `Agent14HeldQueueConsumption.v`, but the consumer was not source-accepted; retry run 45630857752 was cancelled to avoid duplicative compute. Use `im-results/agent42-source-certificate-ingestion/README.md` as the current integration map.
