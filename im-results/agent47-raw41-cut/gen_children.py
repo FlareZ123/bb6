@@ -2,7 +2,7 @@
 import json,sys
 from pathlib import Path
 from generate_two import far,refine,mv,slot,show,support
-folder=Path(sys.argv[1]); name=sys.argv[2]; B=int(sys.argv[3]); spec=sys.argv[4].replace('_',''); a=tuple(-1 if spec[i]=='-' else int(spec[i])*12+6*(spec[i+1]=='R')+ord(spec[i+2])-65 for i in range(0,36,3)); tree=json.loads((folder/'tree.json').read_text()); opens=(folder/'open.txt').read_text().splitlines(); certs=dict((int(i),code) for i,code in (l.split() for l in (folder/'far.txt').read_text().splitlines())); holdouts={'Raw41LC0LB':{29:'.closed (.proven LC0LB.table LC0LB.never)'},'Raw41LB0LC':{3:'.closed (.proven LB0LC3.table LB0LC3.never)',34:'.closed (.proven LB0LC34.table LB0LC34.never)',42:'.closed (.proven LB0LC42.table LB0LC42.never)'}}[name]
+folder=Path(sys.argv[1]); name=sys.argv[2]; B=int(sys.argv[3]); spec=sys.argv[4].replace('_',''); a=tuple(-1 if spec[i]=='-' else int(spec[i])*12+6*(spec[i+1]=='R')+ord(spec[i+2])-65 for i in range(0,36,3)); tree=json.loads((folder/'tree.json').read_text()); opens=(folder/'open.txt').read_text().splitlines(); certs=dict((int(i),code) for i,code in (l.split() for l in (folder/'far.txt').read_text().splitlines())); holdouts={'Raw41LC0LB':{29:'.closed (.proven LC0LB.table LC0LB.never)'},'Raw41LB0LC':{3:'.closed (.proven LB0LC3.table LB0LC3.never)',34:'.closed (.proven LB0LC34.table LB0LC34.never)',42:'.closed (.proven LB0LC42.table LB0LC42.never)'},'Raw41LC0RA':{0:'.closed (.proven LC0RA0.table LC0RA0.never)',1:'.closed (.proven LC0RA2.table LC0RA2.never)',2:'.closed (.proven LC0RA2New.table LC0RA2New.never)'}}[name]
 assert set(certs).isdisjoint(holdouts) and set(certs)|set(holdouts)==set(range(len(opens)))
 index=0
 header='''set_option maxRecDepth 100000
@@ -11,8 +11,8 @@ namespace BB6.Agent47Raw41
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent31ThreeHole BB6.Agent10ZipAudit BB6.Agent48PrefixAudit BB6.Agent47PartialAudit BB6.Agent47CanonicalFrontier BB6.Agent50TNFPilot BB6.Agent19CanonicalPartial BB6.Agent47CanonicalRefinement BB6.Agent31FourHoleRoster
 '''
 end='\nend BB6.Agent47Raw41\n'
-imports={'Raw41LC0LB':['Raw41LC0LBSweep'],'Raw41LB0LC':['Raw41LB0LCCounter3','Raw41LB0LCSweep34','Raw41LB0LCSweep42']}[name]
-expr={'Raw41LC0LB':'refine (child ⟨false,false,2⟩) (2,true) (some ⟨false,false,1⟩)','Raw41LB0LC':'refine (child ⟨false,false,1⟩) (1,true) (some ⟨false,false,2⟩)'}[name]
+imports={'Raw41LC0LB':['Raw41LC0LBSweep'],'Raw41LB0LC':['Raw41LB0LCCounter3','Raw41LB0LCSweep34','Raw41LB0LCSweep42'],'Raw41LC0RA':['Raw41LC0RAGrammar0','Raw41LC0RASweep2','Raw41LC0RACounter2']}[name]
+expr={'Raw41LC0LB':'refine (child ⟨false,false,2⟩) (2,true) (some ⟨false,false,1⟩)','Raw41LB0LC':'refine (child ⟨false,false,1⟩) (1,true) (some ⟨false,false,2⟩)','Raw41LC0RA':'refine (child ⟨false,false,2⟩) (2,true) (some ⟨false,true,0⟩)'}[name]
 base='import Raw41CanonicalCut\n'+''.join(f'import {m}\n' for m in imports)+header+f'abbrev {name}_p : PartialMachine := {expr}\n'+end
 Path(name+'Base.lean').write_text(base)
 def size(t):return 1+sum(size(x) for x in t[3]) if t[0]=='split' else 1
