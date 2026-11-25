@@ -79,7 +79,7 @@ compiled the quarter-source module with the standard axiom set.
 
 Do not conflate this \(2^{22}/2^{23}\) quarter source with Agent25's
 separate 48-node highStopSource, whose progression uses \(2^{38}\).
-The latter is a different, narrower subcylinder.
+The latter is a separate 2^38 high-stop family; no containment relation with this 2^22/2^23 family is asserted here.
 
 ## New unconditional mass non-power lemma
 
@@ -150,6 +150,7 @@ equivalent to one of exactly these alternatives:
 The equivalence is source-level: it is stated in terms of the original
 run secNext (some (5,1)) semantics, not a surrogate recurrence. The
 formal build passed in [CI run 45644768030](https://github.com/FlareZ123/bb6/actions/runs/45644768030).
+The axiom audit in [CI run 45646208637](https://github.com/FlareZ123/bb6/actions/runs/45646208637) reports h5OddQ_not_pow and h5OddMass_not_power with only propext and Quot.sound; the parent-fan and quarter-source wrappers use only propext, Classical.choice, and Quot.sound. No sorryAx or native_decide appears in these theorem dependencies.
 This does **not** establish that either parent is reachable; it gives the
 complete obligations that must now be discharged.
 
