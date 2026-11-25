@@ -561,3 +561,9 @@ Downloaded canonical77-certified artifact 14997966221 from accepted CI 455546481
 
 ## Raw40 checkpoint
 New uniform pump proofs for three five-hole cylinders. Raw40 partial audit discharges 3,144,531,250 raw assignments, retains 303 five-hole residuals (2,958,984,375 mass); parent is an exact member of canonical77; conditional graft gives 379 total entries. Four Lean modules compiled on original canonical77 artifact. Full candidate 0RD/0LC enumeration gives 78 open leaves, max witnessed score 106, no complete closure yet. Continue focusing small five-hole residuals and FAR/sweep proofs. See im-results/agent19-raw40-cut/README.md.
+
+### 2026-11-25 17:06Z — raw40 canonical quotient and exact RDLC
+- Proven generic canonical partial audit and quotient-to-quotient graft; 303 → 189 representatives; canonical global 265 entries.
+- Fully closed RDLC 5-hole cylinder (9,765,625 raw completions) at exact weighted maximum 106, with actual compatible witness at k=105,d=0. Kernel proofs of 24 sharded exhaustive audit branches and all 78 FAR leaves. Consumed into raw40, 188 remaining, 264 global conditional roster.
+- Files + reproducible generator + FAR discovery witness bank under im-results/agent19-raw40-cut, RDLC-README.md. All seven source blobs matched local files; Lean 4.36.0-rc2, canonical77 artifact 14997966221. No new CI claim.
+- Candidate-only normalized enumeration: 36 more five-hole cylinders, 12 complete candidates with FAR≤5; 220 open FAR misses across others. Further proof work underway.
