@@ -21,6 +21,38 @@ TABLE = (
 STATE_NAMES = "ABCDEF"
 PUMP_BLOCK = "110000"
 
+# Observed recursive base-6 encoding of the five-bit high-counter blocks.
+BASE_HIGH = {
+    0: [],
+    1: ["11111"],
+    2: ["00001", "11111"],
+    3: ["11100", "00001", "11111"],
+    4: ["00111", "11101", "11111"],
+    5: ["11111", "11101", "11111"],
+}
+HIGH_PREFIX = {
+    (0, 0): ["00000", "00000", "00000"],
+    (0, 1): ["00000", "00110", "00001"],
+    (1, 0): ["11111", "00000", "00000"],
+    (1, 1): ["11111", "00110", "00001"],
+    (2, 0): ["00001", "11111", "00000"],
+    (2, 1): ["00001", "11110", "00001"],
+    (3, 0): ["11100", "00001", "11111"],
+    (3, 1): ["11100", "00011", "11111"],
+    (4, 0): ["00111", "11101", "11111"],
+    (4, 1): ["00111", "11111", "11111"],
+    (5, 0): ["11111", "11101", "11111"],
+    (5, 1): ["11111", "11111", "11111"],
+}
+
+
+def encode_high(k: int) -> list[str]:
+    if k < 6:
+        return BASE_HIGH[k]
+    quotient, residue = divmod(k, 6)
+    return HIGH_PREFIX[residue, quotient % 2] + encode_high(quotient)
+
+
 
 def trace(max_steps: int):
     ones: set[int] = set()
@@ -91,7 +123,7 @@ def trace(max_steps: int):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--steps", type=int, default=1_000_000)
+    parser.add_argument("--steps", type=int, default=10_000_000)
     parser.add_argument("--out", type=Path,
                         default=Path(__file__).with_name("counter-trace.csv"))
     parser.add_argument("--high-out", type=Path,
@@ -110,6 +142,12 @@ def main():
             raise AssertionError(f"low code depends on more than n mod 6: n={row['n']}")
         if quotient in high_by_quotient and high_by_quotient[quotient] != high:
             raise AssertionError(f"high code depends on more than floor(n/3): n={row['n']}")
+        expected = " ".join(encode_high(quotient))
+        if high != expected:
+            raise AssertionError(
+                f"base-6 high-code recurrence mismatch at k={quotient}: "
+                f"observed={high!r}, expected={expected!r}"
+            )
         low_by_residue[residue] = low
         high_by_quotient[quotient] = high
 
