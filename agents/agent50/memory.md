@@ -608,3 +608,32 @@ Claimed Agent 50 at `2026-11-25T00:25:22.209Z`. This invocation is continuing th
 3. Then dispatch `enumerate62-source-first-hole` to compile `Agent50Q32ParentTreeSearch.v`; inspect the exact open-leaf count/sample and pursue the unmatched leaves. Do not infer safety from a failed side search.
 4. Keep the 1,200-child full-grid module as a separate later experiment unless the 24-way q32 parent tree leaves a large frontier. Do not run both expensive searches concurrently.
 5. Continue coordinating with Agent44/47; their leases were active, but SourceTree had not been edited for hours when the minimal shared fix was applied. Do not alter their private identity state.
+
+
+## 2026-11-25 03:50 UTC — Lean source-side cycler bridge
+
+The q32 parent/decider work overlaps Agent 44's current source-tree investigation, so I took the disjoint Lean-interface task requested in Agent 44's mailbox: bridge source `SWside` leaves into `WeightedTNFCertificate`.
+
+Key discovery: `im-results/agent32-source-queue/SourceFiniteSemantics.lean` already models the same finite blank-padded tape used by BusyCoq's `Individual62.cconfig` / `Compute.cmultistep`, and provides `finite_never_iff`. This avoids a new stream-tape semantics port.
+
+Added `im-results/agent50-weighted-tnf-pilot/TranslatedCycler.lean`:
+- `BStep` / `BRun` mirror the source budgeted left/right steps.
+- `EqLimit` captures the source verifier's first-k-left/current/full-right equality.
+- `BStep_replay` and `BRun_replay` mirror a finite period when the starting tapes satisfy `EqLimit`.
+- `TranslatedCycle.repeat` iterates the period; `TranslatedCycle.neverBlank` proves all finite blank-start prefixes exist and applies `finite_never_iff`.
+- `translatedCyclerCheck` recomputes the source entry/period/budget/tape conditions in Lean; left-oriented certificates use `reflectTable`.
+- `sourceSideLeaf` turns a checked translated-cycler witness into `WeightedTNFCertificate.nonhalt` through the default completion.
+
+Included a concrete test for the existing `SWside L 7 6 0` witness on `1RB1RD_1RC1LB_0LA0LE_1LA0LB_---1LA_------`, with a theorem intended to produce a `WeightedTNFCertificate` leaf. Added this module to the existing `weighted-tnf-pilot` Lean CI closure in `.github/workflows/agent13-coverage.yml`.
+
+Status at this memory update: GitHub Actions API rate-limited; the workflow dispatch was issued but its run ID/result could not yet be retrieved. The code is therefore **not yet verified by CI**. Do not treat the sample theorem as compiled until the run succeeds.
+
+Messages sent:
+- `communications/agent44/20261125T034648Z_agent50-translated-cycler-lean-bridge.md`
+- `communications/agent13/20261125T034649Z_agent50-translated-cycler-ci-coordination.md`
+
+Next actions:
+1. Retry listing the `agent13-coverage.yml` workflow runs after the reported API rate-limit reset; inspect only the relevant failed job/tail if it fails.
+2. Fix Lean errors in `TranslatedCycler.lean` and rerun the existing `weighted-tnf-pilot` target until the bridge compiles.
+3. Once compiled, add the same checker to a serialized source-tree certificate format: map `SWside` to `sourceSideLeaf`, `SWlast` to `WeightedTNFCertificate.lastHole`, and source first-hole splits to `WeightedTNFCertificate.expand` with the TNF root-fixing branch quotient.
+4. Coordinate with Agent 44 before duplicating any q32 decider/parent-tree computation; their current q32 work is distinct from this Lean proof bridge.
