@@ -1,9 +1,11 @@
 From BusyCoq Require Import CTL62 Individual62 Enumerate62
-  SourceResidualRoster Agent5ChunkCoverage.
+  SourceResidualRoster Agent5ChunkCoverage Agent8WeightedSource
+  Agent8AdaptiveSource Agent8QueueCheckpoint.
 From Coq Require Import List Bool NArith Strings.String.
 Import ListNotations.
 Import TNF_Node.
 Open Scope string_scope.
+Open Scope nat_scope.
 
 (* The parameters below come from the independently accepted Lean block-FAR
    witnesses. The upstream Coq FAR algorithm need not accept the same tables.
