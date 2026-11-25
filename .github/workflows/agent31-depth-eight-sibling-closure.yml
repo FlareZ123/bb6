@@ -1,0 +1,59 @@
+name: Agent 31 depth-eight sibling closure
+
+on:
+  workflow_dispatch:
+    inputs:
+      batch_run_id:
+        description: "Previously source-accepted archived FAR batch run"
+        required: true
+        default: "45676854690"
+
+jobs:
+  close-depth-eight-sibling-frontier:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: leanprover/lean-action@v1
+        with:
+          lean-version: leanprover/lean4:v4.36.0-rc2
+
+      - name: Reconstruct compressed BB6 coverage source
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          test -s im-results/agent13-coverage/BB6Coverage.lean
+
+      - name: Compile and audit the expanded depth-eight sibling closure
+        run: |
+          set -euo pipefail
+          printf 'archived_batch_run_id=%s\n' "${{ inputs.batch_run_id }}" > /tmp/a31-depth-eight-provenance.txt
+          python tools/lean_compile_closure.py \
+            --workdir /tmp/a31-depth-eight \
+            --jobs 8 \
+            --theorem BB6.Agent31DepthEightSiblingClosure.extraFarLeaves_in_siblingOpenRawRoster \
+            --theorem BB6.Agent31DepthEightSiblingClosure.siblingOpenRosterPlus_count \
+            --theorem BB6.Agent31DepthEightSiblingClosure.siblingFinalRosterPlus_count \
+            --theorem BB6.Agent31DepthEightSiblingClosure.refinedRootRosterPlus_sound \
+            --theorem BB6.Agent31DepthEightSiblingClosure.finalRootRosterPlus_sound \
+            --theorem BB6.Agent31DepthEightSiblingClosure.finalRootRosterPlus_count \
+            --provenance-input /tmp/a31-depth-eight-provenance.txt \
+            im-results/agent31-shared-core/DepthEightSiblingCoveragePlus.lean \
+            2>&1 | tee /tmp/a31-depth-eight.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a31-depth-eight.log; then
+            echo "Forbidden axiom or native_decide dependency detected" >&2
+            exit 1
+          fi
+          grep -E 'axioms|extraFarLeaves_in_siblingOpenRawRoster|siblingOpenRosterPlus_count|siblingFinalRosterPlus_count|finalRootRosterPlus_sound|finalRootRosterPlus_count' /tmp/a31-depth-eight.log
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: agent31-depth-eight-sibling-closure
+          path: |
+            /tmp/a31-depth-eight
+            /tmp/a31-depth-eight.log
+            /tmp/a31-depth-eight-provenance.txt
+          if-no-files-found: warn
+          retention-days: 30
