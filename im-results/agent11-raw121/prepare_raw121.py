@@ -67,7 +67,8 @@ def enumerate_parent():
     counts = Counter()
     count_tree(tree, counts)
     assert dict(counts) == EXPECTED_STATS, (counts, EXPECTED_STATS)
-    assert "maxscore=4063" in res.stdout, res.stdout
+    late_times = [int(value[0]) for value in spec["late"].values()]
+    assert max(late_times) + 1 == BOUND, late_times
 
     run(["g++", "-std=c++20", "-O3", ROOT / "bank.cpp", "-o", bank])
     indexed = "".join(f"{i} {table}\n" for i, table in enumerate(opens))
@@ -102,6 +103,7 @@ def enumerate_parent():
         "parent": PARENT,
         "first_query": {"ordinary_time": 8, "slot": "E0"},
         "weighted_bound": BOUND,
+        "max_late_first_hole_time": max(late_times),
         "open_sha256": OPEN_SHA,
         "tree_sha256": hashlib.sha256(tree_path.read_bytes()).hexdigest(),
         "dfa_map_sha256": hashlib.sha256((BUILD / "dfa_map.json").read_bytes()).hexdigest(),
