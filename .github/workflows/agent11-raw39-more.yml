@@ -1,0 +1,149 @@
+name: Agent 11 Raw39 additional child source audits
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Which exact A1 child to audit'
+        type: choice
+        options: [0RB, 1RC]
+        required: true
+permissions:
+  contents: write
+jobs:
+  shards:
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        group: [g0, g1, g2, g3, g4, g5, g6]
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Generate exact Raw39 selected child candidate source
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent11-raw39/prepare_raw39_more.py '${{ inputs.branch }}'
+      - name: Check one independent Raw39 shard
+        env:
+          GROUP: ${{ matrix.group }}
+        run: |
+          set -euo pipefail
+          root=im-results/agent11-raw39
+          mapfile -t modules < <(python -c 'import json,os; print("\n".join(json.load(open("im-results/agent11-raw39/shards-${{ inputs.branch }}.json"))["groups"][os.environ["GROUP"]]))')
+          test "${#modules[@]}" -gt 0
+          roots=()
+          for module in "${modules[@]}"; do roots+=("$root/$module.lean"); done
+          work=/tmp/a11-raw39-${{ inputs.branch }}-shard
+          python tools/lean_compile_closure.py \
+            --workdir "$work" --jobs 2 \
+            --manifest "$work/manifest.json" \
+            --label "raw39-${{ inputs.branch }}-shard-$GROUP" \
+            --artifact-name "raw39-${{ inputs.branch }}-shard-$GROUP" \
+            --provenance-input "$root/prepare_raw39_more.py" \
+            --provenance-input "$root/prepare_raw39.py" \
+            --provenance-input "$root/gen_rc_counters.py" \
+            --provenance-input "$root/Raw39CounterCarry.lean" \
+            --provenance-input "$root/gen_auto_counters.py" \
+            --provenance-input "$root/rb-rc-witnesses.json" \
+            --provenance-input "$root/shards-${{ inputs.branch }}.json" \
+            --provenance-input im-results/agent11-raw121/fast_enum.cpp \
+            --provenance-input im-results/agent11-raw121/bank.cpp \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_sweeps.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_four_hole.py \
+            --provenance-input im-results/agent10-tnf-multipump/multi.py \
+            --provenance-input im-results/agent10-tnf-multipump/chunk_checks.py \
+            --provenance-input im-results/agent13-coverage/unpack.py \
+            --provenance-input im-results/agent13-coverage/BB6Coverage.lean.xz.b64 \
+            --provenance-input im-results/agent4-raw109/merge_shards.py \
+            --provenance-input .github/workflows/agent11-raw39-more.yml \
+            --provenance-input tools/lean_compile_closure.py \
+            "${roots[@]}" 2>&1 | tee /tmp/a11-raw39-${{ inputs.branch }}-shard.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a11-raw39-${{ inputs.branch }}-shard.log; then exit 1; fi
+      - name: Preserve source-checked Raw39 shard
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw39-${{ inputs.branch }}-shard-${{ matrix.group }}
+          path: /tmp/a11-raw39-${{ inputs.branch }}-shard/
+          if-no-files-found: error
+          retention-days: 30
+
+  assemble:
+    needs: shards
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reconstruct exact generated source
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent11-raw39/prepare_raw39_more.py '${{ inputs.branch }}'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw39-${{ inputs.branch }}-shard-*
+          path: /tmp/a11-shards
+      - name: Strictly merge the seven dependency-closed shards
+        run: |
+          set -euo pipefail
+          python im-results/agent4-raw109/merge_shards.py \
+            /tmp/a11-shards /tmp/a11-raw39-union \
+            im-results/agent11-raw39/shards-${{ inputs.branch }}.json
+      - name: Prove complete selected child and retain exact 14-child parent complement
+        run: |
+          set -euo pipefail
+          work=/tmp/a11-raw39-parent
+          BOUND=$(python -c 'import json;print(json.load(open("im-results/agent11-raw39/rb-rc-witnesses.json"))["${{ inputs.branch }}"]["bound"])')
+          python tools/lean_compile_closure.py \
+            --workdir "$work" --jobs 2 \
+            --manifest "$work/manifest.json" \
+            --label raw39-${{ inputs.branch }}-partial-parent \
+            --theorem BB6.Agent11Raw39B${{ inputs.branch }}.cut_sound \
+            --parent-table '1RB---_1RC---_0RD---_1LD0RA_------_------' \
+            --weighted-bound "$BOUND" \
+            --artifact-name raw39-${{ inputs.branch }}-partial-parent-proof \
+            --precompiled-manifest /tmp/a11-raw39-union/manifest.json \
+            --precompiled-dir /tmp/a11-raw39-union \
+            im-results/agent11-raw39/Raw39B${{ inputs.branch }}Partial.lean 2>&1 | tee /tmp/a11-raw39-parent.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a11-raw39-parent.log \
+            BB6.Agent11Raw39B${{ inputs.branch }}.treeChild_checked \
+            BB6.Agent11Raw39B${{ inputs.branch }}.allChild \
+            BB6.Agent11Raw39B${{ inputs.branch }}.cut_sound \
+            BB6.Agent11Raw39B${{ inputs.branch }}.residual_count
+          if grep -Eq 'sorryAx|native_decide' /tmp/a11-raw39-parent.log; then exit 1; fi
+      - name: Preserve source-checked partial parent proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw39-${{ inputs.branch }}-partial-parent-proof
+          path: /tmp/a11-raw39-parent/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Publish generated source after acceptance
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add im-results/agent11-raw39/Raw39B${{ inputs.branch }}*.lean im-results/agent11-raw39/manifest-${{ inputs.branch }}.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Agent 11: publish source-checked Raw39 ${{ inputs.branch }} and partial root audit"
+            for attempt in 1 2 3 4 5 6; do
+              git fetch origin main
+              git rebase origin/main
+              if git push origin HEAD:main; then exit 0; fi
+              sleep $((attempt * 2))
+            done
+            exit 1
+          fi
