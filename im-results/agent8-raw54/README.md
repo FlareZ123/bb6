@@ -1,22 +1,36 @@
-# Raw54, E1=0LE, E0=1LB — sweep discovery checkpoint
+# Raw54 E1=0LE, E0=1LB: five-hole child reduction
 
-Canonical residual 54: `1RB---_1RC---_0RD---_1LD0LE_------_------`.
-The E1=0LE, E0=1LB child is `1RB---_1RC---_0RD---_1LD0LE_1LB0LE_------`.
-First-hole enumeration of this five-hole child (25^5 = 9,765,625 raw completions) yielded 1,515 split, 25,133 cycle, 8,567 last-hole and 1,146 open nodes; observed maximum weighted halt 451. The tree and its bound remain candidate data pending the original-source Lean audit.
+Canonical raw54: `1RB---_1RC---_0RD---_1LD0LE_------_------`.
+The current child is `1RB---_1RC---_0RD---_1LD0LE_1LB0LE_------`.
+First-hole enumeration gives 1,515 split, 25,133 cycle, 8,567 last-hole and 1,146 open nodes (25^5 raw completions); observed maximum weighted halt 451. **The full child audit has not passed original-source Lean.** No global roster cut follows.
 
-The ordered bank is a frozen union of six existing FAR banks (426 distinct entries). It hit 1,058 of the 1,146 open nodes. Seven more hit the two 5-state DFAs specified in generate.py. The remaining 81 are all one-hole partial tables. Forty-nine exact affine sweep families were found by symbolic opaque-block execution, then generated using the Agent8 raw112 multisweep approach. All 49 generated proof modules passed Lean 4.36.0-rc2 against a local standalone model with the original Z0, step0, run0, rep, sweepL/R and moveCut definitions/lemmas, and a separately proved zipper-completion nonhalting theorem (axioms propext, Quot.sound only). This was a local mathematical preflight, NOT original repository-source acceptance. The remaining 32 tables are listed explicitly. No claim of closure of the parent or change of global residual count.
+Of 1,146 open nodes, 1,065 have FAR candidates (1,058 frozen-bank hits, seven additional hits), 49 have affine sweep proofs, eight have arbitrary-tail strong-induction proofs, eleven have sparse n-gram certificates, and two have the new shared four-bit counter proof. The last 11 candidate-unresolved one-hole tables are listed in [unresolved.txt](unresolved.txt). The 49 affine, eight strong-induction and eleven n-gram witnesses were previously compiled against original sources from raw117 artifact 14997867504, source revision 988705d0e0d7de1b736777b1b66b324115d75fdb. The two new recurrence proofs were checked locally on a copied model of the original zipper primitives; their original-source consumer is pending.
 
-The columns of sweeps.txt are the zero-based ID in the original 88 bank misses, table, state, left and right zipper words (- empty, V denotes rep P n), P, jump j, entry t, and cost coefficients a,b. Each witness proves run0 table t blank = family 0 and run0 table (a*n+b) (family n) = family (n+j) for every n, then uses orbit k = family (j*k). The source generator imports the actual SweepPumping module. Example ID 3: E, empty left, right (001)^n 0011, 7-step entry, epoch cost 20n+52, jump 2.
+## Two-leaf counter invariant
 
-Reproduce:
+[Raw54Pair.lean](Raw54Pair.lean) handles IDs 2 and 72 (zero-based in the 88 original bank misses), which differ only at C1:
+- 2: `1RB0RF_1RC1RA_0RD0LB_1LD0LE_1LB0LE_1RA---`;
+- 72: `1RB0RF_1RC1RA_0RD1RB_1LD0LE_1LB0LE_1RA---`.
+
+Let k count scanned groups of four ones, and w be a finite Boolean list encoding four-cell blocks 0000 and 0011 (right tape padded by zeros). At A the left word, nearest-first excluding the scanned zero, is (1111)^k 1010111. The right word including the scanned zero encodes w. Both blank runs enter (0,[]) after 21 and 19 steps, respectively.
+
+The exact total return system, with positive primitive costs, is:
+- (k,1::w) -> (k+1,w), cost 6 for ID 2 and 4 for ID 72;
+- (k,0::w) -> (0,0^k 1::w), cost 12+4k;
+- (k,[]) -> (0,0^k 1), cost 12+4k.
+
+Here 0^k denotes k zero block digits. The reset uses a six-step prefix, a left sweep E1 that converts each four-one block to four zeros, and a six-step suffix. The rules close over every finite list, including the implicit blank suffix. Iterating the total map gives unbounded live prefixes without F1 for every assignment of that sole hole. Local Lean 4.36.0-rc2 checked the recurrence and family_next with only propext and Quot.sound using copied original Z0, step0, run0, rep, sweepL and join0. The source module imports Raw54Return and exports never via the existing zipper-to-original-machine transport; that import has not yet been compiled in this incarnation. The generator incorporates both candidate proofs and retains all eleven other leaves.
+
+## Reproduction
+
+The columns of sweeps.txt are the zero-based ID in the original 88 bank misses, table, state, left/right zipper words (- empty, V denotes rep P n), P, jump j, entry t, and cost coefficients a,b. Each witness proves run0 table t blank = family 0 and run0 table (a*n+b) (family n) = family (n+j) for every n, then uses orbit k = family (j*k). Example ID 3: E, empty left, right (001)^n 0011, entry 7, epoch cost 20n+52, jump 2.
+
 ```sh
 python im-results/agent13-coverage/unpack.py
 python im-results/agent8-raw54/generate.py --sweeps-only
-python tools/lean_compile_closure.py --workdir /tmp/a8-raw54-sweeps --jobs 4 im-results/agent8-raw54/Raw54Sweep*.lean
+python tools/lean_compile_closure.py --workdir /tmp/a8-raw54-pair --jobs 4 im-results/agent8-raw54/Raw54Pair.lean
 python im-results/agent8-raw54/generate.py
 python tools/lean_compile_closure.py --workdir /tmp/a8-raw54-cut --jobs 4 im-results/agent8-raw54/Raw54Cut.lean
 ```
-The partial audit generator is not yet replayed against the original dependency closure. Preserve every unresolved leaf, and do not graft the child into a global proof without source acceptance. The 32 unresolved leaves are available for new deciders. Raw54 is still not covered by this child alone. Raw55/56 are other canonical siblings; raw126–129 are excluded by state-introduction canonicality and should not be researched as separate parents.
 
-## Second checkpoint (15:39Z)
-All 49 affine sweeps rebuilt and checked using the original sources from accepted raw117 artifact 14997867504 (source revision 988705d0e0d7de1b736777b1b66b324115d75fdb). Eight new arbitrary-right-tail strong induction certificates (IDs 38,39,40,42,56,61,67,69) also checked locally with axioms propext, Quot.sound. Eleven small sparse n-gram certificates (30,43,45,46,47,54,55,58,60,78,79) checked with only propext, Classical.choice, Quot.sound. The n-gram certificates regenerate from the same ordered miss roster and exact existing emitter. Remaining 13 are in unresolved.txt. The first five-hole child audit is still awaiting full kernel verification; no claim of global coverage or exact BB(6). Corrected reversed FAR bank command arguments.
+The full audit must be checked before using its residual roster. Raw54 has other children; closure of this child alone cannot close the raw54 parent. Raw55/56 are distinct canonical siblings; raw126–129 are excluded by state-introduction canonicality.

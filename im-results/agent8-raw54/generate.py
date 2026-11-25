@@ -83,6 +83,11 @@ def main():
             mod,ns=emit_ngram(ROOT,i,misses[i],data,width=k,module_name=f"Raw54Sparse{i}",expected=(n,l,r))
             certs[misses[i]]=f".proven {ns}.table {ns}.never"
             imports[misses[i]]=mod
+        # Pair of four-bit block counters, sharing the same closed orbit.
+        for i,variant in [(2,"false"),(72,"true")]:
+            ns="BB6.Agent8Raw54.Pair"
+            certs[misses[i]]=f".proven ({ns}.table {variant}) ({ns}.never {variant})"
+            imports[misses[i]]="Raw54Pair"
         for i in [38,39,40,42,56,61,67,69]:
             ns=f"BB6.Agent8Raw54.Rec{i}"
             certs[misses[i]]=f".proven {ns}.table {ns}.never"
