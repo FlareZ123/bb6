@@ -4,8 +4,13 @@ on:
     inputs:
       target:
         type: choice
-        options: [twelve, five-hole, recursive]
+        options: [twelve, five-hole, recursive, raw107-witness, raw107-child]
         default: twelve
+      raw107_child:
+        description: 'B1 action for an individual raw107 child source audit'
+        type: choice
+        options: [0RD, 0RC, 0RE, 1RE, 1LC, 1LE, 1LB, 0RF, 1RF, 0LE, 0LF]
+        default: 0LF
 permissions:
   contents: read
 jobs:
@@ -57,3 +62,30 @@ jobs:
           if grep -Eq 'sorryAx|native_decide' /tmp/a10-recursive.log; then
             exit 1
           fi
+      - name: Verify raw107 0LF/180 original-machine nonhalting theorem
+        if: inputs.target == 'raw107-witness'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python tools/lean_compile_closure.py --workdir /tmp/a10-raw107-witness --jobs 4 im-results/agent11-raw107/Raw107LF180.lean | tee /tmp/a10-raw107-witness.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a10-raw107-witness.log; then exit 1; fi
+      - name: Verify one complete raw107 child against original source
+        if: inputs.target == 'raw107-child'
+        env:
+          CHILD: ${{ inputs.raw107_child }}
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          root=im-results/agent11-raw107
+          case "$CHILD" in
+            0RD) python "$root/generate.py"; module=Raw107RDData ;;
+            0RC) python "$root/generate_rc.py"; module=Raw107RCData ;;
+            0RE) python "$root/generate_re.py"; module=Raw107REData ;;
+            1RE|1LC|1LE|1LB|0RF|1RF|0LE) python "$root/generate_more.py" "$CHILD"; module="Raw107B${CHILD}Data" ;;
+            0LF) python "$root/generate_partial.py" 0LF; module=Raw107LF180Bridge ;;
+            *) exit 2 ;;
+          esac
+          python tools/lean_compile_closure.py --workdir /tmp/a10-raw107-child --jobs 4 "$root/$module.lean" | tee /tmp/a10-raw107-child.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a10-raw107-child.log; then exit 1; fi
