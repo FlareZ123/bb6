@@ -137,20 +137,21 @@ theorem unbounded (k : Nat) : ∃ n z, k ≤ n ∧ run0 ctr n ⟨0,[],[]⟩ = so
 #print axioms unbounded
 open BB6.Agent13BlankDelay BB6.Agent47WeightedHalt
 
-theorem never (m : Machine) (hm : compatible ctr m) : NeverHalts m := by
-  intro n
-  obtain ⟨j,t,hj,hr,_⟩ := unbounded n
-  have hz : (Agent50Zipper.zrun ctr j start).map project = some t := (run_project ctr j start).trans hr
-  cases h : Agent50Zipper.zrun ctr j start with
-  | none => simp [h] at hz
-  | some z =>
-    have H := Agent50Zipper.zrun_sound ctr m hm j start z h
-    rw [start_embed] at H
-    rw [show j=n+(j-n) by omega,run_append] at H
-    change (run m n blank).bind (run m (j - n)) = some (Agent50Zipper.embed z) at H
-    cases he : run m n blank with
-    | none => simp [he] at H
-    | some c => rfl
+noncomputable def advance (z : {z : Z0 // Inv z}) :
+    {p : Nat × Z0 // 0 < p.1 ∧ run0 ctr p.1 z.val = some p.2 ∧ Inv p.2} :=
+  ⟨(Classical.choose (progress z.property),
+    Classical.choose (Classical.choose_spec (progress z.property))),
+    Classical.choose_spec (Classical.choose_spec (progress z.property))⟩
+
+noncomputable def orbit : Nat → {z : Z0 // Inv z}
+  | 0 => ⟨initial, initial_inv⟩
+  | n+1 => ⟨(advance (orbit n)).val.2, (advance (orbit n)).property.2.2⟩
+
+theorem never (m : Machine) (hm : compatible ctr m) : NeverHalts m :=
+  never_of_growth ctr (fun n => (orbit n).val) 53
+    (fun n => (advance (orbit n)).val.1) entry
+    (fun n => (advance (orbit n)).property.1)
+    (fun n => (advance (orbit n)).property.2.1) m hm
 
 theorem cover_zeroRA_zeroRD (B : Nat) : Cover (WeightedBound B) ctr :=
   .leaf _ (fun m hm => weighted_never B m (never m hm))
