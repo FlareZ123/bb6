@@ -45,7 +45,12 @@ def main():
             print(A,i,info)
     for i,module in SPEC.get("extra",{}).items():
         pumps[int(i)]=f"{pumpns}.M{i}"
-        pumpcode.insert(0,"import "+module)
+        packed=ROOT/(module+".lean.gz.b64")
+        if packed.is_file():
+            import gzip,base64
+            (ROOT/(module+".lean")).write_bytes(gzip.decompress(base64.b64decode(packed.read_bytes().strip(),validate=True)))
+        if "import "+module not in pumpcode:
+            pumpcode.insert(0,"import "+module)
     pumpcode.append(f"end {pumpns}")
     (ROOT/(ID+"Pumps.lean")).write_text("\n\n".join(pumpcode)+"\n")
     ns=f"BB6.Agent6{ID}"
