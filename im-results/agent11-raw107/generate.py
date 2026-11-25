@@ -28,7 +28,7 @@ def main():
     dfa=["000"]*47
     for row in OVERRIDES.split():
         i,a=row.split(":");dfa[int(i)]=a
-    pumpcode=["import SweepPumping","set_option maxRecDepth 100000","set_option maxHeartbeats 0","set_option linter.unusedVariables false","namespace BB6.Agent6Raw107RDPumps","open BB6Coverage BB6Coverage.Agent31Pump"]
+    pumpcode=["import SweepPumping","set_option maxRecDepth 100000","set_option maxHeartbeats 0","set_option linter.unusedVariables false","namespace BB6.Agent11Raw107RDPumps","open BB6Coverage BB6Coverage.Agent31Pump"]
     pumps={}
     for i in [0,2,3,30,36]:
         p=one.parse(opens[i])
@@ -38,12 +38,12 @@ def main():
             ans=one.candidate(p,one.concrete_events(p,1500))
         assert ans is not None
         code,info=one.generate(i,p,ans)
-        pumps[i]=f"BB6.Agent6Raw107RDPumps.M{i}"
+        pumps[i]=f"BB6.Agent11Raw107RDPumps.M{i}"
         pumpcode.append(code)
         print(i,info)
-    pumpcode.append("end BB6.Agent6Raw107RDPumps")
+    pumpcode.append("end BB6.Agent11Raw107RDPumps")
     (ROOT/"Raw107RDPumps.lean").write_text("\n\n".join(pumpcode)+"\n")
-    ns="BB6.Agent6Raw107RD"
+    ns="BB6.Agent11Raw107RD"
     def emit(name,imports,body):
         header=f"""set_option maxRecDepth 100000
 set_option maxHeartbeats 0

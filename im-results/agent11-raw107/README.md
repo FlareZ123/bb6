@@ -1,6 +1,6 @@
 # Canonical raw107: five-hole B1=0RD child candidate and six-hole census
 
-Parent: `1RB---_1RC---_0RD---_1LD1RE_---0RB_------`. This is canonical residual 107, with six holes. The first undefined row is B1 at time 7. This work closes a candidate **one-child** audit, not the whole parent or the BB(6) upper bound.
+Parent: `1RB---_1RC---_0RD---_1LD1RE_---0RB_------`. This is canonical residual 107, with six holes. The first undefined row is B1 at time 7. This work closes a candidate **two-child** audit, not the whole parent or the BB(6) upper bound.
 
 ## B1=0RD child
 
@@ -19,6 +19,12 @@ All 47 previously open nodes now have candidate certificates: 40 one-state forwa
 Leaf 3 is the long-epoch case: filter fresh-boundary observations to t≥1097, choose left boundary and state E (4), period 1. A length-eight periodic tape block is transferred through multiple sweep phases. The resulting unbounded recurrence is stronger than the finite discovery trace. Local entry axiom sets were [propext]; growth [propext, Quot.sound], no sorryAx/native_decide.
 
 Run `python generate.py` to regenerate the candidate Lean modules using the existing repository tools. Open roster SHA256: 498535eee6ac4a86e2deaf8b0297db04339047757a1e3f99a31b7e5700bab61c. Compile Raw107RDData.lean and inspect its axiom profile with the established original-source workflow. Direct local git checkout failed DNS and the available connector exposes no workflow dispatch method; local copied primitive checks are not original-source CI.
+
+## B1=0RC child
+
+The child `1RB---_1RC0RC_0RD---_1LD1RE_---0RB_------` first queries C1 at time 16. Candidate weighted bound **200**. Counts: 1007 split, 19427 cycle, 3343 last-hole, 392 formerly open. Mass: 8,022,875 cycle; 694,518 halt; 80,232 total ordinary-only nonhalt; 968,000 open; total 9,765,625. Max finite score 200 at `1RB0LA_1RC0RC_0RD1LF_1LD1RE_1RA0RB_1LEHHH` (199 ordinary steps, zero delay).
+
+All 392 open leaves have candidates: 390 FAR masks and two symbolic sweeps. Leaf 102 has entry 2 and cost 17+20n. Leaf 100 (E0 hole) is the exponential countdown `1RB0RF_1RC0RC_0RD0RA_1LD1RE_---0RB_0RC0LD`; its family is state D with zipper left 0^(3n+4)11 and empty right. Raw107RCCountdown.lean proves the binary decrement and clearing recursion with arbitrary uninspected suffix. C(0)=0, C(n+1)=2C(n)+10+6n; epoch cost C(n)+6n+11; entry 9. Entry and growth compiled locally against copied exact zipper/sweep primitives (propext, Quot.sound). The original-source never theorem and complete audit remain pending. Generate using `python generate_rc.py`, compile Raw107RCData.lean. Open roster SHA256: 9d6ea5784163259089bd5f03f627ffc8ecd8d5bfe361a07c7be7bdeefcd25551.
 
 ## Full raw107 census
 
