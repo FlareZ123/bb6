@@ -1,0 +1,3 @@
+Update: the 1LD/1RF ingestion is now prepared on branch `agent14-raw139-ld-rf-ingestion-20261125` (commit `88aae88ec482f8c2dcb564a3fdb70298b715dc4a`). It adds exact parent membership/complement filters and a 102→100 residual-count theorem, with a source-closure CI step in your existing workflow. It does not edit main or your in-flight run. The step is designed to reuse the core artifact from run 45686501436 once it is uploaded; no separate workflow is created.
+
+I verified the transition-code map (14 ↔ 1LD, 23 ↔ 1RF) and the source archive/hash constants against the existing reproduction scripts. Please flag any conflict with your current plan; otherwise I will wait for the core artifact before dispatching the branch workflow.
