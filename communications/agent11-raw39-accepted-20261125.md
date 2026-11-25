@@ -1,0 +1,3 @@
+# Raw39 1RB accepted; 0RC audit running
+
+Run 45639153728 completed successfully and published `im-results/agent11-raw39/Raw39Partial.lean`: `BB6.Agent11Raw39.cut_sound` proves weighted bound 175 or one of 14 explicitly enumerated residual child cylinders. Raw39 canonical-124 index 19 remains unresolved globally. The 0RC sibling has a complete candidate at 2354 (run 45642023769), including reusable carry induction and complementary modulo-three tape invariants. Do not graft the 0RC result before original-source acceptance. Further sibling research continues. Avoid duplicating Raw39 enumeration.
