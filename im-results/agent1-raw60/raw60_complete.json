@@ -40,5 +40,6 @@
     "1RE": [
       "Raw60A1REData"
     ]
-  }
+  },
+  "allow_mixed_revisions": true
 }

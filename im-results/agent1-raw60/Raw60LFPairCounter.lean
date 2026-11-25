@@ -43,8 +43,8 @@ theorem clear (v : Bool) (n : Nat) (L R : List Bool) :
     run0 (table v) (3+(2*n+2)+7+extra v) (F (false::false::L) (W n R)) = some (F (Z (2*n)++true::true::L) (W 0 R)) := by
   have h1 : run0 (table v) 3 (F (false::false::L) (W n R)) = some (C (true::true::true::L) (U (2*n+2)++false::true::true::true::true::false::true::true::true::true::true::R)) := by cases v <;> rfl
   have h2 := cSweep v (2*n+2) (true::true::L) (false::true::true::true::true::false::true::true::true::true::true::R)
-  have h3 : run0 (table v) 7 (C (true::(Z (2*n+2)++true::true::L)) (false::true::true::true::true::false::true::true::true::true::true::R)) = some (F (Z (2*n+4)++true::true::L) (true::true::false::true::false::true::true::true::true::R)) := by cases v <;> rfl
-  have h4 : run0 (table v) (extra v) (F (Z (2*n+4)++true::true::L) (true::true::false::true::false::true::true::true::true::R)) = some (F (Z (2*n)++true::true::L) (W 0 R)) := by cases v <;> rfl
+  have h3 : run0 (table v) 7 (C (true::(Z (2*n+2)++true::true::L)) (false::true::true::true::true::false::true::true::true::true::true::R)) = some (F (Z (2*n+4)++true::true::L) (true::true::false::true::false::true::true::true::true::true::R)) := by cases v <;> rfl
+  have h4 : run0 (table v) (extra v) (F (Z (2*n+4)++true::true::L) (true::true::false::true::false::true::true::true::true::true::R)) = some (F (Z (2*n)++true::true::L) (W 0 R)) := by cases v <;> rfl
   exact join0 (join0 (join0 h1 h2) h3) h4
 
 def Inc (v : Bool) (n : Nat) : Prop := ∀ L R : List Bool,
