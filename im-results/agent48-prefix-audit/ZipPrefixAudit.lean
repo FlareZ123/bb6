@@ -3,7 +3,7 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 namespace BB6.Agent48PrefixAudit
 open BB6Coverage BB6Coverage.Agent50Zipper BB6Coverage.Agent31Pump
-open BB6.Agent13BlankDelay BB6.Agent31ThreeHole
+open BB6.Agent13BlankDelay BB6.Agent31ThreeHole BB6.Agent50TNFPilot
 open BB6Coverage.Agent10ZipAudit BB6.Agent10ZipAudit
 
 theorem refineStep (p : PartialMachine) (s : Slot) (mv : Move)
@@ -69,6 +69,7 @@ theorem cycleAt_eq (p : PartialMachine) (t : Nat) (z : Z) (entry period : Nat)
     (right : Bool) (boundary : Int) (h : zrun p t start = some z) :
     cycleAt p t z entry period right boundary = zipCycle p entry period right boundary := by
   rw [cycleAt,zipCycle,advance_eq p t z h]
+  rfl
 
 def checkAt (B : Nat) (p : PartialMachine) (t : Nat) (z : Z) : (a : Audit) → Bool
   | .last n s => match advance p t z n with
