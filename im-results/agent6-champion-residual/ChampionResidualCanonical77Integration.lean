@@ -32,6 +32,13 @@ theorem championResidual_unique_canonical77 :
       (fun e => e.1 = championResidualAddress)).length = 1 := by
   decide
 
+/-- There is exactly one entry whose table is the raw139 parent, not merely
+    one entry with its address. -/
+theorem championResidual_unique_by_table :
+    (BB6.Agent47CanonicalRaw114Accepted.roster.filter
+      (fun e => sameTable e.2 championResidual)).length = 1 := by
+  decide
+
 /-- The accepted 77-entry canonical roster therefore has 76 other entries. -/
 theorem canonical77_other_address_count :
     (BB6.Agent47CanonicalRaw114Accepted.roster.filter
@@ -67,7 +74,7 @@ theorem cover_championResidual_from_raw139_leaves
 noncomputable def refinedCanonical77Roster :
     List (List Move × PartialMachine) :=
   (BB6.Agent47CanonicalRaw114Accepted.roster.filter
-    (fun e => e.1 ≠ championResidualAddress)) ++
+    (fun e => sameTable e.2 championResidual = false)) ++
   (remainingF1ZeroRC.map
     (fun e => (championResidualAddress ++ e.1, e.2)))
 
@@ -89,13 +96,20 @@ theorem exact_from_canonical77_and_raw139_leaves
     (Nat.le_trans (by decide) champion_score_ge_49394)
     (by
       intro e he
-      by_cases hEq : e.2 = championResidual
-      · simpa [hEq] using cover_championResidual_from_raw139_leaves hLeaves
-      · exact hOther e he hEq)
+      by_cases hSame : sameTable e.2 championResidual = true
+      · have heq : e.2 = championResidual := sameTable_sound hSame
+        rw [heq]
+        exact cover_championResidual_from_raw139_leaves hLeaves
+      · have hne : e.2 ≠ championResidual := by
+          intro hEq
+          have hself : sameTable championResidual championResidual = true := by decide
+          exact hSame (by simpa [hEq] using hself)
+        exact hOther e he hne)
     BB6Coverage.Agent48DirectRoot.champion_raw_witness
 
 #print axioms championResidual_mem_canonical77
 #print axioms championResidual_unique_canonical77
+#print axioms championResidual_unique_by_table
 #print axioms canonical77_other_address_count
 #print axioms cover_championResidual_from_raw139_leaves
 #print axioms refinedCanonical77Roster_count
