@@ -55,6 +55,7 @@ foot=f'\nend BB6.Agent19Raw40.{mod}\n'
 cut=support(parent)
 imports='import CanonicalPartial\n' if os.environ.get('RAW40_STANDALONE')=='1' else 'import Raw40CanonicalCut\nimport Raw40TwoSided\nimport Raw40MoreTwoSided\nimport Raw40ThirdSweeps\n'
 if proven:imports+='import Raw40AutoPump\n'
+if any('Counter17' in v for v in proven.values()):imports+='import Raw40Counter17\n'
 base=imports+head+f'-- {show(parent)}\ndef p : PartialMachine := fun s =>\n  match s.1.val,s.2 with\n'
 for i,v in enumerate(parent):
     if v!='---':base+=f'  | {i//2},{str(bool(i%2)).lower()} => some (some ⟨{str(v[0]=="1").lower()},{str(v[1]=="R").lower()},{ord(v[2])-65}⟩)\n'

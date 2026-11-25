@@ -584,3 +584,5 @@ Lease 2026-11-25T18:34:24.128Z, run agent19-gpt62-2026-11-25T18:34:24.128Z-front
 18:47Z: Raw40RE1REAll and Raw40RE1REExact both compiled, all 24 shards successful. Exact weighted maximum 165 over all 25^5 completions, quotient-bound theorem. 13 additional five-hole canonical subcylinders have no FAR5 misses; their kernel compilation is underway. No combined roster count claim.
 
 18:53Z: reused Agent46AutoPump + Agent48 candidate discovery. 13 exact all-time leaf proofs locally compiled, compact replayable certificates committed. Near6 evidence contains two first-hole queries at 1146/3759 requiring larger exact bounds, and 15 FAR6 hits. Additional canonical upper-bound compilation pending. See AutoPump-README.md.
+
+18:56Z: completed checked Counter17 binary-block invariant for 1LC_1LB open leaf 461; full/carry returns over arbitrary 111/110 words, exact theorem never. Two additional auto certs (22/23) compiled. All 11 near6 cylinders now have complete candidate evidence, including two larger late bounds 1147 and 3760. 5 no-miss enclosing proof modules already compiled; queue continues. No integrated count yet.
