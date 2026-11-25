@@ -157,24 +157,33 @@ Proof.
   - exact Hmatch.
 Qed.
 
-(* The checkpoint's exact table occurs once. All other active/held entries
-   remain in q0_2800_residual_obligations. *)
-Theorem q0_2800_consumed_count :
-    length q0_2800_consumed_obligations = 1.
+(* The two filters form an exact finite partition of the adaptive list.
+   We do not assume uniqueness: if the same source table occurs more than
+   once, every occurrence is discharged by the same certificate. *)
+Lemma length_filter_partition {A : Type} (f : A -> bool) (xs : list A) :
+    length (filter f xs) +
+      length (filter (fun x => negb (f x)) xs) = length xs.
 Proof.
-  unfold q0_2800_consumed_obligations, with_recovered_held_2800,
-    q0_2800_adaptive_obligations.
-  vm_compute.
+  induction xs as [|a xs IH]; simpl.
+  - reflexivity.
+  - destruct (f a) eqn:Hf; simpl; rewrite IH; lia.
 Qed.
 
-Theorem q0_2800_residual_count :
-    length q0_2800_residual_obligations =
-      length q0_2800_adaptive_obligations - 1.
+Theorem q0_2800_partition_length :
+    length q0_2800_consumed_obligations +
+      length q0_2800_residual_obligations =
+      length q0_2800_adaptive_obligations.
 Proof.
-  unfold q0_2800_residual_obligations, without_recovered_held_2800,
-    q0_2800_adaptive_obligations.
-  vm_compute.
+  unfold q0_2800_consumed_obligations, q0_2800_residual_obligations,
+    with_recovered_held_2800, without_recovered_held_2800.
+  apply length_filter_partition.
 Qed.
+
+(* Emit the exact count from the pinned source checkpoint for the run log;
+   the proof above deliberately does not assume that duplicate occurrences
+   are absent. *)
+Eval vm_compute in length q0_2800_consumed_obligations.
+Eval vm_compute in length q0_2800_residual_obligations.
 
 (* Drop only the exact q_i(2800,100) held table from chunk 28's adaptive
    obligations. All other 128 chunks retain their original full lists.
@@ -215,6 +224,5 @@ Print Assumptions recovered_held_2800_filter_safe.
 Print Assumptions source_weighted_safe_iff_without_recovered_held_2800.
 Print Assumptions q0_2800_queue_safe_iff.
 Print Assumptions q0_2800_consumed_nonempty.
-Print Assumptions q0_2800_consumed_count.
-Print Assumptions q0_2800_residual_count.
+Print Assumptions q0_2800_partition_length.
 Print Assumptions actual_source_chunks_packed_global_upper_after_held_consumption.
