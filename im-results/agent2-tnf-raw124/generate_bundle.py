@@ -52,9 +52,11 @@ open BB6.Agent50TNFPilot BB6.Agent31ThreeHole
     multi={int(i):v for i,v in bundle["multi"].items()}
     long={int(i):v for i,v in bundle["long"].items()}
     nested={int(i):v for i,v in bundle.get("nested",{}).items()}
+    extra_tree=bundle.get("extra_tree",{})
+    extra_indices={index[code] for code in extra_tree}
     pool=bundle["pool"];far={i:pool[k] for i,k in enumerate(bundle["far"]) if k>=0}
-    assert sum(map(len,(single,multi,long,far,nested)))==len(opens)
-    assert set(single)|set(multi)|set(long)|set(far)|set(nested)==set(range(len(opens)))
+    assert sum(map(len,(single,multi,long,far,nested)))+len(extra_tree)==len(opens)
+    assert set(single)|set(multi)|set(long)|set(far)|set(nested)|extra_indices==set(range(len(opens)))
     def table(i):
         return "["+",".join("none" if a=="---" else "some (some "+move(a)+")" for a in parse(opens[i]))+"]"
     body="""open BB6Coverage.Agent50Pump BB6.Agent2MultiPump
@@ -94,7 +96,9 @@ theorem pBranch_nohalt : weightedTNFNoAssignedHalt pBranch :=
     def build(node):
         tag,*v=node
         if tag=="open":
-            code=v[0];i=index[code]
+            code=v[0]
+            if code in extra_tree:return build(extra_tree[code])
+            i=index[code]
             if i in single or i in multi or i in nested:return f".proven pumpTable{i} pumpNever{i}"
             if i in long:
                 a,*v=long[i]
@@ -116,6 +120,7 @@ theorem pBranch_nohalt : weightedTNFNoAssignedHalt pBranch :=
         n,s,kids=v;assert len(kids)==24
         return f".split {n} {slot(s)} (byMove [\n"+",\n".join(build(k) for k in kids)+"])"
     def size(node):
+        if node[0]=="open" and node[1] in extra_tree:return size(extra_tree[node[1]])
         return 1+sum(map(size,node[3])) if node[0]=="split" else 1
     counter=0
     def assemble(n,s,pname,tag,childtags):
@@ -137,8 +142,9 @@ theorem {theorem} : check {B} {pname} tree{tag} = true := by
 """
     def recursive(node,pname,tag):
         nonlocal counter
+        if node[0]=="open" and node[1] in extra_tree:node=extra_tree[node[1]]
         if node[0]!="split" or size(node)<=500:
-            return f"def tree{tag} : Audit := {build(node)}\ntheorem check{tag} : check {B} {pname} tree{tag} = true := by decide\n"
+            return f"def tree{tag} : Audit := {build(node)}\\ntheorem check{tag} : check {B} {pname} tree{tag} = true := by decide\\n"
         _,n,s,ks=node
         out="";ts=[]
         for k,m in zip(ks,MOVES):
@@ -163,9 +169,9 @@ theorem bound_all : ∀ m, compatible pBranch m → WeightedBound {B} m := certi
 #print axioms bound_all
 """
     emit(stem+"Data",mods,body)
-    print(b,B,len(opens),len(single),len(multi),len(long),len(far),flush=True)
+    print(b,B,len(opens),len(single),len(multi),len(long),len(far),len(extra_tree),flush=True)
 def longcycle_bundle(branch):
-    """Build an exact, source-checkable 0LB leaf partition from half-tape witnesses."""
+    """Build a recursive exact 0LB leaf partition from half-tape witnesses."""
     assert branch == "0LB"
     parent = "1RB---_1RC---_0RD---_1LD1RE_---1LF_---0LB"
     subprocess.run([str(ROOT/"enumerate"), parent], cwd=ROOT, check=True)
@@ -173,36 +179,92 @@ def longcycle_bundle(branch):
     rawtree = (ROOT/"tree.json").read_bytes()
     opens = raw.decode().splitlines()
     assert opens
-    indexed = "".join(f"{i} {table}\n" for i, table in enumerate(opens))
     subprocess.run(
         ["g++", "-std=c++20", "-O3", str(ROOT/"longcycle.cpp"), "-o", str(ROOT/"longcycle")],
         check=True,
     )
-    result = subprocess.run(
-        [str(ROOT/"longcycle"), "100000", "128"],
-        cwd=ROOT, input=indexed, text=True, stdout=subprocess.PIPE, check=True,
+
+    terminal = {}
+    splits = {}
+    pending = list(opens)
+    cap, lookback = 100000, 128
+    max_query = 0
+    rounds = 0
+
+    def display(compact):
+        assert len(compact) == 36
+        return "_".join(compact[6*i:6*(i+1)] for i in range(6))
+
+    while pending:
+        rounds += 1
+        indexed = "".join(f"{i} {table.replace('_', '')}\n" for i, table in enumerate(pending))
+        result = subprocess.run(
+            [str(ROOT/"longcycle"), str(cap), str(lookback)],
+            cwd=ROOT, input=indexed, text=True, stdout=subprocess.PIPE, check=True,
+        )
+        rows = [line.split() for line in result.stdout.splitlines()]
+        assert len(rows) == len(pending), (len(pending), len(rows), rounds)
+        ids = [int(row[0]) for row in rows]
+        assert len(set(ids)) == len(ids) and set(ids) == set(range(len(pending)))
+        by_id = {int(row[0]): row for row in rows}
+        retry = []
+        next_pending = []
+        for i, table in enumerate(pending):
+            row = by_id[i]
+            if row[1] == "cycle":
+                assert len(row) == 6, row
+                terminal[table] = ["cycle", int(row[2]), int(row[3]), int(row[4]), int(row[5])]
+            elif row[1] == "hole":
+                assert len(row) == 4, row
+                n, slot_id = int(row[2]), int(row[3])
+                max_query = max(max_query, n)
+                if table.count("---") == 1:
+                    terminal[table] = ["last", n, slot_id]
+                else:
+                    compact = table.replace("_", "")
+                    assert len(compact) == 36 and compact[3*slot_id:3*slot_id+3] == "---"
+                    children = [display(compact[:3*slot_id] + mv + compact[3*slot_id+3:]) for mv in MOVES]
+                    splits[table] = ["split", n, slot_id, children]
+                    next_pending.extend(children)
+            elif row[1] == "open":
+                retry.append(table)
+            else:
+                raise AssertionError(("unknown longcycle result", row))
+
+        if retry:
+            if cap < 1000000:
+                cap = min(cap * 10, 1000000)
+                next_pending.extend(retry)
+            elif lookback < 1024:
+                lookback = min(lookback * 4, 1024)
+                next_pending.extend(retry)
+            else:
+                raise AssertionError(("unresolved 0LB leaves", len(retry), retry[:3], cap, lookback))
+        pending = list(dict.fromkeys(t for t in next_pending if t not in terminal and t not in splits))
+        print(
+            f"0LB recursive pass {rounds}: terminal={len(terminal)} split={len(splits)} "
+            f"pending={len(pending)} cap={cap} lookback={lookback}",
+            flush=True,
+        )
+
+    from functools import lru_cache
+    @lru_cache(None)
+    def build_tree(table):
+        if table in terminal:
+            return terminal[table]
+        n, slot_id, children = splits[table][1:]
+        return ["split", n, slot_id, [build_tree(child) for child in children]]
+
+    extra_tree = {table: build_tree(table) for table in opens}
+    cycles = sum(v[0] == "cycle" for v in terminal.values())
+    last = sum(v[0] == "last" for v in terminal.values())
+    bound = max(1_000_000, max_query + 1_000_000)
+    print(
+        f"0LB recursive partition: initial={len(opens)} cycles={cycles} "
+        f"last={last} splits={len(splits)} unique={len(terminal)+len(splits)} "
+        f"max_query={max_query} bound={bound}",
+        flush=True,
     )
-    rows = [line.split() for line in result.stdout.splitlines()]
-    assert len(rows) == len(opens), (len(opens), len(rows))
-    ids = [int(row[0]) for row in rows]
-    assert len(set(ids)) == len(ids) and set(ids) == set(range(len(opens)))
-    long = {}
-    for row in rows:
-        i = int(row[0])
-        if row[1] == "cycle":
-            assert len(row) == 6, row
-            long[str(i)] = ["cycle", int(row[2]), int(row[3]), int(row[4]), int(row[5])]
-        elif row[1] == "hole":
-            assert len(row) == 4, row
-            assert opens[i].count("---") == 1, (i, opens[i])
-            long[str(i)] = ["hole", int(row[2]), int(row[3])]
-        else:
-            raise AssertionError(("unresolved raw124 0LB leaf", row))
-    cycles = sum(v[0] == "cycle" for v in long.values())
-    holes = [v for v in long.values() if v[0] == "hole"]
-    max_hole = max((v[1] for v in holes), default=0)
-    bound = max(1_000_000, max_hole + 1_000_000)
-    print(f"0LB exact leaf partition: {len(opens)} leaves, {cycles} cycles, {len(holes)} holes, max hole step {max_hole}, bound {bound}", flush=True)
     return {
         "branch": branch,
         "bound": bound,
@@ -212,7 +274,8 @@ def longcycle_bundle(branch):
         "pool": [],
         "single": {},
         "multi": {},
-        "long": long,
+        "long": {},
+        "extra_tree": extra_tree,
     }
 
 
