@@ -82,7 +82,7 @@ Definition source_table_eqb (a b : TM) : bool :=
 Lemma Trans_to_str_injective (x y : option (Sym * dir * Q)) :
     Trans_to_str x = Trans_to_str y -> x = y.
 Proof.
-  destruct x as [[[w d] q]|]; destruct y as [[[w' d'] q']|]; simpl.
+  destruct x as [[w [d q]]|]; destruct y as [[w' [d' q']]|]; simpl.
   - intro H.
     destruct w; destruct w'; destruct d; destruct d'; destruct q; destruct q';
     simpl in H; try discriminate; reflexivity.
