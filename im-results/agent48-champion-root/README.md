@@ -50,20 +50,16 @@ Even such a lower-bound witness would not supply the missing **global upper-boun
 - Independently close a **currently unsolved rooted case** or a nontrivial subset of one of the two universal machine cylinders.
 - Audit the current external champion-family history before calling this bridge a new research finding; the wiki had already noted post-prefix equivalence of TM1 and TM2.
 
-## Raw139 depth-five F/1 sibling closures (2026-11-25)
+## Raw139 depth-five F/1 sibling closures
 
-The table order is `[A0,A1,B0,B1,C0,C1,D0,D1,E0,E1,F0,F1]`; code `24` means unassigned. Immediately before the F/1 split on the source-replayed `championP5` path, the parent is:
+The table order is `[A0,A1,B0,B1,C0,C1,D0,D1,E0,E1,F0,F1]`; code 24 means unassigned. The exact F/1 split parent on `championP5` is `[7,24,11,24,14,21,3,16,12,11,24,24]`.
 
-```text
-[7,24,11,24,14,21,3,16,12,11,24,24]
-```
+| Child | Mathematical closure | Original-source status |
+| --- | --- | --- |
+| F/1 = 1LF (22) | [Complete WeightedBound 126 audit](ChampionF1OneLFCover.lean) | Accepted [45577240835](https://github.com/FlareZ123/bb6/actions/runs/45577240835) |
+| F/1 = 0RD (13) | [66-step entry and exact unbounded growth](ChampionF1ZeroRD.lean), universal nonhalting | Accepted [45577240835](https://github.com/FlareZ123/bb6/actions/runs/45577240835) |
+| F/1 = 0RF (21) | [Complete candidate WeightedBound 211 audit](F1-zeroRF.md), including one exact four-phase recurrence | Local reconstructed zipper stage proof accepted; full source audit [45581070284](https://github.com/FlareZ123/bb6/actions/runs/45581070284) pending |
 
-Two previously open depth-five children now have complete mathematical closures:
+Each leaves A/1, B/1, F/0 unassigned. [ChampionF1SiblingIntegration](ChampionF1SiblingIntegration.lean) verifies the first two table identities and retains 110 of the 112 raw139 leaves in its conditional exactness theorem; the corrected source audit [45577606094](https://github.com/FlareZ123/bb6/actions/runs/45577606094) is pending. [ChampionF1RFIntegration](ChampionF1RFIntegration.lean) is the further proposed consuming theorem retaining 109 leaves; this third closure and its roster integration require original-source acceptance. The 77 other canonical-78 representatives remain separate obligations. No claim of exact BB(6) or global roster removal is made.
 
-1. **F/1 = 1LF (code 22).** The child table is `[7,24,11,24,14,21,3,16,12,11,24,22]`, leaving A/1, B/1, and F/0 unassigned. `ChampionF1OneLFCover.lean` constructs a complete three-hole `Audit` tree and proves `WeightedBound 126` for every compatible completion.
-2. **F/1 = 0RD (code 13).** The child table is `[7,24,11,24,14,21,3,16,12,11,24,13]`, with the same three holes. `ChampionF1ZeroRD.lean` proves every compatible completion nonhalting, using a 66-step entry and an exact stage-growth recurrence.
-
-`ChampionF1SiblingIntegration.lean` checks each child table against the exact `championChild 5` construction, lifts both covers to `championScore`, and filters them from Agent41's `remainingExtended` raw139 frontier. Its conditional exactness theorem uses the remaining **110** raw139 leaves, together with the **77** nonchampion canonical-78 representatives. This is a two-leaf reduction of the previous 112-leaf raw139 frontier, not an exact BB(6) proof.
-
-**Source-validation status:** the standalone original-source audit **passed** in run [45577240835](https://github.com/FlareZ123/bb6/actions/runs/45577240835): 155 project modules compiled from four roots, and the F1 1LF/0RD theorem axiom audit succeeded. The integration module is still pending. Run 45570544320 used an earlier, incorrect direction bit for 1LF and is obsolete; the corrected module uses `⟨true,false,5⟩`. Corrected full integration run [45577606094](https://github.com/FlareZ123/bb6/actions/runs/45577606094) is in progress. Do not treat the 110-leaf integration theorem as source-accepted until that run succeeds. Earlier runs 45574821626 and 45576520749 failed only in post-compile audit-script checks; their parser/name issues have been corrected.
-
+Historical integration run 45570544320 used an incorrect direction bit for 1LF, superseded by `⟨true,false,5⟩`; earlier standalone runs 45574821626 and 45576520749 failed in the post-compile audit parser, since corrected. The accepted run compiled 155 project modules from four roots and passed the F1 axiom audit.
