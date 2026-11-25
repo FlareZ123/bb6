@@ -6,7 +6,7 @@ on:
       target:
         description: Proof target
         type: choice
-        options: [core, cut, corridor, ingest, pump0RE]
+        options: [core, cut, corridor, ingest, pump0RE, late0RE]
         default: core
       source_ref:
         description: Exact source commit (optional)
@@ -36,6 +36,8 @@ jobs:
           D=im-results/agent46-raw13-cut
           if [ "$TARGET" = pump0RE ]; then
             ROOT="$D/Agent46Raw13Pump0RE.lean"
+          elif [ "$TARGET" = late0RE ]; then
+            ROOT="$D/Agent46Raw13Late0RE.lean"
           elif [ "$TARGET" = core ]; then
             ROOT="$D/Agent46Raw13Base.lean"
           else

@@ -15,6 +15,7 @@ open BB6.Agent46StateClosure
 inductive Cut where
   | unresolved
   | closed (t : Audit)
+  | bounded (q : PartialMachine) (C : Nat) (safe : ∀ m, compatible q m → WeightedBound C m)
   | state (mask : Nat)
   | split (n : Nat) (s : Slot) (kids : Move → Cut)
 
@@ -23,6 +24,7 @@ def nextCut (cut : Nat) (mv : Move) := max cut (mv.next.val+1)
 def check (B : Nat) (p : PartialMachine) (cut : Nat) : Cut → Bool
   | .unresolved => true
   | .closed t => zipCheck B p t
+  | .bounded q C _ => tableOK p q && decide (C ≤ B)
   | .state mask => stateCheck p mask
   | .split n s kids => zipQueryOK B p n s &&
       BB6.Agent31ThreeHole.allMoves (fun mv =>
@@ -43,6 +45,7 @@ theorem moves_complete (mv : Move) : mv ∈ moves := by
 def residuals (p : PartialMachine) (cut : Nat) : Cut → List (List Move × PartialMachine)
   | .unresolved => [([],p)]
   | .closed _ => []
+  | .bounded _ _ _ => []
   | .state _ => []
   | .split _ s kids =>
       (moves.filter fun mv => decide (mv.next.val ≤ cut)).flatMap fun mv =>
@@ -76,6 +79,16 @@ theorem sound (B : Nat) (p : PartialMachine) (cut : Nat) (t : Cut)
   | closed t =>
     intro m hm
     exact Or.inl (safe_quotient hf (certifiedZip B p t hf hn hcheck).sound m hm)
+  | bounded q C safe =>
+    have hv : tableOK p q = true ∧ C ≤ B := by
+      simpa only [check, Bool.and_eq_true, decide_eq_true_eq] using hcheck
+    have he := tableOK_sound p q hv.1
+    subst q
+    intro m hm
+    apply Or.inl
+    apply safe_quotient hf _ m hm
+    intro m' hm' k d hk hd
+    exact Nat.le_trans (safe m' hm' k d hk hd) hv.2
   | state mask =>
     intro m hm
     apply Or.inl
@@ -129,6 +142,7 @@ theorem sound (B : Nat) (p : PartialMachine) (cut : Nat) (t : Cut)
 def openMass (holes cut : Nat) : Cut → Nat
   | .unresolved => 25^holes
   | .closed _ => 0
+  | .bounded _ _ _ => 0
   | .state _ => 0
   | .split _ _ kids =>
       (moves.filter fun mv => decide (mv.next.val ≤ cut)).foldl
