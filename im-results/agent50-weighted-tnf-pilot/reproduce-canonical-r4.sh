@@ -129,6 +129,8 @@ required = [
     "BB6.Agent50CanonicalR4Ingestion.r4Subtree_expandedNodes",
     "BB6.Agent50CanonicalR4Ingestion.r4Subtree_closedLeaves",
     "BB6.Agent50CanonicalR4Ingestion.r4Remaining_count",
+    "BB6.Agent50CanonicalR4Ingestion.p23_hole_count",
+    "BB6.Agent50CanonicalR4Ingestion.r4Remaining_mass",
     "BB6.Agent50CanonicalR4Ingestion.r4Remaining_sound",
     "BB6.Agent50CanonicalR4Ingestion.p23_parent_count",
     "BB6.Agent50CanonicalR4Ingestion.r4RefinedRoster_count",
