@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
-"""Merge raw109 same-revision audited shards without silent object collisions.
+"""Merge dependency-closed Lean proof artifacts without silent object collisions.
 
-Restore generated sources in the checkout, leaving tracked inputs untouched.
-The existing strict closure compiler then revalidates all module identities and
-checks the unconditional parent theorem against this union.
+The default raw109 invocation remains same-revision. An optional JSON config
+selects root groups and an artifact prefix; it may also allow mixed source
+revisions, but every source, import graph, compiler identity, object hash, and
+provenance input is still checked against the checkout before the union is
+accepted. Restore generated sources and let lean_compile_closure revalidate the
+final consumer against the merged objects.
 """
 import hashlib
 import json
