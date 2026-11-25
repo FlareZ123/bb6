@@ -15,13 +15,13 @@ The 75/74 counts and raw112 membership are intentionally executable Lean checks,
 
 `../agent31-three-hole-tnf/RightFrame.lean` adds `SafeRight` and `run0_append_right_of_safe_eq`. It proves that a finite run on an explicit right-tape prefix extends unchanged under every opaque appended suffix, provided every rightward move consumes a cell from the visible prefix. This is intended for recursive counter encodings such as the raw112 high stack.
 
-The frame theorem and its exact-output corollary were tested locally with Lean 4.36.0-rc2 against reconstructed zipper definitions. The repository import closure is being checked through the existing raw112 carry CI workflow.
+The frame theorem and its exact-output corollary were tested locally with Lean 4.36.0-rc2 and then compiled in the repository import closure by CI run 45597008330. The raw112 leaves no longer depend on the earlier high-counter-grammar route: the current proof path is a 7-state carry extension with a counted-sweep growth invariant, plus a 4-step/2-step stuttering simulation for the sibling leaf. RightFrame remains a generic reusable lemma, not a dependency of those raw112 proofs.
 
 ## Current evidence status (2026-11-25)
 
 - Raw112 original-semantics carry/sibling audit: run 45595822219 passed; the two `never` theorems reported only `propext`, `Classical.choice`, and `Quot.sound`.
 - Raw112 full parent-cover audit: run 45596113340 was in progress at last check. Its intended theorem is a `Cover (WeightedBound 100000)` for the raw112 parent.
-- Right-suffix frame plus sibling audit: run 45597008330 was queued at last check.
+- Right-suffix frame plus sibling audit: run 45597008330 passed; artifact 15014545618 was uploaded.
 - Shared canonical raw107/raw114/ champion audit: run 45591337117 was still compiling its shared closure at last check.
 
 Do not treat the pending runs or draft roster modules as source-accepted until their CI artifacts and theorem axiom profiles are available.
