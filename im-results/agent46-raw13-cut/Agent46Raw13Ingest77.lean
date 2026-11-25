@@ -97,6 +97,12 @@ theorem d3ResidualEntry_refines_hardroot :
     tableOK d3ResidualEntry.2 d3Leaf = true := by
   decide
 
+/-- The unique descendant is reached by A1=0LC, C1=0LD, D0=0RB. -/
+theorem d3ResidualEntry_address :
+    d3ResidualEntry.1 =
+      [⟨false,false,2⟩, ⟨false,false,3⟩, ⟨false,true,1⟩] := by
+  decide
+
 /-- All completions of the identified descendant have primitive score at
     most 24; the parent raw13 residual remains open until its other branches
     are separately covered. -/
