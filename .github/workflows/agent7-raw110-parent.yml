@@ -2,6 +2,10 @@ name: Agent7 raw110 parent certificate
 on:
   workflow_dispatch:
     inputs:
+      parent_run:
+        description: Prior successful parent-cut run ID, optional
+        type: string
+        default: ''
       late_run:
         description: Successful raw110 late trace run ID; empty checks only the cut
         type: string
@@ -16,12 +20,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
+        if: ${{ inputs.parent_run == '' }}
         with:
           github-token: ${{ github.token }}
           run-id: 45557356900
           pattern: raw110-proof-*
           path: /tmp/raw110-parts
+      - uses: actions/download-artifact@v4
+        if: ${{ inputs.parent_run != '' }}
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.parent_run }}
+          name: raw110-parent-cut
+          path: /tmp/raw110-parent
       - name: Check parent cut from seven accepted child partitions
+        if: ${{ inputs.parent_run == '' }}
         run: |
           set -euxo pipefail
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
@@ -44,7 +57,14 @@ jobs:
               if grep -qE 'sorryAx|native_decide' "/tmp/$m.log"; then exit 1; fi
             fi
           done
+      - name: Install pinned Lean for reused parent cut
+        if: ${{ inputs.parent_run != '' }}
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - uses: actions/upload-artifact@v4
+        if: ${{ inputs.parent_run == '' }}
         with:
           name: raw110-parent-cut
           path: /tmp/raw110-parent/
