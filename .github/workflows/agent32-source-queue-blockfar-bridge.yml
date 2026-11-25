@@ -18,6 +18,8 @@ jobs:
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           "$HOME/.elan/bin/lean" --version
+      - name: Unpack the canonical BB6Coverage source module
+        run: python im-results/agent13-coverage/unpack.py
       - name: Compile SourceQueue-to-BlockFAR bridge closure
         run: |
           set -euo pipefail
