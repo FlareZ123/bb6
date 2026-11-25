@@ -51,9 +51,10 @@ open BB6.Agent50TNFPilot BB6.Agent31ThreeHole
     single={int(i):v for i,v in bundle["single"].items()}
     multi={int(i):v for i,v in bundle["multi"].items()}
     long={int(i):v for i,v in bundle["long"].items()}
+    nested={int(i):v for i,v in bundle.get("nested",{}).items()}
     pool=bundle["pool"];far={i:pool[k] for i,k in enumerate(bundle["far"]) if k>=0}
-    assert sum(map(len,(single,multi,long,far)))==len(opens)
-    assert set(single)|set(multi)|set(long)|set(far)==set(range(len(opens)))
+    assert sum(map(len,(single,multi,long,far,nested)))==len(opens)
+    assert set(single)|set(multi)|set(long)|set(far)|set(nested)==set(range(len(opens)))
     def table(i):
         return "["+",".join("none" if a=="---" else "some (some "+move(a)+")" for a in parse(opens[i]))+"]"
     body="""open BB6Coverage.Agent50Pump BB6.Agent2MultiPump
@@ -75,7 +76,11 @@ theorem pumpNever{i} : ∀ m, compatible pumpTable{i} m → NeverHalts m :=
   {typ}.never pumpTable{i} pumpCert{i} pumpCheck{i}
 #print axioms pumpNever{i}
 """
-    emit(stem+"Pumps",["ThreeHoleAudit","BlockPump","Agent2MultiPump"],body)
+    imports=["ThreeHoleAudit","BlockPump","Agent2MultiPump"]
+    for i,(module,table_name,proof_name) in sorted(nested.items()):
+        imports.append(module)
+        body+=f"\nabbrev pumpTable{i} : PartialMachine := {table_name}\ntheorem pumpNever{i} : ∀ m, compatible pumpTable{i} m → NeverHalts m := {proof_name}\n"
+    emit(stem+"Pumps",list(dict.fromkeys(imports)),body)
     emit(stem+"Base",[stem+"Pumps"],f"""
 abbrev p124 : PartialMachine :=
   refine (pathEnd root 2 (path.take 4)).1 (4,true) (some ⟨true,false,5⟩)
@@ -90,7 +95,7 @@ theorem pBranch_nohalt : weightedTNFNoAssignedHalt pBranch :=
         tag,*v=node
         if tag=="open":
             code=v[0];i=index[code]
-            if i in single or i in multi:return f".proven pumpTable{i} pumpNever{i}"
+            if i in single or i in multi or i in nested:return f".proven pumpTable{i} pumpNever{i}"
             if i in long:
                 a,*v=long[i]
                 if a=="hole":
