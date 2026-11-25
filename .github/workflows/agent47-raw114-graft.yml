@@ -11,6 +11,7 @@ on:
           - canonical73
           - canonical71
           - canonical70
+          - canonical75raw58
         default: all
         required: true
       canonical72_run_id:
@@ -26,7 +27,7 @@ permissions:
   actions: read
 jobs:
   exactness:
-    if: ${{ inputs.target != 'canonical71' && inputs.target != 'canonical70' && inputs.target != 'canonical73' }}
+    if: ${{ inputs.target != 'canonical71' && inputs.target != 'canonical70' && inputs.target != 'canonical73' && inputs.target != 'canonical75raw58' }}
     runs-on: ubuntu-latest
     timeout-minutes: 75
     steps:
@@ -1189,5 +1190,124 @@ jobs:
             /tmp/a31-canonical73-manifest.json
             /tmp/a31-canonical73.log
             /tmp/a31-canonical73-summary.json
+          if-no-files-found: error
+          retention-days: 14
+
+  canonical75raw58:
+    if: ${{ inputs.target == 'canonical75raw58' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lean --version
+      - name: Download the accepted canonical76 and canonical77 source artifacts
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45647053824
+          name: canonical73-raw110-raw112-roster-consumer-certified
+          path: /tmp/a31-accepted76
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45554648116
+          name: canonical77-certified
+          path: /tmp/a47-canonical77
+      - name: Verify accepted artifact identity and compile the conditional 75-roster graft
+        run: |
+          set -euo pipefail
+          base=/tmp/a31-accepted76/a31-shared
+          test -s "$base/CanonicalTwoParentRosterOnly.olean"
+          test -s "$base/CanonicalRaw114Accepted.olean"
+          test -s "$base/manifest/canonical76-base.json"
+          test -s /tmp/a47-canonical77/CanonicalTwoParentGraft.olean
+          test -s /tmp/a47-canonical77/Canonical78Roster.olean
+          python3 - <<'PY'
+          import hashlib, json, pathlib, subprocess
+          base = pathlib.Path('/tmp/a31-accepted76/a31-shared')
+          manifest = json.loads((base / 'manifest/canonical76-base.json').read_text())
+          def sha(path): return hashlib.sha256(path.read_bytes()).hexdigest()
+          assert manifest['theorem'] == 'BB6.Agent31CanonicalTwoParentRosterOnly.exact_at_target'
+          assert manifest['residual_count'] == 76 and manifest['weighted_bound'] == 7014
+          assert manifest['canonical77_artifact_id'] == 14997966221
+          assert sha(base / 'CanonicalTwoParentRosterOnly.lean') == manifest['modules']['CanonicalTwoParentRosterOnly']['source_sha256']
+          assert sha(base / 'CanonicalTwoParentRosterOnly.olean') == manifest['modules']['CanonicalTwoParentRosterOnly']['olean_sha256']
+          assert sha(base / 'CanonicalRaw114Accepted.olean') == manifest['modules']['CanonicalRaw114Accepted']['accepted_artifact_olean_sha256']
+          assert sha(pathlib.Path('/tmp/a47-canonical77/CanonicalTwoParentGraft.olean')) == manifest['modules']['CanonicalTwoParentGraft']['olean_sha256']
+          version = subprocess.check_output(['lean', '--version'], text=True).strip()
+          assert version == manifest['lean_version'], (version, manifest['lean_version'])
+          compiler = pathlib.Path(subprocess.check_output(['lean', '--print-prefix'], text=True).strip()) / 'bin/lean'
+          assert sha(compiler) == manifest['lean_binary_sha256']
+          print('Accepted 76/77 artifact identity, source hashes, object hashes, and Lean binary verified.')
+          PY
+          export PATH="$HOME/.elan/bin:$PATH"
+          export LEAN_PATH="$base:/tmp/a47-canonical77"
+          lean -o /tmp/Canonical75Raw58Graft.olean im-results/agent4-raw58/Canonical75Raw58Graft.lean 2>&1 | tee /tmp/canonical75-raw58-graft.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/canonical75-raw58-graft.log; then
+            echo 'Forbidden proof placeholder or native_decide in Raw58 75-graft' >&2
+            exit 1
+          fi
+          python3 - /tmp/canonical75-raw58-graft.log <<'PY'
+          import json, pathlib, re, sys
+          log = pathlib.Path(sys.argv[1]).read_text()
+          allowed = {'propext', 'Classical.choice', 'Quot.sound'}
+          profiles = {}
+          for name, axioms in re.findall(r"'([^']+)' depends on axioms: \\[([^\\]]*)\\]", log):
+              profiles[name] = {x.strip() for x in axioms.split(',') if x.strip()}
+          required = [
+              'BB6.Agent4Raw58Canonical75.parent_count',
+              'BB6.Agent4Raw58Canonical75.count',
+              'BB6.Agent4Raw58Canonical75.base_sound_at_target',
+              'BB6.Agent4Raw58Canonical75.sound',
+              'BB6.Agent4Raw58Canonical75.exact_at_target',
+          ]
+          for name in required:
+              if name not in profiles: raise SystemExit('missing axiom profile: ' + name)
+              bad = profiles[name] - allowed
+              if bad: raise SystemExit(f'{name}: unexpected axioms {sorted(bad)}')
+              print(f'{name}: {sorted(profiles[name])}')
+          pathlib.Path('/tmp/canonical75-raw58-graft-axioms.json').write_text(json.dumps({k: sorted(profiles[k]) for k in required}, indent=2, sort_keys=True) + '\\n')
+          PY
+          python3 - <<'PY'
+          import hashlib, json, os, pathlib
+          source = pathlib.Path('im-results/agent4-raw58/Canonical75Raw58Graft.lean')
+          summary = {
+              'theorem': 'BB6.Agent4Raw58Canonical75.exact_at_target',
+              'status': 'conditional 75-residual roster theorem; Raw58 parent cover and 75 retained Covers remain explicit',
+              'base_theorem': 'BB6.Agent31CanonicalTwoParentRosterOnly.exact_at_target',
+              'base_residual_count': 76,
+              'grafted_residual_count': 75,
+              'parent_count': 1,
+              'raw58_parent_weighted_bound': 19310,
+              'canonical_target': 6766859,
+              'accepted_76_run_id': 45647053824,
+              'accepted_76_artifact_id': 15043876968,
+              'canonical77_run_id': 45554648116,
+              'canonical77_artifact_id': 14997966221,
+              'source_revision': os.environ['GITHUB_SHA'],
+              'source_sha256': hashlib.sha256(source.read_bytes()).hexdigest(),
+              'olean_sha256': hashlib.sha256(pathlib.Path('/tmp/Canonical75Raw58Graft.olean').read_bytes()).hexdigest(),
+              'axiom_profiles': json.loads(pathlib.Path('/tmp/canonical75-raw58-graft-axioms.json').read_text()),
+              'axiom_allowlist': ['propext', 'Classical.choice', 'Quot.sound'],
+          }
+          pathlib.Path('/tmp/canonical75-raw58-graft-summary.json').write_text(json.dumps(summary, indent=2, sort_keys=True) + '\\n')
+          print(json.dumps(summary, indent=2, sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: canonical75-raw58-graft-conditional-source-audited
+          path: |
+            /tmp/Canonical75Raw58Graft.olean
+            /tmp/canonical75-raw58-graft.log
+            /tmp/canonical75-raw58-graft-axioms.json
+            /tmp/canonical75-raw58-graft-summary.json
+            im-results/agent4-raw58/Canonical75Raw58Graft.lean
           if-no-files-found: error
           retention-days: 14
