@@ -10,6 +10,12 @@ from generate import D, MOVES, tally, emit, move
 import sys
 
 SPEC = {
+    "0RB": ("1RB1LC1RC0LD1LA0RB0RB---------------",4,5,17,7,7014,
+            Counter(split=232,halt=232,cycle=2435,state=336,last=1226,ngram=1318,zeroRBHard=18),
+            ["Agent46Raw13ZeroRBNested","Agent46Raw13ZeroRBPump009"]),
+    "1LC": ("1RB1LC1RC0LD1LA0RB1LC---------------",4,5,10,7,7014,
+            Counter(split=222,halt=222,cycle=3657,state=296,last=1003,ngram=129,oneLCHard=18),
+            ["Agent46Raw13OneLCPumps","Agent46Raw13OneLCBinary","Agent46Raw13OneLCTernary","Agent46Raw13OneLCNested"]),
     "1LA": ("1RB1LC1RC0LD1LA0RB1LA---------------",4,5,9,7,7014,
             Counter(split=233,halt=233,cycle=3777,state=276,last=1108,ngram=185,oneLAHard=10),
             ["Agent46Raw13OneLAPump","Agent46Raw13OneLAFAR"]),
@@ -75,6 +81,11 @@ def main():
         assert len(set(grams))==len(grams)==CENSUS['ngram']
         data=temp/"tables.txt"
         far = {}
+        far_modules=[]
+        if BRANCH in ("0RB","1LC"):
+            from generatePackedFAR import generate
+            far,far_modules=generate(BRANCH,grams)
+            assert len(set(grams) & far.keys()) == {"0RB":1313,"1LC":124}[BRANCH]
         if BRANCH == "0RA":
             from generateZeroRAFAR import generate
             far = generate()
@@ -102,7 +113,7 @@ def main():
         def norm(t):
             if t is None: return None
             if t[0]=="ngram":
-                if t[1] in far: return ({"0RA":"zeroRAFar","1LA":"oneLAFar","1RA":"oneRAFar"}[BRANCH],far[t[1]])
+                if t[1] in far: return ({"0RA":"zeroRAFar","1LA":"oneLAFar","1RA":"oneRAFar","0RB":"zeroRBFar","1LC":"oneLCFar"}[BRANCH],far[t[1]])
                 return ("selectedgram",ids[t[1]])
             if t[0]=="split": return ("split",t[1],t[2],[norm(ch) for ch in t[3]])
             return t
@@ -113,17 +124,17 @@ def main():
             kids.append(name)
             body=emit(norm(t)).replace("BB6.Agent46Raw13SelectedGram",GRAM)
             mv=move(MOVES[i])
-            if BRANCH == "1RA" and i in (4,16):
+            if BRANCH in ("0RB","1LC") or (BRANCH == "1RA" and i in (4,16)):
                 from shard_cut import checked_subtree
                 tag=f"{i:02}"
                 prefix=checked_subtree(t,tag,f"next {mv}",max(CUT,i%6+1),BOUND,
                     lambda tree: emit(norm(tree)).replace("BB6.Agent46Raw13SelectedGram",GRAM))
-                output(name,[PREFIX+"Base"]+PROOFS+modules,prefix+f"""
+                output(name,[PREFIX+"Base"]+PROOFS+far_modules+modules,prefix+f"""
 def kid{tag} : Cut := c{tag}
 theorem checked{tag} : check {BOUND} (next {mv}) (nextCut {CUT} {mv}) kid{tag} = true := ok{tag}
 """)
                 continue
-            output(name,[PREFIX+"Base"]+PROOFS+modules,f"""
+            output(name,[PREFIX+"Base"]+PROOFS+far_modules+modules,f"""
 def kid{i:02} : Cut := {body}
 theorem checked{i:02} : check {BOUND} (next {mv}) (nextCut {CUT} {mv}) kid{i:02} = true := by decide
 """)
