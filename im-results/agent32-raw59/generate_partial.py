@@ -50,8 +50,8 @@ MACROS="""0LB 693 001213333 6
 CHUNK=240
 B=7014
 
-def generate(raw):
-    folder=ROOT/('partial_'+raw);folder.mkdir(exist_ok=True)
+def generate(raw,upgrade=False):
+    folder=ROOT/(('upgrade_' if upgrade else 'partial_')+raw);folder.mkdir(exist_ok=True)
     parent=f'1RB{raw}_1RC---_0RD---_1LD1RE_---1LA_------'
     subprocess.run(['g++','-std=c++17','-O3',str(ROOT.parent/'agent2-tnf-raw99/enumerate.cpp'),'-o',str(folder/'enumerate')],check=True)
     subprocess.run([str(folder/'enumerate'),parent],cwd=folder,check=True)
@@ -65,11 +65,16 @@ def generate(raw):
             certs[rle]=a;break
     module='Raw59PartialSweep'+raw;ns='BB6Coverage.Agent31Pump.'+module
     pieces=['import SweepPumping','set_option maxRecDepth 100000','set_option maxHeartbeats 0','namespace '+ns,'open BB6Coverage']
-    for row in SWEEPS:
+    sweep_rows=SWEEPS
+    if upgrade:
+        import upgrade_data
+        sweep_rows=SWEEPS+upgrade_data.SWEEPS
+    for row in sweep_rows:
         b,i,t,q,side,pre,block,suf,delta=row.split()
         if b!=raw: continue
         i,t,q,delta=map(int,[i,t,q,delta]);rle=opens[i]
-        if rle in certs: continue
+        if rle in certs or rle in pumps: continue
+        if pre=='-':pre=''
         if suf=='-':suf=''
         p=sweeps.parse(rle)
         w=sweeps.W(pre,block,suf);v=sweeps.W(pre+block,block,suf);e=sweeps.W()
@@ -120,12 +125,13 @@ def generate(raw):
     if chosen:
         subprocess.run([sys.executable,str(ng/'emit_ngram.py'),str(inputs),str(outputs),str(folder/(module+'.lean')),'--namespace',ns],check=True)
         imports.append(module)
+    if upgrade:upgrade_data.add_ngrams(raw,folder,opens,certs,pumps,imports)
     unresolved=set(opens)-set(certs)-set(pumps)
     (folder/'residual.txt').write_text(''.join(f'{i} {rle}\n' for i,rle in enumerate(opens) if rle in unresolved))
     print(raw,'FAR',len(certs),'semantic',len(pumps),'retained',len(unresolved),flush=True)
     used=set()
     tree=json.loads((folder/'tree.json').read_text());assert tree[0]=='split';first,root_slot=tree[1:3]
-    prefix=f'Raw59Partial{raw}'; ns=f'BB6.Agent32{prefix}'
+    prefix=f'Raw59Upgrade{raw}' if upgrade else f'Raw59Partial{raw}'; ns=f'BB6.Agent32{prefix}'
     header=f'''set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 namespace {ns}
@@ -215,4 +221,5 @@ theorem residual_sound : ∀ m, compatible {p} m → WeightedBound {B} m ∨
     emit(prefix+'Data',mods,body)
     print(raw,stats,'partial audit emitted; retained',len(unresolved))
 if __name__=='__main__':
-    for raw in sys.argv[1:] or SHA:generate(raw)
+    upgrade='--upgrade' in sys.argv[1:]
+    for raw in [x for x in sys.argv[1:] if x!='--upgrade'] or SHA:generate(raw,upgrade)
