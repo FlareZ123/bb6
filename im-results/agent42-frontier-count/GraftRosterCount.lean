@@ -59,10 +59,27 @@ theorem replaceList_length_add_count {α : Type} [DecidableEq α]
       simp [replaceList, replaceListMatchCount]
   | cons x xs ih =>
       by_cases h : x = target
-      · simp [replaceList, replaceListMatchCount, h, ih,
-          Nat.succ_mul, Nat.add_assoc, Nat.add_left_comm, Nat.add_comm]
-      · simp [replaceList, replaceListMatchCount, h, ih,
-          Nat.add_assoc, Nat.add_left_comm, Nat.add_comm]
+      · subst x
+        have hlen :
+            (replaceList target replacement (target :: xs)).length =
+              replacement.length + (replaceList target replacement xs).length := by
+          simp [replaceList]
+        have hcount :
+            replaceListMatchCount target (target :: xs) =
+              1 + replaceListMatchCount target xs := by
+          simp [replaceListMatchCount]
+        rw [hlen, hcount, List.length_cons, ih]
+        simp [Nat.succ_mul, Nat.add_assoc, Nat.add_left_comm, Nat.add_comm]
+      · have hlen :
+            (replaceList target replacement (x :: xs)).length =
+              1 + (replaceList target replacement xs).length := by
+          simp [replaceList, h]
+        have hcount :
+            replaceListMatchCount target (x :: xs) =
+              replaceListMatchCount target xs := by
+          simp [replaceListMatchCount, h]
+        rw [hlen, hcount, List.length_cons, ih]
+        simp [Nat.add_assoc, Nat.add_left_comm, Nat.add_comm]
 
 /-- Exact one-parent replacement length, without evaluating the resulting list. -/
 theorem replaceList_length_of_one {α : Type} [DecidableEq α]
