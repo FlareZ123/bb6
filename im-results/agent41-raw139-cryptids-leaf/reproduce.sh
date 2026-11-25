@@ -13,6 +13,9 @@ MODULE="BusyBeaver.BB6.NonHalt.M_1RB0LE_1RC0RC_1LD0RB_1LA0LE_1LD1LF_1LDHHH"
 test "$(git -C "$UPSTREAM_ROOT" rev-parse HEAD)" = "$PINNED"
 test -s "$CANONICAL77_DIR/CanonicalTwoParentGraft.olean"
 test -s "$CHAMPION_BUILD_DIR/ChampionF1OneLBIntegration.olean"
+if [ ! -s "$UPSTREAM_ROOT/.lake/build/lib/BusyBeaver/Bridge.olean" ]; then
+  (cd "$UPSTREAM_ROOT" && lake build BusyBeaver.Bridge)
+fi
 test -s "$UPSTREAM_ROOT/.lake/build/lib/BusyBeaver/Bridge.olean"
 test -s "$UPSTREAM_ROOT/.lake/build/lib/BusyBeaver/BB6/NonHalt/M_1RB0LE_1RC0RC_1LD0RB_1LA0LE_1LD1LF_1LDHHH.olean"
 
