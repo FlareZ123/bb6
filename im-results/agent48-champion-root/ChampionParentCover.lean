@@ -110,7 +110,7 @@ theorem side_child (B : Nat) (mv : Move) (entry period : Nat) (boundary : Int)
 
 theorem forget_map (m : Machine) : forgetHaltRows m = fun s => (m s).map some := by
   funext s
-  cases m s <;> rfl
+  cases h : m s <;> simp [forgetHaltRows,h]
 
 theorem child_formula (mv : Move) : child mv = fun s =>
     if s=a1 then some (some mv) else (championTable s).map some := by
@@ -118,20 +118,20 @@ theorem child_formula (mv : Move) : child mv = fun s =>
   by_cases hs : s=a1 <;> simp [child,childM,forget_map,hs]
 
 theorem ld_child (B : Nat) : Cover (WeightedBound B) (child ⟨true,false,3⟩) := by
-  simpa only [child_formula,a1,BB6.Agent48SiblingCounter.table,BB6.Agent48SiblingCounter.variantMove]
-    using liftNever B (BB6.Agent48SiblingCounter.sibling_cover .ld)
+  rw [child_formula]
+  exact liftNever B (BB6.Agent48SiblingCounter.sibling_cover .ld)
 theorem rd_child (B : Nat) : Cover (WeightedBound B) (child ⟨true,true,3⟩) := by
-  simpa only [child_formula,a1,BB6.Agent48SiblingCounter.table,BB6.Agent48SiblingCounter.variantMove]
-    using liftNever B (BB6.Agent48SiblingCounter.sibling_cover .rd)
+  rw [child_formula]
+  exact liftNever B (BB6.Agent48SiblingCounter.sibling_cover .rd)
 theorem le_child (B : Nat) : Cover (WeightedBound B) (child ⟨false,false,4⟩) := by
-  simpa only [child_formula,a1,BB6.Agent48SiblingCounter.table,BB6.Agent48SiblingCounter.variantMove]
-    using liftNever B (BB6.Agent48SiblingCounter.sibling_cover .le)
+  rw [child_formula]
+  exact liftNever B (BB6.Agent48SiblingCounter.sibling_cover .le)
 theorem lc_child (B : Nat) : Cover (WeightedBound B) (child ⟨true,false,2⟩) := by
-  simpa only [child_formula,a1,BB6.Agent48SiblingLC.lc]
-    using liftNever B BB6.Agent48SiblingLC.lc_cover
+  rw [child_formula]
+  exact liftNever B BB6.Agent48SiblingLC.lc_cover
 theorem re_child (B : Nat) : Cover (WeightedBound B) (child ⟨true,true,4⟩) := by
-  simpa only [child_formula,a1,BB6.Agent48SiblingRE.re]
-    using liftNever B BB6.Agent48SiblingRE.re_cover
+  rw [child_formula]
+  exact liftNever B BB6.Agent48SiblingRE.re_cover
 
 /-- All 24 ordinary A1 choices; the only high-score child is the champion.
     Finite halt witnesses count ordinary transitions, excluding final query. -/
