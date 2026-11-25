@@ -23,6 +23,29 @@ On 25 November, the existing tree-bank search cross-combined 49 distinct left/ri
 
 This is one more source-accepted nonhalting leaf. It reduces the pre-consumer hard-set complement from 87 to **86** one-hole rows. The generated theorem and manifest are preserved as the `raw118-treebank-generated` workflow artifact (artifact 15044129837); the deterministic search is in [search_tree_bank.py](../agent16-raw118/search_tree_bank.py).
 
+
+## SAT-synthesized two-sided candidates (source check pending)
+
+The separate SAT search [CI 45662297549](https://github.com/FlareZ123/bb6/actions/runs/45662297549) completed its 87-row search and found the following 11 candidate certificates. The first ten below are new beyond the accepted tree-bank leaf 2873; 2873 is the duplicate tree-bank case. The search artifact is preserved in `im-results/agent1-bidfa-sat/raw118-sat-hits.json`.
+
+| Index | Hole | Left/right DFA states | Reachable certificate states | Stack edges |
+|---:|:---:|---:|---:|---:|
+| 1125 | F1 | 12 / 12 | 114 | 36 |
+| 3900 | B1 | 12 / 12 | 54 | 29 |
+| 3909 | C1 | 16 / 16 | 86 | 36 |
+| 4098 | A1 | 12 / 12 | 47 | 25 |
+| 4222 | C1 | 8 / 8 | 140 | 29 |
+| 4223 | C1 | 6 / 6 | 131 | 23 |
+| 4224 | C1 | 10 / 10 | 133 | 35 |
+| 4343 | C1 | 6 / 6 | 93 | 22 |
+| 5491 | C1 | 16 / 16 | 236 | 41 |
+| 5495 | C1 | 16 / 16 | 146 | 33 |
+
+The first SAT run's generated Lean files failed because `TreeCheck.never` was unqualified outside the Agent16 namespace; this was an emitter-resolution error, not a counterexample. The shared `tree_emit.py` was corrected to call `BB6Coverage.Agent16BiDFA.TreeCheck.never` fully qualified. The existing `weighted-tnf-raw120-1lb-sat-cert` target is being used to regenerate and source-check these 11 candidates without repeating the SAT search.
+
+The Raw118 consumer generator and workflow have also been updated to import the 11-hit module, exclude the duplicate 2873, and include the ten new leaves. If the source check passes, the hard-set complement will shrink from 86 to **76** one-hole rows, and the parent-level accepted count will rise from 873 to **883** of 959. This 76-row partition is still pending its own complete consumer source check; do not treat candidate counts as accepted theorems.
+
+
 ## Exact boundary: leaf proofs are not parent closure
 
 Before the new tree-bank hit, the 274-row hard set had 187 pairwise-disjoint accepted leaves: 105 symbolic pumps, the 72 rows above, and 10 original BiDFA/TreeBiDFA rows from [Agent16's Raw118 dossier](../agent16-raw118/README.md). With index 2873, 188 hard-set rows are source-accepted and 86 remain in that hard-set complement.
