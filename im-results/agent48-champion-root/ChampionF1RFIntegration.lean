@@ -11,7 +11,7 @@ open BB6Coverage.FAR BB6.Agent48F1Integration
 
 theorem zeroRF_is_depth5_sibling :
     sameTable BB6.Agent48F1ZeroRF.parent (championChild 5 ⟨false,true,5⟩) = true := by
-  decide [BB6.Agent48F1ZeroRF.parent, championChild, championParent,
+  decide
     championHole, championP5, championP4, championP3, championP2,
     championP1, championResidual, championRootAfterB, refine, root]
 
