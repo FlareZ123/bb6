@@ -567,7 +567,7 @@ theorem exactBB6OfChampionResidualRoster
   BB6.Agent13RosterComposition.exact_from_roster_dichotomy_mixed
     (Nat.le_trans (by decide : 6 ≤ 7015)
       (Nat.le_of_lt champion_score_gt_7014))
-    (Nat.le_of_lt champion_score_gt_7014)
+    le_rfl
     championResidualRefinedRosterSound
     hLeaves
     champion_raw_witness
