@@ -28,6 +28,8 @@ In `im-results/agent50-weighted-tnf-pilot/root-frontier.json`, residual index 10
 
 This is a depth-one residual of the authentic first-one root `A0=1RB`. The source held table fixes the same A0 and B0 entries and nine additional slots. The Coq bridge `Agent13CrossRouteHeldLeaf.v` proves the exact `source_refinesb` relation twice and composes it with `child_trans`, so the held source node is a child of the authentic first-one root through that precise residual.
 
+**Encoding invariant.** The source Coq `TM` representation uses `None` both for an unassigned slot and for a halting instruction, while `source_refinesb` treats a parent `None` as a wildcard. This pilot is safe under that interface because neither the root residual nor the held table contains an assigned halt: all fixed entries are ordinary moves, and F1 is genuinely unassigned. The Lean module proves `held_no_assigned_halts` and `root_no_assigned_halts`. The source safety theorem still quantifies over every extension at F1, including the halting choice; it does not assume that F1 is filled with a particular move.
+
 ## Independent FARv3 nonhalting certificate
 
 `im-results/agent5-weighted-tnf-queue/Agent5RecoveredHeld.v` rechecks the existing FARv3 `nonhalt208` certificate for the reflected table:
