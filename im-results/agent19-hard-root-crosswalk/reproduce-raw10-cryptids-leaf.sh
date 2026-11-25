@@ -41,6 +41,12 @@ UPSTREAM_LIB="$UPSTREAM_ROOT/.lake/build/lib/lean"
 test -s "$UPSTREAM_LIB/BusyBeaver/Basic.olean"
 test -s "$UPSTREAM_LIB/Cryptids/Machines.olean"
 export LEAN_PATH="${LEAN_PATH:+$LEAN_PATH:}$UPSTREAM_LIB${UPSTREAM_LEAN_PATH:+:$UPSTREAM_LEAN_PATH}"
+# Upstream elaborators (e.g. load_machine_rows%) read data paths relative to
+# the upstream project root. Local repository modules stay in the closure cwd.
+SOURCE="${@: -1}"
+if [[ -f "$UPSTREAM_ROOT/$SOURCE" ]]; then
+  cd "$UPSTREAM_ROOT"
+fi
 exec "$LEAN_BIN" "$@"
 WRAPPER
 chmod +x "$WORKDIR/lean-with-upstream"
