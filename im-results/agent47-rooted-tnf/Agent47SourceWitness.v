@@ -25,7 +25,7 @@ Theorem source_side_check_sound bound p d entry period budget :
 Proof.
   unfold source_side_check.
   destruct (Agent47TC.verify_tcycler p d entry period budget) as [H|H].
-  - intro _. apply source_nonhalt_cylinder.
+  - intros _. apply source_nonhalt_cylinder.
     exact (translated_nonhalt_transfer p H).
   - discriminate.
 Qed.
@@ -47,7 +47,7 @@ Proof.
     as [[c Hrun]|Hearly].
   - destruct c as [q [[l s] r]].
     destruct (p (q,s)) as [mv|] eqn:E; [discriminate|].
-    intro _. exists (q,s).
+    intros _. exists (q,s).
     eapply halts_at_intro.
     + exact Hrun.
     + exact E.
