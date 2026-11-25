@@ -29,7 +29,7 @@ theorem championResidual_mem_canonical77 :
 /-- The raw139 address occurs exactly once after the raw114 graft. -/
 theorem championResidual_unique_canonical77 :
     (BB6.Agent47CanonicalRaw114Accepted.roster.filter
-      (fun e => e.1 = championResidualAddress)).length = 1 := by
+      (fun e => e.1 == championResidualAddress)).length = 1 := by
   decide
 
 /-- There is exactly one entry whose table is the raw139 parent, not merely
@@ -42,7 +42,7 @@ theorem championResidual_unique_by_table :
 /-- The accepted 77-entry canonical roster therefore has 76 other entries. -/
 theorem canonical77_other_address_count :
     (BB6.Agent47CanonicalRaw114Accepted.roster.filter
-      (fun e => e.1 ≠ championResidualAddress)).length = 76 := by
+      (fun e => e.1 != championResidualAddress)).length = 76 := by
   decide
 
 /-- Covers for the 106 retained raw139 descendants lift through all accepted
@@ -74,7 +74,7 @@ theorem cover_championResidual_from_raw139_leaves
 noncomputable def refinedCanonical77Roster :
     List (List Move × PartialMachine) :=
   (BB6.Agent47CanonicalRaw114Accepted.roster.filter
-    (fun e => sameTable e.2 championResidual = false)) ++
+    (fun e => !sameTable e.2 championResidual)) ++
   (remainingF1ZeroRC.map
     (fun e => (championResidualAddress ++ e.1, e.2)))
 
