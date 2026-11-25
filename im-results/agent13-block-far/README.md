@@ -1,67 +1,46 @@
-# Three-cell block forward FAR
+# Block forward FAR and symbolic sweep certificates
 
-Intermediate checkpoint, Agent 13, 2026-11-25. Target: recovered held q_i(2800,100), exact direct table 1RB0RD_1LC1LB_0LE1RA_0LC0RA_1LF1LD_1RD---. All completions of its F1 hole should be discharged at any bound, using an independent Lean proof, with no Coq-to-Lean trust assumption.
+The block-FAR approach groups the tape into finite blocks and proves exact primitive execution for every successful block exit. A finite left DFA and right NFA supply an inductive invariant at all block entries. All original-machine transfers concern the exact partial table, so an unreachable hole may be completed arbitrarily. The checker is independent of Coq decider trust.
 
-BlockMacro.lean proves exact primitive execution of every successful 3-cell macro exit, and every finite primitive prefix executes under an inductive block-entry invariant. BlockFAR.lean proves soundness for arbitrary finite forward automaton certificates: left partial DFA, right NFA, zero-tail acceptance, direct inclusion on right exits and two-edge path on left exits. RangeCheck.lean permits kernel checking in bounded chunks. Locally compiled with Lean 4.36.0-rc2; generic theorems have only standard Lean axioms.
+## Reusable Lean components
 
-A concrete candidate exists locally: 220 left states, 470 defined push edges, 142 right nodes including dead, 317 right edges, 15 accepting zero states. Python checked all constraints and Lean #eval returned true for all three check fields. Concrete kernel checking and original BB6Coverage semantics bridge still pending. Do not count this leaf as Lean-closed until these are complete. No new upper bound on BB(6).
+- `BlockMacro.lean`: width-three block execution, progress, and primitive prefix safety.
+- `BlockFAR.lean`, `RangeCheck.lean`: inductive automaton checking, with bounded kernel chunks.
+- `SparseBlockFAR.lean`: equivalent sparse lookup; left-state minimization reduces large certificates.
+- `BlockMacro2.lean`, `BlockFAR2.lean`, `RangeCheck2.lean`: two-cell checker sharing width-three primitive semantics, checked concretely for q600.
+- `BlockFARBridge.lean`: exact transfer into `BB6Coverage.PartialMachine` and `NeverHalts`.
+- `generate_multi.py` and `specialize.py`: untrusted certificate synthesis; Lean checks the finite proof obligations.
 
-Next checkpoint will include deterministic synthesis and concrete verification. The existing raw10 complement consumer in agent49-box-complement is the intended integration target.
-### Concrete held verification and next target (05:22Z)
-Local Lean 4.36.0-rc2 compiled HeldBlockProof.lean; `BB6BlockFAR.Held.never` depends only on `[propext, Classical.choice, Quot.sound]`. Source bridge tested locally against exact relevant Frontier definitions; full dependency CI dispatched. `Raw110Candidates.json` records 16 further candidate certificates for Agent7's 18 raw110 one-hole leaves, not yet kernel-checked. Two misses: 5/161 and 5/790.
+The existing manual workflow `.github/workflows/agent5-q0-held-blockfar.yml` supports compact and width-two generation, optional reflection, exact original-table equality, source-semantic coverage, and the dedicated q3500 symbolic proof. It rejects sorryAx/native_decide and uploads generated source and compiled modules.
 
-### 05:37 checkpoint: 15 new locally verified certificates and shared carry system
+## Held queue leaves
 
-The raw110 proof generation/checking passed for 15 of 16 certificate candidates in Raw110Candidates.json: all ten child18 leaves, child13/0, child0/152, child5/243,244,515. Each concrete theorem has only the standard three axioms. The reflected child12/21 candidate has 429 left states; the original 10-row kernel chunks exhausted the local 4 GiB memory limit. One-row checking is in progress. The actual-source wrappers and full-parent ingestion are Agent7's integration task. No extra global coverage is claimed until ingestion passes.
+| Leaf | Exact partial table | Status |
+|---|---|---|
+| q2800/100 | `1RB0RD_1LC1LB_0LE1RA_0LC0RA_1LF1LD_1RD---` | Concrete width-three candidate verified locally (220 left states, 142 right nodes, 317 edges); existing raw10 complement consumer supplies source integration. |
+| q3500 | `1RB0RC_1LC1RD_---1RB_0LD0RE_1LE0LF_1RA1LF` | [Original source accepted](https://github.com/FlareZ123/bb6/actions/runs/45603499126). Symbolic solid growth recurrence. |
+| q600 | `1RB1LE_1RC0RD_1LB0RE_1RF0LE_0LA0LB_---0RA` | [Original source accepted](https://github.com/FlareZ123/bb6/actions/runs/45604475251). Width 2, cap 2, modulus 4, runs 2, reflection. |
+| q2700 | `1RB0LD_1LC1RA_1LE1LA_---0RB_1RE0RF_1RF0LC` | [Original source and encoded subtraction accepted](https://github.com/FlareZ123/bb6/actions/runs/45604482036). Compact width 3, cap 2, modulus 4, runs 5. |
+| q0 | `1RB1RD_1RC0LD_0LA0RE_1LA1LB_0RF---_0LA1RA` | [Primitive proof accepted](https://github.com/FlareZ123/bb6/actions/runs/45604172586). Compact width 3, cap 2, modulus 2, runs 5. Original source consumer [run 45605504334](https://github.com/FlareZ123/bb6/actions/runs/45605504334) dispatched. |
 
-The two remaining leaves 5/161 and 5/790 are 1RB---_1RC0RA_0RD0LF_1LD1RE_0RB0LC_1LC0LF and 1RB---_1RC0RA_0RD0LF_1LD1RE_0RB0LC_1LC1RD. CarryMacro.lean kernel-checks their common 11-rule macro system and blank-start initialization. The slower F1 replacement costs five moves in place of one, hence four extra moves. Left stack is a word of nearest-first pairs 01 and 10. All macros are safe if B never starts 11; F and C have local right-prefix preconditions preserved by the rules. No inductive safety proof yet. Fixed-width block FAR, bounded-context n-grams, run-summary FAR and small whole-tape NFA SAT did not solve these two; this is not evidence that they halt. Pursue structural carry invariant rather than repeating searches.
+### q3500 exact growth
 
-### 05:52 checkpoint: all 16 raw110 candidates kernel verified locally
+`Q03500Sweep.lean` establishes `solid_grows`: a B configuration scanning the right-hand blank after a solid block of 9k+1 ones returns after a strictly positive number of steps to the same form with 9(k+1)+1 ones. The blank computation enters solid(1). Let S(p,a,s) denote F scanning the left zero of a sandwich with p ones on the left, a ones between the zeros, and s ones to the right. The exact successive forms are:
 
-12/21 now has a minimized 168-state left DFA (previously 429), 339 right nodes, 441 edges, two accepting zero states and 465 active row checks. SparseBlockFAR.lean uses ordinary finite lookup functions instead of huge packed vectors; its soundness and the concrete certificate were kernel-checked locally. The other 15 retain the previous generator. CarryEquivalence.lean proves that the remaining pair is forever-defined iff its common deterministic macro orbit is forever-defined. This is not a safety proof. Original source integration remains separate.
+```
+solid(9k+1) -> S(0,9k,2) -> S(3k,0,6k+2) -> S(0,9k+2,2)
+ -> S(1,9k+3,2) -> S(3k+2,0,6k+4) -> S(0,9k+6,2)
+ -> S(3k+2,0,6k+6) -> solid(9k+10).
+```
 
+`Q03500Consumer.lean` transfers prefix safety to every completion and supplies `Cover (DecidedBelow B)` for arbitrary B. The exported axiom profiles are only propext and Quot.sound. All 25 C0 completions are nonhalting. Encoded raw10 row: [8,10,11,16,0,8,13,18,19,21,4,23].
 
-## q2700 source-semantic extension and raw10 encoded subtraction (25 Nov 2026)
+### q2700 encoded raw10 refinement
 
-The primitive BlockFAR certificate for the offset-2700 one-hole table
-`1RB0LD_1LC1RA_1LE1LA_---0RB_1RE0RF_1RF0LC` (width 3, cap 2, modulus 4,
-runs 5, no reflection) is already accepted in Agent5 run `45580679383`.
+`Raw10Q2700EncodedConsumer.lean` derives the exact row [8,13,11,4,19,3,0,6,20,22,24,9], checks parent inclusion and disjointness from the 66 existing encoded cylinders, and proves exact subtraction with `subtractMany_exact`. All 25 D0 completions are nonhalting. Earlier source-path failures were repaired by copying the source into Lean's root directory. The previous 41-box residual of mass 90,737,503,713,725 becomes 49 boxes of mass 90,737,503,713,700 in independent computational replay; those box count and mass figures are diagnostics, not a separate kernel cardinality result.
 
-A source-semantics consumer has been added at
-`im-results/agent5-q0-held-blockfar/Q02700Consumer.lean`. It fixes the exact
-12-slot table, constructs its `BB6Coverage.PartialMachine` through
-`BlockFARBridge.partialTable`, and applies `BlockFARBridge.transfer_never`
-to every compatible original machine. It also checks the parent slots
-A0=1RB and B0=1LC and the unique D0 hole. The combined source-consumer run
-`45584389245` generated the primitive certificate successfully but failed
-because Lean rejected compiling `../agent8-coverage-contract/Frontier.lean`
-from outside the configured root directory. This is a workflow source-path
-restriction, not a mathematical counterexample or a failed primitive proof.
-The workflow now copies `Frontier.lean` into its working root before
-compilation. Fresh run `45590202834` includes the corrected source consumer
-and the encoded raw10 residual consumer below; its kernel result is pending.
-Do not treat original-semantics transfer as accepted until that run passes.
+## Raw110
 
-The encoded raw10 refinement is drafted in
-`Raw10Q2700EncodedConsumer.lean`. It derives the row
-`[8,13,11,4,19,3,0,6,20,22,24,9]` from the source table, checks parent
-inclusion and disjointness from all 66 existing encoded cylinders (65 side
-witnesses plus q2800), and states the exact subtraction theorem using
-`subtractMany_exact`. This module is committed but not yet compiled.
+All 16 candidates in `Raw110Candidates.json` were locally kernel-checked. The reflected child12/21 minimized left DFA has 168 states instead of 429, with 339 right nodes, 441 edges, two accepting zero states and 465 active row checks. The remaining child5/161 and 5/790 have the shared deterministic macro orbit in `CarryMacro.lean` and `CarryEquivalence.lean`. Agent7 subsequently obtained a complete original-source raw110 parent proof in [run 45597857116](https://github.com/FlareZ123/bb6/actions/runs/45597857116); use that parent certificate rather than count our individual leaves twice.
 
-Independent first-mismatch replay finds q2700 disjoint from the existing 68
-raw10 cylinders when the cycle and forced-halt rows are included. The current
-41-box residual of mass 90,737,503,713,725 becomes 49 boxes of mass
-90,737,503,713,700: exactly 25 completions removed. The box-count and mass
-figures are computational diagnostics, not kernel-decided cardinality
-theorems; adding q2700 increases the number of residual boxes, so it is only a
-small optional refinement, not a reduction of the open-box burden.
-
-A mirrored width-3 attempt for the q0_3500 table
-`1RB0RC_1LC1RD_---1RB_0LD0RE_1LE0LF_1RA1LF` failed before certificate
-generation in run `45585726536`: no finite exit for abstract row
-`('c', 20, 4, 1)`, block input `a=3`. This is a parameter-specific negative
-result only; q0_3500 remains uncertified.
-
-All of this remains intermediate research. No BB(6) exact value or global
-upper bound follows from these local cylinders.
+These are intermediate local cylinders and reusable checkers. They do not establish the global Busy Beaver upper bound.
