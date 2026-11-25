@@ -51,7 +51,7 @@ def emit_automata_sharded(i,p,cert):
       (i / cert.right.edges.size) (i % cert.right.edges.size)) = true := by decide"""
             )
     row_refs = ", ".join(row_names)
-    replacement = "\\n".join([
+    replacement = "\n".join([
         "theorem left_nonempty : decide (0 < cert.left.edges.size) = true := by decide",
         "theorem right_nonempty : decide (0 < cert.right.edges.size) = true := by decide",
         "theorem left_seed : (cert.left.pop 0).contains (false,0) = true := by decide",
