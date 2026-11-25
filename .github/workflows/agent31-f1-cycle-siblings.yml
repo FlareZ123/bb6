@@ -21,6 +21,11 @@ jobs:
           set -euo pipefail
           python tools/lean_compile_closure.py \
             im-results/agent31-f1-cycle-siblings/ChampionF1CycleSiblings.lean \
+            --source-root im-results/agent7-far \
+            --source-root im-results/agent13-weighted-first-one \
+            --source-root im-results/agent31-three-hole-tnf \
+            --source-root im-results/agent10-tnf-multipump \
+            --source-root im-results/agent50-tnf-pilot \
             --workdir /tmp/a31-f1-cycles --jobs 4 \
             --manifest /tmp/a31-f1-cycles/manifest.json | tee /tmp/a31-f1-cycles.log
           python - <<'PY'
