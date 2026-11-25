@@ -706,6 +706,10 @@ jobs:
           path: /tmp/raw59-parent
       - uses: actions/download-artifact@v4
         with:
+          pattern: raw59-checked-*
+          path: /tmp/raw59-parent-shards
+      - uses: actions/download-artifact@v4
+        with:
           github-token: ${{ github.token }}
           run-id: 45554648116
           name: canonical77-certified
@@ -717,7 +721,7 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           import hashlib
-          roots = [Path('/tmp/raw59-parent'), Path('/tmp/canonical77-base')]
+          roots = [Path('/tmp/raw59-parent'), Path('/tmp/raw59-parent-shards'), Path('/tmp/canonical77-base')]
           out = Path('/tmp/raw59-canonical77')
           seen = {}
           for root in roots:
