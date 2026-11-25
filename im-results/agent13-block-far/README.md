@@ -21,7 +21,7 @@ The existing manual workflow `.github/workflows/agent5-q0-held-blockfar.yml` sup
 | q3500 | `1RB0RC_1LC1RD_---1RB_0LD0RE_1LE0LF_1RA1LF` | [Original source accepted](https://github.com/FlareZ123/bb6/actions/runs/45603499126). Symbolic solid growth recurrence. |
 | q600 | `1RB1LE_1RC0RD_1LB0RE_1RF0LE_0LA0LB_---0RA` | [Original source accepted](https://github.com/FlareZ123/bb6/actions/runs/45604475251). Width 2, cap 2, modulus 4, runs 2, reflection. |
 | q2700 | `1RB0LD_1LC1RA_1LE1LA_---0RB_1RE0RF_1RF0LC` | [Original source and encoded subtraction accepted](https://github.com/FlareZ123/bb6/actions/runs/45604482036). Compact width 3, cap 2, modulus 4, runs 5. |
-| q0 | `1RB1RD_1RC0LD_0LA0RE_1LA1LB_0RF---_0LA1RA` | [Primitive proof accepted](https://github.com/FlareZ123/bb6/actions/runs/45604172586). Compact width 3, cap 2, modulus 2, runs 5. Original source consumer [run 45605504334](https://github.com/FlareZ123/bb6/actions/runs/45605504334) dispatched. |
+| q0 | `1RB1RD_1RC0LD_0LA0RE_1LA1LB_0RF---_0LA1RA` | [Original source accepted](https://github.com/FlareZ123/bb6/actions/runs/45605504334). Compact width 3, cap 2, modulus 2, runs 5. |
 
 ### q3500 exact growth
 
