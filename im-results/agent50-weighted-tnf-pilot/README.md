@@ -119,3 +119,33 @@ The manual `enumerate62-source-first-hole` target in `.github/workflows/shared-r
 A separate full-grid search over the unique serialized strings of all 1,200 first-hole children from the 50 residuals is preserved in `Agent50Chunk2ChildSideSearch.v`. It proves a conditional frontier theorem for the q32(2,32) checkpoint, but is deliberately not included in the first q32-parent CI target because its search is substantially larger. The parent-level 24-way tree is the first priority.
 
 No BB(6) upper bound or exact value follows until the source-tree target compiles and every remaining open leaf is closed. The source-tree data, checker, and conditional theorem are reproducible in the cited Coq module.
+
+
+## Lean-side translated-cycler bridge
+
+`TranslatedCycler.lean` is an independent Lean checker for the source
+`verify_tcycler_r` witness format. It uses the existing
+`SourceFiniteSemantics.lean` finite blank-padded tape model rather than
+trusting a Coq proof term.
+
+The intended proof chain is:
+
+1. `boundedRun` replays the source left/right budget rule.
+2. `EqLimit` checks the first `k` left cells, the current cell, and the
+   complete blank-padded right side.
+3. `BRun_replay` mirrors a bounded period whenever the current finite tape
+   satisfies `EqLimit`.
+4. `TranslatedCycle.repeat` establishes arbitrarily long finite prefixes;
+   `finite_never_iff` transfers that result to `NeverHalts`.
+5. `sourceSideLeaf` converts a checked source-side witness into
+   `WeightedTNFCertificate.nonhalt` via the default completion.
+
+A concrete `SWside L 7 6 0` witness on
+`1RB1RD_1RC1LB_0LA0LE_1LA0LB_---1LA_------` is included as a kernel
+evaluation test. The implementation has been added to the existing
+`weighted-tnf-pilot` Lean CI closure; its first CI result is pending.
+
+This is an intermediate proof bridge, not an exact BB(6) upper bound. The
+next integration step is to serialize the source-tree `SWside` and
+`SWlast` leaves into a Lean-readable tree and map its first-hole splits to
+`WeightedTNFCertificate.expand`.
