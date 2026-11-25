@@ -34,3 +34,32 @@ The explicit retained mass is 9*25^5=87,890,625, while 156,250,000 completions b
 ## Reproduction
 
 Run `python im-results/agent4-raw109/generate.py 0LD 0RE 0LC 1RE` after the standard source unpack and sweep preparation; then use the shared chunk checker and strict closure compiler as in the manual workflow. The local direct Git clone failed DNS resolution; the toolchain reconstructed successfully, and the exact-source closure is delegated to the existing pinned CI target. No full raw109 decision or BB(6) upper bound is claimed.
+
+### Additional candidate closures: 1LB and 0RF
+
+The pooled FAR bank and n-gram search leave three 1LB leaves (23, 240,
+1926) and five 0RF leaves (52, 389, 391, 396, 410). Existing sweep
+generation covers 1LB/23,240 and 0RF/52,391,396,410. The period-two
+left-boundary sweep for 1LB/1926 starts at t=34, grows by 12 ones per
+return, and is emitted by the long-epoch generator. 1LB/25 has a
+width-12 n-gram certificate.
+
+For 0RF/389, the new Raw109RF389.lean proves an exact nested unary
+growth recurrence. Write A(N) for state A, empty left zipper, right
+0 followed by N ones. From blank, A(4) is reached at t=17.
+For even N>=2, entry goes to C with N+1 zeroes and two ones.
+Every inner C phase trades one zero for three ones at cost 2k+10,
+and the final left sweep transfers two ones per six steps. Consequently
+A(N) reaches A(3N+4) in positive finite time. Lean 4.36.0-rc2 checked
+all recurrence and induction theorems against a verbatim local copy
+of the original zipper semantics and composition lemma; only
+propext and Quot.sound occur in the arbitrary-prefix theorem.
+The complete original-source bridge remains subject to CI.
+
+New candidate upper bounds: 1LB 127 (2123 FAR, 6 n-gram, 3 sweeps);
+0RF 461 (487 FAR, 6 n-gram, 4 sweeps, 1 nested-growth proof).
+Together with the earlier four children, this leaves seven of the
+25 B1 choices (68,359,375 completions) under the proposed bound-461
+partition, and resolves 175,781,250 completions if accepted.
+Raw109Refinement6.lean gives the corresponding candidate 84-entry
+canonical-roster graft. No complete cylinder is claimed accepted yet.
