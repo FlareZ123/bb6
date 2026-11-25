@@ -1,0 +1,80 @@
+name: Agent7 raw110 late trace
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  shards:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        variant: [Fast, Slow]
+        part: ['00','01','02','03','04','05','06','07']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: leanprover/lean-action@v1
+        with:
+          auto-config: false
+          use-github-cache: false
+      - name: Generate and check trace shard
+        shell: bash
+        run: |
+          set -euxo pipefail
+          elan run leanprover/lean4:v4.36.0-rc2 lean --version
+          elan override set leanprover/lean4:v4.36.0-rc2
+          python im-results/agent7-raw110/gen_late_trace.py /tmp/raw110-generated
+          python tools/lean_compile_closure.py --workdir /tmp/raw110-check --jobs 2 /tmp/raw110-generated/Raw110Word${{ matrix.variant }}${{ matrix.part }}.lean
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw110-word-${{ matrix.variant }}-${{ matrix.part }}
+          path: /tmp/raw110-check/*.olean
+          if-no-files-found: error
+  source:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: leanprover/lean-action@v1
+        with:
+          auto-config: false
+          use-github-cache: false
+      - name: Check original source bridge
+        run: |
+          set -euxo pipefail
+          elan override set leanprover/lean4:v4.36.0-rc2
+          python im-results/agent13-coverage/unpack.py
+          python tools/lean_compile_closure.py --workdir /tmp/raw110-source --jobs 2 im-results/agent7-raw110/Raw110WordSource.lean
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw110-word-source
+          path: /tmp/raw110-source/*.olean
+          if-no-files-found: error
+  assemble:
+    needs: [shards, source]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: leanprover/lean-action@v1
+        with:
+          auto-config: false
+          use-github-cache: false
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw110-word-*
+          path: /tmp/raw110-assembled
+          merge-multiple: true
+      - name: Assemble trace and weighted covers
+        run: |
+          set -euxo pipefail
+          elan override set leanprover/lean4:v4.36.0-rc2
+          python im-results/agent7-raw110/gen_late_trace.py /tmp/raw110-generated
+          cd /tmp/raw110-generated
+          export LEAN_PATH=/tmp/raw110-assembled
+          lean -o /tmp/raw110-assembled/Raw110WordTrace.olean Raw110WordTrace.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent7-raw110/Raw110LateCover.lean" .
+          lean -o /tmp/raw110-assembled/Raw110LateCover.olean Raw110LateCover.lean
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw110-word-final
+          path: /tmp/raw110-assembled/*.olean
+          if-no-files-found: error
