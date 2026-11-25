@@ -3,7 +3,7 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 cd "$ROOT"
-work="$(mktemp -d)"
+work="$ROOT/.tmp/a48-exact-champion"
 trap 'rm -rf "$work"' EXIT
 mkdir "$work/imports"
 export BB6_CHAMPION_WORK="$work"
@@ -28,7 +28,6 @@ python3 tools/lean_compile_closure.py \
   im-results/agent48-counted-inc0/TM63RawUpperInterface.lean \
   im-results/agent48-counted-inc0/Enumerate62Potential.lean \
   im-results/agent48-counted-inc0/ChampionParentExact.lean \
-  --source-root "$work/imports" \
   --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean \
   --override OuterLCIncPrelude=im-results/agent8-counted-reset/OuterLCIncPrelude.lean \
   --override M0OddResidueSeven=im-results/agent41-m0-n16r7/M0OddResidueSeven.lean \
