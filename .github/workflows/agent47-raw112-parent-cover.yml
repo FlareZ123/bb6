@@ -48,16 +48,11 @@ jobs:
             im-results/agent47-raw112-cut/generation.log
           if-no-files-found: error
 
-  compile_shard:
+  compile_core:
     if: inputs.mode == 'parent' || inputs.mode == 'closed'
     needs: generate_raw112
     runs-on: ubuntu-latest
-    timeout-minutes: 60
-    strategy:
-      fail-fast: false
-      max-parallel: 4
-      matrix:
-        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8]
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - name: Install Lean 4.36.0-rc2
@@ -76,7 +71,74 @@ jobs:
         with:
           name: raw112-generated-sources
           path: im-results/agent47-raw112-cut
-      - name: Compile disjoint raw112 branch/support closure shard
+      - name: Compile common dependency core once
+        run: |
+          set -euo pipefail
+          work=/tmp/a47-raw112-core
+          mkdir -p "$work"
+          python tools/lean_compile_closure.py \
+            im-results/agent47-raw112-cut/Raw112Base.lean \
+            im-results/agent47-raw112-cut/Raw112SiblingNever.lean \
+            im-results/agent16-raw118/ResidualCover.lean \
+            --workdir "$work" \
+            --manifest "$work/manifest.json" \
+            --label raw112-common-core \
+            --artifact-name raw112-common-core \
+            --jobs 4 \
+            --provenance-input tools/lean_compile_closure.py \
+            --provenance-input im-results/agent13-coverage/unpack.py \
+            --provenance-input im-results/agent13-coverage/BB6Coverage.lean.xz.b64 \
+            2>&1 | tee "$work/compile.log"
+          python3 - "$work/manifest.json" <<'PY'
+          import json, sys
+          manifest = json.load(open(sys.argv[1]))
+          modules = {item["module"] for item in manifest["modules"]}
+          required = {"Raw112Base", "Raw112SiblingNever", "ResidualCover"}
+          if not required <= modules:
+              raise SystemExit(f"common core missing roots: {sorted(required - modules)}")
+          print(f"Validated common core: {len(modules)} dependency-closed modules")
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw112-common-core
+          path: /tmp/a47-raw112-core/
+          if-no-files-found: warn
+          retention-days: 30
+
+  compile_shard:
+    if: inputs.mode == 'parent' || inputs.mode == 'closed'
+    needs: [generate_raw112, compile_core]
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Reconstruct common generated source dependencies
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw112-generated-sources
+          path: im-results/agent47-raw112-cut
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw112-common-core
+          path: /tmp/a47-raw112-core
+      - name: Compile disjoint raw112 branch closure shard
         env:
           SHARD: ${{ matrix.shard }}
         run: |
@@ -84,18 +146,11 @@ jobs:
           mapfile -t branches < <(find im-results/agent47-raw112-cut -maxdepth 1 -type f -name 'Raw112Branch*.lean' | sort)
           test "${#branches[@]}" -eq 24
           roots=()
-          if [ "$SHARD" -lt 8 ]; then
-            for i in "${!branches[@]}"; do
-              if [ $((i % 8)) -eq "$SHARD" ]; then
-                roots+=("${branches[$i]}")
-              fi
-            done
-          else
-            roots+=(
-              im-results/agent47-raw112-cut/Raw112SiblingNever.lean
-              im-results/agent16-raw118/ResidualCover.lean
-            )
-          fi
+          for i in "${!branches[@]}"; do
+            if [ $((i % 8)) -eq "$SHARD" ]; then
+              roots+=("${branches[$i]}")
+            fi
+          done
           if [ "${#roots[@]}" -eq 0 ]; then
             echo "No roots assigned to shard $SHARD" >&2
             exit 1
@@ -124,6 +179,8 @@ jobs:
           python -u tools/lean_compile_closure.py "${roots[@]}" \
             --workdir "$work" \
             --manifest "$work/manifest.json" \
+            --precompiled-dir /tmp/a47-raw112-core \
+            --precompiled-manifest /tmp/a47-raw112-core/manifest.json \
             --label "raw112-shard-$SHARD" \
             --jobs 4 \
             --artifact-name "raw112-shard-$SHARD" \
@@ -175,7 +232,7 @@ jobs:
 
   assemble:
     if: inputs.mode == 'parent' || inputs.mode == 'closed'
-    needs: [generate_raw112, compile_shard]
+    needs: [generate_raw112, compile_core, compile_shard]
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
