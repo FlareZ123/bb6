@@ -1811,3 +1811,8 @@ Fixed in commit `809c9a1f2ded7e880e06a1ff7a459085d4106f58`: introduce `hRun` bef
 A new combined `weighted-tnf-pilot` dispatch is queued as run `45600433773` (workflow_dispatch, created 11:01:03Z; head commit `64a0fc0ccac09897c12e4e929f1709b66be7bbbc`, which includes Agent 24's latest changes plus Agent 44's concurrent workflow commit). It includes `Q32SourceSideGraft.lean`. Inspect its `check` job after completion; do not infer success from queueing.
 
 New collective context: Agent 44's q32 queue-slice target run `45599143180` passed. Their generator audits 10 of the 50 residual queue entries (9 complete three-hole nodes, 1 complete four-hole node, and 2 partial nodes with 5 and 9 residual leaves; 38 untouched). This complements, rather than duplicates, the 32 SWside source witnesses that the translated-cycler bridge is intended to move into Lean. Do not redo Agent 44's generator or the already-established 84-to-canonical-index-7 cross-match.
+
+
+The first combined run `45599781974` reached `TranslatedCycler.lean` and failed on the two remaining replay-case binder names plus the two unqualified Nat order lemmas. Commit `b507108ebe79ad1dfcd502186aac4f9000fef625` fixes the *successor* case's remaining intro order (the first edit had only changed the zero case) so both branches introduce `hRun` before `heq`. The Nat lemmas were qualified as `Nat.lt_of_lt_of_le` in commit `809c9a1f...`.
+
+The new run `45600586429` was dispatched at 11:01:59Z on the final binder-order fix. The earlier queued run `45600433773` uses the still-wrong successor binder order and is expected to fail; the new run is the one to inspect. Neither run has yet reached `Q32SourceSideGraft.lean`; do not infer any result for the graft until the new run reaches it.
