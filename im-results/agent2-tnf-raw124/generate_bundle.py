@@ -195,7 +195,24 @@ def longcycle_bundle(branch):
         assert len(compact) == 36
         return "_".join(compact[6*i:6*(i+1)] for i in range(6))
 
-    while pending:
+    deferred = set()
+    while pending or deferred:
+        if not pending:
+            if cap < 1000000:
+                cap = min(cap * 10, 1000000)
+            elif lookback < 1024:
+                lookback = min(lookback * 4, 1024)
+            else:
+                sample = sorted(deferred)[:3]
+                raise AssertionError(("unresolved 0LB leaves", len(deferred), sample, cap, lookback))
+            pending = sorted(t for t in deferred if t not in terminal and t not in splits)
+            deferred.clear()
+            print(
+                f"0LB retry escalation: pending={len(pending)} cap={cap} lookback={lookback}",
+                flush=True,
+            )
+            continue
+
         rounds += 1
         indexed = "".join(f"{i} {table.replace('_', '')}\n" for i, table in enumerate(pending))
         result = subprocess.run(
@@ -207,7 +224,6 @@ def longcycle_bundle(branch):
         ids = [int(row[0]) for row in rows]
         assert len(set(ids)) == len(ids) and set(ids) == set(range(len(pending)))
         by_id = {int(row[0]): row for row in rows}
-        retry = []
         next_pending = []
         for i, table in enumerate(pending):
             row = by_id[i]
@@ -227,26 +243,19 @@ def longcycle_bundle(branch):
                     splits[table] = ["split", n, slot_id, children]
                     next_pending.extend(children)
             elif row[1] == "open":
-                retry.append(table)
+                deferred.add(table)
             else:
                 raise AssertionError(("unknown longcycle result", row))
 
-        if retry:
-            if cap < 1000000:
-                cap = min(cap * 10, 1000000)
-                next_pending.extend(retry)
-            elif lookback < 1024:
-                lookback = min(lookback * 4, 1024)
-                next_pending.extend(retry)
-            else:
-                raise AssertionError(("unresolved 0LB leaves", len(retry), retry[:3], cap, lookback))
-        pending = list(dict.fromkeys(t for t in next_pending if t not in terminal and t not in splits))
+        pending = list(dict.fromkeys(
+            t for t in next_pending
+            if t not in terminal and t not in splits and t not in deferred
+        ))
         print(
             f"0LB recursive pass {rounds}: terminal={len(terminal)} split={len(splits)} "
-            f"pending={len(pending)} cap={cap} lookback={lookback}",
+            f"pending={len(pending)} deferred={len(deferred)} cap={cap} lookback={lookback}",
             flush=True,
         )
-
     from functools import lru_cache
     @lru_cache(None)
     def build_tree(table):
