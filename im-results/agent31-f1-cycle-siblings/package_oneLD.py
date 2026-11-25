@@ -69,6 +69,7 @@ for path in sorted(Path(".").glob("pump-*.json")):
 Path("ChampionF1OneLDHard.lean").write_text(head + "\n\n".join(parts) + "\nend BB6.Agent31OneLD\n")
 
 parent = D["parent"]
+bound = max(290, int(D["counts"].get("maxquery", 0)) + 1)
 tree = node(D["tree"])
 cover = f"""import FastThreeHoleAudit
 import ChampionF1OneLDHard
@@ -79,7 +80,7 @@ open BB6Coverage BB6Coverage.FAR BB6.Agent13BlankDelay BB6.Agent50TNFPilot BB6.A
 
 def parent : PartialMachine := fromCodes {parent}
 def tree : Audit := {tree}
-theorem checked : fastCheck 290 parent tree = true := by decide
+theorem checked : fastCheck {bound} parent tree = true := by decide
 theorem root : parent initialSlot = some (some ⟨true,true,1⟩) := by decide
 theorem nohalt : weightedTNFNoAssignedHalt parent := by
   intro s
@@ -87,9 +88,9 @@ theorem nohalt : weightedTNFNoAssignedHalt parent := by
   cases h : ({parent} : List Nat)[2 * s.1.val + s.2.toNat]? with
   | none => simp [h]
   | some n => by_cases hn : n < 24 <;> simp [h, hn]
-noncomputable def certificate : WeightedTNFCertificate 290 parent 6 :=
-  certifiedFast 290 parent tree root nohalt checked
-theorem all_completions_weighted : ∀ m, compatible parent m → WeightedBound 290 m := certificate.sound
+noncomputable def certificate : WeightedTNFCertificate {bound} parent 6 :=
+  certifiedFast {bound} parent tree root nohalt checked
+theorem all_completions_weighted : ∀ m, compatible parent m → WeightedBound {bound} m := certificate.sound
 #print axioms checked
 #print axioms all_completions_weighted
 end BB6.Agent31OneLD
