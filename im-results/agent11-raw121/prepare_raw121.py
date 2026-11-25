@@ -87,9 +87,9 @@ def enumerate_parent():
 
     special = expected_special(spec)
     assert len(special) == 121, len(special)
-    assert set(unmatched) == special, (len(unmatched), sorted(set(unmatched) ^ special)[:20])
-    assert set(dfa) == set(range(len(opens))) - special
-    assert len(dfa) == 14156 and len(set(dfa.values())) <= 84
+    assert not unmatched, (len(unmatched), sorted(unmatched.items())[:20])
+    assert set(dfa) == set(range(len(opens)))
+    assert len(dfa) == len(opens) and len(set(dfa.values())) == 84
 
     # The explicit symbolic tables are pinned to their open-list indices.
     for category in ("quad", "counter", "long", "quadExtra", "binaryA", "unresolved"):
@@ -109,7 +109,8 @@ def enumerate_parent():
         "dfa_map_sha256": hashlib.sha256((BUILD / "dfa_map.json").read_bytes()).hexdigest(),
         "stats": EXPECTED_STATS,
         "open_leaves": len(opens),
-        "far_leaves": len(dfa),
+        "bank_matched_open_leaves": len(dfa),
+        "far_leaves_used_in_audit": len(dfa) - len(special),
         "far_codes_used": len(set(dfa.values())),
         "symbolic_or_delayed_leaves": len(special),
         "enumerator_stdout": res.stdout.strip(),
@@ -274,8 +275,8 @@ def generate_tree():
     special = expected_special(spec)
     assert set(proofs) | set(late) == special
     assert set(proofs).isdisjoint(late)
-    assert set(dfa) == set(range(len(opens))) - special
-    assert len(proofs) == 119 and len(late) == 2 and len(dfa) == 14156
+    assert set(dfa) == set(range(len(opens)))
+    assert len(proofs) == 119 and len(late) == 2 and len(dfa) == 14277
 
     def build(node):
         tag, *values = node
