@@ -11,7 +11,7 @@ theorem never_of_return (p : PartialMachine) (I : Z0 → Prop)
     (advance : ∀ c, I c → ∃ k d, 0 < k ∧ run0 p k c = some d ∧ I d)
     (m : Machine) (hm : compatible p m) : NeverHalts m := by
   let S := {c : Z0 // I c}
-  have H (c : S) : ∃ k (d : S), 0 < k ∧ run0 p k c.val = some d.val := by
+  have H (c : S) : ∃ (k : Nat) (d : S), 0 < k ∧ run0 p k c.val = some d.val := by
     obtain ⟨k,d,hk,hr,hd⟩ := advance c.val c.property
     exact ⟨k,⟨d,hd⟩,hk,hr⟩
   let cost (c : S) := Classical.choose (H c)
