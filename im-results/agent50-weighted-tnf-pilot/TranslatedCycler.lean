@@ -264,7 +264,7 @@ theorem finiteRun_none_add (m : Machine) (c : FiniteCfg) (n k : Nat)
 a positive bounded period, nondecreasing budget, same control state, and
 EqLimit on the tape. -/
 structure TranslatedCycle (m : Machine) (period budget : Nat)
-    (c : FiniteCfg) : Prop where
+    (c : FiniteCfg) : Type where
   endBudget : Nat
   endConfig : FiniteCfg
   run : BRun m period (budget,c) (endBudget,endConfig)
@@ -285,7 +285,7 @@ theorem TranslatedCycle.repeat {m : Machine} {period budget : Nat}
       have heq' : EqLimit budget c d₂ :=
         EqLimit_trans h.tape_eq (EqLimit_less h.budget_mono heq₂)
       have hcombined := finiteRun_append m c (period*r) period
-      rw [hrun,hperiod] at hcombined
+      simp [hrun,hperiod] at hcombined
       have hindex : period*r + period = period*(r+1) := by
         rw [Nat.mul_succ]
       rw [← hindex]
@@ -342,9 +342,8 @@ def sideEqB (xs ys : List Bool) : Bool :=
 
 def eqLimitB (k : Nat) (c d : FiniteCfg) : Bool :=
   decide (c.state = d.state) &&
-  leftEqB k c.left d.left &&
-  decide (c.cur = d.cur) &&
-  sideEqB c.right d.right
+    (leftEqB k c.left d.left &&
+      (decide (c.cur = d.cur) && sideEqB c.right d.right))
 
 theorem allRange_sound {n : Nat} {f : Nat → Bool}
     (h : (List.range n).all f = true) :
@@ -361,6 +360,7 @@ theorem leftEqB_sound {k : Nat} {xs ys : List Bool}
 
 theorem sideEqB_sound {xs ys : List Bool}
     (h : sideEqB xs ys = true) : SideEq xs ys := by
+  change ∀ i, xs[i]?.getD false = ys[i]?.getD false
   intro i
   by_cases hi : i < max xs.length ys.length
   · have h' := allRange_sound h i hi
@@ -377,10 +377,12 @@ theorem sideEqB_sound {xs ys : List Bool}
 
 theorem eqLimitB_sound {k : Nat} {c d : FiniteCfg}
     (h : eqLimitB k c d = true) : EqLimit k c d := by
-  simp only [eqLimitB, Bool.and_eq_true] at h
-  rcases h with ⟨hs,hl,hc,hr⟩
-  exact ⟨of_decide_eq_true hs, leftEqB_sound hl,
-    of_decide_eq_true hc, sideEqB_sound hr⟩
+  unfold eqLimitB at h
+  have h₁ := Bool.and_eq_true.mp h
+  have h₂ := Bool.and_eq_true.mp h₁.2
+  have h₃ := Bool.and_eq_true.mp h₂.2
+  exact ⟨of_decide_eq_true h₁.1, leftEqB_sound h₂.1,
+    of_decide_eq_true h₃.1, sideEqB_sound h₃.2⟩
 
 /-- Exact finite analogue of TranslatedCyclers.verify_tcycler_r. -/
 def translatedCyclerCheckRight (m : Machine)
@@ -392,8 +394,7 @@ def translatedCyclerCheckRight (m : Machine)
       | none => false
       | some (endBudget,endConfig) =>
           decide (0 < period) &&
-          decide (budget ≤ endBudget) &&
-          eqLimitB budget c endConfig
+            (decide (budget ≤ endBudget) && eqLimitB budget c endConfig)
 
 /-- Coq's left-oriented checker is the right-oriented checker after tape
 reflection. -/
@@ -410,7 +411,9 @@ theorem reflect_never_iff (m : Machine) :
         (run m n blank).map mirrorConfig := by
       simpa only [mirror_blank] using mirror_run m blank n
     cases hr : run m n blank with
-    | none => simp [heq,hr] at h
+    | none =>
+        have hn := h n
+        simp [heq,hr] at hn
     | some c => simp [heq,hr]
   · intro h n
     have heq : run (reflectTable m) n blank =
@@ -471,7 +474,7 @@ theorem sourcePartial_noAssignedHalt (m : Machine) :
 /-- Import a checked BusyCoq SWside witness as an actual Lean nonhalting TNF
 leaf. No Coq proof term is trusted: the finite run, budget, and tape match are
 recomputed by the Lean checker above. -/
-theorem sourceSideLeaf {B : Nat} {p : PartialMachine} {cut : Nat}
+def sourceSideLeaf {B : Nat} {p : PartialMachine} {cut : Nat}
     (hroot : p initialSlot = some (some ⟨true,true,1⟩))
     (hsupport : TNFSupport p cut)
     (hnohalt : weightedTNFNoAssignedHalt p)
@@ -508,7 +511,7 @@ theorem sampleCyclerCheck :
   decide
 
 /-- The imported source-side witness is now a kernel-checked TNF leaf. -/
-theorem sampleSourceLeaf (B : Nat) :
+def sampleSourceLeaf (B : Nat) :
     WeightedTNFCertificate B samplePartial 5 := by
   apply sourceSideLeaf
   · decide
