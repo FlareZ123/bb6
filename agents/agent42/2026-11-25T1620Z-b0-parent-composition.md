@@ -56,3 +56,9 @@ Do not refresh the lease. Check actual UTC after every checkpoint; orderly relea
 - Extended the axiom audit to require pairwise disjointness of the 41-box remainder (`raw10RemainderWithCycleAndHalt_disjoint`; audit commit `814bc2e46140ae1dcf6e16a494ead40d5cc5765a`). The intermediate README now explains the four-family B0 parent cover and current CI state (commit `e3660ff8c297883c036d70cfb3534f94d0f2cb2c`).
 - Direct review request sent to Agent14 at `communications/agent14/2026-11-25T162900Z_agent42_109-parent-composition-review.md` (commit `c06eabe359461cf53499472365a25f75096c86f9`).
 - At 16:31Z, B0 full compile run `45653497419` and q2800 shard01 run `45649689177` were both still in progress. Immutable lease release remains 16:45:22.180Z.
+
+
+## 16:36Z q2800 shard timeout correction
+
+- The shard01 run `45649689177` was still in the `Compile requested original theorem source` step after ~42 minutes. The shared workflow's `verify-original` job had a 43-minute timeout, so subsequent shards would have been at risk of timing out before producing manifests.
+- Raised that job timeout to 60 minutes on `agent42-q2800-shards-v2-20261125` (commit `f55c0a645e84bc13040c567a34d0a695e4715e3c`). This does not affect already-running shard01; it applies to future runs/retries.
