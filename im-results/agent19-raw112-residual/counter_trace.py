@@ -54,49 +54,59 @@ def encode_high(k: int) -> list[str]:
 
 
 
+def bits_near_to_far(word: int) -> str:
+    return "".join("1" if (word >> i) & 1 else "0"
+                   for i in range(word.bit_length()))
+
+
 def trace(max_steps: int):
-    ones: set[int] = set()
-    head = 0
-    state = 0
+    # L and R are little-endian integers: bit 0 is the cell nearest the head.
+    # This is the same compact zipper representation used by the original
+    # simulator, and avoids scanning the full nonblank tape at every step.
+    left = 0
+    right = 0
+    bit = 0
+    head_state = 0
     seen: set[int] = set()
     records = []
     halted = None
 
     for step in range(1, max_steps + 1):
-        bit = int(head in ones)
-        tr = TABLE[state][bit]
+        tr = TABLE[head_state][bit]
         if tr is None:
-            halted = (step - 1, state, bit, head)
+            halted = (step - 1, head_state, bit)
             break
 
         write, direction, next_state = tr
-        if write == "1":
-            ones.add(head)
+        written = int(write == "1")
+        if direction == "R":
+            next_bit = right & 1
+            left = (left << 1) | written
+            right >>= 1
         else:
-            ones.discard(head)
-        head += 1 if direction == "R" else -1
-        state = next_state
+            next_bit = left & 1
+            right = (right << 1) | written
+            left >>= 1
+        head_state = next_state
+        bit = next_bit
 
-        # This is the exact boundary configuration used in the JS trace:
-        # state C, current symbol 0, and the entire nonblank left tail is "1".
-        if state != 2 or head in ones or not ones or min(ones) != head - 1:
+        # Canonical C-boundary configuration: current 0, left word exactly 1.
+        if head_state != 2 or bit != 0 or left != 1:
             continue
 
-        right_end = max(ones)
-        right = "".join("1" if p in ones else "0"
-                        for p in range(head + 1, right_end + 1))
-        if not right.startswith("00"):
+        right_word = bits_near_to_far(right)
+        if not right_word.startswith("00"):
             continue
 
         pos = 2
         n = 0
-        while right[pos:pos + len(PUMP_BLOCK)] == PUMP_BLOCK:
+        while right_word[pos:pos + len(PUMP_BLOCK)] == PUMP_BLOCK:
             n += 1
             pos += len(PUMP_BLOCK)
         if n < 1 or n in seen:
             continue
 
-        suffix = right[pos:]
+        suffix = right_word[pos:]
         if not suffix.startswith("001111") or len(suffix) < 18:
             continue
         low = suffix[6:18]
@@ -108,7 +118,7 @@ def trace(max_steps: int):
         records.append({
             "n": n,
             "step": step,
-            "state": STATE_NAMES[state],
+            "state": STATE_NAMES[head_state],
             "left": "1",
             "right_prefix": "00" + PUMP_BLOCK * n,
             "suffix": suffix,
