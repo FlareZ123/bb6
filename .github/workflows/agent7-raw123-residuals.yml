@@ -7,10 +7,22 @@ on:
         type: choice
         options: ['123', '125']
         default: '123'
+      cut_run:
+        description: Successful cut run ID (assembly only)
+        required: false
+        type: string
+        default: ''
+      residual_run:
+        description: Successful residual run ID (assembly only)
+        required: false
+        type: string
+        default: ''
 permissions:
   contents: read
+  actions: read
 jobs:
   residuals:
+    if: inputs.cut_run == '' && inputs.residual_run == ''
     runs-on: ubuntu-latest
     timeout-minutes: 45
     strategy:
@@ -38,5 +50,55 @@ jobs:
         with:
           name: raw${{ inputs.parent }}-residual-${{ matrix.part }}
           path: /tmp/raw${{ inputs.parent }}-residual/
+          if-no-files-found: error
+          retention-days: 5
+  assemble:
+    if: inputs.cut_run != '' && inputs.residual_run != '' && inputs.parent == '125'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify successful source audits
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CUT_RUN: ${{ inputs.cut_run }}
+          RES_RUN: ${{ inputs.residual_run }}
+        run: |
+          set -euo pipefail
+          for spec in "$CUT_RUN:agent7-raw123-cut.yml" "$RES_RUN:agent7-raw123-residuals.yml"; do
+            id=${spec%%:*}
+            file=${spec#*:}
+            [[ "$id" =~ ^[0-9]+$ ]]
+            gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id" | jq -e --arg file "$file" '.conclusion == "success" and .path == (".github/workflows/" + $file)'
+          done
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw125-cut
+          run-id: ${{ inputs.cut_run }}
+          github-token: ${{ github.token }}
+          path: /tmp/raw125-assembly/cut
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw125-residual-*
+          run-id: ${{ inputs.residual_run }}
+          github-token: ${{ github.token }}
+          path: /tmp/raw125-assembly/residuals
+      - name: Install Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check exact parent cover
+        run: |
+          set -euxo pipefail
+          python im-results/agent13-raw125/merge_final.py /tmp/raw125-assembly /tmp/raw125-final
+          cp im-results/agent13-raw125/Raw125ResidualClosure.lean /tmp/raw125-final/
+          cd /tmp/raw125-final
+          LEAN_PATH="$PWD" lean -o Raw125ResidualClosure.olean Raw125ResidualClosure.lean | tee /tmp/raw125-final.log
+          if grep -qE 'sorryAx|native_decide' /tmp/raw125-final.log; then exit 1; fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw125-final
+          path: /tmp/raw125-final/
           if-no-files-found: error
           retention-days: 5
