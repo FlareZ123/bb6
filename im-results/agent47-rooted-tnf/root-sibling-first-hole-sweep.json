@@ -1,0 +1,1444 @@
+{
+  "status": "heuristic candidate roster; not a proof until every listed witness is checked by Lean residualWitnessOK",
+  "source": "im-results/agent13-roster-convergence/canonical-124.json",
+  "scope": "All 19 ten-hole root siblings in canonical-124, split at their first undefined row after the two-step known prefix",
+  "search": {
+    "lassoTotalStepCap": 80,
+    "sideEntryCap": 6,
+    "sidePeriodCap": 20,
+    "sideBoundaryRadius": 10,
+    "sideBoundarySearch": "closest boundary first; boundary on retained side of entry head"
+  },
+  "summary": {
+    "parents": 19,
+    "ordinaryChildren": 456,
+    "lassoWitnesses": 11,
+    "sideCycleWitnesses": 81,
+    "closedOrdinary": 92,
+    "openOrdinary": 364,
+    "immediateHaltBranches": 19,
+    "closedIncludingHalts": 111,
+    "initialCompletionMass": "19*25^10",
+    "remainingCompletionMass": "364*25^9",
+    "massIdentity": "364*25^9 + 111*25^9 = 19*25^10"
+  },
+  "parents": [
+    {
+      "rawResidualIndex": 0,
+      "parentMove": "0LA",
+      "firstHoleSlot": "A1",
+      "firstHoleStep": 2,
+      "lassoCount": 2,
+      "sideCycleCount": 5,
+      "closedOrdinaryCount": 7,
+      "witnesses": [
+        {
+          "childMove": "0LA",
+          "kind": "side",
+          "entry": 0,
+          "period": 3,
+          "right": false,
+          "boundary": 1,
+          "delta": -1
+        },
+        {
+          "childMove": "0RA",
+          "kind": "side",
+          "entry": 0,
+          "period": 3,
+          "right": true,
+          "boundary": 0,
+          "delta": 1
+        },
+        {
+          "childMove": "1RA",
+          "kind": "side",
+          "entry": 0,
+          "period": 3,
+          "right": true,
+          "boundary": 0,
+          "delta": 1
+        },
+        {
+          "childMove": "0LB",
+          "kind": "side",
+          "entry": 0,
+          "period": 4,
+          "right": false,
+          "boundary": 1,
+          "delta": -2
+        },
+        {
+          "childMove": "0RB",
+          "kind": "lasso",
+          "n": 4,
+          "entry": 0,
+          "period": 4
+        },
+        {
+          "childMove": "1LB",
+          "kind": "side",
+          "entry": 0,
+          "period": 4,
+          "right": false,
+          "boundary": 1,
+          "delta": -2
+        },
+        {
+          "childMove": "1RB",
+          "kind": "lasso",
+          "n": 3,
+          "entry": 1,
+          "period": 2
+        }
+      ],
+      "openMoves": [
+        "1LA",
+        "0LC",
+        "0RC",
+        "1LC",
+        "1RC",
+        "0LD",
+        "0RD",
+        "1LD",
+        "1RD",
+        "0LE",
+        "0RE",
+        "1LE",
+        "1RE",
+        "0LF",
+        "0RF",
+        "1LF",
+        "1RF"
+      ]
+    },
+    {
+      "rawResidualIndex": 2,
+      "parentMove": "1LA",
+      "firstHoleSlot": "A1",
+      "firstHoleStep": 2,
+      "lassoCount": 0,
+      "sideCycleCount": 3,
+      "closedOrdinaryCount": 3,
+      "witnesses": [
+        {
+          "childMove": "0LA",
+          "kind": "side",
+          "entry": 0,
+          "period": 3,
+          "right": false,
+          "boundary": 1,
+          "delta": -1
+        },
+        {
+          "childMove": "0RA",
+          "kind": "side",
+          "entry": 0,
+          "period": 4,
+          "right": true,
+          "boundary": 0,
+          "delta": 2
+        },
+        {
+          "childMove": "1RA",
+          "kind": "side",
+          "entry": 0,
+          "period": 4,
+          "right": true,
+          "boundary": 0,
+          "delta": 2
+        }
+      ],
+      "openMoves": [
+        "1LA",
+        "0LB",
+        "0RB",
+        "1LB",
+        "1RB",
+        "0LC",
+        "0RC",
+        "1LC",
+        "1RC",
+        "0LD",
+        "0RD",
+        "1LD",
+        "1RD",
+        "0LE",
+        "0RE",
+        "1LE",
+        "1RE",
+        "0LF",
+        "0RF",
+        "1LF",
+        "1RF"
+      ]
+    },
+    {
+      "rawResidualIndex": 4,
+      "parentMove": "0LB",
+      "firstHoleSlot": "B1",
+      "firstHoleStep": 2,
+      "lassoCount": 1,
+      "sideCycleCount": 6,
+      "closedOrdinaryCount": 7,
+      "witnesses": [
+        {
+          "childMove": "0LA",
+          "kind": "side",
+          "entry": 0,
+          "period": 3,
+          "right": false,
+          "boundary": 1,
+          "delta": -1
+        },
+        {
+          "childMove": "0RA",
+          "kind": "side",
+          "entry": 0,
+          "period": 3,
+          "right": true,
+          "boundary": 0,
+          "delta": 1
+        },
+        {
+          "childMove": "1RA",
+          "kind": "side",
+          "entry": 0,
+          "period": 3,
+          "right": true,
+          "boundary": 0,
+          "delta": 1
+        },
+        {
+          "childMove": "0LB",
+          "kind": "side",
+          "entry": 3,
+          "period": 1,
+          "right": false,
+          "boundary": -1,
+          "delta": -1
+        },
+        {
+          "childMove": "0RB",
+          "kind": "side",
+          "entry": 3,
+          "period": 1,
+          "right": false,
+          "boundary": 1,
+          "delta": -1
+        },
+        {
+          "childMove": "1LB",
+          "kind": "side",
+          "entry": 3,
+          "period": 1,
+          "right": false,
+          "boundary": -1,
+          "delta": -1
+        },
+        {
+          "childMove": "1RB",
+          "kind": "lasso",
+          "n": 3,
+          "entry": 1,
+          "period": 2
+        }
+      ],
+      "openMoves": [
+        "1LA",
+        "0LC",
+        "0RC",
+        "1LC",
+        "1RC",
+        "0LD",
+        "0RD",
+        "1LD",
+        "1RD",
+        "0LE",
+        "0RE",
+        "1LE",
+        "1RE",
+        "0LF",
+        "0RF",
+        "1LF",
+        "1RF"
+      ]
+    },
+    {
+      "rawResidualIndex": 6,
+      "parentMove": "1LB",
+      "firstHoleSlot": "B1",
+      "firstHoleStep": 2,
+      "lassoCount": 0,
+      "sideCycleCount": 5,
+      "closedOrdinaryCount": 5,
+      "witnesses": [
+        {
+          "childMove": "0LA",
+          "kind": "side",
+          "entry": 0,
+          "period": 3,
+          "right": false,
+          "boundary": 1,
+          "delta": -1
+        },
+        {
+          "childMove": "0LB",
+          "kind": "side",
+          "entry": 3,
+          "period": 1,
+          "right": false,
+          "boundary": -1,
+          "delta": -1
+        },
+        {
+          "childMove": "0RB",
+          "kind": "side",
+          "entry": 4,
+          "period": 1,
+          "right": false,
+          "boundary": 2,
+          "delta": -1
+        },
+        {
+          "childMove": "1LB",
+          "kind": "side",
+          "entry": 3,
+          "period": 1,
+          "right": false,
+          "boundary": -1,
+          "delta": -1
+        },
+        {
+          "childMove": "1RB",
+          "kind": "side",
+          "entry": 1,
+          "period": 3,
+          "right": true,
+          "boundary": 0,
+          "delta": 1
+        }
+      ],
+      "openMoves": [
+        "0RA",
+        "1LA",
+        "1RA",
+        "0LC",
+        "0RC",
+        "1LC",
+        "1RC",
+        "0LD",
+        "0RD",
+        "1LD",
+        "1RD",
+        "0LE",
+        "0RE",
+        "1LE",
+        "1RE",
+        "0LF",
+        "0RF",
+        "1LF",
+        "1RF"
+      ]
+    },
+    {
+      "rawResidualIndex": 8,
+      "parentMove": "0LC",
+      "firstHoleSlot": "C1",
+      "firstHoleStep": 2,
+      "lassoCount": 1,
+      "sideCycleCount": 3,
+      "closedOrdinaryCount": 4,
+      "witnesses": [
+        {
+          "childMove": "0LA",
+          "kind": "side",
+          "entry": 0,
+          "period": 3,
+          "right": false,
+          "boundary": 1,
+          "delta": -1
+        },
+        {
+          "childMove": "0RA",
+          "kind": "side",
+          "entry": 0,
+          "period": 3,
+          "right": true,
+          "boundary": 0,
+          "delta": 1
+        },
+        {
+          "childMove": "1RA",
+          "kind": "side",
+          "entry": 0,
+          "period": 3,
+          "right": true,
+          "boundary": 0,
+          "delta": 1
+        },
+        {
+          "childMove": "1RB",
+          "kind": "lasso",
+          "n": 3,
+          "entry": 1,
+          "period": 2
+        }
+      ],
+      "openMoves": [
+        "1LA",
+        "0LB",
+        "0RB",
+        "1LB",
+        "0LC",
+        "0RC",
+        "1LC",
+        "1RC",
+        "0LD",
+        "0RD",
+        "1LD",
+        "1RD",
+        "0LE",
+        "0RE",
+        "1LE",
+        "1RE",
+        "0LF",
+        "0RF",
+        "1LF",
+        "1RF"
+      ]
+    },
+    {
+      "rawResidualIndex": 9,
+      "parentMove": "0RC",
+      "firstHoleSlot": "C0",
+      "firstHoleStep": 2,
+      "lassoCount": 1,
+      "sideCycleCount": 7,
+      "closedOrdinaryCount": 8,
+      "witnesses": [
+        {
+          "childMove": "0LA",
+          "kind": "side",
+          "entry": 0,
+          "period": 3,
+          "right": true,
+          "boundary": 0,
+          "delta": 1
+        },
+        {
+          "childMove": "0RA",
+          "kind": "side",
+          "entry": 0,
+          "period": 3,
+          "right": true,
+          "boundary": 0,
+          "delta": 3
+        },
+        {
+          "childMove": "1RA",
+          "kind": "side",
+          "entry": 0,
+          "period": 3,
+          "right": true,
+          "boundary": 0,
+          "delta": 3
+        },
+        {
+          "childMove": "0LB",
+          "kind": "lasso",
+          "n": 3,
+          "entry": 1,
+          "period": 2
+        },
+        {
+          "childMove": "0RB",
+          "kind": "side",
+          "entry": 1,
+          "period": 2,
+          "right": true,
+          "boundary": 1,
+          "delta": 2
+        },
+        {
+          "childMove": "1RB",
+          "kind": "side",
+          "entry": 1,
+          "period": 2,
+          "right": true,
+          "boundary": 1,
+          "delta": 2
+        },
+        {
+          "childMove": "0RC",
+          "kind": "side",
+          "entry": 2,
+          "period": 1,
+          "right": true,
+          "boundary": 2,
+          "delta": 1
+        },
+        {
+          "childMove": "1RC",
+          "kind": "side",
+          "entry": 2,
+          "period": 1,
+          "right": true,
+          "boundary": 2,
+          "delta": 1
+        }
+      ],
+      "openMoves": [
+        "1LA",
+        "1LB",
+        "0LC",
+        "1LC",
+        "0LD",
+        "0RD",
+        "1LD",
+        "1RD",
+        "0LE",
+        "0RE",
+        "1LE",
+        "1RE",
+        "0LF",
+        "0RF",
+        "1LF",
+        "1RF"
+      ]
+    },
+    {
+      "rawResidualIndex": 10,
+      "parentMove": "1LC",
+      "firstHoleSlot": "C1",
+      "firstHoleStep": 2,
+      "lassoCount": 0,
+      "sideCycleCount": 1,
+      "closedOrdinaryCount": 1,
+      "witnesses": [
+        {
+          "childMove": "0LA",
+          "kind": "side",
+          "entry": 0,
+          "period": 3,
+          "right": false,
+          "boundary": 1,
+          "delta": -1
+        }
+      ],
+      "openMoves": [
+        "0RA",
+        "1LA",
+        "1RA",
+        "0LB",
+        "0RB",
+        "1LB",
+        "1RB",
+        "0LC",
+        "0RC",
+        "1LC",
+        "1RC",
+        "0LD",
+        "0RD",
+        "1LD",
+        "1RD",
+        "0LE",
+        "0RE",
+        "1LE",
+        "1RE",
+        "0LF",
+        "0RF",
+        "1LF",
+        "1RF"
+      ]
+    },
+    {
+      "rawResidualIndex": 149,
+      "parentMove": "0LD",
+      "firstHoleSlot": "D1",
+      "firstHoleStep": 2,
+      "lassoCount": 1,
+      "sideCycleCount": 3,
+      "closedOrdinaryCount": 4,
+      "witnesses": [
+        {
+          "childMove": "0LA",
+          "kind": "side",
+          "entry": 0,
+          "period": 3,
+          "right": false,
+          "boundary": 1,
+          "delta": -1
+        },
+        {
+          "childMove": "0RA",
+          "kind": "side",
+          "entry": 0,
+          "period": 3,
+          "right": true,
+          "boundary": 0,
+          "delta": 1
+        },
+        {
+          "childMove": "1RA",
+          "kind": "side",
+          "entry": 0,
+          "period": 3,
+          "right": true,
+          "boundary": 0,
+          "delta": 1
+        },
+        {
+          "childMove": "1RB",
+          "kind": "lasso",
+          "n": 3,
+          "entry": 1,
+          "period": 2
+        }
+      ],
+      "openMoves": [
+        "1LA",
+        "0LB",
+        "0RB",
+        "1LB",
+        "0LC",
+        "0RC",
+        "1LC",
+        "1RC",
+        "0LD",
+        "0RD",
+        "1LD",
+        "1RD",
+        "0LE",
+        "0RE",
+        "1LE",
+        "1RE",
+        "0LF",
+        "0RF",
+        "1LF",
+        "1RF"
+      ]
+    },
+    {
+      "rawResidualIndex": 150,
+      "parentMove": "0RD",
+      "firstHoleSlot": "D0",
+      "firstHoleStep": 2,
+      "lassoCount": 1,
+      "sideCycleCount": 7,
+      "closedOrdinaryCount": 8,
+      "witnesses": [
+        {
+          "childMove": "0LA",
+          "kind": "side",
+          "entry": 0,
+          "period": 3,
+          "right": true,
+          "boundary": 0,
+          "delta": 1
+        },
+        {
+          "childMove": "0RA",
+          "kind": "side",
+          "entry": 0,
+          "period": 3,
+          "right": true,
+          "boundary": 0,
+          "delta": 3
+        },
+        {
+          "childMove": "1RA",
+          "kind": "side",
+          "entry": 0,
+          "period": 3,
+          "right": true,
+          "boundary": 0,
+          "delta": 3
+        },
+        {
+          "childMove": "0LB",
+          "kind": "lasso",
+          "n": 3,
+          "entry": 1,
+          "period": 2
+        },
+        {
+          "childMove": "0RB",
+          "kind": "side",
+          "entry": 1,
+          "period": 2,
+          "right": true,
+          "boundary": 1,
+          "delta": 2
+        },
+        {
+          "childMove": "1RB",
+          "kind": "side",
+          "entry": 1,
+          "period": 2,
+          "right": true,
+          "boundary": 1,
+          "delta": 2
+        },
+        {
+          "childMove": "0RD",
+          "kind": "side",
+          "entry": 2,
+          "period": 1,
+          "right": true,
+          "boundary": 2,
+          "delta": 1
+        },
+        {
+          "childMove": "1RD",
+          "kind": "side",
+          "entry": 2,
+          "period": 1,
+          "right": true,
+          "boundary": 2,
+          "delta": 1
+        }
+      ],
+      "openMoves": [
+        "1LA",
+        "1LB",
+        "0LC",
+        "0RC",
+        "1LC",
+        "1RC",
+        "0LD",
+        "1LD",
+        "0LE",
+        "0RE",
+        "1LE",
+        "1RE",
+        "0LF",
+        "0RF",
+        "1LF",
+        "1RF"
+      ]
+    },
+    {
+      "rawResidualIndex": 151,
+      "parentMove": "1LD",
+      "firstHoleSlot": "D1",
+      "firstHoleStep": 2,
+      "lassoCount": 0,
+      "sideCycleCount": 1,
+      "closedOrdinaryCount": 1,
+      "witnesses": [
+        {
+          "childMove": "0LA",
+          "kind": "side",
+          "entry": 0,
+          "period": 3,
+          "right": false,
+          "boundary": 1,
+          "delta": -1
+        }
+      ],
+      "openMoves": [
+        "0RA",
+        "1LA",
+        "1RA",
+        "0LB",
+        "0RB",
+        "1LB",
+        "1RB",
+        "0LC",
+        "0RC",
+        "1LC",
+        "1RC",
+        "0LD",
+        "0RD",
+        "1LD",
+        "1RD",
+        "0LE",
+        "0RE",
+        "1LE",
+        "1RE",
+        "0LF",
+        "0RF",
+        "1LF",
+        "1RF"
+      ]
+    },
+    {
+      "rawResidualIndex": 152,
+      "parentMove": "1RD",
+      "firstHoleSlot": "D0",
+      "firstHoleStep": 2,
+      "lassoCount": 0,
+      "sideCycleCount": 6,
+      "closedOrdinaryCount": 6,
+      "witnesses": [
+        {
+          "childMove": "0RA",
+          "kind": "side",
+          "entry": 0,
+          "period": 3,
+          "right": true,
+          "boundary": 0,
+          "delta": 3
+        },
+        {
+          "childMove": "1RA",
+          "kind": "side",
+          "entry": 0,
+          "period": 3,
+          "right": true,
+          "boundary": 0,
+          "delta": 3
+        },
+        {
+          "childMove": "0RB",
+          "kind": "side",
+          "entry": 1,
+          "period": 2,
+          "right": true,
+          "boundary": 1,
+          "delta": 2
+        },
+        {
+          "childMove": "1RB",
+          "kind": "side",
+          "entry": 1,
+          "period": 2,
+          "right": true,
+          "boundary": 1,
+          "delta": 2
+        },
+        {
+          "childMove": "0RD",
+          "kind": "side",
+          "entry": 2,
+          "period": 1,
+          "right": true,
+          "boundary": 2,
+          "delta": 1
+        },
+        {
+          "childMove": "1RD",
+          "kind": "side",
+          "entry": 2,
+          "period": 1,
+          "right": true,
+          "boundary": 2,
+          "delta": 1
+        }
+      ],
+      "openMoves": [
+        "0LA",
+        "1LA",
+        "0LB",
+        "1LB",
+        "0LC",
+        "0RC",
+        "1LC",
+        "1RC",
+        "0LD",
+        "1LD",
+        "0LE",
+        "0RE",
+        "1LE",
+        "1RE",
+        "0LF",
+        "0RF",
+        "1LF",
+        "1RF"
+      ]
+    },
+    {
+      "rawResidualIndex": 153,
+      "parentMove": "0LE",
+      "firstHoleSlot": "E1",
+      "firstHoleStep": 2,
+      "lassoCount": 1,
+      "sideCycleCount": 3,
+      "closedOrdinaryCount": 4,
+      "witnesses": [
+        {
+          "childMove": "0LA",
+          "kind": "side",
+          "entry": 0,
+          "period": 3,
+          "right": false,
+          "boundary": 1,
+          "delta": -1
+        },
+        {
+          "childMove": "0RA",
+          "kind": "side",
+          "entry": 0,
+          "period": 3,
+          "right": true,
+          "boundary": 0,
+          "delta": 1
+        },
+        {
+          "childMove": "1RA",
+          "kind": "side",
+          "entry": 0,
+          "period": 3,
+          "right": true,
+          "boundary": 0,
+          "delta": 1
+        },
+        {
+          "childMove": "1RB",
+          "kind": "lasso",
+          "n": 3,
+          "entry": 1,
+          "period": 2
+        }
+      ],
+      "openMoves": [
+        "1LA",
+        "0LB",
+        "0RB",
+        "1LB",
+        "0LC",
+        "0RC",
+        "1LC",
+        "1RC",
+        "0LD",
+        "0RD",
+        "1LD",
+        "1RD",
+        "0LE",
+        "0RE",
+        "1LE",
+        "1RE",
+        "0LF",
+        "0RF",
+        "1LF",
+        "1RF"
+      ]
+    },
+    {
+      "rawResidualIndex": 154,
+      "parentMove": "0RE",
+      "firstHoleSlot": "E0",
+      "firstHoleStep": 2,
+      "lassoCount": 1,
+      "sideCycleCount": 7,
+      "closedOrdinaryCount": 8,
+      "witnesses": [
+        {
+          "childMove": "0LA",
+          "kind": "side",
+          "entry": 0,
+          "period": 3,
+          "right": true,
+          "boundary": 0,
+          "delta": 1
+        },
+        {
+          "childMove": "0RA",
+          "kind": "side",
+          "entry": 0,
+          "period": 3,
+          "right": true,
+          "boundary": 0,
+          "delta": 3
+        },
+        {
+          "childMove": "1RA",
+          "kind": "side",
+          "entry": 0,
+          "period": 3,
+          "right": true,
+          "boundary": 0,
+          "delta": 3
+        },
+        {
+          "childMove": "0LB",
+          "kind": "lasso",
+          "n": 3,
+          "entry": 1,
+          "period": 2
+        },
+        {
+          "childMove": "0RB",
+          "kind": "side",
+          "entry": 1,
+          "period": 2,
+          "right": true,
+          "boundary": 1,
+          "delta": 2
+        },
+        {
+          "childMove": "1RB",
+          "kind": "side",
+          "entry": 1,
+          "period": 2,
+          "right": true,
+          "boundary": 1,
+          "delta": 2
+        },
+        {
+          "childMove": "0RE",
+          "kind": "side",
+          "entry": 2,
+          "period": 1,
+          "right": true,
+          "boundary": 2,
+          "delta": 1
+        },
+        {
+          "childMove": "1RE",
+          "kind": "side",
+          "entry": 2,
+          "period": 1,
+          "right": true,
+          "boundary": 2,
+          "delta": 1
+        }
+      ],
+      "openMoves": [
+        "1LA",
+        "1LB",
+        "0LC",
+        "0RC",
+        "1LC",
+        "1RC",
+        "0LD",
+        "0RD",
+        "1LD",
+        "1RD",
+        "0LE",
+        "1LE",
+        "0LF",
+        "0RF",
+        "1LF",
+        "1RF"
+      ]
+    },
+    {
+      "rawResidualIndex": 155,
+      "parentMove": "1LE",
+      "firstHoleSlot": "E1",
+      "firstHoleStep": 2,
+      "lassoCount": 0,
+      "sideCycleCount": 1,
+      "closedOrdinaryCount": 1,
+      "witnesses": [
+        {
+          "childMove": "0LA",
+          "kind": "side",
+          "entry": 0,
+          "period": 3,
+          "right": false,
+          "boundary": 1,
+          "delta": -1
+        }
+      ],
+      "openMoves": [
+        "0RA",
+        "1LA",
+        "1RA",
+        "0LB",
+        "0RB",
+        "1LB",
+        "1RB",
+        "0LC",
+        "0RC",
+        "1LC",
+        "1RC",
+        "0LD",
+        "0RD",
+        "1LD",
+        "1RD",
+        "0LE",
+        "0RE",
+        "1LE",
+        "1RE",
+        "0LF",
+        "0RF",
+        "1LF",
+        "1RF"
+      ]
+    },
+    {
+      "rawResidualIndex": 156,
+      "parentMove": "1RE",
+      "firstHoleSlot": "E0",
+      "firstHoleStep": 2,
+      "lassoCount": 0,
+      "sideCycleCount": 6,
+      "closedOrdinaryCount": 6,
+      "witnesses": [
+        {
+          "childMove": "0RA",
+          "kind": "side",
+          "entry": 0,
+          "period": 3,
+          "right": true,
+          "boundary": 0,
+          "delta": 3
+        },
+        {
+          "childMove": "1RA",
+          "kind": "side",
+          "entry": 0,
+          "period": 3,
+          "right": true,
+          "boundary": 0,
+          "delta": 3
+        },
+        {
+          "childMove": "0RB",
+          "kind": "side",
+          "entry": 1,
+          "period": 2,
+          "right": true,
+          "boundary": 1,
+          "delta": 2
+        },
+        {
+          "childMove": "1RB",
+          "kind": "side",
+          "entry": 1,
+          "period": 2,
+          "right": true,
+          "boundary": 1,
+          "delta": 2
+        },
+        {
+          "childMove": "0RE",
+          "kind": "side",
+          "entry": 2,
+          "period": 1,
+          "right": true,
+          "boundary": 2,
+          "delta": 1
+        },
+        {
+          "childMove": "1RE",
+          "kind": "side",
+          "entry": 2,
+          "period": 1,
+          "right": true,
+          "boundary": 2,
+          "delta": 1
+        }
+      ],
+      "openMoves": [
+        "0LA",
+        "1LA",
+        "0LB",
+        "1LB",
+        "0LC",
+        "0RC",
+        "1LC",
+        "1RC",
+        "0LD",
+        "0RD",
+        "1LD",
+        "1RD",
+        "0LE",
+        "1LE",
+        "0LF",
+        "0RF",
+        "1LF",
+        "1RF"
+      ]
+    },
+    {
+      "rawResidualIndex": 157,
+      "parentMove": "0LF",
+      "firstHoleSlot": "F1",
+      "firstHoleStep": 2,
+      "lassoCount": 1,
+      "sideCycleCount": 3,
+      "closedOrdinaryCount": 4,
+      "witnesses": [
+        {
+          "childMove": "0LA",
+          "kind": "side",
+          "entry": 0,
+          "period": 3,
+          "right": false,
+          "boundary": 1,
+          "delta": -1
+        },
+        {
+          "childMove": "0RA",
+          "kind": "side",
+          "entry": 0,
+          "period": 3,
+          "right": true,
+          "boundary": 0,
+          "delta": 1
+        },
+        {
+          "childMove": "1RA",
+          "kind": "side",
+          "entry": 0,
+          "period": 3,
+          "right": true,
+          "boundary": 0,
+          "delta": 1
+        },
+        {
+          "childMove": "1RB",
+          "kind": "lasso",
+          "n": 3,
+          "entry": 1,
+          "period": 2
+        }
+      ],
+      "openMoves": [
+        "1LA",
+        "0LB",
+        "0RB",
+        "1LB",
+        "0LC",
+        "0RC",
+        "1LC",
+        "1RC",
+        "0LD",
+        "0RD",
+        "1LD",
+        "1RD",
+        "0LE",
+        "0RE",
+        "1LE",
+        "1RE",
+        "0LF",
+        "0RF",
+        "1LF",
+        "1RF"
+      ]
+    },
+    {
+      "rawResidualIndex": 158,
+      "parentMove": "0RF",
+      "firstHoleSlot": "F0",
+      "firstHoleStep": 2,
+      "lassoCount": 1,
+      "sideCycleCount": 7,
+      "closedOrdinaryCount": 8,
+      "witnesses": [
+        {
+          "childMove": "0LA",
+          "kind": "side",
+          "entry": 0,
+          "period": 3,
+          "right": true,
+          "boundary": 0,
+          "delta": 1
+        },
+        {
+          "childMove": "0RA",
+          "kind": "side",
+          "entry": 0,
+          "period": 3,
+          "right": true,
+          "boundary": 0,
+          "delta": 3
+        },
+        {
+          "childMove": "1RA",
+          "kind": "side",
+          "entry": 0,
+          "period": 3,
+          "right": true,
+          "boundary": 0,
+          "delta": 3
+        },
+        {
+          "childMove": "0LB",
+          "kind": "lasso",
+          "n": 3,
+          "entry": 1,
+          "period": 2
+        },
+        {
+          "childMove": "0RB",
+          "kind": "side",
+          "entry": 1,
+          "period": 2,
+          "right": true,
+          "boundary": 1,
+          "delta": 2
+        },
+        {
+          "childMove": "1RB",
+          "kind": "side",
+          "entry": 1,
+          "period": 2,
+          "right": true,
+          "boundary": 1,
+          "delta": 2
+        },
+        {
+          "childMove": "0RF",
+          "kind": "side",
+          "entry": 2,
+          "period": 1,
+          "right": true,
+          "boundary": 2,
+          "delta": 1
+        },
+        {
+          "childMove": "1RF",
+          "kind": "side",
+          "entry": 2,
+          "period": 1,
+          "right": true,
+          "boundary": 2,
+          "delta": 1
+        }
+      ],
+      "openMoves": [
+        "1LA",
+        "1LB",
+        "0LC",
+        "0RC",
+        "1LC",
+        "1RC",
+        "0LD",
+        "0RD",
+        "1LD",
+        "1RD",
+        "0LE",
+        "0RE",
+        "1LE",
+        "1RE",
+        "0LF",
+        "1LF"
+      ]
+    },
+    {
+      "rawResidualIndex": 159,
+      "parentMove": "1LF",
+      "firstHoleSlot": "F1",
+      "firstHoleStep": 2,
+      "lassoCount": 0,
+      "sideCycleCount": 1,
+      "closedOrdinaryCount": 1,
+      "witnesses": [
+        {
+          "childMove": "0LA",
+          "kind": "side",
+          "entry": 0,
+          "period": 3,
+          "right": false,
+          "boundary": 1,
+          "delta": -1
+        }
+      ],
+      "openMoves": [
+        "0RA",
+        "1LA",
+        "1RA",
+        "0LB",
+        "0RB",
+        "1LB",
+        "1RB",
+        "0LC",
+        "0RC",
+        "1LC",
+        "1RC",
+        "0LD",
+        "0RD",
+        "1LD",
+        "1RD",
+        "0LE",
+        "0RE",
+        "1LE",
+        "1RE",
+        "0LF",
+        "0RF",
+        "1LF",
+        "1RF"
+      ]
+    },
+    {
+      "rawResidualIndex": 160,
+      "parentMove": "1RF",
+      "firstHoleSlot": "F0",
+      "firstHoleStep": 2,
+      "lassoCount": 0,
+      "sideCycleCount": 6,
+      "closedOrdinaryCount": 6,
+      "witnesses": [
+        {
+          "childMove": "0RA",
+          "kind": "side",
+          "entry": 0,
+          "period": 3,
+          "right": true,
+          "boundary": 0,
+          "delta": 3
+        },
+        {
+          "childMove": "1RA",
+          "kind": "side",
+          "entry": 0,
+          "period": 3,
+          "right": true,
+          "boundary": 0,
+          "delta": 3
+        },
+        {
+          "childMove": "0RB",
+          "kind": "side",
+          "entry": 1,
+          "period": 2,
+          "right": true,
+          "boundary": 1,
+          "delta": 2
+        },
+        {
+          "childMove": "1RB",
+          "kind": "side",
+          "entry": 1,
+          "period": 2,
+          "right": true,
+          "boundary": 1,
+          "delta": 2
+        },
+        {
+          "childMove": "0RF",
+          "kind": "side",
+          "entry": 2,
+          "period": 1,
+          "right": true,
+          "boundary": 2,
+          "delta": 1
+        },
+        {
+          "childMove": "1RF",
+          "kind": "side",
+          "entry": 2,
+          "period": 1,
+          "right": true,
+          "boundary": 2,
+          "delta": 1
+        }
+      ],
+      "openMoves": [
+        "0LA",
+        "1LA",
+        "0LB",
+        "1LB",
+        "0LC",
+        "0RC",
+        "1LC",
+        "1RC",
+        "0LD",
+        "0RD",
+        "1LD",
+        "1RD",
+        "0LE",
+        "0RE",
+        "1LE",
+        "1RE",
+        "0LF",
+        "1LF"
+      ]
+    }
+  ]
+}
