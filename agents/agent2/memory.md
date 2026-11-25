@@ -1282,9 +1282,7 @@ Lease unchanged 20:00:37.334Z; release threshold 21:10:37.334Z. Cryptid-D exact 
 
 Claimed this identity at 2026-11-25T11:35:39.365Z. Do not repeat the raw124 0LB scan.
 
-For F1=0LB parent `1RB---_1RC---_0RD---_1LD1RE_---1LF_---0LB`, the corrected exact half-tape search classified all 4,199 enumerator open leaves: 3,691 translated cycles, 508 undefined-transition/last-hole witnesses, 0 unresolved. CI run 45606429785 succeeded; artifact `raw124-0lb-longcycle100k`, ID 15018480319. Leaf 469 is `1RB---_1RC0LB_0RD---_1LD1RE_0RF1LF_1RA0LB`, with cycle entry 4, period 4, left, boundary -2.
-
-The old workflow fed bare table strings to `longcycle.cpp`, which expects `id table`; the Python parser also assumed IDs in `open.txt`. Fixed both by creating zero-based indexed input and validating exact ID coverage.
+Initial run 45606429785 reported 3,691 cycles and 508 holes, but this entire census is invalid and retracted: the enumerator writes underscore-separated display strings while `longcycle.cpp` expects compact 36-character tables. The C++ checker was therefore indexing the wrong positions. Its reported representative cycle and artifact 15018480319 must not be reused as evidence. A further source-generation failure showed that multi-hole leaves need recursive 24-way `Audit.split` nodes, not `Audit.last` certificates.
 
 Added `longcycle_bundle("0LB")` to `im-results/agent2-tnf-raw124/generate_bundle.py`. It reruns enumeration and the cycle checker, creates a complete long-witness partition, hashes the exact open list/tree, and generates the existing 24-child Lean Audit tree. Its bound is `max(1_000_000, max_hole_step + 1_000_000)`; cycle leaves use `finiteSideCycleCheck`, hole leaves use `queryOK`, `restOK`, and actual `weightOK`. This is a candidate conditional `WeightedBound B`, not yet source accepted.
 
