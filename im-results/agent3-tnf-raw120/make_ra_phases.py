@@ -1,5 +1,6 @@
 from pathlib import Path
 import phase as p
+import make_ra422
 
 MACHINES={
 424:'1RB0LF_1RC---_0RD0LD_1LD1RE_0RA1LE_0LA1LF',
@@ -9,6 +10,7 @@ MACHINES={
 439:'1RB0LF_1RC1LF_0RD---_1LD1RE_0RA1LE_0LA1RD',
 440:'1RB0LF_1RC1RA_0RD---_1LD1RE_0RA1LE_0LA1RD',
 441:'1RB0LF_1RC1RB_0RD---_1LD1RE_0RA1LE_0LA1RD',
+442:'1RB0LF_1RC1RD_0RD---_1LD1RE_0RA1LE_0LA1RD',
 443:'1RB0LF_1RC1RE_0RD---_1LD1RE_0RA1LE_0LA1RD',
 }
 
@@ -26,6 +28,10 @@ def spec(idx):
     if idx==435:
         def make(r,k=0,m=0):return p.c_right(4,('11'+'00001'*(1+k),False),('00001','n'),(['000000','00001110','0000100110'][r]+'1'*(1+m),False),('1','m'))
         return {f'P{r}':make(r) for r in range(3)},{f'P{r}':(f'P{(r+1)%3}',make((r+1)%3,int(r==2),int(r==2)),(int(r==2),int(r==2))) for r in range(3)},('n','m'),161,'P0',(0,1)
+    if idx==442:
+        sf=['100111','00100111','10111','0010111','1111','001111','111','00111','11','0011']
+        def make(j,k=0):return p.c_right(4,('11'+'00001'*(1+k),False),('00001','n'),(sf[j],False))
+        return {f'P{i}':make(i) for i in range(10)},{f'P{i}':(f'P{(i+1)%10}',make((i+1)%10,int(i%2==1)),(int(i%2==1),)) for i in range(10)},('n',),69,'P0',(0,)
     if idx==441:
         def make(r,k=0,m=0):return p.c_right(4,('11'+'00001'*(1+k),False),('00001','n'),(('0000' if r=='A' else '00')+'1'*((7 if r=='A' else 6)+m),False),('1','m'))
         return {r:make(r) for r in ('A','B')},{'A':('B',make('B',1),(1,0)), 'B':('A',make('A',0,2),(0,2))},('n','m'),145,'A',(0,0)
@@ -63,4 +69,4 @@ if __name__=='__main__':
     import argparse
     ap=argparse.ArgumentParser();ap.add_argument('output',type=Path);ap.add_argument('--index',type=int,action='append');a=ap.parse_args()
     hdr='import PhaseClosure\nopen BB6Coverage BB6Coverage.Agent31Pump\nset_option maxRecDepth 40000\nset_option maxHeartbeats 4000000\nnamespace BB6Coverage.Agent3RA'
-    a.output.write_text(hdr+'\n\n'+'\n\n'.join(generate(i) for i in (a.index or MACHINES))+'\nend BB6Coverage.Agent3RA\n')
+    a.output.write_text(hdr+'\n\n'+'\n\n'.join(make_ra422.generate() if i==422 else generate(i) for i in (a.index or [422,*MACHINES]))+'\nend BB6Coverage.Agent3RA\n')
