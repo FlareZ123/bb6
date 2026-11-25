@@ -90,30 +90,56 @@ theorem final30_covered : Covered 30 52 final30 := by
 
 theorem final30_empty : final30=[] := by decide
 
-/-- The same block filter propagates the existing arithmetic margin
-    certificate; the final finite list is empty. -/
-theorem run30_cert (k : Nat) :
-    Cert 30 82 (1+4*k) (run30 k) := by
-  induction k with
-  | zero =>
-    exact cert_first 30 82 (by decide)
-  | succ k ih =>
-    have hgood : MarginOK 30 82 (1+4*k) 4 (run30 k)=true := by decide
-    have hflat : ∀ B,
-        (parts30 (1+4*k+4) B).flatten =
-          targetWord 30 (1+4*k+4) B 30 := by
-      intro B
-      exact parts30_flat _ _
-    have hfit : ∀ B,
-        Fitted (30+(1+4*k+4)+3) (parts30 (1+4*k+4) B) := by
-      intro B
-      exact parts30_fitted _ _
-    have hnext := cert_next_block 30 82 (1+4*k) 4 (run30 k)
-      (fun B => parts30 (1+4*k+4) B) (by omega) ih hgood hflat hfit
-    simpa [run30,Nat.mul_succ,Nat.add_assoc] using hnext
+/-- One finite certificate transition with a supplied margin check. -/
+theorem run30_cert_step (k : Nat)
+    (hcert : Cert 30 82 (1+4*k) (run30 k))
+    (hgood : MarginOK 30 82 (1+4*k) 4 (run30 k)=true) :
+    Cert 30 82 (1+4*k+4) (run30 (k+1)) := by
+  have hflat : ∀ B,
+      (parts30 (1+4*k+4) B).flatten =
+        targetWord 30 (1+4*k+4) B 30 := by
+    intro B
+    exact parts30_flat _ _
+  have hfit : ∀ B,
+      Fitted (30+(1+4*k+4)+3) (parts30 (1+4*k+4) B) := by
+    intro B
+    exact parts30_fitted _ _
+  have hnext := cert_next_block 30 82 (1+4*k) 4 (run30 k)
+    (fun B => parts30 (1+4*k+4) B) (by omega) hcert hgood hflat hfit
+  simpa [run30] using hnext
+
+/-- The 12 four-bit transitions, each with its concrete finite margin check. -/
+theorem run30_cert : Cert 30 82 49 (run30 12) := by
+  have c0 : Cert 30 82 1 (run30 0) := by
+    simpa [run30] using cert_first 30 82 (by decide)
+  have c1 : Cert 30 82 5 (run30 1) := by
+    simpa using run30_cert_step 0 c0 (by decide)
+  have c2 : Cert 30 82 9 (run30 2) := by
+    simpa using run30_cert_step 1 c1 (by decide)
+  have c3 : Cert 30 82 13 (run30 3) := by
+    simpa using run30_cert_step 2 c2 (by decide)
+  have c4 : Cert 30 82 17 (run30 4) := by
+    simpa using run30_cert_step 3 c3 (by decide)
+  have c5 : Cert 30 82 21 (run30 5) := by
+    simpa using run30_cert_step 4 c4 (by decide)
+  have c6 : Cert 30 82 25 (run30 6) := by
+    simpa using run30_cert_step 5 c5 (by decide)
+  have c7 : Cert 30 82 29 (run30 7) := by
+    simpa using run30_cert_step 6 c6 (by decide)
+  have c8 : Cert 30 82 33 (run30 8) := by
+    simpa using run30_cert_step 7 c7 (by decide)
+  have c9 : Cert 30 82 37 (run30 9) := by
+    simpa using run30_cert_step 8 c8 (by decide)
+  have c10 : Cert 30 82 41 (run30 10) := by
+    simpa using run30_cert_step 9 c9 (by decide)
+  have c11 : Cert 30 82 45 (run30 11) := by
+    simpa using run30_cert_step 10 c10 (by decide)
+  have c12 : Cert 30 82 49 (run30 12) := by
+    simpa using run30_cert_step 11 c11 (by decide)
+  exact c12
 
 theorem cert30 : Cert 30 82 52 [] := by
-  have hprev := run30_cert 12
+  have hprev := run30_cert
   have hgood : MarginOK 30 82 49 3 (run30 12)=true := by decide
   have hflat : ∀ B, (parts30 52 B).flatten=targetWord 30 52 B 30 := by
     intro B
