@@ -1498,6 +1498,11 @@ jobs:
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           "$HOME/.elan/bin/lean" --version
+      - name: Validate reusable artifact run input
+        env:
+          ARTIFACT_RUN_ID: ${{ inputs.raw60_artifact_run_id }}
+        run: |
+          test -n "$ARTIFACT_RUN_ID" || { echo "raw60_artifact_run_id is required"; exit 1; }
       - name: Download reusable child artifacts
         uses: actions/download-artifact@v4
         with:
@@ -1531,7 +1536,8 @@ jobs:
             im-results/agent13-coverage/unpack.py \
             im-results/agent31-three-hole-tnf/generate_sweeps.py \
             im-results/agent31-three-hole-tnf/generate_four_hole.py \
-            im-results/agent31-three-hole-tnf/ZipThreeHoleAudit.lean \
+            im-results/agent10-tnf-multipump/ZipThreeHoleAudit.lean \
+            im-results/agent10-tnf-multipump/ZipAuditCore.lean \
             im-results/agent31-three-hole-tnf/ThreeHoleAudit.lean; do
             old_sha="$(git rev-parse "$ARTIFACT_SHA:$f")"
             new_sha="$(git rev-parse "HEAD:$f")"
