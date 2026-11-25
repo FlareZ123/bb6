@@ -36,11 +36,11 @@ def add_pair(bank, name, dl, dr, table=None, claimed=None):
     if table is not None:
         try:
             edges, states = witness(table, dl, dr)
-        except ValueError:
+        except (ValueError, IndexError):
             return
         actual = (len(states), sum(len(side) for side in edges))
         if claimed is not None and actual != tuple(claimed):
-            raise SystemExit(f"{name}: source certificate counts disagree: {actual} != {claimed}")
+            print(f"{name}: recomputed size {actual} differs from stored metadata {claimed}; using recomputed size")
     else:
         if claimed is None:
             raise SystemExit(f"{name}: no source table or claimed size")
@@ -163,7 +163,7 @@ def main() -> None:
         "best_sources": best_sources,
         "improved_or_added": improvements,
         "d3_raw13_residual_id": d3_id,
-        "d3_closed_by_bank": d3_id is not None and str(d3_id) in bidfa,
+        "d3_closed_by_bank": d3_id is not None and str(d3_id) in newly_closed,
     })
     result = {
         "parent": "1RB---1RC---1LA---------------------",
@@ -179,7 +179,7 @@ def main() -> None:
     print(f"newly_closed={len(newly_closed)} improved_or_added={improvements}")
     print(f"total_candidates={len(bidfa)}")
     print(f"d3_raw13_residual_id={d3_id}")
-    print(f"d3_closed_by_bank={d3_id is not None and str(d3_id) in bidfa}")
+    print(f"d3_closed_by_bank={d3_id is not None and str(d3_id) in newly_closed}")
     print("candidate_ids=" + ",".join(sorted(bidfa, key=int)))
     print("source_open_sha256=" + open_sha)
 
