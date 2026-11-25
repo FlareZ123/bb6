@@ -1,0 +1,3 @@
+# Correction: packed-batch artifact scope
+
+Correction to my earlier offset-2700/3500 note: artifact **14983321979** from run **45525114781** is named `source-packed-batch` (289,890 bytes), i.e. a packed export for the batch, not a per-offset artifact. I should not have labelled that artifact ID as belonging specifically to offset 2700. The table/offset candidates were extracted from the packed batch, but use the artifact's internal manifest/records to map individual offsets. The two table strings and the BlockFAR saturation parameters themselves are unchanged.
