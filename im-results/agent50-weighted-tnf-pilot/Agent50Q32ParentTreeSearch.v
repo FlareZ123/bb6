@@ -24,6 +24,59 @@ Definition agent50_q32_parent_tree : source_tree :=
     (fun v => agent50_q32_child_tree
       (tm_upd q32_canonical_residual_7 (A,S1) v)).
 
+Lemma agent50_find_some_in {A : Type} (f : A -> bool) (xs : list A) (x : A) :
+  find f xs = Some x -> In x xs.
+Proof.
+  induction xs as [|a xs IH]; cbn; intro H.
+  - discriminate.
+  - destruct (f a) eqn:Ha.
+    + inversion H; subst. now left.
+    + right. eapply IH. exact H.
+Qed.
+
+Lemma agent50_chunk2_hole_candidate_time_le18 n h :
+  In (n,h) chunk2_hole_candidates -> n <= 18.
+Proof.
+  unfold chunk2_hole_candidates.
+  intro Hin.
+  apply in_flat_map in Hin.
+  destruct Hin as [k [Hk Hin]].
+  apply in_map_iff in Hin.
+  destruct Hin as [h' [Heq Hh']].
+  inversion Heq; subst n.
+  apply in_seq in Hk. lia.
+Qed.
+
+Lemma agent50_find_chunk2_hole_time_le18 p n h :
+  find_chunk2_hole p = Some (n,h) -> n <= 18.
+Proof.
+  intro Hfind.
+  unfold find_chunk2_hole in Hfind.
+  eapply agent50_chunk2_hole_candidate_time_le18.
+  eapply agent50_find_some_in. exact Hfind.
+Qed.
+
+Lemma agent50_q32_child_tree_check bound p :
+  24 <= bound ->
+  source_tree_check bound p (agent50_q32_child_tree p) = true.
+Proof.
+  intro Hbound.
+  unfold agent50_q32_child_tree.
+  destruct (find_side_candidate p) as [c|] eqn:Hside.
+  - cbn [source_tree_check].
+    pose proof (find_side_candidate_sound p c Hside) as Hcandidate.
+    destruct c as [d [entry [period budget]]].
+    cbn [candidate_witness source_witness_check].
+    unfold side_candidate_check in Hcandidate.
+    exact Hcandidate.
+  - cbn [source_tree_check].
+    destruct (find_chunk2_hole p) as [[n h]|] eqn:Hhole.
+    + apply chunk2_first_hole_tree_check_of_find; [exact Hhole|].
+      pose proof (agent50_find_chunk2_hole_time_le18 p n h Hhole).
+      lia.
+    + reflexivity.
+Qed.
+
 Definition agent50_q32_parent_open : list TM :=
   source_tree_open q32_canonical_residual_7 agent50_q32_parent_tree.
 
@@ -31,7 +84,14 @@ Theorem agent50_q32_parent_tree_checked :
   source_tree_check 7014 q32_canonical_residual_7
     agent50_q32_parent_tree = true.
 Proof.
-  vm_compute. reflexivity.
+  unfold agent50_q32_parent_tree.
+  cbn [source_tree_check].
+  apply andb_true_iff. split.
+  - apply Nat.leb_le. lia.
+  - apply andb_true_iff. split.
+    + vm_compute. reflexivity.
+    + apply forallb_forall. intros v Hv.
+      apply agent50_q32_child_tree_check. lia.
 Qed.
 
 Theorem agent50_q32_parent_tree_open_count :
