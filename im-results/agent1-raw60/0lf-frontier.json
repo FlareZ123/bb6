@@ -1109,9 +1109,17 @@
       "Raw60LFBlockCounter",
       "BB6.Agent1Raw60LFBlockCounter"
     ],
+    "986": [
+      "Raw60LFMixedBlockCounter",
+      "BB6.Agent1Raw60LFMixedBlockCounter.V986"
+    ],
     "988": [
       "Raw60LFPairCounter",
       "BB6.Agent1Raw60LFPairCounter.Leaf988"
+    ],
+    "989": [
+      "Raw60LFMixedBlockCounter",
+      "BB6.Agent1Raw60LFMixedBlockCounter.V989"
     ],
     "990": [
       "Raw60LFBitCounter",
@@ -1125,8 +1133,6 @@
   "unresolved": [
     980,
     982,
-    986,
-    989,
     1024,
     1032,
     1035,
