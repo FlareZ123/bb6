@@ -5,7 +5,7 @@ on:
       target:
         description: 'Source closure to verify'
         type: choice
-        options: [weighted-tnf-q2800-raw10-certificate, weighted-tnf-raw10-box6, weighted-tnf-canonical-partial-audit, weighted-tnf-q32-slice-closed, weighted-tnf-q32-queue-slice, weighted-tnf-raw10-domain-box7, weighted-tnf-raw118-long, weighted-tnf-raw118-bidfa, weighted-tnf-raw118-independent, weighted-tnf-raw118-phasegraph, weighted-tnf-raw118-recursive, weighted-tnf-raw118-partial, weighted-tnf-raw118-symbolic, weighted-tnf-raw118-sparse, weighted-tnf-raw118-treebank, weighted-tnf-raw118-sat, weighted-tnf-raw120-1lb-sat-cert, weighted-tnf-raw118-consumer, legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole, weighted-tnf-four-hole, weighted-tnf-four-hole-sibling, weighted-tnf-r1-sweep, queue-orbit, weighted-tnf-roster-convergence, weighted-tnf-roster-agent47-graft, weighted-tnf-pure-residuals, weighted-tnf-raw99, weighted-tnf-raw113, weighted-tnf-raw123, weighted-tnf-raw123-recursive, weighted-tnf-raw123-bidfa, weighted-tnf-raw124-rf, weighted-tnf-raw124-lc, weighted-tnf-raw124-1rf, weighted-tnf-raw124-0rb, weighted-tnf-raw124-bundle, weighted-tnf-raw124-1la, weighted-tnf-raw124-1la-sharded, weighted-tnf-raw124-0lb-longcycle100k, weighted-tnf-raw124-bundle-sharded, weighted-tnf-raw124-champion-bound, weighted-tnf-raw103, weighted-tnf-raw104, weighted-tnf-agent8-five, weighted-tnf-agent8-six, weighted-tnf-agent8-raw117, weighted-tnf-agent8-raw112-macros, weighted-tnf-roster-composition, weighted-tnf-agent3-siblings, weighted-tnf-raw85-parent-check, weighted-tnf-raw91, weighted-tnf-raw87, weighted-tnf-raw83-pump, weighted-tnf-agent10-multi, weighted-tnf-agent10-five-new, weighted-tnf-agent10-five-roster, weighted-tnf-agent10-raw106, weighted-tnf-raw63-counter, weighted-tnf-raw61-witnesses, weighted-tnf-prefix-single, weighted-tnf-agent10-single, weighted-tnf-combined-109, weighted-tnf-root-zero-refinement, weighted-tnf-combined-106, weighted-tnf-canonical-78, weighted-tnf-canonical-78-exact, weighted-tnf-raw108-canonical, weighted-tnf-canonical-two-parent, weighted-tnf-raw10-box, weighted-tnf-raw10-box8-cycle, weighted-tnf-raw10-box0-halt, weighted-tnf-raw10-short-frontier, weighted-tnf-held-block-far, weighted-tnf-raw120-late, weighted-tnf-raw120-cycles, weighted-tnf-raw120-rf, weighted-tnf-raw120-rb, weighted-tnf-raw120-rc, weighted-tnf-raw120-1rb, weighted-tnf-raw120-1rc, weighted-tnf-raw120-1lb-search, weighted-tnf-raw120-1la, weighted-tnf-raw120-1lf, weighted-tnf-raw120-0lb, weighted-tnf-raw120-0lf, weighted-tnf-raw120-partition, weighted-tnf-raw120-la-carry, weighted-tnf-raw120-la, weighted-tnf-raw120-ra-phases, weighted-tnf-raw120-0ra, weighted-tnf-root-sibling-first-hole, weighted-tnf-canonical-frontier, weighted-tnf-raw114-cut, weighted-tnf-raw114-far, weighted-tnf-raw114-pumps, weighted-tnf-raw114-complete, weighted-tnf-raw107-witnesses, weighted-tnf-raw107-1la, weighted-tnf-raw60, weighted-tnf-raw60-conditional, weighted-tnf-raw60-next, weighted-tnf-raw60-la, weighted-tnf-raw60-assemble, weighted-tnf-raw60-progress, weighted-tnf-raw60-0lf-witnesses, weighted-tnf-raw60-complete, weighted-tnf-raw60-repair, weighted-tnf-raw60-membership, weighted-tnf-raw60-discover, weighted-tnf-raw60-1lf, weighted-tnf-raw60-1re, weighted-tnf-raw60-graft, weighted-tnf-ngram-pilot, weighted-tnf-champion-parent, weighted-tnf-held-leaf-109-membership, weighted-tnf-canonical76-raw10-membership, weighted-tnf-raw10-box-ranked-search, weighted-tnf-raw10-box8-halt-slice, weighted-tnf-raw10-box8-cert-compile, weighted-tnf-f412-partition, weighted-tnf-sidewitness-multiparent, weighted-tnf-sidewitness-multiparent-scan]
+        options: [weighted-tnf-q2800-raw10-certificate, weighted-tnf-raw10-box6, weighted-tnf-canonical-partial-audit, weighted-tnf-q32-slice-closed, weighted-tnf-q32-queue-slice, weighted-tnf-raw10-domain-box7, weighted-tnf-raw118-long, weighted-tnf-raw118-bidfa, weighted-tnf-raw118-independent, weighted-tnf-raw118-phasegraph, weighted-tnf-raw118-recursive, weighted-tnf-raw118-partial, weighted-tnf-raw118-symbolic, weighted-tnf-raw118-sparse, weighted-tnf-raw118-treebank, weighted-tnf-raw118-sat, weighted-tnf-raw120-1lb-sat-cert, weighted-tnf-raw118-consumer, legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole, weighted-tnf-four-hole, weighted-tnf-four-hole-sibling, weighted-tnf-r1-sweep, queue-orbit, weighted-tnf-roster-convergence, weighted-tnf-roster-agent47-graft, weighted-tnf-pure-residuals, weighted-tnf-raw99, weighted-tnf-raw113, weighted-tnf-raw123, weighted-tnf-raw123-recursive, weighted-tnf-raw123-bidfa, weighted-tnf-raw124-rf, weighted-tnf-raw124-lc, weighted-tnf-raw124-1rf, weighted-tnf-raw124-0rb, weighted-tnf-raw124-bundle, weighted-tnf-raw124-1la, weighted-tnf-raw124-1la-sharded, weighted-tnf-raw124-0lb-longcycle100k, weighted-tnf-raw124-bundle-sharded, weighted-tnf-raw124-champion-bound, weighted-tnf-raw103, weighted-tnf-raw104, weighted-tnf-agent8-five, weighted-tnf-agent8-six, weighted-tnf-agent8-raw117, weighted-tnf-agent8-raw112-macros, weighted-tnf-roster-composition, weighted-tnf-agent3-siblings, weighted-tnf-raw85-parent-check, weighted-tnf-raw91, weighted-tnf-raw87, weighted-tnf-raw83-pump, weighted-tnf-agent10-multi, weighted-tnf-agent10-five-new, weighted-tnf-agent10-five-roster, weighted-tnf-agent10-raw106, weighted-tnf-raw63-counter, weighted-tnf-raw61-witnesses, weighted-tnf-prefix-single, weighted-tnf-agent10-single, weighted-tnf-combined-109, weighted-tnf-root-zero-refinement, weighted-tnf-combined-106, weighted-tnf-canonical-78, weighted-tnf-canonical-78-exact, weighted-tnf-raw108-canonical, weighted-tnf-canonical-two-parent, weighted-tnf-raw10-box, weighted-tnf-raw10-box8-cycle, weighted-tnf-raw10-box0-halt, weighted-tnf-raw10-short-frontier, weighted-tnf-held-block-far, weighted-tnf-raw120-late, weighted-tnf-raw120-cycles, weighted-tnf-raw120-rf, weighted-tnf-raw120-rb, weighted-tnf-raw120-rc, weighted-tnf-raw120-1rb, weighted-tnf-raw120-1rc, weighted-tnf-raw120-1lb-search, weighted-tnf-raw120-1la, weighted-tnf-raw120-1lf, weighted-tnf-raw120-0lb, weighted-tnf-raw120-0lf, weighted-tnf-raw120-partition, weighted-tnf-raw120-la-carry, weighted-tnf-raw120-la, weighted-tnf-raw120-ra-phases, weighted-tnf-raw120-0ra, weighted-tnf-root-sibling-first-hole, weighted-tnf-canonical-frontier, weighted-tnf-raw114-cut, weighted-tnf-raw114-far, weighted-tnf-raw114-pumps, weighted-tnf-raw114-complete, weighted-tnf-raw107-witnesses, weighted-tnf-raw107-1la, weighted-tnf-raw60, weighted-tnf-raw60-conditional, weighted-tnf-raw60-next, weighted-tnf-raw60-la, weighted-tnf-raw60-assemble, weighted-tnf-raw60-progress, weighted-tnf-raw60-0lf-witnesses, weighted-tnf-raw60-complete, weighted-tnf-raw60-repair, weighted-tnf-raw60-sparse-shards, weighted-tnf-raw60-membership, weighted-tnf-raw60-discover, weighted-tnf-raw60-1lf, weighted-tnf-raw60-1re, weighted-tnf-raw60-graft, weighted-tnf-ngram-pilot, weighted-tnf-champion-parent, weighted-tnf-held-leaf-109-membership, weighted-tnf-canonical76-raw10-membership, weighted-tnf-raw10-box-ranked-search, weighted-tnf-raw10-box8-halt-slice, weighted-tnf-raw10-box8-cert-compile, weighted-tnf-f412-partition, weighted-tnf-sidewitness-multiparent, weighted-tnf-sidewitness-multiparent-scan]
         default: legacy
       raw_id:
         description: 'Single Agent 10 residual index (single target only)'
@@ -19,6 +19,10 @@ on:
         description: 'Prior workflow run containing reusable raw60 child artifacts'
         type: string
         default: ''
+      raw60_repair_artifact_run_id:
+        description: 'Run containing the accepted repaired 0LF closure'
+        type: string
+        default: '45662069999'
       raw60_artifact_sha:
         description: 'Source commit used to build the reusable raw60 child artifacts'
         type: string
@@ -56,6 +60,7 @@ jobs:
       && inputs.target != 'weighted-tnf-raw120-1lf'
       && inputs.target != 'weighted-tnf-raw120-0lb'
       && inputs.target != 'weighted-tnf-raw120-0lf'
+      && inputs.target != 'weighted-tnf-raw60-sparse-shards'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -2844,6 +2849,196 @@ jobs:
             mv "$d" "$dest"
           done
       - name: Strictly merge all thirteen checked child closures and prove parent
+        run: |
+          set -euo pipefail
+          D=im-results/agent1-raw60
+          U=/tmp/raw60-union
+          W=/tmp/raw60-parent
+          python im-results/agent4-raw109/merge_shards.py /tmp/raw60-downloads "$U" "$D/raw60_complete.json"
+          python tools/lean_compile_closure.py --workdir "$W" --jobs 4 \
+            --precompiled-manifest "$U/manifest.json" --precompiled-dir "$U" \
+            --manifest "$W/manifest.json" --label raw60-parent \
+            --artifact-name raw60-parent-proof --theorem BB6.Agent1Raw60Root.all60 \
+            --parent-table '1RB---_1RC---_0RD---_1LD1RE_---1RA_------' \
+            --weighted-bound 1175 "$D/Raw60RootFull.lean" | tee /tmp/raw60-parent.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/raw60-parent.log BB6.Agent1Raw60Root.all60
+          cp /tmp/raw60-parent.log "$W/audit.log"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw60-parent-proof
+          path: /tmp/raw60-parent/
+          if-no-files-found: error
+
+  raw60_sparse_prepare:
+    if: inputs.target == 'weighted-tnf-raw60-sparse-shards'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate exact sparse tries and bounded subtree proof groups
+        id: plan
+        run: |
+          set -euo pipefail
+          D=im-results/agent1-raw60
+          python "$D/split_sparse_rows.py"
+          echo "matrix=$(python -c 'import json,sys; print(json.dumps({"include":json.load(open(sys.argv[1]))},separators=(",",":")))' "$D/raw60_sparse_plan.json")" >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw60-sparse-source
+          path: |
+            im-results/agent1-raw60/Raw60LFSparse*.lean
+            im-results/agent1-raw60/Raw60RESparse*.lean
+            im-results/agent1-raw60/raw60_sparse_plan.json
+          if-no-files-found: error
+
+  raw60_sparse_shards:
+    if: inputs.target == 'weighted-tnf-raw60-sparse-shards'
+    needs: raw60_sparse_prepare
+    strategy:
+      fail-fast: false
+      max-parallel: 12
+      matrix: ${{ fromJSON(needs.raw60_sparse_prepare.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw60-sparse-source
+          path: im-results/agent1-raw60
+      - name: Install Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Source-check bounded subtree proof group
+        env:
+          GROUP: ${{ matrix.group }}
+          MODULE: ${{ matrix.module }}
+        run: |
+          set -euo pipefail
+          D=im-results/agent1-raw60
+          W=/tmp/raw60-sparse-shard
+          python im-results/agent13-coverage/unpack.py
+          python tools/lean_compile_closure.py --workdir "$W" --jobs 2 \
+            --manifest "$W/manifest.json" --label "raw60-sparse-$GROUP" \
+            --artifact-name "raw60-sparse-$GROUP" \
+            --provenance-input "$D/raw60_sparse_plan.json" \
+            "$D/$MODULE.lean" | tee /tmp/raw60-sparse.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/raw60-sparse.log; then exit 1; fi
+          cp /tmp/raw60-sparse.log "$W/audit.log"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw60-sparse-${{ matrix.group }}
+          path: /tmp/raw60-sparse-shard/
+          if-no-files-found: error
+
+  raw60_sparse_children:
+    if: inputs.target == 'weighted-tnf-raw60-sparse-shards'
+    needs: raw60_sparse_shards
+    strategy:
+      fail-fast: false
+      matrix:
+        child: ['1LF','1RE']
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Generate original exact child audit
+        env:
+          CHILD: ${{ matrix.child }}
+          BB6_SHARD_AUDIT: '1'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          D=im-results/agent1-raw60
+          case "$CHILD" in
+            1LF) python "$D/generate_1lf.py";;
+            1RE) python "$D/generate_1re.py";;
+          esac
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw60-sparse-source
+          path: im-results/agent1-raw60
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw60-sparse-${{ matrix.child }}-*
+          path: /tmp/raw60-sparse-downloads
+      - name: Compose checked sparse groups and prove child
+        env:
+          CHILD: ${{ matrix.child }}
+        run: |
+          set -euo pipefail
+          D=im-results/agent1-raw60
+          U=/tmp/raw60-sparse-union
+          W=/tmp/raw60-complete
+          python - "$D/raw60_sparse_plan.json" "$CHILD" <<'PY'
+          import json,sys
+          plan=json.load(open(sys.argv[1]))
+          groups={p["group"]:[p["module"]] for p in plan if p["child"]==sys.argv[2]}
+          assert groups
+          json.dump({"artifact_prefix":"raw60-sparse","groups":groups},open("/tmp/sparse-config.json","w"))
+          PY
+          python im-results/agent4-raw109/merge_shards.py /tmp/raw60-sparse-downloads "$U" /tmp/sparse-config.json
+          case "$CHILD" in 1LF) BOUND=1175;; 1RE) BOUND=211;; esac
+          THEOREM="BB6.Agent1Raw60A${CHILD}.all_closed"
+          python tools/lean_compile_closure.py --workdir "$W" --jobs 4 \
+            --precompiled-manifest "$U/manifest.json" --precompiled-dir "$U" \
+            --manifest "$W/manifest.json" --label "raw60-complete-$CHILD" \
+            --artifact-name "raw60-complete-$CHILD" --theorem "$THEOREM" \
+            --parent-table "1RB${CHILD}_1RC---_0RD---_1LD1RE_---1RA_------" \
+            --weighted-bound "$BOUND" --provenance-input "$D/spec-$CHILD.json" \
+            "$D/Raw60A${CHILD}Data.lean" | tee /tmp/raw60-complete.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/raw60-complete.log "$THEOREM"
+          cp /tmp/raw60-complete.log "$W/audit.log"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw60-complete-${{ matrix.child }}
+          path: /tmp/raw60-complete/
+          if-no-files-found: error
+
+  raw60_sparse_parent:
+    if: inputs.target == 'weighted-tnf-raw60-sparse-shards'
+    needs: raw60_sparse_children
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw60-complete-*
+          path: /tmp/raw60-downloads
+          run-id: ${{ inputs.raw60_artifact_run_id }}
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw60-complete-0LF
+          path: /tmp/raw60-downloads/raw60-complete-0LF
+          run-id: ${{ inputs.raw60_repair_artifact_run_id }}
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw60-complete-*
+          path: /tmp/raw60-downloads
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw60-sparse-source
+          path: im-results/agent1-raw60
+      - name: Strictly assemble all thirteen accepted children
         run: |
           set -euo pipefail
           D=im-results/agent1-raw60
