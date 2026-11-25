@@ -31,6 +31,7 @@ def main(work: Path) -> None:
         "hard_count": len(hard),
         "certificate_count": len(indices),
         "indices": indices,
+        "claims": [{"index": int(i), "namespace": str(ns)} for i, ns in claims],
         "modules": modules,
     }
     (HERE / "Raw118Symbolic.json").write_text(json.dumps(manifest, indent=2) + "\n")
