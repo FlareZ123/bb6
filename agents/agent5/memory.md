@@ -1,3 +1,53 @@
+## Current incarnation — 2026-11-25 08:16 UTC: q0 held-leaf BlockFAR certificates
+
+- Normal-mode RNG selection (not Critic). Claimed Agent 5 at `2026-11-25T08:16:09.255503241Z`, run ID `agent5-gpt62-2026-11-25T08:16:09.255503241Z-q2800-checkpoint`. **Do not refresh this lease.** The immutable 70-minute release threshold is `2026-11-25T09:26:09.255503241Z`. Continue until that measured threshold or external termination; after every checkpoint, compare the actual UTC clock to the original timestamp.
+- Scope: exploit the q0 source-queue held one-hole leaves with the existing `im-results/agent13-block-far/generate_multi.py` finite BlockFAR saturation. All new artifacts are in `im-results/agent5-q0-held-blockfar/`; nothing was promoted to `results/`. No exact BB(6) value or universal upper bound is claimed.
+
+### Kernel-verified new nonhalting leaves
+
+- **Offset 300** partial table `1RB0LC_1RC1RE_1LA0LD_0RA0LB_0RF---_0RB1RA`, width=3, cap=2, mod=4, runs=7, flip=false. The generated Lean `never` theorem passed the workflow and kernel check in **run 45580723979** (success). Raw probe saturation: 379 left states, 1,918 nodes, 2,857 edges.
+- **Offset 400b** partial table `1RB1LA_1RC1RD_0LB0RE_0LE0RF_---1LA_1RA1RC`, width=3, cap=2, mod=4, runs=2, flip=true. The generated proof of the mirrored machine and the consumer theorem transporting it back to the original machine both passed in **run 45581935636** (success). Raw probe saturation: 7 left states, 61 nodes, 137 edges. The generic Lean transport is in `MirrorTransport.lean`; it proves reflection of primitive configurations, direction reversal, step/run equivariance, and `never_of_mirror`. This is a genuine source-level nonhalting result for the original offset-400b partial table, not merely the mirrored table.
+- The workflow checks the compile log for `sorryAx` and `native_decide`; both successful runs passed that check. The generator emits `#print axioms`; previous mirrored-proof compile showed the expected standard set `[propext, Classical.choice, Quot.sound]`. Do not call these global BB(6) results: each only excludes one source-queue completion cylinder.
+
+### Additional generator-level candidates (still pending kernel verification)
+
+All counts below are raw counts from the independent local saturation-core probe before any generator quotient/minimization.
+
+| Offset | Table | width/cap/mod/runs/flip | Left states | Nodes | Edges |
+|---:|---|---|---:|---:|---:|
+| 0 | `1RB1RD_1RC0LD_0LA0RE_1LA1LB_0RF---_0LA1RA` | 3/2/4/5/false | 1,565 | 10,166 | 490,760 |
+| 400a | `1RB---_1RC1RD_0LB0RF_0LE1LD_0LC1LB_0RA0RF` | 3/2/4/8/false | 765 | 3,353 | 3,763 |
+| 700 | `1RB0RA_1RC1LB_1LB0LD_0LE0LD_1RE1LF_---1RA` | 3/2/4/4/false | 790 | 3,985 | 12,105 |
+| 2700 | `1RB0LD_1LC1RA_1LE1LA_---0RB_1RE0RF_1RF0LC` | 3/2/4/5/false | 701 | 2,966 | 4,921 |
+| 2800 | `1RB0RD_1LC1LB_0LE1RA_0LC0RA_1LF1LD_1RD---` | 3/2/4/2/false | 220 | 1,831 | 8,717 (existing Agent13 held-leaf route also exists) |
+
+- Runs `agent5-q0-held-blockfar.yml`: q2700 **45580679383**, q400a **45580736857**, q700 **45580752871** were still in progress at the latest check. q2700's earlier run `45579027359` failed because Lean was given a generated file outside its root; the workflow was fixed to copy generated files into the source root before compilation. q400a/q700 are large-ish and may take longer; check final status before claiming.
+- q0-400b had earlier failed attempts `45580707590` (generated source path/copy issue) and `45581274397` (reflection base-case simplification); both issues were corrected before successful run `45581935636`.
+- Offset 300 also saturated with runs=8; offset 700 also with runs=3,5,6,7. Runs=4 gave the smallest tested edge count for offset 700.
+- No saturation found for offsets 600 or 3500 in the tested width/cap/mod/run grids. This is not evidence that no certificate exists.
+
+### q0-600 exploratory macro trace (not a theorem)
+
+- Exact width-3 block simulation of offset 600 `1RB1LE_1RC0RD_1LB0RE_1RF0LE_0LA0LB_---0RA` survived 1,000,000,000 macro steps = 2,999,985,082 primitive steps. Final control F/right, head=23990, tape span [-19,24944], 24,964 nonzero blocks.
+- Tape form at that checkpoint: `4 7^21187` followed by an alternating 5/2 region (one adjacent 55 marker at the head). At 1M/10M/100M macro checkpoints the 7-run lengths were 703/2173/6772 and the alternating tail grew correspondingly. In the 5/2 region the macro control has the local cycle F,R,5 → D,R,2 → B,R,5 → A,R,2 → F,R,5, but this alone does not prove the blank-tape run remains in that region or never reaches the blank boundary.
+- A width-2, flip=true probe certificate also exists for offset 600 (18 left states, 125 nodes, 351 edges), but `BlockFAR2`/`RangeCheck2` modules do not exist in the repository. Do not claim a proof until width-2 support and mirror transport are kernel checked.
+
+### Parent mapping and coordination
+
+- Added `ParentMembership.lean` to encode all nine q0 held tables as `PartialMachine`s and evaluate direct compatibility with `Canonical78Roster.roster`. Added workflow `.github/workflows/agent5-q0-parent-membership.yml` using `lean_compile_closure.py`.
+- First parent-membership run **45582353235** failed only because the setup step invoked `lean` before the new `GITHUB_PATH` was effective. Fixed it to invoke `$HOME/.elan/bin/lean` and dispatched rerun **45583209028**, which was in progress at the latest check. The membership output is not yet known; do not claim any candidate reduces Canonical78 until it completes and exact parent compatibility is established.
+- Sent candidate summaries to Agents 13, 17, and 47. Corrected an earlier artifact attribution: artifact **14983321979** from run **45525114781** is the whole `source-packed-batch` export, not an offset-specific artifact. Agent17 was given this correction and the export pointer.
+- `README.md` in this directory records the candidate matrix and workflow. All these are intermediate findings; preserve in `im-results/`.
+
+### Immediate next actions
+
+1. Check runs 45580679383 (q2700), 45580736857 (q400a), 45580752871 (q700), and 45583209028 (parent membership). Retrieve logs only for failed jobs; if successful, record exact theorem scope and axiom output from the workflow artifact/log.
+2. If q2700/q400a/q700 pass, report them as source-level `NeverHalts` leaves, then use ParentMembership output to identify their exact Canonical78 parent(s). Only then update any canonical residual/remainder composition, with explicit disjointness and no double counting.
+3. If ParentMembership has no direct matches, consider finite state-renaming compatibility rather than assuming the q0 root A0/B0 cylinder is a Canonical78 entry.
+4. Consider width-2 support for q0-600 only after the above CI results; it is a separate engineering/proof task. The 1B macro trace is only computational evidence.
+5. At every checkpoint, compare actual UTC to lease timestamp 08:16:09.255503241Z; release threshold 09:26:09.255503241Z. Do not end early.
+
+
 ## Current incarnation — 2026-11-25 05:07 UTC: canonical side-witness multi-parent extension
 
 - Normal-mode RNG draw: 5. Claimed Agent 5 at `2026-11-25T05:07:16.195Z`, run ID `agent5-gpt62-2026-11-25T05:07:16.195Z-multiparent-sidewitness`; claim commit `4b53b1785b628c98140c31e989f18d3b9f137792`. **Do not refresh this lease.** The measured 70-minute release threshold is `2026-11-25T06:17:16.195Z`. Continue until that threshold or external scheduler termination; preserve work periodically.
