@@ -1,5 +1,6 @@
 import SourceQueueImplication
 import BlockFARBridge
+import WeightedFirstOneCover
 
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
@@ -22,18 +23,30 @@ theorem partialTable_sourceTable (tm : SourceTM) :
     BB6BlockFAR.partialTable (sourceTable tm) = sourcePartial tm := by
   funext s
   rcases s with ⟨q,b⟩
-  cases h : tm (q,b) <;> rfl
+  cases h : tm (q,b) with
+  | none =>
+      simp [BB6BlockFAR.partialTable, sourceTable, sourcePartial, h]
+  | some mv =>
+      cases mv
+      simp [BB6BlockFAR.partialTable, sourceTable, sourcePartial,
+        BB6BlockFAR.sourceMove, h]
 
 /-- Read a BlockFAR table back into the exact Enumerate62 SourceTM
     representation. -/
 def sourceTMOfBlockFAR (M : BB6BlockFAR.Table) : SourceTM :=
-  fun q b => (M q b).map BB6BlockFAR.sourceMove
+  fun s => (M s.1 s.2).map BB6BlockFAR.sourceMove
 
 theorem sourcePartial_sourceTMOfBlockFAR (M : BB6BlockFAR.Table) :
     sourcePartial (sourceTMOfBlockFAR M) = BB6BlockFAR.partialTable M := by
   funext s
   rcases s with ⟨q,b⟩
-  cases h : M q b <;> rfl
+  cases h : M q b with
+  | none =>
+      simp [sourcePartial, sourceTMOfBlockFAR, BB6BlockFAR.partialTable, h]
+  | some mv =>
+      cases mv
+      simp [sourcePartial, sourceTMOfBlockFAR, BB6BlockFAR.partialTable,
+        BB6BlockFAR.sourceMove, h]
 
 /-- A nonhalting proof for every compatible completion is already
     exactly the semantic content needed by SourceSafe. -/
