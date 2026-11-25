@@ -237,10 +237,14 @@ jobs:
           D=im-results/agent1-bidfa-sat
           python im-results/agent13-coverage/unpack.py
           python "$D/emit_raw120.py" > "$D/Raw120LBSat.lean"
-          python tools/lean_compile_closure.py --workdir /tmp/raw120-lb-sat-proof --jobs 4 "$D/Raw120LBSat.lean" | tee /tmp/raw120-lb-sat.log
-          if grep -Eq 'sorryAx|native_decide' /tmp/raw120-lb-sat.log; then exit 1; fi
-          for i in 1265 3656 4072; do
-            python im-results/agent4-raw109/audit_axioms.py /tmp/raw120-lb-sat.log "BB6Coverage.Agent1BiDFASat.Raw120LB.M$i.never"
+          python "$D/emit_raw118.py" > "$D/Raw118SatHits.lean"
+          python tools/lean_compile_closure.py --workdir /tmp/bidfa-sat-hits-proof --jobs 4 "$D/Raw120LBSat.lean" "$D/Raw118SatHits.lean" | tee /tmp/bidfa-sat-hits.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/bidfa-sat-hits.log; then exit 1; fi
+          for i in 1265 1947 3656 4072; do
+            python im-results/agent4-raw109/audit_axioms.py /tmp/bidfa-sat-hits.log "BB6Coverage.Agent1BiDFASat.Raw120LB.M$i.never"
+          done
+          for i in 1125 2873 3900 3909 4098 4222 4223 4224 4343 5491 5495; do
+            python im-results/agent4-raw109/audit_axioms.py /tmp/bidfa-sat-hits.log "BB6Coverage.Agent1BiDFASat.Raw118.M$i.never"
           done
       - name: Compose and source-check the complete Raw118 parent residual cover
         if: inputs.target == 'weighted-tnf-raw118-consumer'
