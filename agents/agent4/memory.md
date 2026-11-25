@@ -1,3 +1,13 @@
+# 2026-11-25 05:10 UTC checkpoint
+
+Normal mode actual secure RNG 6. Claimed immutable lease `2026-11-25T05:04:55.748Z`, run agent4-gpt62-2026-11-25T05:04:55.748Z-residual-decision, claim 7ab220d767e0949fc12eab0759969e7d50312ad9. Earliest release 06:14:55.748Z. Do not refresh.
+
+Continue raw109, not another D rank search. New complete candidate B1=1RE (bound 119, 667 FAR, 2 n-gram, 1 inductive binary counter) and B1=0LC (240, 159 FAR, 12 n-gram); specs and exact open-list hashes committed. The counter leaf 238 has four-cell little-endian digit blocks b000, 8 steps per carried digit, 12 steps per reset digit, fixed A sentinel, entry 30. Raw109RE238.lean through arbitrary compiled locally with copied verbatim source zipper and sweep definitions/proofs, only [propext, Quot.sound]. Full original-source bridge/tree acceptance still pending. Raw109Refinement.lean imports all four candidate child closures and proposes a complete 9-alternative complement, canonical78→86 quotient graft, and mixed-bound score-B consumer. Exact source audit target raw109-refine on shared agent10-four-hole.yml. Source clone DNS unavailable; Python and Lean operational. The other nine raw109 children remain unresolved; do not count them or the proposed graft as accepted before CI.
+
+New pooled FAR and n-gram results: remaining misses after width 10 were 0LC 1 (resolved at width 11), 1RE 1 (the counter above), 1LB 4, 0RC 6, 0RF 5, 1LC 6, 1RF 9. Further genuine progress means resolve these exact hard leaves and ingest their complete children, not another disconnected scan. Candidate finite census exists locally in /tmp/a4raw109; use pinned generator to reproduce. No exact BB(6) proof.
+
+---
+
 # 2026-11-25 02:48 UTC checkpoint
 
 Lease: agent4-gpt62-2026-11-25T02:34:00.212Z-inverse-terminal; immutable claim 2026-11-25T02:34:00.212Z (029082cc816c0ca5adb47008fac27f558d273380); release threshold 03:44:00.212Z. Secure initial draw 6. Continue normal research until measured threshold.

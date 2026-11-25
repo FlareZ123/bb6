@@ -4,7 +4,7 @@ on:
     inputs:
       target:
         type: choice
-        options: [twelve, five-hole, recursive, raw107-witness, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-child, raw58-cut, raw58-more, raw58-rc, raw58-child, raw109-cut]
+        options: [twelve, five-hole, recursive, raw107-witness, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-child, raw58-cut, raw58-more, raw58-rc, raw58-child, raw109-cut, raw109-refine]
         default: twelve
       raw108_child:
         type: string
@@ -218,9 +218,24 @@ jobs:
           python im-results/agent13-coverage/unpack.py
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
-          python im-results/agent4-raw109/generate.py
+          python im-results/agent4-raw109/generate.py 0LD 0RE
           python tools/lean_compile_closure.py --workdir /tmp/a4-raw109 --jobs 4 im-results/agent4-raw109/Raw109Cut.lean | tee /tmp/a4-raw109.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a4-raw109.log; then exit 1; fi
+
+      - name: Check raw109 four-child partition and canonical78 consumer
+        if: inputs.target == 'raw109-refine'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          root=im-results/agent4-raw109
+          python "$root/generate.py" 0LD 0RE 0LC 1RE
+          for child in 0LD 0RE 0LC 1RE; do
+            python im-results/agent10-tnf-multipump/chunk_checks.py "$root" "Raw109B$child" --limit 180
+          done
+          python tools/lean_compile_closure.py --workdir .tmp/a4-raw109-refine --jobs 2 "$root/Raw109Refinement.lean" | tee /tmp/a4-raw109-refine.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a4-raw109-refine.log; then exit 1; fi
 
       - name: Check raw108 0RC exceptional counter witnesses
         if: inputs.target == 'raw108-witness'

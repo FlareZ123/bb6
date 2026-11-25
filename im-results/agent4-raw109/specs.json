@@ -40,5 +40,64 @@
     ],
     "multi": [],
     "unresolved": {}
+  },
+  "1RE": {
+    "bound": 119,
+    "query": [
+      8,
+      8
+    ],
+    "sha": "756852bc743c1e834d13fcfc689230126d8a9ffbaef54d5eb314e099359c5698",
+    "stats": {
+      "cycle": 7997,
+      "last": 1569,
+      "open": 670,
+      "split": 445
+    },
+    "one": [],
+    "multi": [],
+    "manual": {
+      "238": [
+        "Raw109RE238",
+        "BB6Coverage.Agent4Raw109RE238",
+        "1RB1LC_1RC1RE_0RD1RF_1LD1RE_1LA1RB_---0LA"
+      ]
+    },
+    "ngram": [
+      2,
+      579
+    ],
+    "unresolved": {}
+  },
+  "0LC": {
+    "bound": 240,
+    "query": [
+      8,
+      5
+    ],
+    "sha": "4efdf14cb99b14ceaa84996cbd364cd6f857bf5880344f885a9e375ab3fa487a",
+    "stats": {
+      "cycle": 14373,
+      "last": 2431,
+      "open": 171,
+      "split": 738
+    },
+    "one": [],
+    "multi": [],
+    "ngram": [
+      7,
+      37,
+      50,
+      111,
+      112,
+      113,
+      114,
+      116,
+      117,
+      118,
+      131,
+      142
+    ],
+    "unresolved": {}
   }
 }
