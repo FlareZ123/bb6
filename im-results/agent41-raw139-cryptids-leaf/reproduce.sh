@@ -24,7 +24,7 @@ fi
 test -s "$UPSTREAM_ROOT/.lake/build/lib/BusyBeaver/Bridge.olean"
 
 mkdir -p "$WORKDIR"
-export LEAN_PATH="$CANONICAL76_BUILD_DIR:$CANONICAL77_DIR:$CHAMPION_BUILD_DIR:$UPSTREAM_ROOT/.lake/build/lib${LEAN_PATH:+:$LEAN_PATH}"
+export LEAN_PATH="$CHAMPION_BUILD_DIR:$CANONICAL76_BUILD_DIR:$CANONICAL77_DIR:$UPSTREAM_ROOT/.lake/build/lib${LEAN_PATH:+:$LEAN_PATH}"
 "$LEAN_BIN" --version | tee "$WORKDIR/lean-version.txt"
 
 compile() {
