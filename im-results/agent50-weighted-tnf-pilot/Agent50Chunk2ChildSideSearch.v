@@ -1,4 +1,5 @@
-From BusyCoq Require Import Agent8Chunk2FirstHole Agent44ChunkSideSearch
+From BusyCoq Require Import Enumerate62 Individual62 Agent8AdaptiveSource
+  Agent8WeightedSource Agent8Chunk2FirstHole Agent44ChunkSideSearch
   Agent47SourceWitness SourceResidualRoster.
 From Coq Require Import List Bool Lia Arith Strings.String.
 Import ListNotations.
