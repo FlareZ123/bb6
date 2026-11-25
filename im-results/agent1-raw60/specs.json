@@ -1,0 +1,48 @@
+{
+  "0RC": {
+    "bound": 376,
+    "query": [
+      15,
+      5
+    ],
+    "stats": {
+      "split": 821,
+      "cycle": 15133,
+      "last": 3525,
+      "open": 226
+    },
+    "sha": "e501394c419afa34ded7ca85988f4774227ff74d048c6bd8adfaf7b8cf699620",
+    "one": [
+      3,
+      187
+    ],
+    "multi": [
+      8,
+      178,
+      184
+    ],
+    "unresolved": {}
+  },
+  "0RE": {
+    "bound": 719,
+    "query": [
+      8,
+      8
+    ],
+    "stats": {
+      "split": 526,
+      "cycle": 9265,
+      "last": 2713,
+      "open": 121
+    },
+    "sha": "6e6f3425d8ad7c086691976135fec6fd1f4f2ffc3c35c8d3ba68e02a026c5442",
+    "one": [
+      3,
+      4,
+      7,
+      26
+    ],
+    "multi": [],
+    "unresolved": {}
+  }
+}
