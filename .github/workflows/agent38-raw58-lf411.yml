@@ -1,0 +1,29 @@
+name: Agent 38 Raw58 LF411 sweep certificate
+
+on:
+  push:
+    paths:
+      - 'im-results/agent38-raw58-triangular-sweep/**'
+      - 'im-results/agent4-raw58/Raw58Live.lean'
+      - 'im-results/agent31-three-hole-tnf/SweepPumping.lean'
+      - '.github/workflows/agent38-raw58-lf411.yml'
+  workflow_dispatch:
+
+jobs:
+  lean:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: leanprover/lean-action@v1
+        with:
+          lean-version: leanprover/lean4:v4.36.0-rc2
+      - name: Reconstruct BB6 coverage module
+        run: python im-results/agent13-coverage/unpack.py
+      - name: Compile theorem closure
+        run: |
+          python tools/lean_compile_closure.py \
+            --workdir /tmp/agent38-raw58-lf411 \
+            --jobs 8 \
+            --theorem BB6.Agent38Raw58LF411.never \
+            im-results/agent38-raw58-triangular-sweep/Raw58LF411.lean
