@@ -66,6 +66,10 @@ python3 "$ROOT/tools/lean_compile_closure.py" \
   --override CanonicalRosterRefinement=im-results/agent47-rooted-tnf/CanonicalRosterRefinement.lean \
   --override CanonicalRaw114Accepted=im-results/agent47-rooted-tnf/CanonicalRaw114Accepted.lean \
   --override CanonicalFrontier=im-results/agent47-rooted-tnf/CanonicalFrontier.lean \
+  --override FourHoleResidualRoster=im-results/agent31-three-hole-tnf/FourHoleResidualRoster.lean \
+  --override FourHoleRootFrontier=im-results/agent31-three-hole-tnf/FourHoleRootFrontier.lean \
+  --override FourHoleData=im-results/agent31-three-hole-tnf/FourHoleData.lean \
+  --override WeightedTNFQueueOrbit=im-results/agent13-weighted-first-one/WeightedTNFQueueOrbit.lean \
   --override FirstHolePath=im-results/agent8-cryptids-tnf-paths/FirstHolePath.lean \
   --override CryptidsFirstHolePaths=im-results/agent8-cryptids-tnf-paths/CryptidsFirstHolePaths.lean \
   --override FiniteLassoOracle=im-results/agent32-zero-prefix-global/FiniteLassoOracle.lean \
