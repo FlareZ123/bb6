@@ -1156,6 +1156,10 @@
     "1038": [
       "Raw60LFPrefixCounter1038",
       "BB6.Agent1Raw60LFPrefixCounter1038"
+    ],
+    "1417": [
+      "Raw60LFParityCounter",
+      "BB6.Agent1Raw60LFParityCounter"
     ]
   },
   "unresolved": [
@@ -1199,7 +1203,6 @@
     1338,
     1350,
     1358,
-    1417,
     1569
   ]
 }
