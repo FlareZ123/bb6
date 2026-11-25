@@ -19,16 +19,24 @@
     786,
     889
   ],
-  "unresolved": {
-    "289": "1RB1RE_1RC0LA_0RD0RF_1LD1RE_1LB1RA_---0LB",
-    "293": "1RB1RE_1RC0LA_0RD0RF_1LD1RE_1LB1RA_---0RD",
-    "317": "1RB1RE_1RC0LA_0RD1RF_1LD1RE_1LB1RA_---0RD",
-    "457": "1RB1RE_1RC0RA_0RD0LF_1LD1RE_1LC1RA_---1LE",
-    "458": "1RB1RE_1RC0RD_0RD0LF_1LD1RE_1LC1RA_---1LE",
-    "495": "1RB1RE_1RC0LB_0RD1LF_1LD1RE_1LC1RA_---1LB"
-  },
+  "unresolved": {},
   "late": {},
   "manual": {
+    "289": [
+      "Raw60REMulti",
+      "BB6.Agent1Raw60REMulti.M289",
+      "1RB1RE_1RC0LA_0RD0RF_1LD1RE_1LB1RA_---0LB"
+    ],
+    "293": [
+      "Raw60REMulti",
+      "BB6.Agent1Raw60REMulti.M293",
+      "1RB1RE_1RC0LA_0RD0RF_1LD1RE_1LB1RA_---0RD"
+    ],
+    "317": [
+      "Raw60REMulti",
+      "BB6.Agent1Raw60REMulti.M317",
+      "1RB1RE_1RC0LA_0RD1RF_1LD1RE_1LB1RA_---0RD"
+    ],
     "327": [
       "Raw60RERecursive",
       "BB6.Agent1Raw60RERecursive.M327",
@@ -48,6 +56,21 @@
       "Raw60RERecursive",
       "BB6.Agent1Raw60RERecursive.M455",
       "1RB1RE_1RC---_0RD0LF_1LD1RE_1LC1RA_0RE0LF"
+    ],
+    "457": [
+      "Raw60REMulti",
+      "BB6.Agent1Raw60REMulti.M457",
+      "1RB1RE_1RC0RA_0RD0LF_1LD1RE_1LC1RA_---1LE"
+    ],
+    "458": [
+      "Raw60REMulti",
+      "BB6.Agent1Raw60REMulti.M458",
+      "1RB1RE_1RC0RD_0RD0LF_1LD1RE_1LC1RA_---1LE"
+    ],
+    "495": [
+      "Raw60RESparse",
+      "BB6.Agent47SparseNGram.Raw60RESparse",
+      "1RB1RE_1RC0LB_0RD1LF_1LD1RE_1LC1RA_---1LB"
     ],
     "663": [
       "Raw60RERecursive",
