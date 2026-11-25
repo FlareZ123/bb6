@@ -134,7 +134,7 @@ jobs:
           import re
           from pathlib import Path
           log = Path('/tmp/reverse-live.log').read_text()
-          for name in ("mem_backY", "mem_reverseLive", "extend_to_DWalk", "reverseLookahead_sound", "covered_next_reverse"):
+          for name in ("mem_backY", "mem_reverseLive", "extend_to_DWalk", "reverseLookahead_sound", "dWalk_to_extend", "reverseLive_iff_extend", "reverseLookahead_iff_extend", "covered_next_reverse"):
               m = re.search(r"'BB6\.Agent23ReverseLag\."+re.escape(name)+r"' depends on axioms:\s*\[([^\]]*)\]", log)
               if not m and re.search(r"'BB6\.Agent23ReverseLag\."+re.escape(name)+r"' does not depend on any axioms", log):
                   print(name, [])
