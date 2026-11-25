@@ -21,7 +21,7 @@ open BB6Coverage.FAR
     F/1 = 1LF child of the source-replayed champion path. -/
 theorem oneLF_is_depth5_sibling :
     sameTable BB6.Agent48F1OneLF.parent
-      (championChild 5 ⟨true,true,5⟩) = true := by
+      (championChild 5 ⟨true,false,5⟩) = true := by
   decide [BB6.Agent48F1OneLF.parent, championChild, championParent,
     championHole, championP5, championP4, championP3, championP2,
     championP1, championResidual, championRootAfterB, refine, root]
