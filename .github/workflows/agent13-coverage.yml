@@ -1221,6 +1221,16 @@ jobs:
             echo "Forbidden proof placeholder or native_decide found in B0=1LC weighted parent consumer" >&2
             exit 1
           fi
+      - name: Audit B0=1LC weighted parent theorem profiles
+        run: python3 im-results/agent42-source-certificate-ingestion/audit_b0_1lc_graft.py /tmp/a13-heldleaf109.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: b0-1lc-weighted-109-graft
+          path: |
+            /tmp/a13-heldleaf109/
+            /tmp/a13-heldleaf109.log
+          if-no-files-found: error
+          retention-days: 90
 
   rootzero:
     if: inputs.target == 'weighted-tnf-root-zero-refinement'
