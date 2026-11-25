@@ -113,6 +113,7 @@ jobs:
           FLIP: ${{ inputs.flip }}
           WIDTH: ${{ inputs.width }}
           COMPACT: ${{ inputs.compact }}
+          TABLE: ${{ inputs.table }}
         run: |
           set -euo pipefail
           cd im-results/agent13-block-far
@@ -171,6 +172,53 @@ jobs:
             lean -o "${MODULE_NAME}MirrorConsumer.olean" "${MODULE_NAME}MirrorConsumer.lean" | tee -a /tmp/q0-blockfar/compile.log
             cp MirrorTransport.lean MirrorTransport.olean "${MODULE_NAME}MirrorConsumer.lean" "${MODULE_NAME}MirrorConsumer.olean" /tmp/q0-blockfar/
           fi
+          # Original-coverage consumer for the exact input table, including reflection.
+          cp ../agent8-coverage-contract/Frontier.lean .
+          lean -o Frontier.olean Frontier.lean 2>&1 | tee -a /tmp/q0-blockfar/compile.log
+          lean -o BlockFARBridge.olean BlockFARBridge.lean 2>&1 | tee -a /tmp/q0-blockfar/compile.log
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          name=os.environ["MODULE_NAME"]
+          width=int(os.environ["WIDTH"])
+          flip=os.environ["FLIP"].lower()=="true"
+          raw=os.environ["TABLE"].replace("_","")
+          assert len(raw)==36 and all(c in "01LRABCDEF-" for c in raw)
+          moves=[]
+          for i in range(0,36,3):
+              t=raw[i:i+3]
+              moves.append("none" if t=="---" else f"some ⟨{str(t[0]=='1').lower()}, {str(t[1]=='R').lower()}, {ord(t[2])-65}⟩")
+          ns="BB6BlockFAR"+("" if width==3 else str(width))+"."+name
+          proof_import=name+"MirrorConsumer" if flip else name+"Proof"
+          actual="BB6BlockFAR."+name+"MirrorConsumer.originalMachine" if flip else ns+".machine"
+          never="BB6BlockFAR."+name+"MirrorConsumer.never_original" if flip else ns+".never"
+          source=f"""import BlockFARBridge
+          import {proof_import}
+
+          namespace BB6Generated.{name}
+          def literal : BB6BlockFAR.Table := fun q b =>
+            ([{','.join(moves)}] : List (Option BB6BlockFAR.Move))[2*q.val+b.toNat]?.getD none
+          theorem exact_table : {actual} = literal := by
+            funext q b
+            have h : ∀ q : Fin 6, ∀ b : Bool, {actual} q b = literal q b := by decide
+            exact h q b
+          def sourceTable : BB6Coverage.PartialMachine := BB6BlockFAR.partialTable literal
+          theorem source_never (m : BB6Coverage.Machine) (hm : BB6Coverage.compatible sourceTable m) :
+              BB6Coverage.NeverHalts m := by
+            apply BB6BlockFAR.transfer_never literal m hm
+            rw [← exact_table]
+            exact {never}
+          theorem cover (B : Nat) : BB6Coverage.Cover (BB6Coverage.DecidedBelow B) sourceTable :=
+            .leaf sourceTable (fun m hm => Or.inl (source_never m hm))
+          #print axioms exact_table
+          #print axioms source_never
+          #print axioms cover
+          end BB6Generated.{name}
+          """
+          Path(name+"SourceConsumer.lean").write_text(source)
+          PY
+          lean -o "${MODULE_NAME}SourceConsumer.olean" "${MODULE_NAME}SourceConsumer.lean" 2>&1 | tee -a /tmp/q0-blockfar/compile.log
+          cp "${MODULE_NAME}SourceConsumer.lean" "${MODULE_NAME}SourceConsumer.olean" /tmp/q0-blockfar/
           if grep -Eq 'sorryAx|native_decide' /tmp/q0-blockfar/compile.log; then
             echo "Forbidden proof placeholder or native_decide found" >&2
             exit 1
