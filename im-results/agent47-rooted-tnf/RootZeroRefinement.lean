@@ -59,7 +59,9 @@ theorem raw0Child_path (mv : Move) : RawRootPath (raw0Child mv) := by
 
 theorem raw0Child_root (mv : Move) :
     raw0Child mv initialSlot = some (some ⟨true, true, 1⟩) := by
-  simp [raw0Child, raw0, refine, BB6.Agent50TNFPilot.root, initialSlot]
+  simp [raw0Child, raw0, raw0Entry, raw0AfterTwo, refine,
+    knownRun, knownStep, BB6.Agent50TNFPilot.root, blank, readSlot, applyMove,
+    initialSlot]
 
 theorem raw0Child_noAssignedHalt (mv : Move) :
     weightedTNFNoAssignedHalt (raw0Child mv) := by
