@@ -1542,6 +1542,7 @@ jobs:
           target=im-results/agent3-tnf-raw120/Raw120Late.lean
           if [ "$TARGET" = weighted-tnf-raw120-1341 ]; then
             python im-results/agent13-raw120-late1341/generate.py
+            python im-results/agent13-raw120-late1341/generate_fast.py
             target=im-results/agent13-raw120-late1341/Raw120Late1341.lean
           elif [ "$TARGET" = weighted-tnf-raw120-cycles ]; then
             target=im-results/agent3-tnf-raw120/Raw120EasyCycles.lean

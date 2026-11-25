@@ -40,7 +40,7 @@ print('actions',len(A),'counts',Counter(x[0] for x in A),'steps by kind',{k:sum(
 
 def write(out,name,imports,body):
     text=''.join(f'import {m}\n' for m in imports)
-    text+='set_option maxRecDepth 100000\nset_option maxHeartbeats 0\nnamespace BB6.Agent13Raw120Late1341\nopen BB6Coverage BB6Coverage.Agent13PackedZipper BB6Coverage.Agent10ZipAudit\n'
+    text+='set_option maxRecDepth 100000\nset_option maxHeartbeats 0\nset_option exponentiation.threshold 1024\nnamespace BB6.Agent13Raw120Late1341\nopen BB6Coverage BB6Coverage.Agent13PackedZipper BB6Coverage.Agent10ZipAudit\n'
     (out/(name+'.lean')).write_text(text+body+'\nend BB6.Agent13Raw120Late1341\n')
 
 out=Path(sys.argv[1]) if len(sys.argv)>1 else Path(__file__).with_name('generated')
@@ -60,8 +60,8 @@ assert time==N
 write(out,'Late1341FastBase',['Late1341Action'],'\n'.join(base))
 body=['private theorem fp0 : runP table 0 startP = some s0 := rfl']
 for j,start,end,name in parts:
-    body.append(f'private theorem fp{j+1} : runP table {end} startP = some s{j+1} := joinP fp{j} fastPart{j}')
-body += [f'theorem fastTrace : runP table {N} startP = some s{len(parts)} := fp{len(parts)}',f'theorem fastQuery : zipRead table {N} = some (0,true) := by\n  rw [← readRunP_eq,readRunP,fastTrace]\n  rfl','#print axioms fastQuery']
+    body.append(f'private theorem fp{j+1} : runP table {end} startP = some s{j+1} := @joinP table {start} {end-start} startP s{j} s{j+1} fp{j} fastPart{j}')
+body += [f'theorem fastTrace : runP table {N} startP = some s{len(parts)} := fp{len(parts)}',f'theorem fastQuery : zipRead table {N} = some (0,true) := by\n  rw [← readRunP_eq]\n  exact congrArg (fun x => x.map readP) fastTrace','#print axioms fastQuery']
 write(out,'Late1341FastTrace',[p[3] for p in parts],'\n'.join(body));print('shards',len(parts))
 # Preserve the semantic consumer's existing interface. The primitive generator remains a fallback.
 write(out,'Late1341Trace',['Late1341FastTrace'],
