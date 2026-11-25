@@ -1,6 +1,6 @@
 # Raw108: six-hole frontier cylinder
 
-Parent `1RB---_1RC---_0RD---_1LD1RE_---1LB_------`; first query B1 at ordinary time 7. The root cut leaves 20 nontrivial children. All 20 children now have candidate dispositions; the final 0LB witness is locally kernel-checked against the copied exact zipper core; **the unconditional parent bound is not established**. The candidate bound must accommodate long halters beyond the early 7014 cutoff, especially 0LE (192168).
+Parent `1RB---_1RC---_0RD---_1LD1RE_---1LB_------`; first query B1 at ordinary time 7. The root cut leaves 20 nontrivial children. All 20 children now have candidate dispositions; the final 0LB witness has passed original-source Lean certification; **the unconditional parent bound is not established**. The candidate bound must accommodate long halters beyond the early 7014 cutoff, especially 0LE (192168).
 
 | B1 | Candidate weighted bound | Open leaves |
 |---|---:|---:|
@@ -45,10 +45,10 @@ The ordered census of 1,956 open leaves is pinned by its SHA-256 digest in [spec
 
 ## 0LB: final candidate leaf solved
 
-The 3890-leaf roster has SHA-256 560bb574bb444f71d13cd205a95bd74f8879b36a0501a54a00a95241497b7508. The compressed base descriptor plus [extra overlay](0LB-extra.json) account for 3889 leaves, including all 24 ordinary continuations of delayed split #1930 (time 91502, A1). Its longest observed continuation reaches the last hole at 4136174 ordinary steps. Candidate bound 4136180. The last leaf #2822 now has a four-phase positive-return induction for all natural parameters, entered from blank at step 1828. See [the recurrence](Gap2822.md) and [Lean source](Raw108LB2822.lean). Local Lean accepts the exact zipper recurrence and entry; the original-source adapter and full 0LB audit are separate acceptance gates.
+The 3890-leaf roster has SHA-256 560bb574bb444f71d13cd205a95bd74f8879b36a0501a54a00a95241497b7508. The compressed base descriptor plus [extra overlay](0LB-extra.json) account for 3889 leaves, including all 24 ordinary continuations of delayed split #1930 (time 91502, A1). Its longest observed continuation reaches the last hole at 4136174 ordinary steps. Candidate bound 4136180. The last leaf #2822 now has a four-phase positive-return induction for all natural parameters, entered from blank at step 1828. See [the recurrence](Gap2822.md) and [Lean source](Raw108LB2822.lean). The original-source adapter and recurrence passed [45695725613](https://github.com/FlareZ123/bb6/actions/runs/45695725613); the full 0LB audit is a separate acceptance gate.
 
 ## Remaining obligations
 
-The 0LB descriptor must be consumed by the generator (including the delayed split and n-gram/block witnesses). For each completed child, the original-source `all_completions` theorem must be accepted. Integrate those weighted bounds with the root cut and the mixed-score canonical quotient; lift the small-cutoff branches to the maximum actual certified child bound (at least 4136180 from current candidates) or the attained champion score B.
+The 0LB descriptor is now consumed by the extended generator (including delayed split and n-gram/block witnesses); its first full audit is [45696008658](https://github.com/FlareZ123/bb6/actions/runs/45696008658). For each completed child, the original-source `all_completions` theorem must be accepted. Integrate those weighted bounds with the root cut and the mixed-score canonical quotient; lift the small-cutoff branches to the maximum actual certified child bound (at least 4136180 from current candidates) or the attained champion score B.
 
 Reproduce with `python generate.py <B1>` and manual `agent10-four-hole.yml` target `raw108-child`. The checker reconstructs the exact ordered census, replays each sweep, and checks the FAR masks and all leaf certificates. Candidate source, not an accepted full proof, is preserved in this dossier. 
