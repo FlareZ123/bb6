@@ -11,7 +11,7 @@ theorem universal_arrival_potential (x : Nat) :
   | ind x ih =>
     intro i r hx hr
     cases hp : Cap.predecessor x with
-    | none => rw [arrivalCost,hp]; omega
+    | none => rw [arrivalCost,hp]; exact Nat.zero_le _
     | some p =>
       have e := Cap.predecessor_sound hp
       have hg := Cap.edge_grows e
@@ -33,7 +33,7 @@ theorem universal_arrival_potential (x : Nat) :
           · omega
         subst p
         have heq : x=5 := by simpa [Cap.f] using hf.symm
-        subst x
+        rw [heq] at hx
         have hband : Cap.lo i≤5 ∧ 5<Cap.lo (i+1) := by rw [Cap.lo_step]; omega
         have hband0 : Cap.lo 0≤5 ∧ 5<Cap.lo (0+1) := by decide
         have hi := Cap.band_unique hband hband0
