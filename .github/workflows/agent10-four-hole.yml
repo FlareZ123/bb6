@@ -4,7 +4,7 @@ on:
     inputs:
       target:
         type: choice
-        options: [twelve, five-hole, recursive, raw107-witness, raw121-witness, raw121-membership, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-gap, raw108-long, raw108-le-trace, raw108-block10-core, raw108-block895, raw108-block895-narrow, raw108-split1930-narrow, raw108-lb0, raw108-weight-core, cached-audit-core, raw108-sharded, raw108-resume, raw108-compose, raw108-child, raw108-graft, raw58-cut, raw58-more, raw58-more2, raw58-more3, raw58-rc, raw58-child, raw109-cut, raw109-refine, raw109-refine6, raw109-refine7, raw109-refine8, raw109-refine9, raw109-refine12, raw109-final-leaves, raw109-closed, raw109-sharded]
+        options: [twelve, five-hole, recursive, raw107-witness, raw121-witness, raw121-membership, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-gap, raw108-long, raw108-le-trace, raw108-block10-core, raw108-block895, raw108-block895-narrow, raw108-split1930-narrow, raw108-lb0, raw108-lb0-reuse, raw108-weight-core, cached-audit-core, raw108-sharded, raw108-resume, raw108-compose, raw108-child, raw108-graft, raw58-cut, raw58-more, raw58-more2, raw58-more3, raw58-rc, raw58-child, raw109-cut, raw109-refine, raw109-refine6, raw109-refine7, raw109-refine8, raw109-refine9, raw109-refine12, raw109-final-leaves, raw109-closed, raw109-sharded]
         default: twelve
       raw108_pins:
         description: 'JSON per-group run_id and full revision pins for raw108-compose'
@@ -31,7 +31,7 @@ permissions:
   actions: read
 jobs:
   check:
-    if: inputs.target != 'raw109-sharded' && inputs.target != 'raw108-sharded' && inputs.target != 'raw108-resume' && inputs.target != 'raw108-lb0' && inputs.target != 'raw108-compose'
+    if: inputs.target != 'raw109-sharded' && inputs.target != 'raw108-sharded' && inputs.target != 'raw108-resume' && inputs.target != 'raw108-lb0' && inputs.target != 'raw108-lb0-reuse' && inputs.target != 'raw108-compose'
     runs-on: ubuntu-latest
     # Raw58 child and parent closures can exceed 60m; keep unrelated targets at 60m.
     timeout-minutes: ${{ (inputs.target == 'raw58-child' || inputs.target == 'raw58-more3') && 120 || 60 }}
@@ -604,25 +604,51 @@ jobs:
           retention-days: 30
 
   raw108-shards:
-    if: inputs.target == 'raw108-sharded' || inputs.target == 'raw108-resume' || inputs.target == 'raw108-lb0'
+    if: inputs.target == 'raw108-sharded' || inputs.target == 'raw108-resume' || inputs.target == 'raw108-lb0' || inputs.target == 'raw108-lb0-reuse'
     strategy:
       fail-fast: false
       max-parallel: 3
       matrix:
-        group: ${{ fromJSON(inputs.target == 'raw108-lb0' && '["lb0"]' || inputs.target == 'raw108-resume' && '["lb0","la0","medium1","medium2","le0"]' || '["lb0","la0","cut","small","medium1","medium2","lf1","le1","le0","lf0"]') }}
+        group: ${{ fromJSON((inputs.target == 'raw108-lb0' || inputs.target == 'raw108-lb0-reuse') && '["lb0"]' || inputs.target == 'raw108-resume' && '["lb0","la0","medium1","medium2","le0"]' || '["lb0","la0","cut","small","medium1","medium2","lf1","le1","le0","lf0"]') }}
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Install pinned Lean
         run: |
           set -euo pipefail
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Restore accepted LB0 exceptional witnesses
+        if: inputs.target == 'raw108-lb0-reuse'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          root=im-results/agent10-raw108
+          dest=/tmp/a10-raw108-lb0-witnesses
+          mkdir -p "$dest"
+          gh run download 45719411601 --name raw108-block895 --dir "$dest/raw108-block895"
+          gh run download 45720878969 --name raw108-split1930-narrow --dir "$dest/raw108-split1930-narrow"
+          python - <<'PY'
+          import json, pathlib, subprocess
+          groups = {"block895": ["Raw108LBBlock895"], "split1930-narrow": [f"Raw108LBSplit1930Kid{i}" for i in (0,3,6,7,9,11,12,13,15,17,18,19,21,23)]}
+          pins = {"block895": {"run_id": "45719411601", "revision": "f1ed25b2db3c4b1f2bc693fbc596248fa8159745"}, "split1930-narrow": {"run_id": "45720878969", "revision": "8313deb87693c888658d5b1e31f0c0189d4d2d8d"}}
+          for p in pins.values():
+              rev = p["revision"]
+              if subprocess.run(["git", "cat-file", "-e", rev+"^{commit}"]).returncode:
+                  subprocess.run(["git", "fetch", "--no-tags", "origin", rev], check=True)
+          pathlib.Path("/tmp/a10-lb0-witness-config.json").write_text(json.dumps({"artifact_prefix": "raw108", "groups": groups}))
+          pathlib.Path("/tmp/a10-lb0-witness-pins.json").write_text(json.dumps(pins))
+          PY
+          python "$root/merge_resume.py" "$dest" /tmp/a10-lb0-witness-union /tmp/a10-lb0-witness-config.json /tmp/a10-lb0-witness-pins.json
       - name: Certify original-source shard
         env:
           GROUP: ${{ matrix.group }}
+          TARGET: ${{ inputs.target }}
         run: |
           set -euo pipefail
           root=im-results/agent10-raw108
@@ -656,7 +682,13 @@ jobs:
             done
           fi
           work=/tmp/a10-raw108-shard
-          python tools/lean_compile_closure.py --workdir "$work" --jobs 1 \
+          reuse=()
+          jobs=1
+          if [ "$TARGET" = raw108-lb0-reuse ]; then
+            reuse=(--precompiled-dir /tmp/a10-lb0-witness-union --precompiled-manifest /tmp/a10-lb0-witness-union/manifest.json)
+            jobs=2
+          fi
+          python tools/lean_compile_closure.py --workdir "$work" --jobs "$jobs" "${reuse[@]}" \
             --manifest "$work/manifest.json" --label "raw108-shard-$GROUP" \
             --artifact-name "raw108-shard-$GROUP" \
             --provenance-input "$root/specs.json" --provenance-input "$root/generate.py" \
@@ -672,6 +704,16 @@ jobs:
             "${roots[@]}" 2>&1 | tee /tmp/a10-raw108-shard.log
           python im-results/agent4-raw109/audit_axioms.py /tmp/a10-raw108-shard.log "${theorems[@]}"
           cp /tmp/a10-raw108-shard.log "$work/audit.log"
+          if [ "$TARGET" = raw108-lb0-reuse ]; then
+            python - "$work/manifest.json" <<'PY'
+          import json, sys
+          m = json.load(open(sys.argv[1]))
+          expected = {"Raw108LBBlock895"} | {f"Raw108LBSplit1930Kid{i}" for i in (0,3,6,7,9,11,12,13,15,17,18,19,21,23)}
+          reused = set(m["precompiled_core"]["reused_modules"])
+          if not expected <= reused:
+              raise SystemExit(f"Accepted exceptional witness not reused: {sorted(expected-reused)}")
+          PY
+          fi
       - name: Retain certified shard
         uses: actions/upload-artifact@v4
         with:
@@ -679,7 +721,7 @@ jobs:
           path: /tmp/a10-raw108-shard/
           retention-days: 30
       - name: Tighten 0LB weighted cutoff using the accepted shard
-        if: matrix.group == 'lb0' && inputs.target == 'raw108-lb0'
+        if: matrix.group == 'lb0' && (inputs.target == 'raw108-lb0' || inputs.target == 'raw108-lb0-reuse')
         run: |
           set -euo pipefail
           work=/tmp/a10-raw108-lb0-exact
@@ -693,7 +735,7 @@ jobs:
           python im-results/agent4-raw109/audit_axioms.py /tmp/a10-raw108-lb0-exact.log BB6.Agent10Raw108LBExact.exact_upper
           cp /tmp/a10-raw108-lb0-exact.log "$work/audit.log"
       - name: Retain tightened 0LB proof
-        if: matrix.group == 'lb0' && inputs.target == 'raw108-lb0'
+        if: matrix.group == 'lb0' && (inputs.target == 'raw108-lb0' || inputs.target == 'raw108-lb0-reuse')
         uses: actions/upload-artifact@v4
         with:
           name: raw108-lb0-exact
