@@ -8,7 +8,7 @@ on:
         default: twelve
       raw107_witness:
         type: choice
-        options: ['180', '1655', '1424']
+        options: ['180', '1655', '1424', '385']
         default: '180'
       raw107_child:
         description: 'B1 action for an individual raw107 child source audit'
@@ -73,8 +73,12 @@ jobs:
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
-          case "$WITNESS" in 180|1655|1424) ;; *) exit 2 ;; esac
-          python tools/lean_compile_closure.py --workdir /tmp/a10-raw107-witness --jobs 4 "im-results/agent11-raw107/Raw107LF${WITNESS}.lean" | tee /tmp/a10-raw107-witness.log
+          case "$WITNESS" in
+            180|1655|1424) module="Raw107LF${WITNESS}" ;;
+            385) module=Raw107LA385 ;;
+            *) exit 2 ;;
+          esac
+          python tools/lean_compile_closure.py --workdir /tmp/a10-raw107-witness --jobs 4 "im-results/agent11-raw107/${module}.lean" | tee /tmp/a10-raw107-witness.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a10-raw107-witness.log; then exit 1; fi
       - name: Verify one complete raw107 child against original source
         if: inputs.target == 'raw107-child'
