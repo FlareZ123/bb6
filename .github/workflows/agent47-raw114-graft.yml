@@ -695,7 +695,7 @@ jobs:
       - name: Restore raw110 Lean sources without reusing foreign oleans
         run: |
           set -euo pipefail
-          find /tmp/raw110-parent -type f -name '*.lean' ! -name 'TNFPilot.lean' -print0 |
+          find /tmp/raw110-parent -type f -name 'Raw110*.lean' -print0 |
             while IFS= read -r -d '' src; do
               dest="im-results/agent7-raw110/$(basename "$src")"
               if [ ! -f "$dest" ]; then
@@ -880,7 +880,7 @@ jobs:
           python im-results/agent8-tnf-raw117/generate.py
           python im-results/agent11-raw121/prepare_raw121.py
           python im-results/agent47-raw112-cut/generate.py | tee /tmp/a31-raw112-generation.log
-          find /tmp/raw110-parent -type f -name '*.lean' ! -name 'TNFPilot.lean' -print0 |
+          find /tmp/raw110-parent -type f -name 'Raw110*.lean' -print0 |
             while IFS= read -r -d '' src; do
               dest="im-results/agent7-raw110/$(basename "$src")"
               if [ ! -f "$dest" ]; then cp "$src" "$dest"; fi
