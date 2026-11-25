@@ -34,26 +34,41 @@ EXTRA = {
     },
 }
 
-def main(branch="1LB"):
+def cases_for(branch, opens=None):
+    cases = dict(CASES if branch == "1LB" else EXTRA.get(branch, {}))
+    if opens is not None:
+        for row in (ROOT / "block_groups.txt").read_text().splitlines():
+            if not row or row.startswith("#"): continue
+            left, right = row.split(":")
+            b, w, c, m, r = left.split()
+            if b != branch: continue
+            for i in map(int, right.split()):
+                assert i not in cases
+                cases[i] = (opens[i], *map(int, (w,c,m,r)))
+        for i,(table,*_) in cases.items():
+            assert opens[i] == table
+    return cases
+
+def main(branch="1LB", opens=None):
     # The specialization script produces a finite-width kernel checker.
-    subprocess.run([sys.executable, str(BLOCK / "specialize.py"), "4"], check=True)
+    cases = cases_for(branch, opens)
+    if any(row[1] == 4 for row in cases.values()):
+        subprocess.run([sys.executable, str(BLOCK / "specialize.py"), "4"], check=True)
     # Frontier defines the BB6Coverage types used by raw59 (via RootShift/Symmetry).
     bridge = (BLOCK / "BlockFARBridge.lean").read_text()
-    cases = CASES if branch == "1LB" else EXTRA[branch]
     prefix = "Raw59LB1" if branch == "1LB" else f"Raw59{branch}"
     for i, (table, width, cap, mod, runs) in cases.items():
         name = f"{prefix}M{i}"
-        ns = f"BB6BlockFAR{width}"
+        ns = "BB6BlockFAR" if width == 3 else f"BB6BlockFAR{width}"
         generate(table, ROOT, width=width, cap=cap, mod=mod, runs=runs,
                  name=name, minimize_left=True)
         # Reuse the exact Frontier source bridge with the specialized block types.
-        text = bridge
-        text = text.replace("import BlockFAR\n", f"import BlockFAR{width}\n")
-        text = text.replace("BB6BlockFAR", ns)
-        # The import is not namespaced and must not be renamed twice.
-        (ROOT / f"Raw59LB1BlockBridge{width}.lean").write_text(text)
+        bridge_mod = "BlockFARBridge" if width == 3 else f"Raw59LB1BlockBridge{width}"
+        if width != 3:
+            text = bridge.replace("import BlockFAR\n", f"import BlockFAR{width}\n").replace("BB6BlockFAR", ns)
+            (ROOT / f"{bridge_mod}.lean").write_text(text)
         (ROOT / f"{prefix}Block{i}.lean").write_text(f"""import {name}Proof
-import Raw59LB1BlockBridge{width}
+import {bridge_mod}
 namespace BB6.Agent32{prefix}Block{i}
 def table : BB6Coverage.PartialMachine := {ns}.partialTable {ns}.{name}.machine
 theorem never (m : BB6Coverage.Machine) (hm : BB6Coverage.compatible table m) :
