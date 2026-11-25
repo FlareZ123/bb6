@@ -1623,7 +1623,7 @@ jobs:
               "raw107_manifest_sha256": hashlib.sha256(raw_path.read_bytes()).hexdigest(),
           }
           out = root / "manifest/combined-canonical77-raw107-manifest.json"
-          out.write_text(json.dumps(combined, indent=2, sort_keys=True) + "\\n")
+          out.write_text(json.dumps(combined, indent=2, sort_keys=True) + "\n")
           print(f"Validated {len(base_modules)} canonical77 and {len(raw_modules)} raw107 modules; merged {len(merged)} precompiled objects.")
           PY
       - name: Reconstruct held-leaf source dependencies
