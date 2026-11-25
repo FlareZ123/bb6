@@ -225,8 +225,8 @@ def build_child(key,spec):
                 if candidate[0]:
                     found=(params,params); cert=candidate; break
             if found is None:
-                for paramsL in params_grid:
-                    for paramsR in params_grid:
+                for paramsL in asym_grid:
+                    for paramsR in asym_grid:
                         if paramsL==paramsR: continue
                         candidate=run_automata(p,paramsL,paramsR,limit=12000)
                         if candidate[0]:
