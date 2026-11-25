@@ -17,7 +17,7 @@ private theorem run_parent_law : BB6.Agent21Dyadic.ParentLaw RunReach := by
   intro x y v hr hy hmod hgt
   obtain ⟨a,k,hreach,hedge⟩ := BB6.Agent19Root32Cone.run_parent_of_right_ge8 x y hy hr
   have hi := (complete_section_inverse a k x y (by omega)).mp hedge
-  exact ⟨a,k,hreach,parent_equations a k x y v hy hmod hgt hi⟩
+  exact ⟨a,k,hreach,BB6.Agent13AffineCone.parent_equations a k x y v hy hmod hgt hi⟩
 
 private theorem unscale_lift (p a u : Nat) (h : 2^p∣22155*a+105*u) :
     2^p∣211*a+u := by
@@ -36,6 +36,30 @@ private theorem large_of_right (n q y : Nat)
   unfold BB6.Agent19Shadow.RightLarge at h
   omega
 
+private theorem signedAcc_eq (S : Int) (w : List Nat) :
+    signedAcc S w=BB6.Agent21Dyadic.acc S w := by
+  induction w generalizing S with
+  | nil => rfl
+  | cons d ds ih =>
+    change signedOffset S d+P d*signedAcc (S+shift d) ds=
+      BB6.Agent21Dyadic.offset S d+BB6.Agent21Dyadic.P d*
+        BB6.Agent21Dyadic.acc (S+BB6.Agent21Dyadic.shift d) ds
+    rw [ih]
+    rfl
+
+private theorem openAt_convert (a b n : Nat)
+    (h : BB6.Agent21Dyadic.OpenAt (BB6.Agent21Dyadic.S a b) (BB6.Agent21Dyadic.Z a b) n) :
+    SignedOpen (sourceS a b) (sourceZ a b) n := by
+  rcases h with ⟨w,hp,hc,hd⟩|⟨w,d,h2,hp,hc,hd⟩
+  · left
+    refine ⟨w,hp,hc,?_⟩
+    rw [signedAcc_eq]
+    exact hd
+  · right
+    refine ⟨w,d,h2,hp,hc,?_⟩
+    rw [signedAcc_eq]
+    exact hd
+
 /-- Source reachability forces an actual nonempty compact bit frontier;
     no recursive valuation guard or source-coordinate materialization. -/
 theorem run_bits_excluded (m x n q a b : Nat)
@@ -47,14 +71,14 @@ theorem run_bits_excluded (m x n q a b : Nat)
   intro hr
   have ho := BB6.Agent21Dyadic.reach_open RunReach run_parent_law n a b
     (large_of_right n q b hs hn) hr
-  change SignedOpen (sourceS a b) (sourceZ a b) n at ho
+  have ho' := openAt_convert a b n ho
   have hm : BB6.Agent19Scalar.U m x+2*BB6.Agent19Scalar.V m x=5+211*m := by
     simp only [BB6.Agent19Scalar.Good,BB6.Agent19Scalar.U,BB6.Agent19Scalar.V,
       BB6.Agent19Scalar.base,BB6.Agent19Scalar.s] at g ⊢
     omega
   have ha := unscale_lift (n+1) a (BB6.Agent19Scalar.U m x) hl.1
   have hb := unscale_lift (n+1) b (BB6.Agent19Scalar.V m x) hl.2
-  obtain ⟨v,hv⟩ := source_frontier_nonempty m x _ _ a b n hm rfl ha hb ho
+  obtain ⟨v,hv⟩ := source_frontier_nonempty m x _ _ a b n hm rfl ha hb ho'
   rw [(check_iff m x n).mp hc] at hv
   simp at hv
 
@@ -102,9 +126,18 @@ theorem root32_no_highstop_bits (r E u n : Nat)
   obtain ⟨gd,gl,gp⟩ := rays_good j
   simp only [threeBitsExcluded,Bool.and_eq_true] at hc
   rcases hr with hD | hL | hP
-  · exact run_bits_excluded _ _ n (E-17) _ _ gd (by rwa [du,dv]) sd hn hc.1.1 hD
-  · exact run_bits_excluded _ _ n (E-17) _ _ gl (by rwa [lu,lv]) sl hn hc.1.2 hL
-  · exact run_bits_excluded _ _ n (E-17) _ _ gp (by rwa [pu,pv]) sp hn hc.2 hP
+  · apply run_bits_excluded (BB6.Agent19Scalar.dRay.m j) (BB6.Agent19Scalar.dRay.x j)
+      n (E-17) _ _ gd ?_ sd hn hc.1.1 hD
+    rw [du,dv]
+    exact hd
+  · apply run_bits_excluded (BB6.Agent19Scalar.lRay.m j) (BB6.Agent19Scalar.lRay.x j)
+      n (E-17) _ _ gl ?_ sl hn hc.1.2 hL
+    rw [lu,lv]
+    exact hl
+  · apply run_bits_excluded (BB6.Agent19Scalar.pRay.m j) (BB6.Agent19Scalar.pRay.x j)
+      n (E-17) _ _ gp ?_ sp hn hc.2 hP
+    rw [pu,pv]
+    exact hp
 
 #print axioms run_bits_excluded
 #print axioms root32_no_highstop_bits
