@@ -88,6 +88,10 @@ def main():
             ns="BB6.Agent8Raw54.Pair"
             certs[misses[i]]=f".proven ({ns}.table {variant}) ({ns}.never {variant})"
             imports[misses[i]]="Raw54Pair"
+        for i,variant in [(62,"false"),(63,"true")]:
+            ns="BB6.Agent8Raw54.LeftPair"
+            certs[misses[i]]=f".proven ({ns}.table {variant}) ({ns}.never {variant})"
+            imports[misses[i]]="Raw54LeftPair"
         for i in [38,39,40,42,56,61,67,69]:
             ns=f"BB6.Agent8Raw54.Rec{i}"
             certs[misses[i]]=f".proven {ns}.table {ns}.never"
