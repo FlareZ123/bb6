@@ -95,11 +95,6 @@ jobs:
           cp im-results/agent10-tnf-multipump/chunk_checks.py pinned/im-results/agent10-tnf-multipump/
           cp im-results/agent13-coverage/unpack.py pinned/im-results/agent13-coverage/
           cp im-results/agent13-coverage/BB6Coverage.lean.xz.b64 pinned/im-results/agent13-coverage/
-          mkdir -p pinned/im-results/agent48-counted-inc0 pinned/im-results/agent48-champion-root pinned/im-results/agent13-weighted-first-one
-          rm -rf pinned/im-results/agent48-counted-inc0 pinned/im-results/agent48-champion-root pinned/im-results/agent13-weighted-first-one
-          cp -a im-results/agent48-counted-inc0 pinned/im-results/
-          cp -a im-results/agent48-champion-root pinned/im-results/
-          cp -a im-results/agent13-weighted-first-one pinned/im-results/
           PARENT_REV="$(cat /tmp/a11-parent-revision.txt)"
           git show "$PARENT_REV:.github/workflows/agent11-raw121-parent.yml" > pinned/.github/workflows/agent11-raw121-parent.yml
           git show "$PARENT_REV:im-results/agent4-raw109/merge_shards.py" > pinned/im-results/agent4-raw109/merge_shards.py
@@ -222,7 +217,7 @@ jobs:
             --workdir /tmp/a11-raw121-graft --jobs 4 \
             --manifest /tmp/a11-raw121-graft/manifest.json \
             --label raw121-canonical76-graft \
-            --theorem BB6.Agent11Raw121Canonical77Graft.exact_from_canonical76_at_champion_score \
+            --theorem BB6.Agent11Raw121Canonical77Graft.exact_at_target \
             --artifact-name raw121-canonical76-graft-proof \
             --precompiled-manifest /tmp/a11-graft-union/manifest.json \
             --precompiled-dir /tmp/a11-graft-union \
@@ -232,11 +227,10 @@ jobs:
             2>&1 | tee /tmp/a11-raw121-graft.log
           python im-results/agent4-raw109/audit_axioms.py \
             /tmp/a11-raw121-graft.log \
-            BB6.Agent11Raw121Canonical77Graft.champion_score_gt_7014 \
             BB6.Agent11Raw121Canonical77Graft.parent_present \
             BB6.Agent11Raw121Canonical77Graft.roster76_count \
             BB6.Agent11Raw121Canonical77Graft.roster76_sound \
-            BB6.Agent11Raw121Canonical77Graft.exact_from_canonical76_at_champion_score
+            BB6.Agent11Raw121Canonical77Graft.exact_at_target
           if grep -Eq 'sorryAx|native_decide' /tmp/a11-raw121-graft.log; then
             exit 1
           fi
