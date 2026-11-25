@@ -2,7 +2,7 @@ import Agent27GapTwoArithmetic
 import Agent8RootCorridorSource
 import Lean.Elab.Tactic.Omega
 namespace BB6.Agent27GapTwoThreeStepSource
-open BusyBeaver.BB6.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA
+open BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LD0LA_1LF1LC_HHH0LA
 open BB6.Agent49ParitySource
 open BB6.Agent27GapTwoArithmetic
 set_option maxRecDepth 1000000

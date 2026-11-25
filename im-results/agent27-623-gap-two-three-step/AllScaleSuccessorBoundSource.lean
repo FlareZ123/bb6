@@ -4,7 +4,7 @@ import Lean.Elab.Tactic.Omega
 
 namespace BB6.Agent27AllScaleSuccessorBoundSource
 
-open BusyBeaver.BB6.M_1RB0LE_0RC1RC_0RD1LA_1LF1LC_HHH0LA
+open BusyBeaver.M_1RB0LE_0RC1RC_0RD1LA_1LF1LC_HHH0LA
 open BB6.Agent49ParitySource
 open BB6.Agent49DrainLinearLogSource
 open BB6.Agent8DrainQuadraticLogSource

@@ -1,6 +1,6 @@
 # Exceptional sectors and low-scale exclusion (#623)
 
-Status: gap-two arithmetic checked locally in Lean 4.36.0-rc2; original-source composition in CI run 45724279858. The all-scale successor bound and low-scale exclusion passed a local exact-equation syntax preflight with imported lemma assumptions; their original-source check remains pending.
+Status: gap-two arithmetic checked locally in Lean 4.36.0-rc2; original-source composition first run 45724279858 failed at the new module due an incorrect namespace prefix (`BusyBeaver.BB6.M_` rather than `BusyBeaver.M_`); corrected in both new modules for the next run. The all-scale successor bound and low-scale exclusion passed a local exact-equation syntax preflight with imported lemma assumptions; their original-source check remains pending.
 
 For a blank-root terminal chain q → p → h → none, q=D(a,d) cannot satisfy a=d+2. Root parity forces a even. If a≥32, the actual transition is drainB 0 a 2. Set k=floor(a/8). Induction gives 8(k+1)≤3^k for k≥4, so a<3^k. Source drain bounds yield p=D(x,y) with x≤k, y≥3a+2. Consequently y≥16x+24. The penultimate-root corridor requires y<16x if odd or y<14x+24 if even, a contradiction. If a<32, mass growth gives t≤7 and exact kernel decisions exclude all eight small visits.
 
