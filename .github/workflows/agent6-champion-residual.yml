@@ -52,7 +52,7 @@ jobs:
           printf '%s  %s\n' 1bce2075fc4e0cd7d740fb71b3796088b190ddb6766e04640d992dadd1b650ff "$work/imports/TerminalLeft.lean" | sha256sum -c -
       - name: Generate Raw68/Raw72/Raw82 source modules
         run: python3 im-results/agent10-tnf-multipump/generate.py 68 72 82
-      - name: Compile the 109-roster replacement and champion frontier
+      - name: Compile the champion frontier and depth-five F1 sibling refinement
         run: |
           set -euo pipefail
           work=/tmp/a6-champion-residual
@@ -61,6 +61,7 @@ jobs:
             im-results/agent6-champion-residual/ChampionResidualParentIntegration.lean \
             im-results/agent6-champion-residual/F0SiblingIntegration.lean \
             im-results/agent6-champion-residual/F0SiblingIntegrationExtended.lean \
+            im-results/agent48-champion-root/ChampionF1SiblingIntegration.lean \
             --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean \
             --override OuterLCIncPrelude=im-results/agent8-counted-reset/OuterLCIncPrelude.lean \
             --override M0OddResidueSeven=im-results/agent41-m0-n16r7/M0OddResidueSeven.lean \
@@ -103,6 +104,15 @@ jobs:
               "remainingExtended_count",
               "refined_residual_cover",
               "exact_from_remainingExtended",
+              "oneLF_is_depth5_sibling",
+              "zeroRD_is_depth5_sibling",
+              "cover_oneLF",
+              "cover_zeroRD",
+              "remainingF1Extended_count",
+              "removedF1_count",
+              "cover_remainingExtended",
+              "refined_residual_cover",
+              "exact_from_remainingF1Extended",
               "champion_score_gt_7014",
               "champion_compatible_root",
               "champion_not_weighted_7014",
