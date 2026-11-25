@@ -106,6 +106,7 @@ jobs:
         if: inputs.target == 'enumerate62-q32-canonical-parent'
         run: |
           cp "$GITHUB_WORKSPACE/research/im-results/agent44-source-roster/Agent44Q32CanonicalParent.v" original/verify/
+          cp "$GITHUB_WORKSPACE/research/im-results/agent8-adaptive-source-plan/Agent8SourceWF.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent44-source-roster/Agent44Q32FirstHoleCoverageProbe.v" original/verify/
       - name: Add exact final twenty-root checkpoint
         if: inputs.target == 'enumerate62-resume-last20' || inputs.target == 'enumerate62-last20-witness'
