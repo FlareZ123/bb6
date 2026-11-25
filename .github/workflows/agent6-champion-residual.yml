@@ -76,6 +76,13 @@ jobs:
               "parent_certificate_on_championP7",
               "championResidualFrontierWithParentSound",
               "championResidualFrontierWithParentCount",
+              "championResidual_mem_canonical78",
+              "openLeaf_mem_residuals",
+              "cover_of_frontier_leaves",
+              "cover_of_championResidual_frontier",
+              "exact_from_nonchampion_roster_covers_and_parent_frontier",
+              "canonical78_other_address_count",
+              "canonical78_refined_obligation_count",
           )
           for name in names:
               m = re.search(r"'[^']*\."+name+r"' depends on axioms: \[([^\]]*)\]", log)
