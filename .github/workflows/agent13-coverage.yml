@@ -31,6 +31,10 @@ on:
         description: 'JSON array of raw60 child IDs to compile in small kid shards'
         type: string
         default: '["1LA","1LB"]'
+      raw118_wide_run_id:
+        description: 'Run containing source-checked Raw118 wide-window certificate artifacts'
+        type: string
+        default: '45667306290'
 permissions:
   contents: read
   actions: read
@@ -66,7 +70,7 @@ jobs:
       && inputs.target != 'weighted-tnf-raw60-sparse-shards'
       && inputs.target != 'weighted-tnf-raw118-wide-cert'
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - name: Install Lean 4.36.0-rc2
@@ -283,6 +287,14 @@ jobs:
           for i in 1125 2873 3900 3909 4098 4222 4223 4224 4343 5491 5495; do
             python im-results/agent4-raw109/audit_axioms.py /tmp/bidfa-sat-hits.log "BB6Coverage.Agent1BiDFASat.Raw118.M$i.never"
           done
+      - name: Download source-checked Raw118 wide-window artifacts
+        if: inputs.target == 'weighted-tnf-raw118-consumer'
+        uses: actions/download-artifact@v4
+        with:
+          pattern: raw118-wide-*
+          run-id: ${{ inputs.raw118_wide_run_id }}
+          github-token: ${{ github.token }}
+          path: .tmp/raw118-wide-artifacts
       - name: Compose and source-check the complete Raw118 parent residual cover
         if: inputs.target == 'weighted-tnf-raw118-consumer'
         run: |
@@ -307,9 +319,10 @@ jobs:
           python im-results/agent16-raw118/tree_emit.py > im-results/agent16-raw118/Raw118Tree.lean
           python im-results/agent16-raw118/generate_late_traces.py /tmp/raw118-data
           python im-results/agent16-raw118/search_tree_bank.py /tmp/raw118-data
+          python im-results/agent40-raw118-independent/merge_wide_artifacts.py .tmp/raw118-wide-artifacts .tmp/raw118-wide-precompiled im-results/agent1-bidfa-sat/wide-generated
           python im-results/agent1-bidfa-sat/emit_raw118.py > im-results/agent1-bidfa-sat/Raw118SatHits.lean
           python im-results/agent16-raw118/emit_consumer.py /tmp/raw118-data
-          python tools/lean_compile_closure.py --workdir /tmp/a16-raw118-consumer --jobs 4 im-results/agent16-raw118/Raw118Consumer.lean im-results/agent16-raw118/Raw118CanonicalMembership.lean im-results/agent1-bidfa-sat/Raw118SatHits.lean | tee /tmp/a16-raw118-consumer.log
+          python tools/lean_compile_closure.py --workdir /tmp/a16-raw118-consumer --jobs 4 --source-root im-results/agent1-bidfa-sat/wide-generated --precompiled-manifest .tmp/raw118-wide-precompiled/manifest.json --precompiled-dir .tmp/raw118-wide-precompiled im-results/agent16-raw118/Raw118Consumer.lean im-results/agent16-raw118/Raw118CanonicalMembership.lean im-results/agent1-bidfa-sat/Raw118SatHits.lean | tee /tmp/a16-raw118-consumer.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a16-raw118-consumer.log; then exit 1; fi
       - name: Preserve generated Raw118 parent consumer
         if: inputs.target == 'weighted-tnf-raw118-consumer'
