@@ -114,6 +114,15 @@ jobs:
           python "$D/generate_independent.py" > "$D/Raw118Independent.lean"
           python tools/lean_compile_closure.py --workdir /tmp/a40-raw118-independent --jobs 4 "$D/Raw118Independent.lean" | tee /tmp/a40-raw118-independent.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a40-raw118-independent.log; then exit 1; fi
+      - name: Check finite phase-graph raw118 sweep invariants
+        if: inputs.target == 'weighted-tnf-raw118-phasegraph'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          D=im-results/agent40-raw118-independent
+          python "$D/generate_phasegraph.py" --modules
+          python tools/lean_compile_closure.py --workdir /tmp/a40-raw118-phasegraph --jobs 4 "$D/Raw118PhaseGraph.lean" | tee /tmp/a40-raw118-phasegraph.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a40-raw118-phasegraph.log; then exit 1; fi
       - name: Verify packed long first-hole trace
         if: inputs.target == 'weighted-tnf-raw118-long'
         run: |
