@@ -3,6 +3,7 @@ import ChampionLastHoleCover
 
 namespace BB6.Agent48ChampionCylinder
 open BB6Coverage BB6Coverage.Agent48Champion BB6ChampionArithmetic BB6.Agent13BlankDelay
+open BB6Coverage.Agent48CountedInc0 BB6Coverage.Agent48DirectRoot
 
 theorem champion_score_ge_3512 : 3512 ≤ proposedTM63Moves+7 := by
   apply Eq.mp (congrArg (fun n : Nat => 3512 ≤ n) threeSectionScore_root)
