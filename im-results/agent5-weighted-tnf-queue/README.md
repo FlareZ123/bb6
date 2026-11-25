@@ -11,7 +11,7 @@ This directory tracks the bridge from the original Coq Enumerate62 source queue 
 - `im-results/agent8-adaptive-source-plan/Agent8AdaptiveSource.v` provides finite-checkpoint and adaptive-plan soundness, including the active-plus-held residual interface. The relevant checkpoint modules were exercised in CI run `45463102601`.
 - `im-results/agent32-source-queue/` contains the q0 partition, source-drain, and source-coverage development. Its intended partition is the 129 slices `q_i (100*i) 100`, with the final slice naturally truncated to 20 input nodes.
 
-- `Agent5ChunkCoverage.v` supplies a candidate original-source composition theorem from all 129 chunk-specific adaptive plans and their exact packed checkpoint equations to the global weighted bound. It uses the existing verified partition, codec and weighted-normalization contracts. Compilation has not yet been accepted; the shared weighted-source target now includes this module.
+- `Agent5ChunkCoverage.v` supplies a candidate original-source composition theorem from all 129 chunk-specific adaptive plans and their exact packed checkpoint equations to the global weighted bound. It uses the existing verified partition, codec and weighted-normalization contracts. The three composition theorems compiled in [run 45535799417](https://github.com/FlareZ123/bb6/actions/runs/45535799417) at `ffdafe80400a6e2154aa6f3dbd94304c37d7a7e2`. The result is conditional on residual safety and does not establish a numerical upper bound.
 
 The critical semantic distinction is that a finite checkpoint may leave both an active queue and held nodes. Both are obligations. A nonempty active queue is not a drained queue.
 
@@ -43,13 +43,13 @@ The VM computation itself took 64.821 seconds. This supports the existing batch 
 
 ## Export tooling
 
-- `check-q0-export.cjs` parses packed queue values, checks the six-row table encoding, independently checks undefined-transition counts and fresh-state metadata, and writes a roster TSV plus JSON manifest. Its full mode expects exactly 129 chunks at offsets 0, 100, ..., 12800, requested size 100, and a consistent source/research revision.
+- `check-q0-export.cjs` parses packed queue values, checks the six-row table encoding, independently checks undefined-transition counts and fresh-state metadata, and writes a roster TSV plus JSON manifest. Its full mode expects exactly 129 chunks at offsets 0, 100, ..., 12800, including the truncated final chunk; `--partial` retains verified rows and explicitly records missing and failed chunks.
 - `.github/workflows/shared-rocq-root-proofs.yml` now runs the parser self-test and emits per-chunk Coq logs for `enumerate62-packed-batch`, making the exact values machine-readable through the Actions logs.
 - [Batch 45523811152](https://github.com/FlareZ123/bb6/actions/runs/45523811152), research revision `8350420137f3b1b45302be198e4cb2c9a2751d1a`, verified offsets 100 and 200 with (112 active, 0 held) and (136 active, 0 held), respectively. Offsets 300 through 800 timed out at 180 seconds (exit 124). Its partial artifact 14983730290 retains the successful outputs. The uniform 1m schedule is not a reliable throughput assumption.
 
 ## Native-computation caveat
 
-The workflow target named `enumerate62-chunk-probe-native` is not currently native. The installed Debian Coq reports that native computation is disabled at configure time and falls back to `vm_compute`. The attempted MAXT probes for chunks 0–100 and 12800–12820 timed out under that fallback. These are not native-performance results. A genuinely native Coq build would require separate installation/configuration.
+The earlier workflow target named `enumerate62-chunk-probe-native` was not native. The installed Debian Coq reports that native computation is disabled at configure time and falls back to `vm_compute`. The attempted MAXT probes for chunks 0–100 and 12800–12820 timed out under that fallback. These are not native-performance results. The target now selects `coqorg/coq:8.20-native` with a smoke test. Run 45537047963 is the first attempt; no native result or speed claim yet.
 
 ## Historical holdout snapshot
 
@@ -71,3 +71,9 @@ These are not assumed to belong to the current source-generated roster. The firs
 5. Discharge the residual obligations through the weighted source theorem; an unfinished checkpoint is never a machine decision.
 
 All computational exports and pilot data remain in `im-results/`; none is presented as an academically publishable result or as a solution to BB(6).
+
+## Recovered checkpoints and direct held proof (2026-11-25)
+
+Twenty distinct batch checkpoints were recovered, with 2928 active and 9 held residual nodes. Offsets 300 and 500 were recovered from successful run 45536192374 with fuel 100000 and 1000000, respectively. The separate final-20 checkpoint is not included in those totals. The source-level held machine at offset 2800, `1RB0RD_1LC1LB_0LE1RA_0LC0RA_1LF1LD_1RD---`, is a reflection of the existing FARv3.nonhalt208 machine. `Agent5RecoveredHeld.v` rechecks that certificate and transfers it to cylinder safety for every bound. Its compilation completed in run 45536703560, whose overall status was failure due to the independent source-tree checker.
+
+The 18 earlier batch chunks yielded 1125 direct short-trace or translated-cycle candidates and 61 additional closed first-hole split candidates. `recover-batch-witnesses.cjs` reconstructs these candidate trees from the pinned batch artifacts; run 45536925519 checks the forest. Do not count pending candidates as proved. See the Agent5 memory for artifact IDs and exact checkpoint offsets.
