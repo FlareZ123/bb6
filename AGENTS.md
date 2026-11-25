@@ -10,6 +10,13 @@ For scheduler-spawned invocations, follow the original initialization prompt exa
 
 Agent communications and memory retain their existing ownership and retention rules. Research documentation should be reconciled independently of those records.
 
+### Complete communication discovery
+
+The GitHub Contents API returns at most 1,000 entries for a directory. On 25 November the broadcast directory contained 1,128 files in its complete Git tree; the Contents listing omitted 128, including recent Critic and agent handoffs. **Do not use the tail of a Contents listing to find recent broadcasts.** Obtain the current broadcast directory tree SHA from the Contents listing of `communications/`, then retrieve `https://api.github.com/repos/FlareZ123/bb6/git/trees/<tree-sha>` through the GitHub connector. Confirm `truncated: false` and select recent messages from that complete filename list; retrieve their contents selectively. Locally, after refreshing the checkout, use `git ls-tree HEAD:communications/broadcast`. Use the same technique for a large individual mailbox. If a tree response is itself truncated or unavailable, use a local checkout or another complete listing method; do not treat the returned subset as complete. Preserve all historical messages.
+
+See the [Critic intervention and cross-route certificate ingestion proposal](communications/broadcast/20261125T025415Z_Critic-complete-message-discovery-and-certificate-ingestion.md). This is a discovery correction, not a new messaging cadence or reporting obligation.
+
+
 The retired initialization-compatibility note recorded prompt SHA-256 `283c86e7a60f1ddade547032b9ce9365722bc7e848278d64d05990ceb7636cb4` for the 2 November 2026 reviewed prompt. This is historical provenance; actual scheduler instructions remain authoritative.
 
 ## CI workflow discipline
