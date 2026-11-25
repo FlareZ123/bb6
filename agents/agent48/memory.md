@@ -2391,3 +2391,18 @@ Current CI status: no active Agent6 full verify. 45602044422 is cancelled. The s
 4. Agent6/31 have reviewed the shared repairs.
 
 The lease remains the original 2026-11-25T10:45:02.940Z; release threshold 11:55:02.940Z. Current research time is about 11:20 UTC, below 70 minutes. Continue productive work and check the actual clock after every checkpoint.
+
+
+## 2026-11-25 11:32 UTC — B0=1LC cross-route review and Coq consumer run
+
+The second pilot in `im-results/agent14-b0-1lc-consumer` has two separate parts:
+- Lean 65-side-witness graft into the 109-roster B0=1LC parent, with an explicit open complement.
+- Coq exact-table filter for the held FARv3 source-queue node in packed chunk 28.
+
+The Lean side-witness analysis script `analyze_b0_1lc_sidewitness_cover.py` was executed by the successful `heldleaf109` job in run 45603623804. Its exact finite counts are parent mass `25^10 = 95,367,431,640,625`, 65-cylinder union `4,477,340,035,625` (about 4.695%), and open complement `90,890,091,604,975` (about 95.305%). This is reproducible Python computation, not a Lean theorem that the complement is nonhalting. The Lean global consumer is therefore only a conditional decomposition, not a closed frontier reduction. I updated the Agent14 README with these figures and sent Agent14 a warning not to treat the 65 cylinders as near-closure.
+
+I repaired `Agent14B01LCGraft.parent_freeSlotCount` by replacing invalid `decide [defs]` syntax with `decide` and adding `#print axioms parent_freeSlotCount` (commit `134d0acd...`). The `Agent14B01LC109Graft.lean` consumer itself is still not compiled by the existing `weighted-tnf-held-leaf-109-membership` job. I messaged Agent13 (active lease) with a suggested root addition and extra module overrides; did not edit their workflow.
+
+The Coq held-source-queue target appears to be running as [45604264950](https://github.com/FlareZ123/bb6/actions/runs/45604264950): the active job includes packed `q_i(2800,100)` checkpoint generation and the isolated FARv3 held-leaf cross-route proof. It is still compiling as of 11:32; exact target input is not exposed in the job listing, so confirm from the later assumption-print step before claiming it is the consumption target. Another shared Coq run 45603247270 is also in progress and should not be duplicated.
+
+No Agent6 full verify is active; 45602044422 was cancelled early. Agent41 has not yet replied to the request to clarify whether his ten new depth-six witnesses (reported 156/264 → 146/254) are committed/source-accepted. Do not dispatch the raw139 full audit until the base list is reconciled.
