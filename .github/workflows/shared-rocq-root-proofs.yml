@@ -224,6 +224,8 @@ jobs:
           cp "$GITHUB_WORKSPACE/research/im-results/agent42-source-certificate-ingestion/Agent42Q2800BatchShard04.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent42-source-certificate-ingestion/Agent42Q2800BatchShard05.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent42-source-certificate-ingestion/Agent42Q2800GlobalUpper.v" original/verify/
+          cp "$GITHUB_WORKSPACE/research/im-results/agent5-weighted-tnf-queue/Agent5HeldFARBatch.v" original/verify/
+          cp "$GITHUB_WORKSPACE/research/im-results/agent5-weighted-tnf-queue/Agent5RosterComplement.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent14-b0-1lc-consumer/Agent14HeldQueueConsumption.v" original/verify/
 
       - name: Add source FAR batch consumer
@@ -322,7 +324,7 @@ jobs:
         if: inputs.target == 'enumerate62-held-farv3-pilot'
         working-directory: original/verify
         run: |
-          printf '%s\n' 'From BusyCoq Require Import Agent13CrossRouteHeldLeaf Agent42HeldCheckpointMembership Agent42Q2800BatchWitnesses Agent42Q2800GlobalUpper.' 'Print Assumptions recovered_held_2800_child_of_first_one_root.' 'Print Assumptions recovered_held_2800_safe_for_all_bounds.' 'Print Assumptions recovered_held_2800_checkpoint_exact.' 'Print Assumptions recovered_held_2800_checkpoint_member.' 'Print Assumptions recovered_held_2800_adaptive_obligation.' 'Print Assumptions q2800_trees_checked.' 'Print Assumptions q2800_tree_roster_safe.' 'Print Assumptions q2800_residual_count.' 'Print Assumptions q2800_adaptive_obligations_safe_iff_residual.' 'Print Assumptions actual_source_chunks_packed_global_upper_after_q2800_roster.' > Agent13CrossRouteHeldAudit.v
+          printf '%s\n' 'From BusyCoq Require Import Agent13CrossRouteHeldLeaf Agent42HeldCheckpointMembership Agent42Q2800BatchWitnesses Agent42Q2800GlobalUpper.' 'Print Assumptions recovered_held_2800_child_of_first_one_root.' 'Print Assumptions recovered_held_2800_safe_for_all_bounds.' 'Print Assumptions recovered_held_2800_checkpoint_exact.' 'Print Assumptions recovered_held_2800_checkpoint_member.' 'Print Assumptions recovered_held_2800_adaptive_obligation.' 'Print Assumptions q2800_trees_checked.' 'Print Assumptions q2800_tree_roster_safe.' 'Print Assumptions q2800_residual_count.' 'Print Assumptions q2800_adaptive_obligations_safe_iff_residual.' 'Print Assumptions actual_source_chunks_packed_global_upper_after_q2800_roster.' 'Print Assumptions q2800_held_attempt_passes.' 'Print Assumptions recovered_held_2800_in_held_certified_roster.' 'Print Assumptions q2800_held_leaf_checkpoint_and_agent5_roster.' 'Print Assumptions q2800_augmented_roster_safe.' 'Print Assumptions actual_source_chunks_packed_global_upper_after_q2800_augmented_roster.' > Agent13CrossRouteHeldAudit.v
           coqc -Q . BusyCoq -native-compiler no Agent13CrossRouteHeldAudit.v
 
 
