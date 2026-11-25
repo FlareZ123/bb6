@@ -26,7 +26,16 @@ def compile(m):
     built.append(m)
 branch,first,end=map(int,sys.argv[1:4])
 for j in range(first,end):
-    m=f'Raw122Kid{branch:02}_{j:02}';compile(m)
+    m=f'Raw122Kid{branch:02}_{j:02}'
+    f=work/(m+'.lean')
+    if not (work/(m+'.olean')).exists() and f.stat().st_size>15000 and ' : PartialAudit := .closed (' in f.read_text():
+        # Generate independently checked smaller subtrees instead of a single
+        # massive reduction. Keep the original exported module and theorem.
+        stage=work/(m+'-split');stage.mkdir(exist_ok=True)
+        mods=subprocess.check_output([sys.executable,str(base/'split_grouped.py'),str(f),str(stage),'5000'],text=True).splitlines()
+        assert mods[-1]==m
+        for n in mods:shutil.copy2(stage/(n+'.lean'),work/(n+'.lean'))
+    compile(m)
     audit=work/'A43CheckAxioms.lean'
     audit.write_text(f'import {m}\n#print axioms BB6.Agent43Raw122.kid{branch:02}_{j:02}_checked\n')
     text=subprocess.check_output(['lean',audit.name],cwd=work,env=env,text=True)
