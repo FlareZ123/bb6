@@ -10,7 +10,7 @@ import sys
 
 DEFAULT_TABLE = '1RB0RD_1LC1LB_0LE1RA_0LC0RA_1LF1LD_1RD---'
 
-def generate(table, out, width=3, cap=2, mod=4, runs=2, flip=False, name="HeldBlock"):
+def generate(table, out, width=3, cap=2, mod=4, runs=2, flip=False, name="HeldBlock", minimize_left=False, sparse=False):
     alphabet=2**width
     suffix="" if width==3 else str(width)
     ns="BB6BlockFAR"+suffix+"." + ("Held" if name=="HeldBlock" else name)
@@ -112,6 +112,22 @@ def generate(table, out, width=3, cap=2, mod=4, runs=2, flip=False, name="HeldBl
     for i,(k,*rest) in enumerate(nodes):
         if k == 'x':
             p,b = rest; _,l,q,d = nodes[p]; aux[l,q,d,b] = cls[i]
+    if minimize_left:
+        # Minimize left partial DFA preserving right control and auxiliary identities.
+        sig=[tuple(ctr.get((l,q,d),dead) for q in range(6) for d in range(2))+tuple(aux.get((l,q,0,b),dead) for q in range(6) for b in range(alphabet)) for l in range(D)]
+        lc=[0]*D
+        while True:
+            keys={};new=[]
+            for l in range(D):
+                k=(sig[l],tuple(lc[delta[l,a]] if (l,a) in delta else -1 for a in range(alphabet)))
+                new.append(keys.setdefault(k,len(keys)))
+            if new==lc:break
+            lc=new
+        D2=len(set(lc)); print('left minimized',D,'->',D2)
+        delta={(lc[l],a):lc[j] for (l,a),j in delta.items()}
+        ctr={(lc[l],q,d):v for (l,q,d),v in ctr.items()}
+        aux={(lc[l],q,d,b):v for (l,q,d,b),v in aux.items()}
+        D=D2
     pred = defaultdict(list)
     for (l,a),j in sorted(delta.items()): pred[j].append((l,a))
     assert delta[0,0] == 0 and ctr[0,0,1] in z2
@@ -141,6 +157,15 @@ def generate(table, out, width=3, cap=2, mod=4, runs=2, flip=False, name="HeldBl
         aux=[aux.get((l,q,0,b),dead) for l in range(D) for q in range(6) for b in range(alphabet)],
         edges=[sorted(r2[s,a]) for s in range(C) for a in range(alphabet)],
         zeroNext=zeroNext, pred=[[alphabet*l+a for l,a in pred[j]] for j in range(D)])
+    def tree(xs, default):
+        items=[(i,v) for i,v in enumerate(xs) if v!=default]
+        def go(x):
+            if not x:return str(default)
+            if len(x)==1:
+                i,v=x[0];return f'if i = {i} then {v} else {default}'
+            k=len(x)//2
+            return f'if i < {x[k][0]} then ({go(x[:k])}) else ({go(x[k:])})'
+        return 'fun i => '+go(items)
     def pack(xs,b): return sum(v<<(b*i) for i,v in enumerate(xs))
     def vector(xs,b,stride):
         assert all(0<=x<2**b for x in xs)
@@ -159,10 +184,18 @@ def machine : Table := fun q b =>
   (['''+','.join('none' if mv is None else f'some ⟨{str(bool(mv[0])).lower()},{str(mv[1]).lower()},{mv[2]}⟩' for mv in moves)+'''] : List (Option Move))[2*q.val+b.toNat]?.getD none
 
 '''
-    for field,key in [('pushCodes','push'),('controlCodes','ctrl'),('auxiliaryCodes','aux'),('zeroNextCodes','zeroNext')]:
-        s += f'def {field} : Packed := '+vector(data[key],b,32)+'\n\n'
-    s += 'def predecessorCodes : PackedRows := '+packedrows(data['pred'],pb,pm,3)+'\n\n'
-    s += 'def edgeCodes : PackedRows := '+packedrows(data['edges'],b,em,10)+'\n\n'
+    if sparse:
+        assert width == 3
+        s = s.replace("import BlockFAR", "import SparseBlockFAR")
+        for field,key in [('pushCodes','push'),('controlCodes','ctrl'),('auxiliaryCodes','aux'),('zeroNextCodes','zeroNext')]:
+            s += f'def {field} : Nat → Nat := '+tree(data[key],0 if key=='push' else dead)+'\n\n'
+        s += 'def predecessorCodes : Nat → List Nat := '+tree(data['pred'],[])+'\n\n'
+        s += 'def edgeCodes : Nat → List Nat := '+tree(data['edges'],[])+'\n\n'
+    else:
+        for field,key in [('pushCodes','push'),('controlCodes','ctrl'),('auxiliaryCodes','aux'),('zeroNextCodes','zeroNext')]:
+            s += f'def {field} : Packed := '+vector(data[key],b,32)+'\n\n'
+        s += 'def predecessorCodes : PackedRows := '+packedrows(data['pred'],pb,pm,3)+'\n\n'
+        s += 'def edgeCodes : PackedRows := '+packedrows(data['edges'],b,em,10)+'\n\n'
     s += 'def zeroCodes : Nat := '+hex(sum(1<<i for i in z2))+'\n\n'
     s += f'''def cert : Data {D-1} {C-1} := {{
   start := 0
@@ -176,6 +209,7 @@ def machine : Table := fun q b =>
 }}
 end BB6BlockFAR.Held
 '''
+    if sparse: s = s.replace('def cert : Data', 'def cert : SparseData')
     out.mkdir(parents=True,exist_ok=True)
     (out/(name+'Packed.lean')).write_text(s.replace('BB6BlockFAR.Held',ns).replace('import BlockFAR\n','import BlockFAR'+suffix+'\n').replace('import RangeCheck\n','import RangeCheck'+suffix+'\n').replace('import HeldBlockPacked','import '+name+'Packed'),encoding='utf8')
     s = '''import HeldBlockPacked

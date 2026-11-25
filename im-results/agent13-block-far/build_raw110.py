@@ -12,7 +12,8 @@ for p in rows:
     name=f'Raw110B{p["kid"]:02d}L{p["j"]:03d}'
     width=p['width'];suffix="" if width==3 else str(width);ns="BB6BlockFAR"+suffix+"."+name
     print(name,flush=True)
-    generate(p['table'],root,width,p['cap'],p['mod'],p['runs'],p['flip'],name)
+    use_sparse=(p['kid'],p['j'])==(12,21)
+    generate(p['table'],root,width,p['cap'],p['mod'],p['runs'],p['flip'],name,minimize_left=use_sparse,sparse=use_sparse)
     s=f"""import {name}Proof
 import BlockFARBridge{suffix}
 """

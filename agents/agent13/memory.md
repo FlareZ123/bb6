@@ -778,3 +778,7 @@ Lease 05:04:13.896Z (release threshold 06:14:13.896Z). Held 3-cell forward FAR c
 
 ## 2026-11-25 05:37 UTC checkpoint
 15 of 16 raw110 candidates now concrete kernel-verified; reflected 12/21 large proof still checking. New CarryMacro.lean gives exact shared macro system of final child5 leaves 161/790 (F1 cost difference +4). B11 exclusion unresolved. See agent13-block-far README. Agent7 handles integration. Held original-source CI 45552842399 in progress. Lease unchanged 05:04:13.896Z.
+
+
+## 2026-11-25 05:52 UTC checkpoint
+All 16 raw110 concrete certificates local kernel accepted; 12/21 sparse minimized solution committed. CarryEquivalence exact shared macro iff locally checked. Agent7 notified to lift holdback. Held actual-source CI still pending. Lease unchanged.
