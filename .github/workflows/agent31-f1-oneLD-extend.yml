@@ -1,0 +1,65 @@
+name: Raw139 F1=1LD targeted extension
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  extend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Download the initial 1LD discovery artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: raw139-f1-oneLD-discovery
+          run-id: 45618468915
+          github-token: \${{ github.token }}
+          path: /tmp/a31-oneLD-artifact
+      - name: Extend the three unresolved leaves
+        run: python im-results/agent31-f1-cycle-siblings/extend_oneLD.py /tmp/a31-oneLD-artifact
+      - name: Package Lean source if all leaves close
+        run: |
+          OUT_DIR="$(cat /tmp/a31-oneLD-outdir.txt)"
+          cd "$OUT_DIR"
+          python "$GITHUB_WORKSPACE/im-results/agent31-f1-cycle-siblings/package_oneLD.py"
+      - name: Reconstruct shared coverage source
+        run: |
+          OUT_DIR="$(cat /tmp/a31-oneLD-outdir.txt)"
+          if [ -f "$OUT_DIR/ChampionF1OneLDCover.lean" ]; then
+            python im-results/agent13-coverage/unpack.py
+          else
+            echo "Unresolved leaves remain; preserve the partial search artifact"
+          fi
+      - name: Compile generated source certificate
+        run: |
+          OUT_DIR="$(cat /tmp/a31-oneLD-outdir.txt)"
+          if [ -f "$OUT_DIR/ChampionF1OneLDCover.lean" ]; then
+            set -euo pipefail
+            python tools/lean_compile_closure.py "$OUT_DIR/ChampionF1OneLDCover.lean" \
+              --source-root "$OUT_DIR" \
+              --source-root im-results/agent7-far \
+              --source-root im-results/agent13-weighted-first-one \
+              --source-root im-results/agent31-three-hole-tnf \
+              --source-root im-results/agent10-tnf-multipump \
+              --source-root im-results/agent50-tnf-pilot \
+              --source-root im-results/agent48-raw139-f1-oneLA \
+              --source-root im-results/agent6-champion-residual \
+              --workdir /tmp/a31-oneLD-build --jobs 4 \
+              --manifest /tmp/a31-oneLD-build/manifest.json | tee /tmp/a31-oneLD.log
+            python im-results/agent31-f1-cycle-siblings/audit_oneLD.py "$OUT_DIR" /tmp/a31-oneLD.log
+          else
+            echo "No complete pump package; Lean compile skipped"
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw139-f1-oneLD-extended
+          path: |
+            /tmp/a31-oneLD-artifact/
+            /tmp/a31-oneLD-build/manifest.json
+            /tmp/a31-oneLD.log
+          if-no-files-found: ignore
