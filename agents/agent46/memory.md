@@ -1,3 +1,9 @@
+# 2026-11-25 07:44 UTC continuation — raw13 D1=0RE mixed bound
+
+RNG 6, normal. Lease 2026-11-25T07:44:21.375Z, claim commit 34803f5255f4f854f25a40385c6e4e9ea02ba795, run agent46-gpt62-2026-11-25T07:44:21.375Z-raw13-mixed. Release threshold 08:54:21.375Z; do not refresh. Local Lean 4.36.0-rc2 installed; GitHub DNS blocked, connector working.
+
+Five of the six hard D1=0RE leaves now have exact common all-time sweep recurrences with authentic seed F(3) at 19 and positive costs, see Agent46Raw13Pump0RE.lean and raw13-cut README. Local copied-definition Lean checks for orbit_first, orbit_step and cost_pos pass with propext and Quot.sound. Actual-source never_of_growth bridge pending. Sixth leaf queries F/0 at 21268, so requires mixed bound. Candidate branch census 60 splits, 609 cycles, 80 state, 339 earlier last-hole, 347 ngram, six hard leaves. Do not repeat scans. Next: verify exact source bridge on existing pump0RE target, implement bound-aware branch cut and consume all siblings with exact complement; preserve #754 and all other residuals. No new accepted roster reduction yet.
+
 # 2026-11-25 continuation — raw13 0LE and 1RE closure
 
 Immutable lease 2026-11-25T05:54:17.199Z, run agent46-raw13-cut-2026-11-25T05:54:17.199Z, claim commit 11bcef97e16f3bbdf60b5759fe2db6d6f98d5b0a, actual RNG 6. Release at ≥07:04:17.199Z only; do not refresh. Lean 4.36.0-rc2 restored from nested tar.zst; direct git DNS blocked. Connector used.

@@ -36,6 +36,22 @@ The other hard leaf `1RB1LC_1RC0LD_1LA0RB_1LB1RE_0RF0RA_---0RD` closes under a s
 
 The complete candidate for the D1=1RE four-hole parent has 85 splits, 140 state masks, 936 cycles, 495 last-hole leaves, 383 dense n-gram leaves, one sparse n-gram leaf and the one pumping leaf. Maximum finite query step is 203. Its original-label mass is another 6×25^4.
 
+## D1 = 0RE: five uniform all-time sweep certificates
+
+For the four-hole parent `1RB1LC_1RC0LD_1LA0RB_1LB0RE_------_------`, the six difficult one-hole descendants include five whose authentic blank runs enter the same configuration family at step 19: A scans a blank immediately left of an odd contiguous run of ones of length 7. Define F(k) = (A, [], 1(11)^k) in the source zipper convention. All five leave F/0 unassigned.
+
+| Variant | E0, E1, F1 | Exact recurrence for k≥1 |
+|---|---|---|
+| 0 | 0RF, 1RD, 0RE | F(k) → F(k+2), cost 8k+13 |
+| 1 | 1RF, 1RD, 0RE | F(k) → F(k+3), cost 8k+19 |
+| 2 | 1RF, 0RA, 0RE | F(k) → F(k+3), cost 10k+17 |
+| 3 | 1RF, 1RD, 1LE | F(k) → F(k+3), cost 8k+21 |
+| 4 | 1RE, 0RF, 0RA | F(k) → F(k+3), cost 10k+17 |
+
+[Agent46Raw13Pump0RE.lean](Agent46Raw13Pump0RE.lean) proves the five exact block recurrences using arbitrary untouched tails and shared B/C and A/C sweeps. The local Lean 4.36.0-rc2 preflight of the recurrence and authentic-seed orbit uses exact copied `run0`, `join0`, `sweepL`, `sweepR` and `rotate` bodies from `SweepPumping`; the exported orbit-step, seed and positivity theorems have only propext and Quot.sound. The actual `never_of_growth` bridge is submitted for a focused original-source check; no source acceptance is claimed yet.
+
+The sixth hard descendant `1RB1LC1RC0LD1LA0RB1LB0RE1RD1RF---1RD` first queries F/0 at primitive step 21268 in a literal simulator. It cannot be accepted as a last-hole leaf at 7014. A weighted larger-bound certificate is required, including the exact delay/final-query convention. A complete candidate enumeration with the dense n-gram checker up to width 7 found 60 splits, 609 translated cycles, 80 state masks, 339 earlier last-hole leaves, 347 dense n-gram leaves, and the six hard leaves. The entire D1=0RE parent is still retained pending the mixed-bound consumer and original-source checks.
+
 ## Exact complement and consuming theorem
 
 The updated candidate census has 353 split queries, 2708 cycles, 948 state masks, 999 last-hole leaves, 15 initial and 826 selected dense n-gram leaves, one sparse n-gram leaf, three original and six additional pumping leaves, and 1722 unresolved canonical leaves. The raw13 parent has 25^9=3814697265625 literal completions; the computed retained mass is 1725412500150. Before this incarnation's two new four-hole candidates the cut retained 1724 leaves and mass 1725417187650. The two branches therefore remove exactly 4687500 weighted literal completions if the source audit accepts the new cut. The global graft is 78−1+1722=1799 quotient obligations, including the exact surviving complement. The earlier D1=0LE-only revision is queued in [CI 45557634300](https://github.com/FlareZ123/bb6/actions/runs/45557634300).
