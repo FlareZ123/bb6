@@ -147,6 +147,21 @@ def main() -> None:
     rows = parse_rows(source)
     assert len(rows) == 388, len(rows)
 
+    # Exhaust the complete 124-entry manifest before focusing on the four hits.
+    all_matches = {}
+    for entry in manifest["entries"]:
+        raw = entry["raw_residual_index"]
+        table = entry["table"]
+        selected = [
+            row for row in rows
+            if all(move is None or code_to_move(row[i]) == move
+                   for i, move in enumerate(table))
+        ]
+        if selected:
+            all_matches[raw] = selected
+    matched_parents = tuple(sorted(all_matches))
+    assert matched_parents == PARENTS, matched_parents
+
     reports = {}
     aggregate_closed = 0
     aggregate_parent = 0
@@ -155,11 +170,7 @@ def main() -> None:
         entry = next(e for e in manifest["entries"]
                      if e["raw_residual_index"] == raw)
         table = entry["table"]
-        selected = [
-            row for row in rows
-            if all(move is None or code_to_move(row[i]) == move
-                   for i, move in enumerate(table))
-        ]
+        selected = all_matches[raw]
         assert len(selected) == EXPECTED_MATCHES[raw], (raw, len(selected))
 
         free_slots = [i for i, move in enumerate(table) if move is None]
@@ -221,6 +232,7 @@ def main() -> None:
 
     print(json.dumps({
         "side_witnesses_parsed": len(rows),
+        "parents_with_any_refinement_in_full_124_manifest": list(matched_parents),
         "parents": reports,
         "aggregate_disjoint_parent_mass": aggregate_parent,
         "aggregate_closed_mass": aggregate_closed,
