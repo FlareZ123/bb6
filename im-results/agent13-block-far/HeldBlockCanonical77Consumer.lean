@@ -1,4 +1,4 @@
-import HeldBlockConsumer
+import HeldBlockRaw10Combined
 import CanonicalRaw114Accepted
 import Canonical78ExactComposition
 import Canonical77HeldMembership
@@ -46,7 +46,7 @@ theorem otherRoster_count : otherRoster.length = 76 := by
     The 77-way canonical roster therefore reduces to 76 other residuals
     plus the raw10 complement, conditional on those Covers. -/
 theorem exact_from_raw10_remainder_77
-    (hOpen : ∀ r ∈ BB6.Agent49BoxBridge.raw10Remainder,
+    (hOpen : ∀ r ∈ BB6.Agent17Raw10CombinedConsumer.raw10RemainderWithCycleAndHalt,
       ∀ m, BB6.Agent49Box.Fits r m →
         WeightedBound BB6.Agent31Canonical78Exact.championScore m)
     (hOther : ∀ e ∈ BB6.Agent47CanonicalRaw114Accepted.roster,
@@ -60,7 +60,7 @@ theorem exact_from_raw10_remainder_77
   intro e he
   by_cases h : e.2 = Parent
   · rw [h]
-    exact BB6.Agent13HeldBlock.raw10_cover_with_held
+    exact BB6.Agent13HeldBlockRaw10Combined.raw10_cover_with_cycle_and_halt
       BB6.Agent31Canonical78Exact.championScore
       (Nat.le_of_lt BB6.Agent31Canonical78Exact.champion_score_gt_7014)
       hOpen
