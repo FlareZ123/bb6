@@ -20,17 +20,17 @@ private theorem trace_parity {a b z x y n0 n1 n2 : Nat}
 def firstInput (x b : Nat) : Nat := ((x:Int)-drift b).toNat
 
 theorem inverse_hit {x y z b : Nat} (hz : z≤5) (hy : 20 < y)
-    (hx : 2*inverseBudget y≤x)
-    (h : Agent41DrainImageDecoder.inverse (y-z)=some b) :
+    (hx : 2*inverseBudget y≤ x)
+    (h : Agent41DrainImageDecoder.inverse (y-z)= some b) :
     let A := firstInput x b
-    inverseBudget y≤A ∧ (A+b)%2=x%2 ∧
-    y=z+image b ∧ 4≤b ∧ drainB A b z=some (.D x y) := by
+    inverseBudget y≤ A ∧ (A+b)%2= x%2 ∧
+    y= z+image b ∧ 4≤ b ∧ drainB A b z= some (.D x y) := by
   dsimp
   have hi := Agent41DrainImageDecoder.inverse_sound
     Agent41DrainImageSource.excessLaws (y-z) b h
-  have hi' : y=z+image b := by unfold image; omega
-  have hmin : 4≤b := by
-    by_cases hsmall : 4≤b
+  have hi' : y= z+image b := by unfold image; omega
+  have hmin : 4≤ b := by
+    by_cases hsmall : 4≤ b
     · exact hsmall
     exfalso
     have hh : b=0 ∨ b=1 ∨ b=2 ∨ b=3 := by omega
@@ -64,7 +64,7 @@ theorem inverse_hit {x y z b : Nat} (hz : z≤5) (hy : 20 < y)
   obtain ⟨u,v,c0,c1,c2,he,ht⟩ := positive_trace_exists drainB HighLevelState.D
     zero_drain drain_three drain_three_one drain_three_two n n b z (by omega) hb
   have hv := trace_image ht
-  have hv' : v=y := by omega
+  have hv' : v= y := by omega
   rw [hv'] at he ht
   have hw := source_drain_window n b z u y he
   unfold Window at hw
@@ -73,13 +73,13 @@ theorem inverse_hit {x y z b : Nat} (hz : z≤5) (hy : 20 < y)
   have hA' : (firstInput x b:Int)=(x:Int)-drift b := by
     unfold firstInput
     exact Int.toNat_of_nonneg (by omega)
-  have hA : n≤firstInput x b := by omega
+  have hA : n≤ firstInput x b := by omega
   obtain ⟨u',v',e0,e1,e2,he',ht'⟩ := positive_trace_exists drainB HighLevelState.D
     zero_drain drain_three drain_three_one drain_three_two n (firstInput x b) b z hA hb
   have hv' := trace_image ht'
   have hd'' := trace_drift ht'
-  have hu : u'=x := by omega
-  have hyy : v'=y := by omega
+  have hu : u'= x := by omega
+  have hyy : v'= y := by omega
   rw [hu,hyy] at he' ht'
   exact ⟨hA,(trace_parity ht').symm,hi',hmin,he'⟩
 
@@ -117,9 +117,9 @@ def rightCandidate (x y : Nat) : Option (Nat×Nat) := do
     let A := firstInput x b
     return (b-1,A+b-2)
 
-private theorem budget_ge_five (y : Nat) (hy : 20 < y) : 5≤inverseBudget y := by
+private theorem budget_ge_five (y : Nat) (hy : 20 < y) : 5≤ inverseBudget y := by
   unfold inverseBudget
-  by_cases h : 5≤y.log2+1
+  by_cases h : 5≤ y.log2+1
   · exact h
   exfalso
   have hlog : y.log2 < 4 := by omega
@@ -127,9 +127,9 @@ private theorem budget_ge_five (y : Nat) (hy : 20 < y) : 5≤inverseBudget y := 
   omega
 
 theorem leftCandidate_sound {x y a d : Nat} (hy : 20 < y)
-    (hx : 2*inverseBudget y≤x) (heven : x%2=0)
-    (h : leftCandidate x y=some (a,d)) :
-    a%2=0 ∧ d < a ∧ highLevelNext (.D a d)=some (.D x y) := by
+    (hx : 2*inverseBudget y≤ x) (heven : x%2=0)
+    (h : leftCandidate x y= some (a,d)) :
+    a%2=0 ∧ d < a ∧ highLevelNext (.D a d)= some (.D x y) := by
   unfold leftCandidate at h
   split at h
   · rename_i hypar
@@ -141,16 +141,16 @@ theorem leftCandidate_sound {x y a d : Nat} (hy : 20 < y)
       subst a; subst d
       obtain ⟨hA,hp,hi,hmin,hs⟩ := inverse_hit (z:=2) (by decide) hy hx hb
       have hpar := Agent41DrainImageDecoder.image_parity Agent41DrainImageSource.excessLaws b
-      change image b%2=b%2 at hpar
+      change image b%2= b%2 at hpar
       have hbpar : b%2=0 := by omega
       have hdpar : (b-2)%2=0 := by omega
       have hbudget := budget_ge_five y hy
       refine ⟨by omega,by omega,?_⟩
-      have he : firstInput x b+b-(b-2)-2=firstInput x b := by omega
-      have hb' : b-2+2=b := by omega
+      have he : firstInput x b+b-(b-2)-2= firstInput x b := by omega
+      have hb' : b-2+2= b := by omega
       simp only [highLevelNext,if_neg (show firstInput x b+b≠0 by omega),
-        if_neg (show ¬((b-2)%2=1 ∧ firstInput x b+b≥b-2+5) by omega),
-        if_pos (show (b-2)%2=0 ∧ firstInput x b+b≥b-2+3 by omega),he,hb']
+        if_neg (show ¬((b-2)%2=1 ∧ firstInput x b+b≥ b-2+5) by omega),
+        if_pos (show (b-2)%2=0 ∧ firstInput x b+b≥ b-2+3 by omega),he,hb']
       exact hs
   · rename_i hypar
     cases hb : Agent41DrainImageDecoder.inverse (y-5) with
@@ -161,20 +161,20 @@ theorem leftCandidate_sound {x y a d : Nat} (hy : 20 < y)
       subst a; subst d
       obtain ⟨hA,hp,hi,hmin,hs⟩ := inverse_hit (z:=5) (by decide) hy hx hb
       have hpar := Agent41DrainImageDecoder.image_parity Agent41DrainImageSource.excessLaws b
-      change image b%2=b%2 at hpar
+      change image b%2= b%2 at hpar
       have hbpar : b%2=0 := by omega
       have hdpar : (b-3)%2=1 := by omega
       refine ⟨by omega,by omega,?_⟩
-      have he : firstInput x b+b+2-(b-3)-5=firstInput x b := by omega
-      have hb' : b-3+3=b := by omega
+      have he : firstInput x b+b+2-(b-3)-5= firstInput x b := by omega
+      have hb' : b-3+3= b := by omega
       simp only [highLevelNext,if_neg (show firstInput x b+b+2≠0 by omega),
-        if_pos (show (b-3)%2=1 ∧ firstInput x b+b+2≥b-3+5 by omega),he,hb']
+        if_pos (show (b-3)%2=1 ∧ firstInput x b+b+2≥ b-3+5 by omega),he,hb']
       exact hs
 
 theorem rightCandidate_sound {x y a d : Nat} (hy : 20 < y)
-    (hx : 2*inverseBudget y≤x) (heven : x%2=0)
-    (h : rightCandidate x y=some (a,d)) :
-    a%2=0 ∧ a < d ∧ highLevelNext (.D a d)=some (.D x y) := by
+    (hx : 2*inverseBudget y≤ x) (heven : x%2=0)
+    (h : rightCandidate x y= some (a,d)) :
+    a%2=0 ∧ a < d ∧ highLevelNext (.D a d)= some (.D x y) := by
   unfold rightCandidate at h
   split at h
   · rename_i hypar
@@ -186,16 +186,16 @@ theorem rightCandidate_sound {x y a d : Nat} (hy : 20 < y)
       subst a; subst d
       obtain ⟨hA,hp,hi,hmin,hs⟩ := inverse_hit (z:=3) (by decide) hy hx hb
       have hpar := Agent41DrainImageDecoder.image_parity Agent41DrainImageSource.excessLaws b
-      change image b%2=b%2 at hpar
+      change image b%2= b%2 at hpar
       have hbpar : b%2=1 := by omega
       have hdpar : (firstInput x b+b-3)%2=1 := by omega
       have hbudget := budget_ge_five y hy
       refine ⟨by omega,by omega,?_⟩
-      have he : firstInput x b+b-3+4-(b+1)=firstInput x b := by omega
-      have hb' : b+1-1=b := by omega
+      have he : firstInput x b+b-3+4-(b+1)= firstInput x b := by omega
+      have hb' : b+1-1= b := by omega
       simp only [highLevelNext,if_neg (show b+1≠0 by omega),
-        if_neg (show ¬((firstInput x b+b-3)%2=1 ∧ b+1≥firstInput x b+b-3+5) by omega),
-        if_neg (show ¬((firstInput x b+b-3)%2=0 ∧ b+1≥firstInput x b+b-3+3) by omega),
+        if_neg (show ¬((firstInput x b+b-3)%2=1 ∧ b+1≥ firstInput x b+b-3+5) by omega),
+        if_neg (show ¬((firstInput x b+b-3)%2=0 ∧ b+1≥ firstInput x b+b-3+3) by omega),
         if_neg (show (b+1)%2≠1 by omega),
         if_neg (show b+1≠firstInput x b+b-3+2 by omega),if_pos hdpar,he,hb']
       exact hs
@@ -206,19 +206,19 @@ theorem rightCandidate_sound {x y a d : Nat} (hy : 20 < y)
       simp [hb] at h
       obtain ⟨ha,hd⟩ := h
       subst a; subst d
-      have hb0 : Agent41DrainImageDecoder.inverse (y-0)=some b := by simpa using hb
+      have hb0 : Agent41DrainImageDecoder.inverse (y-0)= some b := by simpa using hb
       obtain ⟨hA,hp,hi,hmin,hs⟩ := inverse_hit (z:=0) (by decide) hy hx hb0
       have hpar := Agent41DrainImageDecoder.image_parity Agent41DrainImageSource.excessLaws b
-      change image b%2=b%2 at hpar
+      change image b%2= b%2 at hpar
       have hbpar : b%2=1 := by omega
       have hdpar : (firstInput x b+b-2)%2=0 := by omega
       have hbudget := budget_ge_five y hy
       refine ⟨by omega,by omega,?_⟩
-      have he : firstInput x b+b-2+1-(b-1)=firstInput x b := by omega
-      have hb' : b-1+1=b := by omega
+      have he : firstInput x b+b-2+1-(b-1)= firstInput x b := by omega
+      have hb' : b-1+1= b := by omega
       simp only [highLevelNext,if_neg (show b-1≠0 by omega),
-        if_neg (show ¬((firstInput x b+b-2)%2=1 ∧ b-1≥firstInput x b+b-2+5) by omega),
-        if_neg (show ¬((firstInput x b+b-2)%2=0 ∧ b-1≥firstInput x b+b-2+3) by omega),
+        if_neg (show ¬((firstInput x b+b-2)%2=1 ∧ b-1≥ firstInput x b+b-2+5) by omega),
+        if_neg (show ¬((firstInput x b+b-2)%2=0 ∧ b-1≥ firstInput x b+b-2+3) by omega),
         if_neg (show (b-1)%2≠1 by omega),
         if_neg (show b-1≠firstInput x b+b-2+2 by omega),
         if_neg (show (firstInput x b+b-2)%2≠1 by omega),he]
@@ -228,17 +228,17 @@ theorem rightCandidate_sound {x y a d : Nat} (hy : 20 < y)
 
 private def Reconstructed (A b z x y : Nat) : Prop :=
   Window A b z x y ∧
-  (2*inverseBudget y≤x →
-    y=z+image b ∧ Agent41DrainImageDecoder.inverse (y-z)=some b ∧ firstInput x b=A)
+  (2*inverseBudget y≤ x →
+    y= z+image b ∧ Agent41DrainImageDecoder.inverse (y-z)= some b ∧ firstInput x b= A)
 
 private theorem reconstructed_of_drain (A b z x y : Nat)
-    (h : drainB A b z=some (.D x y)) : Reconstructed A b z x y := by
+    (h : drainB A b z= some (.D x y)) : Reconstructed A b z x y := by
   refine ⟨source_drain_window A b z x y h,?_⟩
   intro hx
   obtain ⟨n0,n1,n2,ht⟩ := source_large_first_trace A b z x y h hx
   have hi := trace_image ht
   have hd := trace_drift ht
-  have hg : y-z=image b := by omega
+  have hg : y-z= image b := by omega
   refine ⟨hi,by rw [hg]; exact Agent41DrainImageSource.image_decoder b,?_⟩
   unfold firstInput
   omega
@@ -246,9 +246,9 @@ private theorem reconstructed_of_drain (A b z x y : Nat)
 /-- Complete two-candidate inverse for all large-first even outputs.
 No candidate reevaluation or search over the block counter is necessary. -/
 theorem exact_parent_candidates {a d x y : Nat} (hy : 20 < y)
-    (hx : 2*inverseBudget y≤x) (heven : x%2=0) :
-    highLevelNext (.D a d)=some (.D x y) ↔
-      leftCandidate x y=some (a,d) ∨ rightCandidate x y=some (a,d) := by
+    (hx : 2*inverseBudget y≤ x) (heven : x%2=0) :
+    highLevelNext (.D a d)= some (.D x y) ↔
+      leftCandidate x y= some (a,d) ∨ rightCandidate x y= some (a,d) := by
   constructor
   · intro h
     have hp := parent_envelope_complete Reconstructed reconstructed_of_drain a d x y h
@@ -259,35 +259,35 @@ theorem exact_parent_candidates {a d x y : Nat} (hy : 20 < y)
     · obtain ⟨A,b,hd,_,ha,hdb,hP⟩ := hlo
       obtain ⟨hi,hg,hA⟩ := hP.2 hx
       have hpar := Agent41DrainImageDecoder.image_parity Agent41DrainImageSource.excessLaws b
-      change image b%2=b%2 at hpar
+      change image b%2= b%2 at hpar
       have hypar : y%2≠0 := by omega
       left
-      simp [leftCandidate,hypar,hg,hA,show b-3=d by omega,←ha]
+      simp [leftCandidate,hypar,hg,hA,show b-3= d by omega,←ha]
     · obtain ⟨A,b,hd,_,ha,hdb,hP⟩ := hle
       obtain ⟨hi,hg,hA⟩ := hP.2 hx
       have hpar := Agent41DrainImageDecoder.image_parity Agent41DrainImageSource.excessLaws b
-      change image b%2=b%2 at hpar
+      change image b%2= b%2 at hpar
       have hypar : y%2=0 := by omega
       left
-      simp [leftCandidate,hypar,hg,hA,show b-2=d by omega,←ha]
+      simp [leftCandidate,hypar,hg,hA,show b-2= d by omega,←ha]
     · obtain ⟨_,_,hw,_⟩ := hdiag
       unfold Window at hw
       omega
     · obtain ⟨A,b,ha,hd,hab,hdb,hP⟩ := hro
       obtain ⟨hi,hg,hA⟩ := hP.2 hx
       have hpar := Agent41DrainImageDecoder.image_parity Agent41DrainImageSource.excessLaws b
-      change image b%2=b%2 at hpar
+      change image b%2= b%2 at hpar
       have hypar : y%2=0 := by omega
       right
-      simp [rightCandidate,hypar,hg,hA,show A+b-3=d by omega,←hab]
+      simp [rightCandidate,hypar,hg,hA,show A+b-3= d by omega,←hab]
     · obtain ⟨A,b,ha,hd,hab,hdb,hP⟩ := hre
       obtain ⟨hi,hg,hA⟩ := hP.2 hx
       have hpar := Agent41DrainImageDecoder.image_parity Agent41DrainImageSource.excessLaws b
-      change image b%2=b%2 at hpar
+      change image b%2= b%2 at hpar
       have hypar : y%2≠0 := by omega
       right
       simp only [Nat.sub_zero] at hg
-      simp [rightCandidate,hypar,hg,hA,show A+b-2=d by omega,show b-1=a by omega]
+      simp [rightCandidate,hypar,hg,hA,show A+b-2= d by omega,show b-1= a by omega]
   · rintro (h|h)
     · exact (leftCandidate_sound hy hx heven h).2.2
     · exact (rightCandidate_sound hy hx heven h).2.2
@@ -295,17 +295,17 @@ theorem exact_parent_candidates {a d x y : Nat} (hy : 20 < y)
 /-- For a fixed third counter the existence of a predecessor is independent
 of the large even first counter. -/
 theorem exact_row_gate {x y : Nat} (hy : 20 < y)
-    (hx : 2*inverseBudget y≤x) (heven : x%2=0) :
+    (hx : 2*inverseBudget y≤ x) (heven : x%2=0) :
     (∀ a d, highLevelNext (.D a d)≠some (.D x y)) ↔
       Agent41DrainImageDecoder.blocked y := by
   constructor
   · intro hn
-    have hl : leftCandidate x y=none := by
+    have hl : leftCandidate x y= none := by
       cases hh : leftCandidate x y with
       | none => rfl
       | some p =>
         exact False.elim (hn p.1 p.2 (leftCandidate_sound hy hx heven (by simpa using hh)).2.2)
-    have hr : rightCandidate x y=none := by
+    have hr : rightCandidate x y= none := by
       cases hh : rightCandidate x y with
       | none => rfl
       | some p =>
@@ -335,8 +335,8 @@ theorem exact_row_gate {x y : Nat} (hy : 20 < y)
 
 /-- Whenever both candidate branches exist they are genuinely distinct. -/
 theorem candidates_distinct {x y a d : Nat} (hy : 20 < y)
-    (hx : 2*inverseBudget y≤x) (heven : x%2=0) :
-    leftCandidate x y=some (a,d) → rightCandidate x y≠some (a,d) := by
+    (hx : 2*inverseBudget y≤ x) (heven : x%2=0) :
+    leftCandidate x y= some (a,d) → rightCandidate x y≠some (a,d) := by
   intro hl hr
   have h₁ := (leftCandidate_sound hy hx heven hl).2.1
   have h₂ := (rightCandidate_sound hy hx heven hr).2.1
