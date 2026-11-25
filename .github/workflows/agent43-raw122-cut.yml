@@ -229,13 +229,13 @@ jobs:
 
   assemble-existing:
     if: inputs.artifact_run_id != ''
-    needs: recover
+    needs: [generate, recover]
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.source_ref || github.sha }}
+          ref: ${{ github.sha }}
       - name: Verify the artifact run and checked-out source are identical
         env:
           ARTIFACT_RUN_ID: ${{ inputs.artifact_run_id }}
@@ -244,11 +244,13 @@ jobs:
           set -euo pipefail
           test -n "${{ inputs.source_ref }}" || { echo "source_ref must be the exact artifact head SHA"; exit 1; }
           expected="$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${ARTIFACT_RUN_ID}" --jq '.head_sha')"
-          actual="$(git rev-parse HEAD)"
-          test "$expected" = "$actual" || {
-            echo "artifact source mismatch: run=$expected checkout=$actual"
-            exit 1
-          }
+          test "$expected" = "${{ inputs.source_ref }}"
+          git diff --exit-code "${{ inputs.source_ref }}" -- \
+            im-results/agent43-raw122-cut/generate.py \
+            im-results/agent43-raw122-cut/symbolic.py \
+            im-results/agent43-raw122-cut/long-plans.json \
+            im-results/agent43-raw122-cut/extra-bank.txt \
+            tools/lean_compile_closure.py
       - name: Install Lean
         run: |
           set -euo pipefail
@@ -258,16 +260,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: raw122-generated
-          run-id: ${{ inputs.artifact_run_id }}
-          github-token: ${{ github.token }}
           path: /tmp/a43-source
-      - uses: actions/download-artifact@v4
-        with:
-          pattern: raw122-audit-*
-          run-id: ${{ inputs.artifact_run_id }}
-          github-token: ${{ github.token }}
-          path: /tmp/a43-old-shards
-          merge-multiple: false
       - uses: actions/download-artifact@v4
         with:
           pattern: raw122-recovery-*
