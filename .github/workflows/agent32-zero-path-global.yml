@@ -737,6 +737,7 @@ jobs:
           required = [
               'Raw59ParentCover.olean',
               'Raw59ParentPartition.olean',
+              'Raw59Base.olean',
               'Canonical78Roster.olean',
               'CanonicalRaw114Accepted.olean',
               'CanonicalTwoParentGraft.olean',
@@ -746,6 +747,9 @@ jobs:
           print(f'merged {len(seen)} unique Lean modules; shared objects byte-identical')
           PY
           export LEAN_PATH=/tmp/raw59-canonical77
+          if [[ ! -f /tmp/raw59-canonical77/Raw59ParentPartition.olean ]]; then
+            lean -o /tmp/raw59-canonical77/Raw59ParentPartition.olean im-results/agent32-raw59/Raw59ParentPartition.lean
+          fi
           lean -o /tmp/raw59-canonical77/Raw59CanonicalPartition.olean im-results/agent32-raw59/Raw59CanonicalPartition.lean 2>&1 | tee /tmp/raw59-canonical77-partition.log
           lean -o /tmp/raw59-canonical77/Raw59Canonical77Graft.olean im-results/agent32-raw59/Raw59Canonical77Graft.lean 2>&1 | tee /tmp/raw59-canonical77.log
           if grep -Eq 'sorryAx|native_decide' /tmp/raw59-canonical77-partition.log /tmp/raw59-canonical77.log; then exit 1; fi
