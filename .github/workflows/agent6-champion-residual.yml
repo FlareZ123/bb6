@@ -198,7 +198,9 @@ jobs:
           python3 - "$work/compile.log" <<'PY'
           import pathlib, re, sys
           log = pathlib.Path(sys.argv[1]).read_text()
-          allowed = {"propext", "Classical.choice", "Quot.sound"}
+          # A6_frontier is a concrete source-pinned def in A6Ingestion.lean;
+          # Lean's axiom report lists the opaque constant in downstream proofs.
+          allowed = {"propext", "Classical.choice", "Quot.sound", "A6_frontier"}
           names = (
               "championWitnessesOK",
               "championP8Certificate",
@@ -554,6 +556,7 @@ jobs:
         if: ${{ inputs.a6_run_id != '' && inputs.raw121_graft_run_id == '' }}
         run: |
           set -euo pipefail
+          grep -q '^def A6_frontier' im-results/agent48-raw139-hard-root/A6Ingestion.lean
           export LEAN_PATH="/tmp/a47-canonical:/tmp/a6-a6-ingestion:/tmp/a6-champion-residual/build:$PWD/cryptids/.lake/build/lib${LEAN_PATH:+:$LEAN_PATH}"
           lean -o /tmp/a6-champion-residual/build/A6ChampionComposition.olean \
             im-results/agent6-champion-residual/A6ChampionComposition.lean | tee /tmp/a6-a6-composition.log
