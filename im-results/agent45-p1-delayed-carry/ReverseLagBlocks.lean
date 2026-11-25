@@ -1,5 +1,6 @@
 import ReverseBlockCompose
 import ReverseLagCore
+import LagCert
 
 namespace BB6.Agent45ReverseBlock
 
@@ -155,10 +156,27 @@ theorem covered_next_block (n s h : Nat) (ps : List Prefix)
       hn htr (hflat B) (hfit B)).2 ⟨C,c,hE⟩
   simp [nextBlockByFold,hm',hfilter]
 
+/-- A full margin certificate can use the fitted-block reverse filter
+    without changing its source-level margin argument. -/
+theorem cert_next_block (n K s h : Nat) (ps : List Prefix)
+    (parts : Nat → List (List Nat))
+    (hn : 0<n) (hs : 1≤s) (hcert : Cert n K s ps)
+    (hgood : MarginOK n K s h ps=true)
+    (hflat : ∀ B, (parts B).flatten =
+      (targetsRev n (s+h) B n).reverse)
+    (hfit : ∀ B, Fitted (n+(s+h)+3) (parts B)) :
+    Cert n K (s+h) (nextBlockByFold n s h parts ps) := by
+  refine ⟨covered_next_block n s h ps parts hn hs hcert.cover hflat hfit,?_⟩
+  intro j hj hjs
+  by_cases hle : j≤s
+  · exact hcert.margins j hj hle
+  · exact margin_block n K s h j ps hs (by omega) hjs hcert.cover hgood
+
 #print axioms edgeY_to_walk
 #print axioms walk_to_edgeY
 #print axioms dWalk_iff_walk
 #print axioms blockLookahead_iff_extend
 #print axioms covered_next_block
+#print axioms cert_next_block
 
 end BB6.Agent45ReverseBlock
