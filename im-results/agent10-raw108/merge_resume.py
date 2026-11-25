@@ -40,7 +40,7 @@ def checked_provenance(repo, manifest, rev):
     return current
 
 
-def resume(repo, downloads, output, config, run_id):
+def resume(repo, downloads, output, config, run_id, pins=None):
     groups = {name: set(modules) for name, modules in config["groups"].items()}
     prefix = config["artifact_prefix"]
     current_rev = subprocess.check_output(
@@ -48,6 +48,8 @@ def resume(repo, downloads, output, config, run_id):
     ).strip()
     require(set(x.name for x in downloads.iterdir()) ==
             {f"{prefix}-{g}" for g in groups}, "unexpected downloaded shard set")
+    if pins is not None:
+        require(set(pins) == set(groups), "pin list must cover exactly the group set")
     historical = []
     with tempfile.TemporaryDirectory(dir=downloads.parent) as tmp:
         stage = Path(tmp)
@@ -59,6 +61,9 @@ def resume(repo, downloads, output, config, run_id):
             old = group in OLD_GROUPS
             rev = OLD_REV if old else current_rev
             expected_run = OLD_RUN if old else run_id
+            if pins is not None:
+                rev = pins[group]['revision']
+                expected_run = str(pins[group]['run_id'])
             require(manifest["proof_source_revision"] == rev, f"{group}: source revision mismatch")
             require(str(manifest["workflow"]["run_id"]) == expected_run,
                     f"{group}: workflow run mismatch")
@@ -91,7 +96,8 @@ def resume(repo, downloads, output, config, run_id):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 4:
-        raise SystemExit("usage: merge_resume.py DOWNLOADS OUTPUT CONFIG.json")
+    if len(sys.argv) not in (4, 5):
+        raise SystemExit("usage: merge_resume.py DOWNLOADS OUTPUT CONFIG.json [PINS.json]")
     resume(Path.cwd().resolve(), Path(sys.argv[1]).resolve(), Path(sys.argv[2]).resolve(),
-           json.loads(Path(sys.argv[3]).read_text()), os.environ["GITHUB_RUN_ID"])
+           json.loads(Path(sys.argv[3]).read_text()), os.environ["GITHUB_RUN_ID"],
+           json.loads(Path(sys.argv[4]).read_text()) if len(sys.argv) == 5 else None)
