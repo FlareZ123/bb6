@@ -1,7 +1,7 @@
-From BusyCoq Require Import Enumerate62 Individual62 TC62 Agent8SourceWF
+From BusyCoq Require Import Enumerate62 Individual62 TC62 Agent5Enumerate62DeciderSound Agent8SourceWF
   Agent8QueueCheckpoint Agent8PackedChunk2_32_32 Agent32SourceEncoding
   Agent44Q32CanonicalParent.
-From Coq Require Import List Bool Arith.
+From Coq Require Import List Bool Arith NArith.
 Import ListNotations.
 Import TNF_Node.
 Open Scope nat_scope.
@@ -67,6 +67,62 @@ Proof. vm_compute. reflexivity. Qed.
 
 Print Assumptions q32_parent_child_classes_exact.
 
+Definition q32_parent_nonhalt_children : list T :=
+  filter (fun x => Nat.eqb (q32_parent_child_class x) 1)
+    q32_parent_children.
+
+Definition q32_parent_halt_children : list T :=
+  filter (fun x => Nat.eqb (q32_parent_child_class x) 0)
+    q32_parent_children.
+
+Lemma q32_parent_child_nonhalt_sound (child : T) :
+  q32_parent_child_class child = 1 ->
+  ~ halts (tm child) c0.
+Proof.
+  unfold q32_parent_child_class.
+  destruct (decider (tm child)) as [h| |] eqn:Hdec; simpl; try discriminate.
+  exact (agent32_decider_bounded_sound (tm child)).
+Qed.
+
+Lemma q32_parent_child_halt_sound (child : T) :
+  q32_parent_child_class child = 0 ->
+  exists h n,
+    halts_at (tm child) c0 n h /\
+    (n <= N.to_nat 1000000)%nat.
+Proof.
+  unfold q32_parent_child_class.
+  destruct (decider (tm child)) as [h| |] eqn:Hdec; simpl; try discriminate.
+  destruct (agent32_decider_bounded_sound (tm child)) as [n [Hhalt Hbound]].
+  exists h,n. auto.
+Qed.
+
+Theorem q32_parent_nonhalt_children_sound :
+  Forall (fun x => ~ halts (tm x) c0) q32_parent_nonhalt_children.
+Proof.
+  apply Forall_forall. intros x Hx.
+  apply q32_parent_child_nonhalt_sound.
+  apply Nat.eqb_eq.
+  apply filter_In in Hx. tauto.
+Qed.
+
+Theorem q32_parent_halt_children_bounded :
+  Forall
+    (fun x => exists h n,
+      halts_at (tm x) c0 n h /\ (n <= N.to_nat 1000000)%nat)
+    q32_parent_halt_children.
+Proof.
+  apply Forall_forall. intros x Hx.
+  apply q32_parent_child_halt_sound.
+  apply Nat.eqb_eq.
+  apply filter_In in Hx. tauto.
+Qed.
+
+Theorem q32_parent_child_class_counts :
+  length q32_parent_nonhalt_children = 7 /\
+  length q32_parent_halt_children = 9.
+Proof. vm_compute. auto. Qed.
+
+
 Definition q32_active_a1_class (x : T) : nat :=
   match tm x (A,S1) with
   | Some (S1,L,D) => 0
@@ -84,6 +140,22 @@ Time Eval vm_compute in
      (fst (decode_queue packed_chunk_2_32_32))),
    length (filter (fun x => Nat.eqb (q32_active_a1_class x) 3)
      (fst (decode_queue packed_chunk_2_32_32)))).
+
+Theorem q32_active_a1_counts_exact :
+  (length (filter (fun x => Nat.eqb (q32_active_a1_class x) 0)
+     (fst (decode_queue packed_chunk_2_32_32))),
+   length (filter (fun x => Nat.eqb (q32_active_a1_class x) 1)
+     (fst (decode_queue packed_chunk_2_32_32))),
+   length (filter (fun x => Nat.eqb (q32_active_a1_class x) 2)
+     (fst (decode_queue packed_chunk_2_32_32))),
+   length (filter (fun x => Nat.eqb (q32_active_a1_class x) 3)
+     (fst (decode_queue packed_chunk_2_32_32)))) = (14,70,0,0).
+Proof. vm_compute. reflexivity. Qed.
+
+Print Assumptions q32_parent_nonhalt_children_sound.
+Print Assumptions q32_parent_halt_children_bounded.
+Print Assumptions q32_parent_child_class_counts.
+Print Assumptions q32_active_a1_counts_exact.
 
 Theorem q32_parent_children_covered :
   q32_parent_children_coveredb = true ->
