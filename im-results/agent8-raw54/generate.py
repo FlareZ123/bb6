@@ -100,10 +100,14 @@ def main():
             ns="BB6.Agent8Raw54.Growth50Pair"
             certs[misses[i]]=f".proven ({ns}.table {variant}) ({ns}.never {variant})"
             imports[misses[i]]="Raw54Growth50Pair"
-        for i in [49,52]:
+        for i in [49,52,71]:
             ns=f"BB6.Agent8Raw54.Growth{i}"
             certs[misses[i]]=f".proven {ns}.table {ns}.never"
             imports[misses[i]]=f"Raw54Growth{i}"
+        for i in [41,66]:
+            ns=f"BB6.Agent8Raw54.Word{i}"
+            certs[misses[i]]=f".proven {ns}.table {ns}.never"
+            imports[misses[i]]=f"Raw54Word{i}"
         for i in [38,39,40,42,56,61,67,69]:
             ns=f"BB6.Agent8Raw54.Rec{i}"
             certs[misses[i]]=f".proven {ns}.table {ns}.never"
@@ -113,6 +117,7 @@ def main():
         certs[row]=f".far {str(code[0]=='1').lower()} {d} ⟨0,{D},{L},{R},{z}⟩"
     residual=[row for row in rows if row not in certs]
     assert residual==[line.split(":")[1] for line in (ROOT/"unresolved.txt").read_text().splitlines()]
+    assert not residual
     stats=Counter()
     def build(t):
         tag,*v=t
@@ -170,8 +175,15 @@ theorem residual_count : residuals.length = {len(residual)} := by decide
 theorem sound : ∀ m, compatible parent m → WeightedBound {BOUND} m ∨
     ∃ e ∈ residuals, compatible e.2 m :=
   partialSound {BOUND} parent tree parent_root parent_nohalt checked
+theorem cover : ∀ m, compatible parent m → WeightedBound {BOUND} m := by
+  intro m hm
+  rcases sound m hm with h | ⟨e,he,_⟩
+  · exact h
+  · have hn : residuals = [] := List.length_eq_zero_iff.mp residual_count
+    simp [hn] at he
 #print axioms sound
 #print axioms residual_count
+#print axioms cover
 """)
     assert stats==Counter(split=1515,cycle=25133,last=8567,open=1146),stats
     print(stats,"FAR",len(far),"sweeps",len(imports),"unresolved",len(residual))
