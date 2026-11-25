@@ -31,12 +31,31 @@ def main(a):
     assert len(opens)==spec["stats"]["open"]==len(set(opens))
     index={s:i for i,s in enumerate(opens)}
     witnesses={}
-    for row in spec["groups"].splitlines():
+    for row in spec.get("groups","").splitlines():
         c,ids=row.split()
         for i in ids.split(","):
             i=int(i); assert i not in witnesses
             witnesses[i]=("far",c)
     manual=[]
+    if spec.get("auto"):
+        sys.path.insert(0,str(ROOT.parent/"agent10-tnf-multipump"))
+        import multi
+        aname=f"Raw108Auto{a}"
+        nsa=f"BB6.Agent10{aname}"
+        parts=["import SweepPumping","set_option maxRecDepth 100000","set_option maxHeartbeats 0",
+               f"namespace {nsa}","open BB6Coverage BB6Coverage.Agent31Pump"]
+        def cv(w):return tuple((s,b) for s,b in w)
+        for i,(t,q,l,r,L,R) in spec["auto"].items():
+            i=int(i);assert i not in witnesses
+            st=multi.C(q,cv(l),cv(r));tg=multi.C(q,cv(L),cv(R))
+            p=multi.parse(opens[i])
+            ans=multi.pump(p,st,tg)
+            assert ans is not None,(a,i)
+            code,info=multi.generate(i,p,(t,st,tg,ans))
+            parts.append(code);witnesses[i]=("proven",f"{nsa}.M{i}")
+        parts.append(f"end {nsa}")
+        (ROOT/(aname+".lean")).write_text("\n\n".join(parts)+"\n")
+        manual.append(aname)
     for i,(mod,nspace,table) in spec.get("manual",{}).items():
         i=int(i);assert opens[i]==table and i not in witnesses
         witnesses[i]=("proven",nspace)
@@ -44,6 +63,15 @@ def main(a):
     for i,cyc in spec.get("long_cycles",{}).items():
         i=int(i);assert i not in witnesses
         witnesses[i]=("cycle",cyc)
+    farcache={}
+    for i,t in enumerate(opens):
+        if i in witnesses:continue
+        for c in spec.get("bank",[]):
+            try:
+                m=masks(parse(t),int(c[0]),[int(ch,36) for ch in c[1:]])
+            except AssertionError:
+                continue
+            witnesses[i]=("far",c);farcache[i]=m;break
     assert set(witnesses)==set(range(len(opens))), sorted(set(range(len(opens)))-set(witnesses))
     def emit(name,imports,body):
         header=f"""set_option maxRecDepth 100000
@@ -65,7 +93,7 @@ open BB6.Agent50TNFPilot BB6.Agent31ThreeHole BB6.Agent10ZipAudit
             t=v[0];i=index[t];kind,val=witnesses[i]
             if kind=="proven":return f".proven {val}.table {val}.never"
             if kind=="cycle":return cycle(*val)
-            c=val;rev=int(c[0]);d,D,L,R,z=masks(parse(t),rev,[int(ch,36) for ch in c[1:]])
+            c=val;rev=int(c[0]);d,D,L,R,z=farcache[i] if i in farcache else masks(parse(t),rev,[int(ch,36) for ch in c[1:]])
             return f".far {str(bool(rev)).lower()} {d} ⟨0,{D},{L},{R},{z}⟩"
         assert tag=="split"
         nn,ss,kids=v;assert len(kids)==24
