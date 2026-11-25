@@ -141,7 +141,7 @@ jobs:
           test -s .lake/build/lib/lean/Cryptids/Machines.olean
 
       - name: Compile the canonical77 r4 graft with its complete source closure
-        if: ${{ !inputs.compile_raw10_cryptids_leaf }}
+        if: ${{ !inputs.compile_raw10_cryptids_leaf && !inputs.compile_raw10_ctl_footprint }}
         env:
           CANONICAL77_DIR: /tmp/canonical77
           CANONICAL77_MANIFEST: /tmp/canonical77-manifest/manifest/canonical77-base-manifest.json
@@ -203,7 +203,7 @@ jobs:
           include-hidden-files: true
           retention-days: 30
       - name: Upload the compiled canonical r4 ingestion closure
-        if: ${{ !inputs.compile_raw10_cryptids_leaf }}
+        if: ${{ !inputs.compile_raw10_cryptids_leaf && !inputs.compile_raw10_ctl_footprint }}
         uses: actions/upload-artifact@v4
         with:
           name: canonical-r4-ingestion-certified
