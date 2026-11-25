@@ -12,7 +12,7 @@ open BB6.Agent47Canonical78
 /-- The exact certified set now includes the 65 side witnesses, the original
     held leaf, and the disjoint 625-completion F0=0RC lasso cylinder. -/
 def certifiedTables : List PartialMachine :=
-  sideTables ++ [held] ++ [table]
+  sideTables ++ [held, table]
 
 /-- All complement rectangles are retained after consuming the extra cycle
     cylinder; no rectangle is silently discarded. -/
@@ -26,7 +26,7 @@ theorem raw10RemainderWithCycle_exact (m : Machine) :
       ¬ compatible held m ∧ ¬ compatible table m := by
   rw [raw10RemainderWithCycle, remainder_exact]
   simp only [certifiedTables, List.mem_append, sideTables, List.mem_map,
-    List.mem_singleton]
+    List.mem_cons, List.mem_singleton]
   constructor
   · rintro ⟨hp, hn⟩
     refine ⟨hp, ?_, ?_, ?_⟩
@@ -37,12 +37,12 @@ theorem raw10RemainderWithCycle_exact (m : Machine) :
   · rintro ⟨hp, hs, hh, ht⟩
     refine ⟨hp, ?_⟩
     intro q hq
-    rcases hq with hleft | htable
-    · rcases hleft with hside | hheld
-      · obtain ⟨w, hw, rfl⟩ := hside
-        exact hs w hw
+    rcases hq with hside | htail
+    · obtain ⟨w, hw, rfl⟩ := hside
+      exact hs w hw
+    · rcases htail with rfl | rfl
       · exact hh
-    · exact ht
+      · exact ht
 
 theorem raw10RemainderWithCycle_disjoint :
     raw10RemainderWithCycle.Pairwise Disjoint :=
@@ -57,18 +57,18 @@ def raw10CoverWithCycle (B : Nat) (hB : 7014 ≤ B)
     Cover (WeightedBound B) firstOneB0_1LC :=
   coverFromRemainder B firstOneB0_1LC certifiedTables
     (fun q hq m hm => by
-      rcases List.mem_append.mp hq with hleft | hright
-      · rcases List.mem_append.mp hleft with hs | hh
-        · obtain ⟨w, hw, rfl⟩ := List.mem_map.mp hs
-          have hb := b0_1lcSideWitnesses_safe w hw m hm
-          intro k d hk hd
-          exact Nat.le_trans (hb k d hk hd) hB
-        · have he : q = held := by simpa using hh
+      rcases List.mem_append.mp hq with hs | htail
+      · obtain ⟨w, hw, rfl⟩ := List.mem_map.mp hs
+        have hb := b0_1lcSideWitnesses_safe w hw m hm
+        intro k d hk hd
+        exact Nat.le_trans (hb k d hk hd) hB
+      · rcases List.mem_cons.mp htail with hHeldMem | hTableMem
+        · have he : q = held := by simpa using hHeldMem
           subst q
           exact hHeld m hm
-      · have he : q = table := by simpa using hright
-        subst q
-        exact (cover B).sound hm)
+        · have he : q = table := by simpa using hTableMem
+          subst q
+          exact (cover B).sound hm)
     hOpen
 
 /-- Conditional exact-BB6 composition with the 625-table cylinder consumed.
