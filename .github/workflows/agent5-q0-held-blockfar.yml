@@ -8,6 +8,10 @@ on:
         type: choice
         options: [generated, symbolic-q3500]
         default: generated
+      compact:
+        description: "Minimize left DFA and use sparse lookup (width 3 only)"
+        type: boolean
+        default: false
       table:
         description: "Six-state partial table in repository notation"
         type: string
@@ -62,6 +66,7 @@ jobs:
       - name: Generate finite BlockFAR certificate
         if: inputs.proof_mode == 'generated'
         env:
+          COMPACT: ${{ inputs.compact }}
           TABLE: ${{ inputs.table }}
           MODULE_NAME: ${{ inputs.name }}
           WIDTH: ${{ inputs.width }}
@@ -87,6 +92,8 @@ jobs:
               runs=int(os.environ["RUNS"]),
               flip=os.environ["FLIP"].lower() == "true",
               name=os.environ["MODULE_NAME"],
+              minimize_left=os.environ["COMPACT"].lower() == "true",
+              sparse=os.environ["COMPACT"].lower() == "true",
           )
           (out / "manifest.txt").write_text(
               "table=" + os.environ["TABLE"] + "\n" +
@@ -105,6 +112,7 @@ jobs:
           MODULE_NAME: ${{ inputs.name }}
           FLIP: ${{ inputs.flip }}
           WIDTH: ${{ inputs.width }}
+          COMPACT: ${{ inputs.compact }}
         run: |
           set -euo pipefail
           cd im-results/agent13-block-far
@@ -114,6 +122,10 @@ jobs:
           lean -o BlockMacro.olean BlockMacro.lean
           lean -o BlockFAR.olean BlockFAR.lean
           lean -o RangeCheck.olean RangeCheck.lean
+          if [ "$COMPACT" = "true" ]; then
+            test "$WIDTH" = 3
+            lean -o SparseBlockFAR.olean SparseBlockFAR.lean
+          fi
           if [ "$WIDTH" = 2 ]; then
             for m in BlockMacro2 BlockFAR2 RangeCheck2; do
               lean -o "$m.olean" "$m.lean"
