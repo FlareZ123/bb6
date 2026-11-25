@@ -27,9 +27,9 @@ Proof.
     recovered_held_2800_parent).mp recovered_held_2800_refines_parent).
 Qed.
 
-/-- Source-side complement preservation: every completion of the parent
+(* Source-side complement preservation: every completion of the parent
     either extends the FARv3-certified leaf, or disagrees with it at a slot
-    left open by the parent and fixed by the leaf. -/
+    left open by the parent and fixed by the leaf. *)
 Theorem recovered_held_2800_parent_leaf_partition (m : TM)
     (hm : is_child_of m recovered_held_2800_parent) :
     is_child_of m recovered_held_2800 \\/
@@ -93,8 +93,7 @@ Proof.
   exists x.
   split.
   - exact Hx.
-  - apply source_refinesb_spec.
-    exact Href.
+  - exact ((source_refinesb_spec (tm x) recovered_held_2800).mp Href).
 Qed.
 
 (* The source-roster consumer converts the FARv3 cylinder theorem into the
