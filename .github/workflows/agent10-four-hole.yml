@@ -8,12 +8,12 @@ on:
         default: twelve
       raw107_witness:
         type: choice
-        options: ['180', '1655']
+        options: ['180', '1655', '1424']
         default: '180'
       raw107_child:
         description: 'B1 action for an individual raw107 child source audit'
         type: choice
-        options: [0RD, 0RC, 0RE, 1RE, 1LC, 1LE, 1LB, 0RF, 1RF, 0LE, 0LF]
+        options: [0RD, 0RC, 0RE, 1RE, 1LC, 1LE, 1LB, 0RF, 1RF, 0LE, 0LF, 1LF]
         default: 0LF
 permissions:
   contents: read
@@ -73,7 +73,7 @@ jobs:
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
-          case "$WITNESS" in 180|1655) ;; *) exit 2 ;; esac
+          case "$WITNESS" in 180|1655|1424) ;; *) exit 2 ;; esac
           python tools/lean_compile_closure.py --workdir /tmp/a10-raw107-witness --jobs 4 "im-results/agent11-raw107/Raw107LF${WITNESS}.lean" | tee /tmp/a10-raw107-witness.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a10-raw107-witness.log; then exit 1; fi
       - name: Verify one complete raw107 child against original source
@@ -92,6 +92,7 @@ jobs:
             0RE) python "$root/generate_re.py"; module=Raw107REData ;;
             1RE|1LC|1LE|1LB|0RF|1RF|0LE) python "$root/generate_more.py" "$CHILD"; module="Raw107B${CHILD}Data" ;;
             0LF) python "$root/generate_partial.py" 0LF; module=Raw107LF180Bridge ;;
+            1LF) python "$root/generate_partial.py" 1LF; module=Raw107LFBridge ;;
             *) exit 2 ;;
           esac
           python tools/lean_compile_closure.py --workdir /tmp/a10-raw107-child --jobs 4 "$root/$module.lean" | tee /tmp/a10-raw107-child.log
