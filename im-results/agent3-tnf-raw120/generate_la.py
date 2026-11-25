@@ -115,6 +115,10 @@ assert opens[2311] == "1RB1RA_1RC0LD_0RD0RF_1LD1RE_0LA1LE_---1RC"
 assert opens[2313] == "1RB1RA_1RC0RE_0RD0RF_1LD1RE_0LA1LE_---1RC"
 assert opens[3898] == "1RB1LF_1RC1RF_0RD1RB_1LD1RE_0LA1LE_---0LA"
 assert opens[3916] == "1RB1LF_1RC1RF_0RD1RB_1LD1RE_0LA1LE_---0RE"
+from make_la_shuttle import emit as emit_shuttles, machines as shuttle_machines
+emit_shuttles(opens,FOLDER)
+for i,code,*_ in shuttle_machines:
+    pumps[code] = (f"BB6.Agent3LAFinal.M{i}.table", f"BB6.Agent3LAFinal.M{i}.never")
 missing = []
 one_count = 0
 multi_count = 0
@@ -163,6 +167,26 @@ for i, code in enumerate(opens):
     if code in certs or code in pumps or code in late:
         continue
     p = one.parse(code)
+    # These two families need carefully aligned repeated cuts.
+    if i in (3911,4214):
+        if i == 3911:
+            assert code == "1RB0LF_1RC1RF_0RD1RB_1LD1RE_0LA1LE_---0RC"
+            st = multi.C(4,(),multi.clean(multi.lit("1")+multi.rep("1"*18)+multi.lit("111")))
+            target = multi.C(4,(),multi.clean(multi.rep("1"*18)+multi.lit("1"*22)))
+            entry = 9
+        else:
+            assert code == "1RB1LF_1RC1RB_0RD1RF_1LD1RE_0LA1LE_---0RB"
+            st = multi.C(1,multi.clean(multi.lit("011")+multi.rep("1")+multi.lit("0111")+multi.rep("01")),())
+            target = multi.C(1,multi.clean(multi.lit("0111")+multi.rep("1")+multi.lit("011101")+multi.rep("01")),())
+            entry = 16
+        proof = multi.pump(p,st,target,500)
+        assert proof is not None, (i,code)
+        generated, info = multi.generate(i,p,(entry,st,target,proof))
+        pump_code.append(generated)
+        pumps[code] = (f"{pumpns}.M{i}.table", f"{pumpns}.M{i}.never")
+        multi_count += 1
+        print("targeted-multi",i,info)
+        continue
     events = one.concrete_events(p, EVENT_LIMIT)
     ans = extended_one_candidate(p, events)
     if ans is not None:
@@ -246,6 +270,7 @@ summary = {
     "multi_block_pumps": multi_count,
     "late_leaves": len(late),
     "bidfa_leaves": bidfa_count,
+    "nested_shuttle_leaves": len(shuttle_machines),
     "unresolved": len(missing),
     "unresolved_sample": [{"index": i, "table": code} for i, code in missing[:100]],
 }
@@ -362,7 +387,7 @@ theorem split_checked (p : PartialMachine) (n : Nat) (s : Slot)
   simp only [Bool.and_eq_true]
   exact ⟨hq, allMoves_of _ hk⟩
 """
-emit(prefix + "Base", ["Raw120Late", "Raw120LABiDFA", prefix + "Sweeps"], base)
+emit(prefix + "Base", ["Raw120Late", "Raw120LABiDFA", "Raw120LAShuttles", prefix + "Sweeps"], base)
 
 assert tree[0] == "split"
 root_n, root_slot, root_kids = tree[1], tree[2], tree[3]
