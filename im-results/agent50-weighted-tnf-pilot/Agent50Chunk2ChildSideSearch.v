@@ -18,8 +18,8 @@ Definition agent50_child_side_candidates_zero : list side_candidate :=
       (seq 0 13))
     [L;R].
 
-Definition agent50_find_child_side_candidate (p : TM) : option side_candidate :=
-  find (side_candidate_check (TM_from_str (TM_to_str p)))
+Definition agent50_find_child_side_candidate (table_string : string) : option side_candidate :=
+  find (side_candidate_check (TM_from_str table_string))
     agent50_child_side_candidates_zero.
 
 Lemma agent50_find_first_true {A : Type} (f : A -> bool) (xs : list A) (x : A) :
@@ -32,17 +32,17 @@ Proof.
     + eapply IH. exact H.
 Qed.
 
-Lemma agent50_find_child_side_candidate_sound p c :
-  agent50_find_child_side_candidate p = Some c ->
-  side_candidate_check (TM_from_str (TM_to_str p)) c = true.
+Lemma agent50_find_child_side_candidate_sound table_string c :
+  agent50_find_child_side_candidate table_string = Some c ->
+  side_candidate_check (TM_from_str table_string) c = true.
 Proof.
   unfold agent50_find_child_side_candidate.
   apply agent50_find_first_true.
 Qed.
 
-Lemma agent50_source_certificate_check_of_candidate bound p c :
-  side_candidate_check (TM_from_str (TM_to_str p)) c = true ->
-  certificate_check bound (TM_to_str p, candidate_witness c) = true.
+Lemma agent50_source_certificate_check_of_candidate bound table_string c :
+  side_candidate_check (TM_from_str table_string) c = true ->
+  certificate_check bound (table_string, candidate_witness c) = true.
 Proof.
   intro H.
   destruct c as [d [entry [period budget]]].
@@ -52,13 +52,13 @@ Proof.
 Qed.
 
 Fixpoint agent50_search_child_side_roster
-    (xs : list TM) : list source_certificate :=
-  match xs with
+    (table_strings : list string) : list source_certificate :=
+  match table_strings with
   | [] => []
-  | p :: rest =>
-      match agent50_find_child_side_candidate p with
+  | table_string :: rest =>
+      match agent50_find_child_side_candidate table_string with
       | Some c =>
-          (TM_to_str p, candidate_witness c) ::
+          (table_string, candidate_witness c) ::
             agent50_search_child_side_roster rest
       | None => agent50_search_child_side_roster rest
       end
@@ -67,9 +67,9 @@ Fixpoint agent50_search_child_side_roster
 Theorem agent50_search_child_side_roster_checked bound xs :
   forallb (certificate_check bound) (agent50_search_child_side_roster xs) = true.
 Proof.
-  induction xs as [|p xs IH]; cbn [agent50_search_child_side_roster].
+  induction xs as [|table_string xs IH]; cbn [agent50_search_child_side_roster].
   - reflexivity.
-  - destruct (agent50_find_child_side_candidate p) as [c|] eqn:Hfind; cbn.
+  - destruct (agent50_find_child_side_candidate table_string) as [c|] eqn:Hfind; cbn.
     + apply andb_true_intro. split.
       * apply agent50_source_certificate_check_of_candidate.
         apply agent50_find_child_side_candidate_sound. exact Hfind.
@@ -77,8 +77,11 @@ Proof.
     + exact IH.
 Qed.
 
+Definition agent50_child_side_strings : list string :=
+  nodup string_dec (map TM_to_str chunk2_first_hole_children).
+
 Definition agent50_child_side_certificates : list source_certificate :=
-  agent50_search_child_side_roster chunk2_first_hole_children.
+  agent50_search_child_side_roster agent50_child_side_strings.
 
 Definition agent50_child_side_roster : list TM :=
   certificate_roster agent50_child_side_certificates.
@@ -153,7 +156,8 @@ Qed.
 (* Reproducible finite output: number of children certified by this first
    budget-zero pass, and number retained as open source obligations. *)
 Time Eval vm_compute in
-  (length agent50_child_side_certificates, length agent50_child_side_remaining).
+  (length chunk2_first_hole_children, length agent50_child_side_strings,
+   length agent50_child_side_certificates, length agent50_child_side_remaining).
 
 Print Assumptions agent50_child_side_roster_safe.
 Print Assumptions agent50_child_side_frontier_sound.
