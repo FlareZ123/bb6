@@ -41,3 +41,24 @@ The first 3,691-cycle / 508-hole scan was retracted: `enumerate.cpp` emits under
 The corrected `generate_bundle.py` strips underscores before every C++ query and recursively resolves multi-hole hits: each such leaf becomes a 24-way `Audit.split`; translated cycles become `Audit.cycle`, and only genuine one-hole leaves become `Audit.last`. Open leaves are deferred until all descendants at the current cap are processed, then retried at a larger cap. Independent C++ batches now run in two processes.
 
 Current CI run: 45615959400 (`raw124_bundle_prepare` job 139211302469), dispatched with a 60-minute prepare timeout and serial Lean shard compilation. The generated bound is asserted to be at most 2,000,000. No 0LB classification or source-level `bound_all` theorem has yet been accepted. Once available, `Raw124ChampionBound.branch_bound_le_champion` provides the numeric lift to the champion score, followed by `weightedBound_mono_local` for roster integration.
+
+## F1=0LF — partial candidate partition and inductive certificates
+
+For `1RB---_1RC---_0RD---_1LD1RE_---1LF_---0LF`, a versioned-tape search at cap 3000 and 32 candidate predecessors found 30,026 exact translated side-cycle leaves, 13,104 last-hole leaves, 1,961 splits and 1,974 open leaves. The respective completion masses are 8,475,650 cycle, 1,048,625 bounded (including halt choices at splits), and 241,350 open, totaling 9,765,625. The maximum observed hole query was at 2,925 moves, giving a conservative candidate weighted bound of 2,931 for the bounded part. This partition is a discovery output, not yet a source-checked audit. The open complement must be retained.
+
+The first new hole is F0 at move 9. In its 1RB child, the partition has 75 splits, 1,379 cycle leaves, 287 last-hole leaves and 60 open leaves. Existing FAR search produces 53 candidate certificates among those 60. Two further one-hole leaves have parametric block-growth certificates in [Raw124ZeroLFBlockGrowth.lean](Raw124ZeroLFBlockGrowth.lean):
+
+| Table | Entry moves | Left word (nearest first), parameter n | Increase per epoch |
+|---|---:|---|---:|
+| `1RB0RE_1RC1RA_0RD0RB_1LD1RE_---1LF_1RB0LF` | 91 | `0 (111011101110)^n 11101110111111` | 3 blocks of 1110 |
+| `1RB1RF_1RC1RA_0RD0RB_1LD1RE_---1LF_1RB0LF` | 155 | `010 (11101110)^n 11101110111111` | 2 blocks of 1110 |
+
+Both start in A with empty right list. The finite symbolic sweep operations and universal nonhalting theorems were checked by Lean 4.36.0-rc2 against a reconstructed source-compatible zipper model, with only propext, Classical.choice and Quot.sound. The committed adapter uses original BlockPump.Certificate.never; compilation of its exact source dependency closure is pending. Each table covers 25 completions. Five other leaves of the 1RB child remain unsolved even at the candidate level:
+```
+1RB0LE_1RC1RA_0RD0RB_1LD1RE_---1LF_1RB0LF
+1RB---_1RC1RF_0RD0RB_1LD1RE_0RA1LF_1RB0LF
+1RB---_1RC1RF_0RD0RB_1LD1RE_1RA1LF_1RB0LF
+1RB---_1RC1RA_0RD0RE_1LD1RE_0RB1LF_1RB0LF
+1RB0RD_1RC---_0RD1LA_1LD1RE_1RB1LF_1RB0LF
+```
+No parent or canonical roster obligation has been discharged by this partial work.
