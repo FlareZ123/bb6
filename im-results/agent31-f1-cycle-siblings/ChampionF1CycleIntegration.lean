@@ -126,7 +126,7 @@ theorem cover_remainingF1ZeroRC
                     h1LC', h1RC', h0LE', h1LE']
 
 /-- Conditional exactness after eight new cycle siblings: 77 nonchampion
-    canonical Covers and 100 explicit raw139 leaves remain. -/
+    canonical Covers and 98 explicit raw139 leaves remain. -/
 theorem exact_from_remainingF1Cycles
     (hOther : ∀ e ∈ BB6.Agent47Canonical78.roster,
       e.2 ≠ championResidual →
