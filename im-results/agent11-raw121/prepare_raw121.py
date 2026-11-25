@@ -91,7 +91,33 @@ def enumerate_parent():
     assert set(dfa) == set(range(len(opens)))
     bank_codes = (ROOT / "bank.txt").read_text().splitlines()
     assert len(bank_codes) == len(set(bank_codes)) == 84
-    assert len(dfa) == len(opens) and len(set(dfa.values())) <= 84
+
+    # C++ bank matches are only candidates. Validate every FAR code with the
+    # same finite mask construction used by the Lean FAR checker; try the
+    # remaining fixed-bank codes if the first C++ match is a false positive.
+    setup_paths()
+    import generate_sweeps as one
+    from generate_four_hole import masks
+    valid_dfa = {}
+    invalid_dfa = {}
+    for i in range(len(opens)):
+        if i in special:
+            continue
+        p = one.parse(opens[i])
+        candidates = [dfa[i]] + [code for code in bank_codes if code != dfa[i]]
+        for candidate in candidates:
+            try:
+                masks(p, int(candidate[0]), [int(ch, 36) for ch in candidate[1:]])
+            except (AssertionError, ValueError, IndexError):
+                continue
+            valid_dfa[i] = candidate
+            break
+        else:
+            invalid_dfa[i] = dfa[i]
+    assert not invalid_dfa, ("no Lean-compatible FAR code for", sorted(invalid_dfa.items())[:20])
+    assert set(valid_dfa) == set(range(len(opens))) - special
+    dfa = valid_dfa
+    assert len(dfa) == 14156
 
     # The explicit symbolic tables are pinned to their open-list indices.
     for category in ("quad", "counter", "long", "quadExtra", "binaryA", "unresolved"):
@@ -278,8 +304,8 @@ def generate_tree():
     special = expected_special(spec)
     assert set(proofs) | set(late) == special
     assert set(proofs).isdisjoint(late)
-    assert set(dfa) == set(range(len(opens)))
-    assert len(proofs) == 119 and len(late) == 2 and len(dfa) == 14277
+    assert set(dfa) == set(range(len(opens))) - special
+    assert len(proofs) == 119 and len(late) == 2 and len(dfa) == 14156
 
     def build(node):
         tag, *values = node
