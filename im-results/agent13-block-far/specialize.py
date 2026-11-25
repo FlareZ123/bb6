@@ -12,7 +12,19 @@ for n in map(int,sys.argv[1:]):
     t+='def Sym.zero : Sym := '+vec(['false']*n)+'\n\n'
     t+='def Sym.code (s : Sym) : Nat := '+' + '.join(f'{2**i}*s.{f}.toNat' for i,f in enumerate(fs))+'\n\n'
     t+='def Sym.ofCode (n : Nat) : Sym := '+vec([f'n/{2**i}%2 == 1' for i in range(n)])+'\n\n'
-    t+=f'def symbols : List Sym := (List.range {k}).map Sym.ofCode\n\ntheorem symbols_complete (s : Sym) : s ∈ symbols := by\n  rcases s with '+vec(fs)+'\n  '+' <;> '.join('cases '+f for f in fs)+' <;> decide\n\n'
+    t+=f'def symbols : List Sym := (List.range {k}).map Sym.ofCode\n\n'
+    if n < 8:
+        t+='theorem symbols_complete (s : Sym) : s ∈ symbols := by\n  rcases s with '+vec(fs)+'\n  '+' <;> '.join('cases '+f for f in fs)+' <;> decide\n\n'
+    else:
+        # Symbolic binary digit inversion: avoid 2^n Boolean case branches
+        # and linear list-membership reduction in each branch.
+        bounds=''.join(f'  have hb{i} : s.{f}.toNat ≤ 1 := by cases s.{f} <;> decide\n' for i,f in enumerate(fs))
+        t+=f'theorem code_lt (s : Sym) : s.code < {k} := by\n'+bounds+'  unfold Sym.code\n  omega\n\n'
+        t+='theorem ofCode_code (s : Sym) : Sym.ofCode s.code = s := by\n'+bounds
+        for i,f in enumerate(fs):
+            t+=f'  have h{i} : (s.code / {2**i} % 2 == 1) = s.{f} := by\n    have he : s.code / {2**i} % 2 = s.{f}.toNat := by\n      unfold Sym.code\n      omega\n    rw [he]\n    cases s.{f} <;> rfl\n'
+        t+='  cases s\n  simp only [Sym.ofCode,Sym.mk.injEq]\n  exact '+vec([f'h{i}' for i in range(n)])+'\n\n'
+        t+='theorem symbols_complete (s : Sym) : s ∈ symbols := by\n  exact List.mem_map.mpr ⟨s.code,List.mem_range.mpr (code_lt s),ofCode_code s⟩\n\n'
     t+='inductive Pos where '+' '.join('| '+p for p in ps)+'\n  deriving DecidableEq, Repr\n\n'
     t+='def Sym.read (s : Sym) : Pos → Bool\n'+''.join(f'  | .{p} => s.{f}\n' for p,f in zip(ps,fs))+'\n'
     t+='def Sym.write (s : Sym) (p : Pos) (w : Bool) : Sym :=\n  match p with\n'+''.join(f'  | .{p} => '+vec(['w' if j==i else 's.'+f for j,f in enumerate(fs)])+'\n' for i,p in enumerate(ps))+'\n'
