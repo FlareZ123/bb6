@@ -257,6 +257,9 @@ def emit(t):
     if tag == "late0RE":
         n = "BB6Coverage.Agent31Pump.Raw13Late0RE"
         return f".bounded {n}.table 21269 {n}.bound"
+    if tag in ("zeroRCparent","zeroRDparent"):
+        n = "BB6.Agent46Raw13Zero"+tag[4:6]
+        return f".bounded {n}.parent 7014 {n}.bound"
     if tag == "zeroREparent":
         n = "BB6.Agent46Raw13ZeroRE"
         return f".bounded {n}.parent 21269 {n}.bound"
@@ -294,11 +297,13 @@ if __name__ == "__main__":
     t = tree(ROOT,3,DEPTH,True)
     assert t[:3] == ("split",3,1)
     t = enhance_selected(build_enhanced(t))
-    t = enhance(t,ROOT,{"1RB1LC1RC0LD1LA0RB1LB0RE------------":("zeroREparent",)})
+    t = enhance(t,ROOT,{"1RB1LC1RC0LD1LA0RB1LB0RE------------":("zeroREparent",),
+        "1RB1LC1RC0LD1LA0RB0RC---------------":("zeroRCparent",),
+        "1RB1LC1RC0LD1LA0RB0RD---------------":("zeroRDparent",)})
     c,m = Counter(),Counter()
     tally(t,9,3,c,m)
-    assert c == Counter(open=1721,cycle=2708,state=948,split=353,halt=353,last=999,ngram=15,pump=3,selectedgram=826,pump1RE=1,sharedpump=3,pump0LE=1,pump1RE2=1,sparse1RE=1,zeroREparent=1),c
-    assert m["open"] == 1725410156400 and sum(m.values()) == 25**9,m
+    assert c == Counter(open=1719,cycle=2708,state=948,split=353,halt=353,last=999,ngram=15,pump=3,selectedgram=826,pump1RE=1,sharedpump=3,pump0LE=1,pump1RE2=1,sparse1RE=1,zeroREparent=1,zeroRCparent=1,zeroRDparent=1),c
+    assert m["open"] == 1725351562650 and sum(m.values()) == 25**9,m
     names = []
     for i,k in enumerate(t[3]):
         if k is None:
@@ -306,7 +311,7 @@ if __name__ == "__main__":
         name = f"Agent46Raw13Kid{i:02}"
         names.append(name)
         mv = move(MOVES[i])
-        write(name,["Agent46Raw13Base","Agent46Raw13NGram","Agent46Raw13Pumps","Agent46Raw13SelectedGram","Agent46Raw13Pump1RE","Agent46Raw13SharedPumps","Agent46Raw13Pump0LE","Agent46Raw13Pump1RE2","Agent46Raw13Sparse1RE","Agent46Raw13ZeroRE"],f"""
+        write(name,["Agent46Raw13Base","Agent46Raw13NGram","Agent46Raw13Pumps","Agent46Raw13SelectedGram","Agent46Raw13Pump1RE","Agent46Raw13SharedPumps","Agent46Raw13Pump0LE","Agent46Raw13Pump1RE2","Agent46Raw13Sparse1RE","Agent46Raw13ZeroRE","Agent46Raw13ZeroRC","Agent46Raw13ZeroRD"],f"""
 def kid{i:02} : Cut := {emit(k)}
 theorem checked{i:02} :
     check 21269 (child {mv}) (nextCut 3 {mv}) kid{i:02} = true := by decide

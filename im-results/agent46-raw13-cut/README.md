@@ -4,7 +4,7 @@
 
 Parent: canonical78 raw residual 13, A0=1RB B0=1RC C0=1LA, nine holes. The generic quotient-aware partial cut retains introduced and least-fresh state choices at each authentic query and accounts for all discarded labels via the actual source renaming and blank-delay transport. The generic core was accepted in [CI 45544987354](https://github.com/FlareZ123/bb6/actions/runs/45544987354). The generated cut and ingestion module below must be checked at their current revision before their counts are treated as accepted global coverage.
 
-The exact residual complement is computed by `Agent46CanonicalCut.residuals`, and `Agent46Raw13Ingest.graft_sound` replaces exactly the matched raw13 table in a source-rooted roster. `cover_at_target` consumes the retained quotient-compatible obligations at any target B≥7014. The one-hole #754 cylinder is explicitly retained by `oneHole754_retained`. No timeout is treated as a proof.
+The exact residual complement is computed by `Agent46CanonicalCut.residuals`, and `Agent46Raw13Ingest.graft_sound` replaces exactly the matched raw13 table in a source-rooted roster. `cover_at_target` consumes the retained quotient-compatible obligations at any target B≥21269. The one-hole #754 cylinder is explicitly retained by `oneHole754_retained`. No timeout is treated as a proof.
 
 ## Two complete four-hole branch candidates
 
@@ -60,10 +60,28 @@ Put F(a,b)=(A, [], 0(10)^a(11)^b1). The genuine seed F(1,0) occurs after 12 prim
 - F(2k+1,b+1) → F(2k+3,b), cost 12k+16.
 - F(a,0) → F(1,a+1), cost 4a+16.
 
-Thus F(1,b) → F(1,2b+2) with cost 6b²+18b+20. The exact arbitrary-tail sweep inductions, reset, drain, seed, orbit, positivity, and closed cost lemmas passed local Lean 4.36.0-rc2 against the copied source definitions, only propext and Quot.sound. [Agent46Raw13Pump0RC.lean](Agent46Raw13Pump0RC.lean) includes the actual never_of_growth bridge; the full parent proof is submitted under target zeroRC. Pending source acceptance.
+Thus F(1,b) → F(1,2b+2) with cost 6b²+18b+20. The exact arbitrary-tail sweep inductions, reset, drain, seed, orbit, positivity, and closed cost lemmas passed local Lean 4.36.0-rc2 against the copied source definitions, only propext and Quot.sound. [Agent46Raw13Pump0RC.lean](Agent46Raw13Pump0RC.lean) includes the actual never_of_growth bridge; the full parent proof is submitted under target zeroRC. The complete parent, exact empty complement, and weighted bound 7014 were source-accepted in [CI 45572254080](https://github.com/FlareZ123/bb6/actions/runs/45572254080), pinned revision `a9a20278c7a0cdc541a6d40cdfe58e7af539759b`.
+
+## D0 = 0RD: complete five-hole parent
+
+The five-hole parent `1RB1LC_1RC0LD_1LA0RB_0RD---_------_------` has 158 authentic split queries, 2800 translated-cycle leaves, 176 state masks, 630 last-hole leaves, 20 dense n-gram leaves and five pumping leaves. Its first query is D/1 at step 8.
+
+The new [Agent46CarryPumping.lean](Agent46CarryPumping.lean) proves a generic exact nested-carry induction: if a depth k preparation uses 2k+prep steps and constructs k repeated two-cell blocks plus a marker, and the marker completion costs fin steps, then recursively draining those k blocks from depth zero advances the right counter by one in (prep+fin+2)·2^k−2 steps. The preparation, every lower carry and marker completion are equalities of the actual partial-machine semantics for arbitrary untouched suffixes. The blank-left version has its own exact preparation and marker.
+
+[Agent46Raw13Pump0RD.lean](Agent46Raw13Pump0RD.lean) instantiates the theorem for three of the hard leaves, then uses two ordinary sweep inductions for the remaining two.
+
+| Variant | D1 E0 E1 F0 F1 | Authentic seed | Positive exact recurrence cost |
+|---|---|---|---|
+| 0 | 1LE 0LF --- 1RD 0LE | E, [], (00)^1 1 after 15 | 8·2^k−2 for k→k+1 |
+| 1 | 1LE 1RD 0LF 0LE --- | E, [], (00)^1 1 after 13 | 6·2^k−2 for k→k+1 |
+| 2 | 1RE 0RF --- 0LC 0RF | A, [], (11)^2 10 after 32 | 10·2^k−2 for k→k+1 |
+| 3 | 1RE 0RB 0RF --- 1RE | E, (01)^1 00, [] after 9 | 4n+17 for n→n+1 |
+| 4 | 1RE 0RB 0RF --- 1LD | E, (01)^1 00, [] after 9 | 6n+19 for n→n+1 |
+
+For variants 3,4 the family is E,(01)^(n+1) 00 1^n,[]. The five exact unbounded recurrence proofs and the complete parent with empty complement at weighted bound 7014 passed the original-source [CI 45573192648](https://github.com/FlareZ123/bb6/actions/runs/45573192648) at pinned revision `fb886531bb3364f6cb6c3c0af5806be8dcdb0231`.
 
 ## Exact complement and consuming theorem
 
-The updated candidate census has 353 split queries, 2708 cycles, 948 state masks, 999 last-hole leaves, 15 initial and 826 selected dense n-gram leaves, one sparse n-gram leaf, three original and six additional pumping leaves, and 1721 unresolved canonical leaves after replacing D1=0RE by its standalone bounded parent certificate. The raw13 parent has 25^9=3814697265625 literal completions; the computed retained mass is 1725410156400. Before this incarnation's two new four-hole candidates the cut retained 1724 leaves and mass 1725417187650. The two branches therefore remove exactly 4687500 weighted literal completions if the source audit accepts the new cut. The global graft is 78−1+1721=1798 quotient obligations, including the exact surviving complement. The earlier D1=0LE-only revision was cancelled in [CI 45557634300](https://github.com/FlareZ123/bb6/actions/runs/45557634300).
+The updated candidate census has 353 split queries, 2708 cycles, 948 state masks, 999 last-hole leaves, 15 initial and 826 selected dense n-gram leaves, one sparse n-gram leaf, three original and six additional pumping leaves, and 1719 unresolved canonical leaves after replacing D1=0RE and D0=0RC,0RD by their standalone bounded parent certificates. The raw13 parent has 25^9=3814697265625 literal completions; the computed retained mass is 1725351562650. Before this incarnation's two new four-hole candidates the cut retained 1724 leaves and mass 1725417187650. The three four-hole and two five-hole closures now add an exact candidate mass removal of 3·6·25^4 + 2·3·25^5 relative to the preceding cut. The 0RE,0RC,0RD parent theorems are independently source-accepted; the new global graft requires its own source check. The global graft is 78−1+1719=1796 quotient obligations, including the exact surviving complement. The earlier D1=0LE-only revision was cancelled in [CI 45557634300](https://github.com/FlareZ123/bb6/actions/runs/45557634300).
 
 To reproduce, invoke the existing manual workflow `agent46-raw13-cut.yml` with target `ingest`. It generates the proof data, compiles the original-source import closure, and rejects sorryAx or native_decide in the printed profiles. A failed source check leaves the parent obligation intact. The canonical raw13 parent is still open, #754 remains open, and no BB(6) upper bound follows without the remaining covers at the exact attained score.
