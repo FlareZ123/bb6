@@ -8,18 +8,19 @@ set_option maxHeartbeats 0
 /-- The unresolved Raw58 LF leaf 411. Its only undefined transition is E0. -/
 def raw58LF411 : PartialMachine := fun s =>
   match s.1.val, s.2 with
-  | 0, false => some ⟨true, Dir.R, ⟨1⟩⟩
-  | 0, true  => some ⟨false, Dir.L, ⟨5⟩⟩
-  | 1, false => some ⟨true, Dir.R, ⟨2⟩⟩
-  | 1, true  => some ⟨false, Dir.R, ⟨0⟩⟩
-  | 2, false => some ⟨false, Dir.R, ⟨3⟩⟩
-  | 2, true  => some ⟨false, Dir.R, ⟨1⟩⟩
-  | 3, false => some ⟨true, Dir.L, ⟨3⟩⟩
-  | 3, true  => some ⟨true, Dir.R, ⟨4⟩⟩
+  | 0, false => some (some ⟨true,true,1⟩)
+  | 0, true  => some (some ⟨false,false,5⟩)
+  | 1, false => some (some ⟨true,true,2⟩)
+  | 1, true  => some (some ⟨false,true,0⟩)
+  | 2, false => some (some ⟨false,true,3⟩)
+  | 2, true  => some (some ⟨false,true,1⟩)
+  | 3, false => some (some ⟨true,false,3⟩)
+  | 3, true  => some (some ⟨true,true,4⟩)
   | 4, false => none
-  | 4, true  => some ⟨false, Dir.R, ⟨0⟩⟩
-  | 5, false => some ⟨true, Dir.L, ⟨0⟩⟩
-  | 5, true  => some ⟨true, Dir.L, ⟨1⟩⟩
+  | 4, true  => some (some ⟨false,true,0⟩)
+  | 5, false => some (some ⟨true,false,0⟩)
+  | 5, true  => some (some ⟨true,false,1⟩)
+  | _, _ => none
 
 /-- C(j,t): state C, current 0, with an alternating left-stack marker.
 The left list is nearest-first, as in Agent31Pump.Z0. -/
@@ -217,6 +218,8 @@ theorem drain (j t : Nat) :
       have hfirst := inner j t
       have htail := ih (t+1)
       have hcomp := join0 hfirst htail
+      have hindex : t + (1+j) = t + (j+1) := by omega
+      rw [hindex]
       simpa [drainTime, Nat.add_assoc] using hcomp
 
 /-- A complete growth cycle C(k,0) -> C(2k+4,0). -/
@@ -226,7 +229,7 @@ theorem grow (k : Nat) :
     run0 raw58LF411 (cycleTime k) (C k 0) =
       some (C (2*k+4) 0) := by
   have hcomp := join0 (drain k 0) (reset k)
-  simpa [cycleTime] using hcomp
+  simpa [cycleTime, Nat.zero_add] using hcomp
 
 def index : Nat → Nat
   | 0 => 4
@@ -262,14 +265,14 @@ theorem long (n : Nat) :
       some (C (index n) 0) := by
   exact ⟨elapsed n, elapsed_ge n, iter_run n⟩
 
-theorem arbitrary : Arbitrary raw58LF411 := by
+theorem arbitrary : ∀ n : Nat, ∃ t z, n ≤ t ∧ run0 raw58LF411 t ⟨0, [], []⟩ = some z := by
   intro n
   obtain ⟨t, ht, hrun⟩ := long n
   exact ⟨t, C (index n) 0, ht, hrun⟩
 
 /-- The 411 LF leaf cannot halt in any completion of its partial table. -/
 theorem never (m : Machine) (hm : compatible raw58LF411 m) : NeverHalts m :=
-  never_of_live raw58LF411 arbitrary m hm
+  Agent4Live.never_of_live raw58LF411 arbitrary m hm
 
 #print axioms never
 end BB6.Agent38Raw58LF411
