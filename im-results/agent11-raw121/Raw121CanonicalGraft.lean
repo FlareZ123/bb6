@@ -38,7 +38,7 @@ theorem roster75_sound
       intro k d hk hd
       exact Nat.le_trans
         (BB6.Agent11Raw121.all121 m hm k d hk hd)
-        (by decide))
+        (by decide)))
 
 /-- Conditional exactness after all three parent cuts. The remaining 75
     quotient-compatible residuals still require Covers at the attained B. -/
