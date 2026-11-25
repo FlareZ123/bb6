@@ -71,9 +71,9 @@ Proof.
   apply Forall_forall. intros x Hx.
   assert (Hcheck :
     source_tree_check bound (tm x) (chunk2_first_hole_tree (tm x)) = true).
-  { apply forallb_forall with (x := x) in
-      (searched_chunk_first_hole_tree_checks bound Hbound).
-    - exact (searched_chunk_first_hole_tree_checks bound Hbound x Hx).
+  { pose proof (searched_chunk_first_hole_tree_checks bound Hbound) as Hall.
+    apply forallb_forall with (x := x) in Hall.
+    - exact Hall.
     - exact Hx. }
   assert (Hopen :
     Forall (source_table_safe bound)
@@ -170,10 +170,12 @@ Proof.
   - exact Hbound.
   - apply Forall_forall. intros x Hx.
     apply chunk2_source_table_safe_to_weighted.
-    apply Forall_forall with (x := x) in
-      (searched_chunk_first_hole_remaining_safe bound (by lia) Hremaining).
-    + exact (searched_chunk_first_hole_remaining_safe bound (by lia) Hremaining x Hx).
-    + exact Hx.
+    pose proof
+      (searched_chunk_first_hole_remaining_safe bound (by lia) Hremaining)
+      as Hparents.
+    apply Forall_forall with (x := x) in Hparents.
+    - exact Hparents.
+    - exact Hx.
 Qed.
 
 Time Eval vm_compute in
