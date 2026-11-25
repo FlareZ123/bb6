@@ -13,7 +13,14 @@ def address : List Move :=
   [⟨true,true,2⟩, ⟨false,true,3⟩, ⟨true,false,3⟩,
    ⟨true,true,4⟩, ⟨true,false,0⟩]
 
-theorem raw59_mem : (address,p59) ∈ BB6.Agent47Canonical78.roster := by decide
+theorem raw59_mem : (address,p59) ∈ BB6.Agent47Canonical78.roster := by
+  have h : BB6.Agent47Canonical78.roster.any
+      (fun e => decide (e.1 = address) && tableOK e.2 p59) = true := by decide
+  obtain ⟨e,he,hc⟩ := List.any_eq_true.mp h
+  have ha : e.1 = address := of_decide_eq_true (Bool.and_eq_true.mp hc).1
+  have hp : e.2 = p59 := tableOK_sound _ _ (Bool.and_eq_true.mp hc).2
+  have hEq : e = (address,p59) := Prod.ext ha hp
+  simpa only [hEq] using he
 
 def moves : List Move :=
   (List.finRange 6).flatMap fun q => [false,true].flatMap fun w =>
