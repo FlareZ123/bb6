@@ -165,6 +165,8 @@ jobs:
           path: |
             im-results/agent46-raw13-cut/raw13-open-residuals.txt
             im-results/agent46-raw13-cut/raw13-bidfa-spec.json
+            im-results/agent46-raw13-cut/raw13-phase-search.stdout.txt
+            im-results/agent46-raw13-cut/raw13-phase-search.stderr.txt
             im-results/agent46-raw13-cut/Agent46Raw13BiDFAAudit.lean
             /tmp/a46-raw13/Agent46Raw13Data.olean
             /tmp/a46-raw13.log
