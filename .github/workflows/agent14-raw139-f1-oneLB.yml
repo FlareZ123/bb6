@@ -1,0 +1,46 @@
+name: Agent14 Raw139 F1=1LB source audit
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: agent14-raw139-f1-oneLB-source-audit
+  cancel-in-progress: false
+
+jobs:
+  source-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install pinned Lean toolchain
+        run: |
+          elan toolchain install leanprover/lean4:v4.36.0-rc2
+          elan override set leanprover/lean4:v4.36.0-rc2
+          lean --version
+          sha256sum "$(lean --print-prefix)/bin/lean"
+
+      - name: Reproduce and audit original-source 1LB certificate
+        run: bash im-results/agent14-raw139-f1-oneLB/reproduce.sh
+
+      - name: Upload source-audited Lean artifact and provenance
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent14-raw139-f1-oneLB-source-audit
+          retention-days: 30
+          if-no-files-found: error
+          path: |
+            .tmp/a14-f1-oneLB/manifest.json
+            .tmp/a14-f1-oneLB/build/
+            im-results/agent14-raw139-f1-oneLB/reproduce.sh
+            im-results/agent14-raw139-f1-oneLB/README.md
+            im-results/agent14-raw139-f1-oneLB/source-delta.tar.xz.b64
+            im-results/agent14-raw139-f1-oneLB/source-delta.sha256
+            im-results/agent14-raw139-f1-oneLB/source-delta.manifest.json
+            im-results/agent14-raw139-f1-oneRF/source.tar.xz.b64
+            im-results/agent14-raw139-f1-oneRF/source.sha256
