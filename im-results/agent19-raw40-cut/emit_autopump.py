@@ -37,11 +37,12 @@ theorem never (m : Machine) (hm : compatible table m) : NeverHalts m :=
 #print axioms never
 end Leaf{i}
 """
-print("""import Agent46AutoPump
+ns=sys.argv[2] if len(sys.argv)>2 else "BB6.Agent19Raw40.Auto"
+print(("""import Agent46AutoPump
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 namespace BB6.Agent19Raw40.Auto
-open BB6Coverage BB6Coverage.Agent31Pump BB6Coverage.Agent31Pump.Auto""")
+open BB6Coverage BB6Coverage.Agent31Pump BB6Coverage.Agent31Pump.Auto""").replace("BB6.Agent19Raw40.Auto",ns))
 for row in Path(sys.argv[1]).read_text().splitlines():
     if row.strip():print(cert(json.loads(row)))
-print('end BB6.Agent19Raw40.Auto')
+print('end '+ns)

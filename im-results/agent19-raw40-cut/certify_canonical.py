@@ -54,7 +54,11 @@ open BB6Coverage BB6.Agent13BlankDelay BB6.Agent31ThreeHole BB6.Agent10ZipAudit 
 foot=f'\nend BB6.Agent19Raw40.{mod}\n'
 cut=support(parent)
 imports='import CanonicalPartial\n' if os.environ.get('RAW40_STANDALONE')=='1' else 'import Raw40CanonicalCut\nimport Raw40TwoSided\nimport Raw40MoreTwoSided\nimport Raw40ThirdSweeps\n'
-if proven:imports+='import Raw40AutoPump\n'
+if any('.Auto.Leaf' in v for v in proven.values()):imports+='import Raw40AutoPump\n'
+if any('.Auto2.Leaf' in v for v in proven.values()):imports+='import Raw40AutoPump2\n'
+if any('.Auto3.Leaf' in v for v in proven.values()):imports+='import Raw40AutoPump3\n'
+if any('CounterVariants' in v for v in proven.values()):imports+='import Raw40CounterVariants\n'
+if any('BinaryCarry' in v for v in proven.values()):imports+='import Raw40BinaryCarry\n'
 if any('Counter17' in v for v in proven.values()):imports+='import Raw40Counter17\n'
 base=imports+head+f'-- {show(parent)}\ndef p : PartialMachine := fun s =>\n  match s.1.val,s.2 with\n'
 for i,v in enumerate(parent):
