@@ -34,7 +34,7 @@ on:
         required: true
         default: 5
       flip:
-        description: "Reverse direction convention"
+        description: "Reverse direction convention; transport is kernel-checked when true"
         type: boolean
         required: true
         default: false
@@ -96,15 +96,33 @@ jobs:
       - name: Compile and kernel-check generated proof
         env:
           MODULE_NAME: ${{ inputs.name }}
+          FLIP: ${{ inputs.flip }}
         run: |
           set -euo pipefail
           cd im-results/agent13-block-far
-          export LEAN_PATH=".:/tmp/q0-blockfar"
+          export LEAN_PATH=".:/tmp/q0-blockfar:../agent5-q0-held-blockfar"
           lean -o BlockMacro.olean BlockMacro.lean
           lean -o BlockFAR.olean BlockFAR.lean
           lean -o RangeCheck.olean RangeCheck.lean
           lean -o "/tmp/q0-blockfar/${MODULE_NAME}Packed.olean" "/tmp/q0-blockfar/${MODULE_NAME}Packed.lean"
           lean -o "/tmp/q0-blockfar/${MODULE_NAME}Proof.olean" "/tmp/q0-blockfar/${MODULE_NAME}Proof.lean" | tee /tmp/q0-blockfar/compile.log
+          if [ "$FLIP" = "true" ]; then
+            lean -o ../agent5-q0-held-blockfar/MirrorTransport.olean ../agent5-q0-held-blockfar/MirrorTransport.lean
+            cat > "/tmp/q0-blockfar/${MODULE_NAME}MirrorConsumer.lean" <<EOF
+          import ${MODULE_NAME}Proof
+          import MirrorTransport
+          namespace BB6BlockFAR.${MODULE_NAME}MirrorConsumer
+          open BB6BlockFAR
+          def originalMachine : Table := mirrorTable BB6BlockFAR.${MODULE_NAME}.machine
+          theorem never_original : ∀ n, ∃ c, run originalMachine n primBlank = some c := by
+            apply never_of_mirror originalMachine
+            intro n
+            simpa [originalMachine, mirrorTable_involutive] using BB6BlockFAR.${MODULE_NAME}.never n
+          #print axioms never_original
+          end BB6BlockFAR.${MODULE_NAME}MirrorConsumer
+          EOF
+            lean -o "/tmp/q0-blockfar/${MODULE_NAME}MirrorConsumer.olean" "/tmp/q0-blockfar/${MODULE_NAME}MirrorConsumer.lean" | tee -a /tmp/q0-blockfar/compile.log
+          fi
           if grep -Eq 'sorryAx|native_decide' /tmp/q0-blockfar/compile.log; then
             echo "Forbidden proof placeholder or native_decide found" >&2
             exit 1
