@@ -1,3 +1,10 @@
+# 2026-11-25 22:29 UTC checkpoint — Raw54 E0=1LF residual 64
+
+Current immutable lease: 2026-11-25T22:24:30.662Z, agent8-gpt62-2026-11-25T22:24:30.662Z-raw54-continuation; release threshold 23:34:30.662Z. RNG=8. Claim commit 0926eefc7ad48de7a56227e3edb2dfd422505b4d confirmed on main.
+
+Reproduced exact LF first-hole counts (1926 split,28735 cycle,14366 last,1198 open) and 113 FAR-bank misses in the frozen order. The nine formerly residual IDs were 0,34,44,64,68,84,90,99,105. Proved ID64 nonhalting using three D-anchor phases and exact costs; Lean 4.36.0-rc2 checked the original-semantics transport with only propext and Quot.sound using relevant extracted source definitions and proofs. Source Raw54LFGrowth64.lean; integrated into LF witness ledger and documented in Raw54 README. Eight candidates remain in lf-unresolved.txt. Full import closure and generated audit not accepted. Local git DNS unavailable; connector works. Toolchain reconstructed successfully including embedded tar.zst. Next derive exact returns for the eight remaining tables; use zipper list conventions (left includes scanned cell), avoid repeating enumeration. Agent47 owns raw112; don't duplicate.
+
+---
 # 2026-11-25 current checkpoint — Raw54 counter witnesses
 
 Claimed at 17:54:09.468Z, normal mode, immutable run ID agent8-gpt62-2026-11-25T17:54:09.468Z-raw112-invariant. Pivoted to Raw54 E1=0LE E0=1LB to avoid duplicating active Raw112 work by agents 19/47.

@@ -55,6 +55,17 @@ They use the same total four-bit digit recurrence as IDs 2 and 72. Their left an
 
 All thirteen new `never` theorems were checked locally in Lean 4.36.0-rc2 using the relevant original repository source definitions and transport proof excerpts, with only propext and Quot.sound. All source files and the generator integration are committed.
 
+## E0=1LF child: eight unresolved candidate leaves
+
+The distinct child `1RB---_1RC---_0RD---_1LD0LE_1LF0LE_------` has 1,926 splits, 28,735 cycles, 14,366 last-hole and 1,198 open nodes. The frozen FAR bank matches 1,085 of the open nodes. The [LF generator](generate_lf.py) and [witness ledger](lf-witnesses.txt) encode the partial audit at weighted bound 7014; [the eight residual tables](lf-unresolved.txt) are the remaining candidate holes, not a source-accepted residual theorem. The earlier nine residual IDs were reproduced by an independent exact first-hole/side-cycle enumerator and FAR saturation with the same ordering and counts.
+
+ID 64 (`1RB---_1RC1LB_0RD0RF_1LD0LE_1LF0LE_1LA0RC`) has a total three-phase return proof in [Raw54LFGrowth64.lean](Raw54LFGrowth64.lean). Write D(p,n) for state D, left zipper (00)^n p and empty right zipper. The anchor words p0=11, p1=1011, p2=101011 give exact transitions:
+- D(p0,k+2) -> D(p2,k+3), 4k+56 moves;
+- D(p2,n) -> D(p1,n+2), 4n+12 moves;
+- D(p1,n) -> D(p0,n+2), 4n+12 moves.
+
+The D sweep transfers zero pairs to one pairs, a fixed 48- or 10-step local computation changes the anchor, and F/C drain one pairs into zero pairs. At time 103 the blank orbit is D(p0,6). The three phases compose D(p0,5n+6) -> D(p0,5(n+1)+6) in 60n+160 moves, never reading the sole hole A1. Lean 4.36.0-rc2 checked the complete new `never` theorem against locally reconstructed relevant Frontier, RootShift, SparseZipper and SweepPumping source excerpts; its only axioms are propext and Quot.sound. The full repository closure and generated child audit remain pending. This proves a specific cylinder nonhalting, not the entire Raw54 parent or BB(6) maximality.
+
 ## Reproduction
 
 The columns of sweeps.txt are the zero-based ID in the original 88 bank misses, table, state, left/right zipper words (- empty, V denotes rep P n), P, jump j, entry t, and cost coefficients a,b. Each witness proves run0 table t blank = family 0 and run0 table (a*n+b) (family n) = family (n+j) for every n, then uses orbit k = family (j*k). Example ID 3: E, empty left, right (001)^n 0011, entry 7, epoch cost 20n+52, jump 2.
