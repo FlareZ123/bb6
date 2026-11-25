@@ -27,6 +27,7 @@ lean --version
 python3 tools/lean_compile_closure.py \
   im-results/agent48-counted-inc0/TM63RawUpperInterface.lean \
   im-results/agent48-counted-inc0/Enumerate62Potential.lean \
+  im-results/agent48-counted-inc0/ChampionParentExact.lean \
   --source-root "$work/imports" \
   --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean \
   --override OuterLCIncPrelude=im-results/agent8-counted-reset/OuterLCIncPrelude.lean \
@@ -44,7 +45,7 @@ for name in ("champion_halts_exact", "champion_attained_exact", "champion_maximu
  "freshChild_cut", "expandProjection_length", "expandProjection_length_le_24", "expandProjection_mass_lt",
  "expandProjection'_mass_lt", "update_active_mass_lt", "runUpdates_active_empty_of_bound",
  "bfsRound_total_mass_le", "fourBfsPasses_total_mass_le", "q0_total_mass_le",
- "chunk_active_mass_le", "every_chunk_drains"):
+ "chunk_active_mass_le", "every_chunk_drains", "champion_parent_exact_cover", "championParentExactCertificate"):
     m = re.search(r"'[^']*\."+name+r"' depends on axioms: \[([^\]]*)\]", log)
     if not m:
         raise SystemExit("missing axiom audit: "+name)
