@@ -42,7 +42,10 @@ From the repository root:
 python im-results/agent17-raw10-box-far-search/search.py
 python im-results/agent17-raw10-box-far-search/search.py --generate --min-fixed 6
 python im-results/agent17-raw10-box-far-search/search.py --generate --compile --min-fixed 6
+python im-results/agent17-raw10-box-far-search/search.py --generate --compile --min-fixed 8 --max-boxes 3 --rank-promising
 ```
+
+The optional `--rank-promising` mode preserves original box indices but tries boxes with more singleton ordinary transitions first, breaking ties by smaller completion mass. This is only a search-order heuristic; it does not alter the exact partition or any proof obligation.
 
 The search calls the existing `im-results/agent13-block-far/generate.py`
 without modifying it. Successful candidates are generated in the output
