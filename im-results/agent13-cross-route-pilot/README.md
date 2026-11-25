@@ -58,8 +58,12 @@ The last theorem is the key non-loss statement: consuming the FARv3 leaf removes
 
 Local Lean 4.36.0-rc2 compilation succeeded. Its axiom reports are limited to standard `propext`, `Classical.choice`, and `Quot.sound`; no `sorryAx` is present. The Coq FARv3 transfer reports `FunctionalExtensionality.functional_extensionality_dep` among its assumptions, inherited from the existing permutation/halting transport. That dependency is disclosed rather than hidden.
 
-## Scope and relationship to the 109 mixed-bound roster
+## Direct relationship to the 109 mixed-bound roster
 
-This pilot concerns root-frontier residual index 10, branch `B0=1LC`. Agent 13's mixed-bound 109-roster specialization follows the separate `B0=1RC` path. Therefore this leaf does **not** reduce any of the 109 champion-score obligations and must not be counted as doing so. It is a genuine additional closed source cylinder under the same first-one root, with the rest of its parent retained.
+The parent residual `B0=1LC` is raw residual index 10 (canonical index 6) in `canonical-121.json`. It survives the 15 whole-cylinder exclusions used by `Combined109Roster.lean`: the three `FiveHoleRoster` entries raw66/70/80 and the twelve `AllTwelveRoster` entries raw86/87/88/91/92/93/97/98/100/101/102/104. It is therefore one of the **109 retained obligations**, not an unrelated branch.
+
+`Root109Membership.lean` formalizes that fact against the actual `BB6.Agent47Combined109.reducedRoster`: it proves the B0=1LC parent is not among the fifteen covered tables and is an exact member of the 109-entry list. The q_i 2800 held node is a strict subcylinder of this outstanding 109 obligation.
+
+The 109 roster count remains 109 until the consumer replaces this parent by the certified leaf plus its explicit complement. The `held_leaf_partition` theorem supplies the complement-preservation argument, but `Combined109Roster.reducedRoster` itself is not modified here. Thus this is a genuine closure of one subcylinder inside one of the 109 obligations, not yet a reduction of the roster count or a complete safety proof for the parent.
 
 No claim is made here about exhaustion of all 129 source chunks, closure of the 207 root-frontier residuals, or the exact value of BB(6).
