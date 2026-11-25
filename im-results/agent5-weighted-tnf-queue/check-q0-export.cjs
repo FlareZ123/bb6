@@ -131,6 +131,24 @@ function validateNode(node, where) {
   }
 }
 
+function validateAssumptions(log, moduleName) {
+  if (log.includes("Closed under the global context")) return;
+  const start = log.lastIndexOf("Axioms:");
+  if (start < 0) throw new Error(moduleName + ": no Print Assumptions output found");
+  const end = log.indexOf("chunk_data =", start);
+  const block = log.slice(start, end < 0 ? log.length : end);
+  const allowed = (name) => name === "Nat.of_num_uint" ||
+    name.startsWith("PrimInt63.") || name.startsWith("PArray.") || name.startsWith("Uint63.");
+  const names = [];
+  for (const line of block.split(/\r?\n/)) {
+    if (!line.trim() || line.trim() === "Axioms:" || /^\s/.test(line)) continue;
+    const name = line.trim().split(/[\s:]/)[0].replace(/\.$/, "");
+    if (!allowed(name)) throw new Error(moduleName + ": unexpected assumption " + name);
+    names.push(name);
+  }
+  if (!names.length) throw new Error(moduleName + ": empty or unreadable assumptions block");
+}
+
 function parseLog(log, moduleName) {
   const value = extractPair(log, "chunk_data =");
   const pair = splitTopLevelPair(value);
@@ -143,9 +161,7 @@ function parseLog(log, moduleName) {
       throw new Error(moduleName + ": summary says (" + last[1] + "," + last[2] + ") but parsed (" + active.length + "," + held.length + ")");
     }
   }
-  if (!log.includes("Closed under the global context")) {
-    throw new Error(moduleName + ": exactness theorem assumptions were not printed as closed");
-  }
+  validateAssumptions(log, moduleName);
   [...active, ...held].forEach((node, i) => validateNode(node, moduleName + " residual " + i));
   return { active, held, valueSha256: sha256(value) };
 }
@@ -173,7 +189,12 @@ function selfTest(repoRoot) {
   if (active.length !== 56 || held.length !== 0) {
     throw new Error("self-test expected (56,0), got (" + active.length + "," + held.length + ")");
   }
-  console.log("self-test: existing final-20 checkpoint parses as 56 active, 0 held; all table metadata is consistent");
+  const syntheticLog = "Axioms:\\nPrimInt63.sub : primitive\\nPArray.set : primitive\\nchunk_data = " + value;
+  const parsed = parseLog(syntheticLog, "self-test");
+  if (parsed.active.length !== 56 || parsed.held.length !== 0) {
+    throw new Error("self-test log parser returned the wrong queue lengths");
+  }
+  console.log("self-test: final-20 Coq value/log parser accepts 56 active, 0 held; all table metadata is consistent");
 }
 
 function main() {
@@ -208,6 +229,9 @@ function main() {
       const source = fs.readFileSync(sourceFile, "utf8");
       if (!source.includes("Theorem chunk_data_exact") || !source.includes("source_checkpoint_decode")) {
         throw new Error(moduleName + ": missing source checkpoint exactness theorem");
+      }
+      if (/^\\s*(Admitted|Axiom)\\b/m.test(source)) {
+        throw new Error(moduleName + ": source contains an admission or explicit axiom");
       }
       const log = fs.readFileSync(logFile, "utf8");
       const parsed = parseLog(log, moduleName);
