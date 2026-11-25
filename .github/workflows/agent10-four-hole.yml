@@ -371,7 +371,7 @@ jobs:
           python im-results/agent13-coverage/unpack.py
           root=im-results/agent10-raw108
           python "$root/generate_long_trace.py"
-          python tools/lean_compile_closure.py --workdir .tmp/a10-raw108-long --jobs 1 "$root/Raw108LongRead.lean" | tee /tmp/a10-raw108-long.log
+          python tools/lean_compile_closure.py --workdir .tmp/a10-raw108-long --jobs 1 "$root/Raw108LongAudit.lean" "$root/Raw108LongAttained.lean" im-results/agent10-tnf-multipump/ExactAuditWeight.lean | tee /tmp/a10-raw108-long.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a10-raw108-long.log; then exit 1; fi
 
       - name: Check raw108 0LE doubling counter witnesses
