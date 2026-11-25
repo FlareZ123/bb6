@@ -1,0 +1,140 @@
+abbrev P := [false,true,false,true]
+abbrev Z := [false,false,false,false]
+abbrev O := [false,false,true,false]
+abbrev C := [true,true,false,false]
+abbrev T := [false,true,true,false]
+abbrev U := [false,true,false,false]
+abbrev E := [false,false]
+abbrev M := [false,true,false,true,true]
+
+inductive W : Bool → Type
+  | gEnd : W false
+  | gZ : W false → W false
+  | gO : W false → W false
+  | gC : W true → W false
+  | hEnd : W true
+  | hZ : W true → W true
+  | hU : W true → W true
+  | hT : W false → W true
+
+def enc : {b : Bool} → W b → List Bool
+  | _, .gEnd => [true,true]
+  | _, .gZ w => Z ++ enc w
+  | _, .gO w => O ++ enc w
+  | _, .gC w => C ++ enc w
+  | _, .hEnd => [false,true]
+  | _, .hZ w => Z ++ enc w
+  | _, .hU w => U ++ enc w
+  | _, .hT w => T ++ enc w
+
+def gz : Nat → W false → W false
+  | 0,w => w
+  | n+1,w => .gZ (gz n w)
+def hz : Nat → W true → W true
+  | 0,w => w
+  | n+1,w => .hZ (hz n w)
+theorem encGZ (n) (w : W false) : enc (gz n w) = rep Z n ++ enc w := by
+  induction n with
+  | zero => rfl
+  | succ n ih => simp only [gz,enc,rep,ih,List.append_assoc]
+theorem encHZ (n) (w : W true) : enc (hz n w) = rep Z n ++ enc w := by
+  induction n with
+  | zero => rfl
+  | succ n ih => simp only [hz,enc,rep,ih,List.append_assoc]
+
+inductive Section
+  | scan : Nat → W false → Section
+  | mark : Nat → W true → Section
+
+def sectionCfg : Section → Z0
+  | .scan j w => ⟨4,rep P j ++ E, enc w⟩
+  | .mark j w => ⟨4,rep P j ++ M, false :: enc w⟩
+def next : Section → Section
+  | .scan j (.gO w) => .scan (j+1) w
+  | .scan 0 (.gZ w) => .scan 0 (.gO w)
+  | .scan (j+1) (.gZ w) => .scan 0 (.gC (hz j (.hT w)))
+  | .scan 0 (.gC w) => .mark 0 w
+  | .scan (j+1) (.gC w) => .scan 0 (.gC (hz j (.hU w)))
+  | .scan 0 .gEnd => .scan 0 (.gZ .gEnd)
+  | .scan (j+1) .gEnd => .scan 0 (.gC (hz j .hEnd))
+  | .mark j (.hU w) => .mark (j+1) w
+  | .mark j (.hZ w) => .scan 0 (.gZ (gz j (.gC w)))
+  | .mark j (.hT w) => .scan 0 (.gZ (gz j (.gO w)))
+  | .mark j .hEnd => .scan 0 (.gZ (.gZ (gz j .gEnd)))
+def cost : Section → Nat
+  | .scan _ (.gO _) => 4
+  | .scan 0 (.gZ _) => 18
+  | .scan (j+1) (.gZ _) => 22+4*j
+  | .scan 0 (.gC _) => 7
+  | .scan (j+1) (.gC _) => 16+4*j
+  | .scan 0 .gEnd => 20
+  | .scan (j+1) .gEnd => 16+4*j
+  | .mark _ (.hU _) => 4
+  | .mark j (.hZ _) => 13+4*j
+  | .mark j (.hT _) => 13+4*j
+  | .mark j .hEnd => 21+4*j
+
+theorem scanO (L R : List Bool) :
+    run0 table 4 ⟨4,false::L,O++R⟩ = some ⟨4,P++false::L,R⟩ := by rfl
+theorem markU (L R : List Bool) :
+    run0 table 4 ⟨4,false::L,false::(U++R)⟩ = some ⟨4,P++false::L,false::R⟩ := by rfl
+theorem scanZ0 (R : List Bool) : run0 table 18 ⟨4,E,Z++R⟩ = some ⟨4,E,O++R⟩ := by rfl
+theorem scanC0 (R : List Bool) : run0 table 7 ⟨4,E,C++R⟩ = some ⟨4,M,false::R⟩ := by rfl
+theorem scanEnd0 : run0 table 20 ⟨4,E,[true,true]⟩ = some ⟨4,E,Z++[true,true]⟩ := by rfl
+
+theorem advance (s : Section) : run0 table (cost s) (sectionCfg s) = some (sectionCfg (next s)) := by
+  cases s with
+  | scan j w =>
+    cases w with
+    | gEnd =>
+      cases j with
+      | zero => exact scanEnd0
+      | succ j =>
+        simpa only [cost,next,sectionCfg,enc,encHZ,rep,P,E,C,Z,List.nil_append,List.append_nil,List.append_assoc,List.cons_append] using scanEnd j []
+    | gZ w =>
+      cases j with
+      | zero => exact scanZ0 (enc w)
+      | succ j =>
+        simpa only [cost,next,sectionCfg,enc,encHZ,rep,P,E,C,Z,T,List.nil_append,List.append_nil,List.append_assoc,List.cons_append] using scanZ j (enc w)
+    | gO w =>
+      cases j with
+      | zero => exact scanO [false] (enc w)
+      | succ j =>
+        simpa only [cost,next,sectionCfg,enc,rep,P,E,O,List.nil_append,List.append_nil,List.append_assoc,List.cons_append] using scanO ([true,false,true]++rep P j++E) (enc w)
+    | gC w =>
+      cases j with
+      | zero => exact scanC0 (enc w)
+      | succ j =>
+        simpa only [cost,next,sectionCfg,enc,encHZ,rep,P,E,C,Z,U,List.nil_append,List.append_nil,List.append_assoc,List.cons_append] using scanC j (enc w)
+  | mark j w =>
+    cases w with
+    | hEnd =>
+      simpa only [cost,next,sectionCfg,enc,encGZ,rep,P,E,M,Z,List.nil_append,List.append_nil,List.append_assoc,List.cons_append] using markEnd j []
+    | hZ w =>
+      simpa only [cost,next,sectionCfg,enc,encGZ,rep,P,E,M,Z,C,List.nil_append,List.append_nil,List.append_assoc,List.cons_append] using markZ j (enc w)
+    | hU w =>
+      cases j with
+      | zero => exact markU [true,false,true,true] (enc w)
+      | succ j =>
+        simpa only [cost,next,sectionCfg,enc,rep,P,M,U,List.nil_append,List.append_nil,List.append_assoc,List.cons_append] using markU ([true,false,true]++rep P j++M) (enc w)
+    | hT w =>
+      simpa only [cost,next,sectionCfg,enc,encGZ,rep,P,E,M,Z,O,T,List.nil_append,List.append_nil,List.append_assoc,List.cons_append] using markT j (enc w)
+
+theorem positive (s : Section) : 0 < cost s := by
+  cases s with
+  | scan j w => cases w <;> cases j <;> simp [cost] <;> omega
+  | mark j w => cases w <;> simp [cost] <;> omega
+
+def orbit : Nat → Section
+  | 0 => .scan 0 .gEnd
+  | n+1 => next (orbit n)
+def family (n : Nat) := sectionCfg (orbit n)
+theorem entry : run0 table 9 ⟨0,[],[]⟩ = some (family 0) := by rfl
+theorem growth (n : Nat) : run0 table (cost (orbit n)) (family n) = some (family (n+1)) := advance (orbit n)
+
+theorem never (m : Machine) (hm : compatible table m) : NeverHalts m :=
+  never_of_growth table family 9 (fun n => cost (orbit n)) entry (fun n => positive (orbit n)) growth m hm
+
+#print axioms growth
+#print axioms never
+end BB6.Agent10Raw108LF854
