@@ -312,7 +312,7 @@ jobs:
           docker run --rm --user root -e HOME=/home/coq -e OPAMROOT=/home/coq/.opam \
             -v "$GITHUB_WORKSPACE/original:/work" -w /work/verify \
             --entrypoint bash coqorg/coq:8.20-native -lc '
-              set -eu
+              set -euo pipefail
               eval "$(opam env)"
               coqc --version
               coqc -config
