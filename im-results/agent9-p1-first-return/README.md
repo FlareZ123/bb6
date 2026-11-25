@@ -2,6 +2,8 @@
 
 **Scope.** Write P=2^n, Q=7P−n−3, and root (14P−2n−16,3). We study the ORIGINAL OddCone relation at total inverse cost m. All statements below concern that critical P1 gate; none claims a machine decision or the global BB(6) upper bound.
 
+**New computational method:** [Exact reverse-block and prefix-only carry](../agent9-p1-reverse-block/README.md) extends the finite experimental range and removes terminal endpoint propagation. See the linked dossier for current evidence and remaining exceptions.
+
 ## Main theorems and status
 
 | Original-source consequence | Lean file | Exact-source CI |

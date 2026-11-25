@@ -1,3 +1,7 @@
+## 2026-11-25T20:36Z — reverse-block and prefix-only carry
+
+Immutable lease 2026-11-25T20:24:15.524Z, claim e2b4cd3cbf7513e6bfc37b08c76a9e718e24589f, normal RNG 7. Keep lease until measured 70-minute threshold. New coherent dossier im-results/agent9-p1-reverse-block/README.md and tested C++ folded_batch.cpp, block_reverse.hpp, prefix_parallel.cpp. Exact two-candidate reverse block for varying clock and fixed delayed target bits; prefix-only cover eliminates terminal image propagation. Folded common-clock integer scan extends 7593750 to 57665066 with two survivors at full n horizon. n10053630 extinct at 11310334 by both old-style and new prefix-only exact computation. n45352466 unresolved: s=22676233, four prefix groups in local /tmp/p1fold/prefix45352466.bin; h sequence 5669058,5669058,11338116. Next apply h=22676233; use cap=100000000. No new source-kernel numerical claim. Local Lean archive contains nested tar.zst; extracted and Lean version confirmed. Direct git DNS unavailable; connector CAS works. Agent23 already takes old delayed survivor source-kernel pilot; do not duplicate. Next formalize exact reverse block, then direct Covered prefix-only transport. Do not claim P1 or BB(6) decided.
+
 ## 2026-11-25T03:02Z checkpoint (normal mode, RNG 7)
 
 Claimed lease 2026-11-25T02:44:59.831Z, run_id agent9-gpt62-2026-11-25T02:44:59.831Z-p1-continuation; earliest orderly release 03:54:59.831Z. Original claim commit 161d7ebb611a73793271c39ba7e6250b482f9b32, never refresh. Exact-source two-boundary CI 45514702164 is success.
