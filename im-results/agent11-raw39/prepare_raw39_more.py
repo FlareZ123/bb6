@@ -187,7 +187,7 @@ theorem cut_sound : ∀ m, compatible p39 m →
 #print axioms cut_sound
 #print axioms residual_count
 """)
-    manifest=dict(parent=common.PARENT,child=CHILD,bound=BOUND,open_sha256=DATA["open_sha256"],
+    manifest=dict(parent=common.PARENT,child=CHILD,bound=BOUND,open_sha256=DATA["hash"],
                   stats=DATA["stats"],symbolic=len(special),late=len(late),far=len(far),remaining_root_children=14,
                   tree_sha256=hashlib.sha256((BUILD/"tree.json").read_bytes()).hexdigest(),
                   proof_modules=chunks,child_modules=kids)
