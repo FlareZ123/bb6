@@ -20,7 +20,7 @@ python3 tools/lean_compile_closure.py \
   im-results/agent48-counted-inc0/ChampionParentExact.lean \
   --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean \
   --workdir "$work/build" --jobs 4 | tee "$work/log"
-for theorem in parent_cover parent_reachable parentCertificate sibling_never lc_never re_never champion_parent_exact_cover championParentExactCertificate; do
+for theorem in parent_cover parent_reachable parentCertificate sibling_never lc_never re_never champion_score_ge_3512 champion_parent_exact_cover championParentExactCertificate; do
   grep -E "$theorem.*depends on axioms" "$work/log"
 done
 if grep -E 'depends on axioms.*(sorryAx|native_decide)' "$work/log"; then exit 1; fi
