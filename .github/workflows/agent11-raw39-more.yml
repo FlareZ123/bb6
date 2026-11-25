@@ -182,7 +182,7 @@ jobs:
         run: |
           set -euo pipefail
           root=im-results/agent11-raw39
-          mapfile -t modules < <(python -c 'import json,os; print("\\n".join(json.load(open("im-results/agent11-raw39/shards-rc.json"))["groups"][os.environ["GROUP"]]))')
+          mapfile -t modules < <(python -c 'import json,os; print("\n".join(json.load(open("im-results/agent11-raw39/shards-rc.json"))["groups"][os.environ["GROUP"]]))')
           test "${#modules[@]}" -gt 0
           roots=()
           for module in "${modules[@]}"; do roots+=("$root/$module.lean"); done
