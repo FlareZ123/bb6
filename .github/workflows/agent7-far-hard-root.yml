@@ -15,6 +15,10 @@ on:
         description: Compile the exact FAR-to-weighted-TNF depth-eight sibling integration
         type: boolean
         default: false
+      sibling_roster_smt:
+        description: SMT-scan the remaining depth-eight one-hole residuals in parallel
+        type: boolean
+        default: false
       samples:
         description: Guided mutation trials per DFA size and orientation
         type: number
@@ -62,7 +66,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Enumerate FAR candidates or solve one target by SMT
-        if: ${{ !inputs.batch_only && !inputs.wide132_only && !inputs.sibling_integration_only }}
+        if: ${{ !inputs.batch_only && !inputs.wide132_only && !inputs.sibling_integration_only && !inputs.sibling_roster_smt }}
         env:
           SOLVER_CODE: ${{ inputs.solver_code }}
         run: |
@@ -112,6 +116,39 @@ jobs:
           else
             /tmp/roster_far resources/BB6_holdouts_663_2026-10-16.txt ${{ matrix.shard }} 8 "$SAMPLES" "$MAX_DFA" | tee -a /tmp/hits.txt
           fi
+      - name: SMT-scan remaining depth-eight one-hole residuals
+        if: ${{ inputs.sibling_roster_smt }}
+        run: |
+          set -euo pipefail
+          python3 -m pip install --user --quiet z3-solver
+          node im-results/agent7-far/extract_depth_eight_residuals.js --one-hole > /tmp/one-hole.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          data = json.loads(Path("/tmp/one-hole.json").read_text())
+          assert data["oneHole"] == 101 and len(data["oneHoleTables"]) == 101
+          known = {
+              "1RB0LD_1RC1LF_0RD1LA_1LD1RE_1RD0LB_---0LA",
+              "1RB1RD_1RC1LF_0RD1LA_1LD1RE_1RC0LB_---0LA",
+              "1RB---_1RC1LF_0RD0RC_1LD1RE_0LB0LB_0RC0LA",
+              "1RB1LA_1RC1LF_0RD1RC_1LD1RE_0LA0LB_---0LA",
+              "1RB0LB_1RC1LF_0RD1RF_1LD1RE_---0LB_1RB0LA",
+          }
+          rows = data["oneHoleTables"]
+          assert all(any(x["table"] == k for x in rows) for k in known)
+          codes = [x["table"] for x in rows if x["table"] not in known]
+          assert len(codes) == 96 and len(set(codes)) == 96
+          Path("/tmp/depth-eight-one-hole-roster.txt").write_text("\n".join(codes) + "\n")
+          print(f"Prepared {len(codes)} unresolved one-hole tables from the checked tree roster.")
+          PY
+          : > /tmp/hits.txt
+          python3 im-results/agent7-far/far_smt_roster.py /tmp/depth-eight-one-hole-roster.txt \
+            --shard "${{ matrix.shard }}" --shards 8 \
+            --min-dfa "${{ inputs.solver_min_dfa }}" --max-dfa "${{ inputs.solver_max_dfa }}" \
+            --timeout-ms "${{ inputs.solver_timeout_ms }}" \
+            > /tmp/hits.txt 2> /tmp/far-smt.log
+          cat /tmp/far-smt.log
+          cat /tmp/hits.txt
       - name: Install Lean if there is a candidate
         if: ${{ !inputs.batch_only && !inputs.wide132_only && !inputs.sibling_integration_only }}
         run: |
@@ -213,4 +250,5 @@ jobs:
             /tmp/far-smt.out
             /tmp/far-smt.log
             /tmp/a7-sibling-proof.log
+            /tmp/depth-eight-one-hole-roster.txt
           if-no-files-found: warn
