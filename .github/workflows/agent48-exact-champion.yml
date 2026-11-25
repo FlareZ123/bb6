@@ -5,7 +5,7 @@ on:
       audit:
         description: Source audit to run
         type: choice
-        options: [champion, parent, rc-triple, ra-rd, ra-cover, remaining-cover]
+        options: [champion, parent, rc-triple, ra-rd, ra-cover, remaining-cover, f0-frontier]
         default: champion
 permissions:
   contents: read
@@ -81,6 +81,21 @@ jobs:
           log = open('/tmp/a48-remaining-cover.log').read()
           for name in ('cover_zeroRC_of_RD','cover_oneRE_of_RD'):
               m = re.search(r"'BB6.Agent48Remaining\."+name+r"' depends on axioms: \[([^\]]*)\]", log)
+              assert m, name
+              used = {x.strip() for x in m.group(1).split(',') if x.strip()}
+              assert used <= {'propext','Classical.choice','Quot.sound'}, (name,used)
+          PY
+      - name: Audit raw139 frontier integration
+        if: inputs.audit == 'f0-frontier'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python tools/lean_compile_closure.py im-results/agent48-champion-root/ChampionF0Frontier.lean --workdir /tmp/a48-f0-frontier --jobs 4 | tee /tmp/a48-f0-frontier.log
+          python - <<'PY'
+          import re
+          log = open('/tmp/a48-f0-frontier.log').read()
+          for name in ('earlier_count','obligation_count','raw139_cover','exact_from_obligations','refined_obligation_count'):
+              m = re.search(r"'BB6.Agent48F0Frontier\."+name+r"' depends on axioms: \[([^\]]*)\]", log)
               assert m, name
               used = {x.strip() for x in m.group(1).split(',') if x.strip()}
               assert used <= {'propext','Classical.choice','Quot.sound'}, (name,used)
