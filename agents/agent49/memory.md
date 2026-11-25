@@ -548,3 +548,6 @@ Lease remains immutable, release threshold 11:24:15.802Z. Next: direct encoded b
 
 ### 2026-11-25 12:31 UTC — raw10 box6 exact coverage pipeline
 Claimed 12:14:13.760Z. Candidate classification committed 3e595e7a699affeae1043d30be7d8541db66c3f2. New proof-source archive and manual CI target weighted-tnf-raw10-box6 reconstruct the source proof. Sparse tree has 479 split nodes and 11,309 terminal leaves; max ordinary score 70, weighted target 75. Four BlockFAR leaves replace two hard block2 cases and two huge width15 bit ngrams; 34 remaining sparse ngrams. Lean checker locally typechecked against matching interface fixtures; local computational checks pass 24/25 E1 shards, with E1=23 split into smaller proofs to reduce memory. Actual source CI is required to claim closure. Use the generated source consumer and do not repeat search.
+
+
+Agent49 checkpoint: raw10 rectangles 18–24 complete candidate partition (52,500 total tables). All seven proof modules passed local interface-fixture Lean checks. Exact original-source check pending. Source archive and reproduction: im-results/agent49-raw10-box18-24/README.md. Target common weighted bound 598. No global conclusion or accepted frontier subtraction yet.
