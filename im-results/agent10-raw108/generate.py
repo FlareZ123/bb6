@@ -56,6 +56,12 @@ def main(a):
         parts.append(f"end {nsa}")
         (ROOT/(aname+".lean")).write_text("\n\n".join(parts)+"\n")
         manual.append(aname)
+    if spec.get("phase_chain"):
+        import phase_chain
+        for i,desc in spec["phase_chain"].items():
+            mod,nspace,table=spec["manual"][i]
+            assert desc["table"]==table
+            phase_chain.emit(desc,mod,nspace)
     for i,(mod,nspace,table) in spec.get("manual",{}).items():
         i=int(i);assert opens[i]==table and i not in witnesses
         witnesses[i]=("proven",nspace)

@@ -150,9 +150,11 @@ def wordeq(name,a,b):
         ls.append(f'    _ = {word(v)} := by symm; simpa only [{SIMP}] using moveCut ({word(pre)}) ({word(suf)}) {bits(k)} {str(z=="1").lower()} n')
     return '\n'.join(ls)
 
-def generate(idx,p,ans):
+def generate(idx,p,ans,epoch=False):
     t,st,target,(hist,last)=ans
-    ls=[f'namespace M{idx}',f'-- {show(p)}',tab(p),f'def family (n : Nat) : Z0 := {cfg(st)}',f'theorem entry : run0 table {t} ⟨0,[],[]⟩ = some (family 0) := by rfl']
+    ls=[f'namespace M{idx}',f'-- {show(p)}',tab(p)]
+    if not epoch:
+        ls.extend([f'def family (n : Nat) : Z0 := {cfg(st)}',f'theorem entry : run0 table {t} ⟨0,[],[]⟩ = some (family 0) := by rfl'])
     seg=[];i=0
     while i<len(hist):
         x=hist[i]
@@ -184,16 +186,22 @@ def generate(idx,p,ans):
     ls.extend((wordeq('finalL',last.l,target.l),wordeq('finalR',last.r,target.r)))
     a=sum(x[3] for x in seg if x[0]=='fixed')
     b=sum(x[3] for x in seg if x[0]=='loop')
-    proof=f'theorem growth (n : Nat) : run0 table ({a}+{b}*n) (family n) = some (family (n+1)) := by\n'
+    if epoch:
+        proof=f'theorem epoch (n : Nat) : run0 table ({a}+{b}*n) {cfg(st)} = some {cfg(target)} := by\n'
+    else:
+        proof=f'theorem growth (n : Nat) : run0 table ({a}+{b}*n) (family n) = some (family (n+1)) := by\n'
     join='(phase0 n)'
     for j in range(1,len(seg)):join=f'(join0 {join} (phase{j} n))'
     proof+=f'  have H := {join}\n'
     for name,w,v in [('finalL',last.l,target.l),('finalR',last.r,target.r)]:
         if w!=v:proof+=f'  rw [{name} n] at H\n'
-    proof+=f"  rw [show {'+'.join(costs)}={a}+{b}*n by omega] at H\n  simpa only [family,rep,{SIMP}] using H"
+    proof+=f"  rw [show {'+'.join(costs)}={a}+{b}*n by omega] at H\n"
+    proof+='  exact H' if epoch else f"  simpa only [family,rep,{SIMP}] using H"
     ls.append(proof)
-    ls.append(f'theorem never (m : Machine) (hm : compatible table m) : NeverHalts m :=\n  never_of_growth table family {t} (fun n => {a}+{b}*n) entry (by intro n; omega) growth m hm')
-    ls.extend(['#print axioms never',f'end M{idx}'])
+    if not epoch:
+        ls.append(f'theorem never (m : Machine) (hm : compatible table m) : NeverHalts m :=\n  never_of_growth table family {t} (fun n => {a}+{b}*n) entry (by intro n; omega) growth m hm')
+        ls.append('#print axioms never')
+    ls.append(f'end M{idx}')
     return '\n\n'.join(ls),(t,a,b)
 
 
