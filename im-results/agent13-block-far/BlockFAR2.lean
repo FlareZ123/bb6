@@ -57,7 +57,7 @@ def Data.control {d n} (C : Data d n) (l : LState d) (q : Q) (dir : Bool) : Node
   finCode n (C.controlCodes.get (12*l.val+2*q.val+dir.toNat))
 
 def Data.auxiliary {d n} (C : Data d n) (l : LState d) (q : Q) (b : Sym) : Node n :=
-  finCode n (C.auxiliaryCodes.get (44*l.val+8*q.val+b.code))
+  finCode n (C.auxiliaryCodes.get (24*l.val+4*q.val+b.code))
 
 def Data.predecessors {d n} (C : Data d n) (l : LState d) : List (LState d × Sym) :=
   (C.predecessorCodes.get l.val).map fun x => (finCode d (x/4),Sym.ofCode (x%4))
