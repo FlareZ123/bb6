@@ -3,7 +3,9 @@ from pathlib import Path
 import os, shutil, subprocess, sys
 root=Path.cwd()
 cut=root/"im-results/agent43-raw122-cut"
-for p in Path("/tmp/a43-source").glob("*.lean"): shutil.copy2(p,cut/p.name)
+OLD_SOURCE=Path("/tmp/a43-source-old")
+SOURCE=Path("/tmp/a43-source")
+for p in OLD_SOURCE.glob("*.lean"): shutil.copy2(p,cut/p.name)
 core=Path("/tmp/a43-core")
 work=Path("/tmp/a43-recovery")
 prov=["im-results/agent43-raw122-cut/generate.py","im-results/agent43-raw122-cut/symbolic.py","im-results/agent43-raw122-cut/long-plans.json","im-results/agent43-raw122-cut/extra-bank.txt","tools/lean_compile_closure.py"]
