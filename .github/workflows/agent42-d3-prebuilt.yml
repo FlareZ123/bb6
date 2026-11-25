@@ -33,7 +33,7 @@ jobs:
           repository: ${{ github.repository }}
           run-id: 45639704742
           name: raw13-closure-certified
-          path: /tmp/a46-raw13
+          path: /tmp
       - name: Download canonical77 dependency manifest
         uses: actions/download-artifact@v4
         with:
