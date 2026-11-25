@@ -26,7 +26,7 @@ python im-results/agent2-sidewitness-multiparent/scan.py
 | 10 | 6 | B0=1LC | 10 | 65 | 4,477,340,035,625 / 95,367,431,640,625 (4.695%) |
 | 23 | 13 | B0=1RC, C0=0LD | 9 | 96 | 771,676,095,000 / 3,814,697,265,625 (20.229%) |
 
-Raw10 is included as a control and reproduces the existing Agent13 scan. Its union includes the 65 SideWitness cylinders and the separate q_i(2800,100) held leaf, which adds 25 disjoint completions. The other three rows count only SideWitness cylinders.
+The script exhausts all 124 manifest entries before reporting these four hits: the 388-row SideWitnessCore pool has no direct refinement of the other 120 canonical-124 parents in this orientation. This is a statement about this certificate pool and this exact orientation only; it does not rule out certificates from other libraries or symmetry-transformed witnesses. Raw10 is included as a control and reproduces the existing Agent13 scan. Its union includes the 65 SideWitness cylinders and the separate q_i(2800,100) held leaf, which adds 25 disjoint completions. The other three rows count only SideWitness cylinders.
 
 The four parent cylinders are pairwise disjoint first-one branches. Together their parent completion mass is 289,916,992,187,500; the combined checked-cylinder mass is 52,665,776,340,625 (18.166%). This aggregate is a bookkeeping sum over disjoint parents, not a claim that their complements are closed.
 
