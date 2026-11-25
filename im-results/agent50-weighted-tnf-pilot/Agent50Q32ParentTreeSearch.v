@@ -104,7 +104,7 @@ Proof.
   induction depth as [|d IH]; intros p Hbound.
   - reflexivity.
   - cbn [agent50_bounded_source_tree].
-    destruct (find_side_candidate p) as [c|] eqn:Hside.
+    destruct (agent50_find_side_candidate p) as [c|] eqn:Hside.
     + cbn [source_tree_check].
       pose proof (agent50_find_side_candidate_sound p c Hside) as Hcandidate.
       destruct c as [dir [entry [period budget]]].
