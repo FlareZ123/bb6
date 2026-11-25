@@ -92,8 +92,11 @@ theorem residuals_buildFrontierB (B : Nat) :
       intro actual hmem
       by_cases heq : actual = mv
       · subst actual
-        apply congrArg (fun l => l.map (fun x => (mv :: x.1, x.2)))
-        simpa [hs] using ih'
+        simp only [if_pos rfl]
+        exact congrArg
+          (fun l : List (List Move × PartialMachine) =>
+            l.map (fun x => (mv :: x.1, x.2)))
+          (by simpa [hs] using ih')
       · simp [c, heq, hs, residuals]
 
 /-- Every path edge has 23 off-path ordinary children: the selected move
