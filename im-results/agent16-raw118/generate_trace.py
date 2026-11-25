@@ -65,8 +65,14 @@ print("""theorem longRead : zipRead table 756495 = some (1,true) := by
 theorem longCheck : zipCheck 756496 table (.last 756495 (1,true)) = true := by
   simp only [zipCheck,zipQueryOK,longRead]
   decide
+theorem nohalt : weightedTNFNoAssignedHalt table := by
+  intro s
+  rcases s with ⟨q,b⟩
+  have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
+  rcases hq with rfl|rfl|rfl|rfl|rfl|rfl
+  all_goals cases b <;> decide
 noncomputable def longCertificate : WeightedTNFCertificate 756496 table 6 :=
-  certifiedZip 756496 table (.last 756495 (1,true)) (by decide) (by decide) longCheck
+  certifiedZip 756496 table (.last 756495 (1,true)) (by decide) nohalt longCheck
 #print axioms longRead
 #print axioms longCertificate
 end BB6.Agent16Raw118""")
