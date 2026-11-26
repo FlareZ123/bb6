@@ -55,14 +55,23 @@ def encode : Runs → List Bool
   | .last n => Os (n+1)
   | .cons k g u => Os (3*k+1) ++ Zs (2*g+1) ++ encode u
 
-def cfg (L : List Bool) (u : Runs) : Z0 :=
-  ⟨0,L,true::true::encode u⟩
+def cfg (L : List Bool) : Runs → Z0
+  | .last n => ⟨0,L,Os (n+3)⟩
+  | .cons k g u => ⟨0,L,Os (3*k+3) ++ (Zs (2*g+1) ++ encode u)⟩
 
 /-- The A/B/C entry sweeps a nonempty one-run of length n+3. -/
 theorem scan (L : List Bool) (n : Nat) (T : List Bool)
     (hL : L.headD false = false) (hT : T.headD false = false) :
     run0 table (n+4) ⟨0,L,Os (n+3) ++ T⟩ =
       some ⟨2,Zs (n+3) ++ true::true::L.tail,T.tail⟩ := by
+  have c : run0 table 1 ⟨2,true::(Zs (n+1) ++ true::true::L.tail),T⟩ =
+      some ⟨2,Zs (n+3) ++ true::true::L.tail,T.tail⟩ := by
+    cases T with
+    | nil => rfl
+    | cons bit T =>
+      cases bit
+      · rfl
+      · simp at hT
   have a : run0 table 2 ⟨0,L,Os (n+3) ++ T⟩ =
       some ⟨2,true::true::true::L.tail,Os (n+1) ++ T⟩ := by
     cases L with
@@ -74,14 +83,6 @@ theorem scan (L : List Bool) (n : Nat) (T : List Bool)
   have b := sweepR table 2 [true] [] [true] [false] 1
     (by intro X Y; rfl) (n+1) (true::true::L.tail) T
   simp only [List.nil_append,List.cons_append,List.append_assoc,Nat.one_mul] at b
-  have c : run0 table 1 ⟨2,true::(Zs (n+1) ++ true::true::L.tail),T⟩ =
-      some ⟨2,Zs (n+3) ++ true::true::L.tail,T.tail⟩ := by
-    cases T with
-    | nil => rfl
-    | cons b T =>
-      cases b
-      · rfl
-      · simp at hT
   have H := join0 (join0 a b) c
   simpa only [show 2+(n+1)+1=n+4 by omega] using H
 
@@ -156,6 +157,7 @@ theorem next (L : List Bool) (u : Runs)
   cases u with
   | last n =>
     have a := scan L n [] h0 rfl
+    simp only [List.append_nil] at a
     change run0 table (n+4) (cfg L (.last n)) =
       some ⟨2,Zs (n+3) ++ true::true::L.tail,[]⟩ at a
     obtain ⟨t,L',u',ht,h0',hS',b⟩ :=
