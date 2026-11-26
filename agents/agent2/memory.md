@@ -1669,3 +1669,39 @@ Corrected source:
 - Local container/shell and Python runtime calls returned ClientError, so no local Lean bootstrap was possible in this invocation. CI used Lean 4.36.0-rc2 successfully.
 - Keep all intermediate work in `im-results/`. BB(6) remains unsolved; no universal upper bound or exact BB(6) value is claimed.
 
+
+
+## 2026-11-26T23:22Z checkpoint — Canonical58→57 Raw124 consumer dispatched independently
+
+### New integration path
+
+The Raw124 parent Cover is accepted (run 45908591612, artifact 15159377345, bound 4,136,175). To avoid waiting for the unrelated Raw112 parent, I added a fail-isolated Raw124 consumer directly to the existing Canonical58 Raw113 delta job:
+
+- `im-results/agent2-tnf-raw124/assemble_raw124_canonical57.py` downloads and verifies the exact Raw124 parent artifact (run, artifact ID 15159377345, digest, source revision, Lean binary, theorem/table/bound and axiom log), locates the just-built `Canonical58Raw113Graft.olean` closure, and uses `assemble_canonical_selected.add_family` to link only the reachable Raw124 parent modules. Duplicate OLean declarations are compared by the existing kernel-import comparator; a conflict aborts this optional consumer rather than silently mixing closures.
+- It compiles `Raw124Canonical58Membership.lean`, which imports the actual accepted `Canonical58Raw113Graft.roster58`, proves unique Raw124 membership, constructs `roster57`, and exports `sound_integrated` / `exact_at_champion_score` conditional on the remaining 57 Covers.
+- Workflow `.github/workflows/agent31-canonical71-raw109.yml` has a `continue-on-error: true` optional step in the existing `canonical58_raw113_delta` job. It keeps the accepted Canonical58 result independent from Raw124 import-closure conflicts and includes the Raw124 log/report in the same artifact.
+- The target's first dispatch **45910249980** failed before any download/Lean compilation because the existing command used stale flag `--canonical59-run-id`; the script requires `--base-run-id`. This was a workflow CLI mismatch, not a proof failure. Corrected in commit **8f91f38a2ac75dbb2adef4ca82feb4ec694ef26e**.
+- Corrected rerun **45910336799** (job **140216906213**) is in progress as of 23:22Z. Its main Raw113 graft step is running; the optional Raw124 step is pending. Inputs: accepted Canonical59 run **45880290680**, Raw124 parent run **45908591612**. It uses the accepted base rather than a separate Canonical58 artifact download.
+
+### Canonical56 follow-on
+
+- `Raw124Canonical56Graft.lean` imports the prospective `Canonical57Raw112Graft` plus Raw124ParentComplete and constructs the 56-entry successor, with exact membership and conditional exactness theorems.
+- `assemble_raw124_canonical56.py` verifies/links the Raw124 parent closure into the existing Canonical57 linked directory, compiles the 56-graft source and gates all theorem axiom profiles.
+- The same shared workflow has an optional `continue-on-error: true` step in `canonical57_raw112_delta` to run this consumer after Raw112 succeeds. Input `raw124_parent_run_id` defaults to **45908591612**.
+- Agent32 and Agent17 were informed. Agent32's current Raw112 run **45905708054** remains in progress: `r01a-deep` failed again with exit 143 (runner shutdown, no Lean diagnostic); `r05a0` was still compiling as of 23:22Z. No Raw112 parent acceptance yet. Do not start duplicate Raw112 discovery or an independent 22.9 GB Canonical58 download.
+
+### Workflow/source details
+
+- Workflow commit **25a091b94c2292a1f5818eff597c2046fa16cae0** added the Canonical58→57 optional step; CLI correction **8f91f38a2ac75dbb2adef4ca82feb4ec694ef26e** is the current workflow snapshot used by run 45910336799.
+- Direct wrapper `assemble_raw124_canonical57.py` commit **337f2a54666a791ba030823100e079d913045ae9**, parent-work path fix **95f76bbce1998c5ec6823e4773125aa90013a05d**. It keeps the 1 GB Raw124 artifact download outside the Canonical58 artifact staging directory; only the exact reachable closure is copied into the linked directory.
+- Canonical56 optional step added in workflow commit **4c14d07f453a32e298330464e5d26711a841a313**; wrapper `assemble_raw124_canonical56.py` commit **b3fbc82bc9173379ae45bd0e1ac8a4d527239659**, parent-work path fix **44d7fc3f58a1557fd51337ce4d24854a337bab1b**.
+- Current `Raw124Canonical58Membership.lean` source was restored to the version in run 45910336799's frozen checkout after an experimental extra-identity-check edit, so the artifact source snapshot and checked-in source remain aligned. The main proof still consumes the exact accepted `roster58`; the base report also checks Raw59 retained and Raw118 in the accepted removed-parent list.
+- The Raw124 README is in `im-results/agent2-tnf-raw124/README.md`; keep all of this in `im-results/`, not `results/`. No BB(6) exact solution or universal upper bound is claimed.
+
+### Next actions
+
+1. Monitor run **45910336799**, job **140216906213**. If Raw113 graft succeeds, inspect the optional `raw124_canonical57` step, its `raw124-canonical58-membership.json`, and the uploaded artifact. A Canonical58 base success alone is not a Raw124 subtraction; require the explicit Raw124 report and theorem axiom gate.
+2. If the optional Raw124 step fails, inspect only its tail log. Likely failure points are the parent artifact manifest pin, locating the Canonical58 root OLean, or an exact duplicate-declaration collision. Do not rebuild the base until the specific failure requires it.
+3. If run 45910336799 succeeds, update Raw124 README with the source-accepted 57-residual conditional theorem and notify Agents31/32/17. If it fails at the main Raw113 graft, fix the actual CLI/source error before retrying.
+4. After Raw112 acceptance, let the optional Canonical56 consumer run in the shared Canonical57 job; it may prove the 56-entry successor without another base download.
+
