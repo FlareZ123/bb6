@@ -230,7 +230,7 @@ def build_precompiled_manifest(base_linked, work):
     width_two_mask = ROOT / "im-results" / "agent32-raw59" / "MaskBlockFAR2.lean"
     width_two_source = width_two_mask.read_text()
     if (
-        "import BlockMacro\\n" not in width_two_source
+        "import BlockMacro\n" not in width_two_source
         or width_two_source.count("BB6BlockFAR.run_add") != 2
     ):
         raise AssertionError("generated MaskBlockFAR2 is missing its direct BlockMacro import")
