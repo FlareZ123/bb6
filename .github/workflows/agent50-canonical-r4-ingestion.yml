@@ -1,6 +1,6 @@
 name: Agent 50 canonical r4 ingestion
 
-run-name: Agent 50 ${{ inputs.compile_raw10_ctl_footprint && 'raw10 CTL footprint' || inputs.compile_raw10_cryptids_leaf && 'raw10 Cryptids leaf' || 'canonical r4 ingestion' }}
+run-name: Agent 50 ${{ inputs.compile_raw10_f0_zip && 'raw10 F0 zipper box' || inputs.compile_raw10_ctl_footprint && 'raw10 CTL footprint' || inputs.compile_raw10_cryptids_leaf && 'raw10 Cryptids leaf' || 'canonical r4 ingestion' }}
 
 on:
   workflow_dispatch:
@@ -27,6 +27,11 @@ on:
         type: boolean
       compile_raw10_ctl_footprint:
         description: "Compile the minimal source-pinned four-transition CTL footprint theorem"
+        required: false
+        default: false
+        type: boolean
+      compile_raw10_f0_zip:
+        description: "Compile the source-pinned Raw10 two-hole F0 zipper-cycle frontier"
         required: false
         default: false
         type: boolean
@@ -59,7 +64,7 @@ jobs:
           "$HOME/.elan/bin/lean" --version
 
       - name: Download the accepted canonical77 object artifact
-        if: ${{ !inputs.compile_raw10_ctl_footprint }}
+        if: ${{ !inputs.compile_raw10_ctl_footprint && !inputs.compile_raw10_f0_zip }}
         uses: actions/download-artifact@v4
         with:
           github-token: ${{ github.token }}
@@ -99,7 +104,7 @@ jobs:
         working-directory: upstream
         run: |
           set -euo pipefail
-          if [[ "${{ inputs.compile_raw10_ctl_footprint }}" != "true" ]]; then
+          if [[ "${{ inputs.compile_raw10_ctl_footprint }}" != "true" && "${{ inputs.compile_raw10_f0_zip }}" != "true" ]]; then
             test -s "/tmp/canonical77/CanonicalRaw114Accepted.olean"
             test -s "/tmp/canonical77/CanonicalTwoParentGraft.olean"
             test -s "/tmp/canonical77-manifest/manifest/canonical77-base-manifest.json"
@@ -143,7 +148,7 @@ jobs:
           test -s .lake/build/lib/lean/BusyBeaver/BB6/NonHalt/M_1RB0RC_1LC0LD_1RA1RC_1RA1LE_0LB1RE_HHH1RA.olean
 
       - name: Compile the canonical77 r4 graft with its complete source closure
-        if: ${{ !inputs.compile_raw10_cryptids_leaf && !inputs.compile_raw10_ctl_footprint }}
+        if: ${{ !inputs.compile_raw10_cryptids_leaf && !inputs.compile_raw10_ctl_footprint && !inputs.compile_raw10_f0_zip }}
         env:
           CANONICAL77_DIR: /tmp/canonical77
           CANONICAL77_MANIFEST: /tmp/canonical77-manifest/manifest/canonical77-base-manifest.json
@@ -155,7 +160,7 @@ jobs:
           bash im-results/agent50-weighted-tnf-pilot/reproduce-canonical-r4.sh
 
       - name: Compile source-backed raw10 last-hole leaf
-        if: ${{ inputs.compile_raw10_cryptids_leaf && !inputs.compile_raw10_ctl_footprint }}
+        if: ${{ inputs.compile_raw10_cryptids_leaf && !inputs.compile_raw10_ctl_footprint && !inputs.compile_raw10_f0_zip }}
         env:
           CANONICAL77_DIR: /tmp/canonical77
           CANONICAL77_MANIFEST: /tmp/canonical77-manifest/manifest/canonical77-base-manifest.json
@@ -183,7 +188,7 @@ jobs:
           retention-days: 30
 
       - name: Compile minimal source-backed Raw10 CTL footprint
-        if: ${{ inputs.compile_raw10_ctl_footprint }}
+        if: ${{ inputs.compile_raw10_ctl_footprint && !inputs.compile_raw10_f0_zip }}
         env:
           UPSTREAM_ROOT: ${{ github.workspace }}/upstream
           WORKDIR: ${{ github.workspace }}/.tmp/agent50-raw10-ctl-footprint
@@ -204,8 +209,32 @@ jobs:
           if-no-files-found: error
           include-hidden-files: true
           retention-days: 30
+      - name: Compile source-backed Raw10 two-hole F0 zipper box
+        if: ${{ inputs.compile_raw10_f0_zip }}
+        env:
+          UPSTREAM_ROOT: ${{ github.workspace }}/upstream
+          WORKDIR: ${{ github.workspace }}/.tmp/agent19-raw10-f0-zip
+          JOBS: "4"
+        run: bash im-results/agent19-raw10-f0-box/reproduce-raw10-f0-zip.sh
+
+      - name: Upload source-backed Raw10 F0 zipper box closure
+        if: ${{ inputs.compile_raw10_f0_zip }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw10-f0-zipcycle-box-certified
+          path: |
+            .tmp/agent19-raw10-f0-zip/build/
+            .tmp/agent19-raw10-f0-zip/compile.log
+            .tmp/agent19-raw10-f0-zip/axiom-summary.json
+            .tmp/agent19-raw10-f0-zip/upstream-commit.txt
+            .tmp/agent19-raw10-f0-zip/upstream-dependencies.sha256
+            .tmp/agent19-raw10-f0-zip/BB6Coverage.sha256
+          if-no-files-found: error
+          include-hidden-files: true
+          retention-days: 30
+
       - name: Upload the compiled canonical r4 ingestion closure
-        if: ${{ !inputs.compile_raw10_cryptids_leaf && !inputs.compile_raw10_ctl_footprint }}
+        if: ${{ !inputs.compile_raw10_cryptids_leaf && !inputs.compile_raw10_ctl_footprint && !inputs.compile_raw10_f0_zip }}
         uses: actions/upload-artifact@v4
         with:
           name: canonical-r4-ingestion-certified
