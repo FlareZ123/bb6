@@ -1100,6 +1100,7 @@ jobs:
         env:
           GROUP: ${{ matrix.group }}
           PYTHONUNBUFFERED: "1"
+          LEAN_NUM_THREADS: "1"
         run: |
           set -euo pipefail
           python -u im-results/agent10-raw112-recovery/run_retry_shard.py --group "$GROUP" --root im-results/agent47-raw112-cut --workdir "/tmp/a47-raw112-shard-$GROUP" --precompiled-dir /tmp/a47-raw112-partial-union
