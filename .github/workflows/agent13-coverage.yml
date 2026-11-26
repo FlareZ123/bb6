@@ -2453,7 +2453,7 @@ jobs:
           elif [ "$TARGET" = weighted-tnf-raw47-cut ]; then
             target=im-results/agent19-d1-pilot/Raw47Agent31Graft.lean
           elif [ "$TARGET" = weighted-tnf-raw47-far5 ]; then
-            target=im-results/agent19-d1-pilot/Raw47Far5Cut.lean
+            target=im-results/agent19-d1-pilot/Raw47Far5Agent31Graft.lean
           fi
           python tools/lean_compile_closure.py --workdir /tmp/a47-rootsibling --jobs 4 "$target" | tee /tmp/a47-rootsibling.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a47-rootsibling.log; then
@@ -2467,6 +2467,7 @@ jobs:
           name: raw47-far5-proof
           path: |
             im-results/agent19-d1-pilot/Raw47Far5Cut.lean
+            im-results/agent19-d1-pilot/Raw47Far5Agent31Graft.lean
             /tmp/raw47-far5.txt
             /tmp/raw47-far5.log
             /tmp/raw47.json
