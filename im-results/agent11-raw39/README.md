@@ -30,7 +30,7 @@ The exact compressed partitions [0LE](0LE-frontier.json.xz.b64) and [1LE](1LE-fr
 | Branch | Open | FAR | Asym | Run | Block | Run/block | Late | Delayed cycle | Original residual | Remaining |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | 0LE | 11603 | 9864 | 1302 | 223 | 143 | 38 | 10 | 14 | 9 | 6 |
-| 1LE | 26246 | 23084 | 1790 | 877 | 373 | 34 | 24 | 15 | 49 | 38 |
+| 1LE | 26246 | 23084 | 1790 | 877 | 373 | 34 | 24 | 15 | 49 | 36 |
 
 Candidate weighted bounds 15125/28310, not source-accepted. All 1688 run/block discoveries independently regenerated in Python. Custom Lean proofs checked locally against exact artifact-linked dependencies; only propext and Quot.sound:
 
@@ -38,5 +38,7 @@ Candidate weighted bounds 15125/28310, not source-accepted. All 1688 run/block d
 - [0LE 1791 and 1800](Raw39LE1791.md): alternating residue-three run-count grammar.
 - [1LE 19021,19049,19091,20727,20938](Raw391LEBinaryFive.md): shared quaternary carry grammar.
 - [1LE 1897,2372,2529,2534,2535,2550](Raw391LEBinarySix.md): arbitrary binary tail with growing right sweep.
+- [1LE 1837](Raw391LE1837.lean): paired-bit carry, all pairs 00 or 11, entry 61 steps.
+- [1LE 2370](Raw391LE2370.lean): single low bit and duplicated high bits, entry 53 steps.
 
-Remaining 0LE IDs: 1300, 1583, 3334, 3414, 4084, 7634. The 1LE residual is original 49 minus eleven listed. The semantic generator still needs delayed-cycle and custom-proof dispatch and remaining cases. No complete parent or universal BB(6) bound.
+Remaining 0LE IDs: 1300, 1583, 3334, 3414, 4084, 7634. The 1LE residual is original 49 minus thirteen listed. The semantic generator still needs delayed-cycle and custom-proof dispatch and remaining cases. No complete parent or universal BB(6) bound.
