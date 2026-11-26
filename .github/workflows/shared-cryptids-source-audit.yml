@@ -458,8 +458,10 @@ jobs:
           if grep -Eq 'sorryAx|native_decide' /tmp/cryptids-source-audit/box17-local.log; then exit 1; fi
           cd /tmp/cryptids
           export LEAN_PATH=/tmp/a13-box17-proof
-          lake env lean -o /tmp/a13-box17-proof/CryptidsTapeAdapter.olean "$GITHUB_WORKSPACE/im-results/agent4-coverage-smoke/CryptidsTapeAdapter.lean" 2>&1 | tee /tmp/cryptids-source-audit/box17-tape.log
-          lake env lean "$GITHUB_WORKSPACE/$D/Box17SourceFull.lean" 2>&1 | tee /tmp/cryptids-source-audit/box17-full.log
+          cp "$GITHUB_WORKSPACE/im-results/agent4-coverage-smoke/CryptidsTapeAdapter.lean" .
+          cp "$GITHUB_WORKSPACE/$D/Box17SourceFull.lean" .
+          lake env lean -o /tmp/a13-box17-proof/CryptidsTapeAdapter.olean CryptidsTapeAdapter.lean 2>&1 | tee /tmp/cryptids-source-audit/box17-tape.log
+          lake env lean Box17SourceFull.lean 2>&1 | tee /tmp/cryptids-source-audit/box17-full.log
           if grep -Eq 'sorryAx|native_decide' /tmp/cryptids-source-audit/box17-{tape,full}.log; then exit 1; fi
       - name: Compile F289 exact primitive-step pilot
         if: ${{ inputs.verify_f289_rle_cost }}

@@ -35,7 +35,7 @@ def raw10_cover_except17 (B : Nat) (hB : 7014 ≤ B)
     (hHeld : ∀ m, compatible held m → WeightedBound B m)
     (hOther : ∀ r ∈ raw10Remainder, r ≠ raw10Remainder[17]! →
       ∀ m, Fits r m → WeightedBound B m) :
-    Cover (WeightedBound B) firstOneB0_1LC :=
+    Cover (WeightedBound B) BB6.Agent13CrossRouteHeldLeaf109.firstOneB0_1LC :=
   raw10_cover B hB hHeld (fun r hr m hm => by
     by_cases he : r = raw10Remainder[17]!
     · subst r

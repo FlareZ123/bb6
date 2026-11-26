@@ -45,7 +45,7 @@ theorem raw10_cover_except16 (B : Nat) (hB : 7376 ≤ B)
     (hHeld : ∀ m, compatible held m → WeightedBound B m)
     (hOther : ∀ r ∈ raw10Remainder, r ≠ raw10Remainder[16]! →
       ∀ m, Fits r m → WeightedBound B m) :
-    Cover (WeightedBound B) firstOneB0_1LC :=
+    Cover (WeightedBound B) BB6.Agent13CrossRouteHeldLeaf109.firstOneB0_1LC :=
   raw10_cover B (Nat.le_trans (by decide : 7014 ≤ 7376) hB) hHeld
     (fun r hr m hm => by
       by_cases he : r = raw10Remainder[16]!
