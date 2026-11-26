@@ -53,13 +53,13 @@ def merge(artifact, fallback=False, branches=False):
 
 for artifact in PINS["archived_shards"]:
     merge(artifact, branches=artifact in PINS["assembly_artifacts"])
+# Later successful targeted and linkable closure artifacts.
+for artifact in PINS["late_artifacts"]:
+    merge(artifact, branches=True)
 # Original generated sources fill holes, but never override factored
 # sources actually used to produce accepted objects.
 merge(PINS["source"], fallback=True, branches=True)
 merge(PINS["source_bundle"], fallback=True, branches=True)
-# Later successful targeted and linkable closure artifacts.
-for artifact in PINS["late_artifacts"]:
-    merge(artifact, branches=True)
 
 # The canonical original branch source is selected from the source archive,
 # except the four special branch modules already imported by the rosters.
