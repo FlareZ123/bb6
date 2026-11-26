@@ -32,8 +32,8 @@ theorem count67 : roster67.length = 67 := by
 /-- Conditional 67-roster soundness.  The only new premise beyond the eight
     already consumed by Canonical68 is the Raw112 parent Cover. -/
 theorem sound67
-    (h109 : ∀ m, compatible p109 m → WeightedBound 1703 m)
-    (h123 : Cover (WeightedBound 10000) p123)
+    (h109 : ∀ m, compatible BB6.Agent31Canonical74Raw109Raw123.p109 m → WeightedBound 1703 m)
+    (h123 : Cover (WeightedBound 10000) BB6.Agent31Canonical74Raw109Raw123.p123)
     (h60 : Cover (WeightedBound 1175) p60)
     (h110 : Cover (WeightedBound 6766859) p110)
     (h111 : Cover (WeightedBound 7014) p111)
@@ -52,8 +52,8 @@ theorem sound67
 /-- Conditional exactness after the Raw112 parent is consumed as well.
     The remaining 67 quotient representatives are still explicit. -/
 theorem exact_at_target67 (B : Nat) (hB : 6766859 ≤ B)
-    (h109 : ∀ m, compatible p109 m → WeightedBound 1703 m)
-    (h123 : Cover (WeightedBound 10000) p123)
+    (h109 : ∀ m, compatible BB6.Agent31Canonical74Raw109Raw123.p109 m → WeightedBound 1703 m)
+    (h123 : Cover (WeightedBound 10000) BB6.Agent31Canonical74Raw109Raw123.p123)
     (h60 : Cover (WeightedBound 1175) p60)
     (h110 : Cover (WeightedBound 6766859) p110)
     (h111 : Cover (WeightedBound 7014) p111)
