@@ -1456,7 +1456,7 @@ jobs:
           [[ "$CANONICAL59_RUN_ID" =~ ^[0-9]+$ ]]
           python -m py_compile im-results/agent31-shared-core/assemble_canonical59_raw113_graft.py
           python im-results/agent31-shared-core/assemble_canonical59_raw113_graft.py \
-            --work /tmp/a31-canonical58-raw113 --canonical59-run-id "$CANONICAL59_RUN_ID" \
+            --work /tmp/a31-canonical58-raw113 --base-run-id "$CANONICAL59_RUN_ID" \
             2>&1 | tee /tmp/a31-canonical58-raw113.log
           test -s /tmp/a31-canonical58-raw113/canonical58-raw113-graft.json
           python - <<'PY'
