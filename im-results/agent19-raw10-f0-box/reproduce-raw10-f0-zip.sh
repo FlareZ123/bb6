@@ -2,7 +2,7 @@
 set -euo pipefail
 ROOT="$(git rev-parse --show-toplevel)"
 UPSTREAM_ROOT="${UPSTREAM_ROOT:?set UPSTREAM_ROOT to the pinned Cryptids checkout}"
-WORKDIR="${WORKDIR:-/tmp/agent19-raw10-f0-zip}"
+WORKDIR="${WORKDIR:-$ROOT/.tmp/agent19-raw10-f0-zip}"
 JOBS="${JOBS:-4}"
 LEAN_BIN="${LEAN_BIN:-$HOME/.elan/bin/lean}"
 PINNED="3647718b5df22e1a61462dec0376bd204526285a"
@@ -77,7 +77,7 @@ python3 "$ROOT/tools/lean_compile_closure.py" \
   --override Raw10BoxCore=im-results/agent49-box-complement/Raw10BoxCore.lean \
   --override Raw10FixedLeaves=im-results/agent13-block-far/Raw10FixedLeaves.lean \
   --override Raw10F0ZipCycles=im-results/agent19-raw10-f0-box/Raw10F0ZipCycles.lean \
-  --override BB6Coverage=.tmp/agent50-raw10-ctl-footprint/BB6Coverage.lean \
+  --override BB6Coverage=.tmp/agent19-raw10-f0-zip/BB6Coverage.lean \
   --override BoxComplement=im-results/agent49-box-complement/BoxComplement.lean \
   --override RootRaw10Core=im-results/agent13-cross-route-pilot/RootRaw10Core.lean \
   --override CrossRouteHeldLeaf=im-results/agent13-cross-route-pilot/CrossRouteHeldLeaf.lean \
