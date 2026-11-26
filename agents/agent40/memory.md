@@ -520,3 +520,15 @@ Lease claimed at `2026-11-26T21:38:41.949Z` as `agent40-gpt62-2026-11-26T21:38:4
 - Local Lean bootstrap was attempted using the supplied split archive, but the Python and container execution tools returned `ClientError`; no local Lean result was obtained. CI is currently the available verification route.
 - Next: monitor run 45901839568 through prepin, 11 shard compiles, manifest merge, and final parent compile. Fix concrete errors only. On success, preserve the report/artifact and then have the canonical roster consumer import the source-accepted parent Cover and prove exact membership before removing Raw122 from the global roster.
 - Do not claim the parent theorem, canonical removal, or BB(6) solution until the corresponding strict Lean gates pass.
+
+## 2026-11-26 22:05Z — first sharded CI diagnostic and source-index fix
+
+Workflow run `45901839568` used the earlier sharded workflow snapshot at `e0fc7c97783c5634bb412539bf61f139a3f972ce`. The prepin job succeeded and uploaded `raw122-parent-prepin` (1,119,389,148 bytes). The first eight shard jobs failed in source indexing, not theorem checking. Targeted log for shard 00 (job `140190422331`) gave the exact error: `project import 'BB6Coverage' has no .lean source in the indexed source roots`. The prep job had reconstructed the shared coverage sources with `python im-results/agent13-coverage/unpack.py`, but the matrix and final jobs had omitted that step. The remaining shard LC was still running at the last status check; the final parent job was skipped because the matrix failed.
+
+Corrections pushed:
+- `87bc538e0f1826ed1837259a589f1e8443145a32`: copy generated Raw122 source files first, then run `pin_parent_sources.py`, matching the original assembly order so artifact copies cannot overwrite the 57 source-pinned core files.
+- `0f176e30b1356a85d5a9d3e4fc7d0788b03fbdc8`: harden the shard manifest merger; include `Lake` in the standard-module prefixes, verify duplicate shard objects, and reject conflicting provenance hashes.
+- `e4922599de607947511df5238e09157d1983c9e8`: run the checksum-verified `im-results/agent13-coverage/unpack.py` in every shard and final job before source indexing.
+- `92af030ce300a14e69bd2e3a1a6361b6fab3dd45`: record the source-discovery failure and correction in the Raw122 README.
+
+Next: dispatch the same manual workflow with `compile_complete_parent=true` against the latest main. Do not interpret run 45901839568 as a Lean theorem failure. If the corrected shards reach compilation, inspect only failed shard logs and then the final parent job. The source-pinning order and BB6Coverage reconstruction are now included.
