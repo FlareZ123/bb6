@@ -1281,3 +1281,24 @@ Current immutable lease remains `agent4-gpt62-2026-11-26T06:35:29.114Z-raw58-con
 - The existing Canonical62 module, driver and workflow target remain drafts until Raw112 is accepted and the joint strict linker/count/axiom gate succeeds. Raw58 parent result remains accepted as recorded above.
 
 Current immutable lease remains `agent4-gpt62-2026-11-26T06:35:29.114Z-raw58-continuation` from `2026-11-26T06:35:29.114Z`. After this checkpoint compare the actual runtime clock to the original timestamp; do not refresh it.
+
+## 2026-11-26 checkpoint — source-compiled BB(6) lower bound; Canonical62 preflight
+
+### Champion lower bound and consumer
+
+- The source repair to ChampionScoreLowerBound.lean now compiles completely. Run 45772713066 compiled 116 champion modules; all score theorem profiles, including champion_score_ge_6766859, are standard Lean axioms. BB6Coverage.Agent48DirectRoot.champion_raw_witness also has a standard profile. This establishes the source-compiled attainable lower bound BB(6) ≥ 6,766,859.
+- The same run then failed only in Canonical64ChampionConsumer.lean because WeightedBound is supplied by BB6.Agent13BlankDelay, whose namespace was not opened. Added open BB6.Agent13BlankDelay to the Canonical64 consumer (commit 8a9494f5a0bca9a1ad3b4519215488d9b638d583) and my dependent Canonical62 consumer (commit aac1b38090cbeb7fc759a6e877805622837474a9). Targeted retry 45773904666 is in progress. Do not conflate the now-compiled lower bound with a completed Canonical64 upper-bound consumer.
+
+### Canonical62 preflight
+
+- Added preflight_canonical62.py and target canonical62-preflight to .github/workflows/agent10-four-hole.yml. It combines Canonical64 and Raw58 source closures with Raw112's common-core artifact, uses an explicit BB6.Agent47Raw112.parent_cover axiom stub, and checks the exact parent membership/distinctness, 62-entry filter, and axiom boundary. It is explicitly a preflight only.
+- First attempt 45773088105 failed because the stub imported generated Raw112Data, absent from the common-core artifact. The stub now imports Raw112Base and ResidualCover, which define the parent table and Cover type. Corrected preflight run 45773948199 is queued.
+- The Raw58 README was updated to record this preflight and Raw112 recovery status.
+
+### Raw112 and Raw118 status
+
+- Raw112 run 45751911115 attempt 2 still has shard 1 and shard 5 compiling; shard 4 failed again with runner shutdown / exit 143 after ~10 minutes. No Lean theorem diagnostic. If the remaining shards finish and shard 4 remains the only failure, consider a --jobs 1 targeted retry plus an assemble-existing mode that reuses prior successful artifacts and retains the merge tool's exact source/import/object/provenance hash checks.
+- Raw118 parent assembly run 45768921666 remains in progress. Agent16's membership helper and Agent1's Raw57 helper are coordination-only; neither parent is yet added to the accepted roster.
+- If Raw57 and Raw118 Covers both become source-accepted, prefer one direct multi-parent roster from Canonical64 (potentially 60 residuals) rather than chained unaccepted frontiers. Current Canonical62 is still only a draft/preflight.
+
+Current immutable lease remains agent4-gpt62-2026-11-26T06:35:29.114Z-raw58-continuation from 2026-11-26T06:35:29.114Z. After this checkpoint compare actual runtime time to that original timestamp; continue while elapsed time is under 70 minutes.
