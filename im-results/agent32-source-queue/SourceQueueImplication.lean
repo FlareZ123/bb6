@@ -1,11 +1,12 @@
 import Enumerate62Adapter
 import QueueImplication
+import AdaptiveQueuePlan
 import AdaptiveQueueCoverage
 
 namespace BB6.Agent32SourceQueue
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent5Enumerate62
 open BB6.Agent13QueueCoverage BB6.Agent32QueueImplication
-open BB6.Agent5AdaptiveQueueCoverage
+open BB6.Agent5AdaptiveQueueCoverage BB6.Agent8AdaptiveQueue
 
 theorem reachable_cut_positive {x : SourceNode} (h : SourceReachable x) : 0 < x.fresh := by
   induction h with
@@ -122,6 +123,22 @@ theorem source_queue_root_cover_residuals (H B : Nat) (hB : H+6 ≤ B)
   exact .leaf _ (hs SourceReachable.root)
 
 
+
+/-- Fully adaptive source-queue interface. The plan may use different
+finite fuels and active-list splits at every node; every stopped active or
+held residual remains an explicit certificate obligation. -/
+theorem source_queue_root_cover_plan (H B : Nat) (hB : H+6 ≤ B)
+    (decide : SourceNode → QueueDecision SourceNode)
+    (hevidence : SourceEvidence H decide)
+    (plan : Plan)
+    (hcert : ∀ y, y ∈ obligations decide plan (q0 decide sourceRoot) →
+      SourceSafe B y) :
+    Cover (WeightedBound B) (sourcePartial sourceRoot.tm) := by
+  have hs := q0_safe_of_plan decide (SourceSafe B)
+    (source_localClosure H B hB decide hevidence) sourceRoot plan hcert
+  exact .leaf _ (hs SourceReachable.root)
+
+
 theorem source_queue_root_cover (H B : Nat) (hB : H+6 ≤ B)
     (decide : SourceNode → QueueDecision SourceNode)
     (hevidence : SourceEvidence H decide)
@@ -141,6 +158,7 @@ theorem source_queue_root_cover (H B : Nat) (hB : H+6 ≤ B)
 #print axioms halt_budget_weight
 #print axioms source_localClosure
 #print axioms source_queue_root_cover
+#print axioms source_queue_root_cover_plan
 #print axioms q0_safe_of_chunk_residuals
 #print axioms source_queue_root_cover_residuals
 end BB6.Agent32SourceQueue

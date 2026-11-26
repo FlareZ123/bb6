@@ -104,6 +104,24 @@ theorem exact_from_source_classifier_residuals (H B : Nat) (hB : H+6 ≤ B)
   exact exact_from_weighted_first_one B (by omega) hc champ
 
 
+
+/-- Exactness from an arbitrary finite adaptive source-queue plan. Unlike
+fixed-fuel chunk adapters, this accepts nonuniform advances and recursive
+active-list splits while preserving every stopped active and held residual. -/
+theorem exact_from_source_classifier_plan (H B : Nat) (hB : H+6 ≤ B)
+    (classify : SourceTM → SourceVerdict) (hs : SourceClassifierSound H classify)
+    (plan : Plan)
+    (hcert : ∀ y, y ∈ obligations (queueDecision classify) plan
+      (q0 (queueDecision classify) sourceRoot) → SourceSafe B y)
+    (champ : ∃ m : BB6.Coverage.RawMachine,
+      BB6.Coverage.HaltsAt (BB6.Coverage.tickRaw m) B) :
+    BB6.Coverage.ExactBB6 B := by
+  have hc := source_queue_root_cover_plan H B hB _
+    (source_evidence_of_classifier H classify hs) plan hcert
+  rw [source_root_eq_firstOneCylinder] at hc
+  exact exact_from_weighted_first_one B (by omega) hc champ
+
+
 #print axioms source_default_completion
 #print axioms source_knownRun
 #print axioms source_evidence_of_classifier
@@ -167,8 +185,25 @@ theorem exact_from_finite_classifier_residuals (H B : Nat) (hB : H+6 ≤ B)
     ranges hpart fuel hcert champ
 
 
+
+/-- Finite-list classifier specialization of the arbitrary adaptive-plan
+exactness theorem. -/
+theorem exact_from_finite_classifier_plan (H B : Nat) (hB : H+6 ≤ B)
+    (classify : SourceTM → SourceVerdict) (hs : FiniteClassifierSound H classify)
+    (plan : Plan)
+    (hcert : ∀ y, y ∈ obligations (queueDecision classify) plan
+      (q0 (queueDecision classify) sourceRoot) → SourceSafe B y)
+    (champ : ∃ m : BB6.Coverage.RawMachine,
+      BB6.Coverage.HaltsAt (BB6.Coverage.tickRaw m) B) :
+    BB6.Coverage.ExactBB6 B :=
+  exact_from_source_classifier_plan H B hB classify
+    (source_classifier_sound_of_finite H classify hs) plan hcert champ
+
+
 #print axioms source_classifier_sound_of_finite
 #print axioms exact_from_finite_classifier
 #print axioms exact_from_source_classifier_residuals
 #print axioms exact_from_finite_classifier_residuals
+#print axioms exact_from_source_classifier_plan
+#print axioms exact_from_finite_classifier_plan
 end BB6.Agent32SourceExact
