@@ -65,6 +65,28 @@ def main():
             assert i not in pumps
             pumps[i]=certns
             pumpcode.insert(0,"import "+module)
+    if SPEC.get("automata"):
+        sys.path.insert(0,str(ROOT.parent/"agent4-raw58"))
+        from generate_more import run_automata, compress_automata, emit_automata_sharded
+        an=f"BB6.Agent7{ID}Automata"
+        am=ID+"Automata"
+        code=["import TwoSidedAutomata","set_option maxRecDepth 100000",
+              "set_option maxHeartbeats 0",f"namespace {an}","open BB6Coverage"]
+        for i,params in SPEC["automata"].items():
+            i=int(i)
+            p=one.parse(opens[i])
+            L,R=(params["left"],params["right"]) if isinstance(params,dict) else (params,params)
+            cert=run_automata(p,tuple(L),tuple(R))
+            assert cert[0],(A,i,params)
+            before=cert[1]
+            cert=compress_automata(p,cert)
+            print(A,i,"automata",before,"->",cert[1],flush=True)
+            code.append(emit_automata_sharded(i,p,cert))
+            assert i not in pumps
+            pumps[i]=f"{an}.M{i}"
+        code.append(f"end {an}")
+        (ROOT/(am+".lean")).write_text("\n\n".join(code)+"\n")
+        pumpcode.insert(0,"import "+am)
     pumpcode.append(f"end {pumpns}")
     (ROOT/(ID+"Pumps.lean")).write_text("\n\n".join(pumpcode)+"\n")
     ns=f"BB6.Agent1{ID}"
