@@ -10,3 +10,8 @@ Residual display IDs (fast enumerator open-list indices): 207, 209, 212, 217, 71
 ## Extended side-cycle probe (negative search result)
 
 The eight exact one-hole tables were each passed through the existing `fast_partition.cpp` classifier with `cap=1,000,000` and `lookback=128` in [Actions run 45767878144](https://github.com/FlareZ123/bb6/actions/runs/45767878144), artifact ID `15093027029` (`raw124-1lb-residual-partition-probe`). All eight returned `open`; none produced a `cycle` or `last` leaf within that cap. This is only a bounded search result, not a nonhalting proof. Do not repeat the same cap/lookback run; pursue a different invariant or pump certificate, or materially change the search.
+
+
+## Branch-specific numeric lift (source audit pending)
+
+`Raw124OneLBChampionBound.lean` proves the intended implication `B ≤ 3006 → B ≤ proposedTM63Moves + 7` from the exact 27,959-step root-prefix lower bound in `TM63RawUpperInterface` and `TM63DirectRootComposition`. This avoids the unaccepted F412 two-million-step adapter for this particular F1=1LB cutoff. The dedicated clean source-closure target is `weighted-tnf-raw124-1lb-champion-bound`; earlier attempts failed and the revised run [45770334987](https://github.com/FlareZ123/bb6/actions/runs/45770334987) is pending. Do not rely on the lemma until a clean run accepts both theorem profiles with standard axioms. This does not lift any sibling branch whose cutoff exceeds 27,959.
