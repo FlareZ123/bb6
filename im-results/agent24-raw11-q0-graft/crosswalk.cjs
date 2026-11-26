@@ -155,6 +155,10 @@ function assertEq(actual, expected, label) {
 if (frontier.length !== 116) throw new Error("Raw11 frontier length changed");
 if (checkpointRows.length !== 157 || checkpoint.active.length !== 156 || checkpoint.held.length !== 1) throw new Error("q0 checkpoint cardinality changed");
 if (q0Leaves.length !== 94 || q32Queue.length !== 84 || q32Side.length !== 32) throw new Error("source roster cardinality changed");
+if (!checkpointRows.every((x) => refines(x.table, output.raw11.parent))) throw new Error("q0 checkpoint row does not refine Raw11 parent");
+if (!q0Leaves.every((x) => refines(x.table, output.raw11.parent))) throw new Error("q0 automata leaf does not refine Raw11 parent");
+if (!q32Queue.every((x) => refines(x.table, output.raw11.parent))) throw new Error("q32 queue row does not refine Raw11 parent");
+if (!q32Side.every((x) => refines(x.table, output.raw11.parent))) throw new Error("q32 side leaf does not refine Raw11 parent");
 assertEq(checkpointFrontierHistogram, {
   "100,101,102,103": 1, "104,105,106,107": 1, "109,110,111,112": 1,
   "14,15,16,17": 1, "24": 20, "25": 20, "90,91,92,93": 1,
