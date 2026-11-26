@@ -92,6 +92,11 @@ def download(pin, work):
                 assert not dest.exists(), (aid, i.filename)
                 with z.open(i) as src, dest.open("wb") as dst:
                     shutil.copyfileobj(src, dst)
+            elif path.name == "manifest.json":
+                dest = work / "metadata" / str(aid) / Path(*path.parts)
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                with z.open(i) as src, dest.open("wb") as dst:
+                    shutil.copyfileobj(src, dst)
             elif aid == 14997867504 and path.name in {"Raw117Data.lean", "SOURCE_COMMIT", "RAW117_SOURCE.sha256"}:
                 dest = work / path.name
                 assert not dest.exists(), i.filename
@@ -100,6 +105,64 @@ def download(pin, work):
     assert dirs, f"no objects in {aid}"
     print(f"Verified and extracted artifact {aid}: {info['name']}", flush=True)
     return list(dirs.values())
+
+
+def download_named_artifact(run_id, name, work):
+    """Download one named artifact only from a successful, specified producer run."""
+    run_info = api_json(f"repos/{REPO}/actions/runs/{run_id}")
+    assert run_info["conclusion"] == "success", (run_id, run_info.get("conclusion"))
+    artifacts = api_json(f"repos/{REPO}/actions/runs/{run_id}/artifacts")["artifacts"]
+    matches = [item for item in artifacts if item["name"] == name]
+    assert len(matches) == 1, (run_id, name, [(x["id"], x["name"]) for x in matches])
+    item = matches[0]
+    assert not item["expired"], (item["id"], "artifact expired")
+    digest = item.get("digest") or ""
+    assert digest.startswith("sha256:"), (item["id"], digest)
+    expected = digest.removeprefix("sha256:")
+    dirs = download((item["id"], run_id, expected), work)
+
+    candidates = []
+    for path in (work / "metadata" / str(item["id"])).rglob("manifest.json"):
+        try:
+            manifest = json.loads(path.read_text())
+        except (OSError, json.JSONDecodeError):
+            continue
+        claim = manifest.get("claim") or {}
+        modules = {entry.get("module") for entry in manifest.get("modules", [])}
+        if (claim.get("theorem") == "BB6.Agent47Raw112.parent_cover"
+                and claim.get("parent_table") == "1RB---_1RC---_0RD---_1LD1RE_---1LC_------"
+                and claim.get("weighted_bound") == 100000
+                and {"Raw112ClosedCover", "Raw112Data"} <= modules):
+            candidates.append((path, manifest))
+    assert len(candidates) == 1, (
+        "expected exactly one Raw112 closed-parent manifest with the exact theorem/table/bound",
+        [str(path) for path, _ in candidates],
+    )
+    manifest_path, manifest = candidates[0]
+    assert manifest["proof_source_revision"] == run_info["head_sha"], (
+        manifest["proof_source_revision"], run_info["head_sha"]
+    )
+    assert "4.36.0-rc2" in manifest["lean_version"], manifest["lean_version"]
+    prefix = Path(subprocess.check_output(["lean", "--print-prefix"], text=True).strip())
+    assert manifest["lean_binary"]["sha256"] == sha(prefix / "bin" / "lean")
+    metadata = {
+        "run_id": run_id,
+        "source_revision": run_info["head_sha"],
+        "artifact_id": item["id"],
+        "artifact_name": name,
+        "artifact_digest": digest,
+        "manifest_path": str(manifest_path),
+        "manifest_sha256": sha(manifest_path),
+        "theorem": manifest["claim"]["theorem"],
+        "parent_table": manifest["claim"]["parent_table"],
+        "weighted_bound": manifest["claim"]["weighted_bound"],
+        "lean_version": manifest["lean_version"],
+        "lean_binary_sha256": manifest["lean_binary"]["sha256"],
+        "module_count": manifest["module_count"],
+    }
+    print(f"Verified Raw112 parent artifact {item['id']} from successful run {run_id}.", flush=True)
+    return metadata, dirs
+
 
 def gate(log, required):
     allowed = {"propext", "Classical.choice", "Quot.sound"}
@@ -197,6 +260,8 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--work", type=Path, required=True)
     ap.add_argument("--three", action="store_true", help="also consume Raw71, Raw77 and Raw81")
+    ap.add_argument("--raw112-run-id", type=int,
+                    help="successful run producing raw112-closed-parent-cover")
     args = ap.parse_args()
     work = args.work.resolve()
     work.mkdir(parents=True, exist_ok=False)
@@ -221,6 +286,12 @@ def main():
     assert expect == [sha(work / "Raw117Data.lean")], "Raw117 source hash"
     linked = work / "linked"
     extra_families = []
+    raw112_meta = None
+    if args.raw112_run_id is not None:
+        raw112_meta, raw112_dirs = download_named_artifact(
+            args.raw112_run_id, "raw112-closed-parent-cover", work
+        )
+        extra_families.append(("raw112", raw112_dirs, ["Raw112ClosedCover"]))
     if args.three:
         info = api_json(f"repos/{REPO}/actions/runs/{THREE[1]}")
         assert info["head_sha"] == THREE_REVISION and info["conclusion"] == "success"
@@ -248,6 +319,85 @@ def main():
               "lean_version": subprocess.check_output(["lean", "--version"], text=True).strip()}
     (work / "canonical68-integration.json").write_text(json.dumps(report, indent=2) + "\n")
     print("Canonical68 integrated consumer compiled with the standard axiom gate.", flush=True)
+    if raw112_meta is not None:
+        stages = [
+            (
+                HERE / "Canonical74Raw109Raw123Graft.lean",
+                "Canonical74Raw109Raw123Graft",
+                [
+                    "BB6.Agent31Canonical74Raw109Raw123.p109_root",
+                    "BB6.Agent31Canonical74Raw109Raw123.p123_root",
+                    "BB6.Agent31Canonical74Raw109Raw123.p109_parent_count",
+                    "BB6.Agent31Canonical74Raw109Raw123.p123_parent_count",
+                    "BB6.Agent31Canonical74Raw109Raw123.count75",
+                    "BB6.Agent31Canonical74Raw109Raw123.count74",
+                    "BB6.Agent31Canonical74Raw109Raw123.base_sound_at_target",
+                    "BB6.Agent31Canonical74Raw109Raw123.raw109_sound",
+                    "BB6.Agent31Canonical74Raw109Raw123.sound",
+                    "BB6.Agent31Canonical74Raw109Raw123.exact_at_target",
+                ],
+            ),
+            (
+                HERE.parent / "agent6-e1-parent-consumer" / "Canonical68E1ParentGraft.lean",
+                "Canonical68E1ParentGraft",
+                [
+                    "BB6.Agent6Canonical68E1ParentGraft.p60_parent_count",
+                    "BB6.Agent6Canonical68E1ParentGraft.p110_parent_count",
+                    "BB6.Agent6Canonical68E1ParentGraft.p111_parent_count",
+                    "BB6.Agent6Canonical68E1ParentGraft.p117_parent_count",
+                    "BB6.Agent6Canonical68E1ParentGraft.p121_parent_count",
+                    "BB6.Agent6Canonical68E1ParentGraft.p125_parent_count",
+                    "BB6.Agent6Canonical68E1ParentGraft.count68",
+                    "BB6.Agent6Canonical68E1ParentGraft.sound68",
+                    "BB6.Agent6Canonical68E1ParentGraft.exact_at_target",
+                ],
+            ),
+            (
+                HERE.parent / "agent47-raw112-cut" / "Canonical67E1ParentGraft.lean",
+                "Canonical67E1ParentGraft",
+                [
+                    "BB6.Agent47Canonical67E1ParentGraft.p112_root",
+                    "BB6.Agent47Canonical67E1ParentGraft.p112_parent_count",
+                    "BB6.Agent47Canonical67E1ParentGraft.count67",
+                    "BB6.Agent47Canonical67E1ParentGraft.sound67",
+                    "BB6.Agent47Canonical67E1ParentGraft.exact_at_target67",
+                ],
+            ),
+            (
+                HERE.parent / "agent47-raw112-cut" / "Canonical67Integrated.lean",
+                "Canonical67Integrated",
+                [
+                    "BB6.Agent47Canonical67Integrated.p112_eq",
+                    "BB6.Agent47Canonical67Integrated.raw112_cover",
+                    "BB6.Agent47Canonical67Integrated.sound67_integrated",
+                    "BB6.Agent47Canonical67Integrated.exact_at_target67",
+                ],
+            ),
+        ]
+        stage_reports = {}
+        for source, module, required in stages:
+            log = compile_module(source, linked / (module + ".olean"), env,
+                                 work / (module + ".log"))
+            if re.search(r"sorryAx|native_decide", log):
+                raise AssertionError(f"forbidden proof mechanism in {module}")
+            stage_reports[module] = {
+                "source_sha256": sha(source),
+                "olean_sha256": sha(linked / (module + ".olean")),
+                "axioms": gate(log, required),
+            }
+        integrated67 = {
+            "status": "source-audited integrated conditional 67-residual interface",
+            "weighted_bound_floor": 6766859,
+            "residual_count": 67,
+            "remaining_obligations": "a Cover at the target bound for each of the 67 retained quotient representatives, plus an attaining blank-start witness",
+            "raw112_parent": raw112_meta,
+            "canonical68_integration": report,
+            "modules": stage_reports,
+        }
+        (work / "canonical67-integrated.json").write_text(
+            json.dumps(integrated67, indent=2, sort_keys=True) + "\n"
+        )
+        print("Canonical67 integrated consumer compiled with the standard axiom gate.", flush=True)
     if args.three:
         source = HERE / "Canonical65AfterThree.lean"
         log = compile_module(source, linked / "Canonical65AfterThree.olean", env, work / "canonical65-three.log")
