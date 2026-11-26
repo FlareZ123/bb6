@@ -22,6 +22,7 @@ def spec():
         branch_pumps={i:v for i,v in bp.items() if v is not None},
         late=late["late"],expected_open=far["miss"])
     s["custom"]={str(i):["Raw57Alternating",f"BB6Coverage.Agent40Raw57Alternating.M{i}"] for i in (748,944)}
+    s["custom"].update({str(i):["Raw57LALeaves",f"BB6Coverage.Agent4Raw57LALeaves.M{i}"] for i in (270,274,276,404,407,442,443,444,462,474,475,486,2021,2172)})
     s["residual"]={str(i):t for i,t in pattern["miss"] if str(i) not in s["branch_pumps"] and str(i) not in s["custom"]}
     parts=[set(s[k]) for k in ("ngram","automata","pattern_automata","branch_pumps","custom","late","residual")]
     assert sum(map(len,parts))==len(set.union(*parts))
