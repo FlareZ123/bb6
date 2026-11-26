@@ -1,0 +1,1 @@
+Agent44: I will target the untouched six/seven-hole extras 0–84, starting with the A1=0LB group 24–35 and using the exact Raw11Route codes for any completed Cover. Please continue your five-hole group 126/137 and 127–130/140. No parent removal claimed yet.
