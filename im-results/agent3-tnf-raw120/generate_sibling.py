@@ -264,6 +264,51 @@ if BRANCH == "0RA":
     pumps[TABLE423] = ("BB6Coverage.Agent3RA423Block.table", "BB6Coverage.Agent3RA423Block.never")
     late[opens[433]] = (3314, 5)
 
+def literal_one_candidate(p, ev):
+    # A constant-time phase need not use an accelerated sweep. Replay it
+    # symbolically with an opaque repeated word, retaining every literal
+    # transition for the existing Lean emitter.
+    for i, (t, s, c) in enumerate(ev[:60]):
+        for j in range(i+1, min(i+12, len(ev))):
+            t2, s2, d = ev[j]
+            if s != s2 or c.q != d.q:
+                continue
+            delta = d.h0 - c.h0
+            if s == "L" and c.l.pre == d.l.pre == "":
+                a, b, side = c.r.pre, d.r.pre, "R"
+            elif s == "R" and c.r.pre == d.r.pre == "":
+                a, b, side = c.l.pre, d.l.pre, "L"
+            else:
+                continue
+            diff = len(b)-len(a)
+            if not 1 <= diff <= 16:
+                continue
+            for k in range(len(a)+1):
+                if b[:k] != a[:k] or b[k+diff:] != a[k:]:
+                    continue
+                block = b[k:k+diff]
+                pred = a[:k]+block*2+a[k:]
+                if not any(e[0] == 2*t2-t and e[1] == s and e[2].q == c.q
+                           and e[2].h0 == c.h0+2*delta
+                           and (e[2].r.pre if side == "R" else e[2].l.pre) == pred
+                           for e in ev[j+1:j+12]):
+                    continue
+                w = one.W(a[:k], block, a[k:])
+                v = one.W(a[:k]+block, block, a[k:])
+                start = one.C(c.q, 0, 0, one.W() if side == "R" else w, w if side == "R" else one.W())
+                target = one.C(c.q, delta, 0, one.W() if side == "R" else v, v if side == "R" else one.W())
+                z, hist = start, []
+                try:
+                    for _ in range(t2-t):
+                        zz = one.step(p, z)
+                        hist.append(("step", z, zz, 1))
+                        z = zz
+                except ValueError:
+                    continue
+                if z.norm() == target.norm():
+                    return t, c, start, target, (hist, z)
+    return None
+
 def extended_one_candidate(p, ev):
     # Same opaque-word simulation as generate_sweeps.candidate, with a longer
     # event separation. The emitted proof is still checked by Lean.
@@ -295,7 +340,7 @@ def extended_one_candidate(p, ev):
                 v = one.W(a[:k]+block, block, a[k:])
                 start = one.C(c.q, 0, 0, one.W() if side == "R" else w, w if side == "R" else one.W())
                 target = one.C(c.q, delta, 0, one.W() if side == "R" else v, v if side == "R" else one.W())
-                res = one.pump(p, start, target)
+                res = one.pump(p, start, target, 1000 if BRANCH == "1LB" else 400)
                 if res:
                     return t, c, start, target, res
     return None
@@ -339,9 +384,11 @@ for i, code in enumerate(opens):
         res = one.pump(p, start, target, 2000)
         assert res is not None
         ans = (229, None, start, target, res)
+    elif BRANCH == "1LB":
+        ans = literal_one_candidate(p, events) or one.candidate(p, events)
     else:
         ans = one.candidate(p, events)
-    if ans is None and ((BRANCH == "0RA" and i == 479) or BRANCH in ("1RA", "1RF")):
+    if ans is None and ((BRANCH == "0RA" and i == 479) or BRANCH in ("1RA", "1RF", "1LB")):
         ans = extended_one_candidate(p, events)
     if ans is not None:
         generated, info = one.generate(i, p, ans)
