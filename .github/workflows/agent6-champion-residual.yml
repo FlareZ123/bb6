@@ -454,6 +454,7 @@ jobs:
               "BB6.Agent14Raw139D0LA.all_completions_weighted",
               "BB6.Agent14F1OneLD.all_completions_weighted",
               "BB6.Agent14F1OneRF.all_completions_weighted",
+              "BB6.Agent6ChampionRaw139SiblingIntegration.championResidual_root",
               "BB6.Agent6ChampionRaw139SiblingIntegration.zeroLF_is_depth3_sibling",
               "BB6.Agent6ChampionRaw139SiblingIntegration.oneLB_is_depth3_sibling",
               "BB6.Agent6ChampionRaw139SiblingIntegration.oneLA_is_depth3_sibling",
