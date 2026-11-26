@@ -398,7 +398,7 @@ jobs:
           log = pathlib.Path(sys.argv[1]).read_text()
           allowed = {"propext", "Classical.choice", "Quot.sound"}
           profiles = {}
-          for name, axioms in re.findall(r"'([^']+)' depends on axioms: \\[([^\\]]*)\\]", log):
+          for name, axioms in re.findall(r"'([^']+)' depends on axioms: \[([^\]]*)\]", log):
               profiles[name] = {x.strip() for x in axioms.split(",") if x.strip()}
           for name in re.findall(r"'([^']+)' does not depend on any axioms", log):
               profiles[name] = set()
@@ -417,11 +417,11 @@ jobs:
                   raise SystemExit(f"{name}: unexpected axioms {sorted(bad)}")
               print(f"{name}: {sorted(profiles[name])}")
           pathlib.Path("/tmp/a31-canonical67-axioms.json").write_text(
-              json.dumps({name: sorted(profiles[name]) for name in required}, indent=2, sort_keys=True) + "\\n"
+              json.dumps({name: sorted(profiles[name]) for name in required}, indent=2, sort_keys=True) + "\n"
           )
           PY
           python3 - <<'PY'
-          import hashlib, json, pathlib, subprocess
+          import hashlib, json, os, pathlib, subprocess
           def sha(path):
               h = hashlib.sha256()
               with path.open("rb") as stream:
@@ -438,7 +438,7 @@ jobs:
               "new_parent": "Raw112",
               "new_parent_bound": 100000,
               "new_parent_cover_theorem": "BB6.Agent47Raw112.parent_cover",
-              "source_revision": "${GITHUB_SHA}",
+              "source_revision": os.environ["GITHUB_SHA"],
               "lean_version": subprocess.check_output(["lean", "--version"], text=True).strip(),
               "source_sha256": sha(source),
               "olean_sha256": sha(pathlib.Path("/tmp/a31-canonical74/Canonical67E1ParentGraft.olean")),
@@ -446,7 +446,7 @@ jobs:
               "axiom_profiles": json.loads(pathlib.Path("/tmp/a31-canonical67-axioms.json").read_text()),
               "axiom_allowlist": ["propext", "Classical.choice", "Quot.sound"]
           }
-          pathlib.Path("/tmp/a31-canonical67-summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True) + "\\n")
+          pathlib.Path("/tmp/a31-canonical67-summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n")
           print(json.dumps(summary, indent=2, sort_keys=True))
           PY
 
