@@ -1247,12 +1247,12 @@ jobs:
             --weighted-bound 572 --artifact-name raw119-parent-proof \
             --provenance-input "$root/spec.json" --provenance-input "$root/generate.py" \
             --provenance-input /tmp/a10-raw119-pins.json --provenance-input "$union/manifest.json" \
-            "$root/Raw119Data.lean" 2>&1 | tee /tmp/a10-raw119-parent.log
-          python im-results/agent4-raw109/audit_axioms.py /tmp/a10-raw119-parent.log BB6.Agent10Raw119.all_completions
+            "$root/Raw119Exact.lean" 2>&1 | tee /tmp/a10-raw119-parent.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a10-raw119-parent.log BB6.Agent10Raw119.all_completions BB6.Agent10Raw119.longest_halts BB6.Agent10Raw119.exact_bound
           python - "$work/manifest.json" <<'PY'
           import json,sys
           m=json.load(open(sys.argv[1]))
-          new={"Raw119Data"}|{f"Raw119Kid{i:02}" for i in (5,11,12,13,14,17,23)}
+          new={"Raw119Data","Raw119Exact"}|{f"Raw119Kid{i:02}" for i in (5,11,12,13,14,17,23)}
           expected={x["module"] for x in m["modules"]}-new
           reused=set(m["precompiled_core"]["reused_modules"])
           assert reused==expected,(sorted(expected-reused),sorted(reused-expected))
