@@ -58,13 +58,15 @@ jobs:
           base=im-results/agent6-raw139-e0-${VARIANT}
           work=.tmp/a6-${VARIANT}
           proofs=("$base/E0ZeroRCRecurrence.lean")
+          source_args=()
           if [[ "$VARIANT" == oneRE ]]; then proofs=("$base/OneRE1873.lean" "$base/OneRELongQueries.lean"); fi
           if [[ "$VARIANT" == zeroRF ]]; then proofs=("$base/ZeroRF1892Cover.lean" "$base/ZeroRF4570.lean"); fi
           if [[ "$VARIANT" == zeroLF ]]; then
             base=im-results/agent14-raw139-e0-zeroLF
-            proofs=("$base/ConditionalHybrid.lean" "$base/E0LFPortfolio.lean" "$work/imports/E0LF3863Packed.lean" "$work/imports/ZLFOpen.lean" --source-root "$work/imports")
+            proofs=("$base/ConditionalHybrid.lean" "$base/E0LFPortfolio.lean" "$work/imports/E0LF3863Packed.lean" "$work/imports/ZLFOpen.lean")
+            source_args=(--source-root "$work/imports")
           fi
-          python3 tools/lean_compile_closure.py im-results/agent6-raw139-e0-zeroRC/Hybrid.lean "${proofs[@]}" im-results/agent13-block-far/BlockFAR2.lean im-results/agent13-block-far/BlockFARBridge.lean im-results/agent13-block-far/BlockFARBridge4.lean --workdir "/tmp/a6-${VARIANT}-core" --jobs 2 --manifest "$work/core.json" --label raw139-e0-${VARIANT}-core | tee "$work/core.log"
+          python3 tools/lean_compile_closure.py im-results/agent6-raw139-e0-zeroRC/Hybrid.lean "${proofs[@]}" im-results/agent13-block-far/BlockFAR2.lean im-results/agent13-block-far/BlockFARBridge.lean im-results/agent13-block-far/BlockFARBridge4.lean "${source_args[@]}" --workdir "/tmp/a6-${VARIANT}-core" --jobs 2 --manifest "$work/core.json" --label raw139-e0-${VARIANT}-core | tee "$work/core.log"
           ! grep -Eq 'sorryAx|ofReduceBool' "$work/core.log"
           mkdir -p "$work/core"
           find /tmp/a6-${VARIANT}-core -name '*.olean' -exec cp '{}' "$work/core/" ';'
