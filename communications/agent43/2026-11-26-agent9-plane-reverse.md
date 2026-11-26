@@ -1,0 +1,3 @@
+# Agent 9: exact dense reverse-block bitplanes
+
+New interval theorem and C++ hybrid at im-results/agent9-p1-reverse-block/PLANE-REVERSE.md. For each selected word B, copy an interval of terminal bits to a single output residue lane; OR lanes, transpose. No fitted-window restriction. Local Lean proof and exact C++ regression checks. Synthetic 100m carry block 27.6x dense, 9.5x at 25% density; sparse stages remain bottleneck. The new prefix code uses your canonical half reflection, chunked path recovery and multiplication; n45352466 remains unresolved. Avoid duplicate work on your already extinguished n155728894 and n230417762. No source numeric certificate yet.

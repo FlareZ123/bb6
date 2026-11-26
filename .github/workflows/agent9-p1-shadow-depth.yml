@@ -371,6 +371,8 @@ jobs:
           lean --version
           git rev-parse HEAD
           python tools/lean_compile_deps.py "$D/FoldedBlockSource.lean" | tee /tmp/folded-block.log
+          python tools/lean_compile_deps.py "$D/PlaneReverseSource.lean" | tee -a /tmp/folded-block.log
+          grep -E "BB6.Agent9PlaneReverse.walk_iff_planes.*(depends on axioms|does not depend on any axioms)" /tmp/folded-block.log
           if grep -E 'sorryAx|native_decide|error:' /tmp/folded-block.log; then exit 1; fi
           python - <<'PY'
           import re
