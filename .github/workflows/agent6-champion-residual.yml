@@ -364,6 +364,142 @@ jobs:
             /tmp/a6-champion-residual/core.json
           if-no-files-found: error
           retention-days: 14
+      - name: Download accepted Raw139 D0=0LF source artifact
+        if: ${{ inputs.raw121_graft_run_id == '' }}
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45726077932
+          name: raw139-d0-ZeroLF-certified
+          path: /tmp/a14-d0-ZeroLF
+      - name: Download accepted Raw139 D0=1LB source artifact
+        if: ${{ inputs.raw121_graft_run_id == '' }}
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45726917837
+          name: raw139-d0-OneLB-certified
+          path: /tmp/a14-d0-OneLB
+      - name: Download accepted Raw139 D0=1LA source artifact
+        if: ${{ inputs.raw121_graft_run_id == '' }}
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45727637346
+          name: raw139-d0-OneLA-certified
+          path: /tmp/a14-d0-OneLA
+      - name: Verify accepted D0 source roots and original CI conclusions
+        if: ${{ inputs.raw121_graft_run_id == '' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          for id in 45726077932 45726917837 45727637346; do
+            curl -fsSL -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/runs/$id" -o "/tmp/d0-run-$id.json"
+          done
+          python3 - <<'PY'
+          import hashlib, json, pathlib
+          specs = (
+              ("ZeroLF", 45726077932, "Raw139D0LFCover.lean",
+               "af2904ca46cfcf199c2f01f3eb500752e1da856571f7fc645bcc6462727b39eb"),
+              ("OneLB", 45726917837, "Raw139D0LBCover.lean",
+               "87f0a8be0bca98a4f9c329722488e7e18ead267b3460dd1631471b46031e7809"),
+              ("OneLA", 45727637346, "Raw139D0LACover.lean",
+               "6bc5c852ae4850ab0b121a0a082b0aa76738e619b2e905447f81cba16a983875"),
+          )
+          for label, run_id, root, expected in specs:
+              run = json.loads(pathlib.Path(f"/tmp/d0-run-{run_id}.json").read_text())
+              if run.get("conclusion") != "success":
+                  raise SystemExit(f"D0 {label} source run {run_id} is not successful")
+              artifact = pathlib.Path(f"/tmp/a14-d0-{label}")
+              source = artifact / "imports" / root
+              if not source.is_file():
+                  raise SystemExit(f"missing D0 {label} root source: {source}")
+              actual = hashlib.sha256(source.read_bytes()).hexdigest()
+              if actual != expected:
+                  raise SystemExit(f"D0 {label} root hash mismatch: {actual} != {expected}")
+              if not (artifact / "manifest.json").is_file():
+                  raise SystemExit(f"missing D0 {label} source manifest")
+              if not list((artifact / "build").glob("*.olean")):
+                  raise SystemExit(f"missing D0 {label} compiled objects")
+              print(f"D0 {label}: source run {run_id} accepted; exact root SHA {actual}")
+          PY
+      - name: Compile five source-accepted D0/F1 siblings into the raw139 parent frontier
+        if: ${{ inputs.raw121_graft_run_id == '' }}
+        run: |
+          set -euo pipefail
+          work=/tmp/a6-champion-residual/source-sibling-build
+          python3 tools/lean_compile_closure.py \
+            im-results/agent6-champion-residual/ChampionResidualSourceSiblingIntegration.lean \
+            --source-root "$PWD/.tmp/a14-d0-ZeroLF/imports" \
+            --source-root "$PWD/.tmp/a14-d0-OneLB/imports" \
+            --source-root "$PWD/.tmp/a14-d0-OneLA/imports" \
+            --precompiled-manifest /tmp/a6-champion-residual/manifest.json \
+            --precompiled-dir /tmp/a6-champion-residual/build \
+            --workdir "$work" \
+            --manifest /tmp/a6-champion-residual/source-sibling-manifest.json \
+            --label agent6-raw139-five-sibling-graft --jobs 4 | tee /tmp/a6-source-sibling.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a6-source-sibling.log; then
+            echo "Forbidden proof placeholder or native_decide in raw139 source sibling graft" >&2
+            exit 1
+          fi
+          python3 - /tmp/a6-source-sibling.log <<'PY'
+          import pathlib, re, sys
+          log = pathlib.Path(sys.argv[1]).read_text()
+          allowed = {"propext", "Classical.choice", "Quot.sound"}
+          names = (
+              "BB6.Agent14Raw139D0LF.all_completions_weighted",
+              "BB6.Agent14Raw139D0LB.all_completions_weighted",
+              "BB6.Agent14Raw139D0LA.all_completions_weighted",
+              "BB6.Agent14F1OneLD.all_completions_weighted",
+              "BB6.Agent14F1OneRF.all_completions_weighted",
+              "BB6.Agent6ChampionRaw139SiblingIntegration.zeroLF_is_depth3_sibling",
+              "BB6.Agent6ChampionRaw139SiblingIntegration.oneLB_is_depth3_sibling",
+              "BB6.Agent6ChampionRaw139SiblingIntegration.oneLA_is_depth3_sibling",
+              "BB6.Agent6ChampionRaw139SiblingIntegration.oneLD_is_depth5_sibling",
+              "BB6.Agent6ChampionRaw139SiblingIntegration.oneRF_is_depth5_sibling",
+              "BB6.Agent6ChampionRaw139SiblingIntegration.zeroLF_parent_present",
+              "BB6.Agent6ChampionRaw139SiblingIntegration.oneLB_parent_present",
+              "BB6.Agent6ChampionRaw139SiblingIntegration.oneLA_parent_present",
+              "BB6.Agent6ChampionRaw139SiblingIntegration.oneLD_parent_present",
+              "BB6.Agent6ChampionRaw139SiblingIntegration.oneRF_parent_present",
+              "BB6.Agent6ChampionRaw139SiblingIntegration.cover_zeroLF",
+              "BB6.Agent6ChampionRaw139SiblingIntegration.cover_oneLB",
+              "BB6.Agent6ChampionRaw139SiblingIntegration.cover_oneLA",
+              "BB6.Agent6ChampionRaw139SiblingIntegration.cover_oneLD",
+              "BB6.Agent6ChampionRaw139SiblingIntegration.cover_oneRF",
+              "BB6.Agent6ChampionRaw139SiblingIntegration.remainingRaw139AfterFive_count",
+              "BB6.Agent6ChampionRaw139SiblingIntegration.removedFiveSibling_count",
+              "BB6.Agent6ChampionRaw139SiblingIntegration.sourceAcceptedSiblingCover",
+              "BB6.Agent6ChampionRaw139SiblingIntegration.cover_remainingRaw139Frontier",
+              "BB6.Agent6ChampionRaw139SiblingIntegration.canonical78_refined_obligation_count",
+              "BB6.Agent6ChampionRaw139SiblingIntegration.exact_from_remainingRaw139AfterFive",
+          )
+          for name in names:
+              pattern = r"'" + re.escape(name) + r"' depends on axioms: \\[([^\\]]*)\\]"
+              match = re.search(pattern, log)
+              if match:
+                  used = {x.strip() for x in match.group(1).split(",") if x.strip()}
+              elif "'" + name + "' does not depend on any axioms" in log:
+                  used = set()
+              else:
+                  raise SystemExit("missing axiom audit: " + name)
+              if not used <= allowed:
+                  raise SystemExit(f"nonstandard axioms for {name}: {used - allowed}")
+              print(name, sorted(used))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: ${{ inputs.raw121_graft_run_id == '' }}
+        with:
+          name: agent6-raw139-five-sibling-graft-${{ inputs.source_sha || github.sha }}
+          include-hidden-files: true
+          path: |
+            /tmp/a6-champion-residual/source-sibling-build/ChampionResidualSourceSiblingIntegration.olean
+            /tmp/a6-champion-residual/source-sibling-manifest.json
+            /tmp/a6-source-sibling.log
+          if-no-files-found: error
+          retention-days: 14
       - name: Download source-accepted Raw121 canonical76 graft artifact
         if: ${{ inputs.raw121_graft_run_id != '' }}
         uses: actions/download-artifact@v4
