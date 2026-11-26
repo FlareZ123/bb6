@@ -23,8 +23,10 @@ The existing `agent13-coverage.yml` workflow now also offers `weighted-tnf-raw10
 
 Each accepted slice is a genuine source-connected partial Cover at bound 3640. It does **not** establish `sourceBound` for the whole rectangle; all six slice theorems are still required before `Box4Closure.lean` can be accepted. The aggregate target remains available for a sufficiently provisioned run.
 
-## Full six-slice assembly
+## Parallel six-slice assembly
 
-The per-slice target also uses target-qualified certificate-bank and block-witness module names, so the six independently generated trees can coexist without Lean module or namespace collisions. The shared workflow now offers `weighted-tnf-raw10-box4-sliced-full`: it runs the six target-specific replays in one job, assembles `Box4Closure.lean`, and compiles the complete import closure with a source/proof manifest. On success it preserves the generated Lean sources and manifest as a 90-day workflow artifact.
+The per-slice generator uses target-qualified certificate-bank and block-witness module names, so independently generated trees coexist without Lean module or namespace collisions. The shared workflow's `weighted-tnf-raw10-box4-sliced-full` target runs six matrix jobs, each producing and source-checking one complete slice. Each job uploads its generated Lean sources, precompiled `.olean` closure, and a manifest that records source/import/olean hashes.
 
-This is the intended route to the full rectangle-4 result after the aggregate global-bank run exhausted its one-hour CI window. Until that assembled target succeeds, the six-slice parent bound remains unproved; individual slice acceptance must not be mistaken for whole-rectangle closure.
+The assembly job merges the six manifests only when shared module identities, Lean versions, compiler hashes, and source revisions agree. It also verifies every generated source and precompiled object by SHA-256. The final `Box4Closure.lean` is then compiled using the merged precompiled closure, so only the parent composition theorem needs fresh compilation. The completed generated sources and manifest are preserved as a 90-day workflow artifact.
+
+This avoids the previous aggregate run's one-hour bottleneck while retaining kernel-checked source and dependency identity. Until the assembled target succeeds, the six-slice parent bound remains unproved; individual slice acceptance must not be mistaken for whole-rectangle closure.

@@ -106,6 +106,7 @@ jobs:
       && inputs.target != 'weighted-tnf-agent8-raw54-lf'
       && inputs.target != 'weighted-tnf-agent8-raw54-la'
       && inputs.target != 'weighted-tnf-raw10-box18to24-canonical76'
+      && inputs.target != 'weighted-tnf-raw10-box4-sliced-full'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -287,28 +288,6 @@ jobs:
           python "$D/replay.py" /tmp/a13-box4-slice --target "$slice"
           python tools/lean_compile_closure.py --workdir /tmp/a13-box4-slice-proof --jobs 4 "$D/generated/Box4Slice${slice}.lean" | tee /tmp/a13-box4-slice-proof.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a13-box4-slice-proof.log; then exit 1; fi
-      - name: Regenerate and source-check all Raw10 rectangle-4 halt slices
-        if: inputs.target == 'weighted-tnf-raw10-box4-sliced-full'
-        run: |
-          set -euo pipefail
-          python im-results/agent13-coverage/unpack.py
-          D=im-results/agent13-raw10-box4
-          for slice in 6 7 8 9 10 11; do
-            python "$D/replay.py" "/tmp/a13-box4-slice-$slice" --target "$slice"
-          done
-          python "$D/emit_proof.py" "$D/generated" --assemble
-          python tools/lean_compile_closure.py --workdir /tmp/a13-box4-sliced-full --jobs 4 --manifest /tmp/a13-box4-sliced-full.manifest.json --label "Raw10 rectangle 4 six-slice closure" --theorem "BB6.Agent13.Box4.sourceBound" --parent-table "raw10Remainder[4]" --weighted-bound 3640 --artifact-name "raw10-box4-sliced-full" --provenance-input "$D/replay.py" --provenance-input "$D/greedy.py" --provenance-input "$D/emit_proof.py" --provenance-input "$D/scan.cpp" --provenance-input "$D/classify.cpp" --provenance-input "$D/treegen.cpp" --provenance-input "$D/finish.py" --provenance-input "$D/survivors.json" "$D/generated/Box4Closure.lean" | tee /tmp/a13-box4-sliced-full.log
-          if grep -Eq 'sorryAx|native_decide' /tmp/a13-box4-sliced-full.log; then exit 1; fi
-          cp /tmp/a13-box4-sliced-full.manifest.json "$D/generated/Box4Closure.manifest.json"
-          cp /tmp/a13-box4-sliced-full.log "$D/generated/Box4Closure.log"
-      - name: Preserve generated Raw10 rectangle-4 six-slice proof
-        if: inputs.target == 'weighted-tnf-raw10-box4-sliced-full'
-        uses: actions/upload-artifact@v4
-        with:
-          name: raw10-box4-sliced-full-${{ github.run_id }}
-          path: im-results/agent13-raw10-box4/generated/
-          if-no-files-found: error
-          retention-days: 90
       - name: Check Raw10 rectangle 3 C1=2 subrectangle
         if: inputs.target == 'weighted-tnf-raw10-box3-c2-core' || inputs.target == 'weighted-tnf-raw10-box3-c2-full'
         run: |
@@ -4760,3 +4739,84 @@ jobs:
             im-results/agent47-raw41-cut/survey/055
             im-results/agent47-raw41-cut/survey/049
           if-no-files-found: error
+
+
+  raw10_box4_slices:
+    if: inputs.target == 'weighted-tnf-raw10-box4-sliced-full'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        slice: [6, 7, 8, 9, 10, 11]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Generate and source-check slice ${{ matrix.slice }}
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          D=im-results/agent13-raw10-box4
+          slice="${{ matrix.slice }}"
+          python "$D/replay.py" "/tmp/a13-box4-slice-work-$slice" --target "$slice"
+          python tools/lean_compile_closure.py --workdir "/tmp/a13-box4-slice-proof-$slice" --jobs 4 --manifest "/tmp/a13-box4-slice-$slice.manifest.json" --label "Raw10 rectangle 4 slice $slice" --theorem "BB6.Agent13.Box4.slice$slice" --parent-table "raw10Remainder[4] / final-halt slot $slice" --weighted-bound 3640 --artifact-name "raw10-box4-slice-$slice" --provenance-input "$D/replay.py" --provenance-input "$D/greedy.py" --provenance-input "$D/emit_proof.py" --provenance-input "$D/scan.cpp" --provenance-input "$D/classify.cpp" --provenance-input "$D/treegen.cpp" --provenance-input "$D/finish.py" --provenance-input "$D/survivors.json" "$D/generated/Box4Slice$slice.lean" | tee "/tmp/a13-box4-slice-$slice.log"
+          if grep -Eq 'sorryAx|native_decide' "/tmp/a13-box4-slice-$slice.log"; then exit 1; fi
+          B="/tmp/a13-box4-slice-bundle"
+          mkdir -p "$B/generated" "$B/precompiled"
+          cp -a "$D/generated/." "$B/generated/"
+          cp -a "/tmp/a13-box4-slice-proof-$slice/." "$B/precompiled/"
+          cp "/tmp/a13-box4-slice-$slice.manifest.json" "$B/manifest.json"
+          cp "/tmp/a13-box4-slice-$slice.log" "$B/lean.log"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw10-box4-slice-${{ matrix.slice }}
+          path: /tmp/a13-box4-slice-bundle/
+          if-no-files-found: error
+          retention-days: 90
+
+  raw10_box4_sliced_full:
+    if: inputs.target == 'weighted-tnf-raw10-box4-sliced-full'
+    needs: raw10_box4_slices
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw10-box4-slice-*
+          path: /tmp/box4-slice-artifacts
+          merge-multiple: false
+      - name: Merge exact slice sources and precompiled Lean closures
+        run: |
+          set -euo pipefail
+          D=im-results/agent13-raw10-box4
+          rm -rf "$D/generated" /tmp/a13-box4-precompiled
+          python "$D/merge_manifests.py" --artifacts-root /tmp/box4-slice-artifacts --generated-out "$D/generated" --precompiled-out /tmp/a13-box4-precompiled --manifest-out /tmp/a13-box4-precompiled.manifest.json
+          python "$D/emit_proof.py" "$D/generated" --assemble
+      - name: Compile the assembled six-slice parent theorem using verified precompiled modules
+        run: |
+          set -euo pipefail
+          D=im-results/agent13-raw10-box4
+          python tools/lean_compile_closure.py --workdir /tmp/a13-box4-sliced-full --jobs 4 --precompiled-manifest /tmp/a13-box4-precompiled.manifest.json --precompiled-dir /tmp/a13-box4-precompiled --manifest /tmp/a13-box4-sliced-full.manifest.json --label "Raw10 rectangle 4 six-slice closure" --theorem "BB6.Agent13.Box4.sourceBound" --parent-table "raw10Remainder[4]" --weighted-bound 3640 --artifact-name "raw10-box4-sliced-full" --provenance-input "$D/replay.py" --provenance-input "$D/greedy.py" --provenance-input "$D/emit_proof.py" --provenance-input "$D/merge_manifests.py" --provenance-input "$D/scan.cpp" --provenance-input "$D/classify.cpp" --provenance-input "$D/treegen.cpp" --provenance-input "$D/finish.py" --provenance-input "$D/survivors.json" "$D/generated/Box4Closure.lean" | tee /tmp/a13-box4-sliced-full.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a13-box4-sliced-full.log; then exit 1; fi
+          cp /tmp/a13-box4-sliced-full.manifest.json "$D/generated/Box4Closure.manifest.json"
+          cp /tmp/a13-box4-sliced-full.log "$D/generated/Box4Closure.log"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw10-box4-sliced-full-${{ github.run_id }}
+          path: im-results/agent13-raw10-box4/generated/
+          if-no-files-found: error
+          retention-days: 90
