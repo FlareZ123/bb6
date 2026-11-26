@@ -1,9 +1,10 @@
-"""Source-audit the exact Raw124 22-of-24 first-level partial parent cut.
+"""Source-audit the exact Raw124 singleton residual parent cut.
 
 Downloads only the 22 accepted branch source-audit artifacts, verifies their
 run/artifact/manifest claims and Lean identity, links the reachable imported
 kernel objects with duplicate-declaration checks, then compiles the Raw124
-partial-cut theorem. The result is conditional only on F1=0RE and F1=0LF.
+partial, nested, and singleton-cut theorems. The final result is conditional
+only on F1=0LF/F0=1RC.
 """
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -200,6 +201,24 @@ def main():
     assert fm["lean_binary"]["sha256"] == compiler_sha
     families.append(("0LF-frontier", frontier_dirs, ["Raw124ZeroLFParentFrontier"]))
 
+    # The successful split sparse-FAR repair closes 0RE, including all
+    # 24 ordinary F0 children and the first-query halt. Its self-contained
+    # proof closure is pinned to the successful assembler job.
+    re_run = 45884922679
+    re_aid = 15149067775
+    re_sha = "f89ca10db12662221fb37728d7c266d8bc2fdb54911085faebffa689ea2fbcbe"
+    re_info = a68.api_json(f"repos/{a68.REPO}/actions/runs/{re_run}")
+    assert re_info["conclusion"] == "success"
+    assert re_info["head_sha"] == "09d6f56a73dc2183c840f92febf7d628d338ec01"
+    re_dirs = a68.download((re_aid, re_run, re_sha), work)
+    re_manifest_dir = work / "metadata" / str(re_aid) / "a2-raw124-bundle" / "repair-source"
+    re_manifest = json.loads((re_manifest_dir / "SPLIT_MANIFEST.json").read_text())
+    assert re_manifest["branch"] == "0RE"
+    assert re_manifest["source_commit"] == "3a265e67cdf4d5a75e41ffa48dade25e1dfade82"
+    re_opt = json.loads((re_manifest_dir / "optimized" / "OPTIMIZED_MANIFEST.json").read_text())
+    assert set(re_opt) == {"K04", "K05"}
+    families.append(("0RE", re_dirs, ["Raw124B0REData"]))
+
     linked = work / "linked"
     a68.link_reachable([], work, linked, families=families)
     link_manifest = linked / "kernel-link-manifest.json"
@@ -222,6 +241,16 @@ def main():
     nested_axioms = a68.gate(nested_log.read_text(), [
         "BB6.Agent2Raw124ParentNestedCut.p0LF_eq",
         "BB6.Agent2Raw124ParentNestedCut.cover_of_nested_two",
+    ])
+
+    singleton_source = HERE / "Raw124ParentSingletonCut.lean"
+    singleton_output = work / "Raw124ParentSingletonCut.olean"
+    singleton_log = work / "Raw124ParentSingletonCut.log"
+    compile_source(singleton_source, singleton_output, env, singleton_log)
+    singleton_axioms = a68.gate(singleton_log.read_text(), [
+        "BB6.Agent2Raw124ParentSingletonCut.child0RE_eq",
+        "BB6.Agent2Raw124ParentSingletonCut.cover0RE",
+        "BB6.Agent2Raw124ParentSingletonCut.cover_of_last",
     ])
 
     audit_script = ROOT / "im-results" / "agent4-raw109" / "audit_axioms.py"
@@ -264,6 +293,18 @@ def main():
             "source_sha256": a68.sha(nested_source),
             "object_sha256": a68.sha(nested_output),
         },
+        "singleton_frontier": {
+            "accepted_0RE_run": re_run,
+            "accepted_0RE_artifact": re_aid,
+            "accepted_0RE_artifact_sha256": re_sha,
+            "accepted_0RE_theorem": "BB6.Agent2Raw124B0RE.bound_all",
+            "accepted_0RE_weighted_bound": 2473,
+            "theorem": "BB6.Agent2Raw124ParentSingletonCut.cover_of_last",
+            "hypotheses": ["F1=0LF,F0=1RC"],
+            "axioms": singleton_axioms,
+            "source_sha256": a68.sha(singleton_source),
+            "object_sha256": a68.sha(singleton_output),
+        },
         "artifact_inputs": metadata,
         "linked_module_count": len(json.loads(link_manifest.read_text())["objects"]),
         "kernel_link_manifest_sha256": a68.sha(link_manifest),
@@ -276,6 +317,8 @@ def main():
     shutil.copy2(partial_output, output / partial_output.name)
     shutil.copy2(nested_output, output / nested_output.name)
     shutil.copy2(nested_log, output / nested_log.name)
+    shutil.copy2(singleton_output, output / singleton_output.name)
+    shutil.copy2(singleton_log, output / singleton_log.name)
     shutil.copy2(partial_log, output / partial_log.name)
     shutil.copy2(work / "axiom-audit.log", output / "axiom-audit.log")
     shutil.copy2(link_manifest, output / "kernel-link-manifest.json")
