@@ -548,3 +548,12 @@ Next: monitor preflight 45756065810. If it passes, the Canonical63 consumer is t
 - Updated the source-closure provenance and axiom gate to check the local decomposition plus all intermediate inequalities and final score bounds. The kernel-link manifest upload path is also corrected.
 - Next: rerun the existing `canonical64-score-consumer` target. If `rfl` does not close, inspect the one-step definitional reduction only; do not re-import the larger Q4 drain chain or use `omega` on the huge residual.
 - The consumer remains conditional on all 64 Covers; no BB(6) upper bound has been established.
+
+
+## 2026-11-26T06:44:03.172Z checkpoint — keep the three-section score comparison symbolic
+
+- The source-closure run after the local `rfl` decomposition was `45768868639` (commit `f192c6f8f86636cec826fc456d111e4b9e7d3b5f`). It failed in the same closure step. The GitHub Actions log endpoint was rate-limited; the normal GitHub API confirms the run/job and failed step but does not expose Lean logs. Do not invent the exact theorem error.
+- Reviewed the concrete proof `rw [← threeSectionMoves_root]; simp only [threeSectionMoves]; omega` in `first_section_cost_le_champion_score`. This repeats the known unsafe pattern of unfolding `threeSectionMoves` at concrete champion parameters, which has previously triggered huge `Nat.pow` kernel evaluation in related score wrappers.
+- Replaced it with a generic theorem `sectionResult_cost_le_threeSectionMoves rootSteps L n a b`, proved symbolically by unfolding only `threeSectionMoves` with variable parameters. The concrete score theorem now specializes this lemma and transports the result through `threeSectionMoves_root`, adding the final 7 by `Nat.le_add_right`. The source-closure script records `TM63DirectRootComposition.lean` as provenance and gates the generic lemma's axiom profile.
+- This is a targeted reduction of a known definitional-evaluation hazard, not a confirmed diagnosis of run `45768868639`; wait for the next compiler output before further changes.
+- The fixed-score Canonical64 consumer remains conditional on all 64 Covers; no BB(6) upper bound has been established.

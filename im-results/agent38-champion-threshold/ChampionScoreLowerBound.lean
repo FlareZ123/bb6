@@ -30,12 +30,23 @@ theorem first_increment_le_first_section :
   rw [first_section_cost_decomposition]
   exact Nat.le_add_right _ _
 
+/-- For symbolic section parameters, the first section cost is one
+    nonnegative summand of the full three-section composition. Keeping the
+    parameters symbolic avoids reducing the later tower-sized sections. -/
+theorem sectionResult_cost_le_threeSectionMoves
+    (rootSteps L n a b : Nat) :
+    (sectionResult n 2 a b).cost ≤ threeSectionMoves rootSteps L n a b := by
+  unfold threeSectionMoves
+  omega
+
 /-- The three-section score contains the complete first section cost. -/
 theorem first_section_cost_le_champion_score :
     (sectionResult 7 2 6 63).cost ≤ proposedTM63Moves + 7 := by
-  rw [← threeSectionMoves_root]
-  simp only [threeSectionMoves]
-  omega
+  have h := sectionResult_cost_le_threeSectionMoves 27959 3 7 6 63
+  calc
+    (sectionResult 7 2 6 63).cost ≤ threeSectionMoves 27959 3 7 6 63 := h
+    _ ≤ threeSectionMoves 27959 3 7 6 63 + 7 := Nat.le_add_right _ _
+    _ = proposedTM63Moves + 7 := by rw [← threeSectionMoves_root]
 
 /-- The exact champion score exceeds 2^63. This stronger bound can lift any
     smaller finite-parent threshold without unfolding the enormous score. -/
@@ -58,6 +69,7 @@ theorem champion_score_ge_6766859 :
 #print axioms first_section_cost_decomposition
 #print axioms first_increment_ge_pow63
 #print axioms first_increment_le_first_section
+#print axioms sectionResult_cost_le_threeSectionMoves
 #print axioms first_section_cost_le_champion_score
 #print axioms champion_score_ge_pow63
 #print axioms champion_score_ge_6766859
