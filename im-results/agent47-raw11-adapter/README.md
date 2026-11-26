@@ -114,3 +114,12 @@ See `communications/broadcast/20261126T2315Z_agent47-entry115-crosswalk-disjoint
 Separate source-CI jobs accepted Raw11 parent Covers 127–130 (run `45898270704`) and 126, 137 (run `45908444758`). Parent 140's first two attempts were terminated by runner shutdown while compiling a large child module; the generator now recursively splits oversized modules and the workflow compiles the generated import closure against the pinned cache. Parent 133 has a closed retained tree (78,873 nodes, bound 98). Parents 84, 131, 132, 133, 134 and 140 are being checked in separate runs; do not count a candidate until its parent theorem and axiom guard pass.
 
 The 134 candidate exposed one unresolved leaf, `1RB1RD_1RC1LE_0LA1LF_1LA0RD_---0LC_1LA0LB`. A direct simulator reaches its first undefined E0 slot after 1,694 steps. The Raw11 classifier's fallback horizon was raised from 1,500 to 2,500 so the one-hole/last-transition proof can be attempted; this is not yet accepted until the generated Lean proof compiles.
+
+
+### 2026-11-26 six-parent composition accepted
+
+CI run [45911662010](https://github.com/FlareZ123/bb6/actions/runs/45911662010) compiled Raw11Root52CappedParentsConsume.lean against the accepted 46-parent/q0 artifact and six separate parent-proof artifacts. It composes Covers for Raw11 extra indices 126, 127, 128, 129, 130 and 137, with local bounds 167, 168, 125, 214, 131 and 180.
+
+The new exact census is `(299,237)`: 299 initial residual cylinders, 246 after the 46 extra Covers, 243 after q0 parents 33/49/51, and 237 after these six additional parent Covers. The exact-membership, nodup, subset, census and conditional `cover_from_remaining` theorems all compiled; the CI guard found neither `sorryAx` nor `native_decide`. Artifact [15161045625](https://github.com/FlareZ123/bb6/actions/runs/45911662010/artifacts/15161045625) preserves the consumer source, compiled module and provenance.
+
+This remains a conditional reduction: 237 residual cylinders still require Covers or a further exact partition.
