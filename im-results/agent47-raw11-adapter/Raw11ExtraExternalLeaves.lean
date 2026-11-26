@@ -3,7 +3,7 @@ import Raw11ExtraSweepCoverage
 
 namespace BB6.Agent47ExtraExternal
 
-open BB6Coverage
+open BB6Coverage BB6.Agent13BlankDelay
 
 /-- Lift the two exact Raw11-extra sweep recurrences to any weighted bound. -/
 theorem sweepSafe (v : Bool) (B : Nat) :
