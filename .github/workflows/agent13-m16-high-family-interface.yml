@@ -83,6 +83,8 @@ on:
           - sourceLaneM8
           - sourceRankClock
           - sourceResetClockLower
+          - sourceLiveRankClock
+          - sourceLiveRankCutoff
           - sourceDyadicAncestry
           - sourceHighSigned
           - sourceBoundedShadow
@@ -322,6 +324,14 @@ jobs:
               if [ "$M16_TARGET" = sourceLaneM8Smoke ]; then returns=1000; fi
               python3 im-results/agent12-c-high-shadow/gen_lane_m8.py --returns "$returns"
               target=im-results/agent12-c-high-shadow/LaneM8Generated.lean
+              ;;
+            sourceLiveRankClock)
+              target=im-results/agent12-c-high-shadow/LiveRankClock.lean
+              ;;
+            sourceLiveRankCutoff)
+              jobs=4
+              python3 im-results/agent12-c-high-shadow/gen_bit_event_cutoff.py --returns 10000000 --block 500000 --group 1000000
+              target=im-results/agent12-c-high-shadow/LiveRankCutoff.lean
               ;;
             sourceResetClockLower)
               target=im-results/agent12-c-high-shadow/ResetClockLower.lean
