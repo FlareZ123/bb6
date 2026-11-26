@@ -35,7 +35,7 @@ permissions:
   contents: read
 jobs:
   packed-prefix:
-    if: inputs.target == 'packed-prefix' || (github.event_name == 'push' && github.event.head_commit.message == 'Agent 9: run packed prefix n=45352466')
+    if: ${{ github.event_name == 'push' || inputs.target == 'packed-prefix' }}
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
@@ -58,7 +58,7 @@ jobs:
             grep -Fq "END 45352466 0" /tmp/p1-45352466-half.log
           elif [[ "$rc" -eq 0 ]]; then
             grep -Eq '^END 45352466 [1-9][0-9]*
-    if: inputs.target == 'margin-block-parallel'
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.target == 'margin-block-parallel' }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     strategy:
@@ -97,7 +97,7 @@ jobs:
           retention-days: 3
   source-wall:
     needs: block-shards
-    if: always() && (needs.block-shards.result == 'success' || needs.block-shards.result == 'skipped') && inputs.target != 'packed-prefix' && github.event_name == 'workflow_dispatch'
+    if: ${{ always() && github.event_name == 'workflow_dispatch' && (needs.block-shards.result == 'success' || needs.block-shards.result == 'skipped') && inputs.target != 'packed-prefix' }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
