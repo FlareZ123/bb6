@@ -11,7 +11,7 @@ open BB6.Agent47CanonicalFrontier BB6.Agent47CanonicalRefinement
 open BB6.Agent31StableParentBatch
 open BB6.Agent31Canonical59Membership
 
-/-- Raw83's exact six-hole table:
+/-- Raw83's exact four-hole table:
     1RB---_1RC1LF_0RD---_1LD1RE_---0LB_---0RA.
     It is the E1=0LB cylinder with B1=1LF and F1=0RA fixed. -/
 abbrev p83 : PartialMachine :=
