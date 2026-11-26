@@ -2,7 +2,7 @@ import Raw40C1RC1REAll
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 namespace BB6.Agent19Raw40.Raw40C1RC1RE
-open BB6Coverage BB6.Agent13BlankDelay
+open BB6Coverage BB6.Agent13BlankDelay BB6.Agent10ZipAudit
 
 def witness : Machine := fun s =>
   match s.1.val,s.2 with
@@ -27,7 +27,28 @@ theorem witness_compatible : compatible p witness := by
     | have h : p (_,_) = none := by decide; rw [h] at ht; contradiction
     | cases ht <;> rfl
 
-theorem witness_halts : HaltsAfter witness 5728 := by constructor <;> rfl
+def pLate : PartialMachine := fun s => if s = (4,false) then none else some (witness s)
+theorem pLate_compatible : compatible pLate witness := by
+  intro s t ht
+  unfold pLate at ht
+  split at ht
+  · contradiction
+  · exact Option.some.inj ht
+
+theorem witness_halts : HaltsAfter witness 5728 := by
+  have h : zipQueryOK 5729 pLate 5728 (4,false) = true := by decide +kernel
+  obtain ⟨hr, _, _⟩ := zipQueryOK_sound h
+  cases hc : knownRun pLate 5728 with
+  | none => simp [hc] at hr
+  | some c =>
+    have hs : readSlot c = (4,false) := by simpa [hc] using hr
+    have hrun := knownRun_sound pLate witness pLate_compatible 5728 c hc
+    constructor
+    · rw [hrun]; rfl
+    · rw [run.eq_2,hrun]
+      change rawStep witness c = none
+      have hw : witness (readSlot c) = none := by rw [hs]; rfl
+      simpa [rawStep, readSlot] using congrArg (fun x => x.map (fun mv => BB6Coverage.applyMove c mv)) hw
 
 theorem witness_delay : 0 ∈ delays (zeroNext witness) 0 := by decide
 
