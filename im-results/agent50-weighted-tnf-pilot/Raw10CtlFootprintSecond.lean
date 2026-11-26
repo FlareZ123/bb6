@@ -26,48 +26,24 @@ def candidate3 : BB6Coverage.Machine :=
 
 private abbrev target3 : BusyBeaver.Machine (Fin 2) (Fin 6) := source3.toBB
 
-private def boolToFin2 (b : Bool) : Fin 2 := if b then 1 else 0
 private def fin2ToBool (a : Fin 2) : Bool := a.val == 1
-private def boolToDir (b : Bool) : Turing.Dir :=
-  if b then Turing.Dir.right else Turing.Dir.left
 
-def ofAgent8_3 (m : BB6Coverage.Machine) :
-    ConjectureMachines.Machine 6 2 where
-  transition q a :=
-    (m (q, fin2ToBool a)).map fun mv =>
-      (boolToFin2 mv.write, boolToDir mv.right, mv.next)
+abbrev ofAgent8_3 := BB6.ConjectureBridge.fromAgent8
 
-/-- The inverse adapter is a left inverse on every local transition table. -/
+/-- Reuse the shared, kernel-checked inverse adapter. -/
 theorem toAgent8_ofAgent8_3 (m : BB6Coverage.Machine) :
     BB6.ConjectureBridge.toAgent8 (ofAgent8_3 m) = m := by
-  funext s
-  rcases s with ⟨q, b⟩
-  cases b
-  · cases h : m (q, false) with
-    | none =>
-        rfl
-    | some mv =>
-        cases mv with
-        | mk w r n =>
-            cases w <;> cases r <;>
-              rfl
-  · cases h : m (q, true) with
-    | none =>
-        rfl
-    | some mv =>
-        cases mv with
-        | mk w r n =>
-            cases w <;> cases r <;>
-              rfl
+  simpa [ofAgent8_3] using BB6.ConjectureBridge.toAgent8_fromAgent8 m
 
-/-- Recover the exact pinned source target after the local inverse adapter. -/
+/-- Recover the exact pinned source target after the shared inverse adapter. -/
 theorem ofAgent8_candidate3_toBB :
     (ofAgent8_3 candidate3).toBB = target3 := by
-  funext q a
-  fin_cases q <;> fin_cases a <;> decide
+  change
+    (BB6.ConjectureBridge.fromAgent8
+      (BB6.ConjectureBridge.toAgent8 source3)).toBB = source3.toBB
+  exact congrArg (fun M : ConjectureMachines.Machine 6 2 => M.toBB)
+    (BB6.ConjectureBridge.fromAgent8_toAgent8 source3)
 
-/-- The source DFA tables and accepted tuples are copied verbatim from the
-    pinned module. Its source-side dimensions are Fin 1 and Fin 3. -/
 private def ctlLeftDfaTable3 : List (Fin 1) := [0, 0]
 private def ctlLeftDfa3 (p : Fin 1) (a : Fin 2) : Fin 1 :=
   ctlLeftDfaTable3.getD (2 * p.val + a.val) 0
@@ -129,11 +105,10 @@ theorem ctlLeaf3_neverHalts (m : BB6Coverage.Machine)
                 (ofAgent8_3 m).transition s a =
                   (ofAgent8_3 candidate3).transition s a := by
               change
-                (m (s, fin2ToBool a)).map
-                    (fun mv => (boolToFin2 mv.write, boolToDir mv.right, mv.next)) =
-                  (candidate3 (s, fin2ToBool a)).map
-                    (fun mv => (boolToFin2 mv.write, boolToDir mv.right, mv.next))
-              rw [hmove]
+                (BB6.ConjectureBridge.fromAgent8 m).transition s a =
+                  (BB6.ConjectureBridge.fromAgent8 candidate3).transition s a
+              rw [BB6.ConjectureBridge.fromAgent8_transition,
+                BB6.ConjectureBridge.fromAgent8_transition, hmove]
             simp [ConjectureMachines.Machine.toBB, hTransition]
       _ = target3 s a := by
             rw [ofAgent8_candidate3_toBB]
@@ -142,12 +117,12 @@ theorem ctlLeaf3_neverHalts (m : BB6Coverage.Machine)
     BB6.Agent50CtlFootprint.ctl_certificate_implies_is_does_not_halt_of_agreement
       ctlLeftDfa3 ctlRightDfa3 ctlAcc3 ctlCheck_target3 hAgree
   have hNoHalt :
-      ¬ ConjectureMachines.Halts (BB6.Agent50CtlFootprint.ofAgent8 m) :=
+      ¬ ConjectureMachines.Halts (ofAgent8_3 m) :=
     (ConjectureMachines.isNotHalt_toBB_iff_not_halts
       (BB6.Agent50CtlFootprint.ofAgent8 m)).mp hIsNotHalt
   have hNever :=
     BB6.ConjectureBridge.not_halts_to_agent8
-      (BB6.Agent50CtlFootprint.ofAgent8 m) hNoHalt
+      (ofAgent8_3 m) hNoHalt
   simpa [toAgent8_ofAgent8_3] using hNever
 
 private def allSlots3 : List BB6Coverage.Slot :=
