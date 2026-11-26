@@ -246,6 +246,8 @@ jobs:
         if: always()
         with:
           name: agent3-raw139-normalized-cryptids-scan
-          path: /tmp/agent3-raw139-normalized
-          if-no-files-found: warn
+          path: |
+            /tmp/agent3-raw139-normalized/scan.log
+            /tmp/agent3-raw139-normalized/manifest.json
+          if-no-files-found: error
           retention-days: 14
