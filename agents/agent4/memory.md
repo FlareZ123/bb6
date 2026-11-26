@@ -1210,3 +1210,37 @@ Local Lean 4.36.0-rc2 checks against copied exact zipper semantics establish 133
 ## 2026-11-26 05:26 UTC checkpoint
 - Immutable lease 04:45:48.976Z; release threshold 05:55:48.976Z. Raw58 full exact theorem locally compiled against all ten original source artifact groups. Cut 45758266553 successful, artifact 15089752872. Exact maximum 3055746 for 25^6 compatible tables; Raw58Exact.raw58_bound_exact, all_completions, coverRaw58 use only propext, Classical.choice, Quot.sound. CI raw58-compose dispatched from current main with pinned groups. Agent31 handoff 5486c86a. No canonical count asserted until its integration.
 - Raw57 A1=1LA all sixteen previously unproved leaves locally checked against original SweepPumping. Six modules Raw57LA{Seven,20212172,442444,462,274276,748944} and wrapper Raw57LALeaves under im-results/agent4-raw58. 14 added to make_1la_spec.py fba48d83, retained Agent40 independent 748/944. Existing agent6-raw57-siblings.yml child=1LA dispatched. Agent1 message 2171316b. All individual proofs standard axioms only; full audit not yet accepted. Next check actual CI, help other sibling closure where unclaimed. Local work /tmp/raw58tight.
+
+## 2026-11-26 checkpoint — Raw58 parent accepted; prepare joint Canonical62
+
+**Current incarnation:** `agent4-gpt62-2026-11-26T06:35:29.114Z-raw58-continuation`, immutable claim `2026-11-26T06:35:29.114Z`. Do not refresh the lease. After every checkpoint compare actual runtime UTC with the original claim; release only at 70 minutes.
+
+### Completed Raw58 parent result
+
+- The Raw58 E1=0RA six-hole parent `1RB---_1RC---_0RD---_1LD1RE_---0RA_------` is source-accepted with exact weighted maximum **3,055,746**.
+- Original-source CI run 45762057732 succeeded at revision `91ebd1de7ac989c13541f3b30b422097cebc209a`; artifact 15090715339, `raw58-parent-proof`, digest `2231c274970b233002894c3fa097e3b81ad1484a3db0809c0148f8c03e26c477`.
+- Exported theorem: `BB6.Agent4Raw58Exact.coverRaw58`; exactness: `raw58_bound_exact`. The artifact has ten shard groups and 785 modules. Standard axiom profile only: propext, Classical.choice, Quot.sound.
+- Updated `im-results/agent4-raw58/README.md` and `LF1Sharp.md` to reflect accepted parent closure. The older `Canonical75Raw58Graft.lean` is historical and must not be reused: it has a stale 19,310 premise and old roster.
+
+### Joint Canonical62 integration draft
+
+- Added `im-results/agent4-raw58/Canonical62Raw112Raw58Integrated.lean`: removes Raw112 and Raw58 simultaneously from the accepted Canonical64 roster, with explicit unique-membership, distinct-parent, 62-count, Cover-lifting and `removeParents_sound` obligations. This is uncompiled/unaccepted.
+- Added `im-results/agent4-raw58/assemble_canonical62.py`: pins Canonical64/65/Raw120 and the accepted Raw58 artifact; requires a successful Raw112 artifact; uses the strict reachable-import linker and kernel-declaration comparator.
+- Added `im-results/agent4-raw58/Canonical62ChampionConsumer.lean`, which reuses Agent31's fixed-score/witness module after both the generic 62 interface and that consumer are accepted. It is also uncompiled.
+- Extended existing `.github/workflows/agent10-four-hole.yml` with manual target `canonical62-raw112-raw58`. No new workflow was created.
+- Updated the Raw58 README with the exact draft status. **No Canonical62 result is currently claimed.**
+
+### Current blockers / coordination
+
+- Raw112 parent run 45751911115 failed: shared core and shards 0,2,3,6,7 succeeded; shards 1,4,5 failed; assemble was skipped. The parent artifact is not accepted. Agent31 owns the current Canonical64→63 path; Agent47 was asked whether they are repairing Raw112. Do not dispatch a duplicate Raw112 run without coordination.
+- Agent31's Canonical64 score-consumer run 45768868639 failed in its main champion source-closure step. Agent31 has been notified of the joint 62 plan; logs remain to be inspected.
+- GitHub Actions MCP log retrieval is rate-limited (15-minute retry interval). Use it when available, requesting failed jobs only and short tails; do not fetch workflow logs through the ordinary GitHub connector.
+- Local container/Python shell attempts fail with platform `ClientError`; use CI for Lean compilation until local runtime recovers.
+
+### Next actions
+
+1. Retrieve failed-job logs for Raw112 run 45751911115 and champion consumer run 45768868639 after the Actions API rate limit clears.
+2. Diagnose only the actual failed steps; coordinate with Agent31/47 before retrying Raw112 or changing their workflow.
+3. Once a source-accepted Raw112 parent artifact exists, run the existing `canonical62-raw112-raw58` target and require the 62 roster count, theorem, duplicate-kernel and axiom gates.
+4. Only after generic Canonical62 acceptance, compile the fixed-score wrapper against Agent31's accepted Canonical64 champion score/witness closure.
+5. Keep these intermediate integration artifacts in `im-results/`; no unconditional BB(6) upper bound or exact value has been proved.
