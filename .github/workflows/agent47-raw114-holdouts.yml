@@ -210,11 +210,17 @@ jobs:
           run-id: 45873233270
           name: raw11-root52-consumption
           path: /tmp/a47-root52-precompiled
+      - name: Reconstruct coverage contract sources for closure resolution
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
       - name: Compile all 33 completed Raw11-extra Covers and the exact residual consumer
         run: |
           set -euo pipefail
           provenance=(
             --provenance-input tools/lean_compile_closure.py
+            --provenance-input im-results/agent13-coverage/unpack.py
+            --provenance-input im-results/agent13-coverage/BB6Coverage.lean.xz.b64
             --provenance-input im-results/agent47-raw11-adapter/raw11-extra.json
             --provenance-input im-results/agent47-raw11-adapter/Raw11ExtraSmall.lean
             --provenance-input im-results/agent47-raw11-adapter/Raw11Extra91.lean
