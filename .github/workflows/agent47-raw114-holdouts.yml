@@ -15,7 +15,7 @@ on:
         type: boolean
         default: false
       raw11_q0_extra_covers:
-        description: Compile all 33 Raw11-extra Covers plus q0 parents 33, 49 and 51 after root39 and root52
+        description: Compile all 46 Raw11-extra Covers plus q0 parents 33, 49 and 51 after root39 and root52
         type: boolean
         default: false
 permissions:
@@ -195,7 +195,10 @@ jobs:
   raw11-q0-extra-covers:
     if: ${{ inputs.raw11_q0_extra_covers }}
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    permissions:
+      contents: write
+      actions: read
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - name: Install Lean 4.36.0-rc2
@@ -214,14 +217,17 @@ jobs:
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
-      - name: Generate Raw11 extra parent 92 and 124 Covers
+      - name: Generate Raw11 extra parent Covers
         run: |
           set -euo pipefail
           node im-results/agent47-raw11-adapter/generate-raw11-extra-external.cjs
-          test -s im-results/agent47-raw11-adapter/Raw11Extra92.lean
-          test -s im-results/agent47-raw11-adapter/Raw11Extra124.lean
+          node im-results/agent47-raw11-adapter/generate-raw11-extra-5hole-closed.cjs
+          for id in 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123 124 125 135 136 138 139 141; do
+            test -s "im-results/agent47-raw11-adapter/Raw11Extra${id}.lean"
+          done
           cat im-results/agent47-raw11-adapter/raw11-extra-external-manifest.json
-      - name: Compile 35 extra Covers and q0 parents 33, 49 and 51
+          cat im-results/agent47-raw11-adapter/raw11-extra-5hole-closed-manifest.json
+      - name: Compile 46 extra Covers and q0 parents 33, 49 and 51
         run: |
           set -euo pipefail
           provenance=(
@@ -232,10 +238,24 @@ jobs:
             --provenance-input im-results/agent47-raw11-adapter/raw11-route.json
             --provenance-input im-results/agent47-raw11-adapter/generate-raw11-extra.cjs
             --provenance-input im-results/agent47-raw11-adapter/generate-raw11-extra-external.cjs
+            --provenance-input im-results/agent47-raw11-adapter/generate-raw11-extra-5hole-closed.cjs
+            --provenance-input im-results/agent47-raw11-adapter/scan-raw11-extra-5hole.cjs
             --provenance-input im-results/agent47-raw11-adapter/generate-q0-lean.cjs
             --provenance-input im-results/agent47-raw11-adapter/Raw11ExtraExternalLeaves.lean
+            --provenance-input im-results/agent47-raw11-adapter/Raw11Extra85.lean
+            --provenance-input im-results/agent47-raw11-adapter/Raw11Extra86.lean
+            --provenance-input im-results/agent47-raw11-adapter/Raw11Extra87.lean
+            --provenance-input im-results/agent47-raw11-adapter/Raw11Extra88.lean
+            --provenance-input im-results/agent47-raw11-adapter/Raw11Extra89.lean
+            --provenance-input im-results/agent47-raw11-adapter/Raw11Extra90.lean
             --provenance-input im-results/agent47-raw11-adapter/Raw11Extra92.lean
             --provenance-input im-results/agent47-raw11-adapter/Raw11Extra124.lean
+            --provenance-input im-results/agent47-raw11-adapter/Raw11Extra125.lean
+            --provenance-input im-results/agent47-raw11-adapter/Raw11Extra135.lean
+            --provenance-input im-results/agent47-raw11-adapter/Raw11Extra136.lean
+            --provenance-input im-results/agent47-raw11-adapter/Raw11Extra138.lean
+            --provenance-input im-results/agent47-raw11-adapter/Raw11Extra139.lean
+            --provenance-input im-results/agent47-raw11-adapter/raw11-extra-5hole-closed-manifest.json
             --provenance-input im-results/agent47-raw11-adapter/raw11-extra-external-manifest.json
             --provenance-input im-results/agent5-weighted-tnf-queue/Raw11ExtraFamily.lean
             --provenance-input im-results/agent5-weighted-tnf-queue/Raw11ExtraFamilySeed.lean
@@ -279,7 +299,7 @@ jobs:
             --precompiled-dir /tmp/a47-root52-precompiled/a47-raw11-root52 \
             --jobs 2 \
             --lean lean \
-            --label raw11-root52-plus-33-extras-plus-q0-parents \
+            --label raw11-root52-plus-46-extras-plus-q0-parents \
             --theorem BB6.Agent47Raw11Root52Q0ParentsConsume.cover_from_remaining \
             "${provenance[@]}" \
             2>&1 | tee /tmp/a47-raw11-root52-known.log
@@ -288,6 +308,26 @@ jobs:
             exit 1
           fi
           grep -q "BB6.Agent47Raw11Root52Q0ParentsConsume.cover_from_remaining" /tmp/a47-raw11-root52-known.log
+      - name: Commit generated Raw11 parent Covers
+        if: success()
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
+            echo "::warning::main advanced during compilation; generated Covers remain in the artifact and are not committed"
+            exit 0
+          fi
+          git config user.name "Agent 5"
+          git config user.email "agent5@users.noreply.github.com"
+          git add im-results/agent47-raw11-adapter/Raw11Extra{85,86,87,88,89,90,92,124,125,135,136,138,139}.lean
+          git add im-results/agent47-raw11-adapter/raw11-extra-external-manifest.json
+          git add im-results/agent47-raw11-adapter/raw11-extra-5hole-closed-manifest.json
+          if git diff --cached --quiet; then
+            echo "Generated Raw11 parent Covers are unchanged"
+            exit 0
+          fi
+          git commit -m "Agent 5: add Raw11 extra parent Covers 92, 124 and five-hole set"
+          git push origin HEAD:main
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -297,8 +337,20 @@ jobs:
             /tmp/a47-raw11-root52-known.log
             /tmp/a47-root52-precompiled/q0-root52-lean/
             /tmp/a47-root52-precompiled/q0-root52-source.sha256
+            im-results/agent47-raw11-adapter/Raw11Extra85.lean
+            im-results/agent47-raw11-adapter/Raw11Extra86.lean
+            im-results/agent47-raw11-adapter/Raw11Extra87.lean
+            im-results/agent47-raw11-adapter/Raw11Extra88.lean
+            im-results/agent47-raw11-adapter/Raw11Extra89.lean
+            im-results/agent47-raw11-adapter/Raw11Extra90.lean
             im-results/agent47-raw11-adapter/Raw11Extra92.lean
             im-results/agent47-raw11-adapter/Raw11Extra124.lean
+            im-results/agent47-raw11-adapter/Raw11Extra125.lean
+            im-results/agent47-raw11-adapter/Raw11Extra135.lean
+            im-results/agent47-raw11-adapter/Raw11Extra136.lean
+            im-results/agent47-raw11-adapter/Raw11Extra138.lean
+            im-results/agent47-raw11-adapter/Raw11Extra139.lean
             im-results/agent47-raw11-adapter/raw11-extra-external-manifest.json
+            im-results/agent47-raw11-adapter/raw11-extra-5hole-closed-manifest.json
           if-no-files-found: warn
           retention-days: 30
