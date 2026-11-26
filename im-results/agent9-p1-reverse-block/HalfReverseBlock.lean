@@ -111,7 +111,10 @@ theorem margin_block_prop (n K s h j : Nat) (ps : List Prefix)
   have hL := Nat.mul_le_mul_left ((n+K+2)*marginSize n K)
     (Nat.pow_le_pow_right (show 0<2 by decide) hjs)
   have hR' := Nat.mul_le_mul_left (6*2^n) hr
-  omega
+  calc
+    (n+K+2)*marginSize n K*2^j ≤ (n+K+2)*marginSize n K*2^(s+h) := hL
+    _ < 6*2^n*resMin s C := hineq
+    _ ≤ 6*2^n*resMin j B := hR'
 
 /-- Half-certificate induction using proposition-valued margins. -/
 theorem half_cert_next_block_prop (n K s h : Nat) (ps : List Prefix)
@@ -134,25 +137,6 @@ theorem half_cert_next_block_prop (n K s h : Nat) (ps : List Prefix)
       (by
         intro p hp
         exact hgood p hp)
-
-/-- Initial half certificate at cost two using proposition-valued margins. -/
-theorem half_cert_first_two_prop (n K : Nat) (hn : n%4=2)
-    (hgood : HalfMarginOKProp n K 2 0 [(1,(n+2)/4)]) :
-    HalfCert n K 2 [(1,(n+2)/4)] := by
-  refine ⟨half_first_two n hn,?_⟩
-  intro j hj hjs
-  have hj2 : j=2 := by omega
-  subst j
-  have hfull : Covered n 2
-      ([(1,(n+2)/4)] ++ [(1,(n+2)/4)].map (reflectPrefix n 2)) :=
-    complete_half n 2 [(1,(n+2)/4)] (by omega) (by omega) (by omega)
-      (half_first_two n hn)
-  exact margin_block_prop n K 2 0 2
-    ([(1,(n+2)/4)] ++ [(1,(n+2)/4)].map (reflectPrefix n 2))
-    (by omega) (by omega) (by omega) hfull
-    (by
-      intro p hp
-      exact hgood p hp)
 
 /-- Once the canonical half is empty, the original source has no trace at
     or beyond the corresponding delayed horizon. -/
@@ -191,6 +175,25 @@ theorem half_first_two (n : Nat) (hn : n%4=2) :
     subst a
     simp [hbase.1,Nat.pow_succ]
 
+/-- Initial half certificate at cost two using proposition-valued margins. -/
+theorem half_cert_first_two_prop (n K : Nat) (hn : n%4=2)
+    (hgood : HalfMarginOKProp n K 2 0 [(1,(n+2)/4)]) :
+    HalfCert n K 2 [(1,(n+2)/4)] := by
+  refine ⟨half_first_two n hn,?_⟩
+  intro j hj hjs
+  have hj2 : j=2 := by omega
+  subst j
+  have hfull : Covered n 2
+      ([(1,(n+2)/4)] ++ [(1,(n+2)/4)].map (reflectPrefix n 2)) :=
+    complete_half n 2 [(1,(n+2)/4)] (by omega) (by omega) (by omega)
+      (half_first_two n hn)
+  exact margin_block_prop n K 2 0 2
+    ([(1,(n+2)/4)] ++ [(1,(n+2)/4)].map (reflectPrefix n 2))
+    (by omega) (by omega) (by omega) hfull
+    (by
+      intro p hp
+      exact hgood p hp)
+
 /-- Initial half certificate at cost two. The single MarginOK check is
     performed on the reflected full cover, but only the canonical prefix
     needs to be stored. -/
@@ -228,7 +231,10 @@ theorem half_margin_ok_n45352466 :
   have hineq :
       (45352466+250000000+2)*marginSize 45352466 250000000*4
         < 6*2^45352466 := by
-    omega
+    calc
+      (45352466+250000000+2)*marginSize 45352466 250000000*4
+          < 6*2^64 := hnum
+      _ ≤ 6*2^45352466 := h6pow
   intro p hp
   simp [reflectPrefix,cap] at hp
   rcases hp with hp | hp
