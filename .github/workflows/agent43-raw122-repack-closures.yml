@@ -32,7 +32,7 @@ jobs:
           output=pathlib.Path('/tmp/packed')
           files={}
           for p in sorted(root.rglob('*')):
-              if p.is_file() and (p.suffix in ('.olean','.lean') or p.name=='manifest.json'):
+              if p.is_file() and (p.name=='manifest.json' or (p.suffix in ('.olean','.lean') and p.stem.startswith(('Raw122Roster','Raw122Recovered','Raw122ResidualCompose','Agent29Raw122Indexed','Raw122D','Raw122Counter','Raw122Shift','Raw122Pair','Raw122AHole','Packed','LateCheck')))):
                   # Keep every manifest independently; object/source identity
                   # is checked by the final local merger.
                   name = p.name if p.name!='manifest.json' else p.parent.name+'-manifest.json'
@@ -51,6 +51,37 @@ jobs:
           PY
       - uses: actions/upload-artifact@v4
         with:
-          name: raw122-repacked-${{ matrix.branch }}
-          path: /tmp/packed
+          name: raw122-repacked-${{ matrix.branch }}-00
+          path: /tmp/packed/00
           retention-days: 30
+          if-no-files-found: ignore
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw122-repacked-${{ matrix.branch }}-01
+          path: /tmp/packed/01
+          retention-days: 30
+          if-no-files-found: ignore
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw122-repacked-${{ matrix.branch }}-02
+          path: /tmp/packed/02
+          retention-days: 30
+          if-no-files-found: ignore
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw122-repacked-${{ matrix.branch }}-03
+          path: /tmp/packed/03
+          retention-days: 30
+          if-no-files-found: ignore
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw122-repacked-${{ matrix.branch }}-04
+          path: /tmp/packed/04
+          retention-days: 30
+          if-no-files-found: ignore
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw122-repacked-${{ matrix.branch }}-05
+          path: /tmp/packed/05
+          retention-days: 30
+          if-no-files-found: ignore
