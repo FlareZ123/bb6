@@ -3,7 +3,7 @@
 import os,pathlib,subprocess,sys,json,base64,gzip,hashlib
 root=pathlib.Path(__file__).resolve().parent
 n=int(sys.argv[1]); c,B,N,F={26:('0LE',216,1392,1347),27:('0RE',193,2328,2265),28:('1LE',131,1453,1406),29:('1RE',5729,1504,1452)}[n]
-hashes={26:'38c99c2090ade655dc708978b02756fe6c0e1f21f7f4acaf44aa7936f78278ef',27:'7890fc64fe56d250cd0199fa70d991fe9c4c70312444825ee776b0d975804b21',28:'0be841dcfd83b9b061e801d98efebdfe9e97120d3368c025513a6e3d08856f68'}
+hashes={26:'38c99c2090ade655dc708978b02756fe6c0e1f21f7f4acaf44aa7936f78278ef',27:'7890fc64fe56d250cd0199fa70d991fe9c4c70312444825ee776b0d975804b21',28:'0be841dcfd83b9b061e801d98efebdfe9e97120d3368c025513a6e3d08856f68',29:'15e3a5d66e795e317e8eeb9f314a8f57fb7078085752ff85ceed2a1a229a6afd'}
 if n in hashes:
     raw=base64.b64decode((root/f'round{n}-data.json.gz.b64').read_text())
     assert hashlib.sha256(raw).hexdigest()==hashes[n]
@@ -33,6 +33,10 @@ if n==29:
     data=root/'round29-late.txt';late=data.read_text();(out/'late.txt').write_text(late)
     for x in late.splitlines():
         s,steps,slot=x.split();i=opens.index(s);assert i not in ids;ids.add(i)
+if n==29:
+    for i,ns in [(32,'BB6.Agent19Raw40.Triple32'),(190,'BB6.Agent19Raw40.CarryLeaves.Leaf190'),(197,'BB6.Agent19Raw40.CarryLeaves.Leaf197'),(320,'BB6.Agent19Raw40.Grow320'),(745,'BB6.Agent19Raw40.Quint745')]:
+        assert i not in ids;ids.add(i);proven.append(f'{opens[i]} {ns}\n')
+    imports.extend(['Raw40Triple32','Raw40CarryLeaves','Raw40Grow320','Raw40Quint745'])
 assert ids==set(range(N)),sorted(set(range(N))-ids)
 (out/'proven.txt').write_text(''.join(proven))
 os.environ['RAW40_PROOF_IMPORTS']=' '.join(imports)
