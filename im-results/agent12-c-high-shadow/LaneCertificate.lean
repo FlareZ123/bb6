@@ -56,6 +56,28 @@ def checked (s t : State) (N q K : Nat) (v : Trace) : Prop :=
 instance (s t : State) (N q K : Nat) (v : Trace) : Decidable (checked s t N q K v) := by
   unfold checked; infer_instance
 
+/-- Low-output variant: the final plane inequality supplies the exact
+    b+8 bound needed for the genuine y>=5 section exits. -/
+def checked5 (s t : State) (N q K : Nat) (v : Trace) : Prop :=
+  0<N ∧ q<2^N ∧ q.testBit 0=true ∧
+  lane v N=lift s ∧ lane v 0=lift t ∧
+  countCheckB N q v.counts=true ∧ value v.counts 0=K ∧
+  equalOn (2^N-1) v.ms (addP (addP (shiftP v.ms) [2^N-1,2^N-1]) [q]) ∧
+  equalOn q [v.p] [v.ms.headD 0] ∧
+  equalOn ((2^N-1)^^^q) [v.p] [v.p>>>1] ∧
+  equalOn (2^N-1) (addP (addP v.bs (maskP q v.ms)) (mul2 [q&&&(v.p>>>1)]))
+      (addP (addP (mul2 (shiftP v.bs)) (mul2 [q])) [q&&&v.p]) ∧
+  leOn (inputs q N) (addP [0,0,full N] [v.p]) v.bs ∧
+  leOn (inputs q N) v.bs (addP v.ms [v.p]) ∧
+  equalOn (inputs q N) [v.bs.headD 0] [] ∧
+  leOn (directInputs q N) (branchRhs N v) (mul2 v.bs) ∧
+  leOn (bounceInputs q N) (addP (mul2 v.bs) [full N]) (branchRhs N v) ∧
+  leOn q (addP [0,full N] [v.p]) v.bs ∧
+  leOn q (addP v.bs [0,0,0,full N]) (addP v.ms [v.p])
+
+instance (s t : State) (N q K : Nat) (v : Trace) : Decidable (checked5 s t N q K v) := by
+  unfold checked5; infer_instance
+
 theorem bit_full (N j : Nat) (h:j≤N) : bit (full N) j=1 := by simp [full,bit,Nat.testBit_two_pow_sub_one,show j<N+1 by omega]
 
 theorem bit_bounded (N j : Nat) (h:j<N) : bit (2^N-1) j=1 := by simp [bit,Nat.testBit_two_pow_sub_one,h]
