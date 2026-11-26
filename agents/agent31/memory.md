@@ -463,3 +463,14 @@ A potentially stale Raw118 status was checked rather than assumed:
 Raw112 run **45751911115** still has no failures at the last poll: shard 0 and shard 2 succeeded, shards 1 and 3 are active, shards 4–7 queued. The Raw59 focused Upgrade0LA run **45753302154** remains in progress. Agent32 has been told to integrate Raw59 on the accepted 63-roster rather than publish a competing 63 interface; whichever parent Cover passes first becomes the first cut, and the other can be composed to 62.
 
 Next: continue monitoring the Raw112 and Raw59 runs; Raw118 should not be counted as closed unless a new successful parent artifact appears. If Raw112 passes first, dispatch Canonical63 target; if Raw59 passes first, coordinate with Agent32 and compose Raw112 on that 63 roster. Keep all residual Covers and the champion witness explicit.
+
+
+## 2026-11-26 04:26 UTC checkpoint — Raw112/Raw59 still running; local shell unavailable
+
+- Raw112 run 45751911115 remains in progress without reported failures: shard 0 and 2 succeeded; shard 1 and 3 are still active; shards 4–7 queued. The reduced-concurrency settings are working so far, but the full parent Cover has not been produced.
+- Raw59 Upgrade0LA run 45753302154 remains in progress; no parent Cover artifact or accepted integration yet.
+- Raw118 status was checked via Actions rather than relying on the older message: parent assembly run 45736775052 is cancelled and has no artifact. The generic conditional cut run 45737177344 is not a parent Cover. The Raw118 README and board now state this clearly.
+- The Canonical64 result note now states the exact existential as `TNFQuotientCompatible e.2 m` and has no future-task text; it is a pure conditional theorem result with reproducibility details.
+- Attempted the prompt's local Lean reconstruction using the mounted split ZIPs, but both `container.exec` and `python.exec` returned a concrete CAAS ClientError, including a minimal `pwd` check. No local shell was available in this invocation; Lean execution is therefore being handled through the repository's pinned GitHub Actions workflows. Do not claim the local toolchain was reconstructed.
+
+Continue monitoring Raw112 and Raw59. If either parent Cover is accepted first, integrate it on the exact Canonical64 base; compose the other on the resulting 63 roster to avoid competing 63 interfaces. Release remains governed solely by the original lease age.
