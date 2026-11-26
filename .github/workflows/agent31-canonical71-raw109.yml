@@ -23,7 +23,7 @@ on:
           - canonical58-six-parent-batch
           - canonical57-raw83
           - canonical58-raw113-delta
-          - canonical58-raw112-delta
+          - canonical57-raw112-delta
           - canonical57-raw83-delta
           - canonical63-preflight
           - canonical65-three
@@ -39,12 +39,12 @@ on:
         required: false
         default: ""
       canonical59_run_id:
-        description: "Accepted 59-residual Canonical59 run ID for Raw112/Raw113 delta consumers"
+        description: "Accepted 59-residual Canonical59 run ID for the Raw113 delta"
         type: string
         required: false
         default: ""
       canonical58_run_id:
-        description: "58-residual base run ID; canonical57-raw83 expects the legacy six-parent artifact, canonical57-raw83-delta expects canonical58-raw113-graft-integrated"
+        description: "58-residual Canonical58 run ID (e.g. accepted Raw113 delta) for Raw112 and Raw83 follow-on grafts"
         type: string
         required: false
         default: ""
@@ -59,7 +59,7 @@ on:
         required: false
         default: "45647053824"
       raw112_run_id:
-        description: "Successful Raw112 closed-parent-cover run ID (used by canonical58-raw112-delta and legacy Canonical63/67 consumers)"
+        description: "Successful Raw112 closed-parent-cover run ID (used by canonical57-raw112-delta and legacy Canonical63/67 consumers)"
         type: string
         required: false
         default: ""
@@ -1435,17 +1435,17 @@ jobs:
           CANONICAL59_RUN_ID: ${{ inputs.canonical59_run_id }}
         run: |
           set -euo pipefail
-          [[ "$CANONICAL59_RUN_ID" =~ ^[0-9]+$ ]]
+          [[ "$CANONICAL58_RUN_ID" =~ ^[0-9]+$ ]]
           python -m py_compile im-results/agent31-shared-core/assemble_canonical59_raw113_graft.py
           python im-results/agent31-shared-core/assemble_canonical59_raw113_graft.py \
-            --work /tmp/a31-canonical58-raw113 --base-run-id "$CANONICAL59_RUN_ID" \
+            --work /tmp/a31-canonical58-raw113 --canonical58-run-id "$CANONICAL58_RUN_ID" \
             2>&1 | tee /tmp/a31-canonical58-raw113.log
           test -s /tmp/a31-canonical58-raw113/canonical58-raw113-graft.json
           python - <<'PY'
           import json
           from pathlib import Path
           report = json.loads(Path("/tmp/a31-canonical58-raw113/canonical58-raw113-graft.json").read_text())
-          assert report["remaining_residual_count"] == 58
+          assert report["remaining_residual_count"] == 57
           assert report["olean_sha256"]
           assert report["raw59_retained"]
           profiles = [report["membership_axioms"], report["axioms"]]
@@ -1463,9 +1463,9 @@ jobs:
           compression-level: 0
           retention-days: 30
 
-  canonical58_raw112_delta:
-    name: Add Raw112 to the accepted 59-residual Canonical59 base
-    if: ${{ inputs.target == 'canonical58-raw112-delta' }}
+  canonical57_raw112_delta:
+    name: Add Raw112 after Raw113 to produce Canonical57
+    if: ${{ inputs.target == 'canonical57-raw112-delta' }}
     runs-on: ubuntu-latest
     timeout-minutes: 120
     permissions:
@@ -1484,22 +1484,22 @@ jobs:
       - name: Compile the incremental Raw112 Canonical58 graft
         env:
           GH_TOKEN: ${{ github.token }}
-          CANONICAL59_RUN_ID: ${{ inputs.canonical59_run_id }}
+          CANONICAL58_RUN_ID: ${{ inputs.canonical58_run_id }}
           RAW112_RUN_ID: ${{ inputs.raw112_run_id }}
         run: |
           set -euo pipefail
-          [[ "$CANONICAL59_RUN_ID" =~ ^[0-9]+$ ]]
+          [[ "$CANONICAL58_RUN_ID" =~ ^[0-9]+$ ]]
           [[ "$RAW112_RUN_ID" =~ ^[0-9]+$ ]]
-          python -m py_compile im-results/agent17-raw112-canonical58/assemble_canonical59_raw112_graft.py
-          python im-results/agent17-raw112-canonical58/assemble_canonical59_raw112_graft.py \
-            --work /tmp/a17-canonical58-raw112 --base-run-id "$CANONICAL59_RUN_ID" \
-            --raw112-run-id "$RAW112_RUN_ID" 2>&1 | tee /tmp/a17-canonical58-raw112.log
-          test -s /tmp/a17-canonical58-raw112/canonical58-raw112-graft.json
+          python -m py_compile im-results/agent17-raw112-canonical58/assemble_canonical58_raw112_graft.py
+          python im-results/agent17-raw112-canonical58/assemble_canonical58_raw112_graft.py \
+            --work /tmp/a17-canonical57-raw112 --canonical58-run-id "$CANONICAL58_RUN_ID" \
+            --raw112-run-id "$RAW112_RUN_ID" 2>&1 | tee /tmp/a17-canonical57-raw112.log
+          test -s /tmp/a17-canonical57-raw112/canonical57-raw112-graft.json
           python - <<'PY'
           import json
           from pathlib import Path
-          report = json.loads(Path("/tmp/a17-canonical58-raw112/canonical58-raw112-graft.json").read_text())
-          assert report["remaining_residual_count"] == 58
+          report = json.loads(Path("/tmp/a17-canonical57-raw112/canonical57-raw112-graft.json").read_text())
+          assert report["remaining_residual_count"] == 57
           assert report["graft_olean_sha256"]
           assert "sorryAx" not in str(report["axioms"])
           assert "native_decide" not in str(report["axioms"])
@@ -1507,10 +1507,10 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: canonical58-raw112-graft-integrated
+          name: canonical57-raw112-graft-integrated
           path: |
-            /tmp/a17-canonical58-raw112/**
-            /tmp/a17-canonical58-raw112.log
+            /tmp/a17-canonical57-raw112/**
+            /tmp/a17-canonical57-raw112.log
           if-no-files-found: warn
           compression-level: 0
           retention-days: 30
