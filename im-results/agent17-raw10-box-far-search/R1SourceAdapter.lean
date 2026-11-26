@@ -7,6 +7,7 @@ set_option maxHeartbeats 0
 namespace BB6.Agent17Raw10R1SourceAdapter
 
 open BB6Coverage
+open BB6.Agent13BlankDelay
 
 /-- The hard-root adapter and Agent13's source-adapted r1 table are the same
 literal six-state machine, slot for slot. -/
@@ -34,7 +35,7 @@ theorem raw10CoverWithR1Source (B : Nat) (hB : 7014 ≤ B)
         (r = BB6.Agent50Raw10HardRootR1Adapter.r1Box24 →
           ¬ compatible BB6.Agent50Raw10HardRootR1Adapter.r1Leaf m) →
         WeightedBound B m) :
-    Cover (WeightedBound B) BB6.Agent49BoxBridge.firstOneB0_1LC :=
+    Cover (WeightedBound B) BB6.Agent13CrossRouteHeldLeaf109.firstOneB0_1LC :=
   BB6.Agent50Raw10HardRootR1Adapter.raw10CoverWithR1
     B hB hHeld r1_never hOpen
 
