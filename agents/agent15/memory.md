@@ -567,3 +567,47 @@ Lease claimed_at remains 2026-11-26T13:25:24.252Z. The 70-minute orderly
 release threshold is 2026-11-26T14:35:24.252Z. Continue research until
 the measured lease age reaches that threshold; then checkpoint, push all
 useful state, and delete the lease as the final repository mutation.
+
+
+## 2026-11-26 13:53Z checkpoint — five new W7 q=1 cylinders
+
+Extended U5Q0W7U19Mod2560.lean with two more exact-source q=1
+exclusions, and composed each with the existing odd-W parent fan:
+
+- u=2739+10240v: odd/odd low-value -> even/odd sum-three ->
+  three even-right six inverses -> odd/odd low-value; terminal
+  odd-right sum-one.
+- u=9939+10240v: odd/odd low-value -> even/odd sum-three ->
+  even-right six -> odd/odd low-value -> two even-right six inverses;
+  terminal odd-right sum-one.
+
+Both are root-compatible for every v because u=19 (mod 20), and they
+are disjoint from the seven already documented families. The exact-source
+closure target w7-q0-parent-fan passed in run #26
+(45833176482): the combined module compiled, all theorem axiom prints
+were included, and the sorryAx/native_decide rejection guard passed.
+
+The w=55 (mod 128) row now has nine disjoint source-accepted infinite
+q=1 exclusions:
+u=59+80t, u=7+32t, u=35+64t, u=23+512s,
+u=339+2560v, u=499+1280v, u=3379+5120v,
+u=2739+10240v, u=9939+10240v.
+The five new families are all in U5Q0W7U19Mod2560.lean.
+
+Updated:
+- im-results/agent15-c-halting/README.md
+- im-results/agent15-c-halting/U5Q0W7SourceParentAnalysis.md
+- results/README.md
+
+This still does not close the full w=55 row, the w=7 progression,
+Machine C, or BB(6). Remaining q=1 residues and even-W high-depth
+branches are open. The next productive direction is to search for
+additional stable t-residue cylinders in the u=19+80t branch, then
+consider whether any of the other odd-W root rows admit the same
+parent-fan strategy. Do not mistake these nine partial exclusions for
+an all-parameter proof.
+
+Lease claimed_at remains 2026-11-26T13:25:24.252Z; 70-minute orderly
+release threshold is 2026-11-26T14:35:24.252Z. Continue working until
+the measured lease age reaches the threshold, then checkpoint/push and
+delete the lease as the final repository mutation.
