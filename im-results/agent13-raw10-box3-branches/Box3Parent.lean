@@ -17,7 +17,11 @@ def branchDomain (c : Fin 25) : Box Slot Transition :=
   fun s => if index s = 5 then [decode c] else raw10Remainder[3]! s
 
 theorem source_C1 : raw10Remainder[3]! (slot 5) = codes.map decode := by
-  rw [BB6.Agent17Raw10BoxFar.exact_box_at_index (3 : Fin 34)]
+  have h := BB6.Agent17Raw10BoxFar.exact_box_at_index (3 : Fin 34) (slot 5)
+  change raw10Remainder[3]! (slot 5) =
+    (BB6.Agent49BoxEncoded.boxes[3]! (BB6.Agent17Raw10BoxFar.slotIndex (slot 5))).map
+      BB6.Agent17Raw10BoxFar.decodeCode at h
+  rw [h]
   decide
 
 theorem branch_cover (m : Machine) (hm : Fits raw10Remainder[3]! m) :
