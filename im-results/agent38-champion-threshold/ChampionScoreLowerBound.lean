@@ -69,7 +69,7 @@ theorem champion_score_ge_6766859 :
     6766859 ≤ proposedTM63Moves + 7 := by
   exact Nat.le_trans (by decide : 6766859 ≤ 2^63) champion_score_ge_pow63
 
-#print axioms first_section_cost_decomposition
+#print axioms sectionResult_firstCost_le
 #print axioms first_increment_ge_pow63
 #print axioms first_increment_le_first_section
 #print axioms sectionResult_cost_le_threeSectionMoves
