@@ -197,6 +197,7 @@ def build_precompiled_manifest(base_linked, work):
     """Create a source-verified precompiled subset for the Raw59 source closure."""
     unpack = ROOT / "im-results" / "agent13-coverage" / "unpack.py"
     raw59_generator = ROOT / "im-results" / "agent32-raw59" / "generate.py"
+    raw59_rc_unpack = ROOT / "im-results" / "agent32-raw59" / "unpack_rc.py"
     macrofar_unpack = ROOT / "im-results" / "agent32-macro-far" / "unpack.py"
     raw59_partial = ROOT / "im-results" / "agent32-raw59" / "generate_partial.py"
     raw59_sharp = ROOT / "im-results" / "agent32-raw59" / "generate_sharp.py"
@@ -205,6 +206,7 @@ def build_precompiled_manifest(base_linked, work):
     raw120_generator = ROOT / "im-results" / "agent3-tnf-raw120" / "generate.py"
     generator_commands = [
         [sys.executable, str(unpack)],
+        [sys.executable, str(raw59_rc_unpack)],
         [sys.executable, str(raw59_generator)],
         [sys.executable, str(macrofar_unpack)],
         [sys.executable, str(raw59_partial), "--upgrade", "0LA", "0LB", "0LE", "0LF", "1LB", "1LE", "1LF"],
@@ -235,6 +237,7 @@ def build_precompiled_manifest(base_linked, work):
         "--label", "Canonical64 source-verified precompiled subset for Raw59Exact",
         "--artifact-name", "canonical64-base-precompiled-manifest",
         "--provenance-input", str(unpack),
+        "--provenance-input", str(raw59_rc_unpack),
         "--provenance-input", str(raw59_generator),
         "--provenance-input", str(macrofar_unpack),
         "--provenance-input", str(raw59_partial),
