@@ -93,12 +93,13 @@ jobs:
                 --jobs 8 --workdir /tmp/lean-closure-q0-secondary-cylinders 2>&1 | tee "/tmp/lean-closure-reports/${target}.log"
               ;;
             w7-q0-parent-fan)
-              python3 tools/lean_compile_closure.py \\
-                im-results/agent15-c-halting/U5Q0W7ParentFan.lean \\
-                im-results/agent15-c-halting/U5Q0W7Z4U3Mod16.lean \\
-                im-results/agent15-c-halting/U5Q0W7Z4R3Mod16.lean \\
-                im-results/agent15-c-halting/U5Q0W7R5Mod32.lean \\
-                im-results/agent15-c-halting/U5Q0W7R21Mod128.lean \\
+              python3 tools/lean_compile_closure.py \
+                im-results/agent15-c-halting/U5Q0W7ParentFan.lean \
+                im-results/agent15-c-halting/U5Q0W7Z4U3Mod16.lean \
+                im-results/agent15-c-halting/U5Q0W7Z4R3Mod16.lean \
+                im-results/agent15-c-halting/U5Q0W7R5Mod32.lean \
+                im-results/agent15-c-halting/U5Q0W7R21Mod128.lean \
+                im-results/agent15-c-halting/U5Q0W7U3Mod64.lean \
                 --jobs 4 --workdir /tmp/lean-closure-w7-q0-parent-fan 2>&1 | tee "/tmp/lean-closure-reports/${target}.log"
               ;;
             linear-rank)
