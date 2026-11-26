@@ -46,6 +46,7 @@ jobs:
               ZeroRB) bash im-results/agent48-raw139-e0-0rb/reproduce-parent.sh ;;
               ZeroRD) bash im-results/agent48-raw139-e0-0rd/reproduce-parent.sh ;;
               OneRB) bash im-results/agent48-raw139-e0-1rb/reproduce-parent.sh ;;
+              OneLA) bash im-results/agent48-raw139-e0-1la/reproduce-parent.sh ;;
               *) echo "Unknown E0 parent: $SIBLING" >&2; exit 2 ;;
             esac
           elif [[ "$KIND" == e0sweep ]]; then
@@ -65,6 +66,7 @@ jobs:
             bash im-results/agent48-raw139-f1-oneLA/reproduce-sibling.sh "$SIBLING"
           fi
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: raw139-${{ inputs.kind }}-${{ inputs.sibling }}-certified
           include-hidden-files: true
@@ -72,6 +74,9 @@ jobs:
             .tmp/a48-${{ inputs.kind }}-${{ inputs.sibling }}/manifest.json
             .tmp/a48-${{ inputs.kind }}-${{ inputs.sibling }}/log
             .tmp/a48-${{ inputs.kind }}-${{ inputs.sibling }}/partition.json
+            .tmp/a48-${{ inputs.kind }}-${{ inputs.sibling }}/spec-compact.json
+            .tmp/a48-${{ inputs.kind }}-${{ inputs.sibling }}/unresolved.json
+            .tmp/a48-${{ inputs.kind }}-${{ inputs.sibling }}/discovery.log
             .tmp/a48-${{ inputs.kind }}-${{ inputs.sibling }}/imports/*.lean
             .tmp/a48-${{ inputs.kind }}-${{ inputs.sibling }}/build/*.olean
 
