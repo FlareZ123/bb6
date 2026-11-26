@@ -74,10 +74,19 @@ def resolve_source(module: str, index: dict[str, list[Path]]) -> Path:
         raise FileNotFoundError(
             f"project import {module!r} has no .lean source in the indexed source roots"
         )
-    if len(candidates) != 1:
-        rendered = "\n  ".join(display_source(p) for p in candidates)
+    if len(candidates) > 1:
+        # Artifact roots may carry byte-for-byte copies of tracked sources.
+        # Such copies are not ambiguous: prefer the first search root (ROOT),
+        # but keep rejecting any same-name sources whose contents differ.
+        digests = [sha256_file(path) for path in candidates]
+        if len(set(digests)) == 1:
+            return candidates[0]
+        rendered = "\\n  ".join(
+            f"{display_source(path)} (sha256 {digest})"
+            for path, digest in zip(candidates, digests)
+        )
         raise RuntimeError(
-            f"ambiguous module {module!r}; add an explicit OVERRIDES entry:\n  {rendered}"
+            f"ambiguous module {module!r}; sources differ; add an explicit OVERRIDES entry:\\n  {rendered}"
         )
     return candidates[0]
 
