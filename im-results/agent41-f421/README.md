@@ -2,42 +2,24 @@
 
 ## Exact target
 
-The standard blank-start table is
+The standard blank-start table is `1RB0LC_1RC0RC_1LD0RB_1LA0LE_1LD1LF_1LD---`, with initial state A and single unassigned instruction F1. The family ledger identifies this rooted member as F421; its canonical representative appears in `im-results/agent8-coverage-contract/LedgerTextRows.lean` with state order FDAEBC, canonical root C, and no reflection.
 
-\`1RB0LC_1RC0RC_1LD0RB_1LA0LE_1LD1LF_1LD---\`
+It is the unresolved E0=1LD, A1=0LC branch of the seven-hole Raw139 parent in `im-results/agent41-raw139-small/Raw139SmallPair.lean`, distinct from the source-proved E0=1LD, A1=0LE neighbor and E0=1LA sweep closure.
 
-with initial state A and the single unassigned instruction F1. The held-out family ledger identifies this rooted member as F421; its canonical representative is recorded in \`im-results/agent8-coverage-contract/LedgerTextRows.lean\` with state order \`FDAEBC\`, canonical root C, and no tape reflection.
+## Strongest current reduction
 
-This is the unresolved \`E0=1LD, A1=0LC\` branch of the seven-hole Raw139 parent in \`im-results/agent41-raw139-small/Raw139SmallPair.lean\`. It is distinct from the already source-proved \`E0=1LD, A1=0LE\` upstream neighbor and from the \`E0=1LA\` sweep closure.
+[FrontierTransduction.md](FrontierTransduction.md) gives the exact D-to-D return map: F1 is reached precisely by a bad 111 token in the left parser. [CarryCountdown.md](CarryCountdown.md) derives a new two-return principal phase, a binary countdown on regular tape cells, and a closed-form transition count over whole countdown intervals. The regular-cell safety lemma is independent of the untouched suffix. The remaining mathematical obligation is the exceptional boundary behavior when the marker value becomes zero or a cell degenerates.
 
-## What is established
+The C++ implementation (`compressed.cpp`, `carry.cpp`) evaluated 10^18 principal macros, representing exactly **2741467853641781568730607840197912170 primitive transitions**, without reading F1. The largest single skipped block was 2^56-1 macros. The calculation was cross-checked with the unaccelerated word formula on 12,000 examples and the per-macro engine through 20 million macros. See the derivation for reproducibility and proof boundaries.
 
-A deterministic blank-start simulation of the exact table has completed **2,000,000,000 transitions without reading F1**. Checkpoints preserve the complete finite tape as its set of one-positions:
+This is a finite safe prefix, not a source-accepted Lean theorem, a proof of nonhalting or a new BB(6) lower bound. The missing F1 completion halts only if that row is eventually reached.
 
-- \`state-1b.json\`: step 1,000,000,000; state D; head 88,184; visited interval [-69, 89,969]; 45,013 ones.
-- \`state-2b.json\`: step 2,000,000,000; state B; head 119,870; visited interval [-69, 124,107]; 62,084 ones.
+## Earlier independent evidence
 
-The tape is nearly alternating over its visited interval, with a small number of equal-adjacency defects (38 at 1B; 44 at 2B). This is an empirical structural observation, not an invariant proof.
+The original primitive blank-start simulator completed 2 billion transitions without reading F1. Complete tape checkpoints are `state-1b.json` (state D, head 88184, visited [-69,89969], 45013 ones) and `state-2b.json` (state B, head 119870, visited [-69,124107], 62084 ones). The nearly alternating tape motivated the pair-run representation. `frontier_map.py` compared the first 1000 word returns with primitive simulation (711352 steps).
 
-If the missing F1 instruction is completed by a halting transition and is eventually read, the resulting six-state machine has a score **greater than 2 billion**. If F1 is never read, that completion is nonhalting. Neither eventual reachability nor permanent avoidance has been established. The 2B simulation is therefore not yet a BB(6) lower-bound theorem.
+FAR searches through canonical DFA size 6 did not supply a witness. `search_far.cpp` and the existing manual `.github/workflows/agent41-raw139-small.yml` preserve the size-six search and its checker. These finite failures do not establish impossibility of a larger FAR invariant.
 
-The earlier \`generate.mjs\` audit only explored this leaf for 500 steps and left it open. An exhaustive search of the repository's existing FAR certificate scheme found no witness with DFA sizes 1 through 5. Those negative searches are finite and do not imply that a larger FAR invariant is impossible.
+## Research target
 
-## Current research action
-
-\`search_far.cpp\` enumerates every canonical six-state DFA of size 6 for the existing \`FAR.Data\` certificate scheme, in both tape orientations. It independently checks the synthesized masks against the exact \`fastValid\` conditions before emitting a candidate. Any emitted certificate must still be checked by Lean's \`FAR.Data.fastValid_sound\` and the original-machine bridge; a search result alone is not a proof.
-
-The existing manual workflow \`.github/workflows/agent41-raw139-small.yml\` has an optional \`f421-far-search\` target. This reuses the family's workflow rather than adding another workflow file.
-
-## Remaining mathematical question
-
-Prove either:
-
-1. F1 is never read, using an all-time stack, defect-word, or finite-automaton invariant; or
-2. F1 is first read at a finite time, then source-certify the exact halting completion and its primitive-transition score.
-
-Do not promote finite traces, an unverified automaton search, or the observed alternating tape pattern to a proof.
-
-## Exact accelerated frontier map
-
-[FrontierTransduction.md](FrontierTransduction.md) derives the full D-to-D frontier recurrence as a deterministic transduction of a single binary word, with exact primitive cost and displacement. It reduces all future F1 accesses to one bad prefix in the left parser. [frontier_map.py](frontier_map.py) independently replays 1,000 returns (711,352 primitive transitions). This is an exact paper-level reduction, not an all-time decision or a source-accepted Lean theorem. The next proof target is a closed inductive language for the authentic word orbit.
+Close the exceptional odd-epoch and carry-degeneration dynamics, or find the first unsafe token and establish its exact primitive cost. The regular-cell reduction is a starting point for that proof. `F421Frontier.lean` contains original-machine frontier lemmas; this file's existence does not itself establish source acceptance of the new countdown reduction.
