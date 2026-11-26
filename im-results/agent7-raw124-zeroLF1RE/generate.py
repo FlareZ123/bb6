@@ -27,7 +27,7 @@ PARAMS = {int(i):tuple(v[0]) for i,v in SPEC["auto"].items()}
 EXPECTED = {int(i):v[1] for i,v in SPEC["auto"].items()}
 HARD = set(SPEC["hard"])
 def custom_module(i):
-    return PREFIX+"Counter" if BRANCH=="1LC" else PREFIX+f"M{i}"
+    return PREFIX+"Counter" if BRANCH=="1LC" else "Agent7"+PREFIX+f"M{i}"
 MOVES = [w+d+q for w,d,q in product("01","LR","ABCDEF")]
 
 def bit(x):
