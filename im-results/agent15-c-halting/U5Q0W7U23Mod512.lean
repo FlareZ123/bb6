@@ -80,6 +80,7 @@ theorem w7_z2_q1_parent_unreachable_u23mod512 (s : Nat) :
   have hD : BB6.Agent3.CReach Dx Dy := by
     rw [haD,hkD] at hprev3
     exact hprev3
+  have hDx5 : 5<Dx := by dsimp [Dx]; omega
   have hDxOdd : Dx%2=1 := by dsimp [Dx]; omega
   have hDyOdd : Dy%2=1 := by dsimp [Dy]; omega
   have hDy5 : 5≤Dy := by dsimp [Dy]; omega
@@ -87,7 +88,7 @@ theorem w7_z2_q1_parent_unreachable_u23mod512 (s : Nat) :
   have hDsum16 : (Dx+Dy)%16≠0 := by dsimp [Dx,Dy]; omega
   have hDsize : 24≤Dx+Dy := by dsimp [Dx,Dy]; omega
   obtain ⟨a4,k4,hprev4,hstep4⟩ :=
-    BB6.Agent11M0SumZeroVerified.cReach_parent_of_left_gt5 Dx Dy hDxOdd hD
+    BB6.Agent11M0SumZeroVerified.cReach_parent_of_left_gt5 Dx Dy hDx5 hD
   have hDparent :=
     (BB6.Agent3.oddodd_lowval_parent_iff a4 k4 Dx Dy
       hDxOdd hDyOdd hDy5 hDsum4 hDsum16 hDsize).mp hstep4
